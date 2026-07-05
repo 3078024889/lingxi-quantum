@@ -879,7 +879,77 @@ const WEIGHT_OF_INSTANT_WISH: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH];
+/* ---------- 蜃归：蜃岚星，幻境/释怀题材，全新原创，完整9页 ---------- */
+const SL_DEFS = `<defs>
+  <filter id="slGlow"><feGaussianBlur stdDeviation="10"/></filter>
+  <filter id="slSoft"><feGaussianBlur stdDeviation="2.4"/></filter>
+  <linearGradient id="slSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0e1a2a"/><stop offset="45%" stop-color="#2a3a5a"/><stop offset="80%" stop-color="#7a8ab0"/><stop offset="100%" stop-color="#e8d4c0"/></linearGradient>
+  <radialGradient id="slMirage" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff" stop-opacity=".8"/><stop offset="100%" stop-color="#9ab0d8" stop-opacity="0"/></radialGradient>
+</defs>`;
+function slWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:number}[]) {
+  return list.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#slGlow)"/>`).join('');
+}
+function slFigure(kind: "seeker" | "mirage") {
+  const robe = `<path d="M-12 -34 Q0 -40 12 -34 L16 28 Q0 36 -16 28 Z" fill="${kind === 'mirage' ? '#c9d4e8' : '#2a2c3a'}" opacity="${kind === 'mirage' ? '.55' : '1'}"/>`;
+  // 及肩齐发，带一枚发绳
+  const hair = `<path d="M-8 -46 Q0 -52 8 -46 Q9 -34 5 -26 Q0 -28 -5 -26 Q-9 -34 -8 -46 Z" fill="${kind === 'mirage' ? '#d8e0f0' : '#181a24'}" opacity="${kind === 'mirage' ? '.5' : '1'}"/>`;
+  const head = `<circle cx="0" cy="-40" r="8" fill="${kind === 'mirage' ? '#d8e0f0' : '#2a2c3a'}" opacity="${kind === 'mirage' ? '.55' : '1'}"/>`;
+  const shimmer = kind === "mirage" ? `<animate attributeName="opacity" values=".35;.65;.35" dur="2.6s" repeatCount="indefinite"/>` : "";
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}${hair}${shimmer}</g>`;
+}
+const SL_COVER = `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="url(#slSky)"/>
+  ${slWash([{x:150,y:120,rx:160,ry:90,color:'#9ab0d8',op:.3}])}
+  <g transform="translate(150,170) scale(0.6)">${slFigure("seeker")}</g>
+</svg>`;
+
+const MIRAGE_RETURN: IllustratedEntry = {
+  slug: "what-the-mirage-gave-back",
+  title: "蜃归",
+  titleEn: "What the Mirage Gave Back",
+  cat: "field",
+  teaser: "蜃岚星会把最深的思念，折射成一场几乎以假乱真的重逢——真正的告别，从不是靠一场完美的幻象撑过去的。",
+  teaserEn: "Shenlan Star refracts your deepest longing into an almost-real reunion. True farewell was never something a perfect illusion could carry you through.",
+  price: 9,
+  cover: SL_COVER,
+  pages: [
+    { kickerZh: "一 · 蜃岚星", kickerEn: "I · Shenlan Star", tagZh: "会折射记忆的大气层", tagEn: "An Atmosphere That Refracts Memory",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="url(#slSky)"/>${slWash([{x:150,y:100,rx:150,ry:80,color:'#9ab0d8',op:.35}])}<g transform="translate(150,165) scale(0.55)">${slFigure("seeker")}</g></svg>`,
+      textZh: "蜃岚星的大气层会主动折射光线，把访客心底最深的思念，折成一场几乎以假乱真的幻象。传说里说：\u201c从蜃岚星回来的人，会带回一段不属于自己的记忆。\u201d\n\n停雪剪着一头齐肩的短发，左手腕上系着一根旧发绳——那是她双胞胎哥哥停川出发探索前，随手替她扎上的。三年前，停川在一次星际勘测中失联，再没有回来。",
+      textEn: "Shenlan's atmosphere actively refracts light, bending a visitor's deepest longing into an almost-real illusion. The legend says: those who return from Shenlan carry back a memory that isn't their own.\n\nTing Xue wears her hair cut short at the shoulders, an old hair tie knotted around her left wrist \u2014 tied there casually by her twin brother, Ting Chuan, before his last expedition. Three years ago, he vanished during a stellar survey and never returned." },
+    { kickerZh: "二 · 走入雾中", kickerEn: "II · Into the Mist", tagZh: "启程", tagEn: "Setting Out",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="#0e1a2a"/>${slWash([{x:150,y:110,rx:160,ry:100,color:'#2a3a5a',op:.6}])}<g transform="translate(150,160) scale(0.6)">${slFigure("seeker")}</g></svg>`,
+      textZh: "她不顾所有人劝阻，独自登陆蜃岚星——她只想再见哥哥一面，哪怕明知那可能只是一场幻象。刚踏入雾气弥漫的地带，空气忽然变得粘稠，眼前的景物开始像水面一样轻轻晃动。",
+      textEn: "Against everyone's advice, she landed on Shenlan alone \u2014 she only wanted to see her brother once more, even knowing it might be nothing but illusion. The moment she stepped into the mist-thick zone, the air thickened, and the scenery began to ripple like water." },
+    { kickerZh: "三 · 几乎以假乱真的重逢", kickerEn: "III · The Almost-Real Reunion", tagZh: "幻象初现", tagEn: "The Illusion Appears",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="url(#slSky)"/>${slWash([{x:150,y:100,rx:170,ry:100,color:'#fff',op:.15}])}<g transform="translate(100,160) scale(0.55)">${slFigure("seeker")}</g><g transform="translate(200,160) scale(0.55) scale(-1,1)">${slFigure("mirage")}</g></svg>`,
+      textZh: "雾气深处，停川的身影缓缓浮现——笑容、语气、连说话时习惯性挠后脑勺的小动作，都和记忆里一模一样。他说：\u201c我没事，只是被困在这里出不去，你能不能留下来陪我？\u201d停雪几乎瞬间就红了眼眶。",
+      textEn: "Deep in the mist, Ting Chuan's figure slowly formed \u2014 his smile, his voice, even the habit of scratching the back of his head while talking, exactly as she remembered. \u201cI'm fine,\u201d he said. \u201cJust stuck here, unable to leave. Will you stay with me?\u201d Her eyes welled instantly." },
+    { kickerZh: "四 · 想要留下的心", kickerEn: "IV · The Desire to Stay", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="#0e1a2a"/>${slWash([{x:150,y:110,rx:160,ry:100,color:'#7a8ab0',op:.4}])}<g transform="translate(150,160) scale(0.6)">${slFigure("seeker")}</g></svg>`,
+      textZh: "三年的思念找到了一个出口，停雪几乎就要点头答应留下。这场幻象太温柔、太完整，完整到她几乎说服自己：哪怕这是假的，只要能一直待在这里，好像也没什么不好。",
+      textEn: "Three years of longing finally found an outlet, and Ting Xue nearly agreed to stay. The illusion was so gentle, so complete \u2014 complete enough that she almost convinced herself: even if it wasn't real, staying here forever might not be so bad." },
+    { kickerZh: "五 · 旅人的警示", kickerEn: "V · The Traveler's Warning", tagZh: "转折的契机", tagEn: "A Chance to Turn Back",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="url(#slSky)"/>${slWash([{x:150,y:100,rx:150,ry:80,color:'#9ab0d8',op:.3}])}<g transform="translate(110,160) scale(0.5)">${slFigure("seeker")}</g><g transform="translate(200,160) scale(0.5) scale(-1,1)"><path d="M-11 -34 Q0 -40 11 -34 L15 26 Q0 34 -15 26 Z" fill="#12251e"/><circle cx="0" cy="-44" r="8" fill="#20352c"/></g></svg>`,
+      textZh: "一位途经此地的旅人——长晏——轻声提醒她：\u201c蜃岚星从不会说谎骗你，它只会把你已经相信的东西，还给你。这场重逢里的每一句话，其实都是你自己心里早就设想过的。\u201d",
+      textEn: "A traveler passing through \u2014 Chang Yan \u2014 spoke gently: \u201cShenlan never lies to you. It only gives back what you already believed. Every word in this reunion is something your own heart had already imagined.\u201d" },
+    { kickerZh: "六 · 破绽", kickerEn: "VI · The Flaw", tagZh: "识破", tagEn: "Seeing Through",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="#0e1a2a"/>${slWash([{x:150,y:110,rx:160,ry:100,color:'#2a3a5a',op:.6}])}<g transform="translate(150,160) scale(0.55) scale(-1,1)">${slFigure("mirage")}</g></svg>`,
+      textZh: "停雪忽然想起：眼前的\u201c停川\u201d提到了一件她从没告诉过任何人的小事——那只可能是她自己记忆里的细节，而不是哥哥会知道的事。她终于确认：这真的只是一场，由她自己的思念折射出来的幻象。",
+      textEn: "Ting Xue suddenly noticed: the \u201cTing Chuan\u201d before her mentioned something she had never told anyone \u2014 a detail that could only exist in her own memory, not something her brother could have known. She finally confirmed: this truly was only an illusion, refracted from her own longing." },
+    { kickerZh: "七 · 放手的瞬间", kickerEn: "VII · The Moment of Letting Go", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="url(#slSky)"/>${slWash([{x:150,y:100,rx:170,ry:110,color:'#fff',op:.2}])}<g transform="translate(150,160) scale(0.6)">${slFigure("seeker")}</g></svg>`,
+      textZh: "停雪最终对着那个幻象，说出了她三年来一直没能说出口的话：\u201c我没能见到你最后一面，这件事我可能永远都过不去。但我不会再假装你还在这里等我了。\u201d幻象没有消失得很戏剧化，只是像晨雾一样，缓缓淡去。",
+      textEn: "Ting Xue finally said to the illusion what she'd been unable to say for three years: \u201cI never got to see you one last time, and I may never fully get over that. But I won't pretend anymore that you're still here waiting for me.\u201d The illusion didn't vanish dramatically \u2014 it simply faded, like morning mist." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "带回真实的记忆", tagEn: "Carrying Back the Real Memory",
+      art: `<svg viewBox="0 0 300 220">${SL_DEFS}<rect width="300" height="220" fill="url(#slSky)"/>${slWash([{x:150,y:60,rx:150,ry:60,color:'#fff',op:.18}])}<g transform="translate(150,165) scale(0.6)">${slFigure("seeker")}</g></svg>`,
+      textZh: "离开蜃岚星时，停雪确实\u201c带回了一段不属于自己的记忆\u201d——不是幻象里那个笑着挽留她的哥哥，而是终于完整的告别：那份没能见到最后一面的遗憾，第一次被她好好地放在了心里该在的位置，而不是被一场温柔的假象，悬在半空。",
+      textEn: "Leaving Shenlan, Ting Xue truly did \u201ccarry back a memory that wasn't her own\u201d \u2014 not the illusion of a brother smiling and asking her to stay, but a completed farewell: the regret of never seeing him one last time, finally set down where it belonged, instead of suspended in a gentle fiction.",
+      closingZh: "真正的告别，从不是靠一场完美的幻象撑过去的，而是终于敢让真实的遗憾，落地。",
+      closingEn: "True farewell was never carried by a perfect illusion \u2014 it's finally letting the real regret come to rest." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
