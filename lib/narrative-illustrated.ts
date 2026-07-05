@@ -949,7 +949,83 @@ const MIRAGE_RETURN: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN];
+/* ---------- 三纪回声：澜汜古环，历史/哲学题材，长晏起源篇，完整9页 ---------- */
+const LS_DEFS = `<defs>
+  <filter id="lsGlow"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="lsSoft"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="lsSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a1610"/><stop offset="50%" stop-color="#3a3020"/><stop offset="100%" stop-color="#c9a76a"/></linearGradient>
+  <linearGradient id="lsStone" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8a7a5a"/><stop offset="100%" stop-color="#4a3e2a"/></linearGradient>
+</defs>`;
+function lsWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:number}[]) {
+  return list.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#lsGlow)"/>`).join('');
+}
+function lsRing(layers: number) {
+  return `<g opacity=".8">${Array.from({length:layers}).map((_,i)=>`<ellipse cx="150" cy="${140-i*18}" rx="${100-i*14}" ry="${16-i*1.5}" fill="none" stroke="url(#lsStone)" stroke-width="2" opacity="${.9-i*.15}"/>`).join('')}</g>`;
+}
+function lsFigure(state: "young" | "resolved") {
+  const robe = `<path d="M-11 -34 Q0 -40 11 -34 L15 26 Q0 34 -15 26 Z" fill="${state==='young' ? '#3a4a5a' : '#2a2c3a'}"/>`;
+  // 年轻长晏：略显凌乱的短发；后期：一贯的整洁束发（呼应他在其他故事里的形象）
+  const hair = state === "young"
+    ? `<path d="M-8 -44 Q0 -50 8 -44 Q7 -38 3 -36 Q0 -38 -3 -36 Q-7 -38 -8 -44 Z" fill="#1c1c14"/>`
+    : `<path d="M-7 -44 Q0 -49 7 -44 L6 -34 Q0 -36 -6 -34 Z" fill="#1c1c14"/><line x1="6" y1="-38" x2="14" y2="-30" stroke="#1c1c14" stroke-width="2" stroke-linecap="round"/>`;
+  const head = `<circle cx="0" cy="-38" r="8" fill="#2a2c3a"/>`;
+  const glow = state === "resolved" ? `<circle cx="0" cy="-2" r="20" fill="#c9a76a" opacity=".2" filter="url(#lsSoft)"><animate attributeName="opacity" values=".1;.3;.1" dur="4s" repeatCount="indefinite"/></circle>` : "";
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${glow}${robe}${head}${hair}</g>`;
+}
+const LS_COVER = `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="url(#lsSky)"/>
+  ${lsWash([{x:150,y:130,rx:150,ry:80,color:'#c9a76a',op:.2}])}
+  ${lsRing(3)}
+  <g transform="translate(150,150) scale(0.55)">${lsFigure("young")}</g>
+</svg>`;
+
+const THREE_EPOCHS_ECHO: IllustratedEntry = {
+  slug: "echoes-of-three-epochs",
+  title: "三纪回声",
+  titleEn: "Echoes of the Three Epochs",
+  cat: "sovereign",
+  teaser: "澜汜古环记录着三个先后消亡的文明，年轻的长晏在废墟里发现了同一个错误重复了三次——这也是他后来选择成为旅人的起点。",
+  teaserEn: "The Lansi Ring holds the record of three civilizations that rose and fell. A young Chang Yan found the same mistake repeated three times — and that discovery is where his life as a wanderer began.",
+  price: 9,
+  cover: LS_COVER,
+  pages: [
+    { kickerZh: "一 · 澜汜古环", kickerEn: "I · The Lansi Ring", tagZh: "漂浮的古代废墟", tagEn: "A Floating Ancient Ruin",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="url(#lsSky)"/>${lsWash([{x:150,y:110,rx:150,ry:80,color:'#c9a76a',op:.25}])}${lsRing(3)}<g transform="translate(150,155) scale(0.55)">${lsFigure("young")}</g></svg>`,
+      textZh: "澜汜古环是一整座漂浮的环形废墟，记录着比人类文明更早诞生又消亡的三个纪元。年轻的长晏是环内研究院最年轻的学者，剪着一头总也梳不整齐的短发，习惯在长袍外面再系一条磨破了边的皮带——那是他导师留给他的旧物。他花了五年时间，试图弄清楚这三个文明，究竟是怎么消失的。",
+      textEn: "The Lansi Ring is an entire floating ring of ruins, recording three epochs that rose and fell before humanity's own. Young Chang Yan is the academy's youngest scholar, his short hair perpetually unkempt, a worn leather belt cinched over his robe \u2014 a keepsake from his late mentor. He spent five years trying to understand exactly how these three civilizations vanished." },
+    { kickerZh: "二 · 第一纪的崩塌", kickerEn: "II · The Fall of the First Epoch", tagZh: "考古发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="#1a1610"/>${lsWash([{x:150,y:110,rx:160,ry:100,color:'#3a3020',op:.7}])}${lsRing(1)}<g transform="translate(150,160) scale(0.55)">${lsFigure("young")}</g></svg>`,
+      textZh: "第一纪的记录显示：那个文明发展出了极致的效率工具，任何念头都能被瞬间执行——直到没人再记得，为什么要执行这些念头。整个文明在\u201c越来越快\u201d里，悄无声息地熄灭了。",
+      textEn: "The First Epoch's records showed a civilization that perfected instant execution \u2014 any thought realized without delay \u2014 until no one remembered why those thoughts mattered at all. The whole civilization guttered out, quietly, inside its own acceleration." },
+    { kickerZh: "三 · 第二纪的重复", kickerEn: "III · The Second Epoch Repeats It", tagZh: "同一个错误", tagEn: "The Same Mistake",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="#1a1610"/>${lsWash([{x:150,y:110,rx:160,ry:100,color:'#3a3020',op:.7}])}${lsRing(2)}<g transform="translate(150,160) scale(0.55)">${lsFigure("young")}</g></svg>`,
+      textZh: "长晏本以为第一纪只是个例外，直到他破译了第二纪的记录——完全不同的技术路径，完全不同的文化外壳，核心却是同一件事：把\u201c能不能立刻实现\u201d，当成了\u201c值不值得去做\u201d的唯一标准。",
+      textEn: "Chang Yan assumed the First Epoch was an anomaly \u2014 until he deciphered the Second Epoch's records. Utterly different technology, utterly different culture, yet the same core failure: mistaking \u201ccan this happen instantly\u201d for the only measure of \u201cis this worth doing.\u201d" },
+    { kickerZh: "四 · 第三纪，还是同一件事", kickerEn: "IV · The Third Epoch, the Same Thing Again", tagZh: "确认模式", tagEn: "Confirming the Pattern",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="#1a1610"/>${lsWash([{x:150,y:110,rx:160,ry:100,color:'#3a3020',op:.75}])}${lsRing(3)}<g transform="translate(150,160) scale(0.6) rotate(3)">${lsFigure("young")}</g></svg>`,
+      textZh: "第三纪的证据摆在眼前时，长晏终于确认：这不是巧合，也不是某种文明特有的缺陷，而是任何足够复杂的文明，几乎注定会撞上的同一堵墙——身处系统内部的人，结构上就看不见系统本身的形状。",
+      textEn: "When the Third Epoch's evidence lay before him, Chang Yan finally confirmed it: not coincidence, not a flaw unique to any one civilization, but a wall almost any sufficiently complex civilization was bound to hit \u2014 those inside a system are structurally unable to see the system's shape." },
+    { kickerZh: "五 · 学院的沉默", kickerEn: "V · The Academy's Silence", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="#241f16"/>${lsWash([{x:150,y:100,rx:160,ry:100,color:'#3a3020',op:.6}])}<g transform="translate(110,160) scale(0.5)">${lsFigure("young")}</g><g transform="translate(200,165) scale(0.5) scale(-1,1)"><path d="M-11 -34 Q0 -40 11 -34 L15 26 Q0 34 -15 26 Z" fill="#5a4e38"/><circle cx="0" cy="-38" r="8" fill="#3a3020"/></g></svg>`,
+      textZh: "长晏把发现呈交学院，得到的却是一句冷淡的回应：\u201c三个样本谈不上规律，你这是在贩卖焦虑。\u201d没人愿意认真面对——承认这件事，等于承认他们自己的文明，可能正走在同一条路上。",
+      textEn: "Chang Yan submitted his findings to the academy and received only a cold response: \u201cThree samples don't make a pattern. You're peddling anxiety.\u201d No one wanted to face it \u2014 admitting this meant admitting their own civilization might be walking the same road." },
+    { kickerZh: "六 · 知道了，然后呢", kickerEn: "VI · Knowing, and Then What", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="url(#lsSky)"/>${lsWash([{x:150,y:100,rx:150,ry:70,color:'#c9a76a',op:.2}])}<g transform="translate(150,160) scale(0.6)">${lsFigure("young")}</g></svg>`,
+      textZh: "被拒绝之后，长晏想通了一件更根本的事：就算学院采纳了他的警告，把\u201c不要盲目追求速度\u201d写进法典，也没有用——真正让第一纪、第二纪、第三纪撞墙的，从不是缺一条法律，而是无数个体，在无数个具体瞬间，选择了\u201c更快\u201d而不是\u201c更真实\u201d。",
+      textEn: "After being dismissed, Chang Yan arrived at something more fundamental: even if the academy adopted his warning and wrote \u201cdo not blindly chase speed\u201d into law, it wouldn't matter. What truly drove all three epochs into the wall was never a missing law \u2014 it was countless individuals, in countless specific moments, choosing faster over more real." },
+    { kickerZh: "七 · 放弃学者身份", kickerEn: "VII · Giving Up the Scholar's Life", tagZh: "抉择", tagEn: "The Decision",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="#1a1610"/>${lsWash([{x:150,y:110,rx:160,ry:100,color:'#3a3020',op:.6}])}<g transform="translate(150,160) scale(0.65)">${lsFigure("resolved")}</g></svg>`,
+      textZh: "长晏做了一个让所有同僚不解的决定：辞去学院的职务，不再写论文、不再开讲座，只是收拾行囊，决定去往其他星域——不带着\u201c警告文明\u201d的宏大使命，只是想，遇到一个算一个，在具体的人卡在具体的坎前，说一句真正有用的话。",
+      textEn: "Chang Yan made a decision none of his colleagues understood: he resigned from the academy, stopped writing papers, stopped lecturing. He packed lightly and set out for other star domains \u2014 not carrying some grand mission to warn civilizations, but simply meaning to meet people one at a time, and say one truly useful thing to whoever stood stuck at their own specific threshold." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "旅人的起点", tagEn: "Where the Wanderer Began",
+      art: `<svg viewBox="0 0 300 220">${LS_DEFS}<rect width="300" height="220" fill="url(#lsSky)"/>${lsWash([{x:150,y:60,rx:150,ry:60,color:'#c9a76a',op:.2}])}${lsRing(1)}<g transform="translate(150,165) scale(0.6)">${lsFigure("resolved")}</g></svg>`,
+      textZh: "后来，苍冀星的息栎、焕蜕星域的折微、蜃岚星的停雪，都在各自最卡壳的时刻，遇见过一位来历不明的旅人，说了一句刚好能听进去的话，然后转身离开，从不逗留。\n\n没人知道，那句话，其实是他用五年，读完三个消亡的文明后，唯一敢确定的答案。",
+      textEn: "Later, Xi Li on Cangji, Zhe Wei in Huantui, Ting Xue on Shenlan \u2014 each, at their most stuck moment, met an unnamed traveler who said exactly the right thing, then turned and left, never lingering.\n\nNone of them knew that sentence was the only thing he'd dared to be certain of, after five years spent reading the fall of three vanished civilizations.",
+      closingZh: "他不再试图警告整个文明，只是选择，每次只对一个人，说一句真话。",
+      closingEn: "He stopped trying to warn whole civilizations. He chose, instead, to tell one true thing to one person, one at a time." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
