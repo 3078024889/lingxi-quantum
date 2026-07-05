@@ -1103,7 +1103,209 @@ const CHAOJIAN: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN];
+/* ---------- 焰驺契：焱阙星，锻造/异兽题材，全新原创，完整9页 ---------- */
+const YQ_DEFS = `<defs>
+  <filter id="yqGlow"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="yqSoft"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="yqSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0a06"/><stop offset="50%" stop-color="#5a2410"/><stop offset="100%" stop-color="#ff8a3d"/></linearGradient>
+  <radialGradient id="yqForge" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff3d0"/><stop offset="50%" stop-color="#ff8a3d"/><stop offset="100%" stop-color="#7a2e0a" stop-opacity="0"/></radialGradient>
+</defs>`;
+function yqWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:number}[]) {
+  return list.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#yqGlow)"/>`).join('');
+}
+function yqFigure() {
+  const robe = `<path d="M-11 -32 Q0 -38 11 -32 L15 26 Q0 34 -15 26 Z" fill="#2a1810"/>`;
+  const hair = `<path d="M-8 -44 Q0 -50 8 -44 L7 -36 Q0 -38 -7 -36 Z" fill="#1a0f08"/>`;
+  const head = `<circle cx="0" cy="-38" r="8" fill="#2a1810"/>`;
+  const smudge = `<circle cx="3" cy="-36" r="1.6" fill="#4a2a10" opacity=".7"/>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${robe}${head}${hair}${smudge}</g>`;
+}
+function yqBeast() {
+  return `<g>
+    <path d="M-60 30 Q-30 -50 0 -60 Q30 -50 60 30 Q20 0 0 8 Q-20 0 -60 30 Z" fill="url(#yqForge)" opacity=".9">
+      <animate attributeName="opacity" values=".75;1;.75" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="-14" cy="-30" r="5" fill="#fff3d0"/><circle cx="14" cy="-30" r="5" fill="#fff3d0"/>
+    <circle cx="-14" cy="-30" r="2" fill="#7a2e0a"><animate attributeName="r" values="2;0.3;2" dur="3.5s" repeatCount="indefinite"/></circle>
+    <circle cx="14" cy="-30" r="2" fill="#7a2e0a"><animate attributeName="r" values="2;0.3;2" dur="3.5s" repeatCount="indefinite"/></circle>
+  </g>`;
+}
+const YQ_COVER = `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="url(#yqSky)"/>${yqWash([{x:150,y:150,rx:150,ry:70,color:'#ff8a3d',op:.3}])}<g transform="translate(150,150) scale(0.6)">${yqBeast()}</g><g transform="translate(150,190) scale(0.5)">${yqFigure()}</g></svg>`;
+
+const YANZHOU_PACT: IllustratedEntry = {
+  slug: "the-yanzhou-pact",
+  title: "焰驺契",
+  titleEn: "The Yanzhou Pact",
+  cat: "field",
+  teaser: "焱阙星的锻造学徒，与一头只认\u201c耐心\u201d不认\u201c本事\u201d的守炉异兽——真正的信任，从来不是靠一次惊艳的表现赢来的。",
+  teaserEn: "A forging apprentice on Yanque Star, and a furnace-guardian beast that answers only to patience, never to talent. Trust is never won by a single dazzling display.",
+  price: 9,
+  cover: YQ_COVER,
+  pages: [
+    { kickerZh: "一 · 焱阙星", kickerEn: "I · Yanque Star", tagZh: "火山锻造之星", tagEn: "The Volcanic Forge-Star",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="url(#yqSky)"/><g transform="translate(150,170) scale(0.6)">${yqFigure()}</g></svg>`,
+      textZh: "焱阙星终年被岩浆的热浪笼罩，核心处有一座跨越三代人都没能锻完的巨炉。烬明是新入门的学徒，指关节和小臂上布满被火星烫出的细小疤痕，一头短发总是沾着炉灰，却从没想过要弹掉。他的师兄弟都说，他是这一批里，最没有\u201c天赋\u201d的一个。",
+      textEn: "Yanque Star is perpetually wrapped in the heat of magma, its core home to a colossal forge that three generations haven't finished tempering. Jin Ming, a new apprentice, has fine burn-scars scattered across his knuckles and forearms, his short hair perpetually dusted with forge-ash he never bothers to brush off. His fellow apprentices call him the least gifted of his cohort." },
+    { kickerZh: "二 · 焰驺", kickerEn: "II · Yanzhou", tagZh: "守炉异兽", tagEn: "The Furnace Guardian",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="#1a0a06"/>${yqWash([{x:150,y:110,rx:160,ry:100,color:'#5a2410',op:.7}])}<g transform="translate(150,140) scale(0.65)">${yqBeast()}</g></svg>`,
+      textZh: "巨炉深处住着焰驺——一头通体由熔岩纹路构成的异兽，传说唯有获得它认可的锻造者，才能真正驾驭巨炉的火候。历代最有天赋的学徒都曾尝试靠精湛技艺打动焰驺，无一例外，全部被一阵灼热的气浪逼退。",
+      textEn: "Deep within the great forge lives Yanzhou \u2014 a beast whose entire body is made of lava-vein patterns. Legend says only a smith it approves of can truly command the forge's heat. Every gifted apprentice across generations tried to win it over with masterful technique. Every one was driven back by a wave of searing heat." },
+    { kickerZh: "三 · 一次失败的表演", kickerEn: "III · A Failed Display", tagZh: "困境", tagEn: "The Setback",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="#241008"/>${yqWash([{x:150,y:110,rx:160,ry:100,color:'#5a2410',op:.75}])}<g transform="translate(150,165) scale(0.6)">${yqFigure()}</g></svg>`,
+      textZh: "烬明也曾试图用一次高难度的淬炼技法证明自己，结果炉火失控，几乎烧伤了自己的手臂。焰驺只是冷冷地望着他，没有丝毫要靠近的意思——它对\u201c惊艳\u201d这件事，从来无动于衷。",
+      textEn: "Jin Ming, too, once tried to prove himself with a difficult tempering technique, only for the flame to spiral out of control, nearly scorching his own arm. Yanzhou simply watched him coldly, showing no intention of drawing near \u2014 it had never once responded to \u201cimpressive.\u201d" },
+    { kickerZh: "四 · 师父的话", kickerEn: "IV · The Master's Words", tagZh: "教诲", tagEn: "Teaching",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="url(#yqSky)"/>${yqWash([{x:150,y:100,rx:150,ry:70,color:'#ff8a3d',op:.2}])}<g transform="translate(110,160) scale(0.5)">${yqFigure()}</g><g transform="translate(200,165) scale(0.45) scale(-1,1)"><path d="M-11 -32 Q0 -38 11 -32 L15 26 Q0 34 -15 26 Z" fill="#4a2a18"/><circle cx="0" cy="-38" r="8" fill="#2a1810"/></g></svg>`,
+      textZh: "师父告诉他：\u201c焰驺守着这座炉子，看过太多学徒只在人前用心，人后偷懒。它认的从不是哪次表演惊不惊艳，是你有没有，日复一日，诚实地对待每一炉火。\u201d",
+      textEn: "His master told him: \u201cYanzhou has guarded this forge long enough to see countless apprentices who only cared when watched. It has never judged by how dazzling a display was \u2014 only by whether you tend every single firing honestly, day after day, whether anyone's looking or not.\u201d" },
+    { kickerZh: "五 · 日复一日", kickerEn: "V · Day After Day", tagZh: "坚持", tagEn: "Persistence",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="#241008"/>${yqWash([{x:150,y:120,rx:160,ry:100,color:'#5a2410',op:.7}])}<g transform="translate(150,165) scale(0.6)">${yqFigure()}</g></svg>`,
+      textZh: "烬明不再想着如何被焰驺注意到，只是把每天最普通的添柴、控火、清炉，都做得比前一天更用心一点。他不再抬头看焰驺是否在看他，只是低头，把手里的活做好。",
+      textEn: "Jin Ming stopped thinking about how to catch Yanzhou's attention, and simply did the most ordinary tasks \u2014 feeding the fire, controlling the heat, clearing the ash \u2014 a little more carefully than the day before. He stopped glancing up to see if Yanzhou was watching, and just kept his head down, doing the work well." },
+    { kickerZh: "六 · 不经意的一瞥", kickerEn: "VI · An Unnoticed Glance", tagZh: "转折的信号", tagEn: "A Sign of Change",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="#1a0a06"/>${yqWash([{x:150,y:110,rx:160,ry:100,color:'#5a2410',op:.65}])}<g transform="translate(110,150) scale(0.5)">${yqFigure()}</g><g transform="translate(210,140) scale(0.4)">${yqBeast()}</g></svg>`,
+      textZh: "三个月后的一个普通清晨，烬明像往常一样清理炉膛，一抬头，发现焰驺竟破天荒地凑近了几分，静静看着他手里的活，没有灼人的气浪，只有一种近乎好奇的安静。",
+      textEn: "Three months later, on an ordinary morning, Jin Ming looked up while clearing the hearth to find Yanzhou had, for the first time ever, drawn a little closer \u2014 quietly watching his hands at work, no searing heat, only a stillness that felt almost curious." },
+    { kickerZh: "七 · 焰驺契", kickerEn: "VII · The Pact", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="url(#yqSky)"/>${yqWash([{x:150,y:100,rx:170,ry:110,color:'#fff3d0',op:.25}])}<g transform="translate(150,140) scale(0.65)">${yqBeast()}</g><g transform="translate(150,190) scale(0.5)">${yqFigure()}</g></svg>`,
+      textZh: "又过了半年，焰驺第一次主动将一小簇温和的火苗渡到烬明掌心——不灼人，只是暖。师父说，这就是\u201c焰驺契\u201d：不是一场考验的通过，而是长久的诚实，终于被另一种生命认了出来。",
+      textEn: "Half a year later, Yanzhou passed a small, gentle flame into Jin Ming's palm for the first time \u2014 warm, never burning. His master called it the Yanzhou Pact: not the passing of a trial, but long, quiet honesty finally recognized by another kind of life." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "传承", tagEn: "Passing It On",
+      art: `<svg viewBox="0 0 300 220">${YQ_DEFS}<rect width="300" height="220" fill="url(#yqSky)"/><g transform="translate(150,170) scale(0.6)">${yqFigure()}</g></svg>`,
+      textZh: "多年后，烬明成了焱阙星最受敬重的锻造师，却极少在人前展示技艺。每当有新学徒问他秘诀，他都只说一句：\u201c别想着让炉子记住你的厉害，先让自己，配得上被一头兽信任。\u201d",
+      textEn: "Years later, Jin Ming became Yanque's most respected smith, yet rarely performed for an audience. Whenever a new apprentice asked his secret, he offered only one line: \u201cDon't try to make the forge remember how skilled you are. First become someone worthy of a beast's trust.\u201d",
+      closingZh: "真正的信任，从来不是靠一次惊艳的表现赢来的，而是靠日复一日、没人看见时依然诚实的积累。",
+      closingEn: "True trust is never won by a single dazzling display — only by honest, unwitnessed persistence, day after day." },
+  ],
+};
+
+/* ---------- 归零：焕蜕星域，归零心诀题材，全新原创，完整9页 ---------- */
+const GL_DEFS = `<defs>
+  <filter id="glGlow"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="glSoft"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="glSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c0e14"/><stop offset="45%" stop-color="#3a1a28"/><stop offset="100%" stop-color="#d87b8a"/></linearGradient>
+  <radialGradient id="glGlowC" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e8"/><stop offset="100%" stop-color="#d87b8a" stop-opacity="0"/></radialGradient>
+</defs>`;
+function glWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:number}[]) {
+  return list.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#glGlow)"/>`).join('');
+}
+function glFigure(state: "tense" | "calm") {
+  const robe = `<path d="M-20 20 Q0 -6 20 20 Q26 30 0 34 Q-26 30 -20 20 Z" fill="#3a2430"/>`;
+  const torso = `<path d="M-11 -32 Q0 -37 11 -32 L14 20 Q0 26 -14 20 Z" fill="#3a2430"/>`;
+  const hair = `<path d="M-9 -46 Q0 -54 9 -46 Q10 -34 5 -28 Q0 -30 -5 -28 Q-10 -34 -9 -46 Z" fill="#1a0f16"/>`;
+  const head = `<circle cx="0" cy="-40" r="8" fill="#2a1c24"/>`;
+  const knot = state === "tense" ? `<circle cx="0" cy="-4" r="16" fill="#8a2c3a" opacity=".3" filter="url(#glSoft)"><animate attributeName="r" values="12;20;12" dur="1.2s" repeatCount="indefinite"/></circle>` : `<circle cx="0" cy="-4" r="20" fill="url(#glGlowC)" opacity=".4"><animate attributeName="opacity" values=".25;.5;.25" dur="4s" repeatCount="indefinite"/></circle>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${knot}${robe}${torso}${head}${hair}</g>`;
+}
+const GL_COVER = `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="url(#glSky)"/>${glWash([{x:150,y:150,rx:140,ry:60,color:'#d87b8a',op:.25}])}<g transform="translate(150,155) scale(0.65)">${glFigure("tense")}</g></svg>`;
+
+const RETURN_TO_ZERO: IllustratedEntry = {
+  slug: "return-to-zero",
+  title: "归零",
+  titleEn: "Return to Zero",
+  cat: "sovereign",
+  teaser: "焕蜕星域修习\u201c归零心诀\u201d的阮停，怎么静坐都清空不了心里的一个结——真正的归零，从不是不再有感觉，而是不再需要谁为此付出代价。",
+  teaserEn: "Ruan Ting practices the Heart Reset Method, yet one knot in her heart won't clear no matter how she sits. True reset was never about feeling nothing — it's no longer needing someone else to pay for it.",
+  price: 9,
+  cover: GL_COVER,
+  pages: [
+    { kickerZh: "一 · 归零心诀", kickerEn: "I · The Heart Reset Method", tagZh: "焕蜕星域 · 情绪淤积的清空术", tagEn: "Huantui \u00b7 A Practice for Clearing Stagnant Feeling",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="url(#glSky)"/><g transform="translate(150,160) scale(0.6)">${glFigure("tense")}</g></svg>`,
+      textZh: "焕蜕星域的\u201c归零心诀\u201d专攻情绪淤积的瞬间清空——理论上，任何积压的怨怼、委屈，都能在一次深度静坐里被彻底放下。阮停剪着利落的齐耳短发，习惯把长袍的领口系得一丝不苟，是这门心法里公认修得最扎实的弟子之一，唯独有一个结，怎么也清不掉。",
+      textEn: "Huantui's Heart Reset Method specializes in instantly clearing stagnant emotion \u2014 in theory, any accumulated resentment or grievance can be fully released in one deep sitting. Ruan Ting wears her hair cropped neatly at the ears, her robe collar always fastened precisely. Widely regarded as one of the practice's most accomplished students, she has one knot that refuses to clear, no matter what." },
+    { kickerZh: "二 · 那个结", kickerEn: "II · The Knot", tagZh: "困境", tagEn: "The Trouble",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="#1c0e14"/>${glWash([{x:150,y:110,rx:150,ry:90,color:'#3a1a28',op:.7}])}<g transform="translate(150,160) scale(0.65)">${glFigure("tense")}</g></svg>`,
+      textZh: "多年前，一位曾深深信任的师姐在公开场合窃取了她的心法笔记据为己出，阮停因此错失晋升。这些年，她的\u201c归零\u201d练得炉火纯青——唯独一坐到这段记忆，胸口那个结就死死地缩紧，怎么都松不开。",
+      textEn: "Years ago, a senior disciple she once trusted deeply stole her practice notes and claimed them as her own, costing Ruan Ting a promotion. Over the years, her \u201creset\u201d technique grew masterful \u2014 except whenever she sat with that memory, the knot in her chest clenched tight and would not release." },
+    { kickerZh: "三 · 一次又一次的失败", kickerEn: "III · Failing Again and Again", tagZh: "反复", tagEn: "Repetition",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="#241018"/>${glWash([{x:150,y:120,rx:160,ry:100,color:'#3a1a28',op:.75}])}<g transform="translate(150,165) scale(0.65) rotate(3)">${glFigure("tense")}</g></svg>`,
+      textZh: "她试过所有教科书上的清空步骤，甚至加练到别人的两倍时长，那个结依然纹丝不动。她开始怀疑，是不是自己的\u201c归零\u201d，从一开始就练歪了。",
+      textEn: "She tried every textbook step for clearing, even doubling her practice time beyond anyone else. The knot didn't budge. She began to wonder if her \u201creset\u201d had been practiced wrong from the very start." },
+    { kickerZh: "四 · 长老的提问", kickerEn: "IV · The Elder's Question", tagZh: "转折的契机", tagEn: "A Chance to See Clearly",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="url(#glSky)"/>${glWash([{x:150,y:100,rx:150,ry:70,color:'#d87b8a',op:.2}])}<g transform="translate(110,160) scale(0.5)">${glFigure("tense")}</g><g transform="translate(200,165) scale(0.45) scale(-1,1)"><path d="M-11 -32 Q0 -38 11 -32 L15 26 Q0 34 -15 26 Z" fill="#5a3a48"/><circle cx="0" cy="-38" r="8" fill="#3a2430"/></g></svg>`,
+      textZh: "一位长老听完她的困惑，只问了一句：\u201c你想清空的，是那份委屈，还是想清空之后，她能因此付出代价？\u201d阮停一时语塞——她从没意识到，自己的\u201c归零\u201d里，一直悄悄藏着一个条件。",
+      textEn: "An elder, hearing her trouble, asked only: \u201cWhat you want cleared \u2014 is it the grievance itself, or is it that clearing it should somehow make her pay?\u201d Ruan Ting was speechless. She had never realized her \u201creset\u201d had always carried a hidden condition." },
+    { kickerZh: "五 · 承认那个条件", kickerEn: "V · Admitting the Condition", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="#1c0e14"/>${glWash([{x:150,y:110,rx:160,ry:100,color:'#3a1a28',op:.7}])}<g transform="translate(150,160) scale(0.65)">${glFigure("tense")}</g></svg>`,
+      textZh: "她一开始拒绝承认——这听起来太不体面了，好像自己修行多年，练的全是表面功夫。可越是回避，那个结就收得越紧。她终于对自己坦白：她确实，一直暗暗希望那位师姐会因为做过的事而不好过。",
+      textEn: "At first she refused to admit it \u2014 it felt unflattering, as if years of practice had been surface work all along. But the more she avoided it, the tighter the knot pulled. She finally confessed to herself: yes, she had quietly wished, all this time, that the senior disciple would suffer for what she'd done." },
+    { kickerZh: "六 · 松开的不是怨恨", kickerEn: "VI · What Loosens Isn't the Grudge", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="url(#glSky)"/>${glWash([{x:150,y:100,rx:150,ry:70,color:'#ffe0e8',op:.2}])}<g transform="translate(150,160) scale(0.65)">${glFigure("calm")}</g></svg>`,
+      textZh: "承认的那一刻，她忽然明白：\u201c归零\u201d从来不是要她假装不委屈，而是让她不再需要\u201c对方受罚\u201d来证明自己受过的委屈是真的。这两件事，原来一直被她混成了一件事。",
+      textEn: "The instant she admitted it, she understood: the reset was never about pretending she hadn't been wronged. It was releasing the need for the other's punishment to prove her hurt was real. She had conflated the two all along." },
+    { kickerZh: "七 · 心结解开", kickerEn: "VII · The Knot Releases", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="#0c0610"/>${glWash([{x:150,y:100,rx:180,ry:120,color:'#ffe0e8',op:.3}])}<g transform="translate(150,160) scale(0.7)">${glFigure("calm")}</g></svg>`,
+      textZh: "那次静坐，胸口的结第一次真正松开，不是因为她说服自己\u201c算了\u201d，而是因为她终于把\u201c这件事很委屈\u201d和\u201c她必须付出代价\u201d，拆成了两件事——前者，她可以带着继续往前走；后者，从来不是她该扛的。",
+      textEn: "In that sitting, the knot in her chest finally released \u2014 not because she talked herself into \u201clet it go,\u201d but because she finally separated \u201cthis truly wronged me\u201d from \u201cshe must pay for it.\u201d The first, she could carry forward. The second was never hers to carry at all." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "教导后辈", tagEn: "Teaching Others",
+      art: `<svg viewBox="0 0 300 220">${GL_DEFS}<rect width="300" height="220" fill="url(#glSky)"/><g transform="translate(150,165) scale(0.6)">${glFigure("calm")}</g></svg>`,
+      textZh: "后来，每当有师弟师妹练\u201c归零心诀\u201d怎么都练不透，阮停都会先问他们同一句话：\u201c你想清空的，是这份感受，还是想借清空，让对方付出代价？\u201d很多人，第一次被问住。",
+      textEn: "Later, whenever a junior disciple couldn't get the Heart Reset Method to truly work, Ruan Ting would ask the same question first: \u201cIs it the feeling itself you want to clear, or are you using \u2018clearing\u2019 to make someone else pay?\u201d Many were stopped cold, hearing it for the first time.",
+      closingZh: "真正的归零，从不是不再有感觉，而是不再需要谁为你的感受，付出代价。",
+      closingEn: "True reset was never about feeling nothing — it's no longer needing anyone else to pay for what you feel." },
+  ],
+};
+
+/* ---------- 观测之眼：墨渊星系，遥视训练/黑洞题材，全新原创，完整9页 ---------- */
+const MY_DEFS = `<defs>
+  <filter id="myGlow"><feGaussianBlur stdDeviation="10"/></filter>
+  <filter id="mySoft"><feGaussianBlur stdDeviation="2"/></filter>
+  <radialGradient id="myVoid" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#000"/><stop offset="60%" stop-color="#1a0a2a"/><stop offset="100%" stop-color="#4a2a6a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="myRing" cx="50%" cy="50%" r="50%"><stop offset="70%" stop-color="transparent"/><stop offset="85%" stop-color="#c9a2ff"/><stop offset="100%" stop-color="transparent"/></radialGradient>
+</defs>`;
+function myFigure() {
+  const robe = `<path d="M-11 -32 Q0 -38 11 -32 L15 26 Q0 34 -15 26 Z" fill="#0e0a1c"/>`;
+  const hair = `<path d="M-8 -44 Q0 -50 8 -44 Q8 -36 4 -32" fill="#08061420"/>`;
+  const head = `<circle cx="0" cy="-38" r="8" fill="#12102a"/>`;
+  const blindfold = `<rect x="-8" y="-40" width="16" height="4" fill="#c9a2ff" opacity=".8"/>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}${blindfold}</g>`;
+}
+const MY_COVER = `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#050310"/><circle cx="150" cy="90" r="60" fill="url(#myVoid)"/><circle cx="150" cy="90" r="60" fill="url(#myRing)"><animateTransform attributeName="transform" type="rotate" from="0 150 90" to="360 150 90" dur="40s" repeatCount="indefinite"/></circle><g transform="translate(150,170) scale(0.55)">${myFigure()}</g></svg>`;
+
+const EYE_OF_OBSERVATION: IllustratedEntry = {
+  slug: "the-eye-of-observation",
+  title: "观测之眼",
+  titleEn: "The Eye of Observation",
+  cat: "sovereign",
+  teaser: "墨渊星系的遥视者公会新弟子，第一课不是学会\u201c看见\u201d，而是学会不把自己，投射进看见的东西里。",
+  teaserEn: "A new disciple at the remote viewers' guild orbiting a black hole. The first lesson isn't learning to see — it's learning not to project yourself onto what you see.",
+  price: 9,
+  cover: MY_COVER,
+  pages: [
+    { kickerZh: "一 · 墨渊星系", kickerEn: "I · The Moyuan System", tagZh: "黑洞环绕 · 遥视者公会总部", tagEn: "Black-Hole-Ringed \u00b7 Guild Headquarters",
+      art: `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#050310"/><circle cx="150" cy="90" r="55" fill="url(#myVoid)"/><g transform="translate(150,170) scale(0.55)">${myFigure()}</g></svg>`,
+      textZh: "墨渊星系由三个黑洞彼此环绕而成，遥视者公会的总部就悬浮在引力最稳定的中心点。新弟子沈砚剃着一头极短的寸发，双眼总蒙着一条素色的布——公会规定，未出师的弟子，必须先学会\u201c不用眼睛看\u201d。",
+      textEn: "The Moyuan System is formed by three black holes orbiting one another; the remote viewers' guild headquarters floats at the gravitationally stable center. Shen Yan, a new disciple, keeps his hair cropped nearly to the scalp, his eyes perpetually covered by a plain cloth \u2014 guild rule requires the unproven to first learn to see without eyes." },
+    { kickerZh: "二 · 第一课", kickerEn: "II · The First Lesson", tagZh: "训练", tagEn: "Training",
+      art: `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#08051a"/><circle cx="150" cy="90" r="60" fill="url(#myVoid)"/><g transform="translate(150,170) scale(0.6)">${myFigure()}</g></svg>`,
+      textZh: "导师给他的第一个任务，是遥视公会大殿里的一件摆设，回来描述形状。沈砚描述得头头是道，导师却摇头：\u201c你描述的，是你以为它该是的样子，不是它本来的样子。\u201d",
+      textEn: "His mentor's first assignment: remote-view an object in the guild's main hall and describe its shape. Shen Yan described it fluently and confidently. His mentor shook his head: \u201cYou described what you assumed it should look like, not what it actually was.\u201d" },
+    { kickerZh: "三 · 反复失败", kickerEn: "III · Failing Repeatedly", tagZh: "困境", tagEn: "The Trouble",
+      art: `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#050310"/><circle cx="150" cy="90" r="60" fill="url(#myVoid)"/><g transform="translate(150,170) scale(0.65) rotate(3)">${myFigure()}</g></svg>`,
+      textZh: "接下来的一个月，沈砚每一次遥视，都不自觉地把自己的猜测、期待、甚至恐惧，掺进了\u201c看见\u201d的结果里。他开始怀疑，自己是不是根本没有遥视的天赋。",
+      textEn: "Over the following month, every viewing session, Shen Yan unconsciously folded his own guesses, expectations, even fears into what he \u201csaw.\u201d He began to doubt whether he had any aptitude for remote viewing at all." },
+    { kickerZh: "四 · 导师的比喻", kickerEn: "IV · The Mentor's Metaphor", tagZh: "教诲", tagEn: "Teaching",
+      art: `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#08051a"/><circle cx="150" cy="90" r="55" fill="url(#myVoid)"/><g transform="translate(110,170) scale(0.5)">${myFigure()}</g><g transform="translate(200,175) scale(0.45)"><path d="M-11 -32 Q0 -38 11 -32 L15 26 Q0 34 -15 26 Z" fill="#1a1430"/><circle cx="0" cy="-38" r="8" fill="#0e0a1c"/></g></svg>`,
+      textZh: "导师指着悬在天顶的黑洞说：\u201c黑洞周围的光会被引力弯曲，你看到的星星位置，其实不是它真正所在的地方。观测者的\u2018自己\u2019，就是这团引力——你越想看清，就越要先学会，看见你自己在怎么弯曲它。\u201d",
+      textEn: "His mentor pointed to the black hole overhead. \u201cLight bending around a black hole means the star you see isn't where it actually sits. The observer's own \u2018self\u2019 is exactly that gravity \u2014 the clearer you want to see, the more you must first learn to see how you're bending it.\u201d" },
+    { kickerZh: "五 · 学着看见自己", kickerEn: "V · Learning to See Himself", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#050310"/><circle cx="150" cy="90" r="60" fill="url(#myVoid)"/><g transform="translate(150,170) scale(0.6)">${myFigure()}</g></svg>`,
+      textZh: "沈砚开始在每次遥视前，先花时间觉察自己此刻的情绪和期待——今天是不是特别希望看到什么，或者害怕看到什么。渐渐地，他\u201c看见\u201d的东西，开始和别人核对的结果，越来越吻合。",
+      textEn: "Before each viewing, Shen Yan began spending time noticing his own emotions and expectations \u2014 whether he especially hoped to see something today, or feared it. Gradually, what he \u201csaw\u201d began matching cross-verified results more and more closely." },
+    { kickerZh: "六 · 摘下蒙布的那天", kickerEn: "VI · The Day the Blindfold Came Off", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#08051a"/><circle cx="150" cy="90" r="60" fill="url(#myVoid)"/><circle cx="150" cy="90" r="60" fill="url(#myRing)"><animateTransform attributeName="transform" type="rotate" from="0 150 90" to="360 150 90" dur="20s" repeatCount="indefinite"/></circle><g transform="translate(150,170) scale(0.65)">${myFigure()}</g></svg>`,
+      textZh: "结业那天，导师第一次允许他摘下蒙布，遥视整片墨渊星系。沈砚看见的，不再是自己脑海里\u201c以为的\u201d星图，而是三个黑洞彼此牵引、彼此弯曲、却始终维持着精妙平衡的真实样子。",
+      textEn: "On graduation day, his mentor let him remove the blindfold for the first time to view the entire Moyuan System. What Shen Yan saw was no longer the star-map he'd \u201cassumed\u201d in his mind, but the real shape of three black holes pulling and bending one another, yet holding a delicate balance." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "公会的新弟子", tagEn: "The Guild's Newest Disciples",
+      art: `<svg viewBox="0 0 300 220">${MY_DEFS}<rect width="300" height="220" fill="#050310"/><circle cx="150" cy="90" r="55" fill="url(#myVoid)"/><g transform="translate(150,170) scale(0.6)">${myFigure()}</g></svg>`,
+      textZh: "沈砚后来成了带教导师，教新弟子的第一课，仍然是蒙上双眼。他总说：\u201c你们以为这是在学怎么看见更远的地方，其实，这是在学怎么，先看清自己。\u201d",
+      textEn: "Shen Yan later became a mentor himself, and his first lesson for new disciples remained the same: blindfold on. He always said, \u201cYou think you're learning to see farther. You're actually learning to see yourself clearly, first.\u201d",
+      closingZh: "看得多远不是关键，先看清自己怎么弯曲了眼前的一切，才是遥视真正的起点。",
+      closingEn: "How far you can see was never the point. Seeing clearly how you bend what's in front of you — that's where true seeing begins." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
