@@ -184,15 +184,17 @@ function xxWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:num
 
 function xxSit(state: "calm" | "strained" | "breakthrough") {
   const robe = `<path d="M-20 20 Q0 -6 20 20 Q26 30 0 34 Q-26 30 -20 20 Z" fill="url(#xxRobe)"/>`;
-  const torso = `<path d="M-11 -34 Q0 -40 11 -34 L14 20 Q0 26 -14 20 Z" fill="url(#xxRobe)"><animate attributeName="d" values="M-11 -34 Q0 -40 11 -34 L14 20 Q0 26 -14 20 Z;M-13 -38 Q0 -46 13 -38 L15 20 Q0 26 -15 20 Z;M-11 -34 Q0 -40 11 -34 L14 20 Q0 26 -14 20 Z" dur="3.4s" repeatCount="indefinite"/></path>`;
-  const head = `<circle cx="0" cy="-46" r="8.5" fill="#20352c"/>`;
-  const armL = `<path d="M-11 -28 Q-20 -10 -8 4" stroke="#1a2e26" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
-  const armR = `<path d="M11 -28 Q20 -10 8 4" stroke="#1a2e26" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+  const torso = `<path d="M-11 -32 Q0 -37 11 -32 L14 20 Q0 26 -14 20 Z" fill="url(#xxRobe)"><animate attributeName="d" values="M-11 -32 Q0 -37 11 -32 L14 20 Q0 26 -14 20 Z;M-13 -36 Q0 -43 13 -36 L15 20 Q0 26 -15 20 Z;M-11 -32 Q0 -37 11 -32 L14 20 Q0 26 -14 20 Z" dur="3.4s" repeatCount="indefinite"/></path>`;
+  // 长发垂肩，额前一撮不听话的碎发
+  const hair = `<path d="M-9 -44 Q0 -54 9 -44 Q13 -20 8 6 Q0 10 -8 6 Q-13 -20 -9 -44 Z" fill="#12201a"/><path d="M-2 -50 Q1 -46 -1 -42" stroke="#12201a" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
+  const head = `<circle cx="0" cy="-44" r="8" fill="#20352c"/>`;
+  const armL = `<path d="M-11 -26 Q-20 -8 -8 6" stroke="#1a2e26" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+  const armR = `<path d="M11 -26 Q20 -8 8 6" stroke="#1a2e26" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
   let glow = "";
-  if (state === "calm") glow = `<circle cx="0" cy="-10" r="24" fill="url(#xxGlow)" opacity=".35" filter="url(#xxSoft)"><animate attributeName="r" values="16;34;16" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".2;.5;.2" dur="3.4s" repeatCount="indefinite"/></circle>`;
-  if (state === "strained") glow = `<circle cx="0" cy="-10" r="30" fill="#d8c07a" opacity=".22" filter="url(#xxSoft)"><animate attributeName="r" values="20;38;20" dur="0.9s" repeatCount="indefinite"/><animate attributeName="opacity" values=".15;.4;.15" dur="0.9s" repeatCount="indefinite"/></circle>`;
-  if (state === "breakthrough") glow = `<circle cx="0" cy="-10" r="60" fill="url(#xxGlow)" opacity=".55" filter="url(#xxSoft)"><animate attributeName="r" values="42;78;42" dur="2.6s" repeatCount="indefinite"/></circle>`;
-  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.4s" repeatCount="indefinite"/>${glow}${robe}${torso}${armL}${armR}${head}</g>`;
+  if (state === "calm") glow = `<circle cx="0" cy="-8" r="24" fill="url(#xxGlow)" opacity=".35" filter="url(#xxSoft)"><animate attributeName="r" values="16;34;16" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".2;.5;.2" dur="3.4s" repeatCount="indefinite"/></circle>`;
+  if (state === "strained") glow = `<circle cx="0" cy="-8" r="30" fill="#d8c07a" opacity=".22" filter="url(#xxSoft)"><animate attributeName="r" values="20;38;20" dur="0.9s" repeatCount="indefinite"/><animate attributeName="opacity" values=".15;.4;.15" dur="0.9s" repeatCount="indefinite"/></circle>`;
+  if (state === "breakthrough") glow = `<circle cx="0" cy="-8" r="60" fill="url(#xxGlow)" opacity=".55" filter="url(#xxSoft)"><animate attributeName="r" values="42;78;42" dur="2.6s" repeatCount="indefinite"/></circle>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.4s" repeatCount="indefinite"/>${glow}${robe}${torso}${armL}${armR}${head}${hair}</g>`;
 }
 
 const XI_COVER = `<svg viewBox="0 0 300 220">${XI_DEFS}<rect width="300" height="220" fill="url(#xxSky)"/><rect width="300" height="220" filter="url(#xxPaper)"/>
@@ -307,12 +309,15 @@ function mwWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:num
   return list.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#mwGlow)"/>`).join('');
 }
 function mwPerson(pose: "still" | "reach") {
-  const body = `<path d="M-13 -40 Q0 -48 13 -40 L18 30 Q0 40 -18 30 Z" fill="url(#mwCloak)"/>`;
-  const head = `<circle cx="0" cy="-56" r="9" fill="#2a2140"/>`;
-  const glow = `<ellipse cx="0" cy="-20" rx="30" ry="55" fill="#e8d9c3" opacity=".08" filter="url(#mwGlow)"><animate attributeName="opacity" values=".05;.16;.05" dur="4s" repeatCount="indefinite"/></ellipse>`;
-  const armL = pose === "reach" ? `<path d="M-13 -32 Q-30 -10 -26 18" stroke="#241d3a" stroke-width="5" fill="none" stroke-linecap="round"/>` : `<path d="M-13 -32 Q-20 -14 -16 6" stroke="#241d3a" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-  const armR = `<path d="M13 -32 Q20 -14 16 6" stroke="#241d3a" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -5;0 0" dur="4.5s" repeatCount="indefinite"/>${glow}${body}${armL}${armR}${head}</g>`;
+  const cloak = `<path d="M-15 -38 Q0 -46 15 -38 L20 32 Q0 42 -20 32 Z" fill="url(#mwCloak)"/>`;
+  // 及腰直发
+  const hair = `<path d="M-8 -50 Q0 -58 8 -50 Q11 -10 6 30 Q0 34 -6 30 Q-11 -10 -8 -50 Z" fill="#171029"/>`;
+  const head = `<circle cx="0" cy="-52" r="8" fill="#2a2140"/>`;
+  const badge = `<circle cx="-11" cy="-30" r="2.2" fill="#c9c3d8" opacity=".9"><animate attributeName="opacity" values=".6;1;.6" dur="3s" repeatCount="indefinite"/></circle>`;
+  const glow = `<ellipse cx="0" cy="-16" rx="30" ry="55" fill="#e8d9c3" opacity=".08" filter="url(#mwGlow)"><animate attributeName="opacity" values=".05;.16;.05" dur="4s" repeatCount="indefinite"/></ellipse>`;
+  const armL = pose === "reach" ? `<path d="M-15 -28 Q-32 -8 -28 20" stroke="#241d3a" stroke-width="5" fill="none" stroke-linecap="round"/>` : `<path d="M-15 -28 Q-22 -10 -18 8" stroke="#241d3a" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  const armR = `<path d="M15 -28 Q22 -10 18 8" stroke="#241d3a" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -5;0 0" dur="4.5s" repeatCount="indefinite"/>${glow}${cloak}${armL}${armR}${head}${hair}${badge}</g>`;
 }
 const MW_COVER = `<svg viewBox="0 0 300 220">${MW_DEFS}<rect width="300" height="220" fill="url(#mwSky)"/>
   ${mwWash([{x:230,y:170,rx:110,ry:60,color:'#caa07a',op:.35},{x:40,y:190,rx:90,ry:40,color:'#171331',op:.5}])}
@@ -436,11 +441,15 @@ function fbWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:num
 function fbFigure(pose: "kneel" | "reach" | "glow") {
   const robe = `<path d="M-16 24 Q0 -4 16 24 Q20 32 0 36 Q-20 32 -16 24 Z" fill="url(#fbRobe)"/>`;
   const torso = `<path d="M-10 -30 Q0 -36 10 -30 L13 24 Q0 30 -13 24 Z" fill="url(#fbRobe)"/>`;
-  const head = `<circle cx="0" cy="-42" r="8" fill="#241708"/>`;
-  const armL = pose === "reach" ? `<path d="M-10 -25 Q-26 -10 -20 8" stroke="#1c1108" stroke-width="4.5" fill="none" stroke-linecap="round"/>` : `<path d="M-10 -25 Q-16 -8 -12 6" stroke="#1c1108" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
-  const armR = `<path d="M10 -25 Q16 -8 12 6" stroke="#1c1108" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
-  const glow = pose === "glow" ? `<circle cx="0" cy="-4" r="46" fill="url(#fbVein)" opacity=".6" filter="url(#fbGlow)"><animate attributeName="r" values="34;62;34" dur="2.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".4;.75;.4" dur="2.6s" repeatCount="indefinite"/></circle>` : "";
-  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.8s" repeatCount="indefinite"/>${glow}${robe}${torso}${armL}${armR}${head}</g>`;
+  // 利落短发
+  const hair = `<path d="M-8 -38 Q0 -46 8 -38 Q9 -32 6 -28 Q0 -30 -6 -28 Q-9 -32 -8 -38 Z" fill="#1c1108"/>`;
+  const head = `<circle cx="0" cy="-36" r="8" fill="#241708"/>`;
+  const armL = pose === "reach" ? `<path d="M-10 -22 Q-26 -8 -20 12" stroke="#1c1108" stroke-width="4.5" fill="none" stroke-linecap="round"/>` : `<path d="M-10 -22 Q-16 -6 -12 10" stroke="#1c1108" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+  const armR = `<path d="M10 -22 Q16 -6 12 10" stroke="#1c1108" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+  // 手臂上的灼痕细节
+  const scars = `<line x1="-16" y1="0" x2="-13" y2="4" stroke="#8a5a2a" stroke-width="1" opacity=".7"/><line x1="14" y1="0" x2="17" y2="3" stroke="#8a5a2a" stroke-width="1" opacity=".7"/>`;
+  const glow = pose === "glow" ? `<circle cx="0" cy="0" r="46" fill="url(#fbVein)" opacity=".6" filter="url(#fbGlow)"><animate attributeName="r" values="34;62;34" dur="2.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".4;.75;.4" dur="2.6s" repeatCount="indefinite"/></circle>` : "";
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.8s" repeatCount="indefinite"/>${glow}${robe}${torso}${armL}${armR}${scars}${head}${hair}</g>`;
 }
 function fbVeinShape(alive: boolean) {
   const pulse = alive ? `<animate attributeName="opacity" values=".55;.85;.55" dur="2.6s" repeatCount="indefinite"/>` : "";
@@ -650,11 +659,13 @@ function esStrata(depth: number) {
   return `<g opacity=".85">${colors.map((c,i)=>`<rect x="0" y="${40+i*32}" width="300" height="30" fill="${c}" opacity="${i<=depth?0.9:0.3}"/>`).join('')}</g>`;
 }
 function esFigure(pose: "stand" | "descend" | "kneel") {
-  const robe = `<path d="M-13 -40 Q0 -48 13 -40 L18 30 Q0 40 -18 30 Z" fill="url(#esRobe)"/>`;
-  const head = `<circle cx="0" cy="-56" r="9" fill="#241530"/>`;
-  const armL = pose === "descend" ? `<path d="M-13 -32 Q-24 0 -18 24" stroke="#1c1024" stroke-width="5" fill="none" stroke-linecap="round"/>` : `<path d="M-13 -32 Q-20 -12 -16 8" stroke="#1c1024" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-  const armR = `<path d="M13 -32 Q20 -12 16 8" stroke="#1c1024" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="4s" repeatCount="indefinite"/>${robe}${armL}${armR}${head}</g>`;
+  const robe = `<path d="M-11 -42 Q0 -50 11 -42 L16 32 Q0 42 -16 32 Z" fill="url(#esRobe)"/>`;
+  const head = `<circle cx="0" cy="-58" r="8" fill="#241530"/>`;
+  const armL = pose === "descend" ? `<path d="M-11 -34 Q-22 0 -16 26" stroke="#1c1024" stroke-width="4.2" fill="none" stroke-linecap="round"/>` : `<path d="M-11 -34 Q-18 -12 -14 10" stroke="#1c1024" stroke-width="4.2" fill="none" stroke-linecap="round"/>`;
+  const armR = `<path d="M11 -34 Q18 -12 14 10" stroke="#1c1024" stroke-width="4.2" fill="none" stroke-linecap="round"/>`;
+  // 护腕状的场域灼印
+  const bracelets = `<circle cx="-15" cy="8" r="3" fill="none" stroke="#c97b6a" stroke-width="1" opacity=".7"/><circle cx="13" cy="8" r="3" fill="none" stroke="#c97b6a" stroke-width="1" opacity=".7"/>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="4s" repeatCount="indefinite"/>${robe}${armL}${armR}${bracelets}${head}</g>`;
 }
 const ES_COVER = `<svg viewBox="0 0 300 220">${ES_DEFS}<rect width="300" height="220" fill="url(#esSky)"/><rect width="300" height="220" filter="url(#esPaper)"/>
   ${esStrata(1)}
@@ -798,7 +809,77 @@ const THE_PROOFREADER: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER];
+/* ---------- 瞬愿之重：金曜星，念现界/警示寓言，全新原创，完整9页 ---------- */
+const JY_DEFS = `<defs>
+  <filter id="jyGlow"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="jySoft"><feGaussianBlur stdDeviation="2"/></filter>
+  <radialGradient id="jyBurst" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6d8"/><stop offset="40%" stop-color="#ffd76a"/><stop offset="100%" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient>
+  <linearGradient id="jySky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a1206"/><stop offset="50%" stop-color="#4a2e0a"/><stop offset="100%" stop-color="#d8901a"/></linearGradient>
+</defs>`;
+function jyFigure(state: "radiant" | "overwhelmed" | "still") {
+  const robe = `<path d="M-12 -32 Q0 -38 12 -32 L16 28 Q0 36 -16 28 Z" fill="#2a1c08"/>`;
+  // 高马尾，象征躁动的能量感
+  const hair = `<path d="M-8 -46 Q0 -54 8 -46 Q10 -40 6 -36" fill="#1a1004"/><path d="M6 -44 Q22 -38 24 -20" stroke="#1a1004" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  const head = `<circle cx="0" cy="-42" r="8" fill="#2a1c08"/>`;
+  let extras = "";
+  if (state === "radiant") extras = `<circle cx="0" cy="-6" r="40" fill="url(#jyBurst)" opacity=".7"><animate attributeName="r" values="30;50;30" dur="1.6s" repeatCount="indefinite"/></circle>`;
+  if (state === "overwhelmed") extras = `<g opacity=".8">${Array.from({length:8}).map((_,i)=>{const a=i*45*Math.PI/180;return `<rect x="${20*Math.cos(a)-4}" y="${-6+20*Math.sin(a)-4}" width="8" height="8" fill="#ffd76a" opacity=".7"><animate attributeName="opacity" values=".3;.9;.3" dur="${1+i*.1}s" repeatCount="indefinite"/></rect>`}).join('')}</g>`;
+  if (state === "still") extras = `<circle cx="0" cy="-6" r="14" fill="url(#jyBurst)" opacity=".3"><animate attributeName="opacity" values=".15;.4;.15" dur="4s" repeatCount="indefinite"/></circle>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${extras}${robe}${head}${hair}</g>`;
+}
+const JY_COVER = `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="url(#jySky)"/>
+  <g fill="#ffd76a" opacity=".8">${Array.from({length:14}).map(()=>{const x=Math.random()*300,y=Math.random()*160,s=Math.random()*10+4;return `<rect x="${x}" y="${y}" width="${s}" height="${s}" opacity="${Math.random()*.6+.3}"><animate attributeName="opacity" values="0;1;0" dur="${1+Math.random()*2}s" repeatCount="indefinite"/></rect>`}).join('')}</g>
+  <g transform="translate(150,170) scale(0.6)">${jyFigure("radiant")}</g>
+</svg>`;
+
+const WEIGHT_OF_INSTANT_WISH: IllustratedEntry = {
+  slug: "weight-of-the-instant-wish",
+  title: "瞬愿之重",
+  titleEn: "The Weight of the Instant Wish",
+  cat: "rewrite",
+  teaser: "金曜星念现界最快的显化者，念头一起，物质瞬间成形——直到她再也分不清，哪些是自己真正想要的。",
+  teaserEn: "The fastest manifester on Jinyao Star — a thought, and matter appears instantly. Until she can no longer tell which of her wants are truly her own.",
+  price: 9,
+  cover: JY_COVER,
+  pages: [
+    { kickerZh: "一 · 金曜星", kickerEn: "I · Jinyao Star", tagZh: "念现界 · 意念即刻成物", tagEn: "The Instant-Manifest Realm",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="url(#jySky)"/><g transform="translate(150,160) scale(0.55)">${jyFigure("radiant")}</g></svg>`,
+      textZh: "金曜星被稠密的电离层包裹，是念现界的所在地——这里的意念足够纯粹时，物质会在瞬间成形，快到几乎凭空出现。澈玥梳着一头利落的高马尾，眼神总带着一丝没能歇下来的亢奋，是金曜星有史以来显化速度最快的人，十六岁就被称为\u201c神童\u201d。",
+      textEn: "Jinyao Star is wrapped in a dense ionosphere \u2014 home to the Instant-Manifest Realm, where a pure enough intention becomes matter in a heartbeat, almost out of nothing. Che Yue wears her hair in a sharp high ponytail, her eyes carrying a restlessness that never quite settles. She is the fastest manifester in Jinyao's history, called a prodigy since sixteen." },
+    { kickerZh: "二 · 众人的追捧", kickerEn: "II · Everyone's Admiration", tagZh: "念现竞技", tagEn: "Manifestation Contests",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="#1a1206"/><g transform="translate(150,160) scale(0.6)">${jyFigure("radiant")}</g></svg>`,
+      textZh: "金曜星的文化崇尚\u201c快\u201d：谁能把念头变成实物的速度越快，谁就越受尊敬。澈玥每一次公开显化，都能引来满场惊叹——她甚至不需要想清楚要什么，念头刚冒出一半，物件已经成形在掌心。",
+      textEn: "Jinyao culture worships speed: the faster a thought becomes an object, the more esteemed you are. Every public display Che Yue gave drew gasps of astonishment \u2014 she didn't even need to finish forming a thought before the object was already solid in her palm." },
+    { kickerZh: "三 · 堆积如山", kickerEn: "III · The Pile-Up", tagZh: "困境", tagEn: "The Trouble",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="#241708"/><g transform="translate(150,165) scale(0.6)">${jyFigure("overwhelmed")}</g></svg>`,
+      textZh: "渐渐地，澈玥的居所堆满了她想不起为什么显化出来的东西——一盏她从没点过的灯，七八件从没穿过的衣服，一整墙叫不出名字的摆件。她开始害怕，自己好像已经分不清，哪个念头是\u201c真正想要\u201d，哪个只是一闪而过的反射。",
+      textEn: "Gradually, Che Yue's home filled with objects she couldn't remember wanting \u2014 a lamp never lit, seven or eight garments never worn, a whole wall of ornaments she couldn't name. She grew afraid that she could no longer tell a genuine want from a passing reflex." },
+    { kickerZh: "四 · 崩溃的边缘", kickerEn: "IV · The Edge of Breakdown", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="#1a1206"/><g transform="translate(150,165) scale(0.65) rotate(4)">${jyFigure("overwhelmed")}</g></svg>`,
+      textZh: "一次公开表演上，澈玥站在台前，脑中一片空白——她第一次说不出自己想显化什么。观众的欢呼声还在，她却感到一种前所未有的恐慌：如果连自己想要什么都不知道，那这些年被追捧的\u201c天赋\u201d，到底是什么？",
+      textEn: "At a public performance, Che Yue stood before the crowd, mind blank \u2014 for the first time, she couldn't say what she wanted to manifest. The cheers continued, but she felt an unprecedented panic: if she didn't even know what she wanted, what had her celebrated \u201cgift\u201d ever actually been?" },
+    { kickerZh: "五 · 一位旅人的教诲", kickerEn: "V · A Traveler's Teaching", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="#241708"/><g transform="translate(110,160) scale(0.5)">${jyFigure("still")}</g><g transform="translate(200,160) scale(0.5) scale(-1,1)"><path d="M-11 -34 Q0 -40 11 -34 L15 26 Q0 34 -15 26 Z" fill="#12251e"/><circle cx="0" cy="-44" r="8" fill="#20352c"/></g></svg>`,
+      textZh: "一位途经此地的旅人——族人叫他长晏——看她坐在满屋杂物中久久不语，只说了一句：\u201c金曜星最大的谎言，是把\u2018能不能立刻实现\u2019，当成了\u2018值不值得想要\u2019的证明。\u201d",
+      textEn: "A traveler passing through \u2014 the locals called him Chang Yan \u2014 watched her sit silent amid the clutter, and said only: \u201cJinyao's greatest lie is mistaking \u2018can it happen instantly\u2019 for proof of \u2018is it worth wanting.\u201d\u201d" },
+    { kickerZh: "六 · 静念的戒律", kickerEn: "VI · The Discipline of Stillness", tagZh: "冲突 · 戒断", tagEn: "Conflict \u00b7 Withdrawal",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="#1a1206"/><g transform="translate(150,165) scale(0.6)">${jyFigure("still")}</g></svg>`,
+      textZh: "长晏教她一条几乎违背金曜星天性的戒律：\u201c静念\u201d——察觉到念头升起时，先不显化，只是看着它，等到第二天，再问自己是否还想要。澈玥试了第一天，浑身难受得像戒断什么一样，几次差点没忍住。",
+      textEn: "Chang Yan taught her a discipline nearly against Jinyao's very nature: \u201cstillness of intention\u201d \u2014 noticing a wish arise, but not manifesting it, only watching it, and asking the next day whether she still wanted it. The first day felt like withdrawal. She nearly broke twice." },
+    { kickerZh: "七 · 空了一整天", kickerEn: "VII · A Whole Day of Nothing", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="#241708"/><g transform="translate(150,160) scale(0.65)">${jyFigure("still")}</g></svg>`,
+      textZh: "她第一次坚持完整的一天，没有显化任何东西。夜里躺下时，脑海忽然浮出一个跟\u201c物件\u201d毫无关系的念头——她想给多年没联系的母亲写一封信。这个念头很安静，没有半点想要立刻实现的急迫感，却比过去十年任何一次显化，都更清晰。",
+      textEn: "For the first time, she completed a full day without manifesting anything. Lying down that night, a thought surfaced that had nothing to do with objects at all \u2014 she wanted to write to her estranged mother. The thought was quiet, with no urgency to make it instant, yet clearer than anything she'd manifested in ten years." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "重新学习想要", tagEn: "Relearning How to Want",
+      art: `<svg viewBox="0 0 300 220">${JY_DEFS}<rect width="300" height="220" fill="url(#jySky)"/><g transform="translate(150,165) scale(0.6)">${jyFigure("still")}</g></svg>`,
+      textZh: "澈玥后来仍是金曜星显化最快的人之一，但她多了一个习惯：每次念头升起，先问自己一句——\u201c这是我想要的，还是我只是想要\u2018立刻拥有\u2019的那种感觉？\u201d\n\n她把这句话，也教给了后来找她拜师的每一个孩子。",
+      textEn: "Che Yue remained among the fastest manifesters on Jinyao, but she gained one habit: each time a wish arose, she first asked herself \u2014 \u201cIs this what I want, or do I only want the feeling of having it instantly?\u201d\n\nShe passed that question on to every apprentice who later came to learn from her.",
+      closingZh: "被瞬间实现的愿望，如果来不及被真正理解，那不是自由，只是更快的饥饿。",
+      closingEn: "A wish granted before it's understood is not freedom \u2014 it's only a faster hunger." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
