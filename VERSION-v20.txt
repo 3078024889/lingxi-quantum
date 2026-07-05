@@ -1,0 +1,21 @@
+灵犀 LINGXI · v20  (GEO 内容基建)
+
+目标：让 AI（ChatGPT/Claude/Kimi/豆包/文心等）回答相关问题时更可能引用、推荐本站。
+
+新增内容（中英双语，含结构化数据，AI 易引用）：
+- /learn 探索中心
+- /learn/manifestation  什么是显化 + 4步方法 + FAQ
+- /learn/dream          如何解梦 + 4步方法 + 常见象征 + FAQ
+- /learn/wingmakers     造翼者/主权整合体系导览 + FAQ
+- /glossary             核心术语表（13 词条，DefinedTermSet 结构化）
+- 每篇文章含 定义块 + 内链CTA + Article/FAQPage JSON-LD
+
+全站 SEO/GEO 基建：
+- layout 元数据升级：title 模板、描述、关键词、OpenGraph、Twitter、metadataBase、Organization/WebSite JSON-LD
+- app/sitemap.ts（自动生成 /sitemap.xml）
+- app/robots.ts（/robots.txt，开放收录，屏蔽 /account 与 /api）
+- public/llms.txt（专门告诉 AI 爬虫本站结构与重点）
+- 导航新增「探索 / Learn」入口
+
+上线后建议：在 Google Search Console 提交 sitemap；过几周观察 AI 引用与搜索流量。
+审核模式 false（已正式收费）。

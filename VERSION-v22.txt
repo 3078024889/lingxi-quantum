@@ -1,0 +1,15 @@
+灵犀 LINGXI · v22  (GEO 第二批长尾内容)
+
+新增 6 篇长尾文章（中英双语 + FAQ 结构化数据），覆盖大量高搜索问题：
+- /learn/manifestation-methods    显化方法大全（369法/观想/写下/睡前显化/最佳时间）
+- /learn/manifestation-not-working 显化没效果？原因与修正（6 个原因）
+- /learn/manifestation-signs       显化生效的 7 个征兆
+- /learn/recurring-dreams          为什么反复做同一个梦
+- /learn/dream-symbols             常见梦境象征大全（掉牙/被追/坠落/水/蛇/前任/去世亲人…）
+- /learn/raise-frequency           如何提升意识频率
+
+- 新增可复用文章组件 components/LearnArticle.tsx（统一风格 + Article/FAQPage JSON-LD）
+- /learn 探索中心已列出全部 9 篇
+- sitemap.ts 已加入 6 个新网址（部署后 sitemap.xml 自动更新）
+
+部署后：sitemap 会自动包含新文章，无需在 Search Console 重新提交。

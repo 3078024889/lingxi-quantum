@@ -1,0 +1,10 @@
+灵犀 LINGXI · v38（补首页信任卡片翻译）
+
+★ 累积包含 v26~v37 全部改动，直接上传这一个 v38 即可。
+
+【v38 改动】
+补上首页最后一段漏翻的中文（components/OriginSection.tsx 信任卡片）：
+「命运从不被一纸八字定格——你命由你不由天……灵犀，一直在。」
+现已中英双语，切到 EN 完整显示英文。
+
+【构建】npm run build ✓ Compiled successfully。

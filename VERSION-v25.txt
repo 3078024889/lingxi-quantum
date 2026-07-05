@@ -1,0 +1,12 @@
+灵犀 LINGXI · v25 (域名统一 + SEO/PWA 优化)
+
+1. 首页 Title 加长：灵犀 LINGXI｜意识显化·场域解梦·潜意识改写·修炼技术
+2. Description 重写（更完整、利于 Google 摘要显示）
+3. 全站主域名统一为 lingxifield.com（canonical / sitemap / robots / OG / 结构化数据 / 支付兜底URL 全部更新）
+4. 新增 PWA manifest.webmanifest（手机可添加到桌面；图标待 Logo 接入）
+
+【部署后请做两件事】
+- 在 Vercel 环境变量加 NEXT_PUBLIC_SITE_URL = https://lingxifield.com （让支付成功跳转用新域名）
+- 在 Google Search Console 新增资源 lingxifield.com 并提交 sitemap.xml（旧的 vercel.app 可保留）
+
+（付费 REVIEW_MODE=false、知识库、Google 验证码保留。Logo 收到后再加 favicon + 桌面图标。）

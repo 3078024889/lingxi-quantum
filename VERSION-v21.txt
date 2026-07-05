@@ -1,0 +1,11 @@
+灵犀 LINGXI · v21
+
+本次唯一改动：在首页 <head> 注入 Google Search Console 验证码
+  google-site-verification = Q8hQ5NseO-vRkzeFaFHbjMWljGBYNZKlvclKWBghetk
+
+部署后操作：
+1. 上传本包到 GitHub，等 Vercel 自动部署完成
+2. 回到 Google Search Console 那个『HTML 标记』验证页，点『验证』按钮
+3. 验证通过后 → 左侧 Sitemaps → 填 sitemap.xml → 提交
+
+（v20 的 GEO 内容、付费、知识库等全部保留）

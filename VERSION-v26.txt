@@ -1,0 +1,17 @@
+灵犀 LINGXI · v26 (Logo 接入 + 双 Google 验证码)
+
+1. Logo 正式接入：用你上传的金色 LINGXI 方形 Logo 生成整套图标，放进 public/：
+   - favicon.ico（16/32/48/64 多尺寸，浏览器标签页用）
+   - favicon-16x16.png / favicon-32x32.png（浏览器标签页高清）
+   - apple-touch-icon.png（180，iPhone/iPad 添加到桌面用）
+   - icon-192.png / icon-512.png（PWA 桌面图标 / 安卓）
+2. app/layout.tsx 里接上 icons 元数据（favicon + apple + PWA 全接）。
+3. manifest.webmanifest 补上 icons 数组（192/512 any + 512 maskable），
+   手机「添加到桌面」现在会显示灵犀 Logo。
+4. Google 验证码改成数组，两个都保留并同时生效：
+   - 旧 vercel.app: Q8hQ5NseO-vRkzeFaFHbjMWljGBYNZKlvclKWBghetk
+   - 新 lingxifield.com: p6pCOqQydWyeU9ubwvBSUUROUKG8Hac8xXucbtjy1mg
+
+【保持不变】REVIEW_MODE=false（付费正常）、支付、知识库、SEO/结构化数据、v25 域名统一全部保留。
+【构建】npm run build ✓ Compiled successfully。
+【部署后可选】Search Console 新旧域名两个验证都会通过，无需再手动改。

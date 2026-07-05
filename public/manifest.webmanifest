@@ -1,0 +1,15 @@
+{
+  "name": "灵犀 LINGXI · 意识显化系统",
+  "short_name": "灵犀 LINGXI",
+  "description": "意识显化 · 场域解梦 · 潜意识改写 · 修炼技术",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0922",
+  "theme_color": "#0b0922",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

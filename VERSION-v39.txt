@@ -1,0 +1,23 @@
+灵犀 LINGXI · v39（首页翻译收尾 + 新增 3 篇高流量 learn 文章）
+
+★ 累积包含 v26~v38 全部改动，直接上传这一个 v39 即可。
+
+【v39 改动】
+1. 首页信任卡片补英文（v38 内容，若你还没传就一并在这版）。
+2. 新增 3 篇 learn 文章（中英双语，中文为主），面向高搜索量关键词：
+   - /learn/manifest-love     如何显化爱情与理想伴侣
+   - /learn/method-369        369 显化法怎么做
+   - /learn/affirmations      肯定语怎么用才有效
+   三篇均含：概念、分节讲解、FAQ（带 FAQPage 结构化数据）、相关阅读、行动引导。
+   已登记进 sitemap、learn 目录页、llms.txt —— 会被搜索/AI 自动收录。
+   站点静态页从 53 增至 56。
+
+【部署后（可选）】新文章上线后，可到 Google Search Console 用「网址检查」
+   分别提交这 3 个新网址，加快收录：
+   https://lingxifield.com/learn/manifest-love
+   https://lingxifield.com/learn/method-369
+   https://lingxifield.com/learn/affirmations
+
+【配套】另发你《灵犀·全平台内容包 第1辑》.md —— 可直接复制去各平台发布。
+
+【构建】npm run build ✓ Compiled successfully（56 页全部生成）。

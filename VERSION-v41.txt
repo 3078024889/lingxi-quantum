@@ -1,0 +1,15 @@
+灵犀 LINGXI · v41（修复签到天数统计）
+
+★ 累积包含 v26~v40 全部改动，直接上传这一个 v41 即可。
+
+【v41 改动】
+修复「已签到 N 天」统计错误：此前按记录条数统计（3 天写 6 条会显示 6 天），
+现改为按不同日期去重，显示真实签到天数。
+
+【安全检查结论（本轮核查）】
+- 代码中未写死任何密钥，全部经环境变量读取 ✓
+- 交付 zip 不含 .env 文件，GitHub 仓库中无密钥 ✓
+- 建议：仓库设为 Private；顺手在后台重新生成 SUPABASE_SERVICE_ROLE_KEY
+  与 ZHIPU_API_KEY 并更新到 Vercel 环境变量，然后 Redeploy（可选但推荐）。
+
+【构建】npm run build ✓ Compiled successfully。

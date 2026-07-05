@@ -1,0 +1,32 @@
+灵犀 LINGXI · v42（8 篇新文章 + 活的 hero + 点击水波螺旋 + 新 OG）
+
+★ 累积包含 v26~v41 全部改动，直接上传这一个 v42 即可。
+
+【v42 · 新增 8 篇 learn 文章】（基于知乎等平台真实高频问题，用灵犀的语言书写；
+  每篇含叙事钩子、FAQ 结构化数据、能量交换引导、相关阅读；已进 sitemap/目录/llms.txt）
+  /learn/dream-same-person     总是梦见同一个人，是他在想我吗
+  /learn/twin-flame            双生火焰与灵魂伴侣的区别
+  /learn/inner-friction        精神内耗怎么停下来
+  /learn/what-is-consciousness 什么是意识
+  /learn/letting-go            放不下一个人怎么办
+  /learn/angel-numbers         总是看到 11:11？重复数字的含义
+  /learn/emptiness             总觉得人生没有意义，怎么办
+  /learn/energy-drain          和某些人相处特别累，是怎么回事
+  静态页 56 → 64。这些文章可直接作为各平台发帖的"原文出处"引流。
+
+【v42 · 首页 hero 真的活了】（components/LingxiPortal.tsx）
+  - 背景换为金色光体主权体图（完整居中露脸，不再只见半边）；
+  - 背景缓慢漂移+呼吸（非单纯放大）；两层星空各自漂移、明暗闪烁；
+  - 两圈金色/青色轨道环带光点缓缓旋转；中央光晕呼吸。
+
+【v42 · 全站点击水波螺旋】（components/ClickRipple.tsx，挂于 layout）
+  任意点击/触摸处：三圈涟漪扩散 + 金色螺旋缓旋消融，像触碰活的水面；
+  纯装饰层不拦截任何点击；尊重"减少动态"系统设置。
+
+【v42 · 其他】
+  - OG 分享图更换为光体主权体构图（public/og.png，1200×630）。
+    说明：OG 是分享缩略图，规范为静态，无法动；hero 才能动，已做活。
+  - 导航更名：显化→意识显化(Manifestation)、六道之门→重塑潜意识(Rewrite)；
+    首页三卡片"显化"同步更名"意识显化"。
+
+【构建】npm run build ✓ Compiled successfully（64 页全部生成）。
