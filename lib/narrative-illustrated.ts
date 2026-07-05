@@ -1025,7 +1025,85 @@ const THREE_EPOCHS_ECHO: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO];
+/* ---------- 潮见：洄鲛国，爱情题材，全新原创，完整9页 ---------- */
+const CJ_DEFS = `<defs>
+  <filter id="cjGlow"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="cjSoft"><feGaussianBlur stdDeviation="2.2"/></filter>
+  <linearGradient id="cjSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#031d24"/><stop offset="50%" stop-color="#0a3a44"/><stop offset="100%" stop-color="#3fa896"/></linearGradient>
+  <radialGradient id="cjPearl" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="100%" stop-color="#7fd4c4" stop-opacity="0"/></radialGradient>
+</defs>`;
+function cjWash(list: {x:number;y:number;rx:number;ry:number;color:string;op:number}[]) {
+  return list.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#cjGlow)"/>`).join('');
+}
+function cjHuman() {
+  const robe = `<path d="M-10 -30 Q0 -35 10 -30 L13 24 Q0 30 -13 24 Z" fill="#2c3a4a"/>`;
+  const hair = `<path d="M-8 -42 Q0 -48 8 -42 Q8 -36 4 -33 Q0 -35 -4 -33 Q-8 -36 -8 -42 Z" fill="#1a2028"/>`;
+  const head = `<circle cx="0" cy="-36" r="7.5" fill="#2a3038"/>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}${hair}</g>`;
+}
+function cjTide(form: "figure" | "dissolving") {
+  if (form === "figure") {
+    const body = `<path d="M-9 -32 Q0 -38 9 -32 Q13 -10 8 20 Q0 26 -8 20 Q-13 -10 -9 -32 Z" fill="#5fc4b0" opacity=".85"/>`;
+    const hair = `<path d="M-8 -40 Q0 -46 8 -40 Q10 -30 5 -22" fill="#2a6a5c" opacity=".8"/>`;
+    const head = `<circle cx="0" cy="-34" r="7" fill="#5fc4b0" opacity=".9"/>`;
+    return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${body}${head}${hair}</g>`;
+  }
+  return `<g opacity=".6">${Array.from({length:16}).map(()=>{const x=Math.random()*40-20,y=Math.random()*60-40,r=Math.random()*2+.5,dur=3+Math.random()*3;return `<circle cx="${x}" cy="${y}" r="${r}" fill="#5fc4b0"><animate attributeName="opacity" values="0;.9;0" dur="${dur}s" repeatCount="indefinite"/></circle>`}).join('')}</g>`;
+}
+const CJ_COVER = `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="url(#cjSea)"/>
+  ${cjWash([{x:150,y:120,rx:150,ry:90,color:'#3fa896',op:.3}])}
+  <g transform="translate(110,150) scale(0.55)">${cjHuman()}</g>
+  <g transform="translate(200,150) scale(0.55) scale(-1,1)">${cjTide("figure")}</g>
+</svg>`;
+
+const CHAOJIAN: IllustratedEntry = {
+  slug: "seen-by-the-tide",
+  title: "潮见",
+  titleEn: "Seen by the Tide",
+  cat: "field",
+  teaser: "一位人类研究员，爱上了洄鲛国一个没有\u201c固定自我\u201d的姑娘——真正的爱，或许从不需要被永远记住，只需要，真的发生过。",
+  teaserEn: "A human researcher falls for a woman of Huijiao who has no fixed self. Perhaps true love never needs to be remembered forever — only to have truly happened.",
+  price: 9,
+  cover: CJ_COVER,
+  pages: [
+    { kickerZh: "一 · 驻站的研究员", kickerEn: "I · The Stationed Researcher", tagZh: "洄鲛国 · 潮汐记忆文明", tagEn: "Huijiao \u00b7 A Tidal-Memory Civilization",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="url(#cjSea)"/>${cjWash([{x:150,y:110,rx:150,ry:90,color:'#3fa896',op:.35}])}<g transform="translate(150,160) scale(0.6)">${cjHuman()}</g></svg>`,
+      textZh: "沈知在汐冥星的浮空观测站驻扎了两年，专门记录洄鲛国的生态。他留着一头刻意剪短的黑发，鼻梁上架着一副老式的浮空目镜，说话总是慢半拍，像在斟酌每个字。那天，他在礁石边第一次见到潮见——她的皮肤泛着浅浅的青绿色光泽，像被月光泡过的海水。",
+      textEn: "Shen Zhi had been stationed at the floating observatory above Ximing for two years, cataloguing Huijiao's ecology. He kept his black hair deliberately short, wore old-fashioned floating goggles on his nose, and always spoke half a beat slow, as if weighing every word. That day, by the reef, he saw Chaojian for the first time \u2014 her skin held a faint jade-green sheen, like seawater steeped in moonlight." },
+    { kickerZh: "二 · 靠近", kickerEn: "II · Drawing Closer", tagZh: "相遇", tagEn: "The Meeting",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="#031d24"/>${cjWash([{x:150,y:110,rx:150,ry:90,color:'#0a3a44',op:.7}])}<g transform="translate(110,160) scale(0.55)">${cjHuman()}</g><g transform="translate(200,160) scale(0.55) scale(-1,1)">${cjTide("figure")}</g></svg>`,
+      textZh: "潮见对陆地上的一切都充满好奇，尤其喜欢听沈知讲述\u201c昨天\u201d和\u201c明天\u201d——洄鲛国没有这样分割时间的方式，对他们而言，时间是一整片潮水，没有先后。两人渐渐靠近，沈知却始终有个疑问没敢问出口：\u201c你会记得我吗？\u201d",
+      textEn: "Chaojian was endlessly curious about everything from the land, especially stories of \u201cyesterday\u201d and \u201ctomorrow\u201d \u2014 Huijiao had no such way of dividing time; to them, time was one unbroken tide, without before or after. The two grew close, though Shen Zhi carried a question he never dared ask: \u201cWill you remember me?\u201d" },
+    { kickerZh: "三 · 没有固定的我", kickerEn: "III · No Fixed Self", tagZh: "文明差异", tagEn: "A Difference in Kind",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="url(#cjSea)"/>${cjWash([{x:150,y:110,rx:160,ry:100,color:'#3fa896',op:.3}])}<g transform="translate(150,160) scale(0.6)">${cjTide("figure")}</g></svg>`,
+      textZh: "他终于问出口那天，潮见坦然地告诉他：\u201c我们退潮时会散回海里，下次聚起来的\u2018我\u2019，会带着所有鲛族共同的记忆，但不一定还记得，此刻和你说的这句话，是\u2018我\u2019说的。\u201d沈知听完，久久说不出话。",
+      textEn: "The day he finally asked, Chaojian answered plainly: \u201cWhen the tide recedes, we dissolve back into the sea. The \u2018I\u2019 that gathers again next time carries all of Huijiao's shared memory \u2014 but may not know that this sentence, right now, was spoken by \u2018me.\u2019\u201d Shen Zhi had no words for a long while." },
+    { kickerZh: "四 · 恐惧", kickerEn: "IV · Fear", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="#021620"/>${cjWash([{x:150,y:110,rx:160,ry:100,color:'#0a3a44',op:.75}])}<g transform="translate(150,160) scale(0.6)">${cjHuman()}</g></svg>`,
+      textZh: "沈知开始害怕靠近——他想要的爱，是被一个具体的人，具体地记住，而不是融进一片说不清\u201c是谁\u201d的潮水里。他甚至一度想申请调离观测站，让这段还没深入的感情，停在能被自己完整带走的阶段。",
+      textEn: "Shen Zhi began to fear getting closer \u2014 the love he wanted was to be remembered specifically, by someone specific, not dissolved into a tide with no clear \u201cwho.\u201d He even considered requesting a transfer, wanting to end things while it was still something he could carry away whole." },
+    { kickerZh: "五 · 潮见的回答", kickerEn: "V · Chaojian's Answer", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="url(#cjSea)"/>${cjWash([{x:150,y:100,rx:150,ry:70,color:'#fff6e8',op:.15}])}<g transform="translate(150,160) scale(0.6)">${cjTide("figure")}</g></svg>`,
+      textZh: "潮见似乎察觉了他的退缩，对他说：\u201c你们陆地人总以为，不被记住，等于没发生过。可对潮汐来说，每一滴曾经涌上岸的海水，哪怕退回大海、哪怕再没人分得出它是哪一滴，它拍过那片礁石，这件事，从没有被抹去过。\u201d",
+      textEn: "Chaojian seemed to sense him pulling away, and said: \u201cYou land people always assume that not being remembered means it never happened. But for the tide, every drop of water that ever reached the shore \u2014 even once it returns to the sea, even once no one can tell which drop it was \u2014 the fact that it touched that rock was never erased.\u201d" },
+    { kickerZh: "六 · 留下来的决定", kickerEn: "VI · The Decision to Stay", tagZh: "抉择", tagEn: "The Choice",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="#031d24"/>${cjWash([{x:150,y:110,rx:160,ry:100,color:'#3fa896',op:.4}])}<g transform="translate(110,160) scale(0.55)">${cjHuman()}</g><g transform="translate(200,160) scale(0.55) scale(-1,1)">${cjTide("figure")}</g></svg>`,
+      textZh: "沈知撤回了调离申请。他忽然明白，自己一直执着的\u201c被永远记住\u201d，其实是害怕这段感情\u201c不够真\u201d的证据——可如果连自己都不确定发生过的事够不够真，那才是真正的问题，不是潮见会不会忘记他。",
+      textEn: "Shen Zhi withdrew his transfer request. He suddenly understood that his need to be remembered forever had really been a fear that what they had wasn't real enough \u2014 but if he himself doubted whether something real had happened, that was the actual problem, not whether Chaojian would forget." },
+    { kickerZh: "七 · 退潮之夜", kickerEn: "VII · The Night of the Tide's Return", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="#021620"/>${cjWash([{x:150,y:110,rx:170,ry:110,color:'#0a3a44',op:.7}])}<g transform="translate(150,150) scale(0.55)">${cjTide("dissolving")}</g><g transform="translate(150,170) scale(0.5)">${cjHuman()}</g></svg>`,
+      textZh: "那个季节，潮见照例要随大潮退回海里。分别前，她没有说任何告别的话，只是轻声哼起一段没有歌词的调子。沈知后来才知道，那不是随口哼的曲子——那是洄鲛国用来标记\u201c这段记忆值得被优先带回\u201d的方式。",
+      textEn: "That season, Chaojian would return with the great tide, as always. Before parting, she said no farewell \u2014 only hummed a wordless tune. Shen Zhi later learned it wasn't idle humming at all: it was Huijiao's way of marking a memory as one worth carrying back first." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "潮见我", tagEn: "Seen by the Tide",
+      art: `<svg viewBox="0 0 300 220">${CJ_DEFS}<rect width="300" height="220" fill="url(#cjSea)"/>${cjWash([{x:150,y:60,rx:150,ry:60,color:'#fff6e8',op:.15}])}<g transform="translate(150,160) scale(0.6)">${cjHuman()}</g></svg>`,
+      textZh: "第二年潮汛，一头新聚成的鲛族生物游近礁石，没有认出沈知的脸，却精准地哼起了去年那段没有歌词的调子。沈知站在礁石上，忽然笑了——他终于明白，潮见没有\u201c记住\u201d他，但那片潮水，确确实实\u201c见过\u201d他们两个人，共同存在过的那一段。",
+      textEn: "The following season's tide, a newly gathered creature of Huijiao swam near the reef, not recognizing Shen Zhi's face \u2014 yet humming, precisely, the same wordless tune from the year before. Standing on the reef, Shen Zhi suddenly smiled. He finally understood: Chaojian hadn't \u201cremembered\u201d him. But the tide had truly seen the time the two of them had shared.",
+      closingZh: "真正的爱，或许从不需要被永远记住，只需要，真的发生过，被潮水看见过一次。",
+      closingEn: "True love, perhaps, never needs to be remembered forever — only to have truly happened, seen once by the tide." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
