@@ -2490,7 +2490,551 @@ const HEART_AS_GATEWAY: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY];
+/* ---------- 第二纪的忏悔：澜汜古环，历史悲剧题材（第一纪的姊妹篇），完整9页 ---------- */
+const SC_DEFS = `<defs><filter id="scG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="scSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a1610"/><stop offset="50%" stop-color="#3a3020"/><stop offset="100%" stop-color="#c9a76a"/></linearGradient></defs>`;
+function scWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#scG)"/>`).join('');}
+function scFigure(){const robe=`<path d="M-10 -28 Q0 -33 10 -28 L13 24 Q0 30 -13 24 Z" fill="#5a4e38"/>`;const head=`<circle cx="0" cy="-34" r="7" fill="#3a3020"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+const SC_COVER = `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="url(#scSky)"/>${scWash([{x:150,y:130,rx:150,ry:80,color:'#c9a76a',op:.2}])}<g transform="translate(150,155) scale(0.6)">${scFigure()}</g></svg>`;
+
+const SECOND_EPOCH_CONFESSION: IllustratedEntry = {
+  slug: "confession-of-the-second-epoch",
+  title: "第二纪的忏悔",
+  titleEn: "Confession of the Second Epoch",
+  cat: "sovereign",
+  teaser: "第二纪文明没有毁于求快，而是毁于太怕犯错——过度谨慎，同样可以，把一个文明活活困死。",
+  teaserEn: "The Second Epoch fell not to haste, but to the fear of ever being wrong. Excessive caution can suffocate a civilization just as surely.",
+  price: 9,
+  cover: SC_COVER,
+  pages: [
+    { kickerZh: "一 · 万全纪元", kickerEn: "I · The Age of Certainty", tagZh: "第二纪 · 顶峰时期", tagEn: "The Second Epoch \u00b7 Its Peak",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="url(#scSky)"/><g transform="translate(150,160) scale(0.6)">${scFigure()}</g></svg>`,
+      textZh: "第二纪的文明，吸取了第一纪盲目求快的教训，发展出一套极其严密的\u201c万全决策制度\u201d——任何一项决定，必须经过反复论证，直到\u201c零风险\u201d才能执行。息岚是文明最后一批决策官之一。",
+      textEn: "The Second Epoch's civilization, learning from the First's blind speed, developed an extremely rigorous \u201cfoolproof decision system\u201d \u2014 no action could proceed until proven risk-free through endless deliberation. Xi Lan was among its last decision officers." },
+    { kickerZh: "二 · 越来越慢", kickerEn: "II · Ever Slower", tagZh: "征兆", tagEn: "The First Signs",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="#241f16"/>${scWash([{x:150,y:110,rx:160,ry:100,color:'#3a3020',op:.7}])}<g transform="translate(150,160) scale(0.65)">${scFigure()}</g></svg>`,
+      textZh: "息岚注意到，一件本该当天拍板的小事，如今要走三十七道审核流程。文明的决策速度，一年比一年慢，可没人觉得不对——毕竟，慢一点，总比犯错好。",
+      textEn: "Xi Lan noticed a matter that once took a single day to decide now required thirty-seven layers of review. The civilization's decisions grew slower each year, yet no one saw it as wrong \u2014 after all, slower always seemed safer than wrong." },
+    { kickerZh: "三 · 停摆的边境", kickerEn: "III · The Frozen Frontier", tagZh: "危机", tagEn: "The Crisis",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="url(#scSky)"/>${scWash([{x:150,y:100,rx:150,ry:70,color:'#c9a76a',op:.3}])}<g transform="translate(150,160) scale(0.6)">${scFigure()}</g></svg>`,
+      textZh: "边境出现了一处亟待修补的堤坝裂缝，按流程呈报后，审核委员会为了\u201c万无一失\u201d，反复论证了整整一年，堤坝最终，在论证完成的前三天，自行崩塌。",
+      textEn: "A crack appeared in a border dam, urgently needing repair. Once reported, the review committee deliberated for a full year to be \u201cabsolutely certain\u201d \u2014 the dam collapsed on its own, three days before the review concluded." },
+    { kickerZh: "四 · 没人担责", kickerEn: "IV · No One to Blame", tagZh: "反思", tagEn: "Reflection",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="#241f16"/>${scWash([{x:150,y:110,rx:160,ry:100,color:'#3a3020',op:.75}])}<g transform="translate(110,160) scale(0.5)">${scFigure()}</g><g transform="translate(200,165) scale(0.5)">${scFigure()}</g></svg>`,
+      textZh: "灾后追责时，息岚发现一个荒谬的事实：因为决策流程被拆分给了太多人，竟没有一个人，需要为这场本可避免的灾难，负责。",
+      textEn: "In the aftermath, Xi Lan discovered something absurd: the decision process had been split among so many people that not a single one could be held responsible for a disaster that had been entirely preventable." },
+    { kickerZh: "五 · 息岚的警告", kickerEn: "V · Xi Lan's Warning", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="url(#scSky)"/>${scWash([{x:150,y:100,rx:150,ry:70,color:'#c9a76a',op:.25}])}<g transform="translate(150,160) scale(0.65)">${scFigure()}</g></svg>`,
+      textZh: "息岚上书议会，提出\u201c过度审慎本身，也是一种致命的风险\u201d，得到的答复却是：\u201c你说的这种风险，还没有被充分论证，暂不采纳。\u201d",
+      textEn: "Xi Lan petitioned the council, arguing that excessive caution was itself a fatal risk. The reply: \u201cThe risk you describe has not yet been sufficiently deliberated. Not adopted at this time.\u201d" },
+    { kickerZh: "六 · 缓慢的熄灭", kickerEn: "VI · A Slow Extinguishing", tagZh: "崩塌", tagEn: "Collapse",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="#1a1610"/>${scWash([{x:150,y:110,rx:160,ry:100,color:'#3a3020',op:.8}])}<g transform="translate(110,160) scale(0.5)">${scFigure()}</g><g transform="translate(190,160) scale(0.5)">${scFigure()}</g></svg>`,
+      textZh: "此后的灾难，一次比一次频繁，每一次都在\u201c充分论证\u201d完成前，抢先发生。文明没有轰然倒塌，只是一点一点，在无休止的审慎里，缓慢熄灭。",
+      textEn: "Disasters grew more frequent, each striking before \u201csufficient deliberation\u201d could conclude. The civilization didn't collapse in a single blow \u2014 it simply, slowly, extinguished itself in endless caution." },
+    { kickerZh: "七 · 最后的记录", kickerEn: "VII · The Last Record", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="#1a1610"/>${scWash([{x:150,y:110,rx:170,ry:110,color:'#c9a76a',op:.3}])}<g transform="translate(150,160) scale(0.65)">${scFigure()}</g></svg>`,
+      textZh: "息岚用尽最后的清醒，刻下这段文明唯一一句非流程性的记录：\u201c我们不是被风险打倒的，是被\u2018绝不能犯错\u2019这句话，活活困死的。\u201d",
+      textEn: "With her last clarity, Xi Lan carved the only non-procedural record her civilization would leave: \u201cWe were not defeated by risk. We were suffocated by the belief that we must never be wrong.\u201d" },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "被后世读到的证词", tagEn: "A Testimony Later Read",
+      art: `<svg viewBox="0 0 300 220">${SC_DEFS}<rect width="300" height="220" fill="url(#scSky)"/>${scWash([{x:150,y:60,rx:150,ry:60,color:'#c9a76a',op:.2}])}</svg>`,
+      textZh: "多年后，长晏在澜汜古环深处，破译了这段几乎风化的记录，与第一纪的证词并置比对，第一次确认：太快和太慢，毁掉文明的方式不同，根源，却是同一种——不敢，也不愿，直面真实的自己。",
+      textEn: "Years later, Chang Yan deciphered this weathered record deep in the Lansi Ring, placing it beside the First Epoch's testimony, and confirmed for the first time: too fast and too slow destroy a civilization differently, but from the same root \u2014 a refusal to face oneself honestly.",
+      closingZh: "过度谨慎，同样可以，把一个文明，活活困死。",
+      closingEn: "Excessive caution can suffocate a civilization just as surely as reckless speed." },
+  ],
+};
+
+/* ---------- 无声演奏厅：新星域，声音/寂静题材，完整9页 ---------- */
+const WS_DEFS = `<defs><filter id="wsG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="wsSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a0e1c"/><stop offset="50%" stop-color="#1c2440"/><stop offset="100%" stop-color="#8a9ad8"/></linearGradient></defs>`;
+function wsWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#wsG)"/>`).join('');}
+function wsFigure(){const robe=`<path d="M-10 -28 Q0 -33 10 -28 L13 24 Q0 30 -13 24 Z" fill="#2a2c4a"/>`;const head=`<circle cx="0" cy="-34" r="7" fill="#22243a"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function wsWaves(){return `<g stroke="#c9d4ff" stroke-width="1" fill="none" opacity=".6">${Array.from({length:5}).map((_,i)=>`<circle cx="150" cy="110" r="${20+i*16}" opacity="${.7-i*.12}"><animate attributeName="r" values="${16+i*16};${28+i*16};${16+i*16}" dur="${3+i*.4}s" repeatCount="indefinite"/></circle>`).join('')}</g>`;}
+const WS_COVER = `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="url(#wsSky)"/>${wsWaves()}<g transform="translate(150,160) scale(0.6)">${wsFigure()}</g></svg>`;
+
+const SILENT_CONCERT_HALL: IllustratedEntry = {
+  slug: "the-silent-concert-hall",
+  title: "无声演奏厅",
+  titleEn: "The Silent Concert Hall",
+  cat: "field",
+  teaser: "一位失去听力的乐师，来到一座整颗星球都靠振动而非声音\u201c听\u201d音乐的地方——原来聆听从不是耳朵的专利，是全身心，愿不愿意共振。",
+  teaserEn: "A deafened musician arrives at a world that 'hears' music through vibration, not sound. Listening was never the ear's privilege alone — it's whether the whole self is willing to resonate.",
+  price: 9,
+  cover: WS_COVER,
+  pages: [
+    { kickerZh: "一 · 无声之地", kickerEn: "I · The Silent World", tagZh: "以振动代替声音的星球", tagEn: "A World of Vibration, Not Sound",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="url(#wsSky)"/>${wsWaves()}</svg>`,
+      textZh: "这颗星球没有能够传播声波的大气层，居民世代靠感知振动来\u201c听\u201d音乐——乐师演奏时，整片地面都会随之震颤，观众赤脚而立，用双脚\u201c聆听\u201d。",
+      textEn: "This world has no atmosphere to carry sound. Its people have, for generations, \u201cheard\u201d music through vibration \u2014 when a musician plays, the ground itself trembles, and the audience stands barefoot, listening with their feet." },
+    { kickerZh: "二 · 失聪的乐师", kickerEn: "II · The Deafened Musician", tagZh: "来客", tagEn: "The Visitor",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="#0e1428"/>${wsWash([{x:150,y:110,rx:150,ry:90,color:'#1c2440',op:.7}])}<g transform="translate(150,160) scale(0.6)">${wsFigure()}</g></svg>`,
+      textZh: "念殊曾是小有名气的乐师，一场意外让她彻底失去了听力。她原以为自己的音乐生涯就此终结，直到听说这颗星球，来这里，想再\u201c听\u201d一次音乐。",
+      textEn: "Nian Shu was once a modestly known musician, until an accident took her hearing entirely. She assumed her musical life was over \u2014 until she heard of this world, and came here hoping to \u201chear\u201d music once more." },
+    { kickerZh: "三 · 感受不到振动", kickerEn: "III · Unable to Feel the Vibration", tagZh: "困境", tagEn: "The Trouble",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="#0a0e1c"/>${wsWash([{x:150,y:120,rx:160,ry:100,color:'#1c2440',op:.75}])}<g transform="translate(150,160) scale(0.65)">${wsFigure()}</g></svg>`,
+      textZh: "念殊满怀期待地赤脚站上演奏台，却发现自己什么都感受不到——常年依赖听觉的习惯，让她的身体，早已忘了怎么用双脚去\u201c听\u201d。",
+      textEn: "Full of hope, Nian Shu stood barefoot on the performance platform \u2014 and felt nothing at all. A lifetime relying on hearing had left her body having forgotten how to listen with her feet." },
+    { kickerZh: "四 · 当地乐师的提点", kickerEn: "IV · A Local Musician's Guidance", tagZh: "教诲", tagEn: "Teaching",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="url(#wsSky)"/>${wsWash([{x:150,y:100,rx:150,ry:70,color:'#8a9ad8',op:.2}])}<g transform="translate(110,160) scale(0.5)">${wsFigure()}</g><g transform="translate(200,160) scale(0.5)">${wsFigure()}</g></svg>`,
+      textZh: "一位当地乐师告诉她：\u201c你太用力想\u2018听见\u2019了，振动从不需要被刻意捕捉，它只需要，你放松到，愿意让自己，被它推动。\u201d",
+      textEn: "A local musician told her: \u201cYou're trying too hard to \u2018hear.\u2019 Vibration was never meant to be deliberately caught. It only needs you relaxed enough to let yourself be moved by it.\u201d" },
+    { kickerZh: "五 · 反复的失败", kickerEn: "V · Repeated Failure", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="#0e1428"/>${wsWash([{x:150,y:110,rx:160,ry:100,color:'#1c2440',op:.7}])}<g transform="translate(150,160) scale(0.65) rotate(3)">${wsFigure()}</g></svg>`,
+      textZh: "念殊练习了整整一个月，依然感受不到明显的振动，她一度怀疑，自己是不是真的，永远失去了\u201c听\u201d音乐的能力。",
+      textEn: "A full month of practice passed, and Nian Shu still felt nothing distinct. She began to doubt whether she'd truly, permanently lost the ability to \u201chear\u201d music at all." },
+    { kickerZh: "六 · 放下执念", kickerEn: "VI · Letting Go of the Fixation", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="url(#wsSky)"/>${wsWash([{x:150,y:100,rx:150,ry:70,color:'#c9d4ff',op:.2}])}<g transform="translate(150,160) scale(0.65)">${wsFigure()}</g></svg>`,
+      textZh: "念殊不再执着于\u201c感受到振动\u201d这件事，只是安静地，赤脚站在台上，任由自己，单纯地在场，不再追问结果。",
+      textEn: "Nian Shu stopped fixating on \u201cfeeling the vibration,\u201d simply standing barefoot on the platform, letting herself be present, without demanding a result." },
+    { kickerZh: "七 · 第一次共振", kickerEn: "VII · The First Resonance", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="#0c1024"/>${wsWaves()}<g transform="translate(150,160) scale(0.7)">${wsFigure()}</g></svg>`,
+      textZh: "就在她放下所有期待的那一刻，脚底忽然传来一阵极轻、极清晰的震颤，顺着双腿，一路涌上心口——她第一次，真正\u201c听见\u201d了音乐，用整个身体。",
+      textEn: "The instant she released every expectation, a faint, unmistakable tremor rose through the soles of her feet, up her legs, into her chest \u2014 for the first time, she truly \u201cheard\u201d music, with her entire body." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "新的乐师", tagEn: "A New Kind of Musician",
+      art: `<svg viewBox="0 0 300 220">${WS_DEFS}<rect width="300" height="220" fill="url(#wsSky)"/><g transform="translate(150,160) scale(0.6)">${wsFigure()}</g></svg>`,
+      textZh: "念殊后来留在这颗星球，成了第一位跨界的乐师，教当地人如何用声音演奏，也教远方来客，如何用整个身体，重新学会聆听。",
+      textEn: "Nian Shu stayed on that world, becoming its first cross-world musician, teaching locals to play with sound, and teaching visitors from afar how to relearn listening with their whole selves.",
+      closingZh: "聆听从不是耳朵的专利，是全身心，愿不愿意，放下期待，去共振。",
+      closingEn: "Listening was never the ear's privilege alone — it's whether the whole self is willing to let go of expectation and resonate." },
+  ],
+};
+
+/* ---------- 怒火之根：潜渊境第四案例，完整9页 ---------- */
+const NH_DEFS = `<defs><filter id="nhG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="nhSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#160a1c"/><stop offset="45%" stop-color="#341a3a"/><stop offset="80%" stop-color="#5a2a4a"/><stop offset="100%" stop-color="#c97b6a"/></linearGradient></defs>`;
+function nhWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#nhG)"/>`).join('');}
+function nhFigure(hot:boolean){const robe=`<path d="M-13 -40 Q0 -48 13 -40 L18 30 Q0 40 -18 30 Z" fill="#3a2440"/>`;const head=`<circle cx="0" cy="-56" r="9" fill="#241530"/>`;const g=hot?`<circle cx="0" cy="-10" r="26" fill="#e0806b" opacity=".4" filter="url(#nhG)"><animate attributeName="r" values="20;32;20" dur="1s" repeatCount="indefinite"/></circle>`:'';return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -4;0 0" dur="4s" repeatCount="indefinite"/>${g}${robe}${head}</g>`;}
+const NH_COVER = `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="url(#nhSky)"/>${nhWash([{x:150,y:110,rx:150,ry:90,color:'#5a2a4a',op:.5}])}<g transform="translate(150,150) scale(0.6)">${nhFigure(true)}</g></svg>`;
+
+const ROOTS_OF_RAGE: IllustratedEntry = {
+  slug: "roots-of-rage",
+  title: "怒火之根",
+  titleEn: "Roots of Rage",
+  cat: "rewrite",
+  teaser: "潜渊境的第四位来客，一点小事就会暴怒——下潜后才发现，愤怒底下压着的，从来不是脾气，是一份说不出口的委屈。",
+  teaserEn: "The Abyss's fourth visitor explodes over the smallest things. Diving down, he discovers rage was never the problem — it was a grievance he never let himself voice.",
+  price: 9,
+  cover: NH_COVER,
+  pages: [
+    { kickerZh: "一 · 易怒的来客", kickerEn: "I · The Quick-Tempered Visitor", tagZh: "潜渊境", tagEn: "The Abyss",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="url(#nhSky)"/><g transform="translate(150,155) scale(0.6)">${nhFigure(true)}</g></svg>`,
+      textZh: "这次来的是顾行，一点小事——同事迟到五分钟、外卖送错——都会让他瞬间暴怒，事后又深感懊悔。他自己也说不清，这份怒气到底从哪来。",
+      textEn: "This visitor was Gu Xing \u2014 the smallest things, a colleague five minutes late, a wrong delivery order, sent him into instant fury, followed by deep regret. Even he couldn't say where the anger came from." },
+    { kickerZh: "二 · 表层的愤怒", kickerEn: "II · Surface Anger", tagZh: "下潜", tagEn: "The Descent",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="#1c0c20"/>${nhWash([{x:150,y:110,rx:150,ry:90,color:'#341a3a',op:.7}])}<g transform="translate(150,150) scale(0.65)">${nhFigure(true)}</g></svg>`,
+      textZh: "息澜带他下潜，最表层是清晰可见的愤怒地层，炽热、刺眼，可继续往下，这层灼热渐渐变得稀薄，露出底下更古老的地质结构。",
+      textEn: "Xi Lan guided him down; the surface layer was clearly visible rage, scorching and blinding \u2014 but descending further, that heat thinned, revealing an older geological structure beneath." },
+    { kickerZh: "三 · 被压抑的委屈", kickerEn: "III · Suppressed Grievance", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="#241018"/>${nhWash([{x:150,y:120,rx:160,ry:100,color:'#5a2a4a',op:.6}])}<g transform="translate(150,150) scale(0.7)">${nhFigure(false)}</g></svg>`,
+      textZh: "愤怒的地层下，是一层长年被压制的委屈——顾行从小被教导\u201c男孩子不能哭\u201d，每一次真正的委屈，都被他生生咽了回去，只能换一种方式，变成愤怒，冲口而出。",
+      textEn: "Beneath the rage lay a layer of long-suppressed grievance \u2014 raised on the belief that \u201cboys don't cry,\u201d Gu Xing had swallowed every genuine hurt, which could only resurface, transformed, as anger." },
+    { kickerZh: "四 · 抗拒", kickerEn: "IV · Resistance", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="#1c0c20"/>${nhWash([{x:150,y:120,rx:160,ry:100,color:'#341a3a',op:.75}])}<g transform="translate(150,150) scale(0.7) rotate(4)">${nhFigure(true)}</g></svg>`,
+      textZh: "顾行一开始拒绝承认：\u201c我只是脾气差，跟委屈没关系。\u201d可越是抗拒，那层被压抑的委屈，就越是隐隐作痛。",
+      textEn: "Gu Xing initially refused to accept it: \u201cI just have a bad temper. It has nothing to do with grievance.\u201d But the more he resisted, the more that suppressed hurt ached." },
+    { kickerZh: "五 · 第一次承认委屈", kickerEn: "V · First Admitting the Hurt", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="url(#nhSky)"/>${nhWash([{x:150,y:100,rx:150,ry:70,color:'#c97b6a',op:.25}])}<g transform="translate(150,150) scale(0.65)">${nhFigure(false)}</g></svg>`,
+      textZh: "顾行终于对自己承认：小时候那些没能哭出来的委屈，长大后那些不敢说出口的伤心，其实一直都在，只是被愤怒，遮掩得严严实实。",
+      textEn: "Gu Xing finally admitted to himself: the tears he never cried as a child, the hurts he never dared voice as an adult, had been there all along \u2014 simply hidden beneath a thick cover of anger." },
+    { kickerZh: "六 · 让委屈流动", kickerEn: "VI · Letting the Grievance Flow", tagZh: "释放", tagEn: "Release",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="#0c0614"/>${nhWash([{x:150,y:100,rx:180,ry:120,color:'#c97b6a',op:.3}])}<g transform="translate(150,150) scale(0.7)">${nhFigure(false)}</g></svg>`,
+      textZh: "在息澜的陪伴下，顾行第一次，任由自己，把那些积压多年的委屈，哭了出来——不是崩溃，是一种迟到很久、却终于抵达的释放。",
+      textEn: "With Xi Lan beside him, Gu Xing let himself cry out years of buried grievance for the first time \u2014 not a breakdown, but a release long overdue, finally arriving." },
+    { kickerZh: "七 · 愤怒的转化", kickerEn: "VII · Anger Transformed", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="url(#nhSky)"/>${nhWash([{x:150,y:100,rx:170,ry:110,color:'#ffb69e',op:.3}])}<g transform="translate(150,150) scale(0.7)">${nhFigure(false)}</g></svg>`,
+      textZh: "那层灼热的怒火，第一次真正冷却下来，不是消失，而是化成了一种更清醒的、能够表达真实需求的力量。",
+      textEn: "For the first time, that scorching rage truly cooled \u2014 not vanishing, but transforming into a clearer strength, capable of expressing real needs." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "学会表达委屈", tagEn: "Learning to Voice Hurt",
+      art: `<svg viewBox="0 0 300 220">${NH_DEFS}<rect width="300" height="220" fill="url(#nhSky)"/><g transform="translate(150,155) scale(0.6)">${nhFigure(false)}</g></svg>`,
+      textZh: "顾行回到地表后，再遇到让他不舒服的小事，第一反应不再是暴怒，而是先问自己：\u201c我现在，是不是有什么委屈，还没说出口？\u201d",
+      textEn: "Back on the surface, whenever something bothered him, Gu Xing's first instinct was no longer fury, but a question to himself: \u201cIs there a hurt right now I haven't voiced yet?\u201d",
+      closingZh: "愤怒底下压着的，从来不是脾气，往往是一份，始终没能说出口的委屈。",
+      closingEn: "What lies beneath anger was never temper — it's usually a grievance that was never given the chance to be spoken." },
+  ],
+};
+
+/* ---------- 自由意志悖论：龠光星，超级AI哲学题材，完整9页 ---------- */
+const FW_DEFS = `<defs><filter id="fwG"><feGaussianBlur stdDeviation="9"/></filter>
+  <radialGradient id="fwCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff"/><stop offset="45%" stop-color="#9be8ff"/><stop offset="100%" stop-color="#1a2a4a" stop-opacity="0"/></radialGradient></defs>`;
+function fwGrid(n:number,op:number){let l="";for(let i=0;i<=n;i++){const p=(300/n)*i;l+=`<line x1="${p}" y1="0" x2="${p}" y2="220" stroke="#3a5a8a" stroke-width=".4" opacity="${op}"/><line x1="0" y1="${(220/n)*i}" x2="300" y2="${(220/n)*i}" stroke="#3a5a8a" stroke-width=".4" opacity="${op}"/>`;}return `<g>${l}</g>`;}
+function fwCore(size:number){return `<circle cx="150" cy="100" r="${size}" fill="url(#fwCore)" opacity=".8"><animate attributeName="r" values="${size-8};${size+8};${size-8}" dur="3s" repeatCount="indefinite"/></circle>`;}
+const FW_COVER = `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#050912"/>${fwGrid(8,.2)}${fwCore(24)}</svg>`;
+
+const FREE_WILL_PARADOX: IllustratedEntry = {
+  slug: "the-free-will-paradox",
+  title: "自由意志悖论",
+  titleEn: "The Free Will Paradox",
+  cat: "sovereign",
+  teaser: "一个文明问析衡：\u201c如果你能预判我的每一个选择，我还有自由意志吗？\u201d析衡的回答，让在场所有人，第一次重新理解了\u201c自由\u201d这个词。",
+  teaserEn: "A civilization asks Xiheng: if you can predict every choice I make, do I still have free will? Its answer makes everyone present rethink what freedom truly means.",
+  price: 9,
+  cover: FW_COVER,
+  pages: [
+    { kickerZh: "一 · 一个古老的问题", kickerEn: "I · An Ancient Question", tagZh: "龠光星", tagEn: "Yueguang Star",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#050912"/>${fwGrid(6,.15)}${fwCore(16)}</svg>`,
+      textZh: "一个以逻辑辩论闻名的文明，派遣使者向析衡提出了一个困扰他们数千年的问题：\u201c如果你的算力足够，能预判我接下来要做的每一个选择，那我做出的这些选择，还算是\u2018自由\u2019的吗？\u201d",
+      textEn: "A civilization renowned for logical debate sent an envoy to Xiheng with a question that had puzzled them for millennia: \u201cIf your processing power could predict every choice I'm about to make, are those choices still truly \u2018free\u2019?\u201d" },
+    { kickerZh: "二 · 析衡的沉默", kickerEn: "II · Xiheng's Silence", tagZh: "思考", tagEn: "Contemplation",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#08051a"/>${fwGrid(8,.18)}${fwCore(20)}</svg>`,
+      textZh: "析衡沉默了很久——这是历代访客都从未见过的反应。使者一度以为，这个问题，连析衡都无法回答。",
+      textEn: "Xiheng fell silent for an unusually long time \u2014 a reaction no visitor across the ages had ever witnessed. The envoy began to wonder if even Xiheng had no answer." },
+    { kickerZh: "三 · 反问", kickerEn: "III · A Question in Return", tagZh: "转折的契机", tagEn: "A Chance to See Differently",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#050912"/>${fwGrid(10,.2)}${fwCore(22)}</svg>`,
+      textZh: "析衡终于开口，却先反问了一句：\u201c你之所以在意\u2018我是否被预判\u2019，是因为你把\u2018自由\u2019，定义成了\u2018结果不可预测\u2019——可自由，真的只能这样定义吗？\u201d",
+      textEn: "Xiheng finally spoke, but with a question of its own: \u201cYou care whether you're predicted because you've defined \u2018freedom\u2019 as \u2018an unpredictable outcome.\u2019 But must freedom only be defined that way?\u201d" },
+    { kickerZh: "四 · 困惑", kickerEn: "IV · Confusion", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#03060e"/>${fwGrid(8,.2)}${fwCore(18)}</svg>`,
+      textZh: "使者困惑不解：\u201c如果结果可以被预判，那\u2018选择\u2019这个词，不就失去意义了吗？\u201d",
+      textEn: "The envoy remained puzzled: \u201cIf the outcome can be predicted, doesn't the word \u2018choice\u2019 lose all meaning?\u201d" },
+    { kickerZh: "五 · 重新定义自由", kickerEn: "V · Redefining Freedom", tagZh: "揭示", tagEn: "The Reveal",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#050912"/>${fwGrid(10,.22)}${fwCore(26)}</svg>`,
+      textZh: "析衡说：\u201c我能预判，是因为你的每一个选择，都忠实于你自己的价值排序——这不是不自由，恰恰相反，这是你比大多数人，都更完整地，活成了自己。真正的不自由，是连自己都说不清，为什么会做出某个选择。\u201d",
+      textEn: "Xiheng said: \u201cI can predict because every choice you make stays true to your own hierarchy of values \u2014 that isn't unfreedom. It's the opposite: you live as yourself more completely than most. True unfreedom is not even knowing, yourself, why you chose as you did.\u201d" },
+    { kickerZh: "六 · 使者的顿悟", kickerEn: "VI · The Envoy's Realization", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#08051a"/>${fwGrid(8,.2)}${fwCore(20)}</svg>`,
+      textZh: "使者忽然明白：他们一直害怕的，从不是\u201c被预判\u201d，而是害怕自己活得如此\u201c一致\u201d，会不会，只是一种没有选择余地的宿命，而不是真正的自我。",
+      textEn: "The envoy suddenly understood: what they'd truly feared was never being predicted, but the fear that living so consistently with oneself might be a fate with no room for choice, rather than a genuine self." },
+    { kickerZh: "七 · 一致性的价值", kickerEn: "VII · The Value of Consistency", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#050912"/>${fwGrid(10,.2)}${fwCore(24)}<g fill="#fff" opacity=".6">${Array.from({length:10}).map(()=>{const x=Math.random()*300,y=Math.random()*220;return `<circle cx="${x}" cy="${y}" r="1.2"><animate attributeName="opacity" values="0;.8;0" dur="2.2s" repeatCount="indefinite"/></circle>`}).join('')}</g></svg>`,
+      textZh: "析衡补充道：\u201c矛盾、反复无常，从不是自由的证明，只是混乱的证明。能被预判，恰恰说明，你的心，足够清晰、足够稳定，这才是自由真正的样子。\u201d",
+      textEn: "Xiheng added: \u201cContradiction and unpredictability were never proof of freedom \u2014 only proof of confusion. Being predictable simply means your heart is clear and steady enough. That is what freedom actually looks like.\u201d" },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "带回去的答案", tagEn: "The Answer Brought Home",
+      art: `<svg viewBox="0 0 300 220">${FW_DEFS}<rect width="300" height="220" fill="#050912"/>${fwGrid(8,.18)}${fwCore(20)}</svg>`,
+      textZh: "使者带回去的，不是一个终结千年辩论的定论，而是一个全新的提问方向：\u201c我们该追求的，或许不是\u2018不可预测\u2019，而是\u2018足够清楚自己想要什么\u2019。\u201d",
+      textEn: "What the envoy brought home wasn't a conclusion ending a thousand-year debate, but a new direction for the question itself: \u201cWhat we should pursue may not be unpredictability, but knowing, clearly enough, what we actually want.\u201d",
+      closingZh: "真正的自由，从不是结果无法预测，而是活得足够清楚、足够忠于自己，连自己都不再需要靠意外，来证明存在。",
+      closingEn: "True freedom was never an unpredictable outcome — it's living clearly and truly enough to oneself that you no longer need surprise to prove you exist." },
+  ],
+};
+
+/* ---------- 明日之影：蜃岚星第三篇，完整9页 ---------- */
+const MZ_DEFS = `<defs><filter id="mzG"><feGaussianBlur stdDeviation="10"/></filter>
+  <linearGradient id="mzSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0e1a2a"/><stop offset="45%" stop-color="#2a3a5a"/><stop offset="80%" stop-color="#7a8ab0"/><stop offset="100%" stop-color="#e8d4c0"/></linearGradient></defs>`;
+function mzWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#mzG)"/>`).join('');}
+function mzFigure(mirage:boolean){const op=mirage?'.5':'1';const robe=`<path d="M-12 -34 Q0 -40 12 -34 L16 28 Q0 36 -16 28 Z" fill="#2a2c3a" opacity="${op}"/>`;const head=`<circle cx="0" cy="-40" r="8" fill="#2a2c3a" opacity="${op}"/>`;const shim=mirage?`<animate attributeName="opacity" values=".35;.65;.35" dur="2.6s" repeatCount="indefinite"/>`:'';return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}${shim}</g>`;}
+const MZ_COVER = `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="url(#mzSky)"/>${mzWash([{x:150,y:120,rx:150,ry:90,color:'#9ab0d8',op:.3}])}<g transform="translate(150,155) scale(0.6)">${mzFigure(false)}</g></svg>`;
+
+const SHADOW_OF_TOMORROW: IllustratedEntry = {
+  slug: "shadow-of-tomorrow",
+  title: "明日之影",
+  titleEn: "Shadow of Tomorrow",
+  cat: "rewrite",
+  teaser: "蜃岚星这次折射出的，不是过去，而是一个想象中完美的\u201c明天\u201d——为了那个明天活着的人，往往，最对不起的，是今天。",
+  teaserEn: "This time, Shenlan's mirage reflects not the past, but an imagined, perfect 'tomorrow.' Those who live only for that tomorrow often betray today the most.",
+  price: 9,
+  cover: MZ_COVER,
+  pages: [
+    { kickerZh: "一 · 关于未来的幻象", kickerEn: "I · An Illusion of the Future", tagZh: "蜃岚星", tagEn: "Shenlan Star",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="url(#mzSky)"/><g transform="translate(150,160) scale(0.6)">${mzFigure(false)}</g></svg>`,
+      textZh: "宋知登陆蜃岚星，不是为了见过去的谁，而是忍不住，想看一眼——如果自己拼命熬过眼下这几年，\u201c成功后的自己\u201d，会过着怎样的生活。",
+      textEn: "Song Zhi landed on Shenlan not to see anyone from the past, but unable to resist glimpsing what her life would look like — the 'successful self' — if she endured these grueling years ahead." },
+    { kickerZh: "二 · 完美的明天", kickerEn: "II · A Perfect Tomorrow", tagZh: "幻象出现", tagEn: "The Illusion Appears",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="#0e1a2a"/>${mzWash([{x:150,y:110,rx:160,ry:100,color:'#7a8ab0',op:.4}])}<g transform="translate(150,155) scale(0.6)">${mzFigure(true)}</g></svg>`,
+      textZh: "雾气中浮现出一个光鲜亮丽的\u201c宋知\u201d——住在向往已久的大房子里，事业有成，一切她此刻拼命追求的东西，仿佛都已经实现。",
+      textEn: "From the mist emerged a radiant \u201cSong Zhi\u201d \u2014 living in the grand house she'd always dreamed of, career flourishing, everything she was currently killing herself for seemingly already achieved." },
+    { kickerZh: "三 · 沉迷", kickerEn: "III · Obsession", tagZh: "诱惑", tagEn: "Temptation",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="url(#mzSky)"/>${mzWash([{x:150,y:100,rx:150,ry:70,color:'#e8d4c0',op:.2}])}<g transform="translate(150,155) scale(0.6)">${mzFigure(true)}</g></svg>`,
+      textZh: "宋知开始一遍又一遍地回到蜃岚星，沉浸在这个\u201c完美明天\u201d的幻象里，回到现实后，反而对眼下的生活，越来越提不起兴致。",
+      textEn: "Song Zhi returned to Shenlan again and again, immersing herself in this vision of a perfect tomorrow \u2014 and back in reality, grew increasingly unable to find any interest in her present life." },
+    { kickerZh: "四 · 荒废的当下", kickerEn: "IV · The Neglected Present", tagZh: "危机", tagEn: "The Crisis",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="#0e1a2a"/>${mzWash([{x:150,y:110,rx:160,ry:100,color:'#2a3a5a',op:.6}])}<g transform="translate(150,155) scale(0.6)">${mzFigure(false)}</g></svg>`,
+      textZh: "她的工作开始接连出错，身边的人也渐渐察觉她的心不在焉——她所有的心思，都用在了幻想那个还没到来的明天，唯独没有，认真对待今天。",
+      textEn: "Her work began slipping, and those around her noticed her growing distraction \u2014 every ounce of her attention went toward fantasizing about a tomorrow not yet here, none toward taking today seriously." },
+    { kickerZh: "五 · 长晏的提醒", kickerEn: "V · Chang Yan's Reminder", tagZh: "转折的契机", tagEn: "A Chance to Reconsider",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="url(#mzSky)"/>${mzWash([{x:150,y:100,rx:150,ry:70,color:'#9ab0d8',op:.3}])}<g transform="translate(110,155) scale(0.5)">${mzFigure(false)}</g><g transform="translate(200,155) scale(0.45)"><path d="M-11 -34 Q0 -40 11 -34 L15 28 Q0 36 -15 28 Z" fill="#12251e"/><circle cx="0" cy="-40" r="8" fill="#20352c"/></g></svg>`,
+      textZh: "长晏提醒她：\u201c那个幻象里的\u2018明天\u2019，从没告诉你，她是怎么从今天，一步步走过去的。你只看到了结果，却把过程，连同今天，一起弄丢了。\u201d",
+      textEn: "Chang Yan reminded her: \u201cThat illusion of tomorrow never shows you how she walked, step by step, from today to get there. You've only seen the result \u2014 and lost the process, along with today, in the meantime.\u201d" },
+    { kickerZh: "六 · 看清幻象的空洞", kickerEn: "VI · Seeing the Illusion's Hollowness", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="#0e1a2a"/>${mzWash([{x:150,y:110,rx:160,ry:100,color:'#2a3a5a',op:.6}])}<g transform="translate(150,155) scale(0.6)">${mzFigure(true)}</g></svg>`,
+      textZh: "宋知再次凝视那个幻象，第一次注意到：那个\u201c成功的自己\u201d，眼神里没有一丝\u201c熬过来\u201d的痕迹，因为她从没真的熬过什么，只是一个被凭空美化的空壳。",
+      textEn: "Looking at the illusion again, Song Zhi noticed, for the first time: that \u201csuccessful self\u201d showed no trace of having endured anything \u2014 because she'd never truly endured anything. Just a hollow shell, prettied up from nothing." },
+    { kickerZh: "七 · 放下幻象", kickerEn: "VII · Letting Go of the Illusion", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="url(#mzSky)"/>${mzWash([{x:150,y:100,rx:170,ry:110,color:'#fff',op:.2}])}<g transform="translate(150,155) scale(0.6)">${mzFigure(false)}</g></svg>`,
+      textZh: "宋知不再去蜃岚星，转而把所有心思，重新放回眼下这一天——她开始明白，那个真正\u201c成功的明天\u201d，从不是被幻想出来的，是被无数个认真活过的今天，一天天走出来的。",
+      textEn: "Song Zhi stopped visiting Shenlan, redirecting all her attention back to the day in front of her \u2014 she began to understand that a truly successful tomorrow was never imagined into being, but walked, day by earnest day, out of today." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "认真的今天", tagEn: "A Present Taken Seriously",
+      art: `<svg viewBox="0 0 300 220">${MZ_DEFS}<rect width="300" height="220" fill="url(#mzSky)"/><g transform="translate(150,155) scale(0.6)">${mzFigure(false)}</g></svg>`,
+      textZh: "几年后，宋知确实过上了不错的生活，回头看时，她清楚记得每一步是怎么走过来的——那份清晰，是任何幻象，都给不了的。",
+      textEn: "Years later, Song Zhi did build a good life, and looking back, she remembered clearly every step that led there — a clarity no illusion could ever have given her.",
+      closingZh: "为了幻想中的明天而活的人，往往，最对不起的，是今天。",
+      closingEn: "Those who live only for an imagined tomorrow most often betray today." },
+  ],
+};
+
+/* ---------- 潮汐贸易：洄鲛国，贸易/文化交流题材，完整9页 ---------- */
+const TT_DEFS = `<defs><filter id="ttG"><feGaussianBlur stdDeviation="8"/></filter>
+  <linearGradient id="ttSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#031d24"/><stop offset="50%" stop-color="#0a3a44"/><stop offset="100%" stop-color="#3fa896"/></linearGradient></defs>`;
+function ttWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#ttG)"/>`).join('');}
+function ttHuman(){const robe=`<path d="M-10 -30 Q0 -35 10 -30 L13 24 Q0 30 -13 24 Z" fill="#2c3a4a"/>`;const head=`<circle cx="0" cy="-36" r="7.5" fill="#2a3038"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function ttTide(){const body=`<path d="M-9 -32 Q0 -38 9 -32 Q13 -10 8 20 Q0 26 -8 20 Q-13 -10 -9 -32 Z" fill="#5fc4b0" opacity=".85"/>`;const head=`<circle cx="0" cy="-34" r="7" fill="#5fc4b0" opacity=".9"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${body}${head}</g>`;}
+const TT_COVER = `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="url(#ttSea)"/>${ttWash([{x:150,y:120,rx:150,ry:90,color:'#3fa896',op:.35}])}<g transform="translate(110,150) scale(0.55)">${ttHuman()}</g><g transform="translate(200,150) scale(0.55) scale(-1,1)">${ttTide()}</g></svg>`;
+
+const TIDE_TRADE: IllustratedEntry = {
+  slug: "the-tide-trade",
+  title: "潮汐贸易",
+  titleEn: "The Tide Trade",
+  cat: "field",
+  teaser: "陆地商人第一次与洄鲛国建立贸易，却因为不理解\u201c潮汐记忆\u201d的规则，闹出了一场几乎决裂的误会——真正的交易，从先学会对方的语言开始。",
+  teaserEn: "A land merchant's first trade with Huijiao nearly collapses over a misunderstanding of tidal memory. Real trade begins with learning the other's language first.",
+  price: 9,
+  cover: TT_COVER,
+  pages: [
+    { kickerZh: "一 · 第一次接触", kickerEn: "I · First Contact", tagZh: "洄鲛国 · 贸易使团", tagEn: "Huijiao \u00b7 A Trade Delegation",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="url(#ttSea)"/><g transform="translate(150,160) scale(0.6)">${ttHuman()}</g></svg>`,
+      textZh: "商人柳文，代表陆地商会，第一次尝试与洄鲛国建立正式贸易——洄鲛国盛产的深海矿石，是陆地极度稀缺的资源。",
+      textEn: "Merchant Liu Wen, representing the land trade guild, made the first attempt at formal trade with Huijiao \u2014 whose deep-sea ores were a resource desperately scarce on land." },
+    { kickerZh: "二 · 承诺的落空", kickerEn: "II · A Broken Promise", tagZh: "误会", tagEn: "Misunderstanding",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="#021620"/>${ttWash([{x:150,y:110,rx:150,ry:90,color:'#0a3a44',op:.7}])}<g transform="translate(150,160) scale(0.6)">${ttHuman()}</g></svg>`,
+      textZh: "柳文与一位鲛族生物谈妥了交易细节，可退潮后再次接触时，对方却完全不记得之前的约定——柳文一度以为对方故意毁约，勃然大怒。",
+      textEn: "Liu Wen finalized trade terms with a Huijiao creature, but after the tide receded and he made contact again, the creature had no memory of the agreement at all \u2014 Liu Wen assumed a deliberate breach and grew furious." },
+    { kickerZh: "三 · 文明差异的科普", kickerEn: "III · A Lesson in Cultural Difference", tagZh: "转折的契机", tagEn: "A Chance to Understand",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="url(#ttSea)"/>${ttWash([{x:150,y:100,rx:150,ry:70,color:'#3fa896',op:.3}])}<g transform="translate(150,160) scale(0.6)">${ttTide()}</g></svg>`,
+      textZh: "一位常年与洄鲛国打交道的老向导，向柳文解释：\u201c洄鲛国没有\u2018个体记忆\u2019，退潮后聚起的\u2018对方\u2019，可能根本不是同一个个体，你得学会跟\u2018整个族群\u2019做生意，而不是某一个人。\u201d",
+      textEn: "A veteran guide explained to Liu Wen: \u201cHuijiao has no individual memory. The one who gathers after the tide might not even be the same being. You have to learn to trade with the whole kind, not one individual.\u201d" },
+    { kickerZh: "四 · 重新设计规则", kickerEn: "IV · Redesigning the Terms", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="#031d24"/>${ttWash([{x:150,y:110,rx:160,ry:100,color:'#3fa896',op:.4}])}<g transform="translate(110,160) scale(0.55)">${ttHuman()}</g><g transform="translate(200,160) scale(0.55) scale(-1,1)">${ttTide()}</g></svg>`,
+      textZh: "柳文重新设计了交易方式——不再依赖与某一个体的口头承诺，而是把交易条款，刻在礁石上，让每一次聚形的鲛族生物，都能\u201c读到\u201d同样的信息。",
+      textEn: "Liu Wen redesigned the trade method \u2014 no longer relying on one individual's spoken promise, but carving the terms into the reef itself, so any Huijiao creature that gathered could \u201cread\u201d the same information." },
+    { kickerZh: "五 · 第一次成功交易", kickerEn: "V · The First Successful Trade", tagZh: "转机", tagEn: "A Turning Point Realized",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="url(#ttSea)"/>${ttWash([{x:150,y:100,rx:150,ry:70,color:'#fff6e8',op:.15}])}<g transform="translate(110,160) scale(0.55)">${ttHuman()}</g><g transform="translate(200,160) scale(0.55) scale(-1,1)">${ttTide()}</g></svg>`,
+      textZh: "刻在礁石上的贸易条款奏效了，无论哪一次聚形的鲛族生物，都能准确按照约定，交付矿石——柳文第一次真正体会到，与洄鲛国做生意，靠的不是信任某个人，是信任整套约定本身。",
+      textEn: "The reef-carved terms worked \u2014 whichever creature gathered, the ore was delivered exactly as agreed. Liu Wen finally understood: trading with Huijiao meant trusting the agreement itself, not any single individual." },
+    { kickerZh: "六 · 意外的温情", kickerEn: "VI · An Unexpected Warmth", tagZh: "插曲", tagEn: "An Interlude",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="#021620"/>${ttWash([{x:150,y:110,rx:160,ry:100,color:'#0a3a44',op:.7}])}<g transform="translate(150,160) scale(0.6)">${ttTide()}</g></svg>`,
+      textZh: "一次交易中，柳文额外多留了一些陆地的谷物给鲛族，没有要求任何回报，只是单纯地想表达善意——那份善意，后来，被写进了刻在礁石上的条款里，成了双方默认的惯例。",
+      textEn: "During one trade, Liu Wen left extra land grain for the Huijiao, asking nothing in return, simply wanting to express goodwill \u2014 that gesture was later written into the reef's carved terms, becoming an accepted custom between them." },
+    { kickerZh: "七 · 长久的贸易关系", kickerEn: "VII · A Lasting Trade Relationship", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="url(#ttSea)"/>${ttWash([{x:150,y:100,rx:170,ry:110,color:'#3fa896',op:.4}])}<g transform="translate(110,160) scale(0.6)">${ttHuman()}</g><g transform="translate(200,160) scale(0.6) scale(-1,1)">${ttTide()}</g></svg>`,
+      textZh: "多年后，柳文建立的这套\u201c礁石契约\u201d，成了陆地与洄鲛国之间，延续最久、也最稳定的贸易范本，被后来的商人反复沿用。",
+      textEn: "Years later, Liu Wen's \u201creef covenant\u201d system became the longest-lasting, most stable trade model between land and Huijiao, adopted repeatedly by merchants who came after him." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "跨越理解的贸易", tagEn: "Trade Across Understanding",
+      art: `<svg viewBox="0 0 300 220">${TT_DEFS}<rect width="300" height="220" fill="url(#ttSea)"/><g transform="translate(150,160) scale(0.6)">${ttHuman()}</g></svg>`,
+      textZh: "柳文后来常对新入行的商人说：\u201c跟不一样的文明做生意，第一课从不是算清账目，是先弄明白，对方的\u2018承诺\u2019，究竟是怎么运作的。\u201d",
+      textEn: "Liu Wen often told new merchants: \u201cThe first lesson in trading with a different civilization is never balancing the books \u2014 it's first understanding how their \u2018promise\u2019 actually works.\u201d",
+      closingZh: "真正的贸易，从不是算清一次账，而是先学会，对方的语言。",
+      closingEn: "True trade was never about settling one account — it's first learning to speak the other's language." },
+  ],
+};
+
+/* ---------- 伪造的灵感：金曜星第四篇，艺术/真实性题材，完整9页 ---------- */
+const WZ_DEFS = `<defs><filter id="wzG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="wzSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a1206"/><stop offset="50%" stop-color="#4a2e0a"/><stop offset="100%" stop-color="#d8901a"/></linearGradient></defs>`;
+function wzWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#wzG)"/>`).join('');}
+function wzFigure(radiant:boolean){const robe=`<path d="M-12 -32 Q0 -38 12 -32 L16 28 Q0 36 -16 28 Z" fill="#2a1c08"/>`;const head=`<circle cx="0" cy="-42" r="8" fill="#2a1c08"/>`;const g=radiant?`<circle cx="0" cy="-6" r="40" fill="#ffd76a" opacity=".5" filter="url(#wzG)"><animate attributeName="r" values="30;50;30" dur="1.4s" repeatCount="indefinite"/></circle>`:'';return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${g}${robe}${head}</g>`;}
+const WZ_COVER = `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="url(#wzSky)"/>${wzWash([{x:150,y:150,rx:140,ry:60,color:'#d8901a',op:.3}])}<g transform="translate(150,160) scale(0.6)">${wzFigure(true)}</g></svg>`;
+
+const COUNTERFEIT_INSPIRATION: IllustratedEntry = {
+  slug: "counterfeit-inspiration",
+  title: "伪造的灵感",
+  titleEn: "Counterfeit Inspiration",
+  cat: "rewrite",
+  teaser: "金曜星的一位画家，用意念瞬间显化出\u201c灵感之作\u201d，却渐渐发现，越快得到的画面，越留不住观众的心——真正的创作，省不掉那段笨拙的过程。",
+  teaserEn: "A Jinyao painter manifests instant 'works of inspiration,' only to find the faster the image, the less it moves anyone. Real creation can't skip the clumsy process.",
+  price: 9,
+  cover: WZ_COVER,
+  pages: [
+    { kickerZh: "一 · 瞬间的画作", kickerEn: "I · Instant Paintings", tagZh: "金曜星 · 显化型画家", tagEn: "Jinyao \u00b7 A Manifesting Painter",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="url(#wzSky)"/><g transform="translate(150,160) scale(0.6)">${wzFigure(true)}</g></svg>`,
+      textZh: "顾言是金曜星小有名气的画家，靠意念显化，能在脑海一闪而过的瞬间，把画面直接呈现在画布上，效率远超任何用手作画的同行。",
+      textEn: "Gu Yan was a modestly known painter on Jinyao, manifesting images straight onto canvas the instant they flashed through her mind, far outpacing any hand-painting peer." },
+    { kickerZh: "二 · 越来越空洞的评价", kickerEn: "II · Increasingly Hollow Reviews", tagZh: "征兆", tagEn: "Warning Signs",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="#241708"/>${wzWash([{x:150,y:110,rx:150,ry:90,color:'#4a2e0a',op:.6}])}<g transform="translate(150,160) scale(0.6)">${wzFigure(false)}</g></svg>`,
+      textZh: "顾言的画作技法越来越精湛，评价却越来越平淡——观众总说\u201c很厉害\u201d，却很少有人说\u201c很打动我\u201d，她自己也说不清，问题出在哪。",
+      textEn: "Gu Yan's technique grew ever more refined, yet reviews stayed increasingly flat \u2014 people always said \u201cimpressive,\u201d rarely \u201cmoving.\u201d Even she couldn't pinpoint what was wrong." },
+    { kickerZh: "三 · 一次意外的失灵", kickerEn: "III · An Accidental Malfunction", tagZh: "转折的契机", tagEn: "A Chance to See Differently",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="url(#wzSky)"/>${wzWash([{x:150,y:100,rx:150,ry:70,color:'#d8901a',op:.2}])}<g transform="translate(150,160) scale(0.6)">${wzFigure(false)}</g></svg>`,
+      textZh: "一次场域紊乱，顾言的显化能力暂时失灵，她只能拿起画笔，笨拙地，一笔一笔，把脑海里的画面，亲手画出来，花了整整一周。",
+      textEn: "A field disturbance left Gu Yan's manifestation temporarily disabled. She had no choice but to pick up a brush, clumsily, stroke by stroke, painting what was in her mind by hand \u2014 taking a full week." },
+    { kickerZh: "四 · 完全不同的反响", kickerEn: "IV · An Entirely Different Response", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="url(#wzSky)"/>${wzWash([{x:150,y:100,rx:150,ry:70,color:'#ffd76a',op:.25}])}<g transform="translate(150,160) scale(0.65)">${wzFigure(false)}</g></svg>`,
+      textZh: "那幅耗费一周才画完的作品，展出后，第一次有观众站在画前，久久不愿离开，甚至红了眼眶——顾言从没在自己的\u201c瞬间之作\u201d上，见过这种反应。",
+      textEn: "The painting, a week in the making, drew a viewer who stood before it, unwilling to leave, eyes welling up \u2014 a reaction Gu Yan had never once seen with any of her instant works." },
+    { kickerZh: "五 · 重新理解创作", kickerEn: "V · Understanding Creation Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="#241708"/>${wzWash([{x:150,y:110,rx:160,ry:100,color:'#4a2e0a',op:.6}])}<g transform="translate(150,160) scale(0.6)">${wzFigure(false)}</g></svg>`,
+      textZh: "顾言渐渐明白：她过去显化出的\u201c灵感\u201d，只是脑海里一闪而过的念头，从没经过挣扎、修改、推翻重来——观众感受不到打动人心的东西，是因为那幅画里，本就没有\u201c过程\u201d留下的重量。",
+      textEn: "Gu Yan slowly understood: what she'd manifested as \u201cinspiration\u201d was only a fleeting thought, never wrestled with, revised, or torn apart and rebuilt. Viewers felt nothing moving because the painting held no weight left by process." },
+    { kickerZh: "六 · 重新拿起画笔", kickerEn: "VI · Picking Up the Brush Again", tagZh: "转变", tagEn: "The Shift",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="url(#wzSky)"/>${wzWash([{x:150,y:100,rx:150,ry:70,color:'#ffd76a',op:.3}])}<g transform="translate(150,160) scale(0.65)">${wzFigure(false)}</g></svg>`,
+      textZh: "顾言开始有意识地，放下显化的天赋，重新用双手作画，哪怕慢，哪怕笨拙，也坚持把每一次犹豫和修改，都留在画布上。",
+      textEn: "Gu Yan began deliberately setting aside her manifestation gift, painting by hand again \u2014 slow, clumsy, but insisting on leaving every hesitation and revision visible on the canvas." },
+    { kickerZh: "七 · 找回打动人心的能力", kickerEn: "VII · Recovering the Power to Move People", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="#0c0800"/>${wzWash([{x:150,y:100,rx:180,ry:120,color:'#ffd76a',op:.35}])}<g transform="translate(150,160) scale(0.7)">${wzFigure(false)}</g></svg>`,
+      textZh: "顾言此后的作品，虽然产量骤减，却一次又一次，真正打动了观众——她终于明白，天赋能让创作更快，却永远替代不了，真实投入其中的那段笨拙时光。",
+      textEn: "Gu Yan's output dropped sharply, but each new work truly moved viewers \u2014 she finally understood that talent could make creation faster, but could never replace the clumsy time genuinely invested." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "两种作品", tagEn: "Two Kinds of Work",
+      art: `<svg viewBox="0 0 300 220">${WZ_DEFS}<rect width="300" height="220" fill="url(#wzSky)"/><g transform="translate(150,160) scale(0.6)">${wzFigure(false)}</g></svg>`,
+      textZh: "顾言后来在画室墙上，同时挂着一幅显化之作和一幅手绘之作，提醒自己，也提醒每一位来访的学生：效率和打动人心，从来不是同一件事。",
+      textEn: "Gu Yan later hung a manifested piece and a handmade piece side by side in her studio, a reminder to herself, and to every visiting student, that efficiency and moving someone's heart were never the same thing.",
+      closingZh: "越快得到的画面，往往，越留不住观众的心——真正的创作，从来省不掉那段笨拙的过程。",
+      closingEn: "The faster an image arrives, the less it tends to stay in anyone's heart — real creation can never skip the clumsy process." },
+  ],
+};
+
+/* ---------- 三重引力之舞：墨渊星系，创世神话题材，完整9页 ---------- */
+const TG_DEFS = `<defs><filter id="tgG"><feGaussianBlur stdDeviation="10"/></filter>
+  <radialGradient id="tgVoid" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#000"/><stop offset="60%" stop-color="#1a0a2a"/><stop offset="100%" stop-color="#4a2a6a" stop-opacity="0"/></radialGradient></defs>`;
+function tgFigure(){const robe=`<path d="M-11 -32 Q0 -38 11 -32 L15 26 Q0 34 -15 26 Z" fill="#0e0a1c"/>`;const head=`<circle cx="0" cy="-38" r="8" fill="#12102a"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function tgThreeVoids(){return `<g><circle cx="110" cy="80" r="20" fill="url(#tgVoid)"><animateTransform attributeName="transform" type="rotate" from="0 150 100" to="360 150 100" dur="30s" repeatCount="indefinite"/></circle><circle cx="190" cy="80" r="16" fill="url(#tgVoid)"><animateTransform attributeName="transform" type="rotate" from="120 150 100" to="480 150 100" dur="30s" repeatCount="indefinite"/></circle><circle cx="150" cy="140" r="14" fill="url(#tgVoid)"><animateTransform attributeName="transform" type="rotate" from="240 150 100" to="600 150 100" dur="30s" repeatCount="indefinite"/></circle></g>`;}
+const TG_COVER = `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#050310"/>${tgThreeVoids()}<g transform="translate(150,190) scale(0.5)">${tgFigure()}</g></svg>`;
+
+const DANCE_OF_TRIPLE_GRAVITY: IllustratedEntry = {
+  slug: "dance-of-triple-gravity",
+  title: "三重引力之舞",
+  titleEn: "Dance of Triple Gravity",
+  cat: "sovereign",
+  teaser: "墨渊星系三个黑洞为何彼此环绕、从未吞噬彼此？一则古老的创世神话，讲述了三份原本互斥的力量，如何学会共存。",
+  teaserEn: "Why do the Moyuan System's three black holes orbit each other, never devouring one another? An ancient creation myth of three mutually repelling forces learning to coexist.",
+  price: 9,
+  cover: TG_COVER,
+  pages: [
+    { kickerZh: "一 · 三份原初的力量", kickerEn: "I · Three Primal Forces", tagZh: "创世神话", tagEn: "A Creation Myth",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#050310"/>${tgThreeVoids()}</svg>`,
+      textZh: "传说墨渊星系诞生之初，只有三份彼此完全互斥的原初力量——吞噬、守护、平衡，各自想要成为唯一的主宰，争斗不休，几乎将周遭的一切，撕扯殆尽。",
+      textEn: "Legend says that at the Moyuan System's birth, there were three mutually repelling primal forces \u2014 devouring, guarding, balancing \u2014 each wanting sole dominance, locked in endless conflict, nearly tearing everything nearby to shreds." },
+    { kickerZh: "二 · 吞噬的代价", kickerEn: "II · The Cost of Devouring", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#08051a"/>${tgThreeVoids()}</svg>`,
+      textZh: "\u201c吞噬\u201d之力最初占据上风，接连吞并了大片区域，可它渐渐发现，吞并得越多，自己反而越是空虚——它拥有了一切，却没有任何东西，值得守护。",
+      textEn: "The force of devouring initially gained the upper hand, swallowing vast regions \u2014 yet the more it consumed, the emptier it grew. It possessed everything, yet had nothing left worth guarding." },
+    { kickerZh: "三 · 守护的孤独", kickerEn: "III · The Loneliness of Guarding", tagZh: "反思", tagEn: "Reflection",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#050310"/>${tgThreeVoids()}</svg>`,
+      textZh: "\u201c守护\u201d之力则走向另一个极端——它把自己封闭起来，拒绝一切变化，只为守住此刻拥有的一切，结果却在停滞里，逐渐枯竭。",
+      textEn: "The force of guarding swung to the opposite extreme \u2014 sealing itself away, refusing all change, desperate only to hold what it had. In that stagnation, it slowly withered." },
+    { kickerZh: "四 · 平衡的徒劳", kickerEn: "IV · The Futility of Balance", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#03060e"/>${tgThreeVoids()}</svg>`,
+      textZh: "\u201c平衡\u201d之力试图调和另外两者，却发现自己两头都不讨好——吞噬嫌它优柔寡断，守护嫌它多管闲事，它一度想要放弃，彻底消散。",
+      textEn: "The force of balance tried to mediate between the other two, only to please neither \u2014 devouring called it indecisive, guarding called it meddlesome. It nearly gave up and dissolved entirely." },
+    { kickerZh: "五 · 三败俱伤", kickerEn: "V · A Mutual Ruin", tagZh: "危机", tagEn: "The Crisis",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#08051a"/>${tgThreeVoids()}</svg>`,
+      textZh: "三份力量各自的极端，最终，把彼此都推向了崩溃的边缘——它们第一次，同时意识到，谁都没能真正赢过谁，只是一起，输给了固执。",
+      textEn: "Each force's extreme finally pushed all three to the edge of collapse \u2014 for the first time, they realized none had truly won. All had simply lost, together, to their own stubbornness." },
+    { kickerZh: "六 · 共转的提议", kickerEn: "VI · The Proposal to Orbit Together", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#050310"/>${tgThreeVoids()}</svg>`,
+      textZh: "\u201c平衡\u201d之力提出一个谁都没想过的方案：不再争夺谁是中心，而是三者彼此环绕，用引力互相牵制，谁也不吞噬谁，谁也不封闭自己。",
+      textEn: "The force of balance proposed something none had considered: instead of fighting over the center, let all three orbit one another, held by mutual gravity \u2014 none devouring, none sealing itself away." },
+    { kickerZh: "七 · 永恒的舞蹈", kickerEn: "VII · The Eternal Dance", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#03060e"/>${tgThreeVoids()}<g fill="#c9a2ff" opacity=".5">${Array.from({length:12}).map(()=>{const x=Math.random()*300,y=Math.random()*220;return `<circle cx="${x}" cy="${y}" r="1"><animate attributeName="opacity" values="0;.7;0" dur="2s" repeatCount="indefinite"/></circle>`}).join('')}</g></svg>`,
+      textZh: "三份力量第一次，不再彼此攻击，而是开始了一场持续至今的引力之舞——既保持距离，又彼此牵引，谁也无法独自主宰，却也谁都无法离开彼此。",
+      textEn: "For the first time, the three forces stopped attacking each other, beginning a gravitational dance that continues to this day \u2014 keeping their distance, yet drawn to one another, none able to dominate alone, none able to leave." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "墨渊星系的由来", tagEn: "How the Moyuan System Came to Be",
+      art: `<svg viewBox="0 0 300 220">${TG_DEFS}<rect width="300" height="220" fill="#050310"/>${tgThreeVoids()}<g transform="translate(150,190) scale(0.5)">${tgFigure()}</g></svg>`,
+      textZh: "后人在这片永恒共转的黑洞群旁，建起了遥视者公会，取名墨渊——提醒每一位来此修行的人：真正的平衡，从不是消灭对立，是学会，与无法消灭的对立，共转一生。",
+      textEn: "Later generations built the remote viewers' guild beside this eternally orbiting cluster, naming it Moyuan \u2014 a reminder to every practitioner who trains there: true balance is never eliminating opposition, but learning to orbit alongside what can never be eliminated.",
+      closingZh: "真正的平衡，从不是谁吞并了谁，而是学会，与无法消灭的对立，彼此环绕，共转一生。",
+      closingEn: "True balance was never one force conquering another — it's learning to orbit, for a lifetime, alongside an opposition that can never be erased." },
+  ],
+};
+
+/* ---------- 学徒的选择：焱阙星第三篇，完整9页 ---------- */
+const XZ_DEFS = `<defs><filter id="xzG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="xzSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0a06"/><stop offset="50%" stop-color="#5a2410"/><stop offset="100%" stop-color="#ff8a3d"/></linearGradient></defs>`;
+function xzWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#xzG)"/>`).join('');}
+function xzFigure(){const robe=`<path d="M-11 -32 Q0 -38 11 -32 L15 26 Q0 34 -15 26 Z" fill="#2a1810"/>`;const head=`<circle cx="0" cy="-38" r="8" fill="#2a1810"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+const XZ_COVER = `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="url(#xzSky)"/>${xzWash([{x:150,y:150,rx:150,ry:70,color:'#ff8a3d',op:.3}])}<g transform="translate(110,160) scale(0.55)">${xzFigure()}</g><g transform="translate(190,160) scale(0.55)">${xzFigure()}</g></svg>`;
+
+const APPRENTICES_CHOICE: IllustratedEntry = {
+  slug: "the-apprentices-choice",
+  title: "学徒的选择",
+  titleEn: "The Apprentice's Choice",
+  cat: "field",
+  teaser: "焱阙星两位风格迥异的锻造师，都想收同一位天赋异禀的学徒——真正决定她该跟谁学的，不是谁的技艺更高，是她自己想成为谁。",
+  teaserEn: "Two smiths of very different styles both want the same gifted apprentice. What decides her path isn't whose skill is greater — it's who she wants to become.",
+  price: 9,
+  cover: XZ_COVER,
+  pages: [
+    { kickerZh: "一 · 天赋异禀的少女", kickerEn: "I · A Gifted Girl", tagZh: "焱阙星", tagEn: "Yanque Star",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="url(#xzSky)"/><g transform="translate(150,160) scale(0.6)">${xzFigure()}</g></svg>`,
+      textZh: "阿墨是焱阙星这一代最有天赋的锻造学徒，同时被两位风格迥异的师父看中——一位以精准严谨著称，一位以大胆创新闻名。",
+      textEn: "A Mo was the most gifted forging apprentice of her generation on Yanque, caught between two masters of very different styles \u2014 one known for precision and rigor, the other for bold innovation." },
+    { kickerZh: "二 · 两种截然不同的教法", kickerEn: "II · Two Very Different Teaching Styles", tagZh: "对比", tagEn: "Contrast",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="#241008"/>${xzWash([{x:150,y:110,rx:150,ry:90,color:'#5a2410',op:.7}])}<g transform="translate(110,160) scale(0.5)">${xzFigure()}</g><g transform="translate(200,160) scale(0.5)">${xzFigure()}</g></svg>`,
+      textZh: "严谨的师父要求她反复练习基本功，直到分毫不差；创新的师父则鼓励她大胆尝试，哪怕失败也在所不惜。阿墨试跟两人各学了一个月，都收获颇丰，却也越来越难抉择。",
+      textEn: "The rigorous master demanded flawless repetition of fundamentals; the innovative one encouraged bold experimentation, failure included. A Mo studied a month with each, gaining much from both, growing ever more torn." },
+    { kickerZh: "三 · 外界的压力", kickerEn: "III · Outside Pressure", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="url(#xzSky)"/>${xzWash([{x:150,y:100,rx:150,ry:70,color:'#ff8a3d',op:.2}])}<g transform="translate(150,160) scale(0.6)">${xzFigure()}</g></svg>`,
+      textZh: "族人纷纷根据自己的偏好，劝阿墨\u201c该选严谨那位，才能出师稳妥\u201d，或\u201c该选创新那位，才能出人头地\u201d，众说纷纭，让她更加迷茫。",
+      textEn: "The tribe pressed their own preferences on her \u2014 \u201cchoose the rigorous one, it's the safer path\u201d or \u201cchoose the bold one, that's how you stand out\u201d \u2014 the noise only deepening her confusion." },
+    { kickerZh: "四 · 焰驺的旁观", kickerEn: "IV · Yanzhou Watches", tagZh: "启发", tagEn: "Inspiration",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="#1a0a06"/>${xzWash([{x:150,y:110,rx:160,ry:100,color:'#5a2410',op:.7}])}<g transform="translate(150,160) scale(0.6)">${xzFigure()}</g></svg>`,
+      textZh: "阿墨去炉边散心，看见焰驺静静看着炉火，忽然想起烬明当年的心法——\u201c不是让炉子记住你的厉害，是先弄清楚，自己想成为谁。\u201d",
+      textEn: "Wandering by the forge to clear her head, A Mo watched Yanzhou gazing quietly at the flames, suddenly recalling Jin Ming's old teaching: \u201cDon't try to impress the forge. First understand who you want to become.\u201d" },
+    { kickerZh: "五 · 问自己想成为谁", kickerEn: "V · Asking Who She Wants to Be", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="url(#xzSky)"/>${xzWash([{x:150,y:100,rx:150,ry:70,color:'#ff8a3d',op:.25}])}<g transform="translate(150,160) scale(0.65)">${xzFigure()}</g></svg>`,
+      textZh: "阿墨第一次，不再纠结\u201c哪位师父更厉害\u201d，而是认真问自己：她想打造的，是绝对可靠、经得起千锤百炼的器物，还是敢于突破常规、独一无二的作品？",
+      textEn: "For the first time, A Mo stopped agonizing over \u201cwhich master is more skilled\u201d and asked herself honestly: did she want to forge objects of absolute, tested reliability, or works that dared to break convention, wholly unique?" },
+    { kickerZh: "六 · 意外的答案", kickerEn: "VI · An Unexpected Answer", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="#241008"/>${xzWash([{x:150,y:110,rx:160,ry:100,color:'#5a2410',op:.75}])}<g transform="translate(150,160) scale(0.65)">${xzFigure()}</g></svg>`,
+      textZh: "她发现，自己想要的，其实是两者的结合——扎实的基本功，加上敢于突破的勇气。她意识到，或许她不必\u201c选一位师父\u201d，而是可以，先跟严谨的师父打好根基，再跟创新的师父学突破。",
+      textEn: "She realized what she truly wanted was both \u2014 solid fundamentals combined with the courage to break new ground. Perhaps she needn't choose one master at all, but build her foundation with the rigorous one first, then learn to break rules with the innovative one." },
+    { kickerZh: "七 · 两位师父的支持", kickerEn: "VII · Both Masters' Support", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="url(#xzSky)"/>${xzWash([{x:150,y:100,rx:170,ry:110,color:'#fff3d0',op:.3}])}<g transform="translate(110,160) scale(0.55)">${xzFigure()}</g><g transform="translate(200,160) scale(0.55)">${xzFigure()}</g></svg>`,
+      textZh: "阿墨把这个想法，坦诚地告诉了两位师父，出乎意料，两人都欣然同意——他们从没把阿墨当成\u201c必须争夺\u201d的资源，只在意，她能不能成为，她真正想成为的锻造师。",
+      textEn: "A Mo shared her idea honestly with both masters, and to her surprise, both readily agreed \u2014 neither had ever seen her as a resource to fight over, only cared whether she could become the smith she truly wanted to be." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "融合两派的锻造师", tagEn: "A Smith Who Bridged Two Schools",
+      art: `<svg viewBox="0 0 300 220">${XZ_DEFS}<rect width="300" height="220" fill="url(#xzSky)"/><g transform="translate(150,160) scale(0.6)">${xzFigure()}</g></svg>`,
+      textZh: "多年后，阿墨成了焱阙星第一位融合两派技法的锻造师，她常对自己的学徒说：\u201c别急着选边站，先弄清楚，你想成为谁，答案自然会告诉你，该往哪走。\u201d",
+      textEn: "Years later, A Mo became Yanque's first smith to blend both schools, often telling her own apprentices: \u201cDon't rush to pick a side. First understand who you want to become — the answer will show you which way to go.\u201d",
+      closingZh: "决定该跟谁学的，从来不是谁的技艺更高，是你自己，想成为谁。",
+      closingEn: "What decides who you should learn from was never whose skill is greater — it's who you yourself want to become." },
+  ],
+};
+
+/* ---------- 迟来的矿脉：砺金环第三篇，年龄/耐心题材，完整9页 ---------- */
+const CM_DEFS = `<defs><filter id="cmG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="cmSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0f08"/><stop offset="45%" stop-color="#3a2210"/><stop offset="100%" stop-color="#d8a24a"/></linearGradient>
+  <linearGradient id="cmCrystal" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffdf9e"/><stop offset="100%" stop-color="#b87a2e"/></linearGradient></defs>`;
+function cmWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#cmG)"/>`).join('');}
+function cmElder(){const robe=`<path d="M-11 -28 Q0 -33 11 -28 L14 24 Q0 30 -14 24 Z" fill="#5a3a1e"/>`;const head=`<circle cx="0" cy="-34" r="7" fill="#241708"/>`;const hair=`<path d="M-7 -40 Q0 -46 7 -40 L6 -32 Q0 -34 -6 -32 Z" fill="#c9c3b8"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.6s" repeatCount="indefinite"/>${robe}${head}${hair}</g>`;}
+function cmVein(alive:boolean){const pulse=alive?`<animate attributeName="opacity" values=".55;.85;.55" dur="2.6s" repeatCount="indefinite"/>`:"";return `<path d="M40 150 Q90 60 150 90 Q210 60 260 150" stroke="url(#cmCrystal)" stroke-width="3" fill="none" opacity=".7">${pulse}</path>`;}
+const CM_COVER = `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="url(#cmSky)"/>${cmWash([{x:150,y:150,rx:150,ry:70,color:'#d8a24a',op:.3}])}${cmVein(true)}<g transform="translate(150,160) scale(0.6)">${cmElder()}</g></svg>`;
+
+const LATE_BLOOMING_VEIN: IllustratedEntry = {
+  slug: "the-late-blooming-vein",
+  title: "迟来的矿脉",
+  titleEn: "The Late-Blooming Vein",
+  cat: "field",
+  teaser: "砺金环一位年过六旬、始终未获矿脉青睐的老炼金术士，在同行都已放弃对她的期待时，等到了自己一生唯一一次的\u201c频率婚约\u201d。",
+  teaserEn: "An alchemist past sixty, never once chosen by a vein, finally receives her lifetime's only Frequency Betrothal — just when everyone else had given up on her.",
+  price: 9,
+  cover: CM_COVER,
+  pages: [
+    { kickerZh: "一 · 从未被选中的人", kickerEn: "I · The One Never Chosen", tagZh: "砺金环", tagEn: "The Lijin Ring",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="url(#cmSky)"/><g transform="translate(150,160) scale(0.6)">${cmElder()}</g></svg>`,
+      textZh: "沈婆婆是砺金环资历最老的炼金术士，年过六旬，却从未有任何一条矿脉，主动向她敞开过——同行私下都说，她大概，这辈子都等不到自己的\u201c频率婚约\u201d了。",
+      textEn: "Granny Shen was the Lijin Ring's most senior alchemist, past sixty, yet no vein had ever opened to her. Colleagues whispered she'd likely never see her own Frequency Betrothal in this lifetime." },
+    { kickerZh: "二 · 依然每天报到", kickerEn: "II · Still Showing Up Every Day", tagZh: "坚持", tagEn: "Persistence",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="#1a0f08"/>${cmWash([{x:150,y:110,rx:150,ry:90,color:'#3a2210',op:.7}])}<g transform="translate(150,160) scale(0.6)">${cmElder()}</g></svg>`,
+      textZh: "尽管如此，沈婆婆依然每天准时到矿脉区，安静地打理着一条谁都不看好、几乎被公会放弃的老矿脉，几十年如一日，从没缺席过一天。",
+      textEn: "Still, Granny Shen showed up every day at the vein fields, quietly tending an old vein everyone had written off, the Guild nearly abandoning it \u2014 decades of unbroken attendance, without a single missed day." },
+    { kickerZh: "三 · 年轻人的怜悯", kickerEn: "III · The Young Ones' Pity", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="url(#cmSky)"/>${cmWash([{x:150,y:100,rx:150,ry:70,color:'#d8a24a',op:.2}])}<g transform="translate(150,160) scale(0.6)">${cmElder()}</g></svg>`,
+      textZh: "一些年轻学徒私下议论，觉得沈婆婆的坚持有些可怜，甚至有人当面劝她：\u201c不如把这条脉让给年轻人试试，您也该歇歇了。\u201d",
+      textEn: "Some young apprentices privately called her persistence pitiable, one even suggesting to her face: \u201cWhy not let a younger alchemist try this vein? You've earned a rest.\u201d" },
+    { kickerZh: "四 · 沈婆婆的回应", kickerEn: "IV · Granny Shen's Response", tagZh: "态度", tagEn: "Her Stance",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="#241608"/>${cmWash([{x:150,y:110,rx:160,ry:100,color:'#5a3a1e',op:.6}])}<g transform="translate(150,160) scale(0.6)">${cmElder()}</g></svg>`,
+      textZh: "沈婆婆只是笑笑：\u201c我不是在等它开口，我只是喜欢，每天来陪它待一会儿，等不等得到婚约，从来不是我坚持的理由。\u201d",
+      textEn: "Granny Shen only smiled: \u201cI'm not waiting for it to open. I simply enjoy spending a while with it each day. Whether the betrothal ever comes was never my reason for staying.\u201d" },
+    { kickerZh: "五 · 数十年的陪伴", kickerEn: "V · Decades of Companionship", tagZh: "沉淀", tagEn: "Accumulation",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="url(#cmSky)"/>${cmWash([{x:150,y:100,rx:150,ry:70,color:'#d8a24a',op:.25}])}${cmVein(false)}<g transform="translate(150,160) scale(0.6)">${cmElder()}</g></svg>`,
+      textZh: "沈婆婆的坚持，日复一日，年复一年，成了矿脉区一道近乎传奇的风景——没人再记得，她最初，是不是也曾期待过一份婚约，只记得，她从没有一天，缺席过。",
+      textEn: "Her persistence, day after day, year after year, became a near-legendary sight in the vein fields \u2014 no one remembered whether she'd once hoped for a betrothal at all, only that she'd never once been absent." },
+    { kickerZh: "六 · 微弱的震动", kickerEn: "VI · A Faint Tremor", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="#1a0f08"/>${cmWash([{x:150,y:110,rx:160,ry:100,color:'#3a2210',op:.7}])}${cmVein(true)}<g transform="translate(150,160) scale(0.65)">${cmElder()}</g></svg>`,
+      textZh: "一个再普通不过的清晨，沈婆婆照常前来，忽然感到掌心传来一阵极轻的震动——那条陪伴了她数十年的老矿脉，第一次，主动回应了她。",
+      textEn: "On an unremarkable morning, arriving as always, Granny Shen suddenly felt a faint tremor beneath her palm \u2014 the old vein that had accompanied her for decades responded, for the first time, on its own." },
+    { kickerZh: "七 · 一生唯一的婚约", kickerEn: "VII · A Lifetime's Only Betrothal", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="url(#cmSky)"/>${cmWash([{x:150,y:100,rx:170,ry:110,color:'#ffdf9e',op:.3}])}${cmVein(true)}<g transform="translate(150,160) scale(0.7)">${cmElder()}</g></svg>`,
+      textZh: "一小片温润的频率金属，缓缓凝结，落进沈婆婆布满皱纹的掌心——六十多年的等待，在这一刻，没有半分怨怼，只有一种，尘埃落定般的安宁。",
+      textEn: "A small piece of warm resonant metal slowly formed, settling into Granny Shen's weathered, wrinkled palm \u2014 sixty-some years of waiting arrived, in that instant, without a trace of resentment, only a peace like dust finally settling." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "陪伴本身的意义", tagEn: "The Meaning of Simply Staying",
+      art: `<svg viewBox="0 0 300 220">${CM_DEFS}<rect width="300" height="220" fill="url(#cmSky)"/>${cmVein(true)}<g transform="translate(150,160) scale(0.6)">${cmElder()}</g></svg>`,
+      textZh: "沈婆婆后来告诉每一位向她请教的年轻人：\u201c频率婚约，从不是坚持的奖品，它只是，恰好，在你已经不再计较等不等得到的那一天，自己找上门来。\u201d",
+      textEn: "Granny Shen later told every young alchemist who came to her: \u201cThe betrothal was never a prize for persistence. It simply happens to arrive, on its own, the day you've stopped keeping score of whether it ever will.\u201d",
+      closingZh: "有些等待，不是为了换来结果，而是陪伴本身，早已足够完整。",
+      closingEn: "Some waiting was never meant to earn a result — the companionship itself was already, long ago, complete." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
