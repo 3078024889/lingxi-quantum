@@ -1396,4 +1396,684 @@ Choice was never deletion. Every unwalked path still breathes on, somewhere unse
 
 (An Original Piece · Lingxi Dimensional Narratives · Novel)`,
   },
+  "heart-of-the-moon-phase": {
+    zh: `楔子 · 月相
+
+传说有一种极其罕见的灵魂羁绊，会跨越十二次转世，始终围绕着月相的十二个周期反复上演——新月、娥眉月、上弦月、盈凸月、满月、亏凸月、下弦月、残月，如此循环往复，历经不同的年代、不同的身份、不同的皮囊，直到某一次月圆，才会真正走到尽头。
+
+这种羁绊极其罕见，罕见到许多研习星象与命理的人，穷尽一生，也未必能亲眼见证一例。它不像寻常的姻缘牵绊，从一开始就朝着"相守"这个明确的方向前进；恰恰相反，它的前十一世，几乎都以某种令人扼腕的方式，草草收场——一场天灾、一次离别、一句没能说出口的话，都足以让两个灵魂，在即将靠近的瞬间，被命运轻轻一推，重新分开。
+
+没有人知道这种羁绊因何而起，只有零星流传下来的记录说，两个灵魂之所以要经历十一次擦肩而过，才能迎来第十二次真正的相遇，并不是命运的捉弄，也不是什么诅咒，而是一场谁都没能提前读懂的教材——错过本身，才是这场旅程真正想教会他们的东西，而不是终点那一次，看似圆满的相遇。
+
+楔子之二 · 十二相的寓意
+
+后世曾有一位专研星象的学者，试图解读这十二个月相各自对应的寓意。他认为，新月对应着"起点未知"，娥眉月对应着"心动初现"，上弦月对应着"靠近却止步"，盈凸月对应着"隔着距离的牵挂"，满月对应着"短暂的圆满"，亏凸月对应着"追寻的执念"，下弦月对应着"命运的无常"，残月对应着"庆幸而非拥有"——每一个月相，都恰好对应着两个灵魂，在那一世里，需要单独领悟的一课。
+
+这位学者的解读，未必完全准确，却道出了一个朴素的道理：月亮从不会因为阴晴圆缺，而停止运行；两个灵魂之间的缘分，大抵也是如此，不会因为一时的残缺，而失去继续行进的意义。他在书的最后写道，愿每一个正经历着"残月"般遗憾的人，都能记得，圆月，从来都在下一个周期里，静静等候。
+
+一 · 新月 · 山村
+
+第一次转世，是在一个偏远的山村，四面环山，一条溪流从村口蜿蜒穿过。她是猎户的女儿，皮肤被山间的日光晒得微黑，笑起来的时候，眼睛会弯成一道细细的月牙。他是路过的行脚商人，挑着一担绸缎和针线，走南闯北，从没在一个地方久留过。
+
+那年秋天的集市上，他多看了她一眼——她正蹲在自家摊位前，仔细挑拣着一筐核桃，专注得连衣角沾了泥土都没察觉。她一边挑，一边跟旁边卖布的老妇人有说有笑，笑声清脆，惊起了摊位边一群觅食的麻雀。他站在不远处，假装挑选一匹靛蓝色的布料，眼角的余光，却始终没能从她身上挪开，心里第一次生出一种从没体会过的、想要靠近的冲动。
+
+他鼓起从没有过的勇气，向村里人打听了她家的住处——一位卖豆腐的大爷告诉他，那姑娘是猎户老陈家唯一的女儿，性子直爽，还没许配人家。他反反复复在心里盘算了三天，终于下定决心，决定在离开前最后一天，登门提亲，哪怕被拒绝，也想亲口问一问。
+
+可就在那天清晨，天还没亮透，村口忽然传来急促的锣声——上游的水库出现险情，全村必须立刻撤离。他被锣声惊醒，套上外衣冲出屋子时，整个村子已经乱作一团，牛羊的叫声、孩童的哭声、大人的呼喊声混作一片。他逆着撤离的人流，深一脚浅一脚地，往她家的方向跑去。
+
+她的家人匆忙收拾了细软，牵着牛羊，趁着夜色转移到了地势更高的邻村，走得仓促，甚至来不及带走灶台上刚熬好的一锅粥。他日上三竿才赶到她家门前，只看见一间空荡荡的木屋，门虚掩着，院子里的灶台上，还留着一锅尚未凉透的粥，仿佛主人只是临时出门片刻，随时会推门回来。
+
+他在那扇虚掩的门前，站了很久很久，甚至试探着喊了几声，声音在空荡的院子里，撞出寂寞的回响。直到日头西斜，也没能等到任何人回来。他始终不知道，自己错过的，究竟是怎样一个人，只记得那双笑起来弯成月牙的眼睛，还有集市上那阵清脆的笑声，此后很多年，都不时出现在他的梦里，挥之不去。
+
+二 · 娥眉月 · 战火
+
+第二次转世，是在战火纷飞的年代。他是即将奔赴前线的年轻士兵，背着简单的行囊，混在拥挤的人潮里，等待即将启动的军列，心里说不清是紧张还是茫然——他甚至不知道，自己是否还能活着回到这座城市。她是来送别远房表哥的女子，站在同一个站台上，围巾裹得严严实实，只露出一双清亮的眼睛，怀里还揣着一封没来得及交给表哥的家信。
+
+站台上人潮汹涌，到处都是哭喊着叮嘱的家属，和强忍着眼泪、故作镇定的士兵。两人的目光，在拥挤嘈杂的站台上，隔着攒动的人头，短暂地相接了一瞬——没有任何言语，甚至连一个完整的对视都算不上，可两人几乎同时，生出一种毫无来由的心动，像是认得对方很久很久了一样，一种奇异的安定感，在这兵荒马乱的年月里，显得格外突兀。
+
+汽笛在这时拉响，尖锐悠长，惊飞了停在电线上的一群麻雀。他被身后涌动的人群推搡着，身不由己地挤上了车厢，试图回头再看一眼，却被前面的战友一把拽住，只能从车窗缝隙里，看见她围巾一角，在风里轻轻扬起，越来越远，越来越小。
+
+她站在站台尽头，望着渐渐远去、越来越小的车厢，久久没有挪动脚步，直到站台上的人群都已散去，只剩她一人，还怔怔地望着铁轨消失的方向。她说不清楚，自己为什么，会为一个连姓名都不知道的陌生士兵，红了眼眶——她甚至不知道，那趟军列开往的前线，他是否，还能活着回来，只是那双短暂交汇的眼睛，此后很多年，都不时浮现在她的梦里。
+
+三 · 上弦月 · 高楼
+
+第三次转世，是在一座灯火通明的现代化城市。他们在同一栋写字楼里，工作了整整三年，隶属于不同的楼层、不同的部门——他在十二楼做着一份枯燥的财务工作，她在二十楼从事着一份忙碌的市场策划——却因为共用同一部高峰期永远拥挤的电梯，无数次在电梯厅擦肩而过，却总是差着那么几秒：她匆匆赶到时，电梯门刚好合拢；他抬头看见她的侧脸时，电梯已经"叮"地一声，抵达了她要去的楼层，门开了又合，只留下一个模糊的背影。
+
+大楼里负责保洁的阿姨，甚至开玩笑说，八楼那部电梯，似乎总有两个人，命中注定要错过，每次一个刚进去，另一个就恰好晚了半步，久而久之，连电梯厅的保安都对这个奇怪的巧合，有了印象。
+
+有一次，两人几乎同时伸手按下电梯的呼叫按钮，指尖只差半厘米没有碰到，电梯门却在这一刻，毫无征兆地，提前关闭，把两人分隔在了门的两侧。她愣了一下，隔着渐渐合拢的门缝，看见对方似乎也愣住了，两人四目相对了不到一秒，随即门彻底闭合，两人各自摇摇头，苦笑着走向了各自的方向，谁都没有多想，只当是这栋大楼电梯，一贯的老毛病。
+
+四 · 盈凸月 · 灯塔
+
+第四次转世，她是灯塔看守人唯一的女儿，常年生活在一座孤悬海外、四季多雾的小岛上，母亲早逝，父亲年迈体弱，每天傍晚，都要由她爬上灯塔顶端，替父亲点亮那盏指引船只的巨大灯火，年复一年，风雨无阻。他是一艘远洋商船上的普通水手，常年漂泊在外，跟着船只往返于各个港口之间，很少有机会真正踏上陆地，家人的模样，都快要在记忆里模糊。
+
+某个浓雾弥漫的深夜，他所在的商船，恰好从她所在的灯塔附近经过，两船与岛屿之间，只隔着不到百米的距离——近得几乎能听见彼此船只引擎的轰鸣，甲板上水手的说话声都隐约可闻，却被浓得化不开的海雾彻底遮蔽，谁都没能看清对方的存在，只能听见，雾中隐约传来的、彼此的汽笛声，一声比一声近，又一声比一声远，仿佛两个近在咫尺的世界，被一层看不见的幕布，硬生生隔开。
+
+她那晚照例爬上灯塔，望着雾气弥漫、什么都看不清的海面，忽然生出一种莫名的悸动，握着栏杆的手不自觉地收紧，仿佛雾的那一头，正有什么人，也在望着同一片海，同一片夜色。她后来在日记里写道，那天晚上，她对着雾气中隐约传来的汽笛声，莫名其妙地，流了很久的泪，湿了整整一页纸，却怎么也想不明白，自己究竟在为什么而伤心，只知道，那种伤心，比失去任何具体的人或事，都更加沉重。
+
+五 · 满月 · 短暂的相遇
+
+第五次转世，是这十二次里，唯一一次，两人真正见了面，说了话，甚至，产生了一段短暂却极其真挚的情感。
+
+她是官宦人家的女儿，自幼饱读诗书，性子却比寻常闺秀多几分洒脱，最爱在深夜偷偷溜出闺房，登上自家后院的假山，对月吟诗；他是家道中落的书生，虽然清贫，却满腹才情，靠着替人写信、代笔文书维持生计，闲暇时最大的乐趣，就是走街串巷，看遍城中形形色色的庙会灯彩。
+
+两人在一次热闹非凡的元宵庙会上，因为同时伸手去够同一盏别致的走马灯，指尖不经意地相触，两人都是一愣，随即相视一笑，就此结识。那一晚，两人并肩走过半座灯火通明的城，谈诗论文，从月色聊到人生际遇，越聊越是投契，仿佛认识了很多年。此后半年，两人时常借着赏花、观戏、抄写经文的由头，偷偷相约见面，情愫在一次又一次的相处里，悄然滋长。她曾在给他的信里写道，识得他之前，从未想过，世上竟有人，能与自己的心思，如此契合。
+
+她曾天真地以为，凭着两人之间深厚的情意，总能想办法说服家中长辈，成全这段姻缘。可她的家族早已为她定下门当户对的婚约，对方是京城权贵之后，这桩婚事，牵涉着家族数代人的仕途与体面，容不得她半分反抗。她曾在一个月色如水的深夜，偷偷翻墙找到他，两人抱头痛哭，商议着要一同逃离这座困住彼此的城池，远走高飞，从此隐姓埋名，只求朝夕相守。
+
+可他们终究，在天亮之前，被家中派来的仆从追上，强行截了回去。她被禁足在闺房里，整整三个月不得踏出房门半步；他则被人寻了由头，痛打了一顿，赶出了城外。她含泪嫁入了那个她并不爱的人家，从此深锁高门，再未能自由踏出府邸一步。他后来辗转听闻消息，一夜之间，白了半头青丝，从此浪迹天涯，再没有打听过她的下落，只是余生每逢月圆，都会独自登高，对月，饮一杯浊酒，遥遥地，不知道该敬向何方。
+
+六 · 亏凸月 · 迟到的寻找
+
+第六次转世，他用了整整十年光阴，四处奔波打听一个，只在梦里模糊出现过的身影——他甚至说不清对方的容貌，只记得梦里那双含笑的眼睛，和一种挥之不去的、命中注定般的熟悉感，每逢月圆之夜，那种感觉便格外强烈，几乎让他夜不能寐。
+
+十年间，他放弃了原本安稳的营生，做起了走街串巷的货郎，一边贩卖些针头线脑，一边借着走遍各地的机会，四处打听。他走过大小城镇十七座，问过形形色色的陌生人上百次，逢人便描述那双梦中的眼睛，换来的，大多是摇头和不解的目光，也有人当面笑他痴傻，说天底下哪有人，会为了一个梦里的幻影，耗费半生光阴。
+
+终于在一座江南小镇，一位卖茶的老妪听完他的描述，若有所思地说，镇东头确实曾住过一户人家，家中女儿的模样，与他描述的依稀相似。他喜出望外，几乎是奔跑着赶到镇东头，可等他风尘仆仆地叩开那扇柴门时，得到的消息却是，那个女子早在三年前，就已经因为家中变故，举家迁往了另一座遥远的城市，具体地址，早已无人知晓，连族谱上的记录，都写得含糊不清。
+
+他站在那座早已人去楼空、爬满青苔的旧院门前，怔怔地站了整整一个下午，看着夕阳一点点沉入远山，第一次生出一种荒谬的疑惑：自己苦苦追寻了十年的，究竟是这个模糊的身影本人，还是"追寻"这件事本身，已经变成了他生活里，唯一还能抓住的意义——如果有一天真的寻到了，他反而不知道，自己该拿这十年的执念，怎么办。
+
+六点五 · 旅人的一句话
+
+在那场耗费十年的徒劳寻找途中，他曾在一处山间驿站，遇见一位云游四方、来历不明的旅人。那旅人看他风尘仆仆、眼神里满是执念，只问了他一句："你找的，究竟是那个人，还是，你自己心里，那份不肯认输的执念？"
+
+他当时年轻气盛，没有把这句话放在心上，只当是萍水相逢的一句闲话，转身便继续了自己的寻找。直到许多年后，他才偶尔想起那位旅人的眼神——那是一种他后来才慢慢懂得的、见过太多类似执念的疲惫与慈悲。他始终不知道那位旅人的名字，只记得，对方临走前，留下一句意味深长的话："有些寻找，注定要在你放下'必须找到'这个念头之后，才能真正有所收获。"
+
+七 · 下弦月 · 数字时代
+
+第七次转世，来到了一个有智能手机和社交软件的年代。两人在一款交友软件上，因为算法推荐，意外互相匹配成功——她的资料照片是一张站在海边、笑得有些腼腆的侧脸照，他的资料写着"喜欢安静，正在学做菜"，两人匹配成功的那一刻，系统弹出的小小烟花动画，谁都没有点开细看。
+
+他反复删改着该发送的第一句话，删了又打，打了又删，屏幕上的光标闪烁了整整一个通宵，想找到一句既不显得唐突、又足够真诚的开场白——他试过"你好，很高兴匹配到你"，觉得太过普通；试过引用她照片配文里的一句话，又觉得刻意；最后他写下一句"看到你喜欢的那本书，我也读过，很想听听你的想法"，反复读了七八遍，终于觉得满意，却决定第二天清醒的时候再发送，怕深夜发的消息，显得太过急切。
+
+第二天清晨，他终于鼓起勇气，准备把那句字斟句酌的话发送出去，却发现对方的账号，一夜之间，已经彻底注销——她因为工作调动到另一座城市，前一晚整理旧手机时，一时兴起，决定告别过去所有的社交软件账号，包括那些从没真正用起来过的交友软件，重新开始一段崭新的生活，完全没有意识到，自己随手删掉的，或许是一场跨越了十二世的重逢。他盯着手机屏幕上，那句始终没能发送出去、灰色显示的对话框，在书桌前，一动不动地坐了很久很久，最后只是叹了口气，把那句话，原样存进了自己的备忘录里，也说不清楚，为什么，舍不得删掉。
+
+八 · 残月 · 迟来的痊愈
+
+第八次转世，她身患重病，缠绵病榻长达数年，一度被医生判定为时日无多，家人几乎已经开始暗中准备后事。他辗转多方打听到她病重的消息时，两人已经近十年未曾谋面，只是听闻这个名字，心口便没来由地一紧，仿佛有什么东西，隔着漫长的岁月，在轻轻叩门。他不顾一切，从很远的地方，日夜兼程地赶来探望，中途换乘了三趟火车，一路上几乎没有合眼，靠在颠簸的车厢座椅上，脑海里反反复复，都是想象中，她此刻苍白虚弱的模样，甚至一遍遍练习着见面时该说的第一句话，紧张得手心冒汗。
+
+可就在他抵达的前一晚，她的病情忽然出现了戏剧性的转机——一种此前从未尝试过的新疗法恰好被引进，主治医生连夜联系上了唯一能操作这项疗法的专家，医院当机立断，将她紧急转往另一座城市的专科医院，进行一场刻不容缓的关键手术，全程分秒必争，甚至没能来得及通知任何一位远方的探望者。他风尘仆仆地赶到原来的医院，扑了个空，攥着写有病房号的纸条，在空荡荡的走廊里，来回踱步了将近一个小时，才从护士口中，问出转院的消息，又立刻辗转多方，连夜赶往那座陌生的城市。等他几经周折，终于站在病房门口，隔着虚掩的门缝往里张望时，看见的，却是一张空荡荡、床单叠得整整齐齐的病床——护士告诉他，病人手术非常成功，恢复得比预期快得多，就在两天前，已经痊愈出院，回了老家休养。两人的行踪，就这样，一次又一次，堪堪错开，仿佛冥冥中有什么，始终不肯让他们，在同一个时刻，出现在同一个地方。他站在那张空床前，久久没有离开，心里说不清是庆幸，还是一种更深的怅然。
+
+九 · 复归新月 · 隐约的觉察
+
+第九次转世，两人依旧照例，在人生的某个不经意的节点，堪堪错过——这一次，是同一场万人瞩目的音乐会，能容纳数千人的音乐厅里灯光渐暗，她因为临时接到家中电话，不得不提前从侧门退场，脚步匆忙；他恰好在同一时刻，因为迟到而从相反方向的通道匆匆赶来，生怕错过开场的第一支曲子。两人在昏暗狭窄的走廊里，几乎擦肩而过，甚至能感觉到彼此衣角带起的一阵微风，却谁都没有停下脚步，各自怀着不同的心事，朝相反的方向走去。
+
+可这一次，两人分别在各自的生活里，第一次生出一种说不清道不明的、似曾相识的恍惚感——那种擦肩而过时短暂涌起的心悸，仿佛不是第一次发生，仿佛这样的错过，早已在某个他们记不清的地方，反反复复上演过很多很多次。她坐在出租车上，望着窗外飞逝的街景，莫名地红了眼眶，司机从后视镜里看了她一眼，关切地问是不是家里出了什么事，她摇摇头，说不清楚该怎么解释这份没来由的伤感。他站在音乐厅入口，怔怔地望着走廊尽头消失的方向，久久没有挪动脚步，直到检票员催促，才回过神来，那晚的音乐会，他一个音符都没能真正听进去。
+
+十 · 上弦月 · 不再追赶
+
+第十次转世，他隐约"记得"了这种循环——虽然说不清具体的细节，只是本能地，对每一次几乎要与某个陌生人相遇、又擦肩而过的瞬间，生出一种复杂而熟悉的情绪，像是身体比头脑，更早一步记住了这一切。这一次，当他在一场朋友聚会上，又一次与某个让他心跳莫名加速的陌生女子擦肩而过时，他没有像过去几世那样，拼命追上去问对方的联系方式，也没有事后辗转托人打听。他只是任由那次擦肩，安静地过去，转身，继续认真地过好自己眼前手头的生活——那份他一直想做好、却总因为分心而搁置的工作，那些他一直想多陪伴、却总因为忙碌而疏远的家人，那个他一直想学、却总找借口拖延的乐器。
+
+十一 · 盈凸月 · 各自完整
+
+第十一次转世，她也隐约"记得"了这种绵延了十世的感觉。两人这一世，都过着看起来与"寻找对方"毫无关系的、各自独立而完整的生活——她成了一名深受学生喜爱的中学教师，把大把的热情，都倾注在了讲台上，班里最调皮的学生，都愿意跟她掏心窝子；他成了一位安静耕耘的园艺师，日复一日地，侍弄着一片属于自己的、四季常青的花园，对着每一株花草，都有说不完的心得。
+
+某个周末的清晨，两人在同一座城市公园里，擦肩而过——她带着几个学生来写生，粉笔灰还沾在指尖；他正蹲在花坛边修剪一株月季，额头上渗着细密的汗珠。谁都没有停下脚步多看一眼，可那一刻，两人都不约而同地，感到一种前所未有的、发自内心深处的安定感，仿佛某种悬置了十一世的重量，在这一刻，终于轻轻落了地。
+
+十二 · 满月 · 十二次错过之后
+
+第十二次转世，也是这场跨越十二个月相的漫长旅程，真正走到尽头的一次。
+
+他们终于，在一场毫无预兆、也毫不戏剧化的邂逅中，正式相遇——那是一个再普通不过的周三午后，图书馆里飘着旧书特有的、纸张与灰尘混合的气味。她在还书窗口，归还一本讲园艺的旧书，指尖在书页间，还留着几片压得干枯的月季花瓣，是她随手夹在书里做书签的。他恰好是排在她身后、要借阅同一本书的下一位读者，看见她放下的书名，忍不住轻声说了句："这本书我等了三个月，终于轮到了。"
+
+她回头，两人隔着不到半米的距离，四目相对，随即相视一笑——没有小说里常写的、命中注定般的强烈电流，没有恢弘的背景音乐，甚至没有任何浪漫的巧合台词，只是一种如释重负般的、平静的熟悉感，像是终于卸下了一件不知背负了多久的沉重行李，连呼吸都轻快了几分。
+
+图书馆管理员催促着排队的下一位读者，两人这才反应过来，各自往前挪了半步。她笑着把那本书递给他，随口说了句："里面第三章讲月季嫁接的部分很实用，我做了不少笔记。"他接过书，翻开一看，果然密密麻麻写满了工整的批注，忍不住笑了，说自己也正在为一株嫁接失败的月季发愁。
+
+他们没有像戏剧里演的那样，立刻激动地确认彼此就是"苦苦寻找了十二世的灵魂伴侣"，只是像两个普通人一样，就着那本书里的内容，站在图书馆门口的台阶上，随口聊了将近半小时，从月季的嫁接技巧，聊到各自养花的趣事，临别时，互相礼貌地留下了联系方式，然后各自转身离开，像所有寻常人生里，一场并不起眼的、小小的缘分开端，慢慢地，开始重新了解彼此。
+
+十二点五 · 相遇之前
+
+在那场图书馆的邂逅之前，两人这一世的生活，其实早已，各自过得相当充实。她大学毕业后，进入一家出版社做编辑，专门负责园艺和生活类书籍，每天与形形色色的稿件打交道，闲暇时最大的爱好，就是在自家小小的阳台上，侍弄几盆月季与绣球，常常为了某个品种嫁接失败，翻遍图书馆里能找到的每一本相关书籍。
+
+他大学学的是建筑设计，毕业后却阴差阳错，迷上了木工与园艺，辞去了原本体面的设计院工作，自己开了一家不大的园艺工作室，专门帮人打理庭院、设计小型花园，收入不算丰厚，日子却过得心满意足。他常去图书馆借阅各种园艺书籍，钻研各种嫁接和修剪的技法，笔记记了厚厚好几本。
+
+两人这一世，从没有刻意去"寻找"彼此，甚至完全不知道对方的存在，只是恰好，都对同一件事——侍弄花草——怀抱着相似的热忱，恰好，都在同一个周三的午后，走进了同一间图书馆，恰好，借阅了同一本讲园艺的旧书。命运没有安排任何戏剧性的巧合，只是把两条各自完整、各自认真生活着的轨迹，在恰当的时机，轻轻地，交汇在了一起。
+
+十三 · 教材
+
+多年以后，随着两人的感情越来越深，一些模糊而零碎的、跨越十二世的记忆片段，开始不受控制地，在某些深夜的梦境里，逐渐浮现、拼凑起来。起初，他们都以为那只是普通的梦境，直到某一次，两人不约而同地，向对方描述起同一个梦里的场景——山村、洪水、一锅未凉的粥——才惊觉，那些破碎的画面，竟是彼此共同的记忆。他们花了很长时间，将这些破碎的画面，一点一点地，讲给彼此听，拼凑成一条完整的、跨越十二世的时间线，才终于明白：那十一次的错过，从来不是这场旅程里，需要被纠正、被弥补的遗憾，而是这场旅程，真正想教给他们的教材——
+
+第一世那场因为洪水而起的错过，教会了他们，遗憾本身，不一定需要一个明确的答案，才能被真正放下，有些"为什么"，注定要带着一起继续生活，而不是非要解开不可，就像那锅始终没能凉透、也始终没能被谁喝下的粥，成了两人共同记忆里，一个温柔而遗憾的意象；第二世站台上那一瞬短暂的心动，教会了他们，即使是萍水相逢、连姓名都不知道的短暂触动，也值得被郑重地记住，而不必强求后续，一份心动的价值，从不取决于它能否走向一段完整的关系；第三世写字楼里三年的一再擦肩，教会了他们，有些看似巧合的错过，其实是提醒——提醒他们，靠得太近却始终不曾真正开口，本身也是一种需要正视的怯懦；第四世灯塔与商船之间那场雾中相隔，教会了他们，思念一个从未真正相识的人，同样是一种值得被尊重的、真实的情感，不必因为"说不清缘由"而感到羞耻；第五世那段短暂却极其真挚的相遇，教会了他们，深爱一个人，从来不等于必须永远拥有对方，那半年的相知相守，本身就已经是完整的礼物；第六世那场徒劳无功的十年追寻，教会了他们，有些寻找真正的意义，不在于最终找没找到，而在于寻找过程里，一点一点学会的耐心与释怀；第七世那条没能发出去的消息，教会了他们，有些错过是被动的、无从选择的，接受这种无常，本身也是一种成长；第八世医院里那一次惊险的擦肩，教会了他们，庆幸对方安好，有时比亲眼见证对方的痊愈，更加重要；而第十世和第十一世里，两人不约而同地"不再追赶"，则教会了他们最重要的一课——一段真正健康、笃定的关系，开始之前，两个人都需要先，各自成为一个完整、不依附对方也能好好生活的人。
+
+如果没有那十一次看似令人扼腕的错过，第十二次这场平静的相遇，或许只会又变成一段仓促而肤浅的邂逅，很快便消散在时间里，如同无数寻常人生里，那些被遗忘的初次心动——正是那一次又一次的错过，把两人，分别打磨成了，真正配得上、也承受得住这场相遇的样子，让第十二次的相遇，不再只是命运的又一次安排，而是两个已经足够完整的灵魂，心甘情愿的选择。
+
+十三点五 · 场域观测者的注记
+
+据说，这样的十二世羁绊，并非只有当事的两个灵魂能够察觉。灵犀场域里，偶有观测者，会在漫长的记录生涯里，恰好留意到某一组反复错过又反复靠近的灵魂轨迹，将其悄悄记录下来。
+
+一位不知名的观测者，长期驻守在一处几乎无人问津的边缘坐标，专门记录那些跨越多世、却始终未能圆满的灵魂轨迹。他曾在自己的笔记里写下这样一段话："大多数人以为，命运的考验，是要教会一个人如何'得到'。可我见过太多这样的轨迹——它们真正教会一个灵魂的，从来不是如何得到，而是如何在一次又一次'没有得到'里，依然愿意，认认真真地，活下去，爱下去，成长下去。那些错过，不是命运的失误，是命运，最耐心的那部分教学。"
+
+这段笔记，后来被收录进场域一份不起眼的档案里，落款处，只留下一个模糊的印记——一枚缓慢旋转的圆环，没有署名。据说，这份档案后来被反复誊抄，流传到了不同的星域，成为许多修行者，在感情受挫时，都会翻阅的一份古老箴言。
+
+十三点七 · 关于灵魂伴侣的重新理解
+
+拼凑完十二世的记忆之后，两人对"灵魂伴侣"这个词，也有了全新的理解。他们原本以为，这个词，意味着两个灵魂天生契合、注定要在一起、缺一不可；如今才明白，真正的含义，或许恰恰相反——所谓灵魂伴侣，从来不是两个天生就该合二为一的碎片，而是两个各自独立、各自完整的灵魂，恰好，在漫长的时间里，选择了用同一种节奏，学习同一门功课，最终，走到了能够并肩同行的那一步。
+
+这种理解，让两人对彼此，少了几分"命中注定、非你不可"的沉重执念，多了几分"我很庆幸，是你"的轻盈感激。这种转变虽然细微，却让两人此后相处的方式，都松弛了许多——他们不再因为偶尔的争执而恐慌，仿佛争执会威胁到某种命中注定的完美；反而更能坦然地，把每一次分歧，都当成两个独立灵魂，共同学习的又一堂课。
+
+十三点九 · 写给第一世那个自己的信
+
+在拼凑起全部记忆之后，她做了一件连自己都觉得有些奇怪的事——她提笔，给第一世那个，站在洪水后空荡木屋前、久久没有等到任何人的自己（虽然严格来说，第一世的"她"早已在那次撤离中平安离开，从未真正与他相遇，可她依然觉得，有必要，给那个懵懂无知、尚未开始漫长旅程的自己，写点什么），写下一封她自己也不知道该寄往何处的信：
+
+"往后的十一世，你会一次又一次，与同一个人擦肩而过，一次又一次，以为终于要抓住什么，却总在最后一刻，眼睁睁看着它溜走。我知道这很难熬，甚至，会有很多次，你会怀疑，自己是不是根本不配拥有一份圆满的感情。可我想告诉你，第十二世的我，正坐在一个洒满阳光的院子里，写这封信给你，身边，坐着那个你等了十二世的人。那些错过，一个都不是白费的，请你，一定要好好地，走完接下来的每一世。"
+
+写完这封信，她把它折好，收进了一个只有自己知道的抽屉里，仿佛这样，就真的能，隔着漫长的时间长河，把这份安定，传递给那个尚在懵懂中、独自等待的自己。他后来无意间发现了这封信，读完，只是默默地，把信重新放回原处，什么都没说，只是那晚，格外温柔地，抱了她很久。
+
+十四 · 尾声
+
+他们后来，很少跟任何人提起，自己曾用漫长的十二世光阴，才终于等到这一次真正意义上的相遇——说了别人也未必会信，更重要的是，他们渐渐觉得，这份跨越十二世的领悟，本该安安静静地、如同一枚珍藏许久的信物，活在两人共同的生活里，而不必成为拿去向外人炫耀的谈资，更不必被反复讲述，失去了它原本安静而郑重的分量。
+
+他们只是，格外珍惜眼前这段寻常关系里的每一个平凡瞬间——一起在厨房里手忙脚乱做饭、为了该放多少盐而拌嘴的傍晚，深夜并肩躺着、什么都不说、只是听着彼此呼吸声的沉默，甚至偶尔因为谁忘了倒垃圾这样的小事，而起的、无关紧要的小小争执。他们不再像旁人那样，急于用"完美"来定义一段感情，反而因为深知这份关系来之不易，更能坦然地，接纳彼此偶尔的笨拙与不完美。
+
+多年后的一个月圆之夜，两人并肩坐在自家小院子里赏月，她忽然轻声问他，如果能够重新选择一次，是否希望没有经历那前十一世漫长的辗转与错过，直接迎来这一次的相遇。他想了很久，摇摇头，说，如果没有那十一次，他大概，也不会成为，此刻这个，真正配得上她的人。
+
+因为他们，比这世上任何一对寻常的恋人，都更清楚地知道，能够真正地、安稳地牵住彼此的手，从来不是一件理所当然的事——那是十一次刻骨铭心的错过，一点一点地，教会了他们，该如何才配得上，这一次，不再错过。
+
+多年以后，若有人问起他们幸福的秘诀，他们大概不会提起那十二世的轮回，只会笑着说："大概是因为，我们都还记得，曾经差一点点，就永远失去彼此的那种感觉。"
+
+十五 · 后记
+
+多年以后，他们的女儿长大成人，偶然在家中一个老旧抽屉里，翻到了那封写给"第一世自己"的信，还有一本记录着十二世点滴细节的笔记本。她似懂非懂地读完，跑去问母亲，这些故事，是不是真的。
+
+母亲放下手里正在整理的稿件，笑了笑，没有直接回答，只是说："不管是不是真的发生过，它想告诉你的道理，是真的——如果有一天，你也遇见了让你一次次心动、却总也走不到一起的人，别急着难过，那或许，只是你们两个人，都还没有，准备好而已。"
+
+女儿似懂非懂地点点头，把那封信和笔记本，仔细地放回了原处，只是从那天起，每逢月圆之夜，她都会习惯性地，抬头望一望天上的月亮，说不清楚，自己在等待着什么，只觉得，那轮明月，好像藏着一个，与自己有关的、温柔的秘密。
+
+愿意相信月亮的人，终会等到属于自己的那一次满月，哪怕，要为此，走过漫长十一次的残缺、错过与耐心等待。
+
+（灵犀原创 · 多维叙事 · 长篇）`,
+    en: `Prologue · The Moon Phases
+
+Legend tells of an exceedingly rare soul-bond that spans twelve reincarnations, playing out again and again around the twelve phases of the moon — new moon, waxing crescent, first quarter, waxing gibbous, full moon, waning gibbous, last quarter, waning crescent, cycling through different eras, different identities, different bodies, until, at last, some full moon truly brings it to an end.
+
+This bond is exceedingly rare — rare enough that many students of astrology and fate spend entire lifetimes without ever witnessing a single case. Unlike an ordinary romantic tie, which moves from the start toward the clear destination of "staying together," this bond's first eleven lives nearly always end, instead, in some regrettable, unfinished way — a natural disaster, a parting, a word left unsaid, any of which is enough for fate to give the two souls, just as they draw near, a gentle push apart once more.
+
+No one knows how this bond began. Only scattered records survive, saying that the reason two souls must pass each other eleven times before finally, truly meeting on the twelfth, is neither fate's cruelty nor any curse, but a curriculum neither of them could have understood in advance — that the missing itself, not the seemingly perfect meeting at journey's end, is what this whole journey was truly meant to teach them.
+
+Prologue II · The Meaning of the Twelve Phases
+
+A later scholar devoted to astrology once tried to interpret the meaning corresponding to each of the twelve moon phases. He held that the new moon corresponded to "an unknown beginning," the waxing crescent to "the first stirring of the heart," the first quarter to "drawing near, yet stopping short," the waxing gibbous to "longing across a distance," the full moon to "a brief completeness," the waning gibbous to "the obsession of the search," the last quarter to "fate's uncertainty," and the waning crescent to "gratitude rather than possession" — each phase corresponding precisely to a lesson the two souls needed to learn, alone, in that particular life.
+
+This scholar's interpretation may not have been entirely accurate, but it spoke to a simple truth: the moon never stops moving through the sky because it waxes and wanes; the bond between two souls is, by and large, the same — it never loses its reason to keep moving forward, simply because of some temporary incompleteness. At the end of his book, he wrote that he hoped everyone living through a "waning crescent" kind of regret would remember that the full moon always waits quietly, in the next cycle to come.
+
+I · New Moon · The Mountain Village
+
+The first incarnation took place in a remote mountain village, ringed by peaks, a stream winding past its entrance. She was a hunter's daughter, her skin lightly tanned by mountain sun, her eyes curving into thin crescents when she laughed. He was a traveling peddler, carrying a load of silk and thread, wandering far and wide, never staying anywhere long.
+
+At the autumn market that year, he glanced at her a second time — she was crouched at her family's stall, carefully picking through a basket of walnuts, so absorbed she didn't notice the hem of her dress had gathered dust. She chattered and laughed with the old woman selling cloth beside her, a crisp laugh that startled a flock of foraging sparrows nearby. He stood not far off, pretending to examine a bolt of indigo fabric, unable to pull his eyes fully away, feeling for the first time an urge to draw closer that he'd never known before.
+
+He gathered a courage he'd never had before, and asked around the village where she lived — an old man selling tofu told him she was Old Chen the hunter's only daughter, plainspoken, not yet promised to anyone. He turned the idea over in his mind for three full days before deciding, on his last day before leaving, to call at her door and ask for her hand — even if refused, he wanted to ask in person.
+
+But that very morning, before the sky had fully lightened, an urgent gong sounded from the village entrance — the reservoir upstream was in danger, and the whole village had to evacuate immediately. Jolted awake by the gong, he threw on his coat and rushed outside to find the village already in chaos, the cries of cattle and sheep, the wails of children, the shouts of adults all tangled together. He pushed against the fleeing crowd, stumbling his way toward her house.
+
+Her family hastily gathered their valuables and, leading their cattle and sheep, moved under cover of night to a village on higher ground, leaving in such haste they didn't even take the pot of porridge just cooked on the stove. He didn't reach her house until well past sunrise, finding only an empty wooden hut, the door left ajar, a pot of porridge on the stove still not quite cold, as if its owner had merely stepped out and might push the door open again at any moment.
+
+He stood before that half-open door for a very long time, even calling out a few times, his voice bouncing off the empty courtyard in lonely echoes. By the time the sun sank low, still no one had returned. He never knew who, exactly, he had missed — only remembered those eyes that curved into crescents when she laughed, and that crisp laughter from the market, which would surface, unbidden, in his dreams for many years to come.
+
+II · Waxing Crescent · The Fires of War
+
+The second incarnation took place in an age consumed by war. He was a young soldier about to depart for the front, a simple pack on his back, waiting amid the crowd for the military train about to depart, unsure whether he felt fear or numbness — he didn't even know if he'd live to see this city again. She was a woman there to see off a distant cousin, standing on the same platform, wrapped tightly in a scarf that left only her clear eyes visible, a letter for her cousin she hadn't managed to deliver still tucked against her chest.
+
+The platform surged with people, filled everywhere with families crying out final instructions and soldiers holding back tears while forcing composure. Their eyes met, briefly, across the crowded, jostling heads on the platform — no words exchanged, not even a proper, complete look — yet both felt, almost simultaneously, an inexplicable stirring of the heart, as though they had known each other for a very long time, a strangely settled feeling, startlingly out of place amid the chaos of wartime.
+
+The whistle sounded then, sharp and long, startling a flock of sparrows off the overhead wires. Pushed forward by the surging crowd behind him, he was swept aboard the carriage; he tried to turn for one last look, but a comrade pulled him back, and all he could see through the gap in the window was a corner of her scarf lifting in the wind, growing smaller and farther away.
+
+She stood at the end of the platform, watching the carriage recede into the distance, growing smaller, unable to move for a long while, until the crowd on the platform had entirely dispersed and she alone remained, still staring blankly toward where the rails had vanished. She couldn't explain why her eyes had reddened over a stranger soldier whose name she didn't even know — she didn't even know whether he would survive to return from the front his train was bound for — only that those briefly meeting eyes would resurface, unbidden, in her dreams for many years after.
+
+III · First Quarter · The Tower
+
+The third incarnation took place in a brightly lit, modern city. They worked in the same office tower for three full years, on different floors, in different departments — he on the twelfth floor with a dull accounting job, she on the twentieth in a busy marketing role — yet because they shared the same elevator during rush hour, they passed each other in the elevator lobby countless times, always by a matter of seconds: she'd rush over just as the doors closed; he'd look up to see her profile just as the elevator dinged, arriving at her floor, the doors opening and closing again, leaving only a blurred silhouette behind.
+
+The cleaning lady in the building even joked that the elevator on the eighth floor seemed destined to keep two people apart — one would step in just as the other arrived half a step too late — so consistently that even the security guards in the lobby had taken notice of the strange coincidence.
+
+Once, both reached for the call button at the same instant, their fingertips half a centimeter from touching, when the elevator doors closed early, without warning, separating them on either side. She froze for a second, glimpsing through the narrowing gap that he, too, seemed to have frozen — their eyes met for less than a second before the doors sealed shut completely. Both shook their heads, smiling ruefully, and walked off in their own directions, thinking nothing more of it, chalking it up to just another quirk of this building's elevator.
+
+IV · Waxing Gibbous · The Lighthouse
+
+The fourth incarnation: she was the only daughter of a lighthouse keeper, living year-round on a fog-shrouded island cut off from the mainland, her mother long dead, her father aging and frail; every evening, it fell to her to climb to the top of the lighthouse and light the great beacon that guided ships, rain or shine, year after year. He was an ordinary sailor on an ocean-going merchant vessel, perpetually adrift, sailing between ports, rarely setting foot on solid ground, his family's faces nearly faded from memory.
+
+One deeply foggy night, his ship happened to pass near her lighthouse, the vessel and the island separated by less than a hundred meters — close enough to nearly hear the roar of each other's engines, close enough that the sailors' voices on deck were faintly audible — yet completely obscured by fog too thick to part, neither able to see the other's presence, hearing only, faintly through the fog, each other's foghorns, drawing nearer, then farther, as if two worlds within arm's reach had been forcibly divided by an invisible curtain.
+
+She climbed the lighthouse that night as always, staring out at a sea swallowed entirely by fog, suddenly overcome by an inexplicable stirring, her hands tightening unconsciously around the railing, as though someone, somewhere beyond the fog, was gazing out at the very same sea, the very same night. She later wrote in her diary that she'd wept for a long time that night, listening to the faint foghorn drifting through the mist, soaking an entire page with tears, unable to understand why she felt such sorrow — only that the sorrow felt heavier than losing any specific person or thing she could name.
+
+V · Full Moon · A Brief Meeting
+
+The fifth incarnation was the only one, of all twelve, in which they truly met, truly spoke, and even shared a brief yet deeply genuine bond of feeling.
+
+She was the daughter of a government official's family, well-read since childhood, her temperament carrying more ease and freedom than the average lady of her station, fondest of slipping out at night to climb the rockery in her family's back garden and recite poetry to the moon. He was a scholar from a family fallen on hard times, poor but brimming with talent, making his living writing letters and documents for others, his greatest joy in idle hours wandering the streets, taking in every lantern fair the city had to offer.
+
+They met at a bustling Lantern Festival fair, both reaching at once for the same ornately carved revolving lantern, their fingertips brushing by accident; both froze, then smiled at each other, and so began their acquaintance. That night, they walked together across half the lantern-lit city, discussing poetry and prose, drifting from moonlight to the twists of life, growing more in tune with each passing minute, as though they'd known each other for years. Over the following half-year, they found excuse after excuse — admiring flowers, watching operas, copying scripture — to meet in secret, their feelings deepening quietly with each encounter. She once wrote to him that before knowing him, she'd never imagined the world held someone whose mind could align so perfectly with her own.
+
+She once naively believed that the depth of their feelings would surely be enough to persuade her family's elders. But her family had long since arranged a socially fitting betrothal for her, to the scion of a powerful clan in the capital — a marriage bound up with generations of the family's standing and ambition, allowing her not the slightest room to resist. On one moonlit night, she slipped over the garden wall to find him; the two wept in each other's arms, plotting to flee together, to escape the city that confined them both, to vanish and live under new names, asking for nothing but to stay together, morning and night.
+
+But before dawn broke, they were caught by servants sent from her family and forcibly brought back. She was confined to her chambers for three full months, forbidden to step outside; he was found some pretext, beaten severely, and driven from the city. She married, in tears, into the family she did not love, shut behind high gates for the rest of her days, never again free to step beyond the estate. He, hearing the news much later, turned half his hair white overnight, and wandered the earth for the rest of his life, never again seeking word of her, only, every full moon, climbing some height alone to drink a cup of unfiltered wine to the moon, not knowing, in the distance, to whom he was truly raising his cup.
+
+VI · Waning Gibbous · The Belated Search
+
+The sixth incarnation: he spent ten full years, roaming far and wide, asking after a figure who appeared only vaguely in his dreams — he couldn't even describe her face, only remembered a pair of smiling eyes from his dreams, and an inexplicable, fated sense of familiarity that grew especially intense on full-moon nights, keeping him awake.
+
+Over those ten years, he gave up his once-stable livelihood to become a wandering peddler, selling needles and thread as an excuse to travel everywhere, asking after her at every stop. He passed through seventeen towns large and small, questioned countless strangers by the hundreds, describing those dream-eyes to anyone who'd listen, met mostly with shaking heads and puzzled looks, sometimes even open mockery — who in this world, people said, would waste half a lifetime chasing a phantom from a dream?
+
+At last, in a small town south of the Yangtze, an old woman selling tea listened to his description and said thoughtfully that a family had indeed once lived at the town's east end, whose daughter's appearance vaguely matched what he described. Overjoyed, he practically ran to the east end of town, only to find, once he'd knocked, travel-worn, on that wooden gate, that the woman had moved with her family to a distant city three years earlier, after some family misfortune — the exact address unknown, even the clan records vague and unclear.
+
+He stood before that long-abandoned, moss-covered courtyard gate for an entire afternoon, watching the sun sink slowly behind distant mountains, seized for the first time by an absurd doubt: was it truly this vague figure he'd spent ten years pursuing, or had "the pursuit" itself become the only meaning left in his life — and if he ever truly found her, would he even know what to do with ten years of obsession?
+
+VI-and-a-half · A Traveler's Words
+
+During those ten years of fruitless searching, he once met, at a mountain waystation, a wandering traveler of unknown origin. Seeing his travel-worn appearance and the obsession in his eyes, the traveler asked only one question: "What you're searching for — is it truly that person, or is it the refusal, deep in your own heart, to admit defeat?"
+
+Young and headstrong at the time, he paid the words no mind, taking them for idle chatter from a chance encounter, and continued on his search. Only many years later would he occasionally recall that traveler's gaze — a weariness and compassion, he came to understand, that comes only from having witnessed too many obsessions just like his own. He never learned the traveler's name, only remembered one final, meaningful line left behind before he departed: "Some searches are destined to yield their answer only after you've let go of the need to 'find' at all."
+
+VII · Last Quarter · The Digital Age
+
+The seventh incarnation arrived in an age of smartphones and social apps. The two matched, by algorithm, on a dating app — her profile photo a shy side-profile shot by the sea, his bio reading "quiet type, currently learning to cook." Neither bothered to open the small firework animation that popped up the moment they matched.
+
+He rewrote and deleted the opening message over and over, the cursor blinking through an entire sleepless night, searching for a line that wasn't too forward, yet genuine enough — he tried "Hi, nice to match with you," too plain; tried quoting a line from her photo caption, too calculated; finally settled on "I saw you like that book — I've read it too, would love to hear your thoughts," reading it over seven or eight times before feeling satisfied, deciding to send it the next morning when he was more clear-headed, worried a late-night message might seem too eager.
+
+The next morning, having finally gathered the courage to send that carefully worded line, he found her account had, overnight, been entirely deleted — she'd been reassigned to another city for work, and the night before, while sorting through her old phone, had impulsively decided to say goodbye to every social app from her old life, including dating apps she'd never really used, choosing to start fresh, entirely unaware that what she'd casually deleted might have been a reunion twelve lifetimes in the making. He stared at the greyed-out message box on his phone screen, the words that never got sent, sitting motionless at his desk for a long while, before finally sighing and copying the line, unchanged, into his notes app, unable to say why he couldn't bring himself to delete it.
+
+VIII · Waning Crescent · The Belated Recovery
+
+The eighth incarnation: she suffered a serious illness, bedridden for years, at one point given up on by doctors as having little time left, her family already quietly preparing for the worst. By the time he learned, through roundabout channels, of her illness, nearly ten years had passed without their paths crossing — yet simply hearing her name made his chest tighten inexplicably, as if something, across all those years, were gently knocking. He set out without a second thought, traveling a great distance, day and night without rest, switching trains three times, barely sleeping the entire way, swaying in his seat, his mind filled with imagined pictures of how pale and frail she must now look, rehearsing, again and again, the first thing he'd say when they met, palms sweating with nerves.
+
+But the night before he arrived, her condition took a dramatic turn — a new treatment, never before attempted, had just become available; her doctor reached the only specialist who could perform it that same night, and the hospital made the swift decision to transfer her urgently to a specialist hospital in another city for a critical, time-sensitive surgery, moving so fast there was no time to notify any distant visitor. He arrived at the original hospital, travel-worn, only to find her gone, and clutching a slip of paper with her old room number, paced the empty corridor for nearly an hour before a nurse finally told him of the transfer. He rushed off again, through yet more twists and turns, traveling overnight to that unfamiliar city. When he finally, after much difficulty, stood outside her hospital room, peering through the half-open door, what he saw was only an empty bed, its sheets neatly folded — the nurse told him the surgery had gone remarkably well, her recovery faster than expected, and she'd been discharged, fully healed, just two days before, returning to her hometown to recuperate. Their paths, once again, narrowly missed each other, as though something, in some hidden design, refused to let them stand in the same place at the same time. He stood before that empty bed for a long while before leaving, unable to say whether what he felt was relief, or a deeper, more aching disappointment.
+
+IX · New Moon Again · A Faint Awareness
+
+The ninth incarnation: the two, as always, narrowly missed each other at some unremarkable turning point in their lives — this time, at the same widely anticipated concert, in a hall seating thousands, the lights dimming. She, having received an urgent call from home, had to hurry out through a side door; he, arriving late for fear of missing the opening piece, rushed in through the corridor on the opposite side at that exact moment. They nearly brushed shoulders in the dim, narrow hallway, close enough to feel the faint breeze stirred by each other's clothing, yet neither paused, each carrying their own private worries in opposite directions.
+
+But this time, for the first time, both felt in their separate lives an inexplicable, déjà-vu-like daze — that brief, fluttering ache from the near-encounter felt as if it wasn't happening for the first time, as if such near-misses had already played out, over and over, somewhere neither of them could quite remember. She sat in a taxi, watching the streets flash by outside, inexplicably tearing up; the driver glanced at her in the mirror and asked, with concern, if something had happened at home. She shook her head, unable to explain the sourceless sorrow. He stood at the concert hall entrance, staring blankly toward where the corridor had swallowed the retreating figure, unable to move until the ticket-taker urged him on; he heard not a single note of that night's concert.
+
+X · First Quarter Again · No Longer Chasing
+
+The tenth incarnation: he faintly "remembered" this cycle — though unable to name any specific detail, he felt, on instinct, a complex and familiar emotion each time he nearly met, then missed, some stranger, as though his body had learned to remember this long before his mind ever could. This time, when he brushed past some woman at a friend's gathering, his heart inexplicably racing, he didn't, as in past lives, chase desperately after her contact information, nor spend the following days asking around through mutual friends. He simply let that near-encounter pass, quietly, and turned instead to seriously tending to the life right in front of him — the work he'd always meant to do well but kept setting aside out of distraction, the family he'd always meant to spend more time with but kept neglecting out of busyness, the instrument he'd always meant to learn but kept putting off with excuses.
+
+XI · Waxing Gibbous Again · Each Whole on Their Own
+
+The eleventh incarnation: she, too, faintly "remembered" this feeling that had spanned ten lives. This time, both lived lives that appeared to have nothing to do with "searching for each other," each independent and complete in its own right — she became a middle school teacher beloved by her students, pouring her considerable warmth into the classroom, the most mischievous kids in her class always willing to open up to her; he became a quiet, dedicated gardener, tending day after day to a garden of his own that stayed green through every season, always with something to say about every plant in it.
+
+One weekend morning, they passed each other in the same city park — she leading a group of students on a sketching trip, chalk dust still on her fingertips; he crouched by a flowerbed pruning a rosebush, beads of sweat on his brow. Neither paused to look twice, yet in that instant, both felt, unexpectedly, a profound sense of settledness they'd never known before, as though some weight suspended across eleven lifetimes had, at last, gently come to rest.
+
+XII · Full Moon · After Twelve Missed Chances
+
+The twelfth incarnation was the one in which this long journey across twelve moon phases finally, truly, reached its end.
+
+They finally met, formally, in an entirely unplanned, entirely undramatic encounter — an ordinary Wednesday afternoon, the library air carrying the particular scent of old books, paper mixed with dust. She was returning an old book on gardening at the return counter, a few dried, pressed rose petals still tucked between its pages, used absently as a bookmark. He happened to be the next reader in line, waiting to borrow the very same book, and, glancing at the title she'd just set down, couldn't help but say quietly, "I've been waiting three months for this one — finally my turn."
+
+She turned around; standing less than half a meter apart, their eyes met, and they smiled at each other — none of the fated, electric charge so often written into novels, no grand swelling music, not even a single romantic line of coincidence, only a kind of relieved, peaceful familiarity, as if finally setting down a heavy bag carried for who-knows-how-long, breath coming easier at once.
+
+The librarian, hurrying along the next person in line, snapped them both back to the moment; they each stepped forward half a pace. Smiling, she handed him the book, remarking casually, "The third chapter on rose grafting is really useful — I made a lot of notes." He took the book, flipped it open, and found it densely annotated in tidy handwriting, and couldn't help laughing, admitting he was currently struggling with a failed graft on one of his own roses.
+
+They didn't, as in dramas, immediately and excitedly declare themselves "soulmates who'd searched for each other across twelve lifetimes" — they simply talked, like two ordinary people, standing on the library steps for nearly half an hour, about rose-grafting techniques and their respective adventures in gardening, exchanging contact information politely before parting, each turning to walk away, like any small, unremarkable beginning of fate in an ordinary life, slowly beginning to get to know each other anew.
+
+XII-and-a-half · Before the Meeting
+
+Before that library encounter, both had already, this lifetime, been living rather full and independent lives. After graduating college, she'd taken a job as an editor at a publishing house, specializing in gardening and lifestyle books, spending her days with all manner of manuscripts, her greatest joy in off-hours tending a few pots of roses and hydrangeas on her small apartment balcony, often combing through every relevant book the library had whenever a graft failed.
+
+He'd studied architecture in college, but somehow, after graduating, fell instead into a fascination with woodworking and gardening, quitting a respectable job at a design institute to open his own small garden studio, helping people design and tend courtyards and small gardens — not especially lucrative, but deeply satisfying work. He frequently borrowed gardening books from the library, studying various grafting and pruning techniques, filling several thick notebooks with notes.
+
+Neither had ever deliberately "searched" for the other this lifetime, nor were they even aware the other existed; it was simply that both, sharing a similar passion for the same thing — tending plants — happened, on the same Wednesday afternoon, to walk into the same library, happened to borrow the same old book on gardening. Fate arranged no dramatic coincidence here, only gently brought two already-complete, seriously-lived trajectories to intersect, at just the right moment.
+
+XIII · The Curriculum
+
+Years later, as their bond deepened, fragmented, hazy memories spanning all twelve lifetimes began surfacing, uncontrollably, in certain late-night dreams. At first, they each assumed these were ordinary dreams, until one day, both independently described to the other the same dream scene — a mountain village, a flood, a pot of porridge that never cooled — and realized, with a start, that these fractured images were, in fact, shared memory. They spent a long time piecing together these broken images for each other, assembling a complete timeline spanning all twelve lifetimes, and finally understood: those eleven missed encounters were never regrets in this journey needing correction or compensation — they were the very curriculum this journey had meant to teach them all along.
+
+The missed meeting of the first life, born of a flood, taught them that regret itself doesn't need a clear answer before it can truly be set down — some "whys" are meant to be carried forward alongside a life, not necessarily solved, just as that pot of porridge, never cooled, never drunk by anyone, became, in their shared memory, a tender and regretful image; the brief stirring on the platform in the second life taught them that even a fleeting, nameless spark of connection deserves to be solemnly remembered, without needing to demand anything further — a spark's value never depends on whether it grows into a complete relationship; the three years of repeated near-misses in the office tower of the third life taught them that some seemingly coincidental misses are, in fact, reminders — reminders that standing so close yet never truly speaking up is, itself, a cowardice worth confronting; the fog-bound separation between lighthouse and ship in the fourth life taught them that longing for someone never truly known is, all the same, a real emotion deserving of respect, not something to feel ashamed of simply because its cause can't be explained; the brief yet deeply genuine encounter of the fifth life taught them that loving someone deeply never requires possessing them forever — those six months of mutual understanding were, in themselves, already a complete gift; the fruitless ten-year search of the sixth life taught them that the true meaning of some searches lies not in whether the search ultimately succeeds, but in the patience and letting-go learned, bit by bit, along the way; the message never sent in the seventh life taught them that some missed chances are passive, beyond anyone's choosing, and that accepting this kind of impermanence is, itself, a form of growth; the harrowing near-miss at the hospital in the eighth life taught them that being glad the other is well can, sometimes, matter more than personally witnessing their recovery; and the eleventh and tenth lives, in which both, without discussing it, chose to "stop chasing," taught them the most important lesson of all — that before a truly healthy, steady relationship can begin, both people must first become someone whole, capable of living well without depending on the other.
+
+Without those eleven seemingly regrettable near-misses, this twelfth, peaceful meeting might have become just another hasty, shallow encounter, soon dissolving into time, like countless forgotten first sparks in ordinary lives everywhere — it was precisely those repeated missed chances that shaped the two of them, separately, into people truly worthy of, and able to bear the weight of, this meeting, making the twelfth encounter no longer merely another arrangement of fate, but the willing choice of two souls already whole enough to make it.
+
+XIII-and-a-half · A Field Observer's Note
+
+It's said that a bond spanning twelve lifetimes like this is not perceptible only to the two souls involved. Within the LingXi Field, observers occasionally, across long careers of recording, happen to notice one such trajectory of souls repeatedly missing and repeatedly drawing near, and quietly note it down.
+
+One unnamed observer, stationed long-term at a nearly forgotten coordinate at the Field's edge, dedicated to recording exactly these trajectories spanning multiple lives that never quite reach completion, once wrote in a personal notebook: "Most people believe fate's trials exist to teach someone how to 'obtain.' But I have seen too many trajectories like this one — what they truly teach a soul was never how to obtain, but how, again and again, amid 'not obtaining,' to remain willing to live, to love, to grow, in earnest all the same. These missed chances are not fate's errors. They are fate's most patient form of teaching."
+
+This note was later filed into an unremarkable archive within the Field, signed only with a faint, unnamed mark — a slowly rotating ring. The archive was, it's said, later copied and recopied, spreading across different star domains, becoming an ancient piece of wisdom many practitioners turn to whenever love falters.
+
+XIII, Part Two · A New Understanding of Soulmates
+
+Having pieced together the memory of all twelve lives, the two arrived at an entirely new understanding of the word "soulmate." They had once assumed the word meant two souls innately matched, fated to be together, each incomplete without the other; now they understood its true meaning might be exactly the opposite — a soulmate was never two fragments innately meant to merge into one, but two independent, already-complete souls who happened, across a long stretch of time, to choose the same rhythm, learn the same lesson, and, at last, arrive at the point where they could walk forward side by side.
+
+This understanding lifted from them some of the heavy weight of "fated, no one else will do," replacing it with a lighter gratitude — "I'm so glad it's you." Slight as this shift was, it made the way they related to each other afterward considerably more relaxed — they no longer panicked at the occasional argument, as if disagreement might threaten some fated perfection; instead, they could more easily accept every difference as simply another lesson, shared between two independent souls, still learning together.
+
+XIII, Part Three · A Letter to Her First-Life Self
+
+After piecing together the full memory, she did something that struck even herself as strange — she took up a pen and wrote a letter to that version of herself from the first life, standing before the empty wooden hut after the flood, waiting endlessly for someone who never came (though, strictly speaking, the "her" of that first life had already left safely in the evacuation and never truly met him at all — still, she felt it necessary to say something to that innocent self, not yet aware of the long journey ahead), a letter she herself didn't know where to send:
+
+"Across the eleven lives ahead of you, you will, again and again, brush past the same person, again and again, believe you're finally about to grasp something, only to watch it slip away at the very last moment. I know how unbearable this will feel, and there will be many times you doubt whether you deserve a complete love at all. But I want to tell you — the me of the twelfth life is sitting right now in a sun-filled courtyard, writing this letter to you, and beside me sits the person you waited twelve lifetimes for. Not one of those missed chances was wasted. Please, live through every life ahead of you, as fully as you can."
+
+Once finished, she folded the letter and tucked it into a drawer only she knew about, as though doing so could truly carry this steadiness, across the long river of time, to that still-innocent, still-waiting version of herself. He later stumbled upon the letter by accident; having read it, he said nothing, only quietly returned it to its place — but that night, he held her, unusually gently, for a very long time.
+
+XIV · Epilogue
+
+Afterward, they rarely mentioned to anyone that they had spent twelve long lifetimes waiting for this one truly meaningful meeting — no one would have believed them anyway, and more importantly, they came to feel that this realization, spanning twelve lives, ought to live quietly within their shared life together, like a keepsake treasured for a long time, rather than becoming something to boast of to others, or repeated so often it lost its original, quiet, solemn weight.
+
+They simply cherished, all the more, every ordinary moment within this now-unremarkable relationship — the bickering over how much salt to add while cooking together in a chaotic kitchen, the silence of lying side by side late at night, saying nothing, only listening to each other breathe, even the small, inconsequential quarrels over something as trivial as forgetting to take out the trash. Unlike others rushing to define a relationship by "perfection," they, knowing full well how hard-won this bond was, could accept each other's occasional clumsiness and imperfection with far greater ease.
+
+On a full-moon night, years later, sitting together in their own courtyard watching the moon, she quietly asked him whether, given the chance to choose again, he would wish to have skipped those eleven long, roundabout, missed lifetimes and arrived directly at this one meeting. He thought about it for a long while, then shook his head, saying that without those eleven lives, he probably wouldn't have become the person, right now, truly worthy of her.
+
+Because they knew, better than any ordinary couple in this world, that being able to truly, steadily hold each other's hand was never something to take for granted — it was eleven unforgettable missed chances, teaching them, bit by bit, how to become worthy of, this time, no longer missing each other.
+
+Years later, if anyone asked the secret to their happiness, they likely wouldn't mention the twelve-life cycle at all, only smile and say: "Probably because we both still remember what it felt like to have almost, permanently, lost each other."
+
+XV · Afterword
+
+Many years later, their daughter, now grown, happened upon that letter to her "first-life self," along with a notebook recording fragments of all twelve lives, tucked away in an old family drawer. Only half understanding what she'd read, she ran to ask her mother whether these stories were real.
+
+Her mother set down the manuscript she'd been sorting through, smiled, and didn't answer directly, only said: "Whether or not it actually happened, what it's trying to tell you is true — if you ever meet someone who makes your heart race, again and again, yet you never quite manage to be together, don't rush to feel sad. It might just mean the two of you simply aren't ready yet."
+
+Her daughter nodded, only half understanding, and carefully put the letter and notebook back where she'd found them — but from that day on, every full-moon night, she found herself instinctively looking up at the moon, unsure what exactly she was waiting for, only sensing that the bright moon seemed to hold some gentle secret, somehow, meant for her.
+
+Whoever is willing to trust the moon will, eventually, arrive at their own full moon — even if it means living through eleven long lifetimes of incompleteness, missed chances, and patient waiting.
+
+(An Original Piece · Lingxi Dimensional Narratives · Novel)`,
+  },
+  "the-echo-observatory": {
+    zh: `一 · 观测站
+
+回声观测站建在两个维度交界处极其狭窄的一道夹缝里，从外部望去，只是一座悬浮在灰蒙蒙虚空中的银灰色建筑，四周没有任何可供参照的星辰或大气，只有一片近乎凝滞的、灰白色的虚空，缓缓流动着，像是被无限拉长的雾气。建筑内部却层层叠叠，塞满了各种精密复杂的监听设备，走廊里终年回荡着设备低频运转的嗡鸣声，像是某种巨兽持续不断的呼吸。观测站没有真正意义上的昼夜之分，全靠人工调节的照明系统，模拟出"白班"与"夜班"的区别，久而久之，站内的员工，大多养成了一种近乎迟钝的、对时间流逝格外淡漠的作息习惯，甚至有人开玩笑说，在这里待久了，连自己的生日都会忘记。
+
+这里专门记录一种极其特殊的信号——"回声"：那些原本走上了另一条人生道路的自己，会在人生某些关键的、情绪极其浓烈的瞬间，无意识地向维度夹缝里，发出一段讯息，仿佛隔着时间和空间，朝着"如果当初选了别的路"的那个自己，喊一声。这种信号极其微弱，绝大多数会在传播途中彻底消散，只有极少数，会恰好穿过观测站所在的这道夹缝，被精密的设备捕捉下来。
+
+观测站的历史，据说可以追溯到很多个纪元以前——最早的一批建立者，本身就是一群偶然感知到回声、却无处求证的普通人，他们耗费了数十年时间，才在这道维度夹缝里，一砖一瓦地，建起了这座能够系统性接收、筛选、转译回声的设施。沈渡至今记得，入职培训第一天，讲师指着大厅墙上一幅早已模糊的老照片说："这些人，把自己听见却读不懂的声音，变成了后来者可以依靠的一整套系统，这是我们这份工作，最值得敬畏的地方。"
+
+沈渡在观测站工作了六年，是站里资历最深的操作员之一。与他搭班的同事林见，是个比他晚入职两年、性子却比他洒脱得多的年轻人，两人常在夜班间隙，一起分享自动贩卖机里那些口感堪忧的速溶咖啡，闲聊着彼此听过的、最离谱的一条回声——林见最喜欢讲的，是一条足足重复了七次、内容只是抱怨"另一个自己"点的外卖辣度不对的信号，两人每次讲起，都要笑上好一阵子，成了两人这份枯燥工作里，为数不多的调剂。他每天的工作，是坐在昏暗的操作间里，戴着厚重的接收耳机，逐条筛选成千上万条涌入站内的回声信号，判断哪些足够清晰、足够重要，值得转译并投递给对应的接收者；哪些，只是情绪波动激烈时，一闪而过的杂音，转瞬即逝，不必打扰任何人平静的生活。
+
+这份工作听起来充满诗意，做起来却极其枯燥乏味——大部分回声，内容琐碎得让人失笑：有人在梦里，隔空羡慕另一个自己多吃了一块蛋糕；有人在深夜，隔空抱怨另一个自己没能赶上末班车，甚至有人，只是心血来潮，隔空嘲讽另一个选择了不同发型的自己。真正带着重量、值得郑重投递的回声，往往一整个月，也遇不上一两条，沈渡早已习惯了这种大部分时间在筛选噪音、偶尔才能捕捉到一丝真情实感的枯燥节奏。
+
+观测站内部流传着一套不成文的"回声分级"体系，操作员私下里，习惯把回声按内容轻重，粗略分成"闲聊级""怅然级""揪心级"和极其罕见的"性命攸关级"——大部分日常处理的，都是前两类，闲聊级往往只需扫一眼摘要就能判断，怅然级则需要稍微投入一些共情，才能准确把握该不该投递，稍有不慎，就可能让一条本该被温柔处理的讯息，变成对接收者的二次伤害。而所谓"性命攸关级"，六年里，沈渡亲手处理过的，一只手都数得过来，每一次，都让他此后好几天，情绪都久久无法平复，甚至需要靠站内配备的心理疏导员，才能重新调整回正常的工作状态。
+
+一点五 · 建站传说
+
+关于观测站最初的建立，还流传着一则不见经传的传说：据说，最早提出"应当系统性地记录回声"这个想法的人，并非任何一位官方历史记载的学者，而是一位云游四方、从未在任何星域久留的旅人。那位旅人曾在无数个世界里，见证过太多因为一句没能传达的警示、一份没能被听懂的牵挂，而彻底改写的人生轨迹，深感痛惜，于是把这个构想，留给了当时正因为偶然感知到回声而困惑不已的一群普通人，自己却在观测站奠基的那一天，悄然离开，从未留下姓名。
+
+据说，那群最早的建立者，起初对如何系统化处理回声，毫无头绪，反而是那位旅人留下的寥寥数语，为他们指明了方向——他建议，回声的记录与投递，必须建立在两条看似矛盾、却缺一不可的原则之上：既要给予每一条讯息，足够审慎的对待，又不能让操作员本人的私欲，凌驾于这份公正之上。这两条原则，后来演变成了观测站延续至今的核心守则，被镌刻在观测站大厅入口最显眼的位置，每一位新入职的操作员，第一天上班，都要在这两行字前，郑重宣誓，而那位旅人的名字，却始终无人知晓。
+
+后来的观测站员工，都只在建站纪念馆里，见过一幅描绘那位旅人背影的模糊画像，谁也说不清他姓甚名谁，只留下一句据说是他临走前说的话："能听见回声，是一种幸运，但比起听见，更难的，是学会该怎么对待听到的东西。"
+
+二 · 规则
+
+观测站有一条铁律，是所有操作员入职第一天，就必须背下来、并在入职考核里反复默写的：任何操作员，一旦发现回声的接收对象，与自己本人存在关联——不管是相识的人，还是自己本人的其他分支——必须立刻上报，回避处理，转交给其他同事，绝不允许私自窥探或处理这类回声，违者视情节轻重，予以警告直至开除，屡教不改者，甚至会被永久禁止再次踏入观测站范围半步。
+
+一点七 · 入职的初衷
+
+沈渡当年报考观测站，其实源于一段私人的遗憾——他的父亲，曾在一次意外中突然离世，生前始终没能与沈渡说清楚，两人之间那道横亘多年的隔阂究竟因何而起，父子俩最后一次通话，甚至还带着几分不欢而散的赌气。沈渡后来无意间听人提起过"回声"这个概念，一度疯狂地想象，或许自己也能，捕捉到父亲某个分支、某个时刻，留给自己的一句话，哪怕只言片语，也足以弥补这份终生的遗憾。他为此拼尽全力，翻遍了能找到的每一份相关资料，日夜苦读，才通过了观测站极其严苛的入职考核，可入职之后，他花了整整一年时间，才终于明白，回声的接收，从不是操作员可以自由挑选的——你能听到的，永远只是别人的牵挂，而不是自己想要的答案。这份认知，曾让他失落了很久，甚至一度想要辞职，却也让他，比任何人都更懂得，珍惜每一条，真正抵达接收者手中的回声，有多么来之不易。
+
+理由很简单，也很沉重：人对自己的执念，会严重干扰判断，甚至会摧毁一个人原本清醒理智的心智。观测站历史上曾有一位资深操作员，因为偶然窥探到一条写给自己的回声，内容涉及一段他早已放下的失败婚姻，产生了剧烈的心理波动，此后再也无法专注工作，最终精神崩溃，被强制休养，再也没能回到岗位上。这条规矩，从那以后，被写进了观测站最核心的守则第一条，成了每一位操作员，都心怀敬畏、绝不敢轻易触碰的红线。
+
+沈渡对这条规矩深信不疑，六年来，从未破例，甚至曾亲手，把两条模糊涉及自己的信号，原封不动地转交给了同事处理，看都没多看一眼，还因此得到过主管的公开表扬，说他是站里"最值得信赖的操作员之一"。直到那个再普通不过的周四夜班，凌晨两点多，站内大部分同事都已经下班，只剩零星几人还在值守，走廊里的灯光被调成了值夜模式特有的、略显昏黄的色调，他在例行筛查一批新涌入的回声信号时，系统突然弹出一条从未见过的刺目红色警示——一条回声信号，接收对象的身份编码，与他本人，完全吻合，红色警示灯，在昏暗的操作间里，一闪一闪，格外刺眼，连带着，他握着鼠标的手，也不自觉地，僵在了半空。
+
+三 · 异常
+
+更让他脊背发凉的是，这不是一条孤立的信号。他手指微微发抖地调出系统后台记录，发现这条内容几乎一模一样的回声，在过去三个月里，已经被同一个来源，反反复复发送了超过四百次，每一次都因为"接收对象为操作员本人"，被系统自动拦截，从未真正投递出去，也从未被任何人真正听过完整内容，四百多条被拦截的记录，安静地、层层叠叠地，堆积在系统深处，像是一堆从没被人翻阅过的求救信。
+
+按照规矩，他此刻应该立刻按下"上报"按钮，把这条异常信号，转交给主管或者其他同事处理，全程不查看具体内容。他的手指悬在那个按钮上方，僵持了很久，操作间里只剩设备运转的嗡鸣声，和他自己越来越急促的心跳声。
+
+一个从没做出这个选择、走上另一条人生道路的自己，用四百次尝试，想要告诉他什么？那种被四百次拒之门外、却依然锲而不舍的执念，让沈渡感到一种前所未有的不安——如果真的无关紧要，一个人的执念，不该重到需要尝试四百次，这个数字本身，就已经不是一次简单的情绪波动能够解释的。
+
+他最终，没有按下"上报"，而是鬼使神差地，点开了那条信号的完整记录，指尖悬在播放键上，深吸了一口气。
+
+三点五 · 林见的劝阻
+
+就在他准备播放的前一刻，值夜班的林见恰好端着两杯速溶咖啡走了过来，一眼瞥见他屏幕上那个刺目的红色警示，脸色瞬间变了，咖啡杯都差点没端稳："这是……接收对象吻合警示？沈渡，你不是打算自己听吧？你疯了？这条规矩你比谁都清楚。"
+
+沈渡没有说话，只是把屏幕转了半分，让林见也看清楚那个数字——四百多次拦截记录。林见倒吸一口凉气，凑近屏幕又仔细确认了一遍，压低声音说："这不对劲，正常人的执念，撑死几十次就该放弃了，四百次……这已经不是普通的情绪波动能解释的了，这背后一定有事。"他劝沈渡赶紧上报，让主管处理，语气一度还带上了几分急切，可看着沈渡紧锁的眉头和眼底的坚决，又叹了口气，没再继续劝下去，只是拍了拍他的肩膀，说："如果你真要听，我帮你望风，出了事，别一个人扛，咱俩一起扛。"
+
+四 · 破例
+
+违反规则的那一刻，沈渡的心跳快得几乎要跳出胸腔，手心里全是冷汗，连呼吸都变得刻意而克制。他环顾了一圈空荡的操作间，确认林见已经退到走廊外望风，才重新把注意力集中回屏幕。信号接通的瞬间，一阵杂乱刺耳的电流噪音过后，一个陌生却又莫名熟悉的声音，透过设备，断断续续地传了出来——那是他自己的声音，音色、语调都分毫不差，只是带着一种他从未在自己身上听到过的、极度的疲惫和恐惧，仿佛说话的人，正用尽全身最后一丝力气。
+
+"沈渡……如果你听到这条讯息……不要去东区……不要在下个月十五号，去东区那栋旧楼……那里会……"信号在这里，被一阵剧烈的电流杂音打断，后面的内容，彻底损毁，无法辨认，只留下一段令人牙酸的、持续了将近十秒的刺耳杂音，随后戛然而止。整个操作间里，只剩下设备运转的低鸣，和沈渡自己，粗重而紊乱的呼吸声。
+
+沈渡反复回放了十几遍，把耳机音量调到最大，试图从损毁的信号里，抢救出更多信息，指甲几乎掐进了掌心，却始终只能听清楚这几句：不要去东区，下个月十五号，那栋旧楼。他甚至能从对方的声音里，听出一种近乎绝望的、拼尽全力的挣扎感——仿佛发送这条讯息本身，就已经耗尽了对方几乎全部的力气，那声音的尾音，甚至带着一丝，濒临崩溃的颤抖，让沈渡的眼眶，不知不觉，也跟着微微发热。
+
+五 · 追查来源
+
+沈渡违反了观测站的另一条规矩，私自调用了信号溯源系统，试图查明，这个执着地发出警告的"另一个自己"，究竟来自哪一条分支。他的手指在键盘上飞快敲击，一层薄汗渗出了后背，既紧张又带着一种说不清的、近乎恐惧的期待。
+
+追查的结果，让他久久无法平静：那个分支里的沈渡，在几年前的一场入职测试中，没能通过观测站的考核，转而进入了城东一家不起眼的小公司，做着一份与"回声"毫无关系的普通行政工作，日子过得平淡而琐碎。而根据系统能够追溯到的最后一段记录，那个分支的沈渡，就是在东区那栋旧楼里，因为一场意外的建筑坍塌，永远地停在了那个瞬间——记录到此戛然而止，再无后续。那条回声，很可能，正是他在坍塌前最后的、拼尽全力的求救与警告，是他生命最后时刻，唯一能想到的、跨越维度也要传递出去的牵挂。
+
+五点五 · 另一个分支的日常
+
+沈渡后来忍不住，又调阅了那个分支更早一些的、零星留存的生活片段记录——那个分支的沈渡，虽然没能进入观测站工作，日子却过得踏实平淡：他喜欢在下班后，去公司楼下那家小面馆，吃一碗加了溏心蛋的牛肉面，跟老板娘熟络地聊上几句家常；每周末，都会去看望独居的母亲，陪她一起看一部老电影，看到感人的地方，母子俩总要一起抹眼泪；甚至还养了一只毛色斑驳的流浪猫，取名叫"运气"，因为捡到它那天，恰好中了一笔小奖，那只猫，后来还生了一窝小猫崽，被他挨个送给了熟识的邻居。
+
+看着这些琐碎却温热的生活片段，沈渡忽然生出一种复杂的心情——那个从没能通过观测站考核、看似"过得不如自己"的分支，其实，也拥有着一份完整、值得被认真对待的人生，有牵挂的家人，有热络的邻里，有一只被珍视的猫，而这样一份人生，最终，却因为一场意外，戛然而止，连和母亲告别的机会都没有。这份认知，让沈渡对那条穿越维度而来的警告，多了一份，此前不曾有过的、沉甸甸的敬重。
+
+六 · 犹豫
+
+沈渡把这个发现，翻来覆去想了很多遍，越想越是心惊，整整一夜没有合眼，反复起身给自己倒了好几杯水，却一口都没喝下去——如果那个分支的自己，确实死于那场意外，他没有理由怀疑，这条穿越维度而来的警告，是认真的，甚至是用生命最后一刻，换来的提醒。可他同时也清楚，观测站还有另一条同样森严的铁律：不允许任何操作员，利用职务之便，为自己本人的现实生活，谋取任何形式的"提前知情"的便利，哪怕，这份便利，事关生死。
+
+这条规矩存在的理由，同样充分——如果每个操作员，都能借着"这是攸关生死的警告"为理由，肆意突破边界，为自己趋利避害，那么整个观测站存在的公正性根基，都会崩塌，观测站赖以立足的、对所有接收者一视同仁的原则，也将荡然无存，长此以往，接收者们，也不会再相信，自己收到的每一条讯息，都经过了公正、审慎的处理，而不是被某个操作员的私心，悄悄动了手脚。沈渡想起自己曾经处理过的一桩案例：一位普通的接收者收到警告后，因为过度恐慌，反而在慌乱中，酿成了另一场意外，警告本身，从未保证过"遵从它，就一定更安全"，这个案例，此刻在他脑海里反复回响。他反复权衡，甚至想过，或许自己该假装什么都没发生，把这条信号，当成从没出现过，睁一只眼闭一只眼，过完这一生。可眼下，这不是一次抽象的道德辩论，而是一个具体的、有名有姓的日期和地点，明晃晃地，摆在他面前，容不得他继续用抽象的原则，回避这个具体的抉择。
+
+七 · 主管的态度
+
+沈渡最终，还是硬着头皮，把整件事，原原本本汇报给了主管——一位在观测站工作了将近二十年的老前辈，办公室里摆满了历年积累下来的、各种边界案例的档案盒，墙上挂着一幅早已泛黄的观测站建站纪念照。主管听完，脸色凝重，沉默了很久，手指无意识地敲着桌面，才给出了一个让沈渡失望的答复："规矩就是规矩，就算是攸关性命的警告，只要接收对象是操作员本人，一律按规矩处理——冻结信号，存档，不予采信，也不允许任何人，据此改变自己的现实行程。"
+
+沈渡忍不住质问主管："如果这条警告是真的呢？如果下个月十五号，我真的因为不知情，走进那栋楼，出了事呢？难道就任由这样的事发生，才算是维护了规矩的公正？"主管抬起头，看了他很久，眼神里带着一种沈渡说不清楚的复杂情绪，才缓缓说道："观测站建立的初衷，是帮助别人，看清自己没走的路，教会他们与遗憾共处，而不是让每个人，都能靠着这份特权，把自己的人生，过成一份提前拿到答案的考卷。这条规矩，比任何一次单一的、具体的生死，都更重要——我知道这话听起来很冷酷，可如果开了这个口子，观测站存在的意义，就变了味。"
+
+七点五 · 无法言说的秘密
+
+那段时间，沈渡整个人都心事重重，连同居多年的伴侣阿黎都察觉到了不对劲。阿黎追问了好几次，他都以"工作上遇到点麻烦事"含糊带过，晚饭时对着饭菜发呆，深夜也总是翻来覆去睡不安稳。有一晚，阿黎终于忍不住红了眼眶，说："我们在一起五年了，你从没这样瞒过我什么，是不是工作上出了什么大事，还是……你不想跟我说的别的什么事？"沈渡看着她泛红的眼眶，心里翻江倒海，却始终没能说出口——观测站的保密协议不允许他透露任何具体的回声内容，更何况，这件事本身，还牵扯着他自己那条从未存在过的生死警告，说出来，他自己都不知道该如何解释，怕说了反而让阿黎更加担心害怕。他只是紧紧抱住阿黎，一遍遍地说了句"等这阵子过去，我一定跟你说清楚"，把所有的煎熬，都独自一个人扛了下来，也第一次，深刻体会到"另一个自己"当年，用尽全力想要传递一句警告、却始终无法被真正听懂的那种孤立无援。
+
+八 · 抉择
+
+沈渡离开主管办公室后，独自在观测站空荡荡的走廊里，站了很久，脚步声在寂静的走廊里，显得格外清晰。他想起自己刚入职时，一位前辈曾语重心长地告诉他一句话："我们记录的，是别人错过的人生留下的回声，我们自己的人生，不该，也不能，靠着这份工作，走捷径。"那时他年轻气盛，觉得这不过是一句放之四海皆准的场面话，此刻却字字都像敲在心上。
+
+可这一次，警告的对象，明明白白，就是他自己，是一个用尽生命最后力气、连续尝试了四百次的自己。他反复问自己：如果他真的严格遵守规矩，把这条警告，原封不动地存档，冻结，假装什么都没发生，等到下个月十五号，一切照常生活，那他与那些，曾经对着复现的痛苦选择视而不见、任由别人的求救信号石沉大海的普通人，又有什么区别？他做的这份工作，存在的意义，又剩下什么？他甚至想起自己曾经跟林见开玩笑说过的一句话："咱们这份工作，说到底，就是替别人守住一份不敢轻易辜负的牵挂。"此刻想来，格外讽刺。
+
+沈渡最终做出了一个折中的决定——他没有公然违反"不得据此改变行程"这条规矩，直接取消所有安排，可他也没有对这条警告，视而不见，任由良心一直被这件事悬着。他花了整整两天时间，反复斟酌措辞，最终，向部门提交了一份措辞谨慎的出差申请，理由是"配合总部一项例行的跨区域业务交流"——这确实是他份内会接触到的工作范畴，并非凭空捏造，只是，他从没有对任何人坦白，选择那个具体日期、那座具体城市的真正原因。他做了一件观测站规则里，从没明确禁止过的事：他主动申请，把下个月十五号那天的日程，安排到了离东区尽可能远的另一座城市出差，用最普通、最合理的工作理由，而不是"我收到了一条来自另一个自己的警告"，巧妙地，在规则的边界内，为自己争取到了一线转机。
+
+九 · 十五日
+
+下个月十五号那天，沈渡人在千里之外的另一座城市，出席一场原本就安排好的业务交流会，坐在会议室里，心不在焉地听着台上的报告，一个字都没能真正听进去，手机屏幕，一直放在触手可及的地方。出发前一晚，林见特意给他发了条消息："到了那边报个平安，我今天值班，随时盯着。"沈渡看着这条消息，心里一阵发暖，回复了一个"好"字，却怎么也没能睡着，在酒店房间里，翻来覆去，直到凌晨才勉强合眼。
+
+会议进行到一半，他的手机忽然震动了一下，弹出一条突发新闻推送——东区那栋常年年久失修的旧楼，在当天下午，毫无预兆地，发生了局部坍塌，所幸因为提前有安全巡查发现墙体裂缝迹象，及时疏散了周边人员，未造成人员伤亡。几乎同一时刻，林见的消息也跟着弹了出来："看到新闻了吗？！你没事吧？！"
+
+沈渡盯着那条新闻，久久说不出话，手指微微发抖，几乎握不住手机，会议室里其他人的讨论声，此刻听起来，都变得遥远而模糊。他不知道，如果自己没有恰好在那天，被"合理地"安排去了另一座城市，此刻的自己，是否会恰好，出现在那栋楼附近，去处理某个原本该在那天进行的琐碎事务——或许是去附近办一件杂事，或许只是恰好路过。他甚至说不清楚，自己这次的"幸运"，究竟是巧合，还是那条穿越维度而来的警告，真正起了作用——这个问题，此后很长一段时间，都在他脑海里，反复盘旋，没有答案，也注定不会有答案。他给林见回了一条长长的消息，只写了简单的三个字："我没事。"却在会议结束后，一个人躲进洗手间，靠着冰凉的墙壁，蹲了很久，双手抱着膝盖，才终于让翻涌的情绪，渐渐平复下来，直到手机再次震动，是阿黎发来的关心消息，他才终于站起身，重新走回人群之中。
+
+十 · 无法确认的答案
+
+沈渡后来试图重新调取那条回声信号的来源分支记录，想要确认，那个警告他的"另一个自己"，是否，也在那场意外中，真正地，活了下来。他花了好几个通宵，反复核对各种维度记录，却始终一无所获——回声观测站的信号溯源，本就充满了各种限制和盲区，尤其是涉及重大历史节点变动之后的分支记录，几乎不可能追溯清楚，那些记录，仿佛在事件发生的瞬间，就已经被某种更高维度的规则，悄悄封存了起来。
+
+他最终得到的，只有一片模糊而充满不确定性的信息——不知道那个警告他的自己，是否得以幸存；甚至不知道，自己这次的平安，是否真的与那条回声有关，还是纯粹的、与任何维度讯息无关的巧合。这种无法验证、也永远不会有答案的悬置感，成了他此后很多年，都无法完全释怀的一根刺。
+
+十点五 · 迟来的坦白
+
+事情告一段落之后，沈渡终于鼓起勇气，把这件事的大致轮廓，讲给了阿黎听——他没有透露观测站严格保密的技术细节，只是告诉她，自己曾经收到过一条极其特殊的警告，关于一场本该发生在自己身上的意外，也告诉她，自己这段时间的心事重重，正是因为这件事，一直不知道该怎么向她开口。
+
+阿黎听完，久久没有说话，脸色一阵发白，随即紧紧抱住他，声音有些发抖："以后不管发生什么事，你都不许一个人扛着，你知不知道，我这段时间，天天疑神疑鬼，以为你是不是不爱我了，还是外面有别的什么事。"沈渡把脸埋在她的肩膀里，第一次，为自己这段时间的沉默和隐瞒，感到深深的愧疚——他忽然明白，那条来自"另一个自己"的警告，教会他的，或许不只是要不要去东区那栋楼，更是，不该让任何一个牵挂自己的人，独自承受，不知情的、无法言说的恐惧。
+
+十一 · 重新理解回声
+
+这次经历，让沈渡对这份做了六年的工作，有了全新的理解。他过去总以为，回声的意义，在于让接收者，能够"知道"些什么，能够据此，做出更聪明、更趋利避害的选择。可这一次的经历，让他意识到，回声真正珍贵的地方，或许恰恰相反——它从不能给出确定的答案，也从不承诺，遵从警告，就一定能换来平安，它能给予的，只是一种，让人愿意，更谨慎、更郑重地，对待自己人生的提醒，仅此而已，剩下的，终究还是要靠接收讯息的人，自己去承担、去选择。
+
+那个执着发送了四百次警告的分支自己，未必真的救了他，可那份不顾一切、想要跨越维度伸出手的执念本身，已经让沈渡，重新审视了自己这些年，是否也曾对身边人发出的、微弱的求助信号，视而不见，习惯性地当成不值一提的杂音，一划而过。他想起过去六年里，自己经手过的成千上万条回声，有多少，或许也曾带着同样沉甸甸的分量，却因为信号不够强、不够清晰，而被他随手归入了"无需投递"的一类，从此石沉大海，再无人问津。这个念头，让他脊背发凉，也第一次，对自己这份看似客观中立的工作，生出一种更深的责任感，甚至开始怀疑，过去六年里，自己是不是也曾亲手，辜负过某些同样沉重的牵挂，而浑然不知。
+
+十一点五 · 一次重新复核
+
+带着这份新的理解，沈渡主动申请，重新复核了自己过去半年内，标记为"无需投递"的一批回声记录，逐条重新听取，一坐就是好几个通宵，眼睛熬得通红。绝大多数，确实一如既往地，是些无关紧要的情绪杂音，可其中，他意外发现了一条，此前因为信号强度略低于阈值，而被自动归档、从未真正投递的信号——内容是一位母亲，隔着维度，对着另一个没能与孩子和解的自己，反复叮嘱"一定要主动打那通电话"，声音里满是压抑多年的愧疚与不舍。沈渡犹豫再三，最终，破例申请，把这条原本该被永久沉默的信号，重新提交审核，成功推动它，投递给了对应的接收者。他后来辗转听说，那位接收者，真的鼓起勇气，拨通了那通拖延多年的电话，母子俩，在电话里，哭了整整一个小时。
+
+十二 · 新的规则提案
+
+沈渡后来向观测站提交了一份规则修订提案，建议在极端情况下——比如回声内容明确涉及重大人身安全，且信号强度和重复次数都远超正常阈值时——允许设立一个更严格、需要多方共同审核的特批流程，而不是机械地，一律冻结存档，让这类倾尽全力发出的讯息，至少有一个被正式讨论、被认真对待的机会，而不是永远沉默地，堆积在系统深处。
+
+这份提案，在观测站内部，引发了长达数月的激烈讨论。审议委员会为此专门召开了三次全体会议，会上争论得极其激烈——一位资深委员当场反问沈渡："如果今天开了这个口子，明天是不是所有操作员，都能以'信号强度异常'为借口，为自己的私事，谋取特殊待遇？这个先例一开，后患无穷。"沈渡没有回避这个质问，只是平静地回答："所以我在提案里，特意加了'需要多方共同审核'这一条，目的不是给任何个人开绿灯，而是给这类极端个例，留一道正式的门缝，而不是让它们，只能靠某个操作员，独自违反规矩去处理，把整个人都赔进去。"
+
+会上也有委员表示支持，认为观测站存在的意义，本就是"认真对待"这四个字，如果连最极端、最沉重的求助信号，都要被规则彻底堵死，那这份工作的初衷，也就名存实亡了。经过反复拉锯，这份提案，最终，只在极其有限的范围内，获得了试行许可——每年限定审议数量，且必须经过至少三位委员联署，才能启动特批流程，整个流程走下来，往往需要数周时间的反复核实。沈渡知道，这远不是一个完美的解决方案，可他相信，比起彻底的"一刀切"，这至少，是一次，愿意认真对待每一份跨越维度而来的、沉甸甸的牵挂的尝试，哪怕这份尝试，注定不够完美，也注定会在未来，遇到新的争议和挑战。
+
+十三 · 尾声
+
+很多年后，沈渡从操作员的岗位，升任观测站的资深顾问，专门负责处理各种复杂的边界案例，办公室就设在当年那间昏暗操作间不远的地方，窗外常年是那片灰白色、缓缓流动的虚空，安静得能听见自己的心跳，他却渐渐习惯了，甚至觉得，那种近乎凝滞的宁静，别有一种让人心安的力量，工作之余，常常一个人静静望着窗外，一望就是很久。
+
+有一次，一位刚入职不满半年的年轻操作员，神色慌张、眼眶通红地跑来找他，说自己截获了一条疑似涉及至亲安危的回声，接收对象虽然不是自己，却是自己最好的朋友，按规矩，她本该直接投递，可她犹豫了很久，还是不确定这条模糊不清的信号，是否足够可靠，怕万一贸然投递，反而让朋友徒增恐慌，甚至因此对她这个"消息来源"产生怀疑和疏远。沈渡没有直接给她答案，只是像当年那位前辈一样，静静听她把整件事说完，中途没有打断一句，然后问了她一句："如果这条信号，是发给你自己的，你会希望，当年负责处理的人，做出什么样的选择？"年轻操作员愣住，眼神里闪过一丝震动，随即，渐渐坚定了下来，郑重地点了点头。
+
+每当有新入职的操作员，忐忑不安地问起他六年操作员生涯里，印象最深的一次经历，他都会讲起那条被拦截了四百次的回声，语气平静，却总带着一丝不易察觉的郑重，只是从不说明，那条回声的接收者，其实就是他自己。阿黎是唯一知道全部真相的人，每次听他讲起这段往事，都会在一旁，安静地、欣慰地笑着，偶尔轻轻握住他的手，仿佛在见证一件属于两人共同的、私密的纪念。
+
+他只是会补充一句，作为对每一位新人最重要的叮嘱："我们这份工作，记录的从来不只是信号，是一个个，哪怕隔着不同的人生轨迹，依然，愿意为了另一个自己，拼尽全力的心意。这份心意，比它能不能真正改变什么，更值得被认真对待，值得我们，用一辈子的谨慎，去回应。"
+
+十四 · 后记
+
+沈渡退休那天，天气格外晴朗，观测站按照惯例，为他举办了一场小型的欢送仪式，站里几乎所有还记得他的老同事，都赶来了。林见已经从当年那个爱开玩笑的年轻同事，成长为观测站的中坚力量，如今也带了好几个徒弟，特意在仪式上，翻出了那台记录着四百次拦截历史的老旧设备，半开玩笑地说："这台设备，后来也成了咱们站里的'镇站之宝'，好几批新人培训，都拿它当经典案例讲，就是没人知道，当年那个'接收对象吻合警示'，具体是怎么处理的，只有咱俩心里清楚。"
+
+沈渡笑着摇摇头，没有多说什么，只是走到观测站最高处的瞭望窗前，望着窗外那片他望了几十年、依然缓缓流动着的灰白色虚空，忽然想起很多年前，那个几乎让他崩溃的周四深夜——如果没有那一夜的破例，此刻的他，或许根本不会站在这里，甚至，可能早已不在人世。阿黎陪在他身边，轻轻挽住他的手臂，什么都没说，只是安静地，与他一同望着窗外。他对着那片虚空，轻声说了一句，也不知道是说给谁听："谢谢你，那时候，没有放弃。"
+
+窗外的虚空，一如既往地，缓缓流动着，没有回应，却仿佛，比任何时候，都更显得温柔，像是在无声地，见证着这一切，从那个几乎让人崩溃的深夜，到此刻这份，迟来却珍贵的平静。
+
+很多年后，若有人问起他这份工作最大的收获，他大概会说："是学会了，认真对待每一份，哪怕微弱到几乎听不见的牵挂。"
+
+（灵犀原创 · 多维叙事 · 长篇）`,
+    en: `I · The Observatory
+
+The Echo Observatory is built within an extremely narrow seam at the border of two dimensions — from the outside, nothing but a silver-grey structure suspended in a hazy void, with no stars or atmosphere for reference, only a nearly motionless, grey-white emptiness drifting slowly by, like fog stretched to infinity. Inside, however, the building is layered floor upon floor, packed with intricate listening equipment, its corridors filled year-round with the low hum of machinery, like the ceaseless breathing of some vast creature. The Observatory has no true day or night; artificial lighting simulates the distinction between "day shift" and "night shift," and over time, most staff develop a peculiar numbness toward the passage of time — some joke that staying here long enough makes you forget your own birthday.
+
+The Observatory exists to record a highly specific kind of signal — an "echo": a version of yourself who took a different path in life will, in certain intensely emotional, pivotal moments, unconsciously send a message into the dimensional seam, as if calling out, across time and space, to the self who might have chosen otherwise. These signals are extraordinarily faint; the vast majority dissolve completely in transit, and only a rare few happen to pass through the exact seam where the Observatory sits, captured by its precise instruments.
+
+The Observatory's history, it's said, reaches back many epochs — its earliest founders were ordinary people who happened to perceive echoes with no way to verify them, spending decades building, brick by brick, this facility capable of systematically receiving, filtering, and translating echoes. Shen Du still remembers, on his first day of training, an instructor pointing to a faded old photograph on the hall wall: "These people turned a sound they heard but couldn't understand into an entire system later generations could rely on. That is the most awe-inspiring part of this work."
+
+Shen Du has worked at the Observatory for six years, one of its most senior operators. His shift partner, Lin Jian, joined two years after him and carries himself with far more ease. The two often share the terrible instant coffee from the vending machine during night-shift lulls, trading stories about the most absurd echoes they've heard — Lin Jian's favorite being a signal repeated a full seven times, its entire content an "other self" complaining about the wrong spice level on a delivery order, a story that never fails to make them both laugh, one of the few bright spots in an otherwise tedious job. Shen Du's daily work is to sit in the dim operations room, heavy receiver headphones on, sorting through thousands of incoming echo signals, judging which are clear and significant enough to translate and deliver to their recipients, and which are merely fleeting noise from a burst of emotion, not worth disturbing anyone's peace over.
+
+The job sounds poetic but is, in practice, extremely tedious — most echoes are laughably trivial: someone envying, across dimensions, that their other self got an extra slice of cake in a dream; someone complaining, late at night, that their other self missed the last bus; someone, on a whim, mocking another version of themselves for a different haircut. Echoes carrying real weight, worth solemn delivery, might come once or twice a month at best. Shen Du long ago grew used to this rhythm — mostly filtering noise, occasionally catching a flicker of genuine feeling.
+
+An unwritten "echo grading" system circulates within the Observatory; operators privately sort echoes roughly into "chitchat-grade," "wistful-grade," "heart-wrenching-grade," and the exceedingly rare "life-and-death-grade" — most daily work falls into the first two categories. Chitchat-grade can usually be judged with a glance at the summary; wistful-grade requires a bit more empathy to gauge whether delivery is warranted, and the slightest misjudgment can turn a message meant to be handled gently into a second wound for its recipient. As for "life-and-death-grade," Shen Du could count on one hand the number he'd personally handled in six years — each one left him emotionally unsettled for days afterward, sometimes requiring the Observatory's staff counselor to help him regain his footing.
+
+I-and-a-half · The Founding Legend
+
+A little-known legend surrounds the Observatory's earliest founding: it's said that the person who first proposed "systematically recording echoes" was not any officially recorded scholar, but a wandering traveler who never stayed long in any star domain. That traveler had witnessed, across countless worlds, how many life trajectories were utterly rewritten by a warning never delivered, a longing never understood, and felt deeply grieved by it — so he left the idea with a group of ordinary people, then baffled by their own occasional perception of echoes, and quietly departed on the very day the Observatory was founded, leaving no name behind.
+
+It's said those earliest founders had no idea, at first, how to systematize the handling of echoes, until a few sparse words left by that traveler pointed the way — he suggested that the recording and delivery of echoes must rest on two seemingly contradictory yet equally essential principles: giving every message sufficiently careful treatment, while never letting an operator's personal desires override that fairness. These two principles later became the Observatory's enduring core code, engraved at the most prominent spot at the hall's entrance, where every new operator solemnly swears an oath on their first day — though the traveler's name remains, to this day, unknown.
+
+Later staff have only ever seen, in the founding memorial hall, a blurred portrait depicting that traveler's back — no one can say who he was, only a line said to be his parting words: "Hearing an echo is a fortune. But harder than hearing it is learning what to do with what you've heard."
+
+II · The Rule
+
+The Observatory has one ironclad rule, one every operator must memorize on their first day and repeatedly write out during onboarding assessment: the instant any operator discovers that an echo's recipient is connected to themselves — whether an acquaintance, or another branch of themselves — they must immediately report it, recuse themselves, and hand it off to a colleague, never privately reviewing or processing such an echo. Violators face warnings up to termination, and repeat offenders may be permanently barred from the Observatory grounds.
+
+I-and-seven-tenths · Why He Joined
+
+Shen Du had applied to the Observatory, in truth, out of a private regret — his father had died suddenly in an accident, and the two of them had never managed to clear up the rift, spanning years, that lay between them; their last phone call had even ended in an unresolved, sulking argument. Shen Du later heard, by chance, of the concept of "echoes," and became briefly consumed by the fantasy that he might catch some branch, some moment of his father, leaving him a single sentence — even a fragment would be enough to ease a lifetime of regret. He threw himself entirely into preparing, combing through every relevant document he could find, studying day and night, and finally passed the Observatory's brutally rigorous entrance exam. But once inside, it took him a full year to understand: receiving echoes was never something an operator could choose freely — what you heard was always someone else's longing, never the answer you yourself wanted. This realization left him disheartened for a long while, even briefly considering resignation — but it also taught him, better than anyone, to cherish how rare it was for any echo to truly reach its recipient.
+
+The reason for the rule was simple, yet heavy: a person's obsession with themselves can severely distort judgment, even shatter an otherwise clear, rational mind. In the Observatory's history, one senior operator once accidentally glimpsed an echo addressed to himself, concerning a failed marriage he'd long thought he'd moved past, and suffered such violent psychological turmoil that he could never focus on work again, eventually breaking down entirely, forced into leave, never to return to his post. From then on, this rule was written into the very first line of the Observatory's core code — a boundary every operator regarded with reverent caution, never lightly crossed.
+
+Shen Du had believed in this rule absolutely, never once breaking it in six years — he'd even personally handed off, untouched, two signals vaguely connected to himself, without so much as a glance, earning public praise from his supervisor as "one of the most trustworthy operators on staff." Until that unremarkable Thursday night shift, past two in the morning, most colleagues already gone home, only a handful still on duty, the hallway lights dimmed into their characteristic amber night-mode glow. Routinely screening a fresh batch of incoming echoes, the system suddenly flashed a red alert he'd never seen before — an echo whose recipient's identity code matched his own, completely. The red warning light flashed in the dim operations room, glaringly bright, and his hand, gripping the mouse, froze mid-air without his realizing.
+
+III · The Anomaly
+
+What chilled him further was that this wasn't an isolated signal. Fingers trembling slightly, he pulled up the backend records and found that this nearly identical echo had, over the past three months, been sent by the same source over four hundred times, each attempt automatically intercepted for "recipient matches operator," never truly delivered, never heard in full by anyone — over four hundred blocked records sitting silently, layer upon layer, deep within the system, like a pile of distress letters no one had ever opened.
+
+By the rules, he should have immediately pressed "report," handing this anomaly off to his supervisor or a colleague, without reviewing its content at all. His finger hovered over that button for a long time, the operations room silent except for the hum of machinery and his own increasingly rapid heartbeat.
+
+What was a self who never made this choice, who walked an entirely different life path, trying to tell him, through four hundred attempts? That obsession — turned away four hundred times, yet still unrelenting — filled Shen Du with an unprecedented unease. If it truly meant nothing, no one's obsession should need four hundred tries; the number itself was no longer something a simple emotional outburst could explain.
+
+In the end, he didn't press "report." As if possessed, he opened the signal's full record instead, finger hovering over the play button, and drew a deep breath.
+
+III-and-a-half · Lin Jian's Warning
+
+Just as he was about to hit play, Lin Jian, on night duty, happened to walk over with two cups of instant coffee, and caught sight of the glaring red alert on his screen — his face changed instantly, coffee nearly spilling. "Is that... a recipient-match alert? Shen Du, you're not planning to listen to it yourself, are you? Are you crazy? You know this rule better than anyone."
+
+Shen Du said nothing, only tilted the screen so Lin Jian could see the number clearly — over four hundred intercepted records. Lin Jian sucked in a sharp breath, leaning closer to confirm it, then lowered his voice: "Something's wrong here. A normal person's obsession gives up after a few dozen tries at most. Four hundred... that's not something ordinary emotional turbulence explains. There's something behind this." He urged Shen Du to report it immediately and let the supervisor handle it, his tone growing urgent — but seeing the set of Shen Du's jaw, the resolve in his eyes, he sighed and stopped pushing, only patting his shoulder. "If you're really going to listen, I'll keep watch. Whatever happens, you're not carrying it alone — we both will."
+
+IV · Breaking the Rule
+
+The moment he broke the rule, Shen Du's heart pounded fit to burst from his chest, his palms slick with cold sweat, his breathing deliberately controlled. He glanced around the empty operations room, confirmed Lin Jian had retreated to keep watch in the hallway, then refocused on the screen. The instant the signal connected, after a burst of harsh, chaotic static, a voice both foreign and strangely familiar came through the equipment, broken and fragmented — his own voice, tone and timbre exact, yet carrying an extreme exhaustion and fear he had never once heard in himself, as though the speaker were using every last ounce of strength he had.
+
+"Shen Du... if you hear this message... don't go to the East District... don't go to that old building in the East District on the fifteenth of next month... it will..." The signal cut off here, shattered by a burst of violent static, the rest of the content destroyed beyond recognition, leaving only ten agonizing seconds of ear-grating noise before falling silent. The operations room held nothing but the low hum of equipment and Shen Du's own ragged, uneven breathing.
+
+He replayed it a dozen times, headphones at maximum volume, trying to salvage more from the ruined signal, nails digging into his palms, yet able to make out only these fragments: don't go to the East District, the fifteenth of next month, that old building. He could even hear, in that voice, a nearly desperate, all-consuming struggle — as if sending this message alone had exhausted almost everything the sender had left, the trailing edge of the voice trembling on the verge of collapse, and Shen Du's own eyes, without his noticing, grew hot.
+
+V · Tracing the Source
+
+Shen Du broke another Observatory rule, privately accessing the signal-tracing system to determine exactly which branch this persistent, warning "other self" came from. His fingers flew across the keyboard, a thin sheen of sweat breaking out across his back, tense yet carrying a fear-tinged anticipation he couldn't quite name.
+
+What he found left him unsettled for a long time: in that branch, Shen Du had failed the Observatory's entrance exam years earlier, and instead taken an unremarkable administrative job at a small company in the city's east end, living an ordinary, quiet life with nothing to do with echoes. According to the last records the system could trace, that branch's Shen Du had been in that very old building in the East District when it collapsed in an accident, his timeline stopping abruptly at that instant — the record ending there, with nothing after. That echo was very likely his last, all-out cry for help and warning before the collapse — the one thing, in his final moments, he thought to send across dimensions.
+
+V-and-a-half · The Other Branch's Ordinary Life
+
+Unable to resist, Shen Du later pulled up scattered fragments of that branch's earlier life — though he'd never made it into the Observatory, that Shen Du had lived a grounded, ordinary life: he liked stopping at the noodle shop below his office after work for beef noodles with a soft-boiled egg, chatting easily with the owner; every weekend, he visited his widowed mother, watching an old movie together, both of them tearing up at the touching parts; he'd even adopted a mottled stray cat, naming it "Luck," because he'd won a small prize the very day he found it — a cat that later had a litter of kittens, each given away, one by one, to familiar neighbors.
+
+Looking at these trivial yet warm fragments of life, Shen Du felt a complicated ache — that branch, which never passed the Observatory's exam, which seemed to be "living a lesser life" than his own, had, in fact, possessed a complete life fully worthy of respect: a family to care for, warm neighbors, a cherished cat — a life cut short abruptly by an accident, without even the chance to say goodbye to his mother. This realization gave the warning across dimensions a weight of respect Shen Du had never felt toward it before.
+
+VI · Hesitation
+
+Shen Du turned the discovery over and over in his mind, growing more unsettled each time, unable to sleep the whole night through, getting up repeatedly to pour himself glasses of water he never drank — if that branch had truly died in the accident, he had no reason to doubt this warning across dimensions was genuine, even paid for with the last moment of a life. Yet he also knew the Observatory held another equally severe rule: no operator was permitted to use their position to gain any form of "advance knowledge" advantage for their own real life, even when that advantage concerned life and death.
+
+This rule, too, had solid grounding — if every operator could claim "this is a life-and-death warning" to freely cross boundaries and act in their own interest, the entire foundation of the Observatory's fairness would collapse; the principle of treating every recipient equally, on which the Observatory stood, would vanish entirely. Recipients would no longer trust that every message they received had been handled fairly and carefully, rather than quietly tampered with by some operator's private interest. Shen Du recalled a case he'd once handled: an ordinary recipient, upon receiving a warning, had panicked so severely that the panic itself caused another accident — a warning never guaranteed that heeding it would bring safety, and this case echoed in his mind now. He weighed it over and over, even considering pretending nothing had happened, letting the signal vanish as though it never existed, turning a blind eye for the rest of his life. But right now, this wasn't an abstract moral debate — it was a specific date and location, staring him plainly in the face, leaving no room to hide behind abstract principle any longer.
+
+VII · The Supervisor's Stance
+
+In the end, Shen Du steeled himself and reported the entire matter, exactly as it happened, to his supervisor — a veteran who'd worked at the Observatory for nearly twenty years, his office filled with archive boxes of past boundary cases, a yellowed founding-commemoration photo on the wall. The supervisor's face grew grave; he was silent a long while, fingers tapping absently on the desk, before giving Shen Du a disappointing answer: "Rules are rules. Even a life-and-death warning, if the recipient is the operator himself, gets handled by the book — the signal is frozen, archived, disregarded, and no one is permitted to change their real-life plans because of it."
+
+Shen Du couldn't help pressing him: "What if the warning is real? What if, on the fifteenth, not knowing, I really walk into that building and something happens? Are we just supposed to let that happen, to preserve the fairness of the rule?" The supervisor looked up, studying him for a long moment, something complicated in his eyes Shen Du couldn't name, before saying slowly: "The Observatory was founded to help people see the paths they didn't take, to teach them to live alongside regret — not to let anyone use this privilege to turn their own life into an exam with the answers handed to them in advance. This rule matters more than any single, specific instance of life or death — I know that sounds cold, but if we open this door even once, the whole meaning of this place changes."
+
+VII-and-a-half · An Unspeakable Secret
+
+During that period, Shen Du was visibly troubled, and even his longtime partner, Ah Li, noticed something was wrong. She asked him repeatedly, and each time he brushed it off with "some trouble at work," staring blankly at his dinner, tossing and turning at night. One evening, Ah Li's eyes finally reddened, and she said, "We've been together five years — you've never hidden something like this from me before. Is it something serious at work, or... something else you don't want to tell me?" Shen Du looked at her reddened eyes, his heart in turmoil, yet still couldn't get the words out — the Observatory's confidentiality agreement forbade him from revealing any specific echo content, and worse, this whole matter was tangled up with a life-and-death warning about a version of himself that had never existed in her world; he wasn't even sure how to explain it, afraid that telling her would only frighten her more. He simply held her tightly, repeating "I'll explain everything once this settles down," carrying the entire ordeal alone — and for the first time, deeply understood the isolation that other self must have felt, pouring everything into a warning that could never quite be heard.
+
+VIII · The Decision
+
+After leaving his supervisor's office, Shen Du stood alone in the Observatory's empty corridor for a long time, his footsteps echoing with unusual clarity in the silence. He remembered a senior colleague once telling him, earnestly, when he first joined: "What we record are echoes left behind by other people's missed lives. Our own lives shouldn't, and can't, take shortcuts through this job." Young and headstrong then, he'd taken it for a platitude that applied to everyone but him; now, every word struck like a blow to the chest.
+
+But this time, the warning's target was, unmistakably, himself — a self who had used the very last of his life's strength, trying four hundred times. He kept asking himself: if he strictly obeyed the rules, archiving and freezing the warning, pretending nothing had happened, going about life as usual until the fifteenth — how would he be any different from the ordinary people who'd once turned a blind eye to a recurring, painful choice, letting someone else's cry for help sink without a trace? What, then, would be left of the meaning in this work he did? He even recalled a joke he'd once made to Lin Jian: "What we really do, at the end of the day, is guard a longing someone couldn't bear to betray." It struck him now as deeply ironic.
+
+In the end, Shen Du reached a compromise — he didn't openly violate the rule against changing his schedule because of the warning, canceling everything outright, but neither did he ignore it, letting his conscience hang in limbo. He spent two full days carefully wording a business trip request, citing "routine cross-regional coordination with headquarters" — a genuine part of his job responsibilities, not fabricated from nothing, only that he never told anyone the real reason for choosing that particular date and city. He did something the Observatory's rules had never explicitly forbidden: he requested, of his own accord, that his schedule for the fifteenth be arranged as a business trip to a city as far from the East District as possible, using the most ordinary, reasonable work justification — not "I received a warning from another version of myself" — cleverly securing himself a narrow margin within the boundaries of the rules.
+
+IX · The Fifteenth
+
+On the fifteenth, Shen Du was a thousand miles away in another city, attending a business exchange meeting that had been scheduled all along, sitting distractedly through a presentation, not absorbing a single word, his phone always within reach. The night before he left, Lin Jian had sent him a message: "Check in safe when you get there. I'm on shift today, keeping an eye on things." Shen Du felt a warmth reading it, replying with a simple "okay," yet couldn't sleep at all, tossing and turning in his hotel room until nearly dawn.
+
+Midway through the meeting, his phone buzzed — a breaking news alert. The long-dilapidated old building in the East District had suffered a partial collapse that afternoon, without warning; fortunately, a routine safety inspection had spotted cracks in the walls beforehand and evacuated the surrounding area in time, with no casualties. Almost simultaneously, a message from Lin Jian popped up: "Did you see the news?! Are you okay?!"
+
+Shen Du stared at the news for a long time, unable to speak, his fingers trembling so badly he could barely hold the phone, the discussion around him in the meeting room suddenly distant and blurred. He didn't know whether, had he not been "reasonably" arranged to be in another city that day, he might have happened to be near that building, handling some errand originally scheduled for that day. He couldn't even say whether this "luck" was coincidence, or whether the warning across dimensions had truly worked — a question that would circle in his mind, unanswered, for a long time to come, and destined to remain so. He sent Lin Jian a long reply, though it read simply, "I'm fine." After the meeting ended, he shut himself in the restroom, sank down against the cool wall, knees hugged to his chest, and stayed there until the surging emotion gradually settled — until his phone buzzed again, a concerned message from Ah Li, and he finally rose and returned to the crowd.
+
+X · An Answer That Could Never Be Confirmed
+
+Shen Du later tried to retrieve further records from that branch, hoping to confirm whether the self who warned him had, in fact, survived the accident. He spent several sleepless nights cross-checking dimensional records, coming up empty each time — the Observatory's signal-tracing system was full of limits and blind spots, especially for branches following major historical turning points, nearly impossible to trace clearly, as though those records had been quietly sealed by some higher-dimensional rule the moment the event occurred.
+
+All he was left with was a hazy, uncertain fragment of information — not knowing whether the self who warned him had survived, not even knowing whether his own safety this time was truly connected to that echo, or simply coincidence, unrelated to any dimensional message. This unverifiable, permanently unanswered suspension became a thorn he could never fully let go of, for many years afterward.
+
+X-and-a-half · A Belated Confession
+
+Once things settled, Shen Du finally gathered the courage to tell Ah Li the rough outline of what had happened — without revealing the Observatory's strictly confidential technical details, only that he'd once received an extraordinarily specific warning about an accident meant to happen to him, and that this was the reason for his recent distraction and silence.
+
+Ah Li was quiet for a long moment, her face going pale, before hugging him tightly, her voice trembling: "No matter what happens from now on, you're never allowed to carry it alone again. Do you have any idea how paranoid I've been these past weeks, wondering if you'd fallen out of love with me, or if there was something else going on?" Shen Du buried his face in her shoulder, feeling, for the first time, a deep guilt for his silence and concealment — he suddenly understood that what the warning from "another self" had truly taught him wasn't just whether to avoid that building, but that he should never let anyone who cared about him bear, alone, an unexplained, unspoken fear.
+
+XI · Understanding Echoes Anew
+
+This experience gave Shen Du an entirely new understanding of the job he'd done for six years. He'd always assumed an echo's meaning lay in letting the recipient "know" something, enabling smarter, safer choices. But this experience made him realize that an echo's true value might lie in exactly the opposite — it can never offer a certain answer, nor promise that heeding it guarantees safety. What it offers is only a reminder, urging someone to treat their own life with more care, more solemnity — nothing more. The rest is, in the end, something the recipient must carry and choose for themselves.
+
+That branch, who had sent four hundred desperate warnings, may not have truly saved him — but the sheer, all-out determination to reach across dimensions made Shen Du reexamine whether he himself, over the years, had ever ignored the faint cries for help from those around him, dismissing them, out of habit, as noise not worth a second thought. He thought of the thousands of echoes he'd handled over six years, wondering how many might have carried a similarly heavy weight, only to be dismissed as "no need to deliver" simply because the signal wasn't strong or clear enough — sinking without a trace, never to be revisited. The thought chilled him, and for the first time, he felt a deeper sense of responsibility toward this job he'd once considered objective and neutral, even beginning to wonder how many equally weighty longings he might have unknowingly failed, with his own hands, over the years.
+
+XI-and-a-half · A Re-Review
+
+With this new understanding, Shen Du volunteered to re-review a batch of echoes from the past six months that he'd marked "no need to deliver," listening to each one again, sitting through several sleepless nights, his eyes red with exhaustion. Most, as expected, were indeed inconsequential emotional noise — but among them, he unexpectedly found one, previously auto-archived and never delivered because its signal strength had fallen just below threshold: a mother, across dimensions, urging another version of herself who never reconciled with her child to "make that call, no matter what," her voice thick with years of suppressed guilt and longing. After much hesitation, Shen Du filed an exception request, resubmitting this signal — meant to remain permanently silent — for review, and successfully had it delivered to its recipient. He later heard, through the grapevine, that the recipient had indeed found the courage to make that long-delayed call, and mother and child had cried together on the phone for a full hour.
+
+XII · A New Rule Proposal
+
+Shen Du later submitted a proposal to amend the Observatory's rules, suggesting that in extreme cases — where an echo's content clearly involved major personal safety, and its signal strength and repetition count far exceeded normal thresholds — a stricter, multi-party review process for special exceptions should be established, rather than mechanically freezing and archiving every such case, so that messages sent with everything someone had would at least have a chance to be formally discussed and taken seriously, rather than sinking silently into the depths of the system forever.
+
+The proposal sparked months of heated debate within the Observatory. The review committee convened three full meetings on the matter, the arguments fierce — one senior committee member challenged Shen Du directly: "If we open this door today, won't every operator tomorrow claim 'abnormal signal strength' as an excuse for special treatment in their own affairs? Setting this precedent brings endless trouble." Shen Du didn't dodge the challenge, answering calmly: "That's exactly why I specifically included the requirement for multi-party review in the proposal — not to give any individual a green light, but to leave a formal crack in the door for these extreme cases, rather than forcing them to rely on some lone operator breaking the rules and risking everything alone."
+
+Some committee members voiced support, arguing that the Observatory's very purpose was captured in the phrase "taking it seriously" — if even the most extreme, most weighty cries for help were to be completely blocked by rule, the original intent of this work would be hollowed out. After prolonged back-and-forth, the proposal was, in the end, granted only limited trial approval — a strict annual cap on the number of cases reviewed, requiring at least three committee members' joint endorsement before initiating the special-exception process, the whole procedure often taking weeks of repeated verification. Shen Du knew this was far from a perfect solution, but he believed that, compared to a blanket, one-size-fits-all approach, it was at least an attempt to take seriously every heavy longing that crossed dimensions to reach someone — however imperfect that attempt, and however certain it was to face new disputes and challenges in the future.
+
+XIII · Epilogue
+
+Many years later, Shen Du rose from operator to senior consultant at the Observatory, specializing in complex boundary cases, his office set up not far from that old, dim operations room, the same grey-white void drifting slowly outside his window, quiet enough to hear his own heartbeat — yet he'd grown used to it, even found in that near-stillness a strange, comforting power, often standing at the window in his off-hours, gazing out for long stretches at a time.
+
+Once, a young operator not yet six months on the job came to him, flustered, eyes red, saying she'd intercepted an echo seemingly involving the safety of a close relative — though the recipient wasn't herself, but her best friend. By the rules, she should deliver it directly, but she'd hesitated a long time, unsure whether this hazy, unclear signal was reliable enough, afraid that delivering it recklessly might only cause her friend needless panic, or even make her friend suspicious and distant toward her as the "source" of the message. Shen Du didn't give her a direct answer, only listened quietly, as that mentor once had for him, letting her finish the whole story without interruption, before asking her one question: "If this signal were addressed to you, what choice would you hope the person handling it back then had made?" The young operator froze, something shifting in her eyes, before she nodded, resolve settling into her expression.
+
+Whenever a new operator, nervous and uncertain, asked him about the most memorable experience of his six years as an operator, he would tell the story of that echo intercepted four hundred times, his tone calm yet carrying a barely perceptible weight — never once mentioning that the echo's recipient had been himself. Ah Li was the only one who knew the whole truth; every time she heard him tell this story, she would sit quietly beside him, smiling with quiet contentment, sometimes gently taking his hand, as if witnessing a private memorial that belonged to the two of them alone.
+
+He would only add, as the most important advice for every newcomer: "This work of ours records more than just signals — it records, again and again, the willingness of one person, across entirely different life trajectories, to give everything for another version of themselves. That willingness deserves to be taken seriously, regardless of whether it can truly change anything — deserves to be answered with a lifetime of care."
+
+XIV · Afterword
+
+On the day of Shen Du's retirement, the weather was unusually clear. The Observatory held a small farewell ceremony, as was customary, and nearly every old colleague who still remembered him came. Lin Jian, once that joking young colleague, had grown into a pillar of the Observatory, now training several apprentices of his own; at the ceremony, he specially dug out that old device recording the history of four hundred intercepted signals, saying half-jokingly, "This thing became the station's 'treasured relic' afterward — used as a textbook example in training for several new cohorts. No one knows what actually happened with that 'recipient match alert' back then. Only the two of us know."
+
+Shen Du laughed and shook his head, saying nothing more, only walking to the observation window at the Observatory's highest point, gazing out at that grey-white void he'd watched drift by for decades, suddenly remembering that nearly unbearable Thursday night, many years ago — without that one night's exception, he might not be standing here now at all, might, in fact, no longer be in this world. Ah Li stood beside him, gently taking his arm, saying nothing, simply watching the void together with him. He spoke softly to that emptiness, unsure himself who he was speaking to: "Thank you — for not giving up, back then."
+
+The void outside drifted on as always, offering no reply, yet somehow, it seemed gentler than it ever had before, as if silently bearing witness to everything — from that nearly unbearable night, to this belated, precious peace.
+
+Many years later, if anyone asked what he'd gained most from this work, he would probably say: "Learning to take seriously every longing, however faint, however nearly impossible to hear."
+
+(An Original Piece · Lingxi Dimensional Narratives · Novel)`,
+  },
 };

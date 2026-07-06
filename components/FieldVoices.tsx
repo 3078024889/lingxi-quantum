@@ -27,6 +27,8 @@ type Node = {
 
 const COLORS = ["#E8B765", "#7CE0D3", "#C9A5D8", "#F2E2C4"];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
+// 只在左右两侧空白区生成，避开中间阅读列（约 16%~84% 视口宽度留给正文）。
+const randSideX = () => (Math.random() < 0.5 ? rand(1, 13) : rand(87, 99));
 
 const PRIORITY = /(修炼|显化片刻|邀请)/;
 const BAG: number[] = (() => {
@@ -58,14 +60,14 @@ export default function FieldVoices() {
       for (let k = 0; k < count; k++) {
         arr.push({
           id: seq.current++,
-          x: rand(2, 96),
+          x: randSideX(),
           depth: Math.random(),
           color: COLORS[Math.floor(Math.random() * COLORS.length)],
           fallDur: rand(mobile ? 20 : 26, mobile ? 34 : 40) - Math.random() * 12,
           fallDelay: -rand(0, 34),
           driftDur: rand(9, 20),
           driftDelay: -rand(0, 20),
-          driftDist: rand(-70, 70),
+          driftDist: rand(-20, 20),
           vibDur: rand(2.6, 5),
           vi: pick(),
         });
@@ -82,7 +84,7 @@ export default function FieldVoices() {
   const reseed = (id: number) => {
     setNodes((prev) =>
       prev.map((d) =>
-        d.id === id ? { ...d, x: rand(2, 96), vi: pick(), driftDist: rand(-70, 70) } : d
+        d.id === id ? { ...d, x: randSideX(), vi: pick(), driftDist: rand(-20, 20) } : d
       )
     );
   };
@@ -123,7 +125,7 @@ export default function FieldVoices() {
       {nodes.map((d) => {
         const v = voiceOf(d);
         const lit = hovered === d.id || d.id in speaking;
-        const openRight = d.x < 55;
+        const openRight = d.x >= 50; // 左侧节点文字向左展开，右侧节点向右展开，始终远离中间阅读列
         const base = (2 + d.depth * 6) * (isMobile ? 1.5 : 1); // 手机上更大
         const size = lit ? base + 4 : base;
         const opacity = lit ? 1 : 0.28 + d.depth * 0.42;
