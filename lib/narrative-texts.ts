@@ -856,4 +856,544 @@ The mirror faded without a sound. The Traveler stood where he was — behind, th
 
 (An original piece · Lingxi Dimensional Narratives · Wayfarer VIII · Finale)`,
   },
+  "topological-man": {
+    zh: `序 · 车祸之前
+
+在讲那场车祸之前，或许该先说说，车祸发生之前，顾一舟过的是什么样的日子。
+
+三十二岁，会计，已婚，房贷还剩十六年，车贷刚在去年结清。每天七点四十出门，晚上加班到八九点是常态，周末大部分时间用来陪岳父岳母吃饭、去父母家蹭一顿饭、或者窝在沙发上，把追了一半的剧，断断续续追完。他的生活像一张填得满满当当、却又异常空白的表格——每一格都有内容，每一格加起来，却拼不出一个让他能说清楚"我是谁"的答案。
+
+他不是不快乐，至少他从没这么形容过自己。他只是，很久很久没有为任何一件事，真正地、毫无保留地投入过了。上一次感觉到那种投入，还是大学时偷偷去蹭美术学院的公共课，坐在教室最后一排，看着讲台上那些讨论构图和光影的年轻脸孔，心里涌起一阵他从没跟任何人提起过的酸涩。
+
+那场车祸，就发生在这样一个再普通不过的、被填满了却空白着的夜晚。
+
+一 · 车祸
+
+顾一舟第一次感觉到"拉扯"，是在那场车祸之后的第三个星期，一个再普通不过的周二早晨，他正在给咖啡续第二杯热水。
+
+那场车祸发生在一个下着小雨的夜里。他加完班回家，走的是那条熟悉到闭着眼睛都能开的省道——白天是双向四车道，夜里十点以后，路灯稀疏，两边是望不到头的农田。对向车道有一辆运货卡车，车速快得不合常理，路面湿滑，卡车司机大概是打了个盹，方向盘猛地一打，整辆车斜着甩了过来，车灯像两把刀子，直直劈进他的挡风玻璃。
+
+顾一舟记得自己下意识地打方向，记得轮胎在湿路面上尖锐地摩擦出的声音，记得那一瞬间世界像是被人按了慢放键——雨刷器还在有条不紊地左右摆动，仪表盘上的时间显示还在安静地跳着数字，二十三点十七分，他记得清清楚楚。他知道，接下来这零点几秒，会决定他还能不能看到那些数字继续跳下去。
+
+然后，卡车擦着他的车头掠了过去，撞进了路边的护栏，发出一声闷响，紧接着是金属扭曲的刺耳声音。他的车侧滑了一段距离，撞上路肩的隔离墩，安全气囊弹出，砸在他脸上，然后，一切安静下来，安静得不像话。
+
+他毫发无损地坐在驾驶座上，能听见自己的心跳声大得离谱，一下一下撞着耳膜；能闻到烧焦的橡胶味和安全气囊里那股化学粉末的气味；能感觉到雨点打在破碎车窗上，一滴一滴，凉凉地溅到手背上。他活着，活得如此确凿、如此具体——可有那么一瞬间，他脑子里冒出一个奇怪到近乎荒谬的念头：这不该是他。
+
+那种念头一闪而过，快得他甚至没来得及细想，就被随后赶来的救援、警察的问询、保险公司的电话，还有随之而来的、正常人该有的后怕，一股脑淹没了。
+
+医生后来告诉他，这是幸存者常有的心理反应，一种叫"幸存者内疚"的东西，混杂着创伤后的应激反应，会随着时间慢慢消退。顾一舟点头，接受了这个解释，因为在那个当下，这是唯一说得通的解释。
+
+那三个星期里，顾一舟表面上照常上班、照常吃饭、照常在周末陪妻子去看她父母，可他自己知道，有什么东西，从那场车祸之后，悄悄地不一样了。他开始更容易走神，开会时会突然盯着窗外发呆，同事叫他两三次才反应过来；他开始对着镜子里的自己，多看几秒，说不清楚在找什么；他甚至有一次，站在小区楼下，看着自己那辆已经修好的车，第一次开始好奇，如果那天晚上，他没能活下来，家里人会怎样度过接下来的日子。
+
+那些念头，起初都被他当成正常的、创伤之后的胡思乱想，直到那种感觉，在第三个星期，第三次出现。
+
+二 · 拉扯
+
+那是一种他形容不出来的感觉。不是幻觉——他清清楚楚知道自己站在办公室的茶水间里，面前是滴水的饮水机，桌上是没写完的季度报表；不是幻听，周围一如既往地嘈杂，同事的键盘声、走廊里的脚步声、远处打印机吐纸的声音，一样不少。可就在续水的那个瞬间，他忽然感到，自己身体的某个部位——如果一定要形容，大概是胸口偏左一点的位置——正隔着一层极薄、几乎透明的墙，被另一边的什么东西，用力地、却又徒劳地，往这边拉扯着。
+
+那种拉扯里没有恶意，甚至没有明确的意图，更像是一种物理规律——两块原本紧贴在一起的磁铁，被强行拉开一段距离后，仍然固执地想要靠近彼此。
+
+他站在茶水间里，手里的杯子微微发烫，脑子里毫无征兆地闪过一个画面，像是别人的记忆硬生生插进了他的脑海：一间堆满颜料味道的房间，一幅画到一半、怎么都推进不下去的油画，还有那种他从没体会过的、近乎绝望的专注。
+
+那个画面只停留了不到两秒，就消失了，可留下的震动感，久久没有散去，他甚至能感觉到，那种画面里的房间，有一股松节油混着灰尘的气味，好像真的钻进了他的鼻腔。
+
+顾一舟站在原地，杯子里的水凉了都没察觉，同事从背后拍了他一下肩膀，问他是不是没睡醒。他勉强笑了笑，说没事，转身回了工位，可那种震动感一整天都没有完全消失。他忽然意识到一件从没敢细想的事：或许，那场车祸里，真的"死了"一个顾一舟——只是不是坐在这具身体里的这一个。
+
+三 · 拓扑漂移
+
+接下来的一个月，顾一舟几乎把所有业余时间都花在了查资料上。他从最基础的心理学书籍查起，翻遍了关于创伤、解离、幻觉的所有条目，一无所获——这些解释都太"正常"了，没有一个能真正对应他感受到的那种、带着方向感和具体细节的"拉扯"。
+
+他又转向了量子物理的科普读物，读到"多世界诠释"的时候，第一次觉得自己摸到了一点边——理论上说，每一次量子层面的分岔，宇宙都会分裂出对应的平行分支，每个分支里都存在一个做出了不同选择的自己。可这些书写得再热闹，落到"我该怎么解释自己胸口那种物理性的拉扯感"这个具体问题上，也只是隔靴搔痒，读完之后，除了几个更玄乎的词汇，什么实际帮助都没有。
+
+真正让他找到方向的，是一个几乎没什么访问量的小众论坛，是他在某个深夜，用尽了各种奇怪的关键词组合搜索之后，才偶然翻到的角落。帖子发布于三年前，标题是《关于"拓扑漂移"，写给同样感觉到"拉扯"的人》，点赞数只有个位数，评论区一片荒芜，只有两条无关的灌水评论。
+
+发帖人自称"郁蓝"。她在帖子里写道：极少数经历过"生死岔口"——也就是那种"本该死去，却活了下来"的临界体验的人，会在事后短暂地激活一种感知能力，能隐约察觉到，自己生命中那些关键选择点上，"没有被选择的另一条路"，其实并未真正消失，只是像一张被折叠起来的纸，收进了肉眼看不见的维度里。她把这种体质称为"拓扑人"，说这不是病，是一种极其罕见的、连大部分神经科学都无法解释的现象，全世界大概每几百万人，才会有一个，被某次生死体验意外激活。
+
+顾一舟注册了账号，给她发了一条私信，描述了自己感受到的那种拉扯，还有那个一闪而过的、堆满颜料的房间。
+
+石沉大海了将近两周。他几乎要放弃的时候，深夜十一点四十分，手机震动了一下，屏幕上跳出一行字：
+
+"如果你真的开始'感觉'到了，第一件事，不是去联系那些分支，是先学会，分清哪些感觉是他们的，哪些，还是你自己的。"
+
+四 · 第一次接触
+
+顾一舟没有把这句话当回事。
+
+他花了将近两个月的时间，靠着那种若隐若现的拉扯感，摸索出了一套属于自己的方法——某种他从没在任何书里读到过、只能靠反复试错才总结出的呼吸法：先彻底放松身体，从脚趾开始，一路放松到头皮；再有意识地放松那些始终紧绷着的、用来"分清自己和世界界限"的注意力，直到那层薄墙变得足够透明。
+
+第一次真正"看清"某个分支，是在一个失眠的凌晨三点。
+
+他看见的，是一个二十岁那年，选择了另一条路的顾一舟。
+
+那一年，现实里的顾一舟站在人生第一个真正意义上的岔路口——父母早就铺好路的会计专业，安稳、体面，毕业后进国企，一眼望得到头；另一边，是他偷偷报考、却从没敢跟任何人提起过的美术学院。他记得自己填志愿那天，笔悬在纸上很久，最后还是填了会计——理由和无数个顺从的年轻人一模一样：怕辜负父母那么多年的期待，怕真的走进一条谁都不看好的路，会走投无路。
+
+而在那个"没有被选择"的分支里，另一个顾一舟，把笔落在了美术学院那一栏。
+
+顾一舟"看"到的那个版本的自己，此刻正站在一间租来的老公寓里，墙上、地上到处是没干透的颜料，空气里飘着松节油刺鼻的味道，窗台上摆着几盆早就该浇水却干枯了的绿植。他对着一幅已经画了两个月、却怎么都推进不下去的画发呆，钱包里的余额，紧巴巴地只够撑半个月的房租，冰箱里只剩半盒鸡蛋和一瓶过期的酱料。
+
+那个版本的顾一舟一点也不体面，甚至有点狼狈——可他整个人的状态里，有一种现实里的顾一舟从没在自己身上见过的东西，一种近乎发光的专注，像是全世界都可以先放一放，只有眼前这幅画，是此刻唯一重要的事。
+
+五 · 借用
+
+一开始，顾一舟只是好奇地"看"，看完就散了，没想过要真正做什么。
+
+可随着接触的次数增多，一个念头开始在他心里生根：如果他能把那个画家版本身上，那种"愿意毫无保留地投入一件事"的状态，借一点点过来，会不会，他现在这份已经让他麻木了整整七年的会计工作，也能重新变得有意思一点？
+
+他开始有意识地，在每一次深度冥想接触到那个分支时，"借"一点点那种专注的状态——具体怎么做到的，他自己也说不清楚，只知道那种感觉像是伸手，从隔壁房间，端过来一点点还带着余温的东西。
+
+第一次尝试的效果，惊人得超出他的预期。那整整一周，他在工作时前所未有地投入，甚至因为一份格外用心打磨出来的方案，被从不轻易夸人的上司当众表扬了一句"这份做得有心思"，还破例请他喝了杯咖啡。
+
+尝到甜头之后，他借得越来越频繁。
+
+六 · 第二个分支
+
+第二个被他找到的分支，是一个从没结婚的顾一舟。
+
+在那个版本里，二十七岁那年，他没有像现实里这样，为了不辜负交往了六年的女友的期待，也为了不想面对"分手"这个词背后一整套复杂的社会流程，而是选择了求婚；他选择了坦白——告诉对方，自己那时其实还没准备好走进婚姻，甚至不确定，自己究竟是真的爱着对方，还是只是习惯了对方一直都在的存在。
+
+那次坦白，让那段感情提前结束了。那个版本的顾一舟，此刻正独自生活在一座他完全陌生的城市里，租着一间不大的公寓，偶尔会感到孤独，尤其是深夜，可整个人的状态却异常清醒——他很清楚自己现在想要什么样的关系，不再需要靠"应该"两个字，来替自己做决定。
+
+现实里的顾一舟，此刻正处在一段同样是靠"应该"两个字维系下来的婚姻里。妻子是个好人，两人的日子过得体面又平静，家里的账单准时缴纳，周末会一起去看父母，一切都符合外人眼中"过得不错"的标准。可他很少感到，自己真正地，被理解过。
+
+他开始借用第二个分支身上那种清醒感，学着更诚实地，向妻子表达自己内心真实的想法，而不是像过去那样，永远先猜测"她希望我说什么"。
+
+奇怪的事情，就这样发生了：他和妻子之间，第一次有了几次深夜的长谈，谈的是那些他们结婚五年来，从没真正碰触过的、关于彼此需求和不安的话题，坦诚得他自己都觉得有点陌生。
+
+七 · 第三个分支
+
+尝到了两次甜头之后，顾一舟开始更主动地寻找其他分支，像是发现了一整座免费的宝库。
+
+第三个被他找到的分支，是一个移居海外、成了一名急诊科医生的顾一舟。那个版本的他，大学毕业后没有留在家乡，而是咬牙申请了国外的医学院，熬过了近乎不近人情的住院医师阶段，此刻正值一场深夜的抢救，双手稳得像是焊在了病人身上，脑子里没有一丝多余的杂念，只有眼前这条命。
+
+顾一舟"借"来的，是那种在巨大压力下依然能保持绝对专注、不被恐惧左右的镇定感。他把这份镇定感用在了一次异常艰难的客户谈判上，效果拔群——他破天荒地一次性拿下了一个拖了大半年都没能签下的大客户，部门经理在年会上当众提到了他的名字。
+
+那一刻，他站在台上，接受着同事们的掌声，心里却掠过一丝说不清楚的空虚——那份让他赢得这场谈判的镇定，根本不是他自己的，他甚至说不清楚，如果没有那份"借来"的东西，此刻站在台上的，还会不会是这个被夸奖的顾一舟。
+
+他后来又"看"过那个医生分支几次，渐渐拼凑出了一些更完整的画面：那个版本的顾一舟，在异国他乡熬过了整整六年没有周末、几乎住在医院里的日子，谈过一场因为工作太忙而无疾而终的恋爱，也曾在深夜的更衣室里，因为一次没能抢救回来的病人，一个人蹲在地上哭了很久。那份此刻被顾一舟随手"借用"的镇定，背后是六年不眠不休的积累，是无数个他没有经历过的至暗时刻。顾一舟第一次隐约意识到，自己借用的，从来不只是一份现成的状态，而是别人用整段人生，一寸一寸熬出来的东西。
+
+八 · 越借越贪
+
+顾一舟开始相信，自己发现了一种走捷径的方法——不需要真正去经历那些艰难的、需要用整段人生去交换的选择，只需要像从图书馆借书一样，从别的分支里，"借"来别人辛苦换来的领悟。
+
+他借得越来越多，也越来越贪心。工作上遇到棘手的谈判，他去借那个急诊医生分支的镇定；和年迈的父母起争执时，他去借一个据说和父母关系极好的分支的耐心；甚至连健身时想要多坚持五分钟，他都下意识地，想去借一点某个分支身上的自律，连挑选晚餐吃什么，都开始隐约参考起某个分支的口味偏好。
+
+他开始很少再感觉到，此刻的自己，究竟想要什么、喜欢什么、害怕什么——那些原本属于他自己、哪怕微不足道的感受，渐渐被越来越多"借来"的碎片覆盖，模糊得像是隔着一层毛玻璃。
+
+危机在一次家庭聚餐上，毫无预兆地爆发了。
+
+那天，母亲又一次提起了当年他放弃美术学院的事，语气里带着一丝不易察觉的、多年积攒下来的愧疚。顾一舟下意识地想借用画家分支那种"毫无芥蒂的坦然"来回应母亲，可那一瞬间，他脑子里同时涌进了太多分支的情绪——画家的坦然、单身分支的疏离、医生分支的冷静，几种截然不同的情绪在他脑子里同时炸开，他张了张嘴，一个字都说不出来，整个人僵在饭桌前，脸色一阵发白。
+
+妻子紧张地拉住他的手，父母面面相觑，不知道发生了什么。顾一舟勉强找了个借口离席，躲进洗手间，对着镜子，久久说不出话——镜子里那张脸，他忽然感到无比陌生，好像同时住进去了好几个人，谁都没能真正说得清楚，此刻该由谁来开口。
+
+他打开水龙头，冷水扑在脸上，试图让自己镇定下来。可越是想让自己镇定，脑子里那几种借来的情绪就搅得越乱——他甚至一度产生了一种荒谬的恐慌：如果他现在完全停止借用，任由自己"原本的反应"浮现出来，那个反应，会不会，因为太久没有被使用过，早就已经生锈、甚至消失了？
+
+他在洗手间里站了将近十分钟，妻子来敲门，隔着门问他是不是身体不舒服。顾一舟听着妻子的声音，忽然有一种冲动，想把这一切，那种拉扯感，那些借来的分支，一股脑地告诉她。可话到嘴边，他还是咽了回去，只说了句"没事，可能是刚才吃太快了"，然后打开门，若无其事地回到了饭桌前。
+
+那顿饭剩下的时间，他几乎没再说话，只是机械地往嘴里送菜，脑子里反复回响着一个问题：如果连自己最基本的情绪反应，都需要靠"借"，那这具身体里，此刻坐着的，究竟还是不是顾一舟。
+
+九 · 郁蓝
+
+顾一舟再一次联系了郁蓝，几乎是带着一种求救的语气。这一次，她回复得很快，只有一句话：
+
+"你借得太多了。约个时间见一面吧，有些话，打字说不清楚。"
+
+他们约在一家几乎没什么客人的老式咖啡馆，靠窗的位置。郁蓝比他想象中要年长一些，大概四十岁上下，穿着一件洗得发白的浅灰色针织衫，头发随意地挽在脑后，眼神里有一种他说不清楚的疲惫感，像是经历过某种他此刻还没经历过的代价。她点了一杯黑咖啡，没有加糖，也没有加奶，一直没喝，只是用手指绕着杯沿。
+
+她说话的时候，手指一直没有停下，在杯沿上一圈一圈地绕着，像是某种下意识的、用来让自己保持"在场"的动作。顾一舟后来才明白，那或许正是她在提醒自己：此刻正在说话的，是她自己，不是借来的谁。
+
+"我曾经跟你一样。"她说，声音很轻，"十年前，我经历了一场心脏骤停，被抢救回来之后，也开始感觉到那种拉扯。一开始，我也以为自己发现了捷径——借一点这个分支的勇敢，借一点那个分支的从容，日子确实一度过得'更好'了，别人都说我变得不一样了，更自信，更松弛。有一段时间，我甚至很享受这种感觉，好像自己终于活成了一个'更好的自己'，走在路上都比过去更有底气。"
+
+她停顿了很久，才继续说下去：
+
+"可到后来，我发现自己越来越说不清楚，哪些反应，是我'郁蓝'本来会有的，哪些，只是我东拼西凑借来的表演。我谈恋爱，用的是借来的浪漫；我在职场上升职，用的是借来的果决；我甚至安慰朋友的时候，说的话，都是从某个更擅长安慰人的分支那里，现学现卖的。到最后，我拆开自己身上所有'借来'的部分，发现底下，什么都不剩——我花了七年时间，把自己活成了一个，谁都不是的人。"
+
+十 · 那具没能活下来的身体
+
+顾一舟听得后背发凉，久久没有说话。最后，他问："那要怎么办？"
+
+郁蓝沉默了很久，久到顾一舟以为她不会再回答。最后，她说：
+
+"还有一个分支，我一直没敢让你自己去看——一个在那场车祸里，真正死去了的顾一舟。"
+
+顾一舟的心猛地一沉。
+
+"你应该去见他，"郁蓝说，"不是为了借用什么，那具身体已经没有什么可借的了。是为了让你真正明白——你现在活着，这件事本身，就已经是一种极其偶然、也极其郑重的结果，不是理所当然的。"
+
+顾一舟犹豫了很久很久，最终还是点了头。
+
+那天晚上，他坐在自己家的书房里，用尽了这两个月练出来的所有专注力，缓慢地、几乎是颤抖着，靠近了那个分支。
+
+那个分支里，事故发生在一个几乎一模一样的雨夜——同一条省道，同一辆失控的卡车，唯一的差别是，那个版本的顾一舟，那天提前了整整十分钟出门，恰好，在最猛烈的那一瞬，正面撞上了失控的卡车。
+
+顾一舟"看见"的，不是任何血腥或者惨烈的画面——那层墙从没让他看见过任何具体的影像，他"看见"的，是那具身体，在最后几秒钟里，真实感受到的东西。
+
+不是恐惧，出乎意料地，不是恐惧。是一种猝不及防的、对未完成之事的巨大遗憾：还没来得及，跟母亲说一句"我理解你当年那些期待，也理解你当年那些没说出口的害怕"；还没来得及，诚实地问自己一次，撇开所有人的眼光，自己到底想要怎样的一辈子；还没来得及，好好地，郑重地，活一次。
+
+十一 · 羞愧
+
+那一刻，顾一舟第一次真正理解了郁蓝说的那句话。
+
+那些没有被选择的路，从来不是用来被"借用"的资源库，它们是一种提醒——提醒他，此刻他正在走着的这条路，不是随随便便哪一条，是他极其侥幸、也应该极其郑重地，被留在这个世界上，才得以继续走下去的那一条。
+
+他忽然为自己这段时间以来的"借用"，感到一种从没体会过的羞愧——他一直理所当然地，向那些辛辛苦苦才挣得那份领悟的分支索取，却从没有，认认真真地，为自己此刻正在经历的这条路，付出过同等重量的努力。
+
+他想起自己借来的那份专注、那份清醒、那份镇定，忽然觉得它们像是穿在自己身上、尺码不对的衣服——看着体面，却处处硌人，因为它们本来就不是为他这具身体、这段人生，量身裁剪的。
+
+十二 · 停止借用
+
+顾一舟停止了所有的"借用"。
+
+这不是一个轻松的决定。他重新回到那份让他麻木了七年的会计工作里，这一次，他没有再靠借来的专注力硬撑，而是认认真真地，问了自己一个从没敢细想的问题：撇开父母的期待，撇开"安稳"这两个字的诱惑，他是否真的想，继续做这份工作，做完接下来的三十年。
+
+答案让他自己都有点意外：不想。
+
+他花了将近半年时间，一边工作，一边悄悄考取了一个和设计相关的资格证书，深夜里啃着枯燥的教材，好几次都想放弃，尤其是在连续加班一整周、回家还要挑灯看书的那些夜里，他不止一次问自己，这么折腾，到底值不值得。
+
+递交辞职信那天，他的直属上司愣了很久，问他是不是遇到了什么困难，需不需要公司帮忙。顾一舟摇摇头，只说了一句："没有困难，只是我想清楚了，这不是我想做一辈子的事。"上司叹了口气，说他这个年纪做这种决定，需要很大的勇气，顾一舟当时没说话，心里却想：勇气这个词，他曾经也从别的分支里借用过，可这一次，是他自己一个人，扛下了所有的犹豫和不确定，做出的决定。
+
+新工作的第一天，他坐在一个刚毕业不久的年轻同事旁边，对方比他小了快十岁，教他怎么用一款他从没接触过的设计软件，语气里带着一丝不易察觉的、对"转行大叔"的礼貌性照顾。顾一舟没有觉得难堪，反而觉得新鲜——很多年没有过的、作为一个"新手"重新学习的感觉，笨拙，却让人踏实。他花了比同事多一倍的时间，才勉强做出一份能看的设计稿，可那份稿子上的每一根线条，都是他自己，一笔一笔，从头学着画出来的。
+
+最终，在一个几乎所有人都劝他"三思"的年纪，他还是选择了转行——从最基础的岗位学起，笨拙，收入也大幅缩水，第一个月拿到的工资只有原来的一半，却前所未有地，感到踏实。
+
+那段靠"应该"两个字维系着的婚姻，他也没有再靠借来的清醒感硬撑，而是花了很长很长的时间，真正地、艰难地，和妻子重新谈了一次，关于彼此内心真实需求的对话。
+
+那次谈话是在一个周五的晚上开始的，一直持续到凌晨两点多。妻子先开的口，声音有点抖："我这五年，一直觉得你人在，心不在，我以为是我哪里做得不够好。"顾一舟沉默了很久，才说出一句他准备了很久、却始终没敢说出口的话："不是你的问题，是我这五年，一直不敢告诉你，我其实一直觉得，自己的生活，过得像在完成一份考卷，每一题都答了，却没有一题，是我真正想写的答案。"
+
+那句话说完，两人都沉默了很久。妻子哭了，不是因为伤心，她后来说，是因为那是五年来，她第一次，觉得自己真的"看见"了顾一舟，而不是那个每天准时回家、按部就班的丈夫的影子。那次对话里有过争吵，尤其是谈到要不要要孩子这件事——顾一舟第一次坦白，自己其实还没准备好，妻子一度摔了门，独自在阳台站了很久。也有过长久的沉默，两人隔着餐桌，谁都不说话，只是听着墙上挂钟的秒针声。甚至有一度，两人都以为这段婚姻可能走不下去了——可每一句话，都是他自己，一个字一个字，从心里挖出来说的，不是从别处借来的。
+
+那次谈话没有一个圆满的句号，反而留下了很多没谈完的问题，可他们第一次，是带着这些没解决的问题，一起躺下睡着的，而不是像过去那样，各自在心里把问题悄悄咽下去。
+
+十三 · 一年后
+
+一年后，顾一舟依然能偶尔感觉到那种熟悉的"拉扯感"，只是他不再急着，想要够到那层墙的另一边。
+
+他学会了一种新的、更安静的方式，与那些分支共处——不再借用它们的成果，只是偶尔，任由那份若有若无的牵连感，提醒自己：每一个选择，无论走的是哪一条，都在某个看不见的地方，长成了一整段完整、值得被尊重的人生，那些人生，不该被当成免费的仓库，随手取用。
+
+他给郁蓝发了最后一条消息，谢谢她当年那句"你借得太多了"，也谢谢她愿意，把那个最难面对的分支，指给他看。
+
+这一次，郁蓝回得比以往任何一次都要长。她说，自从那次和顾一舟见面之后，她自己也开始重新尝试，停止借用，一点一点，把这些年拼凑起来的自己，拆解开，重新用属于自己的、哪怕笨拙缓慢的方式，一样一样拿回来。她说这个过程比她想象中要难得多，好几次她都想放弃，回到那种"借用"起来更轻松的状态里，可她还是咬牙坚持了下来。
+
+"上个月，"她在消息最后写道，"我报名了一门插花课，是我自己一直想学、却总找借口拖延的东西。第一次上课，我笨拙得像个刚学走路的孩子，可那种感觉，久违地，是完完全全属于我自己的。谢谢你，那次见面，其实也提醒了我。"
+
+顾一舟看着这条消息，笑了。他忽然明白，或许每一个真正学会"停止借用"的人，都在某种意义上，成了另一个人重新找回自己的提醒——就像他此刻，也终将成为某个未来分支里，某个陌生人的一份提醒一样。
+
+郁蓝最后回复得很简短："能走回自己的路，比借到多少现成的领悟，都要难得。"
+
+十四 · 父亲
+
+停止借用之后，顾一舟还做了一件让全家人都意外的事——他主动去找了父亲一次长谈。
+
+多年来，顾一舟和父亲之间，一直隔着一种说不清道不明的疏离，两人从没红过脸，却也从没真正说过什么交心的话，每次见面，聊的都是天气、股票、或者顾一舟工作上的事。那次长谈，顾一舟第一次问了父亲一个从没敢问的问题："您当年，有没有什么，最后没敢走的路？"
+
+父亲愣了很久，久到顾一舟以为他不会回答。最后，父亲说，他年轻时，其实很想去当兵，可家里是独子，爷爷奶奶不同意，他最后进了工厂，一干就是一辈子。"我这辈子，也不是没有过遗憾，"父亲说，声音很轻，"只是我们那代人，不流行说这些，说了也没用，日子还是得照样过。"
+
+顾一舟第一次意识到，自己身上那种"先满足别人期待，再压下自己感受"的习惯，或许早在父亲那一代，就已经生了根。他没有借用任何分支的勇气，只是握了握父亲的手，说了一句："爸，我理解您当年的选择，也理解您没说出口的那些遗憾。"
+
+父亲没有说话，只是重重地拍了拍他的肩膀，那双手比顾一舟记忆里，苍老了许多。
+
+十四点五 · 关于孩子
+
+那次谈到深夜的对话里，最难的一部分，是关于要不要孩子。顾一舟坦白自己一直没准备好，妻子当时很受伤，两人有大半年时间，都刻意避开这个话题，家里的气氛因此低落了很久。
+
+顾一舟后来花了很长时间想明白，自己对"要孩子"这件事的抗拒，有多少是真实的、属于自己的犹豫，又有多少，是他隐约借用过的、某个一直单身、生活简单洒脱的分支所带来的偏好，混进了自己心里，他自己却一直没能分清。
+
+他花了几个月时间，认认真真地、独自地想这件事，不借用任何分支的态度，只是一遍遍问自己：如果撇开所有比较，撇开那些"过来人"的经验之谈，他是否真的，从心底里，想要一个孩子。
+
+答案渐渐变得清晰起来：他想要。不是因为觉得"应该"要，也不是因为怕晚年孤独，而是因为，他忽然很想知道，一个同时带着他和妻子印记、却又完全独立、拥有自己人生岔路的小生命，会长成什么样子。
+
+他把这个想清楚的答案，告诉了妻子，两人抱着彼此，哭了很久。
+
+十五 · 三年后
+
+三年后的一个周末，顾一舟站在一个小型联合画展的角落里，看着墙上挂着的一幅画——不是什么了不得的作品，技法也谈不上精湛，是他自己，用了整整八个月，断断续续画完的一幅风景画，题材是他和妻子第一次旅行去过的那片海。
+
+妻子牵着他们两岁的女儿，站在画前，笑着说这幅画里的海，颜色调得比照片还好看。顾一舟看着自己的画，忽然想起那个画家分支——那个此刻大概还在某个堆满颜料的公寓里、为生计发愁的顾一舟。他心里没有羡慕，也没有优越感，只有一种很平静的、类似"我们都在各自的路上，认真地活着"的感慨。
+
+那天晚上，他久违地，又感觉到了一点若有若无的拉扯感，像是老朋友隔着一层薄墙，打了个招呼。他笑了笑，没有伸手去够，只是任由那份感觉，安安静静地，来了，又去了。
+
+十五点五 · 给自己的信
+
+三年后那次画展结束的那晚，顾一舟破天荒地，给自己写了一封信，锁进了一个只有他自己知道密码的抽屉里，约定十年后再打开。信里只有几句话，字迹算不上工整，是他罕见地没有用电脑打字、而是一笔一划亲手写下的：如果十年后的你，又开始想借用谁的答案，请回头看看这封信——你此刻的每一次笨拙，都比任何借来的完美，更值得被你自己骄傲。写完这封信，他把它折成一个不太规整的方块，塞进信封，封口的时候，忽然想起多年前那幅怎么都画不完的画，笑了笑，把信锁进了抽屉最深处。
+
+十六 · 尾声
+
+顾一舟后来，很少再向任何人提起拓扑漂移这件事，包括他的妻子——那段婚姻最终没有走向分开，反而在那场艰难的对话之后，变得比过去五年任何时候，都更真实。设计这条新的职业路，他也走得越来越稳，虽然到现在，也没能像那个画家分支一样办过任何一场真正意义上的个人画展，可他手里那些笨拙却真实的作品，是他自己，一笔一笔画出来的。
+
+他只是，会在偶尔感到人生艰难、忍不住又想要抄近路的瞬间，想起那个雨夜，想起那具再也没能说出"我理解你"的身体，然后深吸一口气，继续，笨拙地，一步一步，走完自己这一条——虽然普通，却唯一真正属于他的路。
+
+他偶尔也会想，那个还没能说出"我理解你"的分支，此刻是否也在某个折叠起来的维度里，用某种他无法理解的方式，感觉到了他此刻的这份安稳——如果真的能感觉到，他希望对方知道，自己没有辜负这份被留下来的运气，没有把它，随手换成一堆借来的、拼凑起来的答案，而是，一寸一寸，把它，活成了一整段，虽然普通，却完完全全属于顾一舟自己的人生。
+
+选择从来不是删除，那些没有被走过的岔路，都还在某处，安静地呼吸着——可正因为如此，此刻正在呼吸着的这一条路，才更加不该被辜负，不该被拿去和任何一条"更好"的路比较，因为它从一开始，就不是用来被比较的，它是用来被，认认真真地，走完的。
+
+很多年后，顾一舟偶尔会在女儿问起"人生的意义是什么"这类天真又深刻的问题时，想起自己这段几乎没跟任何人完整说起过的经历。他没有把拓扑漂移的事告诉女儿，只是笑着说："意义这个东西，不是等着被找到的，是你每天，认认真真地做选择，一点一点，自己把它走出来的。"女儿似懂非懂地点点头，转身又跑去玩她的积木了。顾一舟看着她的背影，心里想，这大概，就是他能给出的，最诚实的答案了。
+
+（灵犀原创 · 多维叙事 · 长篇）`,
+    en: `Prologue · Before the Accident
+
+Before telling the story of the accident, it's worth saying something about the life Gu Yizhou was living beforehand.
+
+Thirty-two years old, an accountant, married, sixteen years left on the mortgage, the car loan just paid off last year. Out the door at seven-forty every morning, routinely working late until eight or nine at night, weekends mostly spent having dinner with his in-laws, dropping by his parents' place to mooch a meal, or sprawled on the couch finishing whatever show he'd left half-watched. His life was like a form filled in completely, every field checked — and yet somehow entirely blank, adding up to no answer he could give if asked who he was.
+
+He wasn't unhappy, at least he'd never have described himself that way. He simply hadn't, in a very long time, thrown himself into anything without reservation. The last time he remembered that feeling was in college, sneaking into open lectures at the art academy, sitting in the back row watching young faces at the podium discuss composition and light, a familiar ache rising in his chest that he'd never mentioned to anyone.
+
+The accident happened on just such an ordinary night — one of those nights filled to the brim, and empty all the same.
+
+I · The Accident
+
+Gu Yizhou first felt the "pull" three weeks after the accident, on an unremarkable Tuesday morning, refilling his coffee with hot water for the second time.
+
+The accident had happened on a rainy night. Driving home after overtime, on a provincial road he knew so well he could have driven it blind — four lanes by day, sparse streetlights after ten at night, farmland stretching out on either side. A cargo truck in the oncoming lane was moving at an unreasonable speed; the road was slick; the driver had likely dozed off. The wheel jerked, and the whole truck swung sideways across the road, headlights slicing like blades straight into his windshield.
+
+Gu Yizhou remembered turning the wheel on instinct, the sharp screech of tires on wet asphalt, the world seeming to slip into slow motion — the wipers still sweeping steadily left and right, the clock on the dashboard still quietly ticking forward, 23:17, he remembered it exactly. He knew that the next fraction of a second would decide whether he'd see those numbers keep ticking at all.
+
+Then the truck grazed past his hood and slammed into the guardrail, a dull crash followed by the shriek of twisting metal. His car skidded, struck the median, the airbag deployed into his face, and then — silence, an almost unbearable silence.
+
+He sat in the driver's seat, unhurt, his heart pounding absurdly loud against his eardrums; he could smell burnt rubber and the chemical tang of the airbag's powder; he could feel raindrops through the shattered window, cool against the back of his hand. He was alive, undeniably, concretely alive — and yet, for one instant, an absurd thought surfaced: this shouldn't be him.
+
+The thought passed as quickly as it came, swallowed by the rescue crews, the police questions, the insurance calls, and the perfectly ordinary aftershock that followed. The doctor later told him this was a common reaction among survivors — "survivor's guilt," mixed with post-traumatic stress — and that it would fade with time. Gu Yizhou nodded and accepted the explanation, because at the time, it was the only one that made sense.
+
+Until the feeling returned, for the third time, in the third week.
+
+II · The Pull
+
+Those three weeks, Gu Yizhou went to work as usual, ate as usual, spent weekends with his wife visiting her parents as usual — but he knew something had quietly shifted since the accident. He caught himself drifting during meetings, staring out the window until a colleague called his name twice; he found himself lingering an extra few seconds in front of the mirror, unsure what he was looking for; once, standing in his building's parking lot, looking at his now-repaired car, he found himself wondering, with strange detachment, how his family would have spent the days that followed if he hadn't survived.
+
+He wrote it all off as normal post-trauma rumination — until, in the third week, the feeling came a third time.
+
+It was a feeling he couldn't quite put into words. Not a hallucination — he knew perfectly well he was standing in the office break room, facing a dripping water dispenser, an unfinished quarterly report on his desk; not an auditory illusion, the office as noisy as ever with keyboards, footsteps, the distant printer. But in that instant of refilling his cup, he suddenly felt that some part of his body — if he had to name it, somewhere just left of his chest — was being pulled, forcefully yet uselessly, by something on the other side of an impossibly thin, nearly transparent wall.
+
+There was no malice in that pull, not even clear intent — more like a law of physics: two magnets once pressed together, forced apart, still stubbornly wanting to close the distance.
+
+He stood there, the cup warm in his hand, when a scene flashed unbidden through his mind, as if someone else's memory had been forced into his own: a room thick with the smell of paint, an unfinished oil painting he couldn't seem to push past, and a kind of focus — nearly desperate — that he had never once felt himself.
+
+The image lasted less than two seconds before it vanished, but the tremor it left behind lingered a long while; he could almost still smell the turpentine and dust of that room. A colleague clapped him on the shoulder from behind, asking if he hadn't slept. He forced a smile, said he was fine, and returned to his desk — but the tremor didn't fully fade all day. For the first time, he let himself consider something he'd never dared examine closely: perhaps, in that accident, a Gu Yizhou really had died — just not the one inside this body.
+
+III · Topological Drift
+
+For the next month, Gu Yizhou spent nearly all his free time researching. He started with psychology, combing through every entry on trauma, dissociation, hallucination — nothing fit. These explanations were all too "normal"; none accounted for that directional, oddly specific sensation of being pulled.
+
+He turned to popular physics next, and reading about the "many-worlds interpretation" for the first time felt like touching the edge of something real — theoretically, every quantum-level branching point splits the universe into corresponding parallel timelines, each holding a version of himself who chose differently. But however lively these books were, they offered nothing useful for the concrete question of why his chest physically ached with a sense of pulling.
+
+What finally pointed him somewhere real was an obscure forum with almost no traffic, stumbled upon one late night after exhausting every strange keyword combination he could think of. The post was three years old, titled "On 'Topological Drift,' for Anyone Else Who Feels the Pull," with a single-digit number of likes and an empty comment section save for two irrelevant spam replies.
+
+The poster called herself "Yu Lan." She wrote that a vanishingly rare few who experience a genuine "life-or-death fork" — the kind where one should have died, but didn't — briefly gain a perception, in the aftermath, of something faint: that the "unchosen path" at their life's key junctures never truly vanished, only folded away, like a sheet of paper tucked into a dimension invisible to the eye. She called this condition "Topological," saying it wasn't an illness, but an exceedingly rare phenomenon that even most of neuroscience couldn't explain — occurring, by her estimate, in perhaps one person in several million, and only ever activated by a brush with death.
+
+Gu Yizhou registered an account and sent her a private message, describing the pull he'd felt, and the fleeting image of the paint-stained room.
+
+Silence, for nearly two weeks. Just as he was about to give up, at 11:40 one night, his phone buzzed. A single line appeared on the screen:
+
+"If you're really starting to 'feel' it, the first thing isn't to reach out to those branches. It's learning to tell which feelings are theirs, and which are still yours."
+
+IV · First Contact
+
+Gu Yizhou didn't take the warning seriously.
+
+Over nearly two months, guided by that faint, intermittent pull, he pieced together a method of his own — something he'd never read in any book, arrived at only through trial and error: a breathing technique that began by relaxing the body completely, toe to scalp, then deliberately loosening the tension that always drew the line between self and world, until that thin wall grew transparent enough.
+
+The first time he truly "saw" a branch clearly was at three in the morning, during a bout of insomnia.
+
+What he saw was a Gu Yizhou who, at twenty, had chosen a different path.
+
+That year, the real Gu Yizhou had stood at his first true fork in life — accounting, the major his parents had already paved the way for, stable and respectable, leading straight into a state enterprise, a life visible from end to end; on the other side, the art academy he'd secretly applied to and never told a soul about. He remembered the pen hovering over the application form for a long time, before he finally checked accounting — for the same reason a million compliant young people before him had: afraid of disappointing years of expectation, afraid of walking a road no one believed in and ending up with nowhere to go.
+
+In the branch that was never chosen, another Gu Yizhou had checked the art academy instead.
+
+The version Gu Yizhou "saw" now stood in a rented old apartment, paint splattered across the walls and floor, the air sharp with turpentine, a few withered houseplants on the windowsill long overdue for water. He stood staring at a painting two months in progress, unable to push it any further, his wallet barely holding enough for half a month's rent, the fridge down to half a carton of eggs and an expired bottle of sauce.
+
+That version of Gu Yizhou wasn't respectable at all — a little pathetic, even. And yet there was something in his entire bearing that the real Gu Yizhou had never once seen in himself: an almost luminous focus, as if the whole world could wait, and only the painting in front of him mattered at all.
+
+V · Borrowing
+
+At first, Gu Yizhou only watched, out of curiosity, letting each glimpse dissolve afterward without a second thought.
+
+But as the contact grew more frequent, a thought took root: if he could borrow just a little of that painter's willingness to throw himself, without reservation, into something — could the accounting job that had numbed him for seven straight years feel interesting again, even a little?
+
+He began deliberately, during each deep meditative contact with that branch, "borrowing" a sliver of that focus — he couldn't quite explain how, only that it felt like reaching into the next room and carrying back something still faintly warm.
+
+The results of his first attempt were shocking. That entire week, he threw himself into work with an intensity he'd never had before, and was praised in front of everyone by a boss who rarely complimented anyone — "This one's got real thought in it" — even treated, unusually, to a cup of coffee.
+
+Having tasted the reward, he began borrowing more often.
+
+VI · The Second Branch
+
+The second branch he found was a Gu Yizhou who had never married.
+
+In that version, at twenty-seven, instead of proposing — as he had in reality, to avoid disappointing six years of a girlfriend's expectations, to avoid the whole complicated social apparatus behind the word "breakup" — he had chosen honesty: telling her he wasn't ready for marriage, unsure even whether he truly loved her, or had simply grown used to her presence.
+
+That confession had ended things early. That version of Gu Yizhou now lived alone in a city entirely unfamiliar to him, in a modest rented apartment, occasionally lonely — especially late at night — yet remarkably clear-eyed: he knew exactly what kind of relationship he wanted, no longer needing the word "should" to decide for him.
+
+The real Gu Yizhou was, at that moment, in a marriage held together by that very word. His wife was a good person; their days were comfortable and calm, bills paid on time, weekends spent visiting parents, everything checking every box that "doing well" was supposed to check. And yet he rarely felt truly understood.
+
+He began borrowing that second branch's clarity, learning to speak more honestly to his wife about what he actually felt, instead of always guessing first what she wanted to hear.
+
+Strange things followed: for the first time, he and his wife had several long conversations late into the night, touching subjects they'd never once broached in five years of marriage, with a candor that felt almost foreign to him.
+
+VII · The Third Branch
+
+Having tasted success twice, Gu Yizhou began actively seeking out more branches, as if he'd stumbled upon an entire free treasury.
+
+The third branch he found had emigrated abroad and become an emergency-room doctor. That version of him hadn't stayed in his hometown after college, but had gritted his way through medical school overseas, survived a brutal residency with almost no days off, and was, at that very moment, mid-rescue in the middle of the night, his hands steady as if welded to the patient, his mind free of any thought but the life in front of him.
+
+What Gu Yizhou borrowed was that unshakeable calm under enormous pressure. He used it in an unusually difficult client negotiation, with outstanding results — he closed a major account that had dragged on for nearly a year, and his department manager mentioned his name at the annual meeting in front of everyone.
+
+Standing on stage accepting the applause, he felt an odd hollowness pass through him — the calm that had won him this deal wasn't his at all; he couldn't even say, without it, whether the man standing there being praised would still be him.
+
+He "watched" that doctor branch several more times afterward, piecing together a fuller picture: that version of him had spent six years without weekends, practically living at the hospital, a relationship ended by overwork, and had once crouched alone in a locker room late at night, crying over a patient he couldn't save. The calm Gu Yizhou now borrowed so casually was the product of six sleepless years, of countless darkest moments he himself had never lived through. For the first time, he dimly sensed that what he borrowed was never just a ready-made state — it was something someone else had earned, inch by inch, with an entire life.
+
+VIII · Borrowing Too Much
+
+Gu Yizhou began to believe he'd discovered a kind of shortcut — that he needn't actually live through the hard choices that cost a whole life to make; he could simply borrow, like books from a library, the hard-won insights of other branches.
+
+He borrowed more and more, greedier each time. Tough negotiations at work, he borrowed the ER doctor's composure; arguments with his aging parents, he borrowed the patience of some branch reportedly on excellent terms with them; even at the gym, wanting to push five more minutes, he'd unconsciously reach for a branch's discipline; even choosing what to eat for dinner began to faintly echo some branch's tastes.
+
+He began, less and less, to feel what he himself wanted, liked, or feared — those feelings that had once been entirely his own, however small, gradually buried under an accumulating pile of borrowed fragments, blurred as if seen through frosted glass.
+
+The crisis erupted, without warning, at a family dinner.
+
+That night, his mother brought up, once again, his decision years ago to give up the art academy, her tone carrying a faint, long-accumulated guilt. Gu Yizhou instinctively reached to borrow the painter branch's easy equanimity to respond — but in that instant, too many branches' emotions surged into his mind at once: the painter's calm, the single branch's detachment, the doctor's composure, several wildly different feelings exploding together. He opened his mouth and couldn't get out a single word, freezing at the table, his face draining of color.
+
+His wife gripped his hand anxiously; his parents exchanged confused looks. Gu Yizhou mumbled an excuse and fled to the bathroom, staring into the mirror, unable to speak — the face looking back at him felt utterly foreign, as if several people had moved in at once, none of them able to say who, exactly, should be the one speaking now.
+
+He turned on the tap, splashed cold water on his face, trying to steady himself. But the harder he tried, the more chaotically the borrowed emotions churned — he was even seized by an absurd panic: if he stopped borrowing completely right now and let whatever "original" reaction he had surface on its own, would it, after being unused for so long, have already rusted shut, or vanished altogether?
+
+He stood in the bathroom for nearly ten minutes. His wife knocked, asking through the door if he felt unwell. Hearing her voice, he felt a sudden urge to tell her everything — the pull, the branches, all of it. But the words caught in his throat, and he only said, "I'm fine, might've eaten too fast," before opening the door and returning to the table as if nothing had happened.
+
+He barely spoke for the rest of the meal, mechanically moving food to his mouth, one question echoing in his mind: if even his most basic emotional responses now needed to be borrowed, was the person sitting in this body still Gu Yizhou at all?
+
+IX · Yu Lan
+
+Gu Yizhou reached out to Yu Lan again, almost pleading. This time, she replied quickly, with only one line:
+
+"You've borrowed too much. Let's meet — some things can't be said over text."
+
+They met at an old-fashioned café with hardly any customers, by the window. Yu Lan was older than he'd imagined, somewhere around forty, wearing a faded pale grey knit sweater, her hair loosely tied back, a weariness in her eyes he couldn't quite name — as if she'd already paid some price he hadn't yet had to pay. She ordered black coffee, no sugar, no cream, and never touched it, only turned the cup slowly by its rim.
+
+As she spoke, her fingers never stopped circling the rim of the cup, an unconscious gesture, as if to keep herself anchored, present. Gu Yizhou would later understand it as a reminder to herself: that the one speaking now was truly her, not something borrowed.
+
+"I was once just like you," she said, her voice quiet. "Ten years ago, I went into cardiac arrest, and after they brought me back, I started feeling the same pull. At first, I thought I'd found a shortcut too — a little courage borrowed from this branch, a little ease from that one. For a while, life really did seem to get 'better.' People said I'd changed, become more confident, more relaxed. For a stretch, I even enjoyed it — like I'd finally become a 'better version' of myself, walking down the street with more conviction than ever."
+
+She paused a long while before continuing:
+
+"But eventually, I found I could no longer tell which reactions were genuinely mine, which were just a patchwork performance I'd borrowed from elsewhere. I fell in love using borrowed romance; I got promoted using borrowed decisiveness; even comforting a friend, the words I used were things I'd crammed, on the spot, from some branch better at comfort than I was. In the end, I peeled away every borrowed layer, and found nothing left underneath — I'd spent seven years turning myself into someone who was no one at all."
+
+X · The Body That Didn't Survive
+
+Gu Yizhou felt a chill run down his back, saying nothing for a long while. Finally, he asked, "So what do I do?"
+
+Yu Lan was silent for so long he thought she wouldn't answer. At last, she said:
+
+"There's one more branch I've never dared let you see for yourself — a Gu Yizhou who truly died in that accident."
+
+His heart dropped.
+
+"You should go see him," Yu Lan said. "Not to borrow anything — there's nothing left in that body to borrow. But so you truly understand: the fact that you're alive right now is an extremely accidental, and extremely solemn, outcome. Not something to take for granted."
+
+Gu Yizhou hesitated for a long time, but eventually nodded.
+
+That night, sitting in his study, he drew on every ounce of focus he'd built over the past two months, and slowly, almost trembling, approached that branch.
+
+In that branch, the accident had happened on an almost identical rainy night — the same provincial road, the same runaway truck, the only difference being that version of Gu Yizhou had left home ten minutes earlier, and struck the truck head-on at its most violent instant.
+
+What Gu Yizhou "saw" wasn't any image of blood or violence — that thin wall had never shown him concrete pictures. What he "saw" was what that body had truly felt, in its final seconds.
+
+Not fear — unexpectedly, not fear at all. A sudden, overwhelming regret for things left unfinished: never having told his mother, "I understand the hopes you had for me, and the fears you never said aloud"; never having honestly asked himself, setting aside everyone else's expectations, what kind of life he actually wanted; never having truly, solemnly, lived even once.
+
+XI · Shame
+
+In that moment, Gu Yizhou finally, truly understood what Yu Lan had meant.
+
+The unchosen paths were never a resource to be borrowed from. They were a reminder — that the path he now walked wasn't just any path; it was the one he'd been left in this world, by sheer luck and by grave responsibility, to keep walking.
+
+He suddenly felt a shame he'd never known before, for everything he'd taken these past months — endlessly drawing from branches that had earned their insights through hardship, while never once putting in the same weight of effort for the path he himself was actually living.
+
+He thought of the focus, the clarity, the composure he'd borrowed, and suddenly they felt like clothes in the wrong size — presentable from a distance, but chafing everywhere, because they had never been tailored for this body, this life.
+
+XII · Stopping
+
+Gu Yizhou stopped all borrowing.
+
+It wasn't an easy decision. He went back to the accounting job that had numbed him for seven years, and this time, instead of forcing himself through with borrowed focus, he asked himself a question he'd never dared examine: setting aside his parents' expectations, setting aside the lure of the word "stable," did he actually want to keep doing this job for the next thirty years?
+
+The answer surprised even him: no.
+
+Over nearly six months, working by day and studying by night, he quietly earned a certification in design, grinding through dry textbooks late into the night, wanting to quit more than once. Finally, at an age when nearly everyone around him urged him to "think twice," he changed careers — starting from the most junior position, clumsy, his income cut sharply, his first month's paycheck barely half of what it used to be, and yet, for the first time, he felt solid ground beneath him.
+
+The day he handed in his resignation, his supervisor was stunned, asking if he was in some kind of trouble, if the company could help. Gu Yizhou shook his head. "No trouble. I've just realized this isn't what I want to do for the rest of my life." His supervisor sighed, said it took real courage to make a decision like this at his age. Gu Yizhou said nothing at the time, though he thought to himself: courage was a word he'd once borrowed from elsewhere too — but this time, he alone had carried every ounce of doubt and uncertainty, and made the choice himself.
+
+On his first day at the new job, he sat beside a colleague nearly ten years younger, who taught him a design software he'd never touched, with a polite, faint condescension reserved for "career-change uncles." Gu Yizhou didn't feel humiliated — he felt something almost new: the long-forgotten sensation of being a beginner again, clumsy, but grounded. It took him twice as long as his colleague to produce a passable design draft, but every line on that draft was one he'd drawn himself, from scratch, learning as he went.
+
+As for the marriage held together by "should," he didn't force his way through with borrowed clarity either, but spent a long, difficult stretch of time genuinely talking with his wife about what they each truly needed.
+
+That conversation began on a Friday night and lasted past two in the morning. His wife spoke first, her voice shaking: "These five years, I've felt like you were present but never really there. I thought it was something wrong with me." Gu Yizhou was quiet a long time before saying something he'd prepared for a long time but never dared voice: "It's not you. It's that for five years, I never told you I felt like my life was an exam I kept answering, question after question, without ever writing a single answer that was truly mine."
+
+They were both silent after that. His wife cried — not from sadness, she told him later, but because for the first time in five years she felt she'd truly seen Gu Yizhou, not just the shadow of a punctual, dutiful husband. The conversation held arguments too, especially over whether to have a child — Gu Yizhou admitted, for the first time, that he wasn't ready; his wife once slammed the door and stood alone on the balcony for a long while. There were long silences too, the two of them sitting across the table saying nothing, only the second hand of the wall clock ticking. At one point, they both thought the marriage might not survive — but every word spoken was dug out of his own heart, letter by letter, not borrowed from anywhere else.
+
+The conversation reached no tidy conclusion, leaving many questions unresolved — but for the first time, they fell asleep together carrying those unresolved questions, instead of quietly swallowing them alone, as they always had before.
+
+XII-and-a-half · On Having a Child
+
+The hardest part of that late-night conversation was the question of children. Gu Yizhou had confessed he wasn't ready; his wife had been deeply hurt, and for nearly half a year afterward, they'd carefully avoided the subject, the mood at home dimmed by it.
+
+Gu Yizhou eventually spent a long time understanding how much of his resistance to having a child was genuinely, truly his own hesitation — and how much was a preference he'd unknowingly absorbed from some perpetually single, easygoing branch, mixed so thoroughly into his own feelings that he could no longer tell them apart.
+
+He spent months thinking it through alone, honestly, borrowing no branch's attitude, asking himself again and again: setting aside all comparison, all the received wisdom of "people who've been there," did he, from the bottom of his heart, actually want a child?
+
+The answer slowly became clear: he did. Not because he felt he "should," not out of fear of loneliness in old age, but because he found himself deeply curious what a small, independent life — carrying traces of both him and his wife, yet entirely its own, with its own forks in the road ahead — might grow into.
+
+He told his wife the answer he'd finally arrived at. They held each other and cried for a long time.
+
+XIII · One Year Later
+
+A year later, Gu Yizhou still occasionally felt that familiar pull, but he no longer rushed to reach for the other side of the wall.
+
+He'd learned a new, quieter way of coexisting with those branches — no longer borrowing their results, only occasionally letting that faint sense of connection remind him: every choice, whichever path it took, had grown, somewhere unseen, into an entire life worth respecting — lives that shouldn't be treated as a free warehouse to raid at will.
+
+He sent Yu Lan one last message, thanking her for that line — "you've borrowed too much" — and for being willing to point him toward the hardest branch of all.
+
+This time, Yu Lan's reply was longer than any before. She said that since meeting him, she too had begun trying to stop borrowing, piece by piece dismantling the patchwork self she'd built over the years, reclaiming, slowly and clumsily, what belonged to her alone. She said the process had been far harder than she'd imagined — several times she'd nearly given up and gone back to the easier comfort of borrowing — but she'd pushed through anyway.
+
+"Last month," she wrote at the end, "I signed up for a flower-arranging class — something I'd always wanted to try and kept putting off. My first class, I was as clumsy as a toddler learning to walk, but that feeling, at long last, was entirely, completely my own. Thank you — that meeting reminded me too."
+
+Gu Yizhou smiled reading it. He suddenly understood that perhaps everyone who truly learns to stop borrowing becomes, in some sense, a reminder for someone else finding their own way back — just as he, too, would one day become a reminder for some stranger in some future branch.
+
+Yu Lan's final line was short: "Finding your way back to your own path is harder to come by than any ready-made insight you could ever borrow."
+
+XIV · Father
+
+After he stopped borrowing, Gu Yizhou did something that surprised the whole family — he sought out his father for a real conversation, alone.
+
+For years, there had always been a quiet distance between them, never a harsh word exchanged, but never anything heartfelt either — every meeting filled with talk of weather, stocks, or Gu Yizhou's work. This time, he asked his father a question he'd never dared ask before: "Was there ever a road you didn't take, that you regret most?"
+
+His father was quiet for so long Gu Yizhou thought he wouldn't answer. Finally, his father said that as a young man, he'd wanted badly to enlist in the army, but being an only son, his parents wouldn't allow it; he'd ended up at a factory, and stayed there his whole life. "I've had my share of regrets too," his father said quietly. "We just weren't the generation that talked about these things. Talking wouldn't have changed anything — life still had to go on the same."
+
+Gu Yizhou realized, for the first time, that the habit in him — of satisfying everyone else's expectations first, and burying his own feelings after — had likely taken root a generation earlier, in his father. He borrowed no branch's courage this time, only took his father's hand and said: "Dad, I understand the choice you made, and the regrets you never said out loud."
+
+His father said nothing, only clapped him firmly on the shoulder — a hand Gu Yizhou noticed, for the first time, had grown far older than he remembered.
+
+XV · Three Years Later
+
+Three years later, on a weekend, Gu Yizhou stood in the corner of a small group exhibition, looking at a painting on the wall — nothing remarkable, the technique far from polished, a landscape he'd spent eight intermittent months completing himself: the stretch of sea where he and his wife had taken their first trip together.
+
+His wife, holding their two-year-old daughter's hand, stood before the painting, smiling, saying the sea in it looked even better than the photos. Gu Yizhou looked at his own painting and thought, without envy, without superiority, of that painter branch — probably still, at that very moment, worrying over rent in some paint-cluttered apartment. He felt only a quiet sense that they were each, in their own way, living seriously.
+
+That night, he felt, once again after a long while, a faint, familiar pull — like an old friend saying hello through a thin wall. He smiled, made no move to reach for it, and simply let the feeling come, and go, in peace.
+
+XV-and-a-half · A Letter to Himself
+
+The night that exhibition ended, Gu Yizhou did something unprecedented — he wrote himself a letter, locked it in a drawer only he knew the code to, and set a date ten years out to open it. The letter held only a few lines, written by hand rather than typed, the writing far from neat: If you, ten years from now, are starting to want to borrow someone else's answers again, please look back at this letter — every clumsy moment you have right now is worth more pride than any borrowed perfection ever could be. When he finished, he folded it into an imperfect square, slipped it into an envelope, and sealing it, thought suddenly of that painting years ago that he could never finish, and smiled, before locking the letter deep in the drawer.
+
+XVI · Epilogue
+
+Afterward, Gu Yizhou rarely mentioned topological drift to anyone, including his wife — the marriage never ended in separation; if anything, after that difficult conversation, it became more real than at any point in the previous five years. His new path in design grew steadier too; though he never held a solo exhibition like his painter branch, the clumsy, genuine work in his hands was drawn, stroke by stroke, by himself.
+
+He simply found that, in moments when life felt hard and he was tempted to look for a shortcut, he'd remember that rainy night, remember the body that never got to say "I understand you," and take a deep breath, and keep going — clumsily, one step at a time, walking to the end of this path — ordinary as it was, the only one that was truly, entirely his.
+
+He sometimes wondered whether that branch who never got to say "I understand you" could, in some folded dimension, somehow sense this steadiness of his now — and if so, he hoped it knew: he hadn't wasted the luck of being left behind, hadn't traded it for a pile of borrowed, patchwork answers, but had, inch by inch, lived it into an entire life, ordinary yet entirely, completely Gu Yizhou's own.
+
+Many years later, when his daughter asked him, with the naive profundity only children have, what the meaning of life was, Gu Yizhou would sometimes think back on this experience he'd never fully told anyone. He never told his daughter about topological drift — he only smiled and said, "Meaning isn't something you wait to find. It's something you walk out, one honest choice at a time, every single day." His daughter nodded, only half understanding, and ran off again to play with her blocks. Watching her go, he thought this was, perhaps, the most honest answer he could give.
+
+Choice was never deletion. Every unwalked path still breathes on, somewhere unseen — and it is precisely because of this that the path breathing here, now, deserves never to be squandered, never measured against some "better" road, because it was never meant for comparison at all. It was only ever meant to be walked, all the way through, in earnest.
+
+(An Original Piece · Lingxi Dimensional Narratives · Novel)`,
+  },
 };
