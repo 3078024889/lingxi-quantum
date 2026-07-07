@@ -2360,4 +2360,280 @@ On another quiet snowy night, Shen Yi sat alone on the hillside behind the camp,
 
 (An Original Piece · Lingxi Dimensional Narratives · Novel · The Age Without Light)`,
   },
+  "the-dreamweavers-book": {
+    zh: `一 · 造梦人这份职业
+
+念微是澜汜古环最年轻的造梦人之一，扎着一条利落的辫子，眼神总是格外专注，专门替委托人，在他们自己的梦境里，搭建一场量身定制的体验——想在梦里重返童年老宅的，想在梦里跟已故的亲人再说一次话的，想在梦里，把现实中不敢说出口的告白，先演练一遍的，都会找上造梦人这个行当。澜汜古环的造梦人公会，坐落在一片终年云雾缭绕的星域高地上，公会大殿里，陈列着历代造梦人留下的、各式各样的梦境模型，供来访者，随时参观、学习，其中，最引人注目的一座模型，正是数百年前，公会创立之初，第一位造梦人，亲手搭建的、极其简陋却意义非凡的原型作品，历代造梦人，都会在正式入行前，前来瞻仰这座模型，向这份职业最初的起点，郑重致意。
+
+造梦人的工作台，是一方悬浮在星域夹缝里的、近乎透明的水晶平台，念微每次工作，都要在这方平台上，静坐良久，才能真正进入委托人的意识边缘，开始搭建。她的工具，不是任何具体的仪器，而是一套代代相传的心法——如何在纯粹的意念里，压实出足以承载具体细节的地基，如何在虚无中，一点一点，凝聚出色彩、光影与温度，每一个环节，都需要极高的专注力与耐心，稍有分神，便可能，前功尽弃，公会里，甚至流传着一句老话："搭一场梦容易，守住一场梦，才最难。"
+
+念微入行三年，从最初连一间简单的房间都搭不稳固的新手——她还记得，第一次独立接单时，因为地基压得不够扎实，整个梦境场景，在委托人还没来得及好好体验之前，就轰然崩塌，惹得委托人哭笑不得，念微当时，羞愧得几乎想要辞去这份职业——渐渐成长为公会里，小有名气的年轻造梦人，经手过的委托，从简单的旧地重游，到复杂的多重场景交织，样样精通，手艺渐渐得到认可。唯独有一件事，她始终想不明白：无论她替委托人搭建的梦境场景多么不同——有的温馨如春日暖阳，有的沉郁如深秋落叶，有的甚至光怪陆离到违反基本的物理常识——最底层，总有一层，怎么拆解都拆不掉的、共通的地基，像是所有梦境的根，深深地，扎进了同一片，她始终看不清全貌的土壤里。
+
+二 · 第一次异常
+
+那次异常，发生在念微替一位丧妻多年的老人，搭建一场重逢梦的时候。老人的委托很简单：想再见一见亡妻年轻时的样子，在她最喜欢的那间小院里，一起喝一杯茶。老人说这番话时，声音有些颤抖，还从怀里，小心翼翼地，掏出一张泛黄的旧照片，反复摩挲着，仿佛那是他此生，最珍贵的物件。念微按照惯例，先搭好场景的地基——地基是造梦技艺里最基础、也最耗费心神的一步，需要用意念，一寸一寸，把虚无的空间，压实、固化，直到能够承载起后续所有具体的场景细节。
+
+她像往常一样，专注地压实着地基，感受着意念一层层沉淀下去的踏实感，脑海里，还在细细回味着老人描述的那间小院——院子里，有一棵老槐树，夏天会开满细碎的白花，妻子最喜欢，坐在树下的藤椅上，边喝茶，边看书。可就在地基完工的一瞬间，念微清楚地感觉到，一阵极其细微、却无比真切的震颤，从脚下传来——这层刚刚压实的地基，与她三天前，替另一位委托人（一位准备求婚的年轻人，梦境主题是热闹的海边婚礼）搭建的、风格截然不同的梦境地基，产生了一瞬间的共振，仿佛两个原本毫不相干的梦，在最深处，其实共用着同一块基石，只是被念微，用不同的手法，各自铺陈成了完全不同的样子。她当时，还以为，只是自己太过疲惫，出现了错觉，揉了揉发胀的太阳穴，并未太过在意，直到，类似的震颤，在接下来的几次工作中，又反复出现了好几次，她才终于，意识到，这绝不是简单的错觉。
+
+三 · 请教前辈
+
+那晚，念微独自坐在水晶平台边缘，反复回想着那阵震颤，怎么也无法平静下来，甚至一度怀疑，是不是自己最近工作太累，出现了某种错觉。可她清楚地记得，那种震颤的触感，太过真实，绝非疲惫产生的幻觉——那更像是，两块原本以为毫无关联的石头，在她毫不知情的情况下，其实，从一开始，就共用着同一块基岩。第二天一早，她顾不上休息，便径直，赶往了公会。念微把这个异常，郑重地告诉了造梦人公会里，资历最深的一位前辈——一位须发花白、常年隐居在公会阁楼最深处的老者，人称\\u201c筑基师\\u201d，据说是公会创立以来，唯一一位，真正摸透过梦境地基本质的人，年轻时曾游历过无数星域，见识过形形色色的造梦流派，晚年却选择，隐居在这方小小的阁楼里，很少再接手具体的委托，也很少，主动与外界，有太多往来，公会里，甚至有不少年轻造梦人，从未真正见过他一面，只是听闻过，他的种种传说。前辈听完念微的描述，脸色微微一变，搁下手里正在把玩的一枚旧罗盘——那枚罗盘，据说是他年轻时游历四方留下的纪念品，指针早已锈蚀，却依然被他，随身携带——沉默了很久，才缓缓说道：\\u201c你终于，摸到了这行真正的秘密。\\u201d
+
+\\u201c造梦人这一行，表面上，是在替每个委托人，量身定制一场独一无二的梦，可实际上，\\u201d前辈的声音，带着一种历经沧桑后的平静，缓缓踱步到窗边，望着窗外深邃的星域，\\u201c我们所有人搭建的一切梦境，从来都建在同一片地基上——那是全人类共享的一个场，我们不过是，各自在这片场上，搭了几间，风格不同的小屋而已，小屋的样式千变万化，可地基下面的那片土壤，从来都是同一片。\\u201d念微屏住呼吸，听着这番话，只觉得，自己入行三年来，所有隐约的困惑，此刻，终于，找到了一个方向，胸口，涌起一阵，说不清是震撼还是激动的暖流。她忍不住追问："那前辈，您是怎么发现这个秘密的？"筑基师转过身，望着她，眼神里，闪过一丝，久远的回忆："我年轻时，也曾像你一样，对这份共通的地基，感到深深的困惑，花了将近十年时间，才终于，真正摸清楚，这片场的全貌，只是，我摸清楚之后，却没能，像你今天这样，鼓起勇气，把这份领悟，真正运用到具体的委托里，只能，把这份秘密，藏在心底，日复一日，独自隐居于此。"
+
+四 · 不安的发现
+
+念微对这个说法，感到一种说不出的震动，甚至隐隐有些不安，回到自己的水晶平台后，久久无法平静，一整晚，都没能真正睡着，反反复复，翻来覆去，脑海里，全是前辈那番话——如果所有梦境，本质上共用着同一片地基，那她引以为傲的、独一无二的\\u201c定制手艺\\u201d，是不是，从一开始，就只是一种精巧的表象，是在同一片本就存在的地基上，做着一些，看似不同、实则大同小异的表面文章？她甚至一度，对自己这份坚持了三年的职业，生出了一种，前所未有的怀疑，怀疑自己，这三年来，究竟，是不是，真的，掌握了什么了不起的手艺，还是，只是，一直在，重复着，一场自欺欺人的表演。
+
+她开始反复回想自己这三年经手过的每一个梦境项目，从第一次独立完成的、笨拙生涩的旧地重游，到近来渐渐得心应手的复杂多场景项目，一份一份，仔细梳理，试图找出，那片共通的地基，究竟藏在哪个环节，又是从什么时候起，就已经，悄悄地，存在于她每一次的搭建之中，只是她，从未真正留意过。这份梳理，花了她整整一周的时间，白天照常接单工作，深夜，便独自坐在水晶平台上，一遍遍，回放着记忆里的细节，甚至，因为过度专注，好几次，忘记了按时休息，脸色，都憔悴了不少，连阿澈都察觉到不对，几次三番，来劝她，注意身体，别把自己逼得太紧。
+
+五 · 深挖地基
+
+念微决定，亲自下潜到，自己搭建过的所有梦境地基最深处，去看个究竟。这个决定，在造梦人公会里，几乎从未有人真正尝试过——按照公会代代相传的规矩，造梦人只需要，专注于地基之上的具体场景搭建，从不需要，也不被鼓励，去深究地基本身的构成，那被视为一种，近乎禁忌的、超出职责范围的探索，历代公会的教材里，甚至隐晦地警告过，贸然深挖地基，可能会让造梦人自己的意识，迷失在，那片过于辽阔、缺乏具体轮廓的虚无里，公会的档案室里，甚至隐约记载着，数十年前，曾有一位年轻造梦人，因贸然尝试深挖地基，最终，意识长时间无法苏醒的悲剧，成了公会里，代代相传的警示故事。
+
+念微深知这份风险，出发前，特意找阿澈作为陪同，请他留在意识边缘，随时准备，在她出现异常时，把她拉回来，两人反复核对了几次，确保一旦出现意外，能在最短时间内，做出反应。这趟深挖，远比念微想象的艰难——她的意识，一层层，向着记忆里那些梦境地基的最深处，缓缓下沉，越往下，梦境本身的具体细节，越是模糊消散，那些她精心设计过的场景、色彩、光影，一点一点，被剥离开来，取而代之的，是一种极其抽象、却又无比真实的存在感，像是所有做过的梦、所有梦见过的人，最终，都汇入了同一条看不见的河流，静静地，流淌在，所有具体梦境之下，最幽深的地方。有几次，念微甚至感到，自己的意识，几乎要被那片辽阔的虚无，彻底吞没，浑身冷汗涔涔，全靠阿澈在边缘处，不断传来的、熟悉的呼唤，才让她，一次次，找回了方向，重新稳住心神，继续，缓缓地，向着更深处，下沉。
+
+六 · 场的真相
+
+在地基的最深处，念微终于，第一次，真切地\\u201c看见\\u201d了那片共享的场——它不像任何一个具体的梦境，没有场景，没有人物，甚至没有任何可以用言语描述的形状，只有一种，纯粹的、连接万物的临在感，仿佛整个人类，无论此刻正做着怎样一场，截然不同的梦，此刻，都以某种，超越言语的方式，共同栖息在，这同一片，温柔而辽阔的场里。
+
+六点五 · 一次意识边缘的眩晕
+
+念微从那片场的边缘回来后，浑身虚脱，双手，还在微微颤抖，却又，前所未有地清醒，像是刚刚经历了一场，剧烈却值得的洗礼。阿澈见她脸色苍白，连忙递上一杯温水，紧张地问："怎么样，没事吧？"念微摇摇头，勉强笑了笑，一时竟不知该如何，向阿澈描述，自己刚刚，究竟经历了什么——那种感觉，太过辽阔、太过抽象，几乎超出了，任何具体语言，能够承载的范围。她只能，断断续续地，把自己的感受，尽量说清楚，阿澈听完，久久没有说话，眼神里，满是震动与向往。
+
+念微后来，在公会的核心典籍里，找到了一份，据说是数百年前，某位早已不知姓名的造梦人，留下的零星记录，其中一句话，让她深受触动："我们造的从来不是梦，是一条，让人重新找到自己与万物相连那份感觉的、临时的路。路修得再精巧，终点，也只是，回到，那份，本就存在的连接。"念微把这句话，郑重地，抄录在自己随身携带的笔记本扉页，时常翻看，提醒自己，不要在精巧的设计技法里，迷失了这份职业，最初的方向。她甚至隐约感觉到，这片场里，正流淌着无数个，此刻正在做梦的人，各自不同的心跳与呼吸，彼此交织，却又，各自完整，谁都没有被谁淹没——有孩子甜美的梦呓，有老人怀旧的低语，有恋人间说不出口的悸动，全都，安静地，共存在这片辽阔却不喧闹的场里，彼此靠近，却又，各自保有着，独一无二的边界。
+
+念微怔怔地，在这片场的边缘，停留了很久，感受着那种前所未有的、既渺小又无比连结的悸动——她第一次意识到，自己过去三年，独自完成的每一个梦境项目，其实，从未真正独自完成过，都是，与这片场，一同完成的。她忽然明白，造梦人这份职业，从来不是在\\u201c创造\\u201d梦境，是在，从这片本就存在的共享场里，替每一位委托人，\\u201c打捞\\u201d出，恰好属于他们的那一部分——那些他们内心深处，真正渴望、却始终未能触及的东西，从来都在，只是需要，一位懂得如何打捞的人，把它们，带到，看得见的地方。
+
+七 · 重新理解手艺
+
+带着这份领悟，念微重新审视自己过去三年的工作——她意识到，那些让委托人格外满意、甚至泪流满面的梦境，往往不是她\\u201c设计\\u201d得最巧妙、场景最华丽的那些，而是她，最贴近委托人内心真实渴望的那些，哪怕，那些梦境的场景，其实极其简单朴素。她想起自己刚入行时，接手过的一份格外简单的委托——一位老渔民，头发花白，双手布满常年打渔留下的老茧，皮肤，被常年的海风，吹得粗糙黝黑，只想在梦里，重新出一次海，感受一下，年轻时那种，与大海搏斗的畅快感，念微当时，只用了最简单的手法，搭建了一片朴素的海景，甚至没有加入任何华丽的特效，老渔民醒来后，却感动得热泪盈眶，紧紧握着念微的手，反复说着，这是他这些年，做过最真实的一个梦，比任何一次，真正出海，都更让他感到，年轻时的那份畅快，临走前，还执意，要送给念微，一条，他亲手编织的渔网挂饰，说是，图个吉利。而念微另一些自认为设计精妙、耗费了大量心力的项目，得到的反馈，却往往，只是礼貌性的称赞，鲜少，能让委托人，真正动容。
+
+真正的造梦手艺，从来不是凭空创造多么精妙的场景，是学会，更准确地，倾听委托人内心，最深处那份，连他们自己，都未必说得清的渴望，然后，从那片共享的场里，把它，轻柔地，托举出来。念微开始，有意识地，调整自己的工作方式——每接到一份新委托，她都会，先花更长的时间，安静地，与委托人交谈，不急于动手设计，而是，先弄清楚，对方心里，真正渴望的，究竟是什么，哪怕，这意味着，她能接下的委托数量，比过去，减少了不少，收入也随之，有所下降，她却，从未有过一丝后悔。
+
+八 · 一次特殊的委托
+
+不久后，念微接到了一份格外棘手的委托——一位年幼失去父母、在孤儿院长大的年轻人，名叫顾遥，想要一场，重新经历一次\\u201c被父母好好爱过\\u201d的梦。这份委托，因为缺乏任何具体的真实记忆可供参照——顾遥甚至记不清，自己父母的样貌，只留下一些，模糊而破碎的、关于\\u201c被拥抱过\\u201d的零星感觉——让念微一度不知从何下手，她过去所有精巧的设计技法，在这份委托面前，几乎全部失效，因为她根本没有，任何具体的素材，可供参照搭建。
+
+八点五 · 顾遥的故事
+
+顾遥是在孤儿院长大的，三岁那年，父母在一场意外中双双离世，他对父母，几乎没有任何清晰的记忆，只在很小的时候，偶尔会做一些，说不清道不明的梦，梦里，总有一种温暖的、被拥抱着的感觉，可每次一睁眼，那份感觉，就消散得干干净净，只留下一种，说不出的怅然。孤儿院的老师们，都对他很好，可那种，说不清道不明的空缺感，始终，无法被真正填满——顾遥后来渐渐明白，这份空缺，不是任何一个具体的人，能够替代的，是一份，只有\\u201c父母\\u201d这个身份，才能给予的、独特的情感。
+
+长大后的顾遥，性格温和，工作也算稳定，却始终，带着一种，旁人很难察觉的、深藏的孤独感——他常说，自己就像是，一棵没有根的树，无论枝叶长得多茂盛，心里，总有一处，怎么也填不满的空缺，尤其是在，看到别人一家团聚、其乐融融的场景时，那份空缺感，会格外强烈。
+
+他攒了很久的积蓄，几乎花光了自己所有的存款，才终于，鼓起勇气，找到念微，说出了这份，藏在心底多年的心愿。他说这番话时，声音里，带着一丝，连他自己都没察觉的、小心翼翼的期待，双手，甚至微微地，颤抖着，仿佛，怕这份期待，一旦说出口，就会，再一次，落空，说完之后，他还特意补充了一句："如果做不到，也没关系，我只是，想试一试，哪怕，只有一点点效果，也好。"这句话，让念微，格外郑重地，看待起这份委托，暗自下定决心，一定要，尽全力，帮他完成这份心愿。
+
+九 · 潜入共享的场
+
+念微想起自己在地基深处的领悟，决定不再试图\\u201c设计\\u201d这场梦，而是，带着顾遥这份真实的渴望，一起潜入那片共享的场，看看，这片场里，是否，本就存在着，某种能够回应这份渴望的东西。这是一次前所未有的尝试，公会里从没有人，敢用这种方式，处理委托——所有人都习惯了，先设计、再搭建的传统流程，从没有人，敢把毫无设计、只有一份纯粹渴望的委托人，直接带入那片共享的场。
+
+念微找到顾遥，坦诚地告诉他，这次尝试，没有先例，也无法保证结果，甚至存在一定的风险，问他是否愿意冒这个险。顾遥沉默了很久，望着窗外，眼神里，闪过一丝复杂的挣扎，最终，还是缓缓地，点了点头，说：\\u201c我已经，等了这份感觉，二十多年，不差再冒一次险。\\u201d念微郑重地，把这次尝试的具体安排，一一说给顾遥听，请阿澈作为守护者，全程陪同，确保万无一失，两人反复商议了好几个夜晚，才终于，在一个格外安静的夜晚，正式开始了这次前所未有的潜入。那晚，星域格外宁静，连往日常见的漂浮光尘，都仿佛，屏住了呼吸，静静地，等待着，这场未知的尝试。
+
+十 · 意外的显现
+
+奇迹般地，当念微与顾遥的意识，一同沉入那片共享的场时，一些温暖的片段，竟自发地、缓缓地，浮现了出来——不是某个具体的、被设计好的父母形象，没有清晰的面容，也没有具体的场景，而是一种，纯粹的、毫无保留的关怀感，如同温暖的潮水，缓缓漫过顾遥意识的每一个角落，恰好，填满了他心里，那处始终空缺的角落。念微在一旁，静静地守护着这个过程，能清晰地感觉到，顾遥整个人的意识状态，从最初的紧绷与忐忑，渐渐地，松弛了下来，像是一株，终于被浇灌了充足水分的干渴植物。
+
+那份关怀感，仿佛来自千千万万个，此刻正在世界各处，真心疼爱着自己孩子的父母，共同汇聚而成——不属于任何一个具体的人，却又，无比真实、无比具体地，落在了顾遥身上，甚至，隐约地，带着一些，念微都无法准确描述的、极其细腻的触感，像是有人，正轻轻抚摸着他的头发，又像是，有人，正紧紧地、安心地，拥抱着他，那份拥抱的力度、温度，都精准得，仿佛，早已为他，量身准备了整整二十多年。顾遥醒来后，泪流满面，久久说不出话，最终，只是紧紧抱住念微，哽咽着说，这是他这辈子，第一次，真切地感觉到，自己曾经，被好好地爱过，哪怕，他依然说不清，那份爱，究竟来自谁，也说不清，为什么，一份来路不明的关怀，能让他如此确信，那是真实的。
+
+十一 · 公会的震动
+
+这次成功的尝试，很快，在整个造梦人公会里，传开了消息，引发了不小的震动——一部分保守的前辈，认为念微的做法，过于冒险，脱离了造梦人这一行，一贯讲究\\u201c精准设计\\u201d的传统，担心这种毫无章法的\\u201c潜入\\u201d，一旦失控，可能会给委托人的意识，带来无法预知的风险；另一部分年轻造梦人，则对这种全新的可能性，感到无比兴奋，纷纷向念微请教，这种\\u201c潜入共享场\\u201d的技法，该如何练习，甚至有人，当场表示，愿意拿自己的意识，做第一个试验对象，公会大殿里，一时间，议论纷纷，各执一词。
+
+一位资历颇深的中年造梦人，名叫岳言，向来以严谨保守著称，在公开场合，措辞严厉地质问念微："你这种做法，跟我们代代相传的规矩，完全背道而驰。万一哪天，某个委托人的意识，在那片毫无边界的场里，迷失了方向，你负得起这个责任吗？这份职业存在了这么多年，靠的就是规矩，不是靠某个人一时的冲动。"念微没有回避这个质问，只是平静地回答："我理解这份担忧，正因为如此，我才格外谨慎——每一次潜入，我都会请同门陪同守护，随时准备把委托人拉回来。规矩存在的意义，是保护委托人，而不是，让我们，遇到规矩解决不了的问题时，选择视而不见。"
+
+公会内部，为此，专门召开了一场持续数日的辩论，争论得极其激烈，甚至一度，几乎演变成，公会内部，保守派与革新派的公开分裂，双方各执一词，谁都不肯轻易让步。念微没有强行为自己辩护，只是平静地，把顾遥的经历，完整地讲述给所有人听，然后说：\\u201c我理解大家的担忧，可如果一份委托，注定无法用传统的设计手法完成，我们是该固守规矩，让顾遥这样的人，永远得不到他真正需要的东西，还是，该冒一次，经过深思熟虑的险？\\u201d这番话，让在场不少原本坚决反对的前辈，陷入了长久的沉默，会场里，一时间，只剩下窗外，风吹过星域的低鸣声。
+
+十一点五 · 一位老友的鼓励
+
+辩论最激烈的那几天，念微一度心力交瘁，甚至开始怀疑，自己是不是，把事情想得太简单了。是阿澈，每天陪着她，一起复盘辩论中的每一个质疑，一条一条，认真分析，哪些是确实需要警惕的风险，哪些，只是出于对未知的本能恐惧。"你没有做错任何事，"阿澈有一次，看着神情疲惫的念微，认真地说，"你只是，比其他人，先看到了一步。先看到的人，注定要经历，这段，被质疑的日子，可这不代表，你看到的，不是真的。"这番话，给了念微，重新振作起来的力量。
+
+十二 · 重新定义职业
+
+辩论最终没有得出一个所有人都满意的结论，念微也没有急于说服每一个人，只是把自己这次的经历，完整地记录了下来，交给公会存档，供后来者参考。她花了整整三天时间，字斟句酌地，把从第一次异常，到深挖地基，再到顾遥那场梦的整个过程，事无巨细地，记录了下来，甚至连，自己当初，那份隐隐的不安与自我怀疑，也如实地，一并写了进去，没有丝毫粉饰，希望后来者，无论支持还是反对，都能，基于真实完整的经过，做出自己的判断，而不是，仅凭道听途说，被片面的传言，左右了自己的看法。
+
+她在记录的末尾，郑重地写道：\\u201c造梦人这份职业，或许，从一开始，就被我们理解错了方向——我们不是在\\u201c造\\u201d梦，是在，帮每一位委托人，重新连接上，那片，本就属于所有人的、共享的场。这份连接，才是我们真正的手艺，比任何精巧的设计技法，都更加珍贵，也更加，值得敬畏。\\u201d这份记录，后来，被公会郑重地收录进了核心典籍，成了许多后来者，重新理解这份职业的重要参考，甚至，多年后，还有其他星域的造梦人流派，慕名而来，专程学习这套记录里，所阐述的理念与方法。
+
+十二点五 · 与筑基师的一次长谈
+
+念微后来，专程去拜访了那位须发花白的筑基师，把自己这段时间的种种领悟与困惑，一并说给他听，从第一次异常，到深挖地基时几乎迷失的经历，再到顾遥那场梦的成功，事无巨细，一一道来。筑基师安静地听完，难得地露出一丝欣慰的笑容，起身，从阁楼深处，取出一本，早已泛黄的旧手记："我隐居在这阁楼多年，等的，就是有人，能亲自摸到这层真相，而不是听我转述。有些道理，只有自己下潜过一次，才算真正学会了。这本手记，是我年轻时，也曾尝试摸索这条路时，留下的一些零星记录，如今，正好，传给你。"
+
+他顿了顿，又补充道："往后这条路，注定不好走，会有很多质疑，你要做好准备。我当年，也曾试图，把这份领悟，告诉公会里的其他人，却没能，像你这样，真正说服任何人，只能，选择隐居于此，独自守着这份领悟，直到你的出现——这本手记里，还记录了我当年，几次不成功的尝试，你不妨，也仔细看看，或许，能帮你少走一些，我当年，走过的弯路。"念微郑重地接过那本旧手记，双手，微微颤抖，心里却前所未有地踏实——她知道，自己终于，找到了这份职业，真正的方向，也终于，明白了，筑基师这些年，独自隐居于此的，真正原因。
+
+十二点七 · 一位同门的支持
+
+念微最要好的同门师弟阿澈，是最早一批相信她这套新方法的人。阿澈原本是公会里公认最擅长精巧设计的年轻造梦人，性子洒脱，说话总带着几分玩笑的口吻，却在亲眼见证顾遥那场梦的效果后，主动放下了自己引以为傲的设计手艺，跟着念微，一起摸索"潜入共享场"的技法，甚至为此，推掉了好几份原本能带来丰厚回报的精巧设计委托。他常打趣说："以前我总觉得，造梦人比的是谁的场景设计得更华丽，现在才明白，比的其实是，谁更愿意，先把自己的设计欲望，放下。"
+
+两人此后，常常搭档处理最棘手的委托，配合渐渐默契——念微负责，安静地引导委托人，进入意识边缘，阿澈则负责，在外围，稳稳地守护着整个过程，一旦察觉到任何异常，便能第一时间，把两人的意识，一起拉回现实。有一次，一份委托因为委托人自身情绪过于复杂，潜入过程一度出现了短暂的失控，全靠阿澈反应迅速，果断出手，才有惊无险地，化解了那次危机，事后，两人都惊出了一身冷汗，也因此，更加谨慎地，制定了一套，更加完善的安全守护流程。这次经历，也让念微更加确信，这套新方法，离不开可靠的同伴守护，绝不能，掉以轻心。
+
+十二点八 · 公会新规的确立
+
+经过反复商议，公会最终，为"潜入共享场"这项新技法，制定了一套严格的规范：必须经过至少三年的传统设计训练，才有资格学习；每次潜入，必须有至少一位资深造梦人陪同守护；委托人必须签署充分知情的协议。这套规范，既保留了新技法的可能性，也照顾到了保守派的担忧，最终，在经过又一轮反复修改后，得到了公会内部，绝大多数人的认可，正式载入了公会典籍。
+
+十三 · 新一代的造梦人
+
+多年以后，念微成了造梦人公会的资深导师，办公室就设在筑基师曾经隐居的那间阁楼不远处，窗外，同样常年云雾缭绕，仿佛，冥冥中，也在提醒着她，不要忘记，这份职业，最初的方向。她教给新一代弟子的第一课，永远不是精巧的设计技法，而是，如何安静下来，学会\\u201c潜入\\u201d，而非\\u201c建造\\u201d。每当有新弟子，急于炫耀自己设计出的精妙场景，念微都会带他们，先去感受一次，最简单朴素的、贴近委托人真实渴望的梦境，让他们，亲自体会两者之间，那份，难以言喻的差别。
+
+有一次，一位天赋极高、却格外骄傲的新弟子，名叫小汀，设计出了一场极尽奢华、细节繁复到令人叹为观止的梦境——层层叠叠的宫殿、变幻莫测的光影特效、精心编排的每一个转折，满心以为，会得到念微的大加赞赏，得意地，等着老师的夸奖。念微却只是问了他一句："委托人看完这场梦，记住的，是场景的华丽，还是，自己内心，那份真正被触碰到的感受？"新弟子一时语塞，脸涨得通红，答不上来。念微没有再多说什么，只是带他，重新去拜访了一次那位委托人——委托人果然，对场景的具体细节，几乎毫无印象，只反复说着，那种，说不清道不明的、被理解的感觉，格外让人安心，反而完全说不出，那座耗费小汀无数心血的宫殿，究竟长什么样子。那位新弟子，从此，对念微的教诲，多了几分，发自内心的信服，此后几年，渐渐成长为，公会里，最擅长"潜入共享场"技法的年轻一辈之一。
+
+她常说：\\u201c你们迟早会发现，所有梦境的地基，其实都连在一起。越早明白这一点，你们的手艺，才会越早，真正地，成熟起来——设计技法，练得再精巧，也只是表面的功夫，真正的功夫，在于，你有没有，安静下来，好好倾听的耐心。\\u201d
+
+十四点二 · 公会大殿的新展品
+
+公会大殿里，如今，多了一件特殊的展品——一块，取自念微当年，第一次深挖到的那处地基边缘的、朴素石块，旁边配着一行小字："每一个梦，都不是孤单地被造出来的。"往来的年轻造梦人，路过此处，总会驻足片刻，若有所思。
+
+十四点五 · 一封迟来的信
+
+多年以后，念微收到一封信，寄信人，是当年那位丧妻多年的老人的女儿——老人早已过世，临终前，把那场重逢梦的记忆，反复讲给女儿听，说那是他这辈子，最珍贵的一段时光。女儿在信里写道：\\u201c父亲走的时候，很安详，他说，他已经，好好地，跟母亲告过别了。谢谢你，让他，能带着这份圆满，离开。\\u201d念微读完这封信，久久没有说话，只是把信，郑重地，收进了自己最珍视的那个匣子里，与筑基师留给她的那本旧手记，放在了一起。
+
+她忽然想起，最初接下那份委托时，老人颤抖着，从怀里掏出旧照片的样子——那时的她，还只是一个，刚刚入行不久的年轻造梦人，完全不曾想过，自己当年，一次寻常的委托，最终，会成为，改变整个造梦人行业的起点。她轻轻抚摸着信纸，心里，涌起一股，难以言喻的感慨：原来，每一次认真的托举，都不会真正消失，都会，以某种方式，继续，在时间里，静静地，延续下去。
+
+十五 · 尾声
+
+多年以后，念微依然记得，自己刚刚触碰到那片共享的场时，那份混杂着敬畏与震撼的心情——原来，自己一直以来，引以为傲的手艺，从来不是孤军奋战的产物，而是，与无数个，同样在这片场里，安放过心愿的人，共同完成的。如今，念微偶尔还会亲自接一些格外棘手的委托，每一次，她都会想起，自己第一次，在地基深处，触碰到那片共享的场时，那种，既震撼又安心的感觉——原来，每一个人做过的每一个梦，从来都不是孤单的，都连着，同一片，温柔地托举着所有人的，共享的场。顾遥后来，也成了念微的挚友，每年都会来公会探望她一次，带来一些，他自己，在生活里，渐渐学会给予他人的、温暖的小事——他后来成了一名孤儿院的义工，每周固定抽出时间，去陪伴那些，跟他有着相似经历的孩子，陪他们读书、玩耍，也会，把自己曾经从那片共享的场里，得到过的温暖，一点一点，以最朴素的方式，传递给了更多，需要这份温暖的孩子。他常说，自己虽然，依然说不清，那场梦里的关怀，究竟来自谁，却渐渐明白，或许，正是因为，那份爱，不属于任何一个具体的人，才让他，得以，把它，重新传递给，同样需要的、更多的人。
+
+多年过去，阿澈也早已成为公会里，独当一面的资深造梦人，与念微搭档多年，配合默契得几乎不需要言语，甚至，收了自己的第一批弟子，教学风格，与念微如出一辙，也总是，先教弟子们，安静下来，学会倾听。两人有时会一起回忆起，当年那场几乎让整个公会震动的辩论，相视一笑，感慨万千——如今，"潜入共享场"的技法，已经成了公会正式教材的一部分，成了每一位新入行造梦人，都要学习的必修课，那场曾经引发巨大争议的尝试，如今，反而成了，造梦人这份职业，得以真正成熟起来的转折点，就连当年那位措辞严厉质问过念微的岳言，也在多年后，亲口向念微承认，自己当初的担忧，虽出于好意，却终究，低估了这套新方法背后，真正的价值。
+
+夜深人静时，念微时常，独自坐在水晶平台上，望着星域深处，缓缓想着：或许，造梦人这份职业，最终教会她的，不只是如何搭建一场梦，是让她真正明白，每一个孤独的灵魂，其实，从未真正孤独过，都被，同一片，看不见却真实存在的场，温柔地，连接在了一起。她想起筑基师曾经说过的那句话，此刻，忽然有了更深的理解——有些道理，真的，只有自己亲自下潜过一次，才算真正学会。她也常常，翻看筑基师留给她的那本旧手记，字里行间，能感受到，当年那位前辈，独自摸索这条路时，同样经历过的迷茫与坚持，那份跨越时光的共鸣，让她，格外珍惜，如今，能有阿澈、有一批批年轻弟子，与她并肩同行的这份幸运。
+
+多年后，每当有新弟子，问起念微，当年是否曾害怕过、后悔过，她总是坦然地回答："害怕过，也曾无数次怀疑过自己，可每次想起顾遥醒来时，那种真切的泪水，我就知道，这条路，走对了。"
+
+（灵犀原创 · 多维叙事 · 长篇）`,
+    en: `I · The Trade of Dreamweaving
+
+Nian Wei was one of the youngest dreamweavers in the Lansi Ring, her hair pulled back in a neat braid, her eyes always carrying a particular focus. Her trade was building, inside a client's own dreams, an experience tailored precisely to them — those wanting to revisit a childhood home, those wanting one more conversation with a lost loved one, those wanting to rehearse, in a dream, a confession they'd never dared speak aloud in waking life — all came to the dreamweavers. The dreamweavers' guild in the Lansi Ring sat atop a highland perpetually wrapped in cloud, its great hall lined with models of dreams built by generations of weavers before her, displayed for visitors to study. The most striking among them was a crude but deeply meaningful original piece, built by hand by the guild's very first dreamweaver, centuries ago — every weaver, before formally entering the trade, came to pay respects before it, honoring the origin of their craft.
+
+A dreamweaver's workbench was a nearly transparent crystal platform, suspended in the seam between star domains. Each time Nian Wei worked, she had to sit in stillness upon it for a long while before she could truly enter the edge of a client's consciousness and begin building. Her tools were not any physical instrument, but a method passed down through generations — how to compress, in pure intention, a foundation solid enough to bear specific detail, how to gather, out of nothing, color, light, and warmth. Every step demanded intense focus and patience; the slightest lapse could undo everything. The guild had an old saying: "Building a dream is easy. Holding one steady is the hard part."
+
+Three years into the trade, Nian Wei had grown from a novice who once couldn't even keep a simple room standing — she still remembered her first solo commission, when the foundation wasn't compressed firmly enough, and the entire dreamscape collapsed before the client had even finished experiencing it, leaving her mortified enough to nearly quit — into a modestly renowned young weaver in the guild, skilled at everything from simple returns to old places to intricate, multi-layered scenes. Only one thing continued to puzzle her: no matter how different the dreamscapes she built for her clients — some warm as spring sunlight, some heavy as autumn's fall, some so strange they defied basic physics — at the deepest layer, there was always a shared foundation, impossible to fully take apart, as though every dream's root reached down into the same soil, one whose full shape she had never quite been able to see.
+
+II · The First Anomaly
+
+The anomaly first occurred while Nian Wei was building a reunion dream for an old man who had lost his wife many years before. His request was simple: to see his wife again, as she'd looked when young, in the courtyard she'd loved most, sharing one more cup of tea. His voice trembled as he spoke, and he drew, carefully, from inside his coat, a yellowed old photograph, worn smooth from constant touching, as if it were the most precious thing he owned. As always, Nian Wei began by laying the foundation — the most basic, yet most exhausting step of the craft, requiring intention to compress and solidify empty space, inch by inch, until it could bear the weight of every specific detail to come.
+
+She worked with her usual focus, feeling the satisfying weight of intention settling layer by layer, her mind still lingering on the old man's description of that courtyard — an old scholar tree, blooming with tiny white flowers each summer, his wife's favorite spot to sit in a wicker chair beneath it, sipping tea, reading. But the instant the foundation was finished, Nian Wei felt an unmistakably real, if faint, tremor rise from beneath her feet — this newly compressed foundation resonated, for one instant, with the entirely different dreamscape foundation she'd built three days earlier for another client (a young man preparing to propose, his dream a lively beachside wedding), as though two dreams with nothing in common actually shared, at their deepest layer, the very same bedrock, merely arranged into entirely different shapes by her own hand. At first, she assumed it was exhaustion playing tricks on her, rubbing her throbbing temples and thinking little of it — until similar tremors recurred, again and again, in the work that followed, and she finally understood this was no simple illusion.
+
+III · Seeking the Elder
+
+That night, Nian Wei sat alone at the edge of her crystal platform, turning the tremor over and over in her mind, unable to settle, wondering if she'd simply grown too exhausted lately, prone to illusion. But she remembered the sensation too clearly — too real to be mere fatigue. It felt, instead, like two stones she'd assumed had nothing to do with each other had, without her ever knowing, shared the same bedrock from the start. The next morning, without pausing to rest, she went straight to the guild. She reported this anomaly, solemnly, to the most senior elder in the dreamweavers' guild — a white-haired old man who lived in permanent seclusion at the very top of the guild's tower, known as the Foundation Master, said to be the only person since the guild's founding to have truly grasped the nature of a dream's foundation. In his youth, he had traveled countless domains, witnessed every school of dreamweaving imaginable, only to choose seclusion in his later years, rarely taking commissions, rarely engaging with the outside world at all — many young weavers in the guild had never once seen his face, only heard the legends surrounding him. The elder's expression shifted slightly as he listened, setting down the worn compass he'd been turning in his hands — a keepsake, it was said, from his traveling days, its needle long rusted, yet still carried everywhere he went — and fell silent for a long while before finally saying, "You've finally touched this trade's true secret."
+
+"Dreamweaving looks, on the surface, like building a unique dream tailored to each client. But in truth," the elder's voice carried the calm of someone who had lived through much, as he paced slowly toward the window, gazing out at the deep star domain beyond, "every dream any of us has ever built rests on the very same foundation — a Field shared by all humanity. We are merely building, each of us, a few differently styled little houses atop it. The houses vary endlessly, but the soil beneath them has always been the same." Nian Wei held her breath, listening, feeling every vague doubt from her three years in the trade suddenly find direction, a wave of something between awe and excitement rising in her chest. She couldn't help but ask, "Elder, how did you discover this secret?" The Foundation Master turned to face her, a distant memory flickering in his eyes. "When I was young, I was just as puzzled as you, by this shared foundation. It took me nearly ten years to fully grasp the shape of this Field. But once I understood it, I never found the courage you've shown today, to actually put this understanding into practice with real commissions. All I could do was keep the secret to myself, day after day, living out my life in seclusion here."
+
+IV · An Unsettling Discovery
+
+Nian Wei felt an inexpressible shock at this revelation, an unease she couldn't quite shake, and back at her crystal platform, found herself unable to settle for the entire night, tossing and turning, the elder's words echoing in her mind — if every dream, at its core, shared the same foundation, was her prized, one-of-a-kind "custom craft" nothing more, from the very start, than an elaborate illusion, mere surface dressing on the same foundation everyone else was also building upon? She found herself, for the first time, doubting the very trade she'd devoted three years to — wondering whether she'd truly mastered any remarkable skill at all, or had simply been performing, over and over, an elaborate act of self-deception.
+
+She began replaying, one by one, every dream project she'd handled these past three years — from her first clumsy attempt at a simple return-to-the-past, to the increasingly effortless multi-scene projects of recent months — carefully sorting through each, trying to pinpoint exactly where that shared foundation hid, and from what moment it had quietly existed within every one of her builds, unnoticed until now. This sorting took an entire week; she worked her usual shifts by day, and late into the night, sat alone on her crystal platform, replaying memory after memory, so consumed that she forgot to rest properly on several occasions, her face growing visibly haggard, until even Ah Che noticed something was wrong, urging her, more than once, to take care of herself and not push so hard.
+
+V · Digging Into the Foundation
+
+Nian Wei decided to personally descend into the deepest layer of every dream foundation she had ever built, to see the truth for herself. This decision was one almost no one in the guild's history had ever attempted — by the guild's long-standing rules, a dreamweaver need only focus on the specific scene-building atop the foundation, never required, nor encouraged, to probe the foundation's own composition, a pursuit treated as nearly taboo, beyond the bounds of duty. Generations of guild texts had even obliquely warned that recklessly digging into a foundation could cause a weaver's own consciousness to lose itself in that vast, formless void. The guild archives even vaguely recorded a tragedy from decades past — a young weaver who, attempting exactly this, never regained consciousness — a cautionary tale passed down through generations since.
+
+Fully aware of the risk, Nian Wei asked Ah Che to accompany her before setting out, to remain at the edge of consciousness, ready to pull her back at the first sign of trouble; the two rehearsed their plan several times to ensure the fastest possible response should anything go wrong. This descent proved far harder than she'd imagined — her consciousness sank, layer by layer, into the deepest reaches of the dream foundations in her memory, and the further down she went, the more the dreams' specific details dissolved into vagueness, the carefully designed scenes, colors, and light peeling away one by one, replaced by an extremely abstract, yet undeniably real sense of presence, as though every dream ever dreamed, every person ever dreamed of, had ultimately flowed into the same invisible river, running quietly beneath every specific dream, in the deepest, most hidden place. Several times, Nian Wei felt her own consciousness nearly swallowed whole by that vast emptiness, cold sweat soaking her, saved only by Ah Che's familiar calls reaching her from the edge, again and again pulling her back to steady herself before continuing her slow descent.
+
+VI · The Truth of the Field
+
+At the very depths of the foundation, Nian Wei finally, for the first time, truly "saw" that shared Field — unlike any specific dream, it had no scene, no figures, not even any shape describable in words, only a pure, all-connecting sense of presence, as though the whole of humanity, no matter how different a dream each was living through at that moment, all dwelled together, in some way beyond language, within this same, gentle, boundless Field.
+
+VI-and-a-half · A Dizzying Return
+
+When Nian Wei returned from the edge of that Field, her whole body drained, hands still faintly trembling, yet more awake than she'd ever felt, as though she'd just passed through some fierce but worthwhile trial. Seeing her pale face, Ah Che hurried to bring her a cup of warm water, asking anxiously, "Are you all right?" Nian Wei shook her head, managing a weak smile, momentarily unable to find words to describe what she'd just experienced — too vast, too abstract, nearly beyond the reach of any concrete language. She could only, haltingly, do her best to explain, and Ah Che listened in long silence, his eyes filled with both awe and yearning.
+
+Nian Wei later found, in the guild's core archives, a fragmentary record left behind, it was said, by some unnamed dreamweaver centuries ago, one line striking her deeply: "What we build was never a dream. It is a temporary road, letting someone rediscover the feeling of being connected to all things. However finely the road is built, its destination is only ever a return to that connection, which was already there." She copied this line carefully onto the first page of the notebook she always carried, often reading it back, a reminder never to lose sight, in her polished technique, of this trade's original purpose. She could even faintly sense, within that Field, countless heartbeats and breaths of everyone dreaming at that very moment, weaving together yet each remaining whole, none drowned out by another — a child's sweet murmuring, an old person's wistful whisper, the unspoken flutter between lovers, all coexisting quietly within that vast yet unclamorous Field, drawing close to one another while each kept its own unique boundary.
+
+Nian Wei lingered at the edge of that Field for a long while, stunned, feeling a stirring she'd never known before — at once impossibly small and profoundly connected. For the first time, she realized that not one of the dream projects she'd completed alone these past three years had truly been completed alone at all — each had been completed together with this Field. She suddenly understood: dreamweaving was never about "creating" a dream. It was about reaching into this already-existing shared Field and "fishing out," for each client, exactly the part that belonged to them — those things they truly longed for, deep within, yet had never managed to reach on their own, always there, waiting only for someone who knew how to retrieve them, and bring them somewhere visible.
+
+VII · Understanding the Craft Anew
+
+With this realization, Nian Wei re-examined her work of the past three years — she came to see that the dreams that left clients most satisfied, sometimes moved to tears, were rarely the ones she'd "designed" most cleverly, with the most elaborate scenery, but rather the ones that came closest to a client's genuine, deep-seated longing, however plain the scenery itself might be. She recalled a particularly simple commission from her early days — an old fisherman, gray-haired, his hands calloused from decades of labor, his skin weathered dark by years of sea wind, who simply wanted, once more in a dream, to sail out to sea, to feel again that youthful thrill of wrestling with the ocean. Nian Wei had used the simplest technique available, building a plain seascape with no elaborate effects at all — and the old man woke in tears, gripping her hand tightly, repeating that this was the most real dream he'd had in years, more vivid than any actual voyage he could remember, more alive with that youthful thrill than memory itself. Before leaving, he insisted on giving her a small fishnet charm he'd woven himself, for good luck. Meanwhile, some of her most technically ambitious projects, into which she'd poured enormous effort, often received nothing more than polite praise, rarely moving anyone in any real way.
+
+The true craft of dreamweaving was never about conjuring elaborate scenes out of nothing — it was learning to listen, more accurately, to that deep-seated longing within a client's heart, one they themselves might not even be able to name, and then, gently, lifting it out of that shared Field. Nian Wei began, deliberately, to change how she worked — with every new commission, she now spent far longer simply talking quietly with her clients, in no hurry to begin designing, first seeking to understand what they truly, deeply longed for — even though this meant taking on fewer commissions than before, and her income dropped accordingly. She never once regretted it.
+
+VIII · An Unusual Commission
+
+Not long after, Nian Wei received an especially difficult commission — a young man named Gu Yao, who had lost his parents young and grown up in an orphanage, wanted to relive, once, in a dream, the experience of "having been properly loved by his parents." With no specific real memory to draw on — Gu Yao couldn't even recall his parents' faces, only scattered, fragmentary sensations of once being embraced — Nian Wei found herself, for the first time, utterly at a loss, her entire arsenal of careful design technique rendered useless before this commission, since she had no concrete material at all to build from.
+
+VIII-and-a-half · Gu Yao's Story
+
+Gu Yao had grown up in an orphanage; his parents had died together in an accident when he was three, leaving him with almost no clear memory of them at all, only, occasionally in early childhood, some indescribable dream carrying a warm, embraced feeling, which always dissolved the instant he opened his eyes, leaving nothing but an unnamable ache. The orphanage staff had treated him kindly, but that particular, indescribable emptiness could never truly be filled — Gu Yao had come to understand, over time, that this emptiness could not be replaced by just anyone; it was a feeling only the role of "parent" could ever give.
+
+Grown, Gu Yao carried a gentle temperament, held down a stable job, yet always bore a deeply hidden loneliness few could detect — he often said he felt like a rootless tree, no matter how lush his branches grew, there remained, at his core, an emptiness nothing could fill, especially sharp whenever he witnessed some other family's warm reunion.
+
+He'd spent years saving, nearly emptying his savings, before finally finding the courage to seek out Nian Wei and voice this wish he'd carried in silence for so long. As he spoke, his voice held a carefully guarded hope even he seemed unaware of, his hands trembling slightly, as if afraid this hope, once spoken aloud, might once again come to nothing. He added, afterward, "If it can't be done, that's fine too. I just wanted to try — even a small amount would be enough." This line made Nian Wei take the commission all the more seriously; she resolved, privately, to give everything she had toward fulfilling this wish.
+
+IX · Descending Into the Shared Field
+
+Recalling her realization from the depths of the foundation, Nian Wei decided not to attempt "designing" this dream at all, but instead to descend, together with Gu Yao, carrying his genuine longing, into that shared Field, to see whether something capable of answering that longing already existed there. This was an unprecedented attempt — no one in the guild had ever handled a commission this way; everyone was accustomed to the traditional flow of design first, building second; no one had ever dared to bring a client with no design at all, only a pure longing, directly into that shared Field.
+
+Nian Wei found Gu Yao and told him honestly that this attempt had no precedent, no guaranteed outcome, and carried some risk, asking whether he was still willing to take that chance. Gu Yao fell silent for a long while, gazing out the window, a flicker of complicated struggle in his eyes, before finally nodding slowly. "I've waited twenty-some years for this feeling. I can afford one more risk." Nian Wei solemnly explained every detail of the plan, asking Ah Che to serve as guardian throughout, ensuring nothing would go wrong; the two spent several nights deliberating before finally, on an unusually quiet night, beginning this unprecedented descent. That night, the star domain lay especially still, even the usual drifting motes of light seeming to hold their breath, waiting quietly for this unknown attempt.
+
+X · An Unexpected Manifestation
+
+Miraculously, as Nian Wei and Gu Yao's consciousness sank together into that shared Field, warm fragments began, spontaneously and slowly, to surface — not any specific, designed image of a parent, no clear face, no particular scene, but a pure, unreserved sense of care, washing like a warm tide over every corner of Gu Yao's consciousness, filling precisely that emptiness that had always remained within him. Nian Wei watched over the process quietly, able to clearly sense Gu Yao's entire consciousness shifting from its initial tension and unease into a gradual loosening, like a long-thirsty plant finally receiving enough water.
+
+That sense of care seemed to gather from countless parents, all across the world, at that very moment, genuinely loving their own children — belonging to no single specific person, yet landing, with astonishing realness and specificity, upon Gu Yao, even carrying faint, indescribably delicate sensations Nian Wei herself couldn't quite name — as if someone were gently stroking his hair, as if someone were holding him close, securely, the pressure and warmth of that embrace precisely calibrated, as though prepared, over twenty-some years, exactly for him. When Gu Yao woke, tears streaming down his face, he could say nothing for a long while, finally only holding Nian Wei tightly, choking out that this was the first time in his life he'd truly felt he had once been properly loved — even though he still couldn't say where that love had come from, or why an unnamed care could leave him so certain it had been real.
+
+XI · Ripples Through the Guild
+
+News of this successful attempt spread quickly through the entire dreamweavers' guild, causing no small stir — a portion of conservative elders felt Nian Wei's approach was too reckless, straying from the trade's long-held tradition of "precise design," worried that this unregulated "descending" might, if it ever went wrong, bring unforeseeable risk to a client's consciousness; another portion of younger weavers found this entirely new possibility thrilling, flocking to Nian Wei to ask how to practice this "descend into the shared Field" technique, some even offering, on the spot, to be the first to test it on their own consciousness. The guild's great hall buzzed, for a time, with heated, divided opinion.
+
+A senior mid-career weaver named Yue Yan, known for his strict conservatism, publicly and sharply challenged Nian Wei: "What you're doing runs entirely against the rules passed down through generations. What if, one day, some client's consciousness gets lost in that boundless Field with no way back — will you take responsibility then? This trade has survived this long because of its rules, not because of anyone's momentary impulse." Nian Wei didn't dodge the challenge, answering calmly: "I understand this concern. It's precisely why I've been so cautious — every descent, I bring a fellow weaver to guard the process, ready at any moment to pull the client back. The purpose of rules is to protect clients, not to let us look away whenever we face a problem the rules can't solve."
+
+The guild convened a debate lasting several days, the arguments growing fierce, nearly splitting the guild openly between conservatives and reformers, neither side willing to yield easily. Nian Wei made no forceful defense of herself, simply recounting Gu Yao's experience in full to everyone present, then saying, "I understand everyone's concerns. But if a commission can never be fulfilled through traditional design, should we cling to the rules and let people like Gu Yao never receive what they truly need — or should we take one carefully considered risk?" This left many previously resolute opponents in long silence, the hall falling quiet except for the wind's low hum outside, drifting through the star domain.
+
+XI-and-a-half · A Friend's Encouragement
+
+Through the most intense days of the debate, Nian Wei grew exhausted, even beginning to wonder if she'd oversimplified things. It was Ah Che who stayed by her side every day, reviewing each challenge from the debate with her, carefully sorting which concerns genuinely warranted caution and which were merely instinctive fear of the unknown. "You haven't done anything wrong," Ah Che told her once, seeing how worn she'd grown. "You've simply seen one step further than everyone else. Whoever sees first is destined to face this kind of doubt — but that doesn't mean what you've seen isn't real." These words gave Nian Wei the strength to stand back up.
+
+XII · Redefining the Trade
+
+The debate never reached a conclusion everyone found satisfying, and Nian Wei made no rush to convince anyone; she simply recorded this entire experience in full, submitting it to the guild's archive for future reference. She spent three full days choosing every word carefully, recording the entire process — from the first anomaly, through her near-loss of self while digging into the foundation, to the success of Gu Yao's dream — leaving nothing out, including even her own initial doubt and unease, without a trace of embellishment, hoping that whoever came after, whether they agreed with her or not, could form their own judgment based on the complete, honest account, rather than letting secondhand rumor sway their view.
+
+At the end of the record, she wrote solemnly: "Perhaps this trade has been misunderstood, from the very beginning, in its direction — we are not 'making' dreams. We are helping every client reconnect with that Field, which has always belonged to everyone. This connection is our true craft, more precious, and more worthy of reverence, than any technique of design." This record was later solemnly enshrined in the guild's core texts, becoming an essential reference for many who came after, and years later, dreamweaving schools from other star domains even traveled here specifically to study the ideas and methods it laid out.
+
+XII-and-a-half · A Long Conversation With the Foundation Master
+
+Nian Wei later made a special visit to the white-haired Foundation Master, sharing with him every realization and doubt from this entire period, recounting everything in full, from the first anomaly to her near-loss of self while digging into the foundation, to the success of Gu Yao's dream. He listened quietly, then, with a rare, gratified smile, rose and retrieved, from deep within his chamber, an old, yellowed notebook. "I've lived in seclusion here for years, waiting for someone to touch this truth for themselves, rather than simply hearing it from me. Some things can only truly be learned by descending once, yourself. This notebook holds some scattered records from when I, too, once tried to walk this path, in my youth. It's yours now."
+
+He paused, then added, "The road ahead won't be easy — you'll face plenty of doubt, and you should be ready for it. Back then, I too tried to share this understanding with others in the guild, but never managed, as you have, to truly convince anyone, and could only choose seclusion, guarding this understanding alone, until you came along. This notebook also records several of my own unsuccessful attempts — you might find it useful, to spare yourself some of the detours I once took." Nian Wei accepted the old notebook solemnly, her hands trembling slightly, yet felt, for the first time, an unprecedented sense of groundedness — she knew she had finally found this trade's true direction, and finally understood the real reason behind the Foundation Master's years of solitude.
+
+XII-and-seven-tenths · A Fellow Disciple's Support
+
+Nian Wei's closest fellow disciple, Ah Che, was among the first to believe in her new method. Once the guild's acknowledged master of elaborate design, easygoing and always ready with a joke, Ah Che, after witnessing the effect of Gu Yao's dream firsthand, willingly set aside the design skills he'd once taken such pride in, joining Nian Wei to explore the technique of "descending into the shared Field," even turning down several lucrative design commissions to do so. He often joked, "I used to think dreamweavers competed over whose scenes were more elaborate. Now I understand what we're really competing over is who's willing to set aside their own urge to design, first."
+
+The two went on to frequently partner on the most difficult commissions, their coordination growing seamless — Nian Wei responsible for quietly guiding a client to the edge of consciousness, Ah Che responsible for steadily guarding the entire process from the outside, ready to pull them both back to reality the instant anything seemed wrong. Once, a commission nearly spiraled out of control when a client's own emotions grew too complex mid-descent, and it was only Ah Che's quick, decisive action that resolved the crisis without incident — afterward, both broke into a cold sweat, and together, developed a far more thorough safety protocol. This experience further convinced Nian Wei that this new method could never do without a reliable partner's protection, and could never be taken lightly.
+
+XII-and-eight-tenths · New Guild Regulations
+
+After extensive deliberation, the guild finally established a strict set of regulations for the "descend into the shared Field" technique: at least three years of traditional design training required before one could learn it; at least one senior weaver required to guard every descent; clients required to sign a fully informed consent agreement. This framework preserved the new technique's possibilities while addressing the conservatives' concerns, and after another round of revision, was finally accepted by the vast majority within the guild, formally entered into the guild's core texts.
+
+XIII · A New Generation of Dreamweavers
+
+Years later, Nian Wei became a senior mentor at the dreamweavers' guild, her office set up not far from the tower chamber where the Foundation Master had once lived in seclusion, its window likewise perpetually wrapped in cloud, as though quietly reminding her never to forget this trade's original direction. The first lesson she taught every new disciple was never elaborate design technique, but how to grow still, how to learn to "descend" rather than "build." Whenever an eager new disciple rushed to show off some intricately designed scene, Nian Wei would first take them to experience the simplest, plainest dream, one closest to a client's genuine longing, letting them feel, for themselves, the difference — hard to put into words — between the two.
+
+Once, an exceptionally gifted but proud new disciple named Xiao Ting designed a dreamscape of stunning extravagance — towering palaces, ever-shifting light effects, every turn meticulously choreographed — fully expecting Nian Wei's praise, waiting eagerly for the compliment. Nian Wei only asked him one question: "When the client wakes from this dream, will they remember the grandeur of the scene, or the feeling that genuinely touched something inside them?" Xiao Ting flushed red, unable to answer. Nian Wei said nothing more, simply taking him to revisit that client — and sure enough, the client had almost no memory of the scene's specific details, only kept repeating, over and over, that indescribable feeling of being understood, so deeply reassuring, unable to describe the palace Xiao Ting had poured so much effort into at all. From then on, that disciple carried a genuine, heartfelt conviction in Nian Wei's teaching, growing over the following years into one of the guild's most skilled young practitioners of the "descend into the shared Field" technique.
+
+She often told her students: "Sooner or later, you'll discover that every dream's foundation is connected. The sooner you understand this, the sooner your craft will truly mature — however polished your design technique becomes, it remains only surface work. The real skill lies in whether you have the patience to grow still, and truly listen."
+
+XIV-and-two-tenths · A New Exhibit in the Great Hall
+
+The guild's great hall now holds a special new exhibit — a plain stone, taken from the edge of that very foundation Nian Wei first dug into all those years ago, beside it a small inscription: "No dream was ever built alone." Young weavers passing through often pause here a moment, lost in thought.
+
+XIV-and-a-half · A Belated Letter
+
+Years later, Nian Wei received a letter from the daughter of that old man who had lost his wife so long ago — the old man had since passed, having told his daughter, again and again in his final years, of that reunion dream, calling it the most precious stretch of time in his life. His daughter wrote: "Father passed peacefully. He said he'd properly said goodbye to Mother. Thank you for letting him leave with that sense of completeness." Nian Wei read the letter in long silence, then placed it, solemnly, into the small box she treasured most, alongside the old notebook the Foundation Master had given her.
+
+She suddenly recalled the old man, hands trembling, drawing that worn photograph from his coat, the first time he'd come to her — back then, she'd been little more than a fledgling weaver, never imagining that an ordinary commission would one day become the starting point that changed the entire trade. Gently touching the letter, she felt a wave of feeling hard to put into words: it seemed that no act of genuine care ever truly vanished — it simply continued, quietly, somewhere in time.
+
+XV · Epilogue
+
+Years later, Nian Wei still remembered the mixture of awe and shock she'd felt the first time she touched that shared Field — realizing that the craft she'd once taken such pride in had never been a solitary achievement at all, but something completed together with countless others who had also placed their wishes within that same Field. Even now, she occasionally took on a particularly difficult commission herself, and each time, she remembered that first moment at the depths of the foundation, touching that shared Field — that mixture of awe and reassurance — realizing that no dream anyone had ever dreamed was truly solitary; each was connected to that same, gentle Field, holding everyone up together. Gu Yao, in time, became one of Nian Wei's closest friends, visiting the guild once a year, always bringing some small, warm gesture — things he himself had gradually learned to give others in his own life. He'd gone on to become a volunteer at an orphanage, setting aside fixed time each week to spend with children who'd lived through experiences much like his own, reading with them, playing with them, passing on, in his own plain way, the warmth he'd once received from that shared Field, to more children who needed it. He often said that though he still couldn't say exactly where the care in that dream had come from, he'd come to understand that it was precisely because that love belonged to no single person that he was able, in turn, to pass it on to others who needed it just as much.
+
+Years passed, and Ah Che, too, grew into a senior weaver in his own right, still partnering with Nian Wei, their coordination requiring almost no words at all, even taking on his own first disciples, teaching in a style much like hers, always beginning with stillness, with listening. The two would sometimes reminisce about that debate which had once nearly shaken the entire guild, sharing a knowing smile — the "descend into the shared Field" technique had, by now, become a formal part of the guild's curriculum, required study for every new dreamweaver, and what had once been a fiercely contested experiment had become, instead, the turning point that let this trade truly mature. Even Yue Yan, who had once sharply challenged Nian Wei in public, admitted to her, years later, that his original concern, though well-intentioned, had ultimately underestimated the true value behind this new method.
+
+Late at night, Nian Wei often sat alone on her crystal platform, gazing into the depths of the star domain, thinking slowly: perhaps what dreamweaving had ultimately taught her was not merely how to build a dream, but the truth that no lonely soul was ever truly alone — each was gently connected by the same unseen, yet undeniably real, Field. She thought of what the Foundation Master had once told her, and found, now, a deeper understanding of it — some truths could only ever be learned by descending, oneself, once. She often paged through the old notebook he'd given her, sensing, in its worn handwriting, the same confusion and persistence that elder had once lived through, alone, walking this same path — a resonance across time she'd come to cherish deeply, grateful now for the good fortune of having Ah Che, and generation after generation of young disciples, walking alongside her.
+
+Years later, whenever a new disciple asked Nian Wei whether she'd ever been afraid, ever regretted it, she always answered honestly: "I was afraid. I doubted myself more times than I can count. But every time I remember the way Gu Yao cried when he woke — I know this was the right path."
+
+(An Original Piece · Lingxi Dimensional Narratives · Novel)`,
+  },
 };
