@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Bi from "./Bi";
 import LangToggle from "./LangToggle";
+import SearchBox from "./SearchBox";
 
 const links = [
   { href: "/live-as", zh: "意识显化", en: "Manifestation" },
@@ -39,6 +40,7 @@ export default function Nav() {
 
         {/* 桌面端 */}
         <div className="hidden items-center gap-4 text-[13px] text-bone-dim md:flex">
+          <SearchBox />
           {links.map((l) => (
             <Link key={l.href} href={l.href} className="transition hover:text-lattice">
               <Bi zh={l.zh} en={l.en} />
@@ -72,6 +74,9 @@ export default function Nav() {
       {open && (
         <div className="border-t border-amber/10 bg-[#1c140c]/95 px-6 py-3 md:hidden">
           <div className="flex flex-col">
+            <div className="pb-3">
+              <SearchBox className="sb-wide" />
+            </div>
             {links.map((l) => (
               <Link
                 key={l.href}

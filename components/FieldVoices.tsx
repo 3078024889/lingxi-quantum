@@ -14,6 +14,7 @@ import { VOICES } from "@/lib/voices";
 type Node = {
   id: number;
   x: number;          // 起始横向 %
+  zone: "side" | "middle"; // side：允许自动绽放文字；middle：仅悬停/点击才显示文字
   depth: number;      // 0 远 ~ 1 近
   color: string;
   fallDur: number;    // 下落时长
@@ -27,8 +28,15 @@ type Node = {
 
 const COLORS = ["#E8B765", "#7CE0D3", "#C9A5D8", "#F2E2C4"];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
-// 只在左右两侧空白区生成，避开中间阅读列（约 16%~84% 视口宽度留给正文）。
-const randSideX = () => (Math.random() < 0.5 ? rand(1, 13) : rand(87, 99));
+// 全宽度分布：光点在整个视口宽度上都会出现、都会动，
+// 但只有两侧区域（约 0~18% 和 82~100%）的光点，允许自动绽放文字，
+// 中间阅读列的光点，文字只在悬停/点击时才出现，不打扰阅读。
+const SIDE_MAX = 18;
+function randXZone(): { x: number; zone: "side" | "middle" } {
+  const x = rand(1, 99);
+  const zone: "side" | "middle" = x <= SIDE_MAX || x >= 100 - SIDE_MAX ? "side" : "middle";
+  return { x, zone };
+}
 
 const PRIORITY = /(修炼|显化片刻|邀请)/;
 const BAG: number[] = (() => {
@@ -58,16 +66,18 @@ export default function FieldVoices() {
       const count = Math.max(12, Math.min(mobile ? 20 : 54, Math.round(area / (mobile ? 30000 : 37000))));
       const arr: Node[] = [];
       for (let k = 0; k < count; k++) {
+        const { x, zone } = randXZone();
         arr.push({
           id: seq.current++,
-          x: randSideX(),
+          x,
+          zone,
           depth: Math.random(),
           color: COLORS[Math.floor(Math.random() * COLORS.length)],
           fallDur: rand(mobile ? 20 : 26, mobile ? 34 : 40) - Math.random() * 12,
           fallDelay: -rand(0, 34),
           driftDur: rand(9, 20),
           driftDelay: -rand(0, 20),
-          driftDist: rand(-20, 20),
+          driftDist: rand(-40, 40),
           vibDur: rand(2.6, 5),
           vi: pick(),
         });
@@ -83,9 +93,11 @@ export default function FieldVoices() {
 
   const reseed = (id: number) => {
     setNodes((prev) =>
-      prev.map((d) =>
-        d.id === id ? { ...d, x: randSideX(), vi: pick(), driftDist: rand(-20, 20) } : d
-      )
+      prev.map((d) => {
+        if (d.id !== id) return d;
+        const { x, zone } = randXZone();
+        return { ...d, x, zone, vi: pick(), driftDist: rand(-40, 40) };
+      })
     );
   };
 
@@ -93,11 +105,12 @@ export default function FieldVoices() {
   useEffect(() => {
     if (nodes.length === 0) return;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const maxActive = reduce ? 1 : isMobile ? Math.min(4, Math.ceil(nodes.length / 5)) : Math.min(5, Math.ceil(nodes.length / 10));
+    const sideCount = Math.max(1, nodes.filter((d) => d.zone === "side").length);
+    const maxActive = reduce ? 1 : isMobile ? Math.min(4, Math.ceil(sideCount / 3)) : Math.min(5, Math.ceil(sideCount / 5));
     const tick = () => {
       setSpeaking((prev) => {
         if (Object.keys(prev).length >= maxActive) return prev;
-        const cands = nodes.filter((d) => !(d.id in prev));
+        const cands = nodes.filter((d) => d.zone === "side" && !(d.id in prev));
         if (!cands.length) return prev;
         const d = cands[Math.floor(Math.random() * cands.length)];
         const next = { ...prev, [d.id]: d.vi };
@@ -125,7 +138,7 @@ export default function FieldVoices() {
       {nodes.map((d) => {
         const v = voiceOf(d);
         const lit = hovered === d.id || d.id in speaking;
-        const openRight = d.x >= 50; // 左侧节点文字向左展开，右侧节点向右展开，始终远离中间阅读列
+        const openRight = d.x < 50; // 左侧节点文字向右（朝内）展开，右侧节点向左（朝内）展开，确保气泡在视口内可见
         const base = (2 + d.depth * 6) * (isMobile ? 1.5 : 1); // 手机上更大
         const size = lit ? base + 4 : base;
         const opacity = lit ? 1 : 0.28 + d.depth * 0.42;
