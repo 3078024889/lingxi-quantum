@@ -1,9 +1,9 @@
-// 上升之心 · 能量路径图（原创动态）
-// 中枢大太阳（顶）→ 降入人体 → 太阳神经丛（心脏下方），金色降入
-// 呼气沿行星轴向外绽放。坐姿人形 + 中英文标注。
+// 升维心经 · 节律路径图（原创动态）
+// 清明之源（顶）→ 降入人体 → 汇聚点（心脏下方），金色降入
+// 呼气沿舒展轴向外展开。坐姿人形 + 中英文标注。
 export default function AscendingDiagram({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 440 720" className={className} aria-label="上升之心能量路径">
+    <svg viewBox="0 0 440 720" className={className} aria-label="升维心经节律路径">
       <defs>
         <radialGradient id="ah-bg" cx="50%" cy="30%" r="80%">
           <stop offset="0%" stopColor="#3a2410" />
@@ -42,7 +42,7 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
         })}
       </g>
 
-      {/* 中枢大太阳（顶部） */}
+      {/* 清明之源（顶部） */}
       <circle cx="220" cy="80" r="46" fill="url(#ah-sun)">
         <animate attributeName="r" values="42;52;42" dur="6s" repeatCount="indefinite" />
       </circle>
@@ -56,7 +56,7 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
           );
         })}
       </g>
-      <text x="220" y="150" fill="#FFF4D6" fillOpacity="0.8" fontSize="11" textAnchor="middle">中枢大太阳 · Central Sun</text>
+      <text x="220" y="150" fill="#FFF4D6" fillOpacity="0.8" fontSize="11" textAnchor="middle">清明之源 · Source of Clarity</text>
 
       {/* 垂直光柱（太阳→人体） */}
       <rect x="216" y="120" width="8" height="400" fill="url(#ah-beam)" filter="url(#ah-glow)">
@@ -85,7 +85,7 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
           strokeOpacity="0.5"
           strokeWidth="1.2"
         />
-        {/* 行星轴（水平，呼气绽放） */}
+        {/* 舒展轴（水平，呼气展开） */}
         <line x1="80" y1="360" x2="360" y2="360" stroke="#7CE0D3" strokeWidth="2" strokeOpacity="0.5" filter="url(#ah-glow)">
           <animate attributeName="stroke-opacity" values="0.25;0.6;0.25" dur="5s" repeatCount="indefinite" />
         </line>
@@ -117,7 +117,7 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
         <circle cx="220" cy="360" r="6" fill="#7CC79C" filter="url(#ah-glow)">
           <animate attributeName="r" values="5;8;5" dur="4s" begin="-1s" repeatCount="indefinite" />
         </circle>
-        {/* 太阳神经丛（金色，心脏下方） */}
+        {/* 汇聚点（金色，心脏下方） */}
         <circle cx="220" cy="395" r="9" fill="#F4C97A" filter="url(#ah-glow)">
           <animate attributeName="r" values="7;12;7" dur="3.5s" repeatCount="indefinite" />
         </circle>
@@ -126,12 +126,12 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
       {/* 标注（中英文） */}
       <g fontSize="11" fill="#E8B765" fillOpacity="0.85">
         <text x="254" y="246">松果腺 · Pineal</text>
-        <text x="254" y="332">上升之心 · Ascending Heart</text>
+        <text x="254" y="332">升维之心 · Ascending Heart</text>
         <text x="254" y="362">心脏 · Heart</text>
-        <text x="254" y="398">太阳神经丛 · Solar Plexus</text>
+        <text x="254" y="398">汇聚点 · Convergence Point</text>
       </g>
       <g fontSize="11" fill="#7CE0D3" fillOpacity="0.8">
-        <text x="296" y="352">行星轴 · Planetary Axis</text>
+        <text x="296" y="352">舒展轴 · Extension Axis</text>
       </g>
     </svg>
   );

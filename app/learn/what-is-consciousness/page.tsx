@@ -41,7 +41,7 @@ const data: ArticleData = {
     href: "/practice/breath", btnZh: "进入量子呼吸", btnEn: "Open Quantum Breath",
   },
   related: [
-    { href: "/learn/wingmakers", zh: "造翼者与主权性积分态", en: "WingMakers & the Sovereign Integral" },
+    { href: "/learn/wingmakers", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
     { href: "/learn/higher-self", zh: "什么是更高的自己", en: "The higher self" },
   ],
 };

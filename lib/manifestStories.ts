@@ -87,7 +87,7 @@ const raw: [string, string, string, string][] = [
   ["健康", "Wellbeing", "每天几次刻意的深呼吸后，那种一整天绷着的疲惫，明显轻了。", "After a few deliberate deep breaths each day, the all-day braced-up fatigue clearly eased."],
   ["机缘", "Synchronicity", "临时改的行程，让我恰好赶上了那场后来改变方向的相遇。", "A last-minute change of plans put me right in time for the meeting that redirected everything."],
   ["心灵", "Inner", "当我真正相信「现实会随意识对齐」，我便不再那么用力地推它了。", "When I truly believed 'reality aligns with consciousness,' I stopped pushing it so hard."],
-  ["命运", "Path", "把六道之门一道道走过之后，我终于看清：每一面镜子照的都是我自己。", "Having walked the Six Gates one by one, I saw at last: every mirror had been reflecting me."],
+  ["命运", "Path", "把这些年反复出现的心结一道道走过之后，我终于看清：每一面镜子照的都是我自己。", "Having walked through the recurring knots of these years, one by one, I saw at last: every mirror had been reflecting me."],
 ];
 
 export const STORIES: ManifestStory[] = raw.map(([tagZh, tagEn, zh, en]) => ({

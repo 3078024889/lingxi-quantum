@@ -21,19 +21,19 @@ const data: ArticleData = {
     },
     {
       hZh: "可落地的方法", hEn: "Practical methods",
-      pZh: "呼吸：每天几次缓慢深呼吸，把注意力放回心的区域，是最快回到当下的方式。心的练习：把注意力从头脑移到心，去感受温暖与平静（灵犀的「心的重置」「上升之心」即为此设计）。感恩：每天写下三件值得感恩的事，直接调高频率。减少消耗：减少恐惧型信息、负向自我对话与过度刺激。独处与自然：给自己安静、向内的时间。",
-      pEn: "Breath: a few slow, deep breaths daily, returning attention to the heart, is the fastest way back to the present. Heart practice: move attention from head to heart and feel warmth and calm (Lingxi's 'Heart Reset' and 'Heart of Ascension' are built for this). Gratitude: write three things you're grateful for daily to directly lift your frequency. Reduce drains: less fear-based input, negative self-talk, and overstimulation. Solitude and nature: give yourself quiet, inward time.",
+      pZh: "呼吸：每天几次缓慢深呼吸，把注意力放回心的区域，是最快回到当下的方式。心的练习：把注意力从头脑移到心，去感受温暖与平静（灵犀的「归零心诀」「升维心经」即为此设计）。感恩：每天写下三件值得感恩的事，直接调高频率。减少消耗：减少恐惧型信息、负向自我对话与过度刺激。独处与自然：给自己安静、向内的时间。",
+      pEn: "Breath: a few slow, deep breaths daily, returning attention to the heart, is the fastest way back to the present. Heart practice: move attention from head to heart and feel warmth and calm (Lingxi's 'Heart Reset' and 'Ascending Heart Sutra' are built for this). Gratitude: write three things you're grateful for daily to directly lift your frequency. Reduce drains: less fear-based input, negative self-talk, and overstimulation. Solitude and nature: give yourself quiet, inward time.",
     },
     {
-      hZh: "松果体与「向内」的练习", hEn: "The pineal gland and turning inward",
-      pZh: "在造翼者体系里，松果体被视为光体最初的栖息地、通往更高自己的入口。与其追求外在技巧，不如把它理解为一个提醒：真正的提升来自向内——安静、聆听、回到心。频率的提升不是一次性的成就，而是一种每天选择的状态。",
-      pEn: "In the WingMakers system, the pineal gland is seen as the original abode of the Lightbody and a gateway to the higher self. Rather than chasing external techniques, take it as a reminder: real elevation comes from turning inward — being quiet, listening, returning to the heart. Raising your frequency isn't a one-time achievement but a state you choose each day.",
+      hZh: "向内的练习", hEn: "Turning inward",
+      pZh: "提升频率，从来不是靠外在的技巧或器材，而是一种每天可以重新选择的状态：安静下来，聆听自己，把注意力，重新带回心。真正的提升，不是一次性的成就，是日复一日，选择回到平静与爱。",
+      pEn: "Raising your frequency was never about external techniques or equipment — it's a state you can choose again each day: growing quiet, listening to yourself, bringing attention back to the heart. Real elevation isn't a one-time achievement, but choosing, day after day, to return to calm and love.",
     },
   ],
   faq: [
     { q: "如何快速提升自己的能量/频率？", a: "最快的方式是改变当下的状态：做几次缓慢深呼吸回到心的区域，写下几件感恩的事，减少恐惧型信息与负向自我对话。频率是日常情绪与注意力的总和，持续地选择平静与爱，它就会稳定上升。" },
     { q: "意识频率低有什么表现？", a: "常见表现是长期处在恐惧、匮乏、焦虑、批判或麻木中，注意力被消耗，容易看到威胁、错过机会。这不是缺陷，而是提醒你需要回到当下、回到心，重新选择状态。" },
-    { q: "松果体和提升频率有关系吗？", a: "在造翼者等体系里，松果体被视为通往更高自己的入口。与其追求外在技巧，更稳妥的理解是：它象征「向内」——通过安静、呼吸与回到心来提升状态，而非依赖任何单一方法或物质。" },
+    { q: "松果体和提升频率有关系吗？", a: "在不少灵性传统里，松果体被视为通往更高自己的入口。与其追求外在技巧，更稳妥的理解是：它象征「向内」——通过安静、呼吸与回到心来提升状态，而非依赖任何单一方法或物质。" },
   ],
   cta: {
     titleZh: "从一个练习开始", titleEn: "Begin with one practice",
@@ -41,7 +41,7 @@ const data: ArticleData = {
     href: "/practice", btnZh: "进入修炼技术", btnEn: "Open the practices",
   },
   related: [
-    { href: "/learn/wingmakers", zh: "造翼者体系导览", en: "The WingMakers map" },
+    { href: "/learn/wingmakers", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
     { href: "/glossary", zh: "核心术语表", en: "Core glossary" },
   ],
 };

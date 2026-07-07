@@ -21,8 +21,8 @@ const data: ArticleData = {
     },
     {
       hZh: "为什么会感到痛苦或迷茫", hEn: "Why it can feel painful",
-      pZh: "觉醒常伴随不适，因为它要求你放下旧的身份与安全感，而新的还没成形。这不是你出了问题，而是「旧系统」在松动。在造翼者的语言里，这是从被遗传心智驯化的「社会人」，走向主权性自己的过程——成长的阵痛，往往正是转变的证据。",
-      pEn: "Awakening often comes with discomfort, because it asks you to release old identities and securities before the new has formed. This isn't something wrong with you, but the 'old system' loosening. In WingMakers language, it's the move from the 'social human' conditioned by the genetic mind toward the sovereign self — the growing pains are often the very evidence of transformation.",
+      pZh: "觉醒常伴随不适，因为它要求你放下旧的身份与安全感，而新的还没成形。这不是你出了问题，而是「旧系统」在松动——是从被外界期待驯化的「社会人」，走向真正自己的过程。成长的阵痛，往往正是转变的证据。",
+      pEn: "Awakening often comes with discomfort, because it asks you to release old identities and securities before the new has formed. This isn't something wrong with you, but the 'old system' loosening — the move from the 'social self' conditioned by outside expectation toward the true self. The growing pains are often the very evidence of transformation.",
     },
     {
       hZh: "如何温柔地度过", hEn: "How to move through it gently",
@@ -44,7 +44,7 @@ const data: ArticleData = {
   },
   related: [
     { href: "/learn/higher-self", zh: "什么是高我", en: "What is the higher self" },
-    { href: "/learn/wingmakers", zh: "造翼者体系导览", en: "The WingMakers map" },
+    { href: "/learn/wingmakers", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
   ],
 };
 

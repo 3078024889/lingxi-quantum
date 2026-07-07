@@ -15,10 +15,10 @@ export default function BreathRing() {
       />
       <div className="relative z-10 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-bone-dim">
-          量子暂停
+          量子息法
         </p>
         <p className="mt-2 font-display text-2xl tracking-widest text-bone">
-          我是 · 我们是
+          上扬 · 展开
         </p>
       </div>
     </div>

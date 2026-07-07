@@ -122,7 +122,7 @@ export default function ManifestationArticle() {
 
           <p className="mt-10 text-sm text-bone-dim/70">
             <Bi zh="延伸：" en="Related: " />
-            <Link href="/learn/wingmakers" className="text-lattice hover:text-amber"><Bi zh="造翼者体系导览" en="The WingMakers map" /></Link>
+            <Link href="/learn/wingmakers" className="text-lattice hover:text-amber"><Bi zh="主权与完整导览" en="Sovereignty & Wholeness" /></Link>
             {" · "}
             <Link href="/learn/dream" className="text-lattice hover:text-amber"><Bi zh="如何解梦" en="How to interpret dreams" /></Link>
           </p>

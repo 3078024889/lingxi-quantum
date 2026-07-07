@@ -10,7 +10,7 @@ const CAPS = [
 export default function LingxiPortal() {
   return (
     <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
-      {/* 活的场：光体主权体 + 漂移星层 + 缓转轨道环 */}
+      {/* 活的场：场域光点 + 漂移星层 + 缓转轨道环 */}
       <div className="absolute inset-0 -z-10">
         <img
           src="/images/hero-lightbody.jpg"

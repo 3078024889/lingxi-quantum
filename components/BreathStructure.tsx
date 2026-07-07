@@ -1,11 +1,11 @@
-// 量子暂停呼吸结构 —— 原创：一个小节的四个均等部分
-// 吸气「我是」→ 暂停（主权体）→ 呼气「我们是」→ 暂停（积分态）
+// 量子息法呼吸结构 —— 原创：一个小节的四个均等部分
+// 吸气「上扬」→ 暂停 → 呼气「展开」→ 暂停
 export default function BreathStructure({ className = "" }: { className?: string }) {
   const segments = [
-    { label: "吸气", sub: "我是", color: "#7CE0D3", up: true },
-    { label: "暂停", sub: "主权体", color: "#5BAAC0", up: false, top: true },
-    { label: "呼气", sub: "我们是", color: "#7CC79C", up: false },
-    { label: "暂停", sub: "积分态", color: "#9CB8A0", down: true },
+    { label: "吸气", sub: "上扬", color: "#7CE0D3", up: true },
+    { label: "暂停", sub: "停留", color: "#5BAAC0", up: false, top: true },
+    { label: "呼气", sub: "展开", color: "#7CC79C", up: false },
+    { label: "暂停", sub: "静置", color: "#9CB8A0", down: true },
   ];
   const w = 600;
   const segW = w / 4;
@@ -13,7 +13,7 @@ export default function BreathStructure({ className = "" }: { className?: string
   const path = `M0,140 L${segW},40 L${segW * 2},40 L${segW * 3},140 L${segW * 4},140`;
 
   return (
-    <svg viewBox="0 0 600 220" className={className} aria-label="量子暂停呼吸结构">
+    <svg viewBox="0 0 600 220" className={className} aria-label="量子息法呼吸结构">
       <defs>
         <linearGradient id="bs-line" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="#7CE0D3" />

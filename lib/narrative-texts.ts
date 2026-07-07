@@ -2076,4 +2076,288 @@ Many years later, if anyone asked what he'd gained most from this work, he would
 
 (An Original Piece · Lingxi Dimensional Narratives · Novel)`,
   },
+  "the-age-without-light": {
+    zh: `一 · 格栅熄灭的那一夜
+
+沈亦记得那个夜晚，几乎全世界所有依赖同一套能源格栅运转的系统，在同一瞬间，毫无征兆地，彻底熄灭。城市失去了灯光，交通失去了信号灯，医院失去了监护仪规律的滴答声，连人们随身携带的各类通讯设备，也在那一刻，齐齐陷入死寂。街道上，无数辆失去动力的车辆，僵死在原地，喇叭声、呼喊声，混杂着孩子的哭声，在漆黑一片的城市里，久久回荡。沈亦当时正独自加班，在维护中心的地下机房里，眼睁睁看着，眼前一整面墙的监控屏幕，齐刷刷地，暗了下去，那种彻底的、毫无征兆的死寂，比任何一次警报声，都更让她感到脊背发凉。
+
+事后没有人能给出一个让所有人都信服的解释——有人说是格栅本身老化崩溃，累积了数十年的隐患，终于在某个临界点，集中爆发；也有人说，是某种从未被记录过的能量波动，从天而降，瞬间瓦解了所有精密的电子系统；甚至还有人，私下流传着更加离奇的说法，说这是某种，人类尚未理解的自然规律，在提醒着，一个过度依赖单一系统的文明，终将付出的代价，也有零星几人，说自己在格栅熄灭前，曾隐约做过某种，说不清道不明的梦。可无论原因是什么，那一夜之后，世界再也没能，恢复到从前的样子。
+
+沈亦曾是格栅维护工程师，干了整整十二年又三个月，从一名基层巡检员，一路做到能够独立处理最复杂疑难故障的核心技术骨干，年年考核，都名列前茅，同事们都说，她这辈子，大概会一直守着这份稳定又体面的工作，直到退休。她比任何人都清楚，这套支撑着数十亿人日常生活的系统，究竟有多么复杂、多么脆弱——那些藏在地底深处、纵横交错的能源管线，那些需要精密到毫秒级别协同运作的调度中枢，任何一个环节出错，都可能引发连锁的、灾难性的崩溃。她还记得，那年入职培训时，主管曾半开玩笑地说过一句话："我们维护的不是电网，是整个文明，唯一还愿意相信的那根线，断了它，什么都得跟着乱。"如今回想起来，这句话，竟成了一句，格外沉重的谶语，也让她，在往后无数个不眠之夜里，反复咀嚼。她也比任何人都更早地意识到，靠着修复这套系统活下去，几乎已经不再可能——留给幸存者的，只有重新学会，在没有格栅的世界里，活下去这一件事。
+
+二 · 恐慌蔓延的日子
+
+格栅熄灭后最初的那几个月，是沈亦这辈子经历过最混乱、也最漫长的一段时间，甚至比她后来经历的任何一场危机，都更加让人感到窒息。没有电力，没有净水系统，没有任何一套曾经理所当然的基础设施，人们像被抽走了地基的房子，纷纷陷入了原始的恐慌——争抢仅剩的物资，怀疑身边每一个陌生人，昔日彬彬有礼的社会规则，几乎在一夜之间，土崩瓦解。超市的货架，第一天就被抢购一空；储水的容器，成了比黄金还珍贵的硬通货；曾经素不相识、擦肩而过都不会多看一眼的邻居，如今，彼此提防，夜里轮流值守，生怕对方，会对自己仅剩的存粮，动什么心思。
+
+沈亦所住的那栋公寓楼，在格栅熄灭的第十天，就爆发过一场激烈的冲突——楼里仅剩的一台手摇发电机，成了整栋楼争夺的焦点，几户人家，几乎大打出手，有人甚至抄起了平日里，用来修剪花草的铁锹，最后不得不由几位年长的住户，出面调解，苦口婆心地劝说了将近一个小时，才勉强制止了一场流血冲突。沈亦站在楼道里，看着那些平日里，见面都要客气寒暄的邻居，如今，红着眼睛，互相指责，心里涌起一种，说不出的悲凉——她开始明白，压垮一个文明的，从来不需要多么复杂的原因，只需要，抽走它赖以运转的那套系统，剩下的，人性里，最原始的部分，就会，毫无遮拦地，暴露出来。
+
+沈亦亲眼见过，曾经受人尊敬的邻居，为了一小罐存粮，和另一个同样绝望的幸存者大打出手，两人满身伤痕，滚打在满地狼藉的巷子里，却谁都不肯先松手；也见过，曾经沉迷于虚拟社交、几乎不与真人交流的年轻人，第一次，笨拙地、结结巴巴地，尝试面对面地，向陌生人求助，声音里，带着从未有过的、赤裸的脆弱。她开始怀疑，人类是否真的，能够在没有那套精密系统托底的情况下，继续活下去——这个念头，曾无数次，在深夜里，啃噬着她本就所剩无几的信心，让她一度，几乎彻夜难眠。
+
+三 · 遇见老陈
+
+沈亦是在一次外出寻找物资的途中，遇见老陈的。那是格栅熄灭后的第三个月，她背着几乎见底的水壶，深一脚浅一脚地，走在一条早已被遗弃的山间小路上，脚下的石阶，早已被杂草侵占，几乎看不出原本的形状。她走了整整一天，又累又渴，几乎已经打算放弃，原路返回，却忽然看见，一间几乎被藤蔓完全覆盖的木屋，屋前，一位穿着朴素粗布衣裳的老人，正静静地坐在门槛上，闭目养神，仿佛外界所有的混乱，都与他毫无关系。
+
+老陈曾是一位常年在深山里研究传统呼吸与静心方法的隐居者，格栅熄灭前，几乎没有人把他的研究当回事，觉得那不过是脱离现实的自娱自乐，甚至有人当面嘲笑过他，说他这辈子，注定要在这荒山野岭里，孤独终老，连他自己的儿女，都曾劝他搬到城里去，享享清福，都被他婉拒了，只说，城里的日子，过得太快，他跟不上。可格栅熄灭之后，老陈却成了沈亦见过的，唯一一个，看起来毫不慌乱的人——他的木屋里，储存着足够的干粮与净水，院子里，甚至还种着几畦长势不错的蔬菜，屋后，还有一小片，他自己开垦出来的果园。
+
+"你不害怕吗？"沈亦忍不住问他，声音里，还带着连日奔波留下的疲惫与警惕，一只手，甚至还下意识地，按在腰间那把用来防身的小刀上。老陈却只是笑了笑，慢悠悠地起身，给自己也给她，倒了杯热水，反问她："你有没有想过，你一直依靠的，从来不是那套系统本身，是那套系统，替你屏蔽掉的、你本来就拥有、却一直没用过的能力？"沈亦捧着那杯难得的热水，一时语塞，竟不知该如何反驳。
+
+四 · 关于场的说法
+
+老陈邀请沈亦，在他的木屋里，暂住了几天。趁着夜里围坐炉火的时候，他告诉沈亦一个她从未认真听过的说法：这个世界，从来就存在着一片，独立于任何人造系统而运行的\\u201c场\\u201d——它由每一个生命体的呼吸、心跳与专注，共同维系着，从不需要电力，也不需要任何精密的仪器，几千年来，一直安静地，托举着人类的祖先，走过无数次，比这次更加艰难的绝境，从饥荒、瘟疫，到战乱与流离失所。
+
+"格栅越发达，人越依赖它，就越不需要，也越不记得，怎么和这片场，重新连接。"老陈望着炉火，缓缓说道，"从前的人，靠着日出而作、日落而息的节律，靠着彼此之间，真实的陪伴与协作，就能活下去。格栅出现之后，一切都被切割成了精确的数据和指令，人和人之间，人和这片场之间，那份最原始的连接，就这样，一点一点，被替代掉了。"他顿了顿，又补充道："我不是说格栅本身是错的，它确实，给了很多人，更方便、更安稳的生活。只是，太多人，把这份方便，误当成了唯一的依靠，忘了，自己身上，本就还留着，另一份，从未真正失去过的能力。"
+
+沈亦坐在炉火边，将信将疑，却也不得不承认，眼前这个几乎一无所有的老人，比任何人，都活得更加从容、更加有秩序——他的每一天，都过得规律而充实，没有丝毫，格栅熄灭以来，她在其他幸存者脸上，反复看到的那种，惶惶不可终日的神情。她忍不住问："那这片场,要怎么才能感觉到？"老陈笑了笑，只说了一句："别急，你已经，在感觉它了，只是，还没认出来。就像鱼，从没意识到，自己一直，泡在水里。"
+
+五 · 第一次尝试
+
+老陈带着沈亦，做了一次她从未尝试过的练习——不是为了产生任何具体的、能被测量的结果，只是单纯地，闭上眼睛，盘腿坐在木屋前那方晒得暖烘烘的空地上，把注意力，安静地，放在自己的呼吸和心跳上，持续了将近一个小时。起初，沈亦满脑子都是格栅熄灭后的种种恐慌与算计——该去哪里寻找下一批物资，该如何提防心怀不轨的陌生人，那栋公寓楼里，仍未平息的争执，完全无法安静下来，甚至一度烦躁地，想要睁开眼睛，放弃这场在她看来，毫无意义的练习。她甚至在心里，忍不住埋怨自己：都什么时候了，还有心思，坐在这里，装模作样，浪费本该用来寻找物资的宝贵时间。
+
+可渐渐地，随着老陈平缓而富有节奏的呼吸声，一点点引导着她，沈亦的呼吸，也随之一次次放缓，她第一次，清晰地感觉到，自己的心跳，正逐渐变得，缓慢而有力——那是一种，她过去从没认真感受过的、身体本身的节律，仿佛一直存在，却始终被日常的喧嚣，彻底掩盖了过去。她甚至开始，隐约地，感觉到，胸腔里，那份长久紧绷的焦虑，第一次，像是被谁，轻轻松开了一道扣子，透进了一丝，久违的、微弱的松弛感，那种感觉，陌生得，几乎让她有些不知所措。练习结束时，天色已经完全黑了下来，可沈亦却清楚地看见，老陈掌心，浮现出一点极其微弱、却真实存在的暖光，像是萤火虫收拢起的翅膀，安静地，闪烁着。
+
+六 · 心跳照明的秘密
+
+沈亦盯着那点微光，久久说不出话来，怀疑自己是不是因为连日的疲惫和饥饿，产生了幻觉，甚至下意识地，伸手，想要触碰那点光，却在指尖即将碰到的瞬间，又生出一丝莫名的敬畏，缩回了手，仿佛怕自己，一碰，就会把它，弄碎了。老陈却只是平静地，任由那点光，在掌心，缓缓地，明明灭灭，仿佛这不过是，再寻常不过的一件小事。
+
+老陈解释道，人的心跳，本就带着一种极其微弱的生物电流与能量场，绝大多数人，终其一生，都从未真正静下来，去感受、去唤醒它，那份能量，就这样，被闲置了一辈子，从未有机会，真正显现。"格栅时代，人从睁眼到闭眼，脑子里塞满了各种信息和任务，心跳这点微弱的电流，早就被那些更响亮、更急切的东西，彻底盖住了，"老陈说，"不是它不存在，是没人，肯给它，一点安静的空间，让它，显现出来。"
+
+"这不是魔法，也不是什么特异功能，"老陈继续说道，语气里，没有丝毫夸大其词的神秘感，反而带着一种，多年潜心研究后才有的、朴素的笃定，"这只是每个人与生俱来、却被格栅时代的喧嚣，彻底掩盖掉的一种可能性。格栅没了，喧嚣也跟着没了，剩下的，只有安静，和一颗，终于有机会，被好好听见的心。"沈亦看着老陈掌心那点微光，第一次，对这个失去了一切依靠的世界，生出了一丝，久违的、真实的希望，那种感觉，比她这几个月里，抢到任何一批物资，都更让她安心——那是一种，不必再时刻提防、时刻算计的，久违的平静。
+
+七 · 教给其他幸存者
+
+沈亦在老陈的木屋里，住了将近一个月，把这套呼吸与静心的方法，一点一滴，认真学了下来。学成之后，她决定回到自己所在的临时营地，把老陈教给她的东西，教给身边其他同样惶恐不安的幸存者。起初，几乎没有人愿意相信，在这个连净水都成问题的世界里，静坐呼吸这种事，能有什么实际用处——大家更愿意把有限的力气，花在争抢物资、修补残破的旧设备上，甚至有人当面讥讽她，说她是不是饿糊涂了，才会相信这种毫无根据的说法。
+
+沈亦没有强迫任何人，只是每天傍晚，在临时营地的空地上，安静地练习，日复一日，风雨无阻，哪怕最初，只有她自己一个人的身影，也从未间断过。日子一天天过去，陆续有几个同样疲惫、同样绝望的幸存者，开始好奇地凑过来，跟着她，一起尝试。最先感受到变化的，是一位曾经彻夜失眠、脾气暴躁到几乎与所有人都发生过争执的中年男人——练习了半个月后，他第一次，睡了一整夜安稳觉，第二天清晨，眼眶泛红地，向沈亦道谢，说这是他这几个月来，第一次，觉得自己，还有力气，继续活下去。
+
+七点五 · 最顽固的怀疑者
+
+营地里最顽固的怀疑者，是一位曾经的大学物理教授，姓周，戴着一副早已磨损不堪的眼镜。他始终认为，沈亦这套呼吸练习，不过是一种自我安慰式的心理暗示，压根经不起科学推敲，甚至公开在营地里，讥讽沈亦是在\\u201c用玄学骗人\\u201d，说她这是在，利用人们绝望时的脆弱心理，营造一种虚假的希望。沈亦从未与他争辩，只是每次练习，都欢迎他站在一旁旁观，甚至主动邀请他，一起加入。
+
+一次意外的冲突，让周教授彻底改变了看法——一场关于物资分配的争执，几乎演变成了肢体冲突，双方情绪都已濒临失控，其中一人，甚至已经抄起了手边的木棍。沈亦没有出言劝架，只是当着所有人的面，坐下来，安静地，做了几组呼吸。奇怪的是，原本剑拔弩张的双方，看着她的动作，情绪竟渐渐地，跟着平复了下来，握着木棍的手，也渐渐地，松了下来，最终，那场几乎一触即发的冲突，不了了之地，化解了。
+
+周教授站在人群外，把这一切，看在眼里，久久没有说话，眼镜片后的目光，闪烁不定，手里，还紧紧攥着那根，方才随手捡起、准备劝架用的木棍。事后，他破天荒地，主动找到沈亦，请她重新讲一遍，呼吸练习的原理。他后来告诉沈亦："我研究了大半辈子物理，却从没认真想过，人的情绪和呼吸之间，原来真的存在着这么直接的关联。我不是不信科学，我只是，从没把这套东西，也当成一种，值得认真研究的科学。"从那以后，周教授成了营地里，除沈亦之外，最认真钻研呼吸练习的人，还尝试着，用他仅剩的科学知识，去理解、去记录，这套方法背后的种种细节，甚至用炭笔，在几张残破的旧纸上，画起了简陋的示意图，一笔一划，都力求精准，仿佛是在，对待一份，重要的学术论文。
+
+八 · 群体的微光
+
+几个月后，沈亦所在的营地，已经聚集了二十多位，愿意每天坚持练习呼吸与静心的幸存者，其中，既有当初嗤之以鼻的年轻人，也有半信半疑的中年人，甚至还有几位，拄着拐杖也要坚持前来的老者。某个格外安静、连风声都显得温柔的夜晚，众人围坐在一起，同时闭眼练习，沈亦忽然睁开眼睛，看见几乎每一个人的掌心，都浮现出了同样微弱、却真实的光——那些光彼此靠近，甚至开始，隐隐约约地，呼应着彼此的节律，明灭同频，像是一整片，缓缓呼吸着的、温暖的星群，在寂静的夜色里，缓缓流转。
+
+她也第一次，感觉到那份长久紧绷的焦虑，被谁，轻轻松开了一道扣子。那一刻，沈亦终于彻底理解了老陈说过的那番话——格栅从未真正给予过人们光明，它只是长期，替人们，遮蔽了这份，本就存在于每个人心跳里的、微弱却真实的光。当格栅熄灭，这份光，反而第一次，有机会，被重新点亮。她望着眼前这一片，因二十多颗心跳而彼此呼应的微光，忽然想起格栅熄灭前，城市夜晚，那种冰冷、规整、由电力驱动的万家灯火——两者相比，眼前这片微光，虽然远远称不上明亮，却带着一种，她从未在旧世界里，真正感受过的、活生生的温度，仿佛每一点光，背后，都连着一颗，愿意与他人真诚相待的心。
+
+八点五 · 小满的高烧
+
+营地里最让所有人揪心的一次考验，发生在一个叫小满的六岁女孩身上——一场突如其来的高烧，在没有任何退烧药物、没有医院可去的情况下，几乎要了她的命，滚烫的额头，烧得她整个人都昏昏沉沉，嘴唇干裂发白。孩子的母亲，一位曾经的护士，格栅熄灭前，在城里的儿科病房工作了将近十年，此刻，却急得几乎失去理智，翻遍了营地所有能找到的草药，一遍遍用湿布擦拭孩子的身体，却依然压不住那滚烫的体温，整个人，几近崩溃地，跪坐在床边，喃喃地，一遍遍重复着"不要，不要"。
+
+沈亦守在小满床边，一时也没有更好的办法，只能握着孩子滚烫的小手，跟着自己练习了大半年的呼吸节律，缓慢地、稳定地呼吸着。她没有指望这样做，能直接退烧，只是希望，自己平稳的心跳，或许能给孩子，一点点，安定的陪伴——那一夜，她几乎寸步未离，反反复复地，呼吸着，直到自己的嗓子，都因为长时间压低声音安抚孩子，而变得沙哑。奇怪的是，小满原本急促、紊乱的呼吸，渐渐地，开始跟着沈亦的节奏，慢慢同步了起来，哭闹也渐渐平息，沉沉地睡了过去，连眉头，都渐渐地，舒展开来。
+
+那一夜，小满的体温，虽然没有立刻退下去，呼吸和心跳，却明显地，平稳了许多，母亲也终于能稍微喘口气，靠在墙边，沉沉睡去。三天后，小满的高烧，终于退了下去，第一次睁开眼睛，含糊地喊了一声"沈阿姨"，声音虽然虚弱，却清晰可闻，惹得一旁守候的母亲，当场喜极而泣，紧紧抱住孩子，反复念叨着"谢天谢地"。沈亦不敢说，这全然是呼吸练习的功劳，可她清楚地知道，那一夜，稳定下来的，绝不仅仅是孩子的身体，还有，整个笼罩在营地上空的、几乎要溃散的恐慌。
+
+九 · 旧秩序的呼唤
+
+并非所有人，都愿意接受这种新的生活方式。一批曾经的政府残余人员，试图重建旧有的、依赖集中供电与严密管控的秩序，四处游说幸存者，加入他们的\\u201c重建计划\\u201d，承诺只要肯服从统一调配，格栅终将被修复，一切都会，恢复成从前的样子——那份承诺，对许多疲惫不堪、渴望回到旧日安稳生活的幸存者而言，有着难以抗拒的吸引力。
+
+一位自称\\u201c重建委员会\\u201d代表的中年男子，曾亲自来到沈亦的营地游说，身后还跟着两名扛着旧式步枪、神情警惕的护卫，一副例行公事的做派。他穿着勉强还算整洁的制服，衣领上，还别着一枚早已褪色的旧徽章，语气里带着一种，格栅时代残留下来的、居高临下的笃定："你们这套靠呼吸发光的把戏，能当饭吃吗？能治病吗？能让工厂重新运转吗？跟我们走，用不了多久，电力就会恢复，你们现在这些原始的土办法，到时候，都会被淘汰。"他一边说，一边环顾着营地里，那些正在田间劳作、看起来朴素却精神饱满的居民，眼神里，带着一丝，他自己都没察觉的、不加掩饰的轻蔑，仿佛在打量一群，不知天高地厚的乡野愚民。
+
+沈亦静静听完，只是问了他一句："那你们的重建计划，需要多久？"男子支吾了一下，答不上确切的时间，只含糊地说，需要\\u201c全体人民团结一致，共同努力\\u201d。沈亦又问："在格栅真正修复之前，那些愿意跟你们走的人，要靠什么，活下去？"男子这次，干脆沉默了，脸色，也变得有些难看。沈亦没有再多说什么，只是转身，示意愿意留下的人，可以继续留下，愿意跟他走的人，她也绝不阻拦。
+
+九点五 · 分裂的营地
+
+沈亦所在的营地，也因此分裂——一部分人，尤其是年长的幸存者，选择相信这份关于\\u201c恢复原状\\u201d的承诺，收拾了仅有的行李，跟随重建者离开，临走前，还劝沈亦一同前往，说她这套呼吸练习，终究只是权宜之计，成不了大事。留下的，则是沈亦、老陈托付给她的几册手写笔记，和那批已经真切体会过心跳微光的人们。
+
+离别的那个清晨，天色阴沉，飘着零星的细雨，沈亦站在营地边缘，看着那支收拾行囊、准备离开的队伍，缓缓远去，队伍里，大约有十几个人，占了当时营地人数的近三分之一，每个人的背影，都透着一种，说不清是坚定还是茫然的沉重。队伍里，有一位她曾经花了将近一个月时间、耐心陪伴着练习呼吸的老妇人，临走前，紧紧握住她的手，苍老的手指，微微颤抖，指节上，还留着常年劳作磨出的厚茧，眼含泪水地说："姑娘，不是我不信你，是我这把年纪，实在等不起了，我只想在有生之年，再看一眼，从前那样灯火通明的样子，哪怕只有一晚也好。"沈亦理解她，也没有阻拦，只是轻轻抱了抱她，替她，把仅剩的一点干粮，塞进了行囊。她心里清楚，两种选择，本质上，是两种截然不同的、关于\\u201c依靠\\u201d的信念，谁都无法，替对方，提前做出判断。
+
+十 · 重建者的失败
+
+半年后，沈亦意外得知，那批追随重建者离开的幸存者，境况并不乐观——重建计划迟迟无法真正让格栅重新运转，反而在等待的过程中，滋生出了新的、更加森严的等级与控制，普通幸存者，非但没能等到承诺中的光明，反而被迫承担起，越来越繁重、却看不到尽头的劳役，每天从天不亮，一直劳作到深夜，稍有懈怠，便会受到严厉的惩戒，甚至有传言说，有人因为体力不支晕倒，还被扣除了本就少得可怜的口粮。不少人，开始怀念起，沈亦营地里，那种朴素却真实的、彼此照亮的生活，私下里，不止一次，有人偷偷议论，说当初，或许，选错了方向。
+
+少数几位重建营地的逃亡者，历经周折，辗转找到了沈亦，衣衫褴褛，眼含泪水地请求，能否重新加入。为首的一位年轻男子，脸颊上，还有一道尚未愈合的伤口，说自己是趁着夜色，翻越了两道岗哨，才侥幸逃出来的，身上还带着，未曾愈合的鞭痕。沈亦没有半分犹豫，敞开怀抱接纳了他们，还亲自为他们，找来干净的水和干粮，安排了住处，甚至连夜，为伤势较重的几位，煮了草药汤——她比任何人都清楚，这不是一场谁对谁错的较量，只是，有些人，需要更长的时间，才能放下对旧秩序的执念，重新学会，相信自己本就拥有的那份光。
+
+十点五 · 一位旅人的路过
+
+就在这段最艰难的日子里，营地里，曾出现过一位行踪成谜的旅人，众人只知道，他自称长晏，风尘仆仆，衣着朴素却不显狼狈，气度沉静，说自己走过许多地方，见识过许多，在崩塌之后，重新寻找立足之地的人们。他从不多谈自己的来历，只是安静地，观察着营地里的一切，偶尔，会在人们练习呼吸时，远远地坐在一旁，跟着一起呼吸，也常常，被孩子们围着，好奇地问东问西，他也总是，耐心地，一一回答。
+
+他在\\u201c回光坡\\u201d只逗留了三天，临走前，对正为营地分裂而心力交瘁的沈亦，说了一句话："你不必去说服每一个人都相信你手中的光，你只需要，让自己手中的光，一直亮着，愿意靠近的人，自然会靠近。这世上，很多道理，从来不是靠争辩赢来的，是靠，日复一日，活成的样子，让人心服口服的。"
+
+沈亦起初不明白这句话的分量，直到后来，她真正看着那些从重建营地逃回来的人，看着他们眼中，重新燃起的、对\\u201c回光坡\\u201d的向往，才终于懂得，那位旅人，早已看透了，这场关于\\u201c依靠\\u201d的选择，从来急不得，也强求不来。此后，她再没见过长晏，只是偶尔听闻，别处的幸存者营地，也曾有人，提起过一位类似的旅人，在他们最艰难的时候，恰好，留下过一句，刚好需要的话。
+
+十一 · 新秩序的雏形
+
+一年过去，沈亦所在的营地，逐渐发展成了一处，以\\u201c呼吸与心跳的连接\\u201d为核心的新聚落，人们给它取了个朴素的名字，叫\\u201c回光坡\\u201d。没有集中供电的格栅，人们靠着彼此心跳凝聚出的微光，在夜晚的公共空地上，照亮彼此的脸庞；靠着重新学会的、原始却可靠的协作方式——分工种植、共同守夜、轮流照看孩童与老人，缓慢却坚定地，重建起了一种，全新的生活秩序，不再依赖任何单一的、脆弱的系统，而是依赖，每一个个体，与彼此、与这片\\u201c场\\u201d之间，真实而稳固的连接。
+
+聚落里渐渐形成了一套朴素的日常节律：清晨,人们随着日出，一起练习呼吸，唤醒一天的专注，露水尚未散去，空气里满是青草的气息；正午劳作，分工明确，谁擅长种植、谁擅长照顾病患、谁擅长搭建住所，各自发挥所长，甚至连孩子们，也会被分配一些力所能及的小任务，比如喂养家禽、传递消息；傍晚时分，则是雷打不动的静心时刻，无论那天发生了多少纷争与疲惫，都要在这段时间里，重新回到平稳的呼吸上来。沈亦发现，正是这份朴素却稳定的节律，让\\u201c回光坡\\u201d比其他几处依然混乱不堪的幸存者营地，都更加安定、也更少发生争斗，甚至开始，陆陆续续，有其他营地的幸存者，慕名而来，希望能够加入。
+
+沈亦有时会想起格栅熄灭前的世界，想起那套曾经无比先进、却也无比脆弱的系统，想起自己曾经引以为傲的、维护这套系统的十二年职业生涯。她渐渐明白，那场灾难，与其说是一场毁灭，不如说是一次，被迫的、却也珍贵的提醒——真正能够依靠的，从来不是任何外部搭建的系统，而是，深植在每一个生命体内、只需要被重新唤醒的，那份微弱却坚韧的光。
+
+十二 · 老陈的离去
+
+又是一年冬天，老陈在一个格外安静的雪夜，安详地离开了人世，走的时候，脸上带着一种，沈亦从未在任何人脸上见过的、彻底的安宁，仿佛只是，睡熟了一般。临终前几天，他其实早已察觉到自己大限将至，却依然，每天坚持，拖着日渐虚弱的身体，让人搀扶着，到营地的空地上，陪着大家一起练习呼吸，只是坐的时间，一天比一天短。沈亦几次想劝他好好休息，都被他摆手拒绝："我这辈子，能陪着大家，好好呼吸到最后一刻，是我的福气，别拦着我，我等这一天，等了很多年了。"
+
+临终那晚，他把沈亦叫到床边，枯瘦的手，轻轻覆在她的手背上，只说了一句话："你已经不需要我了，去教给更多人吧——他们的心跳里，都藏着，一盏，只等被点亮的灯。"沈亦握着老陈渐渐冷却的手，第一次，没有像格栅熄灭之初那样，感到彻骨的恐慌与绝望，只有一种，深沉的、平静的感激，仿佛老陈交给她的，不只是一套呼吸的方法，更是一份，足以照亮往后余生的、沉甸甸的托付。窗外的雪，静静地下着，屋里，围坐着十几位闻讯赶来的聚落居民，谁都没有说话，只是跟着老陈最后的呼吸，一起，缓缓地，呼吸着，仿佛想用这种方式，陪他，走完最后一程。
+
+她把老陈安葬在营地后山的一片空地上，那里，正是他们第一次一起练习呼吸的地方，视野开阔，能望见远处连绵、终年积雪的群山，也能望见，聚落里，那一片，日渐壮大的居所。下葬那天，天空飘着细雪，沈亦亲手，在坟前，摆放了一小截，老陈生前最喜欢的、干枯的野菊花，聚落里几乎所有人，都自发地，赶来相送，没有人组织，却排出了一条，长长的、安静的队伍。此后每年冬天，聚落里的人们，都会自发地，聚集在那片空地上，静静地，练习一整夜的呼吸与静心——那些从掌心浮现的微光，一年比一年，更多、更亮，仿佛老陈，从未真正离开过，只是化作了，每个人掌心里，那份，越来越清晰的光。
+
+十三 · 多年以后
+
+多年以后，当年轻一代的孩子，好奇地问起沈亦，格栅熄灭前的世界，究竟是什么样子时，沈亦总是放下手里的活计，笑着坐下来，慢慢说：那是一个，几乎所有人，都以为自己需要依靠外部的、庞大的系统，才能生存下去的时代，人们习惯了随手一按，灯就会亮，习惯了万事都有现成的答案，却没有人告诉过他们，真正能够依靠的光，其实，从出生那一刻起，就已经，安静地，藏在每个人自己的心跳里了。
+
+她还会给孩子们，讲起周教授的故事——那位曾经最顽固、也最较真的怀疑者，后来穷尽自己后半生的心力，把呼吸练习背后的种种细节，一点一点，记录整理成册，成了聚落里，除老陈手稿之外，最重要的一份传承文献，那些用炭笔画就的示意图，虽然简陋，却被后来的聚落居民，一代代，郑重地传抄下来。周教授去世前，曾对沈亦感慨："我这辈子研究物理，最大的遗憾，是没能早一点明白，最精密的系统，从来不在实验室的仪器里，是在每一个愿意静下来的人，自己的呼吸里。要是能重来一次，我年轻时的那些论文，大概，都该重新写过。"他去世那天，也是一个格外晴朗的清晨，阳光透过窗棂，洒在他那张，早已被反复摩挲得发亮的书桌上，沈亦按照他生前的嘱托，把他那几本记满了炭笔示意图的手稿，郑重地，收进了聚落的公共文库，供后来者，随时翻阅。
+
+她指着聚落夜晚里，那一片片，因为无数人平稳的心跳而彼此呼应、明灭同频的微光，轻声说道："格栅熄灭的那一夜，夺走的，从来不是光明本身，是那层，让我们，看不见自己本就拥有的光的，厚厚的遮蔽。"孩子们似懂非懂地点点头，却也会在那晚，破天荒地，愿意安安静静地，坐上一小会儿，试着，去感受自己的心跳。
+
+十三点五 · 远方的消息
+
+偶尔，会有从远方辗转而来的旅人，带来消息，说在别的幸存者聚落里，也渐渐兴起了类似的、以呼吸与心跳为核心的生活方式，有些地方，甚至发展出了，与\\u201c回光坡\\u201d略有不同、却同样有效的练习变体——有的聚落，更侧重集体协奏般的呼吸仪式，有的，则融入了当地流传已久的古老歌谣。沈亦从不觉得意外——她始终相信，老陈教给她的这份领悟，从来不是她一个人的发现，只是，恰好由她，在这片土地上，重新点亮了而已。类似的光，或许，本就一直，散落在世界各个角落，只等着，各自的\\u201c沈亦\\u201d，把它，重新唤醒。
+
+她还听说，曾经与\\u201c回光坡\\u201d分裂、追随重建者离开的那批人，后来也逐渐放弃了对旧格栅的执念，在另一处山谷里，重新建立起了自己的聚落，同样，以呼吸与心跳为生活的核心——只是，他们给自己的聚落，取了个不同的名字。沈亦听闻此事，只是笑了笑，没有多说什么，只觉得，这世上，终究，殊途同归的人，比想象中，要多得多，光，从来不是谁的专利，是每一个愿意静下来的人，都能重新找到的东西。
+
+十四 · 尾声
+
+如今，那片曾经被称为\\u201c无光年代\\u201d的漫长岁月，在幸存者们的记忆里，渐渐有了一个新的名字——\\u201c重新看见的年代\\u201d，这个名字，最初，还是小满长大后，某次闲谈间，随口提议的，没想到，竟被大家，欣然接受，一直沿用了下来。人们不再哀悼格栅的熄灭，反而，隐隐地，心怀一种，说不清道不明的感激：如果不是那一夜彻底的黑暗，或许，没有人会有机会，如此真切地，重新看见，自己心跳深处，那份，本就存在的光。那些曾经，在格栅时代里，被无数屏幕和信息填满、几乎从未真正安静下来的日子，如今回想起来，反而，像是一场，隔着一层玻璃，模糊而遥远的旧梦。
+
+沈亦如今，也成了新一代口中的\\u201c老陈\\u201d，头发已经花白，每天傍晚，依然安静地，教着新来的孩子们，如何呼吸，如何静心，如何在自己的掌心，重新，点亮那盏，从未真正熄灭过的灯。她常说，这盏灯，不需要任何格栅，也不需要任何人施舍，它只需要，一个愿意，安静下来，好好听一听自己心跳的人。
+
+某个同样安静的雪夜，沈亦独自坐在营地后山，老陈坟前的那片空地上，望着漫天繁星，也望着聚落里，那一片，因无数心跳而彼此呼应的微光，忽然明白，自己这一生，或许，早已活成了，当年那个，坐在木屋门槛前，让她第一次心生敬畏的老人的样子——她甚至发现，自己不知从何时起，也养成了老陈生前那种，喝热水前，总要先静静捧一会儿、感受掌心温度的习惯。她笑了笑，轻声说了一句，像是说给老陈听，又像是说给自己听，声音很轻，却很坚定："这盏灯，我接住了，也会好好地，继续传下去。你放心，我不会让它，再一次，彻底熄灭。"
+
+（灵犀原创 · 多维叙事 · 长篇 · 无光年代）`,
+    en: `I · The Night the Grid Went Dark
+
+Shen Yi remembered that night — nearly every system on Earth dependent on the same energy grid went dark, without warning, in the same instant. Cities lost their lights, traffic lost its signals, hospitals lost the steady beeping of their monitors, and every communication device people carried fell, at that same moment, into total silence. In the streets, countless powerless vehicles sat dead where they'd stalled, horns and shouts mixing with children's crying, echoing on and on through the pitch-black city. Shen Yi had been working alone that night, in the underground server room of the maintenance center, watching an entire wall of monitors go dark in unison — that complete, unwarned silence chilled her more than any alarm ever had.
+
+Afterward, no one could offer an explanation everyone found convincing — some said the grid itself had simply collapsed under decades of accumulated strain, reaching some critical threshold; others said some never-before-recorded energy fluctuation had fallen from the sky, instantly dismantling every precision electronic system; some even privately circulated stranger theories, that this was some natural law humanity had never understood, warning a civilization too dependent on a single system of the price it would eventually pay; a scattered few said they'd had some unexplainable dream just before the grid went dark. Whatever the cause, the world never returned to what it had been before that night.
+
+Shen Yi had been a grid maintenance engineer for twelve years and three months, rising from a junior inspector to core technical staff capable of handling the most complex failures alone, her performance reviews always among the best, colleagues certain she'd hold this stable, respectable job until retirement. She understood, better than most, just how complex and fragile the system supporting billions of daily lives truly was — the tangled energy lines buried deep underground, the dispatch centers requiring millisecond-precise coordination, any single failure capable of triggering a catastrophic chain reaction. She still remembered her supervisor half-joking, during that year's training: "We don't maintain a power grid — we maintain the one thread civilization still trusts. Cut it, and everything unravels." Looking back now, that line had become an unbearably heavy omen, one she'd turn over, again and again, through countless sleepless nights to come. She'd also understood, sooner than most, that surviving by repairing this system was no longer possible — the only thing left for survivors was to relearn how to live in a world without the grid.
+
+II · The Days Panic Spread
+
+The first few months after the grid went dark were the most chaotic, most drawn-out stretch of Shen Yi's life — more suffocating than any crisis she'd face afterward. No electricity, no water purification, none of the infrastructure once taken for granted; people, like houses with their foundations ripped away, fell into raw panic — hoarding what supplies remained, suspecting every stranger nearby, the once-polite rules of society collapsing almost overnight. Supermarket shelves emptied on the very first day; water containers became more precious than gold; neighbors who'd once passed without a second glance now eyed each other with suspicion, taking turns keeping watch through the night, terrified the other might have designs on their last remaining stores.
+
+The apartment building Shen Yi lived in erupted into a violent conflict on the tenth day after the grid died — the building's one remaining hand-crank generator became the focal point of a struggle among several households, nearly coming to blows, someone even grabbing the shears normally used for trimming the garden, until a few older residents intervened, talking everyone down over nearly an hour, barely averting bloodshed. Standing in the hallway, watching neighbors who'd once exchanged polite pleasantries now glaring at each other, red-eyed, hurling accusations, Shen Yi felt an indescribable bleakness rise in her — she began to understand that toppling a civilization never required anything complicated; simply pull away the system it ran on, and whatever remained of raw human nature would lay itself bare, without cover.
+
+Shen Yi watched, with her own eyes, a once-respected neighbor come to blows with another equally desperate survivor over a single small tin of stored food, both bloodied, wrestling in a filthy alley, neither willing to let go first; she also watched a young man, once lost in virtual social life, barely able to speak to another person in the flesh, clumsily, haltingly, try for the first time to ask a stranger for help, his voice carrying a nakedness he'd never shown before. She began to doubt whether humanity could truly survive without that precision system beneath it — a thought that gnawed, over and over, at her already-thin reserves of confidence through countless sleepless nights.
+
+III · Meeting Old Chen
+
+Shen Yi met Old Chen while out searching for supplies. It was the third month after the grid died; she carried a nearly empty water flask, stumbling along an abandoned mountain trail, its stone steps long since overtaken by weeds, barely recognizable. She'd walked all day, exhausted and parched, on the verge of giving up and turning back, when she suddenly saw a wooden cabin, almost entirely swallowed by vines, and before it, an old man in plain homespun clothes, sitting quietly on the threshold, eyes closed, as though the chaos of the outside world had nothing to do with him at all.
+
+Old Chen had spent years living as a recluse in these mountains, studying traditional breathing and meditation methods; before the grid died, almost no one took his research seriously, dismissing it as an escapist's indulgence — some had mocked him openly, saying he was destined to grow old and alone out here in the wilderness; even his own children had once urged him to move to the city and enjoy his remaining years in comfort, which he'd politely declined, only saying that city life moved too fast for him to keep up. But after the grid died, Old Chen became the only person Shen Yi encountered who showed no trace of panic at all — his cabin was stocked with sufficient dried food and clean water, his yard planted with a thriving vegetable patch, and behind the cabin, a small orchard he'd cultivated himself.
+
+"Aren't you afraid?" Shen Yi couldn't help but ask, her voice still carrying the exhaustion and wariness of days on the road, one hand unconsciously resting on the small knife at her waist. Old Chen only smiled, rising unhurriedly to pour them both cups of hot water, and asked her in return: "Have you considered that what you've relied on was never the system itself — but what that system shielded you from ever needing: an ability you've always had, but never once used?" Shen Yi, cradling that rare cup of hot water, found herself speechless, unable to muster a rebuttal.
+
+IV · The Talk of the Field
+
+Old Chen invited Shen Yi to stay in his cabin for a few days. Sitting around the fire one night, he told her something she'd never once taken seriously: this world had always held a "Field" — one operating independently of any human-built system, sustained by the breath, heartbeat, and attention of every living being, needing no electricity, no precision instruments, having quietly carried humanity's ancestors through countless hardships far worse than this one — famines, plagues, wars, and displacement — for thousands of years.
+
+"The more developed the grid becomes, the more people depend on it, the less they need to — or remember how to — reconnect with this Field," Old Chen said, gazing into the fire. "People used to live by the rhythm of sunrise and sunset, relying on genuine companionship and cooperation with one another to survive. Once the grid appeared, everything got sliced into precise data and instructions, and that most original connection — between person and person, between person and this Field — got replaced, bit by bit." He paused, then added, "I'm not saying the grid itself was wrong. It really did give many people a more convenient, more stable life. It's just that too many mistook that convenience for the only thing worth relying on, and forgot they still carried, within themselves, another ability — one never truly lost."
+
+Sitting by the fire, Shen Yi remained skeptical, yet had to admit that this nearly destitute old man before her lived with more ease, more order, than anyone she knew — each of his days regular and full, without a trace of the perpetual dread she'd seen, over and over, on the faces of other survivors since the grid died. She couldn't help but ask, "So how does one feel this Field, then?" Old Chen only smiled and said, "Don't rush. You're already feeling it — you just haven't recognized it yet. Like a fish, never realizing it's always been swimming in water."
+
+V · The First Attempt
+
+Old Chen led Shen Yi through a practice she'd never attempted — not meant to produce any specific, measurable result, simply closing her eyes, sitting cross-legged on the sun-warmed patch of ground before the cabin, placing quiet attention on her own breath and heartbeat, for nearly an hour. At first, Shen Yi's mind churned with the panic and calculation of the post-grid world — where to find the next batch of supplies, how to guard against ill-intentioned strangers, the unresolved conflict back at her apartment building — utterly unable to settle, even growing restless enough to want to open her eyes and abandon what seemed to her a pointless exercise. She couldn't help scolding herself inwardly: at a time like this, wasting precious hours sitting here putting on airs.
+
+But gradually, following Old Chen's slow, rhythmic breathing, Shen Yi's own breath began to slow in turn, and for the first time, she felt clearly that her heartbeat was growing slow and strong — a bodily rhythm she'd never once truly noticed before, as if it had always been there, simply buried beneath the constant noise of daily life. She even began to vaguely sense the long-tensed anxiety in her chest loosening, as if someone had gently undone a clasp, letting in a faint, long-unfelt looseness — a sensation so unfamiliar it nearly unsettled her. By the time the practice ended, night had fully fallen, yet Shen Yi could clearly see, in Old Chen's palm, a faint but genuine glow of warm light, flickering quietly like a firefly folding its wings.
+
+VI · The Secret of a Heartbeat's Light
+
+Shen Yi stared at that faint glow, speechless for a long while, wondering if days of exhaustion and hunger had brought on a hallucination, even unconsciously reaching out to touch it, only to draw her hand back at the last instant, seized by an inexplicable reverence, as if afraid that touching it might shatter it. Old Chen simply let the light flicker calmly in his palm, as though this were the most ordinary thing in the world.
+
+Old Chen explained that the human heartbeat carried its own faint bioelectric current and energy field — one that almost everyone, their whole life through, never once grew quiet enough to feel or awaken, that energy left dormant an entire lifetime, never given the chance to truly show itself. "In the grid's age, from the moment people opened their eyes to the moment they closed them, their minds were crammed with information and tasks; that faint current of the heartbeat was long since drowned out by louder, more urgent things," Old Chen said. "It's not that it doesn't exist — no one ever gave it a quiet space to show itself."
+
+"This isn't magic, and it isn't some special power," Old Chen continued, his tone carrying none of the exaggerated mysticism one might expect, but instead a plain certainty born of years of quiet study. "It's simply a possibility everyone is born with, buried entirely beneath the noise of the grid's age. Now the grid is gone, and the noise has gone with it — what's left is quiet, and a heart, finally given the chance to be truly heard." Watching that faint light in Old Chen's palm, Shen Yi felt, for the first time, a long-absent, genuine hope rise in this world stripped of everything it once relied on — a feeling that put her more at ease than securing any batch of supplies these past months ever had, a peace she hadn't felt in a long time, free from the constant need to guard and calculate.
+
+VII · Teaching the Other Survivors
+
+Shen Yi stayed in Old Chen's cabin for nearly a month, learning this method of breath and stillness, carefully, piece by piece. Once she'd learned it, she decided to return to her own makeshift camp and teach what Old Chen had given her to the other survivors around her, equally frightened and lost. At first, almost no one believed that in a world where even clean water was scarce, sitting still and breathing could serve any real purpose — people preferred to spend their limited energy scavenging for supplies or repairing broken equipment, some even openly mocking her, asking if hunger had addled her mind enough to believe such baseless claims.
+
+Shen Yi forced no one. She simply practiced quietly, every evening, on the open ground of the camp, day after day, rain or shine, continuing even when, at first, she was the only one there. As the days passed, a few equally exhausted, equally despairing survivors began drifting over out of curiosity, trying it alongside her. The first to notice a change was a middle-aged man who'd once suffered chronic insomnia and near-constant conflict with everyone around him — after half a month of practice, he slept a full, restful night for the first time, and the next morning, eyes rimmed red, thanked Shen Yi, saying this was the first time in months he'd felt he still had the strength to go on living.
+
+VII-and-a-half · The Most Stubborn Skeptic
+
+The camp's most stubborn skeptic was a former university physics professor named Zhou, his glasses long since worn thin. He remained convinced that Shen Yi's breathing practice was nothing more than a form of self-soothing psychological suggestion, unable to withstand any real scientific scrutiny, openly mocking her in the camp as "peddling mysticism," accusing her of exploiting people's desperate, vulnerable psychology to manufacture false hope. Shen Yi never argued with him, only welcomed him to stand and observe each time she practiced, even inviting him to join.
+
+An unexpected conflict changed Professor Zhou's mind entirely — a dispute over supply allocation nearly turned physical, both sides' emotions on the brink of losing control, one man even grabbing a stick within reach. Shen Yi didn't intervene with words; she simply sat down, in full view of everyone, and calmly took a few rounds of breath. Strangely, the two sides, once at each other's throats, watching her, felt their own emotions gradually settle, the hand gripping the stick slowly loosening, until the near-violent confrontation dissolved on its own.
+
+Professor Zhou stood at the edge of the crowd, watching it all unfold in silence for a long while, his gaze flickering behind his lenses, still gripping the stick he'd grabbed moments earlier to break up the fight. Afterward, he unprecedentedly sought Shen Yi out himself, asking her to explain the principle behind the breathing practice again. He later told her: "I've studied physics my whole life, and never once seriously considered that there could be such a direct link between emotion and breath. It's not that I don't believe in science — I simply never treated this as something worth studying scientifically." From then on, Professor Zhou became the camp's most devoted student of the practice besides Shen Yi herself, using what scientific knowledge he had left to understand and document its every detail, even sketching crude diagrams in charcoal on scraps of torn paper, each stroke as precise as if he were preparing an important academic paper.
+
+VIII · The Group's Faint Light
+
+A few months later, Shen Yi's camp had gathered more than twenty survivors willing to practice breath and stillness daily — among them, young people who'd once scoffed, middle-aged skeptics who'd only half-believed, even a few elders who leaned on canes to attend without fail. On one unusually quiet night, even the wind gentle, the group sat together, eyes closed in practice, when Shen Yi suddenly opened her eyes to see nearly every person's palm glowing with the same faint, genuine light — those lights drawing near one another, even beginning to faintly echo each other's rhythm, flickering in unison, like an entire field of warm stars, breathing slowly together, drifting in the quiet night.
+
+She, too, felt for the first time that long-tensed anxiety loosen, as if someone had gently undone a clasp. In that moment, Shen Yi finally, fully understood what Old Chen had told her — the grid had never truly given people light; it had simply, for a long time, concealed this faint, genuine light that had always existed within every heartbeat. When the grid died, this light finally had the chance to be relit. Looking at this field of faint light, born of more than twenty synchronized heartbeats, she suddenly recalled the cold, orderly, electricity-driven glow of city nights before the grid died — by comparison, this faint light, though far from bright, carried a living warmth she'd never once truly felt in the old world, as if behind every point of light lay a heart willing to meet another with sincerity.
+
+VIII-and-a-half · Xiaoman's Fever
+
+The camp's most heart-wrenching trial came in the form of a six-year-old girl named Xiaoman — a sudden fever, with no fever-reducing medicine and no hospital to turn to, nearly took her life, her forehead scorching, her whole body limp, her lips cracked and pale. Her mother, once a nurse who'd worked in a city pediatric ward for nearly ten years, was now nearly out of her mind with fear, searching every corner of the camp for herbs, wiping her daughter's body with wet cloths again and again, unable to bring down the burning fever, kneeling by the bed in near-collapse, murmuring "no, no" over and over.
+
+Shen Yi kept watch at Xiaoman's bedside, with no better solution at hand, holding the child's burning hand, breathing in the rhythm she'd practiced for nearly a year, slow and steady. She didn't expect this to bring the fever down directly — she only hoped her own steady heartbeat might offer the child some small, settling companionship. That night, she barely left the child's side, breathing over and over, until her own voice grew hoarse from hours of murmuring softly to comfort her. Strangely, Xiaoman's ragged, chaotic breathing gradually began to synchronize with Shen Yi's rhythm, her crying easing, until she fell into a deep sleep, her furrowed brow slowly smoothing.
+
+That night, though Xiaoman's temperature didn't drop right away, her breath and heartbeat grew noticeably steadier, and her mother finally caught her breath, leaning against the wall, falling into an exhausted sleep. Three days later, Xiaoman's fever finally broke; the first time she opened her eyes, she murmured, faintly, "Auntie Shen" — weak, but clear — sending her mother into tears of joy, clutching her daughter tight, repeating "thank goodness" over and over. Shen Yi wouldn't claim this was entirely the breathing practice's doing, but she knew clearly that what steadied that night wasn't only the child's body, but the entire panic threatening to unravel the whole camp.
+
+IX · The Call of the Old Order
+
+Not everyone was willing to accept this new way of life. A group of former government remnants tried to rebuild the old order — centralized power, strict control — traveling from camp to camp, urging survivors to join their "Reconstruction Plan," promising that if everyone submitted to unified command, the grid would eventually be restored, and everything would return to how it had been. That promise held an irresistible pull for many exhausted survivors, longing for the old, stable life.
+
+A middle-aged man calling himself a representative of the "Reconstruction Committee" once came personally to Shen Yi's camp to make his case, flanked by two wary guards carrying old rifles, going through the motions of routine business. He wore a barely presentable uniform, an old, faded badge still pinned to his collar, his tone carrying a leftover arrogance from the grid's age: "This little trick of yours, glowing from breathing — can it feed you? Cure disease? Get the factories running again? Come with us, and before long, the power will be restored, and these primitive methods of yours will be obsolete." As he spoke, he surveyed the camp's residents, working the fields, plain but visibly full of life, a trace of unconscious contempt in his eyes, as though sizing up a group of ignorant country folk.
+
+Shen Yi listened quietly, then asked only one question: "How long will your reconstruction plan take?" The man hesitated, unable to give a definite answer, mumbling something about "everyone uniting, working together." Shen Yi asked again: "Before the grid is truly restored, what will those who go with you live on?" This time, the man simply fell silent, his face darkening. Shen Yi said nothing more, only turned, signaling that those who wished to stay could stay, and those who wished to follow him were free to go.
+
+IX-and-a-half · The Camp Divides
+
+Shen Yi's camp split as a result — a portion, particularly the older survivors, chose to believe the promise of "returning to how things were," packing what little they had and following the reconstructionists away, urging Shen Yi, before leaving, to come along too, saying her breathing practice was, at best, a stopgap measure, incapable of achieving anything real. What remained was Shen Yi, the handful of handwritten notes Old Chen had entrusted to her, and the group who'd genuinely experienced the faint light of their own heartbeats.
+
+On the morning of their parting, under a gray sky with scattered drizzle, Shen Yi stood at the camp's edge, watching the group — some dozen or so people, nearly a third of the camp's population — pack their bags and slowly disappear, each retreating figure carrying a weight somewhere between resolve and confusion. Among them was an elderly woman Shen Yi had spent nearly a month patiently accompanying through the practice; before leaving, she gripped Shen Yi's hand tightly, her aged fingers trembling, calloused from years of labor, and said through tears: "Girl, it's not that I don't believe you — I'm just too old to wait any longer. I only want, in what's left of my life, to see that bright, lit-up world again, even for one night." Shen Yi understood her, and didn't try to stop her, only embracing her gently, tucking what little food she had left into the woman's bag. She knew, in her heart, that these were two fundamentally different beliefs about what to rely on — neither could judge the other's choice in advance.
+
+X · The Reconstructionists' Failure
+
+Six months later, Shen Yi learned, unexpectedly, that those who'd followed the reconstructionists were not faring well — the reconstruction plan had failed, again and again, to truly restore the grid, and in the waiting, had instead bred a new, harsher hierarchy of control. Ordinary survivors, far from receiving the promised light, found themselves burdened with ever-heavier, endless labor, working from before dawn until deep into the night, facing severe punishment for the slightest lapse — rumor even had it that someone, having collapsed from exhaustion, had their already meager rations docked. Many began to miss the plain but genuine, mutually illuminating life back at Shen Yi's camp, murmuring privately, more than once, that perhaps they'd chosen the wrong path.
+
+A handful of escapees from the reconstruction camp, after great hardship, made their way back to Shen Yi, ragged and in tears, asking to rejoin. Their leader, a young man with an unhealed wound across his cheek, said he'd scaled two guard posts under cover of darkness to escape, whip marks still fresh on his back. Shen Yi welcomed them without a moment's hesitation, personally fetching clean water and food, arranging shelter, even boiling herbal soup through the night for those more severely injured — she understood, better than anyone, that this was never a contest of who was right, only that some people needed more time to let go of their attachment to the old order and relearn how to trust the light they'd always carried within.
+
+X-and-a-half · A Traveler Passing Through
+
+During this hardest stretch, a mysterious traveler once passed through the camp, known to all only as Chang Yan — travel-worn yet composed, plain in dress but never haggard, saying he'd walked many places, witnessed many people searching for new footing after collapse. He rarely spoke of his own past, simply observing quietly, occasionally sitting some distance away during breathing practice, breathing along, often surrounded by curious children asking endless questions, which he always answered patiently.
+
+He stayed at "Returning Light Slope" only three days. Before leaving, he said to Shen Yi, worn thin by the camp's division: "You don't need to convince everyone to believe in the light in your hands. You only need to keep your own light burning — those willing to draw near will draw near on their own. Most truths in this world were never won through argument, but through the shape a life takes, day after day, until it convinces people on its own."
+
+Shen Yi didn't understand the weight of these words at first, not until she truly saw those who'd fled back from the reconstruction camp, saw the longing rekindled in their eyes for "Returning Light Slope," and finally understood that the traveler had already seen through this whole matter — that this choice about what to rely on could never be rushed or forced. She never saw Chang Yan again, only occasionally heard that other survivor camps, elsewhere, had also spoken of a similar traveler, who'd left behind, at their hardest moments, exactly the words they needed.
+
+XI · The Shape of a New Order
+
+A year passed, and Shen Yi's camp gradually grew into a settlement centered on "the connection of breath and heartbeat" — people gave it a simple name, "Returning Light Slope." With no centralized grid, people lit each other's faces in the evening commons with the faint glow gathered from their own heartbeats; through rediscovered, primitive yet reliable cooperation — divided labor in farming, shared night watches, taking turns caring for children and elders — they slowly but firmly rebuilt an entirely new order, no longer dependent on any single, fragile system, but on the real, steady connection between each individual, each other, and this Field.
+
+The settlement gradually developed its own plain daily rhythm: at dawn, people practiced breathing together as the sun rose, awakening the day's focus, dew still clinging to the grass, the air thick with its scent; at midday, labor was clearly divided — whoever excelled at farming, at caring for the sick, at building shelter, each contributing their strength, even children given small, manageable tasks like feeding poultry or passing messages; at dusk, an unbreakable moment of stillness, no matter how much conflict or exhaustion the day had brought, everyone returning, in that hour, to steady breath. Shen Yi found that this plain, steady rhythm made "Returning Light Slope" far more settled, far less prone to conflict, than the other survivor camps still mired in chaos — survivors from other camps even began arriving, one after another, hoping to join.
+
+Shen Yi sometimes thought back to the world before the grid died, to that once-advanced, yet fragile system, to her own twelve-year career maintaining it, once a source of pride. She came to understand that the disaster was, perhaps, less a destruction than a forced yet precious reminder — that what could truly be relied on was never any externally built system, but that faint, resilient light planted deep within every living being, needing only to be reawakened.
+
+XII · Old Chen's Passing
+
+Another winter came, and Old Chen passed peacefully away on an unusually quiet snowy night, his face carrying a completeness of peace Shen Yi had never seen on anyone else, as though merely fallen into deep sleep. In his final days, he'd already sensed his time was near, yet still insisted, every day, on being helped, his body growing weaker, to the camp's open ground to practice breathing alongside everyone, though he sat for less time each day. When Shen Yi tried, more than once, to urge him to rest, he waved her off: "Being able to breathe alongside everyone until my very last moment is my good fortune in this life — don't stop me. I've waited for this day for many years."
+
+On his final night, he called Shen Yi to his bedside, his thin hand resting gently over hers, and said only this: "You no longer need me. Go teach more people — hidden in every heartbeat is a lamp, waiting only to be lit." Holding Old Chen's slowly cooling hand, Shen Yi felt, for the first time, not the bone-deep panic and despair she'd felt when the grid first died, but a deep, quiet gratitude, as though what Old Chen had entrusted her with was not merely a breathing method, but a weighty charge sufficient to light the rest of her life. Outside, snow fell quietly; inside, a dozen or so settlement residents who'd rushed over sat in silence, breathing slowly along with Old Chen's final breaths, as if to accompany him this way through his last stretch.
+
+She buried Old Chen on a stretch of open ground on the hill behind the camp, the very place where they'd first practiced breathing together, its view open to distant, perpetually snow-capped mountains, and to the settlement's ever-growing homes below. On the day of his burial, snow drifted softly; Shen Yi placed, with her own hands, a small sprig of dried wild chrysanthemum, Old Chen's favorite, before his grave, nearly the entire settlement gathering, unbidden, into a long, quiet procession. Every winter after that, the settlement's people gathered, unprompted, on that same patch of ground, practicing breath and stillness through the whole night — the faint light rising from their palms growing brighter, more abundant, year after year, as though Old Chen had never truly left, only transformed into that ever-clearer light in everyone's palm.
+
+XIII · Years Later
+
+Years later, when the younger generation's children curiously asked Shen Yi what the world before the grid died had truly been like, she would set down whatever she was doing, sit, and say slowly: it was an age when nearly everyone believed they needed some vast, external system to survive, accustomed to a light switching on at a touch, accustomed to ready-made answers for everything, yet no one had ever told them that the light truly worth relying on had been quietly waiting, in their own heartbeat, since the moment they were born.
+
+She would also tell them of Professor Zhou — once the most stubborn skeptic — who spent the rest of his life meticulously recording the details behind the breathing practice, compiling them into what became, besides Old Chen's own manuscripts, the settlement's most important record, his crude charcoal diagrams solemnly copied down, generation after generation, by those who came after. Before he died, Professor Zhou once said to Shen Yi, with regret: "My greatest regret, after a lifetime studying physics, is not realizing sooner that the most precise system was never in any laboratory instrument — it was in the breath of anyone willing to grow quiet. If I could do it again, I'd probably have to rewrite every paper of my youth." He died on an unusually clear morning, sunlight spilling through the window onto his desk, worn smooth from years of use; as he'd requested, Shen Yi solemnly placed his charcoal-diagrammed manuscripts into the settlement's public archive, for anyone after to consult.
+
+Pointing to the settlement's night sky, filled with faint lights flickering in unison from countless steady heartbeats, she would say softly: "What the night the grid died truly stole was never the light itself — it was the thick veil that kept us from seeing the light we'd always had." The children would nod, only half understanding, yet that night, unprecedentedly, would be willing to sit quietly for a while, trying to feel their own heartbeat.
+
+XIII-and-a-half · News From Afar
+
+Occasionally, travelers arriving from distant places brought news that similar ways of life, centered on breath and heartbeat, were gradually taking root in other survivor settlements, some even developing variations distinct from, yet equally effective as, "Returning Light Slope's" own — some settlements leaning toward collective, choir-like breathing rituals, others weaving in ancient local songs passed down for generations. Shen Yi never found this surprising — she'd always believed that what Old Chen had taught her was never her discovery alone, only that she happened to be the one who relit it, on this particular stretch of earth. Similar light, perhaps, had always been scattered across every corner of the world, waiting only for each place's own "Shen Yi" to reawaken it.
+
+She also heard that the group who'd once split from "Returning Light Slope," following the reconstructionists away, had eventually abandoned their attachment to the old grid as well, establishing their own settlement in another valley, likewise centered on breath and heartbeat — only giving their settlement a different name. Hearing this, Shen Yi only smiled, saying nothing more, only feeling that in this world, those who arrive at the same place by different paths were far more numerous than one might imagine — that light was never anyone's exclusive property, but something every person willing to grow quiet could find again for themselves.
+
+XIV · Epilogue
+
+Today, that long stretch of time once called "the Age Without Light" has, in survivors' memory, gradually taken on a new name — "the Age of Seeing Again." This name, it's said, was first casually suggested by Xiaoman herself, once grown, during an idle conversation, and unexpectedly embraced by everyone, sticking ever since. People no longer mourn the grid's death; instead, they carry a quiet, hard-to-name gratitude: if not for that night's total darkness, perhaps no one would have had the chance to see, so clearly, the light that had always existed deep within their own heartbeat. Those old days, filled with endless screens and information, almost never truly quiet, now feel, in memory, like a hazy, distant dream glimpsed through glass.
+
+Shen Yi has now become the next generation's own "Old Chen," her hair gone entirely gray, still teaching, every evening, the newly arrived children how to breathe, how to grow still, how to relight, in their own palms, that lamp which never truly went out. She often says this lamp needs no grid, needs no one's charity — it only needs someone willing to grow quiet and truly listen to their own heartbeat.
+
+On another quiet snowy night, Shen Yi sat alone on the hillside behind the camp, before Old Chen's grave, gazing up at a sky full of stars, and out at the settlement's faint lights, flickering in unison from countless heartbeats, and suddenly understood that she had, perhaps, already grown into the very image of that old man she'd once found, sitting on his cabin threshold, who'd first stirred her awe — she even realized she'd unknowingly picked up his habit of cupping a cup of hot water quietly for a moment before drinking, feeling its warmth in her palms. She smiled, and said softly, as if to Old Chen, and also to herself, her voice quiet but certain: "I've caught this lamp. I'll carry it well, and pass it on. Don't worry — I won't let it go dark again. Not completely. Not ever."
+
+(An Original Piece · Lingxi Dimensional Narratives · Novel · The Age Without Light)`,
+  },
 };

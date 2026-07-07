@@ -26,8 +26,8 @@ const data: ArticleData = {
     },
     {
       hZh: "如何平衡脉轮", hEn: "How to balance the chakras",
-      pZh: "常见方法有：冥想与观想（想象对应颜色的光在该部位流动）、呼吸练习、对应的瑜伽体式、亲近自然、以及照顾那个层面的现实生活（如心轮——练习自我慈悲与表达爱）。在造翼者体系里，心被视为核心枢纽——许多练习都以回到心、让能量从心流动为中心。",
-      pEn: "Common methods: meditation and visualization (imagine the corresponding color of light flowing at that center), breathing practices, related yoga poses, time in nature, and tending that theme in real life (for the heart — practicing self-compassion and expressing love). In the WingMakers system, the heart is seen as the core hub — many practices center on returning to the heart and letting energy flow from it.",
+      pZh: "常见方法有：冥想与观想（想象对应颜色的光在该部位流动）、呼吸练习、对应的瑜伽体式、亲近自然、以及照顾那个层面的现实生活（如心轮——练习自我慈悲与表达爱）。在多数修行传统里，心轮都被视为承上启下的核心枢纽——许多练习都以回到心、让能量从心流动为中心。",
+      pEn: "Common methods: meditation and visualization (imagine the corresponding color of light flowing at that center), breathing practices, related yoga poses, time in nature, and tending that theme in real life (for the heart — practicing self-compassion and expressing love). Across many traditions, the heart chakra is seen as the pivotal hub connecting the centers above and below it — many practices center on returning to the heart and letting energy flow from it.",
     },
   ],
   faq: [

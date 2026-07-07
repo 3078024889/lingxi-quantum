@@ -8,7 +8,7 @@ import IntuitionDiagram from "@/components/diagrams/IntuitionDiagram";
 import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
 
-export const metadata = { title: "直觉智能 · 修炼技术 | 灵犀 · Intuitive Intelligence | Lingxi", description: "直觉智能：区分世界的声音与心之深处的耳语，把情感历史重铸进慈悲频率的一套意识技术。Intuitive Intelligence practice." };
+export const metadata = { title: "直觉丹道 · 修炼技术 | 灵犀 · The Intuitive Way | Lingxi", description: "直觉丹道：区分世界教给你的声音，与心底沉淀下来的判断，一套让直觉不再被头脑抢先开口的练习。The Intuitive Way practice." };
 
 export default async function IntuitionPage() {
   const { user, unlocks } = await getAccess();
@@ -26,12 +26,12 @@ export default async function IntuitionPage() {
             <Bi zh="修炼技术" en="Practice" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
-            <Bi zh="直觉智能" en="Intuitive Intelligence" />
+            <Bi zh="直觉丹道" en="The Intuitive Way" />
           </h1>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi
-              zh="区分「世界教给你的声音」与「升自你心之深处的耳语」。直觉智能，是量子心滴入三维世界所产生的效果——它是把情感历史重铸进慈悲频率的一套技术。"
-              en="Distinguish 'the voice the world taught you' from 'the whisper rising from deep in your heart.' Intuitive Intelligence is the effect of the quantum heart trickling into the three-dimensional world — a technique for recasting emotional history into the frequency of compassion."
+              zh="区分「这个世界教给你的声音」与「你这些年真正沉淀下来的判断」。直觉从不是凭空而来的神通，是你早已验证过、却不再需要逐步推理，就能调用的经验。"
+              en="Distinguish 'the voice this world has taught you' from 'the judgment you've truly settled into over the years.' Intuition was never a gift from nowhere — it is experience you've already tested, no longer needing to pass through step-by-step reasoning to be called upon."
             />
           </p>
         </section>
@@ -39,17 +39,17 @@ export default async function IntuitionPage() {
         <section className="px-6 py-16">
           <div className="mx-auto max-w-3xl space-y-10 text-base leading-9 text-bone-dim">
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="心，是门户" en="The heart is the gateway" /></h2>
+              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="为何直觉总被盖住" en="Why intuition keeps getting buried" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="心远不只是泵血的肌肉，它是直觉智能的源头性模板。如同物质心脏把氧气送往全身，能量心把直觉智能送往心智。情感有着基于其频率的内置智能；当你听到一个声音里同时鸣奏着慈悲与理解，你就找到了自己的内在声音。"
-                  en="The heart is far more than a muscle that pumps blood; it is the source template of intuitive intelligence. As the physical heart sends oxygen throughout the body, the energetic heart sends intuitive intelligence to the mind. Emotions carry a built-in intelligence based on their frequency; when you hear a voice that sounds both compassion and understanding at once, you have found your inner voice."
+                  zh="真正拦住直觉的，从不是「想得不够多」，而是不肯让沉淀的部分，先于逐步推理开口。头脑的逐条核对天生比直觉慢——它需要把每个念头重新摆上台面，一条条核对；而沉淀下来的判断，早已把答案，一次性递到眼前。越是刻意告诉自己「别想，凭感觉」，那份刻意本身，就已经是另一层思考，反而把直觉，重新盖了回去。"
+                  en="What truly blocks intuition was never 'not thinking enough' — it's refusing to let what has already settled speak before deliberate reasoning does. Step-by-step checking is inherently slower than intuition; it must lay each thought out again, checking one by one, while settled judgment has already handed over the answer in a single motion. The more deliberately you tell yourself not to think, just feel, the more that very deliberateness becomes another layer of thought, burying intuition right back down."
                 />
               </p>
               <p className="mt-4">
                 <Bi
-                  zh="那些遮蔽内在声音的「云层」，是被记录在神经与量子网络里的情感历史。清理它们是一个过程，而非一次性事件——通常需要持续练习 30 天或更久。"
-                  en="The 'clouds' that veil the inner voice are emotional history recorded in the neural and quantum networks. Clearing them is a process, not a one-time event — usually requiring 30 days of steady practice, or more."
+                  zh="遮蔽内在声音的，往往是那些没有被好好安放的情绪记忆。清理它们是一个过程，而非一次性事件——通常需要持续练习 30 天或更久。"
+                  en="What veils the inner voice is often emotional memory that was never properly settled. Clearing it is a process, not a one-time event — usually requiring 30 days of steady practice, or more."
                 />
               </p>
             </div>
@@ -59,58 +59,58 @@ export default async function IntuitionPage() {
                 <IntuitionDiagram className="w-full" />
               </div>
               <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/70">
-                <Bi zh="直觉智能的能量路径：从地心升起，经过我们的心，伸向无限远的无限（∞）。" en="The energy path of Intuitive Intelligence: rising from the Earth's core, passing through the heart, reaching toward the infinite (∞)." />
+                <Bi zh="直觉丹道的练习路径：从平静的胸口出发，穿过纷杂的念头，抵达清晰的判断。" en="The practice path of the Intuitive Way: starting from a calm chest, passing through scattered thought, arriving at clear judgment." />
               </figcaption>
             </figure>
 
-            <PracticeGate unlocked={unlocked} user={!!user} productName="直觉智能" productNameEn="Intuitive Intelligence">
+            <PracticeGate unlocked={unlocked} user={!!user} productName="直觉丹道" productNameEn="The Intuitive Way">
               <div className="mb-12">
-                <PracticeChart src="/images/practice/intuition-chart.jpg" alt="直觉智能技术 · 完整练习图（引文—想象—心呼吸—光之连接，含每日练习）" />
+                <PracticeChart src="/images/practice/intuition-chart.jpg" alt="直觉丹道 · 完整练习图（唤起—安顿—放手—连接，含每日练习）" />
               </div>
               <div className="space-y-10">
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第一步" en="Step 1" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="唤起 · 引文" en="Evoke · the invocation" /></h3>
+                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="唤起 · 一句提醒" en="Evoke · a reminder" /></h3>
                   <p className="mt-3">
-                    <Bi zh="把画面投射到胸口中央，而非头脑。轻声在心里念诵，并容许它在心中形成直观的画面：" en="Project the image to the center of your chest, not the head. Recite softly within, and let it form an intuitive picture in the heart:" />
+                    <Bi zh="把注意力放在胸口，而非头脑。轻声在心里对自己说：" en="Bring attention to the chest, not the head. Say softly to yourself, within:" />
                   </p>
                   <p className="mt-4 rounded-sm border border-white/10 bg-void-deep p-5 italic text-bone">
                     <Bi
-                      zh="我的心之光亮起，我宽恕的能力随之活跃；宽恕一流进我的心便向上升起，以最柔和精炼的光充满整个头部。源自这光，一种对过往的慈悲安顿下来，发生过的一切，都被这光改写了。"
-                      en="The light of my heart is lit, and my capacity to forgive comes alive; as forgiveness flows into my heart it rises upward, filling the whole head with the softest, most refined light. From this light, a compassion for the past settles in, and all that has happened is rewritten by this light."
+                      zh="我愿意先原谅自己，再看清眼下这件事。旧的评判可以先放一放，此刻的判断，只需要诚实，不需要完美。"
+                      en="I am willing to forgive myself first, before I look clearly at what's in front of me. Old judgments can wait a moment. This moment's judgment only needs to be honest, not perfect."
                     />
                   </p>
                 </div>
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第二步" en="Step 2" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="安顿 · 想象" en="Settle · imagine" /></h3>
+                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="安顿 · 留意身体的信号" en="Settle · notice the body's signal" /></h3>
                   <p className="mt-3">
                     <Bi
-                      zh="把这光感知为一种极精炼的金色薄雾，悬浮在头部，在不可察觉的层面缓缓运动。去感觉这光带着智能——一种正在重写、改编你情感历史的能力。清晰的视觉与真实的情感，是这一步的关键。"
-                      en="Perceive this light as an exquisitely refined golden mist, suspended around the head, moving slowly at an imperceptible level. Feel that this light carries intelligence — a capacity that is rewriting and re-editing your emotional history. Clear visualization and genuine feeling are the keys to this step."
+                      zh="回想一件让你纠结的小事，留意身体的第一反应——是胸口一沉，还是肩膀一松？这个比头脑更快的信号，往往比反复权衡更值得信任。清晰的觉察，比强行分析更重要。"
+                      en="Recall something small you've been torn over, and notice the body's first reaction — a sinking in the chest, or a loosening in the shoulders? This signal, faster than the mind, is often more trustworthy than repeated weighing. Clear noticing matters more than forced analysis."
                     />
                   </p>
                 </div>
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第三步" en="Step 3" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="放手 · 经心而呼吸" en="Release · breathe through the heart" /></h3>
+                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="放手 · 不再反复核对" en="Release · stop double-checking" /></h3>
                   <p className="mt-3">
                     <Bi
-                      zh="将注意力集中于呼吸。吸气时，想象把自我的欲望带入量子心的内室，屏息时让它悬浮其中、混合进升自能量心的慈悲之流。然后经由心脏区域呼出，每一次呼气都默念：让它留在神秘里，绽放自己的光。重复 6 到 8 次。"
-                      en="Focus attention on the breath. As you inhale, imagine bringing the ego's desire into the inner chamber of the quantum heart; as you hold, let it hang there and blend into the stream of compassion rising from the energetic heart. Then exhale through the heart area, and with each exhale murmur within: let it stay in the mystery, and bloom its own light. Repeat 6 to 8 times."
+                      zh="把注意力集中于呼吸。吸气时，让那份纠结的念头静静浮现；呼气时，默念：这个答案，已经够清楚了。重复 6 到 8 次，不再回头反复核对。"
+                      en="Focus attention on the breath. As you inhale, let the tangled thought quietly surface; as you exhale, say inwardly: this answer is already clear enough. Repeat 6 to 8 times, without circling back to double-check."
                     />
                   </p>
                 </div>
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第四步" en="Step 4" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="光之连接" en="Connection of light" /></h3>
+                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="日常连接" en="Everyday connection" /></h3>
                   <p className="mt-3">
                     <Bi
-                      zh="想象一些光的细丝从你的量子心散出，把你连接上一个扩展性的能量格栅。它们既是根（锚定你的存在），也是翅膀（给予扬升与扩展）。一整天里，时不时感觉这个包围你的能量结构，将连接感觉为节律性的光之脉冲——流出格栅、进入心脏、再流向全身。每次约 2 秒，但要频繁。"
-                      en="Imagine fine threads of light spreading out from your quantum heart, connecting you to an expansive energy lattice. They are both roots (anchoring your being) and wings (granting ascent and expansion). Throughout the day, feel from time to time this energetic structure surrounding you, sensing the connection as a rhythmic pulse of light — flowing out of the lattice, into the heart, and on through the whole body. About 2 seconds each time, but often."
+                      zh="一整天里，遇到需要判断的小事时，先给自己两秒钟，感受胸口的第一反应，再决定。这个动作只需要 2 秒，但要经常做——它在训练的，是信任那份沉淀下来的判断的习惯。"
+                      en="Throughout the day, whenever a small judgment is needed, give yourself two seconds to notice the chest's first reaction before deciding. This takes only 2 seconds, but do it often — it trains the habit of trusting settled judgment."
                     />
                   </p>
                 </div>
@@ -119,8 +119,8 @@ export default async function IntuitionPage() {
                   <p className="font-display text-lg text-lattice"><Bi zh="练习提醒" en="Practice notes" /></p>
                   <p className="mt-4">
                     <Bi
-                      zh="前三步是一组完整练习；第四步可独立、全天多次使用。重点不是用力，而是平衡身体内的光，使它聚合一致、有节律、自由流动。坚持 30 天，云层会一点点散去。"
-                      en="The first three steps form one complete practice; the fourth can stand alone and be used many times a day. The point is not effort, but balancing the light within the body so it becomes coherent, rhythmic, and freely flowing. Keep it up for 30 days, and the clouds will disperse, little by little."
+                      zh="前三步是一组完整练习；第四步可独立、全天多次使用。重点不是用力分析，而是让身体的第一反应，被听见。坚持 30 天，那些遮蔽判断的旧情绪，会一点点散去。"
+                      en="The first three steps form one complete practice; the fourth can stand alone and be used many times a day. The point is not forceful analysis, but letting the body's first reaction be heard. Keep it up for 30 days, and the old emotion clouding judgment will disperse, little by little."
                     />
                   </p>
                 </div>

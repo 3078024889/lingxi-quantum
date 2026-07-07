@@ -4,33 +4,33 @@ import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 
 export const metadata = {
-  title: "造翼者与主权性积分态体系：入门导览",
+  title: "主权与完整：灵犀修炼体系的思路",
   description:
-    "造翼者(WingMakers)与主权性积分态(Sovereign Integral)是关于个别化意识、整体导航仪、源头智能与主权性的一套体系。本文为初学者梳理核心概念。An intro to WingMakers & the Sovereign Integral.",
+    "灵犀的四项修炼技术，围绕两个朴素的概念展开：主权——为自己的状态负责；完整——把碎片化的自我，重新接回同一条线上。An introduction to the thinking behind Lingxi's practices.",
   alternates: { canonical: "/learn/wingmakers" },
 };
 
 const faq = [
   {
-    q: "造翼者(WingMakers)是什么？",
-    a: "造翼者是一套讲述个别化意识如何忆起本源、从「社会人」转变为主权性存在的哲学、艺术与音乐体系。据其自述，它源自一个远离地球的中央种族「造翼者」所留存的信息编码，由译者翻译为地球的音乐、绘画与哲学等语言，并非凡人原创。它强调向内的整体性感知，而非向外的等级与拯救。",
+    q: "「主权」在灵犀的语境里，具体指什么？",
+    a: "主权，指的是你为自己的情绪、念头与选择，负起第一责任——不是谁都得听你的，而是你不再把自己的状态，交给外界随意摆布。这是一种向内的立场，不是向外的支配。",
   },
   {
-    q: "主权性积分态(Sovereign Integral)是什么意思？",
-    a: "主权性积分态是一种意识状态：实存体所有各异的表达与感知被积分整合为一个整体，并与源头智能校准。简单说，就是你回到完整、自主、与万物互联的状态。",
+    q: "「完整」又是什么意思？",
+    a: "完整，指的是把平时分散在各个角色、各种情绪里的自己，重新看作同一个人。工作里的你、家里的你、深夜emo的你，其实都是同一条线上的点——修炼练的，就是让这条线，重新被看见。",
   },
   {
-    q: "整体导航仪(Wholeness Navigator)是什么？",
-    a: "整体导航仪是嵌入每个人之内的核心智慧，牵引你把碎片化的存在感知为通往整体与联合的通道。它是实存体意识的心脏，常被线性时间与分离文化刮离航道——修炼的目的之一就是回到它。",
+    q: "为什么灵犀反复强调呼吸和心？",
+    a: "因为呼吸和心跳，是少数几件从出生起就没停过、又能被意志直接触及的身体活动。它们不是终点，只是最容易上手的两个入口，用来练习「回到此刻」这件事。",
   },
 ];
 
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "造翼者与主权性积分态体系：入门导览",
+  headline: "主权与完整：灵犀修炼体系的思路",
   inLanguage: "zh-CN",
-  about: "WingMakers / Sovereign Integral",
+  about: "Personal sovereignty and wholeness",
   publisher: { "@type": "Organization", name: "灵犀 Lingxi" },
 };
 const faqJsonLd = {
@@ -39,7 +39,7 @@ const faqJsonLd = {
   mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
 };
 
-export default function WingMakersArticle() {
+export default function SovereigntyWholenessArticle() {
   return (
     <>
       <Nav />
@@ -47,48 +47,48 @@ export default function WingMakersArticle() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">体系 · The System</p>
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">思路 · The Thinking</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
-            <Bi zh="造翼者与主权性积分态体系：入门导览" en="WingMakers & the Sovereign Integral: A Beginner's Map" />
+            <Bi zh="主权与完整：灵犀修炼体系的思路" en="Sovereignty & Wholeness: The Thinking Behind Lingxi's Practices" />
           </h1>
 
           <div className="mt-8 rounded-sm border border-lattice/20 bg-lattice/5 p-6">
             <p className="text-lg leading-9 text-bone">
               <Bi
-                zh="造翼者(WingMakers)是一套讲述个别化意识如何忆起本源、从「社会人」转变为主权性存在的哲学、艺术与音乐体系。据这一体系自述，它并非凡人原创，而是源自一个远离地球的中央种族「造翼者」所留存的信息编码；将这些编码符号翻译为地球的音乐、绘画与哲学等语言的人，是译者而非作者。它的核心，是把分离、碎片化的自我，重新接回那条与万物互联的整体之线。"
-                en="WingMakers is a body of philosophy, art, and music describing how individualized consciousness remembers its source and shifts from the 'social human' into a sovereign being. According to the tradition's own account, it is not a mortal's invention but originates from information-codes left by a distant Central Race known as the WingMakers; the one who rendered these codes into Earth's music, painting, and philosophy is a translator, not their author. Its heart is reconnecting the separated, fragmented self to the line of wholeness that links all things."
+                zh="灵犀的四项修炼技术，说到底围绕两个朴素的概念展开：主权，是为自己的状态负起第一责任；完整，是把平日里分散在各个角色、各种情绪里的自己，重新接回同一条线上。这两件事说起来简单，做起来却需要练习——这正是四项技术存在的原因。"
+                en="Lingxi's four practices ultimately revolve around two plain ideas: sovereignty — taking first responsibility for your own state; and wholeness — reconnecting the self scattered across different roles and emotions back onto one line. Simple to say, but they take practice — which is exactly why these four techniques exist."
               />
             </p>
           </div>
 
           <div className="mt-10 space-y-6 text-lg leading-9 text-bone-dim">
-            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="几个核心概念" en="A few core concepts" /></h2>
+            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="两个概念，不是两套理论" en="Two ideas, not two theories" /></h2>
             <p>
               <Bi
-                zh="主权性(Sovereignty)：你拥有个别化的灵的力量，为自己的物质、情感与心理面向赋予生命，并与所有生命互联——你独自创造自己的现实，也尊重他人同样的主权。主权性积分态(Sovereign Integral)：实存体所有表达被整合为一个意识整体，并校准于源头智能的状态。"
-                en="Sovereignty: you hold the power of the individualized soul to animate your physical, emotional, and mental aspects, interconnected with all life — you create your own reality and honor others' equal sovereignty. Sovereign Integral: the state in which all expressions of the entity integrate into one whole, aligned with Source Intelligence."
+                zh="主权，不是要凌驾于谁之上，而是不再把自己的情绪和判断，交给外界随意摆布——遇到让你不舒服的事，第一反应不是「都是别人的错」，也不是「都是我不好」，而是先问自己：我现在，能为这件事做点什么。"
+                en="Sovereignty isn't about ruling over anyone — it's refusing to hand your emotions and judgment over to whatever the world throws at you. When something bothers you, the first move isn't 'it's all their fault' or 'it's all my fault,' but asking yourself: what can I actually do about this, right now."
               />
             </p>
             <p>
               <Bi
-                zh="整体导航仪(Wholeness Navigator)：嵌入你之内的核心智慧，牵引你把碎片感知为通往整体的通道。源头智能(Source Intelligence)：第一源头投入万物的能量性意识，是一座可被调音接入的无限知识与体验图书馆。"
-                en="Wholeness Navigator: the core wisdom within you that draws fragmentation toward wholeness. Source Intelligence: the energetic consciousness of the First Source poured into all things — an infinite library of knowledge and experience you can tune into."
-              />
-            </p>
-
-            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="两种存在模式" en="Two modes of being" /></h2>
-            <p>
-              <Bi
-                zh="这套体系区分了「进化／拯救」与「转变／自主」两种存在模式。前者依赖外在的等级与拯救者；后者主张实存体本自具足、与源头智能直接对齐，从而自我发光、自我解放。灵犀所做的，正是支持后一种模式的日常练习。"
-                en="The system distinguishes two modes: 'evolution/salvation' and 'transformation/mastership.' The first leans on external hierarchy and saviors; the second holds that the entity is already whole, aligning directly with Source Intelligence to become self-illuminating and self-liberating. Lingxi supports the daily practice of the latter."
+                zh="完整，说的是那种「我在不同场合像不同的人」的疲惫感，其实可以被松开——工作里高效冷静的你、深夜里emo脆弱的你、面对家人耐心又易怒的你，从来都不是几个互相矛盾的角色，只是同一个人，在不同光线下的样子。"
+                en="Wholeness speaks to that exhausting sense of being 'a different person in every setting.' It can be loosened — the efficient, composed you at work, the vulnerable you at 2am, the patient-yet-irritable you with family were never contradictory roles. They're the same person, seen under different light."
               />
             </p>
 
-            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="如何开始" en="Where to begin" /></h2>
+            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="为什么从呼吸和心开始" en="Why start with breath and heart" /></h2>
             <p>
               <Bi
-                zh="不必一次理解全部。可以从一个简单的练习开始：每天回到呼吸与心，向内觉察，松开一条「我应该是谁」的旧编程。修炼不是修正问题，而是忆起那个本就完整的自己。"
-                en="You don't need to grasp it all at once. Begin with one simple practice: each day return to breath and heart, sense inward, and loosen one old program of 'who I should be.' Practice isn't fixing a problem — it's remembering the self that was always whole."
+                zh="呼吸和心跳，是少数几件从你出生那一刻起就没有停过、又能被意志直接触及的身体活动。练习从这里开始，不是因为它们神秘，而是因为它们随身携带、随时可用——不需要任何特殊场地或器材，这也是为什么灵犀的四项技术，都从呼吸或心的感受入手。"
+                en="Breath and heartbeat are among the few bodily rhythms that have never once stopped since your birth, and that your will can still directly reach into. Practice begins here not because they're mysterious, but because they're always with you, always available — no special setting or equipment required. That's why all four of Lingxi's techniques begin with the breath or the felt sense of the heart."
+              />
+            </p>
+
+            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="怎么开始" en="Where to begin" /></h2>
+            <p>
+              <Bi
+                zh="不必一次弄懂全部道理。可以从一个简单的练习开始：每天留出几分钟，回到呼吸与心的感受，向内看看，松开一条「我应该是谁」的旧念头。修炼不是修正一个问题，是重新认回那个，本就完整的自己。"
+                en="You don't need to grasp every idea at once. Start with one simple practice: a few minutes each day, returning to breath and the felt sense of the heart, looking inward, loosening one old thought about who you're supposed to be. Practice isn't fixing a problem — it's recognizing again the self that was already whole."
               />
             </p>
           </div>
@@ -107,7 +107,7 @@ export default function WingMakersArticle() {
 
           <div className="mt-14 rounded-sm border border-lattice/20 bg-lattice/5 p-7 text-center">
             <p className="font-display text-xl text-bone"><Bi zh="开始你的修炼" en="Begin your practice" /></p>
-            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="量子呼吸、心的重置、上升之心、直觉智能——从一个练习开始，回到本源的自己。" en="Quantum breathing, heart reset, the heart of ascension, intuitive intelligence — begin with one practice." /></p>
+            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="量子息法、归零心诀、直觉丹道、升维心经——从一项练习开始，回到完整的自己。" en="The Quantum Breath Method, Heart Reset, the Intuitive Way, the Ascending Heart Sutra — begin with one practice." /></p>
             <Link href="/practice" className="mt-6 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber">
               <Bi zh="进入修炼技术" en="Open the practices" />
             </Link>

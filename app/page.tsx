@@ -41,7 +41,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. 重塑潜意识（六道之门） */}
+        {/* 5. 重塑潜意识 */}
         <section id="gates" className="px-6 py-28 sm:py-36">
           <div className="mx-auto max-w-6xl">
             <p className="text-center font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="重 塑 潜 意 识" en="Rewrite the Subconscious" /></p>
@@ -72,7 +72,7 @@ export default function Home() {
             <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="多维叙事入口" en="Dimensional Narratives" /></p>
             <h2 className="mt-6 font-display text-4xl font-light text-bone"><Bi zh="阅读不同意识层级中的现实结构" en="Read reality across levels of consciousness" /></h2>
             <p className="mx-auto mt-6 max-w-xl text-base leading-9 text-bone-dim">
-              <Bi zh="长篇传输 · 现实重写记录 · 场域叙事 · 主权体观测日志——灵犀原创，持续生长的意识记录。现实不是被经历的，而是被不同层级的意识持续生成。" en="Novels · Reality Rewrite Records · Field Narratives · Sovereign Observation Logs — original records from the Field, growing without end. Reality is not experienced; it is continuously generated." />
+              <Bi zh="长篇传输 · 现实重写记录 · 场域叙事 · 场域观测日志——灵犀原创，持续生长的意识记录。现实不是被经历的，而是被不同层级的意识持续生成。" en="Novels · Reality Rewrite Records · Field Narratives · Field Observation Logs — original records from the Field, growing without end. Reality is not experienced; it is continuously generated." />
             </p>
             <Link href="/narrative" className="mt-10 inline-block border border-amber/50 px-10 py-4 font-display text-sm uppercase tracking-widest2 text-amber transition hover:bg-amber hover:text-void-deep">
               <Bi zh="进入多维叙事" en="Enter the Narratives" />
@@ -84,11 +84,11 @@ export default function Home() {
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-16 sm:flex-row sm:justify-between">
             <div className="max-w-md">
               <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="每日练习" en="Daily practice" /></p>
-              <h2 className="mt-6 font-display text-4xl font-light text-bone"><Bi zh="量子呼吸 · 量子暂停" en="Quantum Breath · The Quantum Pause" /></h2>
+              <h2 className="mt-6 font-display text-4xl font-light text-bone"><Bi zh="量子息法" en="The Quantum Breath Method" /></h2>
               <p className="mt-6 text-base leading-9 text-bone-dim">
                 <Bi
-                  zh="呼吸始终伴随着你的体验，从最初到最终。它是便携式的，每个人都拥有它，正是它将你锚定进了当下——吸气、暂停、呼气、暂停，「我是」与「我们是」交替展开，松开旧编程的镣铐。"
-                  en="Breath accompanies your experience from first to last. It is portable, everyone has it, and it is what anchors you into the present — inhale, pause, exhale, pause; 'I Am' and 'We Are' unfolding in turn, loosening the chains of old programming."
+                  zh="呼吸从你出生的第一刻起就没有停过，也是少数几件意志能够直接接管的身体活动之一。它不需要任何器材，随时可以开始——吸气、停顿、呼气、停顿，四段均等的节律，把散乱的注意力，重新带回此刻。"
+                  en="Breath has never once stopped since your first moment of life, and it is one of the few bodily rhythms your will can directly reach into. It needs no equipment, and can begin anytime — inhale, pause, exhale, pause; four equal parts, bringing scattered attention back to this moment."
                 />
               </p>
               <Link href="/practice/breath" className="mt-10 inline-block border border-lattice/40 px-8 py-4 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-amber hover:text-amber"><Bi zh="开始练习" en="Begin the practice" /></Link>

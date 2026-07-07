@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from "react";
 type Phase = { key: "inhale" | "hold" | "exhale"; labelZh: string; labelEn: string; tagZh: string; tagEn: string; seconds: number };
 
 const buildCycle = (count: number): Phase[] => [
-  { key: "inhale", labelZh: "吸气", labelEn: "Inhale", tagZh: "我是", tagEn: "I Am", seconds: count },
-  { key: "hold", labelZh: "暂停", labelEn: "Pause", tagZh: "我是", tagEn: "I Am", seconds: count },
-  { key: "exhale", labelZh: "呼气", labelEn: "Exhale", tagZh: "我们是", tagEn: "We Are", seconds: count },
-  { key: "hold", labelZh: "暂停", labelEn: "Pause", tagZh: "我们是", tagEn: "We Are", seconds: count },
+  { key: "inhale", labelZh: "吸气", labelEn: "Inhale", tagZh: "上扬", tagEn: "Rising", seconds: count },
+  { key: "hold", labelZh: "停顿", labelEn: "Pause", tagZh: "上扬", tagEn: "Rising", seconds: count },
+  { key: "exhale", labelZh: "呼气", labelEn: "Exhale", tagZh: "展开", tagEn: "Opening", seconds: count },
+  { key: "hold", labelZh: "停顿", labelEn: "Pause", tagZh: "展开", tagEn: "Opening", seconds: count },
 ];
 
 const isEn = () =>
@@ -61,7 +61,7 @@ export default function BreathGuide() {
             {running ? (en ? phase.labelEn : phase.labelZh) : (en ? "Ready" : "准备")}
           </p>
           <p className="mt-2 font-display text-lg tracking-widest2 text-lattice">
-            {running ? (en ? phase.tagEn : phase.tagZh) : (en ? "I Am · We Are" : "我是 · 我们是")}
+            {running ? (en ? phase.tagEn : phase.tagZh) : (en ? "Rising · Opening" : "上扬 · 展开")}
           </p>
           {running && <p className="mt-4 font-display text-6xl text-amber/90">{remain}</p>}
         </div>
@@ -83,11 +83,11 @@ export default function BreathGuide() {
             </div>
             <button onClick={start}
               className="bg-lattice px-12 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber">
-              <span data-lang="zh">开始量子暂停</span><span data-lang="en">Begin the Quantum Pause</span>
+              <span data-lang="zh">开始量子息法</span><span data-lang="en">Begin the Quantum Breath Method</span>
             </button>
             <p className="max-w-sm text-center text-sm leading-7 text-bone-dim/80">
-              <span data-lang="zh">建议先宣示你的目的，再开始。以 3–4 个循环为一组，然后回到常态呼吸（巩固期）。</span>
-              <span data-lang="en">Declare your intent first, then begin. Do 3–4 cycles as a group, then return to normal breathing (the consolidation period).</span>
+              <span data-lang="zh">建议先设定意图，再开始。以 3–4 组为一轮，然后回到自然呼吸（巩固期）。</span>
+              <span data-lang="en">Set an intention first, then begin. Do 3–4 rounds as one set, then return to natural breathing (the consolidation period).</span>
             </p>
           </>
         ) : (
