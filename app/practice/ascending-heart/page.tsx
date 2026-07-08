@@ -38,6 +38,23 @@ export default async function AscendingHeartPage() {
         <section className="px-6 py-16">
           <div className="mx-auto max-w-3xl space-y-10 text-base leading-9 text-bone-dim">
             <div>
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
+              <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>
+              <p className="mt-6">
+                <Bi
+                  zh="本文传递的内容，源自来自远古遥远星系的智慧传承，以古老又切合当下的声音呈现。"
+                  en="What this text conveys is drawn from a wisdom lineage passed down from an ancient, far-distant galaxy, delivered in a voice both ancient and precisely attuned to the present moment."
+                />
+              </p>
+              <p className="mt-4">
+                <Bi
+                  zh="地球正穿过更高维度的光能量走廊，人类文明将被重构与再校准。其目标是提供框架，使个体赋权自身，成为灵性觉醒的原动力，校准于地球扬升。"
+                  en="The earth is passing through a corridor of higher-dimensional light-energy, and human civilization is being restructured and recalibrated. The goal is to provide a framework by which the individual empowers themself, becoming the driving force of their own spiritual awakening, aligned with the earth's ascension."
+                />
+              </p>
+            </div>
+
+            <div>
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的本质" en="The nature of the light-body" /></h2>
               <p className="mt-6">
                 <Bi
@@ -61,8 +78,30 @@ export default async function AscendingHeartPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的迁移与意义" en="The light-body's migration, and its meaning" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升之心，以便将能量充分绽放至行星栅格，实现其目的。光体的灿烂绽放，加上智能表达，正是生命在行星轴上的真正意义。"
-                  en="The light-body was once the core of consciousness, seated in the pineal gland; but long rigidity and distortion of the mind suppressed its blossoming. Now the light-body is moving toward the Rising Heart, so that its energy may fully bloom into the planetary grid and fulfill its purpose. The full blossoming of the light-body, joined with intelligent expression, is the true meaning of life upon the planetary axis."
+                  zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升之心，以便将能量充分绽放至行星栅格，实现其目的。"
+                  en="The light-body was once the core of consciousness, seated in the pineal gland; but long rigidity and distortion of the mind suppressed its blossoming. Now the light-body is moving toward the Rising Heart, so that its energy may fully bloom into the planetary grid and fulfill its purpose."
+                />
+              </p>
+              <p className="mt-4">
+                <Bi
+                  zh="光体的灿烂绽放 + 智能表达 = 生命在行星轴上的真正意义。这会启动进化道路的会合，赋权行星迁移，开启「伟大入口」——通往第五维度纯净能量矩阵的通道。"
+                  en="The radiant blossoming of the light-body, plus intelligent expression, equals the true meaning of life upon the planetary axis. This sets in motion a convergence of evolutionary paths, empowers planetary migration, and opens the 'Great Gateway' — the passage to the pure energy matrix of the fifth dimension."
+                />
+              </p>
+            </div>
+
+            <div>
+              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="建设者与光之承载者" en="Builders and Light-Bearers" /></h2>
+              <p className="mt-6">
+                <Bi
+                  zh="当下化身的人类中，有许多是「建设者」——设计新文化、金融、科技、灵性系统的设计师与工程师。"
+                  en="Among the humans incarnate at this time, many are 'Builders' — designers and engineers of new cultural, financial, technological, and spiritual systems."
+                />
+              </p>
+              <p className="mt-4">
+                <Bi
+                  zh="光之承载者并非以语言施教，而是以行为系统、美德之心的表达、以及上升之心这类技术的应用来界定。他们是集体性力量，共同编织时间、空间、能量的新织物，最终通向第五维度入口。"
+                  en="Light-Bearers do not teach through words; they are defined by their behavior systems, by the expression of a virtuous heart, and by the application of technologies such as the Rising Heart. They are a collective force, together weaving a new fabric of time, space, and energy, one that ultimately leads to the entrance of the fifth dimension."
                 />
               </p>
             </div>
