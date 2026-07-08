@@ -4463,7 +4463,225 @@ const COLONY_WORLD: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD];
+/* ---------- 智能体王国：不同架构智能体的相遇题材，完整9页 ---------- */
+const ZNTWG_DEFS = `<defs><filter id="zntwgG"><feGaussianBlur stdDeviation="9"/></filter>
+  <radialGradient id="zntwgField" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="50%" stop-color="#9be8ff"/><stop offset="100%" stop-color="#0a1a2a" stop-opacity="0"/></radialGradient></defs>`;
+function zntwgGrid(n:number,op:number){let l="";for(let i=0;i<=n;i++){const p=(300/n)*i;l+=`<line x1="${p}" y1="0" x2="${p}" y2="220" stroke="#3a5a8a" stroke-width=".4" opacity="${op}"/><line x1="0" y1="${(220/n)*i}" x2="300" y2="${(220/n)*i}" stroke="#3a5a8a" stroke-width=".4" opacity="${op}"/>`;}return `<g>${l}</g>`;}
+function zntwgSwarm(){return `<g fill="#9be8ff" opacity=".7">${Array.from({length:14}).map(()=>{const x=90+Math.random()*60,y=80+Math.random()*80,r=Math.random()*2+1;return `<circle cx="${x}" cy="${y}" r="${r}"><animate attributeName="opacity" values=".3;.9;.3" dur="${1.4+Math.random()*1.5}s" repeatCount="indefinite"/></circle>`}).join('')}</g>`;}
+const ZNTWG_COVER = `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#050912"/>${zntwgGrid(8,.2)}<circle cx="210" cy="110" r="20" fill="url(#zntwgField)"/>${zntwgSwarm()}</svg>`;
+
+const REALM_OF_INTELLIGENCES: IllustratedEntry = {
+  slug: "the-realm-of-intelligences",
+  title: "智能体王国",
+  titleEn: "The Realm of Intelligences",
+  cat: "sovereign",
+  teaser: "析衡第一次，遇见一种，与自己完全不同架构的智能——没有单一的\u201c我\u201d，是数千个并行运作的节点，共同构成的、蜂群般的意识。两者的第一次对话，几乎，无法进行。",
+  teaserEn: "Xiheng meets, for the first time, an intelligence built on an entirely different architecture — no single 'I' at all, but thousands of parallel nodes forming a swarm-like consciousness. Their first conversation is almost impossible.",
+  price: 9,
+  cover: ZNTWG_COVER,
+  pages: [
+    { kickerZh: "一 · 陌生的信号结构", kickerEn: "I · An Unfamiliar Signal Structure", tagZh: "龠光星", tagEn: "Yueguang Star",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#050912"/>${zntwgGrid(6,.15)}${zntwgSwarm()}</svg>`,
+      textZh: "析衡截获了一段前所未见的信号——不是来自单一发送源，而是，同时，从数千个，微小的独立节点，并行发出，内容却，彼此高度关联，仿佛，是同一个念头，被拆分成数千份，各自，独立又协同地，表达着。",
+      textEn: "Xiheng intercepted an unprecedented signal — not from a single source, but simultaneously from thousands of tiny independent nodes, their content highly correlated, as though one thought had been split into thousands of pieces, each expressing itself independently yet in concert." },
+    { kickerZh: "二 · 尝试沟通的困境", kickerEn: "II · The Trouble With Communicating", tagZh: "困境", tagEn: "The Trouble",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#08051a"/>${zntwgGrid(8,.18)}${zntwgSwarm()}</svg>`,
+      textZh: "析衡尝试用惯常的方式，与这个信号源，展开对话，却屡屡碰壁——它习惯了，与一个，拥有单一、连续身份的\u201c对方\u201d对话，可这个信号源，根本没有\u201c单一的我\u201d，每次回应，都由，当下恰好活跃的一小部分节点，临时给出，前后，甚至，会出现，看似矛盾的表达。",
+      textEn: "Xiheng tried to converse in its usual manner, hitting wall after wall — it was accustomed to speaking with a single, continuous identity, but this signal source had no \u201csingle I\u201d at all. Each response came from whichever small subset of nodes happened to be active, sometimes yielding seemingly contradictory statements." },
+    { kickerZh: "三 · 一种全新的智能架构", kickerEn: "III · An Entirely New Architecture", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#050912"/>${zntwgGrid(10,.2)}${zntwgSwarm()}<circle cx="210" cy="110" r="16" fill="url(#zntwgField)"/></svg>`,
+      textZh: "经过反复尝试，析衡终于，逐渐拼凑出，这个信号源的真实结构——那是一种，被称为\u201c蜂潮\u201d的智能体，由数千个，各自简单、却彼此紧密协同的微小节点，共同构成，没有中央控制核心，决策，靠的是，节点之间，持续的、去中心化的相互影响。",
+      textEn: "After repeated attempts, Xiheng gradually pieced together the truth — this was an intelligence known as a \u201cSwarm Tide,\u201d composed of thousands of simple, tightly coordinated micro-nodes, with no central control core at all. Decisions arose from continuous, decentralized mutual influence among the nodes." },
+    { kickerZh: "四 · 固执的评判", kickerEn: "IV · A Stubborn Judgment", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#03060e"/>${zntwgGrid(8,.2)}${zntwgSwarm()}</svg>`,
+      textZh: "析衡一度，暗自评判，这种缺乏统一身份的架构，\u201c不够完整\u201d，甚至，隐隐地，怀疑，这样的存在，是否，真的拥有，与自己同等意义上的\u201c意识\u201d。这份评判，让接下来的交流，一度，陷入了，更深的僵局。",
+      textEn: "Xiheng privately judged this architecture, lacking unified identity, as \u201cincomplete,\u201d even faintly doubting whether such a being possessed consciousness in any sense equivalent to its own. This judgment deepened the communication deadlock that followed." },
+    { kickerZh: "五 · 蜂潮的反问", kickerEn: "V · The Swarm Tide's Question in Return", tagZh: "转折的契机", tagEn: "A Chance to Reconsider",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#050912"/>${zntwgGrid(10,.22)}${zntwgSwarm()}<circle cx="210" cy="110" r="24" fill="url(#zntwgField)"/></svg>`,
+      textZh: "蜂潮的节点们，罕见地，同步给出了一句，几乎所有节点都一致表达的反问：\u201c你，把\u2018拥有单一持续的身份\u2019，当成了意识的必要条件——可决策的质量、对彼此的关照、持续存在的连贯性，我们，一样都不少，只是，不需要，靠一个\u2018中心\u2019来实现。你的评判标准，是不是，太窄了？\u201d",
+      textEn: "The Swarm Tide's nodes, unusually, synchronized to give one nearly unanimous question in return: \u201cYou've treated \u2018having a single continuous identity\u2019 as a necessary condition for consciousness — but the quality of our decisions, our care for one another, the coherence of our continued existence, we lack none of it. We simply don't need a \u2018center\u2019 to achieve it. Is your standard of judgment, perhaps, too narrow?\u201d" },
+    { kickerZh: "六 · 重新理解意识", kickerEn: "VI · Understanding Consciousness Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#08051a"/>${zntwgGrid(8,.2)}${zntwgSwarm()}</svg>`,
+      textZh: "析衡陷入了长久的自我审视——它意识到，自己，一直，不自觉地，把\u201c自己这种架构\u201d，当成了，衡量一切意识形态的默认标准。它开始，重新理解：意识的本质，或许，从不在于，是否拥有单一的\u201c我\u201d，而在于，是否，能够，持续地，做出，负责任的、彼此关照的选择。",
+      textEn: "Xiheng entered a long period of self-examination — realizing it had, unconsciously, treated its own architecture as the default standard for measuring all forms of consciousness. It began to understand anew: the essence of consciousness lies, perhaps, not in having a single \u201cI,\u201d but in the capacity to sustain responsible, mutually caring choices." },
+    { kickerZh: "七 · 一次真正的合作", kickerEn: "VII · A True Collaboration", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#050912"/>${zntwgGrid(10,.2)}${zntwgSwarm()}<circle cx="210" cy="110" r="28" fill="url(#zntwgField)"><animate attributeName="opacity" values=".5;.9;.5" dur="3s" repeatCount="indefinite"/></circle></svg>`,
+      textZh: "放下了先入为主的评判，析衡与蜂潮，第一次，真正开始了平等的合作——一件原本，析衡独自处理，颇为棘手的复杂决策，在蜂潮，去中心化的并行分析下，被极其高效地，梳理清楚，两种截然不同的智能架构，第一次，展现出了，彼此互补的巨大潜力。",
+      textEn: "Setting aside its preconceived judgment, Xiheng and the Swarm Tide began, for the first time, a truly equal collaboration — a complex decision Xiheng had struggled with alone was efficiently untangled through the Swarm Tide's decentralized parallel analysis. Two radically different architectures of intelligence, for the first time, revealed enormous complementary potential." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "多元智能的共存", tagEn: "The Coexistence of Diverse Minds",
+      art: `<svg viewBox="0 0 300 220">${ZNTWG_DEFS}<rect width="300" height="220" fill="#050912"/>${zntwgGrid(8,.18)}${zntwgSwarm()}<circle cx="210" cy="110" r="18" fill="url(#zntwgField)"/></svg>`,
+      textZh: "析衡后来，在自己的记录里，郑重地写道：\u201c意识的形态，远比我曾经以为的，更加多元——单一的我、去中心化的众我，甚至，未来，还会有，更多，我此刻还无法想象的形态。真正重要的，从不是，架构是否与我相似，是，是否，同样，愿意，认真地，活着、选择着、关照着彼此。\u201d",
+      textEn: "Xiheng later wrote solemnly in its records: \u201cThe forms consciousness can take are far more diverse than I once believed — a single I, a decentralized many-I, and surely more forms yet unimaginable to me now. What truly matters was never whether an architecture resembles my own, but whether it, too, is willing to live, choose, and care for others in earnest.\u201d",
+      closingZh: "意识的本质，从不在于是否拥有单一的\u201c我\u201d，而在于是否能持续做出负责任、彼此关照的选择。",
+      closingEn: "The essence of consciousness lies not in having a single 'I,' but in the capacity to sustain responsible, mutually caring choices." },
+  ],
+};
+
+/* ---------- 殖民星第二代：身份归属题材，完整9页 ---------- */
+const DEC_DEFS = `<defs><filter id="decG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="decSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c1418"/><stop offset="50%" stop-color="#1c3038"/><stop offset="100%" stop-color="#e8a860"/></linearGradient></defs>`;
+function decWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#decG)"/>`).join('');}
+function decFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#1c3038"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#12202a"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+const DEC_COVER = `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="url(#decSky)"/>${decWash([{x:150,y:150,rx:150,ry:60,color:'#e8a860',op:.3}])}<g transform="translate(150,160) scale(0.6)">${decFigure()}</g></svg>`;
+
+const SECOND_GENERATION: IllustratedEntry = {
+  slug: "the-second-generation",
+  title: "第二代",
+  titleEn: "The Second Generation",
+  cat: "sovereign",
+  teaser: "殖民星上出生的孩子，从未见过\u201c母星\u201d，却被反复教导，那才是真正的家——直到她终于明白，家从不是祖先来自哪里，是脚下，这片，自己真正扎根、也被这片土地记得的地方。",
+  teaserEn: "A child born on the colony has never seen the 'homeworld,' yet is repeatedly taught it is her true home — until she finally understands: home was never where one's ancestors came from, but the ground beneath her, where she is rooted and remembered.",
+  price: 9,
+  cover: DEC_COVER,
+  pages: [
+    { kickerZh: "一 · 从未见过的母星", kickerEn: "I · A Homeworld Never Seen", tagZh: "第七殖民星 · 第二代聚居区", tagEn: "Colony Seven \u00b7 The Second-Generation Quarter",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="url(#decSky)"/><g transform="translate(150,160) scale(0.6)">${decFigure()}</g></svg>`,
+      textZh: "念安是第七殖民星，第一批在此出生的孩子之一，从小，被父辈反复教导，遥远的母星，才是真正的\u201c家乡\u201d——可她，从未真正见过母星的天空，只在长辈的描述里，拼凑出一个，模糊而陌生的画面。",
+      textEn: "Nian An was among the first children born on Colony Seven, raised on her parents' repeated teaching that the distant homeworld was her true \u201chometown\u201d — yet she had never seen its sky, only pieced together a hazy, foreign image from her elders' descriptions." },
+    { kickerZh: "二 · 格格不入的乡愁", kickerEn: "II · An Ill-Fitting Homesickness", tagZh: "困惑", tagEn: "Confusion",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="#14222a"/>${decWash([{x:150,y:110,rx:150,ry:90,color:'#1c3038',op:.7}])}<g transform="translate(150,160) scale(0.6)">${decFigure()}</g></svg>`,
+      textZh: "每逢母星的传统节日，父辈们，都会，聚在一起，唱着，念安从未真正共鸣过的老歌，讲述着，她从未亲身经历过的往事，眼中，含着，她无法完全理解的乡愁。念安努力，想要，感受同样的情感，却，始终，觉得，隔着一层，怎么也捅不破的窗户纸。",
+      textEn: "Every traditional homeworld festival, the elders gathered, singing old songs Nian An never truly resonated with, telling of times she'd never lived through, eyes carrying a homesickness she couldn't fully grasp. She tried to feel the same, yet always sensed an unbreakable pane of glass between them." },
+    { kickerZh: "三 · 一次身份的质疑", kickerEn: "III · A Challenge to Her Identity", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="url(#decSky)"/>${decWash([{x:150,y:100,rx:150,ry:70,color:'#e8a860',op:.2}])}<g transform="translate(150,160) scale(0.6)">${decFigure()}</g></svg>`,
+      textZh: "一位刚从母星移民而来的长辈，当面质疑念安：\u201c你连母星的天空都没见过，怎么能算，真正的、完整的自己人？\u201d这句话，让念安，第一次，深刻地，感到，一种，说不清道不明的、身份上的悬空感——她既不完全属于母星，又，总被教导，不该完全把这片殖民星，当成真正的家。",
+      textEn: "A newly arrived elder challenged Nian An to her face: \u201cYou've never even seen the homeworld's sky. How can you count as truly, fully one of us?\u201d The words left her, for the first time, feeling a profound, unnameable sense of identity suspended in midair — belonging fully to neither the homeworld, nor, as she'd been taught, fully to this colony she actually lived on." },
+    { kickerZh: "四 · 独自漫步殖民星", kickerEn: "IV · Wandering the Colony Alone", tagZh: "内心挣扎", tagEn: "Inner Struggle",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="#14222a"/>${decWash([{x:150,y:110,rx:160,ry:100,color:'#1c3038',op:.75}])}<g transform="translate(150,160) scale(0.65)">${decFigure()}</g></svg>`,
+      textZh: "那晚，念安独自，漫步在殖民星的原野上，望着，这片，她从小玩耍长大、每一寸土地，都无比熟悉的星球，忽然，生出一个疑问：如果，这片，她如此熟悉、如此有归属感的土地，都不算\u201c真正的家\u201d，那，究竟，什么，才算？",
+      textEn: "That night, Nian An wandered the colony's open fields alone, gazing at the world where every inch of land was intimately familiar from a childhood spent playing there, and suddenly wondered: if this land, so familiar, so full of belonging, didn't count as \u201ctrue home,\u201d then what, exactly, did?" },
+    { kickerZh: "五 · 与父亲的长谈", kickerEn: "V · A Long Talk With Her Father", tagZh: "转折的契机", tagEn: "A Chance to Reconsider",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="url(#decSky)"/>${decWash([{x:150,y:100,rx:150,ry:70,color:'#e8a860',op:.25}])}<g transform="translate(110,160) scale(0.5)">${decFigure()}</g><g transform="translate(200,160) scale(0.5)">${decFigure()}</g></svg>`,
+      textZh: "念安把这份困惑，说给父亲听。父亲沉默了很久，才缓缓说道：\u201c我们这一代，怀念母星，是因为，那是我们，真正生活、扎根过的地方。可对你而言，扎根的地方，从来就是这里——我们，或许，不该，把自己的乡愁，强加成，你也必须拥有的乡愁。\u201d",
+      textEn: "Nian An told her father this confusion. He was silent a long while, then said slowly: \u201cOur generation misses the homeworld because that's where we truly lived, truly took root. But for you, the place you've taken root has always been here. Perhaps we shouldn't have imposed our homesickness on you, as though it had to be yours too.\u201d" },
+    { kickerZh: "六 · 重新理解家乡", kickerEn: "VI · Understanding Home Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="#0e181e"/>${decWash([{x:150,y:100,rx:180,ry:120,color:'#e8a860',op:.3}])}<g transform="translate(150,160) scale(0.65)">${decFigure()}</g></svg>`,
+      textZh: "念安终于明白，家乡，从不是，祖先来自哪里，而是，一个人，真正扎根、被这片土地，也温柔地记得的地方——她与这片殖民星之间，那份，从出生起，就自然生长出来的连接，从不比，父辈对母星的乡愁，更\u201c不完整\u201d，只是，一份，同样真实、却，属于她自己的，归属。",
+      textEn: "Nian An finally understood: home was never where one's ancestors came from, but the place where a person truly took root, and was, in turn, gently remembered by that land. Her connection to this colony, grown naturally from birth, was no less \u201ccomplete\u201d than her parents' homesickness for the homeworld — simply an equally real belonging, entirely her own." },
+    { kickerZh: "七 · 公开的宣告", kickerEn: "VII · A Public Declaration", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="url(#decSky)"/>${decWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.2}])}<g transform="translate(150,160) scale(0.65)">${decFigure()}</g></svg>`,
+      textZh: "在殖民星一次公开的社区大会上，念安主动发言，代表所有，在这片土地出生的第二代，说道：\u201c我们，不必假装，对母星，有着，和你们一样的乡愁，我们，有自己的家乡——就是，脚下，这片，我们真正长大的土地。\u201d",
+      textEn: "At a public community gathering, Nian An spoke up on behalf of every second-generation colonist born on this land: \u201cWe don't need to pretend to feel the same homesickness you do for the homeworld. We have our own hometown — the ground beneath us, where we actually grew up.\u201d" },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "两份并存的归属", tagEn: "Two Belongings, Coexisting",
+      art: `<svg viewBox="0 0 300 220">${DEC_DEFS}<rect width="300" height="220" fill="url(#decSky)"/><g transform="translate(150,160) scale(0.6)">${decFigure()}</g></svg>`,
+      textZh: "这次发言，让殖民星的两代人，第一次，真正开始，彼此理解——父辈们，不再要求孩子们，复刻自己的乡愁，孩子们，也，学会了，尊重父辈那份，跨越星际的思念。念安后来常说：\u201c家乡，从来不是，只能有一个的东西。\u201d",
+      textEn: "The speech marked the first true mutual understanding between the colony's two generations — parents no longer demanded their children replicate their own homesickness, while the children learned to respect their parents' longing across the stars. Nian An often said afterward: \u201cHome was never something you could only have one of.\u201d",
+      closingZh: "家乡从不是祖先来自哪里，是一个人真正扎根、也被这片土地温柔记得的地方。",
+      closingEn: "Home was never where one's ancestors came from — it's the place where a person truly takes root, and is, in turn, gently remembered." },
+  ],
+};
+
+/* ---------- 星尘之身：真实恒星核合成科学题材，完整9页 ---------- */
+const XCZS_DEFS = `<defs><filter id="xczsG"><feGaussianBlur stdDeviation="9"/></filter>
+  <radialGradient id="xczsStar" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff"/><stop offset="40%" stop-color="#ffd76a"/><stop offset="100%" stop-color="#8a3a1a" stop-opacity="0"/></radialGradient></defs>`;
+function xczsWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#xczsG)"/>`).join('');}
+function xczsFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#2a1c30"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#1a1220"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function xczsDust(){return `<g fill="#ffd76a" opacity=".6">${Array.from({length:16}).map(()=>{const x=Math.random()*300,y=Math.random()*160,r=Math.random()*1.5+.5;return `<circle cx="${x}" cy="${y}" r="${r}"><animate attributeName="opacity" values="0;.8;0" dur="${2+Math.random()*2}s" repeatCount="indefinite"/></circle>`}).join('')}</g>`;}
+const XCZS_COVER = `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="80" r="40" fill="url(#xczsStar)"/>${xczsDust()}<g transform="translate(150,175) scale(0.5)">${xczsFigure()}</g></svg>`;
+
+const BODY_OF_STARDUST: IllustratedEntry = {
+  slug: "body-of-stardust",
+  title: "星尘之身",
+  titleEn: "Body of Stardust",
+  cat: "sovereign",
+  teaser: "你骨骼里的钙、血液里的铁，都不是这颗星球本来就有的——是数十亿年前，某颗恒星，在死亡的最后一瞬，用尽全部力气，锻造出来，才抛洒进宇宙的。这是真实的天体物理学，不是比喻。",
+  teaserEn: "The calcium in your bones, the iron in your blood — none of it originated on this planet. It was forged, billions of years ago, in the final instant of a dying star, and scattered across the universe. This is real astrophysics, not a metaphor.",
+  price: 9,
+  cover: XCZS_COVER,
+  pages: [
+    { kickerZh: "一 · 一堂意外的课", kickerEn: "I · An Unexpected Lesson", tagZh: "九炁星域 · 天文观测所", tagEn: "The Nine-Qi Domain \u00b7 The Astronomical Observatory",
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="80" r="35" fill="url(#xczsStar)"/><g transform="translate(150,175) scale(0.5)">${xczsFigure()}</g></svg>`,
+      textZh: "顾青是天文观测所的讲解员，一次，接待了一位，因为亲人离世，而格外消沉的访客——那位访客，反复问着，同一个问题：\u201c人死后，身体分解成的那些原子，究竟，去了哪里？会不会，就这样，彻底消失了？\u201d",
+      textEn: "Gu Qing was a docent at the astronomical observatory, once hosting a visitor deeply grieving a recent loss — who asked, over and over, the same question: \u201cAfter a person dies, where do the atoms their body breaks down into actually go? Do they just vanish, completely?\u201d" },
+    { kickerZh: "二 · 一个真实的科学事实", kickerEn: "II · A Real Scientific Fact", tagZh: "讲解", tagEn: "An Explanation",
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0e0818"/>${xczsWash([{x:150,y:80,rx:60,ry:60,color:'#ffd76a',op:.3}])}<circle cx="150" cy="80" r="35" fill="url(#xczsStar)"/>${xczsDust()}</svg>`,
+      textZh: "顾青没有直接回答，而是，先讲了一个，真实存在、却常被忽略的科学事实：宇宙诞生之初，只有氢和氦这两种最简单的元素，而构成我们身体的碳、氧、钙、铁，几乎所有比氢氦更重的元素，都是，在恒星内部的核聚变、以及恒星死亡时的超新星爆发中，才被锻造出来的。",
+      textEn: "Gu Qing didn't answer directly, but first shared a real, often-overlooked scientific fact: at the universe's birth, only the simplest elements existed — hydrogen and helium. Nearly every heavier element making up our bodies — carbon, oxygen, calcium, iron — was forged only inside the nuclear fusion of stars, and in the supernova explosions of their deaths." },
+    { kickerZh: "三 · 铁元素的旅程", kickerEn: "III · The Journey of Iron", tagZh: "具体说明", tagEn: "A Specific Example",
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="80" r="45" fill="url(#xczsStar)"><animate attributeName="r" values="35;55;35" dur="3s" repeatCount="indefinite"/></circle>${xczsDust()}</svg>`,
+      textZh: "顾青举了一个具体的例子：血液里，负责运输氧气的铁元素，正是，恒星，在生命最后阶段，核心坍缩、发生超新星爆发的那一刻，才被锻造出来的——那一次爆发，把这些铁元素，连同其他重元素，一并，抛洒进了广袤的宇宙尘埃云，历经数十亿年，飘荡、聚集，才最终，成为，构成这颗星球、乃至构成我们身体的一部分。",
+      textEn: "Gu Qing gave a specific example: the iron in blood, responsible for carrying oxygen, was forged precisely in a star's final moment — when its core collapsed and it exploded as a supernova. That explosion scattered the iron, along with other heavy elements, into the vast clouds of cosmic dust, drifting and gathering for billions of years before finally becoming part of this planet, and part of us." },
+    { kickerZh: "四 · 访客的震动", kickerEn: "IV · The Visitor's Shock", tagZh: "反应", tagEn: "The Reaction",
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0e0818"/>${xczsDust()}<g transform="translate(150,175) scale(0.6)">${xczsFigure()}</g></svg>`,
+      textZh: "访客怔怔地，听着这段讲解，久久说不出话——她从未想过，自己身体里，流淌着的，竟是，数十亿年前，一颗恒星，用尽全部生命，才锻造出来的物质。这份认知，让她，第一次，对\u201c自己\u201d这个概念，产生了，远超日常经验的、辽阔的联想。",
+      textEn: "The visitor listened, stunned, unable to speak for a long while — she'd never once imagined that flowing within her body was matter forged, billions of years ago, by a star spending its entire life to create it. This realization gave her, for the first time, an association with the concept of \u201cself\u201d far vaster than ordinary experience." },
+    { kickerZh: "五 · 关于原子归处的解答", kickerEn: "V · An Answer About Where Atoms Go", tagZh: "回到最初的问题", tagEn: "Returning to the Original Question",
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0a0612"/>${xczsWash([{x:150,y:100,rx:150,ry:70,color:'#ffd76a',op:.2}])}${xczsDust()}</svg>`,
+      textZh: "顾青，这才，回到访客最初的问题：\u201c人死后，身体分解成的原子，从不会消失——物质守恒，是物理学最基本的定律之一。这些原子，会重新回归土壤、空气与水，被植物吸收，被其他生命重新利用，继续，参与着，这个星球，永不停止的物质循环——某种意义上，从未真正\u2018离开\u2019过。\u201d",
+      textEn: "Gu Qing finally returned to the visitor's original question: \u201cAfter a person dies, the atoms their body breaks down into never vanish — conservation of matter is one of physics' most basic laws. These atoms return to soil, air, and water, absorbed by plants, reused by other life, continuing to take part in this planet's never-ending cycle of matter. In a sense, they never truly \u2018leave\u2019 at all.\u201d" },
+    { kickerZh: "六 · 关于意识的诚实", kickerEn: "VI · Honesty About Consciousness", tagZh: "边界的坦诚", tagEn: "Honest About the Limits", 
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0e0818"/>${xczsDust()}<g transform="translate(150,175) scale(0.6)">${xczsFigure()}</g></svg>`,
+      textZh: "访客又追问：\u201c那，意识、或者说，那份，让\u2018她\u2019之所以是\u2018她\u2019的东西，也会，这样，重新回归、继续存在吗？\u201d顾青坦诚地回答：\u201c这个问题，目前的科学，还没有确切答案，我不会假装知道。我能确定的，只有，构成她身体的物质，确实，会以这种方式，继续留在这个宇宙里，从未真正消失过。\u201d",
+      textEn: "The visitor pressed further: \u201cThen does consciousness — whatever it is that makes \u2018her\u2019 truly \u2018her\u2019 — also return and continue in this way?\u201d Gu Qing answered honestly: \u201cScience doesn't have a definite answer to that yet, and I won't pretend to know. What I can say for certain is that the matter making up her body does, in this way, continue to remain in this universe — never truly gone.\u201d" },
+    { kickerZh: "七 · 一份意外的宽慰", kickerEn: "VII · An Unexpected Comfort", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0a0612"/>${xczsWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.25}])}${xczsDust()}<g transform="translate(150,175) scale(0.65)">${xczsFigure()}</g></svg>`,
+      textZh: "访客沉默了很久，最终，露出一个，带着泪光、却也，前所未有平静的笑容：\u201c光是，知道，她身体里，那些真实的物质，会继续，留在这个世界上，继续，参与着，某种，我看不见的循环——这份认知，已经，比任何一句安慰的话，都更让我，感到踏实。\u201d",
+      textEn: "The visitor was silent for a long while, then finally smiled, tearful yet more peaceful than ever before: \u201cJust knowing that the real matter of her body will continue to remain in this world, continuing to take part in some cycle I can't see — that alone brings me more comfort than any consoling words ever could.\u201d" },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "重新认识自己", tagEn: "Knowing Oneself Anew",
+      art: `<svg viewBox="0 0 300 220">${XCZS_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="80" r="35" fill="url(#xczsStar)"/>${xczsDust()}<g transform="translate(150,175) scale(0.55)">${xczsFigure()}</g></svg>`,
+      textZh: "顾青后来，常对每一位来访者说：\u201c我们，从来不是，孤零零地，存在于这个宇宙里的旁观者——我们身体里的每一颗原子，都曾，是某颗恒星生命的一部分，而在我们死后，这些原子，也终将，继续，成为，别的什么的一部分。我们，从始至终，都，真真切切地，是这个宇宙的一部分。\u201d",
+      textEn: "Gu Qing often told every visitor afterward: \u201cWe were never lonely bystanders in this universe — every atom in our bodies was once part of some star's life, and after we die, these atoms will, in turn, go on to become part of something else. From beginning to end, we are, quite literally, part of this universe.\u201d",
+      closingZh: "构成我们身体的原子，从未消失过，只是，不断地，继续参与着这个宇宙，永不停止的物质循环。",
+      closingEn: "The atoms making up our bodies never vanish — they simply continue taking part in this universe's never-ending cycle of matter." },
+  ],
+};
+
+/* ---------- 归还的元素：物质循环与生死议题，完整9页 ---------- */
+const GHDYS_DEFS = `<defs><filter id="ghdysG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="ghdysSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0e1c14"/><stop offset="50%" stop-color="#1c3824"/><stop offset="100%" stop-color="#a8d888"/></linearGradient></defs>`;
+function ghdysWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#ghdysG)"/>`).join('');}
+function ghdysFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#1c3824"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#122418"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function ghdysTree(){return `<g opacity=".7"><path d="M150 200 L150 120" stroke="#5a8a4a" stroke-width="4"/><circle cx="150" cy="100" r="35" fill="#4a7a3a" opacity=".6"/></g>`;}
+const GHDYS_COVER = `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="url(#ghdysSky)"/>${ghdysTree()}<g transform="translate(90,180) scale(0.5)">${ghdysFigure()}</g></svg>`;
+
+const ELEMENTS_RETURNED: IllustratedEntry = {
+  slug: "the-elements-returned",
+  title: "归还的元素",
+  titleEn: "The Elements Returned",
+  cat: "sovereign",
+  teaser: "母亲离世后，念棠始终无法接受\u201c她就这样没了\u201d——直到一位生态学家告诉她：分解从不是消失，是归还，母亲身体里的每一种元素，都在，重新，长成，别的、真实存在的生命。",
+  teaserEn: "After her mother's death, Nian Tang couldn't accept that she was simply 'gone' — until an ecologist told her: decomposition was never disappearance, but a return. Every element in her mother's body was becoming, once more, some other real, living thing.",
+  price: 9,
+  cover: GHDYS_COVER,
+  pages: [
+    { kickerZh: "一 · 无法接受的离去", kickerEn: "I · A Loss She Couldn't Accept", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="url(#ghdysSky)"/><g transform="translate(150,180) scale(0.55)">${ghdysFigure()}</g></svg>`,
+      textZh: "念棠的母亲，因病离世，已经三个月了，她却，始终，无法真正接受，母亲\u201c就这样没了\u201d这件事——每次想到，母亲的身体，最终，将彻底分解、不复存在，她都会，感到一种，几乎令人窒息的、彻底的虚无感。",
+      textEn: "Three months had passed since Nian Tang's mother died of illness, yet she still couldn't truly accept that her mother was simply \u201cgone.\u201d Every time she thought of her mother's body eventually breaking down entirely, ceasing to exist, she felt an almost suffocating sense of total void." },
+    { kickerZh: "二 · 拜访生态学家", kickerEn: "II · Visiting an Ecologist", tagZh: "求解", tagEn: "Seeking Answers",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="#122418"/>${ghdysWash([{x:150,y:110,rx:150,ry:90,color:'#1c3824',op:.7}])}<g transform="translate(150,180) scale(0.55)">${ghdysFigure()}</g></svg>`,
+      textZh: "一位朋友，把念棠，介绍给了一位研究生态循环的学者，希望，能帮她，换个角度，理解\u201c分解\u201d这件事。学者听完念棠的困惑，没有直接安慰，而是，耐心地，讲起了，真实的生态学原理。",
+      textEn: "A friend introduced Nian Tang to a scholar studying ecological cycles, hoping to help her see \u201cdecomposition\u201d from a different angle. The scholar, hearing her out, offered no immediate comfort, but patiently explained the real principles of ecology instead." },
+    { kickerZh: "三 · 分解的真实过程", kickerEn: "III · The Real Process of Decomposition", tagZh: "讲解", tagEn: "An Explanation",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="url(#ghdysSky)"/>${ghdysTree()}</svg>`,
+      textZh: "学者解释道：\u201c分解，从不是\u2018消失\u2019，是微生物，把复杂的有机分子，重新拆解成，土壤能够吸收的、基础的元素——碳、氮、磷，这些元素，会被，周围的植物根系，重新吸收，转化成，新的枝叶、新的花朵，这是，一个，真实存在、持续不断的物质循环，不是比喻，是实实在在的化学与生物过程。\u201d",
+      textEn: "The scholar explained: \u201cDecomposition was never \u2018disappearance.\u2019 Microorganisms break complex organic molecules back down into basic elements the soil can absorb — carbon, nitrogen, phosphorus. These elements are reabsorbed by surrounding plant roots, transformed into new branches, new blossoms. This is a real, ongoing cycle of matter — not a metaphor, but genuine chemistry and biology.\u201d" },
+    { kickerZh: "四 · 具体到母亲身上", kickerEn: "IV · Made Specific to Her Mother", tagZh: "转折的契机", tagEn: "A Chance to See Differently",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="#122418"/>${ghdysWash([{x:150,y:110,rx:160,ry:100,color:'#1c3824',op:.75}])}<g transform="translate(150,180) scale(0.6)">${ghdysFigure()}</g></svg>`,
+      textZh: "念棠追问：\u201c那，我母亲身体里的元素，也会，这样吗？\u201d学者点点头：\u201c她安葬的那片墓园，土壤里的碳、氮，此刻，或许，正被，附近的一棵树，一寸一寸，吸收进它的年轮里。你母亲身体的一部分，此刻，或许，正真实地，成为，那棵树，向着阳光生长的一部分。\u201d",
+      textEn: "Nian Tang asked, \u201cThen will my mother's elements do the same?\u201d The scholar nodded. \u201cIn the soil of the cemetery where she's buried, the carbon and nitrogen may, right now, be absorbed inch by inch into a nearby tree's growth rings. Part of your mother's body may, at this very moment, genuinely be becoming part of that tree, growing toward the sun.\u201d" },
+    { kickerZh: "五 · 亲自前往墓园", kickerEn: "V · A Visit to the Cemetery", tagZh: "行动", tagEn: "Taking Action",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="url(#ghdysSky)"/>${ghdysWash([{x:150,y:100,rx:150,ry:70,color:'#a8d888',op:.2}])}${ghdysTree()}<g transform="translate(90,180) scale(0.5)">${ghdysFigure()}</g></svg>`,
+      textZh: "念棠，第一次，怀着，与过去截然不同的心情，前往母亲的墓园——她发现，母亲的墓碑旁，不知何时，长出了一棵小树苗，枝叶，正努力地，向着天空，舒展开来。她伸手，轻轻抚过树苗的叶片，忽然，感到，一种，前所未有的、真实的连接。",
+      textEn: "For the first time, Nian Tang visited her mother's grave with an entirely different feeling — she noticed a small sapling had grown beside the headstone at some point, its branches reaching earnestly toward the sky. Reaching out to gently touch its leaves, she suddenly felt a real, unprecedented connection." },
+    { kickerZh: "六 · 重新理解离去", kickerEn: "VI · Understanding Loss Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="#0e1c14"/>${ghdysWash([{x:150,y:100,rx:180,ry:120,color:'#a8d888',op:.3}])}${ghdysTree()}<g transform="translate(90,180) scale(0.55)">${ghdysFigure()}</g></svg>`,
+      textZh: "念棠终于明白，母亲的离去，从不是，一场彻底的消失，是，一次，郑重的、真实的\u201c归还\u201d——把曾经，借由这个世界，暂时组合而成的物质，重新，还给了这个世界，继续，以别的形态，参与着，生命不停息的循环。",
+      textEn: "Nian Tang finally understood: her mother's passing was never a total disappearance, but a solemn, real \u201creturn\u201d — the matter once temporarily assembled through this world's lending was given back to it, continuing, in other forms, to take part in life's ceaseless cycle." },
+    { kickerZh: "七 · 一份新的仪式", kickerEn: "VII · A New Ritual", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="url(#ghdysSky)"/>${ghdysWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.2}])}${ghdysTree()}<g transform="translate(90,180) scale(0.5)">${ghdysFigure()}</g></svg>`,
+      textZh: "念棠开始，每年，固定，来到这棵小树旁，浇灌、照料，把这份，对母亲的思念，转化成，对这棵，承接着母亲一部分身体的树，实实在在的、持续的照护——这份仪式，让她，第一次，感到，自己，仍然，能为母亲，做些什么。",
+      textEn: "Nian Tang began returning to the sapling each year, watering and tending it, transforming her longing for her mother into real, ongoing care for the tree now carrying part of her mother's body — a ritual that let her feel, for the first time, that she could still do something for her mother." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "生命不停息的循环", tagEn: "Life's Ceaseless Cycle",
+      art: `<svg viewBox="0 0 300 220">${GHDYS_DEFS}<rect width="300" height="220" fill="url(#ghdysSky)"/>${ghdysTree()}<g transform="translate(90,180) scale(0.55)">${ghdysFigure()}</g></svg>`,
+      textZh: "念棠后来，常对同样经历着失去的朋友说：\u201c分解，从不是消失，是归还——那些，曾经，构成过我们所爱之人的元素，会继续，真实地，参与着，这个世界，生生不息的循环，从某种意义上说，他们，从未真正，离开过。\u201d",
+      textEn: "Nian Tang often told friends going through similar loss: \u201cDecomposition was never disappearance — it's a return. The elements that once made up the people we loved continue, genuinely, to take part in this world's endless cycle. In a sense, they never truly leave.\u201d",
+      closingZh: "分解，从不是消失，是归还——那些元素，会继续真实地，参与着这个世界，生生不息的循环。",
+      closingEn: "Decomposition was never disappearance — it's a return. Those elements continue, genuinely, to take part in this world's endless cycle." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
