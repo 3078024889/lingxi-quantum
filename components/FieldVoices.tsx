@@ -106,7 +106,7 @@ export default function FieldVoices() {
     if (nodes.length === 0) return;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const sideCount = Math.max(1, nodes.filter((d) => d.zone === "side").length);
-    const maxActive = reduce ? 1 : isMobile ? Math.min(4, Math.ceil(sideCount / 3)) : Math.min(5, Math.ceil(sideCount / 5));
+    const maxActive = reduce ? 2 : isMobile ? Math.min(5, Math.ceil(sideCount / 2.4)) : Math.min(6, Math.ceil(sideCount / 3));
     const tick = () => {
       setSpeaking((prev) => {
         if (Object.keys(prev).length >= maxActive) return prev;
@@ -121,11 +121,12 @@ export default function FieldVoices() {
         return next;
       });
     };
-    const iv = setInterval(tick, reduce ? 5200 : isMobile ? 1700 : 2200);
-    const first = setTimeout(tick, 250);
-    const second = setTimeout(tick, 900);
+    const iv = setInterval(tick, reduce ? 3400 : isMobile ? 1300 : 1600);
+    const first = setTimeout(tick, 150);
+    const second = setTimeout(tick, 500);
+    const third = setTimeout(tick, 950);
     return () => {
-      clearInterval(iv); clearTimeout(first); clearTimeout(second);
+      clearInterval(iv); clearTimeout(first); clearTimeout(second); clearTimeout(third);
       timers.current.forEach(clearTimeout); timers.current = [];
     };
   }, [nodes, isMobile]);

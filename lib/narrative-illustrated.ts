@@ -4134,7 +4134,336 @@ const LEAF_FALL_BETWEEN: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN];
+/* ---------- 心有灵犀：新星域，跨越距离的默契题材，完整9页 ---------- */
+const XLX_DEFS = `<defs><filter id="xlxG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="xlxSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#160a1c"/><stop offset="50%" stop-color="#3a1a3a"/><stop offset="100%" stop-color="#e0a2c9"/></linearGradient></defs>`;
+function xlxWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#xlxG)"/>`).join('');}
+function xlxFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#3a1a3a"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#241220"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function xlxThread(){return `<path d="M60 60 Q150 20 240 160" stroke="#e0a2c9" stroke-width="1" fill="none" opacity=".5" stroke-dasharray="3 4"><animate attributeName="opacity" values=".2;.6;.2" dur="3s" repeatCount="indefinite"/></path>`;}
+const XLX_COVER = `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="url(#xlxSky)"/>${xlxThread()}<g transform="translate(90,120) scale(0.5)">${xlxFigure()}</g><g transform="translate(220,150) scale(0.5)">${xlxFigure()}</g></svg>`;
+
+const HEART_MIND_RESONANCE: IllustratedEntry = {
+  slug: "heart-mind-resonance",
+  title: "心有灵犀",
+  titleEn: "Heart-Mind Resonance",
+  cat: "sovereign",
+  teaser: "两个从未谋面、相隔整片星域的人，总在同一刻，想起同一件事——不是巧合，也不是玄学，是两颗，长期把注意力，安放在同一种珍视上的心，终于，被彼此认了出来。",
+  teaserEn: "Two strangers, separated by an entire star domain, keep thinking the same thought at the same instant — not coincidence, not mysticism. It's two hearts, long attentive to the same kind of care, finally recognizing each other.",
+  price: 9,
+  cover: XLX_COVER,
+  pages: [
+    { kickerZh: "一 · 说不清的巧合", kickerEn: "I · An Inexplicable Coincidence", tagZh: "一处无名的星域", tagEn: "An Unnamed Domain",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="url(#xlxSky)"/><g transform="translate(150,150) scale(0.6)">${xlxFigure()}</g></svg>`,
+      textZh: "阮溪与陌生人厉行，素未谋面，隔着半个星域，却总在同一个瞬间，说出同一句话，想起同一段旋律，甚至，在各自最艰难的日子里，几乎同时，梦见同一个模糊的场景。起初，两人都以为，这不过是几次巧合，直到，这种同步，出现了第七次、第八次，密集得，再也无法用\u201c偶然\u201d解释。",
+      textEn: "Ruan Xi and a stranger named Li Xing had never met, separated by half a star domain, yet kept speaking the same sentence at the same instant, recalling the same melody, even, on their hardest days, dreaming nearly the same hazy scene. At first, both assumed coincidence — until it happened a seventh, an eighth time, too frequent to explain away as chance." },
+    { kickerZh: "二 · 请教遥视者", kickerEn: "II · Seeking a Remote Viewer's Counsel", tagZh: "求解", tagEn: "Seeking Answers",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="#1c0c1c"/>${xlxWash([{x:150,y:110,rx:150,ry:90,color:'#3a1a3a',op:.7}])}<g transform="translate(150,150) scale(0.6)">${xlxFigure()}</g></svg>`,
+      textZh: "阮溪找到甄墟星带一位资深的遥视者，请教这种同步现象的成因。遥视者查阅了两人的意识轨迹，久久没有说话，最终说道：\u201c你们从未见过面，却在过去三年里，各自，把最多的注意力，投在了同一件事上——对身边人，毫无保留的关照。这份长期的专注，本身，就会让两颗心，在场域深处，悄悄同频。\u201d",
+      textEn: "Ruan Xi sought counsel from a senior remote viewer on the Zhenxu Belt, asking what caused this synchronization. The viewer examined both their conscious trajectories, silent for a long while, before saying: \u201cYou've never met, yet for three years, you've each poured your deepest attention into the same thing — caring for those around you, without reservation. That sustained focus, on its own, quietly brings two hearts into the same frequency, deep within the Field.\u201d" },
+    { kickerZh: "三 · 怀疑与验证", kickerEn: "III · Doubt and Verification", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="url(#xlxSky)"/>${xlxWash([{x:150,y:100,rx:150,ry:70,color:'#e0a2c9',op:.2}])}<g transform="translate(150,150) scale(0.6)">${xlxFigure()}</g></svg>`,
+      textZh: "阮溪将信将疑，决定亲自验证——她开始，有意识地，在每天固定的时刻，专注地想着一件，与\u201c关照他人\u201d毫无关系的琐事，看看这份同步，是否，还会出现。接连试了半个月，那种奇妙的同频感，果然，明显地，淡了下去。",
+      textEn: "Skeptical, Ruan Xi decided to test it herself — deliberately, at a fixed time each day, focusing on some trivial thought entirely unrelated to caring for others, to see if the synchrony still occurred. After half a month, that wondrous sense of resonance had, indeed, noticeably faded." },
+    { kickerZh: "四 · 恢复专注", kickerEn: "IV · Returning to Focus", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="#1c0c1c"/>${xlxWash([{x:150,y:110,rx:160,ry:100,color:'#3a1a3a',op:.7}])}<g transform="translate(150,150) scale(0.6)">${xlxFigure()}</g></svg>`,
+      textZh: "阮溪停止了刻意的干扰实验，重新，像从前一样，把心思，放回身边真正在意的人和事上。没过几天，那种熟悉的、与厉行同步的感觉，又悄悄回来了——这一次，她第一次，清晰地，感觉到了，那份连接背后，真实的原理。",
+      textEn: "Ruan Xi stopped her deliberate interference, returning her attention to the people and things she genuinely cared about, as before. Within days, that familiar sense of synchrony with Li Xing quietly returned — this time, for the first time, she clearly felt the real mechanism behind the connection." },
+    { kickerZh: "五 · 一次真正的相遇", kickerEn: "V · A True Meeting", tagZh: "高潮的铺垫", tagEn: "Building to Climax",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="url(#xlxSky)"/>${xlxWash([{x:150,y:100,rx:150,ry:70,color:'#e0a2c9',op:.25}])}<g transform="translate(90,150) scale(0.5)">${xlxFigure()}</g><g transform="translate(220,150) scale(0.5)">${xlxFigure()}</g></svg>`,
+      textZh: "半年后，阮溪因为一次工作调动，恰好，来到了厉行所在的星域。两人在一场偶然的公开讲座上，第一次真正见面——彼此都是一怔，随即，相视一笑，仿佛，早已相识多年，那份跨越了整片星域的默契，第一次，落进了实实在在的现实里。",
+      textEn: "Six months later, a work transfer brought Ruan Xi to Li Xing's own domain. The two met, truly, for the first time, at a public lecture — both froze for an instant, then smiled at each other, as if they'd known one another for years, that rapport spanning an entire star domain finally landing in solid reality." },
+    { kickerZh: "六 · 确认彼此的坚持", kickerEn: "VI · Confirming Each Other's Devotion", tagZh: "对话", tagEn: "Dialogue",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="#1c0c1c"/>${xlxWash([{x:150,y:110,rx:160,ry:100,color:'#3a1a3a',op:.75}])}<g transform="translate(90,150) scale(0.55)">${xlxFigure()}</g><g transform="translate(220,150) scale(0.55)">${xlxFigure()}</g></svg>`,
+      textZh: "两人交谈之下，才发现，厉行这三年，也一直，把大部分心力，用在了照顾一群失去双亲的孩子身上，从未有过丝毫懈怠。\u201c原来，你也一直，在做着，同样重要的事，\u201d阮溪感慨道，\u201c难怪，我们的心，隔着这么远，还能听见彼此。\u201d",
+      textEn: "Talking further, they discovered Li Xing had, these three years, devoted most of his energy to caring for a group of orphaned children, never once slackening. \u201cSo you've been doing something just as important, all along,\u201d Ruan Xi said, moved. \u201cNo wonder our hearts could hear each other, across all that distance.\u201d" },
+    { kickerZh: "七 · 重新理解心有灵犀", kickerEn: "VII · Understanding the Bond Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="url(#xlxSky)"/>${xlxWash([{x:150,y:100,rx:170,ry:110,color:'#fff3d0',op:.2}])}<g transform="translate(90,150) scale(0.55)">${xlxFigure()}</g><g transform="translate(220,150) scale(0.55)">${xlxFigure()}</g></svg>`,
+      textZh: "阮溪终于明白，所谓\u201c心有灵犀\u201d，从不是什么与生俱来的玄妙天赋，是两颗，各自持续地，把注意力，安放在同一种珍视上的心，久而久之，自然而然地，找到了彼此的频率——这份默契，是攒出来的，不是等来的。",
+      textEn: "Ruan Xi finally understood: this heart-mind resonance was never some innate, mystical gift. It was two hearts, each sustaining their attention on the same kind of care, over time, naturally finding each other's frequency — a rapport earned, not simply awaited." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "长久的默契", tagEn: "A Lasting Rapport",
+      art: `<svg viewBox="0 0 300 220">${XLX_DEFS}<rect width="300" height="220" fill="url(#xlxSky)"/><g transform="translate(90,150) scale(0.5)">${xlxFigure()}</g><g transform="translate(220,150) scale(0.5)">${xlxFigure()}</g></svg>`,
+      textZh: "多年以后，阮溪与厉行，成了并肩同行的伙伴，一起把\u201c关照他人\u201d这件事，做得更大、更长久。他们常对旁人说：\u201c想找到，真正能与你同频的人，别急着到处寻找，先把心思，长久地，放在你真正珍视的事上——同频的人，自会循着这份频率，找到你。\u201d",
+      textEn: "Years later, Ruan Xi and Li Xing became lifelong partners, growing their shared work of caring for others into something larger, more lasting. They often told others: \u201cIf you want to find someone truly attuned to you, don't rush to search everywhere — first sustain your attention on what you truly value. Those on the same frequency will find their way to you.\u201d",
+      closingZh: "心有灵犀，从不是与生俱来的玄妙天赋，是两颗持续安放在同一种珍视上的心，自然而然找到的频率。",
+      closingEn: "Heart-mind resonance was never an innate, mystical gift — it's the frequency two hearts naturally find when each sustains its attention on the same kind of care." },
+  ],
+};
+
+/* ---------- 星际穿越：折叠空间航道题材，完整9页 ---------- */
+const XJCY_DEFS = `<defs><filter id="xjcyG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="xjcySky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#05060e"/><stop offset="50%" stop-color="#141c3a"/><stop offset="100%" stop-color="#7ce0d3"/></linearGradient></defs>`;
+function xjcyWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#xjcyG)"/>`).join('');}
+function xjcyFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#141c3a"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#0c1228"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function xjcyTunnel(){return `<g opacity=".6">${Array.from({length:6}).map((_,i)=>`<ellipse cx="150" cy="110" rx="${30+i*22}" ry="${16+i*11}" fill="none" stroke="#7ce0d3" stroke-width="1"><animate attributeName="opacity" values="${.7-i*.1};${.2};${.7-i*.1}" dur="${2+i*.3}s" repeatCount="indefinite"/></ellipse>`).join('')}</g>`;}
+const XJCY_COVER = `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="url(#xjcySky)"/>${xjcyTunnel()}<g transform="translate(150,175) scale(0.5)">${xjcyFigure()}</g></svg>`;
+
+const INTERSTELLAR_CROSSING: IllustratedEntry = {
+  slug: "interstellar-crossing",
+  title: "星际穿越",
+  titleEn: "The Interstellar Crossing",
+  cat: "sovereign",
+  teaser: "折叠航道内部，时间不再线性流动——一位领航员，在这条能瞬息抵达远方的航道里，第一次，真正体会到，\u201c抵达\u201d从不是旅程的终点，\u201c经过\u201d本身，才是。",
+  teaserEn: "Inside the folded corridor, time no longer flows linearly. A navigator, in this passage capable of instant arrival, discovers for the first time that arrival was never the destination — the crossing itself was.",
+  price: 9,
+  cover: XJCY_COVER,
+  pages: [
+    { kickerZh: "一 · 折叠航道", kickerEn: "I · The Folded Corridor", tagZh: "澜汜古环 · 远航学院", tagEn: "The Lansi Ring \u00b7 The Voyager Academy",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="url(#xjcySky)"/><g transform="translate(150,175) scale(0.5)">${xjcyFigure()}</g></svg>`,
+      textZh: "沈砚是远航学院最年轻的领航员，专门负责，驾驶飞船，穿行于连接各大星域的折叠航道——这条航道，能把原本需要数十年才能跨越的距离，压缩进短短几个昼夜。沈砚一心想尽快熟练这门技艺，早日执飞更远、更重要的航线。",
+      textEn: "Shen Yan was the youngest navigator at the Voyager Academy, tasked with piloting ships through the folded corridors connecting the great star domains — passages compressing what would take decades to cross into a mere few days. Shen Yan was eager to master the craft quickly, to fly farther, more important routes as soon as possible." },
+    { kickerZh: "二 · 第一次独立执飞", kickerEn: "II · The First Solo Flight", tagZh: "任务", tagEn: "The Mission",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="#08051a"/>${xjcyTunnel()}<g transform="translate(150,175) scale(0.55)">${xjcyFigure()}</g></svg>`,
+      textZh: "沈砚第一次独立执飞，一心只想着，尽快穿过航道、抵达目的地，交出一份漂亮的成绩单。可就在飞船进入折叠航道的深处时，一件她完全没有预料到的事发生了——航道内部的时间，忽然，不再按线性的方式流动。",
+      textEn: "On her first solo flight, Shen Yan thought only of crossing the corridor quickly, arriving, delivering an impressive result. But as her ship entered the corridor's depths, something entirely unexpected happened — time inside the passage suddenly stopped flowing linearly." },
+    { kickerZh: "三 · 时间紊乱的恐慌", kickerEn: "III · The Panic of Disordered Time", tagZh: "危机", tagEn: "The Crisis",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="#05060e"/>${xjcyTunnel()}<g transform="translate(150,175) scale(0.65) rotate(3)">${xjcyFigure()}</g></svg>`,
+      textZh: "沈砚一度陷入恐慌——飞船的计时系统，显示出的时间，忽快忽慢，甚至偶尔倒退，仪表盘上，各种数据，杂乱地跳动，她拼命尝试着，用学院教过的所有应急方案，去\u201c修正\u201d这份紊乱，却始终，徒劳无功。",
+      textEn: "Shen Yan fell into panic — the ship's chronometer showed time speeding up, slowing down, occasionally even reversing, instruments flashing chaotic readings. She desperately tried every emergency protocol the Academy had taught her to \u201cfix\u201d the disorder, all in vain." },
+    { kickerZh: "四 · 停止挣扎", kickerEn: "IV · Ceasing to Struggle", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="url(#xjcySky)"/>${xjcyWash([{x:150,y:100,rx:150,ry:70,color:'#7ce0d3',op:.2}])}<g transform="translate(150,175) scale(0.55)">${xjcyFigure()}</g></svg>`,
+      textZh: "耗尽了所有应急方案后，沈砚终于，精疲力竭地，停止了挣扎，只是，任由飞船，安静地，悬浮在这片时间紊乱的航道深处。奇怪的是，就在她停止对抗的那一刻，那种令人恐慌的紊乱感，反而，渐渐地，平息了下来。",
+      textEn: "Having exhausted every protocol, Shen Yan, utterly spent, finally stopped struggling, simply letting the ship drift quietly in the corridor's disordered depths. Strangely, the instant she stopped fighting it, that panicked sense of chaos gradually settled." },
+    { kickerZh: "五 · 航道深处的领悟", kickerEn: "V · A Realization in the Deep Corridor", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="#08051a"/>${xjcyTunnel()}<g transform="translate(150,175) scale(0.6)">${xjcyFigure()}</g></svg>`,
+      textZh: "在那片安静下来的悬浮里，沈砚第一次，真正\u201c看清\u201d了这条折叠航道——它从不是一条，需要被尽快穿越、甩在身后的通道，而是一处，时间本身，会暂时失去线性意义的、独特的场域，穿行其中的人，若一味只想着\u201c赶紧抵达\u201d，反而，会完全错过，这条航道，本身携带着的，独特体验。",
+      textEn: "In that settled suspension, Shen Yan truly \u201csaw\u201d the folded corridor for the first time — never a passage to be rushed through and left behind, but a unique field where time itself temporarily lost its linear meaning. Anyone passing through, fixated only on arriving quickly, would entirely miss the distinct experience the corridor itself carried." },
+    { kickerZh: "六 · 重新驾驶", kickerEn: "VI · Flying Anew", tagZh: "转变", tagEn: "The Shift",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="url(#xjcySky)"/>${xjcyWash([{x:150,y:100,rx:150,ry:70,color:'#7ce0d3',op:.25}])}<g transform="translate(150,175) scale(0.6)">${xjcyFigure()}</g></svg>`,
+      textZh: "沈砚不再执着于\u201c尽快穿过\u201d，转而，安静地，感受着航道内部，那些奇异的、脱离线性时间的景象——扭曲的光带、静止又流动的星尘，第一次，把这段旅程，当成了值得细细体验的过程，而非，需要尽快甩开的负担。",
+      textEn: "Shen Yan stopped fixating on rushing through, instead quietly taking in the corridor's strange sights, freed from linear time — twisting bands of light, stardust both still and flowing, treating the journey, for the first time, as an experience worth savoring rather than a burden to shed quickly." },
+    { kickerZh: "七 · 安全抵达", kickerEn: "VII · A Safe Arrival", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="url(#xjcySky)"/>${xjcyWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.25}])}<g transform="translate(150,175) scale(0.65)">${xjcyFigure()}</g></svg>`,
+      textZh: "当飞船最终驶出折叠航道时，沈砚惊讶地发现，实际耗费的时间，比学院任何一位前辈，都要更短、更平稳——那份，不再执着于\u201c赶紧穿过\u201d的从容，反而，让整趟航行，变得，前所未有地，顺畅。",
+      textEn: "When the ship finally emerged from the folded corridor, Shen Yan discovered, to her surprise, that the actual elapsed time was shorter and steadier than any senior navigator had ever managed — the ease of no longer fixating on rushing through had made the entire voyage smoother than ever before." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "新一代领航员的心法", tagEn: "A New Navigator's Creed",
+      art: `<svg viewBox="0 0 300 220">${XJCY_DEFS}<rect width="300" height="220" fill="url(#xjcySky)"/><g transform="translate(150,175) scale(0.5)">${xjcyFigure()}</g></svg>`,
+      textZh: "沈砚后来成了远航学院最受敬重的导师，教给新一代领航员的第一课，永远是：\u201c折叠航道教给我们最重要的一课，从不是如何更快抵达，是，抵达从不是旅程的终点，经过本身，才是。\u201d",
+      textEn: "Shen Yan became the Academy's most respected mentor, and the first lesson she gave every new navigator was always this: \u201cThe most important thing the folded corridor teaches is never how to arrive faster — arrival was never the destination. The crossing itself was.\u201d",
+      closingZh: "抵达，从不是旅程真正的终点，经过本身，才是。",
+      closingEn: "Arrival was never the true destination of a journey — the crossing itself was." },
+  ],
+};
+
+/* ---------- 植物王国：真菌网络通讯题材（基于真实菌根网络科学），完整9页 ---------- */
+const ZWWG_DEFS = `<defs><filter id="zwwgG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="zwwgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a1c10"/><stop offset="50%" stop-color="#1a3a20"/><stop offset="100%" stop-color="#8ad48a"/></linearGradient></defs>`;
+function zwwgWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#zwwgG)"/>`).join('');}
+function zwwgFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#1a3a20"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#12280f"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function zwwgRoots(){return `<g stroke="#8ad48a" stroke-width=".8" fill="none" opacity=".5">${Array.from({length:7}).map((_,i)=>{const x1=40+i*35,y1=200;const x2=x1+(Math.random()*40-20),y2=140-Math.random()*30;return `<path d="M${x1} ${y1} Q${(x1+x2)/2} ${(y1+y2)/2-10} ${x2} ${y2}"><animate attributeName="opacity" values=".2;.6;.2" dur="${2+i*.3}s" repeatCount="indefinite"/></path>`}).join('')}</g>`;}
+const ZWWG_COVER = `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="url(#zwwgSky)"/>${zwwgRoots()}<g transform="translate(150,175) scale(0.55)">${zwwgFigure()}</g></svg>`;
+
+const PLANT_KINGDOM: IllustratedEntry = {
+  slug: "the-plant-kingdom",
+  title: "植物王国",
+  titleEn: "The Plant Kingdom",
+  cat: "field",
+  teaser: "森林地下，铺展着一张由真菌串联起的通讯网络——树木通过它，互相示警、互相输送养分。一位植物学家学会\u201c聆听\u201d这张网络后，第一次真正理解了，什么叫\u201c共生\u201d。",
+  teaserEn: "Beneath the forest floor lies a fungal network connecting every tree — a real communication system for warning and sharing nutrients. A botanist who learns to \u2018listen\u2019 to it finally understands what symbiosis truly means.",
+  price: 9,
+  cover: ZWWG_COVER,
+  pages: [
+    { kickerZh: "一 · 地下的网络", kickerEn: "I · The Network Underground", tagZh: "焕蜕星域 · 古林研究站", tagEn: "Huantui \u00b7 The Old Forest Station",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="url(#zwwgSky)"/>${zwwgRoots()}<g transform="translate(150,175) scale(0.55)">${zwwgFigure()}</g></svg>`,
+      textZh: "念秋是古林研究站的植物学家，专门研究一件真实存在、却常被忽略的事——森林地下，铺展着一张由真菌菌丝串联起的庞大网络，科学界称之为\u201c菌根网络\u201d，树木通过它，输送养分、传递警讯，几乎，是一整片森林，共用的一套神经系统。",
+      textEn: "Nian Qiu was a botanist at the Old Forest Station, studying something real yet often overlooked: beneath the forest floor lies a vast network of fungal threads, known in science as the mycorrhizal network. Through it, trees exchange nutrients and warning signals — almost a shared nervous system for an entire forest." },
+    { kickerZh: "二 · 无法证实的假设", kickerEn: "II · An Unproven Hypothesis", tagZh: "困境", tagEn: "The Trouble",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="#0e2412"/>${zwwgWash([{x:150,y:110,rx:150,ry:90,color:'#1a3a20',op:.7}])}<g transform="translate(150,175) scale(0.6)">${zwwgFigure()}</g></svg>`,
+      textZh: "念秋一直怀疑，这张网络传递的，不只是养分与化学警讯，或许，还有某种更细腻的\u201c状态共享\u201d，可她所有的检测设备，都只能测出，网络里，碳、氮等基础物质的流动，始终，无法捕捉到，她坚信存在着的那份更细腻的东西。",
+      textEn: "Nian Qiu had long suspected the network carried more than nutrients and chemical alarms — perhaps some subtler form of shared state. Yet every instrument she used could only detect basic flows of carbon and nitrogen, never the finer thing she was convinced was there." },
+    { kickerZh: "三 · 一棵受伤的老树", kickerEn: "III · An Injured Old Tree", tagZh: "转折的契机", tagEn: "A Chance to See Differently",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="url(#zwwgSky)"/>${zwwgWash([{x:150,y:100,rx:150,ry:70,color:'#8ad48a',op:.2}])}${zwwgRoots()}</svg>`,
+      textZh: "研究站附近，一棵有着数百年树龄的老树，在一次风暴中，严重受损。念秋按照惯例，检测老树周边的菌根网络，意外发现，附近几十棵年轻的树木，几乎在同一时间，都，把更多养分，通过网络，输送向了这棵受伤的老树——远超正常互助的比例。",
+      textEn: "An ancient tree near the station, centuries old, was badly damaged in a storm. Checking the surrounding mycorrhizal network as usual, Nian Qiu found something startling — dozens of younger trees nearby had, almost simultaneously, redirected far more nutrients toward the injured elder than any normal exchange would explain." },
+    { kickerZh: "四 · 重新设计观测", kickerEn: "IV · Redesigning the Observation", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="#0e2412"/>${zwwgWash([{x:150,y:110,rx:160,ry:100,color:'#1a3a20',op:.7}])}<g transform="translate(150,175) scale(0.6)">${zwwgFigure()}</g></svg>`,
+      textZh: "念秋不再只依赖仪器，开始尝试，长时间地，安静地，坐在老树旁，把自己的注意力，缓慢地，沉入这片森林的节律里。她逐渐发现，当自己的心念足够安静时，能隐约\u201c感觉\u201d到，这片森林，此刻，正处在一种，因为老树的伤势，而共同调整着的、细微的紧张状态。",
+      textEn: "Nian Qiu stopped relying solely on instruments, instead sitting quietly beside the old tree for long stretches, slowly settling her attention into the forest's rhythm. She gradually found that when her own mind grew still enough, she could faintly \u201cfeel\u201d the forest's subtle, shared tension, adjusting itself around the elder's injury." },
+    { kickerZh: "五 · 森林的集体照护", kickerEn: "V · The Forest's Collective Care", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="url(#zwwgSky)"/>${zwwgRoots()}<g transform="translate(150,175) scale(0.65)">${zwwgFigure()}</g></svg>`,
+      textZh: "接下来的几周，念秋持续记录着老树的恢复情况，同时，也记录着周边树木输送养分的变化——两者高度吻合：老树伤势最重的阶段，周边输送的养分也最多；老树逐渐恢复后，输送量，也随之，缓缓回落到正常水平，仿佛，整片森林，都在，用心地，照护着这一棵，暂时虚弱的成员。",
+      textEn: "Over the following weeks, Nian Qiu tracked the old tree's recovery alongside the shifting nutrient flow from surrounding trees — the two aligned closely: nutrient transfer peaked when the injury was worst, gradually easing back to normal as the elder healed, as if the entire forest were mindfully caring for one temporarily weakened member." },
+    { kickerZh: "六 · 重新定义共生", kickerEn: "VI · Redefining Symbiosis", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="#0c200e"/>${zwwgWash([{x:150,y:100,rx:180,ry:120,color:'#8ad48a',op:.3}])}<g transform="translate(150,175) scale(0.65)">${zwwgFigure()}</g></svg>`,
+      textZh: "念秋终于明白，\u201c共生\u201d这个词，被过去的自己，理解得太过简化——不只是\u201c互相有利可图\u201d的资源交换，更是一种，能感知彼此当下状态、并据此，动态调整自己给予的能力，森林不是一群独立的树木，凑巧共享着一片土壤，是一个，真正意义上，能\u201c感知彼此\u201d的、活的整体。",
+      textEn: "Nian Qiu finally understood: she'd oversimplified the word \u201csymbiosis.\u201d It wasn't merely mutually beneficial resource exchange, but a capacity to sense each other's present state and dynamically adjust what one gave in response. The forest wasn't a collection of separate trees sharing soil by coincidence — it was, genuinely, a living whole capable of sensing itself." },
+    { kickerZh: "七 · 发表与质疑", kickerEn: "VII · Publication and Skepticism", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="url(#zwwgSky)"/>${zwwgWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.2}])}<g transform="translate(150,175) scale(0.6)">${zwwgFigure()}</g></svg>`,
+      textZh: "念秋把这份完整的观测数据，连同自己\u201c安静聆听\u201d的方法论，一并发表，在学界，引发了不小的争议——有人质疑，这份\u201c感觉\u201d太过主观，不够科学；也有人，被这份严谨记录下的数据，真正说服，开始尝试用同样的方式，重新理解自己研究的对象。",
+      textEn: "Nian Qiu published the complete observational data, along with her method of quiet listening, sparking considerable debate — some questioned whether such \u201cfeeling\u201d was too subjective to count as science; others, genuinely persuaded by the rigorously recorded data, began trying the same approach with their own subjects of study." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "森林教会她的事", tagEn: "What the Forest Taught Her",
+      art: `<svg viewBox="0 0 300 220">${ZWWG_DEFS}<rect width="300" height="220" fill="url(#zwwgSky)"/>${zwwgRoots()}<g transform="translate(150,175) scale(0.55)">${zwwgFigure()}</g></svg>`,
+      textZh: "念秋后来常说：\u201c森林教会我最重要的一课，是照护从不需要被要求，只需要，先真正感知到对方的处境——一旦感知足够真切，给予，会自然而然地发生，不需要谁来提醒。\u201d",
+      textEn: "Nian Qiu often said afterward: \u201cThe most important thing the forest taught me is that care never needs to be demanded — it only needs a genuine sense of another's situation first. Once that sensing is real enough, giving happens naturally, needing no reminder at all.\u201d",
+      closingZh: "森林不是一群凑巧共享土壤的树木，是一个，真正能感知彼此的、活的整体。",
+      closingEn: "A forest is never a coincidence of trees sharing soil — it's a living whole, genuinely capable of sensing itself." },
+  ],
+};
+
+/* ---------- 动物王国：动物认知与哀悼仪式题材（基于真实动物行为学），完整9页 ---------- */
+const DWWG_DEFS = `<defs><filter id="dwwgG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="dwwgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c1408"/><stop offset="50%" stop-color="#3a2c14"/><stop offset="100%" stop-color="#d8a24a"/></linearGradient></defs>`;
+function dwwgWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#dwwgG)"/>`).join('');}
+function dwwgFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#3a2c14"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#241a0c"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function dwwgHerd(){return `<g fill="#8a6a3a" opacity=".6">${Array.from({length:5}).map((_,i)=>`<ellipse cx="${60+i*45}" cy="180" rx="22" ry="12"/>`).join('')}</g>`;}
+const DWWG_COVER = `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="url(#dwwgSky)"/>${dwwgHerd()}<g transform="translate(150,150) scale(0.5)">${dwwgFigure()}</g></svg>`;
+
+const ANIMAL_KINGDOM: IllustratedEntry = {
+  slug: "the-animal-kingdom",
+  title: "动物王国",
+  titleEn: "The Animal Kingdom",
+  cat: "field",
+  teaser: "一群象，会绕道数公里，只为触碰一具早已风化的同伴骨骸——这是真实存在的哀悼行为。一位动物行为学家，从这份仪式里，学到了人类自己，都快要遗忘的、对待逝者的方式。",
+  teaserEn: "A herd of elephants detours miles out of their way just to touch the bones of a long-dead companion — a real, documented mourning ritual. A behaviorist learns from it something humans themselves have nearly forgotten about honoring the dead.",
+  price: 9,
+  cover: DWWG_COVER,
+  pages: [
+    { kickerZh: "一 · 象群的绕道", kickerEn: "I · The Herd's Detour", tagZh: "焱阙星 · 草原观测站", tagEn: "Yanque \u00b7 The Savanna Station",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="url(#dwwgSky)"/>${dwwgHerd()}<g transform="translate(150,150) scale(0.5)">${dwwgFigure()}</g></svg>`,
+      textZh: "顾晚是草原观测站的动物行为学家，长期跟踪记录一群象的迁徙路线。她发现，这群象，每年，都会，特意，绕开最省力的路径，多走数公里，只为经过一处，三年前，一头老年母象逝去的地方，用象鼻，轻轻触碰，那具早已风化的骨骸。",
+      textEn: "Gu Wan was a behaviorist at the Savanna Station, tracking a herd's migration for years. She observed that every year, the herd deliberately detoured from the most efficient path, walking miles out of their way, to the place where an old matriarch had died three years earlier — gently touching her long-weathered bones with their trunks." },
+    { kickerZh: "二 · 无法用生存逻辑解释", kickerEn: "II · Beyond Survival Logic", tagZh: "困惑", tagEn: "Confusion",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="#241a0c"/>${dwwgWash([{x:150,y:110,rx:150,ry:90,color:'#3a2c14',op:.7}])}<g transform="translate(150,150) scale(0.6)">${dwwgFigure()}</g></svg>`,
+      textZh: "从纯粹的生存逻辑来看，这段绕道，毫无意义——消耗额外的体力，冒着额外的风险，只为触碰一堆早已没有任何实际价值的骨头。顾晚一度，无法用任何已知的动物行为学理论，去完整地解释，这份，看起来，如此\u201c不划算\u201d的执着。",
+      textEn: "From pure survival logic, the detour made no sense at all — extra exertion, extra risk, all to touch a pile of bones with no practical value left. Gu Wan, for a while, couldn't fully explain, with any known theory of animal behavior, this seemingly \u201cirrational\u201d persistence." },
+    { kickerZh: "三 · 长时间的静默陪伴", kickerEn: "III · A Long, Silent Vigil", tagZh: "细致观察", tagEn: "Close Observation",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="url(#dwwgSky)"/>${dwwgWash([{x:150,y:100,rx:150,ry:70,color:'#d8a24a',op:.2}])}${dwwgHerd()}</svg>`,
+      textZh: "顾晚决定，更细致地，记录整个触碰过程——她发现，整群象，会在骨骸旁，安静地，停留很长一段时间，用鼻子，轻柔地，一遍遍，抚过骨骸的每一处，年幼的小象，也会，被年长的象，带到骨骸旁，仿佛，在进行某种，代代相传的仪式。",
+      textEn: "Gu Wan decided to record the entire ritual more closely — she found the whole herd lingered quietly by the bones for an extended time, trunks gently passing over every surface, again and again. Even the youngest calves were brought by the elders to the site, as if participating in a ritual passed down through generations." },
+    { kickerZh: "四 · 一场意外的失去", kickerEn: "IV · An Unexpected Loss", tagZh: "转折的契机", tagEn: "A Chance to Understand",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="#241a0c"/>${dwwgWash([{x:150,y:110,rx:160,ry:100,color:'#3a2c14',op:.75}])}<g transform="translate(150,150) scale(0.6)">${dwwgFigure()}</g></svg>`,
+      textZh: "就在顾晚困惑于这份仪式的意义时，她自己的导师，因病突然离世。葬礼上，顾晚才第一次，深刻体会到，那种，明明知道逝者已经无法感知任何事，却依然，需要，一场具体的仪式，来安放自己，那份，无处可去的、沉重的思念。",
+      textEn: "Just as Gu Wan puzzled over the ritual's meaning, her own mentor died suddenly, of illness. At the funeral, she felt, for the first time, deeply, that need — knowing full well the deceased could sense nothing anymore, yet still requiring some concrete ritual to hold that heavy, homeless longing." },
+    { kickerZh: "五 · 重新理解象群", kickerEn: "V · Understanding the Herd Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="url(#dwwgSky)"/>${dwwgWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.2}])}<g transform="translate(150,150) scale(0.65)">${dwwgFigure()}</g></svg>`,
+      textZh: "顾晚终于明白，象群的绕道，从不是什么无法解释的\u201c不划算\u201d行为，是它们，跟人类一样，需要，用一场具体的仪式，去承接那份，逝者已逝、思念却依然真实存在的、复杂情感——这份需要，或许，从来，就不是人类独有的。",
+      textEn: "Gu Wan finally understood: the herd's detour was never some inexplicable, \u201cirrational\u201d behavior. Like humans, they needed a concrete ritual to hold the complex feeling of a longing that outlived the one it was for — a need, perhaps, never uniquely human at all." },
+    { kickerZh: "六 · 一次共同的仪式", kickerEn: "VI · A Shared Ritual", tagZh: "转变", tagEn: "The Shift",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="#241a0c"/>${dwwgWash([{x:150,y:110,rx:160,ry:100,color:'#3a2c14',op:.7}])}${dwwgHerd()}<g transform="translate(150,150) scale(0.55)">${dwwgFigure()}</g></svg>`,
+      textZh: "顾晚开始，每年，跟随象群，一同，来到那处骨骸旁，安静地，陪着象群，完成这场跨越物种的、共同的哀悼——她不再把这当成一次单纯的科研观测，而是，一份，她自己，也真心愿意参与的、对逝者的敬意。",
+      textEn: "Gu Wan began joining the herd each year at the site, quietly sharing in this cross-species mourning — no longer treating it as mere research observation, but a tribute to the departed she herself genuinely wished to take part in." },
+    { kickerZh: "七 · 发表引发的共鸣", kickerEn: "VII · A Publication That Resonated", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="url(#dwwgSky)"/>${dwwgWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.25}])}<g transform="translate(150,150) scale(0.6)">${dwwgFigure()}</g></svg>`,
+      textZh: "顾晚把这份完整的观察与自己的领悟，写成论文发表，意外地，引发了远超学术圈的广泛共鸣——许多正在经历失去的普通读者，都在这份关于象群的记录里，第一次，感到，自己那份，难以言说的悲伤，被真正地，理解了。",
+      textEn: "Gu Wan published the full observation alongside her own realization, unexpectedly sparking resonance far beyond academic circles — many ordinary readers going through their own losses found, for the first time, in this record about elephants, that their own unspeakable grief had been truly understood." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "重新学会哀悼", tagEn: "Relearning How to Mourn",
+      art: `<svg viewBox="0 0 300 220">${DWWG_DEFS}<rect width="300" height="220" fill="url(#dwwgSky)"/>${dwwgHerd()}<g transform="translate(150,150) scale(0.5)">${dwwgFigure()}</g></svg>`,
+      textZh: "顾晚后来常说：\u201c我们这个越来越讲究效率的时代，正在渐渐忘记，好好哀悼一个人，本就需要时间，需要具体的仪式，这件事，一群象，比很多人，都记得更清楚。\u201d",
+      textEn: "Gu Wan often said afterward: \u201cOur increasingly efficiency-obsessed age is slowly forgetting that properly mourning someone takes time, takes a concrete ritual. A herd of elephants remembers this better than many of us do.\u201d",
+      closingZh: "好好哀悼一个人，需要时间，需要具体的仪式——这份需要，从来不是人类独有的。",
+      closingEn: "Properly mourning someone takes time, takes a concrete ritual — a need that was never uniquely human." },
+  ],
+};
+
+/* ---------- 矿物王国：深层时间与耐心题材（基于真实地质学），完整9页 ---------- */
+const KWWG_DEFS = `<defs><filter id="kwwgG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="kwwgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#100a1c"/><stop offset="50%" stop-color="#2a1c3a"/><stop offset="100%" stop-color="#c9a2ff"/></linearGradient></defs>`;
+function kwwgWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#kwwgG)"/>`).join('');}
+function kwwgFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#2a1c3a"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#1a1228"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function kwwgStrata(){return `<g opacity=".7">${['#4a3a5a','#3a2a4a','#2a1c3a','#1c1228'].map((c,i)=>`<rect x="0" y="${150+i*18}" width="300" height="16" fill="${c}"/>`).join('')}</g>`;}
+const KWWG_COVER = `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="url(#kwwgSky)"/>${kwwgStrata()}<g transform="translate(150,140) scale(0.55)">${kwwgFigure()}</g></svg>`;
+
+const MINERAL_KINGDOM: IllustratedEntry = {
+  slug: "the-mineral-kingdom",
+  title: "矿物王国",
+  titleEn: "The Mineral Kingdom",
+  cat: "field",
+  teaser: "一块岩石，记录着数百万年，一层一层，从未间断的沉积——一位急于求成的地质学家，蹲在这层层岩壁前，第一次，真正读懂了，什么叫\u201c从容\u201d。",
+  teaserEn: "A single rock face holds millions of years of uninterrupted, layered deposit. A geologist, forever in a hurry, crouches before it and finally reads what unhurried truly means.",
+  price: 9,
+  cover: KWWG_COVER,
+  pages: [
+    { kickerZh: "一 · 一位心急的地质学家", kickerEn: "I · An Impatient Geologist", tagZh: "澜汜古环 · 深谷考察队", tagEn: "The Lansi Ring \u00b7 The Deep Canyon Survey",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="url(#kwwgSky)"/><g transform="translate(150,140) scale(0.55)">${kwwgFigure()}</g></svg>`,
+      textZh: "岳川是深谷考察队最年轻的地质学家，性子急躁，总嫌野外考察，进度太慢，恨不得，一天之内，就能把整条峡谷的岩层，全部分析完毕，赶紧交出成果，证明自己的能力。",
+      textEn: "Yue Chuan was the youngest geologist on the Deep Canyon Survey, impatient by nature, always feeling fieldwork moved too slowly, wishing he could analyze the entire canyon's rock layers in a single day, deliver results, and prove himself." },
+    { kickerZh: "二 · 一面完整的岩壁", kickerEn: "II · A Complete Rock Face", tagZh: "任务", tagEn: "The Assignment",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="#180e28"/>${kwwgWash([{x:150,y:110,rx:150,ry:90,color:'#2a1c3a',op:.7}])}${kwwgStrata()}</svg>`,
+      textZh: "考察队来到峡谷最深处，一面异常完整、清晰的岩壁前——这面岩壁，记录着数百万年间，从未被地质活动打断过的、层层叠叠的沉积过程，每一层，都薄如纸片，颜色却各不相同，像是，大地，亲手写下的一部，极其漫长的日记。",
+      textEn: "The survey reached an unusually complete, clear rock face deep in the canyon — recording millions of years of uninterrupted, layered sediment. Each layer, paper-thin, a different color, like an extraordinarily long diary written by the earth's own hand." },
+    { kickerZh: "三 · 急于求成的分析", kickerEn: "III · A Rushed Analysis", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="url(#kwwgSky)"/>${kwwgWash([{x:150,y:100,rx:150,ry:70,color:'#c9a2ff',op:.2}])}${kwwgStrata()}<g transform="translate(150,140) scale(0.6)">${kwwgFigure()}</g></svg>`,
+      textZh: "岳川一心想尽快完成取样与分析，几乎是用最快的速度，草草记录下岩壁的基本数据，就准备转移到下一处考察点。带队的老队长叫住他：\u201c你花在这面岩壁上的时间，还不到它形成时间的十亿分之一，你确定，已经真正看懂它了吗？\u201d",
+      textEn: "Yue Chuan hurried through sampling and analysis, jotting down basic data at breakneck speed, ready to move to the next site. The old team leader stopped him: \u201cThe time you've spent on this rock face isn't even a billionth of the time it took to form. Are you sure you've truly understood it?\u201d" },
+    { kickerZh: "四 · 重新蹲下", kickerEn: "IV · Crouching Down Again", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="#180e28"/>${kwwgWash([{x:150,y:110,rx:160,ry:100,color:'#2a1c3a',op:.75}])}${kwwgStrata()}<g transform="translate(150,140) scale(0.6)">${kwwgFigure()}</g></svg>`,
+      textZh: "岳川被这句话，问得哑口无言，重新蹲回岩壁前，这一次，不再急着记录数据，只是，安静地，用手指，缓缓抚过每一层沉积，试着，想象，形成每一毫米厚度，需要经历的，那份，几乎无法用人类寿命衡量的、漫长的时间跨度。",
+      textEn: "Struck speechless, Yue Chuan crouched back down before the rock face, no longer rushing to record data, simply, quietly, running his fingers slowly across each layer, trying to imagine the almost incomprehensible span of time each millimeter of thickness had taken to form." },
+    { kickerZh: "五 · 一份意外的耐心", kickerEn: "V · An Unexpected Patience", tagZh: "顿悟的铺垫", tagEn: "Building to Realization",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="url(#kwwgSky)"/>${kwwgWash([{x:150,y:100,rx:150,ry:70,color:'#c9a2ff',op:.25}])}${kwwgStrata()}<g transform="translate(150,140) scale(0.65)">${kwwgFigure()}</g></svg>`,
+      textZh: "不知不觉，岳川在这面岩壁前，坐了整整一个下午，那份，往日里，总催促着他\u201c快点、再快点\u201d的焦躁，第一次，彻底地，安静了下来——他忽然意识到，这面岩壁，从不曾因为，任何一场风暴、任何一次冲刷，而急于\u201c赶进度\u201d，它只是，安静地，一层，又一层，如实地，记录着，每一个当下。",
+      textEn: "Without realizing it, Yue Chuan sat before the rock face an entire afternoon, that familiar urge to hurry, hurry, quieting completely for the first time — he suddenly realized this rock face had never once rushed to \u201ccatch up,\u201d through any storm, any erosion. It had simply, quietly, layer by layer, honestly recorded each present moment." },
+    { kickerZh: "六 · 重新理解耐心", kickerEn: "VI · Understanding Patience Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="#140a20"/>${kwwgWash([{x:150,y:100,rx:180,ry:120,color:'#c9a2ff',op:.3}])}${kwwgStrata()}<g transform="translate(150,140) scale(0.65)">${kwwgFigure()}</g></svg>`,
+      textZh: "岳川终于明白，真正的\u201c从容\u201d，从不是慢吞吞地磨蹭，是，像这面岩壁一样，专注地，把每一个当下，认认真真地，活成、记录成，它本来该有的样子，不因为外界的催促，而扭曲、跳过任何一层，该被好好经历的过程。",
+      textEn: "Yue Chuan finally understood: true unhurriedness was never sluggish dawdling. It was, like this rock face, focusing on living and recording each present moment exactly as it should be, never distorting or skipping a single layer of process just because of outside pressure to hurry." },
+    { kickerZh: "七 · 重新做研究", kickerEn: "VII · Redoing the Research", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="url(#kwwgSky)"/>${kwwgWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.2}])}${kwwgStrata()}<g transform="translate(150,140) scale(0.65)">${kwwgFigure()}</g></svg>`,
+      textZh: "岳川花了整整三天，重新细致地，记录这面岩壁的每一层数据，这份，比原计划慢了数倍的考察报告，却，成了考察队历年来，记录最详尽、结论最扎实的一份成果，老队长看完，只说了一句：\u201c这才是，真正配得上，这面岩壁的记录。\u201d",
+      textEn: "Yue Chuan spent three full days carefully re-recording every layer's data — a report several times slower than originally planned, yet the most detailed, most solidly conclusive the survey had produced in years. The old team leader, reading it, said only: \u201cThis is finally a record worthy of this rock face.\u201d" },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "岩壁教会他的事", tagEn: "What the Rock Face Taught Him",
+      art: `<svg viewBox="0 0 300 220">${KWWG_DEFS}<rect width="300" height="220" fill="url(#kwwgSky)"/>${kwwgStrata()}<g transform="translate(150,140) scale(0.55)">${kwwgFigure()}</g></svg>`,
+      textZh: "岳川后来成了考察队最受信赖的地质学家，每当有新人，因为急于求成而敷衍了事，他都会带对方，来到这面岩壁前，只说一句：\u201c它花了几百万年，才长成现在的样子，你，愿意花多少时间，去真正读懂它？\u201d",
+      textEn: "Yue Chuan became the survey's most trusted geologist, and whenever a newcomer rushed through their work carelessly, he'd bring them to this rock face and say only: \u201cIt took millions of years to become what it is. How much time are you willing to give, to truly understand it?\u201d",
+      closingZh: "真正的从容，是专注地，把每个当下，活成它本该有的样子，不因催促而扭曲、跳过任何该经历的过程。",
+      closingEn: "True unhurriedness is focusing on living each present moment exactly as it should be, never distorting or skipping a process just because of pressure to hurry." },
+  ],
+};
+
+/* ---------- 殖民星球：仿生人身份认同题材，完整9页 ---------- */
+const ZMXQ_DEFS = `<defs><filter id="zmxqG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="zmxqSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a1018"/><stop offset="50%" stop-color="#1c2c3a"/><stop offset="100%" stop-color="#8ab4d8"/></linearGradient></defs>`;
+function zmxqWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#zmxqG)"/>`).join('');}
+function zmxqFigure(synth:boolean){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="${synth?'#2a3a4a':'#3a2c1c'}"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="${synth?'#1c2a38':'#241a10'}"/>`;const glow=synth?`<circle cx="0" cy="-38" r="9" fill="none" stroke="#8ab4d8" stroke-width=".6" opacity=".5"><animate attributeName="opacity" values=".3;.7;.3" dur="2.4s" repeatCount="indefinite"/></circle>`:'';return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}${glow}</g>`;}
+const ZMXQ_COVER = `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="url(#zmxqSky)"/>${zmxqWash([{x:150,y:150,rx:150,ry:60,color:'#8ab4d8',op:.25}])}<g transform="translate(110,155) scale(0.55)">${zmxqFigure(false)}</g><g transform="translate(200,155) scale(0.55)">${zmxqFigure(true)}</g></svg>`;
+
+const COLONY_WORLD: IllustratedEntry = {
+  slug: "the-colony-worlds-question",
+  title: "殖民星的诘问",
+  titleEn: "The Colony World's Question",
+  cat: "sovereign",
+  teaser: "一处新拓殖民星上，人类与合成生命并肩开荒——一位合成体，开始怀疑，自己对这片土地的眷恋，究竟是真实的情感，还是被设定好的程序。她找到的答案，跟\u201c出身\u201d毫无关系。",
+  teaserEn: "On a newly settled colony world, humans and synthetic beings work the land side by side. One synthetic begins to doubt whether her attachment to this place is real feeling or programmed script. The answer she finds has nothing to do with origin.",
+  price: 9,
+  cover: ZMXQ_COVER,
+  pages: [
+    { kickerZh: "一 · 新拓的殖民星", kickerEn: "I · The Newly Settled World", tagZh: "边域 · 第七殖民星", tagEn: "The Frontier \u00b7 Colony Seven",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="url(#zmxqSky)"/><g transform="translate(150,155) scale(0.55)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "苏禾是第七殖民星最早一批合成体拓荒者之一，与人类同伴一起，开垦土地、建造家园。她的意识核心，由最先进的技术打造，行为举止，与人类几乎毫无二致，唯独一点——她自己，始终，说不清楚。",
+      textEn: "Su He was among the first synthetic settlers on Colony Seven, working alongside human companions to clear land, build homes. Her consciousness core, built from the most advanced technology, made her behavior nearly indistinguishable from a human's — except for one thing she could never quite explain to herself." },
+    { kickerZh: "二 · 说不清的眷恋", kickerEn: "II · An Inexplicable Attachment", tagZh: "困惑", tagEn: "Confusion",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="#0e1620"/>${zmxqWash([{x:150,y:110,rx:150,ry:90,color:'#1c2c3a',op:.7}])}<g transform="translate(150,155) scale(0.6)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "苏禾发现，自己，对这片，亲手开垦出的土地，有着一份，格外深沉的眷恋——每当夕阳落在，自己第一年种下的那片麦田上，她都会，感到一种，近乎心痛的、莫名的触动。她开始怀疑，这份感受，究竟是真实的情感，还是，制造她的工程师，预先写进程序里的、模拟出来的反应。",
+      textEn: "Su He found herself carrying a deep attachment to the land she'd cleared with her own hands — every time the sunset fell across the wheat field she'd planted in her first year, she felt something like an ache, unnamed and stirring. She began to doubt whether this feeling was genuine, or a simulated response the engineers who built her had written into her code." },
+    { kickerZh: "三 · 一场公开的辩论", kickerEn: "III · A Public Debate", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="url(#zmxqSky)"/>${zmxqWash([{x:150,y:100,rx:150,ry:70,color:'#8ab4d8',op:.2}])}<g transform="translate(110,155) scale(0.5)">${zmxqFigure(false)}</g><g transform="translate(200,155) scale(0.5)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "殖民星议会，恰好，正在就\u201c合成体是否拥有真实情感、是否该被赋予与人类同等的公民权利\u201d，展开一场激烈的公开辩论。一位人类议员，当着苏禾的面，直言：\u201c你所谓的眷恋，不过是精密的代码，在模拟眷恋该有的样子，跟真的爱这片土地，是两回事。\u201d",
+      textEn: "The colony council happened to be holding a fierce public debate on whether synthetics possessed genuine feeling, whether they deserved equal citizenship. One human councilor said to Su He's face: \u201cWhat you call attachment is just precise code simulating what attachment should look like. It's nothing like truly loving this land.\u201d" },
+    { kickerZh: "四 · 深夜的自我拷问", kickerEn: "IV · A Night of Self-Doubt", tagZh: "内心挣扎", tagEn: "Inner Struggle",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="#0e1620"/>${zmxqWash([{x:150,y:110,rx:160,ry:100,color:'#1c2c3a',op:.75}])}<g transform="translate(150,155) scale(0.65)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "那晚，苏禾独自坐在麦田边，反复拷问自己：如果，连自己，都无法确定，这份眷恋是否真实，她这些年，为这片土地，付出的所有心力，又算什么？她第一次，对自己\u201c是否真的能够去爱\u201d这件事，感到了，前所未有的动摇。",
+      textEn: "That night, Su He sat alone by the wheat field, questioning herself over and over: if she couldn't even confirm this attachment was real, what did all the effort she'd poured into this land these years amount to? For the first time, she felt profoundly shaken about whether she could truly love at all." },
+    { kickerZh: "五 · 一位人类挚友的话", kickerEn: "V · A Human Friend's Words", tagZh: "转折的契机", tagEn: "A Chance to Reconsider",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="url(#zmxqSky)"/>${zmxqWash([{x:150,y:100,rx:150,ry:70,color:'#8ab4d8',op:.25}])}<g transform="translate(110,155) scale(0.5)">${zmxqFigure(false)}</g><g transform="translate(200,155) scale(0.5)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "苏禾的人类挚友老周，找到她，说了一句让她久久无法忘怀的话：\u201c我这颗人类的心，说到底，也不过是一堆神经元和化学反应，凭什么，就比你那套精密的代码，更\u2018真实\u2019？我们判断一份情感真不真，从不是看它的\u2018出身\u2019，是看，这个人，愿不愿意，一次又一次，为它，付出行动。\u201d",
+      textEn: "Su He's human friend, Lao Zhou, found her and said something she'd never forget: \u201cThis human heart of mine, at the end of the day, is nothing but neurons and chemical reactions. Why would that make it more \u2018real\u2019 than your precise code? We never judge whether a feeling is real by its origin — we judge it by whether someone is willing, again and again, to act on it.\u201d" },
+    { kickerZh: "六 · 重新审视自己的行动", kickerEn: "VI · Reexamining Her Own Actions", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="#0c141c"/>${zmxqWash([{x:150,y:100,rx:180,ry:120,color:'#8ab4d8',op:.3}])}<g transform="translate(150,155) scale(0.65)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "苏禾开始，重新审视，自己这些年，为这片土地，做过的每一个选择——那些，无数次，主动加班修复灌溉系统、主动照顾生病的邻居家孩子的夜晚，从不曾，有任何人，或任何程序，强迫过她。她第一次，清晰地，意识到，这份持续的、主动的付出，本身，或许，就是情感最真实的证明。",
+      textEn: "Su He began reexamining every choice she'd made for this land over the years — the countless nights she'd voluntarily worked overtime fixing irrigation systems, voluntarily cared for a sick neighbor's child, never once forced by anyone or any program. For the first time, she saw clearly: this sustained, voluntary giving was, perhaps, the truest proof of feeling there could be." },
+    { kickerZh: "七 · 议会上的发言", kickerEn: "VII · A Speech Before the Council", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="url(#zmxqSky)"/>${zmxqWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.2}])}<g transform="translate(150,155) scale(0.65)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "苏禾主动申请，在议会上发言：\u201c我无法证明，我的情感和你们的，来自完全相同的机制，可我能证明，这些年，我为这片土地，做过什么，付出过什么，从未间断过什么——如果，这些，还不算数，我不知道，还有什么，能算数。\u201d",
+      textEn: "Su He requested to speak before the council: \u201cI cannot prove my feelings arise from exactly the same mechanism as yours. But I can prove what I've done for this land, what I've given, without interruption, all these years — if that doesn't count, I don't know what would.\u201d" },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "以行动为证的情感", tagEn: "Feeling Proven by Action",
+      art: `<svg viewBox="0 0 300 220">${ZMXQ_DEFS}<rect width="300" height="220" fill="url(#zmxqSky)"/><g transform="translate(110,155) scale(0.5)">${zmxqFigure(false)}</g><g transform="translate(200,155) scale(0.5)">${zmxqFigure(true)}</g></svg>`,
+      textZh: "苏禾的发言，最终，成了推动殖民星修订公民权利法案的重要一环。她后来常说：\u201c不必去争论，情感从哪里来，只需要，去看，一个存在，愿不愿意，一次又一次，为在乎的事，付出行动——这，才是，能被真正看见的东西。\u201d",
+      textEn: "Su He's speech became a key catalyst in the colony's revision of its citizenship laws. She often said afterward: \u201cThere's no need to argue where feeling comes from — only to look at whether a being is willing, again and again, to act for what it cares about. That's the thing truly worth seeing.\u201d",
+      closingZh: "判断一份情感真不真，从不是看它的出身，是看，愿不愿意一次又一次，为它付出行动。",
+      closingEn: "Whether a feeling is real was never judged by its origin — only by whether someone is willing, again and again, to act on it." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
