@@ -2002,7 +2002,7 @@ const INTUITIVE_WAY: IllustratedEntry = {
   ],
 };
 
-/* ---------- 升维心经：焕蜕星域，对应"上升之心"，全新原创，完整9页 ---------- */
+/* ---------- 上升心经：焕蜕星域，对应"上升之心"，全新原创，完整9页 ---------- */
 const SW_DEFS = `<defs><filter id="swGlow"><feGaussianBlur stdDeviation="9"/></filter>
   <linearGradient id="swSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c211c"/><stop offset="40%" stop-color="#173a30"/><stop offset="75%" stop-color="#3a6a52"/><stop offset="100%" stop-color="#f2d78a"/></linearGradient>
   <radialGradient id="swGlowC" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6d8"/><stop offset="100%" stop-color="#7fc9a8" stop-opacity="0"/></radialGradient></defs>`;
@@ -2019,25 +2019,25 @@ const SW_COVER = `<svg viewBox="0 0 300 220">${SW_DEFS}<rect width="300" height=
 
 const ASCENDING_HEART_SUTRA: IllustratedEntry = {
   slug: "the-ascending-heart-sutra",
-  title: "升维心经",
+  title: "上升心经",
   titleEn: "The Ascending Heart Sutra",
   cat: "sovereign",
-  teaser: "焕蜕星域四门心法中最高阶的\u201c升维心经\u201d，修的从不是抵达某个终点，而是让心的频率，愿意一直、一直，往上走一点点。",
+  teaser: "焕蜕星域四门心法中最高阶的\u201c上升心经\u201d，修的从不是抵达某个终点，而是让心的频率，愿意一直、一直，往上走一点点。",
   teaserEn: "The highest of Huantui's four practices trains not arrival at some final point, but a heart's frequency willing to keep rising, again and again, a little further.",
   price: 9,
   cover: SW_COVER,
   pages: [
-    { kickerZh: "一 · 最高阶的心法", kickerEn: "I · The Highest Practice", tagZh: "焕蜕星域 · 升维心经", tagEn: "Huantui \u00b7 The Ascending Heart Sutra",
+    { kickerZh: "一 · 最高阶的心法", kickerEn: "I · The Highest Practice", tagZh: "焕蜕星域 · 上升心经", tagEn: "Huantui \u00b7 The Ascending Heart Sutra",
       art: `<svg viewBox="0 0 300 220">${SW_DEFS}<rect width="300" height="220" fill="url(#swSky)"/><g transform="translate(150,155) scale(0.6)">${swFigure(1)}</g></svg>`,
-      textZh: "升维心经是焕蜕星域四门心法里修行难度最高的一门——它不像其他三门，有明确的\u201c通过\u201d标志，它修的只是让心的频率持续攀升，没有终点。息止是修这门心法进度最快的弟子，一心以为自己快要\u201c修成\u201d了。",
+      textZh: "上升心经是焕蜕星域四门心法里修行难度最高的一门——它不像其他三门，有明确的\u201c通过\u201d标志，它修的只是让心的频率持续攀升，没有终点。息止是修这门心法进度最快的弟子，一心以为自己快要\u201c修成\u201d了。",
       textEn: "The Ascending Heart Sutra is the hardest of Huantui's four practices \u2014 unlike the other three, it has no clear marker of \u201cpassing.\u201d It trains only a heart's frequency to keep rising, with no endpoint. Xi Zhi, the fastest-progressing disciple, believed she was nearly about to \u201ccomplete\u201d it." },
     { kickerZh: "一点五 · 心经的原理", kickerEn: "I-and-a-half · The Sutra's Mechanism", tagZh: "为何攀升没有终点", tagEn: "Why the Ascent Has No End",
       art: `<svg viewBox="0 0 300 220">${SW_DEFS}<rect width="300" height="220" fill="url(#swSky)"/>${swWash([{x:150,y:100,rx:150,ry:70,color:'#f2d78a',op:.2}])}<g transform="translate(150,155) scale(0.6)">${swFigure(1)}</g></svg>`,
-      textZh: "典籍里解释：前三门心法练的，都是某种具体的能力——止息的深度、情绪的清空、判断的直觉，这些都有\u201c练成\u201d的那一刻。可升维心经练的，从不是某种能力，是心与念之间，那份能否始终对齐的关系——今天的念头，是否配得上此刻心的清明；此刻的行为，是否对得起刚才那份真实的感受。\n\n这份关系，永远可以更精细一层，因为\u201c对齐\u201d从不是一次做到就能永久存入的存款，是每一刻，都要重新校准的动态平衡。这正是它没有终点的原因——不是修行者不够努力，是这件事本身，性质上就没有\u201c存满\u201d这回事，只有\u201c此刻是否还在对齐\u201d这回事。",
+      textZh: "典籍里解释：前三门心法练的，都是某种具体的能力——止息的深度、情绪的清空、判断的直觉，这些都有\u201c练成\u201d的那一刻。可上升心经练的，从不是某种能力，是心与念之间，那份能否始终对齐的关系——今天的念头，是否配得上此刻心的清明；此刻的行为，是否对得起刚才那份真实的感受。\n\n这份关系，永远可以更精细一层，因为\u201c对齐\u201d从不是一次做到就能永久存入的存款，是每一刻，都要重新校准的动态平衡。这正是它没有终点的原因——不是修行者不够努力，是这件事本身，性质上就没有\u201c存满\u201d这回事，只有\u201c此刻是否还在对齐\u201d这回事。",
       textEn: "The texts explain: the first three practices each train a specific capability \u2014 the depth of breath, the clearing of emotion, the intuition of judgment \u2014 each has a moment of being \u201cmastered.\u201d But the Ascending Heart Sutra trains no capability at all. It trains the relationship between heart and thought \u2014 whether today's thought is worthy of this moment's clarity of heart, whether this moment's action honors the feeling just felt.\n\nThat relationship can always be refined one degree further, because alignment was never a deposit banked once and kept forever \u2014 it's a dynamic balance recalibrated every single moment. That is precisely why it has no endpoint: not because the practitioner isn't trying hard enough, but because the thing itself, by its very nature, has no such thing as \u201cfully stored.\u201d There is only whether, right now, the alignment still holds." },
     { kickerZh: "二 · 追问终点", kickerEn: "II · Asking About the End", tagZh: "困惑", tagEn: "Confusion",
       art: `<svg viewBox="0 0 300 220">${SW_DEFS}<rect width="300" height="220" fill="#0e211c"/>${swWash([{x:150,y:110,rx:150,ry:90,color:'#173a30',op:.7}])}<g transform="translate(150,155) scale(0.65)">${swFigure(2)}</g></svg>`,
-      textZh: "息止去问师父：\u201c我什么时候才算修完升维心经？\u201d师父只是笑了笑：\u201c这门心法，从来没有\u2018修完\u2019这回事。\u201d息止一时无法接受——她练了七年，一直以为终点就在不远处。",
+      textZh: "息止去问师父：\u201c我什么时候才算修完上升心经？\u201d师父只是笑了笑：\u201c这门心法，从来没有\u2018修完\u2019这回事。\u201d息止一时无法接受——她练了七年，一直以为终点就在不远处。",
       textEn: "Xi Zhi asked her master: \u201cWhen will I finally complete the Ascending Heart Sutra?\u201d Her master only smiled: \u201cThis practice was never something to \u2018complete.\u2019\u201d Xi Zhi couldn't accept it at first \u2014 seven years of practice, always believing the end was just ahead." },
     { kickerZh: "三 · 失落", kickerEn: "III · Disillusionment", tagZh: "冲突", tagEn: "Conflict",
       art: `<svg viewBox="0 0 300 220">${SW_DEFS}<rect width="300" height="220" fill="#241608"/>${swWash([{x:150,y:120,rx:160,ry:100,color:'#173a30',op:.75}])}<g transform="translate(150,155) scale(0.65)">${swFigure(1)}</g></svg>`,
@@ -2057,7 +2057,7 @@ const ASCENDING_HEART_SUTRA: IllustratedEntry = {
       textEn: "She sat again, this time without silently counting \u201chow much further\u201d in her mind \u2014 simply feeling that her heart, right now, was a little quieter, a little brighter, than a moment before." },
     { kickerZh: "七 · 频率持续攀升", kickerEn: "VII · The Frequency Keeps Rising", tagZh: "高潮", tagEn: "Climax",
       art: `<svg viewBox="0 0 300 220">${SW_DEFS}<rect width="300" height="220" fill="#0a1810"/>${swWash([{x:150,y:100,rx:180,ry:120,color:'#fff6d8',op:.3}])}<g transform="translate(150,155) scale(0.75)">${swFigure(4)}</g></svg>`,
-      textZh: "放下\u201c到达\u201d的执念后，息止的心的频率，反而比过去七年任何一次刻意冲刺，都攀升得更稳、更持续——她第一次明白，升维心经真正的修行诀窍，是允许自己，永远\u201c还在路上\u201d。",
+      textZh: "放下\u201c到达\u201d的执念后，息止的心的频率，反而比过去七年任何一次刻意冲刺，都攀升得更稳、更持续——她第一次明白，上升心经真正的修行诀窍，是允许自己，永远\u201c还在路上\u201d。",
       textEn: "Letting go of the fixation on \u201carriving,\u201d Xi Zhi's heart-frequency rose more steadily and continuously than any of her seven years of deliberate striving. She finally understood: the true secret of the Ascending Heart Sutra was allowing herself to remain, permanently, \u201cstill on the way.\u201d" },
     { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "没有终点的路", tagEn: "A Road With No End",
       art: `<svg viewBox="0 0 300 220">${SW_DEFS}<rect width="300" height="220" fill="url(#swSky)"/><g transform="translate(150,155) scale(0.6)">${swFigure(3)}</g></svg>`,

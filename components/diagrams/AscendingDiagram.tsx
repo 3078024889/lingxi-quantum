@@ -1,9 +1,9 @@
-// 升维心经 · 节律路径图（原创动态）
+// 上升心经 · 节律路径图（原创动态）
 // 清明之源（顶）→ 降入人体 → 汇聚点（心脏下方），金色降入
 // 呼气沿舒展轴向外展开。坐姿人形 + 中英文标注。
 export default function AscendingDiagram({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 440 720" className={className} aria-label="升维心经节律路径">
+    <svg viewBox="0 0 440 720" className={className} aria-label="上升心经节律路径">
       <defs>
         <radialGradient id="ah-bg" cx="50%" cy="30%" r="80%">
           <stop offset="0%" stopColor="#3a2410" />
@@ -126,7 +126,7 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
       {/* 标注（中英文） */}
       <g fontSize="11" fill="#E8B765" fillOpacity="0.85">
         <text x="254" y="246">松果腺 · Pineal</text>
-        <text x="254" y="332">升维之心 · Ascending Heart</text>
+        <text x="254" y="332">上升之心 · Ascending Heart</text>
         <text x="254" y="362">心脏 · Heart</text>
         <text x="254" y="398">汇聚点 · Convergence Point</text>
       </g>

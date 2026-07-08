@@ -107,7 +107,7 @@ export default function SovereigntyWholenessArticle() {
 
           <div className="mt-14 rounded-sm border border-lattice/20 bg-lattice/5 p-7 text-center">
             <p className="font-display text-xl text-bone"><Bi zh="开始你的修炼" en="Begin your practice" /></p>
-            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="量子息法、归零心诀、直觉丹道、升维心经——从一项练习开始，回到完整的自己。" en="The Quantum Breath Method, Heart Reset, the Intuitive Way, the Ascending Heart Sutra — begin with one practice." /></p>
+            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="量子息法、归零心诀、直觉丹道、上升心经——从一项练习开始，回到完整的自己。" en="The Quantum Breath Method, Heart Reset, the Intuitive Way, the Ascending Heart Sutra — begin with one practice." /></p>
             <Link href="/practice" className="mt-6 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber">
               <Bi zh="进入修炼技术" en="Open the practices" />
             </Link>

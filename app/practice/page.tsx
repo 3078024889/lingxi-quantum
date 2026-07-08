@@ -4,13 +4,13 @@ import Footer from "@/components/Footer";
 import GateOrigin from "@/components/gates/GateOrigin";
 import Bi from "@/components/Bi";
 
-export const metadata = { title: "修炼技术 | 灵犀 · Practices | Lingxi", description: "四项意识修炼技术：量子息法、直觉丹道、归零心诀、升维心经。一次激活，永久有效。Four consciousness practices — the Quantum Breath Method, the Intuitive Way, Heart Reset, and the Ascending Heart Sutra.", alternates: { canonical: "/practice" } };
+export const metadata = { title: "修炼技术 | 灵犀 · Practices | Lingxi", description: "四项意识修炼技术：量子息法、直觉丹道、归零心诀、上升心经。一次激活，永久有效。Four consciousness practices — the Quantum Breath Method, the Intuitive Way, Heart Reset, and the Ascending Heart Sutra.", alternates: { canonical: "/practice" } };
 
 const practices = [
   { href: "/practice/breath", name: "量子息法", nameEn: "Quantum Breath Method", line: "回到当下，一道随身携带的门。", lineEn: "Return to now — a doorway you always carry." },
   { href: "/practice/intuition", name: "直觉丹道", nameEn: "The Intuitive Way", line: "区分世界的声音与心之深处的耳语。", lineEn: "Tell the world's noise from the whisper deep in the heart." },
   { href: "/practice/heart-reset", name: "归零心诀", nameEn: "Heart Reset", line: "把温暖与清晰的能量唤回心的中央。", lineEn: "Call warm, clear energy back to the center of the heart." },
-  { href: "/practice/ascending-heart", name: "升维心经", nameEn: "Ascending Heart Sutra", line: "没有终点的对齐练习，一点一点更精细。", lineEn: "An alignment practice with no endpoint, refined one degree at a time." },
+  { href: "/practice/ascending-heart", name: "上升心经", nameEn: "Ascending Heart Sutra", line: "没有终点的对齐练习，一点一点更精细。", lineEn: "An alignment practice with no endpoint, refined one degree at a time." },
 ];
 
 export default function PracticeIndex() {

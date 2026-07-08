@@ -21,7 +21,7 @@ const data: ArticleData = {
     },
     {
       hZh: "可落地的方法", hEn: "Practical methods",
-      pZh: "呼吸：每天几次缓慢深呼吸，把注意力放回心的区域，是最快回到当下的方式。心的练习：把注意力从头脑移到心，去感受温暖与平静（灵犀的「归零心诀」「升维心经」即为此设计）。感恩：每天写下三件值得感恩的事，直接调高频率。减少消耗：减少恐惧型信息、负向自我对话与过度刺激。独处与自然：给自己安静、向内的时间。",
+      pZh: "呼吸：每天几次缓慢深呼吸，把注意力放回心的区域，是最快回到当下的方式。心的练习：把注意力从头脑移到心，去感受温暖与平静（灵犀的「归零心诀」「上升心经」即为此设计）。感恩：每天写下三件值得感恩的事，直接调高频率。减少消耗：减少恐惧型信息、负向自我对话与过度刺激。独处与自然：给自己安静、向内的时间。",
       pEn: "Breath: a few slow, deep breaths daily, returning attention to the heart, is the fastest way back to the present. Heart practice: move attention from head to heart and feel warmth and calm (Lingxi's 'Heart Reset' and 'Ascending Heart Sutra' are built for this). Gratitude: write three things you're grateful for daily to directly lift your frequency. Reduce drains: less fear-based input, negative self-talk, and overstimulation. Solitude and nature: give yourself quiet, inward time.",
     },
     {
