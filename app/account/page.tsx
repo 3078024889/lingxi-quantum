@@ -38,7 +38,7 @@ export default async function AccountPage() {
     breath: "量子呼吸",
     intuition: "直觉智能",
     "heart-reset": "心的重置",
-    "ascending-heart": "上升之心",
+    "ascending-heart": "上升心经",
   };
 
   return (

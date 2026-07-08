@@ -18,7 +18,7 @@ export const cultivationProducts: Product[] = [
   { id: "breath", name: "量子呼吸", nameEn: "Quantum Breath", priceUsd: 268, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
   { id: "intuition", name: "直觉智能", nameEn: "Intuitive Intelligence", priceUsd: 268, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
   { id: "heart-reset", name: "心的重置", nameEn: "Heart Reset", priceUsd: 268, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
-  { id: "ascending-heart", name: "上升之心", nameEn: "Ascending Heart", priceUsd: 268, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
+  { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 268, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
 ];
 
 export const manifestationProducts: Product[] = [

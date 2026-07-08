@@ -109,7 +109,7 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
         <circle cx="220" cy="244" r="5" fill="#C77D9C" filter="url(#ah-glow)">
           <animate attributeName="opacity" values="0.6;1;0.6" dur="4s" repeatCount="indefinite" />
         </circle>
-        {/* 胸腺/上升之心 */}
+        {/* 胸腺/上升心经 */}
         <circle cx="220" cy="330" r="6" fill="#C77D9C" filter="url(#ah-glow)">
           <animate attributeName="r" values="5;8;5" dur="4s" repeatCount="indefinite" />
         </circle>
@@ -126,7 +126,7 @@ export default function AscendingDiagram({ className = "" }: { className?: strin
       {/* 标注（中英文） */}
       <g fontSize="11" fill="#E8B765" fillOpacity="0.85">
         <text x="254" y="246">松果腺 · Pineal</text>
-        <text x="254" y="332">上升之心 · Ascending Heart</text>
+        <text x="254" y="332">上升心经 · Ascending Heart</text>
         <text x="254" y="362">心脏 · Heart</text>
         <text x="254" y="398">汇聚点 · Convergence Point</text>
       </g>

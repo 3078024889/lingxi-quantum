@@ -7,7 +7,7 @@ import { getAccess, hasUnlock } from "@/lib/access";
 import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
 
-export const metadata = { title: "上升心经 · 修炼技术 | 灵犀 · The Ascending Heart Sutra | Lingxi", description: "上升心经：光体正迁移向胸腺间的「上升之心」，四式呼吸法助你在行星轴与中枢太阳轴的交汇点上活化自身。The Ascending Heart Sutra — a four-form breath practice at the meeting point of the planetary and central-sun axes." };
+export const metadata = { title: "上升心经 · 修炼技术 | 灵犀 · The Ascending Heart Sutra | Lingxi", description: "上升心经：光体正迁移向胸腺间的「上升心经」，四式呼吸法助你在行星轴与中枢太阳轴的交汇点上活化自身。The Ascending Heart Sutra — a four-form breath practice at the meeting point of the planetary and central-sun axes." };
 
 export default async function AscendingHeartPage() {
   const { user, unlocks } = await getAccess();
@@ -29,7 +29,7 @@ export default async function AscendingHeartPage() {
           </h1>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi
-              zh="光体正从松果腺迁移向胸腺——心脏与喉咙之间——这里被称为「上升之心」，是行星轴与中枢太阳轴的交汇点。呼吸与想象力的整合，是活化这个交汇点最有效的工具。"
+              zh="光体正从松果腺迁移向胸腺——心脏与喉咙之间——这里被称为「上升心经」，是行星轴与中枢太阳轴的交汇点。呼吸与想象力的整合，是活化这个交汇点最有效的工具。"
               en="The light-body is migrating from the pineal gland toward the thymus — between heart and throat — the site known as the Rising Heart, the meeting point of the planetary axis and the central-sun axis. The integration of breath and imagination is the most effective tool for activating this point."
             />
           </p>
@@ -58,7 +58,7 @@ export default async function AscendingHeartPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的本质" en="The nature of the light-body" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="光体是神圣心智的一枚粒子，由中枢太阳投射，穿越第5、第4维度矩阵，最终在人类心脏内具体表现。它最初栖息于心脏，前七年内上移至松果腺，临终时返回第五维度。如今，在宏大觉醒时代，它正迁移回心脏方向，现核心栖息地位于胸腺（心脏与喉咙之间），被称为「上升之心」或「心脏之冠」。"
+                  zh="光体是神圣心智的一枚粒子，由中枢太阳投射，穿越第5、第4维度矩阵，最终在人类心脏内具体表现。它最初栖息于心脏，前七年内上移至松果腺，临终时返回第五维度。如今，在宏大觉醒时代，它正迁移回心脏方向，现核心栖息地位于胸腺（心脏与喉咙之间），被称为「上升心经」或「心脏之冠」。"
                   en="The light-body is a particle of the divine mind, projected by the central sun, passing through the matrices of the 5th and 4th dimensions, ultimately made manifest within the human heart. It first resides in the heart, ascends to the pineal gland within the first seven years of life, and returns to the fifth dimension at death. Now, in this era of great awakening, it is migrating back toward the heart, its core dwelling now the thymus (between heart and throat), known as the 'Rising Heart' or the 'Crown of the Heart.'"
                 />
               </p>
@@ -68,7 +68,7 @@ export default async function AscendingHeartPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="两条轴的交汇" en="Where the two axes meet" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="行星轴（水平轴）：连接光体与地球物质存在，将光体接地锚定于行星。中枢太阳轴（垂直轴）：连接光体与中枢太阳源头，承载下降与上升的能量流。两条轴的交汇点——上升之心，正是个体的活化点。"
+                  zh="行星轴（水平轴）：连接光体与地球物质存在，将光体接地锚定于行星。中枢太阳轴（垂直轴）：连接光体与中枢太阳源头，承载下降与上升的能量流。两条轴的交汇点——上升心经，正是个体的活化点。"
                   en="The planetary axis (horizontal axis) connects the light-body to the earth's material existence, grounding and anchoring the light-body to the planet. The central-sun axis (vertical axis) connects the light-body to the source of the central sun, carrying the descending and ascending flow of energy. Where these two axes meet — the Rising Heart — is precisely the individual's point of activation."
                 />
               </p>
@@ -78,7 +78,7 @@ export default async function AscendingHeartPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的迁移与意义" en="The light-body's migration, and its meaning" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升之心，以便将能量充分绽放至行星栅格，实现其目的。"
+                  zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升心经，以便将能量充分绽放至行星栅格，实现其目的。"
                   en="The light-body was once the core of consciousness, seated in the pineal gland; but long rigidity and distortion of the mind suppressed its blossoming. Now the light-body is moving toward the Rising Heart, so that its energy may fully bloom into the planetary grid and fulfill its purpose."
                 />
               </p>
@@ -100,7 +100,7 @@ export default async function AscendingHeartPage() {
               </p>
               <p className="mt-4">
                 <Bi
-                  zh="光之承载者并非以语言施教，而是以行为系统、美德之心的表达、以及上升之心这类技术的应用来界定。他们是集体性力量，共同编织时间、空间、能量的新织物，最终通向第五维度入口。"
+                  zh="光之承载者并非以语言施教，而是以行为系统、美德之心的表达、以及上升心经这类技术的应用来界定。他们是集体性力量，共同编织时间、空间、能量的新织物，最终通向第五维度入口。"
                   en="Light-Bearers do not teach through words; they are defined by their behavior systems, by the expression of a virtuous heart, and by the application of technologies such as the Rising Heart. They are a collective force, together weaving a new fabric of time, space, and energy, one that ultimately leads to the entrance of the fifth dimension."
                 />
               </p>
@@ -110,7 +110,7 @@ export default async function AscendingHeartPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="呼吸与灵魂的关系" en="The relationship between breath and soul" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="灵魂的呼吸由光体引导。光体智能的工作席位于上升之心。吸气时，中枢太阳的光能经顶轮流入，停驻于太阳神经丛，闪耀个人标识的金色光芒。呼气时，能量从太阳神经丛向上释放至上升之心，再向外绽放到行星轴，接地进第三维度所有存在的能量场。"
+                  zh="灵魂的呼吸由光体引导。光体智能的工作席位于上升心经。吸气时，中枢太阳的光能经顶轮流入，停驻于太阳神经丛，闪耀个人标识的金色光芒。呼气时，能量从太阳神经丛向上释放至上升心经，再向外绽放到行星轴，接地进第三维度所有存在的能量场。"
                   en="The breath of the soul is guided by the light-body. The working seat of the light-body's intelligence is the Rising Heart. On the inhale, the light-energy of the central sun flows in through the crown, coming to rest in the solar plexus, shining with the golden light of one's personal signature. On the exhale, that energy is released upward from the solar plexus to the Rising Heart, then blooms outward along the planetary axis, grounding into the energy field of every third-dimensional being."
                 />
               </p>
@@ -132,7 +132,7 @@ export default async function AscendingHeartPage() {
               </div>
               <div className="space-y-10">
                 <p className="text-sm leading-8 text-bone-dim/80">
-                  <Bi zh="预备：感知胸腺区（心脏与喉咙间）为「上升之心」能量交汇点，即两条轴的交汇处。" en="Preparation: sense the thymus region (between heart and throat) as the energy meeting point of the 'Rising Heart' — where the two axes intersect." />
+                  <Bi zh="预备：感知胸腺区（心脏与喉咙间）为「上升心经」能量交汇点，即两条轴的交汇处。" en="Preparation: sense the thymus region (between heart and throat) as the energy meeting point of the 'Rising Heart' — where the two axes intersect." />
                 </p>
 
                 <div className="border-l border-lattice/30 pl-6">
@@ -151,7 +151,7 @@ export default async function AscendingHeartPage() {
                   <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="呼气绽出（接地赋力）" en="Exhale and Radiate (Grounded Empowerment)" /></h3>
                   <p className="mt-3">
                     <Bi
-                      zh="呼气时，将此能量从太阳神经丛上提至胸腺（上升之心），再沿水平轴向外辐射，接地进行星栅格及众生能量场。每一次呼出，即将更高之光分享给集体之心。此为「投放服务」阶段。"
+                      zh="呼气时，将此能量从太阳神经丛上提至胸腺（上升心经），再沿水平轴向外辐射，接地进行星栅格及众生能量场。每一次呼出，即将更高之光分享给集体之心。此为「投放服务」阶段。"
                       en="As you exhale, lift this energy from the solar plexus up to the thymus (the Rising Heart), then radiate it outward along the horizontal axis, grounding it into the planetary grid and into the energy field of all beings. Each exhale shares this higher light with the collective heart. This is the 'delivering service' phase."
                     />
                   </p>

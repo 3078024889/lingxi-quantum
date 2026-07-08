@@ -2002,7 +2002,7 @@ const INTUITIVE_WAY: IllustratedEntry = {
   ],
 };
 
-/* ---------- 上升心经：焕蜕星域，对应"上升之心"，全新原创，完整9页 ---------- */
+/* ---------- 上升心经：焕蜕星域，对应"上升心经"，全新原创，完整9页 ---------- */
 const SW_DEFS = `<defs><filter id="swGlow"><feGaussianBlur stdDeviation="9"/></filter>
   <linearGradient id="swSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c211c"/><stop offset="40%" stop-color="#173a30"/><stop offset="75%" stop-color="#3a6a52"/><stop offset="100%" stop-color="#f2d78a"/></linearGradient>
   <radialGradient id="swGlowC" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6d8"/><stop offset="100%" stop-color="#7fc9a8" stop-opacity="0"/></radialGradient></defs>`;

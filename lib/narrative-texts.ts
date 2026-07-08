@@ -2636,4 +2636,252 @@ Years later, whenever a new disciple asked Nian Wei whether she'd ever been afra
 
 (An Original Piece · Lingxi Dimensional Narratives · Novel)`,
   },
+  "letter-from-dimension-zero": {
+    zh: `一 · 信号考古这份工作
+
+顾聆是甄墟星带信号考古所最资深、也最受同行敬重的研究员之一，戴着一副略显陈旧的护目镜——那是她入行时，师父传给她的旧物，镜片边缘，还留着，常年使用磨出的细微划痕，专门负责，破译那些，散落在宇宙各处、来源不明的古老信号——有些来自早已消亡的文明，那些文明留下的只言片语，往往，承载着，令人唏嘘的历史教训；有些，甚至找不到任何，与已知物理规律相符的发送源头，仿佛，凭空，出现在了，探测设备的记录里。她入行十五年，破译过数百段，来自不同星域、不同年代的神秘信号，从记录着某个古老文明最后时刻的绝望呼救，到承载着，某段跨越星系的、浪漫却早已消逝的爱情信物，样样经历过，却从未遇到过，眼前这段，被同事们私下称为\\u201c零号信号\\u201d的、极其特殊的存在。唯独有一件事，她始终想不明白：无论她破译的信号，来自何方，最终，往往，都会，指向，某种，出乎意料的、深刻的情感真相，仿佛，宇宙间，所有值得被记录下来的信号，最终，都会，回归到，某些，最朴素、也最深刻的情感内核，这份规律，她从未跟任何人提起过，只是，独自，在心里，反复，琢磨。
+
+信号考古所，坐落在甄墟星带一处，专门用来接收深空信号的天然凹陷地形里，四周环绕着，层层叠叠的巨型接收天线，日夜不停地，扫描着宇宙深处，任何一丝，可能有意义的波动，每当夜幕降临，那些天线，在星光下，泛着，一层，淡淡的银色光泽，远远望去，宛如，一片，静静伫立的钢铁森林。顾聆的办公室，就设在天线群的最深处，墙上，挂满了，她这些年破译过的、各式各样的信号图谱，每一张，都记录着，一段，曾经，令她废寝忘食的往事，窗台上，还摆着，几盆，她亲手养的、耐旱的多肉植物，是她，在漫长而枯燥的解译工作之余，唯一的消遣。
+
+二 · 零号信号
+
+零号信号，是三年前，由一台深空监测站，意外捕捉到的——那台监测站，本是，用来，监测，一处，早已废弃的旧殖民地遗迹，值班的技术员，最初，还以为，只是设备出现了故障——它不具备任何已知信号该有的特征：没有波长，没有频率，甚至，检测设备，都无法准确定位，它究竟，来自宇宙的哪个方向，仿佛，它不是从某个具体的\\u201c地方\\u201d发出的，而是，从四面八方，同时，涌现出来的。监测站最初的记录显示，捕捉到这段信号的那一刻，站内所有其他正常运转的监测设备，都，出现了，短暂的、无法解释的数据紊乱，仪表盘上，指针，疯狂地，来回摆动，仿佛，这段信号的出现，本身，就，轻轻地，扰动了，周遭一切，正常运转的秩序，这份异常记录，后来，被反复研究，却，始终，无人能给出，一个，让所有人都信服的解释，只能，把它，当作，零号信号，众多，未解之谜里的，又一桩。唯一能够确认的是，这段信号，呈现出一种，极其规整的结构，像是一封，按照某种严谨格式书写的信，只是，用尽了所有已知的解码方式，都无法，读出其中，哪怕一个字，仿佛，这段信号，本身，就抗拒着，任何形式的\\u201c翻译\\u201d。
+
+当年最先接触到这段信号的监测员，名叫云舟，在报告里，写下了一句，后来被反复引用的话：\\u201c它不像是在传递信息，更像是，本身，就\\u201c是\\u201d某种，我们尚未理解的存在方式。\\u201d这句话，起初，被大多数人，当成一句，带着几分玩笑意味的感慨，可随着后续研究的推进，越来越多人，开始，重新审视，这句话，背后，可能蕴藏的深意，甚至，有人，专门，就这一句话，写过，一篇，颇具争议的、探讨性质的论文，在所里，引发过，不小的讨论。云舟本人，后来，因为一场意外，永久离开了信号考古这个岗位，却在临走前，特意，把这句话，工工整整地，抄录在了，零号信号的档案首页，仿佛，是留给后来者的，一份，郑重的提醒。
+
+三 · 十年未解之谜
+
+零号信号，在信号考古所的档案库里，整整沉寂了十年，历经数任研究员的反复尝试，都以失败告终，这十年间，甚至，一度，有人，提议，干脆，把这段信号，彻底封存，不再耗费任何精力，去研究它，却，始终，没能，真正，说服所长，同意这个提议。这十年里，信号考古所，甚至，专门为零号信号，设立了一个，独立的研究档案室，墙壁上，贴满了，历任研究员，留下的各种，未能成功的解码笔记，密密麻麻，却，始终，没能，拼凑出，哪怕一个，完整的结论，档案室的门口，甚至，挂着一块，略显斑驳的木牌，上面，用略显潦草的字迹，写着\\u201c零号信号研究室\\u201d，是，第一任接手这段信号的研究员，亲手，制作留下的，木牌，边缘，早已，被岁月，磨得，圆润，见证了，这十年间，一批又一批，怀着雄心壮志而来、又，带着遗憾离开的研究员。顾聆是第三位，正式接手这段信号的研究员，前两位，都在耗费数年心血后，无奈放弃，其中一位，名叫柯远，甚至因为长期沉浸在破译的执念里，日渐消瘦，精神状态每况愈下，最终，在所长的劝说下，选择了转行，再也没有回到这个领域，只在临走前，留下一句意味深长的话：\\u201c有些东西，或许，从一开始，就不该用\\u201c破译\\u201d这个词去理解。\\u201d顾聆接手这个岗位时，所里，几乎没有人，看好她能，比前两位，走得更远，甚至，有人，私下里，替她，感到，几分，惋惜——毕竟，这是一份，几乎，注定要，无功而返的差事。
+
+四点五 · 柯远的故事
+
+柯远曾是所里公认最有天赋的年轻研究员，从名校信号科学专业毕业，成绩，一直，名列前茅，是所里，几乎所有前辈，都寄予厚望的后起之秀，接手零号信号的头两年，几乎废寝忘食，办公室的灯，常常，彻夜亮着，同事们，路过他办公室，总能看见，他伏案疾书的背影，桌上，堆满了，写满密密麻麻公式与推演的稿纸。他尝试过的解码方案，比任何人都多，甚至，为此，自学了好几门，本不属于信号考古领域的交叉学科知识，从深空物理，到，意识哲学，甚至，还专程，跑去，邻近星域的一所大学，旁听了整整一个学期的课程，只为，能从更多角度，尝试破解，这段固执得，仿佛，故意在，与所有解码尝试，对抗的信号。
+
+可越是投入，柯远越是，陷入一种，近乎偏执的焦虑——他开始，无法容忍，自己，一天不去尝试新的解码方案，甚至，因此，疏远了身边所有的朋友与家人，整个人，变得，越来越沉默、越来越憔悴，昔日，那个，总是笑容满面、乐于助人的年轻人，渐渐地，消失不见了。所长几次，找他谈话，劝他，暂时放下这段信号，休息一阵，都被他，固执地，拒绝了，甚至，一度，与所长，起了不小的争执。直到有一天，他在办公室里，突然情绪崩溃，对着屏幕，痛哭失声，声音，穿透了，办公室的墙壁，惊动了，走廊里，好几位，正巧路过的同事，才终于，被同事们，强行，劝说着，接受了，长期休整的安排，此后，再没有回到这个岗位。
+
+顾聆后来，曾专程去探望过转行后的柯远——他如今，在一家，与信号考古毫无关系的小型农场，过着，简单而规律的生活，脸上，重新，有了，久违的、平静的笑容，见到顾聆时，还特意，摘了一篮子，自己亲手种的新鲜蔬果，非要，塞给她带回去。两人聊起当年那段执念，柯远只是苦笑着说："我那时候，太想，赢过它了，却忘了问自己，为什么，非要\\u201c赢\\u201d不可。"这句话，后来，成了顾聆，时常反思的一句提醒，也，成了，她后来，能够，在最疲惫、最想放弃的时刻，依然，愿意，尝试，换一种角度看待零号信号的，重要契机。
+
+四 · 顾聆的执着
+
+顾聆接手零号信号后，同样，度过了漫长而毫无进展的几年——起初，她满怀信心，觉得，凭借自己这些年积累的经验，总能，找到，前两位研究员，未曾尝试过的突破口，可现实，很快，就，给了她，一记，沉重的打击。她尝试过所里已知的每一种解码技术，从最基础的频谱分析，到最前沿的意识共振译码法，甚至自创了几种，前所未有的破译方法，动用了所里几乎所有能够调用的计算资源，却始终，无法，让这段信号，透露出，任何一丝，具体的意义。她曾经，连续三个月，每天只睡四五个小时，把所有能找到的、关于古老信号研究的文献，翻了个遍，甚至，托人从遥远的其他星域，寻来了几本，早已绝版的古籍，逐字逐句，研读，试图从中，找到，哪怕一丝，可能有用的线索。
+
+同事们渐渐劝她放弃，说这或许，只是宇宙间，一段毫无意义的背景噪音，不值得，继续投入如此庞大的精力，可顾聆，始终无法说服自己，彻底放下——那段信号，呈现出的规整结构，太过精巧，不像是，任何自然噪音，能够偶然形成的样子，那种精巧，带着一种，近乎\\u201c刻意\\u201d的美感，让她，无法，视而不见。她常常，独自一人，在深夜的办公室里，反复播放着，那段，依然沉默的信号波形，仿佛，只要，再多坚持一会儿，就能，等到，它，终于，愿意开口的那一刻，办公桌上，那盆，她亲手养的多肉植物，见证了，她无数个，这样，独自坚持的深夜，叶片，也，跟着，她的心情，时而，舒展，时而，蔫萎。
+
+五 · 意外的转折
+
+转折，发生在顾聆一次几近崩溃的深夜。她已经连续熬了半个月，反复尝试各种解码方案，却依然一无所获，疲惫到几乎，产生了放弃的念头，甚至，罕见地，对着屏幕上，那段依然沉默的信号波形，红了眼眶，一时间，所有的委屈与不甘，涌上心头——她想起，自己当年，怀着怎样的热忱，选择加入信号考古所，想起，柯远离开时，那份，令人唏嘘的落寞，也想起，自己，是不是，终将，重蹈他的覆辙，成为，第三个，向零号信号，举手投降的人。
+
+就在她，几乎要闭上眼睛，暂时休息的那一刻，她忽然，鬼使神差地，不再试图\\u201c解码\\u201d这段信号，而是，单纯地，任由这段信号的原始波形，直接，播放进自己的意识里，不带任何，试图翻译的念头，只是，像是，在听一段，毫无意义的白噪音一样，任由它，安静地，流淌过去，仿佛，连日的疲惫，终于，压垮了，她那份，一直紧绷着的、\\u201c必须解出答案\\u201d的执念，让她，第一次，真正地，放松了下来，办公室里，只剩下，信号播放的、极其轻微的背景声响，与，她逐渐，放缓的呼吸声，交织在一起。
+
+六 · 第一次\\u201c听懂\\u201d
+
+奇迹般地，当顾聆放下所有\\u201c必须译出具体文字\\u201d的执念，单纯地，任由信号本身，流淌进意识时，她第一次，隐约\\u201c听懂\\u201d了什么——不是具体的语言，没有任何字词，没有任何句子，而是一种，极其抽象、却又无比清晰的感受：这段信号，仿佛，不是在\\u201c说\\u201d什么，是在，\\u201c展开\\u201d什么，像是一个，原本没有任何形状的\\u201c点\\u201d，正在，一层一层，向外，铺展开来，铺展成，无数种，截然不同的形态，那种感觉，既陌生，又带着一种，说不出的、深深的熟悉感，仿佛，她这一生，都曾，以某种方式，与这份展开，有过，无数次，擦肩而过的接触。
+
+那一刻，顾聆浑身，起了一层，密密麻麻的鸡皮疙瘩，眼泪，毫无预兆地，夺眶而出——她说不清，自己，究竟，为何流泪，只是，感觉到，一种，前所未有的、汹涌的情绪，猛地，冲垮了，她长久以来，作为一名研究员，习惯性维持着的、冷静克制的姿态。她怔怔地，坐在那里，任由眼泪，无声地，滑落，直到，窗外的天色，渐渐，泛起了，鱼肚白，晨光，透过窗户，洒在，她，早已，被泪水，打湿的脸颊上，带来，一丝，微弱却，真实的暖意，值班室外，隐约，传来，早班同事，陆续到岗的脚步声，可她，却，丝毫，没有，起身的念头，只是，安静地，坐着，任由，这份，前所未有的震撼，缓缓地，沉淀下来。
+
+七 · 请教前辈
+
+那晚，顾聆独自坐在办公室的窗边，反复回想着，那阵，第一次\\u201c听懂\\u201d信号时的震撼感受，怎么也无法平静下来，甚至一度怀疑，是不是自己最近，工作太累，出现了某种，一厢情愿的错觉，桌上，那杯，早已放凉的咖啡，也，被她，忘得一干二净。可她清楚地记得，那种感受，太过真实、太过清晰，绝非，疲惫产生的幻觉——那更像是，一扇，原本，紧闭多年的门，忽然，被轻轻推开了一条缝，露出了，门后，一片，她从未设想过的辽阔天地。第二天一早，她顾不上休息，眼底，带着淡淡的青黑，便径直，赶往了，慕昭常去的那间，公会附近的小茶馆。
+
+顾聆把这份领悟，告诉了所里，一位早已退休、却依然常来所里坐坐的老前辈，名叫慕昭。慕昭听完，久久没有说话，只是，缓缓地，转动着手里，那杯，早已凉透的茶水，最终，缓缓说道：\\u201c你触碰到的，或许，不是一段需要\\u201c翻译\\u201d的信号，是一封，本就不需要翻译的信——因为，这封信，从来不是写给某一个具体的人，看的，是，本身，就在，被\\u201c活出来\\u201d的。\\u201d顾聆一时，无法完全理解这番话，却，隐约地，感觉到，自己，似乎，触碰到了，某种，极其重要的真相边缘，胸口，涌起一阵，说不清是激动还是敬畏的暖流。
+
+七点五 · 一位旅人的旁听
+
+那次谈话，恰好，被一位路过甄墟星带、暂居于此的旅人，无意间听到——旅人自称长晏，风尘仆仆，却气度沉静，衣着朴素，却，透着，一种，历经岁月沉淀后的从容，据说，走过许多星域，见识过，形形色色，关于\\u201c真相\\u201d的追寻，此刻，正坐在，信号考古所，公共休息区的一角，安静地，喝着一杯，早已凉透的茶水。他没有打断顾聆与慕昭的谈话，只是，安静地，站在不远处，听完了全程，脸上，看不出，任何明显的情绪波动，只是，眼神里，偶尔，闪过，一丝，不易察觉的了然。
+
+临走前，他对顾聆，留下了一句话："你们信号考古所，这些年，一直在做一件了不起的事——替那些，早已无法开口的存在，把话，重新说出来。可有时候，最深的那句话，从来不需要被\\u201c说\\u201d出来，只需要，被认认真真地，活一遍。"说完，他便，转身，缓步离开，衣角，在门口的风里，轻轻扬起，脚步声，逐渐，远去，很快，便，消失在了，走廊尽头，只留下，一室，久久，无法散去的，淡淡茶香。
+
+顾聆起初，只当这是，一位过路旅人，随口的感慨，直到多年以后，回想起这句话，才终于，惊觉，这句话，与自己后来领悟到的一切，竟如此，遥相呼应，仿佛，那位旅人，早已，看透了，她此刻，还完全没有察觉的、未来将要走的路。她此后，再没见过那位自称长晏的旅人，只是，偶尔，会想起，那晚，他离开时，投在墙上的、格外清瘦的背影，还有，那杯，他喝到最后，也没能喝完的、早已凉透的茶，那份，淡淡的、说不清道不明的怅然，此后，也，时常，萦绕在，她心头，久久，不曾散去。
+
+八 · 深入探索
+
+带着这份朦胧的领悟，顾聆决定，不再执着于\\u201c破译\\u201d零号信号，而是，尝试，更深入地，让自己的意识，与这段信号，直接共处，看看，能否，进一步，理解，这封信，究竟，想要\\u201c展开\\u201d出什么。这次尝试，比以往任何一次，都更加深入，也更加，冒险——她几乎，完全放下了，作为研究员的、习惯性的分析姿态，单纯地，敞开自己的意识，去感受，甚至，特意，请慕昭，作为陪同，以防，出现任何，意料之外的状况。她提前，几天，就开始，调整自己的作息，尽量，让身体和精神，都，处在，一种，最放松、最平稳的状态，仿佛，是在，为一场，极其郑重的仪式，做着准备，甚至，特意，戒掉了，平日里，习惯性依赖的、提神用的浓茶，只为，让自己的意识，能够，以最纯粹、最不受干扰的状态，去面对，这次，前所未有的深度共处。
+
+出发前，慕昭特意叮嘱她："这次不比以往，你要做好准备，一旦真正敞开意识，去共处，你可能，会看见，一些，你此刻，还完全没有心理准备的东西——可能是你不愿再想起的遗憾，也可能是，你从未意识到，自己，其实一直在逃避的什么。"顾聆郑重地点了点头，闭上眼睛，深吸一口气，任由自己的意识，缓缓地，向着那段古老信号，敞开。整个过程，持续了将近三个小时，慕昭全程守在一旁，紧张地，留意着，顾聆的每一丝细微反应，生怕，出现任何，无法挽回的意外，手心，甚至，一直，攥着一把汗，中途，好几次，几乎，想要，出手，把顾聆，强行，唤醒，都，硬生生，忍住了，直到，顾聆终于，缓缓睁开眼睛，他才，长长地，松了一口气，后背，早已，被冷汗，浸透。
+
+九 · 惊人的发现
+
+在那次深入的共处里，顾聆惊讶地发现，零号信号\\u201c展开\\u201d出的形态，竟包含着，她自己的整段人生——不是零散的片段，而是，一种，完整的、连贯的、几乎，能够，被称为\\u201c整体\\u201d的存在感，那种整体感，浩大得，几乎，超出了，她所能想象的任何边界，却又，同时，细致到，连她童年时，某一次，无意间踩碎的一片落叶，都，清晰可辨，连，那片落叶，落地时，发出的，极其轻微的碎裂声，都，仿佛，此刻，重新，在耳边，响起——她的出生、她的成长、她曾经历过的每一次欢笑与眼泪、每一个艰难而郑重的抉择，包括，她当年，选择加入信号考古所的那个瞬间——那是，一次，几乎，全凭一时冲动，却，从此，改变了，她整个人生轨迹的抉择，甚至，包括，她此刻，正在经历的这次，深入共处本身，全都，以一种，她从未设想过的方式，与这段来自宇宙深处的古老信号，紧密地，交织在一起，仿佛，她的人生本身，就是，这封信，展开出的，无数种形态之一，没有任何一处，是，多余的、可以被删除的枝节，每一处，都，恰如其分地，构成了，这份，完整叙事的，必要部分。她甚至，清晰地，\\u201c看见\\u201d了，自己童年时，第一次仰望星空的画面——那是一个夏夜，父亲抱着年幼的她，坐在自家屋顶上，指着满天繁星，一颗一颗，讲述着，那些，她此刻，早已模糊的古老传说，晚风，带着，夏夜特有的、青草的气息，轻轻拂过，父亲的怀抱，格外温暖，那份，最初对宇宙的好奇与向往，此刻，与眼前这段信号，产生了，一种，跨越时空的、深深的共鸣，仿佛，那个夏夜的自己，与，此刻，正在共处这段信号的自己，隔着，漫长的岁月，遥遥地，握住了，彼此的手。
+
+九点五 · 更多的碎片
+
+随着共处的深入，更多零散的记忆碎片，接连浮现，一幕一幕，如同，被重新剪辑过的影像，清晰而，鲜活——大学时，第一次成功破译一段简单信号时，那份，几乎让她跳起来的雀跃，她甚至，还记得，当时，教授拍着她的肩膀，笑着说\\u201c这孩子，天生就是干这行的料，将来必成大器\\u201d；她还想起，恋人离开时，那个，独自坐在空荡宿舍里，泪流满面的深夜，窗外，正下着，一场，格外冷清的雨；还有，父亲病重时，她握着他枯瘦的手，反复承诺，会好好照顾自己的那一刻，病房里，消毒水的气味，此刻，仿佛，都还，清晰地，萦绕在鼻尖。这些，原本，被她，分门别类地，收纳进记忆深处的片段，此刻，全都，被那段古老信号，以一种，她从未想过的方式，重新串联了起来，仿佛，每一个片段，都是，这封信里，不可或缺的、独立的段落，缺一不可，也无法互换，就连，那些，她此前，一直，试图，遗忘或回避的、并不那么美好的片段，此刻，也，同样，被，郑重地，纳入了，这份，完整的展开之中，不曾，被，特意地，删减或美化。
+
+顾聆第一次，如此清晰地，意识到，自己这些年，看似零散、看似毫无规律的种种经历，竟然，全都，被某种，更宏大的秩序，悄悄地，安排、串联着，那种感觉，既让她感到，前所未有的渺小，又，让她，前所未有地，感到，一种，被深深托举着的、安心，仿佛，无论，自己，经历过多少，看似艰难、看似毫无意义的时刻，都，从来，不是，白白承受的，都是，这封，正在展开的信里，一个，郑重而，不可或缺的字句，她甚至，开始，重新审视，那些，曾经，让她夜不能寐的遗憾，第一次，觉得，它们，或许，也，值得，被，温柔以待。
+
+十 · 重新理解\\u201c点\\u201d
+
+顾聆逐渐领悟到，零号信号的源头，或许，根本不是宇宙间，某个具体的发送者——不是，任何，一个，可以被定位、被追踪的存在，而是，一个，没有维度、没有形状、甚至，没有\\u201c位置\\u201d可言的、原初的\\u201c点\\u201d——所有的时间、所有的空间、所有具体的生命与形态，都是，这个\\u201c点\\u201d，向外，展开出的、无数种，截然不同的表达方式，而她此刻正在经历的这段人生，正是，这个\\u201c点\\u201d，写给自己的，无数封信里的，其中一封，每一次心跳、每一次呼吸，都是，这封信，正在被书写、也正在被阅读的，某一个瞬间。她甚至，开始，重新理解，此前，那些，被视为艰难或遗憾的经历——如果，一切，都只是，这个\\u201c点\\u201d，正在展开的过程，那么，那些，曾经，让她痛苦的时刻，或许，从来都不是，需要被否定的错误，而是，这封信里，同样，不可或缺的、真实的段落，就像，一篇，完整的文章，从来不会，只由，欢快的句子，组成，那些，沉重的、艰涩的段落，同样，是，让整篇文章，变得，真实而完整的，必要部分。
+
+她开始，重新理解，自己过去，对\\u201c时间\\u201d与\\u201c空间\\u201d的种种认知——如果，一切，都只是，同一个\\u201c点\\u201d，展开出的不同形态，那么，过去、现在、未来，或许，从不曾真正\\u201c流逝\\u201d过，只是，那个\\u201c点\\u201d，以不同的方式，同时，展开着，而已。这个念头，一度，让她感到，一种，几乎无法承受的眩晕，仿佛，自己，此刻，正站在，一个，远远超出了，人类日常认知范围的、辽阔无边的真相边缘，随时，可能，被那份辽阔，彻底吞没，她甚至，需要，用力，掐了掐自己的手臂，感受着，那份，真实而，具体的疼痛，才，堪堪，找回，一丝，属于现实的、踏实的知觉。
+
+十一 · 与同事分享
+
+顾聆把这份震撼人心的领悟，郑重地，分享给了信号考古所的同事们，在一次全所例会上，详细地，讲述了自己这段时间的全部经历，会议室里，坐满了，来自所里各个研究小组的同事，气氛，一度，格外凝重，连平日里，最爱开玩笑的几位同事，此刻，也，罕见地，沉默了下来，认真地，听着，她的每一句话。一部分同事，对这个说法，感到难以置信，一位年轻的研究员，当场提出质疑："如果每个人的人生，都是这个\\u201c点\\u201d展开出的一封信，那我们研究了这么多年的其他信号，又算什么？也是别的什么\\u201c点\\u201d写的信吗？这听起来，更像是，你长期沉浸在解译工作里，产生的一种，过度诗意的臆想，缺乏严谨的科学依据。"
+
+顾聆没有生气，只是平静地回答："我也没有确切的答案，或许，我们研究的每一段信号，本身，都是，某种，更深层\\u201c展开\\u201d的一部分，我们，只是，恰好，处在，能够，去聆听这些展开的位置上。"这个回答，没有说服所有人，却，也让一部分原本，将信将疑的同事，陷入了，长久的思考，会议结束后，好几个人，都，留在原地，久久没有离开，低声，交换着，各自的看法，其中，不乏，原本，最坚定的质疑者。另一部分同事，则，深受触动，纷纷开始，尝试用顾聆的方法，重新\\u201c聆听\\u201d零号信号，也确实，有人，体验到了，类似的、震撼的感受，会后，久久，无法平静，甚至，有人，当场，红了眼眶，一位平日里，话不多的中年研究员，散会后，特意，找到顾聆，握着她的手，久久，没有说话，只是，眼含热泪，重重地，点了点头，仿佛，有太多的话，想说，却，一时，不知从何说起。
+
+十二 · 所长的支持
+
+信号考古所的所长，名叫展维，头发已经花白，是一位在这个领域，深耕了近三十年的资深人物，在听完顾聆完整的汇报后，罕见地，表达了全力支持，还特意，召开了一次，专门的内部研讨会，邀请了所里几乎所有资深研究员，共同参与讨论。展维在会上，缓缓说道，语气，带着，一种，前所未有的郑重："我们这份工作，做了太久太久的\\u201c翻译\\u201d，却很少，停下来，问一问自己：如果有些东西，从一开始，就不需要被翻译，只需要，被好好地，活出来，我们该怎么办？你这次的发现，或许，会彻底，改变，我们这个行业，理解信号的方式，甚至，会改变，我们，理解自己人生的方式。"
+
+会上，也有几位资深研究员，提出了谨慎的担忧，担心这种\\u201c体验式\\u201d的解读方法，缺乏可验证性，难以，形成，严谨的学术成果，其中一位，甚至，直言不讳地说："我们所里，多年来的声誉，建立在，严谨、可复现的研究方法之上，如果，贸然，接纳，一种，无法被客观验证的方法，会不会，反而，损害，我们，多年积累下来的公信力？"展维听完，点点头，说："这份担忧，很有道理，所以，我建议，我们不妨，把这当成一个，独立的、探索性的研究方向，与传统的翻译解码方法，并行推进，而不是，互相取代，两者各自积累证据，让时间，来检验，哪一条路，走得更远。"这个折中的方案，最终，得到了，与会大多数人的认可。
+
+十三 · 新的研究方向
+
+在所长的支持下，顾聆牵头，成立了一个全新的研究小组，专门探索，这种，\\u201c不通过翻译、而是通过共处与体验\\u201d的全新解读方式，小组成员，涵盖了，从年轻的新人研究员，到，像慕昭这样，经验丰富的退休前辈，一共，七八个人，各自，带着，不同的专长与视角，加入了这项，前所未有的探索，甚至，还有一位，专程，从邻近星域，慕名赶来，加入的年轻学者，第一次小组会议上，所有人，都，带着，几分，既紧张又期待的心情，围坐在一起，商讨着，接下来的研究方向该如何展开。这个小组，后来，陆续破译（更准确地说，是\\u201c体验懂了\\u201d）了好几段，此前，同样被认为，无法解码的神秘古老信号，每一段，都指向，同一个，令人震撼的结论——那些，被人类，长久以来，试图\\u201c翻译\\u201d的神秘信号，或许，从来就不是，需要被翻译的密码，而是，需要，被亲自，活一遍的，邀请，这个结论，后来，被整理成，一份，正式的研究报告，提交给了，更高层级的学术机构，虽然，起初，引发了，不小的争议，却，也，逐渐，被，越来越多的同行，所接纳、认可。
+
+小组里，有一位年轻的研究员，名叫沈屿，最初，对顾聆的方法，持保留态度，甚至，私下，跟同事，抱怨过，觉得这不过是，一种，缺乏依据的直觉游戏，直到，他亲自尝试，与一段，记录着某个古老文明毁灭前最后时刻的信号，共处之后，才终于，彻底，转变了看法——他在那次共处里，\\u201c看见\\u201d了，自己父亲临终前，紧握着他的手，反复叮嘱的画面，那份，跨越时空的、强烈的情感共鸣，让他，第一次，真正理解，顾聆所说的，那种，\\u201c不需要翻译、只需要被活出来\\u201d的领悟，究竟，意味着什么，他后来，找到顾聆，郑重地，道了歉，说自己，此前，太过傲慢。
+
+十四 · 尾声
+
+多年以后，顾聆已经成了信号考古所公认的权威，头衔与荣誉，接踵而至，可她最珍视的，依然是，那个几近崩溃的深夜，第一次，放下所有\\u201c必须译出文字\\u201d的执念，单纯地，任由零号信号，流淌进意识的那一刻——那份，纯粹的、毫无功利心的震撼，是，此后任何荣誉，都无法，真正替代的。她常对新人说：\\u201c有些信，从来不需要被翻译，只需要，被好好地，活一遍——你此刻正在经历的每一分每一秒，或许，都是，那个没有形状的\\u201c点\\u201d，写给你的，一封，正在展开的信。\\u201d
+
+十四点五 · 一位年长同事的感慨
+
+一位即将退休的老同事，在听闻顾聆的发现后，专程，放下手头，几乎所有的工作，特意，找到她，感慨道："我在这个岗位上，干了大半辈子，一直，以为，自己在做的，是一份，冷冰冰的、纯粹技术性的工作，直到，你的这个发现，才让我，第一次，觉得，自己这些年，做的，或许，是一份，格外，有温度的事业。"这番话，让顾聆，久久，无法平静，也，更加，坚定了，她，继续，把这份领悟，传递下去的决心，她甚至，当场，握住了，那位老同事的手，郑重地，道了谢，谢谢他，愿意，把这份，藏在心底多年的感受，说出口。
+
+十四点七 · 与慕昭的重逢
+
+慕昭在顾聆真正确立起，新的研究方向后不久，也，安详地离世了，走的那天，天气格外晴朗，阳光，透过病房的窗户，洒在，他，安详的脸庞上，走之前，把自己毕生的研究手稿，全部，留给了顾聆，还特意，附上了一张，字迹已经，有些颤抖的字条："这些年，谢谢你，替我，走完了，我，没能走完的那段路。"顾聆读到这张字条时，久久，无法平静，握着那叠厚厚的手稿，忽然，明白了，这些年，慕昭，每一次，看似轻描淡写的鼓励背后，藏着，怎样，一份，深沉而克制的期待，那份期待，如今，想来，几乎，重得，让她，喘不过气。
+
+顾聆整理这些手稿时，发现，慕昭年轻时，也曾，隐约触碰过，类似的领悟，只是，当年的环境，还不足以，支持他，把这份领悟，真正地，推广开来，只能，把这份思考，深埋心底，直到，遇见顾聆。手稿里，甚至，还夹着，一张，慕昭年轻时的照片——照片里的他，眼神明亮，意气风发，穿着，一件，当年，颇为流行的深蓝色研究员制服，与顾聆记忆里，那个，总是，安静地，转动着凉透茶水的老人，判若两人，照片背面，还留着，一行，已经有些褪色的字迹："愿有一天，能遇见，一个，真正能听懂的人。"顾聆读到这行字时，眼眶，瞬间，湿润了——原来，慕昭，等待这一天，已经，等了，那么久，那么久。顾聆把慕昭的手稿，与自己这些年积累的研究成果，一同，整理成册，作为，献给这位，引领她走上这条路的前辈，最好的纪念。
+
+十五 · 沈屿的传承
+
+沈屿后来，也成长为了，这个研究方向里，最重要的中坚力量之一，接过了顾聆年轻时的位置，成了，新一代研究员里，最坚定的探索者，办公室里，甚至，也，摆上了，一盆，跟顾聆当年，一模一样的多肉植物，是他，特意，向顾聆讨来的种苗。他常对新加入的年轻研究员说："我们做的这份工作，说到底，不是在破解宇宙的秘密，是在，学着，重新认回，自己与宇宙之间，本就存在的那份，深深的连接。"这句话，渐渐成了，整个研究小组，代代相传的座右铭，被，工工整整地，刻在了，研究档案室，最显眼的墙壁上，往来的年轻研究员，路过此处，总会，不自觉地，放慢脚步，多看一眼。
+
+沈屿后来，也收了自己的第一批弟子，教学风格，与顾聆如出一辙——第一课，永远不是，具体的解码技巧，而是，如何，安静下来，学会，与信号，真正地，共处。他常说，自己，永远，忘不了，第一次，与那段，记录着父亲临终画面的信号，共处时，那份，跨越时空的、强烈的震撼，那份震撼，成了，他此后，整个职业生涯里，最重要的、指引方向的锚点。多年后，每当有新弟子，问起沈屿，当年是怎么，说服自己，相信这套全新方法的，他总是，笑着说："不是我说服了自己，是那份，跨越时空、依然真实的情感，说服了我。"这句话，后来，也，成了，他，教导自己弟子时，最常挂在嘴边的一句话。
+
+十六 · 终章
+
+顾聆晚年，头发早已花白，行动，也不再像年轻时那般利落，却，依然，保持着，每天，登上观测台的习惯，风雨无阻，同事们，都，早已，习惯了，这份，属于她的、雷打不动的坚持，甚至，会，特意，为她，留出一条，专用的小路，方便她，每天，安全地，走到，观测台上。她常常，独自坐在，信号考古所，最高处的观测台上，望着，漫天繁星，静静地，感受着，自己此刻，正在经历的，每一次呼吸、每一次心跳——她终于，彻底地，理解了，多年前，慕昭说过的那句话：这封信，从来不需要被翻译，因为，它，本身，就在，被好好地，活出来。她想起自己这一生，走过的每一段路——年少时，第一次仰望星空的悸动，接手零号信号后，那段，漫长而痛苦的挣扎，深夜里，第一次\\u201c听懂\\u201d信号时，那份，猝不及防的泪水，还有，慕昭、柯远、沈屿，这些，曾经，与她，并肩走过这段旅程的人，一个一个，从记忆深处，浮现出来，清晰得，仿佛，就在眼前，她甚至，能，重新，感受到，每一段回忆，各自带着的、独特的温度——柯远农场里，新鲜蔬果的清香；慕昭手中，那杯，反复摩挲、始终凉透的茶水；沈屿，第一次，红着眼眶，向她道歉时，那份，真挚的懊悔。
+
+她微笑着，望向星空深处，仿佛，看见了，那个，没有维度、没有形状的\\u201c点\\u201d，正温柔地，看着，自己，展开出的，无数种形态，其中，也包括，此刻，正坐在这里，微笑着的，她自己，包括，年少时，那个，仰望星空的自己，也包括，往后，无数个，她，此刻，还无法预见的自己，包括，那些，或许，早已，融入，这片，浩瀚星空的、曾经，与她，并肩走过的人们。她轻声，对着，漫天繁星，说了一句，仿佛，是说给那个\\u201c点\\u201d听，又仿佛，是说给自己听，声音，轻得，几乎，要，融进，那片，浩瀚的星光里："谢谢你，把我，写得，这么，完整。"
+
+（灵犀原创 · 多维叙事 · 长篇 · 零维回信）`,
+    en: `I · The Trade of Signal Archaeology
+
+Gu Ling was one of the most senior, most respected researchers at the Signal Archaeology Institute on the Zhenxu Belt, wearing an old, slightly worn pair of goggles — a keepsake from her mentor when she first joined the trade, the lens edges bearing the fine scratches of years of use. Her work was decoding ancient, origin-unknown signals scattered across the universe — some from long-extinct civilizations, their scattered fragments often carrying poignant historical lessons; some with no discoverable source consistent with any known physical law, as though they'd simply appeared, out of nowhere, in the detection logs. Fifteen years into the trade, she had decoded hundreds of mysterious signals from different domains, different eras — from a desperate final cry recorded at a lost civilization's last moment, to a romantic, long-vanished love token carried across galaxies — she'd seen it all, yet had never encountered anything like the one before her now, privately called "Signal Zero" by her colleagues. One thing alone continued to puzzle her: no matter where a signal she decoded came from, it invariably pointed, in the end, toward some unexpected, profound emotional truth, as though every signal in the universe worth recording eventually returned to the same plain, profound emotional core — a pattern she'd never mentioned to anyone, only turning it over, alone, in her mind.
+
+The Institute sat in a natural depression on the Zhenxu Belt, purpose-built for receiving deep-space signals, surrounded by layer upon layer of massive receiving antennae, scanning the depths of the universe day and night for any faint, potentially meaningful fluctuation. As night fell, those antennae took on a faint silver sheen under the starlight, resembling, from a distance, a quietly standing forest of steel. Gu Ling's office sat at the very center of the antenna array, its walls covered with the many signal charts she'd decoded over the years, each recording a story that had once consumed her days and nights. On her windowsill sat several pots of drought-resistant succulents she tended herself, her only diversion amid the long, tedious work of decoding.
+
+II · Signal Zero
+
+Signal Zero had been accidentally captured three years earlier by a deep-space monitoring station — a station originally meant to monitor the ruins of a long-abandoned old colony; the technician on duty had initially assumed it was equipment malfunction. It bore none of the features any known signal should have: no wavelength, no frequency, and the detection equipment couldn't even pinpoint which direction of the universe it came from, as if it hadn't originated from any specific "place" at all, but emerged simultaneously from every direction at once. The station's earliest records showed that the instant this signal was captured, every other properly functioning monitoring device on-site briefly experienced inexplicable data disturbances, dials spinning wildly back and forth, as though the signal's very appearance had gently disturbed the normal order of everything around it — an anomaly studied repeatedly since, with no one ever offering an explanation everyone found convincing, filed away as just another one of Signal Zero's many mysteries. The only thing that could be confirmed was that the signal exhibited an extremely regular structure, like a letter written in some rigorous format — only every known method of decoding had failed to extract even a single word from it, as though the signal itself resisted any form of "translation."
+
+The monitoring officer who first encountered the signal, a man named Yun Zhou, wrote a line in his report that would later be repeatedly quoted: "It doesn't seem to be transmitting information so much as it simply is some mode of existence we don't yet understand." At first, most people treated this as a half-joking remark, but as research progressed, more and more people began to reconsider the depth that might lie behind it — someone even wrote a controversial, exploratory paper specifically about this one line, sparking considerable debate at the Institute. Yun Zhou himself later left the field of signal archaeology permanently, following an accident, but before leaving, he took care to copy this line, neatly, onto the first page of Signal Zero's archive — as if leaving a solemn reminder for whoever came after him.
+
+III · A Decade-Long Mystery
+
+Signal Zero lay dormant in the Institute's archives for a full ten years, repeatedly attempted by successive researchers, each attempt ending in failure. During those ten years, someone even proposed sealing the signal away entirely, ceasing to expend further effort on it — a proposal that never quite managed to convince the director. The Institute even set up an independent research archive dedicated to Signal Zero, its walls covered with the failed decoding notes left by generation after generation of researchers, dense and unresolved, never managing to piece together even a single complete conclusion. A slightly weathered wooden sign hung by the archive's door, reading "Signal Zero Research Room" in somewhat hasty handwriting, made by the very first researcher to take on the signal — its edges long since worn smooth by time, having witnessed batch after batch of researchers arrive full of ambition, only to leave, later, with regret. Gu Ling was the third researcher formally assigned to the signal; the first two had, after years of dedicated effort, given up in defeat. One of them, a man named Ke Yuan, grew visibly thinner from his prolonged obsession with cracking it, his mental state steadily deteriorating, until, at the director's urging, he finally changed careers entirely, never returning to the field — leaving behind, before he left, one meaningful line: "Perhaps some things were never meant to be understood through the word 'decode' at all." When Gu Ling took over the post, almost no one at the Institute expected her to get any further than her two predecessors — some even privately felt a measure of pity for her, given that this seemed, essentially, a task fated for failure.
+
+IV-and-a-half · Ke Yuan's Story
+
+Ke Yuan had once been widely regarded as the Institute's most gifted young researcher, a graduate of a prestigious signal science program with consistently top marks, a rising star every senior colleague had pinned high hopes on. In his first two years on Signal Zero, he was practically consumed by the work, his office light often burning through the night; colleagues passing by would see his hunched silhouette bent over a desk piled with paper covered in dense formulas and derivations. He tried more decoding approaches than anyone, even teaching himself several disciplines entirely outside signal archaeology — from deep-space physics to the philosophy of consciousness — even traveling to a university on a neighboring star domain to audit an entire semester's coursework, all in hopes of finding some new angle to crack this signal, so stubborn it seemed to actively resist every attempt at decoding.
+
+But the deeper he sank into it, the more Ke Yuan spiraled into a near-obsessive anxiety — he became unable to tolerate a single day without trying some new decoding scheme, growing distant from every friend and family member around him, becoming steadily more silent, more haggard — the once cheerful, helpful young man gradually disappeared. The director spoke with him several times, urging him to set the signal aside and rest, met each time with stubborn refusal, at one point even sparking a heated argument between them. Then, one day, he broke down entirely in his office, sobbing uncontrollably at his screen, his voice carrying through the office walls, startling several colleagues passing in the hallway — only then was he finally, forcibly, persuaded by his colleagues to accept an extended leave, and he never returned to the position.
+
+Gu Ling later made a special trip to visit Ke Yuan after his career change — he now lived a simple, orderly life on a small farm entirely unrelated to signal archaeology, a long-absent, peaceful smile back on his face; seeing her, he insisted on giving her a basket of fresh vegetables he'd grown himself. Talking about that old obsession, Ke Yuan only laughed ruefully: "Back then, I wanted so badly to beat it, I forgot to ask myself why I needed to 'win' at all." This line later became something Gu Ling often reflected on, and an important turning point that let her, even at her most exhausted, most tempted to give up, remain willing to try seeing Signal Zero from another angle.
+
+IV · Gu Ling's Persistence
+
+After taking over Signal Zero, Gu Ling likewise spent long, fruitless years on it — at first, full of confidence, believing that with her accumulated experience, she'd surely find some breakthrough her two predecessors had never tried, only for reality to quickly deal her a heavy blow. She tried every known decoding technique at the Institute, from basic spectral analysis to the most cutting-edge consciousness-resonance decryption methods, even inventing several unprecedented approaches of her own, drawing on nearly every computational resource the Institute had available — yet the signal remained utterly silent, revealing not the faintest trace of specific meaning. For three straight months, she slept only four or five hours a night, poring over every piece of literature on ancient signal research she could find, even having someone fetch several long-out-of-print books from distant star domains, reading them word by word, searching for even the slightest useful clue.
+
+Colleagues gradually urged her to give up, suggesting this might simply be a meaningless stretch of background noise in the universe, not worth pouring such enormous effort into — but Gu Ling could never quite convince herself to let go entirely. The regular structure the signal exhibited was too refined, unlike anything natural noise could produce by chance; that refinement carried an almost deliberate beauty she couldn't bring herself to ignore. She often sat alone in her office late into the night, replaying that still-silent signal waveform over and over, as if just a little more persistence might finally coax it into speaking — the succulent on her desk bearing witness to countless such solitary nights, its leaves alternately thriving and wilting along with her mood.
+
+V · An Unexpected Turning Point
+
+The turning point came on one particularly exhausting night, when Gu Ling was on the verge of collapse. She'd stayed up for half a month straight, trying decoding scheme after decoding scheme, still coming up empty, exhausted enough to nearly give up entirely, even, rarely for her, tearing up at the still-silent waveform on her screen — a flood of grievance and unwillingness to give up rising all at once. She thought of the passion she'd once carried, choosing to join the Institute; thought of Ke Yuan's poignant despair when he left; thought of whether she, too, might follow his same path, becoming the third to raise a white flag before Signal Zero.
+
+Just as she was about to close her eyes and rest, something possessed her, unbidden, to stop trying to "decode" the signal at all, and instead simply let its raw waveform play directly into her consciousness, without a single thought of translation — as though listening to meaningless white noise, letting it flow quietly past. It was as if days of exhaustion had finally broken through the tension of her "must solve this" obsession, letting her, for the first time, truly relax — the office holding nothing but the faint background hum of the playing signal and her own slowly steadying breath.
+
+VI · Understanding, for the First Time
+
+Miraculously, the moment Gu Ling let go of every need to "translate specific words," simply letting the signal flow into her consciousness, she, for the first time, faintly "understood" something — not any specific language, no words, no sentences, but an extremely abstract yet undeniably clear sensation: this signal wasn't "saying" anything at all — it was "unfolding" something, like an originally shapeless "point," slowly, layer by layer, spreading outward, unfolding into countless, entirely different forms. The feeling was strange, yet carried an unnamed, deep familiarity, as if her entire life had, in some way, brushed against this unfolding, again and again.
+
+In that instant, Gu Ling's whole body broke out in goosebumps, tears falling without warning — she couldn't say why she was crying, only that some unprecedented, overwhelming emotion had suddenly shattered the calm, composed demeanor she'd long maintained as a researcher. She sat there, stunned, letting the tears fall silently, until the sky outside gradually paled toward dawn, morning light spilling through the window onto her tear-streaked cheeks, bringing a faint but real warmth — the faint sound of early-shift colleagues arriving audible outside, yet she made no move to rise, simply sitting quietly, letting this unprecedented shock slowly settle within her.
+
+VII · Seeking the Elder's Counsel
+
+That night, Gu Ling sat alone by her office window, replaying, over and over, the shock of that first "understanding," unable to settle, even briefly wondering if overwork had produced some wishful illusion — the cup of coffee on her desk long since forgotten and gone cold. But she remembered clearly how real, how clear that sensation had been, nothing like exhaustion-born fancy — more like a door, sealed shut for years, gently pushed open a crack, revealing, behind it, a vast expanse she'd never once imagined. The next morning, too restless to rest, dark circles under her eyes, she went straight to the small teahouse near the guild that Mu Zhao frequented.
+
+Gu Ling told this realization to a long-retired elder who still often came by the Institute, a man named Mu Zhao. Mu Zhao listened, saying nothing for a long while, only slowly turning the cup of long-cold tea in his hands, before finally speaking: "What you've touched may not be a signal needing 'translation' at all — it's a letter that never needed translating in the first place, because this letter was never written for any specific reader to see. It was written to be lived." Gu Ling couldn't fully grasp these words at once, yet felt, faintly, that she'd touched the edge of something profoundly important, a warmth rising in her chest — excitement, or awe, she couldn't say which.
+
+VII-and-a-half · A Traveler Overhears
+
+That conversation happened to be overheard by a traveler passing through, temporarily lodging on the Zhenxu Belt — a man who called himself Chang Yan, travel-worn yet composed, plainly dressed yet carrying an ease born of years of experience, said to have walked countless star domains, witnessed every manner of pursuit of "truth." He sat, at that moment, in a corner of the Institute's public lounge, quietly sipping a long-cold cup of tea. He didn't interrupt Gu Ling and Mu Zhao's conversation, only stood quietly nearby, listening to the whole exchange, his expression betraying no obvious emotion, only, occasionally, a barely perceptible flicker of understanding in his eyes.
+
+Before leaving, he left Gu Ling with one line: "Your Institute has spent years doing something remarkable — giving voice, once more, to existences long unable to speak for themselves. But sometimes, the deepest words were never meant to be 'spoken' — only earnestly lived." With that, he turned and walked slowly away, his robe stirring in the wind at the doorway, footsteps fading, soon vanishing at the end of the corridor, leaving behind only a lingering trace of tea fragrance.
+
+Gu Ling took this, at first, as nothing more than a passing traveler's idle remark, until, years later, recalling it, she suddenly realized how closely it echoed everything she would come to understand — as if that traveler had already seen through a path she herself hadn't yet noticed she was walking. She never saw the man who called himself Chang Yan again, only occasionally recalled his unusually thin silhouette cast against the wall as he left, and the cup of tea he never finished — a faint, unnamed wistfulness lingering in her heart, long after, never quite fading.
+
+VIII · Diving Deeper
+
+Carrying this hazy realization, Gu Ling decided to stop fixating on "decoding" Signal Zero, and instead try, more deeply, to let her consciousness coexist directly with the signal, to see whether she could further understand what this letter was truly trying to "unfold." This attempt went deeper, and carried more risk, than any before — she nearly abandoned entirely her habitual analytical stance as a researcher, simply opening her consciousness to feel, specifically asking Mu Zhao to accompany her, in case anything unexpected occurred. Days in advance, she began adjusting her routine, trying to keep body and mind in their most relaxed, most stable state, as though preparing for some solemn ritual, even giving up the strong tea she habitually relied on for alertness, so that her consciousness could face this unprecedented deep coexistence in its purest, least distracted state.
+
+Before they began, Mu Zhao specifically cautioned her: "This time is different from before. You need to be ready — once you truly open your consciousness to coexist with it, you may see things you're entirely unprepared for, right now — perhaps regrets you'd rather not recall, perhaps something you've never realized you've been avoiding all along." Gu Ling nodded solemnly, closed her eyes, took a deep breath, and let her consciousness slowly open toward the ancient signal. The entire process lasted nearly three hours, Mu Zhao keeping watch the whole time, anxiously tracking Gu Ling's every subtle reaction, terrified of any irreversible mishap, his palms sweating throughout — several times nearly reaching out to forcibly wake her, holding himself back each time — until Gu Ling finally, slowly opened her eyes, and he let out a long breath, his back already soaked through with cold sweat.
+
+IX · A Startling Discovery
+
+In that deep coexistence, Gu Ling discovered, astonished, that the form Signal Zero "unfolded" into contained her own entire life — not scattered fragments, but a complete, coherent presence that could almost be called "wholeness," vast beyond anything she could have imagined, yet, at the same time, precise down to a single leaf she'd once absently crushed as a child, its faint crackling sound seeming to echo in her ears once more — her birth, her growth, every laugh and every tear she'd ever experienced, every difficult and solemn choice, including the moment she'd chosen to join the Institute — a decision made almost entirely on impulse, yet one that had changed the entire trajectory of her life — even including this very act of deep coexistence she was living through right now, all woven, in a way she'd never once imagined, tightly together with this ancient signal from the depths of the universe, as if her own life were, itself, one of the countless forms this letter had unfolded into — not a single part of it extraneous, removable, every part precisely constituting a necessary piece of this complete narrative. She even clearly "saw" the image of the first time, as a child, she'd looked up at the stars — a summer night, her father holding her in his arms on the roof of their house, pointing out constellation after constellation, telling her ancient legends now long faded from her memory, the evening breeze carrying the scent of summer grass, her father's embrace especially warm — that first curiosity and longing toward the universe now resonating, across time, deeply with the signal before her, as if that childhood self and this present self, coexisting with the signal, reached across the long years to hold each other's hand.
+
+IX-and-a-half · More Fragments
+
+As the coexistence deepened, more scattered memory fragments surfaced one after another, vivid and clear as re-edited footage — the exhilaration, nearly enough to make her jump, of successfully decoding her first simple signal in college, remembering how her professor had clapped her shoulder, laughing, "This kid was born for this work, she'll go far"; the night her lover left, sitting alone in tears in an empty dorm room, a particularly cold rain falling outside; her father, gravely ill, her hand gripping his thin one, promising over and over to take care of herself, the smell of antiseptic in the hospital room still seeming to linger, clear, at the edge of her senses. These fragments, once neatly filed away in the depths of her memory, were now all strung together anew by the ancient signal, in a way she'd never imagined — as if each fragment were an indispensable, distinct paragraph in this letter, none replaceable, none interchangeable — even the fragments she'd long tried to forget or avoid, not particularly beautiful ones, were now, solemnly, included in this complete unfolding, neither trimmed nor prettified.
+
+For the first time, Gu Ling saw with total clarity that her years of seemingly scattered, seemingly patternless experiences had, all along, been quietly arranged and connected by some vaster order — a feeling that left her feeling, at once, more insignificant than ever, and, at the same time, more profoundly held than ever before, as if no matter how many seemingly difficult, seemingly meaningless moments she'd endured, none had ever been suffered for nothing, each one a solemn, indispensable word in this unfolding letter. She even began, for the first time, to look back on those old regrets that had once kept her up at night, feeling, for the first time, that they too, perhaps, deserved to be treated gently.
+
+X · Understanding the "Point" Anew
+
+Gu Ling gradually came to understand that the source of Signal Zero was, perhaps, not any specific sender within the universe at all — not any locatable, traceable entity — but a primordial "Point," dimensionless, shapeless, without even any "location" to speak of — all time, all space, every specific life and form, being countless, entirely different modes of expression this Point had unfolded outward into, and the life she was living right now was one letter among the countless letters this Point had written to itself, every heartbeat, every breath, a moment in which this letter was simultaneously being written and being read. She even began to understand, anew, experiences she'd once regarded as difficult or regrettable — if everything was simply this Point in the process of unfolding, then the moments that had once caused her pain were, perhaps, never mistakes to be denied, but equally indispensable, real paragraphs in this same letter — just as a complete essay was never composed only of joyful sentences; its heavier, harder passages were equally necessary parts of making the whole essay real and complete.
+
+She began, too, to reconsider her past understanding of "time" and "space" — if everything was simply different forms unfolded from the same Point, then perhaps past, present, and future had never truly "passed" at all, only this Point unfolding, simultaneously, in different ways. This thought, at one point, brought her a nearly unbearable vertigo, as though she stood, right now, at the edge of some truth vast beyond the bounds of everyday human understanding, at risk of being entirely swallowed by that vastness — she even had to pinch her own arm, hard, feeling that real, specific pain, just to barely reclaim a thread of grounded, real sensation.
+
+XI · Sharing With Colleagues
+
+Gu Ling solemnly shared this earth-shaking realization with her colleagues at the Institute, recounting, in detail, everything she'd experienced during a full staff meeting, the conference room packed with colleagues from every research group, the atmosphere unusually heavy — even the usually joking colleagues fell, unusually, silent, listening intently to every word. Some colleagues found the idea hard to believe; one young researcher challenged her on the spot: "If every person's life is a letter unfolded by this 'Point,' then what does that make all the other signals we've spent years researching? Letters written by some other 'Point'? This sounds more like an overly poetic fantasy born from years buried in decoding work, lacking any rigorous scientific basis."
+
+Gu Ling didn't take offense, only answering calmly: "I don't have a definite answer either. Perhaps every signal we study is, itself, part of some deeper unfolding, and we simply happen to be positioned to listen to these unfoldings." This answer didn't convince everyone, but it left some of the previously skeptical colleagues deep in prolonged thought — several stayed behind after the meeting ended, exchanging views in low voices, some among them the very ones who'd been most firmly skeptical. Other colleagues were deeply moved, beginning to try Gu Ling's method themselves, "listening" to Signal Zero anew, and some indeed experienced similarly overwhelming sensations, remaining unsettled long after the meeting, some even tearing up on the spot — one usually reticent, middle-aged researcher sought Gu Ling out afterward, holding her hand in silence for a long while, eyes brimming with tears, nodding firmly, as though there were too much to say and no idea where to begin.
+
+XII · The Director's Support
+
+The Institute's director, a man named Zhan Wei, his hair already gray, a veteran with nearly thirty years in the field, offered, rarely, his full support after hearing Gu Ling's complete report, going so far as to convene a dedicated internal symposium, inviting nearly every senior researcher at the Institute. Zhan Wei spoke slowly at the meeting, his tone carrying an unprecedented gravity: "We've spent far too long doing nothing but 'translation' in this line of work, rarely stopping to ask ourselves: what do we do if something, from the very start, never needed translating at all — only needed to be earnestly lived? What you've found this time may fundamentally change how our entire field understands signals — may even change how we understand our own lives."
+
+Several senior researchers at the meeting voiced careful concerns, worried that this "experiential" method of interpretation lacked verifiability, would be difficult to develop into rigorous scholarly work — one even said bluntly: "Our Institute's reputation, built over many years, rests on rigorous, reproducible research methods. If we rashly embrace a method that can't be objectively verified, won't that damage the credibility we've spent so long accumulating?" Zhan Wei nodded, listening: "That concern is entirely valid. So I propose we treat this as an independent, exploratory research direction, advancing it alongside our traditional decoding methods rather than replacing them — let each accumulate its own evidence, and let time judge which path goes further." This compromise ultimately won the approval of the majority present.
+
+XIII · A New Research Direction
+
+With the director's backing, Gu Ling led the formation of an entirely new research group dedicated to exploring this new mode of interpretation — "not through translation, but through coexistence and experience" — its members ranging from young new researchers to experienced retirees like Mu Zhao, seven or eight people in all, each bringing their own expertise and perspective to this unprecedented exploration, even one young scholar who traveled specifically from a neighboring star domain, drawn by reputation alone, to join. At their first group meeting, everyone sat together, a mix of nervousness and anticipation, discussing how to proceed. This group would go on to decode (more accurately, to "come to understand through experience") several other ancient, similarly undecipherable signals, each pointing toward the same startling conclusion — that the mysterious signals humanity had long tried to "translate" were, perhaps, never codes needing translation at all, but invitations needing to be personally, genuinely lived. This conclusion was later compiled into a formal research report, submitted to higher academic institutions, sparking considerable controversy at first, but gradually winning acceptance and recognition from an increasing number of peers.
+
+Among the group was a young researcher named Shen Yu, initially skeptical of Gu Ling's method, even privately complaining to colleagues that it seemed nothing more than an unfounded intuitive game — until he personally tried coexisting with a signal recording the final moments before some ancient civilization's destruction, and was entirely transformed in his view. In that coexistence, he "saw" his own father's final moments, gripping his hand, repeating his last instructions — a strong, time-spanning emotional resonance that let him, for the first time, truly understand what Gu Ling meant by an understanding that "needs no translation, only needs to be lived." He later sought Gu Ling out, solemnly apologizing for having once been so arrogant.
+
+XIV · Epilogue
+
+Years later, Gu Ling had become a widely recognized authority at the Institute, titles and honors accumulating one after another, yet what she treasured most remained that nearly overwhelming night, the first time she let go of every need to "translate into words" and simply let Signal Zero flow into her consciousness — that pure, entirely unselfish shock no later honor could ever truly replace. She often told newcomers: "Some letters were never meant to be translated — only earnestly lived, once. Every minute, every second you're living right now might be a letter, still unfolding, written to you by that shapeless Point."
+
+XIV-and-a-half · An Elder Colleague's Reflection
+
+An elder colleague nearing retirement, upon hearing of Gu Ling's discovery, set aside nearly all of his current work to specially seek her out, reflecting: "I've worked this post for most of my life, always believing what I did was cold, purely technical work — until your discovery let me feel, for the first time, that what I've spent all these years doing might, in fact, be a profoundly warm calling." These words left Gu Ling deeply moved, further strengthening her resolve to continue passing this realization forward — she even took the old colleague's hand on the spot, solemnly thanking him for being willing to speak this long-held feeling aloud.
+
+XIV-and-seven-tenths · Reuniting With Mu Zhao
+
+Not long after Gu Ling truly established this new research direction, Mu Zhao passed away peacefully — the day he died was unusually clear, sunlight spilling through the hospital window onto his serene face. Before he died, he left all his lifelong research notes to Gu Ling, along with a note in trembling handwriting: "Thank you, these years, for walking the road I never managed to finish." Reading this note, Gu Ling remained unsettled for a long while, holding the thick stack of manuscripts, suddenly understanding just how much quiet, restrained hope had lain behind every one of Mu Zhao's seemingly offhand words of encouragement over the years — a weight of expectation that, in hindsight, nearly took her breath away.
+
+As Gu Ling sorted through the manuscripts, she found that Mu Zhao, too, had once faintly touched a similar realization in his youth, only the environment of his time hadn't been able to support him in truly spreading it, so he'd buried the thought deep in his heart, waiting until he met Gu Ling. Tucked among the manuscripts was even a photograph of Mu Zhao in his youth — bright-eyed, full of spirit, wearing the once-fashionable deep-blue researcher's uniform, nothing like the old man she remembered, always quietly turning a cold cup of tea in his hands. On the back of the photo, in faded handwriting: "Hoping, one day, to meet someone who truly understands." Reading this line, Gu Ling's eyes instantly welled with tears — Mu Zhao had waited for that day for so, so long. She compiled his manuscripts, together with her own accumulated years of research, into a single volume, the finest tribute she could offer to the elder who'd first led her onto this path.
+
+XV · Shen Yu's Legacy
+
+Shen Yu went on to become one of the most important pillars of this research direction, taking over the position Gu Ling herself had once held, growing into the most steadfast explorer among the new generation of researchers — even keeping, on his office desk, a succulent identical to the one Gu Ling had once kept, a cutting he'd specially asked her for. He often told newly joined young researchers: "What we're doing, in the end, isn't unraveling the universe's secrets — it's learning to recognize, anew, the deep connection that has always existed between ourselves and the universe." This line gradually became a motto passed down through the entire research group, carved neatly into the most prominent wall of the research archive, where young researchers passing by would, unconsciously, slow their steps for a second look.
+
+Shen Yu later took on his own first disciples, teaching in a style identical to Gu Ling's — never technical decoding skill as the first lesson, but how to grow quiet, learning to truly coexist with a signal. He often said he'd never forget the first time he coexisted with that signal recording his father's final moments, that time-spanning, overwhelming shock becoming the most important guiding anchor of his entire career. Years later, whenever a new disciple asked him how he'd come to believe in this entirely new method, he always answered, smiling: "It wasn't that I convinced myself. It was that time-spanning, still-real emotion that convinced me" — a line that, in time, became one he repeated most often when teaching his own disciples.
+
+XVI · Final Chapter
+
+In her later years, Gu Ling's hair had long since turned white, her movements no longer as nimble as in her youth, yet she still kept, rain or shine, her daily habit of climbing to the observation deck — a devotion her colleagues had long grown used to, even leaving her a dedicated path to ensure she could reach it safely each day. She often sat alone atop the Institute's highest observation deck, gazing up at the star-filled sky, quietly sensing every breath, every heartbeat she was living through right now — finally, fully understanding what Mu Zhao had told her all those years ago: this letter never needed translating, because it was, itself, being earnestly lived. She thought of every stretch of road her life had walked — the stirring of that first childhood gaze up at the stars, the long, painful struggle after taking on Signal Zero, the sudden tears of that first "understanding" in the dead of night, and Mu Zhao, Ke Yuan, Shen Yu — all those who had once walked this journey beside her, surfacing one by one from the depths of memory, clear as if standing before her, each memory carrying its own distinct warmth she could feel again — the fresh scent of vegetables from Ke Yuan's farm; the cup of tea Mu Zhao endlessly turned in his hands, forever cold; the genuine remorse in Shen Yu's reddened eyes the first time he apologized to her.
+
+She smiled, gazing into the depths of the starry sky, as if she could see that dimensionless, shapeless Point, gently watching over every form it had unfolded into — including herself, sitting here now, smiling; including the child who once looked up at the stars; including the countless selves still to come, ones she couldn't yet foresee; including, too, all those who had once walked beside her, perhaps now merged into this same vast starlight. Softly, she spoke to the stars, as if speaking to that Point, and also to herself, her voice so quiet it seemed to dissolve into the vast starlight itself: "Thank you — for writing me, so completely."
+
+(An Original Piece · Lingxi Dimensional Narratives · Novel · Letter from Dimension Zero)`,
+  },
 };

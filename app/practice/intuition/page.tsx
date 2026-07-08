@@ -59,7 +59,7 @@ export default async function IntuitionPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的本质" en="The nature of the light-body" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="光体是神圣心智的一枚粒子，由中枢太阳投射，穿越第5、第4维度矩阵，最终在人类心脏内具体表现。它最初栖息于心脏，前七年内上移至松果腺，临终时返回第五维度。如今，在宏大觉醒时代，它正迁移回心脏方向，现核心栖息地位于胸腺（心脏与喉咙之间），被称为「上升之心」或「心脏之冠」。"
+                  zh="光体是神圣心智的一枚粒子，由中枢太阳投射，穿越第5、第4维度矩阵，最终在人类心脏内具体表现。它最初栖息于心脏，前七年内上移至松果腺，临终时返回第五维度。如今，在宏大觉醒时代，它正迁移回心脏方向，现核心栖息地位于胸腺（心脏与喉咙之间），被称为「上升心经」或「心脏之冠」。"
                   en="The light-body is a particle of the divine mind, projected by the central sun, passing through the matrices of the 5th and 4th dimensions, ultimately made manifest within the human heart. It first resides in the heart, ascends to the pineal gland within the first seven years of life, and returns to the fifth dimension at death. Now, in this era of great awakening, it is migrating back toward the heart, its core dwelling now the thymus (between heart and throat), known as the 'Rising Heart' or the 'Crown of the Heart.'"
                 />
               </p>
@@ -69,7 +69,7 @@ export default async function IntuitionPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="两条轴的交汇" en="Where the two axes meet" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="行星轴（水平轴）：连接光体与地球物质存在，将光体接地锚定于行星。中枢太阳轴（垂直轴）：连接光体与中枢太阳源头，承载下降与上升的能量流。两条轴的交汇点——上升之心，正是个体的活化点。呼吸与想象力的整合，是最有效的活化工具。"
+                  zh="行星轴（水平轴）：连接光体与地球物质存在，将光体接地锚定于行星。中枢太阳轴（垂直轴）：连接光体与中枢太阳源头，承载下降与上升的能量流。两条轴的交汇点——上升心经，正是个体的活化点。呼吸与想象力的整合，是最有效的活化工具。"
                   en="The planetary axis (horizontal axis) connects the light-body to the earth's material existence, grounding and anchoring the light-body to the planet. The central-sun axis (vertical axis) connects the light-body to the source of the central sun, carrying the descending and ascending flow of energy. Where these two axes meet — the Rising Heart — is precisely the individual's point of activation. The integration of breath and imagination is the most effective tool for this activation."
                 />
               </p>
@@ -79,7 +79,7 @@ export default async function IntuitionPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的迁移与意义" en="The light-body's migration, and its meaning" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升之心，以便将能量充分绽放至行星栅格，实现其目的。"
+                  zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升心经，以便将能量充分绽放至行星栅格，实现其目的。"
                   en="The light-body was once the core of consciousness, seated in the pineal gland; but long rigidity and distortion of the mind suppressed its blossoming. Now the light-body is moving toward the Rising Heart, so that its energy may fully bloom into the planetary grid and fulfill its purpose."
                 />
               </p>
@@ -111,7 +111,7 @@ export default async function IntuitionPage() {
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="呼吸与灵魂的关系" en="Breath and the soul" /></h2>
               <p className="mt-6">
                 <Bi
-                  zh="灵魂的呼吸由光体引导。光体智能的工作席位于上升之心。吸气时，中枢太阳的光能经顶轮流入，停驻于太阳神经丛，闪耀个人标识的金色光芒。呼气时，能量从太阳神经丛向上释放至上升之心，再向外绽放到行星轴，接地进第三维度所有存在的能量场。这种接地，灌注以人类仪具的内在聚合一致性，启动人类情感场，构建集体之心与连接性心智，使行星跨越维度栅栏。"
+                  zh="灵魂的呼吸由光体引导。光体智能的工作席位于上升心经。吸气时，中枢太阳的光能经顶轮流入，停驻于太阳神经丛，闪耀个人标识的金色光芒。呼气时，能量从太阳神经丛向上释放至上升心经，再向外绽放到行星轴，接地进第三维度所有存在的能量场。这种接地，灌注以人类仪具的内在聚合一致性，启动人类情感场，构建集体之心与连接性心智，使行星跨越维度栅栏。"
                   en="The breath of the soul is guided by the light-body. The working seat of the light-body's intelligence is the Rising Heart. On the inhale, the light-energy of the central sun flows in through the crown, coming to rest in the solar plexus, shining with the golden light of one's personal signature. On the exhale, that energy is released upward from the solar plexus to the Rising Heart, then blooms outward along the planetary axis, grounding into the energy field of every third-dimensional being. This grounding infuses the human instrument with inner coherence, activates the human emotional field, and builds a collective heart and connective mind, carrying the planet across the barrier of dimensions."
                 />
               </p>
