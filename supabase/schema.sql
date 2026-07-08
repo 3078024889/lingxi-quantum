@@ -36,6 +36,15 @@ create table if not exists public.visions (
   updated_at timestamptz default now()
 );
 
+-- 4b) 提问灵犀（多维叙事 / 修炼技术等相关提问，记录进用户自己的日记）
+create table if not exists public.field_questions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  question text not null,
+  answer text,
+  created_at timestamptz default now()
+);
+
 -- 5) 订单
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
@@ -57,6 +66,7 @@ alter table public.profiles        enable row level security;
 alter table public.unlocks         enable row level security;
 alter table public.reality_entries enable row level security;
 alter table public.visions         enable row level security;
+alter table public.field_questions enable row level security;
 alter table public.orders          enable row level security;
 
 drop policy if exists "own profile read"   on public.profiles;
@@ -75,6 +85,10 @@ create policy "own entries" on public.reality_entries
 
 drop policy if exists "own vision" on public.visions;
 create policy "own vision" on public.visions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+drop policy if exists "own field questions" on public.field_questions;
+create policy "own field questions" on public.field_questions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 drop policy if exists "own orders read" on public.orders;

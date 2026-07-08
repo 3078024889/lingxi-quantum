@@ -3915,7 +3915,226 @@ const HEART_MIND_COHERENCE: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE];
+/* ---------- 场域的呼吸：场域叙事，城市尺度的呼吸节律，完整9页 ---------- */
+const FLB_DEFS = `<defs><filter id="fbG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="flbSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a1420"/><stop offset="50%" stop-color="#1c2c3a"/><stop offset="100%" stop-color="#e8b765"/></linearGradient></defs>`;
+function flbWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#flbG)"/>`).join('');}
+function flbFigure(){const robe=`<path d="M-11 -30 Q0 -35 11 -30 L14 24 Q0 30 -14 24 Z" fill="#243040"/>`;const head=`<circle cx="0" cy="-36" r="7" fill="#1c2432"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function flbCity(){return `<g opacity=".6">${Array.from({length:9}).map((_,i)=>{const x=20+i*30,h=30+Math.random()*40;return `<rect x="${x}" y="${170-h}" width="18" height="${h}" fill="#2a3648"><animate attributeName="opacity" values=".5;.8;.5" dur="${3+i*.3}s" repeatCount="indefinite"/></rect>`}).join('')}</g>`;}
+const FLB_COVER = `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="url(#flbSky)"/>${flbCity()}<g transform="translate(150,150) scale(0.6)">${flbFigure()}</g></svg>`;
+
+const FIELDS_BREATH: IllustratedEntry = {
+  slug: "the-fields-breath",
+  title: "场域的呼吸",
+  titleEn: "The Field's Breath",
+  cat: "field",
+  teaser: "有人发现，整座城市的心跳竟能同步——原来场也会呼吸，只是它的一次呼吸，长达一整个世代。",
+  teaserEn: "An entire city's heartbeat synchronizes — the Field breathes too, only its single breath spans a generation.",
+  price: 9,
+  cover: FLB_COVER,
+  pages: [
+    { kickerZh: "一 · 一份奇怪的统计", kickerEn: "I · A Strange Statistic", tagZh: "一座普通的城市", tagEn: "An Ordinary City",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="url(#flbSky)"/>${flbCity()}<g transform="translate(150,150) scale(0.55)">${flbFigure()}</g></svg>`,
+      textZh: "城市卫生部门的统计员苏念，在整理跨度三十年的居民心率数据时，发现了一件怪事：全城数百万人的静息心率，虽然日日不同，长期看下来，却呈现出一种，极其缓慢、却清晰可辨的、集体同步的波动曲线，仿佛，全城人的心跳，共享着同一个，周期长达数十年的节律。",
+      textEn: "Su Nian, a statistician at the city health department, compiling thirty years of resident heart-rate data, discovered something strange: while the resting heart rates of the city's millions of residents varied daily, over the long term they traced an extremely slow yet unmistakably synchronized collective wave — as if the entire city's heartbeats shared a single rhythm spanning decades." },
+    { kickerZh: "二 · 同事的怀疑", kickerEn: "II · A Colleague's Doubt", tagZh: "质疑", tagEn: "Skepticism",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="#0c1420"/>${flbWash([{x:150,y:110,rx:150,ry:90,color:'#1c2c3a',op:.7}])}${flbCity()}</svg>`,
+      textZh: "苏念把这份发现，拿给同事看，得到的回应，大多是善意的怀疑：\u201c几百万人的数据，随便怎么处理，都能拟合出点什么曲线，你这，多半是统计误差。\u201d苏念没有立刻反驳，只是，把数据，反复清洗、反复验证，那条同步曲线，却，始终，稳定地，存在着，怎么也抹不掉。",
+      textEn: "Su Nian showed her discovery to colleagues, met mostly with polite skepticism: \u201cWith millions of data points, you can fit almost any curve if you process it enough — this is probably just statistical noise.\u201d Su Nian didn't argue right away, only cleaned and re-verified the data again and again — yet that synchronized curve remained stubbornly, unmistakably there, refusing to be explained away." },
+    { kickerZh: "三 · 一整个世代的周期", kickerEn: "III · A Generation-Long Cycle", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="url(#flbSky)"/>${flbWash([{x:150,y:100,rx:150,ry:70,color:'#e8b765',op:.25}])}${flbCity()}</svg>`,
+      textZh: "苏念继续深挖，追溯了更久远的历史档案，惊讶地发现，这条同步曲线，完成一次完整的\u201c一呼一吸\u201d，周期长达约莫三十五年——恰好，接近人类一代人，从年少到成家立业的漫长跨度。她第一次，生出一个大胆的猜测：或许，这座城市，本身，也是一个活着的、会呼吸的存在，只是，它的呼吸，太过缓慢，缓慢到，活在城市里的每一个人，穷尽一生，都未必能，真正察觉。",
+      textEn: "Digging further into older archives, Su Nian discovered, astonished, that this synchronized curve completed one full \u201cinhale-exhale\u201d cycle roughly every thirty-five years — nearly the span of a single human generation, from youth to raising a family. For the first time, she formed a bold hypothesis: perhaps this city was itself a living, breathing entity, its breath simply too slow for anyone living within it to ever notice in a single lifetime." },
+    { kickerZh: "四 · 请教老学者", kickerEn: "IV · Consulting an Old Scholar", tagZh: "求证", tagEn: "Seeking Verification",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="#0c1420"/>${flbWash([{x:150,y:110,rx:160,ry:100,color:'#1c2c3a',op:.7}])}<g transform="translate(110,150) scale(0.5)">${flbFigure()}</g><g transform="translate(200,155) scale(0.45)"><path d="M-11 -30 Q0 -35 11 -30 L14 24 Q0 30 -14 24 Z" fill="#4a3a28"/><circle cx="0" cy="-36" r="7" fill="#2a2018"/></g></svg>`,
+      textZh: "苏念带着这份猜测，求教于一位研究\u201c场域\u201d理论的退休老学者。老学者听完，不但没有嘲笑她，反而，一脸认真地说：\u201c你说得没错，场，本就是活的，它有自己的节律，只是，这份节律，往往，比一个人的寿命，都要漫长，普通人穷尽一生，能感受到的，不过是它，一次呼吸里，极其短暂的一个瞬间。\u201d",
+      textEn: "Su Nian brought her hypothesis to a retired scholar who studied \u201cField\u201d theory. Far from mocking her, the scholar answered with utmost seriousness: \u201cYou\u2019re right. The Field is alive — it has its own rhythm, only that rhythm often outlasts a single human lifespan. In an entire life, an ordinary person experiences only a fleeting instant within one of its breaths.\u201d" },
+    { kickerZh: "五 · 重新理解城市", kickerEn: "V · Understanding the City Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="url(#flbSky)"/>${flbWash([{x:150,y:100,rx:150,ry:70,color:'#e8b765',op:.3}])}${flbCity()}</svg>`,
+      textZh: "苏念开始，重新审视，这座她生活了半辈子的城市——那些，看似毫无关联的兴衰起伏、那些，说不清道不明的、集体性的乐观或低落，或许，都只是，这座城市，一次漫长呼吸里，吸气与呼气之间，自然而然的起伏，而不是，任何单一具体事件，能够完全解释的。",
+      textEn: "Su Nian began to reconsider this city she'd lived in for half her life — the seemingly unrelated rises and falls, the unexplainable waves of collective optimism or gloom, might simply be the natural rise and fall between one inhale and exhale of the city's long breath, rather than anything fully explainable by any single specific event." },
+    { kickerZh: "六 · 一次集体的\u201c呼气\u201d", kickerEn: "VI · A Collective 'Exhale'", tagZh: "验证", tagEn: "Verification",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="#0a1420"/>${flbWash([{x:150,y:110,rx:170,ry:110,color:'#1c2c3a',op:.75}])}${flbCity()}</svg>`,
+      textZh: "根据这套理论，苏念大胆预测，城市即将，进入曲线上的一次\u201c呼气\u201d阶段——整体节奏，会自然而然地，缓慢下来。几个月后，全城的各项活跃度指标，果然，如她所料，集体地、温和地，慢了下来，没有任何明显的外部原因，仿佛，真的，只是，这座城市，在，安静地，呼出一口气。",
+      textEn: "Based on this theory, Su Nian boldly predicted the city was about to enter an \u201cexhale\u201d phase in the curve — its overall pace would naturally slow. Months later, as she\u2019d predicted, every measure of the city\u2019s activity gently, collectively slowed, with no clear external cause — as if the city were simply, quietly, breathing out." },
+    { kickerZh: "七 · 发表这份发现", kickerEn: "VII · Publishing the Discovery", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="url(#flbSky)"/>${flbWash([{x:150,y:100,rx:170,ry:110,color:'#fff3d0',op:.25}])}${flbCity()}</svg>`,
+      textZh: "苏念把这份发现，郑重地整理成一篇论文，起初，饱受争议，却，随着，越来越多其他城市，被验证出，同样存在着，各自独特的呼吸节律，这套理论，渐渐地，被更多人，接纳、重视——人们开始，学着，用一种，更加耐心、更加宽容的眼光，去看待，自己生活的城市，那些，暂时的低谷，不再，轻易，被解读为，衰败的征兆。",
+      textEn: "Su Nian carefully compiled her discovery into a paper — controversial at first, but as more cities were verified to have their own distinct breathing rhythms, the theory gradually gained wider acceptance. People began to view the cities they lived in with more patience, more grace, no longer quick to read a temporary downturn as a sign of decline." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "与城市同呼吸", tagEn: "Breathing With the City",
+      art: `<svg viewBox="0 0 300 220">${FLB_DEFS}<rect width="300" height="220" fill="url(#flbSky)"/>${flbCity()}<g transform="translate(150,150) scale(0.6)">${flbFigure()}</g></svg>`,
+      textZh: "苏念后来，把余生，都投入到了，这项研究里，晚年，常对年轻的研究者说：\u201c别急着，用一年、十年的得失，去评判一座城市，它呼吸的节律，比我们，任何一个人的寿命，都要漫长得多，你我，不过是，恰好，活在了，它某一次呼吸里，某个具体的瞬间而已。\u201d",
+      textEn: "Su Nian devoted the rest of her life to this research, often telling young researchers in her later years: \u201cDon\u2019t rush to judge a city by a year, or a decade, of gains and losses. Its breathing rhythm outlasts any of our individual lifespans — you and I simply happen to be living through one specific instant, within one of its breaths.\u201d",
+      closingZh: "场域也会呼吸，只是它的一次呼吸，长达一整个世代——耐心一点，别急着，为暂时的低谷，下结论。",
+      closingEn: "The Field breathes too — only its single breath spans a generation. Be patient. Don't rush to judge a temporary low." },
+  ],
+};
+
+/* ---------- 共振的城市：场域叙事，集体同步现象，完整9页 ---------- */
+const CR_DEFS = `<defs><filter id="crG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="crSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0e0a1c"/><stop offset="50%" stop-color="#241c3a"/><stop offset="100%" stop-color="#c9a5d8"/></linearGradient></defs>`;
+function crWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#crG)"/>`).join('');}
+function crFigures(n:number){return Array.from({length:n}).map((_,i)=>{const x=40+i*40;return `<g transform="translate(${x},160) scale(0.4)"><path d="M-11 -30 Q0 -35 11 -30 L14 24 Q0 30 -14 24 Z" fill="#3a2c4a"/><circle cx="0" cy="-36" r="7" fill="#241c32"/></g>`}).join('');}
+const CR_COVER = `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="url(#crSky)"/>${crWash([{x:150,y:120,rx:150,ry:90,color:'#c9a5d8',op:.3}])}${crFigures(6)}</svg>`;
+
+const CITY_IN_RESONANCE: IllustratedEntry = {
+  slug: "a-city-in-resonance",
+  title: "共振的城市",
+  titleEn: "A City in Resonance",
+  cat: "field",
+  teaser: "一座城市里，人人都在为各自的目标奔忙，却在某个清晨，同时停下脚步——没有人知道为什么。",
+  teaserEn: "Every citizen chasing a private goal — until one morning, everyone stops at once, and no one knows why.",
+  price: 9,
+  cover: CR_COVER,
+  pages: [
+    { kickerZh: "一 · 各自奔忙的城市", kickerEn: "I · A City of Private Errands", tagZh: "一座繁忙的城市", tagEn: "A Bustling City",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="url(#crSky)"/>${crFigures(6)}</svg>`,
+      textZh: "这座城市，一如往常地，繁忙——上班族，赶着地铁；商贩，吆喝着生意；学生，埋头赶着作业，每个人，都揣着，各自的目标与心事，行色匆匆，谁都没有，多看身边人一眼。",
+      textEn: "The city bustled as always — commuters rushing for the subway, vendors calling out to customers, students hunched over homework, each person carrying their own private goal, their own private worry, hurrying past, no one sparing a second glance at those around them." },
+    { kickerZh: "二 · 那个清晨", kickerEn: "II · That Morning", tagZh: "异常", tagEn: "The Anomaly",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="#0e0a1c"/>${crWash([{x:150,y:110,rx:150,ry:90,color:'#241c3a',op:.7}])}${crFigures(6)}</svg>`,
+      textZh: "某个再普通不过的清晨，七点四十二分，整座城市，几乎所有正在走动的人，同时，毫无征兆地，停下了脚步——不是因为任何具体的原因，只是，一种，说不清道不明的冲动，让大家，几乎在同一秒，静止了下来。",
+      textEn: "On an unremarkable morning, at 7:42, nearly every moving person in the entire city stopped, simultaneously, without warning — not for any specific reason, only some unnameable impulse leaving everyone still, nearly within the same second." },
+    { kickerZh: "三 · 短暂的困惑", kickerEn: "III · A Brief Confusion", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="url(#crSky)"/>${crWash([{x:150,y:100,rx:150,ry:70,color:'#c9a5d8',op:.2}])}${crFigures(6)}</svg>`,
+      textZh: "那一瞬间，持续了大约十秒——足够让每个人，都察觉到，身边的其他人，也同样，停了下来。人群里，响起一阵，轻微的骚动与困惑的低语：\u201c发生什么了？\u201d\u201c你也停下了？\u201d没有人，能给出一个，让所有人信服的解释。",
+      textEn: "That stillness lasted roughly ten seconds — long enough for everyone to notice everyone else had stopped too. A ripple of confused murmurs ran through the crowd: \u201cWhat happened?\u201d \u201cYou stopped too?\u201d No one had an explanation everyone could believe." },
+    { kickerZh: "四 · 记者的调查", kickerEn: "IV · A Reporter Investigates", tagZh: "探索", tagEn: "Investigation",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="#0e0a1c"/>${crWash([{x:150,y:110,rx:160,ry:100,color:'#241c3a',op:.7}])}<g transform="translate(150,160) scale(0.5)">${crFigures(1)}</g></svg>`,
+      textZh: "一位年轻记者，对这件事，产生了浓厚的兴趣，走访了当天，在场的数十位市民，试图找出，这场集体停顿，背后的规律——她发现，几乎每个人，在那十秒钟里，都，不约而同地，想起了，同一件事：自己，最近，是不是，太久，没有，真正停下来，好好看一看，身边的世界了。",
+      textEn: "A young reporter, deeply intrigued, interviewed dozens of citizens who'd been present that day, trying to find some pattern behind the collective pause — she discovered that nearly everyone, in those ten seconds, had, without prior discussion, thought of the same thing: had it been too long since they'd truly stopped to look at the world around them?" },
+    { kickerZh: "五 · 场域理论学者的解读", kickerEn: "V · A Field Theorist's Interpretation", tagZh: "揭示", tagEn: "The Reveal",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="url(#crSky)"/>${crWash([{x:150,y:100,rx:150,ry:70,color:'#c9a5d8',op:.25}])}<g transform="translate(150,160) scale(0.55)">${crFigures(1)}</g></svg>`,
+      textZh: "记者带着这份发现，请教了一位研究场域理论的学者。学者解释道：\u201c当一座城市里，足够多的人，累积到某个临界点的疲惫与麻木，场，会自然地，产生一种，集体性的\u2018提醒\u2019——不是任何具体的人在安排，是场本身，在替所有人，按下了一次，共同的暂停键。\u201d",
+      textEn: "The reporter brought this finding to a scholar of Field theory, who explained: \u201cWhen enough people in a city accumulate exhaustion and numbness past some threshold, the Field naturally produces a kind of collective \u2018reminder\u2019 — not orchestrated by anyone specific, but the Field itself pressing a shared pause button for everyone.\u201d" },
+    { kickerZh: "六 · 重新出发", kickerEn: "VI · Setting Off Again", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="#0c0a1c"/>${crWash([{x:150,y:100,rx:180,ry:120,color:'#c9a5d8',op:.3}])}${crFigures(6)}</svg>`,
+      textZh: "那次集体停顿之后，城市里，出现了一些，细微却真实的变化——地铁上，愿意让座的人，多了一些；街边，愿意驻足听一听陌生人诉说的人，也，多了一些。没有人，公开谈论过这次经历，可这份，共同经历过的暂停，仿佛，悄悄地，在每个人心里，留下了，一点点，柔软的痕迹。",
+      textEn: "After that collective pause, subtle but real changes appeared across the city — a few more people willing to give up their subway seats, a few more willing to pause on the street and listen to a stranger's troubles. No one spoke publicly about the experience, yet that shared moment of stillness seemed to leave a quiet, gentle mark in everyone's heart." },
+    { kickerZh: "七 · 记者的报道", kickerEn: "VII · The Reporter's Story", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="url(#crSky)"/>${crWash([{x:150,y:100,rx:170,ry:110,color:'#fff3d0',op:.25}])}${crFigures(6)}</svg>`,
+      textZh: "记者最终，把这次调查，写成了一篇，格外温柔的报道，没有强行给出结论，只是，郑重地，记录下了，那十秒钟里，每个人，各自浮现的那份，惊人相似的、想要慢下来的渴望——这篇报道，后来，被很多人，反复转发，成了，那一年，最打动人心的一篇报道。",
+      textEn: "The reporter ultimately wrote an unusually gentle piece about her investigation, offering no forced conclusion, only solemnly recording that startlingly similar longing — to simply slow down — that had surfaced in everyone during those ten seconds. The piece went on to be shared widely, becoming that year's most moving story." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "偶尔的共振", tagEn: "Occasional Resonance",
+      art: `<svg viewBox="0 0 300 220">${CR_DEFS}<rect width="300" height="220" fill="url(#crSky)"/>${crFigures(6)}</svg>`,
+      textZh: "此后每隔几年，这座城市，都会，再次出现，类似的、短暂的集体停顿，市民们，渐渐地，不再感到困惑，反而，会心一笑，郑重地，把握住，那短短几秒钟，安静地，看一看，身边的世界。",
+      textEn: "Every few years after that, the city experienced similar brief collective pauses. Residents gradually stopped feeling confused, instead smiling knowingly, solemnly using those few seconds to quietly look at the world around them.",
+      closingZh: "场域会替一整座城市，按下共同的暂停键——不是谁在安排，是太多人，同时，需要，被提醒着，慢下来。",
+      closingEn: "The Field presses a shared pause button for an entire city — orchestrated by no one, simply because too many people, at once, needed reminding to slow down." },
+  ],
+};
+
+/* ---------- 万物皆为节点：场域叙事，网络哲学题材，完整9页 ---------- */
+const EN_DEFS = `<defs><filter id="enG"><feGaussianBlur stdDeviation="9"/></filter>
+  <radialGradient id="enField" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="50%" stop-color="#7ce0d3"/><stop offset="100%" stop-color="#0a1420" stop-opacity="0"/></radialGradient></defs>`;
+function enFigure(){const robe=`<path d="M-11 -30 Q0 -35 11 -30 L14 24 Q0 30 -14 24 Z" fill="#1c3a34"/>`;const head=`<circle cx="0" cy="-36" r="7" fill="#14241f"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function enWeb(){return `<g stroke="#7ce0d3" stroke-width=".6" opacity=".5">${Array.from({length:10}).map(()=>{const x1=Math.random()*300,y1=Math.random()*220,x2=Math.random()*300,y2=Math.random()*220;return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"><animate attributeName="opacity" values=".15;.5;.15" dur="${2+Math.random()*2}s" repeatCount="indefinite"/></line>`}).join('')}</g><g fill="#fff6e8">${Array.from({length:14}).map(()=>{const x=Math.random()*300,y=Math.random()*220;return `<circle cx="${x}" cy="${y}" r="1.4" opacity=".7"/>`}).join('')}</g>`}
+const EN_COVER = `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="#0a1420"/>${enWeb()}<g transform="translate(150,160) scale(0.55)">${enFigure()}</g></svg>`;
+
+const EVERYTHING_IS_A_NODE: IllustratedEntry = {
+  slug: "everything-is-a-node",
+  title: "万物皆为节点",
+  titleEn: "Everything Is a Node",
+  cat: "field",
+  teaser: "一只蚂蚁、一颗恒星、一次心跳——都在同一张网络里，只是振动的频率不同。",
+  teaserEn: "An ant, a star, a heartbeat — all nodes on the same network, differing only in frequency.",
+  price: 9,
+  cover: EN_COVER,
+  pages: [
+    { kickerZh: "一 · 一位跨学科的学者", kickerEn: "I · A Cross-Disciplinary Scholar", tagZh: "一处研究站", tagEn: "A Research Station",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="#0a1420"/><g transform="translate(150,160) scale(0.55)">${enFigure()}</g></svg>`,
+      textZh: "叶蘅是一位同时研究昆虫行为与天体物理的跨学科学者，同事们，常笑她\u201c脚踏两条不搭边的船\u201d，可她始终相信，蚂蚁的觅食路径，与星系的旋转轨迹，之间，或许，藏着，某种，尚未被发现的共通规律。",
+      textEn: "Ye Heng was a cross-disciplinary scholar studying both insect behavior and astrophysics — colleagues often joked she had one foot in two unrelated boats — yet she always believed some undiscovered common pattern might link an ant's foraging path to a galaxy's rotation." },
+    { kickerZh: "二 · 意外的相似曲线", kickerEn: "II · An Uncanny Resemblance", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="#08101c"/>${enWeb()}</svg>`,
+      textZh: "一次意外，叶蘅把蚁群觅食的路径图，与一份，遥远星系团的分布图，并排放在一起对比，惊讶地发现，两幅图，在统计规律上，呈现出，惊人的相似性——仿佛，蚂蚁的觅食网络，与星系的分布网络，本就出自同一套，更底层的规则。",
+      textEn: "By chance, Ye Heng placed an ant colony's foraging map beside a distant galaxy cluster's distribution map, and was astonished to find the two shared strikingly similar statistical patterns — as if the ants' foraging network and the galaxy cluster's distribution both emerged from the same, deeper underlying rule." },
+    { kickerZh: "三 · 更多的验证", kickerEn: "III · Further Verification", tagZh: "探索", tagEn: "Exploration",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="url(#enField)"/>${enWeb()}<g transform="translate(150,160) scale(0.55)">${enFigure()}</g></svg>`,
+      textZh: "叶蘅开始，收集更多，看似毫无关联的网络数据——神经元的连接图谱、社交网络的传播路径、河流的分支形态，一一比对，发现，这些，来自完全不同尺度、完全不同领域的网络，竟然，都遵循着，同一套，极其相似的、关于\u201c节点如何连接\u201d的底层规律。",
+      textEn: "Ye Heng began collecting more seemingly unrelated network data — neural connection maps, social network propagation paths, river branching patterns — comparing them one by one, and found that these networks, from entirely different scales and entirely different fields, all followed the same, remarkably similar underlying rules of how nodes connect." },
+    { kickerZh: "四 · 同行的质疑", kickerEn: "IV · Peers' Skepticism", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="#08101c"/>${enWeb()}<g transform="translate(110,160) scale(0.45)">${enFigure()}</g><g transform="translate(200,160) scale(0.45)">${enFigure()}</g></svg>`,
+      textZh: "叶蘅把这份发现，投给学术期刊，遭到了，不少同行的质疑，认为，这不过是，\u201c万物皆有相似之处\u201d这种，过于笼统的观察，缺乏，真正的科学价值。叶蘅没有气馁，只是，更加严谨地，用数学工具，量化了，这份相似性，究竟，达到了怎样的程度。",
+      textEn: "Ye Heng submitted her findings to an academic journal and faced skepticism from many peers, who dismissed it as an overly broad observation that \u201ceverything resembles everything a little,\u201d lacking real scientific value. Undeterred, Ye Heng worked more rigorously, using mathematical tools to quantify exactly how strong this resemblance truly was." },
+    { kickerZh: "五 · 频率的差异", kickerEn: "V · A Difference in Frequency", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="url(#enField)"/>${enWeb()}</svg>`,
+      textZh: "在反复的量化验证中，叶蘅逐渐领悟到，这些，来自不同尺度的网络，本质上，或许，都是，同一张，更庞大的网络里，不同的\u201c节点\u201d——一只蚂蚁、一颗恒星、一次心跳，彼此，都在，用各自的方式，振动着，区别，只在于，振动的频率、尺度，截然不同，而非，本质上，有什么不同。",
+      textEn: "Through repeated quantitative verification, Ye Heng gradually realized these networks, from different scales, might all essentially be different \u201cnodes\u201d within one vast, single network — an ant, a star, a heartbeat, each vibrating in its own way, the only difference being the frequency and scale of that vibration, not any fundamental difference in kind." },
+    { kickerZh: "六 · 重新设计实验", kickerEn: "VI · Redesigning the Experiment", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="#0c0a1c"/>${enWeb()}<g transform="translate(150,160) scale(0.6)">${enFigure()}</g></svg>`,
+      textZh: "叶蘅设计了一套全新的实验，专门用来检验，这套\u201c万物皆为节点\u201d的假说——她邀请不同领域的学者，共同参与，把各自领域的数据，统一，转译成，同一套，标准化的\u201c振动频率\u201d，结果，再次，惊人地，印证了，这套假说。",
+      textEn: "Ye Heng designed an entirely new experiment specifically to test this \u201ceverything is a node\u201d hypothesis — inviting scholars from different fields to participate, translating their respective data into one standardized \u201cvibration frequency\u201d measure. The results, once again, astonishingly confirmed the hypothesis." },
+    { kickerZh: "七 · 学界的重新接纳", kickerEn: "VII · Academic Acceptance", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="url(#enField)"/>${enWeb()}<g transform="translate(150,160) scale(0.6)">${enFigure()}</g></svg>`,
+      textZh: "这套理论，最终，得到了学界越来越多的认可，甚至，催生了一门，全新的交叉学科，专门研究，不同尺度网络之间，共通的振动规律——叶蘅也因此，成了，这门新学科，公认的奠基人之一。",
+      textEn: "The theory ultimately won increasing recognition across academia, even giving rise to an entirely new cross-disciplinary field dedicated to studying the shared vibrational patterns across networks of different scales — Ye Heng became recognized as one of this new field's founding figures." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "重新看待万物", tagEn: "Seeing Everything Anew",
+      art: `<svg viewBox="0 0 300 220">${EN_DEFS}<rect width="300" height="220" fill="#0a1420"/>${enWeb()}<g transform="translate(150,160) scale(0.55)">${enFigure()}</g></svg>`,
+      textZh: "叶蘅后来，常对学生说：\u201c下次，当你觉得，一只蚂蚁的忙碌，与一颗恒星的运转，毫不相干时，不妨，换个角度想一想——它们，或许，只是，同一张网络里，振动频率，截然不同的，两个节点而已。\u201d",
+      textEn: "Ye Heng often told her students afterward: \u201cNext time you think an ant\u2019s busy work has nothing to do with a star\u2019s orbit, try looking at it differently — they might simply be two nodes, vibrating at vastly different frequencies, on the very same network.\u201d",
+      closingZh: "一只蚂蚁、一颗恒星、一次心跳——都在同一张网络里，只是振动的频率不同。",
+      closingEn: "An ant, a star, a heartbeat — all nodes on the same network, differing only in frequency." },
+  ],
+};
+
+/* ---------- 叶落之间：叶语域，植物意识文明，基于真实菌根网络科学，完整9页 ---------- */
+const LFB_DEFS = `<defs><filter id="yyG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="lfbSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a1c10"/><stop offset="45%" stop-color="#1c3a20"/><stop offset="80%" stop-color="#3a6a30"/><stop offset="100%" stop-color="#c9e07a"/></linearGradient></defs>`;
+function lfbWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#lfbG)"/>`).join('');}
+function lfbFigure(){const robe=`<path d="M-11 -30 Q0 -35 11 -30 L14 24 Q0 30 -14 24 Z" fill="#243828"/>`;const head=`<circle cx="0" cy="-36" r="7" fill="#1a281c"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function lfbRoots(){return `<g stroke="#8ad068" stroke-width=".7" opacity=".55" fill="none">${Array.from({length:8}).map((_,i)=>{const x1=30+i*35,y1=180;const x2=x1+(Math.random()*40-20),y2=140+Math.random()*20;return `<path d="M${x1} ${y1} Q${x1+15} ${(y1+y2)/2} ${x2} ${y2}"><animate attributeName="opacity" values=".3;.6;.3" dur="${3+i*.3}s" repeatCount="indefinite"/></path>`}).join('')}</g>`;}
+function lfbTrees(){return `<g opacity=".7">${Array.from({length:5}).map((_,i)=>{const x=40+i*55;return `<circle cx="${x}" cy="${150}" r="${20+i%2*8}" fill="#3a6a30"/>`}).join('')}</g>`;}
+const LFB_COVER = `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="url(#lfbSky)"/>${lfbRoots()}${lfbTrees()}<g transform="translate(150,170) scale(0.5)">${lfbFigure()}</g></svg>`;
+
+const LEAF_FALL_BETWEEN: IllustratedEntry = {
+  slug: "in-the-space-between-falling-leaves",
+  title: "叶落之间",
+  titleEn: "In the Space Between Falling Leaves",
+  cat: "sovereign",
+  teaser: "叶语域的居民，从不用声音交流，靠的是，深埋地下、彼此纠缠的根系网络——一位人类使者，用尽办法都听不懂，直到，他学会，先把自己，也扎根下去。",
+  teaserEn: "The people of the Leaf-Tongue Domain speak through a tangled network of roots underground, never sound. A human envoy fails at every method, until he learns to root himself first.",
+  price: 9,
+  cover: LFB_COVER,
+  pages: [
+    { kickerZh: "一 · 使者的困境", kickerEn: "I · The Envoy's Dilemma", tagZh: "叶语域", tagEn: "The Leaf-Tongue Domain",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="url(#lfbSky)"/>${lfbTrees()}<g transform="translate(150,170) scale(0.5)">${lfbFigure()}</g></svg>`,
+      textZh: "顾行是人类联合星域派往叶语域的第一位正式使者，任务是，与这片，由高度进化的植物型意识体，构成的文明，建立起，最基本的外交沟通。可他很快发现，这里的居民，压根不用声音，也不用任何，人类熟悉的肢体语言，交流。",
+      textEn: "Gu Xing was the first official envoy the human alliance sent to the Leaf-Tongue Domain, tasked with establishing basic diplomatic contact with a civilization made up of highly evolved, plant-form conscious beings. He quickly discovered the locals used neither sound nor any body language humans would recognize to communicate at all." },
+    { kickerZh: "二 · 地下的网络", kickerEn: "II · The Network Underground", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="#0e1c14"/>${lfbWash([{x:150,y:110,rx:150,ry:90,color:'#1c3a20',op:.7}])}${lfbRoots()}</svg>`,
+      textZh: "经过数月观察，顾行的团队才逐渐确认：叶语域的居民，通过深埋地下、彼此紧密纠缠的根系网络，传递化学信号与电信号，进行交流——这套系统，与顾行故乡，森林里真实存在的菌根网络，原理相通，只是，叶语域的居民，把这套网络，进化成了，一套极其精密、承载着复杂思想的语言系统。",
+      textEn: "After months of observation, Gu Xing's team confirmed: the Leaf-Tongue people communicated through chemical and electrical signals passed along a densely tangled root network buried underground — a system operating on the same principle as the real mycorrhizal networks in the forests of Gu Xing's homeworld, only evolved here into an extraordinarily precise language capable of carrying complex thought." },
+    { kickerZh: "三 · 尝试对接设备", kickerEn: "III · Trying an Interface Device", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="url(#lfbSky)"/>${lfbWash([{x:150,y:100,rx:150,ry:70,color:'#c9e07a',op:.2}])}${lfbRoots()}<g transform="translate(150,170) scale(0.55)">${lfbFigure()}</g></svg>`,
+      textZh: "顾行的团队，研发了一套，能够读取、转译根系电信号的接口设备，兴冲冲地，接入了叶语域的根系网络，得到的，却只是一片，杂乱无章的信号噪音——设备能读出信号的存在，却，完全无法，理解，信号背后，承载的，真正含义。",
+      textEn: "Gu Xing's team developed an interface device capable of reading and translating the root network's electrical signals, eagerly connecting it into the Leaf-Tongue network — only to receive a chaotic mess of noise. The device could detect the signals' existence, but had no way to grasp the meaning carried within them." },
+    { kickerZh: "四 · 一位年长使者的提点", kickerEn: "IV · An Elder Envoy's Guidance", tagZh: "教诲", tagEn: "Teaching",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="#0e1c14"/>${lfbWash([{x:150,y:110,rx:160,ry:100,color:'#1c3a20',op:.7}])}<g transform="translate(110,170) scale(0.5)">${lfbFigure()}</g><g transform="translate(200,175) scale(0.45)"><path d="M-11 -30 Q0 -35 11 -30 L14 24 Q0 30 -14 24 Z" fill="#4a3a28"/><circle cx="0" cy="-36" r="7" fill="#2a2018"/></g></svg>`,
+      textZh: "一位曾在其他非人类文明间，斡旋多年的年长使者，提点顾行：\u201c你想靠一台机器，替你去\u2018听\u2019，这本身，就是错的。真正的交流，从不是隔着设备去翻译，是，你，愿不愿意，先让自己，慢下来，慢到，能够，真正贴近，对方的节奏。\u201d",
+      textEn: "A veteran envoy, who'd spent years mediating between various non-human civilizations, offered Gu Xing this guidance: \u201cWanting a machine to \u2018listen\u2019 for you is the mistake itself. Real communication was never translated through a device — it's whether you're willing to slow yourself down, slow enough to truly draw close to the other's own rhythm.\u201d" },
+    { kickerZh: "五 · 学习植物的时间感", kickerEn: "V · Learning a Plant's Sense of Time", tagZh: "尝试", tagEn: "A New Attempt",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="url(#lfbSky)"/>${lfbRoots()}<g transform="translate(150,170) scale(0.5)">${lfbFigure()}</g></svg>`,
+      textZh: "顾行放下所有精密设备，开始，单纯地，每天，在同一片林地，静坐几个小时，试着，放慢自己的呼吸与心跳，去贴近，叶语域居民，那种，以\u201c季节\u201d而非\u201c秒\u201d为单位的、缓慢悠长的时间感——起初，他只觉得，无聊而漫长，一无所获。",
+      textEn: "Gu Xing set aside every precision device and simply began sitting for hours each day in the same patch of forest, trying to slow his own breath and heartbeat, drawing closer to the Leaf-Tongue people's slow, unhurried sense of time — measured in seasons, not seconds. At first, it felt tediously endless, yielding nothing at all." },
+    { kickerZh: "六 · 第一次感知到回应", kickerEn: "VI · The First Response Felt", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="#0c1c10"/>${lfbWash([{x:150,y:100,rx:180,ry:120,color:'#c9e07a',op:.3}])}${lfbRoots()}<g transform="translate(150,170) scale(0.6)">${lfbFigure()}</g></svg>`,
+      textZh: "坚持了将近一个季度后，顾行光脚踩在泥土上，第一次，隐约感觉到，脚底，传来一阵，极其缓慢、却清晰可辨的、微弱脉动——那不是任何设备的读数，是他，用整个身体，第一次，真切地，触碰到了，这片土地下，那张，活着的网络。",
+      textEn: "After nearly a full season of persistence, standing barefoot in the soil, Gu Xing felt, for the first time, a faint but unmistakable pulse rising through the soles of his feet — not any device's reading, but his entire body, for the first time, truly touching the living network beneath the ground." },
+    { kickerZh: "七 · 缓慢而深刻的对话", kickerEn: "VII · A Slow, Profound Dialogue", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="url(#lfbSky)"/>${lfbWash([{x:150,y:100,rx:170,ry:110,color:'#fff3d0',op:.2}])}${lfbRoots()}<g transform="translate(150,170) scale(0.6)">${lfbFigure()}</g></svg>`,
+      textZh: "此后的几个月，顾行与叶语域，展开了一场，以季节为单位的、极其缓慢的\u201c对话\u201d——没有一句话，是快速交换的，每一次\u201c回应\u201d，都要，耐心等待，数周甚至数月，可正因为这份缓慢，每一次，真正抵达的交流，都，格外，扎实而深刻，不带任何，仓促的误解。",
+      textEn: "Over the following months, Gu Xing engaged in an extremely slow \u201cdialogue\u201d with the Leaf-Tongue Domain, measured in seasons — no exchange happened quickly, each \u201cresponse\u201d requiring weeks, sometimes months, of patient waiting. Yet precisely because of that slowness, every exchange that did arrive was solid, profound, free of any rushed misunderstanding." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "新的外交范式", tagEn: "A New Diplomatic Model",
+      art: `<svg viewBox="0 0 300 220">${LFB_DEFS}<rect width="300" height="220" fill="url(#lfbSky)"/>${lfbRoots()}${lfbTrees()}<g transform="translate(150,170) scale(0.55)">${lfbFigure()}</g></svg>`,
+      textZh: "顾行后来成了，人类联合星域，公认的、与叶语域打交道的第一人，他制定的外交守则，第一条，永远是：\u201c别急着让对方，用你的节奏，跟你说话。先问问自己，愿不愿意，用对方的节奏，重新学一次，倾听。\u201d",
+      textEn: "Gu Xing became the human alliance's recognized first point of contact with the Leaf-Tongue Domain, and the first rule in the diplomatic protocol he established always read: \u201cDon't rush the other side to speak in your rhythm. First ask yourself whether you're willing to relearn listening, in theirs.\u201d",
+      closingZh: "真正的交流，从不是隔着设备去翻译，是愿不愿意，先让自己，慢到，能贴近对方的节奏。",
+      closingEn: "Real communication was never translated through a device — it's whether you're willing to slow yourself down enough to draw close to the other's rhythm." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);

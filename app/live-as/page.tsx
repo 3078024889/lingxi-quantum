@@ -3,6 +3,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import RealityLoop from "./RealityLoop";
+import AskLingxi from "./AskLingxi";
 import { getAccess } from "@/lib/access";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
@@ -39,7 +40,7 @@ export default async function LiveAsPage() {
         </section>
 
         <section className="px-6 pb-28">
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-2xl space-y-16">
             {manifestActive ? (
               <RealityLoop />
             ) : (
@@ -58,6 +59,28 @@ export default async function LiveAsPage() {
                   className="mt-8 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
                 >
                   {user ? <Bi zh="前往订阅" en="Go to subscribe" /> : <Bi zh="登录并订阅" en="Sign in & subscribe" />}
+                </Link>
+              </div>
+            )}
+
+            {user ? (
+              <AskLingxi />
+            ) : (
+              <div className="rounded-sm border border-white/10 bg-void-deep p-8 text-center">
+                <p className="font-display text-xl text-bone">
+                  <Bi zh="登录后即可提问灵犀" en="Sign in to ask Lingxi" />
+                </p>
+                <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-bone-dim">
+                  <Bi
+                    zh="有任何关于多维叙事或修炼技术的疑问，登录后都可以在这里发问给灵犀场域，记录进你自己的日记。"
+                    en="Any question about the narratives or practices — sign in to ask Lingxi here, recorded in your own journal."
+                  />
+                </p>
+                <Link
+                  href="/account"
+                  className="mt-6 inline-block border border-lattice/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-amber hover:text-amber"
+                >
+                  <Bi zh="进入场域" en="Enter the field" />
                 </Link>
               </div>
             )}

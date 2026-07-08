@@ -37,6 +37,13 @@ const SYSTEM: Record<string, string> = {
     "closely attuned to the gate's theme and the user's 'today's state' (their mood and what's on their mind); also consider any recent records. " +
     "Vary the angle across the nine and let them deepen; keep each under ~16 words; guide inward awareness rather than giving answers; no fortune-telling, no diagnosis. " +
     'Return STRICTLY one JSON array like ["question 1","question 2",...,"question 9"] with exactly 9 items — no extra text, explanation, or code fences.',
+  ask:
+    "你是「灵犀」，负责回答用户关于灵犀场域站内内容的提问——可能是关于某一篇多维叙事（原创故事/长篇小说）读后的疑问，" +
+    "也可能是关于某项修炼技术的操作或原理的疑问，也可能只是一句评论或感想。" +
+    "请用中文，先简短回应用户的具体问题或感想（如果用户提到了某篇故事或某个概念，尽量贴合着回应，不要泛泛而谈）；" +
+    "如果是操作性的疑问（比如某个练习步骤不确定），给出清楚、可执行的说明；" +
+    "如果你并不确定用户问的是哪一篇具体内容，坦诚地说明，并邀请用户补充篇名或更多细节，而不是编造内容。" +
+    "语气真诚、平实、像朋友一样交流，不用感叹号堆砌情绪，不写成客服话术。篇幅 120–260 字，不用列表。",
 };
 
 export async function POST(req: Request) {
@@ -52,7 +59,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "请求格式有误。" }, { status: 400 });
   }
 
-  const mode = body.mode === "manifest" || body.mode === "invite" ? body.mode : "dream";
+  const mode = body.mode === "manifest" || body.mode === "invite" || body.mode === "ask" ? body.mode : "dream";
   const content = (body.content || "").trim();
   if (!content) return NextResponse.json({ error: "内容为空。" }, { status: 400 });
   const lang = body.lang === "en" ? "en" : "zh";
@@ -68,7 +75,9 @@ export async function POST(req: Request) {
         ? `${lang === "en" ? "[Gate]" : "【门】"} ${content}\n` +
           `${lang === "en" ? "[Today's state]" : "【今日状态】"} ${mood || (lang === "en" ? "(not provided)" : "（未填写）")}\n` +
           `${body.context ? `${lang === "en" ? "[Recent records]" : "【用户近期记录（梦境/签到摘录）】"}\n${body.context}` : ""}`
-        : `【我正在显化的生活】\n${content}\n${body.context ? `【此刻的感受】\n${body.context}` : ""}`;
+        : mode === "ask"
+          ? `【提问】\n${content}`
+          : `【我正在显化的生活】\n${content}\n${body.context ? `【此刻的感受】\n${body.context}` : ""}`;
 
   try {
     const res = await fetch(ENDPOINT, {
