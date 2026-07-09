@@ -6,7 +6,7 @@ export type Narrative = {
   slug: string;
   title: string;
   titleEn: string;
-  cat: "novel" | "rewrite" | "field" | "sovereign";
+  cat: "novel" | "dream" | "rewrite" | "field" | "sovereign";
   teaser: string;
   teaserEn: string;
   price: number;
@@ -18,6 +18,7 @@ export type Narrative = {
 // 分类占位缩略图：还没配插画的篇目，也不再是"没图看着不舒服"的空白卡片
 const CAT_GLYPH: Record<string, { glyph: string; c1: string; c2: string; c3: string }> = {
   novel:     { glyph: "◈", c1: "#3a2350", c2: "#5c3560", c3: "#e8845f" },
+  dream:     { glyph: "☾", c1: "#161a3a", c2: "#2a2e5c", c3: "#9bb4ff" },
   rewrite:   { glyph: "◐", c1: "#173a30", c2: "#2e5a48", c3: "#d8c07a" },
   field:     { glyph: "✦", c1: "#0c211c", c2: "#173a30", c3: "#7fc9a8" },
   sovereign: { glyph: "⬡", c1: "#1c1331", c2: "#3a2352", c3: "#a68fc9" },
@@ -41,7 +42,7 @@ export function coverPlaceholder(cat: string) {
 
 export const NARRATIVE_CATS = [
   { id: "novel", zh: "长篇传输 · 小说", en: "Long Transmissions · Novels", descZh: "完整长篇，一字不减 · $33 终身可看", descEn: "Full-length works, uncut · $33, yours for life", soon: false },
-  { id: "dream", zh: "梦境档案", en: "Dream Archive", descZh: "来自潜意识的数据片段", descEn: "Data fragments from the subconscious", soon: true },
+  { id: "dream", zh: "梦境档案", en: "Dream Archive", descZh: "来自潜意识的数据片段", descEn: "Data fragments from the subconscious", soon: false },
   { id: "rewrite", zh: "现实重写记录", en: "Reality Rewrite Records", descZh: "发生在「选择之后」的人生变化", descEn: "What changes after the choice is made", soon: false },
   { id: "field", zh: "场域叙事", en: "Field Narratives", descZh: "非个体视角的现实描述 · 含远行者系列", descEn: "Reality beyond the individual · incl. the Wayfarer series", soon: false },
   { id: "sovereign", zh: "主权体观测日志", en: "Sovereign Observation Logs", descZh: "从「场」观察人类现实结构", descEn: "Human reality, observed from the Field", soon: false },
@@ -57,6 +58,15 @@ export const NARRATIVES: Narrative[] = [
   { slug: "letter-from-dimension-zero", title: "零维回信", titleEn: "Letter from Dimension Zero", cat: "novel", teaser: "那个没有维度、没有形状的「点」，给它在时空里展开出的所有形态写了一封信——这封信，就是你现在正在经历的人生。", teaserEn: "The dimensionless point writes a letter to every form it has ever unfolded into — this letter is the life you are living now.", price: 33, cover: `<svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="ldz-bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#1a1428"/><stop offset="100%" stop-color="#050308"/></radialGradient><filter id="ldz-blur"><feGaussianBlur stdDeviation="6"/></filter></defs><rect width="300" height="180" fill="url(#ldz-bg)"/><g opacity=".5" filter="url(#ldz-blur)">${Array.from({length:6}).map((_,i)=>`<circle cx="150" cy="90" r="${14+i*13}" fill="none" stroke="#c9a2ff" stroke-width="1"/>`).join('')}</g><circle cx="150" cy="90" r="4" fill="#fff6e8"><animate attributeName="r" values="3;6;3" dur="2.6s" repeatCount="indefinite"/></circle></svg>` },
 
   // ───────── 现实重写记录（12 · $9 · 创作中）─────────
+  // ───────── 梦境档案（7 · $9 · 来自潜意识的数据片段）─────────
+  { slug: "the-recurring-room", title: "反复出现的房间", titleEn: "The Recurring Room", cat: "dream", teaser: "那扇总是半开的窗，她从未走近过——直到梦终于等到，她愿意回去，好好告别的那一天。", teaserEn: "The window was always half-open, and she never once walked toward it — until the dream finally got the goodbye it had been waiting for.", price: 9 },
+  { slug: "where-flying-dreams-fall", title: "飞行梦的坠落点", titleEn: "Where Flying Dreams Fall", cat: "dream", teaser: "飞得越畅快，坠落得越突然——直到他明白，那份恐惧，一直跟在，配得上这份自由的骄傲后面。", teaserEn: "The higher the flight, the more sudden the fall — until he understood a fear had been trailing his own pride the whole time.", price: 9 },
+  { slug: "the-strangers-face", title: "陌生人的脸", titleEn: "The Stranger's Face", cat: "dream", teaser: "那张脸，不属于任何一个现实里的人，是她自己，最能无条件理解自己的那部分，借着一张脸，来到了梦里。", teaserEn: "The face belonged to no one real — it was the part of her most able to understand her unconditionally, wearing a borrowed face.", price: 9 },
+  { slug: "the-train-you-cant-catch", title: "追不上的列车", titleEn: "The Train You Can't Catch", cat: "dream", teaser: "拼命追赶的列车，象征着，一直不敢开口的申请——递交出去那晚，梦，终于，没有再来。", teaserEn: "The desperately chased train stood for a request never dared. The night it was finally submitted, the dream stopped coming.", price: 9 },
+  { slug: "the-dream-where-you-cant-speak", title: "说不出话的梦", titleEn: "The Dream Where You Can't Speak", cat: "dream", teaser: "张不开嘴，从不是不能说，是深处那份说了也没用的无力感——重新开口那天，梦，渐渐地，稀疏了。", teaserEn: "Being unable to speak was never about ability — it was a buried sense that speaking wouldn't matter. Once she spoke up again, the dream grew rare.", price: 9 },
+  { slug: "the-night-the-water-rose", title: "水漫上来的那晚", titleEn: "The Night the Water Rose", cat: "dream", teaser: "水漫上来，是情绪堆积到了难以负荷的程度——学会觉察之后，同一场梦里，他第一次，从容地游了出去。", teaserEn: "Rising water meant emotion piling up past bearing. Once he learned to notice it, he calmly swam free in the same dream, at last.", price: 9 },
+  { slug: "the-morning-you-couldnt-wake", title: "醒不过来的清晨", titleEn: "The Morning You Couldn't Wake", cat: "dream", teaser: "一层又一层醒来，却始终不确定是否真醒——那是现实里，一段说不清是否稳固的、过渡期本身。", teaserEn: "Waking layer after layer, never quite certain it was real — a mirror of a real transition whose ground she couldn't yet confirm.", price: 9 },
+
   { slug: "the-seventh-day-of-waking", title: "觉醒的第七天", titleEn: "The Seventh Day of Waking", cat: "rewrite", teaser: "前六天，她以为自己疯了。第七天，她才发现，疯的其实是她过去二十年习以为常的那种清醒。", teaserEn: "For six days she thought she was losing her mind. On the seventh, she realized the twenty years before had been the madness.", price: 9 },
   { slug: "tearing-down-that-wall", title: "拆掉那道墙", titleEn: "Tearing Down That Wall", cat: "rewrite", teaser: "他花了半生时间加固一道墙，直到有一天才想起，最初砌墙，是为了挡住一场早已停了的雨。", teaserEn: "He spent half a life reinforcing a wall, before remembering it was built to block a rain that had stopped long ago.", price: 9 },
   { slug: "exiting-the-script", title: "从剧本里退场", titleEn: "Exiting the Script", cat: "rewrite", teaser: "她一直演一个别人写好的角色，直到某天台词说到一半，她忽然停下——原来沉默，也可以是一句台词。", teaserEn: "She had always played someone else's script, until one day, mid-line, she stopped — and found that silence, too, could be a line.", price: 9 },

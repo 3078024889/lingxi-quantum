@@ -3169,4 +3169,89 @@ Nian An felt, for a moment, a little disappointed, thinking it far too plain. Bu
 
 The final lesson holds no new knowledge — only a truth repeated many times: you never lost your connection to the Field.`,
   },
+
+  "the-recurring-room": {
+    zh: `念溪反复梦见同一个房间——陈旧的木地板，一扇总是半开的窗，墙角堆着几只，她怎么也想不起来，究竟装着什么的旧纸箱。这个梦，断断续续，出现了将近十年，每次醒来，都留下一种，说不清道不明的、被什么事，耽搁着的感觉。
+
+一次解梦咨询里，引导者问她："那扇半开的窗，你有没有试过，走过去看看？"念溪愣住了——她从未想过，自己在梦里，竟然，从未，真正走近过那扇窗，每次，都只是，远远地，望着它，任由梦，自行结束。
+
+下一次，那个房间，再次出现时，念溪，鼓起勇气，走向了那扇窗——窗外，是她童年，住过的老宅子的后院，那里，埋着，她十岁那年，因病去世的小猫。她这才明白，这个反复出现的房间，一直，在等她，回去，好好告别一次，那份，被她匆匆略过的悲伤。`,
+    en: `Nian Xi kept dreaming of the same room — worn wooden floors, a window always half-open, a few old cardboard boxes piled in the corner, their contents forever just out of memory's reach. The dream recurred, on and off, for nearly a decade, each waking leaving behind an unnameable sense of something left unfinished.
+
+In a dream-interpretation session, the guide asked her: "That half-open window — have you ever tried walking over to look?" Nian Xi froze — she'd never once considered that, in the dream, she had never actually approached that window, only ever watching it from a distance, letting the dream end on its own.
+
+The next time the room appeared, Nian Xi gathered her courage and walked to the window — outside lay the backyard of the old house she'd grown up in, where her childhood cat, dead of illness when she was ten, was buried. Only then did she understand: the recurring room had simply been waiting for her to return, to properly say goodbye to a grief she'd once rushed past.`,
+  },
+  "where-flying-dreams-fall": {
+    zh: `顾行的飞行梦，总是，在最自由、最畅快的时刻，忽然，急转直下，坠落感，猛地，攫住全身，惊醒过来，一身冷汗。他一度，把这当成，一种，纯粹的、恼人的睡眠干扰，从未细想过，这份坠落，究竟，发生在，梦里，哪个具体的节点。
+
+一次偶然的记录里，顾行发现，每一次坠落，几乎都，紧跟在，梦里，自己，做出某个大胆决定的瞬间之后——仿佛，飞得越高、越畅快，那份，害怕\\u201c配不上这份自由\\u201d的恐惧，就，越紧地，跟在身后。
+
+顾行开始，在现实里，练习着，在做出，让自己格外骄傲的决定后，不立刻，用自我怀疑，把这份骄傲，压下去。几个月后，那个反复坠落的飞行梦，第一次，完整地，飞到了梦的尽头，落地时，是平稳的、双脚着地的，安全降落。`,
+    en: `Gu Xing's flying dreams always, at their freest, most exhilarating moment, suddenly plunged — the falling sensation seizing his whole body, jolting him awake in a cold sweat. He'd long treated this as pure, irritating sleep disturbance, never examining exactly where, within the dream, each fall began.
+
+In a chance journal entry, Gu Xing noticed: nearly every fall came right after a moment, in the dream, of making some bold decision — as if the higher, more exhilarating the flight, the more tightly a fear of "not deserving this freedom" trailed behind him.
+
+Gu Xing began practicing, in waking life, not immediately crushing his own pride with self-doubt after making a decision he was genuinely proud of. Months later, the recurring falling dream, for the first time, flew all the way to the dream's end — landing steady, both feet on solid ground.`,
+  },
+  "the-strangers-face": {
+    zh: `念安，长期反复梦见，同一张，陌生却，格外熟悉的脸——不是任何一个，她现实里认识的人，可每次，在梦里，见到这张脸，都会，涌起一种，被深深理解着的、安心的感觉。
+
+她试着，把这张脸，画了下来，拿给一位解梦引导者看。引导者端详良久，说："很多人，都曾梦见过，类似的、不属于任何具体现实人物的脸——它，往往，不是某个具体的人，是你自己内心深处，那部分，最能够，无条件理解你的自己，借着一张脸，来到了梦里。"
+
+念安将信将疑，却，在下一次，感到，格外孤单委屈的深夜，主动，闭上眼睛，试着，在脑海里，唤起了那张脸——奇迹般地，那份，梦里才有的、被理解着的安心感，竟，真实地，在清醒时，也，浮现了出来。`,
+    en: `Nian An repeatedly dreamed of the same face — a stranger, yet somehow deeply familiar, not anyone she knew in waking life, yet every time this face appeared in her dreams, she felt a wave of being deeply, thoroughly understood.
+
+She sketched the face and brought it to a dream guide. The guide studied it for a long while, then said: "Many people dream of similar faces, ones belonging to no specific person in their real lives — often, it isn't a specific person at all, but the part of yourself, deepest within, most capable of understanding you unconditionally, arriving in the dream wearing a borrowed face."
+
+Skeptical, Nian An, on a night of especially deep loneliness and grievance, closed her eyes and tried summoning that face in her mind — and, remarkably, that dream-born sense of being understood genuinely surfaced, even while fully awake.`,
+  },
+  "the-train-you-cant-catch": {
+    zh: `顾晚，反复梦见，自己，拼尽全力，奔跑，却，总是，差那么一点点，追不上，即将驶离的列车——每次，都在，车门缓缓关上的那一刻，惊醒，心跳，久久，无法平复。
+
+一次深夜，反复梦见这个场景后，顾晚，终于，认真地，问了自己一个问题：那趟，自己，拼命追赶的列车，究竟，象征着，现实里，哪一件，自己，一直，觉得\\u201c快要错过\\u201d的事？她这才意识到，那是，自己，一直，想开口、却，迟迟没敢，向公司提出的、一次晋升申请。
+
+顾晚，鼓起勇气，递交了那份，拖延已久的申请。递交的当晚，那个反复出现的追车梦，久违地，没有再来——仿佛，梦，只是，在，耐心地，提醒她，一件，她自己，一直，不敢，正视的心事。`,
+    en: `Gu Wan repeatedly dreamed of running with everything she had, never quite catching the train pulling away — always waking, heart pounding, at the exact moment the doors slid shut.
+
+One night, after this scene recurred yet again, Gu Wan finally asked herself, in earnest: what did that desperately chased train actually symbolize — what, in real life, did she feel she was "about to miss"? She realized it was the promotion request she'd long wanted to make at work, but had never quite dared to voice.
+
+Gu Wan gathered her courage and submitted the long-delayed request. That very night, the recurring dream of chasing the train didn't return — as if the dream had simply been patiently reminding her of something she hadn't dared face.`,
+  },
+  "the-dream-where-you-cant-speak": {
+    zh: `沈昭，最怕的一种梦，是，遇到，格外重要的场合，却，无论如何，都，张不开嘴，说不出，任何一句话——那种，喉咙被什么，死死堵住的窒息感，格外真实，醒来后，往往，久久，无法平复。
+
+一位解梦引导者告诉她："说不出话的梦，往往，指向的，不是\\u201c不能说\\u201d，是，你内心深处，那份，\\u201c觉得，说了也没用\\u201d的、深深的无力感。"沈昭细想，果然，那些梦里的场合，都，隐约，对应着，现实里，她曾经，试图表达，却，被忽视、被打断的具体经历。
+
+沈昭开始，练习着，在现实里，那些，曾经，选择沉默的场合，重新，鼓起勇气，把话，说出口，哪怕，声音，微微颤抖。渐渐地，那个，说不出话的梦，出现的频率，明显地，减少了下来。`,
+    en: `Su Zhao's most feared kind of dream was finding herself in some critically important moment, unable, no matter how hard she tried, to open her mouth and speak — a suffocating sensation, throat clamped shut, unnervingly real, leaving her unsettled long after waking.
+
+A dream guide told her: "Dreams where you can't speak often point, not to \\u2018being unable to,\\u2019 but to a deep sense of futility — a feeling that speaking wouldn't matter anyway." Su Zhao reflected, and indeed, those dream settings vaguely echoed real experiences of trying to speak up, only to be ignored or cut off.
+
+Su Zhao began practicing, in waking life, speaking up again in situations where she'd once chosen silence, even with her voice trembling slightly. Gradually, the dream where she couldn't speak grew noticeably rarer.`,
+  },
+  "the-night-the-water-rose": {
+    zh: `岳川，反复梦见，自己，身处一栋，正在被水，缓缓淹没的老宅——水位，一点一点，往上涨，他，却，怎么也找不到，逃出去的门，那种，被困住的恐慌，格外真切。
+
+一次工作坊上，引导者解释道：\\u201c梦里的\\u2018水\\u2019，常常，象征着，情绪——水漫上来，往往，意味着，现实里，某些情绪，正在，累积到，一个，你自己，都开始感到，难以负荷的程度。\\u201d岳川细想，那段时间，恰好，正是，他，因为工作压力，长期压抑着，自己真实感受的一段日子。
+
+岳川开始，有意识地，每天，留出一点时间，安静地，觉察自己当下真实的情绪，不再，一味地，压抑、忽视。几周后，那个，被水淹没的梦，渐渐地，变成了，另一个版本——同样的老宅，同样的水位，这一次，他，却，学会了，从容地，游了出去。`,
+    en: `Yue Chuan repeatedly dreamed of being inside an old house slowly flooding — the water level rising, inch by inch, while he could never find a way out, the trapped panic feeling entirely real.
+
+At a workshop, a guide explained: "Water in dreams often symbolizes emotion — rising water often means certain feelings, in waking life, are accumulating to a point you're beginning to find hard to bear." Yue Chuan reflected, and realized that period coincided exactly with months of suppressing his true feelings under work pressure.
+
+Yue Chuan began deliberately setting aside a little time each day to quietly notice his actual present emotions, no longer suppressing or ignoring them. Weeks later, the flooding dream gradually shifted into a different version — the same old house, the same rising water, only this time, he calmly swam his way out.`,
+  },
+  "the-morning-you-couldnt-wake": {
+    zh: `念棠，偶尔，会经历一种，格外令人不安的梦境——梦见自己，醒来了，开始，一天的生活，却，在某个瞬间，忽然，发现，自己，其实，还在梦里，于是，再\\u201c醒\\u201d一次，如此反复，好几层，才，真正，回到现实。
+
+一次，这样的多层嵌套梦醒来后，念棠，久久，无法确定，自己，此刻，是否，真的，已经，清醒了，那种，说不清道不明的恍惚感，格外令人不安。她找到解梦引导者，倾诉这份困扰。
+
+引导者说：\\u201c这种梦，常常，出现在，一个人，现实生活里，正经历着，某种，说不清\\u2018这是不是真的在发生\\u2019的、巨大变动的时期——比如，一份，还没完全确定的新工作，一段，还不确定是否稳固的新关系。\\u201d念棠这才惊觉，自己最近，恰好，正处在，这样一段，充满不确定感的过渡期。`,
+    en: `Nian Tang occasionally experienced a particularly unsettling kind of dream — dreaming she'd woken up, beginning her day, only to suddenly realize, at some point, she was still dreaming, "waking" again, and again, through several layers, before truly returning to reality.
+
+After one such nested false-awakening, Nian Tang remained, for a long while, unable to confirm whether she was truly awake — an unnervingly disorienting feeling. She brought this trouble to a dream guide.
+
+The guide said: "This kind of dream often appears when someone, in waking life, is going through some major upheaval they can't quite confirm is \\u2018really happening\\u2019 — a new job not yet fully settled, a new relationship not yet fully secure." Only then did Nian Tang realize she was, indeed, right in the middle of just such an uncertain transitional period.`,
+  },
 };
