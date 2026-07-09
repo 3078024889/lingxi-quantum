@@ -5160,7 +5160,115 @@ const CANT_WAKE_ILLUSTRATED: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED];
+/* ---------- 现实重写记录·插画升级版：共享视觉素材 ---------- */
+const RW_DEFS = `<defs><filter id="rwG"><feGaussianBlur stdDeviation="9"/></filter>
+  <radialGradient id="rwGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="55%" stop-color="#d8c07a"/><stop offset="100%" stop-color="#173a30" stop-opacity="0"/></radialGradient>
+  <linearGradient id="rwSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c1814"/><stop offset="55%" stop-color="#1c3830"/><stop offset="100%" stop-color="#4a7060"/></linearGradient></defs>`;
+function rwWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#rwG)"/>`).join('');}
+function rwParticles(){return `<g fill="#fff6e8" opacity=".6">${Array.from({length:12}).map(()=>{const x=Math.random()*300,y=Math.random()*160,r=Math.random()*1.4+.4;return `<circle cx="${x}" cy="${y}" r="${r}"><animate attributeName="opacity" values="0;.8;0" dur="${2.4+Math.random()*2}s" repeatCount="indefinite"/></circle>`}).join('')}</g>`;}
+function rwFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#1c3830"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#122820"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+
+/* ---------- 觉醒的第七天：完整9页插画版 ---------- */
+const SDW_COVER = `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwParticles()}<circle cx="150" cy="90" r="32" fill="url(#rwGlow)"/><g transform="translate(150,175) scale(0.5)">${rwFigure()}</g></svg>`;
+
+const SEVENTH_DAY_ILLUSTRATED: IllustratedEntry = {
+  slug: "the-seventh-day-of-waking",
+  title: "觉醒的第七天",
+  titleEn: "The Seventh Day of Waking",
+  cat: "rewrite",
+  teaser: "前六天，她以为自己疯了。第七天，她才发现，疯的其实是她过去二十年，习以为常的那种清醒——一场，迟到了二十年的真正苏醒。",
+  teaserEn: "For six days she thought she was losing her mind. On the seventh, she realized the twenty years before had been the madness — a true awakening, twenty years overdue.",
+  price: 9,
+  cover: SDW_COVER,
+  pages: [
+    { kickerZh: "一 · 第一天的异样", kickerEn: "I · The First Day's Strangeness", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwParticles()}<g transform="translate(150,175) scale(0.55)">${rwFigure()}</g></svg>`,
+      textZh: "念秀，某天清晨，醒来，忽然，感到，一种，前所未有的异样——每天，重复了二十年的通勤路线，此刻，看起来，格外陌生，同事们，早已习惯的寒暄，此刻，听起来，格外，言不由衷。她，一度，以为，自己，是不是，生病了。",
+      textEn: "One morning, Nian Xiu woke feeling an unprecedented strangeness — the commute she'd repeated for twenty years suddenly looked foreign, and colleagues' familiar small talk suddenly sounded hollow. She wondered, for a moment, if she was falling ill." },
+    { kickerZh: "二 · 持续的失真感", kickerEn: "II · A Persisting Sense of Unreality", tagZh: "困扰的加深", tagEn: "The Trouble Deepens",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="#0e2018"/>${rwWash([{x:150,y:110,rx:150,ry:90,color:'#1c3830',op:.7}])}<g transform="translate(150,175) scale(0.6)">${rwFigure()}</g></svg>`,
+      textZh: "接下来的几天，这份异样，非但，没有，消退，反而，愈发，强烈——她，开始，对，自己，习以为常的每一个选择，都，生出，一种，说不清道不明的怀疑：为什么，要，勉强自己，参加，那些，其实，毫无兴趣的应酬？为什么，要，一直，忍受，那份，早已不再热爱的工作？",
+      textEn: "Over the following days, the strangeness didn't fade — it intensified. She began questioning every habitual choice she'd made: why force herself into social obligations she had no real interest in? Why keep enduring a job she'd long stopped loving?" },
+    { kickerZh: "三 · 家人的担忧", kickerEn: "III · Her Family's Concern", tagZh: "外界的反应", tagEn: "The World's Reaction",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwWash([{x:150,y:100,rx:150,ry:70,color:'#d8c07a',op:.2}])}<g transform="translate(110,175) scale(0.5)">${rwFigure()}</g><g transform="translate(200,175) scale(0.5)">${rwFigure()}</g></svg>`,
+      textZh: "念秀的这份，日渐明显的\u201c异常\u201d，很快，引起了，家人的担忧——丈夫，忧心忡忡地，劝她，去看看心理医生，母亲，也，反复叮嘱，\u201c别想太多，好好过日子就行\u201d。念秀，一度，也，开始，怀疑，自己，是不是，真的，出了什么问题。",
+      textEn: "Nian Xiu's increasingly visible \u201cabnormality\u201d soon worried her family — her husband anxiously urged her to see a therapist; her mother kept insisting, \u201cdon't overthink, just live your life.\u201d For a while, Nian Xiu, too, began doubting whether something was truly wrong with her." },
+    { kickerZh: "四 · 第六天的崩溃", kickerEn: "IV · The Sixth Day's Breakdown", tagZh: "低谷", tagEn: "The Low Point",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="#0e2018"/>${rwWash([{x:150,y:110,rx:160,ry:100,color:'#1c3830',op:.75}])}<g transform="translate(150,175) scale(0.6)">${rwFigure()}</g></svg>`,
+      textZh: "第六天深夜，念秀，独自坐在，空荡荡的客厅里，感到，一种，前所未有的崩溃——她，既，无法，说服自己，回到，从前那种，看似正常的生活状态，又，不敢，真的，相信，这份，越来越强烈的异样感，究竟，指向着，什么。",
+      textEn: "On the sixth night, sitting alone in the empty living room, Nian Xiu felt an unprecedented collapse — unable to convince herself to return to her old, seemingly normal state, yet not daring to trust what this growing strangeness might actually mean." },
+    { kickerZh: "五 · 一个意外的问题", kickerEn: "V · An Unexpected Question", tagZh: "转折的契机", tagEn: "A Chance to See Differently",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwWash([{x:150,y:100,rx:150,ry:70,color:'#d8c07a',op:.25}])}<g transform="translate(150,175) scale(0.6)">${rwFigure()}</g></svg>`,
+      textZh: "就在，那个，格外难熬的深夜，念秀，忽然，问了自己一个，从未，认真问过的问题：\u201c如果，这份，被大家，称为\u2018异常\u2019的感觉，其实，才是，真正清醒的开始，那，过去二十年，那种，被所有人，都，认可的\u2018正常\u2019，会不会，其实，才是，真正的沉睡？\u201d",
+      textEn: "In that particularly difficult night, Nian Xiu suddenly asked herself a question she'd never seriously considered: \u201cWhat if this feeling everyone calls \u2018abnormal\u2019 is actually the beginning of true clarity — and the past twenty years of universally approved \u2018normal\u2019 was, in fact, the real sleep?\u201d" },
+    { kickerZh: "六 · 重新审视二十年", kickerEn: "VI · Reexamining Twenty Years", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="#0c1c14"/>${rwWash([{x:150,y:100,rx:180,ry:120,color:'#d8c07a',op:.3}])}<g transform="translate(150,175) scale(0.65)">${rwFigure()}</g></svg>`,
+      textZh: "念秀，第一次，认真地，重新，审视，自己，过去二十年——那些，习以为常的应酬、那份，早已不再热爱、却，从未，真正考虑过离开的工作、那种，遇到分歧，永远，先，压下自己真实想法的相处模式，此刻，一件一件，清晰地，浮现，她，终于，明白，那份，所谓的\u201c清醒\u201d，不过是，一种，长期麻木后，形成的、虚假的稳定。",
+      textEn: "For the first time, Nian Xiu earnestly reexamined her past twenty years — the habitual obligations, the job she'd never truly considered leaving despite no longer loving it, the pattern of always suppressing her real opinion at the first sign of conflict — surfacing, one by one, with sudden clarity. She finally understood: that so-called \u201cclarity\u201d had merely been a false stability, formed by long-term numbness." },
+    { kickerZh: "七 · 第七天的抉择", kickerEn: "VII · The Seventh Day's Choice", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.25}])}${rwParticles()}</svg>`,
+      textZh: "第七天清晨，念秀，第一次，没有，急着，把这份异样感，重新，压下去，而是，郑重地，做出了几个决定——推掉了，一场，早已，毫无兴趣的应酬；认真地，与丈夫，坦白了，自己，这几天，真实的感受；也，第一次，认真地，开始，思考，自己，究竟，想要，怎样的人生。",
+      textEn: "On the seventh morning, for the first time, Nian Xiu didn't rush to push the strangeness back down — instead, she made several solemn decisions: canceling a social obligation she had no interest in, honestly sharing her real feelings with her husband, and, for the first time, seriously considering what kind of life she actually wanted." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "真正的苏醒", tagEn: "A True Awakening",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwParticles()}<g transform="translate(150,175) scale(0.5)">${rwFigure()}</g></svg>`,
+      textZh: "多年以后，念秀，常对，同样，经历着，类似困惑的朋友说：\u201c如果，有一天，你，忽然，觉得，一直以来，习以为常的生活，变得，格外陌生，别急着，把这当成\u2018疯了\u2019——那，很可能，是，一场，迟到了很多年的、真正的苏醒。\u201d",
+      textEn: "Years later, Nian Xiu often told friends going through similar confusion: \u201cIf, one day, you suddenly find the life you've always taken for granted feeling strangely foreign, don't rush to call it \u2018losing your mind\u2019 — it might well be a true awakening, long overdue.\u201d",
+      closingZh: "如果一直以来习以为常的生活，忽然变得格外陌生，那很可能不是疯了，是一场迟到了很多年的、真正的苏醒。",
+      closingEn: "If the life you've always taken for granted suddenly feels strangely foreign, it might not be madness — it could be a true awakening, long overdue." },
+  ],
+};
+
+/* ---------- 拆掉那道墙：完整9页插画版 ---------- */
+const TDW_COVER = `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwParticles()}<rect x="70" y="90" width="160" height="90" fill="none" stroke="#d8c07a" stroke-width="2" opacity=".5"/><g transform="translate(150,195) scale(0.45)">${rwFigure()}</g></svg>`;
+
+const TEARING_DOWN_WALL_ILLUSTRATED: IllustratedEntry = {
+  slug: "tearing-down-that-wall",
+  title: "拆掉那道墙",
+  titleEn: "Tearing Down That Wall",
+  cat: "rewrite",
+  teaser: "他花了半生时间，加固一道墙，直到有一天，才想起，最初砌墙，是为了，挡住，一场，早已，停了很久的雨——那场雨，停了，将近二十年。",
+  teaserEn: "He spent half a life reinforcing a wall, before remembering it was built to block a rain that had stopped nearly twenty years ago.",
+  price: 9,
+  cover: TDW_COVER,
+  pages: [
+    { kickerZh: "一 · 从不松懈的加固", kickerEn: "I · Reinforcement Without Rest", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/><rect x="70" y="90" width="160" height="90" fill="none" stroke="#d8c07a" stroke-width="2" opacity=".5"/><g transform="translate(150,195) scale(0.5)">${rwFigure()}</g></svg>`,
+      textZh: "顾行，花了，将近半生的时间，加固着，一道，横亘在，自己与他人之间的、无形的墙——从不轻易，向任何人，敞开心扉，从不，主动，维系，任何一段，可能，让自己受伤的关系，每一次，感到，有人，靠得太近，都会，本能地，后退一步。",
+      textEn: "Gu Xing spent nearly half his life reinforcing an invisible wall between himself and others — never easily opening his heart to anyone, never proactively maintaining any relationship that might leave him vulnerable, instinctively stepping back whenever someone drew too close." },
+    { kickerZh: "二 · 孤单，却安全", kickerEn: "II · Lonely, Yet Safe", tagZh: "长期的状态", tagEn: "A Long-Held State",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="#0e2018"/>${rwWash([{x:150,y:110,rx:150,ry:90,color:'#1c3830',op:.7}])}<g transform="translate(150,195) scale(0.5)">${rwFigure()}</g></svg>`,
+      textZh: "这道墙，让顾行，的确，避开了，许多，可能的伤害，却，也，让他，格外孤单——身边，来来去去，不乏，真心想要，靠近他的人，可，无一例外，都，被这道墙，挡在了，一个，尴尬而疏离的距离之外，渐渐地，也就，不再，坚持。",
+      textEn: "This wall did spare Gu Xing much potential hurt, but also left him profoundly lonely — people who genuinely wanted to draw close came and went, every one of them held at an awkward, distant remove by the wall, eventually giving up trying." },
+    { kickerZh: "三 · 一位挚友的直言", kickerEn: "III · A Close Friend's Candor", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwWash([{x:150,y:100,rx:150,ry:70,color:'#d8c07a',op:.2}])}<g transform="translate(110,195) scale(0.45)">${rwFigure()}</g><g transform="translate(200,195) scale(0.45)">${rwFigure()}</g></svg>`,
+      textZh: "一位，少有的、坚持了多年的挚友，终于，忍不住，对顾行，直言：\u201c你，到底，在防着什么？我们，认识了十年，我，依然，感觉，跟你，隔着，一道，怎么也，跨不过去的墙。\u201d这句话，让顾行，第一次，认真地，思考起，这道墙，最初，究竟，是，为了什么，而砌起的。",
+      textEn: "A rare friend who'd stuck by him for years finally couldn't hold back: \u201cWhat exactly are you guarding against? We've known each other ten years, and I still feel a wall between us I can never quite cross.\u201d These words led Gu Xing, for the first time, to seriously consider why the wall had been built in the first place." },
+    { kickerZh: "四 · 追溯到年少时", kickerEn: "IV · Tracing Back to Youth", tagZh: "顿悟的铺垫", tagEn: "Building to Realization",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="#0e2018"/>${rwWash([{x:150,y:110,rx:160,ry:100,color:'#1c3830',op:.75}])}<g transform="translate(150,195) scale(0.5)">${rwFigure()}</g></svg>`,
+      textZh: "顾行，细细回想，才，追溯到，将近二十年前，一段，格外深刻的伤害——年少时，一位，曾经，无比信任的挚友，在他，最脆弱的时刻，狠狠地，背叛了他。那场，突如其来的\u201c暴雨\u201d，让，年少的顾行，第一次，感到，彻骨的寒冷与不安。",
+      textEn: "Reflecting carefully, Gu Xing traced it back nearly twenty years, to a particularly deep betrayal — in his youth, a once-trusted friend had cruelly betrayed him at his most vulnerable moment. That sudden \u201cstorm\u201d had left young Gu Xing feeling, for the first time, a bone-deep cold and unease." },
+    { kickerZh: "五 · 那场早已停了的雨", kickerEn: "V · A Rain That Stopped Long Ago", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwWash([{x:150,y:100,rx:180,ry:120,color:'#d8c07a',op:.3}])}<rect x="70" y="90" width="160" height="90" fill="none" stroke="#d8c07a" stroke-width="2" opacity=".6"/></svg>`,
+      textZh: "顾行，忽然，怔住了——那场，年少时的\u201c暴雨\u201d，早已，在，将近二十年前，就，彻底，停了，可，他，却，用了，此后，整整二十年的时间，不断地，加固着，一道，最初，只是，为了，挡住，那一场雨，而砌起的墙，从未，想过，要，把它，拆掉。",
+      textEn: "Gu Xing froze, suddenly — that youthful \u201cstorm\u201d had stopped completely nearly twenty years ago, yet he'd spent the entire two decades since continuously reinforcing a wall built only to block that one storm, never once considering tearing it down." },
+    { kickerZh: "六 · 尝试推倒一小块", kickerEn: "VI · Trying to Remove One Small Piece", tagZh: "行动", tagEn: "Taking Action",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="#0c1c14"/>${rwWash([{x:150,y:110,rx:170,ry:110,color:'#1c3830',op:.7}])}<rect x="90" y="100" width="120" height="70" fill="none" stroke="#d8c07a" stroke-width="1.5" opacity=".4"/></svg>`,
+      textZh: "顾行，决定，先，从，那位，坚持了多年的挚友，开始，尝试，一点一点，拆掉，这道墙——他，第一次，主动地，向对方，坦白了，这份，尘封了二十年的往事，也，第一次，真正地，允许，对方，走进，自己，一直以来，牢牢守护着的、脆弱的内心。",
+      textEn: "Gu Xing decided to start with that longtime friend, trying, bit by bit, to tear down the wall — for the first time, proactively confessing the twenty-year-old past, and, for the first time, genuinely allowing that friend into the vulnerable inner self he'd so tightly guarded." },
+    { kickerZh: "七 · 墙外的天气", kickerEn: "VII · The Weather Beyond the Wall", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.3}])}${rwParticles()}</svg>`,
+      textZh: "让顾行，格外意外的是，墙，拆掉的那一刻，外面，等着他的，不是，他，预想中的暴雨，而是，一片，格外温暖的、久违的阳光——那位挚友，非但，没有，因为这份坦白，而，远离他，反而，更加，珍惜，这份，来之不易的、真正的靠近。",
+      textEn: "To Gu Xing's great surprise, the moment the wall came down, what awaited him outside wasn't the storm he'd braced for, but a long-absent, warm sunlight — his friend, far from pulling away at this confession, treasured this hard-won, genuine closeness all the more." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "定期检查天气", tagEn: "Checking the Weather Regularly",
+      art: `<svg viewBox="0 0 300 220">${RW_DEFS}<rect width="300" height="220" fill="url(#rwSky)"/>${rwParticles()}<g transform="translate(150,195) scale(0.45)">${rwFigure()}</g></svg>`,
+      textZh: "此后，顾行，学会了，定期，问自己一个问题：\u201c我，此刻，守护着的这道墙，是在，挡住一场，正在下的雨，还是，一场，早已，停了很久的雨？\u201d他后来常说：\u201c墙，本身，从不是问题，问题是，我们，是否，还记得，最初，为什么，要砌起它。\u201d",
+      textEn: "Since then, Gu Xing learned to regularly ask himself: \u201cIs the wall I'm guarding right now blocking a rain still falling, or one that stopped long ago?\u201d He often said afterward: \u201cThe wall itself was never the problem. The problem is whether we still remember why we built it in the first place.\u201d",
+      closingZh: "墙本身从不是问题，问题是，我们是否还记得，最初为什么要砌起它。",
+      closingEn: "The wall itself was never the problem — the problem is whether we still remember why we built it in the first place." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED, SEVENTH_DAY_ILLUSTRATED, TEARING_DOWN_WALL_ILLUSTRATED];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
