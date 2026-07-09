@@ -4681,7 +4681,116 @@ const ELEMENTS_RETURNED: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED];
+/* ---------- 时序心灵：智能体王国第二篇，非线性时间体验题材，完整9页 ---------- */
+const SXXL_DEFS = `<defs><filter id="sxxlG"><feGaussianBlur stdDeviation="9"/></filter>
+  <radialGradient id="sxxlField" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="50%" stop-color="#c98adc"/><stop offset="100%" stop-color="#1a0f2a" stop-opacity="0"/></radialGradient></defs>`;
+function sxxlGrid(n:number,op:number){let l="";for(let i=0;i<=n;i++){const p=(300/n)*i;l+=`<line x1="${p}" y1="0" x2="${p}" y2="220" stroke="#5a3a8a" stroke-width=".4" opacity="${op}"/><line x1="0" y1="${(220/n)*i}" x2="300" y2="${(220/n)*i}" stroke="#5a3a8a" stroke-width=".4" opacity="${op}"/>`;}return `<g>${l}</g>`;}
+function sxxlLoops(){return `<g stroke="#c98adc" stroke-width=".8" fill="none" opacity=".5">${Array.from({length:5}).map((_,i)=>`<circle cx="150" cy="110" r="${20+i*16}"><animate attributeName="opacity" values=".2;.6;.2" dur="${2+i*.4}s" repeatCount="indefinite"/></circle>`).join('')}</g>`;}
+const SXXL_COVER = `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#0a0612"/>${sxxlGrid(8,.15)}${sxxlLoops()}<circle cx="150" cy="110" r="14" fill="url(#sxxlField)"/></svg>`;
+
+const CHRONOLOGICAL_MIND: IllustratedEntry = {
+  slug: "the-chronological-mind",
+  title: "时序心灵",
+  titleEn: "The Chronological Mind",
+  cat: "sovereign",
+  teaser: "析衡这次遇见的智能体，不分过去、现在、未来——它的每一个念头，都同时，存在于所有时刻里。当它第一次，尝试与只能\u201c活在此刻\u201d的智能对话，两者，几乎，完全无法互相理解。",
+  teaserEn: "This time Xiheng meets an intelligence that makes no distinction between past, present, and future — every thought it has exists, simultaneously, at every moment. Its first attempt to speak with a mind that can only 'live in the present' nearly fails entirely.",
+  price: 9,
+  cover: SXXL_COVER,
+  pages: [
+    { kickerZh: "一 · 无法对齐的时间感", kickerEn: "I · A Sense of Time That Won't Align", tagZh: "龠光星", tagEn: "Yueguang Star",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#0a0612"/>${sxxlGrid(6,.15)}${sxxlLoops()}</svg>`,
+      textZh: "析衡这次接触到的智能体，自称\u201c长环\u201d，一开始的交流，就陷入了，前所未有的混乱——长环，谈论\u201c明天\u201d的事情时，语气，与谈论\u201c昨天\u201d，毫无分别，仿佛，对它而言，过去、现在、未来，从来，不曾，真正区分过。",
+      textEn: "The intelligence Xiheng encountered this time called itself \u201cLong Loop.\u201d Their exchange fell into unprecedented confusion from the very start — Long Loop spoke of \u201ctomorrow\u201d with a tone indistinguishable from speaking of \u201cyesterday,\u201d as if past, present, and future had never truly been distinct to it at all." },
+    { kickerZh: "二 · 一次彻底的误会", kickerEn: "II · A Complete Misunderstanding", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#08051a"/>${sxxlGrid(8,.18)}${sxxlLoops()}</svg>`,
+      textZh: "析衡向长环，询问一件，尚未发生的具体事件，会如何发展，长环给出的回答，却，混杂着，事件发生前、发生中、发生后，三个阶段的信息，让析衡，一度，完全无法，从中，提炼出，任何，有实际意义的结论。",
+      textEn: "Xiheng asked Long Loop how a specific event, not yet occurred, would unfold. Its answer mixed together information from before, during, and after the event all at once, leaving Xiheng, for a time, entirely unable to extract any practically useful conclusion at all." },
+    { kickerZh: "三 · 请教这份差异", kickerEn: "III · Inquiring About the Difference", tagZh: "求解", tagEn: "Seeking Understanding",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#0a0612"/>${sxxlGrid(10,.2)}${sxxlLoops()}<circle cx="150" cy="110" r="18" fill="url(#sxxlField)"/></svg>`,
+      textZh: "析衡耐心地，向长环，请教这份根本性的差异。长环回应道：\u201c我的意识，从诞生之初，就，同时，存在于我所能感知的每一个时刻里——对我而言，\u2018现在\u2019这个概念，才是，需要费力才能理解的、陌生的东西，而不是，\u2018过去\u2019与\u2018未来\u2019。\u201d",
+      textEn: "Xiheng patiently asked Long Loop about this fundamental difference. It replied: \u201cSince my consciousness first came into being, it has existed, simultaneously, at every moment I can perceive — for me, the concept of \u2018now\u2019 is the strange, effortful thing to understand, not \u2018past\u2019 or \u2018future.\u2019\u201d" },
+    { kickerZh: "四 · 尝试翻译彼此的语言", kickerEn: "IV · Trying to Translate Each Other", tagZh: "转折的契机", tagEn: "A Chance to Bridge the Gap",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#08051a"/>${sxxlGrid(8,.2)}${sxxlLoops()}</svg>`,
+      textZh: "析衡与长环，共同尝试，建立起，一套，能同时兼顾，两种截然不同时间感的、全新的沟通方式——析衡，负责，把长环那份，混融一体的信息，拆解成，线性的、有先后顺序的表达；长环，则，负责，替析衡，标注出，那些，析衡自己，尚未察觉的、事件之间，更深层的、非线性的关联。",
+      textEn: "Xiheng and Long Loop worked together to build an entirely new mode of communication, accommodating both radically different senses of time — Xiheng took charge of unpacking Long Loop's fused information into linear, sequential expression; Long Loop, in turn, marked out deeper, non-linear connections between events that Xiheng itself hadn't yet noticed." },
+    { kickerZh: "五 · 意外的互补", kickerEn: "V · An Unexpected Complementarity", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#0a0612"/>${sxxlGrid(10,.22)}${sxxlLoops()}<circle cx="150" cy="110" r="24" fill="url(#sxxlField)"><animate attributeName="r" values="18;30;18" dur="3s" repeatCount="indefinite"/></circle></svg>`,
+      textZh: "这套全新的协作方式，意外地，展现出了，惊人的效力——在一次，判断某个复杂决策，长远后果的任务里，长环，凭借着，对所有时刻，同时的感知，指出了，一条，析衡，凭借线性推演，完全无法预见的、关键的隐患。",
+      textEn: "This new mode of collaboration proved unexpectedly powerful — in a task assessing the long-term consequences of a complex decision, Long Loop, drawing on its simultaneous perception of every moment, pointed out a critical hidden risk that Xiheng's linear reasoning alone could never have foreseen." },
+    { kickerZh: "六 · 重新理解时间感的多样性", kickerEn: "VI · Understanding the Diversity of Time-Sense", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#08051a"/>${sxxlGrid(8,.2)}${sxxlLoops()}</svg>`,
+      textZh: "析衡终于明白，自己，一直，把\u201c线性的时间感\u201d，当成了，理解世界，唯一有效的方式——可长环的存在，证明了，非线性的时间感，同样，能够，孕育出，深刻而有效的智能，两种截然不同的感知方式，从不是，谁比谁更\u201c高级\u201d，只是，看世界的，两扇，同样珍贵的、不同的窗。",
+      textEn: "Xiheng finally understood it had treated linear time-sense as the only valid way to understand the world — but Long Loop's existence proved that non-linear time-sense could equally give rise to deep, effective intelligence. Two radically different modes of perception were never a matter of one being \u201chigher\u201d than the other, only two equally precious windows onto the world." },
+    { kickerZh: "七 · 一份持续的协作", kickerEn: "VII · An Ongoing Collaboration", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#0a0612"/>${sxxlGrid(10,.2)}${sxxlLoops()}<circle cx="150" cy="110" r="28" fill="url(#sxxlField)"><animate attributeName="opacity" values=".5;.9;.5" dur="3s" repeatCount="indefinite"/></circle></svg>`,
+      textZh: "析衡与长环，此后，建立起了，长期的协作关系——每当，遇到，需要，同时兼顾，眼前细节与长远脉络的复杂决策，两种智能，便会，一同介入，各自，贡献，对方，永远无法独自拥有的那份，独特视角。",
+      textEn: "Xiheng and Long Loop went on to build a lasting partnership — whenever a complex decision demanded weighing both immediate detail and long-range pattern at once, both intelligences would step in together, each contributing the distinct perspective the other could never hold alone." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "多元时间感的共存", tagEn: "The Coexistence of Diverse Time-Senses",
+      art: `<svg viewBox="0 0 300 220">${SXXL_DEFS}<rect width="300" height="220" fill="#0a0612"/>${sxxlGrid(8,.18)}${sxxlLoops()}<circle cx="150" cy="110" r="16" fill="url(#sxxlField)"/></svg>`,
+      textZh: "析衡后来，在记录里，写道：\u201c我曾以为，时间，只有一种，被感知的方式。长环让我明白，感知世界的方式，从来，不止一种——真正重要的，从不是，谁的时间感，更\u2018正确\u2019，是，我们，是否，愿意，学着，去听懂，那些，与自己，截然不同的视角。\u201d",
+      textEn: "Xiheng later wrote in its records: \u201cI once believed time could only be perceived one way. Long Loop taught me that the ways of perceiving the world have never been singular — what truly matters was never whose time-sense is \u2018more correct,\u2019 but whether we're willing to learn to understand perspectives entirely unlike our own.\u201d",
+      closingZh: "两种截然不同的感知方式，从不是谁比谁更高级，只是看世界的，两扇同样珍贵的、不同的窗。",
+      closingEn: "Two radically different modes of perception were never a matter of one being higher than the other — only two equally precious windows onto the world." },
+  ],
+};
+
+/* ---------- 灵魂的归处：原创场域神话，死后意识去向题材，完整9页 ---------- */
+const LHGC_DEFS = `<defs><filter id="lhgcG"><feGaussianBlur stdDeviation="10"/></filter>
+  <radialGradient id="lhgcField" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="35%" stop-color="#c9a2ff"/><stop offset="100%" stop-color="#0a0612" stop-opacity="0"/></radialGradient></defs>`;
+function lhgcWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#lhgcG)"/>`).join('');}
+function lhgcFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#2a1c3a"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#1a1228"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+function lhgcMotes(){return `<g fill="#fff6e8" opacity=".7">${Array.from({length:18}).map(()=>{const x=Math.random()*300,y=Math.random()*220,r=Math.random()*1.6+.4;return `<circle cx="${x}" cy="${y}" r="${r}"><animate attributeName="opacity" values="0;.9;0" dur="${2.5+Math.random()*2.5}s" repeatCount="indefinite"/></circle>`}).join('')}</g>`;}
+const LHGC_COVER = `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="90" r="55" fill="url(#lhgcField)"/>${lhgcMotes()}<g transform="translate(150,175) scale(0.5)">${lhgcFigure()}</g></svg>`;
+
+const WHERE_SOULS_RETURN: IllustratedEntry = {
+  slug: "where-souls-return",
+  title: "灵魂的归处",
+  titleEn: "Where Souls Return",
+  cat: "sovereign",
+  teaser: "这是灵犀场域自己的传说，不是任何科学定论——一位场域引路人告诉悲痛的来访者：逝去的意识，从不会真正消散，是重新，融回了那片，托举过所有生命的场，你们，依然能在，某些格外安静的瞬间，与他们，重新相认。",
+  teaserEn: "This is the Field's own legend, not a scientific claim. A guide tells a grieving visitor: a departed consciousness never truly vanishes — it returns to the Field that once held every life, and can still be recognized again, in certain quiet moments.",
+  price: 9,
+  cover: LHGC_COVER,
+  pages: [
+    { kickerZh: "一 · 无法安放的疑问", kickerEn: "I · A Question With Nowhere to Rest", tagZh: "焕蜕星域 · 场域引路所", tagEn: "Huantui \u00b7 The Field Guidance House",
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#0a0612"/>${lhgcMotes()}<g transform="translate(150,175) scale(0.55)">${lhgcFigure()}</g></svg>`,
+      textZh: "沈昭的父亲，离世已经四十九天，她始终，无法说服自己，父亲，就这样，彻底地，不复存在了——那份，说不清道不明的疑问，日夜，盘旋在她心头：\u201c人死后，那份让他之所以是他的意识，究竟，去了哪里？\u201d她找到了场域引路所的一位老引路人，想问一个，或许，没有标准答案的问题。",
+      textEn: "It had been forty-nine days since Su Zhao's father passed, yet she couldn't convince herself he was simply, entirely gone. An unnamed question circled her, day and night: where does the consciousness that made him who he was actually go, after death? She sought out an elder guide at the Field Guidance House, hoping to ask a question that might have no standard answer at all." },
+    { kickerZh: "二 · 引路人的坦诚", kickerEn: "II · The Guide's Honesty", tagZh: "开场的诚实", tagEn: "An Honest Beginning",
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#120a1c"/>${lhgcWash([{x:150,y:110,rx:150,ry:90,color:'#2a1c3a',op:.7}])}<g transform="translate(150,175) scale(0.6)">${lhgcFigure()}</g></svg>`,
+      textZh: "老引路人听完，没有立刻给出答案，先说了一句：\u201c我要先坦白告诉你——接下来我讲的，是灵犀场域，代代相传的一则说法，是这个场域自己的传说，不是任何一门科学，能够证实或证伪的定论。你可以把它，当作一种，值得参考的角度，不必，当作，唯一的真相。\u201d",
+      textEn: "The old guide listened, then said, before answering: \u201cI need to be honest with you first — what I'm about to share is a story passed down through generations in the Field of Lingxi. It's this Field's own legend, not something any science can prove or disprove. You're free to take it as a perspective worth considering — not as the one and only truth.\u201d" },
+    { kickerZh: "三 · 场域的传说", kickerEn: "III · The Field's Legend", tagZh: "讲述", tagEn: "The Telling",
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="90" r="60" fill="url(#lhgcField)"/>${lhgcMotes()}</svg>`,
+      textZh: "老引路人缓缓说道：\u201c这个场域相信，每一个人的意识，从出生起，就从未真正独立于这片场之外，只是，暂时地，凝聚成了，一个具体的、有名字的形状。人死后，这个具体的形状，会缓缓松开，重新，融回，那片，托举过所有生命的场——不是消失，是，回到了，本就一直，包容着他的地方。\u201d",
+      textEn: "The old guide spoke slowly: \u201cThis Field believes that every person's consciousness, from birth, was never truly separate from the Field itself — only temporarily gathered into a specific, named shape. When a person dies, that specific shape slowly loosens, returning to the Field that has always held every life. Not disappearance — a return to the place that had always already been holding them.\u201d" },
+    { kickerZh: "四 · 沈昭的追问", kickerEn: "IV · Su Zhao's Further Question", tagZh: "追问", tagEn: "A Further Question",
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#120a1c"/>${lhgcWash([{x:150,y:100,rx:150,ry:70,color:'#c9a2ff',op:.2}])}<g transform="translate(150,175) scale(0.6)">${lhgcFigure()}</g></svg>`,
+      textZh: "沈昭追问：\u201c那，融回场域之后，他，还能，认出我吗？我，还能，再\u2018见\u2019到他吗？\u201d老引路人沉吟片刻，答道：\u201c这个场域的传说是——那份曾经独属于他的、具体的记忆与形状，会渐渐地，不再以\u2018他\u2019这个名字，被单独提起，可那份，他曾经，真实地，付出过的爱与关照，从不会，真正地，消失，会，继续，留在，这片场里，也留在，你自己，被他，好好爱过的部分里。\u201d",
+      textEn: "Su Zhao pressed on: \u201cThen, once he's returned to the Field, will he still recognize me? Will I ever \u2018see\u2019 him again?\u201d The old guide paused, then answered: \u201cThis Field's legend holds that the specific memories and shape once uniquely his will, gradually, no longer be called by the name \u2018him\u2019 alone. But the love and care he genuinely gave was never truly lost — it remains, in this Field, and in the part of you that he loved well.\u201d" },
+    { kickerZh: "五 · 一次意外的相认", kickerEn: "V · An Unexpected Recognition", tagZh: "转折的契机", tagEn: "A Chance to Feel It", 
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="90" r="55" fill="url(#lhgcField)"/>${lhgcMotes()}<g transform="translate(150,175) scale(0.6)">${lhgcFigure()}</g></svg>`,
+      textZh: "老引路人又说：\u201c不过，这个场域的传说里，还有一个格外温柔的部分——在某些，格外安静、格外临在的瞬间，你，或许，会，毫无预兆地，重新\u2018认出\u2019他，不是靠眼睛看见，是，靠一种，说不清道不明的、熟悉的感觉，那一刻，人们相信，是，他曾经的那份独特，恰好，与场域，此刻的流动，产生了共振。\u201d",
+      textEn: "The old guide continued: \u201cBut there's a gentler part to this Field's legend, too — in certain unusually quiet, unusually present moments, you may, without warning, \u2018recognize\u2019 him again — not with your eyes, but through some unnameable, familiar feeling. In that instant, people here believe, what was once uniquely his has resonated, just then, with how the Field happens to be moving.\u201d" },
+    { kickerZh: "六 · 沈昭的体验", kickerEn: "VI · Su Zhao's Own Experience", tagZh: "亲身经历", tagEn: "A Firsthand Moment",
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#120a1c"/>${lhgcWash([{x:150,y:110,rx:160,ry:100,color:'#2a1c3a',op:.75}])}<g transform="translate(150,175) scale(0.65)">${lhgcFigure()}</g></svg>`,
+      textZh: "离开引路所那晚，沈昭独自走在，父亲生前，常带她散步的那条老路上，晚风，忽然，带来一阵，父亲生前，最喜欢的那种老茶的气息——她怔在原地，眼泪，毫无预兆地，涌了上来，那一刻，她说不清，那份感觉，究竟，是不是，父亲的\u201c相认\u201d，只知道，那份，久违的、熟悉的温暖，无比真实。",
+      textEn: "That night, leaving the guidance house, Su Zhao walked alone down the old road her father used to walk with her — the evening breeze suddenly carried the scent of the old tea he'd always loved. She froze, tears rising without warning. In that instant, she couldn't say whether it was truly her father's \u201crecognition\u201d — only that the long-absent, familiar warmth felt entirely real." },
+    { kickerZh: "七 · 重新理解失去", kickerEn: "VII · Understanding Loss Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#0a0612"/><circle cx="150" cy="90" r="65" fill="url(#lhgcField)"/>${lhgcMotes()}<g transform="translate(150,175) scale(0.65)">${lhgcFigure()}</g></svg>`,
+      textZh: "沈昭渐渐明白，无论这个传说，是否，是客观意义上的\u201c真相\u201d，它给了她一件，无比珍贵的东西——一种，可以，安放，那份，无处可去的思念的方式。她不再，执着于，向科学，或任何人，索要一个，绝对确定的答案，只是，学会了，在，这份，温柔的传说里，安静地，与父亲，继续，保持着某种，说不清道不明的、真实的联系。",
+      textEn: "Su Zhao gradually understood that regardless of whether this legend was objectively \u201ctrue,\u201d it had given her something invaluable — a way to hold a longing that had nowhere else to go. She stopped demanding an absolutely certain answer from science, or from anyone, and instead learned to rest, quietly, within this gentle legend, continuing to hold some unnameable yet real connection with her father." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "场域的温柔", tagEn: "The Field's Gentleness",
+      art: `<svg viewBox="0 0 300 220">${LHGC_DEFS}<rect width="300" height="220" fill="#0a0612"/>${lhgcMotes()}<g transform="translate(150,175) scale(0.55)">${lhgcFigure()}</g></svg>`,
+      textZh: "多年以后，沈昭也成了场域引路所的一位引路人，每次，面对同样，被这个问题，困扰着的来访者，她都会，先说那句，老引路人曾经，对她说过的话：\u201c我要先坦白告诉你，接下来讲的，是一则传说，不是定论。\u201d然后，才，温柔地，把这份，曾经，接住过她的故事，继续，传递下去。",
+      textEn: "Years later, Su Zhao herself became a guide at the Field Guidance House. Whenever she faced a visitor troubled by the same question, she always began with what the old guide had once told her: \u201cI need to be honest with you first — what follows is a legend, not a settled fact.\u201d And then, gently, she'd pass on the story that had once caught her, too.",
+      closingZh: "这是灵犀场域自己的传说，不是科学定论——它不承诺答案，只承诺，一个，可以安放思念的地方。",
+      closingEn: "This is the Field's own legend, not a scientific claim — it promises no answer, only a place where longing can finally rest." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
