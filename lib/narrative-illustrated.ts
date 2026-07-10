@@ -5768,7 +5768,165 @@ const TURNED_OFF_ALARM_ILLUSTRATED: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED, SEVENTH_DAY_ILLUSTRATED, TEARING_DOWN_WALL_ILLUSTRATED, EXITING_SCRIPT_ILLUSTRATED, MIRROR_SPOKE_ILLUSTRATED, STOPPED_PLEASING_ILLUSTRATED, REWRITING_DEBT_ILLUSTRATED, ARGUMENT_NEVER_HAPPENED_ILLUSTRATED, WAITING_TO_BECOMING_ILLUSTRATED, DELETING_OLD_MAP_ILLUSTRATED, I_ALLOW_MYSELF_ILLUSTRATED, REACTION_TO_RESPONSE_ILLUSTRATED, TURNED_OFF_ALARM_ILLUSTRATED];
+/* ---------- 场域叙事·远行者系列：共享视觉素材 ---------- */
+const WF_DEFS = `<defs><filter id="wfG"><feGaussianBlur stdDeviation="9"/></filter>
+  <linearGradient id="wfSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c1408"/><stop offset="50%" stop-color="#3a2c14"/><stop offset="100%" stop-color="#d8a24a"/></linearGradient>
+  <radialGradient id="wfGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="55%" stop-color="#d8a24a"/><stop offset="100%" stop-color="#3a2c14" stop-opacity="0"/></radialGradient></defs>`;
+function wfWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#wfG)"/>`).join('');}
+function wfDust(){return `<g fill="#d8a24a" opacity=".5">${Array.from({length:12}).map(()=>{const x=Math.random()*300,y=Math.random()*160,r=Math.random()*1.3+.4;return `<circle cx="${x}" cy="${y}" r="${r}"><animate attributeName="opacity" values="0;.8;0" dur="${2.4+Math.random()*2}s" repeatCount="indefinite"/></circle>`}).join('')}</g>`;}
+function wfFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#3a2c14"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#241a0c"/>`;const staff=`<line x1="16" y1="-30" x2="20" y2="26" stroke="#1c1408" stroke-width="1.4"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}${staff}</g>`;}
+
+/* ---------- 摆渡人的问题：远行者系列 I，完整9页插画版 ---------- */
+const FC_COVER = `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<rect x="0" y="170" width="300" height="6" fill="#4a5a7a" opacity=".5"/><g transform="translate(150,175) scale(0.5)">${wfFigure()}</g></svg>`;
+
+const FERRY_CROSSING_ILLUSTRATED: IllustratedEntry = {
+  slug: "at-the-ferry-crossing",
+  title: "摆渡人的问题",
+  titleEn: "The Ferryman's Question · Wayfarer I",
+  cat: "field",
+  teaser: "摆渡人，从不问，乘客，要去哪里，只问，一件事：\u201c你，带了，多重的行李？\u201d远行者系列第一篇——一场，关于，放下的旅程，就此，启程。",
+  teaserEn: "The ferryman never asks where you're headed — only how much luggage you carry. Wayfarer series, part one — a journey about letting go begins.",
+  price: 9,
+  cover: FC_COVER,
+  pages: [
+    { kickerZh: "一 · 雾气漫过水面的渡口", kickerEn: "I · A Crossing Veiled in Mist", tagZh: "焕蜕星域 · 远行者系列 I", tagEn: "Huantui \u00b7 Wayfarer Series I",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<rect x="0" y="170" width="300" height="6" fill="#4a5a7a" opacity=".5"/><g transform="translate(150,175) scale(0.55)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，站在渡口，望着，雾气，缓缓，漫过水面。他，是，一位，远行者，此刻，正，处在，人生一次，格外艰难的抉择路口——身后，是，早已，熟悉、却，令他，窒息的旧生活；渡口对岸，是，一片，模糊、却，隐约，透着，某种，可能性的未知。",
+      textEn: "Shen Xing stood at the ferry crossing, watching mist slowly settle over the water. A wayfarer, he now stood at a particularly difficult crossroads in life — behind him, an old life, familiar yet suffocating; across the crossing, a hazy unknown, faintly carrying some possibility." },
+    { kickerZh: "二 · 摆渡人的怪异问题", kickerEn: "II · The Ferryman's Strange Question", tagZh: "开场", tagEn: "The Encounter",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:150,ry:90,color:'#3a2c14',op:.7}])}<g transform="translate(105,175) scale(0.45)">${wfFigure()}</g><g transform="translate(195,175) scale(0.45)">${wfFigure()}</g></svg>`,
+      textZh: "一位，须发花白的摆渡人，撑着船，缓缓，靠近。沈行，正，准备，说出，自己，此行的目的地，摆渡人，却，先，开口了，问了一个，格外奇怪的问题：\u201c你，带了，多重的行李？\u201d沈行，怔住了，一时，不知，该，如何，回答。",
+      textEn: "A white-haired ferryman poled his boat slowly closer. Just as Shen Xing prepared to state his destination, the ferryman spoke first, asking an oddly specific question: \u201cHow much luggage do you carry?\u201d Shen Xing froze, momentarily unsure how to answer." },
+    { kickerZh: "三 · 具体清点行李", kickerEn: "III · Taking Inventory", tagZh: "求解", tagEn: "Seeking Understanding",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:150,ry:70,color:'#d8a24a',op:.2}])}<g transform="translate(150,175) scale(0.6)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，低头，看着，自己，随身，携带的、一只，格外沉重的布包，第一次，认真地，问，摆渡人：\u201c这份，行李，为什么，如此重要？\u201d摆渡人，缓缓，说道：\u201c这条河，只能，承载，一定的重量，超载的船，永远，到不了，对岸。\u201d",
+      textEn: "Shen Xing looked down at the unusually heavy cloth bag he carried, asking the ferryman earnestly, for the first time: \u201cWhy does this luggage matter so much?\u201d The ferryman said slowly: \u201cThis river can only bear so much weight. An overloaded boat never reaches the far bank.\u201d" },
+    { kickerZh: "四 · 打开行李清点", kickerEn: "IV · Opening the Bag", tagZh: "转折的契机", tagEn: "A Chance to See Differently",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:160,ry:100,color:'#3a2c14',op:.75}])}<g transform="translate(150,175) scale(0.6)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，缓缓，打开，那只，随身携带了，许多年的布包，第一次，认真地，逐一，清点，里面的东西——除了，几件，必需的衣物，剩下的，几乎，全是，各种，说不清道不明的旧怨、旧悔、以及，对未来的，过度焦虑。",
+      textEn: "Shen Xing slowly opened the bag he'd carried for years, earnestly taking inventory of its contents for the first time — beyond a few necessary garments, nearly everything else turned out to be old grudges, old regrets, and excessive anxiety about the future." },
+    { kickerZh: "五 · 沉的从来不是包裹", kickerEn: "V · What Weighs Was Never the Bag", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:180,ry:120,color:'#fff6e8',op:.25}])}<g transform="translate(105,175) scale(0.45)">${wfFigure()}</g><g transform="translate(195,175) scale(0.45)">${wfFigure()}</g></svg>`,
+      textZh: "摆渡人，看着，这一切，缓缓，说道：\u201c沉的，从来，不是，包裹本身，是，你，还没，放下的那个决定——要不要，走。\u201d沈行，猛然，怔住——他，这才，明白，自己，此刻，真正的犹豫，从不是，该往哪里去，是，该不该，放下，身后那份，早已，过时的重量。",
+      textEn: "Watching this, the ferryman said slowly: \u201cWhat weighs isn't the bundle itself — it's the decision you haven't yet let go of: whether to leave.\u201d Shen Xing froze, suddenly understanding: his true hesitation was never about where to go, but whether to release the outdated weight behind him." },
+    { kickerZh: "六 · 逐一放下", kickerEn: "VI · Setting Down, One by One", tagZh: "行动", tagEn: "Taking Action",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:170,ry:110,color:'#3a2c14',op:.7}])}<g transform="translate(150,175) scale(0.6)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，深吸一口气，开始，一件一件，郑重地，把，那些，旧怨、旧悔，从，布包里，取出，放在，渡口的石阶上——每，放下一件，肩上的重量，都，明显地，轻了一分，那份，长期，压着他的沉重感，也，随之，渐渐，松动。",
+      textEn: "Shen Xing took a deep breath, and began, one by one, solemnly removing the old grudges and regrets from the bag, setting them on the stone steps of the crossing — with each one set down, the weight on his shoulders visibly lightened, the long-held heaviness gradually loosening." },
+    { kickerZh: "七 · 轻装上船", kickerEn: "VII · Boarding Light", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.3}])}${wfDust()}</svg>`,
+      textZh: "清点完毕，沈行，手里，只，剩下，一只，格外轻便的行囊。他，郑重地，向，摆渡人，道谢，踏上了，渡船——船，缓缓，驶向，对岸，那份，前所未有的、轻盈的自在感，让，沈行，第一次，对，这趟，未知的旅程，感到，由衷的期待，而，非，恐惧。",
+      textEn: "Inventory complete, Shen Xing was left with only a remarkably light bundle. He thanked the ferryman solemnly and boarded the boat — as it drifted toward the far bank, that unprecedented, weightless ease left him, for the first time, genuinely looking forward to the unknown journey ahead, rather than fearing it." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "旅程的第一课", tagEn: "The Journey's First Lesson", 
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<g transform="translate(150,175) scale(0.5)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，后来，把，这份，渡口的领悟，记在了，随身的笔记里：\u201c旅程的第一课，从不是，弄清楚，要去哪里，是，先，弄清楚，自己，此刻，究竟，还，背着，多重的、早该放下的旧行李。\u201d这，正是，远行者系列，漫长旅途的，第一站。",
+      textEn: "Shen Xing later recorded this crossing's lesson in his travel journal: \u201cThe journey's first lesson was never figuring out where to go — it's first figuring out how much outdated luggage you're still carrying, that should have been set down long ago.\u201d This was the first stop of the Wayfarer's long journey.",
+      closingZh: "沉的从来不是包裹本身，是你还没放下的那个决定——要不要走。",
+      closingEn: "What weighs was never the bundle itself — it's the decision you haven't yet let go of: whether to leave." },
+  ],
+};
+
+/* ---------- 灯塔照向的方向：远行者系列 II，完整9页插画版 ---------- */
+const WFLH_COVER = `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<circle cx="230" cy="70" r="10" fill="url(#wfGlow)"/><rect x="225" y="70" width="10" height="90" fill="#241a0c"/><g transform="translate(120,175) scale(0.5)">${wfFigure()}</g></svg>`;
+
+const LIGHTHOUSE_ILLUSTRATED: IllustratedEntry = {
+  slug: "under-the-lighthouse",
+  title: "灯塔照向的方向",
+  titleEn: "Where the Lighthouse Points · Wayfarer II",
+  cat: "field",
+  teaser: "灯塔的光，是，照给，远处的船看的，不是，照给，你脚下的路看的。远行者系列第二篇——沈行，在，灯塔下，学会了，分辨，两种，截然不同的光。",
+  teaserEn: "The lighthouse beam is for ships far out at sea — not for the ground beneath your feet. Wayfarer series, part two.",
+  price: 9,
+  cover: WFLH_COVER,
+  pages: [
+    { kickerZh: "一 · 一座格外明亮的灯塔", kickerEn: "I · An Especially Bright Lighthouse", tagZh: "焕蜕星域 · 远行者系列 II", tagEn: "Huantui \u00b7 Wayfarer Series II",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<circle cx="230" cy="70" r="12" fill="url(#wfGlow)"/><rect x="225" y="70" width="10" height="90" fill="#241a0c"/><g transform="translate(120,175) scale(0.55)">${wfFigure()}</g></svg>`,
+      textZh: "渡过，那条河后，沈行，来到了，一处，海边的悬崖——崖边，矗立着，一座，格外明亮的灯塔，光束，穿透夜色，照向，远方，海面上，隐约，可见，几艘，正在，航行的船只。沈行，在，灯塔下，驻足，久久，凝望。",
+      textEn: "Crossing that river, Shen Xing arrived at a seaside cliff — an especially bright lighthouse stood at its edge, beam piercing the night, reaching far out to sea, where a few faint ships could be seen sailing. Shen Xing lingered beneath the lighthouse, gazing for a long while." },
+    { kickerZh: "二 · 脚下的黑暗", kickerEn: "II · Darkness Underfoot", tagZh: "困惑", tagEn: "Confusion",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:150,ry:90,color:'#3a2c14',op:.7}])}<g transform="translate(150,175) scale(0.6)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，注意到，一件，格外奇怪的事——灯塔的光，如此，明亮，却，几乎，完全，照不到，自己，脚下的这段，格外崎岖的山路。他，只能，深一脚浅一脚地，摸索着，前进，心里，生出，一种，说不清道不明的困惑。",
+      textEn: "Shen Xing noticed something strange — the lighthouse beam, so bright, barely illuminated the rugged mountain path right beneath his own feet. He had to feel his way forward, step by uncertain step, an unnameable confusion rising in him." },
+    { kickerZh: "三 · 请教守塔人", kickerEn: "III · Consulting the Keeper", tagZh: "求解", tagEn: "Seeking Understanding",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:150,ry:70,color:'#d8a24a',op:.2}])}<g transform="translate(105,175) scale(0.45)">${wfFigure()}</g><g transform="translate(195,175) scale(0.45)">${wfFigure()}</g></svg>`,
+      textZh: "灯塔下，一位，守塔人，正，安静地，维护着，灯塔的机关。沈行，忍不住，问道：\u201c这灯塔的光，如此明亮，为什么，却，照不亮，我，脚下的路？\u201d守塔人，笑了笑，说：\u201c因为，它，本来，就，不是，照给你的路看的。\u201d",
+      textEn: "Beneath the lighthouse, a keeper quietly maintained its mechanism. Shen Xing couldn't help but ask: \u201cThis light is so bright — why can't it light my path underfoot?\u201d The keeper smiled: \u201cBecause it was never meant to light your path at all.\u201d" },
+    { kickerZh: "四 · 灯塔真正的用途", kickerEn: "IV · The Lighthouse's True Purpose", tagZh: "顿悟的铺垫", tagEn: "Building to Realization",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:160,ry:100,color:'#3a2c14',op:.75}])}<circle cx="230" cy="70" r="12" fill="url(#wfGlow)"/></svg>`,
+      textZh: "守塔人，继续，说道：\u201c灯塔的光，是，照给，远处的船看的，让，它们，知道，礁石，在哪里，该，往哪个方向，绕行——它，从不是，为了，照亮，某一个人，脚下的每一步。你，脚下的路，需要，你，自己，去，一步步，摸索着，走出来。\u201d",
+      textEn: "The keeper continued: \u201cThe light is for ships far out at sea — letting them know where the rocks lie, which way to steer clear. It was never meant to light every step beneath any one person's feet. The path under your own feet, you must feel your own way through.\u201d" },
+    { kickerZh: "五 · 重新理解指引", kickerEn: "V · Understanding Guidance Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:180,ry:120,color:'#fff6e8',op:.25}])}<g transform="translate(150,175) scale(0.6)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，忽然，明白——他，此前，一直，习惯性地，向外，寻找，某种，如同灯塔一样，格外明亮、格外权威的指引，期待着，它，能够，替，自己，照亮，人生路上，每一步的具体走法，却，忘了，那些，宏大的道理与指引，从不是，用来，替代，自己，脚下，具体的摸索与实践的。",
+      textEn: "Shen Xing suddenly understood — he'd always habitually sought some bright, authoritative guidance like a lighthouse, hoping it could light every specific step of his life's path, forgetting that grand principles and guidance were never meant to replace his own concrete groping and practice underfoot." },
+    { kickerZh: "六 · 学会自己摸索", kickerEn: "VI · Learning to Feel His Own Way", tagZh: "转变", tagEn: "The Shift",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:170,ry:110,color:'#3a2c14',op:.7}])}<g transform="translate(150,175) scale(0.65)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，不再，抱怨，灯塔的光，照不亮，脚下的路，而是，学着，弯下腰，用手，仔细，触摸，山路上的，每一处，石块与缝隙，凭借，自己的感知，一步步，稳稳当当地，向前，摸索。",
+      textEn: "Shen Xing stopped resenting the lighthouse for failing to light his path, and instead learned to bend down, carefully feeling each stone and crevice along the mountain trail with his own hands, moving forward step by steady step, guided by his own senses." },
+    { kickerZh: "七 · 走出山路", kickerEn: "VII · Emerging From the Trail", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.3}])}${wfDust()}</svg>`,
+      textZh: "天色渐亮时，沈行，终于，凭借，自己的双手与双脚，走出了，那段，崎岖的山路。回头，望向，那座，依然，明亮的灯塔，他，第一次，怀着，纯粹的敬意，而，非，依赖，看待，这份，遥远却，珍贵的指引。",
+      textEn: "As dawn broke, Shen Xing finally emerged from the rugged trail, using only his own hands and feet. Looking back at the still-bright lighthouse, he regarded this distant yet precious guidance, for the first time, with pure respect rather than dependence." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "旅程的第二课", tagEn: "The Journey's Second Lesson", 
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<g transform="translate(150,175) scale(0.5)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，在，笔记里，写道：\u201c旅程的第二课：宏大的指引，负责，标注方向，具体的每一步，永远，需要，自己，亲手，摸索出来。分不清，这两种光的区别，人，很容易，站在原地，埋怨，光，不够亮。\u201d",
+      textEn: "Shen Xing wrote in his journal: \u201cThe journey's second lesson: grand guidance marks direction; every concrete step must always be felt out by one's own hand. Failing to tell these two lights apart, a person easily stands still, blaming the light for not being bright enough.\u201d",
+      closingZh: "灯塔的光，是照给远处的船看的，不是照给你脚下的路看的——脚下的路，需要自己一步步摸索出来。",
+      closingEn: "The lighthouse beam is for ships far out at sea, not for the ground beneath your feet — that path must be felt out step by step, on your own." },
+  ],
+};
+
+/* ---------- 不收钱的镜子：远行者系列 III，完整9页插画版 ---------- */
+const MK_COVER = `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<rect x="120" y="70" width="60" height="90" rx="4" fill="none" stroke="#d8a24a" stroke-width="1.5" opacity=".5"/><g transform="translate(150,185) scale(0.4)">${wfFigure()}</g></svg>`;
+
+const MARKETPLACE_MIRROR_ILLUSTRATED: IllustratedEntry = {
+  slug: "at-the-marketplace",
+  title: "不收钱的镜子",
+  titleEn: "The Mirror That Takes No Money · Wayfarer III",
+  cat: "field",
+  teaser: "集市里，有一面镜子，照出，你，从没敢做的那个决定，之后的样子——但，它，不收钱。远行者系列第三篇——沈行，在，集市，照见了，另一种人生。",
+  teaserEn: "A mirror in the market shows the life after the decision you never dared make — and it doesn't take money. Wayfarer III.",
+  price: 9,
+  cover: MK_COVER,
+  pages: [
+    { kickerZh: "一 · 热闹的集市", kickerEn: "I · A Bustling Market", tagZh: "焕蜕星域 · 远行者系列 III", tagEn: "Huantui \u00b7 Wayfarer Series III",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<g transform="translate(150,185) scale(0.5)">${wfFigure()}</g></svg>`,
+      textZh: "离开，灯塔后，沈行，来到了，一处，热闹非凡的集市——摊位，鳞次栉比，叫卖声，此起彼伏。逛，到，集市深处，一处，格外安静的角落，沈行，看见，一面，摆放着的、古旧的镜子，前面，挂着，一块，木牌，写着：\u201c照见另一种人生，不收钱。\u201d",
+      textEn: "Leaving the lighthouse, Shen Xing arrived at a bustling market — stalls packed close, hawkers' calls rising all around. Deep in the market, in an unusually quiet corner, he saw an old, weathered mirror on display, a wooden sign before it reading: \u201cSee another life. No charge.\u201d" },
+    { kickerZh: "二 · 好奇地照进镜子", kickerEn: "II · Peering In, Curious", tagZh: "开场", tagEn: "The Encounter",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:150,ry:90,color:'#3a2c14',op:.7}])}<rect x="120" y="70" width="60" height="90" rx="4" fill="none" stroke="#d8a24a" stroke-width="1.5" opacity=".6"/></svg>`,
+      textZh: "沈行，将信将疑，凑近，镜子——镜面，缓缓，浮现出，一幅，格外具体的画面：多年前，一次，他，因为，害怕风险，而，最终，没有，付诸行动的、那个，创业计划，此刻，在，镜子里，正，以一种，格外充实、格外精彩的样子，真实地，上演着。",
+      textEn: "Skeptical, Shen Xing leaned in close to the mirror — its surface slowly revealed an unusually specific scene: a business venture he'd once, years ago, abandoned out of fear of risk, was now playing out, vividly, richly, in the mirror, as a life fully lived." },
+    { kickerZh: "三 · 令人心痛的对比", kickerEn: "III · A Painful Comparison", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:150,ry:70,color:'#d8a24a',op:.2}])}<g transform="translate(150,185) scale(0.55)">${wfFigure()}</g></svg>`,
+      textZh: "看着，镜子里，那个，选择了，勇敢冒险的自己，此刻，过着，格外精彩的人生，沈行，心里，涌起，一阵，格外强烈的、说不清道不明的懊悔与心痛——他，忍不住，问自己：\u201c如果，当年，我，也，做出，同样的选择，此刻，会不会，也，站在，那样的位置上？\u201d",
+      textEn: "Watching the version of himself who'd dared to take that risk, now living such a vivid life, Shen Xing felt an intense, unnameable regret and ache — unable to stop himself from asking: \u201cIf I'd made the same choice back then, would I be standing in that place too, right now?\u201d" },
+    { kickerZh: "四 · 镜子背后的声音", kickerEn: "IV · A Voice From Behind the Mirror", tagZh: "转折的契机", tagEn: "A Chance to See Differently",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:160,ry:100,color:'#3a2c14',op:.75}])}<g transform="translate(105,185) scale(0.4)">${wfFigure()}</g><g transform="translate(195,185) scale(0.4)">${wfFigure()}</g></svg>`,
+      textZh: "一位，坐在，镜子旁，售卖，其他物件的老妇人，看出，了，沈行的懊悔，缓缓，说道：\u201c这面镜子，从来，不是，为了，让人，懊悔过去，是，为了，提醒，人们，此刻，还，来得及，为，下一个，同样重要的决定，做出，不一样的选择。\u201d",
+      textEn: "An old woman selling other wares beside the mirror noticed Shen Xing's regret, and said slowly: \u201cThis mirror was never meant to make people regret the past. It's meant to remind them there's still time, right now, to make a different choice for the next equally important decision.\u201d" },
+    { kickerZh: "五 · 重新理解镜子的意义", kickerEn: "V · Understanding the Mirror Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:180,ry:120,color:'#fff6e8',op:.25}])}<rect x="120" y="70" width="60" height="90" rx="4" fill="none" stroke="#fff6e8" stroke-width="1.5" opacity=".5"/></svg>`,
+      textZh: "沈行，怔怔地，望着，镜子，忽然，明白——那份，看见\u201c另一种人生\u201d，带来的意义，从不该是，沉溺于，对，过去的懊悔，是，郑重地，提醒着，自己，眼前，正在，面临的、这趟，远行本身，同样，是，一个，需要，勇敢做出的、格外重要的选择。",
+      textEn: "Shen Xing stared at the mirror, suddenly understanding — the meaning of seeing \u201canother life\u201d was never to dwell in regret over the past, but to solemnly remind himself that the journey he now faced was, itself, an equally important choice requiring courage." },
+    { kickerZh: "六 · 郑重地告别镜子", kickerEn: "VI · A Solemn Farewell to the Mirror", tagZh: "转变", tagEn: "The Shift",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="#180e04"/>${wfWash([{x:150,y:110,rx:170,ry:110,color:'#3a2c14',op:.7}])}<g transform="translate(150,185) scale(0.6)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，向，老妇人，郑重地，道谢，转身，离开了，那面镜子——他，不再，回头，去看，镜子里，那个，\u201c如果当年\u201d的自己，而是，把，全部的心力，重新，聚焦，回到，眼前，这趟，正在，进行的旅程上。",
+      textEn: "Shen Xing thanked the old woman solemnly, turning away from the mirror — no longer looking back at the \u201cwhat if\u201d version of himself, refocusing all his energy on the journey unfolding right before him now." },
+    { kickerZh: "七 · 离开集市", kickerEn: "VII · Leaving the Market", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.3}])}${wfDust()}</svg>`,
+      textZh: "走出，集市时，沈行，脚步，格外，坚定——那份，曾经，令他，心痛的懊悔，已经，转化成了，一份，格外郑重的决心：这一次，无论，前路，多么，充满不确定，他，都，不会，再，因为，恐惧，而，让，未来的自己，再，站在，某面镜子前，懊悔，此刻的犹豫。",
+      textEn: "Walking out of the market, Shen Xing's steps felt unusually resolute — the regret that had once ached had transformed into a solemn determination: this time, however uncertain the road ahead, he would not let fear leave some future self standing before a mirror, regretting this moment's hesitation." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "旅程的第三课", tagEn: "The Journey's Third Lesson", 
+      art: `<svg viewBox="0 0 300 220">${WF_DEFS}<rect width="300" height="220" fill="url(#wfSky)"/>${wfDust()}<g transform="translate(150,185) scale(0.5)">${wfFigure()}</g></svg>`,
+      textZh: "沈行，在，笔记里，写道：\u201c旅程的第三课：那面，照见\u2018另一种人生\u2019的镜子，从不是，为了，让人，沉溺过去，是，为了，提醒，眼前的选择，同样，值得，被，认真对待。\u201d",
+      textEn: "Shen Xing wrote in his journal: \u201cThe journey's third lesson: that mirror showing \u2018another life\u2019 was never meant to trap us in the past — it's meant to remind us the choice right in front of us deserves just as much courage.\u201d",
+      closingZh: "照见另一种人生的镜子，从不是为了让人沉溺过去，是为了提醒，眼前的选择，同样值得被认真对待。",
+      closingEn: "A mirror showing another life was never meant to trap us in the past — it's meant to remind us the choice in front of us deserves the same courage." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED, SEVENTH_DAY_ILLUSTRATED, TEARING_DOWN_WALL_ILLUSTRATED, EXITING_SCRIPT_ILLUSTRATED, MIRROR_SPOKE_ILLUSTRATED, STOPPED_PLEASING_ILLUSTRATED, REWRITING_DEBT_ILLUSTRATED, ARGUMENT_NEVER_HAPPENED_ILLUSTRATED, WAITING_TO_BECOMING_ILLUSTRATED, DELETING_OLD_MAP_ILLUSTRATED, I_ALLOW_MYSELF_ILLUSTRATED, REACTION_TO_RESPONSE_ILLUSTRATED, TURNED_OFF_ALARM_ILLUSTRATED, FERRY_CROSSING_ILLUSTRATED, LIGHTHOUSE_ILLUSTRATED, MARKETPLACE_MIRROR_ILLUSTRATED];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);

@@ -63,9 +63,6 @@ export const NARRATIVES: Narrative[] = [
 
   // ───────── 场域叙事（18 · $9）─────────
   // 远行者系列 · 八篇（已发布，可读）
-  { slug: "at-the-ferry-crossing", title: "摆渡人的问题", titleEn: "The Ferryman's Question · Wayfarer I", cat: "field", teaser: "摆渡人从不问乘客要去哪里，只问一件事：你带了多重的行李？远行者系列第一篇。", teaserEn: "The ferryman never asks where you're headed — only how much luggage you carry. Wayfarer series, part one." , price: 9 },
-  { slug: "under-the-lighthouse", title: "灯塔照向的方向", titleEn: "Where the Lighthouse Points · Wayfarer II", cat: "field", teaser: "灯塔的光是照给远处的船看的，不是照给你脚下的路看的。远行者系列第二篇。", teaserEn: "The lighthouse beam is for ships far out at sea — not for the ground beneath your feet. Wayfarer series, part two.", price: 9 },
-  { slug: "at-the-marketplace", title: "不收钱的镜子", titleEn: "The Mirror That Takes No Money · Wayfarer III", cat: "field", teaser: "集市里有一面镜子，照出你从没敢做的那个决定之后的样子——但它不收钱。远行者系列第三篇。", teaserEn: "A mirror in the market shows the life after the decision you never dared make — and it doesn't take money. Wayfarer III.", price: 9 },
   { slug: "above-the-snowline", title: "雪线之外的寂静", titleEn: "Silence Beyond the Snowline · Wayfarer IV", cat: "field", teaser: "过了雪线，山下所有替你做决定的声音都到不了这个海拔，剩下的，只有你自己。远行者系列第四篇。", teaserEn: "Past the snowline, none of the voices that decide for you can survive the altitude. Wayfarer series, part four.", price: 9 },
   { slug: "inside-the-bell-tower", title: "敲钟人的分寸", titleEn: "The Bell-Ringer's Restraint · Wayfarer V", cat: "field", teaser: "敲钟人最难的工作，从来不是敲钟，是分辨什么时候不该敲。远行者系列第五篇。", teaserEn: "The bell-ringer's hardest task was never ringing the bell — it's knowing when not to. Wayfarer series, part five.", price: 9 },
   { slug: "on-both-banks-of-the-river", title: "河对岸的自己", titleEn: "The Self on the Far Bank · Wayfarer VI", cat: "field", teaser: "河对岸站着的那个身影，是你每一次选择「安全」时，被留在原地的另一个自己。远行者系列第六篇。", teaserEn: "The figure on the far bank is every version of you left behind each time you chose 'safe.' Wayfarer series, part six.", price: 9 },
