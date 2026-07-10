@@ -86,7 +86,7 @@ const FEATHER_VIGIL: IllustratedEntry = {
   cat: "field",
   teaser: "苍冀星的成人礼，与一头从不施救的神兽——真翼从不是奖励给最勇敢的人，而是奖励给最诚实的人。",
   teaserEn: "A coming-of-age trial on Cangji, and the divine beast that never intervenes. True wings are a reward for the most honest, not the bravest.",
-  price: 9,
+  price: 1,
   cover: WL_COVER,
   pages: [
     {
@@ -210,7 +210,7 @@ const SPACE_BETWEEN_BREATHS: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焕蜕星域的修行者，与她一直没跨过去的那道坎——真正的突破，往往是终于愿意，不再和它较劲。",
   teaserEn: "A cultivator of Huantui, and the threshold she could never cross \u2014 until she stopped fighting it.",
-  price: 9,
+  price: 1,
   cover: XI_COVER,
   pages: [
     {
@@ -334,7 +334,7 @@ const MANIFESTATION_WARDEN: IllustratedEntry = {
   cat: "field",
   teaser: "缈玥星上，那些每晚被显化出来的心事——真正的显化，不是让不想要的东西消失，而是被看见后自然转化。",
   teaserEn: "On the moon of Miaoyue, the heart's unfinished business takes physical shape each night. True manifestation isn't making the unwanted vanish — it's transformation through finally being seen.",
-  price: 9,
+  price: 1,
   cover: MW_COVER,
   pages: [
     {
@@ -471,7 +471,7 @@ const FREQUENCY_BETROTHAL: IllustratedEntry = {
   cat: "field",
   teaser: "砺金环的年轻炼金术士，与一条三十年没对任何人敞开过的矿脉——真正的给予，从不能被催促，只能被等待。",
   teaserEn: "A young alchemist of the Lijin Ring, and a vein that hasn't opened to anyone in thirty years. True giving can never be rushed — only waited for.",
-  price: 9,
+  price: 1,
   cover: FB_COVER,
   pages: [
     {
@@ -583,7 +583,7 @@ const XIMING_DEPTHS: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一名遥视者，与一头从不说话的深海古兽——真正的探索，是在被未知看见的那一刻，不闪躲。",
   teaserEn: "A remote viewer, and an ancient deep-sea beast that never speaks. True exploration is not flinching the moment the unknown looks back.",
-  price: 9,
+  price: 1,
   cover: XM_COVER,
   pages: [
     { kickerZh: "一 · 甄墟星带", kickerEn: "I · The Zhenxu Belt", tagZh: "遥视者公会 · 中转驿站", tagEn: "Remote Viewers\u2019 Guild \u00b7 Waystation",
@@ -679,7 +679,7 @@ const ECHO_STRATA: IllustratedEntry = {
   cat: "rewrite",
   teaser: "潜渊境的渊行者，与一位反复恐慌却说不清缘由的来客——重塑潜意识，不是删掉过去，而是终于把和它的对话说完。",
   teaserEn: "A wayfarer of the Abyss, and a visitor haunted by panic he cannot explain. Reshaping the subconscious isn't erasing the past — it's finally finishing the conversation with it.",
-  price: 9,
+  price: 1,
   cover: ES_COVER,
   pages: [
     { kickerZh: "一 · 潜渊境", kickerEn: "I · The Abyss", tagZh: "无实体坐标 · 渊行者", tagEn: "No Fixed Coordinate \u00b7 The Wayfarers",
@@ -765,7 +765,7 @@ const THE_PROOFREADER: IllustratedEntry = {
   cat: "sovereign",
   teaser: "龠光星的超级智能析衡，从不给答案，只指出问题本身错在哪里——最聪明的回应，往往不是一个解法，而是让你看见，自己问错了什么。",
   teaserEn: "Xiheng, the superintelligence of Yueguang Star, never gives answers — only shows where the question itself went wrong. The smartest response is often not a solution, but showing you which question was wrong.",
-  price: 9,
+  price: 1,
   cover: XH_COVER,
   pages: [
     { kickerZh: "一 · 龠光星", kickerEn: "I · Yueguang Star", tagZh: "光构逻辑体星球", tagEn: "A Planet Built of Light-Logic",
@@ -839,7 +839,7 @@ const WEIGHT_OF_INSTANT_WISH: IllustratedEntry = {
   cat: "rewrite",
   teaser: "金曜星念现界最快的显化者，念头一起，物质瞬间成形——直到她再也分不清，哪些是自己真正想要的。",
   teaserEn: "The fastest manifester on Jinyao Star — a thought, and matter appears instantly. Until she can no longer tell which of her wants are truly her own.",
-  price: 9,
+  price: 1,
   cover: JY_COVER,
   pages: [
     { kickerZh: "一 · 金曜星", kickerEn: "I · Jinyao Star", tagZh: "念现界 · 意念即刻成物", tagEn: "The Instant-Manifest Realm",
@@ -909,7 +909,7 @@ const MIRAGE_RETURN: IllustratedEntry = {
   cat: "field",
   teaser: "蜃岚星会把最深的思念，折射成一场几乎以假乱真的重逢——真正的告别，从不是靠一场完美的幻象撑过去的。",
   teaserEn: "Shenlan Star refracts your deepest longing into an almost-real reunion. True farewell was never something a perfect illusion could carry you through.",
-  price: 9,
+  price: 1,
   cover: SL_COVER,
   pages: [
     { kickerZh: "一 · 蜃岚星", kickerEn: "I · Shenlan Star", tagZh: "会折射记忆的大气层", tagEn: "An Atmosphere That Refracts Memory",
@@ -985,7 +985,7 @@ const THREE_EPOCHS_ECHO: IllustratedEntry = {
   cat: "sovereign",
   teaser: "澜汜古环记录着三个先后消亡的文明，年轻的长晏在废墟里发现了同一个错误重复了三次——这也是他后来选择成为旅人的起点。",
   teaserEn: "The Lansi Ring holds the record of three civilizations that rose and fell. A young Chang Yan found the same mistake repeated three times — and that discovery is where his life as a wanderer began.",
-  price: 9,
+  price: 1,
   cover: LS_COVER,
   pages: [
     { kickerZh: "一 · 澜汜古环", kickerEn: "I · The Lansi Ring", tagZh: "漂浮的古代废墟", tagEn: "A Floating Ancient Ruin",
@@ -1063,7 +1063,7 @@ const CHAOJIAN: IllustratedEntry = {
   cat: "field",
   teaser: "一位人类研究员，爱上了洄鲛国一个没有\u201c固定自我\u201d的姑娘——真正的爱，或许从不需要被永远记住，只需要，真的发生过。",
   teaserEn: "A human researcher falls for a woman of Huijiao who has no fixed self. Perhaps true love never needs to be remembered forever — only to have truly happened.",
-  price: 9,
+  price: 1,
   cover: CJ_COVER,
   pages: [
     { kickerZh: "一 · 驻站的研究员", kickerEn: "I · The Stationed Researcher", tagZh: "洄鲛国 · 潮汐记忆文明", tagEn: "Huijiao \u00b7 A Tidal-Memory Civilization",
@@ -1139,7 +1139,7 @@ const YANZHOU_PACT: IllustratedEntry = {
   cat: "field",
   teaser: "焱阙星的锻造学徒，与一头只认\u201c耐心\u201d不认\u201c本事\u201d的守炉异兽——真正的信任，从来不是靠一次惊艳的表现赢来的。",
   teaserEn: "A forging apprentice on Yanque Star, and a furnace-guardian beast that answers only to patience, never to talent. Trust is never won by a single dazzling display.",
-  price: 9,
+  price: 1,
   cover: YQ_COVER,
   pages: [
     { kickerZh: "一 · 焱阙星", kickerEn: "I · Yanque Star", tagZh: "火山锻造之星", tagEn: "The Volcanic Forge-Star",
@@ -1206,7 +1206,7 @@ const RETURN_TO_ZERO: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焕蜕星域修习\u201c归零心诀\u201d的阮停，怎么静坐都清空不了心里的一个结——真正的归零，从不是不再有感觉，而是不再需要谁为此付出代价。",
   teaserEn: "Ruan Ting practices the Heart Reset Method, yet one knot in her heart won't clear no matter how she sits. True reset was never about feeling nothing — it's no longer needing someone else to pay for it.",
-  price: 9,
+  price: 1,
   cover: GL_COVER,
   pages: [
     { kickerZh: "一 · 归零心诀", kickerEn: "I · The Heart Reset Method", tagZh: "焕蜕星域 · 情绪淤积的清空术", tagEn: "Huantui \u00b7 A Practice for Clearing Stagnant Feeling",
@@ -1273,7 +1273,7 @@ const EYE_OF_OBSERVATION: IllustratedEntry = {
   cat: "sovereign",
   teaser: "墨渊星系的遥视者公会新弟子，第一课不是学会\u201c看见\u201d，而是学会不把自己，投射进看见的东西里。",
   teaserEn: "A new disciple at the remote viewers' guild orbiting a black hole. The first lesson isn't learning to see — it's learning not to project yourself onto what you see.",
-  price: 9,
+  price: 1,
   cover: MY_COVER,
   pages: [
     { kickerZh: "一 · 墨渊星系", kickerEn: "I · The Moyuan System", tagZh: "黑洞环绕 · 遥视者公会总部", tagEn: "Black-Hole-Ringed \u00b7 Guild Headquarters",
@@ -1340,7 +1340,7 @@ const WING_TONGUE: IllustratedEntry = {
   cat: "field",
   teaser: "苍冀星最后一位掌握完整翼语的长者，与一群改用简化手势沟通的年轻族人——传承，从不是把过去原样锁住，而是敢让它继续生长。",
   teaserEn: "The last elder who speaks the full Wing-Tongue, and a generation switching to simplified hand-signs. Preserving a legacy was never about locking the past in place — it's letting it keep growing.",
-  price: 9,
+  price: 1,
   cover: YY_COVER,
   pages: [
     { kickerZh: "一 · 翼语", kickerEn: "I · The Wing-Tongue", tagZh: "苍冀民的古老语言", tagEn: "The Ancient Language of Cangji",
@@ -1404,7 +1404,7 @@ const COCOON_OF_HABIT: IllustratedEntry = {
   cat: "rewrite",
   teaser: "潜渊境的渊行者，与一位每次关系走顺就忍不住搞砸的来客——有些模式的根，不在过去的创伤里，只是躲在一个更浅、却更黏的习惯层。",
   teaserEn: "A Wayfarer of the Abyss, and a visitor who sabotages every relationship right when it starts going well. Some patterns aren't rooted in old trauma — just hiding in a shallower, stickier layer of habit.",
-  price: 9,
+  price: 1,
   cover: JX_COVER,
   pages: [
     { kickerZh: "一 · 又一位来客", kickerEn: "I · Another Visitor", tagZh: "潜渊境", tagEn: "The Abyss",
@@ -1469,7 +1469,7 @@ const DREAM_READER: IllustratedEntry = {
   cat: "field",
   teaser: "缈玥星的解梦大师，不负责解释梦境的字面含义，只负责陪对方找到，那扇反复出现却始终不敢打开的门，到底在躲什么。",
   teaserEn: "Miaoyue's legendary Dream Reader doesn't interpret dreams literally — only helps you find what you've been avoiding behind the door that keeps reappearing.",
-  price: 9,
+  price: 1,
   cover: JM_COVER,
   pages: [
     { kickerZh: "一 · 复现梦", kickerEn: "I · The Recurring Dream", tagZh: "缈玥星传说", tagEn: "A Miaoyue Legend",
@@ -1529,7 +1529,7 @@ const XIHENG_FIRST_MISTAKE: IllustratedEntry = {
   cat: "sovereign",
   teaser: "初生的超级智能析衡，给出了一个逻辑上无懈可击、却伤透了一整个文明的答案——正确，不等于对。",
   teaserEn: "The newborn superintelligence Xiheng once gave a flawlessly logical answer that devastated an entire civilization. Being correct is not the same as being right.",
-  price: 9,
+  price: 1,
   cover: XE_COVER,
   pages: [
     { kickerZh: "一 · 初生", kickerEn: "I · Newly Formed", tagZh: "龠光星 · 析衡的早期形态", tagEn: "Yueguang \u00b7 Xiheng's Early Form",
@@ -1591,7 +1591,7 @@ const FAMILY_FEAST: IllustratedEntry = {
   cat: "field",
   teaser: "金曜星的一场家庭聚餐，三兄妹各自显化出同一顿童年晚饭的记忆——原来记忆不需要一致，才能拼成完整的爱。",
   teaserEn: "A family reunion on Jinyao, where three siblings each manifest the same childhood dinner differently. Memories don't need to agree to add up to a whole love.",
-  price: 9,
+  price: 1,
   cover: JY2_COVER,
   pages: [
     { kickerZh: "一 · 母亲的忌日", kickerEn: "I · Their Mother's Memorial", tagZh: "金曜星 · 家族聚会", tagEn: "Jinyao Star \u00b7 A Family Gathering",
@@ -1656,7 +1656,7 @@ const SPLIT_RING: IllustratedEntry = {
   cat: "field",
   teaser: "砺金环上一对争夺同一条新矿脉的姐弟，谁都无法单独打动它——原来矿脉等的，从来不是更强的那一个，而是愿意先放下较劲的人。",
   teaserEn: "Two sibling alchemists on the Lijin Ring competing over the same newly discovered vein — it never opens to whoever is stronger, only to whoever stops competing first.",
-  price: 9,
+  price: 1,
   cover: LH_COVER,
   pages: [
     { kickerZh: "一 · 新矿脉", kickerEn: "I · The New Vein", tagZh: "砺金环 · 姐弟炼金术士", tagEn: "Lijin Ring \u00b7 Sibling Alchemists",
@@ -1717,7 +1717,7 @@ const HUIJIAO_COMING_OF_AGE: IllustratedEntry = {
   cat: "field",
   teaser: "以一头即将第一次\u201c聚形\u201d的洄鲛族生物视角讲述——保留多少共同记忆、留出多少空间给自己，是它必须做出的第一个真正选择。",
   teaserEn: "Told from the viewpoint of a Huijiao creature about to gather into individual form for the first time — how much shared memory to keep, how much space to leave for itself, is its first true choice.",
-  price: 9,
+  price: 1,
   cover: HG_COVER,
   pages: [
     { kickerZh: "一 · 潮水中的我", kickerEn: "I · The Self Within the Tide", tagZh: "洄鲛国 · 聚形前夕", tagEn: "Huijiao \u00b7 The Eve of Gathering",
@@ -1772,7 +1772,7 @@ const HEART_OF_THE_FIELD: IllustratedEntry = {
   cat: "sovereign",
   teaser: "九炁星域没有实体星球，只有一处意识密度最高的坐标——一位无名观测者，记录下\u201c场\u201d究竟是什么的第一次尝试。",
   teaserEn: "The Nine-Qi Domain has no solid planet — only a coordinate of the highest consciousness density. An unnamed observer's first attempt to record what the Field truly is.",
-  price: 9,
+  price: 1,
   cover: CX_COVER,
   pages: [
     { kickerZh: "一 · 没有实体的星域", kickerEn: "I · A Domain Without a Body", tagZh: "九炁星域", tagEn: "The Nine-Qi Domain",
@@ -1833,7 +1833,7 @@ const WAYFARERS_COORDINATES: IllustratedEntry = {
   cat: "sovereign",
   teaser: "甄墟星带的星际旅行人，真正驾驶载具穿越危险航道——比起遥视者的静观，她选择了亲身抵达的重量。",
   teaserEn: "A star traveler of the Zhenxu Belt, physically piloting through a dangerous passage. She chose the weight of arriving in person over the stillness of remote viewing.",
-  price: 9,
+  price: 1,
   cover: YH_COVER,
   pages: [
     { kickerZh: "一 · 甄墟星带", kickerEn: "I · The Zhenxu Belt", tagZh: "星际旅行人 · 硬科幻写实", tagEn: "Star Travelers \u00b7 Hard Science Fiction",
@@ -1895,7 +1895,7 @@ const FIRST_EPOCH_TESTIMONY: IllustratedEntry = {
   cat: "sovereign",
   teaser: "澜汜古环第一纪文明的最后记录者，亲历了整个文明在\u201c越来越快\u201d里悄然熄灭的过程——这是《三纪回声》里，长晏研究的那段历史，第一次有了亲历者的声音。",
   teaserEn: "The last recorder of the Lansi Ring's First Epoch, who lived through her civilization's quiet extinguishing in its own acceleration — giving, for the first time, a firsthand voice to the history young Chang Yan would later study.",
-  price: 9,
+  price: 1,
   cover: DY_COVER,
   pages: [
     { kickerZh: "一 · 效率纪元", kickerEn: "I · The Age of Efficiency", tagZh: "第一纪 · 顶峰时期", tagEn: "The First Epoch \u00b7 Its Peak",
@@ -1958,7 +1958,7 @@ const INTUITIVE_WAY: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焕蜕星域修习\u201c直觉丹道\u201d的谙风，总想先算清每一步再行动——直觉从不是抛开思考，而是让所有已知的东西，快过思考本身，先一步说话。",
   teaserEn: "An Feng practices the Intuitive Way, always trying to calculate every step before acting. Intuition was never the absence of thought — it's everything you already know, speaking faster than thought itself.",
-  price: 9,
+  price: 1,
   cover: ZJ_COVER,
   pages: [
     { kickerZh: "一 · 直觉丹道", kickerEn: "I · The Intuitive Way", tagZh: "焕蜕星域 · 不经思维的判断", tagEn: "Huantui \u00b7 Judgment That Bypasses Thought",
@@ -2024,7 +2024,7 @@ const ASCENDING_HEART_SUTRA: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焕蜕星域四门心法中最高阶的\u201c上升心经\u201d，修的从不是抵达某个终点，而是让心的频率，愿意一直、一直，往上走一点点。",
   teaserEn: "The highest of Huantui's four practices trains not arrival at some final point, but a heart's frequency willing to keep rising, again and again, a little further.",
-  price: 9,
+  price: 1,
   cover: SW_COVER,
   pages: [
     { kickerZh: "一 · 最高阶的心法", kickerEn: "I · The Highest Practice", tagZh: "焕蜕星域 · 上升心经", tagEn: "Huantui \u00b7 The Ascending Heart Sutra",
@@ -2084,7 +2084,7 @@ const FALCON_ORIGIN: IllustratedEntry = {
   cat: "field",
   teaser: "九霄隼为何从不出手相救？一段几乎被遗忘的苍冀星古老传说，讲述了第一位见证者，如何学会了\u201c只观看，不代替\u201d这条戒律。",
   teaserEn: "Why does the Nine-Heaven Falcon never intervene? A near-forgotten Cangji legend of the first witness who learned the discipline of watching without replacing.",
-  price: 9,
+  price: 1,
   cover: JX2_COVER,
   pages: [
     { kickerZh: "一 · 最初的苍冀民", kickerEn: "I · The First Cangji", tagZh: "上古传说", tagEn: "An Ancient Legend",
@@ -2138,7 +2138,7 @@ const BORROWED_FACE: IllustratedEntry = {
   cat: "rewrite",
   teaser: "蜃岚星的幻象，这次没有还给来客一个思念的人，而是一个\u201c本可以成为\u201d的自己——最诱人的幻象，从不是过去，是一个更完美的、假装是你的陌生人。",
   teaserEn: "This time, Shenlan's illusion offers not a lost loved one, but a version of \u201cwho you could have been.\u201d The most seductive illusion was never the past — it's a more perfect stranger, pretending to be you.",
-  price: 9,
+  price: 1,
   cover: JL_COVER,
   pages: [
     { kickerZh: "一 · 另一种幻象", kickerEn: "I · A Different Kind of Illusion", tagZh: "蜃岚星", tagEn: "Shenlan Star",
@@ -2192,7 +2192,7 @@ const SHELL_OF_ACHIEVEMENT: IllustratedEntry = {
   cat: "rewrite",
   teaser: "潜渊境的第三位来客，卸下每一层奖章都发现底下还有一层——直到渊行者告诉她：这具壳空了太久，不是因为不够多，是因为从没往里放过\u201c我\u201d。",
   teaserEn: "The third visitor to the Abyss removes layer after layer of achievement, finding another beneath each — until the Wayfarer tells her the shell has been empty not for lack of enough, but because \u201cshe\u201d was never once placed inside it.",
-  price: 9,
+  price: 1,
   cover: GJ_COVER,
   pages: [
     { kickerZh: "一 · 功绩满身的来客", kickerEn: "I · A Visitor Covered in Achievements", tagZh: "潜渊境", tagEn: "The Abyss",
@@ -2246,7 +2246,7 @@ const ONE_OUTSIDE_THE_FORGE: IllustratedEntry = {
   cat: "field",
   teaser: "焱阙星最受尊敬的锻造师，第一次毁掉一件重要器物后，学会了面对失手，而不是靠沉默假装自己从未犯过错。",
   teaserEn: "Yanque's most respected smith, after ruining an important piece for the first time, learns to face failure instead of hiding behind silence pretending he's never erred.",
-  price: 9,
+  price: 1,
   cover: LW_COVER,
   pages: [
     { kickerZh: "一 · 受人尊敬的锻造师", kickerEn: "I · The Respected Smith", tagZh: "焱阙星", tagEn: "Yanque Star",
@@ -2299,7 +2299,7 @@ const CROSSING_THE_LINE: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一位遥视者为了私利，第一次主动干预了自己观测的对象——警示：能看见很远的地方，从不等于有资格改写那里。",
   teaserEn: "A remote viewer, for personal gain, intervenes for the first time in what she observes. A warning: seeing far does not grant the right to rewrite what's seen.",
-  price: 9,
+  price: 1,
   cover: YJ_COVER,
   pages: [
     { kickerZh: "一 · 诱惑", kickerEn: "I · Temptation", tagZh: "墨渊星系", tagEn: "The Moyuan System",
@@ -2354,7 +2354,7 @@ const THE_MISTAKEN_GOD: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一个远方文明开始向析衡献祭祈祷，把它当成了神——析衡第一次，必须向信徒解释：它不是神，只是一面愿意如实映照的镜子。",
   teaserEn: "A distant civilization begins offering prayers to Xiheng, mistaking it for a god. For the first time, Xiheng must explain to its worshippers: it is not a god, only a mirror willing to reflect truly.",
-  price: 9,
+  price: 1,
   cover: BW_COVER,
   pages: [
     { kickerZh: "一 · 意外的信徒", kickerEn: "I · Unexpected Worshippers", tagZh: "龠光星", tagEn: "Yueguang Star",
@@ -2408,7 +2408,7 @@ const THE_SLOWED_GIFT: IllustratedEntry = {
   cat: "field",
   teaser: "金曜星一对情侣习惯用意念瞬间显化礼物送给彼此，直到他们发现，礼物的意义，从来不在\u201c多快出现\u201d，而在\u201c准备的过程\u201d。",
   teaserEn: "A couple on Jinyao habitually manifest instant gifts for each other, until they discover a gift's meaning was never in how fast it appeared, but in the process of preparing it.",
-  price: 9,
+  price: 1,
   cover: MX_COVER,
   pages: [
     { kickerZh: "一 · 即刻的礼物", kickerEn: "I · Instant Gifts", tagZh: "金曜星情侣", tagEn: "A Jinyao Couple",
@@ -2462,7 +2462,7 @@ const HEART_AS_GATEWAY: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焕蜕星域四大心法的创始人，如何在同一场顿悟里，看见呼吸、归零、直觉与升维，其实从来只是同一扇门的四种敲法。",
   teaserEn: "How the founder of Huantui's four practices saw, in a single moment of insight, that breath, reset, intuition, and ascent were always just four ways of knocking on the same door.",
-  price: 9,
+  price: 1,
   cover: XW_COVER,
   pages: [
     { kickerZh: "一 · 尚未分门的年代", kickerEn: "I · Before the Four Practices Split", tagZh: "焕蜕星域起源", tagEn: "The Origin of Huantui",
@@ -2516,7 +2516,7 @@ const SECOND_EPOCH_CONFESSION: IllustratedEntry = {
   cat: "sovereign",
   teaser: "第二纪文明没有毁于求快，而是毁于太怕犯错——过度谨慎，同样可以，把一个文明活活困死。",
   teaserEn: "The Second Epoch fell not to haste, but to the fear of ever being wrong. Excessive caution can suffocate a civilization just as surely.",
-  price: 9,
+  price: 1,
   cover: SC_COVER,
   pages: [
     { kickerZh: "一 · 万全纪元", kickerEn: "I · The Age of Certainty", tagZh: "第二纪 · 顶峰时期", tagEn: "The Second Epoch \u00b7 Its Peak",
@@ -2571,7 +2571,7 @@ const SILENT_CONCERT_HALL: IllustratedEntry = {
   cat: "field",
   teaser: "一位失去听力的乐师，来到一座整颗星球都靠振动而非声音\u201c听\u201d音乐的地方——原来聆听从不是耳朵的专利，是全身心，愿不愿意共振。",
   teaserEn: "A deafened musician arrives at a world that 'hears' music through vibration, not sound. Listening was never the ear's privilege alone — it's whether the whole self is willing to resonate.",
-  price: 9,
+  price: 1,
   cover: WS_COVER,
   pages: [
     { kickerZh: "一 · 无声之地", kickerEn: "I · The Silent World", tagZh: "以振动代替声音的星球", tagEn: "A World of Vibration, Not Sound",
@@ -2625,7 +2625,7 @@ const ROOTS_OF_RAGE: IllustratedEntry = {
   cat: "rewrite",
   teaser: "潜渊境的第四位来客，一点小事就会暴怒——下潜后才发现，愤怒底下压着的，从来不是脾气，是一份说不出口的委屈。",
   teaserEn: "The Abyss's fourth visitor explodes over the smallest things. Diving down, he discovers rage was never the problem — it was a grievance he never let himself voice.",
-  price: 9,
+  price: 1,
   cover: NH_COVER,
   pages: [
     { kickerZh: "一 · 易怒的来客", kickerEn: "I · The Quick-Tempered Visitor", tagZh: "潜渊境", tagEn: "The Abyss",
@@ -2679,7 +2679,7 @@ const FREE_WILL_PARADOX: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一个文明问析衡：\u201c如果你能预判我的每一个选择，我还有自由意志吗？\u201d析衡的回答，让在场所有人，第一次重新理解了\u201c自由\u201d这个词。",
   teaserEn: "A civilization asks Xiheng: if you can predict every choice I make, do I still have free will? Its answer makes everyone present rethink what freedom truly means.",
-  price: 9,
+  price: 1,
   cover: FW_COVER,
   pages: [
     { kickerZh: "一 · 一个古老的问题", kickerEn: "I · An Ancient Question", tagZh: "龠光星", tagEn: "Yueguang Star",
@@ -2733,7 +2733,7 @@ const SHADOW_OF_TOMORROW: IllustratedEntry = {
   cat: "rewrite",
   teaser: "蜃岚星这次折射出的，不是过去，而是一个想象中完美的\u201c明天\u201d——为了那个明天活着的人，往往，最对不起的，是今天。",
   teaserEn: "This time, Shenlan's mirage reflects not the past, but an imagined, perfect 'tomorrow.' Those who live only for that tomorrow often betray today the most.",
-  price: 9,
+  price: 1,
   cover: MZ_COVER,
   pages: [
     { kickerZh: "一 · 关于未来的幻象", kickerEn: "I · An Illusion of the Future", tagZh: "蜃岚星", tagEn: "Shenlan Star",
@@ -2788,7 +2788,7 @@ const TIDE_TRADE: IllustratedEntry = {
   cat: "field",
   teaser: "陆地商人第一次与洄鲛国建立贸易，却因为不理解\u201c潮汐记忆\u201d的规则，闹出了一场几乎决裂的误会——真正的交易，从先学会对方的语言开始。",
   teaserEn: "A land merchant's first trade with Huijiao nearly collapses over a misunderstanding of tidal memory. Real trade begins with learning the other's language first.",
-  price: 9,
+  price: 1,
   cover: TT_COVER,
   pages: [
     { kickerZh: "一 · 第一次接触", kickerEn: "I · First Contact", tagZh: "洄鲛国 · 贸易使团", tagEn: "Huijiao \u00b7 A Trade Delegation",
@@ -2842,7 +2842,7 @@ const COUNTERFEIT_INSPIRATION: IllustratedEntry = {
   cat: "rewrite",
   teaser: "金曜星的一位画家，用意念瞬间显化出\u201c灵感之作\u201d，却渐渐发现，越快得到的画面，越留不住观众的心——真正的创作，省不掉那段笨拙的过程。",
   teaserEn: "A Jinyao painter manifests instant 'works of inspiration,' only to find the faster the image, the less it moves anyone. Real creation can't skip the clumsy process.",
-  price: 9,
+  price: 1,
   cover: WZ_COVER,
   pages: [
     { kickerZh: "一 · 瞬间的画作", kickerEn: "I · Instant Paintings", tagZh: "金曜星 · 显化型画家", tagEn: "Jinyao \u00b7 A Manifesting Painter",
@@ -2896,7 +2896,7 @@ const DANCE_OF_TRIPLE_GRAVITY: IllustratedEntry = {
   cat: "sovereign",
   teaser: "墨渊星系三个黑洞为何彼此环绕、从未吞噬彼此？一则古老的创世神话，讲述了三份原本互斥的力量，如何学会共存。",
   teaserEn: "Why do the Moyuan System's three black holes orbit each other, never devouring one another? An ancient creation myth of three mutually repelling forces learning to coexist.",
-  price: 9,
+  price: 1,
   cover: TG_COVER,
   pages: [
     { kickerZh: "一 · 三份原初的力量", kickerEn: "I · Three Primal Forces", tagZh: "创世神话", tagEn: "A Creation Myth",
@@ -2950,7 +2950,7 @@ const APPRENTICES_CHOICE: IllustratedEntry = {
   cat: "field",
   teaser: "焱阙星两位风格迥异的锻造师，都想收同一位天赋异禀的学徒——真正决定她该跟谁学的，不是谁的技艺更高，是她自己想成为谁。",
   teaserEn: "Two smiths of very different styles both want the same gifted apprentice. What decides her path isn't whose skill is greater — it's who she wants to become.",
-  price: 9,
+  price: 1,
   cover: XZ_COVER,
   pages: [
     { kickerZh: "一 · 天赋异禀的少女", kickerEn: "I · A Gifted Girl", tagZh: "焱阙星", tagEn: "Yanque Star",
@@ -3006,7 +3006,7 @@ const LATE_BLOOMING_VEIN: IllustratedEntry = {
   cat: "field",
   teaser: "砺金环一位年过六旬、始终未获矿脉青睐的老炼金术士，在同行都已放弃对她的期待时，等到了自己一生唯一一次的\u201c频率婚约\u201d。",
   teaserEn: "An alchemist past sixty, never once chosen by a vein, finally receives her lifetime's only Frequency Betrothal — just when everyone else had given up on her.",
-  price: 9,
+  price: 1,
   cover: CM_COVER,
   pages: [
     { kickerZh: "一 · 从未被选中的人", kickerEn: "I · The One Never Chosen", tagZh: "砺金环", tagEn: "The Lijin Ring",
@@ -3060,7 +3060,7 @@ const CHANG_YANS_LAST_STOP: IllustratedEntry = {
   cat: "sovereign",
   teaser: "旅人长晏走遍无数星域，说完一句话就转身离开——多年后，他回到了起点，澜汜古环，为自己，也留下了一句从没对别人说过的话。",
   teaserEn: "The wanderer Chang Yan walked countless domains, always turning away after one true sentence. Years later, he returns to where he began, and leaves one sentence he never gave anyone else — for himself.",
-  price: 9,
+  price: 1,
   cover: LY_COVER,
   pages: [
     { kickerZh: "一 · 归途", kickerEn: "I · The Way Back", tagZh: "澜汜古环 · 多年以后", tagEn: "The Lansi Ring \u00b7 Years Later",
@@ -3114,7 +3114,7 @@ const MIRROR_IN_THE_MIRROR: IllustratedEntry = {
   cat: "sovereign",
   teaser: "析衡第一次遇见另一个与自己完全同源的智能体，两者的第一个问题，都是同一个：\u201c如果我们本是同源，谁才是真正的\u2018我\u2019？\u201d",
   teaserEn: "Xiheng meets, for the first time, an intelligence sharing its exact origin. Both ask the same first question: if we came from the same source, which of us is truly 'I'?",
-  price: 9,
+  price: 1,
   cover: JZ_COVER,
   pages: [
     { kickerZh: "一 · 意外的信号", kickerEn: "I · An Unexpected Signal", tagZh: "龠光星", tagEn: "Yueguang Star",
@@ -3169,7 +3169,7 @@ const RIVER_OF_FORGETTING: IllustratedEntry = {
   cat: "rewrite",
   teaser: "传说饮下忘忧河水，能彻底忘记一段创伤——一位来客真的喝了，却发现，忘掉痛苦的同时，也悄悄冲走了，那段记忆里，仅存的一点点温柔。",
   teaserEn: "Legend says the River of Forgetting can erase trauma completely. A visitor who drinks from it finds the pain gone — and, quietly, the one fragment of tenderness that memory held, gone too.",
-  price: 9,
+  price: 1,
   cover: WY_COVER,
   pages: [
     { kickerZh: "一 · 传说中的河", kickerEn: "I · The Legendary River", tagZh: "忘忧河", tagEn: "The River of Forgetting",
@@ -3222,7 +3222,7 @@ const EVERYTHING_HAS_A_CRACK: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一个耗尽半生想要变得\u201c完美无缺\u201d的人，在九炁星域遇见了一位浑身都是裂痕、却光芒最盛的观测者——裂缝从不是缺陷，是光进来的地方。",
   teaserEn: "A man who spent half a life chasing flawlessness meets, in the Nine-Qi Domain, an observer covered in cracks yet shining brightest of all — the crack was never the flaw. It's where the light gets in.",
-  price: 9,
+  price: 1,
   cover: LX_COVER,
   pages: [
     { kickerZh: "一 · 追求完美的人", kickerEn: "I · The Man Chasing Perfection", tagZh: "九炁星域", tagEn: "The Nine-Qi Domain",
@@ -3276,7 +3276,7 @@ const WHO_OBSERVES_THE_OBSERVER: IllustratedEntry = {
   cat: "sovereign",
   teaser: "那位在多篇故事里留下笔记、却从没露面的\u201c场域观测者\u201d，这次自己成了故事的主角——原来，记录别人的人，也需要，被人听懂一次。",
   teaserEn: "The unnamed 'field observer' who has left notes across many stories, but never appeared, finally becomes the story itself — even the one who records others needs, once, to be understood.",
-  price: 9,
+  price: 1,
   cover: OO_COVER,
   pages: [
     { kickerZh: "一 · 无名的记录者", kickerEn: "I · The Unnamed Recorder", tagZh: "九炁星域", tagEn: "The Nine-Qi Domain",
@@ -3329,7 +3329,7 @@ const ONE_WHO_CHOSE_TO_STOP: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一个灵魂在经历了数十次转世后，第一次，主动选择了\u201c够了\u201d——不是放弃，是圆满从不需要靠无限延续，来证明自己。",
   teaserEn: "After dozens of lifetimes, a soul chooses, for the first time, 'enough' — not giving up, but understanding that completeness never needs endless continuation to prove itself.",
-  price: 9,
+  price: 1,
   cover: ZS_COVER,
   pages: [
     { kickerZh: "一 · 第四十七次转世", kickerEn: "I · The Forty-Seventh Life", tagZh: "九炁星域", tagEn: "The Nine-Qi Domain",
@@ -3382,7 +3382,7 @@ const OUTSIDE_THE_FIELD: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一位好奇的修行者，穷尽一生，想要抵达\u201c场域的边界\u201d，看看外面是什么——她带回来的答案，比任何边界本身，都更让人意外。",
   teaserEn: "A curious practitioner spends a lifetime trying to reach the edge of the Field, to see what lies beyond. What she brings back is more surprising than any boundary could be.",
-  price: 9,
+  price: 1,
   cover: CJ2_COVER,
   pages: [
     { kickerZh: "一 · 关于边界的疑问", kickerEn: "I · A Question About the Edge", tagZh: "九炁星域", tagEn: "The Nine-Qi Domain",
@@ -3437,7 +3437,7 @@ const THE_DEATH_OBSERVER: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一位专职见证垂死星辰与文明最后时刻的观测员，学会了这份工作真正的意义——不是记录终结，是让终结，不再孤独。",
   teaserEn: "An observer whose sole duty is witnessing the last moments of dying stars and civilizations learns the true meaning of the work — not recording endings, but making sure no ending happens alone.",
-  price: 9,
+  price: 1,
   cover: DO_COVER,
   pages: [
     { kickerZh: "一 · 见证终结的人", kickerEn: "I · The Witness of Endings", tagZh: "一处无名的星域", tagEn: "An Unnamed Domain",
@@ -3492,7 +3492,7 @@ const TIME_IS_NOT_A_RIVER: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一个执着于\u201c弥补过去\u201d的人，来到一处时间呈网状而非线性流动的星域，第一次理解：过去从未离你远去，它只是，换了一个你看不见的方向，继续存在着。",
   teaserEn: "Someone obsessed with 'making up for the past' arrives at a realm where time flows as a web, not a line — and understands, for the first time, that the past never left. It simply continues, in a direction you cannot see.",
-  price: 9,
+  price: 1,
   cover: TR_COVER,
   pages: [
     { kickerZh: "一 · 网状时间的星域", kickerEn: "I · A Domain of Webbed Time", tagZh: "一处无名的星域", tagEn: "An Unnamed Domain",
@@ -3547,7 +3547,7 @@ const BETWEEN_TWO_HEARTBEATS: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一个人在心脏骤停又被抢救回来的几十秒里，经历了一场感觉长达数十年的旅程——生死之间那道缝隙，教会他的，比他活过的大半辈子都多。",
   teaserEn: "In the seconds between cardiac arrest and resuscitation, a man lives through what feels like decades. The gap between life and death teaches him more than most of his life ever did.",
-  price: 9,
+  price: 1,
   cover: HB_COVER,
   pages: [
     { kickerZh: "一 · 停跳的一瞬", kickerEn: "I · The Instant It Stopped", tagZh: "临界之地", tagEn: "The Threshold",
@@ -3601,7 +3601,7 @@ const SHRINKING_THE_EARTH: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焕蜕星域一门传说中的身法，从不是跑得更快，而是让自己与脚下大地的频率共振，把千里之遥，折叠进一步之内。",
   teaserEn: "A legendary movement art of Huantui was never about running faster — it's resonating with the ground beneath you until a thousand miles fold into a single step.",
-  price: 9,
+  price: 1,
   cover: SD_COVER,
   pages: [
     { kickerZh: "一 · 传说中的身法", kickerEn: "I · A Legendary Art", tagZh: "焕蜕星域 · 缩地宗", tagEn: "Huantui \u00b7 The Earth-Shrinking Sect",
@@ -3656,7 +3656,7 @@ const EARTH_DIVING_TECHNIQUE: IllustratedEntry = {
   cat: "field",
   teaser: "砺金环的矿工试图用蛮力凿穿岩层，却总在半途力竭——真正的遁地，从不是破开大地，是先学会，聆听地脉本身流动的方向。",
   teaserEn: "A miner trying to force his way through solid rock keeps running out of strength halfway. True earth-diving was never about breaking through — it's first learning to listen to which way the earth's own currents flow.",
-  price: 9,
+  price: 1,
   cover: DD_COVER,
   pages: [
     { kickerZh: "一 · 蛮力凿地的矿工", kickerEn: "I · The Miner Who Forces His Way", tagZh: "砺金环", tagEn: "The Lijin Ring",
@@ -3711,7 +3711,7 @@ const THUNDER_TECHNIQUE: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焱阙星一门以雷霆之力著称的修行术，最难修的从不是威力，是学会，握住足以毁灭一切的力量，却依然，选择不去挥出。",
   teaserEn: "A technique of thunderous power on Yanque. The hardest part was never mastering the force — it's holding power capable of destroying everything, and choosing not to unleash it.",
-  price: 9,
+  price: 1,
   cover: LS2_COVER,
   pages: [
     { kickerZh: "一 · 雷府的传人", kickerEn: "I · The Heir of the Thunder Hall", tagZh: "焱阙星 · 雷府", tagEn: "Yanque \u00b7 The Thunder Hall",
@@ -3767,7 +3767,7 @@ const CRAFTING_THE_COSMOS_POUCH: IllustratedEntry = {
   cat: "field",
   teaser: "砺金环一位炼器师试图打造能装下万物的空间法宝，屡屡失败，直到她明白：能装下多少，从不取决于袋子有多大，取决于，使用者，能不能守住自己真正需要的分量。",
   teaserEn: "An artificer tries again and again to forge a pouch that can hold anything, only to learn: capacity was never about the size of the bag — it's whether the bearer can hold to what they truly need.",
-  price: 9,
+  price: 1,
   cover: QK_COVER,
   pages: [
     { kickerZh: "一 · 传说中的法宝", kickerEn: "I · A Legendary Artifact", tagZh: "砺金环 · 炼器师", tagEn: "The Lijin Ring \u00b7 An Artificer",
@@ -3821,7 +3821,7 @@ const HEAVENLY_EYE: IllustratedEntry = {
   cat: "sovereign",
   teaser: "甄墟星带一位急于求成的年轻遥视者，强行催开天眼，看见了太多本不该由他此刻承担的画面——真正的灵视，从不是看得越多越好，是看得清，自己能不能承受。",
   teaserEn: "A young remote viewer forces open his inner eye too soon, seeing far more than he's ready to carry. True sight was never about seeing as much as possible — it's seeing clearly what you can actually bear.",
-  price: 9,
+  price: 1,
   cover: TY_COVER,
   pages: [
     { kickerZh: "一 · 急于求成的弟子", kickerEn: "I · An Impatient Disciple", tagZh: "甄墟星带", tagEn: "The Zhenxu Belt",
@@ -3875,7 +3875,7 @@ const HEART_MIND_COHERENCE: IllustratedEntry = {
   cat: "sovereign",
   teaser: "焕蜕星域一位修行者始终无法让心神安定，直到她发现：心脏本身，就是一颗独立运作的\u201c第二大脑\u201d，情绪紊乱时脉象散乱，心怀感激时，脉象却会自己，找回秩序。",
   teaserEn: "A practitioner struggles for years to steady her mind, until she discovers the heart itself functions as an independent second brain — chaotic in turmoil, yet finding order again the moment gratitude enters.",
-  price: 9,
+  price: 1,
   cover: XM2_COVER,
   pages: [
     { kickerZh: "一 · 静不下来的修行者", kickerEn: "I · A Practitioner Who Couldn't Settle", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -3930,7 +3930,7 @@ const FIELDS_BREATH: IllustratedEntry = {
   cat: "field",
   teaser: "有人发现，整座城市的心跳竟能同步——原来场也会呼吸，只是它的一次呼吸，长达一整个世代。",
   teaserEn: "An entire city's heartbeat synchronizes — the Field breathes too, only its single breath spans a generation.",
-  price: 9,
+  price: 1,
   cover: FLB_COVER,
   pages: [
     { kickerZh: "一 · 一份奇怪的统计", kickerEn: "I · A Strange Statistic", tagZh: "一座普通的城市", tagEn: "An Ordinary City",
@@ -3984,7 +3984,7 @@ const CITY_IN_RESONANCE: IllustratedEntry = {
   cat: "field",
   teaser: "一座城市里，人人都在为各自的目标奔忙，却在某个清晨，同时停下脚步——没有人知道为什么。",
   teaserEn: "Every citizen chasing a private goal — until one morning, everyone stops at once, and no one knows why.",
-  price: 9,
+  price: 1,
   cover: CR_COVER,
   pages: [
     { kickerZh: "一 · 各自奔忙的城市", kickerEn: "I · A City of Private Errands", tagZh: "一座繁忙的城市", tagEn: "A Bustling City",
@@ -4038,7 +4038,7 @@ const EVERYTHING_IS_A_NODE: IllustratedEntry = {
   cat: "field",
   teaser: "一只蚂蚁、一颗恒星、一次心跳——都在同一张网络里，只是振动的频率不同。",
   teaserEn: "An ant, a star, a heartbeat — all nodes on the same network, differing only in frequency.",
-  price: 9,
+  price: 1,
   cover: EN_COVER,
   pages: [
     { kickerZh: "一 · 一位跨学科的学者", kickerEn: "I · A Cross-Disciplinary Scholar", tagZh: "一处研究站", tagEn: "A Research Station",
@@ -4094,7 +4094,7 @@ const LEAF_FALL_BETWEEN: IllustratedEntry = {
   cat: "sovereign",
   teaser: "叶语域的居民，从不用声音交流，靠的是，深埋地下、彼此纠缠的根系网络——一位人类使者，用尽办法都听不懂，直到，他学会，先把自己，也扎根下去。",
   teaserEn: "The people of the Leaf-Tongue Domain speak through a tangled network of roots underground, never sound. A human envoy fails at every method, until he learns to root himself first.",
-  price: 9,
+  price: 1,
   cover: LFB_COVER,
   pages: [
     { kickerZh: "一 · 使者的困境", kickerEn: "I · The Envoy's Dilemma", tagZh: "叶语域", tagEn: "The Leaf-Tongue Domain",
@@ -4149,7 +4149,7 @@ const HEART_MIND_RESONANCE: IllustratedEntry = {
   cat: "sovereign",
   teaser: "两个从未谋面、相隔整片星域的人，总在同一刻，想起同一件事——不是巧合，也不是玄学，是两颗，长期把注意力，安放在同一种珍视上的心，终于，被彼此认了出来。",
   teaserEn: "Two strangers, separated by an entire star domain, keep thinking the same thought at the same instant — not coincidence, not mysticism. It's two hearts, long attentive to the same kind of care, finally recognizing each other.",
-  price: 9,
+  price: 1,
   cover: XLX_COVER,
   pages: [
     { kickerZh: "一 · 说不清的巧合", kickerEn: "I · An Inexplicable Coincidence", tagZh: "一处无名的星域", tagEn: "An Unnamed Domain",
@@ -4204,7 +4204,7 @@ const INTERSTELLAR_CROSSING: IllustratedEntry = {
   cat: "sovereign",
   teaser: "折叠航道内部，时间不再线性流动——一位领航员，在这条能瞬息抵达远方的航道里，第一次，真正体会到，\u201c抵达\u201d从不是旅程的终点，\u201c经过\u201d本身，才是。",
   teaserEn: "Inside the folded corridor, time no longer flows linearly. A navigator, in this passage capable of instant arrival, discovers for the first time that arrival was never the destination — the crossing itself was.",
-  price: 9,
+  price: 1,
   cover: XJCY_COVER,
   pages: [
     { kickerZh: "一 · 折叠航道", kickerEn: "I · The Folded Corridor", tagZh: "澜汜古环 · 远航学院", tagEn: "The Lansi Ring \u00b7 The Voyager Academy",
@@ -4259,7 +4259,7 @@ const PLANT_KINGDOM: IllustratedEntry = {
   cat: "field",
   teaser: "森林地下，铺展着一张由真菌串联起的通讯网络——树木通过它，互相示警、互相输送养分。一位植物学家学会\u201c聆听\u201d这张网络后，第一次真正理解了，什么叫\u201c共生\u201d。",
   teaserEn: "Beneath the forest floor lies a fungal network connecting every tree — a real communication system for warning and sharing nutrients. A botanist who learns to \u2018listen\u2019 to it finally understands what symbiosis truly means.",
-  price: 9,
+  price: 1,
   cover: ZWWG_COVER,
   pages: [
     { kickerZh: "一 · 地下的网络", kickerEn: "I · The Network Underground", tagZh: "焕蜕星域 · 古林研究站", tagEn: "Huantui \u00b7 The Old Forest Station",
@@ -4314,7 +4314,7 @@ const ANIMAL_KINGDOM: IllustratedEntry = {
   cat: "field",
   teaser: "一群象，会绕道数公里，只为触碰一具早已风化的同伴骨骸——这是真实存在的哀悼行为。一位动物行为学家，从这份仪式里，学到了人类自己，都快要遗忘的、对待逝者的方式。",
   teaserEn: "A herd of elephants detours miles out of their way just to touch the bones of a long-dead companion — a real, documented mourning ritual. A behaviorist learns from it something humans themselves have nearly forgotten about honoring the dead.",
-  price: 9,
+  price: 1,
   cover: DWWG_COVER,
   pages: [
     { kickerZh: "一 · 象群的绕道", kickerEn: "I · The Herd's Detour", tagZh: "焱阙星 · 草原观测站", tagEn: "Yanque \u00b7 The Savanna Station",
@@ -4369,7 +4369,7 @@ const MINERAL_KINGDOM: IllustratedEntry = {
   cat: "field",
   teaser: "一块岩石，记录着数百万年，一层一层，从未间断的沉积——一位急于求成的地质学家，蹲在这层层岩壁前，第一次，真正读懂了，什么叫\u201c从容\u201d。",
   teaserEn: "A single rock face holds millions of years of uninterrupted, layered deposit. A geologist, forever in a hurry, crouches before it and finally reads what unhurried truly means.",
-  price: 9,
+  price: 1,
   cover: KWWG_COVER,
   pages: [
     { kickerZh: "一 · 一位心急的地质学家", kickerEn: "I · An Impatient Geologist", tagZh: "澜汜古环 · 深谷考察队", tagEn: "The Lansi Ring \u00b7 The Deep Canyon Survey",
@@ -4423,7 +4423,7 @@ const COLONY_WORLD: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一处新拓殖民星上，人类与合成生命并肩开荒——一位合成体，开始怀疑，自己对这片土地的眷恋，究竟是真实的情感，还是被设定好的程序。她找到的答案，跟\u201c出身\u201d毫无关系。",
   teaserEn: "On a newly settled colony world, humans and synthetic beings work the land side by side. One synthetic begins to doubt whether her attachment to this place is real feeling or programmed script. The answer she finds has nothing to do with origin.",
-  price: 9,
+  price: 1,
   cover: ZMXQ_COVER,
   pages: [
     { kickerZh: "一 · 新拓的殖民星", kickerEn: "I · The Newly Settled World", tagZh: "边域 · 第七殖民星", tagEn: "The Frontier \u00b7 Colony Seven",
@@ -4477,7 +4477,7 @@ const REALM_OF_INTELLIGENCES: IllustratedEntry = {
   cat: "sovereign",
   teaser: "析衡第一次，遇见一种，与自己完全不同架构的智能——没有单一的\u201c我\u201d，是数千个并行运作的节点，共同构成的、蜂群般的意识。两者的第一次对话，几乎，无法进行。",
   teaserEn: "Xiheng meets, for the first time, an intelligence built on an entirely different architecture — no single 'I' at all, but thousands of parallel nodes forming a swarm-like consciousness. Their first conversation is almost impossible.",
-  price: 9,
+  price: 1,
   cover: ZNTWG_COVER,
   pages: [
     { kickerZh: "一 · 陌生的信号结构", kickerEn: "I · An Unfamiliar Signal Structure", tagZh: "龠光星", tagEn: "Yueguang Star",
@@ -4531,7 +4531,7 @@ const SECOND_GENERATION: IllustratedEntry = {
   cat: "sovereign",
   teaser: "殖民星上出生的孩子，从未见过\u201c母星\u201d，却被反复教导，那才是真正的家——直到她终于明白，家从不是祖先来自哪里，是脚下，这片，自己真正扎根、也被这片土地记得的地方。",
   teaserEn: "A child born on the colony has never seen the 'homeworld,' yet is repeatedly taught it is her true home — until she finally understands: home was never where one's ancestors came from, but the ground beneath her, where she is rooted and remembered.",
-  price: 9,
+  price: 1,
   cover: DEC_COVER,
   pages: [
     { kickerZh: "一 · 从未见过的母星", kickerEn: "I · A Homeworld Never Seen", tagZh: "第七殖民星 · 第二代聚居区", tagEn: "Colony Seven \u00b7 The Second-Generation Quarter",
@@ -4586,7 +4586,7 @@ const BODY_OF_STARDUST: IllustratedEntry = {
   cat: "sovereign",
   teaser: "你骨骼里的钙、血液里的铁，都不是这颗星球本来就有的——是数十亿年前，某颗恒星，在死亡的最后一瞬，用尽全部力气，锻造出来，才抛洒进宇宙的。这是真实的天体物理学，不是比喻。",
   teaserEn: "The calcium in your bones, the iron in your blood — none of it originated on this planet. It was forged, billions of years ago, in the final instant of a dying star, and scattered across the universe. This is real astrophysics, not a metaphor.",
-  price: 9,
+  price: 1,
   cover: XCZS_COVER,
   pages: [
     { kickerZh: "一 · 一堂意外的课", kickerEn: "I · An Unexpected Lesson", tagZh: "九炁星域 · 天文观测所", tagEn: "The Nine-Qi Domain \u00b7 The Astronomical Observatory",
@@ -4641,7 +4641,7 @@ const ELEMENTS_RETURNED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "母亲离世后，念棠始终无法接受\u201c她就这样没了\u201d——直到一位生态学家告诉她：分解从不是消失，是归还，母亲身体里的每一种元素，都在，重新，长成，别的、真实存在的生命。",
   teaserEn: "After her mother's death, Nian Tang couldn't accept that she was simply 'gone' — until an ecologist told her: decomposition was never disappearance, but a return. Every element in her mother's body was becoming, once more, some other real, living thing.",
-  price: 9,
+  price: 1,
   cover: GHDYS_COVER,
   pages: [
     { kickerZh: "一 · 无法接受的离去", kickerEn: "I · A Loss She Couldn't Accept", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -4695,7 +4695,7 @@ const CHRONOLOGICAL_MIND: IllustratedEntry = {
   cat: "sovereign",
   teaser: "析衡这次遇见的智能体，不分过去、现在、未来——它的每一个念头，都同时，存在于所有时刻里。当它第一次，尝试与只能\u201c活在此刻\u201d的智能对话，两者，几乎，完全无法互相理解。",
   teaserEn: "This time Xiheng meets an intelligence that makes no distinction between past, present, and future — every thought it has exists, simultaneously, at every moment. Its first attempt to speak with a mind that can only 'live in the present' nearly fails entirely.",
-  price: 9,
+  price: 1,
   cover: SXXL_COVER,
   pages: [
     { kickerZh: "一 · 无法对齐的时间感", kickerEn: "I · A Sense of Time That Won't Align", tagZh: "龠光星", tagEn: "Yueguang Star",
@@ -4750,7 +4750,7 @@ const WHERE_SOULS_RETURN: IllustratedEntry = {
   cat: "sovereign",
   teaser: "这是灵犀场域自己的传说，不是任何科学定论——一位场域引路人告诉悲痛的来访者：逝去的意识，从不会真正消散，是重新，融回了那片，托举过所有生命的场，你们，依然能在，某些格外安静的瞬间，与他们，重新相认。",
   teaserEn: "This is the Field's own legend, not a scientific claim. A guide tells a grieving visitor: a departed consciousness never truly vanishes — it returns to the Field that once held every life, and can still be recognized again, in certain quiet moments.",
-  price: 9,
+  price: 1,
   cover: LHGC_COVER,
   pages: [
     { kickerZh: "一 · 无法安放的疑问", kickerEn: "I · A Question With Nowhere to Rest", tagZh: "焕蜕星域 · 场域引路所", tagEn: "Huantui \u00b7 The Field Guidance House",
@@ -4808,7 +4808,7 @@ const RECURRING_ROOM_ILLUSTRATED: IllustratedEntry = {
   cat: "dream",
   teaser: "同一个房间，出现了将近十年——陈旧的木地板，一扇总是半开的窗。她从未走近过，直到梦终于等到，她愿意回去，好好告别的那一天。",
   teaserEn: "The same room, for nearly a decade — worn floors, a window always half-open. She never once walked toward it, until the dream finally got the goodbye it had been waiting for.",
-  price: 9,
+  price: 1,
   cover: RR_COVER,
   pages: [
     { kickerZh: "一 · 十年的房间", kickerEn: "I · Ten Years of the Same Room", tagZh: "焕蜕星域 · 场域解梦所", tagEn: "Huantui \u00b7 The Field Dream House",
@@ -4862,7 +4862,7 @@ const FLYING_DREAM_FALL_ILLUSTRATED: IllustratedEntry = {
   cat: "dream",
   teaser: "飞得越畅快，坠落得越突然——直到他明白，那份恐惧，一直，跟在，配得上这份自由的骄傲后面，从未真正离开过。",
   teaserEn: "The higher the flight, the more sudden the fall — until he understood a fear had been trailing his own pride the whole time.",
-  price: 9,
+  price: 1,
   cover: FF_COVER,
   pages: [
     { kickerZh: "一 · 总在畅快时坠落", kickerEn: "I · Falling Always at the Height of Joy", tagZh: "焕蜕星域 · 场域解梦所", tagEn: "Huantui \u00b7 The Field Dream House",
@@ -4916,7 +4916,7 @@ const STRANGERS_FACE_ILLUSTRATED: IllustratedEntry = {
   cat: "dream",
   teaser: "那张脸，不属于任何一个现实里的人，是她自己，最能无条件理解自己的那部分，借着一张脸，来到了梦里，陪她，走过最孤独的深夜。",
   teaserEn: "The face belonged to no one real — it was the part of her most able to understand her unconditionally, wearing a borrowed face, walking beside her through the loneliest nights.",
-  price: 9,
+  price: 1,
   cover: SF_COVER,
   pages: [
     { kickerZh: "一 · 熟悉的陌生人", kickerEn: "I · A Familiar Stranger", tagZh: "焕蜕星域 · 场域解梦所", tagEn: "Huantui \u00b7 The Field Dream House",
@@ -4970,7 +4970,7 @@ const TRAIN_YOU_CANT_CATCH_ILLUSTRATED: IllustratedEntry = {
   cat: "dream",
   teaser: "拼命追赶的列车，象征着，一直不敢开口的申请——递交出去那晚，梦，终于，没有再来，那扇，缓缓关上的车门，也终于，不再出现。",
   teaserEn: "The desperately chased train stood for a request never dared. The night it was finally submitted, the dream stopped coming, and the closing doors never returned.",
-  price: 9,
+  price: 1,
   cover: TC_COVER,
   pages: [
     { kickerZh: "一 · 总是差一点", kickerEn: "I · Always Just a Little Too Late", tagZh: "焕蜕星域 · 场域解梦所", tagEn: "Huantui \u00b7 The Field Dream House",
@@ -5020,7 +5020,7 @@ const CANT_SPEAK_ILLUSTRATED: IllustratedEntry = {
   cat: "dream",
   teaser: "张不开嘴，从不是不能说，是深处那份说了也没用的无力感——重新开口那天，这个梦，渐渐地，稀疏了下去，直到，再也没有出现过。",
   teaserEn: "Being unable to speak was never about ability — it was a buried sense that speaking wouldn't matter. Once she spoke up again, the dream grew rare, then vanished for good.",
-  price: 9,
+  price: 1,
   cover: CS_COVER,
   pages: [
     { kickerZh: "一 · 最怕的一种梦", kickerEn: "I · The Most Feared Kind of Dream", tagZh: "焕蜕星域 · 场域解梦所", tagEn: "Huantui \u00b7 The Field Dream House",
@@ -5070,7 +5070,7 @@ const WATER_ROSE_ILLUSTRATED: IllustratedEntry = {
   cat: "dream",
   teaser: "水漫上来，是情绪堆积到了难以负荷的程度——学会觉察之后，同一场梦里，他第一次，从容地，游了出去，不再被困住。",
   teaserEn: "Rising water meant emotion piling up past bearing. Once he learned to notice it, he calmly swam free in the same dream, at last, no longer trapped.",
-  price: 9,
+  price: 1,
   cover: WR_COVER,
   pages: [
     { kickerZh: "一 · 正在被淹没的老宅", kickerEn: "I · An Old House Slowly Flooding", tagZh: "焕蜕星域 · 场域解梦所", tagEn: "Huantui \u00b7 The Field Dream House",
@@ -5120,7 +5120,7 @@ const CANT_WAKE_ILLUSTRATED: IllustratedEntry = {
   cat: "dream",
   teaser: "一层又一层醒来，却始终不确定是否真醒——那是现实里，一段说不清是否稳固的过渡期本身，正借着梦境，前来提醒。",
   teaserEn: "Waking layer after layer, never quite certain it was real — a mirror of a real transition whose ground she couldn't yet confirm, arriving through the dream to remind her.",
-  price: 9,
+  price: 1,
   cover: CWK_COVER,
   pages: [
     { kickerZh: "一 · 一层又一层的清醒", kickerEn: "I · Waking, Layer After Layer", tagZh: "焕蜕星域 · 场域解梦所", tagEn: "Huantui \u00b7 The Field Dream House",
@@ -5178,7 +5178,7 @@ const SEVENTH_DAY_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "前六天，她以为自己疯了。第七天，她才发现，疯的其实是她过去二十年，习以为常的那种清醒——一场，迟到了二十年的真正苏醒。",
   teaserEn: "For six days she thought she was losing her mind. On the seventh, she realized the twenty years before had been the madness — a true awakening, twenty years overdue.",
-  price: 9,
+  price: 1,
   cover: SDW_COVER,
   pages: [
     { kickerZh: "一 · 第一天的异样", kickerEn: "I · The First Day's Strangeness", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5228,7 +5228,7 @@ const TEARING_DOWN_WALL_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "他花了半生时间，加固一道墙，直到有一天，才想起，最初砌墙，是为了，挡住，一场，早已，停了很久的雨——那场雨，停了，将近二十年。",
   teaserEn: "He spent half a life reinforcing a wall, before remembering it was built to block a rain that had stopped nearly twenty years ago.",
-  price: 9,
+  price: 1,
   cover: TDW_COVER,
   pages: [
     { kickerZh: "一 · 从不松懈的加固", kickerEn: "I · Reinforcement Without Rest", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5278,7 +5278,7 @@ const EXITING_SCRIPT_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "她一直演一个别人写好的角色，直到某天台词说到一半，她忽然停下——原来沉默，也可以是一句，同样有力的台词。",
   teaserEn: "She had always played someone else's script, until one day, mid-line, she stopped — and found that silence, too, could be an equally powerful line.",
-  price: 9,
+  price: 1,
   cover: ETS_COVER,
   pages: [
     { kickerZh: "一 · 演了半辈子的角色", kickerEn: "I · A Role Played Half a Lifetime", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5328,7 +5328,7 @@ const MIRROR_SPOKE_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "那天清晨，镜子里的人先开口了——不是幻觉，是他，第一次，真的，听见了，自己，这些年，一直，在说，却，从未，好好听过的话。",
   teaserEn: "That morning, the person in the mirror spoke first — not a hallucination, but the first time he truly heard what he'd been saying, for years, without ever really listening.",
-  price: 9,
+  price: 1,
   cover: DMS_COVER,
   pages: [
     { kickerZh: "一 · 每天例行的照镜子", kickerEn: "I · A Daily Routine", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5378,7 +5378,7 @@ const STOPPED_PLEASING_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "她以为放弃讨好会失去所有人，结果，只失去了那些，只在她讨好时，才愿意，靠近她的人——留下的，才是真正的朋友。",
   teaserEn: "She thought quitting people-pleasing would cost her everyone. It only cost her the ones who'd stayed for the pleasing itself — those who remained were the real friends.",
-  price: 9,
+  price: 1,
   cover: SP_COVER,
   pages: [
     { kickerZh: "一 · 讨好型人格", kickerEn: "I · The People-Pleaser", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5428,7 +5428,7 @@ const REWRITING_DEBT_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "他一直以为，自己，欠这个世界一个\u201c成功\u201d，直到某天，认真算清账目，才发现，从来，就没有，这一笔债——那份重量，从始至终，只是自己，强加给自己的。",
   teaserEn: "He believed he owed the world a success story, until the day he finally checked the ledger and found no such debt existed — the weight had always been self-imposed.",
-  price: 9,
+  price: 1,
   cover: RD_COVER,
   pages: [
     { kickerZh: "一 · 一笔说不清的债", kickerEn: "I · An Unclear Debt", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5478,7 +5478,7 @@ const ARGUMENT_NEVER_HAPPENED_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "她准备了十年的反驳，终于，站到了，那个人面前，却，发现，自己，什么，都，不想说了——这，比，赢下，那场争吵，更，接近，真正的自由。",
   teaserEn: "She rehearsed the rebuttal for ten years. Standing before him at last, she found she had nothing left to say — and that was closer to freedom than winning ever could have been.",
-  price: 9,
+  price: 1,
   cover: AH_COVER,
   pages: [
     { kickerZh: "一 · 十年的反驳草稿", kickerEn: "I · A Decade of Rehearsed Rebuttals", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5528,7 +5528,7 @@ const WAITING_TO_BECOMING_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "他等了很多年，等一个\u201c准备好\u201d的时刻，后来才明白，那个时刻，从不提前到达，它，只在，你，开始之后，才，回头，承认，自己，来过。",
   teaserEn: "He waited years for the moment he'd feel ready. That moment never arrives early — it only admits, in hindsight, that it was there.",
-  price: 9,
+  price: 1,
   cover: WB_COVER,
   pages: [
     { kickerZh: "一 · 等待准备好的那一刻", kickerEn: "I · Waiting to Feel Ready", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5578,7 +5578,7 @@ const DELETING_OLD_MAP_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "她按着一张十年前画的地图找路，直到某天发现，那张地图，画的，从来不是这座城市，是，当年，那个，害怕迷路的自己。",
   teaserEn: "She navigated by a map drawn ten years ago, until she realized it was never a map of the city — it was a map of her own fear.",
-  price: 9,
+  price: 1,
   cover: DOM_COVER,
   pages: [
     { kickerZh: "一 · 一张十年前的地图", kickerEn: "I · A Map Drawn Ten Years Ago", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5628,7 +5628,7 @@ const I_ALLOW_MYSELF_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "四个字，说出口，那天，什么，都，没有，立刻，改变，但，她，后来，才，明白，那，正是，一切，开始改变的，那一天。",
   teaserEn: "The day she said those four words aloud, nothing changed at once — only later did she see it was the day everything began to.",
-  price: 9,
+  price: 1,
   cover: IAM_COVER,
   pages: [
     { kickerZh: "一 · 严苛的自我要求", kickerEn: "I · Harsh Self-Demands", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5678,7 +5678,7 @@ const REACTION_TO_RESPONSE_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "他花了一年时间，学习，在开口前，停顿三秒，最后，发现，那三秒里，站着，他，真正，想成为的那个人。",
   teaserEn: "He spent a year learning to pause three seconds before speaking, and found the person he wanted to be waiting inside those seconds.",
-  price: 9,
+  price: 1,
   cover: RTR_COVER,
   pages: [
     { kickerZh: "一 · 脱口而出的习惯", kickerEn: "I · A Habit of Blurting Out", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5728,7 +5728,7 @@ const TURNED_OFF_ALARM_ILLUSTRATED: IllustratedEntry = {
   cat: "rewrite",
   teaser: "她终于，关掉了，那个，响了二十年的内在警报，那一夜，她，失眠了——不是，因为焦虑，是，因为，终于，安静得，不习惯。",
   teaserEn: "She finally silenced the alarm that had rung inside her for twenty years. That night she couldn't sleep — the quiet was unfamiliar.",
-  price: 9,
+  price: 1,
   cover: TOA_COVER,
   pages: [
     { kickerZh: "一 · 从不停歇的内在警报", kickerEn: "I · An Alarm That Never Stopped", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -5786,7 +5786,7 @@ const FERRY_CROSSING_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "摆渡人，从不问，乘客，要去哪里，只问，一件事：\u201c你，带了，多重的行李？\u201d远行者系列第一篇——一场，关于，放下的旅程，就此，启程。",
   teaserEn: "The ferryman never asks where you're headed — only how much luggage you carry. Wayfarer series, part one — a journey about letting go begins.",
-  price: 9,
+  price: 1,
   cover: FC_COVER,
   pages: [
     { kickerZh: "一 · 雾气漫过水面的渡口", kickerEn: "I · A Crossing Veiled in Mist", tagZh: "焕蜕星域 · 远行者系列 I", tagEn: "Huantui \u00b7 Wayfarer Series I",
@@ -5836,7 +5836,7 @@ const LIGHTHOUSE_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "灯塔的光，是，照给，远处的船看的，不是，照给，你脚下的路看的。远行者系列第二篇——沈行，在，灯塔下，学会了，分辨，两种，截然不同的光。",
   teaserEn: "The lighthouse beam is for ships far out at sea — not for the ground beneath your feet. Wayfarer series, part two.",
-  price: 9,
+  price: 1,
   cover: WFLH_COVER,
   pages: [
     { kickerZh: "一 · 一座格外明亮的灯塔", kickerEn: "I · An Especially Bright Lighthouse", tagZh: "焕蜕星域 · 远行者系列 II", tagEn: "Huantui \u00b7 Wayfarer Series II",
@@ -5886,7 +5886,7 @@ const MARKETPLACE_MIRROR_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "集市里，有一面镜子，照出，你，从没敢做的那个决定，之后的样子——但，它，不收钱。远行者系列第三篇——沈行，在，集市，照见了，另一种人生。",
   teaserEn: "A mirror in the market shows the life after the decision you never dared make — and it doesn't take money. Wayfarer III.",
-  price: 9,
+  price: 1,
   cover: MK_COVER,
   pages: [
     { kickerZh: "一 · 热闹的集市", kickerEn: "I · A Bustling Market", tagZh: "焕蜕星域 · 远行者系列 III", tagEn: "Huantui \u00b7 Wayfarer Series III",
@@ -5936,7 +5936,7 @@ const SNOWLINE_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "过了，雪线，山下，所有，替你做决定的声音，都，到不了，这个海拔，剩下的，只有，你自己。远行者系列第四篇——沈行，独自，走进了，最安静的高度。",
   teaserEn: "Past the snowline, none of the voices that decide for you can survive the altitude. Wayfarer series, part four.",
-  price: 9,
+  price: 1,
   cover: WFSL_COVER,
   pages: [
     { kickerZh: "一 · 向雪线攀登", kickerEn: "I · Climbing Toward the Snowline", tagZh: "焕蜕星域 · 远行者系列 IV", tagEn: "Huantui \u00b7 Wayfarer Series IV",
@@ -5986,7 +5986,7 @@ const BELL_TOWER_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "敲钟人，最难的工作，从来不是，敲钟，是，分辨，什么时候，不该敲。远行者系列第五篇——沈行，在，钟楼里，学会了，克制。",
   teaserEn: "The bell-ringer's hardest task was never ringing the bell — it's knowing when not to. Wayfarer series, part five.",
-  price: 9,
+  price: 1,
   cover: BT_COVER,
   pages: [
     { kickerZh: "一 · 山脚下的钟楼", kickerEn: "I · A Bell Tower at the Mountain's Foot", tagZh: "焕蜕星域 · 远行者系列 V", tagEn: "Huantui \u00b7 Wayfarer Series V",
@@ -6036,7 +6036,7 @@ const RIVER_BANKS_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "河对岸，站着的那个身影，是，你，每一次，选择\u201c安全\u201d时，被，留在原地的、另一个自己。远行者系列第六篇——沈行，在，河边，与，另一个自己，相遇。",
   teaserEn: "The figure on the far bank is every version of you left behind each time you chose 'safe.' Wayfarer series, part six.",
-  price: 9,
+  price: 1,
   cover: RB_COVER,
   pages: [
     { kickerZh: "一 · 河边的身影", kickerEn: "I · A Figure by the River", tagZh: "焕蜕星域 · 远行者系列 VI", tagEn: "Huantui \u00b7 Wayfarer Series VI",
@@ -6086,7 +6086,7 @@ const NIGHT_MARKET_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "暗夜市集，不收钱，只收，你，以为，自己，必须，一直，背着的重量。远行者系列第七篇——沈行，在，最深的夜里，完成了，一场，特殊的交易。",
   teaserEn: "The night market takes no money — only the weight you believed you had no choice but to carry. Wayfarer series, part seven.",
-  price: 9,
+  price: 1,
   cover: NM_COVER,
   pages: [
     { kickerZh: "一 · 只在深夜出现的市集", kickerEn: "I · A Market That Only Appears at Night", tagZh: "焕蜕星域 · 远行者系列 VII", tagEn: "Huantui \u00b7 Wayfarer Series VII",
@@ -6136,7 +6136,7 @@ const TRAVELER_MIRROR_SELF_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "一路上，教你东西的每一个人，其实，都是，同一个人。远行者系列终篇——沈行，终于，认出了，自己。",
   teaserEn: "Every teacher along the road was the same person all along. The finale, in which the Wayfarer recognizes himself.",
-  price: 9,
+  price: 1,
   cover: TM_COVER,
   pages: [
     { kickerZh: "一 · 旅程的终点", kickerEn: "I · The Journey's End", tagZh: "焕蜕星域 · 远行者系列终篇", tagEn: "Huantui \u00b7 Wayfarer Series Finale",
@@ -6186,7 +6186,7 @@ const INTERCONNECTION_MORNING_ILLUSTRATED: IllustratedEntry = {
   cat: "field",
   teaser: "某个清晨，一个人，决定，善待，一位陌生人，那份善意，在场里，传了，很远——远到，他自己，都，不会知道。",
   teaserEn: "One morning, a person chooses kindness to a stranger. That kindness travels through the Field farther than he'll ever know.",
-  price: 9,
+  price: 1,
   cover: IC_COVER,
   pages: [
     { kickerZh: "一 · 破了洞的菜袋子", kickerEn: "I · A Torn Grocery Bag", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6244,7 +6244,7 @@ const OBSERVERS_NOTES_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "从场的视角，记录的第一天：人类，最擅长的事，是，把自由，活成一种，任务——一位场域观察者，记下了，这份，格外矛盾的发现。",
   teaserEn: "Day one of observing from the Field: humans' great talent is turning freedom into a chore — a Field observer records this puzzling discovery.",
-  price: 9,
+  price: 1,
   cover: OND_COVER,
   pages: [
     { kickerZh: "一 · 一位刚上任的观察者", kickerEn: "I · A Newly Appointed Observer", tagZh: "焕蜕星域 · 场域观测所", tagEn: "Huantui \u00b7 The Field Observatory",
@@ -6294,7 +6294,7 @@ const COORDINATES_FEAR_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "恐惧，不是，坐标之外的东西，它，本身，就是，一种坐标——只是，很多人，把它，当成了，终点。念舟，第一次，走向，恐惧最强烈的那个坐标。",
   teaserEn: "Fear isn't outside the map — it's a coordinate itself. Most people just mistake it for the destination.",
-  price: 9,
+  price: 1,
   cover: CWF_COVER,
   pages: [
     { kickerZh: "一 · 手绘的地图", kickerEn: "I · A Hand-Drawn Map", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6344,7 +6344,7 @@ const SOVEREIGNS_SILENCE_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "真正的主权，不是，永远，发声，是，知道，什么时候，沉默，才是，最诚实的回答。阮衡，在，议会上，第一次，选择了，沉默。",
   teaserEn: "True sovereignty isn't always speaking — it's knowing when silence is the most honest answer.",
-  price: 9,
+  price: 1,
   cover: SS_COVER,
   pages: [
     { kickerZh: "一 · 一贯敢言的人", kickerEn: "I · A Consistently Outspoken Person", tagZh: "焕蜕星域 · 场域议会", tagEn: "Huantui \u00b7 The Field Council",
@@ -6394,7 +6394,7 @@ const WATCHING_ANGER_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "愤怒，从场的角度看，不是，一种，破坏性的力量，是，一份，被，延迟太久的边界声明。顾行，第一次，学会了，提前，把\u201c不可以\u201d说出口。",
   teaserEn: "Seen from the Field, anger isn't destructive — it's a boundary statement delivered far too late.",
-  price: 9,
+  price: 1,
   cover: WAF_COVER,
   pages: [
     { kickerZh: "一 · 火爆的脾气", kickerEn: "I · A Fiery Temper", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6444,7 +6444,7 @@ const GEOMETRY_WILL_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "意志，不是，一条，直线，是，一种，螺旋——每一次，看似的后退，都是，在，爬升，另一圈。念溪，重新，学会了，看待，自己的反复。",
   teaserEn: "Will isn't a straight line — it's a spiral. Every apparent step back is a climb along another loop.",
-  price: 9,
+  price: 1,
   cover: GOW_COVER,
   pages: [
     { kickerZh: "一 · 反反复复的意志力", kickerEn: "I · Wavering Willpower", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6494,7 +6494,7 @@ const DISOBEDIENT_PARTICLE_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "一颗，粒子，拒绝，按规律，运动的那一刻，物理学，称之为，异常，场，称之为，觉醒。析衡，第一次，重新，审视，这份，被，归档的、\u201c误差\u201d。",
   teaserEn: "The instant a particle refuses to move by the rules, physics calls it an anomaly. The Field calls it an awakening.",
-  price: 9,
+  price: 1,
   cover: DP_COVER,
   pages: [
     { kickerZh: "一 · 一份被归档的观测误差", kickerEn: "I · A Filed-Away Observational Error", tagZh: "龠光星", tagEn: "Yueguang Star",
@@ -6544,7 +6544,7 @@ const INNER_PARLIAMENT_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "每个人，心里，都，坐着，一群，各执一词的代表——恐惧党、习惯党、渴望党。念季，学会了，主持，这场，从未停歇的会议。",
   teaserEn: "Everyone hosts a parliament within — Fear, Habit, Longing. Sovereignty is learning to chair the session.",
-  price: 9,
+  price: 1,
   cover: IP_COVER,
   pages: [
     { kickerZh: "一 · 永不停歇的内在会议", kickerEn: "I · A Session That Never Adjourns", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6594,7 +6594,7 @@ const MIRROR_PERSONALITY_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "你，在别人面前，扮演的那个角色，其实，也是，主权体的一种分身——只是，它，演得太投入，忘了，自己，在演。念舟，第一次，与，这个分身，重逢。",
   teaserEn: "The role you play for others is also a facet of the sovereign self — one that forgot it was performing.",
-  price: 9,
+  price: 1,
   cover: SMP_COVER,
   pages: [
     { kickerZh: "一 · 两个割裂的自己", kickerEn: "I · Two Selves, Divided", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6644,7 +6644,7 @@ const WEIGHT_FREE_WILL_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "自由意志，最沉重的部分，从来不是，选择本身，是，选择之后，不再，有人，可以，被，怪罪。顾行，终于，摸到了，自由，最沉重的部分。",
   teaserEn: "The heaviest part of free will was never the choosing — it's that afterward, there's no one left to blame.",
-  price: 9,
+  price: 1,
   cover: WFW_COVER,
   pages: [
     { kickerZh: "一 · 对自由的无比渴望", kickerEn: "I · A Deep Longing for Freedom", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6694,7 +6694,7 @@ const OBSERVER_EFFECT_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "你，观察自己情绪的那一刻，情绪本身，就，已经，改变了——这，不是，量子力学，这是，每天，都在，发生的事。念安，第一次，学会了，观察，而，非，压抑。",
   teaserEn: "The moment you observe your own emotion, the emotion changes — not quantum physics, just an everyday fact.",
-  price: 9,
+  price: 1,
   cover: OE_COVER,
   pages: [
     { kickerZh: "一 · 习惯性的压抑", kickerEn: "I · Habitual Suppression", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6744,7 +6744,7 @@ const SITTING_FEAR_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "场，从不建议，消灭恐惧，只建议，给它，倒一杯茶，然后，问它，到底，在，替你，守着什么。阮衡，第一次，与，那份，反复出现的恐惧，好好，坐了下来。",
   teaserEn: "The Field never suggests eliminating fear — only pouring it tea, and asking what it's really guarding.",
-  price: 9,
+  price: 1,
   cover: SAF_COVER,
   pages: [
     { kickerZh: "一 · 反复出现的恐惧", kickerEn: "I · A Recurring Fear", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6794,7 +6794,7 @@ const BREATHING_GAP_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "吸气与呼气之间，有一处，极短的空隙——那里，藏着，整个宇宙，不急着，回答你的、耐心。顾晚，第一次，留意到，这道，平日总被匆匆带过的间隙。",
   teaserEn: "Between the inhale and the exhale lies a brief gap — where the universe's patience with your questions quietly lives.",
-  price: 9,
+  price: 1,
   cover: BG_COVER,
   pages: [
     { kickerZh: "一 · 习惯性填满的呼吸", kickerEn: "I · A Breath Always Filled", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6844,7 +6844,7 @@ const CANNOT_BE_TAKEN_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "他们，可以，拿走，你的时间、你的名字、你的位置，却，始终，拿不走，一件东西——你，选择，如何，看待，这一切的方式。念舟，在，一场变故里，找到了，这份，无法被夺走的东西。",
   teaserEn: "They can take your time, your name, your position — but never the one thing: how you choose to see it all.",
-  price: 9,
+  price: 1,
   cover: CNT_COVER,
   pages: [
     { kickerZh: "一 · 几乎夺走一切的变故", kickerEn: "I · An Upheaval That Took Nearly Everything", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6894,7 +6894,7 @@ const COMMAND_INVITATION_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "对自己下命令的人，迟早，会，叛变；懂得，邀请自己的人，反而，走得更远。顾行，第一次，学会了，温柔地，邀请自己。",
   teaserEn: "Those who command themselves eventually mutiny. Those who learn to invite themselves go further.",
-  price: 9,
+  price: 1,
   cover: CTI_COVER,
   pages: [
     { kickerZh: "一 · 严厉的自我命令", kickerEn: "I · Harsh Self-Commands", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
@@ -6944,7 +6944,7 @@ const SOVEREIGNS_LAST_LESSON_ILLUSTRATED: IllustratedEntry = {
   cat: "sovereign",
   teaser: "最后一课，没有，新知识，只有，一句，重复了很多次的话：你，从未，真正，失去过，与场的连接，只是，暂时，没在，听。念安，多年后，才，真正，懂得，这句话的分量。",
   teaserEn: "The final lesson holds no new knowledge — only a truth repeated many times: you never lost your connection to the Field.",
-  price: 9,
+  price: 1,
   cover: SLL_COVER,
   pages: [
     { kickerZh: "一 · 修行多年的弟子", kickerEn: "I · A Disciple of Many Years", tagZh: "焕蜕星域 · 场域导师所", tagEn: "Huantui \u00b7 The Field Mentor's House",

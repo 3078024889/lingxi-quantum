@@ -3,9 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { VOICES } from "@/lib/voices";
 
-/* 心声之雨 · 深空活场层
- * 每颗光点像深空里的一个主权体节点：在下落的同时叠加自己的横向漂移与轻微振动，
- * 斜向缓缓穿过整片时空。部分节点绽放出一句「场域心声」。
+/* 心声之雨 · 深空活场层（v2：仅两侧 · 流星尾巴 · 水波纹涟漪）
+ * 光点只出现在视口左右两侧的窄带里，不再落入中间阅读区，避免干扰内容。
+ * 每颗光点，是一道拉长的流星尾巴——亮点在下、尾迹向上淡出，随下落斜向掠过；
+ * 亮点周围叠加一圈，缓缓扩散、淡出的水波纹涟漪，像光落入水面漾开的样子。
+ * 部分光点会绽放出一句「场域心声」。
  * 桌面：鼠标碰到光点即停住显示；手机：无 hover，故光点更大、可点区域更大，
  *       且文字会自动轮播绽放（不点也能看到），点中则锁定该句。
  * 容器 pointer-events:none，只有光点可交互；z-30 位于导航之下。
@@ -13,8 +15,7 @@ import { VOICES } from "@/lib/voices";
 
 type Node = {
   id: number;
-  x: number;          // 起始横向 %
-  zone: "side" | "middle"; // side：允许自动绽放文字；middle：仅悬停/点击才显示文字
+  x: number;          // 起始横向 %，仅分布在左右两条窄带里
   depth: number;      // 0 远 ~ 1 近
   color: string;
   fallDur: number;    // 下落时长
@@ -22,20 +23,18 @@ type Node = {
   driftDur: number;   // 横向漂移时长
   driftDelay: number;
   driftDist: number;  // 横向漂移幅度(px，含正负=方向)
-  vibDur: number;     // 振动时长
+  rippleDur: number;  // 水波纹涟漪周期
+  rippleDelay: number;
   vi: number;
 };
 
 const COLORS = ["#E8B765", "#7CE0D3", "#C9A5D8", "#F2E2C4"];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
-// 全宽度分布：光点在整个视口宽度上都会出现、都会动，
-// 但只有两侧区域（约 0~18% 和 82~100%）的光点，允许自动绽放文字，
-// 中间阅读列的光点，文字只在悬停/点击时才出现，不打扰阅读。
-const SIDE_MAX = 18;
-function randXZone(): { x: number; zone: "side" | "middle" } {
-  const x = rand(1, 99);
-  const zone: "side" | "middle" = x <= SIDE_MAX || x >= 100 - SIDE_MAX ? "side" : "middle";
-  return { x, zone };
+// 光点只在左右两条窄带里出现（约 1~16% 与 84~99%），中间阅读列完全留空。
+const SIDE_MAX = 16;
+function randX(): number {
+  const onLeft = Math.random() < 0.5;
+  return onLeft ? rand(1, SIDE_MAX) : rand(100 - SIDE_MAX, 99);
 }
 
 const PRIORITY = /(修炼|显化片刻|邀请)/;
@@ -63,22 +62,22 @@ export default function FieldVoices() {
       const mobile = w < 720;
       setIsMobile(mobile);
       const area = w * window.innerHeight;
-      const count = Math.max(12, Math.min(mobile ? 20 : 54, Math.round(area / (mobile ? 30000 : 37000))));
+      // 只在两侧窄带里分布，按可用面积（约为总宽的 32%）折算密度，保持视觉丰富度
+      const count = Math.max(10, Math.min(mobile ? 16 : 42, Math.round((area * 0.34) / (mobile ? 26000 : 32000))));
       const arr: Node[] = [];
       for (let k = 0; k < count; k++) {
-        const { x, zone } = randXZone();
         arr.push({
           id: seq.current++,
-          x,
-          zone,
+          x: randX(),
           depth: Math.random(),
           color: COLORS[Math.floor(Math.random() * COLORS.length)],
           fallDur: rand(mobile ? 20 : 26, mobile ? 34 : 40) - Math.random() * 12,
           fallDelay: -rand(0, 34),
           driftDur: rand(9, 20),
           driftDelay: -rand(0, 20),
-          driftDist: rand(-40, 40),
-          vibDur: rand(2.6, 5),
+          driftDist: rand(-30, 30),
+          rippleDur: rand(2.6, 4.2),
+          rippleDelay: -rand(0, 4),
           vi: pick(),
         });
       }
@@ -95,8 +94,7 @@ export default function FieldVoices() {
     setNodes((prev) =>
       prev.map((d) => {
         if (d.id !== id) return d;
-        const { x, zone } = randXZone();
-        return { ...d, x, zone, vi: pick(), driftDist: rand(-40, 40) };
+        return { ...d, x: randX(), vi: pick(), driftDist: rand(-30, 30) };
       })
     );
   };
@@ -105,12 +103,12 @@ export default function FieldVoices() {
   useEffect(() => {
     if (nodes.length === 0) return;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    const sideCount = Math.max(1, nodes.filter((d) => d.zone === "side").length);
-    const maxActive = reduce ? 2 : isMobile ? Math.min(5, Math.ceil(sideCount / 2.4)) : Math.min(6, Math.ceil(sideCount / 3));
+    const total = Math.max(1, nodes.length);
+    const maxActive = reduce ? 2 : isMobile ? Math.min(5, Math.ceil(total / 2.4)) : Math.min(6, Math.ceil(total / 3));
     const tick = () => {
       setSpeaking((prev) => {
         if (Object.keys(prev).length >= maxActive) return prev;
-        const cands = nodes.filter((d) => d.zone === "side" && !(d.id in prev));
+        const cands = nodes.filter((d) => !(d.id in prev));
         if (!cands.length) return prev;
         const d = cands[Math.floor(Math.random() * cands.length)];
         const next = { ...prev, [d.id]: d.vi };
@@ -139,12 +137,11 @@ export default function FieldVoices() {
       {nodes.map((d) => {
         const v = voiceOf(d);
         const lit = hovered === d.id || d.id in speaking;
-        const openRight = d.x < 50; // 左侧节点文字向右（朝内）展开，右侧节点向左（朝内）展开，确保气泡在视口内可见
-        const base = (2 + d.depth * 6) * (isMobile ? 1.5 : 1); // 手机上更大
-        const size = lit ? base + 4 : base;
-        const opacity = lit ? 1 : 0.28 + d.depth * 0.42;
-        const blur = (1 - d.depth) * 1.1;
-        // 外层=下落(纵向)，中层=横向漂移，内层=振动 —— 三层叠加出斜向深空感
+        const openRight = d.x < 50; // 左侧节点文字向右（朝内）展开，右侧节点向左（朝内）展开
+        const base = (2.2 + d.depth * 5.5) * (isMobile ? 1.5 : 1);
+        const headSize = lit ? base + 4 : base;
+        const tailLen = headSize * (7 + d.depth * 5); // 尾巴长度随深度变化，制造远近层次
+        const opacity = lit ? 1 : 0.32 + d.depth * 0.42;
         return (
           <div
             key={d.id}
@@ -166,33 +163,53 @@ export default function FieldVoices() {
                 animationPlayState: hovered === d.id ? "paused" : "running",
               } as React.CSSProperties}
             >
-              <div className="fv-vib" style={{ animationDuration: `${d.vibDur}s` }}>
-                <div className="relative">
-                  {/* 可点区域：透明大热区，手机更大，方便点中 */}
-                  <span
-                    className="fv-hit pointer-events-auto absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                    style={{ width: isMobile ? 40 : 26, height: isMobile ? 40 : 26 }}
-                    onMouseEnter={() => setHovered(d.id)}
-                    onMouseLeave={() => setHovered((h) => (h === d.id ? null : h))}
-                    onClick={() => setHovered((h) => (h === d.id ? null : d.id))}
-                  />
-                  <span
-                    className="fv-point block rounded-full"
-                    style={{
-                      width: size, height: size, background: d.color,
-                      filter: blur ? `blur(${blur}px)` : undefined,
-                      boxShadow: lit ? `0 0 18px 4px ${d.color}` : `0 0 ${4 + d.depth * 6}px 1px ${d.color}55`,
-                      opacity,
-                    }}
-                  />
-                  {v && (
-                    <div className={`fv-say absolute top-1/2 -translate-y-1/2 ${openRight ? "left-6 text-left" : "right-6 text-right"}`}>
-                      <span className="fv-glyph">✧</span>
-                      <span data-lang="zh">{v.zh}</span>
-                      <span data-lang="en">{v.en}</span>
-                    </div>
-                  )}
-                </div>
+              <div className="relative">
+                {/* 流星尾巴：从亮点向上拉长、淡出的渐变条，随下落方向自然拖出轨迹感 */}
+                <div
+                  className="fv-tail pointer-events-none absolute left-1/2 -translate-x-1/2"
+                  style={{
+                    bottom: headSize * 0.4,
+                    width: Math.max(1.4, headSize * 0.32),
+                    height: tailLen,
+                    background: `linear-gradient(to top, ${d.color}, ${d.color}00)`,
+                    opacity: opacity * 0.75,
+                    filter: `blur(${(1 - d.depth) * 0.8}px)`,
+                  }}
+                />
+                {/* 水波纹涟漪：从亮点缓缓扩散、淡出的圆环，营造光落入水面的感觉 */}
+                <span
+                  className="fv-ripple pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                  style={{
+                    border: `1px solid ${d.color}`,
+                    animationDuration: `${d.rippleDur}s`,
+                    animationDelay: `${d.rippleDelay}s`,
+                    opacity: lit ? 0.5 : 0.28,
+                  }}
+                />
+                {/* 可点区域：透明大热区，手机更大，方便点中 */}
+                <span
+                  className="fv-hit pointer-events-auto absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                  style={{ width: isMobile ? 40 : 26, height: isMobile ? 40 : 26 }}
+                  onMouseEnter={() => setHovered(d.id)}
+                  onMouseLeave={() => setHovered((h) => (h === d.id ? null : h))}
+                  onClick={() => setHovered((h) => (h === d.id ? null : d.id))}
+                />
+                {/* 亮点头部 */}
+                <span
+                  className="fv-point block rounded-full"
+                  style={{
+                    width: headSize, height: headSize, background: d.color,
+                    boxShadow: lit ? `0 0 18px 4px ${d.color}` : `0 0 ${4 + d.depth * 6}px 1px ${d.color}55`,
+                    opacity,
+                  }}
+                />
+                {v && (
+                  <div className={`fv-say absolute top-1/2 -translate-y-1/2 ${openRight ? "left-6 text-left" : "right-6 text-right"}`}>
+                    <span className="fv-glyph">✧</span>
+                    <span data-lang="zh">{v.zh}</span>
+                    <span data-lang="en">{v.en}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -208,8 +225,15 @@ export default function FieldVoices() {
         @keyframes fv-drop { 0% { transform: translateY(-10vh); } 100% { transform: translateY(114vh); } }
         .fv-drift { animation-name: fv-driftx; animation-iteration-count: infinite; animation-timing-function: ease-in-out; will-change: transform; }
         @keyframes fv-driftx { 0%,100% { transform: translateX(calc(var(--drift) * -0.5)); } 50% { transform: translateX(calc(var(--drift) * 0.5)); } }
-        .fv-vib { animation-name: fv-vibrate; animation-iteration-count: infinite; animation-timing-function: ease-in-out; }
-        @keyframes fv-vibrate { 0%,100% { transform: translate(0,0); } 25% { transform: translate(1.5px,-1.5px); } 50% { transform: translate(0,1.5px); } 75% { transform: translate(-1.5px,-0.5px); } }
+        .fv-tail { border-radius: 999px; transition: opacity .55s ease, height .55s ease; }
+        .fv-ripple {
+          width: 6px; height: 6px;
+          animation-name: fv-ripple-out; animation-iteration-count: infinite; animation-timing-function: ease-out;
+        }
+        @keyframes fv-ripple-out {
+          0%   { transform: translate(-50%,-50%) scale(1);   opacity: .6; }
+          100% { transform: translate(-50%,-50%) scale(6.5); opacity: 0; }
+        }
         .fv-point { transition: width .55s ease, height .55s ease, opacity .55s ease, box-shadow .55s ease; }
         .fv-say {
           width: max-content; max-width: 17rem;
@@ -231,7 +255,8 @@ export default function FieldVoices() {
           .fv-say { max-width: 60vw; font-size: 1.02rem; }
         }
         @media (prefers-reduced-motion: reduce) {
-          .fv-fall, .fv-drift, .fv-vib { animation-duration: 0s !important; }
+          .fv-fall, .fv-drift { animation-duration: 0s !important; }
+          .fv-ripple { animation: none; opacity: .35; }
         }
       `}</style>
     </div>

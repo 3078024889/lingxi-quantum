@@ -39,8 +39,14 @@ export async function getAccess() {
   return { user, manifestActive, unlocks };
 }
 
-// 是否解锁了某项修炼技术（拥有该项或四项合集）
+// 是否解锁了某项修炼技术或某篇多维叙事
+const CULTIVATION_IDS = ["breath", "intuition", "heart-reset", "ascending-heart"];
+
 export function hasUnlock(unlocks: string[], productId: string) {
   if (REVIEW_MODE) return true;
-  return unlocks.includes(productId) || unlocks.includes("bundle");
+  if (unlocks.includes(productId)) return true;
+  if (unlocks.includes("everything")) return true; // 全构造解锁：修炼技术 + 多维叙事，含日后新增
+  if (CULTIVATION_IDS.includes(productId) && unlocks.includes("bundle")) return true; // 四项合集：仅解锁四大修炼技术
+  if (!CULTIVATION_IDS.includes(productId) && unlocks.includes("narrative-all")) return true; // 多维叙事全解锁：含日后新增篇目
+  return false;
 }
