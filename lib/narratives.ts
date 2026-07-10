@@ -66,9 +66,6 @@ export const NARRATIVES: Narrative[] = [
   // 独立场域篇（10 · 创作中）
 
   // ───────── 主权体观测日志（15 · $9 · 创作中）─────────
-  { slug: "the-inner-parliament", title: "内在议会", titleEn: "The Inner Parliament", cat: "sovereign", teaser: "每个人心里都坐着一群代表——恐惧党、习惯党、渴望党——主权，是学会主持这场会议。", teaserEn: "Everyone hosts a parliament within — Fear, Habit, Longing. Sovereignty is learning to chair the session.", price: 9 },
-  { slug: "the-sovereign-and-the-mirror-personality", title: "主权体与镜像人格", titleEn: "The Sovereign and the Mirror Personality", cat: "sovereign", teaser: "你在别人面前扮演的那个角色，其实也是主权体的一种分身——只是它演得太投入，忘了自己在演。", teaserEn: "The role you play for others is also a facet of the sovereign self — one that forgot it was performing.", price: 9 },
-  { slug: "the-weight-of-free-will", title: "自由意志的重量", titleEn: "The Weight of Free Will", cat: "sovereign", teaser: "自由意志最沉重的部分，从来不是选择本身，是选择之后，不再有人可以怪罪。", teaserEn: "The heaviest part of free will was never the choosing — it's that afterward, there's no one left to blame.", price: 9 },
   { slug: "the-observer-effect-human-edition", title: "观测者效应 · 人类版", titleEn: "The Observer Effect, Human Edition", cat: "sovereign", teaser: "你观察自己情绪的那一刻，情绪本身就已经改变了——这不是量子力学，这是每天都在发生的事。", teaserEn: "The moment you observe your own emotion, the emotion changes — not quantum physics, just an everyday fact.", price: 9 },
   { slug: "sitting-across-from-fear", title: "与恐惧对坐", titleEn: "Sitting Across from Fear", cat: "sovereign", teaser: "场从不建议消灭恐惧，只建议给它倒一杯茶，然后问它，到底在替你守着什么。", teaserEn: "The Field never suggests eliminating fear — only pouring it tea, and asking what it's really guarding.", price: 9 },
   { slug: "the-sovereigns-breathing-gap", title: "呼吸间隙", titleEn: "The Sovereign's Breathing Gap", cat: "sovereign", teaser: "吸气与呼气之间，有一处极短的空隙——那里，藏着整个宇宙不急着回答你的耐心。", teaserEn: "Between the inhale and the exhale lies a brief gap — where the universe's patience with your questions quietly lives.", price: 9 },
