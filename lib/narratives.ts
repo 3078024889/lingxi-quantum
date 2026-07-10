@@ -66,9 +66,6 @@ export const NARRATIVES: Narrative[] = [
   // 独立场域篇（10 · 创作中）
 
   // ───────── 主权体观测日志（15 · $9 · 创作中）─────────
-  { slug: "observers-notes-day-one", title: "观察者笔记 · 第一日", titleEn: "Observer's Notes, Day One", cat: "sovereign", teaser: "从场的视角记录的第一天：人类最擅长的事，是把自由活成一种任务。", teaserEn: "Day one of observing from the Field: humans' great talent is turning freedom into a chore.", price: 9 },
-  { slug: "coordinates-without-fear", title: "无惧的坐标", titleEn: "Coordinates Without Fear", cat: "sovereign", teaser: "恐惧不是坐标之外的东西，它本身就是一种坐标——只是很多人，把它当成了终点。", teaserEn: "Fear isn't outside the map — it's a coordinate itself. Most people just mistake it for the destination.", price: 9 },
-  { slug: "the-sovereigns-silence", title: "主权体的沉默", titleEn: "The Sovereign's Silence", cat: "sovereign", teaser: "真正的主权，不是永远发声，是知道什么时候，沉默才是最诚实的回答。", teaserEn: "True sovereignty isn't always speaking — it's knowing when silence is the most honest answer.", price: 9 },
   { slug: "watching-anger-from-the-field", title: "从场观察愤怒", titleEn: "Watching Anger from the Field", cat: "sovereign", teaser: "愤怒从场的角度看，不是一种破坏性的力量，是一份被延迟太久的边界声明。", teaserEn: "Seen from the Field, anger isn't destructive — it's a boundary statement delivered far too late.", price: 9 },
   { slug: "the-geometry-of-will", title: "意志的几何", titleEn: "The Geometry of Will", cat: "sovereign", teaser: "意志不是一条直线，是一种螺旋——每一次看似的后退，都是在爬升另一圈。", teaserEn: "Will isn't a straight line — it's a spiral. Every apparent step back is a climb along another loop.", price: 9 },
   { slug: "a-disobedient-particle", title: "一个不服从的粒子", titleEn: "A Disobedient Particle", cat: "sovereign", teaser: "一颗粒子拒绝按规律运动的那一刻，物理学称之为异常，场称之为觉醒。", teaserEn: "The instant a particle refuses to move by the rules, physics calls it an anomaly. The Field calls it an awakening.", price: 9 },

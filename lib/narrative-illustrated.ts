@@ -6226,7 +6226,165 @@ const INTERCONNECTION_MORNING_ILLUSTRATED: IllustratedEntry = {
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED, SEVENTH_DAY_ILLUSTRATED, TEARING_DOWN_WALL_ILLUSTRATED, EXITING_SCRIPT_ILLUSTRATED, MIRROR_SPOKE_ILLUSTRATED, STOPPED_PLEASING_ILLUSTRATED, REWRITING_DEBT_ILLUSTRATED, ARGUMENT_NEVER_HAPPENED_ILLUSTRATED, WAITING_TO_BECOMING_ILLUSTRATED, DELETING_OLD_MAP_ILLUSTRATED, I_ALLOW_MYSELF_ILLUSTRATED, REACTION_TO_RESPONSE_ILLUSTRATED, TURNED_OFF_ALARM_ILLUSTRATED, FERRY_CROSSING_ILLUSTRATED, LIGHTHOUSE_ILLUSTRATED, MARKETPLACE_MIRROR_ILLUSTRATED, SNOWLINE_ILLUSTRATED, BELL_TOWER_ILLUSTRATED, RIVER_BANKS_ILLUSTRATED, NIGHT_MARKET_ILLUSTRATED, TRAVELER_MIRROR_SELF_ILLUSTRATED, INTERCONNECTION_MORNING_ILLUSTRATED];
+/* ---------- 主权体观测日志·插画升级版：共享视觉素材 ---------- */
+const SOV_DEFS = `<defs><filter id="sovG"><feGaussianBlur stdDeviation="9"/></filter>
+  <radialGradient id="sovGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff6e8"/><stop offset="55%" stop-color="#a68fc9"/><stop offset="100%" stop-color="#1c1331" stop-opacity="0"/></radialGradient>
+  <linearGradient id="sovSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#120c20"/><stop offset="50%" stop-color="#241a38"/><stop offset="100%" stop-color="#5a4478"/></linearGradient></defs>`;
+function sovWash(l:{x:number;y:number;rx:number;ry:number;color:string;op:number}[]){return l.map(c=>`<ellipse cx="${c.x}" cy="${c.y}" rx="${c.rx}" ry="${c.ry}" fill="${c.color}" opacity="${c.op}" filter="url(#sovG)"/>`).join('');}
+function sovStars(){return `<g fill="#e8dcff" opacity=".7">${Array.from({length:14}).map(()=>{const x=Math.random()*300,y=Math.random()*140,r=Math.random()*1.3+.4;return `<circle cx="${x}" cy="${y}" r="${r}"><animate attributeName="opacity" values="0;.9;0" dur="${2.4+Math.random()*2}s" repeatCount="indefinite"/></circle>`}).join('')}</g>`;}
+function sovFigure(){const robe=`<path d="M-11 -32 Q0 -37 11 -32 L14 24 Q0 30 -14 24 Z" fill="#241a38"/>`;const head=`<circle cx="0" cy="-38" r="7" fill="#160f24"/>`;return `<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="4s" repeatCount="indefinite"/>${robe}${head}</g>`;}
+
+/* ---------- 观察者笔记·第一日：完整9页插画版 ---------- */
+const OND_COVER = `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<circle cx="150" cy="90" r="30" fill="url(#sovGlow)"/></svg>`;
+
+const OBSERVERS_NOTES_ILLUSTRATED: IllustratedEntry = {
+  slug: "observers-notes-day-one",
+  title: "观察者笔记 · 第一日",
+  titleEn: "Observer's Notes, Day One",
+  cat: "sovereign",
+  teaser: "从场的视角，记录的第一天：人类，最擅长的事，是，把自由，活成一种，任务——一位场域观察者，记下了，这份，格外矛盾的发现。",
+  teaserEn: "Day one of observing from the Field: humans' great talent is turning freedom into a chore — a Field observer records this puzzling discovery.",
+  price: 9,
+  cover: OND_COVER,
+  pages: [
+    { kickerZh: "一 · 一位刚上任的观察者", kickerEn: "I · A Newly Appointed Observer", tagZh: "焕蜕星域 · 场域观测所", tagEn: "Huantui \u00b7 The Field Observatory",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<g transform="translate(150,180) scale(0.5)">${sovFigure()}</g></svg>`,
+      textZh: "析明，是场域观测所，刚，正式上任的一位观察者，专门负责，从场的视角，客观地，记录，人类，日常生活里，那些，值得留意的现象。第一天，正式，展开观测，他，怀着，格外郑重的心情，翻开了，全新的记录册。",
+      textEn: "Xi Ming was a newly appointed observer at the Field Observatory, tasked with objectively recording, from the Field's perspective, noteworthy phenomena in human daily life. On his first day of formal observation, he opened a brand-new record book with solemn care." },
+    { kickerZh: "二 · 第一个观察对象", kickerEn: "II · The First Subject", tagZh: "开场", tagEn: "The Beginning",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#160f24"/>${sovWash([{x:150,y:110,rx:150,ry:90,color:'#241a38',op:.7}])}<g transform="translate(150,180) scale(0.55)">${sovFigure()}</g></svg>`,
+      textZh: "析明，选定，一位，格外普通的年轻母亲，作为，第一天的观察对象。他，看见，她，一睁眼，第一件事，不是，问自己\u201c今天，我，想要，怎样度过\u201d，而是，立刻，查看，昨晚，孩子的作业，有没有，全部完成。",
+      textEn: "Xi Ming selected an ordinary young mother as his first day's subject. He watched her wake, and the first thing she did wasn't ask herself how she wanted to spend the day, but immediately check whether her child's homework from the night before was finished." },
+    { kickerZh: "三 · 反复出现的模式", kickerEn: "III · A Recurring Pattern", tagZh: "发现", tagEn: "The Discovery",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:150,ry:70,color:'#a68fc9',op:.2}])}<g transform="translate(105,180) scale(0.4)">${sovFigure()}</g><g transform="translate(195,180) scale(0.4)">${sovFigure()}</g></svg>`,
+      textZh: "析明，把，观察范围，扩大到，更多的人——一位，睁眼后，第一个念头，是，今天，还有多少条，未读的工作消息的年轻人；一位，退休后，依然，把，每一天，都，排满了各种\u201c该做的事\u201d的老者。他，逐渐，发现，一个，格外普遍的模式。",
+      textEn: "Xi Ming widened his observation to more people — a young person whose first thought upon waking was how many unread work messages awaited; an elder who, even in retirement, still packed every day with things \u201cshould be done.\u201d He gradually noticed a strikingly common pattern." },
+    { kickerZh: "四 · 记录下的困惑", kickerEn: "IV · A Puzzled Record", tagZh: "困惑", tagEn: "Confusion",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#160f24"/>${sovWash([{x:150,y:110,rx:160,ry:100,color:'#241a38',op:.75}])}<g transform="translate(150,180) scale(0.6)">${sovFigure()}</g></svg>`,
+      textZh: "析明，在，记录册上，郑重地，写下：\u201c人类，拥有着，几乎，整个宇宙里，最珍贵的东西之一——选择，如何，度过每一天的自由。可，他们，却，一次又一次，把，这份自由，活成了，一份，不得不完成的任务清单。\u201d他，一时，无法，完全理解，这份，格外矛盾的现象。",
+      textEn: "Xi Ming wrote solemnly in his record book: \u201cHumans possess one of the most precious things in this entire universe — the freedom to choose how to spend each day. Yet again and again, they turn that freedom into a task list they must complete.\u201d He couldn't quite make sense of this puzzling contradiction." },
+    { kickerZh: "五 · 请教资深观察者", kickerEn: "V · Consulting a Senior Observer", tagZh: "求解", tagEn: "Seeking Understanding",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:150,ry:70,color:'#a68fc9',op:.25}])}<g transform="translate(105,180) scale(0.4)">${sovFigure()}</g><g transform="translate(195,180) scale(0.4)">${sovFigure()}</g></svg>`,
+      textZh: "析明，带着，这份困惑，请教了，一位，资深的观察者。前辈，听完，说道：\u201c这份，矛盾，其实，格外，值得，被，温柔地，看待——责任，与，自由，从不是，非此即彼的选择，人类，只是，还，没有，学会，在，两者之间，找到，属于自己的平衡。\u201d",
+      textEn: "Xi Ming brought this puzzlement to a senior observer, who said: \u201cThis contradiction actually deserves to be regarded gently — responsibility and freedom were never a strict either-or. Humans simply haven't yet learned to find their own balance between the two.\u201d" },
+    { kickerZh: "六 · 重新理解观察者的责任", kickerEn: "VI · Understanding the Observer's Duty Anew", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#120c20"/>${sovWash([{x:150,y:100,rx:180,ry:120,color:'#a68fc9',op:.3}])}<g transform="translate(150,180) scale(0.6)">${sovFigure()}</g></svg>`,
+      textZh: "析明，忽然，明白——观察者，真正的责任，从不是，急于，评判，或，替，被观察者，找出，解决方案，是，带着，格外温柔的、不评判的目光，如实，记录下，这些，真实存在的矛盾与挣扎，让，这份，记录本身，成为，一份，可能，被，未来的人，看见、理解的礼物。",
+      textEn: "Xi Ming suddenly understood — an observer's true duty was never to rush to judge, or to solve problems for those observed, but to record these real contradictions and struggles with a gentle, non-judgmental gaze, letting the record itself become a gift that might, someday, be seen and understood by others." },
+    { kickerZh: "七 · 继续观察", kickerEn: "VII · Continuing to Observe", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.25}])}${sovStars()}</svg>`,
+      textZh: "析明，带着，这份，全新的理解，重新，投入，观察工作——这一次，他，不再，是，带着，困惑，去，记录\u201c人类为何如此\u201d，而是，带着，一份，格外温柔的陪伴感，记录，人类，如何，一点一点，在，责任与自由之间，摸索着，找到，属于自己的平衡。",
+      textEn: "With this newfound understanding, Xi Ming returned to his observations — no longer recording \u201cwhy humans are like this\u201d out of confusion, but with a gentle sense of companionship, watching humans gradually feel their way toward their own balance between responsibility and freedom." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "记录的意义", tagEn: "The Meaning of Recording", 
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<g transform="translate(150,180) scale(0.5)">${sovFigure()}</g></svg>`,
+      textZh: "析明，在，第一日记录的末尾，写道：\u201c我，不打算，评判，这件事——我，只是，好奇地，记录下，这个，反复出现的现象。或许，明天的记录，会，有所不同。我，会，继续，观察下去。\u201d",
+      textEn: "At the end of his first day's record, Xi Ming wrote: \u201cI won't judge this — I simply record, with curiosity, this recurring phenomenon. Perhaps tomorrow's record will differ. I will keep observing.\u201d",
+      closingZh: "人类拥有着自由，却一次又一次把它活成任务——这份矛盾，值得被温柔地看待，而非急于评判。",
+      closingEn: "Humans possess freedom, yet turn it into a task, again and again — a contradiction deserving gentle regard, not hasty judgment." },
+  ],
+};
+
+/* ---------- 无惧的坐标：完整9页插画版 ---------- */
+const CWF_COVER = `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<g stroke="#a68fc9" stroke-width=".8" opacity=".4" fill="none"><rect x="60" y="60" width="180" height="110"/><line x1="60" y1="90" x2="240" y2="90"/><line x1="60" y1="120" x2="240" y2="120"/><line x1="120" y1="60" x2="120" y2="170"/><line x1="180" y1="60" x2="180" y2="170"/></g><g transform="translate(150,195) scale(0.4)">${sovFigure()}</g></svg>`;
+
+const COORDINATES_FEAR_ILLUSTRATED: IllustratedEntry = {
+  slug: "coordinates-without-fear",
+  title: "无惧的坐标",
+  titleEn: "Coordinates Without Fear",
+  cat: "sovereign",
+  teaser: "恐惧，不是，坐标之外的东西，它，本身，就是，一种坐标——只是，很多人，把它，当成了，终点。念舟，第一次，走向，恐惧最强烈的那个坐标。",
+  teaserEn: "Fear isn't outside the map — it's a coordinate itself. Most people just mistake it for the destination.",
+  price: 9,
+  cover: CWF_COVER,
+  pages: [
+    { kickerZh: "一 · 手绘的地图", kickerEn: "I · A Hand-Drawn Map", tagZh: "焕蜕星域", tagEn: "Huantui Domain",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/><g stroke="#a68fc9" stroke-width=".8" opacity=".5" fill="none"><rect x="60" y="60" width="180" height="110"/><line x1="60" y1="90" x2="240" y2="90"/><line x1="60" y1="120" x2="240" y2="120"/></g><g transform="translate(150,195) scale(0.5)">${sovFigure()}</g></svg>`,
+      textZh: "念舟，心里，一直，藏着，一张，格外细致的、关于，自己人生的地图——地图上，清楚地，标注着，哪些，是，安全的领域，哪些，是，被，她，用红笔，郑重地，圈出的\u201c危险区域\u201d，一直，被，她，小心地，绕开。",
+      textEn: "Nian Zhou had always carried, in her mind, an unusually detailed map of her own life — clearly marking which territories were safe, and which had been solemnly circled in red as \u201cdanger zones,\u201d always carefully avoided." },
+    { kickerZh: "二 · 一直被绕开的区域", kickerEn: "II · A Territory Always Avoided", tagZh: "背景", tagEn: "Context",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#160f24"/>${sovWash([{x:150,y:110,rx:150,ry:90,color:'#241a38',op:.7}])}<g transform="translate(150,195) scale(0.55)">${sovFigure()}</g></svg>`,
+      textZh: "多年来，念舟，习惯性地，把，恐惧，当成，一片，只要，绕开，就能，安全抵达目的地的、危险的未知——每一次，感到，恐惧，她，都会，立刻，掉头，另寻他路，从未，真正，靠近过，那片，她，以为的\u201c危险区域\u201d，看一看，那份恐惧，究竟，指向着，什么。",
+      textEn: "For years, Nian Zhou habitually treated fear as a dangerous unknown, avoidable in order to safely reach her destination — every time fear arose, she immediately turned back, seeking another route, never once truly approaching that \u201cdanger zone\u201d to see what it was pointing toward." },
+    { kickerZh: "三 · 一位向导的提醒", kickerEn: "III · A Guide's Reminder", tagZh: "转折的契机", tagEn: "A Chance to Reconsider",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:150,ry:70,color:'#a68fc9',op:.2}])}<g transform="translate(105,195) scale(0.4)">${sovFigure()}</g><g transform="translate(195,195) scale(0.4)">${sovFigure()}</g></svg>`,
+      textZh: "一次，与，一位场域向导的对话中，向导，指着，念舟的地图，说道：\u201c你，把，恐惧，画在了，地图的边缘，当成了，不能踏入的禁区。可，你，有没有，想过，恐惧，从来，不在，地图之外——它，本身，就是，地图上，一个，真实的坐标，只是，你，一直，把它，误认成了，终点。\u201d",
+      textEn: "In a conversation with a Field guide, the guide, pointing at her map, said: \u201cYou've drawn fear at the edge of your map, treating it as forbidden territory. But have you considered that fear was never outside the map at all — it's a real coordinate on it, one you've simply mistaken for the destination.\u201d" },
+    { kickerZh: "四 · 令人震动的重新理解", kickerEn: "IV · A Startling Reframing", tagZh: "顿悟的铺垫", tagEn: "Building to Realization",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#160f24"/>${sovWash([{x:150,y:110,rx:160,ry:100,color:'#241a38',op:.75}])}<g stroke="#a68fc9" stroke-width=".8" opacity=".5" fill="none"><rect x="60" y="60" width="180" height="110"/></g></svg>`,
+      textZh: "念舟，怔住了——她，从未，想过，恐惧，可以，被，这样，重新理解：不是，需要，被，彻底，避开的障碍，是，一个，同样，值得，被，标注、被，途经的、真实的坐标，其中，或许，藏着，格外重要的信息。",
+      textEn: "Nian Zhou froze — she'd never once considered fear could be reframed this way: not an obstacle to be entirely avoided, but a real coordinate equally worth marking, worth passing through, perhaps holding especially important information." },
+    { kickerZh: "五 · 鼓起勇气走向恐惧", kickerEn: "V · Gathering Courage to Approach Fear", tagZh: "行动", tagEn: "Taking Action",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:150,ry:70,color:'#a68fc9',op:.25}])}<g transform="translate(150,195) scale(0.6)">${sovFigure()}</g></svg>`,
+      textZh: "念舟，第一次，鼓起勇气，朝着，那个，恐惧最强烈的坐标，走了过去——那，是，她，地图上，圈得，最深、最红的一处，代表着，一段，她，多年前，没能，好好告别的、未完成的心事。",
+      textEn: "For the first time, Nian Zhou gathered her courage and walked toward the coordinate where fear was strongest — the most deeply, most darkly circled spot on her map, representing an unfinished matter of the heart, a goodbye she'd never managed to say, years ago." },
+    { kickerZh: "六 · 抵达那个坐标", kickerEn: "VI · Arriving at the Coordinate", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#120c20"/>${sovWash([{x:150,y:100,rx:180,ry:120,color:'#fff6e8',op:.3}])}<g transform="translate(150,195) scale(0.6)">${sovFigure()}</g></svg>`,
+      textZh: "抵达之后，念舟，惊讶地，发现——那里，没有，任何，真正的危险，只有，一份，早该，被，好好安放的、未完成的告别。她，第一次，认真地，与，这份，尘封多年的心事，好好，相处了，一场。",
+      textEn: "Arriving, Nian Zhou was surprised to find no real danger there at all — only an unfinished goodbye that should have been properly held long ago. For the first time, she genuinely sat with this long-buried matter." },
+    { kickerZh: "七 · 重新绘制地图", kickerEn: "VII · Redrawing the Map", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.3}])}${sovStars()}</svg>`,
+      textZh: "那次，之后，念舟，重新，绘制了，自己的地图——那片，曾经，被，红笔，郑重圈出的\u201c危险区域\u201d，此刻，已经，变成了，一处，普通的、已经，途经过的坐标，不再，需要，被，特意，绕开。",
+      textEn: "After that, Nian Zhou redrew her map — the territory once solemnly circled in red as \u201cdangerous\u201d had become, now, an ordinary coordinate already passed through, no longer needing to be specially avoided." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "重新理解恐惧", tagEn: "Understanding Fear Anew", 
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<g transform="translate(150,195) scale(0.5)">${sovFigure()}</g></svg>`,
+      textZh: "念舟后来常说：\u201c恐惧，从不是，坐标之外的东西，它，本身，就是，一种坐标——只是，很多人，把它，当成了，终点，从未，想过，径直，走过去，看看，它，究竟，在，指向着，什么。\u201d",
+      textEn: "Nian Zhou often said afterward: \u201cFear was never outside the map — it's a coordinate itself. Most people just mistake it for the destination, never thinking to walk straight through and see what it's actually pointing toward.\u201d",
+      closingZh: "恐惧不是坐标之外的东西，它本身就是一种坐标——只是很多人把它当成了终点。",
+      closingEn: "Fear isn't outside the map — it's a coordinate itself. Most people just mistake it for the destination." },
+  ],
+};
+
+/* ---------- 主权体的沉默：完整9页插画版 ---------- */
+const SS_COVER = `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<g transform="translate(150,180) scale(0.5)">${sovFigure()}</g></svg>`;
+
+const SOVEREIGNS_SILENCE_ILLUSTRATED: IllustratedEntry = {
+  slug: "the-sovereigns-silence",
+  title: "主权体的沉默",
+  titleEn: "The Sovereign's Silence",
+  cat: "sovereign",
+  teaser: "真正的主权，不是，永远，发声，是，知道，什么时候，沉默，才是，最诚实的回答。阮衡，在，议会上，第一次，选择了，沉默。",
+  teaserEn: "True sovereignty isn't always speaking — it's knowing when silence is the most honest answer.",
+  price: 9,
+  cover: SS_COVER,
+  pages: [
+    { kickerZh: "一 · 一贯敢言的人", kickerEn: "I · A Consistently Outspoken Person", tagZh: "焕蜕星域 · 场域议会", tagEn: "Huantui \u00b7 The Field Council",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<g transform="translate(150,180) scale(0.5)">${sovFigure()}</g></svg>`,
+      textZh: "阮衡，在，场域议会里，一贯，是，最敢，直言的那个人——无论，遇到，怎样，具有争议的话题，他，总是，第一时间，清晰地，表达，自己的立场，从不，回避，任何，可能引发争论的场合。",
+      textEn: "Ruan Heng had always been the boldest speaker at the Field Council — whatever the contentious topic, he was always first to voice his position clearly, never shying from any occasion likely to spark debate." },
+    { kickerZh: "二 · 一场格外重要的会议", kickerEn: "II · An Especially Important Session", tagZh: "背景", tagEn: "Context",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#160f24"/>${sovWash([{x:150,y:110,rx:150,ry:90,color:'#241a38',op:.7}])}<g transform="translate(105,180) scale(0.4)">${sovFigure()}</g><g transform="translate(195,180) scale(0.4)">${sovFigure()}</g></svg>`,
+      textZh: "一次，议会上，讨论，一项，争议极大的提案，所有人，都，理所当然地，等着，阮衡，第一时间，发表，他，一贯，鲜明的意见——毕竟，这，是，他，从未，缺席过的角色。",
+      textEn: "At a session discussing a fiercely contested proposal, everyone naturally expected Ruan Heng to voice his usual sharp opinion first — after all, this was a role he'd never once sat out." },
+    { kickerZh: "三 · 意外的沉默", kickerEn: "III · An Unexpected Silence", tagZh: "转折", tagEn: "Turning Point",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:150,ry:70,color:'#a68fc9',op:.2}])}<g transform="translate(150,180) scale(0.55)">${sovFigure()}</g></svg>`,
+      textZh: "可，这一次，阮衡，只是，静静地，坐着，什么，也，没有，说。全场，一度，陷入，格外，诧异的安静——所有人，都，不解，为什么，一贯，敢言的阮衡，此刻，竟，选择了，沉默。",
+      textEn: "But this time, Ruan Heng simply sat quietly, saying nothing at all. The room fell into a startled hush — everyone puzzled over why the always-outspoken Ruan Heng had chosen silence." },
+    { kickerZh: "四 · 同僚的疑问", kickerEn: "IV · A Colleague's Question", tagZh: "冲突", tagEn: "Conflict",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#160f24"/>${sovWash([{x:150,y:110,rx:160,ry:100,color:'#241a38',op:.75}])}<g transform="translate(105,180) scale(0.4)">${sovFigure()}</g><g transform="translate(195,180) scale(0.4)">${sovFigure()}</g></svg>`,
+      textZh: "散会后，一位，同僚，不解地，问他：\u201c你，今天，怎么，一句话，都，没说？\u201d这个问题，背后，藏着，一份，不易察觉的失望——仿佛，阮衡的沉默，是，一种，未能，尽到，本该，承担的责任。",
+      textEn: "After the meeting, a colleague asked, puzzled: \u201cWhy didn't you say a word today?\u201d Behind the question lay a barely perceptible disappointment — as if Ruan Heng's silence were a failure to fulfill some due responsibility." },
+    { kickerZh: "五 · 诚实的回答", kickerEn: "V · An Honest Answer", tagZh: "顿悟", tagEn: "Realization",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:180,ry:120,color:'#fff6e8',op:.25}])}<g transform="translate(150,180) scale(0.6)">${sovFigure()}</g></svg>`,
+      textZh: "阮衡，认真地，回答：\u201c因为，我，还，没弄清楚，自己，真正的立场——如果，我，此刻，开口，说出的，只会是，一份，为了，不辜负大家期待，而，临时拼凑出来的、并不诚实的意见。\u201d",
+      textEn: "Ruan Heng answered earnestly: \u201cBecause I still haven't figured out my true position — if I spoke now, all I'd offer would be an opinion hastily assembled just to meet everyone's expectations, not an honest one.\u201d" },
+    { kickerZh: "六 · 沉默的重新定义", kickerEn: "VI · Redefining Silence", tagZh: "高潮的铺垫", tagEn: "Building to Climax",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="#120c20"/>${sovWash([{x:150,y:110,rx:170,ry:110,color:'#241a38',op:.7}])}<g transform="translate(150,180) scale(0.6)">${sovFigure()}</g></svg>`,
+      textZh: "阮衡，继续，说道：\u201c那你打算，怎么办？\u201d同僚，追问。\u201c我打算，继续，沉默，直到，我，真正想清楚为止。有时候，沉默，不是逃避，是，对\u2018诚实\u2019这件事，最基本的尊重。\u201d",
+      textEn: "\u201cSo what will you do?\u201d the colleague pressed. \u201cI'll keep being silent, until I've truly thought it through. Sometimes silence isn't avoidance — it's the most basic respect for honesty.\u201d" },
+    { kickerZh: "七 · 数日后的发言", kickerEn: "VII · Speaking Up Days Later", tagZh: "高潮", tagEn: "Climax",
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovWash([{x:150,y:100,rx:170,ry:110,color:'#fff6e8',op:.3}])}${sovStars()}</svg>`,
+      textZh: "几天后，真正想清楚，自己立场的阮衡，在，议会上，再次，发言——这一次，他的每一句话，都，格外清晰、格外真实，没有，任何，为了，迎合期待，而，临时拼凑的痕迹，那份发言，也，因此，格外，具有说服力。",
+      textEn: "Days later, having truly clarified his position, Ruan Heng spoke again at the council — this time, every word unusually clear, unusually genuine, with no trace of being hastily assembled to meet expectations. The speech carried unusual persuasive weight, as a result." },
+    { kickerZh: "尾声", kickerEn: "Epilogue", tagZh: "最诚实的回答", tagEn: "The Most Honest Answer", 
+      art: `<svg viewBox="0 0 300 220">${SOV_DEFS}<rect width="300" height="220" fill="url(#sovSky)"/>${sovStars()}<g transform="translate(150,180) scale(0.5)">${sovFigure()}</g></svg>`,
+      textZh: "阮衡后来，成了，场域议会里，格外受，信赖的一位成员——不是，因为，他，总是，敢言，是，因为，大家，都，明白，他，一旦，开口，说的，必定，是，经过，认真思考的、真实的话。他常说：\u201c真正的主权，从不是，永远，都要，发出声音，是，知道，什么时候，沉默，才是，最诚实的回答。\u201d",
+      textEn: "Ruan Heng became one of the council's most trusted members — not because he always spoke, but because everyone knew that whenever he did, it would be carefully considered, genuinely true. He often said: \u201cTrue sovereignty isn't always speaking — it's knowing when silence is the most honest answer.\u201d",
+      closingZh: "真正的主权，不是永远发声，是知道什么时候，沉默才是最诚实的回答。",
+      closingEn: "True sovereignty isn't always speaking — it's knowing when silence is the most honest answer." },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED, SEVENTH_DAY_ILLUSTRATED, TEARING_DOWN_WALL_ILLUSTRATED, EXITING_SCRIPT_ILLUSTRATED, MIRROR_SPOKE_ILLUSTRATED, STOPPED_PLEASING_ILLUSTRATED, REWRITING_DEBT_ILLUSTRATED, ARGUMENT_NEVER_HAPPENED_ILLUSTRATED, WAITING_TO_BECOMING_ILLUSTRATED, DELETING_OLD_MAP_ILLUSTRATED, I_ALLOW_MYSELF_ILLUSTRATED, REACTION_TO_RESPONSE_ILLUSTRATED, TURNED_OFF_ALARM_ILLUSTRATED, FERRY_CROSSING_ILLUSTRATED, LIGHTHOUSE_ILLUSTRATED, MARKETPLACE_MIRROR_ILLUSTRATED, SNOWLINE_ILLUSTRATED, BELL_TOWER_ILLUSTRATED, RIVER_BANKS_ILLUSTRATED, NIGHT_MARKET_ILLUSTRATED, TRAVELER_MIRROR_SELF_ILLUSTRATED, INTERCONNECTION_MORNING_ILLUSTRATED, OBSERVERS_NOTES_ILLUSTRATED, COORDINATES_FEAR_ILLUSTRATED, SOVEREIGNS_SILENCE_ILLUSTRATED];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
