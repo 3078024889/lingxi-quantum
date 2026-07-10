@@ -66,9 +66,6 @@ export const NARRATIVES: Narrative[] = [
   // 独立场域篇（10 · 创作中）
 
   // ───────── 主权体观测日志（15 · $9 · 创作中）─────────
-  { slug: "watching-anger-from-the-field", title: "从场观察愤怒", titleEn: "Watching Anger from the Field", cat: "sovereign", teaser: "愤怒从场的角度看，不是一种破坏性的力量，是一份被延迟太久的边界声明。", teaserEn: "Seen from the Field, anger isn't destructive — it's a boundary statement delivered far too late.", price: 9 },
-  { slug: "the-geometry-of-will", title: "意志的几何", titleEn: "The Geometry of Will", cat: "sovereign", teaser: "意志不是一条直线，是一种螺旋——每一次看似的后退，都是在爬升另一圈。", teaserEn: "Will isn't a straight line — it's a spiral. Every apparent step back is a climb along another loop.", price: 9 },
-  { slug: "a-disobedient-particle", title: "一个不服从的粒子", titleEn: "A Disobedient Particle", cat: "sovereign", teaser: "一颗粒子拒绝按规律运动的那一刻，物理学称之为异常，场称之为觉醒。", teaserEn: "The instant a particle refuses to move by the rules, physics calls it an anomaly. The Field calls it an awakening.", price: 9 },
   { slug: "the-inner-parliament", title: "内在议会", titleEn: "The Inner Parliament", cat: "sovereign", teaser: "每个人心里都坐着一群代表——恐惧党、习惯党、渴望党——主权，是学会主持这场会议。", teaserEn: "Everyone hosts a parliament within — Fear, Habit, Longing. Sovereignty is learning to chair the session.", price: 9 },
   { slug: "the-sovereign-and-the-mirror-personality", title: "主权体与镜像人格", titleEn: "The Sovereign and the Mirror Personality", cat: "sovereign", teaser: "你在别人面前扮演的那个角色，其实也是主权体的一种分身——只是它演得太投入，忘了自己在演。", teaserEn: "The role you play for others is also a facet of the sovereign self — one that forgot it was performing.", price: 9 },
   { slug: "the-weight-of-free-will", title: "自由意志的重量", titleEn: "The Weight of Free Will", cat: "sovereign", teaser: "自由意志最沉重的部分，从来不是选择本身，是选择之后，不再有人可以怪罪。", teaserEn: "The heaviest part of free will was never the choosing — it's that afterward, there's no one left to blame.", price: 9 },
