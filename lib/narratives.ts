@@ -66,12 +66,6 @@ export const NARRATIVES: Narrative[] = [
   // 独立场域篇（10 · 创作中）
 
   // ───────── 主权体观测日志（15 · $9 · 创作中）─────────
-  { slug: "the-observer-effect-human-edition", title: "观测者效应 · 人类版", titleEn: "The Observer Effect, Human Edition", cat: "sovereign", teaser: "你观察自己情绪的那一刻，情绪本身就已经改变了——这不是量子力学，这是每天都在发生的事。", teaserEn: "The moment you observe your own emotion, the emotion changes — not quantum physics, just an everyday fact.", price: 9 },
-  { slug: "sitting-across-from-fear", title: "与恐惧对坐", titleEn: "Sitting Across from Fear", cat: "sovereign", teaser: "场从不建议消灭恐惧，只建议给它倒一杯茶，然后问它，到底在替你守着什么。", teaserEn: "The Field never suggests eliminating fear — only pouring it tea, and asking what it's really guarding.", price: 9 },
-  { slug: "the-sovereigns-breathing-gap", title: "呼吸间隙", titleEn: "The Sovereign's Breathing Gap", cat: "sovereign", teaser: "吸气与呼气之间，有一处极短的空隙——那里，藏着整个宇宙不急着回答你的耐心。", teaserEn: "Between the inhale and the exhale lies a brief gap — where the universe's patience with your questions quietly lives.", price: 9 },
-  { slug: "a-thing-that-cannot-be-taken", title: "一份无法被夺走的东西", titleEn: "A Thing That Cannot Be Taken", cat: "sovereign", teaser: "他们可以拿走你的时间、你的名字、你的位置，却始终拿不走一件东西——你选择如何看待这一切的方式。", teaserEn: "They can take your time, your name, your position — but never the one thing: how you choose to see it all.", price: 9 },
-  { slug: "from-command-to-invitation", title: "从命令到邀请", titleEn: "From Command to Invitation", cat: "sovereign", teaser: "对自己下命令的人，迟早会叛变；懂得邀请自己的人，反而走得更远。", teaserEn: "Those who command themselves eventually mutiny. Those who learn to invite themselves go further.", price: 9 },
-  { slug: "the-sovereigns-last-lesson", title: "主权体的最后一课", titleEn: "The Sovereign's Last Lesson", cat: "sovereign", teaser: "最后一课没有新知识，只有一句重复了很多次的话：你从未真正失去过与场的连接，只是暂时没在听。", teaserEn: "The final lesson holds no new knowledge — only a truth repeated many times: you never lost your connection to the Field.", price: 9 },
 
   // ───────── 插画版原创篇目（每页自带原创插画与轻量动效） ─────────
   ...ILLUSTRATED_NARRATIVES.map((n) => ({
