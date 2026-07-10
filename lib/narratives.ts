@@ -60,10 +60,6 @@ export const NARRATIVES: Narrative[] = [
   // ───────── 现实重写记录（12 · $9 · 创作中）─────────
   // ───────── 梦境档案（7 · $9 · 来自潜意识的数据片段）─────────
 
-  { slug: "deleting-the-old-map", title: "删除旧地图", titleEn: "Deleting the Old Map", cat: "rewrite", teaser: "她按着一张十年前画的地图找路，直到某天发现，那张地图画的从来不是这座城市，是当年那个害怕迷路的自己。", teaserEn: "She navigated by a map drawn ten years ago, until she realized it was never a map of the city — it was a map of her own fear.", price: 9 },
-  { slug: "i-allow-myself", title: "我允许自己", titleEn: "I Allow Myself", cat: "rewrite", teaser: "四个字说出口那天，什么都没有立刻改变，但她后来才明白，那正是一切开始改变的那一天。", teaserEn: "The day she said those four words aloud, nothing changed at once — only later did she see it was the day everything began to.", price: 9 },
-  { slug: "from-reaction-to-response", title: "从反应到回应", titleEn: "From Reaction to Response", cat: "rewrite", teaser: "他花了一年时间学习在开口前停顿三秒，最后发现，那三秒里，站着他真正想成为的那个人。", teaserEn: "He spent a year learning to pause three seconds before speaking, and found the person he wanted to be waiting inside those seconds.", price: 9 },
-  { slug: "the-night-i-turned-off-the-alarm", title: "关掉警报的那一夜", titleEn: "The Night I Turned Off the Alarm", cat: "rewrite", teaser: "她终于关掉了那个响了二十年的内在警报，那一夜她失眠了——不是因为焦虑，是因为终于安静得不习惯。", teaserEn: "She finally silenced the alarm that had rung inside her for twenty years. That night she couldn't sleep — the quiet was unfamiliar.", price: 9 },
 
   // ───────── 场域叙事（18 · $9）─────────
   // 远行者系列 · 八篇（已发布，可读）
