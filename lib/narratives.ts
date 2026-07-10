@@ -63,13 +63,7 @@ export const NARRATIVES: Narrative[] = [
 
   // ───────── 场域叙事（18 · $9）─────────
   // 远行者系列 · 八篇（已发布，可读）
-  { slug: "above-the-snowline", title: "雪线之外的寂静", titleEn: "Silence Beyond the Snowline · Wayfarer IV", cat: "field", teaser: "过了雪线，山下所有替你做决定的声音都到不了这个海拔，剩下的，只有你自己。远行者系列第四篇。", teaserEn: "Past the snowline, none of the voices that decide for you can survive the altitude. Wayfarer series, part four.", price: 9 },
-  { slug: "inside-the-bell-tower", title: "敲钟人的分寸", titleEn: "The Bell-Ringer's Restraint · Wayfarer V", cat: "field", teaser: "敲钟人最难的工作，从来不是敲钟，是分辨什么时候不该敲。远行者系列第五篇。", teaserEn: "The bell-ringer's hardest task was never ringing the bell — it's knowing when not to. Wayfarer series, part five.", price: 9 },
-  { slug: "on-both-banks-of-the-river", title: "河对岸的自己", titleEn: "The Self on the Far Bank · Wayfarer VI", cat: "field", teaser: "河对岸站着的那个身影，是你每一次选择「安全」时，被留在原地的另一个自己。远行者系列第六篇。", teaserEn: "The figure on the far bank is every version of you left behind each time you chose 'safe.' Wayfarer series, part six.", price: 9 },
-  { slug: "at-the-night-market", title: "暗夜市集不收钱", titleEn: "What the Night Market Takes Instead · Wayfarer VII", cat: "field", teaser: "暗夜市集不收钱，只收你以为自己必须一直背着的重量。远行者系列第七篇。", teaserEn: "The night market takes no money — only the weight you believed you had no choice but to carry. Wayfarer series, part seven.", price: 9 },
-  { slug: "the-traveler-and-the-mirror-self", title: "远行者与镜中人", titleEn: "The Traveler and the Mirror Self · Wayfarer VIII", cat: "field", teaser: "一路上教你东西的每一个人，其实都是同一个人——终篇，远行者认出了自己。", teaserEn: "Every teacher along the road was the same person all along. The finale, in which the Wayfarer recognizes himself.", price: 9 },
   // 独立场域篇（10 · 创作中）
-  { slug: "a-morning-of-interconnection", title: "互联的清晨", titleEn: "A Morning of Interconnection", cat: "field", teaser: "某个清晨，一个人决定善待陌生人，那份善意在场里传了很远——远到他自己都不会知道。", teaserEn: "One morning, a person chooses kindness to a stranger. That kindness travels through the Field farther than he'll ever know.", price: 9 },
 
   // ───────── 主权体观测日志（15 · $9 · 创作中）─────────
   { slug: "observers-notes-day-one", title: "观察者笔记 · 第一日", titleEn: "Observer's Notes, Day One", cat: "sovereign", teaser: "从场的视角记录的第一天：人类最擅长的事，是把自由活成一种任务。", teaserEn: "Day one of observing from the Field: humans' great talent is turning freedom into a chore.", price: 9 },
