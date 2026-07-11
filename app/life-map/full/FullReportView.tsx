@@ -10,7 +10,8 @@ const t = (zh: string, en: string) => (isEn() ? en : zh);
 const SECTION_TITLES = [
   { zh: "七大行星逐一解读", en: "The Seven Planets, One by One" },
   { zh: "八字深层结构", en: "The Deep Structure of Your Bazi" },
-  { zh: "胎元 · 命宫 · 身宫", en: "Fetal Origin · Life Palace · Body Palace" },
+  { zh: "紫微命盘详解", en: "Your Ziwei Chart, Decoded" },
+  { zh: "胎元 · 命宫 · 身宫（四柱体系）", en: "Fetal Origin · Life Palace · Body Palace (Bazi System)" },
   { zh: "玛雅印记详解", en: "Your Maya Sign, Decoded" },
   { zh: "大运走势", en: "Your Major Luck Cycles" },
   { zh: "频率自测解读", en: "Your Frequency Self-Assessment, Interpreted" },

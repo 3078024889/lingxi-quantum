@@ -2,8 +2,8 @@
 
 import Bi from "@/components/Bi";
 
-// 生命图谱罗盘：五个同心圈层，从内到外，代表不同体系的深度——
-// 已经用真实算法验证、接入报告的（底层逻辑/中式命理/西方占星/玛雅历法），
+// 生命图谱罗盘：六个同心圈层，从内到外，代表不同体系的深度——
+// 已经用真实算法验证、接入报告的（底层逻辑/中式命理/紫微斗数/西方占星/玛雅历法），
 // 与尚未接入、仍是未来计划的（外圈"更多体系"），视觉上区分开，不混为一谈。
 // 全部用矢量文字渲染，不是图片，不会出现文字歪扭看不清的问题。
 
@@ -12,7 +12,7 @@ type Ring = { radius: number; color: string; labelZh: string; labelEn: string; n
 
 const RINGS: Ring[] = [
   {
-    radius: 58, color: "#E8B765", labelZh: "底层逻辑", labelEn: "Primordial Matrix",
+    radius: 52, color: "#E8B765", labelZh: "底层逻辑", labelEn: "Primordial Matrix",
     nodes: [
       { zh: "阴阳", en: "Yin-Yang", angle: -90 },
       { zh: "五行", en: "Five Elements", angle: -18 },
@@ -22,7 +22,7 @@ const RINGS: Ring[] = [
     ],
   },
   {
-    radius: 96, color: "#7CE0D3", labelZh: "中式命理 · 已接入", labelEn: "Chinese Destiny · Live",
+    radius: 86, color: "#7CE0D3", labelZh: "中式命理 · 已接入", labelEn: "Chinese Destiny · Live",
     nodes: [
       { zh: "四柱八字", en: "Bazi Pillars", angle: -60 },
       { zh: "十神", en: "Ten Gods", angle: 12 },
@@ -32,7 +32,18 @@ const RINGS: Ring[] = [
     ],
   },
   {
-    radius: 134, color: "#C9A5D8", labelZh: "西方占星 · 已接入", labelEn: "Western Astrology · Live",
+    radius: 120, color: "#D8A24A", labelZh: "紫微斗数 · 已接入", labelEn: "Ziwei Doushu · Live",
+    nodes: [
+      { zh: "命宫 · 身宫", en: "Soul · Body Palace", angle: -54 },
+      { zh: "十二宫", en: "12 Palaces", angle: 18 },
+      { zh: "十四主星", en: "14 Major Stars", angle: 90 },
+      { zh: "五行局", en: "Elements Bureau", angle: 162 },
+      { zh: "大限", en: "Decade Cycles", angle: 234 },
+      { zh: "（iztro算法验证）", en: "(iztro, verified)", angle: 306 },
+    ],
+  },
+  {
+    radius: 154, color: "#C9A5D8", labelZh: "西方占星 · 已接入", labelEn: "Western Astrology · Live",
     nodes: [
       { zh: "太阳 · 月亮", en: "Sun · Moon", angle: -36 },
       { zh: "水星 · 金星", en: "Mercury · Venus", angle: 36 },
@@ -42,7 +53,7 @@ const RINGS: Ring[] = [
     ],
   },
   {
-    radius: 172, color: "#8AD8C4", labelZh: "玛雅历法 · 已接入", labelEn: "Maya Calendar · Live",
+    radius: 188, color: "#8AD8C4", labelZh: "玛雅历法 · 已接入", labelEn: "Maya Calendar · Live",
     nodes: [
       { zh: "Tzolkin 图腾", en: "Tzolkin Sign", angle: 0 },
       { zh: "Tzolkin 数字", en: "Tzolkin Tone", angle: 120 },
@@ -50,9 +61,8 @@ const RINGS: Ring[] = [
     ],
   },
   {
-    radius: 210, color: "#6a6478", labelZh: "更多体系 · 探索中", labelEn: "More Systems · Exploring", dashed: true,
+    radius: 224, color: "#6a6478", labelZh: "更多体系 · 探索中", labelEn: "More Systems · Exploring", dashed: true,
     nodes: [
-      { zh: "紫微斗数", en: "Ziwei Doushu", angle: -72 },
       { zh: "七政四余", en: "Seven Regulators", angle: -18 },
       { zh: "奇门遁甲", en: "Qimen Dunjia", angle: 36 },
       { zh: "风水堪舆", en: "Feng Shui", angle: 90 },
@@ -60,6 +70,7 @@ const RINGS: Ring[] = [
       { zh: "相学", en: "Physiognomy", angle: 198 },
       { zh: "吠陀占星", en: "Vedic Jyotish", angle: 252 },
       { zh: "全球民间占法", en: "Global Folk Omens", angle: 306 },
+      { zh: "六爻 · 梅花易数", en: "Six Lines · Plum Blossom", angle: 330 },
     ],
   },
 ];
@@ -70,7 +81,7 @@ const toXY = (r: number, angleDeg: number, cx: number, cy: number) => {
 };
 
 export default function LifeMapCompass() {
-  const cx = 250, cy = 250;
+  const cx = 290, cy = 290;
   return (
     <div className="mx-auto mt-16 max-w-3xl px-4">
       <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm-violet">
@@ -78,11 +89,11 @@ export default function LifeMapCompass() {
       </p>
       <p className="mx-auto mt-2 max-w-md text-center text-xs leading-6 text-bone-dim/60">
         <Bi
-          zh="内三圈，是已经用真实算法验证、写进你报告里的体系；最外一圈虚线，是仍在验证中、尚未接入的体系——不会把没核实过的东西，当成已经算好的事实，端给你。"
-          en="The inner three rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
+          zh="内四圈，是已经用真实算法验证、写进你报告里的体系；最外一圈虚线，是仍在验证中、尚未接入的体系——不会把没核实过的东西，当成已经算好的事实，端给你。"
+          en="The inner four rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
         />
       </p>
-      <svg viewBox="0 0 500 500" className="mx-auto mt-8 w-full max-w-lg">
+      <svg viewBox="0 0 580 580" className="mx-auto mt-8 w-full max-w-lg">
         <defs>
           <radialGradient id="compass-bg" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#1c1430" />
@@ -94,11 +105,11 @@ export default function LifeMapCompass() {
             <stop offset="100%" stopColor="#C9A5D8" stopOpacity="0" />
           </radialGradient>
         </defs>
-        <rect x="0" y="0" width="500" height="500" fill="url(#compass-bg)" />
+        <rect x="0" y="0" width="580" height="580" fill="url(#compass-bg)" />
         {/* 背景星点 */}
         {Array.from({ length: 40 }).map((_, i) => {
-          const x = (i * 137.5) % 500;
-          const y = (i * 71.3 + 40) % 500;
+          const x = (i * 137.5) % 580;
+          const y = (i * 71.3 + 40) % 580;
           const r = 0.5 + (i % 3) * 0.4;
           return <circle key={i} cx={x} cy={y} r={r} fill="#fff6e8" opacity={0.25 + (i % 4) * 0.12} />;
         })}

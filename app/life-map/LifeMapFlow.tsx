@@ -17,6 +17,9 @@ type CurrentState = "transforming" | "lost" | "breakthrough" | "stable" | "explo
 type PlanetPlacement = { signZh: string; signEn: string; element: WesternElement };
 type PillarDetail = { ganZhi: string; shiShenGan: string; shiShenZhi: string; naYin: string; diShi: string; hideGan: string[] };
 type MayaTzolkin = { sign: string; signEn: string; meaning: string; tone: number; toneZh: string; toneMeaning: string };
+type ZiWeiStar = { name: string; brightness: string };
+type ZiWeiPalace = { name: string; heavenlyStem: string; earthlyBranch: string; majorStars: ZiWeiStar[]; isSoulPalace: boolean; isBodyPalace: boolean; decadalRange: [number, number] };
+type ZiWeiChart = { soulPalaceBranch: string; bodyPalaceBranch: string; fiveElementsClass: string; zodiac: string; palaces: ZiWeiPalace[] };
 
 type Facts = {
   sunSignZh: string; sunSignEn: string; sunElement: WesternElement;
@@ -30,6 +33,7 @@ type Facts = {
   taiYuan: string; taiYuanNaYin: string; mingGong: string; mingGongNaYin: string; shenGong: string; shenGongNaYin: string;
   wuXingCount: Record<ChineseElement, number>;
   maya: MayaTzolkin;
+  ziwei: ZiWeiChart | null;
 };
 
 type ReportData = {
@@ -58,8 +62,9 @@ const LOADING_STEPS = [
   { zh: "正在连接你的生命信息结构\u2026", en: "Connecting to your life information structure\u2026" },
   { zh: "✨ 推算七大行星的真实位置", en: "✨ Calculating the true positions of seven planets" },
   { zh: "✨ 排布你的四柱八字与十神", en: "✨ Charting your Four Pillars and Ten Gods" },
+  { zh: "✨ 排布你的紫微命盘", en: "✨ Charting your Ziwei Doushu palaces" },
   { zh: "✨ 换算玛雅Tzolkin圣历印记", en: "✨ Converting your Maya Tzolkin day sign" },
-  { zh: "✨ 交叉三套系统，生成你的核心类型", en: "✨ Cross-referencing three systems into your core type" },
+  { zh: "✨ 交叉四套系统，生成你的核心类型", en: "✨ Cross-referencing four systems into your core type" },
 ];
 
 export default function LifeMapFlow() {
@@ -72,6 +77,7 @@ export default function LifeMapFlow() {
   const [hour, setHour] = useState("12");
   const [minute, setMinute] = useState("00");
   const [city, setCity] = useState("");
+  const [gender, setGender] = useState<"male" | "female">("female");
   const [focus, setFocus] = useState<Focus>("all");
   const [currentState, setCurrentState] = useState<CurrentState>("exploring");
   const [energyLevel, setEnergyLevel] = useState(3);
@@ -110,7 +116,7 @@ export default function LifeMapFlow() {
           year: y, month: m, day: d,
           hour: hasTime ? parseInt(hour, 10) || 0 : 12,
           minute: hasTime ? parseInt(minute, 10) || 0 : 0,
-          hasTime,
+          hasTime, gender,
         }),
       });
       const facts: Facts = await calcRes.json();
@@ -128,6 +134,7 @@ export default function LifeMapFlow() {
         `【中式命盘】四柱：${facts.yearPillar} ${facts.monthPillar} ${facts.dayPillar}${facts.hourPillar ? " " + facts.hourPillar : "（未知具体时辰）"}；` +
         `日主：${facts.dayMasterGan}（${facts.dayMasterElement === "wood" ? "木" : facts.dayMasterElement === "fire" ? "火" : facts.dayMasterElement === "earth" ? "土" : facts.dayMasterElement === "metal" ? "金" : "水"}）；` +
         `年干十神：${facts.yearShiShen}；月干十神：${facts.monthShiShen}；日柱纳音：${facts.dayDetail.naYin}；命局五行分布：${wxStr}\n` +
+        (facts.ziwei ? `【紫微斗数】命宫在${facts.ziwei.soulPalaceBranch}，身宫在${facts.ziwei.bodyPalaceBranch}，${facts.ziwei.fiveElementsClass}；命宫主星：${facts.ziwei.palaces.find(p => p.isSoulPalace)?.majorStars.map(s => s.name).join("、") || "无主星（借对宫星曜论）"}\n` : "") +
         `【玛雅Tzolkin】${facts.maya.tone} ${facts.maya.sign}（${facts.maya.meaning}／数字${facts.maya.tone}：${facts.maya.toneMeaning}）\n` +
         `【当前频率自测】能量水平${energyLevel}/5，头脑清晰度${clarityLevel}/5，内外对齐感${alignmentLevel}/5\n` +
         `【用户最想探索】${focusLabel.zh}\n【用户当前状态】${stateLabel.zh}` +
@@ -250,7 +257,7 @@ export default function LifeMapFlow() {
               <Bi zh="每个人来到这个世界，都携带独特的信息结构。" en="Everyone who arrives in this world carries a unique information structure." />
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-9 text-bone-dim">
-              <Bi zh="输入你的基础信息，生成你的专属生命图谱——西方占星、中式八字、玛雅Tzolkin圣历，三套真实的天文历法系统，同一个人，三种古老的语言。" en="Enter your basic information, and generate a life map that is entirely your own — Western astrology, Chinese Bazi, and the Maya Tzolkin calendar: three real astronomical and calendrical systems, one person, three ancient languages." />
+              <Bi zh="输入你的基础信息，生成你的专属生命图谱——西方占星、中式八字、紫微斗数、玛雅Tzolkin圣历，四套真实的天文历法系统，同一个人，四种古老的语言。" en="Enter your basic information, and generate a life map that is entirely your own — Western astrology, Chinese Bazi, Ziwei Doushu, and the Maya Tzolkin calendar: four real astronomical and calendrical systems, one person, four ancient languages." />
             </p>
             <button
               onClick={goForm}
@@ -320,6 +327,21 @@ export default function LifeMapFlow() {
                   placeholder={t("城市", "City")}
                   className="mt-2 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm text-bone-dim">
+                  <Bi zh="性别" en="Gender" />
+                  <span className="ml-2 text-xs text-bone-dim/50"><Bi zh="（紫微斗数排大限方向需要）" en="(needed for Zi Wei Dou Shu's decade-cycle direction)" /></span>
+                </label>
+                <div className="mt-2 grid grid-cols-2 gap-3">
+                  <button onClick={() => setGender("female")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "female" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                    <Bi zh="女" en="Female" />
+                  </button>
+                  <button onClick={() => setGender("male")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "male" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                    <Bi zh="男" en="Male" />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -429,12 +451,12 @@ export default function LifeMapFlow() {
             {/* 命盘数据面板：中西玛雅三方合参，全部真实计算，不是编的——这是免费版就能看到的"证据" */}
             <div className="mt-8 rounded-sm border border-lm-violet/20 bg-lm-violet/5 p-6">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm-violet">
-                <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 玛雅Tzolkin" en="Your Chart Data · Western Astrology · Chinese Bazi · Maya Tzolkin" />
+                <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin" />
               </p>
               <p className="mt-2 text-xs leading-6 text-bone-dim/70">
                 <Bi
-                  zh="以下每一项，都由真实的天文与历法算法计算得出——七大行星的黄道位置，与专业占星软件同源；四柱八字的干支、纳音、地势，采用标准命理算法；玛雅Tzolkin圣历的图腾与数字，用儒略日精确推算，并用两个真实的历史节点（创世日、2012年长历终止日）验证过准确性。不是语言模型现场编的数字。"
-                  en="Every value below comes from real astronomical and calendrical calculation — planetary positions from the same class of method professional astrology software uses; Bazi characters, elements and stages from standard calendrical rules; the Maya Tzolkin day sign and tone computed via Julian Day Number and verified against two real historical reference points. None of it is a number a language model made up."
+                  zh="以下每一项，都由真实的天文与历法算法计算得出——七大行星的黄道位置，与专业占星软件同源；四柱八字的干支、纳音、地势，采用标准命理算法；紫微斗数的命宫身宫排布，用专门的排盘算法计算，并手动按古法逐步核对过命宫、身宫、五行局三项，确认与算法输出一致；玛雅Tzolkin圣历的图腾与数字，用儒略日精确推算，并用两个真实的历史节点（创世日、2012年长历终止日）验证过准确性。不是语言模型现场编的数字。"
+                  en="Every value below comes from real astronomical and calendrical calculation — planetary positions from the same class of method professional astrology software uses; Bazi characters, elements and stages from standard calendrical rules; Ziwei Doushu's Soul and Body Palace placement from a dedicated charting algorithm, manually cross-checked against the classical method for three key values; the Maya Tzolkin day sign and tone computed via Julian Day Number and verified against two real historical reference points. None of it is a number a language model made up."
                 />
               </p>
               <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -469,6 +491,19 @@ export default function LifeMapFlow() {
                 </span>
               </div>
               <p className="mt-2 text-center text-xs text-bone-dim/50">{report.facts.maya.meaning} · {report.facts.maya.toneMeaning}</p>
+              {report.facts.ziwei && (
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-white/10 pt-4">
+                  <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5 font-display text-sm text-bone">
+                    {t("紫微命宫", "Ziwei Soul Palace")} {report.facts.ziwei.soulPalaceBranch}
+                  </span>
+                  <span className="rounded-sm border border-white/10 px-3 py-1.5 font-display text-sm text-bone">
+                    {t("身宫", "Body Palace")} {report.facts.ziwei.bodyPalaceBranch}
+                  </span>
+                  <span className="rounded-sm border border-white/10 px-3 py-1.5 font-display text-sm text-bone">
+                    {report.facts.ziwei.fiveElementsClass}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="mt-8">
@@ -506,14 +541,15 @@ export default function LifeMapFlow() {
               <ul className="mx-auto mt-6 max-w-sm space-y-2 text-left text-sm leading-7 text-bone-dim">
                 <li>01 · <Bi zh="逐一解读——七大行星，每一颗，都有单独的一段解读，不是罗列星座名字" en="Planet by planet — each of the seven gets its own reading, not just a sign name" /></li>
                 <li>02 · <Bi zh="八字深层结构——十神、纳音、地势、藏干，逐柱展开，加上胎元命宫身宫的解读" en="Bazi in depth — Ten Gods, Na Yin, growth stages, hidden stems, pillar by pillar, plus the three palaces" /></li>
-                <li>03 · <Bi zh="玛雅印记详解——你的图腾与数字，在你命盘里具体意味着什么" en="Your Maya sign, decoded — what your day sign and tone specifically mean in your chart" /></li>
-                <li>04 · <Bi zh="大运走势——未来几个十年周期，各自的主题与转折点" en="Major Luck Cycles — the theme and turning point of each coming decade" /></li>
-                <li>05 · <Bi zh="频率自测解读——你填的能量/清晰度/对齐感三项分数，对照命盘，看出真正的落差在哪里" en="Your frequency self-assessment, interpreted — where your actual state diverges from your chart, and why" /></li>
-                <li>06 · <Bi zh="财富与事业频率地图——事业运势、适合的工作方式，与财富的关系、适合的创造路径" en="Wealth & Career Map — your career instincts, working style, relationship with money, paths suited to you" /></li>
-                <li>07 · <Bi zh="关系共振地图——亲密关系的情感模式，加上家族归属、群体角色的解读" en="Relationship Resonance Map — your intimacy pattern, plus family dynamics and your role in groups" /></li>
-                <li>08 · <Bi zh="人生周期导航——30天/90天/365天的关注方向" en="Life Cycle Navigation — focus points for the next 30/90/365 days" /></li>
-                <li>09 · <Bi zh="专属灵犀练习——根据你的状态生成的呼吸与觉察练习" en="A Personal Lingxi Practice — breathing and awareness exercises shaped to your state" /></li>
-                <li>10 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
+                <li>03 · <Bi zh="紫微命盘详解——命宫身宫的主星组合，在你身上具体如何呈现" en="Your Ziwei chart, decoded — what the stars in your Soul and Body Palace mean for you" /></li>
+                <li>04 · <Bi zh="玛雅印记详解——你的图腾与数字，在你命盘里具体意味着什么" en="Your Maya sign, decoded — what your day sign and tone specifically mean in your chart" /></li>
+                <li>05 · <Bi zh="大运走势——未来几个十年周期，各自的主题与转折点" en="Major Luck Cycles — the theme and turning point of each coming decade" /></li>
+                <li>06 · <Bi zh="频率自测解读——你填的能量/清晰度/对齐感三项分数，对照命盘，看出真正的落差在哪里" en="Your frequency self-assessment, interpreted — where your actual state diverges from your chart, and why" /></li>
+                <li>07 · <Bi zh="财富与事业频率地图——事业运势、适合的工作方式，与财富的关系、适合的创造路径" en="Wealth & Career Map — your career instincts, working style, relationship with money, paths suited to you" /></li>
+                <li>08 · <Bi zh="关系共振地图——亲密关系的情感模式，加上家族归属、群体角色的解读" en="Relationship Resonance Map — your intimacy pattern, plus family dynamics and your role in groups" /></li>
+                <li>09 · <Bi zh="人生周期导航——30天/90天/365天的关注方向" en="Life Cycle Navigation — focus points for the next 30/90/365 days" /></li>
+                <li>10 · <Bi zh="专属灵犀练习——根据你的状态生成的呼吸与觉察练习" en="A Personal Lingxi Practice — breathing and awareness exercises shaped to your state" /></li>
+                <li>11 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
               </ul>
               <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-bone-dim/50">
                 <Bi
