@@ -45,6 +45,25 @@ create table if not exists public.field_questions (
   created_at timestamptz default now()
 );
 
+-- 4c) 生命图谱提交记录：出生数据、计算出的命盘事实、免费解读、频率自测，
+--     以及付费解锁后生成的完整报告（full_report 在未解锁前为 null）
+create table if not exists public.life_map_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text,
+  birth_input jsonb not null,
+  facts jsonb not null,
+  core_type_name text,
+  free_narrative text,
+  focus text,
+  current_state text,
+  energy_level int,
+  clarity_level int,
+  alignment_level int,
+  full_report text,
+  created_at timestamptz default now()
+);
+
 -- 5) 订单
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
@@ -67,6 +86,7 @@ alter table public.unlocks         enable row level security;
 alter table public.reality_entries enable row level security;
 alter table public.visions         enable row level security;
 alter table public.field_questions enable row level security;
+alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 
 drop policy if exists "own profile read"   on public.profiles;
@@ -89,6 +109,10 @@ create policy "own vision" on public.visions
 
 drop policy if exists "own field questions" on public.field_questions;
 create policy "own field questions" on public.field_questions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+drop policy if exists "own life map submissions" on public.life_map_submissions;
+create policy "own life map submissions" on public.life_map_submissions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 drop policy if exists "own orders read" on public.orders;

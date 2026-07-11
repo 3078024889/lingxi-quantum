@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
 import { getCoreType, type WesternElement, type ChineseElement } from "@/lib/lifemap-calc";
 import Bi from "@/components/Bi";
+import { createClient } from "@/lib/supabase/client";
+import LifeMapCompass from "./LifeMapCompass";
 
 const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
 const t = (zh: string, en: string) => (isEn() ? en : zh);
@@ -79,7 +80,10 @@ export default function LifeMapFlow() {
   const [loadingStep, setLoadingStep] = useState(0);
   const [report, setReport] = useState<ReportData | null>(null);
   const [error, setError] = useState("");
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [unlocking, setUnlocking] = useState(false);
   const formTopRef = useRef<HTMLDivElement>(null);
+  const supabase = createClient();
 
   const goForm = () => {
     setStage("form");
@@ -140,10 +144,73 @@ export default function LifeMapFlow() {
       clearInterval(stepTimer);
       setReport({ facts, coreType, narrative: aiPayload.text });
       setStage("report");
+
+      // 若已登录，保存这份提交记录，供之后解锁完整报告时使用；未登录则跳过，
+      // 解锁完整报告时会引导先登录。
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          const saveRes = await fetch("/api/lifemap/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: name.trim() || null,
+              birthInput: { year: y, month: m, day: d, hour: hasTime ? parseInt(hour, 10) || 0 : 12, minute: hasTime ? parseInt(minute, 10) || 0 : 0, hasTime },
+              facts,
+              coreTypeName: isEn() ? coreType.nameEn : coreType.name,
+              freeNarrative: aiPayload.text,
+              focus: focusLabel.zh,
+              currentState: stateLabel.zh,
+              energyLevel, clarityLevel, alignmentLevel,
+            }),
+          });
+          const saveData = await saveRes.json();
+          if (saveRes.ok && saveData.id) setSubmissionId(saveData.id);
+        }
+      } catch {
+        // 保存失败不影响免费报告的展示，静默忽略，解锁按钮会引导用户重新走一次
+      }
     } catch {
       clearInterval(stepTimer);
       setError(t("场域连接不稳定，请重试一次。", "The field connection was unstable — please try again."));
       setStage("form");
+    }
+  };
+
+  const unlockFull = async () => {
+    setUnlocking(true);
+    setError("");
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        window.location.href = "/account";
+        return;
+      }
+      let id = submissionId;
+      if (!id) {
+        setError(t("提交记录尚未保存好，请稍候几秒再试一次。", "Your submission isn't saved yet — please wait a few seconds and try again."));
+        setUnlocking(false);
+        return;
+      }
+      const res = await fetch("/api/pay/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: "life-map-report", returnPath: `/life-map/full?id=${id}&paid=1` }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || t("下单失败，请稍后再试。", "Order failed, please try again later."));
+        setUnlocking(false);
+      }
+    } catch {
+      setError(t("网络错误，请稍后再试。", "Network error, please try again later."));
+      setUnlocking(false);
     }
   };
 
@@ -190,6 +257,7 @@ export default function LifeMapFlow() {
                 en="This is a tool for self-exploration and reflection, not a prophecy — the direction of your life is always your own to choose."
               />
             </p>
+            <LifeMapCompass />
           </div>
         </section>
       )}
@@ -450,12 +518,18 @@ export default function LifeMapFlow() {
                 <p className="text-sm text-bone-dim/60 line-through">$29.9</p>
                 <p className="font-display text-4xl text-lm-violet">$9.9</p>
               </div>
-              <Link
-                href="/live-as"
-                className="mt-6 inline-block bg-lm-violet px-12 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:brightness-110"
+              <button
+                onClick={unlockFull}
+                disabled={unlocking}
+                className="mt-6 inline-block bg-lm-violet px-12 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:brightness-110 disabled:opacity-50"
               >
-                ✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" />
-              </Link>
+                {unlocking ? t("正在跳转支付…", "Redirecting to payment…") : <>✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" /></>}
+              </button>
+              {!submissionId && (
+                <p className="mx-auto mt-4 max-w-xs text-xs text-bone-dim/50">
+                  <Bi zh="需要先登录，才能保存并解锁你的完整报告。" en="Sign in first to save and unlock your full report." />
+                </p>
+              )}
             </div>
           </div>
         </section>

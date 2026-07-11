@@ -36,7 +36,11 @@ export const narrativeProducts: Product[] = NARRATIVES.map((n) => ({
   group: "cultivation" as const,
 }));
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts];
+export const lifeMapProducts: Product[] = [
+  { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁你的完整命盘解读，永久保存、随时回看", noteEn: "One exchange unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
+];
+
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }

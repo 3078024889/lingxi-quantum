@@ -5,7 +5,7 @@ import { getProduct } from "@/lib/plans";
 
 export async function POST(req: Request) {
   try {
-    const { productId } = await req.json();
+    const { productId, returnPath } = await req.json();
     const product = getProduct(productId);
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         order_id: order.id,
         order_description: `灵犀 · ${product.name}`,
         ipn_callback_url: `${baseUrl}/api/pay/webhook`,
-        success_url: `${baseUrl}/account?paid=1`,
+        success_url: `${baseUrl}${typeof returnPath === "string" && returnPath.startsWith("/") ? returnPath : "/account?paid=1"}`,
         cancel_url: `${baseUrl}/membership?canceled=1`,
       }),
     });
