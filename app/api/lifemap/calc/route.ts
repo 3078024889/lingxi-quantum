@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { computeLifeMapFacts, type BirthInput } from "@/lib/lifemap-calc";
+import { computeLifeMapFacts, computeMayaTzolkin, type BirthInput } from "@/lib/lifemap-calc";
 
 export const runtime = "nodejs";
 
@@ -26,7 +26,8 @@ export async function POST(req: Request) {
       minute: typeof minute === "number" ? minute : 0,
       hasTime: !!hasTime,
     });
-    return NextResponse.json(facts);
+    const maya = computeMayaTzolkin(year, month, day);
+    return NextResponse.json({ ...facts, maya });
   } catch (e) {
     return NextResponse.json({ error: "计算失败，请检查出生信息。" }, { status: 500 });
   }
