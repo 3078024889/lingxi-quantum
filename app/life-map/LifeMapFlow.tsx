@@ -187,7 +187,8 @@ export default function LifeMapFlow() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        window.location.href = "/account";
+        setError(t("需要先登录，正在带你去登录页面…", "You'll need to sign in first — taking you there now…"));
+        setTimeout(() => { window.location.href = "/account"; }, 1200);
         return;
       }
       let id = submissionId;
@@ -205,10 +206,16 @@ export default function LifeMapFlow() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError(data.error || t("下单失败，请稍后再试。", "Order failed, please try again later."));
+        console.error("解锁完整报告失败:", data);
+        setError(
+          data.error === "支付未配置"
+            ? t("支付网关尚未配置（缺少 NOWPAYMENTS_API_KEY），请联系站点管理员配置后再试。", "Payment gateway isn't configured yet (missing NOWPAYMENTS_API_KEY) — please contact the site admin.")
+            : data.error || t("下单失败，请稍后再试。", "Order failed, please try again later.")
+        );
         setUnlocking(false);
       }
-    } catch {
+    } catch (e) {
+      console.error("解锁完整报告出错:", e);
       setError(t("网络错误，请稍后再试。", "Network error, please try again later."));
       setUnlocking(false);
     }
@@ -502,8 +509,8 @@ export default function LifeMapFlow() {
                 <li>03 · <Bi zh="玛雅印记详解——你的图腾与数字，在你命盘里具体意味着什么" en="Your Maya sign, decoded — what your day sign and tone specifically mean in your chart" /></li>
                 <li>04 · <Bi zh="大运走势——未来几个十年周期，各自的主题与转折点" en="Major Luck Cycles — the theme and turning point of each coming decade" /></li>
                 <li>05 · <Bi zh="频率自测解读——你填的能量/清晰度/对齐感三项分数，对照命盘，看出真正的落差在哪里" en="Your frequency self-assessment, interpreted — where your actual state diverges from your chart, and why" /></li>
-                <li>06 · <Bi zh="财富频率地图——你与财富的关系、阻碍模式、适合的创造路径" en="Wealth Frequency Map — your relationship with money, blocks, and paths suited to you" /></li>
-                <li>07 · <Bi zh="关系共振分析——情感模式、容易吸引的人、成长方向" en="Relationship Resonance — your emotional pattern, who you tend to attract, growth direction" /></li>
+                <li>06 · <Bi zh="财富与事业频率地图——事业运势、适合的工作方式，与财富的关系、适合的创造路径" en="Wealth & Career Map — your career instincts, working style, relationship with money, paths suited to you" /></li>
+                <li>07 · <Bi zh="关系共振地图——亲密关系的情感模式，加上家族归属、群体角色的解读" en="Relationship Resonance Map — your intimacy pattern, plus family dynamics and your role in groups" /></li>
                 <li>08 · <Bi zh="人生周期导航——30天/90天/365天的关注方向" en="Life Cycle Navigation — focus points for the next 30/90/365 days" /></li>
                 <li>09 · <Bi zh="专属灵犀练习——根据你的状态生成的呼吸与觉察练习" en="A Personal Lingxi Practice — breathing and awareness exercises shaped to your state" /></li>
                 <li>10 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
@@ -525,7 +532,12 @@ export default function LifeMapFlow() {
               >
                 {unlocking ? t("正在跳转支付…", "Redirecting to payment…") : <>✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" /></>}
               </button>
-              {!submissionId && (
+              {error && (
+                <p className="mx-auto mt-4 max-w-sm rounded-sm border border-rose/30 bg-rose/10 px-4 py-3 text-sm leading-6 text-rose">
+                  {error}
+                </p>
+              )}
+              {!error && !submissionId && (
                 <p className="mx-auto mt-4 max-w-xs text-xs text-bone-dim/50">
                   <Bi zh="需要先登录，才能保存并解锁你的完整报告。" en="Sign in first to save and unlock your full report." />
                 </p>

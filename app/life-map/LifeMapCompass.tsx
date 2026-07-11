@@ -119,8 +119,11 @@ export default function LifeMapCompass() {
         {/* 中心核心 */}
         <circle cx={cx} cy={cy} r={30} fill="url(#compass-core)" />
         <circle cx={cx} cy={cy} r={14} fill="#fff6e8" opacity={0.9} />
-        <text x={cx} y={cy - 40} textAnchor="middle" fontSize="11" fill="#fff6e8" fontFamily="serif" opacity={0.9}>
+        <text data-lang="zh" x={cx} y={cy - 40} textAnchor="middle" fontSize="11" fill="#fff6e8" fontFamily="serif" opacity={0.9}>
           灵犀场域
+        </text>
+        <text data-lang="en" x={cx} y={cy - 40} textAnchor="middle" fontSize="9" fill="#fff6e8" fontFamily="serif" opacity={0.9}>
+          The Lingxi Field
         </text>
 
         {/* 各圈节点 */}
@@ -133,6 +136,7 @@ export default function LifeMapCompass() {
               <g key={`${ring.radius}-${i}`}>
                 <circle cx={x} cy={y} r={2.6} fill={ring.color} opacity={ring.dashed ? 0.55 : 0.95} />
                 <text
+                  data-lang="zh"
                   x={labelOut.x} y={labelOut.y}
                   textAnchor={anchor}
                   dominantBaseline="middle"
@@ -142,6 +146,18 @@ export default function LifeMapCompass() {
                   opacity={ring.dashed ? 0.7 : 0.95}
                 >
                   {node.zh}
+                </text>
+                <text
+                  data-lang="en"
+                  x={labelOut.x} y={labelOut.y}
+                  textAnchor={anchor}
+                  dominantBaseline="middle"
+                  fontSize="7"
+                  fill={ring.dashed ? "#8a8496" : "#EDE7DC"}
+                  fontFamily="sans-serif"
+                  opacity={ring.dashed ? 0.7 : 0.95}
+                >
+                  {node.en}
                 </text>
               </g>
             );

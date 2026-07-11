@@ -14,8 +14,8 @@ const SECTION_TITLES = [
   { zh: "玛雅印记详解", en: "Your Maya Sign, Decoded" },
   { zh: "大运走势", en: "Your Major Luck Cycles" },
   { zh: "频率自测解读", en: "Your Frequency Self-Assessment, Interpreted" },
-  { zh: "财富频率地图", en: "Your Wealth Frequency Map" },
-  { zh: "关系共振分析", en: "Your Relationship Resonance" },
+  { zh: "财富与事业频率地图", en: "Your Wealth & Career Map" },
+  { zh: "关系共振地图", en: "Your Relationship Resonance Map" },
   { zh: "人生周期导航", en: "Your Life Cycle Navigation" },
   { zh: "专属灵犀练习", en: "A Personal Lingxi Practice" },
 ];
