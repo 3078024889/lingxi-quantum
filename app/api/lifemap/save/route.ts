@@ -49,7 +49,13 @@ export async function POST(req: Request) {
     .single();
 
   if (error || !data) {
-    return NextResponse.json({ error: "保存失败，请稍后再试。" }, { status: 500 });
+    console.error("life_map_submissions 保存失败:", error);
+    // 把真实的数据库错误信息带回前端（记录在浏览器控制台），方便定位——
+    // 最常见的原因是 life_map_submissions 表还没在 Supabase 里建好。
+    return NextResponse.json(
+      { error: "保存失败，请稍后再试。", detail: error?.message || "unknown", code: error?.code || null },
+      { status: 500 }
+    );
   }
   return NextResponse.json({ id: data.id });
 }

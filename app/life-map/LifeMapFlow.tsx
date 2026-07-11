@@ -96,6 +96,53 @@ export default function LifeMapFlow() {
     setTimeout(() => formTopRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   };
 
+  // 保存这份提交记录到 life_map_submissions 表，成功则记下 id 供解锁完整报告使用。
+  // 失败时，把 Supabase/接口返回的真实错误打到 console，方便定位问题
+  // （最常见的原因：还没在 Supabase SQL Editor 里跑过最新的 supabase/schema.sql，
+  // 导致 life_map_submissions 这张表在数据库里还不存在）。
+  const trySaveSubmission = async (args: {
+    y: number; m: number; d: number; hasTime: boolean; hour: string; minute: string;
+    facts: Facts; coreType: { name: string; nameEn: string };
+    freeNarrative: string; focusLabel: { zh: string }; stateLabel: { zh: string };
+    energyLevel: number; clarityLevel: number; alignmentLevel: number; name: string;
+  }): Promise<string | null> => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return null;
+      const saveRes = await fetch("/api/lifemap/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: args.name.trim() || null,
+          birthInput: {
+            year: args.y, month: args.m, day: args.d,
+            hour: args.hasTime ? parseInt(args.hour, 10) || 0 : 12,
+            minute: args.hasTime ? parseInt(args.minute, 10) || 0 : 0,
+            hasTime: args.hasTime,
+          },
+          facts: args.facts,
+          coreTypeName: isEn() ? args.coreType.nameEn : args.coreType.name,
+          freeNarrative: args.freeNarrative,
+          focus: args.focusLabel.zh,
+          currentState: args.stateLabel.zh,
+          energyLevel: args.energyLevel, clarityLevel: args.clarityLevel, alignmentLevel: args.alignmentLevel,
+        }),
+      });
+      const saveData = await saveRes.json();
+      if (saveRes.ok && saveData.id) {
+        setSubmissionId(saveData.id);
+        return saveData.id as string;
+      }
+      console.error("保存生命图谱提交记录失败:", saveRes.status, saveData);
+      return null;
+    } catch (e) {
+      console.error("保存生命图谱提交记录出错:", e);
+      return null;
+    }
+  };
+
   const submit = async () => {
     const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
     if (!y || !m || !d || y < 1900 || y > 2026 || m < 1 || m > 12 || d < 1 || d > 31) {
@@ -154,31 +201,11 @@ export default function LifeMapFlow() {
 
       // 若已登录，保存这份提交记录，供之后解锁完整报告时使用；未登录则跳过，
       // 解锁完整报告时会引导先登录。
-      try {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          const saveRes = await fetch("/api/lifemap/save", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: name.trim() || null,
-              birthInput: { year: y, month: m, day: d, hour: hasTime ? parseInt(hour, 10) || 0 : 12, minute: hasTime ? parseInt(minute, 10) || 0 : 0, hasTime },
-              facts,
-              coreTypeName: isEn() ? coreType.nameEn : coreType.name,
-              freeNarrative: aiPayload.text,
-              focus: focusLabel.zh,
-              currentState: stateLabel.zh,
-              energyLevel, clarityLevel, alignmentLevel,
-            }),
-          });
-          const saveData = await saveRes.json();
-          if (saveRes.ok && saveData.id) setSubmissionId(saveData.id);
-        }
-      } catch {
-        // 保存失败不影响免费报告的展示，静默忽略，解锁按钮会引导用户重新走一次
-      }
+      await trySaveSubmission({
+        y, m, d, hasTime, hour, minute,
+        facts, coreType, freeNarrative: aiPayload.text,
+        focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
+      });
     } catch {
       clearInterval(stepTimer);
       setError(t("场域连接不稳定，请重试一次。", "The field connection was unstable — please try again."));
@@ -200,9 +227,27 @@ export default function LifeMapFlow() {
       }
       let id = submissionId;
       if (!id) {
-        setError(t("提交记录尚未保存好，请稍候几秒再试一次。", "Your submission isn't saved yet — please wait a few seconds and try again."));
-        setUnlocking(false);
-        return;
+        // 先重试保存一次，而不是直接放弃——常见原因是首次自动保存时网络还没就绪
+        if (report) {
+          const focusLabel = FOCUS_OPTIONS.find((f) => f.id === focus)!;
+          const stateLabel = STATE_OPTIONS.find((s) => s.id === currentState)!;
+          const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
+          id = await trySaveSubmission({
+            y, m, d, hasTime, hour, minute,
+            facts: report.facts, coreType: report.coreType, freeNarrative: report.narrative,
+            focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
+          });
+        }
+        if (!id) {
+          setError(
+            t(
+              "提交记录保存失败，可能是数据库还没准备好（请确认已在 Supabase 运行过最新的 schema.sql），或网络不稳定。请打开浏览器控制台查看具体错误后重试。",
+              "Saving your submission failed — possibly the database isn't set up yet (please confirm the latest schema.sql has been run in Supabase), or a network issue. Check the browser console for the specific error and try again."
+            )
+          );
+          setUnlocking(false);
+          return;
+        }
       }
       const res = await fetch("/api/pay/create", {
         method: "POST",
