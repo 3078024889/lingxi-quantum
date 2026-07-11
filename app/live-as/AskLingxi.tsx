@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
+import SpiralField from "@/components/SpiralField";
 
 const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
 const t = (zh: string, en: string) => (isEn() ? en : zh);
@@ -77,6 +78,7 @@ export default function AskLingxi() {
 
   return (
     <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8">
+      <SpiralField active={sending} label={t("提问正在送入场域……", "Your question is entering the field…")} />
       <p className="font-display text-2xl text-bone">{t("提问灵犀", "Ask Lingxi")}</p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">
         {t(

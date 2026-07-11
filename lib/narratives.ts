@@ -16,7 +16,7 @@ export type Narrative = {
 };
 
 // 分类占位缩略图：还没配插画的篇目，也不再是"没图看着不舒服"的空白卡片
-const CAT_GLYPH: Record<string, { glyph: string; c1: string; c2: string; c3: string }> = {
+export const CAT_GLYPH: Record<string, { glyph: string; c1: string; c2: string; c3: string }> = {
   novel:     { glyph: "◈", c1: "#3a2350", c2: "#5c3560", c3: "#e8845f" },
   dream:     { glyph: "☾", c1: "#161a3a", c2: "#2a2e5c", c3: "#9bb4ff" },
   rewrite:   { glyph: "◐", c1: "#173a30", c2: "#2e5a48", c3: "#d8c07a" },

@@ -8,6 +8,7 @@ import SearchBox from "./SearchBox";
 
 const links = [
   { href: "/live-as", zh: "意识显化", en: "Manifestation" },
+  { href: "/life-map", zh: "生命图谱", en: "Life Map" },
   { href: "/dream", zh: "探索梦境", en: "Dreams" },
   { href: "/practice", zh: "修炼技术", en: "Practices" },
   { href: "/#gates", zh: "重塑潜意识", en: "Rewrite" },
