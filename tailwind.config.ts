@@ -13,6 +13,7 @@ const config: Config = {
         rose: "#C77D9C",
         bone: "#EDE7DC",
         "bone-dim": "#A8A096",
+        "lm-violet": "#C9A5D8",
       },
       fontFamily: {
         display: ["var(--font-display)", "serif"],
