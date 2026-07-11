@@ -59,6 +59,7 @@ export type LifeMapFacts = {
   shenGong: string; shenGongNaYin: string;
   // 五行统计：四柱天干地支藏干里，五种元素各出现了几次，反映命局五行的强弱分布
   wuXingCount: Record<ChineseElement, number>;
+  vedic: VedicChart;
 };
 
 function planet(body: string, date: Date): PlanetPlacement {
@@ -112,6 +113,8 @@ export function computeLifeMapFacts(b: BirthInput): LifeMapFacts {
     if (el) wuXingCount[el]++;
   });
 
+  const vedic = computeVedicChart(sunLon, moonLon, b.year);
+
   return {
     sunSignZh: SIGNS[sunIdx], sunSignEn: SIGNS_EN[sunIdx], sunElement: SIGN_ELEMENT[sunIdx],
     moonSignZh: SIGNS[moonIdx], moonSignEn: SIGNS_EN[moonIdx], moonElement: SIGN_ELEMENT[moonIdx],
@@ -123,6 +126,7 @@ export function computeLifeMapFacts(b: BirthInput): LifeMapFacts {
     yearShiShen: ec.getYearShiShenGan(), monthShiShen: ec.getMonthShiShenGan(),
     hourShiShen: b.hasTime ? ec.getTimeShiShenGan() : null,
     daYunStartAge,
+    vedic,
     yearDetail, monthDetail, dayDetail, timeDetail,
     taiYuan: ec.getTaiYuan(), taiYuanNaYin: ec.getTaiYuanNaYin(),
     mingGong: ec.getMingGong(), mingGongNaYin: ec.getMingGongNaYin(),
@@ -225,6 +229,44 @@ export function computeMayaTzolkin(year: number, month: number, day: number): Ma
   const sign = MAYA_SIGNS[signIdx];
   const toneInfo = MAYA_TONES[tone - 1];
   return { sign: sign.zh, signEn: sign.en, meaning: sign.meaning, tone, toneZh: toneInfo.zh, toneMeaning: toneInfo.meaning };
+}
+
+// ---- 吠陀占星（恒星黄道 / Vedic Sidereal）----
+// 用 Lahiri Ayanamsa（最广泛采用的岁差修正值，印度政府官方标准）把回归黄道
+// 换算成恒星黄道。J2000.0基准值 23.853222°，已用ICRC国际标准核对（多个独立
+// 来源确认该数值），岁差速率用 50.2388475"/年 的线性近似——注意：这是线性
+// 近似，不是瑞士星历表级别的完整非线性精度，可能有零点几度以内的偏差，
+// 足够判断"落在哪个恒星星座"，不足以做到角分级别的精确宫位换算。
+const LAHIRI_J2000 = 23.853222;
+const PRECESSION_RATE_PER_YEAR = 50.2388475 / 3600; // 度/年
+
+export function lahiriAyanamsa(year: number): number {
+  return LAHIRI_J2000 + (year - 2000) * PRECESSION_RATE_PER_YEAR;
+}
+
+export type VedicPlacement = { signZh: string; signEn: string };
+
+export function toSidereal(tropicalLon: number, year: number): VedicPlacement {
+  const ayanamsa = lahiriAyanamsa(year);
+  const siderealLon = ((tropicalLon - ayanamsa) % 360 + 360) % 360;
+  const idx = Math.floor(siderealLon / 30);
+  const VEDIC_SIGNS_ZH = ["白羊", "金牛", "双子", "巨蟹", "狮子", "处女", "天秤", "天蝎", "射手", "摩羯", "水瓶", "双鱼"];
+  const VEDIC_SIGNS_EN = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+  return { signZh: VEDIC_SIGNS_ZH[idx], signEn: VEDIC_SIGNS_EN[idx] };
+}
+
+export type VedicChart = {
+  ayanamsa: number;
+  sunSidereal: VedicPlacement;
+  moonSidereal: VedicPlacement;
+};
+
+export function computeVedicChart(tropicalSunLon: number, tropicalMoonLon: number, year: number): VedicChart {
+  return {
+    ayanamsa: lahiriAyanamsa(year),
+    sunSidereal: toSidereal(tropicalSunLon, year),
+    moonSidereal: toSidereal(tropicalMoonLon, year),
+  };
 }
 
 export function getCoreType(sunElement: WesternElement, dayMasterElement: ChineseElement): CoreType {

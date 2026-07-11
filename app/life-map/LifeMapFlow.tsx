@@ -1,13 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { getCoreType, type WesternElement, type ChineseElement } from "@/lib/lifemap-calc";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
 import LifeMapCompass from "./LifeMapCompass";
-
-const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-const t = (zh: string, en: string) => (isEn() ? en : zh);
 
 type Stage = "landing" | "form" | "loading" | "report";
 
@@ -20,6 +17,9 @@ type MayaTzolkin = { sign: string; signEn: string; meaning: string; tone: number
 type ZiWeiStar = { name: string; brightness: string };
 type ZiWeiPalace = { name: string; heavenlyStem: string; earthlyBranch: string; majorStars: ZiWeiStar[]; isSoulPalace: boolean; isBodyPalace: boolean; decadalRange: [number, number] };
 type ZiWeiChart = { soulPalaceBranch: string; bodyPalaceBranch: string; fiveElementsClass: string; zodiac: string; palaces: ZiWeiPalace[] };
+
+type VedicPlacement = { signZh: string; signEn: string };
+type VedicChart = { ayanamsa: number; sunSidereal: VedicPlacement; moonSidereal: VedicPlacement };
 
 type Facts = {
   sunSignZh: string; sunSignEn: string; sunElement: WesternElement;
@@ -34,6 +34,7 @@ type Facts = {
   wuXingCount: Record<ChineseElement, number>;
   maya: MayaTzolkin;
   ziwei: ZiWeiChart | null;
+  vedic: VedicChart;
 };
 
 type ReportData = {
@@ -68,6 +69,21 @@ const LOADING_STEPS = [
 ];
 
 export default function LifeMapFlow() {
+  // 双语状态：首次渲染（服务端与客户端 hydration 那一刻）都固定为 false，
+  // 避免服务端不知道语言偏好、客户端却立刻读到 lang-en 导致的 hydration 不匹配报错
+  // （React #418/#423/#425 那组错误，根源就在这里）。挂载后再用 useEffect 更新为真实语言。
+  const [langEn, setLangEn] = useState(false);
+  useEffect(() => {
+    setLangEn(document.documentElement.classList.contains("lang-en"));
+    const observer = new MutationObserver(() => {
+      setLangEn(document.documentElement.classList.contains("lang-en"));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+  const isEn = () => langEn;
+  const t = (zh: string, en: string) => (langEn ? en : zh);
+
   const [stage, setStage] = useState<Stage>("landing");
   const [name, setName] = useState("");
   const [year, setYear] = useState("");
@@ -105,12 +121,12 @@ export default function LifeMapFlow() {
     facts: Facts; coreType: { name: string; nameEn: string };
     freeNarrative: string; focusLabel: { zh: string }; stateLabel: { zh: string };
     energyLevel: number; clarityLevel: number; alignmentLevel: number; name: string;
-  }): Promise<string | null> => {
+  }): Promise<{ id: string | null; specificError: string | null }> => {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (!user) return null;
+      if (!user) return { id: null, specificError: null };
       const saveRes = await fetch("/api/lifemap/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -133,13 +149,21 @@ export default function LifeMapFlow() {
       const saveData = await saveRes.json();
       if (saveRes.ok && saveData.id) {
         setSubmissionId(saveData.id);
-        return saveData.id as string;
+        return { id: saveData.id as string, specificError: null };
       }
       console.error("保存生命图谱提交记录失败:", saveRes.status, saveData);
-      return null;
+      // Postgres 错误码 42P01 = 表不存在，这是最常见的根因，直接给出明确的修复指令
+      const specificError =
+        saveData.code === "42P01"
+          ? t(
+              "数据库里还没有 life_map_submissions 这张表。请打开 Supabase 后台 → SQL Editor，粘贴运行项目里 supabase/schema.sql 的全部内容，运行完再回来重试。",
+              "The life_map_submissions table doesn't exist in your database yet. Open Supabase → SQL Editor, paste and run the full contents of supabase/schema.sql, then come back and try again."
+            )
+          : null;
+      return { id: null, specificError };
     } catch (e) {
       console.error("保存生命图谱提交记录出错:", e);
-      return null;
+      return { id: null, specificError: null };
     }
   };
 
@@ -228,22 +252,26 @@ export default function LifeMapFlow() {
       let id = submissionId;
       if (!id) {
         // 先重试保存一次，而不是直接放弃——常见原因是首次自动保存时网络还没就绪
+        let specificError: string | null = null;
         if (report) {
           const focusLabel = FOCUS_OPTIONS.find((f) => f.id === focus)!;
           const stateLabel = STATE_OPTIONS.find((s) => s.id === currentState)!;
           const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
-          id = await trySaveSubmission({
+          const result = await trySaveSubmission({
             y, m, d, hasTime, hour, minute,
             facts: report.facts, coreType: report.coreType, freeNarrative: report.narrative,
             focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
           });
+          id = result.id;
+          specificError = result.specificError;
         }
         if (!id) {
           setError(
-            t(
-              "提交记录保存失败，可能是数据库还没准备好（请确认已在 Supabase 运行过最新的 schema.sql），或网络不稳定。请打开浏览器控制台查看具体错误后重试。",
-              "Saving your submission failed — possibly the database isn't set up yet (please confirm the latest schema.sql has been run in Supabase), or a network issue. Check the browser console for the specific error and try again."
-            )
+            specificError ||
+              t(
+                "提交记录保存失败，可能是数据库还没准备好（请确认已在 Supabase 运行过最新的 schema.sql），或网络不稳定。请打开浏览器控制台查看具体错误后重试。",
+                "Saving your submission failed — possibly the database isn't set up yet (please confirm the latest schema.sql has been run in Supabase), or a network issue. Check the browser console for the specific error and try again."
+              )
           );
           setUnlocking(false);
           return;
@@ -496,7 +524,7 @@ export default function LifeMapFlow() {
             {/* 命盘数据面板：中西玛雅三方合参，全部真实计算，不是编的——这是免费版就能看到的"证据" */}
             <div className="mt-8 rounded-sm border border-lm-violet/20 bg-lm-violet/5 p-6">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm-violet">
-                <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin" />
+                <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin · 吠陀占星" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin · Vedic Jyotish" />
               </p>
               <p className="mt-2 text-xs leading-6 text-bone-dim/70">
                 <Bi
@@ -549,6 +577,17 @@ export default function LifeMapFlow() {
                   </span>
                 </div>
               )}
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-white/10 pt-4">
+                <span className="rounded-sm border border-lattice/40 bg-lattice/10 px-3 py-1.5 font-display text-sm text-bone">
+                  {t("吠陀太阳", "Vedic Sun")} {isEn() ? report.facts.vedic.sunSidereal.signEn : report.facts.vedic.sunSidereal.signZh}
+                </span>
+                <span className="rounded-sm border border-white/10 px-3 py-1.5 font-display text-sm text-bone">
+                  {t("吠陀月亮", "Vedic Moon")} {isEn() ? report.facts.vedic.moonSidereal.signEn : report.facts.vedic.moonSidereal.signZh}
+                </span>
+              </div>
+              <p className="mt-2 text-center text-xs text-bone-dim/50">
+                {t(`岁差修正值 ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri恒星黄道`, `Ayanamsa ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri Sidereal`)}
+              </p>
             </div>
 
             <div className="mt-8">

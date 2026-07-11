@@ -2,8 +2,8 @@
 
 import Bi from "@/components/Bi";
 
-// 生命图谱罗盘：六个同心圈层，从内到外，代表不同体系的深度——
-// 已经用真实算法验证、接入报告的（底层逻辑/中式命理/紫微斗数/西方占星/玛雅历法），
+// 生命图谱罗盘：七个同心圈层，从内到外，代表不同体系的深度——
+// 已经用真实算法验证、接入报告的（底层逻辑/中式命理/紫微斗数/西方占星/玛雅历法/吠陀占星），
 // 与尚未接入、仍是未来计划的（外圈"更多体系"），视觉上区分开，不混为一谈。
 // 全部用矢量文字渲染，不是图片，不会出现文字歪扭看不清的问题。
 
@@ -61,16 +61,23 @@ const RINGS: Ring[] = [
     ],
   },
   {
-    radius: 224, color: "#6a6478", labelZh: "更多体系 · 探索中", labelEn: "More Systems · Exploring", dashed: true,
+    radius: 220, color: "#6FA8DC", labelZh: "吠陀占星 · 已接入", labelEn: "Vedic Jyotish · Live",
+    nodes: [
+      { zh: "恒星太阳", en: "Sidereal Sun", angle: -30 },
+      { zh: "恒星月亮", en: "Sidereal Moon", angle: 90 },
+      { zh: "Lahiri岁差", en: "Lahiri Ayanamsa", angle: 210 },
+    ],
+  },
+  {
+    radius: 254, color: "#6a6478", labelZh: "更多体系 · 探索中", labelEn: "More Systems · Exploring", dashed: true,
     nodes: [
       { zh: "七政四余", en: "Seven Regulators", angle: -18 },
       { zh: "奇门遁甲", en: "Qimen Dunjia", angle: 36 },
       { zh: "风水堪舆", en: "Feng Shui", angle: 90 },
       { zh: "六壬 · 太乙", en: "Liu Ren · Tai Yi", angle: 144 },
       { zh: "相学", en: "Physiognomy", angle: 198 },
-      { zh: "吠陀占星", en: "Vedic Jyotish", angle: 252 },
-      { zh: "全球民间占法", en: "Global Folk Omens", angle: 306 },
-      { zh: "六爻 · 梅花易数", en: "Six Lines · Plum Blossom", angle: 330 },
+      { zh: "全球民间占法", en: "Global Folk Omens", angle: 252 },
+      { zh: "六爻 · 梅花易数", en: "Six Lines · Plum Blossom", angle: 306 },
     ],
   },
 ];
@@ -89,8 +96,8 @@ export default function LifeMapCompass() {
       </p>
       <p className="mx-auto mt-2 max-w-md text-center text-xs leading-6 text-bone-dim/60">
         <Bi
-          zh="内四圈，是已经用真实算法验证、写进你报告里的体系；最外一圈虚线，是仍在验证中、尚未接入的体系——不会把没核实过的东西，当成已经算好的事实，端给你。"
-          en="The inner four rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
+          zh="内六圈，是已经用真实算法验证、写进你报告里的体系；最外一圈虚线，是仍在验证中、尚未接入的体系——不会把没核实过的东西，当成已经算好的事实，端给你。"
+          en="The inner six rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
         />
       </p>
       <svg viewBox="0 0 580 580" className="mx-auto mt-8 w-full max-w-lg">

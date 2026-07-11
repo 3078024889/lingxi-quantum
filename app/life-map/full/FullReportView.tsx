@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 
-const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-const t = (zh: string, en: string) => (isEn() ? en : zh);
-
 const SECTION_TITLES = [
   { zh: "七大行星逐一解读", en: "The Seven Planets, One by One" },
   { zh: "八字深层结构", en: "The Deep Structure of Your Bazi" },
@@ -23,6 +20,19 @@ const SECTION_TITLES = [
 
 export default function FullReportView({ id }: { id: string }) {
   const supabase = createClient();
+  // 同 LifeMapFlow：首次渲染固定为 false，避免 hydration 不匹配报错，挂载后再同步真实语言。
+  const [langEn, setLangEn] = useState(false);
+  useEffect(() => {
+    setLangEn(document.documentElement.classList.contains("lang-en"));
+    const observer = new MutationObserver(() => {
+      setLangEn(document.documentElement.classList.contains("lang-en"));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+  const isEn = () => langEn;
+  const t = (zh: string, en: string) => (langEn ? en : zh);
+
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
   const [sections, setSections] = useState<string[]>([]);
   const [coreTypeName, setCoreTypeName] = useState("");
