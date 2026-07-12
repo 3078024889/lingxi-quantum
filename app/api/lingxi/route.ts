@@ -159,6 +159,13 @@ export async function POST(req: Request) {
               ? content
               : `【我正在显化的生活】\n${content}\n${body.context ? `【此刻的感受】\n${body.context}` : ""}`;
 
+  // ask 和 lifemap 模式，没有单独的英文版提示词，用附加指令的方式让模型直接输出英文，
+  // 避免维护两份几乎重复、容易互相走样的中英提示词。
+  const langAppend =
+    lang === "en" && (mode === "ask" || mode === "lifemap")
+      ? "\n\n【IMPORTANT】Write your ENTIRE response in natural, fluent English instead of Chinese — not a literal translation, written as if originally composed in English, same tone and format as specified above."
+      : "";
+
   try {
     // 十二章加起来目标约3500-4200个中文字符，中文在多数模型里的token消耗
     // 明显高于西文，5700很可能不够、导致后面几章被截断——这里给足余量。
@@ -171,7 +178,7 @@ export async function POST(req: Request) {
         temperature: 0.9,
         max_tokens: maxTokens,
         messages: [
-          { role: "system", content: SYSTEM[systemKey] },
+          { role: "system", content: SYSTEM[systemKey] + langAppend },
           { role: "user", content: userText },
         ],
         // 知识库检索：回答前先从灵犀知识库取相关 Codex 片段

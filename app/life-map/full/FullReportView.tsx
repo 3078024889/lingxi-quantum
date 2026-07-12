@@ -60,10 +60,11 @@ export default function FullReportView({ id }: { id: string }) {
 
       setStatus("generating");
       try {
+        const currentLangEn = document.documentElement.classList.contains("lang-en");
         const res = await fetch("/api/lifemap/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh" }),
         });
         const data = await res.json();
         if (res.status === 402) {

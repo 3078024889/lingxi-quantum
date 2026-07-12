@@ -61,6 +61,7 @@ create table if not exists public.life_map_submissions (
   clarity_level int,
   alignment_level int,
   full_report text,
+  full_report_en text,
   created_at timestamptz default now()
 );
 
@@ -86,6 +87,10 @@ alter table public.unlocks         enable row level security;
 alter table public.reality_entries enable row level security;
 alter table public.visions         enable row level security;
 alter table public.field_questions enable row level security;
+-- 迁移：如果 life_map_submissions 表是在 full_report_en 字段加入之前建的，
+-- 这一句会把缺的字段补上（已存在则跳过，安全可重复执行）。
+alter table public.life_map_submissions add column if not exists full_report_en text;
+
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 

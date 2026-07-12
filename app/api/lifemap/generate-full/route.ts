@@ -15,13 +15,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 });
   }
 
-  let body: { id?: string };
+  let body: { id?: string; lang?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "请求格式有误。" }, { status: 400 });
   }
   if (!body.id) return NextResponse.json({ error: "缺少提交记录 ID。" }, { status: 400 });
+  const lang = body.lang === "en" ? "en" : "zh";
 
   // 精确校验解锁状态——只认 "life-map-report" 或 "everything" 这两个明确的产品ID，
   // 不复用通用 hasUnlock()（避免 narrative-all 这类跟叙事相关的解锁，被误判为也解锁了生命图谱）。
@@ -50,9 +51,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "无权访问这份记录。" }, { status: 403 });
   }
 
-  // 已经生成过，直接返回缓存内容，不重复调用AI
-  if (submission.full_report) {
-    return NextResponse.json({ fullReport: submission.full_report });
+  // 已经生成过，直接返回对应语言的缓存内容，不重复调用AI
+  const cached = lang === "en" ? submission.full_report_en : submission.full_report;
+  if (cached) {
+    return NextResponse.json({ fullReport: cached });
   }
 
   const key = process.env.ZHIPU_API_KEY;
@@ -94,6 +96,11 @@ export async function POST(req: Request) {
     `【用户最想探索】${submission.focus}\n【用户当前状态】${submission.current_state}` +
     (submission.name ? `\n【称呼】${submission.name}` : "");
 
+  const langInstruction =
+    lang === "en"
+      ? "\n\n【IMPORTANT】Write your ENTIRE response in English instead of Chinese. Keep the exact same structure and the \"===N===\" section delimiters exactly as specified above (do not translate the delimiters themselves), but every word of actual content must be in natural, fluent English — not a literal word-for-word translation, but written as if originally composed in English, in the same tone and specificity described above."
+      : "";
+
   try {
     const res = await fetch(ZHIPU_ENDPOINT, {
       method: "POST",
@@ -103,7 +110,7 @@ export async function POST(req: Request) {
         temperature: 0.85,
         max_tokens: 8000,
         messages: [
-          { role: "system", content: LIFEMAP_FULL_SYSTEM },
+          { role: "system", content: LIFEMAP_FULL_SYSTEM + langInstruction },
           { role: "user", content: promptContent },
         ],
       }),
@@ -114,7 +121,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "生成失败，请稍后再试。" }, { status: 502 });
     }
 
-    await supabase.from("life_map_submissions").update({ full_report: text }).eq("id", body.id);
+    const updateField = lang === "en" ? { full_report_en: text } : { full_report: text };
+    await supabase.from("life_map_submissions").update(updateField).eq("id", body.id);
     return NextResponse.json({ fullReport: text });
   } catch {
     return NextResponse.json({ error: "连接场域时出错，请稍后再试。" }, { status: 500 });
