@@ -21,7 +21,7 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-amber/10 bg-[#1c140c]/75 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-white/12 bg-[#14122a]/45 backdrop-blur-xl">
       <nav className="mx-auto max-w-6xl px-6 py-4">
         <div className="flex items-center justify-between gap-4">
           <Link
