@@ -5,13 +5,14 @@ import { getCoreType, type WesternElement, type ChineseElement } from "@/lib/lif
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
 import LifeMapCompass from "./LifeMapCompass";
+import NatalChartWheel from "./NatalChartWheel";
 
 type Stage = "landing" | "form" | "loading" | "report";
 
 type Focus = "wealth" | "relationship" | "direction" | "growth" | "all";
 type CurrentState = "transforming" | "lost" | "breakthrough" | "stable" | "exploring";
 
-type PlanetPlacement = { signZh: string; signEn: string; element: WesternElement };
+type PlanetPlacement = { signZh: string; signEn: string; element: WesternElement; longitude: number };
 type PillarDetail = { ganZhi: string; shiShenGan: string; shiShenZhi: string; naYin: string; diShi: string; hideGan: string[] };
 type MayaTzolkin = { sign: string; signEn: string; meaning: string; tone: number; toneZh: string; toneMeaning: string };
 type ZiWeiStar = { name: string; brightness: string };
@@ -22,8 +23,8 @@ type VedicPlacement = { signZh: string; signEn: string };
 type VedicChart = { ayanamsa: number; sunSidereal: VedicPlacement; moonSidereal: VedicPlacement };
 
 type Facts = {
-  sunSignZh: string; sunSignEn: string; sunElement: WesternElement;
-  moonSignZh: string; moonSignEn: string; moonElement: WesternElement;
+  sunSignZh: string; sunSignEn: string; sunElement: WesternElement; sunLongitude: number;
+  moonSignZh: string; moonSignEn: string; moonElement: WesternElement; moonLongitude: number;
   mercury: PlanetPlacement; venus: PlanetPlacement; mars: PlanetPlacement; jupiter: PlanetPlacement; saturn: PlanetPlacement;
   yearPillar: string; monthPillar: string; dayPillar: string; hourPillar: string | null;
   dayMasterGan: string; dayMasterElement: ChineseElement;
@@ -34,6 +35,7 @@ type Facts = {
   wuXingCount: Record<ChineseElement, number>;
   maya: MayaTzolkin;
   ziwei: ZiWeiChart | null;
+  lifeCode: { number: number; isMaster: boolean };
   vedic: VedicChart;
 };
 
@@ -71,6 +73,16 @@ const PROFESSION_OPTIONS: { id: string; zh: string; en: string }[] = [
   { id: "freelance", zh: "自由职业", en: "Freelance" },
   { id: "unemployed", zh: "待业 · 无业", en: "Between Jobs" },
   { id: "other", zh: "其他（自定义）", en: "Other (specify)" },
+];
+
+// 感情状态：作为上下文输入，帮关系章节写得更贴合当下处境，不是用来预测
+// "会不会结婚"——单身/恋爱/已婚，三种处境需要的解读角度本来就不同。
+const RELATIONSHIP_OPTIONS: { id: string; zh: string; en: string }[] = [
+  { id: "single", zh: "单身", en: "Single" },
+  { id: "dating", zh: "恋爱中", en: "In a Relationship" },
+  { id: "married", zh: "已婚", en: "Married" },
+  { id: "complicated", zh: "说不清楚", en: "It's Complicated" },
+  { id: "prefer-not", zh: "不想说", en: "Prefer not to say" },
 ];
 
 const STATE_OPTIONS: { id: CurrentState; zh: string; en: string }[] = [
@@ -119,6 +131,7 @@ export default function LifeMapFlow() {
   const [gender, setGender] = useState<"male" | "female">("female");
   const [profession, setProfession] = useState("");
   const [professionCustom, setProfessionCustom] = useState("");
+  const [relationshipStatus, setRelationshipStatus] = useState("");
   const [focus, setFocus] = useState<Focus>("all");
   const [currentState, setCurrentState] = useState<CurrentState>("exploring");
   const [energyLevel, setEnergyLevel] = useState(3);
@@ -224,6 +237,7 @@ export default function LifeMapFlow() {
       const stateLabel = STATE_OPTIONS.find((s) => s.id === currentState)!;
       const professionOpt = PROFESSION_OPTIONS.find((p) => p.id === profession);
       const professionLabel = profession === "other" ? professionCustom.trim() : professionOpt?.zh || "";
+      const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === relationshipStatus)?.zh || "";
       const wx = facts.wuXingCount;
       const wxStr = `木${wx.wood} 火${wx.fire} 土${wx.earth} 金${wx.metal} 水${wx.water}`;
       const promptContent =
@@ -237,6 +251,7 @@ export default function LifeMapFlow() {
         `【当前频率自测】能量水平${energyLevel}/5，头脑清晰度${clarityLevel}/5，内外对齐感${alignmentLevel}/5\n` +
         `【用户最想探索】${focusLabel.zh}\n【用户当前状态】${stateLabel.zh}` +
         (professionLabel ? `\n【用户职业】${professionLabel}` : "") +
+        (relationshipLabel ? `\n【当前感情状态】${relationshipLabel}` : "") +
         (name.trim() ? `\n【称呼】${name.trim()}` : "");
 
       const aiRes = await fetch("/api/lingxi", {
@@ -495,6 +510,18 @@ export default function LifeMapFlow() {
             </div>
 
             <div className="mt-8">
+              <p className="text-sm text-lm2-text-dim"><Bi zh="当前感情状态（选填，帮助关系章节写得更贴合处境）：" en="Current relationship status (optional — helps the relationship section speak to your situation):" /></p>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
+                {RELATIONSHIP_OPTIONS.map((r) => (
+                  <button key={r.id} onClick={() => setRelationshipStatus(r.id)}
+                    className={`rounded-sm border px-3 py-2.5 text-center text-xs transition ${relationshipStatus === r.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    <Bi zh={r.zh} en={r.en} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8">
               <p className="text-sm text-lm2-text-dim"><Bi zh="最近你的状态：" en="Your state recently:" /></p>
               <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {STATE_OPTIONS.map((s) => (
@@ -582,6 +609,18 @@ export default function LifeMapFlow() {
               <p className="text-base leading-9 text-lm2-text-dim">{parsed.echoText}</p>
             </div>
 
+            {/* 真实星盘：用已验证的行星黄经数据，画出标准占星轮图 */}
+            <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6">
+              <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                <Bi zh="你的星盘" en="Your Natal Chart" />
+              </p>
+              <NatalChartWheel
+                sunLongitude={report.facts.sunLongitude} moonLongitude={report.facts.moonLongitude}
+                mercury={report.facts.mercury.longitude} venus={report.facts.venus.longitude}
+                mars={report.facts.mars.longitude} jupiter={report.facts.jupiter.longitude} saturn={report.facts.saturn.longitude}
+              />
+            </div>
+
             {/* 命盘数据面板：中西玛雅三方合参，全部真实计算，不是编的——这是免费版就能看到的"证据" */}
             <div className="mt-8 rounded-sm border border-lm2-violet/20 bg-lm2-violet/5 p-6">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
@@ -649,6 +688,11 @@ export default function LifeMapFlow() {
               <p className="mt-2 text-center text-xs text-lm2-text-dim/50">
                 {t(`岁差修正值 ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri恒星黄道`, `Ayanamsa ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri Sidereal`)}
               </p>
+              <div className="mt-4 flex items-center justify-center gap-3 border-t border-lm2-text/10 pt-4">
+                <span className="rounded-sm border border-lm2-mint/40 bg-lm2-mint/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
+                  {t("生命密码", "Life Path Number")} {report.facts.lifeCode.number}{report.facts.lifeCode.isMaster ? t("（大师数）", " (Master Number)") : ""}
+                </span>
+              </div>
             </div>
 
             <div className="mt-8">

@@ -39,7 +39,7 @@ export type BirthInput = {
   hasTime: boolean;
 };
 
-export type PlanetPlacement = { signZh: string; signEn: string; element: WesternElement };
+export type PlanetPlacement = { signZh: string; signEn: string; element: WesternElement; longitude: number };
 
 export type PillarDetail = {
   ganZhi: string;
@@ -51,8 +51,8 @@ export type PillarDetail = {
 };
 
 export type LifeMapFacts = {
-  sunSignZh: string; sunSignEn: string; sunElement: WesternElement;
-  moonSignZh: string; moonSignEn: string; moonElement: WesternElement;
+  sunSignZh: string; sunSignEn: string; sunElement: WesternElement; sunLongitude: number;
+  moonSignZh: string; moonSignEn: string; moonElement: WesternElement; moonLongitude: number;
   // 五大行星：真实黄道经度换算，不是免费版才有、付费版瞎编——完整报告解锁的是"解读"，不是"编数据"
   mercury: PlanetPlacement; venus: PlanetPlacement; mars: PlanetPlacement; jupiter: PlanetPlacement; saturn: PlanetPlacement;
   yearPillar: string; monthPillar: string; dayPillar: string; hourPillar: string | null;
@@ -77,7 +77,7 @@ function planet(body: string, date: Date): PlanetPlacement {
   const ecl = Astronomy.Ecliptic(vec);
   const lon = ((ecl.elon % 360) + 360) % 360;
   const idx = Math.floor(lon / 30);
-  return { signZh: SIGNS[idx], signEn: SIGNS_EN[idx], element: SIGN_ELEMENT[idx] };
+  return { signZh: SIGNS[idx], signEn: SIGNS_EN[idx], element: SIGN_ELEMENT[idx], longitude: lon };
 }
 
 export function computeLifeMapFacts(b: BirthInput): LifeMapFacts {
@@ -126,8 +126,8 @@ export function computeLifeMapFacts(b: BirthInput): LifeMapFacts {
   const vedic = computeVedicChart(sunLon, moonLon, b.year);
 
   return {
-    sunSignZh: SIGNS[sunIdx], sunSignEn: SIGNS_EN[sunIdx], sunElement: SIGN_ELEMENT[sunIdx],
-    moonSignZh: SIGNS[moonIdx], moonSignEn: SIGNS_EN[moonIdx], moonElement: SIGN_ELEMENT[moonIdx],
+    sunSignZh: SIGNS[sunIdx], sunSignEn: SIGNS_EN[sunIdx], sunElement: SIGN_ELEMENT[sunIdx], sunLongitude: ((sunLon % 360) + 360) % 360,
+    moonSignZh: SIGNS[moonIdx], moonSignEn: SIGNS_EN[moonIdx], moonElement: SIGN_ELEMENT[moonIdx], moonLongitude: ((moonLon % 360) + 360) % 360,
     mercury: planet("Mercury", date), venus: planet("Venus", date), mars: planet("Mars", date),
     jupiter: planet("Jupiter", date), saturn: planet("Saturn", date),
     yearPillar: ec.getYear(), monthPillar: ec.getMonth(), dayPillar: ec.getDay(),
@@ -281,4 +281,22 @@ export function computeVedicChart(tropicalSunLon: number, tropicalMoonLon: numbe
 
 export function getCoreType(sunElement: WesternElement, dayMasterElement: ChineseElement): CoreType {
   return TYPE_MATRIX[sunElement][dayMasterElement];
+}
+
+// ---- 生命密码（生命路径数）----
+// 西方数字命理学里最广泛使用的方法：把出生年月日的全部数字相加，
+// 反复求和直到剩一位数，除非中途出现11/22/33这三个"大师数"就保留不再简化——
+// 这是数字命理学界公认的标准算法，可以独立验证。
+export type LifeCode = { number: number; isMaster: boolean };
+
+function digitSum(n: number): number {
+  return String(n).split("").reduce((s, d) => s + parseInt(d, 10), 0);
+}
+
+export function computeLifeCode(year: number, month: number, day: number): LifeCode {
+  let total = digitSum(year) + digitSum(month) + digitSum(day);
+  while (total > 9 && total !== 11 && total !== 22 && total !== 33) {
+    total = digitSum(total);
+  }
+  return { number: total, isMaster: total === 11 || total === 22 || total === 33 };
 }

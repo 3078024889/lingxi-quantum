@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { computeLifeMapFacts, computeMayaTzolkin, lunarToSolar, type BirthInput } from "@/lib/lifemap-calc";
+import { computeLifeMapFacts, computeMayaTzolkin, computeLifeCode, lunarToSolar, type BirthInput } from "@/lib/lifemap-calc";
 import { computeZiWeiChart, type Gender } from "@/lib/ziwei-calc";
 
 export const runtime = "nodejs";
@@ -43,6 +43,7 @@ export async function POST(req: Request) {
       hasTime: !!hasTime,
     });
     const maya = computeMayaTzolkin(year, month, day);
+    const lifeCode = computeLifeCode(year, month, day);
     // 24小时制转紫微斗数的13时辰序号：0=早子(00-01) 1=丑…6=午…12=晚子(23-00)
     const ziweiHourIndex = Math.floor((usedHour + 1) / 2) % 13;
     let ziwei = null;
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
       ziwei = null; // 紫微排盘偶发的极端日期边界问题，不应影响其余数据正常返回
     }
     // 把换算后的真实阳历日期也带回前端展示，让用户能确认换算结果无误
-    return NextResponse.json({ ...facts, maya, ziwei, resolvedSolar: { year, month, day } });
+    return NextResponse.json({ ...facts, maya, ziwei, lifeCode, resolvedSolar: { year, month, day } });
   } catch (e) {
     return NextResponse.json({ error: "计算失败，请检查出生信息。" }, { status: 500 });
   }
