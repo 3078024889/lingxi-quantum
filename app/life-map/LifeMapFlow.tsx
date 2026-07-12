@@ -633,7 +633,8 @@ export default function LifeMapFlow() {
                 <li>08 · <Bi zh="关系共振地图——亲密关系的情感模式，加上家族归属、群体角色的解读" en="Relationship Resonance Map — your intimacy pattern, plus family dynamics and your role in groups" /></li>
                 <li>09 · <Bi zh="人生周期导航——30天/90天/365天的关注方向" en="Life Cycle Navigation — focus points for the next 30/90/365 days" /></li>
                 <li>10 · <Bi zh="专属灵犀练习——根据你的状态生成的呼吸与觉察练习" en="A Personal Lingxi Practice — breathing and awareness exercises shaped to your state" /></li>
-                <li>11 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
+                <li>11 · <Bi zh="前世今生印记——纯属脑洞的创意小板块，基于你的命盘元素，编一段好玩的前世片段与未来画面" en="Past & Future Imprint — a purely-for-fun creative bit, weaving your chart elements into a playful past-life vignette and a glimpse of what's ahead" /></li>
+                <li>12 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
               </ul>
               <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-bone-dim/50">
                 <Bi

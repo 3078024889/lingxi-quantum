@@ -16,6 +16,7 @@ const SECTION_TITLES = [
   { zh: "关系共振地图", en: "Your Relationship Resonance Map" },
   { zh: "人生周期导航", en: "Your Life Cycle Navigation" },
   { zh: "专属灵犀练习", en: "A Personal Lingxi Practice" },
+  { zh: "前世今生印记 · 纯属脑洞", en: "Past & Future Imprint · Just for Fun" },
 ];
 
 export default function FullReportView({ id }: { id: string }) {
