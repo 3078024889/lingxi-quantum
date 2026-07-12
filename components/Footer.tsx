@@ -3,7 +3,8 @@ import Bi from "./Bi";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/5 px-6 py-12">
+    <footer className="relative border-t border-white/8 px-6 py-12">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-lattice/40 to-transparent" />
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 sm:flex-row sm:justify-between">
         <p className="font-display text-sm tracking-widest2 text-bone-dim/70">
           <Bi zh="灵犀 LINGXI · 一道活的意识场" en="LINGXI · A Living Field of Consciousness" />
