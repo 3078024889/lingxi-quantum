@@ -20,7 +20,6 @@ const SECTION_TITLES = [
 ];
 
 export default function FullReportView({ id }: { id: string }) {
-  const supabase = createClient();
   // 同 LifeMapFlow：首次渲染固定为 false，避免 hydration 不匹配报错，挂载后再同步真实语言。
   const [langEn, setLangEn] = useState(false);
   useEffect(() => {
@@ -43,6 +42,10 @@ export default function FullReportView({ id }: { id: string }) {
 
   useEffect(() => {
     const run = async () => {
+      // 客户端在此处才真正创建 Supabase 实例——只在 useEffect（挂载后才执行）内部创建，
+      // 绝不放在组件顶层：放在顶层会在 Next.js 构建时的服务端预渲染阶段也执行到，
+      // 如果那个阶段环境变量不可用，会直接导致整个页面构建失败。
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -88,7 +91,7 @@ export default function FullReportView({ id }: { id: string }) {
       }
     };
     run();
-  }, [id, supabase]);
+  }, [id]);
 
   if (status === "checking" || status === "generating") {
     return (
@@ -134,7 +137,7 @@ export default function FullReportView({ id }: { id: string }) {
         import("jspdf"),
       ]);
       const canvas = await html2canvas(reportRef.current, {
-        backgroundColor: "#FBF8F2",
+        backgroundColor: "#1c1830",
         scale: 2,
         useCORS: true,
       });

@@ -58,11 +58,11 @@ export default function NatalChartWheel({
       <svg viewBox="0 0 400 400" className="mx-auto w-full">
         <defs>
           <radialGradient id="natal-bg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FFFDF8" />
-            <stop offset="100%" stopColor="#F2ECDF" />
+            <stop offset="0%" stopColor="#25203b" />
+            <stop offset="100%" stopColor="#141221" />
           </radialGradient>
         </defs>
-        <circle cx={cx} cy={cy} r={outerR + 8} fill="url(#natal-bg)" stroke="#E0D8C4" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={outerR + 8} fill="url(#natal-bg)" stroke="#5a4f78" strokeWidth="1" />
 
         {/* 十二星座分界线与刻度环 */}
         {Array.from({ length: 12 }).map((_, i) => {
@@ -72,15 +72,15 @@ export default function NatalChartWheel({
           const glyphPos = toXY(lon + 15, zodiacR);
           return (
             <g key={i}>
-              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#D8CDB4" strokeWidth="1" />
-              <text x={glyphPos.x} y={glyphPos.y} textAnchor="middle" dominantBaseline="middle" fontSize="15" fill="#8a7f9e">
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#5a4f78" strokeWidth="1" />
+              <text x={glyphPos.x} y={glyphPos.y} textAnchor="middle" dominantBaseline="middle" fontSize="15" fill="#D8CDFF">
                 {ZODIAC_GLYPHS[i]}
               </text>
             </g>
           );
         })}
-        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="#D8CDB4" strokeWidth="1" />
-        <circle cx={cx} cy={cy} r={zodiacR - 28} fill="none" stroke="#E5DCC8" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="#5a4f78" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={zodiacR - 28} fill="none" stroke="#3f3658" strokeWidth="1" />
 
         {/* 行星连线到黄道环（细线标出精确角度），符号本身径向错开避让 */}
         {adjusted.map((p) => {
@@ -97,7 +97,7 @@ export default function NatalChartWheel({
           );
         })}
 
-        <circle cx={cx} cy={cy} r={3} fill="#8a7f9e" />
+        <circle cx={cx} cy={cy} r={3} fill="#D8CDFF" />
       </svg>
 
       <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-[11px] text-lm2-text-dim">

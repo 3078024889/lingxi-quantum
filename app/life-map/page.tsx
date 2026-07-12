@@ -2,6 +2,8 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LifeMapFlow from "./LifeMapFlow";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "生命频率测试 · 生成你的个人意识图谱 | 灵犀 · Lingxi Life Frequency Map",
   description:
@@ -13,7 +15,7 @@ export default function LifeMapPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-lm2-bg pt-16">
+      <main className="min-h-screen bg-lm2-nebula pt-16">
         <LifeMapFlow />
       </main>
       <Footer />

@@ -2,6 +2,8 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import FullReportView from "./FullReportView";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "你的完整生命图谱 | 灵犀 · Lingxi",
   robots: { index: false, follow: false },
@@ -17,7 +19,7 @@ export default function FullLifeMapPage({
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-lm2-bg pt-16">
+      <main className="min-h-screen bg-lm2-nebula pt-16">
         {!id ? (
           <div className="mx-auto max-w-md px-6 py-24 text-center">
             <p className="font-display text-2xl text-lm2-text">

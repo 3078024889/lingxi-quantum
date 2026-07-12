@@ -143,7 +143,6 @@ export default function LifeMapFlow() {
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
   const formTopRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
 
   const goForm = () => {
     setStage("form");
@@ -161,6 +160,10 @@ export default function LifeMapFlow() {
     energyLevel: number; clarityLevel: number; alignmentLevel: number; name: string;
   }): Promise<{ id: string | null; specificError: string | null }> => {
     try {
+      // 客户端在此处才真正创建 Supabase 实例——只在用户交互触发的函数内部创建，
+      // 绝不放在组件顶层：放在顶层会在 Next.js 构建时的服务端预渲染阶段也执行到，
+      // 如果那个阶段环境变量不可用，会直接导致整个页面构建失败。
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -207,8 +210,8 @@ export default function LifeMapFlow() {
 
   const submit = async () => {
     const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
-    if (!y || !m || !d || y < 1900 || y > 2026 || m < 1 || m > 12 || d < 1 || d > 31) {
-      setError(t("请填写完整、有效的出生日期。", "Please enter a complete, valid birth date."));
+    if (!y || !m || !d || y < 1 || y > 2026 || m < 1 || m > 12 || d < 1 || d > 31) {
+      setError(t("请填写完整、有效的出生日期（年份支持公元1年至今，暂不支持公元前）。", "Please enter a complete, valid birth date (year 1 CE to present; BCE dates aren't supported yet)."));
       return;
     }
     setError("");
@@ -284,6 +287,7 @@ export default function LifeMapFlow() {
     setUnlocking(true);
     setError("");
     try {
+      const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -377,7 +381,7 @@ export default function LifeMapFlow() {
             </p>
             <button
               onClick={goForm}
-              className="mt-10 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-white shadow-md transition hover:brightness-110"
+              className="mt-10 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(180,150,255,0.4)] transition hover:brightness-110"
             >
               ✨ {t("开始探索", "Begin Exploring")}
             </button>
@@ -571,7 +575,7 @@ export default function LifeMapFlow() {
 
             <button
               onClick={submit}
-              className="mt-10 w-full bg-lm2-aurora py-4 font-display text-sm uppercase tracking-widest2 text-white shadow-md transition hover:brightness-110"
+              className="mt-10 w-full bg-lm2-aurora py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(180,150,255,0.4)] transition hover:brightness-110"
             >
               {t("生成我的生命图谱", "Generate My Life Map")}
             </button>
@@ -605,12 +609,12 @@ export default function LifeMapFlow() {
               {t("太阳", "Sun")} {isEn() ? report.facts.sunSignEn : report.facts.sunSignZh} · {t("日主", "Day Master")} {report.facts.dayMasterGan}
             </p>
 
-            <div className="mt-10 rounded-sm border border-lm2-text/10 bg-lm2-card p-8">
+            <div className="mt-10 rounded-sm border border-lm2-text/10 bg-lm2-card p-8 backdrop-blur-xl">
               <p className="text-base leading-9 text-lm2-text-dim">{parsed.echoText}</p>
             </div>
 
             {/* 真实星盘：用已验证的行星黄经数据，画出标准占星轮图 */}
-            <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6">
+            <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的星盘" en="Your Natal Chart" />
               </p>
@@ -622,7 +626,7 @@ export default function LifeMapFlow() {
             </div>
 
             {/* 命盘数据面板：中西玛雅三方合参，全部真实计算，不是编的——这是免费版就能看到的"证据" */}
-            <div className="mt-8 rounded-sm border border-lm2-violet/20 bg-lm2-violet/5 p-6">
+            <div className="mt-8 rounded-sm border border-lm2-violet/20 bg-lm2-violet/5 p-6 backdrop-blur-xl">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin · 吠陀占星" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin · Vedic Jyotish" />
               </p>
@@ -642,7 +646,7 @@ export default function LifeMapFlow() {
                   { label: t("木星", "Jupiter"), v: isEn() ? report.facts.jupiter.signEn : report.facts.jupiter.signZh },
                   { label: t("土星", "Saturn"), v: isEn() ? report.facts.saturn.signEn : report.facts.saturn.signZh },
                 ].map((p) => (
-                  <div key={p.label} className="rounded-sm border border-lm2-text/10 bg-lm2-card px-3 py-2 text-center">
+                  <div key={p.label} className="rounded-sm border border-lm2-text/10 bg-lm2-card px-3 py-2 text-center backdrop-blur-xl">
                     <p className="text-[10px] uppercase tracking-widest2 text-lm2-text-dim/60">{p.label}</p>
                     <p className="mt-1 font-display text-sm text-lm2-text">{p.v}</p>
                   </div>
@@ -709,7 +713,7 @@ export default function LifeMapFlow() {
               </p>
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {parsed.keywords.map((k, i) => (
-                  <div key={i} className="rounded-sm border border-lm2-text/10 bg-lm2-card p-4 text-center">
+                  <div key={i} className="rounded-sm border border-lm2-text/10 bg-lm2-card p-4 text-center backdrop-blur-xl">
                     <p className="font-display text-xl text-lm2-text">✨ {k.word}</p>
                     <p className="mt-1 text-xs text-lm2-text-dim/70">{k.desc}</p>
                   </div>
@@ -717,7 +721,7 @@ export default function LifeMapFlow() {
               </div>
             </div>
 
-            <div className="mt-14 rounded-sm border border-lm2-violet/30 bg-lm2-violet/5 p-8 text-center">
+            <div className="mt-14 rounded-sm border border-lm2-violet/30 bg-lm2-violet/5 p-8 text-center backdrop-blur-xl">
               <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>
@@ -754,7 +758,7 @@ export default function LifeMapFlow() {
               <button
                 onClick={unlockFull}
                 disabled={unlocking}
-                className="mt-6 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-white shadow-md transition hover:brightness-110 disabled:opacity-50"
+                className="mt-6 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(180,150,255,0.4)] transition hover:brightness-110 disabled:opacity-50"
               >
                 {unlocking ? t("正在跳转支付…", "Redirecting to payment…") : <>✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" /></>}
               </button>
