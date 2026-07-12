@@ -3,6 +3,14 @@
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
+import NatalChartWheel from "../NatalChartWheel";
+
+type ChartFacts = {
+  sunLongitude: number; moonLongitude: number;
+  mercury: { longitude: number }; venus: { longitude: number }; mars: { longitude: number };
+  jupiter: { longitude: number }; saturn: { longitude: number };
+  wuXingCount: { wood: number; fire: number; earth: number; metal: number; water: number };
+};
 
 const SECTION_TITLES = [
   { zh: "七大行星逐一解读", en: "The Seven Planets, One by One" },
@@ -38,6 +46,8 @@ export default function FullReportView({ id }: { id: string }) {
   const reportRef = useRef<HTMLDivElement>(null);
   const [sections, setSections] = useState<string[]>([]);
   const [coreTypeName, setCoreTypeName] = useState("");
+  const [facts, setFacts] = useState<ChartFacts | null>(null);
+  const [freqScores, setFreqScores] = useState<{ energy: number; clarity: number; alignment: number } | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -56,10 +66,18 @@ export default function FullReportView({ id }: { id: string }) {
 
       const { data: submission } = await supabase
         .from("life_map_submissions")
-        .select("core_type_name")
+        .select("core_type_name, facts, energy_level, clarity_level, alignment_level")
         .eq("id", id)
         .single();
       if (submission?.core_type_name) setCoreTypeName(submission.core_type_name);
+      if (submission?.facts) setFacts(submission.facts as ChartFacts);
+      if (submission) {
+        setFreqScores({
+          energy: submission.energy_level ?? 3,
+          clarity: submission.clarity_level ?? 3,
+          alignment: submission.alignment_level ?? 3,
+        });
+      }
 
       setStatus("generating");
       try {
@@ -185,6 +203,19 @@ export default function FullReportView({ id }: { id: string }) {
         <div ref={reportRef} className="bg-lm2-bg px-1 py-4">
         <h1 className="mt-4 font-display text-3xl font-light text-lm2-text">{coreTypeName}</h1>
 
+        {facts && (
+          <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
+            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+              <Bi zh="你的星盘" en="Your Natal Chart" />
+            </p>
+            <NatalChartWheel
+              sunLongitude={facts.sunLongitude} moonLongitude={facts.moonLongitude}
+              mercury={facts.mercury.longitude} venus={facts.venus.longitude} mars={facts.mars.longitude}
+              jupiter={facts.jupiter.longitude} saturn={facts.saturn.longitude}
+            />
+          </div>
+        )}
+
         <div className="mt-12 space-y-14">
           {sections.map((content, i) => (
             <div key={i} className="break-inside-avoid">
@@ -192,6 +223,8 @@ export default function FullReportView({ id }: { id: string }) {
                 {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
               </p>
               <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{content}</div>
+              {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
+              {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
             </div>
           ))}
         </div>
@@ -204,6 +237,65 @@ export default function FullReportView({ id }: { id: string }) {
         </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+// 五行分布图：横向条形图，五种元素各自的强度一目了然，配合第2章八字解读一起看
+function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; metal: number; water: number } }) {
+  const items = [
+    { label: "木", en: "Wood", v: wx.wood, color: "#7FE7C4" },
+    { label: "火", en: "Fire", v: wx.fire, color: "#FF8FD1" },
+    { label: "土", en: "Earth", v: wx.earth, color: "#FFCB61" },
+    { label: "金", en: "Metal", v: wx.metal, color: "#D8CDFF" },
+    { label: "水", en: "Water", v: wx.water, color: "#5FE8FF" },
+  ];
+  const max = Math.max(1, ...items.map((i) => i.v));
+  return (
+    <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+      <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="命局五行分布" en="Element Balance" /></p>
+      <div className="mt-4 space-y-2.5">
+        {items.map((it) => (
+          <div key={it.label} className="flex items-center gap-3">
+            <span className="w-10 shrink-0 font-display text-sm text-lm2-text">{it.label}</span>
+            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-lm2-text/10">
+              <div className="h-full rounded-full" style={{ width: `${Math.max(6, (it.v / max) * 100)}%`, background: it.color }} />
+            </div>
+            <span className="w-4 shrink-0 text-right text-xs text-lm2-text-dim">{it.v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// 频率自测图：三项分数用环形进度呈现，比纯数字更直观
+function FrequencyChart({ scores }: { scores: { energy: number; clarity: number; alignment: number } }) {
+  const items = [
+    { label: "能量水平", en: "Energy", v: scores.energy, color: "#FF8FD1" },
+    { label: "头脑清晰度", en: "Clarity", v: scores.clarity, color: "#5FE8FF" },
+    { label: "内外对齐感", en: "Alignment", v: scores.alignment, color: "#FFCB61" },
+  ];
+  return (
+    <div className="mt-5 grid grid-cols-3 gap-4 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+      {items.map((it) => {
+        const pct = (it.v / 5) * 100;
+        const r = 26, c = 2 * Math.PI * r;
+        return (
+          <div key={it.label} className="flex flex-col items-center">
+            <svg viewBox="0 0 64 64" className="w-16">
+              <circle cx="32" cy="32" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="6" />
+              <circle
+                cx="32" cy="32" r={r} fill="none" stroke={it.color} strokeWidth="6" strokeLinecap="round"
+                strokeDasharray={`${c}`} strokeDashoffset={`${c * (1 - pct / 100)}`}
+                transform="rotate(-90 32 32)"
+              />
+              <text x="32" y="37" textAnchor="middle" fontSize="16" fill="#F4EFFF" fontFamily="serif">{it.v}</text>
+            </svg>
+            <p className="mt-1 text-center text-[11px] text-lm2-text-dim">{it.label}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }
