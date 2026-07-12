@@ -93,11 +93,11 @@ export default function FullReportView({ id }: { id: string }) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
         <div className="lm-core lm-core-active" />
-        <p className="mt-8 font-display text-lg text-bone">
+        <p className="mt-8 font-display text-lg text-lm2-text">
           {status === "checking" ? t("正在确认解锁状态…", "Confirming your unlock…") : t("灵犀正在为你，逐层展开这份完整命盘…", "Lingxi is unfolding your full chart, layer by layer…")}
         </p>
-        <p className="mt-2 text-sm text-bone-dim/60">{t("这可能需要一点时间，请不要关闭页面。", "This may take a moment — please don't close this page.")}</p>
-        <style>{`.lm-core { width: 90px; height: 90px; border-radius: 999px; background: radial-gradient(circle at 50% 45%, #fff6e8, #C9A5D8 45%, transparent 75%); animation: lm-breathe 1.5s ease-in-out infinite; } @keyframes lm-breathe { 0%,100% { transform: scale(1); opacity: .75; } 50% { transform: scale(1.18); opacity: 1; } }`}</style>
+        <p className="mt-2 text-sm text-lm2-text-dim/60">{t("这可能需要一点时间，请不要关闭页面。", "This may take a moment — please don't close this page.")}</p>
+        <style>{`.lm-core { width: 90px; height: 90px; border-radius: 999px; background: conic-gradient(from 0deg, #E8869E, #E7B85C, #5FC79B, #5A9FDE, #A47ADC, #E8869E); animation: lm-breathe 1.5s ease-in-out infinite, lm-spin 6s linear infinite; filter: blur(7px) saturate(0.9); opacity: .85; } @keyframes lm-breathe { 0%,100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.15); opacity: .95; } } @keyframes lm-spin { from { filter: blur(7px) saturate(0.9) hue-rotate(0deg); } to { filter: blur(7px) saturate(0.9) hue-rotate(360deg); } }`}</style>
       </div>
     );
   }
@@ -105,11 +105,11 @@ export default function FullReportView({ id }: { id: string }) {
   if (status === "locked") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <p className="font-display text-2xl text-bone">🔒 <Bi zh="尚未解锁这份报告" en="This report isn't unlocked yet" /></p>
-        <p className="mt-4 text-sm leading-7 text-bone-dim">
+        <p className="font-display text-2xl text-lm2-text">🔒 <Bi zh="尚未解锁这份报告" en="This report isn't unlocked yet" /></p>
+        <p className="mt-4 text-sm leading-7 text-lm2-text-dim">
           <Bi zh="回到生命图谱页面，重新走一次解锁流程。" en="Head back to the Life Map page to complete the unlock." />
         </p>
-        <a href="/life-map" className="mt-8 inline-block border border-lm-violet/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lm-violet transition hover:border-lm-violet hover:text-bone">
+        <a href="/life-map" className="mt-8 inline-block border border-lm2-violet/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lm2-violet transition hover:border-lm2-violet hover:text-lm2-text">
           <Bi zh="返回生命图谱" en="Back to Life Map" />
         </a>
       </div>
@@ -133,7 +133,7 @@ export default function FullReportView({ id }: { id: string }) {
         import("jspdf"),
       ]);
       const canvas = await html2canvas(reportRef.current, {
-        backgroundColor: "#06050A",
+        backgroundColor: "#FBF8F2",
         scale: 2,
         useCORS: true,
       });
@@ -167,32 +167,32 @@ export default function FullReportView({ id }: { id: string }) {
     <div className="px-6 py-20 print:py-6">
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between print:hidden">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lm-violet">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
             🌌 <Bi zh="完整生命频率图谱" en="Your Full Life Frequency Map" />
           </p>
           <button
             onClick={downloadPdf}
             disabled={downloading}
-            className="rounded-sm border border-white/15 px-4 py-2 text-xs uppercase tracking-widest2 text-bone-dim transition hover:border-lm-violet hover:text-bone disabled:opacity-50"
+            className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
           >
             {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
           </button>
         </div>
-        <div ref={reportRef} className="bg-void px-1 py-4">
-        <h1 className="mt-4 font-display text-3xl font-light text-bone">{coreTypeName}</h1>
+        <div ref={reportRef} className="bg-lm2-bg px-1 py-4">
+        <h1 className="mt-4 font-display text-3xl font-light text-lm2-text">{coreTypeName}</h1>
 
         <div className="mt-12 space-y-14">
           {sections.map((content, i) => (
             <div key={i} className="break-inside-avoid">
-              <p className="font-display text-xs uppercase tracking-widest2 text-lm-violet">
+              <p className="font-display text-xs uppercase tracking-widest2 text-lm2-violet">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
               </p>
-              <div className="mt-3 whitespace-pre-line text-base leading-9 text-bone-dim">{content}</div>
+              <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{content}</div>
             </div>
           ))}
         </div>
 
-        <p className="mt-16 text-center text-xs leading-6 text-bone-dim/50 print:hidden">
+        <p className="mt-16 text-center text-xs leading-6 text-lm2-text-dim/50 print:hidden">
           <Bi
             zh="这是一份自我探索与反思的参考，不是命运预言——生命的走向，始终由你自己选择。"
             en="This is a tool for self-exploration and reflection, not a prophecy — the direction of your life is always your own to choose."

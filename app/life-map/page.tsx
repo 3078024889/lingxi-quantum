@@ -13,7 +13,7 @@ export default function LifeMapPage() {
   return (
     <>
       <Nav />
-      <main className="pt-16">
+      <main className="min-h-screen bg-lm2-bg pt-16">
         <LifeMapFlow />
       </main>
       <Footer />

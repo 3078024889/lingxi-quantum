@@ -91,10 +91,10 @@ export default function LifeMapCompass() {
   const cx = 290, cy = 290;
   return (
     <div className="mx-auto mt-16 max-w-3xl px-4">
-      <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm-violet">
+      <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
         <Bi zh="灵犀生命图谱罗盘" en="The Lingxi Life Map Compass" />
       </p>
-      <p className="mx-auto mt-2 max-w-md text-center text-xs leading-6 text-bone-dim/60">
+      <p className="mx-auto mt-2 max-w-md text-center text-xs leading-6 text-lm2-text-dim/60">
         <Bi
           zh="内六圈，是已经用真实算法验证、写进你报告里的体系；最外一圈虚线，是仍在验证中、尚未接入的体系——不会把没核实过的东西，当成已经算好的事实，端给你。"
           en="The inner six rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
@@ -103,22 +103,22 @@ export default function LifeMapCompass() {
       <svg viewBox="0 0 580 580" className="mx-auto mt-8 w-full max-w-lg">
         <defs>
           <radialGradient id="compass-bg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#1c1430" />
-            <stop offset="100%" stopColor="#06050a" />
+            <stop offset="0%" stopColor="#FFFDF8" />
+            <stop offset="100%" stopColor="#F2ECDF" />
           </radialGradient>
           <radialGradient id="compass-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fff6e8" />
-            <stop offset="45%" stopColor="#C9A5D8" />
-            <stop offset="100%" stopColor="#C9A5D8" stopOpacity="0" />
+            <stop offset="0%" stopColor="#FFFDF8" />
+            <stop offset="45%" stopColor="#A47ADC" />
+            <stop offset="100%" stopColor="#A47ADC" stopOpacity="0" />
           </radialGradient>
         </defs>
         <rect x="0" y="0" width="580" height="580" fill="url(#compass-bg)" />
-        {/* 背景星点 */}
+        {/* 背景微尘：暖调低饱和度小点，替代深色主题下的星点，在米白底色上依然可见但不刺眼 */}
         {Array.from({ length: 40 }).map((_, i) => {
           const x = (i * 137.5) % 580;
           const y = (i * 71.3 + 40) % 580;
           const r = 0.5 + (i % 3) * 0.4;
-          return <circle key={i} cx={x} cy={y} r={r} fill="#fff6e8" opacity={0.25 + (i % 4) * 0.12} />;
+          return <circle key={i} cx={x} cy={y} r={r} fill="#B8A88E" opacity={0.2 + (i % 4) * 0.1} />;
         })}
 
         {/* 同心圆环 */}
@@ -128,19 +128,19 @@ export default function LifeMapCompass() {
             cx={cx} cy={cy} r={ring.radius}
             fill="none"
             stroke={ring.color}
-            strokeWidth={1}
+            strokeWidth={1.2}
             strokeDasharray={ring.dashed ? "4 5" : undefined}
-            opacity={0.5}
+            opacity={0.6}
           />
         ))}
 
         {/* 中心核心 */}
         <circle cx={cx} cy={cy} r={30} fill="url(#compass-core)" />
-        <circle cx={cx} cy={cy} r={14} fill="#fff6e8" opacity={0.9} />
-        <text data-lang="zh" x={cx} y={cy - 40} textAnchor="middle" fontSize="11" fill="#fff6e8" fontFamily="serif" opacity={0.9}>
+        <circle cx={cx} cy={cy} r={14} fill="#A47ADC" opacity={0.85} />
+        <text data-lang="zh" x={cx} y={cy - 40} textAnchor="middle" fontSize="11" fill="#2E2740" fontFamily="serif" opacity={0.85}>
           灵犀场域
         </text>
-        <text data-lang="en" x={cx} y={cy - 40} textAnchor="middle" fontSize="9" fill="#fff6e8" fontFamily="serif" opacity={0.9}>
+        <text data-lang="en" x={cx} y={cy - 40} textAnchor="middle" fontSize="9" fill="#2E2740" fontFamily="serif" opacity={0.75}>
           The Lingxi Field
         </text>
 
@@ -159,7 +159,7 @@ export default function LifeMapCompass() {
                   textAnchor={anchor}
                   dominantBaseline="middle"
                   fontSize="8.5"
-                  fill={ring.dashed ? "#8a8496" : "#EDE7DC"}
+                  fill={ring.dashed ? "#9d92ad" : "#3a3350"}
                   fontFamily="sans-serif"
                   opacity={ring.dashed ? 0.7 : 0.95}
                 >
@@ -171,7 +171,7 @@ export default function LifeMapCompass() {
                   textAnchor={anchor}
                   dominantBaseline="middle"
                   fontSize="7"
-                  fill={ring.dashed ? "#8a8496" : "#EDE7DC"}
+                  fill={ring.dashed ? "#9d92ad" : "#3a3350"}
                   fontFamily="sans-serif"
                   opacity={ring.dashed ? 0.7 : 0.95}
                 >
@@ -182,7 +182,7 @@ export default function LifeMapCompass() {
           })
         )}
       </svg>
-      <div className="mx-auto mt-4 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-widest2 text-bone-dim/60">
+      <div className="mx-auto mt-4 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-widest2 text-lm2-text-dim/60">
         {RINGS.map((ring) => (
           <span key={ring.radius} className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-2 rounded-full" style={{ background: ring.color, opacity: ring.dashed ? 0.55 : 1 }} />

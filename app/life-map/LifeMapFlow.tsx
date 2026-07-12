@@ -51,6 +51,28 @@ const FOCUS_OPTIONS: { id: Focus; zh: string; en: string }[] = [
   { id: "all", zh: "全面探索", en: "Full Exploration" },
 ];
 
+// 职业：覆盖常见大类 + "其他"自定义兜底，而不是穷举每一个具体头衔
+// （比如"总统""董事长"这类，落在"领导 · 管理 · 政界"这一类里，用户可以在
+// 自定义栏里，写下更具体的头衔，报告解读时会引用这个具体描述）。
+const PROFESSION_OPTIONS: { id: string; zh: string; en: string }[] = [
+  { id: "student", zh: "学生", en: "Student" },
+  { id: "education", zh: "教育 · 科研", en: "Education & Research" },
+  { id: "healthcare", zh: "医疗 · 健康", en: "Healthcare" },
+  { id: "finance", zh: "金融 · 商业", en: "Finance & Business" },
+  { id: "tech", zh: "科技 · 互联网", en: "Tech & Internet" },
+  { id: "founder", zh: "创业者", en: "Founder / Entrepreneur" },
+  { id: "executive", zh: "高管 · 董事", en: "Executive / Board Member" },
+  { id: "leadership", zh: "领导 · 管理 · 政界", en: "Leadership / Government" },
+  { id: "military", zh: "军警", en: "Military / Police" },
+  { id: "art", zh: "艺术 · 设计", en: "Art & Design" },
+  { id: "media", zh: "影视 · 音乐 · 主播", en: "Film, Music & Streaming" },
+  { id: "sales", zh: "销售 · 市场", en: "Sales & Marketing" },
+  { id: "agriculture", zh: "农林牧渔", en: "Agriculture & Farming" },
+  { id: "freelance", zh: "自由职业", en: "Freelance" },
+  { id: "unemployed", zh: "待业 · 无业", en: "Between Jobs" },
+  { id: "other", zh: "其他（自定义）", en: "Other (specify)" },
+];
+
 const STATE_OPTIONS: { id: CurrentState; zh: string; en: string }[] = [
   { id: "transforming", zh: "正在转变期", en: "In a period of change" },
   { id: "lost", zh: "感觉迷茫", en: "Feeling lost" },
@@ -95,6 +117,8 @@ export default function LifeMapFlow() {
   const [minute, setMinute] = useState("00");
   const [city, setCity] = useState("");
   const [gender, setGender] = useState<"male" | "female">("female");
+  const [profession, setProfession] = useState("");
+  const [professionCustom, setProfessionCustom] = useState("");
   const [focus, setFocus] = useState<Focus>("all");
   const [currentState, setCurrentState] = useState<CurrentState>("exploring");
   const [energyLevel, setEnergyLevel] = useState(3);
@@ -198,6 +222,8 @@ export default function LifeMapFlow() {
 
       const focusLabel = FOCUS_OPTIONS.find((f) => f.id === focus)!;
       const stateLabel = STATE_OPTIONS.find((s) => s.id === currentState)!;
+      const professionOpt = PROFESSION_OPTIONS.find((p) => p.id === profession);
+      const professionLabel = profession === "other" ? professionCustom.trim() : professionOpt?.zh || "";
       const wx = facts.wuXingCount;
       const wxStr = `木${wx.wood} 火${wx.fire} 土${wx.earth} 金${wx.metal} 水${wx.water}`;
       const promptContent =
@@ -210,6 +236,7 @@ export default function LifeMapFlow() {
         `【玛雅Tzolkin】${facts.maya.tone} ${facts.maya.sign}（${facts.maya.meaning}／数字${facts.maya.tone}：${facts.maya.toneMeaning}）\n` +
         `【当前频率自测】能量水平${energyLevel}/5，头脑清晰度${clarityLevel}/5，内外对齐感${alignmentLevel}/5\n` +
         `【用户最想探索】${focusLabel.zh}\n【用户当前状态】${stateLabel.zh}` +
+        (professionLabel ? `\n【用户职业】${professionLabel}` : "") +
         (name.trim() ? `\n【称呼】${name.trim()}` : "");
 
       const aiRes = await fetch("/api/lingxi", {
@@ -324,22 +351,22 @@ export default function LifeMapFlow() {
             <div className="lm-core" />
           </div>
           <div className="relative z-10">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lm-violet">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("发现你的生命频率", "Discover Your Life Frequency")}
             </p>
-            <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
+            <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-light leading-tight text-lm2-text sm:text-5xl">
               <Bi zh="每个人来到这个世界，都携带独特的信息结构。" en="Everyone who arrives in this world carries a unique information structure." />
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-9 text-bone-dim">
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-9 text-lm2-text-dim">
               <Bi zh="输入你的基础信息，生成你的专属生命图谱——西方占星、中式八字、紫微斗数、玛雅Tzolkin圣历，四套真实的天文历法系统，同一个人，四种古老的语言。" en="Enter your basic information, and generate a life map that is entirely your own — Western astrology, Chinese Bazi, Ziwei Doushu, and the Maya Tzolkin calendar: four real astronomical and calendrical systems, one person, four ancient languages." />
             </p>
             <button
               onClick={goForm}
-              className="mt-10 inline-block bg-lm-violet px-12 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:brightness-110"
+              className="mt-10 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-white shadow-md transition hover:brightness-110"
             >
               ✨ {t("开始探索", "Begin Exploring")}
             </button>
-            <p className="mx-auto mt-6 max-w-md text-xs leading-6 text-bone-dim/60">
+            <p className="mx-auto mt-6 max-w-md text-xs leading-6 text-lm2-text-dim/60">
               <Bi
                 zh="这是一份自我探索与反思的参考，不是命运预言——生命的走向，始终由你自己选择。"
                 en="This is a tool for self-exploration and reflection, not a prophecy — the direction of your life is always your own to choose."
@@ -353,95 +380,95 @@ export default function LifeMapFlow() {
       {stage === "form" && (
         <section className="px-6 py-20">
           <div className="mx-auto max-w-xl">
-            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm-violet">
+            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               <Bi zh="创建你的生命档案" en="Create Your Life Profile" />
             </p>
-            <h2 className="mt-3 text-center font-display text-3xl font-light text-bone">
+            <h2 className="mt-3 text-center font-display text-3xl font-light text-lm2-text">
               <Bi zh="一、基础信息" en="I. Basic Information" />
             </h2>
 
             <div className="mt-10 space-y-6">
               <div>
-                <label className="block text-sm text-bone-dim"><Bi zh="姓名（选填）" en="Name (optional)" /></label>
+                <label className="block text-sm text-lm2-text-dim"><Bi zh="姓名（选填）" en="Name (optional)" /></label>
                 <input
                   value={name} onChange={(e) => setName(e.target.value)}
                   placeholder={t("名字是一种身份频率符号", "A name is a symbol of your identity frequency")}
-                  className="mt-2 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60"
+                  className="mt-2 w-full rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-bone-dim"><Bi zh="出生日期" en="Birth Date" /></label>
-                <p className="mt-1 text-xs leading-5 text-bone-dim/60">
+                <label className="block text-sm text-lm2-text-dim"><Bi zh="出生日期" en="Birth Date" /></label>
+                <p className="mt-1 text-xs leading-5 text-lm2-text-dim/60">
                   <Bi
                     zh="中国身份证上的出生日期，有的写的是阳历（公历/西历，国际通用的那种），有的写的是农历（中国传统历法）——两者是完全不同的历法系统，同一串数字，按错了历法，算出来的命盘会整个错位。不确定的话，通常身份证上写的是阳历；海外用户，一般直接选阳历即可。"
                     en="On Chinese ID cards, the birth date is sometimes Gregorian (Solar/Western calendar), sometimes Chinese Lunar — these are entirely different calendar systems, and picking the wrong one will throw off every calculation. If unsure, ID cards usually show the Gregorian date; users outside China should simply select Gregorian."
                   />
                 </p>
                 <div className="mt-3 grid grid-cols-2 gap-3">
-                  <button onClick={() => setCalendarType("solar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "solar" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                  <button onClick={() => setCalendarType("solar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "solar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
                     <Bi zh="阳历（公历/西历）" en="Gregorian (Solar / Western)" />
                   </button>
-                  <button onClick={() => setCalendarType("lunar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "lunar" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                  <button onClick={() => setCalendarType("lunar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "lunar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
                     <Bi zh="农历（中国传统历法）" en="Chinese Lunar Calendar" />
                   </button>
                 </div>
                 <div className="mt-3 grid grid-cols-3 gap-3">
-                  <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
-                  <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={calendarType === "lunar" ? t("农历月", "Lunar Month") : t("月", "Month")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
-                  <input value={day} onChange={(e) => setDay(e.target.value)} placeholder={calendarType === "lunar" ? t("农历日", "Lunar Day") : t("日", "Day")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
+                  <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} inputMode="numeric" className="rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60" />
+                  <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={calendarType === "lunar" ? t("农历月", "Lunar Month") : t("月", "Month")} inputMode="numeric" className="rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60" />
+                  <input value={day} onChange={(e) => setDay(e.target.value)} placeholder={calendarType === "lunar" ? t("农历日", "Lunar Day") : t("日", "Day")} inputMode="numeric" className="rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60" />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="block text-sm text-bone-dim"><Bi zh="出生时间" en="Birth Time" /></label>
-                  <button onClick={() => setHasTime((v) => !v)} className="text-xs text-lm-violet underline underline-offset-4">
+                  <label className="block text-sm text-lm2-text-dim"><Bi zh="出生时间" en="Birth Time" /></label>
+                  <button onClick={() => setHasTime((v) => !v)} className="text-xs text-lm2-violet underline underline-offset-4">
                     {hasTime ? t("不知道也可以", "I don't know it") : t("我知道具体时间", "I know the exact time")}
                   </button>
                 </div>
                 {hasTime && (
                   <div className="mt-2 grid grid-cols-2 gap-3">
-                    <input value={hour} onChange={(e) => setHour(e.target.value)} placeholder={t("时 (0-23)", "Hour (0-23)")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
-                    <input value={minute} onChange={(e) => setMinute(e.target.value)} placeholder={t("分", "Minute")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
+                    <input value={hour} onChange={(e) => setHour(e.target.value)} placeholder={t("时 (0-23)", "Hour (0-23)")} inputMode="numeric" className="rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60" />
+                    <input value={minute} onChange={(e) => setMinute(e.target.value)} placeholder={t("分", "Minute")} inputMode="numeric" className="rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60" />
                   </div>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm text-bone-dim"><Bi zh="出生地点（选填）" en="Birth City (optional)" /></label>
+                <label className="block text-sm text-lm2-text-dim"><Bi zh="出生地点（选填）" en="Birth City (optional)" /></label>
                 <input
                   value={city} onChange={(e) => setCity(e.target.value)}
                   placeholder={t("城市", "City")}
-                  className="mt-2 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60"
+                  className="mt-2 w-full rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-bone-dim">
+                <label className="block text-sm text-lm2-text-dim">
                   <Bi zh="性别" en="Gender" />
-                  <span className="ml-2 text-xs text-bone-dim/50"><Bi zh="（紫微斗数排大限方向需要）" en="(needed for Zi Wei Dou Shu's decade-cycle direction)" /></span>
+                  <span className="ml-2 text-xs text-lm2-text-dim/50"><Bi zh="（紫微斗数排大限方向需要）" en="(needed for Zi Wei Dou Shu's decade-cycle direction)" /></span>
                 </label>
                 <div className="mt-2 grid grid-cols-2 gap-3">
-                  <button onClick={() => setGender("female")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "female" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                  <button onClick={() => setGender("female")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "female" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
                     <Bi zh="女" en="Female" />
                   </button>
-                  <button onClick={() => setGender("male")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "male" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                  <button onClick={() => setGender("male")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "male" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
                     <Bi zh="男" en="Male" />
                   </button>
                 </div>
               </div>
             </div>
 
-            <h2 className="mt-14 text-center font-display text-3xl font-light text-bone">
+            <h2 className="mt-14 text-center font-display text-3xl font-light text-lm2-text">
               <Bi zh="二、当前人生状态" en="II. Where You Are Now" />
             </h2>
             <div className="mt-8">
-              <p className="text-sm text-bone-dim"><Bi zh="你目前最想探索：" en="What you most want to explore right now:" /></p>
+              <p className="text-sm text-lm2-text-dim"><Bi zh="你目前最想探索：" en="What you most want to explore right now:" /></p>
               <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {FOCUS_OPTIONS.map((f) => (
                   <button key={f.id} onClick={() => setFocus(f.id)}
-                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${focus === f.id ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${focus === f.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
                     <Bi zh={f.zh} en={f.en} />
                   </button>
                 ))}
@@ -449,21 +476,40 @@ export default function LifeMapFlow() {
             </div>
 
             <div className="mt-8">
-              <p className="text-sm text-bone-dim"><Bi zh="最近你的状态：" en="Your state recently:" /></p>
+              <p className="text-sm text-lm2-text-dim"><Bi zh="你的职业（选填，帮助财富与事业章节写得更具体）：" en="Your profession (optional — helps the career section speak to your actual work):" /></p>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {PROFESSION_OPTIONS.map((p) => (
+                  <button key={p.id} onClick={() => setProfession(p.id)}
+                    className={`rounded-sm border px-3 py-2.5 text-left text-xs transition ${profession === p.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    <Bi zh={p.zh} en={p.en} />
+                  </button>
+                ))}
+              </div>
+              {profession === "other" && (
+                <input
+                  value={professionCustom} onChange={(e) => setProfessionCustom(e.target.value)}
+                  placeholder={t("具体是什么工作？", "What do you do?")}
+                  className="mt-3 w-full rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60"
+                />
+              )}
+            </div>
+
+            <div className="mt-8">
+              <p className="text-sm text-lm2-text-dim"><Bi zh="最近你的状态：" en="Your state recently:" /></p>
               <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {STATE_OPTIONS.map((s) => (
                   <button key={s.id} onClick={() => setCurrentState(s.id)}
-                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${currentState === s.id ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${currentState === s.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
                     <Bi zh={s.zh} en={s.en} />
                   </button>
                 ))}
               </div>
             </div>
 
-            <h2 className="mt-14 text-center font-display text-3xl font-light text-bone">
+            <h2 className="mt-14 text-center font-display text-3xl font-light text-lm2-text">
               <Bi zh="三、当前频率自测" en="III. Self-Assessment: Your Current Frequency" />
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-center text-sm leading-7 text-bone-dim">
+            <p className="mx-auto mt-3 max-w-md text-center text-sm leading-7 text-lm2-text-dim">
               <Bi
                 zh="命盘给出的是你与生俱来的结构，这三项，则是你此刻真实的状态——两者放在一起看，报告才知道，该把重点，放在哪里。"
                 en="Your chart shows the structure you were born with. These three ratings show where you actually are right now — together, they tell the report where to focus."
@@ -477,16 +523,16 @@ export default function LifeMapFlow() {
               ].map((f) => (
                 <div key={f.label}>
                   <div className="flex items-baseline justify-between">
-                    <p className="text-sm text-bone">{f.label}</p>
-                    <p className="font-display text-lg text-lm-violet">{f.v}<span className="text-xs text-bone-dim/50">/5</span></p>
+                    <p className="text-sm text-lm2-text">{f.label}</p>
+                    <p className="font-display text-lg text-lm2-violet">{f.v}<span className="text-xs text-lm2-text-dim/50">/5</span></p>
                   </div>
-                  <p className="mt-1 text-xs text-bone-dim/60">{f.sub}</p>
+                  <p className="mt-1 text-xs text-lm2-text-dim/60">{f.sub}</p>
                   <div className="mt-3 flex gap-2">
                     {[1, 2, 3, 4, 5].map((n) => (
                       <button
                         key={n}
                         onClick={() => f.set(n)}
-                        className={`h-8 flex-1 rounded-sm border transition ${n <= f.v ? "border-lm-violet bg-lm-violet/40" : "border-white/12 bg-void"}`}
+                        className={`h-8 flex-1 rounded-sm border transition ${n <= f.v ? "border-lm2-violet bg-lm2-violet/40" : "border-lm2-text/12 bg-lm2-bg"}`}
                       />
                     ))}
                   </div>
@@ -498,7 +544,7 @@ export default function LifeMapFlow() {
 
             <button
               onClick={submit}
-              className="mt-10 w-full bg-lm-violet py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:brightness-110"
+              className="mt-10 w-full bg-lm2-aurora py-4 font-display text-sm uppercase tracking-widest2 text-white shadow-md transition hover:brightness-110"
             >
               {t("生成我的生命图谱", "Generate My Life Map")}
             </button>
@@ -511,7 +557,7 @@ export default function LifeMapFlow() {
           <div className="lm-core lm-core-active" />
           <div className="mt-10 space-y-3">
             {LOADING_STEPS.slice(0, loadingStep + 1).map((s, i) => (
-              <p key={i} className={`font-display text-base ${i === loadingStep ? "text-bone" : "text-bone-dim/50"}`}>
+              <p key={i} className={`font-display text-base ${i === loadingStep ? "text-lm2-text" : "text-lm2-text-dim/50"}`}>
                 <Bi zh={s.zh} en={s.en} />
               </p>
             ))}
@@ -522,26 +568,26 @@ export default function LifeMapFlow() {
       {stage === "report" && report && parsed && (
         <section className="px-6 py-20">
           <div className="mx-auto max-w-2xl">
-            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm-violet">
+            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("你的生命频率报告", "Your Life Frequency Report")}
             </p>
-            <h2 className="mt-4 text-center font-display text-4xl font-light text-bone">
+            <h2 className="mt-4 text-center font-display text-4xl font-light text-lm2-text">
               {isEn() ? report.coreType.nameEn : report.coreType.name}
             </h2>
-            <p className="mt-3 text-center text-sm text-bone-dim/70">
+            <p className="mt-3 text-center text-sm text-lm2-text-dim/70">
               {t("太阳", "Sun")} {isEn() ? report.facts.sunSignEn : report.facts.sunSignZh} · {t("日主", "Day Master")} {report.facts.dayMasterGan}
             </p>
 
-            <div className="mt-10 rounded-sm border border-white/10 bg-void-deep p-8">
-              <p className="text-base leading-9 text-bone-dim">{parsed.echoText}</p>
+            <div className="mt-10 rounded-sm border border-lm2-text/10 bg-lm2-card p-8">
+              <p className="text-base leading-9 text-lm2-text-dim">{parsed.echoText}</p>
             </div>
 
             {/* 命盘数据面板：中西玛雅三方合参，全部真实计算，不是编的——这是免费版就能看到的"证据" */}
-            <div className="mt-8 rounded-sm border border-lm-violet/20 bg-lm-violet/5 p-6">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lm-violet">
+            <div className="mt-8 rounded-sm border border-lm2-violet/20 bg-lm2-violet/5 p-6">
+              <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin · 吠陀占星" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin · Vedic Jyotish" />
               </p>
-              <p className="mt-2 text-xs leading-6 text-bone-dim/70">
+              <p className="mt-2 text-xs leading-6 text-lm2-text-dim/70">
                 <Bi
                   zh="以下每一项，都由真实的天文与历法算法计算得出——七大行星的黄道位置，与专业占星软件同源；四柱八字的干支、纳音、地势，采用标准命理算法；紫微斗数的命宫身宫排布，用专门的排盘算法计算，并手动按古法逐步核对过命宫、身宫、五行局三项，确认与算法输出一致；玛雅Tzolkin圣历的图腾与数字，用儒略日精确推算，并用两个真实的历史节点（创世日、2012年长历终止日）验证过准确性。不是语言模型现场编的数字。"
                   en="Every value below comes from real astronomical and calendrical calculation — planetary positions from the same class of method professional astrology software uses; Bazi characters, elements and stages from standard calendrical rules; Ziwei Doushu's Soul and Body Palace placement from a dedicated charting algorithm, manually cross-checked against the classical method for three key values; the Maya Tzolkin day sign and tone computed via Julian Day Number and verified against two real historical reference points. None of it is a number a language model made up."
@@ -557,87 +603,87 @@ export default function LifeMapFlow() {
                   { label: t("木星", "Jupiter"), v: isEn() ? report.facts.jupiter.signEn : report.facts.jupiter.signZh },
                   { label: t("土星", "Saturn"), v: isEn() ? report.facts.saturn.signEn : report.facts.saturn.signZh },
                 ].map((p) => (
-                  <div key={p.label} className="rounded-sm border border-white/10 bg-void-deep px-3 py-2 text-center">
-                    <p className="text-[10px] uppercase tracking-widest2 text-bone-dim/60">{p.label}</p>
-                    <p className="mt-1 font-display text-sm text-bone">{p.v}</p>
+                  <div key={p.label} className="rounded-sm border border-lm2-text/10 bg-lm2-card px-3 py-2 text-center">
+                    <p className="text-[10px] uppercase tracking-widest2 text-lm2-text-dim/60">{p.label}</p>
+                    <p className="mt-1 font-display text-sm text-lm2-text">{p.v}</p>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-white/10 pt-4 font-display text-sm text-bone">
-                <span className="rounded-sm border border-white/10 px-3 py-1.5">{report.facts.yearPillar}</span>
-                <span className="rounded-sm border border-white/10 px-3 py-1.5">{report.facts.monthPillar}</span>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-lm2-text/10 pt-4 font-display text-sm text-lm2-text">
+                <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.yearPillar}</span>
+                <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.monthPillar}</span>
                 <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5">{report.facts.dayPillar}</span>
-                {report.facts.hourPillar && <span className="rounded-sm border border-white/10 px-3 py-1.5">{report.facts.hourPillar}</span>}
-                {!report.facts.hourPillar && <span className="rounded-sm border border-white/5 px-3 py-1.5 text-bone-dim/40">{t("时柱未知", "Hour pillar unknown")}</span>}
+                {report.facts.hourPillar && <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.hourPillar}</span>}
+                {!report.facts.hourPillar && <span className="rounded-sm border border-lm2-text/5 px-3 py-1.5 text-lm2-text-dim/40">{t("时柱未知", "Hour pillar unknown")}</span>}
               </div>
-              <p className="mt-3 text-center text-xs text-bone-dim/50">
+              <p className="mt-3 text-center text-xs text-lm2-text-dim/50">
                 <Bi zh={`日柱纳音：${report.facts.dayDetail.naYin}　命局五行：木${report.facts.wuXingCount.wood} 火${report.facts.wuXingCount.fire} 土${report.facts.wuXingCount.earth} 金${report.facts.wuXingCount.metal} 水${report.facts.wuXingCount.water}`} en={`Day Pillar Na Yin: ${report.facts.dayDetail.naYin}　Element Balance: Wood ${report.facts.wuXingCount.wood} Fire ${report.facts.wuXingCount.fire} Earth ${report.facts.wuXingCount.earth} Metal ${report.facts.wuXingCount.metal} Water ${report.facts.wuXingCount.water}`} />
               </p>
-              <div className="mt-4 flex items-center justify-center gap-3 border-t border-white/10 pt-4">
-                <span className="rounded-sm border border-lm-violet/30 bg-lm-violet/10 px-4 py-2 text-center font-display text-sm text-bone">
+              <div className="mt-4 flex items-center justify-center gap-3 border-t border-lm2-text/10 pt-4">
+                <span className="rounded-sm border border-lm2-violet/30 bg-lm2-violet/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
                   {t("玛雅印记", "Maya Sign")} {report.facts.maya.tone} {isEn() ? report.facts.maya.signEn : report.facts.maya.sign}
                 </span>
               </div>
-              <p className="mt-2 text-center text-xs text-bone-dim/50">{report.facts.maya.meaning} · {report.facts.maya.toneMeaning}</p>
+              <p className="mt-2 text-center text-xs text-lm2-text-dim/50">{report.facts.maya.meaning} · {report.facts.maya.toneMeaning}</p>
               {report.facts.ziwei && (
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-white/10 pt-4">
-                  <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5 font-display text-sm text-bone">
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-lm2-text/10 pt-4">
+                  <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5 font-display text-sm text-lm2-text">
                     {t("紫微命宫", "Ziwei Soul Palace")} {report.facts.ziwei.soulPalaceBranch}
                   </span>
-                  <span className="rounded-sm border border-white/10 px-3 py-1.5 font-display text-sm text-bone">
+                  <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5 font-display text-sm text-lm2-text">
                     {t("身宫", "Body Palace")} {report.facts.ziwei.bodyPalaceBranch}
                   </span>
-                  <span className="rounded-sm border border-white/10 px-3 py-1.5 font-display text-sm text-bone">
+                  <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5 font-display text-sm text-lm2-text">
                     {report.facts.ziwei.fiveElementsClass}
                   </span>
                 </div>
               )}
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-white/10 pt-4">
-                <span className="rounded-sm border border-lattice/40 bg-lattice/10 px-3 py-1.5 font-display text-sm text-bone">
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-lm2-text/10 pt-4">
+                <span className="rounded-sm border border-lattice/40 bg-lattice/10 px-3 py-1.5 font-display text-sm text-lm2-text">
                   {t("吠陀太阳", "Vedic Sun")} {isEn() ? report.facts.vedic.sunSidereal.signEn : report.facts.vedic.sunSidereal.signZh}
                 </span>
-                <span className="rounded-sm border border-white/10 px-3 py-1.5 font-display text-sm text-bone">
+                <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5 font-display text-sm text-lm2-text">
                   {t("吠陀月亮", "Vedic Moon")} {isEn() ? report.facts.vedic.moonSidereal.signEn : report.facts.vedic.moonSidereal.signZh}
                 </span>
               </div>
-              <p className="mt-2 text-center text-xs text-bone-dim/50">
+              <p className="mt-2 text-center text-xs text-lm2-text-dim/50">
                 {t(`岁差修正值 ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri恒星黄道`, `Ayanamsa ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri Sidereal`)}
               </p>
             </div>
 
             <div className="mt-8">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lm-violet">
+              <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="当前生命阶段" en="Your Current Life Stage" />
               </p>
-              <h3 className="mt-2 font-display text-2xl text-bone">「{parsed.stageName}」</h3>
-              <p className="mt-3 text-base leading-8 text-bone-dim">{parsed.stageDesc}</p>
+              <h3 className="mt-2 font-display text-2xl text-lm2-text">「{parsed.stageName}」</h3>
+              <p className="mt-3 text-base leading-8 text-lm2-text-dim">{parsed.stageDesc}</p>
             </div>
 
             <div className="mt-8">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lm-violet">
+              <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的三个关键词" en="Your Three Keywords" />
               </p>
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {parsed.keywords.map((k, i) => (
-                  <div key={i} className="rounded-sm border border-white/10 bg-void-deep p-4 text-center">
-                    <p className="font-display text-xl text-bone">✨ {k.word}</p>
-                    <p className="mt-1 text-xs text-bone-dim/70">{k.desc}</p>
+                  <div key={i} className="rounded-sm border border-lm2-text/10 bg-lm2-card p-4 text-center">
+                    <p className="font-display text-xl text-lm2-text">✨ {k.word}</p>
+                    <p className="mt-1 text-xs text-lm2-text-dim/70">{k.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="mt-14 rounded-sm border border-lm-violet/30 bg-lm-violet/5 p-8 text-center">
-              <p className="font-display text-lg text-bone">
+            <div className="mt-14 rounded-sm border border-lm2-violet/30 bg-lm2-violet/5 p-8 text-center">
+              <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-bone-dim">
+              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-lm2-text-dim">
                 <Bi
                   zh="七大行星只给了星座，没给你它们彼此之间的角度关系；四柱只列了干支，没给你藏干、地势、胎元命宫身宫这些更深的骨架；玛雅印记也只给了名字，没给你它在你命盘里真正意味着什么。三套系统、几十个真实数据点，交叉组合出的，是独属于你的一份命盘——完整报告，会把它们，逐一，为你解读。"
                   en="The planets above only show signs — not the angles between them. The Pillars only show characters — not the hidden stems, growth stages, or the deeper palaces beneath them. The Maya sign only shows a name — not what it actually means in your chart. Three systems, dozens of real data points, cross-combined into something uniquely yours — the full report interprets all of it, one layer at a time."
                 />
               </p>
-              <ul className="mx-auto mt-6 max-w-sm space-y-2 text-left text-sm leading-7 text-bone-dim">
+              <ul className="mx-auto mt-6 max-w-sm space-y-2 text-left text-sm leading-7 text-lm2-text-dim">
                 <li>01 · <Bi zh="逐一解读——七大行星，每一颗，都有单独的一段解读，不是罗列星座名字" en="Planet by planet — each of the seven gets its own reading, not just a sign name" /></li>
                 <li>02 · <Bi zh="八字深层结构——十神、纳音、地势、藏干，逐柱展开，加上胎元命宫身宫的解读" en="Bazi in depth — Ten Gods, Na Yin, growth stages, hidden stems, pillar by pillar, plus the three palaces" /></li>
                 <li>03 · <Bi zh="紫微命盘详解——命宫身宫的主星组合，在你身上具体如何呈现" en="Your Ziwei chart, decoded — what the stars in your Soul and Body Palace mean for you" /></li>
@@ -651,20 +697,20 @@ export default function LifeMapFlow() {
                 <li>11 · <Bi zh="前世今生印记——纯属脑洞的创意小板块，基于你的命盘元素，编一段好玩的前世片段与未来画面" en="Past & Future Imprint — a purely-for-fun creative bit, weaving your chart elements into a playful past-life vignette and a glimpse of what's ahead" /></li>
                 <li>12 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
               </ul>
-              <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-bone-dim/50">
+              <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-lm2-text-dim/50">
                 <Bi
                   zh="五套真实系统、上百个真实数据点，交叉着，写给你一个人——这份报告，帮你看见的，从来不只是一张命盘。"
                   en="Five real systems, over a hundred real data points, cross-woven for you alone — what this report helps you see was never just a chart."
                 />
               </p>
               <div className="mt-8">
-                <p className="text-sm text-bone-dim/60 line-through">$29.9</p>
-                <p className="font-display text-4xl text-lm-violet">$9.9</p>
+                <p className="text-sm text-lm2-text-dim/60 line-through">$29.9</p>
+                <p className="font-display text-4xl text-lm2-violet">$9.9</p>
               </div>
               <button
                 onClick={unlockFull}
                 disabled={unlocking}
-                className="mt-6 inline-block bg-lm-violet px-12 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:brightness-110 disabled:opacity-50"
+                className="mt-6 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-white shadow-md transition hover:brightness-110 disabled:opacity-50"
               >
                 {unlocking ? t("正在跳转支付…", "Redirecting to payment…") : <>✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" /></>}
               </button>
@@ -674,7 +720,7 @@ export default function LifeMapFlow() {
                 </p>
               )}
               {!error && !submissionId && (
-                <p className="mx-auto mt-4 max-w-xs text-xs text-bone-dim/50">
+                <p className="mx-auto mt-4 max-w-xs text-xs text-lm2-text-dim/50">
                   <Bi zh="需要先登录，才能保存并解锁你的完整报告。" en="Sign in first to save and unlock your full report." />
                 </p>
               )}
@@ -686,12 +732,14 @@ export default function LifeMapFlow() {
       <style>{`
         .lm-core {
           width: 120px; height: 120px; border-radius: 999px;
-          background: radial-gradient(circle at 50% 45%, #fff6e8, #C9A5D8 45%, transparent 75%);
-          animation: lm-breathe 4.2s ease-in-out infinite;
-          filter: blur(1px);
+          background: conic-gradient(from 0deg, #E8869E, #E7B85C, #5FC79B, #5A9FDE, #A47ADC, #E8869E);
+          animation: lm-breathe 4.2s ease-in-out infinite, lm-spin 18s linear infinite;
+          filter: blur(9px) saturate(0.9);
+          opacity: 0.85;
         }
-        @keyframes lm-breathe { 0%,100% { transform: scale(1); opacity: .75; } 50% { transform: scale(1.18); opacity: 1; } }
-        .lm-core-active { animation: lm-breathe 1.5s ease-in-out infinite; width: 90px; height: 90px; }
+        @keyframes lm-breathe { 0%,100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.15); opacity: .95; } }
+        @keyframes lm-spin { from { filter: blur(9px) saturate(0.9) hue-rotate(0deg); } to { filter: blur(9px) saturate(0.9) hue-rotate(360deg); } }
+        .lm-core-active { animation: lm-breathe 1.5s ease-in-out infinite, lm-spin 6s linear infinite; width: 90px; height: 90px; }
       `}</style>
     </div>
   );
