@@ -1,24 +1,37 @@
 import { NextResponse } from "next/server";
-import { computeLifeMapFacts, computeMayaTzolkin, type BirthInput } from "@/lib/lifemap-calc";
+import { computeLifeMapFacts, computeMayaTzolkin, lunarToSolar, type BirthInput } from "@/lib/lifemap-calc";
 import { computeZiWeiChart, type Gender } from "@/lib/ziwei-calc";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  let body: Partial<BirthInput> & { gender?: string };
+  let body: Partial<BirthInput> & { gender?: string; calendarType?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "请求格式有误。" }, { status: 400 });
   }
 
-  const { year, month, day, hour, minute, hasTime } = body;
+  const { year: inputYear, month: inputMonth, day: inputDay, hour, minute, hasTime } = body;
   const gender: Gender = (body as { gender?: string }).gender === "male" ? "male" : "female";
+  // calendarType：'solar'（阳历/公历/西历，默认）| 'lunar'（中国农历，身份证上常见的另一种记法）——
+  // 两者是完全不同的历法系统，必须先统一换算成阳历，才能进行后续的天文/命理计算。
+  const calendarType = (body as { calendarType?: string }).calendarType === "lunar" ? "lunar" : "solar";
   if (
-    typeof year !== "number" || typeof month !== "number" || typeof day !== "number" ||
-    year < 1900 || year > 2026 || month < 1 || month > 12 || day < 1 || day > 31
+    typeof inputYear !== "number" || typeof inputMonth !== "number" || typeof inputDay !== "number" ||
+    inputYear < 1900 || inputYear > 2026 || inputMonth < 1 || inputMonth > 12 || inputDay < 1 || inputDay > 31
   ) {
     return NextResponse.json({ error: "出生日期无效。" }, { status: 400 });
+  }
+
+  let year = inputYear, month = inputMonth, day = inputDay;
+  try {
+    if (calendarType === "lunar") {
+      const solar = lunarToSolar(inputYear, inputMonth, inputDay);
+      year = solar.year; month = solar.month; day = solar.day;
+    }
+  } catch {
+    return NextResponse.json({ error: "农历日期换算失败，请检查日期是否存在（比如农历没有的闰月/日期）。" }, { status: 400 });
   }
 
   try {
@@ -38,7 +51,8 @@ export async function POST(req: Request) {
     } catch {
       ziwei = null; // 紫微排盘偶发的极端日期边界问题，不应影响其余数据正常返回
     }
-    return NextResponse.json({ ...facts, maya, ziwei });
+    // 把换算后的真实阳历日期也带回前端展示，让用户能确认换算结果无误
+    return NextResponse.json({ ...facts, maya, ziwei, resolvedSolar: { year, month, day } });
   } catch (e) {
     return NextResponse.json({ error: "计算失败，请检查出生信息。" }, { status: 500 });
   }

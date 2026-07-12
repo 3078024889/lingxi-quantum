@@ -5,7 +5,17 @@
 // 这一点，是灵犀生命图谱与市面上大多数"AI算命"最根本的区别。
 
 import * as Astronomy from "astronomy-engine";
-import { Solar } from "lunar-javascript";
+import { Solar, Lunar } from "lunar-javascript";
+
+// 出生日期可能有三种记法：阳历（西历/公历，国际通用）、农历（中国传统历法，
+// 身份证上常见的另一种记法）——两者是完全不同的历法系统，同一串数字，
+// 按不同历法解读，对应的是相差最多一个月的两个不同真实日期，所有后续的
+// 天文/命理计算，都必须先统一换算成阳历，才不会全盘算错。
+export function lunarToSolar(year: number, month: number, day: number): { year: number; month: number; day: number } {
+  const lunar = Lunar.fromYmd(year, month, day);
+  const solar = lunar.getSolar();
+  return { year: solar.getYear(), month: solar.getMonth(), day: solar.getDay() };
+}
 
 export type WesternElement = "fire" | "earth" | "air" | "water";
 export type ChineseElement = "wood" | "fire" | "earth" | "metal" | "water";

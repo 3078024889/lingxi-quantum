@@ -86,6 +86,7 @@ export default function LifeMapFlow() {
 
   const [stage, setStage] = useState<Stage>("landing");
   const [name, setName] = useState("");
+  const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
@@ -187,7 +188,7 @@ export default function LifeMapFlow() {
           year: y, month: m, day: d,
           hour: hasTime ? parseInt(hour, 10) || 0 : 12,
           minute: hasTime ? parseInt(minute, 10) || 0 : 0,
-          hasTime, gender,
+          hasTime, gender, calendarType,
         }),
       });
       const facts: Facts = await calcRes.json();
@@ -371,10 +372,24 @@ export default function LifeMapFlow() {
 
               <div>
                 <label className="block text-sm text-bone-dim"><Bi zh="出生日期" en="Birth Date" /></label>
-                <div className="mt-2 grid grid-cols-3 gap-3">
+                <p className="mt-1 text-xs leading-5 text-bone-dim/60">
+                  <Bi
+                    zh="中国身份证上的出生日期，有的写的是阳历（公历/西历，国际通用的那种），有的写的是农历（中国传统历法）——两者是完全不同的历法系统，同一串数字，按错了历法，算出来的命盘会整个错位。不确定的话，通常身份证上写的是阳历；海外用户，一般直接选阳历即可。"
+                    en="On Chinese ID cards, the birth date is sometimes Gregorian (Solar/Western calendar), sometimes Chinese Lunar — these are entirely different calendar systems, and picking the wrong one will throw off every calculation. If unsure, ID cards usually show the Gregorian date; users outside China should simply select Gregorian."
+                  />
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  <button onClick={() => setCalendarType("solar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "solar" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                    <Bi zh="阳历（公历/西历）" en="Gregorian (Solar / Western)" />
+                  </button>
+                  <button onClick={() => setCalendarType("lunar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "lunar" ? "border-lm-violet bg-lm-violet/10 text-bone" : "border-white/12 text-bone-dim hover:border-white/25"}`}>
+                    <Bi zh="农历（中国传统历法）" en="Chinese Lunar Calendar" />
+                  </button>
+                </div>
+                <div className="mt-3 grid grid-cols-3 gap-3">
                   <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
-                  <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
-                  <input value={day} onChange={(e) => setDay(e.target.value)} placeholder={t("日", "Day")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
+                  <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={calendarType === "lunar" ? t("农历月", "Lunar Month") : t("月", "Month")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
+                  <input value={day} onChange={(e) => setDay(e.target.value)} placeholder={calendarType === "lunar" ? t("农历日", "Lunar Day") : t("日", "Day")} inputMode="numeric" className="rounded-sm border border-white/15 bg-void px-4 py-3 text-bone outline-none focus:border-lm-violet/60" />
                 </div>
               </div>
 
@@ -638,8 +653,8 @@ export default function LifeMapFlow() {
               </ul>
               <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-bone-dim/50">
                 <Bi
-                  zh="真人命理师/占星师的一次解读，通常在千元以上；一份中西玛雅三方合参、逐项展开的书面报告，只要一杯咖啡的价钱。"
-                  en="A single session with a real astrologer or fortune-teller typically runs well over a hundred dollars; a full, itemized written report drawing on three real systems costs less than a coffee."
+                  zh="五套真实系统、上百个真实数据点，交叉着，写给你一个人——这份报告，帮你看见的，从来不只是一张命盘。"
+                  en="Five real systems, over a hundred real data points, cross-woven for you alone — what this report helps you see was never just a chart."
                 />
               </p>
               <div className="mt-8">

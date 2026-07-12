@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 
@@ -35,6 +35,8 @@ export default function FullReportView({ id }: { id: string }) {
   const t = (zh: string, en: string) => (langEn ? en : zh);
 
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
+  const [downloading, setDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
   const [sections, setSections] = useState<string[]>([]);
   const [coreTypeName, setCoreTypeName] = useState("");
   const [error, setError] = useState("");
@@ -122,6 +124,45 @@ export default function FullReportView({ id }: { id: string }) {
     );
   }
 
+  const downloadPdf = async () => {
+    if (!reportRef.current) return;
+    setDownloading(true);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(reportRef.current, {
+        backgroundColor: "#06050A",
+        scale: 2,
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/jpeg", 0.92);
+      // A4 比例分页：把长截图，按A4宽高比，切成若干页
+      const pdf = new jsPDF({ unit: "pt", format: "a4" });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      pdf.save(`灵犀生命图谱-${coreTypeName || "report"}.pdf`);
+    } catch (e) {
+      console.error("PDF 生成失败:", e);
+      alert(t("PDF 生成失败，请稍后再试，或改用浏览器打印功能另存为 PDF。", "PDF generation failed — please try again, or use your browser's print-to-PDF as a fallback."));
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="px-6 py-20 print:py-6">
       <div className="mx-auto max-w-2xl">
@@ -130,12 +171,14 @@ export default function FullReportView({ id }: { id: string }) {
             🌌 <Bi zh="完整生命频率图谱" en="Your Full Life Frequency Map" />
           </p>
           <button
-            onClick={() => window.print()}
-            className="rounded-sm border border-white/15 px-4 py-2 text-xs uppercase tracking-widest2 text-bone-dim transition hover:border-lm-violet hover:text-bone"
+            onClick={downloadPdf}
+            disabled={downloading}
+            className="rounded-sm border border-white/15 px-4 py-2 text-xs uppercase tracking-widest2 text-bone-dim transition hover:border-lm-violet hover:text-bone disabled:opacity-50"
           >
-            <Bi zh="下载 / 打印 PDF" en="Download / Print PDF" />
+            {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
           </button>
         </div>
+        <div ref={reportRef} className="bg-void px-1 py-4">
         <h1 className="mt-4 font-display text-3xl font-light text-bone">{coreTypeName}</h1>
 
         <div className="mt-12 space-y-14">
@@ -155,6 +198,7 @@ export default function FullReportView({ id }: { id: string }) {
             en="This is a tool for self-exploration and reflection, not a prophecy — the direction of your life is always your own to choose."
           />
         </p>
+        </div>
       </div>
     </div>
   );

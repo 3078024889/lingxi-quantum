@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { VOICES } from "@/lib/voices";
 
 /* 心声之雨 · 深空活场层（v2：仅两侧 · 流星尾巴 · 水波纹涟漪）
@@ -49,6 +50,10 @@ const BAG: number[] = (() => {
 const pick = () => BAG[Math.floor(Math.random() * BAG.length)];
 
 export default function FieldVoices() {
+  const pathname = usePathname();
+  // 生命图谱的表单/报告页，文字密度高、需要专注阅读，心声之雨的浮动文字气泡
+  // 之前会盖住报告内容，这类页面直接不渲染心声之雨。
+  const suppressed = pathname?.startsWith("/life-map");
   const [nodes, setNodes] = useState<Node[]>([]);
   const [speaking, setSpeaking] = useState<Record<number, number>>({});
   const [hovered, setHovered] = useState<number | null>(null);
@@ -131,6 +136,8 @@ export default function FieldVoices() {
 
   const voiceOf = (d: Node) =>
     hovered === d.id ? VOICES[d.vi] : d.id in speaking ? VOICES[d.vi] : null;
+
+  if (suppressed) return null;
 
   return (
     <div className="fv-rain pointer-events-none fixed inset-0 z-30 overflow-hidden" aria-hidden="true">
