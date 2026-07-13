@@ -79,7 +79,21 @@ const FRAGMENT_SHADER = `
     vec2 rippleOffset = vec2(n1, n2) * 0.006;
 
     vec2 cuv = coverUV(uv + rippleOffset, u_resolution, u_texSize);
-    vec3 color = texture2D(u_video, clamp(cuv, 0.0, 1.0)).rgb;
+    cuv = clamp(cuv, 0.0, 1.0);
+
+    // 锐化：视频原始分辨率有限，铺满大屏幕时会被放大，直接采样会偏软。
+    // 用经典的 unsharp mask 思路——取周围四个像素做一次模糊估计，
+    // 原图减去模糊图再叠加回去，边缘和细节的对比度会被拉高，
+    // 视觉上更"脆"，不是插值出根本不存在的细节，但能让现有细节更清楚。
+    vec2 texel = 1.0 / u_texSize;
+    vec3 center = texture2D(u_video, cuv).rgb;
+    vec3 blur =
+      texture2D(u_video, cuv + vec2(texel.x, 0.0)).rgb +
+      texture2D(u_video, cuv - vec2(texel.x, 0.0)).rgb +
+      texture2D(u_video, cuv + vec2(0.0, texel.y)).rgb +
+      texture2D(u_video, cuv - vec2(0.0, texel.y)).rgb;
+    blur *= 0.25;
+    vec3 color = center + (center - blur) * 0.55;
 
     float vig = smoothstep(1.05, 0.35, length((uv - 0.5) * vec2(1.15, 1.0)));
     color *= mix(0.94, 1.0, vig);
