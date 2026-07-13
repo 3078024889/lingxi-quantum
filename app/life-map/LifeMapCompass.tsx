@@ -104,9 +104,9 @@ export default function LifeMapCompass() {
       <svg viewBox="0 0 580 580" className="mx-auto mt-8 w-full max-w-lg">
         <defs>
           <radialGradient id="compass-bg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#2a2044" />
-            <stop offset="45%" stopColor="#1c1830" />
-            <stop offset="100%" stopColor="#12101f" />
+            <stop offset="0%" stopColor="#f7f0ff" />
+            <stop offset="45%" stopColor="#eef4ff" />
+            <stop offset="100%" stopColor="#e4ecff" />
           </radialGradient>
           <radialGradient id="compass-core" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#F4EFFF" />
@@ -131,7 +131,7 @@ export default function LifeMapCompass() {
           const x = (i * 137.5) % 580;
           const y = (i * 71.3 + 40) % 580;
           const r = 0.5 + (i % 3) * 0.4;
-          return <circle key={i} cx={x} cy={y} r={r} fill="#F4EFFF" opacity={0.25 + (i % 4) * 0.12} />;
+          return <circle key={i} cx={x} cy={y} r={r} fill="#5a5270" opacity={0.3 + (i % 4) * 0.12} />;
         })}
 
         {/* 同心圆环 */}
@@ -156,10 +156,10 @@ export default function LifeMapCompass() {
         <circle cx={cx} cy={cy} r={14} fill="#FFB3DD" opacity={0.85}>
           <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite" />
         </circle>
-        <text data-lang="zh" x={cx} y={cy - 40} textAnchor="middle" fontSize="11" fill="#F4EFFF" fontFamily="serif" opacity={0.85}>
+        <text data-lang="zh" x={cx} y={cy - 40} textAnchor="middle" fontSize="11" fill="#2a2440" fontFamily="serif" opacity={0.85}>
           灵犀场域
         </text>
-        <text data-lang="en" x={cx} y={cy - 40} textAnchor="middle" fontSize="9" fill="#F4EFFF" fontFamily="serif" opacity={0.75}>
+        <text data-lang="en" x={cx} y={cy - 40} textAnchor="middle" fontSize="9" fill="#2a2440" fontFamily="serif" opacity={0.75}>
           The Lingxi Field
         </text>
 
@@ -180,7 +180,7 @@ export default function LifeMapCompass() {
                   textAnchor={anchor}
                   dominantBaseline="middle"
                   fontSize="8.5"
-                  fill={ring.dashed ? "#8a7fa8" : "#E8E0FF"}
+                  fill={ring.dashed ? "#8a7fa0" : "#2a2440"}
                   fontFamily="sans-serif"
                   opacity={ring.dashed ? 0.7 : 0.95}
                 >
@@ -192,7 +192,7 @@ export default function LifeMapCompass() {
                   textAnchor={anchor}
                   dominantBaseline="middle"
                   fontSize="7"
-                  fill={ring.dashed ? "#8a7fa8" : "#E8E0FF"}
+                  fill={ring.dashed ? "#8a7fa0" : "#2a2440"}
                   fontFamily="sans-serif"
                   opacity={ring.dashed ? 0.7 : 0.95}
                 >

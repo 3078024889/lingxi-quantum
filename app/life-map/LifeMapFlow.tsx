@@ -85,6 +85,16 @@ const RELATIONSHIP_OPTIONS: { id: string; zh: string; en: string }[] = [
   { id: "prefer-not", zh: "不想说", en: "Prefer not to say" },
 ];
 
+// 是否有修炼习惯：作为上下文输入，让"专属灵犀练习"那一章的落笔角度更贴合——
+// 已经在修炼的人，练习建议可以更进阶；没有基础但感兴趣的人，练习建议会
+// 自然带出site内"修炼技术"板块可以进一步探索，不是硬广告式的推销。
+const PRACTICE_OPTIONS: { id: string; zh: string; en: string }[] = [
+  { id: "regular", zh: "有稳定的修炼习惯", en: "I have a regular practice" },
+  { id: "occasional", zh: "偶尔练习，不算规律", en: "I practice occasionally" },
+  { id: "curious", zh: "没有，但很感兴趣", en: "No, but I'm curious" },
+  { id: "none", zh: "没有，也不确定感不感兴趣", en: "No, and I'm not sure yet" },
+];
+
 const STATE_OPTIONS: { id: CurrentState; zh: string; en: string }[] = [
   { id: "transforming", zh: "正在转变期", en: "In a period of change" },
   { id: "lost", zh: "感觉迷茫", en: "Feeling lost" },
@@ -132,6 +142,7 @@ export default function LifeMapFlow() {
   const [profession, setProfession] = useState("");
   const [professionCustom, setProfessionCustom] = useState("");
   const [relationshipStatus, setRelationshipStatus] = useState("");
+  const [practiceStatus, setPracticeStatus] = useState("");
   const [focus, setFocus] = useState<Focus>("all");
   const [currentState, setCurrentState] = useState<CurrentState>("exploring");
   const [energyLevel, setEnergyLevel] = useState(3);
@@ -158,6 +169,7 @@ export default function LifeMapFlow() {
     facts: Facts; coreType: { name: string; nameEn: string };
     freeNarrative: string; focusLabel: { zh: string }; stateLabel: { zh: string };
     energyLevel: number; clarityLevel: number; alignmentLevel: number; name: string;
+    professionLabel?: string; relationshipLabel?: string; practiceLabel?: string;
   }): Promise<{ id: string | null; specificError: string | null }> => {
     try {
       // 客户端在此处才真正创建 Supabase 实例——只在用户交互触发的函数内部创建，
@@ -182,7 +194,11 @@ export default function LifeMapFlow() {
           facts: args.facts,
           coreTypeName: isEn() ? args.coreType.nameEn : args.coreType.name,
           freeNarrative: args.freeNarrative,
-          focus: args.focusLabel.zh,
+          focus:
+            args.focusLabel.zh +
+            (args.professionLabel ? ` · 职业：${args.professionLabel}` : "") +
+            (args.relationshipLabel ? ` · 感情状态：${args.relationshipLabel}` : "") +
+            (args.practiceLabel ? ` · 修炼习惯：${args.practiceLabel}` : ""),
           currentState: args.stateLabel.zh,
           energyLevel: args.energyLevel, clarityLevel: args.clarityLevel, alignmentLevel: args.alignmentLevel,
         }),
@@ -241,6 +257,7 @@ export default function LifeMapFlow() {
       const professionOpt = PROFESSION_OPTIONS.find((p) => p.id === profession);
       const professionLabel = profession === "other" ? professionCustom.trim() : professionOpt?.zh || "";
       const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === relationshipStatus)?.zh || "";
+      const practiceLabel = PRACTICE_OPTIONS.find((p) => p.id === practiceStatus)?.zh || "";
       const wx = facts.wuXingCount;
       const wxStr = `木${wx.wood} 火${wx.fire} 土${wx.earth} 金${wx.metal} 水${wx.water}`;
       const promptContent =
@@ -255,6 +272,7 @@ export default function LifeMapFlow() {
         `【用户最想探索】${focusLabel.zh}\n【用户当前状态】${stateLabel.zh}` +
         (professionLabel ? `\n【用户职业】${professionLabel}` : "") +
         (relationshipLabel ? `\n【当前感情状态】${relationshipLabel}` : "") +
+        (practiceLabel ? `\n【是否有修炼习惯】${practiceLabel}` : "") +
         (name.trim() ? `\n【称呼】${name.trim()}` : "");
 
       const aiRes = await fetch("/api/lingxi", {
@@ -275,6 +293,7 @@ export default function LifeMapFlow() {
         y, m, d, hasTime, hour, minute,
         facts, coreType, freeNarrative: aiPayload.text,
         focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
+        professionLabel, relationshipLabel, practiceLabel,
       });
     } catch {
       clearInterval(stepTimer);
@@ -303,11 +322,16 @@ export default function LifeMapFlow() {
         if (report) {
           const focusLabel = FOCUS_OPTIONS.find((f) => f.id === focus)!;
           const stateLabel = STATE_OPTIONS.find((s) => s.id === currentState)!;
+          const professionOpt2 = PROFESSION_OPTIONS.find((p) => p.id === profession);
+          const professionLabel = profession === "other" ? professionCustom.trim() : professionOpt2?.zh || "";
+          const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === relationshipStatus)?.zh || "";
+          const practiceLabel = PRACTICE_OPTIONS.find((p) => p.id === practiceStatus)?.zh || "";
           const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
           const result = await trySaveSubmission({
             y, m, d, hasTime, hour, minute,
             facts: report.facts, coreType: report.coreType, freeNarrative: report.narrative,
             focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
+            professionLabel, relationshipLabel, practiceLabel,
           });
           id = result.id;
           specificError = result.specificError;
@@ -520,6 +544,18 @@ export default function LifeMapFlow() {
                   <button key={r.id} onClick={() => setRelationshipStatus(r.id)}
                     className={`rounded-sm border px-3 py-2.5 text-center text-xs transition ${relationshipStatus === r.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
                     <Bi zh={r.zh} en={r.en} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <p className="text-sm text-lm2-text-dim"><Bi zh="是否有修炼/静心练习的习惯（选填）：" en="Do you have a practice / meditation habit (optional):" /></p>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {PRACTICE_OPTIONS.map((p) => (
+                  <button key={p.id} onClick={() => setPracticeStatus(p.id)}
+                    className={`rounded-sm border px-3 py-2.5 text-center text-xs transition ${practiceStatus === p.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    <Bi zh={p.zh} en={p.en} />
                   </button>
                 ))}
               </div>

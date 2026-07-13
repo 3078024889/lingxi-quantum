@@ -10,6 +10,10 @@ type ChartFacts = {
   mercury: { longitude: number }; venus: { longitude: number }; mars: { longitude: number };
   jupiter: { longitude: number }; saturn: { longitude: number };
   wuXingCount: { wood: number; fire: number; earth: number; metal: number; water: number };
+  ziwei: {
+    palaces: { name: string; earthlyBranch: string; majorStars: { name: string; brightness: string }[]; isSoulPalace: boolean; isBodyPalace: boolean; decadalRange: [number, number] }[];
+  } | null;
+  daYunStartAge: number | null;
 };
 
 const SECTION_TITLES = [
@@ -243,6 +247,8 @@ export default function FullReportView({ id }: { id: string }) {
               </p>
               <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{content}</div>
               {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
+              {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
+              {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
               {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
             </div>
           ))}
@@ -333,6 +339,104 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
           </div>
         );
       })}
+    </div>
+  );
+}
+
+// 紫微十二宫方形图：传统命盘本来就是这样按地支固定方位排布的——
+// 地支顺时针从"巳"起手在左上角，寅丑子亥收在左下角，中间空出来放核心信息。
+const ZIWEI_GRID_BRANCHES = [
+  ["巳", "午", "未", "申"],
+  ["辰", null, null, "酉"],
+  ["卯", null, null, "戌"],
+  ["寅", "丑", "子", "亥"],
+];
+
+function ZiweiGrid({
+  palaces,
+}: {
+  palaces: { name: string; earthlyBranch: string; majorStars: { name: string; brightness: string }[]; isSoulPalace: boolean; isBodyPalace: boolean }[];
+}) {
+  const byBranch = new Map(palaces.map((p) => [p.earthlyBranch, p]));
+  const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
+  return (
+    <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+      <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="紫微十二宫" en="The Twelve Ziwei Palaces" /></p>
+      <div className="mt-4 grid grid-cols-4 gap-1.5">
+        {ZIWEI_GRID_BRANCHES.flat().map((branch, i) => {
+          if (branch === null) {
+            // 中央2x2留白区域，只在第一个空格渲染一次、跨2x2
+            if (i === 5) {
+              return (
+                <div key="center" className="col-span-2 row-span-2 flex flex-col items-center justify-center rounded-sm border border-lm2-violet/20 bg-lm2-violet/5">
+                  <span className="lm2-ziwei-glow font-display text-lg text-lm2-violet">紫微</span>
+                  <span className="mt-1 text-[9px] text-lm2-text-dim">Ziwei Doushu</span>
+                </div>
+              );
+            }
+            return null;
+          }
+          const p = byBranch.get(branch);
+          const color = auroraColors[i % auroraColors.length];
+          return (
+            <div
+              key={branch}
+              className="flex min-h-[74px] flex-col justify-between rounded-sm border p-1.5"
+              style={{
+                borderColor: p?.isSoulPalace || p?.isBodyPalace ? color : "rgba(255,255,255,0.1)",
+                background: p?.isSoulPalace ? `${color}18` : "transparent",
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] text-lm2-text-dim">{branch}</span>
+                {(p?.isSoulPalace || p?.isBodyPalace) && (
+                  <span className="text-[8px]" style={{ color }}>
+                    {p?.isSoulPalace ? "命" : ""}{p?.isBodyPalace ? "身" : ""}
+                  </span>
+                )}
+              </div>
+              <p className="text-[10px] font-medium text-lm2-text">{p?.name ?? ""}</p>
+              <p className="text-[8px] leading-tight text-lm2-text-dim">
+                {p?.majorStars.map((s) => s.name).join("·") || "—"}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+      <style>{`
+        .lm2-ziwei-glow { animation: lm2-ziwei-pulse 3.5s ease-in-out infinite; }
+        @keyframes lm2-ziwei-pulse { 0%,100% { opacity: 0.7; text-shadow: 0 0 6px rgba(199,156,255,0.3); } 50% { opacity: 1; text-shadow: 0 0 14px rgba(199,156,255,0.7); } }
+      `}</style>
+    </div>
+  );
+}
+
+// 大运时间轴：从起运年龄开始，横向展开几个十年周期，比一段段文字更容易一眼看懂节奏
+function DaYunTimeline({ startAge }: { startAge: number | null }) {
+  const start = startAge ?? 8;
+  const periods = Array.from({ length: 5 }).map((_, i) => start + i * 10);
+  const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
+  return (
+    <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+      <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="大运时间轴" en="Major Luck Cycle Timeline" /></p>
+      <div className="relative mt-6 pb-2">
+        <div className="absolute left-0 right-0 top-3 h-0.5 bg-gradient-to-r from-lm2-rose via-lm2-amber via-lm2-mint to-lm2-violet opacity-40" />
+        <div className="flex justify-between">
+          {periods.map((age, i) => (
+            <div key={age} className="flex flex-col items-center">
+              <span
+                className="lm2-dayun-dot h-3 w-3 rounded-full"
+                style={{ background: auroraColors[i % auroraColors.length], animationDelay: `${i * 0.4}s` }}
+              />
+              <span className="mt-2 font-display text-xs text-lm2-text">{age}<Bi zh="岁" en="" /></span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        .lm2-dayun-dot { animation: lm2-dayun-glow 2.4s ease-in-out infinite; }
+        @keyframes lm2-dayun-glow { 0%,100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.3); filter: brightness(1.4); } }
+      `}</style>
     </div>
   );
 }

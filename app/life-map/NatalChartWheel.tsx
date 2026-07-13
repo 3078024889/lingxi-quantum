@@ -58,11 +58,11 @@ export default function NatalChartWheel({
       <svg viewBox="0 0 400 400" className="mx-auto w-full">
         <defs>
           <radialGradient id="natal-bg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#25203b" />
-            <stop offset="100%" stopColor="#141221" />
+            <stop offset="0%" stopColor="#f7f0ff" />
+            <stop offset="100%" stopColor="#e4ecff" />
           </radialGradient>
         </defs>
-        <circle cx={cx} cy={cy} r={outerR + 8} fill="url(#natal-bg)" stroke="#5a4f78" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={outerR + 8} fill="url(#natal-bg)" stroke="#b8b0d8" strokeWidth="1" />
 
         {/* 十二星座分界线与刻度环 */}
         {Array.from({ length: 12 }).map((_, i) => {
@@ -72,15 +72,15 @@ export default function NatalChartWheel({
           const glyphPos = toXY(lon + 15, zodiacR);
           return (
             <g key={i}>
-              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#5a4f78" strokeWidth="1" />
-              <text x={glyphPos.x} y={glyphPos.y} textAnchor="middle" dominantBaseline="middle" fontSize="15" fill="#D8CDFF">
+              <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#b8b0d8" strokeWidth="1" />
+              <text x={glyphPos.x} y={glyphPos.y} textAnchor="middle" dominantBaseline="middle" fontSize="15" fill="#5a4f9c">
                 {ZODIAC_GLYPHS[i]}
               </text>
             </g>
           );
         })}
-        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="#5a4f78" strokeWidth="1" />
-        <circle cx={cx} cy={cy} r={zodiacR - 28} fill="none" stroke="#3f3658" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="#b8b0d8" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={zodiacR - 28} fill="none" stroke="#d8d0f0" strokeWidth="1" />
 
         {/* 行星连线到黄道环（细线标出精确角度），符号本身径向错开避让 */}
         {adjusted.map((p) => {
@@ -99,7 +99,7 @@ export default function NatalChartWheel({
           );
         })}
 
-        <circle cx={cx} cy={cy} r={3} fill="#D8CDFF">
+        <circle cx={cx} cy={cy} r={3} fill="#5a4f9c">
           <animate attributeName="r" values="2.5;4;2.5" dur="3.5s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="0.7;1;0.7" dur="3.5s" repeatCount="indefinite" />
         </circle>

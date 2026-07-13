@@ -51,7 +51,7 @@ export default function IllustratedBookReader({
         className="relative overflow-hidden rounded-sm border border-white/10"
         style={{
           background:
-            "radial-gradient(ellipse at 20% 0%, rgba(255,143,209,0.10), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(95,232,255,0.10), transparent 55%), radial-gradient(ellipse at 50% 100%, rgba(255,203,97,0.08), transparent 60%), linear-gradient(180deg, #1c1830 0%, #14101f 100%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(255,143,209,0.16), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(95,232,255,0.18), transparent 55%), radial-gradient(ellipse at 50% 100%, rgba(255,203,97,0.14), transparent 60%), linear-gradient(180deg, #eef6ff 0%, #f7f0ff 100%)",
           minHeight: 560,
         }}
       >
@@ -65,7 +65,7 @@ export default function IllustratedBookReader({
                 <Bi zh="灵犀 · 多维叙事" en="Lingxi · Dimensional Narrative" />
               </p>
               <div
-                className="mt-6 aspect-[3/2.2] w-full max-w-sm overflow-hidden rounded-sm"
+                className="lx-aurora-flip mt-6 aspect-[3/2.2] w-full max-w-sm overflow-hidden rounded-sm"
                 dangerouslySetInnerHTML={{ __html: entry.cover }}
               />
               <h2 className="mt-6 font-display text-3xl font-light leading-snug text-bone sm:text-4xl">
@@ -80,7 +80,7 @@ export default function IllustratedBookReader({
           ) : page ? (
             <div className="flex min-h-[480px] flex-col">
               <div
-                className="aspect-[3/2] w-full overflow-hidden rounded-sm shadow-lg"
+                className="lx-aurora-flip aspect-[3/2] w-full overflow-hidden rounded-sm shadow-lg"
                 dangerouslySetInnerHTML={{ __html: page.art }}
               />
               <div className="mt-5 text-center">
