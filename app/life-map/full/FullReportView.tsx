@@ -200,7 +200,7 @@ export default function FullReportView({ id }: { id: string }) {
       <style>{`
         .lm2-print-mode {
           background: linear-gradient(135deg,
-            #ffb3dd 0%, #ffd9a0 18%, #b3f0d4 36%, #a3e8ff 54%, #d4b3ff 72%, #ffb3dd 100%);
+            #FFB1DE 0%, #FFE096 20%, #BAFAC7 40%, #94EAF9 60%, #7AA9FA 80%, #CAAFFB 100%);
           border-radius: 4px;
         }
         .lm2-print-mode h1,
@@ -223,7 +223,7 @@ export default function FullReportView({ id }: { id: string }) {
             {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
           </button>
         </div>
-        <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-bg px-1 py-4"}>
+        <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-report px-1 py-4"}>
         <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>
 
         {facts && (

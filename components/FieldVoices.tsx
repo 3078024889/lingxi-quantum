@@ -28,7 +28,7 @@ type Node = {
   vi: number;
 };
 
-const COLORS = ["#E8B765", "#7CE0D3", "#C9A5D8", "#F2E2C4"];
+const COLORS = ["#FFB1DE", "#FFE096", "#BAFAC7", "#94EAF9", "#7AA9FA", "#CAAFFB"];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 // 光点只在左右两条窄带里出现（约 1~16% 与 84~99%），中间阅读列完全留空。
 const SIDE_MAX = 16;
@@ -205,8 +205,11 @@ export default function FieldVoices() {
                   }}
                 />
                 {v && (
-                  <div className={`fv-say absolute top-1/2 -translate-y-1/2 ${openRight ? "left-6 text-left" : "right-6 text-right"}`}>
-                    <span className="fv-glyph">✧</span>
+                  <div
+                    className={`fv-say absolute top-1/2 -translate-y-1/2 ${openRight ? "left-6 text-left" : "right-6 text-right"}`}
+                    style={{ borderColor: `${d.color}55`, boxShadow: `0 2px 14px rgba(0,0,0,0.35), 0 0 16px ${d.color}22` }}
+                  >
+                    <span className="fv-glyph" style={{ color: d.color }}>✧</span>
                     <span data-lang="zh">{v.zh}</span>
                     <span data-lang="en">{v.en}</span>
                   </div>

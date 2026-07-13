@@ -11,13 +11,13 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 静态兜底天空——WebGL 不可用、或 shader 还没启动前的第一帧，
-   直接用真实彩虹云照片本身（sky1.jpg，同一批用在 Shader 里的照片之一），
-   不再是任何程序生成的渐变——保证兜底状态下看到的也是货真价实的天空。 */
+/* 静态兜底天空——WebGL 不可用、视频自动播放被拦截、或 shader 还没启动前
+   的第一帧，用的是同一支彩虹云视频的海报帧（第一帧截图），保证兜底状态
+   下看到的也是同一片真实天空，只是不动而已。 */
 body {
   position: relative;
   background-color: #1F4FAE;
-  background-image: url("/images/sky/sky1.jpg");
+  background-image: url("/images/sky/rainbow-sky-poster.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -30,10 +30,11 @@ body {
 }
 
 /* 全站所有用 bg-void / bg-void-deep 的卡片（签到框、问答框、故事卡片等），
+   以及生命图谱报告里的 bg-lm2-card 子卡片（星盘、五行、紫微、频率图），
    追加一层流动的珠光彩虹光泽叠加——不改变底色本身的深浅（保证文字对比度），
    只是让原本"一块死气的纯色"，变成有呼吸、缓慢流动的多彩光泽，
    颜色与全站彩虹云背景（粉/金/绿/青/蓝）呼应，统一全站的色彩语言。 */
-.bg-void, .bg-void-deep {
+.bg-void, .bg-void-deep, .bg-lm2-card {
   position: relative;
   background-image:
     radial-gradient(ellipse 90% 70% at 15% 0%, rgba(255,177,222,0.16), transparent 55%),
@@ -47,7 +48,27 @@ body {
   50% { background-position: 20% 15%, 80% 85%, 40% 60%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bg-void, .bg-void-deep { animation: none; }
+  .bg-void, .bg-void-deep, .bg-lm2-card { animation: none; }
+}
+
+/* 生命图谱完整报告的容器——半透明毛玻璃，让身后流动的彩虹云视频背景
+   透出来，同时保持文字足够的对比度可读。跟 bg-lm2-bg（表单输入框用的
+   不透明浅色）分开维护，不影响输入框的可用性。 */
+.bg-lm2-report {
+  position: relative;
+  background: rgba(255, 255, 255, 0.66);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  background-image:
+    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(255,177,222,0.18), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(148,234,249,0.18), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,224,150,0.14), transparent 60%);
+  background-size: 200% 200%, 200% 200%, 200% 200%;
+  animation: lx-card-shimmer 22s ease-in-out infinite;
+  border-radius: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bg-lm2-report { animation: none; }
 }
 
 /* 119篇故事插画：原本是深色底配白字的手绘SVG，逐一重画工作量太大，
