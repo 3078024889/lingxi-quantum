@@ -121,7 +121,7 @@ export default function LifeMapCompass() {
             <stop offset="100%" stopColor="#C79CFF" />
           </linearGradient>
         </defs>
-        <rect x="0" y="0" width="580" height="580" fill="url(#compass-bg)" />
+        <rect x="0" y="0" width="580" height="580" fill="url(#compass-bg)" opacity="0.35" />
         {/* 极光光带：一圈缓慢旋转的彩虹细环，是这张图的signature动效 */}
         <circle cx={cx} cy={cy} r={outerRForAura} fill="none" stroke="url(#compass-aurora-ring)" strokeWidth="2" opacity="0.5" strokeDasharray="6 14">
           <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="60s" repeatCount="indefinite" />

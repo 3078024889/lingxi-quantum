@@ -62,7 +62,7 @@ export default function NatalChartWheel({
             <stop offset="100%" stopColor="#e4ecff" />
           </radialGradient>
         </defs>
-        <circle cx={cx} cy={cy} r={outerR + 8} fill="url(#natal-bg)" stroke="#b8b0d8" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={outerR + 8} fill="url(#natal-bg)" fillOpacity="0.4" stroke="#b8b0d8" strokeWidth="1" />
 
         {/* 十二星座分界线与刻度环 */}
         {Array.from({ length: 12 }).map((_, i) => {

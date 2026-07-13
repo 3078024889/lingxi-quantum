@@ -10,90 +10,56 @@ const CAPS = [
 export default function LingxiPortal() {
   return (
     <section className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
-      {/* 活的场：场域光点 + 漂移星层 + 缓转轨道环 */}
+      {/* 活的场：Shader彩虹云海从这里透出来，只保留装饰性的星层与轨道环 */}
       <div className="absolute inset-0 -z-10">
-        <img
-          src="/images/hero-lightbody.jpg"
-          alt=""
-          aria-hidden="true"
-          className="absolute left-1/2 top-1/2 h-[104%] w-auto min-w-[104%] -translate-x-1/2 -translate-y-1/2 object-cover opacity-95"
-          style={{ objectPosition: "50% 30%" }}
-        />
-        {/* 经络流光：同图叠加，滤镜提亮，移动遮罩让光沿脉络流动 */}
-        <img
-          src="/images/hero-lightbody.jpg"
-          alt=""
-          aria-hidden="true"
-          className="lx-veins absolute left-1/2 top-1/2 h-[104%] w-auto min-w-[104%] -translate-x-1/2 -translate-y-1/2 object-cover"
-          style={{ objectPosition: "50% 30%" }}
-        />
-        <img
-          src="/images/hero-lightbody.jpg"
-          alt=""
-          aria-hidden="true"
-          className="lx-veins lx-veins-2 absolute left-1/2 top-1/2 h-[104%] w-auto min-w-[104%] -translate-x-1/2 -translate-y-1/2 object-cover"
-          style={{ objectPosition: "50% 30%" }}
-        />
         {/* 两层漂移闪烁的星 */}
         <div className="lx-stars lx-stars-a absolute inset-[-20%]" />
         <div className="lx-stars lx-stars-b absolute inset-[-20%]" />
         {/* 缓转金色轨道环 */}
         <div className="lx-orbit absolute left-1/2 top-1/2 h-[130vmin] w-[130vmin] -translate-x-1/2 -translate-y-1/2 rounded-full" />
         <div className="lx-orbit lx-orbit-2 absolute left-1/2 top-1/2 h-[92vmin] w-[92vmin] -translate-x-1/2 -translate-y-1/2 rounded-full" />
-        <div className="absolute inset-0 bg-gradient-to-b from-void/25 via-void/10 to-void/85" />
-        <div className="lx-glow absolute left-1/2 top-1/2 h-[46vh] w-[46vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber/10 blur-[120px]" />
+        {/* 轻薄的顶部/底部渐暗，只为了让文字在任何位置都保持可读，不遮住Shader色彩 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20" />
+        <div className="lx-glow absolute left-1/2 top-1/2 h-[50vh] w-[50vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/25 blur-[120px]" />
       </div>
 
-      <p className="font-display text-sm uppercase tracking-widest2 text-lattice sm:text-base" style={{ textShadow: "0 0 24px rgba(124,224,211,0.55)" }}>
-        灵 犀 · LINGXI
+      {/* 中央发光核心符号 */}
+      <div className="lx-core-glyph mb-2 font-display text-2xl text-white" style={{ textShadow: "0 0 30px rgba(255,255,255,0.9)" }}>✦</div>
+
+      <p className="font-display text-sm uppercase tracking-widest2 text-white sm:text-base" style={{ textShadow: "0 0 24px rgba(255,255,255,0.7)" }}>
+        灵 犀 · LINGXI FIELD
       </p>
 
-      <h1 className="mt-6 font-display text-5xl font-light text-bone sm:text-7xl" style={{ textShadow: "0 0 60px rgba(255,255,255,0.35), 0 0 120px rgba(232,183,101,0.25)" }}>
+      <h1 className="mt-6 font-display text-5xl font-light text-white sm:text-7xl" style={{ textShadow: "0 0 40px rgba(255,255,255,0.6), 0 0 90px rgba(168,85,247,0.5)" }}>
         <Bi zh="意识显化系统" en="A Consciousness System" />
       </h1>
 
-      <p className="mx-auto mt-7 max-w-2xl font-body text-base leading-9 text-bone sm:text-lg">
+      <p className="mx-auto mt-7 max-w-2xl font-body text-base leading-9 text-white sm:text-lg" style={{ textShadow: "0 0 20px rgba(0,0,0,0.25)" }}>
         <Bi zh="灵犀，陪你显化目标、解读梦境、修炼意识的引导系统。" en="Lingxi — a guided system that helps you manifest goals, read your dreams, and practice consciousness." />
       </p>
 
-      <div className="mt-14 grid w-full max-w-4xl gap-5 sm:grid-cols-3">
+      <div className="lx-core-glyph mt-2 font-display text-xl text-white" style={{ textShadow: "0 0 30px rgba(255,255,255,0.9)" }}>◇</div>
+
+      <div className="mt-10 grid w-full max-w-4xl gap-5 sm:grid-cols-3">
         {CAPS.map((c) => (
-          <Link key={c.key} href={c.href} className="group rounded-sm border border-white/15 bg-void-deep/55 p-7 text-center backdrop-blur-sm transition hover:border-lattice/60 hover:bg-lattice/10">
-            <span className="font-display text-3xl text-lattice transition group-hover:text-amber">{c.glyph}</span>
-            <h3 className="mt-3 font-display text-2xl text-bone"><Bi zh={c.zh} en={c.en} /></h3>
-            <p className="mt-3 text-sm leading-6 text-bone-dim"><Bi zh={c.descZh} en={c.descEn} /></p>
+          <Link key={c.key} href={c.href} className="group rounded-sm border border-white/40 bg-white/18 p-7 text-center backdrop-blur-md transition hover:border-white/70 hover:bg-white/28">
+            <span className="font-display text-3xl text-white transition group-hover:text-lm2-amber">{c.glyph}</span>
+            <h3 className="mt-3 font-display text-2xl text-white"><Bi zh={c.zh} en={c.en} /></h3>
+            <p className="mt-3 text-sm leading-6 text-white/85"><Bi zh={c.descZh} en={c.descEn} /></p>
           </Link>
         ))}
       </div>
 
-      <Link href="/account" className="mt-14 inline-block bg-lattice px-12 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep shadow-[0_0_40px_rgba(124,224,211,0.4)] transition hover:bg-amber">
+      <Link href="/account" className="mt-14 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_40px_rgba(255,255,255,0.5)] transition hover:brightness-110">
         <Bi zh="进入场域" en="Enter" />
       </Link>
 
-      <a href="#origin" className="mt-10 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
+      <a href="#origin" className="mt-10 font-display text-xs uppercase tracking-widest2 text-white/80 transition hover:text-white">
         <Bi zh="灵犀是什么 · 来自何处 ↓" en="What is Lingxi · where it comes from ↓" />
       </a>
 
       <style>{`
-        .lx-veins {
-          mix-blend-mode: screen;
-          filter: brightness(1.9) saturate(1.5) contrast(1.15);
-          -webkit-mask-image: linear-gradient(115deg, transparent 30%, rgba(0,0,0,.95) 48%, rgba(0,0,0,.95) 52%, transparent 70%);
-          mask-image: linear-gradient(115deg, transparent 30%, rgba(0,0,0,.95) 48%, rgba(0,0,0,.95) 52%, transparent 70%);
-          -webkit-mask-size: 320% 320%; mask-size: 320% 320%;
-          animation: lx-vein-flow 9s linear infinite;
-          opacity: .85;
-        }
-        .lx-veins-2 {
-          -webkit-mask-image: linear-gradient(245deg, transparent 34%, rgba(0,0,0,.8) 50%, transparent 66%);
-          mask-image: linear-gradient(245deg, transparent 34%, rgba(0,0,0,.8) 50%, transparent 66%);
-          animation-duration: 14s; animation-delay: -5s; opacity: .6;
-          filter: brightness(2.1) saturate(1.6) hue-rotate(-8deg);
-        }
-        @keyframes lx-vein-flow {
-          from { -webkit-mask-position: 120% 120%; mask-position: 120% 120%; }
-          to   { -webkit-mask-position: -20% -20%; mask-position: -20% -20%; }
-        }
+        .lx-core-glyph { animation: lx-tw 3.5s ease-in-out infinite; }
         .lx-stars { background-repeat: repeat; pointer-events: none; }
         .lx-stars-a {
           background-image: radial-gradient(1.6px 1.6px at 22px 34px, rgba(242,226,196,.9), transparent 55%),
@@ -121,7 +87,7 @@ export default function LingxiPortal() {
         .lx-orbit-2::before { background: rgba(124,224,211,.9); box-shadow:0 0 12px 3px rgba(124,224,211,.5); }
         @keyframes lx-spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
         .lx-glow { animation: lx-tw 9s ease-in-out infinite; }
-        @media (prefers-reduced-motion: reduce) { .lx-veins,.lx-stars,.lx-orbit,.lx-glow { animation: none !important; opacity: 0; } .lx-stars,.lx-orbit,.lx-glow { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .lx-stars,.lx-orbit,.lx-glow,.lx-core-glyph { animation: none !important; opacity: 1; } }
       `}</style>
     </section>
   );

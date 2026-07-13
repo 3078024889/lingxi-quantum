@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import FieldVoices from "@/components/FieldVoices";
+import AuroraShaderBackground from "@/components/AuroraShaderBackground";
 import ClickRipple from "@/components/ClickRipple";
 
 const SITE = "https://lingxifield.com";
@@ -113,6 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-body antialiased">
         <div className="grain" aria-hidden="true" />
+        <AuroraShaderBackground />
         <FieldVoices />
         <ClickRipple />
         {children}

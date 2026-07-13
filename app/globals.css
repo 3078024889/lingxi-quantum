@@ -13,51 +13,15 @@ html {
 
 body {
   position: relative;
-  background-color: #eef4ff;
-  background-image:
-    radial-gradient(ellipse 65% 55% at 10% 5%, rgba(120, 200, 255, 0.35), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(180, 220, 255, 0.32), transparent 58%),
-    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(255, 200, 235, 0.30), transparent 62%),
-    radial-gradient(ellipse 55% 45% at 95% 85%, rgba(216, 190, 255, 0.30), transparent 58%),
-    radial-gradient(ellipse 50% 42% at 4% 90%, rgba(255, 224, 168, 0.26), transparent 55%),
-    radial-gradient(ellipse 45% 38% at 50% 35%, rgba(255, 255, 255, 0.45), transparent 60%),
-    linear-gradient(135deg, #eaf3ff 0%, #f3ecff 45%, #ffeef8 100%);
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
-  background-size: 140% 140%, 140% 140%, 140% 140%, 140% 140%, 140% 140%, 140% 140%, 100% 100%;
+  background-color: #3A8DFF;
+  background-image: linear-gradient(150deg, #3A8DFF 0%, #5B7FFF 35%, #8B6FFF 65%, #C86FE8 100%);
   background-attachment: fixed;
   color: #2a2440;
   min-height: 100vh;
-  animation: lx-nebula-drift 42s ease-in-out infinite;
-}
-
-@keyframes lx-nebula-drift {
-  0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0 0; }
-  50% { background-position: 4% 3%, -3% 4%, 2% -3%, -4% -2%, 3% 2%, 2% -2%, 0 0; }
-}
-
-/* 极光光斑层：几团大小不一、明暗独立起伏的柔光，叠加在主背景之上，
-   模拟极光呼吸流动感——不是装饰性静态光圈。 */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle 20vw at 20% 18%, rgba(120,200,255,0.28), transparent 70%),
-    radial-gradient(circle 16vw at 80% 22%, rgba(216,190,255,0.26), transparent 70%),
-    radial-gradient(circle 24vw at 55% 88%, rgba(255,200,235,0.24), transparent 70%),
-    radial-gradient(circle 14vw at 90% 78%, rgba(255,224,168,0.24), transparent 70%);
-  animation: lx-nebula-breathe 16s ease-in-out infinite;
-}
-@keyframes lx-nebula-breathe {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  33% { opacity: 1; transform: scale(1.06); }
-  66% { opacity: 0.75; transform: scale(0.97); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body, body::before { animation: none; }
+  .lx-shader-canvas { display: none !important; }
 }
 
 /* 全站所有用 bg-void / bg-void-deep 的卡片（签到框、问答框、故事卡片等），
@@ -170,80 +134,4 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
   .page-flip { animation: none; }
-}
-
-/* === Lingxi Rainbow Celestial Field v120 visual overhaul === */
-:root {
-  --lx-sky: #0b5fd7;
-  --lx-cyan: #00e5ff;
-  --lx-purple: #c46cff;
-  --lx-pink: #ff8bdc;
-  --lx-gold: #ffd76a;
-  --lx-green: #7fffd4;
-  --lx-glass: rgba(255,255,255,.16);
-}
-
-body {
-  background-color:#1781d8;
-  background-image:
-    radial-gradient(ellipse 70% 45% at 20% 10%, rgba(255,255,255,.55), transparent 60%),
-    radial-gradient(ellipse 60% 55% at 85% 20%, rgba(255,139,220,.55), transparent 60%),
-    radial-gradient(ellipse 55% 45% at 15% 70%, rgba(0,229,255,.5), transparent 60%),
-    radial-gradient(ellipse 70% 55% at 70% 85%, rgba(255,215,106,.45), transparent 60%),
-    linear-gradient(180deg,#55c9ff 0%,#87e8ff 25%,#b9f7ff 45%,#dca8ff 75%,#ffd6ef 100%);
-  color:#17213b;
-  animation: lx-rainbow-sky 35s ease-in-out infinite;
-}
-
-body::before {
-  background:
-    radial-gradient(circle at 15% 20%,rgba(255,255,255,.8),transparent 18%),
-    radial-gradient(circle at 75% 25%,rgba(255,150,220,.5),transparent 22%),
-    radial-gradient(circle at 45% 65%,rgba(0,255,220,.35),transparent 25%),
-    radial-gradient(circle at 80% 80%,rgba(255,210,80,.35),transparent 20%);
-  filter:blur(35px);
-  animation:lx-cloud-flow 20s ease-in-out infinite;
-}
-
-@keyframes lx-rainbow-sky{
-  0%,100%{background-position:0 0}
-  50%{background-position:100px 80px}
-}
-@keyframes lx-cloud-flow{
-  0%,100%{transform:scale(1) translate(0,0);opacity:.7}
-  50%{transform:scale(1.12) translate(20px,-15px);opacity:1}
-}
-
-/* 所有玻璃卡片升级为彩虹极光玻璃 */
-.glass,
-[class*="rounded"],
-[class*="card"],
-.bg-void,
-.bg-void-deep {
-  border-color:rgba(255,255,255,.35)!important;
-  background:
-    linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.08)),
-    radial-gradient(circle at top left,rgba(255,255,255,.35),transparent 35%)!important;
-  backdrop-filter:blur(28px) saturate(150%);
-  box-shadow:0 20px 60px rgba(80,120,255,.18),inset 0 0 40px rgba(255,255,255,.12);
-}
-
-/* 按钮 */
-button,
-.btn,
-a[class*="button"] {
-  background:linear-gradient(135deg,#00e5ff,#c46cff,#ff8bdc,#ffd76a)!important;
-  color:white!important;
-  border:none!important;
-  box-shadow:0 0 35px rgba(196,108,255,.45);
-}
-
-/* 标题光晕 */
-h1,h2 {
-  text-shadow:0 0 25px rgba(0,229,255,.25),0 0 35px rgba(255,139,220,.25);
-}
-
-/* 灵犀核心光球 */
-.breath-ring {
-  box-shadow:0 0 80px #00e5ff,0 0 120px #c46cff,0 0 160px #ffd76a;
 }
