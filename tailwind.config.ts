@@ -5,8 +5,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        void: "#06050A",
-        "void-deep": "#020103",
+        void: "#16101f",
+        "void-deep": "#0f0a1a",
         lattice: "#5FE8FF",
         "lattice-dim": "#3E7C76",
         amber: "#FFCB61",

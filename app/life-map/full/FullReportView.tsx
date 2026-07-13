@@ -254,17 +254,30 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
   return (
     <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="命局五行分布" en="Element Balance" /></p>
-      <div className="mt-4 space-y-2.5">
-        {items.map((it) => (
+      <div className="mt-4 space-y-3">
+        {items.map((it, idx) => (
           <div key={it.label} className="flex items-center gap-3">
             <span className="w-10 shrink-0 font-display text-sm text-lm2-text">{it.label}</span>
-            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-lm2-text/10">
-              <div className="h-full rounded-full" style={{ width: `${Math.max(6, (it.v / max) * 100)}%`, background: it.color }} />
+            <div className="h-3 flex-1 overflow-hidden rounded-full bg-lm2-text/10">
+              <div
+                className="lm2-wx-bar h-full rounded-full"
+                style={{
+                  width: `${Math.max(6, (it.v / max) * 100)}%`,
+                  background: `linear-gradient(90deg, ${it.color}99, ${it.color})`,
+                  boxShadow: `0 0 10px ${it.color}80`,
+                  animationDelay: `${idx * 0.15}s`,
+                }}
+              />
             </div>
             <span className="w-4 shrink-0 text-right text-xs text-lm2-text-dim">{it.v}</span>
           </div>
         ))}
       </div>
+      <style>{`
+        .lm2-wx-bar { animation: lm2-wx-grow 1.1s cubic-bezier(.22,1,.36,1) both, lm2-wx-glow 3s ease-in-out infinite; }
+        @keyframes lm2-wx-grow { from { transform: scaleX(0); transform-origin: left; } to { transform: scaleX(1); transform-origin: left; } }
+        @keyframes lm2-wx-glow { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.25); } }
+      `}</style>
     </div>
   );
 }
@@ -278,18 +291,23 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
   ];
   return (
     <div className="mt-5 grid grid-cols-3 gap-4 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
-      {items.map((it) => {
+      {items.map((it, idx) => {
         const pct = (it.v / 5) * 100;
         const r = 26, c = 2 * Math.PI * r;
         return (
           <div key={it.label} className="flex flex-col items-center">
-            <svg viewBox="0 0 64 64" className="w-16">
+            <svg viewBox="0 0 64 64" className="w-16" style={{ filter: `drop-shadow(0 0 6px ${it.color}70)` }}>
               <circle cx="32" cy="32" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="6" />
               <circle
                 cx="32" cy="32" r={r} fill="none" stroke={it.color} strokeWidth="6" strokeLinecap="round"
                 strokeDasharray={`${c}`} strokeDashoffset={`${c * (1 - pct / 100)}`}
                 transform="rotate(-90 32 32)"
-              />
+              >
+                <animate attributeName="stroke-width" values="5.5;6.5;5.5" dur={`${2.6 + idx * 0.3}s`} repeatCount="indefinite" />
+              </circle>
+              <circle cx="32" cy="32" r="3" fill={it.color} opacity="0.9">
+                <animate attributeName="r" values="2.5;3.5;2.5" dur={`${2.2 + idx * 0.4}s`} repeatCount="indefinite" />
+              </circle>
               <text x="32" y="37" textAnchor="middle" fontSize="16" fill="#F4EFFF" fontFamily="serif">{it.v}</text>
             </svg>
             <p className="mt-1 text-center text-[11px] text-lm2-text-dim">{it.label}</p>

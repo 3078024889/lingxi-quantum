@@ -89,7 +89,9 @@ export default function NatalChartWheel({
           return (
             <g key={p.nameZh}>
               <line x1={edge.x} y1={edge.y} x2={dot.x} y2={dot.y} stroke={p.color} strokeWidth="0.75" opacity="0.5" />
-              <circle cx={dot.x} cy={dot.y} r="13" fill="#FFFDF8" stroke={p.color} strokeWidth="1.5" />
+              <circle cx={dot.x} cy={dot.y} r="13" fill="#FFFDF8" stroke={p.color} strokeWidth="1.5">
+                <animate attributeName="r" values="12;13.5;12" dur={`${3 + (p.longitude % 5) * 0.4}s`} repeatCount="indefinite" begin={`${(p.longitude % 7) * 0.3}s`} />
+              </circle>
               <text x={dot.x} y={dot.y} textAnchor="middle" dominantBaseline="central" fontSize="14" fill={p.color}>
                 {p.glyph}
               </text>
@@ -97,7 +99,10 @@ export default function NatalChartWheel({
           );
         })}
 
-        <circle cx={cx} cy={cy} r={3} fill="#D8CDFF" />
+        <circle cx={cx} cy={cy} r={3} fill="#D8CDFF">
+          <animate attributeName="r" values="2.5;4;2.5" dur="3.5s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.7;1;0.7" dur="3.5s" repeatCount="indefinite" />
+        </circle>
       </svg>
 
       <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-[11px] text-lm2-text-dim">

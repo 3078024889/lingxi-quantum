@@ -12,6 +12,7 @@ html {
 }
 
 body {
+  position: relative;
   background-color: #16101f;
   background-image:
     radial-gradient(ellipse 60% 50% at 12% 6%, rgba(255, 143, 209, 0.32), transparent 55%),
@@ -29,11 +30,42 @@ body {
     radial-gradient(1.5px 1.5px at 95% 75%, rgba(255,255,255,.55), transparent),
     radial-gradient(1.4px 1.4px at 33% 15%, rgba(255,255,255,.5), transparent),
     linear-gradient(135deg, #1a1628 0%, #221c38 45%, #1b2c38 100%);
-  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 340px 340px, 300px 300px, 380px 380px, 260px 260px, 320px 320px, 280px 280px, 360px 360px, 300px 300px, 100% 100%;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat;
+  background-size: 140% 140%, 140% 140%, 140% 140%, 140% 140%, 140% 140%, 140% 140%, 340px 340px, 300px 300px, 380px 380px, 260px 260px, 320px 320px, 280px 280px, 360px 360px, 100% 100%;
   background-attachment: fixed;
   color: #ede7dc;
   min-height: 100vh;
+  animation: lx-nebula-drift 42s ease-in-out infinite;
+}
+
+@keyframes lx-nebula-drift {
+  0%, 100% { background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  50% { background-position: 4% 3%, -3% 4%, 2% -3%, -4% -2%, 3% 2%, -2% -4%, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+}
+
+/* 星系光斑层：几团大小不一、明暗独立起伏的柔光，叠加在主背景之上，
+   模拟哈勃望远镜星云照片那种"活的"呼吸闪烁感——不是装饰性静态光圈。 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 18vw at 18% 15%, rgba(255,143,209,0.20), transparent 70%),
+    radial-gradient(circle 14vw at 82% 25%, rgba(95,232,255,0.18), transparent 70%),
+    radial-gradient(circle 22vw at 60% 85%, rgba(255,203,97,0.16), transparent 70%),
+    radial-gradient(circle 12vw at 90% 80%, rgba(199,156,255,0.16), transparent 70%);
+  animation: lx-nebula-breathe 16s ease-in-out infinite;
+}
+@keyframes lx-nebula-breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  33% { opacity: 1; transform: scale(1.06); }
+  66% { opacity: 0.75; transform: scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body, body::before { animation: none; }
 }
 
 ::selection {

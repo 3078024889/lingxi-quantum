@@ -51,7 +51,7 @@ export default function IllustratedBookReader({
         className="relative overflow-hidden rounded-sm border border-white/10"
         style={{
           background:
-            "radial-gradient(ellipse at 30% 0%, rgba(124,224,211,0.06), transparent 55%), linear-gradient(180deg, #0b0a12 0%, #08070d 100%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(255,143,209,0.10), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(95,232,255,0.10), transparent 55%), radial-gradient(ellipse at 50% 100%, rgba(255,203,97,0.08), transparent 60%), linear-gradient(180deg, #1c1830 0%, #14101f 100%)",
           minHeight: 560,
         }}
       >
