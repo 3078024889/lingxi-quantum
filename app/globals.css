@@ -11,12 +11,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* 静态兜底天空——WebGL 不可用、或 shader 还没启动前的第一帧，
+   用的是真实蓝天的配色（深蓝到略浅的蓝），不再是紫粉色调，
+   再叠一小片珠光色斑，呼应彩虹云的主题，但克制、不喧宾夺主。 */
 body {
   position: relative;
-  background-color: #3A8DFF;
-  background-image: linear-gradient(150deg, #3A8DFF 0%, #5B7FFF 35%, #8B6FFF 65%, #C86FE8 100%);
+  background-color: #1F4FAE;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 72% 18%, rgba(255,177,222,0.20), transparent 60%),
+    radial-gradient(ellipse 55% 35% at 80% 26%, rgba(255,224,150,0.16), transparent 60%),
+    radial-gradient(ellipse 50% 32% at 88% 34%, rgba(148,234,249,0.16), transparent 60%),
+    linear-gradient(180deg, #1B3F91 0%, #2F6BC7 55%, #4C8EE0 100%);
   background-attachment: fixed;
-  color: #2a2440;
+  color: #182238;
   min-height: 100vh;
 }
 
@@ -25,14 +32,15 @@ body {
 }
 
 /* 全站所有用 bg-void / bg-void-deep 的卡片（签到框、问答框、故事卡片等），
-   追加一层流动的彩虹光泽叠加——不改变底色本身的深浅（保证文字对比度），
-   只是让原本"一块死气的纯色"，变成有呼吸、缓慢流动的多彩光泽。 */
+   追加一层流动的珠光彩虹光泽叠加——不改变底色本身的深浅（保证文字对比度），
+   只是让原本"一块死气的纯色"，变成有呼吸、缓慢流动的多彩光泽，
+   颜色与全站彩虹云背景（粉/金/绿/青/蓝）呼应，统一全站的色彩语言。 */
 .bg-void, .bg-void-deep {
   position: relative;
   background-image:
-    radial-gradient(ellipse 90% 70% at 15% 0%, rgba(120,200,255,0.18), transparent 55%),
-    radial-gradient(ellipse 80% 60% at 90% 100%, rgba(216,190,255,0.16), transparent 55%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,200,235,0.14), transparent 60%);
+    radial-gradient(ellipse 90% 70% at 15% 0%, rgba(255,177,222,0.16), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 90% 100%, rgba(148,234,249,0.16), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,224,150,0.14), transparent 60%);
   background-size: 200% 200%, 200% 200%, 200% 200%;
   animation: lx-card-shimmer 18s ease-in-out infinite;
 }
