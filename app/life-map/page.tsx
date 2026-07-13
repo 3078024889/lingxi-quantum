@@ -15,7 +15,7 @@ export default function LifeMapPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-lm2-nebula pt-16">
+      <main className="min-h-screen pt-16">
         <LifeMapFlow />
       </main>
       <Footer />

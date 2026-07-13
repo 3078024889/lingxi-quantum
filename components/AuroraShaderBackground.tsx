@@ -49,47 +49,72 @@ const FRAGMENT_SHADER = `
     return 130.0 * dot(m, g);
   }
 
-  vec3 palette(float t) {
-    // 天空蓝 -> 青光 -> 极光紫 -> 粉 -> 金 -> 翡翠绿 -> 回到天空蓝，8秒一个周期
-    vec3 c0 = vec3(0.227, 0.553, 1.000); // #3A8DFF
-    vec3 c1 = vec3(0.000, 0.898, 1.000); // #00E5FF
-    vec3 c2 = vec3(0.659, 0.333, 0.969); // #A855F7
-    vec3 c3 = vec3(1.000, 0.553, 0.922); // #FF8DEB
-    vec3 c4 = vec3(1.000, 0.847, 0.420); // #FFD86B
-    vec3 c5 = vec3(0.435, 1.000, 0.784); // #6FFFC8
-    float seg = fract(t) * 6.0;
+  // FBM：多个octave的噪声叠加，制造真实云朵那种"大团块+细节纹理"的形状，
+  // 不是单层噪声那种均匀糊状的过渡。
+  float fbm(vec2 p) {
+    float sum = 0.0;
+    float amp = 0.55;
+    float freq = 1.0;
+    for (int i = 0; i < 5; i++) {
+      sum += amp * snoise(p * freq);
+      freq *= 2.05;
+      amp *= 0.55;
+    }
+    return sum;
+  }
+
+  // 彩虹条带：真实彩虹是清晰分层的红橙黄绿蓝紫，不是平滑混合——
+  // 用离散的色带 + 很窄的过渡区，制造"条带感"而不是"渐变糊"。
+  vec3 rainbowBand(float t) {
+    t = fract(t);
+    vec3 cols[6];
+    cols[0] = vec3(1.000, 0.553, 0.922); // 粉 #FF8DEB
+    cols[1] = vec3(1.000, 0.847, 0.420); // 金 #FFD86B
+    cols[2] = vec3(0.435, 1.000, 0.784); // 翡翠绿 #6FFFC8
+    cols[3] = vec3(0.000, 0.898, 1.000); // 青 #00E5FF
+    cols[4] = vec3(0.227, 0.553, 1.000); // 天蓝 #3A8DFF
+    cols[5] = vec3(0.659, 0.333, 0.969); // 紫 #A855F7
+    float seg = t * 6.0;
     int idx = int(floor(seg));
-    float f = fract(seg);
+    float f = seg - float(idx);
+    // 窄过渡带（0.18），中间大部分是纯色平台——这才是"条带"而不是"渐变"
+    float edge = smoothstep(0.0, 0.18, f) * (1.0 - smoothstep(0.82, 1.0, f)) + smoothstep(0.82, 1.0, f);
     vec3 a; vec3 b;
-    if (idx == 0) { a = c0; b = c1; }
-    else if (idx == 1) { a = c1; b = c2; }
-    else if (idx == 2) { a = c2; b = c3; }
-    else if (idx == 3) { a = c3; b = c4; }
-    else if (idx == 4) { a = c4; b = c5; }
-    else { a = c5; b = c0; }
-    return mix(a, b, smoothstep(0.0, 1.0, f));
+    if (idx == 0) { a = cols[0]; b = cols[1]; }
+    else if (idx == 1) { a = cols[1]; b = cols[2]; }
+    else if (idx == 2) { a = cols[2]; b = cols[3]; }
+    else if (idx == 3) { a = cols[3]; b = cols[4]; }
+    else if (idx == 4) { a = cols[4]; b = cols[5]; }
+    else { a = cols[5]; b = cols[0]; }
+    float mixF = smoothstep(0.82, 1.0, f);
+    return mix(a, b, mixF);
   }
 
   void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-    vec2 p = uv * 3.0;
     float t = u_time * 0.15;
 
-    float n1 = snoise(p + vec2(t, -t * 0.6));
-    float n2 = snoise(p * 1.8 + vec2(-t * 0.4, t * 0.8) + 5.2);
-    float n3 = snoise(p * 0.6 + vec2(t * 0.25, t * 0.15) + 9.1);
-    float field = (n1 * 0.5 + n2 * 0.35 + n3 * 0.25);
+    // 真实蓝天底色：顶深底浅的天空渐变，这是"真实天空"的基础，不是彩虹本身
+    vec3 sky = mix(vec3(0.216, 0.416, 0.792), vec3(0.494, 0.706, 0.949), uv.y);
 
-    float colorPhase = field * 0.5 + t / 8.0;
-    vec3 color = palette(colorPhase);
+    // 云朵形状：FBM噪声阈值化，形成有清晰边缘的云团，而不是铺满全屏的糊状色场
+    vec2 cloudP = uv * vec2(3.2, 2.0) + vec2(t * 0.5, t * 0.12);
+    float cloudShape = fbm(cloudP);
+    float cloudMask = smoothstep(0.05, 0.55, cloudShape);
 
-    // 云雾感：叠加一层柔和的白光，随噪声起伏，模拟光从云中穿出
-    float glow = smoothstep(0.15, 0.9, n2) * 0.35;
-    color = mix(color, vec3(1.0), glow);
+    // 彩虹条带：沿着云朵纹理的另一个方向展开，制造"云隙间透出彩虹"的效果
+    float bandT = cloudShape * 0.6 + uv.x * 0.3 + t / 8.0;
+    vec3 rainbow = rainbowBand(bandT);
 
-    // 让色彩更有"云团聚散"的层次，而不是均匀铺开
-    float density = smoothstep(-0.3, 0.6, field);
-    color *= (0.75 + density * 0.4);
+    // 云朵内部叠加一层更细的纹理噪声，制造蓬松的云絮质感
+    float detail = fbm(cloudP * 2.6 + 10.0) * 0.15;
+    rainbow += detail;
+
+    // 光从云中穿出的高光——噪声高值区域叠加白光
+    float glow = smoothstep(0.35, 0.75, cloudShape) * 0.4;
+    rainbow = mix(rainbow, vec3(1.0), glow);
+
+    vec3 color = mix(sky, rainbow, cloudMask);
 
     gl_FragColor = vec4(color, 1.0);
   }
