@@ -2,29 +2,39 @@
 
 import { useEffect, useRef } from "react";
 
-// 真实彩虹云场 Shader 背景——参照"贝母云 / 云彩虹（cloud iridescence）"实拍：
-// 画面主体是干净、饱和的蓝天，云只占一小片，是稀薄、拉丝状的卷云，
-// 色彩不是铺满整片云的实心彩虹，而是沿着云的稀薄边缘、以柔和连续的珠光色
-// （粉→金→绿→青→蓝）一圈圈晕开，云的浓密处仍然是近白色——这是光通过
-// 极小冰晶衍射的真实物理观感，不是"给云涂色"。整个场用逐帧噪声驱动，
-// 云的丝缕形状、色彩的相位都在缓慢流动漂移，画面是活的。
+// 彩虹云海背景——不再是纯程序生成的噪声云，而是直接用你拍摄/收集的三张
+// 真实云彩虹照片（已裁掉地面建筑和水印，只留蓝天+七彩云）作为贴图，
+// GPU 逐帧对采样坐标做一层很轻、低频的水波扭曲，让画面像"隔着一层缓慢
+// 流动的水面"看这片天空——云的轮廓、色彩都是照片本身真实的样子，动的
+// 只是那层温柔的波纹，不会把照片撕成噪点。三张照片之间每隔一段时间
+// 缓慢交叉溶解切换，整个场感觉是活的、在呼吸，但底子始终是真实照片。
 //
-// 容错设计：WebGL 上下文创建失败、shader 编译失败、或任何运行时错误，
-// 都会被捕获，画布直接不显示——这时 globals.css 里那个静态天空渐变
-// （已经验证过在所有设备上都能正常显示）会顶上来，绝不会出现白屏。
+// 容错设计：WebGL 不可用、贴图加载失败、shader 编译失败等任何问题，
+// 都会被捕获，画布直接不显示——这时 globals.css 里那张静态天空照片
+// （同一批真实照片之一）会顶上来，绝不会出现白屏或噪点。
 
 const VERTEX_SHADER = `
+  varying vec2 v_uv;
   void main() {
+    v_uv = position.xy * 0.5 + 0.5;
     gl_Position = vec4(position, 1.0);
   }
 `;
 
 const FRAGMENT_SHADER = `
   precision highp float;
+  varying vec2 v_uv;
   uniform vec2 u_resolution;
   uniform float u_time;
+  uniform sampler2D u_tex0;
+  uniform sampler2D u_tex1;
+  uniform sampler2D u_tex2;
+  uniform vec2 u_texSize0;
+  uniform vec2 u_texSize1;
+  uniform vec2 u_texSize2;
 
-  // Simplex noise（Ashima Arts 经典实现，GLSL标准写法）
+  // Simplex noise（Ashima Arts 经典实现）——这里只用它做非常低频、柔和的
+  // 位移场，不用来生成云的形状本身，云的形状已经是照片里真实的样子了。
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -52,103 +62,81 @@ const FRAGMENT_SHADER = `
     return 130.0 * dot(m, g);
   }
 
-  // FBM：多个octave的噪声叠加，制造真实云朵那种"大团块+细节纹理"的形状。
-  float fbm(vec2 p) {
-    float sum = 0.0;
-    float amp = 0.55;
-    float freq = 1.0;
-    for (int i = 0; i < 5; i++) {
-      sum += amp * snoise(p * freq);
-      freq *= 2.05;
-      amp *= 0.55;
+  // 把屏幕 uv 按 "cover" 方式映射到某张贴图自己的坐标系里——
+  // 保证照片不被拉伸变形，永远铺满整个视口并居中裁切。
+  vec2 coverUV(vec2 uv, vec2 screenRes, vec2 texRes) {
+    float screenAspect = screenRes.x / screenRes.y;
+    float texAspect = texRes.x / texRes.y;
+    vec2 scale = vec2(1.0);
+    if (screenAspect > texAspect) {
+      scale.y = texAspect / screenAspect;
+    } else {
+      scale.x = screenAspect / texAspect;
     }
-    return sum;
+    return (uv - 0.5) * scale + 0.5;
   }
 
-  // 域扭曲（domain warp）：用噪声去扰动噪声的采样坐标，
-  // 这是让噪声场从"团块状"变成实拍卷云那种"拉丝、飘带状"纹理的关键，
-  // 也是让整个场看起来在缓慢流动、卷曲、而不是原地闪烁的关键。
-  vec2 warp(vec2 p, float t) {
-    vec2 q = vec2(fbm(p + vec2(0.0, 0.0) + t * 0.06), fbm(p + vec2(5.2, 1.3) - t * 0.05));
-    vec2 r = vec2(
-      fbm(p + 3.2 * q + vec2(1.7, 9.2) + t * 0.09),
-      fbm(p + 3.2 * q + vec2(8.3, 2.8) - t * 0.07)
-    );
-    return r;
+  // 极慢的镜头漂移（缩放+平移），配合水波扭曲，让"活的场"不仅是纹理在
+  // 波动，画面本身也像被一阵很慢的风推着缓缓游移。
+  vec2 drift(vec2 uv, float t, float seed) {
+    float zoom = 1.0 + 0.05 * sin(t * 0.05 + seed);
+    vec2 pan = vec2(sin(t * 0.035 + seed * 3.1), cos(t * 0.028 + seed * 2.3)) * 0.03;
+    return (uv - 0.5) * zoom + 0.5 + pan;
   }
 
-  // 连续珠光色谱：不是分段色带，是像贝母云/油膜那样柔和连续过渡的彩虹相位，
-  // 粉紫 → 金黄 → 嫩绿 → 青 → 天蓝 → 回到粉紫，循环无缝。
-  vec3 iridescence(float t) {
-    vec3 c1 = vec3(1.000, 0.694, 0.870); // 珠光粉  #FFB1DE
-    vec3 c2 = vec3(1.000, 0.878, 0.588); // 暖金    #FFE096
-    vec3 c3 = vec3(0.729, 0.980, 0.780); // 嫩绿    #BAFAC7
-    vec3 c4 = vec3(0.580, 0.918, 0.976); // 浅青    #94EAF9
-    vec3 c5 = vec3(0.478, 0.663, 0.980); // 天蓝    #7AA9FA
-    vec3 c6 = vec3(0.792, 0.686, 0.984); // 淡紫    #CAAFFB
-    t = fract(t);
-    float seg = t * 6.0;
-    int idx = int(floor(seg));
-    float f = smoothstep(0.0, 1.0, seg - float(idx));
-    if (idx == 0) return mix(c1, c2, f);
-    if (idx == 1) return mix(c2, c3, f);
-    if (idx == 2) return mix(c3, c4, f);
-    if (idx == 3) return mix(c4, c5, f);
-    if (idx == 4) return mix(c5, c6, f);
-    return mix(c6, c1, f);
+  vec3 sampleSky(int idx, vec2 uv, float t) {
+    vec2 cuv;
+    vec2 ruv = uv;
+    // 低频水波：两层不同频率、不同速度的噪声叠加做位移场，振幅很小，
+    // 只是让画面"呼吸"，不会破坏照片本身的清晰度和形状。
+    float n1 = snoise(uv * 2.2 + vec2(t * 0.10, -t * 0.07) + float(idx) * 11.0);
+    float n2 = snoise(uv * 4.1 - vec2(t * 0.06, t * 0.05) + float(idx) * 31.0);
+    vec2 rippleOffset = vec2(n1, n2) * 0.012;
+
+    if (idx == 0) {
+      cuv = coverUV(drift(ruv, t, 0.0) + rippleOffset, u_resolution, u_texSize0);
+      return texture2D(u_tex0, clamp(cuv, 0.0, 1.0)).rgb;
+    } else if (idx == 1) {
+      cuv = coverUV(drift(ruv, t, 7.0) + rippleOffset, u_resolution, u_texSize1);
+      return texture2D(u_tex1, clamp(cuv, 0.0, 1.0)).rgb;
+    } else {
+      cuv = coverUV(drift(ruv, t, 14.0) + rippleOffset, u_resolution, u_texSize2);
+      return texture2D(u_tex2, clamp(cuv, 0.0, 1.0)).rgb;
+    }
   }
 
   void main() {
-    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-    vec2 auv = uv;
-    auv.x *= u_resolution.x / u_resolution.y;
-    float t = u_time * 0.16;
+    vec2 uv = v_uv;
+    float t = u_time * 0.5;
 
-    // 真实蓝天底色：顶部深邃、地平线附近略浅，饱和干净——画面的主角是这片蓝天
-    vec3 sky = mix(vec3(0.243, 0.514, 0.867), vec3(0.129, 0.318, 0.706), uv.y);
+    // 三张真实照片轮流展示，每张停留一段时间后缓慢交叉溶解到下一张——
+    // 云彩流动漂移的同时，画面本身也在缓缓"转场"，加强"活的场"的感觉。
+    float cycle = 16.0;
+    float total = cycle * 3.0;
+    float phase = mod(u_time, total);
+    int idxA = int(mod(floor(phase / cycle), 3.0));
+    int idxB = int(mod(floor(phase / cycle) + 1.0, 3.0));
+    float localT = mod(phase, cycle) / cycle;
+    float blend = smoothstep(0.72, 1.0, localT);
 
-    // 卷云的拉丝纹理：整体沿一个方向拉伸压扁，再做域扭曲，
-    // 出来的形状是稀薄、飘逸的丝带，而不是浓密云团
-    vec2 cloudP = vec2(auv.x * 1.15, auv.y * 3.4) + vec2(t * 0.42, t * 0.05);
-    vec2 w = warp(cloudP, t);
-    float density = fbm(cloudP + 2.6 * w);
+    vec3 colorA = sampleSky(idxA, uv, t);
+    vec3 colorB = blend > 0.001 ? sampleSky(idxB, uv, t) : colorA;
+    vec3 color = mix(colorA, colorB, blend);
 
-    // 云量控制得很稀薄：大部分画面留白给纯蓝天，只有少数丝缕状区域显现云和彩虹
-    float cloudMask = smoothstep(0.18, 0.58, density) * (1.0 - smoothstep(0.86, 1.05, density));
-
-    // 珠光彩虹只集中在云"稀薄的边缘"最强，云心浓处反而泛白——
-    // 这正是真实衍射云彩的观感：edge 在过渡区取最大值
-    float edge = smoothstep(0.18, 0.42, density) * (1.0 - smoothstep(0.5, 0.86, density));
-
-    // 色相相位：用另一层噪声驱动，让彩虹色带本身也随时间蜿蜒流动，
-    // 而不是固定贴在某个位置不动
-    float huePhase = fbm(cloudP * 1.6 + w * 1.4 + t * 0.12) * 0.9 + auv.x * 0.12 + t * 0.05;
-    vec3 iri = iridescence(huePhase);
-
-    // 云体本身的底色：从近白（云心）到极浅蓝白（云边）
-    vec3 cloudBase = mix(vec3(0.86, 0.93, 0.99), vec3(1.0), smoothstep(0.4, 0.9, density));
-
-    // 云体 = 白色云雾 与 珠光彩虹 按 edge 强度混合
-    vec3 cloudColor = mix(cloudBase, iri, clamp(edge * 1.5, 0.0, 0.92));
-
-    // 极细的絮状细节噪声，避免云面看起来是光滑色块
-    float detail = fbm(cloudP * 4.5 + 20.0 + t * 0.2) * 0.05;
-    cloudColor += detail;
-
-    // 云心透出的柔光高光
-    float glow = smoothstep(0.55, 0.95, density) * 0.35;
-    cloudColor = mix(cloudColor, vec3(1.0), glow);
-
-    vec3 color = mix(sky, cloudColor, cloudMask);
-
-    // 极轻微的高层丝云叠加一层几乎不带色的白纱，增加流动的层次感，
-    // 不额外占用彩虹的视觉份额
-    float veil = smoothstep(0.5, 0.95, fbm(auv * vec2(2.0, 1.2) + vec2(-t * 0.25, t * 0.03) + 40.0));
-    color = mix(color, vec3(1.0), veil * 0.05);
+    // 极轻微的暗角，让四周略微收敛，视觉重心留在画面中central，
+    // 同时也让贴图边缘的裁切不那么突兀。
+    float vig = smoothstep(1.05, 0.35, length((uv - 0.5) * vec2(1.15, 1.0)));
+    color *= mix(0.94, 1.0, vig);
 
     gl_FragColor = vec4(color, 1.0);
   }
 `;
+
+const TEXTURE_PATHS = [
+  "/images/sky/sky1.jpg",
+  "/images/sky/sky2.jpg",
+  "/images/sky/sky3.jpg",
+];
 
 export default function AuroraShaderBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -168,12 +156,42 @@ export default function AuroraShaderBackground() {
         renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: "low-power" });
         if (disposed) { renderer.dispose(); return; }
 
+        const loader = new THREE.TextureLoader();
+        const textures = await Promise.all(
+          TEXTURE_PATHS.map(
+            (src) =>
+              new Promise<import("three").Texture>((resolve, reject) => {
+                loader.load(
+                  src,
+                  (tex) => {
+                    tex.colorSpace = THREE.SRGBColorSpace;
+                    tex.wrapS = THREE.ClampToEdgeWrapping;
+                    tex.wrapT = THREE.ClampToEdgeWrapping;
+                    tex.minFilter = THREE.LinearMipmapLinearFilter;
+                    tex.magFilter = THREE.LinearFilter;
+                    tex.generateMipmaps = true;
+                    resolve(tex);
+                  },
+                  undefined,
+                  reject
+                );
+              })
+          )
+        );
+        if (disposed) { renderer.dispose(); return; }
+
         const scene = new THREE.Scene();
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
         const geometry = new THREE.PlaneGeometry(2, 2);
         const uniforms = {
           u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
           u_time: { value: 0 },
+          u_tex0: { value: textures[0] },
+          u_tex1: { value: textures[1] },
+          u_tex2: { value: textures[2] },
+          u_texSize0: { value: new THREE.Vector2((textures[0].image as HTMLImageElement).width, (textures[0].image as HTMLImageElement).height) },
+          u_texSize1: { value: new THREE.Vector2((textures[1].image as HTMLImageElement).width, (textures[1].image as HTMLImageElement).height) },
+          u_texSize2: { value: new THREE.Vector2((textures[2].image as HTMLImageElement).width, (textures[2].image as HTMLImageElement).height) },
         };
         const material = new THREE.ShaderMaterial({
           vertexShader: VERTEX_SHADER,
@@ -206,9 +224,9 @@ export default function AuroraShaderBackground() {
           window.removeEventListener("resize", setSize);
         };
       } catch (e) {
-        // WebGL 不可用、shader 编译失败等任何问题——静默失败，画布保持隐藏，
-        // globals.css 的静态渐变兜底会顶上来，不影响页面正常使用。
-        console.warn("彩虹流体背景未能启动，使用静态渐变兜底:", e);
+        // WebGL 不可用、贴图加载失败、shader 编译失败等任何问题——静默失败，
+        // 画布保持隐藏，globals.css 的静态照片兜底会顶上来，不影响页面正常使用。
+        console.warn("彩虹云海背景未能启动，使用静态照片兜底:", e);
       }
     })();
 

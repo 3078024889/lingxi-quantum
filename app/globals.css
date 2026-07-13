@@ -12,16 +12,14 @@ html {
 }
 
 /* 静态兜底天空——WebGL 不可用、或 shader 还没启动前的第一帧，
-   用的是真实蓝天的配色（深蓝到略浅的蓝），不再是紫粉色调，
-   再叠一小片珠光色斑，呼应彩虹云的主题，但克制、不喧宾夺主。 */
+   直接用真实彩虹云照片本身（sky1.jpg，同一批用在 Shader 里的照片之一），
+   不再是任何程序生成的渐变——保证兜底状态下看到的也是货真价实的天空。 */
 body {
   position: relative;
   background-color: #1F4FAE;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 72% 18%, rgba(255,177,222,0.20), transparent 60%),
-    radial-gradient(ellipse 55% 35% at 80% 26%, rgba(255,224,150,0.16), transparent 60%),
-    radial-gradient(ellipse 50% 32% at 88% 34%, rgba(148,234,249,0.16), transparent 60%),
-    linear-gradient(180deg, #1B3F91 0%, #2F6BC7 55%, #4C8EE0 100%);
+  background-image: url("/images/sky/sky1.jpg");
+  background-size: cover;
+  background-position: center;
   background-attachment: fixed;
   color: #182238;
   min-height: 100vh;
