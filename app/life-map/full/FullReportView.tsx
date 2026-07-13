@@ -43,6 +43,7 @@ export default function FullReportView({ id }: { id: string }) {
 
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
   const [downloading, setDownloading] = useState(false);
+  const [printMode, setPrintMode] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
   const [sections, setSections] = useState<string[]>([]);
   const [coreTypeName, setCoreTypeName] = useState("");
@@ -149,13 +150,17 @@ export default function FullReportView({ id }: { id: string }) {
   const downloadPdf = async () => {
     if (!reportRef.current) return;
     setDownloading(true);
+    setPrintMode(true);
+    // 等两帧，确保打印模式的样式（彩虹背景+黑字）真的重绘完成，再截图，
+    // 不然html2canvas可能截到样式切换前的旧画面。
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     try {
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),
         import("jspdf"),
       ]);
       const canvas = await html2canvas(reportRef.current, {
-        backgroundColor: "#1c1830",
+        backgroundColor: null, // 透明背景，让彩虹渐变（打印模式的css）本身作为唯一背景来源
         scale: 2,
         useCORS: true,
       });
@@ -182,11 +187,25 @@ export default function FullReportView({ id }: { id: string }) {
       alert(t("PDF 生成失败，请稍后再试，或改用浏览器打印功能另存为 PDF。", "PDF generation failed — please try again, or use your browser's print-to-PDF as a fallback."));
     } finally {
       setDownloading(false);
+      setPrintMode(false);
     }
   };
 
   return (
     <div className="px-6 py-20 print:py-6">
+      <style>{`
+        .lm2-print-mode {
+          background: linear-gradient(135deg,
+            #ffb3dd 0%, #ffd9a0 18%, #b3f0d4 36%, #a3e8ff 54%, #d4b3ff 72%, #ffb3dd 100%);
+          border-radius: 4px;
+        }
+        .lm2-print-mode h1,
+        .lm2-print-mode p,
+        .lm2-print-mode span,
+        .lm2-print-mode div { color: #241a30 !important; }
+        .lm2-print-mode .lm2-print-title { color: #4a2a5c !important; font-weight: 600; }
+        .lm2-print-mode svg text { fill: #241a30 !important; }
+      `}</style>
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between print:hidden">
           <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
@@ -200,8 +219,8 @@ export default function FullReportView({ id }: { id: string }) {
             {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
           </button>
         </div>
-        <div ref={reportRef} className="bg-lm2-bg px-1 py-4">
-        <h1 className="mt-4 font-display text-3xl font-light text-lm2-text">{coreTypeName}</h1>
+        <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-bg px-1 py-4"}>
+        <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>
 
         {facts && (
           <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
