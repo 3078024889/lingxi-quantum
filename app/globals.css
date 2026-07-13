@@ -51,6 +51,37 @@ body {
   .bg-void, .bg-void-deep, .bg-lm2-card { animation: none; }
 }
 
+/* 文字/卡片对比度修复——像"创造并非单一来源"这几个卡片里的小标签
+   （FIELD SOURCE / CONSCIOUS LAYERS 这类）、说明性文字，用的是当年为
+   纯色浅底设计的低透明度颜色（比如 text-lattice/60、text-bone-dim/50），
+   放在如今这片更亮、更花的真实彩虹云视频背景上，对比度不够，几乎看
+   不清。这里直接把这些"半透明强调色/说明文字"统一收紧到接近不透明，
+   不用逐个文件去改 class，全站生效。
+   text-lattice/0（悬停时才淡入的那种）不在此列，保持原样不动。 */
+.text-lattice\/60, .text-lattice\/70, .text-lattice\/80, .text-lattice\/85 {
+  color: rgba(6, 116, 143, 0.96) !important;
+}
+.text-amber\/70, .text-amber\/80, .text-amber\/90 {
+  color: rgba(168, 108, 10, 0.96) !important;
+}
+.text-bone-dim\/40, .text-bone-dim\/50, .text-bone-dim\/60,
+.text-bone-dim\/70, .text-bone-dim\/80 {
+  color: rgba(58, 51, 82, 0.92) !important;
+}
+.text-lm2-text-dim\/40, .text-lm2-text-dim\/50,
+.text-lm2-text-dim\/60, .text-lm2-text-dim\/70 {
+  color: rgba(58, 51, 82, 0.92) !important;
+}
+
+/* 半透明卡片底色（意识显化 / 创造源 这两张卡）原本是 40%～60% 的浅色，
+   在视频背景上几乎变成"隐形"，文字直接飘在杂色画面上。收紧到接近
+   不透明的毛玻璃质感，卡片轮廓和文字对比度才稳定，不受视频当下画面
+   亮暗影响。 */
+.bg-void-deep\/40, .bg-void-deep\/60 {
+  background-color: rgba(250, 247, 255, 0.86) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
 /* 生命图谱完整报告的容器——半透明毛玻璃，让身后流动的彩虹云视频背景
    透出来，同时保持文字足够的对比度可读。跟 bg-lm2-bg（表单输入框用的
    不透明浅色）分开维护，不影响输入框的可用性。 */

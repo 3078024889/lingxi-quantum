@@ -88,7 +88,8 @@ const FRAGMENT_SHADER = `
   }
 `;
 
-const VIDEO_SRC = "/images/sky/rainbow-sky.mp4";
+const VIDEO_SRC_WEBM = "/images/sky/rainbow-sky.webm";
+const VIDEO_SRC_MP4 = "/images/sky/rainbow-sky.mp4";
 const POSTER_SRC = "/images/sky/rainbow-sky-poster.jpg";
 
 export default function AuroraShaderBackground() {
@@ -109,14 +110,38 @@ export default function AuroraShaderBackground() {
         const THREE = await import("three");
 
         const video = document.createElement("video");
-        video.src = VIDEO_SRC;
+        video.setAttribute("webkit-playsinline", "true");
+        video.setAttribute("playsinline", "true");
+        video.preload = "auto";
         video.poster = POSTER_SRC;
         video.muted = true;
+        video.defaultMuted = true;
         video.loop = true;
         video.playsInline = true;
         video.autoplay = true;
-        video.crossOrigin = "anonymous";
+        // 同时提供 WebM(VP9) 和 MP4(H.264) 两种编码，浏览器会自动挑选它
+        // 支持的那个——不同浏览器/系统对这两种编码的支持情况不一样，只提供
+        // 单一格式在某些环境下会直接播放失败（这正是之前排查到的根因）。
+        const sourceWebm = document.createElement("source");
+        sourceWebm.src = VIDEO_SRC_WEBM;
+        sourceWebm.type = "video/webm";
+        const sourceMp4 = document.createElement("source");
+        sourceMp4.src = VIDEO_SRC_MP4;
+        sourceMp4.type = "video/mp4";
+        video.appendChild(sourceWebm);
+        video.appendChild(sourceMp4);
+        // 移动端（尤其 iOS Safari）对"游离于文档之外"的 video 元素用作
+        // WebGL 贴图纹理时经常直接罢工——必须真的挂进 DOM 里（视觉上完全
+        // 隐藏，不占布局）才能稳定解码播放，这是之前手机上放不出视频、
+        // 只能看到模糊兜底图的根本原因之一。
+        video.style.position = "fixed";
+        video.style.width = "1px";
+        video.style.height = "1px";
+        video.style.opacity = "0";
+        video.style.pointerEvents = "none";
+        document.body.appendChild(video);
         videoRef.current = video;
+        video.load();
 
         await new Promise<void>((resolve, reject) => {
           video.addEventListener("loadeddata", () => resolve(), { once: true });
@@ -145,7 +170,7 @@ export default function AuroraShaderBackground() {
         const geometry = new THREE.PlaneGeometry(2, 2);
         const uniforms = {
           u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-          u_texSize: { value: new THREE.Vector2(video.videoWidth || 1680, video.videoHeight || 792) },
+          u_texSize: { value: new THREE.Vector2(video.videoWidth || 1928, video.videoHeight || 908) },
           u_time: { value: 0 },
           u_video: { value: videoTexture },
         };
@@ -160,7 +185,7 @@ export default function AuroraShaderBackground() {
         const setSize = () => {
           const w = window.innerWidth, h = window.innerHeight;
           renderer!.setSize(w, h, false);
-          renderer!.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+          renderer!.setPixelRatio(Math.min(window.devicePixelRatio, 2));
           uniforms.u_resolution.value.set(w, h);
         };
         setSize();
@@ -194,6 +219,7 @@ export default function AuroraShaderBackground() {
         videoRef.current.pause();
         videoRef.current.src = "";
         videoRef.current.load();
+        videoRef.current.remove();
       }
     };
   }, []);
