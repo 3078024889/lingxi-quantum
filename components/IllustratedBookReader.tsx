@@ -65,7 +65,7 @@ export default function IllustratedBookReader({
                 <Bi zh="灵犀 · 多维叙事" en="Lingxi · Dimensional Narrative" />
               </p>
               <div
-                className="lx-aurora-flip mt-6 aspect-[3/2.2] w-full max-w-sm overflow-hidden rounded-sm"
+                className="mt-6 aspect-[3/2.2] w-full max-w-sm overflow-hidden rounded-sm"
                 dangerouslySetInnerHTML={{ __html: entry.cover }}
               />
               <h2 className="mt-6 font-display text-3xl font-light leading-snug text-bone sm:text-4xl">
@@ -80,7 +80,7 @@ export default function IllustratedBookReader({
           ) : page ? (
             <div className="flex min-h-[480px] flex-col">
               <div
-                className="lx-aurora-flip aspect-[3/2] w-full overflow-hidden rounded-sm shadow-lg"
+                className="aspect-[3/2] w-full overflow-hidden rounded-sm shadow-lg"
                 dangerouslySetInnerHTML={{ __html: page.art }}
               />
               <div className="mt-5 text-center">

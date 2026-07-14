@@ -11,131 +11,69 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 静态兜底天空——WebGL 不可用、视频自动播放被拦截、或 shader 还没启动前
-   的第一帧，用的是同一支彩虹云视频的海报帧（第一帧截图），保证兜底状态
-   下看到的也是同一片真实天空，只是不动而已。 */
+/* ============ Rainbow Celestial Aurora Design System ============
+   全站基底不再是"浅色玻璃 + 深紫字"，反过来：深空底色 + 珍珠白/黄金/
+   极光青文字。这样不管页面上有没有视频，文字对比度都是稳的，不需要
+   再靠光晕、强制不透明这类补丁去补——补丁改的是症状，改主题基调才是
+   在改病根。
+
+   页面背景本身是一层深邃、缓慢流动的极光渐变（纯 CSS，矢量级清晰，
+   不存在分辨率上限），视频只在页面里特定的"取景窗"（AuroraVideoBand
+   组件）里出现，按视频原始像素尺寸展示、不做拉伸铺满，所以视频区域
+   永远是清晰的。 */
 body {
   position: relative;
-  background-color: #1F4FAE;
-  background-image: url("/images/sky/rainbow-sky-poster.jpg");
-  background-size: cover;
-  background-position: center;
+  background-color: #0c0a1f;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 15% -10%, rgba(255,159,214,0.16), transparent 55%),
+    radial-gradient(ellipse 65% 55% at 100% 10%, rgba(127,239,224,0.14), transparent 55%),
+    radial-gradient(ellipse 60% 60% at 50% 100%, rgba(201,166,255,0.16), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 85% 90%, rgba(240,200,104,0.12), transparent 55%),
+    linear-gradient(160deg, #0a0818 0%, #12102a 45%, #191333 75%, #0e1a2e 100%);
   background-attachment: fixed;
-  color: #182238;
+  background-size: 140% 140%, 140% 140%, 140% 140%, 140% 140%, 100% 100%;
+  animation: lx-body-aurora 50s ease-in-out infinite;
+  color: #F7F3EA;
   min-height: 100vh;
 }
-
+@keyframes lx-body-aurora {
+  0%, 100% { background-position: 0% 0%, 100% 0%, 50% 100%, 90% 90%, 0% 0%; }
+  50% { background-position: 12% 8%, 85% 15%, 45% 88%, 78% 82%, 0% 0%; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .lx-shader-canvas { display: none !important; }
+  body { animation: none; }
 }
 
-/* 全站所有用 bg-void / bg-void-deep 的卡片（签到框、问答框、故事卡片等），
-   以及生命图谱报告里的 bg-lm2-card 子卡片（星盘、五行、紫微、频率图），
-   追加一层流动的珠光彩虹光泽叠加——不改变底色本身的深浅（保证文字对比度），
-   只是让原本"一块死气的纯色"，变成有呼吸、缓慢流动的多彩光泽，
-   颜色与全站彩虹云背景（粉/金/绿/青/蓝）呼应，统一全站的色彩语言。 */
-.bg-void, .bg-void-deep, .bg-lm2-card {
+/* Aurora Crystal Glass——全站卡片统一底样：深色水晶玻璃 + 一圈极光描边
+   微光，取代之前的浅色玻璃。金/粉/紫/青四色描边缓慢流动，卡片本身够
+   暗，文字（珍珠白/黄金/极光青）天然清晰，不需要额外处理。 */
+.bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report {
   position: relative;
   background-image:
-    radial-gradient(ellipse 90% 70% at 15% 0%, rgba(255,177,222,0.16), transparent 55%),
-    radial-gradient(ellipse 80% 60% at 90% 100%, rgba(148,234,249,0.16), transparent 55%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,224,150,0.14), transparent 60%);
+    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(240,200,104,0.10), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(127,239,224,0.10), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,159,214,0.08), transparent 60%);
   background-size: 200% 200%, 200% 200%, 200% 200%;
-  animation: lx-card-shimmer 18s ease-in-out infinite;
+  animation: lx-card-shimmer 20s ease-in-out infinite;
+  border: 1px solid rgba(240,200,104,0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset, 0 8px 32px rgba(0,0,0,0.35);
 }
 @keyframes lx-card-shimmer {
   0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
   50% { background-position: 20% 15%, 80% 85%, 40% 60%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bg-void, .bg-void-deep, .bg-lm2-card { animation: none; }
+  .bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report { animation: none; }
 }
 
-/* 文字/卡片对比度修复——像"创造并非单一来源"这几个卡片里的小标签
-   （FIELD SOURCE / CONSCIOUS LAYERS 这类）、说明性文字，用的是当年为
-   纯色浅底设计的低透明度颜色（比如 text-lattice/60、text-bone-dim/50），
-   放在如今这片更亮、更花的真实彩虹云视频背景上，对比度不够，几乎看
-   不清。这里直接把这些"半透明强调色/说明文字"统一收紧到接近不透明，
-   不用逐个文件去改 class，全站生效。
-   text-lattice/0（悬停时才淡入的那种）不在此列，保持原样不动。 */
-.text-lattice\/60, .text-lattice\/70, .text-lattice\/80, .text-lattice\/85 {
-  color: rgba(6, 116, 143, 0.96) !important;
-}
-.text-amber\/70, .text-amber\/80, .text-amber\/90 {
-  color: rgba(168, 108, 10, 0.96) !important;
-}
-.text-bone-dim\/40, .text-bone-dim\/50, .text-bone-dim\/60,
-.text-bone-dim\/70, .text-bone-dim\/80 {
-  color: rgba(58, 51, 82, 0.92) !important;
-}
-.text-lm2-text-dim\/40, .text-lm2-text-dim\/50,
-.text-lm2-text-dim\/60, .text-lm2-text-dim\/70 {
-  color: rgba(58, 51, 82, 0.92) !important;
-}
-
-/* 深色正文/标题字（text-bone、text-lm2-text 这一整套，全站 389 处用到，
-   是绝大多数页面标题和正文的默认颜色）大量是直接摆在视频背景上、没有
-   任何卡片托底的——比如生命图谱首屏那句"每个人来到这个世界……"、
-   探索梦境页的"显化与梦境解读"。这类文字本身颜色没问题，问题是背景
-   现在是亮暗不断变化的真实视频，纯色文字在视频亮的地方就会读不清。
-   做法是给文字加一圈柔和的浅色光晕（text-shadow 多层叠加），不改变
-   文字本身的颜色，让它在视频任何亮度区域上都能"浮"出来；这圈光晕在
-   卡片背景（本来就是浅色）上几乎不可见，不会破坏原本在卡片里的观感，
-   只在文字直接盖在视频上时起作用。 */
-.text-bone, .text-lm2-text,
-.text-bone-dim, .text-lm2-text-dim,
-.text-lattice, .text-amber, .text-rose, .text-violet,
-.text-lm2-violet, .text-lm2-rose, .text-lm2-amber, .text-lm2-mint, .text-lm2-sky {
-  text-shadow:
-    0 1px 3px rgba(255, 255, 255, 0.75),
-    0 0 10px rgba(255, 255, 255, 0.55),
-    0 0 22px rgba(255, 255, 255, 0.3);
-}
-/* 反过来，白色/浅色文字（引言气泡之外，偶尔直接摆在视频上的白字标题）
-   在视频很亮的区域也会隐形，配一圈深色光晕对称处理。 */
-.text-white {
-  text-shadow:
-    0 1px 3px rgba(10, 10, 20, 0.5),
-    0 0 14px rgba(10, 10, 20, 0.35);
-}
-/* 半透明卡片底色（意识显化 / 创造源 这两张卡）原本是 40%～60% 的浅色，
-   在视频背景上几乎变成"隐形"，文字直接飘在杂色画面上。收紧到接近
-   不透明的毛玻璃质感，卡片轮廓和文字对比度才稳定，不受视频当下画面
-   亮暗影响。 */
-.bg-void-deep\/40, .bg-void-deep\/60 {
-  background-color: rgba(250, 247, 255, 0.86) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-/* 生命图谱完整报告的容器——半透明毛玻璃，让身后流动的彩虹云视频背景
-   透出来，同时保持文字足够的对比度可读。跟 bg-lm2-bg（表单输入框用的
-   不透明浅色）分开维护，不影响输入框的可用性。 */
-.bg-lm2-report {
-  position: relative;
-  background: rgba(255, 255, 255, 0.66);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  background-image:
-    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(255,177,222,0.18), transparent 55%),
-    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(148,234,249,0.18), transparent 55%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,224,150,0.14), transparent 60%);
-  background-size: 200% 200%, 200% 200%, 200% 200%;
-  animation: lx-card-shimmer 22s ease-in-out infinite;
-  border-radius: 4px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .bg-lm2-report { animation: none; }
-}
-
-/* 119篇故事插画：原本是深色底配白字的手绘SVG，逐一重画工作量太大，
-   用滤镜整体翻转成亮色底配深字——invert先把明暗关系倒过来，hue-rotate
-   把色相转回接近原本的色彩关系，saturate补偿invert常见的褪色感。 */
-.lx-aurora-flip {
-  filter: invert(0.92) hue-rotate(180deg) saturate(1.25) brightness(1.05);
-}
+/* 119篇故事插画：原本就是深色底配白字的手绘 SVG，之前为了配合浅色
+   主题临时做了反色滤镜，现在主题本身换回深色系，插画直接用原色即可，
+   已在 IllustratedBookReader 里去掉了 lx-aurora-flip 这层滤镜类。 */
 
 ::selection {
-  background: rgba(124, 224, 211, 0.25);
+  background: rgba(127, 239, 224, 0.28);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -151,7 +89,7 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(124, 224, 211, 0.55),
+    rgba(127, 239, 224, 0.55),
     transparent
   );
   height: 1px;
@@ -217,4 +155,30 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
   .page-flip { animation: none; }
+}
+
+/* ============ Aurora Video Band ============
+   页面里按视频原始像素尺寸展示的"取景窗"，绝不放大超过素材本身分辨率
+   ——这是这一版解决"模糊"问题的核心手段：不铺满、不拉伸，永远 1:1 或
+   缩小，never 放大。超出视频宽度的两侧留白用深空渐变自然过渡，不是
+   生硬裁切。 */
+.lx-video-band {
+  position: relative;
+  width: 100%;
+  max-width: 2560px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.lx-video-band video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.lx-video-band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(10,8,24,0) 60%, rgba(10,8,24,0.55) 100%);
 }

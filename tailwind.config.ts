@@ -5,27 +5,37 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        void: "#eef4ff",
-        "void-deep": "#f5eeff",
-        lattice: "#0891b2",
-        "lattice-dim": "#0e7490",
-        amber: "#c98a1f",
-        rose: "#d6389e",
-        violet: "#8b5cf6",
-        bone: "#2a2440",
-        "bone-dim": "#5a5270",
-        "lm-violet": "#8b5cf6",
-        // 生命图谱主题：跟全站统一为同一套"黎明天空"亮色系，不再单独维护一套深色 token
-        "lm2-bg": "#eef4ff",
-        "lm2-bg-deep": "#f5eeff",
-        "lm2-card": "rgba(255,255,255,0.55)",
-        "lm2-text": "#2a2440",
-        "lm2-text-dim": "#5a5270",
-        "lm2-rose": "#d6389e",
-        "lm2-amber": "#c98a1f",
-        "lm2-mint": "#0d9488",
-        "lm2-sky": "#0891b2",
-        "lm2-violet": "#8b5cf6",
+        // ===== Rainbow Celestial Aurora Design System =====
+        // 深色玻璃卡片基底（Aurora Crystal Glass）。之前 void/lm2-bg 这套是
+        // 浅色（#eef4ff），配合当年的浅色渐变背景；现在全站背景是真实的
+        // 夜空极光视频/深色星云渐变，卡片基底也整体反转成深色玻璃——
+        // 这样文字（珍珠白/黄金/极光青）天然就有对比度，不需要再叠光晕
+        // 之类的补丁。
+        void: "#141230",
+        "void-deep": "#1b1740",
+        lattice: "#7FEFE0",
+        "lattice-dim": "#5FD4C4",
+        amber: "#F0C868",
+        rose: "#FF9FD6",
+        violet: "#C9A6FF",
+        bone: "#F7F3EA",
+        "bone-dim": "#D9D3E8",
+        "lm-violet": "#C9A6FF",
+        // 生命图谱主题：跟全站统一为同一套"极光水晶"深色系
+        "lm2-bg": "#141230",
+        "lm2-bg-deep": "#1b1740",
+        "lm2-card": "rgba(22,19,48,0.55)",
+        "lm2-text": "#F7F3EA",
+        "lm2-text-dim": "#D9D3E8",
+        "lm2-rose": "#FF9FD6",
+        "lm2-amber": "#F0C868",
+        "lm2-mint": "#7FEFE0",
+        "lm2-sky": "#8FD8FF",
+        "lm2-violet": "#C9A6FF",
+        // 珍珠白 / 黄金 / 极光青——文字系统三主色，供组件直接引用
+        pearl: "#F7F3EA",
+        gold: "#F0C868",
+        "aurora-cyan": "#7FEFE0",
       },
       fontFamily: {
         display: ["var(--font-display)", "serif"],
@@ -46,6 +56,8 @@ const config: Config = {
           "radial-gradient(circle at 80% 20%, rgba(120,220,255,0.22), transparent 40%)," +
           "radial-gradient(circle at 50% 90%, rgba(255,210,120,0.18), transparent 35%)," +
           "linear-gradient(135deg, #171526, #25203b, #182b38)",
+        "aurora-ring":
+          "linear-gradient(135deg, #F0C868, #FF9FD6, #C9A6FF, #7FEFE0, #F0C868)",
       },
     },
   },

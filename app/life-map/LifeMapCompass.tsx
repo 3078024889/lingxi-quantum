@@ -82,14 +82,7 @@ const RINGS: Ring[] = [
   },
 ];
 
-const toXY = (r: number, angleDeg: number, cx: number, cy: number) => {
-  const rad = (angleDeg * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-};
-
 export default function LifeMapCompass() {
-  const cx = 290, cy = 290;
-  const outerRForAura = 268;
   return (
     <div className="mx-auto mt-16 max-w-3xl px-4">
       <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
@@ -101,109 +94,17 @@ export default function LifeMapCompass() {
           en="The inner six rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
         />
       </p>
-      <svg viewBox="0 0 580 580" className="mx-auto mt-8 w-full max-w-lg">
-        <defs>
-          <radialGradient id="compass-bg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#f7f0ff" />
-            <stop offset="45%" stopColor="#eef4ff" />
-            <stop offset="100%" stopColor="#e4ecff" />
-          </radialGradient>
-          <radialGradient id="compass-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#F4EFFF" />
-            <stop offset="35%" stopColor="#FFB3DD" />
-            <stop offset="70%" stopColor="#A3E8FF" />
-            <stop offset="100%" stopColor="#A3E8FF" stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id="compass-aurora-ring" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FF8FD1" />
-            <stop offset="33%" stopColor="#FFCB61" />
-            <stop offset="66%" stopColor="#5FE8FF" />
-            <stop offset="100%" stopColor="#C79CFF" />
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="580" height="580" fill="url(#compass-bg)" opacity="0.35" />
-        {/* 极光光带：一圈缓慢旋转的彩虹细环，是这张图的signature动效 */}
-        <circle cx={cx} cy={cy} r={outerRForAura} fill="none" stroke="url(#compass-aurora-ring)" strokeWidth="2" opacity="0.5" strokeDasharray="6 14">
-          <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="60s" repeatCount="indefinite" />
-        </circle>
-        {/* 背景微尘：暖调低饱和度小点，替代深色主题下的星点，在米白底色上依然可见但不刺眼 */}
-        {Array.from({ length: 40 }).map((_, i) => {
-          const x = (i * 137.5) % 580;
-          const y = (i * 71.3 + 40) % 580;
-          const r = 0.5 + (i % 3) * 0.4;
-          return <circle key={i} cx={x} cy={y} r={r} fill="#5a5270" opacity={0.3 + (i % 4) * 0.12} />;
-        })}
-
-        {/* 同心圆环 */}
-        {RINGS.map((ring, ringIdx) => (
-          <circle
-            key={ring.radius}
-            cx={cx} cy={cy} r={ring.radius}
-            fill="none"
-            stroke={ring.color}
-            strokeWidth={1.2}
-            strokeDasharray={ring.dashed ? "4 5" : undefined}
-            opacity={0.6}
-          >
-            <animate attributeName="opacity" values="0.4;0.75;0.4" dur={`${5 + ringIdx * 1.3}s`} repeatCount="indefinite" />
-          </circle>
-        ))}
-
-        {/* 中心核心 */}
-        <circle cx={cx} cy={cy} r={30} fill="url(#compass-core)">
-          <animate attributeName="r" values="26;34;26" dur="5s" repeatCount="indefinite" />
-        </circle>
-        <circle cx={cx} cy={cy} r={14} fill="#FFB3DD" opacity={0.85}>
-          <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite" />
-        </circle>
-        <text data-lang="zh" x={cx} y={cy - 40} textAnchor="middle" fontSize="11" fill="#2a2440" fontFamily="serif" opacity={0.85}>
-          灵犀场域
-        </text>
-        <text data-lang="en" x={cx} y={cy - 40} textAnchor="middle" fontSize="9" fill="#2a2440" fontFamily="serif" opacity={0.75}>
-          The Lingxi Field
-        </text>
-
-        {/* 各圈节点 */}
-        {RINGS.map((ring) =>
-          ring.nodes.map((node, i) => {
-            const { x, y } = toXY(ring.radius, node.angle, cx, cy);
-            const labelOut = toXY(ring.radius + 15, node.angle, cx, cy);
-            const anchor = Math.cos((node.angle * Math.PI) / 180) > 0.15 ? "start" : Math.cos((node.angle * Math.PI) / 180) < -0.15 ? "end" : "middle";
-            return (
-              <g key={`${ring.radius}-${i}`}>
-                <circle cx={x} cy={y} r={2.6} fill={ring.color} opacity={ring.dashed ? 0.55 : 0.95}>
-                  <animate attributeName="r" values="2;3.2;2" dur={`${2.5 + (i % 4) * 0.6}s`} repeatCount="indefinite" begin={`${(i % 5) * 0.4}s`} />
-                </circle>
-                <text
-                  data-lang="zh"
-                  x={labelOut.x} y={labelOut.y}
-                  textAnchor={anchor}
-                  dominantBaseline="middle"
-                  fontSize="8.5"
-                  fill={ring.dashed ? "#8a7fa0" : "#2a2440"}
-                  fontFamily="sans-serif"
-                  opacity={ring.dashed ? 0.7 : 0.95}
-                >
-                  {node.zh}
-                </text>
-                <text
-                  data-lang="en"
-                  x={labelOut.x} y={labelOut.y}
-                  textAnchor={anchor}
-                  dominantBaseline="middle"
-                  fontSize="7"
-                  fill={ring.dashed ? "#8a7fa0" : "#2a2440"}
-                  fontFamily="sans-serif"
-                  opacity={ring.dashed ? 0.7 : 0.95}
-                >
-                  {node.en}
-                </text>
-              </g>
-            );
-          })
-        )}
-      </svg>
-      <div className="mx-auto mt-4 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-widest2 text-lm2-text-dim/60">
+      <div className="relative mx-auto mt-8 aspect-square w-full max-w-lg overflow-hidden rounded-full shadow-[0_0_60px_rgba(240,200,104,0.18)]">
+        <img
+          src="/images/lifemap/compass.jpg"
+          alt="灵犀生命图谱大罗盘 · Lingxi Life Compass"
+          className="h-full w-full object-cover"
+          loading="lazy"
+        />
+      </div>
+      {/* 罗盘图是氛围视觉，下面这份体系清单才是准确、可中英切换、
+          随算法接入状态更新的真实数据来源——图和数据分开维护。 */}
+      <div className="mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-widest2 text-lm2-text-dim/60">
         {RINGS.map((ring) => (
           <span key={ring.radius} className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-2 rounded-full" style={{ background: ring.color, opacity: ring.dashed ? 0.55 : 1 }} />

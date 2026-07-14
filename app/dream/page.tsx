@@ -3,6 +3,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import DreamBackdrop from "@/components/diagrams/DreamBackdrop";
 import DreamConsole from "./DreamConsole";
+import AuroraVideoBand from "@/components/AuroraVideoBand";
 import { getAccess } from "@/lib/access";
 import Link from "next/link";
 import Bi from "@/components/Bi";
@@ -32,6 +33,7 @@ export default async function DreamPage() {
               en="A dream is a language the Field uses to speak with you. Record it, gaze at it, and let the symbols that surface be gently understood. The heart receives premonitory impressions from its own future environment — and dreams are often one of the doorways in."
             />
           </p>
+          <AuroraVideoBand className="mx-auto mt-14 max-w-2xl" />
         </section>
 
         <section className="px-6 pb-28">
