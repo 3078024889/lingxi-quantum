@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import FieldVoices from "@/components/FieldVoices";
-import FieldStats from "@/components/FieldStats";
 import AuroraVideoBand from "@/components/AuroraVideoBand";
 import ClickRipple from "@/components/ClickRipple";
 
@@ -117,7 +116,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="grain" aria-hidden="true" />
         <AuroraVideoBand />
         <FieldVoices />
-        <FieldStats />
         <ClickRipple />
         {children}
       </body>

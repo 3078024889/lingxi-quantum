@@ -26,15 +26,33 @@ type Node = {
   rippleDur: number;  // 水波纹涟漪周期
   rippleDelay: number;
   vi: number;
+  isData: boolean;    // true = 右侧"数据掉落"节点，绽放时显示数字而不是引言
+  statIdx: number;    // isData 为 true 时，对应 STATS 里的第几条
 };
 
 const COLORS = ["#D8B8FF", "#A0E0D0", "#FF9FD6", "#C9A6FF"];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
-// 光点现在只在左侧窄带出现（约 1~16%），右侧留给场域数据面板。
+// 左右两条窄带都有光点：左侧落场域心声引言，右侧混着场域数据一起落下。
 const SIDE_MAX = 16;
 function randX(): number {
-  return rand(1, SIDE_MAX);
+  const onLeft = Math.random() < 0.5;
+  return onLeft ? rand(1, SIDE_MAX) : rand(100 - SIDE_MAX, 99);
 }
+
+/* 场域数据——装饰性的氛围数字，不是接了真实数据库统计出来的（目前没有
+ * 埋点/统计接口）。以后要换真实数据，把这里的 base 换成接口读回来的
+ * 数字即可，下面的下落/绽放逻辑不用动。 */
+const STATS = [
+  { glyph: "✦", base: 128742, suffix: "+", zh: "生命图谱已生成", en: "Life maps generated" },
+  { glyph: "☾", base: 98315, suffix: "+", zh: "梦境解析记录", en: "Dreams interpreted" },
+  { glyph: "♡", base: 68942, suffix: "+", zh: "修炼者在场域中成长", en: "Practitioners growing here" },
+  { glyph: "◈", base: 36, suffix: "", zh: "多维系统融合", en: "Systems integrated" },
+];
+const statValue = (i: number) => {
+  const s = STATS[i];
+  const jitter = Math.floor(Math.random() * 40); // 每次绽放都轻轻跳一点，看起来数字还在走
+  return `${(s.base + jitter).toLocaleString()}${s.suffix}`;
+};
 
 const PRIORITY = /(修炼|显化片刻|邀请)/;
 const BAG: number[] = (() => {
@@ -47,8 +65,8 @@ const BAG: number[] = (() => {
 })();
 const pick = () => BAG[Math.floor(Math.random() * BAG.length)];
 
-// 每颗光点绽放的引言前面配一个小图标，跟场域数据面板（右侧）的图标
-// 语言呼应，光点本身也更有辨识度，不只是一个圆点。
+// 每颗光点绽放的引言前面配一个小图标，光点本身也更有辨识度，不只是一个
+// 圆点。右侧数据节点直接用对应统计项自己的图标（见 STATS）。
 const GLYPHS = ["✦", "☾", "♡", "✎", "❋", "◈"];
 const glyphFor = (id: number) => GLYPHS[id % GLYPHS.length];
 
@@ -67,13 +85,17 @@ export default function FieldVoices() {
       const mobile = w < 720;
       setIsMobile(mobile);
       const area = w * window.innerHeight;
-      // 只在两侧窄带里分布，按可用面积（约为总宽的 32%）折算密度，保持视觉丰富度
-      const count = Math.max(6, Math.min(mobile ? 10 : 24, Math.round((area * 0.17) / (mobile ? 26000 : 32000))));
+      // 左右两条窄带都分布，按可用面积（约为总宽的 32%）折算密度
+      const count = Math.max(10, Math.min(mobile ? 16 : 42, Math.round((area * 0.34) / (mobile ? 26000 : 32000))));
       const arr: Node[] = [];
       for (let k = 0; k < count; k++) {
+        const x = randX();
+        // 右侧（x>50）的光点里，约三分之一绽放时显示"场域数据"而不是引言，
+        // 跟左侧的心声引言混在一起落下，不是另开一个固定不动的面板。
+        const isData = x > 50 && Math.random() < 0.34;
         arr.push({
           id: seq.current++,
-          x: randX(),
+          x,
           depth: Math.random(),
           color: COLORS[Math.floor(Math.random() * COLORS.length)],
           fallDur: rand(mobile ? 20 : 26, mobile ? 34 : 40) - Math.random() * 12,
@@ -84,6 +106,8 @@ export default function FieldVoices() {
           rippleDur: rand(2.6, 4.2),
           rippleDelay: -rand(0, 4),
           vi: pick(),
+          isData,
+          statIdx: Math.floor(Math.random() * STATS.length),
         });
       }
       setNodes(arr);
@@ -99,7 +123,8 @@ export default function FieldVoices() {
     setNodes((prev) =>
       prev.map((d) => {
         if (d.id !== id) return d;
-        return { ...d, x: randX(), vi: pick(), driftDist: rand(-30, 30) };
+        const x = randX();
+        return { ...d, x, vi: pick(), driftDist: rand(-30, 30), isData: x > 50 && Math.random() < 0.34, statIdx: Math.floor(Math.random() * STATS.length) };
       })
     );
   };
@@ -208,7 +233,7 @@ export default function FieldVoices() {
                     opacity,
                   }}
                 />
-                {v && (
+                {v && !d.isData && (
                   <div
                     className={`fv-say absolute top-1/2 -translate-y-1/2 ${openRight ? "left-6 text-left" : "right-6 text-right"}`}
                     style={{ borderColor: `${d.color}55`, boxShadow: `0 2px 14px rgba(0,0,0,0.35), 0 0 16px ${d.color}22` }}
@@ -216,6 +241,17 @@ export default function FieldVoices() {
                     <span className="fv-glyph" style={{ color: d.color }}>{glyphFor(d.id)}</span>
                     <span data-lang="zh">{v.zh}</span>
                     <span data-lang="en">{v.en}</span>
+                  </div>
+                )}
+                {d.isData && (hovered === d.id || d.id in speaking) && (
+                  <div
+                    className={`fv-data absolute top-1/2 -translate-y-1/2 ${openRight ? "left-6 text-left" : "right-6 text-right"}`}
+                    style={{ borderColor: `${d.color}55`, boxShadow: `0 2px 14px rgba(0,0,0,0.35), 0 0 16px ${d.color}22` }}
+                  >
+                    <span className="fv-glyph" style={{ color: d.color }}>{STATS[d.statIdx].glyph}</span>
+                    <span className="fv-data-num" style={{ color: d.color }}>{statValue(d.statIdx)}</span>
+                    <span className="fv-data-label" data-lang="zh">{STATS[d.statIdx].zh}</span>
+                    <span className="fv-data-label" data-lang="en">{STATS[d.statIdx].en}</span>
                   </div>
                 )}
               </div>
@@ -247,20 +283,41 @@ export default function FieldVoices() {
           width: max-content; max-width: 17rem;
           font-family: "Cormorant Garamond", serif;
           font-size: 0.98rem; line-height: 1.6; letter-spacing: 0.015em;
-          color: rgba(216,184,255,0.98);
+          color: var(--text-primary, #DDE6FF);
           padding: 5px 12px;
           border-radius: 999px;
-          background: linear-gradient(135deg, rgba(10,24,46,0.6), rgba(8,18,34,0.65));
-          border: 1px solid rgba(216,184,255,0.34);
+          background: linear-gradient(135deg, rgba(24,30,64,0.62), rgba(10,20,40,0.68));
+          border: 1px solid rgba(200,180,255,0.4);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
           box-shadow: 0 2px 18px rgba(0,0,0,0.3);
           animation: fv-say-in 1s ease both;
         }
         .fv-glyph { color: rgba(160,224,208,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
+        /* 右侧"数据掉落"绽放出来的小卡：图标 + 数字 + 一行说明，跟左侧的
+           引言气泡是同一套玻璃质感，只是内容换成了数字。 */
+        .fv-data {
+          width: max-content; max-width: 13rem;
+          display: flex; flex-direction: column; gap: 2px;
+          padding: 7px 14px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, rgba(24,30,64,0.62), rgba(10,20,40,0.68));
+          border: 1px solid rgba(200,180,255,0.4);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          box-shadow: 0 2px 18px rgba(0,0,0,0.3);
+          animation: fv-say-in 1s ease both;
+        }
+        .fv-data-num {
+          font-family: "Cormorant Garamond", serif;
+          font-size: 1.1rem; font-weight: 600;
+          text-shadow: var(--glow-soft, 0 0 8px rgba(224,230,255,0.45));
+        }
+        .fv-data-label { font-size: 0.68rem; color: var(--text-secondary, #B8C9E6); line-height: 1.3; }
         @keyframes fv-say-in { from { opacity: 0; letter-spacing: 0.12em; } to { opacity: 1; letter-spacing: 0.015em; } }
         @media (max-width: 719px) {
           .fv-say { max-width: 60vw; font-size: 1.02rem; }
+          .fv-data { max-width: 50vw; }
         }
         @media (prefers-reduced-motion: reduce) {
           .fv-fall, .fv-drift { animation-duration: 0s !important; }
