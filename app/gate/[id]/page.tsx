@@ -30,7 +30,7 @@ export default function GatePage({ params }: { params: { id: string } }) {
             <div className="flex h-full items-center justify-center opacity-50">
               <GateVisual id={gate.id} className="h-[120%] w-auto" />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-b from-void/50 via-void/70 to-void" />
+            <div className="absolute inset-0 bg-gradient-to-b from-void/30 via-void/15 to-void/40" />
           </div>
           <div>
             <span className="font-display text-6xl text-lattice/70">

@@ -11,6 +11,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* 文字质感：全站正文/标题默认色（珍珠白）配一圈很轻的暖金色环境光晕，
+   不是简单一片纯白——白里带一点金光，是"白金色"这个方向的具体做法。
+   同时叠一点点极暗的贴地阴影，纯粹是保险：万一文字正好落在视频画面
+   最亮的一小块区域，还留一点点抓地力，不会整个融进去。这跟 v116 那版
+   "厚重白色光晕"完全是两回事——这里的金光很淡，是提气质用的，不是
+   拿来硬拽对比度的补丁。 */
+.text-bone, .text-lm2-text {
+  text-shadow: 0 0 22px rgba(240,200,104,0.22), 0 1px 3px rgba(6,4,16,0.35);
+}
+.text-bone-dim, .text-lm2-text-dim {
+  text-shadow: 0 0 16px rgba(240,200,104,0.14), 0 1px 2px rgba(6,4,16,0.3);
+}
+
 /* ============ Rainbow Celestial Aurora Design System ============
    全站基底不再是"浅色玻璃 + 深紫字"，反过来：深空底色 + 珍珠白/黄金/
    极光青文字。这样文字对比度是稳的，不需要再靠光晕、强制不透明这类
@@ -39,13 +52,19 @@ body {
    暗，文字（珍珠白/黄金/极光青）天然清晰，不需要额外处理。 */
 .bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report {
   position: relative;
+  /* 全站几十处卡片用的都是不带斜杠透明度后缀的 bg-void-deep 这类写法，
+     Tailwind 编译出来的是纯色不透明的 background-color——这才是"到处
+     都是黑框，挡住了背景"的根本原因，不是卡片"看起来暗"，是它真的
+     完全不透明。这里直接把这几个类的底色统一收成半透明玻璃色，不管
+     组件那边写没写 /40 这种后缀，都会被这条规则统一接管。 */
+  background-color: rgba(20, 18, 46, 0.4) !important;
   background-image:
     radial-gradient(ellipse 90% 70% at 10% 0%, rgba(240,200,104,0.10), transparent 55%),
     radial-gradient(ellipse 80% 60% at 95% 100%, rgba(127,239,224,0.10), transparent 55%),
     radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,159,214,0.08), transparent 60%);
   background-size: 200% 200%, 200% 200%, 200% 200%;
   animation: lx-card-shimmer 20s ease-in-out infinite;
-  border: 1px solid rgba(240,200,104,0.16);
+  border: 1px solid rgba(240,200,104,0.22);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset, 0 8px 32px rgba(0,0,0,0.35);
@@ -56,6 +75,14 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report { animation: none; }
+}
+/* 输入框（textarea/input）例外：文字输入需要足够扎实的底色才看得清
+   打字光标和已输入内容，玻璃化到看得见背后视频的程度反而会降低可用
+   性，这里单独把表单控件的透明度调高一些，跟普通卡片区分开。 */
+textarea.bg-void, input.bg-void {
+  background-color: rgba(14, 12, 34, 0.82) !important;
+  background-image: none;
+  animation: none;
 }
 
 /* 119篇故事插画：原本就是深色底配白字的手绘 SVG，之前为了配合浅色

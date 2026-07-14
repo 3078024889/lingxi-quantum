@@ -95,12 +95,19 @@ export default function LifeMapCompass() {
         />
       </p>
       <div className="relative mx-auto mt-8 aspect-square w-full max-w-lg overflow-hidden rounded-2xl shadow-[0_0_60px_rgba(240,200,104,0.18)]">
-        <img
-          src="/images/lifemap/compass.jpg"
-          alt="灵犀生命图谱大罗盘 · Lingxi Life Compass"
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/images/lifemap/compass-poster.jpg"
           className="h-full w-full object-contain"
-          loading="lazy"
-        />
+          aria-label="灵犀生命图谱大罗盘 · Lingxi Life Compass"
+        >
+          <source src="/images/lifemap/compass.webm" type="video/webm" />
+          <source src="/images/lifemap/compass.mp4" type="video/mp4" />
+        </video>
       </div>
       {/* 罗盘图是氛围视觉，下面这份体系清单才是准确、可中英切换、
           随算法接入状态更新的真实数据来源——图和数据分开维护。 */}

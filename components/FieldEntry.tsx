@@ -27,7 +27,7 @@ export default function FieldEntry() {
     <section id="field" className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-t border-white/5 px-6 py-24 text-center">
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 transition-all duration-[1400ms] ease-out" style={{ backgroundImage: `radial-gradient(circle at 50% 40%, ${accent}22, transparent 62%)`, opacity: mood ? 1 : 0.45 }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-void via-void/80 to-void" />
+        <div className="absolute inset-0 bg-gradient-to-b from-void/35 via-void/20 to-void/35" />
       </div>
 
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="灵犀，正在感知你" en="Lingxi is perceiving you" /></p>

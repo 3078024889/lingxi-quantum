@@ -243,14 +243,14 @@ export default function FieldVoices() {
           width: max-content; max-width: 17rem;
           font-family: "Cormorant Garamond", serif;
           font-size: 0.98rem; line-height: 1.6; letter-spacing: 0.015em;
-          color: rgba(247,243,234,0.98);
+          color: rgba(250,246,236,0.98);
           padding: 5px 12px;
           border-radius: 999px;
-          background: rgba(10,8,22,0.78);
-          border: 1px solid rgba(255,255,255,0.14);
-          backdrop-filter: blur(3px);
-          -webkit-backdrop-filter: blur(3px);
-          box-shadow: 0 2px 14px rgba(0,0,0,0.45);
+          background: linear-gradient(135deg, rgba(58,44,24,0.5), rgba(28,20,44,0.55));
+          border: 1px solid rgba(240,200,104,0.32);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          box-shadow: 0 2px 18px rgba(0,0,0,0.3);
           animation: fv-say-in 1s ease both;
         }
         .fv-glyph { color: rgba(240,200,104,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
