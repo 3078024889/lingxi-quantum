@@ -21,6 +21,7 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "narrative", title: "多维叙事", titleEn: "Narratives", href: "/narrative" },
   { slug: "learn", title: "探索", titleEn: "Learn", href: "/learn" },
   { slug: "membership", title: "能量交换场", titleEn: "Access", href: "/membership" },
+  { slug: "number-energy", title: "手机号车牌号测试", titleEn: "Number Energy", href: "/tools/number-energy" },
 ];
 
 type Ripple = { id: number; x: number; y: number };

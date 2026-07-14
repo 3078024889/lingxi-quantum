@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { computeLifeMapFacts, computeMayaTzolkin, computeLifeCode, lunarToSolar, type BirthInput } from "@/lib/lifemap-calc";
 import { computeZiWeiChart, type Gender } from "@/lib/ziwei-calc";
+import { computeHumanDesign } from "@/lib/human-design-calc";
 
 export const runtime = "nodejs";
 
@@ -52,8 +53,17 @@ export async function POST(req: Request) {
     } catch {
       ziwei = null; // 紫微排盘偶发的极端日期边界问题，不应影响其余数据正常返回
     }
+    // 人类图：只算到"门"这一层（真实天文计算，可复核）；能量中心/类型/权威
+    // 需要另一套已验证的完整对照表才能算准，还没接入，先不给结论。
+    let humanDesign = null;
+    try {
+      const birthUTC = new Date(Date.UTC(year, month - 1, day, usedHour, typeof minute === "number" ? minute : 0));
+      humanDesign = computeHumanDesign(birthUTC);
+    } catch {
+      humanDesign = null;
+    }
     // 把换算后的真实阳历日期也带回前端展示，让用户能确认换算结果无误
-    return NextResponse.json({ ...facts, maya, ziwei, lifeCode, resolvedSolar: { year, month, day } });
+    return NextResponse.json({ ...facts, maya, ziwei, lifeCode, humanDesign, resolvedSolar: { year, month, day } });
   } catch (e) {
     return NextResponse.json({ error: "计算失败，请检查出生信息。" }, { status: 500 });
   }

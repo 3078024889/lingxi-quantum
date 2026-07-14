@@ -22,6 +22,9 @@ type ZiWeiChart = { soulPalaceBranch: string; bodyPalaceBranch: string; fiveElem
 type VedicPlacement = { signZh: string; signEn: string };
 type VedicChart = { ayanamsa: number; sunSidereal: VedicPlacement; moonSidereal: VedicPlacement };
 
+type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
+type HumanDesignResult = { personality: GateActivation[]; design: GateActivation[]; sunConsciousGate: number; sunUnconsciousGate: number };
+
 type Facts = {
   sunSignZh: string; sunSignEn: string; sunElement: WesternElement; sunLongitude: number;
   moonSignZh: string; moonSignEn: string; moonElement: WesternElement; moonLongitude: number;
@@ -37,6 +40,7 @@ type Facts = {
   ziwei: ZiWeiChart | null;
   lifeCode: { number: number; isMaster: boolean };
   vedic: VedicChart;
+  humanDesign: HumanDesignResult | null;
 };
 
 type ReportData = {
@@ -738,6 +742,35 @@ export default function LifeMapFlow() {
                 </span>
               </div>
             </div>
+
+            {report.facts.humanDesign && (
+              <div className="bg-reading-glass mt-8 p-6 sm:p-8">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                  <Bi zh="人类图 · 门（新增，测试版）" en="Human Design · Gates (New, Preview)" />
+                </p>
+                <p className="mt-2 text-xs leading-6 text-lm2-text-dim">
+                  <Bi
+                    zh="太阳门是人类图里权重最高的单一信息（约占人格印记70%），已经用真实天文计算得出。「能量中心是否被定义」「类型（生产者/投射者/显示者/反映者）」「内在权威」这几项，需要另一套完整核对过的对照表才能算准，目前还没有接入——不把没核实过的结论当成算好的事实端给你，这几项先留空，核实完再更新。"
+                    en="The Sun gate is the single highest-weighted piece of information in Human Design (roughly 70% of the personality imprint), and it's already computed from real astronomy. Which centers are defined, your Type (Generator / Projector / Manifestor / Reflector), and your Authority all require a separate, fully verified reference table that isn't wired in yet — rather than presenting an unverified conclusion as calculated fact, these are left blank until verified."
+                  />
+                </p>
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                  <span className="rounded-sm border border-lm2-amber/40 bg-lm2-amber/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
+                    {t("太阳门（意识）", "Sun Gate (Conscious)")} {report.facts.humanDesign.sunConsciousGate}
+                  </span>
+                  <span className="rounded-sm border border-lm2-text/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
+                    {t("太阳门（潜意识）", "Sun Gate (Unconscious)")} {report.facts.humanDesign.sunUnconsciousGate}
+                  </span>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 border-t border-lm2-text/10 pt-4 text-xs text-lm2-text-dim sm:grid-cols-3">
+                  {report.facts.humanDesign.personality.map((g) => (
+                    <span key={g.key}>
+                      {isEn() ? g.en : g.zh} — {t("门", "Gate")} {g.gate}.{g.line}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mt-8">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
