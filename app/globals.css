@@ -181,6 +181,9 @@ textarea.bg-lm2-bg, input.bg-lm2-bg {
   box-shadow: 0 1px 24px rgba(140, 210, 255, 0.12);
 }
 
+.lx-entry-accordion summary::-webkit-details-marker { display: none; }
+.lx-entry-accordion summary { list-style: none; }
+
 ::selection {
   background: rgba(127, 239, 224, 0.28);
 }

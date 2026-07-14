@@ -126,15 +126,20 @@ export default function DreamConsole() {
       {entries.length > 0 && (
         <div>
           <p className="font-display text-xl text-bone">{t("我的梦境档案","My dream archive")}</p>
-          <div className="mt-6 space-y-5">
+          <div className="mt-6 space-y-3">
             {entries.map((e, i) => (
-              <div key={e.id || i} className="rounded-sm border border-white/10 bg-void-deep p-5">
-                <p className="font-display text-sm tracking-widest2 text-amber">
-                  {e.entry_date ? new Date(e.entry_date).toLocaleDateString(isEn() ? "en-US" : "zh-CN") : ""}
-                </p>
-                <p className="mt-3 text-base leading-8 text-bone">{e.today.replace(/^【梦】/, "")}</p>
-                {e.feeling && <p className="mt-2 text-sm leading-7 text-bone-dim">{t("联想：","Associations: ")}{e.feeling}</p>}
-              </div>
+              <details key={e.id || i} open={i === 0} className="lx-entry-accordion group rounded-sm border border-white/10 bg-void-deep">
+                <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4">
+                  <span className="font-display text-sm tracking-widest2 text-amber">
+                    {e.entry_date ? new Date(e.entry_date).toLocaleDateString(isEn() ? "en-US" : "zh-CN") : ""}
+                  </span>
+                  <span className="text-bone-dim text-xs transition group-open:rotate-180">▾</span>
+                </summary>
+                <div className="px-5 pb-5">
+                  <p className="text-base leading-8 text-bone">{e.today.replace(/^【梦】/, "")}</p>
+                  {e.feeling && <p className="mt-2 text-sm leading-7 text-bone-dim">{t("联想：","Associations: ")}{e.feeling}</p>}
+                </div>
+              </details>
             ))}
           </div>
           <p className="bg-void-deep mx-auto mt-6 w-fit rounded-full px-4 py-2 text-center text-xs text-bone-dim">{t("你的梦境档案已在云端安全同步。","Your dream archive is synced securely to the cloud.")}</p>

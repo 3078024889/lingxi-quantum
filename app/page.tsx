@@ -101,7 +101,7 @@ export default function Home() {
 
         {/* 7. 显化 · 能量交换 */}
         <section className="px-6 py-28 sm:py-36">
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="显化 · 能量交换" en="Manifestation · Energy Exchange" /></p>
             <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="活在此版本中的你" en="Live as the you in this version" /></h2>
             <p className="mx-auto mt-8 max-w-xl text-base leading-9 text-bone-dim">

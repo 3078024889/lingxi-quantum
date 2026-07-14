@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { getCoreType, type WesternElement, type ChineseElement } from "@/lib/lifemap-calc";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
@@ -435,6 +436,12 @@ export default function LifeMapFlow() {
             <h2 className="mt-3 text-center font-display text-3xl font-light text-lm2-text">
               <Bi zh="一、基础信息" en="I. Basic Information" />
             </h2>
+            <p className="mt-4 text-center text-xs text-lm2-text-dim">
+              <Bi zh="也想测测随身携带的号码？" en="Curious about the numbers you carry every day?" />{" "}
+              <Link href="/tools/number-energy" className="text-lm2-mint underline underline-offset-4 hover:text-lm2-amber">
+                <Bi zh="手机号 / 车牌号数字能量测试 →" en="Phone & license plate number test →" />
+              </Link>
+            </p>
 
             <div className="mt-10 space-y-6">
               <div>

@@ -30,7 +30,7 @@ export default function PracticeIndex() {
           </h1>
           <p className="mx-auto mt-3 max-w-xl font-display text-sm italic text-lattice/85 sm:text-base">
             <Bi
-              zh="源自来自远古遥远星系的智慧传承，以古老又切合当下的声音呈现。"
+              zh="源自远古遥远星系的智慧传承，以古老又切合当下的声音呈现。"
               en="A wisdom lineage from ancient, distant star systems — voiced anew for the present moment."
             />
           </p>

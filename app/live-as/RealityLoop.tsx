@@ -206,26 +206,31 @@ export default function RealityLoop() {
       {entries.length > 0 && (
         <div>
           <p className="font-display text-xl text-bone">{t("我的现实回路","My Reality Loop")}</p>
-          <div className="mt-6 space-y-5">
+          {/* 折叠结构：条目会随着每天签到不断变多，全部展开既拖慢渲染也不好看。
+              默认只有最新一条展开，其余收成一行日期，点开再看内容——数据全部
+              还在，只是视觉上和渲染上都轻量很多。 */}
+          <div className="mt-6 space-y-3">
             {entries.map((e, i) => (
-              <div
-                key={e.id || i}
-                className="rounded-sm border border-white/10 bg-void-deep p-5"
-              >
-                <p className="font-display text-sm tracking-widest2 text-amber">
-                  {e.entry_date
-                    ? new Date(e.entry_date).toLocaleDateString(isEn() ? "en-US" : "zh-CN")
-                    : ""}
-                </p>
-                {e.today && (
-                  <p className="mt-3 text-base leading-8 text-bone">{e.today}</p>
-                )}
-                {e.feeling && (
-                  <p className="mt-2 text-sm leading-7 text-bone-dim">
-                    {t("感受：","Feeling: ")}{e.feeling}
-                  </p>
-                )}
-              </div>
+              <details key={e.id || i} open={i === 0} className="lx-entry-accordion group rounded-sm border border-white/10 bg-void-deep">
+                <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4">
+                  <span className="font-display text-sm tracking-widest2 text-amber">
+                    {e.entry_date
+                      ? new Date(e.entry_date).toLocaleDateString(isEn() ? "en-US" : "zh-CN")
+                      : ""}
+                  </span>
+                  <span className="text-bone-dim text-xs transition group-open:rotate-180">▾</span>
+                </summary>
+                <div className="px-5 pb-5">
+                  {e.today && (
+                    <p className="text-base leading-8 text-bone">{e.today}</p>
+                  )}
+                  {e.feeling && (
+                    <p className="mt-2 text-sm leading-7 text-bone-dim">
+                      {t("感受：","Feeling: ")}{e.feeling}
+                    </p>
+                  )}
+                </div>
+              </details>
             ))}
           </div>
           <p className="bg-void-deep mx-auto mt-6 w-fit rounded-full px-4 py-2 text-center text-xs text-bone-dim">
