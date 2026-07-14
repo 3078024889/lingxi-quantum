@@ -88,7 +88,7 @@ export default function LearnHub() {
           {groups.map((g) => (
             <section key={g.en} className="mt-14">
               <h2 className="font-display text-2xl font-light text-amber"><Bi zh={g.zh} en={g.en} /></h2>
-              <div className="bg-void-deep mt-5 divide-y divide-[color:var(--aurora-glass-border)] rounded-sm px-5">
+              <div className="bg-reading-glass mt-5 divide-y divide-[color:var(--aurora-glass-border)] rounded-sm px-5">
                 {g.items.map((it) => (
                   <Link key={it.href} href={it.href} className="flex items-baseline justify-between gap-4 py-4 transition hover:text-lattice">
                     <span className="text-base leading-7 text-bone"><Bi zh={it.zh} en={it.en} /></span>

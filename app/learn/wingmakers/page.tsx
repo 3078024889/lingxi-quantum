@@ -47,6 +47,7 @@ export default function SovereigntyWholenessArticle() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
+          <div className="bg-reading-glass px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">思路 · The Thinking</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
             <Bi zh="主权与完整：灵犀修炼体系的思路" en="Sovereignty & Wholeness: The Thinking Behind Lingxi's Practices" />
@@ -93,6 +94,8 @@ export default function SovereigntyWholenessArticle() {
             </p>
           </div>
 
+          </div>
+
           <div className="mt-14">
             <h2 className="font-display text-2xl font-light text-bone"><Bi zh="常见问题" en="FAQ" /></h2>
             <div className="mt-6 space-y-5">
@@ -113,7 +116,7 @@ export default function SovereigntyWholenessArticle() {
             </Link>
           </div>
 
-          <p className="mt-10 text-sm text-bone-dim/70">
+          <p className="bg-void-deep mt-10 rounded-sm px-6 py-4 text-sm text-bone-dim">
             <Bi zh="延伸：" en="Related: " />
             <Link href="/glossary" className="text-lattice hover:text-amber"><Bi zh="核心术语表" en="Core glossary" /></Link>
             {" · "}

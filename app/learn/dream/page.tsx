@@ -47,6 +47,7 @@ export default function DreamArticle() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
+          <div className="bg-reading-glass px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">解梦 · Dreams</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
             <Bi zh="如何解梦：读懂潜意识写给你的信" en="How to Interpret Dreams" />
@@ -87,6 +88,8 @@ export default function DreamArticle() {
             </p>
           </div>
 
+          </div>
+
           <div className="mt-14">
             <h2 className="font-display text-2xl font-light text-bone"><Bi zh="常见问题" en="FAQ" /></h2>
             <div className="mt-6 space-y-5">
@@ -107,7 +110,7 @@ export default function DreamArticle() {
             </Link>
           </div>
 
-          <p className="mt-10 text-sm text-bone-dim/70">
+          <p className="bg-void-deep mt-10 rounded-sm px-6 py-4 text-sm text-bone-dim">
             <Bi zh="延伸：" en="Related: " />
             <Link href="/learn/manifestation" className="text-lattice hover:text-amber"><Bi zh="什么是显化" en="What manifestation is" /></Link>
             {" · "}

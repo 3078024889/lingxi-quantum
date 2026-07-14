@@ -65,7 +65,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
-          <div className="bg-void-deep rounded-sm px-8 py-10">
+          <div className="bg-reading-glass rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh={data.eyebrowZh} en={data.eyebrowEn} />
           </p>
@@ -110,7 +110,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
           </div>
 
           {data.related && data.related.length > 0 && (
-            <p className="mt-10 text-sm text-bone-dim/70">
+            <p className="bg-void-deep mt-10 rounded-sm px-6 py-4 text-sm text-bone-dim">
               <Bi zh="延伸：" en="Related: " />
               {data.related.map((r, i) => (
                 <span key={r.href}>

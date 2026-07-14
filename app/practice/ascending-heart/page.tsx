@@ -21,7 +21,7 @@ export default async function AscendingHeartPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-40">
             <GateDestiny className="h-[420px] w-[420px]" />
           </div>
-          <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
+          <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="修炼技术" en="Practice" />
           </p>
@@ -38,7 +38,7 @@ export default async function AscendingHeartPage() {
         </section>
 
         <section className="px-6 py-16">
-          <div className="bg-void-deep mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
+          <div className="bg-reading-glass mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
               <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>
@@ -181,7 +181,7 @@ export default async function AscendingHeartPage() {
                   </p>
                 </div>
 
-                <div className="rounded-sm border border-white/10 bg-void-deep p-8">
+                <div className="bg-reading-glass p-8">
                   <p className="font-display text-lg text-lattice"><Bi zh="练习要诀" en="Practice notes" /></p>
                   <p className="mt-4">
                     <Bi

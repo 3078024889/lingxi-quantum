@@ -49,6 +49,7 @@ export default async function AccountPage() {
         <section className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-6 py-24 text-center">
           {user ? (
             <>
+              <div className="bg-void-deep w-full rounded-sm px-8 py-10">
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
                 <Bi zh="你已连接至场域" en="You are connected to the field" />
               </p>
@@ -59,6 +60,7 @@ export default async function AccountPage() {
               <p className="mt-6 max-w-sm text-base leading-9 text-bone-dim">
                 <Bi zh="你的现实回路与练习记录，已在云端安全同步。" en="Your Reality Loop and practice records are synced securely to the cloud." />
               </p>
+              </div>
 
               {/* 会员状态 */}
               <div className="mt-8 w-full space-y-3 text-left">
@@ -104,6 +106,7 @@ export default async function AccountPage() {
             </>
           ) : (
             <>
+              <div className="bg-void-deep w-full rounded-sm px-8 py-10">
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
                 <Bi zh="进入场域" en="Enter the field" />
               </p>
@@ -115,6 +118,7 @@ export default async function AccountPage() {
               </p>
               <div className="mt-12 w-full">
                 <LoginForm />
+              </div>
               </div>
             </>
           )}

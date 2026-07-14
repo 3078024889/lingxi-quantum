@@ -48,14 +48,8 @@ export default function IllustratedBookReader({
   return (
     <div className="mx-auto max-w-2xl select-none">
       <div
-        className="relative overflow-hidden rounded-sm border border-white/10"
-        style={{
-          background:
-            "radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.18), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.16), transparent 55%), linear-gradient(135deg, rgba(20,34,58,0.62) 0%, rgba(16,28,50,0.68) 100%), linear-gradient(135deg, rgba(110,196,230,0.28) 0%, rgba(150,170,235,0.26) 100%)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          minHeight: 560,
-        }}
+        className="bg-reading-glass relative overflow-hidden"
+        style={{ minHeight: 560 }}
       >
         <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/40 to-transparent z-10" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-black/20 to-transparent z-10" />

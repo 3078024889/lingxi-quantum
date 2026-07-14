@@ -139,7 +139,27 @@ body {
 /* 输入框（textarea/input）例外：文字输入需要足够扎实的底色才看得清
    打字光标和已输入内容，玻璃化到看得见背后视频的程度反而会降低可用
    性，这里单独把表单控件的透明度调高一些，跟普通卡片区分开。 */
-textarea.bg-void, input.bg-void {
+/* 阅读面玻璃（Reading Glass）——专门给"长文阅读"场景用的底色，比普通
+   装饰性卡片（.bg-void-deep 那套，偏轻透）更扎实一点，长时间阅读需要
+   比小卡片更强的衬托，但也不能太深——读者反馈这个方向是对的，只是上一
+   版调得偏深了一点，这次收回来一些。多维叙事阅读器、四大修炼技术详情
+   页、探索页文章正文，统一用这一个类，不再是三套分别调的深浅。 */
+.bg-reading-glass {
+  position: relative;
+  background-color: rgba(14, 24, 42, 0.34) !important;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.14), transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.12), transparent 55%),
+    var(--aurora-glass);
+  border: 1px solid var(--aurora-glass-border);
+  border-radius: 4px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--aurora-glow);
+}
+
+textarea.bg-void, input.bg-void,
+textarea.bg-lm2-bg, input.bg-lm2-bg {
   background-color: rgba(16, 34, 56, 0.5) !important;
   background-image: linear-gradient(135deg, rgba(110,196,230,0.16), rgba(150,170,235,0.14)) !important;
   animation: none;

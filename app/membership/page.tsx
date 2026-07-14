@@ -78,6 +78,7 @@ export default async function MembershipPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25">
             <EarthGrid className="h-[520px] w-[520px]" />
           </div>
+          <div className="bg-void-deep relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="能量交换" en="Energy Exchange" />
           </p>
@@ -87,6 +88,7 @@ export default async function MembershipPage() {
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi zh="完成能量交换后，场域将自动为你开启。" en="Once the energy exchange is complete, the Field opens for you automatically." />
           </p>
+          </div>
         </section>
 
         {/* 一、修炼技术 */}

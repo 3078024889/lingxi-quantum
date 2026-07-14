@@ -48,6 +48,7 @@ export default function GatePage({ params }: { params: { id: string } }) {
         {/* 引介 */}
         <section className="px-6 py-24">
           <div className="mx-auto max-w-2xl">
+            <div className="bg-reading-glass px-8 py-10">
             <p className="text-lg leading-10 text-bone-dim"><Bi zh={gate.intro} en={gate.introEn} /></p>
 
             <GateInvitations
@@ -57,6 +58,7 @@ export default function GatePage({ params }: { params: { id: string } }) {
               pool={gate.prompts}
               poolEn={gate.promptsEn}
             />
+            </div>
 
             <div className="mt-16 flex flex-col gap-4 sm:flex-row">
               <Link

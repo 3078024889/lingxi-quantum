@@ -601,7 +601,7 @@ export default function LifeMapFlow() {
                       <button
                         key={n}
                         onClick={() => f.set(n)}
-                        className={`h-8 flex-1 rounded-sm border transition ${n <= f.v ? "border-lm2-violet bg-lm2-violet/40" : "border-lm2-text/12 bg-lm2-bg"}`}
+                        className={`h-8 flex-1 rounded-sm border transition ${n <= f.v ? "border-lm2-violet bg-lm2-violet/40" : "bg-lm2-card border-lm2-text/12"}`}
                       />
                     ))}
                   </div>

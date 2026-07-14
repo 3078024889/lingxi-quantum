@@ -21,7 +21,7 @@ export default async function HeartResetPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-40">
             <GateHealth className="h-[420px] w-[420px]" />
           </div>
-          <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
+          <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="修炼技术" en="Practice" />
           </p>
@@ -38,7 +38,7 @@ export default async function HeartResetPage() {
         </section>
 
         <section className="px-6 py-16">
-          <div className="bg-void-deep mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
+          <div className="bg-reading-glass mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
             <div>
               <h2 className="font-display text-3xl font-light text-bone"><Bi zh="为何心需要归零" en="Why the heart needs zeroing" /></h2>
               <p className="mt-6">
@@ -107,7 +107,7 @@ export default async function HeartResetPage() {
                   </p>
                 </div>
 
-                <div className="rounded-sm border border-white/10 bg-void-deep p-8">
+                <div className="bg-reading-glass p-8">
                   <p className="font-display text-lg text-lattice"><Bi zh="验证标志" en="Sign of success" /></p>
                   <p className="mt-4">
                     <Bi

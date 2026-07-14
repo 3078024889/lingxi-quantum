@@ -10,16 +10,18 @@ export default function DeclarationPage() {
       <Nav />
       <main className="pt-16">
         <section className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-24">
+          <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="系统声明" en="System Declaration" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
             <Bi zh="关于灵犀" en="About Lingxi" />
           </h1>
+          </div>
         </section>
 
         <section className="px-6 pb-28">
-          <div className="mx-auto max-w-3xl space-y-14">
+          <div className="bg-reading-glass mx-auto max-w-3xl space-y-14 px-8 py-12 sm:px-14">
             <div>
               <h2 className="font-display text-2xl text-bone"><Bi zh="免责声明" en="Disclaimer" /></h2>
               <div className="mt-5 space-y-4 text-base leading-9 text-bone-dim">

@@ -41,13 +41,15 @@ export default function GlossaryPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main className="px-6 pb-24 pt-28">
         <div className="mx-auto max-w-2xl">
-          <p className="font-display text-sm uppercase tracking-widest2 text-amber/80">术语表 · Glossary</p>
+          <div className="bg-void-deep rounded-sm px-8 py-10">
+          <p className="font-display text-sm uppercase tracking-widest2 text-amber">术语表 · Glossary</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">核心词汇</h1>
           <p className="mt-6 text-lg leading-9 text-bone-dim">
             灵犀场域里反复出现的核心概念。这些词条是理解显化、解梦与修炼的底层语言。
           </p>
+          </div>
 
-          <dl className="mt-12 divide-y divide-white/10 border-y border-white/10">
+          <dl className="bg-reading-glass mt-12 divide-y divide-[color:var(--aurora-glass-border)] px-8 py-4 sm:px-10">
             {terms.map((t) => (
               <div key={t.en} className="py-6">
                 <dt className="flex flex-wrap items-baseline gap-x-3">

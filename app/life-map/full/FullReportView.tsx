@@ -200,11 +200,11 @@ export default function FullReportView({ id }: { id: string }) {
       <style>{`
         .lm2-print-mode {
           background:
-            radial-gradient(ellipse 70% 50% at 15% 0%, rgba(160,224,255,0.30), transparent 55%),
-            radial-gradient(ellipse 65% 55% at 100% 15%, rgba(140,210,235,0.26), transparent 55%),
-            radial-gradient(ellipse 60% 55% at 50% 100%, rgba(150,180,240,0.24), transparent 60%),
-            radial-gradient(ellipse 55% 45% at 85% 85%, rgba(216,184,255,0.18), transparent 55%),
-            linear-gradient(160deg, #0c1c30 0%, #123048 45%, #164260 100%);
+            radial-gradient(ellipse 75% 55% at 12% -5%, rgba(110,196,230,0.42), transparent 58%),
+            radial-gradient(ellipse 70% 60% at 100% 10%, rgba(150,170,235,0.38), transparent 58%),
+            radial-gradient(ellipse 65% 55% at 50% 100%, rgba(160,224,255,0.28), transparent 60%),
+            radial-gradient(ellipse 55% 45% at 85% 85%, rgba(216,184,255,0.22), transparent 55%),
+            linear-gradient(160deg, #0a1a2e 0%, #0f2a48 45%, #123a5c 100%);
           border-radius: 4px;
         }
         .lm2-print-mode h1,

@@ -51,6 +51,7 @@ export default function ManifestationArticle() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
+          <div className="bg-reading-glass px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">显化 · Manifestation</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
             <Bi zh="什么是显化，以及如何真正显化" en="What Manifestation Is, and How to Actually Do It" />
@@ -99,6 +100,8 @@ export default function ManifestationArticle() {
           </div>
 
           {/* FAQ */}
+          </div>
+
           <div className="mt-14">
             <h2 className="font-display text-2xl font-light text-bone"><Bi zh="常见问题" en="FAQ" /></h2>
             <div className="mt-6 space-y-5">
@@ -120,7 +123,7 @@ export default function ManifestationArticle() {
             </Link>
           </div>
 
-          <p className="mt-10 text-sm text-bone-dim/70">
+          <p className="bg-void-deep mt-10 rounded-sm px-6 py-4 text-sm text-bone-dim">
             <Bi zh="延伸：" en="Related: " />
             <Link href="/learn/wingmakers" className="text-lattice hover:text-amber"><Bi zh="主权与完整导览" en="Sovereignty & Wholeness" /></Link>
             {" · "}
