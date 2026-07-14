@@ -91,8 +91,8 @@ export default function LifeMapCompass() {
       </p>
       <p className="mx-auto mt-2 max-w-md text-center text-xs leading-6 text-lm2-text-dim">
         <Bi
-          zh="内六圈，是已经用真实算法验证、写进你报告里的体系；最外一圈虚线，是仍在验证中、尚未接入的体系——不会把没核实过的东西，当成已经算好的事实，端给你。"
-          en="The inner six rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
+          zh="这座罗盘，是场域的整体气象——下面这份清单才是准确的数据来源：已经用真实算法验证、写进你报告里的体系，标着「已接入」；还没接入、暂时不会当成算好的事实端给你的，标着「探索中」。"
+          en="The compass itself is the field's overall atmosphere — the list below is the accurate data source: systems already verified with real algorithms and written into your report are marked “Live”; systems not yet connected, and not presented to you as calculated fact, are marked “Exploring.”"
         />
       </p>
       </div>
@@ -112,11 +112,15 @@ export default function LifeMapCompass() {
         </video>
       </div>
       {/* 罗盘图是氛围视觉，下面这份体系清单才是准确、可中英切换、
-          随算法接入状态更新的真实数据来源——图和数据分开维护。 */}
+          随算法接入状态更新的真实数据来源——图和数据分开维护。之前这里
+          每个体系配一个不同颜色的圆点，暗示视频里也有对应的颜色分区——
+          但视频本身是一整支金色调的罗盘动画，没有分色，这个点之前会
+          让人误以为图和文字是对应着的。这里改成统一的状态点：金色=
+          已接入，灰色=探索中，不再暗示颜色跟视频画面有对应关系。 */}
       <div className="bg-lm2-card mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 rounded-sm px-6 py-4 text-[10px] uppercase tracking-widest2 text-lm2-text-dim">
         {RINGS.map((ring) => (
           <span key={ring.radius} className="flex items-center gap-1.5">
-            <span className="inline-block h-2 w-2 rounded-full" style={{ background: ring.color, opacity: ring.dashed ? 0.55 : 1 }} />
+            <span className="inline-block h-2 w-2 rounded-full" style={{ background: ring.dashed ? "#8A8496" : "#F0C868" }} />
             <Bi zh={ring.labelZh} en={ring.labelEn} />
           </span>
         ))}

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import { getCoreType, type WesternElement, type ChineseElement } from "@/lib/lifemap-calc";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
 import LifeMapCompass from "./LifeMapCompass";
 import NatalChartWheel from "./NatalChartWheel";
+import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
 
 type Stage = "landing" | "form" | "loading" | "report";
 
@@ -143,6 +143,8 @@ export default function LifeMapFlow() {
   const [hour, setHour] = useState("12");
   const [minute, setMinute] = useState("00");
   const [city, setCity] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [plateNumber, setPlateNumber] = useState("");
   const [gender, setGender] = useState<"male" | "female">("female");
   const [profession, setProfession] = useState("");
   const [professionCustom, setProfessionCustom] = useState("");
@@ -436,12 +438,6 @@ export default function LifeMapFlow() {
             <h2 className="mt-3 text-center font-display text-3xl font-light text-lm2-text">
               <Bi zh="一、基础信息" en="I. Basic Information" />
             </h2>
-            <p className="mt-4 text-center text-xs text-lm2-text-dim">
-              <Bi zh="也想测测随身携带的号码？" en="Curious about the numbers you carry every day?" />{" "}
-              <Link href="/tools/number-energy" className="text-lm2-mint underline underline-offset-4 hover:text-lm2-amber">
-                <Bi zh="手机号 / 车牌号数字能量测试 →" en="Phone & license plate number test →" />
-              </Link>
-            </p>
 
             <div className="mt-10 space-y-6">
               <div>
@@ -496,6 +492,28 @@ export default function LifeMapFlow() {
                 <input
                   value={city} onChange={(e) => setCity(e.target.value)}
                   placeholder={t("城市", "City")}
+                  className="mt-2 w-full rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-lm2-text-dim">
+                  <Bi zh="手机号（选填，会一并生成数字能量解读）" en="Phone number (optional — a number-energy reading will be included)" />
+                </label>
+                <input
+                  value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder={t("138 0000 0000", "e.g. 138 0000 0000")}
+                  className="mt-2 w-full rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-lm2-text-dim">
+                  <Bi zh="车牌号（选填，只取数字部分测算）" en="License plate (optional — only the digits are used)" />
+                </label>
+                <input
+                  value={plateNumber} onChange={(e) => setPlateNumber(e.target.value)}
+                  placeholder={t("京A 88888", "e.g. ABC 8888")}
                   className="mt-2 w-full rounded-sm border border-lm2-text/15 bg-lm2-bg px-4 py-3 text-lm2-text outline-none focus:border-lm2-violet/60"
                 />
               </div>
@@ -776,6 +794,42 @@ export default function LifeMapFlow() {
                     </span>
                   ))}
                 </div>
+              </div>
+            )}
+
+            {(phoneNumber.trim() || plateNumber.trim()) && (
+              <div className="bg-void-deep mt-8 p-6 sm:p-8">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                  <Bi zh="数字能量解读" en="Number Energy Reading" />
+                </p>
+                {phoneNumber.trim() && (() => {
+                  const r = analyzePhoneNumber(phoneNumber);
+                  return (
+                    <div className="mt-4">
+                      <p className="text-sm text-lm2-text-dim">{t("手机号", "Phone")} {r.digitsOnly}</p>
+                      <p className="mt-1 font-display text-lg text-lm2-text">
+                        {t("总和灵动数", "Total number")} {r.totalSum} · <Bi zh={r.lingdong.zh} en={r.lingdong.en} />
+                      </p>
+                    </div>
+                  );
+                })()}
+                {plateNumber.trim() && (() => {
+                  const r = analyzePlateNumber(plateNumber);
+                  return (
+                    <div className="mt-4 border-t border-lm2-text/10 pt-4">
+                      <p className="text-sm text-lm2-text-dim">{t("车牌号", "Plate")} {r.digitsOnly}</p>
+                      <p className="mt-1 font-display text-lg text-lm2-text">
+                        {t("总和灵动数", "Total number")} {r.totalSum} · <Bi zh={r.lingdong.zh} en={r.lingdong.en} />
+                      </p>
+                    </div>
+                  );
+                })()}
+                <p className="mt-5 text-xs leading-6 text-lm2-text-dim">
+                  <Bi
+                    zh="这是民俗数字能量学（81数灵动数体系），是约定俗成的符号含义表，不是天文或统计意义上算出来的结论，供参考。"
+                    en="This is folk number-energy numerology (the 81-number system) — a conventional table of symbolic meanings, not an astronomically or statistically derived result. For reference only."
+                  />
+                </p>
               </div>
             )}
 
