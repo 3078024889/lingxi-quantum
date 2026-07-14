@@ -28,13 +28,12 @@ type Node = {
   vi: number;
 };
 
-const COLORS = ["#D6B77A", "#8EDBD2", "#FF9FD6", "#C9A6FF"];
+const COLORS = ["#D8B8FF", "#A0E0D0", "#FF9FD6", "#C9A6FF"];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
-// 光点只在左右两条窄带里出现（约 1~16% 与 84~99%），中间阅读列完全留空。
+// 光点现在只在左侧窄带出现（约 1~16%），右侧留给场域数据面板。
 const SIDE_MAX = 16;
 function randX(): number {
-  const onLeft = Math.random() < 0.5;
-  return onLeft ? rand(1, SIDE_MAX) : rand(100 - SIDE_MAX, 99);
+  return rand(1, SIDE_MAX);
 }
 
 const PRIORITY = /(修炼|显化片刻|邀请)/;
@@ -47,6 +46,11 @@ const BAG: number[] = (() => {
   return bag;
 })();
 const pick = () => BAG[Math.floor(Math.random() * BAG.length)];
+
+// 每颗光点绽放的引言前面配一个小图标，跟场域数据面板（右侧）的图标
+// 语言呼应，光点本身也更有辨识度，不只是一个圆点。
+const GLYPHS = ["✦", "☾", "♡", "✎", "❋", "◈"];
+const glyphFor = (id: number) => GLYPHS[id % GLYPHS.length];
 
 export default function FieldVoices() {
   // 光点只在视口两侧窄带出现、不进中间阅读列，全站统一开启，不再按路径关闭。
@@ -64,7 +68,7 @@ export default function FieldVoices() {
       setIsMobile(mobile);
       const area = w * window.innerHeight;
       // 只在两侧窄带里分布，按可用面积（约为总宽的 32%）折算密度，保持视觉丰富度
-      const count = Math.max(10, Math.min(mobile ? 16 : 42, Math.round((area * 0.34) / (mobile ? 26000 : 32000))));
+      const count = Math.max(6, Math.min(mobile ? 10 : 24, Math.round((area * 0.17) / (mobile ? 26000 : 32000))));
       const arr: Node[] = [];
       for (let k = 0; k < count; k++) {
         arr.push({
@@ -209,7 +213,7 @@ export default function FieldVoices() {
                     className={`fv-say absolute top-1/2 -translate-y-1/2 ${openRight ? "left-6 text-left" : "right-6 text-right"}`}
                     style={{ borderColor: `${d.color}55`, boxShadow: `0 2px 14px rgba(0,0,0,0.35), 0 0 16px ${d.color}22` }}
                   >
-                    <span className="fv-glyph" style={{ color: d.color }}>✧</span>
+                    <span className="fv-glyph" style={{ color: d.color }}>{glyphFor(d.id)}</span>
                     <span data-lang="zh">{v.zh}</span>
                     <span data-lang="en">{v.en}</span>
                   </div>
@@ -243,17 +247,17 @@ export default function FieldVoices() {
           width: max-content; max-width: 17rem;
           font-family: "Cormorant Garamond", serif;
           font-size: 0.98rem; line-height: 1.6; letter-spacing: 0.015em;
-          color: rgba(214,183,122,0.98);
+          color: rgba(216,184,255,0.98);
           padding: 5px 12px;
           border-radius: 999px;
           background: linear-gradient(135deg, rgba(10,24,46,0.6), rgba(8,18,34,0.65));
-          border: 1px solid rgba(214,183,122,0.34);
+          border: 1px solid rgba(216,184,255,0.34);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
           box-shadow: 0 2px 18px rgba(0,0,0,0.3);
           animation: fv-say-in 1s ease both;
         }
-        .fv-glyph { color: rgba(142,219,210,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
+        .fv-glyph { color: rgba(160,224,208,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
         @keyframes fv-say-in { from { opacity: 0; letter-spacing: 0.12em; } to { opacity: 1; letter-spacing: 0.015em; } }
         @media (max-width: 719px) {
           .fv-say { max-width: 60vw; font-size: 1.02rem; }

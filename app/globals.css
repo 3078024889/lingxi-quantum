@@ -1,6 +1,15 @@
 :root {
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* ============ Lingxi Typography System V4（定版） ============ */
+  --text-primary: #DDE6FF;
+  --text-heading: #F0E6FF;
+  --text-heading-gradient: linear-gradient(90deg, #E0D4FF, #C8E0FF);
+  --text-accent-purple: #D8B8FF;
+  --text-accent-cyan: #A0E0D0;
+  --text-button: #E0F0FF;
+  --text-secondary: #B8C9E6;
+  --glow-soft: 0 0 8px rgba(224, 230, 255, 0.45);
 }
 
 @tailwind base;
@@ -11,34 +20,45 @@ html {
   scroll-behavior: smooth;
 }
 
-/* ============ Lingxi Typography System V3 ============
-   白/青蓝/金三色互相抢主视觉的问题——三个颜色的饱和度、亮度都接近，
-   长时间看会刺眼、发冷、注意力分散。这版建立五层文字色：
-   - 标题（title，星辉银 #ECE5F5）：比正文亮一档，但依然克制，不是纯白
-   - 正文（bone/lm2-text，月雾紫白 #DDD8EA）：全站 80% 的文字用这个，
-     长时间阅读不刺眼
-   - 辅助（bone-dim/lm2-text-dim，星尘灰紫 #9893B0）：说明性文字
-   - 强调（lattice，灵犀青玉 #8EDBD2）：比纯青蓝多一分绿，不会跟蓝紫色
-     背景"融在一起"
-   - 印记（amber，古星金 #D6B77A）：收窄到只用于章节号、核心符号这类
-     "印记性"文字，不再大面积铺开当正文强调色
-   文字本身不再叠厚重光晕去硬拽对比度——颜色选对了，靠色彩关系本身
-   就有足够的呼吸感，只留极淡的一点点氛围光，"发光但不亮"。 */
+/* 正文：全站默认字色统一用 --text-primary，不再是纯白，也不是上一版
+   的月雾紫白/星尘灰紫两层——这版收敛成你迭代过后的定版：偏蓝的浅紫白，
+   跟深空蓝紫背景是同一个色系家族，不是"文字"和"背景"两套互不相干的
+   颜色硬凑在一起。 */
 .text-bone, .text-lm2-text {
-  text-shadow: 0 0 12px rgba(221,216,234,0.12), 0 1px 2px rgba(4,8,18,0.4);
+  color: var(--text-primary);
+  text-shadow: var(--glow-soft);
 }
 .text-bone-dim, .text-lm2-text-dim {
-  text-shadow: 0 1px 2px rgba(4,8,18,0.35);
+  color: var(--text-secondary);
+  text-shadow: none;
 }
-/* 标题：h1/h2 用 text-bone 时，取比正文更亮一档的星辉银，制造主次 */
+/* 标题：h1/h2 用渐变字（紫到青的横向渐变），不是纯色——这是这版最大
+   的变化，标题本身自带一点流动的渐变质感，跟背景的极光气质呼应。 */
 h1.text-bone, h2.text-bone, h1.text-lm2-text, h2.text-lm2-text,
 .text-title, .text-lm2-title {
-  color: #ECE5F5;
-  text-shadow: 0 0 16px rgba(236,229,245,0.16), 0 1px 3px rgba(4,8,18,0.45);
+  color: var(--text-heading);
+  background: var(--text-heading-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: var(--glow-soft);
+}
+/* 强调色：紫 / 青绿双色，统计数字、图标文字、关键词用 */
+.text-amber, .text-lm2-amber, .text-violet, .text-lm2-violet, .text-lm-violet {
+  color: var(--text-accent-purple);
+  text-shadow: var(--glow-soft);
+}
+.text-lattice, .text-lm2-mint, .text-lm2-sky {
+  color: var(--text-accent-cyan);
+  text-shadow: var(--glow-soft);
+}
+/* 按钮文字：统一用偏白的浅蓝，跟按钮本身的渐变底色区分开 */
+button, .btn, a[class*="bg-lattice"], a[class*="bg-amber"] {
+  text-shadow: var(--glow-soft);
 }
 
 /* ============ Rainbow Celestial Aurora Design System ============
-   全站基底：深空底色 + Lingxi Typography System 五层文字色。
+   全站基底：深空底色 + Lingxi Typography System V4。
    真正"活的"那层，是 AuroraVideoBand 组件——固定铺满整个视口、不随
    页面滚动、全站每一屏都在（见 layout.tsx），这才是"场是活的"的
    来源。下面这层 CSS 渐变只是视频加载失败/播放被拦截时的静态兜底，
@@ -47,18 +67,18 @@ body {
   position: relative;
   background-color: #0a1626;
   background-image:
-    radial-gradient(ellipse 80% 60% at 12% -5%, rgba(143,216,255,0.24), transparent 60%),
-    radial-gradient(ellipse 75% 65% at 100% 8%, rgba(142,219,210,0.20), transparent 60%),
-    radial-gradient(ellipse 70% 65% at 50% 105%, rgba(94,169,255,0.22), transparent 62%),
-    radial-gradient(ellipse 65% 55% at 88% 92%, rgba(214,183,122,0.14), transparent 58%),
+    radial-gradient(ellipse 80% 60% at 12% -5%, rgba(200,224,255,0.22), transparent 60%),
+    radial-gradient(ellipse 75% 65% at 100% 8%, rgba(160,224,208,0.18), transparent 60%),
+    radial-gradient(ellipse 70% 65% at 50% 105%, rgba(216,184,255,0.20), transparent 62%),
+    radial-gradient(ellipse 65% 55% at 88% 92%, rgba(216,184,255,0.14), transparent 58%),
     linear-gradient(160deg, #081220 0%, #0c1f36 35%, #0f2a48 65%, #0a1c30 100%);
   background-attachment: fixed;
-  color: #DDD8EA;
+  color: var(--text-primary);
   min-height: 100vh;
 }
 
 /* Aurora Crystal Glass——全站卡片统一底样：深色水晶玻璃 + 一圈很淡的
-   古星金描边，取代之前饱和度过高的亮金描边。 */
+   紫青双色描边。 */
 .bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report {
   position: relative;
   /* 全站几十处卡片用的都是不带斜杠透明度后缀的 bg-void-deep 这类写法，
@@ -68,15 +88,15 @@ body {
      组件那边写没写 /40 这种后缀，都会被这条规则统一接管。 */
   background-color: rgba(10, 24, 46, 0.42) !important;
   background-image:
-    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(214,183,122,0.08), transparent 55%),
-    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(142,219,210,0.10), transparent 55%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(94,169,255,0.08), transparent 60%);
+    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(216,184,255,0.08), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(160,224,208,0.10), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(200,224,255,0.08), transparent 60%);
   background-size: 200% 200%, 200% 200%, 200% 200%;
   animation: lx-card-shimmer 20s ease-in-out infinite;
-  border: 1px solid rgba(214,183,122,0.22);
+  border: 1px solid rgba(216,184,255,0.22);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 0 0 1px rgba(143,216,255,0.05) inset, 0 8px 32px rgba(0,0,0,0.35);
+  box-shadow: 0 0 0 1px rgba(200,224,255,0.05) inset, 0 8px 32px rgba(0,0,0,0.35);
 }
 @keyframes lx-card-shimmer {
   0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
@@ -106,8 +126,8 @@ textarea.bg-void, input.bg-void {
 .lx-nav-glass {
   background-color: rgba(8, 18, 34, 0.72);
   background-image:
-    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(214,183,122,0.08), transparent 55%),
-    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(142,219,210,0.08), transparent 55%);
+    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(216,184,255,0.08), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(160,224,208,0.08), transparent 55%);
 }
 
 ::selection {

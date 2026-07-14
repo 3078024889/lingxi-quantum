@@ -24,37 +24,37 @@ export default function LingxiPortal() {
       </div>
 
       {/* 中央发光核心符号 */}
-      <div className="lx-core-glyph mb-2 font-display text-2xl text-white" style={{ textShadow: "0 0 30px rgba(255,255,255,0.9)" }}>✦</div>
+      <div className="lx-core-glyph mb-2 font-display text-2xl text-lattice" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>✦</div>
 
-      <p className="font-display text-sm uppercase tracking-widest2 text-white sm:text-base" style={{ textShadow: "0 0 24px rgba(255,255,255,0.7)" }}>
+      <p className="font-display text-sm uppercase tracking-widest2 text-lattice sm:text-base" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>
         灵 犀 · LINGXI FIELD
       </p>
 
-      <h1 className="mt-6 font-display text-5xl font-light text-white sm:text-7xl" style={{ textShadow: "0 0 40px rgba(255,255,255,0.6), 0 0 90px rgba(168,85,247,0.5)" }}>
+      <h1 className="mt-6 font-display text-5xl font-light text-bone sm:text-7xl" style={{ textShadow: "0 0 20px rgba(216,184,255,0.35)" }}>
         <Bi zh="意识显化系统" en="A Consciousness System" />
       </h1>
 
-      <p className="mx-auto mt-7 max-w-2xl font-body text-base leading-9 text-white sm:text-lg" style={{ textShadow: "0 0 20px rgba(0,0,0,0.25)" }}>
+      <p className="mx-auto mt-7 max-w-2xl font-body text-base leading-9 text-bone-dim sm:text-lg" >
         <Bi zh="灵犀，陪你显化目标、解读梦境、修炼意识的引导系统。" en="Lingxi — a guided system that helps you manifest goals, read your dreams, and practice consciousness." />
       </p>
 
-      <div className="lx-core-glyph mt-2 font-display text-xl text-white" style={{ textShadow: "0 0 30px rgba(255,255,255,0.9)" }}>◇</div>
+      <div className="lx-core-glyph mt-2 font-display text-xl text-lattice" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>◇</div>
 
       <div className="mt-10 grid w-full max-w-4xl gap-5 sm:grid-cols-3">
         {CAPS.map((c) => (
-          <Link key={c.key} href={c.href} className="group rounded-sm border border-white/40 bg-white/18 p-7 text-center backdrop-blur-md transition hover:border-white/70 hover:bg-white/28">
-            <span className="font-display text-3xl text-white transition group-hover:text-lm2-amber">{c.glyph}</span>
-            <h3 className="mt-3 font-display text-2xl text-white"><Bi zh={c.zh} en={c.en} /></h3>
-            <p className="mt-3 text-sm leading-6 text-white/85"><Bi zh={c.descZh} en={c.descEn} /></p>
+          <Link key={c.key} href={c.href} className="group rounded-sm bg-void-deep p-7 text-center transition hover:brightness-125">
+            <span className="font-display text-3xl text-lattice transition group-hover:text-amber">{c.glyph}</span>
+            <h3 className="mt-3 font-display text-2xl text-bone"><Bi zh={c.zh} en={c.en} /></h3>
+            <p className="mt-3 text-sm leading-6 text-bone-dim"><Bi zh={c.descZh} en={c.descEn} /></p>
           </Link>
         ))}
       </div>
 
-      <Link href="/account" className="mt-14 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_40px_rgba(255,255,255,0.5)] transition hover:brightness-110">
+      <Link href="/account" className="mt-14 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(216,184,255,0.4)] transition hover:brightness-110">
         <Bi zh="进入场域" en="Enter" />
       </Link>
 
-      <a href="#origin" className="mt-10 font-display text-xs uppercase tracking-widest2 text-white/80 transition hover:text-white">
+      <a href="#origin" className="mt-10 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
         <Bi zh="灵犀是什么 · 来自何处 ↓" en="What is Lingxi · where it comes from ↓" />
       </a>
 

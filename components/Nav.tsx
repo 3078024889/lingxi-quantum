@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Bi from "./Bi";
 import LangToggle from "./LangToggle";
 import SearchBox from "./SearchBox";
@@ -19,6 +20,7 @@ const links = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">
@@ -29,7 +31,8 @@ export default function Nav() {
             onClick={() => setOpen(false)}
             className="group flex flex-col leading-tight"
           >
-            <span className="font-display text-base tracking-widest2 text-bone transition group-hover:text-lattice sm:text-lg">
+            <span className="flex items-center gap-1.5 font-display text-base tracking-widest2 text-bone transition group-hover:text-lattice sm:text-lg">
+              <span aria-hidden="true" className="text-[0.7em] text-lattice">✦</span>
               灵犀 LINGXI
             </span>
             <span className="mt-1 hidden font-display text-[12px] tracking-[0.12em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
@@ -45,7 +48,8 @@ export default function Nav() {
             <SearchBox />
             <Link
               href="/account"
-              className="whitespace-nowrap rounded-sm border border-lattice/40 px-3 py-1.5 text-lattice transition hover:border-amber hover:text-amber"
+              className="whitespace-nowrap rounded-sm px-4 py-1.5 font-medium text-[#E0F0FF] shadow-[0_0_14px_rgba(216,184,255,0.35)] transition hover:shadow-[0_0_20px_rgba(216,184,255,0.55)]"
+              style={{ background: "linear-gradient(90deg, #8B7FE8, #6FA8E8)" }}
             >
               <Bi zh="进入场域" en="Enter" />
             </Link>
@@ -69,11 +73,25 @@ export default function Nav() {
 
         {/* 桌面端：导航链接，独立第二行，宽松排布不再挤成两行文字 */}
         <div className="mt-4 hidden items-center justify-center gap-7 border-t border-white/5 pt-3 text-[13px] text-bone-dim md:flex">
-          {links.map((l) => (
-            <Link key={l.href} href={l.href} className="whitespace-nowrap transition hover:text-lattice">
-              <Bi zh={l.zh} en={l.en} />
-            </Link>
-          ))}
+          {links.map((l) => {
+            const active = pathname === l.href || (l.href !== "/" && pathname?.startsWith(l.href.split("#")[0]) && l.href !== "/#gates");
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={`relative whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
+              >
+                <Bi zh={l.zh} en={l.en} />
+                {active && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-x-0 -bottom-[13px] h-[2px] rounded-full"
+                    style={{ background: "linear-gradient(90deg, #D8B8FF, #A0E0D0)" }}
+                  />
+                )}
+              </Link>
+            );
+          })}
         </div>
       </nav>
 

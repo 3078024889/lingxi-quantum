@@ -210,9 +210,9 @@ export default function FullReportView({ id }: { id: string }) {
         .lm2-print-mode h1,
         .lm2-print-mode p,
         .lm2-print-mode span,
-        .lm2-print-mode div { color: #F7F3EA !important; }
-        .lm2-print-mode .lm2-print-title { color: #F0C868 !important; font-weight: 600; }
-        .lm2-print-mode svg text { fill: #F7F3EA !important; }
+        .lm2-print-mode div { color: #DDE6FF !important; }
+        .lm2-print-mode .lm2-print-title { color: #D8B8FF !important; font-weight: 600; }
+        .lm2-print-mode svg text { fill: #DDE6FF !important; }
         /* 报告里的子卡片（星盘/五行/紫微/频率）在打印模式下也要跟外层的
            深色极光底保持一致的玻璃质感，不能用网页版那套半透明深色
            （半透明深色叠在同样是深色的打印底上，边界会糊成一团看不清）。
@@ -220,7 +220,7 @@ export default function FullReportView({ id }: { id: string }) {
            分得清楚。 */
         .lm2-print-mode .bg-lm2-card {
           background: rgba(255,255,255,0.08) !important;
-          border-color: rgba(240,200,104,0.35) !important;
+          border-color: rgba(216,184,255,0.35) !important;
         }
       `}</style>
       <div className="mx-auto max-w-2xl">
