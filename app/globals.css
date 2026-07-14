@@ -10,6 +10,15 @@
   --text-button: #E0F0FF;
   --text-secondary: #B8C9E6;
   --glow-soft: 0 0 8px rgba(224, 230, 255, 0.45);
+  /* ============ Aurora Glass（统一底色） ============
+     全站所有"有文字的框"——导航栏、卡片、心声之雨的气泡——统一用这一个
+     紫到蓝的渐变玻璃，不再用偏黑偏灰的深色玻璃。这是这一版最核心的
+     改动：之前每处分别调深色玻璃的透明度、调深色玻璃的描边，颜色底子
+     终究还是"深色"，怎么调都会读成"黑框/灰框"。这次直接换底色本身，
+     不再是"透明度游戏"。 */
+  --aurora-glass: linear-gradient(135deg, rgba(94, 74, 168, 0.6), rgba(64, 108, 186, 0.58));
+  --aurora-glass-strong: linear-gradient(135deg, rgba(100, 78, 176, 0.78), rgba(66, 112, 192, 0.76));
+  --aurora-glass-border: rgba(210, 190, 255, 0.5);
 }
 
 @tailwind base;
@@ -77,30 +86,30 @@ body {
   min-height: 100vh;
 }
 
-/* Aurora Crystal Glass——全站卡片统一底样：深色水晶玻璃 + 一圈很淡的
-   紫青双色描边。 */
+/* Aurora Glass——全站卡片统一底样：紫到蓝的渐变玻璃，不再是深色/黑色
+   系底子叠一点点高光那种做法。这是这版最核心的改动，见上面 :root 里
+   --aurora-glass 的说明。 */
 .bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report {
   position: relative;
   /* 全站几十处卡片用的都是不带斜杠透明度后缀的 bg-void-deep 这类写法，
      Tailwind 编译出来的是纯色不透明的 background-color——这才是"到处
-     都是黑框，挡住了背景"的根本原因，不是卡片"看起来暗"，是它真的
-     完全不透明。这里直接把这几个类的底色统一收成半透明玻璃色，不管
-     组件那边写没写 /40 这种后缀，都会被这条规则统一接管。 */
-  background-color: rgba(24, 30, 64, 0.46) !important;
+     都是黑框，挡住了背景"的根本原因。这里直接把这几个类的底色统一
+     接管成 Aurora Glass 渐变，不管组件那边写没写 /40 这种后缀。 */
+  background-color: rgba(80, 84, 160, 0.55) !important;
   background-image:
-    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(216,184,255,0.14), transparent 55%),
-    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(160,224,208,0.14), transparent 55%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(139,127,232,0.12), transparent 60%);
-  background-size: 200% 200%, 200% 200%, 200% 200%;
+    var(--aurora-glass),
+    radial-gradient(ellipse 70% 55% at 15% 0%, rgba(230,210,255,0.18), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 95% 100%, rgba(160,224,208,0.14), transparent 55%);
+  background-size: 100% 100%, 200% 200%, 200% 200%;
   animation: lx-card-shimmer 20s ease-in-out infinite;
-  border: 1px solid rgba(200,180,255,0.4);
+  border: 1px solid var(--aurora-glass-border);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    0 0 0 1px rgba(200,224,255,0.06) inset,
-    0 0 22px rgba(139,127,232,0.16),
-    0 0 12px rgba(160,224,208,0.10),
-    0 8px 32px rgba(0,0,0,0.35);
+    0 0 0 1px rgba(230,220,255,0.1) inset,
+    0 0 24px rgba(139,110,220,0.22),
+    0 0 14px rgba(160,224,208,0.12),
+    0 8px 32px rgba(0,0,0,0.3);
 }
 @keyframes lx-card-shimmer {
   0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
@@ -113,7 +122,7 @@ body {
    打字光标和已输入内容，玻璃化到看得见背后视频的程度反而会降低可用
    性，这里单独把表单控件的透明度调高一些，跟普通卡片区分开。 */
 textarea.bg-void, input.bg-void {
-  background-color: rgba(8, 18, 36, 0.58) !important;
+  background-color: rgba(48, 44, 96, 0.55) !important;
   background-image: none;
   animation: none;
 }
@@ -128,11 +137,8 @@ textarea.bg-void, input.bg-void {
    之前这里其实是从老版浅色主题遗留下来的 bg-white/45——没跟着整体
    换色，这是导航栏一直显得"发灰、看不清"的真正原因。 */
 .lx-nav-glass {
-  background-color: rgba(10, 20, 40, 0.32);
-  background-image:
-    linear-gradient(180deg, rgba(20,16,50,0.22) 0%, rgba(10,20,40,0.12) 100%),
-    radial-gradient(ellipse 90% 120% at 10% 0%, rgba(216,184,255,0.16), transparent 60%),
-    radial-gradient(ellipse 80% 120% at 95% 0%, rgba(160,224,208,0.14), transparent 60%);
+  background-color: rgba(80, 84, 160, 0.6);
+  background-image: var(--aurora-glass-strong);
 }
 
 ::selection {

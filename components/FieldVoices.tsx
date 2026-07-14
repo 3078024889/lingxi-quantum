@@ -286,14 +286,14 @@ export default function FieldVoices() {
           color: var(--text-primary, #DDE6FF);
           padding: 5px 12px;
           border-radius: 999px;
-          background: linear-gradient(135deg, rgba(24,30,64,0.62), rgba(10,20,40,0.68));
-          border: 1px solid rgba(200,180,255,0.4);
+          background: var(--aurora-glass, linear-gradient(135deg, rgba(94,74,168,0.6), rgba(64,108,186,0.58)));
+          border: 1px solid var(--aurora-glass-border, rgba(210,190,255,0.5));
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          box-shadow: 0 2px 18px rgba(0,0,0,0.3);
+          box-shadow: 0 2px 18px rgba(0,0,0,0.25);
           animation: fv-say-in 1s ease both;
         }
-        .fv-glyph { color: rgba(160,224,208,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
+        .fv-glyph { color: rgba(255,255,255,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
         /* 右侧"数据掉落"绽放出来的小卡：图标 + 数字 + 一行说明，跟左侧的
            引言气泡是同一套玻璃质感，只是内容换成了数字。 */
         .fv-data {
@@ -301,11 +301,11 @@ export default function FieldVoices() {
           display: flex; flex-direction: column; gap: 2px;
           padding: 7px 14px;
           border-radius: 12px;
-          background: linear-gradient(135deg, rgba(24,30,64,0.62), rgba(10,20,40,0.68));
-          border: 1px solid rgba(200,180,255,0.4);
+          background: var(--aurora-glass, linear-gradient(135deg, rgba(94,74,168,0.6), rgba(64,108,186,0.58)));
+          border: 1px solid var(--aurora-glass-border, rgba(210,190,255,0.5));
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          box-shadow: 0 2px 18px rgba(0,0,0,0.3);
+          box-shadow: 0 2px 18px rgba(0,0,0,0.25);
           animation: fv-say-in 1s ease both;
         }
         .fv-data-num {
