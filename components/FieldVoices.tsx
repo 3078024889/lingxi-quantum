@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { VOICES } from "@/lib/voices";
 
 /* 心声之雨 · 深空活场层（v2：仅两侧 · 流星尾巴 · 水波纹涟漪）
@@ -78,6 +79,14 @@ export default function FieldVoices() {
   const [isMobile, setIsMobile] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const seq = useRef(0);
+  const pathname = usePathname();
+
+  // 手机上点导航切换页面时，把当前绽放/锁定的心声内容立刻收起——
+  // 不带到下一页去，下一页重新按 3 秒节奏来。
+  useEffect(() => {
+    setSpeaking({});
+    setHovered(null);
+  }, [pathname]);
 
   useEffect(() => {
     const build = () => {
@@ -144,7 +153,7 @@ export default function FieldVoices() {
         const next = { ...prev, [d.id]: d.vi };
         const to = setTimeout(() => {
           setSpeaking((p) => { const c = { ...p }; delete c[d.id]; return c; });
-        }, isMobile ? 6400 : 6000);
+        }, isMobile ? 3000 : 6000);
         timers.current.push(to);
         return next;
       });

@@ -21,6 +21,7 @@ export default async function AscendingHeartPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-40">
             <GateDestiny className="h-[420px] w-[420px]" />
           </div>
+          <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="修炼技术" en="Practice" />
           </p>
@@ -33,10 +34,11 @@ export default async function AscendingHeartPage() {
               en="The light-body is migrating from the pineal gland toward the thymus — between heart and throat — the site known as the Rising Heart, the meeting point of the planetary axis and the central-sun axis. The integration of breath and imagination is the most effective tool for activating this point."
             />
           </p>
+          </div>
         </section>
 
         <section className="px-6 py-16">
-          <div className="mx-auto max-w-3xl space-y-10 text-base leading-9 text-bone-dim">
+          <div className="bg-void-deep mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
               <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>

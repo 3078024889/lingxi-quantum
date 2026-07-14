@@ -85,15 +85,17 @@ const RINGS: Ring[] = [
 export default function LifeMapCompass() {
   return (
     <div className="mx-auto mt-16 max-w-3xl px-4">
+      <div className="bg-lm2-card mx-auto max-w-lg rounded-sm px-6 py-6">
       <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
         <Bi zh="灵犀生命图谱罗盘" en="The Lingxi Life Map Compass" />
       </p>
-      <p className="mx-auto mt-2 max-w-md text-center text-xs leading-6 text-lm2-text-dim/60">
+      <p className="mx-auto mt-2 max-w-md text-center text-xs leading-6 text-lm2-text-dim">
         <Bi
           zh="内六圈，是已经用真实算法验证、写进你报告里的体系；最外一圈虚线，是仍在验证中、尚未接入的体系——不会把没核实过的东西，当成已经算好的事实，端给你。"
           en="The inner six rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
         />
       </p>
+      </div>
       <div className="relative mx-auto mt-8 aspect-square w-full max-w-lg overflow-hidden rounded-2xl shadow-[0_0_60px_rgba(240,200,104,0.18)]">
         <video
           autoPlay
@@ -111,7 +113,7 @@ export default function LifeMapCompass() {
       </div>
       {/* 罗盘图是氛围视觉，下面这份体系清单才是准确、可中英切换、
           随算法接入状态更新的真实数据来源——图和数据分开维护。 */}
-      <div className="mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-widest2 text-lm2-text-dim/60">
+      <div className="bg-lm2-card mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 rounded-sm px-6 py-4 text-[10px] uppercase tracking-widest2 text-lm2-text-dim">
         {RINGS.map((ring) => (
           <span key={ring.radius} className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-2 rounded-full" style={{ background: ring.color, opacity: ring.dashed ? 0.55 : 1 }} />

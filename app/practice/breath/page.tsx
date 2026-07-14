@@ -30,7 +30,7 @@ export default async function BreathPage() {
       <main className="pt-16">
         <section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20"><CosmicField className="h-full w-auto" /></div>
-          <div className="mx-auto max-w-3xl">
+          <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="修炼技术 · 单次激活 · 永久有效" en="Practice · one activation · yours forever" /></p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="量子息法" en="The Quantum Breath Method" /></h1>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim"><Bi zh="量子息法是意识本源整合进程的主要工具。呼吸的美妙就在于，它始终伴随着你在这个世界的体验，从最初的到最终的。它是便携式的，每个人都拥有它，正是它将你锚定进了当下。" en="The Quantum Breath Method is the primary tool of the primordial-consciousness integration process. The beauty of the breath is that it accompanies your experience in this world from the very first to the very last. It is portable — everyone already has it — and it is what anchors you into the present moment." /></p>
@@ -38,7 +38,7 @@ export default async function BreathPage() {
         </section>
 
         <section className="border-t border-white/5 px-6 py-24">
-          <div className="mx-auto max-w-3xl">
+          <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
             <h2 className="font-display text-3xl font-light text-bone"><Bi zh="呼吸与本源意识" en="Breath and primordial consciousness" /></h2>
             <div className="mt-10 space-y-8 text-base leading-9 text-bone-dim">
               <p><Bi zh="有一个为每个人准备的通用支持系统，那就是呼吸。正是呼吸将我们连接到了起源点：意识的本源状态，即纯粹的存在状态。呼吸是一种途径，无论在什么时空，人类仪器都经由它连接回这个起始点。呼吸是门户，连通了物质维度与量子/交互维度诸领域。" en="There is a universal support system prepared for everyone: the breath. It is breath that connects us back to the point of origin — the primordial state of consciousness, the state of pure being. Breath is the pathway through which the human instrument, in any time and space, connects back to this starting point. Breath is the doorway that links the material dimension to the realms of the quantum/interactive dimensions." /></p>
@@ -52,7 +52,7 @@ export default async function BreathPage() {
         {unlocked ? (
           <>
             <section className="border-t border-white/5 px-6 py-24">
-              <div className="mx-auto max-w-3xl">
+              <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
                 <h2 className="font-display text-3xl font-light text-bone"><Bi zh="节律路径 · 完整练习图" en="Rhythm path · complete practice chart" /></h2>
                 <p className="mt-4 text-base leading-9 text-bone-dim"><Bi zh="这是一张完整的量子息法练习挂图，包含节律路径、五步流程与四段呼吸结构。建议保存到手机，随时对照练习。" en="This is a complete Quantum Breath Method practice chart — the rhythm path, the five-step flow, and the four-part breath structure. Save it to your phone and refer to it anytime you practice." /></p>
                 <div className="mt-10">
@@ -70,7 +70,7 @@ export default async function BreathPage() {
             </section>
 
             <section className="border-t border-white/5 px-6 py-24">
-              <div className="mx-auto max-w-3xl">
+              <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
                 <h2 className="font-display text-3xl font-light text-bone"><Bi zh="标准五步法" en="The standard five-step method" /></h2>
                 <div className="mt-12 space-y-12">
                   {standardSteps.map((s) => (
@@ -85,7 +85,7 @@ export default async function BreathPage() {
             </section>
 
             <section className="border-t border-white/5 px-6 py-24">
-              <div className="mx-auto max-w-3xl">
+              <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
                 <h2 className="font-display text-3xl font-light text-bone"><Bi zh="简明四步法（呼吸计数版）" en="The concise four-step method (breath-counting version)" /></h2>
                 <div className="mt-8 space-y-6 text-base leading-9 text-bone-dim">
                   <p><Bi zh="这是量子息法的另一种表述方式，以计数法来计时。呼吸模式是一个由4步构成的简单过程：1. 吸气（鼻）：以计数法计时，最短从1数到3，最大数到6（取决于肺活量、姿势、及不受打扰的程度）。2. 暂停（屏息）：保持住气息，以相等的计数时长。3. 呼气（嘴）：将气吐出，依然是同样的计数时长。4. 暂停（屏息）：再次保持停顿，以同样的计数时长。关键：4步过程中各步时长保持均等。完全精确地监测均等性并不必要，重要的是在保持呼吸连贯流畅性的前提下，大致地监测每步的时长。" en="This is an alternate expression of the Quantum Breath Method, timed by counting. The breath pattern is a simple 4-step process: 1. Inhale (nose): timed by count, from as short as 1 to 3, up to as long as 6 (depending on lung capacity, posture, and how undisturbed you are). 2. Pause (hold breath): hold the breath for an equal count. 3. Exhale (mouth): release the breath, again for the same count. 4. Pause (hold breath): hold once more, for the same count. Key point: the duration of each of the 4 steps should stay equal. Perfectly precise monitoring of equality isn't necessary — what matters is roughly tracking each step's duration while keeping the breath coherent and flowing." /></p>
@@ -96,7 +96,7 @@ export default async function BreathPage() {
             </section>
 
             <section className="border-t border-white/5 px-6 py-24">
-              <div className="mx-auto max-w-3xl">
+              <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
                 <h2 className="font-display text-3xl font-light text-bone"><Bi zh="附加建议" en="Additional guidance" /></h2>
                 <div className="mt-8 space-y-6 text-base leading-9 text-bone-dim">
                   <p><Bi zh="量子息法浓缩版：当练习量子息法持续了2、3周时间后，思考它如何能被浓缩而应用到实时境遇中。将这5步活动改编成30秒活动，进而10秒活动，最终变成3秒活动。理念是将量子息法的体验（而非呼吸面向）浓缩成更短的时间片段，从而能用在实时经历中——打电话、开会、驾车、和他人交谈时唤起这种体验，又无需五步结构所需要的时间。" en="Condensed version: after 2 or 3 weeks of practicing the Quantum Breath Method, consider how it can be condensed and applied to real-time situations. Adapt the 5-step activity into a 30-second activity, then a 10-second activity, and finally a 3-second activity. The idea is to condense the experience of the Quantum Breath Method (not the breathing aspect itself) into shorter segments of time, so it can be summoned in real-time moments — on a call, in a meeting, driving, talking with someone — without needing the time the five-step structure requires." /></p>

@@ -137,7 +137,7 @@ export default function DreamConsole() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-center text-xs text-bone-dim/60">{t("你的梦境档案已在云端安全同步。","Your dream archive is synced securely to the cloud.")}</p>
+          <p className="bg-void-deep mx-auto mt-6 w-fit rounded-full px-4 py-2 text-center text-xs text-bone-dim">{t("你的梦境档案已在云端安全同步。","Your dream archive is synced securely to the cloud.")}</p>
         </div>
       )}
     </div>

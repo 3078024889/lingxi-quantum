@@ -394,6 +394,7 @@ export default function LifeMapFlow() {
             <div className="lm-core" />
           </div>
           <div className="relative z-10">
+            <div className="bg-lm2-card mx-auto max-w-2xl rounded-sm px-8 py-10">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("发现你的生命频率", "Discover Your Life Frequency")}
             </p>
@@ -409,12 +410,13 @@ export default function LifeMapFlow() {
             >
               ✨ {t("开始探索", "Begin Exploring")}
             </button>
-            <p className="mx-auto mt-6 max-w-md text-xs leading-6 text-lm2-text-dim/60">
+            <p className="mx-auto mt-6 max-w-md text-xs leading-6 text-lm2-text-dim">
               <Bi
                 zh="这是一份自我探索与反思的参考，不是命运预言——生命的走向，始终由你自己选择。"
                 en="This is a tool for self-exploration and reflection, not a prophecy — the direction of your life is always your own to choose."
               />
             </p>
+            </div>
             <LifeMapCompass />
           </div>
         </section>

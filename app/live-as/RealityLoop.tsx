@@ -228,7 +228,7 @@ export default function RealityLoop() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-center text-xs text-bone-dim/60">
+          <p className="bg-void-deep mx-auto mt-6 w-fit rounded-full px-4 py-2 text-center text-xs text-bone-dim">
             {t("你的现实回路已在云端安全同步。","Your Reality Loop is synced securely to the cloud.")}
           </p>
         </div>

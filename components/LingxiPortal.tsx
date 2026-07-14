@@ -54,7 +54,7 @@ export default function LingxiPortal() {
         <Bi zh="进入场域" en="Enter" />
       </Link>
 
-      <a href="#origin" className="mt-10 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
+      <a href="#origin" className="bg-void-deep mt-10 rounded-full px-5 py-2 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
         <Bi zh="灵犀是什么 · 来自何处 ↓" en="What is Lingxi · where it comes from ↓" />
       </a>
 

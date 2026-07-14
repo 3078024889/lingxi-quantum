@@ -20,6 +20,7 @@ export default async function DreamPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 opacity-60">
             <DreamBackdrop className="h-full w-full" />
           </div>
+          <div className="bg-void-deep relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-12">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="显化与梦境解读" en="Manifestation & Dream Interpretation" />
           </p>
@@ -32,6 +33,7 @@ export default async function DreamPage() {
               en="A dream is a language the Field uses to speak with you. Record it, gaze at it, and let the symbols that surface be gently understood. The heart receives premonitory impressions from its own future environment — and dreams are often one of the doorways in."
             />
           </p>
+          </div>
         </section>
 
         <section className="px-6 pb-28">

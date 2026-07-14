@@ -44,9 +44,11 @@ export default function Home() {
         {/* 5. 重塑潜意识 */}
         <section id="gates" className="px-6 py-28 sm:py-36">
           <div className="mx-auto max-w-6xl">
-            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="重 塑 潜 意 识" en="Rewrite the Subconscious" /></p>
-            <h2 className="mt-6 text-center font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="每一道门，都是一面镜子" en="Each gate is a mirror" /></h2>
-            <p className="mx-auto mt-6 max-w-xl text-center text-base leading-8 text-bone-dim"><Bi zh="映出你与生命某个面向的关系。" en="reflecting your relationship with one facet of life." /></p>
+            <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10 text-center">
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="重 塑 潜 意 识" en="Rewrite the Subconscious" /></p>
+              <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="每一道门，都是一面镜子" en="Each gate is a mirror" /></h2>
+              <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-bone-dim"><Bi zh="映出你与生命某个面向的关系。" en="reflecting your relationship with one facet of life." /></p>
+            </div>
             <div className="mt-20 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
               {gates.map((gate) => (
                 <Link key={gate.id} href={`/gate/${gate.id}`} className="group relative block overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] transition hover:border-lattice/60">
@@ -67,8 +69,8 @@ export default function Home() {
 
         {/* 6. 量子呼吸 */}
         {/* 5.5 多维叙事入口 */}
-        <section className="border-t border-white/5 px-6 py-24 sm:py-28">
-          <div className="mx-auto max-w-3xl text-center">
+        <section className="px-6 py-24 sm:py-28">
+          <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="多维叙事入口" en="Dimensional Narratives" /></p>
             <h2 className="mt-6 font-display text-4xl font-light text-bone"><Bi zh="阅读不同意识层级中的现实结构" en="Read reality across levels of consciousness" /></h2>
             <p className="mx-auto mt-6 max-w-xl text-base leading-9 text-bone-dim">

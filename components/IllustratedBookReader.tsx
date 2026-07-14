@@ -51,7 +51,7 @@ export default function IllustratedBookReader({
         className="relative overflow-hidden rounded-sm border border-white/10"
         style={{
           background:
-            "radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.18), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.16), transparent 55%), linear-gradient(135deg, rgba(110,196,230,0.22) 0%, rgba(150,170,235,0.20) 100%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.18), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.16), transparent 55%), linear-gradient(135deg, rgba(20,34,58,0.62) 0%, rgba(16,28,50,0.68) 100%), linear-gradient(135deg, rgba(110,196,230,0.28) 0%, rgba(150,170,235,0.26) 100%)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
           minHeight: 560,
@@ -95,7 +95,7 @@ export default function IllustratedBookReader({
                   <Bi zh={page.kickerZh} en={page.kickerEn} />
                 </p>
               </div>
-              <div className="mx-auto mt-4 max-w-xl whitespace-pre-line font-display text-[16px] leading-8 text-bone-dim sm:text-[17px] sm:leading-9">
+              <div className="mx-auto mt-4 max-w-xl whitespace-pre-line font-display text-[16px] leading-8 text-bone sm:text-[17px] sm:leading-9">
                 <Bi zh={page.textZh} en={page.textEn} block />
               </div>
               {page.closingZh && (

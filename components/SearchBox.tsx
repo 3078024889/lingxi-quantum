@@ -142,21 +142,37 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           width: 100%; max-width: 15rem;
           padding: 6px 10px;
           border-radius: 999px;
-          border: 1px solid rgba(232,183,101,0.22);
-          background: rgba(28,20,12,0.55);
+          position: relative;
+          border: 1.5px solid transparent;
+          background:
+            linear-gradient(rgba(10,20,38,0.55), rgba(10,20,38,0.55)) padding-box,
+            conic-gradient(from var(--sb-angle, 0deg), #D8B8FF, #94D8F0, #A0E0D0, #D8B8FF) border-box;
+          animation: sb-spin 6s linear infinite;
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          color: rgba(232,183,101,0.85);
-          transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+          color: var(--text-primary, #DDE6FF);
+          transition: box-shadow .25s ease, background .25s ease;
           overflow: hidden;
           cursor: text;
         }
+        @property --sb-angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+        @keyframes sb-spin {
+          to { --sb-angle: 360deg; }
+        }
         .sb-box-active, .sb-box:hover {
-          border-color: rgba(232,183,101,0.55);
-          box-shadow: 0 0 0 1px rgba(232,183,101,0.15), 0 4px 18px rgba(232,183,101,0.12);
-          background: rgba(28,20,12,0.75);
+          box-shadow: 0 0 16px rgba(160,224,255,0.3), 0 4px 18px rgba(216,184,255,0.18);
+          background:
+            linear-gradient(rgba(10,20,38,0.68), rgba(10,20,38,0.68)) padding-box,
+            conic-gradient(from var(--sb-angle, 0deg), #D8B8FF, #94D8F0, #A0E0D0, #D8B8FF) border-box;
         }
         .sb-box.sb-wide { max-width: none; }
+        @media (prefers-reduced-motion: reduce) {
+          .sb-box { animation: none; }
+        }
         .sb-icon { width: 15px; height: 15px; flex: none; opacity: .85; }
         .sb-input {
           flex: 1; min-width: 0;
@@ -183,11 +199,11 @@ export default function SearchBox({ className = "" }: { className?: string }) {
         .sb-panel {
           position: absolute; left: 0; right: 0; top: calc(100% + 8px);
           max-height: 70vh; overflow-y: auto;
-          background: rgba(20,14,8,0.96);
-          border: 1px solid rgba(232,183,101,0.2);
+          background: linear-gradient(135deg, rgba(20,34,58,0.88) 0%, rgba(16,28,50,0.92) 100%);
+          border: 1px solid var(--aurora-glass-border, rgba(160,224,255,0.5));
           border-radius: 14px;
           padding: 8px;
-          box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+          box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(140,210,255,0.12);
           z-index: 60;
         }
         .sb-empty { padding: 14px 10px; font-size: 13px; color: rgba(237,231,220,0.55); text-align: center; }
