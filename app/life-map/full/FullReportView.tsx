@@ -199,16 +199,29 @@ export default function FullReportView({ id }: { id: string }) {
     <div className="px-6 py-20 print:py-6">
       <style>{`
         .lm2-print-mode {
-          background: linear-gradient(135deg,
-            #FFB1DE 0%, #FFE096 20%, #BAFAC7 40%, #94EAF9 60%, #7AA9FA 80%, #CAAFFB 100%);
+          background:
+            radial-gradient(ellipse 70% 50% at 15% 0%, rgba(255,159,214,0.28), transparent 55%),
+            radial-gradient(ellipse 65% 55% at 100% 15%, rgba(127,239,224,0.24), transparent 55%),
+            radial-gradient(ellipse 60% 55% at 50% 100%, rgba(201,166,255,0.26), transparent 60%),
+            radial-gradient(ellipse 55% 45% at 85% 85%, rgba(240,200,104,0.22), transparent 55%),
+            linear-gradient(160deg, #14122e 0%, #1b1740 45%, #241f47 100%);
           border-radius: 4px;
         }
         .lm2-print-mode h1,
         .lm2-print-mode p,
         .lm2-print-mode span,
-        .lm2-print-mode div { color: #241a30 !important; }
-        .lm2-print-mode .lm2-print-title { color: #4a2a5c !important; font-weight: 600; }
-        .lm2-print-mode svg text { fill: #241a30 !important; }
+        .lm2-print-mode div { color: #F7F3EA !important; }
+        .lm2-print-mode .lm2-print-title { color: #F0C868 !important; font-weight: 600; }
+        .lm2-print-mode svg text { fill: #F7F3EA !important; }
+        /* 报告里的子卡片（星盘/五行/紫微/频率）在打印模式下也要跟外层的
+           深色极光底保持一致的玻璃质感，不能用网页版那套半透明深色
+           （半透明深色叠在同样是深色的打印底上，边界会糊成一团看不清）。
+           这里给它们在打印模式下加一层更亮一点的玻璃亮度，卡片轮廓才
+           分得清楚。 */
+        .lm2-print-mode .bg-lm2-card {
+          background: rgba(255,255,255,0.08) !important;
+          border-color: rgba(240,200,104,0.35) !important;
+        }
       `}</style>
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between print:hidden">

@@ -94,11 +94,11 @@ export default function LifeMapCompass() {
           en="The inner six rings are systems already verified and written into your report. The outer dashed ring lists systems still being verified — not yet presented as calculated fact."
         />
       </p>
-      <div className="relative mx-auto mt-8 aspect-square w-full max-w-lg overflow-hidden rounded-full shadow-[0_0_60px_rgba(240,200,104,0.18)]">
+      <div className="relative mx-auto mt-8 aspect-square w-full max-w-lg overflow-hidden rounded-2xl shadow-[0_0_60px_rgba(240,200,104,0.18)]">
         <img
           src="/images/lifemap/compass.jpg"
           alt="灵犀生命图谱大罗盘 · Lingxi Life Compass"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain"
           loading="lazy"
         />
       </div>

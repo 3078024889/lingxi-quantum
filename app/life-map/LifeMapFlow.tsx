@@ -6,7 +6,6 @@ import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
 import LifeMapCompass from "./LifeMapCompass";
 import NatalChartWheel from "./NatalChartWheel";
-import AuroraVideoBand from "@/components/AuroraVideoBand";
 
 type Stage = "landing" | "form" | "loading" | "report";
 
@@ -417,7 +416,6 @@ export default function LifeMapFlow() {
               />
             </p>
             <LifeMapCompass />
-            <AuroraVideoBand className="mx-auto mt-16 max-w-3xl" />
           </div>
         </section>
       )}
