@@ -49,10 +49,10 @@ export default function Home() {
             <p className="mx-auto mt-6 max-w-xl text-center text-base leading-8 text-bone-dim"><Bi zh="映出你与生命某个面向的关系。" en="reflecting your relationship with one facet of life." /></p>
             <div className="mt-20 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
               {gates.map((gate) => (
-                <Link key={gate.id} href={`/gate/${gate.id}`} className="group relative block overflow-hidden rounded-sm border border-white/10 transition hover:border-lattice/40">
+                <Link key={gate.id} href={`/gate/${gate.id}`} className="group relative block overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] transition hover:border-lattice/60">
                   <div className="relative h-80 bg-void-deep">
                     <GateVisual id={gate.id} className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-void via-void/30 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,20,38,0.55)] via-[rgba(10,20,38,0.12)] to-transparent" />
                   </div>
                   <div className="absolute inset-x-0 bottom-0 p-7">
                     <span className="font-display text-4xl text-lattice/70">{gate.glyph}</span>

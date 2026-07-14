@@ -286,11 +286,11 @@ export default function FieldVoices() {
           color: var(--text-primary, #DDE6FF);
           padding: 5px 12px;
           border-radius: 999px;
-          background: var(--aurora-glass, linear-gradient(135deg, rgba(94,74,168,0.6), rgba(64,108,186,0.58)));
-          border: 1px solid var(--aurora-glass-border, rgba(210,190,255,0.5));
+          background: var(--aurora-glass, linear-gradient(135deg, rgba(110,196,230,0.22), rgba(150,170,235,0.20)));
+          border: 1px solid var(--aurora-glass-border, rgba(160,224,255,0.55));
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          box-shadow: 0 2px 18px rgba(0,0,0,0.25);
+          box-shadow: 0 0 16px rgba(140,210,255,0.22), 0 2px 14px rgba(0,0,0,0.2);
           animation: fv-say-in 1s ease both;
         }
         .fv-glyph { color: rgba(255,255,255,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
@@ -301,11 +301,11 @@ export default function FieldVoices() {
           display: flex; flex-direction: column; gap: 2px;
           padding: 7px 14px;
           border-radius: 12px;
-          background: var(--aurora-glass, linear-gradient(135deg, rgba(94,74,168,0.6), rgba(64,108,186,0.58)));
-          border: 1px solid var(--aurora-glass-border, rgba(210,190,255,0.5));
+          background: var(--aurora-glass, linear-gradient(135deg, rgba(110,196,230,0.22), rgba(150,170,235,0.20)));
+          border: 1px solid var(--aurora-glass-border, rgba(160,224,255,0.55));
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
-          box-shadow: 0 2px 18px rgba(0,0,0,0.25);
+          box-shadow: 0 0 16px rgba(140,210,255,0.22), 0 2px 14px rgba(0,0,0,0.2);
           animation: fv-say-in 1s ease both;
         }
         .fv-data-num {

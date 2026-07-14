@@ -51,7 +51,7 @@ export default function IllustratedBookReader({
         className="relative overflow-hidden rounded-sm border border-white/10"
         style={{
           background:
-            "radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.18), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.16), transparent 55%), linear-gradient(135deg, rgba(94,74,168,0.6) 0%, rgba(64,108,186,0.58) 100%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.18), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.16), transparent 55%), linear-gradient(135deg, rgba(110,196,230,0.22) 0%, rgba(150,170,235,0.20) 100%)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
           minHeight: 560,
@@ -131,7 +131,7 @@ export default function IllustratedBookReader({
         <button
           onClick={() => go(-1)}
           disabled={isCover}
-          className="rounded-sm border border-white/10 px-3 py-1.5 font-display uppercase tracking-widest2 transition hover:border-lattice/50 hover:text-lattice disabled:opacity-30"
+          className="bg-void-deep rounded-sm px-3 py-1.5 font-display uppercase tracking-widest2 transition hover:border-lattice/60 hover:text-lattice disabled:opacity-30"
         >
           <Bi zh="← 上一页" en="← Prev" />
         </button>
@@ -141,7 +141,7 @@ export default function IllustratedBookReader({
         <button
           onClick={() => go(1)}
           disabled={isPaywall || idx >= total - 1}
-          className="rounded-sm border border-white/10 px-3 py-1.5 font-display uppercase tracking-widest2 transition hover:border-lattice/50 hover:text-lattice disabled:opacity-30"
+          className="bg-void-deep rounded-sm px-3 py-1.5 font-display uppercase tracking-widest2 transition hover:border-lattice/60 hover:text-lattice disabled:opacity-30"
         >
           <Bi zh="下一页 →" en="Next →" />
         </button>

@@ -115,7 +115,7 @@ export default function DreamConsole() {
 
       {/* 灵犀解析 · 被光改写 */}
       {reading && (
-        <div className="relative overflow-hidden rounded-sm border border-amber/30 bg-gradient-to-b from-amber/5 to-lattice/5 p-7 sm:p-9">
+        <div className="relative overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] bg-void-deep p-7 sm:p-9">
           <p className="font-display text-sm uppercase tracking-widest2 text-amber">{t("灵犀 · 来自场的回响","Lingxi · an echo from the field")}</p>
           <div className="mt-5 space-y-4 whitespace-pre-line text-base leading-9 text-bone">
             {reading}

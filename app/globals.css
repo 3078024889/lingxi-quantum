@@ -11,14 +11,16 @@
   --text-secondary: #B8C9E6;
   --glow-soft: 0 0 8px rgba(224, 230, 255, 0.45);
   /* ============ Aurora Glass（统一底色） ============
-     全站所有"有文字的框"——导航栏、卡片、心声之雨的气泡——统一用这一个
-     紫到蓝的渐变玻璃，不再用偏黑偏灰的深色玻璃。这是这一版最核心的
-     改动：之前每处分别调深色玻璃的透明度、调深色玻璃的描边，颜色底子
-     终究还是"深色"，怎么调都会读成"黑框/灰框"。这次直接换底色本身，
-     不再是"透明度游戏"。 */
-  --aurora-glass: linear-gradient(135deg, rgba(94, 74, 168, 0.6), rgba(64, 108, 186, 0.58));
-  --aurora-glass-strong: linear-gradient(135deg, rgba(100, 78, 176, 0.78), rgba(66, 112, 192, 0.76));
-  --aurora-glass-border: rgba(210, 190, 255, 0.5);
+     上一版的紫蓝渐变太深、太不透明，读出来是"深蓝色卡片"，不是用户
+     视频里那种发光、透亮的极光蓝——真正的极光蓝更接近浅青蓝色，而且
+     本身是透光的，不是一块实色。这版把色相从"紫→深蓝"改成"浅青→浅
+     蓝"，同时把不透明度砍掉一大半，让卡片更像"一层带着光的玻璃"，
+     不是"一块有颜色的板子"。文字对比度不够的部分，靠边框和外发光
+     去补，而不是靠加深底色。 */
+  --aurora-glass: linear-gradient(135deg, rgba(110, 196, 230, 0.22), rgba(150, 170, 235, 0.20));
+  --aurora-glass-strong: linear-gradient(135deg, rgba(110, 196, 230, 0.42), rgba(150, 170, 235, 0.4));
+  --aurora-glass-border: rgba(160, 224, 255, 0.55);
+  --aurora-glow: 0 0 20px rgba(140, 210, 255, 0.28), 0 0 8px rgba(180, 220, 255, 0.2);
 }
 
 @tailwind base;
@@ -89,32 +91,48 @@ body {
 /* Aurora Glass——全站卡片统一底样：紫到蓝的渐变玻璃，不再是深色/黑色
    系底子叠一点点高光那种做法。这是这版最核心的改动，见上面 :root 里
    --aurora-glass 的说明。 */
-.bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report {
+.bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report,
+.bg-void\/85, .bg-void-deep\/40, .bg-void-deep\/60 {
   position: relative;
   /* 全站几十处卡片用的都是不带斜杠透明度后缀的 bg-void-deep 这类写法，
      Tailwind 编译出来的是纯色不透明的 background-color——这才是"到处
      都是黑框，挡住了背景"的根本原因。这里直接把这几个类的底色统一
-     接管成 Aurora Glass 渐变，不管组件那边写没写 /40 这种后缀。 */
-  background-color: rgba(80, 84, 160, 0.55) !important;
+     接管成 Aurora Glass 渐变，不管组件那边写没写 /40 这种后缀。
+     最底下叠一层很淡很淡的深色，只为了让文字有个最低限度的抓地力，
+     不是把卡片重新做深——90% 的视觉份量还是那层浅青蓝玻璃。 */
+  background-color: rgba(10, 20, 38, 0.22) !important;
   background-image:
     var(--aurora-glass),
-    radial-gradient(ellipse 70% 55% at 15% 0%, rgba(230,210,255,0.18), transparent 55%),
-    radial-gradient(ellipse 60% 50% at 95% 100%, rgba(160,224,208,0.14), transparent 55%);
+    radial-gradient(ellipse 70% 55% at 15% 0%, rgba(255,255,255,0.10), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 95% 100%, rgba(160,224,255,0.10), transparent 55%);
   background-size: 100% 100%, 200% 200%, 200% 200%;
   animation: lx-card-shimmer 20s ease-in-out infinite;
   border: 1px solid var(--aurora-glass-border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   box-shadow:
-    0 0 0 1px rgba(230,220,255,0.1) inset,
-    0 0 24px rgba(139,110,220,0.22),
-    0 0 14px rgba(160,224,208,0.12),
-    0 8px 32px rgba(0,0,0,0.3);
+    0 0 0 1px rgba(255,255,255,0.12) inset,
+    var(--aurora-glow),
+    0 8px 28px rgba(0,0,0,0.22);
 }
 @keyframes lx-card-shimmer {
   0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
   50% { background-position: 20% 15%, 80% 85%, 40% 60%; }
 }
+/* 全站还散落着一批用 bg-amber/5、bg-lattice/5、bg-rose/10 这类"低透明度
+   强调色"做小卡片底色的写法（生命重塑、修炼技术、账号登录等十几个
+   文件里都有），这些没有走 bg-void 那条线，是另一套独立的写法，之前
+   几版都漏掉了。这里直接把用到的这几个具体组合也接到 Aurora Glass
+   上——现在不管是主卡片、心声之雨气泡，还是这些散落的小卡片，字面
+   意义上共用同一份底色定义。 */
+.bg-amber\/5, .bg-amber\/10, .bg-amber\/20,
+.bg-lattice\/5, .bg-lattice\/10, .bg-lattice\/15,
+.bg-rose\/10, .bg-rose\/5, .bg-violet\/5, .bg-violet\/10 {
+  background-image: var(--aurora-glass) !important;
+  background-color: rgba(10, 20, 38, 0.22) !important;
+  border-color: var(--aurora-glass-border) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report { animation: none; }
 }
@@ -122,9 +140,10 @@ body {
    打字光标和已输入内容，玻璃化到看得见背后视频的程度反而会降低可用
    性，这里单独把表单控件的透明度调高一些，跟普通卡片区分开。 */
 textarea.bg-void, input.bg-void {
-  background-color: rgba(48, 44, 96, 0.55) !important;
+  background-color: rgba(16, 34, 56, 0.55) !important;
   background-image: none;
   animation: none;
+  border-color: var(--aurora-glass-border) !important;
 }
 
 /* 119篇故事插画：原本就是深色底配白字的手绘 SVG，之前为了配合浅色
@@ -137,8 +156,9 @@ textarea.bg-void, input.bg-void {
    之前这里其实是从老版浅色主题遗留下来的 bg-white/45——没跟着整体
    换色，这是导航栏一直显得"发灰、看不清"的真正原因。 */
 .lx-nav-glass {
-  background-color: rgba(80, 84, 160, 0.6);
+  background-color: rgba(10, 20, 38, 0.35);
   background-image: var(--aurora-glass-strong);
+  box-shadow: 0 1px 24px rgba(140, 210, 255, 0.12);
 }
 
 ::selection {

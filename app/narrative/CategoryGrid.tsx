@@ -42,7 +42,7 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
   return (
     <Link
       href={`/narrative/${n.slug}`}
-      className="group flex flex-col justify-between overflow-hidden rounded-sm border border-white/10 bg-void-deep/60 transition hover:border-amber/50"
+      className="group flex flex-col justify-between overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] bg-void-deep/60 transition hover:border-amber/50"
     >
       <div
         className="aspect-[5/3] w-full overflow-hidden bg-void-deep"
@@ -104,7 +104,7 @@ export default function CategoryGrid() {
         const list = NARRATIVES.filter((n) => n.cat === (cat.id as string));
         const isOpen = openCats.has(cat.id as string);
         return (
-          <div key={cat.id} className="overflow-hidden rounded-sm border border-white/10">
+          <div key={cat.id} className="overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)]">
             <button
               onClick={() => toggle(cat.id as string)}
               className="group grid w-full grid-cols-1 items-stretch text-left sm:grid-cols-[220px_1fr]"
