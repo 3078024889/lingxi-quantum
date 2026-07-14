@@ -28,6 +28,12 @@ export default function PracticeIndex() {
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
             <Bi zh="心为门户，万法唯心" en="The heart is the gateway; all ways are of the heart" />
           </h1>
+          <p className="mx-auto mt-3 max-w-xl font-display text-sm italic text-lattice/85 sm:text-base">
+            <Bi
+              zh="源自来自远古遥远星系的智慧传承，以古老又切合当下的声音呈现。"
+              en="A wisdom lineage from ancient, distant star systems — voiced anew for the present moment."
+            />
+          </p>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi
               zh="四项修炼技术，一次激活，永久有效。或开启「四项合集」，一并拥有全部，并免费享有日后新增的练习。"
