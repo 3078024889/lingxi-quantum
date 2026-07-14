@@ -18,10 +18,10 @@ html {
    "厚重白色光晕"完全是两回事——这里的金光很淡，是提气质用的，不是
    拿来硬拽对比度的补丁。 */
 .text-bone, .text-lm2-text {
-  text-shadow: 0 0 22px rgba(240,200,104,0.22), 0 1px 3px rgba(6,4,16,0.35);
+  text-shadow: 0 0 18px rgba(240,200,104,0.35), 0 1px 4px rgba(4,8,18,0.55), 0 0 2px rgba(4,8,18,0.4);
 }
 .text-bone-dim, .text-lm2-text-dim {
-  text-shadow: 0 0 16px rgba(240,200,104,0.14), 0 1px 2px rgba(6,4,16,0.3);
+  text-shadow: 0 0 14px rgba(240,200,104,0.22), 0 1px 3px rgba(4,8,18,0.45);
 }
 
 /* ============ Rainbow Celestial Aurora Design System ============
@@ -35,15 +35,15 @@ html {
    平时会被视频完全盖住，所以不需要再做动画，省一点无谓的性能开销。 */
 body {
   position: relative;
-  background-color: #0c0a1f;
+  background-color: #0a1626;
   background-image:
-    radial-gradient(ellipse 80% 60% at 12% -5%, rgba(255,159,214,0.22), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 12% -5%, rgba(143,216,255,0.24), transparent 60%),
     radial-gradient(ellipse 75% 65% at 100% 8%, rgba(127,239,224,0.20), transparent 60%),
-    radial-gradient(ellipse 70% 65% at 50% 105%, rgba(201,166,255,0.20), transparent 62%),
+    radial-gradient(ellipse 70% 65% at 50% 105%, rgba(94,169,255,0.22), transparent 62%),
     radial-gradient(ellipse 65% 55% at 88% 92%, rgba(240,200,104,0.18), transparent 58%),
-    linear-gradient(160deg, #0d0a20 0%, #171233 35%, #211a45 65%, #12203a 100%);
+    linear-gradient(160deg, #081220 0%, #0c1f36 35%, #0f2a48 65%, #0a1c30 100%);
   background-attachment: fixed;
-  color: #F7F3EA;
+  color: #F0C868;
   min-height: 100vh;
 }
 
@@ -57,17 +57,17 @@ body {
      都是黑框，挡住了背景"的根本原因，不是卡片"看起来暗"，是它真的
      完全不透明。这里直接把这几个类的底色统一收成半透明玻璃色，不管
      组件那边写没写 /40 这种后缀，都会被这条规则统一接管。 */
-  background-color: rgba(20, 18, 46, 0.4) !important;
+  background-color: rgba(10, 24, 46, 0.42) !important;
   background-image:
     radial-gradient(ellipse 90% 70% at 10% 0%, rgba(240,200,104,0.10), transparent 55%),
     radial-gradient(ellipse 80% 60% at 95% 100%, rgba(127,239,224,0.10), transparent 55%),
-    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(255,159,214,0.08), transparent 60%);
+    radial-gradient(ellipse 70% 55% at 50% 50%, rgba(94,169,255,0.10), transparent 60%);
   background-size: 200% 200%, 200% 200%, 200% 200%;
   animation: lx-card-shimmer 20s ease-in-out infinite;
-  border: 1px solid rgba(240,200,104,0.22);
+  border: 1px solid rgba(240,200,104,0.28);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset, 0 8px 32px rgba(0,0,0,0.35);
+  box-shadow: 0 0 0 1px rgba(143,216,255,0.05) inset, 0 8px 32px rgba(0,0,0,0.35);
 }
 @keyframes lx-card-shimmer {
   0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
@@ -80,7 +80,7 @@ body {
    打字光标和已输入内容，玻璃化到看得见背后视频的程度反而会降低可用
    性，这里单独把表单控件的透明度调高一些，跟普通卡片区分开。 */
 textarea.bg-void, input.bg-void {
-  background-color: rgba(14, 12, 34, 0.82) !important;
+  background-color: rgba(8, 18, 36, 0.85) !important;
   background-image: none;
   animation: none;
 }
@@ -88,6 +88,18 @@ textarea.bg-void, input.bg-void {
 /* 119篇故事插画：原本就是深色底配白字的手绘 SVG，之前为了配合浅色
    主题临时做了反色滤镜，现在主题本身换回深色系，插画直接用原色即可，
    已在 IllustratedBookReader 里去掉了 lx-aurora-flip 这层滤镜类。 */
+
+/* 导航栏：持续挂在屏幕最上面的常驻界面，可读性优先级比内容卡片更高，
+   单独给一个比普通卡片更实一点的极光蓝玻璃底色，不复用 .bg-void 那套
+   （那套是给内容卡片用的，透明度更高，长期常驻的导航栏用那个太透了）。
+   之前这里其实是从老版浅色主题遗留下来的 bg-white/45——没跟着整体
+   换色，这是导航栏一直显得"发灰、看不清"的真正原因。 */
+.lx-nav-glass {
+  background-color: rgba(8, 18, 34, 0.72);
+  background-image:
+    radial-gradient(ellipse 90% 70% at 10% 0%, rgba(240,200,104,0.08), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 95% 100%, rgba(127,239,224,0.08), transparent 55%);
+}
 
 ::selection {
   background: rgba(127, 239, 224, 0.28);

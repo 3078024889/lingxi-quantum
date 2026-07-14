@@ -243,17 +243,17 @@ export default function FieldVoices() {
           width: max-content; max-width: 17rem;
           font-family: "Cormorant Garamond", serif;
           font-size: 0.98rem; line-height: 1.6; letter-spacing: 0.015em;
-          color: rgba(250,246,236,0.98);
+          color: rgba(240,200,104,0.98);
           padding: 5px 12px;
           border-radius: 999px;
-          background: linear-gradient(135deg, rgba(58,44,24,0.5), rgba(28,20,44,0.55));
-          border: 1px solid rgba(240,200,104,0.32);
+          background: linear-gradient(135deg, rgba(10,24,46,0.6), rgba(8,18,34,0.65));
+          border: 1px solid rgba(240,200,104,0.34);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
           box-shadow: 0 2px 18px rgba(0,0,0,0.3);
           animation: fv-say-in 1s ease both;
         }
-        .fv-glyph { color: rgba(240,200,104,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
+        .fv-glyph { color: rgba(127,239,224,0.95); margin: 0 .4em; font-size: .8em; vertical-align: 0.08em; }
         @keyframes fv-say-in { from { opacity: 0; letter-spacing: 0.12em; } to { opacity: 1; letter-spacing: 0.015em; } }
         @media (max-width: 719px) {
           .fv-say { max-width: 60vw; font-size: 1.02rem; }

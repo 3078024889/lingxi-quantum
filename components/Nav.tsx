@@ -21,7 +21,7 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-black/8 bg-white/45 backdrop-blur-xl">
+    <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">
       <nav className="mx-auto max-w-6xl px-6 py-4">
         <div className="flex items-center justify-between gap-4">
           <Link
@@ -79,7 +79,7 @@ export default function Nav() {
 
       {/* 移动端：展开菜单 */}
       {open && (
-        <div className="border-t border-amber/10 bg-[#1c140c]/95 px-6 py-3 md:hidden">
+        <div className="lx-nav-glass border-t border-amber/15 px-6 py-3 md:hidden">
           <div className="flex flex-col">
             <div className="pb-3">
               <SearchBox className="sb-wide" />

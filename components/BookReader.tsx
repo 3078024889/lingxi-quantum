@@ -83,7 +83,9 @@ function BookInstance({
         className="relative overflow-hidden rounded-sm border border-white/10"
         style={{
           background:
-            "radial-gradient(ellipse at 30% 0%, rgba(124,224,211,0.05), transparent 55%), linear-gradient(180deg, #0b0a12 0%, #08070d 100%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(240,200,104,0.14), transparent 55%), radial-gradient(ellipse at 85% 15%, rgba(127,239,224,0.14), transparent 55%), linear-gradient(180deg, rgba(10,24,46,0.55) 0%, rgba(8,18,34,0.62) 100%)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
           minHeight: 420,
         }}
       >
