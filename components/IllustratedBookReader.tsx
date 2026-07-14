@@ -121,7 +121,7 @@ export default function IllustratedBookReader({
         )}
       </div>
 
-      <div className="mt-4 flex items-center justify-between text-xs text-bone-dim/60">
+      <div className="mt-4 flex items-center justify-between text-xs text-bone-dim">
         <button
           onClick={() => go(-1)}
           disabled={isCover}

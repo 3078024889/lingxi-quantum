@@ -32,20 +32,22 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
       <Nav />
       <main className="pt-16">
         <section className="px-6 py-16 text-center sm:py-20">
+          <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh={`多维叙事 · ${cat.zh}`} en={`Dimensional Narratives · ${cat.en}`} />
           </p>
           <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-light leading-snug text-bone sm:text-5xl">
             <Bi zh={n.title} en={n.titleEn} />
           </h1>
-          <p className="mt-4 text-xs text-bone-dim/60">
+          <p className="mt-4 text-xs text-bone-dim">
             <Bi zh="灵犀原创 · 多维叙事" en="An original piece · Lingxi Dimensional Narratives" />
           </p>
+          </div>
         </section>
 
         <section className="px-6 pb-24">
           <div className="mx-auto max-w-2xl">
-            <p className="mb-10 text-center text-lg leading-9 text-bone-dim">
+            <p className="bg-void-deep mb-10 rounded-sm px-6 py-5 text-center text-lg leading-9 text-bone-dim">
               <Bi zh={n.teaser} en={n.teaserEn} />
             </p>
 
@@ -58,7 +60,7 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
             )}
 
             <div className="mt-14 text-center">
-              <Link href="/narrative" className="font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
+              <Link href="/narrative" className="bg-void-deep inline-block rounded-full px-5 py-2 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
                 <Bi zh="← 返回多维叙事" en="← Back to Dimensional Narratives" />
               </Link>
             </div>

@@ -141,11 +141,11 @@ export default function RealityLoop() {
         </p>
       </div>
 
-      <div>
+      <div className="bg-void-deep rounded-sm px-6 py-6 sm:px-8">
         <label className="font-display text-xl text-bone">
           {t("我正在显化的（我的愿景）","What I am manifesting (my vision)")}
         </label>
-        <p className="mt-2 text-sm text-bone-dim/80">
+        <p className="mt-2 text-sm text-bone-dim">
           {t("用现在时、肯定句，像它已经属于你一样写下来。这一项会一直保留。","Write it in the present tense, as an affirmation, as if it already belongs to you. This entry stays saved.")}
         </p>
         <textarea

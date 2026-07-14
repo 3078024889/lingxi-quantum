@@ -424,7 +424,7 @@ export default function LifeMapFlow() {
 
       {stage === "form" && (
         <section className="px-6 py-20">
-          <div className="mx-auto max-w-xl">
+          <div className="bg-reading-glass mx-auto max-w-xl px-6 py-10 sm:px-10">
             <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               <Bi zh="创建你的生命档案" en="Create Your Life Profile" />
             </p>
@@ -451,10 +451,10 @@ export default function LifeMapFlow() {
                   />
                 </p>
                 <div className="mt-3 grid grid-cols-2 gap-3">
-                  <button onClick={() => setCalendarType("solar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "solar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                  <button onClick={() => setCalendarType("solar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "solar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh="阳历（公历/西历）" en="Gregorian (Solar / Western)" />
                   </button>
-                  <button onClick={() => setCalendarType("lunar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "lunar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                  <button onClick={() => setCalendarType("lunar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "lunar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh="农历（中国传统历法）" en="Chinese Lunar Calendar" />
                   </button>
                 </div>
@@ -495,10 +495,10 @@ export default function LifeMapFlow() {
                   <span className="ml-2 text-xs text-lm2-text-dim/50"><Bi zh="（紫微斗数排大限方向需要）" en="(needed for Zi Wei Dou Shu's decade-cycle direction)" /></span>
                 </label>
                 <div className="mt-2 grid grid-cols-2 gap-3">
-                  <button onClick={() => setGender("female")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "female" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                  <button onClick={() => setGender("female")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "female" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh="女" en="Female" />
                   </button>
-                  <button onClick={() => setGender("male")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "male" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                  <button onClick={() => setGender("male")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "male" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh="男" en="Male" />
                   </button>
                 </div>
@@ -513,7 +513,7 @@ export default function LifeMapFlow() {
               <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {FOCUS_OPTIONS.map((f) => (
                   <button key={f.id} onClick={() => setFocus(f.id)}
-                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${focus === f.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${focus === f.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh={f.zh} en={f.en} />
                   </button>
                 ))}
@@ -525,7 +525,7 @@ export default function LifeMapFlow() {
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {PROFESSION_OPTIONS.map((p) => (
                   <button key={p.id} onClick={() => setProfession(p.id)}
-                    className={`rounded-sm border px-3 py-2.5 text-left text-xs transition ${profession === p.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    className={`rounded-sm border px-3 py-2.5 text-left text-xs transition ${profession === p.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh={p.zh} en={p.en} />
                   </button>
                 ))}
@@ -544,7 +544,7 @@ export default function LifeMapFlow() {
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
                 {RELATIONSHIP_OPTIONS.map((r) => (
                   <button key={r.id} onClick={() => setRelationshipStatus(r.id)}
-                    className={`rounded-sm border px-3 py-2.5 text-center text-xs transition ${relationshipStatus === r.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    className={`rounded-sm border px-3 py-2.5 text-center text-xs transition ${relationshipStatus === r.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh={r.zh} en={r.en} />
                   </button>
                 ))}
@@ -556,7 +556,7 @@ export default function LifeMapFlow() {
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {PRACTICE_OPTIONS.map((p) => (
                   <button key={p.id} onClick={() => setPracticeStatus(p.id)}
-                    className={`rounded-sm border px-3 py-2.5 text-center text-xs transition ${practiceStatus === p.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    className={`rounded-sm border px-3 py-2.5 text-center text-xs transition ${practiceStatus === p.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh={p.zh} en={p.en} />
                   </button>
                 ))}
@@ -568,7 +568,7 @@ export default function LifeMapFlow() {
               <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {STATE_OPTIONS.map((s) => (
                   <button key={s.id} onClick={() => setCurrentState(s.id)}
-                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${currentState === s.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/12 text-lm2-text-dim hover:border-lm2-text/25"}`}>
+                    className={`rounded-sm border px-4 py-3 text-left text-sm transition ${currentState === s.id ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh={s.zh} en={s.en} />
                   </button>
                 ))}
@@ -624,9 +624,9 @@ export default function LifeMapFlow() {
       {stage === "loading" && (
         <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
           <div className="lm-core lm-core-active" />
-          <div className="mt-10 space-y-3">
+          <div className="bg-void-deep mt-10 space-y-3 rounded-sm px-8 py-6">
             {LOADING_STEPS.slice(0, loadingStep + 1).map((s, i) => (
-              <p key={i} className={`font-display text-base ${i === loadingStep ? "text-lm2-text" : "text-lm2-text-dim/50"}`}>
+              <p key={i} className={`font-display text-base ${i === loadingStep ? "text-lm2-text" : "text-lm2-text-dim/75"}`}>
                 <Bi zh={s.zh} en={s.en} />
               </p>
             ))}
@@ -637,17 +637,19 @@ export default function LifeMapFlow() {
       {stage === "report" && report && parsed && (
         <section className="px-6 py-20">
           <div className="mx-auto max-w-2xl">
-            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+            <div className="bg-void-deep rounded-sm px-8 py-8 text-center">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("你的生命频率报告", "Your Life Frequency Report")}
             </p>
-            <h2 className="mt-4 text-center font-display text-4xl font-light text-lm2-text">
+            <h2 className="mt-4 font-display text-4xl font-light text-lm2-text">
               {isEn() ? report.coreType.nameEn : report.coreType.name}
             </h2>
-            <p className="mt-3 text-center text-sm text-lm2-text-dim/70">
+            <p className="mt-3 text-sm text-lm2-text-dim">
               {t("太阳", "Sun")} {isEn() ? report.facts.sunSignEn : report.facts.sunSignZh} · {t("日主", "Day Master")} {report.facts.dayMasterGan}
             </p>
+            </div>
 
-            <div className="mt-10 rounded-sm border border-lm2-text/10 bg-lm2-card p-8 backdrop-blur-xl">
+            <div className="bg-reading-glass mt-10 p-8">
               <p className="text-base leading-9 text-lm2-text-dim">{parsed.echoText}</p>
             </div>
 
