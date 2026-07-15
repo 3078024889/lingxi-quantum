@@ -80,9 +80,9 @@ export default function Nav() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`group relative flex flex-col items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
+                className={`group relative flex items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
               >
-                <RuneIcon kind={l.rune} className={`h-4 w-4 ${active ? "text-lattice" : "text-bone-dim/70"} transition group-hover:text-lattice`} />
+                <RuneIcon kind={l.rune} className={`h-3.5 w-3.5 ${active ? "text-lattice" : "text-bone-dim/70"} transition group-hover:text-lattice`} />
                 <Bi zh={l.zh} en={l.en} />
                 {active && (
                   <span

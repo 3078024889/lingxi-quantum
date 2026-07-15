@@ -50,6 +50,20 @@ type ReportData = {
   narrative: string; // 灵犀生成的正文（含三段：呼应/阶段/关键词）
 };
 
+// 未登录时点"解锁完整报告"，会被带去登录页——这一跳会清空所有 React state。
+// 这个类型是跳转前存进 sessionStorage 的"草稿"，装着重建这次提交所需的
+// 全部信息（包括手机号/车牌号），登录回来后用它自动恢复、接着解锁，
+// 不需要用户重新填一遍表单。
+type LifeMapDraft = {
+  y: number; m: number; d: number; hasTime: boolean; hour: string; minute: string;
+  name: string; focus: Focus; currentState: CurrentState;
+  energyLevel: number; clarityLevel: number; alignmentLevel: number;
+  profession: string; professionCustom: string; relationshipStatus: string; practiceStatus: string;
+  phoneNumber: string; plateNumber: string;
+  report: ReportData;
+};
+const LX_DRAFT_KEY = "lx-lifemap-pending-unlock";
+
 const FOCUS_OPTIONS: { id: Focus; zh: string; en: string }[] = [
   { id: "wealth", zh: "财富与事业", en: "Wealth & Career" },
   { id: "relationship", zh: "感情与关系", en: "Love & Relationships" },
@@ -333,6 +347,27 @@ export default function LifeMapFlow() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
+        // 之前这里直接跳转登录页，会把整个页面的 React state 清空——如果用户
+        // 在"基础信息"里填了手机号/车牌号，这份数据从来没被存过（下面
+        // trySaveSubmission 在未登录时会直接跳过存库），跳去登录页这一下，
+        // 手机号/车牌号就真的丢了，等登录回来，报告里自然不会有这一节。
+        // 这里改成：跳转前，先把这次提交需要的全部信息存进 sessionStorage，
+        // 登录回来后由下面那个 effect 自动恢复并接着完成解锁，不需要用户
+        // 重新填一遍。
+        try {
+          if (report) {
+            const draft: LifeMapDraft = {
+              y: parseInt(year, 10), m: parseInt(month, 10), d: parseInt(day, 10),
+              hasTime, hour, minute, name, focus, currentState,
+              energyLevel, clarityLevel, alignmentLevel,
+              profession, professionCustom, relationshipStatus, practiceStatus,
+              phoneNumber, plateNumber, report,
+            };
+            sessionStorage.setItem(LX_DRAFT_KEY, JSON.stringify(draft));
+          }
+        } catch {
+          // sessionStorage 不可用（隐私模式等）就算了，不阻塞正常的登录跳转
+        }
         setError(t("需要先登录，正在带你去登录页面…", "You'll need to sign in first — taking you there now…"));
         setTimeout(() => { window.location.href = "/account"; }, 1200);
         return;
@@ -402,6 +437,96 @@ export default function LifeMapFlow() {
       setUnlocking(false);
     }
   };
+
+  // 登录回来后，检查 sessionStorage 里有没有跳转前存的草稿——有，且现在确实
+  // 已经登录了，就自动恢复表单/报告状态，并直接接着完成"保存提交记录 + 下单"，
+  // 用户不需要再点一次解锁、更不需要重新填手机号/车牌号。
+  useEffect(() => {
+    const resume = async () => {
+      let raw: string | null = null;
+      try {
+        raw = sessionStorage.getItem(LX_DRAFT_KEY);
+      } catch {
+        return;
+      }
+      if (!raw) return;
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return; // 还没登录，草稿留着，下次再说
+
+      let draft: LifeMapDraft;
+      try {
+        draft = JSON.parse(raw);
+      } catch {
+        sessionStorage.removeItem(LX_DRAFT_KEY);
+        return;
+      }
+      sessionStorage.removeItem(LX_DRAFT_KEY);
+
+      // 先把画面恢复成草稿里的样子，即使下面自动下单失败，用户看到的
+      // 也是自己填过的完整信息，而不是一片空白的表单。
+      setYear(String(draft.y)); setMonth(String(draft.m)); setDay(String(draft.d));
+      setHasTime(draft.hasTime); setHour(draft.hour); setMinute(draft.minute);
+      setName(draft.name); setFocus(draft.focus); setCurrentState(draft.currentState);
+      setEnergyLevel(draft.energyLevel); setClarityLevel(draft.clarityLevel); setAlignmentLevel(draft.alignmentLevel);
+      setProfession(draft.profession); setProfessionCustom(draft.professionCustom);
+      setRelationshipStatus(draft.relationshipStatus); setPracticeStatus(draft.practiceStatus);
+      setPhoneNumber(draft.phoneNumber); setPlateNumber(draft.plateNumber);
+      setReport(draft.report); setStage("report");
+      setUnlocking(true);
+      setError(t("欢迎回来，正在继续为你解锁完整报告…", "Welcome back — resuming your unlock…"));
+
+      // 不依赖上面刚 set 的 state（同一批 state 更新是异步的，这一帧读到的
+      // 可能还是旧值），直接用刚解析出来的 draft 数据去存库、下单。
+      const focusLabel = FOCUS_OPTIONS.find((f) => f.id === draft.focus)!;
+      const stateLabel = STATE_OPTIONS.find((s) => s.id === draft.currentState)!;
+      const professionOpt = PROFESSION_OPTIONS.find((p) => p.id === draft.profession);
+      const professionLabel = draft.profession === "other" ? draft.professionCustom.trim() : professionOpt?.zh || "";
+      const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === draft.relationshipStatus)?.zh || "";
+      const practiceLabel = PRACTICE_OPTIONS.find((p) => p.id === draft.practiceStatus)?.zh || "";
+      const phoneReading = draft.phoneNumber.trim() ? (() => {
+        const r = analyzePhoneNumber(draft.phoneNumber);
+        return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+      })() : undefined;
+      const plateReading = draft.plateNumber.trim() ? (() => {
+        const r = analyzePlateNumber(draft.plateNumber);
+        return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+      })() : undefined;
+
+      const result = await trySaveSubmission({
+        y: draft.y, m: draft.m, d: draft.d, hasTime: draft.hasTime, hour: draft.hour, minute: draft.minute,
+        facts: draft.report.facts, coreType: draft.report.coreType, freeNarrative: draft.report.narrative,
+        focusLabel, stateLabel, energyLevel: draft.energyLevel, clarityLevel: draft.clarityLevel, alignmentLevel: draft.alignmentLevel,
+        name: draft.name, professionLabel, relationshipLabel, practiceLabel,
+        phoneReading, plateReading,
+      });
+      if (!result.id) {
+        setUnlocking(false);
+        setError(
+          result.specificError ||
+            t("欢迎回来！你填过的信息已经恢复，请再点一次「解锁完整报告」。", "Welcome back! Your info has been restored — please tap Unlock Full Report once more.")
+        );
+        return;
+      }
+      setSubmissionId(result.id);
+      const res = await fetch("/api/pay/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: "life-map-report", returnPath: `/life-map/full?id=${result.id}&paid=1` }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setUnlocking(false);
+        setError(t("欢迎回来！你填过的信息已经恢复，请再点一次「解锁完整报告」。", "Welcome back! Your info has been restored — please tap Unlock Full Report once more."));
+      }
+    };
+    resume();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ---------- 解析灵犀返回的三段式正文 ----------
   const parsed = (() => {
