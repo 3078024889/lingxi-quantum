@@ -48,6 +48,7 @@ export default function FullReportView({ id }: { id: string }) {
 
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
   const [downloading, setDownloading] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
   const [printMode, setPrintMode] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
   const [sections, setSections] = useState<string[]>([]);
@@ -152,6 +153,36 @@ export default function FullReportView({ id }: { id: string }) {
     );
   }
 
+  // 重新生成：跳过缓存，用最新的内容模板重新生成一遍。给已经付过费、但报告是在
+  // 内容模板更新之前生成的用户用——比如后来新加了"数字能量解读"这类章节，
+  // 老报告不会自动补上，点这个按钮才会用最新模板重新写一份。
+  const regenerate = async () => {
+    setRegenerating(true);
+    setError("");
+    try {
+      const currentLangEn = document.documentElement.classList.contains("lang-en");
+      const res = await fetch("/api/lifemap/generate-full", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate: true }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.fullReport) {
+        setError(data.error || t("重新生成失败，请稍后再试。", "Regeneration failed — please try again shortly."));
+        return;
+      }
+      const parts = (data.fullReport as string)
+        .split(/===\s*\d+\s*===/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      setSections(parts);
+    } catch {
+      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again shortly."));
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
   const downloadPdf = async () => {
     if (!reportRef.current) return;
     setDownloading(true);
@@ -229,13 +260,23 @@ export default function FullReportView({ id }: { id: string }) {
           <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
             🌌 <Bi zh="完整生命频率图谱" en="Your Full Life Frequency Map" />
           </p>
-          <button
-            onClick={downloadPdf}
-            disabled={downloading}
-            className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
-          >
-            {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={regenerate}
+              disabled={regenerating}
+              className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
+              title={t("用最新内容模板重新生成这份报告（比如后来新加的章节，老报告不会自动出现）", "Regenerate this report with the latest content template (sections added later won't appear automatically otherwise)")}
+            >
+              {regenerating ? <Bi zh="正在重新生成…" en="Regenerating…" /> : <Bi zh="↻ 重新生成" en="↻ Regenerate" />}
+            </button>
+            <button
+              onClick={downloadPdf}
+              disabled={downloading}
+              className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
+            >
+              {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
+            </button>
+          </div>
         </div>
         <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-report px-1 py-4"}>
         <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>

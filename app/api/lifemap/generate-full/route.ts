@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "请先登录" }, { status: 401 });
   }
 
-  let body: { id?: string; lang?: string };
+  let body: { id?: string; lang?: string; regenerate?: boolean };
   try {
     body = await req.json();
   } catch {
@@ -51,9 +51,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "无权访问这份记录。" }, { status: 403 });
   }
 
-  // 已经生成过，直接返回对应语言的缓存内容，不重复调用AI
+  // 已经生成过，直接返回对应语言的缓存内容，不重复调用AI——除非明确要求重新生成
+  // （比如内容模板更新了，用户想让已经付费的旧报告，用上新加的章节）。
   const cached = lang === "en" ? submission.full_report_en : submission.full_report;
-  if (cached) {
+  if (cached && !body.regenerate) {
     return NextResponse.json({ fullReport: cached });
   }
 
