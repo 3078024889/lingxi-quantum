@@ -426,7 +426,7 @@ export default function LifeMapFlow() {
         console.error("解锁完整报告失败:", data);
         setError(
           data.error === "支付未配置"
-            ? t("支付网关尚未配置（缺少 NOWPAYMENTS_API_KEY），请联系站点管理员配置后再试。", "Payment gateway isn't configured yet (missing NOWPAYMENTS_API_KEY) — please contact the site admin.")
+            ? t("支付网关尚未配置（缺少 PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET），请联系站点管理员配置后再试。", "Payment gateway isn't configured yet (missing PayPal credentials) — please contact the site admin.")
             : data.error || t("下单失败，请稍后再试。", "Order failed, please try again later.")
         );
         setUnlocking(false);

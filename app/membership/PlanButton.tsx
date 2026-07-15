@@ -32,7 +32,7 @@ export default function PlanButton({
       });
       const data = await res.json();
       if (data.url) {
-        window.location.href = data.url; // 跳转到支付页（USDT/加密能量）
+        window.location.href = data.url; // 跳转到 PayPal 付款页
       } else {
         setError(data.error || (document.documentElement.classList.contains("lang-en") ? "Order failed, please try again later" : "下单失败，请稍后再试"));
         setLoading(false);

@@ -64,11 +64,23 @@ function Card({
   );
 }
 
-export default async function MembershipPage() {
+export default async function MembershipPage({
+  searchParams,
+}: {
+  searchParams: { canceled?: string; pending?: string; error?: string };
+}) {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const status = searchParams.pending
+    ? { tone: "pending", zh: "PayPal 正在处理这笔付款，一般几分钟内会自动完成——完成后这里会自动解锁，不用重复付款。", en: "PayPal is still processing this payment — it usually clears within a few minutes and unlocks automatically. No need to pay again." }
+    : searchParams.canceled
+    ? { tone: "canceled", zh: "已取消这次能量交换，没有产生任何扣款。", en: "Exchange canceled — nothing was charged." }
+    : searchParams.error
+    ? { tone: "error", zh: "付款遇到了问题，还没有完成扣款。可以重试一次，如果反复失败，联系我们看看是不是账户那边的原因。", en: "Something went wrong and the payment didn't go through. Try again, or reach out if it keeps failing." }
+    : null;
 
   return (
     <>
@@ -88,6 +100,19 @@ export default async function MembershipPage() {
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi zh="完成能量交换后，场域将自动为你开启。" en="Once the energy exchange is complete, the Field opens for you automatically." />
           </p>
+          {status && (
+            <p
+              className={`mx-auto mt-6 max-w-xl rounded-sm border px-5 py-3 text-sm leading-6 ${
+                status.tone === "error"
+                  ? "border-red-400/30 bg-red-400/10 text-red-200"
+                  : status.tone === "pending"
+                  ? "border-amber/30 bg-amber/10 text-amber"
+                  : "border-white/15 bg-white/5 text-bone-dim"
+              }`}
+            >
+              <Bi zh={status.zh} en={status.en} />
+            </p>
+          )}
           </div>
         </section>
 

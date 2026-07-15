@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
+import { createPaypalOrder } from "@/lib/paypal";
 
 export async function POST(req: Request) {
   try {
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
         product_type: product.type,
         amount_usd: product.priceUsd,
         status: "pending",
-        provider: "nowpayments",
+        provider: "paypal",
       })
       .select()
       .single();
@@ -36,41 +37,32 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "创建订单失败" }, { status: 500 });
     }
 
-    const apiKey = process.env.NOWPAYMENTS_API_KEY;
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
-    if (!apiKey) {
-      return NextResponse.json({ error: "支付未配置" }, { status: 500 });
-    }
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
+    const dest =
+      typeof returnPath === "string" && returnPath.startsWith("/") ? returnPath : "/account?paid=1";
 
-    const resp = await fetch("https://api.nowpayments.io/v1/invoice", {
-      method: "POST",
-      headers: { "x-api-key": apiKey, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        price_amount: product.priceUsd,
-        price_currency: "usd",
-        order_id: order.id,
-        order_description: `灵犀 · ${product.name}`,
-        ipn_callback_url: `${baseUrl}/api/pay/webhook`,
-        success_url: `${baseUrl}${typeof returnPath === "string" && returnPath.startsWith("/") ? returnPath : "/account?paid=1"}`,
-        cancel_url: `${baseUrl}/membership?canceled=1`,
-      }),
-    });
+    try {
+      const { id: paypalOrderId, approveUrl } = await createPaypalOrder({
+        amountUsd: product.priceUsd,
+        description: `灵犀 · ${product.name}`,
+        referenceId: order.id,
+        // 用户在 PayPal 付完款，会先回到这个中转接口，由它负责真正扣款
+        // （capture）、解锁内容，再跳去 dest；不能让 PayPal 直接跳 dest，
+        // 不然"钱到没到账"这件事就没有服务端环节去确认了。
+        returnUrl: `${baseUrl}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(dest)}`,
+        cancelUrl: `${baseUrl}/membership?canceled=1`,
+      });
 
-    const data = await resp.json();
-    if (!resp.ok || !data.invoice_url) {
+      await admin.from("orders").update({ provider_payment_id: paypalOrderId }).eq("id", order.id);
+
+      return NextResponse.json({ url: approveUrl });
+    } catch (e) {
+      await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
       return NextResponse.json(
-        { error: "支付网关返回异常", detail: data },
+        { error: "支付网关返回异常", detail: e instanceof Error ? e.message : String(e) },
         { status: 502 }
       );
     }
-
-    await admin
-      .from("orders")
-      .update({ provider_payment_id: String(data.id ?? "") })
-      .eq("id", order.id);
-
-    return NextResponse.json({ url: data.invoice_url });
   } catch {
     return NextResponse.json({ error: "服务器错误" }, { status: 500 });
   }

@@ -1,101 +1,45 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getProduct } from "@/lib/plans";
+import { verifyPaypalWebhook } from "@/lib/paypal";
+import { fulfillPaidOrder } from "@/lib/fulfill-order";
 
-// NowPayments 到账回调（IPN）。用 IPN Secret 校验签名，防伪造。
-function sortObject(obj: any): any {
-  if (Array.isArray(obj)) return obj.map(sortObject);
-  if (obj && typeof obj === "object") {
-    return Object.keys(obj)
-      .sort()
-      .reduce((acc: any, k) => {
-        acc[k] = sortObject(obj[k]);
-        return acc;
-      }, {});
-  }
-  return obj;
-}
-
+// PayPal 异步 Webhook——用户付完款那一刻，PayPal 会独立推送一份通知过来，
+// 跟"用户跳转回 /api/pay/paypal/return"是两条互相独立的路径，谁先到都行，
+// 这里存在的意义是兜底：万一用户付完款之后没有真的跳转回网站（比如中途
+// 关掉了浏览器标签页），这条路径依然能保证订单被正确解锁，不会因为一次
+// 网络波动就白白收了钱却没给用户开通。
 export async function POST(req: Request) {
-  const secret = process.env.NOWPAYMENTS_IPN_SECRET;
-  const signature = req.headers.get("x-nowpayments-sig");
   const raw = await req.text();
 
-  if (!secret || !signature) {
-    return NextResponse.json({ error: "未配置或缺少签名" }, { status: 400 });
+  const verified = await verifyPaypalWebhook(req.headers, raw);
+  if (!verified) {
+    return NextResponse.json({ error: "签名校验失败或未配置 PAYPAL_WEBHOOK_ID" }, { status: 401 });
   }
 
-  let body: any;
+  let event: any;
   try {
-    body = JSON.parse(raw);
+    event = JSON.parse(raw);
   } catch {
     return NextResponse.json({ error: "无效负载" }, { status: 400 });
   }
-  const sorted = JSON.stringify(sortObject(body));
-  const hmac = crypto.createHmac("sha512", secret).update(sorted).digest("hex");
-  if (hmac !== signature) {
-    return NextResponse.json({ error: "签名校验失败" }, { status: 401 });
-  }
 
-  const status = body.payment_status;
-  const orderId = body.order_id;
-  if (!orderId) return NextResponse.json({ ok: true });
+  if (event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
+    // PayPal 的订单号，在我们这边对应 orders.provider_payment_id，需要反查
+    // 出我们自己的订单 id 再去 fulfill（fulfillPaidOrder 认的是我们自己的
+    // orders.id，不是 PayPal 的订单号）。
+    const paypalOrderId =
+      event.resource?.supplementary_data?.related_ids?.order_id || event.resource?.id;
+    if (!paypalOrderId) return NextResponse.json({ ok: true });
 
-  const admin = createAdminClient();
-
-  if (status === "finished" || status === "confirmed") {
+    const admin = createAdminClient();
     const { data: order } = await admin
       .from("orders")
-      .select("*")
-      .eq("id", orderId)
+      .select("id")
+      .eq("provider_payment_id", paypalOrderId)
       .single();
-
-    if (order && order.status !== "paid") {
-      const product = getProduct(order.product_id);
-      const now = new Date();
-
-      if (order.product_type === "permanent") {
-        // 永久解锁：写入 unlocks 表
-        await admin.from("unlocks").upsert({
-          user_id: order.user_id,
-          product_id: order.product_id,
-        });
-        // 若买的是四项合集，把单项也一并解锁
-        if (order.product_id === "bundle") {
-          const items = ["breath", "intuition", "heart-reset", "ascending-heart"];
-          for (const pid of items) {
-            await admin
-              .from("unlocks")
-              .upsert({ user_id: order.user_id, product_id: pid });
-          }
-        }
-      } else {
-        // 订阅：延长 manifest_until
-        const days = product?.days ?? 30;
-        const { data: profile } = await admin
-          .from("profiles")
-          .select("manifest_until")
-          .eq("id", order.user_id)
-          .single();
-        const current =
-          profile?.manifest_until && new Date(profile.manifest_until) > now
-            ? new Date(profile.manifest_until)
-            : now;
-        const until = new Date(current.getTime() + days * 86400000);
-        await admin
-          .from("profiles")
-          .update({ manifest_until: until.toISOString() })
-          .eq("id", order.user_id);
-      }
-
-      await admin
-        .from("orders")
-        .update({ status: "paid", paid_at: now.toISOString() })
-        .eq("id", orderId);
+    if (order) {
+      await fulfillPaidOrder(order.id);
     }
-  } else if (status === "failed" || status === "expired") {
-    await admin.from("orders").update({ status: "failed" }).eq("id", orderId);
   }
 
   return NextResponse.json({ ok: true });

@@ -1,0 +1,65 @@
+灵犀 LINGXI · v144（支付网关从 NOWPayments 加密货币，换成 PayPal 自动结算；
+删除了所有加密货币收款相关代码）
+
+★ 在 v143 基础上的改动，直接上传这一个 v144 即可（累计包含此前全部内容）。
+★★ 这一版需要你配置 PayPal 密钥才能正常收款，见下方"部署前必做"。
+
+【一、新增】lib/paypal.ts
+- PayPal Orders v2 API 的封装：换 access token、创建订单、扣款（capture）、
+  校验 Webhook 签名，四个函数。
+
+【二、新增】lib/fulfill-order.ts
+- 把"订单确认已付款之后要做的事"（解锁永久内容 / 延长订阅有效期）单独
+  抽出来，因为现在"确认已付款"有两条独立路径都可能触发（用户付完款跳
+  转回网站 / PayPal 异步推送的 Webhook），这个函数做了幂等处理（按订单
+  状态是否已经是 paid 判断），两条路径谁先到都行，不会重复解锁两次。
+
+【三、重写】app/api/pay/create/route.ts
+- 原来调 NOWPayments 的 /v1/invoice，现在改成调 PayPal 创建订单，逻辑
+  结构基本没变：建 orders 表记录 → 拿到付款页链接 → 返回给前端跳转，
+  跟之前用法一致，前端（PlanButton.tsx、LifeMapFlow.tsx 等）不需要改。
+
+【四、新增】app/api/pay/paypal/return/route.ts
+- 用户在 PayPal 页面点"同意付款"后会先跳回这个中转接口，由它负责真正
+  扣款（capture）、确认成功后解锁内容，再跳去最终该去的页面。PayPal
+  偶尔会把订单判定为需要人工审核（PENDING），这种会带用户去"处理中"
+  的提示页，不会误判成失败。
+
+【五、重写】app/api/pay/webhook/route.ts
+- 原来是校验 NOWPayments 的 IPN 签名，现在改成校验 PayPal Webhook 签名，
+  监听 PAYMENT.CAPTURE.COMPLETED 事件，作为"用户没有正常跳转回网站"
+  时的兜底解锁路径。
+
+【六、清理】
+- app/life-map/LifeMapFlow.tsx、app/membership/PlanButton.tsx 里残留的
+  NOWPayments/USDT/加密货币 相关提示文案和注释，改成对应 PayPal 的说法。
+- 全仓库搜索确认：NOWPAYMENTS_API_KEY、NOWPAYMENTS_IPN_SECRET 这些环境
+  变量名已经没有任何代码在用了，Vercel 项目设置里那两个可以删掉了。
+
+【七、新增】.env.example
+- 列出了部署这份代码需要配置的全部环境变量，包含新的 PayPal 那几个。
+
+【八、能量交换页面（/membership）小改进】app/membership/page.tsx
+- 补上了付款返回状态的提示：取消付款 / PayPal处理中 / 付款失败，之前
+  这几种情况跳回来页面上什么提示都没有，用户会一脸懵，现在会有一句话
+  说明当前状态。
+
+═══════════════════════════════════
+【部署前必做——不配置这几个，收款会直接报错"支付未配置"】
+═══════════════════════════════════
+1. 去 PayPal 开发者后台 https://developer.paypal.com/dashboard/applications
+   创建一个 App，拿到 Client ID 和 Secret。
+2. 在 Vercel 项目设置的环境变量里加上：
+   PAYPAL_CLIENT_ID、PAYPAL_CLIENT_SECRET、PAYPAL_ENV（先填 sandbox 测试，
+   确认整条"下单→付款→自动解锁"流程没问题后，再切成 live）。
+3. 在 PayPal 开发者后台给这个 App 订阅 Webhook，地址填
+   https://lingxifield.com/api/pay/webhook，事件至少勾选
+   PAYMENT.CAPTURE.COMPLETED，订阅成功后会给一个 Webhook ID，
+   填进环境变量 PAYPAL_WEBHOOK_ID——这个强烈建议配，是防止用户付完款
+   却没解锁成功的兜底保障，不要跳过这一步。
+4. Vercel 项目设置里，NOWPAYMENTS_API_KEY 和 NOWPAYMENTS_IPN_SECRET
+   这两个环境变量已经用不到了，可以删除。
+
+建议先用 PAYPAL_ENV=sandbox（PayPal 提供的测试账号，不涉及真实资金）
+把"生命图谱报告解锁"这类最简单的一笔完整走一遍，确认没问题、Webhook
+也收到了，再切换成 live 正式收款。
