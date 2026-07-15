@@ -109,7 +109,12 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: process.env.ZHIPU_MODEL || "glm-4-flash-250414",
         temperature: 0.85,
-        max_tokens: 8000,
+        // 之前是 8000——12个中文段落写下来，本来就已经很接近这个上限了，
+        // 加了第13节"数字能量解读"之后，AI 的回复经常在写到第13节之前，
+        // 就被这个上限截断（finish_reason 会是 "length"），"没有第13节"
+        // 表面上看起来像是"没数据可写"，其实是"根本没写到那里就被切断了"。
+        // 这才是这次真正的根因，不是数据没存上——上调到 12000，留足空间。
+        max_tokens: 12000,
         messages: [
           { role: "system", content: LIFEMAP_FULL_SYSTEM + langInstruction },
           { role: "user", content: promptContent },
@@ -118,6 +123,12 @@ export async function POST(req: Request) {
     });
     const data = await res.json();
     const text = data?.choices?.[0]?.message?.content?.trim();
+    const finishReason = data?.choices?.[0]?.finish_reason;
+    if (finishReason === "length") {
+      // 回复被 max_tokens 截断了——留个日志，下次再出现"报告缺了最后一节"
+      // 这类问题，第一时间就知道是这个原因，不用再靠猜。
+      console.error("[generate-full] AI 回复被 max_tokens 截断，finish_reason=length，submission id:", body.id);
+    }
     if (!res.ok || !text) {
       return NextResponse.json({ error: "生成失败，请稍后再试。" }, { status: 502 });
     }
