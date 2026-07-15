@@ -27,7 +27,7 @@ export default function LingxiPortal() {
       <div className="lx-core-glyph mb-2 font-display text-2xl text-lattice" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>✦</div>
 
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice sm:text-base" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>
-        灵 犀 · LINGXI FIELD
+        灵 犀 场 · LINGXI FIELD
       </p>
 
       <h1 className="mt-6 font-display text-5xl font-light text-bone sm:text-7xl" style={{ textShadow: "0 0 20px rgba(216,184,255,0.35)" }}>

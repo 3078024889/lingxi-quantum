@@ -33,7 +33,7 @@ export default function Nav() {
           >
             <span className="flex items-center gap-1.5 font-display text-base tracking-widest2 text-bone transition group-hover:text-lattice sm:text-lg">
               <span aria-hidden="true" className="text-[0.7em] text-lattice">✦</span>
-              灵犀 LINGXI
+              灵犀场 LINGXIFIELD
             </span>
             <span className="mt-1 hidden font-display text-[12px] tracking-[0.12em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
               <Bi

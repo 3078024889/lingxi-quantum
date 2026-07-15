@@ -31,7 +31,7 @@ const articleJsonLd = {
   headline: "什么是显化，以及如何真正显化",
   inLanguage: "zh-CN",
   about: "显化 / Manifestation",
-  publisher: { "@type": "Organization", name: "灵犀 Lingxi" },
+  publisher: { "@type": "Organization", name: "灵犀场 LingxiField" },
 };
 const faqJsonLd = {
   "@context": "https://schema.org",

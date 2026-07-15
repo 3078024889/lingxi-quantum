@@ -13,7 +13,7 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { id: string } }) {
   const gate = getGate(params.id);
-  return { title: gate ? `${gate.title} ${gate.titleEn} · 重塑潜意识 Rewrite the Subconscious | 灵犀 Lingxi` : "灵犀 Lingxi" };
+  return { title: gate ? `${gate.title} ${gate.titleEn} · 重塑潜意识 Rewrite the Subconscious | 灵犀场 LingxiField` : "灵犀场 LingxiField" };
 }
 
 export default function GatePage({ params }: { params: { id: string } }) {

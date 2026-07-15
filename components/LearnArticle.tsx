@@ -30,10 +30,10 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
     description: data.defZh,
     inLanguage: ["zh-CN", "en"],
     image: "https://lingxifield.com/og.png",
-    author: { "@type": "Organization", name: "灵犀 Lingxi", url: "https://lingxifield.com" },
+    author: { "@type": "Organization", name: "灵犀场 LingxiField", url: "https://lingxifield.com" },
     publisher: {
       "@type": "Organization",
-      name: "灵犀 Lingxi",
+      name: "灵犀场 LingxiField",
       logo: { "@type": "ImageObject", url: "https://lingxifield.com/icon-512.png" },
     },
     mainEntityOfPage: `https://lingxifield.com/learn/${data.slug}`,
@@ -42,7 +42,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "灵犀 Lingxi", item: "https://lingxifield.com" },
+      { "@type": "ListItem", position: 1, name: "灵犀场 LingxiField", item: "https://lingxifield.com" },
       { "@type": "ListItem", position: 2, name: "学习 Learn", item: "https://lingxifield.com/learn" },
       { "@type": "ListItem", position: 3, name: data.titleZh, item: `https://lingxifield.com/learn/${data.slug}` },
     ],

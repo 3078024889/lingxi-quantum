@@ -37,19 +37,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "无权修改这份记录。" }, { status: 403 });
   }
 
-  // 先把旧的手机号/车牌号数字能量片段（如果之前补录过一次）从 focus 里摘掉，
-  // 避免重复补录的时候，同一个字段越叠越长。
-  let focus = (submission.focus || "")
-    .replace(/\s*·\s*手机号数字能量：[^·]+/g, "")
-    .replace(/\s*·\s*车牌号数字能量：[^·]+/g, "");
-
+  // 先把旧的手机号/车牌号数字能量片段摘掉，但只摘"这次请求里真的提供了新值"
+  // 的那一项——如果这次只想补一个新手机号、车牌号没动，就不能把已经存在的
+  // 车牌号数据也一起删掉，之前的版本在这里有问题：不管这次填没填车牌号，
+  // 都会把旧车牌号先清空，等于"补录手机号"这个操作，会意外把车牌号冲掉。
+  let focus = submission.focus || "";
   const phone = (body.phone || "").trim();
   const plate = (body.plate || "").trim();
   if (phone) {
+    focus = focus.replace(/\s*·\s*手机号数字能量：[^·]+/g, "");
     const r = analyzePhoneNumber(phone);
     focus += ` · 手机号数字能量：${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
   }
   if (plate) {
+    focus = focus.replace(/\s*·\s*车牌号数字能量：[^·]+/g, "");
     const r = analyzePlateNumber(plate);
     focus += ` · 车牌号数字能量：${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
   }

@@ -9,8 +9,8 @@ const SITE = "https://lingxifield.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "灵犀 LINGXI ｜ 意识显化 · 场域解梦 · 潜意识改写 · 修炼技术",
-    template: "%s ｜ 灵犀 LINGXI",
+    default: "灵犀场 LINGXIFIELD ｜ 意识显化 · 场域解梦 · 潜意识改写 · 修炼技术",
+    template: "%s ｜ 灵犀场 LINGXIFIELD",
   },
   description:
     "灵犀（LINGXI）是一套意识显化与内在成长系统，融合意识显化（现实回路）、探索梦境、重塑潜意识、量子息法、上升心经、多维叙事等实践技术，帮助你探索内在觉察、创造力与身心成长。先在意识里活成真实，现实自会随之对齐。",
@@ -30,12 +30,12 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "灵犀 Lingxi",
+    siteName: "灵犀场 LingxiField",
     title: "灵犀 · 意识显化系统",
     description:
       "陪你显化目标、解读梦境、修炼意识的引导活场系统。先在意识里活成真实，现实自会随之对齐。",
     url: SITE,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "灵犀 Lingxi · 意识显化系统" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "灵犀场 LingxiField · 意识显化系统" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -70,8 +70,8 @@ export const metadata: Metadata = {
 const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "灵犀 Lingxi",
-  alternateName: ["Lingxi", "LINGXI", "灵犀"],
+  name: "灵犀场 LingxiField",
+  alternateName: ["Lingxi", "LINGXI", "灵犀", "LingxiField", "灵犀场"],
   url: SITE,
   logo: `${SITE}/icon-512.png`,
   description:
@@ -88,7 +88,7 @@ const orgJsonLd = {
 const siteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "灵犀 Lingxi",
+  name: "灵犀场 LingxiField",
   alternateName: "LINGXI",
   url: SITE,
   inLanguage: ["zh-CN", "en"],

@@ -31,7 +31,7 @@ const articleJsonLd = {
   headline: "主权与完整：灵犀修炼体系的思路",
   inLanguage: "zh-CN",
   about: "Personal sovereignty and wholeness",
-  publisher: { "@type": "Organization", name: "灵犀 Lingxi" },
+  publisher: { "@type": "Organization", name: "灵犀场 LingxiField" },
 };
 const faqJsonLd = {
   "@context": "https://schema.org",

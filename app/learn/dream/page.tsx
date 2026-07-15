@@ -31,7 +31,7 @@ const articleJsonLd = {
   headline: "如何解梦：读懂潜意识写给你的信",
   inLanguage: "zh-CN",
   about: "解梦 / Dream interpretation",
-  publisher: { "@type": "Organization", name: "灵犀 Lingxi" },
+  publisher: { "@type": "Organization", name: "灵犀场 LingxiField" },
 };
 const faqJsonLd = {
   "@context": "https://schema.org",

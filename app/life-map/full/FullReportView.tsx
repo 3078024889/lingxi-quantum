@@ -5,6 +5,9 @@ import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 import NatalChartWheel from "../NatalChartWheel";
 
+type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
+type HumanDesignResult = { personality: GateActivation[]; design: GateActivation[]; sunConsciousGate: number; sunUnconsciousGate: number };
+
 type ChartFacts = {
   sunLongitude: number; moonLongitude: number;
   mercury: { longitude: number }; venus: { longitude: number }; mars: { longitude: number };
@@ -14,6 +17,7 @@ type ChartFacts = {
     palaces: { name: string; earthlyBranch: string; majorStars: { name: string; brightness: string }[]; isSoulPalace: boolean; isBodyPalace: boolean; decadalRange: [number, number] }[];
   } | null;
   daYunStartAge: number | null;
+  humanDesign: HumanDesignResult | null;
 };
 
 const SECTION_TITLES = [
@@ -60,6 +64,7 @@ export default function FullReportView({ id }: { id: string }) {
   const [facts, setFacts] = useState<ChartFacts | null>(null);
   const [freqScores, setFreqScores] = useState<{ energy: number; clarity: number; alignment: number } | null>(null);
   const [numberEnergy, setNumberEnergy] = useState<{ label: string; total: number }[]>([]);
+  const [freePreview, setFreePreview] = useState<{ echoText: string; stageName: string; stageDesc: string; keywords: { word: string; desc: string }[] } | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -78,7 +83,7 @@ export default function FullReportView({ id }: { id: string }) {
 
       const { data: submission } = await supabase
         .from("life_map_submissions")
-        .select("core_type_name, facts, energy_level, clarity_level, alignment_level, focus")
+        .select("core_type_name, facts, energy_level, clarity_level, alignment_level, focus, free_narrative")
         .eq("id", id)
         .single();
       if (submission?.core_type_name) setCoreTypeName(submission.core_type_name);
@@ -100,6 +105,23 @@ export default function FullReportView({ id }: { id: string }) {
         const plateMatch = /车牌号数字能量：\S+（总和(\d+)/.exec(submission.focus);
         if (plateMatch) matches.push({ label: "车牌号", total: parseInt(plateMatch[1], 10) });
         setNumberEnergy(matches);
+      }
+      // 免费预览里那段"当前生命阶段 + 三个关键词"，其实早就存进了
+      // free_narrative 字段（跟当初免费预览页面显示的是同一份数据）——
+      // 之前完整报告页面只顾着展示付费才生成的12/13段内容，没把这段
+      // 免费阶段就有的内容也带进来，等于用户在免费预览里看到的东西，
+      // 花钱之后反而在完整报告里找不到了。这里用跟免费预览完全一样的
+      // 解析逻辑，把这段内容也摆进完整报告。
+      if (submission?.free_narrative) {
+        const parts = (submission.free_narrative as string).split(/\n\s*\n/).map((s: string) => s.trim()).filter(Boolean);
+        const echoText = parts[0] || "";
+        const [stageName, stageDesc] = (parts[1] || "").split("|").map((s) => s?.trim());
+        const keywordParts = (parts[2] || "").split("|").map((s) => s.trim()).filter(Boolean);
+        const keywords = keywordParts.map((kp) => {
+          const [w, d] = kp.split(",").map((s) => s?.trim());
+          return { word: w || "", desc: d || "" };
+        });
+        setFreePreview({ echoText, stageName: stageName || "", stageDesc: stageDesc || "", keywords });
       }
 
       setStatus("generating");
@@ -383,6 +405,53 @@ export default function FullReportView({ id }: { id: string }) {
           </div>
         )}
 
+        {freePreview && (
+          <div className="bg-void-deep mt-10 p-6 sm:p-8">
+            {freePreview.echoText && (
+              <p className="text-base leading-9 text-lm2-text">{freePreview.echoText}</p>
+            )}
+            {freePreview.stageName && (
+              <div className="mt-6 border-t border-lm2-text/10 pt-6">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                  <Bi zh="当前生命阶段" en="Your Current Life Stage" />
+                </p>
+                <h3 className="mt-2 font-display text-2xl text-lm2-text">「{freePreview.stageName}」</h3>
+                <p className="mt-3 text-base leading-8 text-lm2-text-dim">{freePreview.stageDesc}</p>
+              </div>
+            )}
+            {freePreview.keywords.length > 0 && (
+              <div className="mt-6 border-t border-lm2-text/10 pt-6">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                  <Bi zh="你的三个关键词" en="Your Three Keywords" />
+                </p>
+                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  {freePreview.keywords.map((k, i) => (
+                    <div key={i} className="bg-lm2-card rounded-sm p-4 text-center backdrop-blur-xl">
+                      <p className="font-display text-xl text-lm2-text">✨ {k.word}</p>
+                      <p className="mt-1 text-xs text-lm2-text-dim">{k.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {facts?.humanDesign && (
+          <div className="bg-void-deep mt-8 p-6 sm:p-8">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+              <Bi zh="人类图 · 门" en="Human Design · Gates" />
+            </p>
+            <p className="mt-2 text-xs leading-6 text-lm2-text-dim">
+              <Bi
+                zh="太阳门是人类图里权重最高的单一信息（约占人格印记70%），已经用真实天文计算得出，下面列出的每一个门也是如此。完整的类型与内在权威解读，将在后续版本中加入。"
+                en="The Sun gate is the single highest-weighted piece of information in Human Design (roughly 70% of the personality imprint), and it's computed from real astronomy — as is every gate listed below. Full Type and Authority readings will arrive in a future update."
+              />
+            </p>
+            <HumanDesignChart hd={facts.humanDesign} />
+          </div>
+        )}
+
         <div className="mt-12 space-y-14">
           {sections.map((content, i) => {
             const isSkippedNumberSection = i === 12 && /未提供手机号或车牌号/.test(content);
@@ -447,6 +516,49 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
           </div>
         );
       })}
+    </div>
+  );
+}
+
+// 人类图门位环——跟星盘用的是同一种"角度即位置"的画法：每颗星体按它
+// 真实的黄道经度，摆在圆周上对应的角度，中心显示太阳门（意识/潜意识）
+// 这个人类图里权重最高的信息，不再是一串纯文字列表。
+function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
+  const cx = 130, cy = 130, r = 96;
+  const glyphs: Record<string, string> = {
+    sun: "☉", earth: "⊕", moon: "☽", mercury: "☿", venus: "♀",
+    mars: "♂", jupiter: "♃", saturn: "♄", uranus: "♅", neptune: "♆", pluto: "♇",
+  };
+  const colors = ["#F0C868", "#8EDBD2", "#D8B8FF", "#FF9FD6"];
+  return (
+    <div className="mt-5 flex flex-col items-center gap-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl sm:flex-row sm:items-start">
+      <svg viewBox="0 0 260 260" className="w-56 shrink-0">
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={r - 20} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+        {hd.personality.map((g, i) => {
+          const rad = ((g.longitude - 90) * Math.PI) / 180;
+          const x = cx + r * Math.cos(rad);
+          const y = cy + r * Math.sin(rad);
+          const color = colors[i % colors.length];
+          return (
+            <g key={g.key}>
+              <line x1={cx} y1={cy} x2={x} y2={y} stroke={color} strokeOpacity="0.15" strokeWidth="1" />
+              <circle cx={x} cy={y} r="10" fill="rgba(10,20,38,0.85)" stroke={color} strokeWidth="1.5">
+                <animate attributeName="r" values="9;11;9" dur={`${2.6 + i * 0.3}s`} repeatCount="indefinite" />
+              </circle>
+              <text x={x} y={y + 4} textAnchor="middle" fontSize="10" fill={color}>{glyphs[g.key] || "•"}</text>
+            </g>
+          );
+        })}
+        <circle cx={cx} cy={cy} r="34" fill="rgba(240,200,104,0.12)" stroke="#F0C868" strokeWidth="1" />
+        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="11" fill="#F0C868" fontFamily="serif">{hd.sunConsciousGate}</text>
+        <text x={cx} y={cy + 12} textAnchor="middle" fontSize="8" fill="#D9D3E8">门 {hd.sunUnconsciousGate}</text>
+      </svg>
+      <div className="grid flex-1 grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-lm2-text-dim sm:grid-cols-3">
+        {hd.personality.map((g) => (
+          <span key={g.key}>{g.zh} — 门 {g.gate}.{g.line}</span>
+        ))}
+      </div>
     </div>
   );
 }

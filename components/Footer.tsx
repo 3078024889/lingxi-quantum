@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="relative px-6 py-12">
       <div className="bg-void-deep mx-auto flex max-w-6xl flex-col items-center gap-6 rounded-sm px-6 py-8 sm:flex-row sm:justify-between">
         <p className="font-display text-sm tracking-widest2 text-bone-dim">
-          <Bi zh="灵犀 LINGXI · 一道活的意识场" en="LINGXI · A Living Field of Consciousness" />
+          <Bi zh="灵犀场 LINGXIFIELD · 一道活的意识场" en="LINGXIFIELD · A Living Field of Consciousness" />
         </p>
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[13px] text-bone-dim">
           <Link href="/practice" className="hover:text-lattice">
