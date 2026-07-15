@@ -171,12 +171,12 @@ export default function DeclarationPage() {
                 </ul>
                 <p><Bi zh="可通过以下方式连接灵犀场：" en="you can reach Lingxi Field through:" /></p>
                 <a
-                  href="https://x.com/lingxinqs?s=11"
+                  href="https://x.com/lingxifield?s=11"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block rounded-sm border border-lattice/40 px-6 py-3 font-display text-sm tracking-widest2 text-lattice transition hover:border-amber hover:text-amber"
                 >
-                  X（Twitter）· @lingxinqs
+                  X（Twitter）· @lingxifield
                 </a>
               </div>
             </div>

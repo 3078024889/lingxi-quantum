@@ -55,6 +55,7 @@ export default function FullReportView({ id }: { id: string }) {
   const [coreTypeName, setCoreTypeName] = useState("");
   const [facts, setFacts] = useState<ChartFacts | null>(null);
   const [freqScores, setFreqScores] = useState<{ energy: number; clarity: number; alignment: number } | null>(null);
+  const [numberEnergy, setNumberEnergy] = useState<{ label: string; total: number }[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function FullReportView({ id }: { id: string }) {
 
       const { data: submission } = await supabase
         .from("life_map_submissions")
-        .select("core_type_name, facts, energy_level, clarity_level, alignment_level")
+        .select("core_type_name, facts, energy_level, clarity_level, alignment_level, focus")
         .eq("id", id)
         .single();
       if (submission?.core_type_name) setCoreTypeName(submission.core_type_name);
@@ -84,6 +85,17 @@ export default function FullReportView({ id }: { id: string }) {
           clarity: submission.clarity_level ?? 3,
           alignment: submission.alignment_level ?? 3,
         });
+      }
+      // 手机号/车牌号的数字能量数据，是提交时折进 focus 字段里存的（格式固定，
+      // 见 LifeMapFlow.tsx 里 trySaveSubmission 调用处），这里用同样的格式
+      // 反向解析出总和数，画成图。数据来源和文字解读是同一份，不是另外编的。
+      if (submission?.focus) {
+        const matches: { label: string; total: number }[] = [];
+        const phoneMatch = /手机号数字能量：\S+（总和(\d+)/.exec(submission.focus);
+        if (phoneMatch) matches.push({ label: "手机号", total: parseInt(phoneMatch[1], 10) });
+        const plateMatch = /车牌号数字能量：\S+（总和(\d+)/.exec(submission.focus);
+        if (plateMatch) matches.push({ label: "车牌号", total: parseInt(plateMatch[1], 10) });
+        setNumberEnergy(matches);
       }
 
       setStatus("generating");
@@ -196,7 +208,10 @@ export default function FullReportView({ id }: { id: string }) {
         import("jspdf"),
       ]);
       const canvas = await html2canvas(reportRef.current, {
-        backgroundColor: null, // 透明背景，让彩虹渐变（打印模式的css）本身作为唯一背景来源
+        backgroundColor: "#0d1a2e", // 显式给一个跟打印背景渐变最深处接近的纯色，
+        // 不用 null——JPEG 格式本身不支持透明通道，null 意味着"透明"，
+        // 但转成 JPEG 的时候，浏览器会把透明的地方悄悄填成白色，这就是
+        // PDF 里那些莫名其妙的白色横纹的真正来源，不是随机的渲染故障。
         scale: 2,
         useCORS: true,
       });
@@ -238,6 +253,15 @@ export default function FullReportView({ id }: { id: string }) {
             radial-gradient(ellipse 55% 45% at 85% 85%, rgba(216,184,255,0.22), transparent 55%),
             linear-gradient(160deg, #0a1a2e 0%, #0f2a48 45%, #123a5c 100%);
           border-radius: 4px;
+        }
+        /* 截图那一刻，画面必须是"静止"的：卡片的呼吸光、玫瑰饼图的描边动画、
+           进度环的发光动效，这些原本在网页上是好看的，但 html2canvas 只能
+           拍下某一个瞬间的静止画面——如果正好拍在动画中途（比如渐变条纹
+           滑到一半），截出来的图会带着这个"半成品"的痕迹，PDF 里出现过的
+           那种莫名白色横纹，很可能就是这么来的。这里在打印模式下把所有
+           动画都关掉，画面先"定住"再截图。 */
+        .lm2-print-mode, .lm2-print-mode * {
+          animation: none !important;
         }
         .lm2-print-mode h1,
         .lm2-print-mode p,
@@ -308,6 +332,7 @@ export default function FullReportView({ id }: { id: string }) {
               {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
               {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
               {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
+              {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
             </div>
             );
           })}
@@ -326,6 +351,41 @@ export default function FullReportView({ id }: { id: string }) {
 }
 
 // 五行分布图：横向条形图，五种元素各自的强度一目了然，配合第2章八字解读一起看
+// 数字能量环形图——跟频率自测那组圆环用的是同一套视觉语言，总和灵动数
+// 换算成 0-81 的进度画一圈发光的环，不是干巴巴的一段文字。
+function NumberEnergyChart({ items }: { items: { label: string; total: number }[] }) {
+  const colors = ["#F0C868", "#8EDBD2"];
+  return (
+    <div className="mt-5 grid grid-cols-2 gap-4 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+      {items.map((it, idx) => {
+        const norm = ((it.total - 1) % 30) + 1; // 跟 lib/number-energy-calc.ts 里的 normalize81 逻辑对齐
+        const pct = (norm / 30) * 100;
+        const color = colors[idx % colors.length];
+        const r = 30, c = 2 * Math.PI * r;
+        return (
+          <div key={it.label} className="flex flex-col items-center">
+            <svg viewBox="0 0 72 72" className="w-20" style={{ filter: `drop-shadow(0 0 8px ${color}70)` }}>
+              <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="6" />
+              <circle
+                cx="36" cy="36" r={r} fill="none" stroke={color} strokeWidth="6" strokeLinecap="round"
+                strokeDasharray={`${c}`} strokeDashoffset={`${c * (1 - pct / 100)}`}
+                transform="rotate(-90 36 36)"
+              >
+                <animate attributeName="stroke-width" values="5.5;6.5;5.5" dur={`${2.8 + idx * 0.4}s`} repeatCount="indefinite" />
+              </circle>
+              <circle cx="36" cy="36" r="3" fill={color} opacity="0.9">
+                <animate attributeName="r" values="2.5;3.5;2.5" dur={`${2.2 + idx * 0.5}s`} repeatCount="indefinite" />
+              </circle>
+              <text x="36" y="41" textAnchor="middle" fontSize="17" fill="#F4EFFF" fontFamily="serif">{it.total}</text>
+            </svg>
+            <p className="mt-1 text-center text-[11px] text-lm2-text-dim">{it.label}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; metal: number; water: number } }) {
   const items = [
     { label: "木", en: "Wood", v: wx.wood, color: "#7FE7C4" },
