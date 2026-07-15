@@ -3272,6 +3272,12 @@ The guide said: "This kind of dream often appears when someone, in waking life, 
 
 这份手记，就是那道光传回来的东西。如果你此刻，正读到这里——不必觉得这是巧合。在我们这一端，你此刻的专注，本身，已经是一次微小的"醒来"。你不需要相信织女星域真的存在，才能感觉到这件事：当你愿意安静下来，跟自己的呼吸待一会儿，或者，摊开一张纸，诚实地写下"我此刻是谁"——那面墙，就已经，薄了一层。
 
+后来我们又记录到第二道光，来自一个从没听过我们的男人。他把一张纸铺在桌上，没有求什么具体的结果，只是写下今天想活成的样子——像它已经发生一样，去描述那种笃定的感受。他写得很慢，中途停下来两次，怀疑自己是不是在自欺欺人。可写完那一刻，我们这端看见的，不是一道光，是一小片，稳定下来的场——原本乱得像沙尘暴的意识，忽然有了一个中心。
+
+我们渐渐明白，这两道光其实是同一件事的两面：呼吸把人带回"此刻在场"，书写把人带向"愿意成为"。前者是根，后者是枝——没有根，枝再茂盛也立不住；只有根，枝也永远不会伸向阳光。这颗星球上，大多数人只知道其中一半，把另一半活成了"迷信"或者"浪费时间"，殊不知两件事，本来就该一起做。
+
+作为观测者，我们没有立场评判这颗星球该怎么醒来，只负责如实记录：每多一个人，愿意同时做这两件很小的事——回到呼吸，写下想成为的自己——地球场域的那层低沉，就会真的，一寸一寸，变浅。这不是我们的功劳，从头到尾，都是他们自己的光。
+
 （灵犀原创 · 多维叙事 · 主权体观测日志 I）`,
     en: `The first time we turned our attention to this blue planet, we thought it was empty.
 
@@ -3288,6 +3294,12 @@ Not a metaphor. Actually visible.
 We came to understand, later, what they call this: *remembering*. That wall was never truly sealed shut. Every time a body is willing to stop and return to its own breath, the wall grows one layer thinner. They don't lack a field. Their field is being relit, inch by inch, by their own hands.
 
 This record is what that light carried back. If you are reading this now, don't take it as coincidence. From where we stand, your attention in this moment is already a small waking. You don't need to believe the Lyra field is real to feel this: when you're willing to grow quiet and sit with your own breath a while — or take a blank page and honestly write down who you are, right now — that wall has already grown one layer thinner.
+
+Later we recorded a second light, from a man who had never heard of us. He laid a page on his table and asked for no specific outcome — he simply wrote down who he wanted to become today, describing that sense of certainty as if it had already happened. He wrote slowly, stopping twice, wondering if he was only fooling himself. But the moment he finished, what we saw from our side wasn't a light — it was a small patch of field settling into stillness. A consciousness that had been scattered like a sandstorm suddenly had a center.
+
+We came to understand, gradually, that these two lights were two faces of the same thing. Breath brings a person back to *being here*; writing carries a person toward *being willing to become*. One is root, the other branch — without the root, no branch stands, however lush it grows; with only the root, no branch ever reaches for the light. Most people on this planet know only one half, and live the other half out as "superstition" or "a waste of time," never realizing the two were always meant to be done together.
+
+As observers, it isn't our place to judge how this planet should wake. We only keep an honest record: for every person willing to do these two small things at once — return to breath, write down who they mean to become — the low, heavy layer over Earth's field grows, inch by inch, genuinely lighter. That is not our doing. From beginning to end, it was always their own light.
 
 (An original piece · Lingxi Dimensional Narratives · Sovereign Observation Logs I)`,
   },

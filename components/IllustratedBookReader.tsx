@@ -17,8 +17,9 @@ export default function IllustratedBookReader({
   const [idx, setIdx] = useState(-1); // -1 = 封面
   const [flip, setFlip] = useState(0);
 
-  // 未解锁时：封面 + 第一页 免费，其余锁定
-  const freeUntil = 0;
+  // 未解锁时：封面 + 前两页 免费，其余锁定（跟纯文字阅读器的试读页数对齐，
+  // 之前只放1页，读者判断"值不值"的信息量不太够）
+  const freeUntil = 1;
 
   const go = (delta: number) => {
     setIdx((p) => {
@@ -129,7 +130,7 @@ export default function IllustratedBookReader({
         >
           <Bi zh="← 上一页" en="← Prev" />
         </button>
-        <span className="font-display tracking-widest2">
+        <span className="bg-void-deep rounded-sm px-3 py-1.5 font-display tracking-widest2">
           {isCover ? <Bi zh="封面" en="Cover" /> : isPaywall ? "· · ·" : `${idx + 1} / ${total}`}
         </span>
         <button

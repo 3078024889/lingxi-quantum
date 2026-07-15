@@ -35,13 +35,13 @@ export const metadata: Metadata = {
     description:
       "陪你显化目标、解读梦境、修炼意识的引导活场系统。先在意识里活成真实，现实自会随之对齐。",
     url: SITE,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "灵犀场 LingxiField · 意识显化系统" }],
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "灵犀场 LingxiField · 意识显化系统" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "灵犀 · 意识显化系统 | Lingxi",
     description: "显化 · 解梦 · 修炼。一个陪你回到自己的意识显化系统。",
-    images: ["/og.png"],
+    images: ["/og.jpg"],
   },
   robots: { index: true, follow: true },
   manifest: "/manifest.webmanifest",

@@ -64,7 +64,7 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
             <div className="mt-14 grid gap-4 border-t border-white/5 pt-10 sm:grid-cols-2">
               <Link
                 href="/practice"
-                className="group rounded-sm border border-white/10 px-6 py-5 text-center transition hover:border-lattice/50"
+                className="bg-void-deep group rounded-sm px-6 py-5 text-center transition hover:border-lattice/50"
               >
                 <p className="font-display text-xs uppercase tracking-widest2 text-lattice/70 transition group-hover:text-lattice">
                   <Bi zh="如果这篇触动了你" en="If this stayed with you" />
@@ -75,7 +75,7 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
               </Link>
               <Link
                 href="/live-as"
-                className="group rounded-sm border border-white/10 px-6 py-5 text-center transition hover:border-amber/50"
+                className="bg-void-deep group rounded-sm px-6 py-5 text-center transition hover:border-amber/50"
               >
                 <p className="font-display text-xs uppercase tracking-widest2 text-amber/70 transition group-hover:text-amber">
                   <Bi zh="想活成故事里的那种清醒" en="Want to live with that clarity" />

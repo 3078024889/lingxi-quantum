@@ -50,7 +50,9 @@ function BookInstance({
   const [page, setPage] = useState(-1);
   const [flip, setFlip] = useState(0);
 
-  const visiblePages = locked ? Math.min(pages.length, 1) : pages.length;
+  // 免费试读页数：以前锁1页，读者连判断"值不值"的信息都不够。改成2页
+  // （或全文页数本身就不到2页时，直接给全部），试读窗口打开得更合理一些。
+  const visiblePages = locked ? Math.min(pages.length, 2) : pages.length;
 
   const go = (delta: number) => {
     setPage((p) => {
@@ -146,7 +148,7 @@ function BookInstance({
         >
           ← 上一页
         </button>
-        <span className="font-display tracking-widest2">
+        <span className="bg-void-deep rounded-sm px-3 py-1.5 font-display tracking-widest2">
           {isCover ? "封面" : isPaywall ? "· · ·" : isEnd ? "完" : `${page + 1} / ${pages.length}`}
         </span>
         <button
