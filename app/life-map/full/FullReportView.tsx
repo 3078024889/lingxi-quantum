@@ -29,6 +29,7 @@ const SECTION_TITLES = [
   { zh: "人生周期导航", en: "Your Life Cycle Navigation" },
   { zh: "专属灵犀练习", en: "A Personal Lingxi Practice" },
   { zh: "前世今生印记 · 纯属脑洞", en: "Past & Future Imprint · Just for Fun" },
+  { zh: "数字能量解读（手机号 / 车牌号）", en: "Number Energy Reading (Phone & Plate)" },
 ];
 
 export default function FullReportView({ id }: { id: string }) {
@@ -253,7 +254,10 @@ export default function FullReportView({ id }: { id: string }) {
         )}
 
         <div className="mt-12 space-y-14">
-          {sections.map((content, i) => (
+          {sections.map((content, i) => {
+            const isSkippedNumberSection = i === 12 && /未提供手机号或车牌号/.test(content);
+            if (isSkippedNumberSection) return null;
+            return (
             <div key={i} className="break-inside-avoid">
               <p className="font-display text-xs uppercase tracking-widest2 text-lm2-violet">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
@@ -264,7 +268,8 @@ export default function FullReportView({ id }: { id: string }) {
               {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
               {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
             </div>
-          ))}
+            );
+          })}
         </div>
 
         <p className="mt-16 text-center text-xs leading-6 text-lm2-text-dim/50 print:hidden">

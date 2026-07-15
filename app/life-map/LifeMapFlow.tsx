@@ -177,6 +177,7 @@ export default function LifeMapFlow() {
     freeNarrative: string; focusLabel: { zh: string }; stateLabel: { zh: string };
     energyLevel: number; clarityLevel: number; alignmentLevel: number; name: string;
     professionLabel?: string; relationshipLabel?: string; practiceLabel?: string;
+    phoneReading?: string; plateReading?: string;
   }): Promise<{ id: string | null; specificError: string | null }> => {
     try {
       // 客户端在此处才真正创建 Supabase 实例——只在用户交互触发的函数内部创建，
@@ -205,7 +206,9 @@ export default function LifeMapFlow() {
             args.focusLabel.zh +
             (args.professionLabel ? ` · 职业：${args.professionLabel}` : "") +
             (args.relationshipLabel ? ` · 感情状态：${args.relationshipLabel}` : "") +
-            (args.practiceLabel ? ` · 修炼习惯：${args.practiceLabel}` : ""),
+            (args.practiceLabel ? ` · 修炼习惯：${args.practiceLabel}` : "") +
+            (args.phoneReading ? ` · 手机号数字能量：${args.phoneReading}` : "") +
+            (args.plateReading ? ` · 车牌号数字能量：${args.plateReading}` : ""),
           currentState: args.stateLabel.zh,
           energyLevel: args.energyLevel, clarityLevel: args.clarityLevel, alignmentLevel: args.alignmentLevel,
         }),
@@ -295,12 +298,24 @@ export default function LifeMapFlow() {
       setStage("report");
 
       // 若已登录，保存这份提交记录，供之后解锁完整报告时使用；未登录则跳过，
-      // 解锁完整报告时会引导先登录。
+      // 解锁完整报告时会引导先登录。手机号/车牌号如果填了，这里也折进去一起存——
+      // 免费预览里显示的解读只是即时算出来展示一下，真正要留到付费完整报告里
+      // 用，必须存进这条记录，不然后面解锁报告的时候，这两项数据已经不在了，
+      // 等于白填。
+      const phoneReading = phoneNumber.trim() ? (() => {
+        const r = analyzePhoneNumber(phoneNumber);
+        return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+      })() : undefined;
+      const plateReading = plateNumber.trim() ? (() => {
+        const r = analyzePlateNumber(plateNumber);
+        return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+      })() : undefined;
       await trySaveSubmission({
         y, m, d, hasTime, hour, minute,
         facts, coreType, freeNarrative: aiPayload.text,
         focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
         professionLabel, relationshipLabel, practiceLabel,
+        phoneReading, plateReading,
       });
     } catch {
       clearInterval(stepTimer);
@@ -333,12 +348,21 @@ export default function LifeMapFlow() {
           const professionLabel = profession === "other" ? professionCustom.trim() : professionOpt2?.zh || "";
           const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === relationshipStatus)?.zh || "";
           const practiceLabel = PRACTICE_OPTIONS.find((p) => p.id === practiceStatus)?.zh || "";
+          const phoneReading2 = phoneNumber.trim() ? (() => {
+            const r = analyzePhoneNumber(phoneNumber);
+            return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+          })() : undefined;
+          const plateReading2 = plateNumber.trim() ? (() => {
+            const r = analyzePlateNumber(plateNumber);
+            return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+          })() : undefined;
           const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
           const result = await trySaveSubmission({
             y, m, d, hasTime, hour, minute,
             facts: report.facts, coreType: report.coreType, freeNarrative: report.narrative,
             focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
             professionLabel, relationshipLabel, practiceLabel,
+            phoneReading: phoneReading2, plateReading: plateReading2,
           });
           id = result.id;
           specificError = result.specificError;
@@ -771,12 +795,12 @@ export default function LifeMapFlow() {
             {report.facts.humanDesign && (
               <div className="bg-reading-glass mt-8 p-6 sm:p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
-                  <Bi zh="人类图 · 门（新增，测试版）" en="Human Design · Gates (New, Preview)" />
+                  <Bi zh="人类图 · 门" en="Human Design · Gates" />
                 </p>
                 <p className="mt-2 text-xs leading-6 text-lm2-text-dim">
                   <Bi
-                    zh="太阳门是人类图里权重最高的单一信息（约占人格印记70%），已经用真实天文计算得出。「能量中心是否被定义」「类型（生产者/投射者/显示者/反映者）」「内在权威」这几项，需要另一套完整核对过的对照表才能算准，目前还没有接入——不把没核实过的结论当成算好的事实端给你，这几项先留空，核实完再更新。"
-                    en="The Sun gate is the single highest-weighted piece of information in Human Design (roughly 70% of the personality imprint), and it's already computed from real astronomy. Which centers are defined, your Type (Generator / Projector / Manifestor / Reflector), and your Authority all require a separate, fully verified reference table that isn't wired in yet — rather than presenting an unverified conclusion as calculated fact, these are left blank until verified."
+                    zh="太阳门，是人类图里权重最高的单一信息（约占人格印记70%），已经用真实天文计算得出，下面列出的每一个门也是如此。完整的类型（生产者/投射者/显示者/反映者）与内在权威解读，将在后续版本中加入。"
+                    en="The Sun gate is the single highest-weighted piece of information in Human Design (roughly 70% of the personality imprint), and it's computed from real astronomy — as is every gate listed below. Full Type (Generator / Projector / Manifestor / Reflector) and Authority readings will arrive in a future update."
                   />
                 </p>
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
@@ -833,7 +857,7 @@ export default function LifeMapFlow() {
               </div>
             )}
 
-            <div className="mt-8">
+            <div className="bg-void-deep mt-8 p-6 sm:p-8">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="当前生命阶段" en="Your Current Life Stage" />
               </p>
@@ -855,7 +879,7 @@ export default function LifeMapFlow() {
               </div>
             </div>
 
-            <div className="mt-14 rounded-sm border border-lm2-violet/30 bg-lm2-violet/5 p-8 text-center backdrop-blur-xl">
+            <div className="mt-14 rounded-sm border border-lm2-violet/40 bg-lm2-violet/15 p-8 text-center backdrop-blur-xl">
               <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>
@@ -878,8 +902,9 @@ export default function LifeMapFlow() {
                 <li>10 · <Bi zh="专属灵犀练习——根据你的状态生成的呼吸与觉察练习" en="A Personal Lingxi Practice — breathing and awareness exercises shaped to your state" /></li>
                 <li>11 · <Bi zh="前世今生印记——纯属脑洞的创意小板块，基于你的命盘元素，编一段好玩的前世片段与未来画面" en="Past & Future Imprint — a purely-for-fun creative bit, weaving your chart elements into a playful past-life vignette and a glimpse of what's ahead" /></li>
                 <li>12 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
+                <li>13 · <Bi zh="如果你填了手机号、车牌号或职业，这些也会被交叉解读，写进对应的章节里，不是白填" en="If you filled in a phone number, license plate, or occupation, those are cross-read too and woven into the relevant sections — not left unused" /></li>
               </ul>
-              <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-lm2-text-dim/50">
+              <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-lm2-text-dim">
                 <Bi
                   zh="五套真实系统、上百个真实数据点，交叉着，写给你一个人——这份报告，帮你看见的，从来不只是一张命盘。"
                   en="Five real systems, over a hundred real data points, cross-woven for you alone — what this report helps you see was never just a chart."
