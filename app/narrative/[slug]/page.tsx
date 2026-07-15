@@ -59,6 +59,33 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
               <LiveReader slug={n.slug} price={n.price} titleZh={n.title} titleEn={n.titleEn} />
             )}
 
+            {/* 每篇叙事读完之后的轻引导——不是硬广告，是把"看完故事"这个瞬间，
+               自然接到"回到自己身上"的下一步，读者想不想继续，仍由自己选。 */}
+            <div className="mt-14 grid gap-4 border-t border-white/5 pt-10 sm:grid-cols-2">
+              <Link
+                href="/practice"
+                className="group rounded-sm border border-white/10 px-6 py-5 text-center transition hover:border-lattice/50"
+              >
+                <p className="font-display text-xs uppercase tracking-widest2 text-lattice/70 transition group-hover:text-lattice">
+                  <Bi zh="如果这篇触动了你" en="If this stayed with you" />
+                </p>
+                <p className="mt-2 text-sm leading-6 text-bone-dim">
+                  <Bi zh="修炼技术，是把这份触动，落回身体里的方式。" en="The Practices are how to bring that feeling back into the body." />
+                </p>
+              </Link>
+              <Link
+                href="/live-as"
+                className="group rounded-sm border border-white/10 px-6 py-5 text-center transition hover:border-amber/50"
+              >
+                <p className="font-display text-xs uppercase tracking-widest2 text-amber/70 transition group-hover:text-amber">
+                  <Bi zh="想活成故事里的那种清醒" en="Want to live with that clarity" />
+                </p>
+                <p className="mt-2 text-sm leading-6 text-bone-dim">
+                  <Bi zh="进入意识显化，把它带进你自己的现实。" en="Enter Manifestation, and bring it into your own reality." />
+                </p>
+              </Link>
+            </div>
+
             <div className="mt-14 text-center">
               <Link href="/narrative" className="bg-void-deep inline-block rounded-full px-5 py-2 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
                 <Bi zh="← 返回多维叙事" en="← Back to Dimensional Narratives" />

@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import GateOrigin from "@/components/gates/GateOrigin";
 import Bi from "@/components/Bi";
 
-export const metadata = { title: "修炼技术 | 灵犀 · Practices | Lingxi", description: "四项意识修炼技术：量子息法、直觉丹道、归零心诀、上升心经。一次激活，永久有效。Four consciousness practices — the Quantum Breath Method, the Intuitive Way, Heart Reset, and the Ascending Heart Sutra.", alternates: { canonical: "/practice" } };
+export const metadata = { title: "修炼技术 | 灵犀 · Practices | Lingxi", description: "四项意识修炼技术：量子息法、直觉丹道、归零心诀、上升心经，各自成径，也可合一深入。Four consciousness practices — the Quantum Breath Method, the Intuitive Way, Heart Reset, and the Ascending Heart Sutra — each a complete path on its own.", alternates: { canonical: "/practice" } };
 
 const practices = [
   { href: "/practice/breath", name: "量子息法", nameEn: "Quantum Breath Method", line: "回到当下，一道随身携带的门。", lineEn: "Return to now — a doorway you always carry." },
@@ -36,8 +36,8 @@ export default function PracticeIndex() {
           </p>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi
-              zh="四项修炼技术，一次激活，永久有效。或开启「四项合集」，一并拥有全部，并免费享有日后新增的练习。"
-              en="Four practices — activate once, yours forever. Or open the Four-in-One Set to hold them all, and receive any future practices free."
+              zh="四道修炼各自成一条完整的路，也可以一起深入，让彼此呼应。「四项合集」收纳了这四条路径，此后新加入的练习，也会自然汇入其中。"
+              en="Each of the four practices is a complete path on its own — or walk them together and let them echo one another. The Four-in-One Set holds all four paths, and any practice added later flows naturally into it."
             />
           </p>
           <p className="mx-auto mt-8 max-w-2xl font-display text-xl leading-9 text-lattice sm:text-2xl">

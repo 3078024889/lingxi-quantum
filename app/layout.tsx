@@ -9,7 +9,7 @@ const SITE = "https://lingxifield.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "灵犀场 LINGXIFIELD ｜ 意识显化 · 场域解梦 · 潜意识改写 · 修炼技术",
+    default: "灵犀场 LINGXIFIELD ｜ 意识显化 · 生命图谱 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事",
     template: "%s ｜ 灵犀场 LINGXIFIELD",
   },
   description:

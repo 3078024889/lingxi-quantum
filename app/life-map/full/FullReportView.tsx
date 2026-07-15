@@ -52,11 +52,6 @@ export default function FullReportView({ id }: { id: string }) {
 
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
   const [downloading, setDownloading] = useState(false);
-  const [regenerating, setRegenerating] = useState(false);
-  const [showNumberForm, setShowNumberForm] = useState(false);
-  const [phoneInput, setPhoneInput] = useState("");
-  const [plateInput, setPlateInput] = useState("");
-  const [savingNumbers, setSavingNumbers] = useState(false);
   const [printMode, setPrintMode] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
   const [sections, setSections] = useState<string[]>([]);
@@ -98,6 +93,8 @@ export default function FullReportView({ id }: { id: string }) {
       // 手机号/车牌号的数字能量数据，是提交时折进 focus 字段里存的（格式固定，
       // 见 LifeMapFlow.tsx 里 trySaveSubmission 调用处），这里用同样的格式
       // 反向解析出总和数，画成图。数据来源和文字解读是同一份，不是另外编的。
+      // 这是生命图谱"结合当下生活状态"的一部分，跟星盘/八字/紫微等一起
+      // 常驻显示在报告里，不再挂一个可以关掉的开关按钮。
       if (submission?.focus) {
         const matches: { label: string; total: number }[] = [];
         const phoneMatch = /手机号数字能量：\S+（总和(\d+)/.exec(submission.focus);
@@ -191,60 +188,6 @@ export default function FullReportView({ id }: { id: string }) {
     );
   }
 
-  // 重新生成：跳过缓存，用最新的内容模板重新生成一遍。给已经付过费、但报告是在
-  // 内容模板更新之前生成的用户用——比如后来新加了"数字能量解读"这类章节，
-  // 老报告不会自动补上，点这个按钮才会用最新模板重新写一份。
-  const regenerate = async () => {
-    setRegenerating(true);
-    setError("");
-    try {
-      const currentLangEn = document.documentElement.classList.contains("lang-en");
-      const res = await fetch("/api/lifemap/generate-full", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate: true }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.fullReport) {
-        setError(data.error || t("重新生成失败，请稍后再试。", "Regeneration failed — please try again shortly."));
-        return;
-      }
-      const parts = (data.fullReport as string)
-        .split(/===\s*\d+\s*===/)
-        .map((s) => s.trim())
-        .filter(Boolean);
-      setSections(parts);
-    } catch {
-      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again shortly."));
-    } finally {
-      setRegenerating(false);
-    }
-  };
-
-  const saveNumbersAndRegenerate = async () => {
-    if (!phoneInput.trim() && !plateInput.trim()) return;
-    setSavingNumbers(true);
-    setError("");
-    try {
-      const updRes = await fetch("/api/lifemap/update-numbers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, phone: phoneInput.trim(), plate: plateInput.trim() }),
-      });
-      const updData = await updRes.json();
-      if (!updRes.ok) {
-        setError(updData.error || t("补录失败，请稍后再试。", "Couldn't save — please try again shortly."));
-        return;
-      }
-      setShowNumberForm(false);
-      await regenerate();
-    } catch {
-      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again shortly."));
-    } finally {
-      setSavingNumbers(false);
-    }
-  };
-
   const downloadPdf = async () => {
     if (!reportRef.current) return;
     setDownloading(true);
@@ -336,21 +279,6 @@ export default function FullReportView({ id }: { id: string }) {
           </p>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowNumberForm((v) => !v)}
-              className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text"
-              title={t("给这份已经生成的报告，补填手机号/车牌号，不用重新走一遍出生信息表单", "Add a phone/plate number to this already-generated report without redoing the whole birth-info form")}
-            >
-              {numberEnergy.length > 0 ? <Bi zh="数字能量" en="Number Energy" /> : <Bi zh="+ 补录手机号/车牌号" en="+ Add Phone/Plate" />}
-            </button>
-            <button
-              onClick={regenerate}
-              disabled={regenerating}
-              className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
-              title={t("用最新内容模板重新生成这份报告（比如后来新加的章节，老报告不会自动出现）", "Regenerate this report with the latest content template (sections added later won't appear automatically otherwise)")}
-            >
-              {regenerating ? <Bi zh="正在重新生成…" en="Regenerating…" /> : <Bi zh="↻ 重新生成" en="↻ Regenerate" />}
-            </button>
-            <button
               onClick={downloadPdf}
               disabled={downloading}
               className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
@@ -359,36 +287,6 @@ export default function FullReportView({ id }: { id: string }) {
             </button>
           </div>
         </div>
-
-        {showNumberForm && (
-          <div className="bg-void-deep mt-4 rounded-sm p-5 print:hidden">
-            <p className="text-sm text-lm2-text-dim">
-              <Bi
-                zh="这份报告是之前生成的，如果当时没填手机号/车牌号，可以在这里补上——保存后会自动用新数据重新生成一份报告，包含数字能量解读那一节。"
-                en="This report was generated earlier. If you didn't add a phone/plate number back then, you can add it here — saving will automatically regenerate the report with the Number Energy section included."
-              />
-            </p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              <input
-                value={phoneInput} onChange={(e) => setPhoneInput(e.target.value)}
-                placeholder={t("手机号（选填）", "Phone number (optional)")}
-                className="bg-void w-full rounded-sm border border-white/15 px-4 py-3 text-sm text-lm2-text outline-none focus:border-lm2-violet/60"
-              />
-              <input
-                value={plateInput} onChange={(e) => setPlateInput(e.target.value)}
-                placeholder={t("车牌号（选填）", "License plate (optional)")}
-                className="bg-void w-full rounded-sm border border-white/15 px-4 py-3 text-sm text-lm2-text outline-none focus:border-lm2-violet/60"
-              />
-            </div>
-            <button
-              onClick={saveNumbersAndRegenerate}
-              disabled={savingNumbers || (!phoneInput.trim() && !plateInput.trim())}
-              className="bg-lm2-violet/70 mt-4 rounded-sm px-6 py-2.5 text-xs uppercase tracking-widest2 text-white transition hover:brightness-110 disabled:opacity-40"
-            >
-              {savingNumbers ? <Bi zh="正在保存并重新生成…" en="Saving & regenerating…" /> : <Bi zh="保存并重新生成" en="Save & Regenerate" />}
-            </button>
-          </div>
-        )}
         <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-report px-1 py-4"}>
         <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>
 
@@ -454,6 +352,10 @@ export default function FullReportView({ id }: { id: string }) {
 
         <div className="mt-12 space-y-14">
           {sections.map((content, i) => {
+            // 第13章（索引12）是手机号/车牌号的数字能量解读——只有当时真的没填
+            // 手机号也没填车牌号，AI 才会写"未提供…"这段占位文字，这种情况下
+            // 跳过；只要填了任意一项，就正常展示，是生命图谱里结合当下生活
+            // 状态的一部分，不能弄丢。
             const isSkippedNumberSection = i === 12 && /未提供手机号或车牌号/.test(content);
             if (isSkippedNumberSection) return null;
             return (

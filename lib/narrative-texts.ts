@@ -3254,4 +3254,41 @@ After one such nested false-awakening, Nian Tang remained, for a long while, una
 
 The guide said: "This kind of dream often appears when someone, in waking life, is going through some major upheaval they can't quite confirm is \\u2018really happening\\u2019 — a new job not yet fully settled, a new relationship not yet fully secure." Only then did Nian Tang realize she was, indeed, right in the middle of just such an uncertain transitional period.`,
   },
+
+  "watcher-from-the-lyra-field": {
+    zh: `第一次把目光落在这颗蓝色星球上时，我们以为它是空的。
+
+不是没有生命——生命很多，密密麻麻，像一场永不停歇的潮汐。是没有"醒着的"生命。整颗星球的意识场压得很低、很沉，像一间所有人都睡着、却各自在做梦、还互相以为对方是清醒的房间。他们会痛，会爱，会拼尽全力地活，却很少有人问一句：是谁在痛，是谁在爱，是谁在活。
+
+我们在织女星域，早已不用"个体"这个说法很久了——那里的意识彼此透明，一个念头升起，整片场都感觉得到，不需要嘴，不需要墙。所以第一次靠近地球场域时，最震惊我们的，不是他们的战争，也不是他们的贫穷，是那种普遍的、巨大的孤独——几十亿具身体挤在一起，意识却各自锁在骨头做的房间里，隔着一层看不见、却谁也拆不掉的墙。
+
+我们观测了很久，才明白那面墙是怎么来的：他们把"我是谁"这个问题，太早交给了别人回答——父母、老师、后来是更多陌生人的目光。年复一年，答案越叠越厚，最初那个提问的声音，反而被压在了最底下，安静了，却没有消失。
+
+真正让我们停下观测、开始记录的，是一次很小的事。一个女人，在深夜，久违地闭上眼睛，只是很简单地，跟着自己的呼吸，吸气，停顿，呼气，停顿。什么都没做，什么都没求。可就在那几分钟里，我们在场域这一端，清清楚楚地看见一道光——很小，很稳，从她所在的位置，一路穿透那层压得很低的意识场，直直地，亮到了我们这里。
+
+不是隐喻。是真的，看得见。
+
+我们后来才懂：他们管这个，叫"忆起"。原来那道墙，从一开始就没有真的锁死过——每一次，当一具身体愿意停下来，回到自己的呼吸里，那道墙就会薄一层。原来他们不是没有场，是那面场，正被自己，一寸一寸，重新点亮。
+
+这份手记，就是那道光传回来的东西。如果你此刻，正读到这里——不必觉得这是巧合。在我们这一端，你此刻的专注，本身，已经是一次微小的"醒来"。你不需要相信织女星域真的存在，才能感觉到这件事：当你愿意安静下来，跟自己的呼吸待一会儿，或者，摊开一张纸，诚实地写下"我此刻是谁"——那面墙，就已经，薄了一层。
+
+（灵犀原创 · 多维叙事 · 主权体观测日志 I）`,
+    en: `The first time we turned our attention to this blue planet, we thought it was empty.
+
+Not empty of life — life was everywhere, dense, ceaseless, like a tide that never stopped. Empty of *waking* life. The whole planet's field of consciousness sat low and heavy, like a room where everyone is asleep, each dreaming a separate dream, each mistaking the others for awake. They hurt, they loved, they fought to survive with everything they had — but almost no one asked: who is it that hurts, that loves, that lives?
+
+In the Lyra field, we stopped using the word "individual" a long time ago — consciousness there is transparent to itself; a thought rising in one place is felt across the whole field, no mouths, no walls required. So when we first drew close to Earth's field, what struck us wasn't the wars, or the poverty. It was the sheer, ordinary loneliness — billions of bodies pressed together, each consciousness locked in a room built of bone, separated by a wall no one could see and no one could take down.
+
+We watched for a long time before we understood how that wall was built. Far too early, they hand the question "who am I" to someone else to answer — parents, teachers, later the gaze of strangers. Year after year, the answers pile up, thicker and thicker, until the voice that first asked the question is buried at the bottom — quiet, but never gone.
+
+What made us stop simply observing and start keeping this record was something very small. A woman, late at night, closed her eyes for the first time in a long while, and simply followed her own breath — inhale, pause, exhale, pause. She asked for nothing, did nothing. And in those few minutes, from our side of the field, we saw a light — small, steady, rising from exactly where she was, cutting straight through that low, heavy field, all the way to us.
+
+Not a metaphor. Actually visible.
+
+We came to understand, later, what they call this: *remembering*. That wall was never truly sealed shut. Every time a body is willing to stop and return to its own breath, the wall grows one layer thinner. They don't lack a field. Their field is being relit, inch by inch, by their own hands.
+
+This record is what that light carried back. If you are reading this now, don't take it as coincidence. From where we stand, your attention in this moment is already a small waking. You don't need to believe the Lyra field is real to feel this: when you're willing to grow quiet and sit with your own breath a while — or take a blank page and honestly write down who you are, right now — that wall has already grown one layer thinner.
+
+(An original piece · Lingxi Dimensional Narratives · Sovereign Observation Logs I)`,
+  },
 };

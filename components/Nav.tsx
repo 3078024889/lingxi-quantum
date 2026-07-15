@@ -6,16 +6,17 @@ import { usePathname } from "next/navigation";
 import Bi from "./Bi";
 import LangToggle from "./LangToggle";
 import SearchBox from "./SearchBox";
+import RuneIcon, { RuneKind } from "./RuneIcon";
 
-const links = [
-  { href: "/live-as", zh: "意识显化", en: "Manifestation" },
-  { href: "/life-map", zh: "生命图谱", en: "Life Map" },
-  { href: "/dream", zh: "探索梦境", en: "Dreams" },
-  { href: "/practice", zh: "修炼技术", en: "Practices" },
-  { href: "/#gates", zh: "重塑潜意识", en: "Rewrite" },
-  { href: "/narrative", zh: "多维叙事", en: "Narratives" },
-  { href: "/learn", zh: "探索", en: "Learn" },
-  { href: "/membership", zh: "能量交换场", en: "Access" },
+const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
+  { href: "/live-as", zh: "意识显化", en: "Manifestation", rune: "eye" },
+  { href: "/life-map", zh: "生命图谱", en: "Life Map", rune: "mandala" },
+  { href: "/dream", zh: "探索梦境", en: "Dreams", rune: "crescent" },
+  { href: "/practice", zh: "修炼技术", en: "Practices", rune: "flame" },
+  { href: "/#gates", zh: "重塑潜意识", en: "Rewrite", rune: "spiral" },
+  { href: "/narrative", zh: "多维叙事", en: "Narratives", rune: "infinity" },
+  { href: "/learn", zh: "探索", en: "Learn", rune: "compass" },
+  { href: "/membership", zh: "能量交换场", en: "Access", rune: "crystal" },
 ];
 
 export default function Nav() {
@@ -32,13 +33,13 @@ export default function Nav() {
             className="group flex flex-col leading-tight"
           >
             <span className="flex items-center gap-1.5 font-display text-base tracking-widest2 text-bone transition group-hover:text-lattice sm:text-lg">
-              <span aria-hidden="true" className="text-[0.7em] text-lattice">✦</span>
+              <RuneIcon kind="mark" className="h-[1.05em] w-[1.05em] text-lattice" />
               灵犀场 LINGXIFIELD
             </span>
-            <span className="mt-1 hidden font-display text-[12px] tracking-[0.12em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
+            <span className="mt-1 hidden font-display text-[12px] tracking-[0.1em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
               <Bi
-                zh="意识显化 · 场域解梦 · 潜意识改写 · 修炼技术"
-                en="Manifestation · Dream Field · Subconscious · Practice"
+                zh="意识显化 · 生命图谱 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事"
+                en="Manifestation · Life Map · Dreams · Practices · Rewrite · Narratives"
               />
             </span>
           </Link>
@@ -79,8 +80,9 @@ export default function Nav() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`relative whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
+                className={`group relative flex flex-col items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
               >
+                <RuneIcon kind={l.rune} className={`h-4 w-4 ${active ? "text-lattice" : "text-bone-dim/70"} transition group-hover:text-lattice`} />
                 <Bi zh={l.zh} en={l.en} />
                 {active && (
                   <span
@@ -107,8 +109,9 @@ export default function Nav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="border-b border-white/5 py-3 text-base text-bone transition hover:text-lattice"
+                className="flex items-center gap-3 border-b border-white/5 py-3 text-base text-bone transition hover:text-lattice"
               >
+                <RuneIcon kind={l.rune} className="h-4 w-4 text-lattice/70" />
                 <Bi zh={l.zh} en={l.en} />
               </Link>
             ))}

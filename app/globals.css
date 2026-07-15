@@ -244,6 +244,42 @@ textarea.bg-lm2-bg, input.bg-lm2-bg {
   }
 }
 
+/* 远古符文呼吸光——跟量子息法同一套"吸-停-呼-停"四段节律，只是这里
+   动的是发光强度而不是缩放（图标太小，缩放会显得抖），用在导航符文
+   和 LOGO 印记上，让整个场域"活"起来，而不是静态图标。 */
+.rune-breathe {
+  animation: runeGlow 11s ease-in-out infinite;
+}
+@keyframes runeGlow {
+  0% {
+    opacity: 0.55;
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+  18% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+  45% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+  64% {
+    opacity: 0.55;
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+  100% {
+    opacity: 0.55;
+    filter: drop-shadow(0 0 1px currentColor);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rune-breathe {
+    animation: none;
+    opacity: 0.9;
+  }
+}
+
 /* 中英双语切换：默认显示中文，html.lang-en 时显示英文 */
 [data-lang="en"] { display: none; }
 html.lang-en [data-lang="zh"] { display: none; }
