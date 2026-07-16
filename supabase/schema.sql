@@ -96,6 +96,11 @@ alter table public.life_map_submissions add column if not exists full_report_en 
 -- 靠时间去猜，容易猜错。这一列直接把对应的 life_map_submissions.id 存
 -- 进来，以后一眼就能对上，不用再去猜。
 alter table public.orders add column if not exists submission_id uuid references public.life_map_submissions(id) on delete set null;
+-- 光有 submission_id 还是要跳到另一张表才能看到名字——同一个人测试用了
+-- 好几个不同的名字，光靠这一列在 orders 表里排查还是要来回切表核对。
+-- 这里直接把名字也存一份进来（拿到当时的名字就够用了，不需要跟着
+-- life_map_submissions 表实时同步，姓名这种字段基本不会改）。
+alter table public.orders add column if not exists submission_name text;
 
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;

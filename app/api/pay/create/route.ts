@@ -21,6 +21,21 @@ export async function POST(req: Request) {
     }
 
     const admin = createAdminClient();
+
+    // 生命图谱订单，顺手把姓名也存一份进 orders 表——同一个人可能拿不同
+    // 名字测过好几次，只存 submission_id 的话，在 Supabase 表格编辑器里
+    // 想认出"这是哪一份"，还是得跳到另一张表核对，直接把名字带过来，
+    // 一眼就能看清楚。
+    let submissionName: string | null = null;
+    if (typeof submissionId === "string") {
+      const { data: sub } = await admin
+        .from("life_map_submissions")
+        .select("name")
+        .eq("id", submissionId)
+        .single();
+      submissionName = sub?.name ?? null;
+    }
+
     const { data: order, error: orderErr } = await admin
       .from("orders")
       .insert({
@@ -30,13 +45,8 @@ export async function POST(req: Request) {
         amount_usd: product.priceUsd,
         status: "pending",
         provider: "paypal",
-        // 生命图谱报告这类订单，顺手把是"哪一份提交记录"记下来——之前
-        // orders 表跟 life_map_submissions 表之间完全没有关联，同一个
-        // 人测过好几次的话，从后台订单记录反查"这笔钱对应哪份报告"，
-        // 只能靠时间去猜，容易猜错（复制错了 orders 表自己的 id，去当
-        // life_map_submissions 的 id 用，那两个是完全不同的表，各自的
-        // id 互不相通）。这里加一列直接存好，以后一眼就能对上。
         ...(typeof submissionId === "string" ? { submission_id: submissionId } : {}),
+        ...(submissionName ? { submission_name: submissionName } : {}),
       })
       .select()
       .single();

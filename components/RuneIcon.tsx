@@ -8,11 +8,12 @@
 //   infinity 多维叙事——维度之间的往复通道
 //   compass 探索——導向、未知领域的探勘
 //   crystal 能量交换场——凝结的能量结构
+//   figure  场域入口（账户）——小金人，郑重的、值得被看见的一个入口
 // 统一用 currentColor 线条 + rune-breathe 呼吸光，颜色由外层文字色决定，
 // 不需要额外传色值，跟随所在按钮的 hover 状态自然变化。
 export type RuneKind =
   | "eye" | "mandala" | "crescent" | "flame"
-  | "spiral" | "infinity" | "compass" | "crystal" | "mark";
+  | "spiral" | "infinity" | "compass" | "crystal" | "mark" | "figure";
 
 const paths: Record<RuneKind, JSX.Element> = {
   eye: (
@@ -63,6 +64,13 @@ const paths: Record<RuneKind, JSX.Element> = {
     <g fill="none" stroke="currentColor" strokeWidth="1.1">
       <path d="M12 2.5 19 8l-2 8.5-5 5-5-5L5 8Z" />
       <path d="M12 2.5V21.5M5 8h14M9 16.5h6" />
+    </g>
+  ),
+  figure: (
+    <g fill="none" stroke="currentColor" strokeWidth="1.1">
+      <circle cx="12" cy="5.4" r="2.3" />
+      <path d="M12 7.7c-2.5 0-4.2 1.7-4.2 4v3.4h1.7L9.1 20h5.8l-.4-4.9h1.7v-3.4c0-2.3-1.7-4-4.2-4Z" />
+      <path d="M6.5 21h11" strokeLinecap="round" />
     </g>
   ),
   // LOGO 印记：中心一点星芒 + 外圈双环，呼应品牌图标里"星芒穿环"的构图，

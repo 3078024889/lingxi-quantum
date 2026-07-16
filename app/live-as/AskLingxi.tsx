@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SpiralField from "@/components/SpiralField";
 
@@ -11,11 +12,19 @@ type QA = { id?: string; created_at?: string; question: string; answer: string |
 
 export default function AskLingxi() {
   const supabase = createClient();
+  const searchParams = useSearchParams();
   const [question, setQuestion] = useState("");
   const [history, setHistory] = useState<QA[]>([]);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+
+  // 搜索框搜不到结果时，会把用户的搜索词带到这里来（?ask=xxx），直接
+  // 把这个词填进提问框——用户不需要再手动复制粘贴一遍自己刚才搜的东西。
+  useEffect(() => {
+    const fromSearch = searchParams.get("ask");
+    if (fromSearch) setQuestion(fromSearch);
+  }, [searchParams]);
 
   const load = useCallback(async () => {
     const {

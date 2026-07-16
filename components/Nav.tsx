@@ -49,10 +49,10 @@ export default function Nav() {
             <SearchBox />
             <Link
               href="/account"
-              className="whitespace-nowrap rounded-sm px-4 py-1.5 font-medium text-[#E0F0FF] shadow-[0_0_14px_rgba(216,184,255,0.35)] transition hover:shadow-[0_0_20px_rgba(216,184,255,0.55)]"
-              style={{ background: "linear-gradient(90deg, #8B7FE8, #6FA8E8)" }}
+              className="flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-[#F0C868]/50 px-4 py-1.5 font-medium text-[#F0C868] shadow-[0_0_14px_rgba(240,200,104,0.25)] transition hover:border-[#F0C868] hover:shadow-[0_0_20px_rgba(240,200,104,0.45)]"
             >
-              <Bi zh="我的账户" en="My Account" />
+              <RuneIcon kind="figure" className="h-[1.1em] w-[1.1em] text-[#F0C868]" />
+              <Bi zh="场域入口" en="Field Entrance" />
             </Link>
             <LangToggle />
           </div>
@@ -118,9 +118,10 @@ export default function Nav() {
             <Link
               href="/account"
               onClick={() => setOpen(false)}
-              className="mt-4 rounded-sm border border-lattice/40 py-3 text-center font-display text-sm tracking-widest2 text-lattice transition hover:border-amber hover:text-amber"
+              className="mt-4 flex items-center justify-center gap-2 rounded-sm border border-[#F0C868]/50 py-3 text-center font-display text-sm tracking-widest2 text-[#F0C868] transition hover:border-[#F0C868] hover:brightness-110"
             >
-              <Bi zh="我的账户" en="My Account" />
+              <RuneIcon kind="figure" className="h-4 w-4 text-[#F0C868]" />
+              <Bi zh="场域入口" en="Field Entrance" />
             </Link>
           </div>
         </div>

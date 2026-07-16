@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NARRATIVES } from "@/lib/narratives";
+import Bi from "@/components/Bi";
 
 /* 场域搜索 · 导航搜索框
  * 特点：
@@ -25,6 +26,15 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "number-energy", title: "手机号车牌号测试", titleEn: "Number Energy", href: "/tools/number-energy" },
 ];
 
+// 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的
+// "搜索星域故事、修炼技术"这种通用占位符，更能让人知道"原来可以搜这些"。
+const PLACEHOLDER_HINTS = [
+  { zh: "试试搜「共鸣礁」", en: 'Try "The Resonance Reef"' },
+  { zh: "试试搜「量子呼吸」", en: 'Try "Quantum Breath"' },
+  { zh: "试试搜「生命图谱」", en: 'Try "Life Map"' },
+  { zh: "试试搜「显化」", en: 'Try "Manifestation"' },
+];
+
 type Ripple = { id: number; x: number; y: number };
 
 export default function SearchBox({ className = "" }: { className?: string }) {
@@ -32,8 +42,15 @@ export default function SearchBox({ className = "" }: { className?: string }) {
   const [q, setQ] = useState("");
   const [focused, setFocused] = useState(false);
   const [ripples, setRipples] = useState<Ripple[]>([]);
+  const [hintIdx, setHintIdx] = useState(0);
   const seq = useRef(0);
   const boxRef = useRef<HTMLDivElement>(null);
+  const isEn = typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
+
+  useEffect(() => {
+    const t = setInterval(() => setHintIdx((i) => (i + 1) % PLACEHOLDER_HINTS.length), 3200);
+    return () => clearInterval(t);
+  }, []);
 
   const results = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -99,7 +116,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           setFocused(false);
           router.push(href);
         }}
-        placeholder="搜索星域故事、修炼技术…"
+        placeholder={isEn ? PLACEHOLDER_HINTS[hintIdx].en : PLACEHOLDER_HINTS[hintIdx].zh}
         className="sb-input"
       />
       {q && (
@@ -115,7 +132,18 @@ export default function SearchBox({ className = "" }: { className?: string }) {
       {focused && q && (
         <div className="sb-panel">
           {!hasResults && (
-            <div className="sb-empty">没有找到匹配的内容，换个关键词试试</div>
+            <div className="sb-empty-wrap">
+              <p className="sb-empty">
+                <Bi zh="灵犀场里还没有这个" en="Not in the field yet" />
+              </p>
+              <Link
+                href={`/live-as?ask=${encodeURIComponent(q)}`}
+                onClick={() => setFocused(false)}
+                className="sb-ask-link"
+              >
+                <Bi zh={`向灵犀提问「${q}」→`} en={`Ask Lingxi about "${q}" →`} />
+              </Link>
+            </div>
           )}
           {results.pages.length > 0 && (
             <div className="sb-group">
@@ -222,7 +250,16 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(140,210,255,0.12);
           z-index: 60;
         }
-        .sb-empty { padding: 14px 10px; font-size: 13px; color: rgba(237,231,220,0.55); text-align: center; }
+        .sb-empty { padding: 14px 10px 4px; font-size: 13px; color: rgba(237,231,220,0.55); text-align: center; }
+        .sb-empty-wrap { padding-bottom: 6px; }
+        .sb-ask-link {
+          display: block; margin: 4px 8px 8px; padding: 9px 10px;
+          border-radius: 8px; text-align: center; font-size: 13px;
+          color: #F0C868; background: rgba(240,200,104,0.1);
+          border: 1px solid rgba(240,200,104,0.3);
+          transition: background .15s ease;
+        }
+        .sb-ask-link:hover { background: rgba(240,200,104,0.2); }
         .sb-group + .sb-group { margin-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 6px; }
         .sb-group-label { font-size: 11px; letter-spacing: .08em; color: rgba(124,224,211,0.75); padding: 4px 8px; }
         .sb-item {

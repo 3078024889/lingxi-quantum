@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import LoginForm from "./LoginForm";
 import SignOutButton from "./SignOutButton";
 import ChangePasswordForm from "./ChangePasswordForm";
+import DeleteAccountButton from "./DeleteAccountButton";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
 import { createClient } from "@/lib/supabase/server";
@@ -107,6 +108,10 @@ export default async function AccountPage() {
               {lifeMapReports.length > 0 && (
                 <div className="mt-3 w-full space-y-2 text-left">
                   <p className="px-1 text-sm text-bone-dim"><Bi zh="我的生命图谱报告" en="My Life Map Reports" /></p>
+                  {/* 万一同一个人测过几十上百次，这个列表不能无限往下长，把
+                     底下的修改密码/退出登录这些按钮越推越远——限定一个
+                     最大高度，超出的部分自己滚动。 */}
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
                   {lifeMapReports.map((r) => (
                     <Link
                       key={r.id}
@@ -117,6 +122,7 @@ export default async function AccountPage() {
                       <span className="text-xs text-bone-dim">{new Date(r.created_at).toLocaleDateString()}</span>
                     </Link>
                   ))}
+                  </div>
                 </div>
               )}
 
@@ -135,6 +141,7 @@ export default async function AccountPage() {
                 </Link>
                 <ChangePasswordForm />
                 <SignOutButton />
+                <DeleteAccountButton />
               </div>
             </>
           ) : (

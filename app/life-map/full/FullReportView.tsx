@@ -361,6 +361,12 @@ export default function FullReportView({ id }: { id: string }) {
             </button>
           </div>
         </div>
+        <p className="mt-2 text-xs text-lm2-text-dim/70 print:hidden">
+          <Bi
+            zh="不用急着现在下载——这份报告会一直留在「场域入口」里，随时可以回来查看。"
+            en="No need to download it right now — this report stays saved under Field Entrance, and you can come back to it anytime."
+          />
+        </p>
         <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-report px-1 py-4"}>
         <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>
 
