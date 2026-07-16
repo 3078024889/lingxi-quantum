@@ -36,9 +36,9 @@ const data: ArticleData = {
     { q: "冥想每天要多久？", a: "规律比时长更重要。每天 3–5 分钟、稳定地做，远胜偶尔的长时间冥想。熟悉后可逐渐延长到 10–20 分钟。" },
   ],
   cta: {
-    titleZh: "从量子呼吸开始", titleEn: "Begin with quantum breathing",
-    descZh: "灵犀的量子呼吸练习，是最适合新手的入门冥想。", descEn: "Lingxi's quantum breathing is an ideal entry meditation for beginners.",
-    href: "/practice/breath", btnZh: "进入量子呼吸", btnEn: "Open quantum breathing",
+    titleZh: "从量子息法开始", titleEn: "Begin with quantum breathing",
+    descZh: "灵犀的量子息法练习，是最适合新手的入门冥想。", descEn: "Lingxi's quantum breathing is an ideal entry meditation for beginners.",
+    href: "/practice/breath", btnZh: "进入量子息法", btnEn: "Open quantum breathing",
   },
   related: [
     { href: "/learn/raise-frequency", zh: "如何提升意识频率", en: "Raise your frequency" },

@@ -38,7 +38,7 @@ const data: ArticleData = {
   cta: {
     titleZh: "亲自去体验，而不只是理解", titleEn: "Experience it, don't just understand it",
     descZh: "量子暂停呼吸，是触碰纯粹觉知最直接的门。三个循环，你会在念头的缝隙里遇见自己。", descEn: "The Quantum Pause is the most direct doorway to pure awareness. Three cycles, and you meet yourself in the gap between thoughts.",
-    href: "/practice/breath", btnZh: "进入量子呼吸", btnEn: "Open Quantum Breath",
+    href: "/practice/breath", btnZh: "进入量子息法", btnEn: "Open Quantum Breath",
   },
   related: [
     { href: "/learn/wingmakers", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },

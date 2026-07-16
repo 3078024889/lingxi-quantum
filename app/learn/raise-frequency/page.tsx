@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "从一个练习开始", titleEn: "Begin with one practice",
-    descZh: "量子呼吸、心的重置、上升心经、直觉智能——选一个，每天回到更高的状态。", descEn: "Quantum breathing, heart reset, the heart of ascension, intuitive intelligence — pick one and return to a higher state daily.",
+    descZh: "量子息法、归零心诀、上升心经、直觉丹道——选一个，每天回到更高的状态。", descEn: "Quantum breathing, heart reset, the heart of ascension, intuitive intelligence — pick one and return to a higher state daily.",
     href: "/practice", btnZh: "进入修炼技术", btnEn: "Open the practices",
   },
   related: [

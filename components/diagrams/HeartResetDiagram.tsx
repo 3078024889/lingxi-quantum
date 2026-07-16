@@ -1,9 +1,9 @@
-// 心的重置 · 能量路径图（原创动态）
+// 归零心诀 · 能量路径图（原创动态）
 // 由心发出绿色光 → 上升 → 充满整个头部
 // 人体上半身 + 中英文标注。
 export default function HeartResetDiagram({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 440 620" className={className} aria-label="心的重置能量路径">
+    <svg viewBox="0 0 440 620" className={className} aria-label="归零心诀能量路径">
       <defs>
         <radialGradient id="hr-bg" cx="50%" cy="40%" r="75%">
           <stop offset="0%" stopColor="#0c2018" />

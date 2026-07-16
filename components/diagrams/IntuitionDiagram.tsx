@@ -1,9 +1,9 @@
-// 直觉智能 · 能量路径图（原创动态）
+// 直觉丹道 · 能量路径图（原创动态）
 // 地心 → 经过我们的心 → 无限远的无限（∞）
 // 强调"经过心"这一中转。人体轮廓 + 中英文标注。
 export default function IntuitionDiagram({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 440 720" className={className} aria-label="直觉智能能量路径">
+    <svg viewBox="0 0 440 720" className={className} aria-label="直觉丹道能量路径">
       <defs>
         <radialGradient id="iq-bg" cx="50%" cy="45%" r="78%">
           <stop offset="0%" stopColor="#1a1230" />

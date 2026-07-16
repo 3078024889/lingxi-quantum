@@ -6,6 +6,7 @@ import BreathRing from "@/components/BreathRing";
 import GateVisual from "@/components/GateVisual";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import FarewellBanner from "@/components/FarewellBanner";
 import { gates } from "@/lib/gates";
 import Bi from "@/components/Bi";
 
@@ -13,6 +14,7 @@ export default function Home() {
   return (
     <>
       <Nav />
+      <FarewellBanner />
       <main className="relative overflow-hidden">
         {/* 1. 入口：意识显化系统 */}
         <LingxiPortal />
@@ -67,7 +69,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6. 量子呼吸 */}
+        {/* 6. 量子息法 */}
         {/* 5.5 多维叙事入口 */}
         <section className="px-6 py-24 sm:py-28">
           <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12 text-center">

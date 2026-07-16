@@ -24,13 +24,23 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "learn", title: "探索", titleEn: "Learn", href: "/learn" },
   { slug: "membership", title: "能量交换场", titleEn: "Access", href: "/membership" },
   { slug: "number-energy", title: "手机号车牌号测试", titleEn: "Number Energy", href: "/tools/number-energy" },
+  { slug: "life-map", title: "生命图谱", titleEn: "Life Map", href: "/life-map" },
+  // 之前这里只收录了大类目（"修炼技术"这种），四项具体的修炼技术各自
+  // 叫什么名字，完全没被收进来——搜具体的"量子息法"，只能匹配到大类
+  // 目名称里完全不沾边的字，自然搜不到，会掉进"没有结果"或者误撞进
+  // 多维叙事里某篇不相关内容的标题/简介。这里把四个具体名字都补上。
+  { slug: "practice-breath", title: "量子息法", titleEn: "Quantum Breath Method", href: "/practice/breath" },
+  { slug: "practice-intuition", title: "直觉丹道", titleEn: "The Intuitive Way", href: "/practice/intuition" },
+  { slug: "practice-heart-reset", title: "归零心诀", titleEn: "Heart Reset", href: "/practice/heart-reset" },
+  { slug: "practice-ascending-heart", title: "上升心经", titleEn: "Ascending Heart Sutra", href: "/practice/ascending-heart" },
+  { slug: "account", title: "场域入口", titleEn: "Field Entrance", href: "/account" },
 ];
 
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的
 // "搜索星域故事、修炼技术"这种通用占位符，更能让人知道"原来可以搜这些"。
 const PLACEHOLDER_HINTS = [
   { zh: "试试搜「共鸣礁」", en: 'Try "The Resonance Reef"' },
-  { zh: "试试搜「量子呼吸」", en: 'Try "Quantum Breath"' },
+  { zh: "试试搜「量子息法」", en: 'Try "Quantum Breath Method"' },
   { zh: "试试搜「生命图谱」", en: 'Try "Life Map"' },
   { zh: "试试搜「显化」", en: 'Try "Manifestation"' },
 ];

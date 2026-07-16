@@ -39,8 +39,8 @@ const data: ArticleData = {
   noteEn: "A gentle note: occasional sleep paralysis is common and harmless. If episodes are frequent, severely affect your sleep, or come with intense fear, please consult a doctor or sleep specialist. Lingxi offers gentle perspective, not medical advice.",
   cta: {
     titleZh: "回到呼吸，安住身体", titleEn: "Return to breath, settle the body",
-    descZh: "灵犀的量子呼吸练习，帮你在睡前放松神经、安住身体。", descEn: "Lingxi's quantum breathing helps relax your nervous system and settle the body before sleep.",
-    href: "/practice/breath", btnZh: "进入量子呼吸", btnEn: "Open quantum breathing",
+    descZh: "灵犀的量子息法练习，帮你在睡前放松神经、安住身体。", descEn: "Lingxi's quantum breathing helps relax your nervous system and settle the body before sleep.",
+    href: "/practice/breath", btnZh: "进入量子息法", btnEn: "Open quantum breathing",
   },
   related: [
     { href: "/learn/lucid-dreaming", zh: "清醒梦怎么做", en: "How to lucid dream" },

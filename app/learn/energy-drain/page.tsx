@@ -26,18 +26,18 @@ const data: ArticleData = {
     },
     {
       hZh: "守住频率的三个练习", hEn: "Three practices to hold your frequency",
-      pZh: "一、进场前的锚定：见面或进入人多的场合前，做一轮量子暂停（吸-停-呼-停），在心里轻说「我带着自己的频率进去」。有锚的场，不容易被带跑。二、相处中的归位：感到被抽走时，把注意力放回呼吸与脚底三秒——这不是走神，是把能量的根收回自己身上。三、离场后的重置：结束消耗性的相处后，别直接扎进下一件事，给自己几分钟心的重置，把沾上的浊重放下，把温暖清洁的能量唤回心的中央。边界不是推开谁，是记得你的能量首先属于你。",
+      pZh: "一、进场前的锚定：见面或进入人多的场合前，做一轮量子暂停（吸-停-呼-停），在心里轻说「我带着自己的频率进去」。有锚的场，不容易被带跑。二、相处中的归位：感到被抽走时，把注意力放回呼吸与脚底三秒——这不是走神，是把能量的根收回自己身上。三、离场后的重置：结束消耗性的相处后，别直接扎进下一件事，给自己几分钟归零心诀，把沾上的浊重放下，把温暖清洁的能量唤回心的中央。边界不是推开谁，是记得你的能量首先属于你。",
       pEn: "One — anchor before entering: before a meeting or a crowded room, do one quantum pause (inhale-hold-exhale-hold) and say inwardly, 'I enter carrying my own frequency.' An anchored field is hard to sweep away. Two — return during: when you feel the pull, place attention on your breath and the soles of your feet for three seconds — not distraction, but drawing your roots back into yourself. Three — reset after: after draining company, don't dive into the next thing; give yourself a few minutes of Heart Reset, setting down what clung to you, calling warm clean energy back to the heart's center. A boundary is not pushing anyone away — it is remembering your energy belongs first to you.",
     },
   ],
   faq: [
     { q: "为什么我和某些人待一会儿就特别累？", a: "相处是两个场的交叠：若对方的模式是持续倒苦水、贬低比较、或需要你管理他的情绪，你的能量就在单向流出。累是你的场在如实汇报，不是你不合群。看清这一点后，可以用锚定与归位的练习守住自己的频率。" },
-    { q: "高敏感的人要怎么保护自己的能量？", a: "关键不是变「钝」，而是给接收器装上开关：进场前用一轮量子暂停锚定自己；相处中感到被抽走时，注意力回到呼吸与脚底；离场后用几分钟心的重置放下沾上的浊重。敏感配上边界，就从消耗变成了天赋。" },
+    { q: "高敏感的人要怎么保护自己的能量？", a: "关键不是变「钝」，而是给接收器装上开关：进场前用一轮量子暂停锚定自己；相处中感到被抽走时，注意力回到呼吸与脚底；离场后用几分钟归零心诀放下沾上的浊重。敏感配上边界，就从消耗变成了天赋。" },
     { q: "需要和消耗我的人断绝关系吗？", a: "不一定，也不必走极端。可以先做三件更温和的事：减少单独相处的时长、在关系里停止扮演「容器」与「情绪管理员」、把省下的能量用于滋养自己。若对方是无法回避的家人同事，练习就更重要——边界可以先建在你的内在。" },
   ],
   cta: {
     titleZh: "给你的接收器，装上开关", titleEn: "Give your receiver a dial",
-    descZh: "量子暂停与心的重置，是灵犀里守护能量边界的两项核心修炼——一次激活，永久陪你。", descEn: "The Quantum Pause and the Heart Reset are Lingxi's two core practices for guarding your energy — activated once, with you for good.",
+    descZh: "量子暂停与归零心诀，是灵犀里守护能量边界的两项核心修炼——一次激活，永久陪你。", descEn: "The Quantum Pause and the Heart Reset are Lingxi's two core practices for guarding your energy — activated once, with you for good.",
     href: "/practice", btnZh: "了解修炼技术", btnEn: "Explore the practices",
   },
   related: [

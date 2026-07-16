@@ -25,7 +25,7 @@ function Card({
       className={`flex flex-col rounded-sm border p-8 ${
         product.highlight
           ? "border-amber/50 bg-amber/5"
-          : "border-white/10 bg-void-deep"
+          : "border-white/10 bg-reading-glass"
       }`}
     >
       {product.highlight && (
@@ -90,7 +90,7 @@ export default async function MembershipPage({
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25">
             <EarthGrid className="h-[520px] w-[520px]" />
           </div>
-          <div className="bg-void-deep relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-10">
+          <div className="bg-reading-glass relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="能量交换" en="Energy Exchange" />
           </p>

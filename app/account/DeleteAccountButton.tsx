@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Bi from "@/components/Bi";
 
-// 注销账户是不可逆操作——删了就是删了，之前解锁过的报告、买过的修炼
+// 注销是不可逆操作——删了就是删了，之前解锁过的报告、买过的修炼
 // 技术、多维叙事，全部一起清空，重新注册也找不回来。所以这里不是点一下
-// 就立刻执行，要先点"注销账户"，弹出一段说明和第二次确认按钮，逼自己
+// 就立刻执行，要先点一次，弹出一段说明和第二次确认按钮，逼自己
 // 慢下来看清楚再决定。
 export default function DeleteAccountButton() {
   const router = useRouter();
@@ -17,6 +17,15 @@ export default function DeleteAccountButton() {
     setStatus("deleting");
     const res = await fetch("/api/account/delete", { method: "POST" });
     if (res.ok) {
+      // 注销之后，不用一句冷冰冰的"操作成功"打发——留一句话，让这次
+      // 离开，也带着场域本来的语气，而不是像在关掉一个软件账户。
+      sessionStorage.setItem(
+        "lx-farewell",
+        JSON.stringify({
+          zh: "欢迎再次回归灵犀场。当你准备好时，记得回家的路。",
+          en: "Welcome back to the Field, whenever you return. When you're ready, remember the way home.",
+        })
+      );
       router.push("/");
       router.refresh();
     } else {
@@ -30,7 +39,7 @@ export default function DeleteAccountButton() {
         onClick={() => setOpen(true)}
         className="w-full py-3 text-center text-xs text-bone-dim/50 underline underline-offset-2 transition hover:text-rose"
       >
-        <Bi zh="注销账户" en="Delete Account" />
+        <Bi zh="注销并永远离开灵犀场" en="Deregister & Leave the Field" />
       </button>
     );
   }
@@ -39,7 +48,7 @@ export default function DeleteAccountButton() {
     <div className="w-full rounded-sm border border-rose/30 bg-rose/5 p-5 text-left">
       <p className="text-sm text-rose">
         <Bi
-          zh="注销账户会永久删除你的登录身份和全部数据——包括已解锁的生命图谱报告、修炼技术、多维叙事。这个操作无法撤销，重新注册也找不回来。"
+          zh="注销会永久删除你在灵犀场的登录身份和全部数据——包括已解锁的生命图谱报告、修炼技术、多维叙事。这个操作无法撤销，重新注册也找不回来。"
           en="Deleting your account permanently removes your login and all your data — including unlocked Life Map reports, Practices, and Narratives. This cannot be undone, and re-registering will not recover it."
         />
       </p>

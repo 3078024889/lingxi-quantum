@@ -4,7 +4,7 @@ import Bi from "./Bi";
 const CAPS = [
   { key: "manifest", glyph: "显", zh: "意识显化", en: "Manifestation", descZh: "把意图变成现实，每日对齐", descEn: "Turn intention into reality, aligned daily", href: "/live-as" },
   { key: "dream", glyph: "梦", zh: "探索梦境", en: "Dreams", descZh: "读懂梦境给你的讯息", descEn: "Decode the messages in your dreams", href: "/dream" },
-  { key: "practice", glyph: "炼", zh: "修炼", en: "Practice", descZh: "量子呼吸等意识练习", descEn: "Quantum breathing & consciousness practices", href: "/practice" },
+  { key: "practice", glyph: "炼", zh: "修炼", en: "Practice", descZh: "量子息法等意识练习", descEn: "Quantum breathing & consciousness practices", href: "/practice" },
 ];
 
 export default function LingxiPortal() {

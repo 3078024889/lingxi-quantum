@@ -241,6 +241,19 @@ export default function FullReportView({ id }: { id: string }) {
       const pdf = new jsPDF({ unit: "pt", format: "a4" });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // jsPDF 的页面默认底色是纯白——之前每页只在"贴了图的地方"有颜色，
+      // 内容填不满一整页的时候，剩下那一截，就会露出这个默认白底，这才是
+      // "颜色盖不住A4纸"、能看到大片空白的真正原因。这里在每次新开一页
+      // 时，先用一个跟极光渐变主色调接近的纯色，把整页铺满，再往上面贴
+      // 内容截图——图片是不透明的JPEG，该盖住的地方还是会盖住，只是
+      // 图片之外、原本会露白的地方，现在也是深色而不是白色了。
+      const fillPageBackground = () => {
+        pdf.setFillColor(36, 26, 68);
+        pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      };
+      fillPageBackground();
+
       let cursorY = 0;
       let placedAnything = false;
 
@@ -262,6 +275,7 @@ export default function FullReportView({ id }: { id: string }) {
           // 只对这一个章节，退回旧的"切片"处理，其余章节不受影响。
           if (placedAnything) {
             pdf.addPage();
+            fillPageBackground();
             cursorY = 0;
           }
           let heightLeft = imgHeight;
@@ -271,6 +285,7 @@ export default function FullReportView({ id }: { id: string }) {
           while (heightLeft > 10) {
             position = heightLeft - imgHeight;
             pdf.addPage();
+            fillPageBackground();
             pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
             heightLeft -= pageHeight;
           }
@@ -281,6 +296,7 @@ export default function FullReportView({ id }: { id: string }) {
 
         if (placedAnything && cursorY + imgHeight > pageHeight) {
           pdf.addPage();
+          fillPageBackground();
           cursorY = 0;
         }
         pdf.addImage(imgData, "JPEG", 0, cursorY, imgWidth, imgHeight);
@@ -368,6 +384,13 @@ export default function FullReportView({ id }: { id: string }) {
           />
         </p>
         <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-report px-1 py-4"}>
+        <div>
+        {/* 标题这个 <h1> 之前是报告容器里独立的一个直接子元素——PDF导出
+           是按"每个直接子元素单独截一张图"来做的，一行字的<h1>单独截图，
+           很容易因为字体度量/行高这些边缘情况，截出比例不对的一小片，
+           后面再贴星盘图的时候，就会看到中间空出一截白边。这里把标题
+           跟星盘panel包进同一个容器，两个一起当成一整块来截图，不再
+           把标题单独拆出来。 */}
         <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>
 
         {facts && (
@@ -382,6 +405,7 @@ export default function FullReportView({ id }: { id: string }) {
             />
           </div>
         )}
+        </div>
 
         {freePreview && (
           <div className="bg-void-deep mt-10 p-6 sm:p-8">

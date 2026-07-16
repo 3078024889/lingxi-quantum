@@ -6,6 +6,7 @@ import LoginForm from "./LoginForm";
 import SignOutButton from "./SignOutButton";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
+import ReportRow from "./ReportRow";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
 import { createClient } from "@/lib/supabase/server";
@@ -52,9 +53,9 @@ export default async function AccountPage() {
 
   const nameMap: Record<string, string> = {
     bundle: "四项合集",
-    breath: "量子呼吸",
-    intuition: "直觉智能",
-    "heart-reset": "心的重置",
+    breath: "量子息法",
+    intuition: "直觉丹道",
+    "heart-reset": "归零心诀",
     "ascending-heart": "上升心经",
   };
 
@@ -113,14 +114,12 @@ export default async function AccountPage() {
                      最大高度，超出的部分自己滚动。 */}
                   <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
                   {lifeMapReports.map((r) => (
-                    <Link
+                    <ReportRow
                       key={r.id}
-                      href={`/life-map/full?id=${r.id}`}
-                      className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-5 py-3 transition hover:border-lattice/40"
-                    >
-                      <span className="font-display text-lattice">{r.core_type_name || <Bi zh="未命名报告" en="Untitled report" />}</span>
-                      <span className="text-xs text-bone-dim">{new Date(r.created_at).toLocaleDateString()}</span>
-                    </Link>
+                      id={r.id}
+                      title={r.core_type_name}
+                      date={new Date(r.created_at).toLocaleDateString()}
+                    />
                   ))}
                   </div>
                 </div>

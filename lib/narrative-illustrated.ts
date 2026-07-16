@@ -1935,7 +1935,7 @@ const FIRST_EPOCH_TESTIMONY: IllustratedEntry = {
   ],
 };
 
-/* ---------- 直觉丹道：焕蜕星域，对应"直觉智能"，全新原创，完整9页 ---------- */
+/* ---------- 直觉丹道：焕蜕星域，对应"直觉丹道"，全新原创，完整9页 ---------- */
 const ZJ_DEFS = `<defs><filter id="zjGlow"><feGaussianBlur stdDeviation="9"/></filter><filter id="zjSoft"><feGaussianBlur stdDeviation="1.8"/></filter>
   <linearGradient id="zjSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c211c"/><stop offset="45%" stop-color="#173a30"/><stop offset="80%" stop-color="#2e5a48"/><stop offset="100%" stop-color="#d8c07a"/></linearGradient>
   <radialGradient id="zjGlowC" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8f5ec" stop-opacity=".9"/><stop offset="100%" stop-color="#7fc9a8" stop-opacity="0"/></radialGradient></defs>`;
