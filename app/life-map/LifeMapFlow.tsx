@@ -1055,14 +1055,7 @@ export default function LifeMapFlow() {
               </div>
             </div>
 
-            <div className="mt-14 rounded-sm border border-lm2-violet/40 p-8 text-center shadow-[0_0_50px_rgba(140,110,255,0.25)] backdrop-blur-2xl" style={{
-              background:
-                "radial-gradient(ellipse 80% 60% at 15% -10%, rgba(255,182,213,0.30), transparent 60%)," +
-                "radial-gradient(ellipse 75% 60% at 100% 0%, rgba(140,210,255,0.34), transparent 60%)," +
-                "radial-gradient(ellipse 70% 55% at 50% 105%, rgba(216,184,255,0.32), transparent 62%)," +
-                "radial-gradient(ellipse 55% 45% at 90% 90%, rgba(255,214,153,0.24), transparent 56%)," +
-                "linear-gradient(160deg, rgba(58,35,80,0.85) 0%, rgba(44,26,58,0.85) 50%, rgba(30,20,45,0.88) 100%)",
-            }}>
+            <div className="bg-lm2-card mt-14 rounded-sm border border-lm2-violet/40 p-8 text-center shadow-[0_0_40px_rgba(140,110,255,0.2)]">
               <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>

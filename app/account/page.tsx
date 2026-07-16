@@ -33,6 +33,21 @@ export default async function AccountPage() {
   }
   const manifestActive = manifestUntil && new Date(manifestUntil) > new Date();
 
+  // 之前账户页只显示"生命图谱已解锁"这个笼统的状态，没有列出具体报告——
+  // 如果同一个人测过不止一次（不同的出生信息、或者重新测过一次），
+  // 付款完成后要是没跳转成功、或者关掉了标签页，就完全没有入口能再找
+  // 回那份报告，只能干着急。这里补上一份列表，直接链到每一份报告。
+  let lifeMapReports: { id: string; core_type_name: string | null; created_at: string }[] = [];
+  if (user) {
+    const { data: reports } = await supabase
+      .from("life_map_submissions")
+      .select("id, core_type_name, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(10);
+    lifeMapReports = reports ?? [];
+  }
+
   const nameMap: Record<string, string> = {
     bundle: "四项合集",
     breath: "量子呼吸",
@@ -87,6 +102,22 @@ export default async function AccountPage() {
                   </p>
                 </div>
               </div>
+
+              {lifeMapReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的生命图谱报告" en="My Life Map Reports" /></p>
+                  {lifeMapReports.map((r) => (
+                    <Link
+                      key={r.id}
+                      href={`/life-map/full?id=${r.id}`}
+                      className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-5 py-3 transition hover:border-lattice/40"
+                    >
+                      <span className="font-display text-lattice">{r.core_type_name || <Bi zh="未命名报告" en="Untitled report" />}</span>
+                      <span className="text-xs text-bone-dim">{new Date(r.created_at).toLocaleDateString()}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
 
               <div className="mt-8 flex w-full flex-col gap-4">
                 <Link
