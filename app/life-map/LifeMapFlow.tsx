@@ -587,6 +587,12 @@ export default function LifeMapFlow() {
             <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-lm2-text-dim/80">
               <Bi zh="只是你，作为容易遗忘的意识分身，暂时记不起自己了。" en="You've simply forgotten — the way a fragment of consciousness, wandering far from itself, always does for a while." />
             </p>
+            <p className="mx-auto mt-4 max-w-xl text-xs leading-7 text-lm2-text-dim/60">
+              <Bi
+                zh="不是「水瓶座所以你怎样」这种通用说法——每一句解读，都精确到你星盘里具体哪颗行星、哪个宫位、哪个十神，交叉印证出来的，换一个人，换一套数据，同一句话不成立。"
+                en={`Not "you're an Aquarius, so..." — every line is traced back to specific planets, houses, and chart placements unique to you, cross-verified across systems. Swap in a different person's data, and the same sentence stops being true.`}
+              />
+            </p>
             <button
               onClick={goForm}
               className="mt-10 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(180,150,255,0.4)] transition hover:brightness-110"

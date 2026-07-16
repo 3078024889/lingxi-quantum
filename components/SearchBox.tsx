@@ -142,19 +142,21 @@ export default function SearchBox({ className = "" }: { className?: string }) {
 
       {focused && q && (
         <div className="sb-panel">
+          {/* 之前"没搜到结果才显示提问灵犀"这个判断，依赖 hasResults——
+             但多维叙事有150多篇故事，每篇的简介都是一整段自由文本，
+             用户搜的词，哪怕跟站内内容毫不相关，也有不小概率恰好在
+             某一篇简介里，撞上一段完全不相关的子串，被误判成"搜到了"，
+             导致提问灵犀这个入口被静默地挡住，这正是搜"完全没有的字词"
+             却始终跳不到提问窗口的真正原因——不是没触发，是被一次
+             不相关的巧合匹配给挡住了。
+             这次改成不再依赖这个可能不准的判断：只要输入框里有内容，
+             提问灵犀这个入口就一直露出来（放在结果列表最下方），不管
+             上面搜没搜到东西，都能直接点进去问，不会再被"看似搜到了、
+             其实文不对题"的情况挡住。 */}
           {!hasResults && (
-            <div className="sb-empty-wrap">
-              <p className="sb-empty">
-                <Bi zh="灵犀场里还没有这个" en="Not in the field yet" />
-              </p>
-              <Link
-                href={`/live-as?ask=${encodeURIComponent(q)}`}
-                onClick={() => setFocused(false)}
-                className="sb-ask-link"
-              >
-                <Bi zh={`向灵犀提问「${q}」→`} en={`Ask Lingxi about "${q}" →`} />
-              </Link>
-            </div>
+            <p className="sb-empty">
+              <Bi zh="灵犀场里还没有这个" en="Not in the field yet" />
+            </p>
           )}
           {results.pages.length > 0 && (
             <div className="sb-group">
@@ -188,6 +190,13 @@ export default function SearchBox({ className = "" }: { className?: string }) {
               ))}
             </div>
           )}
+          <Link
+            href={`/live-as?ask=${encodeURIComponent(q)}`}
+            onClick={() => setFocused(false)}
+            className="sb-ask-link"
+          >
+            <Bi zh={`没找到想要的？向灵犀提问「${q}」→`} en={`Not what you're after? Ask Lingxi about "${q}" →`} />
+          </Link>
         </div>
       )}
 

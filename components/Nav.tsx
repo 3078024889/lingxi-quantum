@@ -10,8 +10,6 @@ import RuneIcon, { RuneKind } from "./RuneIcon";
 
 const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
   { href: "/live-as", zh: "意识显化", en: "Manifestation", rune: "eye" },
-  { href: "/life-map", zh: "生命图谱", en: "Life Map", rune: "mandala" },
-  { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
   { href: "/dream", zh: "探索梦境", en: "Dreams", rune: "crescent" },
   { href: "/practice", zh: "修炼技术", en: "Practices", rune: "flame" },
   { href: "/#gates", zh: "重塑潜意识", en: "Rewrite", rune: "spiral" },
@@ -20,9 +18,22 @@ const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
   { href: "/membership", zh: "能量交换场", en: "Access", rune: "crystal" },
 ];
 
+// "场域精测"——把生命图谱、关系共振，还有以后会陆续上线的桃花测试、
+// 命硬不硬，收进同一个文件夹式的下拉菜单里，不用每上线一个新测试，
+// 就在导航栏最外层再挤一个新入口——导航栏本身的宽度是有限的，这样
+// 收纳，以后加测试产品也不会让顶栏变得越来越挤。
+const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon?: boolean }[] = [
+  { href: "/life-map", zh: "生命图谱", en: "Life Map", rune: "mandala" },
+  { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
+  { href: "#", zh: "桃花测试", en: "Romance Timing", rune: "crescent", soon: true },
+  { href: "#", zh: "命硬不硬", en: "Life Resilience", rune: "crystal", soon: true },
+];
+
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [testsOpen, setTestsOpen] = useState(false);
   const pathname = usePathname();
+  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship");
 
   return (
     <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">
@@ -75,26 +86,82 @@ export default function Nav() {
 
         {/* 桌面端：导航链接，独立第二行，宽松排布不再挤成两行文字 */}
         <div className="mt-4 hidden flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/5 pt-3 text-[13px] text-bone-dim md:flex">
-          {links.map((l) => {
-            const active = pathname === l.href || (l.href !== "/" && pathname?.startsWith(l.href.split("#")[0]) && l.href !== "/#gates");
+          {(() => {
+            const NavLink = (l: (typeof links)[number]) => {
+              const active = pathname === l.href || (l.href !== "/" && pathname?.startsWith(l.href.split("#")[0]) && l.href !== "/#gates");
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={`group relative flex items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
+                >
+                  <RuneIcon kind={l.rune} className={`h-3.5 w-3.5 ${active ? "text-lattice" : "text-bone-dim/70"} transition group-hover:text-lattice`} />
+                  <Bi zh={l.zh} en={l.en} />
+                  {active && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-x-0 -bottom-[13px] h-[2px] rounded-full"
+                      style={{ background: "linear-gradient(90deg, #D8B8FF, #A0E0D0)" }}
+                    />
+                  )}
+                </Link>
+              );
+            };
             return (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={`group relative flex items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
-              >
-                <RuneIcon kind={l.rune} className={`h-3.5 w-3.5 ${active ? "text-lattice" : "text-bone-dim/70"} transition group-hover:text-lattice`} />
-                <Bi zh={l.zh} en={l.en} />
-                {active && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 -bottom-[13px] h-[2px] rounded-full"
-                    style={{ background: "linear-gradient(90deg, #D8B8FF, #A0E0D0)" }}
-                  />
-                )}
-              </Link>
+              <>
+                {NavLink(links[0])}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setTestsOpen(true)}
+                  onMouseLeave={() => setTestsOpen(false)}
+                >
+                  <button
+                    onClick={() => setTestsOpen((v) => !v)}
+                    className={`group flex items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${testsActive ? "text-lattice" : ""}`}
+                  >
+                    <RuneIcon kind="mandala" className={`h-3.5 w-3.5 ${testsActive ? "text-lattice" : "text-bone-dim/70"} transition group-hover:text-lattice`} />
+                    <Bi zh="场域精测" en="Precision Tests" />
+                    <svg viewBox="0 0 12 8" className={`h-2 w-2.5 transition ${testsOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="1.4">
+                      <path d="M1 1.5 6 6.5 11 1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {testsActive && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-x-0 -bottom-[13px] h-[2px] rounded-full"
+                        style={{ background: "linear-gradient(90deg, #D8B8FF, #A0E0D0)" }}
+                      />
+                    )}
+                  </button>
+                  {testsOpen && (
+                    <div className="bg-void-deep absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-sm border border-white/10 p-2 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
+                      {preciseTests.map((item) =>
+                        item.soon ? (
+                          <div key={item.zh} className="flex cursor-not-allowed items-center justify-between gap-2 rounded-sm px-3 py-2.5 text-bone-dim/40">
+                            <span className="flex items-center gap-2">
+                              <RuneIcon kind={item.rune} className="h-3.5 w-3.5" />
+                              <Bi zh={item.zh} en={item.en} />
+                            </span>
+                            <span className="text-[10px] uppercase tracking-widest2"><Bi zh="即将上线" en="Soon" /></span>
+                          </div>
+                        ) : (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setTestsOpen(false)}
+                            className="flex items-center gap-2 rounded-sm px-3 py-2.5 text-bone transition hover:bg-white/5 hover:text-lattice"
+                          >
+                            <RuneIcon kind={item.rune} className="h-3.5 w-3.5" />
+                            <Bi zh={item.zh} en={item.en} />
+                          </Link>
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
+                {links.slice(1).map((l) => NavLink(l))}
+              </>
             );
-          })}
+          })()}
         </div>
       </nav>
 
@@ -105,7 +172,40 @@ export default function Nav() {
             <div className="pb-3">
               <SearchBox className="sb-wide" />
             </div>
-            {links.map((l) => (
+            {links.slice(0, 1).map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 border-b border-white/5 py-3 text-base text-bone transition hover:text-lattice"
+              >
+                <RuneIcon kind={l.rune} className="h-4 w-4 text-lattice/70" />
+                <Bi zh={l.zh} en={l.en} />
+              </Link>
+            ))}
+            <p className="pt-3 text-[11px] uppercase tracking-widest2 text-bone-dim/50"><Bi zh="场域精测" en="Precision Tests" /></p>
+            {preciseTests.map((item) =>
+              item.soon ? (
+                <div key={item.zh} className="flex items-center justify-between gap-3 border-b border-white/5 py-3 text-base text-bone-dim/40">
+                  <span className="flex items-center gap-3">
+                    <RuneIcon kind={item.rune} className="h-4 w-4" />
+                    <Bi zh={item.zh} en={item.en} />
+                  </span>
+                  <span className="text-[10px] uppercase tracking-widest2"><Bi zh="即将上线" en="Soon" /></span>
+                </div>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 border-b border-white/5 py-3 text-base text-bone transition hover:text-lattice"
+                >
+                  <RuneIcon kind={item.rune} className="h-4 w-4 text-lattice/70" />
+                  <Bi zh={item.zh} en={item.en} />
+                </Link>
+              )
+            )}
+            {links.slice(1).map((l) => (
               <Link
                 key={l.href}
                 href={l.href}

@@ -11,6 +11,41 @@ const t = (zh: string, en: string) => (isEn() ? en : zh);
 type Person = { name: string; year: string; month: string; day: string; hour: string; minute: string; hasTime: boolean };
 const emptyPerson: Person = { name: "", year: "", month: "", day: "", hour: "12", minute: "0", hasTime: false };
 
+// 这个组件之前是定义在 RelationshipFlow 函数体内部的一个局部箭头函数——
+// 看起来没问题，但React每次组件重新渲染，都会把它当成一个"全新的
+// 组件类型"（哪怕代码逻辑完全一样），导致输入框在每次按键之后，都被
+// 整个卸载重装一遍，焦点跟着丢失——这正是"打一个字母就断"的真正原因，
+// 不是网络问题。挪到模块顶层、变成一个独立稳定的组件，问题就消失了：
+// React现在认得出"这还是同一个输入框"，不会每次按键都重新创建它。
+function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (p: Person) => void; label: string }) {
+  return (
+    <div className="bg-void-deep rounded-sm p-6">
+      <p className="font-display text-sm uppercase tracking-widest2 text-lattice">{label}</p>
+      <input
+        value={person.name}
+        onChange={(e) => setPerson({ ...person, name: e.target.value })}
+        placeholder={t("姓名（或称呼）", "Name (or however you refer to them)")}
+        className="mt-4 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-sm text-bone outline-none focus:border-lattice/60"
+      />
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        <input value={person.year} onChange={(e) => setPerson({ ...person, year: e.target.value })} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+        <input value={person.month} onChange={(e) => setPerson({ ...person, month: e.target.value })} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+        <input value={person.day} onChange={(e) => setPerson({ ...person, day: e.target.value })} placeholder={t("日", "Day")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+      </div>
+      <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
+        <input type="checkbox" checked={person.hasTime} onChange={(e) => setPerson({ ...person, hasTime: e.target.checked })} />
+        <Bi zh="知道具体出生时间（选填，能算得更精确）" en="I know the exact birth time (optional, for more precision)" />
+      </label>
+      {person.hasTime && (
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <input value={person.hour} onChange={(e) => setPerson({ ...person, hour: e.target.value })} placeholder={t("时（0-23）", "Hour (0-23)")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+          <input value={person.minute} onChange={(e) => setPerson({ ...person, minute: e.target.value })} placeholder={t("分", "Minute")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function RelationshipFlow() {
   const router = useRouter();
   const [a, setA] = useState<Person>(emptyPerson);
@@ -90,45 +125,18 @@ export default function RelationshipFlow() {
     }
   };
 
-  const PersonForm = ({ person, setPerson, label }: { person: Person; setPerson: (p: Person) => void; label: string }) => (
-    <div className="bg-void-deep rounded-sm p-6">
-      <p className="font-display text-sm uppercase tracking-widest2 text-lattice">{label}</p>
-      <input
-        value={person.name}
-        onChange={(e) => setPerson({ ...person, name: e.target.value })}
-        placeholder={t("姓名（或称呼）", "Name (or however you refer to them)")}
-        className="mt-4 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-sm text-bone outline-none focus:border-lattice/60"
-      />
-      <div className="mt-3 grid grid-cols-3 gap-2">
-        <input value={person.year} onChange={(e) => setPerson({ ...person, year: e.target.value })} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-        <input value={person.month} onChange={(e) => setPerson({ ...person, month: e.target.value })} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-        <input value={person.day} onChange={(e) => setPerson({ ...person, day: e.target.value })} placeholder={t("日", "Day")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-      </div>
-      <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
-        <input type="checkbox" checked={person.hasTime} onChange={(e) => setPerson({ ...person, hasTime: e.target.checked })} />
-        <Bi zh="知道具体出生时间（选填，能算得更精确）" en="I know the exact birth time (optional, for more precision)" />
-      </label>
-      {person.hasTime && (
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          <input value={person.hour} onChange={(e) => setPerson({ ...person, hour: e.target.value })} placeholder={t("时（0-23）", "Hour (0-23)")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-          <input value={person.minute} onChange={(e) => setPerson({ ...person, minute: e.target.value })} placeholder={t("分", "Minute")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-        </div>
-      )}
-    </div>
-  );
-
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
         <Bi zh="灵犀 · 关系共振图谱" en="Lingxi · Relationship Resonance Map" />
       </p>
       <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-        <Bi zh="两个人，一起看" en="Two people, one map" />
+        <Bi zh="不是合不合，是算得出的共振结构" en={'Not "do we match" — a resonance structure you can actually see'} />
       </h1>
       <p className="mt-4 max-w-xl text-base leading-8 text-bone-dim">
         <Bi
-          zh="伴侣、合伙人、任何一段你想看懂的关系——把两个人的出生信息都填上，灵犀会分别算出各自的生命向量，再看这两份向量放在一起，哪里天然共鸣、哪里天然互补、哪里容易起摩擦。"
-          en="A partner, a business partner, any relationship you want to understand — enter both people's birth information, and Lingxi will compute each person's life vector, then see where the two naturally resonate, where they complement, and where friction is likely."
+          zh="灵犀不会告诉你「你们很配」——它会告诉你，两个人各自的十项生命向量放在一起时，哪几项数值几乎重合（天然共鸣）、哪几项恰好互补对齐（天然分工）、哪几项同时冲得很高却没有另一端接住（真实的摩擦点）。这些都是从两份完整命盘——西方占星、中式八字、紫微斗数、玛雅Tzolkin、吠陀占星——交叉计算出的具体数值，不是「你水瓶座他天蝎座所以很配」这种笼统说法。"
+          en={`Lingxi won't tell you "you're compatible." It will show you, across ten computed life-vector dimensions, exactly where your two charts align almost precisely (natural resonance), where they land on opposite ends of the same axis (natural complementarity), and where you're both running hot on the same drive with nothing to balance it (a real friction point) — all derived from two full charts (Western astrology, Chinese Bazi, Ziwei Doushu, Maya Tzolkin, Vedic astrology), not "you're an Aquarius, they're a Scorpio, so..."`}
         />
       </p>
 
