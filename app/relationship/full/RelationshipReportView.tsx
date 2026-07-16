@@ -4,8 +4,21 @@ import { useEffect, useState } from "react";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
 
-const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-const t = (zh: string, en: string) => (isEn() ? en : zh);
+// 同一个 bug、同一个修法：见 RelationshipFlow.tsx 里的注释——直接读
+// document.documentElement 的class不会随语言切换按钮重新渲染，改用
+// MutationObserver 监听class变化，变成真正的React state。
+function useLang() {
+  const [langEn, setLangEn] = useState(false);
+  useEffect(() => {
+    setLangEn(document.documentElement.classList.contains("lang-en"));
+    const observer = new MutationObserver(() => {
+      setLangEn(document.documentElement.classList.contains("lang-en"));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+  return langEn;
+}
 
 const SECTION_TITLES = [
   { zh: "吸引来源", en: "Where the Attraction Comes From" },
@@ -16,6 +29,8 @@ const SECTION_TITLES = [
 ];
 
 export default function RelationshipReportView({ id }: { id: string }) {
+  const langEn = useLang();
+  const t = (zh: string, en: string) => (langEn ? en : zh);
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
   const [error, setError] = useState("");
   const [names, setNames] = useState<{ a: string; b: string } | null>(null);

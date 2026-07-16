@@ -64,7 +64,14 @@ export async function POST(req: Request) {
       .select("id")
       .single();
     if (error || !row) {
-      return NextResponse.json({ error: "保存失败，请稍后再试。" }, { status: 500 });
+      // 之前这里报错只回一句"保存失败，请稍后再试"，看不出到底是哪里
+      // 失败的——数据库那张表如果压根没建（比如迁移SQL没跑），或者
+      // 权限规则不对，都会走到这里，但表现出来的症状一模一样，没法
+      // 从用户这边的报错信息反推。这次把 Supabase 返回的真实错误内容
+      // 打进服务器日志（不会暴露给用户，但能在 Vercel 的 Logs 里看到），
+      // 方便真正定位是"表不存在"还是别的原因。
+      console.error("[relationship/save] 插入 relationship_submissions 失败:", error);
+      return NextResponse.json({ error: "保存失败——如果持续出现，请检查 Supabase 里 relationship_submissions 这张表是否已经建好。" }, { status: 500 });
     }
     return NextResponse.json({ id: row.id });
   } catch {
