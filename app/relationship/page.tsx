@@ -12,7 +12,7 @@ export default function RelationshipPage() {
   return (
     <>
       <Nav />
-      <main className="pt-16">
+      <main className="pt-24">
         <RelationshipFlow />
       </main>
       <Footer />

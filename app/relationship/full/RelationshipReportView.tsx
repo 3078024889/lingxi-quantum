@@ -20,6 +20,11 @@ export default function RelationshipReportView({ id }: { id: string }) {
   const [error, setError] = useState("");
   const [names, setNames] = useState<{ a: string; b: string } | null>(null);
   const [sections, setSections] = useState<string[]>([]);
+  const [resonance, setResonance] = useState<{
+    resonant: { labelZh: string; labelEn: string; a: number; b: number }[];
+    complementary: { labelZh: string; labelEn: string }[];
+    friction: { labelZh: string; labelEn: string }[];
+  } | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -53,6 +58,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           .map((s: string) => s.trim())
           .filter(Boolean);
         setSections(parts);
+        if (data.resonance) setResonance(data.resonance);
         setStatus("ready");
       } catch {
         setStatus("error");
@@ -97,6 +103,47 @@ export default function RelationshipReportView({ id }: { id: string }) {
       <h1 className="mt-4 font-display text-3xl font-light text-bone">
         {names ? `${names.a} × ${names.b}` : ""}
       </h1>
+
+      {resonance && (
+        <div className="bg-void-deep mt-8 space-y-6 rounded-sm p-6">
+          {resonance.resonant.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="共鸣点 · 共享的驱动力" en="Resonance · Shared Drives" /></p>
+              <div className="mt-3 space-y-2">
+                {resonance.resonant.map((r, i) => (
+                  <div key={i} className="flex items-center gap-3 text-sm">
+                    <span className="w-28 shrink-0 text-bone-dim">{t(r.labelZh, r.labelEn)}</span>
+                    <div className="flex h-2 flex-1 gap-0.5 overflow-hidden rounded-full bg-white/5">
+                      <div className="h-full rounded-l-full bg-lattice" style={{ width: `${r.a}%` }} />
+                      <div className="h-full rounded-r-full bg-amber" style={{ width: `${r.b}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {resonance.complementary.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh="互补点 · 天然分工" en="Complementary · Natural Division" /></p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {resonance.complementary.map((c, i) => (
+                  <span key={i} className="rounded-full border border-amber/30 bg-amber/10 px-3 py-1 text-xs text-amber">{t(c.labelZh, c.labelEn)}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          {resonance.friction.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest2 text-rose"><Bi zh="摩擦点 · 需要留意" en="Friction · Worth Watching" /></p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {resonance.friction.map((c, i) => (
+                  <span key={i} className="rounded-full border border-rose/30 bg-rose/10 px-3 py-1 text-xs text-rose">{t(c.labelZh, c.labelEn)}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       <div className="mt-10 space-y-10">
         {sections.map((content, i) => (
           <div key={i}>

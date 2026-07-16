@@ -9,7 +9,7 @@ export default function RelationshipFullPage({ searchParams }: { searchParams: {
   return (
     <>
       <Nav />
-      <main className="pt-16">
+      <main className="pt-24">
         {id ? (
           <RelationshipReportView id={id} />
         ) : (

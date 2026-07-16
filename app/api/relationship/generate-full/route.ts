@@ -41,18 +41,11 @@ export async function POST(req: Request) {
 
   const lang = body.lang === "en" ? "en" : "zh";
   const cached = lang === "en" ? submission.full_report_en : submission.full_report;
-  if (cached && !body.regenerate) {
-    return NextResponse.json({ fullReport: cached });
-  }
-
-  const key = process.env.ZHIPU_API_KEY;
-  if (!key) {
-    return NextResponse.json({ error: "尚未配置灵犀解析（缺少 ZHIPU_API_KEY）。" }, { status: 503 });
-  }
-
   // ── 复用生命向量引擎：两个人各自算一份生命向量，再用共振引擎比较——
   // 这是这个产品的核心，不是另外发明一套"合婚算法"，是同一套五套系统
-  // 计算出来的数据，多算一层"两份向量放在一起会怎样"。
+  // 计算出来的数据，多算一层"两份向量放在一起会怎样"。这一步是纯代码
+  // 计算，不花钱调AI，挪到缓存判断之前，保证不管报告文本是不是缓存的，
+  // 这份结构化的共振数据每次都能返回给前端画图用。
   const factsA = submission.facts_a as any;
   const factsB = submission.facts_b as any;
   const toLVInput = (f: any) => ({
@@ -64,6 +57,16 @@ export async function POST(req: Request) {
   const vA = computeLifeVector(toLVInput(factsA));
   const vB = computeLifeVector(toLVInput(factsB));
   const { resonant, complementary, friction } = compareLifeVectors(vA, vB);
+
+  if (cached && !body.regenerate) {
+    return NextResponse.json({ fullReport: cached, resonance: { resonant, complementary, friction } });
+  }
+
+  const key = process.env.ZHIPU_API_KEY;
+  if (!key) {
+    return NextResponse.json({ error: "尚未配置灵犀解析（缺少 ZHIPU_API_KEY）。" }, { status: 503 });
+  }
+
   const traitsA = topTraits(vA, 3);
   const traitsB = topTraits(vB, 3);
   const conflictsA = findConflictsWithFallback(vA);
@@ -131,7 +134,10 @@ export async function POST(req: Request) {
       .update(lang === "en" ? { full_report_en: text } : { full_report: text })
       .eq("id", body.id);
 
-    return NextResponse.json({ fullReport: text });
+    return NextResponse.json({
+      fullReport: text,
+      resonance: { resonant, complementary, friction },
+    });
   } catch (e) {
     return NextResponse.json({ error: "连接场域时出错，请稍后再试。", detail: e instanceof Error ? e.message : String(e) }, { status: 500 });
   }
