@@ -78,11 +78,31 @@ export default function FullReportView({ id }: { id: string }) {
 
       const { data: submission } = await supabase
         .from("life_map_submissions")
-        .select("core_type_name, facts, energy_level, clarity_level, alignment_level, focus, free_narrative")
+        .select("core_type_name, facts, birth_input, energy_level, clarity_level, alignment_level, focus, free_narrative")
         .eq("id", id)
         .single();
       if (submission?.core_type_name) setCoreTypeName(submission.core_type_name);
-      if (submission?.facts) setFacts(submission.facts as ChartFacts);
+      let loadedFacts = submission?.facts as ChartFacts | undefined;
+      if (loadedFacts) setFacts(loadedFacts);
+      // 老报告（"人类图·门"这个板块上线之前生成的）facts 里没有 humanDesign
+      // 这一项——出生信息本身是存过的，天文计算又是确定性的，这里自动补算
+      // 一次，不需要用户自己发现"少了一节"再来找我们。
+      if (loadedFacts && !loadedFacts.humanDesign) {
+        try {
+          const res = await fetch("/api/lifemap/backfill-facts", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+          });
+          const data = await res.json();
+          if (res.ok && data.facts) {
+            loadedFacts = data.facts as ChartFacts;
+            setFacts(loadedFacts);
+          }
+        } catch {
+          // 补算失败就算了，不影响报告其余部分正常显示
+        }
+      }
       if (submission) {
         setFreqScores({
           energy: submission.energy_level ?? 3,
@@ -201,10 +221,7 @@ export default function FullReportView({ id }: { id: string }) {
         import("jspdf"),
       ]);
       const canvas = await html2canvas(reportRef.current, {
-        backgroundColor: "#0d1a2e", // 显式给一个跟打印背景渐变最深处接近的纯色，
-        // 不用 null——JPEG 格式本身不支持透明通道，null 意味着"透明"，
-        // 但转成 JPEG 的时候，浏览器会把透明的地方悄悄填成白色，这就是
-        // PDF 里那些莫名其妙的白色横纹的真正来源，不是随机的渲染故障。
+        backgroundColor: "#1a1440", // 跟 .lm2-print-mode 渐变的起始色对齐，不再是旧的深藏青
         scale: 2,
         useCORS: true,
       });
@@ -239,14 +256,25 @@ export default function FullReportView({ id }: { id: string }) {
     <div className="px-6 py-20 print:py-6">
       <style>{`
         .lm2-print-mode {
+          /* 之前这里是深藏青色打底、只在边角叠一点点极光色，截出来的PDF
+             看着就是一片深色，跟网站其他地方（首页、OG图）那种明亮饱和
+             的七彩极光完全不是一个调子。这次改成跟品牌视觉一致的做法：
+             以多组更饱和、覆盖范围更大的极光色块打底，压深色的比例，
+             让粉紫、天青、金橙这几个品牌色都能被看见，同时仍然留出
+             足够的深浅对比，白色文字才读得清楚。 */
           background:
-            radial-gradient(ellipse 75% 55% at 12% -5%, rgba(110,196,230,0.42), transparent 58%),
-            radial-gradient(ellipse 70% 60% at 100% 10%, rgba(150,170,235,0.38), transparent 58%),
-            radial-gradient(ellipse 65% 55% at 50% 100%, rgba(160,224,255,0.28), transparent 60%),
-            radial-gradient(ellipse 55% 45% at 85% 85%, rgba(216,184,255,0.22), transparent 55%),
-            linear-gradient(160deg, #0a1a2e 0%, #0f2a48 45%, #123a5c 100%);
+            radial-gradient(ellipse 85% 60% at 10% -8%, rgba(255,182,213,0.38), transparent 62%),
+            radial-gradient(ellipse 80% 65% at 100% 5%, rgba(140,210,255,0.42), transparent 62%),
+            radial-gradient(ellipse 75% 60% at 50% 105%, rgba(216,184,255,0.40), transparent 64%),
+            radial-gradient(ellipse 60% 50% at 90% 90%, rgba(255,214,153,0.30), transparent 58%),
+            radial-gradient(ellipse 55% 45% at 5% 60%, rgba(150,232,210,0.26), transparent 55%),
+            linear-gradient(160deg, #1a1440 0%, #241a4a 30%, #17335c 65%, #0d2440 100%);
           border-radius: 4px;
         }
+        /* 打印模式下的标题/正文颜色，配合上面更亮的极光底重新调过一次——
+           之前那组浅蓝白（#DDE6FF）是给深藏青底设计的，现在底色亮了不少，
+           同一套颜色对比度会打折扣，这里同步调得更亮、更暖一点，跟标题
+           的暖紫金色（lm2-print-title）呼应起来。 */
         /* 截图那一刻，画面必须是"静止"的：卡片的呼吸光、玫瑰饼图的描边动画、
            进度环的发光动效，这些原本在网页上是好看的，但 html2canvas 只能
            拍下某一个瞬间的静止画面——如果正好拍在动画中途（比如渐变条纹

@@ -3383,4 +3383,173 @@ This observation log is numbered "I" — which means more will follow. The Lyra 
 
 (An original piece · Lingxi Dimensional Narratives · Sovereign Observation Logs I)`,
   },
+
+  "shipyard-chronicles-i": {
+    zh: `【船坞纪 I · 一艘不愿意战斗的舰】
+
+海燕星域的星图上，找不到忆土船坞的坐标——它不属于任何一个行星系，是一整代造船世家，用三百年时间，一点点从虚空里"种"出来的悬浮结构，像一颗永远悬在两颗恒星引力之间、谁也拉不走它的种子。这里没有流水线，没有量产的舰体——每一艘从这里出去的船，都是独一无二的，因为每一艘船的心脏，都源自一个活人，愿意亲手交出去的、独一无二的记忆。
+
+船坞悬在海燕星域最边缘的一片废弃引力井里，靠三条从母星"忆土"牵来的能源脐带吊着，像一枚挂在虚空里的、巨大的、缓慢呼吸的种子荚。阮惊蛰第一次走进主锻造舱的时候，师父只对她说了一句话："忘掉你以为的'造船'——我们不造船，我们接生。"
+
+在忆核船坞，一艘舰的灵魂，不是造出来的，是长出来的。造船的原材料，一半是从坠落的星屑里提炼出的液态忆晶，另一半，是某个活人，愿意亲手剖出的一段记忆——不是复制，是**真的交出去**，连同那段记忆里全部的重量、疼痛和温度，注入锻造槽，跟忆晶交融，慢慢结晶成一颗心。船坞的人管这个过程叫"淬忆"，管做这件事的人，叫"忆核匠"。
+
+阮惊蛰交出去的，是七岁那年，母亲把她一个人留在暴风雪里的渡口，转身走进了另一支船队，从此再没回来的那个下午。她没告诉任何人这段记忆的内容——淬忆的规矩是：一旦交出，锻造槽会自动吞掉记忆本身，忆核匠此后终生都不会再记得那个下午具体发生了什么，只会留下一种模糊的、说不清源头的钝痛，像伤口愈合后留下的疤，摸得到，却讲不出故事。这是这份职业最古老的献祭——用一段自己的过去，换一艘船的现在。
+
+【与阮惊蛰同批入坞的，还有另外三个学徒】
+
+跟阮惊蛰同一批，被船坞收为学徒的，还有另外三个人。年纪最长的叫柯远征，是船坞里少有的、家族三代都做忆核匠的"老船坞人"，交出去的记忆是他十四岁那年，第一次跟着父亲远征、独自击退过一群小型劫掠艇的那份骄傲与恐惧——他淬出的心，几乎是天生的战舰坯子，反应之凶悍，连议会里最资深的锻造师都罕见地当众称赞过。另外两个学徒，一个淬出了侦察舰的心，一个淬出的心太过破碎，锻造槽运转到第五天就自行熄灭，回炉了事，那个学徒此后没有再申请第二次淬忆的资格——按船坞的规矩，一生只有一次机会，交出去的记忆，无论结果如何，都不会归还。
+
+阮惊蛰记得，柯远征在她还在"听心"的第二天夜里，特意绕来看过她一次，隔着锻造舱那层厚重的观察舷窗，看了很久，只说了一句："你这颗心，跳得不像要打仗的样子。"她当时没有回答，只是把耳朵，更用力地贴在了冰凉的槽壁上。
+
+七天后，锻造槽里那团浑浊的忆晶液，第一次自己跳动了。
+
+***
+
+按船坞的规矩，一颗新生的心，第一次跳动的三天内，锻造者要日夜守在槽边，倾听它，直到听懂它想成为什么样的船——是巡戈舰、护卫舰，还是需要更庞大骨架的主力舰。这个阶段叫"听心"，是整个淬忆流程里最庄重、也最没有捷径可走的一步：心的意愿，不能被引导，只能被倾听。
+
+阮惊蛰听了三天三夜，听到的，却是船坞史上从没被正式记录过的一种回答。
+
+这颗心不想要炮塔。她把最基础的动力核心接上去测试反应的时候，那颗心几乎是"躲"开了所有跟武装相关的接口，反而在货舱和生活舱那两组接口上，跳动得格外用力，像小孩子拽着大人的衣角，指向自己真正想去的方向。阮惊蛰花了整整一个通宵，才确认自己没有听错——这颗心，只想要一件事：**带着人，回家**。
+
+她把这个结果报给船坞的锻造议会时，会议室安静了很久。
+
+"你确定不是淬忆的时候，情绪注入得太满，心还没分化完全？"议长福瑞恩问她，语气不算苛刻，却带着一种见惯了年轻人犯类似错误的耐心，"新船在成型初期，确实容易被锻造者自己当时的情绪牵着走。你才十九岁，这是你第一次淬忆，把'想回家'这种念头，误认成船的意愿，不是什么可耻的事。"
+
+"我没有弄错。"阮惊蛰说，"我听了三天，它每一次跳动，都在说同一件事。"
+
+"那这颗心，对船坞没有用。"另一位议员开口，语气比福瑞恩更直接，"海燕星域现在是什么局势，你不是不知道——三条商路都在被劫掠者骚扰，我们需要能打的船，不是一艘只会认路回家的货运壳子。这颗心如果真的听不进武装意愿，按规矩，只能回炉，重新提炼忆晶，换一个锻造者再淬一次。"
+
+回炉，意味着这颗刚刚开始跳动的心，会被重新熔化，回到最初那团浑浊的液态，意味着它此刻这个"只想带人回家"的自己，会被彻底抹去，重新变成一张白纸，等着被别人的记忆和别人的意愿，重新塑造成议会想要的样子。
+
+阮惊蛰站在议会中央，感觉到自己手心全是汗。她还想不起七岁那年那个下午具体发生了什么，但不知为什么，"回炉"这两个字，让她心口那道说不清来源的钝痛，一下子锐利了起来。
+
+"给我三十天。"她听见自己说，"三十天，我让它证明自己有用——不是打仗的用处，是别的用处。三十天之后，如果它还是这样，你们再回炉，我不会再拦。"
+
+***
+
+福瑞恩最终批了这三十天，附带一个条件：阮惊蛰要以"个人担保"的身份，把这艘还没正式命名的船，开去跑一趟最危险的外围航线——正是劫掠者活动最频繁的那几条，商船队近来都不太敢单独走。议会的算盘打得很清楚：如果这艘"只想回家"的船，连一次正常的巡航都撑不下来，那就是它没用的铁证，回炉也就没什么好争的了。
+
+阮惊蛰给它取名"归"。
+
+第一次带着"归"离开船坞主体、真正独立飞行的时候，阮惊蛰才明白，福瑞恩说的"分化不完全"，某种意义上说对了一半，又完全说错了。"归"确实不像其他新生舰那样，一启动就本能地去校准武器系统的响应速度——它启动之后做的第一件事，是把船坞里能连到的所有导航星图，全部调出来，一条一条，安静地"看"过去，像是在确认这片星域里，究竟哪些地方，曾经、或者现在，是"别人的家"。
+
+十七天后，她们在第九曲速带边缘，撞见了一支被劫掠者打残的商队。三艘运输船，两艘已经失去动力，漂在原地，船体上大大小小的破口正在往外泄漏空气，船员挤在最后一艘还能动的船里，靠仅存的一点应急氧维持着，救援信号发了两天，附近没有一艘武装船愿意冒险靠近这片危险航道。
+
+阮惊蛰后来无数次回想那一刻——她按照船坞的规矩，第一反应是立刻返航求援，"归"没有武装，硬闯进去毫无胜算。但她的手还没碰到返航的操作面板，就感觉到"归"的心，在她的锻造者感知里，第一次，跳动得那样急切——不是恐惧，是一种近乎渴望的、想要冲过去的冲动，跟她三十天前"听心"时感受到的那种执拗，一模一样。
+
+她赌了一把，把决定权交给了"归"。
+
+没有武器的船，靠的是"归"对这片星域几乎苛刻的熟悉——它带着阮惊蛰，贴着劫掠者巡逻的间隙，从一条连本地领航员都未必记得的、早已废弃的旧矿道绕了过去，用不到十五分钟，就摸到了那三艘残破商船的位置，比任何一支正规救援队都快。对接舱门打开的那一刻，阮惊蛰第一次真切地闻到了恐惧的气味——那不是什么诗意的说法，是残破商船里泄漏出的、混杂着冷凝剂和血腥的空气，扑面而来。最先冲进"归"的货舱的，是几个抱着孩子的母亲，孩子小得还不明白发生了什么，只是被大人紧紧捂着嘴，怕哭声引来更多劫掠艇。阮惊蛰站在舱口清点人数，双手抖得几乎握不住记录板，而她能感觉到，"归"的心跳，在这一刻，前所未有地稳——像是终于等到了它存在至今，唯一真正想做的那件事。
+
+它没有能力开火驱散劫掠者，却用它那异常宽大的货舱和生活维生系统，一次性接纳了全部三艘船上的幸存者——一百一十四条命，塞进了一艘按吨位计算，本来最多只该承载六十人的"运输壳子"里，靠的是"归"自己在超载状态下，重新调配了所有非必要区域的空间和空气循环，硬是腾出了容纳下所有人的余地。
+
+它带着这一百一十四个人，用一条没有任何船坞档案记录过的暗道，安全地，把他们，全部，送回了家。
+
+***
+
+阮惊蛰把"归"重新开回船坞的时候，福瑞恩站在船坞入口，看着那一百一十四个人，一个接一个，从"归"过载运转、几乎散架边缘的船体里走出来，久久没有说话。
+
+"三十天还没到。"阮惊蛰说，声音有点抖，不知道是因为疲惫，还是别的什么，"但我想，它已经证明过了。"
+
+议会最终没有让"归"回炉。福瑞恩后来在船坞的正式记录里，为它单独开了一个新的分类——不叫巡戈舰，不叫护卫舰，叫"归途级"，专门用来命名这一类：心不愿意打仗，却愿意在最危险的地方，把人，一个不落地，带回家的船。往后几年，忆核船坞陆续又淬出过几艘同类型的心，每一艘，锻造者交出去的记忆，都跟"回家"这件事，脱不开关系。
+
+阮惊蛰后来才想明白，福瑞恩当初那句"你的情绪牵着心走"，其实也没说错——只是他以为那是缺陷，而她渐渐懂得，那从来不是缺陷。她七岁那年在暴风雪渡口失去的那个"家"，一直没能真正找回来，但她把那份没能实现的渴望，连同那段被锻造槽吞掉、她此生都不会再记起的记忆，一起，交给了"归"——而"归"，替她，把这份渴望，活成了一件真正能救人的事。
+
+有些心的意愿，从一开始，就比锻造者自己更清楚，它该成为什么。锻造者能做的，从来不是塑造，只是听懂，然后，让开。
+
+【三年后，忆土船坞新收的一批学徒里，有一个女孩，总在深夜偷偷跑去停泊区】
+
+三年后，"归"已经不是船坞里唯一一艘"归途级"了。福瑞恩当年单独开的那个分类，如今已经收录了七艘同类的心，其中两艘，是柯远征后来亲手淬出来的——那个曾经淬出全船坞最凶悍战舰坯子的男人，在跟着阮惊蛰和"归"跑过两次外围救援航线之后，申请了船坞史上从未有过先例的"二次淬忆"，用自己作为忆核匠的全部资历做担保，才被议会破例批准。没有人知道他第二次交出去的是哪一段记忆，柯远征自己也不再记得，只是他此后淬出的每一艘船，货舱都造得格外宽大。
+
+阮惊蛰成了船坞最年轻的正式锻造师那一年，收了自己的第一个学徒——一个总在深夜，偷偷跑去停泊区、隔着舷窗看"归"很久很久的女孩。
+
+"你不用怕自己'听错'。"阮惊蛰后来对她说，是当年福瑞恩没能想明白、而她用整整三年才真正弄懂的一句话，"淬忆这件事，从头到尾，从来不是你在塑造一颗心该长成什么样子。你唯一要做的，是诚实地把自己交出去，然后，闭上嘴，听——它自己，早就知道，它想成为什么。"
+
+那个女孩后来淬出的心，同样不肯要炮塔。
+
+（灵犀原创 · 多维叙事 · 船坞纪 I）`,
+    en: `[Shipyard Chronicles I · The Ship That Refused to Fight]
+
+The Memory-Root Shipyard doesn't appear on any star chart of the Halcyon Reach — it belongs to no planetary system, a floating structure a whole lineage of shipwrights spent three hundred years "growing" out of the void, like a seed pod forever suspended between the gravity of two stars, one no one can pull away. There is no assembly line here, no hull built the same way twice — every ship that leaves this place is singular, because every ship's heart begins as a single, irreplaceable memory that a living person chose to give away.
+
+The yard hangs in an abandoned gravity well at the far edge of the Halcyon Reach, held by three energy tethers drawn from its mother-world, Memoria. Ruan Jingzhe's mentor said only one thing to her the first time she walked into the main forging bay: "Forget what you think 'shipbuilding' means. We don't build ships. We deliver them."
+
+At the Memory-Root yard, a ship's soul isn't manufactured — it's grown. The raw material is half liquid memory-crystal, refined from fallen stardust, and half a memory someone chooses to carve out of themselves — not copied, but truly given away, weight and ache and warmth intact, poured into the forging vat to fuse with the crystal and slowly crystallize into a heart. The yard calls this process Quenching, and the people who do it Memory-Smiths.
+
+What Ruan Jingzhe gave away was the afternoon she was seven, the one where her mother left her alone at a ferry crossing in a snowstorm, turned, and walked into another ship's crew, and never came back. She told no one what the memory contained — that's the rule of Quenching: once given, the vat swallows the memory itself. A Memory-Smith will never again recall exactly what happened that afternoon, only a dull, sourceless ache, like a scar you can touch but can't explain. It is the oldest sacrifice of the trade — a piece of your own past, traded for a ship's present.
+
+[Three Other Apprentices Joined the Yard the Same Year as Ruan Jingzhe]
+
+Three others were taken on as apprentices the same year as Ruan Jingzhe. The eldest, Ke Yuanzheng, came from one of the yard's rare three-generation Memory-Smith families; the memory he gave was the pride and terror of the day he was fourteen, riding with his father, and single-handedly drove off a pack of small raider craft — the heart he quenched came out almost a natural-born warship, its reflexes so fierce that even the yard's most senior smiths praised it openly, a rare thing. Of the other two, one quenched the heart of a scout ship; the other's heart came out too fractured, and the vat went dark on its own on the fifth day — sent back to be melted down. That apprentice never applied for a second Quenching; by the yard's law, everyone gets exactly one chance, and whatever memory you give, win or lose, is never returned.
+
+Ruan Jingzhe remembered Ke Yuanzheng coming by on the second night of her Listening, pausing at the thick viewing pane of the forging bay, watching for a long while before saying only: "That heart of yours doesn't beat like it wants to fight." She didn't answer. She just pressed her ear harder against the cold wall of the vat.
+
+Seven days later, the murky slurry of memory-crystal in the vat beat, on its own, for the first time.
+
+***
+
+By the yard's law, within the first three days a new heart beats, the smith must stay by the vat day and night, listening, until they understand what kind of ship it wants to become — a cruiser, an escort, or something needing a heavier frame entirely. This stage is called Listening, and it is the most solemn part of the whole process, the one step with no shortcut: a heart's will cannot be guided. It can only be heard.
+
+Ruan Jingzhe listened for three days and three nights, and what she heard was an answer the yard's records had never officially seen before.
+
+This heart didn't want gun turrets. When she wired in the base power core to test its responses, the heart practically flinched away from every weapons-related interface, and instead beat hard, insistently, against the cargo-hold and life-support interfaces — like a child tugging at an adult's sleeve, pointing toward where it actually wanted to go. It took her an entire sleepless night to be sure she wasn't imagining it: this heart wanted exactly one thing. To carry people home.
+
+When she reported this to the Forging Council, the chamber went quiet for a long time.
+
+"Are you certain the emotion wasn't simply poured in too heavily during the Quenching, and the heart hasn't fully differentiated yet?" asked Chair Fuline, not unkindly, but with the patience of someone who had seen this mistake before. "New hearts, early on, are easily pulled by whatever the smith herself is feeling. You're nineteen. This is your first Quenching. Mistaking a longing to go home for the ship's own will wouldn't be shameful."
+
+"I didn't mistake anything," Ruan Jingzhe said. "I listened for three days. Every single beat said the same thing."
+
+"Then this heart is of no use to the yard." Another councilor spoke, more bluntly than Fuline. "You know the state of the Halcyon Reach right now — all three trade routes are being harassed by raiders. We need ships that can fight, not a cargo shell that only knows the way home. If this heart truly can't take on martial intent, the rule is clear: it goes back to the vat, gets re-refined, and gets quenched again by a different smith."
+
+Going back to the vat meant this heart, only just beginning to beat, would be melted down again, returned to that first murky liquid — meant that the self it was right now, the one that only wanted to carry people home, would be erased completely, turned back into a blank page, waiting to be reshaped by someone else's memory, someone else's will, into whatever the Council wanted instead.
+
+Ruan Jingzhe stood in the center of the chamber and realized her palms were soaked with sweat. She still couldn't recall exactly what had happened that afternoon when she was seven, but somehow, the words "back to the vat" made the nameless, dull ache in her chest go suddenly sharp.
+
+"Give me thirty days," she heard herself say. "Thirty days, and I'll prove it's useful — not for fighting, for something else. If it's still like this after thirty days, send it back. I won't stand in the way again."
+
+***
+
+Fuline granted the thirty days, on one condition: Ruan Jingzhe would personally vouch for the still-unnamed ship and fly it on the most dangerous outer route — exactly the ones where raider activity was worst, the ones merchant convoys had stopped risking alone lately. The Council's calculation was plain: if this ship that "only wanted to go home" couldn't even survive a routine run, that would be proof enough of its uselessness, and no one would argue against melting it down.
+
+Ruan Jingzhe named it Homebound.
+
+The first time she flew it independently, away from the yard's main body, she understood that what Fuline called "incomplete differentiation" was half right and completely wrong at the same time. Homebound really wasn't like other newborn ships, which instinctively calibrate their weapons-response the moment they're powered on. The first thing it did, once active, was pull up every navigational star chart the yard had on file and look through them, one by one, quietly — as if confirming which places in this stretch of space, past or present, had ever been someone's home.
+
+Seventeen days later, at the edge of the ninth warp lane, they came across a convoy that raiders had torn apart. Three transport ships, two already dead in the water, hull breaches leaking atmosphere in a dozen places, crew packed into the one ship still holding together, running on the last of their emergency oxygen. The distress call had been out for two days. No armed ship nearby was willing to risk that stretch of space.
+
+Ruan Jingzhe would replay that moment countless times afterward — her first instinct, by the book, was to turn back for reinforcements; Homebound was unarmed, and charging in meant certain loss. But before her hand even reached the return controls, she felt Homebound's heart, through her smith's sense, beat with an urgency she had never felt from it before — not fear, but something close to longing, a pull toward the wreckage as fierce as what she'd felt during the Listening, thirty days before.
+
+She gambled, and handed the decision to Homebound.
+
+An unarmed ship survived on Homebound's almost obsessive familiarity with this stretch of space — it carried Ruan Jingzhe through the gaps in the raiders' patrol pattern, along an old abandoned mining channel that even local navigators barely remembered, and reached the three broken ships in under fifteen minutes, faster than any proper rescue fleet could have managed. The moment the docking hatch opened, Ruan Jingzhe smelled fear for the first time in her life, truly smelled it — not a poetic turn of phrase, but the actual air leaking out of the wrecked ships, thick with coolant and blood. The first through Homebound's cargo hold were mothers clutching children too young to understand what was happening, hands pressed over small mouths so their crying wouldn't draw more raiders. Ruan Jingzhe stood at the hatch counting heads, hands shaking too hard to hold her log-slate steady — and she could feel Homebound's heartbeat, in that moment, steadier than it had ever been. As if it had finally arrived at the one thing it had existed, from the very start, to do.
+
+It had no way to fire a shot and drive the raiders off. But with its unusually oversized cargo hold and life-support systems, it took in every survivor from all three ships at once — one hundred and fourteen lives, packed into a "cargo shell" rated, by tonnage, for sixty at most — Homebound itself, running dangerously overloaded, reallocating every non-essential space and every liter of air circulation, carving out room for every last one of them.
+
+It carried all one hundred and fourteen of them home, safely, along a passage that appears in no shipyard archive to this day.
+
+***
+
+When Ruan Jingzhe flew Homebound back into the yard, Fuline stood at the entrance and watched, silent for a long while, as those one hundred and fourteen people climbed out, one by one, from a hull running on overload, groaning at the edge of structural failure.
+
+"Thirty days aren't up yet," Ruan Jingzhe said, her voice shaking, whether from exhaustion or something else she couldn't say. "But I think it's already proven itself."
+
+The Council never sent Homebound back to the vat. Fuline later created, for the yard's official records, an entirely new classification — not cruiser, not escort, but Wayhome-class: hearts unwilling to fight, but willing to go to the most dangerous places and bring every single person home, none left behind. In the years that followed, the Memory-Root yard quenched several more hearts of the same kind, and every smith who gave one up had given, one way or another, a memory bound up with the idea of home.
+
+Ruan Jingzhe came to understand, eventually, that Fuline's old accusation — that her emotion had pulled the heart along with it — hadn't been wrong, exactly. He had simply mistaken it for a flaw. She learned, slowly, that it never was one. The home she lost at seven, at that snowbound ferry crossing, was never truly recovered. But she had given that unfulfilled longing, together with the memory the vat swallowed and would never return to her, entirely to Homebound — and Homebound, in her place, had turned that longing into something that genuinely, actually, saved lives.
+
+Some hearts know, from the very first beat, what they are meant to become — more clearly than the smith who made them ever could. All a smith can really do is not shape it. Only listen, understand, and then step aside.
+
+[Three Years Later, Among the New Apprentices at the Memory-Root Yard, There Was a Girl Who Kept Sneaking Down to the Docking Bay at Night]
+
+Three years later, Homebound was no longer the only Wayhome-class ship in the yard. The classification Fuline once created just for it now held seven hearts of the same kind, two of them quenched by Ke Yuanzheng himself — the man whose heart had once come out as the fiercest warship frame in the yard's history, who, after flying two rescue routes alongside Ruan Jingzhe and Homebound, applied for something the yard had never allowed before: a second Quenching, vouching for it with his entire reputation as a smith, and was granted it, against precedent. No one knows what memory he gave the second time. Ke Yuanzheng himself no longer remembers. Every ship he's quenched since has an unusually oversized cargo hold.
+
+The year Ruan Jingzhe became the yard's youngest full smith, she took on her first apprentice — a girl who kept sneaking down to the docking bay at night, staring at Homebound through the viewing pane for a long, long time.
+
+"You don't need to be afraid of 'hearing wrong,'" Ruan Jingzhe told her eventually — the sentence it had taken her three full years to understand, the one Fuline never had. "Quenching was never, from beginning to end, about you shaping what a heart should become. The only thing you actually have to do is give yourself away honestly, and then close your mouth, and listen. It already knows what it wants to be."
+
+The heart the girl quenched didn't want gun turrets either.
+
+(An original piece · Lingxi Dimensional Narratives · Shipyard Chronicles I)`,
+  },
 };
