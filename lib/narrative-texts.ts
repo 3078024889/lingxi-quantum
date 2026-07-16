@@ -3552,4 +3552,45 @@ The heart the girl quenched didn't want gun turrets either.
 
 (An original piece · Lingxi Dimensional Narratives · Shipyard Chronicles I)`,
   },
+
+  "the-resonance-reef": {
+    zh: `在共鸣礁生活的族群，从不"打坐"。他们没有"呼吸"这件事——那颗星球的大气对他们的身体来说太过稀薄，真正维系他们生命的，是彼此心跳之间的共振。
+
+一个共鸣礁人，从出生起就能感觉到方圆几公里内所有同类的心跳——不是听见，是像自己身体的一部分那样，直接感觉到。他们的"修炼"，不是向内收摄，而是反过来：主动地、一次次地，把自己的心跳节奏，交给身边的人，任由它被别人的节奏改写，再改写回去。他们管这个叫"入礁"。
+
+一个刚成年的共鸣礁人告诉我们，最难的不是把自己的心跳交出去——那是本能，从小就会。最难的，是交出去之后，那种"我"的边界短暂消失的感觉：分不清哪一下心跳是自己的，哪一下是别人的。族群里的长者说，这正是修炼真正开始的地方——你越是抓紧"这颗心跳属于我"，礁群的共振就越乱、越弱；你越愿意让这份边界模糊一会儿，回来的时候，反而更清楚"我"是谁，因为你终于摸到了"我"和"我们"共用的那个更深的心跳。
+
+他们没有孤独这个词。不是因为他们从不独处，是因为即使独处，他们的心跳里，也一直带着整片礁群的回响。
+
+（灵犀原创 · 多维叙事 · 场域叙事）`,
+    en: `The people who live on the Resonance Reef never sit in meditation. They have no such thing as breath — the atmosphere of that world is too thin to sustain a body the way air does here. What actually keeps them alive is the resonance between one another's heartbeats.
+
+A Reef-dweller can feel the heartbeat of every one of their kind within several kilometers, from the moment they're born — not hearing it, but feeling it the way you feel your own pulse, as part of the body itself. Their practice isn't turning inward. It's the opposite: again and again, deliberately, handing their own heart's rhythm over to whoever is near, letting it be rewritten by someone else's rhythm, then rewriting it back. They call this "entering the reef."
+
+A newly grown Reef-dweller once told us that giving your heartbeat away isn't the hard part — that's instinct, learned before you can remember learning it. The hard part is what comes after: the brief dissolving of the boundary of "I," the moment you can no longer tell which beat is your own and which belongs to someone else. Their elders say this is exactly where the practice truly begins. The tighter you grip "this heartbeat is mine," the more the whole reef's resonance frays and weakens. The more willing you are to let that boundary blur for a while, the clearer it becomes, when you return, who "I" actually is — because you've finally touched the deeper heartbeat that "I" and "we" have always shared.
+
+They have no word for loneliness. Not because they're never alone, but because even alone, their heartbeat still carries the echo of the whole reef.
+
+(An original piece · Lingxi Dimensional Narratives · Field Narratives)`,
+  },
+  "the-grief-weavers": {
+    zh: `织哀者不修炼快乐，他们修炼的是怎么把悲伤，纺成能用的东西。
+
+这个种族的孩子，第一堂修炼课，是学"完整地悲伤"——不是压抑，也不是宣泄完就算了，是要一个人，坐进"织室"，把某段真正让自己痛的记忆，从头到尾，重新经历一遍，不快进，也不回避任何一个细节，直到眼泪本身，在他们的技术里，变成一种能被纺成丝线的物质。
+
+他们把这种丝线，织成布，盖在城市里那些刚刚经历过重大失去的人身上——不是为了安慰，织哀者会纠正你这个说法：那块布不是用来"抵消"悲伤的，是用来"接住"悲伤的，让正在痛的人知道，这份痛不是异常，是曾经有人，也这样痛过，并且把那份痛，变成了此刻正裹着你的这块布的经纬。
+
+我们问一个老织哀者，为什么不干脆修炼一种直接消除悲伤的技术，那样不是更"有效"吗。她织布的手没有停，说："你们那颗星球上很多人，终其一生都在学怎么绕开悲伤，好像悲伤是路上的坑，要跳过去。可悲伤从来不是坑，是矿——你们只是没人教过你们怎么开采。"
+
+（灵犀原创 · 多维叙事 · 场域叙事）`,
+    en: `The Grief-Weavers don't practice happiness. What they practice is spinning sorrow into something usable.
+
+A child of this people takes, as their first lesson, the practice of grieving completely — not suppressing it, not simply venting it and moving on, but sitting alone in what they call the Weaving Room, and living through some memory that genuinely hurts, from beginning to end, without skipping ahead and without avoiding a single detail, until the tears themselves, through a craft they've refined for generations, become a substance that can be spun into thread.
+
+They weave that thread into cloth, and lay it over anyone in the city who has just suffered a great loss — not as comfort, a Grief-Weaver would correct you here: the cloth isn't meant to cancel the grief out. It's meant to catch it, so the person hurting knows their pain isn't an aberration — that someone else once hurt exactly this way, and turned that hurt into the very weave now wrapped around them.
+
+We asked an old Grief-Weaver why her people didn't simply develop a technique to erase sorrow outright — wouldn't that be more "effective"? Her hands never stopped weaving as she answered: "So many people on your planet spend their whole lives learning how to go around grief, as if it were a pothole in the road, something to step over. But grief was never a pothole. It's ore. No one ever taught you how to mine it."
+
+(An original piece · Lingxi Dimensional Narratives · Field Narratives)`,
+  },
 };
