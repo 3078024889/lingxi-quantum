@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { NARRATIVES } from "@/lib/narratives";
 
 /* 场域搜索 · 导航搜索框
@@ -27,6 +28,7 @@ const STATIC_PAGES: StaticEntry[] = [
 type Ripple = { id: number; x: number; y: number };
 
 export default function SearchBox({ className = "" }: { className?: string }) {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [focused, setFocused] = useState(false);
   const [ripples, setRipples] = useState<Ripple[]>([]);
@@ -84,6 +86,18 @@ export default function SearchBox({ className = "" }: { className?: string }) {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         onFocus={() => setFocused(true)}
+        onKeyDown={(e) => {
+          // 之前这个框只做"边打字边过滤"的实时下拉，没接任何键盘事件——
+          // 按回车键，从代码层面看就是什么都没绑定，自然毫无反应。这里补上：
+          // 回车时，直接跳去当前排在最前面的匹配结果（先看页面，没有页面
+          // 匹配就看多维叙事），是大多数人对"搜索框+回车"最直觉的预期。
+          if (e.key !== "Enter") return;
+          const top = results.pages[0] ?? results.stories[0];
+          if (!top) return;
+          const href = "href" in top ? top.href : `/narrative/${top.slug}`;
+          setFocused(false);
+          router.push(href);
+        }}
         placeholder="搜索星域故事、修炼技术…"
         className="sb-input"
       />

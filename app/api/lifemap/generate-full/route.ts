@@ -63,13 +63,34 @@ export async function POST(req: Request) {
   // 残缺的，直接当成需要重新生成处理，不能原样返回一份有问题的报告。
   const cached = lang === "en" ? submission.full_report_en : submission.full_report;
   const cachedSectionCount = cached ? (cached.match(/===\s*\d+\s*===/g) ?? []).length : 0;
-  const cachedIsComplete = cachedSectionCount >= 13;
+  const cachedHasCompleteSectionCount = cachedSectionCount >= 13;
+
+  // 光数分节标记不够——还有一种"看起来完整、其实是过期缓存"的情况：
+  // 缓存里第13节写的是"未提供手机号或车牌号"，但 submission.focus 里
+  // 现在其实已经有手机号/车牌号数据了（比如：第一次生成报告时确实没填，
+  // 后来用户回来补填了，或者同一条提交记录先后测试过好几次）。这种
+  // 情况下，13个分节标记都在，会被上面那条规则误判成"完整"，永远不会
+  // 触发重新生成——报告就会卡在"数据其实有、但报告永远说没有"这个
+  // 状态，这正是被反馈了好几次、却一直没修好的真正原因。
+  // 这里加一层核对：缓存第13节说"没提供"，但 focus 字段现在明明有数据，
+  // 就判定缓存已经过期，不能直接相信"分节数够13个"这个表面信号。
+  const focusHasNumberData = /手机号数字能量|车牌号数字能量/.test(submission.focus || "");
+  const cachedSection13Text = (() => {
+    const parts = (cached || "").split(/===\s*\d+\s*===/).map((s: string) => s.trim()).filter(Boolean);
+    return parts[12] || ""; // 索引12 = 第13节（第0节是===1===之前的空字符串，已被filter去掉，所以parts[0]对应===1===之后的内容）
+  })();
+  const cachedSection13IsStaleNoData =
+    focusHasNumberData && /未提供手机号或车牌号/.test(cachedSection13Text);
+
+  const cachedIsComplete = cachedHasCompleteSectionCount && !cachedSection13IsStaleNoData;
   if (cached && cachedIsComplete && !body.regenerate) {
     return NextResponse.json({ fullReport: cached });
   }
   if (cached && !cachedIsComplete) {
     console.error(
-      `[generate-full] 缓存报告不完整（只有 ${cachedSectionCount}/13 节），自动重新生成，submission id:`,
+      cachedSection13IsStaleNoData
+        ? `[generate-full] 缓存的第13节说"未提供手机号/车牌号"，但 focus 字段里现在确实有这项数据，判定为过期缓存，自动重新生成，submission id:`
+        : `[generate-full] 缓存报告不完整（只有 ${cachedSectionCount}/13 节），自动重新生成，submission id:`,
       body.id
     );
   }
@@ -211,7 +232,10 @@ const LIFEMAP_FULL_SYSTEM =
   "自由地想象、编织一个有画面感的\"前世印记\"小片段（一个模糊的年代、一个职业或角色、一件留下印记的小事），" +
   "再用同样轻松好玩的笔调，想象一个\"未来印记\"的画面（不是预言具体会发生什么，是一种，如果保持当前的成长方向，可能会体验到的、充满可能性的感受或场景）。" +
   "全程保持游戏感、探索感，不要一本正经地包装成玄学真相，约300-350字）\n" +
-  "===13===\n（数字能量解读：只有当\"用户最想探索\"这一栏信息里，包含\"手机号数字能量\"或\"车牌号数字能量\"字样时才写这一节——" +
-  "结合这些号码的总和灵动数与对应的吉凶含义，写这个号码组合，跟这个人命盘里的日主五行、核心类型，有没有呼应或者提醒的地方，" +
-  "语气上明确这是民俗数字能量学、约定俗成的符号系统，不是天文或统计意义上的结论，别说得比命盘部分更笃定，约150-200字。" +
-  "如果\"用户最想探索\"这一栏完全没有提到手机号或车牌号数据，这一节只写一句话：\"（未提供手机号或车牌号，跳过此节）\"，不要编造号码或解读）";
+  "===13===\n（数字能量解读：" +
+  (focusHasNumberData
+    ? "\"用户最想探索\"这一栏信息里，确实包含手机号或车牌号的数字能量数据，必须写这一节——" +
+      "结合这些号码的总和灵动数与对应的吉凶含义，写这个号码组合，跟这个人命盘里的日主五行、核心类型，有没有呼应或者提醒的地方，" +
+      "语气上明确这是民俗数字能量学、约定俗成的符号系统，不是天文或统计意义上的结论，别说得比命盘部分更笃定，约150-200字。"
+    : "\"用户最想探索\"这一栏没有提供手机号或车牌号数据，这一节只写一句话：\"（未提供手机号或车牌号，跳过此节）\"，不要编造号码或解读") +
+  "）";

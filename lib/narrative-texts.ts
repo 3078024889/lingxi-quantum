@@ -3553,26 +3553,6 @@ The heart the girl quenched didn't want gun turrets either.
 (An original piece · Lingxi Dimensional Narratives · Shipyard Chronicles I)`,
   },
 
-  "the-resonance-reef": {
-    zh: `在共鸣礁生活的族群，从不"打坐"。他们没有"呼吸"这件事——那颗星球的大气对他们的身体来说太过稀薄，真正维系他们生命的，是彼此心跳之间的共振。
-
-一个共鸣礁人，从出生起就能感觉到方圆几公里内所有同类的心跳——不是听见，是像自己身体的一部分那样，直接感觉到。他们的"修炼"，不是向内收摄，而是反过来：主动地、一次次地，把自己的心跳节奏，交给身边的人，任由它被别人的节奏改写，再改写回去。他们管这个叫"入礁"。
-
-一个刚成年的共鸣礁人告诉我们，最难的不是把自己的心跳交出去——那是本能，从小就会。最难的，是交出去之后，那种"我"的边界短暂消失的感觉：分不清哪一下心跳是自己的，哪一下是别人的。族群里的长者说，这正是修炼真正开始的地方——你越是抓紧"这颗心跳属于我"，礁群的共振就越乱、越弱；你越愿意让这份边界模糊一会儿，回来的时候，反而更清楚"我"是谁，因为你终于摸到了"我"和"我们"共用的那个更深的心跳。
-
-他们没有孤独这个词。不是因为他们从不独处，是因为即使独处，他们的心跳里，也一直带着整片礁群的回响。
-
-（灵犀原创 · 多维叙事 · 场域叙事）`,
-    en: `The people who live on the Resonance Reef never sit in meditation. They have no such thing as breath — the atmosphere of that world is too thin to sustain a body the way air does here. What actually keeps them alive is the resonance between one another's heartbeats.
-
-A Reef-dweller can feel the heartbeat of every one of their kind within several kilometers, from the moment they're born — not hearing it, but feeling it the way you feel your own pulse, as part of the body itself. Their practice isn't turning inward. It's the opposite: again and again, deliberately, handing their own heart's rhythm over to whoever is near, letting it be rewritten by someone else's rhythm, then rewriting it back. They call this "entering the reef."
-
-A newly grown Reef-dweller once told us that giving your heartbeat away isn't the hard part — that's instinct, learned before you can remember learning it. The hard part is what comes after: the brief dissolving of the boundary of "I," the moment you can no longer tell which beat is your own and which belongs to someone else. Their elders say this is exactly where the practice truly begins. The tighter you grip "this heartbeat is mine," the more the whole reef's resonance frays and weakens. The more willing you are to let that boundary blur for a while, the clearer it becomes, when you return, who "I" actually is — because you've finally touched the deeper heartbeat that "I" and "we" have always shared.
-
-They have no word for loneliness. Not because they're never alone, but because even alone, their heartbeat still carries the echo of the whole reef.
-
-(An original piece · Lingxi Dimensional Narratives · Field Narratives)`,
-  },
   "the-grief-weavers": {
     zh: `织哀者不修炼快乐，他们修炼的是怎么把悲伤，纺成能用的东西。
 

@@ -220,28 +220,74 @@ export default function FullReportView({ id }: { id: string }) {
         import("html2canvas"),
         import("jspdf"),
       ]);
-      const canvas = await html2canvas(reportRef.current, {
-        backgroundColor: "#1a1440", // 跟 .lm2-print-mode 渐变的起始色对齐，不再是旧的深藏青
-        scale: 2,
-        useCORS: true,
-      });
-      const imgData = canvas.toDataURL("image/jpeg", 0.92);
-      // A4 比例分页：把长截图，按A4宽高比，切成若干页
+
+      // 之前是把整份报告（十几个章节+图表）截成一张巨大的长图，再按
+      // A4高度切片、逐页贴回去。这个做法在报告比较长的时候，会撞到
+      // 浏览器canvas本身的最大尺寸限制（不同浏览器上限不一样，但十几
+      // 屏内容叠加缩放两倍，很容易超过），超限之后canvas会静默出现
+      // 空白/花屏/内容错位，这正是"文档后面一块空白""内容断裂"这些
+      // 问题的根源，不是随机故障。
+      //
+      // 改成按"章节"逐个单独截图，再把每一小张图，尽量完整地放进
+      // PDF页面里——一张图如果在当前页剩余空间放不下，就换到下一页
+      // 整个放，而不是把一个章节从中间切开。这样每次html2canvas截的
+      // 都是一小块，不会撞尺寸限制；绝大多数情况下也不会再出现一句话
+      // 被从中间切成两页这种情况（除非单个章节本身就长过一整页，那种
+      // 极少数情况下才会退回到"切片"处理，仅针对那一个章节）。
+      const container = reportRef.current;
+      const chapters = Array.from(container.children) as HTMLElement[];
+      const PRINT_BG = "#241a44"; // 跟 .lm2-print-mode 渐变中段色调接近，每小节独立截图时统一用这个纯色打底，拼起来不会有明显接缝
+
       const pdf = new jsPDF({ unit: "pt", format: "a4" });
       const pageWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      let cursorY = 0;
+      let placedAnything = false;
+
+      for (const chapter of chapters) {
+        // 跳过没有实际可见内容的空节点（比如条件渲染后留下的空 div）
+        if (!chapter || chapter.offsetHeight < 2) continue;
+
+        const canvas = await html2canvas(chapter, {
+          backgroundColor: PRINT_BG,
+          scale: 2,
+          useCORS: true,
+        });
+        const imgData = canvas.toDataURL("image/jpeg", 0.92);
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        if (imgHeight > pageHeight) {
+          // 极少数情况：单个章节本身就超过一整页高（比如某个图表特别高）。
+          // 只对这一个章节，退回旧的"切片"处理，其余章节不受影响。
+          if (placedAnything) {
+            pdf.addPage();
+            cursorY = 0;
+          }
+          let heightLeft = imgHeight;
+          let position = 0;
+          pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+          while (heightLeft > 10) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+          cursorY = imgHeight % pageHeight;
+          placedAnything = true;
+          continue;
+        }
+
+        if (placedAnything && cursorY + imgHeight > pageHeight) {
+          pdf.addPage();
+          cursorY = 0;
+        }
+        pdf.addImage(imgData, "JPEG", 0, cursorY, imgWidth, imgHeight);
+        cursorY += imgHeight;
+        placedAnything = true;
       }
+
       pdf.save(`灵犀生命图谱-${coreTypeName || "report"}.pdf`);
     } catch (e) {
       console.error("PDF 生成失败:", e);
