@@ -13,7 +13,7 @@
 // 不需要额外传色值，跟随所在按钮的 hover 状态自然变化。
 export type RuneKind =
   | "eye" | "mandala" | "crescent" | "flame"
-  | "spiral" | "infinity" | "compass" | "crystal" | "mark" | "figure";
+  | "spiral" | "infinity" | "compass" | "crystal" | "mark" | "figure" | "twin";
 
 const paths: Record<RuneKind, JSX.Element> = {
   eye: (
@@ -81,6 +81,12 @@ const paths: Record<RuneKind, JSX.Element> = {
       <circle cx="12" cy="12" r="6.2" opacity="0.8" />
       <path d="M12 5v3.4M12 15.6V19M5 12h3.4M15.6 12H19" strokeWidth="1" />
       <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none" />
+    </g>
+  ),
+  twin: (
+    <g fill="none" stroke="currentColor" strokeWidth="1.1">
+      <circle cx="9" cy="12" r="6.5" opacity=".85" />
+      <circle cx="15" cy="12" r="6.5" opacity=".85" />
     </g>
   ),
 };

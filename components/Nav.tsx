@@ -11,6 +11,7 @@ import RuneIcon, { RuneKind } from "./RuneIcon";
 const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
   { href: "/live-as", zh: "意识显化", en: "Manifestation", rune: "eye" },
   { href: "/life-map", zh: "生命图谱", en: "Life Map", rune: "mandala" },
+  { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
   { href: "/dream", zh: "探索梦境", en: "Dreams", rune: "crescent" },
   { href: "/practice", zh: "修炼技术", en: "Practices", rune: "flame" },
   { href: "/#gates", zh: "重塑潜意识", en: "Rewrite", rune: "spiral" },
@@ -73,7 +74,7 @@ export default function Nav() {
         </div>
 
         {/* 桌面端：导航链接，独立第二行，宽松排布不再挤成两行文字 */}
-        <div className="mt-4 hidden items-center justify-center gap-7 border-t border-white/5 pt-3 text-[13px] text-bone-dim md:flex">
+        <div className="mt-4 hidden flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/5 pt-3 text-[13px] text-bone-dim md:flex">
           {links.map((l) => {
             const active = pathname === l.href || (l.href !== "/" && pathname?.startsWith(l.href.split("#")[0]) && l.href !== "/#gates");
             return (
