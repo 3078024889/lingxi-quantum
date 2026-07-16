@@ -35,7 +35,7 @@ export default function LingxiPortal() {
       </h1>
 
       <p className="mx-auto mt-7 max-w-2xl font-body text-base leading-9 text-bone-dim sm:text-lg" >
-        <Bi zh="灵犀，陪你显化目标、解读梦境、修炼意识的引导系统。" en="Lingxi — a guided system that helps you manifest goals, read your dreams, and practice consciousness." />
+        <Bi zh="灵犀不创造你的欲望，只提供一面镜子——显化你的意图，解读你的梦境，练习你身体本来就会的呼吸与觉察。" en="Lingxi doesn't manufacture what you should want. It offers a mirror — to manifest your intent, decode your dreams, and practice the breath and awareness your body already knows." />
       </p>
 
       <div className="lx-core-glyph mt-2 font-display text-xl text-lattice" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>◇</div>

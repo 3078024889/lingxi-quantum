@@ -584,6 +584,9 @@ export default function LifeMapFlow() {
             <p className="mx-auto mt-6 max-w-xl text-lg leading-9 text-lm2-text-dim">
               <Bi zh="填入你的出生信息，让西方占星、中式八字、紫微斗数、玛雅Tzolkin圣历、吠陀占星——五套各自独立演化了千年的语言，一起指向同一个人：你。它们不替你做决定，只是把你早已知道、却被日常的噪音盖住的那部分，重新照出来。" en="Enter your birth information, and let five languages — Western astrology, Chinese Bazi, Ziwei Doushu, the Maya Tzolkin calendar, and Vedic astrology, each evolved independently over a thousand years — point at the same person: you. None of them decide for you. They only re-light what you already knew, before the noise of ordinary life covered it over." />
             </p>
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-lm2-text-dim/80">
+              <Bi zh="只是你，作为容易遗忘的意识分身，暂时记不起自己了。" en="You've simply forgotten — the way a fragment of consciousness, wandering far from itself, always does for a while." />
+            </p>
             <button
               onClick={goForm}
               className="mt-10 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(180,150,255,0.4)] transition hover:brightness-110"
