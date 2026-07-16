@@ -53,9 +53,25 @@ export async function POST(req: Request) {
 
   // 已经生成过，直接返回对应语言的缓存内容，不重复调用AI——除非明确要求重新生成
   // （比如内容模板更新了，用户想让已经付费的旧报告，用上新加的章节）。
+  //
+  // 但有个例外必须处理：缓存的报告本身可能是"不完整"的——比如是在
+  // max_tokens 从 8000 调到 12000 之前生成的，AI 当时写到第13节之前就被
+  // 截断了，那份"缺了最后一节"的报告，从那以后就一直原样缓存在数据库
+  // 里，永远不会自己变好。之前是靠界面上一个"重新生成"按钮让用户手动
+  // 触发修复，现在那个按钮按产品决定去掉了，所以这里必须自动接手这件
+  // 事：缓存内容如果数不出13个"===N==="分节标记，就说明它本来就是
+  // 残缺的，直接当成需要重新生成处理，不能原样返回一份有问题的报告。
   const cached = lang === "en" ? submission.full_report_en : submission.full_report;
-  if (cached && !body.regenerate) {
+  const cachedSectionCount = cached ? (cached.match(/===\s*\d+\s*===/g) ?? []).length : 0;
+  const cachedIsComplete = cachedSectionCount >= 13;
+  if (cached && cachedIsComplete && !body.regenerate) {
     return NextResponse.json({ fullReport: cached });
+  }
+  if (cached && !cachedIsComplete) {
+    console.error(
+      `[generate-full] 缓存报告不完整（只有 ${cachedSectionCount}/13 节），自动重新生成，submission id:`,
+      body.id
+    );
   }
 
   const key = process.env.ZHIPU_API_KEY;
@@ -109,12 +125,10 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         model: process.env.ZHIPU_MODEL || "glm-4-flash-250414",
         temperature: 0.85,
-        // 之前是 8000——12个中文段落写下来，本来就已经很接近这个上限了，
-        // 加了第13节"数字能量解读"之后，AI 的回复经常在写到第13节之前，
-        // 就被这个上限截断（finish_reason 会是 "length"），"没有第13节"
-        // 表面上看起来像是"没数据可写"，其实是"根本没写到那里就被切断了"。
-        // 这才是这次真正的根因，不是数据没存上——上调到 12000，留足空间。
-        max_tokens: 12000,
+        // 12000 在实测中偶尔还是不够（AI 输出长度本身有一定随机性，赶上
+        // 写得比较详细的一次，12个段落写完就已经很接近上限，第13节还是
+        // 有概率被切掉）。上调到 16000，留更充分的余量。
+        max_tokens: 16000,
         messages: [
           { role: "system", content: LIFEMAP_FULL_SYSTEM + langInstruction },
           { role: "user", content: promptContent },

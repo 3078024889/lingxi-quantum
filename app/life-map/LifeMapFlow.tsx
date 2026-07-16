@@ -1004,7 +1004,7 @@ export default function LifeMapFlow() {
               </div>
             </div>
 
-            <div className="mt-14 rounded-sm border border-lm2-violet/40 bg-lm2-violet/15 p-8 text-center backdrop-blur-xl">
+            <div className="mt-14 rounded-sm border border-lm2-violet/40 bg-gradient-to-b from-[#1c1330]/95 via-[#221a38]/92 to-[#140f22]/95 p-8 text-center shadow-[0_0_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl">
               <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>
