@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LoginForm from "./LoginForm";
 import SignOutButton from "./SignOutButton";
+import ChangePasswordForm from "./ChangePasswordForm";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
 import { createClient } from "@/lib/supabase/server";
@@ -132,6 +133,7 @@ export default async function AccountPage() {
                 >
                   <Bi zh="能量交换 / 续期" en="Energy Exchange / Renew" />
                 </Link>
+                <ChangePasswordForm />
                 <SignOutButton />
               </div>
             </>

@@ -6,7 +6,7 @@ import { createPaypalOrder } from "@/lib/paypal";
 
 export async function POST(req: Request) {
   try {
-    const { productId, returnPath } = await req.json();
+    const { productId, submissionId, returnPath } = await req.json();
     const product = getProduct(productId);
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
@@ -30,6 +30,13 @@ export async function POST(req: Request) {
         amount_usd: product.priceUsd,
         status: "pending",
         provider: "paypal",
+        // 生命图谱报告这类订单，顺手把是"哪一份提交记录"记下来——之前
+        // orders 表跟 life_map_submissions 表之间完全没有关联，同一个
+        // 人测过好几次的话，从后台订单记录反查"这笔钱对应哪份报告"，
+        // 只能靠时间去猜，容易猜错（复制错了 orders 表自己的 id，去当
+        // life_map_submissions 的 id 用，那两个是完全不同的表，各自的
+        // id 互不相通）。这里加一列直接存好，以后一眼就能对上。
+        ...(typeof submissionId === "string" ? { submission_id: submissionId } : {}),
       })
       .select()
       .single();

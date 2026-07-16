@@ -422,7 +422,7 @@ export default function LifeMapFlow() {
       const res = await fetch("/api/pay/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: "life-map-report", returnPath: `/life-map/full?id=${id}&paid=1` }),
+        body: JSON.stringify({ productId: "life-map-report", submissionId: id, returnPath: `/life-map/full?id=${id}&paid=1` }),
       });
       const data = await res.json();
       if (data.url) {
@@ -541,7 +541,7 @@ export default function LifeMapFlow() {
     const res = await fetch("/api/pay/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId: "life-map-report", returnPath: `/life-map/full?id=${result.id}&paid=1` }),
+      body: JSON.stringify({ productId: "life-map-report", submissionId: result.id, returnPath: `/life-map/full?id=${result.id}&paid=1` }),
     });
     const data = await res.json();
     if (data.url) {

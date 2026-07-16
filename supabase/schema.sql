@@ -91,6 +91,12 @@ alter table public.field_questions enable row level security;
 -- 这一句会把缺的字段补上（已存在则跳过，安全可重复执行）。
 alter table public.life_map_submissions add column if not exists full_report_en text;
 
+-- orders 表之前跟 life_map_submissions 表毫无关联——同一个人测过好几次
+-- 生命图谱的话，从 orders 表的付款记录反查"这笔钱对应哪一份报告"，只能
+-- 靠时间去猜，容易猜错。这一列直接把对应的 life_map_submissions.id 存
+-- 进来，以后一眼就能对上，不用再去猜。
+alter table public.orders add column if not exists submission_id uuid references public.life_map_submissions(id) on delete set null;
+
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 

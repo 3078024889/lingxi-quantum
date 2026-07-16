@@ -52,7 +52,7 @@ export default function Nav() {
               className="whitespace-nowrap rounded-sm px-4 py-1.5 font-medium text-[#E0F0FF] shadow-[0_0_14px_rgba(216,184,255,0.35)] transition hover:shadow-[0_0_20px_rgba(216,184,255,0.55)]"
               style={{ background: "linear-gradient(90deg, #8B7FE8, #6FA8E8)" }}
             >
-              <Bi zh="进入场域" en="Enter" />
+              <Bi zh="我的账户" en="My Account" />
             </Link>
             <LangToggle />
           </div>
@@ -120,7 +120,7 @@ export default function Nav() {
               onClick={() => setOpen(false)}
               className="mt-4 rounded-sm border border-lattice/40 py-3 text-center font-display text-sm tracking-widest2 text-lattice transition hover:border-amber hover:text-amber"
             >
-              <Bi zh="进入场域" en="Enter" />
+              <Bi zh="我的账户" en="My Account" />
             </Link>
           </div>
         </div>
