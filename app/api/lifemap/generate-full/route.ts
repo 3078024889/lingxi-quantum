@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { computeLifeVector, findConflictsWithFallback, topTraits, wealthArchetypes, type LifeVectorDim } from "@/lib/life-vector";
 
 export const runtime = "nodejs";
 
@@ -117,7 +118,40 @@ export async function POST(req: Request) {
       `十二宫概览：${ziwei.palaces.map((p) => `${p.name}(${p.earthlyBranch})${p.majorStars.length ? "[" + p.majorStars.map((s) => s.name).join("") + "]" : ""}`).join("，")}\n`
     : "【紫微斗数】未提供具体出生时辰，紫微命盘暂缺\n";
 
+  // ── 生命向量引擎：在拼AI提示词之前，先用确定性的代码逻辑，把这份
+  // 命盘算出核心特质、内在矛盾、财富类型——这是"先转结构化数据、再做
+  // 矛盾检测"这层架构真正落地的地方。下面拼进 promptContent 的，不再
+  // 是"这是你的原始数据，自己去找矛盾"，而是"矛盾已经算出来了，围绕
+  // 这几条写"。AI不再负责"发现"，只负责"讲述"，这是这次架构升级的
+  // 核心变化。
+  const lifeVector = computeLifeVector({
+    sunElement: facts.sunElement as any,
+    moonElement: facts.moonElement as any,
+    mercury: facts.mercury as any, venus: facts.venus as any, mars: facts.mars as any,
+    jupiter: facts.jupiter as any, saturn: facts.saturn as any,
+    dayMasterElement: facts.dayMasterElement as any,
+    wuXingCount: wx as any,
+    yearShiShen: facts.yearShiShen as string, monthShiShen: facts.monthShiShen as string,
+    hourShiShen: (facts.hourShiShen as string) ?? null,
+  });
+  const conflicts = findConflictsWithFallback(lifeVector);
+  const coreTraits = topTraits(lifeVector, 3);
+  const wealthTypes = wealthArchetypes(lifeVector, 2);
+
+  const DIM_ZH: Record<LifeVectorDim, string> = {
+    freedomNeed: "自由需求", stabilityNeed: "稳定需求", creativity: "创造倾向", discipline: "秩序纪律",
+    riskTolerance: "风险偏好", emotionalDepth: "情感深度", introspection: "内省倾向", socialDrive: "社交驱动",
+    ambition: "野心驱动", adaptability: "适应弹性",
+  };
+  const lifeVectorSummary =
+    `【生命向量引擎 · 已计算完成，直接使用，不要重新判断或推翻】\n` +
+    `核心特质（按强度排序）：${coreTraits.map((t) => `${t.labelZh}(${t.score})`).join("、")}\n` +
+    `内在矛盾（已检测出的核心张力，报告要围绕这个/这些矛盾展开，不要另外自创其他矛盾）：\n` +
+    conflicts.map((c) => `- ${c.labelZh}（${DIM_ZH[c.a]} ${lifeVector[c.a]} vs ${DIM_ZH[c.b]} ${lifeVector[c.b]}，张力强度${c.strength}）`).join("\n") + "\n" +
+    `财富来源类型（按匹配度排序，第8章要围绕这个判断展开，不要自己另外分类）：${wealthTypes.map((w) => `${w.labelZh}(匹配度${w.score})`).join("、")}\n`;
+
   const promptContent =
+    lifeVectorSummary +
     `【核心类型】${submission.core_type_name}\n` +
     `【西方星盘】太阳：${facts.sunSignZh}；月亮：${facts.moonSignZh}；水星：${(facts.mercury as any)?.signZh}；金星：${(facts.venus as any)?.signZh}；` +
     `火星：${(facts.mars as any)?.signZh}；木星：${(facts.jupiter as any)?.signZh}；土星：${(facts.saturn as any)?.signZh}\n` +
@@ -189,11 +223,13 @@ function buildLifemapFullSystem(focusHasNumberData: boolean): string {
   return (
   "你是「灵犀」，负责为已付费用户，撰写一份完整的「生命频率图谱」报告。用户的命盘数据（西方七大行星、中式四柱八字含十神纳音地势藏干胎元命宫身宫、紫微斗数命宫身宫与十二宫主星、玛雅Tzolkin圣历图腾数字），" +
   "以及用户的当前频率自测分数、最想探索的方向、当前状态，都已作为真实计算出的客观事实提供给你。你的任务，是围绕这些确定的事实，逐一撰写十二个章节的解读，不是重新判断或质疑这些数据。" +
-  "【在动笔之前，先在心里完成这四步——这是整篇报告的方法论，不是走个形式】" +
-  "第一步，从提供给你的全部数据里，找出二到三个分量最重、最能定义这个人的核心特质（比如：某颗行星跟日主的呼应、某个十神格局、某个反复出现的五行倾向）——这些是贯穿全篇的主干，后面十二个章节，都要能看出这几条主干的影子，不是每章各写各的、互不相关。" +
-  "第二步，也是全篇价值最高的一步：从这些数据里，找出一到两组真实存在的\"内在矛盾\"——不是随便两个特质拼在一起，是那种\"这个人身上，同时有两股会互相拉扯的力量\"，比如\"渴望自由，但深层需要稳定的连接\"\"追求突破，却又被过往的秩序感束缚\"这种。这种矛盾感，才是让用户觉得\"这在说我\"的核心原因——没有内在矛盾的人，是不存在的，找不到，说明你还没挖够深，不是这个人没有。" +
-  "第三步，把这份核心矛盾，映射到用户实际关心的具体领域——财富、关系、事业、决策方式——具体讲，这份矛盾会在哪种真实场景里冒出来，这个人自己会怎么描述那种感觉。" +
-  "第四步，才开始动笔写十二个章节——每一章，都要能看出第一步到第三步想清楚的那条主线，不是十二个互相独立的命理知识点讲解。" +
+  "【在动笔之前，先看懂下面这份「生命向量引擎」算出来的结果——这是整篇报告的骨架，不是走个形式】" +
+  "系统已经用确定性的规则，从这份命盘的原始数据里，算出了这个人最核心的几项特质、以及一到两组真实的\"内在矛盾\"（在下面的数据里，标注为【生命向量引擎】那部分）。" +
+  "这一步不再需要你自己去猜、去找——已经算好了，你的任务，是把这份已经确定的结构，用有画面感的、具体的语言讲出来，不是重新去命盘原始数据里另外发现一套不一样的矛盾。" +
+  "第一步，认清楚算出来的这一到两组核心矛盾具体是什么，确认自己理解了这组矛盾的两端分别是什么力量。" +
+  "第二步，把这份矛盾，落回到命盘里具体是哪些数据点在支撑它——不是空泛地说\"你有自由需求也有稳定需求\"，是要指出，是哪颗行星、哪个十神、哪个五行组合，撑起了\"自由\"这一端，又是哪些数据撑起了\"稳定\"这一端。" +
+  "第三步，把这份矛盾，映射到用户实际关心的具体领域——财富、关系、事业、决策方式——具体讲，这份矛盾会在哪种真实场景里冒出来，这个人自己会怎么描述那种感觉。" +
+  "第四步，才开始动笔写十二个章节——每一章，都要能看出这组核心矛盾的影子，不是十二个互相独立的命理知识点讲解。" +
   "整份报告读完，用户应该有的感觉是\"这份报告知道我为什么会一直遇到某种问题\"，而不是\"这份报告知道很多关于星座八字的知识\"——前者是懂这个人，后者是懂命理学，这两件事，完全不是一回事。" +
   "每个章节，都要贴合用户的具体数据来写，不能是可以套用在任何人身上的通用性格描述——要让用户读完，觉得\"这确实是在讲我的命盘\"，而不是\"这段话换个人也说得通\"。" +
   "【最关键的质量要求】每一段解读，至少要交叉引用两到三个不同的具体数据点，写出\"这几项放在一起，指向了什么\"，而不是把每个数据点单独翻译成一句性格描述再排列在一起——" +
@@ -242,10 +278,8 @@ function buildLifemapFullSystem(focusHasNumberData: boolean): string {
   "===8===\n（财富与事业频率地图：分两部分——事业运势，这个人天生适合的工作方式、容易发挥优势的角色、容易遇到的职场阻碍模式；" +
   "如果用户提供了具体职业，要让这部分明显贴合这个职业来写，不是泛泛而谈：创业者，要侧重\"经营决策的风格、容易忽略的经营风险、适合的商业模式\"这类更贴近做生意的角度；" +
   "销售/市场类，侧重\"说服与建立信任的方式\"；艺术/创作类，侧重\"创作节奏与灵感来源\"；学生，侧重\"学习方式与未来方向的探索\"；没提供具体职业，就用更泛化的\"工作方式\"来写。" +
-  "财富创造方式这一部分，先从这五种财富来源倾向里，明确判断出这个人最接近哪一到两种（可以是主+辅两种的组合，不要五种都提），再围绕判断出的类型展开写，不要只停留在抽象的\"方式与模式\"这种空泛说法：" +
-  "创造型（靠原创的想法或作品变现，波动大但天花板高）、资源型（靠人脉和资源整合，擅长撮合而非亲自下场）、专业型（靠某个领域的深度积累，收入随专业度稳步上升）、" +
-  "机会型（靠敏锐地抓住风口和时机，起伏明显）、经营型（靠长期系统化的积累和管理，慢但稳）——判断依据要落回具体数据点（比如某个十神格局或者某颗行星的位置），" +
-  "并且要指出这个人在这条财富路径上最容易卡住的具体阻碍是什么，不是预测具体赚多少钱或几岁升职，约350-400字）\n" +
+  "财富创造方式这一部分，【生命向量引擎】已经算出了这个人最匹配的一到两种财富来源类型（创造型/资源型/专业型/机会型/经营型），直接使用这个判断结果去展开写，不要自己重新判断或者换一套分类；" +
+  "结合命盘里具体是哪些数据点支撑了这个判断，并指出这个人在这条财富路径上最容易卡住的具体阻碍是什么，不是预测具体赚多少钱或几岁升职，约350-400字）\n" +
   "===9===\n（关系共振地图：分两部分——亲密关系，这个人的情感模式、容易吸引或被吸引的类型、关系里的成长方向；" +
   "如果用户提供了当前感情状态，要让这部分解读贴合这个具体处境来写：单身，就侧重\"容易在什么样的关系模式里，重复遇到相似的课题\"；" +
   "恋爱中，就侧重\"这段关系里，容易浮现的相处模式与成长空间\"；已婚，就侧重\"长期关系里，容易忽略却值得关注的互动模式\"；" +

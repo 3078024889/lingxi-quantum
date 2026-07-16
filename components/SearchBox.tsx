@@ -34,6 +34,7 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "practice-heart-reset", title: "归零心诀", titleEn: "Heart Reset", href: "/practice/heart-reset" },
   { slug: "practice-ascending-heart", title: "上升心经", titleEn: "Ascending Heart Sutra", href: "/practice/ascending-heart" },
   { slug: "account", title: "场域入口", titleEn: "Field Entrance", href: "/account" },
+  { slug: "relationship", title: "关系共振图谱", titleEn: "Relationship Resonance Map", href: "/relationship" },
 ];
 
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的

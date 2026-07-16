@@ -102,6 +102,30 @@ alter table public.orders add column if not exists submission_id uuid references
 -- life_map_submissions 表实时同步，姓名这种字段基本不会改）。
 alter table public.orders add column if not exists submission_name text;
 
+-- ========================================
+-- 灵犀关系共振图谱（合婚/合伙/合财富通用测试，$9.9）
+-- ========================================
+-- 两个人各自的出生信息 + 命盘数据（facts_a/facts_b，复用生命图谱同一套
+-- 计算引擎，不是另外发明一套），加上AI生成的关系共振报告全文。
+create table if not exists public.relationship_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name_a text not null,
+  name_b text not null,
+  birth_input_a jsonb not null,
+  birth_input_b jsonb not null,
+  facts_a jsonb not null,
+  facts_b jsonb not null,
+  relationship_type text default 'romantic', -- 'romantic' | 'business' | 'general'——同一套计算，只是报告的AI提示词侧重点不同
+  full_report text,
+  full_report_en text,
+  created_at timestamptz default now()
+);
+alter table public.relationship_submissions enable row level security;
+drop policy if exists "own relationship submissions" on public.relationship_submissions;
+create policy "own relationship submissions" on public.relationship_submissions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 

@@ -40,7 +40,11 @@ export const lifeMapProducts: Product[] = [
   { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁你的完整命盘解读，永久保存、随时回看", noteEn: "One exchange unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts];
+export const relationshipProducts: Product[] = [
+  { id: "relationship-resonance", name: "关系共振图谱", nameEn: "Relationship Resonance Map", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁你与任意一人的共振分析——亲密关系、合伙、任何两人关系皆可，永久保存、可测多次", noteEn: "One exchange unlocks resonance analysis between you and anyone — romantic, business, or any pairing. Yours to keep, test as many pairs as you like.", group: "cultivation" },
+];
+
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }
