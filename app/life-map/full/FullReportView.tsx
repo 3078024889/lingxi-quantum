@@ -502,10 +502,43 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
     { label: "水", en: "Water", v: wx.water, color: "#5FE8FF" },
   ];
   const max = Math.max(1, ...items.map((i) => i.v));
+  // 五边雷达图——五行本来就是五个维度的平衡关系，用五边形的"形状"一眼
+  // 就能看出是均衡还是偏科，比横条更直观，也不依赖认得汉字：外国用户
+  // 看不懂"木火土金水"这几个字，但看得懂一个五边形是不是长歪了。
+  const RADAR_SIZE = 140, CENTER = 70, MAX_R = 54;
+  const radarPoints = items.map((it, i) => {
+    const angle = -Math.PI / 2 + (i * 2 * Math.PI) / items.length;
+    const r = (Math.max(0.15, it.v / max)) * MAX_R;
+    return { x: CENTER + r * Math.cos(angle), y: CENTER + r * Math.sin(angle), labelX: CENTER + (MAX_R + 16) * Math.cos(angle), labelY: CENTER + (MAX_R + 16) * Math.sin(angle) };
+  });
+  const radarPath = radarPoints.map((p) => `${p.x},${p.y}`).join(" ");
+  const gridRings = [0.33, 0.66, 1].map((frac) =>
+    items.map((_, i) => {
+      const angle = -Math.PI / 2 + (i * 2 * Math.PI) / items.length;
+      return `${CENTER + frac * MAX_R * Math.cos(angle)},${CENTER + frac * MAX_R * Math.sin(angle)}`;
+    }).join(" ")
+  );
   return (
     <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="命局五行分布" en="Element Balance" /></p>
-      <div className="mt-4 space-y-3">
+      <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+        <svg viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`} className="h-36 w-36 shrink-0">
+          {gridRings.map((pts, i) => (
+            <polygon key={i} points={pts} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+          ))}
+          <polygon points={radarPath} fill="rgba(199,156,255,0.28)" stroke="#C79CFF" strokeWidth="1.5">
+            <animate attributeName="opacity" values=".75;1;.75" dur="3.4s" repeatCount="indefinite" />
+          </polygon>
+          {radarPoints.map((p, i) => (
+            <circle key={i} cx={p.x} cy={p.y} r="2.6" fill={items[i].color} />
+          ))}
+          {radarPoints.map((p, i) => (
+            <text key={i} x={p.labelX} y={p.labelY} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="#DDE6FF">
+              {items[i].label}
+            </text>
+          ))}
+        </svg>
+        <div className="w-full flex-1 space-y-3">
         {items.map((it, idx) => (
           <div key={it.label} className="flex items-center gap-3">
             <span className="w-10 shrink-0 font-display text-sm text-lm2-text">{it.label}</span>
@@ -523,6 +556,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
             <span className="w-4 shrink-0 text-right text-xs text-lm2-text-dim">{it.v}</span>
           </div>
         ))}
+        </div>
       </div>
       <style>{`
         .lm2-wx-bar { animation: lm2-wx-grow 1.1s cubic-bezier(.22,1,.36,1) both, lm2-wx-glow 3s ease-in-out infinite; }

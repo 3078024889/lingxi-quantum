@@ -61,6 +61,7 @@ type LifeMapDraft = {
   profession: string; professionCustom: string; relationshipStatus: string; practiceStatus: string;
   phoneNumber: string; plateNumber: string;
   report: ReportData;
+  savedAt: number; // 存草稿的时间戳（Date.now()）——用来判断这份草稿是不是"太久远了"
 };
 const LX_DRAFT_KEY = "lx-lifemap-pending-unlock";
 
@@ -174,6 +175,9 @@ export default function LifeMapFlow() {
   const [error, setError] = useState("");
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
+  // 登录跳转回来后，如果发现有未完成的解锁草稿，先放在这里等用户确认，
+  // 不直接自动下单——避免"随便打开一下页面"就被静默带去付款页那种bug。
+  const [resumedDraft, setResumedDraft] = useState<LifeMapDraft | null>(null);
   const formTopRef = useRef<HTMLDivElement>(null);
 
   const goForm = () => {
@@ -362,6 +366,7 @@ export default function LifeMapFlow() {
               energyLevel, clarityLevel, alignmentLevel,
               profession, professionCustom, relationshipStatus, practiceStatus,
               phoneNumber, plateNumber, report,
+              savedAt: Date.now(),
             };
             sessionStorage.setItem(LX_DRAFT_KEY, JSON.stringify(draft));
           }
@@ -441,6 +446,12 @@ export default function LifeMapFlow() {
   // 登录回来后，检查 sessionStorage 里有没有跳转前存的草稿——有，且现在确实
   // 已经登录了，就自动恢复表单/报告状态，并直接接着完成"保存提交记录 + 下单"，
   // 用户不需要再点一次解锁、更不需要重新填手机号/车牌号。
+  // 登录回来后，检查 sessionStorage 里有没有跳转前存的草稿——有，且现在确实
+  // 已经登录了，就自动恢复表单/报告状态，但**不会**自动帮用户下单付款——
+  // 这一步必须由用户自己点一下确认。之前是检测到草稿就直接自动下单、
+  // 直接跳转 PayPal，结果测试/调试过程中留下的旧草稿，会在用户毫无预期
+  // 的情况下，让"随便打开一下生命图谱页面"这个动作，直接冲去了付款页，
+  // 体验上非常突兀，也不安全——谁都不该被"静默"带去一个要花钱的页面。
   useEffect(() => {
     const resume = async () => {
       let raw: string | null = null;
@@ -450,11 +461,6 @@ export default function LifeMapFlow() {
         return;
       }
       if (!raw) return;
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return; // 还没登录，草稿留着，下次再说
 
       let draft: LifeMapDraft;
       try {
@@ -465,8 +471,19 @@ export default function LifeMapFlow() {
       }
       sessionStorage.removeItem(LX_DRAFT_KEY);
 
-      // 先把画面恢复成草稿里的样子，即使下面自动下单失败，用户看到的
-      // 也是自己填过的完整信息，而不是一片空白的表单。
+      // 草稿超过2小时就不再当作"刚才那次没走完的操作"，直接丢弃——
+      // 避免很久以前调试/测试时留下的草稿，某天被无缘无故地翻出来用。
+      const TWO_HOURS = 2 * 60 * 60 * 1000;
+      if (!draft.savedAt || Date.now() - draft.savedAt > TWO_HOURS) return;
+
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return; // 还没登录，草稿已经清了，等用户重新走一遍就好，不强求"找回"
+
+      // 只恢复画面显示，不自动下单、不自动跳PayPal——用户看到自己填过的
+      // 报告，和一个"继续解锁"的按钮，自己决定要不要接着付款。
       setYear(String(draft.y)); setMonth(String(draft.m)); setDay(String(draft.d));
       setHasTime(draft.hasTime); setHour(draft.hour); setMinute(draft.minute);
       setName(draft.name); setFocus(draft.focus); setCurrentState(draft.currentState);
@@ -475,58 +492,65 @@ export default function LifeMapFlow() {
       setRelationshipStatus(draft.relationshipStatus); setPracticeStatus(draft.practiceStatus);
       setPhoneNumber(draft.phoneNumber); setPlateNumber(draft.plateNumber);
       setReport(draft.report); setStage("report");
-      setUnlocking(true);
-      setError(t("欢迎回来，正在继续为你解锁完整报告…", "Welcome back — resuming your unlock…"));
-
-      // 不依赖上面刚 set 的 state（同一批 state 更新是异步的，这一帧读到的
-      // 可能还是旧值），直接用刚解析出来的 draft 数据去存库、下单。
-      const focusLabel = FOCUS_OPTIONS.find((f) => f.id === draft.focus)!;
-      const stateLabel = STATE_OPTIONS.find((s) => s.id === draft.currentState)!;
-      const professionOpt = PROFESSION_OPTIONS.find((p) => p.id === draft.profession);
-      const professionLabel = draft.profession === "other" ? draft.professionCustom.trim() : professionOpt?.zh || "";
-      const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === draft.relationshipStatus)?.zh || "";
-      const practiceLabel = PRACTICE_OPTIONS.find((p) => p.id === draft.practiceStatus)?.zh || "";
-      const phoneReading = draft.phoneNumber.trim() ? (() => {
-        const r = analyzePhoneNumber(draft.phoneNumber);
-        return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
-      })() : undefined;
-      const plateReading = draft.plateNumber.trim() ? (() => {
-        const r = analyzePlateNumber(draft.plateNumber);
-        return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
-      })() : undefined;
-
-      const result = await trySaveSubmission({
-        y: draft.y, m: draft.m, d: draft.d, hasTime: draft.hasTime, hour: draft.hour, minute: draft.minute,
-        facts: draft.report.facts, coreType: draft.report.coreType, freeNarrative: draft.report.narrative,
-        focusLabel, stateLabel, energyLevel: draft.energyLevel, clarityLevel: draft.clarityLevel, alignmentLevel: draft.alignmentLevel,
-        name: draft.name, professionLabel, relationshipLabel, practiceLabel,
-        phoneReading, plateReading,
-      });
-      if (!result.id) {
-        setUnlocking(false);
-        setError(
-          result.specificError ||
-            t("欢迎回来！你填过的信息已经恢复，请再点一次「解锁完整报告」。", "Welcome back! Your info has been restored — please tap Unlock Full Report once more.")
-        );
-        return;
-      }
-      setSubmissionId(result.id);
-      const res = await fetch("/api/pay/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: "life-map-report", returnPath: `/life-map/full?id=${result.id}&paid=1` }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setUnlocking(false);
-        setError(t("欢迎回来！你填过的信息已经恢复，请再点一次「解锁完整报告」。", "Welcome back! Your info has been restored — please tap Unlock Full Report once more."));
-      }
+      setResumedDraft(draft);
     };
     resume();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 用户在"继续解锁"横幅里点了确认，才真正发起存库+下单——是上面 resume()
+  // 曾经自动做的事，现在挪到这里，变成需要用户主动点一下才会执行。
+  const confirmResumedUnlock = async () => {
+    const draft = resumedDraft;
+    if (!draft) return;
+    setResumedDraft(null);
+    setUnlocking(true);
+    setError(t("正在继续为你解锁完整报告…", "Resuming your unlock…"));
+
+    const focusLabel = FOCUS_OPTIONS.find((f) => f.id === draft.focus)!;
+    const stateLabel = STATE_OPTIONS.find((s) => s.id === draft.currentState)!;
+    const professionOpt = PROFESSION_OPTIONS.find((p) => p.id === draft.profession);
+    const professionLabel = draft.profession === "other" ? draft.professionCustom.trim() : professionOpt?.zh || "";
+    const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === draft.relationshipStatus)?.zh || "";
+    const practiceLabel = PRACTICE_OPTIONS.find((p) => p.id === draft.practiceStatus)?.zh || "";
+    const phoneReading = draft.phoneNumber.trim() ? (() => {
+      const r = analyzePhoneNumber(draft.phoneNumber);
+      return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+    })() : undefined;
+    const plateReading = draft.plateNumber.trim() ? (() => {
+      const r = analyzePlateNumber(draft.plateNumber);
+      return `${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
+    })() : undefined;
+
+    const result = await trySaveSubmission({
+      y: draft.y, m: draft.m, d: draft.d, hasTime: draft.hasTime, hour: draft.hour, minute: draft.minute,
+      facts: draft.report.facts, coreType: draft.report.coreType, freeNarrative: draft.report.narrative,
+      focusLabel, stateLabel, energyLevel: draft.energyLevel, clarityLevel: draft.clarityLevel, alignmentLevel: draft.alignmentLevel,
+      name: draft.name, professionLabel, relationshipLabel, practiceLabel,
+      phoneReading, plateReading,
+    });
+    if (!result.id) {
+      setUnlocking(false);
+      setError(
+        result.specificError ||
+          t("信息已恢复，请再点一次「解锁完整报告」。", "Your info has been restored — please tap Unlock Full Report once more.")
+      );
+      return;
+    }
+    setSubmissionId(result.id);
+    const res = await fetch("/api/pay/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId: "life-map-report", returnPath: `/life-map/full?id=${result.id}&paid=1` }),
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      setUnlocking(false);
+      setError(t("信息已恢复，请再点一次「解锁完整报告」。", "Your info has been restored — please tap Unlock Full Report once more."));
+    }
+  };
 
   // ---------- 解析灵犀返回的三段式正文 ----------
   const parsed = (() => {
@@ -815,6 +839,30 @@ export default function LifeMapFlow() {
       {stage === "report" && report && parsed && (
         <section className="px-6 py-20">
           <div className="mx-auto max-w-2xl">
+            {resumedDraft && (
+              <div className="bg-void-deep mb-6 rounded-sm border border-lm2-violet/40 px-6 py-5 text-center">
+                <p className="text-sm leading-6 text-lm2-text">
+                  <Bi
+                    zh="欢迎回来——你之前有一次没走完的解锁，信息已经帮你恢复好了。"
+                    en="Welcome back — you had an unfinished unlock. We've restored your information."
+                  />
+                </p>
+                <div className="mt-3 flex items-center justify-center gap-3">
+                  <button
+                    onClick={confirmResumedUnlock}
+                    className="bg-lm2-violet/70 rounded-sm px-6 py-2 text-xs uppercase tracking-widest2 text-white transition hover:brightness-110"
+                  >
+                    <Bi zh="继续解锁" en="Continue Unlock" />
+                  </button>
+                  <button
+                    onClick={() => setResumedDraft(null)}
+                    className="text-xs text-lm2-text-dim underline underline-offset-2 hover:text-lm2-text"
+                  >
+                    <Bi zh="不用了，我再看看" en="Not now" />
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="bg-void-deep rounded-sm px-8 py-8 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("你的生命频率报告", "Your Life Frequency Report")}
