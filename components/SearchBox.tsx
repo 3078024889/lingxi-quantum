@@ -92,9 +92,10 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           // 回车时，直接跳去当前排在最前面的匹配结果（先看页面，没有页面
           // 匹配就看多维叙事），是大多数人对"搜索框+回车"最直觉的预期。
           if (e.key !== "Enter") return;
-          const top = results.pages[0] ?? results.stories[0];
-          if (!top) return;
-          const href = "href" in top ? top.href : `/narrative/${top.slug}`;
+          const topPage = results.pages[0];
+          const topStory = results.stories[0];
+          const href = topPage ? topPage.href : topStory ? `/narrative/${topStory.slug}` : null;
+          if (!href) return;
           setFocused(false);
           router.push(href);
         }}

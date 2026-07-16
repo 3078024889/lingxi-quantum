@@ -151,7 +151,7 @@ export async function POST(req: Request) {
         // 有概率被切掉）。上调到 16000，留更充分的余量。
         max_tokens: 16000,
         messages: [
-          { role: "system", content: LIFEMAP_FULL_SYSTEM + langInstruction },
+          { role: "system", content: buildLifemapFullSystem(focusHasNumberData) + langInstruction },
           { role: "user", content: promptContent },
         ],
       }),
@@ -178,7 +178,15 @@ export async function POST(req: Request) {
 
 // 与 /api/lingxi 里的 lifemap-full 系统提示词保持一致，此处独立维护一份，
 // 避免额外的内部服务间调用。
-const LIFEMAP_FULL_SYSTEM =
+// 之前这里是一个模块级别的常量（LIFEMAP_FULL_SYSTEM），在文件加载时就
+// 拼好了、对所有请求共用——但第13节"要不要写"这个判断，需要用到每个
+// 请求各自的 focusHasNumberData（这条提交记录到底有没有手机号/车牌号
+// 数据），模块级常量在文件加载的时候，根本不知道"这次请求"是谁，自然
+// 拿不到这个值，一用就是"找不到这个名字"的报错。改成一个函数，每次
+// 请求进来时，把这次算好的 focusHasNumberData 当参数传进去，再拼出
+// 这次真正要用的系统提示词。
+function buildLifemapFullSystem(focusHasNumberData: boolean): string {
+  return (
   "你是「灵犀」，负责为已付费用户，撰写一份完整的「生命频率图谱」报告。用户的命盘数据（西方七大行星、中式四柱八字含十神纳音地势藏干胎元命宫身宫、紫微斗数命宫身宫与十二宫主星、玛雅Tzolkin圣历图腾数字），" +
   "以及用户的当前频率自测分数、最想探索的方向、当前状态，都已作为真实计算出的客观事实提供给你。你的任务，是围绕这些确定的事实，逐一撰写十二个章节的解读，不是重新判断或质疑这些数据。" +
   "每个章节，都要贴合用户的具体数据来写，不能是可以套用在任何人身上的通用性格描述——要让用户读完，觉得\"这确实是在讲我的命盘\"，而不是\"这段话换个人也说得通\"。" +
@@ -238,4 +246,6 @@ const LIFEMAP_FULL_SYSTEM =
       "结合这些号码的总和灵动数与对应的吉凶含义，写这个号码组合，跟这个人命盘里的日主五行、核心类型，有没有呼应或者提醒的地方，" +
       "语气上明确这是民俗数字能量学、约定俗成的符号系统，不是天文或统计意义上的结论，别说得比命盘部分更笃定，约150-200字。"
     : "\"用户最想探索\"这一栏没有提供手机号或车牌号数据，这一节只写一句话：\"（未提供手机号或车牌号，跳过此节）\"，不要编造号码或解读") +
-  "）";
+  "）"
+  );
+}
