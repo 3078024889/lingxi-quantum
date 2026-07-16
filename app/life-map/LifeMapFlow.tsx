@@ -129,7 +129,7 @@ const LOADING_STEPS = [
   { zh: "✨ 排布你的四柱八字与十神", en: "✨ Charting your Four Pillars and Ten Gods" },
   { zh: "✨ 排布你的紫微命盘", en: "✨ Charting your Ziwei Doushu palaces" },
   { zh: "✨ 换算玛雅Tzolkin圣历印记", en: "✨ Converting your Maya Tzolkin day sign" },
-  { zh: "✨ 交叉四套系统，生成你的核心类型", en: "✨ Cross-referencing four systems into your core type" },
+  { zh: "✨ 交叉五套系统，生成你的核心类型", en: "✨ Cross-referencing five systems into your core type" },
 ];
 
 export default function LifeMapFlow() {
@@ -579,10 +579,10 @@ export default function LifeMapFlow() {
               🌌 {t("发现你的生命频率", "Discover Your Life Frequency")}
             </p>
             <h1 className="mx-auto mt-6 max-w-2xl font-display text-4xl font-light leading-tight text-lm2-text sm:text-5xl">
-              <Bi zh="每个人来到这个世界，都携带独特的信息结构。" en="Everyone who arrives in this world carries a unique information structure." />
+              <Bi zh="你携带的，从来不只是一具身体，还有一份只属于你的信息结构。" en="What you carry was never only a body — it is an information structure that belongs to you alone." />
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-9 text-lm2-text-dim">
-              <Bi zh="输入你的基础信息，生成你的专属生命图谱——西方占星、中式八字、紫微斗数、玛雅Tzolkin圣历，四套真实的天文历法系统，同一个人，四种古老的语言。" en="Enter your basic information, and generate a life map that is entirely your own — Western astrology, Chinese Bazi, Ziwei Doushu, and the Maya Tzolkin calendar: four real astronomical and calendrical systems, one person, four ancient languages." />
+              <Bi zh="填入你的出生信息，让西方占星、中式八字、紫微斗数、玛雅Tzolkin圣历、吠陀占星——五套各自独立演化了千年的语言，一起指向同一个人：你。它们不替你做决定，只是把你早已知道、却被日常的噪音盖住的那部分，重新照出来。" en="Enter your birth information, and let five languages — Western astrology, Chinese Bazi, Ziwei Doushu, the Maya Tzolkin calendar, and Vedic astrology, each evolved independently over a thousand years — point at the same person: you. None of them decide for you. They only re-light what you already knew, before the noise of ordinary life covered it over." />
             </p>
             <button
               onClick={goForm}

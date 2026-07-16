@@ -1,0 +1,36 @@
+# 之前项目里没有 .gitignore 文件——如果哪天把这份代码传到 GitHub 之类的
+# 平台，没有这个文件，环境变量（含 PayPal 密钥、Supabase 服务密钥这些）
+# 一旦不小心提交进版本历史，就很难彻底清干净了。这个文件本身不影响你现在
+# 用 zip 包上传部署的流程，纯粹是个安全兜底。
+
+# 依赖
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js 构建产物
+.next/
+out/
+build/
+
+# 环境变量——真正的密钥只应该在 Vercel 项目设置里，不应该出现在代码里
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 编辑器/系统杂项
+.DS_Store
+*.pem
+.vscode/
+.idea/
+
+# Vercel
+.vercel
