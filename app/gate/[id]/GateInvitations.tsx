@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
+import { useLang } from "@/lib/useLang";
 
 function shuffle<T>(pool: T[]): T[] {
   const a = [...pool];
@@ -31,12 +32,9 @@ export default function GateInvitations({
   const [loading, setLoading] = useState(false);
   const [note, setNote] = useState("");
   const [done, setDone] = useState(false);
-
-  const isEn = () =>
-    typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-
+  const isEn = useLang();
   const localFallback = () => {
-    const en = isEn();
+    const en = isEn;
     const base = en && poolEn && poolEn.length ? poolEn : pool;
     return shuffle(base).slice(0, 9);
   };
@@ -45,7 +43,7 @@ export default function GateInvitations({
     if (loading) return;
     setLoading(true);
     setNote("");
-    const en = isEn();
+    const en = isEn;
     try {
       // 取近期记录作为补充语境（登录用户）
       let context = "";
@@ -102,7 +100,7 @@ export default function GateInvitations({
       setInvites(localFallback());
       setDone(true);
       setNote(
-        isEn()
+        isEn
           ? "Connection to the field failed — here is a gentle set for today."
           : "连接场域出错，先为你准备了一组温柔的邀请。"
       );
@@ -135,7 +133,7 @@ export default function GateInvitations({
           value={mood}
           onChange={(e) => setMood(e.target.value)}
           rows={3}
-          placeholder={isEn() ? "e.g. a little tired, something on my mind about work…" : "例如：有点累，心里挂着一件工作上的事……（可留空）"}
+          placeholder={isEn ? "e.g. a little tired, something on my mind about work…" : "例如：有点累，心里挂着一件工作上的事……（可留空）"}
           className="mt-3 w-full resize-none rounded-sm border border-white/15 bg-void-deep px-4 py-3 text-base leading-7 text-bone placeholder:text-bone-dim/40 focus:border-lattice/50 focus:outline-none"
         />
       </div>

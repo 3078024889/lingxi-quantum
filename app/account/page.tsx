@@ -41,14 +41,29 @@ export default async function AccountPage() {
   // 付款完成后要是没跳转成功、或者关掉了标签页，就完全没有入口能再找
   // 回那份报告，只能干着急。这里补上一份列表，直接链到每一份报告。
   let lifeMapReports: { id: string; core_type_name: string | null; created_at: string }[] = [];
+  // 之前只查了 life_map_submissions 这一张表——关系共振图谱用的是另一张
+  // 独立的表（relationship_submissions），场域入口这边完全没去查过，
+  // 所以测完关系共振，账户页里理所当然什么都看不到，不是漏了什么
+  // 判断逻辑，是压根没写查这张表的代码。这里补上，跟生命图谱报告
+  // 用同一套列表样式展示。
+  let relationshipReports: { id: string; name_a: string; name_b: string; created_at: string }[] = [];
   if (user) {
-    const { data: reports } = await supabase
-      .from("life_map_submissions")
-      .select("id, core_type_name, created_at")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(10);
+    const [{ data: reports }, { data: relReports }] = await Promise.all([
+      supabase
+        .from("life_map_submissions")
+        .select("id, core_type_name, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("relationship_submissions")
+        .select("id, name_a, name_b, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+    ]);
     lifeMapReports = reports ?? [];
+    relationshipReports = relReports ?? [];
   }
 
   const nameMap: Record<string, string> = {
@@ -120,6 +135,24 @@ export default async function AccountPage() {
                       title={r.core_type_name}
                       date={new Date(r.created_at).toLocaleDateString()}
                     />
+                  ))}
+                  </div>
+                </div>
+              )}
+
+              {relationshipReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的关系共振图谱" en="My Relationship Resonance Maps" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {relationshipReports.map((r) => (
+                    <Link
+                      key={r.id}
+                      href={`/relationship/full?id=${r.id}`}
+                      className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-5 py-3 transition hover:border-lattice/40"
+                    >
+                      <span className="font-display text-lattice">{r.name_a} × {r.name_b}</span>
+                      <span className="text-xs text-bone-dim">{new Date(r.created_at).toLocaleDateString()}</span>
+                    </Link>
                   ))}
                   </div>
                 </div>

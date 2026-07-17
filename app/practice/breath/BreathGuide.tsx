@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLang } from "@/lib/useLang";
 
 type Phase = { key: "inhale" | "hold" | "exhale"; labelZh: string; labelEn: string; tagZh: string; tagEn: string; seconds: number };
 
@@ -11,9 +12,6 @@ const buildCycle = (count: number): Phase[] => [
   { key: "hold", labelZh: "停顿", labelEn: "Pause", tagZh: "展开", tagEn: "Opening", seconds: count },
 ];
 
-const isEn = () =>
-  typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-
 export default function BreathGuide() {
   const [count, setCount] = useState(4);
   const [running, setRunning] = useState(false);
@@ -23,7 +21,7 @@ export default function BreathGuide() {
 
   const cycle = buildCycle(count);
   const phase = cycle[phaseIdx];
-  const en = isEn();
+  const en = useLang();
 
   useEffect(() => {
     if (!running) return;

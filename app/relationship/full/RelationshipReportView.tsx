@@ -159,9 +159,9 @@ export default function RelationshipReportView({ id }: { id: string }) {
           )}
         </div>
       )}
-      <div className="mt-10 space-y-10">
+      <div className="mt-10 space-y-6">
         {sections.map((content, i) => (
-          <div key={i}>
+          <div key={i} className="bg-void-deep rounded-sm p-6">
             <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
               {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
             </p>
@@ -169,9 +169,11 @@ export default function RelationshipReportView({ id }: { id: string }) {
           </div>
         ))}
       </div>
-      <p className="mt-14 text-center text-sm text-bone-dim/70">
-        <Bi zh="这是一份自我探索与反思的参考，不是关系预言——关系的走向，始终由两个人共同选择。" en="This is a reference for reflection, not a prophecy about your relationship — its course is always shaped by both people, together." />
-      </p>
+      <div className="bg-void-deep mt-8 rounded-sm p-5 text-center">
+        <p className="text-sm text-bone-dim/80">
+          <Bi zh="这是一份自我探索与反思的参考，不是关系预言——关系的走向，始终由两个人共同选择。" en="This is a reference for reflection, not a prophecy about your relationship — its course is always shaped by both people, together." />
+        </p>
+      </div>
     </div>
   );
 }

@@ -3,16 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useLang } from "@/lib/useLang";
 
 type Mode = "signin" | "signup";
-
-const isEn = () =>
-  typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-const t = (zh: string, en: string) => (isEn() ? en : zh);
 
 export default function LoginForm() {
   const router = useRouter();
   const supabase = createClient();
+  const langEn = useLang();
+  const t = (zh: string, en: string) => (langEn ? en : zh);
   const [mode, setMode] = useState<Mode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -124,6 +123,13 @@ export default function LoginForm() {
       </p>
     </div>
   );
+}
+
+// 这个函数是在报错发生的那一刻才被调用的（不是渲染期间），不涉及
+// "语言切换按钮要不要触发重新渲染"这个问题，直接读一次当下的语言
+// 状态就行，不需要用到上面那个响应式的hook。
+function isEn(): boolean {
+  return typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
 }
 
 function translate(msg: string): string {

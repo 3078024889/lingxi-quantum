@@ -3,14 +3,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SpiralField from "@/components/SpiralField";
-
-const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-const t = (zh: string, en: string) => (isEn() ? en : zh);
+import { useLang } from "@/lib/useLang";
 
 type Dream = { id?: string; entry_date?: string; today: string; feeling: string };
 
 export default function DreamConsole() {
   const supabase = createClient();
+  const langEn = useLang();
+  const t = (zh: string, en: string) => (langEn ? en : zh);
   const [dream, setDream] = useState("");
   const [assoc, setAssoc] = useState("");
   const [entries, setEntries] = useState<Dream[]>([]);
@@ -131,7 +131,7 @@ export default function DreamConsole() {
               <details key={e.id || i} open={i === 0} className="lx-entry-accordion group rounded-sm border border-white/10 bg-void-deep">
                 <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4">
                   <span className="font-display text-sm tracking-widest2 text-amber">
-                    {e.entry_date ? new Date(e.entry_date).toLocaleDateString(isEn() ? "en-US" : "zh-CN") : ""}
+                    {e.entry_date ? new Date(e.entry_date).toLocaleDateString(langEn ? "en-US" : "zh-CN") : ""}
                   </span>
                   <span className="text-bone-dim text-xs transition group-open:rotate-180">▾</span>
                 </summary>

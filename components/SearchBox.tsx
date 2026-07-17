@@ -142,17 +142,21 @@ export default function SearchBox({ className = "" }: { className?: string }) {
 
       {focused && q && (
         <div className="sb-panel">
-          {/* 之前"没搜到结果才显示提问灵犀"这个判断，依赖 hasResults——
-             但多维叙事有150多篇故事，每篇的简介都是一整段自由文本，
-             用户搜的词，哪怕跟站内内容毫不相关，也有不小概率恰好在
-             某一篇简介里，撞上一段完全不相关的子串，被误判成"搜到了"，
-             导致提问灵犀这个入口被静默地挡住，这正是搜"完全没有的字词"
-             却始终跳不到提问窗口的真正原因——不是没触发，是被一次
-             不相关的巧合匹配给挡住了。
-             这次改成不再依赖这个可能不准的判断：只要输入框里有内容，
-             提问灵犀这个入口就一直露出来（放在结果列表最下方），不管
-             上面搜没搜到东西，都能直接点进去问，不会再被"看似搜到了、
-             其实文不对题"的情况挡住。 */}
+          {/* 这个"向灵犀提问"入口，这次特意放在结果列表最上方，而不是
+             最下方——如果搜的词命中了好几篇多维叙事（很常见的词，比如
+             "信息"，在150多篇故事的简介里，撞上的概率不低），下面这个
+             面板本身有滚动、有最大高度限制，放在最下面的话，前面结果
+             一多，这个入口就会被挤到要滚动到底才能看到的地方，等于
+             "渲染了，但用户根本看不见、以为它不存在"。挪到最上面，
+             不管上面搜到多少东西，这个入口都保证是打开面板第一眼就
+             看到的内容。 */}
+          <Link
+            href={`/live-as?ask=${encodeURIComponent(q)}`}
+            onClick={() => setFocused(false)}
+            className="sb-ask-link"
+          >
+            <Bi zh={`向灵犀提问「${q}」→`} en={`Ask Lingxi about "${q}" →`} />
+          </Link>
           {!hasResults && (
             <p className="sb-empty">
               <Bi zh="灵犀场里还没有这个" en="Not in the field yet" />
@@ -190,13 +194,6 @@ export default function SearchBox({ className = "" }: { className?: string }) {
               ))}
             </div>
           )}
-          <Link
-            href={`/live-as?ask=${encodeURIComponent(q)}`}
-            onClick={() => setFocused(false)}
-            className="sb-ask-link"
-          >
-            <Bi zh={`没找到想要的？向灵犀提问「${q}」→`} en={`Not what you're after? Ask Lingxi about "${q}" →`} />
-          </Link>
         </div>
       )}
 

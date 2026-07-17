@@ -3,14 +3,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SpiralField from "@/components/SpiralField";
-
-const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-const t = (zh: string, en: string) => (isEn() ? en : zh);
+import { useLang } from "@/lib/useLang";
 
 type Entry = { id?: string; entry_date?: string; today: string; feeling: string };
 
 export default function RealityLoop() {
   const supabase = createClient();
+  const langEn = useLang();
+  const t = (zh: string, en: string) => (langEn ? en : zh);
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [vision, setVision] = useState("");
   const [today, setToday] = useState("");
@@ -215,7 +215,7 @@ export default function RealityLoop() {
                 <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4">
                   <span className="font-display text-sm tracking-widest2 text-amber">
                     {e.entry_date
-                      ? new Date(e.entry_date).toLocaleDateString(isEn() ? "en-US" : "zh-CN")
+                      ? new Date(e.entry_date).toLocaleDateString(langEn ? "en-US" : "zh-CN")
                       : ""}
                   </span>
                   <span className="text-bone-dim text-xs transition group-open:rotate-180">▾</span>
