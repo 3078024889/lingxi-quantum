@@ -1,29 +1,53 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SpiralField from "@/components/SpiralField";
 
-const isEn = () => typeof document !== "undefined" && document.documentElement.classList.contains("lang-en");
-const t = (zh: string, en: string) => (isEn() ? en : zh);
+// 同一个语言切换不生效的bug，同一个修法——见 RelationshipFlow.tsx 里
+// 的详细注释。这个文件之前也是"每次要显示才读一次class"的老写法。
+function useLang() {
+  const [langEn, setLangEn] = useState(false);
+  useEffect(() => {
+    setLangEn(document.documentElement.classList.contains("lang-en"));
+    const observer = new MutationObserver(() => {
+      setLangEn(document.documentElement.classList.contains("lang-en"));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+  return langEn;
+}
 
 type QA = { id?: string; created_at?: string; question: string; answer: string | null };
 
 export default function AskLingxi() {
   const supabase = createClient();
   const searchParams = useSearchParams();
+  const langEn = useLang();
+  const t = (zh: string, en: string) => (langEn ? en : zh);
   const [question, setQuestion] = useState("");
   const [history, setHistory] = useState<QA[]>([]);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   // 搜索框搜不到结果时，会把用户的搜索词带到这里来（?ask=xxx），直接
   // 把这个词填进提问框——用户不需要再手动复制粘贴一遍自己刚才搜的东西。
+  // 之前只做了"把词填进去"这一半——这个板块在页面里的位置，其实在
+  // "签到记录"下面，不滚动屏幕根本看不到，用户从搜索框跳过来，落地
+  // 看到的是页面最上方，会以为"什么都没发生"。这次补上另一半：带着
+  // ?ask= 参数跳过来的时候，自动把页面滚动到这个板块的位置。
   useEffect(() => {
     const fromSearch = searchParams.get("ask");
-    if (fromSearch) setQuestion(fromSearch);
+    if (fromSearch) {
+      setQuestion(fromSearch);
+      requestAnimationFrame(() => {
+        rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
   }, [searchParams]);
 
   const load = useCallback(async () => {
@@ -57,7 +81,7 @@ export default function AskLingxi() {
       const res = await fetch("/api/lingxi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "ask", content: q, lang: isEn() ? "en" : "zh" }),
+        body: JSON.stringify({ mode: "ask", content: q, lang: langEn ? "en" : "zh" }),
       });
       const payload = await res.json();
       if (res.ok && payload.text) {
@@ -86,7 +110,7 @@ export default function AskLingxi() {
   };
 
   return (
-    <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8">
+    <div ref={rootRef} className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8 scroll-mt-24">
       <SpiralField active={sending} label={t("提问正在送入场域……", "Your question is entering the field…")} />
       <p className="font-display text-2xl text-bone">{t("提问灵犀", "Ask Lingxi")}</p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">

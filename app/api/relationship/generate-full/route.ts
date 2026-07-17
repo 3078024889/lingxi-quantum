@@ -112,7 +112,7 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: process.env.ZHIPU_MODEL || "glm-4-plus",
+        model: process.env.ZHIPU_MODEL || "glm-4-flash-250414",
         messages,
         max_tokens: 6000,
         temperature: 0.85,
@@ -125,7 +125,8 @@ export async function POST(req: Request) {
       console.error("[relationship generate-full] AI 回复被 max_tokens 截断，submission id:", body.id);
     }
     if (!text) {
-      return NextResponse.json({ error: "生成失败，请稍后再试。", detail: data }, { status: 502 });
+      console.error("[relationship generate-full] AI 没有返回内容，submission id:", body.id, "AI原始返回:", JSON.stringify(data));
+      return NextResponse.json({ error: "生成失败，请稍后再试。" }, { status: 502 });
     }
 
     const admin = (await import("@/lib/supabase/admin")).createAdminClient();
@@ -139,6 +140,7 @@ export async function POST(req: Request) {
       resonance: { resonant, complementary, friction },
     });
   } catch (e) {
-    return NextResponse.json({ error: "连接场域时出错，请稍后再试。", detail: e instanceof Error ? e.message : String(e) }, { status: 500 });
+    console.error("[relationship generate-full] 出错:", e);
+    return NextResponse.json({ error: "连接场域时出错，请稍后再试。" }, { status: 500 });
   }
 }

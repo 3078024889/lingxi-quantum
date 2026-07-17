@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { Fragment, useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 import NatalChartWheel from "../NatalChartWheel";
@@ -462,18 +462,28 @@ export default function FullReportView({ id }: { id: string }) {
             // 状态的一部分，不能弄丢。
             const isSkippedNumberSection = i === 12 && /未提供手机号或车牌号/.test(content);
             if (isSkippedNumberSection) return null;
+            // 之前图表是嵌在同一个章节div里的——文字+图表加起来一旦超过
+            //一整页高，PDF导出时的切片逻辑会不管三七二十一按像素高度切，
+            // 切到图表中间也不会绕开，这才是"有的图被截断了"的真正原因。
+            // 这次把图表拆成跟文字并列的独立div（用Fragment包起来，
+            // Fragment本身不会产生真实DOM节点，两个div依然是reportRef
+            // 下的直接子节点）——PDF导出是按"每个直接子节点单独截图"来
+            // 做的，图表现在会被单独截一张图，不会再跟着文字一起被从
+            // 中间切开。
             return (
-            <div key={i} className="break-inside-avoid">
+            <Fragment key={i}>
+            <div className="break-inside-avoid">
               <p className="font-display text-xs uppercase tracking-widest2 text-lm2-violet">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
               </p>
               <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{content}</div>
-              {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
-              {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
-              {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
-              {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
-              {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
             </div>
+            {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
+            {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
+            {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
+            {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
+            {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
+            </Fragment>
             );
           })}
         </div>
