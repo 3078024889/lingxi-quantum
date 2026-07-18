@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import Bi from "@/components/Bi";
-import PortalSpinner from "@/components/PortalSpinner";
+import SpiralField from "@/components/SpiralField";
+import TarotCardArt from "@/components/TarotCardArt";
+import { useLang } from "@/lib/useLang";
 import type { TarotCard } from "@/lib/tarot-data";
 
 export default function TarotReveal({ card }: { card: TarotCard }) {
+  const langEn = useLang();
   const [revealing, setRevealing] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
@@ -22,35 +25,35 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
 
   if (!revealed) {
     return (
-      <button
-        onClick={reveal}
-        disabled={revealing}
-        className="lx-tarot-card group relative mx-auto flex h-72 w-48 flex-col items-center justify-center gap-4 rounded-sm border border-lattice/30 bg-void-deep transition hover:border-lattice/60 disabled:cursor-wait"
-      >
-        {revealing ? (
-          <PortalSpinner size="large" />
-        ) : (
-          <>
-            <span className="font-display text-4xl text-lattice/60 transition group-hover:text-lattice">✦</span>
-            <span className="font-display text-xs uppercase tracking-widest2 text-bone-dim">
-              <Bi zh="翻开今日塔罗" en="Reveal Today's Card" />
-            </span>
-          </>
-        )}
-        <style>{`
+      <>
+        <SpiralField active={revealing} label={langEn ? "The card is turning in light…" : "塔罗正在被光翻开……"} />
+        <button
+          onClick={reveal}
+          disabled={revealing}
+          className="lx-tarot-card group relative mx-auto flex h-72 w-48 flex-col items-center justify-center gap-4 rounded-sm border border-lattice/30 bg-void-deep transition hover:border-lattice/60 disabled:cursor-wait"
+        >
+          <span className="font-display text-4xl text-lattice/60 transition group-hover:text-lattice">✦</span>
+          <span className="font-display text-xs uppercase tracking-widest2 text-bone-dim">
+            <Bi zh="翻开今日塔罗" en="Reveal Today's Card" />
+          </span>
+          <style>{`
           .lx-tarot-card { background-image: repeating-linear-gradient(45deg, rgba(199,156,255,0.05) 0 2px, transparent 2px 14px); }
         `}</style>
-      </button>
+        </button>
+      </>
     );
   }
 
   return (
     <div>
-      <div className="lx-tarot-reveal mx-auto flex h-72 w-48 flex-col items-center justify-center gap-3 rounded-sm border border-lattice/40 bg-void-deep p-4 text-center">
-        <span className="font-display text-3xl text-amber">{card.glyph}</span>
-        <p className="font-display text-lg text-bone">
-          <Bi zh={card.nameZh} en={card.nameEn} />
-        </p>
+      <div className="lx-tarot-reveal relative mx-auto h-72 w-48 overflow-hidden rounded-sm border border-lattice/40 bg-void-deep">
+        <TarotCardArt c1={card.theme.c1} c2={card.theme.c2} icon={card.theme.icon} />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void-deep via-void-deep/80 to-transparent px-4 pb-4 pt-10 text-center">
+          <p className="font-display text-sm text-bone-dim">{card.glyph}</p>
+          <p className="font-display text-lg text-bone">
+            <Bi zh={card.nameZh} en={card.nameEn} />
+          </p>
+        </div>
       </div>
 
       <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">

@@ -1,7 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
 // 螺旋黑洞「场」动图：内容被吸入、被光改写。
 // active=true 时显示全屏覆盖的旋涡 + 状态文字。
+//
+// 用 createPortal 直接挂载到 document.body 下——不用 fixed inset-0
+// 直接嵌在调用它的组件原本的位置。原因：CSS 里 position:fixed 的元素，
+// 如果祖先链上有任何一层带 transform/filter/perspective/will-change
+// 这类属性（页面里做动画效果的容器很容易踩上，比如极光背景那几层），
+// fixed 元素就不再是相对"浏览器视口"定位，而是被限制在那个祖先节点
+// 的框里——效果就是这个"全屏"黑洞旋涡，实际只在页面中间一小块区域
+// 里显示，背景其余部分的极光颜色都还亮着，没有真正接管全屏。这个问题
+// 很隐蔽，不好一个个排查是哪层容器造成的，用 Portal 直接跳过整条
+// 祖先链，保证不管这个组件被套在页面多深的位置，都能真正贴边全屏。
 export default function SpiralField({
   active,
   label = "正在送入场……",
@@ -9,8 +22,12 @@ export default function SpiralField({
   active: boolean;
   label?: string;
 }) {
-  if (!active) return null;
-  return (
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!active || !mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-void/85 backdrop-blur-sm">
       <div className="sf-wrap relative h-72 w-72">
         {/* 旋臂 */}
@@ -66,6 +83,7 @@ export default function SpiralField({
           50%     { box-shadow: 0 0 40px 14px rgba(232,183,101,0.9); transform: translate(-50%,-50%) scale(1.6); }
         }
       `}</style>
-    </div>
+    </div>,
+    document.body
   );
 }

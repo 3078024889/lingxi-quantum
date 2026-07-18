@@ -203,28 +203,39 @@ export async function POST(req: Request) {
     // 十二章加起来目标约3500-4200个中文字符，中文在多数模型里的token消耗
     // 明显高于西文，5700很可能不够、导致后面几章被截断——这里给足余量。
     const maxTokens = mode === "lifemap-full" ? 8000 : 1200;
-    const res = await fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-      body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.9,
-        max_tokens: maxTokens,
-        frequency_penalty: 0.4,
-        presence_penalty: 0.3,
-        messages: [
-          { role: "system", content: SYSTEM[systemKey] + langAppend },
-          { role: "user", content: userText },
-        ],
-        // 知识库检索：回答前先从灵犀知识库取相关 Codex 片段
-        tools: [
-          {
-            type: "retrieval",
-            retrieval: { knowledge_id: KNOWLEDGE_ID, prompt_template: PROMPT_TEMPLATE },
-          },
-        ],
-      }),
-    });
+    const callOnce = () =>
+      fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+        body: JSON.stringify({
+          model: MODEL,
+          temperature: 0.9,
+          max_tokens: maxTokens,
+          frequency_penalty: 0.4,
+          presence_penalty: 0.3,
+          messages: [
+            { role: "system", content: SYSTEM[systemKey] + langAppend },
+            { role: "user", content: userText },
+          ],
+          // 知识库检索：回答前先从灵犀知识库取相关 Codex 片段
+          tools: [
+            {
+              type: "retrieval",
+              retrieval: { knowledge_id: KNOWLEDGE_ID, prompt_template: PROMPT_TEMPLATE },
+            },
+          ],
+        }),
+      });
+
+    let res = await callOnce();
+    // 429（限流）大概率是短时间内请求太密集，不是真的坏了——等1.2秒
+    // 再试一次，很大概率就通过了，不用把这种"缓一下就好"的情况，直接
+    // 丢给用户去手动点"稍后再试"。只重试一次，避免真的出问题时卡住
+    // 用户太久。
+    if (res.status === 429) {
+      await new Promise((r) => setTimeout(r, 1200));
+      res = await callOnce();
+    }
 
     if (!res.ok) {
       return NextResponse.json({ error: `场域暂时无法回应（${res.status}），请稍后再试。` }, { status: 502 });

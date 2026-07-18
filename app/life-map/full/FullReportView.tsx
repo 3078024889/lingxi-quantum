@@ -389,7 +389,7 @@ export default function FullReportView({ id }: { id: string }) {
               disabled={downloading}
               className="flex items-center gap-2 rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
             >
-              {downloading ? <><PortalSpinner size="inline" /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载 PDF" en="Download PDF" />}
+              {downloading ? <><PortalSpinner /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载 PDF" en="Download PDF" />}
             </button>
           </div>
         </div>

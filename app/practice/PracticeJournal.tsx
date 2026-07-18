@@ -168,7 +168,7 @@ export default function PracticeJournal() {
           disabled={saving || !content.trim()}
           className="ml-auto flex items-center gap-2 bg-lattice px-8 py-3 font-display text-xs uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          {saving ? <><PortalSpinner size="inline" /><Bi zh="正在记录…" en="Saving…" /></> : <Bi zh="记下这段心得" en="Save this note" />}
+          {saving ? <><PortalSpinner /><Bi zh="正在记录…" en="Saving…" /></> : <Bi zh="记下这段心得" en="Save this note" />}
         </button>
       </div>
 

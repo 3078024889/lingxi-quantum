@@ -237,7 +237,7 @@ export default function ResilienceFlow() {
         disabled={loading || !year || !month || !day}
         className="mt-6 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
       >
-        {loading ? <><PortalSpinner size="inline" /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="测出我的生命韧性指数" en="Get My Resilience Index" />}
+        {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="测出我的生命韧性指数" en="Get My Resilience Index" />}
       </button>
     </div>
   );

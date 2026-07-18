@@ -198,7 +198,7 @@ export default function RelationshipFlow() {
         disabled={submitting}
         className="mt-8 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
       >
-        {submitting ? <><PortalSpinner size="inline" /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh="开始能量交换 · $9.9" en="Begin Energy Exchange · $9.9" />}
+        {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh="开始能量交换 · $9.9" en="Begin Energy Exchange · $9.9" />}
       </button>
       <div className="bg-void-deep mt-3 rounded-sm p-3 text-center">
         <p className="text-xs text-bone-dim/90">

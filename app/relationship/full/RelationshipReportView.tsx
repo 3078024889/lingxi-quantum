@@ -5,6 +5,7 @@ import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { DIM_LABEL, type LifeVector, type LifeVectorDim } from "@/lib/life-vector";
+import SpiralField from "@/components/SpiralField";
 import PortalSpinner from "@/components/PortalSpinner";
 
 // 同一个 bug、同一个修法：见 RelationshipFlow.tsx 里的注释——直接读
@@ -174,7 +175,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
   if (status === "checking" || status === "generating") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <PortalSpinner size="large" label={t("正在读取两份生命向量的共振…", "Reading the resonance between two life vectors…")} />
+        <SpiralField active label={t("正在读取两份生命向量的共振…", "Reading the resonance between two life vectors…")} />
       </div>
     );
   }
@@ -227,7 +228,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           disabled={downloading}
           className="flex items-center gap-2 rounded-sm border border-bone/15 px-4 py-2 text-xs uppercase tracking-widest2 text-bone-dim transition hover:border-lattice hover:text-bone disabled:opacity-50"
         >
-          {downloading ? <><PortalSpinner size="inline" /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载 PDF" en="Download PDF" />}
+          {downloading ? <><PortalSpinner /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载 PDF" en="Download PDF" />}
         </button>
       </div>
       <p className="mt-2 text-xs text-bone-dim/70 print:hidden">
