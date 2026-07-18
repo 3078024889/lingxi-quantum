@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
-import { computeLifeVector, findConflictsWithFallback, topTraits, wealthArchetypes, type LifeVectorDim } from "@/lib/life-vector";
+import { computeLifeVector, findConflictsWithFallback, topTraits, wealthArchetypes, calculateResilience, type LifeVectorDim } from "@/lib/life-vector";
 
 export const runtime = "nodejs";
 
@@ -52,6 +52,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "无权访问这份记录。" }, { status: 403 });
   }
 
+  // 生命韧性指数只依赖 facts 里的命盘数据（不调用AI，不花钱），提前算出来，
+  // 不管命中缓存与否，都能一起返给前端画一个分数展示——不用等到走完
+  // "缓存不完整才重新生成"那一整套判断，才拿得到这个分数。
+  const earlyFacts = submission.facts as Record<string, unknown>;
+  const earlyLifeVector = computeLifeVector({
+    sunElement: earlyFacts.sunElement as any,
+    moonElement: earlyFacts.moonElement as any,
+    mercury: earlyFacts.mercury as any, venus: earlyFacts.venus as any, mars: earlyFacts.mars as any,
+    jupiter: earlyFacts.jupiter as any, saturn: earlyFacts.saturn as any,
+    dayMasterElement: earlyFacts.dayMasterElement as any,
+    wuXingCount: earlyFacts.wuXingCount as any,
+    yearShiShen: earlyFacts.yearShiShen as string, monthShiShen: earlyFacts.monthShiShen as string,
+    hourShiShen: (earlyFacts.hourShiShen as string) ?? null,
+  });
+  const resilience = calculateResilience(earlyLifeVector);
+
   // 已经生成过，直接返回对应语言的缓存内容，不重复调用AI——除非明确要求重新生成
   // （比如内容模板更新了，用户想让已经付费的旧报告，用上新加的章节）。
   //
@@ -64,7 +80,10 @@ export async function POST(req: Request) {
   // 残缺的，直接当成需要重新生成处理，不能原样返回一份有问题的报告。
   const cached = lang === "en" ? submission.full_report_en : submission.full_report;
   const cachedSectionCount = cached ? (cached.match(/===\s*\d+\s*===/g) ?? []).length : 0;
-  const cachedHasCompleteSectionCount = cachedSectionCount >= 13;
+  // 新增第14节「生命韧性指数」之后，一份完整报告要有14个分节标记——
+  // 旧版本（只有13节）的缓存，会被下面这条规则判定为不完整，自动
+  // 重新生成一次，用户借此免费获得新增的韧性指数章节，不需要额外操作。
+  const cachedHasCompleteSectionCount = cachedSectionCount >= 14;
 
   // 光数分节标记不够——还有一种"看起来完整、其实是过期缓存"的情况：
   // 缓存里第13节写的是"未提供手机号或车牌号"，但 submission.focus 里
@@ -85,13 +104,13 @@ export async function POST(req: Request) {
 
   const cachedIsComplete = cachedHasCompleteSectionCount && !cachedSection13IsStaleNoData;
   if (cached && cachedIsComplete && !body.regenerate) {
-    return NextResponse.json({ fullReport: cached });
+    return NextResponse.json({ fullReport: cached, resilienceScore: resilience.score, resilienceBreakdown: resilience.breakdown });
   }
   if (cached && !cachedIsComplete) {
     console.error(
       cachedSection13IsStaleNoData
         ? `[generate-full] 缓存的第13节说"未提供手机号/车牌号"，但 focus 字段里现在确实有这项数据，判定为过期缓存，自动重新生成，submission id:`
-        : `[generate-full] 缓存报告不完整（只有 ${cachedSectionCount}/13 节），自动重新生成，submission id:`,
+        : `[generate-full] 缓存报告不完整（只有 ${cachedSectionCount}/14 节），自动重新生成，submission id:`,
       body.id
     );
   }
@@ -124,16 +143,9 @@ export async function POST(req: Request) {
   // 是"这是你的原始数据，自己去找矛盾"，而是"矛盾已经算出来了，围绕
   // 这几条写"。AI不再负责"发现"，只负责"讲述"，这是这次架构升级的
   // 核心变化。
-  const lifeVector = computeLifeVector({
-    sunElement: facts.sunElement as any,
-    moonElement: facts.moonElement as any,
-    mercury: facts.mercury as any, venus: facts.venus as any, mars: facts.mars as any,
-    jupiter: facts.jupiter as any, saturn: facts.saturn as any,
-    dayMasterElement: facts.dayMasterElement as any,
-    wuXingCount: wx as any,
-    yearShiShen: facts.yearShiShen as string, monthShiShen: facts.monthShiShen as string,
-    hourShiShen: (facts.hourShiShen as string) ?? null,
-  });
+  // lifeVector / resilience 已经在函数上方（缓存判断之前）算好了，这里
+  // 直接复用 earlyLifeVector，不重复计算——两处用的是同一个 facts 来源。
+  const lifeVector = earlyLifeVector;
   const conflicts = findConflictsWithFallback(lifeVector);
   const coreTraits = topTraits(lifeVector, 3);
   const wealthTypes = wealthArchetypes(lifeVector, 2);
@@ -148,7 +160,10 @@ export async function POST(req: Request) {
     `核心特质（按强度排序）：${coreTraits.map((t) => `${t.labelZh}(${t.score})`).join("、")}\n` +
     `内在矛盾（已检测出的核心张力，报告要围绕这个/这些矛盾展开，不要另外自创其他矛盾）：\n` +
     conflicts.map((c) => `- ${c.labelZh}（${DIM_ZH[c.a]} ${lifeVector[c.a]} vs ${DIM_ZH[c.b]} ${lifeVector[c.b]}，张力强度${c.strength}）`).join("\n") + "\n" +
-    `财富来源类型（按匹配度排序，第8章要围绕这个判断展开，不要自己另外分类）：${wealthTypes.map((w) => `${w.labelZh}(匹配度${w.score})`).join("、")}\n`;
+    `财富来源类型（按匹配度排序，第8章要围绕这个判断展开，不要自己另外分类）：${wealthTypes.map((w) => `${w.labelZh}(匹配度${w.score})`).join("、")}\n` +
+    `生命韧性指数（总分，第14章要围绕这个已算好的分数展开，不要自己重新打分）：${resilience.score}/100，子维度：` +
+    (Object.keys(resilience.breakdown) as (keyof typeof resilience.breakdown)[])
+      .map((k) => `${resilience.labels[k].zh}${resilience.breakdown[k]}`).join("、") + "\n";
 
   const promptContent =
     lifeVectorSummary +
@@ -185,7 +200,7 @@ export async function POST(req: Request) {
         // 有概率被切掉）。上调到 16000，留更充分的余量。
         max_tokens: 16000,
         messages: [
-          { role: "system", content: buildLifemapFullSystem(focusHasNumberData) + langInstruction },
+          { role: "system", content: buildLifemapFullSystem(focusHasNumberData, resilience.score) + langInstruction },
           { role: "user", content: promptContent },
         ],
       }),
@@ -204,7 +219,7 @@ export async function POST(req: Request) {
 
     const updateField = lang === "en" ? { full_report_en: text } : { full_report: text };
     await supabase.from("life_map_submissions").update(updateField).eq("id", body.id);
-    return NextResponse.json({ fullReport: text });
+    return NextResponse.json({ fullReport: text, resilienceScore: resilience.score, resilienceBreakdown: resilience.breakdown });
   } catch {
     return NextResponse.json({ error: "连接场域时出错，请稍后再试。" }, { status: 500 });
   }
@@ -219,7 +234,7 @@ export async function POST(req: Request) {
 // 拿不到这个值，一用就是"找不到这个名字"的报错。改成一个函数，每次
 // 请求进来时，把这次算好的 focusHasNumberData 当参数传进去，再拼出
 // 这次真正要用的系统提示词。
-function buildLifemapFullSystem(focusHasNumberData: boolean): string {
+function buildLifemapFullSystem(focusHasNumberData: boolean, resilienceScore: number): string {
   return (
   "你是「灵犀」，负责为已付费用户，撰写一份完整的「生命频率图谱」报告。用户的命盘数据（西方七大行星、中式四柱八字含十神纳音地势藏干胎元命宫身宫、紫微斗数命宫身宫与十二宫主星、玛雅Tzolkin圣历图腾数字），" +
   "以及用户的当前频率自测分数、最想探索的方向、当前状态，都已作为真实计算出的客观事实提供给你。你的任务，是围绕这些确定的事实，逐一撰写十二个章节的解读，不是重新判断或质疑这些数据。" +
@@ -308,6 +323,12 @@ function buildLifemapFullSystem(focusHasNumberData: boolean): string {
       "结合这些号码的总和灵动数与对应的吉凶含义，写这个号码组合，跟这个人命盘里的日主五行、核心类型，有没有呼应或者提醒的地方，" +
       "语气上明确这是民俗数字能量学、约定俗成的符号系统，不是天文或统计意义上的结论，别说得比命盘部分更笃定，约150-200字。"
     : "\"用户最想探索\"这一栏没有提供手机号或车牌号数据，这一节只写一句话：\"（未提供手机号或车牌号，跳过此节）\"，不要编造号码或解读") +
-  "）"
+  "）\n" +
+  "===14===\n（生命韧性指数：【生命向量引擎】已经算出这个人的韧性总分（0-100）与五个子维度分数（压力恢复能力、变化适应能力、危机反弹能力、长期坚持能力、精神稳定能力），" +
+  "你不负责打分，只负责解读这个已经算好的结果。先用一句话点出这个总分意味着什么类型的韧性（不是笼统地说\"你很坚强\"，是具体说这个人的韧性，更偏向\"越挫越强\"、\"扛得住但恢复慢\"、\"表面平稳但容易内耗\"这类更精确的类型判断，" +
+  "判断依据要具体落到五个子维度里哪两三项分数最突出、哪两三项分数偏低，这个组合说明了什么）。" +
+  "然后从五个子维度里，挑分数最高的1-2项和最低的1-2项，各写一小段：最高的那项，具体说这份韧性，会在什么真实场景里，成为这个人的依靠；最低的那项，具体说，什么情况下，这个人的韧性，最容易被打穿或者被消耗。" +
+  "结尾给一句具体的、可操作的提醒——不是\"要多锻炼抗压能力\"这种空话，是结合这个人命盘里已经写过的核心矛盾或财富类型，指出下一次遇到低谷时，具体可以抓住哪一种自己天生就有的资源。" +
+  "绝对不能说\"你命很硬\"\"你命不好\"这类算命断语，也不能预言具体会遇到什么灾难或考验，全程是对一种能力结构的描述，不是吉凶预言，约300-350字）"
   );
 }

@@ -120,10 +120,20 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           // 回车时，直接跳去当前排在最前面的匹配结果（先看页面，没有页面
           // 匹配就看多维叙事），是大多数人对"搜索框+回车"最直觉的预期。
           if (e.key !== "Enter") return;
+          const query = q.trim();
+          if (!query) return;
           const topPage = results.pages[0];
           const topStory = results.stories[0];
-          const href = topPage ? topPage.href : topStory ? `/narrative/${topStory.slug}` : null;
-          if (!href) return;
+          // 之前这里"没有匹配就 return"，等于按回车原地不动——用户输入
+          // 场域里没有的词（比如"命硬吗"），敲回车什么反应都没有，只能
+          // 靠自己发现面板里那条"向灵犀提问"链接、再手动点一下。这不是
+          // 用户预期的"搜不到就自动带我去问灵犀"。这里补上：没有任何
+          // 页面/叙事命中时，回车直接跳转提问灵犀，带上原始查询词。
+          const href = topPage
+            ? topPage.href
+            : topStory
+            ? `/narrative/${topStory.slug}`
+            : `/live-as?ask=${encodeURIComponent(query)}`;
           setFocused(false);
           router.push(href);
         }}

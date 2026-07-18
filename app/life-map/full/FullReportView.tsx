@@ -34,6 +34,7 @@ const SECTION_TITLES = [
   { zh: "专属灵犀练习", en: "A Personal Lingxi Practice" },
   { zh: "前世今生印记 · 纯属脑洞", en: "Past & Future Imprint · Just for Fun" },
   { zh: "数字能量解读（手机号 / 车牌号）", en: "Number Energy Reading (Phone & Plate)" },
+  { zh: "生命韧性指数", en: "Your Life Resilience Index" },
 ];
 
 export default function FullReportView({ id }: { id: string }) {

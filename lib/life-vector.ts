@@ -285,3 +285,52 @@ export function wealthArchetypes(v: LifeVector, n = 2): { type: WealthArchetype;
     .sort((a, b) => b.score - a.score)
     .slice(0, n);
 }
+
+// ────────────────────────────────────────────────────────────────────
+// 生命韧性指数（Life Resilience Index）
+// ────────────────────────────────────────────────────────────────────
+// 跟财富类型、内在矛盾用的是同一套方法论：不是让AI自己判断"这个人命硬
+// 不硬"，是从已经算出来的生命向量里，用固定规则，先算出一个0-100的
+// 确定性分数，AI只负责围绕这个已经算好的分数、和它的五个子维度，写
+// 有画面感的解读——不负责自己评分。
+//
+// 五个子维度，全部由现有十个生命向量维度组合得出，不需要额外向用户
+// 收集新的数据：
+// - 抗压恢复（stressRecovery）：适应弹性高、情感深度不过载，说明遇事
+//   更容易"消化过去、回到状态"，而不是被情绪长期困住
+// - 变化适应（adaptability）：直接复用生命向量里的"适应弹性"维度
+// - 危机反弹（crisisRebound）：风险偏好与野心的组合——愿意冒险、又有
+//   往前冲的驱动力，遇到低谷时更容易主动寻找下一个突破口，而不是原地等待
+// - 长期坚持（persistence）：秩序纪律与野心的组合——既有执行力、又有
+//   想要达成的目标，是"能不能扛住一件事的长期消耗"的底层支撑
+// - 精神稳定（emotionalStability）：情感深度不过载、内省倾向高——情绪
+//   有出口、且有自我觉察能力，不容易被情绪本身反噬
+export type ResilienceDim = "stressRecovery" | "adaptability" | "crisisRebound" | "persistence" | "emotionalStability";
+export type ResilienceBreakdown = Record<ResilienceDim, number>;
+
+const RESILIENCE_LABEL: Record<ResilienceDim, { zh: string; en: string }> = {
+  stressRecovery: { zh: "压力恢复能力", en: "Stress Recovery" },
+  adaptability: { zh: "变化适应能力", en: "Adaptability" },
+  crisisRebound: { zh: "危机反弹能力", en: "Crisis Rebound" },
+  persistence: { zh: "长期坚持能力", en: "Persistence" },
+  emotionalStability: { zh: "精神稳定能力", en: "Emotional Stability" },
+};
+
+export function calculateResilience(v: LifeVector): { score: number; breakdown: ResilienceBreakdown; labels: typeof RESILIENCE_LABEL } {
+  const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
+  const breakdown: ResilienceBreakdown = {
+    stressRecovery: clamp(v.adaptability * 0.6 + (100 - v.emotionalDepth) * 0.4),
+    adaptability: clamp(v.adaptability),
+    crisisRebound: clamp(v.riskTolerance * 0.5 + v.ambition * 0.5),
+    persistence: clamp(v.discipline * 0.5 + v.ambition * 0.5),
+    emotionalStability: clamp((100 - v.emotionalDepth) * 0.5 + v.introspection * 0.5),
+  };
+  const score = clamp(
+    breakdown.stressRecovery * 0.25 +
+    breakdown.adaptability * 0.2 +
+    breakdown.crisisRebound * 0.15 +
+    breakdown.persistence * 0.25 +
+    breakdown.emotionalStability * 0.15
+  );
+  return { score, breakdown, labels: RESILIENCE_LABEL };
+}
