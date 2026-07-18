@@ -35,6 +35,10 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "practice-ascending-heart", title: "上升心经", titleEn: "Ascending Heart Sutra", href: "/practice/ascending-heart" },
   { slug: "account", title: "场域入口", titleEn: "Field Entrance", href: "/account" },
   { slug: "relationship", title: "关系共振图谱", titleEn: "Relationship Resonance Map", href: "/relationship" },
+  // 用户很可能搜的是"命硬吗""命硬不硬"这类口语，不是"生命韧性指数"这个
+  // 正式产品名——之前这类搜索就是你说的"搜不到"的典型例子，这里把口语
+  // 说法也写进标题里，搜索是简单的字符串匹配，标题里出现过的词才搜得到。
+  { slug: "resilience", title: "生命韧性指数 · 命硬不硬测试", titleEn: "Life Resilience Index", href: "/resilience" },
 ];
 
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的

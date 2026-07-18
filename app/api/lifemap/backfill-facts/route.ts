@@ -54,7 +54,12 @@ export async function POST(req: Request) {
   try {
     const usedHour = typeof birthInput.hour === "number" ? birthInput.hour : 12;
     const usedMinute = typeof birthInput.minute === "number" ? birthInput.minute : 0;
-    const birthUTC = new Date(Date.UTC(birthInput.year, birthInput.month - 1, birthInput.day, usedHour, usedMinute));
+    // 同一个陷阱、同一处修法，见 lib/lifemap-calc.ts 顶部的详细注释——
+    // Date.UTC() 对0-99之间的年份会自动当成19xx年，这里也是独立构造
+    // 的Date，一并修掉。
+    const birthUTC = new Date(0);
+    birthUTC.setUTCFullYear(birthInput.year, birthInput.month - 1, birthInput.day);
+    birthUTC.setUTCHours(usedHour, usedMinute, 0, 0);
     const humanDesign = computeHumanDesign(birthUTC);
     const newFacts = { ...facts, humanDesign };
 

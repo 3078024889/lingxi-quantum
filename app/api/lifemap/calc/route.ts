@@ -57,7 +57,12 @@ export async function POST(req: Request) {
     // 需要另一套已验证的完整对照表才能算准，还没接入，先不给结论。
     let humanDesign = null;
     try {
-      const birthUTC = new Date(Date.UTC(year, month - 1, day, usedHour, typeof minute === "number" ? minute : 0));
+      // 同 lib/lifemap-calc.ts 里那处一样的陷阱：Date.UTC() 对0-99之间的
+      // 年份会自动当成19xx年，这里单独构造了一次Date，之前漏改了，
+      // 顺手一起修掉，用setUTCFullYear()避免这个陷阱。
+      const birthUTC = new Date(0);
+      birthUTC.setUTCFullYear(year, month - 1, day);
+      birthUTC.setUTCHours(usedHour, typeof minute === "number" ? minute : 0, 0, 0);
       humanDesign = computeHumanDesign(birthUTC);
     } catch {
       humanDesign = null;

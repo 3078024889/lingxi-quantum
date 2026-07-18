@@ -25,15 +25,15 @@ const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
 const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon?: boolean }[] = [
   { href: "/life-map", zh: "生命图谱", en: "Life Map", rune: "mandala" },
   { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
+  { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", rune: "crystal" },
   { href: "#", zh: "桃花测试", en: "Romance Timing", rune: "crescent", soon: true },
-  { href: "#", zh: "命硬不硬", en: "Life Resilience", rune: "crystal", soon: true },
 ];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [testsOpen, setTestsOpen] = useState(false);
   const pathname = usePathname();
-  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship");
+  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience");
 
   return (
     <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">
