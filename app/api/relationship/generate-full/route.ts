@@ -134,6 +134,17 @@ export async function POST(req: Request) {
         presence_penalty: 0.3,
       }),
     });
+    // 之前这里没有检查 res.ok 就直接 await res.json()——如果智谱接口本身
+    // 拒绝了这次请求（比如请求体里混入了异常数值，返回4xx/5xx错误），
+    // data 长得和"AI正常返回但没写内容"几乎一样（都没有 choices 字段），
+    // 两种完全不同的失败原因，会被这里的代码当成同一种情况处理，用户
+        // 看到的都是"生成失败，请稍后再试"，没法区分。这里把这两种情况
+    // 分开记录到日志里，方便以后真出问题时能一眼看出是哪一种。
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error("[relationship generate-full] 智谱接口返回非200状态:", res.status, errBody, "submission id:", body.id);
+      return NextResponse.json({ error: "灵犀场暂时无法回应，请稍后再试。" }, { status: 502 });
+    }
     const data = await res.json();
     const rawText = data?.choices?.[0]?.message?.content as string | undefined;
     const text = rawText ? stripMarkdownArtifacts(rawText) : rawText;

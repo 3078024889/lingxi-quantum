@@ -82,7 +82,20 @@ function planet(body: string, date: Date): PlanetPlacement {
 
 export function computeLifeMapFacts(b: BirthInput): LifeMapFacts {
   // ---- 西方：真实天文黄道经度（太阳、月亮 + 五大行星）----
-  const date = new Date(Date.UTC(b.year, b.month - 1, b.day, b.hour, b.minute));
+  // 这里原来写的是 new Date(Date.UTC(b.year, ...))——JS 的 Date.UTC()
+  // 对 0-99 之间的年份，有一个几乎所有人都会踩一次的经典陷阱：会自动
+  // 当成"19xx年"处理（Date.UTC(12,...) 实际生成的是 1912 年，不是
+  // 字面意义的公元12年）。这个陷阱只影响这一处西方天文计算，下面的
+  // 中式八字/紫微部分用的是 lunar-javascript / iztro，直接传数字年份，
+  // 不会被这个陷阱影响——两套系统对同一个"12年"的理解会因此完全不
+  // 一致（西方部分算的是1912年的星盘，中式部分算的是真实公元12年的
+  // 八字），这才是"填12年，结果不对"背后真正的原因，不是系统故意
+  // 要求年份必须以19开头。
+  // 修法：用 setUTCFullYear() 显式设置年份——这个方法不会做0-99的
+  // 特殊处理，传12就是公元12年，两套系统就能真正算的是同一个年份了。
+  const date = new Date(0);
+  date.setUTCFullYear(b.year, b.month - 1, b.day);
+  date.setUTCHours(b.hour, b.minute, 0, 0);
   const sunLon = Astronomy.SunPosition(date).elon;
   const moonLon = Astronomy.EclipticGeoMoon(date).lon;
   const sunIdx = Math.floor(((sunLon % 360) + 360) % 360 / 30);

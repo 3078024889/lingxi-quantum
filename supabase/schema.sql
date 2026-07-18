@@ -126,6 +126,21 @@ drop policy if exists "own relationship submissions" on public.relationship_subm
 create policy "own relationship submissions" on public.relationship_submissions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+-- 4d) 修炼心得记录——用户日常修炼（量子息法/直觉丹道/归零心诀/上升心经，
+--     或不归于某一项练习的一般心得）的私人笔记，纯粹是"我的记录"，
+--     不调用AI、不生成任何解读，只是替代手机备忘录的一个更贴合场域视觉的地方。
+create table if not exists public.practice_journal_entries (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  practice text,               -- 'breath' | 'intuition' | 'heart-reset' | 'ascending-heart' | null（不归于某一项具体练习）
+  content text not null,
+  created_at timestamptz default now()
+);
+alter table public.practice_journal_entries enable row level security;
+drop policy if exists "own practice journal entries" on public.practice_journal_entries;
+create policy "own practice journal entries" on public.practice_journal_entries
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 

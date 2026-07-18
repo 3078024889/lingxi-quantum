@@ -31,11 +31,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "请填写两个人的姓名和出生信息。" }, { status: 400 });
   }
   for (const p of [a, b]) {
+    // 这条校验本身范围很宽——1年到今年都能通过，不是"必须1900年以后"
+    // 这种限制。之前"填12年，结果不对"的真正原因，出在下面
+    // computeLifeMapFacts() 内部一个JS Date对象的经典陷阱（0-99之间的
+    // 年份会被自动当成19xx年处理），已经在 lib/lifemap-calc.ts 里修好了，
+    // 不是这里的范围判断需要收紧或放宽。
     if (
       typeof p.year !== "number" || typeof p.month !== "number" || typeof p.day !== "number" ||
       p.year < 1 || p.year > 2026 || p.month < 1 || p.month > 12 || p.day < 1 || p.day > 31
     ) {
-      return NextResponse.json({ error: "出生日期无效。" }, { status: 400 });
+      return NextResponse.json({ error: "出生日期无效，请检查年月日是否都填写了完整的数字。" }, { status: 400 });
     }
   }
 

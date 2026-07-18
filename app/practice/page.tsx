@@ -3,6 +3,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import GateOrigin from "@/components/gates/GateOrigin";
 import Bi from "@/components/Bi";
+import PracticeJournal from "./PracticeJournal";
 
 export const metadata = { title: "修炼技术 | 灵犀 · Practices | Lingxi", description: "四项意识修炼技术：量子息法、直觉丹道、归零心诀、上升心经，各自成径，也可合一深入。Four consciousness practices — the Quantum Breath Method, the Intuitive Way, Heart Reset, and the Ascending Heart Sutra — each a complete path on its own.", alternates: { canonical: "/practice" } };
 
@@ -49,22 +50,28 @@ export default function PracticeIndex() {
         </section>
 
         <section className="px-6 pb-28">
-          <div className="mx-auto grid max-w-4xl gap-6 sm:grid-cols-2">
-            {practices.map((p) => (
-              <Link
-                key={p.href}
-                href={p.href}
-                className="group rounded-sm border border-white/10 bg-void-deep p-8 transition hover:border-lattice/40"
-              >
-                <h2 className="font-display text-2xl text-bone group-hover:text-lattice">
-                  <Bi zh={p.name} en={p.nameEn} />
-                </h2>
-                <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh={p.line} en={p.lineEn} /></p>
-                <span className="mt-5 inline-block font-display text-xs uppercase tracking-widest2 text-lattice/70">
-                  <Bi zh="进入 →" en="Enter →" />
-                </span>
-              </Link>
-            ))}
+          <div className="mx-auto max-w-4xl">
+            <div className="grid gap-6 sm:grid-cols-2">
+              {practices.map((p) => (
+                <Link
+                  key={p.href}
+                  href={p.href}
+                  className="group rounded-sm border border-white/10 bg-void-deep p-8 transition hover:border-lattice/40"
+                >
+                  <h2 className="font-display text-2xl text-bone group-hover:text-lattice">
+                    <Bi zh={p.name} en={p.nameEn} />
+                  </h2>
+                  <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh={p.line} en={p.lineEn} /></p>
+                  <span className="mt-5 inline-block font-display text-xs uppercase tracking-widest2 text-lattice/70">
+                    <Bi zh="进入 →" en="Enter →" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-10">
+              <PracticeJournal />
+            </div>
           </div>
         </section>
       </main>
