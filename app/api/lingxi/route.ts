@@ -4,10 +4,20 @@ import { stripMarkdownArtifacts } from "@/lib/text-clean";
 export const runtime = "nodejs";
 
 const ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
-// 文本模型：flash档速度快但在长文本/严格格式指令上容易出问题（结构性
-// 重复、markdown符号漏改），换成质量更高的 plus 档；ZHIPU_MODEL 环境
-// 变量仍可覆盖，不用改代码就能切换。
-const MODEL = process.env.ZHIPU_MODEL || "glm-4-plus";
+// 这个接口覆盖的都是高频调用的免费功能（签到解读、解梦、提问灵犀、
+// 生命图谱的免费预览）——每次签到、每次解梦都会调一次，量比付费报告
+// 大得多。之前把默认模型从flash换成plus，是为了解决生命图谱/关系
+// 共振那两份付费报告的重复+格式问题，但这个接口本身的调用频率
+// 完全不是一个量级，用plus档在这里，很容易先把限流额度用在这些
+// 免费高频调用上，反而让真正要生成付费报告的时候撞上限流。
+// 换回 flash 档——智谱官方说明这个档位是"永久免费，只受并发数限制"，
+// 免费额度明显比plus这类进阶档位宽松得多，更适合这种高频场景。
+// 质量层面，防重复采样参数、格式规则、markdown兜底清理、解析容错
+// 这几处独立加固（v168-v169做的）都还在，不是回到只靠模型本身的状态。
+// 用单独的 ZHIPU_MODEL_LIGHT 这个环境变量名（不是 ZHIPU_MODEL），
+// 这样以后想单独调整这个接口的模型档位，不会跟付费报告那两个接口
+// 共用的 ZHIPU_MODEL_FULL 互相影响。
+const MODEL = process.env.ZHIPU_MODEL_LIGHT || "glm-4-flash-250414";
 // 灵犀知识库（站点资料）
 const KNOWLEDGE_ID = process.env.ZHIPU_KNOWLEDGE_ID || "2071126362659377152";
 

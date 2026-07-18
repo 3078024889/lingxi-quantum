@@ -199,10 +199,13 @@ export async function POST(req: Request) {
         // 明显力不从心：实测输出里出现过大段一字不差的重复段落、以及
         // markdown星号符号没有按要求去掉，这两个问题的根源大概率就是
         // 模型档位本身扛不住这么复杂的指令，不是提示词没写对。
-        // 换成 glm-4-plus（智谱的旗舰文本档），同时保留 ZHIPU_MODEL 环境
-        // 变量可以覆盖——如果之后想再往上换到 glm-4.6 / glm-5.1 这类更新
-        // 的档位，不用改代码，部署环境变量里改一下就行。
-        model: process.env.ZHIPU_MODEL || "glm-4-plus",
+        // 换成 glm-4-plus（智谱的旗舰文本档）。这两份付费报告的生成
+        // 接口调用频率天然就低（一次购买生成一次，之后走缓存），用
+        // 更贵、限流额度更紧的plus档没问题；跟高频调用的免费接口
+        // （app/api/lingxi/route.ts）分开用不同的环境变量名
+        // （ZHIPU_MODEL_FULL，不是ZHIPU_MODEL_LIGHT），以后想单独
+        // 调整某一边的模型档位，不会互相影响。
+        model: process.env.ZHIPU_MODEL_FULL || "glm-4-plus",
         temperature: 0.85,
         // frequency_penalty：对已经出现过的词/短语，降低模型再次选用的
         // 概率，专门针对"整段一字不差重复"这类问题；presence_penalty：

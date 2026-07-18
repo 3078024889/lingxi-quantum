@@ -123,10 +123,10 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        // 同 lifemap 报告：flash档扛不住这种长文本+严格格式的复杂指令，
-        // 换成 plus 档，理由见 app/api/lifemap/generate-full/route.ts 里
-        // 同一处的详细注释。
-        model: process.env.ZHIPU_MODEL || "glm-4-plus",
+        // 同 lifemap 报告：跟高频免费接口分开用独立的环境变量名
+        // （ZHIPU_MODEL_FULL），理由见 app/api/lifemap/generate-full/
+        // route.ts 里同一处的详细注释。
+        model: process.env.ZHIPU_MODEL_FULL || "glm-4-plus",
         messages,
         max_tokens: 6000,
         temperature: 0.85,
