@@ -23,6 +23,7 @@ export default function PracticeIndex() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-35">
             <GateOrigin className="h-[440px] w-[440px]" />
           </div>
+          <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="修炼技术" en="Practices" />
           </p>
@@ -47,6 +48,7 @@ export default function PracticeIndex() {
           <p className="mx-auto mt-4 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi zh="解锁的其他早已存在的能力，会随之显现——你只是忆起了自己。" en="Other abilities, already within you, appear in turn — you are only remembering yourself." />
           </p>
+          </div>
         </section>
 
         <section className="px-6 pb-28">

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
+import PortalSpinner from "@/components/PortalSpinner";
 
 type PracticeKey = "breath" | "intuition" | "heart-reset" | "ascending-heart" | "";
 
@@ -42,12 +43,13 @@ export default function PracticeJournal() {
       return;
     }
     setAuthed(true);
-    const { data } = await supabase
+    const { data, error: err } = await supabase
       .from("practice_journal_entries")
       .select("id, practice, content, created_at")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(200);
+    if (err) console.error("[PracticeJournal] 读取历史记录失败，Supabase 原始错误:", err);
     if (data) setEntries(data as Entry[]);
     setLoading(false);
   }, [supabase]);
@@ -74,7 +76,21 @@ export default function PracticeJournal() {
       .single();
     setSaving(false);
     if (err || !data) {
-      setError(t("记录失败，请稍后再试。", "Couldn't save — please try again."));
+      // 把真实错误打到控制台——"记录失败，请稍后再试"这句话本身，
+      // 之前完全没有区分"网络抖动"和"这张表在数据库里根本还没建出来"
+      // 这两种情况，导致这条反馈完全没法用来定位问题。
+      console.error("[PracticeJournal] 保存失败，Supabase 原始错误:", err);
+      if (err?.code === "42P01") {
+        // Postgres错误码 42P01 = relation does not exist，这是最可能的
+        // 原因：新表还没在 Supabase 项目里建出来（需要在 Supabase 的
+        // SQL Editor 里重新跑一次 supabase/schema.sql）。
+        setError(t(
+          "记录失败：数据库里还没有这张表。需要在 Supabase 后台的 SQL Editor 里，重新运行一次 schema.sql 这个文件（不会影响已有数据），建出 practice_journal_entries 这张表。",
+          "Save failed: this table doesn't exist in the database yet. Re-run supabase/schema.sql in the Supabase SQL Editor (this won't affect existing data) to create the practice_journal_entries table."
+        ));
+      } else {
+        setError(t("记录失败，请稍后再试。", "Couldn't save — please try again."));
+      }
       return;
     }
     setEntries((prev) => [data as Entry, ...prev]);
@@ -150,9 +166,9 @@ export default function PracticeJournal() {
         <button
           onClick={save}
           disabled={saving || !content.trim()}
-          className="ml-auto bg-lattice px-8 py-3 font-display text-xs uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+          className="ml-auto flex items-center gap-2 bg-lattice px-8 py-3 font-display text-xs uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          {saving ? <Bi zh="正在记录…" en="Saving…" /> : <Bi zh="记下这段心得" en="Save this note" />}
+          {saving ? <><PortalSpinner size="inline" /><Bi zh="正在记录…" en="Saving…" /></> : <Bi zh="记下这段心得" en="Save this note" />}
         </button>
       </div>
 

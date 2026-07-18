@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
+import PortalSpinner from "@/components/PortalSpinner";
 
 type Result = {
   score: number;
@@ -111,9 +112,11 @@ export default function ResilienceFlow() {
 
     return (
       <div className="mx-auto max-w-xl px-6 py-16">
-        <p className="text-center font-display text-sm uppercase tracking-widest2 text-lattice/80">
-          <Bi zh="灵犀 · 生命韧性指数" en="Lingxi · Life Resilience Index" />
-        </p>
+        <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+            <Bi zh="灵犀 · 生命韧性指数" en="Lingxi · Life Resilience Index" />
+          </p>
+        </div>
 
         <div className="mt-8 flex flex-col items-center rounded-sm border border-white/10 bg-void-deep p-8">
           <svg viewBox="0 0 180 180" className="w-44" style={{ filter: "drop-shadow(0 0 14px rgba(199,156,255,0.45))" }}>
@@ -178,29 +181,33 @@ export default function ResilienceFlow() {
           </a>
         </div>
 
-        <p className="mt-6 text-center text-xs text-bone-dim/60">
-          <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
-        </p>
+        <div className="mt-6 rounded-sm border border-white/10 bg-void-deep px-6 py-3 text-center">
+          <p className="text-xs text-bone-dim/60">
+            <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">
-      <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-        <Bi zh="灵犀 · 生命韧性指数" en="Lingxi · Life Resilience Index" />
-      </p>
-      <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-        <Bi zh="遇到低谷，你的系统是怎么把你接住的？" en="When things get hard, how does your system catch you?" />
-      </h1>
-      <p className="mt-4 text-base leading-8 text-bone-dim">
-        <Bi
-          zh="不是问你「命硬不硬」。是从你的真实命盘数据里，算出五项确定性的分数——压力恢复、变化适应、危机反弹、长期坚持、精神稳定——看看你的韧性，具体是哪种类型。免费、即时、不需要登录。"
-          en={'Not asking whether you\'re "built tough." We compute five deterministic scores from your real chart data — stress recovery, adaptability, crisis rebound, persistence, emotional stability — to show exactly what kind of resilience you have. Free, instant, no sign-in needed.'}
-        />
-      </p>
+      <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <Bi zh="灵犀 · 生命韧性指数" en="Lingxi · Life Resilience Index" />
+        </p>
+        <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
+          <Bi zh="遇到低谷，你的系统是怎么把你接住的？" en="When things get hard, how does your system catch you?" />
+        </h1>
+        <p className="mt-4 text-base leading-8 text-bone-dim">
+          <Bi
+            zh="不是问你「命硬不硬」。是从你的真实命盘数据里，算出五项确定性的分数——压力恢复、变化适应、危机反弹、长期坚持、精神稳定——看看你的韧性，具体是哪种类型。免费、即时、不需要登录。"
+            en={'Not asking whether you\'re "built tough." We compute five deterministic scores from your real chart data — stress recovery, adaptability, crisis rebound, persistence, emotional stability — to show exactly what kind of resilience you have. Free, instant, no sign-in needed.'}
+          />
+        </p>
+      </div>
 
-      <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6">
+      <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">
         <p className="text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -228,9 +235,9 @@ export default function ResilienceFlow() {
       <button
         onClick={submit}
         disabled={loading || !year || !month || !day}
-        className="mt-6 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+        className="mt-6 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
       >
-        {loading ? <Bi zh="正在计算…" en="Calculating…" /> : <Bi zh="测出我的生命韧性指数" en="Get My Resilience Index" />}
+        {loading ? <><PortalSpinner size="inline" /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="测出我的生命韧性指数" en="Get My Resilience Index" />}
       </button>
     </div>
   );

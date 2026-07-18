@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/membership",
     // 这三个是"场域精测"产品页——之前一直没被收进sitemap，对搜索引擎
     // 来说等于不存在，跟"要方便浏览器检索引流"这条需求是矛盾的，顺手补上。
-    "/life-map", "/relationship", "/resilience",
+    "/life-map", "/relationship", "/resilience", "/romance",
   ];
   const now = new Date();
   return routes.map((r) => ({

@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
+import PortalSpinner from "@/components/PortalSpinner";
 import NatalChartWheel from "../NatalChartWheel";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
@@ -386,9 +387,9 @@ export default function FullReportView({ id }: { id: string }) {
             <button
               onClick={downloadPdf}
               disabled={downloading}
-              className="rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
+              className="flex items-center gap-2 rounded-sm border border-lm2-text/15 px-4 py-2 text-xs uppercase tracking-widest2 text-lm2-text-dim transition hover:border-lm2-violet hover:text-lm2-text disabled:opacity-50"
             >
-              {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
+              {downloading ? <><PortalSpinner size="inline" /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载 PDF" en="Download PDF" />}
             </button>
           </div>
         </div>
