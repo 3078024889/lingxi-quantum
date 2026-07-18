@@ -27,13 +27,15 @@ const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon
   { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", rune: "crystal" },
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", rune: "crescent" },
+  { href: "/daily", zh: "今日运势", en: "Daily Horoscope", rune: "mandala" },
+  { href: "/tarot", zh: "今日塔罗", en: "Tarot of the Day", rune: "twin" },
 ];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [testsOpen, setTestsOpen] = useState(false);
   const pathname = usePathname();
-  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance");
+  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/daily") || pathname?.startsWith("/tarot");
 
   return (
     <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">

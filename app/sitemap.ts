@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { NARRATIVES } from "@/lib/narratives";
+import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
 
 const SITE = "https://lingxifield.com";
 
@@ -21,7 +22,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/membership",
     // 这三个是"场域精测"产品页——之前一直没被收进sitemap，对搜索引擎
     // 来说等于不存在，跟"要方便浏览器检索引流"这条需求是矛盾的，顺手补上。
-    "/life-map", "/relationship", "/resilience", "/romance",
+    "/life-map", "/relationship", "/resilience", "/romance", "/daily", "/tarot",
+    // 十二星座各自的每日运势页——每一个都对应"今天XX座运势"这种真实
+    // 高搜索量的查询意图，单独收录进sitemap，而不是只收一个/daily
+    // 入口，更容易被搜索引擎索引到具体星座的那个词。
+    ...ZODIAC_SIGNS.map((s) => `/daily/${s.slug}`),
   ];
   const now = new Date();
   return routes.map((r) => ({

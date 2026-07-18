@@ -24,6 +24,15 @@ const SIGNS = ["白羊", "金牛", "双子", "巨蟹", "狮子", "处女", "天�
 const SIGNS_EN = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"] as const;
 const SIGN_ELEMENT: WesternElement[] = ["fire", "earth", "air", "water", "fire", "earth", "air", "water", "fire", "earth", "air", "water"];
 
+// 十二星座的完整列表（slug用于URL，比如 /daily/aries）——每日运势
+// 页面的选择器和路由都要用到这份数据，直接导出，不在别处重复定义。
+export const ZODIAC_SIGNS = SIGNS_EN.map((en, i) => ({
+  slug: en.toLowerCase(),
+  zh: SIGNS[i], en,
+  element: SIGN_ELEMENT[i],
+  glyph: ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"][i],
+}));
+
 // 天干 → 五行（日主五行由日柱天干决定，这是四柱八字的标准算法）
 const GAN_ELEMENT: Record<string, ChineseElement> = {
   "甲": "wood", "乙": "wood",
@@ -71,6 +80,14 @@ export type LifeMapFacts = {
   wuXingCount: Record<ChineseElement, number>;
   vedic: VedicChart;
 };
+
+// 黄经度数（0-360）→ 星座——每日运势模块要用同一套换算，不重复定义
+// 一份星座数组，直接导出这个函数。
+export function signFromLongitude(lon: number): { signZh: string; signEn: string; element: WesternElement } {
+  const norm = ((lon % 360) + 360) % 360;
+  const idx = Math.floor(norm / 30);
+  return { signZh: SIGNS[idx], signEn: SIGNS_EN[idx], element: SIGN_ELEMENT[idx] };
+}
 
 function planet(body: string, date: Date): PlanetPlacement {
   const vec = Astronomy.GeoVector(body as Astronomy.Body, date, false);

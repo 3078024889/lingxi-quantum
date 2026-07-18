@@ -40,6 +40,8 @@ const STATIC_PAGES: StaticEntry[] = [
   // 说法也写进标题里，搜索是简单的字符串匹配，标题里出现过的词才搜得到。
   { slug: "resilience", title: "生命韧性指数 · 命硬不硬测试", titleEn: "Life Resilience Index", href: "/resilience" },
   { slug: "romance", title: "桃花磁场测试 · 桃花运", titleEn: "Romance Magnetism Index", href: "/romance" },
+  { slug: "daily", title: "今日运势 · 每日星座运势", titleEn: "Daily Horoscope", href: "/daily" },
+  { slug: "tarot", title: "今日塔罗 · 每日一卡", titleEn: "Tarot Card of the Day", href: "/tarot" },
 ];
 
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的
