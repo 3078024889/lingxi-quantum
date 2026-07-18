@@ -6,6 +6,7 @@ import LoginForm from "./LoginForm";
 import SignOutButton from "./SignOutButton";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
+import RelationshipReportRow from "./RelationshipReportRow";
 import ReportRow from "./ReportRow";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
@@ -145,14 +146,12 @@ export default async function AccountPage() {
                   <p className="px-1 text-sm text-bone-dim"><Bi zh="我的关系共振图谱" en="My Relationship Resonance Maps" /></p>
                   <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
                   {relationshipReports.map((r) => (
-                    <Link
+                    <RelationshipReportRow
                       key={r.id}
-                      href={`/relationship/full?id=${r.id}`}
-                      className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-5 py-3 transition hover:border-lattice/40"
-                    >
-                      <span className="font-display text-lattice">{r.name_a} × {r.name_b}</span>
-                      <span className="text-xs text-bone-dim">{new Date(r.created_at).toLocaleDateString()}</span>
-                    </Link>
+                      id={r.id}
+                      title={`${r.name_a} × ${r.name_b}`}
+                      date={new Date(r.created_at).toLocaleDateString()}
+                    />
                   ))}
                   </div>
                 </div>

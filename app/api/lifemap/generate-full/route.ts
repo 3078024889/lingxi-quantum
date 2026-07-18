@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { computeLifeVector, findConflictsWithFallback, topTraits, wealthArchetypes, calculateResilience, type LifeVectorDim } from "@/lib/life-vector";
+import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 export const runtime = "nodejs";
 
@@ -193,8 +194,22 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
       body: JSON.stringify({
-        model: process.env.ZHIPU_MODEL || "glm-4-flash-250414",
+        // 之前默认用的 glm-4-flash 是速度优先的轻量档模型——在这种要求
+        // 十四个章节、6000+字系统提示词、严格反重复规则的长文本任务上，
+        // 明显力不从心：实测输出里出现过大段一字不差的重复段落、以及
+        // markdown星号符号没有按要求去掉，这两个问题的根源大概率就是
+        // 模型档位本身扛不住这么复杂的指令，不是提示词没写对。
+        // 换成 glm-4-plus（智谱的旗舰文本档），同时保留 ZHIPU_MODEL 环境
+        // 变量可以覆盖——如果之后想再往上换到 glm-4.6 / glm-5.1 这类更新
+        // 的档位，不用改代码，部署环境变量里改一下就行。
+        model: process.env.ZHIPU_MODEL || "glm-4-plus",
         temperature: 0.85,
+        // frequency_penalty：对已经出现过的词/短语，降低模型再次选用的
+        // 概率，专门针对"整段一字不差重复"这类问题；presence_penalty：
+        // 鼓励引入没提过的新内容，两者都是标准OpenAI兼容参数，智谱的
+        // 接口走的就是OpenAI兼容协议，可以放心传。
+        frequency_penalty: 0.4,
+        presence_penalty: 0.3,
         // 12000 在实测中偶尔还是不够（AI 输出长度本身有一定随机性，赶上
         // 写得比较详细的一次，12个段落写完就已经很接近上限，第13节还是
         // 有概率被切掉）。上调到 16000，留更充分的余量。
@@ -206,7 +221,9 @@ export async function POST(req: Request) {
       }),
     });
     const data = await res.json();
-    const text = data?.choices?.[0]?.message?.content?.trim();
+    const rawText = data?.choices?.[0]?.message?.content?.trim();
+    // 兜底清理：去掉AI偶尔漏改的markdown星号，见 lib/text-clean.ts 顶部注释。
+    const text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
     const finishReason = data?.choices?.[0]?.finish_reason;
     if (finishReason === "length") {
       // 回复被 max_tokens 截断了——留个日志，下次再出现"报告缺了最后一节"
@@ -271,6 +288,9 @@ function buildLifemapFullSystem(focusHasNumberData: boolean, resilienceScore: nu
   "\"需要你去克服和面对\"\"蕴含着希望和机遇，需要你去发掘和把握\"这类结尾——这种句子唯一的作用是\"让段落看起来结束了\"，没有传递任何这段话之前没说过的具体信息。" +
   "每一段的最后一句，要么是这段分析里最尖锐、最值得记住的那个判断的浓缩，要么干脆就让段落停在前一句具体的描述上，不需要每段都刻意补一句总结。" +
   "每一句判断，都要具体到，只有掌握了这份命盘的这几个数据点，才写得出来，而不是通用的星座/生肖/性格测试式描述。" +
+  "【格式规则，必须遵守】全文只能是纯文字段落，绝对不能使用任何markdown语法——不能出现**加粗**、#标题、-或*开头的列表符号，这些符号不会被界面正确渲染，会以原始符号的样子直接展示给用户，非常影响观感。" +
+  "【绝对不能出现的最严重错误——逐字重复】同一句话、同一个段落，绝对不能在文中出现两次或以上，哪怕是在不同章节里。" +
+  "写完每一段之前，回想一下前面是不是已经写过几乎一样的话，如果是，必须换一种全新的表达或者直接跳过，不能原样再写一遍——这比\"句式相似\"更严重，是绝对不能触碰的底线。" +
   "【防止结构性重复——这条非常重要】不要在多个段落里，反复套用同一个句式骨架——比如\"然而，X也代表了/象征着…你可能会在不知不觉中…这可能会让你在…方面遇到挑战\"这种结构，" +
   "如果在解读七大行星、四柱、十二宫这类需要连续写多段类似结构内容的部分，每一段都用这个骨架，读起来会像模板套壳、内容在变句子结构没变。每一段都要换一种全新的句式和展开方式，不能有两段的骨架是相似的。" +
   "同样，不要在不同章节里，反复搬出同一小撮数据点当\"论据\"——比如写完第1章（七大行星）后，第6、7、8、9章又把\"太阳水瓶、月亮巨蟹、金星摩羯\"这几项原样重新罗列一遍再重复一次已经说过的结论，" +

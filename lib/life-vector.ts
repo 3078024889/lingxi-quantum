@@ -241,7 +241,7 @@ export function compareLifeVectors(vA: LifeVector, vB: LifeVector) {
 
 // 找出向量里分数最高的几个维度，作为"核心特质"——报告方法论第一步
 // 要用到的"贯穿全篇的主干"
-const DIM_LABEL: Record<LifeVectorDim, { zh: string; en: string }> = {
+export const DIM_LABEL: Record<LifeVectorDim, { zh: string; en: string }> = {
   freedomNeed: { zh: "自由需求", en: "need for freedom" },
   stabilityNeed: { zh: "稳定需求", en: "need for stability" },
   creativity: { zh: "创造倾向", en: "creative drive" },

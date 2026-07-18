@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { computeLifeVector, compareLifeVectors, findConflictsWithFallback, topTraits } from "@/lib/life-vector";
+import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 export const runtime = "nodejs";
 const ZHIPU_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
   const { resonant, complementary, friction } = compareLifeVectors(vA, vB);
 
   if (cached && !body.regenerate) {
-    return NextResponse.json({ fullReport: cached, resonance: { resonant, complementary, friction } });
+    return NextResponse.json({ fullReport: cached, resonance: { resonant, complementary, friction }, vectors: { a: vA, b: vB } });
   }
 
   const key = process.env.ZHIPU_API_KEY;
@@ -99,6 +100,8 @@ export async function POST(req: Request) {
     "每一段都要交叉引用双方的具体数据点，写出\"这两个人放在一起，会发生什么\"，而不是先写一段A的性格、再写一段B的性格，两段中间没有真正的互动分析。" +
     "绝对不能写\"你们需要多沟通\"\"要互相理解\"这类适用于任何两个人的空话——每一条建议，都要具体到，是因为这两个人这组特定的共鸣/互补/摩擦，才需要这样做。" +
     "少用\"可能\"\"也许\"\"通常\"这类模糊限定词——连续使用会让整段话读起来像是在猜测、不敢断言，灵犀的语气是清楚地指出观察到的模式，不是小心翼翼地打太极。一段话里，这类词最多出现一次。" +
+    "【格式规则，必须遵守】全文只能是纯文字段落，绝对不能使用任何markdown语法——不能出现**加粗**、#标题、-或*开头的列表符号，这些符号不会被界面正确渲染，会以原始符号的样子直接展示给用户。" +
+    "【绝对不能出现的最严重错误——逐字重复】同一句话、同一个段落，绝对不能在文中出现两次或以上，哪怕是在不同章节里。写完每一段之前，回想一下前面是不是已经写过几乎一样的话，如果是，必须换一种表达或者直接跳过。" +
     "严格按以下格式输出，五个章节之间，各用一行「===数字===」分隔（数字从1到5），不要添加任何其他标题、开场白或结语：\n" +
     "===1===\n（吸引来源：这两个人之间，最初的吸引/连接，最可能来自哪里——具体到是共鸣点的哪一项，或者互补点的哪一组，让两人有一种\"对上了\"的感觉，约250-300字）\n" +
     "===2===\n（关系动力：日常相处里，两人各自扮演什么角色，谁更倾向推动/谁更倾向稳定，这种动力模式会怎样具体地体现在日常互动里，约300-350字）\n" +
@@ -120,14 +123,20 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: process.env.ZHIPU_MODEL || "glm-4-flash-250414",
+        // 同 lifemap 报告：flash档扛不住这种长文本+严格格式的复杂指令，
+        // 换成 plus 档，理由见 app/api/lifemap/generate-full/route.ts 里
+        // 同一处的详细注释。
+        model: process.env.ZHIPU_MODEL || "glm-4-plus",
         messages,
         max_tokens: 6000,
         temperature: 0.85,
+        frequency_penalty: 0.4,
+        presence_penalty: 0.3,
       }),
     });
     const data = await res.json();
-    const text = data?.choices?.[0]?.message?.content as string | undefined;
+    const rawText = data?.choices?.[0]?.message?.content as string | undefined;
+    const text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
     const finishReason = data?.choices?.[0]?.finish_reason;
     if (finishReason === "length") {
       console.error("[relationship generate-full] AI 回复被 max_tokens 截断，submission id:", body.id);
@@ -146,6 +155,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       fullReport: text,
       resonance: { resonant, complementary, friction },
+      vectors: { a: vA, b: vB },
     });
   } catch (e) {
     console.error("[relationship generate-full] 出错:", e);

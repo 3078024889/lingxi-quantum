@@ -4,6 +4,7 @@ import { Fragment, useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 import NatalChartWheel from "../NatalChartWheel";
+import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
 type HumanDesignResult = { personality: GateActivation[]; design: GateActivation[]; sunConsciousGate: number; sunUnconsciousGate: number };
@@ -131,14 +132,27 @@ export default function FullReportView({ id }: { id: string }) {
       // 花钱之后反而在完整报告里找不到了。这里用跟免费预览完全一样的
       // 解析逻辑，把这段内容也摆进完整报告。
       if (submission?.free_narrative) {
-        const parts = (submission.free_narrative as string).split(/\n\s*\n/).map((s: string) => s.trim()).filter(Boolean);
+        // 兜底清理一层：老数据可能是在"禁止markdown"这条规则加上去之前
+        // 生成的，先把星号这类符号清掉，再按分隔符切——不然带着"**"的
+        // 原始文本会直接进到下面的split逻辑里，切出来的每一段都可能
+        // 带着多余符号。
+        const cleanedNarrative = stripMarkdownArtifacts(submission.free_narrative as string);
+        const parts = cleanedNarrative.split(/\n\s*\n/).map((s: string) => s.trim()).filter(Boolean);
         const echoText = parts[0] || "";
-        const [stageName, stageDesc] = (parts[1] || "").split("|").map((s) => s?.trim());
-        const keywordParts = (parts[2] || "").split("|").map((s) => s.trim()).filter(Boolean);
-        const keywords = keywordParts.map((kp) => {
-          const [w, d] = kp.split(",").map((s) => s?.trim());
-          return { word: w || "", desc: d || "" };
-        });
+        // 阶段名称/说明、关键词这两段，格式要求AI用半角竖线 | 分隔——但
+        // 万一AI偶尔用了全角竖线｜或者顿号，原来的写法会直接切失败。
+        // 这里统一先把常见的全角变体换成约定好的半角符号，再切分。
+        const normalizeDelims = (s: string) => s.replace(/[｜]/g, "|").replace(/[，、]/g, ",");
+        const [stageName, stageDesc] = normalizeDelims(parts[1] || "").split("|").map((s) => s?.trim());
+        const keywordParts = normalizeDelims(parts[2] || "").split("|").map((s) => s.trim()).filter(Boolean);
+        // 一个正常的关键词条目切开之后应该是"词,说明"两段——如果AI没按
+        // 格式写（比如整段话里根本没有逗号，或者被切出三段以上），
+        // 就说明这一条不是有效的关键词，直接丢弃，而不是把一整句话
+        // 硬塞进"关键词"这个框里显示给用户看。
+        const keywords = keywordParts
+          .map((kp) => kp.split(",").map((s) => s?.trim()).filter(Boolean))
+          .filter((pair) => pair.length === 2 && pair[0].length <= 8)
+          .map(([w, d]) => ({ word: w, desc: d }));
         setFreePreview({ echoText, stageName: stageName || "", stageDesc: stageDesc || "", keywords });
       }
 
@@ -477,7 +491,7 @@ export default function FullReportView({ id }: { id: string }) {
               <p className="font-display text-xs uppercase tracking-widest2 text-lm2-violet">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
               </p>
-              <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{content}</div>
+              <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{stripMarkdownArtifacts(content)}</div>
             </div>
             {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
             {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}

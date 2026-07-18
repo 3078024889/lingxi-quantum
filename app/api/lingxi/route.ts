@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
+import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 export const runtime = "nodejs";
 
 const ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
-// 文本模型：默认免费、稳定支持知识库检索；可用环境变量切到 glm-4.7-flash
-const MODEL = process.env.ZHIPU_MODEL || "glm-4-flash-250414";
+// 文本模型：flash档速度快但在长文本/严格格式指令上容易出问题（结构性
+// 重复、markdown符号漏改），换成质量更高的 plus 档；ZHIPU_MODEL 环境
+// 变量仍可覆盖，不用改代码就能切换。
+const MODEL = process.env.ZHIPU_MODEL || "glm-4-plus";
 // 灵犀知识库（站点资料）
 const KNOWLEDGE_ID = process.env.ZHIPU_KNOWLEDGE_ID || "2071126362659377152";
 
@@ -84,6 +87,14 @@ const SYSTEM: Record<string, string> = {
     "绝对不能出现的表达：断言式的命运预言（\"你将会\u2026\"\"你注定\u2026\"）、具体的财务或婚姻承诺、诊断性的心理健康判断。" +
     "可以出现的表达：观察性的、邀请自我觉察式的语言（\"你可能，正在\u2026\"\"值得留意的是\u2026\"）。" +
     "语气真诚、克制、有文学质感，避免鸡汤式的空洞肯定语。" +
+    "【格式规则，必须严格遵守，界面会按这个格式直接解析，一旦格式不对，用户看到的内容会错乱】" +
+    "全文只能是纯文字，绝对不能出现markdown语法——不能有**加粗**、#标题、-或*开头的列表符号。" +
+    "第三段的关键词部分，必须严格是「关键词1,说明1|关键词2,说明2|关键词3,说明3」这一行文字，用英文竖线 | 分隔三组，每组内部用中文逗号分隔关键词和说明——" +
+    "【非常重要】上面「关键词1」「说明1」「关键词2」这些字样，只是在告诉你这个位置该填什么类型的内容，不是要你原样抄写的文字——" +
+    "绝对不能把\"关键词1\"\"关键词2\"\"关键词3\"这几个字本身，当成你写的关键词，必须替换成你为这个人真正想出来的、有具体内容的词，比如\"内在求索\"\"平衡创造\"这种，不能是\"关键词1\"这种占位符字面。" +
+    "举一个完整的正确范例（内容仅供参考格式，不要套用其中的具体措辞）：\"内在求索,持续向内挖掘自我认知|平衡创造,在冲动与谨慎间找到落点|实践落地,把抽象构想变成看得见的结果\"——" +
+    "每组只能有一个逗号、不能再分成第三段文字，说明部分控制在12字以内，不能是一整句带句号的长句。" +
+    "不能写成编号列表、不能加粗关键词、不能在关键词或说明文字里再包含逗号或竖线这两个符号本身（换一种说法来表达，避免用到这两个符号）。" +
     "严格按以下格式输出，三段之间用两个换行分隔，不要加任何标题、编号或额外说明文字：\n" +
     "第一段：呼应核心类型、并带入至少一到两个其他数据点的解读（约100-140字）\n" +
     "第二段：格式为「阶段名称|阶段说明」，阶段说明约60-90字\n" +
@@ -199,6 +210,8 @@ export async function POST(req: Request) {
         model: MODEL,
         temperature: 0.9,
         max_tokens: maxTokens,
+        frequency_penalty: 0.4,
+        presence_penalty: 0.3,
         messages: [
           { role: "system", content: SYSTEM[systemKey] + langAppend },
           { role: "user", content: userText },
@@ -234,7 +247,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "邀请生成失败。" }, { status: 502 });
     }
 
-    return NextResponse.json({ text });
+    return NextResponse.json({ text: stripMarkdownArtifacts(text) });
   } catch {
     return NextResponse.json({ error: "连接场域时出错，请稍后再试。" }, { status: 502 });
   }

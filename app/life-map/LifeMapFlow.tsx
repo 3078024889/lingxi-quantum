@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import LifeMapCompass from "./LifeMapCompass";
 import NatalChartWheel from "./NatalChartWheel";
 import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
+import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 type Stage = "landing" | "form" | "loading" | "report";
 
@@ -555,14 +556,15 @@ export default function LifeMapFlow() {
   // ---------- 解析灵犀返回的三段式正文 ----------
   const parsed = (() => {
     if (!report) return null;
-    const parts = report.narrative.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+    const parts = stripMarkdownArtifacts(report.narrative).split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
     const echoText = parts[0] || "";
-    const [stageName, stageDesc] = (parts[1] || "").split("|").map((s) => s?.trim());
-    const keywordParts = (parts[2] || "").split("|").map((s) => s.trim()).filter(Boolean);
-    const keywords = keywordParts.map((kp) => {
-      const [w, d] = kp.split(",").map((s) => s?.trim());
-      return { word: w || "", desc: d || "" };
-    });
+    const normalizeDelims = (s: string) => s.replace(/[｜]/g, "|").replace(/[，、]/g, ",");
+    const [stageName, stageDesc] = normalizeDelims(parts[1] || "").split("|").map((s) => s?.trim());
+    const keywordParts = normalizeDelims(parts[2] || "").split("|").map((s) => s.trim()).filter(Boolean);
+    const keywords = keywordParts
+      .map((kp) => kp.split(",").map((s) => s?.trim()).filter(Boolean))
+      .filter((pair) => pair.length === 2 && pair[0].length <= 8)
+      .map(([w, d]) => ({ word: w, desc: d }));
     return { echoText, stageName: stageName || "", stageDesc: stageDesc || "", keywords };
   })();
 
