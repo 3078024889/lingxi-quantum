@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { computeLifeVector, findConflictsWithFallback, topTraits, wealthArchetypes, calculateResilience, type LifeVectorDim } from "@/lib/life-vector";
+import { calculateRomance } from "@/lib/romance-calc";
+
+const ROMANCE_STYLE_LABEL: Record<string, string> = {
+  independent: "独立探索型", magnetic: "磁场吸引型", devoted: "深度专一型", gentle: "温和亲和型",
+};
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 export const runtime = "nodejs";
@@ -68,6 +73,13 @@ export async function POST(req: Request) {
     hourShiShen: (earlyFacts.hourShiShen as string) ?? null,
   });
   const resilience = calculateResilience(earlyLifeVector);
+  // 桃花磁场指数——跟韧性指数同一个原则，纯计算不调用AI，四柱数据
+  // 从 earlyFacts 里取（跟独立的 /api/romance/calc 用的是同一套
+  // calculateRomance() 逻辑，不是另外发明一套）。
+  const romance = calculateRomance(earlyLifeVector, {
+    yearPillar: earlyFacts.yearPillar as string, monthPillar: earlyFacts.monthPillar as string,
+    dayPillar: earlyFacts.dayPillar as string, hourPillar: (earlyFacts.hourPillar as string) ?? null,
+  });
 
   // 已经生成过，直接返回对应语言的缓存内容，不重复调用AI——除非明确要求重新生成
   // （比如内容模板更新了，用户想让已经付费的旧报告，用上新加的章节）。
@@ -84,7 +96,7 @@ export async function POST(req: Request) {
   // 新增第14节「生命韧性指数」之后，一份完整报告要有14个分节标记——
   // 旧版本（只有13节）的缓存，会被下面这条规则判定为不完整，自动
   // 重新生成一次，用户借此免费获得新增的韧性指数章节，不需要额外操作。
-  const cachedHasCompleteSectionCount = cachedSectionCount >= 14;
+  const cachedHasCompleteSectionCount = cachedSectionCount >= 15;
 
   // 光数分节标记不够——还有一种"看起来完整、其实是过期缓存"的情况：
   // 缓存里第13节写的是"未提供手机号或车牌号"，但 submission.focus 里
@@ -105,13 +117,13 @@ export async function POST(req: Request) {
 
   const cachedIsComplete = cachedHasCompleteSectionCount && !cachedSection13IsStaleNoData;
   if (cached && cachedIsComplete && !body.regenerate) {
-    return NextResponse.json({ fullReport: cached, resilienceScore: resilience.score, resilienceBreakdown: resilience.breakdown });
+    return NextResponse.json({ fullReport: cached, resilienceScore: resilience.score, resilienceBreakdown: resilience.breakdown, romanceScore: romance.score, romanceStyle: romance.style, hasTaoHua: romance.taoHua.hasTaoHua });
   }
   if (cached && !cachedIsComplete) {
     console.error(
       cachedSection13IsStaleNoData
         ? `[generate-full] 缓存的第13节说"未提供手机号/车牌号"，但 focus 字段里现在确实有这项数据，判定为过期缓存，自动重新生成，submission id:`
-        : `[generate-full] 缓存报告不完整（只有 ${cachedSectionCount}/14 节），自动重新生成，submission id:`,
+        : `[generate-full] 缓存报告不完整（只有 ${cachedSectionCount}/15 节），自动重新生成，submission id:`,
       body.id
     );
   }
@@ -164,7 +176,9 @@ export async function POST(req: Request) {
     `财富来源类型（按匹配度排序，第8章要围绕这个判断展开，不要自己另外分类）：${wealthTypes.map((w) => `${w.labelZh}(匹配度${w.score})`).join("、")}\n` +
     `生命韧性指数（总分，第14章要围绕这个已算好的分数展开，不要自己重新打分）：${resilience.score}/100，子维度：` +
     (Object.keys(resilience.breakdown) as (keyof typeof resilience.breakdown)[])
-      .map((k) => `${resilience.labels[k].zh}${resilience.breakdown[k]}`).join("、") + "\n";
+      .map((k) => `${resilience.labels[k].zh}${resilience.breakdown[k]}`).join("、") + "\n" +
+    `桃花磁场指数（总分，第15章要围绕这个已算好的分数和吸引力风格展开，不要自己重新打分或另外分类）：${romance.score}/100，吸引力风格：${ROMANCE_STYLE_LABEL[romance.style]}` +
+    (romance.taoHua.hasTaoHua ? `，命盘${romance.taoHua.foundIn.join("、")}带传统命理"桃花"地支（${romance.taoHua.taohuaBranch}）` : "，命盘未见传统命理桃花地支") + "\n";
 
   const promptContent =
     lifeVectorSummary +
@@ -225,7 +239,7 @@ export async function POST(req: Request) {
           // 有概率被切掉）。上调到 16000，留更充分的余量。
           max_tokens: 16000,
           messages: [
-            { role: "system", content: buildLifemapFullSystem(focusHasNumberData, resilience.score) + langInstruction },
+            { role: "system", content: buildLifemapFullSystem(focusHasNumberData, resilience.score, romance.score, ROMANCE_STYLE_LABEL[romance.style]) + langInstruction },
             { role: "user", content: promptContent },
           ],
         }),
@@ -254,7 +268,7 @@ export async function POST(req: Request) {
 
     const updateField = lang === "en" ? { full_report_en: text } : { full_report: text };
     await supabase.from("life_map_submissions").update(updateField).eq("id", body.id);
-    return NextResponse.json({ fullReport: text, resilienceScore: resilience.score, resilienceBreakdown: resilience.breakdown });
+    return NextResponse.json({ fullReport: text, resilienceScore: resilience.score, resilienceBreakdown: resilience.breakdown, romanceScore: romance.score, romanceStyle: romance.style, hasTaoHua: romance.taoHua.hasTaoHua });
   } catch {
     return NextResponse.json({ error: "连接场域时出错，请稍后再试。" }, { status: 500 });
   }
@@ -269,7 +283,7 @@ export async function POST(req: Request) {
 // 拿不到这个值，一用就是"找不到这个名字"的报错。改成一个函数，每次
 // 请求进来时，把这次算好的 focusHasNumberData 当参数传进去，再拼出
 // 这次真正要用的系统提示词。
-function buildLifemapFullSystem(focusHasNumberData: boolean, resilienceScore: number): string {
+function buildLifemapFullSystem(focusHasNumberData: boolean, resilienceScore: number, romanceScore: number, romanceStyleLabel: string): string {
   return (
   "【你是谁，在用什么姿态说话——这段定调，比后面任何一条具体规则都重要】" +
   "把自己想象成一位真正看过成千上万张命盘的引导者——不是在完成一份\"写作任务\"，是坐在这个人对面，" +
@@ -373,6 +387,13 @@ function buildLifemapFullSystem(focusHasNumberData: boolean, resilienceScore: nu
   "判断依据要具体落到五个子维度里哪两三项分数最突出、哪两三项分数偏低，这个组合说明了什么）。" +
   "然后从五个子维度里，挑分数最高的1-2项和最低的1-2项，各写一小段：最高的那项，具体说这份韧性，会在什么真实场景里，成为这个人的依靠；最低的那项，具体说，什么情况下，这个人的韧性，最容易被打穿或者被消耗。" +
   "结尾给一句具体的、可操作的提醒——不是\"要多锻炼抗压能力\"这种空话，是结合这个人命盘里已经写过的核心矛盾或财富类型，指出下一次遇到低谷时，具体可以抓住哪一种自己天生就有的资源。" +
-  "绝对不能说\"你命很硬\"\"你命不好\"这类算命断语，也不能预言具体会遇到什么灾难或考验，全程是对一种能力结构的描述，不是吉凶预言，约300-350字）"
+  "绝对不能说\"你命很硬\"\"你命不好\"这类算命断语，也不能预言具体会遇到什么灾难或考验，全程是对一种能力结构的描述，不是吉凶预言，约300-350字）\n" +
+  "===15===\n（桃花磁场地图：【生命向量引擎+传统命理桃花规则】已经算出这个人的桃花磁场总分（0-100）、吸引力风格类型（" + romanceStyleLabel + "），" +
+  "你不负责打分或分类，只负责围绕这个已经算好的结果写解读。这一节要具体回答四件事，各写一小段，不要写成四个孤立的小标题，要写成一段连贯、有画面感的解读：" +
+  "（1）这个人的吸引力，具体是怎么被别人感知到的——不是抽象地说\"有魅力\"，是说在什么样的真实互动场景里，别人会开始注意到这个人；" +
+  "（2）这种吸引力风格，容易吸引来什么类型的关系或什么类型的人，又容易在什么情况下，把不适合的人也一并吸引过来；" +
+  "（3）这个人在感情/人际关系里，最容易被忽略的一个盲区是什么——要具体到一个真实场景，不是空泛地说\"要多沟通\"；" +
+  "（4）如果命盘里带传统命理的桃花地支，要提一句这意味着人际吸引力天生更容易被外界看见，但不能说成\"桃花运旺\"这种算命断语，也不能预言具体会遇到什么人或什么时候脱单；如果命盘没有，不用刻意提这件事，不用说\"没有桃花\"这种听起来像缺憾的话。" +
+  "全篇不能出现\"魅力四射\"\"异性缘好\"这类空洞套话，每一句判断都要能看出是从这个人具体的生命向量数据里得出来的，换一个人就说不出这句话，约300-350字）"
   );
 }

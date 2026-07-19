@@ -37,6 +37,7 @@ const SECTION_TITLES = [
   { zh: "前世今生印记 · 纯属脑洞", en: "Past & Future Imprint · Just for Fun" },
   { zh: "数字能量解读（手机号 / 车牌号）", en: "Number Energy Reading (Phone & Plate)" },
   { zh: "生命韧性指数", en: "Your Life Resilience Index" },
+  { zh: "桃花磁场地图", en: "Your Romance Magnetism Map" },
 ];
 
 export default function FullReportView({ id }: { id: string }) {
@@ -152,7 +153,16 @@ export default function FullReportView({ id }: { id: string }) {
         // 硬塞进"关键词"这个框里显示给用户看。
         const keywords = keywordParts
           .map((kp) => kp.split(",").map((s) => s?.trim()).filter(Boolean))
-          .filter((pair) => pair.length === 2 && pair[0].length <= 8)
+          .filter((pair) => {
+            if (pair.length !== 2 || pair[0].length > 8) return false;
+            // 兜底：AI有小概率把提示词里给它看的占位符（"关键词1""说明1"
+            // 这种字样）原样抄回来，当成真实内容——这种情况，词本身很短，
+            // 能通过上面的长度校验，骗不过去，得单独用正则抓出来剔除。
+            // 长度校验防的是"AI把整句话当关键词"，这条防的是"AI把占位符
+            // 当关键词"，两种不同的失败模式，得分开防。
+            if (/^【?关键词\s*\d/.test(pair[0]) || /^说明\s*\d/.test(pair[1])) return false;
+            return true;
+          })
           .map(([w, d]) => ({ word: w, desc: d }));
         setFreePreview({ echoText, stageName: stageName || "", stageDesc: stageDesc || "", keywords });
       }

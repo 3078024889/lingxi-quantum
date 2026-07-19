@@ -563,7 +563,14 @@ export default function LifeMapFlow() {
     const keywordParts = normalizeDelims(parts[2] || "").split("|").map((s) => s.trim()).filter(Boolean);
     const keywords = keywordParts
       .map((kp) => kp.split(",").map((s) => s?.trim()).filter(Boolean))
-      .filter((pair) => pair.length === 2 && pair[0].length <= 8)
+      .filter((pair) => {
+        if (pair.length !== 2 || pair[0].length > 8) return false;
+        // 兜底：AI有小概率把提示词里给它看的占位符（"关键词1""说明1"
+        // 这种字样）原样抄回来，当成真实内容——这种情况词本身很短，
+        // 能通过长度校验，得单独用正则抓出来剔除。
+        if (/^【?关键词\s*\d/.test(pair[0]) || /^说明\s*\d/.test(pair[1])) return false;
+        return true;
+      })
       .map(([w, d]) => ({ word: w, desc: d }));
     return { echoText, stageName: stageName || "", stageDesc: stageDesc || "", keywords };
   })();
