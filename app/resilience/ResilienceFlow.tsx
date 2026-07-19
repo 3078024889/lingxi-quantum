@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
+import WhyTrustLingxi from "@/components/WhyTrustLingxi";
 
 type Result = {
   score: number;
@@ -166,11 +167,13 @@ export default function ResilienceFlow() {
           <p className="mt-2 text-base leading-8 text-bone-dim">{t(DIM_LOW[weakest].zh, DIM_LOW[weakest].en)}</p>
         </div>
 
+        <WhyTrustLingxi />
+
         <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
           <p className="text-sm leading-7 text-bone-dim">
             <Bi
-              zh="这个分数，只是你完整生命图谱里的一个章节。财富模式、关系模式、内在矛盾——完整报告里都有，交叉引用同一份命盘算出来的所有维度。"
-              en="This score is one chapter of your full Life Map. Wealth patterns, relationship patterns, inner conflicts — the full report cross-references every dimension computed from the same chart."
+              zh="这五个维度的分数，是从你完整命盘里，只抽出跟「韧性」相关的这一部分。同一份命盘还能算出：你的财富来源类型是哪一种、你在亲密关系里的核心矛盾是什么、你的桃花磁场和吸引力风格——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
+              en="These five scores are pulled from just one slice of your full chart — the resilience-related part. The same chart also determines your wealth archetype, the core tension in your close relationships, and your romance magnetism — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
             />
           </p>
           <a

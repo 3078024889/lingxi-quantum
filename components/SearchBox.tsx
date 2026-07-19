@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
-import SpiralField from "@/components/SpiralField";
 
 /* 场域搜索 · 导航搜索框
  * 特点：
@@ -60,7 +59,6 @@ export default function SearchBox({ className = "" }: { className?: string }) {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [focused, setFocused] = useState(false);
-  const [searching, setSearching] = useState(false);
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const [hintIdx, setHintIdx] = useState(0);
   const seq = useRef(0);
@@ -115,7 +113,6 @@ export default function SearchBox({ className = "" }: { className?: string }) {
       {ripples.map((r) => (
         <span key={r.id} className="sb-ripple" style={{ left: r.x, top: r.y }} />
       ))}
-      <SpiralField active={searching} label={isEn ? "Searching the field…" : "正在场域中搜寻……"} />
       <svg className="sb-icon" viewBox="0 0 20 20" fill="none">
         <circle cx="8.5" cy="8.5" r="6" stroke="currentColor" strokeWidth="1.4" />
         <path d="M13 13L17.5 17.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
@@ -131,7 +128,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           // 匹配就看多维叙事），是大多数人对"搜索框+回车"最直觉的预期。
           if (e.key !== "Enter") return;
           const query = q.trim();
-          if (!query || searching) return;
+          if (!query) return;
           const topPage = results.pages[0];
           const topStory = results.stories[0];
           // 之前这里"没有匹配就 return"，等于按回车原地不动——用户输入
@@ -145,15 +142,11 @@ export default function SearchBox({ className = "" }: { className?: string }) {
             ? `/narrative/${topStory.slug}`
             : `/live-as?ask=${encodeURIComponent(query)}`;
           setFocused(false);
-          // 之前是回车立刻跳转，页面切换几乎是瞬间的，"进入场域"这个
-          // 动作完全感受不到。这里先展示螺旋场，停留一小段时间，再真正
-          // 跳转——不是为了拖慢速度，是让"搜索"这个动作，也有一次跟
-          // 签到/解梦/提问灵犀一样的"送入场域"体验，跟你的要求一致：
-          // 搜索框也值得有这个效果。
-          setSearching(true);
-          setTimeout(() => {
-            router.push(href);
-          }, 1000);
+          // 试过给搜索也接上九彩螺旋场，反馈是"不干净"——搜索这个动作
+          // 本身预期就是快、直接，加一段仪式感的过渡反而显得拖沓，跟
+          // 签到/解梦/提问灵犀那种"进入场域"的重动作不是一回事。改回
+          // 瞬间跳转。
+          router.push(href);
         }}
         placeholder={isEn ? PLACEHOLDER_HINTS[hintIdx].en : PLACEHOLDER_HINTS[hintIdx].zh}
         className="sb-input"

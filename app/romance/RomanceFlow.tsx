@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
+import WhyTrustLingxi from "@/components/WhyTrustLingxi";
 
 type Result = {
   score: number;
@@ -143,11 +144,13 @@ export default function RomanceFlow() {
           </div>
         )}
 
+        <WhyTrustLingxi />
+
         <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
           <p className="text-sm leading-7 text-bone-dim">
             <Bi
-              zh="这个分数，只是你完整生命图谱里的一个章节。财富模式、生命韧性、内在矛盾——完整报告里都有，交叉引用同一份命盘算出来的所有维度。"
-              en="This score is one chapter of your full Life Map. Wealth patterns, resilience, inner conflicts — the full report cross-references every dimension computed from the same chart."
+              zh="这个桃花磁场分数，是从你完整命盘里，只抽出跟「吸引力」相关的这一部分。同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
+              en="This magnetism score is pulled from just one slice of your full chart — the attraction-related part. The same chart also determines your resilience index, your wealth archetype, and the core tension at your center — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
             />
           </p>
           <a
