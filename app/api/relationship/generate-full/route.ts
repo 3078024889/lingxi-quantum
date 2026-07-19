@@ -129,10 +129,11 @@ export async function POST(req: Request) {
         method: "POST",
         headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
         body: JSON.stringify({
-          // 同 lifemap 报告：改回 glm-4-plus（并发数20，且是已验证过
-          // 效果的成熟档位），理由见 app/api/lifemap/generate-full/
-          // route.ts 里同一处的详细注释。
-          model: process.env.ZHIPU_MODEL_FULL || "glm-4-plus",
+          // 同 lifemap 报告：换成免费的 glm-4.7-flash，理由见
+          // app/api/lifemap/generate-full/route.ts 里同一处的详细
+          // 注释（账户余额0元，glm-4-plus这类付费模型必然调用失败，
+          // 跟并发数无关）。
+          model: process.env.ZHIPU_MODEL_FULL || "glm-4.7-flash",
           messages,
           max_tokens: 6000,
           temperature: 0.85,

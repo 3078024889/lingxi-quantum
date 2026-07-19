@@ -23,7 +23,16 @@ const ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 // 之前老撞429的直接原因）都宽松出一个数量级。这个接口覆盖的又都是
 // 高频免费功能，选并发余量最大的这一档，最大程度降低再撞限流的
 // 概率。
-const MODEL = process.env.ZHIPU_MODEL_LIGHT || "glm-4-air";
+// 【找到真正根源了，之前一直没找对】她的智谱账户余额是0元、从没
+// 充值过、信用支付也没开通（财务页面截图确认）。之前几轮一直在按
+// "并发数限制"这个维度换模型（glm-4.5→glm-4-air），但都换成了付费
+// 模型——glm-4-air、glm-4-plus 都是要花钱的档位，不是免费的，账户
+// 没钱，请求必然被拒绝，跟并发数够不够宽松完全无关，之前的判断
+// 方向就没找对。
+// 智谱官方明确标注"永久免费"的，是 Flash 这个系列（glm-4-flash、
+// glm-4.7-flash 这些），不看账户余额也能调用。这里换成 glm-4-flash——
+// 她账户后台那张速率限制表里，这个具体型号的并发数给到20，也不算低。
+const MODEL = process.env.ZHIPU_MODEL_LIGHT || "glm-4-flash";
 // 灵犀知识库（站点资料）
 const KNOWLEDGE_ID = process.env.ZHIPU_KNOWLEDGE_ID || "2071126362659377152";
 
