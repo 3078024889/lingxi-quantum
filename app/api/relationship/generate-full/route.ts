@@ -119,21 +119,29 @@ export async function POST(req: Request) {
   ];
 
   try {
-    const res = await fetch(ZHIPU_ENDPOINT, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        // 同 lifemap 报告：跟高频免费接口分开用独立的环境变量名
-        // （ZHIPU_MODEL_FULL），理由见 app/api/lifemap/generate-full/
-        // route.ts 里同一处的详细注释。
-        model: process.env.ZHIPU_MODEL_FULL || "glm-4-plus",
-        messages,
-        max_tokens: 6000,
-        temperature: 0.85,
-        frequency_penalty: 0.4,
-        presence_penalty: 0.3,
-      }),
-    });
+    const callOnce = () =>
+      fetch(ZHIPU_ENDPOINT, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          // 同 lifemap 报告：改回 glm-4-plus（并发数20，且是已验证过
+          // 效果的成熟档位），理由见 app/api/lifemap/generate-full/
+          // route.ts 里同一处的详细注释。
+          model: process.env.ZHIPU_MODEL_FULL || "glm-4-plus",
+          messages,
+          max_tokens: 6000,
+          temperature: 0.85,
+          frequency_penalty: 0.4,
+          presence_penalty: 0.3,
+        }),
+      });
+
+    let res = await callOnce();
+    // 429（限流）先等1.2秒再重试一次，理由同 app/api/lingxi/route.ts。
+    if (res.status === 429) {
+      await new Promise((r) => setTimeout(r, 1200));
+      res = await callOnce();
+    }
     // 之前这里没有检查 res.ok 就直接 await res.json()——如果智谱接口本身
     // 拒绝了这次请求（比如请求体里混入了异常数值，返回4xx/5xx错误），
     // data 长得和"AI正常返回但没写内容"几乎一样（都没有 choices 字段），

@@ -190,39 +190,47 @@ export async function POST(req: Request) {
       : "";
 
   try {
-    const res = await fetch(ZHIPU_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-      body: JSON.stringify({
-        // 之前默认用的 glm-4-flash 是速度优先的轻量档模型——在这种要求
-        // 十四个章节、6000+字系统提示词、严格反重复规则的长文本任务上，
-        // 明显力不从心：实测输出里出现过大段一字不差的重复段落、以及
-        // markdown星号符号没有按要求去掉，这两个问题的根源大概率就是
-        // 模型档位本身扛不住这么复杂的指令，不是提示词没写对。
-        // 换成 glm-4-plus（智谱的旗舰文本档）。这两份付费报告的生成
-        // 接口调用频率天然就低（一次购买生成一次，之后走缓存），用
-        // 更贵、限流额度更紧的plus档没问题；跟高频调用的免费接口
-        // （app/api/lingxi/route.ts）分开用不同的环境变量名
-        // （ZHIPU_MODEL_FULL，不是ZHIPU_MODEL_LIGHT），以后想单独
-        // 调整某一边的模型档位，不会互相影响。
-        model: process.env.ZHIPU_MODEL_FULL || "glm-4-plus",
-        temperature: 0.85,
-        // frequency_penalty：对已经出现过的词/短语，降低模型再次选用的
-        // 概率，专门针对"整段一字不差重复"这类问题；presence_penalty：
-        // 鼓励引入没提过的新内容，两者都是标准OpenAI兼容参数，智谱的
-        // 接口走的就是OpenAI兼容协议，可以放心传。
-        frequency_penalty: 0.4,
-        presence_penalty: 0.3,
-        // 12000 在实测中偶尔还是不够（AI 输出长度本身有一定随机性，赶上
-        // 写得比较详细的一次，12个段落写完就已经很接近上限，第13节还是
-        // 有概率被切掉）。上调到 16000，留更充分的余量。
-        max_tokens: 16000,
-        messages: [
-          { role: "system", content: buildLifemapFullSystem(focusHasNumberData, resilience.score) + langInstruction },
-          { role: "user", content: promptContent },
-        ],
-      }),
-    });
+    const callOnce = () =>
+      fetch(ZHIPU_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+        body: JSON.stringify({
+          // 之前默认用的 glm-4-flash 是速度优先的轻量档模型——在这种要求
+          // 十四个章节、6000+字系统提示词、严格反重复规则的长文本任务上，
+          // 明显力不从心：实测输出里出现过大段一字不差的重复段落、以及
+          // markdown星号符号没有按要求去掉，这两个问题的根源大概率就是
+          // 模型档位本身扛不住这么复杂的指令，不是提示词没写对。
+          // 你发的完整列表里，glm-4-plus 其实是在的（之前只看到部分
+          // 截图，没找到，判断错了）——并发数限制给到20，比glm-5.2的10
+          // 还宽松，而且是更成熟、这段时间一直在用、已经验证过效果的
+          // 一代模型，改回这个档位。这两份付费报告调用频率天然低，20的
+          // 并发余量绰绰有余。
+          model: process.env.ZHIPU_MODEL_FULL || "glm-4-plus",
+          temperature: 0.85,
+          // frequency_penalty：对已经出现过的词/短语，降低模型再次选用的
+          // 概率，专门针对"整段一字不差重复"这类问题；presence_penalty：
+          // 鼓励引入没提过的新内容，两者都是标准OpenAI兼容参数，智谱的
+          // 接口走的就是OpenAI兼容协议，可以放心传。
+          frequency_penalty: 0.4,
+          presence_penalty: 0.3,
+          // 12000 在实测中偶尔还是不够（AI 输出长度本身有一定随机性，赶上
+          // 写得比较详细的一次，12个段落写完就已经很接近上限，第13节还是
+          // 有概率被切掉）。上调到 16000，留更充分的余量。
+          max_tokens: 16000,
+          messages: [
+            { role: "system", content: buildLifemapFullSystem(focusHasNumberData, resilience.score) + langInstruction },
+            { role: "user", content: promptContent },
+          ],
+        }),
+      });
+
+    let res = await callOnce();
+    // 429（限流）先等1.2秒再重试一次——多数情况下是短时间内请求太
+    // 密集，缓一下就好，不用直接让用户看到失败提示。
+    if (res.status === 429) {
+      await new Promise((r) => setTimeout(r, 1200));
+      res = await callOnce();
+    }
     const data = await res.json();
     const rawText = data?.choices?.[0]?.message?.content?.trim();
     // 兜底清理：去掉AI偶尔漏改的markdown星号，见 lib/text-clean.ts 顶部注释。

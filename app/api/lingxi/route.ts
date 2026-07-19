@@ -17,7 +17,13 @@ const ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 // 用单独的 ZHIPU_MODEL_LIGHT 这个环境变量名（不是 ZHIPU_MODEL），
 // 这样以后想单独调整这个接口的模型档位，不会跟付费报告那两个接口
 // 共用的 ZHIPU_MODEL_FULL 互相影响。
-const MODEL = process.env.ZHIPU_MODEL_LIGHT || "glm-4-flash-250414";
+// 你发的完整列表里，GLM-4-Air 这个档位并发数限制给到100——是列表里
+// 除了向量模型/搜索类工具之外，通用模型里给得最宽松的一档，比之前
+// 试过的 glm-4.5（10）、glm-4-flash-250414（只有2，这很可能就是
+// 之前老撞429的直接原因）都宽松出一个数量级。这个接口覆盖的又都是
+// 高频免费功能，选并发余量最大的这一档，最大程度降低再撞限流的
+// 概率。
+const MODEL = process.env.ZHIPU_MODEL_LIGHT || "glm-4-air";
 // 灵犀知识库（站点资料）
 const KNOWLEDGE_ID = process.env.ZHIPU_KNOWLEDGE_ID || "2071126362659377152";
 
