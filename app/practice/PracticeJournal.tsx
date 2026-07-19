@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
-import PortalSpinner from "@/components/PortalSpinner";
+import SpiralField from "@/components/SpiralField";
 
 type PracticeKey = "breath" | "intuition" | "heart-reset" | "ascending-heart" | "";
 
@@ -72,6 +72,7 @@ export default function PracticeJournal() {
     if (!content.trim() || saving) return;
     setSaving(true);
     setError("");
+    const startedAt = Date.now();
     const supabase = createClient();
     const {
       data: { user },
@@ -85,6 +86,12 @@ export default function PracticeJournal() {
       .insert({ user_id: user.id, practice: practice || null, content: content.trim() })
       .select("id, practice, content, created_at")
       .single();
+    // 直接写数据库，通常几百毫秒就结束——不加一个最短展示时长的话，
+    // 九彩螺旋场会一闪而过，用户根本看不清，等于白做了这个效果。
+    // 跟签到（RealityLoop.tsx）用的是同一个手法：保证至少显示够
+    // 一段时间，体感上像是"场域真的在处理这件事"，不是纯粹为了拖时间。
+    const wait = Math.max(0, 1800 - (Date.now() - startedAt));
+    await new Promise((r) => setTimeout(r, wait));
     setSaving(false);
     if (err || !data) {
       // 把真实错误打到控制台——"记录失败，请稍后再试"这句话本身，
@@ -175,12 +182,13 @@ export default function PracticeJournal() {
       />
       <div className="mt-3 flex items-center justify-between gap-4">
         {error && <p className="text-sm text-rose">{error}</p>}
+        <SpiralField active={saving} label={t("正在记下这段心得……", "Recording this note…")} />
         <button
           onClick={save}
           disabled={saving || !content.trim()}
-          className="ml-auto flex items-center gap-2 bg-lattice px-8 py-3 font-display text-xs uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+          className="ml-auto bg-lattice px-8 py-3 font-display text-xs uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          {saving ? <><PortalSpinner /><Bi zh="正在记录…" en="Saving…" /></> : <Bi zh="记下这段心得" en="Save this note" />}
+          {saving ? <Bi zh="正在记录…" en="Saving…" /> : <Bi zh="记下这段心得" en="Save this note" />}
         </button>
       </div>
 
