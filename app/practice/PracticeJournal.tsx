@@ -21,7 +21,16 @@ const PRACTICE_LABEL: Record<Exclude<PracticeKey, "">, { zh: string; en: string 
 // 里，这里给场域内一个更贴合视觉、能跨设备同步的地方去做同一件事。
 // 不调用AI、不生成任何解读，纯粹是"我自己的记录"。
 export default function PracticeJournal() {
-  const supabase = createClient();
+  // 之前这里在组件最顶层直接 const supabase = createClient()——这行
+  // 代码在"每次渲染"都会执行，包括 Next.js 构建阶段对这个页面做服务器
+  // 端预渲染的那一次也会执行到。预渲染发生在构建环境里，不一定能拿到
+  // 跟运行时完全一致的环境变量，一旦拿不到，@supabase/ssr 会直接抛出
+  // "缺少 URL/Key" 的错误，整个 `npm run build` 直接失败，其他所有页面
+  // 都会被这一个页面拖累发不出去——这正是构建日志里报的那个错。
+  // 改成只在真正要用到supabase的地方（下面 load/save/doDelete 各自
+  // 的函数体内）才创建客户端，不在组件渲染的时候就创建——这几个函数
+  // 只会在浏览器里被真正调用（页面加载后的effect、用户点击按钮），
+  // 服务器端预渲染那一次根本不会执行到这几行，自然不会再报这个错。
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -34,6 +43,7 @@ export default function PracticeJournal() {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
+    const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -52,7 +62,7 @@ export default function PracticeJournal() {
     if (err) console.error("[PracticeJournal] 读取历史记录失败，Supabase 原始错误:", err);
     if (data) setEntries(data as Entry[]);
     setLoading(false);
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     load();
@@ -62,6 +72,7 @@ export default function PracticeJournal() {
     if (!content.trim() || saving) return;
     setSaving(true);
     setError("");
+    const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -98,6 +109,7 @@ export default function PracticeJournal() {
   };
 
   const doDelete = async (id: string) => {
+    const supabase = createClient();
     await supabase.from("practice_journal_entries").delete().eq("id", id);
     setEntries((prev) => prev.filter((e) => e.id !== id));
     setConfirmingId(null);
