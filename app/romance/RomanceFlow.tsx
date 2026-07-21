@@ -123,6 +123,13 @@ export default function RomanceFlow() {
           </p>
         </div>
 
+        <div className="mt-4 flex justify-center">
+          <div className="overflow-hidden rounded-sm border border-amber/25" style={{ maxWidth: 260 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/romance/romance.jpg" alt={t("桃花磁场指数", "Romance Magnetism Index")} className="block w-full" />
+          </div>
+        </div>
+
         <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
           <p className="text-base leading-9 text-bone-dim">{t(OVERALL[band(result.score)].zh, OVERALL[band(result.score)].en)}</p>
         </div>

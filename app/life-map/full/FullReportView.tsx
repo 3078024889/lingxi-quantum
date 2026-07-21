@@ -6,6 +6,7 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import NatalChartWheel from "../NatalChartWheel";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
+import { lifemapTypeImage } from "@/lib/lifemap-type-images";
 
 type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
 type HumanDesignResult = { personality: GateActivation[]; design: GateActivation[]; sunConsciousGate: number; sunUnconsciousGate: number };
@@ -419,6 +420,15 @@ export default function FullReportView({ id }: { id: string }) {
            把标题单独拆出来。 */}
         <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>
 
+        {lifemapTypeImage(coreTypeName) && (
+          <div className="mt-6 flex justify-center">
+            <div className="lm2-card overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 280 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={lifemapTypeImage(coreTypeName)!} alt={coreTypeName} className="block w-full" />
+            </div>
+          </div>
+        )}
+
         {facts && (
           <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
             <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
@@ -509,6 +519,22 @@ export default function FullReportView({ id }: { id: string }) {
             {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
             {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
             {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
+            {i === 13 && (
+              <div className="mt-4 flex justify-center">
+                <div className="overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 240 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/resilience/resilience.jpg" alt="Life Resilience Index" className="block w-full" />
+                </div>
+              </div>
+            )}
+            {i === 14 && (
+              <div className="mt-4 flex justify-center">
+                <div className="overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 240 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/romance/romance.jpg" alt="Romance Magnetism Map" className="block w-full" />
+                </div>
+              </div>
+            )}
             </Fragment>
             );
           })}

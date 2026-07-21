@@ -8,6 +8,7 @@ import LifeMapCompass from "./LifeMapCompass";
 import NatalChartWheel from "./NatalChartWheel";
 import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
+import { lifemapTypeImage } from "@/lib/lifemap-type-images";
 
 type Stage = "landing" | "form" | "loading" | "report";
 
@@ -888,6 +889,14 @@ export default function LifeMapFlow() {
             <h2 className="mt-4 font-display text-4xl font-light text-lm2-text">
               {isEn() ? report.coreType.nameEn : report.coreType.name}
             </h2>
+            {lifemapTypeImage(report.coreType.name) && (
+              <div className="mt-5 flex justify-center">
+                <div className="overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 240 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={lifemapTypeImage(report.coreType.name)!} alt={report.coreType.name} className="block w-full" />
+                </div>
+              </div>
+            )}
             <p className="mt-3 text-sm text-lm2-text-dim">
               {t("太阳", "Sun")} {isEn() ? report.facts.sunSignEn : report.facts.sunSignZh} · {t("日主", "Day Master")} {report.facts.dayMasterGan}
             </p>

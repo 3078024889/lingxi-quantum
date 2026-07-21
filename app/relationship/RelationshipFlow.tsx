@@ -165,18 +165,22 @@ export default function RelationshipFlow() {
 
       <div className="bg-void-deep mt-8 rounded-sm p-5">
         <p className="text-sm text-bone-dim"><Bi zh="这是什么关系？" en="What kind of relationship is this?" /></p>
-        <div className="mt-2 flex flex-wrap gap-2">
+        <div className="mt-3 grid grid-cols-3 gap-3">
           {([
-            { id: "romantic", zh: "亲密关系", en: "Romantic" },
-            { id: "business", zh: "合伙/商业", en: "Business" },
-            { id: "general", zh: "其他关系", en: "Other" },
+            { id: "romantic", zh: "亲密关系", en: "Romantic", img: "/images/relationship/romantic.jpg" },
+            { id: "business", zh: "合伙/商业", en: "Business", img: "/images/relationship/business.jpg" },
+            { id: "general", zh: "其他关系", en: "Other", img: "/images/relationship/general.jpg" },
           ] as const).map((opt) => (
             <button
               key={opt.id}
               onClick={() => setRelationshipType(opt.id)}
-              className={`rounded-sm border px-4 py-2 text-sm transition ${relationshipType === opt.id ? "border-lattice bg-lattice/10 text-lattice" : "border-white/15 text-bone-dim hover:border-lattice/40"}`}
+              className={`overflow-hidden rounded-sm border text-left transition ${relationshipType === opt.id ? "border-lattice ring-1 ring-lattice" : "border-white/15 hover:border-lattice/40"}`}
             >
-              <Bi zh={opt.zh} en={opt.en} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={opt.img} alt={opt.zh} className="block aspect-[2/3] w-full object-cover" />
+              <p className={`px-2 py-2 text-center text-xs ${relationshipType === opt.id ? "text-lattice" : "text-bone-dim"}`}>
+                <Bi zh={opt.zh} en={opt.en} />
+              </p>
             </button>
           ))}
         </div>

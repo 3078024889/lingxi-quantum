@@ -136,6 +136,13 @@ export default function ResilienceFlow() {
           </p>
         </div>
 
+        <div className="mt-4 flex justify-center">
+          <div className="overflow-hidden rounded-sm border border-lattice/20" style={{ maxWidth: 260 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/resilience/resilience.jpg" alt={t("生命韧性指数", "Life Resilience Index")} className="block w-full" />
+          </div>
+        </div>
+
         <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">
           <p className="text-base leading-9 text-bone-dim">{t(OVERALL[band(result.score)].zh, OVERALL[band(result.score)].en)}</p>
         </div>

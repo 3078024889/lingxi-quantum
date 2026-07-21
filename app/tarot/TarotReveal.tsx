@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Bi from "@/components/Bi";
 import SpiralField from "@/components/SpiralField";
-import TarotCardArt from "@/components/TarotCardArt";
 import { useLang } from "@/lib/useLang";
 import type { TarotCard } from "@/lib/tarot-data";
 
@@ -23,6 +22,8 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
     }, 900);
   };
 
+  const imgSrc = `/images/tarot/${String(card.index).padStart(2, "0")}.jpg`;
+
   if (!revealed) {
     return (
       <>
@@ -30,7 +31,7 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
         <button
           onClick={reveal}
           disabled={revealing}
-          className="lx-tarot-card group relative mx-auto flex h-72 w-48 flex-col items-center justify-center gap-4 rounded-sm border border-lattice/30 bg-void-deep transition hover:border-lattice/60 disabled:cursor-wait"
+          className="lx-tarot-card group relative mx-auto flex h-80 w-56 flex-col items-center justify-center gap-4 rounded-sm border border-lattice/30 bg-void-deep transition hover:border-lattice/60 disabled:cursor-wait"
         >
           <span className="font-display text-4xl text-lattice/60 transition group-hover:text-lattice">✦</span>
           <span className="font-display text-xs uppercase tracking-widest2 text-bone-dim">
@@ -46,17 +47,21 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
 
   return (
     <div>
-      <div className="lx-tarot-reveal relative mx-auto h-72 w-48 overflow-hidden rounded-sm border border-lattice/40 bg-void-deep">
-        <TarotCardArt c1={card.theme.c1} c2={card.theme.c2} icon={card.theme.icon} />
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-void-deep via-void-deep/80 to-transparent px-4 pb-4 pt-10 text-center">
-          <p className="font-display text-sm text-bone-dim">{card.glyph}</p>
-          <p className="font-display text-lg text-bone">
-            <Bi zh={card.nameZh} en={card.nameEn} />
-          </p>
-        </div>
+      <div className="lx-tarot-reveal relative mx-auto w-56 overflow-hidden rounded-sm border border-lattice/40 bg-void-deep">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={imgSrc} alt={card.nameZh} className="block w-full" />
       </div>
 
-      <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">
+      <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
+        <p className="font-display text-xl text-bone">
+          <Bi zh={card.nameZh} en={card.nameEn} />
+        </p>
+        <p className="mt-1 text-xs text-lattice/70">
+          <Bi zh={card.keywordsZh} en={card.keywordsEn} />
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
         <p className="text-base leading-8 text-bone-dim">
           <Bi zh={card.meaningZh} en={card.meaningEn} />
         </p>

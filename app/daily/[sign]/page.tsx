@@ -50,6 +50,10 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
             <p className="mt-3 text-xs text-bone-dim">
               <Bi zh={`月相：${transit.moonPhaseZh} · 月亮在${transit.moonSignZh}座`} en={`Moon Phase: ${transit.moonPhaseEn} · Moon in ${transit.moonSignEn}`} />
             </p>
+            <div className="mt-5 overflow-hidden rounded-sm border border-lattice/20" style={{ maxWidth: 220 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/daily/daily.jpg" alt="Daily Horoscope" className="block w-full" />
+            </div>
           </div>
 
           <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">

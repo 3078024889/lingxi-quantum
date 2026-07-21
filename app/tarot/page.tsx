@@ -7,8 +7,8 @@ import TarotReveal from "./TarotReveal";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "今日塔罗牌 · 免费每日一卡 | 灵犀 Tarot Card of the Day — Free | Lingxi",
-  description: "每天一张塔罗大阿尔卡那牌，全球用户今天看到的是同一张牌，每日午夜更新，完全免费，不需要登录。One shared tarot card each day, free, no sign-in needed, refreshes at midnight.",
+  title: "灵犀量子塔罗 · 免费每日一卡 | 灵犀 Lingxi Quantum Tarot — Free Daily Card | Lingxi",
+  description: "灵犀场原创78张卡牌体系，每天一张，全球用户今天看到的是同一张牌，每日午夜更新，完全免费，不需要登录。Lingxi's original 78-card system — one shared card each day, free, no sign-in needed.",
   alternates: { canonical: "/tarot" },
 };
 
@@ -23,7 +23,7 @@ export default function TarotPage() {
         <div className="mx-auto max-w-md px-6 py-16 text-center">
           <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-              <Bi zh="灵犀 · 今日塔罗" en="Lingxi · Tarot Card of the Day" />
+              <Bi zh="灵犀量子塔罗 · 今日一卡" en="Lingxi Quantum Tarot · Today's Card" />
             </p>
             <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
               <Bi zh="今天，全场域共享同一张牌" en="Today, everyone shares the same card" />

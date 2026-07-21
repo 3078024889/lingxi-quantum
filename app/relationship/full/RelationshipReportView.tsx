@@ -45,6 +45,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
     friction: { labelZh: string; labelEn: string }[];
   } | null>(null);
   const [vectors, setVectors] = useState<{ a: LifeVector; b: LifeVector } | null>(null);
+  const [relType, setRelType] = useState<string>("romantic");
   const [downloading, setDownloading] = useState(false);
   const [printMode, setPrintMode] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
@@ -54,10 +55,13 @@ export default function RelationshipReportView({ id }: { id: string }) {
       const supabase = createClient();
       const { data: submission } = await supabase
         .from("relationship_submissions")
-        .select("name_a, name_b")
+        .select("name_a, name_b, relationship_type")
         .eq("id", id)
         .single();
-      if (submission) setNames({ a: submission.name_a, b: submission.name_b });
+      if (submission) {
+        setNames({ a: submission.name_a, b: submission.name_b });
+        if (submission.relationship_type) setRelType(submission.relationship_type);
+      }
 
       const currentLangEn = document.documentElement.classList.contains("lang-en");
       try {
@@ -242,6 +246,17 @@ export default function RelationshipReportView({ id }: { id: string }) {
         <h1 className="font-display text-3xl font-light text-bone">
           {names ? `${names.a} × ${names.b}` : ""}
         </h1>
+
+        <div className="mt-4 flex justify-center">
+          <div className="overflow-hidden rounded-sm border border-lattice/20" style={{ maxWidth: 220 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/images/relationship/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}.jpg`}
+              alt={relType}
+              className="block w-full"
+            />
+          </div>
+        </div>
 
         {vectors && (
           <div className="mt-6">
