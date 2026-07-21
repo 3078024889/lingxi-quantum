@@ -67,6 +67,21 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
         </p>
       </div>
 
+      <div className="mt-6 rounded-sm border border-amber/25 bg-amber/5 p-6 text-center">
+        <p className="text-sm leading-7 text-bone-dim">
+          <Bi
+            zh="今天的这张牌，是全场域共享的。想看专属于你的三张牌——由你真实的命盘数据确定，不是随机抽取——过去、现在、未来各一张。"
+            en="Today's card is shared by everyone. To see your own three cards — determined by your real chart data, not a random draw — one each for Past, Present, and Future."
+          />
+        </p>
+        <a
+          href="/tarot/deep"
+          className="mt-5 inline-block bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice"
+        >
+          <Bi zh="解锁我的三张牌阵 · $9.9" en="Unlock My Three-Card Spread · $9.9" />
+        </a>
+      </div>
+
       <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
         <p className="text-sm leading-7 text-bone-dim">
           <Bi

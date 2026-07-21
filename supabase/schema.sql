@@ -141,6 +141,27 @@ drop policy if exists "own practice journal entries" on public.practice_journal_
 create policy "own practice journal entries" on public.practice_journal_entries
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+-- 4e) 灵犀量子塔罗 · 三张牌阵深度探索（$9.9付费产品）——过去/现在/未来
+--     三张牌的索引是从命盘数据确定性算出来的（见 lib/tarot-spread.ts），
+--     不是随机抽的，存下来是为了同一份提交不用每次重新算+重新调AI。
+create table if not exists public.tarot_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text,
+  birth_input jsonb not null,
+  facts jsonb not null,
+  past_index int not null,
+  present_index int not null,
+  future_index int not null,
+  full_report text,
+  full_report_en text,
+  created_at timestamptz default now()
+);
+alter table public.tarot_submissions enable row level security;
+drop policy if exists "own tarot submissions" on public.tarot_submissions;
+create policy "own tarot submissions" on public.tarot_submissions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 

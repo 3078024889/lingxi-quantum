@@ -143,9 +143,11 @@ export async function POST(req: Request) {
       });
 
     let res = await callOnce();
-    // 429（限流）先等1.2秒再重试一次，理由同 app/api/lingxi/route.ts。
-    if (res.status === 429) {
-      await new Promise((r) => setTimeout(r, 1200));
+    // glm-4.7-flash 并发数限制只有1，重试1次、等1.2秒经常不够——加到
+    // 最多2次，等待时间也拉长，理由见 app/api/lifemap/generate-full/
+    // route.ts 里同一处的详细注释。
+    for (let attempt = 0; attempt < 2 && res.status === 429; attempt++) {
+      await new Promise((r) => setTimeout(r, 2000 + attempt * 1500));
       res = await callOnce();
     }
     // 之前这里没有检查 res.ok 就直接 await res.json()——如果智谱接口本身

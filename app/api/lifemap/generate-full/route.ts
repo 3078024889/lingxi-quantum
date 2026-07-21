@@ -246,11 +246,25 @@ export async function POST(req: Request) {
       });
 
     let res = await callOnce();
-    // 429（限流）先等1.2秒再重试一次——多数情况下是短时间内请求太
-    // 密集，缓一下就好，不用直接让用户看到失败提示。
-    if (res.status === 429) {
-      await new Promise((r) => setTimeout(r, 1200));
+    // glm-4.7-flash 这个免费档位，并发数限制只有1（她账户后台速率限制
+    // 页面查到的），意味着"上一次请求还没处理完，下一次就已经进来"这种
+    // 情况非常容易撞上429——之前只重试一次、只等1.2秒，遇到稍微长一点
+    // 的排队就还是失败。这次改成最多重试2次，等待时间也拉长到2秒、
+    // 3.5秒，给排队多一点缓冲空间。
+    for (let attempt = 0; attempt < 2 && res.status === 429; attempt++) {
+      await new Promise((r) => setTimeout(r, 2000 + attempt * 1500));
       res = await callOnce();
+    }
+    // 之前这里没有检查 res.ok 就直接 res.json()——如果智谱接口本身返回
+    // 非200状态（限流重试2次之后仍然429，或者其他错误），拿到的响应体
+    // 里不会有 choices 字段，跟"AI正常返回但没写内容"这两种完全不同的
+    // 失败原因，会被当成同一种情况处理，用户看到的都是"生成失败"，
+    // 日志里也查不出真实原因。这里补上跟 relationship 那个接口一致的
+    // 处理：非200状态单独记日志，把智谱接口返回的真实错误内容打出来。
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error("[generate-full] 智谱接口返回非200状态:", res.status, errBody, "submission id:", body.id);
+      return NextResponse.json({ error: `场域暂时无法回应（${res.status}），请稍后再试。` }, { status: 502 });
     }
     const data = await res.json();
     const rawText = data?.choices?.[0]?.message?.content?.trim();
@@ -262,7 +276,8 @@ export async function POST(req: Request) {
       // 这类问题，第一时间就知道是这个原因，不用再靠猜。
       console.error("[generate-full] AI 回复被 max_tokens 截断，finish_reason=length，submission id:", body.id);
     }
-    if (!res.ok || !text) {
+    if (!text) {
+      console.error("[generate-full] AI 没有返回内容，submission id:", body.id, "AI原始返回:", JSON.stringify(data));
       return NextResponse.json({ error: "生成失败，请稍后再试。" }, { status: 502 });
     }
 
