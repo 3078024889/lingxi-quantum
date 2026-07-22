@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
@@ -30,6 +30,8 @@ export default function QianReport({ id }: { id: string }) {
   const [abilityMap, setAbilityMap] = useState<AbilityItem[]>([]);
   const [lifeStage, setLifeStage] = useState<LifeStage | null>(null);
   const [unlocking, setUnlocking] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -91,6 +93,81 @@ export default function QianReport({ id }: { id: string }) {
     else setUnlocking(false);
   };
 
+  // 跟生命图谱、关系共振用的是同一套导出方式：按每个章节单独截图，
+  // 再逐张贴进A4页面，不会撞浏览器canvas的最大尺寸限制（见
+  // app/life-map/full/FullReportView.tsx 里 downloadPdf 的详细注释）。
+  const downloadPdf = async () => {
+    if (!reportRef.current) return;
+    setDownloading(true);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const container = reportRef.current;
+      const chapters = Array.from(container.children) as HTMLElement[];
+      const PRINT_BG = "#0d0d1a";
+
+      const pdf = new jsPDF({ unit: "pt", format: "a4" });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const fillPageBackground = () => {
+        pdf.setFillColor(13, 13, 26);
+        pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      };
+      fillPageBackground();
+
+      let cursorY = 0;
+      let placedAnything = false;
+
+      for (const chapter of chapters) {
+        if (!chapter || chapter.offsetHeight < 2) continue;
+        const canvas = await html2canvas(chapter, { backgroundColor: PRINT_BG, scale: 2, useCORS: true });
+        const imgData = canvas.toDataURL("image/jpeg", 0.92);
+        const imgWidth = pageWidth;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        if (imgHeight > pageHeight) {
+          if (placedAnything) {
+            pdf.addPage();
+            fillPageBackground();
+            cursorY = 0;
+          }
+          let heightLeft = imgHeight;
+          let position = 0;
+          pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+          while (heightLeft > 10) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            fillPageBackground();
+            pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+          cursorY = imgHeight % pageHeight;
+          placedAnything = true;
+          continue;
+        }
+
+        if (placedAnything && cursorY + imgHeight > pageHeight) {
+          pdf.addPage();
+          fillPageBackground();
+          cursorY = 0;
+        }
+        pdf.addImage(imgData, "JPEG", 0, cursorY, imgWidth, imgHeight);
+        cursorY += imgHeight;
+        placedAnything = true;
+      }
+
+      pdf.save(`灵犀生命灵签-${name || "report"}.pdf`);
+    } catch (e) {
+      console.error("PDF 生成失败:", e);
+      alert(t("PDF 生成失败，请稍后再试，或改用浏览器打印功能另存为 PDF。", "PDF generation failed — please try again, or use your browser's print-to-PDF as a fallback."));
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (status === "checking") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
@@ -129,6 +206,18 @@ export default function QianReport({ id }: { id: string }) {
           <Bi zh="灵犀生命灵签 · 生命灵签报告" en="Lingxi Life Oracle · Life Sign Report" />
         </p>
       </div>
+
+      <div className="mt-4 flex justify-center">
+        <button
+          onClick={downloadPdf}
+          disabled={downloading}
+          className="rounded-sm border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone disabled:opacity-50"
+        >
+          {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载完整报告 PDF" en="Download Full Report PDF" />}
+        </button>
+      </div>
+
+      <div ref={reportRef}>
       <h1 className="mt-6 text-center font-display text-3xl font-light text-bone">
         {name || t("你的", "Your")} <Bi zh="生命灵签报告" en="Life Sign Report" />
       </h1>
@@ -196,6 +285,7 @@ export default function QianReport({ id }: { id: string }) {
             <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
           </div>
         ))}
+      </div>
       </div>
 
       <div className="mt-6 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">

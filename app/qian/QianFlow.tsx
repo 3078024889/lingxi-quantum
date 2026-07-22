@@ -6,6 +6,7 @@ import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import type { LifeSign } from "@/lib/qian-data";
 import { TIER_LABELS } from "@/lib/qian-data";
+import QianCosmicRing from "@/components/QianCosmicRing";
 
 type Stage = "form" | "gathering" | "shaking" | "revealed";
 
@@ -23,6 +24,7 @@ export default function QianFlow() {
   const [error, setError] = useState("");
   const [stage, setStage] = useState<Stage>("form");
   const [signs, setSigns] = useState<LifeSign[] | null>(null);
+  const [signIndexes, setSignIndexes] = useState<number[] | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
 
@@ -57,6 +59,11 @@ export default function QianFlow() {
         return;
       }
 
+      // signIndexes 一拿到就存下来——不用等到"revealed"阶段才知道是
+      // 哪三枚，"shaking"这一步，宇宙签库环形组件就可以直接高亮这
+      // 三个位置，视觉上是"环停下来，三枚签亮起来"，不是揭示阶段
+      // 才突然冒出来。
+      setSignIndexes(data.signIndexes as number[]);
       setTimeout(() => setStage("shaking"), 900);
       setTimeout(async () => {
         const { LIFE_SIGNS } = await import("@/lib/qian-data");
@@ -85,7 +92,11 @@ export default function QianFlow() {
 
   if (stage === "form") {
     return (
-      <div className="mx-auto max-w-md px-6 py-16">
+      <div className="px-6 pt-8">
+        <div className="mx-auto max-w-2xl">
+          <QianCosmicRing />
+        </div>
+        <div className="mx-auto max-w-md pb-16">
         <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
@@ -142,71 +153,21 @@ export default function QianFlow() {
         >
           <Bi zh="静心，读取生命签" en="Be Still, and Reveal" />
         </button>
+        </div>
       </div>
     );
   }
 
   if (stage === "gathering" || stage === "shaking") {
     return (
-      <div className="mx-auto flex max-w-md flex-col items-center px-6 py-24 text-center">
-        <div className="lx-qian-wrap relative h-64 w-52">
-          <div className="lx-qian-nebula absolute inset-0 rounded-full" />
-          <svg
-            viewBox="0 0 200 240"
-            className={`relative h-full w-full ${stage === "shaking" ? "lx-qian-shake" : ""}`}
-          >
-            <defs>
-              <linearGradient id="qian-tube" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#3a2416" />
-                <stop offset="15%" stopColor="#7a4a24" />
-                <stop offset="50%" stopColor="#9c6a3a" />
-                <stop offset="85%" stopColor="#7a4a24" />
-                <stop offset="100%" stopColor="#3a2416" />
-              </linearGradient>
-              <linearGradient id="qian-stick" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#FF7A5C" />
-                <stop offset="18%" stopColor="#E8D9B8" />
-                <stop offset="100%" stopColor="#D8C9A8" />
-              </linearGradient>
-            </defs>
-
-            {/* 签筒——收口略窄的圆柱体，暖木色 */}
-            <path d="M 62,90 Q 60,225 68,232 L 132,232 Q 140,225 138,90 Z" fill="url(#qian-tube)" stroke="#2a1810" strokeWidth="1.5" />
-            <ellipse cx="100" cy="90" rx="38" ry="9" fill="#5a3a1e" stroke="#2a1810" strokeWidth="1.5" />
-            <ellipse cx="100" cy="88" rx="34" ry="7" fill="#1a1008" opacity="0.85" />
-
-            {/* 18根签，密集插在筒口——中间那一根在摇晃阶段会明显冒出来 */}
-            {Array.from({ length: 18 }).map((_, i) => {
-              const spread = 30;
-              const x = 100 + (i - 8.5) * (spread / 17) * 2;
-              const isRising = i === 9;
-              const baseH = 78 + ((i * 37) % 12);
-              return (
-                <rect
-                  key={i}
-                  x={x - 1.6}
-                  y={stage === "shaking" && isRising ? 18 : 88 - baseH}
-                  width="3.2"
-                  height={stage === "shaking" && isRising ? baseH + 70 : baseH}
-                  rx="1.6"
-                  fill="url(#qian-stick)"
-                  className={stage === "shaking" && isRising ? "lx-qian-rise" : ""}
-                  style={{ transition: "y 1.1s cubic-bezier(.22,1,.36,1), height 1.1s cubic-bezier(.22,1,.36,1)" }}
-                />
-              );
-            })}
-          </svg>
-        </div>
-        <p className="mt-6 font-display text-sm tracking-widest2 text-lattice/80">
-          {stage === "gathering" ? <Bi zh="先静心，连接场域……" en="Growing still, connecting to the field…" /> : <Bi zh="你的生命灵签，正从场域中显现……" en="Your life signs are revealing themselves from the field…" />}
+      <div className="mx-auto flex max-w-2xl flex-col items-center px-6 py-16 text-center">
+        <QianCosmicRing
+          highlightIndexes={stage === "shaking" ? signIndexes ?? undefined : undefined}
+          paused={stage === "shaking"}
+        />
+        <p className="mt-2 font-display text-sm tracking-widest2 text-lattice/80">
+          {stage === "gathering" ? <Bi zh="先静心，连接场域……" en="Growing still, connecting to the field…" /> : <Bi zh="三枚生命签，正从六十四枚中亮起……" en="Three signs are lighting up among the sixty-four…" />}
         </p>
-        <style>{`
-          .lx-qian-nebula { background: radial-gradient(circle, rgba(199,156,255,0.35), transparent 70%); filter: blur(20px); animation: lx-qian-breathe 2.2s ease-in-out infinite; }
-          @keyframes lx-qian-breathe { 0%,100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 0.8; transform: scale(1.05); } }
-          .lx-qian-shake { animation: lx-qian-rattle 0.3s ease-in-out infinite; transform-origin: 100px 200px; }
-          @keyframes lx-qian-rattle { 0%,100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-          @media (prefers-reduced-motion: reduce) { .lx-qian-nebula, .lx-qian-shake { animation: none !important; } }
-        `}</style>
       </div>
     );
   }
