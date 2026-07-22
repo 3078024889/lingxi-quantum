@@ -7,12 +7,14 @@ import GateVisual from "@/components/GateVisual";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import FarewellBanner from "@/components/FarewellBanner";
+import EntryGate from "@/components/EntryGate";
 import { gates } from "@/lib/gates";
 import Bi from "@/components/Bi";
 
 export default function Home() {
   return (
     <>
+      <EntryGate />
       <Nav />
       <FarewellBanner />
       <main className="relative overflow-hidden">

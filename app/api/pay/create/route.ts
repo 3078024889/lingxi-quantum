@@ -22,18 +22,31 @@ export async function POST(req: Request) {
 
     const admin = createAdminClient();
 
-    // 生命图谱订单，顺手把姓名也存一份进 orders 表——同一个人可能拿不同
-    // 名字测过好几次，只存 submission_id 的话，在 Supabase 表格编辑器里
-    // 想认出"这是哪一份"，还是得跳到另一张表核对，直接把名字带过来，
-    // 一眼就能看清楚。
+    // 顺手把姓名也存一份进 orders 表——同一个人可能拿不同名字测过好
+    // 几次，只存 submission_id 的话，在 Supabase 表格编辑器里想认出
+    // "这是哪一份"，还是得跳到另一张表核对，直接把名字带过来，一眼
+    // 就能看清楚。之前这里写死只查 life_map_submissions 一张表，
+    // 摇签、塔罗三张牌阵这些新产品的订单，查不到名字（不报错，只是
+    // 静默留空）——这次按 productId 对应到正确的表。
+    const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
+      "life-map-report": "life_map_submissions",
+      "relationship-resonance": "relationship_submissions",
+      "qian-reading": "qian_submissions",
+      "tarot-reading": "tarot_reading_submissions",
+    };
     let submissionName: string | null = null;
-    if (typeof submissionId === "string") {
+    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
+    if (typeof submissionId === "string" && submissionTable) {
+      const isRelationship = submissionTable === "relationship_submissions";
       const { data: sub } = await admin
-        .from("life_map_submissions")
-        .select("name")
+        .from(submissionTable)
+        .select(isRelationship ? "name_a, name_b" : "name")
         .eq("id", submissionId)
         .single();
-      submissionName = sub?.name ?? null;
+      const subData = sub as { name?: string; name_a?: string; name_b?: string } | null;
+      submissionName = isRelationship
+        ? subData?.name_a && subData?.name_b ? `${subData.name_a} × ${subData.name_b}` : null
+        : subData?.name ?? null;
     }
 
     const { data: order, error: orderErr } = await admin

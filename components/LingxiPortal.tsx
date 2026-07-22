@@ -22,17 +22,17 @@ export default function LingxiPortal() {
       <div className="lx-core-glyph mb-2 font-display text-2xl text-lattice" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>✦</div>
 
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice sm:text-base" style={{ textShadow: "0 0 8px rgba(224,230,255,0.45)" }}>
-        <Bi zh="欢迎进入" en="Welcome to" />
+        <Bi zh="你已进入" en="You are now inside" />
       </p>
 
       <h1 className="mt-6 font-display text-5xl font-light text-bone sm:text-7xl" style={{ textShadow: "0 0 20px rgba(216,184,255,0.35)" }}>
-        <Bi zh="灵犀场 · 意识显化系统" en="Lingxi Field · Manifestation System" />
+        <Bi zh="灵犀场" en="Lingxi Field" />
       </h1>
 
       <p className="mx-auto mt-7 max-w-2xl font-body text-base leading-9 text-bone-dim sm:text-lg" >
         <Bi
-          zh="一个探索意识、重塑潜意识、创造生命可能性的个人意识空间——融合生命图谱、潜意识探索、梦境智能、东方智慧与宇宙叙事，帮助你重新理解自己。灵犀不创造你的欲望，只提供一面镜子。"
-          en="A personal consciousness space for exploring awareness, reshaping the subconscious, and creating new possibilities — combining life mapping, subconscious exploration, dream intelligence, Eastern wisdom, and cosmic narrative to help you understand yourself anew. Lingxi doesn't manufacture what you should want. It offers a mirror."
+          zh="灵犀不创造你的欲望，只提供一面镜子——显化你的意图，解读你的梦境，练习你身体本来就会的呼吸与觉察。往下看，是你可以从这里开始的几个方向。"
+          en="Lingxi doesn't manufacture what you should want. It offers a mirror — to manifest your intent, decode your dreams, and practice the breath and awareness your body already knows. Below are a few places you can begin."
         />
       </p>
 

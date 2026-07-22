@@ -93,9 +93,17 @@ alter table public.life_map_submissions add column if not exists full_report_en 
 
 -- orders 表之前跟 life_map_submissions 表毫无关联——同一个人测过好几次
 -- 生命图谱的话，从 orders 表的付款记录反查"这笔钱对应哪一份报告"，只能
--- 靠时间去猜，容易猜错。这一列直接把对应的 life_map_submissions.id 存
--- 进来，以后一眼就能对上，不用再去猜。
-alter table public.orders add column if not exists submission_id uuid references public.life_map_submissions(id) on delete set null;
+-- 靠时间去猜，容易猜错。这一列直接把对应的提交记录 id 存进来，以后
+-- 一眼就能对上，不用再去猜。
+alter table public.orders add column if not exists submission_id uuid;
+-- 这一列最初设计成外键、只指向 life_map_submissions 一张表——后来陆续
+-- 加了关系共振、生命灵签、塔罗三张牌阵这些新产品，submission_id 现在
+-- 可能指向好几张不同的表，外键只能绑一张表，硬指向 life_map_submissions
+-- 会导致其余产品的订单，一插入就被外键校验拦下来（"创建订单失败"这个
+-- 报错的真正原因）。这里把外键约束去掉，改成普通字段——数据完整性靠
+-- 代码层面保证（每个产品的下单接口自己知道该存哪张表的id），不再依赖
+-- 数据库外键去校验。
+alter table public.orders drop constraint if exists orders_submission_id_fkey;
 -- 光有 submission_id 还是要跳到另一张表才能看到名字——同一个人测试用了
 -- 好几个不同的名字，光靠这一列在 orders 表里排查还是要来回切表核对。
 -- 这里直接把名字也存一份进来（拿到当时的名字就够用了，不需要跟着
