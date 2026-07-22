@@ -5,7 +5,7 @@ import QianReport from "./QianReport";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "你的三重生命印记 | 灵犀生命印记 · Lingxi",
+  title: "你的三重生命签 | 灵犀生命灵签 · Lingxi",
   robots: { index: false, follow: false },
 };
 
@@ -30,7 +30,7 @@ export default function QianFullPage({
               href="/qian"
               className="mt-8 inline-block border border-lattice/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
             >
-              <span data-lang="zh">返回生命印记</span>
+              <span data-lang="zh">返回生命灵签</span>
               <span data-lang="en">Back to Life Oracle</span>
             </a>
           </div>

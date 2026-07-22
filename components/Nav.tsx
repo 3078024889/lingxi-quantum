@@ -29,7 +29,7 @@ const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", rune: "crescent" },
   { href: "/daily", zh: "今日运势", en: "Daily Horoscope", rune: "mandala" },
   { href: "/tarot", zh: "灵犀量子塔罗", en: "Lingxi Quantum Tarot", rune: "twin" },
-  { href: "/qian", zh: "灵犀生命印记", en: "Lingxi Life Oracle", rune: "crystal" },
+  { href: "/qian", zh: "灵犀生命灵签", en: "Lingxi Life Oracle", rune: "crystal" },
 ];
 
 export default function Nav() {

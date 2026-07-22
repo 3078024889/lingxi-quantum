@@ -1,17 +1,13 @@
-import { QIAN_SIGNS, type QianSign } from "./qian-data";
+import { ORIGIN_SIGNS, SOUL_SIGNS, WALKER_SIGNS, type LifeSign } from "./qian-data";
 
 // ────────────────────────────────────────────────────────────────────
-// 摇签 · 确定性抽签
+// 灵犀生命灵签 · 确定性抽签
 // ────────────────────────────────────────────────────────────────────
-// 摇出的3支签，来自这个人真实的四柱——年柱、日柱、时柱本身，就是
-// 六十甲子里的3个真实组合，直接摇出这个人自己的柱，比另外用哈希算
-// 3个不相干的签更贴合"这签是你的"这件事本身。没有出生时间的人，
-// 时柱缺失，第三支签改用"日柱+月柱地支"合成的一个确定性索引代替。
-function ganzhiToIndex(ganzhi: string): number {
-  const idx = QIAN_SIGNS.findIndex((s) => s.ganzhi === ganzhi);
-  return idx >= 0 ? idx : 0;
-}
-
+// 年柱→源流签(24枚池)、日柱→灵魂签(24枚池)、时柱→行者签(16枚池)——
+// 三层各自独立的象征池，不是同一批签换个名字。每根柱子本身是60甲子
+// 里的一个真实组合，这里把它哈希映射到对应层的池子大小上，同一份
+// 出生数据，重新读取还是同样的三枚签——"这签是你的"这句话依然成立，
+// 只是现在签库本身更丰富（64枚原型，而不是60甲子字面意义上的重复）。
 function hashToIndex(str: string, mod: number): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
@@ -20,12 +16,10 @@ function hashToIndex(str: string, mod: number): number {
 
 export function drawThreeSigns(input: {
   yearPillar: string; monthPillar: string; dayPillar: string; hourPillar: string | null;
-}): [QianSign, QianSign, QianSign] {
-  const first = QIAN_SIGNS[ganzhiToIndex(input.yearPillar)];
-  const second = QIAN_SIGNS[ganzhiToIndex(input.dayPillar)];
-  const thirdIdx = input.hourPillar
-    ? ganzhiToIndex(input.hourPillar)
-    : hashToIndex(`third:${input.monthPillar}:${input.dayPillar}`, 60);
-  const third = QIAN_SIGNS[thirdIdx];
-  return [first, second, third];
+}): [LifeSign, LifeSign, LifeSign] {
+  const origin = ORIGIN_SIGNS[hashToIndex(`origin:${input.yearPillar}`, ORIGIN_SIGNS.length)];
+  const soul = SOUL_SIGNS[hashToIndex(`soul:${input.dayPillar}`, SOUL_SIGNS.length)];
+  const walkerSeed = input.hourPillar ? `walker:${input.hourPillar}` : `walker:${input.monthPillar}:${input.dayPillar}`;
+  const walker = WALKER_SIGNS[hashToIndex(walkerSeed, WALKER_SIGNS.length)];
+  return [origin, soul, walker];
 }
