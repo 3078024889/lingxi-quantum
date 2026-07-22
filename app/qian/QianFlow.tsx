@@ -80,14 +80,24 @@ export default function QianFlow() {
   const unlock = async () => {
     if (!submissionId) return;
     setUnlocking(true);
-    const res = await fetch("/api/pay/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId: "qian-reading", submissionId, returnPath: `/qian/full?id=${submissionId}` }),
-    });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-    else setUnlocking(false);
+    setError("");
+    try {
+      const res = await fetch("/api/pay/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: "qian-reading", submissionId, returnPath: `/qian/full?id=${submissionId}` }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError((data.error || t("下单失败，请稍后再试。", "Order failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
+        setUnlocking(false);
+      }
+    } catch {
+      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+      setUnlocking(false);
+    }
   };
 
   if (stage === "form") {
@@ -217,6 +227,7 @@ export default function QianFlow() {
         >
           {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="开启完整生命解码 · $9.9" en="Unlock the Full Decoding · $9.9" />}
         </button>
+        {error && <p className="mt-3 text-xs text-rose">{error}</p>}
         {signs && (
           <button
             onClick={() => {

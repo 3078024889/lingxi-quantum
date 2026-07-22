@@ -77,14 +77,24 @@ export default function TarotReadingFlow() {
   const unlock = async () => {
     if (!submissionId) return;
     setUnlocking(true);
-    const res = await fetch("/api/pay/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId: "tarot-reading", submissionId, returnPath: `/tarot/reading/full?id=${submissionId}` }),
-    });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-    else setUnlocking(false);
+    setError("");
+    try {
+      const res = await fetch("/api/pay/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: "tarot-reading", submissionId, returnPath: `/tarot/reading/full?id=${submissionId}` }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setError((data.error || t("下单失败，请稍后再试。", "Order failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
+        setUnlocking(false);
+      }
+    } catch {
+      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+      setUnlocking(false);
+    }
   };
 
   if (stage === "form") {
@@ -205,6 +215,7 @@ export default function TarotReadingFlow() {
         >
           {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="解锁三张牌阵深度解读 · $9.9" en="Unlock the Three-Card Reading · $9.9" />}
         </button>
+        {error && <p className="mt-3 text-xs text-rose">{error}</p>}
       </div>
     </div>
   );
