@@ -44,11 +44,11 @@ export const relationshipProducts: Product[] = [
   { id: "relationship-resonance", name: "关系共振图谱", nameEn: "Relationship Resonance Map", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁你与任意一人的共振分析——亲密关系、合伙、任何两人关系皆可，永久保存、可测多次", noteEn: "One exchange unlocks resonance analysis between you and anyone — romantic, business, or any pairing. Yours to keep, test as many pairs as you like.", group: "cultivation" },
 ];
 
-export const tarotProducts: Product[] = [
-  { id: "tarot-deep", name: "灵犀量子塔罗 · 深度探索", nameEn: "Lingxi Quantum Tarot · Deep Exploration", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁专属于你的过去/现在/未来三张牌阵解读——由你的真实命盘数据确定，不是随机抽取，永久保存、可测多次", noteEn: "One exchange unlocks your own Past / Present / Future spread — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
+export const qianProducts: Product[] = [
+  { id: "qian-reading", name: "摇签 · 场域解读", nameEn: "Sign Drawing · Field Reading", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁属于你的三支签的完整解读——由你的真实命盘四柱确定，不是随机摇出，永久保存、可再读", noteEn: "One exchange unlocks the full reading of your three signs — determined by your real chart pillars, not a random shake. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...tarotProducts];
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }

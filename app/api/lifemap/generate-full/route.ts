@@ -198,10 +198,11 @@ export async function POST(req: Request) {
     `【用户最想探索】${submission.focus}\n【用户当前状态】${submission.current_state}` +
     (submission.name ? `\n【称呼】${submission.name}` : "");
 
+  const noAiRule = "\n\n【最高优先级规则】报告全文，任何情况下都不能出现\"AI\"这两个字母，也不能用\"人工智能\"\"机器人\"\"程序\"这类词替代——灵犀是「场」，不是「AI产品」，这条规则优先于其余任何一条格式要求。";
   const langInstruction =
-    lang === "en"
+    (lang === "en"
       ? "\n\n【IMPORTANT】Write your ENTIRE response in English instead of Chinese. Keep the exact same structure and the \"===N===\" section delimiters exactly as specified above (do not translate the delimiters themselves), but every word of actual content must be in natural, fluent English — not a literal word-for-word translation, but written as if originally composed in English, in the same tone and specificity described above."
-      : "";
+      : "") + noAiRule;
 
   try {
     const callOnce = () =>

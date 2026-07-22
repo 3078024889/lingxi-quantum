@@ -42,6 +42,7 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "romance", title: "桃花磁场测试 · 桃花运", titleEn: "Romance Magnetism Index", href: "/romance" },
   { slug: "daily", title: "今日运势 · 每日星座运势", titleEn: "Daily Horoscope", href: "/daily" },
   { slug: "tarot", title: "灵犀量子塔罗 · 今日塔罗 · 每日一卡", titleEn: "Lingxi Quantum Tarot · Daily Card", href: "/tarot" },
+  { slug: "qian", title: "摇签 · 求签 · 意识占卜", titleEn: "Sign Drawing · Field Divination", href: "/qian" },
 ];
 
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的

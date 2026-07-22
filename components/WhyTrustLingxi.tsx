@@ -15,8 +15,8 @@ export default function WhyTrustLingxi() {
       </p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">
         <Bi
-          zh="不是AI临场编的。灵犀场底层是一套「生命向量引擎」——先用真实天文数据（此刻行星在黄道上的精确位置）和真实历法数据（你的四柱八字），算出一组固定的数字，人格倾向、情感深度、社交驱动这些维度，全部是先算出分数，AI才根据这些已经算好的数字去写解读，不是AI自己决定要不要说你「压力恢复能力强」。同一份出生数据，任何时候重新算，前面的分数都是一样的——这是它跟一般AI算命网站最大的不同：别的网站是「问AI你怎么看」，这里是「先算出结构，AI只负责讲清楚这个结构」。"
-          en="This isn't improvised by AI. Underneath, Lingxi Field runs a Life Vector Engine — real astronomical data (the exact position of the planets right now) and real calendrical data (your bazi pillars) get computed into a fixed set of numbers first. Traits like stress recovery or social drive are scored before any writing happens — the AI explains a structure that's already been calculated, it doesn't decide on its own whether to call you resilient. Run the same birth data again, and the underlying scores come out identical. That's the core difference from a typical AI horoscope site: most ask the AI what it thinks; this computes the structure first and only asks the AI to explain it clearly."
+          zh="不是临场编的。灵犀场底层是一套「生命向量引擎」——先用真实天文数据（此刻行星在黄道上的精确位置）和真实历法数据（你的四柱八字），算出一组固定的数字，人格倾向、情感深度、社交驱动这些维度，全部是先算出分数，灵犀才根据这些已经算好的数字去写解读，不是灵犀自己决定要不要说你「压力恢复能力强」。同一份出生数据，任何时候重新算，前面的分数都是一样的——这是它跟一般算命网站最大的不同：别的网站是「直接问、直接给答案」，这里是「先算出结构，灵犀只负责讲清楚这个结构」。"
+          en="This isn't improvised on the spot. Underneath, Lingxi Field runs a Life Vector Engine — real astronomical data (the exact position of the planets right now) and real calendrical data (your bazi pillars) get computed into a fixed set of numbers first. Traits like stress recovery or social drive are scored before any writing happens — Lingxi explains a structure that's already been calculated, it doesn't decide on its own whether to call you resilient. Run the same birth data again, and the underlying scores come out identical. That's the core difference from a typical horoscope site: most just ask and answer directly; this computes the structure first, and only asks Lingxi to explain it clearly."
         />
       </p>
     </div>

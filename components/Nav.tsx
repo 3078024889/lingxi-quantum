@@ -29,14 +29,14 @@ const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", rune: "crescent" },
   { href: "/daily", zh: "今日运势", en: "Daily Horoscope", rune: "mandala" },
   { href: "/tarot", zh: "灵犀量子塔罗", en: "Lingxi Quantum Tarot", rune: "twin" },
-  { href: "/tarot/deep", zh: "塔罗深度探索 · $9.9", en: "Tarot Deep Exploration · $9.9", rune: "crystal" },
+  { href: "/qian", zh: "摇签 · $9.9", en: "Sign Drawing · $9.9", rune: "crystal" },
 ];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [testsOpen, setTestsOpen] = useState(false);
   const pathname = usePathname();
-  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/daily") || pathname?.startsWith("/tarot");
+  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/daily") || pathname?.startsWith("/tarot") || pathname?.startsWith("/qian");
 
   return (
     <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">

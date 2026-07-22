@@ -114,9 +114,10 @@ export async function POST(req: Request) {
     "===4===\n（长期潜力：这段关系需要具备什么条件才能长期健康地走下去——不是预测结果，是指出具体需要建立的\"共识\"或者\"分工\"，约250-300字）\n" +
     "===5===\n（成长方向：给两人各自一条具体的、可操作的建议，说明为什么是这一条建议、跟这两人的具体特质如何对应，结尾可以轻描淡写地提一句灵犀场的修炼技术或生命图谱，语气像朋友随口一提，不能是广告腔，约200-250字）\n";
 
-  const langInstruction = lang === "en"
+  const noAiRule = "\n\n【最高优先级规则】报告全文，任何情况下都不能出现\"AI\"这两个字母，也不能用\"人工智能\"\"机器人\"\"程序\"这类词替代——灵犀是「场」，不是「AI产品」，这条规则优先于其余任何一条格式要求。";
+  const langInstruction = (lang === "en"
     ? "\n\n【IMPORTANT】Write your entire response in natural, fluent English (not Chinese), while keeping the exact ===N=== section markers."
-    : "";
+    : "") + noAiRule;
 
   const messages = [
     { role: "system", content: system + langInstruction },
