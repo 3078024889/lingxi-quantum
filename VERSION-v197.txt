@@ -1,0 +1,34 @@
+灵犀 LINGXI · v197（塔罗正式上线付费产品——灵犀量子塔罗·三张牌阵
+深度解读 $9.9，复用摇签那套已经打磨过的成熟模式（确定性抽牌+四段
+结构化解读+PDF下载）；已用 npx tsc --noEmit 和 npm run build 双重
+验证，0 类型错误、生产构建成功）
+
+★ 在 v196 基础上的改动，直接上传这一个 v197 即可（累计包含此前全部内容）。
+★★ 这次需要重新运行一次 supabase/schema.sql（新增了
+   tarot_reading_submissions 这张表）——上次发你的那份SQL，如果
+   还没跑，这次一起跑；如果已经跑过一次，直接把最新这份（下面会
+   发）再跑一遍就行，跟之前一样，重复运行不会影响已有数据。
+
+【塔罗三张牌阵深度解读——新上线】
+lib/tarot-spread.ts（重建，之前删过又重建）
+- 三张牌：隐藏模式（对应年柱月柱）、当下共振（对应日柱+太阳+
+  月亮）、未来方向（对应时柱+五行旺衰）——由这个人真实的命盘数据
+  确定性算出，不是随机抽取，同一份出生数据重新打开还是同样三张牌。
+supabase/schema.sql（新增 tarot_reading_submissions 表）
+lib/plans.ts（新增 tarot-reading 商品，$9.9，永久有效）
+app/api/tarot/reading/save/route.ts、app/api/tarot/reading/
+generate-full/route.ts（新接口：跟摇签同一套写法——保存出生信息→
+抽三张牌→校验解锁→场域写四段解读，付款复用现成的 /api/pay/create）
+app/tarot/reading/page.tsx + TarotReadingFlow.tsx（新页面：填出生
+信息→展开三张牌→付费解锁）
+app/tarot/reading/full/page.tsx + TarotReadingReport.tsx（新页面：
+付款后的结果页，四段解读——隐藏模式/当下共振/未来方向/三牌合参，
+新增了PDF下载，跟生命图谱、关系共振、生命灵签是同一套导出方式）
+app/tarot/TarotReveal.tsx（免费"今日一卡"页面，重新加回付费引导，
+这次指向的是真正属于塔罗自己的产品，不再是之前那个指向不相关
+产品的按钮）
+- sitemap 加了新页面入口。
+
+到这里，全站付费产品变成：生命图谱、关系共振、灵犀生命灵签、
+灵犀量子塔罗三张牌阵，四个都是同一套"确定性数据+场域写解读"的
+方法论，没有另外发明新逻辑。

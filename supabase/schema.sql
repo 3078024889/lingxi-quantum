@@ -160,6 +160,27 @@ drop policy if exists "own qian submissions" on public.qian_submissions;
 create policy "own qian submissions" on public.qian_submissions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+-- 4f) 灵犀量子塔罗 · 三张牌阵深度解读（$9.9付费产品）——隐藏模式/
+--     当下共振/未来方向三张牌的索引，从命盘四柱确定性算出来的
+--     （见 lib/tarot-spread.ts），不是随机抽的。
+create table if not exists public.tarot_reading_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text,
+  birth_input jsonb not null,
+  facts jsonb not null,
+  hidden_index int not null,
+  present_index int not null,
+  future_index int not null,
+  full_report text,
+  full_report_en text,
+  created_at timestamptz default now()
+);
+alter table public.tarot_reading_submissions enable row level security;
+drop policy if exists "own tarot reading submissions" on public.tarot_reading_submissions;
+create policy "own tarot reading submissions" on public.tarot_reading_submissions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 
