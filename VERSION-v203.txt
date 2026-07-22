@@ -1,0 +1,24 @@
+灵犀 LINGXI · v203（场域入口（账户页）新增生命灵签、塔罗生命镜像的
+报告列表——跟你说的生命图谱、关系共振那套一样，可以看、可以点进去
+下载PDF、可以删除；已用 npx tsc --noEmit 和 npm run build 双重
+验证，0 类型错误、生产构建成功）
+
+★ 在 v202 基础上的改动，直接上传这一个 v203 即可（累计包含此前全部内容）。
+★★ 这次不需要新的SQL。
+
+【场域入口新增两个报告列表】
+app/api/qian/delete/route.ts、app/api/tarot/reading/delete/route.ts
+（新接口，删除逻辑）
+app/account/QianReportRow.tsx、app/account/TarotReadingReportRow.tsx
+（新组件，跟生命图谱的ReportRow、关系共振的RelationshipReportRow
+是同一套交互）
+app/account/page.tsx
+- 之前场域入口只查了 life_map_submissions 和 relationship_
+  submissions 这两张表——生命灵签、塔罗生命镜像各自也是独立的表，
+  之前完全没查过，所以测完这两个，账户页里理所当然什么都看不到，
+  不是判断逻辑漏了什么，是压根没写查这两张表的代码。这次一起补上。
+- 现在账户页会显示"我的生命灵签""我的塔罗生命镜像"两个列表，点
+  进去就是各自的结果页（PDF下载按钮已经在结果页里，这次没有另外
+  在列表这里加下载按钮，是复用结果页已有的下载功能，不用做两份）。
+  每一条记录旁边有删除按钮，跟生命图谱、关系共振那两个是一致的
+  交互——点删除图标会先要求"确认删除"，不是点一下就直接没了。

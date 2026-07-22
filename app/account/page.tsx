@@ -8,6 +8,8 @@ import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
 import RelationshipReportRow from "./RelationshipReportRow";
 import ReportRow from "./ReportRow";
+import QianReportRow from "./QianReportRow";
+import TarotReadingReportRow from "./TarotReadingReportRow";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
 import { createClient } from "@/lib/supabase/server";
@@ -48,8 +50,12 @@ export default async function AccountPage() {
   // 判断逻辑，是压根没写查这张表的代码。这里补上，跟生命图谱报告
   // 用同一套列表样式展示。
   let relationshipReports: { id: string; name_a: string; name_b: string; created_at: string }[] = [];
+  // 同样的道理，生命灵签和塔罗生命镜像各自也是独立的表，之前场域
+  // 入口完全没查过这两张——这次一起补上，跟前两个用同一套列表样式。
+  let qianReports: { id: string; name: string | null; created_at: string }[] = [];
+  let tarotReadingReports: { id: string; name: string | null; created_at: string }[] = [];
   if (user) {
-    const [{ data: reports }, { data: relReports }] = await Promise.all([
+    const [{ data: reports }, { data: relReports }, { data: qReports }, { data: trReports }] = await Promise.all([
       supabase
         .from("life_map_submissions")
         .select("id, core_type_name, created_at")
@@ -62,9 +68,23 @@ export default async function AccountPage() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(10),
+      supabase
+        .from("qian_submissions")
+        .select("id, name, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("tarot_reading_submissions")
+        .select("id, name, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
     ]);
     lifeMapReports = reports ?? [];
     relationshipReports = relReports ?? [];
+    qianReports = qReports ?? [];
+    tarotReadingReports = trReports ?? [];
   }
 
   const nameMap: Record<string, string> = {
@@ -150,6 +170,38 @@ export default async function AccountPage() {
                       key={r.id}
                       id={r.id}
                       title={`${r.name_a} × ${r.name_b}`}
+                      date={new Date(r.created_at).toLocaleDateString()}
+                    />
+                  ))}
+                  </div>
+                </div>
+              )}
+
+              {qianReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的生命灵签" en="My Life Oracle Readings" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {qianReports.map((r) => (
+                    <QianReportRow
+                      key={r.id}
+                      id={r.id}
+                      title={r.name}
+                      date={new Date(r.created_at).toLocaleDateString()}
+                    />
+                  ))}
+                  </div>
+                </div>
+              )}
+
+              {tarotReadingReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的塔罗生命镜像" en="My Quantum Life Mirrors" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {tarotReadingReports.map((r) => (
+                    <TarotReadingReportRow
+                      key={r.id}
+                      id={r.id}
+                      title={r.name}
                       date={new Date(r.created_at).toLocaleDateString()}
                     />
                   ))}

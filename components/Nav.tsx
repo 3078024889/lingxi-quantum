@@ -48,7 +48,8 @@ export default function Nav() {
             className="group flex flex-col leading-tight"
           >
             <span className="flex items-center gap-1.5 font-display text-base tracking-widest2 text-bone transition group-hover:text-lattice sm:text-lg">
-              <RuneIcon kind="mark" className="h-[1.05em] w-[1.05em] text-lattice" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="h-[1.4em] w-[1.4em]" />
               灵犀场 LINGXIFIELD
             </span>
             <span className="mt-1 hidden font-display text-[12px] tracking-[0.1em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
