@@ -2,46 +2,92 @@
 
 import { useState } from "react";
 import Bi from "@/components/Bi";
-import SpiralField from "@/components/SpiralField";
-import { useLang } from "@/lib/useLang";
 import type { TarotCard } from "@/lib/tarot-data";
 
+// 三段式的"进入场域"仪式，取代原来"点一下、等0.9秒、弹出图片"这种
+// 过于简单的交互——不是重新设计整个产品定位（见这次回复里对GPT那份
+// "场域会话"方案的具体意见），是把"揭示"这个动作本身，做得更有分量：
+// 第一步星云汇聚，第二步核心凝结出光点，第三步光点长成完整的卡牌——
+// 卡牌是"从场域中心浮现出来的"，不是"翻开的"，视觉上更贴近"一个象征
+// 在场域中显化"这个感觉，但没有牺牲卡牌本身内容的具体性。
 export default function TarotReveal({ card }: { card: TarotCard }) {
-  const langEn = useLang();
-  const [revealing, setRevealing] = useState(false);
-  const [revealed, setRevealed] = useState(false);
+  const [stage, setStage] = useState<"idle" | "gathering" | "condensing" | "revealed">("idle");
 
-  const reveal = () => {
-    if (revealed || revealing) return;
-    setRevealing(true);
-    // 半秒钟的"翻牌中"动效，配合螺旋动效，让"揭示"这个动作有一点仪式感，
-    // 不是点了就立刻弹出文字——神秘空间先回应一下，再给出答案。
-    setTimeout(() => {
-      setRevealing(false);
-      setRevealed(true);
-    }, 900);
+  const enter = () => {
+    if (stage !== "idle") return;
+    setStage("gathering");
+    setTimeout(() => setStage("condensing"), 1400);
+    setTimeout(() => setStage("revealed"), 2600);
   };
 
   const imgSrc = `/images/tarot/${String(card.index).padStart(2, "0")}.jpg`;
 
-  if (!revealed) {
+  if (stage !== "revealed") {
     return (
-      <>
-        <SpiralField active={revealing} label={langEn ? "The card is turning in light…" : "塔罗正在被光翻开……"} />
-        <button
-          onClick={reveal}
-          disabled={revealing}
-          className="lx-tarot-card group relative mx-auto flex h-80 w-56 flex-col items-center justify-center gap-4 rounded-sm border border-lattice/30 bg-void-deep transition hover:border-lattice/60 disabled:cursor-wait"
-        >
-          <span className="font-display text-4xl text-lattice/60 transition group-hover:text-lattice">✦</span>
-          <span className="font-display text-xs uppercase tracking-widest2 text-bone-dim">
-            <Bi zh="翻开今日塔罗" en="Reveal Today's Card" />
-          </span>
-          <style>{`
-          .lx-tarot-card { background-image: repeating-linear-gradient(45deg, rgba(199,156,255,0.05) 0 2px, transparent 2px 14px); }
+      <div className="lx-field relative mx-auto flex h-80 w-64 items-center justify-center">
+        {/* 星云汇聚层——九色光环，一进入就开始缓慢转动，不是等点击才出现，
+           营造"场域一直在，你只是走近了它"的感觉。 */}
+        <div className="lx-nebula pointer-events-none absolute inset-0 rounded-full" />
+        <div className="lx-nebula-2 pointer-events-none absolute inset-4 rounded-full" />
+
+        {stage === "idle" && (
+          <button
+            onClick={enter}
+            className="lx-enter-btn group relative z-10 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full border border-lattice/40 bg-void/70 backdrop-blur-sm transition hover:border-lattice/70"
+          >
+            <span className="font-display text-2xl text-lattice/70 transition group-hover:text-lattice">✦</span>
+            <span className="px-2 text-center font-display text-[10px] uppercase tracking-widest2 text-bone-dim">
+              <Bi zh="进入灵犀场" en="Enter the Field" />
+            </span>
+          </button>
+        )}
+
+        {(stage === "gathering" || stage === "condensing") && (
+          <>
+            {/* 粒子从四周向中心汇聚 */}
+            {Array.from({ length: 14 }).map((_, i) => (
+              <span
+                key={i}
+                className="lx-particle absolute h-1 w-1 rounded-full"
+                style={{
+                  ["--a" as string]: `${(i * 360) / 14}deg`,
+                  ["--delay" as string]: `${i * 0.05}s`,
+                  background: ["#C79CFF", "#8CD2FF", "#7CE0D3", "#E8B765", "#FF8FD1"][i % 5],
+                }}
+              />
+            ))}
+            {/* 中心核心——先是一个小光点，凝结阶段开始放大发光，为卡牌浮现做铺垫 */}
+            <span className={`lx-core absolute rounded-full bg-white ${stage === "condensing" ? "lx-core-grow" : ""}`} />
+            {stage === "condensing" && (
+              <p className="absolute bottom-0 font-display text-xs tracking-widest2 text-lattice/80">
+                <Bi zh="一个象征正在浮现……" en="A symbol is emerging…" />
+              </p>
+            )}
+          </>
+        )}
+
+        <style>{`
+          .lx-nebula { background: conic-gradient(from 0deg, #C79CFF, #8CD2FF, #7CE0D3, #7FE7C4, #E8D08A, #E8B765, #FF8FD1, #FF7A8A, #D8B8FF, #C79CFF); filter: blur(26px); opacity: 0.35; animation: lx-spin 16s linear infinite; }
+          .lx-nebula-2 { background: conic-gradient(from 180deg, #C79CFF, #8CD2FF, #7CE0D3, #7FE7C4, #E8D08A, #E8B765, #FF8FD1, #FF7A8A, #D8B8FF, #C79CFF); filter: blur(16px); opacity: 0.25; animation: lx-spin-rev 11s linear infinite; }
+          @keyframes lx-spin { to { transform: rotate(360deg); } }
+          @keyframes lx-spin-rev { to { transform: rotate(-360deg); } }
+          .lx-particle { left: 50%; top: 50%; box-shadow: 0 0 6px 2px currentColor; animation: lx-gather 1.3s ease-in both; animation-delay: var(--delay); }
+          @keyframes lx-gather {
+            0%   { opacity: 0; transform: rotate(var(--a)) translateX(110px) scale(1); }
+            20%  { opacity: 1; }
+            100% { opacity: 0; transform: rotate(var(--a)) translateX(0) scale(0.2); }
+          }
+          .lx-core { width: 6px; height: 6px; box-shadow: 0 0 12px 4px rgba(255,255,255,0.9); animation: lx-pulse 1s ease-in-out infinite; }
+          .lx-core-grow { animation: lx-core-expand 1.2s cubic-bezier(.22,1,.36,1) forwards; }
+          @keyframes lx-pulse { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
+          @keyframes lx-core-expand { from { width: 6px; height: 6px; box-shadow: 0 0 12px 4px rgba(255,255,255,0.9); } to { width: 220px; height: 220px; box-shadow: 0 0 60px 20px rgba(255,255,255,0.5); opacity: 0; } }
+          .lx-enter-btn { animation: lx-breathe 3s ease-in-out infinite; }
+          @keyframes lx-breathe { 0%,100% { box-shadow: 0 0 0 rgba(199,156,255,0); } 50% { box-shadow: 0 0 24px 4px rgba(199,156,255,0.25); } }
+          @media (prefers-reduced-motion: reduce) {
+            .lx-nebula, .lx-nebula-2, .lx-particle, .lx-core, .lx-core-grow, .lx-enter-btn { animation: none !important; }
+          }
         `}</style>
-        </button>
-      </>
+      </div>
     );
   }
 
@@ -98,8 +144,8 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
       </div>
 
       <style>{`
-        .lx-tarot-reveal { animation: lx-tarot-in 0.5s cubic-bezier(.22,1,.36,1) both; }
-        @keyframes lx-tarot-in { from { opacity: 0; transform: scale(0.9) rotateY(90deg); } to { opacity: 1; transform: scale(1) rotateY(0deg); } }
+        .lx-tarot-reveal { animation: lx-tarot-in 0.6s cubic-bezier(.22,1,.36,1) both; }
+        @keyframes lx-tarot-in { from { opacity: 0; transform: scale(0.85); filter: brightness(2); } to { opacity: 1; transform: scale(1); filter: brightness(1); } }
         @media (prefers-reduced-motion: reduce) { .lx-tarot-reveal { animation: none; } }
       `}</style>
     </div>
