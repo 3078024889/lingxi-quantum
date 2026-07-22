@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
-import { QIAN_SIGNS } from "@/lib/qian-data";
+import { QIAN_SIGNS, IMPRINT_LABELS } from "@/lib/qian-data";
+
+const LAYER_TITLES = [
+  { zh: "生命原型", en: "Life Archetype" },
+  { zh: "潜意识映射", en: "Subconscious Mapping" },
+  { zh: "阴影觉察", en: "Shadow Awareness" },
+  { zh: "创造方向", en: "Creation Direction" },
+];
 
 export default function QianReport({ id }: { id: string }) {
   const langEn = useLang();
@@ -46,7 +53,12 @@ export default function QianReport({ id }: { id: string }) {
           setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
           return;
         }
-        setSections((data.fullReport as string).split(/\n\s*\n/).map((s: string) => s.trim()).filter(Boolean));
+        setSections(
+          (data.fullReport as string)
+            .split(/===\s*\d+\s*===/)
+            .map((s: string) => s.trim())
+            .filter(Boolean)
+        );
         setStatus("ready");
       } catch {
         setStatus("error");
@@ -104,16 +116,19 @@ export default function QianReport({ id }: { id: string }) {
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-          <Bi zh="摇签 · 场域解读" en="Sign Drawing · Field Reading" />
+          <Bi zh="灵犀生命印记 · 场域解读" en="Lingxi Life Oracle · Field Reading" />
         </p>
       </div>
       <h1 className="mt-6 text-center font-display text-3xl font-light text-bone">
-        {name || t("你的", "Your")} <Bi zh="三支签" en="Three Signs" />
+        {name || t("你的", "Your")} <Bi zh="三重生命印记" en="Three Life Imprints" />
       </h1>
 
       <div className="mt-8 grid grid-cols-3 gap-3">
         {signs.map((s, i) => (
           <div key={i} className="rounded-sm border border-lattice/25 bg-void-deep p-4 text-center">
+            <p className="text-[10px] uppercase tracking-widest2 text-amber/80">
+              <Bi zh={IMPRINT_LABELS[i].zh} en={IMPRINT_LABELS[i].en} />
+            </p>
             <p className="font-display text-2xl text-amber">{s.ganzhi}</p>
             <p className="mt-2 text-xs text-bone">
               <Bi zh={s.nameZh} en={s.nameEn} />
@@ -125,6 +140,11 @@ export default function QianReport({ id }: { id: string }) {
       <div className="mt-8 space-y-5">
         {sections.map((content, i) => (
           <div key={i} className="rounded-sm border border-white/10 bg-void-deep p-6">
+            {LAYER_TITLES[i] && (
+              <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+                <Bi zh={LAYER_TITLES[i].zh} en={LAYER_TITLES[i].en} />
+              </p>
+            )}
             <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
           </div>
         ))}

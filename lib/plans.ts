@@ -45,7 +45,7 @@ export const relationshipProducts: Product[] = [
 ];
 
 export const qianProducts: Product[] = [
-  { id: "qian-reading", name: "摇签 · 场域解读", nameEn: "Sign Drawing · Field Reading", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁属于你的三支签的完整解读——由你的真实命盘四柱确定，不是随机摇出，永久保存、可再读", noteEn: "One exchange unlocks the full reading of your three signs — determined by your real chart pillars, not a random shake. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "qian-reading", name: "灵犀生命印记 · 场域解读", nameEn: "Lingxi Life Oracle · Field Reading", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁属于你的三重生命印记的完整解读——由你的真实命盘四柱确定，不是随机摇出，永久保存、可再读", noteEn: "One exchange unlocks the full reading of your three life imprints — determined by your real chart pillars, not a random shake. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts];

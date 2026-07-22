@@ -67,3 +67,12 @@ function buildSigns(): QianSign[] {
 // 古代历法周期（干支纪年纪日的基础），每一签对应一个真实的干支组合，
 // "来源于古老的星历系统"这句话，字面意义上是真的。
 export const QIAN_SIGNS: QianSign[] = buildSigns();
+
+// 三个位置各自的"印"——年柱/日柱/时柱三个真实命盘位置，各自对应一个
+// 更贴合"生命编码"而不是"抽签编号"的名字，替换"第一支/第二支/第三支"
+// 这种编号式叫法。
+export const IMPRINT_LABELS = [
+  { zh: "源流印", en: "Origin Seal", sub: "对应年柱 · 你从哪里来", subEn: "Year Pillar · Where you come from" },
+  { zh: "核心印", en: "Core Seal", sub: "对应日柱 · 你此刻是谁", subEn: "Day Pillar · Who you are right now" },
+  { zh: "行动印", en: "Action Seal", sub: "对应时柱 · 你如何展开", subEn: "Hour Pillar · How you move forward" },
+] as const;

@@ -124,7 +124,7 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
           href="/qian"
           className="mt-5 inline-block bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice"
         >
-          <Bi zh="去摇签 · $9.9" en="Go Draw Your Signs · $9.9" />
+          <Bi zh="去读取我的生命印记 · $9.9" en="Go Reveal My Life Imprints · $9.9" />
         </a>
       </div>
 

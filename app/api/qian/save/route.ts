@@ -64,7 +64,17 @@ export async function POST(req: Request) {
       .single();
 
     if (insertErr || !submission) {
-      console.error("[qian save] 写入失败:", insertErr);
+      console.error("[qian save] 写入失败，Supabase 原始错误:", insertErr);
+      if (insertErr?.code === "42P01") {
+        // Postgres错误码 42P01 = relation does not exist——最可能的原因：
+        // qian_submissions 这张新表还没在 Supabase 项目里建出来，需要
+        // 重新跑一次 supabase/schema.sql（跟之前修炼心得记录踩的是
+        // 同一个坑）。
+        return NextResponse.json(
+          { error: "保存失败：数据库里还没有这张表。需要在 Supabase 后台的 SQL Editor 里，重新运行一次 schema.sql 这个文件（不会影响已有数据），建出 qian_submissions 这张表。" },
+          { status: 500 }
+        );
+      }
       return NextResponse.json({ error: "保存失败，请稍后再试。" }, { status: 500 });
     }
 
