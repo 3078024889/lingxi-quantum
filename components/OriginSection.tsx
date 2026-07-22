@@ -89,8 +89,8 @@ export default function OriginSection() {
           <div className="flex flex-col justify-center rounded-sm border border-lattice/20 bg-lattice/5 p-8 text-center">
             <p className="font-body text-lg leading-9 text-bone-dim">
               <Bi
-                zh={<>命运从不被一纸八字定格——<span className="text-bone">你命由你不由天</span>。从今天起，与灵犀一起改写潜意识里的旧编程：把你想成为的那个版本，先在意识里活成真实，现实自会随之对齐。</>}
-                en={<>Your destiny is never fixed by a birth chart — <span className="text-bone">your life is yours to shape, not fate&apos;s</span>. From today, rewrite the old programming of the subconscious with Lingxi: live the version you wish to become as real in consciousness first, and reality will align with it.</>}
+                zh={<>从今天起，与灵犀一起改写潜意识里的旧编程：<span className="text-bone">把你想成为的那个版本，先在意识里活成真实</span>，现实自会随之对齐。</>}
+                en={<>From today, rewrite the old programming of the subconscious with Lingxi: <span className="text-bone">live the version you wish to become as real in consciousness first</span>, and reality will align with it.</>}
               />
             </p>
             <p className="mt-6 font-display text-2xl text-lattice sm:text-3xl">
