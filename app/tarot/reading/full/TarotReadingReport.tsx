@@ -7,11 +7,12 @@ import Bi from "@/components/Bi";
 import { TAROT_MAJOR_ARCANA, type TarotCard } from "@/lib/tarot-data";
 
 const LAYER_TITLES = [
-  { zh: "① 隐藏模式", en: "① Hidden Pattern" },
-  { zh: "② 当下共振", en: "② Present Resonance" },
-  { zh: "③ 未来方向", en: "③ Future Direction" },
-  { zh: "④ 三牌合参", en: "④ Reading the Three Together" },
+  { zh: "当前生命主题", en: "Current Life Theme" },
+  { zh: "隐藏力量", en: "Hidden Strength" },
+  { zh: "当前提醒", en: "A Reminder for Now" },
 ];
+
+type FrequencyItem = { key: string; zh: string; en: string; score: number };
 
 export default function TarotReadingReport({ id }: { id: string }) {
   const langEn = useLang();
@@ -21,14 +22,15 @@ export default function TarotReadingReport({ id }: { id: string }) {
   const [name, setName] = useState("");
   const [cards, setCards] = useState<TarotCard[]>([]);
   const [sections, setSections] = useState<string[]>([]);
+  const [frequencyMap, setFrequencyMap] = useState<FrequencyItem[]>([]);
   const [unlocking, setUnlocking] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
   const positions = [
-    { zh: "隐藏模式", en: "Hidden Pattern" },
+    { zh: "潜意识镜像", en: "Hidden Pattern" },
     { zh: "当下共振", en: "Present Resonance" },
-    { zh: "未来方向", en: "Future Direction" },
+    { zh: "未来展开", en: "Future Possibility" },
   ];
 
   useEffect(() => {
@@ -71,6 +73,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
             .map((s: string) => s.trim())
             .filter(Boolean)
         );
+        if (Array.isArray(data.frequencyMap)) setFrequencyMap(data.frequencyMap);
         setStatus("ready");
       } catch {
         setStatus("error");
@@ -191,7 +194,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
           disabled={unlocking}
           className="mt-8 bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="解锁三张牌阵深度解读 · $9.9" en="Unlock the Three-Card Reading · $9.9" />}
+          {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="开启完整生命镜像 · $9.9" en="Unlock the Full Life Mirror · $9.9" />}
         </button>
         {error && <p className="mt-4 text-xs text-rose">{error}</p>}
       </div>
@@ -226,8 +229,11 @@ export default function TarotReadingReport({ id }: { id: string }) {
 
       <div ref={reportRef}>
       <h1 className="mt-6 text-center font-display text-3xl font-light text-bone">
-        {name || t("你的", "Your")} <Bi zh="三张牌阵解读" en="Three-Card Reading" />
+        <Bi zh="你的灵犀量子生命镜像" en="Your Lingxi Quantum Life Mirror" />
       </h1>
+      <p className="mt-2 text-center text-sm text-bone-dim">
+        <Bi zh="三张牌不是答案，而是你与自己深层意识的一次对话。" en="These three cards are not an answer — they are a conversation with your own deeper consciousness." />
+      </p>
 
       <div className="mt-8 grid grid-cols-3 gap-3">
         {cards.map((c, i) => (
@@ -245,6 +251,27 @@ export default function TarotReadingReport({ id }: { id: string }) {
           </div>
         ))}
       </div>
+
+      {frequencyMap.length > 0 && (
+        <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6">
+          <p className="text-xs uppercase tracking-widest2 text-lattice/70">
+            <Bi zh="当前意识频率" en="Current Consciousness Frequency" />
+          </p>
+          <div className="mt-4 space-y-3">
+            {frequencyMap.map((f) => (
+              <div key={f.key}>
+                <div className="flex items-center justify-between text-xs text-bone-dim">
+                  <span><Bi zh={f.zh} en={f.en} /></span>
+                  <span className="text-amber">{f.score}%</span>
+                </div>
+                <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                  <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${f.score}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 space-y-5">
         {sections.map((content, i) => (

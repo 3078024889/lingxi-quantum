@@ -41,7 +41,8 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "resilience", title: "生命韧性指数 · 命硬不硬测试", titleEn: "Life Resilience Index", href: "/resilience" },
   { slug: "romance", title: "桃花磁场测试 · 桃花运", titleEn: "Romance Magnetism Index", href: "/romance" },
   { slug: "daily", title: "今日运势 · 每日星座运势", titleEn: "Daily Horoscope", href: "/daily" },
-  { slug: "tarot", title: "灵犀量子塔罗 · 今日塔罗 · 每日一卡", titleEn: "Lingxi Quantum Tarot · Daily Card", href: "/tarot" },
+  { slug: "tarot", title: "灵犀量子塔罗 · 与生命场建立连接", titleEn: "Lingxi Quantum Tarot · Connect with the Field", href: "/tarot" },
+  { slug: "tarot-daily", title: "今日塔罗 · 每日一卡", titleEn: "Tarot · Daily Card", href: "/tarot/daily" },
   { slug: "qian", title: "灵犀生命灵签 · 摇签 · 求签", titleEn: "Lingxi Life Oracle · Sign Drawing", href: "/qian" },
 ];
 

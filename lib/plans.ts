@@ -49,7 +49,7 @@ export const qianProducts: Product[] = [
 ];
 
 export const tarotReadingProducts: Product[] = [
-  { id: "tarot-reading", name: "灵犀量子塔罗 · 三张牌阵深度解读", nameEn: "Lingxi Quantum Tarot · Three-Card Deep Reading", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁专属于你的三张牌阵——隐藏模式、当下共振、未来方向，由你的真实命盘数据确定，不是随机抽取，永久保存、可再读", noteEn: "One exchange unlocks your own three-card spread — hidden pattern, present resonance, future direction — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "tarot-reading", name: "灵犀量子塔罗 · 三张牌阵深度解读", nameEn: "Lingxi Quantum Tarot · Three-Card Deep Reading", priceUsd: 9.9, type: "permanent", note: "一次能量交换，解锁专属于你的三张牌阵——潜意识镜像、当下共振、未来展开，由你的真实命盘数据确定，不是随机抽取，永久保存、可再读", noteEn: "One exchange unlocks your own three-card spread — hidden pattern, present resonance, future possibility — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts];

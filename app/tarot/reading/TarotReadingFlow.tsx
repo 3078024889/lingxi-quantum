@@ -8,6 +8,13 @@ import type { TarotCard } from "@/lib/tarot-data";
 
 type Stage = "form" | "connecting" | "revealed";
 
+const CONNECTING_LINES = [
+  { zh: "正在连接灵犀场……", en: "Connecting with Lingxi Field…" },
+  { zh: "感知你的当下意识状态……", en: "Sensing your present state of consciousness…" },
+  { zh: "读取：内在情绪波动 · 当前生命主题 · 潜意识模式 · 未来展开方向", en: "Reading: inner emotional currents · current life theme · subconscious patterns · future direction" },
+  { zh: "正在生成你的三张生命镜像牌……", en: "Generating your three life mirror cards…" },
+];
+
 export default function TarotReadingFlow() {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
@@ -26,9 +33,9 @@ export default function TarotReadingFlow() {
   const [unlocking, setUnlocking] = useState(false);
 
   const positions = [
-    { zh: "隐藏模式", en: "Hidden Pattern" },
+    { zh: "潜意识镜像", en: "Hidden Pattern" },
     { zh: "当下共振", en: "Present Resonance" },
-    { zh: "未来方向", en: "Future Direction" },
+    { zh: "未来展开", en: "Future Possibility" },
   ];
 
   const connect = async () => {
@@ -67,7 +74,7 @@ export default function TarotReadingFlow() {
         setCards((data.cardIndexes as number[]).map((i) => TAROT_MAJOR_ARCANA[i]));
         setSubmissionId(data.id);
         setStage("revealed");
-      }, 1800);
+      }, 5000);
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setStage("form");
@@ -102,27 +109,27 @@ export default function TarotReadingFlow() {
       <div className="mx-auto max-w-md px-6 py-16">
         <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-            <Bi zh="灵犀量子塔罗 · 三张牌阵深度解读" en="Lingxi Quantum Tarot · Three-Card Deep Reading" />
+            <Bi zh="灵犀量子塔罗" en="Lingxi Quantum Tarot" />
           </p>
           <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-            <Bi zh="今天的那张牌，全场域共享。这三张，只属于你。" en="Today's card is shared by everyone. These three belong only to you." />
+            <Bi zh="一次与自己深层意识的连接" en="A connection with your own deeper consciousness" />
           </h1>
           <p className="mt-4 text-base leading-8 text-bone-dim">
             <Bi
-              zh="不是随机抽的。这三张牌，由你真实的命盘数据确定性算出——隐藏模式对应年柱月柱，当下共振对应日柱与太阳月亮，未来方向对应时柱与五行旺衰。同一份出生数据，重新打开还是同样三张牌，场域只负责把它们交叉引用你的命盘，写成一段解读。"
-              en="Not a random draw. These three cards are determined by your real chart data — hidden pattern from year and month pillars, present resonance from your day pillar, Sun and Moon, future direction from your hour pillar and elemental balance. The same birth data always yields the same three cards; the field's only job is weaving them into a reading, cross-referenced against your actual chart."
+              zh={<>每个人都拥有独特的生命频率。当你进入灵犀场，场域将根据你的命盘数据，自动展开三张生命镜像牌：<br />看见过去留下的模式<br />理解现在正在发生的共振<br />探索未来可能展开的方向</>}
+              en={<>Every person carries a unique life frequency. When you enter Lingxi Field, it unfolds your own three-card life mirror based on your chart data:<br />See the patterns left behind by the past<br />Understand the resonance happening now<br />Explore where the future may unfold</>}
             />
           </p>
         </div>
 
         <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">
-          <p className="text-sm text-bone-dim">{t("称呼（选填）", "Name (optional)")}</p>
+          <p className="text-sm text-bone-dim">{t("怎么称呼你（选填）", "What should we call you (optional)")}</p>
           <input
             value={name} onChange={(e) => setName(e.target.value)}
             placeholder={t("怎么称呼你", "What should we call you")}
             className="mt-2 w-full rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60"
           />
-          <p className="mt-4 text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
+          <p className="mt-4 text-sm text-bone-dim">{t("你的时间坐标——出生年月日", "Your time coordinates — birth date")}</p>
           <div className="mt-2 grid grid-cols-3 gap-2">
             <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
             <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -130,7 +137,7 @@ export default function TarotReadingFlow() {
           </div>
           <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
             <input type="checkbox" checked={hasTime} onChange={(e) => setHasTime(e.target.checked)} />
-            <Bi zh="知道具体出生时间（选填，未来方向那张牌会更准）" en="I know the exact birth time (optional, sharpens the Future card)" />
+            <Bi zh="知道具体出生时间（选填，未来展开那张牌会更准）" en="I know the exact birth time (optional, sharpens the Future card)" />
           </label>
           {hasTime && (
             <div className="mt-2 grid grid-cols-2 gap-2">
@@ -151,8 +158,15 @@ export default function TarotReadingFlow() {
           disabled={!year || !month || !day}
           className="mt-6 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          <Bi zh="展开我的三张牌" en="Reveal My Three Cards" />
+          <Bi zh="✦ 与灵犀场连接" en="✦ Connect with the Field" />
         </button>
+
+        <a
+          href="/tarot/daily"
+          className="mt-6 block text-center text-xs text-bone-dim underline decoration-dotted underline-offset-4 transition hover:text-lattice"
+        >
+          <Bi zh="不想连接完整场域？看看今天全场域共享的那一张牌 →" en="Not ready for the full connection? See today's card, shared by everyone →" />
+        </a>
       </div>
     );
   }
@@ -161,13 +175,23 @@ export default function TarotReadingFlow() {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center px-6 py-24 text-center">
         <div className="lx-tr-glow h-20 w-20 rounded-full" />
-        <p className="mt-8 font-display text-sm tracking-widest2 text-lattice/80">
-          <Bi zh="三张牌，正从七十八张中展开……" en="Three cards are unfolding from the seventy-eight…" />
-        </p>
+        <div className="mt-8 space-y-2">
+          {CONNECTING_LINES.map((line, i) => (
+            <p
+              key={i}
+              className="lx-tr-line font-display text-sm tracking-widest2 text-lattice/80"
+              style={{ animationDelay: `${i * 0.85}s` }}
+            >
+              <Bi zh={line.zh} en={line.en} />
+            </p>
+          ))}
+        </div>
         <style>{`
           .lx-tr-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(16px); animation: lx-tr-breathe 2.2s ease-in-out infinite; }
           @keyframes lx-tr-breathe { 0%,100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 0.9; transform: scale(1.1); } }
-          @media (prefers-reduced-motion: reduce) { .lx-tr-glow { animation: none !important; } }
+          .lx-tr-line { opacity: 0; animation: lx-tr-line-in 0.6s ease-out forwards; }
+          @keyframes lx-tr-line-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+          @media (prefers-reduced-motion: reduce) { .lx-tr-glow, .lx-tr-line { animation: none !important; opacity: 1; } }
         `}</style>
       </div>
     );
@@ -213,7 +237,7 @@ export default function TarotReadingFlow() {
           disabled={unlocking}
           className="mt-5 bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50"
         >
-          {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="解锁三张牌阵深度解读 · $9.9" en="Unlock the Three-Card Reading · $9.9" />}
+          {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="开启完整生命镜像 · $9.9" en="Unlock the Full Life Mirror · $9.9" />}
         </button>
         {error && <p className="mt-3 text-xs text-rose">{error}</p>}
       </div>
