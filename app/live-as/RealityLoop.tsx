@@ -194,7 +194,7 @@ export default function RealityLoop() {
         {error && <p className="mt-4 text-sm text-rose">{error}</p>}
       </div>
 
-      <SpiralField active={sending} label={t("发送至场 · 灵犀正在以光改写……","Sending to the field · Lingxi is rewriting with light…")} />
+      <SpiralField active={sending} label={t("发送至场 · 灵犀场正在以光改写……","Sending to the field · Lingxi Field is rewriting with light…")} />
 
       {reading && (
         <div className="relative overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] bg-void-deep p-7 sm:p-9">

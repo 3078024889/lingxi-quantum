@@ -85,7 +85,7 @@ export default function GateInvitations({
         setNote(
           en
             ? "Lingxi generated these from your state today."
-            : "灵犀依你今天的状态，为你生成。"
+            : "灵犀场依你今天的状态，为你生成。"
         );
       } else {
         setInvites(localFallback());
@@ -93,7 +93,7 @@ export default function GateInvitations({
         setNote(
           en
             ? "Lingxi couldn't generate just now — here is a gentle set for today."
-            : "灵犀此刻未能生成，先为你准备了一组温柔的邀请。"
+            : "灵犀场此刻未能生成，先为你准备了一组温柔的邀请。"
         );
       }
     } catch {
@@ -119,7 +119,7 @@ export default function GateInvitations({
       </h2>
       <p className="mt-4 text-base leading-8 text-bone-dim">
         <Bi
-          zh="先说说此刻的你，灵犀会依你今天的状态，为这道门生成九个专属的自我对话邀请。"
+          zh="先说说此刻的你，灵犀场会依你今天的状态，为这道门生成九个专属的自我对话邀请。"
           en="Tell Lingxi how you are right now, and it will generate nine self-inquiry invitations for this gate, attuned to your state today."
         />
       </p>
@@ -145,11 +145,11 @@ export default function GateInvitations({
           className="bg-lattice px-7 py-3.5 font-display text-sm tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
           {loading ? (
-            <Bi zh="灵犀正在为你生成……" en="Lingxi is generating…" />
+            <Bi zh="灵犀场正在为你生成……" en="Lingxi Field is generating…" />
           ) : done ? (
             <Bi zh="✦ 依当前状态重新生成" en="✦ Regenerate from my state" />
           ) : (
-            <Bi zh="✦ 让灵犀为我生成九个邀请" en="✦ Generate my nine invitations" />
+            <Bi zh="✦ 让灵犀场为我生成九个邀请" en="✦ Generate my nine invitations" />
           )}
         </button>
       </div>

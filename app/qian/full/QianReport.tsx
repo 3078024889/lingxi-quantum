@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import { LIFE_SIGNS, TIER_LABELS } from "@/lib/qian-data";
+import ShareButton from "@/components/ShareButton";
+import { REVIEW_MODE } from "@/lib/reviewMode";
 
 // 四段解读对应doc21的报告设计——不是随便起的名字，是"三签怎么组合→
 // 天赋数字地图→当前处在哪个阶段→接下来具体练什么"这条完整的自我
@@ -82,6 +84,11 @@ export default function QianReport({ id }: { id: string }) {
   }, [id]);
 
   const unlock = async () => {
+    if (REVIEW_MODE) {
+      setStatus("checking");
+      window.location.reload();
+      return;
+    }
     setUnlocking(true);
     try {
       const res = await fetch("/api/pay/create", {
@@ -298,10 +305,15 @@ export default function QianReport({ id }: { id: string }) {
       </div>
       </div>
 
-      <div className="mt-6 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+      <div className="mt-6 flex flex-col items-center gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
         <p className="text-xs text-bone-dim/60">
           <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
         </p>
+        <ShareButton
+          text={t("我做了一份灵犀生命灵签报告，去看看你自己的：", "I got my Lingxi Life Oracle reading — check out your own:")}
+          url="https://lingxifield.com/qian"
+          label={{ zh: "分享这份报告", en: "Share this reading" }}
+        />
       </div>
     </div>
   );

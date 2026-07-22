@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Bi from "./Bi";
 import SpiralField from "./SpiralField";
-import RuneIcon from "./RuneIcon";
 
 // ────────────────────────────────────────────────────────────────────
 // 灵犀场 · 场域入口仪式
@@ -56,9 +55,10 @@ export default function EntryGate() {
     <div
       className={`fixed inset-0 z-[200] flex flex-col items-center justify-center bg-void px-6 text-center transition-opacity duration-700 ${fadingOut ? "opacity-0" : "opacity-100"}`}
     >
-      {/* 左上角场域标记——跟导航栏用的是同一个图标，不是另外新画的 */}
+      {/* 左上角场域标记——用的是你自己生成的那张LOGO图片文件 */}
       <div className="absolute left-6 top-6 flex items-center gap-2 sm:left-10 sm:top-10">
-        <RuneIcon kind="mark" className="h-6 w-6 text-lattice" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="h-10 w-10 sm:h-12 sm:w-12" />
         <span className="font-display text-xs uppercase tracking-widest2 text-bone-dim sm:text-sm">
           LINGXIFIELD
         </span>

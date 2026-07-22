@@ -7,7 +7,7 @@ import { getAccess } from "@/lib/access";
 import Link from "next/link";
 import Bi from "@/components/Bi";
 
-export const metadata = { title: "梦境解析 · 显化与梦境 | 灵犀 · Dream Interpretation | Lingxi", description: "记录并解析你的梦境，由灵犀以象征与心理的视角温柔解读反复出现的象征与线索。Record and interpret your dreams with Lingxi.", alternates: { canonical: "/dream" } };
+export const metadata = { title: "梦境解析 · 显化与梦境 | 灵犀 · Dream Interpretation | Lingxi", description: "记录并解析你的梦境，由灵犀场以象征与心理的视角温柔解读反复出现的象征与线索。Record and interpret your dreams with Lingxi Field.", alternates: { canonical: "/dream" } };
 
 export default async function DreamPage() {
   const { user, manifestActive } = await getAccess();

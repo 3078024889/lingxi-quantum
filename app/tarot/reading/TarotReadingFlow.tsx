@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import type { TarotCard } from "@/lib/tarot-data";
+import { REVIEW_MODE } from "@/lib/reviewMode";
 
 type Stage = "form" | "connecting" | "revealed";
 
@@ -83,6 +84,10 @@ export default function TarotReadingFlow() {
 
   const unlock = async () => {
     if (!submissionId) return;
+    if (REVIEW_MODE) {
+      window.location.href = `/tarot/reading/full?id=${submissionId}`;
+      return;
+    }
     setUnlocking(true);
     setError("");
     try {
@@ -175,11 +180,11 @@ export default function TarotReadingFlow() {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center px-6 py-24 text-center">
         <div className="lx-tr-glow h-20 w-20 rounded-full" />
-        <div className="mt-8 space-y-2">
+        <div className="mt-8 space-y-3 rounded-sm border border-white/10 bg-void-deep/90 px-6 py-6 backdrop-blur-sm">
           {CONNECTING_LINES.map((line, i) => (
             <p
               key={i}
-              className="lx-tr-line font-display text-sm tracking-widest2 text-lattice/80"
+              className="lx-tr-line font-display text-base tracking-wide text-lattice sm:text-lg"
               style={{ animationDelay: `${i * 0.85}s` }}
             >
               <Bi zh={line.zh} en={line.en} />

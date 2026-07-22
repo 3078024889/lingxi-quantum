@@ -38,7 +38,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "读懂你自己的梦", titleEn: "Interpret your own dream",
-    descZh: "象征只是起点。写下你的梦，发送至场，灵犀会结合你的情绪与近况温柔解读。", descEn: "Symbols are only a start. Write your dream, send it to the field, and Lingxi reads it with your feelings and context.",
+    descZh: "象征只是起点。写下你的梦，发送至场，灵犀场会结合你的情绪与近况温柔解读。", descEn: "Symbols are only a start. Write your dream, send it to the field, and Lingxi Field reads it with your feelings and context.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

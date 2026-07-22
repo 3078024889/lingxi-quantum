@@ -78,7 +78,7 @@ export default function DreamConsole() {
 
   return (
     <div className="space-y-10">
-      <SpiralField active={sending} label={t("发送至场 · 灵犀正在以光改写……","Sending to the field · Lingxi is rewriting with light…")} />
+      <SpiralField active={sending} label={t("发送至场 · 灵犀场正在以光改写……","Sending to the field · Lingxi Field is rewriting with light…")} />
 
       <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8">
         <p className="font-display text-2xl text-bone">{t("记录今晨的梦","Record this morning\u0027s dream")}</p>

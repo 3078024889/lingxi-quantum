@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "把这个梦，交给灵犀读一读", titleEn: "Let Lingxi read this dream with you",
-    descZh: "记录你的梦，灵犀会以象征与场域的视角温柔解读，陪你看见那段等待被完成的能量。", descEn: "Record your dream, and Lingxi will read it gently through symbol and field — helping you see the current waiting to be completed.",
+    descZh: "记录你的梦，灵犀场会以象征的视角温柔解读，陪你看见那段等待被完成的能量。", descEn: "Record your dream, and Lingxi Field will read it gently through symbol — helping you see the current waiting to be completed.",
     href: "/dream", btnZh: "进入探索梦境", btnEn: "Open Dream Exploration",
   },
   related: [

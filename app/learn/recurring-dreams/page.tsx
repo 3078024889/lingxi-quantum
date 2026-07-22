@@ -38,8 +38,8 @@ const data: ArticleData = {
   note: "温柔提示：如果某个反复出现的梦让你长期痛苦、严重影响睡眠或情绪，或与创伤有关，请考虑寻求心理咨询师等专业人士的支持。灵犀的解读是温柔的陪伴与启发，不替代专业帮助。",
   noteEn: "A gentle note: if a recurring dream causes lasting distress, seriously affects your sleep or mood, or relates to trauma, please consider the support of a counselor or other professional. Lingxi's readings are gentle companionship and inspiration, not a substitute for professional help.",
   cta: {
-    titleZh: "让灵犀陪你拆开这封信", titleEn: "Open the letter with Lingxi",
-    descZh: "写下这个反复出现的梦，发送至场，灵犀会以象征与心理的视角温柔回应。", descEn: "Write down the recurring dream, send it to the field, and Lingxi will respond gently.",
+    titleZh: "让灵犀场陪你拆开这封信", titleEn: "Open the letter with Lingxi Field",
+    descZh: "写下这个反复出现的梦，发送至场，灵犀场会以象征与心理的视角温柔回应。", descEn: "Write down the recurring dream, send it to the field, and Lingxi Field will respond gently.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

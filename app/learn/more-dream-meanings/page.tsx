@@ -39,7 +39,7 @@ const data: ArticleData = {
   noteEn: "A gentle note: dream symbols are references, not verdicts. If a dream connects to lasting distress or trauma, please consider professional support. Lingxi's readings are companionship and inspiration, not a substitute for professional help.",
   cta: {
     titleZh: "读懂你自己的象征", titleEn: "Read your own symbols",
-    descZh: "象征只是起点。写下你的梦，灵犀会结合你的情绪与近况温柔解读。", descEn: "Symbols are a start. Write your dream; Lingxi reads it with your feelings and context.",
+    descZh: "象征只是起点。写下你的梦，灵犀场会结合你的情绪与近况温柔解读。", descEn: "Symbols are a start. Write your dream; Lingxi Field reads it with your feelings and context.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

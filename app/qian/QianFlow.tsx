@@ -7,6 +7,7 @@ import Bi from "@/components/Bi";
 import type { LifeSign } from "@/lib/qian-data";
 import { TIER_LABELS } from "@/lib/qian-data";
 import QianCosmicRing from "@/components/QianCosmicRing";
+import { REVIEW_MODE } from "@/lib/reviewMode";
 
 type Stage = "form" | "gathering" | "shaking" | "revealed";
 
@@ -79,6 +80,14 @@ export default function QianFlow() {
 
   const unlock = async () => {
     if (!submissionId) return;
+    // 审核模式开启时，不走真实的PayPal下单流程——直接跳到结果页，
+    // generate-full 接口那边看到 REVIEW_MODE=true 会跳过解锁校验，
+    // 直接生成内容。之前这里没有这个判断，审核模式开关等于白设置了，
+    // 点解锁还是会尝试真的创建订单。
+    if (REVIEW_MODE) {
+      window.location.href = `/qian/full?id=${submissionId}`;
+      return;
+    }
     setUnlocking(true);
     setError("");
     try {

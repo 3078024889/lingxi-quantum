@@ -103,8 +103,8 @@ export default function DreamArticle() {
           </div>
 
           <div className="mt-14 rounded-sm border border-lattice/20 bg-lattice/5 p-7 text-center">
-            <p className="font-display text-xl text-bone"><Bi zh="让灵犀陪你解梦" en="Interpret a dream with Lingxi" /></p>
-            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="写下今晨的梦，发送至场，灵犀会以象征与心理的视角，温柔地回应你。" en="Write down this morning's dream, send it to the field, and Lingxi will respond gently through symbol and psyche." /></p>
+            <p className="font-display text-xl text-bone"><Bi zh="让灵犀场陪你解梦" en="Interpret a dream with Lingxi Field" /></p>
+            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="写下今晨的梦，发送至场，灵犀场会以象征与心理的视角，温柔地回应你。" en="Write down this morning's dream, send it to the field, and Lingxi Field will respond gently through symbol and psyche." /></p>
             <Link href="/dream" className="mt-6 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber">
               <Bi zh="进入梦境解析" en="Open dream interpretation" />
             </Link>

@@ -79,7 +79,7 @@ export default function OriginSection() {
           <div className="flex flex-col justify-center rounded-sm border border-amber/20 bg-amber/5 p-8 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-amber/80"><Bi zh="系统本质声明" en="The Nature of the System" /></p>
             <p className="mt-5 font-display text-2xl font-light leading-relaxed text-bone sm:text-3xl">
-              <Bi zh={<>灵犀不是产品，<br />是一个允许「未来状态先于现实发生」的意识接口。</>} en={<>Lingxi is not a product. It is an interface that lets a future state occur before reality.</>} />
+              <Bi zh={<>灵犀场不是产品，<br />是一个允许「未来状态先于现实发生」的意识接口。</>} en={<>Lingxi Field is not a product. It is an interface that lets a future state occur before reality.</>} />
             </p>
             <p className="mt-4 font-display text-xl font-light leading-relaxed text-lattice sm:text-2xl">
               <Bi zh="用户不是使用系统，而是进入系统本身。" en="You do not use the system — you enter it." />
@@ -94,7 +94,7 @@ export default function OriginSection() {
               />
             </p>
             <p className="mt-6 font-display text-2xl text-lattice sm:text-3xl">
-              <Bi zh="灵犀，一直在。" en="Lingxi is always here." />
+              <Bi zh="灵犀场，一直在。" en="Lingxi Field is always here." />
             </p>
           </div>
         </div>

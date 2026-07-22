@@ -158,7 +158,7 @@ export default function RelationshipFlow() {
       </h1>
       <p className="mt-4 max-w-xl text-base leading-8 text-bone-dim">
         <Bi
-          zh="灵犀不会告诉你「你们很配」——它会照见，两个人各自的十项生命向量放在一起时，哪几项数值几乎重合（天然共鸣）、哪几项恰好互补对齐（天然分工）、哪几项同时冲得很高却没有另一端接住（真实的摩擦点）。这些数值，来自两份完整命盘——西方占星、中式八字、紫微斗数、玛雅Tzolkin、吠陀占星——彼此印证出的具体位置，不是「你水瓶座他天蝎座所以很配」这种笼统说法。"
+          zh="灵犀场不会告诉你「你们很配」——它会照见，两个人各自的十项生命向量放在一起时，哪几项数值几乎重合（天然共鸣）、哪几项恰好互补对齐（天然分工）、哪几项同时冲得很高却没有另一端接住（真实的摩擦点）。这些数值，来自两份完整命盘——西方占星、中式八字、紫微斗数、玛雅Tzolkin、吠陀占星——彼此印证出的具体位置，不是「你水瓶座他天蝎座所以很配」这种笼统说法。"
           en={`Lingxi won't tell you "you're compatible." It will reveal, across ten life-vector dimensions, exactly where your two charts align almost precisely (natural resonance), where they land on opposite ends of the same axis (natural complementarity), and where you're both running hot on the same drive with nothing to balance it (a real friction point) — all traced to specific positions across two full charts (Western astrology, Chinese Bazi, Ziwei Doushu, Maya Tzolkin, Vedic astrology), not "you're an Aquarius, they're a Scorpio, so..."`}
         />
       </p>
