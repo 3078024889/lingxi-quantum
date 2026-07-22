@@ -113,21 +113,6 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
         </p>
       </div>
 
-      <div className="mt-6 rounded-sm border border-amber/25 bg-amber/5 p-6 text-center">
-        <p className="text-sm leading-7 text-bone-dim">
-          <Bi
-            zh="今天的这张牌，是全场域共享的。想要属于你自己的——先静心，连接场域，摇出专属于你的三支签，由你真实的命盘确定，不是随机摇取。"
-            en="Today's card is shared by everyone. For something that's entirely your own — be still, connect to the field, and draw your own three signs, determined by your real chart, not a random shake."
-          />
-        </p>
-        <a
-          href="/qian"
-          className="mt-5 inline-block bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice"
-        >
-          <Bi zh="去读取我的生命印记 · $9.9" en="Go Reveal My Life Imprints · $9.9" />
-        </a>
-      </div>
-
       <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
         <p className="text-sm leading-7 text-bone-dim">
           <Bi

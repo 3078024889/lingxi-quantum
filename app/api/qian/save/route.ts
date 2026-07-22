@@ -75,12 +75,19 @@ export async function POST(req: Request) {
           { status: 500 }
         );
       }
-      return NextResponse.json({ error: "保存失败，请稍后再试。" }, { status: 500 });
+      // 除了上面这个最常见的原因，这里不再猜第二种可能——直接把
+      // Supabase返回的原始错误信息（code+message）暴露出来，用户
+      // 截图发过来，就能一次性看到真实原因，不用一轮一轮来回猜。
+      const rawDetail = insertErr
+        ? `${insertErr.code ?? "无错误码"}: ${insertErr.message ?? "无错误信息"}`
+        : "写入后没有返回记录（原因未知）";
+      return NextResponse.json({ error: `保存失败，请稍后再试。（技术细节：${rawDetail}）` }, { status: 500 });
     }
 
     return NextResponse.json({ id: submission.id, signIndexes: submission.sign_indexes });
   } catch (e) {
     console.error("[qian save] 计算失败:", e);
-    return NextResponse.json({ error: "计算失败，请检查出生信息。" }, { status: 500 });
+    const msg = e instanceof Error ? e.message : String(e);
+    return NextResponse.json({ error: `计算失败，请检查出生信息。（技术细节：${msg}）` }, { status: 500 });
   }
 }

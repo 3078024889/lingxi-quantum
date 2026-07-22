@@ -26,13 +26,13 @@ export default function TarotPage() {
               <Bi zh="灵犀量子塔罗 · 今日一卡" en="Lingxi Quantum Tarot · Today's Card" />
             </p>
             <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-              <Bi zh="今天，场域为所有人显化了同一张牌" en="Today, the field has manifested the same card for everyone" />
+              <Bi zh="七十八张里，今天只有一张，被整个场域同时看见" en="Of 78 cards, only one is being seen by the entire field today" />
             </h1>
             <p className="mt-3 text-xs text-bone-dim/70">{todayLabel}</p>
             <p className="mt-4 text-base leading-8 text-bone-dim">
               <Bi
-                zh="每一天，场域只显化一张牌，所有人看到的是同一个象征——午夜之后，它会自然流转到下一张。你此刻打开，就是场域此刻想让你看见的。"
-                en="Each day, the field manifests just one card — the same symbol for everyone. Past midnight, it naturally moves on to the next. Whatever you find here now is what the field means for you to see."
+                zh="不是你抽到的，是场域今天正在显化的——此刻打开这个页面的每一个人，看见的都是同一个象征。它不会一直是这张。但今天，是。"
+                en="Not one you drew — it's the one the field is manifesting today. Everyone who opens this page right now sees the same symbol. It won't always be this one. But today, it is."
               />
             </p>
           </div>
