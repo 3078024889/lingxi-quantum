@@ -23,6 +23,28 @@
   --aurora-glow: 0 0 20px rgba(140, 210, 255, 0.28), 0 0 8px rgba(180, 220, 255, 0.2);
 }
 
+/* .bg-void-deep 这个class，之前一直是纯Tailwind工具类，直接铺一块
+   不透明的深蓝色（#0f2038），全站几十个卡片、结果页、报告章节都在
+   用它——但它从来没跟 .bg-reading-glass、导航栏那套"极光玻璃"语言
+   对齐过，看起来就是"一块不透明的深色板子"，跟背景的极光视频完全
+   割裂，这正是"黑框"这个反馈的真实原因。这里直接覆盖这个class本身
+   （不是逐个文件去改），比 .bg-reading-glass 更轻透一点（那个是给
+   长文阅读用的，需要更扎实的衬托；这个是给普通卡片、结果区块用的，
+   应该更透）。改完这一处，全站所有用了 bg-void-deep 的地方会一次性
+   统一变成半透明玻璃面板，不用逐个文件排查。 */
+.bg-void-deep {
+  position: relative;
+  background-color: rgba(14, 24, 42, 0.24) !important;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.10), transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.09), transparent 55%),
+    var(--aurora-glass);
+  border-color: var(--aurora-glass-border) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--aurora-glow);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
