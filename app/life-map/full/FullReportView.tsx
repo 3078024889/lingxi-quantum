@@ -242,6 +242,9 @@ export default function FullReportView({ id }: { id: string }) {
     // 等两帧，确保打印模式的样式（彩虹背景+黑字）真的重绘完成，再截图，
     // 不然html2canvas可能截到样式切换前的旧画面。
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    // 同上：额外等自定义字体真正加载完成，避免html2canvas拿浏览器
+    // 默认字体的度量去截图，导致标题文字重叠、挤在一起。
+    await document.fonts.ready;
     try {
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),

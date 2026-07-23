@@ -106,6 +106,9 @@ export default function RelationshipReportView({ id }: { id: string }) {
     setDownloading(true);
     setPrintMode(true);
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    // 同上：额外等自定义字体真正加载完成，避免html2canvas拿浏览器
+    // 默认字体的度量去截图，导致标题文字重叠、挤在一起。
+    await document.fonts.ready;
     try {
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),

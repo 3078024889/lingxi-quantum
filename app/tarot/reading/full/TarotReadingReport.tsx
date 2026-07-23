@@ -9,9 +9,18 @@ import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 
 const LAYER_TITLES = [
-  { zh: "当前生命主题", en: "Current Life Theme" },
-  { zh: "隐藏力量", en: "Hidden Strength" },
-  { zh: "当前提醒", en: "A Reminder for Now" },
+  { zh: "① 灵犀场连接声明", en: "① Field Connection Statement" },
+  { zh: "② 潜意识镜像深度解析", en: "② Hidden Pattern Deep Dive" },
+  { zh: "③ 当下共振深度解析", en: "③ Present Resonance Deep Dive" },
+  { zh: "④ 未来展开深度解析", en: "④ Future Possibility Deep Dive" },
+  { zh: "⑤ 三牌联合生命公式", en: "⑤ The Three-Card Life Formula" },
+  { zh: "⑥ 财富创造地图", en: "⑥ Wealth Creation Map" },
+  { zh: "⑦ 关系生命地图", en: "⑦ Relationship Life Map" },
+  { zh: "⑧ 事业使命地图", en: "⑧ Career & Mission Map" },
+  { zh: "⑨ 当前生命阶段", en: "⑨ Current Life Stage" },
+  { zh: "⑩ 灵犀成长路径", en: "⑩ Growth Path" },
+  { zh: "⑪ 给未来自己的信", en: "⑪ A Letter to Your Future Self" },
+  { zh: "⑫ 生命关键词", en: "⑫ Your Life Keywords" },
 ];
 
 type FrequencyItem = { key: string; zh: string; en: string; score: number };
@@ -116,6 +125,14 @@ export default function TarotReadingReport({ id }: { id: string }) {
     if (!reportRef.current) return;
     setDownloading(true);
     try {
+      // 之前这里点了就立刻开始截图，网页自定义字体（font-display那套）
+      // 如果这时候还没加载完，html2canvas会拿浏览器默认字体的度量去
+      // 排版截图，等真字体一到位，文字宽度/行高对不上，看起来就是标题
+      // 和副标题重叠、文字挤在一起糊成一团。这里先等字体真正加载完成，
+      // 再多留200毫秒给排版稳定下来，才开始截图。
+      await document.fonts.ready;
+      await new Promise((r) => setTimeout(r, 200));
+
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),
         import("jspdf"),
@@ -187,7 +204,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
   if (status === "checking") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <p className="text-sm text-bone-dim">{t("正在读取你的三张牌……", "Reading your three cards…")}</p>
+        <p className="text-sm text-bone-dim">{t("场域正在展开你的完整生命镜像档案，第一次生成需要一点时间……", "The field is unfolding your full consciousness blueprint — the first generation takes a little while…")}</p>
       </div>
     );
   }
@@ -220,7 +237,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-          <Bi zh="灵犀量子塔罗 · 三张牌阵深度解读" en="Lingxi Quantum Tarot · Three-Card Deep Reading" />
+          <Bi zh="灵犀量子塔罗 · 生命镜像档案" en="Lingxi Quantum Tarot · Personal Consciousness Blueprint" />
         </p>
       </div>
 

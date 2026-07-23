@@ -12,10 +12,18 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 // 天赋数字地图→当前处在哪个阶段→接下来具体练什么"这条完整的自我
 // 理解路径。
 const LAYER_TITLES = [
-  { zh: "① 三签关系分析", en: "① Sign Relationship Analysis" },
-  { zh: "② 天赋能力地图", en: "② Talent & Ability Map" },
-  { zh: "③ 人生阶段分析", en: "③ Life Stage Analysis" },
-  { zh: "④ 灵犀成长建议", en: "④ Lingxi Growth Guidance" },
+  { zh: "① 生命三原型总览", en: "① Three Archetypes Overview" },
+  { zh: "② 源流签深度解析", en: "② Origin Sign Deep Dive" },
+  { zh: "③ 灵魂签深度解析", en: "③ Soul Sign Deep Dive" },
+  { zh: "④ 行者签深度解析", en: "④ Walker Sign Deep Dive" },
+  { zh: "⑤ 三签融合分析", en: "⑤ Three-Sign Fusion" },
+  { zh: "⑥ 财富创造系统", en: "⑥ Wealth Creation System" },
+  { zh: "⑦ 关系模式分析", en: "⑦ Relationship Pattern" },
+  { zh: "⑧ 事业使命地图", en: "⑧ Career & Mission Map" },
+  { zh: "⑨ 当前人生阶段", en: "⑨ Current Life Stage" },
+  { zh: "⑩ 隐藏天赋", en: "⑩ Hidden Talents" },
+  { zh: "⑪ 灵犀成长路径", en: "⑪ Growth Path" },
+  { zh: "⑫ 生命宣言", en: "⑫ Life Declaration" },
 ];
 
 type AbilityItem = { key: string; zh: string; en: string; score: number };
@@ -116,6 +124,14 @@ export default function QianReport({ id }: { id: string }) {
     if (!reportRef.current) return;
     setDownloading(true);
     try {
+      // 之前这里点了就立刻开始截图，网页自定义字体（font-display那套）
+      // 如果这时候还没加载完，html2canvas会拿浏览器默认字体的度量去
+      // 排版截图，等真字体一到位，文字宽度/行高对不上，看起来就是标题
+      // 和副标题重叠、文字挤在一起糊成一团。这里先等字体真正加载完成，
+      // 再多留200毫秒给排版稳定下来，才开始截图。
+      await document.fonts.ready;
+      await new Promise((r) => setTimeout(r, 200));
+
       const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
         import("html2canvas"),
         import("jspdf"),
@@ -187,7 +203,7 @@ export default function QianReport({ id }: { id: string }) {
   if (status === "checking") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <p className="text-sm text-bone-dim">{t("正在读取你的生命灵签……", "Reading your life signs…")}</p>
+        <p className="text-sm text-bone-dim">{t("场域正在展开你的完整生命原型档案，第一次生成需要一点时间……", "The field is unfolding your full life archetype blueprint — the first generation takes a little while…")}</p>
       </div>
     );
   }
@@ -220,7 +236,7 @@ export default function QianReport({ id }: { id: string }) {
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-          <Bi zh="灵犀生命灵签 · 生命灵签报告" en="Lingxi Life Oracle · Life Sign Report" />
+          <Bi zh="灵犀生命灵签 · 生命原型档案" en="Lingxi Life Oracle · Personal Life Archetype Blueprint" />
         </p>
       </div>
 
@@ -236,7 +252,7 @@ export default function QianReport({ id }: { id: string }) {
 
       <div ref={reportRef}>
       <h1 className="mt-6 text-center font-display text-3xl font-light text-bone">
-        {name || t("你的", "Your")} <Bi zh="生命灵签报告" en="Life Sign Report" />
+        {name || t("你的", "Your")} <Bi zh="生命原型档案" en="Life Archetype Blueprint" />
       </h1>
       <p className="mt-2 text-center text-sm text-bone-dim">
         <Bi zh="三枚灵签，三个维度，一张属于你的生命地图。" en="Three signs, three dimensions — one life map that's entirely your own." />
