@@ -24,6 +24,15 @@ export default function Footer() {
           <Link href="/account" className="hover:text-lattice">
             <Bi zh="进入场域" en="Enter" />
           </Link>
+          <Link href="/terms" className="hover:text-lattice">
+            <Bi zh="服务条款" en="Terms" />
+          </Link>
+          <Link href="/privacy" className="hover:text-lattice">
+            <Bi zh="隐私政策" en="Privacy" />
+          </Link>
+          <Link href="/refunds" className="hover:text-lattice">
+            <Bi zh="退款政策" en="Refunds" />
+          </Link>
         </div>
       </div>
     </footer>
