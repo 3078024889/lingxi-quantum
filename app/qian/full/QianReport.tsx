@@ -251,19 +251,33 @@ export default function QianReport({ id }: { id: string }) {
       </div>
 
       <div ref={reportRef}>
-      <h1 className="mt-6 text-center font-display text-3xl font-light text-bone">
-        {name || t("你的", "Your")} <Bi zh="生命原型档案" en="Life Archetype Blueprint" />
-      </h1>
-      <p className="mt-2 text-center text-sm text-bone-dim">
-        <Bi zh="三枚灵签，三个维度，一张属于你的生命地图。" en="Three signs, three dimensions — one life map that's entirely your own." />
-      </p>
+      <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-12 text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
+        <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice/70">
+          LINGXI LIFE ORACLE
+        </p>
+        <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
+          {name || t("你的", "Your")} <Bi zh="生命原型档案" en="Life Archetype Blueprint" />
+        </h1>
+        <p className="mt-1 font-display text-sm text-lattice/80">
+          <Bi zh="灵犀生命灵签 · 生命原型档案" en="Lingxi Life Oracle · Personal Life Archetype Blueprint" />
+        </p>
+        <p className="mt-4 text-sm leading-7 text-bone-dim">
+          <Bi zh="三枚灵签，三个维度，一张属于你的生命地图。" en="Three signs, three dimensions — one life map that's entirely your own." />
+        </p>
 
-      <div className="mt-8 grid grid-cols-3 gap-3">
-        {signs.map((s, i) => (
-          <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 bg-void-deep text-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/images/qian/${String(s.index).padStart(2, "0")}.jpg`} alt={s.nameZh} className="block aspect-[2/3] w-full object-cover" />
-            <div className="p-3">
+        <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-3">
+          {signs.map((s, i) => (
+            <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/images/qian/${String(s.index).padStart(2, "0")}.jpg`} alt={s.nameZh} className="block aspect-[2/3] w-full object-cover" />
+            </div>
+          ))}
+        </div>
+        <div className="mx-auto mt-3 grid max-w-md grid-cols-3 gap-3 text-center">
+          {signs.map((s, i) => (
+            <div key={i}>
               <p className="text-[10px] uppercase tracking-widest2 text-amber/80">
                 <Bi zh={TIER_LABELS[s.tier].zh} en={TIER_LABELS[s.tier].en} />
               </p>
@@ -271,8 +285,13 @@ export default function QianReport({ id }: { id: string }) {
                 <Bi zh={s.nameZh} en={s.nameEn} />
               </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        <p className="mt-8 text-xs text-bone-dim/60">
+          {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
+        </p>
+        <p className="mt-1 text-xs text-bone-dim/60">lingxifield.com</p>
       </div>
 
       {lifeStage && (

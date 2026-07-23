@@ -252,19 +252,36 @@ export default function TarotReadingReport({ id }: { id: string }) {
       </div>
 
       <div ref={reportRef}>
-      <h1 className="mt-6 text-center font-display text-3xl font-light text-bone">
-        <Bi zh="你的灵犀量子生命镜像" en="Your Lingxi Quantum Life Mirror" />
-      </h1>
-      <p className="mt-2 text-center text-sm text-bone-dim">
-        <Bi zh="三张牌不是答案，而是你与自己深层意识的一次对话。" en="These three cards are not an answer — they are a conversation with your own deeper consciousness." />
-      </p>
+      {/* 封面——LOGO+标题+已揭示的三张牌，就是封面本身，不需要另外
+          设计一张专门的封面插画。这个区块本身是reportRef的第一个
+          直接子元素，PDF导出会把它当成独立的一页/一个章节截图。 */}
+      <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-12 text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
+        <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice/70">
+          LINGXI QUANTUM TAROT
+        </p>
+        <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
+          <Bi zh="你的灵犀量子生命镜像" en="Your Lingxi Quantum Life Mirror" />
+        </h1>
+        <p className="mt-1 font-display text-sm text-lattice/80">
+          <Bi zh="灵犀量子生命镜像档案" en="Personal Consciousness Blueprint Report" />
+        </p>
+        <p className="mt-4 text-sm leading-7 text-bone-dim">
+          <Bi zh="三张牌不是答案，而是你与自己深层意识的一次对话。" en="These three cards are not an answer — they are a conversation with your own deeper consciousness." />
+        </p>
 
-      <div className="mt-8 grid grid-cols-3 gap-3">
-        {cards.map((c, i) => (
-          <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 bg-void-deep text-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/images/tarot/${String(c.index).padStart(2, "0")}.jpg`} alt={c.nameZh} className="block aspect-[2/3] w-full object-cover" />
-            <div className="p-2">
+        <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-3">
+          {cards.map((c, i) => (
+            <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/images/tarot/${String(c.index).padStart(2, "0")}.jpg`} alt={c.nameZh} className="block aspect-[2/3] w-full object-cover" />
+            </div>
+          ))}
+        </div>
+        <div className="mx-auto mt-3 grid max-w-md grid-cols-3 gap-3 text-center">
+          {cards.map((c, i) => (
+            <div key={i}>
               <p className="text-[10px] uppercase tracking-widest2 text-amber/80">
                 <Bi zh={positions[i].zh} en={positions[i].en} />
               </p>
@@ -272,8 +289,13 @@ export default function TarotReadingReport({ id }: { id: string }) {
                 <Bi zh={c.nameZh} en={c.nameEn} />
               </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        <p className="mt-8 text-xs text-bone-dim/60">
+          {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
+        </p>
+        <p className="mt-1 text-xs text-bone-dim/60">lingxifield.com</p>
       </div>
 
       {frequencyMap.length > 0 && (
