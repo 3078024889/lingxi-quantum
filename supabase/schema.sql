@@ -109,6 +109,7 @@ alter table public.orders drop constraint if exists orders_submission_id_fkey;
 -- 这里直接把名字也存一份进来（拿到当时的名字就够用了，不需要跟着
 -- life_map_submissions 表实时同步，姓名这种字段基本不会改）。
 alter table public.orders add column if not exists submission_name text;
+alter table public.orders add column if not exists amount_rmb numeric;
 
 -- ========================================
 -- 灵犀关系共振图谱（合婚/合伙/合财富通用测试，$9.9）

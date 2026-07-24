@@ -6,6 +6,8 @@ import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import type { TarotCard } from "@/lib/tarot-data";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import WechatPayModal from "@/components/WechatPayModal";
+import { getProduct } from "@/lib/plans";
 
 type Stage = "form" | "connecting" | "revealed";
 
@@ -32,6 +34,7 @@ export default function TarotReadingFlow() {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
+  const [showWechatPay, setShowWechatPay] = useState(false);
 
   const positions = [
     { zh: "潜意识镜像", en: "Hidden Pattern" },
@@ -82,31 +85,14 @@ export default function TarotReadingFlow() {
     }
   };
 
-  const unlock = async () => {
+  const unlock = () => {
     if (!submissionId) return;
     if (REVIEW_MODE) {
       window.location.href = `/tarot/reading/full?id=${submissionId}`;
       return;
     }
-    setUnlocking(true);
-    setError("");
-    try {
-      const res = await fetch("/api/pay/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: "tarot-reading", submissionId, returnPath: `/tarot/reading/full?id=${submissionId}` }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setError((data.error || t("下单失败，请稍后再试。", "Order failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
-        setUnlocking(false);
-      }
-    } catch {
-      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
-      setUnlocking(false);
-    }
+    // PayPal企业账户被注销、暂时无法使用，改成微信扫码支付。
+    setShowWechatPay(true);
   };
 
   if (stage === "form") {
@@ -242,9 +228,19 @@ export default function TarotReadingFlow() {
           disabled={unlocking}
           className="mt-5 bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50"
         >
-          {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="开启完整生命镜像 · $9.9" en="Unlock the Full Life Mirror · $9.9" />}
+          <Bi zh={`开启完整生命镜像 · ¥${getProduct("tarot-reading")?.priceRmb}`} en={`Unlock the Full Life Mirror · ¥${getProduct("tarot-reading")?.priceRmb}`} />
         </button>
         {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+        {showWechatPay && submissionId && (
+          <WechatPayModal
+            productId="tarot-reading"
+            submissionId={submissionId}
+            priceRmb={getProduct("tarot-reading")?.priceRmb ?? 0}
+            productName={{ zh: "灵犀量子塔罗 · 生命镜像档案", en: "Lingxi Quantum Tarot · Life Mirror" }}
+            onClose={() => setShowWechatPay(false)}
+            onSuccess={() => { window.location.href = `/tarot/reading/full?id=${submissionId}`; }}
+          />
+        )}
       </div>
     </div>
   );

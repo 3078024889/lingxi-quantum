@@ -9,6 +9,8 @@ import NatalChartWheel from "./NatalChartWheel";
 import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { lifemapTypeImage } from "@/lib/lifemap-type-images";
+import WechatPayModal from "@/components/WechatPayModal";
+import { getProduct } from "@/lib/plans";
 
 type Stage = "landing" | "form" | "loading" | "report";
 
@@ -177,6 +179,8 @@ export default function LifeMapFlow() {
   const [error, setError] = useState("");
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
+  const [showWechatPay, setShowWechatPay] = useState(false);
+  const [payingSubmissionId, setPayingSubmissionId] = useState<string | null>(null);
   // 登录跳转回来后，如果发现有未完成的解锁草稿，先放在这里等用户确认，
   // 不直接自动下单——避免"随便打开一下页面"就被静默带去付款页那种bug。
   const [resumedDraft, setResumedDraft] = useState<LifeMapDraft | null>(null);
@@ -421,23 +425,9 @@ export default function LifeMapFlow() {
           return;
         }
       }
-      const res = await fetch("/api/pay/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: "life-map-report", submissionId: id, returnPath: `/life-map/full?id=${id}&paid=1` }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        console.error("解锁完整报告失败:", data);
-        setError(
-          data.error === "支付未配置"
-            ? t("支付网关尚未配置（缺少 PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET），请联系站点管理员配置后再试。", "Payment gateway isn't configured yet (missing PayPal credentials) — please contact the site admin.")
-            : data.error || t("下单失败，请稍后再试。", "Order failed, please try again later.")
-        );
-        setUnlocking(false);
-      }
+      setPayingSubmissionId(id);
+      setShowWechatPay(true);
+      setUnlocking(false);
     } catch (e) {
       console.error("解锁完整报告出错:", e);
       setError(t("网络错误，请稍后再试。", "Network error, please try again later."));
@@ -540,18 +530,9 @@ export default function LifeMapFlow() {
       return;
     }
     setSubmissionId(result.id);
-    const res = await fetch("/api/pay/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId: "life-map-report", submissionId: result.id, returnPath: `/life-map/full?id=${result.id}&paid=1` }),
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      setUnlocking(false);
-      setError(t("信息已恢复，请再点一次「解锁完整报告」。", "Your info has been restored — please tap Unlock Full Report once more."));
-    }
+    setPayingSubmissionId(result.id);
+    setShowWechatPay(true);
+    setUnlocking(false);
   };
 
   // ---------- 解析灵犀返回的三段式正文 ----------
@@ -1111,16 +1092,26 @@ export default function LifeMapFlow() {
                 />
               </p>
               <div className="mt-8">
-                <p className="text-sm text-lm2-text-dim/60 line-through">$29.9</p>
-                <p className="font-display text-4xl text-lm2-violet">$9.9</p>
+                <p className="text-sm text-lm2-text-dim/60 line-through">¥199</p>
+                <p className="font-display text-4xl text-lm2-violet">¥{getProduct("life-map-report")?.priceRmb}</p>
               </div>
               <button
                 onClick={unlockFull}
                 disabled={unlocking}
                 className="mt-6 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(180,150,255,0.4)] transition hover:brightness-110 disabled:opacity-50"
               >
-                {unlocking ? t("正在跳转支付…", "Redirecting to payment…") : <>✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" /></>}
+                {unlocking ? t("正在准备支付…", "Preparing payment…") : <>✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" /></>}
               </button>
+              {showWechatPay && payingSubmissionId && (
+                <WechatPayModal
+                  productId="life-map-report"
+                  submissionId={payingSubmissionId}
+                  priceRmb={getProduct("life-map-report")?.priceRmb ?? 0}
+                  productName={{ zh: "灵犀生命图谱 · 完整报告", en: "Lingxi Life Map · Full Report" }}
+                  onClose={() => setShowWechatPay(false)}
+                  onSuccess={() => { window.location.href = `/life-map/full?id=${payingSubmissionId}&paid=1`; }}
+                />
+              )}
               {error && (
                 <p className="mx-auto mt-4 max-w-sm rounded-sm border border-rose/30 bg-rose/10 px-4 py-3 text-sm leading-6 text-rose">
                   {error}

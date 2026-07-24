@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
+import WechatPayModal from "@/components/WechatPayModal";
+import { getProduct } from "@/lib/plans";
 
 type Person = { name: string; year: string; month: string; day: string; hour: string; minute: string; hasTime: boolean };
 const emptyPerson: Person = { name: "", year: "", month: "", day: "", hour: "12", minute: "0", hasTime: false };
@@ -75,6 +77,8 @@ export default function RelationshipFlow() {
   const [b, setB] = useState<Person>(emptyPerson);
   const [relationshipType, setRelationshipType] = useState<"romantic" | "business" | "general">("romantic");
   const [submitting, setSubmitting] = useState(false);
+  const [showWechatPay, setShowWechatPay] = useState(false);
+  const [payingSubmissionId, setPayingSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   const valid = (p: Person) => p.name.trim() && p.year && p.month && p.day;
@@ -126,22 +130,9 @@ export default function RelationshipFlow() {
         return;
       }
 
-      const payRes = await fetch("/api/pay/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: "relationship-resonance",
-          submissionId: saveData.id,
-          returnPath: `/relationship/full?id=${saveData.id}&paid=1`,
-        }),
-      });
-      const payData = await payRes.json();
-      if (payData.url) {
-        window.location.href = payData.url;
-      } else {
-        setSubmitting(false);
-        setError(payData.error || t("跳转支付失败，请稍后再试。", "Couldn't start checkout — please try again."));
-      }
+      setPayingSubmissionId(saveData.id);
+      setShowWechatPay(true);
+      setSubmitting(false);
     } catch {
       setSubmitting(false);
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
@@ -202,8 +193,18 @@ export default function RelationshipFlow() {
         disabled={submitting}
         className="mt-8 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
       >
-        {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh="开始能量交换 · $9.9" en="Begin Energy Exchange · $9.9" />}
+        {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`开始能量交换 · ¥${getProduct("relationship-resonance")?.priceRmb}`} en={`Begin Energy Exchange · ¥${getProduct("relationship-resonance")?.priceRmb}`} />}
       </button>
+      {showWechatPay && payingSubmissionId && (
+        <WechatPayModal
+          productId="relationship-resonance"
+          submissionId={payingSubmissionId}
+          priceRmb={getProduct("relationship-resonance")?.priceRmb ?? 0}
+          productName={{ zh: "灵犀关系共振图谱", en: "Lingxi Relationship Resonance" }}
+          onClose={() => setShowWechatPay(false)}
+          onSuccess={() => { window.location.href = `/relationship/full?id=${payingSubmissionId}&paid=1`; }}
+        />
+      )}
       <div className="bg-void-deep mt-3 rounded-sm p-3 text-center">
         <p className="text-xs text-bone-dim/90">
           <Bi zh="一次交换，永久解锁——之后可以用不同的两个人再测，不用重复付费。" en="One exchange, unlocked forever — test as many pairs as you like afterward, no repeat payment." />

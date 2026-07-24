@@ -7,6 +7,8 @@ import Bi from "@/components/Bi";
 import { LIFE_SIGNS, TIER_LABELS } from "@/lib/qian-data";
 import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import WechatPayModal from "@/components/WechatPayModal";
+import { getProduct } from "@/lib/plans";
 
 // 四段解读对应doc21的报告设计——不是随便起的名字，是"三签怎么组合→
 // 天赋数字地图→当前处在哪个阶段→接下来具体练什么"这条完整的自我
@@ -40,6 +42,7 @@ export default function QianReport({ id }: { id: string }) {
   const [abilityMap, setAbilityMap] = useState<AbilityItem[]>([]);
   const [lifeStage, setLifeStage] = useState<LifeStage | null>(null);
   const [unlocking, setUnlocking] = useState(false);
+  const [showWechatPay, setShowWechatPay] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
@@ -91,30 +94,13 @@ export default function QianReport({ id }: { id: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const unlock = async () => {
+  const unlock = () => {
     if (REVIEW_MODE) {
       setStatus("checking");
       window.location.reload();
       return;
     }
-    setUnlocking(true);
-    try {
-      const res = await fetch("/api/pay/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: "qian-reading", submissionId: id, returnPath: `/qian/full?id=${id}` }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setError((data.error || t("下单失败，请稍后再试。", "Order failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
-        setUnlocking(false);
-      }
-    } catch {
-      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
-      setUnlocking(false);
-    }
+    setShowWechatPay(true);
   };
 
   // 跟生命图谱、关系共振用的是同一套导出方式：按每个章节单独截图，
@@ -217,9 +203,19 @@ export default function QianReport({ id }: { id: string }) {
           disabled={unlocking}
           className="mt-8 bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="开启完整生命解码 · $9.9" en="Unlock the Full Decoding · $9.9" />}
+          <Bi zh={`开启完整生命解码 · ¥${getProduct("qian-reading")?.priceRmb}`} en={`Unlock the Full Decoding · ¥${getProduct("qian-reading")?.priceRmb}`} />
         </button>
         {error && <p className="mt-4 text-xs text-rose">{error}</p>}
+        {showWechatPay && (
+          <WechatPayModal
+            productId="qian-reading"
+            submissionId={id}
+            priceRmb={getProduct("qian-reading")?.priceRmb ?? 0}
+            productName={{ zh: "灵犀生命灵签 · 完整解读", en: "Lingxi Life Oracle · Full Reading" }}
+            onClose={() => setShowWechatPay(false)}
+            onSuccess={() => window.location.reload()}
+          />
+        )}
       </div>
     );
   }

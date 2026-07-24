@@ -8,6 +8,8 @@ import type { LifeSign } from "@/lib/qian-data";
 import { TIER_LABELS } from "@/lib/qian-data";
 import QianCosmicRing from "@/components/QianCosmicRing";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import WechatPayModal from "@/components/WechatPayModal";
+import { getProduct } from "@/lib/plans";
 
 type Stage = "form" | "gathering" | "shaking" | "revealed";
 
@@ -28,6 +30,7 @@ export default function QianFlow() {
   const [signIndexes, setSignIndexes] = useState<number[] | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
+  const [showWechatPay, setShowWechatPay] = useState(false);
 
   const shake = async () => {
     if (!year || !month || !day) return;
@@ -78,35 +81,18 @@ export default function QianFlow() {
     }
   };
 
-  const unlock = async () => {
+  const unlock = () => {
     if (!submissionId) return;
-    // 审核模式开启时，不走真实的PayPal下单流程——直接跳到结果页，
-    // generate-full 接口那边看到 REVIEW_MODE=true 会跳过解锁校验，
-    // 直接生成内容。之前这里没有这个判断，审核模式开关等于白设置了，
-    // 点解锁还是会尝试真的创建订单。
+    // 审核模式开启时，不走真实付款流程——直接跳到结果页，generate-full
+    // 接口那边看到 REVIEW_MODE=true 会跳过解锁校验，直接生成内容。
     if (REVIEW_MODE) {
       window.location.href = `/qian/full?id=${submissionId}`;
       return;
     }
-    setUnlocking(true);
-    setError("");
-    try {
-      const res = await fetch("/api/pay/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: "qian-reading", submissionId, returnPath: `/qian/full?id=${submissionId}` }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setError((data.error || t("下单失败，请稍后再试。", "Order failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
-        setUnlocking(false);
-      }
-    } catch {
-      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
-      setUnlocking(false);
-    }
+    // PayPal企业账户被注销、暂时无法使用，这里改成微信扫码支付——
+    // 国内用户直接扫码，海外用户这个渠道暂时收不到（下一步海外支付
+    // 渠道确定了再加回来，不是永久只支持微信）。
+    setShowWechatPay(true);
   };
 
   if (stage === "form") {
@@ -234,9 +220,19 @@ export default function QianFlow() {
           disabled={unlocking}
           className="mt-5 bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50"
         >
-          {unlocking ? <Bi zh="正在跳转…" en="Redirecting…" /> : <Bi zh="开启完整生命解码 · $9.9" en="Unlock the Full Decoding · $9.9" />}
+          <Bi zh={`开启完整生命解码 · ¥${getProduct("qian-reading")?.priceRmb}`} en={`Unlock the Full Decoding · ¥${getProduct("qian-reading")?.priceRmb}`} />
         </button>
         {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+        {showWechatPay && submissionId && (
+          <WechatPayModal
+            productId="qian-reading"
+            submissionId={submissionId}
+            priceRmb={getProduct("qian-reading")?.priceRmb ?? 0}
+            productName={{ zh: "灵犀生命灵签 · 完整解读", en: "Lingxi Life Oracle · Full Reading" }}
+            onClose={() => setShowWechatPay(false)}
+            onSuccess={() => { window.location.href = `/qian/full?id=${submissionId}`; }}
+          />
+        )}
         {signs && (
           <button
             onClick={() => {
