@@ -198,8 +198,8 @@ export default function RomanceFlow() {
         </h1>
         <p className="mt-4 text-base leading-8 text-bone-dim">
           <Bi
-            zh="每个人都有自己的吸引方式——有人靠表达，有人靠温度，有人无需刻意靠近，也会让别人感受到他的存在。吸引力不仅是外在表现，更是一种生命互动方式。场域读取你的生命结构，探索你的吸引力来源、你的关系连接模式、你容易被哪类人感受到，以及你在人际互动中的独特频率。了解自己的磁场，不是为了证明「有没有桃花」，而是看见你正在如何与世界建立连接。免费、即时、不需要登录。"
-            en="Everyone has their own way of drawing people in — some through expression, some through warmth, some simply by being present. Magnetism isn't only about how you appear; it's a way of interacting with life. The field reads your structure to explore where your pull comes from, how you connect, who tends to feel it, and your own frequency in how you meet people. This isn't about proving you 'have romance luck' — it's about seeing how you're already connecting with the world. Free, instant, no sign-in needed."
+            zh="每个人都有自己的吸引方式——有人靠表达，有人靠温度，有人无需刻意靠近，也会让别人感受到他的存在。吸引力不仅是外在表现，更是一种生命互动方式。场域读取你的生命结构，探索你的吸引力来源、你的关系连接模式、你容易被哪类人感受到，以及你在人际互动中的独特频率。了解自己的磁场，不是为了证明「有没有桃花」，而是看见你正在如何与世界建立连接——即时呈现，不需要登录。"
+            en="Everyone has their own way of drawing people in — some through expression, some through warmth, some simply by being present. Magnetism isn't only about how you appear; it's a way of interacting with life. The field reads your structure to explore where your pull comes from, how you connect, who tends to feel it, and your own frequency in how you meet people. This isn't about proving you 'have romance luck' — it's about seeing how you're already connecting with the world, shown to you right away, no sign-in needed."
           />
         </p>
       </div>

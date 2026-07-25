@@ -34,7 +34,7 @@ export default function Home() {
           <div className="mx-auto grid max-w-5xl gap-16 sm:grid-cols-2">
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="为何修炼" en="Why practice" /></p>
-              <p className="mt-6 font-display text-2xl leading-relaxed text-bone sm:text-3xl">
+              <p className="mt-6 font-display text-xl leading-relaxed text-bone sm:text-2xl">
                 <Bi
                   zh={<>因为真正的探索，不是向外寻找答案，<br />而是重新认识自己——向内，看见意识深处的声音，觉察、理解，逐渐忆起那个真实的自己。</>}
                   en={<>Because true exploration isn't about searching outward for answers —<br />it's about knowing yourself again. Turn inward, hear the voice beneath awareness, notice, understand, and slowly remember who you really are.</>}
@@ -43,7 +43,7 @@ export default function Home() {
             </div>
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="为何显化" en="Why manifest" /></p>
-              <p className="mt-6 font-display text-2xl leading-relaxed text-bone sm:text-3xl">
+              <p className="mt-6 font-display text-xl leading-relaxed text-bone sm:text-2xl">
                 <Bi
                   zh={<>显化不是改变世界，而是让你的意识、行动、选择，与想创造的现实逐渐对齐——当内在清晰，现实开始回应。</>}
                   en={<>Manifestation isn't about changing the world — it's about bringing your awareness, actions, and choices into alignment with the reality you want to create. When the inside is clear, reality starts to answer.</>}
@@ -59,7 +59,7 @@ export default function Home() {
             <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10 text-center">
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="重 塑 潜 意 识" en="Rewrite the Subconscious" /></p>
               <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="每一道阻碍，都是生命留下的一面镜子" en="Every obstacle is a mirror life has left behind" /></h2>
-              <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-bone-dim"><Bi zh="它不是限制，它是在等待被理解——看见它，穿越它，重新选择。" en="It isn't a limitation. It's waiting to be understood — see it, move through it, choose again." /></p>
+              <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-bone-dim"><Bi zh="它不是限制，它是在等待被理解——看见它，穿越它，重新选择。" en="It isn't a limitation. It's waiting to be understood — see it, move through it, choose again." /></p>
             </div>
             <div className="mt-20 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
               {gates.map((gate) => (

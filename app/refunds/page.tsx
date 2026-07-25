@@ -12,6 +12,7 @@ export default function RefundsPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
+        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
         <h1 className="font-display text-4xl font-light text-bone">
           <Bi zh="退款政策" en="Refund Policy" />
         </h1>
@@ -62,8 +63,8 @@ export default function RefundsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="请通过网站内的联系方式与我们联系，并提供：你的账户邮箱、购买的产品名称、购买时间（或订单/交易编号）、遇到问题的具体描述（如有截图请一并提供）。我们会在收到申请后的合理时间内（通常不超过5个工作日）回复你处理结果。退款将原路退回至你付款时使用的支付方式，实际到账时间取决于该支付服务商（如PayPal）的处理周期，通常为5-10个工作日。"
-                en="Please contact us through the contact information on this Site and provide: your account email, the name of the product purchased, the purchase date (or order/transaction ID), and a specific description of the issue (including screenshots, if available). We will respond with the outcome within a reasonable time after receiving your request, typically no more than 5 business days. Refunds are issued back to the original payment method used, and the actual time for funds to arrive depends on the processing cycle of the relevant payment provider (such as PayPal), typically 5\u201310 business days."
+                zh="请通过网站内的联系方式与我们联系，并提供：你的账户邮箱、购买的产品名称、购买时间（或订单/交易编号）、遇到问题的具体描述（如有截图请一并提供）。我们会在收到申请后的合理时间内（通常不超过5个工作日）回复你处理结果。退款将原路退回至你付款时使用的支付方式，实际到账时间取决于该支付服务商（如微信支付）的处理周期，通常为5-10个工作日。"
+                en="Please contact us through the contact information on this Site and provide: your account email, the name of the product purchased, the purchase date (or order/transaction ID), and a specific description of the issue (including screenshots, if available). We will respond with the outcome within a reasonable time after receiving your request, typically no more than 5 business days. Refunds are issued back to the original payment method used, and the actual time for funds to arrive depends on the processing cycle of the relevant payment provider (such as WeChat Pay), typically 5\u201310 business days."
               />
             </p>
           </section>
@@ -79,6 +80,7 @@ export default function RefundsPage() {
               />
             </p>
           </section>
+        </div>
         </div>
       </main>
       <Footer />

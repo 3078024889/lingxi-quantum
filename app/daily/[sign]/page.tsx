@@ -16,8 +16,8 @@ export function generateMetadata({ params }: { params: { sign: string } }) {
   const sign = ZODIAC_SIGNS.find((s) => s.slug === params.sign);
   if (!sign) return {};
   return {
-    title: `${sign.zh}座今日运势 · 免费 | 灵犀 ${sign.en} Daily Horoscope — Free | Lingxi`,
-    description: `${sign.zh}座今天的真实月相与月亮星座解读，每天更新，免费查看。Today's real transit-based horoscope for ${sign.en}, updated daily, completely free.`,
+    title: `${sign.zh}座今日运势 · 每日更新 | 灵犀场 ${sign.en} Daily Horoscope | Lingxi Field`,
+    description: `${sign.zh}座今天的真实月相与月亮星座解读，每天更新，即时查看。Today's real transit-based horoscope for ${sign.en}, updated daily.`,
     alternates: { canonical: `/daily/${sign.slug}` },
   };
 }

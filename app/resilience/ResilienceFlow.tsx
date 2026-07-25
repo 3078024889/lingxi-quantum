@@ -222,8 +222,8 @@ export default function ResilienceFlow() {
         </h1>
         <p className="mt-4 text-base leading-8 text-bone-dim">
           <Bi
-            zh="真正的韧性，不是永远没有压力，而是在变化、困难、不确定出现时，你是否拥有重新调整自己的能力。很多时候我们只知道「我还能不能撑住」，却很少知道「我的生命系统，是如何恢复的」。场域从你的生命结构中，探索五项核心韧性维度——压力恢复、变化适应、危机反弹、长期坚持、精神稳定。了解自己的韧性结构，不是为了给自己贴标签，而是知道你的力量来自哪里、你的消耗发生在哪里，以及如何更好地支持自己。免费、即时、不需要登录。"
-            en="True resilience isn't the absence of pressure — it's whether you can re-adjust when change, difficulty, or uncertainty shows up. Most of the time we only know 'can I still hold on,' and rarely know 'how does my system actually recover.' The field explores five core dimensions from your life structure — stress recovery, adaptability, crisis rebound, persistence, emotional stability. Understanding your resilience isn't about labeling yourself — it's knowing where your strength comes from, where your drain happens, and how to support yourself better. Free, instant, no sign-in needed."
+            zh="真正的韧性，不是永远没有压力，而是在变化、困难、不确定出现时，你是否拥有重新调整自己的能力。很多时候我们只知道「我还能不能撑住」，却很少知道「我的生命系统，是如何恢复的」。场域从你的生命结构中，探索五项核心韧性维度——压力恢复、变化适应、危机反弹、长期坚持、精神稳定。了解自己的韧性结构，不是为了给自己贴标签，而是知道你的力量来自哪里、你的消耗发生在哪里，以及如何更好地支持自己——即时呈现，不需要登录。"
+            en="True resilience isn't the absence of pressure — it's whether you can re-adjust when change, difficulty, or uncertainty shows up. Most of the time we only know 'can I still hold on,' and rarely know 'how does my system actually recover.' The field explores five core dimensions from your life structure — stress recovery, adaptability, crisis rebound, persistence, emotional stability. Understanding your resilience isn't about labeling yourself — it's knowing where your strength comes from, where your drain happens, and how to support yourself better, shown to you right away, no sign-in needed."
           />
         </p>
       </div>

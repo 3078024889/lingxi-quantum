@@ -12,6 +12,7 @@ export default function PrivacyPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
+        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
         <h1 className="font-display text-4xl font-light text-bone">
           <Bi zh="隐私政策" en="Privacy Policy" />
         </h1>
@@ -26,8 +27,8 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="账户信息：注册时提供的邮箱地址，由我们的账户服务商（Supabase）处理身份验证。测试与报告数据：你为生成个人报告而主动填写的信息，包括出生日期、出生时间（可选）、出生地点（可选）、称呼（可选）。梦境记录、显化愿景、修炼心得等你主动写下并保存的文字内容。付款记录：购买了哪个产品、购买时间、金额，不包括你的完整银行卡号或PayPal账户密码——支付信息由第三方支付服务商（如PayPal）直接处理，我们不会接触或存储你的完整支付凭证。使用数据：访问的页面、设备与浏览器类型等基础技术信息，用于网站正常运行与故障排查。"
-                en="Account information: the email address you provide at registration, used for authentication through our account service provider (Supabase). Test and report data: information you voluntarily submit to generate a personal report, including birth date, birth time (optional), birth place (optional), and a preferred name (optional); as well as dream journal entries, manifestation visions, and practice journal entries you choose to write and save. Payment records: which product was purchased, when, and for how much \u2014 this does not include your full card number or PayPal account password. Payment details are handled directly by third-party payment providers (such as PayPal); we never receive or store your full payment credentials. Usage data: basic technical information such as pages visited and device/browser type, used for keeping the Site running properly and for troubleshooting."
+                zh="账户信息：注册时提供的邮箱地址，由我们的账户服务商（Supabase）处理身份验证。测试与报告数据：你为生成个人报告而主动填写的信息，包括出生日期、出生时间（可选）、出生地点（可选）、称呼（可选）。梦境记录、显化愿景、修炼心得等你主动写下并保存的文字内容。付款记录：购买了哪个产品、购买时间、金额，不包括你的完整支付账户或密码信息——支付信息由第三方支付服务商（如微信支付）直接处理，我们不会接触或存储你的完整支付凭证。使用数据：访问的页面、设备与浏览器类型等基础技术信息，用于网站正常运行与故障排查。"
+                en="Account information: the email address you provide at registration, used for authentication through our account service provider (Supabase). Test and report data: information you voluntarily submit to generate a personal report, including birth date, birth time (optional), birth place (optional), and a preferred name (optional); as well as dream journal entries, manifestation visions, and practice journal entries you choose to write and save. Payment records: which product was purchased, when, and for how much \u2014 this does not include your full payment account or password details. Payment details are handled directly by third-party payment providers (such as WeChat Pay); we never receive or store your full payment credentials. Usage data: basic technical information such as pages visited and device/browser type, used for keeping the Site running properly and for troubleshooting."
               />
             </p>
           </section>
@@ -127,6 +128,7 @@ export default function PrivacyPage() {
               />
             </p>
           </section>
+        </div>
         </div>
       </main>
       <Footer />

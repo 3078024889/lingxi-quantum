@@ -6,8 +6,8 @@ import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
 import { computeTodayTransit } from "@/lib/daily-transit";
 
 export const metadata = {
-  title: "今日运势 · 十二星座每日免费运势 | 灵犀 Daily Horoscope — Free | Lingxi",
-  description: "根据今天真实的月亮星座与月相天文数据，查看十二星座今日运势。免费、每日更新、不需要登录。Real daily transit data — free horoscope for all 12 zodiac signs, updated every day.",
+  title: "今日运势 · 十二星座每日运势 | 灵犀场 Daily Horoscope | Lingxi Field",
+  description: "根据今天真实的月亮星座与月相天文数据，查看十二星座今日运势，每日更新，不需要登录。Real daily transit data for all 12 zodiac signs, updated every day.",
   alternates: { canonical: "/daily" },
 };
 

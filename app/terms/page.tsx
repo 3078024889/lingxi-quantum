@@ -12,6 +12,7 @@ export default function TermsPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
+        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
         <h1 className="font-display text-4xl font-light text-bone">
           <Bi zh="服务条款" en="Terms of Service" />
         </h1>
@@ -62,8 +63,8 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="本网站部分内容需要一次性付费解锁，具体价格以购买时页面显示为准。付款通过第三方支付服务商（如PayPal）处理，本网站不会存储你的完整银行卡或支付账户信息。付费内容解锁后即为永久有效，可反复查看，不涉及订阅或自动续费。关于退款，请查看我们的《退款政策》。"
-                en="Some content on this Site requires a one-time payment to unlock; the applicable price is as shown on the page at the time of purchase. Payments are processed through third-party payment providers (such as PayPal); this Site does not store your full card or payment account details. Once unlocked, paid content remains permanently accessible and does not involve a subscription or auto-renewal. For refunds, please see our Refund Policy."
+                zh="本网站部分内容需要付费解锁，具体价格以购买时页面显示为准，付款通过第三方支付服务商（如微信支付）处理，本网站不会存储你的完整支付账户或密码信息。本网站的付费产品分为两类：一次性解锁类（如生命图谱、关系共振、生命灵签、量子塔罗、四大修炼技术等）付费后即永久有效，可反复查看；订阅制产品（如显化与梦境解读、多维叙事年度解锁、全构造解锁）按周期计费，到期后需续费才能继续使用，订阅不会自动续费扣款，到期后你可以自行选择是否续期。关于退款，请查看我们的《退款政策》。"
+                en="Some content on this Site requires payment to unlock, at the price shown on the page at the time of purchase. Payments are processed through third-party payment providers (such as WeChat Pay); this Site does not store your full payment account or password details. Paid products on this Site fall into two categories: one-time unlocks (such as the Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, and the Four Practices), which remain permanently accessible once purchased; and subscription products (such as Manifestation & Dream Interpretation, the yearly Narrative unlock, and Everything Unlocked), which are billed for a fixed period and require manual renewal to continue after expiry — subscriptions do not auto-renew or auto-charge; you choose whether to renew each time. For refunds, please see our Refund Policy."
               />
             </p>
           </section>
@@ -127,6 +128,7 @@ export default function TermsPage() {
               />
             </p>
           </section>
+        </div>
         </div>
       </main>
       <Footer />

@@ -12,6 +12,7 @@ export default function AboutPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
+        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
         <h1 className="font-display text-4xl font-light text-bone">
           <Bi zh="关于我们" en="About Us" />
         </h1>
@@ -56,6 +57,7 @@ export default function AboutPage() {
               />
             </p>
           </section>
+        </div>
         </div>
       </main>
       <Footer />
