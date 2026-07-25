@@ -103,81 +103,26 @@ export default function QianReport({ id }: { id: string }) {
     setShowWechatPay(true);
   };
 
-  // 跟生命图谱、关系共振用的是同一套导出方式：按每个章节单独截图，
-  // 再逐张贴进A4页面，不会撞浏览器canvas的最大尺寸限制（见
-  // app/life-map/full/FullReportView.tsx 里 downloadPdf 的详细注释）。
+  // 目录页要列的章节标题——lifeStage、abilityMap这两块是条件渲染的，
+  // 有没有要看实际数据，构建目录列表的时候要跟正文实际渲染出来的
+  // 直接子元素顺序完全对应，不然目录和实际内容会对不上。
   const downloadPdf = async () => {
     if (!reportRef.current) return;
     setDownloading(true);
     try {
-      // 之前这里点了就立刻开始截图，网页自定义字体（font-display那套）
-      // 如果这时候还没加载完，html2canvas会拿浏览器默认字体的度量去
-      // 排版截图，等真字体一到位，文字宽度/行高对不上，看起来就是标题
-      // 和副标题重叠、文字挤在一起糊成一团。这里先等字体真正加载完成，
-      // 再多留200毫秒给排版稳定下来，才开始截图。
-      await document.fonts.ready;
-      await new Promise((r) => setTimeout(r, 200));
-
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-      const container = reportRef.current;
-      const chapters = Array.from(container.children) as HTMLElement[];
-      const PRINT_BG = "#0d0d1a";
-
-      const pdf = new jsPDF({ unit: "pt", format: "a4" });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const fillPageBackground = () => {
-        pdf.setFillColor(13, 13, 26);
-        pdf.rect(0, 0, pageWidth, pageHeight, "F");
-      };
-      fillPageBackground();
-
-      let cursorY = 0;
-      let placedAnything = false;
-
-      for (const chapter of chapters) {
-        if (!chapter || chapter.offsetHeight < 2) continue;
-        const canvas = await html2canvas(chapter, { backgroundColor: PRINT_BG, scale: 2, useCORS: true });
-        const imgData = canvas.toDataURL("image/jpeg", 0.92);
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        if (imgHeight > pageHeight) {
-          if (placedAnything) {
-            pdf.addPage();
-            fillPageBackground();
-            cursorY = 0;
-          }
-          let heightLeft = imgHeight;
-          let position = 0;
-          pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-          while (heightLeft > 10) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            fillPageBackground();
-            pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
-          cursorY = imgHeight % pageHeight;
-          placedAnything = true;
-          continue;
-        }
-
-        if (placedAnything && cursorY + imgHeight > pageHeight) {
-          pdf.addPage();
-          fillPageBackground();
-          cursorY = 0;
-        }
-        pdf.addImage(imgData, "JPEG", 0, cursorY, imgWidth, imgHeight);
-        cursorY += imgHeight;
-        placedAnything = true;
-      }
-
-      pdf.save(`灵犀生命灵签-${name || "report"}.pdf`);
+      const { exportGlassPdf } = await import("@/lib/pdf-export");
+      const chapterTitles = [
+        ...(lifeStage ? [{ titleZh: "当前所处阶段", titleEn: "Current Life Stage" }] : []),
+        ...(abilityMap.length > 0 ? [{ titleZh: "天赋能力地图", titleEn: "Talent & Ability Map" }] : []),
+        ...LAYER_TITLES.map((l) => ({ titleZh: l.zh, titleEn: l.en })),
+      ];
+      await exportGlassPdf({
+        containerRef: reportRef.current,
+        fileName: `灵犀生命灵签-${name || "report"}.pdf`,
+        reportTitleZh: `${name || "你的"}生命原型档案`,
+        reportTitleEn: `${name || "Your"} Life Archetype Blueprint`,
+        chapterTitles,
+      });
     } catch (e) {
       console.error("PDF 生成失败:", e);
       alert(t("PDF 生成失败，请稍后再试，或改用浏览器打印功能另存为 PDF。", "PDF generation failed — please try again, or use your browser's print-to-PDF as a fallback."));
@@ -322,18 +267,16 @@ export default function QianReport({ id }: { id: string }) {
         </div>
       )}
 
-      <div className="mt-8 space-y-5">
-        {sections.map((content, i) => (
-          <div key={i} className="rounded-sm border border-white/10 bg-void-deep p-6">
-            {LAYER_TITLES[i] && (
-              <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
-                <Bi zh={LAYER_TITLES[i].zh} en={LAYER_TITLES[i].en} />
-              </p>
-            )}
-            <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
-          </div>
-        ))}
-      </div>
+      {sections.map((content, i) => (
+        <div key={i} className="mt-5 rounded-sm border border-white/10 bg-void-deep p-6">
+          {LAYER_TITLES[i] && (
+            <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+              <Bi zh={LAYER_TITLES[i].zh} en={LAYER_TITLES[i].en} />
+            </p>
+          )}
+          <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
+        </div>
+      ))}
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">

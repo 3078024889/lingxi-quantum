@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
-import { createWechatNativeOrder, wechatPayConfigured } from "@/lib/wechatpay";
+import { createWechatNativeOrder, wechatPayConfigured, wechatPayMissingVars } from "@/lib/wechatpay";
 
 const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
   "life-map-report": "life_map_submissions",
@@ -14,8 +14,9 @@ const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
 export async function POST(req: Request) {
   try {
     if (!wechatPayConfigured()) {
+      const missing = wechatPayMissingVars();
       return NextResponse.json(
-        { error: "微信支付尚未配置完整（缺少商户号/密钥/证书这几个环境变量），暂时无法使用。" },
+        { error: `微信支付还差这几个环境变量没配：${missing.join("、")}`, detail: "其余已配置的变量已生效，不是全部重来。" },
         { status: 503 }
       );
     }

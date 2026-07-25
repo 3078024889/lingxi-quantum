@@ -106,70 +106,25 @@ export default function RelationshipReportView({ id }: { id: string }) {
     setDownloading(true);
     setPrintMode(true);
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    // 同上：额外等自定义字体真正加载完成，避免html2canvas拿浏览器
-    // 默认字体的度量去截图，导致标题文字重叠、挤在一起。
-    await document.fonts.ready;
     try {
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-      const container = reportRef.current;
-      const chapters = Array.from(container.children) as HTMLElement[];
-      const PRINT_BG = "#241a44";
-
-      const pdf = new jsPDF({ unit: "pt", format: "a4" });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const fillPageBackground = () => {
-        pdf.setFillColor(36, 26, 68);
-        pdf.rect(0, 0, pageWidth, pageHeight, "F");
-      };
-      fillPageBackground();
-
-      let cursorY = 0;
-      let placedAnything = false;
-
-      for (const chapter of chapters) {
-        if (!chapter || chapter.offsetHeight < 2) continue;
-        const canvas = await html2canvas(chapter, { backgroundColor: PRINT_BG, scale: 2, useCORS: true });
-        const imgData = canvas.toDataURL("image/jpeg", 0.92);
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        if (imgHeight > pageHeight) {
-          if (placedAnything) {
-            pdf.addPage();
-            fillPageBackground();
-            cursorY = 0;
-          }
-          let heightLeft = imgHeight;
-          let position = 0;
-          pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-          while (heightLeft > 10) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            fillPageBackground();
-            pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
-          cursorY = imgHeight % pageHeight;
-          placedAnything = true;
-          continue;
-        }
-
-        if (placedAnything && cursorY + imgHeight > pageHeight) {
-          pdf.addPage();
-          fillPageBackground();
-          cursorY = 0;
-        }
-        pdf.addImage(imgData, "JPEG", 0, cursorY, imgWidth, imgHeight);
-        cursorY += imgHeight;
-        placedAnything = true;
-      }
-
-      pdf.save(`灵犀关系共振-${names ? `${names.a}×${names.b}` : "report"}.pdf`);
+      const { exportGlassPdf } = await import("@/lib/pdf-export");
+      const children = Array.from(reportRef.current.children) as HTMLElement[];
+      const [coverEl, ...chapterEls] = children;
+      const chapterTitles = chapterEls.map((_, i) => ({
+        titleZh: i === 0 ? "关系共振总览" : `深度解析 · 第${i}部分`,
+        titleEn: i === 0 ? "Resonance Overview" : `Deep Analysis · Part ${i}`,
+      }));
+      const reportTitle = names ? `${names.a} × ${names.b}` : "report";
+      await exportGlassPdf({
+        coverEl,
+        chapterEls,
+        fileName: `灵犀关系共振-${reportTitle}.pdf`,
+        reportTitleZh: `${reportTitle} 关系共振图谱`,
+        reportTitleEn: `${reportTitle} · Relationship Resonance`,
+        chapterTitles,
+        bgColorRgb: [36, 26, 68],
+        bgColorHex: "#241a44",
+      });
     } catch (e) {
       console.error("PDF 生成失败:", e);
       alert(t("PDF 生成失败，请稍后再试，或改用浏览器打印功能另存为 PDF。", "PDF generation failed — please try again, or use your browser's print-to-PDF as a fallback."));

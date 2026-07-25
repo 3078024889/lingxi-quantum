@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { decryptWechatNotifyResource } from "@/lib/wechatpay";
+import { decryptWechatNotifyResource, verifyWechatNotifySignature } from "@/lib/wechatpay";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
 
 // 微信支付服务器主动推送的支付结果通知——用户扫码付款成功之后，微信会
@@ -8,17 +8,24 @@ import { fulfillPaidOrder } from "@/lib/fulfill-order";
 // 兜底路径，跟前端轮询（/api/pay/wechat/query）是两条独立的确认渠道，
 // 谁先确认成功都行，fulfillPaidOrder 内部做了幂等处理，不会重复解锁。
 //
-// 老实说明一处简化：完整的微信支付验签流程，还应该验证微信支付平台
-// 证书对这条通知本身的签名（Wechatpay-Signature这个请求头），确认
-// 这条通知确实是微信服务器发的，不是别人伪造的。这一步需要先调用
-// 微信支付的"获取平台证书列表"接口拿到平台公钥，是一个更完整、但
-// 也更复杂的实现。这次先做了"解密资源"这一层（用APIv3密钥解密，
-// 只有真正知道密钥的人能解出正确内容），加上下面查询接口的双重确认，
-// 在实际风险可控的前提下先跑起来；平台证书验签这一层，作为后续
-// 补强的安全加固项，不是这次能一次性做完的。
+// 这一版补上了平台公钥验签——先确认这条通知的签名真的能用微信支付
+// 公钥验证通过，验不过直接拒绝处理，不再只靠"能不能正确解密"这一层
+// 弱验证。
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+    const timestamp = req.headers.get("Wechatpay-Timestamp") ?? "";
+    const nonce = req.headers.get("Wechatpay-Nonce") ?? "";
+    const signature = req.headers.get("Wechatpay-Signature") ?? "";
+    const serial = req.headers.get("Wechatpay-Serial") ?? "";
+
+    const validSignature = verifyWechatNotifySignature({ timestamp, nonce, body: rawBody, signature, serial });
+    if (!validSignature) {
+      console.error("[wechat notify] 签名验证失败，拒绝处理这条通知");
+      return NextResponse.json({ code: "FAIL", message: "签名验证失败" }, { status: 401 });
+    }
+
+    const body = JSON.parse(rawBody);
     const resource = body.resource;
     if (!resource) {
       return NextResponse.json({ code: "FAIL", message: "缺少resource字段" }, { status: 400 });
@@ -50,3 +57,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ code: "FAIL", message: "处理异常" }, { status: 500 });
   }
 }
+

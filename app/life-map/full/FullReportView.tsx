@@ -239,102 +239,32 @@ export default function FullReportView({ id }: { id: string }) {
     if (!reportRef.current) return;
     setDownloading(true);
     setPrintMode(true);
-    // 等两帧，确保打印模式的样式（彩虹背景+黑字）真的重绘完成，再截图，
+    // 等两帧，确保打印模式的样式（极光渐变+浅色字）真的重绘完成，再截图，
     // 不然html2canvas可能截到样式切换前的旧画面。
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    // 同上：额外等自定义字体真正加载完成，避免html2canvas拿浏览器
-    // 默认字体的度量去截图，导致标题文字重叠、挤在一起。
-    await document.fonts.ready;
     try {
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
-
-      // 之前是把整份报告（十几个章节+图表）截成一张巨大的长图，再按
-      // A4高度切片、逐页贴回去。这个做法在报告比较长的时候，会撞到
-      // 浏览器canvas本身的最大尺寸限制（不同浏览器上限不一样，但十几
-      // 屏内容叠加缩放两倍，很容易超过），超限之后canvas会静默出现
-      // 空白/花屏/内容错位，这正是"文档后面一块空白""内容断裂"这些
-      // 问题的根源，不是随机故障。
-      //
-      // 改成按"章节"逐个单独截图，再把每一小张图，尽量完整地放进
-      // PDF页面里——一张图如果在当前页剩余空间放不下，就换到下一页
-      // 整个放，而不是把一个章节从中间切开。这样每次html2canvas截的
-      // 都是一小块，不会撞尺寸限制；绝大多数情况下也不会再出现一句话
-      // 被从中间切成两页这种情况（除非单个章节本身就长过一整页，那种
-      // 极少数情况下才会退回到"切片"处理，仅针对那一个章节）。
-      const container = reportRef.current;
-      const chapters = Array.from(container.children) as HTMLElement[];
-      const PRINT_BG = "#241a44"; // 跟 .lm2-print-mode 渐变中段色调接近，每小节独立截图时统一用这个纯色打底，拼起来不会有明显接缝
-
-      const pdf = new jsPDF({ unit: "pt", format: "a4" });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      // jsPDF 的页面默认底色是纯白——之前每页只在"贴了图的地方"有颜色，
-      // 内容填不满一整页的时候，剩下那一截，就会露出这个默认白底，这才是
-      // "颜色盖不住A4纸"、能看到大片空白的真正原因。这里在每次新开一页
-      // 时，先用一个跟极光渐变主色调接近的纯色，把整页铺满，再往上面贴
-      // 内容截图——图片是不透明的JPEG，该盖住的地方还是会盖住，只是
-      // 图片之外、原本会露白的地方，现在也是深色而不是白色了。
-      const fillPageBackground = () => {
-        pdf.setFillColor(36, 26, 68);
-        pdf.rect(0, 0, pageWidth, pageHeight, "F");
-      };
-      fillPageBackground();
-
-      let cursorY = 0;
-      let placedAnything = false;
-
-      for (const chapter of chapters) {
-        // 跳过没有实际可见内容的空节点（比如条件渲染后留下的空 div）
-        if (!chapter || chapter.offsetHeight < 2) continue;
-
-        const canvas = await html2canvas(chapter, {
-          backgroundColor: PRINT_BG,
-          scale: 2,
-          useCORS: true,
-        });
-        const imgData = canvas.toDataURL("image/jpeg", 0.92);
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        if (imgHeight > pageHeight) {
-          // 极少数情况：单个章节本身就超过一整页高（比如某个图表特别高）。
-          // 只对这一个章节，退回旧的"切片"处理，其余章节不受影响。
-          if (placedAnything) {
-            pdf.addPage();
-            fillPageBackground();
-            cursorY = 0;
-          }
-          let heightLeft = imgHeight;
-          let position = 0;
-          pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-          while (heightLeft > 10) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            fillPageBackground();
-            pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
-          cursorY = imgHeight % pageHeight;
-          placedAnything = true;
-          continue;
-        }
-
-        if (placedAnything && cursorY + imgHeight > pageHeight) {
-          pdf.addPage();
-          fillPageBackground();
-          cursorY = 0;
-        }
-        pdf.addImage(imgData, "JPEG", 0, cursorY, imgWidth, imgHeight);
-        cursorY += imgHeight;
-        placedAnything = true;
-      }
-
-      pdf.save(`灵犀生命图谱-${coreTypeName || "report"}.pdf`);
+      const { exportGlassPdf } = await import("@/lib/pdf-export");
+      const children = Array.from(reportRef.current.children) as HTMLElement[];
+      const [coverEl, ...chapterEls] = children;
+      // 这份报告的分组截图逻辑，之前经过专门调优（标题跟星盘图绑在一起
+      // 截图、每个章节的图表拆成独立节点避免被从中间切断），这次没有
+      // 重新拆分这套结构，只是在外面加了目录页和页码——目录条目数量
+      // 因此对应的是"实际截图时分成了几大块"，不是每一个细分小节都单独
+      // 列一条，这个是如实反映当前技术实现，不是数错了。
+      const chapterTitles = chapterEls.map((_, i) => ({
+        titleZh: i === 0 ? "核心类型与命盘总览" : `深度解析 · 第${i}部分`,
+        titleEn: i === 0 ? "Core Type & Chart Overview" : `Deep Analysis · Part ${i}`,
+      }));
+      await exportGlassPdf({
+        coverEl,
+        chapterEls,
+        fileName: `灵犀生命图谱-${coreTypeName || "report"}.pdf`,
+        reportTitleZh: `${coreTypeName || "你的"}生命图谱`,
+        reportTitleEn: `${coreTypeName || "Your"} Life Map`,
+        chapterTitles,
+        bgColorRgb: [36, 26, 68],
+        bgColorHex: "#241a44",
+      });
     } catch (e) {
       console.error("PDF 生成失败:", e);
       alert(t("PDF 生成失败，请稍后再试，或改用浏览器打印功能另存为 PDF。", "PDF generation failed — please try again, or use your browser's print-to-PDF as a fallback."));

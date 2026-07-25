@@ -20,9 +20,28 @@ const MCH_ID = process.env.WECHAT_MCH_ID;
 const API_V3_KEY = process.env.WECHAT_API_V3_KEY;
 const PRIVATE_KEY = process.env.WECHAT_PRIVATE_KEY;
 const CERT_SERIAL_NO = process.env.WECHAT_CERT_SERIAL_NO;
+// 微信支付公钥模式——用来验证"这条支付结果通知真的是微信官方发的"，
+// 不是随便谁伪造发过来的。之前 notify 那个接口的注释里老实说过这一步
+// 没做完整，这次补上。公钥本身不敏感（是公开的），但公钥ID要对得上
+// 微信推送通知时带的 Wechatpay-Serial 请求头，才能确认用的是哪一版。
+const PLATFORM_PUBLIC_KEY = process.env.WECHAT_PLATFORM_PUBLIC_KEY;
+const PLATFORM_PUBLIC_KEY_ID = process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID;
 
 export function wechatPayConfigured(): boolean {
   return !!(APP_ID && MCH_ID && API_V3_KEY && PRIVATE_KEY && CERT_SERIAL_NO);
+}
+
+// 具体缺了哪几个——之前那个 wechatPayConfigured() 只回答"配没配全"，
+// 缺一个就整体报"没配置完整"，容易让人误以为已经配好的那几个也没
+// 生效。这个函数明确列出到底缺哪几个，错误提示更有用。
+export function wechatPayMissingVars(): string[] {
+  const missing: string[] = [];
+  if (!APP_ID) missing.push("WECHAT_APP_ID");
+  if (!MCH_ID) missing.push("WECHAT_MCH_ID");
+  if (!API_V3_KEY) missing.push("WECHAT_API_V3_KEY");
+  if (!PRIVATE_KEY) missing.push("WECHAT_PRIVATE_KEY");
+  if (!CERT_SERIAL_NO) missing.push("WECHAT_CERT_SERIAL_NO");
+  return missing;
 }
 
 function sign(message: string): string {
@@ -89,6 +108,39 @@ export async function createWechatNativeOrder(params: {
     throw new Error(`微信支付未返回code_url: ${JSON.stringify(data)}`);
   }
   return { codeUrl: data.code_url };
+}
+
+// 验证微信支付服务器推送过来的通知，签名是否真的对得上——传入
+// 请求头里的 Wechatpay-Timestamp / Wechatpay-Nonce / 原始请求体，
+// 拼出跟微信签名时同样格式的待验证字符串，用微信支付公钥验证
+// Wechatpay-Signature 这个签名是否吻合。验证不通过，说明这条通知
+// 不是微信官方发的（或者被篡改过），必须拒绝处理，不能只看到
+// "收到了一条通知"就当成真的。
+export function verifyWechatNotifySignature(params: {
+  timestamp: string;
+  nonce: string;
+  body: string;
+  signature: string;
+  serial: string; // 微信在Wechatpay-Serial请求头里带的，标明用的是哪一版公钥
+}): boolean {
+  if (!PLATFORM_PUBLIC_KEY || !PLATFORM_PUBLIC_KEY_ID) {
+    console.error("[wechatpay] 缺少 WECHAT_PLATFORM_PUBLIC_KEY / WECHAT_PLATFORM_PUBLIC_KEY_ID，无法验签");
+    return false;
+  }
+  if (params.serial !== PLATFORM_PUBLIC_KEY_ID) {
+    console.error("[wechatpay] 通知用的公钥ID对不上，可能是公钥已轮换，需要更新环境变量。收到的serial:", params.serial);
+    return false;
+  }
+  const message = `${params.timestamp}\n${params.nonce}\n${params.body}\n`;
+  const normalizedKey = PLATFORM_PUBLIC_KEY.replace(/\\n/g, "\n");
+  try {
+    const verifier = crypto.createVerify("RSA-SHA256");
+    verifier.update(message, "utf8");
+    return verifier.verify(normalizedKey, params.signature, "base64");
+  } catch (e) {
+    console.error("[wechatpay] 验签过程出错:", e);
+    return false;
+  }
 }
 
 // 主动查询一笔订单的支付状态——前端轮询用，用户扫码付款之后，页面每隔
