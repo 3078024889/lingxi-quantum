@@ -39,7 +39,7 @@ export default function PlanButton({
       <div>
         <button
           disabled
-          className="w-full cursor-not-allowed py-4 font-display text-sm uppercase tracking-widest2 text-bone-dim/60 opacity-60 border border-white/10"
+          className="w-full cursor-not-allowed py-4 font-display text-sm uppercase tracking-widest2 text-bone-dim/82 opacity-60 border border-white/10"
         >
           <span data-lang="zh">审核中 · 暂未开放</span><span data-lang="en">In review · not yet open</span>
         </button>

@@ -51,7 +51,7 @@ function ResultCard({ result }: { result: NumberEnergyResult }) {
           </div>
         </div>
       )}
-      <p className="mt-6 text-xs leading-6 text-bone-dim/70">
+      <p className="mt-6 text-xs leading-6 text-bone-dim/85">
         <Bi
           zh="这是民俗数字能量学（81数灵动数体系），是一套流传已久、约定俗成的符号含义表，不是天文或统计意义上「算出来」的结论——供参考，不作为决策依据。"
           en="This is folk number-energy numerology (the 81-number system) — a long-established, conventional table of symbolic meanings, not an astronomically or statistically derived result. For reference only, not a basis for decisions."

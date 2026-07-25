@@ -137,7 +137,7 @@ export default function QianReport({ id }: { id: string }) {
         <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
           <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命原型档案，第一次生成需要一点时间……", "The field is unfolding your full life archetype blueprint — the first generation takes a little while…")}</p>
-          <p className="mt-3 text-xs text-bone-dim/60">{t("若长时间没有反应，按 F5 刷新一下页面即可，不会影响已经生成的内容。", "If nothing happens for a while, press F5 to refresh — this won't affect anything already generated.")}</p>
+          <p className="mt-3 text-xs text-bone-dim/82">{t("若长时间没有反应，按 F5 刷新一下页面即可，不会影响已经生成的内容。", "If nothing happens for a while, press F5 to refresh — this won't affect anything already generated.")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
@@ -228,7 +228,7 @@ export default function QianReport({ id }: { id: string }) {
         <div className="mx-auto mt-3 grid max-w-md grid-cols-3 gap-3 text-center">
           {signs.map((s, i) => (
             <div key={i}>
-              <p className="text-[10px] uppercase tracking-widest2 text-amber/80">
+              <p className="text-[11px] uppercase tracking-widest2 text-amber/80">
                 <Bi zh={TIER_LABELS[s.tier].zh} en={TIER_LABELS[s.tier].en} />
               </p>
               <p className="mt-1 text-xs text-bone">
@@ -238,10 +238,10 @@ export default function QianReport({ id }: { id: string }) {
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-bone-dim/60">
+        <p className="mt-8 text-xs text-bone-dim/82">
           {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
         </p>
-        <p className="mt-1 text-xs text-bone-dim/60">lingxifield.com</p>
+        <p className="mt-1 text-xs text-bone-dim/82">lingxifield.com</p>
       </div>
 
       {lifeStage && (
@@ -289,7 +289,7 @@ export default function QianReport({ id }: { id: string }) {
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
-        <p className="text-xs text-bone-dim/60">
+        <p className="text-xs text-bone-dim/82">
           <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
         </p>
         <ShareButton

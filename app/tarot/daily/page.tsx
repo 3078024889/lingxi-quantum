@@ -28,7 +28,7 @@ export default function TarotPage() {
             <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
               <Bi zh="七十八张里，今天只有一张，被整个场域同时看见" en="Of 78 cards, only one is being seen by the entire field today" />
             </h1>
-            <p className="mt-3 text-xs text-bone-dim/70">{todayLabel}</p>
+            <p className="mt-3 text-xs text-bone-dim/85">{todayLabel}</p>
             <p className="mt-4 text-base leading-8 text-bone-dim">
               <Bi
                 zh="不是你抽到的，是场域今天正在显化的——此刻打开这个页面的每一个人，看见的都是同一个象征。它不会一直是这张。但今天，是。"

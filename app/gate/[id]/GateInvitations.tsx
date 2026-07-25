@@ -134,7 +134,7 @@ export default function GateInvitations({
           onChange={(e) => setMood(e.target.value)}
           rows={3}
           placeholder={isEn ? "e.g. a little tired, something on my mind about work…" : "例如：有点累，心里挂着一件工作上的事……（可留空）"}
-          className="mt-3 w-full resize-none rounded-sm border border-white/15 bg-void-deep px-4 py-3 text-base leading-7 text-bone placeholder:text-bone-dim/40 focus:border-lattice/50 focus:outline-none"
+          className="mt-3 w-full resize-none rounded-sm border border-white/15 bg-void-deep px-4 py-3 text-base leading-7 text-bone placeholder:text-bone-dim/75 focus:border-lattice/50 focus:outline-none"
         />
       </div>
 
@@ -164,7 +164,7 @@ export default function GateInvitations({
           ))}
         </div>
       )}
-      {note && <p className="mt-4 text-sm text-bone-dim/70">{note}</p>}
+      {note && <p className="mt-4 text-sm text-bone-dim/85">{note}</p>}
     </div>
   );
 }

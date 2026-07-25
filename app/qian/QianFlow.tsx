@@ -194,13 +194,13 @@ export default function QianFlow() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/images/qian/${String(s.index).padStart(2, "0")}.jpg`} alt={s.nameZh} className="block aspect-[2/3] w-full object-cover" />
             <div className="p-3">
-              <p className="text-[10px] uppercase tracking-widest2 text-amber/80">
+              <p className="text-[11px] uppercase tracking-widest2 text-amber/80">
                 <Bi zh={TIER_LABELS[s.tier].zh} en={TIER_LABELS[s.tier].en} />
               </p>
               <p className="mt-1 font-display text-sm text-bone">
                 <Bi zh={s.nameZh} en={s.nameEn} />
               </p>
-              <p className="mt-1 text-[10px] text-bone-dim">
+              <p className="mt-1 text-[11px] text-bone-dim">
                 <Bi zh={s.keywordsZh} en={s.keywordsEn} />
               </p>
             </div>

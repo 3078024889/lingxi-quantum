@@ -51,11 +51,11 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
       <div className="flex flex-1 flex-col justify-between p-6">
         <div>
           <div className="flex items-center justify-between">
-            <span className="font-display text-[10px] uppercase tracking-widest2 text-lattice/70">
+            <span className="font-display text-[11px] uppercase tracking-widest2 text-lattice/70">
               <Bi zh={catZh} en={catEn} />
             </span>
             {n.status === "soon" && (
-              <span className="rounded-sm border border-white/15 px-2 py-0.5 font-display text-[10px] uppercase tracking-widest2 text-bone-dim/60">
+              <span className="rounded-sm border border-white/15 px-2 py-0.5 font-display text-[11px] uppercase tracking-widest2 text-bone-dim/82">
                 <Bi zh="创作中" en="Coming" />
               </span>
             )}
@@ -68,7 +68,7 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
           </p>
         </div>
         <p className="mt-4 flex items-center justify-between border-t border-white/5 pt-4 font-display text-xs uppercase tracking-widest2">
-          <span className={n.status === "soon" ? "text-bone-dim/40" : "text-amber"}>
+          <span className={n.status === "soon" ? "text-bone-dim/75" : "text-amber"}>
             {n.status === "soon" ? (
               <Bi zh="即将开放" en="Opening soon" />
             ) : (
@@ -134,7 +134,7 @@ export default function CategoryGrid() {
               </div>
             )}
             {isOpen && cat.soon && (
-              <p className="border-t border-white/10 bg-void p-8 text-center text-sm text-bone-dim/70">
+              <p className="border-t border-white/10 bg-void p-8 text-center text-sm text-bone-dim/85">
                 <Bi zh="档案整理中 · 即将开放" en="Archive in preparation · opening soon" />
               </p>
             )}

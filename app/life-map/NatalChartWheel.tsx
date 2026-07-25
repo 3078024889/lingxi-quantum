@@ -105,7 +105,7 @@ export default function NatalChartWheel({
         </circle>
       </svg>
 
-      <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-[11px] text-lm2-text-dim">
+      <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-xs text-lm2-text-dim">
         {points.map((p) => (
           <span key={p.nameZh} className="inline-flex items-center gap-1">
             <span style={{ color: p.color }}>{p.glyph}</span>

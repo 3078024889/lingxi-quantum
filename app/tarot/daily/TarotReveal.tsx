@@ -36,7 +36,7 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
             className="lx-enter-btn group relative z-10 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full border border-lattice/40 bg-void/70 backdrop-blur-sm transition hover:border-lattice/70"
           >
             <span className="font-display text-2xl text-lattice/70 transition group-hover:text-lattice">✦</span>
-            <span className="px-2 text-center font-display text-[10px] uppercase tracking-widest2 text-bone-dim">
+            <span className="px-2 text-center font-display text-[11px] uppercase tracking-widest2 text-bone-dim">
               <Bi zh="进入灵犀场" en="Enter the Field" />
             </span>
           </button>

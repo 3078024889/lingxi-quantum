@@ -47,13 +47,13 @@ export default function ReportRow({
           <button
             onClick={doDelete}
             disabled={deleting}
-            className="rounded-sm border border-rose/50 px-2 py-1 text-[11px] text-rose transition hover:bg-rose/10 disabled:opacity-50"
+            className="rounded-sm border border-rose/50 px-2 py-1 text-xs text-rose transition hover:bg-rose/10 disabled:opacity-50"
           >
             <Bi zh="确认删除" en="Confirm" />
           </button>
           <button
             onClick={() => setConfirming(false)}
-            className="rounded-sm border border-white/15 px-2 py-1 text-[11px] text-bone-dim transition hover:text-bone"
+            className="rounded-sm border border-white/15 px-2 py-1 text-xs text-bone-dim transition hover:text-bone"
           >
             <Bi zh="取消" en="Cancel" />
           </button>
@@ -63,7 +63,7 @@ export default function ReportRow({
           onClick={() => setConfirming(true)}
           aria-label="删除这份报告"
           title="删除这份报告"
-          className="shrink-0 rounded-sm p-2 text-bone-dim/40 transition hover:bg-rose/10 hover:text-rose"
+          className="shrink-0 rounded-sm p-2 text-bone-dim/75 transition hover:bg-rose/10 hover:text-rose"
         >
           {/* 删除图标——线条极简的垃圾桶，颜色跟在场域背景光里的其他
              图标一样，默认是低调的暗色，只有hover时才提示"危险动作" */}

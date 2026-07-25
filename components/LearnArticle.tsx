@@ -86,7 +86,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
             ))}
           </div>
 
-          {data.note && <p className="mt-8 rounded-sm border border-white/10 bg-void-deep p-5 text-sm leading-7 text-bone-dim/80">{data.noteEn ? <Bi zh={data.note} en={data.noteEn} /> : data.note}</p>}
+          {data.note && <p className="mt-8 rounded-sm border border-white/10 bg-void-deep p-5 text-sm leading-7 text-bone-dim/90">{data.noteEn ? <Bi zh={data.note} en={data.noteEn} /> : data.note}</p>}
           </div>
 
           <div className="mt-14">

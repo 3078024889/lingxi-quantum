@@ -58,7 +58,7 @@ export default function IllustratedBookReader({
         <div key={flip} className="page-flip px-6 py-8 sm:px-10 sm:py-10">
           {isCover ? (
             <div className="flex min-h-[480px] flex-col items-center justify-center text-center">
-              <p className="font-display text-[11px] uppercase tracking-widest2 text-lattice/70">
+              <p className="font-display text-xs uppercase tracking-widest2 text-lattice/70">
                 <Bi zh="灵犀 · 多维叙事" en="Lingxi · Dimensional Narrative" />
               </p>
               <div
@@ -68,7 +68,7 @@ export default function IllustratedBookReader({
               <h2 className="mt-6 font-display text-3xl font-light leading-snug text-bone sm:text-4xl">
                 <Bi zh={entry.title} en={entry.titleEn} />
               </h2>
-              <p className="mt-3 max-w-md text-sm text-bone-dim/70">
+              <p className="mt-3 max-w-md text-sm text-bone-dim/85">
                 <Bi zh={entry.teaser} en={entry.teaserEn} />
               </p>
             </div>
@@ -82,11 +82,11 @@ export default function IllustratedBookReader({
               />
               <div className="mt-5 text-center">
                 {page.tagZh && (
-                  <span className="inline-block rounded-full border border-white/15 px-3 py-1 font-display text-[10px] uppercase tracking-widest2 text-bone-dim/70">
+                  <span className="inline-block rounded-full border border-white/15 px-3 py-1 font-display text-[11px] uppercase tracking-widest2 text-bone-dim/85">
                     <Bi zh={page.tagZh} en={page.tagEn ?? ""} />
                   </span>
                 )}
-                <p className="mt-3 font-display text-[11px] uppercase tracking-widest2 text-lattice/70">
+                <p className="mt-3 font-display text-xs uppercase tracking-widest2 text-lattice/70">
                   <Bi zh={page.kickerZh} en={page.kickerEn} />
                 </p>
               </div>

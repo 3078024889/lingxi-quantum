@@ -49,7 +49,7 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
         placeholder={t("姓名（或称呼，必填）", "Name (or however you refer to them) *")}
         className="mt-4 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-sm text-bone outline-none focus:border-lattice/60"
       />
-      <p className="mt-3 text-xs text-bone-dim/60">{t("出生年月日（必填）", "Birth date (required)")}</p>
+      <p className="mt-3 text-xs text-bone-dim/82">{t("出生年月日（必填）", "Birth date (required)")}</p>
       <div className="mt-1.5 grid grid-cols-3 gap-2">
         <input value={person.year} onChange={(e) => setPerson({ ...person, year: e.target.value })} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
         <input value={person.month} onChange={(e) => setPerson({ ...person, month: e.target.value })} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />

@@ -921,7 +921,7 @@ export default function LifeMapFlow() {
                   { label: t("土星", "Saturn"), v: isEn() ? report.facts.saturn.signEn : report.facts.saturn.signZh },
                 ].map((p) => (
                   <div key={p.label} className="rounded-sm border border-lm2-text/10 bg-lm2-card px-3 py-2 text-center backdrop-blur-xl">
-                    <p className="text-[10px] uppercase tracking-widest2 text-lm2-text-dim/60">{p.label}</p>
+                    <p className="text-[11px] uppercase tracking-widest2 text-lm2-text-dim/60">{p.label}</p>
                     <p className="mt-1 font-display text-sm text-lm2-text">{p.v}</p>
                   </div>
                 ))}

@@ -204,11 +204,11 @@ export default function PracticeJournal() {
                     {new Date(e.created_at).toLocaleDateString(langEn ? "en-US" : "zh-CN")}
                   </span>
                   {e.practice && (
-                    <span className="shrink-0 rounded-full border border-lattice/30 px-2 py-0.5 text-[10px] text-lattice">
+                    <span className="shrink-0 rounded-full border border-lattice/30 px-2 py-0.5 text-[11px] text-lattice">
                       <Bi zh={PRACTICE_LABEL[e.practice as Exclude<PracticeKey, "">]?.zh ?? ""} en={PRACTICE_LABEL[e.practice as Exclude<PracticeKey, "">]?.en ?? ""} />
                     </span>
                   )}
-                  <span className="truncate text-sm text-bone-dim/70">{e.content.slice(0, 24)}</span>
+                  <span className="truncate text-sm text-bone-dim/85">{e.content.slice(0, 24)}</span>
                 </span>
                 <span className="shrink-0 text-xs text-bone-dim transition group-open:rotate-180">▾</span>
               </summary>
@@ -219,13 +219,13 @@ export default function PracticeJournal() {
                     <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => doDelete(e.id)}
-                        className="rounded-sm border border-rose/50 px-2 py-1 text-[11px] text-rose transition hover:bg-rose/10"
+                        className="rounded-sm border border-rose/50 px-2 py-1 text-xs text-rose transition hover:bg-rose/10"
                       >
                         <Bi zh="确认删除" en="Confirm" />
                       </button>
                       <button
                         onClick={() => setConfirmingId(null)}
-                        className="rounded-sm border border-white/15 px-2 py-1 text-[11px] text-bone-dim transition hover:text-bone"
+                        className="rounded-sm border border-white/15 px-2 py-1 text-xs text-bone-dim transition hover:text-bone"
                       >
                         <Bi zh="取消" en="Cancel" />
                       </button>
@@ -233,7 +233,7 @@ export default function PracticeJournal() {
                   ) : (
                     <button
                       onClick={() => setConfirmingId(e.id)}
-                      className="text-[11px] text-bone-dim/50 transition hover:text-rose"
+                      className="text-xs text-bone-dim/78 transition hover:text-rose"
                     >
                       <Bi zh="删除这条记录" en="Delete this note" />
                     </button>

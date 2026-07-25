@@ -145,7 +145,7 @@ async function LiveIllustratedReader({ slug, price, titleZh, titleEn }: { slug: 
         <PlanButton productId={slug} loggedIn={!!user} nameZh={titleZh} nameEn={titleEn} />
       </div>
       {!user && (
-        <p className="mt-3 text-xs text-bone-dim/60">
+        <p className="mt-3 text-xs text-bone-dim/82">
           <Bi zh="需先登录，解锁将与账户永久绑定。" en="Sign in first — your unlock binds to your account." />
         </p>
       )}
@@ -191,7 +191,7 @@ async function LiveReader({
         <PlanButton productId={slug} loggedIn={!!user} nameZh={titleZh} nameEn={titleEn} />
       </div>
       {!user && (
-        <p className="mt-3 text-xs text-bone-dim/60">
+        <p className="mt-3 text-xs text-bone-dim/82">
           <Bi zh="需先登录，解锁将与账户永久绑定。" en="Sign in first — your unlock binds to your account." />
         </p>
       )}

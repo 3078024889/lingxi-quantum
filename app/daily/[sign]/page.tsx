@@ -46,7 +46,7 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
             <h1 className="mt-3 font-display text-3xl font-light text-bone">
               <Bi zh={`${sign.zh}座 · 今日运势`} en={`${sign.en} · Today`} />
             </h1>
-            <p className="mt-2 text-xs text-bone-dim/70">{todayLabel}</p>
+            <p className="mt-2 text-xs text-bone-dim/85">{todayLabel}</p>
             <p className="mt-3 text-xs text-bone-dim">
               <Bi zh={`月相：${transit.moonPhaseZh} · 月亮在${transit.moonSignZh}座`} en={`Moon Phase: ${transit.moonPhaseEn} · Moon in ${transit.moonSignEn}`} />
             </p>
@@ -97,7 +97,7 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
             </a>
           </div>
 
-          <p className="mt-6 text-center text-xs text-bone-dim/50">
+          <p className="mt-6 text-center text-xs text-bone-dim/78">
             <Bi zh="太阳星座只是众多变量之一，仅供参考与反思。" en="Sun sign is just one of many variables — for reflection only." />
           </p>
         </div>

@@ -102,7 +102,7 @@ export default function RomanceFlow() {
       <div className="mx-auto max-w-xl px-6 py-16">
         <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
-            <Bi zh="灵犀 · 桃花磁场指数" en="Lingxi · Romance Magnetism Index" />
+            <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
           </p>
         </div>
 
@@ -135,13 +135,13 @@ export default function RomanceFlow() {
         </div>
 
         <div className="mt-4 rounded-sm border border-amber/20 bg-amber/5 p-6">
-          <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh={STYLE_LABEL[result.style].zh} en={STYLE_LABEL[result.style].en} /></p>
+          <p className="text-sm uppercase tracking-widest2 text-amber"><Bi zh={STYLE_LABEL[result.style].zh} en={STYLE_LABEL[result.style].en} /></p>
           <p className="mt-2 text-base leading-8 text-bone-dim">{t(STYLE_TEXT[result.style].zh, STYLE_TEXT[result.style].en)}</p>
         </div>
 
         {result.hasTaoHua && (
           <div className="mt-4 rounded-sm border border-lattice/20 bg-lattice/5 p-6">
-            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="命带桃花" en="Peach Blossom in Your Chart" /></p>
+            <p className="text-sm uppercase tracking-widest2 text-lattice"><Bi zh="命带桃花" en="Peach Blossom in Your Chart" /></p>
             <p className="mt-2 text-base leading-8 text-bone-dim">
               <Bi
                 zh={`你的${result.foundIn.join("、")}上，带着传统命理里说的「桃花」地支（${result.taohuaBranch}）——这是命理古法里，专门用来判断人际吸引力是否容易被外界感知到的一条规则，不是说你的关系必然如何，是说你的吸引力，天生就更容易被人注意到。`}
@@ -151,13 +151,23 @@ export default function RomanceFlow() {
           </div>
         )}
 
+        <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
+          <p className="text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
+          <p className="mt-2 text-base leading-8 text-bone-dim">
+            <Bi
+              zh="不是临场编的。灵犀场底层是一套「生命向量引擎」——先用真实天文数据（此刻行星在黄道上的精确位置）和真实历法数据（你的四柱八字），算出一组固定的数字，人格倾向、情感深度、社交驱动这些维度，全部是先算出分数，场域才根据这些已经算好的数字去写解读，不是场域自己决定要不要说你「有吸引力」。同一份出生数据，任何时候重新算，前面的分数都是一样的——这是它跟一般算命网站最大的不同：别的网站是「直接问、直接给答案」，这里是「先算出结构，场域只负责讲清楚这个结构」。这个桃花磁场分数，是从你完整命盘里，只抽出跟「吸引力」相关的这一部分。"
+              en="This isn't improvised. Underneath, Lingxi Field runs on a life-vector engine — real astronomical data (the planets' exact positions right now) and real calendrical data (your Bazi pillars) are used to compute a fixed set of numbers first — personality tendencies, emotional depth, social drive — before any text gets written. The field writes based on numbers already computed; it doesn't decide on its own whether to call you magnetic. Recompute the same birth data anytime, and the underlying scores come out identical. That's the core difference from a typical fortune-telling site: they ask a question and hand you an answer directly; here, the structure is computed first, and the field only explains it. This magnetism score is pulled from just the attraction-related slice of your full chart."
+            />
+          </p>
+        </div>
+
         <WhyTrustLingxi />
 
         <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
-          <p className="text-sm leading-7 text-bone-dim">
+          <p className="text-base leading-8 text-bone-dim">
             <Bi
-              zh="这个桃花磁场分数，是从你完整命盘里，只抽出跟「吸引力」相关的这一部分。同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
-              en="This magnetism score is pulled from just one slice of your full chart — the attraction-related part. The same chart also determines your resilience index, your wealth archetype, and the core tension at your center — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
+              zh="同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
+              en="The same chart also determines your resilience index, your wealth archetype, and the core tension at your center — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
             />
           </p>
           <a
@@ -169,7 +179,7 @@ export default function RomanceFlow() {
         </div>
 
         <div className="mt-6 rounded-sm border border-white/10 bg-void-deep px-6 py-3 text-center">
-          <p className="text-xs text-bone-dim/60">
+          <p className="text-sm text-bone-dim/90">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言。" en="This is a reference for self-reflection, not a prophecy about your relationships." />
           </p>
         </div>

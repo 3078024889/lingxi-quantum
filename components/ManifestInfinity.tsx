@@ -157,7 +157,7 @@ export default function ManifestInfinity() {
         {/* 心声浮现在环下方，不遮挡曲线 */}
         <div className="mx-auto mt-6 min-h-[9rem] max-w-2xl px-2 text-center">
           <div key={i} className="lx-voice-in">
-            <span className="font-display text-[11px] uppercase tracking-widest2 text-amber/80">
+            <span className="font-display text-xs uppercase tracking-widest2 text-amber/80">
               {v.theme}
             </span>
             <p className="mt-4 font-display text-2xl leading-relaxed text-bone sm:text-3xl">
@@ -165,9 +165,9 @@ export default function ManifestInfinity() {
             </p>
           </div>
           <div className="mt-8 flex items-center justify-center gap-10">
-            <button onClick={() => go(i - 1)} aria-label="上一个" className="font-display text-2xl text-bone-dim/70 transition hover:text-amber">‹</button>
+            <button onClick={() => go(i - 1)} aria-label="上一个" className="font-display text-2xl text-bone-dim/85 transition hover:text-amber">‹</button>
             <span className="h-px w-16 bg-white/10" />
-            <button onClick={() => go(i + 1)} aria-label="下一个" className="font-display text-2xl text-bone-dim/70 transition hover:text-amber">›</button>
+            <button onClick={() => go(i + 1)} aria-label="下一个" className="font-display text-2xl text-bone-dim/85 transition hover:text-amber">›</button>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ import Bi from "@/components/Bi";
 export default function WhyTrustLingxi() {
   return (
     <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
-      <p className="text-xs uppercase tracking-widest2 text-bone-dim/70">
+      <p className="text-xs uppercase tracking-widest2 text-bone-dim/85">
         <Bi zh="这个分数是怎么来的" en="How This Score Was Actually Computed" />
       </p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">

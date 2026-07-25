@@ -60,7 +60,7 @@ export default function OriginSection() {
                 {sources.map((s, i) => (
                   <div key={i} className="flex items-baseline justify-between gap-3 py-2.5">
                     <span className="font-display text-lg font-light text-bone sm:text-xl">{s.zh}</span>
-                    <span className="font-display text-[10px] uppercase tracking-widest2 text-lattice/60 sm:text-xs">{s.en}</span>
+                    <span className="font-display text-[11px] uppercase tracking-widest2 text-lattice/60 sm:text-xs">{s.en}</span>
                   </div>
                 ))}
               </div>

@@ -181,7 +181,7 @@ export default function DeclarationPage() {
               </div>
             </div>
 
-            <p className="border-t border-white/5 pt-10 text-center text-xs leading-6 text-bone-dim/50">
+            <p className="border-t border-white/5 pt-10 text-center text-xs leading-6 text-bone-dim/78">
               <Bi zh="灵犀 · 一个允许「未来状态先于现实发生」的意识接口" en="Lingxi · a consciousness interface that lets the future state happen before reality" />
             </p>
           </div>

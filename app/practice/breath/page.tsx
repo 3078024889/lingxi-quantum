@@ -60,11 +60,11 @@ export default async function BreathPage() {
                 </div>
                 <figure className="mt-16">
                   <div className="mx-auto max-w-md rounded-sm border border-white/10 bg-void"><BreathDiagram className="w-full" /></div>
-                  <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/70">节律路径示意：吸气时垂直轴延伸自地球核心，穿过松果腺，向上伸向无限；呼气时水平轴从心脏区域向外延展，环绕地球。</figcaption>
+                  <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/85">节律路径示意：吸气时垂直轴延伸自地球核心，穿过松果腺，向上伸向无限；呼气时水平轴从心脏区域向外延展，环绕地球。</figcaption>
                 </figure>
                 <figure className="mt-16">
                   <div className="rounded-sm border border-white/10 bg-void p-4"><BreathStructure className="w-full" /></div>
-                  <figcaption className="mt-3 text-center text-sm text-bone-dim/70">结构框架：吸气（鼻，「我是」）→ 暂停 → 呼气（嘴，「我们是」）→ 暂停</figcaption>
+                  <figcaption className="mt-3 text-center text-sm text-bone-dim/85">结构框架：吸气（鼻，「我是」）→ 暂停 → 呼气（嘴，「我们是」）→ 暂停</figcaption>
                 </figure>
               </div>
             </section>

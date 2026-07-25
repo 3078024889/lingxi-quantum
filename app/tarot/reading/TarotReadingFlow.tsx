@@ -205,7 +205,7 @@ export default function TarotReadingFlow() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/images/tarot/${String(c.index).padStart(2, "0")}.jpg`} alt={c.nameZh} className="block aspect-[2/3] w-full object-cover" />
             <div className="p-2">
-              <p className="text-[10px] uppercase tracking-widest2 text-amber/80">
+              <p className="text-[11px] uppercase tracking-widest2 text-amber/80">
                 <Bi zh={positions[i].zh} en={positions[i].en} />
               </p>
               <p className="mt-1 text-xs text-bone">

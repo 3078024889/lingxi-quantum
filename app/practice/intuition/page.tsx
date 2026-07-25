@@ -188,7 +188,7 @@ export default async function IntuitionPage() {
               <div className="rounded-sm border border-white/10 bg-void">
                 <IntuitionDiagram className="w-full" />
               </div>
-              <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/70">
+              <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/85">
                 <Bi zh="直觉丹道的练习路径：从心之光的投射出发，穿过情感历史的重铸，抵达光之细丝的连接。" en="The practice path of The Intuitive Way: from the projection of the heart's light, through the recasting of emotional history, to the connection of filaments of light." />
               </figcaption>
             </figure>

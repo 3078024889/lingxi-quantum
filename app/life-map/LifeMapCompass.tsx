@@ -117,7 +117,7 @@ export default function LifeMapCompass() {
           但视频本身是一整支金色调的罗盘动画，没有分色，这个点之前会
           让人误以为图和文字是对应着的。这里改成统一的状态点：金色=
           已接入，灰色=探索中，不再暗示颜色跟视频画面有对应关系。 */}
-      <div className="bg-lm2-card mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 rounded-sm px-6 py-4 text-[10px] uppercase tracking-widest2 text-lm2-text-dim">
+      <div className="bg-lm2-card mx-auto mt-6 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-2 rounded-sm px-6 py-4 text-[11px] uppercase tracking-widest2 text-lm2-text-dim">
         {RINGS.map((ring) => (
           <span key={ring.radius} className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-2 rounded-full" style={{ background: ring.dashed ? "#8A8496" : "#F0C868" }} />

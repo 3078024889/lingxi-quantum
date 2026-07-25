@@ -61,7 +61,7 @@ export default function GlossaryPage() {
             ))}
           </dl>
 
-          <p className="mt-10 text-sm text-bone-dim/70">
+          <p className="mt-10 text-sm text-bone-dim/85">
             延伸：
             <Link href="/learn/wingmakers" className="text-lattice hover:text-amber">主权与完整导览</Link>
             {" · "}

@@ -513,7 +513,7 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
               </circle>
               <text x="36" y="41" textAnchor="middle" fontSize="17" fill="#F4EFFF" fontFamily="serif">{it.total}</text>
             </svg>
-            <p className="mt-1 text-center text-[11px] text-lm2-text-dim">{it.label}</p>
+            <p className="mt-1 text-center text-xs text-lm2-text-dim">{it.label}</p>
           </div>
         );
       })}
@@ -666,7 +666,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
               </circle>
               <text x="32" y="37" textAnchor="middle" fontSize="16" fill="#F4EFFF" fontFamily="serif">{it.v}</text>
             </svg>
-            <p className="mt-1 text-center text-[11px] text-lm2-text-dim">{it.label}</p>
+            <p className="mt-1 text-center text-xs text-lm2-text-dim">{it.label}</p>
           </div>
         );
       })}
@@ -726,7 +726,7 @@ function ZiweiGrid({
                   </span>
                 )}
               </div>
-              <p className="text-[10px] font-medium text-lm2-text">{p?.name ?? ""}</p>
+              <p className="text-[11px] font-medium text-lm2-text">{p?.name ?? ""}</p>
               <p className="text-[8px] leading-tight text-lm2-text-dim">
                 {p?.majorStars.map((s) => s.name).join("·") || "—"}
               </p>
