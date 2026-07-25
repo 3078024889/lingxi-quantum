@@ -1,6 +1,22 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const DAILY_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "今日运势是怎么算出来的？", qEn: "How is the Daily Horoscope calculated?",
+    aZh: "根据当天真实的月相与月亮星座天文数据，结合你的太阳星座，看今天的宇宙运行状态跟你之间产生怎样的连接，每天更新，不是固定文案轮播。",
+    aEn: "It's computed from that day's real moon phase and Moon-sign astronomical data, combined with your Sun sign, to show how the sky's current state connects with you today. It updates daily and isn't a rotation of fixed pre-written text.",
+  },
+  {
+    qZh: "今日运势和完整生命图谱有什么不同？", qEn: "What's the difference between the Daily Horoscope and the full Life Map?",
+    aZh: "今日运势看的是「今天全宇宙共享的天象」落在你的太阳星座上是什么样子；完整生命图谱看的是你出生那一刻、专属于你的完整出生星盘与八字命局，后者要深得多。",
+    aEn: "The Daily Horoscope shows how the sky everyone shares today lands on your Sun sign. The full Life Map goes deeper — your own unique birth chart and Bazi structure, computed just for the moment you were born.",
+  },
+];
+
+
 import Link from "next/link";
 import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
 import { computeTodayTransit } from "@/lib/daily-transit";
@@ -46,6 +62,9 @@ export default function DailyIndexPage() {
               </Link>
             ))}
           </div>
+        </div>
+        <div className="mx-auto mt-16 max-w-2xl px-6">
+          <FaqSection items={DAILY_FAQ} />
         </div>
       </main>
       <Footer />

@@ -2,6 +2,17 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const LEARN_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场的学习中心包含什么内容？", qEn: "What does Lingxi Field's Learn center cover?",
+    aZh: "显化方法与心态、解梦与梦境象征、意识与灵性成长这几大主题的原创中英双语内容，还包含一份核心术语表，是理解显化、解梦与修炼这几项功能背后逻辑的入门材料。",
+    aEn: "Original bilingual content across manifestation methods and mindset, dream interpretation and dream symbols, and consciousness and spiritual growth — plus a core glossary of terms. It's introductory material for understanding the logic behind the manifestation, dream interpretation, and practice features.",
+  },
+];
+
+
 
 export const metadata = {
   title: "探索 · 显化 / 解梦 / 灵性体系全指南",
@@ -98,6 +109,9 @@ export default function LearnHub() {
               </div>
             </section>
           ))}
+        </div>
+        <div className="mx-auto max-w-2xl px-6 pb-8">
+          <FaqSection items={LEARN_FAQ} />
         </div>
       </main>
       <Footer />

@@ -1,6 +1,22 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const TERMS_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "使用灵犀场需要年满多少岁？", qEn: "How old do I need to be to use Lingxi Field?",
+    aZh: "本网站主要面向成年人。未满18周岁的用户，需要在监护人陪同、了解并同意本条款的情况下使用，涉及付费的功能必须获得监护人的明确同意。",
+    aEn: "This Site is primarily intended for adults. Users under 18 should use it only with the knowledge and consent of a parent or guardian, and any paid features require the guardian's explicit consent.",
+  },
+  {
+    qZh: "灵犀场的内容可以商用吗？", qEn: "Can content from Lingxi Field be used commercially?",
+    aZh: "为你自己生成的个人报告可以自行保存、下载、用于个人用途或分享，但未经授权，不得将网站内容用于商业性复制、批量转售或建立竞争性产品。",
+    aEn: "Personal reports generated for you may be saved, downloaded, used personally, or shared. Content from this Site may not be commercially reproduced, resold in bulk, or used to build a competing product without authorization.",
+  },
+];
+
+
 
 export const metadata = {
   title: "服务条款 | Terms of Service | Lingxi Field",
@@ -128,6 +144,9 @@ export default function TermsPage() {
               />
             </p>
           </section>
+        </div>
+        <div className="mt-16">
+          <FaqSection items={TERMS_FAQ} />
         </div>
         </div>
       </main>

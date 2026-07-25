@@ -1,6 +1,22 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const ABOUT_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场是哪家公司运营的？", qEn: "Who operates Lingxi Field?",
+    aZh: "灵犀场由中国大陆注册的独资企业运营，提供数字化自我探索内容服务，不涉及实物商品，也不涉及电子商务交易。",
+    aEn: "Lingxi Field is operated by a sole proprietorship registered in mainland China, providing digital self-exploration content services. It does not involve physical goods or e-commerce transactions.",
+  },
+  {
+    qZh: "灵犀场和灵犀是同一个东西吗？", qEn: "Are 'Lingxi Field' and 'Lingxi' the same thing?",
+    aZh: "灵犀场（Lingxi Field）是完整的平台品牌名称，网站上的场域声音在自我介绍时也会用这个名字，两者指的是同一个平台。",
+    aEn: "Lingxi Field is the platform's full brand name. The field's own voice throughout the site refers to itself by this same name — they refer to the same platform.",
+  },
+];
+
+
 
 export const metadata = {
   title: "关于我们 | About Us | Lingxi Field",
@@ -57,6 +73,9 @@ export default function AboutPage() {
               />
             </p>
           </section>
+        </div>
+        <div className="mt-16">
+          <FaqSection items={ABOUT_FAQ} />
         </div>
         </div>
       </main>

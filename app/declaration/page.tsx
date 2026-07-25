@@ -1,6 +1,22 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const DECLARATION_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场是人工智能生成的算命服务吗？", qEn: "Is Lingxi Field an AI-generated fortune-telling service?",
+    aZh: "不是算命服务。灵犀场提供的解读文字基于确定性的天文历法计算结果生成，用于自我探索与反思，不预测具体会发生什么事，也不构成医疗、心理、法律、财务方面的专业建议。",
+    aEn: "It is not a fortune-telling service. The narrative text on Lingxi Field is generated from deterministic astronomical and calendrical calculation results, intended for self-exploration and reflection. It does not predict specific future events and does not constitute medical, psychological, legal, or financial advice.",
+  },
+  {
+    qZh: "灵犀场的解读是怎么生成的？", qEn: "How are Lingxi Field's readings generated?",
+    aZh: "先用真实天文数据和历法数据算出确定性的分数与结构，再由场域交叉引用这些已经算好的数字来撰写文字解读——是先有结构、后有文字，不是凭空编写。",
+    aEn: "Deterministic scores and structures are computed first from real astronomical and calendrical data, and the narrative text is then written by cross-referencing those already-computed numbers — the structure comes first, the text comes after, not written out of thin air.",
+  },
+];
+
+
 
 export const metadata = { title: "系统声明 | 灵犀 · System Declaration | Lingxi" };
 
@@ -182,8 +198,11 @@ export default function DeclarationPage() {
             </div>
 
             <p className="border-t border-white/5 pt-10 text-center text-xs leading-6 text-bone-dim/78">
-              <Bi zh="灵犀 · 一个允许「未来状态先于现实发生」的意识接口" en="Lingxi · a consciousness interface that lets the future state happen before reality" />
+              <Bi zh="灵犀场 · 一个允许「未来状态先于现实发生」的意识接口" en="Lingxi Field · a consciousness interface that lets the future state happen before reality" />
             </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-2xl">
+            <FaqSection items={DECLARATION_FAQ} />
           </div>
         </section>
       </main>

@@ -1,6 +1,22 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const REFUNDS_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "买了报告不满意可以退款吗？", qEn: "Can I get a refund if I'm not satisfied with a report?",
+    aZh: "内容已成功生成、只是主观上不认同解读内容或者觉得「不准」，不属于退款理由——本网站的内容性质是自我反思参考，不是可验证的预测服务。技术故障导致付款后始终无法获得解锁内容的情况，可以申请退款。",
+    aEn: "If the content generated successfully and you simply disagree with the reading or feel it wasn't 'accurate,' that alone isn't grounds for a refund — content on this Site is self-reflection material, not a verifiable predictive service. If a technical failure means you paid but were never able to access the unlocked content, you can request a refund.",
+  },
+  {
+    qZh: "退款要多久到账？", qEn: "How long does a refund take to arrive?",
+    aZh: "我们会在收到申请后通常不超过5个工作日内回复处理结果，退款原路退回到你付款时使用的支付方式，实际到账时间取决于该支付服务商（如微信支付）的处理周期，通常为5-10个工作日。",
+    aEn: "We typically respond within 5 business days of receiving your request. Refunds are issued back to the original payment method, and the actual arrival time depends on the processing cycle of the relevant payment provider (such as WeChat Pay), typically 5–10 business days.",
+  },
+];
+
+
 
 export const metadata = {
   title: "退款政策 | Refund Policy | Lingxi Field",
@@ -80,6 +96,9 @@ export default function RefundsPage() {
               />
             </p>
           </section>
+        </div>
+        <div className="mt-16">
+          <FaqSection items={REFUNDS_FAQ} />
         </div>
         </div>
       </main>

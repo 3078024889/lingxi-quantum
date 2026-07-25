@@ -1,6 +1,22 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const PRIVACY_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场会不会把我的出生信息卖给第三方？", qEn: "Does Lingxi Field sell my birth information to third parties?",
+    aZh: "不会。出生信息仅用于生成你自己的报告，以及发送给语言模型服务商用于撰写解读文字，不会被用于广告投放或者出售给其他公司。",
+    aEn: "No. Your birth information is used only to generate your own report and is sent to the language model provider solely to write your reading — it is never used for advertising targeting or sold to other companies.",
+  },
+  {
+    qZh: "我可以要求灵犀场删除我的数据吗？", qEn: "Can I request that Lingxi Field delete my data?",
+    aZh: "可以，你可以随时在账户页面删除自己的测试记录，如需注销整个账户或有其他数据请求，可以通过网站内的联系方式联系我们处理。",
+    aEn: "Yes. You can delete your own test records at any time from your account page. To close your account entirely or make other data requests, contact us through the contact information on this Site.",
+  },
+];
+
+
 
 export const metadata = {
   title: "隐私政策 | Privacy Policy | Lingxi Field",
@@ -128,6 +144,9 @@ export default function PrivacyPage() {
               />
             </p>
           </section>
+        </div>
+        <div className="mt-16">
+          <FaqSection items={PRIVACY_FAQ} />
         </div>
         </div>
       </main>

@@ -6,6 +6,22 @@ import RealityLoop from "./RealityLoop";
 import AskLingxi from "./AskLingxi";
 import { getAccess } from "@/lib/access";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const LIVE_AS_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "显化在灵犀场里是怎么运作的？", qEn: "How does manifestation work on Lingxi Field?",
+    aZh: "每天花几分钟，进入你已经与目标对齐的那个自己的感受，记录当下的感受、行动与选择，让意识、行动、选择逐渐与你想创造的现实对齐——不是被动等待，是持续、主动的日常练习。",
+    aEn: "Spend a few minutes each day entering the felt sense of already being the version of yourself aligned with your goal, and record your feelings, actions, and choices — bringing your awareness, actions, and choices into alignment with the reality you want, step by step. It's an active daily practice, not passive waiting.",
+  },
+  {
+    qZh: "显化练习需要付费吗？", qEn: "Does the manifestation practice require payment?",
+    aZh: "属于「显化与梦境解读」订阅模块，需要订阅后才能使用。",
+    aEn: "It belongs to the Manifestation & Dream Interpretation subscription module, and requires an active subscription.",
+  },
+];
+
+
 import CosmicField from "@/components/CosmicField";
 
 export const metadata = {
@@ -86,6 +102,9 @@ export default async function LiveAsPage() {
             )}
           </div>
         </section>
+        <div className="mx-auto max-w-2xl px-6 pb-24">
+          <FaqSection items={LIVE_AS_FAQ} />
+        </div>
       </main>
       <Footer />
     </>
