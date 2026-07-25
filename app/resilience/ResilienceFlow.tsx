@@ -116,7 +116,7 @@ export default function ResilienceFlow() {
       <div className="mx-auto max-w-xl px-6 py-16">
         <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-            <Bi zh="灵犀 · 生命韧性指数" en="Lingxi · Life Resilience Index" />
+            <Bi zh="灵犀场 · 生命韧性指数" en="Lingxi Field · Life Resilience Index" />
           </p>
         </div>
 
@@ -205,7 +205,7 @@ export default function ResilienceFlow() {
     <div className="mx-auto max-w-md px-6 py-16">
       <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-          <Bi zh="灵犀 · 生命韧性指数" en="Lingxi · Life Resilience Index" />
+          <Bi zh="灵犀场 · 生命韧性指数" en="Lingxi Field · Life Resilience Index" />
         </p>
         <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
           <Bi zh="遇到低谷，你的系统是怎么把你接住的？" en="When things get hard, how does your system catch you?" />

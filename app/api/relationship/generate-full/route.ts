@@ -32,8 +32,11 @@ export async function POST(req: Request) {
   if (!submission) return NextResponse.json({ error: "找不到这份提交记录。" }, { status: 404 });
 
   if (!REVIEW_MODE) {
-    const { data: unlockRows } = await supabase.from("unlocks").select("product_id").eq("user_id", submission.user_id);
-    const unlocks = (unlockRows ?? []).map((r: { product_id: string }) => r.product_id);
+    const { data: unlockRows } = await supabase.from("unlocks").select("product_id, expires_at").eq("user_id", submission.user_id);
+    const nowTs = new Date();
+    const unlocks = (unlockRows ?? [])
+      .filter((r: { product_id: string; expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > nowTs)
+      .map((r: { product_id: string }) => r.product_id);
     const unlocked = unlocks.includes("relationship-resonance") || unlocks.includes("everything");
     if (!unlocked) {
       return NextResponse.json({ error: "尚未解锁这份关系共振图谱。" }, { status: 402 });

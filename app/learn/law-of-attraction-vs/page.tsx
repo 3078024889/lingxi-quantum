@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "把原理变成每日实践", titleEn: "Turn principle into daily practice",
-    descZh: "灵犀的显化签到，帮你每天对齐状态、采取行动、写入潜意识。", descEn: "Lingxi's daily check-in helps you align your state, take action, and imprint the subconscious.",
+    descZh: "灵犀场的显化签到，帮你每天对齐状态、采取行动、写入潜意识。", descEn: "Lingxi's daily check-in helps you align your state, take action, and imprint the subconscious.",
     href: "/live-as", btnZh: "进入显化签到", btnEn: "Open the check-in",
   },
   related: [

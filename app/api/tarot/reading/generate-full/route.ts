@@ -61,7 +61,7 @@ function buildBatches(hidden: TarotCard, present: TarotCard, future: TarotCard, 
       titleZh: "第三批：生命阶段 + 成长路径 + 给未来自己的信 + 关键词", count: 4, maxTokens: 3200,
       instruction:
         "===1===\n（当前生命阶段：具体说清楚这个人此刻正处于觉醒、转化、创造、扩展这四个阶段里的哪一个、为什么、这个阶段的核心课题是什么，约180-220字）" +
-        "===2===\n（灵犀成长路径：这个人已经被匹配到「" + practice.zh + "」这项修炼技术——不需要你重新选，只需要具体说清楚为什么是这一项、这项技术具体能帮这个人解决前面提到的哪个具体课题，约180-220字）" +
+        "===2===\n（灵犀场成长路径：这个人已经被匹配到「" + practice.zh + "」这项修炼技术——不需要你重新选，只需要具体说清楚为什么是这一项、这项技术具体能帮这个人解决前面提到的哪个具体课题，约180-220字）" +
         "===3===\n（给未来自己的信：以「亲爱的自己」开头，写一段给这个人自己的私人文字，3-5句话，短句为主，呼应前面所有章节提炼出的核心特质，不要写成鸡汤，约120-160字）" +
         "===4===\n（生命关键词：从整份解读里提炼5个词，每个词后面跟一个逗号分隔，最后一个词后面用句号结尾，不要写成列表符号，就是一句话里用逗号隔开5个词，约20-30字）",
     },
@@ -91,7 +91,8 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
 
   const parseAndValidate = (raw: string) => {
     const sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
-    const valid = sections.length === batch.count && sections.every((s) => s.length >= 15);
+    const minAcceptable = Math.max(1, Math.floor(batch.count * 0.8));
+    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 15);
     return { sections, valid };
   };
 
@@ -110,8 +111,8 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
   let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
   let check = text ? parseAndValidate(text) : { sections: [], valid: false };
 
-  if (!check.valid) {
-    console.error(`[tarot reading generate-full] ${batch.titleZh} 首次生成不完整，重试一次。submission id:`, submissionId, "段数:", check.sections.length);
+  for (let retry = 0; retry < 2 && !check.valid; retry++) {
+    console.error(`[tarot reading generate-full] ${batch.titleZh} 第${retry + 1}次生成不完整，重试。submission id:`, submissionId, "段数:", check.sections.length, "预期:", batch.count);
     res = await callOnce();
     if (res.ok) {
       data = await res.json();
@@ -120,9 +121,13 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
       check = text ? parseAndValidate(text) : { sections: [], valid: false };
     }
   }
-  if (!check.valid) {
-    console.error(`[tarot reading generate-full] ${batch.titleZh} 重试后仍不完整，submission id:`, submissionId, "原始内容:", text);
+
+  if (!check.valid && check.sections.length === 0) {
+    console.error(`[tarot reading generate-full] ${batch.titleZh} 多次重试后仍完全没有可用内容，submission id:`, submissionId, "原始内容:", text);
     return null;
+  }
+  if (!check.valid) {
+    console.error(`[tarot reading generate-full] ${batch.titleZh} 重试后段数/长度仍不完全达标，但采用现有内容。submission id:`, submissionId, "实际段数:", check.sections.length, "预期:", batch.count);
   }
   return check.sections;
 }
@@ -152,9 +157,12 @@ export async function POST(req: Request) {
   if (!REVIEW_MODE) {
     const { data: unlockRows } = await supabase
       .from("unlocks")
-      .select("product_id")
+      .select("product_id, expires_at")
       .eq("user_id", user!.id);
-    const unlocks = (unlockRows ?? []).map((r: { product_id: string }) => r.product_id);
+    const nowTs = new Date();
+    const unlocks = (unlockRows ?? [])
+      .filter((r: { product_id: string; expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > nowTs)
+      .map((r: { product_id: string }) => r.product_id);
     const unlocked = unlocks.includes("tarot-reading") || unlocks.includes("everything");
     if (!unlocked) {
       return NextResponse.json({ error: "尚未解锁完整生命镜像。" }, { status: 402 });

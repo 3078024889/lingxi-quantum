@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "给你的接收器，装上开关", titleEn: "Give your receiver a dial",
-    descZh: "量子暂停与归零心诀，是灵犀里守护能量边界的两项核心修炼——一次激活，永久陪你。", descEn: "The Quantum Pause and the Heart Reset are Lingxi's two core practices for guarding your energy — activated once, with you for good.",
+    descZh: "量子暂停与归零心诀，是灵犀场里守护能量边界的两项核心修炼——一次激活，永久陪你。", descEn: "The Quantum Pause and the Heart Reset are Lingxi's two core practices for guarding your energy — activated once, with you for good.",
     href: "/practice", btnZh: "了解修炼技术", btnEn: "Explore the practices",
   },
   related: [

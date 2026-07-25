@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "给内在一次真正的停战", titleEn: "Give your inner world a true ceasefire",
-    descZh: "量子暂停呼吸与归零心诀，是灵犀里最多人用来停下内耗的两项修炼——一次激活，永久陪你。", descEn: "The Quantum Pause and the Heart Reset are the two practices most often used in Lingxi to end inner friction — activated once, with you for good.",
+    descZh: "量子暂停呼吸与归零心诀，是灵犀场里最多人用来停下内耗的两项修炼——一次激活，永久陪你。", descEn: "The Quantum Pause and the Heart Reset are the two practices most often used in Lingxi to end inner friction — activated once, with you for good.",
     href: "/practice", btnZh: "了解修炼技术", btnEn: "Explore the practices",
   },
   related: [

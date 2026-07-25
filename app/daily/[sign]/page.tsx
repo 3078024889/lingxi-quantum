@@ -85,8 +85,8 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
           <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
             <p className="text-sm leading-7 text-bone-dim">
               <Bi
-                zh="今日运势看的是「今天全宇宙共享的天象」落在你的太阳星座上是什么样子——你的完整生命图谱，看的是「专属于你」的出生星盘与八字命局，两者不是一回事，后者要深得多。"
-                en="Today's horoscope shows how the sky everyone shares today lands on your Sun sign. Your full Life Map goes deeper — your own unique birth chart and bazi structure, computed just for you."
+                zh="今日运势读取的是：宇宙当前运行状态，与你太阳星座之间产生的连接——像一份「今日意识天气」，帮你观察今天适合关注什么、调整什么、顺应什么。而生命图谱不同，它读取的是你出生那一刻、属于你的完整生命坐标。一个观察今天，一个探索你。"
+                en="Today's horoscope reads the connection between the sky's current state and your Sun sign \u2014 a kind of \u201cweather report for today's consciousness,\u201d helping you notice what to focus on, adjust, or move with. Your Life Map is different \u2014 it reads the full set of coordinates that belong only to you, from the moment you were born. One observes today. The other explores you."
               />
             </p>
             <a

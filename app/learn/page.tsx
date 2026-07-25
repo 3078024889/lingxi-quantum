@@ -6,7 +6,7 @@ import Bi from "@/components/Bi";
 export const metadata = {
   title: "探索 · 显化 / 解梦 / 灵性体系全指南",
   description:
-    "灵犀的原创内容中心：显化方法与心态、解梦与梦境象征、意识与灵性成长。中英双语，含核心术语表。Manifestation, dreams, and spiritual growth — bilingual guides.",
+    "灵犀场的原创内容中心：显化方法与心态、解梦与梦境象征、意识与灵性成长。中英双语，含核心术语表。Manifestation, dreams, and spiritual growth — bilingual guides.",
   alternates: { canonical: "/learn" },
 };
 
@@ -49,7 +49,7 @@ const groups: Group[] = [
   {
     zh: "灵性与修炼", en: "Spirit & Practice",
     items: [
-      { href: "/learn/wingmakers", zh: "主权与完整：灵犀修炼体系的思路", en: "Sovereignty & Wholeness: The Thinking Behind the Practices" },
+      { href: "/learn/wingmakers", zh: "主权与完整：灵犀场修炼体系的思路", en: "Sovereignty & Wholeness: The Thinking Behind the Practices" },
       { href: "/learn/higher-self", zh: "什么是高我？如何与高我连接", en: "What is the higher self, and how to connect" },
       { href: "/learn/how-to-meditate", zh: "如何冥想：新手入门指南", en: "How to meditate: a beginner's guide" },
       { href: "/learn/raise-frequency", zh: "如何提升意识频率", en: "How to raise your frequency" },
@@ -80,7 +80,7 @@ export default function LearnHub() {
           </h1>
           <p className="mt-6 text-lg leading-9 text-bone-dim">
             <Bi
-              zh="灵犀的原创内容中心——把显化、解梦与灵性成长，讲成清晰、可落地、中英双语的语言。"
+              zh="灵犀场的原创内容中心——把显化、解梦与灵性成长，讲成清晰、可落地、中英双语的语言。"
               en="The original-content center of Lingxi — manifestation, dream work, and spiritual growth, in clear and practical bilingual language."
             />
           </p>

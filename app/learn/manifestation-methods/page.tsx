@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "把方法变成每日练习", titleEn: "Turn methods into daily practice",
-    descZh: "灵犀的显化签到，帮你每天进入状态、写入潜意识，并收到来自场的回响。", descEn: "Lingxi's daily check-in helps you enter the state, imprint it, and receive a reflection from the field.",
+    descZh: "灵犀场的显化签到，帮你每天进入状态、写入潜意识，并收到来自场的回响。", descEn: "Lingxi's daily check-in helps you enter the state, imprint it, and receive a reflection from the field.",
     href: "/live-as", btnZh: "进入显化签到", btnEn: "Open the check-in",
   },
   related: [

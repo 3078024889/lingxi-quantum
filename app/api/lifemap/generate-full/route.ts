@@ -36,9 +36,12 @@ export async function POST(req: Request) {
   if (!REVIEW_MODE) {
     const { data: unlockRows } = await supabase
       .from("unlocks")
-      .select("product_id")
+      .select("product_id, expires_at")
       .eq("user_id", user!.id);
-    const unlocks = (unlockRows ?? []).map((r: { product_id: string }) => r.product_id);
+    const nowTs = new Date();
+    const unlocks = (unlockRows ?? [])
+      .filter((r: { product_id: string; expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > nowTs)
+      .map((r: { product_id: string }) => r.product_id);
     const unlocked = unlocks.includes("life-map-report") || unlocks.includes("everything");
     if (!unlocked) {
       return NextResponse.json({ error: "尚未解锁完整报告。" }, { status: 402 });

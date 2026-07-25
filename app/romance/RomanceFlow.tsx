@@ -181,15 +181,15 @@ export default function RomanceFlow() {
     <div className="mx-auto max-w-md px-6 py-16">
       <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
         <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
-          <Bi zh="灵犀 · 桃花磁场指数" en="Lingxi · Romance Magnetism Index" />
+          <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
         </p>
         <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-          <Bi zh="你的吸引力，别人是怎么感受到的？" en="How do people actually feel your pull?" />
+          <Bi zh="你的吸引力，正在向世界传递什么？" en="What is your magnetism telling the world?" />
         </h1>
         <p className="mt-4 text-base leading-8 text-bone-dim">
           <Bi
-            zh="从你的真实命盘数据里，算出桃花磁场分数、你的吸引力风格，再核对一条命理古法——命盘里是否带着传统说法里的「桃花」标记。免费、即时、不需要登录。"
-            en={'Computed from your real chart data: a romance magnetism score, your attraction style, and a check against a classical rule — whether your chart carries a traditional "Peach Blossom" marker. Free, instant, no sign-in needed.'}
+            zh="吸引力，从来不只是外貌——有人靠表达吸引，有人靠温度吸引，有人只是出现，就会让别人感受到一种特别的存在感。场域读取你的真实命盘数据，探索你的吸引力来源、你的关系互动模式、你容易被怎样的人感受到——看看你的生命磁场，正在如何与世界连接。免费、即时、不需要登录。"
+            en="Attraction was never just about looks — some people draw others in through expression, some through warmth, some simply by showing up. The field reads your real chart data to explore where your magnetism comes from, how you show up in connection, and who tends to feel it most. See how your field is connecting with the world. Free, instant, no sign-in needed."
           />
         </p>
       </div>

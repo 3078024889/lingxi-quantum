@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "先回到被爱的状态", titleEn: "Return to the state of being loved",
-    descZh: "灵犀的现实回路，陪你每天进入「已经拥有」的感受，把值得被爱写进潜意识。", descEn: "Lingxi's Reality Loop helps you enter the felt sense of already having it, and write worthiness into the subconscious.",
+    descZh: "灵犀场的现实回路，陪你每天进入「已经拥有」的感受，把值得被爱写进潜意识。", descEn: "Lingxi's Reality Loop helps you enter the felt sense of already having it, and write worthiness into the subconscious.",
     href: "/live-as", btnZh: "进入现实回路", btnEn: "Open the Reality Loop",
   },
   related: [

@@ -18,6 +18,8 @@ export async function fulfillPaidOrder(orderId: string) {
   const product = getProduct(order.product_id);
   const now = new Date();
 
+  const MANIFEST_SUBSCRIPTION_IDS = ["day", "month", "year"];
+
   if (order.product_type === "permanent") {
     await admin.from("unlocks").upsert({ user_id: order.user_id, product_id: order.product_id });
     // 买"四项合集"时，把四项单品也一并解锁
@@ -27,7 +29,9 @@ export async function fulfillPaidOrder(orderId: string) {
         await admin.from("unlocks").upsert({ user_id: order.user_id, product_id: pid });
       }
     }
-  } else {
+  } else if (MANIFEST_SUBSCRIPTION_IDS.includes(order.product_id)) {
+    // "显化与梦境解读"这三档，用的是profiles.manifest_until这一个共享
+    // 字段——这是这三档产品专属的原有机制，不受下面这条新分支影响。
     const days = product?.days ?? 30;
     const { data: profile } = await admin
       .from("profiles")
@@ -40,6 +44,24 @@ export async function fulfillPaidOrder(orderId: string) {
         : now;
     const until = new Date(current.getTime() + days * 86400000);
     await admin.from("profiles").update({ manifest_until: until.toISOString() }).eq("id", order.user_id);
+  } else {
+    // "多维叙事·年度解锁""灵犀场·全构造解锁"这两个订阅制产品——各自
+    // 在unlocks表里记一条带到期时间的记录，不跟显化模块共用字段，
+    // 也不会互相覆盖。如果之前已经解锁过、还没到期，续费是在原有
+    // 到期时间基础上累加，不是从今天重新算。
+    const days = product?.days ?? 365;
+    const { data: existing } = await admin
+      .from("unlocks")
+      .select("expires_at")
+      .eq("user_id", order.user_id)
+      .eq("product_id", order.product_id)
+      .single();
+    const current =
+      existing?.expires_at && new Date(existing.expires_at) > now
+        ? new Date(existing.expires_at)
+        : now;
+    const until = new Date(current.getTime() + days * 86400000);
+    await admin.from("unlocks").upsert({ user_id: order.user_id, product_id: order.product_id, expires_at: until.toISOString() });
   }
 
   await admin.from("orders").update({ status: "paid", paid_at: now.toISOString() }).eq("id", orderId);

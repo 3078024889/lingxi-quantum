@@ -21,7 +21,7 @@ const faq = [
   },
   {
     q: "每天该怎么练习显化？",
-    a: "用现在时、肯定句写下你想活成的版本；每天花几分钟进入「已经拥有」的感受；留意并采取那个版本的你会做的微小行动。灵犀的「显化签到」就是为这套日常设计的。",
+    a: "用现在时、肯定句写下你想活成的版本；每天花几分钟进入「已经拥有」的感受；留意并采取那个版本的你会做的微小行动。灵犀场的「显化签到」就是为这套日常设计的。",
   },
 ];
 
@@ -117,7 +117,7 @@ export default function ManifestationArticle() {
           {/* CTA */}
           <div className="mt-14 rounded-sm border border-lattice/20 bg-lattice/5 p-7 text-center">
             <p className="font-display text-xl text-bone"><Bi zh="把显化变成每日练习" en="Make manifestation a daily practice" /></p>
-            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="灵犀的「显化签到」陪你每天进入「已经拥有」的状态，并给你来自场的回响。" en="Lingxi's daily check-in helps you enter the 'already have it' state each day, with a reflection from the field." /></p>
+            <p className="mt-3 leading-8 text-bone-dim"><Bi zh="灵犀场的「显化签到」陪你每天进入「已经拥有」的状态，并给你来自场的回响。" en="Lingxi's daily check-in helps you enter the 'already have it' state each day, with a reflection from the field." /></p>
             <Link href="/live-as" className="mt-6 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber">
               <Bi zh="进入显化签到" en="Open the check-in" />
             </Link>

@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "读懂梦此刻的讯息", titleEn: "Read the dream's present message",
-    descZh: "写下你的梦，发送至场，灵犀帮你看见它在照见的此刻真相。", descEn: "Write your dream, send it to the field, and Lingxi helps you see the present truth it reflects.",
+    descZh: "写下你的梦，发送至场，灵犀场帮你看见它在照见的此刻真相。", descEn: "Write your dream, send it to the field, and Lingxi helps you see the present truth it reflects.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

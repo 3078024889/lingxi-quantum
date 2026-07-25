@@ -2,6 +2,7 @@ import Link from "next/link";
 import LingxiPortal from "@/components/LingxiPortal";
 import OriginSection from "@/components/OriginSection";
 import FieldEntry from "@/components/FieldEntry";
+import FieldInsightsSection from "@/components/FieldInsightsSection";
 import BreathRing from "@/components/BreathRing";
 import GateVisual from "@/components/GateVisual";
 import Nav from "@/components/Nav";
@@ -25,19 +26,28 @@ export default function Home() {
         {/* 3. 场域回应你的当下 */}
         <FieldEntry />
 
+        {/* 3.5 场域精测——列出全部测试产品，每个都配一句具体的"获得什么" */}
+        <FieldInsightsSection />
+
         {/* 4. 核心信条 */}
         <section className="border-t border-white/5 bg-void-deep px-6 py-28 sm:py-36">
           <div className="mx-auto grid max-w-5xl gap-16 sm:grid-cols-2">
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="为何修炼" en="Why practice" /></p>
-              <p className="mt-6 font-display text-3xl leading-snug text-bone sm:text-4xl">
-                <Bi zh={<>忆起本源自己，<br />向内探索，知晓内在全部真相。</>} en={<>Remember your source self;<br />look within, and know the whole truth inside.</>} />
+              <p className="mt-6 font-display text-2xl leading-relaxed text-bone sm:text-3xl">
+                <Bi
+                  zh={<>因为真正的探索，不是向外寻找答案，<br />而是重新认识自己——向内，看见意识深处的声音，觉察、理解，逐渐忆起那个真实的自己。</>}
+                  en={<>Because true exploration isn't about searching outward for answers —<br />it's about knowing yourself again. Turn inward, hear the voice beneath awareness, notice, understand, and slowly remember who you really are.</>}
+                />
               </p>
             </div>
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="为何显化" en="Why manifest" /></p>
-              <p className="mt-6 font-display text-3xl leading-snug text-bone sm:text-4xl">
-                <Bi zh={<>为了更轻松地生活，<br />深深扎根于地球，忆起本源自己。</>} en={<>To live more lightly;<br />rooted deeply in the Earth, remembering your source self.</>} />
+              <p className="mt-6 font-display text-2xl leading-relaxed text-bone sm:text-3xl">
+                <Bi
+                  zh={<>显化不是改变世界，而是让你的意识、行动、选择，与想创造的现实逐渐对齐——当内在清晰，现实开始回应。</>}
+                  en={<>Manifestation isn't about changing the world — it's about bringing your awareness, actions, and choices into alignment with the reality you want to create. When the inside is clear, reality starts to answer.</>}
+                />
               </p>
             </div>
           </div>
@@ -48,8 +58,8 @@ export default function Home() {
           <div className="mx-auto max-w-6xl">
             <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10 text-center">
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="重 塑 潜 意 识" en="Rewrite the Subconscious" /></p>
-              <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="每一道门，都是一面镜子" en="Each gate is a mirror" /></h2>
-              <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-bone-dim"><Bi zh="映出你与生命某个面向的关系。" en="reflecting your relationship with one facet of life." /></p>
+              <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="每一道阻碍，都是生命留下的一面镜子" en="Every obstacle is a mirror life has left behind" /></h2>
+              <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-bone-dim"><Bi zh="它不是限制，它是在等待被理解——看见它，穿越它，重新选择。" en="It isn't a limitation. It's waiting to be understood — see it, move through it, choose again." /></p>
             </div>
             <div className="mt-20 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
               {gates.map((gate) => (

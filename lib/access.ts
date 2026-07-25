@@ -29,12 +29,17 @@ export async function getAccess() {
 
   const { data: u } = await supabase
     .from("unlocks")
-    .select("product_id")
+    .select("product_id, expires_at")
     .eq("user_id", user.id);
 
   const manifestActive =
     !!profile?.manifest_until && new Date(profile.manifest_until) > new Date();
-  const unlocks = (u ?? []).map((r: { product_id: string }) => r.product_id);
+  // expires_at 为空 = 永久解锁（原有行为不变）；有值但已经过了，就不
+  // 算数——不能让一个过期的"多维叙事年解锁"继续被当成有效解锁。
+  const nowTs = new Date();
+  const unlocks = (u ?? [])
+    .filter((r: { product_id: string; expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > nowTs)
+    .map((r: { product_id: string }) => r.product_id);
 
   return { user, manifestActive, unlocks };
 }

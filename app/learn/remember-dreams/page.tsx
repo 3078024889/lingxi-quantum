@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "建立你的梦境档案", titleEn: "Build your dream archive",
-    descZh: "在灵犀梦境解析里随手记录每个梦，日积月累，读懂潜意识的语言。", descEn: "Jot every dream in Lingxi and, over time, learn the language of your subconscious.",
+    descZh: "在灵犀场梦境解析里随手记录每个梦，日积月累，读懂潜意识的语言。", descEn: "Jot every dream in Lingxi and, over time, learn the language of your subconscious.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

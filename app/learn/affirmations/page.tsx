@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "把肯定语活成状态", titleEn: "Live your affirmations as a state",
-    descZh: "灵犀的现实回路，帮你每天带着感受进入「已经拥有」，让新信念真正写入。", descEn: "Lingxi's Reality Loop helps you enter 'already having it' with feeling each day, so new beliefs truly imprint.",
+    descZh: "灵犀场的现实回路，帮你每天带着感受进入「已经拥有」，让新信念真正写入。", descEn: "Lingxi's Reality Loop helps you enter 'already having it' with feeling each day, so new beliefs truly imprint.",
     href: "/live-as", btnZh: "进入现实回路", btnEn: "Open the Reality Loop",
   },
   related: [

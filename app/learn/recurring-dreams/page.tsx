@@ -35,7 +35,7 @@ const data: ArticleData = {
     { q: "怎样才能不再做这个重复的梦？", qEn: "How can I stop having this recurring dream?", a: "试着写下梦境与它唤起的情绪，问自己现实中什么让你有同样的感觉，然后温柔地面对那个被回避的议题。一旦它被看见、被处理，反复的梦常会自然停止。", aEn: "Write down the dream and the emotion it stirs, ask what in waking life gives you the same feeling, then gently face the avoided issue. Once it is seen and addressed, the recurring dream usually lets go on its own." },
     { q: "重复的噩梦需要担心吗？", qEn: "Should I worry about recurring nightmares?", a: "偶尔的重复梦很常见，多与压力有关。但如果重复的噩梦严重影响睡眠和情绪、长期不缓解，或与创伤经历有关，寻求心理专业人士的帮助会更稳妥。", aEn: "Occasional recurring dreams are common and mostly stress-related. But if recurring nightmares seriously affect your sleep and mood, persist long-term, or relate to trauma, seeking help from a mental-health professional is the safer path." },
   ],
-  note: "温柔提示：如果某个反复出现的梦让你长期痛苦、严重影响睡眠或情绪，或与创伤有关，请考虑寻求心理咨询师等专业人士的支持。灵犀的解读是温柔的陪伴与启发，不替代专业帮助。",
+  note: "温柔提示：如果某个反复出现的梦让你长期痛苦、严重影响睡眠或情绪，或与创伤有关，请考虑寻求心理咨询师等专业人士的支持。灵犀场的解读是温柔的陪伴与启发，不替代专业帮助。",
   noteEn: "A gentle note: if a recurring dream causes lasting distress, seriously affects your sleep or mood, or relates to trauma, please consider the support of a counselor or other professional. Lingxi's readings are gentle companionship and inspiration, not a substitute for professional help.",
   cta: {
     titleZh: "让灵犀场陪你拆开这封信", titleEn: "Open the letter with Lingxi Field",

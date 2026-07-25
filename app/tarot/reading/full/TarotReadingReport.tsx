@@ -20,7 +20,7 @@ const LAYER_TITLES = [
   { zh: "⑦ 关系生命地图", en: "⑦ Relationship Life Map" },
   { zh: "⑧ 事业使命地图", en: "⑧ Career & Mission Map" },
   { zh: "⑨ 当前生命阶段", en: "⑨ Current Life Stage" },
-  { zh: "⑩ 灵犀成长路径", en: "⑩ Growth Path" },
+  { zh: "⑩ 灵犀场成长路径", en: "⑩ Growth Path" },
   { zh: "⑪ 给未来自己的信", en: "⑪ A Letter to Your Future Self" },
   { zh: "⑫ 生命关键词", en: "⑫ Your Life Keywords" },
 ];
@@ -134,7 +134,16 @@ export default function TarotReadingReport({ id }: { id: string }) {
   if (status === "checking") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <p className="text-sm text-bone-dim">{t("场域正在展开你的完整生命镜像档案，第一次生成需要一点时间……", "The field is unfolding your full consciousness blueprint — the first generation takes a little while…")}</p>
+        <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-10">
+          <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命镜像档案，第一次生成需要一点时间……", "The field is unfolding your full consciousness blueprint — the first generation takes a little while…")}</p>
+          <p className="mt-3 text-xs text-bone-dim/60">{t("若长时间没有反应，按 F5 刷新一下页面即可，不会影响已经生成的内容。", "If nothing happens for a while, press F5 to refresh — this won't affect anything already generated.")}</p>
+        </div>
+        <style>{`
+          .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
+          @keyframes lx-checking-breathe { 0%,100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 0.9; transform: scale(1.1); } }
+          @media (prefers-reduced-motion: reduce) { .lx-checking-glow { animation: none !important; } }
+        `}</style>
       </div>
     );
   }

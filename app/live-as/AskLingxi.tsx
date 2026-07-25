@@ -115,7 +115,7 @@ export default function AskLingxi() {
       <p className="font-display text-2xl text-bone">{t("提问灵犀", "Ask Lingxi")}</p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">
         {t(
-          "读完一段多维叙事后未解的困惑，练习一项修炼技术时拿不准的细节——都可以在这里，说给灵犀听。你的提问与灵犀的回应，会一并留在你自己的日记里，成为这段旅程的一部分。",
+          "读完一段多维叙事后未解的困惑，练习一项修炼技术时拿不准的细节——都可以在这里，说给灵犀场听。你的提问与灵犀场的回应，会一并留在你自己的日记里，成为这段旅程的一部分。",
           "A question left unanswered after a story, a detail you're unsure of mid-practice — say it to Lingxi here. Your question and Lingxi's response will stay in your own journal, part of this journey."
         )}
       </p>
@@ -143,7 +143,7 @@ export default function AskLingxi() {
       {!loading && history.length > 0 && (
         <div className="mt-10 space-y-6">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-            {t("与灵犀的对话", "Conversations with Lingxi")}
+            {t("与灵犀场的对话", "Conversations with Lingxi")}
           </p>
           {history.map((qa, i) => (
             <div key={qa.id || i} className="rounded-sm border border-white/10 bg-void-deep p-5">
@@ -151,7 +151,7 @@ export default function AskLingxi() {
               {qa.answer && (
                 <div className="mt-3 border-t border-white/10 pt-3">
                   <p className="text-xs uppercase tracking-widest2 text-amber/80">
-                    {t("灵犀的回响", "Lingxi's echo")}
+                    {t("灵犀场的回响", "Lingxi's echo")}
                   </p>
                   <p className="mt-2 whitespace-pre-line text-sm leading-7 text-bone-dim">{qa.answer}</p>
                 </div>

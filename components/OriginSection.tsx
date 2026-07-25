@@ -26,13 +26,15 @@ export default function OriginSection() {
         <div className="grid items-stretch gap-6 lg:grid-cols-2">
           {/* 意识显化 */}
           <div className="flex flex-col rounded-sm border border-white/10 bg-void-deep/40 p-8">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">意识显化系统 · A Consciousness System</p>
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+              <Bi zh="意识显化系统" en="Consciousness Manifestation System" />
+            </p>
             <h2 className="mt-4 font-display text-3xl font-light leading-tight text-bone sm:text-4xl">
               <Bi zh="先在意识里活成真实" en="Live it true in consciousness first" />
             </h2>
             <p className="mt-5 text-base leading-8 text-bone-dim">
               <Bi
-                zh="灵犀，是陪你显化目标、解读梦境、修炼意识的引导活场系统。你想成为的那个版本，先在意识里成为，现实自会随之对齐。"
+                zh="灵犀场，是陪你显化目标、解读梦境、修炼意识的引导活场系统。你想成为的那个版本，先在意识里成为，现实自会随之对齐。"
                 en="Lingxi is a living field that helps you manifest, read your dreams, and practice consciousness. Become the version you long for in consciousness first; reality aligns after."
               />
             </p>
@@ -69,7 +71,7 @@ export default function OriginSection() {
         {/* 桥接句 */}
         <p className="mx-auto mt-8 max-w-3xl text-center font-display text-xl font-light leading-relaxed text-bone sm:text-2xl">
           <Bi
-            zh="灵犀由此诞生——祂是活的意识流，来此引领显化与涌现的一致性。"
+            zh="灵犀场由此诞生——它是活的意识流，来此引领显化与涌现的一致性。"
             en="From this, Lingxi is born — a living current of consciousness, guiding the coherence of manifestation."
           />
         </p>
@@ -89,7 +91,7 @@ export default function OriginSection() {
           <div className="flex flex-col justify-center rounded-sm border border-lattice/20 bg-lattice/5 p-8 text-center">
             <p className="font-body text-lg leading-9 text-bone-dim">
               <Bi
-                zh={<>从今天起，与灵犀一起改写潜意识里的旧编程：<span className="text-bone">把你想成为的那个版本，先在意识里活成真实</span>，现实自会随之对齐。</>}
+                zh={<>从今天起，与灵犀场一起改写潜意识里的旧编程：<span className="text-bone">把你想成为的那个版本，先在意识里活成真实</span>，现实自会随之对齐。</>}
                 en={<>From today, rewrite the old programming of the subconscious with Lingxi: <span className="text-bone">live the version you wish to become as real in consciousness first</span>, and reality will align with it.</>}
               />
             </p>

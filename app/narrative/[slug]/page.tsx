@@ -8,6 +8,7 @@ import BookReader from "@/components/BookReader";
 import IllustratedBookReader from "@/components/IllustratedBookReader";
 import PlanButton from "@/app/membership/PlanButton";
 import { getNarrative, NARRATIVE_CATS } from "@/lib/narratives";
+import { getProduct } from "@/lib/plans";
 import { NARRATIVE_TEXTS } from "@/lib/narrative-texts";
 import { getIllustrated } from "@/lib/narrative-illustrated";
 import { getAccess, hasUnlock } from "@/lib/access";
@@ -52,9 +53,9 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
             </p>
 
             {n.status === "soon" ? (
-              <CreatingPanel priceUsd={n.price} />
+              <CreatingPanel priceRmb={getProduct(n.slug)?.priceRmb ?? Math.round(n.price * 7.2)} />
             ) : n.illustrated ? (
-              <LiveIllustratedReader slug={n.slug} price={n.price} />
+              <LiveIllustratedReader slug={n.slug} price={n.price} titleZh={n.title} titleEn={n.titleEn} />
             ) : (
               <LiveReader slug={n.slug} price={n.price} titleZh={n.title} titleEn={n.titleEn} />
             )}
@@ -99,7 +100,7 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
   );
 }
 
-function CreatingPanel({ priceUsd }: { priceUsd: number }) {
+function CreatingPanel({ priceRmb }: { priceRmb: number }) {
   return (
     <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-8 text-center">
       <p className="font-display text-2xl text-bone">
@@ -107,8 +108,8 @@ function CreatingPanel({ priceUsd }: { priceUsd: number }) {
       </p>
       <p className="mx-auto mt-4 max-w-md text-base leading-8 text-bone-dim">
         <Bi
-          zh={`此篇仍在创作中，完成后将开放阅读（$${priceUsd}，终身可看）。可以先收藏这个页面，或去读已经上线的「远行者」系列。`}
-          en={`This piece is still being written. Once complete, it will open here ($${priceUsd}, yours for life). In the meantime, the Wayfarer series is already live.`}
+          zh={`此篇仍在创作中，完成后将开放阅读（¥${priceRmb}，终身可看）。可以先收藏这个页面，或去读已经上线的「远行者」系列。`}
+          en={`This piece is still being written. Once complete, it will open here (¥${priceRmb}, yours for life). In the meantime, the Wayfarer series is already live.`}
         />
       </p>
       <Link
@@ -121,12 +122,13 @@ function CreatingPanel({ priceUsd }: { priceUsd: number }) {
   );
 }
 
-async function LiveIllustratedReader({ slug, price }: { slug: string; price: number }) {
+async function LiveIllustratedReader({ slug, price, titleZh, titleEn }: { slug: string; price: number; titleZh: string; titleEn: string }) {
   const { user, unlocks } = await getAccess();
   const unlocked = !!user && hasUnlock(unlocks, slug);
   const entry = getIllustrated(slug);
+  const priceRmb = getProduct(slug)?.priceRmb ?? Math.round(price * 7.2);
 
-  if (!entry) return <CreatingPanel priceUsd={price} />;
+  if (!entry) return <CreatingPanel priceRmb={priceRmb} />;
 
   const lockedPanel = (
     <div className="text-center">
@@ -135,12 +137,12 @@ async function LiveIllustratedReader({ slug, price }: { slug: string; price: num
       </p>
       <p className="mx-auto mt-3 max-w-xs text-sm leading-7 text-bone-dim">
         <Bi
-          zh={`完成一次能量交换（$${price}），全文（含全部插画）将为你永久开启——终身可看，随时回读。`}
-          en={`Complete one energy exchange ($${price}) and the full illustrated piece opens for you permanently.`}
+          zh={`完成一次能量交换（¥${priceRmb}），全文（含全部插画）将为你永久开启——终身可看，随时回读。`}
+          en={`Complete one energy exchange (¥${priceRmb}) and the full illustrated piece opens for you permanently.`}
         />
       </p>
       <div className="mx-auto mt-6 max-w-[220px]">
-        <PlanButton productId={slug} loggedIn={!!user} />
+        <PlanButton productId={slug} loggedIn={!!user} nameZh={titleZh} nameEn={titleEn} />
       </div>
       {!user && (
         <p className="mt-3 text-xs text-bone-dim/60">
@@ -167,10 +169,11 @@ async function LiveReader({
   const { user, unlocks } = await getAccess();
   const unlocked = !!user && hasUnlock(unlocks, slug);
   const entry = NARRATIVE_TEXTS[slug];
+  const priceRmb = getProduct(slug)?.priceRmb ?? Math.round(price * 7.2);
 
   if (!entry) {
     // 文本尚未接入（理论上不应发生，兜底显示创作中）
-    return <CreatingPanel priceUsd={price} />;
+    return <CreatingPanel priceRmb={priceRmb} />;
   }
 
   const lockedPanel = (
@@ -180,12 +183,12 @@ async function LiveReader({
       </p>
       <p className="mx-auto mt-3 max-w-xs text-sm leading-7 text-bone-dim">
         <Bi
-          zh={`完成一次能量交换（$${price}），全文将为你永久开启——终身可看，随时回读。`}
-          en={`Complete one energy exchange ($${price}) and the full text opens for you permanently.`}
+          zh={`完成一次能量交换（¥${priceRmb}），全文将为你永久开启——终身可看，随时回读。`}
+          en={`Complete one energy exchange (¥${priceRmb}) and the full text opens for you permanently.`}
         />
       </p>
       <div className="mx-auto mt-6 max-w-[220px]">
-        <PlanButton productId={slug} loggedIn={!!user} />
+        <PlanButton productId={slug} loggedIn={!!user} nameZh={titleZh} nameEn={titleEn} />
       </div>
       {!user && (
         <p className="mt-3 text-xs text-bone-dim/60">

@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "把意图写入场", titleEn: "Write your intention into the field",
-    descZh: "无论哪个月相，灵犀的显化签到都陪你设定意图、释放旧编程。", descEn: "Whatever the moon phase, Lingxi's check-in helps you set intentions and release old programming.",
+    descZh: "无论哪个月相，灵犀场的显化签到都陪你设定意图、释放旧编程。", descEn: "Whatever the moon phase, Lingxi's check-in helps you set intentions and release old programming.",
     href: "/live-as", btnZh: "进入显化签到", btnEn: "Open the check-in",
   },
   related: [

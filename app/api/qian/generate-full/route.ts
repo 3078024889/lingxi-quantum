@@ -35,7 +35,7 @@ function buildAbilityMap(v: ReturnType<typeof computeLifeVector>) {
 }
 
 // 四项修炼技术——按签的质地做一个确定性的推荐映射（不是AI现场瞎配的），
-// 具体推荐哪一项，AI在写"灵犀成长路径"这一章的时候会拿到这个已经
+// 具体推荐哪一项，AI在写"灵犀场成长路径"这一章的时候会拿到这个已经
 // 选好的技术名字，只负责说清楚"为什么是这一项"。
 const PRACTICE_BY_TIER: Record<string, { zh: string; en: string }> = {
   origin: { zh: "量子息法", en: "Quantum Breath" },
@@ -83,7 +83,7 @@ function buildBatches(lang: "zh" | "en", signs: (typeof LIFE_SIGNS)[number][], a
       instruction:
         "===1===\n（当前人生阶段：这个人已经被判定处于「" + lifeStage.zh + "」这个阶段——不需要你重新判断阶段，只需要具体说清楚这个阶段的人通常在经历什么、正在从什么旧结构转向什么新结构，约180-220字）" +
         "===2===\n（隐藏天赋：说清楚这个人身上一项「还没被完全使用的能力」和一项「容易被自己或别人低估的能力」，要具体、要有画面感，不能是空泛的夸奖，约180-220字）" +
-        "===3===\n（灵犀成长路径：这个人已经被匹配到「" + practice.zh + "」这项修炼技术——不需要你重新选，只需要具体说清楚为什么是这一项、这项技术具体能帮这个人解决前面提到的哪个具体课题，约180-220字）" +
+        "===3===\n（灵犀场成长路径：这个人已经被匹配到「" + practice.zh + "」这项修炼技术——不需要你重新选，只需要具体说清楚为什么是这一项、这项技术具体能帮这个人解决前面提到的哪个具体课题，约180-220字）" +
         "===4===\n（生命宣言：以第一人称「我」写一段属于这个人的生命宣言，4-6句话，短句为主，呼应前面所有章节提炼出的核心特质，结尾要有力量感，不要写成鸡汤，约100-140字）",
     },
   ];
@@ -112,7 +112,14 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
 
   const parseAndValidate = (raw: string) => {
     const sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
-    const valid = sections.length === batch.count && sections.every((s) => s.length >= 60);
+    // 之前这里要求"段数必须跟预期完全相等"，稍微有一点格式偏差
+    // （比如AI多打了一个分隔符、或者少打了一个），整批内容就被判定
+    // 无效、直接报错——这是"场域这次的回应不完整"频繁出现的真正
+    // 原因，不是AI真的经常生成失败，是校验本身太严格。这次放宽：
+    // 只要求段数不少于预期的80%（向下取整，至少留1段），且每段不能
+    // 短得离谱（20字，不是之前的60字——60字对这种密度的内容也偏严）。
+    const minAcceptable = Math.max(1, Math.floor(batch.count * 0.8));
+    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 20);
     return { sections, valid };
   };
 
@@ -131,8 +138,10 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
   let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
   let check = text ? parseAndValidate(text) : { sections: [], valid: false };
 
-  if (!check.valid) {
-    console.error(`[qian generate-full] ${batch.titleZh} 首次生成不完整，重试一次。submission id:`, submissionId, "段数:", check.sections.length);
+  // 最多重试2次（一共最多尝试3次），每次都用更宽容的标准重新校验，
+  // 大幅降低"其实内容基本没问题、只是格式差一点点就被拒绝"的概率。
+  for (let retry = 0; retry < 2 && !check.valid; retry++) {
+    console.error(`[qian generate-full] ${batch.titleZh} 第${retry + 1}次生成不完整，重试。submission id:`, submissionId, "段数:", check.sections.length, "预期:", batch.count);
     res = await callOnce();
     if (res.ok) {
       data = await res.json();
@@ -141,9 +150,17 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
       check = text ? parseAndValidate(text) : { sections: [], valid: false };
     }
   }
-  if (!check.valid) {
-    console.error(`[qian generate-full] ${batch.titleZh} 重试后仍不完整，submission id:`, submissionId, "原始内容:", text);
+
+  // 重试完还是不满足"宽容标准"——不再直接判定整批失败，只要至少
+  // 提取出了一段像样的内容，就用能用的这部分，好过让用户完全看不到
+  // 任何内容、只能对着一句报错干瞪眼。真正返回null（彻底失败）的
+  // 情况，只剩"一段有效内容都没提取出来"这一种。
+  if (!check.valid && check.sections.length === 0) {
+    console.error(`[qian generate-full] ${batch.titleZh} 多次重试后仍完全没有可用内容，submission id:`, submissionId, "原始内容:", text);
     return null;
+  }
+  if (!check.valid) {
+    console.error(`[qian generate-full] ${batch.titleZh} 重试后段数/长度仍不完全达标，但采用现有内容（好过完全报错）。submission id:`, submissionId, "实际段数:", check.sections.length, "预期:", batch.count);
   }
   return check.sections;
 }
@@ -169,9 +186,12 @@ export async function POST(req: Request) {
   if (!REVIEW_MODE) {
     const { data: unlockRows } = await supabase
       .from("unlocks")
-      .select("product_id")
+      .select("product_id, expires_at")
       .eq("user_id", user!.id);
-    const unlocks = (unlockRows ?? []).map((r: { product_id: string }) => r.product_id);
+    const nowTs = new Date();
+    const unlocks = (unlockRows ?? [])
+      .filter((r: { product_id: string; expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > nowTs)
+      .map((r: { product_id: string }) => r.product_id);
     const unlocked = unlocks.includes("qian-reading") || unlocks.includes("everything");
     if (!unlocked) {
       return NextResponse.json({ error: "尚未解锁深度生命解读。" }, { status: 402 });

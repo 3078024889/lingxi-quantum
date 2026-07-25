@@ -34,7 +34,7 @@ const SECTION_TITLES = [
   { zh: "财富与事业频率地图", en: "Your Wealth & Career Map" },
   { zh: "关系共振地图", en: "Your Relationship Resonance Map" },
   { zh: "人生周期导航", en: "Your Life Cycle Navigation" },
-  { zh: "专属灵犀练习", en: "A Personal Lingxi Practice" },
+  { zh: "专属灵犀场练习", en: "A Personal Lingxi Field Practice" },
   { zh: "前世今生印记 · 纯属脑洞", en: "Past & Future Imprint · Just for Fun" },
   { zh: "数字能量解读（手机号 / 车牌号）", en: "Number Energy Reading (Phone & Plate)" },
   { zh: "生命韧性指数", en: "Your Life Resilience Index" },

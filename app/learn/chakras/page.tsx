@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "回到心的中枢", titleEn: "Return to the heart hub",
-    descZh: "灵犀的「归零心诀」「上升心经」练习，帮你回到心、让能量流动。", descEn: "Lingxi's Heart Reset and Heart of Ascension practices return you to the heart and let energy flow.",
+    descZh: "灵犀场的「归零心诀」「上升心经」练习，帮你回到心、让能量流动。", descEn: "Lingxi's Heart Reset and Heart of Ascension practices return you to the heart and let energy flow.",
     href: "/practice", btnZh: "进入修炼技术", btnEn: "Open the practices",
   },
   related: [

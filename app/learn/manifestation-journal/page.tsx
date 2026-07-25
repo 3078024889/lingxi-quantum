@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "把书写变成显化签到", titleEn: "Turn journaling into a check-in",
-    descZh: "灵犀的显化签到，就是一个每日书写「已经拥有」状态的地方，并给你来自场的回响。", descEn: "Lingxi's daily check-in is a place to write the 'already have it' state each day, with a reflection from the field.",
+    descZh: "灵犀场的显化签到，就是一个每日书写「已经拥有」状态的地方，并给你来自场的回响。", descEn: "Lingxi's daily check-in is a place to write the 'already have it' state each day, with a reflection from the field.",
     href: "/live-as", btnZh: "进入显化签到", btnEn: "Open the check-in",
   },
   related: [

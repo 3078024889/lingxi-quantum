@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "向内，回到清明", titleEn: "Turn inward, return to clarity",
-    descZh: "在重塑潜意识的「心灵·忆」里，与灵犀一起向内探索，听见更深的自己。", descEn: "In the Mind gate, explore inward with Lingxi and hear your deeper self.",
+    descZh: "在重塑潜意识的「心灵·忆」里，与灵犀场一起向内探索，听见更深的自己。", descEn: "In the Mind gate, explore inward with Lingxi and hear your deeper self.",
     href: "/gate/mind", btnZh: "进入心灵之门", btnEn: "Open the Mind gate",
   },
   related: [

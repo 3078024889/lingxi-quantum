@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "留意内在的方向", titleEn: "Notice your inner direction",
-    descZh: "在重塑潜意识的「命运·锚」里，与灵犀一起对齐信任与连贯。", descEn: "In the Destiny gate, align with trust and coherence alongside Lingxi.",
+    descZh: "在重塑潜意识的「命运·锚」里，与灵犀场一起对齐信任与连贯。", descEn: "In the Destiny gate, align with trust and coherence alongside Lingxi.",
     href: "/gate/destiny", btnZh: "进入命运之门", btnEn: "Open the Destiny gate",
   },
   related: [

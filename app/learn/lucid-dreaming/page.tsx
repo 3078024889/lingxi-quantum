@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "从记梦开始", titleEn: "Begin with dream journaling",
-    descZh: "在灵犀梦境解析里记录每一个梦，提升觉察，也为清醒梦打下地基。", descEn: "Record every dream in Lingxi to build awareness — and the foundation for lucid dreaming.",
+    descZh: "在灵犀场梦境解析里记录每一个梦，提升觉察，也为清醒梦打下地基。", descEn: "Record every dream in Lingxi to build awareness — and the foundation for lucid dreaming.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

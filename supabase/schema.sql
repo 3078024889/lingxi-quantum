@@ -18,6 +18,11 @@ create table if not exists public.unlocks (
   created_at timestamptz default now(),
   primary key (user_id, product_id)
 );
+-- 多维叙事年解锁、全构造解锁这两个产品改成订阅制之后，需要各自能记录
+-- 一个到期时间（不能跟"显化与梦境解读"共用profiles.manifest_until
+-- 那一个字段，那样会互相覆盖）。这一列留空就是永久解锁（原来的行为
+-- 不变），有值就是订阅到期时间。
+alter table public.unlocks add column if not exists expires_at timestamptz;
 
 -- 3) 现实回路
 create table if not exists public.reality_entries (

@@ -15,19 +15,18 @@ export type Product = {
 };
 
 export const cultivationProducts: Product[] = [
-  { id: "bundle", name: "四项合集", nameEn: "Four-in-One Set", priceUsd: 199, priceRmb: 1399, type: "permanent", note: "永久有效，免费享有日后新增的全部练习技术", noteEn: "Yours forever, including every future practice added later, free.", highlight: true, group: "cultivation" },
-  { id: "breath", name: "量子息法", nameEn: "Quantum Breath Method", priceUsd: 66, priceRmb: 468, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
-  { id: "intuition", name: "直觉丹道", nameEn: "The Intuitive Way", priceUsd: 66, priceRmb: 468, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
-  { id: "heart-reset", name: "归零心诀", nameEn: "Heart Reset", priceUsd: 66, priceRmb: 468, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
-  { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 66, priceRmb: 468, type: "permanent", note: "单次能量交换，永久有效", noteEn: "A single energy exchange — yours forever.", group: "cultivation" },
-  { id: "narrative-all", name: "多维叙事 · 全解锁", nameEn: "All Narratives · Unlocked", priceUsd: 199, priceRmb: 1399, type: "permanent", note: "一次交换，解锁全部多维叙事，含日后新增的全部篇目", noteEn: "One exchange unlocks every narrative, including all added later.", highlight: true, group: "cultivation" },
-  { id: "everything", name: "灵犀 · 全构造解锁", nameEn: "Lingxi · Everything Unlocked", priceUsd: 1688, priceRmb: 11999, type: "permanent", note: "终身有效，解锁全部多维叙事与全部修炼技术，含日后新增的一切", noteEn: "Lifetime access to every narrative and every practice technique, including everything added later.", highlight: true, group: "cultivation" },
+  { id: "breath", name: "量子息法", nameEn: "Quantum Breath Method", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
+  { id: "intuition", name: "直觉丹道", nameEn: "The Intuitive Way", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
+  { id: "heart-reset", name: "归零心诀", nameEn: "Heart Reset", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
+  { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
+  { id: "narrative-all", name: "多维叙事 · 年度解锁", nameEn: "All Narratives · Yearly", priceUsd: 93, priceRmb: 666, type: "subscription", days: 365, note: "一年内解锁全部多维叙事，含日后新增的全部篇目", noteEn: "One year of access to every narrative, including all added later.", highlight: true, group: "cultivation" },
+  { id: "everything", name: "灵犀场 · 全构造解锁", nameEn: "Lingxi Field · Everything Unlocked", priceUsd: 1204, priceRmb: 8668, type: "subscription", days: 365, note: "一年内解锁全部多维叙事与全部修炼技术，含日后新增的一切", noteEn: "One year of access to every narrative and every practice technique, including everything added later.", highlight: true, group: "cultivation" },
 ];
 
 export const manifestationProducts: Product[] = [
-  { id: "day", name: "单日体验", nameEn: "One-Day Pass", priceUsd: 9.9, priceRmb: 68, type: "subscription", days: 1, note: "体验一天显化与梦境解读", noteEn: "Experience Manifestation & Dream Interpretation for a day.", group: "manifestation" },
-  { id: "month", name: "月度订阅", nameEn: "Monthly", priceUsd: 99, priceRmb: 698, type: "subscription", days: 30, note: "每月持续对齐", noteEn: "Stay aligned, month after month.", highlight: true, group: "manifestation" },
-  { id: "year", name: "年度订阅", nameEn: "Yearly", priceUsd: 999, priceRmb: 6999, type: "subscription", days: 365, note: "一年深度旅程，最佳价值", noteEn: "A year-long journey — best value.", group: "manifestation" },
+  { id: "day", name: "单日体验", nameEn: "One-Day Pass", priceUsd: 5.5, priceRmb: 39.9, type: "subscription", days: 1, note: "体验一天显化与梦境解读", noteEn: "Experience Manifestation & Dream Interpretation for a day.", group: "manifestation" },
+  { id: "month", name: "月度探索", nameEn: "Monthly", priceUsd: 23, priceRmb: 168, type: "subscription", days: 30, note: "每月持续对齐", noteEn: "Stay aligned, month after month.", highlight: true, group: "manifestation" },
+  { id: "year", name: "年度旅程", nameEn: "Yearly", priceUsd: 139, priceRmb: 999, type: "subscription", days: 365, note: "一年深度旅程，最佳价值", noteEn: "A year-long journey — best value.", group: "manifestation" },
 ];
 
 // 多维叙事：短篇 $1，长篇 $5，一次能量交换，终身可看

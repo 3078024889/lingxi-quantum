@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "用每日签到化解抗拒", titleEn: "Dissolve resistance with daily check-in",
-    descZh: "灵犀的显化签到帮你每天回到「已经拥有」的状态，并给你来自场的回响。", descEn: "Lingxi's daily check-in returns you to the 'already have it' state, with a reflection from the field.",
+    descZh: "灵犀场的显化签到帮你每天回到「已经拥有」的状态，并给你来自场的回响。", descEn: "Lingxi's daily check-in returns you to the 'already have it' state, with a reflection from the field.",
     href: "/live-as", btnZh: "进入显化签到", btnEn: "Open the check-in",
   },
   related: [

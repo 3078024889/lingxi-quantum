@@ -75,7 +75,7 @@ const orgJsonLd = {
   url: SITE,
   logo: `${SITE}/icon-512.png`,
   description:
-    "灵犀是一个意识显化系统，提供显化、解梦与意识修炼的引导。Lingxi is a bilingual consciousness system for manifestation, dream interpretation, and inner practice.",
+    "灵犀场是一个意识显化系统，提供显化、解梦与意识修炼的引导。Lingxi Field is a bilingual consciousness system for manifestation, dream interpretation, and inner practice.",
   knowsAbout: [
     "意识显化", "显化方法", "现实回路", "吸引力法则", "场域解梦", "梦境解析",
     "潜意识改写", "量子息法", "上升心经", "重塑潜意识", "探索梦境", "多维叙事", "提升频率", "共时性", "觉醒",

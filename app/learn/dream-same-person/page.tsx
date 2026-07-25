@@ -33,10 +33,10 @@ const data: ArticleData = {
   faq: [
     { q: "总是梦见同一个人，是对方在想我吗？", a: "梦无法证明对方的心思。更可靠的理解是：这个梦来自你自己——你们之间有一段未完结的情绪或能量还留在你的内在世界里，夜里意识放松时，它便借对方的样子浮现。与其猜他，不如读懂这封写给你自己的信。" },
     { q: "梦见很多年没联系的人是什么意思？", a: "通常不是关于那个人本身，而是关于「他所代表的那个时期的你」——某个阶段的渴望、遗憾或没被看见的自己。可以问：那时候的我，有什么没被完成？" },
-    { q: "怎么让这种反复的梦停下来？", a: "不是去压制它，而是去完成它：记录梦境与感受，写下没说出口的话，在心里做一次真正的告别或原谅。当那段能量被看见、被完成，梦往往自然改变或停止。灵犀的探索梦境可以陪你逐层读懂这些反复出现的象征。" },
+    { q: "怎么让这种反复的梦停下来？", a: "不是去压制它，而是去完成它：记录梦境与感受，写下没说出口的话，在心里做一次真正的告别或原谅。当那段能量被看见、被完成，梦往往自然改变或停止。灵犀场的探索梦境可以陪你逐层读懂这些反复出现的象征。" },
   ],
   cta: {
-    titleZh: "把这个梦，交给灵犀读一读", titleEn: "Let Lingxi read this dream with you",
+    titleZh: "把这个梦，交给灵犀场读一读", titleEn: "Let Lingxi read this dream with you",
     descZh: "记录你的梦，灵犀场会以象征的视角温柔解读，陪你看见那段等待被完成的能量。", descEn: "Record your dream, and Lingxi Field will read it gently through symbol — helping you see the current waiting to be completed.",
     href: "/dream", btnZh: "进入探索梦境", btnEn: "Open Dream Exploration",
   },

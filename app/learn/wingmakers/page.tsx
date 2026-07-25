@@ -4,15 +4,15 @@ import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 
 export const metadata = {
-  title: "主权与完整：灵犀修炼体系的思路",
+  title: "主权与完整：灵犀场修炼体系的思路",
   description:
-    "灵犀的四项修炼技术，围绕两个朴素的概念展开：主权——为自己的状态负责；完整——把碎片化的自我，重新接回同一条线上。An introduction to the thinking behind Lingxi's practices.",
+    "灵犀场的四项修炼技术，围绕两个朴素的概念展开：主权——为自己的状态负责；完整——把碎片化的自我，重新接回同一条线上。An introduction to the thinking behind Lingxi's practices.",
   alternates: { canonical: "/learn/wingmakers" },
 };
 
 const faq = [
   {
-    q: "「主权」在灵犀的语境里，具体指什么？",
+    q: "「主权」在灵犀场的语境里，具体指什么？",
     a: "主权，指的是你为自己的情绪、念头与选择，负起第一责任——不是谁都得听你的，而是你不再把自己的状态，交给外界随意摆布。这是一种向内的立场，不是向外的支配。",
   },
   {
@@ -20,7 +20,7 @@ const faq = [
     a: "完整，指的是把平时分散在各个角色、各种情绪里的自己，重新看作同一个人。工作里的你、家里的你、深夜emo的你，其实都是同一条线上的点——修炼练的，就是让这条线，重新被看见。",
   },
   {
-    q: "为什么灵犀反复强调呼吸和心？",
+    q: "为什么灵犀场反复强调呼吸和心？",
     a: "因为呼吸和心跳，是少数几件从出生起就没停过、又能被意志直接触及的身体活动。它们不是终点，只是最容易上手的两个入口，用来练习「回到此刻」这件事。",
   },
 ];
@@ -28,7 +28,7 @@ const faq = [
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "主权与完整：灵犀修炼体系的思路",
+  headline: "主权与完整：灵犀场修炼体系的思路",
   inLanguage: "zh-CN",
   about: "Personal sovereignty and wholeness",
   publisher: { "@type": "Organization", name: "灵犀场 LingxiField" },
@@ -50,13 +50,13 @@ export default function SovereigntyWholenessArticle() {
           <div className="bg-reading-glass px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">思路 · The Thinking</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
-            <Bi zh="主权与完整：灵犀修炼体系的思路" en="Sovereignty & Wholeness: The Thinking Behind Lingxi's Practices" />
+            <Bi zh="主权与完整：灵犀场修炼体系的思路" en="Sovereignty & Wholeness: The Thinking Behind Lingxi's Practices" />
           </h1>
 
           <div className="mt-8 rounded-sm border border-lattice/20 bg-lattice/5 p-6">
             <p className="text-lg leading-9 text-bone">
               <Bi
-                zh="灵犀的四项修炼技术，说到底围绕两个朴素的概念展开：主权，是为自己的状态负起第一责任；完整，是把平日里分散在各个角色、各种情绪里的自己，重新接回同一条线上。这两件事说起来简单，做起来却需要练习——这正是四项技术存在的原因。"
+                zh="灵犀场的四项修炼技术，说到底围绕两个朴素的概念展开：主权，是为自己的状态负起第一责任；完整，是把平日里分散在各个角色、各种情绪里的自己，重新接回同一条线上。这两件事说起来简单，做起来却需要练习——这正是四项技术存在的原因。"
                 en="Lingxi's four practices ultimately revolve around two plain ideas: sovereignty — taking first responsibility for your own state; and wholeness — reconnecting the self scattered across different roles and emotions back onto one line. Simple to say, but they take practice — which is exactly why these four techniques exist."
               />
             </p>
@@ -80,7 +80,7 @@ export default function SovereigntyWholenessArticle() {
             <h2 className="font-display text-2xl font-light text-bone"><Bi zh="为什么从呼吸和心开始" en="Why start with breath and heart" /></h2>
             <p>
               <Bi
-                zh="呼吸和心跳，是少数几件从你出生那一刻起就没有停过、又能被意志直接触及的身体活动。练习从这里开始，不是因为它们神秘，而是因为它们随身携带、随时可用——不需要任何特殊场地或器材，这也是为什么灵犀的四项技术，都从呼吸或心的感受入手。"
+                zh="呼吸和心跳，是少数几件从你出生那一刻起就没有停过、又能被意志直接触及的身体活动。练习从这里开始，不是因为它们神秘，而是因为它们随身携带、随时可用——不需要任何特殊场地或器材，这也是为什么灵犀场的四项技术，都从呼吸或心的感受入手。"
                 en="Breath and heartbeat are among the few bodily rhythms that have never once stopped since your birth, and that your will can still directly reach into. Practice begins here not because they're mysterious, but because they're always with you, always available — no special setting or equipment required. That's why all four of Lingxi's techniques begin with the breath or the felt sense of the heart."
               />
             </p>

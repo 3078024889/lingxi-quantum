@@ -103,12 +103,12 @@ export default function TarotReadingFlow() {
             <Bi zh="灵犀量子塔罗" en="Lingxi Quantum Tarot" />
           </p>
           <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-            <Bi zh="一次与自己深层意识的连接" en="A connection with your own deeper consciousness" />
+            <Bi zh="三张生命镜像牌，正在等待与你相遇" en="Three life mirror cards are waiting to meet you" />
           </h1>
           <p className="mt-4 text-base leading-8 text-bone-dim">
             <Bi
-              zh={<>每个人都拥有独特的生命频率。当你进入灵犀场，场域将根据你的命盘数据，自动展开三张生命镜像牌：<br />看见过去留下的模式<br />理解现在正在发生的共振<br />探索未来可能展开的方向</>}
-              en={<>Every person carries a unique life frequency. When you enter Lingxi Field, it unfolds your own three-card life mirror based on your chart data:<br />See the patterns left behind by the past<br />Understand the resonance happening now<br />Explore where the future may unfold</>}
+              zh={<>你抽取的，不是随机答案，而是一面来自内在的镜子。进入灵犀场，三张生命镜像牌将根据你的命盘数据展开：<br />🌙 看见过去留下的意识痕迹<br />☀️ 理解此刻正在发生的生命共振<br />⭐ 探索未来正在形成的可能方向<br />三张牌不是告诉你命运是什么，而是帮助你看见：你正在经历什么，为什么会经历，以及下一步可以如何选择。</>}
+              en={<>What you draw is not a random answer — it's a mirror from within. Entering Lingxi Field, three life mirror cards unfold from your chart data:<br />🌙 See the traces your past has left in consciousness<br />☀️ Understand the resonance happening right now<br />⭐ Explore the possibilities your future is forming<br />These cards don't tell you what fate is. They help you see what you're going through, why, and what you can choose next.</>}
             />
           </p>
         </div>
@@ -219,8 +219,8 @@ export default function TarotReadingFlow() {
       <div className="mt-8 rounded-sm border border-amber/25 bg-amber/5 p-6 text-center">
         <p className="text-sm leading-7 text-bone-dim">
           <Bi
-            zh="这三张牌摆在一起，讲的是同一件事的三个侧面。具体是什么，需要场域交叉引用你的完整命盘，才能讲清楚。"
-            en="These three cards together tell three sides of the same story. Understanding exactly what takes the field cross-referencing your full chart."
+            zh="三张牌展示的是生命结构的三个切面，但真正隐藏的信息，存在于它们之间的关系。场域将结合你的完整生命图谱，解析：为什么这三张牌会同时出现，它们与你的人生阶段如何对应，以及正在等待你觉察的生命主题。"
+            en="The three cards show three facets of your life structure — but what they truly reveal lives in the relationship between them. The field, cross-referencing your full chart, unfolds: why these three cards appeared together, how they map to the stage you're in, and the theme waiting to be noticed."
           />
         </p>
         <button

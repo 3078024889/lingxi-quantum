@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "从量子息法开始", titleEn: "Begin with quantum breathing",
-    descZh: "灵犀的量子息法练习，是最适合新手的入门冥想。", descEn: "Lingxi's quantum breathing is an ideal entry meditation for beginners.",
+    descZh: "灵犀场的量子息法练习，是最适合新手的入门冥想。", descEn: "Lingxi's quantum breathing is an ideal entry meditation for beginners.",
     href: "/practice/breath", btnZh: "进入量子息法", btnEn: "Open quantum breathing",
   },
   related: [

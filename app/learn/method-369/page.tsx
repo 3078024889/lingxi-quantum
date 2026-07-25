@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "把 369 变成每日对齐", titleEn: "Turn 369 into daily alignment",
-    descZh: "灵犀的现实回路，帮你每天进入状态、写入潜意识，并收到来自场的回响。", descEn: "Lingxi's Reality Loop helps you enter the state daily, imprint it, and receive a reflection from the field.",
+    descZh: "灵犀场的现实回路，帮你每天进入状态、写入潜意识，并收到来自场的回响。", descEn: "Lingxi's Reality Loop helps you enter the state daily, imprint it, and receive a reflection from the field.",
     href: "/live-as", btnZh: "进入现实回路", btnEn: "Open the Reality Loop",
   },
   related: [

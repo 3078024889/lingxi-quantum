@@ -33,12 +33,12 @@ const data: ArticleData = {
   faq: [
     { q: "《潜意识的力量》主要讲什么？", a: "约瑟夫·墨菲的核心观点是：潜意识不会分辨对错，会忠实接受你反复输入的信念并将其变成现实。因此，持续地用现在时、带着情绪去输入笃定、健康、丰盛的信念，就能逐步改变你的体验与人生。" },
     { q: "墨菲的潜意识方法怎么做？", a: "用现在时的肯定句（如「我是健康丰盛的」）、带着真实的情绪与相信去反复默念，尤其在睡前与刚醒来这两个潜意识最开放的时刻；然后放松地把愿望交给潜意识，不焦虑地监控结果。" },
-    { q: "墨菲的方法和显化是一回事吗？", a: "高度相通。现代显化练习很多都源自墨菲这类潜意识理论——核心都是「先在内在持有那个状态，让潜意识把它变成现实」。灵犀的显化签到与睡前练习，正是这一理念的日常落地。" },
+    { q: "墨菲的方法和显化是一回事吗？", a: "高度相通。现代显化练习很多都源自墨菲这类潜意识理论——核心都是「先在内在持有那个状态，让潜意识把它变成现实」。灵犀场的显化签到与睡前练习，正是这一理念的日常落地。" },
   ],
   note: "说明：本文以通俗语言转述约瑟夫·墨菲《潜意识的力量》的核心方法，便于学习理解，并非原书内容的摘录或翻译。若想深入，建议阅读正版原书。",
   cta: {
     titleZh: "把信念写入潜意识", titleEn: "Imprint belief into your subconscious",
-    descZh: "灵犀的显化签到，陪你每天用现在时、带着感受输入新的信念，尤其适合睡前练习。", descEn: "Lingxi's daily check-in helps you feed new beliefs in present tense, with feeling — ideal for a bedtime practice.",
+    descZh: "灵犀场的显化签到，陪你每天用现在时、带着感受输入新的信念，尤其适合睡前练习。", descEn: "Lingxi's daily check-in helps you feed new beliefs in present tense, with feeling — ideal for a bedtime practice.",
     href: "/live-as", btnZh: "进入显化签到", btnEn: "Open the check-in",
   },
   related: [

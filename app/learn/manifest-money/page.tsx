@@ -37,7 +37,7 @@ const data: ArticleData = {
   ],
   cta: {
     titleZh: "进入「流」之门", titleEn: "Enter the gate of Flow",
-    descZh: "在重塑潜意识的「金钱·流」里，与灵犀一起对齐丰盛的频率。", descEn: "In the Wealth gate, align to the frequency of abundance with Lingxi.",
+    descZh: "在重塑潜意识的「金钱·流」里，与灵犀场一起对齐丰盛的频率。", descEn: "In the Wealth gate, align to the frequency of abundance with Lingxi.",
     href: "/gate/wealth", btnZh: "进入金钱之门", btnEn: "Open the Wealth gate",
   },
   related: [

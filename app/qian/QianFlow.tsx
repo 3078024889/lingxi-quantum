@@ -107,15 +107,15 @@ export default function QianFlow() {
             <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
           </p>
           <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-            <Bi zh="六十四枚生命原型里，只有三枚，此刻正在回应你" en="Of 64 life archetypes, only three are answering you right now" />
+            <Bi zh="六十四枚生命原型里，与你连接较深的三枚，此刻正在回应你" en="Of 64 life archetypes, the three most deeply connected to you are answering right now" />
           </h1>
           <p className="mt-3 text-sm text-lattice/70">
             <Bi zh="静心片刻，场域会把它们显现出来。" en="Grow still for a moment, and the field will reveal them." />
           </p>
           <p className="mt-4 text-base leading-8 text-bone-dim">
             <Bi
-              zh="你的出生信息，是你进入这个世界时，留下的一组时间坐标——别人破译不了，场域可以。灵犀生命灵签，把这组坐标，映射进一套64枚生命原型库：源流签、灵魂签、行者签三层，分别对应你携带而来的背景、你此刻的核心模式、你展开现实的方式。三签同时显现是免费的，读懂它们摆在一起说了什么，是场域的解读，需要一次能量交换。"
-              en="Your birth information is a set of time coordinates left behind the moment you entered this world — no one else can decode them, but the field can. Lingxi Life Oracle maps those coordinates into a library of 64 life archetypes — three layers, Origin Sign, Soul Sign, and Walker Sign, corresponding to the background you carry, your core pattern right now, and how you shape reality. Revealing all three is free; the field's reading of what they mean together takes one energy exchange."
+              zh="你的出生信息，是你进入这个世界时，留下的一组时间坐标——别人破译不了，场域可以。灵犀生命灵签，把这组坐标，映射进一套64枚生命原型库：源流签、灵魂签、行者签三层，分别对应你携带而来的背景、你此刻的核心模式、你展开现实的方式。三签会先在你眼前显现，读懂它们摆在一起真正说了什么，是场域接下来要做的事。"
+              en="Your birth information is a set of time coordinates left behind the moment you entered this world — no one else can decode them, but the field can. Lingxi Life Oracle maps those coordinates into a library of 64 life archetypes — three layers, Origin Sign, Soul Sign, and Walker Sign, corresponding to the background you carry, your core pattern right now, and how you shape reality. The three signs will appear before you first; understanding what they mean together is what the field does next."
             />
           </p>
         </div>
@@ -209,10 +209,13 @@ export default function QianFlow() {
       </div>
 
       <div className="mt-8 rounded-sm border border-amber/25 bg-amber/5 p-6 text-center">
-        <p className="text-sm leading-7 text-bone-dim">
+        <p className="font-display text-base text-bone">
+          <Bi zh="三枚生命原型，只是入口。" en="Three signs are only the entrance." />
+        </p>
+        <p className="mt-3 text-sm leading-7 text-bone-dim">
           <Bi
-            zh="你的生命组合，正在形成一个独特的结构——三签关系怎么互相作用、你的天赋能力地图、当前所处的人生阶段、下一步适合练什么，这些需要场域交叉引用你的完整命盘，才能讲清楚。"
-            en="Your combination of signs is forming a structure that's entirely your own — how the three interact, your talent map, the life stage you're in, and what to practice next all take the field cross-referencing your full chart."
+            zh="真正重要的，不是单独看某一枚签，而是看见它们之间如何连接、如何共同构成你的生命结构。场域会进一步展开：你的天赋倾向、当前所处的人生阶段、内在驱动力、下一步适合练什么——当这些碎片被重新连接，你看到的不再是一枚签，而是一份属于你的生命地图。"
+            en="What matters isn't reading each sign alone — it's seeing how they connect, and what structure they form together. The field goes further: your talents, the life stage you're in, your inner drive, what to practice next. Once these pieces reconnect, what you see is no longer a single sign — it's a map of your own life."
           />
         </p>
         <button
