@@ -10,6 +10,27 @@ import QianCosmicRing from "@/components/QianCosmicRing";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const QIAN_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀生命灵签的64枚原型是随机摇出来的吗？", qEn: "Are the 64 archetypes in Lingxi Life Oracle drawn at random?",
+    aZh: "不是。三重生命签由你的真实命盘四柱（年柱、日柱、时柱）确定性映射到64枚生命原型库——源流签对应年柱（24枚池）、灵魂签对应日柱（24枚池）、行者签对应时柱（16枚池），同一个人的同一份出生数据，任何时候重新计算，摇出的三枚签都完全一致，不是随机摇签。",
+    aEn: "No. Your three life signs are deterministically mapped from your real chart's Four Pillars (Year, Day, and Hour) into a library of 64 life archetypes — the Origin Sign from the Year Pillar (a pool of 24), the Soul Sign from the Day Pillar (a pool of 24), and the Walker Sign from the Hour Pillar (a pool of 16). Recompute the same birth data at any time, and all three signs come out identical — it isn't a random draw.",
+  },
+  {
+    qZh: "生命灵签和抽签算命有什么不同？", qEn: "How is Lingxi Life Oracle different from traditional divination?",
+    aZh: "传统抽签通常是随机的、当场给出吉凶断语；生命灵签是先用真实的出生日期时间确定性算出三重原型，再由场域交叉解读这三重原型之间的关系，得到一份12章节的生命原型档案，不预测具体吉凶祸福，是一份自我理解的参考。",
+    aEn: "Traditional divination is usually random and gives an on-the-spot fortune verdict. Lingxi Life Oracle instead computes three archetype layers deterministically from your real birth date and time, then the field interprets how these three layers relate to each other across a 12-section life archetype record — it doesn't predict specific fortune or misfortune, and functions as a reference for self-understanding.",
+  },
+  {
+    qZh: "生命灵签的完整解读包含什么内容？", qEn: "What's included in the full Life Oracle reading?",
+    aZh: "包括生命三原型总览、源流签深度解析、灵魂签深度解析、行者签深度解析、三签融合分析、财富创造系统、关系模式分析、事业使命地图、当前人生阶段、隐藏天赋、灵犀场成长路径、生命宣言，共12个章节，支持下载PDF永久保存。",
+    aEn: "It covers an overview of your three archetypes, deep dives into the Origin, Soul, and Walker signs individually, a fusion analysis of all three, a wealth creation system, relationship pattern analysis, a career and mission map, your current life stage, hidden talents, a Lingxi Field growth path, and a personal life declaration — 12 sections in total, downloadable as a PDF to keep.",
+  },
+];
+
+
 
 type Stage = "form" | "gathering" | "shaking" | "revealed";
 
@@ -158,6 +179,7 @@ export default function QianFlow() {
         >
           <Bi zh="静心，读取生命签" en="Be Still, and Reveal" />
         </button>
+        <FaqSection items={QIAN_FAQ} />
         </div>
       </div>
     );

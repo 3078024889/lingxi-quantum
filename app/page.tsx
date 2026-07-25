@@ -10,6 +10,27 @@ import Footer from "@/components/Footer";
 import FarewellBanner from "@/components/FarewellBanner";
 import { gates } from "@/lib/gates";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const HOME_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场（Lingxi Field）是什么？", qEn: "What is Lingxi Field?",
+    aZh: "灵犀场是一款数字化自我探索平台，提供个性化生命结构分析、象征体系探索、创意叙事内容及数字报告服务。所有内容基于真实的天文历法数据确定性计算生成，用于个人探索与反思，不构成医疗、金融、法律等专业建议。",
+    aEn: "Lingxi Field is a digital self-exploration platform offering personalized life-structure analysis, symbolic exploration, creative narrative content, and digital reports. All content is generated from deterministic calculations based on real astronomical and calendrical data, intended for personal exploration and reflection — it does not constitute medical, financial, legal, or other professional advice.",
+  },
+  {
+    qZh: "灵犀场提供哪些产品？", qEn: "What products does Lingxi Field offer?",
+    aZh: "场域精测（生命图谱、关系共振、生命灵签、量子塔罗、生命韧性指数、桃花磁场指数、今日运势）、梦境智能、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、潜意识重塑、多维叙事。",
+    aEn: "Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, Life Resilience Index, Romance Magnetism Index, Daily Resonance), Dream Intelligence, the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Subconscious Rewriting, and Dimensional Narrative.",
+  },
+  {
+    qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",
+    aZh: "不是。灵犀场的内容基于确定性的天文历法计算生成，目的是帮助用户从不同角度理解自己，不预测具体会发生什么事，也不提供医疗、心理、法律、财务方面的专业建议。",
+    aEn: "No. Content on Lingxi Field is generated from deterministic astronomical and calendrical calculations, intended to help users understand themselves from different angles. It does not predict specific future events and does not provide medical, psychological, legal, or financial advice.",
+  },
+];
+
+
 
 export default function Home() {
   return (
@@ -125,6 +146,9 @@ export default function Home() {
             <Link href="/live-as" className="mt-12 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"><Bi zh="进入我的现实回路" en="Enter my Reality Loop" /></Link>
           </div>
         </section>
+      <div className="mx-auto max-w-2xl px-6 pb-24">
+        <FaqSection items={HOME_FAQ} />
+      </div>
       </main>
       <Footer />
     </>

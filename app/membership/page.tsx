@@ -10,6 +10,27 @@ import {
 } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场的付费产品分几种？", qEn: "How many types of paid products does Lingxi Field have?",
+    aZh: "分两类：一次性解锁类（生命图谱、关系共振、生命灵签、量子塔罗、四大修炼技术），付费后永久有效；订阅制产品（显化与梦境解读、多维叙事年度解锁、灵犀场全构造解锁），按周期计费，到期后可自行选择是否续费，不会自动扣款。",
+    aEn: "There are two kinds: one-time unlocks (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, and the Four Practices), which remain permanently accessible once purchased; and subscription products (Manifestation & Dream Interpretation, the yearly Narrative unlock, and Everything Unlocked), which are billed for a fixed period and require you to actively choose to renew — there's no auto-charging.",
+  },
+  {
+    qZh: "灵犀场·全构造解锁包含什么？", qEn: "What does Lingxi Field's Everything Unlocked tier include?",
+    aZh: "包含全站所有能量交换项目：四大修炼技术、显化与梦境解读、多维叙事系统、场域精测（生命图谱、关系共振、生命灵签、量子塔罗）不限次数深度解析，以及后续新增的全部场域内容，按年计费。",
+    aEn: "It includes every energy exchange on the site: the Four Practices, Manifestation & Dream Interpretation, the Dimensional Narrative system, unlimited deep readings across Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot), and all field modules added later — billed annually.",
+  },
+  {
+    qZh: "灵犀场支持哪些支付方式？", qEn: "What payment methods does Lingxi Field support?",
+    aZh: "目前支持微信扫码支付，海外支付渠道正在接入中。",
+    aEn: "Currently WeChat Pay is supported. International payment options are being added.",
+  },
+];
+
+
 
 export const metadata = { title: "能量交换 | 灵犀场 · Energy Exchange | Lingxi", description: "能量交换：进入灵犀场的四大修炼技术、显化与梦境解读、多维叙事，或一次性开启全构造。完成后场域自动开启。Enter Lingxi Field's practices, manifestation module, narratives, or unlock everything at once.", alternates: { canonical: "/membership" } };
 
@@ -341,6 +362,10 @@ export default async function MembershipPage({
           </p>
         </section>
         )}
+
+        <div className="mx-auto max-w-2xl px-6 pb-24">
+          <FaqSection items={MEMBERSHIP_FAQ} />
+        </div>
       </main>
       <Footer />
     </>

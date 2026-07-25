@@ -7,6 +7,32 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const RELATIONSHIP_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "关系共振图谱是怎么计算两个人的关系的？", qEn: "How does the Relationship Resonance Map compute the connection between two people?",
+    aZh: "灵犀场分别为两个人计算出完整的十项生命向量（融合西方占星、中式八字、紫微斗数、玛雅Tzolkin、吠陀占星这五套系统），再把两份向量交叉对照，找出哪几项数值几乎重合（天然共鸣）、哪几项恰好互补对齐（天然分工）、哪几项同时冲得很高却没有另一端接住（真实的摩擦点）。全部基于确定性计算，不是笼统的星座配对说法。",
+    aEn: "Lingxi Field computes a full set of ten life-vector dimensions for each person (drawing on Western astrology, Chinese Bazi, Ziwei Doushu, the Maya Tzolkin, and Vedic astrology), then cross-references the two sets to find where they align almost precisely (natural resonance), where they land on complementary ends of the same axis (natural division of roles), and where both run hot on the same drive with nothing to balance it (a real friction point). It's all based on deterministic computation, not generic sign-matching.",
+  },
+  {
+    qZh: "关系共振图谱只能测情侣吗？", qEn: "Is the Relationship Resonance Map only for romantic couples?",
+    aZh: "不是，可以测任何两人关系——亲密关系、合伙/商业关系，或者朋友、家人、导师这类其他关系，网站上有三种入口分别对应，测算逻辑一样，解读的角度会针对不同关系类型调整。",
+    aEn: "No — it can be used for any pairing: romantic relationships, business partnerships, or other connections like friends, family, or mentors. The site has three entry types for these, using the same underlying calculation but with the interpretation angled to fit each relationship type.",
+  },
+  {
+    qZh: "买一次能测几对关系？", qEn: "How many pairs can I test with one purchase?",
+    aZh: "一次能量交换后永久解锁，之后可以用不同的两个人反复测算，不需要为每一对关系重新付费。",
+    aEn: "One exchange unlocks the feature permanently — afterward you can test as many different pairs as you like, with no repeat payment required for each new pair.",
+  },
+  {
+    qZh: "关系共振图谱会说两个人合不合适吗？", qEn: "Does the Relationship Resonance Map tell you whether two people are compatible?",
+    aZh: "不会给「合适/不合适」这种简单结论，而是展示两个人各自的生命结构在哪里天然共鸣、哪里互补、哪里容易产生摩擦，帮助理解这段关系正在发生什么，具体怎么处理由用户自己判断。",
+    aEn: "It doesn't give a simple 'compatible or not' verdict. Instead, it shows where the two people's life structures naturally resonate, where they complement each other, and where friction is likely — helping you understand what's happening in the relationship, while what to do about it remains your own call.",
+  },
+];
+
+
 
 type Person = { name: string; year: string; month: string; day: string; hour: string; minute: string; hasTime: boolean };
 const emptyPerson: Person = { name: "", year: "", month: "", day: "", hour: "12", minute: "0", hasTime: false };
@@ -226,10 +252,11 @@ export default function RelationshipFlow() {
         />
       )}
       <div className="bg-void-deep mt-3 rounded-sm p-3 text-center">
-        <p className="text-xs text-bone-dim/90">
+        <p className="text-sm text-bone-dim/90">
           <Bi zh="一次交换，永久解锁——之后可以用不同的两个人再测，不用重复付费。" en="One exchange, unlocked forever — test as many pairs as you like afterward, no repeat payment." />
         </p>
       </div>
+      <FaqSection items={RELATIONSHIP_FAQ} />
     </div>
   );
 }

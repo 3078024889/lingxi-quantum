@@ -10,6 +10,37 @@ import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { lifemapTypeImage } from "@/lib/lifemap-type-images";
 import WechatPayModal from "@/components/WechatPayModal";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const LIFEMAP_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场生命图谱是怎么算出来的？", qEn: "How is the Lingxi Field Life Map calculated?",
+    aZh: "生命图谱融合五套真实系统：西方占星（七大行星在黄道上的精确位置）、中式八字（你的出生年月日时对应的四柱干支）、紫微斗数（命宫身宫与十二宫主星）、玛雅Tzolkin圣历（你的图腾与数字）、吠陀占星。所有数据都来自真实的天文历法计算，不是随机生成或者人工编写的，同一份出生信息，任何时候重新计算，结果都完全一致。",
+    aEn: "The Life Map combines five real systems: Western astrology (the exact positions of seven planets on the ecliptic), Chinese Bazi (your Four Pillars from birth date and time), Ziwei Doushu (Soul and Body Palace with their ruling stars), the Maya Tzolkin calendar (your day sign and tone), and Vedic astrology. All data comes from real astronomical and calendrical computation, not randomly generated or manually written text — recomputing the same birth data at any time produces identical results.",
+  },
+  {
+    qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",
+    aZh: "不是。灵犀场提供的是自我探索与反思类的数字内容，基于确定性的天文历法计算生成个性化解读，目的是帮助用户从不同角度理解自己，不预测具体会发生什么事、不提供医疗心理法律财务建议，也不宣称能改变命运。",
+    aEn: "No. Lingxi Field provides digital content for self-exploration and reflection, generating personalized readings from deterministic astronomical and calendrical calculations. The goal is to help users understand themselves from different angles — it does not predict specific future events, does not provide medical, psychological, legal, or financial advice, and does not claim to change anyone's fate.",
+  },
+  {
+    qZh: "生命图谱需要提供哪些信息？", qEn: "What information does the Life Map need?",
+    aZh: "需要出生日期是必填的，出生时间和出生地点是选填项——填写得越完整，涉及需要精确时间的部分（比如命宫身宫、宫位）就能算得越准确，不填出生时间也可以生成报告，只是这部分内容会用默认时间近似计算。",
+    aEn: "Your birth date is required; birth time and birth place are optional. The more complete the information, the more accurate the parts that depend on precise timing (such as the Soul Palace and house positions) will be. You can still generate a report without a birth time — those specific sections will use an approximated default time.",
+  },
+  {
+    qZh: "免费部分和付费完整报告有什么区别？", qEn: "What's the difference between the free preview and the full paid report?",
+    aZh: "免费部分展示命盘最外层的骨架——七大行星的星座位置、四柱的干支、玛雅印记的名称。付费完整报告会展开更深的层次：行星之间的角度关系、八字的十神纳音地势藏干胎元命宫身宫、紫微命宫身宫的主星组合详解、财富与事业频率地图、关系共振地图、大运走势、人生周期导航等13个章节，并支持下载PDF永久保存。",
+    aEn: "The free preview shows the outer frame of your chart — sign placements for the seven planets, the characters of your Four Pillars, and the name of your Maya sign. The full paid report unfolds deeper layers: the angles between planets, the Ten Gods/Na Yin/growth stages/hidden stems/Fetal Origin/Palaces within your Bazi, a detailed breakdown of your Ziwei star combinations, a wealth and career map, a relationship resonance map, major luck cycles, life cycle navigation, and more across 13 sections — downloadable as a PDF to keep permanently.",
+  },
+  {
+    qZh: "生命图谱可以下载PDF吗？", qEn: "Can I download the Life Map as a PDF?",
+    aZh: "可以，购买完整报告后，可以在结果页面下载为PDF文件，永久保存，随时可以重新打开查看，不需要每次都重新登录网站。",
+    aEn: "Yes. After purchasing the full report, you can download it as a PDF from the results page, keep it permanently, and reopen it anytime without needing to log back into the site.",
+  },
+];
+
+
 import { getProduct } from "@/lib/plans";
 
 type Stage = "landing" | "form" | "loading" | "report";
@@ -598,6 +629,9 @@ export default function LifeMapFlow() {
             </p>
             </div>
             <LifeMapCompass />
+          </div>
+          <div className="mx-auto mt-16 max-w-2xl px-6">
+            <FaqSection items={LIFEMAP_FAQ} />
           </div>
         </section>
       )}

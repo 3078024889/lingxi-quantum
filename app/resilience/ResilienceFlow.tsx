@@ -5,6 +5,27 @@ import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import WhyTrustLingxi from "@/components/WhyTrustLingxi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const RESILIENCE_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "生命韧性指数的五项分数是怎么算出来的？", qEn: "How are the five Life Resilience scores calculated?",
+    aZh: "从真实天文数据（当下行星在黄道上的精确位置）和真实历法数据（你的四柱八字）里，算出压力恢复、变化适应、危机反弹、长期坚持、精神稳定五项确定性分数。全部基于确定性计算，同一份出生数据任何时候重算结果都一致，不是临场编的。",
+    aEn: "The five scores — stress recovery, adaptability, crisis rebound, persistence, and emotional stability — are computed from real astronomical data (the planets' exact positions right now) and real calendrical data (your Bazi pillars). It's all deterministic; recomputing the same birth data at any time produces identical results, not something improvised on the spot.",
+  },
+  {
+    qZh: "生命韧性指数测试需要付费吗？", qEn: "Does the Life Resilience Index test cost anything?",
+    aZh: "不需要，即时呈现，不需要登录，也不需要付费。",
+    aEn: "No — it's shown to you right away, with no sign-in and no payment required.",
+  },
+  {
+    qZh: "韧性分数低是不是代表这个人不坚强？", qEn: "Does a low resilience score mean someone isn't strong?",
+    aZh: "不是。五项分数反映的是「这个人的系统具体靠哪种方式来应对压力和变化」，不是笼统的「坚强/不坚强」评价——每个人的韧性类型不同，分数较低的那一项，往往只是提醒这部分需要更多主动的支持，不是缺陷。",
+    aEn: "No. The five scores describe the specific way a person's system tends to handle pressure and change — not a blanket judgment of 'strong' versus 'not strong.' Everyone's resilience profile is different, and a lower score in one dimension usually just points to where more active support helps, not a flaw.",
+  },
+];
+
+
 
 type Result = {
   score: number;
@@ -260,6 +281,7 @@ export default function ResilienceFlow() {
       >
         {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="测出我的生命韧性指数" en="Get My Resilience Index" />}
       </button>
+      <FaqSection items={RESILIENCE_FAQ} />
     </div>
   );
 }

@@ -1,6 +1,22 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const NARRATIVE_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场的多维叙事是什么？", qEn: "What is Lingxi Field's Dimensional Narrative?",
+    aZh: "多维叙事是灵犀场原创的创意叙事内容，包含长篇意识传输、现实重写记录、场域叙事、场域观测日志，持续更新，属于虚构创作类内容，用于阅读体验，不是事实陈述或者预言。",
+    aEn: "Dimensional Narrative is Lingxi Field's original creative content — long-form consciousness transmissions, reality-rewrite records, field narratives, and field observation logs, updated continuously. It's fictional creative writing meant for the reading experience, not a factual statement or a prediction.",
+  },
+  {
+    qZh: "多维叙事怎么收费？", qEn: "How is Dimensional Narrative priced?",
+    aZh: "单篇作品可以单独购买，一次能量交换后终身可读；也可以选择「多维叙事·年度解锁」，一年内解锁全部篇目，包含期间新增的全部内容。",
+    aEn: "Individual pieces can be purchased separately — one energy exchange unlocks a piece for life. Alternatively, the yearly Dimensional Narrative unlock gives access to every piece for a year, including everything added during that period.",
+  },
+];
+
+
 import CategoryGrid from "./CategoryGrid";
 
 export const metadata = {
@@ -35,6 +51,9 @@ export default function NarrativePage() {
         <section className="px-6 pb-28">
           <div className="mx-auto max-w-5xl">
             <CategoryGrid />
+          </div>
+          <div className="mx-auto mt-16 max-w-2xl">
+            <FaqSection items={NARRATIVE_FAQ} />
           </div>
         </section>
       </main>

@@ -6,6 +6,22 @@ import DreamConsole from "./DreamConsole";
 import { getAccess } from "@/lib/access";
 import Link from "next/link";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const DREAM_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场怎么解析梦境？", qEn: "How does Lingxi Field interpret dreams?",
+    aZh: "记录下梦境内容后，场域会从象征与心理的视角温柔解读，结合你近期的状态与反复出现的线索，帮助理解梦境可能在传递的信息，不是逐字对照「周公解梦」式的固定词典解释。",
+    aEn: "After you record a dream, the field interprets it through a symbolic and psychological lens, drawing on your recent state and any recurring threads, to help you understand what the dream might be communicating — not a word-for-word lookup in a fixed dream dictionary.",
+  },
+  {
+    qZh: "梦境解析需要付费吗？", qEn: "Does dream interpretation require payment?",
+    aZh: "梦境解析属于「显化与梦境解读」订阅模块，需要订阅后才能使用，订阅后梦境记录会在云端安全同步，可以随时回看反复出现的象征与线索。",
+    aEn: "Dream interpretation belongs to the Manifestation & Dream Interpretation subscription module, and requires an active subscription. Once subscribed, your dream records sync securely to the cloud so you can revisit recurring symbols and threads anytime.",
+  },
+];
+
+
 
 export const metadata = { title: "梦境解析 · 显化与梦境 | 灵犀 · Dream Interpretation | Lingxi", description: "记录并解析你的梦境，由灵犀场以象征与心理的视角温柔解读反复出现的象征与线索。Record and interpret your dreams with Lingxi Field.", alternates: { canonical: "/dream" } };
 
@@ -61,6 +77,10 @@ export default async function DreamPage() {
             )}
           </div>
         </section>
+
+        <div className="mx-auto max-w-2xl px-6 pb-24">
+          <FaqSection items={DREAM_FAQ} />
+        </div>
       </main>
       <Footer />
     </>

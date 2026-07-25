@@ -5,6 +5,27 @@ import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import WhyTrustLingxi from "@/components/WhyTrustLingxi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const ROMANCE_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "桃花磁场分数是怎么算出来的？", qEn: "How is the Romance Magnetism score calculated?",
+    aZh: "从真实出生数据里算出金星位置、命盘里跟人际吸引力相关的维度，再核对传统命理里「命带桃花」这条规则（日柱地支是否落在特定地支上）。全部基于确定性计算，同一份出生数据任何时候重算结果都一致，不是临场编的。",
+    aEn: "It's computed from your real birth data — the position of Venus and the attraction-related dimensions in your chart — cross-checked against the classical 'Peach Blossom' rule in Chinese astrology (whether your Day Pillar's branch falls in a specific set). It's all based on deterministic computation; recomputing the same birth data at any time gives the same result, not something improvised on the spot.",
+  },
+  {
+    qZh: "桃花磁场测试要付费吗？", qEn: "Does the Romance Magnetism test cost anything?",
+    aZh: "不需要，即时呈现，不需要登录，也不需要付费。",
+    aEn: "No — it's shown to you right away, with no sign-in and no payment required.",
+  },
+  {
+    qZh: "桃花磁场分数高低代表什么？", qEn: "What does a higher or lower Romance Magnetism score mean?",
+    aZh: "分数高低反映的是「吸引力被外界感知到的容易程度」，不是「谈恋爱能力」或者「人品好坏」的评价——分数偏低不代表没有吸引力，可能是这份吸引力需要更近距离、更长时间才会被感知到。",
+    aEn: "The score reflects how easily your magnetism is noticed by others — it isn't a judgment of your ability to date or your character. A lower score doesn't mean you lack appeal; it may mean your appeal takes closer proximity or more time to be noticed.",
+  },
+];
+
+
 
 type Result = {
   score: number;
@@ -236,6 +257,7 @@ export default function RomanceFlow() {
       >
         {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="测出我的桃花磁场指数" en="Get My Romance Magnetism Index" />}
       </button>
+      <FaqSection items={ROMANCE_FAQ} />
     </div>
   );
 }

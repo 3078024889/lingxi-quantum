@@ -3,6 +3,22 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import GateOrigin from "@/components/gates/GateOrigin";
 import Bi from "@/components/Bi";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+
+const PRACTICE_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场的四大修炼技术是什么？", qEn: "What are Lingxi Field's Four Practices?",
+    aZh: "量子息法（呼吸节律练习，进入身体与意识重新同步的入口）、直觉丹道（开启内在感知与直觉连接）、归零心诀（回到内在中心的位置）、上升心经（从内在觉察走向生命展开）。四项技术围绕呼吸与心的感受入手，各自独立解锁，一次能量交换后永久开启。",
+    aEn: "Quantum Breath (a breathing-rhythm practice, an entrance to re-syncing body and consciousness), The Intuitive Way (opening inner perception and intuitive connection), Heart Reset (returning to your inner center), and Ascending Heart (moving from inner awareness into life unfolding). All four begin from breath or the felt sense of the heart, unlock independently, and remain open forever after one energy exchange.",
+  },
+  {
+    qZh: "修炼技术需要每天练习吗？", qEn: "Do the practices need to be done daily?",
+    aZh: "不强制。每项技术解锁后永久有效，可以按自己的节奏使用，不设打卡或者连续天数的要求。",
+    aEn: "Not required. Once a practice is unlocked, it stays open forever, and you can use it at your own pace — there's no check-in requirement or streak to maintain.",
+  },
+];
+
+
 import PracticeJournal from "./PracticeJournal";
 
 export const metadata = { title: "修炼技术 | 灵犀 · Practices | Lingxi", description: "四项意识修炼技术：量子息法、直觉丹道、归零心诀、上升心经，各自成径，也可合一深入。Four consciousness practices — the Quantum Breath Method, the Intuitive Way, Heart Reset, and the Ascending Heart Sutra — each a complete path on its own.", alternates: { canonical: "/practice" } };
@@ -74,6 +90,7 @@ export default function PracticeIndex() {
             <div className="mt-10">
               <PracticeJournal />
             </div>
+            <FaqSection items={PRACTICE_FAQ} />
           </div>
         </section>
       </main>
