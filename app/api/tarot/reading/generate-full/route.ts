@@ -68,7 +68,7 @@ function buildBatches(hidden: TarotCard, present: TarotCard, future: TarotCard, 
   ];
 }
 
-async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promptContent: string, submissionId: string): Promise<string[] | null> {
+async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promptContent: string, submissionId: string): Promise<{ sections: string[] | null; failReason?: string }> {
   const system = baseVoice + `【这次只负责${batch.titleZh}这一部分，严格按下面的分段格式输出，共${batch.count}段，每段之间用===隔开，不能多也不能少】` + batch.instruction +
     (lang === "en" ? " 用英文回复（Reply in English），但===数字===这些分隔符本身保持原样不要翻译。" : "");
 
@@ -104,7 +104,7 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
     console.error(`[tarot reading generate-full] ${batch.titleZh} 接口返回非200状态:`, res.status, errBody, "submission id:", submissionId);
-    return null;
+    return { sections: null, failReason: `接口返回${res.status}：${errBody.slice(0, 200)}` };
   }
   let data = await res.json();
   let rawText = data?.choices?.[0]?.message?.content?.trim();
@@ -119,17 +119,20 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
       rawText = data?.choices?.[0]?.message?.content?.trim();
       text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
       check = text ? parseAndValidate(text) : { sections: [], valid: false };
+    } else {
+      const errBody = await res.text().catch(() => "");
+      console.error(`[tarot reading generate-full] ${batch.titleZh} 重试请求本身也失败:`, res.status, errBody);
     }
   }
 
   if (!check.valid && check.sections.length === 0) {
     console.error(`[tarot reading generate-full] ${batch.titleZh} 多次重试后仍完全没有可用内容，submission id:`, submissionId, "原始内容:", text);
-    return null;
+    return { sections: null, failReason: text ? "AI返回内容格式无法解析成段落（可能没有按===数字===格式分段）" : "AI没有返回任何内容（可能是max_tokens过低或者接口静默失败）" };
   }
   if (!check.valid) {
     console.error(`[tarot reading generate-full] ${batch.titleZh} 重试后段数/长度仍不完全达标，但采用现有内容。submission id:`, submissionId, "实际段数:", check.sections.length, "预期:", batch.count);
   }
-  return check.sections;
+  return { sections: check.sections };
 }
 
 const PRACTICE_BY_DOMINANT: { zh: string }[] = [
@@ -218,11 +221,14 @@ export async function POST(req: Request) {
     const batches = buildBatches(hidden, present, future, practice);
     const allSections: string[] = [];
     for (const batch of batches) {
-      const sections = await generateBatch(key, lang, batch, promptContent, body.id);
-      if (!sections) {
-        return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 502 });
+      const result = await generateBatch(key, lang, batch, promptContent, body.id);
+      if (!result.sections) {
+        return NextResponse.json(
+          { error: "场域这次的回应不完整，请稍后再试一次。", detail: `${batch.titleZh}：${result.failReason ?? "未知原因"}` },
+          { status: 502 }
+        );
       }
-      allSections.push(...sections);
+      allSections.push(...result.sections);
     }
 
     const text = allSections.map((s, i) => `===${i + 1}===\n${s}`).join("\n\n");

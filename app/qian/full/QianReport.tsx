@@ -73,7 +73,7 @@ export default function QianReport({ id }: { id: string }) {
         const data = await res.json();
         if (!res.ok || !data.fullReport) {
           setStatus("error");
-          setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
+          setError((data.error || t("生成失败，请稍后再试。", "Generation failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
           return;
         }
         setSections(

@@ -1064,31 +1064,98 @@ export default function LifeMapFlow() {
               <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-lm2-text-dim">
+              <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-lm2-text-dim">
                 <Bi
-                  zh="七大行星只给了星座，没给你它们彼此之间的角度关系；四柱只列了干支，没给你藏干、地势、胎元命宫身宫这些更深的骨架；玛雅印记也只给了名字，没给你它在你命盘里真正意味着什么。三套系统、几十个真实数据点，交叉组合出的，是独属于你的一份命盘——完整报告，会把它们，逐一，为你解读。"
-                  en="The planets above only show signs — not the angles between them. The Pillars only show characters — not the hidden stems, growth stages, or the deeper palaces beneath them. The Maya sign only shows a name — not what it actually means in your chart. Three systems, dozens of real data points, cross-combined into something uniquely yours — the full report interprets all of it, one layer at a time."
+                  zh="刚刚展开的，是你的生命结构入口。但一份完整命盘，并不是由几个星座、几个干支、几个象征组成——真正隐藏的信息，存在于星体之间的关系、时间坐标中的深层结构、不同生命系统之间产生的交叉映射。七大行星告诉你星座位置，但更重要的是它们彼此之间形成的角度关系；四柱呈现你的出生结构，但更深处还有藏干、十神、地势、胎元、命宫、身宫等生命信息；玛雅印记不仅是一个名称，它背后的象征频率，需要放入你的整体结构中才能被理解。五套生命系统，数百个数据节点，交叉组合出的，是一份只属于你的生命档案。完整报告，将逐层展开。"
+                  en="What just unfolded is the entrance to your life structure. But a full chart was never made of a few signs, a few characters, a few symbols — what's truly hidden lives in the relationships between the planets, the deeper structure within your time coordinates, and the cross-mapping between different life systems. The seven planets show you sign placements, but what matters more is the angles they form with each other. The Four Pillars show your birth structure, but deeper still are the hidden stems, Ten Gods, growth stages, and the palaces beneath them. The Maya sign is more than a name — its symbolic frequency only makes sense inside your whole structure. Five life systems, hundreds of data points, cross-combined into a record that belongs only to you. The full report unfolds it, layer by layer."
                 />
               </p>
-              <ul className="mx-auto mt-6 max-w-sm space-y-2 text-left text-sm leading-7 text-lm2-text-dim">
-                <li>01 · <Bi zh="逐一解读——七大行星，每一颗，都有单独的一段解读，不是罗列星座名字" en="Planet by planet — each of the seven gets its own reading, not just a sign name" /></li>
-                <li>02 · <Bi zh="八字深层结构——十神、纳音、地势、藏干，逐柱展开，加上胎元命宫身宫的解读" en="Bazi in depth — Ten Gods, Na Yin, growth stages, hidden stems, pillar by pillar, plus the three palaces" /></li>
-                <li>03 · <Bi zh="紫微命盘详解——命宫身宫的主星组合，在你身上具体如何呈现" en="Your Ziwei chart, decoded — what the stars in your Soul and Body Palace mean for you" /></li>
-                <li>04 · <Bi zh="玛雅印记详解——你的图腾与数字，在你命盘里具体意味着什么" en="Your Maya sign, decoded — what your day sign and tone specifically mean in your chart" /></li>
-                <li>05 · <Bi zh="大运走势——未来几个十年周期，各自的主题与转折点" en="Major Luck Cycles — the theme and turning point of each coming decade" /></li>
-                <li>06 · <Bi zh="频率自测解读——你填的能量/清晰度/对齐感三项分数，对照命盘，看出真正的落差在哪里" en="Your frequency self-assessment, interpreted — where your actual state diverges from your chart, and why" /></li>
-                <li>07 · <Bi zh="财富与事业频率地图——事业运势、适合的工作方式，与财富的关系、适合的创造路径" en="Wealth & Career Map — your career instincts, working style, relationship with money, paths suited to you" /></li>
-                <li>08 · <Bi zh="关系共振地图——亲密关系的情感模式，加上家族归属、群体角色的解读" en="Relationship Resonance Map — your intimacy pattern, plus family dynamics and your role in groups" /></li>
-                <li>09 · <Bi zh="人生周期导航——30天/90天/365天的关注方向" en="Life Cycle Navigation — focus points for the next 30/90/365 days" /></li>
-                <li>10 · <Bi zh="专属灵犀场练习——根据你的状态生成的呼吸与觉察练习" en="A Personal Lingxi Field Practice — breathing and awareness exercises shaped to your state" /></li>
-                <li>11 · <Bi zh="前世今生印记——纯属脑洞的创意小板块，基于你的命盘元素，编一段好玩的前世片段与未来画面" en="Past & Future Imprint — a purely-for-fun creative bit, weaving your chart elements into a playful past-life vignette and a glimpse of what's ahead" /></li>
-                <li>12 · <Bi zh="完整报告可下载 PDF，永久保存，随时回看" en="Full report available as a downloadable PDF — yours to keep, revisit anytime" /></li>
-                <li>13 · <Bi zh="如果你填了手机号、车牌号或职业，这些也会被交叉解读，写进对应的章节里，不是白填" en="If you filled in a phone number, license plate, or occupation, those are cross-read too and woven into the relevant sections — not left unused" /></li>
-              </ul>
-              <p className="mx-auto mt-6 max-w-sm text-xs leading-6 text-lm2-text-dim">
+
+              <div className="mx-auto mt-8 max-w-xl space-y-6 text-left">
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">01 · <Bi zh="逐一解读" en="Planet by Planet" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="每一颗行星，都代表生命中的一种核心功能。完整解读不会停留在「你是什么星座」，而会展开：你的太阳如何表达自我，月亮如何影响情绪与内在需求，水星如何影响思考方式，金星如何影响关系与价值感，火星如何影响行动动力——七大行星之间的连接关系，共同组成你独特的生命表达方式。" en="Each planet represents a core function of your life. The reading goes past 'what sign are you' — it unfolds how your Sun expresses itself, how your Moon shapes emotion and inner need, how Mercury shapes thought, how Venus shapes relationships and value, how Mars shapes drive. The connections between all seven form your own way of expressing life." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">02 · <Bi zh="八字深层结构" en="Bazi, in Depth" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="八字不仅是四柱干支，每一个天干地支背后，都隐藏着更细微的生命结构。完整解析将展开十神关系、藏干信息、纳音象征、十二地势，加上胎元、命宫、身宫——从表层出生信息，深入到你的内在运行逻辑。" en="Bazi is more than four pillars of characters — behind every stem and branch is a finer structure. The full analysis unfolds Ten Gods, hidden stems, Na Yin, the twelve growth stages, plus the Fetal Origin, Soul Palace, and Body Palace — from surface birth data into the logic that runs underneath." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">03 · <Bi zh="紫微命盘详解" en="Your Ziwei Chart, Decoded" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="紫微斗数关注的不仅是「有什么星」，更重要的是这些星曜如何组合、如何在你的生命领域中产生作用。完整解析命宫、身宫、主星组合，以及不同人生领域中的表现方式，帮你理解天赋在哪里、成长课题是什么。" en="Ziwei Doushu isn't only about which stars are present — what matters more is how they combine and act across your life. The full reading covers your Soul Palace, Body Palace, and star combinations, and how they show up across different life domains — where your gifts are, and what you're here to grow through." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">04 · <Bi zh="玛雅印记详解" en="Your Maya Sign, Decoded" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="玛雅圣历是一套关于时间与意识象征的古老系统。你的图腾与数字不是简单的标签——完整解读会结合你的整体生命结构，探索你的象征主题、表达方式，以及你与时间节奏之间的连接。" en="The Maya Tzolkin is an ancient system of time and consciousness symbolism. Your day sign and tone are more than labels — the full reading places them inside your whole structure, exploring your symbolic theme, your way of expressing it, and your connection to the rhythm of time." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">05 · <Bi zh="大运走势" en="Major Luck Cycles" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="人生并不是静止的结构，不同阶段会展开不同主题。大运分析帮你观察未来周期中的主要方向、阶段性的变化趋势，以及可能出现的重要生命课题——不是预测固定未来，而是帮你理解自己正在进入怎样的人生阶段。" en="Life isn't a static structure — different phases unfold different themes. The Luck Cycle analysis shows the main direction of what's ahead, the shifts by phase, and the themes likely to surface — not a fixed prediction, but a way to understand what stage of life you're entering." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">06 · <Bi zh="频率自测解读" en="Your Self-Assessment, Interpreted" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="你的主观感受，也是生命探索的重要部分。把你填的能量状态、清晰程度、内在对齐感，跟你的命盘结构进行对照，看见你感受到的自己，与命盘结构呈现出的自己，是否存在不同。" en="Your subjective sense of things is part of the exploration too. Your self-rated energy, clarity, and inner alignment are set against your chart structure, to see whether the self you feel and the self your chart shows actually agree." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">07 · <Bi zh="财富与事业频率地图" en="Wealth & Career Map" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="财富不仅是结果，更是一种价值交换方式。完整分析你的创造优势、适合的发展方向、事业表达方式，以及财富形成路径，帮你理解什么样的方式更容易发挥你的生命价值。" en="Wealth is more than an outcome — it's a way value moves through you. The full analysis covers your creative strengths, the directions suited to you, how you express work, and how wealth tends to form for you — a way to see what lets your value actually move." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">08 · <Bi zh="关系共振地图" en="Relationship Resonance Map" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="关系，是两个生命结构的相遇。完整解析亲密关系中的互动模式、情感表达方式、家族影响，以及你在人群中的角色——看见你如何连接别人，也看见关系如何推动你的成长。" en="A relationship is where two life structures meet. The full reading covers how you interact in intimacy, how you express emotion, family influence, and your role among others — seeing how you connect, and how connection grows you." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">09 · <Bi zh="人生周期导航" en="Life Cycle Navigation" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="生命探索不应该停留在一次阅读。根据你的当前状态，生成30天关注主题、90天调整方向、365天长期成长路径——让生命图谱，成为持续陪伴你的导航。" en="Exploring your life shouldn't end after one read. Based on your current state, it generates a 30-day focus, a 90-day direction, and a 365-day long-term path — so your Life Map becomes a navigation that stays with you." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">10 · <Bi zh="专属灵犀场练习" en="A Personal Lingxi Field Practice" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="每个人的状态不同，适合自己的练习也应该不同。灵犀场根据你的生命结构，生成对应的呼吸练习、觉察方式、内在整理路径，帮助理解，逐渐进入实践。" en="Everyone's state is different, and what fits should be too. Based on your structure, the field generates a breathing practice, a way of noticing, and a path for inner clearing — from understanding, into practice." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">11 · <Bi zh="前世今生印记 · 纯属脑洞" en="Past & Future Imprint · Just for Fun" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="这是灵犀场中的创意叙事空间。根据你的命盘元素，创造一段象征性的生命故事——它不是历史证明，而是一种想象与自我探索，通过故事看见自己与生命主题之间的连接。" en="A creative narrative corner of the field. Using your chart's elements, it weaves a symbolic vignette of your life — not a historical claim, but a piece of imagination and self-exploration, seeing your connection to your life's themes through story." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">12 · <Bi zh="完整报告可下载PDF" en="Downloadable PDF" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="你的生命探索会形成一份完整档案——支持PDF保存、长期查看、随时回顾，让这次探索，成为属于你的生命记录。" en="Your exploration becomes a complete record — saved as a PDF, kept long-term, revisited anytime. This exploration becomes a record that's yours." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">13 · <Bi zh="额外信息也不会被浪费" en="Nothing You Enter Goes Unused" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="如果你填了手机号、车牌号或职业，你输入的每一项信息，都是连接你与灵犀场的一部分——不同信息会作为辅助维度，参与对应章节的交叉分析，让最终呈现的内容，更加贴近你的个人状态。" en="If you entered a phone number, license plate, or occupation, every piece you gave is part of your connection to the field — each becomes a supporting dimension, woven into the relevant section, so what you get back sits closer to who you actually are." />
+                  </p>
+                </div>
+              </div>
+
+              <p className="mx-auto mt-8 max-w-sm text-xs leading-6 text-lm2-text-dim">
                 <Bi
-                  zh="五套真实系统、上百个真实数据点，交叉着，写给你一个人——这份报告，帮你看见的，从来不只是一张命盘。"
-                  en="Five real systems, over a hundred real data points, cross-woven for you alone — what this report helps you see was never just a chart."
+                  zh="五套真实系统、上百个真实数据点，交叉着，写给你一个人——这份报告帮你看见的，从来不只是一张命盘，而是一张关于你如何来到这里、如何展开自己、以及如何继续创造未来的生命地图。"
+                  en="Five real systems, over a hundred real data points, cross-woven for you alone — what this report helps you see was never just a chart. It's a map of how you arrived here, how you unfold, and how you keep creating what comes next."
                 />
               </p>
               <div className="mt-8">

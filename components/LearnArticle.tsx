@@ -86,14 +86,14 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
             ))}
           </div>
 
-          {data.note && <p className="mt-8 rounded-sm border border-white/10 bg-void-deep/40 p-5 text-sm leading-7 text-bone-dim/80">{data.noteEn ? <Bi zh={data.note} en={data.noteEn} /> : data.note}</p>}
+          {data.note && <p className="mt-8 rounded-sm border border-white/10 bg-void-deep p-5 text-sm leading-7 text-bone-dim/80">{data.noteEn ? <Bi zh={data.note} en={data.noteEn} /> : data.note}</p>}
           </div>
 
           <div className="mt-14">
             <h2 className="font-display text-2xl font-light text-bone"><Bi zh="常见问题" en="FAQ" /></h2>
             <div className="mt-6 space-y-5">
               {data.faq.map((f, i) => (
-                <div key={i} className="rounded-sm border border-white/10 bg-void-deep/40 p-6">
+                <div key={i} className="rounded-sm border border-white/10 bg-void-deep p-6">
                   <p className="font-display text-lg text-bone">{f.qEn ? <Bi zh={f.q} en={f.qEn} /> : f.q}</p>
                   <p className="mt-3 leading-8 text-bone-dim">{f.aEn ? <Bi zh={f.a} en={f.aEn} /> : f.a}</p>
                 </div>

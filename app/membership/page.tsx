@@ -293,13 +293,13 @@ export default async function MembershipPage({
             </div>
             <div className="rounded-sm border border-amber/50 bg-amber/5 p-10 text-center">
               <span className="mb-4 inline-block w-fit rounded-sm bg-amber/20 px-3 py-1 font-display text-xs tracking-widest2 text-amber">
-                <Bi zh="最高层级" en="Top Tier" />
+                <Bi zh="神尊层级" en="Sovereign Tier" />
               </span>
               <h3 className="font-display text-2xl text-bone"><Bi zh={everything.name} en={everything.nameEn} /></h3>
               <PriceTag priceRmb={everything.priceRmb} days={everything.days} type={everything.type} />
 
               <p className="mx-auto mt-6 max-w-md text-xs uppercase tracking-widest2 text-lattice/70"><Bi zh="全站能量交换项目 · 开放全部" en="Every energy exchange on the site · fully open" /></p>
-              <div className="mx-auto mt-6 grid max-w-lg grid-cols-1 gap-4 text-left sm:grid-cols-2">
+              <div className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-sm border border-white/10 bg-void-deep p-4">
                   <p className="text-sm text-bone">🌌 <Bi zh="意识显化体系" en="Conscious Manifestation" /></p>
                   <p className="mt-1 text-xs text-bone-dim"><Bi zh="探索意识如何影响现实创造。" en="Explore how consciousness shapes the reality you create." /></p>
@@ -316,7 +316,11 @@ export default async function MembershipPage({
                   <p className="text-sm text-bone">📖 <Bi zh="多维叙事体系" en="Dimensional Narrative" /></p>
                   <p className="mt-1 text-xs text-bone-dim"><Bi zh="持续阅读灵犀场原创意识记录。" en="Read Lingxi Field's original consciousness records, as they grow." /></p>
                 </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4 sm:col-span-2">
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
+                  <p className="text-sm text-bone">🔮 <Bi zh="场域精测·不限次数" en="Field Insights · Unlimited" /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="生命图谱、关系共振、生命灵签、量子塔罗，不限次数深度解析。" en="Life Map, Relationship Resonance, Life Oracle, Quantum Tarot — unlimited deep readings." /></p>
+                </div>
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
                   <p className="text-sm text-bone">✨ <Bi zh="后续新增内容" en="Everything added later" /></p>
                   <p className="mt-1 text-xs text-bone-dim"><Bi zh="未来开放的新场域模块，同步体验。" en="New field modules, as they open, included automatically." /></p>
                 </div>

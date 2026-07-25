@@ -145,7 +145,7 @@ export default function RelationshipFlow() {
         <Bi zh="灵犀场 · 关系共振图谱" en="Lingxi Field · Relationship Resonance Map" />
       </p>
       <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-        <Bi zh="不是合不合，是能被看见的共振结构" en={'Not "do we match" — a resonance structure you can actually see'} />
+        <Bi zh="不是合不合，而是看见两个生命如何相遇" en="Not whether you match — seeing how two lives meet" />
       </h1>
       <p className="mt-4 max-w-xl text-base leading-8 text-bone-dim">
         <Bi
@@ -174,6 +174,26 @@ export default function RelationshipFlow() {
               </p>
             </button>
           ))}
+        </div>
+        <div className="mt-4 text-sm leading-7 text-bone-dim">
+          {relationshipType === "romantic" && (
+            <Bi
+              zh="💞 亲密关系共振——看见彼此吸引的来源、情感表达方式、深层需求差异，以及关系中的成长主题。"
+              en="💞 Romantic Resonance — see where the attraction comes from, how you each express emotion, where your deeper needs differ, and the theme this relationship is growing you through."
+            />
+          )}
+          {relationshipType === "business" && (
+            <Bi
+              zh="🤝 合伙商业共振——看见两个人在创造、决策、资源交换中的不同角色，探索谁更适合推动、谁更擅长稳定，哪些地方容易协同、哪些地方需要提前理解。"
+              en="🤝 Partnership Resonance — see the different roles you each play in creating, deciding, and exchanging resources. Who's built to push forward, who's built to hold steady, where you naturally sync, and where it helps to understand each other first."
+            />
+          )}
+          {relationshipType === "general" && (
+            <Bi
+              zh="🌌 其他关系共振——朋友、家人、导师、伙伴，每一次连接都有它形成的原因。探索彼此之间如何影响、如何支持，以及这段关系带来的生命意义。"
+              en="🌌 Other Resonance — friends, family, mentors, companions. Every connection forms for a reason. Explore how you shape each other, how you support each other, and what this relationship means in your life."
+            />
+          )}
         </div>
       </div>
 

@@ -166,7 +166,7 @@ export default function TarotReadingFlow() {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center px-6 py-24 text-center">
         <div className="lx-tr-glow h-20 w-20 rounded-full" />
-        <div className="mt-8 space-y-3 rounded-sm border border-white/10 bg-void-deep/90 px-6 py-6 backdrop-blur-sm">
+        <div className="mt-8 space-y-3 rounded-sm border border-white/10 bg-void-deep px-6 py-6 backdrop-blur-sm">
           {CONNECTING_LINES.map((line, i) => (
             <p
               key={i}

@@ -214,8 +214,8 @@ export default function QianFlow() {
         </p>
         <p className="mt-3 text-sm leading-7 text-bone-dim">
           <Bi
-            zh="真正重要的，不是单独看某一枚签，而是看见它们之间如何连接、如何共同构成你的生命结构。场域会进一步展开：你的天赋倾向、当前所处的人生阶段、内在驱动力、下一步适合练什么——当这些碎片被重新连接，你看到的不再是一枚签，而是一份属于你的生命地图。"
-            en="What matters isn't reading each sign alone — it's seeing how they connect, and what structure they form together. The field goes further: your talents, the life stage you're in, your inner drive, what to practice next. Once these pieces reconnect, what you see is no longer a single sign — it's a map of your own life."
+            zh="真正重要的，不是单独看某一枚签，而是看见它们之间如何连接、如何共同构成你的生命结构。场域会进一步展开：你的核心天赋倾向、你正在经历的人生主题、你的内在驱动力，以及那些反复出现、值得被理解的生命模式——当这些碎片被重新连接，你看到的不再是一枚签，而是一幅属于你的生命原型地图。"
+            en="What matters isn't reading each sign alone — it's seeing how they connect, and what structure they form together. The field goes further: your core talents, the theme you're living through, your inner drive, and the patterns that keep resurfacing and are worth understanding. Once these pieces reconnect, what you see is no longer a single sign — it's a map of your own life archetype."
           />
         </p>
         <button

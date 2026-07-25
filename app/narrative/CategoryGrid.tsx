@@ -42,7 +42,7 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
   return (
     <Link
       href={`/narrative/${n.slug}`}
-      className="group flex flex-col justify-between overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] bg-void-deep/60 transition hover:border-amber/50"
+      className="group flex flex-col justify-between overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] bg-void-deep transition hover:border-amber/50"
     >
       <div
         className="aspect-[5/3] w-full overflow-hidden bg-void-deep"
@@ -110,7 +110,7 @@ export default function CategoryGrid() {
               className="group grid w-full grid-cols-1 items-stretch text-left sm:grid-cols-[220px_1fr]"
             >
               <CategoryCover catId={cat.id as string} />
-              <div className="flex flex-col justify-center gap-2 bg-void-deep/60 p-6 transition group-hover:bg-void-deep">
+              <div className="flex flex-col justify-center gap-2 bg-void-deep p-6 transition group-hover:bg-void-deep">
                 <div className="flex items-center justify-between">
                   <h2 className="font-display text-2xl font-light text-bone sm:text-3xl">
                     <Bi zh={cat.zh} en={cat.en} />

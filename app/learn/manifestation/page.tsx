@@ -106,7 +106,7 @@ export default function ManifestationArticle() {
             <h2 className="font-display text-2xl font-light text-bone"><Bi zh="常见问题" en="FAQ" /></h2>
             <div className="mt-6 space-y-5">
               {faq.map((f, i) => (
-                <div key={i} className="rounded-sm border border-white/10 bg-void-deep/40 p-6">
+                <div key={i} className="rounded-sm border border-white/10 bg-void-deep p-6">
                   <p className="font-display text-lg text-bone">{f.q}</p>
                   <p className="mt-3 leading-8 text-bone-dim">{f.a}</p>
                 </div>
