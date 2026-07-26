@@ -5,21 +5,19 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const REFUNDS_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "买了报告不满意可以退款吗？", qEn: "Can I get a refund if I'm not satisfied with a report?",
-    aZh: "内容已成功生成、只是主观上不认同解读内容或者觉得「不准」，不属于退款理由——本网站的内容性质是自我反思参考，不是可验证的预测服务。技术故障导致付款后始终无法获得解锁内容的情况，可以申请退款。",
-    aEn: "If the content generated successfully and you simply disagree with the reading or feel it wasn't 'accurate,' that alone isn't grounds for a refund — content on this Site is self-reflection material, not a verifiable predictive service. If a technical failure means you paid but were never able to access the unlocked content, you can request a refund.",
+    qZh: "买了体验内容后感觉不符合期待，可以退款吗？", qEn: "If a piece of content doesn't match my expectations, can I get a refund?",
+    aZh: "灵犀场提供的是个人探索体验。内容生成完成后，由于数字内容已经即时提供，单纯因个人理解、感受或期待差异，一般不属于退款范围。如果出现技术故障、内容无法访问、重复支付，可以联系我们处理。",
+    aEn: "Lingxi Field offers a personal exploration experience. Once content has been generated, because digital content is provided instantly, a difference in personal understanding, feeling, or expectation alone generally isn't grounds for a refund. If you experience a technical fault, inaccessible content, or a duplicate charge, please contact us.",
   },
   {
-    qZh: "退款要多久到账？", qEn: "How long does a refund take to arrive?",
-    aZh: "我们会在收到申请后通常不超过5个工作日内回复处理结果，退款原路退回到你付款时使用的支付方式，实际到账时间取决于该支付服务商（如微信支付）的处理周期，通常为5-10个工作日。",
-    aEn: "We typically respond within 5 business days of receiving your request. Refunds are issued back to the original payment method, and the actual arrival time depends on the processing cycle of the relevant payment provider (such as WeChat Pay), typically 5–10 business days.",
+    qZh: "退款多久可以到账？", qEn: "How long does a refund take to arrive?",
+    aZh: "我们通常会在收到申请后的5个工作日内完成审核。退款成功后，将按照原支付渠道规则返回，实际到账时间取决于支付服务商。",
+    aEn: "We typically complete our review within 5 business days of receiving your request. Once approved, the refund is returned via the original payment channel's rules — the actual arrival time depends on the payment provider.",
   },
 ];
 
-
-
 export const metadata = {
-  title: "退款政策 | Refund Policy | Lingxi Field",
+  title: "退款政策 | 灵犀场 | Refund Policy | Lingxi Field",
   alternates: { canonical: "/refunds" },
 };
 
@@ -39,62 +37,61 @@ export default function RefundsPage() {
         <div className="mt-10 space-y-8 text-base leading-8 text-bone-dim">
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="1. 数字内容的性质" en="1. The Nature of Digital Content" />
+              <Bi zh="1. 数字体验说明" en="1. About Digital Experiences" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="灵犀场提供的付费内容（例如生命图谱、关系共振图谱、生命灵签、量子塔罗等完整报告）均为按你提交的个人信息即时生成的数字内容，一旦生成完成即可立即查看、下载，不涉及实物寄送。正因如此，我们的退款政策会比实体商品更严格，但我们同样承诺，如果确实是我们这边出了问题，会负责任地处理。"
-                en="The paid content provided by Lingxi Field (such as full Life Map, Relationship Resonance, Life Oracle, or Quantum Tarot reports) is digital content generated instantly based on the personal information you submit, and becomes viewable and downloadable as soon as it is generated. There is no physical shipment involved. Because of this, our refund policy is stricter than what you might expect for physical goods \u2014 but we are equally committed to handling things responsibly when the issue is genuinely on our end."
+                zh="灵犀场提供的部分内容属于即时生成数字体验，例如生命图谱、关系探索、灵犀生命灵签、量子塔罗、个性化探索报告。这些内容会根据用户提交的信息生成，并在完成后立即提供访问权限。"
+                en="Some content on Lingxi Field is an instantly generated digital experience — for example, the Life Map, relationship exploration, the Lingxi Life Oracle, Quantum Tarot, and personalized exploration reports. This content is generated from the information you submit and access is granted immediately once it's complete."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="2. 什么情况下我们会退款" en="2. When We Will Issue a Refund" />
+              <Bi zh="2. 可以申请退款的情况" en="2. When a Refund Can Be Requested" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="如果出现以下情况，请在购买后7天内联系我们，我们会为你处理退款：因技术故障，你付款后始终未能获得对应的解锁内容（且经我们排查确认不是网络或设备原因）；同一份订单被重复扣款；你能证明该笔购买并非由你本人授权（例如账户被盗用）。"
-                en="If any of the following occurs, please contact us within 7 days of purchase and we will process a refund: due to a technical failure, you paid but were never able to access the corresponding unlocked content (and we have confirmed this was not caused by network or device issues on your end); the same order was charged more than once; or you can demonstrate that the purchase was not authorized by you (for example, your account was compromised)."
+                zh="如果发生：支付成功但内容未开启；系统技术故障导致无法使用；重复支付；未授权支付，请联系我们处理。"
+                en="If any of the following occur — payment succeeded but content did not open; a system fault made the content unusable; a duplicate charge; or an unauthorized payment — please contact us."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="3. 什么情况下我们通常不会退款" en="3. When We Generally Will Not Issue a Refund" />
+              <Bi zh="3. 通常无法退款的情况" en="3. When a Refund Generally Isn't Available" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="内容已成功生成、你已经查看或下载，仅仅是因为不认同解读内容、或者认为解读不准而要求退款——因为本网站的内容性质是自我反思参考，不是可验证的预测服务，主观感受上的不满意，不属于我们所定义的服务故障；填写了错误的出生日期或信息导致生成的内容不符合预期（可以联系我们协助重新生成，但通常不会作为退款理由）；已经使用超过7天。"
-                en="Content that has been successfully generated and that you have already viewed or downloaded, where the refund request is based solely on disagreeing with the reading or feeling it was \u201cnot accurate\u201d \u2014 because the content on this Site is self-reflection material, not a verifiable predictive service, so subjective dissatisfaction does not, on its own, constitute a service failure as we define it; content generated incorrectly due to birth date or information you entered incorrectly (we can help you regenerate it, but this is generally not grounds for a refund); or requests made more than 7 days after purchase."
+                zh="由于数字内容具有即时生成属性，以下情况通常不属于退款范围：已生成并查看内容；因个人主观感受认为内容「不符合期待」；认为探索结果「不准确」；用户填写信息错误导致结果变化。灵犀场提供的是探索体验，而非保证性预测服务。"
+                en="Because digital content is generated instantly, the following generally aren't grounds for a refund: content that has already been generated and viewed; a personal, subjective sense that content 'didn't match expectations'; a belief that a result was 'inaccurate'; or a result that changed because of information you entered incorrectly. Lingxi Field offers an exploratory experience, not a guaranteed predictive service."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="4. 如何申请退款" en="4. How to Request a Refund" />
+              <Bi zh="4. 退款申请流程" en="4. How to Request a Refund" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="请通过网站内的联系方式与我们联系，并提供：你的账户邮箱、购买的产品名称、购买时间（或订单/交易编号）、遇到问题的具体描述（如有截图请一并提供）。我们会在收到申请后的合理时间内（通常不超过5个工作日）回复你处理结果。退款将原路退回至你付款时使用的支付方式，实际到账时间取决于该支付服务商（如微信支付）的处理周期，通常为5-10个工作日。"
-                en="Please contact us through the contact information on this Site and provide: your account email, the name of the product purchased, the purchase date (or order/transaction ID), and a specific description of the issue (including screenshots, if available). We will respond with the outcome within a reasonable time after receiving your request, typically no more than 5 business days. Refunds are issued back to the original payment method used, and the actual time for funds to arrive depends on the processing cycle of the relevant payment provider (such as WeChat Pay), typically 5\u201310 business days."
+                zh="请发送邮件至 support@lingxifield.com，提供注册邮箱、订单信息、问题描述。我们将在通常5个工作日内回复处理结果。退款到账时间取决于支付服务商处理周期。"
+                en="Please email support@lingxifield.com with your registered email, order information, and a description of the issue. We will typically respond with an outcome within 5 business days. The time for a refund to arrive depends on the payment provider's processing cycle."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="5. 联系我们" en="5. Contact Us" />
+              <Bi zh="联系我们" en="Contact Us" />
             </h2>
-            <p className="mt-3">
-              <Bi
-                zh="如对本政策有任何疑问，或希望申请退款，请通过网站内的联系方式与我们联系。"
-                en="If you have any questions about this Policy, or wish to request a refund, please contact us through the contact information provided on this Site."
-              />
-            </p>
+            <div className="mt-3 space-y-1 text-sm">
+              <p>support@lingxifield.com</p>
+              <p>business@lingxifield.com</p>
+              <p>contact@lingxifield.com</p>
+            </div>
           </section>
         </div>
         <div className="mt-16">

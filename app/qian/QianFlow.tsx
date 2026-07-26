@@ -14,19 +14,19 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const QIAN_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀生命灵签的64枚原型是随机摇出来的吗？", qEn: "Are the 64 archetypes in Lingxi Life Oracle drawn at random?",
-    aZh: "不是。三重生命签由你的真实命盘四柱（年柱、日柱、时柱）确定性映射到64枚生命原型库——源流签对应年柱（24枚池）、灵魂签对应日柱（24枚池）、行者签对应时柱（16枚池），同一个人的同一份出生数据，任何时候重新计算，摇出的三枚签都完全一致，不是随机摇签。",
-    aEn: "No. Your three life signs are deterministically mapped from your real chart's Four Pillars (Year, Day, and Hour) into a library of 64 life archetypes — the Origin Sign from the Year Pillar (a pool of 24), the Soul Sign from the Day Pillar (a pool of 24), and the Walker Sign from the Hour Pillar (a pool of 16). Recompute the same birth data at any time, and all three signs come out identical — it isn't a random draw.",
+    qZh: "灵犀生命灵签的64枚生命原型是随机摇出来的吗？", qEn: "Are the 64 archetypes in Lingxi Life Oracle randomly drawn?",
+    aZh: "不是。当你进入灵犀场，你的出生信息会成为一组独特的生命坐标，这组坐标会与64枚生命原型产生对应连接，展开三重生命镜像：源流签映照你携带而来的生命背景，以及那些早已形成的深层倾向；灵魂签观察你内在最核心的意识模式，以及此刻正在经历的生命主题；行者签探索你如何走向现实世界，以及未来展开自己的方式。三枚生命原型不是随机出现的答案，它们更像三面镜子，分别照见你的过去、现在，以及正在形成的方向。",
+    aEn: "No. When you enter Lingxi Field, your birth information becomes a unique set of life coordinates, which form a corresponding connection with 64 life archetypes, unfolding three layers of life mirroring: the Origin Sign reflects the background you carry and the deep-set tendencies already formed within you; the Soul Sign observes your core conscious pattern and the theme you're currently living through; the Walker Sign explores how you move into the world and the way your future unfolds. The three archetypes aren't a random answer — they're closer to three mirrors, each reflecting your past, present, and the direction now forming.",
   },
   {
-    qZh: "生命灵签和抽签算命有什么不同？", qEn: "How is Lingxi Life Oracle different from traditional divination?",
-    aZh: "传统抽签通常是随机的、当场给出吉凶断语；生命灵签是先用真实的出生日期时间确定性算出三重原型，再由场域交叉解读这三重原型之间的关系，得到一份12章节的生命原型档案，不预测具体吉凶祸福，是一份自我理解的参考。",
-    aEn: "Traditional divination is usually random and gives an on-the-spot fortune verdict. Lingxi Life Oracle instead computes three archetype layers deterministically from your real birth date and time, then the field interprets how these three layers relate to each other across a 12-section life archetype record — it doesn't predict specific fortune or misfortune, and functions as a reference for self-understanding.",
+    qZh: "生命灵签和传统抽签有什么不同？", qEn: "How is Lingxi Life Oracle different from traditional divination?",
+    aZh: "传统抽签通常关注「结果是什么」「吉还是凶」。生命灵签关注的是「我为什么会成为现在的我」「我的生命结构正在表达什么」——它不是从未知中寻找答案，而是从你已经携带的信息中，重新整理那些容易被日常忽略的线索。64枚生命原型，是灵犀场原创设计的一套象征体系，每一个原型都代表一种生命主题：创造、连接、觉察、转变、探索、成长。三重生命签组合在一起，形成属于你的生命原型档案，不是替你定义人生，而是帮助你重新认识自己。",
+    aEn: "Traditional divination usually asks 'what's the outcome' or 'is it good or bad luck.' Lingxi Life Oracle asks 'why did I become who I am' and 'what is my life structure expressing.' It isn't searching for an answer in the unknown — it's reorganizing clues you already carry, ones that everyday life tends to overlook. The 64 life archetypes are an original symbolic system created for Lingxi Field, each representing a life theme: creation, connection, awareness, transformation, exploration, growth. The three signs together form your own life archetype record — not defining your life for you, but helping you recognize yourself again.",
   },
   {
-    qZh: "生命灵签的完整解读包含什么内容？", qEn: "What's included in the full Life Oracle reading?",
-    aZh: "包括生命三原型总览、源流签深度解析、灵魂签深度解析、行者签深度解析、三签融合分析、财富创造系统、关系模式分析、事业使命地图、当前人生阶段、隐藏天赋、灵犀场成长路径、生命宣言，共12个章节，支持下载PDF永久保存。",
-    aEn: "It covers an overview of your three archetypes, deep dives into the Origin, Soul, and Walker signs individually, a fusion analysis of all three, a wealth creation system, relationship pattern analysis, a career and mission map, your current life stage, hidden talents, a Lingxi Field growth path, and a personal life declaration — 12 sections in total, downloadable as a PDF to keep.",
+    qZh: "生命灵签的完整解读包含什么内容？", qEn: "What does the full Life Oracle reading include?",
+    aZh: "完整生命灵签不是简单解释三枚签的含义，它会展开：三重生命原型总览、源流签深度解析、灵魂签深度解析、行者签深度解析、三签融合关系、财富创造系统、关系模式分析、事业使命地图、当前人生阶段、隐藏天赋探索、灵犀场成长路径、生命宣言，共12个章节。最终生成的是一份属于你的生命原型档案。",
+    aEn: "The full Life Oracle reading isn't a simple explanation of what three signs mean — it unfolds: an overview of your three archetypes, deep dives into the Origin, Soul, and Walker signs, how the three fuse together, a wealth creation system, relationship pattern analysis, a career and mission map, your current life stage, hidden talent exploration, a Lingxi Field growth path, and a personal life declaration — 12 sections in total. What forms is a life archetype record that's entirely your own.",
   },
 ];
 

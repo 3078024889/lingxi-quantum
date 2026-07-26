@@ -138,12 +138,17 @@ export default function FieldVoices() {
     );
   };
 
-  // 自动绽放。手机上并发更多，保证不点也能看到文字。
+  // 自动绽放——只在桌面端启用。手机端之前也会像桌面一样自动依次轮播
+  // 好几句心声，用户切菜单页清空之后，只要不小心碰到任意一个光点，
+  // 叠加还在跑的轮播计时器，看起来就像"心声又全部冒出来了"，体验很
+  // 混乱。手机端改成完全由点击驱动：不点，光点就只是安静地落下，不
+  // 会自己冒文字；点中哪个，就只显示那一个。
   useEffect(() => {
+    if (isMobile) return;
     if (nodes.length === 0) return;
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     const total = Math.max(1, nodes.length);
-    const maxActive = reduce ? 2 : isMobile ? Math.min(5, Math.ceil(total / 2.4)) : Math.min(6, Math.ceil(total / 3));
+    const maxActive = reduce ? 2 : Math.min(6, Math.ceil(total / 3));
     const tick = () => {
       setSpeaking((prev) => {
         if (Object.keys(prev).length >= maxActive) return prev;
@@ -153,12 +158,12 @@ export default function FieldVoices() {
         const next = { ...prev, [d.id]: d.vi };
         const to = setTimeout(() => {
           setSpeaking((p) => { const c = { ...p }; delete c[d.id]; return c; });
-        }, isMobile ? 3000 : 6000);
+        }, 6000);
         timers.current.push(to);
         return next;
       });
     };
-    const iv = setInterval(tick, reduce ? 3400 : isMobile ? 1300 : 1600);
+    const iv = setInterval(tick, reduce ? 3400 : 1600);
     const first = setTimeout(tick, 150);
     const second = setTimeout(tick, 500);
     const third = setTimeout(tick, 950);
@@ -167,6 +172,21 @@ export default function FieldVoices() {
       timers.current.forEach(clearTimeout); timers.current = [];
     };
   }, [nodes, isMobile]);
+
+  // 手机端：点击光点以外的任何地方，收起当前正显示的那一句——因为
+  // 容器本身 pointer-events:none，普通点击不会经过这里，所以监听
+  // 整个文档的点击，只要点击目标不是某个光点的可点热区，就清空。
+  useEffect(() => {
+    if (!isMobile) return;
+    const onDocClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".fv-hit")) {
+        setHovered(null);
+      }
+    };
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, [isMobile]);
 
   const voiceOf = (d: Node) =>
     hovered === d.id ? VOICES[d.vi] : d.id in speaking ? VOICES[d.vi] : null;

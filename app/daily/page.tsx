@@ -5,14 +5,14 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const DAILY_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "今日运势是怎么算出来的？", qEn: "How is the Daily Horoscope calculated?",
-    aZh: "根据当天真实的月相与月亮星座天文数据，结合你的太阳星座，看今天的宇宙运行状态跟你之间产生怎样的连接，每天更新，不是固定文案轮播。",
-    aEn: "It's computed from that day's real moon phase and Moon-sign astronomical data, combined with your Sun sign, to show how the sky's current state connects with you today. It updates daily and isn't a rotation of fixed pre-written text.",
+    qZh: "今日运势是如何形成的？", qEn: "How does the Daily Resonance form?",
+    aZh: "每一天，天空都有独特的运行轨迹——月亮经过不同位置，太阳保持不同周期，宇宙中的时间节律持续变化。灵犀场读取当天的天象节点，并与你的太阳星座产生连接，形成属于今天的场域观察，不是重复生成一句固定的话，每天进入，看到的都是当天时间流动留下的不同主题。它帮助你观察：今天适合关注什么，今天哪些情绪值得倾听，今天如何更顺应自己的节奏。",
+    aEn: "Every day, the sky follows its own unique path — the Moon moves through different positions, the Sun holds a different cycle, and the rhythm of cosmic time keeps shifting. Lingxi Field reads that day's celestial nodes and connects them with your Sun sign to form an observation that belongs to today — not a fixed line repeated on a loop. Each visit shows a different theme left behind by that day's flow of time. It helps you notice what's worth your attention today, which feelings are worth listening to, and how to move more in step with your own rhythm.",
   },
   {
-    qZh: "今日运势和完整生命图谱有什么不同？", qEn: "What's the difference between the Daily Horoscope and the full Life Map?",
-    aZh: "今日运势看的是「今天全宇宙共享的天象」落在你的太阳星座上是什么样子；完整生命图谱看的是你出生那一刻、专属于你的完整出生星盘与八字命局，后者要深得多。",
-    aEn: "The Daily Horoscope shows how the sky everyone shares today lands on your Sun sign. The full Life Map goes deeper — your own unique birth chart and Bazi structure, computed just for the moment you were born.",
+    qZh: "今日运势和完整生命图谱有什么不同？", qEn: "What's the difference between Daily Resonance and the full Life Map?",
+    aZh: "两者观察的是不同层次。今日运势关注「现在」，它像天气，告诉你今天的环境节奏如何流动。生命图谱关注「你」，它像一张完整地图，探索你携带怎样的生命结构、天赋如何展开、关系模式如何形成、创造方向在哪里。一个看当下，一个看整个旅程。",
+    aEn: "They observe different layers. Daily Resonance focuses on 'now' — it's like weather, telling you how today's environmental rhythm is flowing. The Life Map focuses on 'you' — it's like a complete map, exploring what life structure you carry, how your gifts unfold, how your relationship patterns form, and where your creative direction lies. One looks at the moment. The other looks at the whole journey.",
   },
 ];
 

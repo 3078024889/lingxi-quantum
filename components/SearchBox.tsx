@@ -106,6 +106,26 @@ export default function SearchBox({ className = "" }: { className?: string }) {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
+  const goToTopResult = () => {
+    // 之前这段逻辑只在桌面键盘的Enter事件里触发——手机上，虚拟键盘的
+    // "完成"/"搜索"/"换行"这几个确认键，不是所有手机浏览器都会像
+    // 桌面那样正确派发出一个keydown事件、key正好等于"Enter"，这是
+    // 一个很常见的移动端坑，不是这个网站独有的问题。把逻辑提出来
+    // 单独一个函数，配合下面的<form onSubmit>和一个真正可点的搜索
+    // 按钮，不管手机键盘那个确认键靠不靠谱，点这个按钮永远有效。
+    const query = q.trim();
+    if (!query) return;
+    const topPage = results.pages[0];
+    const topStory = results.stories[0];
+    const href = topPage
+      ? topPage.href
+      : topStory
+      ? `/narrative/${topStory.slug}`
+      : `/live-as?ask=${encodeURIComponent(query)}`;
+    setFocused(false);
+    router.push(href);
+  };
+
   return (
     <div
       ref={boxRef}
@@ -115,6 +135,13 @@ export default function SearchBox({ className = "" }: { className?: string }) {
       {ripples.map((r) => (
         <span key={r.id} className="sb-ripple" style={{ left: r.x, top: r.y }} />
       ))}
+      <form
+        className="flex flex-1 items-center gap-1.5"
+        onSubmit={(e) => {
+          e.preventDefault();
+          goToTopResult();
+        }}
+      >
       <svg className="sb-icon" viewBox="0 0 20 20" fill="none">
         <circle cx="8.5" cy="8.5" r="6" stroke="currentColor" strokeWidth="1.4" />
         <path d="M13 13L17.5 17.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
@@ -123,38 +150,14 @@ export default function SearchBox({ className = "" }: { className?: string }) {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         onFocus={() => setFocused(true)}
-        onKeyDown={(e) => {
-          // 之前这个框只做"边打字边过滤"的实时下拉，没接任何键盘事件——
-          // 按回车键，从代码层面看就是什么都没绑定，自然毫无反应。这里补上：
-          // 回车时，直接跳去当前排在最前面的匹配结果（先看页面，没有页面
-          // 匹配就看多维叙事），是大多数人对"搜索框+回车"最直觉的预期。
-          if (e.key !== "Enter") return;
-          const query = q.trim();
-          if (!query) return;
-          const topPage = results.pages[0];
-          const topStory = results.stories[0];
-          // 之前这里"没有匹配就 return"，等于按回车原地不动——用户输入
-          // 场域里没有的词（比如"命硬吗"），敲回车什么反应都没有，只能
-          // 靠自己发现面板里那条"向灵犀提问"链接、再手动点一下。这不是
-          // 用户预期的"搜不到就自动带我去问灵犀"。这里补上：没有任何
-          // 页面/叙事命中时，回车直接跳转提问灵犀，带上原始查询词。
-          const href = topPage
-            ? topPage.href
-            : topStory
-            ? `/narrative/${topStory.slug}`
-            : `/live-as?ask=${encodeURIComponent(query)}`;
-          setFocused(false);
-          // 试过给搜索也接上九彩螺旋场，反馈是"不干净"——搜索这个动作
-          // 本身预期就是快、直接，加一段仪式感的过渡反而显得拖沓，跟
-          // 签到/解梦/提问灵犀那种"进入场域"的重动作不是一回事。改回
-          // 瞬间跳转。
-          router.push(href);
-        }}
+        type="search"
+        enterKeyHint="search"
         placeholder={isEn ? PLACEHOLDER_HINTS[hintIdx].en : PLACEHOLDER_HINTS[hintIdx].zh}
         className="sb-input"
       />
       {q && (
         <button
+          type="button"
           aria-label="清空"
           onClick={() => setQ("")}
           className="sb-clear"
@@ -162,6 +165,19 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           ×
         </button>
       )}
+      {q && (
+        <button
+          type="submit"
+          aria-label="搜索"
+          className="sb-go"
+        >
+          <svg viewBox="0 0 20 20" fill="none" className="h-full w-full">
+            <circle cx="8.5" cy="8.5" r="6" stroke="currentColor" strokeWidth="1.6" />
+            <path d="M13 13L17.5 17.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        </button>
+      )}
+      </form>
 
       {focused && q && (
         <div className="sb-panel">
@@ -269,6 +285,13 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           padding: 0 2px;
         }
         .sb-clear:hover { color: #e8b765; }
+        .sb-go {
+          flex: none; width: 22px; height: 22px; padding: 3px;
+          color: rgba(237,231,220,0.7);
+          border-radius: 999px;
+          transition: color .15s ease, background .15s ease;
+        }
+        .sb-go:hover, .sb-go:active { color: #e8b765; background: rgba(232,183,101,0.12); }
         .sb-ripple {
           position: absolute; width: 6px; height: 6px; margin: -3px 0 0 -3px;
           border-radius: 50%;

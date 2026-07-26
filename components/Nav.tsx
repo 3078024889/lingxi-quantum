@@ -54,8 +54,8 @@ export default function Nav() {
             </span>
             <span className="mt-1 hidden font-display text-[12px] tracking-[0.1em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
               <Bi
-                zh="意识显化 · 生命图谱 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事"
-                en="Manifestation · Life Map · Dreams · Practices · Rewrite · Narratives"
+                zh="意识显化 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事"
+                en="Manifestation · Field Insights · Dreams · Practices · Rewrite · Narratives"
               />
             </span>
           </Link>
@@ -171,8 +171,8 @@ export default function Nav() {
 
       {/* 移动端：展开菜单 */}
       {open && (
-        <div className="lx-nav-glass border-t border-amber/15 px-6 py-3 md:hidden">
-          <div className="flex flex-col">
+        <div className="lx-nav-glass max-h-[calc(100svh-64px)] overflow-y-auto border-t border-amber/15 px-6 py-3 md:hidden">
+          <div className="flex flex-col pb-6">
             <div className="pb-3">
               <SearchBox className="sb-wide" />
             </div>

@@ -12,19 +12,14 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const TAROT_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀量子塔罗的三张牌是随机抽取的吗？", qEn: "Are the three cards in Lingxi Quantum Tarot drawn at random?",
-    aZh: "不是。三张牌由你真实的命盘数据确定性算出——潜意识镜像对应年柱月柱，当下共振对应日柱与太阳月亮，未来展开对应时柱与当下最旺的五行元素。同一份出生数据，任何时候重新计算，抽到的三张牌都完全一致，不是随机洗牌抽取的。",
-    aEn: "No. The three cards are deterministically computed from your real chart data — Hidden Pattern maps to your Year and Month Pillars, Present Resonance to your Day Pillar plus Sun and Moon signs, and Future Possibility to your Hour Pillar and the dominant element in your chart. Recompute the same birth data at any time, and the same three cards come up — it isn't a random shuffle draw.",
+    qZh: "灵犀量子塔罗的三张生命镜像牌是随机的吗？", qEn: "Are the three life mirror cards in Lingxi Quantum Tarot random?",
+    aZh: "不是。灵犀量子塔罗不是传统意义上的随机抽牌——当你进入灵犀场，你提供的出生信息会成为一个独特的生命坐标，场域通过这一组坐标，与78张原创生命镜像牌产生对应连接。三张牌分别映照：过去留下的意识痕迹、当前正在发生的生命共振、未来正在形成的可能方向。它不是告诉你命运已经写好，而是像一面镜子，让隐藏在意识深处的信息，有机会被看见。",
+    aEn: "No. Lingxi Quantum Tarot isn't a random draw in the traditional sense. When you enter Lingxi Field, the birth information you provide becomes a unique life coordinate, and the field forms a corresponding connection between that coordinate and a set of 78 original life mirror cards. The three cards mirror: the traces your past has left in consciousness, the resonance happening in your life right now, and the possible directions your future is forming. It doesn't tell you fate is already written — it's a mirror, giving information hidden in consciousness a chance to be seen.",
   },
   {
     qZh: "灵犀量子塔罗跟传统塔罗牌有什么不同？", qEn: "How is Lingxi Quantum Tarot different from traditional tarot?",
-    aZh: "传统塔罗通常是随机洗牌抽取，靠解牌师临场解读；灵犀量子塔罗的78张牌本身是原创设计的象征体系，抽牌过程由你的真实命盘数据确定，不是物理洗牌，解读也是先算出确定性的意识频率分数，再由场域交叉引用这些分数和三张牌的关系来写解读，不是临场编的。",
-    aEn: "Traditional tarot is usually drawn from a physically shuffled deck and interpreted live by a reader. Lingxi Quantum Tarot uses an original 78-card symbolic system, but which cards you get is determined by your real chart data rather than a physical shuffle — the reading is written by first computing deterministic consciousness-frequency scores, then having the field cross-reference those scores against the relationship between the three cards, not improvised on the spot.",
-  },
-  {
-    qZh: "灵犀量子塔罗和今日一张牌有什么区别？", qEn: "What's the difference between Quantum Tarot and the Daily Card?",
-    aZh: "今日一张牌（/tarot/daily）是全场域用户共享的同一张牌，每天更新，看的是「今天大家共同面对的场域主题」；灵犀量子塔罗是根据你个人的命盘数据算出专属于你的三张牌，看的是「你自己」。",
-    aEn: "The Daily Card (/tarot/daily) is the same single card shared by everyone that day, updated daily — it reflects a theme the whole field is facing together. Quantum Tarot computes three cards unique to you from your own chart data — it reflects you specifically.",
+    aZh: "传统塔罗更多依靠随机抽取、象征牌面、解读者经验。灵犀量子塔罗建立的是另一种路径——不是等待随机答案出现，而是让你的生命信息，与原创象征体系产生对应。78张生命镜像牌，是灵犀场原创的意识象征库，每一张牌都代表一种生命主题：觉醒、选择、连接、创造、转变。三张牌组合起来，不是预测未来，而是一份与你当前生命状态对应的内在观察。",
+    aEn: "Traditional tarot relies more on random drawing, symbolic imagery, and a reader's experience. Lingxi Quantum Tarot builds a different path — instead of waiting for a random answer to appear, it lets your life information correspond with an original symbolic system. The 78 life mirror cards are Lingxi Field's own library of consciousness symbols, each representing a life theme: awakening, choice, connection, creation, transformation. The three cards together don't predict the future — they form an inner observation that corresponds to your current life state.",
   },
 ];
 

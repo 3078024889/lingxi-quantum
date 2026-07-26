@@ -6,13 +6,18 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 const NARRATIVE_FAQ: BilingualFaqItem[] = [
   {
     qZh: "灵犀场的多维叙事是什么？", qEn: "What is Lingxi Field's Dimensional Narrative?",
-    aZh: "多维叙事是灵犀场原创的创意叙事内容，包含长篇意识传输、现实重写记录、场域叙事、场域观测日志，持续更新，属于虚构创作类内容，用于阅读体验，不是事实陈述或者预言。",
-    aEn: "Dimensional Narrative is Lingxi Field's original creative content — long-form consciousness transmissions, reality-rewrite records, field narratives, and field observation logs, updated continuously. It's fictional creative writing meant for the reading experience, not a factual statement or a prediction.",
+    aZh: "多维叙事，是灵犀场创造的一种意识探索型叙事空间，不是传统意义上的故事阅读。它更像是一扇入口：通过长篇意识传输、现实重写记录、场域叙事、观测日志等形式，探索如果意识拥有不同视角、如果现实可以被重新理解、如果生命不只是经历而是一场持续创造，我们会看到怎样的世界。这里融合科幻想象、哲学思考、意识探索与未来叙事，每一篇作品都是一次进入不同意识层级的旅程。",
+    aEn: "Dimensional Narrative is a consciousness-exploration narrative space created by Lingxi Field — not story-reading in the traditional sense. It's closer to a doorway: through long-form consciousness transmissions, reality-rewrite records, field narratives, and observation logs, it explores what world we'd see if consciousness held different vantage points, if reality could be understood anew, if life were not just something experienced but something continuously created. It blends science-fiction imagination, philosophical thought, consciousness exploration, and future narrative — each piece a journey into a different layer of consciousness.",
   },
   {
-    qZh: "多维叙事怎么收费？", qEn: "How is Dimensional Narrative priced?",
-    aZh: "单篇作品可以单独购买，一次能量交换后终身可读；也可以选择「多维叙事·年度解锁」，一年内解锁全部篇目，包含期间新增的全部内容。",
-    aEn: "Individual pieces can be purchased separately — one energy exchange unlocks a piece for life. Alternatively, the yearly Dimensional Narrative unlock gives access to every piece for a year, including everything added during that period.",
+    qZh: "多维叙事能带给我什么？", qEn: "What can Dimensional Narrative bring me?",
+    aZh: "很多时候，人困住自己的原因，不是没有答案，而是无法跳出原有视角。多维叙事提供的是一种新的观察方式，帮助你打开想象边界、重新理解自己与现实的关系、看见隐藏在经历背后的另一种可能、从新的角度思考生命、意识与未来。它不是告诉你世界应该是什么，而是邀请你探索：如果世界还有另一种理解方式，会发生什么？",
+    aEn: "Often, what traps a person isn't the absence of an answer — it's being unable to step outside a familiar vantage point. Dimensional Narrative offers a new way of observing, helping you open the edges of imagination, re-understand your relationship with reality, see another possibility hidden behind your own experience, and think about life, consciousness, and the future from a new angle. It doesn't tell you what the world should be — it invites you to explore what might happen if the world could be understood another way.",
+  },
+  {
+    qZh: "多维叙事是真实发生的吗？", qEn: "Are the events in Dimensional Narrative real?",
+    aZh: "多维叙事属于灵犀场原创意识文学与未来想象内容，不是新闻记录，也不是对未来事件的预测。它更接近意识实验、未来寓言、象征性探索——就像一部优秀科幻作品，不一定描述现实，却可以让我们重新理解现实。",
+    aEn: "Dimensional Narrative is Lingxi Field's original consciousness literature and speculative content — it isn't news reporting, nor a prediction of future events. It's closer to a consciousness experiment, a future fable, a symbolic exploration — much like great science fiction, which doesn't necessarily describe reality but can help us understand reality anew.",
   },
 ];
 

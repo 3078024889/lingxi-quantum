@@ -11,13 +11,13 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 const DREAM_FAQ: BilingualFaqItem[] = [
   {
     qZh: "灵犀场怎么解析梦境？", qEn: "How does Lingxi Field interpret dreams?",
-    aZh: "记录下梦境内容后，场域会从象征与心理的视角温柔解读，结合你近期的状态与反复出现的线索，帮助理解梦境可能在传递的信息，不是逐字对照「周公解梦」式的固定词典解释。",
-    aEn: "After you record a dream, the field interprets it through a symbolic and psychological lens, drawing on your recent state and any recurring threads, to help you understand what the dream might be communicating — not a word-for-word lookup in a fixed dream dictionary.",
+    aZh: "梦境，是意识在另一种语言中的表达。灵犀场并不采用传统「一个符号对应一个答案」的方式，因为同一个梦境，不同的人可能拥有完全不同的意义。灵犀场将梦境视为一种来自深层意识的信息表达，通过象征分析、心理线索、近期生命状态、重复出现的主题，帮助你理解这个梦为什么出现、它正在提醒什么、你的意识正在处理什么。梦不是预言，它更像是内在世界发送给你的信件。",
+    aEn: "A dream is consciousness expressing itself in another language. Lingxi Field doesn't use the traditional 'one symbol, one fixed meaning' approach, because the same dream can carry a completely different meaning for different people. Lingxi Field treats a dream as a message from deeper consciousness — through symbolic analysis, psychological cues, your recent state, and recurring themes, it helps you understand why this dream appeared, what it might be pointing to, and what your consciousness is processing. A dream isn't a prophecy — it's closer to a letter your inner world has sent you.",
   },
   {
-    qZh: "梦境解析需要付费吗？", qEn: "Does dream interpretation require payment?",
-    aZh: "梦境解析属于「显化与梦境解读」订阅模块，需要订阅后才能使用，订阅后梦境记录会在云端安全同步，可以随时回看反复出现的象征与线索。",
-    aEn: "Dream interpretation belongs to the Manifestation & Dream Interpretation subscription module, and requires an active subscription. Once subscribed, your dream records sync securely to the cloud so you can revisit recurring symbols and threads anytime.",
+    qZh: "梦境解析能带给我什么？", qEn: "What can dream interpretation bring me?",
+    aZh: "很多困惑，并不是因为没有答案，而是因为答案隐藏在意识更深的位置。梦境解析帮助你看见重复出现的心理模式、理解被忽略的情绪信号、发现潜意识中的限制与渴望、找回被日常生活覆盖的内在声音。当你开始理解自己的梦，其实是在学习理解自己。梦境记录会在你的场域入口里安全保存，可以随时回看反复出现的象征与线索。",
+    aEn: "Many confusions aren't because there's no answer — it's because the answer is hidden deeper in consciousness. Dream interpretation helps you see recurring psychological patterns, understand overlooked emotional signals, discover limits and longings within the subconscious, and recover the inner voice everyday life tends to cover up. Learning to understand your dreams is, in a way, learning to understand yourself. Your dream records are saved securely in your field entrance, so you can revisit recurring symbols and threads anytime.",
   },
 ];
 

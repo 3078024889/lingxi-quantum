@@ -9,19 +9,19 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const RESILIENCE_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "生命韧性指数的五项分数是怎么算出来的？", qEn: "How are the five Life Resilience scores calculated?",
-    aZh: "从真实天文数据（当下行星在黄道上的精确位置）和真实历法数据（你的四柱八字）里，算出压力恢复、变化适应、危机反弹、长期坚持、精神稳定五项确定性分数。全部基于确定性计算，同一份出生数据任何时候重算结果都一致，不是临场编的。",
-    aEn: "The five scores — stress recovery, adaptability, crisis rebound, persistence, and emotional stability — are computed from real astronomical data (the planets' exact positions right now) and real calendrical data (your Bazi pillars). It's all deterministic; recomputing the same birth data at any time produces identical results, not something improvised on the spot.",
+    qZh: "生命韧性指数的五项分数是如何形成的？", qEn: "How do the five Life Resilience scores form?",
+    aZh: "生命韧性指数，并不是评判一个人「够不够坚强」。每个人面对变化、压力与人生转折时，都拥有不同的内在恢复方式，灵犀场会结合你的出生信息所对应的生命结构节点，展开五个维度的观察：压力恢复（你如何从消耗状态重新回到平衡）、变化适应（面对未知环境时，你如何调整自己的节奏）、危机反弹（在低谷与挑战中，你如何重新启动自己的力量）、长期坚持（你如何维持方向、持续完成重要目标）、精神稳定（你如何保持内在中心，不被外界完全牵引）。这些维度不是给你贴标签，更像一张「生命恢复地图」——原来你的力量一直存在，只是过去没有用正确的方式连接它。",
+    aEn: "The Life Resilience Index doesn't judge whether someone is 'strong enough.' Everyone has a different way of recovering internally when facing change, pressure, or turning points. Lingxi Field draws on the life-structure nodes tied to your birth information to open five dimensions of observation: stress recovery (how you return to balance from depletion), adaptability (how you adjust your rhythm in unfamiliar territory), crisis rebound (how you reignite your own force in the middle of a low point), persistence (how you hold direction and see important goals through), and emotional stability (how you keep your inner center without being fully pulled by outside forces). These dimensions aren't labels — they're closer to a 'recovery map' of your life, showing that your strength was there all along, just not yet connected to in the right way.",
   },
   {
-    qZh: "生命韧性指数测试需要付费吗？", qEn: "Does the Life Resilience Index test cost anything?",
-    aZh: "不需要，即时呈现，不需要登录，也不需要付费。",
-    aEn: "No — it's shown to you right away, with no sign-in and no payment required.",
+    qZh: "生命韧性指数需要开启完整探索吗？", qEn: "Do I need to open the full exploration for the Resilience Index?",
+    aZh: "生命韧性指数是一处独立的自我观察入口，进入后就能快速看见自己的韧性结构：哪些能力已经自然形成，哪些部分值得更多关注，你的系统习惯如何面对人生波动。它不要求你成为另一个人，只是帮助你更了解自己本来就是如何恢复的。",
+    aEn: "The Life Resilience Index is a standalone entrance for self-observation — once you enter, you quickly see your own resilience structure: which capacities have already formed naturally, which parts deserve more attention, and how your system habitually meets life's turbulence. It doesn't ask you to become someone else — it just helps you understand how you already recover.",
   },
   {
     qZh: "韧性分数低是不是代表这个人不坚强？", qEn: "Does a low resilience score mean someone isn't strong?",
-    aZh: "不是。五项分数反映的是「这个人的系统具体靠哪种方式来应对压力和变化」，不是笼统的「坚强/不坚强」评价——每个人的韧性类型不同，分数较低的那一项，往往只是提醒这部分需要更多主动的支持，不是缺陷。",
-    aEn: "No. The five scores describe the specific way a person's system tends to handle pressure and change — not a blanket judgment of 'strong' versus 'not strong.' Everyone's resilience profile is different, and a lower score in one dimension usually just points to where more active support helps, not a flaw.",
+    aZh: "不是。灵犀场从不使用「强者」和「弱者」这样的判断。有些人的力量来自快速行动，有些人的力量来自深度思考，有些人的力量来自长期积累——某一个维度较低，不代表缺少能力，可能只是说明你的生命系统更适合通过另一种方式恢复。真正的成长，不是把自己变成别人，而是学会使用自己已经拥有的力量。",
+    aEn: "No. Lingxi Field never uses judgments like 'strong' or 'weak.' Some people's strength comes from fast action, some from deep thought, some from long accumulation. A lower score in one dimension doesn't mean a lack of capacity — it may simply mean your system recovers better through a different route. Real growth isn't becoming someone else. It's learning to use the strength you already have.",
   },
 ];
 

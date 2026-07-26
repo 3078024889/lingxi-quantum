@@ -5,21 +5,19 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const PRIVACY_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀场会不会把我的出生信息卖给第三方？", qEn: "Does Lingxi Field sell my birth information to third parties?",
-    aZh: "不会。出生信息仅用于生成你自己的报告，以及发送给语言模型服务商用于撰写解读文字，不会被用于广告投放或者出售给其他公司。",
-    aEn: "No. Your birth information is used only to generate your own report and is sent to the language model provider solely to write your reading — it is never used for advertising targeting or sold to other companies.",
+    qZh: "灵犀场会出售我的出生信息或个人数据吗？", qEn: "Does Lingxi Field sell my birth information or personal data?",
+    aZh: "不会。用户提交的信息仅用于提供对应的个人探索体验、保存记录以及优化服务。灵犀场不会出售用户数据，也不会将个人信息用于广告交易或其他无关用途。",
+    aEn: "No. Information you submit is used only to provide your personal exploration experience, save your records, and improve the service. Lingxi Field does not sell user data, and does not use personal information for advertising transactions or other unrelated purposes.",
   },
   {
-    qZh: "我可以要求灵犀场删除我的数据吗？", qEn: "Can I request that Lingxi Field delete my data?",
-    aZh: "可以，你可以随时在账户页面删除自己的测试记录，如需注销整个账户或有其他数据请求，可以通过网站内的联系方式联系我们处理。",
-    aEn: "Yes. You can delete your own test records at any time from your account page. To close your account entirely or make other data requests, contact us through the contact information on this Site.",
+    qZh: "我可以删除自己的数据吗？", qEn: "Can I delete my own data?",
+    aZh: "可以。用户可以通过账户功能管理自己的记录。如果希望删除账户或请求清除相关数据，可以发送邮件至 support@lingxifield.com，我们将在合理时间内处理。",
+    aEn: "Yes. You can manage your own records through your account. If you'd like to delete your account or request that related data be cleared, email support@lingxifield.com and we will handle it within a reasonable time.",
   },
 ];
 
-
-
 export const metadata = {
-  title: "隐私政策 | Privacy Policy | Lingxi Field",
+  title: "隐私政策 | 灵犀场 | Privacy Policy | Lingxi Field",
   alternates: { canonical: "/privacy" },
 };
 
@@ -39,60 +37,60 @@ export default function PrivacyPage() {
         <div className="mt-10 space-y-8 text-base leading-8 text-bone-dim">
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="1. 我们收集哪些信息" en="1. What Information We Collect" />
+              <Bi zh="1. 我们收集的信息" en="1. Information We Collect" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="账户信息：注册时提供的邮箱地址，由我们的账户服务商（Supabase）处理身份验证。测试与报告数据：你为生成个人报告而主动填写的信息，包括出生日期、出生时间（可选）、出生地点（可选）、称呼（可选）。梦境记录、显化愿景、修炼心得等你主动写下并保存的文字内容。付款记录：购买了哪个产品、购买时间、金额，不包括你的完整支付账户或密码信息——支付信息由第三方支付服务商（如微信支付）直接处理，我们不会接触或存储你的完整支付凭证。使用数据：访问的页面、设备与浏览器类型等基础技术信息，用于网站正常运行与故障排查。"
-                en="Account information: the email address you provide at registration, used for authentication through our account service provider (Supabase). Test and report data: information you voluntarily submit to generate a personal report, including birth date, birth time (optional), birth place (optional), and a preferred name (optional); as well as dream journal entries, manifestation visions, and practice journal entries you choose to write and save. Payment records: which product was purchased, when, and for how much \u2014 this does not include your full payment account or password details. Payment details are handled directly by third-party payment providers (such as WeChat Pay); we never receive or store your full payment credentials. Usage data: basic technical information such as pages visited and device/browser type, used for keeping the Site running properly and for troubleshooting."
+                zh="为了提供灵犀场体验，我们可能收集：账户信息（例如邮箱地址，用于账户登录和身份验证）；探索数据（包括出生日期、出生时间（可选）、出生地点（可选）、用户主动填写的愿景、梦境记录、个人探索记录）；技术信息（包括浏览器类型、设备信息、页面访问记录，用于网站运行、安全维护和体验优化）。"
+                en="To provide the Lingxi Field experience, we may collect: account information (such as your email address, used for login and identity verification); exploration data (including birth date, birth time (optional), birth place (optional), visions you choose to enter, dream journal entries, and your personal exploration records); and technical information (including browser type, device information, and page-visit records, used to run the site, maintain security, and improve the experience)."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="2. 我们如何使用这些信息" en="2. How We Use This Information" />
+              <Bi zh="2. 信息用途" en="2. How We Use This Information" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="生成你请求的个人报告与解读内容；维护你的账户，让你能够查看、下载、删除自己保存过的记录；处理你的付款、解锁你购买的内容；改进网站的功能与体验；在必要时（例如客服支持）与你联系。"
-                en="To generate the personal reports and readings you request; to maintain your account so you can view, download, and delete records you have saved; to process your payments and unlock the content you have purchased; to improve the Site's functionality and experience; and, when necessary (such as for customer support), to contact you."
+                zh="我们使用信息用于：生成个人化体验内容；保存用户探索记录；提供账户服务；优化产品体验；提供客户支持。"
+                en="We use information to: generate personalized experience content; save your exploration records; provide account services; improve the product experience; and provide customer support."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="3. 内容生成方式——如实说明" en="3. How Content Is Generated \u2014 An Honest Explanation" />
+              <Bi zh="3. 内容生成方式" en="3. How Content Is Generated" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="这一节我们选择使用清楚、准确的技术用语，而不是网站其余部分使用的场域化语言，因为隐私政策的目的是让你准确了解数据如何被处理，不是品牌表达。你提交的出生信息、命盘数据，会被发送给第三方语言模型服务商（智谱AI）用于生成解读文字；命盘本身的计算（行星位置、历法换算等）在我们自己的服务器上完成，不会发送给第三方。我们与语言模型服务商之间有相应的数据处理约定，你的信息不会被该服务商用于训练其模型或用于其他与生成你的报告无关的目的。"
-                en="In this section, we intentionally use clear, precise technical language rather than the more evocative language used elsewhere on the Site, because the purpose of a privacy policy is for you to accurately understand how your data is processed, not to express our brand voice. The birth information and chart data you submit are sent to a third-party language model provider (Zhipu AI) to generate the narrative text of your reading. The chart calculations themselves (planetary positions, calendrical conversions, etc.) are performed on our own servers and are not sent to any third party. We have a data processing agreement with our language model provider; your information is not used by that provider to train its models or for any purpose unrelated to generating your report."
+                zh="部分体验内容会结合数据计算系统、智能生成技术、内容模型服务，生成个性化文字内容。用户提交的信息，仅用于生成对应体验内容。我们不会将用户数据用于训练第三方模型。"
+                en="Some content is generated by combining a data-computation system, intelligent generation technology, and a content-model service to produce personalized text. Information you submit is used only to generate your corresponding experience content. We do not use your data to train third-party models."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="4. 我们如何存储与保护信息" en="4. How We Store & Protect Information" />
+              <Bi zh="4. 数据存储与保护" en="4. Data Storage & Protection" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="你的账户与报告数据存储在Supabase提供的数据库服务上，并启用了行级安全策略（Row Level Security），确保只有你自己的账户能够访问你自己的数据，我们的技术团队在日常运营中不会主动查看单个用户的具体报告内容。我们采取合理的技术与管理措施保护你的信息，但请理解，没有任何互联网传输或存储方式能保证百分之百的安全。"
-                en="Your account and report data are stored on database infrastructure provided by Supabase, with Row Level Security enabled, ensuring that only your own account can access your own data; our technical team does not routinely view individual users' report content in the course of normal operations. We take reasonable technical and organizational measures to protect your information, but please understand that no method of transmission or storage over the internet can be guaranteed to be 100% secure."
+                zh="用户数据存储于 Supabase 数据服务系统。我们采用合理的数据安全措施，包括访问控制和安全策略，保护用户数据。"
+                en="User data is stored on the Supabase data service. We use reasonable data-security measures, including access controls and security policies, to protect your data."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="5. 你的权利" en="5. Your Rights" />
+              <Bi zh="5. 用户的数据权利" en="5. Your Data Rights" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="你可以随时在账户页面查看、下载自己保存过的报告记录；可以随时删除自己的测试记录（删除后无法恢复）；如需注销整个账户或有其他关于个人信息的请求（例如导出全部数据、更正信息），请通过网站内的联系方式与我们联系，我们会在合理时间内处理。"
-                en="You may view and download your saved report records at any time from your account page; you may delete your own test records at any time (deletion is permanent and cannot be undone); if you wish to close your account entirely or have other requests regarding your personal information (such as exporting all your data or correcting information), please contact us through the contact information on this Site, and we will address your request within a reasonable time."
+                zh="用户可以：查看自己的数据；删除个人记录；请求注销账户；请求数据处理说明。如需帮助：support@lingxifield.com"
+                en="You may: view your own data; delete personal records; request account closure; or request an explanation of how your data is processed. For help: support@lingxifield.com"
               />
             </p>
           </section>
@@ -103,46 +101,33 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="本网站不是专门面向儿童设计的，我们不会在明知的情况下收集13周岁以下儿童的个人信息。如果你是家长或监护人，发现自己未满13周岁的孩子向我们提供了个人信息，请联系我们，我们会尽快删除相关信息。"
-                en="This Site is not specifically directed at children, and we do not knowingly collect personal information from children under the age of 13. If you are a parent or guardian and believe your child under 13 has provided us with personal information, please contact us and we will remove it promptly."
+                zh="灵犀场不主动收集儿童个人信息。如发现未成年人未经授权提交个人数据，我们会及时处理删除。"
+                en="Lingxi Field does not knowingly collect personal information from children. If we discover that a minor has submitted personal data without authorization, we will promptly delete it."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="7. 跨境数据传输" en="7. International Data Transfers" />
+              <Bi zh="7. 跨境数据处理" en="7. Cross-Border Data Processing" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="由于我们使用的部分技术服务商（如账户与数据库服务、语言模型服务）的服务器可能位于不同国家/地区，你的信息在处理过程中可能会跨境传输。我们会要求相关服务商遵守适当的数据保护标准。"
-                en="Because some of the technical service providers we use (such as our account/database service and language model service) may operate servers in different countries or regions, your information may be transferred across borders during processing. We require the relevant providers to comply with appropriate data protection standards."
+                zh="由于部分技术服务可能部署于不同地区，用户数据可能发生跨境处理。我们会要求合作服务商遵循合理的数据保护标准。"
+                en="Because some technical services may be deployed in different regions, your data may be processed across borders. We require our service partners to follow reasonable data-protection standards."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="8. 政策变更" en="8. Changes to This Policy" />
+              <Bi zh="8. 联系我们" en="8. Contact Us" />
             </h2>
-            <p className="mt-3">
-              <Bi
-                zh="我们可能不时更新本政策，更新后的版本将标注新的生效日期并发布于本页面。重大变更时，我们会尽合理努力以显著方式告知你。"
-                en="We may update this Policy from time to time. Updated versions will be marked with a new effective date and posted on this page. For material changes, we will make reasonable efforts to notify you in a prominent way."
-              />
-            </p>
-          </section>
-
-          <section>
-            <h2 className="font-display text-xl text-bone">
-              <Bi zh="9. 联系我们" en="9. Contact Us" />
-            </h2>
-            <p className="mt-3">
-              <Bi
-                zh="如对本政策或你的个人信息有任何疑问，请通过网站内的联系方式与我们联系。"
-                en="If you have any questions about this Policy or your personal information, please contact us through the contact information provided on this Site."
-              />
-            </p>
+            <div className="mt-3 space-y-1 text-sm">
+              <p>support@lingxifield.com</p>
+              <p>business@lingxifield.com</p>
+              <p>contact@lingxifield.com</p>
+            </div>
           </section>
         </div>
         <div className="mt-16">

@@ -11,24 +11,24 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const RELATIONSHIP_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "关系共振图谱是怎么计算两个人的关系的？", qEn: "How does the Relationship Resonance Map compute the connection between two people?",
-    aZh: "灵犀场分别为两个人计算出完整的十项生命向量（融合西方占星、中式八字、紫微斗数、玛雅Tzolkin、吠陀占星这五套系统），再把两份向量交叉对照，找出哪几项数值几乎重合（天然共鸣）、哪几项恰好互补对齐（天然分工）、哪几项同时冲得很高却没有另一端接住（真实的摩擦点）。全部基于确定性计算，不是笼统的星座配对说法。",
-    aEn: "Lingxi Field computes a full set of ten life-vector dimensions for each person (drawing on Western astrology, Chinese Bazi, Ziwei Doushu, the Maya Tzolkin, and Vedic astrology), then cross-references the two sets to find where they align almost precisely (natural resonance), where they land on complementary ends of the same axis (natural division of roles), and where both run hot on the same drive with nothing to balance it (a real friction point). It's all based on deterministic computation, not generic sign-matching.",
+    qZh: "关系共振图谱是怎么理解两个人的关系的？", qEn: "How does the Relationship Resonance Map understand the connection between two people?",
+    aZh: "灵犀场关注的不是「你们适不适合」，因为真正重要的问题，从来不是「这个人是不是我的正确答案」，而是「我们为什么会相遇」「这段连接正在呈现什么结构」。关系共振图谱会将两个人的生命信息映射到同一片关系场中，观察哪些部分天然产生共鸣（像两种频率自然靠近）、哪些部分形成互补（一个人的优势正好成为另一个人的支持）、哪些部分容易产生摩擦（不是判断谁对谁错，是看见双方不同的表达方式）。它不是一句「合」或者「不合」，而是一张帮助你理解关系运行方式的地图。",
+    aEn: "Lingxi Field isn't concerned with whether you two 'match.' The real question was never 'is this person my correct answer' — it's 'why did we meet' and 'what structure is this connection showing.' The Relationship Resonance Map maps both people's life information into the same relational field, observing where they naturally resonate (like two frequencies drawing close), where they complement each other (one person's strength becomes the other's support), and where friction tends to arise (not about who's right, but about seeing each other's different modes of expression). It isn't a verdict of 'compatible' or 'not' — it's a map that helps you understand how the relationship actually runs.",
   },
   {
-    qZh: "关系共振图谱只能测情侣吗？", qEn: "Is the Relationship Resonance Map only for romantic couples?",
-    aZh: "不是，可以测任何两人关系——亲密关系、合伙/商业关系，或者朋友、家人、导师这类其他关系，网站上有三种入口分别对应，测算逻辑一样，解读的角度会针对不同关系类型调整。",
-    aEn: "No — it can be used for any pairing: romantic relationships, business partnerships, or other connections like friends, family, or mentors. The site has three entry types for these, using the same underlying calculation but with the interpretation angled to fit each relationship type.",
+    qZh: "关系共振图谱只能看情侣关系吗？", qEn: "Can the Relationship Resonance Map only be used for romantic couples?",
+    aZh: "不是，关系是生命中最丰富的连接形式。灵犀场目前提供三种入口：亲密关系（探索彼此吸引的来源、情绪互动方式、长期相处中的共振与挑战）、合伙商业关系（探索价值观连接、创造方式、合作节奏、资源互补）、其他关系（朋友、家人、导师、重要生命伙伴）。不同关系会展开不同观察角度，因为爱情、友情、事业，本质上都是不同形式的生命连接。",
+    aEn: "No — relationships are the richest form of connection in life. Lingxi Field currently offers three entrances: intimate relationships (exploring where attraction comes from, emotional interaction styles, and the resonance and challenges of long-term closeness), business partnerships (exploring shared values, creative style, working rhythm, and complementary resources), and other relationships (friends, family, mentors, significant life companions). Different relationships open different angles of observation, because romance, friendship, and work are all, at their core, different forms of life connection.",
   },
   {
-    qZh: "买一次能测几对关系？", qEn: "How many pairs can I test with one purchase?",
-    aZh: "一次能量交换后永久解锁，之后可以用不同的两个人反复测算，不需要为每一对关系重新付费。",
-    aEn: "One exchange unlocks the feature permanently — afterward you can test as many different pairs as you like, with no repeat payment required for each new pair.",
+    qZh: "一次场域入口开启，能看几段关系？", qEn: "How many relationships does one field entrance opening cover?",
+    aZh: "每一次关系共振开启，都会生成对应这一段关系的探索档案，针对的是当前输入的这两个人。如果想探索另一段关系，可以重新开启一次新的关系连接。灵犀场希望每一次进入，都是真实面对一段关系，而不是批量生成大量没有意义的结果——生成过的档案会保存在你的场域入口里，随时可以回看。",
+    aEn: "Each opening of Relationship Resonance generates an exploration record for that specific relationship, based on the two people entered. To explore a different relationship, you can open a new connection. Lingxi Field wants each entry to be a genuine encounter with one relationship, not a batch of meaningless results — records you've generated are saved in your field entrance and can be revisited anytime.",
   },
   {
-    qZh: "关系共振图谱会说两个人合不合适吗？", qEn: "Does the Relationship Resonance Map tell you whether two people are compatible?",
-    aZh: "不会给「合适/不合适」这种简单结论，而是展示两个人各自的生命结构在哪里天然共鸣、哪里互补、哪里容易产生摩擦，帮助理解这段关系正在发生什么，具体怎么处理由用户自己判断。",
-    aEn: "It doesn't give a simple 'compatible or not' verdict. Instead, it shows where the two people's life structures naturally resonate, where they complement each other, and where friction is likely — helping you understand what's happening in the relationship, while what to do about it remains your own call.",
+    qZh: "关系共振图谱会说两个人合不合适吗？", qEn: "Does the Relationship Resonance Map say whether two people are compatible?",
+    aZh: "不会。灵犀场不会替你决定「留下还是离开」，因为关系不是一道数学题。它会帮助你看见为什么彼此吸引、哪里容易理解彼此、哪里需要更多觉察——一段关系真正珍贵的地方，不只是结果，而是在相遇过程中，两个人如何共同成长。",
+    aEn: "No. Lingxi Field won't decide 'stay or leave' for you — a relationship isn't a math problem. It helps you see why you're drawn to each other, where understanding comes easily, and where more awareness is needed. What's truly valuable in a relationship isn't just the outcome, but how two people grow together through the encounter.",
   },
 ];
 
@@ -253,7 +253,7 @@ export default function RelationshipFlow() {
       )}
       <div className="bg-void-deep mt-3 rounded-sm p-3 text-center">
         <p className="text-sm text-bone-dim/90">
-          <Bi zh="一次交换，永久解锁——之后可以用不同的两个人再测，不用重复付费。" en="One exchange, unlocked forever — test as many pairs as you like afterward, no repeat payment." />
+          <Bi zh="一次能量交换，为你和对方生成一份完整的关系共振图谱，保存在你的场域入口里，随时可以回看、下载。" en="One energy exchange generates a full Relationship Resonance Map for you and the other person, saved in your field entrance — revisit or download it anytime." />
         </p>
       </div>
       <FaqSection items={RELATIONSHIP_FAQ} />

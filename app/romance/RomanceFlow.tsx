@@ -9,19 +9,19 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const ROMANCE_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "桃花磁场分数是怎么算出来的？", qEn: "How is the Romance Magnetism score calculated?",
-    aZh: "从真实出生数据里算出金星位置、命盘里跟人际吸引力相关的维度，再核对传统命理里「命带桃花」这条规则（日柱地支是否落在特定地支上）。全部基于确定性计算，同一份出生数据任何时候重算结果都一致，不是临场编的。",
-    aEn: "It's computed from your real birth data — the position of Venus and the attraction-related dimensions in your chart — cross-checked against the classical 'Peach Blossom' rule in Chinese astrology (whether your Day Pillar's branch falls in a specific set). It's all based on deterministic computation; recomputing the same birth data at any time gives the same result, not something improvised on the spot.",
+    qZh: "桃花磁场分数是如何形成的？", qEn: "How does the Romance Magnetism score form?",
+    aZh: "吸引力，从来不只是外貌，也来自表达方式、情绪温度、存在感、连接他人的方式。灵犀场通过你的生命结构信息，观察与你「连接世界」相关的象征节点：你容易通过什么方式被感知、你释放怎样的关系信号、哪一种状态下你的魅力更容易自然展开，同时结合传统象征体系中的桃花标记，形成一份关于个人吸引力风格的探索。它不是告诉你「一定会遇见谁」，而是帮助你发现，你的生命磁场，正在如何与世界发生连接。",
+    aEn: "Attraction was never just about looks — it also comes from how you express, your emotional warmth, your presence, and how you connect with others. Lingxi Field observes the symbolic nodes tied to how you connect with the world: how you tend to be perceived, what relational signal you give off, and in which state your charm unfolds most naturally — cross-checked against the classical Peach Blossom marker, forming an exploration of your own attraction style. It doesn't tell you 'who you'll meet.' It helps you discover how your field is already connecting with the world.",
   },
   {
-    qZh: "桃花磁场测试要付费吗？", qEn: "Does the Romance Magnetism test cost anything?",
-    aZh: "不需要，即时呈现，不需要登录，也不需要付费。",
-    aEn: "No — it's shown to you right away, with no sign-in and no payment required.",
+    qZh: "桃花磁场是不是要开启完整探索才能看？", qEn: "Do I need to open the full exploration to see my Romance Magnetism?",
+    aZh: "桃花磁场是一处轻量的自我探索入口，帮助你快速认识自己的吸引力来源、关系互动模式、容易被别人感受到的一面。真正完整的关系结构，会在生命图谱与关系共振中进一步展开——因为吸引力只是连接的开始，理解自己，才是关系真正的起点。",
+    aEn: "Romance Magnetism is a light, standalone entrance for self-exploration — it helps you quickly recognize where your attraction comes from, how you interact in connection, and the side of you others tend to notice. A more complete relational structure unfolds further in the Life Map and Relationship Resonance — because attraction is only the beginning of connection. Understanding yourself is where a relationship truly starts.",
   },
   {
     qZh: "桃花磁场分数高低代表什么？", qEn: "What does a higher or lower Romance Magnetism score mean?",
-    aZh: "分数高低反映的是「吸引力被外界感知到的容易程度」，不是「谈恋爱能力」或者「人品好坏」的评价——分数偏低不代表没有吸引力，可能是这份吸引力需要更近距离、更长时间才会被感知到。",
-    aEn: "The score reflects how easily your magnetism is noticed by others — it isn't a judgment of your ability to date or your character. A lower score doesn't mean you lack appeal; it may mean your appeal takes closer proximity or more time to be noticed.",
+    aZh: "它不是魅力排行榜，也不是判断一个人是否受欢迎——灵犀场看到的是「你的存在感，是如何被世界接收」。有些人的吸引力属于第一眼，出现时便容易被注意；有些人的吸引力属于长期，越深入了解越容易感受到价值；有些人的吸引力属于特定环境，在熟悉领域、热爱的事情中会自然发光。不同结构，没有高低，只有不同的表达方式。",
+    aEn: "It isn't a charisma leaderboard, and it doesn't judge how popular someone is — what Lingxi Field observes is how your presence is received by the world. Some people's pull is instant, noticed the moment they arrive. Some are a slow burn, felt more deeply the longer you know them. Some shine brightest in a particular setting — in familiar territory, doing what they love. Different structures aren't ranked. They're just different modes of expression.",
   },
 ];
 

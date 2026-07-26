@@ -53,7 +53,7 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
             </p>
 
             {n.status === "soon" ? (
-              <CreatingPanel priceRmb={getProduct(n.slug)?.priceRmb ?? Math.round(n.price * 7.2)} />
+              <CreatingPanel priceRmb={getProduct(n.slug)?.priceRmb ?? n.price} />
             ) : n.illustrated ? (
               <LiveIllustratedReader slug={n.slug} price={n.price} titleZh={n.title} titleEn={n.titleEn} />
             ) : (
@@ -126,7 +126,7 @@ async function LiveIllustratedReader({ slug, price, titleZh, titleEn }: { slug: 
   const { user, unlocks } = await getAccess();
   const unlocked = !!user && hasUnlock(unlocks, slug);
   const entry = getIllustrated(slug);
-  const priceRmb = getProduct(slug)?.priceRmb ?? Math.round(price * 7.2);
+  const priceRmb = getProduct(slug)?.priceRmb ?? price;
 
   if (!entry) return <CreatingPanel priceRmb={priceRmb} />;
 
@@ -169,7 +169,7 @@ async function LiveReader({
   const { user, unlocks } = await getAccess();
   const unlocked = !!user && hasUnlock(unlocks, slug);
   const entry = NARRATIVE_TEXTS[slug];
-  const priceRmb = getProduct(slug)?.priceRmb ?? Math.round(price * 7.2);
+  const priceRmb = getProduct(slug)?.priceRmb ?? price;
 
   if (!entry) {
     // 文本尚未接入（理论上不应发生，兜底显示创作中）

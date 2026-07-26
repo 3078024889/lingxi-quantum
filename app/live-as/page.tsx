@@ -10,14 +10,14 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const LIVE_AS_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "显化在灵犀场里是怎么运作的？", qEn: "How does manifestation work on Lingxi Field?",
-    aZh: "每天花几分钟，进入你已经与目标对齐的那个自己的感受，记录当下的感受、行动与选择，让意识、行动、选择逐渐与你想创造的现实对齐——不是被动等待，是持续、主动的日常练习。",
-    aEn: "Spend a few minutes each day entering the felt sense of already being the version of yourself aligned with your goal, and record your feelings, actions, and choices — bringing your awareness, actions, and choices into alignment with the reality you want, step by step. It's an active daily practice, not passive waiting.",
+    qZh: "显化在灵犀场里是如何运作的？", qEn: "How does manifestation work on Lingxi Field?",
+    aZh: "显化，并不是简单地等待某件事发生，而是意识、选择与现实行动逐渐形成一致。你相信什么、你关注什么、你如何选择、你如何行动，都在不断影响你正在创造的生活版本。灵犀场中的显化练习，通过意识聚焦（让你清晰看见真正想创造的方向）、状态连接（进入那个已经与目标产生共振的自己）、行动对齐（让每天的选择逐渐靠近你想体验的现实）——当内在频率、意识方向与现实行动开始一致，很多过去看似遥远的目标，会逐渐出现新的路径：新的机会，新的关系，新的创造方式，也包括意识本身的持续扩展。显化不是逃避现实，而是成为那个能够承载你想要现实的自己。",
+    aEn: "Manifestation isn't simply waiting for something to happen — it's the gradual alignment of consciousness, choice, and real-world action. What you believe, what you focus on, how you choose, and how you act all keep shaping the version of life you're creating. The manifestation practice on Lingxi Field works through focused awareness (seeing clearly what you truly want to create), state connection (entering the version of yourself already resonating with that goal), and action alignment (letting daily choices move closer to the reality you want). When inner frequency, conscious direction, and real action begin to align, goals that once felt distant tend to open new paths — new opportunities, new relationships, new ways of creating, and an ongoing expansion of consciousness itself. Manifestation isn't escaping reality — it's becoming the self able to carry the reality you want.",
   },
   {
-    qZh: "显化练习需要付费吗？", qEn: "Does the manifestation practice require payment?",
-    aZh: "属于「显化与梦境解读」订阅模块，需要订阅后才能使用。",
-    aEn: "It belongs to the Manifestation & Dream Interpretation subscription module, and requires an active subscription.",
+    qZh: "显化练习如何帮助自己？", qEn: "How does the manifestation practice help me?",
+    aZh: "灵犀场显化练习，不是要求你幻想一个不存在的世界，它更像是一种意识训练——帮助你发现哪些信念正在限制自己、哪些旧模式正在重复、哪些选择正在远离真正想要的人生。通过持续觉察，你会越来越清楚什么是恐惧驱动的选择，什么是真正来自内心的创造。当意识发生改变，现实也会开始出现新的展开方式。",
+    aEn: "The Lingxi Field manifestation practice doesn't ask you to imagine a world that doesn't exist — it's closer to a form of consciousness training, helping you discover which beliefs are limiting you, which old patterns keep repeating, and which choices are pulling you away from the life you actually want. Through ongoing awareness, you become increasingly clear on what's a fear-driven choice versus what truly comes from creation within. As consciousness shifts, reality tends to open new ways of unfolding too.",
   },
 ];
 

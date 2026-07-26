@@ -6,20 +6,18 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 const TERMS_FAQ: BilingualFaqItem[] = [
   {
     qZh: "使用灵犀场需要年满多少岁？", qEn: "How old do I need to be to use Lingxi Field?",
-    aZh: "本网站主要面向成年人。未满18周岁的用户，需要在监护人陪同、了解并同意本条款的情况下使用，涉及付费的功能必须获得监护人的明确同意。",
-    aEn: "This Site is primarily intended for adults. Users under 18 should use it only with the knowledge and consent of a parent or guardian, and any paid features require the guardian's explicit consent.",
+    aZh: "灵犀场主要面向成年人。未成年人使用平台，需要获得监护人同意，涉及能量交换的功能必须获得监护人的明确同意。",
+    aEn: "Lingxi Field is primarily intended for adults. Minors using the platform need a guardian's consent, and any feature involving an energy exchange requires the guardian's explicit consent.",
   },
   {
     qZh: "灵犀场的内容可以商用吗？", qEn: "Can content from Lingxi Field be used commercially?",
-    aZh: "为你自己生成的个人报告可以自行保存、下载、用于个人用途或分享，但未经授权，不得将网站内容用于商业性复制、批量转售或建立竞争性产品。",
-    aEn: "Personal reports generated for you may be saved, downloaded, used personally, or shared. Content from this Site may not be commercially reproduced, resold in bulk, or used to build a competing product without authorization.",
+    aZh: "用户生成的个人报告，可以用于个人保存和分享，但未经授权，不得商业复制、批量销售、二次开发，或用于建立竞争服务。",
+    aEn: "Personal reports you generate may be kept and shared for personal use. Without authorization, they may not be commercially reproduced, resold in bulk, adapted into derivative products, or used to build a competing service.",
   },
 ];
 
-
-
 export const metadata = {
-  title: "服务条款 | Terms of Service | Lingxi Field",
+  title: "服务条款 | 灵犀场 | Terms of Service | Lingxi Field",
   alternates: { canonical: "/terms" },
 };
 
@@ -43,44 +41,44 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="灵犀场（Lingxi Field，网站域名 lingxifield.com，以下称「本网站」或「我们」）是一个提供自我探索类数字内容服务的平台，内容包括但不限于生命图谱、关系共振、生命灵签、量子塔罗、梦境记录与解析、显化练习、意识修炼技术等，均以真实的出生日期、时间等天文历法数据为基础，结合语言模型生成的文字解读，供用户参考。使用本网站即表示你同意本服务条款，请在使用前仔细阅读。"
-                en="Lingxi Field (lingxifield.com, \u201cthe Site\u201d or \u201cwe\u201d) is a platform offering self-exploration digital content, including but not limited to life mapping, relationship resonance, life sign readings, quantum tarot, dream journaling and interpretation, manifestation practices, and consciousness practice techniques. All content is generated based on real astronomical and calendrical data (such as birth date and time) combined with narrative text produced by a language model, for personal reference only. By using this Site, you agree to these Terms of Service. Please read them carefully before use."
+                zh="Lingxi Field 灵犀场（以下简称「灵犀场」「本平台」或「我们」）是一个提供数字化意识探索与个人成长体验的平台。平台通过生命图谱、关系探索、生命灵签、量子塔罗、梦境记录、显化实践以及相关探索模块，为用户提供个性化数字体验内容。部分体验内容会根据用户提供的信息，结合数据计算、象征体系与智能生成技术形成个人化内容。"
+                en="Lingxi Field ('Lingxi Field,' 'the platform,' or 'we') is a platform offering digital consciousness exploration and personal-growth experiences. Through the Life Map, relationship exploration, the Life Oracle, Quantum Tarot, dream journaling, manifestation practice, and related exploration modules, the platform provides personalized digital experience content. Some content is generated based on the information you provide, combined with data computation, symbolic systems, and intelligent generation technology."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="2. 服务性质说明——请务必阅读" en="2. Nature of the Service — Please Read Carefully" />
+              <Bi zh="2. 服务性质说明" en="2. Nature of the Service" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="本网站提供的所有内容，均为基于象征系统与已计算的确定性数据（天文位置、历法数据）生成的自我反思参考材料，其目的是帮助用户获得看待自身处境的新角度，不是、也不构成：命运预测、医疗诊断或建议、心理治疗或心理咨询、法律建议、财务或投资建议。如果你正在经历医疗、心理健康、法律或财务方面的困难，请咨询相应领域的专业持证人士，不要仅依据本网站内容做出重大决定。"
-                en="All content provided by this Site is self-reflection material generated from a symbolic system and deterministic computed data (astronomical positions, calendrical data), intended to offer a new perspective on one's own circumstances. It does not constitute, and should not be relied upon as: a prediction of fate, medical diagnosis or advice, psychological therapy or counseling, legal advice, or financial or investment advice. If you are experiencing medical, mental health, legal, or financial difficulties, please consult a licensed professional in the relevant field. Do not make major life decisions based solely on content from this Site."
+                zh="灵犀场提供的所有内容，属于个人探索工具、象征体验内容以及自我觉察辅助材料。其目的在于帮助用户观察自身状态、探索个人模式、获得新的思考角度。相关内容不代表未来确定结果，不构成命运预测、医疗诊断、心理治疗、法律建议或财务建议。用户应基于自身判断使用相关体验。"
+                en="All content on Lingxi Field is a tool for personal exploration, symbolic experience, and self-awareness. Its purpose is to help you observe your own state, explore your patterns, and gain a new vantage point. This content does not represent a certain future outcome, and does not constitute a prediction of fate, a medical diagnosis, psychotherapy, legal advice, or financial advice. You should use these experiences based on your own judgment."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="3. 账户" en="3. Accounts" />
+              <Bi zh="3. 用户账户" en="3. User Accounts" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="使用部分功能（例如保存测试记录、购买付费内容）需要注册账户。你需要对账户信息的真实性、账户与密码的保密性负责，并对账户下发生的所有活动承担相应责任。如果发现账户被未经授权使用，请立即联系我们。本网站主要面向成年人；如果你未满18周岁，请在监护人陪同、了解并同意本条款的情况下使用本网站，涉及付费的功能请务必获得监护人的明确同意。"
-                en="Some features (such as saving test records or purchasing paid content) require account registration. You are responsible for the accuracy of your account information, the confidentiality of your account and password, and all activity that occurs under your account. If you become aware of any unauthorized use of your account, please contact us immediately. This Site is primarily intended for adults. If you are under 18, please use this Site only with the knowledge and consent of a parent or guardian, and obtain their explicit consent before using any paid features."
+                zh="部分功能需要注册账户。用户需要提供真实有效的信息、妥善保护账户安全、对账户行为负责。如果发现账户存在未经授权使用情况，请及时联系我们。灵犀场主要面向成年人，未成年人使用平台，需要获得监护人同意。"
+                en="Some features require a registered account. You need to provide accurate information, keep your account secure, and take responsibility for activity under your account. If you discover unauthorized use of your account, please contact us promptly. Lingxi Field is primarily intended for adults; minors need a guardian's consent to use the platform."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="4. 付费内容与购买" en="4. Paid Content & Purchases" />
+              <Bi zh="4. 数字体验内容" en="4. Digital Experience Content" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="本网站部分内容需要付费解锁，具体价格以购买时页面显示为准，付款通过第三方支付服务商（如微信支付）处理，本网站不会存储你的完整支付账户或密码信息。本网站的付费产品分为两类：一次性解锁类（如生命图谱、关系共振、生命灵签、量子塔罗、四大修炼技术等）付费后即永久有效，可反复查看；订阅制产品（如显化与梦境解读、多维叙事年度解锁、全构造解锁）按周期计费，到期后需续费才能继续使用，订阅不会自动续费扣款，到期后你可以自行选择是否续期。关于退款，请查看我们的《退款政策》。"
-                en="Some content on this Site requires payment to unlock, at the price shown on the page at the time of purchase. Payments are processed through third-party payment providers (such as WeChat Pay); this Site does not store your full payment account or password details. Paid products on this Site fall into two categories: one-time unlocks (such as the Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, and the Four Practices), which remain permanently accessible once purchased; and subscription products (such as Manifestation & Dream Interpretation, the yearly Narrative unlock, and Everything Unlocked), which are billed for a fixed period and require manual renewal to continue after expiry — subscriptions do not auto-renew or auto-charge; you choose whether to renew each time. For refunds, please see our Refund Policy."
+                zh="灵犀场部分功能属于数字内容体验，包括生命图谱、灵犀生命灵签、量子塔罗、关系探索、梦境探索。内容生成后会绑定至用户账户，用户可以查看个人生成内容。"
+                en="Some features on Lingxi Field are digital content experiences, including the Life Map, Lingxi Life Oracle, Quantum Tarot, relationship exploration, and dream exploration. Once generated, content is bound to your account, and you can view content you've generated."
               />
             </p>
           </section>
@@ -91,8 +89,8 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="本网站的文字、图像、卡牌与符号设计、代码及整体呈现方式，除另有说明外，均归灵犀场所有或已获得合法授权。你为自己生成的个人报告（例如你的生命图谱、你的塔罗解读），可以自行保存、下载、用于个人用途或分享；未经授权，不得将本网站内容用于商业性复制、批量转售或建立竞争性产品。"
-                en="Unless otherwise stated, the text, imagery, card and symbol designs, code, and overall presentation of this Site are owned by or licensed to Lingxi Field. Personal reports generated for you (such as your own Life Map or Tarot reading) may be saved, downloaded, used personally, or shared by you. Content from this Site may not be commercially reproduced, resold in bulk, or used to build a competing product without authorization."
+                zh="灵犀场拥有平台内容体系、视觉设计、软件系统、页面结构、创意表达相关知识产权。用户生成的个人报告，可以用于个人保存和分享。未经授权，不得商业复制、批量销售、二次开发，或建立竞争服务。"
+                en="Lingxi Field owns the intellectual property in the platform's content system, visual design, software system, page structure, and creative expression. Personal reports you generate may be kept and shared for personal use. Without authorization, they may not be commercially reproduced, resold in bulk, adapted into derivative products, or used to build a competing service."
               />
             </p>
           </section>
@@ -103,32 +101,32 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="使用本网站时，你同意不：冒用他人身份或提交虚假出生信息用于骚扰他人；尝试破解、逆向工程或干扰本网站的正常运行；将本网站用于任何非法目的；未经授权抓取、批量复制本网站内容。"
-                en="When using this Site, you agree not to: impersonate another person or submit false birth information to harass others; attempt to hack, reverse-engineer, or disrupt the normal operation of this Site; use this Site for any unlawful purpose; or scrape or bulk-copy content from this Site without authorization."
+                zh="用户不得：使用他人身份创建账户；提供虚假信息进行恶意操作；攻击平台系统；破解程序；批量抓取内容；用于非法目的。"
+                en="You may not: create an account using someone else's identity; provide false information for malicious purposes; attack the platform's systems; reverse-engineer or crack the software; scrape content in bulk; or use the platform for any unlawful purpose."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="7. 免责声明与责任限制" en="7. Disclaimer & Limitation of Liability" />
+              <Bi zh="7. 责任限制" en="7. Limitation of Liability" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="本网站内容按「现状」提供，不作任何明示或暗示的准确性、完整性或适用性保证。在法律允许的最大范围内，灵犀场对因使用或无法使用本网站而产生的任何直接、间接、附带或后果性损失不承担责任。"
-                en="Content on this Site is provided “as is,” without any express or implied warranty of accuracy, completeness, or fitness for a particular purpose. To the maximum extent permitted by law, Lingxi Field is not liable for any direct, indirect, incidental, or consequential loss arising from the use or inability to use this Site."
+                zh="灵犀场按照现有状态提供服务。我们努力保证内容准确、安全和稳定，但不保证所有体验结果符合个人期待，或内容能够满足所有个人需求。用户理解，灵犀场提供的是探索体验，而不是确定性答案。"
+                en="Lingxi Field provides the service as-is. We work to keep content accurate, secure, and stable, but we do not guarantee that every experience will match your personal expectations, or that the content will meet every individual need. You understand that Lingxi Field offers an exploratory experience, not a definitive answer."
               />
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-bone">
-              <Bi zh="8. 条款变更" en="8. Changes to These Terms" />
+              <Bi zh="8. 条款更新" en="8. Changes to These Terms" />
             </h2>
             <p className="mt-3">
               <Bi
-                zh="我们可能不时更新本条款，更新后的版本将标注新的生效日期并发布于本页面。继续使用本网站即表示你接受更新后的条款。"
-                en="We may update these Terms from time to time. Updated versions will be marked with a new effective date and posted on this page. Continued use of this Site constitutes acceptance of the updated Terms."
+                zh="我们可能根据产品发展、安全要求或法律变化更新服务条款。更新后的版本将在网站公布。继续使用灵犀场，即表示接受更新后的条款。"
+                en="We may update these Terms as the product evolves or as security or legal requirements change. Updated versions will be posted on the website. Continuing to use Lingxi Field means accepting the updated Terms."
               />
             </p>
           </section>
@@ -137,12 +135,11 @@ export default function TermsPage() {
             <h2 className="font-display text-xl text-bone">
               <Bi zh="9. 联系我们" en="9. Contact Us" />
             </h2>
-            <p className="mt-3">
-              <Bi
-                zh="如对本条款有任何疑问，请通过网站内的联系方式与我们联系。"
-                en="If you have any questions about these Terms, please contact us through the contact information provided on this Site."
-              />
-            </p>
+            <div className="mt-3 space-y-1 text-sm">
+              <p>support@lingxifield.com</p>
+              <p>business@lingxifield.com</p>
+              <p>contact@lingxifield.com</p>
+            </div>
           </section>
         </div>
         <div className="mt-16">

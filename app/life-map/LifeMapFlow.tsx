@@ -14,29 +14,24 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const LIFEMAP_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀场生命图谱是怎么算出来的？", qEn: "How is the Lingxi Field Life Map calculated?",
-    aZh: "生命图谱融合五套真实系统：西方占星（七大行星在黄道上的精确位置）、中式八字（你的出生年月日时对应的四柱干支）、紫微斗数（命宫身宫与十二宫主星）、玛雅Tzolkin圣历（你的图腾与数字）、吠陀占星。所有数据都来自真实的天文历法计算，不是随机生成或者人工编写的，同一份出生信息，任何时候重新计算，结果都完全一致。",
-    aEn: "The Life Map combines five real systems: Western astrology (the exact positions of seven planets on the ecliptic), Chinese Bazi (your Four Pillars from birth date and time), Ziwei Doushu (Soul and Body Palace with their ruling stars), the Maya Tzolkin calendar (your day sign and tone), and Vedic astrology. All data comes from real astronomical and calendrical computation, not randomly generated or manually written text — recomputing the same birth data at any time produces identical results.",
-  },
-  {
     qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",
-    aZh: "不是。灵犀场提供的是自我探索与反思类的数字内容，基于确定性的天文历法计算生成个性化解读，目的是帮助用户从不同角度理解自己，不预测具体会发生什么事、不提供医疗心理法律财务建议，也不宣称能改变命运。",
-    aEn: "No. Lingxi Field provides digital content for self-exploration and reflection, generating personalized readings from deterministic astronomical and calendrical calculations. The goal is to help users understand themselves from different angles — it does not predict specific future events, does not provide medical, psychological, legal, or financial advice, and does not claim to change anyone's fate.",
+    aZh: "不是。灵犀场并不是一个告诉你「未来会发生什么」的预测工具，而是一处连接自我探索、生命结构理解与意识扩展的数字场域。它通过天文周期、传统象征体系、生命原型、多维叙事与意识探索模型，将这些不同维度的信息重新连接，帮助你从新的角度观察自己——这里不是替你定义人生，而是提供一面更深的镜子，你依然是自己生命的创造者。",
+    aEn: "No. Lingxi Field isn't a tool that tells you what will happen next — it's a digital field connecting self-exploration, an understanding of your life structure, and consciousness expansion. Drawing on astronomical cycles, traditional symbolic systems, life archetypes, dimensional narrative, and consciousness models, it reconnects these different dimensions of information to help you observe yourself from a new angle. This isn't about defining your life for you — it's a deeper mirror. You remain the creator of your own life.",
   },
   {
     qZh: "生命图谱需要提供哪些信息？", qEn: "What information does the Life Map need?",
-    aZh: "需要出生日期是必填的，出生时间和出生地点是选填项——填写得越完整，涉及需要精确时间的部分（比如命宫身宫、宫位）就能算得越准确，不填出生时间也可以生成报告，只是这部分内容会用默认时间近似计算。",
-    aEn: "Your birth date is required; birth time and birth place are optional. The more complete the information, the more accurate the parts that depend on precise timing (such as the Soul Palace and house positions) will be. You can still generate a report without a birth time — those specific sections will use an approximated default time.",
+    aZh: "出生日期是基础信息，出生时间与出生地点是更深层的信息节点。信息越完整，灵犀场能够展开的生命结构维度越丰富——但灵犀场并不是简单复制某一种命理体系，出生信息更像是一组进入生命旅程时留下的坐标，不是决定你的程序，而是一组用于观察自己的镜面数据。即使信息不完整，也能展开基础探索；完整信息则能打开更多层次的结构。",
+    aEn: "Your birth date is the foundation; birth time and birth place are deeper information nodes. The more complete the information, the richer the dimensions Lingxi Field can unfold — but Lingxi Field isn't simply replicating any one fortune-telling system. Birth information works more like a set of coordinates left behind as you entered this life's journey — not a program that determines you, but mirror data for observing yourself. Even incomplete information opens a basic exploration; complete information opens more layers of structure.",
   },
   {
-    qZh: "免费部分和付费完整报告有什么区别？", qEn: "What's the difference between the free preview and the full paid report?",
-    aZh: "免费部分展示命盘最外层的骨架——七大行星的星座位置、四柱的干支、玛雅印记的名称。付费完整报告会展开更深的层次：行星之间的角度关系、八字的十神纳音地势藏干胎元命宫身宫、紫微命宫身宫的主星组合详解、财富与事业频率地图、关系共振地图、大运走势、人生周期导航等13个章节，并支持下载PDF永久保存。",
-    aEn: "The free preview shows the outer frame of your chart — sign placements for the seven planets, the characters of your Four Pillars, and the name of your Maya sign. The full paid report unfolds deeper layers: the angles between planets, the Ten Gods/Na Yin/growth stages/hidden stems/Fetal Origin/Palaces within your Bazi, a detailed breakdown of your Ziwei star combinations, a wealth and career map, a relationship resonance map, major luck cycles, life cycle navigation, and more across 13 sections — downloadable as a PDF to keep permanently.",
+    qZh: "场域入口的展开和完整生命图谱有什么区别？", qEn: "What's the difference between the field entrance preview and the full Life Map?",
+    aZh: "灵犀场不会把生命探索切割成简单的「有」和「没有」。场域入口的展开，是让你先看见生命结构的轮廓——星体象征、生命原型、核心印记、基础频率。完整生命图谱，会进一步展开这些结构之间的连接关系：七大行星象征关系、八字生命结构、紫微结构探索、玛雅印记探索、人生周期导航、财富与创造路径、关系共振地图、灵犀场专属练习。最终形成的是一份属于你的生命探索档案，不是一张简单的命盘。",
+    aEn: "Lingxi Field doesn't split self-exploration into a simple 'have' or 'don't have.' The entrance preview lets you first see the outline of your life structure — planetary symbols, life archetypes, core imprints, base frequencies. The full Life Map unfolds the connections between these structures further: the seven planets' symbolic relationships, your Bazi life structure, your Ziwei structure, your Maya sign, life cycle navigation, wealth and creative pathways, a relationship resonance map, and a personal Lingxi Field practice. What forms is a complete self-exploration record — not a simple chart.",
   },
   {
-    qZh: "生命图谱可以下载PDF吗？", qEn: "Can I download the Life Map as a PDF?",
-    aZh: "可以，购买完整报告后，可以在结果页面下载为PDF文件，永久保存，随时可以重新打开查看，不需要每次都重新登录网站。",
-    aEn: "Yes. After purchasing the full report, you can download it as a PDF from the results page, keep it permanently, and reopen it anytime without needing to log back into the site.",
+    qZh: "生命图谱可以下载PDF吗？", qEn: "Can I save the Life Map as a PDF?",
+    aZh: "可以。完整生命图谱生成后，会保存在你的场域入口里，你可以在线查看、下载PDF保存、随时返回回看，也可以删除。它不是一次性的答案，而是一份可以陪伴你持续探索自己的生命档案。",
+    aEn: "Yes. Once your full Life Map is generated, it's saved in your field entrance — you can view it online, download it as a PDF, come back to it anytime, or delete it. It isn't a one-time answer; it's a life record that can keep accompanying your ongoing self-exploration.",
   },
 ];
 

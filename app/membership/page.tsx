@@ -14,19 +14,29 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀场的付费产品分几种？", qEn: "How many types of paid products does Lingxi Field have?",
-    aZh: "分两类：一次性解锁类（生命图谱、关系共振、生命灵签、量子塔罗、四大修炼技术），付费后永久有效；订阅制产品（显化与梦境解读、多维叙事年度解锁、灵犀场全构造解锁），按周期计费，到期后可自行选择是否续费，不会自动扣款。",
-    aEn: "There are two kinds: one-time unlocks (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, and the Four Practices), which remain permanently accessible once purchased; and subscription products (Manifestation & Dream Interpretation, the yearly Narrative unlock, and Everything Unlocked), which are billed for a fixed period and require you to actively choose to renew — there's no auto-charging.",
+    qZh: "灵犀场的能量交换项目分几种？", qEn: "How many kinds of energy exchange does Lingxi Field offer?",
+    aZh: "分两类：一次性开启类（四大修炼技术等），完成一次能量交换后永久有效；周期性场域连接（显化与梦境解读、多维叙事年度解锁、灵犀场全构造解锁），按周期连接，到期后由你自行决定是否延续，不会自动扣款。",
+    aEn: "There are two kinds: one-time openings (like the Four Practices), permanently active after a single energy exchange; and periodic field connections (Manifestation & Dream Interpretation, the yearly Narrative unlock, and Everything Unlocked), connected for a fixed period, with renewal always your own choice — nothing auto-charges.",
   },
   {
-    qZh: "灵犀场·全构造解锁包含什么？", qEn: "What does Lingxi Field's Everything Unlocked tier include?",
-    aZh: "包含全站所有能量交换项目：四大修炼技术、显化与梦境解读、多维叙事系统、场域精测（生命图谱、关系共振、生命灵签、量子塔罗）不限次数深度解析，以及后续新增的全部场域内容，按年计费。",
-    aEn: "It includes every energy exchange on the site: the Four Practices, Manifestation & Dream Interpretation, the Dimensional Narrative system, unlimited deep readings across Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot), and all field modules added later — billed annually.",
+    qZh: "灵犀场·全构造解锁包含什么？", qEn: "What does Lingxi Field's Everything Unlocked include?",
+    aZh: "灵犀场全构造解锁，是进入完整灵犀场体验的一种方式，连接灵犀场目前开放的多个探索维度：场域精测（生命图谱、关系共振、生命灵签、量子塔罗等生命结构探索）、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、显化与梦境探索（记录梦境、理解象征、探索意识与现实创造之间的连接）、多维叙事系统（持续展开的意识文学与未来探索内容），以及未来灵犀场持续生长的新模块。它不是开通更多功能，而是进入一个完整的生命探索空间。",
+    aEn: "Everything Unlocked is a way into the complete Lingxi Field experience, connecting the exploration dimensions currently open on the site: Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, and other life-structure exploration), the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Manifestation & Dream Exploration (recording dreams, understanding symbols, exploring the connection between consciousness and reality-creation), the Dimensional Narrative system (continuously unfolding consciousness literature and future exploration), and new modules as Lingxi Field keeps growing. It isn't unlocking more features — it's entering a complete space for self-exploration.",
   },
   {
-    qZh: "灵犀场支持哪些支付方式？", qEn: "What payment methods does Lingxi Field support?",
-    aZh: "目前支持微信扫码支付，海外支付渠道正在接入中。",
-    aEn: "Currently WeChat Pay is supported. International payment options are being added.",
+    qZh: "为什么会设计「全构造解锁」这一层？", qEn: "Why does Everything Unlocked exist as its own tier?",
+    aZh: "灵犀场最初并不是为了创造一个个独立工具。生命图谱帮助看见结构，关系共振帮助理解连接，修炼技术帮助回到内在，显化练习帮助创造现实，多维叙事帮助拓展意识——这些模块背后，本质上都指向同一个方向：理解自己。当这些部分连接起来，它们才真正形成一个完整的场。",
+    aEn: "Lingxi Field wasn't originally created as a set of separate tools. The Life Map helps you see your structure. Relationship Resonance helps you understand connection. The practices help you return inward. Manifestation helps you create reality. Dimensional Narrative helps you expand consciousness. Underneath, these all point toward the same thing: understanding yourself. Connected together, they form a genuinely complete field.",
+  },
+  {
+    qZh: "灵犀场支持哪些方式进入？", qEn: "How can I enter Lingxi Field's energy exchange?",
+    aZh: "灵犀场正在逐步开放不同地区的能量交换方式，目前支持微信支付，接下来会陆续开通支付宝等更多国内渠道，海外支付渠道也在持续接入中——会根据全球用户的使用习惯，开放更多便捷、安全的进入方式。",
+    aEn: "Lingxi Field is gradually opening energy-exchange options across different regions. WeChat Pay is currently supported, with Alipay and other domestic channels coming soon, and international payment options in ongoing development — more convenient, secure ways to enter will open as global usage grows.",
+  },
+  {
+    qZh: "灵犀场为什么叫「能量交换」，不直接叫「付款」？", qEn: "Why does Lingxi Field call it 'energy exchange' instead of 'payment'?",
+    aZh: "因为这里提供的并不是单纯的信息消费。每一次进入，背后都是内容创造、系统维护、持续研发、场域成长——你给予支持，灵犀场继续创造更多探索内容，这是一个双向连接的过程，不是一次性的买卖关系。",
+    aEn: "Because what's offered here isn't simple content consumption. Behind every entry is content creation, system maintenance, ongoing development, and the field's own growth. Your support lets Lingxi Field keep creating more to explore — it's a two-way connection, not a one-off transaction.",
   },
 ];
 

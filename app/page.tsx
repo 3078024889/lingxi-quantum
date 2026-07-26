@@ -12,6 +12,29 @@ import { gates } from "@/lib/gates";
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
+const GATES_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "什么是灵犀场的「重塑潜意识」？", qEn: "What is Lingxi Field's 'Rewrite the Subconscious'?",
+    aZh: "人的很多选择，并不是来自当下的意识决定——很多时候，我们重复某种关系模式、生活轨迹、情绪反应，是因为潜意识里早已形成了一套熟悉的运行方式。灵犀场的「重塑潜意识」，不是让你强迫自己改变，也不是简单地告诉你应该怎样生活，它更像是一面镜子：通过意识观察、象征连接、内在记录与场域练习，帮助你看见那些反复出现的人生主题，那些隐藏却影响选择的信念，那些曾经保护过你、如今却限制你的旧模式。当一个人真正看见自己的内在结构，改变往往不是靠压迫自己完成，而是在理解之后自然发生——因为你不是在对抗自己，你是在重新认识自己。",
+    aEn: "Many of our choices don't come from a conscious decision made in the moment — often, we repeat a relationship pattern, a life trajectory, or an emotional reaction because the subconscious has already formed a familiar way of running. Lingxi Field's 'Rewrite the Subconscious' doesn't force you to change, nor does it simply tell you how to live. It's closer to a mirror: through conscious observation, symbolic connection, inner recording, and field practice, it helps you see the life themes that keep resurfacing, the hidden beliefs shaping your choices, and the old patterns that once protected you but now hold you back. When a person truly sees their own inner structure, change tends to happen not by forcing yourself, but naturally, after understanding — because you aren't fighting yourself. You're getting to know yourself again.",
+  },
+  {
+    qZh: "重塑潜意识可以带来什么？", qEn: "What can Rewrite the Subconscious bring?",
+    aZh: "潜意识并不是需要被消灭的东西，它储存着你的经历、记忆、情绪与生命经验。真正的改变，不是删除过去，而是重新建立与自己的关系。在灵犀场中，你可以逐渐探索：为什么某些事情总会重复发生，为什么明明想改变却总回到旧模式，哪些内在信念正在影响你的选择，如何让意识、行动与想创造的现实逐渐靠近。当内在结构发生变化，外在生活中的选择方式、人际关系、创造方向，也可能随之展开新的可能。",
+    aEn: "The subconscious isn't something to be erased — it holds your experiences, memories, emotions, and life history. Real change isn't deleting the past; it's rebuilding your relationship with yourself. Within Lingxi Field, you can gradually explore why certain things keep repeating, why you return to old patterns even when you want change, which inner beliefs are shaping your choices, and how to bring awareness, action, and the reality you want to create closer together. As the inner structure shifts, the way you choose, relate to others, and create in outer life may open new possibilities too.",
+  },
+  {
+    qZh: "重塑潜意识是不是改变命运？", qEn: "Is Rewrite the Subconscious about changing fate?",
+    aZh: "灵犀场不认为人的生命是一条固定轨道，它更相信生命是一场持续生成的过程——过去形成的模式会影响现在的倾向，但觉察，会创造新的选择空间。重塑潜意识不是替你决定未来，而是帮助你拿回更多主动权，当你开始看见自己，你才真正开始参与自己的生命创造。",
+    aEn: "Lingxi Field doesn't see life as a fixed track — it holds life closer to an ongoing process of becoming. Patterns formed in the past shape present tendencies, but awareness creates new room to choose. Rewrite the Subconscious doesn't decide your future for you — it helps you reclaim more agency. Once you begin to see yourself, you truly begin to take part in creating your own life.",
+  },
+  {
+    qZh: "重塑潜意识需要每天练习吗？", qEn: "Does Rewrite the Subconscious need to be practiced daily?",
+    aZh: "灵犀场不设置强制任务，因为真正深入的变化，不来自外界要求，而来自一个人开始愿意了解自己。有些改变发生在一次深刻的觉察中，有些改变则需要时间，让新的意识模式逐渐融入生活。你可以按照自己的节奏进入——一次阅读，一次练习，一次新的理解，每一次回到自己，都是一次重新连接。",
+    aEn: "Lingxi Field sets no mandatory routine, because real depth of change doesn't come from an outside requirement — it comes from a person becoming willing to understand themselves. Some shifts happen in a single moment of deep awareness; others take time, as a new conscious pattern slowly settles into life. You can enter at your own pace — one reading, one practice, one new understanding. Every return to yourself is a reconnection.",
+  },
+];
+
 const HOME_FAQ: BilingualFaqItem[] = [
   {
     qZh: "灵犀场（Lingxi Field）是什么？", qEn: "What is Lingxi Field?",
@@ -96,6 +119,9 @@ export default function Home() {
                   </div>
                 </Link>
               ))}
+            </div>
+            <div className="mx-auto mt-16 max-w-2xl">
+              <FaqSection items={GATES_FAQ} />
             </div>
           </div>
         </section>
