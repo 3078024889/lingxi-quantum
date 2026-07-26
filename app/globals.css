@@ -107,6 +107,7 @@ body {
     linear-gradient(160deg, #081220 0%, #0c1f36 35%, #0f2a48 65%, #0a1c30 100%);
   background-attachment: fixed;
   color: var(--text-primary);
+  font-weight: 500;
   min-height: 100vh;
 }
 

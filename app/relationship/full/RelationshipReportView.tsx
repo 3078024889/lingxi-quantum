@@ -7,6 +7,7 @@ import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { DIM_LABEL, type LifeVector, type LifeVectorDim } from "@/lib/life-vector";
 import SpiralField from "@/components/SpiralField";
 import PortalSpinner from "@/components/PortalSpinner";
+import ShareButton from "@/components/ShareButton";
 
 // 同一个 bug、同一个修法：见 RelationshipFlow.tsx 里的注释——直接读
 // document.documentElement 的class不会随语言切换按钮重新渲染，改用
@@ -276,6 +277,13 @@ export default function RelationshipReportView({ id }: { id: string }) {
           <p className="text-sm text-bone-dim/90">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言——关系的走向，始终由两个人共同选择。" en="This is a reference for reflection, not a prophecy about your relationship — its course is always shaped by both people, together." />
           </p>
+        </div>
+        <div className="mt-4 text-center">
+          <ShareButton
+            text={t("我做了一份灵犀关系共振图谱，去看看你们的：", "I got a Lingxi Field Relationship Resonance Map — check out yours:")}
+            url="https://lingxifield.com/relationship"
+            label={{ zh: "分享这份报告", en: "Share this reading" }}
+          />
         </div>
       </div>
     </div>

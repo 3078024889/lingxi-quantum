@@ -16,6 +16,78 @@ const BONE_DIM_RGB: [number, number, number] = [168, 168, 190]; // 偏灰的正�
 
 export type PdfChapterMeta = { titleZh: string; titleEn: string };
 
+// 给桃花磁场、生命韧性指数、今日运势这类"单屏即时结果"用的轻量版
+// 导出——不需要封面页、不需要目录，直接把结果区域按需要分页截图，
+// 配合每个产品自己的主题色（比如桃花磁场用粉色调，不是全站统一的
+// 深蓝）。
+export async function exportSimplePdf(params: {
+  containerRef: HTMLElement;
+  fileName: string;
+  bgColorRgb: [number, number, number];
+  bgColorHex: string;
+}): Promise<void> {
+  const { containerRef, fileName, bgColorRgb, bgColorHex } = params;
+
+  await document.fonts.ready;
+  await new Promise((r) => setTimeout(r, 200));
+
+  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+    import("html2canvas"),
+    import("jspdf"),
+  ]);
+
+  const pdf = new jsPDF({ unit: "pt", format: "a4" });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const MARGIN = 32;
+
+  const fillPageBackground = () => {
+    pdf.setFillColor(...bgColorRgb);
+    pdf.rect(0, 0, pageWidth, pageHeight, "F");
+  };
+  fillPageBackground();
+
+  const children = Array.from(containerRef.children) as HTMLElement[];
+  let cursorY = MARGIN;
+  let placedAnything = false;
+
+  for (const chunk of children) {
+    if (!chunk || chunk.offsetHeight < 2) continue;
+    const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    const imgWidth = pageWidth - MARGIN * 2;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const usableHeight = pageHeight - MARGIN * 2;
+
+    if (imgHeight > usableHeight) {
+      if (placedAnything) { pdf.addPage(); fillPageBackground(); cursorY = MARGIN; }
+      let heightLeft = imgHeight;
+      let position = MARGIN;
+      pdf.addImage(imgData, "JPEG", MARGIN, position, imgWidth, imgHeight);
+      heightLeft -= usableHeight;
+      while (heightLeft > 10) {
+        position = MARGIN - (imgHeight - heightLeft);
+        pdf.addPage(); fillPageBackground();
+        pdf.addImage(imgData, "JPEG", MARGIN, position, imgWidth, imgHeight);
+        heightLeft -= usableHeight;
+      }
+      cursorY = MARGIN + (imgHeight % usableHeight || usableHeight);
+      placedAnything = true;
+      continue;
+    }
+
+    if (placedAnything && cursorY + imgHeight > pageHeight - MARGIN) {
+      pdf.addPage(); fillPageBackground(); cursorY = MARGIN;
+    }
+    pdf.addImage(imgData, "JPEG", MARGIN, cursorY, imgWidth, imgHeight);
+    cursorY += imgHeight + 14;
+    placedAnything = true;
+  }
+
+  pdf.save(fileName);
+}
+
+
 export async function exportGlassPdf(params: {
   containerRef?: HTMLElement; // 简单场景：直接传整个容器，工具自己把第一个直接子元素当封面、其余当正文
   coverEl?: HTMLElement; // 精细场景：调用方已经自己确定好封面元素和正文章节数组，不想被重新拆分（比如章节分组本身经过特殊调优，不想被这个工具的默认规则打乱）

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import WhyTrustLingxi from "@/components/WhyTrustLingxi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import ShareButton from "@/components/ShareButton";
 
 const RESILIENCE_FAQ: BilingualFaqItem[] = [
   {
@@ -95,6 +96,8 @@ export default function ResilienceFlow() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<Result | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const submit = async () => {
     if (!year || !month || !day || loading) return;
@@ -124,6 +127,27 @@ export default function ResilienceFlow() {
     }
   };
 
+  const downloadPdf = async () => {
+    if (!reportRef.current) return;
+    setDownloading(true);
+    try {
+      const { exportSimplePdf } = await import("@/lib/pdf-export");
+      await exportSimplePdf({
+        containerRef: reportRef.current,
+        fileName: "灵犀生命韧性指数.pdf",
+        // 扎根/沉稳主题——深森林绿打底，呼应"韧性、恢复力、稳固"这个
+        // 产品的调性，不是全站统一的深蓝背景。
+        bgColorRgb: [12, 32, 26],
+        bgColorHex: "#0c201a",
+      });
+    } catch (e) {
+      console.error("PDF 生成失败:", e);
+      alert(t("PDF 生成失败，请稍后再试。", "PDF generation failed — please try again."));
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (result) {
     const dims = DIM_ORDER.filter((d) => d in result.breakdown);
     const sorted = [...dims].sort((a, b) => result.breakdown[b] - result.breakdown[a]);
@@ -134,7 +158,8 @@ export default function ResilienceFlow() {
     const elementLabel: Record<string, string> = { wood: "木", fire: "火", earth: "土", metal: "金", water: "水" };
 
     return (
-      <div className="mx-auto max-w-xl px-6 py-16">
+      <>
+      <div ref={reportRef} className="mx-auto max-w-xl px-6 py-16">
         <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="灵犀场 · 生命韧性指数" en="Lingxi Field · Life Resilience Index" />
@@ -229,6 +254,24 @@ export default function ResilienceFlow() {
           </p>
         </div>
       </div>
+
+      <div className="mx-auto mt-4 max-w-xl px-6 text-center">
+        <button
+          onClick={downloadPdf}
+          disabled={downloading}
+          className="rounded-sm border border-lattice/40 px-6 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:bg-lattice/10 disabled:opacity-50"
+        >
+          {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
+        </button>
+        <div className="mt-3">
+          <ShareButton
+            text={t("我测了灵犀场的生命韧性指数，去看看你自己的：", "I got my Lingxi Field Resilience reading — check out your own:")}
+            url="https://lingxifield.com/resilience"
+            label={{ zh: "分享这份结果", en: "Share this result" }}
+          />
+        </div>
+      </div>
+      </>
     );
   }
 

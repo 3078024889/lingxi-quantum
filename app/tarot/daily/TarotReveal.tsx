@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Bi from "@/components/Bi";
 import type { TarotCard } from "@/lib/tarot-data";
+import { getProduct } from "@/lib/plans";
+import ShareButton from "@/components/ShareButton";
 
 // 三段式的"进入场域"仪式，取代原来"点一下、等0.9秒、弹出图片"这种
 // 过于简单的交互——不是重新设计整个产品定位（见这次回复里对GPT那份
@@ -12,6 +14,28 @@ import type { TarotCard } from "@/lib/tarot-data";
 // 在场域中显化"这个感觉，但没有牺牲卡牌本身内容的具体性。
 export default function TarotReveal({ card }: { card: TarotCard }) {
   const [stage, setStage] = useState<"idle" | "gathering" | "condensing" | "revealed">("idle");
+  const [downloading, setDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
+
+  const downloadPdf = async () => {
+    if (!reportRef.current) return;
+    setDownloading(true);
+    try {
+      const { exportSimplePdf } = await import("@/lib/pdf-export");
+      await exportSimplePdf({
+        containerRef: reportRef.current,
+        fileName: `灵犀今日塔罗-${card.nameZh}.pdf`,
+        // 紫罗兰神秘主题，呼应塔罗牌本身的视觉调性。
+        bgColorRgb: [26, 14, 40],
+        bgColorHex: "#1a0e28",
+      });
+    } catch (e) {
+      console.error("PDF 生成失败:", e);
+      alert("PDF 生成失败，请稍后再试。 / PDF generation failed — please try again.");
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const enter = () => {
     if (stage !== "idle") return;
@@ -93,6 +117,7 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
 
   return (
     <div>
+      <div ref={reportRef}>
       <div className="lx-tarot-reveal relative mx-auto w-56 overflow-hidden rounded-sm border border-lattice/40 bg-void-deep">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={imgSrc} alt={card.nameZh} className="block w-full" />
@@ -112,6 +137,24 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
           <Bi zh={card.meaningZh} en={card.meaningEn} />
         </p>
       </div>
+      </div>
+
+      <div className="mt-4 text-center">
+        <button
+          onClick={downloadPdf}
+          disabled={downloading}
+          className="rounded-sm border border-lattice/40 px-6 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:bg-lattice/10 disabled:opacity-50"
+        >
+          {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
+        </button>
+        <div className="mt-3">
+          <ShareButton
+            text={`今天全场域共享的塔罗牌是「${card.nameZh}」，来看看你的： / Today's shared tarot card is "${card.nameEn}" — see yours:`}
+            url="https://lingxifield.com/tarot/daily"
+            label={{ zh: "分享今日一卡", en: "Share today's card" }}
+          />
+        </div>
+      </div>
 
       <div className="mt-6 rounded-sm border border-amber/25 bg-amber/5 p-6 text-center">
         <p className="text-sm leading-7 text-bone-dim">
@@ -124,7 +167,7 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
           href="/tarot/reading"
           className="mt-5 inline-block bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice"
         >
-          <Bi zh="展开我的三张牌阵 · $9.9" en="Reveal My Three-Card Reading · $9.9" />
+          <Bi zh={`展开我的三张牌阵 · ¥${getProduct("tarot-reading")?.priceRmb}`} en={`Reveal My Three-Card Reading · ¥${getProduct("tarot-reading")?.priceRmb}`} />
         </a>
       </div>
 

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import WhyTrustLingxi from "@/components/WhyTrustLingxi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import ShareButton from "@/components/ShareButton";
 
 const ROMANCE_FAQ: BilingualFaqItem[] = [
   {
@@ -86,6 +87,8 @@ export default function RomanceFlow() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<Result | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const submit = async () => {
     if (!year || !month || !day || loading) return;
@@ -115,12 +118,34 @@ export default function RomanceFlow() {
     }
   };
 
+  const downloadPdf = async () => {
+    if (!reportRef.current) return;
+    setDownloading(true);
+    try {
+      const { exportSimplePdf } = await import("@/lib/pdf-export");
+      await exportSimplePdf({
+        containerRef: reportRef.current,
+        fileName: "灵犀桃花磁场指数.pdf",
+        // 粉桃花主题——深玫瑰色打底，跟这个产品自己的品牌色（rose）
+        // 呼应，不是全站统一的深蓝背景。
+        bgColorRgb: [42, 16, 28],
+        bgColorHex: "#2a101c",
+      });
+    } catch (e) {
+      console.error("PDF 生成失败:", e);
+      alert(t("PDF 生成失败，请稍后再试。", "PDF generation failed — please try again."));
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (result) {
     const r = 70, c = 2 * Math.PI * r;
     const pct = result.score / 100;
 
     return (
-      <div className="mx-auto max-w-xl px-6 py-16">
+      <>
+      <div ref={reportRef} className="mx-auto max-w-xl px-6 py-16">
         <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
             <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
@@ -205,6 +230,24 @@ export default function RomanceFlow() {
           </p>
         </div>
       </div>
+
+      <div className="mx-auto mt-4 max-w-xl px-6 text-center">
+        <button
+          onClick={downloadPdf}
+          disabled={downloading}
+          className="rounded-sm border border-rose/40 px-6 py-3 font-display text-sm uppercase tracking-widest2 text-rose transition hover:border-rose hover:bg-rose/10 disabled:opacity-50"
+        >
+          {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
+        </button>
+        <div className="mt-3">
+          <ShareButton
+            text={t("我测了灵犀场的桃花磁场指数，去看看你自己的：", "I got my Lingxi Field Romance Magnetism reading — check out your own:")}
+            url="https://lingxifield.com/romance"
+            label={{ zh: "分享这份结果", en: "Share this result" }}
+          />
+        </div>
+      </div>
+      </>
     );
   }
 

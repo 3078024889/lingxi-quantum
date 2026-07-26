@@ -6,6 +6,8 @@ import Link from "next/link";
 import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
 import { computeTodayTransit, elementRelation } from "@/lib/daily-transit";
 import { PHASE_THEME, RELATION_THEME } from "@/lib/daily-horoscope-narrative";
+import DownloadResultPdfButton from "@/components/DownloadResultPdfButton";
+import ShareButton from "@/components/ShareButton";
 
 // 每次访问都重新算（不是纯静态页）——不然月相和月亮星座这些"应该每天
 // 变"的数据，会被Next.js当成一成不变的静态内容缓存住，失去"每日"
@@ -35,9 +37,10 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
       <Nav />
       <main className="pt-24">
         <div className="mx-auto max-w-xl px-6 py-16">
+          <div id="daily-result">
           <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-              <Bi zh="灵犀 · 今日运势" en="Lingxi · Daily Horoscope" />
+              <Bi zh="灵犀场 · 今日运势" en="Lingxi Field · Daily Horoscope" />
             </p>
           </div>
 
@@ -68,6 +71,24 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
             <p className="mt-2 text-base leading-8 text-bone-dim">
               <Bi zh={RELATION_THEME[relation].zh} en={RELATION_THEME[relation].en} />
             </p>
+          </div>
+          </div>
+
+          <div className="mt-4 text-center">
+            <DownloadResultPdfButton
+              targetId="daily-result"
+              fileName={`灵犀今日运势-${sign.zh}座.pdf`}
+              bgColorRgb={[14, 16, 42]}
+              bgColorHex="#0e102a"
+              colorClass="border-lattice/40 text-lattice hover:border-lattice hover:bg-lattice/10"
+            />
+            <div className="mt-3">
+              <ShareButton
+                text={`我看了灵犀场${sign.zh}座今日运势，去看看你的星座：/ My Lingxi Field ${sign.en} horoscope today — check your sign:`}
+                url={`https://lingxifield.com/daily/${sign.slug}`}
+                label={{ zh: "分享今日运势", en: "Share today's reading" }}
+              />
+            </div>
           </div>
 
           <div className="mt-6 grid grid-cols-6 gap-2 sm:grid-cols-12">

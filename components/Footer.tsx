@@ -17,7 +17,7 @@ export default function Footer() {
             <Bi zh="显化活在此版本中的你" en="Live This Version" />
           </Link>
           <Link href="/origin" className="hover:text-lattice">
-            <Bi zh="创造源" en="Origin Field" />
+            <Bi zh="创始人与创造源" en="Founder & Origin" />
           </Link>
           <Link href="/declaration" className="hover:text-lattice">
             <Bi zh="系统声明" en="Declaration" />

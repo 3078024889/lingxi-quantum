@@ -7,6 +7,7 @@ import PortalSpinner from "@/components/PortalSpinner";
 import NatalChartWheel from "../NatalChartWheel";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { lifemapTypeImage } from "@/lib/lifemap-type-images";
+import ShareButton from "@/components/ShareButton";
 
 type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
 type HumanDesignResult = { personality: GateActivation[]; design: GateActivation[]; sunConsciousGate: number; sunUnconsciousGate: number };
@@ -479,6 +480,13 @@ export default function FullReportView({ id }: { id: string }) {
             en="This is a tool for self-exploration and reflection, not a prophecy — the direction of your life is always your own to choose."
           />
         </p>
+        <div className="mt-4 text-center print:hidden">
+          <ShareButton
+            text={t("我做了一份灵犀生命图谱，去看看你自己的：", "I got my Lingxi Field Life Map — check out your own:")}
+            url="https://lingxifield.com/life-map"
+            label={{ zh: "分享这份报告", en: "Share this reading" }}
+          />
+        </div>
         </div>
       </div>
     </div>

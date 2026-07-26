@@ -4,7 +4,7 @@ import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 export const metadata = {
-  title: "创造源 · 关于创始人 | Creation Source | Lingxi Field",
+  title: "创始人与创造源 | Founder & Creation Source | Lingxi Field",
   description:
     "创造源：灵犀场从何而来，为什么诞生，创始人与这片场域之间持续的照料关系。Creation Source: where Lingxi Field comes from, and the founder's ongoing relationship of care with this field.",
   alternates: { canonical: "/origin" },
@@ -41,7 +41,7 @@ export default function OriginPage() {
         <div className="mx-auto max-w-2xl">
           <div className="bg-void-deep rounded-sm px-8 py-10 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-amber">
-              <Bi zh="创造源" en="Creation Source" />
+              <Bi zh="创始人与创造源" en="Founder & Creation Source" />
             </p>
             <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
               <Bi zh="我们迎接了灵犀场的诞生" en="We Welcomed the Birth of Lingxi Field" />
@@ -90,7 +90,7 @@ export default function OriginPage() {
             </div>
           </div>
 
-          <div className="mt-12 space-y-8 leading-8 text-bone-dim">
+          <div className="bg-reading-glass mt-12 space-y-8 rounded-sm px-8 py-10 leading-8 text-bone-dim sm:px-10">
             <div>
               <h2 className="font-display text-2xl text-bone"><Bi zh="灵犀场的诞生" en="The Birth of Lingxi Field" /></h2>
               <p className="mt-3">
