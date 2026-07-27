@@ -613,7 +613,7 @@ export default function LifeMapFlow() {
             <p className="mx-auto mt-4 max-w-xl text-sm leading-8 text-lm2-text-dim/80">
               <Bi zh="只是你，作为容易遗忘的意识分身，暂时记不起自己了。" en="You've simply forgotten — the way a fragment of consciousness, wandering far from itself, always does for a while." />
             </p>
-            <p className="mx-auto mt-4 max-w-xl text-xs leading-7 text-lm2-text-dim/60">
+            <p className="mx-auto mt-4 max-w-xl text-xs leading-7 text-lm2-text-dim/80">
               <Bi
                 zh="不是「水瓶座所以你怎样」这种通用说法——每一句解读，都精确到你星盘里具体哪颗行星、哪个宫位、哪个十神，交叉印证出来的，换一个人，换一套数据，同一句话不成立。"
                 en={`Not "you're an Aquarius, so..." — every line is traced back to specific planets, houses, and chart placements unique to you, cross-verified across systems. Swap in a different person's data, and the same sentence stops being true.`}
@@ -662,7 +662,7 @@ export default function LifeMapFlow() {
 
               <div>
                 <label className="block text-sm text-lm2-text-dim"><Bi zh="出生日期" en="Birth Date" /></label>
-                <p className="mt-1 text-xs leading-5 text-lm2-text-dim/60">
+                <p className="mt-1 text-xs leading-5 text-lm2-text-dim/80">
                   <Bi
                     zh="中国身份证上的出生日期，有的写的是阳历（公历/西历，国际通用的那种），有的写的是农历（中国传统历法）——两者是完全不同的历法系统，同一串数字，按错了历法，算出来的命盘会整个错位。不确定的话，通常身份证上写的是阳历；海外用户，一般直接选阳历即可。"
                     en="On Chinese ID cards, the birth date is sometimes Gregorian (Solar/Western calendar), sometimes Chinese Lunar — these are entirely different calendar systems, and picking the wrong one will throw off every calculation. If unsure, ID cards usually show the Gregorian date; users outside China should simply select Gregorian."
@@ -732,7 +732,7 @@ export default function LifeMapFlow() {
               <div>
                 <label className="block text-sm text-lm2-text-dim">
                   <Bi zh="性别" en="Gender" />
-                  <span className="ml-2 text-xs text-lm2-text-dim/50"><Bi zh="（紫微斗数排大限方向需要）" en="(needed for Zi Wei Dou Shu's decade-cycle direction)" /></span>
+                  <span className="ml-2 text-xs text-lm2-text-dim/72"><Bi zh="（紫微斗数排大限方向需要）" en="(needed for Zi Wei Dou Shu's decade-cycle direction)" /></span>
                 </label>
                 <div className="mt-2 grid grid-cols-2 gap-3">
                   <button onClick={() => setGender("female")} className={`rounded-sm border px-4 py-3 text-sm transition ${gender === "female" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
@@ -833,9 +833,9 @@ export default function LifeMapFlow() {
                 <div key={f.label}>
                   <div className="flex items-baseline justify-between">
                     <p className="text-sm text-lm2-text">{f.label}</p>
-                    <p className="font-display text-lg text-lm2-violet">{f.v}<span className="text-xs text-lm2-text-dim/50">/5</span></p>
+                    <p className="font-display text-lg text-lm2-violet">{f.v}<span className="text-xs text-lm2-text-dim/72">/5</span></p>
                   </div>
-                  <p className="mt-1 text-xs text-lm2-text-dim/60">{f.sub}</p>
+                  <p className="mt-1 text-xs text-lm2-text-dim/80">{f.sub}</p>
                   <div className="mt-3 flex gap-2">
                     {[1, 2, 3, 4, 5].map((n) => (
                       <button
@@ -959,7 +959,7 @@ export default function LifeMapFlow() {
                   { label: t("土星", "Saturn"), v: isEn() ? report.facts.saturn.signEn : report.facts.saturn.signZh },
                 ].map((p) => (
                   <div key={p.label} className="rounded-sm border border-lm2-text/10 bg-lm2-card px-3 py-2 text-center backdrop-blur-xl">
-                    <p className="text-[11px] uppercase tracking-widest2 text-lm2-text-dim/60">{p.label}</p>
+                    <p className="text-[11px] uppercase tracking-widest2 text-lm2-text-dim/80">{p.label}</p>
                     <p className="mt-1 font-display text-sm text-lm2-text">{p.v}</p>
                   </div>
                 ))}
@@ -969,9 +969,9 @@ export default function LifeMapFlow() {
                 <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.monthPillar}</span>
                 <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5">{report.facts.dayPillar}</span>
                 {report.facts.hourPillar && <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.hourPillar}</span>}
-                {!report.facts.hourPillar && <span className="rounded-sm border border-lm2-text/5 px-3 py-1.5 text-lm2-text-dim/40">{t("时柱未知", "Hour pillar unknown")}</span>}
+                {!report.facts.hourPillar && <span className="rounded-sm border border-lm2-text/5 px-3 py-1.5 text-lm2-text-dim/65">{t("时柱未知", "Hour pillar unknown")}</span>}
               </div>
-              <p className="mt-3 text-center text-xs text-lm2-text-dim/50">
+              <p className="mt-3 text-center text-xs text-lm2-text-dim/72">
                 <Bi zh={`日柱纳音：${report.facts.dayDetail.naYin}　命局五行：木${report.facts.wuXingCount.wood} 火${report.facts.wuXingCount.fire} 土${report.facts.wuXingCount.earth} 金${report.facts.wuXingCount.metal} 水${report.facts.wuXingCount.water}`} en={`Day Pillar Na Yin: ${report.facts.dayDetail.naYin}　Element Balance: Wood ${report.facts.wuXingCount.wood} Fire ${report.facts.wuXingCount.fire} Earth ${report.facts.wuXingCount.earth} Metal ${report.facts.wuXingCount.metal} Water ${report.facts.wuXingCount.water}`} />
               </p>
               <div className="mt-4 flex items-center justify-center gap-3 border-t border-lm2-text/10 pt-4">
@@ -979,7 +979,7 @@ export default function LifeMapFlow() {
                   {t("玛雅印记", "Maya Sign")} {report.facts.maya.tone} {isEn() ? report.facts.maya.signEn : report.facts.maya.sign}
                 </span>
               </div>
-              <p className="mt-2 text-center text-xs text-lm2-text-dim/50">{report.facts.maya.meaning} · {report.facts.maya.toneMeaning}</p>
+              <p className="mt-2 text-center text-xs text-lm2-text-dim/72">{report.facts.maya.meaning} · {report.facts.maya.toneMeaning}</p>
               {report.facts.ziwei && (
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-lm2-text/10 pt-4">
                   <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5 font-display text-sm text-lm2-text">
@@ -1001,7 +1001,7 @@ export default function LifeMapFlow() {
                   {t("吠陀月亮", "Vedic Moon")} {isEn() ? report.facts.vedic.moonSidereal.signEn : report.facts.vedic.moonSidereal.signZh}
                 </span>
               </div>
-              <p className="mt-2 text-center text-xs text-lm2-text-dim/50">
+              <p className="mt-2 text-center text-xs text-lm2-text-dim/72">
                 {t(`岁差修正值 ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri恒星黄道`, `Ayanamsa ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri Sidereal`)}
               </p>
               <div className="mt-4 flex items-center justify-center gap-3 border-t border-lm2-text/10 pt-4">
@@ -1197,7 +1197,7 @@ export default function LifeMapFlow() {
                 />
               </p>
               <div className="mt-8">
-                <p className="text-sm text-lm2-text-dim/60 line-through">¥199</p>
+                <p className="text-sm text-lm2-text-dim/80 line-through">¥199</p>
                 <p className="font-display text-4xl text-lm2-violet">¥{getProduct("life-map-report")?.priceRmb}</p>
               </div>
               <button
@@ -1223,7 +1223,7 @@ export default function LifeMapFlow() {
                 </p>
               )}
               {!error && !submissionId && (
-                <p className="mx-auto mt-4 max-w-xs text-xs text-lm2-text-dim/50">
+                <p className="mx-auto mt-4 max-w-xs text-xs text-lm2-text-dim/72">
                   <Bi zh="需要先登录，才能保存并解锁你的完整报告。" en="Sign in first to save and unlock your full report." />
                 </p>
               )}

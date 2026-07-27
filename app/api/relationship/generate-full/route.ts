@@ -5,6 +5,11 @@ import { computeLifeVector, compareLifeVectors, findConflictsWithFallback, topTr
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 export const runtime = "nodejs";
+// v225：见 app/api/qian/generate-full/route.ts 里同一处的详细注释——
+// 默认的函数超时时间对这类长耗时 AI 调用来说太短，超时会被前端当成
+// "连接场域时出错"展示，其实不是接口坏了。这个接口现在还多了一次
+// 失败重试，更需要留够时间。
+export const maxDuration = 300;
 const ZHIPU_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
 export async function POST(req: Request) {
@@ -30,6 +35,16 @@ export async function POST(req: Request) {
     .eq("id", body.id)
     .single();
   if (!submission) return NextResponse.json({ error: "找不到这份提交记录。" }, { status: 404 });
+
+  // 安全修复（v225）：之前这里漏了归属校验——生命图谱、灵签、塔罗三个
+  // 姊妹接口都会检查"这份提交记录是不是当前登录用户自己的"，唯独这个
+  // 接口没做，导致理论上任何登录用户，只要拿到别人的 submission id，
+  // 就既能读到别人的关系共振报告内容，又会绕开自己的付费状态、直接
+  // 借用"提交记录所有者"是否已解锁来通过下面的解锁校验——不用付费就
+  // 能生成一份不属于自己的报告。这里补上跟其余三个接口一致的校验。
+  if (!REVIEW_MODE && submission.user_id !== user!.id) {
+    return NextResponse.json({ error: "无权访问这份记录。" }, { status: 403 });
+  }
 
   if (!REVIEW_MODE) {
     const { data: unlockRows } = await supabase.from("unlocks").select("product_id, expires_at").eq("user_id", submission.user_id);
@@ -140,7 +155,11 @@ export async function POST(req: Request) {
           // 跟并发数无关）。
           model: process.env.ZHIPU_MODEL_FULL || "glm-4.7-flash",
           messages,
-          max_tokens: 6000,
+          // v225：6000 对这份报告要求的 9-10 个章节来说偏紧——之前的表现
+          // 是最后一到两个章节（比如"05·成长方向"）整段缺失，不是内容
+          // 写得差，是配额不够写到那里就被截断了。参考 lifemap 报告
+          // （12章用16000）的章节数/token比例，这里上调到9000。
+          max_tokens: 9000,
           temperature: 0.85,
           frequency_penalty: 0.4,
           presence_penalty: 0.3,
@@ -166,12 +185,33 @@ export async function POST(req: Request) {
       console.error("[relationship generate-full] 智谱接口返回非200状态:", res.status, errBody, "submission id:", body.id);
       return NextResponse.json({ error: "灵犀场暂时无法回应，请稍后再试。" }, { status: 502 });
     }
-    const data = await res.json();
-    const rawText = data?.choices?.[0]?.message?.content as string | undefined;
-    const text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
-    const finishReason = data?.choices?.[0]?.finish_reason;
+    let data = await res.json();
+    let rawText = data?.choices?.[0]?.message?.content as string | undefined;
+    let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
+    let finishReason = data?.choices?.[0]?.finish_reason;
     if (finishReason === "length") {
-      console.error("[relationship generate-full] AI 回复被 max_tokens 截断，submission id:", body.id);
+      console.error("[relationship generate-full] AI 回复被 max_tokens 截断，重试一次。submission id:", body.id);
+      const retryRes = await callOnce();
+      if (retryRes.ok) {
+        const retryData = await retryRes.json();
+        const retryRaw = retryData?.choices?.[0]?.message?.content as string | undefined;
+        if (retryRaw) {
+          data = retryData;
+          rawText = retryRaw;
+          text = stripMarkdownArtifacts(retryRaw);
+          finishReason = retryData?.choices?.[0]?.finish_reason;
+        }
+      }
+      if (finishReason === "length" && text) {
+        console.error("[relationship generate-full] 重试后仍被截断，裁掉最后一段不完整内容。submission id:", body.id);
+        const parts = text.split(/===\s*\d+\s*===/);
+        const lastPart = parts[parts.length - 1]?.trim() ?? "";
+        const endsCleanly = /[。！？.!?」”】]\s*$/.test(lastPart);
+        if (!endsCleanly && parts.length > 1) {
+          const cutIndex = text.lastIndexOf(lastPart);
+          text = text.slice(0, cutIndex).trim();
+        }
+      }
     }
     if (!text) {
       console.error("[relationship generate-full] AI 没有返回内容，submission id:", body.id, "AI原始返回:", JSON.stringify(data));

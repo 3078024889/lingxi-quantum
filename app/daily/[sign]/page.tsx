@@ -37,12 +37,20 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
       <Nav />
       <main className="pt-24">
         <div className="mx-auto max-w-xl px-6 py-16">
-          <div id="daily-result">
-          <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+          <div className="flex items-center justify-between gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
               <Bi zh="灵犀场 · 今日运势" en="Lingxi Field · Daily Horoscope" />
             </p>
+            <DownloadResultPdfButton
+              targetId="daily-result"
+              fileName={`灵犀今日运势-${sign.zh}座.pdf`}
+              bgColorRgb={[14, 16, 42]}
+              bgColorHex="#0e102a"
+              colorClass="shrink-0 border-lattice/40 text-lattice hover:border-lattice hover:bg-lattice/10"
+            />
           </div>
+
+          <div id="daily-result" className="mt-4">
 
           <div className="mt-6 flex flex-col items-center rounded-sm border border-white/10 bg-void-deep p-8 text-center">
             <span className="font-display text-5xl text-lattice">{sign.glyph}</span>
@@ -75,13 +83,6 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
           </div>
 
           <div className="mt-4 text-center">
-            <DownloadResultPdfButton
-              targetId="daily-result"
-              fileName={`灵犀今日运势-${sign.zh}座.pdf`}
-              bgColorRgb={[14, 16, 42]}
-              bgColorHex="#0e102a"
-              colorClass="border-lattice/40 text-lattice hover:border-lattice hover:bg-lattice/10"
-            />
             <div className="mt-3">
               <ShareButton
                 text={`我看了灵犀场${sign.zh}座今日运势，去看看你的星座：/ My Lingxi Field ${sign.en} horoscope today — check your sign:`}

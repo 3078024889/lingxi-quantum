@@ -146,10 +146,17 @@ export default function RomanceFlow() {
     return (
       <>
       <div ref={reportRef} className="mx-auto max-w-xl px-6 py-16">
-        <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+        <div className="flex items-center justify-between gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
             <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
           </p>
+          <button
+            onClick={downloadPdf}
+            disabled={downloading}
+            className="flex shrink-0 items-center gap-2 rounded-sm border border-rose/40 px-4 py-2 text-xs uppercase tracking-widest2 text-rose transition hover:border-rose hover:text-bone disabled:opacity-50"
+          >
+            {downloading ? <Bi zh="生成中…" en="Generating…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
+          </button>
         </div>
 
         <div className="mt-6 flex flex-col items-center rounded-sm border border-white/10 bg-void-deep p-8">
@@ -232,20 +239,11 @@ export default function RomanceFlow() {
       </div>
 
       <div className="mx-auto mt-4 max-w-xl px-6 text-center">
-        <button
-          onClick={downloadPdf}
-          disabled={downloading}
-          className="rounded-sm border border-rose/40 px-6 py-3 font-display text-sm uppercase tracking-widest2 text-rose transition hover:border-rose hover:bg-rose/10 disabled:opacity-50"
-        >
-          {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
-        </button>
-        <div className="mt-3">
-          <ShareButton
-            text={t("我测了灵犀场的桃花磁场指数，去看看你自己的：", "I got my Lingxi Field Romance Magnetism reading — check out your own:")}
-            url="https://lingxifield.com/romance"
-            label={{ zh: "分享这份结果", en: "Share this result" }}
-          />
-        </div>
+        <ShareButton
+          text={t("我测了灵犀场的桃花磁场指数，去看看你自己的：", "I got my Lingxi Field Romance Magnetism reading — check out your own:")}
+          url="https://lingxifield.com/romance"
+          label={{ zh: "分享这份结果", en: "Share this result" }}
+        />
       </div>
       </>
     );

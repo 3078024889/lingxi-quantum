@@ -38,10 +38,14 @@ export async function POST(req: Request) {
     const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
     if (typeof submissionId === "string" && submissionTable) {
       const isRelationship = submissionTable === "relationship_submissions";
+      // v225：加上 .eq("user_id", user.id)——之前这里只按 submissionId 查，
+      // 没确认这份提交记录是不是当前下单的人自己的，理论上有人可以传别人
+      // 的 submissionId，把别人的名字写进自己的订单备注里。
       const { data: sub } = await admin
         .from(submissionTable)
         .select(isRelationship ? "name_a, name_b" : "name")
         .eq("id", submissionId)
+        .eq("user_id", user.id)
         .single();
       const subData = sub as { name?: string; name_a?: string; name_b?: string } | null;
       submissionName = isRelationship

@@ -6,6 +6,9 @@ import { computeLifeVector, type LifeVectorInput } from "@/lib/life-vector";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 
+export const runtime = "nodejs";
+export const maxDuration = 300;
+
 const ZHIPU_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
 function softenScore(raw: number): number {
@@ -43,7 +46,7 @@ type Batch = { titleZh: string; count: number; instruction: string; maxTokens: n
 function buildBatches(hidden: TarotCard, present: TarotCard, future: TarotCard, practice: { zh: string }): Batch[] {
   return [
     {
-      titleZh: "第一批：连接声明 + 三张牌深度解析", count: 4, maxTokens: 3200,
+      titleZh: "第一批：连接声明 + 三张牌深度解析", count: 4, maxTokens: 4200,
       instruction:
         "===1===\n（灵犀场连接声明：这三张牌不是预测，是这个人意识正在关注什么、生命正在转换什么、未来正在打开什么——用有画面感的语言开篇，为整份报告定调，不用逐一介绍三张牌，那是后面几段的事，约150-180字）" +
         "===2===\n（潜意识镜像深度解析：围绕" + hidden.nameZh + "（核心主题：" + hidden.themeZh + "，象征：" + hidden.symbolZh + "）这张牌，交叉引用年柱月柱，说清楚这个人携带而来、自己未必完全意识到的深层模式，以及这份模式里藏着的隐藏力量，约220-260字）" +
@@ -51,7 +54,7 @@ function buildBatches(hidden: TarotCard, present: TarotCard, future: TarotCard, 
         "===4===\n（未来展开深度解析：围绕" + future.nameZh + "（核心主题：" + future.themeZh + "，象征：" + future.symbolZh + "）这张牌，交叉引用时柱和五行分布，不是预言，是指出这个人正在进入的可能性方向，约220-260字）",
     },
     {
-      titleZh: "第二批：三牌联合公式 + 财富 + 关系 + 事业", count: 4, maxTokens: 3200,
+      titleZh: "第二批：三牌联合公式 + 财富 + 关系 + 事业", count: 4, maxTokens: 4200,
       instruction:
         "===1===\n（三牌联合生命公式：这是整份报告价值最高的一段——把三张牌的核心主题各提炼一个词，组成一条「觉察→选择→创造」式的生命公式（用这个人自己三张牌对应的词，不要照抄这个例子），再说清楚这个人的生命模式不是靠重复旧经验成长，而是通过什么方式创造新现实，约200-240字）" +
         "===2===\n（财富创造地图：说清楚这个人的财富优势具体是什么类型、最容易遇到的财富阻碍是什么、财富成长路线大致分几个阶段，约220-260字）" +
@@ -59,7 +62,7 @@ function buildBatches(hidden: TarotCard, present: TarotCard, future: TarotCard, 
         "===4===\n（事业使命地图：这个人的天赋关键词是什么、具体适合往哪几个方向发展（结合三张牌的特质给出2-3个具体方向，不是泛泛而谈），约200-240字）",
     },
     {
-      titleZh: "第三批：生命阶段 + 成长路径 + 给未来自己的信 + 关键词", count: 4, maxTokens: 3200,
+      titleZh: "第三批：生命阶段 + 成长路径 + 给未来自己的信 + 关键词", count: 4, maxTokens: 4200,
       instruction:
         "===1===\n（当前生命阶段：具体说清楚这个人此刻正处于觉醒、转化、创造、扩展这四个阶段里的哪一个、为什么、这个阶段的核心课题是什么，约180-220字）" +
         "===2===\n（灵犀场成长路径：这个人已经被匹配到「" + practice.zh + "」这项修炼技术——不需要你重新选，只需要具体说清楚为什么是这一项、这项技术具体能帮这个人解决前面提到的哪个具体课题，约180-220字）" +
@@ -90,10 +93,18 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
       }),
     });
 
-  const parseAndValidate = (raw: string) => {
-    const sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
+  // v225：同 qian/generate-full 里的修复——只检查段数和长度不够严谨，
+  // 被 max_tokens 截断的半句话（finish_reason === "length"）也能通过
+  // 这层校验，展示给用户的内容就会在句子中间突然断掉。
+  const endsCleanly = (s: string) => /[。！？.!?」”】]\s*$/.test(s.trim());
+
+  const parseAndValidate = (raw: string, finishReason?: string) => {
+    let sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
     const minAcceptable = Math.max(1, Math.floor(batch.count * 0.8));
-    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 15);
+    if (finishReason === "length" && sections.length > 0 && !endsCleanly(sections[sections.length - 1])) {
+      sections = sections.slice(0, -1);
+    }
+    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 15 && endsCleanly(s));
     return { sections, valid };
   };
 
@@ -110,7 +121,8 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
   let data = await res.json();
   let rawText = data?.choices?.[0]?.message?.content?.trim();
   let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
-  let check = text ? parseAndValidate(text) : { sections: [], valid: false };
+  let finishReason = data?.choices?.[0]?.finish_reason;
+  let check = text ? parseAndValidate(text, finishReason) : { sections: [], valid: false };
 
   for (let retry = 0; retry < 2 && !check.valid; retry++) {
     console.error(`[tarot reading generate-full] ${batch.titleZh} 第${retry + 1}次生成不完整，重试。submission id:`, submissionId, "段数:", check.sections.length, "预期:", batch.count);
@@ -119,7 +131,8 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
       data = await res.json();
       rawText = data?.choices?.[0]?.message?.content?.trim();
       text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
-      check = text ? parseAndValidate(text) : { sections: [], valid: false };
+      finishReason = data?.choices?.[0]?.finish_reason;
+      check = text ? parseAndValidate(text, finishReason) : { sections: [], valid: false };
     } else {
       const errBody = await res.text().catch(() => "");
       console.error(`[tarot reading generate-full] ${batch.titleZh} 重试请求本身也失败:`, res.status, errBody);

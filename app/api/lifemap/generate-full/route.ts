@@ -10,6 +10,7 @@ const ROMANCE_STYLE_LABEL: Record<string, string> = {
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
 const ZHIPU_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 

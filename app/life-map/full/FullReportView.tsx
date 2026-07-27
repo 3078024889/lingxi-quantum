@@ -208,7 +208,7 @@ export default function FullReportView({ id }: { id: string }) {
         <p className="mt-8 font-display text-lg text-lm2-text">
           {status === "checking" ? t("正在确认解锁状态…", "Confirming your unlock…") : t("灵犀场正在为你，逐层展开这份完整命盘…", "Lingxi Field is unfolding your full chart, layer by layer…")}
         </p>
-        <p className="mt-2 text-sm text-lm2-text-dim/60">{t("这可能需要一点时间，请不要关闭页面。", "This may take a moment — please don't close this page.")}</p>
+        <p className="mt-2 text-sm text-lm2-text-dim/80">{t("这可能需要一点时间，请不要关闭页面。", "This may take a moment — please don't close this page.")}</p>
         <style>{`.lm-core { width: 90px; height: 90px; border-radius: 999px; background: conic-gradient(from 0deg, #E8869E, #E7B85C, #5FC79B, #5A9FDE, #A47ADC, #E8869E); animation: lm-breathe 1.5s ease-in-out infinite, lm-spin 6s linear infinite; filter: blur(7px) saturate(0.9); opacity: .85; } @keyframes lm-breathe { 0%,100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.15); opacity: .95; } } @keyframes lm-spin { from { filter: blur(7px) saturate(0.9) hue-rotate(0deg); } to { filter: blur(7px) saturate(0.9) hue-rotate(360deg); } }`}</style>
       </div>
     );
@@ -474,7 +474,7 @@ export default function FullReportView({ id }: { id: string }) {
           })}
         </div>
 
-        <p className="mt-16 text-center text-xs leading-6 text-lm2-text-dim/50 print:hidden">
+        <p className="mt-16 text-center text-xs leading-6 text-lm2-text-dim/72 print:hidden">
           <Bi
             zh="这是一份自我探索与反思的参考，不是命运预言——生命的走向，始终由你自己选择。"
             en="This is a tool for self-exploration and reflection, not a prophecy — the direction of your life is always your own to choose."

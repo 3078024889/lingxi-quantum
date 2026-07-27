@@ -41,10 +41,12 @@ export async function POST(req: Request) {
     const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
     if (typeof submissionId === "string" && submissionTable) {
       const isRelationship = submissionTable === "relationship_submissions";
+      // v225：同 pay/create 的修复，加上归属校验。
       const { data: sub } = await admin
         .from(submissionTable)
         .select(isRelationship ? "name_a, name_b" : "name")
         .eq("id", submissionId)
+        .eq("user_id", user.id)
         .single();
       const subData = sub as { name?: string; name_a?: string; name_b?: string } | null;
       submissionName = isRelationship

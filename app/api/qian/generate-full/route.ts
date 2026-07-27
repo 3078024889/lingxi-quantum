@@ -6,6 +6,18 @@ import { computeLifeVector, type LifeVectorInput } from "@/lib/life-vector";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 
+// v225：这个接口要连续发起最多 3 批、每批最多重试 3 次的智谱调用，
+// 正常情况下也常常要跑 20-40 秒。Vercel 的函数默认超时时间很短
+// （Hobby 套餐 10 秒，Pro 套餐不显式声明的话也只有 15 秒），跑到一半
+// 被平台强制掐断时，前端拿到的不是一个"内容生成失败"的正常错误，
+// 而是一次网络层面的连接中断——这正好会命中下面 catch 块里那句
+// "连接场域时出错，请稍后再试"，看起来像是接口坏了，其实是超时设置
+// 太短。显式声明 maxDuration，把这个函数允许运行的时间拉长（300 秒
+// 是 Vercel Pro 套餐允许的上限；如果账号是 Hobby 套餐，实际会被平台
+// 压到 60 秒，仍然比默认值宽松很多）。
+export const runtime = "nodejs";
+export const maxDuration = 300;
+
 const ZHIPU_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 
 // 人生阶段——确定性算出来的，不是AI猜的。
@@ -64,7 +76,7 @@ function buildBatches(lang: "zh" | "en", signs: (typeof LIFE_SIGNS)[number][], a
   const practice = PRACTICE_BY_TIER[walker.tier] ?? PRACTICE_BY_TIER.walker;
   return [
     {
-      titleZh: "第一批：生命三原型总览 + 三签各自深度解析", titleEn: "Batch 1", count: 4, maxTokens: 3200,
+      titleZh: "第一批：生命三原型总览 + 三签各自深度解析", titleEn: "Batch 1", count: 4, maxTokens: 4200,
       instruction:
         "===1===\n（生命三原型总览：把三重签的核心特质各提炼一个动词或短语，组成一条「XX→XX→XX」式的生命公式，再用150-200字说清楚这个人的生命路径是一条什么样的展开路线，不是单一路径，是一条有方向感的路，不能只是重复三个签名）" +
         "===2===\n（源流签深度解析：围绕" + origin.nameZh + "（" + origin.keywordsZh + "）这枚签，写清楚这个人携带而来的原始频率、生命优势是什么、以及优势反面容易带来什么潜在挑战——不是简单夸奖，是有具体画面感的判断，约220-260字）" +
@@ -72,7 +84,7 @@ function buildBatches(lang: "zh" | "en", signs: (typeof LIFE_SIGNS)[number][], a
         "===4===\n（行者签深度解析：围绕" + walker.nameZh + "（" + walker.keywordsZh + "）这枚签，写清楚这个人的行动力模式、创造现实的具体路径、以及一句具体的人生行动提醒，约220-260字）",
     },
     {
-      titleZh: "第二批：三签融合 + 财富 + 关系 + 事业", titleEn: "Batch 2", count: 4, maxTokens: 3200,
+      titleZh: "第二批：三签融合 + 财富 + 关系 + 事业", titleEn: "Batch 2", count: 4, maxTokens: 4200,
       instruction:
         "===1===\n（三签融合分析：这是整份报告价值最高的一段——不是三签分别介绍，是把三签连成一个生命公式，说清楚源流签打下的底、灵魂签驱动的内在、行者签展开的行动，三者叠加之后，这个人的核心使命是什么一句话，约200-240字）" +
         "===2===\n（财富创造系统：说清楚这个人的财富原型是什么类型，具体的财富入口有哪三个方向，以及最容易遇到的财富阻碍是什么、需要建立什么样的系统来突破，约220-260字）" +
@@ -80,7 +92,7 @@ function buildBatches(lang: "zh" | "en", signs: (typeof LIFE_SIGNS)[number][], a
         "===4===\n（事业使命地图：这个人的使命关键词是什么、具体适合往哪几个方向发展（结合前面三签的特质给出2-3个具体方向，不是泛泛的「各行各业都可以」），约200-240字）",
     },
     {
-      titleZh: "第三批：人生阶段 + 隐藏天赋 + 成长路径 + 生命宣言", titleEn: "Batch 3", count: 4, maxTokens: 3200,
+      titleZh: "第三批：人生阶段 + 隐藏天赋 + 成长路径 + 生命宣言", titleEn: "Batch 3", count: 4, maxTokens: 4200,
       instruction:
         "===1===\n（当前人生阶段：这个人已经被判定处于「" + lifeStage.zh + "」这个阶段——不需要你重新判断阶段，只需要具体说清楚这个阶段的人通常在经历什么、正在从什么旧结构转向什么新结构，约180-220字）" +
         "===2===\n（隐藏天赋：说清楚这个人身上一项「还没被完全使用的能力」和一项「容易被自己或别人低估的能力」，要具体、要有画面感，不能是空泛的夸奖，约180-220字）" +
@@ -111,8 +123,14 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
       }),
     });
 
-  const parseAndValidate = (raw: string) => {
-    const sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
+  // v225：判断"最后一段是不是在句子中间被硬切断"的简单规则——正常写完
+  // 的一段，结尾应该是句号、感叹号、问号（中英文都算）这类收尾标点；
+  // 如果不是，大概率是被 max_tokens 截断的半句话（比如"你需要学习在
+  // 深度连接"这种没写完就没了），不能当成有效内容展示给用户。
+  const endsCleanly = (s: string) => /[。！？.!?」”】]\s*$/.test(s.trim());
+
+  const parseAndValidate = (raw: string, finishReason?: string) => {
+    let sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
     // 之前这里要求"段数必须跟预期完全相等"，稍微有一点格式偏差
     // （比如AI多打了一个分隔符、或者少打了一个），整批内容就被判定
     // 无效、直接报错——这是"场域这次的回应不完整"频繁出现的真正
@@ -120,7 +138,16 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
     // 只要求段数不少于预期的80%（向下取整，至少留1段），且每段不能
     // 短得离谱（20字，不是之前的60字——60字对这种密度的内容也偏严）。
     const minAcceptable = Math.max(1, Math.floor(batch.count * 0.8));
-    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 20);
+    // 如果接口明确告诉我们这次是被 max_tokens 截断的（finish_reason
+    // === "length"），最后一段大概率是写到一半被硬切的——之前的校验
+    // 完全没检查这个，只要段数够、每段够长，就当成正常内容展示，这才
+    // 是用户看到"行者签深度解析"写到一半突然没了、后面一片空白的
+    // 真正原因。这里补上：只要命中截断信号，且最后一段结尾不像正常
+    // 收尾，就把这半句话丢掉，不展示不完整的内容。
+    if (finishReason === "length" && sections.length > 0 && !endsCleanly(sections[sections.length - 1])) {
+      sections = sections.slice(0, -1);
+    }
+    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 20 && endsCleanly(s));
     return { sections, valid };
   };
 
@@ -137,7 +164,11 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
   let data = await res.json();
   let rawText = data?.choices?.[0]?.message?.content?.trim();
   let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
-  let check = text ? parseAndValidate(text) : { sections: [], valid: false };
+  let finishReason = data?.choices?.[0]?.finish_reason;
+  if (finishReason === "length") {
+    console.error(`[qian generate-full] ${batch.titleZh} 被 max_tokens 截断，finish_reason=length，submission id:`, submissionId);
+  }
+  let check = text ? parseAndValidate(text, finishReason) : { sections: [], valid: false };
 
   // 最多重试2次（一共最多尝试3次），每次都用更宽容的标准重新校验，
   // 大幅降低"其实内容基本没问题、只是格式差一点点就被拒绝"的概率。
@@ -148,7 +179,11 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
       data = await res.json();
       rawText = data?.choices?.[0]?.message?.content?.trim();
       text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
-      check = text ? parseAndValidate(text) : { sections: [], valid: false };
+      finishReason = data?.choices?.[0]?.finish_reason;
+      if (finishReason === "length") {
+        console.error(`[qian generate-full] ${batch.titleZh} 重试仍被 max_tokens 截断，submission id:`, submissionId);
+      }
+      check = text ? parseAndValidate(text, finishReason) : { sections: [], valid: false };
     } else {
       const errBody = await res.text().catch(() => "");
       console.error(`[qian generate-full] ${batch.titleZh} 重试请求本身也失败:`, res.status, errBody);
