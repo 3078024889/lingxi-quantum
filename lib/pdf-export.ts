@@ -60,18 +60,25 @@ export async function exportSimplePdf(params: {
     const usableHeight = pageHeight - MARGIN * 2;
 
     if (imgHeight > usableHeight) {
-      if (placedAnything) { pdf.addPage(); fillPageBackground(); cursorY = MARGIN; }
+      if (placedAnything) { pdf.addPage(); fillPageBackground(); }
+      // 同exportGlassPdf里的注释：这里故意用pageHeight（整页高度）
+      // 推进，不用usableHeight（页高减边距）——jsPDF实际按整页物理
+      // 边界裁切图片，不会在底部自动扣掉边距，用usableHeight推进会
+      // 导致每页实际前进的距离比真实裁切范围小，下一页开头重复出现
+      // 上一页已经露出过的内容。
       let heightLeft = imgHeight;
-      let position = MARGIN;
+      let position = 0;
       pdf.addImage(imgData, "JPEG", MARGIN, position, imgWidth, imgHeight);
-      heightLeft -= usableHeight;
+      heightLeft -= pageHeight;
       while (heightLeft > 10) {
-        position = MARGIN - (imgHeight - heightLeft);
+        position = -(imgHeight - heightLeft);
         pdf.addPage(); fillPageBackground();
         pdf.addImage(imgData, "JPEG", MARGIN, position, imgWidth, imgHeight);
-        heightLeft -= usableHeight;
+        heightLeft -= pageHeight;
       }
-      cursorY = MARGIN + (imgHeight % usableHeight || usableHeight);
+      // 最后一页顶部可能还留着不到10px的图片尾巴，不当成"完全空白"，
+      // 下一块内容从稍微往下一点的位置开始，避免贴在一起。
+      cursorY = 20;
       placedAnything = true;
       continue;
     }
@@ -221,19 +228,29 @@ export async function exportGlassPdf(params: {
 
     if (imgHeight > usableHeight) {
       if (placedAnythingOnPage) startNewContentPage();
+      // 这里跨页切割的推进量，故意不用usableHeight（页高减去上下
+      // 边距），而是用pageHeight本身——jsPDF实际按整页物理边界
+      // （0到pageHeight）裁切图片，不会在底部自动扣掉边距，如果
+      // 这里的"每页前进多少"算得比实际裁切范围小，下一页开头就会
+      // 重新出现上一页已经露出过的那一小段内容，看起来就是"标题和
+      // 一段话又出现了一次"——这正是之前"目录/正文重复"这个问题
+      // 的真正根源，不是内容生成重复，是切图的时候切错了。
       let heightLeft = imgHeight;
-      let position = MARGIN;
+      let position = 0;
       pdf.addImage(imgData, "JPEG", MARGIN, position, imgWidth, imgHeight);
-      heightLeft -= usableHeight;
+      heightLeft -= pageHeight;
       while (heightLeft > 10) {
-        position = MARGIN - (imgHeight - heightLeft);
+        position = -(imgHeight - heightLeft);
         pdf.addPage();
         fillPageBackground();
         contentPageNumbers.push(pdf.getNumberOfPages());
         pdf.addImage(imgData, "JPEG", MARGIN, position, imgWidth, imgHeight);
-        heightLeft -= usableHeight;
+        heightLeft -= pageHeight;
       }
-      cursorY = MARGIN + (imgHeight % usableHeight || usableHeight);
+      // 最后一页顶部可能还留着不到10px的图片尾巴（heightLeft<=10那
+      // 一点点），不能当成"这页完全空白"处理，下一个章节从稍微
+      // 往下一点的位置开始，避免跟这一点残留内容贴在一起。
+      cursorY = 24;
       placedAnythingOnPage = true;
       continue;
     }
