@@ -202,7 +202,16 @@ export default function RelationshipReportView({ id }: { id: string }) {
       </p>
 
       <div ref={reportRef} className={printMode ? "rel-print-mode mt-8 px-1 py-4" : "mt-8 px-1 py-4"}>
-        <h1 className="font-display text-3xl font-light text-bone">
+        <p className="text-center font-display text-xs uppercase tracking-widest2 text-amber">
+          {relType === "business" ? (
+            <Bi zh="合伙商业关系共振" en="Business Partnership Resonance" />
+          ) : relType === "general" ? (
+            <Bi zh="其他关系共振" en="Other Relationship Resonance" />
+          ) : (
+            <Bi zh="亲密关系共振" en="Romantic Relationship Resonance" />
+          )}
+        </p>
+        <h1 className="mt-2 font-display text-3xl font-light text-bone text-center">
           {names ? `${names.a} × ${names.b}` : ""}
         </h1>
 

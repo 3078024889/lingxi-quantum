@@ -146,37 +146,55 @@ export async function exportGlassPdf(params: {
     pdf.addImage(imgData, "JPEG", 0, y, imgWidth, Math.min(imgHeight, pageHeight));
   }
 
-  // ── 第二页：目录（直接画字，不截图） ──
+  // ── 第二页：目录 ──
+  // 之前这里直接用jsPDF自带的Helvetica字体画中文字——Helvetica这个
+  // 字体根本没有中文字形，画出来必然是乱码或者空白方块，这正是
+  // "目录页乱码"的真正原因，不是内容或者编码设置的问题，是选错了
+  // 渲染方式。改成跟封面、正文完全一样的做法：先在一个不显示在
+  // 页面上的临时容器里，用网页真实加载的字体把目录排好版，截图，
+  // 再把这张图贴进PDF——不再依赖jsPDF自己画字，彻底避开字体缺字
+  // 这个坑。
+  const tocContainer = document.createElement("div");
+  tocContainer.style.position = "fixed";
+  tocContainer.style.left = "-9999px";
+  tocContainer.style.top = "0";
+  tocContainer.style.width = "800px";
+  tocContainer.style.padding = "56px 48px";
+  tocContainer.style.fontFamily = "var(--font-body, sans-serif)";
+  tocContainer.innerHTML = `
+    <p style="margin:0;font-family:var(--font-display, serif);font-size:15px;letter-spacing:.15em;text-transform:uppercase;color:rgb(${AMBER_RGB.join(",")})">CONTENTS</p>
+    <h1 style="margin:14px 0 0;font-family:var(--font-display, serif);font-weight:300;font-size:30px;color:#ffffff;">${reportTitleZh}</h1>
+    <p style="margin:6px 0 0;font-family:var(--font-display, serif);font-size:15px;color:rgb(${LATTICE_RGB.join(",")})">${reportTitleEn}</p>
+    <div style="margin-top:36px;">
+      ${chapterTitles
+        .map(
+          (ch, i) => `
+        <div style="display:flex;align-items:baseline;gap:18px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.08);">
+          <span style="flex:none;width:22px;font-size:12px;color:rgb(${BONE_DIM_RGB.join(",")})">${String(i + 1).padStart(2, "0")}</span>
+          <div>
+            <div style="font-family:var(--font-display, serif);font-size:17px;color:#ffffff;">${ch.titleZh}</div>
+            <div style="margin-top:2px;font-size:11px;color:rgb(${LATTICE_RGB.join(",")})">${ch.titleEn}</div>
+          </div>
+        </div>`
+        )
+        .join("")}
+    </div>
+  `;
+  document.body.appendChild(tocContainer);
+  await document.fonts.ready;
+  await new Promise((r) => setTimeout(r, 80));
+
   pdf.addPage();
   fillPageBackground();
-  pdf.setTextColor(...AMBER_RGB);
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(11);
-  pdf.text("CONTENTS", MARGIN, 70);
-  pdf.setTextColor(255, 255, 255);
-  pdf.setFontSize(20);
-  pdf.text(reportTitleZh, MARGIN, 95);
-  pdf.setTextColor(...LATTICE_RGB);
-  pdf.setFontSize(11);
-  pdf.text(reportTitleEn, MARGIN, 115);
-
-  let tocY = 160;
-  const tocLineHeight = 30;
-  chapterTitles.forEach((ch, i) => {
-    if (tocY > pageHeight - MARGIN) return;
-    pdf.setTextColor(...BONE_DIM_RGB);
-    pdf.setFontSize(9);
-    pdf.text(String(i + 1).padStart(2, "0"), MARGIN, tocY);
-    pdf.setTextColor(255, 255, 255);
-    pdf.setFontSize(13);
-    pdf.text(ch.titleZh, MARGIN + 30, tocY);
-    pdf.setTextColor(...LATTICE_RGB);
-    pdf.setFontSize(9);
-    pdf.text(ch.titleEn, MARGIN + 30, tocY + 14);
-    pdf.setDrawColor(60, 55, 80);
-    pdf.line(MARGIN + 30, tocY + 20, pageWidth - MARGIN, tocY + 20);
-    tocY += tocLineHeight;
-  });
+  try {
+    const tocCanvas = await html2canvas(tocContainer, { backgroundColor: bgHex, scale: 2, useCORS: true });
+    const tocImgData = tocCanvas.toDataURL("image/jpeg", 0.92);
+    const tocImgWidth = pageWidth;
+    const tocImgHeight = Math.min((tocCanvas.height * tocImgWidth) / tocCanvas.width, pageHeight);
+    pdf.addImage(tocImgData, "JPEG", 0, 0, tocImgWidth, tocImgHeight);
+  } finally {
+    document.body.removeChild(tocContainer);
+  }
 
   // ── 正文内容（每个章节截图，逐张贴进页面） ──
   pdf.addPage();

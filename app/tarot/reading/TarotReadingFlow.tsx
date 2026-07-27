@@ -95,8 +95,10 @@ export default function TarotReadingFlow() {
         setSubmissionId(data.id);
         setStage("revealed");
       }, 5000);
-    } catch {
-      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+    } catch (e) {
+      console.error("[tarot connect] 提交出错:", e);
+      const detail = e instanceof Error ? e.message : String(e);
+      setError(t(`连接场域时出错，请稍后再试。（技术细节：${detail}）`, `Error connecting to the field — please try again. (Detail: ${detail})`));
       setStage("form");
     }
   };

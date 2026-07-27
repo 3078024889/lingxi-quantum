@@ -184,19 +184,16 @@ export default function TarotReadingReport({ id }: { id: string }) {
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
-      <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+      <div className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
           <Bi zh="灵犀量子塔罗 · 生命镜像档案" en="Lingxi Quantum Tarot · Personal Consciousness Blueprint" />
         </p>
-      </div>
-
-      <div className="mt-4 flex justify-center">
         <button
           onClick={downloadPdf}
           disabled={downloading}
-          className="rounded-sm border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone disabled:opacity-50"
+          className="flex shrink-0 items-center gap-2 rounded-sm border border-lattice/40 px-4 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone disabled:opacity-50"
         >
-          {downloading ? <Bi zh="正在生成 PDF…" en="Generating PDF…" /> : <Bi zh="下载完整报告 PDF" en="Download Full Report PDF" />}
+          {downloading ? <Bi zh="生成中…" en="Generating…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
         </button>
       </div>
 

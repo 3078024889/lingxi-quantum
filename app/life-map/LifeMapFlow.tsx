@@ -10,6 +10,7 @@ import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { lifemapTypeImage } from "@/lib/lifemap-type-images";
 import WechatPayModal from "@/components/WechatPayModal";
+import { REVIEW_MODE } from "@/lib/reviewMode";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const LIFEMAP_FAQ: BilingualFaqItem[] = [
@@ -451,6 +452,10 @@ export default function LifeMapFlow() {
           return;
         }
       }
+      if (REVIEW_MODE) {
+        window.location.href = `/life-map/full?id=${id}&paid=1`;
+        return;
+      }
       setPayingSubmissionId(id);
       setShowWechatPay(true);
       setUnlocking(false);
@@ -556,6 +561,10 @@ export default function LifeMapFlow() {
       return;
     }
     setSubmissionId(result.id);
+    if (REVIEW_MODE) {
+      window.location.href = `/life-map/full?id=${result.id}&paid=1`;
+      return;
+    }
     setPayingSubmissionId(result.id);
     setShowWechatPay(true);
     setUnlocking(false);
