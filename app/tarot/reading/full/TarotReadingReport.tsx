@@ -122,6 +122,11 @@ export default function TarotReadingReport({ id }: { id: string }) {
         reportTitleZh: "你的灵犀量子生命镜像",
         reportTitleEn: "Your Lingxi Quantum Life Mirror",
         chapterTitles,
+        // 量子塔罗主题——深靛紫打底，跟生命灵签（默认近黑深蓝）、
+        // 生命图谱/关系共振（深紫）都区分开，呼应"量子镜像"这个
+        // 更神秘、更深邃的产品调性。
+        bgColorRgb: [24, 16, 48],
+        bgColorHex: "#181030",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);

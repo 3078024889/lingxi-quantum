@@ -4,7 +4,6 @@ import { useState, useRef } from "react";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
-import WhyTrustLingxi from "@/components/WhyTrustLingxi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ShareButton from "@/components/ShareButton";
 
@@ -126,10 +125,11 @@ export default function RomanceFlow() {
       await exportSimplePdf({
         containerRef: reportRef.current,
         fileName: "灵犀桃花磁场指数.pdf",
-        // 粉桃花主题——深玫瑰色打底，跟这个产品自己的品牌色（rose）
-        // 呼应，不是全站统一的深蓝背景。
-        bgColorRgb: [42, 16, 28],
-        bgColorHex: "#2a101c",
+        // 粉桃花主题——卡片和PDF背景都换成更接近"粉/玫瑰"色调的暖色，
+        // 跟品牌粉色（rose）和桃花海报插画呼应，不再是偏冷、发黑的
+        // 深酒红色。
+        bgColorRgb: [44, 20, 32],
+        bgColorHex: "#2c1420",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -146,7 +146,7 @@ export default function RomanceFlow() {
     return (
       <>
       <div ref={reportRef} className="mx-auto max-w-xl px-6 py-16">
-        <div className="flex items-center justify-between gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+        <div className="flex items-center justify-between gap-3 rounded-sm border border-rose/20 bg-[#2c1420] px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
             <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
           </p>
@@ -159,7 +159,7 @@ export default function RomanceFlow() {
           </button>
         </div>
 
-        <div className="mt-6 flex flex-col items-center rounded-sm border border-white/10 bg-void-deep p-8">
+        <div className="mt-6 flex flex-col items-center rounded-sm border border-rose/20 bg-[#2c1420] p-8">
           <svg viewBox="0 0 180 180" className="w-44" style={{ filter: "drop-shadow(0 0 14px rgba(255,143,209,0.45))" }}>
             <circle cx="90" cy="90" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12" />
             <circle
@@ -183,7 +183,7 @@ export default function RomanceFlow() {
           </div>
         </div>
 
-        <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
+        <div className="mt-4 rounded-sm border border-rose/20 bg-[#2c1420] p-6">
           <p className="text-base leading-9 text-bone-dim">{t(OVERALL[band(result.score)].zh, OVERALL[band(result.score)].en)}</p>
         </div>
 
@@ -204,7 +204,7 @@ export default function RomanceFlow() {
           </div>
         )}
 
-        <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
+        <div className="mt-4 rounded-sm border border-rose/20 bg-[#2c1420] p-6">
           <p className="text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
           <p className="mt-2 text-base leading-8 text-bone-dim">
             <Bi
@@ -214,9 +214,7 @@ export default function RomanceFlow() {
           </p>
         </div>
 
-        <WhyTrustLingxi />
-
-        <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
+        <div className="mt-8 rounded-sm border border-rose/20 bg-[#2c1420] p-6 text-center">
           <p className="text-base leading-8 text-bone-dim">
             <Bi
               zh="同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
@@ -231,7 +229,7 @@ export default function RomanceFlow() {
           </a>
         </div>
 
-        <div className="mt-6 rounded-sm border border-white/10 bg-void-deep px-6 py-3 text-center">
+        <div className="mt-6 rounded-sm border border-rose/20 bg-[#2c1420] px-6 py-3 text-center">
           <p className="text-sm text-bone-dim/90">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言。" en="This is a reference for self-reflection, not a prophecy about your relationships." />
           </p>
@@ -251,7 +249,7 @@ export default function RomanceFlow() {
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">
-      <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
+      <div className="rounded-sm border border-rose/20 bg-[#2c1420] p-6 sm:p-8">
         <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
           <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
         </p>
@@ -266,7 +264,7 @@ export default function RomanceFlow() {
         </p>
       </div>
 
-      <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">
+      <div className="mt-6 rounded-sm border border-rose/20 bg-[#2c1420] p-6">
         <p className="text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -286,7 +284,7 @@ export default function RomanceFlow() {
       </div>
 
       {error && (
-        <div className="mt-4 rounded-sm border border-rose/30 bg-void-deep p-4">
+        <div className="mt-4 rounded-sm border border-rose/30 bg-[#2c1420] p-4">
           <p className="text-sm text-rose">{error}</p>
         </div>
       )}

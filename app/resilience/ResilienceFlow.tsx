@@ -4,7 +4,6 @@ import { useState, useRef } from "react";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
-import WhyTrustLingxi from "@/components/WhyTrustLingxi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ShareButton from "@/components/ShareButton";
 
@@ -237,8 +236,6 @@ export default function ResilienceFlow() {
             />
           </p>
         </div>
-
-        <WhyTrustLingxi />
 
         <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
           <p className="text-base leading-8 text-bone-dim">

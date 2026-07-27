@@ -4,8 +4,9 @@ import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import Link from "next/link";
 import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
-import { computeTodayTransit, elementRelation } from "@/lib/daily-transit";
+import { computeTodayTransit, elementRelation, computeRetrogrades, dayRuler } from "@/lib/daily-transit";
 import { PHASE_THEME, RELATION_THEME } from "@/lib/daily-horoscope-narrative";
+import { getDailyFortuneContent } from "@/lib/daily-fortune-ai";
 import DownloadResultPdfButton from "@/components/DownloadResultPdfButton";
 import ShareButton from "@/components/ShareButton";
 
@@ -24,13 +25,26 @@ export function generateMetadata({ params }: { params: { sign: string } }) {
   };
 }
 
-export default function DailySignPage({ params }: { params: { sign: string } }) {
+export default async function DailySignPage({ params }: { params: { sign: string } }) {
   const sign = ZODIAC_SIGNS.find((s) => s.slug === params.sign);
   if (!sign) notFound();
 
   const transit = computeTodayTransit();
   const relation = elementRelation(transit.moonElement, sign.element);
+  const retro = computeRetrogrades();
+  const ruler = dayRuler();
   const todayLabel = new Date(transit.date + "T00:00:00Z").toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+
+  // v226：正文优先用真正针对"今天+这个星座"生成、并按天缓存的内容——
+  // 具体理由见 lib/daily-fortune-ai.ts 顶部注释。生成失败（比如密钥
+  // 没配、接口一时不通）时，退回旧的月相+元素关系模板组合，保证页面
+  // 任何时候都有内容可看，不会因为AI这一步失败就整页空白。
+  const [fortuneZh, fortuneEn] = await Promise.all([
+    getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, lang: "zh" }),
+    getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, lang: "en" }),
+  ]);
+  const fallbackZh = `${PHASE_THEME[transit.moonPhaseKey].zh} ${RELATION_THEME[relation].zh}`;
+  const fallbackEn = `${PHASE_THEME[transit.moonPhaseKey].en} ${RELATION_THEME[relation].en}`;
 
   return (
     <>
@@ -68,17 +82,20 @@ export default function DailySignPage({ params }: { params: { sign: string } }) 
           </div>
 
           <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
-            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="今天的月相能量" en="Today's Lunar Energy" /></p>
+            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="今日能量指引" en="Today's Energy Guidance" /></p>
             <p className="mt-2 text-base leading-8 text-bone-dim">
-              <Bi zh={PHASE_THEME[transit.moonPhaseKey].zh} en={PHASE_THEME[transit.moonPhaseKey].en} />
+              <Bi zh={fortuneZh || fallbackZh} en={fortuneEn || fallbackEn} />
             </p>
-          </div>
-
-          <div className="mt-4 rounded-sm border border-amber/20 bg-amber/5 p-6">
-            <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh={`落在${sign.zh}座身上`} en={`For ${sign.en}, specifically`} /></p>
-            <p className="mt-2 text-base leading-8 text-bone-dim">
-              <Bi zh={RELATION_THEME[relation].zh} en={RELATION_THEME[relation].en} />
-            </p>
+            <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-bone-dim/80">
+              <span className="rounded-sm border border-white/10 px-2 py-1">
+                <Bi zh={`当日守护星：${ruler.zh}`} en={`Day Ruler: ${ruler.en}`} />
+              </span>
+              {retro.length > 0 && (
+                <span className="rounded-sm border border-amber/25 px-2 py-1 text-amber">
+                  <Bi zh={`逆行中：${retro.map((r) => r.planetZh).join("、")}`} en={`Retrograde: ${retro.map((r) => r.planetEn).join(", ")}`} />
+                </span>
+              )}
+            </div>
           </div>
           </div>
 

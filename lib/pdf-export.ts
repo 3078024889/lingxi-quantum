@@ -218,9 +218,62 @@ export async function exportGlassPdf(params: {
     placedAnythingOnPage = false;
   };
 
+  // v226：之前"内容/图表被截断"的真正原因——每个章节是整块截图成一张
+  // 图，如果这张图比一页还高，就靠下面的循环机械地按"页面还剩多少
+  // 高度"来裁切，裁切点完全不管这里是不是一句话中间、是不是一个分数
+  // 条的中间，切在哪算哪。这里改成"先拆、再截图"：在真正截图之前，
+  // 先检查这个章节渲染出来是不是明显超高，超高就把里面的正文段落
+  // （用 whitespace-pre-line 渲染的那一段）按句子重新分组，拆成几个
+  // 分别都截图的小块——只允许在"句子与句子之间"分页，不允许在"一句
+  // 话内部"分页。找不到可拆的正文（比如这个章节主要是图表而不是长
+  // 文字）就保底整块处理，不强拆。
+  const SAFE_CHAPTER_HEIGHT_PX = 900;
+
+  const splitTallChapter = (chapter: HTMLElement): { pieces: HTMLElement[]; cleanup: HTMLElement[] } => {
+    if (chapter.offsetHeight <= SAFE_CHAPTER_HEIGHT_PX) return { pieces: [chapter], cleanup: [] };
+
+    const paragraph = chapter.querySelector<HTMLElement>(".whitespace-pre-line");
+    if (!paragraph || !paragraph.textContent || !paragraph.textContent.trim()) {
+      return { pieces: [chapter], cleanup: [] };
+    }
+
+    const sentences = paragraph.textContent.match(/[^。！？.!?]+[。！？.!?]?/g)?.filter((s) => s.trim()) ?? [];
+    if (sentences.length <= 1) return { pieces: [chapter], cleanup: [] };
+
+    const GROUP_SIZE = 5; // 大约每 5 句一块——这个粒度下，单块基本不可能还超过一页
+    const groups: string[] = [];
+    for (let i = 0; i < sentences.length; i += GROUP_SIZE) {
+      groups.push(sentences.slice(i, i + GROUP_SIZE).join("").trim());
+    }
+    if (groups.length <= 1) return { pieces: [chapter], cleanup: [] };
+
+    const pieces: HTMLElement[] = [];
+    groups.forEach((text, idx) => {
+      const clone = chapter.cloneNode(true) as HTMLElement;
+      const cloneParagraph = clone.querySelector<HTMLElement>(".whitespace-pre-line");
+      if (cloneParagraph) cloneParagraph.textContent = text;
+      // 只有第一小块保留标题/徽标这类非正文元素，后面的小块只留正文，
+      // 避免同一个章节标题在页面里重复出现好几次。
+      if (idx > 0 && cloneParagraph) {
+        Array.from(clone.children).forEach((child) => {
+          if (child !== cloneParagraph) child.remove();
+        });
+      }
+      clone.style.position = "fixed";
+      clone.style.left = "-9999px";
+      clone.style.top = "0";
+      clone.style.width = `${chapter.offsetWidth}px`;
+      document.body.appendChild(clone);
+      pieces.push(clone);
+    });
+    return { pieces, cleanup: pieces };
+  };
+
   for (const chapter of contentEls) {
     if (!chapter || chapter.offsetHeight < 2) continue;
-    const canvas = await html2canvas(chapter, { backgroundColor: bgHex, scale: 2, useCORS: true });
+    const { pieces, cleanup } = splitTallChapter(chapter);
+    for (const piece of pieces) {
+    const canvas = await html2canvas(piece, { backgroundColor: bgHex, scale: 2, useCORS: true });
     const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -235,6 +288,10 @@ export async function exportGlassPdf(params: {
       // 重新出现上一页已经露出过的那一小段内容，看起来就是"标题和
       // 一段话又出现了一次"——这正是之前"目录/正文重复"这个问题
       // 的真正根源，不是内容生成重复，是切图的时候切错了。
+      // 走到这条分支，说明即使按句子拆过了，单独一小块仍然超过一页
+      // （比如一句话本身就特别长，或者这块里嵌了一张大图/图表），
+      // 这种情况非常少见，保留机械裁切作为兜底，不会崩溃，只是不能
+      // 保证百分百不切在内容中间。
       let heightLeft = imgHeight;
       let position = 0;
       pdf.addImage(imgData, "JPEG", MARGIN, position, imgWidth, imgHeight);
@@ -261,6 +318,8 @@ export async function exportGlassPdf(params: {
     pdf.addImage(imgData, "JPEG", MARGIN, cursorY, imgWidth, imgHeight);
     cursorY += imgHeight + 18;
     placedAnythingOnPage = true;
+    }
+    cleanup.forEach((el) => el.remove());
   }
 
   // ── 统一给正文页加页脚：页码 + 网址 ──
