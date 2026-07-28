@@ -1,0 +1,48 @@
+灵犀 LINGXI · v229（今日运势 → 今日场域测试：加入真实潮汐力学的
+"能量潮汐"，并延伸出未来几天的潮汐趋势）
+
+【改了什么】
+1. 全站"今日运势"改名"今日场域测试"（Today's Field Test）——
+   app/page.tsx、app/daily/page.tsx、components/SearchBox.tsx、
+   components/LingxiPortal.tsx、components/FieldInsightsSection.tsx、
+   components/Nav.tsx、components/DownloadResultPdfButton.tsx、
+   app/daily/[sign]/page.tsx 里的相关文案全部换掉。
+
+2. 新增"能量潮汐"——lib/daily-transit.ts 新增 tideLevel()、
+   nextTidePeak() 两个函数。不是编的比喻，是真实潮汐力学：新月/满月
+   时太阳月亮引力叠加，潮汐力最强（大潮/spring tide）；上弦月/下弦月
+   时引力互相抵消，潮汐力最弱（小潮/neap tide），这套规律任何潮汐表
+   网站都能查证。用月相角度换算成0-100的"潮汐强度"数值，页面上有
+   一条真实的进度条可视化。
+
+3. 报告内容延伸到"未来几天"——用 astronomy-engine 的
+   SearchMoonPhase 往前搜下一次新月/满月的确切日期，写进AI正文，
+   变成"再过N天会到达这轮潮汐的峰值/低点"这种具体的未来趋势描述。
+   这不违反"不能预言具体会发生什么事"这条规则——潮汐涨落是月亮公转
+   周期决定的、提前就能精确算出来的天文事实，预测的是潮汐这个自然
+   现象本身，不是这个人的命运，system prompt里也专门写了这条区分，
+   避免AI把这个界限写模糊了。
+
+4. 正文AI生成的system prompt同步更新，要求把潮汐强度和潮汐趋势也
+   交叉引用进解读里，不能割裂地罗列。
+
+【改动的文件】
+lib/daily-transit.ts（新增tideLevel、nextTidePeak，TodayTransit类型
+  新增moonPhaseAngle字段）
+lib/daily-fortune-ai.ts（system/user prompt加入潮汐数据）
+app/daily/[sign]/page.tsx（页面文案改名 + 潮汐可视化进度条 + 潮汐
+  趋势文字）
+app/page.tsx、app/daily/page.tsx、components/SearchBox.tsx、
+  components/LingxiPortal.tsx、components/FieldInsightsSection.tsx、
+  components/Nav.tsx、components/DownloadResultPdfButton.tsx（改名）
+
+【没有要跑的新SQL——这次没有动数据库结构】
+
+【下一步，量还很大，没做完，如实说清楚】
+你这条消息里还提到"量子塔罗、（桃花磁场+生命韧性）、关系共振"这三组
+要各自配一版免费引流报告，现有内容质量不够、要大胆重写——这块工作量
+不比这次的潮汐功能小（塔罗和关系共振现在完全没有免费预览，等于要
+从零建；桃花磁场和生命韧性的免费内容现在是固定模板文案，要重写成
+真正有水准的版本），这次先把"今日场域测试"这一个做扎实、验证过
+tsc和build，没有跟另外三组混在一起囫囵吞枣地赶——那三组我接下来
+继续做。

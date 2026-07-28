@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import Link from "next/link";
 import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
-import { computeTodayTransit, elementRelation, computeRetrogrades, dayRuler } from "@/lib/daily-transit";
+import { computeTodayTransit, elementRelation, computeRetrogrades, dayRuler, tideLevel, nextTidePeak } from "@/lib/daily-transit";
 import { PHASE_THEME, RELATION_THEME } from "@/lib/daily-horoscope-narrative";
 import { getDailyFortuneContent } from "@/lib/daily-fortune-ai";
 import DownloadResultPdfButton from "@/components/DownloadResultPdfButton";
@@ -19,8 +19,8 @@ export function generateMetadata({ params }: { params: { sign: string } }) {
   const sign = ZODIAC_SIGNS.find((s) => s.slug === params.sign);
   if (!sign) return {};
   return {
-    title: `${sign.zh}座今日运势 · 每日更新 | 灵犀场 ${sign.en} Daily Horoscope | Lingxi Field`,
-    description: `${sign.zh}座今天的真实月相与月亮星座解读，每天更新，即时查看。Today's real transit-based horoscope for ${sign.en}, updated daily.`,
+    title: `${sign.zh}座今日场域测试 · 每日更新 | 灵犀场 ${sign.en} Today's Field Test | Lingxi Field`,
+    description: `${sign.zh}座今天的真实月相、月亮星座与能量潮汐解读，每天更新，即时查看。Today's real transit and energy-tide reading for ${sign.en}, updated daily.`,
     alternates: { canonical: `/daily/${sign.slug}` },
   };
 }
@@ -33,6 +33,8 @@ export default async function DailySignPage({ params }: { params: { sign: string
   const relation = elementRelation(transit.moonElement, sign.element);
   const retro = computeRetrogrades();
   const ruler = dayRuler();
+  const tide = tideLevel(transit.moonPhaseAngle);
+  const nextTide = nextTidePeak();
   const todayLabel = new Date(transit.date + "T00:00:00Z").toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
 
   // v226：正文优先用真正针对"今天+这个星座"生成、并按天缓存的内容——
@@ -40,8 +42,8 @@ export default async function DailySignPage({ params }: { params: { sign: string
   // 没配、接口一时不通）时，退回旧的月相+元素关系模板组合，保证页面
   // 任何时候都有内容可看，不会因为AI这一步失败就整页空白。
   const [fortuneZh, fortuneEn] = await Promise.all([
-    getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, lang: "zh" }),
-    getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, lang: "en" }),
+    getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, tide, nextTide, lang: "zh" }),
+    getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, tide, nextTide, lang: "en" }),
   ]);
   const fallbackZh = `${PHASE_THEME[transit.moonPhaseKey].zh} ${RELATION_THEME[relation].zh}`;
   const fallbackEn = `${PHASE_THEME[transit.moonPhaseKey].en} ${RELATION_THEME[relation].en}`;
@@ -53,11 +55,11 @@ export default async function DailySignPage({ params }: { params: { sign: string
         <div className="mx-auto max-w-xl px-6 py-16">
           <div className="flex items-center justify-between gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
-              <Bi zh="灵犀场 · 今日运势" en="Lingxi Field · Daily Horoscope" />
+              <Bi zh="灵犀场 · 今日场域测试" en="Lingxi Field · Today's Field Test" />
             </p>
             <DownloadResultPdfButton
               targetId="daily-result"
-              fileName={`灵犀今日运势-${sign.zh}座.pdf`}
+              fileName={`灵犀今日场域测试-${sign.zh}座.pdf`}
               bgColorRgb={[14, 16, 42]}
               bgColorHex="#0e102a"
               colorClass="shrink-0 border-lattice/40 text-lattice hover:border-lattice hover:bg-lattice/10"
@@ -69,7 +71,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
           <div className="mt-6 flex flex-col items-center rounded-sm border border-white/10 bg-void-deep p-8 text-center">
             <span className="font-display text-5xl text-lattice">{sign.glyph}</span>
             <h1 className="mt-3 font-display text-3xl font-light text-bone">
-              <Bi zh={`${sign.zh}座 · 今日运势`} en={`${sign.en} · Today`} />
+              <Bi zh={`${sign.zh}座 · 今日场域测试`} en={`${sign.en} · Today's Field Test`} />
             </h1>
             <p className="mt-2 text-xs text-bone-dim/85">{todayLabel}</p>
             <p className="mt-3 text-xs text-bone-dim">
@@ -77,15 +79,32 @@ export default async function DailySignPage({ params }: { params: { sign: string
             </p>
             <div className="mt-5 overflow-hidden rounded-sm border border-lattice/20" style={{ maxWidth: 220 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/daily/daily.jpg" alt="Daily Horoscope" className="block w-full" />
+              <img src="/images/daily/daily.jpg" alt="Today's Field Test" className="block w-full" />
             </div>
           </div>
 
           <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
-            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="今日能量指引" en="Today's Energy Guidance" /></p>
+            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="今日场域解读" en="Today's Field Reading" /></p>
             <p className="mt-2 text-base leading-8 text-bone-dim">
               <Bi zh={fortuneZh || fallbackZh} en={fortuneEn || fallbackEn} />
             </p>
+
+            <div className="mt-5 border-t border-white/10 pt-5">
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh="能量潮汐" en="Energy Tide" /></p>
+                <p className="text-xs text-bone-dim">{tide}/100</p>
+              </div>
+              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
+                <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${tide}%` }} />
+              </div>
+              <p className="mt-2 text-xs leading-6 text-bone-dim/85">
+                <Bi
+                  zh={`真实潮汐力学换算——新月满月时潮汐最强，上下弦月时最弱。${nextTide.daysAway === 0 ? "今天正好处在潮汐的转折点。" : `再过${nextTide.daysAway}天，会到达这轮潮汐的${nextTide.kind === "spring" ? "峰值（大潮）" : "低点（小潮）"}。`}`}
+                  en={`A real tidal-mechanics reading — strongest at new/full moon, weakest at the quarters. ${nextTide.daysAway === 0 ? "Today sits right at a turning point." : `In ${nextTide.daysAway} day${nextTide.daysAway > 1 ? "s" : ""}, this cycle reaches its ${nextTide.kind === "spring" ? "peak (spring tide)" : "low (neap tide)"}.`}`}
+                />
+              </p>
+            </div>
+
             <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-bone-dim/80">
               <span className="rounded-sm border border-white/10 px-2 py-1">
                 <Bi zh={`当日守护星：${ruler.zh}`} en={`Day Ruler: ${ruler.en}`} />
@@ -102,9 +121,9 @@ export default async function DailySignPage({ params }: { params: { sign: string
           <div className="mt-4 text-center">
             <div className="mt-3">
               <ShareButton
-                text={`我看了灵犀场${sign.zh}座今日运势，去看看你的星座：/ My Lingxi Field ${sign.en} horoscope today — check your sign:`}
+                text={`我测了灵犀场${sign.zh}座今日场域测试，去看看你的星座：/ My Lingxi Field ${sign.en} field test today — check your sign:`}
                 url={`https://lingxifield.com/daily/${sign.slug}`}
-                label={{ zh: "分享今日运势", en: "Share today's reading" }}
+                label={{ zh: "分享今日场域测试", en: "Share today's field test" }}
               />
             </div>
           </div>
@@ -124,7 +143,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
           <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
             <p className="text-sm leading-7 text-bone-dim">
               <Bi
-                zh="今日运势读取的是：宇宙当前运行状态，与你太阳星座之间产生的连接——像一份「今日意识天气」，帮你观察今天适合关注什么、调整什么、顺应什么。而生命图谱不同，它读取的是你出生那一刻、属于你的完整生命坐标。一个观察今天，一个探索你。"
+                zh="今日场域测试读取的是：宇宙当前运行状态，与你太阳星座之间产生的连接——像一份「今日意识天气」，帮你观察今天适合关注什么、调整什么、顺应什么。而生命图谱不同，它读取的是你出生那一刻、属于你的完整生命坐标。一个观察今天，一个探索你。"
                 en="Today's horoscope reads the connection between the sky's current state and your Sun sign \u2014 a kind of \u201cweather report for today's consciousness,\u201d helping you notice what to focus on, adjust, or move with. Your Life Map is different \u2014 it reads the full set of coordinates that belong only to you, from the moment you were born. One observes today. The other explores you."
               />
             </p>

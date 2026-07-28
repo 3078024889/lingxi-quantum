@@ -29,7 +29,7 @@ const CAPS: Cap[] = [
       { zh: "关系共振", en: "Relationship Resonance", descZh: "探索人与人之间的连接与镜像。", descEn: "Explore the connection and mirroring between two people.", href: "/relationship" },
       { zh: "生命韧性指数", en: "Life Resilience Index", descZh: "探索面对变化时的内在力量。", descEn: "Explore your inner strength in the face of change.", href: "/resilience" },
       { zh: "桃花磁场", en: "Love Resonance", descZh: "探索情感连接中的模式与能量。", descEn: "Explore the patterns and energy within emotional connection.", href: "/romance" },
-      { zh: "今日运势", en: "Daily Resonance", descZh: "感知当下生命节律。", descEn: "Sense the rhythm of life right now.", href: "/daily" },
+      { zh: "今日场域测试", en: "Today's Field Test", descZh: "感知当下生命节律。", descEn: "Sense the rhythm of life right now.", href: "/daily" },
     ],
   },
   {

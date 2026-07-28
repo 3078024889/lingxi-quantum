@@ -27,7 +27,7 @@ const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon
   { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", rune: "crystal" },
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", rune: "crescent" },
-  { href: "/daily", zh: "今日运势", en: "Daily Horoscope", rune: "mandala" },
+  { href: "/daily", zh: "今日场域测试", en: "Today's Field Test", rune: "mandala" },
   { href: "/tarot", zh: "灵犀量子塔罗", en: "Lingxi Quantum Tarot", rune: "twin" },
   { href: "/qian", zh: "灵犀生命灵签", en: "Lingxi Life Oracle", rune: "crystal" },
 ];

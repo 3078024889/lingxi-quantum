@@ -39,7 +39,7 @@ function phaseKeyFromAngle(angle: number): MoonPhaseKey {
 
 export type TodayTransit = {
   moonSignZh: string; moonSignEn: string; moonElement: WesternElement;
-  moonPhaseKey: MoonPhaseKey; moonPhaseZh: string; moonPhaseEn: string;
+  moonPhaseKey: MoonPhaseKey; moonPhaseZh: string; moonPhaseEn: string; moonPhaseAngle: number;
   sunSignZh: string; sunSignEn: string; // 太阳此刻所在星座＝当下的"星座季节"
   date: string; // YYYY-MM-DD，用于判断"今天"是否已经变化，便于服务端渲染时天然按天刷新
 };
@@ -58,7 +58,7 @@ export function computeTodayTransit(now: Date = new Date()): TodayTransit {
 
   return {
     moonSignZh: moon.signZh, moonSignEn: moon.signEn, moonElement: moon.element,
-    moonPhaseKey: phaseKey, moonPhaseZh: PHASE_LABEL[phaseKey].zh, moonPhaseEn: PHASE_LABEL[phaseKey].en,
+    moonPhaseKey: phaseKey, moonPhaseZh: PHASE_LABEL[phaseKey].zh, moonPhaseEn: PHASE_LABEL[phaseKey].en, moonPhaseAngle: phaseAngle,
     sunSignZh: sun.signZh, sunSignEn: sun.signEn,
     date: now.toISOString().slice(0, 10),
   };
@@ -112,11 +112,42 @@ export function dayRuler(now: Date = new Date()): { zh: string; en: string } {
   return DAY_RULER[now.getUTCDay()];
 }
 
+// 能量潮汐——这不是我们编的比喻，是真实的潮汐力学：新月和满月时，
+// 太阳和月亮的引力沿同一条线叠加（要么同向、要么正对），潮汐力最强，
+// 叫"大潮"（spring tide）；上弦月和下弦月时，太阳和月亮的引力互相
+// 垂直、部分抵消，潮汐力最弱，叫"小潮"（neap tide）。这套周期真实
+// 存在、可以在任何潮汐表网站查证，不是占星附会。用月相角度算出一个
+// 0-100的"潮汐强度"，公式上就是"离新月/满月（0°/180°）越近，数值
+// 越高；离上下弦月（90°/270°）越近，数值越低"。
+export function tideLevel(phaseAngleDeg: number): number {
+  const rad = (phaseAngleDeg * Math.PI) / 180;
+  return Math.round(50 + 50 * Math.cos(2 * rad));
+}
+
+export type NextTidePeak = { kind: "spring" | "neap"; daysAway: number; date: string };
+
+// 未来几天潮汐会怎么变——这是真实可预测的天文现象（月亮绕地球一圈
+// 的周期是确定的，不是占卜），可以放心往前推算，跟"预言你的人生"是
+//两回事：这里预测的是潮汐这个自然现象本身，不是这个人的命运。
+export function nextTidePeak(now: Date = new Date()): NextTidePeak {
+  // targetLon: 0=新月(大潮), 180=满月(大潮)——两个都搜，取更近的那个。
+  const toNew = Astronomy.SearchMoonPhase(0, now, 30);
+  const toFull = Astronomy.SearchMoonPhase(180, now, 30);
+  const candidates: { kind: "spring"; date: Date }[] = [];
+  if (toNew) candidates.push({ kind: "spring", date: toNew.date });
+  if (toFull) candidates.push({ kind: "spring", date: toFull.date });
+  candidates.sort((a, b) => a.date.getTime() - b.date.getTime());
+  const nearest = candidates[0];
+  if (!nearest) return { kind: "spring", daysAway: 0, date: now.toISOString().slice(0, 10) };
+  const daysAway = Math.max(0, Math.round((nearest.date.getTime() - now.getTime()) / 86400000));
+  return { kind: nearest.kind, daysAway, date: nearest.date.toISOString().slice(0, 10) };
+}
+
+const COMPATIBLE: Record<WesternElement, WesternElement> = { fire: "air", air: "fire", earth: "water", water: "earth" };
+
 // 元素关系——占星里真实存在的技法：同元素共振，相生元素（火风、土水）
 // 顺畅，相克元素（火水、土风）有摩擦，不是我们编的比喻。
 export type ElementRelation = "resonant" | "flowing" | "friction";
-
-const COMPATIBLE: Record<WesternElement, WesternElement> = { fire: "air", air: "fire", earth: "water", water: "earth" };
 
 export function elementRelation(a: WesternElement, b: WesternElement): ElementRelation {
   if (a === b) return "resonant";
