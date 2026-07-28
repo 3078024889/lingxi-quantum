@@ -106,8 +106,49 @@ export default function RelationshipFlow() {
   const [showWechatPay, setShowWechatPay] = useState(false);
   const [payingSubmissionId, setPayingSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [previewing, setPreviewing] = useState(false);
+  const [preview, setPreview] = useState<{
+    resonance: {
+      resonant: { labelZh: string; labelEn: string; a: number; b: number }[];
+      complementary: { labelZh: string; labelEn: string }[];
+      friction: { labelZh: string; labelEn: string }[];
+    };
+    sunSignA: string; sunSignB: string; sunSignAEn: string; sunSignBEn: string;
+  } | null>(null);
 
   const valid = (p: Person) => p.name.trim() && p.year && p.month && p.day;
+
+  const runPreview = async () => {
+    if (!valid(a) || !valid(b)) {
+      setError(t("请把两个人的姓名和出生日期都填完整。", "Please fill in both people's names and birth dates."));
+      return;
+    }
+    setError("");
+    setPreviewing(true);
+    const toBirth = (p: Person) => ({
+      year: parseInt(p.year, 10), month: parseInt(p.month, 10), day: parseInt(p.day, 10),
+      hour: p.hasTime ? parseInt(p.hour, 10) : 12, minute: p.hasTime ? parseInt(p.minute, 10) : 0,
+      hasTime: p.hasTime,
+    });
+    try {
+      const res = await fetch("/api/relationship/calc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ a: toBirth(a), b: toBirth(b) }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || t("计算失败，请稍后再试。", "Calculation failed — please try again."));
+        setPreviewing(false);
+        return;
+      }
+      setPreview(data);
+    } catch {
+      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+    } finally {
+      setPreviewing(false);
+    }
+  };
 
   const submit = async () => {
     if (!valid(a) || !valid(b)) {
@@ -234,13 +275,76 @@ export default function RelationshipFlow() {
         </div>
       )}
 
-      <button
-        onClick={submit}
-        disabled={submitting}
-        className="mt-8 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
-      >
-        {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`开始能量交换 · ¥${getProduct("relationship-resonance")?.priceRmb}`} en={`Begin Energy Exchange · ¥${getProduct("relationship-resonance")?.priceRmb}`} />}
-      </button>
+      {!preview ? (
+        <button
+          onClick={runPreview}
+          disabled={previewing}
+          className="mt-8 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+        >
+          {previewing ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="免费看共鸣与互补点 →" en="See Resonance & Complementarity — Free →" />}
+        </button>
+      ) : (
+        <div className="mt-8 rounded-sm border border-lattice/25 bg-void-deep p-6">
+          <p className="text-center font-display text-sm uppercase tracking-widest2 text-lattice">
+            <Bi zh={`${a.name} × ${b.name} · 免费预览`} en={`${a.name} × ${b.name} · Free Preview`} />
+          </p>
+          <p className="mt-2 text-center text-xs text-bone-dim/85">
+            <Bi zh={`太阳星座：${preview.sunSignA} × ${preview.sunSignB}`} en={`Sun Signs: ${preview.sunSignAEn} × ${preview.sunSignBEn}`} />
+          </p>
+
+          {preview.resonance.resonant.length > 0 && (
+            <div className="mt-5 border-t border-white/10 pt-5">
+              <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh="共鸣点 · 共享的驱动力" en="Resonance · Shared Drives" /></p>
+              <div className="mt-3 space-y-2">
+                {preview.resonance.resonant.map((r, i) => (
+                  <p key={i} className="text-sm text-bone-dim">
+                    <Bi zh={r.labelZh} en={r.labelEn} /> <span className="text-bone-dim/70">({r.a} / {r.b})</span>
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+          {preview.resonance.complementary.length > 0 && (
+            <div className="mt-5 border-t border-white/10 pt-5">
+              <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="互补点 · 天然分工" en="Complementary · Natural Division" /></p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {preview.resonance.complementary.map((c, i) => (
+                  <span key={i} className="rounded-full border border-lattice/30 px-3 py-1 text-xs text-bone-dim">
+                    <Bi zh={c.labelZh} en={c.labelEn} />
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          {preview.resonance.friction.length > 0 && (
+            <div className="mt-5 border-t border-white/10 pt-5">
+              <p className="text-xs uppercase tracking-widest2 text-rose"><Bi zh="摩擦点 · 值得留意" en="Friction · Worth Noticing" /></p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {preview.resonance.friction.map((f, i) => (
+                  <span key={i} className="rounded-full border border-rose/30 px-3 py-1 text-xs text-bone-dim">
+                    <Bi zh={f.labelZh} en={f.labelEn} />
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <p className="mt-6 text-center text-xs leading-6 text-bone-dim/85">
+            <Bi
+              zh="这只是数值本身——为什么会共鸣、这段互补具体怎么发挥作用、摩擦点要怎么面对，完整报告会逐一写清楚。"
+              en="These are just the raw numbers — why the resonance forms, how the complementarity actually plays out, how to work with the friction: the full report unpacks all of it."
+            />
+          </p>
+
+          <button
+            onClick={submit}
+            disabled={submitting}
+            className="mt-4 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+          >
+            {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`解锁完整报告 · ¥${getProduct("relationship-resonance")?.priceRmb}`} en={`Unlock Full Report · ¥${getProduct("relationship-resonance")?.priceRmb}`} />}
+          </button>
+        </div>
+      )}
       {showWechatPay && payingSubmissionId && (
         <WechatPayModal
           productId="relationship-resonance"

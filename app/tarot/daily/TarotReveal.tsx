@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Bi from "@/components/Bi";
 import type { TarotCard } from "@/lib/tarot-data";
+import type { NextTidePeak } from "@/lib/daily-transit";
 import { getProduct } from "@/lib/plans";
 import ShareButton from "@/components/ShareButton";
 
@@ -12,7 +13,32 @@ import ShareButton from "@/components/ShareButton";
 // 第一步星云汇聚，第二步核心凝结出光点，第三步光点长成完整的卡牌——
 // 卡牌是"从场域中心浮现出来的"，不是"翻开的"，视觉上更贴近"一个象征
 // 在场域中显化"这个感觉，但没有牺牲卡牌本身内容的具体性。
-export default function TarotReveal({ card }: { card: TarotCard }) {
+//
+// v230：加入"今日能量潮汐"跟卡牌的交叉解读——传统塔罗，同一张牌每天
+// 的含义是不变的；这里额外叠加了当天真实的潮汐力学数据（见
+// lib/daily-transit.ts 顶部注释），让"今天抽到这张牌"这件事，多了一层
+// 只属于"今天"的具体信息，不是重新发明这张牌的含义，是在传统含义之上
+// 再交叉引用一个真实、可验证的天文变量。
+function tideReading(card: TarotCard, tide: number, nextTide: NextTidePeak, langEn: boolean): string {
+  const band = tide >= 70 ? "high" : tide <= 30 ? "low" : "mid";
+  const trendZh = nextTide.daysAway === 0
+    ? "潮汐正处在转折点上"
+    : `再过${nextTide.daysAway}天将到达这轮潮汐的${nextTide.kind === "spring" ? "峰值" : "低点"}`;
+  const trendEn = nextTide.daysAway === 0
+    ? "the tide sits right at a turning point"
+    : `in ${nextTide.daysAway} day${nextTide.daysAway > 1 ? "s" : ""} this cycle reaches its ${nextTide.kind === "spring" ? "peak" : "low"}`;
+
+  if (langEn) {
+    if (band === "high") return `Today's energy tide runs strong (${tide}/100) — whatever "${card.nameEn}" is pointing you toward, the amplitude today makes it land harder than usual, for better or worse. And ${trendEn}.`;
+    if (band === "low") return `Today's energy tide runs quiet (${tide}/100) — "${card.nameEn}" is still speaking, but today favors sitting with it rather than acting on it loudly. And ${trendEn}.`;
+    return `Today's energy tide sits in the middle (${tide}/100) — a fairly ordinary day to meet "${card.nameEn}", neither amplified nor muted. And ${trendEn}.`;
+  }
+  if (band === "high") return `今天的能量潮汐很强（${tide}/100）——「${card.nameZh}」指向的这个主题，今天会被放大得比平时更明显，好坏都是。而且${trendZh}。`;
+  if (band === "low") return `今天的能量潮汐偏弱（${tide}/100）——「${card.nameZh}」的意思还在，但今天更适合安静地体会它，而不是急着大动作回应。而且${trendZh}。`;
+  return `今天的能量潮汐处在中间地带（${tide}/100）——遇到「${card.nameZh}」这张牌，是一个比较平常的时机，不会被放大也不会被压低。而且${trendZh}。`;
+}
+
+export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard; tide: number; nextTide: NextTidePeak }) {
   const [stage, setStage] = useState<"idle" | "gathering" | "condensing" | "revealed">("idle");
   const [downloading, setDownloading] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
@@ -135,6 +161,19 @@ export default function TarotReveal({ card }: { card: TarotCard }) {
       <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
         <p className="text-base leading-8 text-bone-dim">
           <Bi zh={card.meaningZh} en={card.meaningEn} />
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-sm border border-amber/25 bg-amber/5 p-6">
+        <div className="flex items-center justify-between">
+          <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh="今日能量潮汐" en="Today's Energy Tide" /></p>
+          <p className="text-xs text-bone-dim">{tide}/100</p>
+        </div>
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+          <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${tide}%` }} />
+        </div>
+        <p className="mt-3 text-sm leading-7 text-bone-dim">
+          <Bi zh={tideReading(card, tide, nextTide, false)} en={tideReading(card, tide, nextTide, true)} />
         </p>
       </div>
       </div>

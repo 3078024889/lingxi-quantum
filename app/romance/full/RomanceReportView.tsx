@@ -193,9 +193,13 @@ export default function RomanceReportView({ id }: { id: string }) {
         })}
 
         <div
-          className="relative mt-4 overflow-hidden rounded-sm"
+          className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
-        />
+        >
+          <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
+            <Bi zh="你的生命场，自然绽放。" en="Your field blooms naturally." />
+          </p>
+        </div>
       </div>
 
       <div className="mt-6 text-center">

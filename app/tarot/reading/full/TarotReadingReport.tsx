@@ -25,6 +25,16 @@ const LAYER_TITLES = [
   { zh: "⑫ 生命关键词", en: "⑫ Your Life Keywords" },
 ];
 
+// v231：正文分组——12段内容原样保留，按PDF设计文档的6页结构重新
+// 分组：能量晶片展开（连接声明+三张牌解析）、意识波谱（联合公式+
+// 财富+关系+事业）、量子洞察（生命阶段+成长路径），封印页（信+
+// 关键词）单独处理。
+const TAROT_PAGE_GROUPS = [
+  { titleZh: "能量晶片展开", titleEn: "Energy Chip Unfolding", bg: "page-2", indices: [0, 1, 2, 3] },
+  { titleZh: "意识波谱", titleEn: "Consciousness Spectrum", bg: "page-3", indices: [4, 5, 6, 7] },
+  { titleZh: "量子洞察", titleEn: "Quantum Insight", bg: "page-4", indices: [8, 9] },
+];
+
 type FrequencyItem = { key: string; zh: string; en: string; score: number };
 
 export default function TarotReadingReport({ id }: { id: string }) {
@@ -113,8 +123,9 @@ export default function TarotReadingReport({ id }: { id: string }) {
     try {
       const { exportGlassPdf } = await import("@/lib/pdf-export");
       const chapterTitles = [
-        ...(frequencyMap.length > 0 ? [{ titleZh: "当前意识频率", titleEn: "Current Consciousness Frequency" }] : []),
-        ...LAYER_TITLES.map((l) => ({ titleZh: l.zh, titleEn: l.en })),
+        ...(frequencyMap.length > 0 ? [{ titleZh: "量子意识矩阵", titleEn: "Quantum Consciousness Matrix" }] : []),
+        ...TAROT_PAGE_GROUPS.map((g) => ({ titleZh: g.titleZh, titleEn: g.titleEn })),
+        ...(sections.length >= 12 ? [{ titleZh: "量子封印页", titleEn: "Quantum Seal" }] : []),
       ];
       await exportGlassPdf({
         containerRef: reportRef.current,
@@ -250,9 +261,12 @@ export default function TarotReadingReport({ id }: { id: string }) {
       </div>
 
       {frequencyMap.length > 0 && (
-        <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6">
-          <p className="text-xs uppercase tracking-widest2 text-lattice/70">
-            <Bi zh="当前意识频率" en="Current Consciousness Frequency" />
+        <div
+          className="relative mt-8 overflow-hidden rounded-sm border border-white/10 p-6"
+          style={{ backgroundImage: "linear-gradient(rgba(24,16,48,0.8), rgba(24,16,48,0.8)), url(/images/tarot-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          <p className="text-center text-xs uppercase tracking-widest2 text-lattice/90">
+            <Bi zh="量子意识矩阵 · Quantum Consciousness Matrix" en="Quantum Consciousness Matrix" />
           </p>
           <div className="mt-4 space-y-3">
             {frequencyMap.map((f) => (
@@ -270,16 +284,54 @@ export default function TarotReadingReport({ id }: { id: string }) {
         </div>
       )}
 
-      {sections.map((content, i) => (
-        <div key={i} className="mt-5 rounded-sm border border-white/10 bg-void-deep p-6">
-          {LAYER_TITLES[i] && (
-            <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
-              <Bi zh={LAYER_TITLES[i].zh} en={LAYER_TITLES[i].en} />
-            </p>
-          )}
-          <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
+      {TAROT_PAGE_GROUPS.map((group, gi) => (
+        <div
+          key={gi}
+          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          style={{ backgroundImage: `linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-lattice/90">
+            <Bi zh={group.titleZh} en={group.titleEn} />
+          </p>
+          {group.indices.map((idx) => (
+            sections[idx] ? (
+              <div key={idx} className={idx !== group.indices[0] ? "mt-6 border-t border-white/10 pt-5" : ""}>
+                {LAYER_TITLES[idx] && (
+                  <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+                    <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
+                  </p>
+                )}
+                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
+              </div>
+            ) : null
+          ))}
         </div>
       ))}
+
+      {(sections[10] || sections[11]) && (
+        <div
+          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          style={{ backgroundImage: "linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          {[10, 11].map((idx) =>
+            sections[idx] ? (
+              <div key={idx} className={idx !== 10 ? "mt-6 border-t border-white/10 pt-5" : ""}>
+                {LAYER_TITLES[idx] && (
+                  <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+                    <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
+                  </p>
+                )}
+                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
+              </div>
+            ) : null
+          )}
+          <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
+            <p className="font-display text-sm italic text-lattice/85">
+              <Bi zh="每一种可能，都等待意识选择。" en="Every possibility exists until consciousness chooses." />
+            </p>
+          </div>
+        </div>
+      )}
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">

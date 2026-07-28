@@ -28,6 +28,14 @@ const LAYER_TITLES = [
   { zh: "⑫ 生命宣言", en: "⑫ Life Declaration" },
 ];
 
+// v231：正文分组——把12个具体章节（内容本身不变）按PDF设计文档的
+// 6页结构分成4个视觉分组页 + 1个封印页，索引对应LAYER_TITLES的顺序。
+const QIAN_PAGE_GROUPS = [
+  { titleZh: "灵签核心页 · 三签解析", titleEn: "Oracle Symbol · The Three Signs", bg: "page-2", indices: [0, 1, 2, 3] },
+  { titleZh: "生命象征解析", titleEn: "Symbol Interpretation", bg: "page-3", indices: [4, 5, 6, 7] },
+  { titleZh: "金色生命卷轴", titleEn: "Golden Life Scroll", bg: "page-4", indices: [8, 9, 10] },
+];
+
 type AbilityItem = { key: string; zh: string; en: string; score: number };
 type LifeStage = { zh: string; en: string };
 
@@ -112,9 +120,9 @@ export default function QianReport({ id }: { id: string }) {
     try {
       const { exportGlassPdf } = await import("@/lib/pdf-export");
       const chapterTitles = [
-        ...(lifeStage ? [{ titleZh: "当前所处阶段", titleEn: "Current Life Stage" }] : []),
-        ...(abilityMap.length > 0 ? [{ titleZh: "天赋能力地图", titleEn: "Talent & Ability Map" }] : []),
-        ...LAYER_TITLES.map((l) => ({ titleZh: l.zh, titleEn: l.en })),
+        ...((lifeStage || abilityMap.length > 0) ? [{ titleZh: "灵签生成页面", titleEn: "Oracle Activation" }] : []),
+        ...QIAN_PAGE_GROUPS.map((g) => ({ titleZh: g.titleZh, titleEn: g.titleEn })),
+        ...(sections[sections.length - 1] ? [{ titleZh: "灵犀封印页", titleEn: "Oracle Seal" }] : []),
       ];
       await exportGlassPdf({
         containerRef: reportRef.current,
@@ -244,48 +252,92 @@ export default function QianReport({ id }: { id: string }) {
         <p className="mt-1 text-xs text-bone-dim/82">lingxifield.com</p>
       </div>
 
-      {lifeStage && (
-        <div className="mt-6 rounded-sm border border-amber/25 bg-amber/5 px-6 py-3 text-center">
-          <p className="text-xs uppercase tracking-widest2 text-amber/80">
-            <Bi zh="当前所处阶段" en="Current Life Stage" />
+      {(lifeStage || abilityMap.length > 0) && (
+        <div
+          className="relative mt-6 overflow-hidden rounded-sm border border-amber/20 p-6"
+          style={{ backgroundImage: "linear-gradient(rgba(13,13,26,0.8), rgba(13,13,26,0.8)), url(/images/qian-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          <p className="text-center text-xs uppercase tracking-widest2 text-amber/90">
+            <Bi zh="灵签生成页面 · Oracle Activation" en="Oracle Activation" />
           </p>
-          <p className="mt-1 font-display text-lg text-bone">
-            <Bi zh={lifeStage.zh} en={lifeStage.en} />
-          </p>
+          {lifeStage && (
+            <div className="mt-4 text-center">
+              <p className="text-xs uppercase tracking-widest2 text-amber/80">
+                <Bi zh="当前所处阶段" en="Current Life Stage" />
+              </p>
+              <p className="mt-1 font-display text-lg text-bone">
+                <Bi zh={lifeStage.zh} en={lifeStage.en} />
+              </p>
+            </div>
+          )}
+          {abilityMap.length > 0 && (
+            <div className="mt-5 space-y-3 border-t border-white/10 pt-5">
+              <p className="text-xs uppercase tracking-widest2 text-lattice/70">
+                <Bi zh="天赋能力地图" en="Talent & Ability Map" />
+              </p>
+              {abilityMap.map((a) => (
+                <div key={a.key}>
+                  <div className="flex items-center justify-between text-xs text-bone-dim">
+                    <span><Bi zh={a.zh} en={a.en} /></span>
+                    <span className="text-amber">{a.score}</span>
+                  </div>
+                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${a.score}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {abilityMap.length > 0 && (
-        <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
-          <p className="text-xs uppercase tracking-widest2 text-lattice/70">
-            <Bi zh="天赋能力地图" en="Talent & Ability Map" />
+      {/* v231：正文分组——12段原样保留（源流签深度解析这些具体章节，
+         是这次会话里反复打磨过的内容，一个字没改），只是展示层面按
+         PDF设计文档的6页结构重新分组：灵签核心页（总览+三签解析）、
+         生命象征解析（融合/财富/关系/事业）、金色生命卷轴（人生阶段/
+         隐藏天赋/成长路径）、封印页（生命宣言，上一版已做）。 */}
+      {QIAN_PAGE_GROUPS.map((group, gi) => (
+        <div
+          key={gi}
+          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          style={{ backgroundImage: `linear-gradient(rgba(13,13,26,0.82), rgba(13,13,26,0.82)), url(/images/qian-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-amber/90">
+            <Bi zh={group.titleZh} en={group.titleEn} />
           </p>
-          <div className="mt-4 space-y-3">
-            {abilityMap.map((a) => (
-              <div key={a.key}>
-                <div className="flex items-center justify-between text-xs text-bone-dim">
-                  <span><Bi zh={a.zh} en={a.en} /></span>
-                  <span className="text-amber">{a.score}</span>
-                </div>
-                <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                  <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${a.score}%` }} />
-                </div>
+          {group.indices.map((idx) => (
+            sections[idx] ? (
+              <div key={idx} className={idx !== group.indices[0] ? "mt-6 border-t border-white/10 pt-5" : ""}>
+                {LAYER_TITLES[idx] && (
+                  <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+                    <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
+                  </p>
+                )}
+                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
               </div>
-            ))}
+            ) : null
+          ))}
+        </div>
+      ))}
+
+      {sections[sections.length - 1] && (
+        <div
+          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          style={{ backgroundImage: "linear-gradient(rgba(13,13,26,0.82), rgba(13,13,26,0.82)), url(/images/qian-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          {LAYER_TITLES[sections.length - 1] && (
+            <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+              <Bi zh={LAYER_TITLES[sections.length - 1].zh} en={LAYER_TITLES[sections.length - 1].en} />
+            </p>
+          )}
+          <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[sections.length - 1]}</p>
+          <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
+            <p className="font-display text-sm italic text-lattice/85">
+              <Bi zh="场已回应。" en="The field has spoken." />
+            </p>
           </div>
         </div>
       )}
-
-      {sections.map((content, i) => (
-        <div key={i} className="mt-5 rounded-sm border border-white/10 bg-void-deep p-6">
-          {LAYER_TITLES[i] && (
-            <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
-              <Bi zh={LAYER_TITLES[i].zh} en={LAYER_TITLES[i].en} />
-            </p>
-          )}
-          <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
-        </div>
-      ))}
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">

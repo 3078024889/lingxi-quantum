@@ -576,12 +576,29 @@ export default function LifeMapFlow() {
     const parts = stripMarkdownArtifacts(report.narrative).split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
     const echoText = parts[0] || "";
     const normalizeDelims = (s: string) => s.replace(/[｜]/g, "|").replace(/[，、]/g, ",");
-    const [stageName, stageDesc] = normalizeDelims(parts[1] || "").split("|").map((s) => s?.trim());
+    let [stageName, stageDesc] = normalizeDelims(parts[1] || "").split("|").map((s) => s?.trim());
+    // 兜底：AI有小概率把提示词格式说明里的占位符（"阶段名称"这四个字
+    // 本身）原样抄回来，当成真实的阶段名——这种情况必须识别出来，
+    // 不能把占位符原样展示给用户看到"「阶段名称」"这种没有实际内容
+    // 的结果。
+    if (stageName && /^【?阶段名称】?$/.test(stageName.trim())) {
+      stageName = "";
+    }
     const keywordParts = normalizeDelims(parts[2] || "").split("|").map((s) => s.trim()).filter(Boolean);
     const keywords = keywordParts
-      .map((kp) => kp.split(",").map((s) => s?.trim()).filter(Boolean))
-      .filter((pair) => {
-        if (pair.length !== 2 || pair[0].length > 8) return false;
+      .map((kp) => {
+        // 之前这里要求每组必须严格是"词,说明"两段，AI如果在说明文字里
+        // 多写了一个逗号（比如"自我觉察,清晰,有深度"，被逗号切成3段），
+        // 整组会被当成格式不对直接丢弃——这正是"三个关键词只显示两个"
+        // 的真正原因，不是显示层的问题，是这三段被解析代码悄悄扔掉了
+        // 一段。现在改成：只要第一段是关键词本身，其余不管有几段，
+        // 都合并回说明文字里，不再因为多一个逗号就丢掉整组内容。
+        const bits = kp.split(",").map((s) => s?.trim()).filter(Boolean);
+        if (bits.length < 2) return null;
+        return [bits[0], bits.slice(1).join("，")] as [string, string];
+      })
+      .filter((pair): pair is [string, string] => {
+        if (!pair || pair[0].length > 8) return false;
         // 兜底：AI有小概率把提示词里给它看的占位符（"关键词1""说明1"
         // 这种字样）原样抄回来，当成真实内容——这种情况词本身很短，
         // 能通过长度校验，得单独用正则抓出来剔除。
@@ -1076,13 +1093,15 @@ export default function LifeMapFlow() {
               </div>
             )}
 
-            <div className="bg-void-deep mt-8 p-6 sm:p-8">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
-                <Bi zh="当前生命阶段" en="Your Current Life Stage" />
-              </p>
-              <h3 className="mt-2 font-display text-2xl text-lm2-text">「{parsed.stageName}」</h3>
-              <p className="mt-3 text-base leading-8 text-lm2-text-dim">{parsed.stageDesc}</p>
-            </div>
+            {parsed.stageName && (
+              <div className="bg-void-deep mt-8 p-6 sm:p-8">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                  <Bi zh="当前生命阶段" en="Your Current Life Stage" />
+                </p>
+                <h3 className="mt-2 font-display text-2xl text-lm2-text">「{parsed.stageName}」</h3>
+                <p className="mt-3 text-base leading-8 text-lm2-text-dim">{parsed.stageDesc}</p>
+              </div>
+            )}
 
             <div className="mt-8">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">

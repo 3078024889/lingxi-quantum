@@ -193,9 +193,13 @@ export default function ResilienceReportView({ id }: { id: string }) {
         })}
 
         <div
-          className="relative mt-4 overflow-hidden rounded-sm"
+          className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/resilience-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
-        />
+        >
+          <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
+            <Bi zh="生命会弯曲，生命会成长，生命会继续展开。" en="Life bends. Life grows. Life continues." />
+          </p>
+        </div>
       </div>
 
       <div className="mt-6 text-center">

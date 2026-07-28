@@ -33,6 +33,16 @@ const SECTION_TITLES = [
   { zh: "成长方向", en: "Growth Direction" },
 ];
 
+// v231：PDF设计文档给这个产品起的整体页面名字，作为每个章节的
+// 视觉小标题（原有的具体章节名——吸引来源/关系动力这些——保留
+// 在下面当副标题，不是替换掉，两者一起显示）。
+const REL_PAGE_NAMES = [
+  { zh: "双生命星图", en: "Dual Life Star Map" },
+  { zh: "关系轨道分析", en: "Orbit Connection" },
+  { zh: "共振能量织网", en: "Resonance Weave" },
+  { zh: "关系洞察", en: "Field Insight" },
+];
+
 export default function RelationshipReportView({ id }: { id: string }) {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
@@ -283,14 +293,38 @@ export default function RelationshipReportView({ id }: { id: string }) {
           </div>
         )}
 
-        {sections.map((content, i) => (
-          <div key={i} className="bg-void-deep mt-6 rounded-sm p-6">
-            <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
-              {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
-            </p>
-            <div className="mt-3 whitespace-pre-line text-base leading-9 text-bone-dim">{stripMarkdownArtifacts(content)}</div>
-          </div>
-        ))}
+        {sections.map((content, i) => {
+          const isSeal = i === sections.length - 1;
+          const folder = relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
+          const superTitle = REL_PAGE_NAMES[i];
+          return (
+            <div
+              key={i}
+              className="relative mt-6 overflow-hidden rounded-sm p-6"
+              style={{
+                backgroundImage: `linear-gradient(rgba(42,22,46,0.84), rgba(42,22,46,0.84)), url(/images/relationship-full/${folder}/page-${isSeal ? 5 : i + 1}.jpg)`,
+                backgroundSize: "cover", backgroundPosition: "center",
+              }}
+            >
+              {superTitle && (
+                <p className="mb-2 text-center text-[11px] uppercase tracking-widest2 text-rose/85">
+                  <Bi zh={superTitle.zh} en={superTitle.en} />
+                </p>
+              )}
+              <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
+                {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
+              </p>
+              <div className="mt-3 whitespace-pre-line text-base leading-9 text-bone-dim">{stripMarkdownArtifacts(content)}</div>
+              {isSeal && (
+                <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
+                  <p className="font-display text-sm italic text-lattice/85">
+                    <Bi zh="每一次连接，都会形成一个新的场。" en="Every connection creates a field." />
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })}
 
         <div className="bg-void-deep mt-6 rounded-sm p-5 text-center">
           <p className="text-sm text-bone-dim/90">

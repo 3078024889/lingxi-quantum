@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import { getTodaysCard } from "@/lib/tarot-daily";
+import { computeTodayTransit, tideLevel, nextTidePeak } from "@/lib/daily-transit";
 import TarotReveal from "./TarotReveal";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,9 @@ export const metadata = {
 
 export default function TarotPage() {
   const card = getTodaysCard();
+  const transit = computeTodayTransit();
+  const tide = tideLevel(transit.moonPhaseAngle);
+  const nextTide = nextTidePeak();
   const todayLabel = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
 
   return (
@@ -38,7 +42,7 @@ export default function TarotPage() {
           </div>
 
           <div className="mt-8">
-            <TarotReveal card={card} />
+            <TarotReveal card={card} tide={tide} nextTide={nextTide} />
           </div>
         </div>
       </main>
