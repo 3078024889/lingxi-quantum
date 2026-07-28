@@ -269,7 +269,7 @@ export async function POST(req: Request) {
     if (!res.ok) {
       const errBody = await res.text().catch(() => "");
       console.error("[generate-full] 智谱接口返回非200状态:", res.status, errBody, "submission id:", body.id);
-      return NextResponse.json({ error: `场域暂时无法回应（${res.status}），请稍后再试。` }, { status: 502 });
+      return NextResponse.json({ error: `场域暂时无法回应（${res.status}），请稍后再试。` }, { status: 500 });
     }
     const data = await res.json();
     const rawText = data?.choices?.[0]?.message?.content?.trim();
@@ -283,7 +283,7 @@ export async function POST(req: Request) {
     }
     if (!text) {
       console.error("[generate-full] AI 没有返回内容，submission id:", body.id, "AI原始返回:", JSON.stringify(data));
-      return NextResponse.json({ error: "生成失败，请稍后再试。" }, { status: 502 });
+      return NextResponse.json({ error: "生成失败，请稍后再试。" }, { status: 500 });
     }
 
     const updateField = lang === "en" ? { full_report_en: text } : { full_report: text };

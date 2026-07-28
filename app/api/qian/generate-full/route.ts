@@ -293,7 +293,7 @@ export async function POST(req: Request) {
       if (!result.sections) {
         return NextResponse.json(
           { error: "场域这次的回应不完整，请稍后再试一次。", detail: `${batch.titleZh}：${result.failReason ?? "未知原因"}` },
-          { status: 502 }
+          { status: 500 }
         );
       }
       allSections.push(...result.sections);

@@ -240,11 +240,11 @@ export async function POST(req: Request) {
     }
 
     if (!res.ok) {
-      return NextResponse.json({ error: `场域暂时无法回应（${res.status}），请稍后再试。` }, { status: 502 });
+      return NextResponse.json({ error: `场域暂时无法回应（${res.status}），请稍后再试。` }, { status: 500 });
     }
     const data = await res.json();
     const text: string | undefined = data?.choices?.[0]?.message?.content;
-    if (!text) return NextResponse.json({ error: "场域沉默了，请稍后再试。" }, { status: 502 });
+    if (!text) return NextResponse.json({ error: "场域沉默了，请稍后再试。" }, { status: 500 });
 
     if (mode === "invite") {
       try {
@@ -257,11 +257,11 @@ export async function POST(req: Request) {
       } catch {
         // 解析失败：交由前端用本地池兜底
       }
-      return NextResponse.json({ error: "邀请生成失败。" }, { status: 502 });
+      return NextResponse.json({ error: "邀请生成失败。" }, { status: 500 });
     }
 
     return NextResponse.json({ text: stripMarkdownArtifacts(text) });
   } catch {
-    return NextResponse.json({ error: "连接场域时出错，请稍后再试。" }, { status: 502 });
+    return NextResponse.json({ error: "连接场域时出错，请稍后再试。" }, { status: 500 });
   }
 }

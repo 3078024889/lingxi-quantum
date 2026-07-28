@@ -286,7 +286,7 @@ export async function POST(req: Request) {
       const result = await generateBatch(key, lang, batches[bi], typeLabel, bi === batches.length - 1, resonanceSummary, body.id);
       if (!result.sections) {
         console.error("[relationship generate-full] 批次失败:", result.failReason, "submission id:", body.id);
-        return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 502 });
+        return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 500 });
       }
       allSections.push(...result.sections);
     }
