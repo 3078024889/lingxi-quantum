@@ -198,7 +198,10 @@ export default function QianReport({ id }: { id: string }) {
       </div>
 
       <div ref={reportRef}>
-      <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-12 text-center">
+      <div
+        className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center"
+        style={{ backgroundImage: "linear-gradient(rgba(13,13,26,0.72), rgba(13,13,26,0.72)), url(/images/qian-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
         <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice/70">

@@ -52,7 +52,15 @@ export const tarotReadingProducts: Product[] = [
   { id: "tarot-reading", name: "灵犀量子塔罗 · 三张牌阵深度解读", nameEn: "Lingxi Quantum Tarot · Three-Card Deep Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁专属于你的三张牌阵——潜意识镜像、当下共振、未来展开，由你的真实命盘数据确定，不是随机抽取，永久保存、可再读", noteEn: "One exchange unlocks your own three-card spread — hidden pattern, present resonance, future possibility — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts];
+export const resilienceProducts: Product[] = [
+  { id: "resilience-report", name: "生命韧性指数 · 完整档案", nameEn: "Life Resilience Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的生命韧性档案——五项分数背后的具体结构、再生循环、隐藏力量，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Resilience Archive — the structure behind your five scores, your recovery cycle, your hidden strength — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
+];
+
+export const romanceProducts: Product[] = [
+  { id: "romance-report", name: "桃花磁场指数 · 完整档案", nameEn: "Romance Magnetism Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的桃花磁场档案——五个磁场维度、吸引力风格、命理桃花星，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Romance Magnetism Archive — your five field dimensions, attraction style, and traditional chart signals — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
+];
+
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }

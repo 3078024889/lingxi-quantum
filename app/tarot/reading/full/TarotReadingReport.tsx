@@ -206,7 +206,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {/* 封面——LOGO+标题+已揭示的三张牌，就是封面本身，不需要另外
           设计一张专门的封面插画。这个区块本身是reportRef的第一个
           直接子元素，PDF导出会把它当成独立的一页/一个章节截图。 */}
-      <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-12 text-center">
+      <div className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center" style={{ backgroundImage: "linear-gradient(rgba(24,16,48,0.72), rgba(24,16,48,0.72)), url(/images/tarot-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
         <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice/70">

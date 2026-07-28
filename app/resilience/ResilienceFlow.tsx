@@ -6,6 +6,9 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ShareButton from "@/components/ShareButton";
+import WechatPayModal from "@/components/WechatPayModal";
+import { getProduct } from "@/lib/plans";
+import { REVIEW_MODE } from "@/lib/reviewMode";
 
 const RESILIENCE_FAQ: BilingualFaqItem[] = [
   {
@@ -96,7 +99,44 @@ export default function ResilienceFlow() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<Result | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [unlockName, setUnlockName] = useState("");
+  const [unlocking, setUnlocking] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [showWechatPay, setShowWechatPay] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
+
+  const unlock = async () => {
+    if (!year || !month || !day || unlocking) return;
+    setUnlocking(true);
+    setError("");
+    try {
+      const res = await fetch("/api/resilience/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          year: parseInt(year, 10), month: parseInt(month, 10), day: parseInt(day, 10),
+          hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0,
+          hasTime, name: unlockName,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.id) {
+        setError(data.error || t("保存失败，请稍后再试。", "Save failed — please try again."));
+        setUnlocking(false);
+        return;
+      }
+      setSubmissionId(data.id);
+      if (REVIEW_MODE) {
+        window.location.href = `/resilience/full?id=${data.id}`;
+        return;
+      }
+      setShowWechatPay(true);
+      setUnlocking(false);
+    } catch {
+      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+      setUnlocking(false);
+    }
+  };
 
   const submit = async () => {
     if (!year || !month || !day || loading) return;
@@ -257,6 +297,45 @@ export default function ResilienceFlow() {
             <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
           </p>
         </div>
+      </div>
+
+      <div className="mx-auto mt-6 max-w-xl px-6">
+        <div className="rounded-sm border border-emerald-400/25 bg-void-deep p-6 text-center">
+          <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300">
+            <Bi zh="想看得更深？" en="Want to go deeper?" />
+          </p>
+          <p className="mt-2 text-sm leading-7 text-bone-dim">
+            <Bi
+              zh="这五个分数背后，还有一份完整档案——根系支撑系统、再生循环、隐藏力量与恢复模式，逐一展开成一份可以下载、永久保存的深度报告。"
+              en="Behind these five scores is a full archive — your root system, regeneration cycle, hidden strength and recovery pattern, unfolded into a downloadable report you keep for life."
+            />
+          </p>
+          <input
+            type="text"
+            value={unlockName}
+            onChange={(e) => setUnlockName(e.target.value)}
+            placeholder={t("你的名字（选填）", "Your name (optional)")}
+            className="mt-4 w-full rounded-sm border border-white/15 bg-transparent px-4 py-2 text-center text-sm text-bone outline-none focus:border-emerald-400/60"
+          />
+          <button
+            onClick={unlock}
+            disabled={unlocking}
+            className="mt-4 w-full bg-emerald-400 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-emerald-300 disabled:opacity-50"
+          >
+            {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`解锁完整档案 · ¥${getProduct("resilience-report")?.priceRmb}`} en={`Unlock Full Archive · $${getProduct("resilience-report")?.priceUsd}`} />}
+          </button>
+          {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+        </div>
+        {showWechatPay && submissionId && (
+          <WechatPayModal
+            productId="resilience-report"
+            submissionId={submissionId}
+            priceRmb={getProduct("resilience-report")?.priceRmb ?? 0}
+            productName={{ zh: "生命韧性指数 · 完整档案", en: "Life Resilience Index · Full Archive" }}
+            onClose={() => setShowWechatPay(false)}
+            onSuccess={() => { window.location.href = `/resilience/full?id=${submissionId}`; }}
+          />
+        )}
       </div>
 
       <div className="mx-auto mt-4 max-w-xl px-6 text-center">

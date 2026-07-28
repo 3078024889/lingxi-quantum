@@ -33,6 +33,8 @@ export async function POST(req: Request) {
       "relationship-resonance": "relationship_submissions",
       "qian-reading": "qian_submissions",
       "tarot-reading": "tarot_reading_submissions",
+      "resilience-report": "resilience_submissions",
+      "romance-report": "romance_submissions",
     };
     let submissionName: string | null = null;
     const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];

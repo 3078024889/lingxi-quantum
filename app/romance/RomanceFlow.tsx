@@ -6,6 +6,9 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ShareButton from "@/components/ShareButton";
+import WechatPayModal from "@/components/WechatPayModal";
+import { getProduct } from "@/lib/plans";
+import { REVIEW_MODE } from "@/lib/reviewMode";
 
 const ROMANCE_FAQ: BilingualFaqItem[] = [
   {
@@ -87,7 +90,44 @@ export default function RomanceFlow() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<Result | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [unlockName, setUnlockName] = useState("");
+  const [unlocking, setUnlocking] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [showWechatPay, setShowWechatPay] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
+
+  const unlock = async () => {
+    if (!year || !month || !day || unlocking) return;
+    setUnlocking(true);
+    setError("");
+    try {
+      const res = await fetch("/api/romance/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          year: parseInt(year, 10), month: parseInt(month, 10), day: parseInt(day, 10),
+          hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0,
+          hasTime, name: unlockName,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.id) {
+        setError(data.error || t("保存失败，请稍后再试。", "Save failed — please try again."));
+        setUnlocking(false);
+        return;
+      }
+      setSubmissionId(data.id);
+      if (REVIEW_MODE) {
+        window.location.href = `/romance/full?id=${data.id}`;
+        return;
+      }
+      setShowWechatPay(true);
+      setUnlocking(false);
+    } catch {
+      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+      setUnlocking(false);
+    }
+  };
 
   const submit = async () => {
     if (!year || !month || !day || loading) return;
@@ -234,6 +274,45 @@ export default function RomanceFlow() {
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言。" en="This is a reference for self-reflection, not a prophecy about your relationships." />
           </p>
         </div>
+      </div>
+
+      <div className="mx-auto mt-6 max-w-xl px-6">
+        <div className="rounded-sm border border-rose/25 bg-[#2c1420] p-6 text-center">
+          <p className="font-display text-sm uppercase tracking-widest2 text-rose">
+            <Bi zh="想看得更深？" en="Want to go deeper?" />
+          </p>
+          <p className="mt-2 text-sm leading-7 text-bone-dim">
+            <Bi
+              zh="这个分数背后，还有一份完整档案——五个磁场维度、吸引力风格、命理桃花星逐一展开，成一份可以下载、永久保存的深度报告。"
+              en="Behind this score is a full archive — your five field dimensions, attraction style, and traditional chart signals, unfolded into a downloadable report you keep for life."
+            />
+          </p>
+          <input
+            type="text"
+            value={unlockName}
+            onChange={(e) => setUnlockName(e.target.value)}
+            placeholder={t("你的名字（选填）", "Your name (optional)")}
+            className="mt-4 w-full rounded-sm border border-white/15 bg-transparent px-4 py-2 text-center text-sm text-bone outline-none focus:border-rose/60"
+          />
+          <button
+            onClick={unlock}
+            disabled={unlocking}
+            className="mt-4 w-full bg-rose px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+          >
+            {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`解锁完整档案 · ¥${getProduct("romance-report")?.priceRmb}`} en={`Unlock Full Archive · $${getProduct("romance-report")?.priceUsd}`} />}
+          </button>
+          {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+        </div>
+        {showWechatPay && submissionId && (
+          <WechatPayModal
+            productId="romance-report"
+            submissionId={submissionId}
+            priceRmb={getProduct("romance-report")?.priceRmb ?? 0}
+            productName={{ zh: "桃花磁场指数 · 完整档案", en: "Romance Magnetism Index · Full Archive" }}
+            onClose={() => setShowWechatPay(false)}
+            onSuccess={() => { window.location.href = `/romance/full?id=${submissionId}`; }}
+          />
+        )}
       </div>
 
       <div className="mx-auto mt-4 max-w-xl px-6 text-center">

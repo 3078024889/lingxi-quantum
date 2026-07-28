@@ -9,6 +9,8 @@ const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
   "relationship-resonance": "relationship_submissions",
   "qian-reading": "qian_submissions",
   "tarot-reading": "tarot_reading_submissions",
+  "resilience-report": "resilience_submissions",
+  "romance-report": "romance_submissions",
 };
 
 export async function POST(req: Request) {

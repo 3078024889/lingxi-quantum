@@ -346,30 +346,42 @@ export default function FullReportView({ id }: { id: string }) {
         </p>
         <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-report px-1 py-4"}>
         <div>
-        {/* 标题这个 <h1> 之前是报告容器里独立的一个直接子元素——PDF导出
-           是按"每个直接子元素单独截一张图"来做的，一行字的<h1>单独截图，
-           很容易因为字体度量/行高这些边缘情况，截出比例不对的一小片，
-           后面再贴星盘图的时候，就会看到中间空出一截白边。这里把标题
-           跟星盘panel包进同一个容器，两个一起当成一整块来截图，不再
-           把标题单独拆出来。 */}
-        <h1 className="mt-4 font-display text-3xl font-light text-lm2-text lm2-print-title">{coreTypeName}</h1>
-
-        {lifemapTypeImage(coreTypeName) && (
-          <div className="mt-6 flex justify-center">
-            <div className="lm2-card overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 280 }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={lifemapTypeImage(coreTypeName)!} alt={coreTypeName} className="block w-full" />
+          {/* v227：封面图本身已经带了"LINGXI FIELD / 生命图谱 / Life Map"
+             这些标题文字和网址，不用在HTML里重复画一遍标题——这里只叠加
+             因人而异的动态内容：姓名/核心类型，放进图片中间那圈本来就
+             留出来的空白里。
+             注意：封面图、类型卡片、星盘卡片，必须包在同一个外层<div>
+             里，作为reportRef唯一的第一个直接子元素——PDF导出那边是按
+             "reportRef的第一个直接子元素=封面，其余每个直接子元素各自
+             对应一个章节"来切的，如果这里拆成好几个平级的<div>，会被
+             误当成多出来的"章节"，导致后面12个真章节的标题全部错位。 */}
+          <div
+            className="relative overflow-hidden rounded-sm"
+            style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/lifemap/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          >
+            <div className="absolute inset-x-0 top-[26%] text-center">
+              <h1 className="font-display text-2xl font-light text-white lm2-print-title" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}>
+                {coreTypeName}
+              </h1>
             </div>
           </div>
-        )}
 
-        {facts && (
-          <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
-            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
-              <Bi zh="你的星盘" en="Your Natal Chart" />
-            </p>
-            <NatalChartWheel
-              sunLongitude={facts.sunLongitude} moonLongitude={facts.moonLongitude}
+          {lifemapTypeImage(coreTypeName) && (
+            <div className="mt-6 flex justify-center">
+              <div className="lm2-card overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 280 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={lifemapTypeImage(coreTypeName)!} alt={coreTypeName} className="block w-full" />
+              </div>
+            </div>
+          )}
+
+          {facts && (
+            <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
+              <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                <Bi zh="你的星盘" en="Your Natal Chart" />
+              </p>
+              <NatalChartWheel
+                sunLongitude={facts.sunLongitude} moonLongitude={facts.moonLongitude}
               mercury={facts.mercury.longitude} venus={facts.venus.longitude} mars={facts.mars.longitude}
               jupiter={facts.jupiter.longitude} saturn={facts.saturn.longitude}
             />

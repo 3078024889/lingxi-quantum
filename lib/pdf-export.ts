@@ -91,6 +91,18 @@ export async function exportSimplePdf(params: {
     placedAnything = true;
   }
 
+  // v227：之前这个导出函数（今日运势/生命韧性指数/桃花磁场指数用的
+  // 这一份）完全没有盖网址，跟另一个导出函数（生命图谱/生命灵签/
+  // 关系共振/量子塔罗用的那一份）不一致。统一在保存前，给这份PDF
+  // 产生的每一页都盖上网址。
+  const totalPages = pdf.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    pdf.setPage(p);
+    pdf.setFontSize(8);
+    pdf.setTextColor(150, 146, 168);
+    pdf.text(`lingxifield.com`, MARGIN, pageHeight - 14);
+  }
+
   pdf.save(fileName);
 }
 
@@ -152,6 +164,12 @@ export async function exportGlassPdf(params: {
     const y = Math.max(0, (pageHeight - imgHeight) / 2);
     pdf.addImage(imgData, "JPEG", 0, y, imgWidth, Math.min(imgHeight, pageHeight));
   }
+  // v227：之前只有正文页盖了网址，封面和目录页没有——万一用户只把
+  // 封面那一页截图分享出去，上面完全没有 lingxifield.com 这几个字。
+  // 现在每一页，不管封面、目录、正文，都统一盖上网址。
+  pdf.setFontSize(8);
+  pdf.setTextColor(150, 146, 168);
+  pdf.text(`lingxifield.com`, MARGIN, pageHeight - 20);
 
   // ── 第二页：目录 ──
   // 之前这里直接用jsPDF自带的Helvetica字体画中文字——Helvetica这个
@@ -199,6 +217,9 @@ export async function exportGlassPdf(params: {
     const tocImgWidth = pageWidth;
     const tocImgHeight = Math.min((tocCanvas.height * tocImgWidth) / tocCanvas.width, pageHeight);
     pdf.addImage(tocImgData, "JPEG", 0, 0, tocImgWidth, tocImgHeight);
+    pdf.setFontSize(8);
+    pdf.setTextColor(150, 146, 168);
+    pdf.text(`lingxifield.com`, MARGIN, pageHeight - 20);
   } finally {
     document.body.removeChild(tocContainer);
   }
