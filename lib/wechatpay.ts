@@ -44,14 +44,39 @@ export function wechatPayMissingVars(): string[] {
   return missing;
 }
 
+// v241：私钥格式问题——这是这类多行PEM密钥粘贴进环境变量最常见的
+// 故障来源，这次统一处理，不是只处理一种情况：
+//   1. 字面上的"\n"两个字符（不是真正的换行）——粘贴/环境变量系统
+//      转义导致的，之前已经处理。
+//   2. Windows风格的"\r\n"残留——从Windows记事本、某些浏览器粘贴
+//      过来的文本，可能带着"\r"，Node的crypto模块解析PEM格式时，
+//      这个多余的字符会导致解析失败。
+//   3. 首尾多余的空格或空行——复制的时候容易带上，PEM格式要求第一行
+//      必须精确是"-----BEGIN PRIVATE KEY-----"，前面多一个空格都
+//      会解析失败。
+// 这个函数统一处理这三种情况，并且如果处理完之后，格式看起来还是
+// 不对（没有BEGIN/END这两行），直接抛出一个说清楚原因的错误，而不是
+// 让Node的crypto模块抛出一个只有开发者能看懂的底层报错。
+function normalizePemKey(raw: string, label: string): string {
+  let key = raw.trim();
+  key = key.replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  key = key.trim();
+  if (!key.includes("-----BEGIN") || !key.includes("-----END")) {
+    throw new Error(
+      `${label} 格式看起来不对——正常应该以"-----BEGIN PRIVATE KEY-----"开头、` +
+      `"-----END PRIVATE KEY-----"结尾，中间是多行的内容。请重新从微信支付` +
+      `商户平台下载 apiclient_key.pem 文件，把文件的完整内容（包括头尾这两行）` +
+      `原样粘贴进环境变量，不要只复制中间那部分。`
+    );
+  }
+  return key;
+}
+
 function sign(message: string): string {
   if (!PRIVATE_KEY) throw new Error("缺少 WECHAT_PRIVATE_KEY 环境变量");
   const signer = crypto.createSign("RSA-SHA256");
   signer.update(message, "utf8");
-  // 私钥内容如果是从环境变量里粘贴进来的，换行符经常会被转义成字面上的
-  // "\n" 两个字符，这里统一转换回真正的换行符，不然Node的crypto模块
-  // 解析不了这个私钥格式。
-  const normalizedKey = PRIVATE_KEY.replace(/\\n/g, "\n");
+  const normalizedKey = normalizePemKey(PRIVATE_KEY, "WECHAT_PRIVATE_KEY");
   return signer.sign(normalizedKey, "base64");
 }
 
@@ -153,7 +178,7 @@ export function verifyWechatNotifySignature(params: {
     return false;
   }
   const message = `${params.timestamp}\n${params.nonce}\n${params.body}\n`;
-  const normalizedKey = PLATFORM_PUBLIC_KEY.replace(/\\n/g, "\n");
+  const normalizedKey = normalizePemKey(PLATFORM_PUBLIC_KEY, "WECHAT_PLATFORM_PUBLIC_KEY");
   try {
     const verifier = crypto.createVerify("RSA-SHA256");
     verifier.update(message, "utf8");

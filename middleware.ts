@@ -19,6 +19,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(cleanUrl, 308);
   }
 
+  // v241：之前怀疑过的一个方向——支付这类POST接口，日志里显示的来源
+  // 是"edge-middleware"，而不是"serverless"，说明请求很可能连真正的
+  // API路由函数都没跑到，是在这一层就出问题了。这里下面这段
+  // supabase.auth.getUser()，是唯一会在中间件里发起真实网络请求的
+  // 地方（要去问Supabase"这个人现在登录状态是什么"）——如果Supabase
+  // 那次请求变慢或者失败，会直接卡在这一层，而中间件运行的Edge
+  // Runtime，超时限制比serverless函数更短、也不支持用maxDuration
+  // 调整，v240那次加的maxDuration完全帮不到这里。
+  //
+  // 所有 /api/* 路由本身都已经各自用 createClient() 重新做了一遍
+  // 登录校验（这是必须的，不能省），中间件这里刷新登录cookie，主要
+  // 是为了让浏览器"翻页面"的时候session不过期，对一次性的API请求
+  // 意义不大——所以这里直接跳过，把这个网络请求从"支付"这类接口的
+  // 关键路径上完全拿掉，不是让它变得更快，是让它压根不在这条路径上。
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -43,7 +61,18 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  await supabase.auth.getUser();
+  // 就算是页面请求，也不让这次刷新无限期地卡住中间件——5秒内
+  // Supabase没有回应，就放行，让页面继续加载，只是这次没刷新到最新的
+  // session而已，不是什么严重后果；比"整个页面因为这一步卡死"要好
+  // 得多。
+  try {
+    await Promise.race([
+      supabase.auth.getUser(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("middleware getUser timeout")), 5000)),
+    ]);
+  } catch (e) {
+    console.error("[middleware] 刷新登录状态失败或超时，本次请求跳过刷新：", e);
+  }
   return response;
 }
 
