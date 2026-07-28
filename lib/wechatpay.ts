@@ -69,15 +69,36 @@ async function wechatRequest(method: "GET" | "POST", path: string, body?: object
   const url = `https://api.mch.weixin.qq.com${path}`;
   const bodyStr = body ? JSON.stringify(body) : "";
   const authHeader = buildAuthHeader(method, url, bodyStr);
-  const res = await fetch(url, {
-    method,
-    headers: {
-      Authorization: authHeader,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: body ? bodyStr : undefined,
-  });
+  // v240：之前这里没有设置超时——如果微信支付的接口响应慢（Vercel
+  // 服务器到微信支付网关之间，网络延迟本来就比国内访问更容易偏高），
+  // 这个请求会一直挂着，直到被Vercel平台自己的运行时长限制强制杀死。
+  // 平台杀死函数的方式，是直接返回一个HTML错误页，不是我们自己写的
+  // JSON错误——这正是"Unexpected token '<'"这个报错的真正原因：
+  // 前端拿到的不是JSON，是一段HTML。这里加一个明确的20秒超时，让这个
+  // 请求自己先失败、返回我们自己写的、有意义的JSON错误，不要等平台
+  // 出手。
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000);
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method,
+      headers: {
+        Authorization: authHeader,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: body ? bodyStr : undefined,
+      signal: controller.signal,
+    });
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      throw new Error("微信支付接口响应超时（超过20秒），请稍后再试");
+    }
+    throw e;
+  } finally {
+    clearTimeout(timeoutId);
+  }
   const data = await res.json();
   if (!res.ok) {
     throw new Error(`微信支付接口返回错误 ${res.status}: ${JSON.stringify(data)}`);

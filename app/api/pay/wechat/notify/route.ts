@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { decryptWechatNotifyResource, verifyWechatNotifySignature } from "@/lib/wechatpay";
+
+export const runtime = "nodejs";
+export const maxDuration = 30;
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
 
 // 微信支付服务器主动推送的支付结果通知——用户扫码付款成功之后，微信会

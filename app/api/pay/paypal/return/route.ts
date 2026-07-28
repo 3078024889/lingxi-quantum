@@ -3,6 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { capturePaypalOrder } from "@/lib/paypal";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
 
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
 // 用户在 PayPal 页面点"同意付款"之后，PayPal 会把浏览器带回这个地址
 // （附带它自己的 token / PayerID 参数，我们不需要用到，orderId 是我们自己
 // 在 create 那一步塞进 URL 的）。这里负责真正把钱"扣下来"（capture），

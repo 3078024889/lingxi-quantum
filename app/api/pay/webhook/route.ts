@@ -3,6 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyPaypalWebhook } from "@/lib/paypal";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
 
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
 // PayPal 异步 Webhook——用户付完款那一刻，PayPal 会独立推送一份通知过来，
 // 跟"用户跳转回 /api/pay/paypal/return"是两条互相独立的路径，谁先到都行，
 // 这里存在的意义是兜底：万一用户付完款之后没有真的跳转回网站（比如中途

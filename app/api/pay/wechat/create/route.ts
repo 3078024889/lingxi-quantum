@@ -4,6 +4,13 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
 import { createWechatNativeOrder, wechatPayConfigured, wechatPayMissingVars } from "@/lib/wechatpay";
 
+// v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
+// 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
+// 那个报错的真正原因，就是函数被平台自己在到达10秒时杀死，返回了
+// 平台自己的HTML错误页，不是我们代码里任何一个catch块能拦住的。
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
 const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
   "life-map-report": "life_map_submissions",
   "relationship-resonance": "relationship_submissions",

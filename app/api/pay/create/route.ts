@@ -4,6 +4,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
 import { createPaypalOrder } from "@/lib/paypal";
 
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
 export async function POST(req: Request) {
   try {
     const { productId, submissionId, returnPath } = await req.json();

@@ -16,6 +16,24 @@ function paypalBaseUrl() {
     : "https://api-m.paypal.com";
 }
 
+// v240：跟微信支付那边一样的加固——不给fetch设超时，一旦PayPal接口
+// 响应慢，会一直挂到被平台自己的运行时长上限杀死，返回HTML错误页而
+// 不是我们自己的JSON错误。这里包一层20秒超时。
+async function fetchWithTimeout(url: string, options: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 20000);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      throw new Error("PayPal 接口响应超时（超过20秒），请稍后再试");
+    }
+    throw e;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 let cachedToken: { token: string; expiresAt: number } | null = null;
 
 // OAuth2 client_credentials 换 access token，加了一层内存缓存（token 通常
@@ -29,7 +47,7 @@ export async function getPaypalAccessToken(): Promise<string> {
   if (!clientId || !secret) {
     throw new Error("PayPal 未配置：缺少 PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET");
   }
-  const res = await fetch(`${paypalBaseUrl()}/v1/oauth2/token`, {
+  const res = await fetchWithTimeout(`${paypalBaseUrl()}/v1/oauth2/token`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${Buffer.from(`${clientId}:${secret}`).toString("base64")}`,
@@ -55,7 +73,7 @@ export async function createPaypalOrder(params: {
   cancelUrl: string;
 }): Promise<{ id: string; approveUrl: string }> {
   const token = await getPaypalAccessToken();
-  const res = await fetch(`${paypalBaseUrl()}/v2/checkout/orders`, {
+  const res = await fetchWithTimeout(`${paypalBaseUrl()}/v2/checkout/orders`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -91,7 +109,7 @@ export async function createPaypalOrder(params: {
 // PENDING），那种情况不应该当作已付款处理。
 export async function capturePaypalOrder(orderId: string): Promise<{ status: string; raw: any }> {
   const token = await getPaypalAccessToken();
-  const res = await fetch(`${paypalBaseUrl()}/v2/checkout/orders/${orderId}/capture`, {
+  const res = await fetchWithTimeout(`${paypalBaseUrl()}/v2/checkout/orders/${orderId}/capture`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
   });
@@ -118,7 +136,7 @@ export async function verifyPaypalWebhook(
   const webhookId = process.env.PAYPAL_WEBHOOK_ID;
   if (!webhookId) return false;
   const token = await getPaypalAccessToken();
-  const res = await fetch(`${paypalBaseUrl()}/v1/notifications/verify-webhook-signature`, {
+  const res = await fetchWithTimeout(`${paypalBaseUrl()}/v1/notifications/verify-webhook-signature`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({

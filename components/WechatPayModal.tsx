@@ -39,13 +39,26 @@ export default function WechatPayModal({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ productId, submissionId }),
         });
-        const data = await res.json();
+        // v240：如果服务器函数被平台在返回JSON之前就中断（比如触发了
+        // 运行时长上限），拿到的响应体会是一段HTML错误页，不是JSON——
+        // 这里先按文本读一次、自己尝试解析，解析失败就给一个人能看懂
+        // 的错误提示，而不是让"Unexpected token '<'"这种技术报错直接
+        // 展示给用户。
+        const rawText = await res.text();
+        let data: { codeUrl?: string; orderId?: string; error?: string; detail?: string };
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          setStatus("error");
+          setError(`场域连接超时或服务暂时不可用，请稍后再试。（服务器返回了非预期的内容，状态码 ${res.status}）`);
+          return;
+        }
         if (!res.ok || !data.codeUrl) {
           setStatus("error");
           setError((data.error || "创建订单失败") + (data.detail ? ` (${data.detail})` : ""));
           return;
         }
-        orderIdRef.current = data.orderId;
+        orderIdRef.current = data.orderId ?? null;
         const dataUrl = await QRCode.toDataURL(data.codeUrl, { width: 260, margin: 1 });
         setQrDataUrl(dataUrl);
         setStatus("waiting");
