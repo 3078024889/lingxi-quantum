@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   const calendarType = (body as { calendarType?: string }).calendarType === "lunar" ? "lunar" : "solar";
   if (
     typeof inputYear !== "number" || typeof inputMonth !== "number" || typeof inputDay !== "number" ||
-    inputYear < 1 || inputYear > 2026 || inputMonth < 1 || inputMonth > 12 || inputDay < 1 || inputDay > 31
+    inputYear < 1 || inputYear > 2100 || inputMonth < 1 || inputMonth > 12 || inputDay < 1 || inputDay > 31
   ) {
     return NextResponse.json({ error: "出生日期无效，请检查年月日是否都填写了完整的数字。" }, { status: 400 });
   }

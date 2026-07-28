@@ -108,6 +108,21 @@ function band(score: number): 0 | 1 | 2 | 3 {
   return 3;
 }
 
+
+const TEASER_CHAPTERS: { titleZh: string; titleEn: string; descZh: string; descEn: string }[] = [
+  { titleZh: "\u751f\u547d\u97e7\u6027\u6e90\u70b9", titleEn: "Where Your Resilience Begins", descZh: "\u4e94\u9879\u5206\u6570\u653e\u5728\u4e00\u8d77\uff0c\u5f62\u6210\u4e86\u4e00\u79cd\u4ec0\u4e48\u6837\u7684\u6574\u4f53\u6c14\u573a\u2014\u2014\u54ea\u51e0\u9879\u662f\u9aa8\u67b6\u3001\u54ea\u51e0\u9879\u662f\u8584\u5f31\u73af\u8282\uff0c\u4e0d\u662f\u9010\u6761\u7ffb\u8bd1\u5206\u6570\uff0c\u662f\u770b\u6574\u4f53\u5f62\u72b6\u3002", descEn: "Your five scores together, forming a real shape \u2014 which parts are your skeleton, which are thin." },
+  { titleZh: "\u538b\u529b\u6062\u590d\u80fd\u529b", titleEn: "Stress Recovery", descZh: "\u8fd9\u9879\u5206\u6570\u80cc\u540e\uff0c\u4f60\u5904\u7406\u65e5\u5e38\u538b\u529b\u7684\u5177\u4f53\u65b9\u5f0f\u662f\u4ec0\u4e48\u2014\u2014\u5206\u6570\u9ad8\u4f4e\u5206\u522b\u610f\u5473\u7740\u4ec0\u4e48\u771f\u5b9e\u7684\u884c\u4e3a\u6a21\u5f0f\u3002", descEn: "The real behavior behind this score \u2014 how you actually process everyday pressure." },
+  { titleZh: "\u53d8\u5316\u9002\u5e94\u80fd\u529b", titleEn: "Adaptability to Change", descZh: "\u8ba1\u5212\u88ab\u6253\u4e71\u65f6\uff0c\u4f60\u771f\u5b9e\u7684\u53cd\u5e94\u987a\u5e8f\u662f\u4ec0\u4e48\u2014\u2014\u4e0d\u662f\u300c\u4f60\u9002\u5e94\u529b\u5f3a\u4e0d\u5f3a\u300d\uff0c\u662f\u5177\u4f53\u7684\u7b2c\u4e00\u6b65\u3001\u7b2c\u4e8c\u6b65\u3002", descEn: "The exact sequence of your reaction when plans fall apart \u2014 step by step, not just a rating." },
+  { titleZh: "\u5371\u673a\u53cd\u5f39\u80fd\u529b", titleEn: "Crisis Rebound", descZh: "\u771f\u6b63\u7684\u4f4e\u8c37\u51b2\u51fb\u6765\u4e34\u65f6\uff0c\u4f60\u7684\u542f\u52a8\u65b9\u5f0f\u662f\u5feb\u8fd8\u662f\u6162\u3001\u9760\u4ec0\u4e48\u91cd\u65b0\u7ad9\u8d77\u6765\u3002", descEn: "When a real low hits, whether you bounce fast or slow \u2014 and what actually gets you back up." },
+  { titleZh: "\u957f\u671f\u575a\u6301\u80fd\u529b", titleEn: "Long-Term Persistence", descZh: "\u6ca1\u6709\u5373\u65f6\u53cd\u9988\u7684\u957f\u671f\u6295\u5165\uff0c\u4f60\u9760\u4ec0\u4e48\u6491\u4f4f\u2014\u2014\u8fd9\u9879\u80fd\u529b\u901a\u5e38\u6700\u4e0d\u5bb9\u6613\u88ab\u770b\u89c1\uff0c\u5374\u6700\u51b3\u5b9a\u7ed3\u679c\u3002", descEn: "What keeps you going through long stretches with no feedback \u2014 usually invisible, usually decisive." },
+  { titleZh: "\u7cbe\u795e\u7a33\u5b9a\u7ed3\u6784", titleEn: "Emotional Stability Structure", descZh: "\u4f60\u7684\u5185\u5728\u7a33\u5b9a\u611f\u6765\u81ea\u54ea\u91cc\uff0c\u6ce2\u52a8\u4e4b\u540e\u9760\u4ec0\u4e48\u56de\u5230\u4e2d\u5fc3\u3002", descEn: "Where your inner steadiness actually comes from, and what brings you back to center." },
+  { titleZh: "\u9690\u85cf\u6062\u590d\u6a21\u5f0f", titleEn: "Hidden Recovery Pattern", descZh: "\u7ed3\u5408\u4f60\u6700\u9ad8\u7684\u90a3\u9879\u5206\u6570\uff0c\u6307\u51fa\u4e00\u79cd\u4f60\u81ea\u5df1\u53ef\u80fd\u90fd\u6ca1\u610f\u8bc6\u5230\u3001\u4f46\u786e\u5b9e\u5728\u8d77\u4f5c\u7528\u7684\u6062\u590d\u65b9\u5f0f\u3002", descEn: "Tied to your strongest score \u2014 a recovery method you likely use without realizing it." },
+  { titleZh: "\u80fd\u91cf\u6d88\u8017\u5730\u56fe", titleEn: "Energy Drain Map", descZh: "\u7ed3\u5408\u4f60\u6700\u4f4e\u7684\u90a3\u9879\u5206\u6570\uff0c\u5177\u4f53\u6307\u51fa\u54ea\u79cd\u60c5\u5883\u6a21\u5f0f\u6700\u5bb9\u6613\u6084\u6084\u6d88\u8017\u4f60\u2014\u2014\u4e0d\u662f\u300c\u8fc7\u5ea6\u601d\u8003\u300d\u8fd9\u79cd\u901a\u7528\u8bcd\u3002", descEn: "Tied to your weakest score \u2014 the exact situation pattern that quietly drains you." },
+  { titleZh: "\u97e7\u6027\u8fdb\u5316\u8def\u5f84", titleEn: "Resilience Growth Path", descZh: "\u4e0d\u662f\u53d8\u5f97\u66f4\u5f3a\uff0c\u662f\u8ba9\u73b0\u6709\u529b\u91cf\u5f62\u6210\u7cfb\u7edf\u2014\u2014\u4e00\u4ef6\u8ddf\u4f60\u6700\u5f3a\u9879\u548c\u6700\u5f31\u9879\u76f8\u5173\u7684\u3001\u53ef\u64cd\u4f5c\u7684\u5c0f\u4e8b\u3002", descEn: "Not about getting stronger \u2014 about turning what you already have into a system. One concrete next step." },
+  { titleZh: "\u7075\u7280\u573a\u6062\u590d\u5b9e\u8df5", titleEn: "A Personal Recovery Practice", descZh: "\u4e00\u4e2a\u5177\u4f53\u3001\u53ef\u6267\u884c\u7684\u65e5\u5e38\u5c0f\u7ec3\u4e60\uff0c\u7ed3\u5408\u4f60\u7684\u5206\u6570\u7ed3\u6784\uff0c\u4e0d\u662f\u300c\u591a\u4f11\u606f\u300d\u8fd9\u79cd\u901a\u7528\u5efa\u8bae\u3002", descEn: "A specific daily practice matched to your exact score structure \u2014 not \"get more rest.\"" },
+  { titleZh: "\u751f\u547d\u97e7\u6027\u603b\u7ed3", titleEn: "Resilience Summary", descZh: "\u6536\u5c3e\u5fc5\u987b\u6307\u5411\u524d\u9762\u63d0\u5230\u8fc7\u7684\u5177\u4f53\u5206\u6570\u6216\u5224\u65ad\uff0c\u4e0d\u662f\u9760\u60c5\u7eea\u8bcd\u6536\u5c3e\u3002", descEn: "A closing tied to a specific score already discussed \u2014 not a warm-and-fuzzy sendoff." },
+];
+
 export default function ResilienceFlow() {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
@@ -331,7 +346,10 @@ export default function ResilienceFlow() {
       </div>
 
       <div className="mx-auto mt-6 max-w-xl px-6">
-        <div className="lx-glass p-6 text-center">
+        <div
+          className="lx-glass p-6 text-center"
+          style={{ backgroundImage: "linear-gradient(rgba(9,37,31,0.62), rgba(9,37,31,0.62)), url(/images/resilience-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        >
           <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300">
             <Bi zh="想看得更深？" en="Want to go deeper?" />
           </p>
@@ -341,6 +359,21 @@ export default function ResilienceFlow() {
               en="Behind these five scores is a full archive — your root system, regeneration cycle, hidden strength and recovery pattern, unfolded into a downloadable report you keep for life."
             />
           </p>
+
+          <div className="mt-6 space-y-5 border-t border-white/10 pt-6 text-left">
+            <p className="text-center font-display text-sm uppercase tracking-widest2 text-emerald-300">
+              <Bi zh="完整档案会逐一展开" en="What the Full Archive Unfolds" />
+            </p>
+            {TEASER_CHAPTERS.map((c, i) => (
+              <div key={i}>
+                <p className="font-display text-sm text-emerald-300">{String(i + 1).padStart(2, "0")} · <Bi zh={c.titleZh} en={c.titleEn} /></p>
+                <p className="mt-1.5 text-sm leading-7 text-bone-dim">
+                  <Bi zh={c.descZh} en={c.descEn} />
+                </p>
+              </div>
+            ))}
+          </div>
+
           <input
             type="text"
             value={unlockName}

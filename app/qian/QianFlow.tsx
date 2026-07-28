@@ -34,6 +34,21 @@ const QIAN_FAQ: BilingualFaqItem[] = [
 
 type Stage = "form" | "gathering" | "shaking" | "revealed";
 
+
+const TEASER_CHAPTERS: { titleZh: string; titleEn: string; descZh: string; descEn: string }[] = [
+  { titleZh: "\u751f\u547d\u4e09\u539f\u578b\u603b\u89c8", titleEn: "Three Archetypes Overview", descZh: "\u628a\u4e09\u91cd\u7b7e\u7684\u6838\u5fc3\u7279\u8d28\u63d0\u70bc\u6210\u4e00\u6761\u300cXX\u2192XX\u2192XX\u300d\u7684\u751f\u547d\u516c\u5f0f\u2014\u2014\u4e0d\u662f\u4e09\u4e2a\u7b7e\u540d\u5b57\u7684\u5806\u780c\uff0c\u662f\u4e00\u6761\u6709\u65b9\u5411\u611f\u7684\u5c55\u5f00\u8def\u7ebf\u3002", descEn: "Your three signs distilled into a single life formula \u2014 not three names stacked together, but a route with a direction." },
+  { titleZh: "\u6e90\u6d41\u7b7e\u6df1\u5ea6\u89e3\u6790", titleEn: "Origin Sign Deep Dive", descZh: "\u4f60\u643a\u5e26\u800c\u6765\u7684\u539f\u59cb\u9891\u7387\u3001\u751f\u547d\u4f18\u52bf\u662f\u4ec0\u4e48\uff0c\u4f18\u52bf\u53cd\u9762\u53c8\u5bb9\u6613\u5e26\u6765\u4ec0\u4e48\u6f5c\u5728\u6311\u6218\u2014\u2014\u4e0d\u662f\u7b80\u5355\u5938\u5956\uff0c\u662f\u6709\u5177\u4f53\u753b\u9762\u611f\u7684\u5224\u65ad\u3002", descEn: "The raw frequency you were born carrying, your real advantage, and the specific shadow side of that same advantage." },
+  { titleZh: "\u7075\u9b42\u7b7e\u6df1\u5ea6\u89e3\u6790", titleEn: "Soul Sign Deep Dive", descZh: "\u4f60\u771f\u6b63\u7684\u5185\u5728\u9a71\u52a8\u529b\u662f\u4ec0\u4e48\u3001\u5929\u8d4b\u65b9\u5411\u9002\u5408\u5f80\u54ea\u8d70\u3001\u6f5c\u610f\u8bc6\u91cc\u5bb9\u6613\u91cd\u590d\u51fa\u73b0\u7684\u6a21\u5f0f\u662f\u4ec0\u4e48\u3002", descEn: "What actually drives you underneath, where your gift wants to go, and the pattern your subconscious keeps replaying." },
+  { titleZh: "\u884c\u8005\u7b7e\u6df1\u5ea6\u89e3\u6790", titleEn: "Walker Sign Deep Dive", descZh: "\u4f60\u7684\u884c\u52a8\u529b\u6a21\u5f0f\u3001\u521b\u9020\u73b0\u5b9e\u7684\u5177\u4f53\u8def\u5f84\uff0c\u4ee5\u53ca\u4e00\u53e5\u53ea\u5bf9\u4f60\u6210\u7acb\u7684\u4eba\u751f\u884c\u52a8\u63d0\u9192\u3002", descEn: "How you actually move, your specific path for turning ideas into reality, and one action reminder that fits you and only you." },
+  { titleZh: "\u4e09\u7b7e\u878d\u5408\u5206\u6790", titleEn: "Three-Sign Fusion", descZh: "\u6574\u4efd\u62a5\u544a\u4ef7\u503c\u6700\u9ad8\u7684\u4e00\u6bb5\u2014\u2014\u4e09\u7b7e\u8fde\u6210\u4e00\u4e2a\u751f\u547d\u516c\u5f0f\uff0c\u6e90\u6d41\u7b7e\u6253\u4e0b\u7684\u5e95\u3001\u7075\u9b42\u7b7e\u9a71\u52a8\u7684\u5185\u5728\u3001\u884c\u8005\u7b7e\u5c55\u5f00\u7684\u884c\u52a8\uff0c\u53e0\u52a0\u4e4b\u540e\u4f60\u7684\u6838\u5fc3\u4f7f\u547d\u662f\u4ec0\u4e48\u3002", descEn: "The single highest-value section \u2014 your three signs fused into one formula, revealing your core mission." },
+  { titleZh: "\u4ef7\u503c\u521b\u9020\u5730\u56fe", titleEn: "Value Creation Map", descZh: "\u4f60\u7684\u8d22\u5bcc\u539f\u578b\u662f\u4ec0\u4e48\u7c7b\u578b\u3001\u5177\u4f53\u7684\u5165\u53e3\u6709\u54ea\u51e0\u4e2a\u65b9\u5411\uff0c\u4e8b\u4e1a\u4e0a\u9002\u5408\u5f80\u54ea\u51e0\u4e2a\u5177\u4f53\u65b9\u5411\u53d1\u5c55\u2014\u2014\u4e0d\u662f\u300c\u5404\u884c\u5404\u4e1a\u90fd\u53ef\u4ee5\u300d\u8fd9\u79cd\u7a7a\u8bdd\u3002", descEn: "Your specific wealth archetype, the actual entry points, and the concrete career directions suited to you." },
+  { titleZh: "\u5173\u7cfb\u6620\u5c04", titleEn: "Relationship Mapping", descZh: "\u4f60\u5728\u5173\u7cfb\u91cc\u771f\u6b63\u5bfb\u627e\u7684\u662f\u4ec0\u4e48\u3001\u5bb9\u6613\u5438\u5f15\u4ec0\u4e48\u6837\u7684\u4eba\u3001\u5173\u7cfb\u91cc\u6700\u5927\u7684\u8bfe\u9898\u662f\u4ec0\u4e48\u3002", descEn: "What you're really looking for in a relationship, who you tend to attract, and your biggest relational lesson." },
+  { titleZh: "\u5f53\u4e0b\u751f\u547d\u4e3b\u9898", titleEn: "Current Life Theme", descZh: "\u4f60\u6b64\u523b\u6b63\u5904\u4e8e\u54ea\u4e2a\u5177\u4f53\u9636\u6bb5\u3001\u6b63\u5728\u4ece\u4ec0\u4e48\u65e7\u7ed3\u6784\u8f6c\u5411\u4ec0\u4e48\u65b0\u7ed3\u6784\u2014\u2014\u4e0d\u662f\u6cdb\u6cdb\u7684\u4eba\u751f\u5efa\u8bae\u3002", descEn: "The specific stage you're in right now, and exactly what old structure you're moving out of." },
+  { titleZh: "\u9690\u85cf\u529b\u91cf", titleEn: "Hidden Strength", descZh: "\u4e00\u9879\u4f60\u8fd8\u6ca1\u5b8c\u5168\u4f7f\u7528\u7684\u80fd\u529b\uff0c\u548c\u4e00\u9879\u5bb9\u6613\u88ab\u81ea\u5df1\u6216\u522b\u4eba\u4f4e\u4f30\u7684\u80fd\u529b\u2014\u2014\u8981\u5177\u4f53\u3001\u8981\u6709\u753b\u9762\u611f\uff0c\u4e0d\u662f\u7a7a\u6cdb\u7684\u5938\u5956\u3002", descEn: "One ability you haven't fully used yet, and one that's easy to underrate \u2014 named specifically, not just flattered." },
+  { titleZh: "\u7075\u7280\u573a\u5b9e\u8df5", titleEn: "A Personal Practice", descZh: "\u5df2\u7ecf\u4e3a\u4f60\u5339\u914d\u597d\u7684\u4fee\u70bc\u6280\u672f\uff0c\u5177\u4f53\u8bf4\u6e05\u695a\u4e3a\u4ec0\u4e48\u662f\u8fd9\u4e00\u9879\u3001\u5b83\u80fd\u5e2e\u4f60\u89e3\u51b3\u524d\u9762\u63d0\u5230\u7684\u54ea\u4e2a\u5177\u4f53\u8bfe\u9898\u3002", descEn: "A practice matched specifically to you, and exactly which of your challenges it's meant to address." },
+  { titleZh: "\u751f\u547d\u7075\u7b7e\u603b\u7ed3", titleEn: "Oracle Summary", descZh: "\u4ee5\u7b2c\u4e00\u4eba\u79f0\u5199\u4e0b\u5c5e\u4e8e\u4f60\u7684\u751f\u547d\u5ba3\u8a00\uff0c\u547c\u5e94\u524d\u9762\u6240\u6709\u7ae0\u8282\u63d0\u70bc\u51fa\u7684\u6838\u5fc3\u7279\u8d28\uff0c\u6536\u5c3e\u8981\u6709\u529b\u91cf\u611f\u3002", descEn: "A first-person declaration that echoes everything the report has found \u2014 a real close, not a greeting-card line." },
+];
+
 export default function QianFlow() {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
@@ -242,10 +257,24 @@ export default function QianFlow() {
             en="What matters isn't reading each sign alone — it's seeing how they connect, and what structure they form together. The field goes further: your core talents, the theme you're living through, your inner drive, and the patterns that keep resurfacing and are worth understanding. Once these pieces reconnect, what you see is no longer a single sign — it's a map of your own life archetype."
           />
         </p>
+        <div className="mt-8 space-y-5 border-t border-white/10 pt-8 text-left">
+          <p className="text-center font-display text-sm uppercase tracking-widest2 text-amber">
+            <Bi zh="完整档案会逐一展开" en="What the Full Archive Unfolds" />
+          </p>
+          {TEASER_CHAPTERS.map((c, i) => (
+            <div key={i}>
+              <p className="font-display text-sm text-amber">{String(i + 1).padStart(2, "0")} · <Bi zh={c.titleZh} en={c.titleEn} /></p>
+              <p className="mt-1.5 text-sm leading-7 text-bone-dim">
+                <Bi zh={c.descZh} en={c.descEn} />
+              </p>
+            </div>
+          ))}
+        </div>
+
         <button
           onClick={unlock}
           disabled={unlocking}
-          className="mt-5 bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50"
+          className="mt-8 bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50"
         >
           <Bi zh={`开启完整生命解码 · ¥${getProduct("qian-reading")?.priceRmb}`} en={`Unlock the Full Decoding · ¥${getProduct("qian-reading")?.priceRmb}`} />
         </button>

@@ -92,6 +92,21 @@ const STYLE_BAND_INSIGHT: Record<string, { zh: string; en: string }> = {
   "gentle|2": { zh: "\u6e29\u548c\u4eb2\u548c+\u9ad8\u78c1\u573a\u662f\u5f88\u8ba8\u559c\u7684\u7ec4\u5408\uff0c\u4f46\u4e5f\u6700\u5bb9\u6613\u8ba9\u4f60\u88ab\u8fc7\u5ea6\u6d88\u8017\u2014\u2014\u5f88\u591a\u4eba\u4f1a\u4e60\u60ef\u6027\u5730\u627e\u4f60\u503e\u8bc9\u3001\u4f9d\u8d56\u4f60\u7684\u5305\u5bb9\uff0c\u4f60\u9700\u8981\u7ec3\u4e60\u5206\u8fa8\u201c\u559c\u6b22\u6211\u201d\u548c\u201c\u9700\u8981\u6211\u7684\u5305\u5bb9\u201d\u8fd9\u4e24\u79cd\u9760\u8fd1\u3002", en: "Gentle warmth plus a strong field is an easy combination to like, and also the one most likely to drain you \u2014 people will habitually come to you to vent, leaning on your patience. You need to practice telling apart being liked from being needed for your patience." },
 };
 
+
+const TEASER_CHAPTERS: { titleZh: string; titleEn: string; descZh: string; descEn: string }[] = [
+  { titleZh: "\u6843\u82b1\u78c1\u573a\u6e90\u70b9", titleEn: "Where Your Field Begins", descZh: "\u4e94\u4e2a\u7ef4\u5ea6\u548c\u5438\u5f15\u529b\u98ce\u683c\u653e\u5728\u4e00\u8d77\uff0c\u5f62\u6210\u4e86\u600e\u6837\u7684\u6574\u4f53\u6c14\u573a\u2014\u2014\u4e0d\u662f\u9010\u6761\u7ffb\u8bd1\u5206\u6570\uff0c\u662f\u770b\u6574\u4f53\u5f62\u72b6\u3002", descEn: "Your five dimensions and attraction style together, forming your real overall field." },
+  { titleZh: "\u5438\u5f15\u529b\u7c7b\u578b", titleEn: "Attraction Type", descZh: "\u5177\u4f53\u5c55\u5f00\u4f60\u7684\u5438\u5f15\u529b\u98ce\u683c\uff0c\u522b\u4eba\u5177\u4f53\u662f\u600e\u4e48\u88ab\u8fd9\u79cd\u98ce\u683c\u611f\u77e5\u5230\u7684\u2014\u2014\u8d8a\u5177\u4f53\u8d8a\u597d\uff0c\u4e0d\u662f\u6cdb\u6cdb\u800c\u8c08\u3002", descEn: "A concrete unpacking of your specific style \u2014 exactly how people pick up on it." },
+  { titleZh: "\u60c5\u611f\u8868\u8fbe\u6a21\u5f0f", titleEn: "Emotional Expression Pattern", descZh: "\u4f60\u559c\u6b22\u4e00\u4e2a\u4eba\u65f6\uff0c\u5177\u4f53\u7684\u8868\u8fbe\u65b9\u5f0f\u662f\u76f4\u63a5\u3001\u884c\u52a8\u3001\u966a\u4f34\u8fd8\u662f\u7406\u89e3\u2014\u2014\u7ed3\u5408\u5177\u4f53\u7ef4\u5ea6\u5206\u6570\u8bf4\u660e\u3002", descEn: "How you actually show you're into someone \u2014 tied to your specific dimension scores." },
+  { titleZh: "\u5173\u7cfb\u9700\u6c42\u5730\u56fe", titleEn: "Relationship Needs Map", descZh: "\u4f60\u5728\u5173\u7cfb\u91cc\u771f\u6b63\u9700\u8981\u7684\u662f\u7a33\u5b9a\u3001\u81ea\u7531\u3001\u6210\u957f\u8fd8\u662f\u4ea4\u6d41\uff0c\u7ed3\u5408\u5177\u4f53\u5206\u6570\u8bf4\u660e\u4e3a\u4ec0\u4e48\u3002", descEn: "What you genuinely need in a relationship \u2014 stability, freedom, growth, or exchange \u2014 and why." },
+  { titleZh: "\u9690\u85cf\u9b45\u529b\u8282\u70b9", titleEn: "Hidden Charm Point", descZh: "\u7ed3\u5408\u5206\u6570\u6700\u9ad8\u4f46\u5bb9\u6613\u88ab\u81ea\u5df1\u5ffd\u7565\u7684\u90a3\u4e2a\u7ef4\u5ea6\uff0c\u6307\u51fa\u4e00\u4e2a\u4f60\u81ea\u5df1\u53ef\u80fd\u6ca1\u610f\u8bc6\u5230\u7684\u9b45\u529b\u70b9\u3002", descEn: "Tied to your highest, most overlooked dimension \u2014 a charm point you likely don't know you have." },
+  { titleZh: "\u5173\u7cfb\u4e92\u52a8\u6a21\u5f0f", titleEn: "Relationship Interaction Pattern", descZh: "\u8fdb\u5165\u5173\u7cfb\u65f6\uff0c\u4f60\u662f\u4e3b\u52a8\u9760\u8fd1\u3001\u6162\u6162\u89c2\u5bdf\u8fd8\u662f\u6df1\u5ea6\u8fde\u63a5\u2014\u2014\u5177\u4f53\u8bf4\u660e\u8fd9\u79cd\u6a21\u5f0f\u7684\u753b\u9762\u3002", descEn: "Whether you lean in fast, watch first, or go deep immediately \u2014 painted specifically." },
+  { titleZh: "\u5438\u5f15\u529b\u6210\u957f\u65b9\u5411", titleEn: "Attraction Growth Direction", descZh: "\u4e0d\u662f\u53d8\u6210\u522b\u4eba\u559c\u6b22\u7684\u6837\u5b50\uff0c\u662f\u66f4\u5b8c\u6574\u5730\u8868\u8fbe\u81ea\u5df1\u2014\u2014\u7ed3\u5408\u4f60\u6700\u4f4e\u5206\u7ef4\u5ea6\uff0c\u7ed9\u51fa\u5177\u4f53\u53ef\u64cd\u4f5c\u7684\u65b9\u5411\u3002", descEn: "Not about becoming likeable \u2014 about expressing yourself more fully. Tied to your lowest score, with a real direction." },
+  { titleZh: "\u60c5\u611f\u963b\u788d\u5730\u56fe", titleEn: "Emotional Obstacle Map", descZh: "\u7ed3\u5408\u5177\u4f53\u6570\u636e\uff0c\u6307\u51fa\u4f60\u5728\u5173\u7cfb\u91cc\u6700\u5bb9\u6613\u51fa\u73b0\u7684\u5177\u4f53\u963b\u788d\u6a21\u5f0f\u2014\u2014\u8981\u5177\u4f53\uff0c\u4e0d\u8981\u7b3c\u7edf\u3002", descEn: "The exact obstacle pattern most likely to show up for you \u2014 named specifically, not vaguely." },
+  { titleZh: "\u7406\u60f3\u8fde\u63a5\u6a21\u5f0f", titleEn: "Ideal Connection Style", descZh: "\u6839\u636e\u4f60\u7684\u5177\u4f53\u7ed3\u6784\uff0c\u66f4\u5bb9\u6613\u5728\u4ec0\u4e48\u6837\u7684\u5173\u7cfb\u6a21\u5f0f\u91cc\u8212\u5c55\u2014\u2014\u5177\u4f53\u8bf4\u660e\u4e3a\u4ec0\u4e48\u3002", descEn: "The relationship style you're most likely to thrive in, and specifically why." },
+  { titleZh: "\u6843\u82b1\u78c1\u573a\u6545\u4e8b", titleEn: "A Symbolic Story", descZh: "\u7528\u6709\u753b\u9762\u611f\u7684\u8c61\u5f81\u6bd4\u55bb\uff0c\u63cf\u7ed8\u4f60\u7684\u5438\u5f15\u529b\u8d28\u5730\u2014\u2014\u4e0d\u662f\u7a7a\u6d1e\u7684\u6bd4\u55bb\uff0c\u8981\u5177\u4f53\u3002", descEn: "A vivid, specific metaphor for the texture of your attraction \u2014 not a generic image." },
+  { titleZh: "\u6843\u82b1\u78c1\u573a\u603b\u7ed3", titleEn: "Field Summary", descZh: "\u6536\u5c3e\u5fc5\u987b\u6307\u5411\u524d\u9762\u63d0\u5230\u8fc7\u7684\u5177\u4f53\u7ef4\u5ea6\u6216\u5224\u65ad\uff0c\u4e0d\u662f\u9760\u60c5\u7eea\u8bcd\u6536\u5c3e\u3002", descEn: "A closing tied to a specific dimension already discussed \u2014 not a warm-and-fuzzy sendoff." },
+];
+
 export default function RomanceFlow() {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
@@ -301,7 +316,10 @@ export default function RomanceFlow() {
       </div>
 
       <div className="mx-auto mt-6 max-w-xl px-6">
-        <div className="rounded-sm border border-rose/25 bg-[#2c1420] p-6 text-center">
+        <div
+          className="rounded-sm border border-rose/25 p-6 text-center"
+          style={{ backgroundColor: "#2c1420", backgroundImage: "linear-gradient(rgba(44,20,32,0.62), rgba(44,20,32,0.62)), url(/images/romance-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        >
           <p className="font-display text-sm uppercase tracking-widest2 text-rose">
             <Bi zh="想看得更深？" en="Want to go deeper?" />
           </p>
@@ -311,6 +329,21 @@ export default function RomanceFlow() {
               en="Behind this score is a full archive — your five field dimensions, attraction style, and traditional chart signals, unfolded into a downloadable report you keep for life."
             />
           </p>
+
+          <div className="mt-6 space-y-5 border-t border-white/10 pt-6 text-left">
+            <p className="text-center font-display text-sm uppercase tracking-widest2 text-rose">
+              <Bi zh="完整档案会逐一展开" en="What the Full Archive Unfolds" />
+            </p>
+            {TEASER_CHAPTERS.map((c, i) => (
+              <div key={i}>
+                <p className="font-display text-sm text-rose">{String(i + 1).padStart(2, "0")} · <Bi zh={c.titleZh} en={c.titleEn} /></p>
+                <p className="mt-1.5 text-sm leading-7 text-bone-dim">
+                  <Bi zh={c.descZh} en={c.descEn} />
+                </p>
+              </div>
+            ))}
+          </div>
+
           <input
             type="text"
             value={unlockName}

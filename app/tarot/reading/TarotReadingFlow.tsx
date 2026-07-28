@@ -34,6 +34,21 @@ const CONNECTING_LINES = [
   { zh: "正在生成你的三张生命镜像牌……", en: "Generating your three life mirror cards…" },
 ];
 
+
+const TEASER_CHAPTERS: { titleZh: string; titleEn: string; descZh: string; descEn: string }[] = [
+  { titleZh: "\u7075\u7280\u573a\u8fde\u63a5\u58f0\u660e", titleEn: "Field Connection Statement", descZh: "\u8fd9\u4e09\u5f20\u724c\u4e0d\u662f\u9884\u6d4b\uff0c\u662f\u4f60\u7684\u610f\u8bc6\u6b63\u5728\u5173\u6ce8\u4ec0\u4e48\u3001\u751f\u547d\u6b63\u5728\u8f6c\u6362\u4ec0\u4e48\u3001\u672a\u6765\u6b63\u5728\u6253\u5f00\u4ec0\u4e48\u2014\u2014\u4e3a\u6574\u4efd\u62a5\u544a\u5b9a\u8c03\u3002", descEn: "Not a prediction \u2014 a statement of what your awareness is tracking, what's shifting, what's opening." },
+  { titleZh: "\u6f5c\u610f\u8bc6\u955c\u50cf\u6df1\u5ea6\u89e3\u6790", titleEn: "Hidden Pattern Deep Dive", descZh: "\u4ea4\u53c9\u5f15\u7528\u4f60\u7684\u5e74\u67f1\u6708\u67f1\uff0c\u8bf4\u6e05\u695a\u4f60\u643a\u5e26\u800c\u6765\u3001\u81ea\u5df1\u672a\u5fc5\u5b8c\u5168\u610f\u8bc6\u5230\u7684\u6df1\u5c42\u6a21\u5f0f\uff0c\u4ee5\u53ca\u8fd9\u4efd\u6a21\u5f0f\u91cc\u85cf\u7740\u7684\u9690\u85cf\u529b\u91cf\u3002", descEn: "Cross-referenced with your chart, revealing the deep pattern you carry but may not fully see \u2014 and the strength hidden inside it." },
+  { titleZh: "\u5f53\u4e0b\u5171\u632f\u6df1\u5ea6\u89e3\u6790", titleEn: "Present Resonance Deep Dive", descZh: "\u4ea4\u53c9\u5f15\u7528\u65e5\u67f1\u3001\u592a\u9633\u3001\u6708\u4eae\uff0c\u8bf4\u6e05\u695a\u4f60\u6b64\u523b\u771f\u5b9e\u7684\u80fd\u91cf\u4e3b\u9898\u3001\u6b63\u5728\u5f62\u6210\u7684\u9009\u62e9\u662f\u4ec0\u4e48\u3002", descEn: "Cross-referenced with your day pillar, sun, and moon \u2014 your real energetic theme right now, and the choice taking shape." },
+  { titleZh: "\u672a\u6765\u5c55\u5f00\u6df1\u5ea6\u89e3\u6790", titleEn: "Future Possibility Deep Dive", descZh: "\u4ea4\u53c9\u5f15\u7528\u65f6\u67f1\u548c\u4e94\u884c\u5206\u5e03\uff0c\u4e0d\u662f\u9884\u8a00\uff0c\u662f\u6307\u51fa\u4f60\u6b63\u5728\u8fdb\u5165\u7684\u53ef\u80fd\u6027\u65b9\u5411\u3002", descEn: "Cross-referenced with your hour pillar and elements \u2014 not a prophecy, a direction you're moving into." },
+  { titleZh: "\u4e09\u724c\u8054\u5408\u751f\u547d\u516c\u5f0f", titleEn: "The Three-Card Life Formula", descZh: "\u6574\u4efd\u62a5\u544a\u4ef7\u503c\u6700\u9ad8\u7684\u4e00\u6bb5\u2014\u2014\u4e09\u5f20\u724c\u7684\u6838\u5fc3\u4e3b\u9898\u8fde\u6210\u4e00\u6761\u751f\u547d\u516c\u5f0f\uff0c\u8bf4\u6e05\u695a\u4f60\u521b\u9020\u65b0\u73b0\u5b9e\u7684\u5177\u4f53\u65b9\u5f0f\u3002", descEn: "The single highest-value section \u2014 your three cards fused into one life formula." },
+  { titleZh: "\u4ef7\u503c\u521b\u9020\u5730\u56fe", titleEn: "Value Creation Map", descZh: "\u4f60\u7684\u8d22\u5bcc\u4f18\u52bf\u5177\u4f53\u662f\u4ec0\u4e48\u7c7b\u578b\u3001\u6700\u5bb9\u6613\u9047\u5230\u7684\u963b\u788d\u662f\u4ec0\u4e48\uff0c\u5929\u8d4b\u9002\u5408\u5f80\u54ea\u51e0\u4e2a\u5177\u4f53\u65b9\u5411\u53d1\u5c55\u3002", descEn: "Your specific wealth strengths, your likely obstacle, and the concrete directions your gift is suited for." },
+  { titleZh: "\u5173\u7cfb\u751f\u547d\u5730\u56fe", titleEn: "Relationship Life Map", descZh: "\u4f60\u7231\u7684\u8868\u8fbe\u65b9\u5f0f\u3001\u5bb9\u6613\u5438\u5f15\u7684\u4eba\u3001\u5173\u7cfb\u91cc\u6700\u5927\u7684\u6210\u957f\u8bfe\u9898\u3002", descEn: "How you express love, who you tend to attract, and your biggest relational lesson." },
+  { titleZh: "\u5f53\u524d\u751f\u547d\u6620\u5c04", titleEn: "Current Life Mapping", descZh: "\u4f60\u6b64\u523b\u6b63\u5904\u4e8e\u89c9\u9192\u3001\u8f6c\u5316\u3001\u521b\u9020\u3001\u6269\u5c55\u56db\u4e2a\u9636\u6bb5\u91cc\u7684\u54ea\u4e00\u4e2a\uff0c\u6838\u5fc3\u8bfe\u9898\u662f\u4ec0\u4e48\u3002", descEn: "Which of the four life stages you're actually in right now, and what it's asking of you." },
+  { titleZh: "\u7075\u7280\u573a\u5b9e\u8df5", titleEn: "A Personal Practice", descZh: "\u5df2\u7ecf\u4e3a\u4f60\u5339\u914d\u597d\u7684\u4fee\u70bc\u6280\u672f\uff0c\u5177\u4f53\u8bf4\u6e05\u695a\u4e3a\u4ec0\u4e48\u662f\u8fd9\u4e00\u9879\u3001\u5b83\u80fd\u89e3\u51b3\u524d\u9762\u63d0\u5230\u7684\u54ea\u4e2a\u5177\u4f53\u8bfe\u9898\u3002", descEn: "A practice matched specifically to you, and exactly which challenge it addresses." },
+  { titleZh: "\u7ed9\u672a\u6765\u81ea\u5df1\u7684\u4fe1", titleEn: "A Letter to Your Future Self", descZh: "\u4e00\u6bb5\u79c1\u4eba\u6587\u5b57\uff0c\u547c\u5e94\u524d\u9762\u6240\u6709\u7ae0\u8282\u63d0\u70bc\u51fa\u7684\u6838\u5fc3\u7279\u8d28\uff0c\u4e0d\u5199\u6210\u9e21\u6c64\u3002", descEn: "A private note echoing everything the reading has found \u2014 not a motivational poster line." },
+  { titleZh: "\u751f\u547d\u5173\u952e\u8bcd", titleEn: "Your Life Keywords", descZh: "\u4ece\u6574\u4efd\u89e3\u8bfb\u91cc\u63d0\u70bc\u51fa\u4e94\u4e2a\u771f\u6b63\u5c5e\u4e8e\u4f60\u7684\u8bcd\uff0c\u4e0d\u662f\u968f\u673a\u751f\u6210\u7684\u5f62\u5bb9\u8bcd\u3002", descEn: "Five words drawn from the reading itself \u2014 not random flattering adjectives." },
+];
+
 export default function TarotReadingFlow() {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
@@ -242,10 +257,24 @@ export default function TarotReadingFlow() {
             en="The three cards show three facets of your life structure — but what they truly reveal lives in the relationship between them. The field, cross-referencing your full chart, unfolds: why these three cards appeared together, how they map to the stage you're in, and the theme waiting to be noticed."
           />
         </p>
+        <div className="mt-8 space-y-5 border-t border-white/10 pt-8 text-left">
+          <p className="text-center font-display text-sm uppercase tracking-widest2 text-amber">
+            <Bi zh="完整档案会逐一展开" en="What the Full Archive Unfolds" />
+          </p>
+          {TEASER_CHAPTERS.map((c, i) => (
+            <div key={i}>
+              <p className="font-display text-sm text-amber">{String(i + 1).padStart(2, "0")} · <Bi zh={c.titleZh} en={c.titleEn} /></p>
+              <p className="mt-1.5 text-sm leading-7 text-bone-dim">
+                <Bi zh={c.descZh} en={c.descEn} />
+              </p>
+            </div>
+          ))}
+        </div>
+
         <button
           onClick={unlock}
           disabled={unlocking}
-          className="mt-5 bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50"
+          className="mt-8 bg-amber px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50"
         >
           <Bi zh={`开启完整生命镜像 · ¥${getProduct("tarot-reading")?.priceRmb}`} en={`Unlock the Full Life Mirror · ¥${getProduct("tarot-reading")?.priceRmb}`} />
         </button>
