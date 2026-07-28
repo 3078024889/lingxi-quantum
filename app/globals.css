@@ -327,3 +327,18 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .page-flip { animation: none; }
 }
+
+/* v234：统一的"玻璃面板"样式——半透明白底 + 模糊 + 细边框 + 投影，
+   专门给压在极光/星云这类照片背景上的文字卡片用。之前很多地方用的
+   是纯色（bg-void-deep）当卡片背景，纯色在某些照片背景上对比度不够、
+   看起来像是没有边框；这个类统一解决"文字压在背景图上看不清"这个
+   问题，所有产品的文字卡片都应该用这一个类，不要各自用不同的写法。 */
+.lx-glass {
+  position: relative;
+  background: rgba(20, 16, 30, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+}

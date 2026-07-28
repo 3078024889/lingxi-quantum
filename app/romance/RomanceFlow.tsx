@@ -323,7 +323,7 @@ export default function RomanceFlow() {
             disabled={unlocking}
             className="mt-4 w-full bg-rose px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
           >
-            {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`解锁完整档案 · ¥${getProduct("romance-report")?.priceRmb}`} en={`Unlock Full Archive · $${getProduct("romance-report")?.priceUsd}`} />}
+            {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`展开桃花磁场档案 · ¥${getProduct("romance-report")?.priceRmb}`} en={`Unfold the Full Attraction Archive · $${getProduct("romance-report")?.priceUsd}`} />}
           </button>
           {error && <p className="mt-3 text-xs text-rose">{error}</p>}
         </div>

@@ -11,6 +11,7 @@ const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
   "tarot-reading": "tarot_reading_submissions",
   "resilience-report": "resilience_submissions",
   "romance-report": "romance_submissions",
+  "daily-tide-report": "daily_tide_submissions",
 };
 
 export async function POST(req: Request) {

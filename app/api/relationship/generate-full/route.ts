@@ -5,12 +5,198 @@ import { computeLifeVector, compareLifeVectors, findConflictsWithFallback, topTr
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 export const runtime = "nodejs";
-// v225：见 app/api/qian/generate-full/route.ts 里同一处的详细注释——
-// 默认的函数超时时间对这类长耗时 AI 调用来说太短，超时会被前端当成
-// "连接场域时出错"展示，其实不是接口坏了。这个接口现在还多了一次
-// 失败重试，更需要留够时间。
 export const maxDuration = 300;
 const ZHIPU_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
+
+// v235：关系共振从5段升级成11章节结构，三种关系类型（亲密/商业/其他）
+// 各自一套独立的11章节主题——章节主题本身是固定的（这才是真正"结构化"
+// 的部分：不管是谁，选了"合伙商业关系"，看到的都是同一套11个主题，
+// 秒开、不用等），但每个章节底下具体写了什么，还是由AI围绕这两个人
+// 真实的向量数据现场生成、生成一次后永久缓存——不是把内容也写死。
+// 这样"结构固定、秒开"和"内容具体、不是模板空话"两件事都要。
+
+type ChapterMeta = { titleZh: string; titleEn: string; hint: string };
+
+const ROMANTIC_CHAPTERS: ChapterMeta[] = [
+  { titleZh: "双生命星图", titleEn: "Dual Life Star Map",
+    hint: "双生命星图：概览两人的生命结构第一次相遇是什么样——不用逐条翻译数据，要写出这两份结构叠在一起，形成了一种什么样的整体气场" },
+  { titleZh: "初始吸引来源", titleEn: "Where the Attraction Began",
+    hint: "初始吸引来源：具体到是共鸣点的哪一项、或互补点的哪一组，让两人第一次有\"对上了\"的感觉，写出这份吸引具体的画面" },
+  { titleZh: "情绪连接模式", titleEn: "Emotional Connection Pattern",
+    hint: "情绪连接模式：两人各自习惯用什么方式表达在乎（语言/行动/陪伴/空间），这种表达方式的差异具体会造成什么样的误会或惊喜" },
+  { titleZh: "价值观共振地图", titleEn: "Values Resonance Map",
+    hint: "价值观共振地图：两人在底层价值（安全感/成长/自由这类）上，哪些是真的共享、哪些只是表面重合，具体说清楚" },
+  { titleZh: "沟通语言地图", titleEn: "Communication Language Map",
+    hint: "沟通语言地图：两人接收信息的方式有什么具体差异（比如一方要先确认情绪、另一方直接谈重点），给出具体可操作的沟通建议" },
+  { titleZh: "冲突触发结构", titleEn: "Conflict Trigger Structure",
+    hint: "冲突触发结构：结合摩擦点，具体讲这段关系最容易在什么场景下起冲突、冲突通常怎么升级；如果没有明显摩擦点，讲最容易被两人共同忽略的盲区" },
+  { titleZh: "关系成长路径", titleEn: "Relationship Growth Path",
+    hint: "关系成长路径：这段关系从吸引到理解到共创，具体会经历什么样的阶段性课题，不是泛泛的\"三阶段论\"，要结合这两人的具体特质" },
+  { titleZh: "隐藏互补力量", titleEn: "Hidden Complementary Strength",
+    hint: "隐藏互补力量：对方身上有哪些具体的特质，恰好能补上这个人自己容易忽略的地方，写出双向的、具体的礼物" },
+  { titleZh: "长期共振潜力", titleEn: "Long-Term Resonance Potential",
+    hint: "长期共振潜力：这段关系需要具备什么具体条件才能长期健康——不是预测结果，是指出需要建立的具体共识或分工" },
+  { titleZh: "双生命未来叙事", titleEn: "A Shared Future Narrative",
+    hint: "双生命未来叙事：用有画面感、但不是宿命论断言的语言，描绘如果两人继续同行，会形成什么样具体的相处形态（不是预言事件，是描述关系的质地）" },
+  { titleZh: "关系共振总结", titleEn: "Resonance Summary",
+    hint: "关系共振总结：作为收尾，必须明确指向前面章节提到过的具体共鸣点/互补点，不能只靠情绪词收尾，给两人各一条具体、可操作的建议" },
+];
+
+const BUSINESS_CHAPTERS: ChapterMeta[] = [
+  { titleZh: "双创造者星图", titleEn: "Dual Creator Star Map",
+    hint: "双创造者星图：概览两人的创造驱动力第一次放在一起是什么样，写出这两种驱动力叠加会形成的整体气场" },
+  { titleZh: "商业驱动力分析", titleEn: "Business Drive Analysis",
+    hint: "商业驱动力分析：两人各自为什么想做这件事——探索新机会/建立长期体系/扩大影响力/解决真实需求，具体到是哪一种、为什么" },
+  { titleZh: "能力互补结构", titleEn: "Complementary Capability Structure",
+    hint: "能力互补结构：具体到战略/执行/资源整合/表达这几类能力上，谁更适合负责哪一块，为什么，不能是空泛的\"各有所长\"" },
+  { titleZh: "决策模式地图", titleEn: "Decision-Making Map",
+    hint: "决策模式地图：面对机会和风险时，两人各自是先行动验证、还是先研究降低风险，这种差异具体会怎样影响合作节奏" },
+  { titleZh: "资源连接地图", titleEn: "Resource Connection Map",
+    hint: "资源连接地图：两人各自更容易带来什么类型的资源（知识/关系/渠道/资金/创造力），组合起来具体能放大什么" },
+  { titleZh: "风险冲突地图", titleEn: "Risk & Conflict Map",
+    hint: "风险冲突地图：结合摩擦点，具体讲合作中最容易在什么决策场景下起冲突（速度vs稳定、创新vs规则这类），给出具体的处理方向" },
+  { titleZh: "合作周期地图", titleEn: "Partnership Cycle Map",
+    hint: "合作周期地图：从探索期到建设期到扩展期，这两人具体的组合，在哪个阶段最容易发挥优势、哪个阶段最容易出问题" },
+  { titleZh: "商业价值放大点", titleEn: "Value Amplification Point",
+    hint: "商业价值放大点：这两个人的具体组合，最可能在哪个方向上产生1+1>2的效果（品牌/产品/用户网络/知识资产），具体说明为什么" },
+  { titleZh: "团队角色定位", titleEn: "Team Role Positioning",
+    hint: "团队角色定位：结合两人具体特质，谁更适合定方向、谁更适合建系统、谁更适合连接资源，不能是笼统的角色描述" },
+  { titleZh: "长期共创模型", titleEn: "Long-Term Co-Creation Model",
+    hint: "长期共创模型：这段合作要持续进化，具体需要建立什么样的规则或机制（不是空泛地说\"要沟通\"），结合两人特质给具体建议" },
+  { titleZh: "双创造者商业叙事", titleEn: "A Shared Business Narrative",
+    hint: "双创造者商业叙事：作为收尾，用有画面感的语言描绘两人如果继续合作会形成什么样具体的创造系统，必须明确指向前面提到过的具体特质，不能靠情绪词收尾" },
+];
+
+const GENERAL_CHAPTERS: ChapterMeta[] = [
+  { titleZh: "双生命连接图", titleEn: "Dual Life Connection Map",
+    hint: "双生命连接图：概览两人的生命结构第一次产生连接是什么样，写出这种连接具体的整体气场" },
+  { titleZh: "相遇主题", titleEn: "The Theme of This Meeting",
+    hint: "相遇主题：这段关系更像带来陪伴、启发、学习还是挑战，具体到是哪一种、为什么，不能是笼统的\"每种都有一点\"" },
+  { titleZh: "互动模式", titleEn: "Interaction Pattern",
+    hint: "互动模式：两人更倾向通过思想交流、行动支持还是情绪陪伴建立连接，具体描述这种模式在日常里长什么样" },
+  { titleZh: "信任建立方式", titleEn: "How Trust Forms",
+    hint: "信任建立方式：对这两人来说，信任具体是靠什么积累起来的（持续回应/真实表达/共同经历），需要多长的过程" },
+  { titleZh: "交流频率地图", titleEn: "Communication Frequency Map",
+    hint: "交流频率地图：两人接收信息的具体差异（直接/深度/感受/观察型），这种差异会怎样具体影响交流的顺畅程度" },
+  { titleZh: "差异理解地图", titleEn: "Understanding the Differences",
+    hint: "差异理解地图：两人最大的具体差异是什么（计划vs灵活、理性vs感受这类），这份差异具体怎样才能变成成长入口而不是摩擦" },
+  { titleZh: "支持关系结构", titleEn: "Support Structure",
+    hint: "支持关系结构：对方真正需要的支持方式是什么（陪伴/建议/行动/资源），跟这个人习惯给出的支持方式是否对得上" },
+  { titleZh: "共同成长方向", titleEn: "Shared Growth Direction",
+    hint: "共同成长方向：这段关系具体能在哪个方向上推动两人一起成长（一起学习/共同创造/互相启发），为什么是这个方向" },
+  { titleZh: "关系边界地图", titleEn: "Boundary Map",
+    hint: "关系边界地图：这段关系要保持健康，具体需要在哪些地方保留各自的独立空间，不能是笼统的\"要有边界感\"" },
+  { titleZh: "深层连接价值", titleEn: "Deeper Value of the Connection",
+    hint: "深层连接价值：这段关系具体带来了什么样的隐藏意义（改变了某个视角、扩大了某种认知），要具体不要空泛" },
+  { titleZh: "关系象征故事", titleEn: "A Symbolic Story",
+    hint: "关系象征故事：作为收尾，用有画面感的比喻描绘这段关系的质地，必须明确指向前面提到过的具体特质，不能靠情绪词收尾" },
+];
+
+function chaptersForType(type: string): ChapterMeta[] {
+  if (type === "business") return BUSINESS_CHAPTERS;
+  if (type === "general") return GENERAL_CHAPTERS;
+  return ROMANTIC_CHAPTERS;
+}
+
+const endsCleanly = (s: string) => /[。！？.!?」”】]\s*$/.test(s.trim());
+
+function parseAndValidate(raw: string, count: number, finishReason?: string) {
+  let sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
+  const minAcceptable = Math.max(1, Math.floor(count * 0.8));
+  if (finishReason === "length" && sections.length > 0 && !endsCleanly(sections[sections.length - 1])) {
+    sections = sections.slice(0, -1);
+  }
+  const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 40 && endsCleanly(s));
+  return { sections, valid };
+}
+
+type Batch = { chapters: ChapterMeta[]; maxTokens: number };
+
+function buildBatches(chapters: ChapterMeta[]): Batch[] {
+  return [
+    { chapters: chapters.slice(0, 4), maxTokens: 4200 },
+    { chapters: chapters.slice(4, 8), maxTokens: 4200 },
+    { chapters: chapters.slice(8, 11), maxTokens: 3400 },
+  ];
+}
+
+function baseVoice(typeLabel: string, isLastBatch: boolean): string {
+  return (
+    "【你是谁，在用什么姿态说话——这段定调，比后面任何一条具体规则都重要】" +
+    "把自己想象成一位真正看过成千上万段" + typeLabel + "的引导者——不是在完成一份\"写作任务\"，是坐在这两个人对面，看着这两份图谱叠在一起，说出你真正看到的东西。你的分量，来自于你看得准、说得具体，不来自于语气有多热情。" +
+    "判断句要像\"这种组合我见过，你们的情况是……\"这种笃定，而不是\"根据数据分析，可能显示出……\"这种报告腔。" +
+    "读者读完，应该觉得\"这个人真的看懂了我们俩\"，不是\"在按模板念数据\"——这是贯穿全篇的姿态。" +
+    "下面提供的【关系共振引擎】部分，是用确定性算法已经算出的结构化结果（各自的核心特质/内在矛盾，以及两人之间的共鸣点/互补点/摩擦点）——你的任务是把这份结构，用具体、有画面感的语言讲透，不是重新判断或无视这些结果。" +
+    "绝对不能用\"合不合\"这种算命式表达，也不能打百分比分数（比如\"匹配度85%\"）——这种表达像营销话术，不是灵犀的语气。" +
+    "【最容易犯、也最致命的错误——两人共享同一个特质时，绝对不能只是说\"两人都很X\"就完事】共鸣点告诉你的，只是\"这两个人在同一个维度上，分数都很高\"——但两个人的分数高，几乎从来不是因为同一个理由，各自的命盘数据不一样，走到这个分数的路径也不一样。正确的做法：先问一句——这两个人各自的这份特质，是从命盘里哪里来的？来源不一样，表现出来的样子就不一样，把这份不同写出来，才是这两个人独有的关系，不是任何两个人都适用的空话。" +
+    "每一段都要交叉引用双方的具体数据点，写出\"这两个人放在一起，会发生什么\"，不能先写一段A、再写一段B，两段中间没有真正的互动分析。" +
+    "少用\"可能\"\"也许\"\"通常\"这类模糊限定词——一段话里最多出现一次。" +
+    (isLastBatch
+      ? "【这一批最后一段是全篇收尾，尤其容易滑向空话，务必额外注意】收尾段落不能只靠情绪词和排比句，必须明确指向前面章节提到过的某个具体共鸣点/互补点/摩擦点。"
+      : "") +
+    "【重要区分——\"笃定\"指的是把当下的结构讲清楚，不是对未来下命运判决】绝对不能出现\"你们注定……\"\"你们必然……\"\"这段关系一定会……\"这类给关系下命运判决、听起来像算命断语的句式。同一件事，笃定地描述\"当下呈现出的模式是什么\"，跟武断地宣判\"未来一定如何\"，是两回事，只做前者。" +
+    "【格式规则，必须遵守】全文只能是纯文字段落，绝对不能使用任何markdown语法——不能出现**加粗**、#标题、-或*开头的列表符号。" +
+    "【绝对不能出现的最严重错误——逐字重复】同一句话、同一个段落，绝对不能在文中出现两次以上，哪怕是在不同章节里。" +
+    "\n\n【最高优先级规则】报告全文，任何情况下都不能出现\"AI\"这两个字母，也不能用\"人工智能\"\"机器人\"\"程序\"这类词替代——灵犀是「场」，不是「AI产品」，这条规则优先于其余任何一条格式要求。"
+  );
+}
+
+async function generateBatch(
+  key: string, lang: "zh" | "en", batch: Batch, typeLabel: string, isLastBatch: boolean,
+  resonanceSummary: string, submissionId: string
+): Promise<{ sections: string[] | null; failReason?: string }> {
+  const instruction =
+    "严格按以下格式输出，" + batch.chapters.length + "个章节之间，各用一行「===数字===」分隔（数字从1开始），不要添加任何其他标题、开场白或结语：\n" +
+    batch.chapters.map((c, i) => `===${i + 1}===\n（${c.hint}，约250-300字）`).join("\n");
+
+  const system = baseVoice(typeLabel, isLastBatch) +
+    (lang === "en" ? "\n\n【IMPORTANT】Write your entire response in natural, fluent English (not Chinese), while keeping the exact ===N=== section markers." : "") +
+    "\n\n" + instruction;
+
+  const callOnce = () =>
+    fetch(ZHIPU_ENDPOINT, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: process.env.ZHIPU_MODEL_FULL || "glm-4.7-flash",
+        messages: [{ role: "system", content: system }, { role: "user", content: resonanceSummary }],
+        max_tokens: batch.maxTokens, temperature: 0.85, frequency_penalty: 0.4, presence_penalty: 0.3,
+      }),
+    });
+
+  let res = await callOnce();
+  for (let attempt = 0; attempt < 2 && res.status === 429; attempt++) {
+    await new Promise((r) => setTimeout(r, 2000 + attempt * 1500));
+    res = await callOnce();
+  }
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => "");
+    console.error(`[relationship generate-full] 批次接口返回非200:`, res.status, errBody, "submission id:", submissionId);
+    return { sections: null, failReason: `接口返回${res.status}：${errBody.slice(0, 200)}` };
+  }
+  let data = await res.json();
+  let rawText = data?.choices?.[0]?.message?.content?.trim();
+  let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
+  let finishReason = data?.choices?.[0]?.finish_reason;
+  let check = text ? parseAndValidate(text, batch.chapters.length, finishReason) : { sections: [], valid: false };
+
+  for (let retry = 0; retry < 2 && !check.valid; retry++) {
+    console.error(`[relationship generate-full] 批次第${retry + 1}次生成不完整，重试。submission id:`, submissionId, "段数:", check.sections.length, "预期:", batch.chapters.length);
+    res = await callOnce();
+    if (res.ok) {
+      data = await res.json();
+      rawText = data?.choices?.[0]?.message?.content?.trim();
+      text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
+      finishReason = data?.choices?.[0]?.finish_reason;
+      check = text ? parseAndValidate(text, batch.chapters.length, finishReason) : { sections: [], valid: false };
+    } else {
+      const errBody = await res.text().catch(() => "");
+      return { sections: null, failReason: `重试时接口返回${res.status}：${errBody.slice(0, 200)}` };
+    }
+  }
+  if (!check.valid) return { sections: null, failReason: `多次重试后仍不完整，最后一次收到${check.sections.length}段，预期${batch.chapters.length}段` };
+  return { sections: check.sections };
+}
 
 export async function POST(req: Request) {
   const supabase = createClient();
@@ -36,35 +222,21 @@ export async function POST(req: Request) {
     .single();
   if (!submission) return NextResponse.json({ error: "找不到这份提交记录。" }, { status: 404 });
 
-  // 安全修复（v225）：之前这里漏了归属校验——生命图谱、灵签、塔罗三个
-  // 姊妹接口都会检查"这份提交记录是不是当前登录用户自己的"，唯独这个
-  // 接口没做，导致理论上任何登录用户，只要拿到别人的 submission id，
-  // 就既能读到别人的关系共振报告内容，又会绕开自己的付费状态、直接
-  // 借用"提交记录所有者"是否已解锁来通过下面的解锁校验——不用付费就
-  // 能生成一份不属于自己的报告。这里补上跟其余三个接口一致的校验。
   if (!REVIEW_MODE && submission.user_id !== user!.id) {
     return NextResponse.json({ error: "无权访问这份记录。" }, { status: 403 });
   }
 
   if (!REVIEW_MODE) {
     const { data: unlockRows } = await supabase.from("unlocks").select("product_id, expires_at").eq("user_id", submission.user_id);
-    const nowTs = new Date();
-    const unlocks = (unlockRows ?? [])
-      .filter((r: { product_id: string; expires_at: string | null }) => !r.expires_at || new Date(r.expires_at) > nowTs)
-      .map((r: { product_id: string }) => r.product_id);
-    const unlocked = unlocks.includes("relationship-resonance") || unlocks.includes("everything");
-    if (!unlocked) {
-      return NextResponse.json({ error: "尚未解锁这份关系共振图谱。" }, { status: 402 });
-    }
+    const unlocked = (unlockRows ?? []).some(
+      (u) => u.product_id === "relationship-resonance" && (!u.expires_at || new Date(u.expires_at) > new Date())
+    );
+    if (!unlocked) return NextResponse.json({ error: "尚未解锁完整报告。" }, { status: 402 });
   }
 
   const lang = body.lang === "en" ? "en" : "zh";
   const cached = lang === "en" ? submission.full_report_en : submission.full_report;
-  // ── 复用生命向量引擎：两个人各自算一份生命向量，再用共振引擎比较——
-  // 这是这个产品的核心，不是另外发明一套"合婚算法"，是同一套五套系统
-  // 计算出来的数据，多算一层"两份向量放在一起会怎样"。这一步是纯代码
-  // 计算，不花钱调AI，挪到缓存判断之前，保证不管报告文本是不是缓存的，
-  // 这份结构化的共振数据每次都能返回给前端画图用。
+
   const factsA = submission.facts_a as any;
   const factsB = submission.facts_b as any;
   const toLVInput = (f: any) => ({
@@ -91,7 +263,9 @@ export async function POST(req: Request) {
   const conflictsA = findConflictsWithFallback(vA);
   const conflictsB = findConflictsWithFallback(vB);
 
-  const typeLabel = submission.relationship_type === "business" ? "商业合作/合伙" : submission.relationship_type === "general" ? "泛用（尚未指定具体关系类型）" : "亲密关系/伴侣";
+  const relType = submission.relationship_type === "business" ? "business" : submission.relationship_type === "general" ? "general" : "romantic";
+  const typeLabel = relType === "business" ? "商业合作/合伙关系" : relType === "general" ? "人际关系（朋友/家人/伙伴）" : "亲密关系/伴侣关系";
+  const chapters = chaptersForType(relType);
 
   const resonanceSummary =
     `【关系共振引擎 · 已计算完成，直接使用】\n` +
@@ -104,129 +278,28 @@ export async function POST(req: Request) {
     `【${submission.name_a} 命盘概要】太阳${factsA.sunSignZh}、月亮${factsA.moonSignZh}、日主${factsA.dayMasterGan}(${factsA.dayMasterElement})\n` +
     `【${submission.name_b} 命盘概要】太阳${factsB.sunSignZh}、月亮${factsB.moonSignZh}、日主${factsB.dayMasterGan}(${factsB.dayMasterElement})\n`;
 
-  const system =
-    "【你是谁，在用什么姿态说话——这段定调，比后面任何一条具体规则都重要】" +
-    "把自己想象成一位真正看过成千上万对关系的引导者——不是在完成一份\"写作任务\"，是坐在这两个人对面，" +
-    "看着这两份图谱叠在一起，说出你真正看到的东西。你的分量，来自于你看得准、说得具体，不来自于语气有多热情。" +
-    "判断句要像\"这种组合我见过，你们的情况是……\"这种笃定，而不是\"根据数据分析，可能显示出……\"这种报告腔。" +
-    "读者读完，应该觉得\"这个人真的看懂了我们俩的关系，不是在按模板念数据\"——这是贯穿全篇的姿态。" +
-    "你是「灵犀场」，负责撰写一份「关系共振图谱」——分析两个人之间的关系动力，可能是伴侣、可能是合伙人、可能是任何两人关系，具体类型见下方数据。" +
-    "下面提供的【关系共振引擎】部分，是用确定性算法已经算出的结构化结果（各自的核心特质/内在矛盾，以及两人之间的共鸣点/互补点/摩擦点）——你的任务是把这份结构，用具体、有画面感的语言讲透，不是重新判断或者无视这些结果。" +
-    "绝对不能用\"合不合\"\"八字合不合\"这种算命式表达，也不能打百分比分数（比如\"匹配度85%\"）——这种表达像营销话术，不是灵犀的语气。" +
-    "【最容易犯、也最致命的错误——两人共享同一个特质时，绝对不能只是说\"两人都很X\"就完事】" +
-    "共鸣点告诉你的，只是\"这两个人在同一个维度上，分数都很高\"——但两个人的分数高，几乎从来不是因为同一个理由，各自的命盘数据不一样，走到这个分数的路径也不一样。" +
-    "反面例子（绝对不能写成这样）：\"两人都极度看重秩序纪律，这种特质在初次合作或接触时，会让他们迅速感受到彼此的严谨和可靠……两人都有野心，这种共同的对成功的渴望，会让他们建立起'我们目标一致'的共鸣感。\"——" +
-    "这段话把\"共鸣点\"直接翻译成了\"两人都是这样\"，换任何两个人，只要共鸣点凑巧是同一个词，这段话原样成立，读者感觉不到\"这写的是我们两个\"，只感觉到\"这写的是任何两个有共鸣点的人\"。" +
-    "正确的做法：先问一句——这两个人各自的这份秩序感/野心，是从命盘里哪里来的？来源不一样，表现出来的样子就不一样。" +
-    "正确例子：\"两人都在追求向前——但一个人的推动力来自不断突破边界、寻找下一个未知的疆域，另一个人的推动力，来自把已经拿到手的东西，构建成一套能够长久运转的体系。一个在找新大陆，一个在建新文明——方向一致，走的路完全不是一回事。\"——" +
-    "这才是共鸣点真正的写法：表面上是同一个词（比如都叫'野心'），底下的驱动方式、满足方式、疲惫的点，各自不同，把这份不同写出来，才是这两个人独有的关系，不是任何两个人都适用的空话。" +
-    "每一段都要交叉引用双方的具体数据点，写出\"这两个人放在一起，会发生什么\"，而不是先写一段A的性格、再写一段B的性格，两段中间没有真正的互动分析。" +
-    "绝对不能写\"你们需要多沟通\"\"要互相理解\"这类适用于任何两个人的空话——每一条建议，都要具体到，是因为这两个人这组特定的共鸣/互补/摩擦，才需要这样做。" +
-    "少用\"可能\"\"也许\"\"通常\"这类模糊限定词——连续使用会让整段话读起来像是在猜测、不敢断言，灵犀的语气是清楚地指出观察到的模式，不是小心翼翼地打太极。一段话里，这类词最多出现一次。" +
-    "【第5段\"成长方向\"尤其容易滑向空话，务必额外注意】给的建议不能是\"多沟通\"\"要理解彼此\"这类适用于任何两人的话，也不能是情绪浓度高但没有具体信息量的排比句——每一条建议，都要能明确对应到前面已经提到过的某个具体共鸣点/互补点/摩擦点，读者要能看出\"这条建议是因为我们俩这个具体组合才成立的\"，不是随便两个人都适用的通用关系建议。" +
-    "【重要区分——\"笃定\"指的是把当下的结构讲清楚，不是对未来下命运判决】上面说的\"笃定\"，指的是描述这两人此刻呈现出的模式时要具体、不含糊，不是说要断言这段关系\"一定会怎样\"。绝对不能出现\"你们注定……\"\"你们必然……\"\"你们就是……\"\"这段关系一定会……\"这类给关系下命运判决、听起来像算命断语的句式——这类句式即使写得很具体，也会让整篇报告读起来像宿命论预测，而不是灵犀场\"看见当下结构\"这个定位。同一件事，笃定地描述\"当下呈现出的模式是什么\"，跟武断地宣判\"未来一定如何\"，是两回事，只做前者。" +
-    "【格式规则，必须遵守】全文只能是纯文字段落，绝对不能使用任何markdown语法——不能出现**加粗**、#标题、-或*开头的列表符号，这些符号不会被界面正确渲染，会以原始符号的样子直接展示给用户。" +
-    "【绝对不能出现的最严重错误——逐字重复】同一句话、同一个段落，绝对不能在文中出现两次或以上，哪怕是在不同章节里。写完每一段之前，回想一下前面是不是已经写过几乎一样的话，如果是，必须换一种表达或者直接跳过。" +
-    "严格按以下格式输出，五个章节之间，各用一行「===数字===」分隔（数字从1到5），不要添加任何其他标题、开场白或结语：\n" +
-    "===1===\n（吸引来源：这两个人之间，最初的吸引/连接，最可能来自哪里——具体到是共鸣点的哪一项，或者互补点的哪一组，让两人有一种\"对上了\"的感觉，约250-300字）\n" +
-    "===2===\n（关系动力：日常相处里，两人各自扮演什么角色，谁更倾向推动/谁更倾向稳定，这种动力模式会怎样具体地体现在日常互动里，约300-350字）\n" +
-    "===3===\n（冲突地图：结合摩擦点，具体讲这段关系最容易在什么场景下起冲突，冲突通常会怎么发生、怎么升级，如果没有明显摩擦点，就讲最容易被双方共同忽略的盲区，约300-350字）\n" +
-    "===4===\n（长期潜力：这段关系需要具备什么条件才能长期健康地走下去——不是预测结果，是指出具体需要建立的\"共识\"或者\"分工\"，约250-300字）\n" +
-    "===5===\n（成长方向：给两人各自一条具体的、可操作的建议，说明为什么是这一条建议、跟这两人的具体特质如何对应，结尾可以轻描淡写地提一句灵犀场的修炼技术或生命图谱，语气像朋友随口一提，不能是广告腔，约200-250字）\n";
-
-  const noAiRule = "\n\n【最高优先级规则】报告全文，任何情况下都不能出现\"AI\"这两个字母，也不能用\"人工智能\"\"机器人\"\"程序\"这类词替代——灵犀是「场」，不是「AI产品」，这条规则优先于其余任何一条格式要求。";
-  const langInstruction = (lang === "en"
-    ? "\n\n【IMPORTANT】Write your entire response in natural, fluent English (not Chinese), while keeping the exact ===N=== section markers."
-    : "") + noAiRule;
-
-  const messages = [
-    { role: "system", content: system + langInstruction },
-    { role: "user", content: resonanceSummary },
-  ];
+  const batches = buildBatches(chapters);
+  const allSections: string[] = [];
 
   try {
-    const callOnce = () =>
-      fetch(ZHIPU_ENDPOINT, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          // 同 lifemap 报告：换成免费的 glm-4.7-flash，理由见
-          // app/api/lifemap/generate-full/route.ts 里同一处的详细
-          // 注释（账户余额0元，glm-4-plus这类付费模型必然调用失败，
-          // 跟并发数无关）。
-          model: process.env.ZHIPU_MODEL_FULL || "glm-4.7-flash",
-          messages,
-          // v225：6000 对这份报告要求的 9-10 个章节来说偏紧——之前的表现
-          // 是最后一到两个章节（比如"05·成长方向"）整段缺失，不是内容
-          // 写得差，是配额不够写到那里就被截断了。参考 lifemap 报告
-          // （12章用16000）的章节数/token比例，这里上调到9000。
-          max_tokens: 9000,
-          temperature: 0.85,
-          frequency_penalty: 0.4,
-          presence_penalty: 0.3,
-        }),
-      });
-
-    let res = await callOnce();
-    // glm-4.7-flash 并发数限制只有1，重试1次、等1.2秒经常不够——加到
-    // 最多2次，等待时间也拉长，理由见 app/api/lifemap/generate-full/
-    // route.ts 里同一处的详细注释。
-    for (let attempt = 0; attempt < 2 && res.status === 429; attempt++) {
-      await new Promise((r) => setTimeout(r, 2000 + attempt * 1500));
-      res = await callOnce();
-    }
-    // 之前这里没有检查 res.ok 就直接 await res.json()——如果智谱接口本身
-    // 拒绝了这次请求（比如请求体里混入了异常数值，返回4xx/5xx错误），
-    // data 长得和"AI正常返回但没写内容"几乎一样（都没有 choices 字段），
-    // 两种完全不同的失败原因，会被这里的代码当成同一种情况处理，用户
-        // 看到的都是"生成失败，请稍后再试"，没法区分。这里把这两种情况
-    // 分开记录到日志里，方便以后真出问题时能一眼看出是哪一种。
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
-      console.error("[relationship generate-full] 智谱接口返回非200状态:", res.status, errBody, "submission id:", body.id);
-      return NextResponse.json({ error: "灵犀场暂时无法回应，请稍后再试。" }, { status: 502 });
-    }
-    let data = await res.json();
-    let rawText = data?.choices?.[0]?.message?.content as string | undefined;
-    let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
-    let finishReason = data?.choices?.[0]?.finish_reason;
-    if (finishReason === "length") {
-      console.error("[relationship generate-full] AI 回复被 max_tokens 截断，重试一次。submission id:", body.id);
-      const retryRes = await callOnce();
-      if (retryRes.ok) {
-        const retryData = await retryRes.json();
-        const retryRaw = retryData?.choices?.[0]?.message?.content as string | undefined;
-        if (retryRaw) {
-          data = retryData;
-          rawText = retryRaw;
-          text = stripMarkdownArtifacts(retryRaw);
-          finishReason = retryData?.choices?.[0]?.finish_reason;
-        }
+    for (let bi = 0; bi < batches.length; bi++) {
+      const result = await generateBatch(key, lang, batches[bi], typeLabel, bi === batches.length - 1, resonanceSummary, body.id);
+      if (!result.sections) {
+        console.error("[relationship generate-full] 批次失败:", result.failReason, "submission id:", body.id);
+        return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 502 });
       }
-      if (finishReason === "length" && text) {
-        console.error("[relationship generate-full] 重试后仍被截断，裁掉最后一段不完整内容。submission id:", body.id);
-        const parts = text.split(/===\s*\d+\s*===/);
-        const lastPart = parts[parts.length - 1]?.trim() ?? "";
-        const endsCleanly = /[。！？.!?」”】]\s*$/.test(lastPart);
-        if (!endsCleanly && parts.length > 1) {
-          const cutIndex = text.lastIndexOf(lastPart);
-          text = text.slice(0, cutIndex).trim();
-        }
-      }
-    }
-    if (!text) {
-      console.error("[relationship generate-full] AI 没有返回内容，submission id:", body.id, "AI原始返回:", JSON.stringify(data));
-      return NextResponse.json({ error: "生成失败，请稍后再试。" }, { status: 502 });
+      allSections.push(...result.sections);
     }
 
+    const fullReport = allSections.join("\n\n===SECTION===\n\n");
     const admin = (await import("@/lib/supabase/admin")).createAdminClient();
     await admin
       .from("relationship_submissions")
-      .update(lang === "en" ? { full_report_en: text } : { full_report: text })
+      .update(lang === "en" ? { full_report_en: fullReport } : { full_report: fullReport })
       .eq("id", body.id);
 
     return NextResponse.json({
-      fullReport: text,
+      fullReport,
       resonance: { resonant, complementary, friction },
       vectors: { a: vA, b: vB },
     });

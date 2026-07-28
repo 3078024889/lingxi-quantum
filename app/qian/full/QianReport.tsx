@@ -13,27 +13,30 @@ import { getProduct } from "@/lib/plans";
 // 四段解读对应doc21的报告设计——不是随便起的名字，是"三签怎么组合→
 // 天赋数字地图→当前处在哪个阶段→接下来具体练什么"这条完整的自我
 // 理解路径。
+// v237：12段合并成11段——财富创造系统+事业使命地图合并成一段"价值
+// 创造地图"，其余章节按你的11章节命名方案重新命名（源流签/灵魂签/
+// 行者签这三签的具体内容完全没动，这是这个产品最有价值的部分，不
+// 会因为改名字就换掉）。
 const LAYER_TITLES = [
   { zh: "① 生命三原型总览", en: "① Three Archetypes Overview" },
   { zh: "② 源流签深度解析", en: "② Origin Sign Deep Dive" },
   { zh: "③ 灵魂签深度解析", en: "③ Soul Sign Deep Dive" },
   { zh: "④ 行者签深度解析", en: "④ Walker Sign Deep Dive" },
   { zh: "⑤ 三签融合分析", en: "⑤ Three-Sign Fusion" },
-  { zh: "⑥ 财富创造系统", en: "⑥ Wealth Creation System" },
-  { zh: "⑦ 关系模式分析", en: "⑦ Relationship Pattern" },
-  { zh: "⑧ 事业使命地图", en: "⑧ Career & Mission Map" },
-  { zh: "⑨ 当前人生阶段", en: "⑨ Current Life Stage" },
-  { zh: "⑩ 隐藏天赋", en: "⑩ Hidden Talents" },
-  { zh: "⑪ 灵犀场成长路径", en: "⑪ Growth Path" },
-  { zh: "⑫ 生命宣言", en: "⑫ Life Declaration" },
+  { zh: "⑥ 价值创造地图", en: "⑥ Value Creation Map" },
+  { zh: "⑦ 关系映射", en: "⑦ Relationship Mapping" },
+  { zh: "⑧ 当下生命主题", en: "⑧ Current Life Theme" },
+  { zh: "⑨ 隐藏力量", en: "⑨ Hidden Strength" },
+  { zh: "⑩ 灵犀场实践", en: "⑩ A Personal Practice" },
+  { zh: "⑪ 生命灵签总结", en: "⑪ Oracle Summary" },
 ];
 
-// v231：正文分组——把12个具体章节（内容本身不变）按PDF设计文档的
-// 6页结构分成4个视觉分组页 + 1个封印页，索引对应LAYER_TITLES的顺序。
+// v231：正文分组——按PDF设计文档的6页结构分成3个视觉分组页 + 1个
+// 封印页，索引对应LAYER_TITLES的顺序（v237更新为11段后的新索引）。
 const QIAN_PAGE_GROUPS = [
   { titleZh: "灵签核心页 · 三签解析", titleEn: "Oracle Symbol · The Three Signs", bg: "page-2", indices: [0, 1, 2, 3] },
-  { titleZh: "生命象征解析", titleEn: "Symbol Interpretation", bg: "page-3", indices: [4, 5, 6, 7] },
-  { titleZh: "金色生命卷轴", titleEn: "Golden Life Scroll", bg: "page-4", indices: [8, 9, 10] },
+  { titleZh: "生命象征解析", titleEn: "Symbol Interpretation", bg: "page-3", indices: [4, 5, 6] },
+  { titleZh: "金色生命卷轴", titleEn: "Golden Life Scroll", bg: "page-4", indices: [7, 8, 9] },
 ];
 
 type AbilityItem = { key: string; zh: string; en: string; score: number };
@@ -68,28 +71,43 @@ export default function QianReport({ id }: { id: string }) {
       }
 
       const currentLangEn = document.documentElement.classList.contains("lang-en");
-      try {
-        const res = await fetch("/api/qian/generate-full", {
+      const fetchReport = (regenerate: boolean) =>
+        fetch("/api/qian/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh" }),
+          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate }),
         });
+      try {
+        let res = await fetchReport(false);
         if (res.status === 402) {
           setStatus("locked");
           return;
         }
-        const data = await res.json();
+        let data = await res.json();
         if (!res.ok || !data.fullReport) {
           setStatus("error");
           setError((data.error || t("生成失败，请稍后再试。", "Generation failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
           return;
         }
-        setSections(
-          (data.fullReport as string)
-            .split(/===\s*\d+\s*===/)
-            .map((s: string) => s.trim())
-            .filter(Boolean)
-        );
+        let parts = (data.fullReport as string)
+          .split(/===\s*\d+\s*===/)
+          .map((s: string) => s.trim())
+          .filter(Boolean);
+        // v237：升级前生成、缓存下来的报告是12段（财富创造+事业使命还
+        // 没合并），这次合并成了11段——检测到缓存段数偏多，自动触发
+        // 一次重新生成，升级成新结构，不用用户自己点"重新生成"。
+        if (parts.length > 11) {
+          console.error("[qian report] 检测到旧版本缓存（" + parts.length + "段），自动升级为11章节新结构");
+          res = await fetchReport(true);
+          data = await res.json();
+          if (res.ok && data.fullReport) {
+            parts = (data.fullReport as string)
+              .split(/===\s*\d+\s*===/)
+              .map((s: string) => s.trim())
+              .filter(Boolean);
+          }
+        }
+        setSections(parts);
         if (Array.isArray(data.abilityMap)) setAbilityMap(data.abilityMap);
         if (data.lifeStage) setLifeStage(data.lifeStage);
         setStatus("ready");
@@ -208,7 +226,7 @@ export default function QianReport({ id }: { id: string }) {
       <div ref={reportRef}>
       <div
         className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center"
-        style={{ backgroundImage: "linear-gradient(rgba(13,13,26,0.72), rgba(13,13,26,0.72)), url(/images/qian-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        style={{ backgroundColor: "#0d0d1a", backgroundImage: "linear-gradient(rgba(13,13,26,0.72), rgba(13,13,26,0.72)), url(/images/qian-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
@@ -255,7 +273,7 @@ export default function QianReport({ id }: { id: string }) {
       {(lifeStage || abilityMap.length > 0) && (
         <div
           className="relative mt-6 overflow-hidden rounded-sm border border-amber/20 p-6"
-          style={{ backgroundImage: "linear-gradient(rgba(13,13,26,0.8), rgba(13,13,26,0.8)), url(/images/qian-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundColor: "#0d0d1a", backgroundImage: "linear-gradient(rgba(13,13,26,0.8), rgba(13,13,26,0.8)), url(/images/qian-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="text-center text-xs uppercase tracking-widest2 text-amber/90">
             <Bi zh="灵签生成页面 · Oracle Activation" en="Oracle Activation" />
@@ -300,7 +318,7 @@ export default function QianReport({ id }: { id: string }) {
         <div
           key={gi}
           className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
-          style={{ backgroundImage: `linear-gradient(rgba(13,13,26,0.82), rgba(13,13,26,0.82)), url(/images/qian-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundColor: "#0d0d1a", backgroundImage: `linear-gradient(rgba(13,13,26,0.82), rgba(13,13,26,0.82)), url(/images/qian-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-amber/90">
             <Bi zh={group.titleZh} en={group.titleEn} />
@@ -323,7 +341,7 @@ export default function QianReport({ id }: { id: string }) {
       {sections[sections.length - 1] && (
         <div
           className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
-          style={{ backgroundImage: "linear-gradient(rgba(13,13,26,0.82), rgba(13,13,26,0.82)), url(/images/qian-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundColor: "#0d0d1a", backgroundImage: "linear-gradient(rgba(13,13,26,0.82), rgba(13,13,26,0.82)), url(/images/qian-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           {LAYER_TITLES[sections.length - 1] && (
             <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">

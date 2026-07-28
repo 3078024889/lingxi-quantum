@@ -11,7 +11,7 @@ const ITEMS = [
   { href: "/tarot", zh: "灵犀量子塔罗", en: "Lingxi Quantum Tarot", getZh: "三张生命镜像牌的完整生命镜像档案", getEn: "A full life-mirror reading from three cards" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", getZh: "五项确定性分数，看清你的韧性类型", getEn: "Five deterministic scores, mapping your resilience type" },
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", getZh: "你的吸引力风格与磁场分数，即时呈现", getEn: "Your attraction style and magnetism score, shown right away" },
-  { href: "/daily", zh: "今日场域测试", en: "Today's Field Test", getZh: "今日星象落在你太阳星座上的样子，即时呈现", getEn: "How today's sky lands on your Sun sign, shown right away" },
+  { href: "/daily", zh: "今日运势潮汐", en: "Daily Fortune Tide", getZh: "今日星象落在你太阳星座上的样子，即时呈现", getEn: "How today's sky lands on your Sun sign, shown right away" },
 ];
 
 export default function FieldInsightsSection() {

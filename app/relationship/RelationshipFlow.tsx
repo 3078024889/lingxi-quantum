@@ -95,6 +95,24 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
   );
 }
 
+// v235：三种关系类型，各自独立的措辞——不再统一用"免费预览"这个
+// 听起来廉价的词，也不再用通用的"解锁完整报告"，换成贴合每种关系
+// 具体语境的说法。
+const TYPE_COPY: Record<"romantic" | "business" | "general", { previewLabel: { zh: string; en: string }; unlockLabel: { zh: string; en: string } }> = {
+  romantic: {
+    previewLabel: { zh: "关系星图入口已开启", en: "Your Star Map Has Opened" },
+    unlockLabel: { zh: "展开完整亲密关系档案", en: "Unfold the Full Relationship Archive" },
+  },
+  business: {
+    previewLabel: { zh: "商业共振入口已开启", en: "Your Business Resonance Has Opened" },
+    unlockLabel: { zh: "开启商业共振地图", en: "Open the Business Resonance Map" },
+  },
+  general: {
+    previewLabel: { zh: "关系共振入口已开启", en: "Your Connection Field Has Opened" },
+    unlockLabel: { zh: "展开双生命连接档案", en: "Unfold the Full Connection Archive" },
+  },
+};
+
 export default function RelationshipFlow() {
   const router = useRouter();
   const langEn = useLang();
@@ -281,12 +299,12 @@ export default function RelationshipFlow() {
           disabled={previewing}
           className="mt-8 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          {previewing ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="免费看共鸣与互补点 →" en="See Resonance & Complementarity — Free →" />}
+          {previewing ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="展开共鸣与互补点 →" en="Reveal Resonance & Complementarity →" />}
         </button>
       ) : (
-        <div className="mt-8 rounded-sm border border-lattice/25 bg-void-deep p-6">
+        <div className="lx-glass mt-8 p-6">
           <p className="text-center font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh={`${a.name} × ${b.name} · 免费预览`} en={`${a.name} × ${b.name} · Free Preview`} />
+            <Bi zh={`${a.name} × ${b.name} · ${TYPE_COPY[relationshipType].previewLabel.zh}`} en={`${a.name} × ${b.name} · ${TYPE_COPY[relationshipType].previewLabel.en}`} />
           </p>
           <p className="mt-2 text-center text-xs text-bone-dim/85">
             <Bi zh={`太阳星座：${preview.sunSignA} × ${preview.sunSignB}`} en={`Sun Signs: ${preview.sunSignAEn} × ${preview.sunSignBEn}`} />
@@ -341,7 +359,7 @@ export default function RelationshipFlow() {
             disabled={submitting}
             className="mt-4 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
           >
-            {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`解锁完整报告 · ¥${getProduct("relationship-resonance")?.priceRmb}`} en={`Unlock Full Report · ¥${getProduct("relationship-resonance")?.priceRmb}`} />}
+            {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`${TYPE_COPY[relationshipType].unlockLabel.zh} · ¥${getProduct("relationship-resonance")?.priceRmb}`} en={`${TYPE_COPY[relationshipType].unlockLabel.en} · ¥${getProduct("relationship-resonance")?.priceRmb}`} />}
           </button>
         </div>
       )}

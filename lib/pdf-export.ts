@@ -14,6 +14,55 @@ const AMBER_RGB: [number, number, number] = [232, 183, 101]; // 对应品牌金�
 const LATTICE_RGB: [number, number, number] = [199, 156, 255]; // 对应品牌紫色 lattice
 const BONE_DIM_RGB: [number, number, number] = [168, 168, 190]; // 偏灰的正文色
 
+// v234：这是"PDF只有封面用上了背景图、后面的章节全被纯色盖住"这个
+// 问题的真正根因——html2canvas 截图的时候，如果元素的CSS背景图片
+// （无论是<img>标签还是style里的background-image）这时候还没真正
+// 加载完成，html2canvas会截出一片空白或者干脆用上面传的bgColor
+// 纯色兜底，而不是等图片加载好了再截。封面因为在页面最上面、用户
+// 点下载按钮之前肉眼就已经看到它了，图片早就加载完了，所以封面
+// 总是正常；后面的章节背景图，是随着导出流程往下截图才第一次真正
+// 触发浏览器去请求这张图片，根本来不及在html2canvas截图那一刻加载
+// 完——这不是"背景色覆盖了模板"，是图片压根还没下载完，截图截到的
+// 是"图片还没出现"那一瞬间。
+// 修复方式：在对某个元素调用html2canvas之前，先明确等它内部所有
+// <img>标签和CSS背景图片都真正加载完成，再截图。
+async function waitForImages(el: HTMLElement): Promise<void> {
+  const promises: Promise<void>[] = [];
+
+  const imgTags = Array.from(el.querySelectorAll("img"));
+  for (const img of imgTags) {
+    if (!img.complete) {
+      promises.push(
+        new Promise((resolve) => {
+          img.addEventListener("load", () => resolve(), { once: true });
+          img.addEventListener("error", () => resolve(), { once: true }); // 加载失败也不要卡住整个导出流程
+        })
+      );
+    }
+  }
+
+  const allEls = [el, ...Array.from(el.querySelectorAll<HTMLElement>("*"))];
+  const seenUrls = new Set<string>();
+  for (const node of allEls) {
+    const bg = node.style.backgroundImage || getComputedStyle(node).backgroundImage;
+    const match = bg && bg.match(/url\(["']?(.*?)["']?\)/);
+    const url = match?.[1];
+    if (url && !seenUrls.has(url)) {
+      seenUrls.add(url);
+      promises.push(
+        new Promise((resolve) => {
+          const preloader = new Image();
+          preloader.onload = () => resolve();
+          preloader.onerror = () => resolve();
+          preloader.src = url;
+        })
+      );
+    }
+  }
+
+  if (promises.length > 0) await Promise.all(promises);
+}
+
 export type PdfChapterMeta = { titleZh: string; titleEn: string };
 
 // 给桃花磁场、生命韧性指数、今日运势这类"单屏即时结果"用的轻量版
@@ -53,6 +102,7 @@ export async function exportSimplePdf(params: {
 
   for (const chunk of children) {
     if (!chunk || chunk.offsetHeight < 2) continue;
+    await waitForImages(chunk);
     const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 2, useCORS: true });
     const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidth = pageWidth - MARGIN * 2;
@@ -157,6 +207,7 @@ export async function exportGlassPdf(params: {
   // ── 第一页：封面（截图） ──
   fillPageBackground();
   if (coverEl && coverEl.offsetHeight > 2) {
+    await waitForImages(coverEl);
     const canvas = await html2canvas(coverEl, { backgroundColor: bgHex, scale: 2, useCORS: true });
     const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidth = pageWidth;
@@ -294,6 +345,7 @@ export async function exportGlassPdf(params: {
     if (!chapter || chapter.offsetHeight < 2) continue;
     const { pieces, cleanup } = splitTallChapter(chapter);
     for (const piece of pieces) {
+    await waitForImages(piece);
     const canvas = await html2canvas(piece, { backgroundColor: bgHex, scale: 2, useCORS: true });
     const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidth = pageWidth - MARGIN * 2;

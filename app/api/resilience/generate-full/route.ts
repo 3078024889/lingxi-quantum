@@ -17,42 +17,36 @@ const DIM_ZH: Record<string, string> = {
 
 const noAiRule = "\n\n【最高优先级规则】全文任何情况下都不能出现\"AI\"这两个字母，也不能用\"人工智能\"\"机器人\"\"程序\"这类词替代——灵犀是「场」，不是「AI产品」，这条规则优先于其余任何一条要求。";
 
-const baseVoice =
-  "【你是谁，在用什么姿态说话】你是「灵犀场」，负责为已完成能量交换的人，写一份「生命韧性档案」——一份围绕\"恢复力、扎根、再生\"这个主题的完整报告，不是「你抗压能力几分」这种打分测评。" +
-  "下面给你的五项分数（压力恢复/变化适应/危机反弹/长期坚持/精神稳定），是从这个人真实的出生信息确定性算出来的固定数字，不是你现场评判的——你的任务是围绕这些已经算出的具体分数，写出这个人的韧性结构具体是什么样、为什么是这样。" +
-  "语气：像一位真正见过很多人如何度过低谷的人在说话，判断要具体、要像\"我见过，你这种情况是……\"这种笃定，不要用\"你可能\"\"或许\"这类含糊限定词连续出现。" +
-  "【绝对不能写成\"打分测评\"或\"心理测试报告\"】不要出现\"你的抗压能力是XX分，属于中等水平\"这种话——分数是拿来交叉引用、写出具体画面的原材料，不是拿来复述的结果。" +
-  "【防止空话——这是最容易出问题的地方】情绪浓度高、但没有具体信息量的句子（比如\"你很坚强，你能挺过一切\"），换给任何一个人念都成立，必须避免。每一句判断，都要能明确指向前面给你的某个具体分数或数据点，不能只靠鼓励性的形容词堆出\"温暖\"的感觉。" +
-  "【格式规则，必须严格遵守】全文只能是纯文字段落，绝对不能使用任何markdown语法——不能出现**加粗**、#标题、-或*开头的列表符号。" +
-  "【绝对不能出现的最严重错误——逐字重复】同一句话、同一个段落，绝对不能在文中出现两次以上，不同段落之间也不能出现大段重复的判断或用词。" +
-  noAiRule;
+// v236：从5段升级成11章节，每个维度（压力恢复/变化适应/危机反弹/
+// 长期坚持/精神稳定）各自独立成一章——不是把5个分数揉在一起讲，是
+// 每一项单独深挖，这样每章都能扎扎实实交叉引用这一项具体的分数，
+// 不用被迫在一段话里塞下五个维度、被迫写得笼统。
+type ChapterMeta = { titleZh: string; titleEn: string; hint: string };
 
-type Batch = { titleZh: string; count: number; instruction: string; maxTokens: number };
-
-function buildBatches(params: {
-  score: number; breakdown: Record<string, number>; sunSignZh: string; dayMasterElement: string;
-  strongest: string; weakest: string;
-}): Batch[] {
-  const { score, breakdown, sunSignZh, dayMasterElement, strongest, weakest } = params;
-  const breakdownStr = Object.entries(breakdown).map(([k, v]) => `${DIM_ZH[k] ?? k}${v}分`).join("、");
+function buildChapters(breakdownStr: string): ChapterMeta[] {
   return [
-    {
-      titleZh: "第一批：生命韧性图谱总览 + 根系支撑系统", count: 2, maxTokens: 3200,
-      instruction:
-        "===1===\n（生命韧性图谱总览：这个人的太阳星座是" + sunSignZh + "，八字日主五行是" + dayMasterElement + "，五项韧性分数分别是" + breakdownStr + "，总分" + score + "。用「树」的意象——根系是过去积累的经验和习惯，树干是当下承受和转化的方式，树冠是韧性最终外显出来的样子——具体说清楚这个人的韧性结构长什么样，尤其要说清楚最高分「" + DIM_ZH[strongest] + "」和最低分「" + DIM_ZH[weakest] + "」之间，是怎样互相影响的，不是分开列出来，约220-260字）\n" +
-        "===2===\n（根系支撑系统：逐一但简洁地说清楚这五项能力各自的具体样子——不是每项都展开讲透（那是后面的事），而是像看一张根系分布图一样，说清楚这五条根哪几条粗、哪几条细，彼此之间有没有互相支援，整体是均衡型还是有明显偏科，约220-260字）",
-    },
-    {
-      titleZh: "第二批：再生循环能量环 + 韧性洞察", count: 2, maxTokens: 3600,
-      instruction:
-        "===1===\n（再生循环能量环：具体描述这个人经历「冲击→转化→恢复→成长→新生」这五个阶段时，自己的节奏是什么样的——哪个阶段对这个人来说走得最快、哪个阶段最容易卡住，尤其要点出「" + DIM_ZH[weakest] + "」这一项在这个循环的哪个环节上最容易拖慢整体节奏，约220-260字）\n" +
-        "===2===\n（韧性洞察，分三段但连贯成一整段：隐藏力量——这个人自己可能都没完全意识到、但从数据看确实存在的一项能力；恢复模式——面对变化时这个人身体和情绪的自然反应顺序是什么；成长方向——具体给出一件这个人下次遇到冲击时可以做的、跟前面提到的具体分数或阶段相关的小动作，不要给泛泛的\"多休息\"\"要放松\"这种通用建议，约260-300字）",
-    },
-    {
-      titleZh: "第三批：生命树印记（封印页）", count: 1, maxTokens: 1200,
-      instruction:
-        "===1===\n（生命树印记：作为整份报告的收尾——必须明确指向前面提到过的某个具体分数或阶段（比如呼应最高分那一项、或者呼应再生循环里走得最快的那个阶段），不能只靠\"你很坚强，生命会继续绽放\"这类换谁都成立的空话收尾，用比较有画面感、克制、不煽情的语言，约120-150字）",
-    },
+    { titleZh: "生命韧性源点", titleEn: "Where Your Resilience Begins",
+      hint: `生命韧性源点：概览这个人的韧性结构整体是什么样——五项分数（${breakdownStr}）放在一起，形成了一种什么样的整体气场，哪几项是骨架、哪几项是薄弱环节，不用逐条翻译，要写出整体形状` },
+    { titleZh: "压力恢复能力", titleEn: "Stress Recovery",
+      hint: "压力恢复能力：具体到这项分数背后，这个人处理日常压力的具体方式是什么，分数高低分别意味着什么真实的行为模式" },
+    { titleZh: "变化适应能力", titleEn: "Adaptability to Change",
+      hint: "变化适应能力：具体到这项分数背后，计划被打乱时这个人的真实反应顺序是什么" },
+    { titleZh: "危机反弹能力", titleEn: "Crisis Rebound",
+      hint: "危机反弹能力：具体到这项分数背后，真正的低谷冲击来临时，这个人的启动方式是快还是慢、靠什么重新站起来" },
+    { titleZh: "长期坚持能力", titleEn: "Long-Term Persistence",
+      hint: "长期坚持能力：具体到这项分数背后，没有即时反馈的长期投入，这个人靠什么撑住" },
+    { titleZh: "精神稳定结构", titleEn: "Emotional Stability Structure",
+      hint: "精神稳定结构：具体到这项分数背后，这个人的内在稳定感来自哪里，波动之后靠什么回到中心" },
+    { titleZh: "隐藏恢复模式", titleEn: "Hidden Recovery Pattern",
+      hint: "隐藏恢复模式：结合五项分数中最高的那一项，具体指出这个人可能自己都没意识到、但确实在起作用的一种恢复方式" },
+    { titleZh: "能量消耗地图", titleEn: "Energy Drain Map",
+      hint: "能量消耗地图：结合五项分数中最低的那一项，具体指出哪种情境模式最容易悄悄消耗这个人的能量，不是泛泛地说\"过度思考\"这种通用词" },
+    { titleZh: "韧性进化路径", titleEn: "Resilience Growth Path",
+      hint: "韧性进化路径：不是变得更强，是让现有的力量形成系统——具体给出一件跟这个人最强项和最弱项相关的、可操作的小事" },
+    { titleZh: "灵犀场恢复实践", titleEn: "A Personal Recovery Practice",
+      hint: "灵犀场恢复实践：结合这个人具体的分数结构，给出一个具体、可执行的日常小练习（不是泛泛的\"多休息\"），说明为什么这个练习适合这个人" },
+    { titleZh: "生命韧性总结", titleEn: "Resilience Summary",
+      hint: "生命韧性总结：作为收尾，必须明确指向前面章节提到过的具体分数或具体判断，不能只靠情绪词收尾，用比较有画面感、克制、不煽情的语言" },
   ];
 }
 
@@ -64,13 +58,41 @@ function parseAndValidate(raw: string, count: number, finishReason?: string) {
   if (finishReason === "length" && sections.length > 0 && !endsCleanly(sections[sections.length - 1])) {
     sections = sections.slice(0, -1);
   }
-  const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 20 && endsCleanly(s));
+  const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 30 && endsCleanly(s));
   return { sections, valid };
 }
 
-async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, submissionId: string): Promise<{ sections: string[] | null; failReason?: string }> {
-  const system = baseVoice + `【这次只负责${batch.titleZh}这一部分，严格按下面的分段格式输出，共${batch.count}段，每段之间用===隔开，不能多也不能少】` + batch.instruction +
-    (lang === "en" ? " 用英文回复（Reply in English），但===数字===这些分隔符本身保持原样不要翻译。" : "");
+type Batch = { chapters: ChapterMeta[]; maxTokens: number };
+function buildBatches(chapters: ChapterMeta[]): Batch[] {
+  return [
+    { chapters: chapters.slice(0, 4), maxTokens: 3800 },
+    { chapters: chapters.slice(4, 8), maxTokens: 3800 },
+    { chapters: chapters.slice(8, 11), maxTokens: 3000 },
+  ];
+}
+
+function baseVoice(isLastBatch: boolean): string {
+  return (
+    "【你是谁，在用什么姿态说话】你是「灵犀场」，负责为已完成能量交换的人，写一份「生命韧性档案」——一份围绕\"恢复力、扎根、再生\"这个主题的完整报告，不是「你抗压能力几分」这种打分测评。" +
+    "下面给你的五项分数，是从这个人真实的出生信息确定性算出来的固定数字，不是你现场评判的——你的任务是围绕这些已经算出的具体分数，写出这个人的韧性结构具体是什么样、为什么是这样。" +
+    "语气：像一位真正见过很多人如何度过低谷的人在说话，判断要具体、要笃定，不要用\"你可能\"\"或许\"这类含糊限定词连续出现。" +
+    "【绝对不能写成\"打分测评\"】不要出现\"你的抗压能力是XX分，属于中等水平\"这种话——分数是拿来交叉引用、写出具体画面的原材料，不是拿来复述的结果。" +
+    "【防止空话——这是最容易出问题的地方】情绪浓度高、但没有具体信息量的句子，换给任何一个人念都成立，必须避免。每一句判断，都要能明确指向前面给你的某个具体分数或数据点。" +
+    (isLastBatch ? "【这一批最后一段是全篇收尾，尤其容易滑向空话】收尾段落必须明确指向前面提到过的具体分数或判断，不能只靠情绪词堆出力量感。" : "") +
+    "【格式规则，必须严格遵守】全文只能是纯文字段落，绝对不能使用任何markdown语法——不能出现**加粗**、#标题、-或*开头的列表符号。" +
+    "【绝对不能出现的最严重错误——逐字重复】同一句话、同一个段落，绝对不能在文中出现两次以上。" +
+    noAiRule
+  );
+}
+
+async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, isLastBatch: boolean, userContent: string, submissionId: string): Promise<{ sections: string[] | null; failReason?: string }> {
+  const instruction =
+    "严格按以下格式输出，" + batch.chapters.length + "个章节之间，各用一行「===数字===」分隔（数字从1开始），不要添加任何其他标题、开场白或结语：\n" +
+    batch.chapters.map((c, i) => `===${i + 1}===\n（${c.hint}，约220-260字）`).join("\n");
+
+  const system = baseVoice(isLastBatch) +
+    (lang === "en" ? "\n\n【IMPORTANT】Write your entire response in natural, fluent English (not Chinese), while keeping the exact ===N=== section markers." : "") +
+    "\n\n" + instruction;
 
   const callOnce = () =>
     fetch(ZHIPU_ENDPOINT, {
@@ -78,7 +100,7 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, submi
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
       body: JSON.stringify({
         model: process.env.ZHIPU_MODEL_FULL || "glm-4.7-flash",
-        messages: [{ role: "system", content: system }, { role: "user", content: "开始写这一部分。" }],
+        messages: [{ role: "system", content: system }, { role: "user", content: userContent }],
         max_tokens: batch.maxTokens, temperature: 0.85, frequency_penalty: 0.4, presence_penalty: 0.3,
       }),
     });
@@ -90,14 +112,14 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, submi
   }
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
-    console.error(`[resilience generate-full] ${batch.titleZh} 接口返回非200:`, res.status, errBody, "submission id:", submissionId);
+    console.error(`[resilience generate-full] 批次接口返回非200:`, res.status, errBody, "submission id:", submissionId);
     return { sections: null, failReason: `接口返回${res.status}：${errBody.slice(0, 200)}` };
   }
   let data = await res.json();
   let rawText = data?.choices?.[0]?.message?.content?.trim();
   let text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
   let finishReason = data?.choices?.[0]?.finish_reason;
-  let check = text ? parseAndValidate(text, batch.count, finishReason) : { sections: [], valid: false };
+  let check = text ? parseAndValidate(text, batch.chapters.length, finishReason) : { sections: [], valid: false };
 
   for (let retry = 0; retry < 2 && !check.valid; retry++) {
     res = await callOnce();
@@ -106,13 +128,13 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, submi
       rawText = data?.choices?.[0]?.message?.content?.trim();
       text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
       finishReason = data?.choices?.[0]?.finish_reason;
-      check = text ? parseAndValidate(text, batch.count, finishReason) : { sections: [], valid: false };
+      check = text ? parseAndValidate(text, batch.chapters.length, finishReason) : { sections: [], valid: false };
     } else {
       const errBody = await res.text().catch(() => "");
       return { sections: null, failReason: `重试时接口返回${res.status}：${errBody.slice(0, 200)}` };
     }
   }
-  if (!check.valid) return { sections: null, failReason: `多次重试后仍不完整，最后一次收到${check.sections.length}段，预期${batch.count}段` };
+  if (!check.valid) return { sections: null, failReason: `多次重试后仍不完整，最后一次收到${check.sections.length}段，预期${batch.chapters.length}段` };
   return { sections: check.sections };
 }
 
@@ -144,34 +166,38 @@ export async function POST(req: Request) {
   if (!REVIEW_MODE) {
     const { data: unlockRows } = await admin.from("unlocks").select("product_id, expires_at").eq("user_id", user!.id);
     const unlocked = (unlockRows ?? []).some(
-      (u) => u.product_id === "resilience-report" && (!u.expires_at || new Date(u.expires_at) > new Date())
+      (u: { product_id: string; expires_at: string | null }) => u.product_id === "resilience-report" && (!u.expires_at || new Date(u.expires_at) > new Date())
     );
     if (!unlocked) return NextResponse.json({ error: "尚未解锁完整报告。" }, { status: 402 });
   }
 
   const cachedField = lang === "en" ? "full_report_en" : "full_report";
-  if (submission[cachedField] && !body.regenerate) {
-    return NextResponse.json({ fullReport: submission[cachedField] });
-  }
-
   const facts = submission.facts;
   const vector = computeLifeVector(facts as LifeVectorInput);
   const resilience = calculateResilience(vector);
   const breakdown = resilience.breakdown as Record<string, number>;
-  const entries = Object.entries(breakdown);
-  const strongest = entries.reduce((a, b) => (b[1] > a[1] ? b : a))[0];
-  const weakest = entries.reduce((a, b) => (b[1] < a[1] ? b : a))[0];
+  const breakdownStr = Object.entries(breakdown).map(([k, v]) => `${DIM_ZH[k] ?? k}${v}分`).join("、");
+  const chapters = buildChapters(breakdownStr);
 
-  const batches = buildBatches({
-    score: resilience.score, breakdown, sunSignZh: facts.sunSignZh, dayMasterElement: facts.dayMasterElement,
-    strongest, weakest,
-  });
+  if (submission[cachedField] && !body.regenerate) {
+    const cachedText = submission[cachedField] as string;
+    const cachedCount = cachedText.split(/===\s*(?:\d+|SECTION)\s*===/).map((s: string) => s.trim()).filter(Boolean).length;
+    if (cachedCount >= 8) {
+      return NextResponse.json({ fullReport: cachedText });
+    }
+    // 少于8段，说明是升级前生成的旧版5段报告——不直接返回，往下走
+    // 重新按11章节生成一份新的。
+  }
 
+  const userContent =
+    `太阳星座：${facts.sunSignZh}\n八字日主五行：${facts.dayMasterElement}\n生命韧性总分：${resilience.score}\n五项分数：${breakdownStr}\n`;
+
+  const batches = buildBatches(chapters);
   const allSections: string[] = [];
-  for (const batch of batches) {
-    const result = await generateBatch(key, lang, batch, body.id);
+  for (let bi = 0; bi < batches.length; bi++) {
+    const result = await generateBatch(key, lang, batches[bi], bi === batches.length - 1, userContent, body.id);
     if (!result.sections) {
-      console.error("[resilience generate-full] 批次失败:", batch.titleZh, result.failReason, "submission id:", body.id);
+      console.error("[resilience generate-full] 批次失败:", result.failReason, "submission id:", body.id);
       return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 502 });
     }
     allSections.push(...result.sections);

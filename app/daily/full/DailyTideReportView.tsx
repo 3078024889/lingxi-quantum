@@ -9,7 +9,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 
-// v236：11章节，跟 app/api/resilience/generate-full/route.ts 里
+// v236：11章节，跟 app/api/daily-tide/generate-full/route.ts 里
 // buildChapters() 的顺序必须完全一致。
 const SECTION_TITLES = [
   { titleZh: "① 生命韧性源点", titleEn: "① Where Your Resilience Begins" },
@@ -25,7 +25,7 @@ const SECTION_TITLES = [
   { titleZh: "⑪ 生命韧性总结", titleEn: "⑪ Resilience Summary" },
 ];
 
-export default function ResilienceReportView({ id }: { id: string }) {
+export default function DailyTideReportView({ id }: { id: string }) {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
   const [status, setStatus] = useState<"checking" | "locked" | "ready" | "error">("checking");
@@ -40,7 +40,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
     const load = async () => {
       const supabase = createClient();
       const { data: submission } = await supabase
-        .from("resilience_submissions")
+        .from("daily_tide_submissions")
         .select("name")
         .eq("id", id)
         .single();
@@ -48,7 +48,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
 
       const currentLangEn = document.documentElement.classList.contains("lang-en");
       try {
-        const res = await fetch("/api/resilience/generate-full", {
+        const res = await fetch("/api/daily-tide/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh" }),
@@ -95,8 +95,8 @@ export default function ResilienceReportView({ id }: { id: string }) {
         reportTitleZh: `${name || "你的"}生命韧性档案`,
         reportTitleEn: `${name || "Your"} Life Resilience Archive`,
         chapterTitles: SECTION_TITLES,
-        bgColorRgb: [9, 37, 31],
-        bgColorHex: "#09251f",
+        bgColorRgb: [10, 20, 42],
+        bgColorHex: "#0a142a",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -109,12 +109,12 @@ export default function ResilienceReportView({ id }: { id: string }) {
   if (status === "checking") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <div className="rounded-sm border border-emerald-400/25 bg-void-deep px-6 py-10">
+        <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
           <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命韧性档案，第一次生成需要一点时间……", "The field is unfolding your full Resilience Archive — the first generation takes a little while…")}</p>
         </div>
         <style>{`
-          .lx-checking-glow { background: radial-gradient(circle, rgba(126,232,196,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
+          .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
           @keyframes lx-checking-breathe { 0%,100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 0.9; transform: scale(1.1); } }
           @media (prefers-reduced-motion: reduce) { .lx-checking-glow { animation: none !important; } }
         `}</style>
@@ -130,14 +130,14 @@ export default function ResilienceReportView({ id }: { id: string }) {
           onClick={unlock}
           className="mt-8 bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
         >
-          <Bi zh={`解锁完整档案 · ¥${getProduct("resilience-report")?.priceRmb}`} en={`Unlock Full Archive · ¥${getProduct("resilience-report")?.priceRmb}`} />
+          <Bi zh={`解锁完整档案 · ¥${getProduct("daily-tide-report")?.priceRmb}`} en={`Unlock Full Archive · ¥${getProduct("daily-tide-report")?.priceRmb}`} />
         </button>
         {error && <p className="mt-4 text-xs text-rose">{error}</p>}
         {showWechatPay && (
           <WechatPayModal
-            productId="resilience-report"
+            productId="daily-tide-report"
             submissionId={id}
-            priceRmb={getProduct("resilience-report")?.priceRmb ?? 0}
+            priceRmb={getProduct("daily-tide-report")?.priceRmb ?? 0}
             productName={{ zh: "生命韧性指数 · 完整档案", en: "Life Resilience Index · Full Archive" }}
             onClose={() => setShowWechatPay(false)}
             onSuccess={() => window.location.reload()}
@@ -158,13 +158,13 @@ export default function ResilienceReportView({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-6 py-4">
-        <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
           <Bi zh="灵犀场 · 生命韧性档案" en="Lingxi Field · Life Resilience Archive" />
         </p>
         <button
           onClick={downloadPdf}
           disabled={downloading}
-          className="flex shrink-0 items-center gap-2 rounded-sm border border-emerald-400/40 px-4 py-2 text-xs uppercase tracking-widest2 text-emerald-300 transition hover:border-emerald-300 hover:text-bone disabled:opacity-50"
+          className="flex shrink-0 items-center gap-2 rounded-sm border border-lattice/40 px-4 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone disabled:opacity-50"
         >
           {downloading ? <Bi zh="生成中…" en="Generating…" /> : <Bi zh="下载 PDF" en="Download PDF" />}
         </button>
@@ -173,7 +173,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
       <div ref={reportRef} className="mt-4">
         <div
           className="relative overflow-hidden rounded-sm"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/resilience-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/daily-tide-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
             <h1 className="font-display text-2xl font-light text-white" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.6)" }}>
@@ -183,7 +183,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
         </div>
 
         {sections.map((content, i) => {
-          const bg = `/images/resilience-full/page-${(i % 4) + 1}.jpg`;
+          const bg = `/images/daily-tide-full/page-${(i % 4) + 1}.jpg`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
             <div
@@ -192,7 +192,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
               style={{ backgroundColor: "#09251f", backgroundImage: `linear-gradient(rgba(9,37,31,0.55), rgba(9,37,31,0.55)), url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
               <div className="p-8">
-                <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300/90">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lattice/90">
                   <Bi zh={title.titleZh} en={title.titleEn} />
                 </p>
                 <p className="mt-4 whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
@@ -203,18 +203,18 @@ export default function ResilienceReportView({ id }: { id: string }) {
 
         <div
           className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/resilience-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/daily-tide-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
-            <Bi zh="生命会弯曲，生命会成长，生命会继续展开。" en="Life bends. Life grows. Life continues." />
+            <Bi zh="潮汐涨落，节奏自有其时，你与它同行。" en="Tides rise and fall in their own time — you move with them." />
           </p>
         </div>
       </div>
 
       <div className="mt-6 text-center">
         <ShareButton
-          text={t("我做了一份灵犀生命韧性档案，去看看你自己的：", "I got my Lingxi Life Resilience Archive — check out your own:")}
-          url="https://lingxifield.com/resilience"
+          text={t("我做了一份灵犀今日运势潮汐深度报告，去看看你自己的：", "I got my Lingxi Daily Fortune Tide report — check out your own:")}
+          url="https://lingxifield.com/daily"
           label={{ zh: "分享这份结果", en: "Share this result" }}
         />
       </div>

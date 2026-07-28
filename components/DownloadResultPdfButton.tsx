@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Bi from "./Bi";
 
-// 给服务端渲染的页面（今日场域测试、今日塔罗这类）用的下载按钮——这些
+// 给服务端渲染的页面（今日运势潮汐、今日塔罗这类）用的下载按钮——这些
 // 页面本身没有客户端state，没法用React ref拿到要截图的区域，改成
 // 传一个DOM id，点击的时候用document.getElementById现查，效果
 // 一样，但不需要把整个页面改成客户端组件。

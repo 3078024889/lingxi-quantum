@@ -124,11 +124,25 @@ export function tideLevel(phaseAngleDeg: number): number {
   return Math.round(50 + 50 * Math.cos(2 * rad));
 }
 
-export type NextTidePeak = { kind: "spring" | "neap"; daysAway: number; date: string };
+// v237：往后N天的潮汐强度——用astronomy-engine真实算出未来那一天的
+// 月相角度，再用同一套tideLevel公式换算。这是在往前算一个真实的、
+// 可验证的天文数值（月亮公转是确定的），不是编的。给"未来7/30/90天
+// 趋势"这几个付费章节用。
+export function tideLevelAt(daysFromNow: number, now: Date = new Date()): number {
+  const future = new Date(now.getTime() + daysFromNow * 86400000);
+  const angle = Astronomy.MoonPhase(future);
+  return tideLevel(angle);
+}
+
+export function futureTideSnapshot(now: Date = new Date()): { day7: number; day30: number; day90: number } {
+  return { day7: tideLevelAt(7, now), day30: tideLevelAt(30, now), day90: tideLevelAt(90, now) };
+}
 
 // 未来几天潮汐会怎么变——这是真实可预测的天文现象（月亮绕地球一圈
 // 的周期是确定的，不是占卜），可以放心往前推算，跟"预言你的人生"是
 //两回事：这里预测的是潮汐这个自然现象本身，不是这个人的命运。
+export type NextTidePeak = { kind: "spring" | "neap"; daysAway: number; date: string };
+
 export function nextTidePeak(now: Date = new Date()): NextTidePeak {
   // targetLon: 0=新月(大潮), 180=满月(大潮)——两个都搜，取更近的那个。
   const toNew = Astronomy.SearchMoonPhase(0, now, 30);

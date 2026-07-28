@@ -25,23 +25,52 @@ function useLang() {
   return langEn;
 }
 
-const SECTION_TITLES = [
-  { zh: "吸引来源", en: "Where the Attraction Comes From" },
-  { zh: "关系动力", en: "Relationship Dynamics" },
-  { zh: "冲突地图", en: "Conflict Map" },
-  { zh: "长期潜力", en: "Long-Term Potential" },
-  { zh: "成长方向", en: "Growth Direction" },
-];
-
-// v231：PDF设计文档给这个产品起的整体页面名字，作为每个章节的
-// 视觉小标题（原有的具体章节名——吸引来源/关系动力这些——保留
-// 在下面当副标题，不是替换掉，两者一起显示）。
-const REL_PAGE_NAMES = [
-  { zh: "双生命星图", en: "Dual Life Star Map" },
-  { zh: "关系轨道分析", en: "Orbit Connection" },
-  { zh: "共振能量织网", en: "Resonance Weave" },
-  { zh: "关系洞察", en: "Field Insight" },
-];
+// v235：升级成11章节结构，三种关系类型（亲密/商业/其他）各自一套
+// 独立的11个章节标题——必须跟 app/api/relationship/generate-full/
+// route.ts 里对应类型的 XXX_CHAPTERS 数组顺序完全一致，这些标题本身
+// 不是AI生成的，是固定结构（这就是"结构固定、秒开"的部分），下面
+// 具体每章写了什么才是AI现场生成、缓存后复用的部分。
+const CHAPTER_TITLES: Record<"romantic" | "business" | "general", { zh: string; en: string }[]> = {
+  romantic: [
+    { zh: "双生命星图", en: "Dual Life Star Map" },
+    { zh: "初始吸引来源", en: "Where the Attraction Began" },
+    { zh: "情绪连接模式", en: "Emotional Connection Pattern" },
+    { zh: "价值观共振地图", en: "Values Resonance Map" },
+    { zh: "沟通语言地图", en: "Communication Language Map" },
+    { zh: "冲突触发结构", en: "Conflict Trigger Structure" },
+    { zh: "关系成长路径", en: "Relationship Growth Path" },
+    { zh: "隐藏互补力量", en: "Hidden Complementary Strength" },
+    { zh: "长期共振潜力", en: "Long-Term Resonance Potential" },
+    { zh: "双生命未来叙事", en: "A Shared Future Narrative" },
+    { zh: "关系共振总结", en: "Resonance Summary" },
+  ],
+  business: [
+    { zh: "双创造者星图", en: "Dual Creator Star Map" },
+    { zh: "商业驱动力分析", en: "Business Drive Analysis" },
+    { zh: "能力互补结构", en: "Complementary Capability Structure" },
+    { zh: "决策模式地图", en: "Decision-Making Map" },
+    { zh: "资源连接地图", en: "Resource Connection Map" },
+    { zh: "风险冲突地图", en: "Risk & Conflict Map" },
+    { zh: "合作周期地图", en: "Partnership Cycle Map" },
+    { zh: "商业价值放大点", en: "Value Amplification Point" },
+    { zh: "团队角色定位", en: "Team Role Positioning" },
+    { zh: "长期共创模型", en: "Long-Term Co-Creation Model" },
+    { zh: "双创造者商业叙事", en: "A Shared Business Narrative" },
+  ],
+  general: [
+    { zh: "双生命连接图", en: "Dual Life Connection Map" },
+    { zh: "相遇主题", en: "The Theme of This Meeting" },
+    { zh: "互动模式", en: "Interaction Pattern" },
+    { zh: "信任建立方式", en: "How Trust Forms" },
+    { zh: "交流频率地图", en: "Communication Frequency Map" },
+    { zh: "差异理解地图", en: "Understanding the Differences" },
+    { zh: "支持关系结构", en: "Support Structure" },
+    { zh: "共同成长方向", en: "Shared Growth Direction" },
+    { zh: "关系边界地图", en: "Boundary Map" },
+    { zh: "深层连接价值", en: "Deeper Value of the Connection" },
+    { zh: "关系象征故事", en: "A Symbolic Story" },
+  ],
+};
 
 export default function RelationshipReportView({ id }: { id: string }) {
   const langEn = useLang();
@@ -75,17 +104,19 @@ export default function RelationshipReportView({ id }: { id: string }) {
       }
 
       const currentLangEn = document.documentElement.classList.contains("lang-en");
-      try {
-        const res = await fetch("/api/relationship/generate-full", {
+      const fetchReport = (regenerate: boolean) =>
+        fetch("/api/relationship/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh" }),
+          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate }),
         });
+      try {
+        let res = await fetchReport(false);
         if (res.status === 402) {
           setStatus("locked");
           return;
         }
-        const data = await res.json();
+        let data = await res.json();
         if (!res.ok || !data.fullReport) {
           setStatus("error");
           setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
@@ -93,10 +124,31 @@ export default function RelationshipReportView({ id }: { id: string }) {
         }
         // 兜底清理一层：老缓存可能是在"禁止markdown"这条规则加上去之前
         // 生成的，展示前再过滤一次星号，双保险。
-        const parts = stripMarkdownArtifacts(data.fullReport as string)
-          .split(/===\s*\d+\s*===/)
+        // v235：正则同时兼容旧的"===数字==="分隔符（升级前生成、还
+        // 缓存着的报告）和新的"===SECTION==="分隔符，不然老用户已经
+        // 付费生成过的报告，这次升级后会突然解析不出来、整段展示成
+        // 一大团文字。
+        let parts = stripMarkdownArtifacts(data.fullReport as string)
+          .split(/===\s*(?:\d+|SECTION)\s*===/)
           .map((s: string) => s.trim())
           .filter(Boolean);
+        // v235：升级前生成、缓存下来的报告只有5段——这次章节结构升级
+        // 到了11段，直接展示这份旧缓存会导致内容和新的11个章节标题
+        // 对不上（比如第6段的旧内容，被贴上新结构里"关系成长路径"
+        // 这个标签，其实完全是两回事）。检测到缓存明显偏短，就自动
+        // 触发一次重新生成，把这份报告升级成新结构，不用用户自己手动
+        // 点"重新生成"。
+        if (parts.length > 0 && parts.length < 8) {
+          console.error("[relationship report] 检测到旧版本缓存（" + parts.length + "段），自动升级为11章节新结构");
+          res = await fetchReport(true);
+          data = await res.json();
+          if (res.ok && data.fullReport) {
+            parts = stripMarkdownArtifacts(data.fullReport as string)
+              .split(/===\s*(?:\d+|SECTION)\s*===/)
+              .map((s: string) => s.trim())
+              .filter(Boolean);
+          }
+        }
         setSections(parts);
         if (data.resonance) setResonance(data.resonance);
         if (data.vectors) setVectors(data.vectors);
@@ -218,6 +270,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         ref={reportRef}
         className={printMode ? "rel-print-mode mt-8 px-1 py-4" : "mt-8 px-1 py-4"}
         style={{
+          backgroundColor: "#2a162e",
           backgroundImage: `linear-gradient(rgba(42,22,46,0.86), rgba(42,22,46,0.86)), url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.jpg)`,
           backgroundSize: "cover", backgroundPosition: "top center", backgroundAttachment: "local",
         }}
@@ -253,7 +306,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         )}
 
         {resonance && (
-          <div className="bg-void-deep mt-6 space-y-6 rounded-sm p-6">
+          <div className="lx-glass mt-6 space-y-6 p-6">
             {resonance.resonant.length > 0 && (
               <div>
                 <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="共鸣点 · 共享的驱动力" en="Resonance · Shared Drives" /></p>
@@ -296,23 +349,25 @@ export default function RelationshipReportView({ id }: { id: string }) {
         {sections.map((content, i) => {
           const isSeal = i === sections.length - 1;
           const folder = relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
-          const superTitle = REL_PAGE_NAMES[i];
+          // v235：11个章节，只有4张正文背景图（page-1到page-4，page-0是
+          // 封面、page-5留给封印页）可以循环用——不用为每个章节单独画
+          // 一张图，效果上仍然是"连续几页不会背景完全一样"（4张轮流），
+          // 跟之前讨论的"背景图不够就轮换用"是同一个思路。
+          const bgIndex = isSeal ? 5 : (i % 4) + 1;
+          const relKey: "romantic" | "business" | "general" = relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
+          const chapterTitle = CHAPTER_TITLES[relKey][i];
           return (
             <div
               key={i}
               className="relative mt-6 overflow-hidden rounded-sm p-6"
               style={{
-                backgroundImage: `linear-gradient(rgba(42,22,46,0.84), rgba(42,22,46,0.84)), url(/images/relationship-full/${folder}/page-${isSeal ? 5 : i + 1}.jpg)`,
+                backgroundColor: "#2a162e",
+                backgroundImage: `linear-gradient(rgba(42,22,46,0.84), rgba(42,22,46,0.84)), url(/images/relationship-full/${folder}/page-${bgIndex}.jpg)`,
                 backgroundSize: "cover", backgroundPosition: "center",
               }}
             >
-              {superTitle && (
-                <p className="mb-2 text-center text-[11px] uppercase tracking-widest2 text-rose/85">
-                  <Bi zh={superTitle.zh} en={superTitle.en} />
-                </p>
-              )}
               <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
-                {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
+                {String(i + 1).padStart(2, "0")} · <Bi zh={chapterTitle?.zh ?? ""} en={chapterTitle?.en ?? ""} />
               </p>
               <div className="mt-3 whitespace-pre-line text-base leading-9 text-bone-dim">{stripMarkdownArtifacts(content)}</div>
               {isSeal && (
@@ -326,7 +381,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           );
         })}
 
-        <div className="bg-void-deep mt-6 rounded-sm p-5 text-center">
+        <div className="lx-glass mt-6 p-5 text-center">
           <p className="text-sm text-bone-dim/90">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言——关系的走向，始终由两个人共同选择。" en="This is a reference for reflection, not a prophecy about your relationship — its course is always shaped by both people, together." />
           </p>
@@ -378,7 +433,7 @@ function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: 
   });
 
   return (
-    <div className="rounded-sm border border-bone/10 bg-void-deep p-5 backdrop-blur-xl">
+    <div className="lx-glass p-5">
       <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="生命向量对比" en="Life Vector Comparison" /></p>
       <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
         <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-56 w-56 shrink-0">

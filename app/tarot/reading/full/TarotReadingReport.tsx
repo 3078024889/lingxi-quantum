@@ -10,29 +10,30 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 
+// v237：12段合并成11段——财富创造地图+事业使命地图合并成"价值创造
+// 地图"，三张牌（hidden/present/future）的具体解析内容完全没动。
 const LAYER_TITLES = [
   { zh: "① 灵犀场连接声明", en: "① Field Connection Statement" },
   { zh: "② 潜意识镜像深度解析", en: "② Hidden Pattern Deep Dive" },
   { zh: "③ 当下共振深度解析", en: "③ Present Resonance Deep Dive" },
   { zh: "④ 未来展开深度解析", en: "④ Future Possibility Deep Dive" },
   { zh: "⑤ 三牌联合生命公式", en: "⑤ The Three-Card Life Formula" },
-  { zh: "⑥ 财富创造地图", en: "⑥ Wealth Creation Map" },
+  { zh: "⑥ 价值创造地图", en: "⑥ Value Creation Map" },
   { zh: "⑦ 关系生命地图", en: "⑦ Relationship Life Map" },
-  { zh: "⑧ 事业使命地图", en: "⑧ Career & Mission Map" },
-  { zh: "⑨ 当前生命阶段", en: "⑨ Current Life Stage" },
-  { zh: "⑩ 灵犀场成长路径", en: "⑩ Growth Path" },
-  { zh: "⑪ 给未来自己的信", en: "⑪ A Letter to Your Future Self" },
-  { zh: "⑫ 生命关键词", en: "⑫ Your Life Keywords" },
+  { zh: "⑧ 当前生命映射", en: "⑧ Current Life Mapping" },
+  { zh: "⑨ 灵犀场实践", en: "⑨ A Personal Practice" },
+  { zh: "⑩ 给未来自己的信", en: "⑩ A Letter to Your Future Self" },
+  { zh: "⑪ 生命关键词", en: "⑪ Your Life Keywords" },
 ];
 
-// v231：正文分组——12段内容原样保留，按PDF设计文档的6页结构重新
-// 分组：能量晶片展开（连接声明+三张牌解析）、意识波谱（联合公式+
+// v231：正文分组——按PDF设计文档的6页结构重新分组（v237更新为11段
+// 后的新索引）：能量晶片展开（连接声明+三张牌解析）、意识波谱（联合公式+
 // 财富+关系+事业）、量子洞察（生命阶段+成长路径），封印页（信+
 // 关键词）单独处理。
 const TAROT_PAGE_GROUPS = [
   { titleZh: "能量晶片展开", titleEn: "Energy Chip Unfolding", bg: "page-2", indices: [0, 1, 2, 3] },
-  { titleZh: "意识波谱", titleEn: "Consciousness Spectrum", bg: "page-3", indices: [4, 5, 6, 7] },
-  { titleZh: "量子洞察", titleEn: "Quantum Insight", bg: "page-4", indices: [8, 9] },
+  { titleZh: "意识波谱", titleEn: "Consciousness Spectrum", bg: "page-3", indices: [4, 5, 6] },
+  { titleZh: "量子洞察", titleEn: "Quantum Insight", bg: "page-4", indices: [7, 8] },
 ];
 
 type FrequencyItem = { key: string; zh: string; en: string; score: number };
@@ -75,28 +76,42 @@ export default function TarotReadingReport({ id }: { id: string }) {
       }
 
       const currentLangEn = document.documentElement.classList.contains("lang-en");
-      try {
-        const res = await fetch("/api/tarot/reading/generate-full", {
+      const fetchReport = (regenerate: boolean) =>
+        fetch("/api/tarot/reading/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh" }),
+          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate }),
         });
+      try {
+        let res = await fetchReport(false);
         if (res.status === 402) {
           setStatus("locked");
           return;
         }
-        const data = await res.json();
+        let data = await res.json();
         if (!res.ok || !data.fullReport) {
           setStatus("error");
           setError((data.error || t("生成失败，请稍后再试。", "Generation failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
           return;
         }
-        setSections(
-          (data.fullReport as string)
-            .split(/===\s*\d+\s*===/)
-            .map((s: string) => s.trim())
-            .filter(Boolean)
-        );
+        let parts = (data.fullReport as string)
+          .split(/===\s*\d+\s*===/)
+          .map((s: string) => s.trim())
+          .filter(Boolean);
+        // v237：升级前生成的旧缓存是12段（价值创造地图之前还没合并），
+        // 检测到段数偏多，自动重新生成成新的11段结构。
+        if (parts.length > 11) {
+          console.error("[tarot report] 检测到旧版本缓存（" + parts.length + "段），自动升级为11章节新结构");
+          res = await fetchReport(true);
+          data = await res.json();
+          if (res.ok && data.fullReport) {
+            parts = (data.fullReport as string)
+              .split(/===\s*\d+\s*===/)
+              .map((s: string) => s.trim())
+              .filter(Boolean);
+          }
+        }
+        setSections(parts);
         if (Array.isArray(data.frequencyMap)) setFrequencyMap(data.frequencyMap);
         setStatus("ready");
       } catch {
@@ -125,7 +140,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       const chapterTitles = [
         ...(frequencyMap.length > 0 ? [{ titleZh: "量子意识矩阵", titleEn: "Quantum Consciousness Matrix" }] : []),
         ...TAROT_PAGE_GROUPS.map((g) => ({ titleZh: g.titleZh, titleEn: g.titleEn })),
-        ...(sections.length >= 12 ? [{ titleZh: "量子封印页", titleEn: "Quantum Seal" }] : []),
+        ...(sections.length >= 11 ? [{ titleZh: "量子封印页", titleEn: "Quantum Seal" }] : []),
       ];
       await exportGlassPdf({
         containerRef: reportRef.current,
@@ -217,7 +232,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {/* 封面——LOGO+标题+已揭示的三张牌，就是封面本身，不需要另外
           设计一张专门的封面插画。这个区块本身是reportRef的第一个
           直接子元素，PDF导出会把它当成独立的一页/一个章节截图。 */}
-      <div className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center" style={{ backgroundImage: "linear-gradient(rgba(24,16,48,0.72), rgba(24,16,48,0.72)), url(/images/tarot-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
+      <div className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center" style={{ backgroundColor: "#181030", backgroundImage: "linear-gradient(rgba(24,16,48,0.72), rgba(24,16,48,0.72)), url(/images/tarot-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
         <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice/70">
@@ -263,7 +278,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {frequencyMap.length > 0 && (
         <div
           className="relative mt-8 overflow-hidden rounded-sm border border-white/10 p-6"
-          style={{ backgroundImage: "linear-gradient(rgba(24,16,48,0.8), rgba(24,16,48,0.8)), url(/images/tarot-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundColor: "#181030", backgroundImage: "linear-gradient(rgba(24,16,48,0.8), rgba(24,16,48,0.8)), url(/images/tarot-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="text-center text-xs uppercase tracking-widest2 text-lattice/90">
             <Bi zh="量子意识矩阵 · Quantum Consciousness Matrix" en="Quantum Consciousness Matrix" />
@@ -288,7 +303,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
         <div
           key={gi}
           className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
-          style={{ backgroundImage: `linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundColor: "#181030", backgroundImage: `linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-lattice/90">
             <Bi zh={group.titleZh} en={group.titleEn} />
@@ -308,14 +323,14 @@ export default function TarotReadingReport({ id }: { id: string }) {
         </div>
       ))}
 
-      {(sections[10] || sections[11]) && (
+      {(sections[9] || sections[10]) && (
         <div
           className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
-          style={{ backgroundImage: "linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundColor: "#181030", backgroundImage: "linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
-          {[10, 11].map((idx) =>
+          {[9, 10].map((idx) =>
             sections[idx] ? (
-              <div key={idx} className={idx !== 10 ? "mt-6 border-t border-white/10 pt-5" : ""}>
+              <div key={idx} className={idx !== 9 ? "mt-6 border-t border-white/10 pt-5" : ""}>
                 {LAYER_TITLES[idx] && (
                   <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
                     <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />

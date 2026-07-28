@@ -9,12 +9,20 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 
+// v236：11章节，跟 app/api/romance/generate-full/route.ts 里
+// buildChapters() 的顺序必须完全一致。
 const SECTION_TITLES = [
-  { titleZh: "① 吸引力核心图", titleEn: "① Attraction Core" },
-  { titleZh: "② 磁场频率光谱", titleEn: "② Magnetic Spectrum" },
-  { titleZh: "③ 吸引能量花瓣", titleEn: "③ Attraction Petals" },
-  { titleZh: "④ 磁场洞察", titleEn: "④ Field Insight" },
-  { titleZh: "⑤ 磁场印记", titleEn: "⑤ Field Signature" },
+  { titleZh: "① 桃花磁场源点", titleEn: "① Where Your Field Begins" },
+  { titleZh: "② 吸引力类型", titleEn: "② Attraction Type" },
+  { titleZh: "③ 情感表达模式", titleEn: "③ Emotional Expression Pattern" },
+  { titleZh: "④ 关系需求地图", titleEn: "④ Relationship Needs Map" },
+  { titleZh: "⑤ 隐藏魅力节点", titleEn: "⑤ Hidden Charm Point" },
+  { titleZh: "⑥ 关系互动模式", titleEn: "⑥ Relationship Interaction Pattern" },
+  { titleZh: "⑦ 吸引力成长方向", titleEn: "⑦ Attraction Growth Direction" },
+  { titleZh: "⑧ 情感阻碍地图", titleEn: "⑧ Emotional Obstacle Map" },
+  { titleZh: "⑨ 理想连接模式", titleEn: "⑨ Ideal Connection Style" },
+  { titleZh: "⑩ 桃花磁场故事", titleEn: "⑩ A Symbolic Story" },
+  { titleZh: "⑪ 桃花磁场总结", titleEn: "⑪ Field Summary" },
 ];
 
 export default function RomanceReportView({ id }: { id: string }) {
@@ -57,7 +65,8 @@ export default function RomanceReportView({ id }: { id: string }) {
         }
         setSections((data.fullReport as string).split("===SECTION===").map((s) => s.trim()).filter(Boolean));
         setStatus("ready");
-      } catch {
+      } catch (e) {
+        console.error("[report view] 请求失败:", e);
         setStatus("error");
         setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       }
@@ -174,13 +183,13 @@ export default function RomanceReportView({ id }: { id: string }) {
         </div>
 
         {sections.map((content, i) => {
-          const bg = i % 2 === 0 ? "/images/lifemap/content-bg-1.jpg" : "/images/lifemap/content-bg-2.jpg";
+          const bg = `/images/romance-full/page-${(i % 4) + 1}.jpg`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
             <div
               key={i}
               className="relative mt-4 overflow-hidden rounded-sm"
-              style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
+              style={{ backgroundColor: "#2c1420", backgroundImage: `linear-gradient(rgba(44,20,32,0.55), rgba(44,20,32,0.55)), url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
               <div className="p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-rose/90">
