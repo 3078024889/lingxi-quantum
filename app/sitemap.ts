@@ -1,10 +1,33 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 import { NARRATIVES } from "@/lib/narratives";
 import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
 
-const SITE = "https://lingxifield.com";
+export const dynamic = "force-dynamic";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// v250：之前这里写死SITE = "https://lingxifield.com"，但lingxifield.cn
+// 也在通过阿里云CDN提供同一套内容——搜索引擎的sitemap协议要求，一份
+// sitemap里列出的网址，必须跟这份sitemap文件自己所在的域名一致，
+// 不能跨域名列（这是sitemaps.org规范本身的要求，不是某家搜索引擎
+// 特别刁难）。之前.cn那边访问 /sitemap.xml，看到的却全是.com开头的
+// 网址，Google报"站点地图地址无效"、必应报"源URL不是网站的一部分"，
+// 都是在说这同一件事。这次改成：sitemap生成的时候，读取这次请求
+// 实际是从哪个域名进来的，就用哪个域名生成里面的网址——.com访问看到
+// 全部是.com的链接，.cn访问看到全部是.cn的链接，两边都能各自通过
+// 校验。
+async function resolveSite(): Promise<string> {
+  try {
+    const h = await headers();
+    const host = h.get("host") || "";
+    if (host.includes("lingxifield.cn")) return "https://lingxifield.cn";
+  } catch {
+    // headers() 在某些静态预渲染场景下可能不可用，安全兜底回退到.com
+  }
+  return "https://lingxifield.com";
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const SITE = await resolveSite();
   const routes = [
     "", "/learn",
     "/learn/manifestation", "/learn/manifestation-methods", "/learn/manifestation-not-working",
