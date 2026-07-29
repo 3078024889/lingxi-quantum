@@ -33,7 +33,6 @@ function CheckoutInner() {
   const redirectTo = params.get("redirect") ?? "/account/orders";
   const product = getProduct(productId);
 
-  const [method, setMethod] = useState<"wechat" | "alipay">("wechat");
   const [status, setStatus] = useState<PayStatus>("form");
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [error, setError] = useState("");
@@ -74,7 +73,6 @@ function CheckoutInner() {
   }, []);
 
   const submitOrder = async () => {
-    if (method !== "wechat") return; // 支付宝还没接，理论上按钮已经disabled，这里再兜底一次
     setStatus("creating");
     setError("");
     try {
@@ -107,6 +105,19 @@ function CheckoutInner() {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
     }
   };
+
+  // v257：照参考站点的样子——进页面就直接生成、展示二维码，不用先点
+  // 一次"提交订单"再等二维码出来，少一步操作。只有productId真的能
+  // 找到对应产品时才自动下单，避免productId传错的时候白白创建一笔
+  // 没用的订单。
+  const autoStarted = useRef(false);
+  useEffect(() => {
+    if (product && !autoStarted.current) {
+      autoStarted.current = true;
+      submitOrder();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
 
   useEffect(() => {
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
@@ -144,50 +155,36 @@ function CheckoutInner() {
         </div>
       </div>
 
-      {status === "form" && (
-        <>
-          {/* 支付方式选择 */}
-          <div className="mt-6">
-            <p className="text-xs uppercase tracking-widest2 text-bone-dim"><Bi zh="选择支付方式" en="Choose Payment Method" /></p>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setMethod("wechat")}
-                className={`rounded-sm border p-4 text-center transition ${method === "wechat" ? "border-lattice bg-lattice/10 text-lattice" : "border-white/15 text-bone-dim hover:border-white/30"}`}
-              >
-                <p className="font-display text-sm"><Bi zh="微信支付" en="WeChat Pay" /></p>
-              </button>
-              <button
-                disabled
-                title={t("即将上线", "Coming soon")}
-                className="cursor-not-allowed rounded-sm border border-white/10 p-4 text-center text-bone-dim/40"
-              >
-                <p className="font-display text-sm"><Bi zh="支付宝" en="Alipay" /></p>
-                <p className="mt-1 text-[10px] uppercase tracking-widest2"><Bi zh="即将上线" en="Coming Soon" /></p>
-              </button>
-            </div>
-          </div>
-
-          <button
-            onClick={submitOrder}
-            className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
-          >
-            <Bi zh="提交订单" en="Submit Order" />
-          </button>
-        </>
-      )}
-
       {status === "creating" && (
         <p className="mt-10 text-center text-sm text-bone-dim"><Bi zh="正在生成二维码……" en="Generating QR code…" /></p>
       )}
 
       {status === "waiting" && qrDataUrl && (
-        <div className="mt-8 text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto h-56 w-56 rounded-sm bg-white p-2" />
-          <p className="mt-4 text-xs text-bone-dim">
+        <div className="mt-8">
+          <p className="text-center text-xs uppercase tracking-widest2 text-bone-dim">
+            <Bi zh="使用微信/支付宝扫码付款" en="Scan with WeChat or Alipay to Pay" />
+          </p>
+          {/* 两个码并排放，照参考图那样——微信是真的能扫的码；支付宝
+              这一格没有真的二维码，是个占位说明，不会假装能扫。 */}
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            <div className="text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto h-48 w-48 rounded-sm bg-white p-2" />
+              <p className="mt-2 text-xs text-lattice">
+                <Bi zh="✓ 微信支付" en="✓ WeChat Pay" />
+              </p>
+            </div>
+            <div className="flex flex-col items-center justify-center rounded-sm border border-dashed border-white/15 p-4">
+              <p className="text-4xl text-bone-dim/20">支</p>
+              <p className="mt-2 text-xs text-bone-dim/50">
+                <Bi zh="支付宝 · 即将上线" en="Alipay · Coming Soon" />
+              </p>
+            </div>
+          </div>
+          <p className="mt-4 text-center text-xs text-bone-dim">
             <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
           </p>
-          <p className="mt-1 text-xs text-bone-dim/70">
+          <p className="mt-1 text-center text-xs text-bone-dim/70">
             <Bi
               zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
               en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
@@ -215,7 +212,15 @@ function CheckoutInner() {
       )}
 
       {status === "error" && (
-        <p className="mt-10 text-center text-sm text-rose">{error}</p>
+        <div className="mt-10 text-center">
+          <p className="text-sm text-rose">{error}</p>
+          <button
+            onClick={submitOrder}
+            className="mt-4 border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice"
+          >
+            <Bi zh="重新生成二维码" en="Try Again" />
+          </button>
+        </div>
       )}
     </div>
   );
