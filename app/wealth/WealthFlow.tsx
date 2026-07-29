@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
@@ -44,13 +45,13 @@ export default function WealthFlow() {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
 
+  const [name, setName] = useState("");
   const [year, setYear] = useState(""); const [month, setMonth] = useState(""); const [day, setDay] = useState("");
   const [hour, setHour] = useState(""); const [minute, setMinute] = useState(""); const [hasTime, setHasTime] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [result, setResult] = useState<WealthResult | null>(null);
   const [error, setError] = useState("");
 
-  const [unlockName, setUnlockName] = useState("");
   const [unlocking, setUnlocking] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [showWechatPay, setShowWechatPay] = useState(false);
@@ -101,7 +102,7 @@ export default function WealthFlow() {
         body: JSON.stringify({
           year: parseInt(year, 10), month: parseInt(month, 10), day: parseInt(day, 10),
           hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0,
-          hasTime, name: unlockName,
+          hasTime, name,
         }),
       });
       const data = await res.json();
@@ -136,7 +137,12 @@ export default function WealthFlow() {
           />
         </p>
 
-        <div className="mt-6 flex items-center justify-center gap-2">
+        <input
+          type="text" value={name} onChange={(e) => setName(e.target.value)}
+          placeholder={t("你的名字（选填）", "Your name (optional)")}
+          className="mt-6 w-full rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-amber/60"
+        />
+        <div className="mt-3 flex items-center justify-center gap-2">
           <input type="number" value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Y")} className="w-20 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />
           <input type="number" value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "M")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />
           <input type="number" value={day} onChange={(e) => setDay(e.target.value)} placeholder={t("日", "D")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />
@@ -197,14 +203,21 @@ export default function WealthFlow() {
               ))}
             </div>
 
-            <input
-              type="text" value={unlockName} onChange={(e) => setUnlockName(e.target.value)}
-              placeholder={t("你的名字（选填）", "Your name (optional)")}
-              className="mt-6 w-full rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-amber/60"
-            />
             <button onClick={unlock} disabled={unlocking} className="mt-4 flex w-full items-center justify-center gap-2 bg-amber py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50">
               {unlocking ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`展开完整财富创造地图 · ¥${getProduct("wealth-report")?.priceRmb}`} en={`Unfold the Full Wealth Map · $${getProduct("wealth-report")?.priceUsd}`} />}
             </button>
+
+            <div className="mt-6 border-t border-white/10 pt-6 text-center">
+              <p className="text-xs leading-6 text-bone-dim/85">
+                <Bi
+                  zh="地图看见的是你的创造结构；真正让价值落地，还需要一份持续的对齐与连贯——这是「意识显化」在做的事。"
+                  en="The map shows your creative structure — but landing that value in reality takes ongoing alignment and coherence. That's what Consciousness Manifestation is for."
+                />
+              </p>
+              <Link href="/live-as" className="mt-3 inline-block border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:bg-lattice hover:text-void-deep">
+                <Bi zh="了解意识显化 →" en="Explore Consciousness Manifestation →" />
+              </Link>
+            </div>
           </div>
         )}
 
