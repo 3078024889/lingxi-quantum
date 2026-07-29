@@ -362,7 +362,7 @@ export default function ResilienceFlow() {
       <div className="mx-auto mt-6 max-w-xl px-6">
         <div
           className="lx-glass p-6 text-center"
-          style={{ backgroundImage: "linear-gradient(rgba(9,37,31,0.62), rgba(9,37,31,0.62)), url(/images/resilience-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundImage: "linear-gradient(rgba(9,37,31,0.38), rgba(9,37,31,0.38)), url(/images/resilience-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300">
             <Bi zh="想看得更深？" en="Want to go deeper?" />

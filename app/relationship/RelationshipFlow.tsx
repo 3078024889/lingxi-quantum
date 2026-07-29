@@ -348,7 +348,7 @@ export default function RelationshipFlow() {
         <div
           className="lx-glass mt-8 p-6"
           style={{
-            backgroundImage: `linear-gradient(rgba(20,16,30,0.62), rgba(20,16,30,0.62)), url(/images/relationship-full/${relationshipType}/page-0.jpg)`,
+            backgroundImage: `linear-gradient(rgba(20,16,30,0.38), rgba(20,16,30,0.38)), url(/images/relationship-full/${relationshipType}/page-0.jpg)`,
             backgroundSize: "cover", backgroundPosition: "center",
           }}
         >

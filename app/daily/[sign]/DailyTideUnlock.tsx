@@ -85,7 +85,10 @@ export default function DailyTideUnlock() {
   };
 
   return (
-    <div className="lx-glass mt-6 p-6 text-center">
+    <div
+      className="lx-glass mt-6 p-6 text-center"
+      style={{ backgroundImage: "linear-gradient(rgba(10,20,42,0.38), rgba(10,20,42,0.38)), url(/images/daily-tide-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+    >
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
         <Bi zh="想看得更深？" en="Want to go deeper?" />
       </p>

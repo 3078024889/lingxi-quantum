@@ -73,6 +73,24 @@ export default function AboutPage() {
               />
             </p>
           </section>
+
+          <section>
+            <h2 className="font-display text-xl text-bone">
+              <Bi zh="联系我们" en="Contact Us" />
+            </h2>
+            <p className="mt-3">
+              <Bi zh="有任何问题、反馈或合作意向，欢迎通过以下方式联系：" en="For any questions, feedback, or partnership inquiries, feel free to reach us through:" />
+            </p>
+            <div className="mt-4 space-y-2 text-sm">
+              <p><Bi zh="官方邮箱：" en="Official email:" /></p>
+              <p>support@lingxifield.com</p>
+              <p>business@lingxifield.com</p>
+              <p>contact@lingxifield.com</p>
+              <p className="pt-2"><Bi zh="官方网站：" en="Official website:" /></p>
+              <p>https://lingxifield.com</p>
+              <p>https://lingxifield.cn</p>
+            </div>
+          </section>
         </div>
         <div className="mt-16">
           <FaqSection items={ABOUT_FAQ} />

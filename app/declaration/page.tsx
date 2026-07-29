@@ -206,6 +206,7 @@ export default function DeclarationPage() {
                   <p>contact@lingxifield.com</p>
                   <p className="pt-2"><Bi zh="官方网站：" en="Official website:" /></p>
                   <p>https://lingxifield.com</p>
+                  <p>https://lingxifield.cn</p>
                   <p className="pt-2"><Bi zh="官方 X：" en="Official X:" /></p>
                   <a
                     href="https://x.com/lingxifield?s=11"

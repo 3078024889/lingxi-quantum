@@ -251,7 +251,10 @@ export default function TarotReadingFlow() {
         ))}
       </div>
 
-      <div className="mt-8 rounded-sm border border-amber/25 bg-amber/5 p-6 text-center">
+      <div
+        className="mt-8 rounded-sm border border-amber/25 p-6 text-center"
+        style={{ backgroundImage: "linear-gradient(rgba(24,16,48,0.5), rgba(24,16,48,0.5)), url(/images/tarot-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+      >
         <p className="text-sm leading-7 text-bone-dim">
           <Bi
             zh="三张牌展示的是生命结构的三个切面，但真正隐藏的信息，存在于它们之间的关系。场域将结合你的完整生命图谱，解析：为什么这三张牌会同时出现，它们与你的人生阶段如何对应，以及正在等待你觉察的生命主题。"

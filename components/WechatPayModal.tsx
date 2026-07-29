@@ -28,8 +28,46 @@ export default function WechatPayModal({
   const [status, setStatus] = useState<"creating" | "waiting" | "error">("creating");
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [error, setError] = useState("");
+  const [checkingNow, setCheckingNow] = useState(false);
   const orderIdRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const doneRef = useRef(false);
+
+  // v251：真实问题——之前只靠一个每3秒跑一次的setInterval去检测"付了
+  // 没"，但手机浏览器对切到后台、离开太久的标签页，经常会暂停里面的
+  // 定时器。v244那次为了解决扫码识别问题，专门加了"长按保存到相册、
+  // 切到微信App扫一扫识别"这条路径——这恰好意味着用户会离开这个页面
+  // 所在的标签页去完成支付，付完款切回来的时候，那个定时器可能已经
+  // 被浏览器暂停了，没能及时发现支付成功。这里补一个"页面重新变为可见
+  // 时，立刻主动查一次"的监听，不用等定时器自己恢复；另外加一个手动
+  // 按钮兜底，万一自动检测两条路都没赶上，用户自己点一下也能确认。
+  const checkPaidOnce = async (manual = false) => {
+    if (!orderIdRef.current || doneRef.current) return;
+    if (manual) setCheckingNow(true);
+    try {
+      const qRes = await fetch(`/api/pay/wechat/query?orderId=${orderIdRef.current}`);
+      const qData = await qRes.json();
+      if (qData.paid && !doneRef.current) {
+        doneRef.current = true;
+        if (pollRef.current) clearInterval(pollRef.current);
+        onSuccess();
+      } else if (manual) {
+        setError("");
+      }
+    } catch {
+      // 单次查询失败不用管，下一次再试就行。
+    } finally {
+      if (manual) setCheckingNow(false);
+    }
+  };
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") checkPaidOnce();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, []);
 
   useEffect(() => {
     const createOrder = async () => {
@@ -72,19 +110,7 @@ export default function WechatPayModal({
         setQrDataUrl(dataUrl);
         setStatus("waiting");
 
-        pollRef.current = setInterval(async () => {
-          if (!orderIdRef.current) return;
-          try {
-            const qRes = await fetch(`/api/pay/wechat/query?orderId=${orderIdRef.current}`);
-            const qData = await qRes.json();
-            if (qData.paid) {
-              if (pollRef.current) clearInterval(pollRef.current);
-              onSuccess();
-            }
-          } catch {
-            // 单次轮询失败不用管，下一次再试就行。
-          }
-        }, 3000);
+        pollRef.current = setInterval(() => { checkPaidOnce(); }, 3000);
       } catch (e) {
         setStatus("error");
         setError(e instanceof Error ? e.message : "连接场域时出错");
@@ -129,6 +155,13 @@ export default function WechatPayModal({
                 en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
               />
             </p>
+            <button
+              onClick={() => checkPaidOnce(true)}
+              disabled={checkingNow}
+              className="mt-4 w-full border border-lattice/30 py-2.5 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice disabled:opacity-50"
+            >
+              {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下" en="I've paid — check now" />}
+            </button>
           </>
         )}
 

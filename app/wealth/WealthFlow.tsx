@@ -126,14 +126,17 @@ export default function WealthFlow() {
 
   return (
     <div className="mx-auto max-w-xl px-6">
-      <div className="lx-glass p-6" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.62), rgba(20,16,10,0.62)), url(/images/wealth-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
+      <div className="lx-glass p-6" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.38), rgba(20,16,10,0.38)), url(/images/wealth-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
         <p className="text-center font-display text-sm uppercase tracking-widest2 text-amber">
           <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
         </p>
-        <p className="mt-3 text-center text-sm leading-7 text-bone-dim">
+        <p className="mt-2 text-center text-xs uppercase tracking-widest2 text-bone-dim/70">
+          <Bi zh="找到你与生俱来的财富创造方式" en="Find the wealth-creation way you were born with" />
+        </p>
+        <p className="mt-4 text-center text-sm leading-7 text-bone-dim">
           <Bi
-            zh="不是预测你会不会发财，是探索你如何发现价值、创造价值、交换价值——你携带而来的那种独特创造方式。"
-            en="Not a prediction of whether you'll get rich — an exploration of how you discover, create, and exchange value, in the specific way you're built to."
+            zh="财富不是简单的数字。它来自你如何发现机会、如何创造价值、如何连接资源、如何让你的能力进入现实世界——这份地图不是预测你会不会发财，是探索你携带而来的那种独特创造方式。"
+            en="Wealth isn't just a number. It comes from how you spot opportunity, create value, connect resources, and bring your ability into the real world — this map isn't a prediction of whether you'll get rich, it's an exploration of the specific way you're built to create."
           />
         </p>
 
@@ -204,7 +207,7 @@ export default function WealthFlow() {
             </div>
 
             <button onClick={unlock} disabled={unlocking} className="mt-4 flex w-full items-center justify-center gap-2 bg-amber py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50">
-              {unlocking ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`展开完整财富创造地图 · ¥${getProduct("wealth-report")?.priceRmb}`} en={`Unfold the Full Wealth Map · $${getProduct("wealth-report")?.priceUsd}`} />}
+              {unlocking ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`开启我的财富创造档案 · ¥${getProduct("wealth-report")?.priceRmb}`} en={`Open My Wealth Creation Archive · $${getProduct("wealth-report")?.priceUsd}`} />}
             </button>
 
             <div className="mt-6 border-t border-white/10 pt-6 text-center">

@@ -332,7 +332,7 @@ export default function RomanceFlow() {
       <div className="mx-auto mt-6 max-w-xl px-6">
         <div
           className="rounded-sm border border-rose/25 p-6 text-center"
-          style={{ backgroundColor: "#2c1420", backgroundImage: "linear-gradient(rgba(44,20,32,0.62), rgba(44,20,32,0.62)), url(/images/romance-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ backgroundColor: "#2c1420", backgroundImage: "linear-gradient(rgba(44,20,32,0.38), rgba(44,20,32,0.38)), url(/images/romance-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="font-display text-sm uppercase tracking-widest2 text-rose">
             <Bi zh="想看得更深？" en="Want to go deeper?" />

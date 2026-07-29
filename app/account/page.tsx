@@ -10,6 +10,8 @@ import RelationshipReportRow from "./RelationshipReportRow";
 import ReportRow from "./ReportRow";
 import QianReportRow from "./QianReportRow";
 import TarotReadingReportRow from "./TarotReadingReportRow";
+import SimpleReportRow from "./SimpleReportRow";
+import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
 import { createClient } from "@/lib/supabase/server";
@@ -54,8 +56,17 @@ export default async function AccountPage() {
   // 入口完全没查过这两张——这次一起补上，跟前两个用同一套列表样式。
   let qianReports: { id: string; name: string | null; created_at: string }[] = [];
   let tarotReadingReports: { id: string; name: string | null; created_at: string }[] = [];
+  // 生命韧性、桃花磁场、今日运势潮汐、财富创造地图——同样的道理，之前
+  // 场域入口完全没查过这四张表，这次一起补上。
+  let resilienceReports: { id: string; name: string | null; created_at: string }[] = [];
+  let romanceReports: { id: string; name: string | null; created_at: string }[] = [];
+  let dailyTideReports: { id: string; name: string | null; generated_date: string; created_at: string }[] = [];
+  let wealthReports: { id: string; name: string | null; created_at: string }[] = [];
   if (user) {
-    const [{ data: reports }, { data: relReports }, { data: qReports }, { data: trReports }] = await Promise.all([
+    const [
+      { data: reports }, { data: relReports }, { data: qReports }, { data: trReports },
+      { data: resReports }, { data: romReports }, { data: dtReports }, { data: wReports },
+    ] = await Promise.all([
       supabase
         .from("life_map_submissions")
         .select("id, core_type_name, created_at")
@@ -80,11 +91,39 @@ export default async function AccountPage() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(10),
+      supabase
+        .from("resilience_submissions")
+        .select("id, name, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("romance_submissions")
+        .select("id, name, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("daily_tide_submissions")
+        .select("id, name, generated_date, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("wealth_submissions")
+        .select("id, name, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
     ]);
     lifeMapReports = reports ?? [];
     relationshipReports = relReports ?? [];
     qianReports = qReports ?? [];
     tarotReadingReports = trReports ?? [];
+    resilienceReports = resReports ?? [];
+    romanceReports = romReports ?? [];
+    dailyTideReports = dtReports ?? [];
+    wealthReports = wReports ?? [];
   }
 
   const nameMap: Record<string, string> = {
@@ -94,6 +133,20 @@ export default async function AccountPage() {
     "heart-reset": "归零心诀",
     "ascending-heart": "上升心经",
   };
+  // v251：之前这里把"多维叙事"解锁也混进这份纯文字列表，只显示标题、
+  // 点不进去——用户付了钱买一篇文章的永久阅读权，却只能在这里看见
+  // 一串没有链接的文字，找不到真正的文章在哪。这里单独把叙事类的
+  // unlock挑出来，做成可以直接点进去的链接；另外这几个"XX-report"
+  // 类型的unlock，已经各自有自己的报告列表区块了，这里不用重复显示，
+  // 过滤掉，不然同一份东西会在页面上出现两次、显示成一串没意义的
+  // 原始ID字符串。
+  const narrativeMap = new Map(NARRATIVES.map((n) => [n.slug, n.title]));
+  const REPORT_PRODUCT_IDS = new Set([
+    "life-map-report", "relationship-resonance", "qian-reading", "tarot-reading",
+    "resilience-report", "romance-report", "wealth-report", "daily-tide-report",
+  ]);
+  const narrativeUnlocks = unlocks.filter((id) => narrativeMap.has(id));
+  const plainUnlocks = unlocks.filter((id) => !narrativeMap.has(id) && !REPORT_PRODUCT_IDS.has(id));
 
   return (
     <>
@@ -134,13 +187,24 @@ export default async function AccountPage() {
                 <div className="rounded-sm border border-white/10 bg-void-deep px-5 py-4">
                   <p className="text-sm text-bone-dim"><Bi zh="已激活的修炼技术" en="Activated practices" /></p>
                   <p className="mt-1 font-display text-lg text-lattice">
-                    {unlocks.length
-                      ? unlocks.map((id) => nameMap[id] || id).join("、")
+                    {plainUnlocks.length
+                      ? plainUnlocks.map((id) => nameMap[id] || id).join("、")
                       : ""}
-                    {!unlocks.length && <Bi zh="暂无" en="None yet" />}
+                    {!plainUnlocks.length && <Bi zh="暂无" en="None yet" />}
                   </p>
                 </div>
               </div>
+
+              {narrativeUnlocks.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我已解锁的多维叙事" en="My Unlocked Narratives" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {narrativeUnlocks.map((slug) => (
+                    <SimpleReportRow key={slug} href={`/narrative/${slug}`} title={narrativeMap.get(slug) ?? slug} date="" />
+                  ))}
+                  </div>
+                </div>
+              )}
 
               {lifeMapReports.length > 0 && (
                 <div className="mt-3 w-full space-y-2 text-left">
@@ -204,6 +268,50 @@ export default async function AccountPage() {
                       title={r.name}
                       date={new Date(r.created_at).toLocaleDateString()}
                     />
+                  ))}
+                  </div>
+                </div>
+              )}
+
+              {resilienceReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的生命韧性档案" en="My Life Resilience Archives" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {resilienceReports.map((r) => (
+                    <SimpleReportRow key={r.id} href={`/resilience/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
+                  ))}
+                  </div>
+                </div>
+              )}
+
+              {romanceReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的桃花磁场档案" en="My Romance Magnetism Archives" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {romanceReports.map((r) => (
+                    <SimpleReportRow key={r.id} href={`/romance/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
+                  ))}
+                  </div>
+                </div>
+              )}
+
+              {dailyTideReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的今日运势潮汐深度报告" en="My Daily Fortune Tide Reports" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {dailyTideReports.map((r) => (
+                    <SimpleReportRow key={r.id} href={`/daily/full?id=${r.id}`} title={r.name || r.generated_date} date={new Date(r.created_at).toLocaleDateString()} />
+                  ))}
+                  </div>
+                </div>
+              )}
+
+              {wealthReports.length > 0 && (
+                <div className="mt-3 w-full space-y-2 text-left">
+                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的财富创造地图" en="My Wealth Creation Maps" /></p>
+                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                  {wealthReports.map((r) => (
+                    <SimpleReportRow key={r.id} href={`/wealth/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
                   </div>
                 </div>
