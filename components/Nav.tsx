@@ -27,6 +27,7 @@ const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon
   { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", rune: "crystal" },
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", rune: "crescent" },
+  { href: "/wealth", zh: "财富创造地图", en: "Wealth Creation Map", rune: "mandala" },
   { href: "/daily", zh: "今日运势潮汐", en: "Daily Fortune Tide", rune: "mandala" },
   { href: "/tarot", zh: "灵犀量子塔罗", en: "Lingxi Quantum Tarot", rune: "twin" },
   { href: "/qian", zh: "灵犀生命灵签", en: "Lingxi Life Oracle", rune: "crystal" },
@@ -36,7 +37,7 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const [testsOpen, setTestsOpen] = useState(false);
   const pathname = usePathname();
-  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/daily") || pathname?.startsWith("/tarot") || pathname?.startsWith("/qian");
+  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/tarot") || pathname?.startsWith("/qian");
 
   return (
     <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">

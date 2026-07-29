@@ -39,6 +39,7 @@ export async function POST(req: Request) {
       "resilience-report": "resilience_submissions",
       "romance-report": "romance_submissions",
       "daily-tide-report": "daily_tide_submissions",
+      "wealth-report": "wealth_submissions",
     };
     let submissionName: string | null = null;
     const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];

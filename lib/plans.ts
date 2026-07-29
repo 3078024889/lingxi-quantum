@@ -64,7 +64,11 @@ export const dailyTideProducts: Product[] = [
   { id: "daily-tide-report", name: "今日运势潮汐 · 深度报告", nameEn: "Daily Fortune Tide · Deep Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁从今天起的深度潮汐报告——今日六重潮汐 + 未来7/30/90天真实潮汐趋势，永久保存、可再读", noteEn: "One exchange unlocks a deep tide report starting today — six daily tides plus real 7/30/90-day tide trends. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts];
+export const wealthProducts: Product[] = [
+  { id: "wealth-report", name: "财富创造地图 · 完整档案", nameEn: "Wealth Creation Map · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的财富创造地图——五个创造维度、创造类型、价值流动路径，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Wealth Creation Map — your five creative dimensions, creation type, and value flow path — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
+];
+
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }

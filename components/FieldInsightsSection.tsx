@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Bi from "./Bi";
 
-// 场域精测——首页新增区块，列出全部7个测试产品，每个都配一句具体的
+// 场域精测——首页新增区块，列出全部8个测试产品，每个都配一句具体的
 // "获得什么"，不是笼统的"权益包含"，让人在点进去、甚至在付费之前，
 // 就清楚知道自己会得到什么。
 const ITEMS = [
@@ -11,6 +11,7 @@ const ITEMS = [
   { href: "/tarot", zh: "灵犀量子塔罗", en: "Lingxi Quantum Tarot", getZh: "三张生命镜像牌的完整生命镜像档案", getEn: "A full life-mirror reading from three cards" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", getZh: "五项确定性分数，看清你的韧性类型", getEn: "Five deterministic scores, mapping your resilience type" },
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", getZh: "你的吸引力风格与磁场分数，即时呈现", getEn: "Your attraction style and magnetism score, shown right away" },
+  { href: "/wealth", zh: "财富创造地图", en: "Wealth Creation Map", getZh: "五个创造维度分数与你的创造类型，即时呈现", getEn: "Five creation dimension scores and your creation type, shown right away" },
   { href: "/daily", zh: "今日运势潮汐", en: "Daily Fortune Tide", getZh: "今日星象落在你太阳星座上的样子，即时呈现", getEn: "How today's sky lands on your Sun sign, shown right away" },
 ];
 

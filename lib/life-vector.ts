@@ -334,3 +334,40 @@ export function calculateResilience(v: LifeVector): { score: number; breakdown: 
   );
   return { score, breakdown, labels: RESILIENCE_LABEL };
 }
+
+// v245：财富创造地图——复用同一套生命向量，也复用已经存在的
+// wealthArchetypes() 分类（生命图谱"财富创造系统"那一章已经在用），
+// 不是另起一套可能跟生命图谱对不上的新分类——同一个人，在生命图谱
+// 和财富创造地图里看到的"财富来源类型"判断，应该是一致的。这里新增
+// 的，是原来没有的五个具体维度分数，用来做更细的章节展开。
+export type WealthDim = "insight" | "build" | "connect" | "express" | "risk";
+export type WealthBreakdown = Record<WealthDim, number>;
+
+const WEALTH_DIM_LABEL: Record<WealthDim, { zh: string; en: string }> = {
+  insight: { zh: "洞察力", en: "Insight" },
+  build: { zh: "构建力", en: "Building Power" },
+  connect: { zh: "连接力", en: "Connecting Power" },
+  express: { zh: "表达力", en: "Expression Power" },
+  risk: { zh: "风险承担力", en: "Risk Capacity" },
+};
+
+export function calculateWealthDetail(v: LifeVector): { score: number; breakdown: WealthBreakdown; type: WealthArchetype; typeLabelZh: string; typeLabelEn: string; labels: typeof WEALTH_DIM_LABEL } {
+  const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
+  const breakdown: WealthBreakdown = {
+    insight: clamp(v.introspection * 0.55 + v.creativity * 0.45),
+    build: clamp(v.discipline * 0.6 + v.stabilityNeed * 0.4),
+    connect: clamp(v.socialDrive * 0.6 + v.adaptability * 0.4),
+    express: clamp(v.ambition * 0.55 + v.socialDrive * 0.45),
+    risk: clamp(v.riskTolerance * 0.6 + v.ambition * 0.4),
+  };
+  const score = clamp(
+    breakdown.insight * 0.22 +
+    breakdown.build * 0.2 +
+    breakdown.connect * 0.2 +
+    breakdown.express * 0.2 +
+    breakdown.risk * 0.18
+  );
+  const [topType] = wealthArchetypes(v, 1);
+  return { score, breakdown, type: topType.type, typeLabelZh: topType.labelZh, typeLabelEn: topType.labelEn, labels: WEALTH_DIM_LABEL };
+}
+
