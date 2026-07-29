@@ -108,8 +108,8 @@ function CreatingPanel({ priceRmb }: { priceRmb: number }) {
       </p>
       <p className="mx-auto mt-4 max-w-md text-base leading-8 text-bone-dim">
         <Bi
-          zh={`此篇仍在创作中，完成后将开放阅读（¥${priceRmb}，终身可看）。可以先收藏这个页面，或去读已经上线的「远行者」系列。`}
-          en={`This piece is still being written. Once complete, it will open here (¥${priceRmb}, yours for life). In the meantime, the Wayfarer series is already live.`}
+          zh={`此篇仍在创作中，完成后将开放阅读（¥${priceRmb}，解锁一年内可反复阅读）。可以先收藏这个页面，或去读已经上线的「远行者」系列。`}
+          en={`This piece is still being written. Once complete, it will open here (¥${priceRmb}, unlocked for one year of reading). In the meantime, the Wayfarer series is already live.`}
         />
       </p>
       <Link
@@ -137,8 +137,8 @@ async function LiveIllustratedReader({ slug, price, titleZh, titleEn }: { slug: 
       </p>
       <p className="mx-auto mt-3 max-w-xs text-sm leading-7 text-bone-dim">
         <Bi
-          zh={`完成一次能量交换（¥${priceRmb}），全文（含全部插画）将为你永久开启——终身可看，随时回读。`}
-          en={`Complete one energy exchange (¥${priceRmb}) and the full illustrated piece opens for you permanently.`}
+          zh={`完成一次能量交换（¥${priceRmb}），全文（含全部插画）将为你开启一年——一年内随时回读，到期后可再次解锁。`}
+          en={`Complete one energy exchange (¥${priceRmb}) and the full illustrated piece opens for one year of reading.`}
         />
       </p>
       <div className="mx-auto mt-6 max-w-[220px]">
@@ -183,8 +183,8 @@ async function LiveReader({
       </p>
       <p className="mx-auto mt-3 max-w-xs text-sm leading-7 text-bone-dim">
         <Bi
-          zh={`完成一次能量交换（¥${priceRmb}），全文将为你永久开启——终身可看，随时回读。`}
-          en={`Complete one energy exchange (¥${priceRmb}) and the full text opens for you permanently.`}
+          zh={`完成一次能量交换（¥${priceRmb}），全文将为你开启一年——一年内随时回读，到期后可再次解锁。`}
+          en={`Complete one energy exchange (¥${priceRmb}) and the full text opens for one year of reading.`}
         />
       </p>
       <div className="mx-auto mt-6 max-w-[220px]">

@@ -25,7 +25,7 @@ export default function WechatPayModal({
   onClose: () => void;
   onSuccess: () => void;
 }) {
-  const [status, setStatus] = useState<"creating" | "waiting" | "error">("creating");
+  const [status, setStatus] = useState<"creating" | "waiting" | "error" | "success">("creating");
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [error, setError] = useState("");
   const [checkingNow, setCheckingNow] = useState(false);
@@ -50,7 +50,18 @@ export default function WechatPayModal({
       if (qData.paid && !doneRef.current) {
         doneRef.current = true;
         if (pollRef.current) clearInterval(pollRef.current);
-        onSuccess();
+        // v254：之前一确认支付成功，立刻跳转到报告页——用户完全没有
+        // 意识到"这个东西以后能在场域入口的我的订单里找到"，导致之后
+        // 想再看一次的时候，忘了在哪、也不知道有这么个地方能找。这里
+        // 先停留两秒，明确提示一句"以后可以在场域入口→我的订单里找到"，
+        // 再跳转，把这个入口的存在，第一次成功支付的时候就告诉用户。
+        setStatus("success");
+        setTimeout(() => { onSuccess(); }, 1800);
+      } else if (qData.unlockError) {
+        // v253：钱已经确认到账了，但解锁那一步写入失败——这种情况
+        // 不该让用户一直干等，要如实告诉他们具体卡在哪，并且提示
+        // 可以去场域入口"待确认订单"里再重试一次，不用重新付钱。
+        setError(`支付已确认到账，但解锁时出现问题：${qData.unlockError}。请稍后在「场域入口 → 待确认订单」里重试，不用重新付款。`);
       } else if (manual) {
         setError("");
       }
@@ -184,7 +195,23 @@ export default function WechatPayModal({
             >
               {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下 →" en="I've paid — check now →" />}
             </button>
+            {error && <p className="mt-3 text-xs text-rose">{error}</p>}
           </>
+        )}
+
+        {status === "success" && (
+          <div className="mt-8">
+            <p className="font-display text-2xl text-lattice">✓</p>
+            <p className="mt-3 text-sm text-bone">
+              <Bi zh="能量交换完成" en="Exchange complete" />
+            </p>
+            <p className="mt-3 text-xs leading-6 text-bone-dim">
+              <Bi
+                zh="以后想再看这份内容，随时可以回到「场域入口 → 我的订单」找到它——正在带你过去……"
+                en="You can always find this again under Account → My Orders — taking you there now…"
+              />
+            </p>
+          </div>
         )}
 
         {status === "error" && (

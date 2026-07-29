@@ -73,7 +73,7 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
               <Bi zh="即将开放" en="Opening soon" />
             ) : (
               <>
-                ¥{n.price} · <Bi zh="终身可看" en="yours for life" />
+                ¥{n.price} · <Bi zh="解锁一年" en="1-year access" />
               </>
             )}
           </span>

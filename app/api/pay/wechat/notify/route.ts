@@ -53,7 +53,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ code: "FAIL", message: "订单不存在" }, { status: 404 });
     }
 
-    await fulfillPaidOrder(order.id);
+    const result = await fulfillPaidOrder(order.id);
+    if (!result.ok) {
+      console.error("[wechat notify] 微信webhook确认已支付，但解锁写入失败:", result.error, "order id:", order.id);
+      // 依然回SUCCESS给微信——不是因为不重要，是因为让微信不停重试
+      // 这个webhook，解决不了背后真正的写入失败原因，只会重复报同一个
+      // 错误。订单这边因为fulfillPaidOrder失败时不会被标记成paid，
+      // 用户自己在场域入口的"待确认订单"里还能重新点查询、重试。
+    }
     return NextResponse.json({ code: "SUCCESS", message: "成功" });
   } catch (e) {
     console.error("[wechat notify] 处理回调异常:", e);

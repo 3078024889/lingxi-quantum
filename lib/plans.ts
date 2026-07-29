@@ -31,8 +31,8 @@ export const manifestationProducts: Product[] = [
 
 // 多维叙事：短篇 $1，长篇 $5，一次能量交换，终身可看
 export const narrativeProducts: Product[] = NARRATIVES.map((n) => ({
-  id: n.slug, name: n.title, nameEn: n.titleEn, priceUsd: Math.round((n.price / 7.2) * 100) / 100, priceRmb: n.price, type: "permanent" as const,
-  note: "一次能量交换，终身可看", noteEn: "One energy exchange — yours to read for life.",
+  id: n.slug, name: n.title, nameEn: n.titleEn, priceUsd: Math.round((n.price / 7.2) * 100) / 100, priceRmb: n.price, type: "subscription" as const, days: 365,
+  note: "一次能量交换，解锁一年，一年内可反复阅读", noteEn: "One energy exchange unlocks this piece for one year of reading.",
   group: "cultivation" as const,
 }));
 

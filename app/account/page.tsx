@@ -12,6 +12,7 @@ import QianReportRow from "./QianReportRow";
 import TarotReadingReportRow from "./TarotReadingReportRow";
 import SimpleReportRow from "./SimpleReportRow";
 import PendingOrdersPanel from "./PendingOrdersPanel";
+import CollapsibleSection from "./CollapsibleSection";
 import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
@@ -212,26 +213,18 @@ export default async function AccountPage() {
                 </div>
               </div>
 
+              <PendingOrdersPanel orders={pendingOrders} />
+
               {narrativeUnlocks.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我已解锁的多维叙事" en="My Unlocked Narratives" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 多维叙事" titleEn="Unlocked · Narrative" count={narrativeUnlocks.length}>
                   {narrativeUnlocks.map((slug) => (
                     <SimpleReportRow key={slug} href={`/narrative/${slug}`} title={narrativeMap.get(slug) ?? slug} date="" />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
-              <PendingOrdersPanel orders={pendingOrders} />
-
               {lifeMapReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的生命图谱报告" en="My Life Map Reports" /></p>
-                  {/* 万一同一个人测过几十上百次，这个列表不能无限往下长，把
-                     底下的修改密码/退出登录这些按钮越推越远——限定一个
-                     最大高度，超出的部分自己滚动。 */}
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 生命图谱" titleEn="Unlocked · Life Map" count={lifeMapReports.length}>
                   {lifeMapReports.map((r) => (
                     <ReportRow
                       key={r.id}
@@ -240,14 +233,11 @@ export default async function AccountPage() {
                       date={new Date(r.created_at).toLocaleDateString()}
                     />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {relationshipReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的关系共振图谱" en="My Relationship Resonance Maps" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 关系共振" titleEn="Unlocked · Relationship Resonance" count={relationshipReports.length}>
                   {relationshipReports.map((r) => (
                     <RelationshipReportRow
                       key={r.id}
@@ -256,14 +246,11 @@ export default async function AccountPage() {
                       date={new Date(r.created_at).toLocaleDateString()}
                     />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {qianReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的生命灵签" en="My Life Oracle Readings" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 生命灵签" titleEn="Unlocked · Life Oracle" count={qianReports.length}>
                   {qianReports.map((r) => (
                     <QianReportRow
                       key={r.id}
@@ -272,14 +259,11 @@ export default async function AccountPage() {
                       date={new Date(r.created_at).toLocaleDateString()}
                     />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {tarotReadingReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的塔罗生命镜像" en="My Quantum Life Mirrors" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 量子塔罗" titleEn="Unlocked · Quantum Tarot" count={tarotReadingReports.length}>
                   {tarotReadingReports.map((r) => (
                     <TarotReadingReportRow
                       key={r.id}
@@ -288,52 +272,39 @@ export default async function AccountPage() {
                       date={new Date(r.created_at).toLocaleDateString()}
                     />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {resilienceReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的生命韧性档案" en="My Life Resilience Archives" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 生命韧性指数" titleEn="Unlocked · Life Resilience" count={resilienceReports.length}>
                   {resilienceReports.map((r) => (
                     <SimpleReportRow key={r.id} href={`/resilience/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {romanceReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的桃花磁场档案" en="My Romance Magnetism Archives" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 桃花磁场指数" titleEn="Unlocked · Romance Magnetism" count={romanceReports.length}>
                   {romanceReports.map((r) => (
                     <SimpleReportRow key={r.id} href={`/romance/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {dailyTideReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的今日运势潮汐深度报告" en="My Daily Fortune Tide Reports" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 今日运势潮汐" titleEn="Unlocked · Daily Fortune Tide" count={dailyTideReports.length}>
                   {dailyTideReports.map((r) => (
                     <SimpleReportRow key={r.id} href={`/daily/full?id=${r.id}`} title={r.name || r.generated_date} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               {wealthReports.length > 0 && (
-                <div className="mt-3 w-full space-y-2 text-left">
-                  <p className="px-1 text-sm text-bone-dim"><Bi zh="我的财富创造地图" en="My Wealth Creation Maps" /></p>
-                  <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+                <CollapsibleSection titleZh="已解锁订单 · 财富创造地图" titleEn="Unlocked · Wealth Creation Map" count={wealthReports.length}>
                   {wealthReports.map((r) => (
                     <SimpleReportRow key={r.id} href={`/wealth/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
-                  </div>
-                </div>
+                </CollapsibleSection>
               )}
 
               <div className="mt-8 flex w-full flex-col gap-4">
