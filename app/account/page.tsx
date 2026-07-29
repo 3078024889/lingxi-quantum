@@ -213,6 +213,13 @@ export default async function AccountPage() {
                 </div>
               </div>
 
+              <Link
+                href="/account/orders"
+                className="mt-4 flex w-full items-center justify-center gap-2 border border-lattice bg-lattice/10 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:bg-lattice hover:text-void-deep"
+              >
+                <Bi zh="查看场域订单（订单号 · 金额 · 状态 · 有效期）→" en="View Field Orders (No. · Amount · Status · Expiry) →" />
+              </Link>
+
               <PendingOrdersPanel orders={pendingOrders} />
 
               {narrativeUnlocks.length > 0 && (

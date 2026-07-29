@@ -207,8 +207,8 @@ export default function WechatPayModal({
             </p>
             <p className="mt-3 text-xs leading-6 text-bone-dim">
               <Bi
-                zh="以后想再看这份内容，随时可以回到「场域入口 → 我的订单」找到它——正在带你过去……"
-                en="You can always find this again under Account → My Orders — taking you there now…"
+                zh="以后想再看这份内容，随时可以回到「场域入口 → 场域订单」找到它——正在带你过去……"
+                en="You can always find this again under Account → Field Orders — taking you there now…"
               />
             </p>
           </div>
