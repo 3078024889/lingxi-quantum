@@ -124,12 +124,34 @@ export default function WechatPayModal({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 px-6" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 px-6"
+      onClick={() => {
+        // v252：之前不管什么状态，点一下背景就直接关闭弹窗——等待
+        // 支付确认的这个阶段（status==="waiting"），关掉弹窗会连带
+        // 丢失这笔订单的追踪状态。用户如果没点准那个"我已完成支付"
+        // 按钮、手滑碰到旁边的背景，弹窗就整个消失了，钱可能确实付了，
+        // 页面却已经不知道该去查哪一笔。这里改成：只有不在等待支付
+        // 这个状态时，点背景才会关闭；正在等待支付的时候，必须点右上
+        // 角那个"✕"才能关，且点"✕"时会有一次确认，避免误触直接关掉。
+        if (status !== "waiting") onClose();
+      }}
+    >
       <div
-        className="w-full max-w-sm rounded-sm border border-lattice/25 bg-void-deep p-8 text-center"
+        className="max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-sm border border-lattice/25 bg-void-deep p-8 text-center"
         onClick={(e) => e.stopPropagation()}
       >
-        <button onClick={onClose} className="float-right text-bone-dim hover:text-bone">✕</button>
+        <button
+          onClick={() => {
+            if (status === "waiting" && !window.confirm("确定要关闭吗？如果你已经完成支付，建议先点「我已完成支付，帮我确认一下」，确认成功之后再关闭。")) {
+              return;
+            }
+            onClose();
+          }}
+          className="float-right text-bone-dim hover:text-bone"
+        >
+          ✕
+        </button>
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
           <Bi zh="微信扫码支付" en="Scan with WeChat to Pay" />
         </p>
@@ -145,7 +167,7 @@ export default function WechatPayModal({
         {status === "waiting" && qrDataUrl && (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto mt-6 h-56 w-56 rounded-sm bg-white p-2" />
+            <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto mt-6 h-48 w-48 rounded-sm bg-white p-2" />
             <p className="mt-4 text-xs text-bone-dim">
               <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
             </p>
@@ -158,9 +180,9 @@ export default function WechatPayModal({
             <button
               onClick={() => checkPaidOnce(true)}
               disabled={checkingNow}
-              className="mt-4 w-full border border-lattice/30 py-2.5 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice disabled:opacity-50"
+              className="sticky bottom-0 mt-4 w-full border border-lattice bg-void-deep py-3 text-xs uppercase tracking-widest2 text-lattice shadow-[0_-8px_16px_rgba(0,0,0,0.4)] transition hover:bg-lattice hover:text-void-deep disabled:opacity-50"
             >
-              {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下" en="I've paid — check now" />}
+              {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下 →" en="I've paid — check now →" />}
             </button>
           </>
         )}

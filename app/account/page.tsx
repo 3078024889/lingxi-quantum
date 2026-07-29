@@ -11,6 +11,7 @@ import ReportRow from "./ReportRow";
 import QianReportRow from "./QianReportRow";
 import TarotReadingReportRow from "./TarotReadingReportRow";
 import SimpleReportRow from "./SimpleReportRow";
+import PendingOrdersPanel from "./PendingOrdersPanel";
 import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
@@ -62,10 +63,16 @@ export default async function AccountPage() {
   let romanceReports: { id: string; name: string | null; created_at: string }[] = [];
   let dailyTideReports: { id: string; name: string | null; generated_date: string; created_at: string }[] = [];
   let wealthReports: { id: string; name: string | null; created_at: string }[] = [];
+  // v252：生成过二维码、但还没被确认为已支付的订单——万一支付弹窗
+  // 中途意外关闭（误触背景、或者用户直接切走了），这里给一条"事后
+  // 还能回来确认"的路。只列最近的、状态还不是paid的订单，付过的和
+  // 从没生成过订单的都不会出现在这里。
+  let pendingOrders: { id: string; product_id: string; created_at: string; amount_usd: number }[] = [];
   if (user) {
     const [
       { data: reports }, { data: relReports }, { data: qReports }, { data: trReports },
       { data: resReports }, { data: romReports }, { data: dtReports }, { data: wReports },
+      { data: poReports },
     ] = await Promise.all([
       supabase
         .from("life_map_submissions")
@@ -115,6 +122,15 @@ export default async function AccountPage() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(10),
+      supabase
+        .from("orders")
+        .select("id, product_id, created_at, amount_usd")
+        .eq("user_id", user.id)
+        .eq("provider", "wechat")
+        .neq("status", "paid")
+        .not("provider_payment_id", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(10),
     ]);
     lifeMapReports = reports ?? [];
     relationshipReports = relReports ?? [];
@@ -124,6 +140,7 @@ export default async function AccountPage() {
     romanceReports = romReports ?? [];
     dailyTideReports = dtReports ?? [];
     wealthReports = wReports ?? [];
+    pendingOrders = poReports ?? [];
   }
 
   const nameMap: Record<string, string> = {
@@ -205,6 +222,8 @@ export default async function AccountPage() {
                   </div>
                 </div>
               )}
+
+              <PendingOrdersPanel orders={pendingOrders} />
 
               {lifeMapReports.length > 0 && (
                 <div className="mt-3 w-full space-y-2 text-left">
