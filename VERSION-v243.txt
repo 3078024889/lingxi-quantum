@@ -1,0 +1,30 @@
+灵犀 LINGXI · v243（网站底部加上ICP备案号，工信部审核通过后的
+法定要求）
+
+【改动】
+备案号"湘ICP备2026031465号"加到了网站底部（app/components/
+Footer.tsx），点击会跳转到工信部备案系统查询页面
+（https://beian.miit.gov.cn/），这是法律强制要求的展示方式——不是
+随便放个文字，必须能点击跳转到官方查询页。
+
+【改动的文件】
+components/Footer.tsx
+
+【没有要跑的新SQL】
+
+【lingxifield.cn 接下来怎么接，需要你确认】
+这个我没法替你决定，两种常见接法完全不同：
+
+  方案A：直接在Vercel加一个新域名
+  跟现在.com的接法一样，在Vercel项目设置里的Domains添加
+  lingxifield.cn，然后按Vercel给的提示改DNS——最简单，但访问速度
+  取决于Vercel自己的海外节点，国内用户访问可能不是最快。
+
+  方案B：国内CDN在前，Vercel当源站
+  用阿里云CDN、腾讯云CDN、又拍云这类国内服务商，配置源站指向你
+  现在Vercel部署的.com域名，国内用户访问lingxifield.cn时先经过
+  国内CDN节点（备案号就是挂在这个CDN服务上），CDN再回源到Vercel
+  取内容——访问速度对国内用户更友好，但需要额外开通一个CDN服务、
+  多一层配置。
+
+你确认选哪种，我再告诉你具体要在哪几个地方填什么值。

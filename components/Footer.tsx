@@ -49,6 +49,19 @@ export default function Footer() {
           <p className="mt-2">
             Lingxi Field is a digital self-exploration platform. We provide personalized symbolic analysis, reflection tools, creative narratives, and digital reports. Our services are designed for personal reflection and entertainment purposes only, and do not provide medical, financial, legal, or other professional advice.
           </p>
+          {/* v243：ICP备案号——工信部审核通过后，法律要求必须在网站显著
+              位置（一般放在底部）展示备案号，并链接到工信部备案系统
+              查询页面，这是强制要求，不是可选项。 */}
+          <p className="mt-4">
+            <a
+              href="https://beian.miit.gov.cn/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-lattice"
+            >
+              湘ICP备2026031465号
+            </a>
+          </p>
         </div>
       </div>
     </footer>
