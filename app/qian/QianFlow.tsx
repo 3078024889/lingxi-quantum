@@ -11,6 +11,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 
 const QIAN_FAQ: BilingualFaqItem[] = [
   {
@@ -278,7 +279,7 @@ export default function QianFlow() {
         >
           <Bi zh={`开启完整生命解码 · ¥${getProduct("qian-reading")?.priceRmb}`} en={`Unlock the Full Decoding · ¥${getProduct("qian-reading")?.priceRmb}`} />
         </button>
-        {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+        {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
         {showWechatPay && submissionId && (
           <WechatPayModal
             productId="qian-reading"

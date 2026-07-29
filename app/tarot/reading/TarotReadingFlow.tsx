@@ -9,6 +9,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 
 const TAROT_FAQ: BilingualFaqItem[] = [
   {
@@ -278,7 +279,7 @@ export default function TarotReadingFlow() {
         >
           <Bi zh={`开启完整生命镜像 · ¥${getProduct("tarot-reading")?.priceRmb}`} en={`Unlock the Full Life Mirror · ¥${getProduct("tarot-reading")?.priceRmb}`} />
         </button>
-        {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+        {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
         {showWechatPay && submissionId && (
           <WechatPayModal
             productId="tarot-reading"

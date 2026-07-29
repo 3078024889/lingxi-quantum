@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { useLang } from "@/lib/useLang";
+import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 
 // v237：今日运势潮汐的付费深度报告入口——免费的星座今日运势（这个
 // 页面本身）完全不用出生时间，但深度报告需要真实出生数据才能算日主
@@ -43,6 +45,18 @@ export default function DailyTideUnlock() {
     setUnlocking(true);
     setError("");
     try {
+      // v244：之前这里没有提前检查登录状态，未登录的用户点"解锁"
+      // 之后，只能等后端返回"请先登录"这句纯文字提示，找不到
+      // 登录入口在哪——这里改成提交前先本地检查一次，没登录就
+      // 直接带去登录页，跟关系共振那边已经在用的处理方式一致。
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError(t("需要先登录，正在带你去登录页面…", "You'll need to sign in first — taking you there now…"));
+        setTimeout(() => { window.location.href = "/account"; }, 1200);
+        return;
+      }
+
       const res = await fetch("/api/daily-tide/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -126,7 +140,7 @@ export default function DailyTideUnlock() {
           </button>
         </div>
       )}
-      {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+      {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
 
       {showWechatPay && submissionId && (
         <WechatPayModal

@@ -59,7 +59,16 @@ export default function WechatPayModal({
           return;
         }
         orderIdRef.current = data.orderId ?? null;
-        const dataUrl = await QRCode.toDataURL(data.codeUrl, { width: 260, margin: 1 });
+        // v244：之前 width:260, margin:1 ——分辨率偏低、二维码周围几乎
+        // 没有留白（专业说法叫"静区"，扫码识别就是靠这圈留白来判断
+        // 二维码的边界在哪）。这在屏幕上直接扫没问题，但保存到相册、
+        // 微信压缩一遍、再从相册扫这条链路，图片质量和留白都会被进一步
+        // 压缩，260px+几乎没有留白的二维码，大概率就识别不出来了——
+        // 这不是微信支付网关的问题，是我们自己生成这张图的参数需要
+        // 更保守一点。这里把分辨率提到600px、留白按标准给够、纠错级别
+        // 调到M（能容忍最多15%的图像损坏仍然可读），专门是为了扛住
+        // "保存-压缩-重新扫描"这条链路。
+        const dataUrl = await QRCode.toDataURL(data.codeUrl, { width: 600, margin: 4, errorCorrectionLevel: "M" });
         setQrDataUrl(dataUrl);
         setStatus("waiting");
 
@@ -113,6 +122,12 @@ export default function WechatPayModal({
             <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto mt-6 h-56 w-56 rounded-sm bg-white p-2" />
             <p className="mt-4 text-xs text-bone-dim">
               <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
+            </p>
+            <p className="mt-1 text-xs text-bone-dim/70">
+              <Bi
+                zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
+                en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
+              />
             </p>
           </>
         )}

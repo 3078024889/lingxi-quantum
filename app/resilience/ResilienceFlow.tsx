@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
@@ -9,6 +10,7 @@ import ShareButton from "@/components/ShareButton";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 
 const RESILIENCE_FAQ: BilingualFaqItem[] = [
   {
@@ -147,6 +149,18 @@ export default function ResilienceFlow() {
     setUnlocking(true);
     setError("");
     try {
+      // v244：之前这里没有提前检查登录状态，未登录的用户点"解锁"
+      // 之后，只能等后端返回"请先登录"这句纯文字提示，找不到
+      // 登录入口在哪——这里改成提交前先本地检查一次，没登录就
+      // 直接带去登录页，跟关系共振那边已经在用的处理方式一致。
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError(t("需要先登录，正在带你去登录页面…", "You'll need to sign in first — taking you there now…"));
+        setTimeout(() => { window.location.href = "/account"; }, 1200);
+        return;
+      }
+
       const res = await fetch("/api/resilience/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -388,7 +402,7 @@ export default function ResilienceFlow() {
           >
             {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`展开完整韧性档案 · ¥${getProduct("resilience-report")?.priceRmb}`} en={`Unfold the Full Resilience Archive · $${getProduct("resilience-report")?.priceUsd}`} />}
           </button>
-          {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+          {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
         </div>
         {showWechatPay && submissionId && (
           <WechatPayModal
