@@ -180,7 +180,7 @@ export default function ResilienceFlow() {
         return;
       }
       // v256：改成跳转到独立付款页，不再用弹窗。
-      window.location.href = `/checkout?productId=resilience-report&submissionId=${data.id}&redirect=${encodeURIComponent(`/resilience/full?id=${data.id}`)}`;
+      window.location.href = `/checkout?productId=resilience-report&submissionId=${data.id}&name=${encodeURIComponent(unlockName)}&redirect=${encodeURIComponent(`/resilience/full?id=${data.id}`)}`;
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setUnlocking(false);

@@ -179,15 +179,17 @@ export default function WechatPayModal({
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto mt-6 h-48 w-48 rounded-sm bg-white p-2" />
-            <p className="mt-4 text-xs text-bone-dim">
-              <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
-            </p>
-            <p className="mt-1 text-xs text-bone-dim/70">
-              <Bi
-                zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
-                en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
-              />
-            </p>
+            <div className="mx-auto mt-4 rounded-sm border border-lattice/30 bg-lattice/5 p-4 text-left">
+              <p className="text-sm leading-6 text-bone">
+                <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
+              </p>
+              <p className="mt-2 text-xs leading-6 text-bone-dim">
+                <Bi
+                  zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
+                  en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
+                />
+              </p>
+            </div>
             <button
               onClick={() => checkPaidOnce(true)}
               disabled={checkingNow}

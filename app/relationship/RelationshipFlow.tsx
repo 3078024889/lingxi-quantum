@@ -257,7 +257,7 @@ export default function RelationshipFlow() {
 
       setSubmitting(false);
       // v256：改成跳转到独立付款页，不再用弹窗。
-      window.location.href = `/checkout?productId=relationship-resonance&submissionId=${saveData.id}&redirect=${encodeURIComponent(`/relationship/full?id=${saveData.id}`)}`;
+      window.location.href = `/checkout?productId=relationship-resonance&submissionId=${saveData.id}&name=${encodeURIComponent(`${a.name} × ${b.name}`)}&redirect=${encodeURIComponent(`/relationship/full?id=${saveData.id}`)}`;
     } catch {
       setSubmitting(false);
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));

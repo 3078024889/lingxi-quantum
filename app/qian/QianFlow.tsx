@@ -127,7 +127,7 @@ export default function QianFlow() {
       return;
     }
     // v256：改成跳转到独立付款页，不再用弹窗。
-    window.location.href = `/checkout?productId=qian-reading&submissionId=${submissionId}&redirect=${encodeURIComponent(`/qian/full?id=${submissionId}`)}`;
+    window.location.href = `/checkout?productId=qian-reading&submissionId=${submissionId}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/qian/full?id=${submissionId}`)}`;
   };
 
   if (stage === "form") {

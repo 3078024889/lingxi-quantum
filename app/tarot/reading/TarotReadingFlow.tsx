@@ -124,7 +124,7 @@ export default function TarotReadingFlow() {
       return;
     }
     // v256：改成跳转到独立付款页，不再用弹窗。
-    window.location.href = `/checkout?productId=tarot-reading&submissionId=${submissionId}&redirect=${encodeURIComponent(`/tarot/reading/full?id=${submissionId}`)}`;
+    window.location.href = `/checkout?productId=tarot-reading&submissionId=${submissionId}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/tarot/reading/full?id=${submissionId}`)}`;
   };
 
   if (stage === "form") {

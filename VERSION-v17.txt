@@ -1,9 +1,0 @@
-灵犀 LINGXI · v17
-本次新增：
-1. 真·灵犀解析：接入智谱 GLM-4-Flash（免费）。新增服务端路由 app/api/lingxi/route.ts
-   —— 需在 Vercel 环境变量加 ZHIPU_API_KEY（去 open.bigmodel.cn 注册获取），key 仅在服务端使用
-2. 螺旋黑洞「场」动图 components/SpiralField.tsx
-3. 梦境页：记录后点「发送至场·灵犀解析」→ 旋涡吸入 → 灵犀返回解读
-4. 显化签到页：「今日签到·发送至场」→ 旋涡 → 灵犀显化回响
-注意：未配置 ZHIPU_API_KEY 时，点击会出现旋涡后提示「尚未配置灵犀解析」，属正常，配置后即可。
-审核模式仍为开启(REVIEW_MODE=true)。

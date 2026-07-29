@@ -9,13 +9,13 @@ import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import { getProduct } from "@/lib/plans";
 import { useLang } from "@/lib/useLang";
+import { createClient } from "@/lib/supabase/client";
 
-// v258：二维码中间加一个小色块+文字，区分"这是哪家的码"——不是去用
+// v259：二维码中间加一个小色块+文字，区分"这是哪家的码"——不是去用
 // 微信/支付宝的官方图标（那是他们的注册商标，不能拿来用），是用
-// 我们自己的文字徽标做视觉区分，跟很多正规产品自己生成付款码时的
-// 处理方式一样。徽标控制在二维码宽度的18%左右，二维码本身用的是
-// M级纠错（能容忍最多15%左右的图案遮挡仍可扫描），加这么大一块
-// 徽标不会导致扫不出来。
+// 我们自己的文字徽标做视觉区分。徽标控制在二维码宽度的18%左右，
+// 二维码本身用的是M级纠错（能容忍最多15%左右的图案遮挡仍可扫描），
+// 加这么大一块徽标不会导致扫不出来。
 async function addCenterBadge(qrDataUrl: string, label: string, bg: string): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
@@ -29,7 +29,6 @@ async function addCenterBadge(qrDataUrl: string, label: string, bg: string): Pro
       const badgeSize = img.width * 0.2;
       const cx = img.width / 2;
       const cy = img.height / 2;
-      // 白色圆角底垫，避免色块直接叠在二维码黑白格子上显得太突兀
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
       ctx.roundRect(cx - badgeSize / 2 - 6, cy - badgeSize / 2 - 6, badgeSize + 12, badgeSize + 12, 8);
@@ -50,17 +49,28 @@ async function addCenterBadge(qrDataUrl: string, label: string, bg: string): Pro
   });
 }
 
-// v256：独立的付款页——之前是弹窗，这次照淘宝订单确认页那种样式做成
-// 一整页：商品信息、金额、支付方式选择（微信支付可以真的用；支付宝
-// 目前还没接，摆出来但标"即将上线"，不假装能用）、提交按钮。数字
-// 内容不需要收货地址，这里直接跳过，不像电商那样问"寄到哪"。
-//
-// 复用的是跟WechatPayModal完全一样的后端接口（/api/pay/wechat/create、
-// /api/pay/wechat/query），没有另外写一套支付逻辑——这次只是换了个
-// 呈现方式（整页 vs 弹窗），核心的下单、轮询、解锁判断，都是同一套
-// 已经在v253修过根因的代码，不是重新发明。
+// v260：把天数换成人话——"365天"不如直接说"一年"，"30天"不如说
+// "一个月"，付款前一眼就能看懂到期是多久，不用自己心算。
+function describeDuration(days: number, langEn: boolean): string {
+  if (langEn) {
+    if (days === 1) return "1 day";
+    if (days === 30) return "1 month";
+    if (days === 365) return "1 year";
+    return `${days} days`;
+  }
+  if (days === 1) return "1 天";
+  if (days === 30) return "1 个月";
+  if (days === 365) return "1 年";
+  return `${days} 天`;
+}
 
-type PayStatus = "form" | "creating" | "waiting" | "success" | "error";
+// v259：重新做了一遍流程，跟之前不一样的地方——之前是进页面直接弹
+// 二维码，这次改成先有一个"订单确认"阶段：真实订单号、商品、数量、
+// 金额、买家信息（登录邮箱）、支付方式选择，全部先摆出来，用户看清楚
+// 之后点"立即支付"，这时候才展示二维码。订单本身在"订单确认"这个
+// 阶段就已经真实创建好了（不是等点了"立即支付"才创建）——这样订单号
+// 从一开始展示的就是真实、已经存在于数据库里的号码，不是占位符。
+type PayStatus = "loading" | "review" | "waiting" | "success" | "error";
 
 function CheckoutInner() {
   const params = useSearchParams();
@@ -70,16 +80,27 @@ function CheckoutInner() {
 
   const productId = params.get("productId") ?? "";
   const submissionId = params.get("submissionId") ?? undefined;
+  const contentName = params.get("name") ?? "";
   const redirectTo = params.get("redirect") ?? "/account/orders";
   const product = getProduct(productId);
 
-  const [status, setStatus] = useState<PayStatus>("form");
+  const [status, setStatus] = useState<PayStatus>("loading");
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [error, setError] = useState("");
   const [checkingNow, setCheckingNow] = useState(false);
+  const [buyerEmail, setBuyerEmail] = useState("");
   const orderIdRef = useRef<string | null>(null);
+  const codeUrlRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const doneRef = useRef(false);
+  const startedRef = useRef(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setBuyerEmail(data.user?.email ?? "");
+    });
+  }, []);
 
   const checkPaidOnce = async (manual = false) => {
     if (!orderIdRef.current || doneRef.current) return;
@@ -112,8 +133,10 @@ function CheckoutInner() {
     return () => document.removeEventListener("visibilitychange", onVisible);
   }, []);
 
-  const submitOrder = async () => {
-    setStatus("creating");
+  // 第一步：创建真实订单——拿到真实订单号，但先不展示二维码，只展示
+  // 订单信息本身，等用户看清楚了、主动点"立即支付"才进入下一步。
+  const createOrder = async () => {
+    setStatus("loading");
     setError("");
     try {
       const res = await fetch("/api/pay/wechat/create", {
@@ -130,32 +153,35 @@ function CheckoutInner() {
         setError(`场域连接超时或服务暂时不可用，请稍后再试。（状态码 ${res.status}）`);
         return;
       }
-      if (!res.ok || !data.codeUrl) {
+      if (!res.ok || !data.codeUrl || !data.orderId) {
         setStatus("error");
         setError((data.error || "创建订单失败") + (data.detail ? ` (${data.detail})` : ""));
         return;
       }
-      orderIdRef.current = data.orderId ?? null;
-      const rawDataUrl = await QRCode.toDataURL(data.codeUrl, { width: 600, margin: 4, errorCorrectionLevel: "M" });
-      const dataUrl = await addCenterBadge(rawDataUrl, "微信", "#07C160"); // #07C160 是微信品牌色，用来做色块底色，不涉及使用他们的图标本身
-      setQrDataUrl(dataUrl);
-      setStatus("waiting");
-      pollRef.current = setInterval(() => { checkPaidOnce(); }, 3000);
+      orderIdRef.current = data.orderId;
+      codeUrlRef.current = data.codeUrl;
+      setStatus("review");
     } catch {
       setStatus("error");
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
     }
   };
 
-  // v257：照参考站点的样子——进页面就直接生成、展示二维码，不用先点
-  // 一次"提交订单"再等二维码出来，少一步操作。只有productId真的能
-  // 找到对应产品时才自动下单，避免productId传错的时候白白创建一笔
-  // 没用的订单。
-  const autoStarted = useRef(false);
+  // 第二步：用户点"立即支付"，这时候才真正生成、展示二维码，并开始
+  // 轮询支付状态。
+  const payNow = async () => {
+    if (!codeUrlRef.current) return;
+    setStatus("waiting");
+    const rawDataUrl = await QRCode.toDataURL(codeUrlRef.current, { width: 600, margin: 4, errorCorrectionLevel: "M" });
+    const dataUrl = await addCenterBadge(rawDataUrl, "微信", "#07C160");
+    setQrDataUrl(dataUrl);
+    pollRef.current = setInterval(() => { checkPaidOnce(); }, 3000);
+  };
+
   useEffect(() => {
-    if (product && !autoStarted.current) {
-      autoStarted.current = true;
-      submitOrder();
+    if (product && !startedRef.current) {
+      startedRef.current = true;
+      createOrder();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
@@ -181,65 +207,111 @@ function CheckoutInner() {
         <Bi zh="确认订单" en="Confirm Order" />
       </h1>
 
-      {/* 商品信息——照淘宝那种订单确认页的样式：商品名、数量、金额，
-          数字内容不需要收货地址，直接跳过这一项。 */}
-      <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="font-display text-lg text-bone"><Bi zh={product.name} en={product.nameEn} /></p>
-            <p className="mt-1 text-xs text-bone-dim"><Bi zh={product.note} en={product.noteEn} /></p>
-            <p className="mt-2 text-xs text-bone-dim/70">
-              <Bi zh="数量" en="Qty" />：× 1
-            </p>
-          </div>
-          <p className="shrink-0 font-display text-2xl text-amber">¥{product.priceRmb}</p>
-        </div>
-      </div>
-
-      {status === "creating" && (
-        <p className="mt-10 text-center text-sm text-bone-dim"><Bi zh="正在生成二维码……" en="Generating QR code…" /></p>
+      {status === "loading" && (
+        <p className="mt-10 text-center text-sm text-bone-dim"><Bi zh="正在创建订单……" en="Creating order…" /></p>
       )}
 
-      {status === "waiting" && qrDataUrl && (
-        <div className="mt-8">
-          <p className="text-center text-xs uppercase tracking-widest2 text-bone-dim">
-            <Bi zh="使用微信/支付宝扫码付款" en="Scan with WeChat or Alipay to Pay" />
-          </p>
-          {/* 两个码并排放，照参考图那样——微信是真的能扫的码；支付宝
-              这一格没有真的二维码，是个占位说明，不会假装能扫。 */}
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            <div className="text-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto h-48 w-48 rounded-sm bg-white p-2" />
-              <p className="mt-2 text-xs text-lattice">
-                <Bi zh="✓ 微信支付" en="✓ WeChat Pay" />
+      {(status === "review" || status === "waiting") && (
+        <>
+          {/* 订单信息——照淘宝订单确认页那种密度：订单号、商品、数量、
+              金额、买家信息，全部摆出来。数字内容不需要收货地址，直接
+              跳过这一项。 */}
+          <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-5">
+            <p className="text-[11px] uppercase tracking-widest2 text-bone-dim/60">
+              <Bi zh="订单号" en="Order No." /> {orderIdRef.current}
+            </p>
+            <div className="mt-3 flex items-start justify-between gap-4 border-t border-white/10 pt-3">
+              <div>
+                <p className="font-display text-lg text-bone"><Bi zh={product.name} en={product.nameEn} /></p>
+                {submissionId && (
+                  <p className="mt-1 text-xs text-bone-dim">
+                    <Bi zh="内容" en="Content" />：{contentName || `#${submissionId.slice(0, 8)}`}
+                  </p>
+                )}
+                <p className="mt-2 text-xs text-bone-dim/70"><Bi zh="数量" en="Qty" />：× 1</p>
+                {product.type === "subscription" && product.days && (
+                  <p className="mt-1 text-xs text-amber/80">
+                    <Bi
+                      zh={`有效期：${describeDuration(product.days, false)}（从支付成功那一刻开始计算）`}
+                      en={`Valid for: ${describeDuration(product.days, true)} (starting from the moment payment is confirmed)`}
+                    />
+                  </p>
+                )}
+                {product.type === "permanent" && (
+                  <p className="mt-1 text-xs text-lattice/80">
+                    <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
+                  </p>
+                )}
+              </div>
+              <p className="shrink-0 font-display text-2xl text-amber">¥{product.priceRmb}</p>
+            </div>
+            {/* 权益说明——product.note本来就是"这次交换具体包含什么"的
+                描述，这里单独用一个小标题把它摆出来，让它在付款前就是
+                看得见的承诺，不是买完才知道。 */}
+            <div className="mt-3 border-t border-white/10 pt-3">
+              <p className="text-xs uppercase tracking-widest2 text-bone-dim/60">
+                <Bi zh="本次交换包含" en="This Exchange Includes" />
+              </p>
+              <p className="mt-1.5 text-xs leading-6 text-bone-dim">
+                <Bi zh={product.note} en={product.noteEn} />
               </p>
             </div>
-            <div className="flex flex-col items-center justify-center rounded-sm border border-dashed border-white/15 p-4">
-              <p className="text-4xl text-bone-dim/20">支</p>
-              <p className="mt-2 text-xs text-bone-dim/50">
-                <Bi zh="支付宝 · 即将上线" en="Alipay · Coming Soon" />
+            {buyerEmail && (
+              <p className="mt-3 border-t border-white/10 pt-3 text-xs text-bone-dim">
+                <Bi zh="买家信息" en="Buyer" />：{buyerEmail}
               </p>
+            )}
+          </div>
+
+          {/* 支付方式选择 */}
+          <div className="mt-6">
+            <p className="text-xs uppercase tracking-widest2 text-bone-dim"><Bi zh="支付方式" en="Payment Method" /></p>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="rounded-sm border border-lattice bg-lattice/10 p-4 text-center text-lattice">
+                <p className="font-display text-sm"><Bi zh="✓ 微信支付" en="✓ WeChat Pay" /></p>
+              </div>
+              <div className="cursor-not-allowed rounded-sm border border-white/10 p-4 text-center text-bone-dim/40">
+                <p className="font-display text-sm"><Bi zh="支付宝" en="Alipay" /></p>
+                <p className="mt-1 text-[10px] uppercase tracking-widest2"><Bi zh="即将上线" en="Coming Soon" /></p>
+              </div>
             </div>
           </div>
-          <p className="mt-4 text-center text-xs text-bone-dim">
-            <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
-          </p>
-          <p className="mt-1 text-center text-xs text-bone-dim/70">
-            <Bi
-              zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
-              en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
-            />
-          </p>
-          <button
-            onClick={() => checkPaidOnce(true)}
-            disabled={checkingNow}
-            className="mt-4 w-full border border-lattice bg-void-deep py-3 text-xs uppercase tracking-widest2 text-lattice transition hover:bg-lattice hover:text-void-deep disabled:opacity-50"
-          >
-            {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下 →" en="I've paid — check now →" />}
-          </button>
-          {error && <p className="mt-3 text-xs text-rose">{error}</p>}
-        </div>
+
+          {status === "review" && (
+            <button
+              onClick={payNow}
+              className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+            >
+              <Bi zh={`立即支付 · ¥${product.priceRmb}`} en={`Pay Now · ¥${product.priceRmb}`} />
+            </button>
+          )}
+
+          {status === "waiting" && qrDataUrl && (
+            <div className="mt-8 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto h-56 w-56 rounded-sm bg-white p-2" />
+              <div className="mx-auto mt-4 max-w-sm rounded-sm border border-lattice/30 bg-lattice/5 p-4">
+                <p className="text-sm leading-6 text-bone">
+                  <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
+                </p>
+                <p className="mt-2 text-xs leading-6 text-bone-dim">
+                  <Bi
+                    zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
+                    en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
+                  />
+                </p>
+              </div>
+              <button
+                onClick={() => checkPaidOnce(true)}
+                disabled={checkingNow}
+                className="mt-4 w-full border border-lattice bg-void-deep py-3 text-xs uppercase tracking-widest2 text-lattice transition hover:bg-lattice hover:text-void-deep disabled:opacity-50"
+              >
+                {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下 →" en="I've paid — check now →" />}
+              </button>
+              {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+            </div>
+          )}
+        </>
       )}
 
       {status === "success" && (
@@ -256,10 +328,10 @@ function CheckoutInner() {
         <div className="mt-10 text-center">
           <p className="text-sm text-rose">{error}</p>
           <button
-            onClick={submitOrder}
+            onClick={createOrder}
             className="mt-4 border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice"
           >
-            <Bi zh="重新生成二维码" en="Try Again" />
+            <Bi zh="重试" en="Try Again" />
           </button>
         </div>
       )}
