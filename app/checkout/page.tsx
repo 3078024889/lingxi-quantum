@@ -10,6 +10,46 @@ import Bi from "@/components/Bi";
 import { getProduct } from "@/lib/plans";
 import { useLang } from "@/lib/useLang";
 
+// v258：二维码中间加一个小色块+文字，区分"这是哪家的码"——不是去用
+// 微信/支付宝的官方图标（那是他们的注册商标，不能拿来用），是用
+// 我们自己的文字徽标做视觉区分，跟很多正规产品自己生成付款码时的
+// 处理方式一样。徽标控制在二维码宽度的18%左右，二维码本身用的是
+// M级纠错（能容忍最多15%左右的图案遮挡仍可扫描），加这么大一块
+// 徽标不会导致扫不出来。
+async function addCenterBadge(qrDataUrl: string, label: string, bg: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) { resolve(qrDataUrl); return; }
+      ctx.drawImage(img, 0, 0);
+      const badgeSize = img.width * 0.2;
+      const cx = img.width / 2;
+      const cy = img.height / 2;
+      // 白色圆角底垫，避免色块直接叠在二维码黑白格子上显得太突兀
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.roundRect(cx - badgeSize / 2 - 6, cy - badgeSize / 2 - 6, badgeSize + 12, badgeSize + 12, 8);
+      ctx.fill();
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.roundRect(cx - badgeSize / 2, cy - badgeSize / 2, badgeSize, badgeSize, 6);
+      ctx.fill();
+      ctx.fillStyle = "#ffffff";
+      ctx.font = `bold ${Math.floor(badgeSize * 0.32)}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(label, cx, cy + 1);
+      resolve(canvas.toDataURL());
+    };
+    img.onerror = () => resolve(qrDataUrl);
+    img.src = qrDataUrl;
+  });
+}
+
 // v256：独立的付款页——之前是弹窗，这次照淘宝订单确认页那种样式做成
 // 一整页：商品信息、金额、支付方式选择（微信支付可以真的用；支付宝
 // 目前还没接，摆出来但标"即将上线"，不假装能用）、提交按钮。数字
@@ -96,7 +136,8 @@ function CheckoutInner() {
         return;
       }
       orderIdRef.current = data.orderId ?? null;
-      const dataUrl = await QRCode.toDataURL(data.codeUrl, { width: 600, margin: 4, errorCorrectionLevel: "M" });
+      const rawDataUrl = await QRCode.toDataURL(data.codeUrl, { width: 600, margin: 4, errorCorrectionLevel: "M" });
+      const dataUrl = await addCenterBadge(rawDataUrl, "微信", "#07C160"); // #07C160 是微信品牌色，用来做色块底色，不涉及使用他们的图标本身
       setQrDataUrl(dataUrl);
       setStatus("waiting");
       pollRef.current = setInterval(() => { checkPaidOnce(); }, 3000);

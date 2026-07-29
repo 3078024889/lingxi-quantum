@@ -1,20 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { REVIEW_MODE } from "@/lib/reviewMode";
-import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 
-// PayPal企业账户已经被注销、暂时没有可用的海外收款渠道，这里改成
-// 微信扫码支付——membership这些产品是"直接购买"，不像生命图谱那些
-// 产品需要先提交一份出生数据再解锁，所以不用传submissionId。
+// v258：这个按钮是修炼技术、显化订阅、多维叙事（单篇+年度解锁）
+// 这几类"直接购买"产品共用的同一个组件——之前改的8个"先填资料再解锁"
+// 的产品各自转了一遍，这个组件转一次，等于把剩下这一大片"直接购买"
+// 类型的入口也一次性接进新付款页了，不用再一个一个改。
 export default function PlanButton({
   productId,
   loggedIn,
   highlight,
-  nameZh,
-  nameEn,
 }: {
   productId: string;
   loggedIn: boolean;
@@ -23,7 +20,6 @@ export default function PlanButton({
   nameEn: string;
 }) {
   const router = useRouter();
-  const [showWechatPay, setShowWechatPay] = useState(false);
   const product = getProduct(productId);
 
   const buy = () => {
@@ -31,7 +27,9 @@ export default function PlanButton({
       router.push("/account");
       return;
     }
-    setShowWechatPay(true);
+    if (!product) return;
+    const here = typeof window !== "undefined" ? window.location.pathname : "/membership";
+    router.push(`/checkout?productId=${productId}&redirect=${encodeURIComponent(here)}`);
   };
 
   if (REVIEW_MODE) {
@@ -63,15 +61,6 @@ export default function PlanButton({
           <><span data-lang="zh">登录后交换</span><span data-lang="en">Sign in to exchange</span></>
         )}
       </button>
-      {showWechatPay && (
-        <WechatPayModal
-          productId={productId}
-          priceRmb={product?.priceRmb ?? 0}
-          productName={{ zh: nameZh, en: nameEn }}
-          onClose={() => setShowWechatPay(false)}
-          onSuccess={() => window.location.reload()}
-        />
-      )}
     </div>
   );
 }
