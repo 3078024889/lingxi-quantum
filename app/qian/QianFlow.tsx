@@ -8,7 +8,6 @@ import type { LifeSign } from "@/lib/qian-data";
 import { TIER_LABELS } from "@/lib/qian-data";
 import QianCosmicRing from "@/components/QianCosmicRing";
 import { REVIEW_MODE } from "@/lib/reviewMode";
-import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
@@ -67,7 +66,6 @@ export default function QianFlow() {
   const [signIndexes, setSignIndexes] = useState<number[] | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
-  const [showWechatPay, setShowWechatPay] = useState(false);
 
   const shake = async () => {
     if (!year || !month || !day) return;
@@ -128,10 +126,8 @@ export default function QianFlow() {
       window.location.href = `/qian/full?id=${submissionId}`;
       return;
     }
-    // PayPal企业账户被注销、暂时无法使用，这里改成微信扫码支付——
-    // 国内用户直接扫码，海外用户这个渠道暂时收不到（下一步海外支付
-    // 渠道确定了再加回来，不是永久只支持微信）。
-    setShowWechatPay(true);
+    // v256：改成跳转到独立付款页，不再用弹窗。
+    window.location.href = `/checkout?productId=qian-reading&submissionId=${submissionId}&redirect=${encodeURIComponent(`/qian/full?id=${submissionId}`)}`;
   };
 
   if (stage === "form") {
@@ -283,16 +279,6 @@ export default function QianFlow() {
           <Bi zh={`开启完整生命解码 · ¥${getProduct("qian-reading")?.priceRmb}`} en={`Unlock the Full Decoding · ¥${getProduct("qian-reading")?.priceRmb}`} />
         </button>
         {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
-        {showWechatPay && submissionId && (
-          <WechatPayModal
-            productId="qian-reading"
-            submissionId={submissionId}
-            priceRmb={getProduct("qian-reading")?.priceRmb ?? 0}
-            productName={{ zh: "灵犀生命灵签 · 完整解读", en: "Lingxi Life Oracle · Full Reading" }}
-            onClose={() => setShowWechatPay(false)}
-            onSuccess={() => { window.location.href = `/qian/full?id=${submissionId}`; }}
-          />
-        )}
         {signs && (
           <button
             onClick={() => {

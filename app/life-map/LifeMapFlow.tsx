@@ -9,7 +9,6 @@ import NatalChartWheel from "./NatalChartWheel";
 import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { lifemapTypeImage } from "@/lib/lifemap-type-images";
-import WechatPayModal from "@/components/WechatPayModal";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
@@ -206,8 +205,6 @@ export default function LifeMapFlow() {
   const [error, setError] = useState("");
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
-  const [showWechatPay, setShowWechatPay] = useState(false);
-  const [payingSubmissionId, setPayingSubmissionId] = useState<string | null>(null);
   // 登录跳转回来后，如果发现有未完成的解锁草稿，先放在这里等用户确认，
   // 不直接自动下单——避免"随便打开一下页面"就被静默带去付款页那种bug。
   const [resumedDraft, setResumedDraft] = useState<LifeMapDraft | null>(null);
@@ -456,9 +453,8 @@ export default function LifeMapFlow() {
         window.location.href = `/life-map/full?id=${id}&paid=1`;
         return;
       }
-      setPayingSubmissionId(id);
-      setShowWechatPay(true);
-      setUnlocking(false);
+      // v256：改成跳转到独立付款页，不再用弹窗。
+      window.location.href = `/checkout?productId=life-map-report&submissionId=${id}&redirect=${encodeURIComponent(`/life-map/full?id=${id}&paid=1`)}`;
     } catch (e) {
       console.error("解锁完整报告出错:", e);
       setError(t("网络错误，请稍后再试。", "Network error, please try again later."));
@@ -565,9 +561,8 @@ export default function LifeMapFlow() {
       window.location.href = `/life-map/full?id=${result.id}&paid=1`;
       return;
     }
-    setPayingSubmissionId(result.id);
-    setShowWechatPay(true);
-    setUnlocking(false);
+    // v256：改成跳转到独立付款页，不再用弹窗。
+    window.location.href = `/checkout?productId=life-map-report&submissionId=${result.id}&redirect=${encodeURIComponent(`/life-map/full?id=${result.id}&paid=1`)}`;
   };
 
   // ---------- 解析灵犀返回的三段式正文 ----------
@@ -1226,16 +1221,6 @@ export default function LifeMapFlow() {
               >
                 {unlocking ? t("正在准备支付…", "Preparing payment…") : <>✨ <Bi zh="解锁完整报告" en="Unlock My Full Life Map" /></>}
               </button>
-              {showWechatPay && payingSubmissionId && (
-                <WechatPayModal
-                  productId="life-map-report"
-                  submissionId={payingSubmissionId}
-                  priceRmb={getProduct("life-map-report")?.priceRmb ?? 0}
-                  productName={{ zh: "灵犀生命图谱 · 完整报告", en: "Lingxi Life Map · Full Report" }}
-                  onClose={() => setShowWechatPay(false)}
-                  onSuccess={() => { window.location.href = `/life-map/full?id=${payingSubmissionId}&paid=1`; }}
-                />
-              )}
               {error && (
                 <p className="mx-auto mt-4 max-w-sm rounded-sm border border-rose/30 bg-rose/10 px-4 py-3 text-sm leading-6 text-rose">
                   {error}

@@ -6,7 +6,6 @@ import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
 import type { TarotCard } from "@/lib/tarot-data";
 import { REVIEW_MODE } from "@/lib/reviewMode";
-import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
@@ -66,7 +65,6 @@ export default function TarotReadingFlow() {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
-  const [showWechatPay, setShowWechatPay] = useState(false);
 
   const positions = [
     { zh: "潜意识镜像", en: "Hidden Pattern" },
@@ -125,8 +123,8 @@ export default function TarotReadingFlow() {
       window.location.href = `/tarot/reading/full?id=${submissionId}`;
       return;
     }
-    // PayPal企业账户被注销、暂时无法使用，改成微信扫码支付。
-    setShowWechatPay(true);
+    // v256：改成跳转到独立付款页，不再用弹窗。
+    window.location.href = `/checkout?productId=tarot-reading&submissionId=${submissionId}&redirect=${encodeURIComponent(`/tarot/reading/full?id=${submissionId}`)}`;
   };
 
   if (stage === "form") {
@@ -283,16 +281,6 @@ export default function TarotReadingFlow() {
           <Bi zh={`开启完整生命镜像 · ¥${getProduct("tarot-reading")?.priceRmb}`} en={`Unlock the Full Life Mirror · ¥${getProduct("tarot-reading")?.priceRmb}`} />
         </button>
         {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
-        {showWechatPay && submissionId && (
-          <WechatPayModal
-            productId="tarot-reading"
-            submissionId={submissionId}
-            priceRmb={getProduct("tarot-reading")?.priceRmb ?? 0}
-            productName={{ zh: "灵犀量子塔罗 · 生命镜像档案", en: "Lingxi Quantum Tarot · Life Mirror" }}
-            onClose={() => setShowWechatPay(false)}
-            onSuccess={() => { window.location.href = `/tarot/reading/full?id=${submissionId}`; }}
-          />
-        )}
       </div>
     </div>
   );

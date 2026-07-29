@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
-import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { useLang } from "@/lib/useLang";
@@ -38,7 +37,6 @@ export default function DailyTideUnlock() {
   const [unlocking, setUnlocking] = useState(false);
   const [error, setError] = useState("");
   const [submissionId, setSubmissionId] = useState<string | null>(null);
-  const [showWechatPay, setShowWechatPay] = useState(false);
 
   const unlock = async () => {
     if (!year || !month || !day || unlocking) return;
@@ -76,8 +74,8 @@ export default function DailyTideUnlock() {
         window.location.href = `/daily/full?id=${data.id}`;
         return;
       }
-      setShowWechatPay(true);
-      setUnlocking(false);
+      // v256：改成跳转到独立付款页，不再用弹窗。
+      window.location.href = `/checkout?productId=daily-tide-report&submissionId=${data.id}&redirect=${encodeURIComponent(`/daily/full?id=${data.id}`)}`;
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setUnlocking(false);
@@ -145,16 +143,7 @@ export default function DailyTideUnlock() {
       )}
       {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
 
-      {showWechatPay && submissionId && (
-        <WechatPayModal
-          productId="daily-tide-report"
-          submissionId={submissionId}
-          priceRmb={getProduct("daily-tide-report")?.priceRmb ?? 0}
-          productName={{ zh: "今日运势潮汐 · 深度报告", en: "Daily Fortune Tide · Deep Report" }}
-          onClose={() => setShowWechatPay(false)}
-          onSuccess={() => { window.location.href = `/daily/full?id=${submissionId}`; }}
-        />
-      )}
+      
     </div>
   );
 }

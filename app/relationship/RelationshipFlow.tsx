@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
-import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
@@ -164,8 +163,6 @@ export default function RelationshipFlow() {
   const [b, setB] = useState<Person>(emptyPerson);
   const [relationshipType, setRelationshipType] = useState<"romantic" | "business" | "general">("romantic");
   const [submitting, setSubmitting] = useState(false);
-  const [showWechatPay, setShowWechatPay] = useState(false);
-  const [payingSubmissionId, setPayingSubmissionId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [previewing, setPreviewing] = useState(false);
   const [preview, setPreview] = useState<{
@@ -258,9 +255,9 @@ export default function RelationshipFlow() {
         return;
       }
 
-      setPayingSubmissionId(saveData.id);
-      setShowWechatPay(true);
       setSubmitting(false);
+      // v256：改成跳转到独立付款页，不再用弹窗。
+      window.location.href = `/checkout?productId=relationship-resonance&submissionId=${saveData.id}&redirect=${encodeURIComponent(`/relationship/full?id=${saveData.id}`)}`;
     } catch {
       setSubmitting(false);
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
@@ -425,16 +422,6 @@ export default function RelationshipFlow() {
             {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`${TYPE_COPY[relationshipType].unlockLabel.zh} · ¥${getProduct("relationship-resonance")?.priceRmb}`} en={`${TYPE_COPY[relationshipType].unlockLabel.en} · ¥${getProduct("relationship-resonance")?.priceRmb}`} />}
           </button>
         </div>
-      )}
-      {showWechatPay && payingSubmissionId && (
-        <WechatPayModal
-          productId="relationship-resonance"
-          submissionId={payingSubmissionId}
-          priceRmb={getProduct("relationship-resonance")?.priceRmb ?? 0}
-          productName={{ zh: "灵犀关系共振图谱", en: "Lingxi Relationship Resonance" }}
-          onClose={() => setShowWechatPay(false)}
-          onSuccess={() => { window.location.href = `/relationship/full?id=${payingSubmissionId}&paid=1`; }}
-        />
       )}
       <div className="bg-void-deep mt-3 rounded-sm p-3 text-center">
         <p className="text-sm text-bone-dim/90">

@@ -7,7 +7,6 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ShareButton from "@/components/ShareButton";
-import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
@@ -141,7 +140,6 @@ export default function ResilienceFlow() {
   const [unlockName, setUnlockName] = useState("");
   const [unlocking, setUnlocking] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
-  const [showWechatPay, setShowWechatPay] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
   const unlock = async () => {
@@ -181,8 +179,8 @@ export default function ResilienceFlow() {
         window.location.href = `/resilience/full?id=${data.id}`;
         return;
       }
-      setShowWechatPay(true);
-      setUnlocking(false);
+      // v256：改成跳转到独立付款页，不再用弹窗。
+      window.location.href = `/checkout?productId=resilience-report&submissionId=${data.id}&redirect=${encodeURIComponent(`/resilience/full?id=${data.id}`)}`;
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setUnlocking(false);
@@ -404,16 +402,6 @@ export default function ResilienceFlow() {
           </button>
           {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
         </div>
-        {showWechatPay && submissionId && (
-          <WechatPayModal
-            productId="resilience-report"
-            submissionId={submissionId}
-            priceRmb={getProduct("resilience-report")?.priceRmb ?? 0}
-            productName={{ zh: "生命韧性指数 · 完整档案", en: "Life Resilience Index · Full Archive" }}
-            onClose={() => setShowWechatPay(false)}
-            onSuccess={() => { window.location.href = `/resilience/full?id=${submissionId}`; }}
-          />
-        )}
       </div>
 
       <div className="mx-auto mt-4 max-w-xl px-6 text-center">

@@ -8,7 +8,6 @@ import PortalSpinner from "@/components/PortalSpinner";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 import { getProduct } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/client";
-import WechatPayModal from "@/components/WechatPayModal";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 
 // v245：财富创造地图——跟生命韧性/桃花磁场同一套模式：免费快测（不
@@ -54,7 +53,6 @@ export default function WealthFlow() {
 
   const [unlocking, setUnlocking] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
-  const [showWechatPay, setShowWechatPay] = useState(false);
 
   const calc = async () => {
     if (!year || !month || !day || calculating) return;
@@ -116,8 +114,8 @@ export default function WealthFlow() {
         window.location.href = `/wealth/full?id=${data.id}`;
         return;
       }
-      setShowWechatPay(true);
-      setUnlocking(false);
+      // v256：改成跳转到独立付款页，不再用弹窗。
+      window.location.href = `/checkout?productId=wealth-report&submissionId=${data.id}&redirect=${encodeURIComponent(`/wealth/full?id=${data.id}`)}`;
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setUnlocking(false);
@@ -226,17 +224,6 @@ export default function WealthFlow() {
 
         {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
       </div>
-
-      {showWechatPay && submissionId && (
-        <WechatPayModal
-          productId="wealth-report"
-          submissionId={submissionId}
-          priceRmb={getProduct("wealth-report")?.priceRmb ?? 0}
-          productName={{ zh: "财富创造地图 · 完整档案", en: "Wealth Creation Map · Full Archive" }}
-          onClose={() => setShowWechatPay(false)}
-          onSuccess={() => { window.location.href = `/wealth/full?id=${submissionId}`; }}
-        />
-      )}
     </div>
   );
 }

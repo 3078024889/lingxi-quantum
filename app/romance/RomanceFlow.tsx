@@ -7,7 +7,6 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import ShareButton from "@/components/ShareButton";
-import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
@@ -125,7 +124,6 @@ export default function RomanceFlow() {
   const [unlockName, setUnlockName] = useState("");
   const [unlocking, setUnlocking] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
-  const [showWechatPay, setShowWechatPay] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
 
   const unlock = async () => {
@@ -165,8 +163,8 @@ export default function RomanceFlow() {
         window.location.href = `/romance/full?id=${data.id}`;
         return;
       }
-      setShowWechatPay(true);
-      setUnlocking(false);
+      // v256：改成跳转到独立付款页，不再用弹窗。
+      window.location.href = `/checkout?productId=romance-report&submissionId=${data.id}&redirect=${encodeURIComponent(`/romance/full?id=${data.id}`)}`;
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setUnlocking(false);
@@ -374,16 +372,6 @@ export default function RomanceFlow() {
           </button>
           {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
         </div>
-        {showWechatPay && submissionId && (
-          <WechatPayModal
-            productId="romance-report"
-            submissionId={submissionId}
-            priceRmb={getProduct("romance-report")?.priceRmb ?? 0}
-            productName={{ zh: "桃花磁场指数 · 完整档案", en: "Romance Magnetism Index · Full Archive" }}
-            onClose={() => setShowWechatPay(false)}
-            onSuccess={() => { window.location.href = `/romance/full?id=${submissionId}`; }}
-          />
-        )}
       </div>
 
       <div className="mx-auto mt-4 max-w-xl px-6 text-center">
