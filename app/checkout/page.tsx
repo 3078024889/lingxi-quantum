@@ -119,6 +119,17 @@ function CheckoutInner() {
   // （navigator只在客户端存在），SSR阶段先当作false，不影响首屏渲染。
   const isWechatBrowser =
     typeof navigator !== "undefined" && /MicroMessenger/i.test(navigator.userAgent);
+  // v267：微信的"网页授权域名"只能验证、绑定一个域名——已经配的是
+  // lingxifield.cn（备案过的那个），lingxifield.com没有备案，永远
+  // 没法通过微信那边的域名校验。之前没做这个区分，导致在.com被微信
+  // 内置浏览器打开时，也一样会尝试走网页授权，结果每次都是固定报错
+  // "redirect_uri域名与后台配置不一致"——这不是配置没做完，是.com
+  // 这个域名在微信生态里天然做不到，两个域名没法"同步"这一项。这里
+  // 加一个域名判断，.com在微信里打开时不再尝试注定失败的授权，改成
+  // 提示切换到.cn。
+  const isCnDomain = typeof window !== "undefined" && /lingxifield\.cn$/i.test(window.location.hostname);
+  const cnSwitchUrl =
+    typeof window !== "undefined" ? window.location.href.replace(/lingxifield\.com/i, "lingxifield.cn") : "";
   const jsapiParamsRef = useRef<{
     appId: string; timeStamp: string; nonceStr: string; package: string; signType: "RSA"; paySign: string;
   } | null>(null);
@@ -193,7 +204,8 @@ function CheckoutInner() {
     // 微信内置浏览器 + 还没拿到code —— 先去做静默网页授权换code，
     // 换完微信会自动跳回这个页面（原有的productId等query会保留），
     // 到时候wechatCode就会有值，会走下面的JSAPI分支，不会再走这里。
-    if (isWechatBrowser && !wechatCode) {
+    // 只在.cn域名做这件事——.com没有、也没法通过微信的域名校验。
+    if (isWechatBrowser && !wechatCode && isCnDomain) {
       try {
         const redirectUri = window.location.href.split("#")[0];
         const res = await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(redirectUri)}`);
@@ -210,6 +222,19 @@ function CheckoutInner() {
         setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
         return;
       }
+    }
+
+    // 微信内浏览器 + 不是.cn域名——扫码在这里既打不开（微信不允许自己
+    // 扫自己），网页授权又注定失败（域名没备案、没法通过微信校验），
+    // 与其让用户看到一个每次都一样的死胡同报错，不如直接给一个切换
+    // 到.cn继续走的入口，那边这条路径是真的通的。
+    if (isWechatBrowser && !isCnDomain) {
+      setStatus("error");
+      setError(t(
+        "微信内暂不支持在这个域名完成支付，请点下方按钮切换到 lingxifield.cn 继续",
+        "Payment inside WeChat isn't available on this domain yet — tap below to continue on lingxifield.cn"
+      ));
+      return;
     }
 
     try {
@@ -238,10 +263,19 @@ function CheckoutInner() {
         // 但code已经在第一次请求里用掉了），不要停在一个用户看不懂的
         // 报错上，直接把code从地址栏摘掉、重新走一次静默授权，对用户
         // 来说感觉不到中间这一步，只是稍微多等一下。
-        if (isWechatBrowser && wechatCode) {
+        // v267修复严重bug：这里原来只要"在微信里 && 有code"就无条件
+        // 重新走一次授权，一旦下单本身持续失败（比如环境变量还没生效、
+        // 商户配置有问题），就会变成 授权→失败→再授权→再失败 的死循环，
+        // 用户看到的就是页面卡在"正在生成场域订单……"一直刷新、永远
+        // 不出结果，而且完全看不到真正的报错原因。现在只允许自愈一次：
+        // 地址栏里带上 lxretry 标记，第二次进来就不再重定向，直接把
+        // 真实报错显示出来。
+        const alreadyRetried = params.get("lxretry") === "1";
+        if (isWechatBrowser && wechatCode && !alreadyRetried) {
           const clean = new URL(window.location.href);
           clean.searchParams.delete("code");
           clean.searchParams.delete("state");
+          clean.searchParams.set("lxretry", "1");
           try {
             const redirectUri = clean.toString();
             const r2 = await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(redirectUri)}`);
@@ -485,12 +519,21 @@ function CheckoutInner() {
       {status === "error" && (
         <div className="mt-10 text-center">
           <p className="text-sm text-rose">{error}</p>
-          <button
-            onClick={createOrder}
-            className="mt-4 border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice"
-          >
-            <Bi zh="重试" en="Try Again" />
-          </button>
+          {isWechatBrowser && !isCnDomain ? (
+            <a
+              href={cnSwitchUrl}
+              className="mt-4 inline-block bg-lattice px-6 py-2 text-xs uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+            >
+              <Bi zh="切换到 lingxifield.cn 继续 →" en="Switch to lingxifield.cn →" />
+            </a>
+          ) : (
+            <button
+              onClick={createOrder}
+              className="mt-4 border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice"
+            >
+              <Bi zh="重试" en="Try Again" />
+            </button>
+          )}
         </div>
       )}
     </div>
