@@ -9027,3 +9027,36 @@ app/account/orders/page.tsx —— 按你确认的结构重做，不再是一条
 
 【还没做】
 支付宝正式接入（占位还在，等你申请下来）。
+
+========================================
+
+灵犀 LINGXI · v266（紧急：订阅解锁写入失败 + 生命韧性输入框遗漏）
+
+★★ 最高优先级，先跑 SQL-v266-unlocks-expires-at-and-orders-columns.sql ★★
+真实报错：订阅解锁写入失败：Could not find the 'expires_at' column of
+'unlocks' in the schema cache——钱到账了，但多维叙事单篇/年度解锁/
+显化订阅/全构造解锁这类"订阅制"产品，写不进解锁记录，订单卡在待支付，
+账户页点"查询"重试也会一直失败，因为根本原因是这张表从建表起就缺
+这一列，不是重试能解决的。这条SQL在supabase/schema.sql里其实一直
+都在，但从来没被单独抽出来给你跑过。这次连另外几条同样情况、可能
+也没跑过的列（orders.submission_id / submission_name / amount_rmb、
+life_map_submissions.full_report_en）一起补齐，一次性跑完。
+
+跑完SQL后，去场域订单里找那笔"瞬间之重"，点「查询」重试一次即可，
+不用重新付款。
+
+【这次真正改完、npm run build 验证通过的】
+1. 生命韧性指数（app/resilience/ResilienceFlow.tsx）——之前只修了
+   桃花磁场、今日运势的"姓名输入框压在PDF封面图水印上"这个问题，
+   漏了生命韧性自己（你这次发的截图里那个问题其实是这个页面）。
+   这次一并拆成独立纯色卡片，四个产品（生命韧性/桃花磁场/财富地图/
+   今日运势）现在处理方式统一了。
+2. 微信网页授权报错信息——之前不管实际缺哪个环境变量，报错文案都
+   写死显示"缺 WECHAT_APP_ID / WECHAT_APP_SECRET"两个都缺，这次改成
+   动态显示，缺哪个说哪个，不会让人误以为已经配好的那个也没生效。
+   你Vercel环境变量列表里确认了WECHAT_APP_ID已经有，缺的只有
+   WECHAT_APP_SECRET这一个（公众号后台"基本配置"页能找到，不是支付
+   用的那几个密钥）。另外webhook验签用到的WECHAT_PLATFORM_PUBLIC_KEY /
+   WECHAT_PLATFORM_PUBLIC_KEY_ID这两个也还没配——这个不会导致"钱到账
+   但解锁失败"（前端轮询查询那条路径不依赖这两个变量），但webhook这条
+   兜底路径目前会因为验签失败被拒绝，建议之后也补上，双保险。

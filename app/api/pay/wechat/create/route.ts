@@ -9,7 +9,7 @@ import {
   wechatPayConfigured,
   wechatPayMissingVars,
 } from "@/lib/wechatpay";
-import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
+import { exchangeCodeForOpenid, wechatOauthConfigured, wechatOauthMissingVars } from "@/lib/wechat-oauth";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         if (!wechatOauthConfigured()) {
           await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
           return NextResponse.json(
-            { error: "微信网页授权还没配置完整（缺 WECHAT_APP_ID / WECHAT_APP_SECRET）" },
+            { error: `微信网页授权还没配置完整（缺 ${wechatOauthMissingVars().join("、")}）` },
             { status: 503 }
           );
         }

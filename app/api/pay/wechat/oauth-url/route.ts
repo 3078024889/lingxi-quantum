@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getWechatOAuthUrl, wechatOauthConfigured } from "@/lib/wechat-oauth";
+import { getWechatOAuthUrl, wechatOauthConfigured, wechatOauthMissingVars } from "@/lib/wechat-oauth";
 
 export const runtime = "nodejs";
 
@@ -15,7 +15,7 @@ export async function GET(req: Request) {
   }
   if (!wechatOauthConfigured()) {
     return NextResponse.json(
-      { error: "微信网页授权还没配置完整（缺 WECHAT_APP_ID / WECHAT_APP_SECRET）" },
+      { error: `微信网页授权还没配置完整（缺 ${wechatOauthMissingVars().join("、")}）` },
       { status: 503 }
     );
   }

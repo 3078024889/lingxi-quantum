@@ -370,13 +370,18 @@ export default function ResilienceFlow() {
               </div>
             ))}
           </div>
+        </div>
 
+        {/* v266：跟桃花磁场/今日运势这次统一的处理方式一样——姓名输入框
+            和解锁按钮从压着封面图背景的卡片里拆出来，单独一块纯色玻璃
+            面板，不再跟封面图底部的"lingxifield.com"落款文字叠在一起。 */}
+        <div className="lx-glass mt-4 p-6 text-center">
           <input
             type="text"
             value={unlockName}
             onChange={(e) => setUnlockName(e.target.value)}
             placeholder={t("你的名字（选填）", "Your name (optional)")}
-            className="mt-4 w-full rounded-sm border border-white/15 bg-transparent px-4 py-2 text-center text-sm text-bone outline-none focus:border-emerald-400/60"
+            className="w-full rounded-sm border border-white/15 bg-transparent px-4 py-2 text-center text-sm text-bone outline-none focus:border-emerald-400/60"
           />
           <button
             onClick={unlock}

@@ -23,6 +23,16 @@ export function wechatOauthConfigured(): boolean {
   return !!(APP_ID && APP_SECRET);
 }
 
+// 具体缺哪个——之前这里没有这个函数，两条路由里都是写死的一句
+// "缺 WECHAT_APP_ID / WECHAT_APP_SECRET"，哪怕只缺一个，也会显示两个
+// 都缺，容易让人误以为已经配好的那个也没生效，去重复排查。
+export function wechatOauthMissingVars(): string[] {
+  const missing: string[] = [];
+  if (!APP_ID) missing.push("WECHAT_APP_ID");
+  if (!APP_SECRET) missing.push("WECHAT_APP_SECRET");
+  return missing;
+}
+
 // 生成静默授权跳转链接——用户在微信内置浏览器打开这个链接，微信会（不弹
 // 任何授权弹窗，因为scope=snsapi_base）直接跳回redirectUri，并带上
 // ?code=xxx&state=xxx。redirectUri本身建议带上当时页面已有的query（
