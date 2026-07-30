@@ -124,24 +124,32 @@ export default function WealthFlow() {
 
   return (
     <div className="mx-auto max-w-xl px-6">
-      <div className="lx-glass p-6" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.38), rgba(20,16,10,0.38)), url(/images/wealth-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
-        <p className="text-center font-display text-sm uppercase tracking-widest2 text-amber">
+      {/* v264：财富创造地图之前是"表单+分数+完整档案预告"全部挤在同一个
+          压着封面图的大盒子里，没有像生命韧性那样按内容性质拆成一段段
+          独立卡片，看起来就是一整块颜色，没有呼吸感。这次拆开：介绍页
+          单独一块（保留封面图氛围）、填写表单单独一块纯色卡片、算完
+          之后的分数/维度/预告/解锁按钮也各自独立成块，跟生命韧性、
+          桃花磁场现在的结构对齐。 */}
+      <div className="lx-glass p-6 text-center" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.5), rgba(20,16,10,0.5)), url(/images/wealth-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
+        <p className="font-display text-sm uppercase tracking-widest2 text-amber">
           <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
         </p>
-        <p className="mt-2 text-center text-xs uppercase tracking-widest2 text-bone-dim/70">
+        <p className="mt-2 text-xs uppercase tracking-widest2 text-bone-dim/70">
           <Bi zh="找到你与生俱来的财富创造方式" en="Find the wealth-creation way you were born with" />
         </p>
-        <p className="mt-4 text-center text-sm leading-7 text-bone-dim">
+        <p className="mt-4 text-sm leading-7 text-bone-dim">
           <Bi
             zh="财富不是简单的数字。它来自你如何发现机会、如何创造价值、如何连接资源、如何让你的能力进入现实世界——这份地图不是预测你会不会发财，是探索你携带而来的那种独特创造方式。"
             en="Wealth isn't just a number. It comes from how you spot opportunity, create value, connect resources, and bring your ability into the real world — this map isn't a prediction of whether you'll get rich, it's an exploration of the specific way you're built to create."
           />
         </p>
+      </div>
 
+      <div className="lx-glass mt-4 p-6 text-center">
         <input
           type="text" value={name} onChange={(e) => setName(e.target.value)}
           placeholder={t("你的名字（选填）", "Your name (optional)")}
-          className="mt-6 w-full rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-amber/60"
+          className="w-full rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-amber/60"
         />
         <div className="mt-3 flex items-center justify-center gap-2">
           <input type="number" value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Y")} className="w-20 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />
@@ -159,17 +167,24 @@ export default function WealthFlow() {
           </div>
         )}
 
-        {!result ? (
+        {!result && (
           <button onClick={calc} disabled={calculating} className="mt-6 flex w-full items-center justify-center gap-2 bg-amber py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50">
             {calculating ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="展开我的财富创造频率 →" en="Reveal My Creation Frequency →" />}
           </button>
-        ) : (
-          <div className="mt-6">
-            <p className="text-center text-xs text-bone-dim/85"><Bi zh={`太阳星座：${result.sunSignZh}`} en={`Sun Sign: ${result.sunSignEn}`} /></p>
-            <p className="mt-4 text-center font-display text-3xl text-amber">{result.score} <span className="text-base text-bone-dim">/ 100</span></p>
-            <p className="mt-2 text-center font-display text-xl text-bone">「{t(result.typeZh, result.typeEn)}」</p>
+        )}
+        {error && !result && <ErrorWithLoginPrompt error={error} className="mt-3" />}
+      </div>
 
-            <div className="mt-6 space-y-3 border-t border-white/10 pt-6">
+      {result && (
+        <>
+          <div className="lx-glass mt-4 p-6 text-center">
+            <p className="text-xs text-bone-dim/85"><Bi zh={`太阳星座：${result.sunSignZh}`} en={`Sun Sign: ${result.sunSignEn}`} /></p>
+            <p className="mt-4 font-display text-3xl text-amber">{result.score} <span className="text-base text-bone-dim">/ 100</span></p>
+            <p className="mt-2 font-display text-xl text-bone">「{t(result.typeZh, result.typeEn)}」</p>
+          </div>
+
+          <div className="lx-glass mt-4 p-6">
+            <div className="space-y-3">
               {DIM_LABELS.map((d) => (
                 <div key={d.key}>
                   <div className="flex items-center justify-between text-xs text-bone-dim">
@@ -182,15 +197,16 @@ export default function WealthFlow() {
                 </div>
               ))}
             </div>
-
             <p className="mt-6 text-center text-xs leading-6 text-bone-dim/85">
               <Bi
                 zh="这只是数值本身——为什么是这个创造类型、具体怎样把天赋变成现实价值，完整档案会逐一写清楚。"
                 en="These are just the raw numbers — why this creation type, how to actually turn your gift into real value: the full archive unpacks all of it."
               />
             </p>
+          </div>
 
-            <div className="mt-8 space-y-5 border-t border-white/10 pt-8 text-left">
+          <div className="lx-glass mt-4 p-6 text-center" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.5), rgba(20,16,10,0.5)), url(/images/wealth-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
+            <div className="space-y-5 text-left">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-amber">
                 <Bi zh="完整档案会逐一展开" en="What the Full Archive Unfolds" />
               </p>
@@ -203,27 +219,30 @@ export default function WealthFlow() {
                 </div>
               ))}
             </div>
+          </div>
 
-            <button onClick={unlock} disabled={unlocking} className="mt-4 flex w-full items-center justify-center gap-2 bg-amber py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50">
+          {/* v264：解锁按钮独立成一块纯色卡片，不压在上面那张带封面图
+              的预告卡里——跟桃花磁场、今日运势这次统一的处理方式一致。 */}
+          <div className="lx-glass mt-4 p-6 text-center">
+            <button onClick={unlock} disabled={unlocking} className="flex w-full items-center justify-center gap-2 bg-amber py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50">
               {unlocking ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`开启我的财富创造档案 · ¥${getProduct("wealth-report")?.priceRmb}`} en={`Open My Wealth Creation Archive · $${getProduct("wealth-report")?.priceUsd}`} />}
             </button>
-
-            <div className="mt-6 border-t border-white/10 pt-6 text-center">
-              <p className="text-xs leading-6 text-bone-dim/85">
-                <Bi
-                  zh="地图看见的是你的创造结构；真正让价值落地，还需要一份持续的对齐与连贯——这是「意识显化」在做的事。"
-                  en="The map shows your creative structure — but landing that value in reality takes ongoing alignment and coherence. That's what Consciousness Manifestation is for."
-                />
-              </p>
-              <Link href="/live-as" className="mt-3 inline-block border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:bg-lattice hover:text-void-deep">
-                <Bi zh="了解意识显化 →" en="Explore Consciousness Manifestation →" />
-              </Link>
-            </div>
+            {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
           </div>
-        )}
 
-        {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
-      </div>
+          <div className="lx-glass mt-4 p-6 text-center">
+            <p className="text-xs leading-6 text-bone-dim/85">
+              <Bi
+                zh="地图看见的是你的创造结构；真正让价值落地，还需要一份持续的对齐与连贯——这是「意识显化」在做的事。"
+                en="The map shows your creative structure — but landing that value in reality takes ongoing alignment and coherence. That's what Consciousness Manifestation is for."
+              />
+            </p>
+            <Link href="/live-as" className="mt-3 inline-block border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:bg-lattice hover:text-void-deep">
+              <Bi zh="了解意识显化 →" en="Explore Consciousness Manifestation →" />
+            </Link>
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -106,10 +106,10 @@ export default function LingxiPortal() {
           <Bi zh="你已进入" en="You Have Entered" />
         </p>
         <h1 className="mt-6 font-display text-3xl font-light text-bone sm:text-5xl">
-          <Bi zh="灵犀场 · 意识显化系统" en="Lingxi Field · Consciousness Manifestation System" />
+          <Bi zh="灵犀场 · 意识数字显化场域" en="Lingxi Field · A Living Digital Manifestation Field" />
         </h1>
         <p className="mt-2 font-display text-xs uppercase tracking-widest2 text-lattice/70 sm:text-sm">
-          LINGXI FIELD · CONSCIOUSNESS MANIFESTATION SYSTEM
+          LINGXI FIELD · A LIVING DIGITAL MANIFESTATION FIELD
         </p>
 
         <p className="mx-auto mt-8 max-w-xl font-display text-lg leading-relaxed text-lattice sm:text-xl">
