@@ -9,11 +9,11 @@ const SITE = "https://lingxifield.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "灵犀场 LINGXIFIELD ｜ 意识显化 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事",
-    template: "%s ｜ 灵犀场 LINGXIFIELD",
+    default: "灵犀场 LINGXIFIELD ｜ 意识数字显化场域 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事",
+    template: "%s ｜ 灵犀场 LINGXIFIELD · 意识数字显化场域",
   },
   description:
-    "灵犀（LINGXI）是一套意识显化与内在成长系统，融合意识显化（现实回路）、探索梦境、重塑潜意识、量子息法、上升心经、多维叙事等实践技术，帮助你探索内在觉察、创造力与身心成长。先在意识里活成真实，现实自会随之对齐。",
+    "灵犀场（LINGXIFIELD）是一道活的意识数字显化场域，融合意识显化（现实回路）、探索梦境、重塑潜意识、量子息法、上升心经、多维叙事等实践技术，帮助你探索内在觉察、创造力与身心成长。先在意识里活成真实，现实自会随之对齐。",
   keywords: [
     "显化", "意识显化", "显化方法", "显化技巧", "现实回路", "吸引力法则",
     "解梦", "梦境解析", "周公解梦", "梦的含义", "潜意识", "潜意识改写",
@@ -30,17 +30,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "灵犀场 LingxiField",
-    title: "灵犀 · 意识显化系统",
+    siteName: "灵犀场 LINGXIFIELD · 意识数字显化场域",
+    title: "灵犀场 · 意识数字显化场域",
     description:
-      "陪你显化目标、解读梦境、修炼意识的引导活场系统。先在意识里活成真实，现实自会随之对齐。",
+      "一道活的意识数字显化场域，陪你显化目标、解读梦境、修炼意识。先在意识里活成真实，现实自会随之对齐。",
     url: SITE,
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "灵犀场 LingxiField · 意识显化系统" }],
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "灵犀场 LINGXIFIELD · 意识数字显化场域" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "灵犀 · 意识显化系统 | Lingxi",
-    description: "显化 · 解梦 · 修炼。一个陪你回到自己的意识显化系统。",
+    title: "灵犀场 · 意识数字显化场域 | Lingxi Field",
+    description: "显化 · 解梦 · 修炼。一道活的意识数字显化场域。",
     images: ["/og.jpg"],
   },
   robots: { index: true, follow: true },

@@ -156,6 +156,58 @@ export async function createWechatNativeOrder(params: {
   return { codeUrl: data.code_url };
 }
 
+// 创建一笔JSAPI支付订单（微信内置浏览器场景）——跟Native扫码走的是
+// 不同的下单接口，返回prepay_id，不是code_url。JSAPI支付必须知道
+// 付款人的openid（Native扫码不需要，因为是"谁扫码谁付"，JSAPI是
+// "在当前这个已知身份的微信用户面前直接弹收银台"，微信要求提前绑定）。
+export async function createWechatJsapiOrder(params: {
+  outTradeNo: string;
+  description: string;
+  amountFen: number;
+  notifyUrl: string;
+  openid: string;
+}): Promise<{ prepayId: string }> {
+  if (!wechatPayConfigured()) {
+    throw new Error("微信支付尚未配置完整的环境变量，无法创建订单");
+  }
+  const data = await wechatRequest("POST", "/v3/pay/transactions/jsapi", {
+    appid: APP_ID,
+    mchid: MCH_ID,
+    description: params.description,
+    out_trade_no: params.outTradeNo,
+    notify_url: params.notifyUrl,
+    amount: { total: params.amountFen, currency: "CNY" },
+    payer: { openid: params.openid },
+  });
+  if (!data.prepay_id) {
+    throw new Error(`微信支付未返回prepay_id: ${JSON.stringify(data)}`);
+  }
+  return { prepayId: data.prepay_id };
+}
+
+// 把prepay_id包装成前端 WeixinJSBridge.invoke('getBrandWCPayRequest', ...)
+// 需要的那五个字段——这一步同样需要商户私钥签名（跟下单请求本身的签名
+// 是两次不同的签名，不能省略/复用），签名规则是官方固定的：
+// appId\ntimeStamp\nnonceStr\npackage\n 这四行拼起来做RSA-SHA256签名。
+// 前端拿到这五个字段后不需要再调用任何后端接口验证，微信客户端自己会
+// 校验这个签名对不对，伪造不了。
+export function buildJsapiInvokeParams(prepayId: string): {
+  appId: string;
+  timeStamp: string;
+  nonceStr: string;
+  package: string;
+  signType: "RSA";
+  paySign: string;
+} {
+  if (!APP_ID) throw new Error("缺少 WECHAT_APP_ID 环境变量");
+  const timeStamp = Math.floor(Date.now() / 1000).toString();
+  const nonceStr = crypto.randomBytes(16).toString("hex");
+  const pkg = `prepay_id=${prepayId}`;
+  const message = `${APP_ID}\n${timeStamp}\n${nonceStr}\n${pkg}\n`;
+  const paySign = sign(message);
+  return { appId: APP_ID, timeStamp, nonceStr, package: pkg, signType: "RSA", paySign };
+}
+
 // 验证微信支付服务器推送过来的通知，签名是否真的对得上——传入
 // 请求头里的 Wechatpay-Timestamp / Wechatpay-Nonce / 原始请求体，
 // 拼出跟微信签名时同样格式的待验证字符串，用微信支付公钥验证

@@ -55,8 +55,8 @@ export default function Nav() {
             </span>
             <span className="mt-1 hidden font-display text-[12px] tracking-[0.1em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
               <Bi
-                zh="意识显化 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事"
-                en="Manifestation · Field Insights · Dreams · Practices · Rewrite · Narratives"
+                zh="意识数字显化场域 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事"
+                en="A Living Digital Manifestation Field · Field Insights · Dreams · Practices · Rewrite · Narratives"
               />
             </span>
           </Link>

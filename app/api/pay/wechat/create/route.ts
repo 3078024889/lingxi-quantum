@@ -2,7 +2,14 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
-import { createWechatNativeOrder, wechatPayConfigured, wechatPayMissingVars } from "@/lib/wechatpay";
+import {
+  createWechatNativeOrder,
+  createWechatJsapiOrder,
+  buildJsapiInvokeParams,
+  wechatPayConfigured,
+  wechatPayMissingVars,
+} from "@/lib/wechatpay";
+import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
@@ -32,7 +39,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const { productId, submissionId } = await req.json();
+    const { productId, submissionId, code } = await req.json();
+    // code存在，说明前端是在微信内置浏览器里、已经走完静默授权拿到了
+    // 微信的一次性code——这种场景走JSAPI（直接在微信里弹收银台），
+    // 不再是Native扫码（微信自己的内置浏览器不允许自己弹二维码给自己
+    // 扫，这正是"塔罗按钮按不动"的根因）。code不存在就还是原来的
+    // Native扫码流程，不影响桌面/外部浏览器场景。
+    const useJsapi = typeof code === "string" && code.length > 0;
     const product = getProduct(productId);
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
@@ -96,6 +109,29 @@ export async function POST(req: Request) {
     const amountFen = Math.round(product.priceRmb * 100);
 
     try {
+      if (useJsapi) {
+        if (!wechatOauthConfigured()) {
+          await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
+          return NextResponse.json(
+            { error: "微信网页授权还没配置完整（缺 WECHAT_APP_ID / WECHAT_APP_SECRET）" },
+            { status: 503 }
+          );
+        }
+        const { openid } = await exchangeCodeForOpenid(code);
+        const { prepayId } = await createWechatJsapiOrder({
+          outTradeNo,
+          description: `灵犀 · ${product.name}`.slice(0, 40),
+          amountFen,
+          notifyUrl: `${baseUrl}/api/pay/wechat/notify`,
+          openid,
+        });
+        const jsapi = buildJsapiInvokeParams(prepayId);
+
+        await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
+
+        return NextResponse.json({ orderId: order.id, jsapi, outTradeNo });
+      }
+
       const { codeUrl } = await createWechatNativeOrder({
         outTradeNo,
         description: `灵犀 · ${product.name}`.slice(0, 40), // 微信支付对商品描述有长度限制
@@ -109,7 +145,7 @@ export async function POST(req: Request) {
     } catch (e) {
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
       return NextResponse.json(
-        { error: "微信支付网关返回异常", detail: e instanceof Error ? e.message : String(e) },
+        { error: useJsapi ? "微信网页授权或JSAPI下单失败" : "微信支付网关返回异常", detail: e instanceof Error ? e.message : String(e) },
         { status: 500 }
       );
     }

@@ -95,6 +95,39 @@ function CheckoutInner() {
   const doneRef = useRef(false);
   const startedRef = useRef(false);
 
+  // v262：微信内置浏览器场景——微信自己不允许在自己的浏览器里弹二维码
+  // 让用户"自己扫自己"，这条路径必须走JSAPI（直接在当前页面里唤起
+  // 微信原生收银台），不是Native扫码。isWechatBrowser只在浏览器端判断
+  // （navigator只在客户端存在），SSR阶段先当作false，不影响首屏渲染。
+  const isWechatBrowser =
+    typeof navigator !== "undefined" && /MicroMessenger/i.test(navigator.userAgent);
+  const jsapiParamsRef = useRef<{
+    appId: string; timeStamp: string; nonceStr: string; package: string; signType: "RSA"; paySign: string;
+  } | null>(null);
+  const wechatCode = params.get("code") ?? undefined;
+
+  function invokeWeixinPay(
+    jsapi: { appId: string; timeStamp: string; nonceStr: string; package: string; signType: string; paySign: string },
+    onOk: () => void,
+    onFail: (msg: string) => void
+  ) {
+    const w = window as unknown as {
+      WeixinJSBridge?: { invoke: (event: string, params: unknown, cb: (res: { err_msg: string }) => void) => void };
+    };
+    const run = () => {
+      w.WeixinJSBridge!.invoke("getBrandWCPayRequest", jsapi, (res) => {
+        if (res.err_msg === "get_brand_wcpay_request:ok") onOk();
+        else if (res.err_msg === "get_brand_wcpay_request:cancel") onFail(t("已取消支付", "Payment canceled"));
+        else onFail(res.err_msg || t("支付调起失败", "Failed to open WeChat Pay"));
+      });
+    };
+    if (typeof w.WeixinJSBridge === "undefined") {
+      document.addEventListener("WeixinJSBridgeReady", run, false);
+    } else {
+      run();
+    }
+  }
+
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
@@ -138,14 +171,43 @@ function CheckoutInner() {
   const createOrder = async () => {
     setStatus("loading");
     setError("");
+
+    // 微信内置浏览器 + 还没拿到code —— 先去做静默网页授权换code，
+    // 换完微信会自动跳回这个页面（原有的productId等query会保留），
+    // 到时候wechatCode就会有值，会走下面的JSAPI分支，不会再走这里。
+    if (isWechatBrowser && !wechatCode) {
+      try {
+        const redirectUri = window.location.href.split("#")[0];
+        const res = await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(redirectUri)}`);
+        const data = await res.json();
+        if (!res.ok || !data.url) {
+          setStatus("error");
+          setError((data.error || "微信网页授权初始化失败"));
+          return;
+        }
+        window.location.href = data.url;
+        return; // 页面即将跳转，不用再往下走
+      } catch {
+        setStatus("error");
+        setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+        return;
+      }
+    }
+
     try {
       const res = await fetch("/api/pay/wechat/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId, submissionId }),
+        body: JSON.stringify({ productId, submissionId, ...(wechatCode ? { code: wechatCode } : {}) }),
       });
       const rawText = await res.text();
-      let data: { codeUrl?: string; orderId?: string; error?: string; detail?: string };
+      let data: {
+        codeUrl?: string;
+        orderId?: string;
+        error?: string;
+        detail?: string;
+        jsapi?: { appId: string; timeStamp: string; nonceStr: string; package: string; signType: "RSA"; paySign: string };
+      };
       try {
         data = JSON.parse(rawText);
       } catch {
@@ -153,13 +215,29 @@ function CheckoutInner() {
         setError(`场域连接超时或服务暂时不可用，请稍后再试。（状态码 ${res.status}）`);
         return;
       }
-      if (!res.ok || !data.codeUrl || !data.orderId) {
+      if (!res.ok || !data.orderId || (!data.codeUrl && !data.jsapi)) {
+        // 微信的code是一次性的——如果是重试导致的失败（用户点了"重试"，
+        // 但code已经在第一次请求里用掉了），不要停在一个用户看不懂的
+        // 报错上，直接把code从地址栏摘掉、重新走一次静默授权，对用户
+        // 来说感觉不到中间这一步，只是稍微多等一下。
+        if (isWechatBrowser && wechatCode) {
+          const clean = new URL(window.location.href);
+          clean.searchParams.delete("code");
+          clean.searchParams.delete("state");
+          try {
+            const redirectUri = clean.toString();
+            const r2 = await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(redirectUri)}`);
+            const d2 = await r2.json();
+            if (r2.ok && d2.url) { window.location.href = d2.url; return; }
+          } catch { /* 掉到下面正常报错分支 */ }
+        }
         setStatus("error");
         setError((data.error || "创建订单失败") + (data.detail ? ` (${data.detail})` : ""));
         return;
       }
       orderIdRef.current = data.orderId;
-      codeUrlRef.current = data.codeUrl;
+      if (data.jsapi) jsapiParamsRef.current = data.jsapi;
+      if (data.codeUrl) codeUrlRef.current = data.codeUrl;
       setStatus("review");
     } catch {
       setStatus("error");
@@ -167,9 +245,22 @@ function CheckoutInner() {
     }
   };
 
-  // 第二步：用户点"立即支付"，这时候才真正生成、展示二维码，并开始
-  // 轮询支付状态。
+  // 第二步：用户点"立即支付"。微信内置浏览器场景走JSAPI——直接唤起
+  // 微信原生收银台，不展示二维码（微信不允许在自己的浏览器里弹码给
+  // 自己扫）；其它场景保持原来的Native扫码。
   const payNow = async () => {
+    if (jsapiParamsRef.current) {
+      setStatus("waiting");
+      invokeWeixinPay(
+        jsapiParamsRef.current,
+        () => {
+          checkPaidOnce();
+          pollRef.current = setInterval(() => { checkPaidOnce(); }, 3000);
+        },
+        (msg) => { setStatus("review"); setError(msg); }
+      );
+      return;
+    }
     if (!codeUrlRef.current) return;
     setStatus("waiting");
     const rawDataUrl = await QRCode.toDataURL(codeUrlRef.current, { width: 600, margin: 4, errorCorrectionLevel: "M" });
@@ -286,7 +377,23 @@ function CheckoutInner() {
             </button>
           )}
 
-          {status === "waiting" && qrDataUrl && (
+          {status === "waiting" && jsapiParamsRef.current && (
+            <div className="mt-8 text-center">
+              <p className="text-sm leading-6 text-bone">
+                <Bi zh="正在唤起微信支付……如果没有自动弹出，请稍等或返回重试" en="Opening WeChat Pay… if nothing pops up, please wait or try again" />
+              </p>
+              <button
+                onClick={() => checkPaidOnce(true)}
+                disabled={checkingNow}
+                className="mt-4 w-full border border-lattice bg-void-deep py-3 text-xs uppercase tracking-widest2 text-lattice transition hover:bg-lattice hover:text-void-deep disabled:opacity-50"
+              >
+                {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下 →" en="I've paid — check now →" />}
+              </button>
+              {error && <p className="mt-3 text-xs text-rose">{error}</p>}
+            </div>
+          )}
+
+          {status === "waiting" && qrDataUrl && !jsapiParamsRef.current && (
             <div className="mt-8 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto h-56 w-56 rounded-sm bg-white p-2" />

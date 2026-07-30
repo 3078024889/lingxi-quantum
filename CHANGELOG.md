@@ -8885,3 +8885,62 @@ app/qian/full/QianReport.tsx、app/tarot/reading/full/TarotReadingReport.tsx、
 ========================================
 
 
+
+========================================
+
+灵犀 LINGXI · v262（微信 JSAPI 支付接入 + 财富地图字段修复 + 站点更名）
+
+★ 先跑 SQL-v262-wealth-birth-input-fix.sql（跟工程里已有的
+  SQL-v261-fix-wealth-birth-input.sql 是同一条修复，之前那份看起来
+  没有被实际执行过，这次换个文件名保证你能确认真的跑过）。
+
+【这次真正改完、本地 npm run build 验证通过的】
+
+1. 财富创造地图"保存失败"报错
+   根因：wealth_submissions 表缺 birth_input 列，代码和表结构不一致。
+   跑上面那条 SQL 即可，不用改代码。
+
+2. 微信支付 JSAPI（这是这次的主要工作）
+   之前只接了 Native扫码支付，微信自己的内置浏览器不允许在自己的
+   浏览器里弹二维码给自己扫——这是"塔罗按钮按不动""某些页面没反应"
+   这类问题的根因，不是单个页面的bug。
+   新增：
+     - lib/wechat-oauth.ts —— 微信网页静默授权（code换openid）
+     - lib/wechatpay.ts —— 新增 createWechatJsapiOrder / buildJsapiInvokeParams
+     - app/api/pay/wechat/oauth-url/route.ts —— 生成授权跳转链接
+     - app/api/pay/wechat/create/route.ts —— 收到code时走JSAPI分支，
+       没有code（桌面/外部浏览器）保持原来的Native扫码，互不影响
+     - app/checkout/page.tsx —— 检测微信内置浏览器，自动走静默授权→
+       唤起微信原生收银台，不再弹二维码；非微信浏览器行为完全不变
+   需要你在 Vercel 环境变量里补两个新变量（.env.example 已更新说明）：
+     WECHAT_APP_SECRET —— 公众号AppSecret（跟支付相关密钥是两码事）
+   同时必须去 mp.weixin.qq.com 公众号后台「网页授权域名」加一遍
+   lingxifield.cn（这跟你截图里 pay.weixin.qq.com 那个"JSAPI支付授权
+   目录"是两个独立配置，缺哪个都不行，.env.example 里写清楚了）。
+   关于你截图里的两个问题，直接回答：
+     - JSAPI支付授权目录（/membership/、/checkout/）——这个配置本身没
+       问题。查过代码，全站所有产品的支付调用都统一收口在 /checkout
+       这一个页面发起（不是每个产品页各自调），所以只要 /checkout/
+       在目录里就覆盖了全部产品，不需要每加一个新测试就去改这个列表。
+     - Native支付回调链接反复变回 https://lingxifield.cn——这个字段
+       对我们现在的接口没有实际影响：代码用的是APIv3，每次下单都会
+       在请求里显式带上 notify_url（具体在 lib/wechatpay.ts 的
+       createWechatNativeOrder / createWechatJsapiOrder 里），不依赖
+       商户平台这个页面配置的值。它反复恢复成域名根路径，大概率是
+       微信那边只认已经做过ICP备案校验的根域名、不接受自定义子路径，
+       不用管它，不会影响支付和回调是否成功。
+
+3. 站点更名
+   Nav标语、<title>、meta description、Open Graph/Twitter 卡片，都
+   从"意识显化系统"改成"灵犀场 LINGXIFIELD · 意识数字显化场域"，
+   保留了原有花了心思调过的SEO关键词列表，没有整段推翻重写。
+
+【这次刻意没做、说清楚为什么】
+生命韧性指数/桃花磁场指数/财富地图/今日运势 四个页面的黑框改玻璃面板、
+免费展开顺序调整（1-11点在前、引导图谱在最后）、桃花磁场插画删除、
+今日运势星座点击优化、订单中心按GPT那版结构重做——这些是真实存在的
+问题，但是要动的文件多、涉及UI结构重排，跟这次的支付修复性质不同，
+"看起来改了"和"真的改对了、还跟其他产品视觉统一"中间的差距，正是
+你之前吃过亏的地方，所以没有在这次囫囵改完就打包。下一版（v263）
+专门做这一块，会先把玻璃面板模板抽成一个共享组件，四个页面统一套用，
+不是分别改四次、四种效果。
