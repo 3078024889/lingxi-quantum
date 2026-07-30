@@ -72,6 +72,24 @@ function describeDuration(days: number, langEn: boolean): string {
 // 从一开始展示的就是真实、已经存在于数据库里的号码，不是占位符。
 type PayStatus = "loading" | "review" | "waiting" | "success" | "error";
 
+// 场域订单卡片用的缩略图——直接复用每个产品完整报告页已经在用的
+// 封面图（page-0.jpg），不用额外生成新素材。关系共振按关系类型分了
+// 三套图，这里统一用general这一套做订单卡缩略图（不影响报告本身
+// 用的是哪一套，报告页自己会按relationshipType选对应的那套）。
+const THUMB_BY_PRODUCT: Record<string, string> = {
+  "life-map-report": "/images/lifemap/compass-poster.jpg",
+  "relationship-resonance": "/images/relationship-full/general/page-0.jpg",
+  "qian-reading": "/images/qian-full/page-0.jpg",
+  "tarot-reading": "/images/tarot-full/page-0.jpg",
+  "resilience-report": "/images/resilience-full/page-0.jpg",
+  "romance-report": "/images/romance-full/page-0.jpg",
+  "daily-tide-report": "/images/daily-tide-full/page-0.jpg",
+  breath: "/images/practice/quantum-pause-chart.jpg",
+  intuition: "/images/practice/intuition-chart.jpg",
+  "heart-reset": "/images/practice/heart-reset-chart.jpg",
+  "ascending-heart": "/images/practice/ascending-heart-chart.jpg",
+};
+
 function CheckoutInner() {
   const params = useSearchParams();
   const router = useRouter();
@@ -295,31 +313,50 @@ function CheckoutInner() {
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
       <h1 className="font-display text-2xl font-light text-bone">
-        <Bi zh="确认订单" en="Confirm Order" />
+        <Bi zh="场域订单" en="Field Order" />
       </h1>
+      <p className="mt-1 text-xs text-bone-dim/70">
+        <Bi zh="确认这次能量交换的内容，无误后再提交支付" en="Confirm this exchange before you submit payment" />
+      </p>
 
       {status === "loading" && (
-        <p className="mt-10 text-center text-sm text-bone-dim"><Bi zh="正在创建订单……" en="Creating order…" /></p>
+        <p className="mt-10 text-center text-sm text-bone-dim"><Bi zh="正在生成场域订单……" en="Creating your field order…" /></p>
       )}
 
       {(status === "review" || status === "waiting") && (
         <>
-          {/* 订单信息——照淘宝订单确认页那种密度：订单号、商品、数量、
-              金额、买家信息，全部摆出来。数字内容不需要收货地址，直接
-              跳过这一项。 */}
-          <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-5">
-            <p className="text-[11px] uppercase tracking-widest2 text-bone-dim/60">
-              <Bi zh="订单号" en="Order No." /> {orderIdRef.current}
-            </p>
-            <div className="mt-3 flex items-start justify-between gap-4 border-t border-white/10 pt-3">
-              <div>
+          {/* 场域订单卡——信息密度参照淘宝/天猫订单确认页（缩略图+
+              标题+价格+买家信息+提交这几块一次性摆清楚，不用来回滑动
+              才能看全），但措词全部换成灵犀场自己的语言："买家信息"
+              换成"连接账号"，"数量"这种电商概念直接去掉（这里从来不是
+              "买几件"，是"开启一次"），玻璃面板视觉延续全站风格，
+              不套用淘宝的白底样式。 */}
+          <div className="mt-6 overflow-hidden rounded-sm border border-white/10 bg-void-deep/80 backdrop-blur-sm">
+            <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-5 py-3">
+              <p className="text-[11px] uppercase tracking-widest2 text-bone-dim/60">
+                <Bi zh="场域订单号" en="Field Order No." /> {orderIdRef.current}
+              </p>
+              <p className="text-[11px] uppercase tracking-widest2 text-lattice/70">
+                <Bi zh="待支付" en="Pending" />
+              </p>
+            </div>
+
+            <div className="flex items-start gap-4 px-5 py-4">
+              {THUMB_BY_PRODUCT[productId] && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={THUMB_BY_PRODUCT[productId]}
+                  alt=""
+                  className="h-16 w-16 shrink-0 rounded-sm border border-white/10 object-cover"
+                />
+              )}
+              <div className="min-w-0 flex-1">
                 <p className="font-display text-lg text-bone"><Bi zh={product.name} en={product.nameEn} /></p>
                 {submissionId && (
-                  <p className="mt-1 text-xs text-bone-dim">
-                    <Bi zh="内容" en="Content" />：{contentName || `#${submissionId.slice(0, 8)}`}
+                  <p className="mt-1 truncate text-xs text-bone-dim">
+                    <Bi zh="对应内容" en="Linked to" />：{contentName || `#${submissionId.slice(0, 8)}`}
                   </p>
                 )}
-                <p className="mt-2 text-xs text-bone-dim/70"><Bi zh="数量" en="Qty" />：× 1</p>
                 {product.type === "subscription" && product.days && (
                   <p className="mt-1 text-xs text-amber/80">
                     <Bi
@@ -336,10 +373,11 @@ function CheckoutInner() {
               </div>
               <p className="shrink-0 font-display text-2xl text-amber">¥{product.priceRmb}</p>
             </div>
+
             {/* 权益说明——product.note本来就是"这次交换具体包含什么"的
                 描述，这里单独用一个小标题把它摆出来，让它在付款前就是
                 看得见的承诺，不是买完才知道。 */}
-            <div className="mt-3 border-t border-white/10 pt-3">
+            <div className="border-t border-white/10 px-5 py-3">
               <p className="text-xs uppercase tracking-widest2 text-bone-dim/60">
                 <Bi zh="本次交换包含" en="This Exchange Includes" />
               </p>
@@ -347,11 +385,19 @@ function CheckoutInner() {
                 <Bi zh={product.note} en={product.noteEn} />
               </p>
             </div>
+
             {buyerEmail && (
-              <p className="mt-3 border-t border-white/10 pt-3 text-xs text-bone-dim">
-                <Bi zh="买家信息" en="Buyer" />：{buyerEmail}
-              </p>
+              <div className="border-t border-white/10 px-5 py-3">
+                <p className="text-xs text-bone-dim">
+                  <Bi zh="连接账号" en="Connected Account" />：{buyerEmail}
+                </p>
+              </div>
             )}
+
+            <div className="flex items-center justify-between border-t border-white/10 bg-white/[0.03] px-5 py-3">
+              <p className="text-xs text-bone-dim"><Bi zh="应付总额" en="Total Due" /></p>
+              <p className="font-display text-xl text-amber">¥{product.priceRmb}</p>
+            </div>
           </div>
 
           {/* 支付方式选择 */}
