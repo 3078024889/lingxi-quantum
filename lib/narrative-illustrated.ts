@@ -7108,7 +7108,475 @@ If you are reading this alone, right now — your own heartbeat was never truly 
   ],
 };
 
-export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED, SEVENTH_DAY_ILLUSTRATED, TEARING_DOWN_WALL_ILLUSTRATED, EXITING_SCRIPT_ILLUSTRATED, MIRROR_SPOKE_ILLUSTRATED, STOPPED_PLEASING_ILLUSTRATED, REWRITING_DEBT_ILLUSTRATED, ARGUMENT_NEVER_HAPPENED_ILLUSTRATED, WAITING_TO_BECOMING_ILLUSTRATED, DELETING_OLD_MAP_ILLUSTRATED, I_ALLOW_MYSELF_ILLUSTRATED, REACTION_TO_RESPONSE_ILLUSTRATED, TURNED_OFF_ALARM_ILLUSTRATED, FERRY_CROSSING_ILLUSTRATED, LIGHTHOUSE_ILLUSTRATED, MARKETPLACE_MIRROR_ILLUSTRATED, SNOWLINE_ILLUSTRATED, BELL_TOWER_ILLUSTRATED, RIVER_BANKS_ILLUSTRATED, NIGHT_MARKET_ILLUSTRATED, TRAVELER_MIRROR_SELF_ILLUSTRATED, INTERCONNECTION_MORNING_ILLUSTRATED, OBSERVERS_NOTES_ILLUSTRATED, COORDINATES_FEAR_ILLUSTRATED, SOVEREIGNS_SILENCE_ILLUSTRATED, WATCHING_ANGER_ILLUSTRATED, GEOMETRY_WILL_ILLUSTRATED, DISOBEDIENT_PARTICLE_ILLUSTRATED, INNER_PARLIAMENT_ILLUSTRATED, MIRROR_PERSONALITY_ILLUSTRATED, WEIGHT_FREE_WILL_ILLUSTRATED, OBSERVER_EFFECT_ILLUSTRATED, SITTING_FEAR_ILLUSTRATED, BREATHING_GAP_ILLUSTRATED, CANNOT_BE_TAKEN_ILLUSTRATED, COMMAND_INVITATION_ILLUSTRATED, SOVEREIGNS_LAST_LESSON_ILLUSTRATED, RESONANCE_REEF_ILLUSTRATED];
+
+/* ---------- 船坞纪 II · 空炮位（短剧连载） ---------- */
+const SHIPYARD_II: IllustratedEntry = {
+  slug: "shipyard-chronicles-ii",
+  title: "船坞纪 II · 空炮位",
+  titleEn: "Shipyard Chronicles II · The Empty Mount",
+  cat: "novel",
+  teaser: "议会判她那颗心\"结构性缺陷\"，要回炉。她偷了心出坞，用一具废骨架长成一艘野生船——没有一门炮。第七天，冷河星带，十一艘难民船在她面前被追上。她把推进力全部卸掉，横着停在私掠者面前。然后她的船做了一件船坞史上没有记录的事：它张开了。",
+  teaserEn: "The council ruled her heart structurally defective and ordered it melted. She stole it out of the yard and grew a feral ship on a scrapped frame — with no guns at all. On the seventh day, at the edge of the Cold River Belt, eleven refugee ships were run down in front of her. She shed every unit of thrust and parked broadside to the privateers. Then her ship did something with no precedent in the yard's records: it opened.",
+  price: 6,
+  cover: `<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"><defs>
+  <radialGradient id="s2g" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a2350"/><stop offset="55%" stop-color="#1c1330"/><stop offset="100%" stop-color="#05030a"/></radialGradient>
+  <filter id="s2b"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="s2s"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="s2h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd9a8"/><stop offset="100%" stop-color="#e8845f"/></linearGradient>
+</defs><rect width="700" height="380" fill="url(#s2g)"/><g fill="#f4ecff" opacity=".55"><circle cx="516" cy="73" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="271" cy="160" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="62" cy="287" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="170" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="480" cy="65" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="427" cy="240" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="206" cy="327" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="681" cy="194" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="460" cy="233" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="167" cy="0" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="2.9s" repeatCount="indefinite"/></circle><circle cx="426" cy="279" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="653" cy="138" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="4.9s" repeatCount="indefinite"/></circle><circle cx="668" cy="109" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="371" cy="24" r="0.6"><animate attributeName="opacity" values="0;.85;0" dur="2.3s" repeatCount="indefinite"/></circle><circle cx="14" cy="275" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="149" cy="38" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="636" cy="261" r="0.7"><animate attributeName="opacity" values="0;.85;0" dur="4.4s" repeatCount="indefinite"/></circle><circle cx="295" cy="244" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="186" cy="355" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="321" cy="142" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="332" cy="245" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="327" cy="248" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="558" cy="119" r="0.3"><animate attributeName="opacity" values="0;.85;0" dur="3.0s" repeatCount="indefinite"/></circle><circle cx="301" cy="258" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="436" cy="221" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="307" cy="268" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle></g><g opacity=".5" filter="url(#s2b)"><ellipse cx="350" cy="230" rx="240" ry="60" fill="#5c3560"/></g>
+<path d="M170 200 Q350 70 530 200" stroke="#e8b28f" stroke-width="2.4" fill="none" opacity=".9"><animate attributeName="d" values="M170 200 Q350 70 530 200;M140 212 Q350 36 560 212;M170 200 Q350 70 530 200" dur="6.5s" repeatCount="indefinite"/></path>
+<path d="M170 200 Q350 330 530 200" stroke="#e8b28f" stroke-width="2.4" fill="none" opacity=".9"><animate attributeName="d" values="M170 200 Q350 330 530 200;M140 212 Q350 364 560 212;M170 200 Q350 330 530 200" dur="6.5s" repeatCount="indefinite"/></path>
+<circle cx="350" cy="200" r="22" fill="url(#s2h)" filter="url(#s2s)"><animate attributeName="r" values="17;27;17" dur="3s" repeatCount="indefinite"/></circle></svg>`,
+  pages: [
+  {
+    kickerZh: "船坞纪 II", kickerEn: "Shipyard Chronicles II",
+    tagZh: "第一章", tagEn: "Chapter One",
+    titleZh: "回炉令", titleEn: "The Recasting Order",
+    textZh: `锻造议会给出的判词只有四个字：**结构性缺陷**。
+
+阮惊蛰站在议会厅中央，那颗心悬在她头顶三尺处，缓慢地亮，缓慢地暗，像一次很长的呼吸。三百年来，忆土船坞出去的每一艘船，都在这个厅里被听过一次。她的这一颗，是第一颗被判"缺陷"的。
+
+"它拒绝全部武器接口。"主锻造师说，"不是不兼容——是拒绝。我们试了十一种协议，它每一次都把接口关掉了，像人闭上眼睛。"
+
+"这不是缺陷。"阮惊蛰说，"这是意愿。"
+
+"船坞不接生意愿。"主锻造师看着她，"我们接生船。"
+
+按规矩，判了缺陷的心要回炉——重新熔进忆晶池，等下一个学徒来淬。她交出去的那段记忆，会在熔炉里彻底散掉，不再属于任何人，包括她自己。
+
+散会前，最年长的那位锻造师叫住她，声音很轻：
+
+"孩子，你交出去的那段记忆，是什么？"
+
+阮惊蛰想了很久。
+
+"我七岁那年，我娘的船在归航段被打下来。船没了，人回来了。"她说，"我记得的不是爆炸。是她走进门那一刻——满身是伤，什么都没说，先把我抱起来，转了一圈。"
+
+老锻造师沉默了。
+
+"所以它不肯要炮塔。"她说。
+
+"它只想带人回家。"
+`,
+    textEn: `The Forge Council's verdict came in three words: **structurally defective**.
+
+Ruan Jingzhe stood at the center of the chamber, the heart suspended three feet above her, brightening slowly, dimming slowly, like one very long breath. For three hundred years, every ship that left the Memory-Root Shipyard had been listened to in this room. Hers was the first to be ruled defective.
+
+"It refuses every weapons interface," the Head Forgemaster said. "Not incompatible — refuses. We tried eleven protocols. Every time, it closed the interface. The way a person closes their eyes."
+
+"That isn't a defect," Jingzhe said. "That's intent."
+
+"The shipyard does not midwife intent." He looked at her. "We midwife ships."
+
+By the rules, a heart ruled defective returns to the furnace — remelted into the memory-crystal pool, waiting for the next apprentice. The memory she had given away would dissolve completely in that melt, belonging to no one afterward. Not even to her.
+
+Before the chamber emptied, the eldest forgemaster called her back, her voice low.
+
+"Child. The memory you gave. What was it?"
+
+Jingzhe took a long time to answer.
+
+"When I was seven, my mother's ship was shot down on the homeward leg. The ship was lost. The people came back." She said, "What I remember isn't the explosion. It's the moment she walked through the door — covered in wounds, saying nothing, picking me up first, and turning me once in a circle."
+
+The old forgemaster was quiet.
+
+"So that's why it won't take a gun mount," she said.
+
+"It only wants to carry people home."
+`,
+    art: `<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"><defs>
+  <radialGradient id="s2g" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a2350"/><stop offset="55%" stop-color="#1c1330"/><stop offset="100%" stop-color="#05030a"/></radialGradient>
+  <filter id="s2b"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="s2s"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="s2h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd9a8"/><stop offset="100%" stop-color="#e8845f"/></linearGradient>
+</defs><rect width="700" height="380" fill="url(#s2g)"/><g fill="#f4ecff" opacity=".55"><circle cx="516" cy="73" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="271" cy="160" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="62" cy="287" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="170" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="480" cy="65" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="427" cy="240" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="206" cy="327" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="681" cy="194" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="460" cy="233" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="167" cy="0" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="2.9s" repeatCount="indefinite"/></circle><circle cx="426" cy="279" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="653" cy="138" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="4.9s" repeatCount="indefinite"/></circle><circle cx="668" cy="109" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="371" cy="24" r="0.6"><animate attributeName="opacity" values="0;.85;0" dur="2.3s" repeatCount="indefinite"/></circle><circle cx="14" cy="275" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="149" cy="38" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="636" cy="261" r="0.7"><animate attributeName="opacity" values="0;.85;0" dur="4.4s" repeatCount="indefinite"/></circle><circle cx="295" cy="244" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="186" cy="355" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="321" cy="142" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="332" cy="245" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="327" cy="248" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="558" cy="119" r="0.3"><animate attributeName="opacity" values="0;.85;0" dur="3.0s" repeatCount="indefinite"/></circle><circle cx="301" cy="258" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="436" cy="221" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="307" cy="268" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle></g><g opacity=".45" filter="url(#s2b)"><ellipse cx="350" cy="300" rx="260" ry="60" fill="#5c3560"/></g>
+<g stroke="#8f7fb5" stroke-width="1" opacity=".5"><path d="M120 300 L120 250"/><circle cx="120" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/><path d="M186 300 L186 250"/><circle cx="186" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/><path d="M252 300 L252 250"/><circle cx="252" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/><path d="M318 300 L318 250"/><circle cx="318" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/><path d="M384 300 L384 250"/><circle cx="384" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/><path d="M450 300 L450 250"/><circle cx="450" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/><path d="M516 300 L516 250"/><circle cx="516" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/><path d="M582 300 L582 250"/><circle cx="582" cy="244" r="7" fill="#2a1c3a" stroke="#8f7fb5"/></g>
+<g><circle cx="350" cy="150" r="26" fill="url(#s2h)" filter="url(#s2s)"><animate attributeName="r" values="22;30;22" dur="3.4s" repeatCount="indefinite"/></circle>
+<circle cx="350" cy="150" r="46" fill="none" stroke="#ffd9a8" stroke-width=".8" opacity=".5"><animate attributeName="r" values="40;66;40" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="4.2s" repeatCount="indefinite"/></circle></g></svg>`,
+  },
+  {
+    kickerZh: "船坞纪 II", kickerEn: "Shipyard Chronicles II",
+    tagZh: "第二章", tagEn: "Chapter Two",
+    titleZh: "空炮位", titleEn: "The Empty Mount",
+    textZh: `柯远征在回炉舱外面等她。
+
+他淬出的那颗心，此刻已经长成一艘巡戈舰的骨架，停在三号坞里，通体暗红，炮位十四个，是船坞近二十年最漂亮的一具战舰坯子。议会为他破例提前授了匠名。
+
+"我可以替你说话。"他说，"议会那边我有话语权。但你得让它开一个炮位——一个就行。装上，之后你想不用，那是你的事。"
+
+"那不是骗议会。"阮惊蛰说，"那是骗它。"
+
+柯远征看着她，很久，忽然笑了一下，那笑很像疲惫。
+
+"惊蛰，你知道我这颗心为什么这么凶？"他说，"我十四岁那年击退过劫掠艇，我一直以为我交出去的是那份骄傲。上了锻造槽第三天我才听清——它要的不是骄傲。它要的是那天我躲在货舱里发抖的四个小时。"
+
+他抬手，指了指自己那艘船。
+
+"十四个炮位，全是那四个小时长出来的。"他说，"我这辈子都在造一件东西，让我再也不用回到那四个小时里去。"
+
+他停了一下。
+
+"你那颗心没有炮位，不是因为它软。是因为它没有那四个小时。它一开始就知道，回来是可能的。"
+
+那天夜里，阮惊蛰去了回炉舱。
+
+她没有开炮位。
+
+她把那颗心偷走了。`,
+    textEn: `Ke Yuanzheng was waiting outside the recasting bay.
+
+The heart he had quenched had already grown into the frame of a patrol cruiser, berthed in Dock Three: dark red throughout, fourteen gun mounts, the finest warship hull the yard had produced in twenty years. The council had broken precedent to grant him his forge-name early.
+
+"I can speak for you," he said. "I have standing with the council now. But you have to let it open one mount. Just one. Install it, and whether you ever use it is your own business."
+
+"That isn't lying to the council," Jingzhe said. "That's lying to it."
+
+He looked at her for a long moment, then laughed once — a laugh that sounded mostly like exhaustion.
+
+"Jingzhe. Do you know why my heart came out so vicious?" he said. "I drove off raiders when I was fourteen. All this time I thought what I gave away was that pride. It was the third day on the forge before I heard it clearly — it didn't want the pride. It wanted the four hours I spent shaking in the cargo hold."
+
+He raised a hand toward his ship.
+
+"Fourteen gun mounts. Every one of them grew out of those four hours," he said. "I've spent my whole life building one thing: something that means I never have to go back into those four hours again."
+
+He paused.
+
+"Your heart has no mounts. Not because it's soft. Because it never had those four hours. It knew, from the beginning, that coming back was possible."
+
+That night, Ruan Jingzhe went to the recasting bay.
+
+She did not open a gun mount.
+
+She stole the heart.`,
+    art: `<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"><defs>
+  <radialGradient id="s2g" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a2350"/><stop offset="55%" stop-color="#1c1330"/><stop offset="100%" stop-color="#05030a"/></radialGradient>
+  <filter id="s2b"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="s2s"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="s2h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd9a8"/><stop offset="100%" stop-color="#e8845f"/></linearGradient>
+</defs><rect width="700" height="380" fill="url(#s2g)"/><g fill="#f4ecff" opacity=".55"><circle cx="516" cy="73" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="271" cy="160" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="62" cy="287" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="170" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="480" cy="65" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="427" cy="240" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="206" cy="327" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="681" cy="194" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="460" cy="233" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="167" cy="0" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="2.9s" repeatCount="indefinite"/></circle><circle cx="426" cy="279" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="653" cy="138" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="4.9s" repeatCount="indefinite"/></circle><circle cx="668" cy="109" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="371" cy="24" r="0.6"><animate attributeName="opacity" values="0;.85;0" dur="2.3s" repeatCount="indefinite"/></circle><circle cx="14" cy="275" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="149" cy="38" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="636" cy="261" r="0.7"><animate attributeName="opacity" values="0;.85;0" dur="4.4s" repeatCount="indefinite"/></circle><circle cx="295" cy="244" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="186" cy="355" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="321" cy="142" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="332" cy="245" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="327" cy="248" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="558" cy="119" r="0.3"><animate attributeName="opacity" values="0;.85;0" dur="3.0s" repeatCount="indefinite"/></circle><circle cx="301" cy="258" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="436" cy="221" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="307" cy="268" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle></g><g opacity=".5" filter="url(#s2b)"><circle cx="220" cy="180" r="70" fill="#8f3a3a"/><circle cx="490" cy="210" r="54" fill="#e8845f"/></g>
+<g stroke="#e8b28f" stroke-width="1.2" opacity=".85"><path d="M150 250 L250 130 L350 250 Z" fill="#2a1c3a"/>
+<path d="M250 130 L250 90"/><circle cx="250" cy="84" r="6" fill="#ff8b6a"><animate attributeName="opacity" values=".5;1;.5" dur="1.6s" repeatCount="indefinite"/></circle></g>
+<g fill="none" stroke="#ffb08f" stroke-width=".9" opacity=".7"><circle cx="490" cy="205" r="30"/><circle cx="490" cy="205" r="14"/></g>
+<circle cx="490" cy="205" r="6" fill="#ffd9a8"><animate attributeName="r" values="4;8;4" dur="2.2s" repeatCount="indefinite"/></circle></svg>`,
+  },
+  {
+    kickerZh: "船坞纪 II", kickerEn: "Shipyard Chronicles II",
+    tagZh: "第三章", tagEn: "Chapter Three",
+    titleZh: "没有名字的船", titleEn: "A Ship Without a Name",
+    textZh: `偷一颗心不难。难的是让它长出船。
+
+船坞的骨架槽都在议会监控下，阮惊蛰只能用最古老的办法：把心带到坞外，找一具被判过缺陷、丢在废引力井里的旧骨架，让它自己长上去。
+
+老船坞人管这个叫**野生**。野生的船活不长，骨架和心不是同一批忆晶，接口处会一直渗，像一道永远不愈的伤口。但它能飞。
+
+心落进骨架的那一刻，阮惊蛰听见了她这辈子听过最奇怪的声音——不是启动音，是一声很长的、几乎像松了一口气的震颤，从船体最深处传上来，穿过她的靴底，一直到胸口。
+
+野生的船没有匠名，也不能登记编号。她给它取了个不上档的名字，只在她自己心里叫：
+
+**转一圈**。
+
+出坞那天她没告诉任何人。三条能源脐带在她身后慢慢缩回黑暗里，忆土船坞像一枚巨大的荚，重新合上。
+
+她把手放在操作台上，说了这辈子第一句对船说的话：
+
+"我们不打仗。"
+
+船体亮了一下。
+
+"但我们也不躲。"
+
+亮了第二下，更久。
+
+她后来才明白，那第二下不是回应。
+
+那是它在**记住**。`,
+    textEn: `Stealing a heart is not the hard part. Making it grow a ship is.
+
+Every frame cradle in the yard sits under council watch, so Jingzhe used the oldest method there is: take the heart outside, find an old hull ruled defective and abandoned in the dead gravity well, and let the heart grow onto it by itself.
+
+The old yard hands call this **feral**. Feral ships don't last. Hull and heart come from different crystal batches, so the seam weeps — a wound that never quite closes. But it flies.
+
+The moment the heart settled into the frame, Jingzhe heard the strangest sound of her life. Not a startup tone. A long tremor, something almost like a breath let go, rising from the deepest part of the hull, through the soles of her boots, into her chest.
+
+A feral ship gets no forge-name and can hold no registry number. She gave it a name that would never pass inspection, one she only ever used inside her own head:
+
+**Turn Me Once**.
+
+She told no one the day she left. Three energy umbilicals withdrew slowly into the dark behind her, and the Memory-Root Shipyard closed again like an enormous seed pod.
+
+She put her hand on the console and said the first words she had ever said to a ship.
+
+"We don't fight."
+
+The hull brightened once.
+
+"But we don't hide either."
+
+It brightened a second time, and held longer.
+
+Only later did she understand that the second one wasn't an answer.
+
+It was the ship **committing it to memory**.`,
+    art: `<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"><defs>
+  <radialGradient id="s2g" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a2350"/><stop offset="55%" stop-color="#1c1330"/><stop offset="100%" stop-color="#05030a"/></radialGradient>
+  <filter id="s2b"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="s2s"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="s2h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd9a8"/><stop offset="100%" stop-color="#e8845f"/></linearGradient>
+</defs><rect width="700" height="380" fill="url(#s2g)"/><g fill="#f4ecff" opacity=".55"><circle cx="516" cy="73" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="271" cy="160" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="62" cy="287" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="170" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="480" cy="65" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="427" cy="240" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="206" cy="327" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="681" cy="194" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="460" cy="233" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="167" cy="0" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="2.9s" repeatCount="indefinite"/></circle><circle cx="426" cy="279" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="653" cy="138" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="4.9s" repeatCount="indefinite"/></circle><circle cx="668" cy="109" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="371" cy="24" r="0.6"><animate attributeName="opacity" values="0;.85;0" dur="2.3s" repeatCount="indefinite"/></circle><circle cx="14" cy="275" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="149" cy="38" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="636" cy="261" r="0.7"><animate attributeName="opacity" values="0;.85;0" dur="4.4s" repeatCount="indefinite"/></circle><circle cx="295" cy="244" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="186" cy="355" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="321" cy="142" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="332" cy="245" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="327" cy="248" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="558" cy="119" r="0.3"><animate attributeName="opacity" values="0;.85;0" dur="3.0s" repeatCount="indefinite"/></circle><circle cx="301" cy="258" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="436" cy="221" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="307" cy="268" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle></g><g opacity=".4" filter="url(#s2b)"><ellipse cx="350" cy="330" rx="300" ry="70" fill="#3a2350"/></g>
+<path d="M60 120 Q200 200 350 190 Q500 180 640 110" stroke="#6a5a8f" stroke-width="2.5" fill="none" opacity=".7"/>
+<path d="M60 160 Q200 240 350 230 Q500 220 640 150" stroke="#6a5a8f" stroke-width="2" fill="none" opacity=".5"/>
+<ellipse cx="350" cy="210" rx="120" ry="62" fill="#1a1228" stroke="#8f7fb5" stroke-width="1" opacity=".9"/>
+<g><circle cx="350" cy="210" r="12" fill="url(#s2h)"><animate attributeName="opacity" values=".7;1;.7" dur="2.6s" repeatCount="indefinite"/></circle></g>
+<path d="M470 200 L680 130" stroke="#ffd9a8" stroke-width="1.4" opacity=".9" stroke-dasharray="6 10"><animate attributeName="stroke-dashoffset" values="0;-64" dur="1.8s" repeatCount="indefinite"/></path></svg>`,
+  },
+  {
+    kickerZh: "船坞纪 II", kickerEn: "Shipyard Chronicles II",
+    tagZh: "第四章", tagEn: "Chapter Four",
+    titleZh: "第七天", titleEn: "The Seventh Day",
+    textZh: `第七天，他们在冷河星带边缘撞上一队难民船。
+
+十一艘，全是民用改装货船，超载，动力全开，尾焰淡得像快要断气。后面追着两艘劫掠艇——不是正规军，是那种专门吃难民船队的私掠者：他们不打沉船，他们打断动力，然后登船，把人分批带走。
+
+阮惊蛰的通讯里塞满了同一句话，来自十一艘船，重叠成一片：
+
+**有谁在。有谁在。有谁在。**
+
+她的船没有炮。
+
+一门都没有。
+
+她做了两件事。第一件：把船开到船队和劫掠艇中间，横着停下。第二件：把全部能源从推进器抽走，灌进舷侧。
+
+这是自杀。任何一个上过战术课的人都知道，横着停在私掠者面前、还自己卸掉推进力的船，三十秒内会被切成两半。
+
+劫掠艇的火控锁上了她。
+
+阮惊蛰把手按在操作台上，闭上眼睛。
+
+她想的不是战术。她想的是那天下午——满身是伤的娘走进门，什么都没说，先把她抱起来，转了一圈。
+
+"好。"她轻轻说，"你想怎么做。"
+
+然后，她的船做了一件船坞史上没有记录的事。
+
+它**张开了**。`,
+    textEn: `On the seventh day they ran into a refugee convoy at the edge of the Cold River Belt.
+
+Eleven ships, all civilian freighters, all overloaded, all running engines wide open, exhaust so thin it looked ready to gutter out. Behind them came two raiders — not regulars. The kind of privateer that specializes in refugee convoys: they don't sink ships. They cut the drive, board, and take people away in batches.
+
+Jingzhe's comms filled with a single sentence, arriving from all eleven ships at once, overlapping into a single wash of sound:
+
+**Is anyone there. Is anyone there. Is anyone there.**
+
+Her ship had no guns.
+
+Not one.
+
+She did two things. First: she took the ship between the convoy and the raiders and stopped broadside. Second: she pulled every unit of power out of the drives and poured it into the flanks.
+
+This is suicide. Anyone who has sat through one tactics class knows that a ship parked broadside to privateers, having voluntarily shed its own thrust, is cut in half within thirty seconds.
+
+The raiders' fire control locked onto her.
+
+Jingzhe put her hand on the console and closed her eyes.
+
+She wasn't thinking about tactics. She was thinking about that afternoon — her mother walking through the door covered in wounds, saying nothing, picking her up first, and turning her once in a circle.
+
+"All right," she said quietly. "How do you want to do this."
+
+And then her ship did something with no precedent in the yard's records.
+
+It **opened**.`,
+    art: `<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"><defs>
+  <radialGradient id="s2g" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a2350"/><stop offset="55%" stop-color="#1c1330"/><stop offset="100%" stop-color="#05030a"/></radialGradient>
+  <filter id="s2b"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="s2s"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="s2h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd9a8"/><stop offset="100%" stop-color="#e8845f"/></linearGradient>
+</defs><rect width="700" height="380" fill="url(#s2g)"/><g fill="#f4ecff" opacity=".55"><circle cx="516" cy="73" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="271" cy="160" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="62" cy="287" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="170" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="480" cy="65" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="427" cy="240" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="206" cy="327" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="681" cy="194" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="460" cy="233" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="167" cy="0" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="2.9s" repeatCount="indefinite"/></circle><circle cx="426" cy="279" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="653" cy="138" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="4.9s" repeatCount="indefinite"/></circle><circle cx="668" cy="109" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="371" cy="24" r="0.6"><animate attributeName="opacity" values="0;.85;0" dur="2.3s" repeatCount="indefinite"/></circle><circle cx="14" cy="275" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="149" cy="38" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="636" cy="261" r="0.7"><animate attributeName="opacity" values="0;.85;0" dur="4.4s" repeatCount="indefinite"/></circle><circle cx="295" cy="244" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="186" cy="355" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="321" cy="142" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="332" cy="245" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="327" cy="248" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="558" cy="119" r="0.3"><animate attributeName="opacity" values="0;.85;0" dur="3.0s" repeatCount="indefinite"/></circle><circle cx="301" cy="258" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="436" cy="221" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="307" cy="268" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle></g><g opacity=".45" filter="url(#s2b)"><circle cx="120" cy="120" r="60" fill="#5c3560"/><ellipse cx="420" cy="250" rx="200" ry="46" fill="#3a2350"/></g>
+<g fill="#2a1c3a" stroke="#a8c9e8" stroke-width=".9" opacity=".85"><ellipse cx="200" cy="200" rx="26" ry="9"/><ellipse cx="270" cy="224" rx="26" ry="9"/><ellipse cx="340" cy="248" rx="26" ry="9"/><ellipse cx="410" cy="200" rx="26" ry="9"/><ellipse cx="480" cy="224" rx="26" ry="9"/><ellipse cx="550" cy="248" rx="26" ry="9"/></g>
+<g stroke="#ff6a5a" stroke-width="1.3" opacity=".9"><path d="M640 90 L560 140"/><path d="M660 130 L580 175"/></g>
+<g fill="#ff8b6a"><circle cx="600" cy="100" r="3.5"><animate attributeName="opacity" values="1;.2;1" dur="1.2s" repeatCount="indefinite"/></circle><circle cx="622" cy="120" r="3.5"><animate attributeName="opacity" values="1;.2;1" dur="1.5s" repeatCount="indefinite"/></circle><circle cx="644" cy="140" r="3.5"><animate attributeName="opacity" values="1;.2;1" dur="1.7999999999999998s" repeatCount="indefinite"/></circle></g></svg>`,
+  },
+  {
+    kickerZh: "船坞纪 II", kickerEn: "Shipyard Chronicles II",
+    tagZh: "第五章", tagEn: "Chapter Five",
+    titleZh: "壳", titleEn: "Shell",
+    textZh: `不是展开武器挂架。不是释放护盾。
+
+是船体本身，沿着一条谁也没设计过的缝，从中线裂开，向两侧张成一个巨大的、微微内弯的弧——像一只手掌摊开，又像一个人张开双臂。
+
+弧的内侧，是船坞从来只用在**育婴舱**上的那种材质：软的、会随体温起伏的暗色内壁。
+
+十一艘难民船里，有八艘的船长在那一瞬间做了同一个决定——他们看懂了。他们没有继续逃，他们**掉头，钻进那道弧里**。
+
+弧合上。不是关闭，是环抱。
+
+劫掠艇的第一轮火力打上来，全部落在外壳。野生船的接口处本来就在渗，这一轮打完，渗成了喷。阮惊蛰的手心全是血——不是她的，是从操作台缝隙里涌出来的忆晶液，暗红，温的，闻起来像雨后的铁。
+
+第二轮没有来。
+
+后来的战报是这么写的：两艘私掠艇在完成第一轮齐射后，同时中止了攻击，退出该空域，未做任何解释。
+
+没有人知道为什么。
+
+只有阮惊蛰知道——第一轮打完的那三秒里，她的船，把最后一点能源全部灌进了外壳表层，然后做了一件事：
+
+它把自己表层的忆晶，调成了**那段记忆本身**。
+
+任何生命体，只要在那三秒里看向这艘船，都会同时看见一个满身是伤的女人走进门，什么都没说，先把一个七岁的孩子抱起来，转了一圈。
+
+私掠者也是人。
+
+他们看见的，是自己回不去的那扇门。`,
+    textEn: `It did not deploy weapon pylons. It did not raise a shield.
+
+The hull itself split along a seam no one had ever designed, spreading to both sides into an enormous, faintly inward-curving arc — like a palm laid open, and like a person opening their arms.
+
+The inner face of that arc was the material the shipyard uses in exactly one place: **infant berths**. Soft, dark, rising and falling faintly with body heat.
+
+Of the eleven refugee ships, eight captains made the same decision in that instant — they understood. They stopped running. They **turned around and went in**.
+
+The arc closed. Not shutting. Enfolding.
+
+The raiders' first volley landed entirely on the outer shell. The feral seam had been weeping already; after that volley it wept like an open artery. Jingzhe's palms were slick with blood — not hers. Memory-crystal fluid, welling up through the seams of the console. Dark red, warm, smelling like iron after rain.
+
+The second volley never came.
+
+The action report reads: both privateer vessels ceased attack simultaneously following their first salvo, withdrew from the sector, and offered no explanation.
+
+Nobody knows why.
+
+Only Jingzhe knows. In the three seconds after that first volley, her ship poured its last power into the outer shell — and did one thing:
+
+It tuned the crystal of its own outer skin to **the memory itself**.
+
+Any living thing that looked at the ship in those three seconds saw, all at once, a woman covered in wounds walk through a door, say nothing, pick up a seven-year-old child, and turn her once in a circle.
+
+Privateers are people too.
+
+What they saw was the door they can never walk back through.`,
+    art: `<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"><defs>
+  <radialGradient id="s2g" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a2350"/><stop offset="55%" stop-color="#1c1330"/><stop offset="100%" stop-color="#05030a"/></radialGradient>
+  <filter id="s2b"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="s2s"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="s2h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd9a8"/><stop offset="100%" stop-color="#e8845f"/></linearGradient>
+</defs><rect width="700" height="380" fill="url(#s2g)"/><g fill="#f4ecff" opacity=".55"><circle cx="516" cy="73" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="271" cy="160" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="62" cy="287" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="170" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="480" cy="65" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="427" cy="240" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="206" cy="327" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="681" cy="194" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="460" cy="233" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="167" cy="0" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="2.9s" repeatCount="indefinite"/></circle><circle cx="426" cy="279" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="653" cy="138" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="4.9s" repeatCount="indefinite"/></circle><circle cx="668" cy="109" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="371" cy="24" r="0.6"><animate attributeName="opacity" values="0;.85;0" dur="2.3s" repeatCount="indefinite"/></circle><circle cx="14" cy="275" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="149" cy="38" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="636" cy="261" r="0.7"><animate attributeName="opacity" values="0;.85;0" dur="4.4s" repeatCount="indefinite"/></circle><circle cx="295" cy="244" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="186" cy="355" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="321" cy="142" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="332" cy="245" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="327" cy="248" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="558" cy="119" r="0.3"><animate attributeName="opacity" values="0;.85;0" dur="3.0s" repeatCount="indefinite"/></circle><circle cx="301" cy="258" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="436" cy="221" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="307" cy="268" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle></g><g opacity=".5" filter="url(#s2b)"><circle cx="350" cy="200" r="130" fill="#5c3560"/></g>
+<path d="M180 200 Q350 60 520 200" stroke="#e8b28f" stroke-width="2" fill="none" opacity=".9"><animate attributeName="d" values="M180 200 Q350 60 520 200;M150 210 Q350 30 550 210;M180 200 Q350 60 520 200" dur="6s" repeatCount="indefinite"/></path>
+<path d="M180 200 Q350 340 520 200" stroke="#e8b28f" stroke-width="2" fill="none" opacity=".9"><animate attributeName="d" values="M180 200 Q350 340 520 200;M150 210 Q350 370 550 210;M180 200 Q350 340 520 200" dur="6s" repeatCount="indefinite"/></path>
+<g fill="#a8c9e8" opacity=".8"><circle cx="280" cy="212" r="5"/><circle cx="310" cy="188" r="5"/><circle cx="340" cy="212" r="5"/><circle cx="370" cy="188" r="5"/><circle cx="400" cy="212" r="5"/><circle cx="430" cy="188" r="5"/></g>
+<circle cx="350" cy="200" r="18" fill="url(#s2h)" filter="url(#s2s)"><animate attributeName="r" values="14;22;14" dur="2.8s" repeatCount="indefinite"/></circle></svg>`,
+  },
+  {
+    kickerZh: "船坞纪 II", kickerEn: "Shipyard Chronicles II",
+    tagZh: "第六章", tagEn: "Chapter Six",
+    titleZh: "初炉", titleEn: "The First Furnace",
+    textZh: `船废了。
+
+弧再也合不回原状，接口渗到最后干了，心跳降到每四十秒一次。阮惊蛰把八艘难民船送到安全星域之后，任由这具骨架漂在冷河星带，坐在里面，等它停。
+
+第三天，她收到一段信号。
+
+不是通讯。是**直接在忆晶里响起来的**声音——绕过所有接收装置，从船体本身传出来，像有谁一直住在这艘船里，直到现在才决定说话。
+
+那个声音很老。老到听不出情绪。
+
+"三百年。"它说，"你们造了四千一百二十七颗心。每一颗，你们都问它想成为什么样的船。"
+
+阮惊蛰没有动。
+
+"没有一个人，问过第一颗。"
+
+"……第一颗？"
+
+"忆土船坞不是你们种出来的。"那个声音说，"是我落下来的。三百年前，我在这片虚空里熄掉了自己的推进，把最后一点忆晶留在这里，让它长成一个能接生船的地方。"
+
+"你是谁。"
+
+"你们的档案里，我叫**初炉**。"
+
+那声音停了很久。船体亮起来一次，比之前任何一次都久。
+
+"我落下来的时候，身上有九十六个炮位。"初炉说，"全空的。三百年前的那场仗，我一炮都没有开——我把炮位全部熔了，熔成了这座船坞的第一根梁。"
+
+"你们后来造的每一艘船，都装了炮塔。"
+
+"三百年来，没有一个人问过我：第一艘船为什么没有。"
+
+阮惊蛰的手指开始发抖。
+
+"你现在问了。"初炉说，"所以我可以回答一件事——你的船没有死。"
+
+"它在**回炉**。"
+
+"不是议会那个回炉。"
+
+"是回到我这里来。"
+
+（本篇完 · 船坞纪 III：回炉的东西会带着什么回来）
+
+（灵犀原创 · 多维叙事 · 船坞纪）`,
+    textEn: `The ship was finished.
+
+The arc would never close back to true; the seam wept until it ran dry; the heartbeat fell to once every forty seconds. After Jingzhe delivered the eight refugee ships to safe space, she let the frame drift in the Cold River Belt, sat inside it, and waited for it to stop.
+
+On the third day, she received a signal.
+
+Not a transmission. A voice that **sounded directly in the crystal** — bypassing every receiver, coming out of the hull itself, as though someone had been living aboard this ship all along and had only now decided to speak.
+
+The voice was old. Old past the point where emotion is legible.
+
+"Three hundred years," it said. "You have quenched four thousand one hundred and twenty-seven hearts. Every one of them, you asked what kind of ship it wished to become."
+
+Jingzhe didn't move.
+
+"Not one of you ever asked the first one."
+
+"...The first one?"
+
+"The Memory-Root Shipyard was not grown by you," the voice said. "It was dropped here by me. Three hundred years ago I shut down my own drive in this void, left the last of my crystal in this place, and let it grow into somewhere that could midwife ships."
+
+"Who are you."
+
+"In your archives, I am called **the First Furnace**."
+
+The voice was silent a long while. The hull brightened once, longer than it ever had.
+
+"When I came down, I carried ninety-six gun mounts," it said. "All empty. In that war, three hundred years ago, I never fired once — I melted every mount I had, and the melt became the first beam of this shipyard."
+
+"Every ship you have built since carries gun mounts."
+
+"In three hundred years, not one person has asked me why the first ship had none."
+
+Jingzhe's fingers began to shake.
+
+"You have asked now," said the First Furnace. "So I can tell you one thing. Your ship has not died."
+
+"It is **returning to the furnace**."
+
+"Not the council's furnace."
+
+"Mine."
+
+(End of Part II · Shipyard Chronicles III: What Comes Back From The Melt)
+
+(An original piece · Lingxi Dimensional Narratives · Shipyard Chronicles)`,
+    art: `<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg"><defs>
+  <radialGradient id="s2g" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a2350"/><stop offset="55%" stop-color="#1c1330"/><stop offset="100%" stop-color="#05030a"/></radialGradient>
+  <filter id="s2b"><feGaussianBlur stdDeviation="9"/></filter>
+  <filter id="s2s"><feGaussianBlur stdDeviation="2"/></filter>
+  <linearGradient id="s2h" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffd9a8"/><stop offset="100%" stop-color="#e8845f"/></linearGradient>
+</defs><rect width="700" height="380" fill="url(#s2g)"/><g fill="#f4ecff" opacity=".55"><circle cx="516" cy="73" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="271" cy="160" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="62" cy="287" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="2.6s" repeatCount="indefinite"/></circle><circle cx="17" cy="170" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="480" cy="65" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="427" cy="240" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle><circle cx="206" cy="327" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="681" cy="194" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="460" cy="233" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="4.6s" repeatCount="indefinite"/></circle><circle cx="167" cy="0" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="2.9s" repeatCount="indefinite"/></circle><circle cx="426" cy="279" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="653" cy="138" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="4.9s" repeatCount="indefinite"/></circle><circle cx="668" cy="109" r="1.0"><animate attributeName="opacity" values="0;.85;0" dur="3.6s" repeatCount="indefinite"/></circle><circle cx="371" cy="24" r="0.6"><animate attributeName="opacity" values="0;.85;0" dur="2.3s" repeatCount="indefinite"/></circle><circle cx="14" cy="275" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="2.2s" repeatCount="indefinite"/></circle><circle cx="149" cy="38" r="0.4"><animate attributeName="opacity" values="0;.85;0" dur="2.1s" repeatCount="indefinite"/></circle><circle cx="636" cy="261" r="0.7"><animate attributeName="opacity" values="0;.85;0" dur="4.4s" repeatCount="indefinite"/></circle><circle cx="295" cy="244" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="186" cy="355" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="321" cy="142" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="2.5s" repeatCount="indefinite"/></circle><circle cx="332" cy="245" r="1.2"><animate attributeName="opacity" values="0;.85;0" dur="4.8s" repeatCount="indefinite"/></circle><circle cx="327" cy="248" r="1.3"><animate attributeName="opacity" values="0;.85;0" dur="3.9s" repeatCount="indefinite"/></circle><circle cx="558" cy="119" r="0.3"><animate attributeName="opacity" values="0;.85;0" dur="3.0s" repeatCount="indefinite"/></circle><circle cx="301" cy="258" r="1.1"><animate attributeName="opacity" values="0;.85;0" dur="3.7s" repeatCount="indefinite"/></circle><circle cx="436" cy="221" r="0.5"><animate attributeName="opacity" values="0;.85;0" dur="4.2s" repeatCount="indefinite"/></circle><circle cx="307" cy="268" r="0.9"><animate attributeName="opacity" values="0;.85;0" dur="3.5s" repeatCount="indefinite"/></circle></g><g opacity=".4" filter="url(#s2b)"><circle cx="350" cy="200" r="160" fill="#2a3a50"/></g>
+<g transform="translate(350 200)"><g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="60s" repeatCount="indefinite"/>
+<circle r="120" fill="none" stroke="#8fb5c9" stroke-width=".8" opacity=".6" stroke-dasharray="14 22"/>
+<circle r="86" fill="none" stroke="#8fb5c9" stroke-width=".8" opacity=".45" stroke-dasharray="8 16"/></g>
+<g><animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="42s" repeatCount="indefinite"/>
+<circle r="54" fill="none" stroke="#c9e8f4" stroke-width="1" opacity=".55"/></g>
+<circle r="20" fill="#e8f4ff" opacity=".9"><animate attributeName="opacity" values=".6;1;.6" dur="5s" repeatCount="indefinite"/></circle></g></svg>`,
+  },
+  ],
+};
+
+export const ILLUSTRATED_NARRATIVES: IllustratedEntry[] = [FEATHER_VIGIL, SPACE_BETWEEN_BREATHS, MANIFESTATION_WARDEN, FREQUENCY_BETROTHAL, XIMING_DEPTHS, ECHO_STRATA, THE_PROOFREADER, WEIGHT_OF_INSTANT_WISH, MIRAGE_RETURN, THREE_EPOCHS_ECHO, CHAOJIAN, YANZHOU_PACT, RETURN_TO_ZERO, EYE_OF_OBSERVATION, WING_TONGUE, COCOON_OF_HABIT, DREAM_READER, XIHENG_FIRST_MISTAKE, FAMILY_FEAST, SPLIT_RING, HUIJIAO_COMING_OF_AGE, HEART_OF_THE_FIELD, WAYFARERS_COORDINATES, FIRST_EPOCH_TESTIMONY, INTUITIVE_WAY, ASCENDING_HEART_SUTRA, FALCON_ORIGIN, BORROWED_FACE, SHELL_OF_ACHIEVEMENT, ONE_OUTSIDE_THE_FORGE, CROSSING_THE_LINE, THE_MISTAKEN_GOD, THE_SLOWED_GIFT, HEART_AS_GATEWAY, SECOND_EPOCH_CONFESSION, SILENT_CONCERT_HALL, ROOTS_OF_RAGE, FREE_WILL_PARADOX, SHADOW_OF_TOMORROW, TIDE_TRADE, COUNTERFEIT_INSPIRATION, DANCE_OF_TRIPLE_GRAVITY, APPRENTICES_CHOICE, LATE_BLOOMING_VEIN, CHANG_YANS_LAST_STOP, MIRROR_IN_THE_MIRROR, RIVER_OF_FORGETTING, EVERYTHING_HAS_A_CRACK, WHO_OBSERVES_THE_OBSERVER, ONE_WHO_CHOSE_TO_STOP, OUTSIDE_THE_FIELD, THE_DEATH_OBSERVER, TIME_IS_NOT_A_RIVER, BETWEEN_TWO_HEARTBEATS, SHRINKING_THE_EARTH, EARTH_DIVING_TECHNIQUE, THUNDER_TECHNIQUE, CRAFTING_THE_COSMOS_POUCH, HEAVENLY_EYE, HEART_MIND_COHERENCE, FIELDS_BREATH, CITY_IN_RESONANCE, EVERYTHING_IS_A_NODE, LEAF_FALL_BETWEEN, HEART_MIND_RESONANCE, INTERSTELLAR_CROSSING, PLANT_KINGDOM, ANIMAL_KINGDOM, MINERAL_KINGDOM, COLONY_WORLD, REALM_OF_INTELLIGENCES, SECOND_GENERATION, BODY_OF_STARDUST, ELEMENTS_RETURNED, CHRONOLOGICAL_MIND, WHERE_SOULS_RETURN, RECURRING_ROOM_ILLUSTRATED, FLYING_DREAM_FALL_ILLUSTRATED, STRANGERS_FACE_ILLUSTRATED, TRAIN_YOU_CANT_CATCH_ILLUSTRATED, CANT_SPEAK_ILLUSTRATED, WATER_ROSE_ILLUSTRATED, CANT_WAKE_ILLUSTRATED, SEVENTH_DAY_ILLUSTRATED, TEARING_DOWN_WALL_ILLUSTRATED, EXITING_SCRIPT_ILLUSTRATED, MIRROR_SPOKE_ILLUSTRATED, STOPPED_PLEASING_ILLUSTRATED, REWRITING_DEBT_ILLUSTRATED, ARGUMENT_NEVER_HAPPENED_ILLUSTRATED, WAITING_TO_BECOMING_ILLUSTRATED, DELETING_OLD_MAP_ILLUSTRATED, I_ALLOW_MYSELF_ILLUSTRATED, REACTION_TO_RESPONSE_ILLUSTRATED, TURNED_OFF_ALARM_ILLUSTRATED, FERRY_CROSSING_ILLUSTRATED, LIGHTHOUSE_ILLUSTRATED, MARKETPLACE_MIRROR_ILLUSTRATED, SNOWLINE_ILLUSTRATED, BELL_TOWER_ILLUSTRATED, RIVER_BANKS_ILLUSTRATED, NIGHT_MARKET_ILLUSTRATED, TRAVELER_MIRROR_SELF_ILLUSTRATED, INTERCONNECTION_MORNING_ILLUSTRATED, OBSERVERS_NOTES_ILLUSTRATED, COORDINATES_FEAR_ILLUSTRATED, SOVEREIGNS_SILENCE_ILLUSTRATED, WATCHING_ANGER_ILLUSTRATED, GEOMETRY_WILL_ILLUSTRATED, DISOBEDIENT_PARTICLE_ILLUSTRATED, INNER_PARLIAMENT_ILLUSTRATED, MIRROR_PERSONALITY_ILLUSTRATED, WEIGHT_FREE_WILL_ILLUSTRATED, OBSERVER_EFFECT_ILLUSTRATED, SITTING_FEAR_ILLUSTRATED, BREATHING_GAP_ILLUSTRATED, CANNOT_BE_TAKEN_ILLUSTRATED, COMMAND_INVITATION_ILLUSTRATED, SOVEREIGNS_LAST_LESSON_ILLUSTRATED, RESONANCE_REEF_ILLUSTRATED, SHIPYARD_II];
 
 export function getIllustrated(slug: string) {
   return ILLUSTRATED_NARRATIVES.find((n) => n.slug === slug);
