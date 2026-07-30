@@ -35,7 +35,7 @@ export default function DailyIndexPage() {
       <Nav />
       <main className="pt-24">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
+          <div className="lx-glass p-6 sm:p-8">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
               <Bi zh="灵犀 · 今日运势潮汐" en="Lingxi · Daily Fortune Tide" />
             </p>
@@ -55,7 +55,7 @@ export default function DailyIndexPage() {
               <Link
                 key={s.slug}
                 href={`/daily/${s.slug}`}
-                className="group flex flex-col items-center gap-2 rounded-sm border border-white/10 bg-void-deep py-6 transition hover:border-lattice/40"
+                className="group flex flex-col items-center gap-2 lx-glass py-6 transition hover:border-lattice/40"
               >
                 <span className="font-display text-3xl text-lattice transition group-hover:text-amber">{s.glyph}</span>
                 <span className="text-sm text-bone-dim"><Bi zh={s.zh} en={s.en} /></span>

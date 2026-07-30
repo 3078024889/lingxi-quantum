@@ -3554,22 +3554,110 @@ The heart the girl quenched didn't want gun turrets either.
   },
 
   "the-grief-weavers": {
-    zh: `织哀者不修炼快乐，他们修炼的是怎么把悲伤，纺成能用的东西。
+    zh: `织哀者不修炼快乐。他们修炼的是怎么把悲伤，纺成能用的东西。
 
-这个种族的孩子，第一堂修炼课，是学"完整地悲伤"——不是压抑，也不是宣泄完就算了，是要一个人，坐进"织室"，把某段真正让自己痛的记忆，从头到尾，重新经历一遍，不快进，也不回避任何一个细节，直到眼泪本身，在他们的技术里，变成一种能被纺成丝线的物质。
+这个种族的孩子，第一堂修炼课不在教室，在织室。
 
-他们把这种丝线，织成布，盖在城市里那些刚刚经历过重大失去的人身上——不是为了安慰，织哀者会纠正你这个说法：那块布不是用来"抵消"悲伤的，是用来"接住"悲伤的，让正在痛的人知道，这份痛不是异常，是曾经有人，也这样痛过，并且把那份痛，变成了此刻正裹着你的这块布的经纬。
+织室很小，只容一个人。没有窗，墙是活的——一种会随体温微微起伏的暗色材质。孩子进去的时候通常带着一件东西：一只旧鞋、一段录音、某个人留下的半瓶药。织哀者不规定要带什么，只有一条要求——那件东西必须还能让你痛。
 
-我们问一个老织哀者，为什么不干脆修炼一种直接消除悲伤的技术，那样不是更"有效"吗。她织布的手没有停，说："你们那颗星球上很多人，终其一生都在学怎么绕开悲伤，好像悲伤是路上的坑，要跳过去。可悲伤从来不是坑，是矿——你们只是没人教过你们怎么开采。"
+然后是最难的部分：完整地悲伤一次。
+
+不是压抑。压抑在他们的语言里叫「把矿埋回去」。也不是宣泄——宣泄是「把矿石砸碎了扬在风里，什么也没剩下」。完整地悲伤，是坐进那间小屋，把那段真正让自己痛的记忆，从头到尾重新经历一遍。不快进。不跳过任何一个细节。包括那些你一直不肯承认自己记得的细节：他当时手指的温度，那天下午光的角度，你说完最后一句话之后，房间里安静了多久。
+
+孩子第一次进织室，平均待三个小时。出来时手里通常什么也没有。织哀者不认为这是失败。他们说，第一次进去的人，多数时间都花在「绕」上——绕开最痛的那一段，在外围反复打转，以为自己已经在悲伤了。
+
+真正开始的时候，眼泪会变。
+
+这是他们的技术里最难向外人解释的一步。不是所有眼泪都能纺。他们分得很细：忍了很久终于崩掉的那种，含盐高、纤维短，纺出来的线脆，一拉就断；为了让别人看见而流的那种，根本不成纤维。只有一种能用——当一个人不再抵抗、不再表演、也不再指望这份痛消失，只是完整地承受它的时候，流出来的那种。织哀者说，那时候眼泪的密度会变，「像是有什么东西在里面沉下去了」。
+
+那才是可纺的。
+
+线纺出来是暗的，接近无色，只在特定角度下泛出一点光。他们把这种线织成布，盖在城里那些刚刚经历重大失去的人身上。
+
+不是为了安慰。老织哀者会纠正你这个说法，语气不重，但一定纠正：这块布不是用来抵消悲伤的，是用来接住悲伤的。
+
+区别在哪里？
+
+被抵消的悲伤会回来。被接住的悲伤，会知道自己落在了什么地方。
+
+一个人正在最痛的时候，脑子里反复出现的其实不是「我很痛」，是「只有我这么痛」、「我这样是不是不正常」、「是不是早该好了却还没好」。那块布只做一件事：让他知道，这份痛不是异常。这块布的每一根经纬，都是曾经有人这样痛过、并且没有绕开地痛完了，才留下来的。他此刻裹着的，是别人痛过的证据。
+
+在织哀者的城市里，这块布不是礼物，是回声。
+
+我们问那位老织哀者，为什么不干脆修炼一种直接消除悲伤的技术。那样不是更有效吗。
+
+她织布的手没有停。
+
+「我们试过。」她说。「很久以前，我们有一代人做成了——他们做出一种技术，能把悲伤从记忆里干净地摘走。痛的部分没有了，事情还记得。」
+
+那一代人后来怎么了。
+
+「他们还活着，活得很平静。」她说，「只是有一件事他们做不到了：他们没办法再爱任何新的东西。」
+
+她第一次抬起头。
+
+「因为爱一样东西，就是同意将来会为它痛。他们把痛的能力摘掉的时候，顺手把这份同意也摘掉了。他们没有失去悲伤——他们失去的是敢于开始的能力。」
+
+然后她说了那句后来被记录下来、传出这颗星球的话：
+
+「你们那颗星球上很多人，终其一生都在学怎么绕开悲伤，好像悲伤是路上的坑，要跳过去。可悲伤从来不是坑，是矿——你们只是没人教过你们怎么开采。」
+
+离开织室那一带的时候，我们看见一个很年轻的织哀者，第一次交出成品。那块布很小，边缘不齐，线也粗。收布的老人看了很久，然后点头，说了一句他们的行话。翻译过来大概是：
+
+「这一块，痛得很干净。」
 
 （灵犀原创 · 多维叙事 · 场域叙事）`,
-    en: `The Grief-Weavers don't practice happiness. What they practice is spinning sorrow into something usable.
+    en: `The Grief-Weavers do not practice happiness. What they practice is how to spin sorrow into something usable.
 
-A child of this people takes, as their first lesson, the practice of grieving completely — not suppressing it, not simply venting it and moving on, but sitting alone in what they call the Weaving Room, and living through some memory that genuinely hurts, from beginning to end, without skipping ahead and without avoiding a single detail, until the tears themselves, through a craft they've refined for generations, become a substance that can be spun into thread.
+A child of this people takes their first lesson not in a classroom but in a weaving room.
 
-They weave that thread into cloth, and lay it over anyone in the city who has just suffered a great loss — not as comfort, a Grief-Weaver would correct you here: the cloth isn't meant to cancel the grief out. It's meant to catch it, so the person hurting knows their pain isn't an aberration — that someone else once hurt exactly this way, and turned that hurt into the very weave now wrapped around them.
+The room is small — it holds one person. There are no windows, and the walls are alive: a dark material that rises and falls faintly with your body heat. A child usually carries something in with them. An old shoe. A recording. Half a bottle of someone's medicine. The Grief-Weavers don't prescribe what you bring. There is only one requirement — it must still be able to hurt you.
 
-We asked an old Grief-Weaver why her people didn't simply develop a technique to erase sorrow outright — wouldn't that be more "effective"? Her hands never stopped weaving as she answered: "So many people on your planet spend their whole lives learning how to go around grief, as if it were a pothole in the road, something to step over. But grief was never a pothole. It's ore. No one ever taught you how to mine it."
+Then comes the hard part: to grieve, once, all the way through.
+
+Not suppression. In their language, suppression is called *burying the ore again*. Nor venting — venting is *smashing the ore and throwing the dust into the wind, so that nothing is left*. To grieve completely is to sit in that small room and live the memory that genuinely hurts from beginning to end. No skipping ahead. No stepping around a single detail — including the details you have never been willing to admit you remember. The temperature of his fingers. The angle of the light that afternoon. How long the room stayed quiet after you said the last thing you said.
+
+A child's first time in the weaving room lasts about three hours. They usually come out with nothing in their hands. The Grief-Weavers do not consider this a failure. They say that most of a beginner's time is spent *going around* — circling the worst part, orbiting it at a safe radius, believing that the circling is the grieving.
+
+When it finally begins, the tears change.
+
+This is the part of their craft hardest to explain to outsiders. Not all tears can be spun. They distinguish carefully. The tears of someone who held on a long time and finally broke run high in salt, short in fibre; the thread spins brittle and snaps under any pull. Tears wept to be seen never form fibre at all. Only one kind is usable — the kind that comes when a person has stopped resisting, stopped performing, and stopped expecting the pain to go away, and is simply bearing it, completely. The Grief-Weavers say the density changes then. *As though something inside it had settled.*
+
+That is what can be spun.
+
+The thread comes out dark, nearly colourless, throwing off a little light only at certain angles. They weave it into cloth, and lay the cloth over those in the city who have just suffered a great loss.
+
+Not as comfort. An old Grief-Weaver will correct you on this — not harshly, but she will correct you: the cloth is not meant to cancel the grief. It is meant to catch it.
+
+What's the difference?
+
+Grief that has been cancelled comes back. Grief that has been caught knows where it has landed.
+
+When a person is in the worst of it, the thought running through them is not *I am in pain*. It's *only I am in pain like this* — *is there something wrong with me* — *shouldn't I be better by now*. The cloth does exactly one thing: it tells them this pain is not an aberration. Every thread in its weave is there because someone once hurt this way and did not go around it — hurt it all the way through, and left this behind. What is wrapped around them is the evidence of another person's pain.
+
+In the cities of the Grief-Weavers, the cloth is not a gift. It is an echo.
+
+We asked that old weaver why her people had never simply developed a technique to remove sorrow outright. Wouldn't that be more effective?
+
+Her hands never stopped.
+
+"We tried," she said. "Long ago, one generation of us managed it. They built a technique that lifted grief cleanly out of memory. The hurting was gone. The events were still remembered."
+
+And what became of that generation?
+
+"They're still alive. Living very peacefully," she said. "There's only one thing they can no longer do. They cannot love anything new."
+
+She looked up for the first time.
+
+"To love something is to consent, in advance, to hurting for it. When they removed the capacity to hurt, they removed that consent along with it. They did not lose grief. They lost the ability to begin."
+
+Then she said the thing that was written down, and that eventually left the planet:
+
+"So many people on your world spend their whole lives learning how to go around grief, as if it were a pothole in the road, something to be stepped over. But grief was never a pothole. It's ore — and no one ever taught you how to mine it."
+
+As we were leaving that quarter, we saw a very young Grief-Weaver hand in finished work for the first time. The cloth was small, uneven at the edges, the thread coarse. The elder receiving it looked at it a long while, then nodded and said something in their trade idiom. Translated, it comes out roughly as:
+
+"This one hurt cleanly."
 
 (An original piece · Lingxi Dimensional Narratives · Field Narratives)`,
   },

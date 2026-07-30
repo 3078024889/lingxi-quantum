@@ -137,7 +137,7 @@ export default function QianFlow() {
           <QianCosmicRing />
         </div>
         <div className="mx-auto max-w-md pb-16">
-        <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
+        <div className="lx-glass p-6 sm:p-8">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
           </p>
@@ -155,7 +155,7 @@ export default function QianFlow() {
           </p>
         </div>
 
-        <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">
+        <div className="mt-6 lx-glass p-6">
           <p className="text-sm text-bone-dim">{t("称呼（选填）", "Name (optional)")}</p>
           <input
             value={name} onChange={(e) => setName(e.target.value)}
@@ -181,7 +181,7 @@ export default function QianFlow() {
         </div>
 
         {error && (
-          <div className="mt-4 rounded-sm border border-rose/30 bg-void-deep p-4">
+          <div className="mt-4 lx-glass p-4">
             <p className="text-sm text-rose">{error}</p>
           </div>
         )}
@@ -215,7 +215,7 @@ export default function QianFlow() {
 
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
-      <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+      <div className="lx-glass px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
           <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
         </p>
@@ -226,7 +226,7 @@ export default function QianFlow() {
 
       <div className="mt-8 grid grid-cols-3 gap-3">
         {signs?.map((s, i) => (
-          <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 bg-void-deep text-center">
+          <div key={i} className="overflow-hidden lx-glass text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/images/qian/${String(s.index).padStart(2, "0")}.jpg`} alt={s.nameZh} className="block aspect-[2/3] w-full object-cover" />
             <div className="p-3">

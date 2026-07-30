@@ -130,7 +130,7 @@ export default function TarotReadingFlow() {
   if (stage === "form") {
     return (
       <div className="mx-auto max-w-md px-6 py-16">
-        <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
+        <div className="lx-glass p-6 sm:p-8">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
             <Bi zh="灵犀量子塔罗" en="Lingxi Quantum Tarot" />
           </p>
@@ -145,7 +145,7 @@ export default function TarotReadingFlow() {
           </p>
         </div>
 
-        <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-6">
+        <div className="mt-6 lx-glass p-6">
           <p className="text-sm text-bone-dim">{t("怎么称呼你（选填）", "What should we call you (optional)")}</p>
           <input
             value={name} onChange={(e) => setName(e.target.value)}
@@ -171,7 +171,7 @@ export default function TarotReadingFlow() {
         </div>
 
         {error && (
-          <div className="mt-4 rounded-sm border border-rose/30 bg-void-deep p-4">
+          <div className="mt-4 lx-glass p-4">
             <p className="text-sm text-rose">{error}</p>
           </div>
         )}
@@ -199,7 +199,7 @@ export default function TarotReadingFlow() {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center px-6 py-24 text-center">
         <div className="lx-tr-glow h-20 w-20 rounded-full" />
-        <div className="mt-8 space-y-3 rounded-sm border border-white/10 bg-void-deep px-6 py-6 backdrop-blur-sm">
+        <div className="mt-8 space-y-3 lx-glass px-6 py-6 backdrop-blur-sm">
           {CONNECTING_LINES.map((line, i) => (
             <p
               key={i}
@@ -223,7 +223,7 @@ export default function TarotReadingFlow() {
 
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
-      <div className="rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+      <div className="lx-glass px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
           <Bi zh="灵犀量子塔罗 · 三张牌阵深度解读" en="Lingxi Quantum Tarot · Three-Card Deep Reading" />
         </p>
@@ -234,7 +234,7 @@ export default function TarotReadingFlow() {
 
       <div className="mt-8 grid grid-cols-3 gap-3">
         {cards?.map((c, i) => (
-          <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 bg-void-deep text-center">
+          <div key={i} className="overflow-hidden lx-glass text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/images/tarot/${String(c.index).padStart(2, "0")}.jpg`} alt={c.nameZh} className="block aspect-[2/3] w-full object-cover" />
             <div className="p-2">
