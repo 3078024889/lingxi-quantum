@@ -9135,3 +9135,31 @@ lib/narrative-illustrated.ts —— 新增 SHIPYARD_II
 III 的题目定了：《回炉的东西会带着什么回来》。初炉说"你的船在回炉，
 不是议会那个回炉，是回到我这里来"——III 要回答的是：一艘船回到
 初炉里，再出来的时候，还是不是它自己。
+
+========================================
+
+灵犀 LINGXI · v270（修复：手机百度打开网站只剩一支视频）
+
+【故障本质】
+不是代码写错，是国产 App 内置浏览器（手机百度、UC、QQ浏览器、夸克、
+以及腾讯X5内核）会主动"接管"页面里的 <video>，把它提进自己的全屏
+播放器。而 components/AuroraVideoBand.tsx 里那支极光视频，恰好是
+position:fixed 铺满整个视口的全站背景层——被接管之后，用户看到的
+就只剩这支视频，整站内容全被挡在后面。标准的 playsInline 只约束
+iOS Safari，管不了这些自定义内核，所以之前虽然写了 playsInline
+也没用。
+
+【两层处理】
+1. 已知会劫持的浏览器（baiduboxapp / UCBrowser / MQQBrowser /
+   QQBrowser / baidubrowser / Quark）——直接不渲染 <video>，改用
+   poster 静态图当背景。损失的是"极光在流动"，换来的是页面能正常
+   打开。在这些浏览器里，页面可用 >> 背景会动。
+2. 其余浏览器——补上腾讯X5内核那几个私有属性
+   （x5-playsinline / x5-video-player-type=h5 /
+     x5-video-player-fullscreen=false / webkit-playsinline），
+   明确告诉内核"这个视频内联播，别全屏、别加你自己的控件"。
+   同时加 disablePictureInPicture / controls={false}。
+
+生命图谱那支罗盘视频（app/life-map/LifeMapCompass.tsx）同样补上了
+这几个属性——它不是全屏背景，被劫持的后果没那么严重，但一样会突然
+弹全屏打断阅读，一并处理掉。

@@ -105,6 +105,12 @@ export default function LifeMapCompass() {
           preload="metadata"
           poster="/images/lifemap/compass-poster.jpg"
           className="h-full w-full object-contain"
+          x5-playsinline="true"
+          x5-video-player-type="h5"
+          x5-video-player-fullscreen="false"
+          webkit-playsinline="true"
+          disablePictureInPicture
+          controls={false}
           aria-label="灵犀生命图谱大罗盘 · Lingxi Life Compass"
         >
           <source src="/images/lifemap/compass.webm" type="video/webm" />
