@@ -3,6 +3,15 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { computeLifeMapFacts, lunarToSolar, type BirthInput } from "@/lib/lifemap-calc";
 
+// v261：之前这里没有设置maxDuration——不显式配置的话，Vercel默认的
+// 函数运行时长上限，比这个接口真实需要的计算+数据库写入时间更容易
+// 不够用，一旦稍微跑得慢一点，就会被平台直接杀死，前端表现为"点了
+// 按钮但没反应"，不会报出任何看得懂的错误。这里统一补上，跟支付
+// 相关接口用的是同一个思路。
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
+
 // v245：财富创造地图，保存流程照抄 resilience_submissions 那一套
 // 已经验证过的写法（登录校验、admin client写库、错误信息里带上原始
 // Postgres错误方便排查）。

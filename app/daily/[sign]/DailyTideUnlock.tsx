@@ -83,6 +83,7 @@ export default function DailyTideUnlock() {
   };
 
   return (
+    <>
     <div
       className="lx-glass mt-6 p-6 text-center"
       style={{ backgroundImage: "linear-gradient(rgba(10,20,42,0.38), rgba(10,20,42,0.38)), url(/images/daily-tide-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
@@ -118,32 +119,36 @@ export default function DailyTideUnlock() {
         >
           <Bi zh="展开今日运势潮汐深度报告 →" en="Unfold the Deep Tide Report →" />
         </button>
-      ) : (
-        <div className="mt-4">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <input
-              type="text" value={name} onChange={(e) => setName(e.target.value)}
-              placeholder={t("你的名字（选填）", "Your name (optional)")}
-              className="w-full max-w-xs rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60"
-            />
-          </div>
-          <div className="mt-2 flex items-center justify-center gap-2">
-            <input type="number" value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Y")} className="w-20 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60" />
-            <input type="number" value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "M")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60" />
-            <input type="number" value={day} onChange={(e) => setDay(e.target.value)} placeholder={t("日", "D")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60" />
-          </div>
-          <button
-            onClick={unlock}
-            disabled={unlocking}
-            className="mt-4 w-full max-w-xs bg-lattice py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
-          >
-            {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`展开深度潮汐报告 · ¥${getProduct("daily-tide-report")?.priceRmb}`} en={`Unfold the Deep Report · $${getProduct("daily-tide-report")?.priceUsd}`} />}
-          </button>
-        </div>
-      )}
+      ) : null}
       {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
-
-      
     </div>
+    {expanded && (
+      // v261：之前这个填写姓名/出生日期的小框，跟上面那张卡片共用同一张
+      // 背景图，图片底部本来就带着网址水印，卡片一长，输入框刚好落在
+      // 水印那一片区域，看起来很花、看不清。这次把这一段整个挪出来，
+      // 单独放一张没有背景图干扰的纯色卡片，不再跟水印打架。
+      <div className="mx-auto mt-4 max-w-md rounded-sm border border-white/10 bg-void-deep p-6 text-center">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <input
+            type="text" value={name} onChange={(e) => setName(e.target.value)}
+            placeholder={t("你的名字（选填）", "Your name (optional)")}
+            className="w-full max-w-xs rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60"
+          />
+        </div>
+        <div className="mt-2 flex items-center justify-center gap-2">
+          <input type="number" value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Y")} className="w-20 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60" />
+          <input type="number" value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "M")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60" />
+          <input type="number" value={day} onChange={(e) => setDay(e.target.value)} placeholder={t("日", "D")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-lattice/60" />
+        </div>
+        <button
+          onClick={unlock}
+          disabled={unlocking}
+          className="mt-4 w-full max-w-xs bg-lattice py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+        >
+          {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`展开深度潮汐报告 · ¥${getProduct("daily-tide-report")?.priceRmb}`} en={`Unfold the Deep Report · $${getProduct("daily-tide-report")?.priceUsd}`} />}
+        </button>
+      </div>
+    )}
+    </>
   );
 }

@@ -3,6 +3,15 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { computeLifeMapFacts, lunarToSolar, type BirthInput } from "@/lib/lifemap-calc";
 
+// v261：之前这里没有设置maxDuration——不显式配置的话，Vercel默认的
+// 函数运行时长上限，比这个接口真实需要的计算+数据库写入时间更容易
+// 不够用，一旦稍微跑得慢一点，就会被平台直接杀死，前端表现为"点了
+// 按钮但没反应"，不会报出任何看得懂的错误。这里统一补上，跟支付
+// 相关接口用的是同一个思路。
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
+
 // v237：今日运势潮汐的付费深度报告——跟生命韧性/桃花磁场同一套模式，
 // 免费的今日快测完全不变，这里是新增的付费入口。
 export async function POST(req: Request) {

@@ -185,8 +185,8 @@ export default function WechatPayModal({
               </p>
               <p className="mt-2 text-xs leading-6 text-bone-dim">
                 <Bi
-                  zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
-                  en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
+                  zh="出于支付安全考虑，微信不支持保存二维码到相册后再扫描付款——如果当前设备不方便直接扫码，可以换一台手机、用它的微信直接扫这张二维码"
+                  en="For payment security, WeChat doesn't support scanning a saved QR code from your photo album — if this device isn't convenient for scanning directly, use a different phone's WeChat to scan this code instead"
                 />
               </p>
             </div>

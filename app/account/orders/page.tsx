@@ -146,6 +146,11 @@ export default async function FieldOrdersPage() {
                       {expiryLabel && (
                         <p className="mt-1 text-xs text-amber/80">{expiryLabel}</p>
                       )}
+                      {isPaid && product && (
+                        <p className="mt-1 text-xs leading-6 text-bone-dim/85">
+                          <Bi zh="获得权益" en="Benefits" />：<Bi zh={product.note} en={product.noteEn} />
+                        </p>
+                      )}
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="font-display text-xl text-bone">{amountDisplay}</p>

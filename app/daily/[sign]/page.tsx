@@ -11,6 +11,11 @@ import DownloadResultPdfButton from "@/components/DownloadResultPdfButton";
 import ShareButton from "@/components/ShareButton";
 import DailyTideUnlock from "./DailyTideUnlock";
 
+// v261：这个页面首次访问某个星座、某一天的时候，会现场调用AI生成内容
+// （之后同一天同一个星座的访问会走缓存，很快），首次生成这一次如果
+// 稍微慢一点，默认的函数超时很容易不够用，导致点了星座卡半天没反应。
+export const maxDuration = 30;
+
 // 每次访问都重新算（不是纯静态页）——不然月相和月亮星座这些"应该每天
 // 变"的数据，会被Next.js当成一成不变的静态内容缓存住，失去"每日"
 // 的意义。计算本身很便宜（不调用AI，纯天文公式），不缓存也没问题。

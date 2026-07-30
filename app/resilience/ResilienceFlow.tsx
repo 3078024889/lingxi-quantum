@@ -335,21 +335,6 @@ export default function ResilienceFlow() {
           </p>
         </div>
 
-        <div className="mt-8 lx-glass p-6 text-center">
-          <p className="text-base leading-8 text-bone-dim">
-            <Bi
-              zh="同一份命盘还能算出：你的财富来源类型是哪一种、你在亲密关系里的核心矛盾是什么、你的桃花磁场和吸引力风格——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
-              en="The same chart also determines your wealth archetype, the core tension in your close relationships, and your romance magnetism — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
-            />
-          </p>
-          <a
-            href="/life-map"
-            className="mt-5 inline-block bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
-          >
-            <Bi zh="查看完整生命图谱 →" en="See Your Full Life Map →" />
-          </a>
-        </div>
-
         <div className="mt-6 lx-glass px-6 py-3 text-center">
           <p className="text-sm text-bone-dim/90">
             <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
@@ -401,6 +386,27 @@ export default function ResilienceFlow() {
             {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`展开完整韧性档案 · ¥${getProduct("resilience-report")?.priceRmb}`} en={`Unfold the Full Resilience Archive · $${getProduct("resilience-report")?.priceUsd}`} />}
           </button>
           {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
+        </div>
+      </div>
+
+      {/* v261：这段"查看完整生命图谱"的引导，之前排在1-11点清单前面，
+          等于用户还没看到免费产品本身能展开成什么样，就先被推去买另一个
+          产品——这次挪到解锁按钮之后，位置对了：先把这个产品自己的
+          完整价值讲完，最后再做交叉导流。 */}
+      <div className="mx-auto mt-6 max-w-xl px-6">
+        <div className="lx-glass p-6 text-center">
+          <p className="text-base leading-8 text-bone-dim">
+            <Bi
+              zh="同一份命盘还能算出：你的财富来源类型是哪一种、你在亲密关系里的核心矛盾是什么、你的桃花磁场和吸引力风格——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
+              en="The same chart also determines your wealth archetype, the core tension in your close relationships, and your romance magnetism — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
+            />
+          </p>
+          <a
+            href="/life-map"
+            className="mt-5 inline-block border border-lattice/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
+          >
+            <Bi zh="查看完整生命图谱 →" en="See Your Full Life Map →" />
+          </a>
         </div>
       </div>
 

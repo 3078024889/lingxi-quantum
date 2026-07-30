@@ -294,10 +294,15 @@ function CheckoutInner() {
                 <p className="text-sm leading-6 text-bone">
                   <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
                 </p>
+                {/* v261：之前这里写的"存到相册再扫"，微信支付官方文档
+                    明确写了不支持这条路径（为了防止二维码截图被盗用/
+                    钓鱼，微信统一关闭了"从相册识别二维码完成支付"这个
+                    功能），照着做只会看到微信弹出报错，不是真的能走通
+                    的办法。这里换成更准确的说明。 */}
                 <p className="mt-2 text-xs leading-6 text-bone-dim">
                   <Bi
-                    zh="如果暂时不方便扫码，可以长按二维码保存到相册，之后用微信「扫一扫」右上角的相册图标识别"
-                    en="If you can't scan right now, long-press to save this QR code, then use WeChat's Scan feature and pick it from your album"
+                    zh="出于支付安全考虑，微信不支持保存二维码到相册后再扫描付款——如果当前设备不方便直接扫码，可以换一台手机、用它的微信直接扫这张二维码"
+                    en="For payment security, WeChat doesn't support scanning a saved QR code from your photo album — if this device isn't convenient for scanning directly, use a different phone's WeChat to scan this code instead"
                   />
                 </p>
               </div>

@@ -258,13 +258,6 @@ export default function RomanceFlow() {
           </p>
         </div>
 
-        <div className="mt-4 flex justify-center">
-          <div className="overflow-hidden rounded-sm border border-amber/25" style={{ maxWidth: 260 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/romance/romance.jpg" alt={t("桃花磁场指数", "Romance Magnetism Index")} className="block w-full" />
-          </div>
-        </div>
-
         <div className="mt-4 rounded-sm border border-rose/20 bg-[#2c1420] p-6">
           <p className="text-base leading-9 text-bone-dim">{t(OVERALL[band(result.score)].zh, OVERALL[band(result.score)].en)}</p>
         </div>
@@ -303,21 +296,6 @@ export default function RomanceFlow() {
               en="This isn't improvised. Underneath, Lingxi Field runs on a life-vector engine — real astronomical data (the planets' exact positions right now) and real calendrical data (your Bazi pillars) are used to compute a fixed set of numbers first — personality tendencies, emotional depth, social drive — before any text gets written. The field writes based on numbers already computed; it doesn't decide on its own whether to call you magnetic. Recompute the same birth data anytime, and the underlying scores come out identical. That's the core difference from a typical fortune-telling site: they ask a question and hand you an answer directly; here, the structure is computed first, and the field only explains it. This magnetism score is pulled from just the attraction-related slice of your full chart."
             />
           </p>
-        </div>
-
-        <div className="mt-8 rounded-sm border border-rose/20 bg-[#2c1420] p-6 text-center">
-          <p className="text-base leading-8 text-bone-dim">
-            <Bi
-              zh="同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
-              en="The same chart also determines your resilience index, your wealth archetype, and the core tension at your center — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
-            />
-          </p>
-          <a
-            href="/life-map"
-            className="mt-5 inline-block bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
-          >
-            <Bi zh="查看完整生命图谱 →" en="See Your Full Life Map →" />
-          </a>
         </div>
 
         <div className="mt-6 rounded-sm border border-rose/20 bg-[#2c1420] px-6 py-3 text-center">
@@ -371,6 +349,25 @@ export default function RomanceFlow() {
             {unlocking ? <Bi zh="准备中…" en="Preparing…" /> : <Bi zh={`展开桃花磁场档案 · ¥${getProduct("romance-report")?.priceRmb}`} en={`Unfold the Full Attraction Archive · $${getProduct("romance-report")?.priceUsd}`} />}
           </button>
           {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
+        </div>
+      </div>
+
+      {/* v261：这段"查看完整生命图谱"的引导，之前排在1-11点清单前面，
+          这次挪到解锁按钮之后。 */}
+      <div className="mx-auto mt-6 max-w-xl px-6">
+        <div className="rounded-sm border border-rose/20 bg-[#2c1420] p-6 text-center">
+          <p className="text-base leading-8 text-bone-dim">
+            <Bi
+              zh="同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
+              en="The same chart also determines your resilience index, your wealth archetype, and the core tension at your center — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
+            />
+          </p>
+          <a
+            href="/life-map"
+            className="mt-5 inline-block border border-lattice/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
+          >
+            <Bi zh="查看完整生命图谱 →" en="See Your Full Life Map →" />
+          </a>
         </div>
       </div>
 
