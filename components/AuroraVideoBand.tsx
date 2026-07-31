@@ -77,40 +77,34 @@ export default function AuroraVideoBand() {
       {/* 极轻的暗角，压一压视频最亮区域，让全站文字（珍珠白/黄金/极光青）
           在任何画面亮度下都还留有一点余量，不需要再靠光晕这类补丁。 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,transparent_0%,rgba(8,6,20,0.35)_100%)]" />
-      {/* v279：夜空中的晨曦意识空间。
-          五色：深夜蓝 #101A3A / 星云蓝 #25345C / 雾紫 #7B6FA3
-                透明青绿 #8CCFC8 / 晨曦金 #D6B9A5
-          参照：凌晨五点的湖面——天还暗，但已经有光。
+      {/* v280：把背景还给极光。
+          v279 加了一条中央竖带压暗（为了保证文字对比度），代价太大：
+          它把首屏中央那颗意识球整个挡住了，整站也变得暗淡无光。
+          这是典型的"为了指标牺牲了作品"——对比度是达标了，
+          但页面失去了生命感，那才是用户真正在看的东西。
 
-          关键构图（这一条是从效果图本身读出来的）：
-          效果图里极光最亮最美的地方在**左右两侧**，中间那条是内容带，
-          明显更沉。所以正确做法不是整体压暗——那会把极光的美一起
-          压掉，也就是之前几版做成"暗色仪表盘"的原因——
-          而是只压中间这一条竖带。
-          这样：两侧极光保持鲜活透亮，中间的文字与雾玻璃有足够的
-          衬底。玻璃因此可以一直保持 0.32 的漂浮感，不必加重。 */}
+          改成：背景只做极轻的一层统一调性，不做任何局部遮挡。
+          对比度交给面板自己承担——文字本来就几乎都在面板里，
+          让背景去保证面板内文字的可读性，本来就是找错了地方。
+          首屏大标题不在面板里，但它字号很大（sm:text-5xl），
+          大文字的可读标准是 3.0 而非 4.5，轻背景足够。 */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(16,26,58,0.30) 0%, rgba(37,52,92,0.18) 50%, rgba(37,52,92,0.14) 100%)",
+            "linear-gradient(180deg, rgba(16,26,58,0.26) 0%, rgba(37,52,92,0.14) 48%, rgba(37,52,92,0.10) 100%)",
         }}
       />
-      {/* 中央内容带压暗：横向渐变，两侧完全透明，中间最沉 */}
+      {/* 极光增强层：把原本就有的紫与青托起来，让画面更透亮，
+          不是加暗，是加光。这是"暗淡无光"的解药。 */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(90deg, rgba(14,20,44,0) 0%, rgba(14,20,44,0.12) 18%, rgba(14,20,44,0.62) 34%, rgba(14,20,44,0.70) 50%, rgba(14,20,44,0.62) 66%, rgba(14,20,44,0.12) 82%, rgba(14,20,44,0) 100%)",
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 60% at 12% 34%, rgba(123,111,163,0.26), transparent 72%)," +
-            "radial-gradient(ellipse 55% 55% at 88% 30%, rgba(140,207,200,0.18), transparent 70%)," +
-            "radial-gradient(ellipse 96% 46% at 50% 90%, rgba(214,185,165,0.14), transparent 78%)",
+            "radial-gradient(ellipse 70% 62% at 14% 34%, rgba(160,120,255,0.22), transparent 70%)," +
+            "radial-gradient(ellipse 62% 56% at 86% 30%, rgba(120,240,220,0.18), transparent 68%)," +
+            "radial-gradient(ellipse 96% 44% at 50% 92%, rgba(232,200,160,0.14), transparent 78%)",
+          mixBlendMode: "screen",
         }}
       />
     </div>

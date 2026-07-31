@@ -14,7 +14,9 @@ const config: Config = {
         lattice: "#9FD8D0",
         "lattice-dim": "#7CC4B4",
         amber: "#C9A8D8",
-        rose: "#FF9FD6",
+        // v281：原 #FF9FD6 太艳，压在桃花 PDF 的粉色底上几乎糊掉。
+        // 柔化并提亮，只作强调用，不再当正文色。
+        rose: "#E8B8D4",
         violet: "#D8B8FF",
         // v277：正文不用纯白。效果图那个感觉的关键之一，是文字带一点
         // 蓝紫，与深蓝紫的底同源，读起来像"从同一片光里长出来"，
@@ -29,17 +31,22 @@ const config: Config = {
         title: "#F0E6FF",
         "lm-violet": "#D8B8FF",
         // 生命图谱主题：文字令牌跟全站同一套 Lingxi Typography System V4
-        "lm2-bg": "#0c1a30",
-        "lm2-bg-deep": "#0f2038",
-        "lm2-card": "rgba(14,28,52,0.55)",
-        "lm2-text": "#F4F7FF",
-        "lm2-text-dim": "#D2DEF5",
-        "lm2-title": "#F0E6FF",
-        "lm2-rose": "#FF9FD6",
-        "lm2-amber": "#D8B8FF",
-        "lm2-mint": "#A0E0D0",
-        "lm2-sky": "#A0E0D0",
-        "lm2-violet": "#D8B8FF",
+        // v281：生命图谱原本自带一整套独立主题（lm2-*），跟全站的
+        // bone / lattice / lx-glass 完全无关——这就是为什么前几版改
+        // 全站视觉时，生命图谱一直纹丝不动。363 处引用散在 5 个组件里，
+        // 逐个替换风险大且容易漏，所以改法是：保留变量名，把它们的值
+        // 对齐到全站新色板。一次生效，不动任何组件代码。
+        "lm2-bg": "rgba(62,58,96,0.58)",        // 对齐雾玻璃底
+        "lm2-bg-deep": "rgba(52,48,84,0.62)",
+        "lm2-card": "rgba(96,86,132,0.50)",     // 对齐雾玻璃亮侧
+        "lm2-text": "#DCD7EA",                  // 对齐 bone
+        "lm2-text-dim": "#C2C8D8",              // 对齐 bone-dim
+        "lm2-title": "#DCD7EA",
+        "lm2-rose": "#D8A8C8",                  // 柔化，原 #FF9FD6 过艳
+        "lm2-amber": "#C9A8D8",                 // 对齐 amber
+        "lm2-mint": "#9FD8D0",                  // 对齐 lattice
+        "lm2-sky": "#9FD8D0",
+        "lm2-violet": "#C9A8D8",
         // 供组件直接引用的文字系统主色
         pearl: "#DDE6FF",
         gold: "#D8B8FF",

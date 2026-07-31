@@ -357,7 +357,7 @@ export default function FullReportView({ id }: { id: string }) {
              误当成多出来的"章节"，导致后面12个真章节的标题全部错位。 */}
           <div
             className="relative overflow-hidden rounded-sm"
-            style={{ aspectRatio: "3 / 4", backgroundColor: "#0d0d1a", backgroundImage: "url(/images/lifemap/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+            style={{ aspectRatio: "3 / 4", backgroundColor: "#1a2038", backgroundImage: "url(/images/lifemap/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
           >
             <div className="absolute inset-x-0 top-[26%] text-center">
               <h1 className="font-display text-2xl font-light text-white lm2-print-title" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}>
@@ -376,7 +376,7 @@ export default function FullReportView({ id }: { id: string }) {
           )}
 
           {facts && (
-            <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
+            <div className="mt-8 lx-pdf-lifemap p-6 backdrop-blur-xl">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的星盘" en="Your Natal Chart" />
               </p>
@@ -511,7 +511,7 @@ export default function FullReportView({ id }: { id: string }) {
 function NumberEnergyChart({ items }: { items: { label: string; total: number }[] }) {
   const colors = ["#F0C868", "#8EDBD2"];
   return (
-    <div className="mt-5 grid grid-cols-2 gap-4 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+    <div className="mt-5 grid grid-cols-2 gap-4 lx-pdf-lifemap p-5 backdrop-blur-xl">
       {items.map((it, idx) => {
         const norm = ((it.total - 1) % 30) + 1; // 跟 lib/number-energy-calc.ts 里的 normalize81 逻辑对齐
         const pct = (norm / 30) * 100;
@@ -552,7 +552,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
   };
   const colors = ["#F0C868", "#8EDBD2", "#D8B8FF", "#FF9FD6"];
   return (
-    <div className="mt-5 flex flex-col items-center gap-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl sm:flex-row sm:items-start">
+    <div className="mt-5 flex flex-col items-center gap-5 lx-pdf-lifemap p-6 backdrop-blur-xl sm:flex-row sm:items-start">
       <svg viewBox="0 0 260 260" className="w-56 shrink-0">
         <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
         <circle cx={cx} cy={cy} r={r - 20} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
@@ -610,7 +610,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
     }).join(" ")
   );
   return (
-    <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+    <div className="mt-5 lx-pdf-lifemap p-5 backdrop-blur-xl">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="命局五行分布" en="Element Balance" /></p>
       <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
         <svg viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`} className="h-36 w-36 shrink-0">
@@ -666,7 +666,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
     { label: "内外对齐感", en: "Alignment", v: scores.alignment, color: "#FFCB61" },
   ];
   return (
-    <div className="mt-5 grid grid-cols-3 gap-4 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+    <div className="mt-5 grid grid-cols-3 gap-4 lx-pdf-lifemap p-5 backdrop-blur-xl">
       {items.map((it, idx) => {
         const pct = (it.v / 5) * 100;
         const r = 26, c = 2 * Math.PI * r;
@@ -711,7 +711,7 @@ function ZiweiGrid({
   const byBranch = new Map(palaces.map((p) => [p.earthlyBranch, p]));
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
   return (
-    <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+    <div className="mt-5 lx-pdf-lifemap p-5 backdrop-blur-xl">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="紫微十二宫" en="The Twelve Ziwei Palaces" /></p>
       <div className="mt-4 grid grid-cols-4 gap-1.5">
         {ZIWEI_GRID_BRANCHES.flat().map((branch, i) => {
@@ -768,7 +768,7 @@ function DaYunTimeline({ startAge }: { startAge: number | null }) {
   const periods = Array.from({ length: 5 }).map((_, i) => start + i * 10);
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
   return (
-    <div className="mt-5 rounded-sm border border-lm2-text/10 bg-lm2-card p-5 backdrop-blur-xl">
+    <div className="mt-5 lx-pdf-lifemap p-5 backdrop-blur-xl">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="大运时间轴" en="Major Luck Cycle Timeline" /></p>
       <div className="relative mt-6 pb-2">
         <div className="absolute left-0 right-0 top-3 h-0.5 bg-gradient-to-r from-lm2-rose via-lm2-amber via-lm2-mint to-lm2-violet opacity-40" />

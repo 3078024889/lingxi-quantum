@@ -246,7 +246,7 @@ export default function QianFlow() {
 
       <div
         className="mt-8 rounded-sm border border-amber/25 p-6 text-center"
-        style={{ backgroundImage: "linear-gradient(rgba(13,13,26,0.5), rgba(13,13,26,0.5)), url(/images/qian-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+        style={{ backgroundImage: "linear-gradient(rgba(42,36,52,0.5), rgba(42,36,52,0.5)), url(/images/qian-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "top" }}
       >
         <p className="font-display text-base text-bone">
           <Bi zh="三枚生命原型，只是入口。" en="Three signs are only the entrance." />

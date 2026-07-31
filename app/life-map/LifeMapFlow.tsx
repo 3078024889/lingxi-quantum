@@ -612,7 +612,7 @@ export default function LifeMapFlow() {
             <div className="lm-core" />
           </div>
           <div className="relative z-10">
-            <div className="bg-lm2-card mx-auto max-w-2xl rounded-sm px-8 py-10">
+            <div className="lx-glass-lifemap mx-auto max-w-2xl px-8 py-10">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("发现你的生命频率", "Discover Your Life Frequency")}
             </p>
@@ -938,7 +938,7 @@ export default function LifeMapFlow() {
             </div>
 
             {/* 真实星盘：用已验证的行星黄经数据，画出标准占星轮图 */}
-            <div className="mt-8 rounded-sm border border-lm2-text/10 bg-lm2-card p-6 backdrop-blur-xl">
+            <div className="lx-pdf-lifemap mt-8 p-6">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的星盘" en="Your Natal Chart" />
               </p>
@@ -1112,7 +1112,7 @@ export default function LifeMapFlow() {
               </div>
             </div>
 
-            <div className="bg-lm2-card mt-14 rounded-sm border border-lm2-violet/40 p-8 text-center shadow-[0_0_40px_rgba(140,110,255,0.2)]">
+            <div className="lx-pdf-lifemap mt-14 p-8 text-center">
               <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>

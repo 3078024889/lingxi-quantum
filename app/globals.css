@@ -355,9 +355,12 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   /* v279 灵犀雾玻璃。
      不是白玻璃（会被极光亮带吞掉），也不是黑面板（会变暗色仪表盘）。
      是紫蓝雾气中的透明晶体：有温度的雾，不是透明空气。
-     0.32 而非 0.42——0.42 开始像"面板"，灵犀需要的是"漂浮"。 */
+     v280 调整：背景那条中央压暗带移除之后（它挡住了首屏的意识球），
+     对比度改由面板承担，所以雾玻璃需要比 0.32 稍实一点。
+     用 0.50–0.58 的渐变：仍然是雾，不是实心面板，
+     背景的极光依然透得过来，但文字在任何位置都站得住。 */
   position: relative;
-  background: linear-gradient(135deg, rgba(150,130,180,0.28), rgba(120,105,150,0.34));
+  background: linear-gradient(135deg, rgba(96,86,132,0.50), rgba(62,58,96,0.58));
   border: 1px solid rgba(220, 210, 240, 0.22);
   backdrop-filter: blur(24px) saturate(1.04);
   -webkit-backdrop-filter: blur(24px) saturate(1.04);
@@ -376,8 +379,8 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-qian,
 .lx-glass-tarot,
 .lx-glass-relation,
-.lx-glass-lifemap { background: linear-gradient(135deg, rgba(145,155,195,0.26), rgba(105,115,160,0.34)); border-color: rgba(220,210,240,0.22); }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(140,168,150,0.26), rgba(95,120,105,0.34)); border-color: rgba(220,210,240,0.22); }
+.lx-glass-lifemap { background: linear-gradient(135deg, rgba(78,86,116,0.50), rgba(54,62,88,0.58)); border-color: rgba(220,210,240,0.22); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(78,102,84,0.50), rgba(52,70,58,0.58)); border-color: rgba(220,210,240,0.22); }
 .lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
 .lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
 .lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }

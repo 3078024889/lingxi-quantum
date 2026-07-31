@@ -189,7 +189,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
             <div
               key={i}
               className="relative mt-4 overflow-hidden rounded-sm"
-              style={{ backgroundColor: "#09251f", backgroundImage: `linear-gradient(rgba(9,37,31,0.55), rgba(9,37,31,0.55)), url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
+              style={{ backgroundColor: "#16282e", backgroundImage: `linear-gradient(rgba(22,40,46,0.52), rgba(22,40,46,0.52)), url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
               <div className="p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-lattice/90">

@@ -269,7 +269,7 @@ export default function RomanceFlow() {
 
         {STYLE_BAND_INSIGHT[`${result.style}|${band(result.score)}`] && (
           <div className="mt-4 lx-glass p-6">
-            <p className="text-sm uppercase tracking-widest2 text-rose"><Bi zh="这个风格 × 这个磁场强度，具体会怎样" en="This Style × This Field Strength" /></p>
+            <p className="text-sm uppercase tracking-widest2 text-bone"><Bi zh="这个风格 × 这个磁场强度，具体会怎样" en="This Style × This Field Strength" /></p>
             <p className="mt-2 text-base leading-8 text-bone-dim">
               {t(STYLE_BAND_INSIGHT[`${result.style}|${band(result.score)}`].zh, STYLE_BAND_INSIGHT[`${result.style}|${band(result.score)}`].en)}
             </p>
@@ -307,7 +307,7 @@ export default function RomanceFlow() {
 
       <div className="mx-auto mt-6 max-w-xl px-6">
         <div className="lx-pdf-romance p-6 text-center">
-          <p className="font-display text-sm uppercase tracking-widest2 text-rose">
+          <p className="font-display text-sm uppercase tracking-widest2 text-bone">
             <Bi zh="想看得更深？" en="Want to go deeper?" />
           </p>
           <p className="mt-2 text-sm leading-7 text-bone-dim">
@@ -318,12 +318,12 @@ export default function RomanceFlow() {
           </p>
 
           <div className="mt-6 space-y-5 border-t border-white/10 pt-6 text-left">
-            <p className="text-center font-display text-sm uppercase tracking-widest2 text-rose">
+            <p className="text-center font-display text-sm uppercase tracking-widest2 text-bone">
               <Bi zh="完整档案会逐一展开" en="What the Full Archive Unfolds" />
             </p>
             {TEASER_CHAPTERS.map((c, i) => (
               <div key={i}>
-                <p className="font-display text-sm text-rose">{String(i + 1).padStart(2, "0")} · <Bi zh={c.titleZh} en={c.titleEn} /></p>
+                <p className="font-display text-sm text-bone"><span className="text-rose">{String(i + 1).padStart(2, "0")}</span> · <Bi zh={c.titleZh} en={c.titleEn} /></p>
                 <p className="mt-1.5 text-sm leading-7 text-bone-dim">
                   <Bi zh={c.descZh} en={c.descEn} />
                 </p>
