@@ -105,7 +105,7 @@ export default function LingxiPortal() {
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice sm:text-base">
           <Bi zh="你已进入" en="You Have Entered" />
         </p>
-        <h1 className="mt-6 font-display text-3xl font-light text-bone sm:text-5xl">
+        <h1 className="lx-hero-title mt-6 font-display text-3xl font-light tracking-[0.14em] sm:text-5xl">
           <Bi zh="灵犀场 · 意识数字显化场域" en="Lingxi Field · A Living Digital Manifestation Field" />
         </h1>
         <p className="mt-2 font-display text-xs uppercase tracking-widest2 text-lattice sm:text-sm">

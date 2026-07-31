@@ -77,6 +77,31 @@ export default function AuroraVideoBand() {
       {/* 极轻的暗角，压一压视频最亮区域，让全站文字（珍珠白/黄金/极光青）
           在任何画面亮度下都还留有一点余量，不需要再靠光晕这类补丁。 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,transparent_0%,rgba(8,6,20,0.35)_100%)]" />
+      {/* v275：极光之上叠一层深色宇宙罩。
+          这是解开一个死结的关键。之前的困境是：面板做透 → 压到极光
+          亮带上文字看不清（实测对比度只有 3.2，标准是 4.5）；面板做深
+          → 变成暗玻璃，看不出背景在流动，也就没有"空灵"可言。
+          两头都想要，唯一的出路是把背景本身的亮度压下来——极光最亮
+          那几条光带从约 (180,200,230) 压到约 (95,105,125) 之后，
+          面板就可以放心做透，文字也不会被吃掉。
+          用两层：一层整体暗色压亮度，一层顶部到底部的渐变，让上方
+          （导航与标题所在）更沉，下方保留水面的反光。
+          注意：这一层在视频之上、内容之下，不影响视频播放，也不会
+          在会劫持视频的浏览器里出问题（那边本来就换成静态图了）。 */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(6,10,26,0.62) 0%, rgba(7,14,32,0.50) 45%, rgba(9,16,38,0.44) 100%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 42%, rgba(10,16,36,0.10) 0%, rgba(6,10,26,0.45) 100%)",
+        }}
+      />
     </div>
   );
 }

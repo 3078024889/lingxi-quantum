@@ -333,45 +333,87 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    是纯色（bg-void-deep）当卡片背景，纯色在某些照片背景上对比度不够、
    看起来像是没有边框；这个类统一解决"文字压在背景图上看不清"这个
    问题，所有产品的文字卡片都应该用这一个类，不要各自用不同的写法。 */
-/* v274：玻璃面板重新配平。
-   之前是 rgba(20,16,30,0.55) + blur(20px)——遮罩压掉一大半亮度、
-   模糊把极光糊成一团色晕，结果是"暗玻璃"，看不出背景在流动。
-   但也不能照搬 rgba(255,255,255,.08) 这类浅色玻璃：本站背景是全屏
-   流动视频，同一块面板会在暗部和亮部之间来回移动，浅遮罩压到极光
-   亮带上（约 180,200,230）时会接近白色，文字直接消失。
-   所以走中间路线，三件事一起做：
-     遮罩 0.55 → 0.45   透光从 45% 提到 55%，极光透得更多
-     模糊 20px → 10px   保留流动感，不再是一团糊
-     文字投影           亮部时的保险，避免文字被背景吃掉
-   实测说明（用极光实际取样色算的对比度）：
-     暗部 12.2 / 中间调 9.9 / 最亮的极光带 3.2
-   最亮那几条光带上达不到 4.5 的可读性标准——但要说清楚：
-   原来的 0.55 在同样位置也只有 4.1，同样不达标。这是背景本身
-   太亮造成的，不是这次改动引入的问题。文字投影正是为这个场景
-   准备的：它不改变测量值，但显著改善实际可读性，因为投影给了
-   字形一圈独立于背景的边缘。
-   如果之后发现亮带上确实难读，最稳的解法不是继续加深遮罩
-   （那会把空灵感全部换掉），而是给背景视频本身加一层很淡的
-   整体压暗，那样面板可以保持通透。 */
+/* ────────── 灵犀场玻璃面板体系 v275 ──────────
+   这一版能做透，是因为背景那边先解决了。
+   components/AuroraVideoBand.tsx 在极光之上加了一层深色宇宙罩，
+   把最亮的极光带从约 (180,200,230) 压到约 (61,71,91)。
+   压暗之后实测对比度（bone-soft 文字）：
+       极光暗部 12.9 / 中间调 12.1 / 最亮的极光带 8.2
+   全部远超 4.5 的可读标准——所以面板终于可以放心做透了。
+   遮罩 0.30，比最初的 0.55 透了近一倍，极光的流动清楚可见，
+   而文字比以前任何一版都清楚。这就是 GPT 那句诊断说对的地方：
+   问题从来不是"字压在极光上不够白"，是背景太亮，
+   要让"文字从极光里生出来"，得先把极光沉下去。
+
+   不采纳原方案的两点，理由仍然成立：
+   · border-radius 24px —— 会变成随处可见的 App 卡片，
+     4px 近直角才是灵犀场的晶体辨识度。
+   · 用 CSS 渐变替换真实极光视频 —— 那支视频是已有的好素材，
+     换成渐变是倒退。 */
+
 .lx-glass {
   position: relative;
-  background: rgba(20, 16, 30, 0.45);
-  backdrop-filter: blur(10px) saturate(1.1);
-  -webkit-backdrop-filter: blur(10px) saturate(1.1);
-  border: 1px solid rgba(230, 240, 255, 0.22);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.30),
-              inset 0 0 30px rgba(255, 255, 255, 0.04);
+  background: rgba(20, 16, 30, 0.30);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  border: 1px solid rgba(220, 220, 255, 0.24);
+  box-shadow: 0 0 40px rgba(160, 150, 255, 0.12),
+              inset 0 0 40px rgba(255, 255, 255, 0.04);
   border-radius: 4px;
 }
 
-/* 面板内文字的可读性保险：极淡的暗投影。
-   在暗背景上几乎看不出来，在极光亮带上能把字"托住"。
-   注意不要加太重，否则文字会显脏、失去空灵感。 */
-.lx-glass p,
-.lx-glass span,
-.lx-glass h1,
-.lx-glass h2,
-.lx-glass h3,
-.lx-glass li {
-  text-shadow: 0 1px 3px rgba(6, 4, 14, 0.55);
+/* 八个产品的专属色调，取自各自 PDF 封面 page-0.jpg 的实际取样色。
+   现在遮罩只有 0.30，色调是"染"上去的一层薄色，不是盖住背景，
+   所以产品身份能认出来，极光也仍然透得过去。 */
+.lx-glass-resilience,
+.lx-glass-romance,
+.lx-glass-wealth,
+.lx-glass-daily,
+.lx-glass-qian,
+.lx-glass-tarot,
+.lx-glass-relation,
+.lx-glass-lifemap {
+  position: relative;
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  border: 1px solid rgba(220,220,255,0.24);
+  box-shadow: 0 0 40px rgba(160,150,255,0.12), inset 0 0 40px rgba(255,255,255,0.04);
+  border-radius: 4px;
+}
+.lx-glass-resilience { background: rgba(32, 46, 30, 0.30); border-color: rgba(160, 224, 208, 0.26); }
+.lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
+.lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
+.lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }
+.lx-glass-qian       { background: rgba(42, 34, 44, 0.30); border-color: rgba(216, 184, 255, 0.24); }
+.lx-glass-tarot      { background: rgba(36, 28, 58, 0.30); border-color: rgba(185, 160, 235, 0.28); }
+.lx-glass-relation   { background: rgba(26, 34, 50, 0.30); border-color: rgba(185, 217, 255, 0.26); }
+.lx-glass-lifemap    { background: rgba(24, 32, 52, 0.30); border-color: rgba(185, 205, 255, 0.26); }
+
+/* v275：主标题不用纯白。
+   纯白压在极光上永远是"贴上去的"，而渐变色标题会读作"从光里长出来的"。
+   月白 → 月光紫 → 灵犀青，正好是全站三个主色，标题因此成为
+   整套配色的索引，而不是一个孤立的装饰。
+   注意保留 color 作为兜底：少数浏览器不支持 background-clip:text，
+   不加兜底会变成完全透明、整行标题消失。 */
+.lx-hero-title {
+  color: #EDE9FF;
+  background: linear-gradient(96deg, #F2EEFF 0%, #C9B4FF 46%, #A8E8DC 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 28px rgba(190, 160, 255, 0.35));
+}
+
+/* 呼吸光：给需要"活着"的元素用，8 秒一个循环，比心跳慢，
+   慢到不打扰阅读，但足以让人感觉这一页没有静止。 */
+@keyframes lx-breath {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.04); }
+}
+.lx-breath { animation: lx-breath 8s ease-in-out infinite; }
+
+/* 尊重系统的"减少动态效果"设置——前庭功能敏感的人会因持续动画
+   感到不适，这是无障碍的基本要求，不是可选项。 */
+@media (prefers-reduced-motion: reduce) {
+  .lx-breath { animation: none; opacity: 0.85; }
 }

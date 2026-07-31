@@ -59,7 +59,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
       <Nav />
       <main className="pt-24">
         <div className="mx-auto max-w-xl px-6 py-16">
-          <div className="flex items-center justify-between gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
+          <div className="flex items-center justify-between gap-3 lx-glass-daily px-6 py-4 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
               <Bi zh="灵犀场 · 今日运势潮汐" en="Lingxi Field · Daily Fortune Tide" />
             </p>
@@ -74,7 +74,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
 
           <div id="daily-result" className="mt-4">
 
-          <div className="mt-6 flex flex-col items-center rounded-sm border border-white/10 bg-void-deep p-8 text-center">
+          <div className="mt-6 flex flex-col items-center lx-glass-daily p-8 text-center">
             <span className="font-display text-5xl text-lattice">{sign.glyph}</span>
             <h1 className="mt-3 font-display text-3xl font-light text-bone">
               <Bi zh={`${sign.zh}座 · 今日运势潮汐`} en={`${sign.en} · Daily Fortune Tide`} />
@@ -89,7 +89,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
             </div>
           </div>
 
-          <div className="mt-4 rounded-sm border border-white/10 bg-void-deep p-6">
+          <div className="mt-4 lx-glass-daily p-6">
             <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="今日场域解读" en="Today's Field Reading" /></p>
             <p className="mt-2 text-base leading-8 text-bone-dim">
               <Bi zh={fortuneZh || fallbackZh} en={fortuneEn || fallbackEn} />
@@ -148,7 +148,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
             ))}
           </div>
 
-          <div className="mt-8 rounded-sm border border-white/10 bg-void-deep p-6 text-center">
+          <div className="mt-8 lx-glass-daily p-6 text-center">
             <p className="text-sm leading-7 text-bone-dim">
               <Bi
                 zh="今日运势潮汐读取的是：宇宙当前运行状态，与你太阳星座之间产生的连接——像一份「今日意识天气」，帮你观察今天适合关注什么、调整什么、顺应什么。而生命图谱不同，它读取的是你出生那一刻、属于你的完整生命坐标。一个观察今天，一个探索你。"

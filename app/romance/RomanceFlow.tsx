@@ -339,7 +339,7 @@ export default function RomanceFlow() {
             背景的卡片里——那张封面图底部本来就印着"lingxifield.com"
             这类落款文字，输入框叠上去，两边文字互相打架，看不清楚。
             这里拆成单独一块纯色玻璃面板，不再压在任何背景图上。 */}
-        <div className="lx-glass mt-4 p-6 text-center">
+        <div className="lx-glass-romance mt-4 p-6 text-center">
           <input
             type="text"
             value={unlockName}
@@ -361,7 +361,7 @@ export default function RomanceFlow() {
       {/* v261：这段"查看完整生命图谱"的引导，之前排在1-11点清单前面，
           这次挪到解锁按钮之后。 */}
       <div className="mx-auto mt-6 max-w-xl px-6">
-        <div className="lx-glass p-6 text-center">
+        <div className="lx-glass-romance p-6 text-center">
           <p className="text-base leading-8 text-bone-dim">
             <Bi
               zh="同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
@@ -390,7 +390,7 @@ export default function RomanceFlow() {
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">
-      <div className="lx-glass p-6 sm:p-8">
+      <div className="lx-glass-romance p-6 sm:p-8">
         <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
           <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
         </p>

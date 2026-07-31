@@ -344,7 +344,7 @@ export default function ResilienceFlow() {
 
       <div className="mx-auto mt-6 max-w-xl px-6">
         <div
-          className="lx-glass p-6 text-center"
+          className="lx-glass-resilience p-6 text-center"
           style={{ backgroundImage: "linear-gradient(rgba(9,37,31,0.38), rgba(9,37,31,0.38)), url(/images/resilience-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300">
@@ -375,7 +375,7 @@ export default function ResilienceFlow() {
         {/* v266：跟桃花磁场/今日运势这次统一的处理方式一样——姓名输入框
             和解锁按钮从压着封面图背景的卡片里拆出来，单独一块纯色玻璃
             面板，不再跟封面图底部的"lingxifield.com"落款文字叠在一起。 */}
-        <div className="lx-glass mt-4 p-6 text-center">
+        <div className="lx-glass-resilience mt-4 p-6 text-center">
           <input
             type="text"
             value={unlockName}
@@ -399,7 +399,7 @@ export default function ResilienceFlow() {
           产品——这次挪到解锁按钮之后，位置对了：先把这个产品自己的
           完整价值讲完，最后再做交叉导流。 */}
       <div className="mx-auto mt-6 max-w-xl px-6">
-        <div className="lx-glass p-6 text-center">
+        <div className="lx-glass-resilience p-6 text-center">
           <p className="text-base leading-8 text-bone-dim">
             <Bi
               zh="同一份命盘还能算出：你的财富来源类型是哪一种、你在亲密关系里的核心矛盾是什么、你的桃花磁场和吸引力风格——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
@@ -428,7 +428,7 @@ export default function ResilienceFlow() {
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">
-      <div className="lx-glass p-6 sm:p-8">
+      <div className="lx-glass-resilience p-6 sm:p-8">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀场 · 生命韧性指数" en="Lingxi Field · Life Resilience Index" />
         </p>

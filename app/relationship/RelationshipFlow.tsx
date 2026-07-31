@@ -66,7 +66,7 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
   return (
-    <div className="lx-glass p-6">
+    <div className="lx-glass-relation p-6">
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice">{label}</p>
       <input
         value={person.name}
@@ -286,7 +286,7 @@ export default function RelationshipFlow() {
         />
       </p>
 
-      <div className="lx-glass mt-8 p-5">
+      <div className="lx-glass-relation mt-8 p-5">
         <p className="text-sm text-bone-dim"><Bi zh="你们之间，正在形成怎样的连接？" en="What connection is forming between you two?" /></p>
         <div className="mt-3 grid grid-cols-3 gap-3">
           {([
@@ -335,7 +335,7 @@ export default function RelationshipFlow() {
       </div>
 
       {error && (
-        <div className="lx-glass mt-4 p-4">
+        <div className="lx-glass-relation mt-4 p-4">
           <p className="text-sm text-rose">{error}</p>
         </div>
       )}
@@ -350,7 +350,7 @@ export default function RelationshipFlow() {
         </button>
       ) : (
         <div
-          className="lx-glass mt-8 p-6"
+          className="lx-glass-relation mt-8 p-6"
           style={{
             backgroundImage: `linear-gradient(rgba(20,16,30,0.38), rgba(20,16,30,0.38)), url(/images/relationship-full/${relationshipType}/page-0.jpg)`,
             backgroundSize: "cover", backgroundPosition: "center",
@@ -430,7 +430,7 @@ export default function RelationshipFlow() {
           </button>
         </div>
       )}
-      <div className="lx-glass mt-3 p-3 text-center">
+      <div className="lx-glass-relation mt-3 p-3 text-center">
         <p className="text-sm text-bone-dim">
           <Bi zh="一次能量交换，为你和对方生成一份完整的关系共振图谱，保存在你的场域入口里，随时可以回看、下载。" en="One energy exchange generates a full Relationship Resonance Map for you and the other person, saved in your field entrance — revisit or download it anytime." />
         </p>

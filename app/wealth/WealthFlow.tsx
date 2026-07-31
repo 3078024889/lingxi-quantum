@@ -130,7 +130,7 @@ export default function WealthFlow() {
           单独一块（保留封面图氛围）、填写表单单独一块纯色卡片、算完
           之后的分数/维度/预告/解锁按钮也各自独立成块，跟生命韧性、
           桃花磁场现在的结构对齐。 */}
-      <div className="lx-glass p-6 text-center" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.5), rgba(20,16,10,0.5)), url(/images/wealth-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
+      <div className="lx-glass-wealth p-6 text-center" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.5), rgba(20,16,10,0.5)), url(/images/wealth-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
         <p className="font-display text-sm uppercase tracking-widest2 text-amber">
           <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
         </p>
@@ -145,7 +145,7 @@ export default function WealthFlow() {
         </p>
       </div>
 
-      <div className="lx-glass mt-4 p-6 text-center">
+      <div className="lx-glass-wealth mt-4 p-6 text-center">
         <input
           type="text" value={name} onChange={(e) => setName(e.target.value)}
           placeholder={t("你的名字（选填）", "Your name (optional)")}
@@ -177,13 +177,13 @@ export default function WealthFlow() {
 
       {result && (
         <>
-          <div className="lx-glass mt-4 p-6 text-center">
+          <div className="lx-glass-wealth mt-4 p-6 text-center">
             <p className="text-xs text-bone-soft"><Bi zh={`太阳星座：${result.sunSignZh}`} en={`Sun Sign: ${result.sunSignEn}`} /></p>
             <p className="mt-4 font-display text-3xl text-amber">{result.score} <span className="text-base text-bone-dim">/ 100</span></p>
             <p className="mt-2 font-display text-xl text-bone">「{t(result.typeZh, result.typeEn)}」</p>
           </div>
 
-          <div className="lx-glass mt-4 p-6">
+          <div className="lx-glass-wealth mt-4 p-6">
             <div className="space-y-3">
               {DIM_LABELS.map((d) => (
                 <div key={d.key}>
@@ -205,7 +205,7 @@ export default function WealthFlow() {
             </p>
           </div>
 
-          <div className="lx-glass mt-4 p-6 text-center" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.5), rgba(20,16,10,0.5)), url(/images/wealth-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
+          <div className="lx-glass-wealth mt-4 p-6 text-center" style={{ backgroundImage: "linear-gradient(rgba(20,16,10,0.5), rgba(20,16,10,0.5)), url(/images/wealth-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}>
             <div className="space-y-5 text-left">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-amber">
                 <Bi zh="完整档案会逐一展开" en="What the Full Archive Unfolds" />
@@ -223,14 +223,14 @@ export default function WealthFlow() {
 
           {/* v264：解锁按钮独立成一块纯色卡片，不压在上面那张带封面图
               的预告卡里——跟桃花磁场、今日运势这次统一的处理方式一致。 */}
-          <div className="lx-glass mt-4 p-6 text-center">
+          <div className="lx-glass-wealth mt-4 p-6 text-center">
             <button onClick={unlock} disabled={unlocking} className="flex w-full items-center justify-center gap-2 bg-amber py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50">
               {unlocking ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`开启我的财富创造档案 · ¥${getProduct("wealth-report")?.priceRmb}`} en={`Open My Wealth Creation Archive · $${getProduct("wealth-report")?.priceUsd}`} />}
             </button>
             {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
           </div>
 
-          <div className="lx-glass mt-4 p-6 text-center">
+          <div className="lx-glass-wealth mt-4 p-6 text-center">
             <p className="text-xs leading-6 text-bone-soft">
               <Bi
                 zh="地图看见的是你的创造结构；真正让价值落地，还需要一份持续的对齐与连贯——这是「意识显化」在做的事。"

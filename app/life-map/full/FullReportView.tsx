@@ -390,7 +390,7 @@ export default function FullReportView({ id }: { id: string }) {
         </div>
 
         {freePreview && (
-          <div className="bg-void-deep mt-10 p-6 sm:p-8">
+          <div className="lx-glass-lifemap mt-10 p-6 sm:p-8">
             {freePreview.echoText && (
               <p className="text-base leading-9 text-lm2-text">{freePreview.echoText}</p>
             )}
@@ -422,7 +422,7 @@ export default function FullReportView({ id }: { id: string }) {
         )}
 
         {facts?.humanDesign && (
-          <div className="bg-void-deep mt-8 p-6 sm:p-8">
+          <div className="lx-glass-lifemap mt-8 p-6 sm:p-8">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               <Bi zh="人类图 · 门" en="Human Design · Gates" />
             </p>

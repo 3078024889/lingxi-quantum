@@ -137,7 +137,7 @@ export default function QianFlow() {
           <QianCosmicRing />
         </div>
         <div className="mx-auto max-w-md pb-16">
-        <div className="lx-glass p-6 sm:p-8">
+        <div className="lx-glass-qian p-6 sm:p-8">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
           </p>
@@ -215,7 +215,7 @@ export default function QianFlow() {
 
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
-      <div className="lx-glass px-6 py-4 text-center">
+      <div className="lx-glass-qian px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
         </p>
