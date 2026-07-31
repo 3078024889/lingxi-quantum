@@ -138,13 +138,13 @@ export default function QianFlow() {
         </div>
         <div className="mx-auto max-w-md pb-16">
         <div className="lx-glass p-6 sm:p-8">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
           </p>
           <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
             <Bi zh="六十四枚生命原型里，与你连接较深的三枚，此刻正在回应你" en="Of 64 life archetypes, the three most deeply connected to you are answering right now" />
           </h1>
-          <p className="mt-3 text-sm text-lattice/70">
+          <p className="mt-3 text-sm text-lattice">
             <Bi zh="静心片刻，场域会把它们显现出来。" en="Grow still for a moment, and the field will reveal them." />
           </p>
           <p className="mt-4 text-base leading-8 text-bone-dim">
@@ -206,7 +206,7 @@ export default function QianFlow() {
           highlightIndexes={stage === "shaking" ? signIndexes ?? undefined : undefined}
           paused={stage === "shaking"}
         />
-        <p className="mt-2 font-display text-sm tracking-widest2 text-lattice/80">
+        <p className="mt-2 font-display text-sm tracking-widest2 text-lattice">
           {stage === "gathering" ? <Bi zh="先静心，连接场域……" en="Growing still, connecting to the field…" /> : <Bi zh="三枚生命签，正从六十四枚中亮起……" en="Three signs are lighting up among the sixty-four…" />}
         </p>
       </div>
@@ -216,7 +216,7 @@ export default function QianFlow() {
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
       <div className="lx-glass px-6 py-4 text-center">
-        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
         </p>
       </div>

@@ -11,8 +11,8 @@ const data: ArticleData = {
   slug: "raise-frequency",
   eyebrowZh: "修炼 · 频率", eyebrowEn: "Practice · Frequency",
   titleZh: "如何提升意识频率", titleEn: "How to Raise Your Consciousness Frequency",
-  defZh: "提升意识频率，本质上是把你的内在状态从恐惧、匮乏、批判，转向爱、平静、感恩与连贯。频率不是玄学指标，而是你日常情绪与注意力的总和。当你更多地停留在高频状态，你看见的机会、做出的选择，乃至吸引来的人事物，都会随之改变。",
-  defEn: "Raising your frequency is essentially shifting your inner state from fear, lack, and judgment toward love, calm, gratitude, and coherence. Frequency isn't a mystical metric but the sum of your daily emotions and attention. The more you rest in higher states, the more the opportunities you see, the choices you make, and even what you attract begin to change.",
+  defZh: "频率这个词很容易被误用成给情绪分等级——爱是高频、恐惧是低频，于是要努力待在高的那一边。这个理解会带来一个副作用：人开始压着自己真实的感受，把悲伤、愤怒、害怕当成需要清除的东西。那不是提升，那是把一部分自己关在门外，而被关在门外的部分不会消失，只会换个方式回来。\n\n在灵犀场的语境里，频率说的是连贯，不是情绪的好坏。连贯，指的是你此刻的感受、念头和行动是否在同一条线上。一个正在悲伤、并且允许自己悲伤的人，是连贯的；一个笑着说没事、心里翻江倒海的人，不连贯。所以真正会改变的，不是你的情绪等级，是内耗的多少——当感受、念头、行动不再互相打架，你注意到的东西会变，做出的选择会变，能拿出来的力气也会变。",
+  defEn: "The word frequency is easily misused as a ranking of emotions — love high, fear low, so try to stay on the high side. That reading has a side effect: people begin suppressing what they actually feel, treating grief, anger and fear as things to be cleared away. That isn't raising anything. It's shutting part of yourself outside the door, and the part left outside doesn't disappear; it returns by another route.\n\nIn this field, frequency refers to coherence, not to good and bad feelings. Coherence means whether what you feel, what you think, and what you do are on the same line. Someone grieving, who is allowing themselves to grieve, is coherent. Someone smiling and saying they're fine while everything churns inside is not. So what actually changes is not your emotional tier — it's how much is lost to internal friction.",
   sections: [
     {
       hZh: "为什么内在状态会改变现实", hEn: "Why your state shapes reality",

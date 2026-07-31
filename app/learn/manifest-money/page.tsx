@@ -11,8 +11,8 @@ const data: ArticleData = {
   slug: "manifest-money",
   eyebrowZh: "显化 · 财富", eyebrowEn: "Manifestation · Wealth",
   titleZh: "如何显化金钱与财富", titleEn: "How to Manifest Money and Abundance",
-  defZh: "显化金钱，核心不是凭空盼着钱出现，而是先把你与金钱的内在关系，从恐惧、匮乏与「我不配」转向信任、丰盛与值得。当你稳定地处在丰盛的状态，你会更敢于行动、更易看见机会、也更容易做出带来收入的选择——金钱是流动的能量，它流向与它同频的人。",
-  defEn: "Manifesting money isn't waiting for cash to appear from nowhere, but first shifting your inner relationship with money from fear, lack, and 'I'm unworthy' toward trust, abundance, and worthiness. When you steadily hold an abundant state, you act more boldly, notice more opportunities, and make choices that bring income — money is flowing energy, drawn to those on its frequency.",
+  defZh: "显化金钱最容易被讲成一句话：钱会流向与它同频的人。这个说法听起来顺，但它把最关键的一段省掉了——钱不会因为你频率对了就自己找上门，它经由具体的事到你手里：一次你敢开的口、一个你多留意到的机会、一份你终于交出去的东西。\n\n真正在变的是这一段。当你和钱的关系从恐惧、匮乏、我不配，转向信任与值得，改变的不是宇宙的分配，是你的行为：你更敢报价、更少自动往低处让、更容易看见本来就在那里的机会。内在状态改变外在结果，中间那一环永远是行动，不能跳过。\n\n所以这件事不承诺任何金额，也没有期限。它能承诺的是：把内耗降下来之后，同样的处境里，你能拿出来的力气会多一些。",
+  defEn: "Manifesting money is usually reduced to one line: money flows to those on its frequency. It sounds neat, and it skips the part that matters — money does not arrive because your frequency was correct. It arrives through specific things: a price you dared to name, an opening you happened to notice, a piece of work you finally handed over.\n\nThat middle stretch is what actually changes. When your relationship with money shifts from fear, scarcity and unworthiness toward trust and deserving, what changes is not the universe's allocation. It's your behaviour: you quote higher, concede less automatically, and see opportunities that were already there. Inner state does change outer results — and the link in the middle is always action. It cannot be skipped.\n\nSo nothing here promises an amount, and there is no deadline. What it does offer: with less lost to internal friction, in the same circumstances, you'll have more force available.",
   sections: [
     {
       hZh: "先改写金钱信念", hEn: "Rewrite your money beliefs first",

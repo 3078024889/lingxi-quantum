@@ -38,8 +38,8 @@ const data: ArticleData = {
   note: "温柔提示：如果某个反复出现的梦让你长期痛苦、严重影响睡眠或情绪，或与创伤有关，请考虑寻求心理咨询师等专业人士的支持。灵犀场的解读是温柔的陪伴与启发，不替代专业帮助。",
   noteEn: "A gentle note: if a recurring dream causes lasting distress, seriously affects your sleep or mood, or relates to trauma, please consider the support of a counselor or other professional. Lingxi's readings are gentle companionship and inspiration, not a substitute for professional help.",
   cta: {
-    titleZh: "让灵犀场陪你拆开这封信", titleEn: "Open the letter with Lingxi Field",
-    descZh: "写下这个反复出现的梦，发送至场，灵犀场会以象征与心理的视角温柔回应。", descEn: "Write down the recurring dream, send it to the field, and Lingxi Field will respond gently.",
+    titleZh: "反复出现的，往往不是符号，是位置", titleEn: "What repeats is usually not the symbol but the position",
+    descZh: "同一个画面反复回来，值得看的往往不是它是什么，而是它一直停在哪一段——是刚开始的起处，是站在要不要进去的门处，还是事情过去了痕迹还在的余处。场域会把符号和位置一起读，因为停在门口三年和已经走进去，是完全不同的两件事。", descEn: "When one image keeps returning, what matters is often not what it is but which stretch it keeps stopping at — the origin where things have barely begun, the threshold of whether to enter, or the residue where the event is over and the trace isn't. The field reads symbol and position together, because standing at a door for three years and having already walked in are entirely different things.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

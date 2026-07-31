@@ -1,0 +1,45 @@
+{
+  "_comment": "72格手写内容。相当于《易经》64卦各有卦辞——最有分量的格不交给合成。未写的格由合成兜底。",
+  "cells": [
+    {
+      "archetype": "blade",
+      "phase": "unbroken",
+      "fieldText": {
+        "zh": "刃的结构，最高与最低之间落差很大。这意味着你身上有几样东西是真的锋利——不是勉强够用，是明显强过多数人；同时也意味着，锋利那几项之外的部分是薄的。这是同一件事的两面：刀之所以能切，正因为它不厚。\n\n目前这套结构还处在未启：它是完整的，但还没有被真正推动过。这不是缺点，只是说明现在看到的是设计图，不是使用记录。刃真正的性质要等它切过一次才知道——切之前，谁也不知道是会开锋，还是会崩口。\n\n这一段可以做的，是先认清哪几项是刃、哪几项是薄的那一侧。等真的用上力的时候，你会知道该把重量压在哪。",
+        "en": "A blade structure: the distance between your highest and lowest runs wide. It means a few things about you are genuinely sharp — not barely adequate, but clearly beyond most people. It also means that outside those few, the structure is thin. These are one fact, not two: a blade cuts precisely because it isn't thick.\n\nRight now this structure is unbroken — intact, but never truly pushed. That isn't a flaw. It only means what you're looking at is the design, not the service record. What a blade really is only shows after it has cut once. Before that, no one knows whether it takes an edge or chips.\n\nWhat's worth doing here is simply knowing which of these are the edge, and which side is the thin one. When real weight comes, you'll know where to put it."
+      }
+    },
+    {
+      "archetype": "blade",
+      "phase": "strain",
+      "fieldText": {
+        "zh": "刃正在受力，还没有变形。\n\n这一段的体感通常是这样的：你锋利的那几项在高速运转，效率高得连你自己都有点意外；与此同时，薄的那一侧开始发出很轻的声音——不是断裂，是那种「有点撑着」的感觉，容易被当成累，然后被忽略过去。\n\n刃的风险从来不在锋口上，在背脊。承重的时候，最先出问题的一定是薄的那一侧，而不是你最强的那几项。所以这一段真正要看住的，不是你正在发挥的地方，是你没在用的地方。\n\n具体一点：这周有没有哪件小事，你已经连续几次告诉自己「回头再处理」。那件事的位置，多半就在你薄的那一侧。",
+        "en": "The blade is under load, and hasn't deformed.\n\nWhat this stretch usually feels like: your sharp dimensions are running fast, with an efficiency that surprises even you — and at the same time the thin side has begun making a very quiet sound. Not cracking. More like something holding. It's easy to read as tiredness and pass over.\n\nA blade's risk is never at the edge. It's along the spine. Under weight, the first thing to give is always the thin side, never your strongest few. So what needs watching here isn't where you're performing. It's where you aren't.\n\nConcretely: is there some small thing this week you've told yourself several times you'll deal with later. That thing is probably sitting on your thin side."
+      }
+    },
+    {
+      "archetype": "blade",
+      "phase": "crack",
+      "fieldText": {
+        "zh": "见缝。裂口出现了。\n\n先说清楚一件事：刃出现裂口，几乎都不是因为承受力不够，是因为受力位置落在了薄的那一侧。这两件事经常被混为一谈，混淆之后人会得出一个错误的结论——我不行了。更准确的说法是：这一次力压错了地方。\n\n还有一层，说出来可能不太好接受，但它是真的：见缝往往也是你第一次真正看清自己结构的时刻。此前你知道自己哪里强，但不一定知道自己是怎么搭起来的。裂口的位置，就是结构图上你从来没标注过的那条线。\n\n这一段不适合做大的调整，也不适合逼自己尽快恢复。适合做的只有一件事：把裂口的位置记下来。不是为了责备自己，是因为下一次力再来的时候，你会知道它会往哪走。",
+        "en": "The fissure. It has opened.\n\nFirst, plainly: when a blade cracks, it is almost never because it couldn't take enough. It's because the force landed on the thin side. Those two get confused constantly, and once confused, people reach a wrong conclusion: I'm not able anymore. The more accurate version: this time the weight landed in the wrong place.\n\nThere's a second layer, and it may not be easy to take, though it's true: the fissure is usually also the first moment you see your own structure clearly. Until now you knew where you were strong; you didn't necessarily know how you were built. Where it opened is the line on the diagram you had never marked.\n\nThis isn't a stretch for large adjustments, or for forcing yourself to recover quickly. There's only one thing worth doing: note where it opened. Not to blame yourself. Because next time weight comes, you'll know which way it travels."
+      }
+    },
+    {
+      "archetype": "blade",
+      "phase": "hold",
+      "fieldText": {
+        "zh": "持中。住在难受里，但没有塌。\n\n这是九个时相里最长的一段，也是最少被看见的一段——因为它没有事件。裂开的时候有事件，恢复的时候有事件，唯独持中这一段，从外面看什么都没发生，只有你自己知道每天是怎么过来的。\n\n对刃来说，这一段尤其消耗：锋利的结构不擅长熬，它擅长的是切。要它长时间维持一个不出结果的状态，等于让刀去做钝器的活。所以这一段你觉得费劲，不是你退步了，是这一段本来就不是你的形态擅长的。\n\n有一件事值得说清楚：住得住本身就是结果。它不是还没有进展，它是进展的一种，只是这种进展不产生可以拿出来说的东西。\n\n如果要做点什么，让它足够小：一件每天都会发生、不需要意志力的事就够了。这一段不需要突破，只需要不塌。",
+        "en": "Holding. Living inside the difficulty, without collapse.\n\nThis is the longest of the nine phases, and the least witnessed — because it contains no events. Cracking is an event. Recovering is an event. Holding, from outside, looks like nothing is happening at all; only you know what each day took.\n\nFor a blade this stretch costs more than most: a sharp structure isn't built for enduring, it's built for cutting. Asking it to sustain a state that produces no result is asking a knife to do a hammer's work. So if this feels harder than it should, that isn't decline. This phase simply isn't what your form is good at.\n\nOne thing worth stating plainly: holding is itself a result. It is not the absence of progress. It's a kind of progress that produces nothing you can show anyone.\n\nIf you want to do something, keep it small enough to be nearly nothing: one thing that happens daily and requires no willpower. This stretch doesn't need a breakthrough. It needs you not to collapse."
+      }
+    },
+    {
+      "archetype": "blade",
+      "phase": "temper",
+      "fieldText": {
+        "zh": "淬。经过一次之后变得更耐用——注意，是更耐用，不是更硬。\n\n这个区别对刃来说特别重要。没有经过淬的刃是脆的：锋口很利，但受力方向一变就崩。淬过之后，锋利没有减少，改变的是它能承受的方向变多了。你可能会发现自己现在遇到同类的事，反应没那么剧烈了——那不是变钝，是背脊变韧了。\n\n从记录上看，你最近这段时间是有规律地在补的，而且不是集中几天，是稳定地分散在很多周里。规律比总量重要得多——一个月三十次然后停三个月，和每周两次不断，长出来的是完全不同的东西。淬这一相，只有后一种长得出来。\n\n你的结构没有变，仍然是刃，落差仍然在那里。变的是你在这套结构里走的路，和一年前不是同一条。",
+        "en": "Tempering. More durable after passing through — and note: durable, not harder.\n\nFor a blade this distinction matters more than most. An untempered blade is brittle: the edge is keen, but change the direction of force and it chips. After tempering, nothing of the sharpness is lost; what changes is the number of directions it can take. You may notice that similar situations now provoke less in you — that isn't dullness. The spine has become tougher.\n\nFrom the record: over this last stretch you've been putting work in regularly, and not in bursts — spread steadily across many weeks. Regularity matters far more than volume. Thirty sessions in a month then three months of nothing, versus twice a week without fail: those grow entirely different things. This phase only grows out of the second.\n\nYour structure hasn't changed. It's still a blade, and the distance is still there. What changed is the path you walk inside it, and it's no longer the path from a year ago."
+      }
+    }
+  ]
+}

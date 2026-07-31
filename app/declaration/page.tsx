@@ -25,7 +25,7 @@ export default function DeclarationPage() {
       <main className="pt-16">
         <section className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-24">
           <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="系统声明" en="System Declaration" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
@@ -220,7 +220,7 @@ export default function DeclarationPage() {
               </div>
             </div>
 
-            <p className="border-t border-white/5 pt-10 text-center text-xs leading-6 text-bone-dim/78">
+            <p className="border-t border-white/5 pt-10 text-center text-xs leading-6 text-bone-soft">
               <Bi zh="愿每一次连接，都开启新的发现。" en="May every connection open a new discovery." />
             </p>
           </div>

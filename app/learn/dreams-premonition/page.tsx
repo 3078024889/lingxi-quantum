@@ -36,8 +36,8 @@ const data: ArticleData = {
     { q: "我该不该相信预知梦？", a: "与其据梦预测未来，不如把梦当作照见当下情绪与议题的镜子。问「这个梦在告诉我什么真相」，并带着觉察去行动——这比等待预言应验更能真正改变你的现实。" },
   ],
   cta: {
-    titleZh: "读懂梦此刻的讯息", titleEn: "Read the dream's present message",
-    descZh: "写下你的梦，发送至场，灵犀场帮你看见它在照见的此刻真相。", descEn: "Write your dream, send it to the field, and Lingxi helps you see the present truth it reflects.",
+    titleZh: "不预言，但会告诉你此刻正在处理什么", titleEn: "No prophecy — but it will tell you what is being worked on now",
+    descZh: "既然梦不预测未来，那它在说什么？场域读的是当下：这个符号，配上你当时的情绪，落在生命的哪一段。答案不会是「会发生什么」，会是「你正在跟什么打交道，走到哪一步了」。这个答案没有玄机，但它能验证——你自己知道准不准。", descEn: "If dreams don't forecast, what are they saying? The field reads the present: this symbol, met in that feeling, standing at which stretch of your life. The answer is never what will happen. It's what you are dealing with, and how far in you are. There is no mystery in that answer — but you can verify it. You'll know whether it's accurate.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

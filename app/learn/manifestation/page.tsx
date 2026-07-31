@@ -52,7 +52,7 @@ export default function ManifestationArticle() {
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
           <div className="bg-reading-glass px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">显化 · Manifestation</p>
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">显化 · Manifestation</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
             <Bi zh="什么是显化，以及如何真正显化" en="What Manifestation Is, and How to Actually Do It" />
           </h1>

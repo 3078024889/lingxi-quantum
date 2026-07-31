@@ -248,7 +248,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         .rel-print-mode .bg-void-deep { background: rgba(255,255,255,0.08) !important; }
       `}</style>
       <div className="flex items-center justify-between print:hidden">
-        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀 · 关系共振图谱" en="Lingxi · Relationship Resonance Map" />
         </p>
         <button
@@ -259,7 +259,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           {downloading ? <><PortalSpinner /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载 PDF" en="Download PDF" />}
         </button>
       </div>
-      <p className="mt-2 text-xs text-bone-dim/85 print:hidden">
+      <p className="mt-2 text-xs text-bone-soft print:hidden">
         <Bi
           zh="不用急着现在下载——这份图谱会一直留在「场域入口」里，随时可以回来查看。"
           en="No need to download it right now — this map stays saved under Field Entrance, and you can come back to it anytime."
@@ -382,7 +382,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         })}
 
         <div className="lx-glass mt-6 p-5 text-center">
-          <p className="text-sm text-bone-dim/90">
+          <p className="text-sm text-bone-dim">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言——关系的走向，始终由两个人共同选择。" en="This is a reference for reflection, not a prophecy about your relationship — its course is always shaped by both people, together." />
           </p>
         </div>
@@ -457,7 +457,7 @@ function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: 
             <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#E8B765" }} />
             <span className="text-bone-dim">{nameB}</span>
           </div>
-          <p className="mt-3 max-w-[12rem] text-xs leading-5 text-bone-dim/85">
+          <p className="mt-3 max-w-[12rem] text-xs leading-5 text-bone-soft">
             <Bi
               zh="两个形状重叠的地方，是两人共享的驱动力；差得远的地方，往往就是下方文字里写到的互补或摩擦点。"
               en="Where the two shapes overlap is shared drive; where they differ most is usually the complementary or friction point discussed below."

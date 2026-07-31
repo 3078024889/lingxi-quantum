@@ -18,6 +18,11 @@ const config: Config = {
         violet: "#D8B8FF",
         bone: "#F4F7FF",
         "bone-dim": "#D2DEF5",
+        // v274：新增两档实色。之前大量文字用 text-bone-dim/70、/85 这类
+        // 透明度稀释，压在极光背景上实际亮度只剩七八成，远看就"糊"进背景，
+        // 这是"字太浅、没有打开欲望"的技术根因。改用实色，亮度可控。
+        "bone-soft": "#C8D7F2",
+        "bone-mute": "#AFC1DF",
         title: "#F0E6FF",
         "lm-violet": "#D8B8FF",
         // 生命图谱主题：文字令牌跟全站同一套 Lingxi Typography System V4

@@ -1,0 +1,126 @@
+{
+  "_comment": "场域精测七十二变：8结构原型（本相）× 9状态相位（时相）= 72。与梦境库同一套心法（见 knowledge/dream/axes.json），两处互通。本相由五维分数的形态归纳而来，不是分数高低——同样均分70，五维平齐(经纬)和五维锯齿(刃)是完全不同的两个人。时相由状态层推出。二轴正交：本相是地图，时相是你此刻在图上的位置。",
+  "archetypes": [
+    {
+      "key": "keel",
+      "zh": "龙骨",
+      "en": "Keel",
+      "stanceZh": "单点极强，其余围绕它组织。强的那一项就是整个结构的主梁",
+      "stanceEn": "one dominant strength around which everything else organizes"
+    },
+    {
+      "key": "lattice",
+      "zh": "经纬",
+      "en": "Lattice",
+      "stanceZh": "五维接近平齐，没有明显主梁，靠彼此支撑",
+      "stanceEn": "near-even across dimensions, holding by mutual support rather than a main beam"
+    },
+    {
+      "key": "blade",
+      "zh": "刃",
+      "en": "Blade",
+      "stanceZh": "高低反差极大，锋利，代价是薄",
+      "stanceEn": "extreme contrast between high and low — sharp, and thin for the same reason"
+    },
+    {
+      "key": "ember",
+      "zh": "伏火",
+      "en": "Ember",
+      "stanceZh": "整体偏低但不熄，靠很小的持续输入维持",
+      "stanceEn": "low overall yet not out — sustained by a very small continuous input"
+    },
+    {
+      "key": "tide",
+      "zh": "潮",
+      "en": "Tide",
+      "stanceZh": "有明显的涨落节律，强弱随周期换位",
+      "stanceEn": "a clear rhythm of rise and fall, strength changing station by cycle"
+    },
+    {
+      "key": "anchor",
+      "zh": "锚",
+      "en": "Anchor",
+      "stanceZh": "恢复与稳定这一侧厚，冲击面薄，守强于攻",
+      "stanceEn": "thick on the recovery-and-stability side, thin at impact — holds better than it strikes"
+    },
+    {
+      "key": "arrow",
+      "zh": "矢",
+      "en": "Arrow",
+      "stanceZh": "冲击与反弹这一侧厚，持续面薄，攻强于守",
+      "stanceEn": "thick on the impact-and-rebound side, thin on duration — strikes better than it holds"
+    },
+    {
+      "key": "well",
+      "zh": "井",
+      "en": "Well",
+      "stanceZh": "表层看不出深浅，真正的量在下面，需要事情足够大才见底",
+      "stanceEn": "surface gives no reading of depth; the real volume is below, revealed only by something large enough"
+    }
+  ],
+  "phases": [
+    {
+      "key": "unbroken",
+      "zh": "未启",
+      "en": "Unbroken",
+      "stanceZh": "还没有真正被推动过，结构是完整的但未经使用",
+      "stanceEn": "not yet genuinely pushed; the structure is intact but untested"
+    },
+    {
+      "key": "first",
+      "zh": "初动",
+      "en": "First Motion",
+      "stanceZh": "刚开始动，方向还不稳定",
+      "stanceEn": "just beginning to move, direction not yet steady"
+    },
+    {
+      "key": "strain",
+      "zh": "受力",
+      "en": "Under Load",
+      "stanceZh": "正在承重，还没有变形",
+      "stanceEn": "bearing weight, not yet deforming"
+    },
+    {
+      "key": "crack",
+      "zh": "见缝",
+      "en": "Fissure",
+      "stanceZh": "出现了裂口，通常也是第一次看清结构的地方",
+      "stanceEn": "a fissure has opened — usually also the first clear view of the structure"
+    },
+    {
+      "key": "hold",
+      "zh": "持中",
+      "en": "Holding",
+      "stanceZh": "住在难受里但没有塌，这一段最长也最少被看见",
+      "stanceEn": "living inside the difficulty without collapse — the longest stretch, and the least witnessed"
+    },
+    {
+      "key": "turn",
+      "zh": "转向",
+      "en": "Turning",
+      "stanceZh": "力的方向在改变，旧的用法开始不管用",
+      "stanceEn": "the direction of force is changing; the old way stops working"
+    },
+    {
+      "key": "knit",
+      "zh": "缝合",
+      "en": "Knitting",
+      "stanceZh": "裂口在长，长回来的地方和原来不一样",
+      "stanceEn": "the fissure is closing, and closes back differently from before"
+    },
+    {
+      "key": "temper",
+      "zh": "淬",
+      "en": "Tempering",
+      "stanceZh": "经过一次之后变得更耐用，不是更硬",
+      "stanceEn": "more durable after passing through — not harder"
+    },
+    {
+      "key": "still",
+      "zh": "归位",
+      "en": "Settled",
+      "stanceZh": "这一轮结束了，结构回到可用状态，但已不是原样",
+      "stanceEn": "this round is over; the structure is usable again, and no longer the same"
+    }
+  ]
+}

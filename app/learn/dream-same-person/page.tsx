@@ -36,8 +36,8 @@ const data: ArticleData = {
     { q: "怎么让这种反复的梦停下来？", a: "不是去压制它，而是去完成它：记录梦境与感受，写下没说出口的话，在心里做一次真正的告别或原谅。当那段能量被看见、被完成，梦往往自然改变或停止。灵犀场的探索梦境可以陪你逐层读懂这些反复出现的象征。" },
   ],
   cta: {
-    titleZh: "把这个梦，交给灵犀场读一读", titleEn: "Let Lingxi read this dream with you",
-    descZh: "记录你的梦，灵犀场会以象征的视角温柔解读，陪你看见那段等待被完成的能量。", descEn: "Record your dream, and Lingxi Field will read it gently through symbol — helping you see the current waiting to be completed.",
+    titleZh: "寄信人和收信人都是你自己，那这封信写的是什么", titleEn: "If you are both sender and recipient, what does the letter say",
+    descZh: "场域不会去猜对方在想什么——那猜不到，猜了也是编。它读的是这个梦里你所处的位置和情绪：想念配归处，和不安配内处，指向的是完全不同的两件未完成。看清是哪一件，比确认对方的心意有用得多。", descEn: "The field will not guess what the other person is thinking — that can't be known, and guessing would be invention. What it reads is the position and the feeling you occupy inside the dream: longing at the place of return, and unease from inside, point to two entirely different unfinished things. Seeing which one it is helps far more than confirming how someone else feels.",
     href: "/dream", btnZh: "进入探索梦境", btnEn: "Open Dream Exploration",
   },
   related: [

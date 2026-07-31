@@ -85,7 +85,7 @@ export default function LearnHub() {
       <Nav />
       <main className="px-6 pb-24 pt-28">
         <div className="mx-auto max-w-3xl">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">探索 · Explore</p>
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">探索 · Explore</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
             <Bi zh="显化、解梦、与本源体系" en="Manifestation, Dreams, and the Source System" />
           </h1>

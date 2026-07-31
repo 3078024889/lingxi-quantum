@@ -1,0 +1,23 @@
+{
+  "_comment": "手写覆盖。相当于《易经》64卦各有卦辞——最有分量的格不交给合成。coverage() 统计72格里手写了多少，这个百分比就是该符号的成熟度。",
+  "overrides": [
+    {
+      "symbol": "snake",
+      "emotion": "fear",
+      "position": "depth",
+      "fieldText": {
+        "zh": "蛇出现在深处，而你当时是怕的——这一格值得单独说。深处的意思是：你已经不在犹豫要不要看它了，你已经在里面，而且比预想的还要深。恐惧在这个位置上不是阻力，是深度计——它告诉你这件事的分量比你原来估的重。这种梦通常不出现在事情刚开始的时候，它出现在你已经走进去一段之后。所以不用把它读成警告；读成「这件事是真的，不是我想多了」，更接近它想说的。",
+        "en": "A snake at the depth, met with fear — this cell is worth saying on its own. Depth means you're no longer deciding whether to look at it; you're already inside, and further down than you expected. Fear in this position isn't resistance, it's a depth gauge — it tells you this weighs more than you'd estimated. This dream rarely comes at the beginning of something. It comes after you've already walked in a way. So don't read it as a warning. Read it as: this is real, I wasn't imagining it. That's closer to what it's saying."
+      }
+    },
+    {
+      "symbol": "snake",
+      "emotion": "relief",
+      "position": "release",
+      "fieldText": {
+        "zh": "蛇出现在放处，而你是松的——这是七十二格里最少见的一格。它几乎只出现在一种情况下：某样你长期戒备着的东西，你终于不用再戒备了。不是它消失了，是你和它的关系变了。这类梦通常不预示什么，它是一次结账——把过去某一段的紧绷，正式记为已结束。",
+        "en": "A snake at the place of release, and you at ease — of the seventy-two cells this is among the rarest. It appears almost only in one situation: something you'd been guarding against for a long time no longer needs guarding. Not because it's gone, but because your relationship to it has changed. This kind of dream rarely foretells anything. It settles an account — formally marking a long stretch of tension as ended."
+      }
+    }
+  ]
+}

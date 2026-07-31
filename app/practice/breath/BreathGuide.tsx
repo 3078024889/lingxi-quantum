@@ -83,7 +83,7 @@ export default function BreathGuide() {
               className="bg-lattice px-12 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber">
               <span data-lang="zh">开始量子息法</span><span data-lang="en">Begin the Quantum Breath Method</span>
             </button>
-            <p className="max-w-sm text-center text-sm leading-7 text-bone-dim/90">
+            <p className="max-w-sm text-center text-sm leading-7 text-bone-dim">
               <span data-lang="zh">建议先设定意图，再开始。以 3–4 组为一轮，然后回到自然呼吸（巩固期）。</span>
               <span data-lang="en">Set an intention first, then begin. Do 3–4 rounds as one set, then return to natural breathing (the consolidation period).</span>
             </p>

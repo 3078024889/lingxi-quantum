@@ -92,15 +92,15 @@ function BookInstance({
         <div key={flip} className="page-flip px-7 py-10 sm:px-12 sm:py-14">
           {isCover ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-              <p className="font-display text-xs uppercase tracking-widest2 text-lattice/70">
+              <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
                 灵犀 · 多维叙事
               </p>
               <h2 className="mt-6 font-display text-3xl font-light leading-snug text-bone sm:text-4xl">
                 {title}
               </h2>
-              <p className="mt-3 text-sm text-bone-dim/85">{subtitle}</p>
+              <p className="mt-3 text-sm text-bone-soft">{subtitle}</p>
               <div className="glyph-rule mt-8 w-24" />
-              <p className="mt-8 font-display text-xs uppercase tracking-widest2 text-bone-dim/78">
+              <p className="mt-8 font-display text-xs uppercase tracking-widest2 text-bone-soft">
                 Lingxi Field · Original
               </p>
             </div>
@@ -110,8 +110,8 @@ function BookInstance({
             </div>
           ) : isEnd ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-              <p className="font-display text-2xl tracking-widest2 text-lattice/70">✧ 完 ✧</p>
-              <p className="mt-4 text-sm text-bone-dim/82">愿它在你的场里继续展开</p>
+              <p className="font-display text-2xl tracking-widest2 text-lattice">✧ 完 ✧</p>
+              <p className="mt-4 text-sm text-bone-soft">愿它在你的场里继续展开</p>
             </div>
           ) : (
             <Page>{pages[page]}</Page>

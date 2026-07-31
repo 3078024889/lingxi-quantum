@@ -38,7 +38,7 @@ export default function NarrativePage() {
       <main className="pt-16">
         <section className="px-6 py-20 text-center sm:py-24">
           <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="灵犀原创 · 维度叙事系统" en="Lingxi Original · Dimensional Narrative System" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">

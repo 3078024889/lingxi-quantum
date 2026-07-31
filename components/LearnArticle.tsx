@@ -66,7 +66,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
           <div className="bg-reading-glass rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh={data.eyebrowZh} en={data.eyebrowEn} />
           </p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
@@ -86,7 +86,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
             ))}
           </div>
 
-          {data.note && <p className="mt-8 rounded-sm border border-white/10 bg-void-deep p-5 text-sm leading-7 text-bone-dim/90">{data.noteEn ? <Bi zh={data.note} en={data.noteEn} /> : data.note}</p>}
+          {data.note && <p className="mt-8 rounded-sm border border-white/10 bg-void-deep p-5 text-sm leading-7 text-bone-dim">{data.noteEn ? <Bi zh={data.note} en={data.noteEn} /> : data.note}</p>}
           </div>
 
           <div className="mt-14">

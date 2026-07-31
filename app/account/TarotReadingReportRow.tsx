@@ -62,7 +62,7 @@ export default function TarotReadingReportRow({
           onClick={() => setConfirming(true)}
           aria-label="删除这份记录"
           title="删除这份记录"
-          className="shrink-0 rounded-sm p-2 text-bone-dim/75 transition hover:bg-rose/10 hover:text-rose"
+          className="shrink-0 rounded-sm p-2 text-bone-soft transition hover:bg-rose/10 hover:text-rose"
         >
           <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.4">
             <path d="M4 6h12M8 6V4.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V6M6 6l.6 10a1 1 0 0 0 1 .9h4.8a1 1 0 0 0 1-.9L14 6" strokeLinecap="round" strokeLinejoin="round" />

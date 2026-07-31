@@ -37,7 +37,7 @@ export default function DeleteAccountButton() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full py-3 text-center text-xs text-bone-dim/78 underline underline-offset-2 transition hover:text-rose"
+        className="w-full py-3 text-center text-xs text-bone-soft underline underline-offset-2 transition hover:text-rose"
       >
         <Bi zh="注销并永远离开灵犀场" en="Deregister & Leave the Field" />
       </button>

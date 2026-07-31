@@ -11,8 +11,8 @@ const data: ArticleData = {
   slug: "manifest-love",
   eyebrowZh: "显化 · 爱情", eyebrowEn: "Manifestation · Love",
   titleZh: "如何显化爱情与理想伴侣", titleEn: "How to Manifest Love & an Ideal Partner",
-  defZh: "显化爱情的核心，不是去控制某个特定的人，而是先成为你想遇见的那个人、清理阻挡爱的旧信念、并让自己稳定地进入「被爱、值得爱」的状态。当你的频率改变，与之同频的关系自会靠近。",
-  defEn: "Manifesting love is not about controlling a specific person, but about becoming the one you hope to meet, clearing old beliefs that block love, and steadily entering the state of being loved and worthy of love. When your frequency shifts, relationships on that frequency draw near.",
+  defZh: "显化爱情最常被说成：改变你的频率，同频的人自会靠近。前半句是对的，后半句省掉了太多东西。\n\n真正会变的是这些：你更少为了被喜欢而收起自己，更早察觉哪些相处让你消耗，更敢在第一次不舒服的时候就说出来，也更容易被那些本来就适合你的人看见——因为你不再把自己藏在一个「更好版本」后面。这些变化会实实在在改变你遇到谁、留下谁。\n\n但有一件事必须说清楚：你无法、也不应该去改变某个特定的人是否爱你。那不在你手里，那是他的自由意志。任何声称能让特定某人回心转意的方法，都在向你承诺它给不了的东西——而代价往往是你把等待的时间，误认成修行。",
+  defEn: "Manifesting love is usually put as: change your frequency and the matching person draws near. The first half is right; the second half skips too much.\n\nWhat actually changes is this: you shrink yourself less in order to be liked, you notice sooner which dynamics drain you, you speak up at the first discomfort rather than the fifth, and you become easier to see for people who already suit you — because you are no longer hiding behind a better version of yourself. Those shifts genuinely change who you meet and who you keep.\n\nBut one thing has to be stated plainly: you cannot, and should not, change whether a particular person loves you. That is not in your hands; it is their free will. Any method claiming it can turn a specific person around is promising what it cannot deliver — and the cost is usually that you mistake years of waiting for spiritual practice.",
   sections: [
     {
       hZh: "先成为，而非追逐", hEn: "Become, don't chase",

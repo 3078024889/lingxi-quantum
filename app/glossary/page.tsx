@@ -125,7 +125,7 @@ export default function GlossaryPage() {
             ))}
           </dl>
 
-          <p className="mt-10 text-sm text-bone-dim/85">
+          <p className="mt-10 text-sm text-bone-soft">
             <Bi zh="延伸：" en="Related: " />
             <Link href="/learn/wingmakers" className="text-lattice hover:text-amber"><Bi zh="主权与完整导览" en="Sovereignty & Wholeness guide" /></Link>
             {" · "}

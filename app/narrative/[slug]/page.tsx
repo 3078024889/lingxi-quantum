@@ -34,7 +34,7 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
       <main className="pt-16">
         <section className="px-6 py-16 text-center sm:py-20">
           <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh={`多维叙事 · ${cat.zh}`} en={`Dimensional Narratives · ${cat.en}`} />
           </p>
           <h1 className="mx-auto mt-6 max-w-3xl font-display text-4xl font-light leading-snug text-bone sm:text-5xl">
@@ -67,7 +67,7 @@ export default async function NarrativeDetail({ params }: { params: { slug: stri
                 href="/practice"
                 className="bg-void-deep group rounded-sm px-6 py-5 text-center transition hover:border-lattice/50"
               >
-                <p className="font-display text-xs uppercase tracking-widest2 text-lattice/70 transition group-hover:text-lattice">
+                <p className="font-display text-xs uppercase tracking-widest2 text-lattice transition group-hover:text-lattice">
                   <Bi zh="如果这篇触动了你" en="If this stayed with you" />
                 </p>
                 <p className="mt-2 text-sm leading-6 text-bone-dim">
@@ -145,7 +145,7 @@ async function LiveIllustratedReader({ slug, price, titleZh, titleEn }: { slug: 
         <PlanButton productId={slug} loggedIn={!!user} nameZh={titleZh} nameEn={titleEn} />
       </div>
       {!user && (
-        <p className="mt-3 text-xs text-bone-dim/82">
+        <p className="mt-3 text-xs text-bone-soft">
           <Bi zh="需先登录，解锁将与账户永久绑定。" en="Sign in first — your unlock binds to your account." />
         </p>
       )}
@@ -191,7 +191,7 @@ async function LiveReader({
         <PlanButton productId={slug} loggedIn={!!user} nameZh={titleZh} nameEn={titleEn} />
       </div>
       {!user && (
-        <p className="mt-3 text-xs text-bone-dim/82">
+        <p className="mt-3 text-xs text-bone-soft">
           <Bi zh="需先登录，解锁将与账户永久绑定。" en="Sign in first — your unlock binds to your account." />
         </p>
       )}

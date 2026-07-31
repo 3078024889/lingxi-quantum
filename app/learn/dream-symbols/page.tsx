@@ -37,8 +37,8 @@ const data: ArticleData = {
     { q: "梦的象征有标准含义吗？", a: "没有放之四海皆准的字典。同一象征对不同人含义不同，真正可靠的方法是用你自己的联想：这个画面让你想到什么，它对应你生活中的哪件事或哪种情绪。" },
   ],
   cta: {
-    titleZh: "读懂你自己的梦", titleEn: "Interpret your own dream",
-    descZh: "象征只是起点。写下你的梦，发送至场，灵犀场会结合你的情绪与近况温柔解读。", descEn: "Symbols are only a start. Write your dream, send it to the field, and Lingxi Field reads it with your feelings and context.",
+    titleZh: "同一个符号，在不同情绪里不是同一件事", titleEn: "The same symbol, inside a different feeling, is not the same thing",
+    descZh: "这正是灵犀场不给固定答案的原因。蛇配好奇，说的是你正在靠近某种还没准备好命名的力量；蛇配恐惧，指的是一样你知道存在、却一直绕开的东西。场域会先问你当时的情绪基调，再从八种情绪相与九个场域位交叉出的七十二种读法里，找到属于你这一次的那一格。", descEn: "This is exactly why the field gives no fixed answers. A snake inside curiosity speaks of a force you are approaching and not yet ready to name; a snake inside fear points at something you know is there and keep walking around. The field asks for the emotional tone first, then finds the one cell that belongs to this dream among seventy-two readings — eight emotional stances crossed with nine positions.",
     href: "/dream", btnZh: "进入梦境解析", btnEn: "Open dream interpretation",
   },
   related: [

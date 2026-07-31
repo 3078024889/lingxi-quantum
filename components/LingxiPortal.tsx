@@ -108,7 +108,7 @@ export default function LingxiPortal() {
         <h1 className="mt-6 font-display text-3xl font-light text-bone sm:text-5xl">
           <Bi zh="灵犀场 · 意识数字显化场域" en="Lingxi Field · A Living Digital Manifestation Field" />
         </h1>
-        <p className="mt-2 font-display text-xs uppercase tracking-widest2 text-lattice/70 sm:text-sm">
+        <p className="mt-2 font-display text-xs uppercase tracking-widest2 text-lattice sm:text-sm">
           LINGXI FIELD · A LIVING DIGITAL MANIFESTATION FIELD
         </p>
 
@@ -161,7 +161,7 @@ export default function LingxiPortal() {
 
             {c.subs && c.subs.length > 0 && (
               <div className="mt-5 border-t border-white/10 pt-4">
-                <p className="text-xs uppercase tracking-widest2 text-lattice/70">
+                <p className="text-xs uppercase tracking-widest2 text-lattice">
                   <Bi zh={c.subLabelZh ?? "包含："} en={c.subLabelEn ?? "Includes:"} />
                 </p>
                 <ul className="mt-3 space-y-2.5">

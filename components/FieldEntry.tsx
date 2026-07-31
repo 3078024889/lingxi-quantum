@@ -30,7 +30,7 @@ export default function FieldEntry() {
         <div className="absolute inset-0 bg-gradient-to-b from-void/35 via-void/20 to-void/35" />
       </div>
 
-      <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="灵犀，正在感知你" en="Lingxi is perceiving you" /></p>
+      <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="灵犀，正在感知你" en="Lingxi is perceiving you" /></p>
       <h2 className="mt-6 font-display text-3xl font-light leading-snug text-bone sm:text-4xl"><Bi zh="此刻，你想朝哪个方向展开？" en="Where do you want to unfold, right now?" /></h2>
 
       <div className="mt-12 grid w-full max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">

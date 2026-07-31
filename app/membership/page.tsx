@@ -145,16 +145,16 @@ function PracticeCard({ id, loggedIn }: { id: string; loggedIn: boolean }) {
   return (
     <div className="flex flex-col rounded-sm border border-white/10 bg-reading-glass p-8">
       <h3 className="font-display text-2xl text-bone"><Bi zh={p.name} en={p.nameEn} /></h3>
-      <p className="mt-2 text-sm text-lattice/80"><Bi zh={b.headerZh} en={b.headerEn} /></p>
+      <p className="mt-2 text-sm text-lattice"><Bi zh={b.headerZh} en={b.headerEn} /></p>
       <PriceTag priceRmb={p.priceRmb} type={p.type} />
-      <p className="mt-2 text-xs text-bone-dim/85"><Bi zh="一次能量交换，永久开启。" en="One energy exchange, open forever." /></p>
+      <p className="mt-2 text-xs text-bone-soft"><Bi zh="一次能量交换，永久开启。" en="One energy exchange, open forever." /></p>
       <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice/60"><Bi zh="获得：" en="You receive:" /></p>
       <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-bone-dim">
         {b.items.map((it, i) => (
           <li key={i}>· <Bi zh={it.zh} en={it.en} /></li>
         ))}
       </ul>
-      <p className="mt-4 text-xs italic text-bone-dim/82"><Bi zh={b.closingZh} en={b.closingEn} /></p>
+      <p className="mt-4 text-xs italic text-bone-soft"><Bi zh={b.closingZh} en={b.closingEn} /></p>
       <div className="mt-6">
         <PlanButton productId={p.id} loggedIn={loggedIn} nameZh={p.name} nameEn={p.nameEn} />
       </div>
@@ -223,7 +223,7 @@ export default async function MembershipPage({
             <EarthGrid className="h-[520px] w-[520px]" />
           </div>
           <div className="bg-reading-glass relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="能量交换" en="Energy Exchange" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
@@ -301,7 +301,7 @@ export default async function MembershipPage({
                 <li>· <Bi zh="场域观测日志" en="Field observation logs" /></li>
                 <li>· <Bi zh="持续更新的原创多维故事" en="Original dimensional stories, continuously updated" /></li>
               </ul>
-              <p className="mx-auto mt-4 max-w-xs text-xs italic text-bone-dim/82">
+              <p className="mx-auto mt-4 max-w-xs text-xs italic text-bone-soft">
                 <Bi zh="现实不是单一发生的结果，而是意识与生命持续交汇后的展开。" en="Reality is not a single outcome. It unfolds from the ongoing meeting of consciousness and life." />
               </p>
               <div className="mx-auto mt-6 max-w-[220px]">
@@ -329,7 +329,7 @@ export default async function MembershipPage({
               <h3 className="font-display text-2xl text-bone"><Bi zh={everything.name} en={everything.nameEn} /></h3>
               <PriceTag priceRmb={everything.priceRmb} days={everything.days} type={everything.type} />
 
-              <p className="mx-auto mt-6 max-w-md text-xs uppercase tracking-widest2 text-lattice/70"><Bi zh="全站能量交换项目 · 开放全部" en="Every energy exchange on the site · fully open" /></p>
+              <p className="mx-auto mt-6 max-w-md text-xs uppercase tracking-widest2 text-lattice"><Bi zh="全站能量交换项目 · 开放全部" en="Every energy exchange on the site · fully open" /></p>
               <div className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-sm border border-white/10 bg-void-deep p-4">
                   <p className="text-sm text-bone">🌌 <Bi zh="意识显化体系" en="Conscious Manifestation" /></p>
@@ -364,7 +364,7 @@ export default async function MembershipPage({
             </div>
           </div>
 
-          <p className="mx-auto mt-12 max-w-2xl text-center text-xs leading-6 text-bone-dim/82">
+          <p className="mx-auto mt-12 max-w-2xl text-center text-xs leading-6 text-bone-soft">
             <Bi
               zh="能量交换完成后，场域自动开启，无需等待人工确认。四大修炼技术永久有效；显化与梦境解读、多维叙事、全构造解锁到期可续期，时间自动累加。"
               en="Once the energy exchange completes, the Field opens automatically — no manual confirmation needed. The Four Practices are yours forever; Manifestation & Dream Interpretation, Dimensional Narrative, and Everything Unlocked can be renewed on expiry, with time added automatically."

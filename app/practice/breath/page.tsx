@@ -31,7 +31,7 @@ export default async function BreathPage() {
         <section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20"><CosmicField className="h-full w-auto" /></div>
           <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="修炼技术 · 单次激活 · 永久有效" en="Practice · one activation · yours forever" /></p>
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="修炼技术 · 单次激活 · 永久有效" en="Practice · one activation · yours forever" /></p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="量子息法" en="The Quantum Breath Method" /></h1>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim"><Bi zh="量子息法是意识本源整合进程的主要工具。呼吸的美妙就在于，它始终伴随着你在这个世界的体验，从最初的到最终的。它是便携式的，每个人都拥有它，正是它将你锚定进了当下。" en="The Quantum Breath Method is the primary tool of the primordial-consciousness integration process. The beauty of the breath is that it accompanies your experience in this world from the very first to the very last. It is portable — everyone already has it — and it is what anchors you into the present moment." /></p>
           </div>
@@ -60,11 +60,11 @@ export default async function BreathPage() {
                 </div>
                 <figure className="mt-16">
                   <div className="mx-auto max-w-md rounded-sm border border-white/10 bg-void"><BreathDiagram className="w-full" /></div>
-                  <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/85">节律路径示意：吸气时垂直轴延伸自地球核心，穿过松果腺，向上伸向无限；呼气时水平轴从心脏区域向外延展，环绕地球。</figcaption>
+                  <figcaption className="mt-4 text-center text-sm leading-7 text-bone-soft">节律路径示意：吸气时垂直轴延伸自地球核心，穿过松果腺，向上伸向无限；呼气时水平轴从心脏区域向外延展，环绕地球。</figcaption>
                 </figure>
                 <figure className="mt-16">
                   <div className="rounded-sm border border-white/10 bg-void p-4"><BreathStructure className="w-full" /></div>
-                  <figcaption className="mt-3 text-center text-sm text-bone-dim/85">结构框架：吸气（鼻，「我是」）→ 暂停 → 呼气（嘴，「我们是」）→ 暂停</figcaption>
+                  <figcaption className="mt-3 text-center text-sm text-bone-soft">结构框架：吸气（鼻，「我是」）→ 暂停 → 呼气（嘴，「我们是」）→ 暂停</figcaption>
                 </figure>
               </div>
             </section>

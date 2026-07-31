@@ -135,10 +135,10 @@ function OrderCard({ o }: { o: OrderRow }) {
   const benefits = BENEFIT_DETAIL[o.product_id];
 
   return (
-    <div className="rounded-sm border border-white/10 bg-void-deep p-5">
+    <div className="lx-glass p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] uppercase tracking-widest2 text-bone-dim/60">
+          <p className="text-[11px] uppercase tracking-widest2 text-bone-mute">
             <Bi zh="场域订单号" en="Field Order No." /> {o.id}
           </p>
           {dest ? (
@@ -162,7 +162,7 @@ function OrderCard({ o }: { o: OrderRow }) {
             </p>
           )}
           {isPaid && product?.type === "permanent" && (
-            <p className="mt-1 text-xs text-lattice/80">
+            <p className="mt-1 text-xs text-lattice">
               <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
             </p>
           )}
@@ -173,13 +173,13 @@ function OrderCard({ o }: { o: OrderRow }) {
               没有配清单的（场域精测这些一次性报告类），仍然用原来的
               note描述，够用，不用为了统一硬凑清单。 */}
           {isPaid && benefits ? (
-            <ul className="mt-2 space-y-1 text-xs leading-6 text-bone-dim/85">
+            <ul className="mt-2 space-y-1 text-xs leading-6 text-bone-soft">
               {(benefits.zh).map((line, i) => (
                 <li key={i}>· <Bi zh={line} en={benefits.en[i]} /></li>
               ))}
             </ul>
           ) : isPaid && product ? (
-            <p className="mt-1 text-xs leading-6 text-bone-dim/85">
+            <p className="mt-1 text-xs leading-6 text-bone-soft">
               <Bi zh="获得权益" en="Benefits" />：<Bi zh={product.note} en={product.noteEn} />
             </p>
           ) : null}
@@ -259,18 +259,18 @@ export default async function FieldOrdersPage() {
               <Bi zh="← 返回场域入口" en="← Back to Account" />
             </Link>
           </div>
-          <p className="mb-8 text-xs text-bone-dim/70">
+          <p className="mb-8 text-xs text-bone-mute">
             <Bi zh="按类别查看每一次能量交换的详情、有效期与具体权益。" en="Every exchange, grouped by kind, with its expiry and exact benefits." />
           </p>
 
           {!user && (
-            <p className="text-center text-sm text-bone-dim">
+            <p className="lx-glass p-8 text-center text-sm text-bone-soft">
               <Bi zh="请先登录查看你的场域订单。" en="Please log in to view your field orders." />
             </p>
           )}
 
           {user && orders.length === 0 && (
-            <p className="text-center text-sm text-bone-dim">
+            <p className="lx-glass p-8 text-center text-sm text-bone-soft">
               <Bi zh="还没有任何订单——完成一次能量交换后，会出现在这里。" en="No orders yet — they'll appear here once you complete an exchange." />
             </p>
           )}
@@ -282,7 +282,7 @@ export default async function FieldOrdersPage() {
                   <h2 className="font-display text-lg text-lattice">
                     <Bi zh={s.titleZh} en={s.titleEn} />
                   </h2>
-                  <p className="mt-1 text-xs leading-6 text-bone-dim/70">
+                  <p className="mt-1 text-xs leading-6 text-bone-mute">
                     <Bi zh={s.hintZh} en={s.hintEn} />
                   </p>
                   <div className="mt-4 space-y-3">

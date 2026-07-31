@@ -16,7 +16,7 @@ export default function NumberEnergyPage() {
       <main className="pt-16">
         <section className="px-6 py-20 text-center">
           <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
               <Bi zh="数字能量学" en="Number Energy" />
             </p>
             <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">

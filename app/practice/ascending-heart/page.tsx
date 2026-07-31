@@ -22,7 +22,7 @@ export default async function AscendingHeartPage() {
             <GateDestiny className="h-[420px] w-[420px]" />
           </div>
           <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="修炼技术" en="Practice" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
@@ -40,7 +40,7 @@ export default async function AscendingHeartPage() {
         <section className="px-6 py-16">
           <div className="bg-reading-glass mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
             <div>
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
               <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>
               <p className="mt-6">
                 <Bi
@@ -133,7 +133,7 @@ export default async function AscendingHeartPage() {
                 <PracticeChart src="/images/practice/ascending-heart-chart.jpg" alt="上升心经 · 完整练习图（吸气接引—呼气绽出—载波调频—节律合一，含四式呼吸法）" />
               </div>
               <div className="space-y-10">
-                <p className="text-sm leading-8 text-bone-dim/90">
+                <p className="text-sm leading-8 text-bone-dim">
                   <Bi zh="预备：感知胸腺区（心脏与喉咙间）为「上升心经」能量交汇点，即两条轴的交汇处。" en="Preparation: sense the thymus region (between heart and throat) as the energy meeting point of the 'Rising Heart' — where the two axes intersect." />
                 </p>
 

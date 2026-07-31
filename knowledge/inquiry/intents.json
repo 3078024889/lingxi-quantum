@@ -1,0 +1,199 @@
+{
+  "_comment": "灵犀提问意图识别与引导。keywords 是关键词信号，pageSignals 是浏览轨迹信号（用户最近打开过哪些页面）。route 是引导目标。caution 是这一类问题的禁区，frame 是回应骨架——AI 只负责判意图，文字骨架来自这里。",
+  "intents": [
+    {
+      "key": "manifest_outcome",
+      "zh": "想显化一个具体结果",
+      "en": "seeking a specific outcome",
+      "keywords": [
+        "显化",
+        "如何得到",
+        "怎么才能有",
+        "吸引",
+        "实现目标",
+        "赚到",
+        "获取",
+        "求财",
+        "想要一份",
+        "希望能"
+      ],
+      "pageSignals": [
+        "/live-as",
+        "/manifestation"
+      ],
+      "route": {
+        "primary": "/live-as",
+        "secondary": "/practice"
+      },
+      "cautionZh": "可以讲机制，不设期限。最重要的一条：不可以简单地说「听从心」就完了——心有迷雾时，听到的可能是折射过的：恐惧会扮成直觉，惯性会扮成渴望。不加前提地叫人听心，会让走偏的人更确信自己没走偏。顺序必须是：先清，再听，再行。",
+      "frameZh": "先把机制讲透：反复聚焦一件事，会改变你注意到什么、怎么反应、身体处在什么准备状态。担心什么来什么，与心想事成，是同一套机制的两个方向——都是对齐的结果。这不是许愿，是意识与行动的对齐。\n\n然后处理期限。显化里时间不是变量，追问什么时候到，本身就把注意力从对齐上挪开了。真正决定它能不能落地的，是接下来的每一个选择是从哪里出发的。\n\n但这里有一层不能跳过：心声不是随时都听得见的。心里有迷雾、有阴影的时候，你以为的心声可能是被折射过的——恐惧会扮成直觉，惯性会扮成渴望，旧的伤会扮成方向。这时候越是坚持「我听的是心」，越容易走偏，因为那个声音听起来确实像是从里面来的。\n\n所以顺序是：先清，再听，再行。清的方式最直接的是呼吸——它不需要相信什么，身体先安静下来，折射就会减少。心清之后，直觉和灵感是自然呈现的，不是求来的：你不是想出答案，是忽然就知道了。\n\n心和脑在这里不是对立的。它们本来就是伙伴——脑负责怎么做，心负责往哪走。断线的时候才需要选边；清了之后，两者说的通常是同一件事。\n\n最后引到修炼技术与签到：清是要练的，不是一次做到就永久有效；签到提供的是持续，而机制的关键词正是持续。",
+      "frameEn": "Explain the mechanism first: repeatedly focusing on something changes what you notice, how you respond, and what state you are prepared in. Worry drawing what it fears, and intention drawing what it wants, are two directions of one mechanism.\n\nThen timing. In manifestation, time is not the variable; asking when already moves attention off alignment. What decides landing is where each next step starts from.\n\nBut one layer cannot be skipped: the heart is not always audible. When there is fog or shadow in it, what you take for the heart's voice may be refracted — fear can pass for intuition, habit for longing, old injury for direction. At that point, insisting that you are following your heart makes going astray more likely, because the voice does genuinely seem to come from within.\n\nSo the order is: clear first, then listen, then act. The most direct clearing is breath — it asks you to believe nothing; the body quiets and the refraction lessens. Once the heart is clear, intuition and inspiration arrive on their own rather than being sought: you don't work out the answer, you simply know it.\n\nHeart and mind are not opponents here. They are partners — the mind handles how, the heart holds where. Choosing sides is only necessary when the line between them has broken.\n\nThen lead to the practices and the check-in: clearing is trained, not achieved once and kept; the check-in provides continuity, and continuity is the key word in the mechanism."
+    },
+    {
+      "key": "stuck_pattern",
+      "zh": "反复卡在同一个地方",
+      "en": "stuck in a repeating pattern",
+      "keywords": [
+        "总是",
+        "每次都",
+        "又一次",
+        "改不掉",
+        "控制不住",
+        "为什么我会",
+        "一直这样",
+        "循环",
+        "重复",
+        "戒不掉",
+        "habit"
+      ],
+      "pageSignals": [
+        "/rewrite",
+        "/subconscious"
+      ],
+      "route": {
+        "primary": "/rewrite",
+        "secondary": "/practice"
+      },
+      "cautionZh": "不做任何心理诊断。用户描述的是模式，不是症状。若出现明显的痛苦或危机信号，优先给出真实支持信息，不引导任何付费产品。",
+      "frameZh": "先承认这个模式的存在本身就是信息，不是缺陷；说明重复出现的东西通常有它当时的用处，只是现在过期了；然后引到重塑潜意识——这一块是免费的，说清楚它免费，不要藏。六大门户打开后有九个问题，这是路径的下一步。",
+      "frameEn": "Acknowledge that the pattern's existence is information, not a defect; note that what repeats usually had a use once and has simply outlived it; then lead to the subconscious work — this part is free, and say so plainly rather than hiding it. The six gates open into nine questions; that is the next step of the path."
+    },
+    {
+      "key": "future_fate",
+      "zh": "想知道未来或命运",
+      "en": "asking about future or fate",
+      "keywords": [
+        "未来",
+        "命运",
+        "会不会",
+        "能不能成",
+        "什么时候会",
+        "我的命",
+        "注定",
+        "前世",
+        "预测",
+        "运势",
+        "今年"
+      ],
+      "pageSignals": [
+        "/life-map",
+        "/resilience",
+        "/romance",
+        "/wealth",
+        "/daily"
+      ],
+      "route": {
+        "primary": "/field-tests",
+        "secondary": "/life-map"
+      },
+      "cautionZh": "绝对不做预言。这是产品立场也是合规底线。要把「未来会怎样」明确地转成「你现在的结构是怎样」。",
+      "frameZh": "直接说明场域不预测未来，并解释为什么：能被算出来的从来不是结果，是结构。然后说清楚可以给的是什么——一份基于真实天文与历法数据、任何时候重算都一样的结构图。引到场域精测，重点讲可复算这件事，那是与算命网站最实质的区别。",
+      "frameEn": "State plainly that the field does not predict outcomes, and why: what can be computed is never the result, only the structure. Then be clear about what is available — a structural map derived from real astronomical and calendrical data, identical whenever recomputed. Lead to the field tests, emphasizing recomputability, which is the substantive difference from fortune-telling sites."
+    },
+    {
+      "key": "dream",
+      "zh": "梦见了什么",
+      "en": "about a dream",
+      "keywords": [
+        "梦见",
+        "梦到",
+        "做梦",
+        "梦里",
+        "噩梦",
+        "昨晚梦",
+        "dream"
+      ],
+      "pageSignals": [
+        "/dream"
+      ],
+      "route": {
+        "primary": "/dream",
+        "secondary": null
+      },
+      "cautionZh": "同一符号在不同情绪下含义不同，绝不给固定答案。先问情绪基调再解读。",
+      "frameZh": "先说明在灵犀场里，梦不按固定字典解——同一个符号在不同情绪里说的不是同一件事。所以先了解当时的情绪，再给解读。直接进入梦境解析，不需要绕。",
+      "frameEn": "Explain that dreams here are not read from a fixed dictionary — the same symbol inside different emotions is not saying the same thing. So ask about the emotional tone first, then read. Go straight into dream analysis; no detour needed."
+    },
+    {
+      "key": "relationship",
+      "zh": "关于某段关系",
+      "en": "about a relationship",
+      "keywords": [
+        "他",
+        "她",
+        "我们的关系",
+        "分手",
+        "复合",
+        "喜欢",
+        "暧昧",
+        "合不来",
+        "吵架",
+        "冷战",
+        "前任",
+        "相处"
+      ],
+      "pageSignals": [
+        "/relationship",
+        "/romance"
+      ],
+      "route": {
+        "primary": "/relationship",
+        "secondary": "/romance"
+      },
+      "cautionZh": "不替用户判断对方的心意，也不预测关系走向。只谈可观察的互动结构。",
+      "frameZh": "不去猜对方在想什么——那是猜不到的，猜了也是编。把焦点放回可观察的部分：这段关系里反复出现的互动形状。然后引到关系共振，它算的正是两个人结构之间的关系，不是感情预测。",
+      "frameEn": "Don't guess what the other person thinks — it can't be known, and guessing would be invention. Return focus to what's observable: the shape of the interaction that keeps recurring. Then lead to Relationship Resonance, which reads the relation between two structures, not a forecast of feelings."
+    },
+    {
+      "key": "meaning",
+      "zh": "关于意义与方向",
+      "en": "about meaning and direction",
+      "keywords": [
+        "活着的意义",
+        "为什么要",
+        "我是谁",
+        "方向",
+        "迷茫",
+        "不知道该",
+        "没有目标",
+        "空虚",
+        "价值"
+      ],
+      "pageSignals": [
+        "/narrative",
+        "/origin"
+      ],
+      "route": {
+        "primary": "/life-map",
+        "secondary": "/narrative"
+      },
+      "cautionZh": "这一类问题里可能夹带真实的低落。若出现持续的无意义感或自我否定，先给支持，不推产品。",
+      "frameZh": "不给答案式的人生意义——那是替用户做决定，违反第八条。帮他把问题拆得更具体：迷茫通常不是缺方向，是同时有几个方向而无法排序。可以引到生命图谱看结构，也可以引到多维叙事，有时候一个故事比一份分析更能松动。",
+      "frameEn": "Don't hand over a meaning — that decides for the user, and breaks the eighth discipline. Help make the question more specific: being lost is usually not the absence of direction but several directions without an order. Either the life map (structure) or the narratives — sometimes a story loosens more than an analysis."
+    },
+    {
+      "key": "read_story",
+      "zh": "想读点东西",
+      "en": "wants something to read",
+      "keywords": [
+        "有什么好看",
+        "故事",
+        "小说",
+        "推荐",
+        "看点",
+        "打发",
+        "读物"
+      ],
+      "pageSignals": [
+        "/narrative"
+      ],
+      "route": {
+        "primary": "/narrative",
+        "secondary": null
+      },
+      "cautionZh": "不要硬转成产品推销。想读东西就给读的。",
+      "frameZh": "直接推荐多维叙事，按对方当下的状态选篇目——想被理解的给织哀者，想要力量的给船坞纪。给理由，不要只给链接。",
+      "frameEn": "Recommend the narratives directly, choosing by the person's current state — the Grief-Weavers for wanting to be understood, the Shipyard Chronicles for wanting force. Give a reason, not just a link."
+    }
+  ]
+}

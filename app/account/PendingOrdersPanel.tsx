@@ -67,7 +67,7 @@ export default function PendingOrdersPanel({
       <p className="px-1 text-sm text-bone-dim">
         <Bi zh="待解锁订单" en="Orders Awaiting Confirmation" />
       </p>
-      <p className="px-1 text-xs text-bone-dim/70">
+      <p className="px-1 text-xs text-bone-mute">
         <Bi
           zh="如果你已经完成支付，但页面没有自动跳转解锁，点下面对应订单的「查询」，重新确认一次；如果这笔订单你从没真正付过款，可以直接删除。"
           en="If you already paid but the page didn't unlock automatically, tap Check to re-confirm. If you never actually paid for an order, you can delete it."
@@ -83,7 +83,7 @@ export default function PendingOrdersPanel({
                 <p className="font-display text-sm text-lattice">{product?.name ?? o.product_id}</p>
                 <p className="text-xs text-bone-dim">{new Date(o.created_at).toLocaleString()}</p>
                 {result === "not-paid" && (
-                  <p className="mt-1 text-xs text-bone-dim/70"><Bi zh="还没查到支付记录，如果你还没付款，可以忽略这条。" en="No payment found yet — if you haven't paid, you can ignore this." /></p>
+                  <p className="mt-1 text-xs text-bone-mute"><Bi zh="还没查到支付记录，如果你还没付款，可以忽略这条。" en="No payment found yet — if you haven't paid, you can ignore this." /></p>
                 )}
                 {result === "error" && (
                   <p className="mt-1 text-xs text-rose"><Bi zh="查询出错，请稍后再试。" en="Check failed — please try again." /></p>

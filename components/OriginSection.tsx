@@ -26,7 +26,7 @@ export default function OriginSection() {
         <div className="grid items-stretch gap-6 lg:grid-cols-2">
           {/* 意识显化 */}
           <div className="flex flex-col rounded-sm border border-white/10 bg-void-deep p-8">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
               <Bi zh="意识显化系统" en="Consciousness Manifestation System" />
             </p>
             <h2 className="mt-4 font-display text-3xl font-light leading-tight text-bone sm:text-4xl">
@@ -50,7 +50,7 @@ export default function OriginSection() {
 
           {/* 创造源 */}
           <div className="flex flex-col rounded-sm border border-white/10 bg-void-deep p-8">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">创造源 · Origin Field</p>
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">创造源 · Origin Field</p>
             <h2 className="mt-4 font-display text-3xl font-light leading-tight text-bone sm:text-4xl">
               <Bi zh="创造并非单一来源" en="Creation Has No Single Source" />
             </h2>

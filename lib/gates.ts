@@ -15,16 +15,21 @@ export type Gate = {
 export const gates: Gate[] = [
   {
     id: "origin",
-    title: "出身",
+    // v273：门名从「出身」改为「来处」。「出身」在中文里带阶层含义
+    // （出身好／出身不好），用户一进门就先被戳一下；而这道门的引言
+    // 说的其实是「你来自哪里」，是来处，不是身份。「来处」更轻、更准，
+    // 也与最后一道门「扎根」成对：来处是给定的，扎根是选的。
+    // 路由 id 保留 origin 不动，已收录链接不受影响。
+    title: "来处",
     titleEn: "Origin",
     glyph: "源",
     image: null,
     line: "你来自哪里，从不决定你能去到哪里。",
     lineEn: "Where you come from never decides where you can go.",
     intro:
-      "你诞生于源，而非诞生于环境。出身只是这一世旅程的起点坐标，不是你存在的边界。在这道门里，我们一同松开「我从哪里来」所附带的旧编程，回到那个先于一切标签的本源自己。",
+      "来处是起点坐标，不是边界。早年被放在哪里、被反复告知你是谁，会变成一套默认设置——它不像限制，它像事实，所以很难被看见。这道门做的事只有一件：把「我从哪里来」和「我能去到哪里」分开。看清那套设置从谁那里来，你就不必再替它继续运行下去。",
     introEn:
-      "You are born of Source, not of circumstance. Origin is only the starting coordinate of this life's journey, not the boundary of your being. In this gate, we loosen together the old programming attached to 'where I came from,' and return to the source self that exists before every label.",
+      "Where you come from is a starting coordinate, not a boundary. Where you were placed early on, and what you were repeatedly told you were, becomes a set of defaults — it doesn't feel like a limit, it feels like fact, which is why it stays unseen. This gate does one thing: it separates where I came from from where I can go. Once you see whose settings these were, you no longer have to keep running them.",
     prompts: [
       "如果出身不再定义我，我会如何描述此刻的自己？",
       "我从家族那里继承的信念里，哪些是我真正想保留的？",
@@ -135,16 +140,21 @@ export const gates: Gate[] = [
   },
   {
     id: "destiny",
-    title: "命运",
-    titleEn: "Destiny",
+    // v273：门名从「命运」改为「扎根」。原因：「命运」暗示已被写定，
+    // 与灵犀场「不做任何宿命预判」的立场冲突，也跟这道门自己的引言
+    // （保持对齐、保持连贯）对不上——它讲的从来不是命运，是持续对齐。
+    // 「扎根」与第一道门「来处」形成对照：来处是给定的，扎根是选的。
+    // 路由 id 保留 destiny 不动，避免已收录的链接失效。
+    title: "扎根",
+    titleEn: "Rooting",
     glyph: "锚",
     image: null,
     line: "保持对齐，保持信任与连贯，显化便会发生。",
     lineEn: "Stay aligned, keep trust and coherence, and manifestation unfolds.",
     intro:
-      "命运不是被写定的剧本，而是你与源持续对齐后自然展开的路径。显化与时间无关，与对齐相关。保持一致性与连贯，信任那未知的指引——你是行走的信任，是回家的记忆。",
+      "扎根，是你选择把自己立在哪里。来处是给定的，扎根不是——它是你此刻决定要对齐的那个方向，以及愿不愿意每天回到它上面。显化与时间无关，与连贯相关：不是等它来，是让每一步都从同一个地方出发。根扎得住，路自然长出来。",
     introEn:
-      "Destiny is not a fixed script but a path that unfolds naturally as you stay aligned with Source. Manifestation has nothing to do with time and everything to do with alignment. Keep consistency and coherence, trust the unseen guidance — you are trust, walking; you are the memory of coming home.",
+      "Rooting is where you choose to stand. Where you came from was given; this is not — it is the direction you decide to align with now, and whether you return to it daily. Manifestation has nothing to do with time and everything to do with coherence: not waiting for it to arrive, but letting each step depart from the same place. Roots that hold, grow the path.",
     prompts: [
       "如果我完全信任正在展开的路径，下一步是什么？",
       "我愿意为之保持对齐的，是怎样的未来？",

@@ -60,7 +60,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
       <main className="pt-24">
         <div className="mx-auto max-w-xl px-6 py-16">
           <div className="flex items-center justify-between gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
               <Bi zh="灵犀场 · 今日运势潮汐" en="Lingxi Field · Daily Fortune Tide" />
             </p>
             <DownloadResultPdfButton
@@ -79,7 +79,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
             <h1 className="mt-3 font-display text-3xl font-light text-bone">
               <Bi zh={`${sign.zh}座 · 今日运势潮汐`} en={`${sign.en} · Daily Fortune Tide`} />
             </h1>
-            <p className="mt-2 text-xs text-bone-dim/85">{todayLabel}</p>
+            <p className="mt-2 text-xs text-bone-soft">{todayLabel}</p>
             <p className="mt-3 text-xs text-bone-dim">
               <Bi zh={`月相：${transit.moonPhaseZh} · 月亮在${transit.moonSignZh}座`} en={`Moon Phase: ${transit.moonPhaseEn} · Moon in ${transit.moonSignEn}`} />
             </p>
@@ -103,7 +103,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
               <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
                 <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${tide}%` }} />
               </div>
-              <p className="mt-2 text-xs leading-6 text-bone-dim/85">
+              <p className="mt-2 text-xs leading-6 text-bone-soft">
                 <Bi
                   zh={`真实潮汐力学换算——新月满月时潮汐最强，上下弦月时最弱。${nextTide.daysAway === 0 ? "今天正好处在潮汐的转折点。" : `再过${nextTide.daysAway}天，会到达这轮潮汐的${nextTide.kind === "spring" ? "峰值（大潮）" : "低点（小潮）"}。`}`}
                   en={`A real tidal-mechanics reading — strongest at new/full moon, weakest at the quarters. ${nextTide.daysAway === 0 ? "Today sits right at a turning point." : `In ${nextTide.daysAway} day${nextTide.daysAway > 1 ? "s" : ""}, this cycle reaches its ${nextTide.kind === "spring" ? "peak (spring tide)" : "low (neap tide)"}.`}`}
@@ -111,7 +111,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
               </p>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-bone-dim/80">
+            <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-bone-soft">
               <span className="rounded-sm border border-white/10 px-2 py-1">
                 <Bi zh={`当日守护星：${ruler.zh}`} en={`Day Ruler: ${ruler.en}`} />
               </span>
@@ -163,7 +163,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
             </a>
           </div>
 
-          <p className="mt-6 text-center text-xs text-bone-dim/78">
+          <p className="mt-6 text-center text-xs text-bone-soft">
             <Bi zh="太阳星座只是众多变量之一，仅供参考与反思。" en="Sun sign is just one of many variables — for reflection only." />
           </p>
         </div>

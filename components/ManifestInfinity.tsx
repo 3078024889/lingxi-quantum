@@ -68,7 +68,7 @@ export default function ManifestInfinity() {
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[52vh] w-[86vw] max-w-5xl -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber/[0.05] blur-[140px]" />
 
       <div className="mx-auto max-w-5xl text-center">
-        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="场 域 回 响" en="Reflections from the Field" />
         </p>
         <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
@@ -165,9 +165,9 @@ export default function ManifestInfinity() {
             </p>
           </div>
           <div className="mt-8 flex items-center justify-center gap-10">
-            <button onClick={() => go(i - 1)} aria-label="上一个" className="font-display text-2xl text-bone-dim/85 transition hover:text-amber">‹</button>
+            <button onClick={() => go(i - 1)} aria-label="上一个" className="font-display text-2xl text-bone-soft transition hover:text-amber">‹</button>
             <span className="h-px w-16 bg-white/10" />
-            <button onClick={() => go(i + 1)} aria-label="下一个" className="font-display text-2xl text-bone-dim/85 transition hover:text-amber">›</button>
+            <button onClick={() => go(i + 1)} aria-label="下一个" className="font-display text-2xl text-bone-soft transition hover:text-amber">›</button>
           </div>
         </div>
       </div>

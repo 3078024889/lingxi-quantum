@@ -48,7 +48,7 @@ export default function SovereigntyWholenessArticle() {
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
           <div className="bg-reading-glass px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">思路 · The Thinking</p>
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">思路 · The Thinking</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
             <Bi zh="主权与完整：灵犀场修炼体系的思路" en="Sovereignty & Wholeness: The Thinking Behind Lingxi's Practices" />
           </h1>
@@ -56,32 +56,32 @@ export default function SovereigntyWholenessArticle() {
           <div className="mt-8 rounded-sm border border-lattice/20 bg-lattice/5 p-6">
             <p className="text-lg leading-9 text-bone">
               <Bi
-                zh="灵犀场的四项修炼技术，说到底围绕两个朴素的概念展开：主权，是为自己的状态负起第一责任；完整，是把平日里分散在各个角色、各种情绪里的自己，重新接回同一条线上。这两件事说起来简单，做起来却需要练习——这正是四项技术存在的原因。"
-                en="Lingxi's four practices ultimately revolve around two plain ideas: sovereignty — taking first responsibility for your own state; and wholeness — reconnecting the self scattered across different roles and emotions back onto one line. Simple to say, but they take practice — which is exactly why these four techniques exist."
+                zh="主权与完整，在灵犀场里不是两个励志口号，是同一件事的两面。主权，说的是你的意识是独一无二的——它有自己的经验轨迹，无法被归类、被复制、被谁替你定义。完整，说的是这个独一无二的你，同时连接着一切；你不是从整体里切出来的碎片，你是整体在这个位置上的一次完整表达。四项修炼技术之所以存在，是因为这件事知道没用，得练。"
+                en="Sovereignty and wholeness are not two slogans here; they are two faces of one thing. Sovereignty says your consciousness is singular — it carries its own trajectory of experience, and cannot be categorized, duplicated, or defined for you by anyone. Wholeness says that this singular you is simultaneously connected to everything: you are not a fragment cut out of the whole, you are the whole expressing itself completely at this position. The four practices exist because knowing this changes nothing. It has to be trained."
               />
             </p>
           </div>
 
           <div className="mt-10 space-y-6 text-lg leading-9 text-bone-dim">
-            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="两个概念，不是两套理论" en="Two ideas, not two theories" /></h2>
+            <h2 className="font-display text-2xl font-light text-bone"><Bi zh="为什么这两个词必须一起出现" en="Why these two words must arrive together" /></h2>
             <p>
               <Bi
-                zh="主权，不是要凌驾于谁之上，而是不再把自己的情绪和判断，交给外界随意摆布——遇到让你不舒服的事，第一反应不是「都是别人的错」，也不是「都是我不好」，而是先问自己：我现在，能为这件事做点什么。"
-                en="Sovereignty isn't about ruling over anyone — it's refusing to hand your emotions and judgment over to whatever the world throws at you. When something bothers you, the first move isn't 'it's all their fault' or 'it's all my fault,' but asking yourself: what can I actually do about this, right now."
+                zh="只讲主权，会滑向孤立——「我谁也不需要，我自己就够了」。那不是主权，那是把连接切断之后剩下的硬壳。只讲完整，会滑向消融——「我们都是一体的，个体不重要」。那也不是完整，那是把自己交出去之后剩下的顺从。两个词必须一起出现，因为真正的位置在它们之间：完全是自己，同时完全连着。分离与互联，是所有二元性的根，其余的对立都是从这一对长出来的。"
+                en="Sovereignty alone slides toward isolation — I need no one, I am enough by myself. That isn't sovereignty; that is the shell left after connection has been cut. Wholeness alone slides toward dissolution — we are all one, the individual doesn't matter. That isn't wholeness either; that is the compliance left after you've handed yourself away. The two words must arrive together, because the real position is between them: entirely yourself, and entirely connected. Separation and interconnection are the root duality; every other opposition grows out of that pair."
               />
             </p>
             <p>
               <Bi
-                zh="完整，说的是那种「我在不同场合像不同的人」的疲惫感，其实可以被松开——工作里高效冷静的你、深夜里emo脆弱的你、面对家人耐心又易怒的你，从来都不是几个互相矛盾的角色，只是同一个人，在不同光线下的样子。"
-                en="Wholeness speaks to that exhausting sense of being 'a different person in every setting.' It can be loosened — the efficient, composed you at work, the vulnerable you at 2am, the patient-yet-irritable you with family were never contradictory roles. They're the same person, seen under different light."
+                zh="这也解释了一件常被误会的事：分离不是错误，是人类的默认镜头。生存本身就要求分离——分清哪里是我、哪里不是我，否则活不下来。所以没有人需要为自己活在分离里感到羞愧。要做的不是消灭分离，是不再只有它一个镜头。四项技术练的正是这件事：让另一个镜头能被调用。"
+                en="This also clears up a common misreading: separation is not an error. It is the human default lens. Survival itself demands it — knowing where I end and where I don't, or you don't last long. So no one needs to feel ashamed of living inside separation. The work isn't to abolish it; it's to stop having only one lens available. That is precisely what the four practices train: making the other lens callable."
               />
             </p>
 
             <h2 className="font-display text-2xl font-light text-bone"><Bi zh="为什么从呼吸和心开始" en="Why start with breath and heart" /></h2>
             <p>
               <Bi
-                zh="呼吸和心跳，是少数几件从你出生那一刻起就没有停过、又能被意志直接触及的身体活动。练习从这里开始，不是因为它们神秘，而是因为它们随身携带、随时可用——不需要任何特殊场地或器材，这也是为什么灵犀场的四项技术，都从呼吸或心的感受入手。"
-                en="Breath and heartbeat are among the few bodily rhythms that have never once stopped since your birth, and that your will can still directly reach into. Practice begins here not because they're mysterious, but because they're always with you, always available — no special setting or equipment required. That's why all four of Lingxi's techniques begin with the breath or the felt sense of the heart."
+                zh="因为心不只是泵血的肌肉。在这个体系里，能量性的心是物质心脏的源头性模板——物质心脏分送氧气，能量心分送直觉性智能给心智。情感的速度比思想更快，最深远的体验编织在心的结构里，而不是思想的结构里。而呼吸，是唯一一件从出生到最后一刻都没停过、又能被意志直接触及的事——它随身携带，不需要场地、器材或相信任何东西。这就是为什么四项技术全部从这两处入手：一个是最诚实的通道，一个是随时可用的开关。"
+                en="Because the heart is not merely a muscle that pumps blood. In this system the energetic heart is the source template of the physical one: the physical heart distributes oxygen, the energetic heart distributes intuitive intelligence to the mind. Emotion moves faster than thought, and the deepest experiences are woven into the structure of the heart rather than the structure of thinking. Breath, meanwhile, is the one thing that has never stopped from birth to the final moment and that your will can reach directly — portable, requiring no place, no equipment, and no belief in anything. That is why all four practices begin at these two points: one is the most honest channel, the other the switch always within reach."
               />
             </p>
 

@@ -47,9 +47,9 @@ export default function PracticeChart({
         </div>
       </div>
 
-      <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/85">
+      <figcaption className="mt-4 text-center text-sm leading-7 text-bone-soft">
         {alt}
-        <span className="mt-1 block text-xs text-lattice/70">
+        <span className="mt-1 block text-xs text-lattice">
           长按（手机）或右键（电脑）即可保存这张练习图，随时查看
         </span>
       </figcaption>

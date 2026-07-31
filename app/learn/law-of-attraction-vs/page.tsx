@@ -11,8 +11,8 @@ const data: ArticleData = {
   slug: "law-of-attraction-vs",
   eyebrowZh: "显化 · 概念", eyebrowEn: "Manifestation · Concepts",
   titleZh: "显化和吸引力法则的区别", titleEn: "Manifestation vs. the Law of Attraction",
-  defZh: "吸引力法则，是一条原理——「同频相吸」，你持续关注与感受的东西，会把同频的现实吸引过来。显化，则是把意图变成现实的整个实践，它包含吸引力法则，但更完整：既包括调整内在状态（吸引），也包括清理旧信念、采取对齐的行动、以及放手信任。简单说：吸引力法则是「为什么」，显化是「怎么做」。",
-  defEn: "The law of attraction is a principle — 'like attracts like': what you consistently focus on and feel draws a matching reality toward you. Manifestation is the whole practice of turning intention into reality; it includes the law of attraction but is more complete: adjusting your inner state (attraction), clearing old beliefs, taking aligned action, and releasing into trust. In short: the law of attraction is the 'why,' manifestation is the 'how.'",
+  defZh: "吸引力法则常被说成一条宇宙定律：你关注什么，就吸引什么。更经得起推敲的说法是——你持续关注和感受的东西，会改变你注意到什么、怎么反应、身体处在什么准备状态；而这些，会实实在在地改变你遇到什么、抓不抓得住。\n\n这不是把它降级，反而解释了为什么它有时候灵、有时候不灵：机制作用在你身上，不作用在世界的分配规则上。这也解释了另一句老话——担心什么来什么。它和心想事成是同一套机制的两个方向，都是对齐的结果。\n\n显化则是完整的实践：既包括调整内在状态，也包括清理旧信念、采取对齐的行动、以及放下对结果的紧盯。简单说：吸引力法则解释了机制，显化是把机制真正走完的那条路。",
+  defEn: "The law of attraction is usually stated as a cosmic law: you attract what you focus on. A more defensible version: what you sustainedly attend to and feel changes what you notice, how you respond, and what state your body is prepared in — and those changes genuinely alter what you encounter and whether you can act on it.\n\nThis isn't a demotion. It explains why it sometimes seems to work and sometimes doesn't: the mechanism operates on you, not on the world's rules of allocation. It also explains the older saying that worry draws what it fears — that and intention drawing what it wants are two directions of one mechanism, both results of alignment.\n\nManifestation is the full practice: adjusting inner state, clearing old beliefs, taking aligned action, and loosening the grip on outcome. In short: the law of attraction names the mechanism; manifestation is walking it all the way through.",
   sections: [
     {
       hZh: "吸引力法则是什么", hEn: "What the law of attraction is",

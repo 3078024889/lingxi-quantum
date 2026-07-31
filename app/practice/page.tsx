@@ -40,7 +40,7 @@ export default function PracticeIndex() {
             <GateOrigin className="h-[440px] w-[440px]" />
           </div>
           <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="修炼技术" en="Practices" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
@@ -80,7 +80,7 @@ export default function PracticeIndex() {
                     <Bi zh={p.name} en={p.nameEn} />
                   </h2>
                   <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh={p.line} en={p.lineEn} /></p>
-                  <span className="mt-5 inline-block font-display text-xs uppercase tracking-widest2 text-lattice/70">
+                  <span className="mt-5 inline-block font-display text-xs uppercase tracking-widest2 text-lattice">
                     <Bi zh="进入 →" en="Enter →" />
                   </span>
                 </Link>

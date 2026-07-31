@@ -24,7 +24,7 @@ const GATES_FAQ: BilingualFaqItem[] = [
     aEn: "The subconscious isn't something to be erased — it holds your experiences, memories, emotions, and life history. Real change isn't deleting the past; it's rebuilding your relationship with yourself. Within Lingxi Field, you can gradually explore why certain things keep repeating, why you return to old patterns even when you want change, which inner beliefs are shaping your choices, and how to bring awareness, action, and the reality you want to create closer together. As the inner structure shifts, the way you choose, relate to others, and create in outer life may open new possibilities too.",
   },
   {
-    qZh: "重塑潜意识是不是改变命运？", qEn: "Is Rewrite the Subconscious about changing fate?",
+    qZh: "重塑潜意识是不是改变既定的人生？", qEn: "Is Rewrite the Subconscious about changing a fixed life?",
     aZh: "灵犀场不认为人的生命是一条固定轨道，它更相信生命是一场持续生成的过程——过去形成的模式会影响现在的倾向，但觉察，会创造新的选择空间。重塑潜意识不是替你决定未来，而是帮助你拿回更多主动权，当你开始看见自己，你才真正开始参与自己的生命创造。",
     aEn: "Lingxi Field doesn't see life as a fixed track — it holds life closer to an ongoing process of becoming. Patterns formed in the past shape present tendencies, but awareness creates new room to choose. Rewrite the Subconscious doesn't decide your future for you — it helps you reclaim more agency. Once you begin to see yourself, you truly begin to take part in creating your own life.",
   },
@@ -101,7 +101,7 @@ export default function Home() {
         <section id="gates" className="px-6 py-28 sm:py-36">
           <div className="mx-auto max-w-6xl">
             <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10 text-center">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="重 塑 潜 意 识" en="Rewrite the Subconscious" /></p>
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="重 塑 潜 意 识" en="Rewrite the Subconscious" /></p>
               <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="每一道阻碍，都是生命留下的一面镜子" en="Every obstacle is a mirror life has left behind" /></h2>
               <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-bone-dim"><Bi zh="它不是限制，它是在等待被理解——看见它，穿越它，重新选择。" en="It isn't a limitation. It's waiting to be understood — see it, move through it, choose again." /></p>
             </div>
@@ -113,7 +113,7 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,20,38,0.55)] via-[rgba(10,20,38,0.12)] to-transparent" />
                   </div>
                   <div className="absolute inset-x-0 bottom-0 p-7">
-                    <span className="font-display text-4xl text-lattice/70">{gate.glyph}</span>
+                    <span className="font-display text-4xl text-lattice">{gate.glyph}</span>
                     <h3 className="mt-1 font-display text-2xl text-bone"><Bi zh={gate.title} en={gate.titleEn} /></h3>
                     <p className="mt-3 text-sm leading-6 text-bone-dim"><Bi zh={gate.line} en={gate.lineEn} /></p>
                   </div>
@@ -161,7 +161,7 @@ export default function Home() {
         {/* 7. 显化 · 能量交换 */}
         <section className="px-6 py-28 sm:py-36">
           <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12 text-center">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80"><Bi zh="显化 · 能量交换" en="Manifestation · Energy Exchange" /></p>
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="显化 · 能量交换" en="Manifestation · Energy Exchange" /></p>
             <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl"><Bi zh="活在此版本中的你" en="Live as the you in this version" /></h2>
             <p className="mx-auto mt-8 max-w-xl text-base leading-9 text-bone-dim">
               <Bi

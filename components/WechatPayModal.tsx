@@ -163,7 +163,7 @@ export default function WechatPayModal({
         >
           ✕
         </button>
-        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="微信扫码支付" en="Scan with WeChat to Pay" />
         </p>
         <p className="mt-2 text-sm text-bone-dim">

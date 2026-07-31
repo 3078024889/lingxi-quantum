@@ -63,7 +63,7 @@ export default function ReportRow({
           onClick={() => setConfirming(true)}
           aria-label="删除这份报告"
           title="删除这份报告"
-          className="shrink-0 rounded-sm p-2 text-bone-dim/75 transition hover:bg-rose/10 hover:text-rose"
+          className="shrink-0 rounded-sm p-2 text-bone-soft transition hover:bg-rose/10 hover:text-rose"
         >
           {/* 删除图标——线条极简的垃圾桶，颜色跟在场域背景光里的其他
              图标一样，默认是低调的暗色，只有hover时才提示"危险动作" */}

@@ -51,11 +51,11 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
       <div className="flex flex-1 flex-col justify-between p-6">
         <div>
           <div className="flex items-center justify-between">
-            <span className="font-display text-[11px] uppercase tracking-widest2 text-lattice/70">
+            <span className="font-display text-[11px] uppercase tracking-widest2 text-lattice">
               <Bi zh={catZh} en={catEn} />
             </span>
             {n.status === "soon" && (
-              <span className="rounded-sm border border-white/15 px-2 py-0.5 font-display text-[11px] uppercase tracking-widest2 text-bone-dim/82">
+              <span className="rounded-sm border border-white/15 px-2 py-0.5 font-display text-[11px] uppercase tracking-widest2 text-bone-soft">
                 <Bi zh="创作中" en="Coming" />
               </span>
             )}
@@ -68,7 +68,7 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
           </p>
         </div>
         <p className="mt-4 flex items-center justify-between border-t border-white/5 pt-4 font-display text-xs uppercase tracking-widest2">
-          <span className={n.status === "soon" ? "text-bone-dim/75" : "text-amber"}>
+          <span className={n.status === "soon" ? "text-bone-soft" : "text-amber"}>
             {n.status === "soon" ? (
               <Bi zh="即将开放" en="Opening soon" />
             ) : (
@@ -77,7 +77,7 @@ function ArticleCard({ n, catZh, catEn }: { n: Narrative; catZh: string; catEn: 
               </>
             )}
           </span>
-          <span className="text-lattice/70 transition group-hover:translate-x-1">
+          <span className="text-lattice transition group-hover:translate-x-1">
             <Bi zh="进入 →" en="Enter →" />
           </span>
         </p>
@@ -134,7 +134,7 @@ export default function CategoryGrid() {
               </div>
             )}
             {isOpen && cat.soon && (
-              <p className="border-t border-white/10 bg-void p-8 text-center text-sm text-bone-dim/85">
+              <p className="border-t border-white/10 bg-void p-8 text-center text-sm text-bone-soft">
                 <Bi zh="档案整理中 · 即将开放" en="Archive in preparation · opening soon" />
               </p>
             )}

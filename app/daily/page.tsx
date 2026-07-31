@@ -36,7 +36,7 @@ export default function DailyIndexPage() {
       <main className="pt-24">
         <div className="mx-auto max-w-2xl px-6 py-16 text-center">
           <div className="lx-glass p-6 sm:p-8">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
               <Bi zh="灵犀 · 今日运势潮汐" en="Lingxi · Daily Fortune Tide" />
             </p>
             <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">

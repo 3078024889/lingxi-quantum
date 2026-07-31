@@ -142,7 +142,7 @@ export default function AskLingxi() {
 
       {!loading && history.length > 0 && (
         <div className="mt-10 space-y-6">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             {t("与灵犀场的对话", "Conversations with Lingxi")}
           </p>
           {history.map((qa, i) => (

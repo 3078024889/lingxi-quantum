@@ -109,7 +109,7 @@ export default function LoginForm() {
 
       {error && <p className="text-sm text-rose">{error}</p>}
 
-      <p className="pt-2 text-center text-xs leading-6 text-bone-dim/82">
+      <p className="pt-2 text-center text-xs leading-6 text-bone-soft">
         <span data-lang="zh">
           {mode === "signin"
             ? "首次使用？点上方「注册」创建你的场域账户。"

@@ -100,7 +100,7 @@ export default function Nav() {
                   href={l.href}
                   className={`group relative flex items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${active ? "text-lattice" : ""}`}
                 >
-                  <RuneIcon kind={l.rune} className={`h-3.5 w-3.5 ${active ? "text-lattice" : "text-bone-dim/85"} transition group-hover:text-lattice`} />
+                  <RuneIcon kind={l.rune} className={`h-3.5 w-3.5 ${active ? "text-lattice" : "text-bone-soft"} transition group-hover:text-lattice`} />
                   <Bi zh={l.zh} en={l.en} />
                   {active && (
                     <span
@@ -124,7 +124,7 @@ export default function Nav() {
                     onClick={() => setTestsOpen((v) => !v)}
                     className={`group flex items-center gap-1.5 whitespace-nowrap pb-1 transition hover:text-lattice ${testsActive ? "text-lattice" : ""}`}
                   >
-                    <RuneIcon kind="mandala" className={`h-3.5 w-3.5 ${testsActive ? "text-lattice" : "text-bone-dim/85"} transition group-hover:text-lattice`} />
+                    <RuneIcon kind="mandala" className={`h-3.5 w-3.5 ${testsActive ? "text-lattice" : "text-bone-soft"} transition group-hover:text-lattice`} />
                     <Bi zh="场域精测" en="Precision Tests" />
                     <svg viewBox="0 0 12 8" className={`h-2 w-2.5 transition ${testsOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="1.4">
                       <path d="M1 1.5 6 6.5 11 1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -141,7 +141,7 @@ export default function Nav() {
                     <div className="bg-void-deep absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-sm border border-white/10 p-2 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
                       {preciseTests.map((item) =>
                         item.soon ? (
-                          <div key={item.zh} className="flex cursor-not-allowed items-center justify-between gap-2 rounded-sm px-3 py-2.5 text-bone-dim/75">
+                          <div key={item.zh} className="flex cursor-not-allowed items-center justify-between gap-2 rounded-sm px-3 py-2.5 text-bone-soft">
                             <span className="flex items-center gap-2">
                               <RuneIcon kind={item.rune} className="h-3.5 w-3.5" />
                               <Bi zh={item.zh} en={item.en} />
@@ -184,14 +184,14 @@ export default function Nav() {
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 border-b border-white/5 py-3 text-base text-bone transition hover:text-lattice"
               >
-                <RuneIcon kind={l.rune} className="h-4 w-4 text-lattice/70" />
+                <RuneIcon kind={l.rune} className="h-4 w-4 text-lattice" />
                 <Bi zh={l.zh} en={l.en} />
               </Link>
             ))}
-            <p className="pt-3 text-xs uppercase tracking-widest2 text-bone-dim/78"><Bi zh="场域精测" en="Precision Tests" /></p>
+            <p className="pt-3 text-xs uppercase tracking-widest2 text-bone-soft"><Bi zh="场域精测" en="Precision Tests" /></p>
             {preciseTests.map((item) =>
               item.soon ? (
-                <div key={item.zh} className="flex items-center justify-between gap-3 border-b border-white/5 py-3 text-base text-bone-dim/75">
+                <div key={item.zh} className="flex items-center justify-between gap-3 border-b border-white/5 py-3 text-base text-bone-soft">
                   <span className="flex items-center gap-3">
                     <RuneIcon kind={item.rune} className="h-4 w-4" />
                     <Bi zh={item.zh} en={item.en} />
@@ -205,7 +205,7 @@ export default function Nav() {
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 border-b border-white/5 py-3 text-base text-bone transition hover:text-lattice"
                 >
-                  <RuneIcon kind={item.rune} className="h-4 w-4 text-lattice/70" />
+                  <RuneIcon kind={item.rune} className="h-4 w-4 text-lattice" />
                   <Bi zh={item.zh} en={item.en} />
                 </Link>
               )
@@ -217,7 +217,7 @@ export default function Nav() {
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 border-b border-white/5 py-3 text-base text-bone transition hover:text-lattice"
               >
-                <RuneIcon kind={l.rune} className="h-4 w-4 text-lattice/70" />
+                <RuneIcon kind={l.rune} className="h-4 w-4 text-lattice" />
                 <Bi zh={l.zh} en={l.en} />
               </Link>
             ))}

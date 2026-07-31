@@ -27,7 +27,9 @@
             "en": "A snake arriving inside calm is a less common pairing. It tends to show up after someone has been living alongside something intense for a while — no longer fighting it, no longer pretending it isn't there. This kind of dream is usually not a prompt but a confirmation: you can be in the same room with it now."
           }
         }
-      ]
+      ],
+      "coreZh": "蛇在灵犀场里代表的不是吉凶，是一股尚未被命名的生命力——可能是蜕变，也可能是被压住很久的什么，取决于你遇见它时站在哪里。",
+      "coreEn": "In this field a snake stands for neither fortune nor warning, but for a life-force not yet named — it may be a shedding, or something long pressed down, depending on where you stood when you met it."
     },
     {
       "id": "dream.sym.falling",
@@ -49,7 +51,9 @@
             "en": "Falling without panic — even with some ease in it — is a pairing worth noticing. It often comes just after someone has set down something they'd been holding up with effort. The weightlessness in the dream corresponds to a sentence not yet said out loud: I'm not carrying this anymore."
           }
         }
-      ]
+      ],
+      "coreZh": "坠落说的是支撑感，不是失败。梦里失重的那一刻，对应的是现实里某个你还没踩到底的地方。",
+      "coreEn": "Falling speaks about support, not failure. The weightless moment corresponds to somewhere in waking life where you haven't yet touched the floor."
     },
     {
       "id": "dream.sym.home",
@@ -71,7 +75,9 @@
             "en": "Returning to an old house and finding it off — rooms changed, no way out, someone present who shouldn't be — often appears while someone is re-understanding a past stretch of their life. The wrongness isn't a problem; it's progress. It means the angle you see it from now is no longer the angle you had then."
           }
         }
-      ]
+      ],
+      "coreZh": "老房子在梦里往往不是地方，是人的结构——房间是分区，门是选择，回去是重新查看某一部分自己。",
+      "coreEn": "An old house in a dream is usually not a place but a person's structure — rooms are compartments, doors are choices, returning is re-examining a part of yourself."
     },
     {
       "id": "dream.sym.water",
@@ -93,7 +99,9 @@
             "en": "Water that presses in — rising too fast, bottomless, or leaving you unable to move — usually relates to emotional volume outpacing your current rate of processing. Note that this is about rate, not capacity. The same amount of water arriving slowly is a river; arriving at once, it's a flood. So what usually needs adjusting isn't how much you can take. It's the pace."
           }
         }
-      ]
+      ],
+      "coreZh": "水直接映射情绪状态。清浊、深浅、动静都是信息，其中最关键的是量和速度的关系。",
+      "coreEn": "Water maps directly onto emotional state. Clarity, depth and motion all carry information — the most telling being the relation between volume and rate."
     }
   ]
 }

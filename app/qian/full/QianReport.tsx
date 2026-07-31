@@ -163,7 +163,7 @@ export default function QianReport({ id }: { id: string }) {
         <div className="rounded-sm border border-lattice/25 bg-void-deep px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
           <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命原型档案，第一次生成需要一点时间……", "The field is unfolding your full life archetype blueprint — the first generation takes a little while…")}</p>
-          <p className="mt-3 text-xs text-bone-dim/82">{t("若长时间没有反应，按 F5 刷新一下页面即可，不会影响已经生成的内容。", "If nothing happens for a while, press F5 to refresh — this won't affect anything already generated.")}</p>
+          <p className="mt-3 text-xs text-bone-soft">{t("若长时间没有反应，按 F5 刷新一下页面即可，不会影响已经生成的内容。", "If nothing happens for a while, press F5 to refresh — this won't affect anything already generated.")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
@@ -211,7 +211,7 @@ export default function QianReport({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-6 py-4">
-        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀生命灵签 · 生命原型档案" en="Lingxi Life Oracle · Personal Life Archetype Blueprint" />
         </p>
         <button
@@ -230,13 +230,13 @@ export default function QianReport({ id }: { id: string }) {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
-        <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice/70">
+        <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice">
           LINGXI LIFE ORACLE
         </p>
         <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
           {name || t("你的", "Your")} <Bi zh="生命原型档案" en="Life Archetype Blueprint" />
         </h1>
-        <p className="mt-1 font-display text-sm text-lattice/80">
+        <p className="mt-1 font-display text-sm text-lattice">
           <Bi zh="灵犀生命灵签 · 生命原型档案" en="Lingxi Life Oracle · Personal Life Archetype Blueprint" />
         </p>
         <p className="mt-4 text-sm leading-7 text-bone-dim">
@@ -264,10 +264,10 @@ export default function QianReport({ id }: { id: string }) {
           ))}
         </div>
 
-        <p className="mt-8 text-xs text-bone-dim/82">
+        <p className="mt-8 text-xs text-bone-soft">
           {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
         </p>
-        <p className="mt-1 text-xs text-bone-dim/82">lingxifield.com</p>
+        <p className="mt-1 text-xs text-bone-soft">lingxifield.com</p>
       </div>
 
       {(lifeStage || abilityMap.length > 0) && (
@@ -290,7 +290,7 @@ export default function QianReport({ id }: { id: string }) {
           )}
           {abilityMap.length > 0 && (
             <div className="mt-5 space-y-3 border-t border-white/10 pt-5">
-              <p className="text-xs uppercase tracking-widest2 text-lattice/70">
+              <p className="text-xs uppercase tracking-widest2 text-lattice">
                 <Bi zh="天赋能力地图" en="Talent & Ability Map" />
               </p>
               {abilityMap.map((a) => (
@@ -327,7 +327,7 @@ export default function QianReport({ id }: { id: string }) {
             sections[idx] ? (
               <div key={idx} className={idx !== group.indices[0] ? "mt-6 border-t border-white/10 pt-5" : ""}>
                 {LAYER_TITLES[idx] && (
-                  <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+                  <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">
                     <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
                   </p>
                 )}
@@ -344,7 +344,7 @@ export default function QianReport({ id }: { id: string }) {
           style={{ backgroundColor: "#0d0d1a", backgroundImage: "linear-gradient(rgba(13,13,26,0.82), rgba(13,13,26,0.82)), url(/images/qian-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           {LAYER_TITLES[sections.length - 1] && (
-            <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice/70">
+            <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">
               <Bi zh={LAYER_TITLES[sections.length - 1].zh} en={LAYER_TITLES[sections.length - 1].en} />
             </p>
           )}
@@ -359,7 +359,7 @@ export default function QianReport({ id }: { id: string }) {
       </div>
 
       <div className="mt-6 flex flex-col items-center gap-3 rounded-sm border border-white/10 bg-void-deep px-6 py-4 text-center">
-        <p className="text-xs text-bone-dim/82">
+        <p className="text-xs text-bone-soft">
           <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
         </p>
         <ShareButton

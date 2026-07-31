@@ -40,7 +40,7 @@ export default async function LiveAsPage() {
         <section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25"><CosmicField className="h-full w-auto" /></div>
           <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="显化与梦境解读" en="Manifestation & Dream Interpretation" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">

@@ -175,7 +175,7 @@ export default async function AccountPage() {
           {user ? (
             <>
               <div className="bg-void-deep w-full rounded-sm px-8 py-10">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
                 <Bi zh="你已连接至场域" en="You are connected to the field" />
               </p>
               <h1 className="mt-6 font-display text-4xl font-light text-bone">
@@ -335,7 +335,7 @@ export default async function AccountPage() {
           ) : (
             <>
               <div className="bg-void-deep w-full rounded-sm px-8 py-10">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
                 <Bi zh="进入场域" en="Enter the field" />
               </p>
               <h1 className="mt-6 font-display text-4xl font-light text-bone">

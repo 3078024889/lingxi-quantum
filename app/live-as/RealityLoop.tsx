@@ -136,7 +136,7 @@ export default function RealityLoop() {
           <p className="text-sm text-bone-dim">{t("已签到","Checked in")}</p>
           <p className="font-display text-3xl text-lattice">{streak}{t(" 天"," days")}</p>
         </div>
-        <p className="max-w-xs text-right text-sm leading-6 text-bone-dim/90">
+        <p className="max-w-xs text-right text-sm leading-6 text-bone-dim">
           {t("每天重复，保持对齐。显化与时间无关，与对齐相关。","Repeat daily, stay aligned. Manifestation has nothing to do with time and everything to do with alignment.")}
         </p>
       </div>

@@ -349,12 +349,16 @@ function CheckoutInner() {
       <h1 className="font-display text-2xl font-light text-bone">
         <Bi zh="场域订单" en="Field Order" />
       </h1>
-      <p className="mt-1 text-xs text-bone-dim/70">
+      <p className="mt-1 text-xs text-bone-mute">
         <Bi zh="确认这次能量交换的内容，无误后再提交支付" en="Confirm this exchange before you submit payment" />
       </p>
 
       {status === "loading" && (
-        <p className="mt-10 text-center text-sm text-bone-dim"><Bi zh="正在生成场域订单……" en="Creating your field order…" /></p>
+        // v274：等待态也要有框。之前这里是一段裸文字浮在极光背景上，
+        // 跟前后都有玻璃面板的页面割裂，看起来像页面坏了。
+        <div className="lx-glass mt-10 p-8 text-center">
+          <p className="text-sm text-bone-soft"><Bi zh="正在生成场域订单……" en="Creating your field order…" /></p>
+        </div>
       )}
 
       {(status === "review" || status === "waiting") && (
@@ -367,10 +371,10 @@ function CheckoutInner() {
               不套用淘宝的白底样式。 */}
           <div className="mt-6 overflow-hidden rounded-sm border border-white/10 bg-void-deep/80 backdrop-blur-sm">
             <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-5 py-3">
-              <p className="text-[11px] uppercase tracking-widest2 text-bone-dim/60">
+              <p className="text-[11px] uppercase tracking-widest2 text-bone-mute">
                 <Bi zh="场域订单号" en="Field Order No." /> {orderIdRef.current}
               </p>
-              <p className="text-[11px] uppercase tracking-widest2 text-lattice/70">
+              <p className="text-[11px] uppercase tracking-widest2 text-lattice">
                 <Bi zh="待支付" en="Pending" />
               </p>
             </div>
@@ -400,7 +404,7 @@ function CheckoutInner() {
                   </p>
                 )}
                 {product.type === "permanent" && (
-                  <p className="mt-1 text-xs text-lattice/80">
+                  <p className="mt-1 text-xs text-lattice">
                     <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
                   </p>
                 )}
@@ -412,7 +416,7 @@ function CheckoutInner() {
                 描述，这里单独用一个小标题把它摆出来，让它在付款前就是
                 看得见的承诺，不是买完才知道。 */}
             <div className="border-t border-white/10 px-5 py-3">
-              <p className="text-xs uppercase tracking-widest2 text-bone-dim/60">
+              <p className="text-xs uppercase tracking-widest2 text-bone-mute">
                 <Bi zh="本次交换包含" en="This Exchange Includes" />
               </p>
               <p className="mt-1.5 text-xs leading-6 text-bone-dim">
@@ -441,7 +445,7 @@ function CheckoutInner() {
               <div className="rounded-sm border border-lattice bg-lattice/10 p-4 text-center text-lattice">
                 <p className="font-display text-sm"><Bi zh="✓ 微信支付" en="✓ WeChat Pay" /></p>
               </div>
-              <div className="cursor-not-allowed rounded-sm border border-white/10 p-4 text-center text-bone-dim/40">
+              <div className="cursor-not-allowed rounded-sm border border-white/10 p-4 text-center text-bone-mute">
                 <p className="font-display text-sm"><Bi zh="支付宝" en="Alipay" /></p>
                 <p className="mt-1 text-[10px] uppercase tracking-widest2"><Bi zh="即将上线" en="Coming Soon" /></p>
               </div>
@@ -458,7 +462,7 @@ function CheckoutInner() {
           )}
 
           {status === "waiting" && jsapiParamsRef.current && (
-            <div className="mt-8 text-center">
+            <div className="lx-glass mt-8 p-6 text-center">
               <p className="text-sm leading-6 text-bone">
                 <Bi zh="正在唤起微信支付……如果没有自动弹出，请稍等或返回重试" en="Opening WeChat Pay… if nothing pops up, please wait or try again" />
               </p>
@@ -507,7 +511,7 @@ function CheckoutInner() {
       )}
 
       {status === "success" && (
-        <div className="mt-10 text-center">
+        <div className="lx-glass mt-10 p-8 text-center">
           <p className="font-display text-2xl text-lattice">✓</p>
           <p className="mt-3 text-sm text-bone"><Bi zh="能量交换完成" en="Exchange complete" /></p>
           <p className="mt-3 text-xs leading-6 text-bone-dim">

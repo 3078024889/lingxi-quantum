@@ -85,7 +85,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
             onClick={enter}
             className="lx-enter-btn group relative z-10 flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-full border border-lattice/40 bg-void/70 backdrop-blur-sm transition hover:border-lattice/70"
           >
-            <span className="font-display text-2xl text-lattice/70 transition group-hover:text-lattice">✦</span>
+            <span className="font-display text-2xl text-lattice transition group-hover:text-lattice">✦</span>
             <span className="px-2 text-center font-display text-[11px] uppercase tracking-widest2 text-bone-dim">
               <Bi zh="进入灵犀场" en="Enter the Field" />
             </span>
@@ -109,7 +109,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
             {/* 中心核心——先是一个小光点，凝结阶段开始放大发光，为卡牌浮现做铺垫 */}
             <span className={`lx-core absolute rounded-full bg-white ${stage === "condensing" ? "lx-core-grow" : ""}`} />
             {stage === "condensing" && (
-              <p className="absolute bottom-0 font-display text-xs tracking-widest2 text-lattice/80">
+              <p className="absolute bottom-0 font-display text-xs tracking-widest2 text-lattice">
                 <Bi zh="一个象征正在浮现……" en="A symbol is emerging…" />
               </p>
             )}
@@ -153,7 +153,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
         <p className="font-display text-xl text-bone">
           <Bi zh={card.nameZh} en={card.nameEn} />
         </p>
-        <p className="mt-1 text-xs text-lattice/70">
+        <p className="mt-1 text-xs text-lattice">
           <Bi zh={card.keywordsZh} en={card.keywordsEn} />
         </p>
       </div>

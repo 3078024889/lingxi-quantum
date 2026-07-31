@@ -74,7 +74,7 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
         placeholder={t("姓名（或称呼，必填）", "Name (or however you refer to them) *")}
         className="mt-4 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-sm text-bone outline-none focus:border-lattice/60"
       />
-      <p className="mt-3 text-xs text-bone-dim/82">{t("出生年月日（必填）", "Birth date (required)")}</p>
+      <p className="mt-3 text-xs text-bone-soft">{t("出生年月日（必填）", "Birth date (required)")}</p>
       <div className="mt-1.5 grid grid-cols-3 gap-2">
         <input value={person.year} onChange={(e) => setPerson({ ...person, year: e.target.value })} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
         <input value={person.month} onChange={(e) => setPerson({ ...person, month: e.target.value })} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -273,7 +273,7 @@ export default function RelationshipFlow() {
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
-      <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+      <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
         <Bi zh="灵犀场 · 关系共振图谱" en="Lingxi Field · Relationship Resonance Map" />
       </p>
       <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
@@ -359,7 +359,7 @@ export default function RelationshipFlow() {
           <p className="text-center font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh={`${a.name} × ${b.name} · ${TYPE_COPY[relationshipType].previewLabel.zh}`} en={`${a.name} × ${b.name} · ${TYPE_COPY[relationshipType].previewLabel.en}`} />
           </p>
-          <p className="mt-2 text-center text-xs text-bone-dim/85">
+          <p className="mt-2 text-center text-xs text-bone-soft">
             <Bi zh={`太阳星座：${preview.sunSignA} × ${preview.sunSignB}`} en={`Sun Signs: ${preview.sunSignAEn} × ${preview.sunSignBEn}`} />
           </p>
 
@@ -369,7 +369,7 @@ export default function RelationshipFlow() {
               <div className="mt-3 space-y-2">
                 {preview.resonance.resonant.map((r, i) => (
                   <p key={i} className="text-sm text-bone-dim">
-                    <Bi zh={r.labelZh} en={r.labelEn} /> <span className="text-bone-dim/70">({r.a} / {r.b})</span>
+                    <Bi zh={r.labelZh} en={r.labelEn} /> <span className="text-bone-mute">({r.a} / {r.b})</span>
                   </p>
                 ))}
               </div>
@@ -400,7 +400,7 @@ export default function RelationshipFlow() {
             </div>
           )}
 
-          <p className="mt-6 text-center text-xs leading-6 text-bone-dim/85">
+          <p className="mt-6 text-center text-xs leading-6 text-bone-soft">
             <Bi
               zh="这只是数值本身——为什么会共鸣、这段互补具体怎么发挥作用、摩擦点要怎么面对，完整报告会逐一写清楚。"
               en="These are just the raw numbers — why the resonance forms, how the complementarity actually plays out, how to work with the friction: the full report unpacks all of it."
@@ -431,7 +431,7 @@ export default function RelationshipFlow() {
         </div>
       )}
       <div className="lx-glass mt-3 p-3 text-center">
-        <p className="text-sm text-bone-dim/90">
+        <p className="text-sm text-bone-dim">
           <Bi zh="一次能量交换，为你和对方生成一份完整的关系共振图谱，保存在你的场域入口里，随时可以回看、下载。" en="One energy exchange generates a full Relationship Resonance Map for you and the other person, saved in your field entrance — revisit or download it anytime." />
         </p>
       </div>

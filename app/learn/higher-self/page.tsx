@@ -11,18 +11,18 @@ const data: ArticleData = {
   slug: "higher-self",
   eyebrowZh: "体系 · 高我", eyebrowEn: "The System · Higher Self",
   titleZh: "什么是高我？如何与高我连接", titleEn: "What Is the Higher Self, and How to Connect",
-  defZh: "高我，是你更深、更智慧、与本源相连的那部分意识——它超越日常的恐惧与念头，知道你真正是谁、真正想要什么。与高我连接，不是向外寻找某个神明，而是向内安静下来，听见那个一直都在的、更清明的自己。",
-  defEn: "The higher self is the deeper, wiser part of your consciousness connected to Source — beyond daily fears and thoughts, it knows who you truly are and what you truly want. Connecting with it isn't seeking some external deity, but growing quiet within and hearing the clearer self that has always been there.",
+  defZh: "在灵犀场的语境里，高我不是一个住在你上面、需要你去够到的更高存在。它就是你——是你不被割裂时的那个状态。日常里之所以感觉不到它，不是因为它在远处，是因为注意力被分散在各个角色、各种应付里，那条线断成了几截。所谓与高我连接，其实是把断掉的线接回来，不是向上攀附什么。",
+  defEn: "In this field, the higher self is not a loftier being living above you that you must reach up to. It is you — you in the state of not being split. The reason it seems absent day to day isn't distance; it's that attention has been scattered across roles and coping, and the line has broken into segments. What is called connecting with the higher self is really reconnecting that line, not climbing toward something.",
   sections: [
     {
-      hZh: "高我与小我的区别", hEn: "Higher self vs. the ego",
-      pZh: "小我（日常自我）由恐惧、比较、生存焦虑驱动，声音急促而响亮；高我的声音通常安静、平和、笃定，不带恐慌。一个简单的辨别法：让你收缩、恐惧、急于证明的，多来自小我；让你扩展、平静、回到爱的，多来自高我。",
-      pEn: "The ego (everyday self) is driven by fear, comparison, and survival anxiety — its voice is urgent and loud; the higher self's voice is usually quiet, peaceful, and certain, without panic. A simple test: what makes you contract, fear, and rush to prove yourself tends to come from the ego; what makes you expand, settle, and return to love tends to come from the higher self.",
+      hZh: "「更高的我」这个说法，容易造成一个误会", hEn: "Where the phrase 'higher self' misleads",
+      pZh: "把自己分成「高我」和「小我」，然后想办法站到高的那一边——这个做法本身，正是分离在起作用。那个焦虑的、比较的、急于证明的部分，不是需要被打败的敌人，它是你在长期不安全里长出来的生存机制，它保护过你。跟它对立，等于跟自己内战，而内战最消耗的恰恰是你想拿回的那份完整。更接近事实的说法是：不是有两个你，是同一个你，有时候连着，有时候断着。",
+      pEn: "Splitting yourself into a 'higher' self and a 'lower' one, then trying to stand on the higher side — that move is separation at work. The anxious, comparing, proving part is not an enemy to be defeated; it is a survival mechanism grown in a long stretch of unsafety, and it protected you. Opposing it means civil war with yourself, and civil war costs precisely the wholeness you were trying to recover. Closer to the fact: there are not two of you. There is one you, sometimes connected, sometimes cut.",
     },
     {
       hZh: "如何连接高我", hEn: "How to connect",
-      pZh: "1) 安静：冥想、独处、亲近自然，降低头脑的噪音。2) 回到心：把注意力从思考移到心的感受。3) 留意直觉：那些不带恐惧、反复出现的「轻声指引」。4) 提问与书写：写下一个问题，然后凭直觉自由书写答案。5) 信任：连接不是一次惊天的体验，而是日复一日越来越熟悉那份内在的清明。",
-      pEn: "1) Quiet: meditation, solitude, time in nature lower the mind's noise. 2) Return to the heart: move attention from thinking to the heart's feeling. 3) Notice intuition: those fear-free, recurring 'quiet nudges.' 4) Ask and write: write a question, then free-write the answer from intuition. 5) Trust: connection isn't one dramatic experience but growing more familiar, day by day, with that inner clarity.",
+      pZh: "顺序很重要，跳过第一步，后面都会失真。一、先清：心里有压力和迷雾的时候，你以为听见的那个声音，很可能是折射过的——恐惧会扮成直觉，惯性会扮成渴望。所以先从呼吸开始，它不需要你相信任何东西，身体先静下来，折射就会减少。二、再听：心清之后，直觉不是求来的，是自然呈现的——你不是想出答案，是忽然就知道了。三、再行：把它带进一个具体的选择里，哪怕很小。听见而不动，线还是断的。\n\n注意一个常见陷阱：很多说法教人用「让你扩展的就是高我，让你收缩的就是小我」来分辨。这个方法在心清的时候有效，在心浊的时候会反过来害你——它会让人把合理的警觉当成小我甩掉。清是前提，不是可选项。",
+      pEn: "The order matters; skip the first step and everything after it distorts. First, clear. When there is pressure and fog in the heart, the voice you think you hear is likely refracted — fear can pass for intuition, habit for longing. So begin with breath: it asks you to believe nothing, the body quiets, and the refraction lessens. Second, listen. Once clear, intuition isn't sought but simply appears — you don't work out the answer, you suddenly know it. Third, act. Carry it into one concrete choice, however small. Hearing without moving leaves the line still cut.\n\nOne common trap: many teachings offer 'what expands you is the higher self, what contracts you is the ego' as a test. It works when the heart is clear and turns against you when it isn't — it will have people discard legitimate caution as 'ego.' Clarity is the prerequisite, not an option.",
     },
     {
       hZh: "连接之后", hEn: "After you connect",

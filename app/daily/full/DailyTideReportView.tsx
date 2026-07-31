@@ -158,7 +158,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-6 py-4">
-        <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀场 · 生命韧性档案" en="Lingxi Field · Life Resilience Archive" />
         </p>
         <button

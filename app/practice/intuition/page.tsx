@@ -23,7 +23,7 @@ export default async function IntuitionPage() {
             <GateMind className="h-[420px] w-[420px]" />
           </div>
           <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="修炼技术" en="Practice" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
@@ -41,7 +41,7 @@ export default async function IntuitionPage() {
         <section className="px-6 py-16">
           <div className="bg-reading-glass mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
             <div>
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
               <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>
               <p className="mt-6">
                 <Bi
@@ -130,7 +130,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="二 · 内在声音与直觉丹道" en="II · The Inner Voice and Intuitive Alchemy" /></p>
+              <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="二 · 内在声音与直觉丹道" en="II · The Inner Voice and Intuitive Alchemy" /></p>
               <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="心是什么" en="What the heart is" /></h2>
               <p className="mt-6">
                 <Bi
@@ -188,7 +188,7 @@ export default async function IntuitionPage() {
               <div className="rounded-sm border border-white/10 bg-void">
                 <IntuitionDiagram className="w-full" />
               </div>
-              <figcaption className="mt-4 text-center text-sm leading-7 text-bone-dim/85">
+              <figcaption className="mt-4 text-center text-sm leading-7 text-bone-soft">
                 <Bi zh="直觉丹道的练习路径：从心之光的投射出发，穿过情感历史的重铸，抵达光之细丝的连接。" en="The practice path of The Intuitive Way: from the projection of the heart's light, through the recasting of emotional history, to the connection of filaments of light." />
               </figcaption>
             </figure>

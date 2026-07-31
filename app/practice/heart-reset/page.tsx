@@ -22,7 +22,7 @@ export default async function HeartResetPage() {
             <GateHealth className="h-[420px] w-[420px]" />
           </div>
           <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="修炼技术" en="Practice" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">

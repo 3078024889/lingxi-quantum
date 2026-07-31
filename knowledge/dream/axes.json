@@ -1,0 +1,126 @@
+{
+  "_comment": "72变架构：8情绪相 × 9场域位 = 72。取法《易经》八卦相重之理——不是硬写72段，是两轴各自成义，交而生变。轴本身只有17段基底，但组合出72种读法。每一格还可以有手写override（见 overrides.json），相当于64卦各有卦辞。",
+  "emotions": [
+    {
+      "key": "curiosity",
+      "zh": "好奇",
+      "en": "curiosity",
+      "stanceZh": "正在靠近，尚未命名",
+      "stanceEn": "approaching, not yet named"
+    },
+    {
+      "key": "fear",
+      "zh": "恐惧",
+      "en": "fear",
+      "stanceZh": "知道它在，一直绕开",
+      "stanceEn": "known, and walked around"
+    },
+    {
+      "key": "calm",
+      "zh": "平静",
+      "en": "calm",
+      "stanceZh": "已能共处，不再对抗",
+      "stanceEn": "able to coexist, no longer fighting"
+    },
+    {
+      "key": "grief",
+      "zh": "哀伤",
+      "en": "grief",
+      "stanceZh": "正在承认失去",
+      "stanceEn": "acknowledging a loss"
+    },
+    {
+      "key": "anger",
+      "zh": "愤怒",
+      "en": "anger",
+      "stanceZh": "边界被越过了，而且知道",
+      "stanceEn": "a boundary crossed, and known to be"
+    },
+    {
+      "key": "longing",
+      "zh": "想念",
+      "en": "longing",
+      "stanceZh": "有一部分被留在了别处",
+      "stanceEn": "a part left somewhere else"
+    },
+    {
+      "key": "unease",
+      "zh": "不安",
+      "en": "unease",
+      "stanceZh": "有东西不对，但说不出哪里",
+      "stanceEn": "something off, location unknown"
+    },
+    {
+      "key": "relief",
+      "zh": "松弛",
+      "en": "relief",
+      "stanceZh": "刚刚放下了一直扛着的",
+      "stanceEn": "just set down what was being carried"
+    }
+  ],
+  "positions": [
+    {
+      "key": "origin",
+      "zh": "起处",
+      "en": "origin",
+      "stanceZh": "刚刚开始，还没有形状",
+      "stanceEn": "just begun, without shape yet"
+    },
+    {
+      "key": "approach",
+      "zh": "近处",
+      "en": "approach",
+      "stanceZh": "已经能看见，还没有碰到",
+      "stanceEn": "visible, not yet touched"
+    },
+    {
+      "key": "threshold",
+      "zh": "门处",
+      "en": "threshold",
+      "stanceZh": "站在要不要进去的位置",
+      "stanceEn": "standing at whether to enter"
+    },
+    {
+      "key": "inside",
+      "zh": "内处",
+      "en": "inside",
+      "stanceZh": "已经在里面了",
+      "stanceEn": "already inside"
+    },
+    {
+      "key": "depth",
+      "zh": "深处",
+      "en": "depth",
+      "stanceZh": "比想象的更深，还在往下",
+      "stanceEn": "deeper than expected, still going"
+    },
+    {
+      "key": "turn",
+      "zh": "转处",
+      "en": "turn",
+      "stanceZh": "方向正在改变",
+      "stanceEn": "direction is changing"
+    },
+    {
+      "key": "return",
+      "zh": "归处",
+      "en": "return",
+      "stanceZh": "往回走，但不是回到原点",
+      "stanceEn": "heading back, not to the same point"
+    },
+    {
+      "key": "residue",
+      "zh": "余处",
+      "en": "residue",
+      "stanceZh": "事情过去了，痕迹还在",
+      "stanceEn": "the event is over, the trace isn't"
+    },
+    {
+      "key": "release",
+      "zh": "放处",
+      "en": "release",
+      "stanceZh": "可以不带着它继续走了",
+      "stanceEn": "可以放下并继续 / able to continue without carrying it"
+    }
+  ]
+}

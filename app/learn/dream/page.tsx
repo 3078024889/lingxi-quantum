@@ -48,7 +48,7 @@ export default function DreamArticle() {
       <main className="px-6 pb-24 pt-28">
         <article className="mx-auto max-w-2xl">
           <div className="bg-reading-glass px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">解梦 · Dreams</p>
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">解梦 · Dreams</p>
           <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
             <Bi zh="如何解梦：读懂潜意识写给你的信" en="How to Interpret Dreams" />
           </h1>

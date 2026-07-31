@@ -145,7 +145,7 @@ export default function PracticeJournal() {
 
   return (
     <div className="rounded-sm border border-white/10 bg-void-deep p-6 sm:p-8">
-      <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+      <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
         <Bi zh="修炼心得记录" en="Practice Journal" />
       </p>
       <p className="mt-2 text-sm leading-7 text-bone-dim">
@@ -208,7 +208,7 @@ export default function PracticeJournal() {
                       <Bi zh={PRACTICE_LABEL[e.practice as Exclude<PracticeKey, "">]?.zh ?? ""} en={PRACTICE_LABEL[e.practice as Exclude<PracticeKey, "">]?.en ?? ""} />
                     </span>
                   )}
-                  <span className="truncate text-sm text-bone-dim/85">{e.content.slice(0, 24)}</span>
+                  <span className="truncate text-sm text-bone-soft">{e.content.slice(0, 24)}</span>
                 </span>
                 <span className="shrink-0 text-xs text-bone-dim transition group-open:rotate-180">▾</span>
               </summary>
@@ -233,7 +233,7 @@ export default function PracticeJournal() {
                   ) : (
                     <button
                       onClick={() => setConfirmingId(e.id)}
-                      className="text-xs text-bone-dim/78 transition hover:text-rose"
+                      className="text-xs text-bone-soft transition hover:text-rose"
                     >
                       <Bi zh="删除这条记录" en="Delete this note" />
                     </button>

@@ -33,7 +33,7 @@ export default function GatePage({ params }: { params: { id: string } }) {
             <div className="absolute inset-0 bg-gradient-to-b from-void/30 via-void/15 to-void/40" />
           </div>
           <div>
-            <span className="font-display text-6xl text-lattice/70">
+            <span className="font-display text-6xl text-lattice">
               {gate.glyph}
             </span>
             <h1 className="mt-4 font-display text-5xl font-light text-bone sm:text-6xl">

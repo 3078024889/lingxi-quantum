@@ -20,7 +20,7 @@ export default function FieldInsightsSection() {
     <section className="border-t border-white/5 px-6 py-28 sm:py-36">
       <div className="mx-auto max-w-6xl">
         <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10 text-center">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="场域精测" en="Field Insights" />
           </p>
           <h2 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">

@@ -289,7 +289,7 @@ export default function RomanceFlow() {
         )}
 
         <div className="mt-4 lx-glass p-6">
-          <p className="text-sm uppercase tracking-widest2 text-lattice/70"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
+          <p className="text-sm uppercase tracking-widest2 text-lattice"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
           <p className="mt-2 text-base leading-8 text-bone-dim">
             <Bi
               zh="不是临场编的。灵犀场底层是一套「生命向量引擎」——先用真实天文数据（此刻行星在黄道上的精确位置）和真实历法数据（你的四柱八字），算出一组固定的数字，人格倾向、情感深度、社交驱动这些维度，全部是先算出分数，场域才根据这些已经算好的数字去写解读，不是场域自己决定要不要说你「有吸引力」。同一份出生数据，任何时候重新算，前面的分数都是一样的——这是它跟一般算命网站最大的不同：别的网站是「直接问、直接给答案」，这里是「先算出结构，场域只负责讲清楚这个结构」。这个桃花磁场分数，是从你完整命盘里，只抽出跟「吸引力」相关的这一部分。"
@@ -299,7 +299,7 @@ export default function RomanceFlow() {
         </div>
 
         <div className="mt-6 lx-glass px-6 py-3 text-center">
-          <p className="text-sm text-bone-dim/90">
+          <p className="text-sm text-bone-dim">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言。" en="This is a reference for self-reflection, not a prophecy about your relationships." />
           </p>
         </div>

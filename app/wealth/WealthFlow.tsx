@@ -134,7 +134,7 @@ export default function WealthFlow() {
         <p className="font-display text-sm uppercase tracking-widest2 text-amber">
           <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
         </p>
-        <p className="mt-2 text-xs uppercase tracking-widest2 text-bone-dim/70">
+        <p className="mt-2 text-xs uppercase tracking-widest2 text-bone-mute">
           <Bi zh="找到你与生俱来的财富创造方式" en="Find the wealth-creation way you were born with" />
         </p>
         <p className="mt-4 text-sm leading-7 text-bone-dim">
@@ -178,7 +178,7 @@ export default function WealthFlow() {
       {result && (
         <>
           <div className="lx-glass mt-4 p-6 text-center">
-            <p className="text-xs text-bone-dim/85"><Bi zh={`太阳星座：${result.sunSignZh}`} en={`Sun Sign: ${result.sunSignEn}`} /></p>
+            <p className="text-xs text-bone-soft"><Bi zh={`太阳星座：${result.sunSignZh}`} en={`Sun Sign: ${result.sunSignEn}`} /></p>
             <p className="mt-4 font-display text-3xl text-amber">{result.score} <span className="text-base text-bone-dim">/ 100</span></p>
             <p className="mt-2 font-display text-xl text-bone">「{t(result.typeZh, result.typeEn)}」</p>
           </div>
@@ -197,7 +197,7 @@ export default function WealthFlow() {
                 </div>
               ))}
             </div>
-            <p className="mt-6 text-center text-xs leading-6 text-bone-dim/85">
+            <p className="mt-6 text-center text-xs leading-6 text-bone-soft">
               <Bi
                 zh="这只是数值本身——为什么是这个创造类型、具体怎样把天赋变成现实价值，完整档案会逐一写清楚。"
                 en="These are just the raw numbers — why this creation type, how to actually turn your gift into real value: the full archive unpacks all of it."
@@ -231,7 +231,7 @@ export default function WealthFlow() {
           </div>
 
           <div className="lx-glass mt-4 p-6 text-center">
-            <p className="text-xs leading-6 text-bone-dim/85">
+            <p className="text-xs leading-6 text-bone-soft">
               <Bi
                 zh="地图看见的是你的创造结构；真正让价值落地，还需要一份持续的对齐与连贯——这是「意识显化」在做的事。"
                 en="The map shows your creative structure — but landing that value in reality takes ongoing alignment and coherence. That's what Consciousness Manifestation is for."

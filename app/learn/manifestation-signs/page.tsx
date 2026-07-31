@@ -11,8 +11,8 @@ const data: ArticleData = {
   slug: "manifestation-signs",
   eyebrowZh: "显化 · 征兆", eyebrowEn: "Manifestation · Signs",
   titleZh: "显化正在生效的 7 个征兆", titleEn: "7 Signs Your Manifestation Is Working",
-  defZh: "显化正在生效，最可靠的征兆不是外在结果立刻出现，而是你的内在状态先变了：你更平静、对结果不再焦虑、开始反复遇到与目标相关的人事物、灵感和机会变多，并自然做出更对齐的选择。内在的转变，总是先于外在的显现。",
-  defEn: "The most reliable sign your manifestation is working isn't an instant external result, but a shift in your inner state first: you feel calmer, less anxious about the outcome, start encountering people and events related to your goal, notice more ideas and opportunities, and naturally make more aligned choices. Inner change always precedes outer appearance.",
+  defZh: "关于显化征兆，有一件事需要先说清楚，否则后面全是误读：反复遇到与目标相关的人事物，多半不是宇宙在发信号，是你的注意力被调到了那个频道上。买了红色的车，满街都是红色的车——车没变多，你的过滤器变了。\n\n知道这一点并不会让它失效，反而让它更有用：过滤器变了，本身就是最可靠的进展。因为你能看见的机会变多了，能接住的也就变多了。\n\n所以真正值得留意的征兆，都在你身上，不在天上：对结果不再那么焦虑；开始做一些以前会犹豫的小选择；灵感来的时候更容易接住；同样的处境里，内耗少了。至于外在结果什么时候到，它不受你控制，也不构成你做得对不对的判据。",
+  defEn: "One thing has to be said first about signs, or everything after it gets misread: repeatedly running into things related to your goal is usually not the universe signalling. It's your attention being tuned to that channel. Buy a red car and the streets fill with red cars — the cars didn't multiply, your filter changed.\n\nKnowing this doesn't disarm it; it makes it more useful. A changed filter is itself the most reliable progress there is, because more of what's available becomes visible, and what's visible can be acted on.\n\nSo the signs genuinely worth noting are all in you, not in the sky: less anxiety about the outcome; making small choices you would once have hesitated over; catching inspiration more easily; less lost to internal friction in the same circumstances. As for when an external result arrives — that isn't under your control, and it isn't the measure of whether you're doing this right.",
   sections: [
     {
       hZh: "7 个征兆", hEn: "Seven signs",

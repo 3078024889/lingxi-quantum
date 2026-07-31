@@ -37,7 +37,7 @@ export default async function DreamPage() {
             <DreamBackdrop className="h-full w-full" />
           </div>
           <div className="bg-void-deep relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-12">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice/80">
+          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="显化与梦境解读" en="Manifestation & Dream Interpretation" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
