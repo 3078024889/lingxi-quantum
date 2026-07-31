@@ -396,12 +396,12 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    注意保留 color 作为兜底：少数浏览器不支持 background-clip:text，
    不加兜底会变成完全透明、整行标题消失。 */
 .lx-hero-title {
-  color: #EDE9FF;
-  background: linear-gradient(96deg, #F2EEFF 0%, #C9B4FF 46%, #A8E8DC 100%);
+  color: #E5DFFF;
+  background: linear-gradient(96deg, #E5DFFF 0%, #BCA7FF 48%, #A8EBDD 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 28px rgba(190, 160, 255, 0.35));
+  filter: drop-shadow(0 0 34px rgba(190, 160, 255, 0.46));
 }
 
 /* 呼吸光：给需要"活着"的元素用，8 秒一个循环，比心跳慢，
@@ -464,3 +464,58 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-pdf-tarot      { background-image: url("/images/tarot-full/page-1.jpg"); }
 .lx-pdf-relation   { background-image: url("/images/relationship-full/general/page-1.jpg"); }
 .lx-pdf-lifemap    { background-image: url("/images/lifemap/page-1.jpg"); }
+
+/* v277：修炼次第卡片。
+   悬停时轻微上浮 + 边框泛紫，暗示"可以进去"，但不做夸张位移——
+   这是一条修行路径的入口，不是电商货架上的商品卡。 */
+.lx-practice-card {
+  background: rgba(10, 20, 50, 0.30);
+  border: 1px solid rgba(200, 200, 255, 0.16);
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform .45s ease, background .45s ease, border-color .45s ease, box-shadow .45s ease;
+}
+.lx-practice-card:hover {
+  background: rgba(190, 150, 255, 0.10);
+  border-color: rgba(216, 184, 255, 0.42);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(160, 150, 255, 0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lx-practice-card, .lx-practice-card:hover { transition: none; transform: none; }
+}
+
+/* 主标题两侧的装饰线，效果图里那个 —— ✦ —— */
+.lx-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: rgba(216, 184, 255, 0.55);
+}
+.lx-rule::before, .lx-rule::after {
+  content: "";
+  height: 1px;
+  width: clamp(28px, 8vw, 90px);
+  background: linear-gradient(90deg, transparent, rgba(216,184,255,.55), transparent);
+}
+
+/* 入口按钮：胶囊 + 柔光。这是全站唯一一个用大圆角的元素——
+   按钮是"门"，圆的门口比方的更像可以走进去；
+   面板保持 4px 直角，两者不冲突。 */
+.lx-portal-btn {
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(190,150,255,.26), rgba(120,220,220,.22));
+  border: 1px solid rgba(255,255,255,.30);
+  color: #EDE9FF;
+  box-shadow: 0 0 30px rgba(190,150,255,.34);
+  transition: transform .4s ease, box-shadow .4s ease;
+}
+.lx-portal-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 56px rgba(190,150,255,.62);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lx-portal-btn, .lx-portal-btn:hover { transition: none; transform: none; }
+}

@@ -108,8 +108,8 @@ export default function LingxiPortal() {
         <h1 className="lx-hero-title mt-6 font-display text-3xl font-light tracking-[0.14em] sm:text-5xl">
           <Bi zh="灵犀场 · 意识数字显化场域" en="Lingxi Field · A Living Digital Manifestation Field" />
         </h1>
-        <p className="mt-2 font-display text-xs uppercase tracking-widest2 text-lattice sm:text-sm">
-          LINGXI FIELD · A LIVING DIGITAL MANIFESTATION FIELD
+        <p className="lx-rule mt-3 font-display text-xs uppercase tracking-widest2 text-lattice sm:text-sm">
+          <span>LINGXI FIELD · A LIVING DIGITAL MANIFESTATION FIELD</span>
         </p>
 
         <p className="mx-auto mt-8 max-w-xl font-display text-lg leading-relaxed text-lattice sm:text-xl">
@@ -184,16 +184,16 @@ export default function LingxiPortal() {
         ))}
       </div>
 
-      <div className="mt-14 w-full max-w-xl rounded-sm border border-white/10 bg-void-deep px-8 py-10">
+      <div className="lx-glass mt-14 w-full max-w-xl px-8 py-10">
         <p className="font-display text-lg text-lattice sm:text-xl">
           <Bi zh="你的探索，从这里开始。" en="Your journey begins here." />
         </p>
-        <Link href="/account" className="mt-8 inline-block bg-lm2-aurora px-12 py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(216,184,255,0.4)] transition hover:brightness-110">
+        <Link href="/account" className="lx-portal-btn mt-8 inline-block px-12 py-4 font-display text-sm uppercase tracking-widest2">
           <Bi zh="进入灵犀场" en="Enter The Field" />
         </Link>
       </div>
 
-      <a href="#origin" className="bg-void-deep mt-10 rounded-full px-5 py-2 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
+      <a href="#origin" className="lx-glass mt-10 !rounded-full px-5 py-2 font-display text-xs uppercase tracking-widest2 text-bone-dim transition hover:text-lattice">
         <Bi zh="灵犀场是什么 · 来自何处 ↓" en="What is Lingxi Field · where it comes from ↓" />
       </a>
 

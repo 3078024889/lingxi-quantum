@@ -77,29 +77,40 @@ export default function AuroraVideoBand() {
       {/* 极轻的暗角，压一压视频最亮区域，让全站文字（珍珠白/黄金/极光青）
           在任何画面亮度下都还留有一点余量，不需要再靠光晕这类补丁。 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,transparent_0%,rgba(8,6,20,0.35)_100%)]" />
-      {/* v275：极光之上叠一层深色宇宙罩。
-          这是解开一个死结的关键。之前的困境是：面板做透 → 压到极光
-          亮带上文字看不清（实测对比度只有 3.2，标准是 4.5）；面板做深
-          → 变成暗玻璃，看不出背景在流动，也就没有"空灵"可言。
-          两头都想要，唯一的出路是把背景本身的亮度压下来——极光最亮
-          那几条光带从约 (180,200,230) 压到约 (95,105,125) 之后，
-          面板就可以放心做透，文字也不会被吃掉。
-          用两层：一层整体暗色压亮度，一层顶部到底部的渐变，让上方
-          （导航与标题所在）更沉，下方保留水面的反光。
-          注意：这一层在视频之上、内容之下，不影响视频播放，也不会
-          在会劫持视频的浏览器里出问题（那边本来就换成静态图了）。 */}
+      {/* v277：极光之上的深色宇宙层。
+          这一层决定整站的调性。关键不是"压暗"，而是"压成深蓝紫"——
+          中性黑会把极光压成灰扑扑的，而带蓝紫的暗层会让极光的紫和青
+          反而更透、更饱和，文字压上去才有"从光里长出来"的感觉，
+          而不是"白字贴在图上"。
+
+          三层叠加，各司其职：
+            1) 主色层：#071426 → #0B1833 的深蓝紫，从上到下略轻，
+               上方（导航与标题区）更沉，下方保留水面反光。
+            2) 光晕层：左紫右青两团，位置对着极光本身的走向，
+               把原本就有的颜色再托一把，不是凭空加色。
+            3) 收边层：四周渐暗，把视线收拢到中间，
+               这是"大气"的来源——画面有中心，不是平铺。 */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(6,10,26,0.40) 0%, rgba(7,14,32,0.26) 45%, rgba(9,16,38,0.22) 100%)",
+            "linear-gradient(180deg, rgba(7,20,38,0.66) 0%, rgba(11,24,51,0.48) 42%, rgba(13,26,56,0.40) 100%)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 42%, rgba(10,16,36,0.00) 0%, rgba(6,10,26,0.28) 100%)",
+            "radial-gradient(ellipse 60% 50% at 22% 38%, rgba(185,156,255,0.20), transparent 62%)," +
+            "radial-gradient(ellipse 55% 45% at 80% 34%, rgba(143,232,221,0.15), transparent 60%)," +
+            "radial-gradient(ellipse 70% 40% at 50% 92%, rgba(120,140,255,0.16), transparent 65%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 78% 70% at 50% 45%, rgba(7,16,34,0) 0%, rgba(7,16,34,0.34) 72%, rgba(5,11,26,0.58) 100%)",
         }}
       />
     </div>

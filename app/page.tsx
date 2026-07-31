@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LingxiPortal from "@/components/LingxiPortal";
+import PracticeLadder from "@/components/PracticeLadder";
 import OriginSection from "@/components/OriginSection";
 import FieldEntry from "@/components/FieldEntry";
 import FieldInsightsSection from "@/components/FieldInsightsSection";
@@ -63,6 +64,7 @@ export default function Home() {
       <main className="relative overflow-hidden">
         {/* 1. 入口：意识显化系统 */}
         <LingxiPortal />
+      <PracticeLadder />
 
         {/* 2. 灵犀是什么 / 来自何处（创造源，紧跟入口） */}
         <OriginSection />
