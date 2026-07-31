@@ -130,7 +130,7 @@ export default function TarotReadingFlow() {
   if (stage === "form") {
     return (
       <div className="mx-auto max-w-md px-6 py-16">
-        <div className="lx-glass-tarot p-6 sm:p-8">
+        <div className="lx-pdf-tarot p-6 sm:p-8">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="灵犀量子塔罗" en="Lingxi Quantum Tarot" />
           </p>
@@ -223,7 +223,7 @@ export default function TarotReadingFlow() {
 
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
-      <div className="lx-glass-tarot px-6 py-4 text-center">
+      <div className="lx-pdf-tarot px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀量子塔罗 · 三张牌阵深度解读" en="Lingxi Quantum Tarot · Three-Card Deep Reading" />
         </p>

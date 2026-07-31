@@ -876,7 +876,7 @@ export default function LifeMapFlow() {
       {stage === "loading" && (
         <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
           <div className="lm-core lm-core-active" />
-          <div className="lx-glass-lifemap mt-10 space-y-3 px-8 py-6">
+          <div className="lx-pdf-lifemap mt-10 space-y-3 px-8 py-6">
             {LOADING_STEPS.slice(0, loadingStep + 1).map((s, i) => (
               <p key={i} className={`font-display text-base ${i === loadingStep ? "text-lm2-text" : "text-lm2-text-dim/75"}`}>
                 <Bi zh={s.zh} en={s.en} />
@@ -890,7 +890,7 @@ export default function LifeMapFlow() {
         <section className="px-6 py-20">
           <div className="mx-auto max-w-2xl">
             {resumedDraft && (
-              <div className="lx-glass-lifemap mb-6 px-6 py-5 text-center">
+              <div className="lx-pdf-lifemap mb-6 px-6 py-5 text-center">
                 <p className="text-sm leading-6 text-lm2-text">
                   <Bi
                     zh="欢迎回来——你之前有一次没走完的解锁，信息已经帮你恢复好了。"
@@ -913,7 +913,7 @@ export default function LifeMapFlow() {
                 </div>
               </div>
             )}
-            <div className="lx-glass-lifemap px-8 py-8 text-center">
+            <div className="lx-pdf-lifemap px-8 py-8 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("你的生命频率报告", "Your Life Frequency Report")}
             </p>
@@ -1053,7 +1053,7 @@ export default function LifeMapFlow() {
             )}
 
             {(phoneNumber.trim() || plateNumber.trim()) && (
-              <div className="lx-glass-lifemap mt-8 p-6 sm:p-8">
+              <div className="lx-pdf-lifemap mt-8 p-6 sm:p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                   <Bi zh="数字能量解读" en="Number Energy Reading" />
                 </p>
@@ -1089,7 +1089,7 @@ export default function LifeMapFlow() {
             )}
 
             {parsed.stageName && (
-              <div className="lx-glass-lifemap mt-8 p-6 sm:p-8">
+              <div className="lx-pdf-lifemap mt-8 p-6 sm:p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                   <Bi zh="当前生命阶段" en="Your Current Life Stage" />
                 </p>

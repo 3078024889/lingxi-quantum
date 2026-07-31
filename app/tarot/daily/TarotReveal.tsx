@@ -149,7 +149,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
         <img src={imgSrc} alt={card.nameZh} className="block w-full" />
       </div>
 
-      <div className="mt-6 lx-glass-tarot p-6 text-center">
+      <div className="mt-6 lx-pdf-tarot p-6 text-center">
         <p className="font-display text-xl text-bone">
           <Bi zh={card.nameZh} en={card.nameEn} />
         </p>
@@ -158,7 +158,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
         </p>
       </div>
 
-      <div className="mt-4 lx-glass-tarot p-6">
+      <div className="mt-4 lx-pdf-tarot p-6">
         <p className="text-base leading-8 text-bone-dim">
           <Bi zh={card.meaningZh} en={card.meaningEn} />
         </p>
@@ -210,7 +210,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
         </a>
       </div>
 
-      <div className="mt-6 lx-glass-tarot p-6 text-center">
+      <div className="mt-6 lx-pdf-tarot p-6 text-center">
         <p className="text-sm leading-7 text-bone-dim">
           <Bi
             zh="今天这张牌，是全宇宙今天共享的一个提示。想知道这张牌落在你自己独特的命盘上，会有什么更具体的含义，可以看看你的完整生命图谱。"

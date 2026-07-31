@@ -92,14 +92,14 @@ export default function AuroraVideoBand() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(6,10,26,0.62) 0%, rgba(7,14,32,0.50) 45%, rgba(9,16,38,0.44) 100%)",
+            "linear-gradient(180deg, rgba(6,10,26,0.40) 0%, rgba(7,14,32,0.26) 45%, rgba(9,16,38,0.22) 100%)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 42%, rgba(10,16,36,0.10) 0%, rgba(6,10,26,0.45) 100%)",
+            "radial-gradient(ellipse at 50% 42%, rgba(10,16,36,0.00) 0%, rgba(6,10,26,0.28) 100%)",
         }}
       />
     </div>

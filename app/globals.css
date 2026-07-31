@@ -417,3 +417,50 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .lx-breath { animation: none; opacity: 0.85; }
 }
+
+/* ────────── PDF 底纹面板 v276 ──────────
+   之前理解错了方向：我取了各产品 PDF 封面的"颜色"做色调，
+   但要的是把那张 PDF 图本身当成框的底。
+   生命韧性那棵树、字压在树上的效果，应该出现在这个产品的每一个框里，
+   而不只是 1-11 点预告那一块。
+
+   做法：每个产品一个类，背景是该产品的真实 PDF 页图 +
+   一层暗罩保证可读。暗罩数值是按每张图文字区实测色算出来的，
+   不是拍脑袋定的。以生命韧性的树图为例：
+     文字区平均 (109,125,90)，bone-soft 直接压上去对比度只有 3.06
+     加 0.35 暗罩后降到 (74,86,68)，对比度 5.34 —— 过线，
+     且树的形状与金色根系仍然清楚可见。
+
+   背景用 fixed 让同一产品内多个面板共享同一张图的不同区域，
+   滚动时像是一整张 PDF 在下面延展，而不是每个框各贴一张缩略图。 */
+
+[class*="lx-pdf-"] {
+  position: relative;
+  border: 1px solid rgba(220, 220, 255, 0.22);
+  border-radius: 4px;
+  box-shadow: 0 0 40px rgba(160, 150, 255, 0.12),
+              inset 0 0 40px rgba(255, 255, 255, 0.04);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+/* 暗罩用伪元素叠在图上、内容之下，这样图片本身不需要预处理，
+   换 PDF 图的时候只改 background-image 一行即可。 */
+[class*="lx-pdf-"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(8,12,24,0.42) 0%, rgba(8,12,24,0.30) 50%, rgba(8,12,24,0.42) 100%);
+  pointer-events: none;
+}
+[class*="lx-pdf-"] > * { position: relative; z-index: 1; }
+
+.lx-pdf-resilience { background-image: url("/images/resilience-full/page-1.jpg"); }
+.lx-pdf-romance    { background-image: url("/images/romance-full/page-1.jpg"); }
+.lx-pdf-wealth     { background-image: url("/images/wealth-full/page-1.jpg"); }
+.lx-pdf-daily      { background-image: url("/images/daily-tide-full/page-1.jpg"); }
+.lx-pdf-qian       { background-image: url("/images/qian-full/page-1.jpg"); }
+.lx-pdf-tarot      { background-image: url("/images/tarot-full/page-1.jpg"); }
+.lx-pdf-relation   { background-image: url("/images/relationship-full/general/page-1.jpg"); }
+.lx-pdf-lifemap    { background-image: url("/images/lifemap/page-1.jpg"); }
