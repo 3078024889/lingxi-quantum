@@ -77,40 +77,40 @@ export default function AuroraVideoBand() {
       {/* 极轻的暗角，压一压视频最亮区域，让全站文字（珍珠白/黄金/极光青）
           在任何画面亮度下都还留有一点余量，不需要再靠光晕这类补丁。 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,transparent_0%,rgba(8,6,20,0.35)_100%)]" />
-      {/* v277：极光之上的深色宇宙层。
-          这一层决定整站的调性。关键不是"压暗"，而是"压成深蓝紫"——
-          中性黑会把极光压成灰扑扑的，而带蓝紫的暗层会让极光的紫和青
-          反而更透、更饱和，文字压上去才有"从光里长出来"的感觉，
-          而不是"白字贴在图上"。
+      {/* v279：夜空中的晨曦意识空间。
+          五色：深夜蓝 #101A3A / 星云蓝 #25345C / 雾紫 #7B6FA3
+                透明青绿 #8CCFC8 / 晨曦金 #D6B9A5
+          参照：凌晨五点的湖面——天还暗，但已经有光。
 
-          三层叠加，各司其职：
-            1) 主色层：#071426 → #0B1833 的深蓝紫，从上到下略轻，
-               上方（导航与标题区）更沉，下方保留水面反光。
-            2) 光晕层：左紫右青两团，位置对着极光本身的走向，
-               把原本就有的颜色再托一把，不是凭空加色。
-            3) 收边层：四周渐暗，把视线收拢到中间，
-               这是"大气"的来源——画面有中心，不是平铺。 */}
+          关键构图（这一条是从效果图本身读出来的）：
+          效果图里极光最亮最美的地方在**左右两侧**，中间那条是内容带，
+          明显更沉。所以正确做法不是整体压暗——那会把极光的美一起
+          压掉，也就是之前几版做成"暗色仪表盘"的原因——
+          而是只压中间这一条竖带。
+          这样：两侧极光保持鲜活透亮，中间的文字与雾玻璃有足够的
+          衬底。玻璃因此可以一直保持 0.32 的漂浮感，不必加重。 */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(7,20,38,0.66) 0%, rgba(11,24,51,0.48) 42%, rgba(13,26,56,0.40) 100%)",
+            "linear-gradient(180deg, rgba(16,26,58,0.30) 0%, rgba(37,52,92,0.18) 50%, rgba(37,52,92,0.14) 100%)",
+        }}
+      />
+      {/* 中央内容带压暗：横向渐变，两侧完全透明，中间最沉 */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(14,20,44,0) 0%, rgba(14,20,44,0.12) 18%, rgba(14,20,44,0.62) 34%, rgba(14,20,44,0.70) 50%, rgba(14,20,44,0.62) 66%, rgba(14,20,44,0.12) 82%, rgba(14,20,44,0) 100%)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 22% 38%, rgba(185,156,255,0.20), transparent 62%)," +
-            "radial-gradient(ellipse 55% 45% at 80% 34%, rgba(143,232,221,0.15), transparent 60%)," +
-            "radial-gradient(ellipse 70% 40% at 50% 92%, rgba(120,140,255,0.16), transparent 65%)",
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 78% 70% at 50% 45%, rgba(7,16,34,0) 0%, rgba(7,16,34,0.34) 72%, rgba(5,11,26,0.58) 100%)",
+            "radial-gradient(ellipse 60% 60% at 12% 34%, rgba(123,111,163,0.26), transparent 72%)," +
+            "radial-gradient(ellipse 55% 55% at 88% 30%, rgba(140,207,200,0.18), transparent 70%)," +
+            "radial-gradient(ellipse 96% 46% at 50% 90%, rgba(214,185,165,0.14), transparent 78%)",
         }}
       />
     </div>

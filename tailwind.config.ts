@@ -11,21 +11,21 @@ const config: Config = {
         "void-deep": "#0f2038",
 
         // ===== Lingxi Typography System V4（多轮迭代后的定版色值） =====
-        lattice: "#8FE8DD",
+        lattice: "#9FD8D0",
         "lattice-dim": "#7CC4B4",
-        amber: "#B99CFF",
+        amber: "#C9A8D8",
         rose: "#FF9FD6",
         violet: "#D8B8FF",
         // v277：正文不用纯白。效果图那个感觉的关键之一，是文字带一点
         // 蓝紫，与深蓝紫的底同源，读起来像"从同一片光里长出来"，
         // 而纯白永远像"贴上去的"。降幅很小，可读性不受影响。
-        bone: "#E9ECFA",
-        "bone-dim": "#D7D9E8",
+        bone: "#DCD7EA",
+        "bone-dim": "#C2C8D8",
         // v274：新增两档实色。之前大量文字用 text-bone-dim/70、/85 这类
         // 透明度稀释，压在极光背景上实际亮度只剩七八成，远看就"糊"进背景，
         // 这是"字太浅、没有打开欲望"的技术根因。改用实色，亮度可控。
-        "bone-soft": "#BCC5DE",
-        "bone-mute": "#B4BDD6",
+        "bone-soft": "#C2C8D8",
+        "bone-mute": "#B2BACE",
         title: "#F0E6FF",
         "lm-violet": "#D8B8FF",
         // 生命图谱主题：文字令牌跟全站同一套 Lingxi Typography System V4

@@ -352,13 +352,17 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
      换成渐变是倒退。 */
 
 .lx-glass {
+  /* v279 灵犀雾玻璃。
+     不是白玻璃（会被极光亮带吞掉），也不是黑面板（会变暗色仪表盘）。
+     是紫蓝雾气中的透明晶体：有温度的雾，不是透明空气。
+     0.32 而非 0.42——0.42 开始像"面板"，灵犀需要的是"漂浮"。 */
   position: relative;
-  background: rgba(20, 16, 30, 0.30);
-  backdrop-filter: blur(16px) saturate(1.15);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15);
-  border: 1px solid rgba(220, 220, 255, 0.24);
-  box-shadow: 0 0 40px rgba(160, 150, 255, 0.12),
-              inset 0 0 40px rgba(255, 255, 255, 0.04);
+  background: linear-gradient(135deg, rgba(150,130,180,0.28), rgba(120,105,150,0.34));
+  border: 1px solid rgba(220, 210, 240, 0.22);
+  backdrop-filter: blur(24px) saturate(1.04);
+  -webkit-backdrop-filter: blur(24px) saturate(1.04);
+  box-shadow: 0 8px 48px rgba(40, 36, 62, 0.20),
+              inset 0 0 60px rgba(255, 255, 255, 0.045);
   border-radius: 4px;
 }
 
@@ -372,15 +376,8 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-qian,
 .lx-glass-tarot,
 .lx-glass-relation,
-.lx-glass-lifemap {
-  position: relative;
-  backdrop-filter: blur(16px) saturate(1.15);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15);
-  border: 1px solid rgba(220,220,255,0.24);
-  box-shadow: 0 0 40px rgba(160,150,255,0.12), inset 0 0 40px rgba(255,255,255,0.04);
-  border-radius: 4px;
-}
-.lx-glass-resilience { background: rgba(32, 46, 30, 0.30); border-color: rgba(160, 224, 208, 0.26); }
+.lx-glass-lifemap { background: linear-gradient(135deg, rgba(145,155,195,0.26), rgba(105,115,160,0.34)); border-color: rgba(220,210,240,0.22); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(140,168,150,0.26), rgba(95,120,105,0.34)); border-color: rgba(220,210,240,0.22); }
 .lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
 .lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
 .lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }
@@ -396,12 +393,14 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    注意保留 color 作为兜底：少数浏览器不支持 background-clip:text，
    不加兜底会变成完全透明、整行标题消失。 */
 .lx-hero-title {
-  color: #E5DFFF;
-  background: linear-gradient(96deg, #E5DFFF 0%, #BCA7FF 48%, #A8EBDD 100%);
+  color: #DCD7EA;
+  font-weight: 200;
+  letter-spacing: 0.28em;
+  background: linear-gradient(96deg, #E3DEF0 0%, #C9A8D8 50%, #9FD8D0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 34px rgba(190, 160, 255, 0.46));
+  filter: drop-shadow(0 0 18px rgba(201, 168, 216, 0.22));
 }
 
 /* 呼吸光：给需要"活着"的元素用，8 秒一个循环，比心跳慢，
@@ -451,7 +450,7 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   position: absolute;
   inset: 0;
   border-radius: 4px;
-  background: linear-gradient(180deg, rgba(8,12,24,0.42) 0%, rgba(8,12,24,0.30) 50%, rgba(8,12,24,0.42) 100%);
+  background: linear-gradient(180deg, rgba(38,34,52,0.46) 0%, rgba(38,34,52,0.34) 50%, rgba(38,34,52,0.46) 100%);
   pointer-events: none;
 }
 [class*="lx-pdf-"] > * { position: relative; z-index: 1; }
