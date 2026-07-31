@@ -1,0 +1,16 @@
+{
+  "_comment": "生命韧性指数 11 章定义。dim 是该章的主维度，没命中组合节点时回落到这一维的分数带。",
+  "chapters": [
+    { "key": "01-self-recovery",    "dim": "recovery",  "titleZh": "自我恢复力",   "titleEn": "Self-Recovery" },
+    { "key": "02-emotional",        "dim": "stability", "titleZh": "情绪稳定力",   "titleEn": "Emotional Stability" },
+    { "key": "03-adaptive",         "dim": "adaptive",  "titleZh": "环境适应力",   "titleEn": "Adaptability" },
+    { "key": "04-crisis",           "dim": "crisis",    "titleZh": "危机反弹能力", "titleEn": "Crisis Rebound" },
+    { "key": "05-persistence",      "dim": "persist",   "titleZh": "长期坚持能力", "titleEn": "Long-Haul Persistence" },
+    { "key": "06-mental-structure", "dim": "stability", "titleZh": "精神稳定结构", "titleEn": "Mental Structure" },
+    { "key": "07-hidden-recovery",  "dim": "recovery",  "titleZh": "隐藏恢复模式", "titleEn": "Hidden Recovery Mode" },
+    { "key": "08-energy-drain",     "dim": "recovery",  "titleZh": "能量消耗地图", "titleEn": "Energy Drain Map" },
+    { "key": "09-evolution-path",   "dim": "persist",   "titleZh": "韧性进化路径", "titleEn": "Resilience Path" },
+    { "key": "10-practice",         "dim": "recovery",  "titleZh": "灵犀场恢复实践", "titleEn": "Field Practice" },
+    { "key": "11-summary",          "dim": "crisis",    "titleZh": "生命韧性总结", "titleEn": "Summary" }
+  ]
+}

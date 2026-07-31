@@ -1,0 +1,12 @@
+{
+  "_comment": "结构层分数带阈值。⚠️ 一旦上线不可修改——用户三个月后重算，分数不变但解读变了，会直接击穿'可复算'这个核心信任承诺。改动此文件视为破坏性变更。",
+  "_layer": "structure",
+  "_note": "状态层不使用分数带，用 span/cadence/focus/shift 四个量，见 docs/STATE-LAYER-DESIGN.md",
+  "bands": [
+    { "key": "vlow",  "min": 0,  "max": 24,  "voice": "绝不写成打击。说'这条路径你用得少'，不说'你弱'" },
+    { "key": "low",   "min": 25, "max": 44,  "voice": "说机制，指出用得少的路径不等于用不了" },
+    { "key": "mid",   "min": 45, "max": 64,  "voice": "最容易写成废话的一带。靠组合做区分，不靠分数本身" },
+    { "key": "high",  "min": 65, "max": 84,  "voice": "写机制，同时必须写代价" },
+    { "key": "vhigh", "min": 85, "max": 100, "voice": "高分的代价要写得更明确。绝不奉承" }
+  ]
+}

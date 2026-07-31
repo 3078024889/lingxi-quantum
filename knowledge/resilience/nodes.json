@@ -1,0 +1,144 @@
+{
+  "nodes": [
+    {
+      "id": "r.recovery.vhigh.a",
+      "chapter": "01-self-recovery",
+      "dim": "recovery",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "恢复不依赖外部条件，独处即可重启",
+      "shadowSide": "太容易自己消化，别人以为你不需要支持；也容易错过被照顾的机会",
+      "growthDirection": "把一次真实的疲惫说给一个人听，不是求助，只是说出来",
+      "fieldText": {
+        "zh": "你的恢复几乎不需要条件——不用换环境、不用等谁有空，一个人待一会儿，系统就开始自己往回走。这让你在很多场合显得不费力。代价是这份不费力太安静了：别人看不出你什么时候在耗，久了会默认你不需要被照顾。可以试一件小事——把最近一次真实的疲惫，完整地说给一个人听。不是求助，只是让它被听见一次。",
+        "en": "Your recovery asks for almost no conditions — no change of setting, no waiting for someone to be free. A while alone, and the system starts finding its own way back. In most situations this makes you look effortless. The cost is that the effortlessness is very quiet: people can't see when you're running low, and over time they'll assume you don't need looking after. One small thing worth trying — tell one person about the last time you were genuinely tired. Not as a request for help. Just so it gets heard once."
+      }
+    },
+    {
+      "id": "r.recovery.mid.a",
+      "chapter": "01-self-recovery",
+      "dim": "recovery",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "恢复能力在，但需要特定条件才启动",
+      "shadowSide": "条件不具备时会误判成'我恢复不了'，实际是条件没到",
+      "growthDirection": "找出上一次真正缓过来时的具体场景，写下来当作可复用的条件",
+      "fieldText": {
+        "zh": "你的恢复是有条件的——条件对了，回来得挺快；条件不对，就会卡在半路，像一直在充电但电量不动。多数人在这里会得出一个结论：我恢复能力不行。更准确的说法是：你的恢复需要的那几个条件，你还没弄清楚是什么。回想上一次真的缓过来是什么场景——在哪、几点、之前刚做完什么、身边有没有人。把它写下来。那不是巧合，那是你的条件。",
+        "en": "Your recovery is conditional — when the conditions are right, you come back fairly quickly; when they aren't, you stall halfway, like charging without the number moving. Most people draw one conclusion here: I'm bad at recovering. The more accurate version is: you haven't yet worked out what your conditions are. Think back to the last time you genuinely came back — where you were, what time it was, what you'd just finished, whether anyone was around. Write it down. That wasn't coincidence. Those are your conditions."
+      }
+    },
+    {
+      "id": "r.recovery.low.a",
+      "chapter": "01-self-recovery",
+      "dim": "recovery",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "恢复路径使用频率低，多数时候靠硬撑过去",
+      "shadowSide": "硬撑本身有效，所以更不容易发现还有别的方式",
+      "growthDirection": "在还没到极限的时候停一次，观察一下不撑到底会发生什么",
+      "fieldText": {
+        "zh": "这一项分数低，通常不是恢复不了，是这条路径你用得少。硬撑是有效的——正因为有效，你很少有机会发现还有别的走法。用得少的路径不等于用不了，多半是没被教过怎么用。可以试一次：在还没到极限的时候先停下来，看看不撑到底会发生什么。这不是要你放弃，是给自己一次观察的机会。",
+        "en": "A low score here usually doesn't mean you can't recover. It means this path is one you rarely use. Pushing through works — and precisely because it works, you seldom get the chance to discover there's another way. A path used rarely isn't a path you can't use; more often, no one ever taught you how. Worth trying once: stop before you hit the limit, and see what happens when you don't push all the way. This isn't about giving up. It's about giving yourself a chance to observe."
+      }
+    },
+    {
+      "id": "r.stability.vhigh.a",
+      "chapter": "02-emotional",
+      "dim": "stability",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "情绪波动幅度小，内在基准线稳",
+      "shadowSide": "稳定容易被误读成不在乎；自己也可能因此察觉不到真实需求",
+      "growthDirection": "情绪起来时先命名它，不急着让它平息",
+      "fieldText": {
+        "zh": "你的情绪基准线很稳，波动起来幅度不大，落回去也快。这让你在别人慌的时候还能想事情。要留意的是另一面：稳定常常被读成不在乎——别人这么读，有时候你自己也这么读，于是那些本来该被听见的情绪，还没成形就被抹平了。下次情绪起来的时候，先给它取个名字，不急着让它平息。稳定不等于必须没有波动。",
+        "en": "Your emotional baseline is steady — the swings don't go far, and they settle quickly. It means you can still think while other people are panicking. Watch the other side of it: steadiness often reads as not caring — to other people, and sometimes to you as well, so feelings that deserved to be heard get flattened before they've fully formed. Next time something rises, name it first. Don't rush it back down. Steady doesn't have to mean nothing moves."
+      }
+    },
+    {
+      "id": "r.stability.low.a",
+      "chapter": "02-emotional",
+      "dim": "stability",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "情绪信号强、传导快，缓冲层薄",
+      "shadowSide": "容易被解读成'太敏感'，但信号强本身是信息量大",
+      "growthDirection": "在情绪和反应之间插一个具体动作，先造出缓冲，不急着改情绪本身",
+      "fieldText": {
+        "zh": "你的情绪信号很强，传导也快——事情刚发生，身体已经知道了。这一项分数低，说的不是你脆弱，是你和情绪之间的缓冲层比较薄，信号几乎没有衰减就到了。信号强本身是信息量大，不是缺陷；问题只在于它来得太快，来不及处理。可以先造缓冲，而不是先改情绪：在感觉起来和开口之间，插一个具体动作——喝一口水，走到窗边站十秒。缓冲是练出来的，不是天生的。",
+        "en": "Your emotional signal is strong and travels fast — something happens, and your body already knows. A low score here isn't saying you're fragile. It's saying the buffer between you and the feeling is thin, so the signal arrives with almost no attenuation. A strong signal means high information, not a defect; the only problem is that it arrives faster than it can be processed. Build the buffer before trying to change the feeling: between the sensation rising and you saying anything, insert one concrete action — a sip of water, ten seconds standing by a window. Buffers are trained, not inherited."
+      }
+    },
+    {
+      "id": "r.recovery.vlow.a",
+      "chapter": "01-self-recovery",
+      "dim": "recovery",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "恢复路径几乎未被使用，长期处于持续输出状态",
+      "shadowSide": "越是没停过，越难相信停下来是安全的",
+      "growthDirection": "先做一件五分钟就能完成的停顿，不要求它有效果",
+      "fieldText": {
+        "zh": "这一项分数很低，说明恢复这条路径你几乎没怎么走过。这通常不是选择，是长期没有条件——需要你顶着的事一件接一件，久到停下来这件事本身会让人不安。这里最难的其实不是休息，是相信停下来不会出事。所以不用从大的开始：找一件五分钟就能完成的停顿，什么都不做，也不要求它必须有效果。这一次不是为了恢复，只是为了让身体确认一次——停一下，天没有塌。",
+        "en": "A very low score here means this recovery path is one you've almost never walked. Usually that isn't a choice — it's a long stretch without the conditions for it: one thing after another that needed you to hold, for long enough that stopping itself became unsettling. The hard part here isn't resting. It's trusting that stopping won't cause something to go wrong. So don't start big. Find one five-minute pause where you do nothing at all, and don't require it to work. This time isn't about recovering. It's about letting your body confirm, once, that you stopped and nothing collapsed."
+      }
+    },
+    {
+      "id": "r.recovery.high.a",
+      "chapter": "01-self-recovery",
+      "dim": "recovery",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "恢复启动快，且不太依赖外部条件",
+      "shadowSide": "回得太快，有些经历会被跳过消化那一步",
+      "growthDirection": "回来之后补一句：刚才那件事，我实际的感受是什么",
+      "fieldText": {
+        "zh": "你回来得比大多数人快——事情过去，你很快能重新投入，不太需要缓冲期。这是真的省力。要注意的是快本身带来的一个盲区：有些经历被翻篇了，但没有被消化。它们不会立刻造成什么，只是在某个不相干的时刻突然回来一下。所以可以在回来之后补一步，很短：那件事过去之后，问自己一句——刚才那件事，我实际的感受是什么。不用处理它，说出来就行。",
+        "en": "You come back faster than most — once something is over, you're able to re-engage quickly, without needing much of a buffer. That genuinely saves energy. Watch one blind spot that speed creates: some experiences get turned past without being digested. They don't cause anything immediately; they just come back briefly at some unrelated moment. So add one short step after the return. Once it's over, ask yourself: what did I actually feel back there. You don't have to do anything with the answer. Saying it is enough."
+      }
+    },
+    {
+      "id": "r.stability.vlow.a",
+      "chapter": "02-emotional",
+      "dim": "stability",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "情绪振幅大且回落慢，缓冲几乎不存在",
+      "shadowSide": "波动大常被当成性格问题，实际是缓冲缺失",
+      "growthDirection": "记录情绪起来前十分钟发生了什么，先找触发点不急着控制",
+      "fieldText": {
+        "zh": "你的情绪振幅比较大，起来之后回落也需要时间。这种情况常常被当成性格问题来讲，但更接近事实的说法是：你和情绪之间几乎没有缓冲，所以每一次都是全额到账。全额到账不代表你承受力弱，代表信号没有任何衰减。要建缓冲，先别急着控制情绪本身——那是最难的一端。先做记录：情绪起来之前的十分钟，发生了什么。写几次之后，触发点会自己浮出来。看得见触发点，才谈得上缓冲。",
+        "en": "Your emotional range runs wide, and once something rises it takes time to come back down. This often gets framed as a personality problem, but the closer description is: there's almost no buffer between you and the feeling, so every time it arrives at full amount. Full amount doesn't mean you tolerate less. It means the signal arrives with no attenuation at all. To build a buffer, don't start by trying to control the feeling — that's the hardest end. Start with a record: in the ten minutes before it rose, what happened. Write it down a few times and the triggers surface on their own. You can't buffer what you can't yet see."
+      }
+    },
+    {
+      "id": "r.stability.mid.a",
+      "chapter": "02-emotional",
+      "dim": "stability",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "稳定性随情境变化，特定场合明显更容易被推动",
+      "shadowSide": "整体看起来还好，所以那几个特定场合容易被忽略",
+      "growthDirection": "找出最近三次情绪起伏，看它们有没有共同的场景",
+      "fieldText": {
+        "zh": "你的情绪稳定性是分场合的——大部分时候没什么问题，但有几类情境下，你明显更容易被推动。因为整体看起来还好，这几个特定场合反而最容易被忽略过去，每次都当成偶然。它们多半不是偶然。回想最近三次情绪起伏比较大的时候：是不是有共同点——同一类人、同一种被对待的方式、同一个说不出口的位置。找到那个共同点，比笼统地要求自己稳定有用得多。",
+        "en": "Your stability is situational — most of the time it holds fine, but there are a few kinds of situations where you're noticeably easier to move. Because the overall picture looks fine, those specific situations are the ones most easily written off as one-offs. They usually aren't. Think back to the last three times your feelings ran high: was there something in common — the same kind of person, the same way of being treated, the same position you couldn't say out loud. Finding that common thread is far more useful than asking yourself, in general, to be steadier."
+      }
+    },
+    {
+      "id": "r.stability.high.a",
+      "chapter": "02-emotional",
+      "dim": "stability",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "基准线稳，受外部影响小",
+      "shadowSide": "稳定会让别人默认你不受影响，也让自己延后处理真实感受",
+      "growthDirection": "在别人以为你没事的场合，主动说一次实话",
+      "fieldText": {
+        "zh": "你的情绪基准线比较稳，外面发生什么，多数时候不会把你带走。这让你在别人乱的时候还能接得住事。代价是它会形成一种默认——别人默认你不受影响，久了你自己也会跟着默认，于是真实的感受被一再往后放，直到自己都不太确定还在不在。可以在一个别人以为你没事的场合，主动说一次实话：这件事我其实是有反应的。不需要说得完整，说出来这一步比说得好更重要。",
+        "en": "Your emotional baseline holds fairly steady — whatever is happening outside, most of the time it doesn't carry you off. It means you can catch things while other people are scattered. The cost is that it sets a default: other people assume you're unaffected, and after a while you assume it too, so the real feelings keep getting pushed back until you're not quite sure they're still there. Try this once, in a setting where everyone assumes you're fine: say the true thing. That one did land on me. It doesn't need to be complete. Saying it at all matters more than saying it well."
+      }
+    }
+  ]
+}

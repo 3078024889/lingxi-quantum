@@ -1,0 +1,99 @@
+{
+  "symbols": [
+    {
+      "id": "dream.sym.snake",
+      "symbolZh": "蛇",
+      "symbolEn": "snake",
+      "corePattern": "蜕变与被压抑生命力的双面象征；关键在做梦者当时的情绪，而不是符号本身",
+      "readings": [
+        {
+          "emotion": "curiosity",
+          "fieldText": {
+            "zh": "蛇在好奇的情绪里出现，多半和「正在靠近某种你还没准备好命名的力量」有关。它不是威胁的预告，更像一个正在接近的变化——你已经察觉到它，只是还没决定要不要伸手。可以回想一下：最近有没有一件事，你嘴上说还在考虑，心里其实已经动了。",
+            "en": "A snake arriving inside curiosity usually has to do with approaching some force you're not ready to name yet. It isn't a warning of threat; it's more like a change drawing near — you've already sensed it, you just haven't decided whether to reach out. Worth recalling: is there something recently you say you're still considering, while something in you has already moved."
+          }
+        },
+        {
+          "emotion": "fear",
+          "fieldText": {
+            "zh": "蛇在恐惧里出现，通常指向一种你知道存在、但一直绕开不看的东西。恐惧本身在这里是有功能的——它标记了位置。梦不是在预告危险，是在指出「这里有一样东西，你每次都从旁边走过去」。不用急着弄清它是什么，先承认自己一直在绕，就已经是靠近了。",
+            "en": "A snake arriving inside fear usually points at something you know is there and have kept walking around. The fear itself has a function here — it marks the location. The dream isn't forecasting danger; it's noting that there's something you pass beside every time. You don't have to work out what it is right away. Admitting you've been circling it is already a step closer."
+          }
+        },
+        {
+          "emotion": "calm",
+          "fieldText": {
+            "zh": "蛇在平静里出现，是比较少见的组合。它往往出现在一个人已经和某种强烈的东西共处了一段时间之后——不再对抗，也不再假装它不在。这种梦通常不是提醒，是确认：你已经能和它待在同一个房间里了。",
+            "en": "A snake arriving inside calm is a less common pairing. It tends to show up after someone has been living alongside something intense for a while — no longer fighting it, no longer pretending it isn't there. This kind of dream is usually not a prompt but a confirmation: you can be in the same room with it now."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dream.sym.falling",
+      "symbolZh": "坠落",
+      "symbolEn": "falling",
+      "corePattern": "失去支撑感的身体化表达；方向（有没有落地）比坠落本身更有信息量",
+      "readings": [
+        {
+          "emotion": "fear",
+          "fieldText": {
+            "zh": "坠落配上恐惧，是最常见的一种梦，通常出现在支撑结构正在变动的时期——工作、关系、住处、或者某个你一直依赖的确定性。它不预示失败，它描述的是「暂时没有踩到底」的那个状态。值得问自己的是：最近哪一件事，我不知道底在哪里。",
+            "en": "Falling paired with fear is one of the most common dreams, and it usually appears while a supporting structure is shifting — work, a relationship, where you live, or some certainty you'd been leaning on. It doesn't foretell failure. It describes the state of not yet having touched bottom. The question worth asking: which situation right now is one where I don't know where the floor is."
+          }
+        },
+        {
+          "emotion": "relief",
+          "fieldText": {
+            "zh": "坠落而不慌，甚至带着松弛，这个组合值得留意——它常常出现在一个人刚刚放下了某样一直用力扛着的东西之后。梦里的失重，对应的是现实里那句还没说出口的「不扛了」。",
+            "en": "Falling without panic — even with some ease in it — is a pairing worth noticing. It often comes just after someone has set down something they'd been holding up with effort. The weightlessness in the dream corresponds to a sentence not yet said out loud: I'm not carrying this anymore."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dream.sym.home",
+      "symbolZh": "老房子",
+      "symbolEn": "old house",
+      "corePattern": "已经不再居住、但仍在意识里保有位置的旧结构",
+      "readings": [
+        {
+          "emotion": "longing",
+          "fieldText": {
+            "zh": "回到老房子并带着想念，通常和「某个阶段的自己」有关，而不是那个地方本身。房子在梦里往往是人的结构：房间是分区，门是选择，回去是重新查看某一部分。带着想念回去，多半是那一部分里有你现在需要、但已经很久没用过的东西。",
+            "en": "Returning to an old house with longing usually has to do with a version of yourself from that period, not the place itself. In dreams a house tends to be a person's structure: rooms are compartments, doors are choices, returning is re-examining a part. Going back with longing generally means something in that part is needed now and hasn't been used in a long time."
+          }
+        },
+        {
+          "emotion": "unease",
+          "fieldText": {
+            "zh": "回到老房子却觉得不对劲——房间变了、找不到出口、有人不该在那里——这类梦常出现在一个人正在重新理解过去某段经历的时候。不对劲的感觉不是问题，是进展：说明你现在看它的角度，和当时已经不一样了。",
+            "en": "Returning to an old house and finding it off — rooms changed, no way out, someone present who shouldn't be — often appears while someone is re-understanding a past stretch of their life. The wrongness isn't a problem; it's progress. It means the angle you see it from now is no longer the angle you had then."
+          }
+        }
+      ]
+    },
+    {
+      "id": "dream.sym.water",
+      "symbolZh": "水",
+      "symbolEn": "water",
+      "corePattern": "情绪状态的直接映射；清浊、深浅、动静都是信息",
+      "readings": [
+        {
+          "emotion": "calm",
+          "fieldText": {
+            "zh": "平静的水面通常对应一段相对稳定的内在时期。这类梦不带任务，也不需要解读出什么行动——它更接近一次记录。如果最近的生活并不平静，那这个梦可能是在指出：有一部分的你，其实比你以为的稳。",
+            "en": "Still water usually corresponds to a relatively steady inner stretch. This kind of dream carries no task and doesn't need to yield an action — it's closer to a record. If life recently hasn't been calm, the dream may be pointing out that some part of you is steadier than you'd assumed."
+          }
+        },
+        {
+          "emotion": "fear",
+          "fieldText": {
+            "zh": "水带来压迫感——涨得太快、深不见底、或者你在里面动不了——通常和「情绪量超过了当前的处理速度」有关。注意这说的是速度，不是能力。同样多的水，慢慢来是河，一次性来就是淹。所以真正要调的往往不是承受力，是节奏。",
+            "en": "Water that presses in — rising too fast, bottomless, or leaving you unable to move — usually relates to emotional volume outpacing your current rate of processing. Note that this is about rate, not capacity. The same amount of water arriving slowly is a river; arriving at once, it's a flood. So what usually needs adjusting isn't how much you can take. It's the pace."
+          }
+        }
+      ]
+    }
+  ]
+}

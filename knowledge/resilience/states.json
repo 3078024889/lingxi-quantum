@@ -1,0 +1,32 @@
+{
+  "nodes": [
+    {
+      "id": "r.state.deepening.recovery",
+      "chapter": "01-self-recovery",
+      "priority": 10,
+      "when": {
+        "structureDim": "recovery",
+        "structureBand": "low",
+        "shift": "deepening",
+        "cadence": "high"
+      },
+      "fieldText": {
+        "zh": "你的结构没有变——这一项本来就不是靠时间变好的。变的是你在这套结构里走的路。最近这段时间，你练习的正好落在这一端，而且不是集中几天，是稳定地分布在很多周里。规律比总量重要得多：一个月练三十次然后停三个月，和每周稳定两次，长出来的是不同的东西。你在长的是后面那种。",
+        "en": "Your structure hasn't changed — this isn't the kind of thing that improves by waiting. What changed is the path you're walking inside it. Over this last stretch, your practice has landed on exactly this end, and not in a few concentrated bursts: spread steadily across many weeks. Regularity matters far more than volume. Thirty sessions in a month and then three months of nothing, versus twice a week without fail — those grow different things. What you're growing is the second one."
+      }
+    },
+    {
+      "id": "r.state.longgap",
+      "chapter": "01-self-recovery",
+      "priority": 6,
+      "when": {
+        "spanMonthsMin": 6,
+        "cadence": "none"
+      },
+      "fieldText": {
+        "zh": "距上一份报告已经过去一段时间，这期间的练习记录很少。这不构成任何评价——大多数时候，是生活本身占满了，不是谁不够努力。结构这一端一直在这里，没有过期，也不需要从头再来。你什么时候回来，都可以接着上次的位置往下走。",
+        "en": "It's been a while since your last report, and there are few practice records in between. This isn't an evaluation of anything — most of the time, life simply filled the space; it isn't a question of effort. This part of the structure has been here the whole time. It hasn't expired, and it doesn't need restarting from zero. Whenever you come back, you can pick up from where you left off."
+      }
+    }
+  ]
+}

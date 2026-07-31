@@ -1,0 +1,22 @@
+{
+  "themes": [
+    {
+      "id": "dream.theme.chased",
+      "themeZh": "被追赶",
+      "themeEn": "being chased",
+      "fieldText": {
+        "zh": "被追赶的梦，重点往往不在追的是什么，在你有没有回头看。一直不回头的梦，通常对应现实里一件被推迟了很久、每次想到就先做别的事的具体事情。它不危险，它只是还没被处理。",
+        "en": "In chase dreams the point is usually not what's chasing, but whether you look back. Dreams where you never turn around tend to correspond to one specific thing in waking life that keeps getting postponed — the thing you think of and then immediately do something else instead. It isn't dangerous. It just hasn't been dealt with yet."
+      }
+    },
+    {
+      "id": "dream.theme.reunion",
+      "themeZh": "重逢",
+      "themeEn": "reunion",
+      "fieldText": {
+        "zh": "梦见重逢，尤其是和已经不在联系里的人，很少是关于那个人本身。更多时候是关于「和那个人在一起时的你」——某种当时很自然、后来慢慢用不上了的状态。梦把那个状态还给你看一眼。",
+        "en": "Dreaming of reunion, especially with someone no longer in your life, is rarely about that person. More often it's about who you were around them — some way of being that came naturally then and gradually stopped being usable. The dream returns that state to you for a moment, to look at."
+      }
+    }
+  ]
+}

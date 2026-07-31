@@ -1,0 +1,35 @@
+{
+  "combos": [
+    {
+      "id": "r.combo.crisis-vs-daily",
+      "chapter": "01-self-recovery",
+      "priority": 20,
+      "when": {
+        "contrast": [
+          "crisis",
+          "recovery"
+        ],
+        "gapMin": 40
+      },
+      "fieldText": {
+        "zh": "这两项放在一起，会看到一件比单看任何一项都重要的事：你扛得住大风浪，却容易被日常的小事一点点磨。危机来的时候，你的系统会自动进入聚焦，效率高得连你自己都意外；但日常里那些不构成事件的消耗——反复的沟通、没有结论的等待、一件件不重要的小事——没有一件大到能触发你那套机制，所以它们只是安静地累积。这不是矛盾，是同一套系统的两面：它是被事件唤醒的，日常不构成事件。所以真正需要主动安排的，不是大事之后的休整，是日常里那些没人会提醒你的空隙。",
+        "en": "Put these two together and you see something more important than either alone: you can hold through a storm, and get worn down by small daily things. When a crisis arrives, your system focuses automatically, with an efficiency that surprises even you. But the daily drains — the repeated conversations, the waiting without resolution, the unimportant things one after another — none of them is large enough to trigger that mechanism, so they simply accumulate, quietly. This isn't a contradiction. It's two faces of one system: it's woken by events, and daily life doesn't qualify as an event. So what actually needs deliberate scheduling isn't the recovery after something big. It's the gaps in ordinary days that no one will remind you about."
+      }
+    },
+    {
+      "id": "r.combo.both-low-recovery-stability",
+      "chapter": "02-emotional",
+      "priority": 18,
+      "when": {
+        "bothLow": [
+          "recovery",
+          "stability"
+        ]
+      },
+      "fieldText": {
+        "zh": "这两项同时偏低的时候，最常见的误读是把它当成一个关于自己的结论。更准确的读法是：你现在同时缺的是缓冲和补给——情绪来得快，而回落需要的条件又还没找到。这两件事会互相加重，所以看起来会比实际更难。先别处理情绪本身，那是最难的一端。先处理条件：固定一件每天都会发生、门槛低到不需要意志力的小事——早上第一口水、睡前把手机放到另一个房间。补给稳了，缓冲会自己长出来一点。顺序反过来会很吃力。",
+        "en": "When both of these sit low, the most common misreading is to treat it as a conclusion about yourself. The more accurate reading: right now you're short on both buffer and supply — feelings arrive fast, and the conditions for settling haven't been found yet. These two compound each other, which is why it looks harder than it is. Don't start with the feeling itself; that's the difficult end. Start with conditions: fix one small thing that happens daily and needs no willpower at all — the first glass of water in the morning, putting the phone in another room before sleep. Once supply steadies, some buffer grows back on its own. Doing it in the reverse order is exhausting."
+      }
+    }
+  ]
+}
