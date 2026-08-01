@@ -970,7 +970,7 @@ export default function LifeMapFlow() {
                   { label: t("木星", "Jupiter"), v: isEn() ? report.facts.jupiter.signEn : report.facts.jupiter.signZh },
                   { label: t("土星", "Saturn"), v: isEn() ? report.facts.saturn.signEn : report.facts.saturn.signZh },
                 ].map((p) => (
-                  <div key={p.label} className="rounded-sm border border-lm2-text/10 bg-lm2-card px-3 py-2 text-center backdrop-blur-xl">
+                  <div key={p.label} className="lx-pdf-lifemap px-3 py-2 text-center backdrop-blur-xl">
                     <p className="text-[11px] uppercase tracking-widest2 text-lm2-text-dim/80">{p.label}</p>
                     <p className="mt-1 font-display text-sm text-lm2-text">{p.v}</p>
                   </div>
@@ -1104,7 +1104,7 @@ export default function LifeMapFlow() {
               </p>
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {parsed.keywords.map((k, i) => (
-                  <div key={i} className="rounded-sm border border-lm2-text/10 bg-lm2-card p-4 text-center backdrop-blur-xl">
+                  <div key={i} className="lx-pdf-lifemap p-4 text-center backdrop-blur-xl">
                     <p className="font-display text-xl text-lm2-text">✨ {k.word}</p>
                     <p className="mt-1 text-xs text-lm2-text-dim/70">{k.desc}</p>
                   </div>

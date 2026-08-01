@@ -360,11 +360,11 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
      用 0.50–0.58 的渐变：仍然是雾，不是实心面板，
      背景的极光依然透得过来，但文字在任何位置都站得住。 */
   position: relative;
-  background: linear-gradient(135deg, rgba(96,86,132,0.50), rgba(62,58,96,0.58));
-  border: 1px solid rgba(220, 210, 240, 0.22);
+  background: linear-gradient(135deg, rgba(80,130,220,0.20), rgba(130,80,200,0.16));
+  border: 1px solid rgba(190, 220, 255, 0.28);
   backdrop-filter: blur(24px) saturate(1.04);
   -webkit-backdrop-filter: blur(24px) saturate(1.04);
-  box-shadow: 0 8px 48px rgba(40, 36, 62, 0.20),
+  box-shadow: 0 0 44px rgba(80, 160, 255, 0.14),
               inset 0 0 60px rgba(255, 255, 255, 0.045);
   border-radius: 4px;
 }
@@ -379,8 +379,8 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-qian,
 .lx-glass-tarot,
 .lx-glass-relation,
-.lx-glass-lifemap { background: linear-gradient(135deg, rgba(78,86,116,0.50), rgba(54,62,88,0.58)); border-color: rgba(220,210,240,0.22); }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(78,102,84,0.50), rgba(52,70,58,0.58)); border-color: rgba(220,210,240,0.22); }
+.lx-glass-lifemap { background: linear-gradient(135deg, rgba(95,145,230,0.20), rgba(135,95,210,0.16)); border-color: rgba(190,220,255,0.28); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(90,180,150,0.20), rgba(70,140,190,0.16)); border-color: rgba(190,220,255,0.28); }
 .lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
 .lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
 .lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }
@@ -396,14 +396,14 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    注意保留 color 作为兜底：少数浏览器不支持 background-clip:text，
    不加兜底会变成完全透明、整行标题消失。 */
 .lx-hero-title {
-  color: #DCD7EA;
+  color: #EEE5FF;
   font-weight: 200;
   letter-spacing: 0.28em;
-  background: linear-gradient(96deg, #E3DEF0 0%, #C9A8D8 50%, #9FD8D0 100%);
+  background: linear-gradient(90deg, #E9D8FF 0%, #91E8FF 50%, #D8B7FF 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 18px rgba(201, 168, 216, 0.22));
+  filter: drop-shadow(0 0 32px rgba(140, 220, 255, 0.55));
 }
 
 /* 呼吸光：给需要"活着"的元素用，8 秒一个循环，比心跳慢，
@@ -453,7 +453,7 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   position: absolute;
   inset: 0;
   border-radius: 4px;
-  background: linear-gradient(180deg, rgba(38,34,52,0.46) 0%, rgba(38,34,52,0.34) 50%, rgba(38,34,52,0.46) 100%);
+  background: linear-gradient(180deg, rgba(5,11,36,0.60) 0%, rgba(8,21,54,0.46) 50%, rgba(5,11,36,0.60) 100%);
   pointer-events: none;
 }
 [class*="lx-pdf-"] > * { position: relative; z-index: 1; }
@@ -520,4 +520,19 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lx-portal-btn, .lx-portal-btn:hover { transition: none; transform: none; }
+}
+
+/* v282：意识核心。首屏中央那颗球是视觉中心，之前被压暗带挡住、
+   又没有自己的发光，所以整个首屏没有"爆点"。
+   三层外扩光晕：近处青白、中层紫、远处冷青，越远越淡。 */
+.lx-orb-core {
+  background: radial-gradient(circle,
+    #ffffff 0%,
+    #B8F3FF 15%,
+    #A58CFF 35%,
+    transparent 70%);
+  box-shadow:
+    0 0 40px #B9F2FF,
+    0 0 120px rgba(150, 100, 255, 0.60),
+    0 0 220px rgba(50, 220, 255, 0.30);
 }

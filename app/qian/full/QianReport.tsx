@@ -317,7 +317,7 @@ export default function QianReport({ id }: { id: string }) {
       {QIAN_PAGE_GROUPS.map((group, gi) => (
         <div
           key={gi}
-          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          className="lx-pdf-qian relative mt-5 overflow-hidden p-6"
           style={{ backgroundColor: "#2a2434", backgroundImage: `linear-gradient(rgba(42,36,52,0.82), rgba(42,36,52,0.82)), url(/images/qian-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "top" }}
         >
           <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-amber/90">
@@ -340,7 +340,7 @@ export default function QianReport({ id }: { id: string }) {
 
       {sections[sections.length - 1] && (
         <div
-          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          className="lx-pdf-qian relative mt-5 overflow-hidden p-6"
           style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.82), rgba(42,36,52,0.82)), url(/images/qian-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "top" }}
         >
           {LAYER_TITLES[sections.length - 1] && (

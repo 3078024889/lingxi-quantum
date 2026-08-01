@@ -302,7 +302,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {TAROT_PAGE_GROUPS.map((group, gi) => (
         <div
           key={gi}
-          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          className="lx-pdf-tarot relative mt-5 overflow-hidden p-6"
           style={{ backgroundColor: "#181030", backgroundImage: `linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-lattice/90">
@@ -325,7 +325,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
 
       {(sections[9] || sections[10]) && (
         <div
-          className="relative mt-5 overflow-hidden rounded-sm border border-white/10 p-6"
+          className="lx-pdf-tarot relative mt-5 overflow-hidden p-6"
           style={{ backgroundColor: "#181030", backgroundImage: "linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           {[9, 10].map((idx) =>
