@@ -17,9 +17,14 @@
      蓝"，同时把不透明度砍掉一大半，让卡片更像"一层带着光的玻璃"，
      不是"一块有颜色的板子"。文字对比度不够的部分，靠边框和外发光
      去补，而不是靠加深底色。 */
-  --aurora-glass: linear-gradient(135deg, rgba(110, 196, 230, 0.22), rgba(150, 170, 235, 0.20));
-  --aurora-glass-strong: linear-gradient(135deg, rgba(110, 196, 230, 0.42), rgba(150, 170, 235, 0.4));
-  --aurora-glass-border: rgba(160, 224, 255, 0.55);
+  /* v286：玻璃不该自己带颜色，应该反射环境颜色。
+     之前这里是青蓝(110,196,230)+灰蓝(150,170,235)，等于把面板染成
+     蓝色塑料片——这是整站"灰、淡、雾蒙蒙"的源头。
+     改成以白为主、紫青为辅的三段渐变：白负责通透，紫青只作反光。 */
+  --aurora-glass: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(180,150,255,0.10), rgba(80,220,220,0.08));
+  --aurora-glass-strong: linear-gradient(135deg, rgba(255,255,255,0.20), rgba(180,150,255,0.16), rgba(80,220,220,0.12));
+  /* 边框从 0.55 的硬青蓝改为 0.35 的柔紫白——之前太硬，像描边 */
+  --aurora-glass-border: rgba(220, 210, 255, 0.35);
   --aurora-glow: 0 0 20px rgba(140, 210, 255, 0.28), 0 0 8px rgba(180, 220, 255, 0.2);
 }
 
@@ -199,9 +204,12 @@ textarea.bg-lm2-bg, input.bg-lm2-bg {
    之前这里其实是从老版浅色主题遗留下来的 bg-white/45——没跟着整体
    换色，这是导航栏一直显得"发灰、看不清"的真正原因。 */
 .lx-nav-glass {
-  background-color: rgba(10, 20, 38, 0.35);
+  /* v286：导航之前看起来像"一条蓝色横幅"。底色从偏蓝的
+     (10,20,38) 改为偏紫的 (10,15,45)，配合 aurora-glass-strong
+     变量（已改为无色反射版），成为悬浮玻璃而不是实心条。 */
+  background-color: rgba(10, 15, 45, 0.35);
   background-image: var(--aurora-glass-strong);
-  box-shadow: 0 1px 24px rgba(140, 210, 255, 0.12);
+  box-shadow: 0 2px 30px rgba(140, 110, 255, 0.16);
 }
 
 .lx-entry-accordion summary::-webkit-details-marker { display: none; }
@@ -353,18 +361,15 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 
 .lx-glass {
   position: relative;
-  /* v285：更透 + 紫色内发光。
-     背景推向紫晶之后，暗部亮度从 (39,43,72) 升到 (72,64,130)，
-     可读性反而变好（青绿亮带上的正文从 2.6 升到 5.1），
-     所以玻璃可以做得比之前任何一版都透。
-     内发光用紫（rgba(180,120,255)）而不是白——白色内光会让玻璃
-     显得"塑料"，紫色内光才像水晶。 */
-  background: linear-gradient(135deg, rgba(180,150,255,0.16), rgba(80,220,255,0.08));
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  /* v286：玻璃本身近乎无色，颜色来自它反射的环境。
+     白 0.12 打底给通透，紫 0.10 与青 0.08 只作反光。
+     内光比外光重要——效果图里的面板不是靠边框亮，是内部有光。 */
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(180,150,255,0.10), rgba(80,220,220,0.08));
+  border: 1px solid rgba(220, 210, 255, 0.35);
   backdrop-filter: blur(30px) saturate(165%);
   -webkit-backdrop-filter: blur(30px) saturate(165%);
-  box-shadow: 0 0 80px rgba(160, 100, 255, 0.25),
-              inset 0 0 60px rgba(255, 180, 255, 0.12);
+  box-shadow: inset 0 0 40px rgba(180, 140, 255, 0.18),
+              0 0 40px rgba(120, 220, 255, 0.15);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -384,7 +389,7 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(16,10,34,0.36), rgba(20,12,38,0.30));
+  background: linear-gradient(160deg, rgba(16,10,34,0.44), rgba(20,12,38,0.38));
   pointer-events: none;
 }
 
@@ -398,8 +403,8 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-qian,
 .lx-glass-tarot,
 .lx-glass-relation,
-.lx-glass-lifemap { background: linear-gradient(135deg, rgba(160,180,255,0.16), rgba(190,145,255,0.08)); }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(150,220,200,0.16), rgba(90,200,255,0.08)); }
+.lx-glass-lifemap { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(165,185,255,0.10), rgba(195,150,255,0.08)); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(150,230,200,0.10), rgba(120,200,255,0.08)); }
 .lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
 .lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
 .lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }
@@ -499,15 +504,15 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-relation,
 .lx-glass-lifemap {
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(220, 210, 255, 0.35);
   backdrop-filter: blur(30px) saturate(165%);
   -webkit-backdrop-filter: blur(30px) saturate(165%);
-  box-shadow: 0 0 80px rgba(160, 100, 255, 0.25),
-              inset 0 0 60px rgba(255, 180, 255, 0.12);
+  box-shadow: inset 0 0 40px rgba(180, 140, 255, 0.18),
+              0 0 40px rgba(120, 220, 255, 0.15);
   border-radius: 4px;
   overflow: hidden;
 }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(150,220,200,0.16), rgba(90,200,255,0.08)); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(150,230,200,0.10), rgba(120,200,255,0.08)); }
 .lx-glass-romance    { background: linear-gradient(135deg, rgba(190,110,170,0.20), rgba(140,90,190,0.17)); }
 .lx-glass-wealth     { background: linear-gradient(135deg, rgba(90,130,215,0.20), rgba(130,95,200,0.17)); }
 .lx-glass-daily      { background: linear-gradient(135deg, rgba(80,180,205,0.20), rgba(85,125,205,0.17)); }

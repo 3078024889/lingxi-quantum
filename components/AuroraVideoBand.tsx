@@ -50,7 +50,7 @@ export default function AuroraVideoBand() {
     <div className="fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
       {hijacker ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={POSTER_SRC} alt="" className="h-full w-full object-cover" />
+        <img src={POSTER_SRC} alt="" className="h-full w-full object-cover" style={{ filter: "saturate(1.35) brightness(1.08) contrast(1.05)" }} />
       ) : (
         <video
           autoPlay
@@ -60,6 +60,10 @@ export default function AuroraVideoBand() {
           preload="auto"
           poster={POSTER_SRC}
           className="h-full w-full object-cover"
+          // v286：视频本身提饱和。之前紫不够紫、青不够青，是因为视频被
+          // 上面的背景层和玻璃层双重压掉了，看起来灰蒙蒙。
+          // 在源头提上来，后面的层就不需要再补色。
+          style={{ filter: "saturate(1.35) brightness(1.08) contrast(1.05)" }}
           // 腾讯X5内核（微信、QQ、部分安卓浏览器）专用：走H5内联播放，
           // 不要接管成全屏播放器。React会把这些带横线的属性原样输出。
           x5-playsinline="true"
@@ -77,33 +81,27 @@ export default function AuroraVideoBand() {
       {/* 极轻的暗角，压一压视频最亮区域，让全站文字（珍珠白/黄金/极光青）
           在任何画面亮度下都还留有一点余量，不需要再靠光晕这类补丁。 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,transparent_0%,rgba(8,6,20,0.35)_100%)]" />
-      {/* v285：从"科技蓝"推向"紫晶意识场"。
-          诊断很准：之前的层偏蓝灰（#344b72 那种），像科技官网后台。
-          效果图的核心不是蓝，是"蓝紫宇宙 + 生命光谱"。
-          处方：紫 +40%、青绿 +20%、蓝 -25%。
+      {/* v286：70% 深空背景 + 20% 极光颜色 + 10% 玻璃反射。
+          之前的比例反了——玻璃自己带着蓝色，占了大头，所以整站发灰。
+          现在玻璃改成近乎无色（只反射环境），颜色的活儿交回给这一层。
 
-          三层：
-          1) 底色渐变 #070b28 → #151c55 → #27164d
-             注意底部是紫（#27164d）不是蓝——这是"暗→光→暗"层次的关键，
-             之前整体亮度平均，所以没有纵深。
-          2) 四团能量光：左紫、右青绿、底部暖紫、中心蓝
-             暖紫那团是之前完全没有的，它让画面有"晨光"而不只是"夜"。
-          3) screen 混合——是加光不是加暗，极光的流动才透得出来。 */}
+          左侧紫色星云、右侧青绿极光、中间深蓝宇宙，
+          底色 #080b2a → #101946 → #07152d。
+          用 screen 混合：是加光不是加暗，视频的流动才透得出来。 */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(7,11,40,0.52) 0%, rgba(21,28,85,0.30) 52%, rgba(39,22,77,0.44) 100%)",
+            "linear-gradient(160deg, rgba(8,11,42,0.50) 0%, rgba(16,25,70,0.26) 50%, rgba(7,21,45,0.44) 100%)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 20% 30%, rgba(155,108,255,0.34), transparent 42%)," +
-            "radial-gradient(circle at 80% 30%, rgba(88,230,200,0.22), transparent 38%)," +
-            "radial-gradient(circle at 50% 82%, rgba(217,140,255,0.30), transparent 40%)," +
-            "radial-gradient(circle at 50% 46%, rgba(36,61,143,0.20), transparent 46%)",
+            "radial-gradient(ellipse 62% 55% at 25% 20%, rgba(190,120,255,0.35), transparent 45%)," +
+            "radial-gradient(ellipse 58% 50% at 75% 30%, rgba(80,255,220,0.25), transparent 45%)," +
+            "radial-gradient(ellipse 80% 44% at 50% 88%, rgba(215,140,255,0.22), transparent 55%)",
           mixBlendMode: "screen",
         }}
       />

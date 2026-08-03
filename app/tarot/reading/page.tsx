@@ -5,7 +5,7 @@ import TarotReadingFlow from "./TarotReadingFlow";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "灵犀量子塔罗 · 三张牌阵深度解读 $9.9 | Lingxi Quantum Tarot Three-Card Reading | Lingxi",
+  title: "灵犀量子塔罗 · 三张牌阵深度解读 | Lingxi Quantum Tarot Three-Card Reading | Lingxi",
   description: "专属于你的三张牌——潜意识镜像、当下共振、未来展开，由你的真实命盘数据确定，不是随机抽取。Your own three cards — determined by your real chart data, not a random draw.",
   alternates: { canonical: "/tarot/reading" },
 };
