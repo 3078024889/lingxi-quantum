@@ -88,15 +88,19 @@ export default function ResilienceReportView({ id }: { id: string }) {
     if (!reportRef.current) return;
     setDownloading(true);
     try {
-      const { exportGlassPdf } = await import("@/lib/pdf-export");
-      await exportGlassPdf({
-        containerRef: reportRef.current,
+      // v290：换用档案式导出——每章独立一页、PDF 原图铺满整页、
+      // 文字压在半透明玻璃面板上。之前是 html2canvas 把网页截图再切片，
+      // 结果是图被裁、底色写死成墨绿（新素材是浅色，WPS 里打开发黑）、
+      // 一页塞两三章显得内容单薄。
+      const { exportArchivePdf } = await import("@/lib/pdf-export");
+      await exportArchivePdf({
+        chapters: sections.map((body, i) => ({ title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? `第 ${i + 1} 章`, body })),
         fileName: `灵犀生命韧性档案-${name || "report"}.pdf`,
-        reportTitleZh: `${name || "你的"}生命韧性档案`,
-        reportTitleEn: `${name || "Your"} Life Resilience Archive`,
-        chapterTitles: SECTION_TITLES,
-        bgColorRgb: [9, 37, 31],
-        bgColorHex: "#09251f",
+        titleZh: `${name || "你的"}生命韧性档案`,
+        titleEn: `${name || "Your"} Life Resilience Archive`,
+        coverImage: "/images/resilience-full/page-0.png",
+        bodyImages: [1, 2, 3, 4].map((n) => `/images/resilience-full/page-${n}.png`),
+        endImage: "/images/resilience-full/page-5.png",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
