@@ -139,6 +139,566 @@
         "zh": "你的情绪基准线比较稳，外面发生什么，多数时候不会把你带走。这让你在别人乱的时候还能接得住事。代价是它会形成一种默认——别人默认你不受影响，久了你自己也会跟着默认，于是真实的感受被一再往后放，直到自己都不太确定还在不在。可以在一个别人以为你没事的场合，主动说一次实话：这件事我其实是有反应的。不需要说得完整，说出来这一步比说得好更重要。",
         "en": "Your emotional baseline holds fairly steady — whatever is happening outside, most of the time it doesn't carry you off. It means you can catch things while other people are scattered. The cost is that it sets a default: other people assume you're unaffected, and after a while you assume it too, so the real feelings keep getting pushed back until you're not quite sure they're still there. Try this once, in a setting where everyone assumes you're fine: say the true thing. That one did land on me. It doesn't need to be complete. Saying it at all matters more than saying it well."
       }
+    },
+    {
+      "id": "r.adaptability.vlow.a",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "计划一被打乱就整体停摆，需要重新铺一遍才能动",
+      "shadowSide": "越是重新铺越怕被打断，形成循环",
+      "growthDirection": "把计划写成三件互不依赖的事，而不是一条流水线",
+      "fieldText": {
+        "zh": "计划一旦被打乱，你需要的不是调整，是重新来过——这一项分数很低，说的是这件事。你的做法通常是把事情铺成一条完整的线，一环扣一环，所以中间断掉一环，整条线就停了，得从头再铺。这不是不够灵活，是你的系统按「完整」运行，不按「局部」运行。可以换一种铺法：把今天要做的写成三件互不依赖的事，而不是一条有先后的流水线。断掉一件，另外两件照常。改的不是你的适应力，是任务的结构。",
+        "en": "When a plan gets disrupted, what you need isn't an adjustment — it's to start over. That is what a very low score here describes. You tend to lay work out as one continuous line, each step depending on the last, so when one link breaks the whole line stops and has to be laid again. This isn't inflexibility. Your system runs on completeness rather than on parts. Try laying it out differently: write today as three things that don't depend on each other, rather than one sequence. Break one and the other two still stand. What changes isn't your adaptability — it's the shape of the task."
+      }
+    },
+    {
+      "id": "r.adaptability.low.a",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "变化会消耗额外的启动成本，但能过去",
+      "shadowSide": "消耗被自己低估，累积到某个点才发现",
+      "growthDirection": "变化发生时记一句「这次我用了多久缓过来」，让成本可见",
+      "fieldText": {
+        "zh": "变化对你来说不是不能接受，是要额外付一笔启动成本——同一件事，别人换个方式做就直接做了，你需要先在心里重新对一遍才动得起来。这笔成本是真实的，问题在于它不显眼：每次都过去了，所以你不会记它，直到某个阶段变化多得让你莫名疲惫，才发现账早就欠着。可以让它变得可见：变化发生的时候，随手记一句「这次我用了多久缓过来」。记几次之后你会知道自己的真实节奏，也就能提前留出这段时间，而不是每次都硬挤。",
+        "en": "Change isn't something you can't take — it just costs you an extra startup fee. The same task, done a different way: others simply do it; you need to run through it again internally before you can move. That cost is real, and the problem is that it's invisible. You get through every time, so you never count it — until a stretch with a lot of change leaves you inexplicably tired, and you find the bill has been accruing all along. Make it visible: when something changes, note how long it took you to come back. After a few times you'll know your actual rhythm, and can budget for it instead of squeezing it in every time."
+      }
+    },
+    {
+      "id": "r.adaptability.mid.a",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "按变化的类型分：有些能立刻接住，有些会卡",
+      "shadowSide": "整体看起来还行，所以卡住的那一类每次都当成偶然",
+      "growthDirection": "分辨让你卡的是「没有预告」还是「没有解释」的变化",
+      "fieldText": {
+        "zh": "你的适应力是分类型的。有些变化你几乎立刻就接住了，另一些会明显卡一下——因为整体表现还行，卡住的那一类反而最容易被当成偶然放过去。它多半不是偶然。值得分辨：让你卡的到底是「没有预告」的变化，还是「没有解释」的变化。前者是节奏问题，提前知道就能解决；后者是意义问题，你需要理解为什么变，而不是被通知变了。这两种要的东西完全不同，混在一起处理，会一直觉得自己适应力不稳定。",
+        "en": "Your adaptability is type-dependent. Some changes you absorb almost instantly; others visibly stall you — and because the overall picture looks fine, the stalling kind gets written off as a one-off. It usually isn't. Worth distinguishing: is it change without warning that stalls you, or change without explanation? The first is a question of pacing, solved by knowing in advance. The second is a question of meaning: you need to understand why it changed, not simply be told that it did. Those need completely different things, and treating them as one is why your adaptability keeps feeling inconsistent."
+      }
+    },
+    {
+      "id": "r.adaptability.high.a",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "接住变化的速度快，切换成本低",
+      "shadowSide": "切得太快，有些没处理完的事被顺势跳过",
+      "growthDirection": "换轨之后补一句：上一段有没有什么是我还没收尾的",
+      "fieldText": {
+        "zh": "你切换得很快。计划变了，你多半能立刻找到新的走法，不需要缓冲期——这在多数环境里是明显的优势，别人还在消化，你已经在动了。要留意的是快带来的一个盲区：有些事情不是被解决了，是被顺势跳过了。变化给了它一个天然的理由消失，而你切得太顺，没有注意到它还在原地。所以换轨之后可以补一句：上一段里，有没有什么是我还没收尾的。花不了多少时间，但能防止旧账在几个月后突然回来。",
+        "en": "You switch fast. When a plan changes you can usually find the new route immediately, with no buffer — in most environments that's a clear advantage; others are still digesting while you're already moving. Watch the blind spot that speed creates: some things don't get resolved, they get skipped. The change gave them a natural excuse to disappear, and you switched so smoothly that you didn't notice they're still sitting there. So after changing tracks, add one question: was there anything in the last stretch I never closed out. It costs little, and it stops old business from resurfacing months later."
+      }
+    },
+    {
+      "id": "r.adaptability.vhigh.a",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "几乎不受计划变动影响，随时可以重组",
+      "shadowSide": "太容易重组，别人默认你没有立场；自己也可能忘了原来想要什么",
+      "growthDirection": "定期回看最初的方向，确认是在调整路线，不是被路线带走",
+      "fieldText": {
+        "zh": "计划对你来说更像参考，不像承诺——变了就变了，你几乎立刻能重组出一条新路。这种流动性很少见，也确实好用。但它有一个不容易察觉的代价：太容易重组的人会被默认为「没有所谓」，久了别人不再问你的意见，只通知你结果；更麻烦的是，你自己也可能在一次次顺应之后，记不清最初想要的是什么。所以值得定期回看一次最初的方向——不是为了固执，是为了确认这些调整是你在走路线，还是路线在带着你走。",
+        "en": "Plans are more like references to you than commitments — when they change, they change, and you can reassemble a new route almost immediately. That fluidity is rare, and genuinely useful. It carries a cost that's hard to notice: someone who reassembles that easily gets read as having no stake, and over time people stop asking your view and simply inform you of outcomes. More troubling, after enough accommodations you may lose track of what you originally wanted. So it's worth returning periodically to the original direction — not out of stubbornness, but to confirm whether you're steering these adjustments, or being carried by them."
+      }
+    },
+    {
+      "id": "r.crisisRebound.vlow.a",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "冲击来临时系统倾向于保护性关闭，而不是启动",
+      "shadowSide": "关闭常被读成软弱，其实是一种代价很高的自保",
+      "growthDirection": "冲击之后先确认身体安全，不急着评估自己表现如何",
+      "fieldText": {
+        "zh": "真正的冲击来临时，你的系统更倾向于关闭而不是启动——这一项分数很低，说的是这件事。别人在危机里加速，你可能是整个人慢下来、僵住、暂时什么也判断不了。这种反应经常被读成软弱，但它其实是一种保护：系统判断此刻动比不动更危险，所以先把闸拉下来。它有效，代价是恢复得慢。这一段最不需要的是自我评估。冲击过去之后，先确认一件具体的事——吃了吗、睡了吗、有没有人知道你现在的状况。等身体先落地，再谈别的。",
+        "en": "When a real shock lands, your system leans toward shutting down rather than starting up — that is what a very low score here describes. Others accelerate in a crisis; you may slow to a stop, freeze, temporarily unable to judge anything. That response often gets read as weakness. It is in fact protection: the system has judged that moving is riskier than not moving, so it pulls the switch. It works, and the cost is a slow recovery. What this stretch least needs is self-assessment. After the shock, confirm one concrete thing — have you eaten, have you slept, does anyone know your situation. Let the body land first. Everything else can wait."
+      }
+    },
+    {
+      "id": "r.crisisRebound.low.a",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "能站起来，但需要的时间比自己预期长",
+      "shadowSide": "拿预期当标准，于是每次都觉得自己不够快",
+      "growthDirection": "把上一次真实的恢复天数记下来，用它当基准，不用别人的",
+      "fieldText": {
+        "zh": "你站得起来，只是需要的时间比你以为的长。这项分数低，说的不是你恢复不了，是你的恢复曲线比较缓——问题往往不在曲线本身，在你拿了一个不属于自己的预期去对照它。你以为三天该好，实际需要两周，于是每一天都在自责，而自责本身又拖慢了恢复。可以换个基准：回想上一次真正缓过来花了多久，把那个数字记下来。下次再遇到类似的事，用你自己的数字，不要用别人的。知道要走两周，和以为该三天却走了两周，是完全不同的两种体验。",
+        "en": "You do get back up — it just takes longer than you expect. A low score here isn't saying you can't recover; it's saying your recovery curve is gradual. And the problem is usually not the curve but the expectation you measure it against, which isn't yours. You think three days should do it, it actually takes two weeks, so every day carries self-blame — and the self-blame slows the recovery further. Try a different baseline: recall how long it genuinely took you to come back last time, and write that number down. Next time something similar happens, use your number, not someone else's. Knowing it takes two weeks, versus thinking it should take three and finding it takes two, are entirely different experiences."
+      }
+    },
+    {
+      "id": "r.crisisRebound.mid.a",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "反弹力度取决于冲击的类型，不取决于强度",
+      "shadowSide": "以为是自己状态不稳，其实是不同类型的冲击调用不同资源",
+      "growthDirection": "回想两次反弹快慢差别很大的经历，找出它们的类型差异",
+      "fieldText": {
+        "zh": "你的反弹速度不太取决于冲击有多大，更取决于它是哪一类。有些事情很重，你反而很快就重新站起来了；有些事情看起来不大，却让你缓了很久。这经常被误读成「我的状态不稳定」，更接近事实的说法是：不同类型的冲击调用的是你身上不同的资源，而其中有一类资源比较薄。可以回想两次反弹快慢差别很大的经历，比较它们——是不是一次有明确的对手和方向，另一次没有？是不是一次你能做点什么，另一次只能等？分清类型，比笼统地要求自己更抗打有用得多。",
+        "en": "How fast you rebound depends less on how large the shock was than on which kind it was. Some heavy things you come back from quickly; some that look minor leave you slow for a long time. This gets misread as instability. Closer to the fact: different kinds of shock draw on different resources in you, and one of those resources runs thin. Recall two experiences where your rebound speed differed sharply, and compare them — did one have a clear opponent and direction while the other didn't? In one could you act, while in the other you could only wait? Sorting the kinds apart is far more useful than asking yourself, in general, to take hits better."
+      }
+    },
+    {
+      "id": "r.crisisRebound.high.a",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "冲击触发聚焦，压力越大反而越清楚该做什么",
+      "shadowSide": "只在危机里清楚，平稳期反而找不到方向",
+      "growthDirection": "把危机里奏效的具体做法写下来，试着在平常时候用一次",
+      "fieldText": {
+        "zh": "真正的低谷来临时，你反而比风平浪静的时候更容易调动起行动力，去找下一个出口。原因很可能是你的系统天生更擅长在压力下启动，而不是在压力下瘫痪——平时看起来没什么方向感，一旦情况真的紧急，反而会突然变得很清楚该往哪走。这种模式经常被误读成「什么都不在乎」，其实是启动的开关需要够高的压力才会被真正按下。可以做一件事：把危机里那些真正奏效的具体做法写下来，然后挑一个，在平常的时候用一次。你会发现那套能力不是只有危机才能调出来。",
+        "en": "When a real low point arrives, you find it easier to mobilize than during calm stretches, and you go looking for the next exit. Most likely your system is built to ignite under pressure rather than to seize up under it — ordinarily you may seem to lack direction, and then, once things are genuinely urgent, it becomes suddenly clear which way to move. This pattern often gets misread as not caring. In fact the switch simply needs enough pressure before it truly presses down. One thing worth doing: write down the specific moves that actually worked during a crisis, then pick one and use it on an ordinary day. You'll find that capacity isn't only available in emergencies."
+      }
+    },
+    {
+      "id": "r.crisisRebound.vhigh.a",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "危机中的启动几乎是即时的，且能带动他人",
+      "shadowSide": "太可靠，所有人都默认你没事；自己也不再区分「能扛」与「该扛」",
+      "growthDirection": "在危机中途主动说一次自己的状态，哪怕只有一句",
+      "fieldText": {
+        "zh": "危机里你几乎是即时启动的，而且这种启动往往会带动周围的人——大家会不自觉地看向你，等你先动。这是一种真实的力量，不需要谦虚。但它有一个很少被说破的代价：太可靠的人，所有人都默认他没事，包括他自己。久了你会不再区分「我能扛」和「这件事该不该由我扛」，把前者当成后者的答案。所以可以试一次：在危机进行中，而不是结束之后，主动说一句自己的状态。哪怕只是「我现在也挺紧的」。这一句不会削弱任何东西，但它会让你重新成为在场的人之一，而不只是那个撑住场面的人。",
+        "en": "In a crisis your ignition is nearly instantaneous, and it tends to move the people around you — they look toward you without meaning to, waiting for you to act first. That is real strength; no need to be modest about it. It carries a cost that rarely gets said out loud: the most reliable person is assumed by everyone to be fine, including by himself. Over time you stop distinguishing between I can carry this and this should be mine to carry, and let the first stand as the answer to the second. So try this once: mid-crisis, not afterwards, say one sentence about your own state. Even just, this is tight for me too. It weakens nothing — and it puts you back among the people present, rather than only being the one holding the room."
+      }
+    },
+    {
+      "id": "r.05-persist.vlow.a",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "没有即时反馈时动力迅速衰减，靠意志硬撑成本极高",
+      "shadowSide": "反复启动又中断，容易得出「我坚持不了任何事」的结论",
+      "growthDirection": "把长期目标拆到每天能看见完成的最小单位",
+      "fieldText": {
+        "zh": "没有即时反馈的事，你很难撑住——这一项分数很低，说的是这件事。它常被理解成毅力不足，但更接近的说法是：你的系统需要看见结果才能持续供能，而长期投入恰恰在很长一段时间里什么也看不见。硬撑不是不行，是成本高得不可持续，撑几次就会得出「我坚持不了任何事」这个并不准确的结论。可行的做法不是加强意志，是改造反馈：把长期目标拆到每天能看见完成的最小单位——不是「写完一章」，是「今天打开文档写了三行」。让系统有东西可以确认，它才愿意继续供能。",
+        "en": "Things without immediate feedback are hard for you to sustain — that is what a very low score here describes. It usually gets read as a lack of willpower. Closer to the truth: your system needs to see a result before it will keep supplying energy, and long-haul work shows nothing for a long stretch. Forcing it isn't impossible, just unsustainably expensive, and after a few attempts you arrive at the inaccurate conclusion that you can't stick with anything. The workable move isn't more willpower; it's rebuilding the feedback: break the long goal down to the smallest unit you can see completed today — not finish the chapter, but opened the document and wrote three lines. Give the system something to confirm, and it will keep supplying."
+      }
+    },
+    {
+      "id": "r.05-persist.low.a",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "能坚持，但需要外部结构支撑，独自维持时容易断",
+      "shadowSide": "断了归因于自己，忽略了断的是结构不是人",
+      "growthDirection": "找一个不依赖意志的外部锚点：固定时间、固定地点、或一个人",
+      "fieldText": {
+        "zh": "你能坚持，但需要有东西托着——有人一起、有固定的时间、有人会问起，这些在的时候你走得挺稳；一旦全靠自己维持，就容易断。这项分数低说的是这个，不是说你不能长期做一件事。多数人在这里会归因于自己不够自律，其实断掉的是结构，不是人。所以要补的也是结构：找一个不依赖意志的外部锚点——每周三晚上八点、总是同一个位置、或者一个知道你在做这件事的人。锚点不需要监督你，它只需要存在，让「继续」变成默认，而不是每次都要重新决定。",
+        "en": "You can persist, but you need something holding it up — company, a fixed time, someone who will ask. With those in place you move steadily; left entirely to yourself, it tends to break. That's what a low score here means; it isn't saying you can't do anything long-term. Most people blame their own discipline at this point. What broke was the structure, not the person. So structure is what to rebuild: find an external anchor that doesn't depend on willpower — Wednesdays at eight, always the same seat, or one person who knows you're doing this. The anchor doesn't need to supervise you. It only needs to exist, so that continuing becomes the default instead of a decision you must make again each time."
+      }
+    },
+    {
+      "id": "r.05-persist.mid.a",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "在有意义感的事上能长期投入，在纯任务上很快耗尽",
+      "shadowSide": "把两种情况混为一谈，怀疑自己的坚持力不稳定",
+      "growthDirection": "分辨手上的事属于哪一类，别用同一套方法对待",
+      "fieldText": {
+        "zh": "你的坚持力不是一条平线，它取决于这件事对你有没有意义。有意义感的事，你可以投入很久，甚至不太需要提醒；纯粹的任务，很快就耗尽了。这两种情况混在一起看，就会觉得「我的坚持力时好时坏」。它其实相当稳定，只是燃料不同。可以做的是先分类：手上这件事，是我认它，还是我只是接了它？前者靠意义供能，需要的是不断和意义连线；后者靠结构供能，需要的是拆小、设截止、找人盯。用错了方法，再努力都会觉得费劲。",
+        "en": "Your persistence isn't a flat line; it depends on whether the thing means something to you. Work that carries meaning you can sustain for a long time, sometimes without needing reminders. Pure tasks drain you quickly. Looking at both together produces the sense that your persistence is unreliable. It's actually quite stable — the fuel is simply different. Start by sorting: is this something I own, or something I merely accepted? The first runs on meaning and needs regular reconnection to why. The second runs on structure and needs breaking down, deadlines, someone checking. Apply the wrong method and any amount of effort feels like grinding."
+      }
+    },
+    {
+      "id": "r.05-persist.high.a",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "长期投入不太依赖外部反馈，能自己供能",
+      "shadowSide": "撑得太久，有些早该放下的事也一起被撑住了",
+      "growthDirection": "定期问一次：这件事我还要不要，而不是我还能不能",
+      "fieldText": {
+        "zh": "没有即时反馈的长期投入，你靠什么撑住——这项能力通常最不容易被看见，却最决定结果。你身上它是厚的：不太需要别人肯定，也不太因为一时没有进展就动摇，能自己给自己供能走很远。要留意的正好是这份能力的另一面：撑得住的人，容易把「还能撑」当成「应该继续」，于是有些早就该放下的事，也被一起撑住了，甚至撑了好几年。所以值得定期问一次——不是「我还能不能坚持」，是「这件事我还要不要」。前一个问题你几乎永远答得出，后一个才是真正需要判断的。",
+        "en": "What holds you through long investment without immediate feedback — this capacity is usually the least visible and the most decisive. In you it runs thick: you don't need much external validation, you aren't easily shaken by a stretch without progress, and you can fuel yourself a long way. Watch the other face of that strength: people who can hold tend to treat still able to hold as should continue, and so things that should have been set down years ago get held up too. Worth asking periodically — not can I still keep going, but do I still want this. You can almost always answer the first. The second is the one that actually requires judgment."
+      }
+    },
+    {
+      "id": "r.05-persist.vhigh.a",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "极强的续航，几乎不因外界变化而中断",
+      "shadowSide": "续航太强，止损的信号会被当成需要克服的困难",
+      "growthDirection": "预先设一个退出条件，在开始的时候就写下来",
+      "fieldText": {
+        "zh": "你的续航强到几乎不受外界影响——别人放弃的地方你还在走，而且不觉得特别费力。这是罕见的，也确实带来了很多别人拿不到的结果。但正因为它太强，有一个信号在你身上容易失灵：止损。对多数人来说，撑不住本身就是一个提示，提醒他们该重新评估；而你撑得住，所以这个提示不会出现，那些本该被读作「方向不对」的困难，会被你读成「需要克服」。可行的做法是在开始的时候就写下退出条件——什么情况出现，我就重新评估。趁还没投入的时候写，那时候你最清醒。",
+        "en": "Your endurance runs strong enough that outside conditions barely interrupt it — you're still walking where others stopped, and it doesn't feel especially hard. That's rare, and it has produced results others couldn't reach. Precisely because it's so strong, one signal tends to fail in you: cutting losses. For most people, no longer being able to hold is itself the prompt to reassess. You can hold, so the prompt never arrives, and difficulties that should read as wrong direction get read instead as things to overcome. The workable move is to write the exit condition at the start — what would have to happen for me to reassess. Write it before you're invested. That's when you see most clearly."
+      }
+    },
+    {
+      "id": "r.07-hidden.vlow.a",
+      "chapter": "07-hidden",
+      "dim": "stressRecovery",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "恢复几乎全靠中断刺激源，没有主动的恢复动作",
+      "shadowSide": "以为只要事情停了就会好，于是从不主动做什么",
+      "growthDirection": "找一件不需要环境配合、五分钟内能做完的恢复动作",
+      "fieldText": {
+        "zh": "你的恢复方式目前几乎只有一种：等刺激源停下来。事情结束了，你才开始好转；事情不结束，你就一直悬着。这不是错的方式，它只是把恢复完全交给了外部条件——而外部条件恰恰是你控制不了的那部分。这种模式下最常出现的一句话是「等这阵子过去就好了」。有时候确实会好，有时候一阵接一阵，就一直没有过去。所以值得找一件不依赖环境的恢复动作：五分钟内能做完、不需要谁配合、不需要事情先结束。它不会解决什么，但它会证明一件重要的事——恢复这件事，有一部分是你自己能启动的。",
+        "en": "Right now you have essentially one way to recover: wait for the source of stress to stop. Once something ends you begin to improve; while it continues you stay suspended. That isn't wrong — it simply hands recovery entirely to external conditions, which are exactly the part you don't control. The sentence that appears most often in this mode is once this stretch passes, I'll be fine. Sometimes it is. Sometimes one stretch runs into the next and it never passes. So it's worth finding one recovery action that doesn't depend on circumstances: doable in five minutes, needing no one's cooperation, not requiring anything to end first. It won't solve anything. It will prove something important — that part of recovering is something you can start yourself."
+      }
+    },
+    {
+      "id": "r.07-hidden.low.a",
+      "chapter": "07-hidden",
+      "dim": "stressRecovery",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "有恢复动作，但只在崩到底之后才启用",
+      "shadowSide": "把恢复当成急救，于是恢复本身也带着紧张",
+      "growthDirection": "把已经奏效的那件事提前用，在还没崩之前用一次",
+      "fieldText": {
+        "zh": "你身上其实有奏效的恢复方式，只是它们通常在你已经撑不住之后才被启用——恢复被当成了急救，而不是日常。这样做的代价是：每次恢复本身也是紧绷的，因为你是在损失已经发生之后才动手。有一件事可以试：把那件已经被验证有效的事情提前用一次，在你觉得「还行、还能撑」的时候就用。这听起来像浪费，但它是整件事里性价比最高的动作——同样的方法，在没崩的时候用，成本是崩了之后的几分之一。",
+        "en": "You do have recovery methods that work; they simply get activated only after you can no longer hold — recovery treated as first aid rather than as routine. The cost is that recovery itself carries tension, because you're acting after the loss has already happened. One thing worth trying: use the method you already know works earlier, at a point when you still feel fine, still able to hold. It sounds wasteful. It's the highest-return move available — the same method, used before the collapse, costs a fraction of what it costs after."
+      }
+    },
+    {
+      "id": "r.07-hidden.mid.a",
+      "chapter": "07-hidden",
+      "dim": "stressRecovery",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "恢复方式有效但不稳定，取决于当时的条件是否凑齐",
+      "shadowSide": "条件不凑齐时误判成「这方法不管用了」",
+      "growthDirection": "写下上一次真正恢复时的三个具体条件：在哪、几点、之前做了什么",
+      "fieldText": {
+        "zh": "你的恢复方式是有效的，只是不太稳定——同样的做法，有时候很管用，有时候没什么感觉。这通常不是方法失效了，是它依赖的条件那次没凑齐。多数人在这里会换方法，换了几次之后得出「什么都不管用」的结论，其实需要找的不是新方法，是旧方法的使用条件。可以写下来：上一次真正缓过来的时候，你在哪、大概几点、之前刚做完什么、身边有没有人。这三四个信息就是你的条件清单。知道条件，就能主动创造它，而不是每次碰运气。",
+        "en": "Your recovery methods work, they're just inconsistent — the same approach sometimes helps a lot and sometimes does nothing. That usually isn't the method failing; it's that the conditions it depends on didn't line up that time. Most people switch methods here, and after a few switches conclude that nothing works. What's needed isn't a new method but the operating conditions of the old one. Write it down: the last time you genuinely came back, where were you, roughly what time, what had you just finished, was anyone around. Those three or four details are your condition list. Knowing them lets you create them deliberately instead of leaving it to chance."
+      }
+    },
+    {
+      "id": "r.07-hidden.high.a",
+      "chapter": "07-hidden",
+      "dim": "stressRecovery",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "有一套自己都未必意识到的、稳定起作用的恢复方式",
+      "shadowSide": "因为是自动的，所以从没被保护过，环境一变就丢了",
+      "growthDirection": "把它明确命名下来，当成需要维护的东西，而不是理所当然的习惯",
+      "fieldText": {
+        "zh": "你身上有一套稳定起作用的恢复方式，而且很可能你自己都没意识到它的存在——它已经变成习惯，做的时候不觉得是在恢复。这是好事，也是风险所在：正因为它是自动的，你从来没有保护过它。搬一次家、换一份工作、生活节奏变一次，它可能就悄悄消失了，而你只会感觉「最近状态不太好」，找不到原因。所以值得做一件事：把它明确说出来、命名下来。比如「我的恢复方式是下班后走那段路回家」。写下来之后，它就从一个理所当然的习惯，变成一件你知道要维护的东西。",
+        "en": "You have a recovery pattern that works reliably, and quite possibly you don't know it exists — it has become habit, and doing it doesn't feel like recovering. That's fortunate, and it's where the risk sits: precisely because it's automatic, you've never protected it. One move, one job change, one shift in daily rhythm, and it can quietly disappear, leaving you with a vague sense that things haven't been good lately and no idea why. So it's worth naming it explicitly. For instance: my recovery is the walk home after work. Once written down, it stops being an assumed habit and becomes something you know to maintain."
+      }
+    },
+    {
+      "id": "r.07-hidden.vhigh.a",
+      "chapter": "07-hidden",
+      "dim": "stressRecovery",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "恢复几乎是自动运行的，不需要专门安排",
+      "shadowSide": "太自动，以至于难以理解别人为什么恢复不了",
+      "growthDirection": "在别人恢复得慢的时候，先不给建议",
+      "fieldText": {
+        "zh": "恢复对你来说几乎是自动的——不需要专门安排，事情过去了系统就自己往回走。这是一种很省力的天赋。它带来的一个盲区是关于别人的：因为你从没经历过恢复不了的状态，所以很难理解那是什么感觉，容易在别人还在里面的时候，给出「换个角度想想就好了」这类建议——你是真诚的，但对方听到的是「连这个你都做不到」。所以在别人恢复得慢的时候，可以先不给建议，只说一句「不着急」。这句话对恢复慢的人来说，比任何方法都有用。",
+        "en": "Recovery is nearly automatic for you — no arranging needed; once something is over, the system walks itself back. That's a genuinely economical gift. It creates one blind spot, and it's about other people: having never lived in a state you couldn't recover from, it's hard to know what that feels like, and easy to offer try looking at it differently while someone is still inside it. You mean it sincerely; what they hear is you can't even manage that. So when someone is slow to recover, consider not offering a method. Say instead: there's no rush. For a person recovering slowly, that sentence does more than any technique."
+      }
+    },
+    {
+      "id": "r.08-drain.vlow.a",
+      "chapter": "08-drain",
+      "dim": "emotionalStability",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "情绪信号强且无缓冲，最大的消耗来自持续的内部处理",
+      "shadowSide": "消耗发生在没人看得见的地方，所以不被承认",
+      "growthDirection": "记录情绪起来前十分钟发生了什么，先找触发点",
+      "fieldText": {
+        "zh": "你最大的能量消耗，不在做的事上，在处理感受上。情绪信号来得强、来得快，而且几乎没有缓冲，所以同样一天，你实际处理的量比别人多得多——这部分消耗发生在内部，没有人看得见，包括有时候你自己也不承认它算「累」。它算。可以做的第一件事不是控制情绪，是找触发点：记录几次情绪起来之前的十分钟发生了什么。写几次，模式会自己浮出来。看得见触发点，才谈得上提前调配能量，而不是每次都被动承受。",
+        "en": "Your largest energy drain isn't in what you do; it's in processing what you feel. The signal arrives strong and fast with almost no buffer, so on the same day you handle far more than others do — and that consumption happens internally, where nobody sees it, including sometimes you, who won't count it as tiredness. It counts. The first move isn't controlling the feeling; it's locating the trigger: record what happened in the ten minutes before it rose, several times over. Write it a few times and the pattern surfaces on its own. Once triggers are visible, you can allocate energy in advance instead of absorbing it each time."
+      }
+    },
+    {
+      "id": "r.08-drain.low.a",
+      "chapter": "08-drain",
+      "dim": "emotionalStability",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "消耗集中在少数几类反复出现的情境",
+      "shadowSide": "以为是普遍的疲惫，其实来源很集中",
+      "growthDirection": "找出最近三次明显被消耗的场合，看它们的共同点",
+      "fieldText": {
+        "zh": "你的能量消耗其实相当集中——不是所有事都在耗你，是少数几类情境反复在耗。因为它们出现得频繁，感觉上像是「普遍地累」，实际上来源很窄。这是好消息：来源窄意味着可以针对性处理，不需要整体改造生活。可以做的：回想最近三次明显被消耗的场合，把它们并排看——是不是同一类人、同一种被对待的方式、同一个说不出口的位置？找到那个共同点之后，你要处理的就从「我怎么老是累」变成了一件具体的、有边界的事。",
+        "en": "Your energy drain is actually quite concentrated — it isn't everything wearing you down, it's a few recurring situations. Because they come often, it feels like general tiredness; the source is in fact narrow. That's good news: a narrow source can be addressed specifically, without overhauling your life. Try this: recall the last three times you were noticeably drained and set them side by side — the same kind of person, the same way of being treated, the same position you couldn't voice? Once you find the common thread, what you're dealing with shifts from why am I always tired to one concrete thing with edges."
+      }
+    },
+    {
+      "id": "r.08-drain.mid.a",
+      "chapter": "08-drain",
+      "dim": "emotionalStability",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "消耗与补充大致持平，但缓冲很薄，遇到叠加就见底",
+      "shadowSide": "平时看起来够用，所以从不预留余量",
+      "growthDirection": "在事情叠加之前先取消一件，而不是等撑不住再取消",
+      "fieldText": {
+        "zh": "你的能量收支大致是平的——平时够用，看起来没什么问题。真正的风险不在总量，在缓冲：因为平时刚好够，所以你不会预留余量，一旦几件事叠在一起，很快就见底，而且是没有预警的那种见底。这一项的关键动作不是补充，是提前减法：在事情开始叠加的时候，主动取消一件，而不是等撑不住了再被迫取消。同样是少做一件事，前者你还有选择权，后者往往是最重要的那件被牺牲掉。",
+        "en": "Your energy budget roughly balances — enough on ordinary days, no visible problem. The real risk isn't the total; it's the buffer. Because it's just enough, you never hold a reserve, so when several things stack up you hit bottom quickly, and without warning. The key action here isn't topping up; it's subtracting early: cancel one thing as the stacking begins, rather than being forced to cancel once you can't hold. Either way you do one less thing — but in the first case you still choose which, and in the second it's usually the most important one that gets sacrificed."
+      }
+    },
+    {
+      "id": "r.08-drain.high.a",
+      "chapter": "08-drain",
+      "dim": "emotionalStability",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "补充能力强，消耗不容易累积",
+      "shadowSide": "不容易累，所以对别人的疲惫缺少体感",
+      "growthDirection": "别人说累的时候，先信，不要先评估合理性",
+      "fieldText": {
+        "zh": "你的补充能力比消耗快，所以消耗不太容易在你身上累积——同样强度的一段时间，别人已经很吃力，你还在正常运转。这是真实的优势。它带来的盲区是关于别人的：因为你很少体验到那种「怎么休息都缓不过来」的状态，所以听到别人说累的时候，容易先在心里评估一下合不合理。多数时候你不会说出来，但那个评估本身会通过语气传递出去。可以试着改一个顺序：先信，再问。「听起来挺耗的」这一句，比任何建议都更能让人接得住。",
+        "en": "Your replenishment outruns your drain, so consumption doesn't accumulate easily — through a stretch of the same intensity, others are struggling while you're still running normally. That's a real advantage. The blind spot it creates is about other people: rarely having experienced the state where no amount of rest helps, you tend to assess, internally, whether someone's tiredness is warranted. Usually you don't say it, but the assessment carries in your tone. Try reversing the order: believe first, ask second. That sounds draining does more for a person than any advice."
+      }
+    },
+    {
+      "id": "r.08-drain.vhigh.a",
+      "chapter": "08-drain",
+      "dim": "emotionalStability",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "能量结构厚实，几乎不受一般消耗影响",
+      "shadowSide": "过高的耐受让危险信号也被吸收掉，等发现时往往已经很深",
+      "growthDirection": "定期做一次不靠感觉的检查：睡眠、食欲、有没有还想做的事",
+      "fieldText": {
+        "zh": "你的能量结构很厚，一般强度的消耗几乎影响不到你——这在多数情况下是好事，但它有一个特别的风险：耐受太高的人，身体和情绪发出的早期信号会被一并吸收掉，等到你终于感觉到不对劲，往往已经很深了。因为你的感觉不再是可靠的仪表，所以需要一个不靠感觉的检查方式。可以定期问三个不需要判断的问题：最近睡得怎么样、有没有还想吃东西、有没有还想做的事。这三个是客观的。任何一个持续说不出「还行」，就该认真看一看，不管当时的感觉如何。",
+        "en": "Your energy structure is thick; ordinary consumption barely registers — usually an advantage, with one particular risk: in someone with very high tolerance, the early signals from body and emotion get absorbed along with everything else, so by the time something feels wrong it is often already deep. Because your felt sense is no longer a reliable gauge, you need a check that doesn't rely on feeling. Ask three questions that need no judgment: how has sleep been, is there still appetite, is there still something you want to do. Those are objective. If any of them stops being fine for a while, look into it seriously, regardless of how you feel at the time."
+      }
+    },
+    {
+      "id": "r.09-path.vlow.a",
+      "chapter": "09-path",
+      "dim": "persistence",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "现阶段最需要的是减少消耗，不是增加能力",
+      "shadowSide": "急于变强反而加重损耗",
+      "growthDirection": "这一周只做一件事：把一件正在耗你的事停掉",
+      "fieldText": {
+        "zh": "这一段的进化路径不是变强，是先止损。分数落在这里，通常意味着系统正在长期超载——在超载状态下练任何东西，都会变成新的负担。所以最有效的一步是减法：这一周只做一件事，把一件正在耗你的事情停掉，或者推迟。不用是最大的那件，选一件你有权决定的就行。等消耗降下来，能力会自己回来一部分——那部分不是练出来的，是本来就有、只是被占用了。",
+        "en": "The path here isn't getting stronger; it's stopping the bleed first. A score in this range usually means the system has been overloaded for a long time — and practising anything while overloaded turns into another burden. So the most effective step is subtraction: this week, do one thing only — stop or postpone one thing that is draining you. It doesn't have to be the biggest one; pick one you have the authority to decide. As the drain drops, some capacity returns on its own — not built through practice, but there all along and simply occupied."
+      }
+    },
+    {
+      "id": "r.09-path.low.a",
+      "chapter": "09-path",
+      "dim": "persistence",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "从一件小事开始建立可重复的成功经验",
+      "shadowSide": "跳过小事直接挑战大目标，失败后更难启动",
+      "growthDirection": "选一件两周内能完成的事，完成它比它有多重要更要紧",
+      "fieldText": {
+        "zh": "这一段最有用的不是找到方向，是攒回一次「我做成了」的经验。分数在这个位置的人，往往已经很久没有完整完成过一件事——不是能力问题，是启动过太多次、中断过太多次，系统不再相信启动是有用的。所以选事的标准不是重要，是能完成：找一件两周内确定能做完的事，小到什么程度都可以。完成它，比它有多重要要紧得多。你需要的是让系统重新采集到一条「开始了，也结束了」的记录。",
+        "en": "What helps most here isn't finding a direction; it's recovering one experience of I finished that. People scoring in this range often haven't completed anything end-to-end in a long time — not from lack of ability, but from starting too many times and stopping too many times, until the system stopped believing that starting leads anywhere. So the criterion for choosing isn't importance, it's completability: pick something you can definitely finish within two weeks, however small. Finishing it matters far more than what it is. What you need is for the system to record one entry that reads: began, and also ended."
+      }
+    },
+    {
+      "id": "r.09-path.mid.a",
+      "chapter": "09-path",
+      "dim": "persistence",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "进化的方向是把已有的能力连成系统，不是补短板",
+      "shadowSide": "习惯性补短板，结果强项也没长出来",
+      "growthDirection": "找出最强项和最弱项，做一件同时用到两者的小事",
+      "fieldText": {
+        "zh": "你的进化路径不是补短板。五项里已经有站得住的部分，问题是它们之间还没有连成一条线——单独一件事你扛得住，两三件叠在一起系统就开始吃紧，不是因为承受力不够，是因为每一块「站得住」都还是孤立的，没有互相支援。所以要做的是连接：找出你最强的一项和最弱的一项，做一件同时用到两者的小事。比如最强是危机反弹、最弱是日常恢复，那就在一次小的紧急事件之后，刻意安排一段恢复，让那套启动机制也学会关机。",
+        "en": "Your path forward isn't shoring up weaknesses. Among the five, some already hold; the issue is that they aren't yet joined into one line — a single situation you handle, two or three stacked and the system tightens, not because capacity is short but because each solid piece stands alone, without mutual support. So the work is connection: identify your strongest and weakest, and do one small thing that uses both. If crisis rebound is strongest and daily recovery weakest, then after one small emergency, deliberately schedule a stretch of recovery — teach that ignition mechanism how to shut down as well."
+      }
+    },
+    {
+      "id": "r.09-path.high.a",
+      "chapter": "09-path",
+      "dim": "persistence",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "进化方向是可持续，不是更高",
+      "shadowSide": "继续加码会把优势变成消耗",
+      "growthDirection": "把一件做得好的事减量一次，观察结果是否真的下降",
+      "fieldText": {
+        "zh": "你的结构已经相当好用，所以这一段的方向不是更高，是可持续。继续加码是最自然的选择，也是最容易把优势变成消耗的一条路——能扛的人往往一路加到某个隐形的临界点，然后突然发现整个系统的效率在下降，而不是某一件事出了问题。可以做一次反向实验：把一件你做得很好的事主动减量一次，比如少做三分之一，然后观察结果是不是真的下降了。多数时候不会。这个实验的价值在于，它会让你重新知道自己真正需要投入多少，而不是靠惯性一直加。",
+        "en": "Your structure already works well, so the direction here isn't higher; it's sustainable. Adding more is the natural choice, and it's the surest route to turning an advantage into a drain — people who can carry tend to keep adding until some invisible threshold, then find the whole system's efficiency dropping rather than any single thing failing. Try a reverse experiment: deliberately reduce one thing you do well — say by a third — and watch whether results actually fall. Usually they don't. The value of the experiment is that it tells you how much you genuinely need to put in, instead of adding by momentum."
+      }
+    },
+    {
+      "id": "r.09-path.vhigh.a",
+      "chapter": "09-path",
+      "dim": "persistence",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "进化方向从自身转向承载他人",
+      "shadowSide": "太容易承载，容易演变成对方不再自己站起来",
+      "growthDirection": "承载的时候留一个位置给对方，别把事情全部接过来",
+      "fieldText": {
+        "zh": "你的韧性已经超出自身所需，所以这一段的进化方向多半不再是自己——而是你能承载多少别人。这不是负担，是这套结构自然会走到的地方：能扛的人身边总会聚起需要被扛的人。要留意的只有一处分寸：承载和替代是两件事。全部接过来最省事，也最容易让对方不再自己站起来，久了双方都会累。可以在承载的时候留一个位置——哪怕只是把最简单的一步留给对方做。让人靠着是支持，让人不用动了就不是了。",
+        "en": "Your resilience already exceeds what you need, so the direction here is probably no longer about yourself — it's about how much of others you can carry. That isn't a burden; it's where this structure naturally arrives, since people who can carry accumulate people who need carrying. Only one distinction needs watching: carrying and replacing are different. Taking everything on is the least effortful and the surest way to leave the other person no longer standing on their own, until both of you are tired. Leave a place for them when you carry — even just the simplest step. Letting someone lean is support; letting someone stop moving is not."
+      }
+    },
+    {
+      "id": "r.10-practice.vlow.a",
+      "chapter": "10-practice",
+      "dim": "stressRecovery",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "此刻需要的是最低门槛的动作，不是练习计划",
+      "shadowSide": "任何有难度的方法都会变成新的压力源",
+      "growthDirection": "每天一次三个呼吸，不要求感觉，不要求效果",
+      "fieldText": {
+        "zh": "这一段不适合开始任何需要坚持的练习——门槛只要存在，就会变成新的压力源。所以这里给的动作只有一个，而且刻意做到最低：每天找一个时刻，做三个呼吸。就三个。不要求你感觉到什么，不要求有效果，不要求每天同一时间。做完就算完成。它的作用不是恢复，是重新建立一件你说了算的事——在什么都由不得你的阶段，有一件小事是你能决定的，这件事本身比它的效果重要。",
+        "en": "This isn't a stretch for starting any practice that requires persistence — any threshold at all becomes another source of pressure. So there's one action here, and it's deliberately set as low as possible: once a day, take three breaths. Just three. No requirement to feel anything, no requirement that it work, no requirement to do it at the same time. Doing it counts as done. Its purpose isn't recovery; it's re-establishing one thing that is yours to decide. In a stretch where little is up to you, having one small thing that is matters more than what it accomplishes."
+      }
+    },
+    {
+      "id": "r.10-practice.low.a",
+      "chapter": "10-practice",
+      "dim": "stressRecovery",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "需要把恢复从「有空才做」变成「固定发生」",
+      "shadowSide": "靠意愿安排的事在低能量期一定最先被砍掉",
+      "growthDirection": "把一次恢复绑在一件每天必然发生的事后面",
+      "fieldText": {
+        "zh": "你需要的不是新方法，是让恢复不再依赖意愿。靠意愿安排的事，在能量低的时候一定最先被砍掉——而那恰恰是最需要它的时候。可行的做法是把它绑在一件每天必然发生的事后面：刷完牙之后、坐下之前、关灯之后。绑定的那件事本身不重要，重要的是它每天都会发生，所以恢复也就跟着发生了。不需要你记得，不需要你有意愿。这一步走通之后再谈方法，才有意义。",
+        "en": "What you need isn't a new method; it's for recovery to stop depending on willingness. Anything scheduled by willingness is the first thing cut when energy is low — which is exactly when it's needed most. The workable approach is to attach it to something that happens every day regardless: after brushing your teeth, before sitting down, after turning off the light. The anchor itself doesn't matter; what matters is that it happens daily, so recovery happens with it. No remembering required, no willingness required. Once this holds, talking about methods starts to make sense."
+      }
+    },
+    {
+      "id": "r.10-practice.mid.a",
+      "chapter": "10-practice",
+      "dim": "stressRecovery",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "已有可用的方法，缺的是使用条件的稳定",
+      "shadowSide": "条件不稳时误判成方法无效，反复更换",
+      "growthDirection": "固定一个时间和地点，一个月内不换方法",
+      "fieldText": {
+        "zh": "你已经有能用的恢复方式了，这一段要补的是稳定性——同样的方法，条件凑齐时很管用，条件不齐就没感觉，于是容易误判成「这个方法不行了」，然后去换新的。换来换去，每一种都没有机会真正长起来。建议是反过来：一个月内不换方法，只固定条件。选一个时间、一个地点，让它们尽量不变。方法的效果需要重复才会显现，而重复需要的是稳定的条件，不是更好的方法。",
+        "en": "You already have workable recovery methods; what this stretch needs is consistency. The same approach helps when conditions align and does nothing when they don't, which makes it easy to conclude the method stopped working and go looking for another. Switching repeatedly means none of them ever gets the chance to take root. The suggestion is the reverse: don't change methods for a month; fix the conditions instead. Choose one time and one place and keep them as unchanging as you can. A method's effect only shows through repetition, and repetition needs stable conditions, not a better method."
+      }
+    },
+    {
+      "id": "r.10-practice.high.a",
+      "chapter": "10-practice",
+      "dim": "stressRecovery",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "恢复系统运转良好，可以开始处理更深的部分",
+      "shadowSide": "运转良好容易让人停在表层，不再往下走",
+      "growthDirection": "在一次恢复之后，多问一句：刚才那件事我实际的感受是什么",
+      "fieldText": {
+        "zh": "你的恢复系统运转得不错，日常层面基本不需要额外安排。所以这一段可以往下走一层：从「恢复状态」到「消化经验」。这两件事不一样——状态恢复了，不代表那件事被消化了；有些经历被翻篇得很快，只是没有被处理，它们会在某个不相干的时刻突然回来一下。可以加一个很短的步骤：一次恢复之后，问自己一句「刚才那件事，我实际的感受是什么」。不用处理它，也不用得出结论，说出来这一步就够了。",
+        "en": "Your recovery system runs well; day to day it needs little extra arrangement. So this stretch can go one layer deeper: from restoring state to digesting experience. These aren't the same — state returning doesn't mean the thing was processed; some experiences get turned past quickly without being handled, and they return briefly at some unrelated moment. Add one short step: after a recovery, ask yourself what you actually felt back there. You don't have to work with the answer or reach a conclusion. Saying it is enough."
+      }
+    },
+    {
+      "id": "r.10-practice.vhigh.a",
+      "chapter": "10-practice",
+      "dim": "stressRecovery",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "恢复不再是需要处理的课题",
+      "shadowSide": "把注意力全放在自己身上会浪费这份余裕",
+      "growthDirection": "把一次恢复的时间用来陪一个正在难受的人",
+      "fieldText": {
+        "zh": "恢复对你已经不构成课题——不需要方法，也不需要安排。所以这一章对你的意义不在于练什么，而在于这份余裕可以放到哪里。一个具体的建议：把原本用于自己恢复的一段时间，用来陪一个正在难受的人。不用给建议，不用解决什么，在那里就行。对你来说这段时间的成本很低，对处在低谷里的人来说，有人在场而不评判，是他当时最需要、也最难得到的东西。这不是利他的说教，是这份能力最有效的用法。",
+        "en": "Recovery no longer constitutes a problem for you — no method needed, no arranging needed. So this chapter's relevance isn't what to practise but where to put the surplus. One concrete suggestion: take a stretch of time you'd have used for your own recovery and spend it with someone who is struggling. No advice, nothing to solve. Being there is enough. The cost to you is low; for someone in a low point, having a person present who doesn't evaluate is what they most need and least often get. This isn't a lesson in altruism. It's the most effective use of this capacity."
+      }
+    },
+    {
+      "id": "r.11-summary.vlow.a",
+      "chapter": "11-summary",
+      "dim": "crisisRebound",
+      "band": "vlow",
+      "weight": 1,
+      "corePattern": "当前处在需要被支持的位置，而不是需要努力的位置",
+      "shadowSide": "把「需要支持」读成失败，于是拒绝支持",
+      "growthDirection": "告诉一个人你现在的真实状况，不用要求他做什么",
+      "fieldText": {
+        "zh": "把这份报告读到这里，最该被说清楚的一句是：你现在处在需要被支持的位置，不是需要更努力的位置。这两者经常被混为一谈，而混淆的代价很大——在应该休息的时候加倍用力，是让人真正垮掉的常见路径。这一段没有需要你完成的任务。如果一定要做一件事，那就是让一个人知道你现在的真实状况。不用请求什么，也不用解释，说出来本身就是这一段最有效的动作。\n\n如果这种状态已经持续了一段时间，并且明显影响到睡眠、进食或日常运转，跟专业的人聊一聊是值得的。这不是严重不严重的问题，是有没有人搭一把手的问题。",
+        "en": "Read this far, the sentence that most needs saying is this: you are currently in the position of needing support, not the position of needing more effort. Those two get confused constantly, and the confusion is costly — doubling down when you should be resting is a common route to genuinely breaking. There is no task for you in this stretch. If one thing must be done, let one person know your actual situation. No request needed, no explanation. Saying it is itself the most effective action here.\n\nIf this state has continued for a while and is clearly affecting sleep, eating, or daily functioning, talking with a professional is worth doing. It isn't a question of how serious it is. It's a question of whether anyone is lending a hand."
+      }
+    },
+    {
+      "id": "r.11-summary.low.a",
+      "chapter": "11-summary",
+      "dim": "crisisRebound",
+      "band": "low",
+      "weight": 1,
+      "corePattern": "结构完整，只是长期没有得到补给",
+      "shadowSide": "把「暂时低」读成「本来就弱」",
+      "growthDirection": "把这份报告放三个月后再看一次，对比变化",
+      "fieldText": {
+        "zh": "整份报告读下来，如果有一个印象需要被纠正，是这个：分数低说的是当前状态，不是你的上限。这份结构是完整的——五项都在，路径都在，只是其中几条长期没有得到补给，所以现在跑不动。补给和天赋是两回事，前者是可以改变的。一个具体的建议：把这份报告存下来，三个月后再生成一次，对照着看。不用刻意去改善什么，只是看。分数会不会变不重要，重要的是你会看见哪些描述不再准确了——那就是变化真实发生过的地方。",
+        "en": "If one impression needs correcting after reading this through, it's this: a low score describes a current state, not your ceiling. The structure is complete — all five are present, all the paths are there; several simply haven't been resupplied for a long time and so can't run right now. Supply and capacity are different things, and the first can change. One concrete suggestion: save this report and generate another in three months, then compare. You don't need to work at improving anything. Just look. Whether the numbers move isn't the point; what matters is noticing which descriptions no longer fit — that's where change actually happened."
+      }
+    },
+    {
+      "id": "r.11-summary.mid.a",
+      "chapter": "11-summary",
+      "dim": "crisisRebound",
+      "band": "mid",
+      "weight": 1,
+      "corePattern": "结构均衡，真正的信息在维度之间的关系里",
+      "shadowSide": "只看总分会觉得平淡，错过组合里的信息",
+      "growthDirection": "找出最高与最低两项，看它们放在一起说明了什么",
+      "fieldText": {
+        "zh": "整体读下来，你的结构相当均衡——没有特别薄的地方，也没有一项高到能定义你。这种结构最容易被读得平淡，因为总分说明不了什么。真正的信息在维度之间的关系里：找出你最高和最低的两项，把它们放在一起看。同一个人，某一项高、某一项低，这个落差本身就是一条线索，它会指出你的系统是被什么唤醒的、又在什么地方悄悄漏。平均分只告诉你「还行」，落差才告诉你「你是怎么搭起来的」。",
+        "en": "Read as a whole, your structure is fairly even — nothing especially thin, nothing high enough to define you. This kind of structure reads as unremarkable, because the total says little. The real information sits in the relationships between dimensions: find your highest and your lowest and look at them together. In one person, one high and one low — that gap is itself a lead. It shows what wakes your system and where it quietly leaks. An average tells you it's fine. The gap tells you how you're built."
+      }
+    },
+    {
+      "id": "r.11-summary.high.a",
+      "chapter": "11-summary",
+      "dim": "crisisRebound",
+      "band": "high",
+      "weight": 1,
+      "corePattern": "结构可靠，主要风险来自被过度依赖",
+      "shadowSide": "可靠的人承担的往往超过自己该承担的",
+      "growthDirection": "分辨一件事是「我能做」还是「该由我做」",
+      "fieldText": {
+        "zh": "整份报告读下来，你的结构是可靠的——多数情况下扛得住，也确实经常是别人指望的那个人。所以最后要说的不是能力，是边界：可靠的人承担的，往往超过自己应该承担的部分。因为你能，所以事情自然流向你；而「我能做」和「这件事该由我做」是两个问题，前者你几乎永远答得出，后者常常没有被问过。可以从下一件事开始，多问一次第二个问题。不是为了推掉什么，是为了让承担变成选择，而不是默认。",
+        "en": "Read as a whole, your structure is reliable — it holds in most situations, and you're often the person others count on. So the closing note isn't about capacity; it's about edges: reliable people tend to carry more than is theirs to carry. Because you can, things flow toward you naturally — and I can do this and this should be mine to do are two different questions. You can almost always answer the first; the second often never gets asked. Starting with the next thing, ask the second one too. Not to push anything away — to make carrying a choice rather than a default."
+      }
+    },
+    {
+      "id": "r.11-summary.vhigh.a",
+      "chapter": "11-summary",
+      "dim": "crisisRebound",
+      "band": "vhigh",
+      "weight": 1,
+      "corePattern": "结构非常完整，课题从承受转向选择",
+      "shadowSide": "什么都扛得住的人，最难分辨什么值得扛",
+      "growthDirection": "问自己：如果不需要向任何人证明，我会先放下哪一件",
+      "fieldText": {
+        "zh": "整份报告读下来，你的结构非常完整。这带来一个别人不太会遇到的课题：当什么都扛得住的时候，最难的反而是分辨什么值得扛。承受力本身不再是限制，于是选择变成了唯一真正的变量——而选择需要的不是力量，是知道自己要什么。可以问自己一个问题，慢慢答：如果不需要向任何人证明什么，我会先放下哪一件事。这个问题对韧性弱的人没有意义，因为他们本来就撑不住；对你有意义，因为你什么都撑得住，所以每一件都是你自己选着扛下来的。",
+        "en": "Read as a whole, your structure is very complete. That brings a problem others rarely face: when you can carry anything, the hard part becomes discerning what is worth carrying. Capacity is no longer the constraint, so choice becomes the only real variable — and choice doesn't require strength, it requires knowing what you want. One question worth answering slowly: if I needed to prove nothing to anyone, which thing would I set down first. For someone with low resilience the question is meaningless — they couldn't hold it anyway. For you it means something, because you can hold all of it, which means every one of them is something you chose to carry."
+      }
     }
   ]
 }

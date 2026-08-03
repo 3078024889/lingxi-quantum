@@ -1,21 +1,19 @@
 // ────────────────────────────────────────────────────────────────
-// 灵犀场 · 规则/AI 混合层
+// 灵犀场 · 规则报告引擎（不含 AI）
 // ────────────────────────────────────────────────────────────────
-// 这一层是知识库从"图纸"变成"生产线"的接口。
+// 报告完全由规则产出，不调用任何外部模型。
 //
-// 为什么要混合，而不是等知识库写完再一次性切换：
-//   等的话，写的每一条节点在上线之前都无法验证，只能靠想象判断好不好；
-//   而且要等几周，这期间 429 限流、报告截断这些问题一个都不会缓解。
-// 混合之后：
-//   · 每写一条节点，立刻就在生产环境生效，效果当场可见
-//   · 节点越多，AI 调用越少，429 自然缓解
-//   · 某一天所有章节都有节点了，AI 就可以关掉——那时切换是无感的，
-//     不是一次有风险的大爆炸
+// 这是刻意的架构决定，不是过渡状态：
+//   · token 成本与速率限制不再是变量——报告生成是纯计算，零调用
+//   · 同一份输入永远同一份输出，可复算，这是"结构层"承诺的技术基础
+//   · 断网、断供、涨价都不影响用户能不能拿到报告
 //
-// 判定规则很简单：某一章如果规则引擎能产出内容，就用规则的；
-// 产不出来（该分数带还没写节点），这一章交给 AI。
-// 两者产出的章节标题一致（chapters.json 已对齐线上 buildChapters），
-// 所以拼在一起用户看不出接缝。
+// 因此这里没有"回落 AI"这条路径。某一章产不出内容，是知识库
+// 缺节点，属于必须修复的缺陷，会被 reportGaps() 报出来，
+// 而不是悄悄交给模型糊过去——那样会让缺口永远藏着。
+//
+// AI 只保留在三处真正接自由文本的功能：提问灵犀、梦境探索、
+// 意识显化签到，且只当后备（见 lib/gate-tone.ts 的关键词优先策略）。
 
 import { buildReport, type Library, type Scores, type FieldState } from "@/lib/knowledge-engine";
 
@@ -23,16 +21,16 @@ export type HybridChapter = {
   key: string;
   titleZh: string;
   titleEn: string;
-  /** 规则引擎产出的正文；null 表示这一章需要 AI 生成 */
+  /** 规则引擎产出的正文；null 表示知识库在这一章缺节点（缺陷，需补） */
   ruleTextZh: string | null;
   ruleTextEn: string | null;
-  source: "rule" | "ai";
+  source: "rule" | "gap";
 };
 
 export type HybridPlan = {
   chapters: HybridChapter[];
-  /** 需要交给 AI 的章节，按线上原有的批次逻辑处理 */
-  aiChapterKeys: string[];
+  /** 缺节点的章节——这是知识库的待补清单，不是给 AI 的任务清单 */
+  gapChapterKeys: string[];
   /** 规则覆盖率，用于日志与后台观察进度 */
   coverage: { total: number; byRule: number; percent: number };
 };
@@ -57,7 +55,7 @@ export function planReport(
     if (!hasContent) {
       return {
         key: ch.chapter, titleZh: ch.titleZh, titleEn: ch.titleEn,
-        ruleTextZh: null, ruleTextEn: null, source: "ai",
+        ruleTextZh: null, ruleTextEn: null, source: "gap",
       };
     }
     // 一章内可能有多块（组合/单维 + 状态层），用空行连接成完整章节
@@ -72,7 +70,7 @@ export function planReport(
   const byRule = chapters.filter((c) => c.source === "rule").length;
   return {
     chapters,
-    aiChapterKeys: chapters.filter((c) => c.source === "ai").map((c) => c.key),
+    gapChapterKeys: chapters.filter((c) => c.source === "gap").map((c) => c.key),
     coverage: {
       total: chapters.length,
       byRule,
@@ -82,23 +80,15 @@ export function planReport(
 }
 
 /**
- * 把规则章节与 AI 章节合并成最终报告文本。
- * aiSections 的键是章节 key，值是该章的正文。
- * 顺序永远以 chapters.json 为准，不受两边生成顺序影响。
+ * 渲染成最终报告文本。缺节点的章节直接跳过——宁可少一章，
+ * 也不能输出空标题让用户以为内容丢了。
  */
-export function mergeReport(
-  plan: HybridPlan,
-  aiSections: Record<string, string>,
-  lang: "zh" | "en" = "zh"
-): string {
+export function renderReport(plan: HybridPlan, lang: "zh" | "en" = "zh"): string {
   return plan.chapters
     .map((ch, i) => {
-      const title = lang === "en" ? ch.titleEn : ch.titleZh;
-      const body =
-        ch.source === "rule"
-          ? (lang === "en" ? ch.ruleTextEn : ch.ruleTextZh) ?? ""
-          : aiSections[ch.key] ?? "";
+      const body = (lang === "en" ? ch.ruleTextEn : ch.ruleTextZh) ?? "";
       if (!body.trim()) return "";
+      const title = lang === "en" ? ch.titleEn : ch.titleZh;
       return `=== ${i + 1} ===\n${title}\n\n${body.trim()}`;
     })
     .filter(Boolean)

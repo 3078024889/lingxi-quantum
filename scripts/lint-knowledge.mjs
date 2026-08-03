@@ -156,6 +156,9 @@ for (const dir of readdirSync(ROOT).filter((d) => d !== "_shared")) {
   } catch { continue; }
 
   for (const ch of chapters) {
+    // dim 为 null 的总览章节没有单一主维度，不按分数带覆盖——
+    // 它由本相节点（八相）承担，覆盖检查用另一套规则，见下方。
+    if (!ch.dim) continue;
     for (const band of BANDS) {
       const has = nodes.some(
         (n) => n.chapter === ch.key && n.dim === ch.dim && n.band === band

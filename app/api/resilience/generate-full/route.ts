@@ -200,43 +200,30 @@ export async function POST(req: Request) {
   const userContent =
     `太阳星座：${facts.sunSignZh}\n八字日主五行：${facts.dayMasterElement}\n生命韧性总分：${resilience.score}\n五项分数：${breakdownStr}\n`;
 
-  // ── v287：规则引擎接入 ──
-  // 知识库里已经写好节点的章节，直接由规则产出，不再走 AI。
-  // 这是"逐章替换"而非"一次性切换"：每往 knowledge/resilience/ 里
-  // 多写一条节点，这里就少一次 AI 调用，效果当场可见，
-  // 也顺带缓解 429（免费档并发只有1，调用越少越不容易撞限流）。
-  // 等所有章节都有节点了，AI 这条路径自然就空了，那时关掉是无感的。
+  // ── v288：生命韧性报告完全由规则引擎产出，不调用任何外部模型 ──
+  // 这是刻意的架构决定：
+  //   · token 成本与速率限制不再是变量——纯计算，零调用，429 不可能发生
+  //   · 同一份出生数据永远同一份报告，可复算
+  //   · 断网、断供、涨价都不影响用户能不能拿到报告
+  // 知识库在 knowledge/resilience/，65 个单维节点 + 6 个组合节点，
+  // 覆盖 11 章 × 5 分数带，实测五种差异极大的分数结构均 100% 命中。
   const lib = await loadLibrary("resilience");
   const seed = `${facts.sunSignZh}|${facts.dayMasterElement}|${resilience.score}|${breakdownStr}`;
   const plan = planReport(lib, breakdown, seed, null);
-  console.log(`[resilience] 规则覆盖 ${plan.coverage.byRule}/${plan.coverage.total} 章（${plan.coverage.percent}%），其余走AI`);
 
-  // 只把还没有规则内容的章节交给 AI。索引要保留，
-  // 因为下面要按原始章节顺序把两边拼回去。
-  const aiIdx = plan.chapters.map((c, i) => ({ c, i })).filter((x) => x.c.source === "ai").map((x) => x.i);
-  const aiChapters = aiIdx.map((i) => chapters[i]);
-
-  const aiTexts: string[] = [];
-  if (aiChapters.length > 0) {
-    const batches = buildBatches(aiChapters);
-    for (let bi = 0; bi < batches.length; bi++) {
-      const result = await generateBatch(key, lang, batches[bi], bi === batches.length - 1, userContent, body.id);
-      if (!result.sections) {
-        console.error("[resilience generate-full] 批次失败:", result.failReason, "submission id:", body.id);
-        return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 500 });
-      }
-      aiTexts.push(...result.sections);
-    }
+  if (plan.gapChapterKeys.length > 0) {
+    // 有缺口说明知识库漏了这个分数带的节点——这是需要修复的缺陷，
+    // 不静默降级。日志记下具体章节，方便定位要补哪一条。
+    console.error("[resilience] 知识库缺口:", plan.gapChapterKeys.join(","), "分数:", JSON.stringify(breakdown));
   }
 
-  // 按原始章节顺序合并：规则章节用知识库内容，其余按顺序取 AI 产出。
-  let aiCursor = 0;
-  const allSections: string[] = plan.chapters.map((ch) => {
-    if (ch.source === "rule") {
-      return (lang === "en" ? ch.ruleTextEn : ch.ruleTextZh) ?? "";
-    }
-    return aiTexts[aiCursor++] ?? "";
-  }).filter((x) => x.trim());
+  const allSections: string[] = plan.chapters
+    .map((ch) => (lang === "en" ? ch.ruleTextEn : ch.ruleTextZh) ?? "")
+    .filter((x) => x.trim());
+
+  if (allSections.length === 0) {
+    return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 500 });
+  }
 
   const fullReport = allSections.join("\n\n===SECTION===\n\n");
   await admin.from("resilience_submissions").update({ [cachedField]: fullReport }).eq("id", body.id);

@@ -30,6 +30,64 @@
         "zh": "这两项同时偏低的时候，最常见的误读是把它当成一个关于自己的结论。更准确的读法是：你现在同时缺的是缓冲和补给——情绪来得快，而回落需要的条件又还没找到。这两件事会互相加重，所以看起来会比实际更难。先别处理情绪本身，那是最难的一端。先处理条件：固定一件每天都会发生、门槛低到不需要意志力的小事——早上第一口水、睡前把手机放到另一个房间。补给稳了，缓冲会自己长出来一点。顺序反过来会很吃力。",
         "en": "When both of these sit low, the most common misreading is to treat it as a conclusion about yourself. The more accurate reading: right now you're short on both buffer and supply — feelings arrive fast, and the conditions for settling haven't been found yet. These two compound each other, which is why it looks harder than it is. Don't start with the feeling itself; that's the difficult end. Start with conditions: fix one small thing that happens daily and needs no willpower at all — the first glass of water in the morning, putting the phone in another room before sleep. Once supply steadies, some buffer grows back on its own. Doing it in the reverse order is exhausting."
       }
+    },
+    {
+      "id": "r.origin.blade",
+      "chapter": "01-origin",
+      "when": {
+        "contrast": [
+          "crisisRebound",
+          "stressRecovery"
+        ],
+        "gapMin": 45
+      },
+      "priority": 30,
+      "fieldText": {
+        "zh": "先看整体形状：你的五项之间落差很大，最高的和最低的隔着一大段。这种结构在灵犀场里叫「刃」——锋利，而且锋利和薄是同一件事：刀之所以能切，正因为它不厚。\n\n这意味着你身上有几样东西是真的强，不是勉强够用，是明显强过多数人；同时也意味着强项之外的那部分是薄的。多数人会想去补薄的那一侧，但对刃来说，更要紧的不是补厚，是知道在什么位置用力。承重的时候，最先出问题的一定是薄的那一侧，而不是你最强的那几项——所以真正需要看住的，不是你正在发挥的地方，是你没在用的地方。\n\n下面几章会逐项展开。读的时候可以留意：哪几项是刃，哪几项是背脊。",
+        "en": "Start with the overall shape: the distance between your highest and lowest runs wide. In this field that structure is called a blade — sharp, and sharpness and thinness are one fact: a blade cuts precisely because it isn't thick.\n\nIt means a few things about you are genuinely strong — not barely adequate, but clearly beyond most people. It also means that outside those few, the structure is thin. Most people want to thicken the thin side. For a blade, what matters more than thickening is knowing where to place the weight. Under load, the first thing to give is always the thin side, never your strongest few — so what needs watching isn't where you're performing. It's where you aren't.\n\nThe chapters below take these one at a time. As you read, notice which are the edge and which are the spine."
+      }
+    },
+    {
+      "id": "r.origin.ember",
+      "chapter": "01-origin",
+      "when": {
+        "bothLow": [
+          "stressRecovery",
+          "emotionalStability",
+          "persistence"
+        ]
+      },
+      "priority": 28,
+      "fieldText": {
+        "zh": "先看整体形状：你的五项目前都在偏低的位置，而且比较接近，没有哪一项塌得特别厉害。这种结构在灵犀场里叫「伏火」——火没有灭，只是烧得很小，靠很少的燃料维持着。\n\n这个形状最容易被读成「我什么都不行」，但那是误读。均匀的低，和某一项塌陷，是完全不同的两件事：前者说明系统还是完整的，各部分还在协同，只是整体供给不足；后者才是结构性的问题。你现在更接近前者。\n\n所以后面几章，读的时候可以换一个角度：不是看每一项差多少，是看哪一项最容易先回来。供给恢复之后，能力会自己回来一部分——那部分不是练出来的，是本来就有、只是被占用了。",
+        "en": "Start with the overall shape: all five currently sit low, and fairly close together — none has collapsed markedly further than the rest. In this field that structure is called an ember — the fire hasn't gone out; it's burning small, sustained on very little fuel.\n\nThis shape is easily read as I'm no good at any of it. That's a misreading. An even low and a single collapsed dimension are entirely different: the first means the system is still whole, the parts still coordinating, with the supply simply short; the second is structural. You're closer to the first.\n\nSo as you read the chapters below, try a different angle: not how far each falls short, but which one is likeliest to return first. As supply recovers, some capacity comes back on its own — not built through practice, but there all along and simply occupied."
+      }
+    },
+    {
+      "id": "r.origin.keel",
+      "chapter": "01-origin",
+      "when": {
+        "bothHigh": [
+          "crisisRebound",
+          "persistence",
+          "adaptability"
+        ]
+      },
+      "priority": 28,
+      "fieldText": {
+        "zh": "先看整体形状：你的五项多数落在高位，而且彼此支撑得不错，没有明显的短板拖住整体。这种结构在灵犀场里叫「龙骨」——有主梁，整艘船围绕它组织起来。\n\n这类结构的问题通常不在能不能扛，在扛得太顺。承受力不再是限制之后，真正的变量变成了选择：什么值得扛、什么该放下、承担到哪里为止。这些问题对结构薄的人不成立，因为他们本来就没得选；对你成立，因为每一件都是你自己选着扛下来的。\n\n后面几章会逐项展开。读的时候可以带着一个问题：这一项这么强，它的代价是什么。每一项高分背后都有代价，只是平时不显。",
+        "en": "Start with the overall shape: most of your five sit high and support each other well, with no obvious weak point dragging on the whole. In this field that structure is called a keel — there's a main beam, and the ship organizes around it.\n\nThe issue with this kind of structure usually isn't whether you can carry, but that carrying goes too smoothly. Once capacity stops being the constraint, the real variable becomes choice: what's worth carrying, what to set down, where the carrying ends. Those questions don't arise for a thin structure — there was never a choice. They arise for you, because every one of these is something you chose to carry.\n\nThe chapters below take these one at a time. Read them with one question in hand: this one is strong — what does it cost? Every high score has a cost; it simply doesn't show on ordinary days."
+      }
+    },
+    {
+      "id": "r.origin.lattice",
+      "chapter": "01-origin",
+      "when": {},
+      "priority": 5,
+      "fieldText": {
+        "zh": "先看整体形状：你的五项之间没有极端的落差，也没有哪一项高到能定义你——它们大致平齐，互相支撑。这种结构在灵犀场里叫「经纬」：没有单一主梁，靠彼此织成的关系承力。\n\n这个形状最容易被读得平淡，因为总分说明不了什么。但真正的信息不在总分，在维度之间的关系里：同一个人，某一项略高、某一项略低，这个落差本身就是线索——它会指出你的系统是被什么唤醒的，又在什么地方悄悄漏。\n\n所以后面几章，比起看每一项的分数，更值得看的是它们放在一起说明了什么。读完之后可以回头找出最高和最低的两项，把它们并排看一眼。那一眼通常比任何单项都说明问题。",
+        "en": "Start with the overall shape: there's no extreme gap between your five, and none stands high enough to define you — they run roughly level, supporting one another. In this field that structure is called a lattice: no single main beam, load carried by the relationships woven between them.\n\nThis shape reads as unremarkable, because the total says little. The real information isn't in the total but in the relationships between dimensions: in one person, one slightly higher and one slightly lower — that gap is itself a lead. It shows what wakes your system, and where it quietly leaks.\n\nSo as you read the chapters below, what they say together is worth more than what each says alone. Afterwards, go back and set your highest and lowest side by side. That one look usually explains more than any single dimension."
+      }
     }
   ]
 }
