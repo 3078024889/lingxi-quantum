@@ -2,12 +2,12 @@
   "combos": [
     {
       "id": "r.combo.crisis-vs-daily",
-      "chapter": "01-self-recovery",
+      "chapter": "02-stress",
       "priority": 20,
       "when": {
         "contrast": [
-          "crisis",
-          "recovery"
+          "crisisRebound",
+          "stressRecovery"
         ],
         "gapMin": 40
       },
@@ -18,12 +18,12 @@
     },
     {
       "id": "r.combo.both-low-recovery-stability",
-      "chapter": "02-emotional",
+      "chapter": "06-stability",
       "priority": 18,
       "when": {
         "bothLow": [
-          "recovery",
-          "stability"
+          "stressRecovery",
+          "emotionalStability"
         ]
       },
       "fieldText": {

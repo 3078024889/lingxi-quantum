@@ -152,7 +152,7 @@ export type Library = {
   nodes: StructureNode[];
   combos: ComboNode[];
   states?: StateNode[];
-  chapters: { key: string; dim: string; titleZh: string; titleEn: string }[];
+  chapters: { key: string; dim: string | null; titleZh: string; titleEn: string }[];
 };
 
 export type RenderedChapter = {
@@ -185,6 +185,9 @@ export function buildReport(
       blocks.push({ source: "combo", id: c.id, zh: c.fieldText.zh, en: c.fieldText.en });
     } else {
       // 2. 没命中组合 → 回落到本章主维度对应分数带的单维节点
+      // 第1章这类总览章节 dim 为 null，没有单一主维度，
+      // 只能由组合节点承担；这里直接跳过单维回落。
+      if (!ch.dim) return { chapter: ch.key, titleZh: ch.titleZh, titleEn: ch.titleEn, blocks };
       const band = bandOf(scores[ch.dim] ?? 50);
       const candidates = lib.nodes.filter(
         (n) => n.chapter === ch.key && n.dim === ch.dim && n.band === band

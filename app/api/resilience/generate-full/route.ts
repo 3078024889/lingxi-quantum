@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { computeLifeVector, calculateResilience, type LifeVectorInput } from "@/lib/life-vector";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { planReport, loadLibrary } from "@/lib/hybrid-report";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -112,8 +113,9 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, isLas
     });
 
   let res = await callOnce();
-  for (let attempt = 0; attempt < 2 && res.status === 429; attempt++) {
-    await new Promise((r) => setTimeout(r, 2000 + attempt * 1500));
+  // v287：429 重试从2次改5次，等待改指数退避，理由同上。
+  for (let attempt = 0; attempt < 5 && res.status === 429; attempt++) {
+    await new Promise((r) => setTimeout(r, [3000, 6000, 12000, 20000, 30000][attempt]));
     res = await callOnce();
   }
   if (!res.ok) {
@@ -198,16 +200,43 @@ export async function POST(req: Request) {
   const userContent =
     `太阳星座：${facts.sunSignZh}\n八字日主五行：${facts.dayMasterElement}\n生命韧性总分：${resilience.score}\n五项分数：${breakdownStr}\n`;
 
-  const batches = buildBatches(chapters);
-  const allSections: string[] = [];
-  for (let bi = 0; bi < batches.length; bi++) {
-    const result = await generateBatch(key, lang, batches[bi], bi === batches.length - 1, userContent, body.id);
-    if (!result.sections) {
-      console.error("[resilience generate-full] 批次失败:", result.failReason, "submission id:", body.id);
-      return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 500 });
+  // ── v287：规则引擎接入 ──
+  // 知识库里已经写好节点的章节，直接由规则产出，不再走 AI。
+  // 这是"逐章替换"而非"一次性切换"：每往 knowledge/resilience/ 里
+  // 多写一条节点，这里就少一次 AI 调用，效果当场可见，
+  // 也顺带缓解 429（免费档并发只有1，调用越少越不容易撞限流）。
+  // 等所有章节都有节点了，AI 这条路径自然就空了，那时关掉是无感的。
+  const lib = await loadLibrary("resilience");
+  const seed = `${facts.sunSignZh}|${facts.dayMasterElement}|${resilience.score}|${breakdownStr}`;
+  const plan = planReport(lib, breakdown, seed, null);
+  console.log(`[resilience] 规则覆盖 ${plan.coverage.byRule}/${plan.coverage.total} 章（${plan.coverage.percent}%），其余走AI`);
+
+  // 只把还没有规则内容的章节交给 AI。索引要保留，
+  // 因为下面要按原始章节顺序把两边拼回去。
+  const aiIdx = plan.chapters.map((c, i) => ({ c, i })).filter((x) => x.c.source === "ai").map((x) => x.i);
+  const aiChapters = aiIdx.map((i) => chapters[i]);
+
+  const aiTexts: string[] = [];
+  if (aiChapters.length > 0) {
+    const batches = buildBatches(aiChapters);
+    for (let bi = 0; bi < batches.length; bi++) {
+      const result = await generateBatch(key, lang, batches[bi], bi === batches.length - 1, userContent, body.id);
+      if (!result.sections) {
+        console.error("[resilience generate-full] 批次失败:", result.failReason, "submission id:", body.id);
+        return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 500 });
+      }
+      aiTexts.push(...result.sections);
     }
-    allSections.push(...result.sections);
   }
+
+  // 按原始章节顺序合并：规则章节用知识库内容，其余按顺序取 AI 产出。
+  let aiCursor = 0;
+  const allSections: string[] = plan.chapters.map((ch) => {
+    if (ch.source === "rule") {
+      return (lang === "en" ? ch.ruleTextEn : ch.ruleTextZh) ?? "";
+    }
+    return aiTexts[aiCursor++] ?? "";
+  }).filter((x) => x.trim());
 
   const fullReport = allSections.join("\n\n===SECTION===\n\n");
   await admin.from("resilience_submissions").update({ [cachedField]: fullReport }).eq("id", body.id);

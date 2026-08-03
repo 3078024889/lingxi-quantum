@@ -2,10 +2,10 @@
   "nodes": [
     {
       "id": "r.state.deepening.recovery",
-      "chapter": "01-self-recovery",
+      "chapter": "02-stress",
       "priority": 10,
       "when": {
-        "structureDim": "recovery",
+        "structureDim": "stressRecovery",
         "structureBand": "low",
         "shift": "deepening",
         "cadence": "high"
@@ -17,7 +17,7 @@
     },
     {
       "id": "r.state.longgap",
-      "chapter": "01-self-recovery",
+      "chapter": "02-stress",
       "priority": 6,
       "when": {
         "spanMonthsMin": 6,

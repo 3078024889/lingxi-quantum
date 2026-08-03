@@ -256,8 +256,13 @@ export async function POST(req: Request) {
     // 情况非常容易撞上429——之前只重试一次、只等1.2秒，遇到稍微长一点
     // 的排队就还是失败。这次改成最多重试2次，等待时间也拉长到2秒、
     // 3.5秒，给排队多一点缓冲空间。
-    for (let attempt = 0; attempt < 2 && res.status === 429; attempt++) {
-      await new Promise((r) => setTimeout(r, 2000 + attempt * 1500));
+    // v287：429 重试从「2次、等2和3.5秒」改为「5次、指数退避」。
+    // glm-4.7-flash 免费档并发只有 1，配额恢复需要时间，等 2 秒远远不够；
+    // 而且分批生成时每批都在打接口，前一批的配额还没恢复下一批就上去了，
+    // 越重试越限流。改成 3/6/12/20/30 秒，总计最多等 71 秒——
+    // 报告生成本来就是慢操作，用户宁可多等一分钟，也不要拿到"生成失败"。
+    for (let attempt = 0; attempt < 5 && res.status === 429; attempt++) {
+      await new Promise((r) => setTimeout(r, [3000, 6000, 12000, 20000, 30000][attempt]));
       res = await callOnce();
     }
     // 之前这里没有检查 res.ok 就直接 res.json()——如果智谱接口本身返回

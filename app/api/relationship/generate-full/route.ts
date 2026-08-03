@@ -171,8 +171,9 @@ async function generateBatch(
     });
 
   let res = await callOnce();
-  for (let attempt = 0; attempt < 2 && res.status === 429; attempt++) {
-    await new Promise((r) => setTimeout(r, 2000 + attempt * 1500));
+  // v287：429 重试从2次改5次，等待改指数退避，理由同上。
+  for (let attempt = 0; attempt < 5 && res.status === 429; attempt++) {
+    await new Promise((r) => setTimeout(r, [3000, 6000, 12000, 20000, 30000][attempt]));
     res = await callOnce();
   }
   if (!res.ok) {
