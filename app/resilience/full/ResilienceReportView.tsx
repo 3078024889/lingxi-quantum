@@ -203,17 +203,39 @@ export default function ResilienceReportView({ id }: { id: string }) {
             background-attachment: fixed，滚动时像一整张长卷在下面延展），
             各章用玻璃面板浮在上面——面板之间因此有了统一感，
             背景也真正透得出来。 */}
+        {/* v292：每章从"小灰框"改为整屏沉浸式画面。
+            之前是一堆卡片堆叠，用户截图发微信时截到的是一个灰框，
+            没有收藏欲。现在每章占满一屏、背景是完整的 PDF 原图、
+            文字浮在玻璃面板上——用户随手一截就是一整张艺术画面。 */}
         {sections.map((content, i) => {
+          const bg = `/images/resilience-full/page-${(i % 4) + 1}.png`;
+          const posY = ["12%", "50%", "88%"][Math.floor(i / 4) % 3];
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
-            <div key={i} className="lx-glass-resilience relative mt-4 overflow-hidden">
-              <div className="p-8">
-                <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300/90">
-                  <Bi zh={title.titleZh} en={title.titleEn} />
+            <section
+              key={i}
+              className="relative mt-6 flex min-h-[92vh] items-center justify-center overflow-hidden rounded-sm"
+              style={{
+                backgroundImage: `url(${bg})`,
+                backgroundSize: "cover",
+                backgroundPosition: `center ${posY}`,
+              }}
+            >
+              <div className="lx-glass-resilience mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
+                <p className="font-display text-[11px] uppercase tracking-[0.34em] text-bone-mute">
+                  LIFE RESILIENCE · {String(i + 1).padStart(2, "0")} / {String(sections.length).padStart(2, "0")}
                 </p>
-                <p className="mt-4 whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
+                <h3 className="mt-4 font-display text-xl font-light tracking-[0.08em] text-bone sm:text-2xl">
+                  <Bi zh={title.titleZh} en={title.titleEn} />
+                </h3>
+                <div className="mt-3 h-px w-14 bg-amber/50" />
+                <div className="mt-6 space-y-4 text-[15px] leading-[2] text-bone-dim">
+                  {content.split("\n\n").filter(Boolean).map((para, k) => (
+                    <p key={k}>{para}</p>
+                  ))}
+                </div>
               </div>
-            </div>
+            </section>
           );
         })}
 

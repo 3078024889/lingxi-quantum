@@ -430,181 +430,113 @@ export async function exportGlassPdf(params: {
 // 用按字符宽度估算的方式手动折行。
 
 export async function exportArchivePdf(params: {
-  /** 每章的 { 标题, 正文 } */
   chapters: { title: string; body: string }[];
   fileName: string;
-  /** 报告主标题，印在封面 */
   titleZh: string;
   titleEn: string;
-  /** 封面图 / 正文循环图 / 尾页图 的 URL */
   coverImage: string;
   bodyImages: string[];
   endImage: string;
-  /** 玻璃面板与文字色。浅色素材用深字，深色素材用浅字。 */
   panelRgba?: [number, number, number, number];
   textRgb?: [number, number, number];
   titleRgb?: [number, number, number];
 }): Promise<void> {
-  const {
-    chapters, fileName, titleZh, titleEn,
-    coverImage, bodyImages, endImage,
-    // v291：面板从 0.72 降到 0.42。
-    // 0.72 太白，把素材压死了，看起来是"图片 + 白框文章"而不是档案。
-    // 0.42 实测墨字对比度仍有 10.9（远超 4.5 标准），
-    // 但晨雾水彩的层次能透出来，面板才像玻璃而不是纸片。
-    //
-    // 关于为什么不用深色玻璃 + 浅字（更接近官网的深空视觉）：
-    // 实测过。新素材正文区平均色 (206,193,185)，接近米白。
-    // 深蓝面板 0.35 压上去，浅字对比度只有 2.8，读不清；
-    // 要让浅字能读，面板得加到 0.62 以上——那时素材已经被压成
-    // 一块深色底，等于新做的浅色 PDF 白做了。
-    // 浅色素材配深字，是这套素材下唯一能同时保住通透与可读的组合。
-    panelRgba = [255, 255, 255, 0.42],
-    textRgb = [38, 32, 52],
-    titleRgb = [86, 56, 126],
-  } = params;
+  const { chapters, fileName, titleZh, titleEn, coverImage, bodyImages, endImage } = params;
 
-  await document.fonts.ready;
-  const { jsPDF } = await import("jspdf");
+  // ⚠️ 为什么不用 jsPDF 原生文本：
+  // jsPDF 内置字体只有 Helvetica/Times/Courier 这几种西文字体，
+  // 没有任何中文字形。直接 pdf.text() 写中文，输出的是
+  // "O`v„uT}—ç`'hchH" 这类乱码——上一版就是栽在这里。
+  // 要用原生文本必须先嵌入中文字体文件（Noto Sans SC 约 8–10MB），
+  // 那会让首次下载 PDF 时多加载 10MB，移动端体验很差。
+  //
+  // 所以改用另一条路：在页面外构建一个真正的 A4 尺寸 DOM，
+  // 用浏览器自己的字体渲染（中文一定正确），再整页截图贴进 PDF。
+  // 与旧方案的区别在于——旧方案截的是网页上那些小卡片，
+  // 所以出来像"网页截图"；这里截的是专门为 A4 排好版的整页，
+  // 背景图铺满、玻璃面板浮在上面，出来就是档案页。
 
-  const pdf = new jsPDF({ unit: "pt", format: "a4" });
-  const W = pdf.internal.pageSize.getWidth();
-  const H = pdf.internal.pageSize.getHeight();
-
-  // 图片转 dataURL，并保证已完全加载——直接把 URL 交给 jsPDF 在
-  // 某些浏览器里会拿到未解码的图，输出空白。
-  const toDataUrl = (url: string): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => {
-        const c = document.createElement("canvas");
-        c.width = img.naturalWidth; c.height = img.naturalHeight;
-        c.getContext("2d")!.drawImage(img, 0, 0);
-        resolve(c.toDataURL("image/jpeg", 0.9));
-      };
-      img.onerror = () => reject(new Error("图片加载失败: " + url));
-      img.src = url;
-    });
-
-  const [coverData, endData, ...bodyData] = await Promise.all([
-    toDataUrl(coverImage), toDataUrl(endImage), ...bodyImages.map(toDataUrl),
+  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+    import("html2canvas"),
+    import("jspdf"),
   ]);
 
-  // 整页铺图。素材是 3:4，A4 是 1:1.414，比例不同必然有一边溢出，
-  // 宁可裁掉边缘也不留白边。
-  //
-  // shift 参数控制纵向取景位置（0=上部 0.5=中部 1=下部）——
-  // 这是让 6 张图产生 11 种不重样画面的办法：同一张图取不同区域，
-  // 视觉上就是不同的画面。复制文件做不到这一点，
-  // 因为复制品跟原图长得一模一样，用户看到的重复次数不变。
-  const fillPage = (data: string, shift = 0.5) => {
-    const ratioPage = W / H;
-    const ratioImg = 3 / 4;
-    let w = W, h = H, x = 0, y = 0;
-    if (ratioImg > ratioPage) { h = H; w = H * ratioImg; x = (W - w) / 2; }
-    else { w = W; h = W / ratioImg; y = -(h - H) * shift; }
-    pdf.addImage(data, "JPEG", x, y, w, h);
+  await document.fonts.ready;
+
+  const pdf = new jsPDF({ unit: "pt", format: "a4" });
+  const PW = pdf.internal.pageSize.getWidth();
+  const PH = pdf.internal.pageSize.getHeight();
+
+  // A4 在 96dpi 下的像素尺寸，按 2 倍缩放渲染保证清晰度
+  const PX_W = 794, PX_H = 1123;
+
+  const stage = document.createElement("div");
+  stage.style.cssText =
+    `position:fixed;left:-99999px;top:0;width:${PX_W}px;height:${PX_H}px;overflow:hidden;`;
+  document.body.appendChild(stage);
+
+  const renderPage = async (html: string): Promise<string> => {
+    stage.innerHTML = html;
+    await waitForImages(stage);
+    // 图片解码完成后再等一帧，否则偶发截到半张图
+    await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 60)));
+    const canvas = await html2canvas(stage, {
+      width: PX_W, height: PX_H, scale: 2, useCORS: true, backgroundColor: "#F6F4F0",
+    });
+    return canvas.toDataURL("image/jpeg", 0.92);
   };
 
-  // 中文折行：jsPDF 的 splitTextToSize 按空格断词，中文会整段不折。
-  // 这里按累计字符宽度手动折——中文字符按字号全宽算，
-  // ASCII 按约 0.5 倍算，够准，且不需要引入额外字体度量库。
-  const wrapCN = (text: string, fontSize: number, maxWidth: number): string[] => {
-    const out: string[] = [];
-    for (const para of text.split("\n")) {
-      if (!para.trim()) { out.push(""); continue; }
-      let line = "", width = 0;
-      for (const ch of para) {
-        const cw = /[\x00-\xff]/.test(ch) ? fontSize * 0.5 : fontSize;
-        if (width + cw > maxWidth) { out.push(line); line = ch; width = cw; }
-        else { line += ch; width += cw; }
-      }
-      if (line) out.push(line);
-    }
-    return out;
-  };
+  // 每章换一个纵向取景位，让 4 张图产生 12 种画面，11 章不重样
+  const SHIFTS = ["center 12%", "center 50%", "center 88%"];
 
-  const M = 46;            // 页边距
-  const PAD = 26;          // 玻璃面板内边距
-  const FS = 11.5;         // 正文字号
-  const LH = 20;           // 行高
+  const pageShell = (bg: string, pos: string, inner: string) => `
+    <div style="position:relative;width:${PX_W}px;height:${PX_H}px;overflow:hidden;
+                font-family:'Noto Serif SC','Songti SC','SimSun',serif;">
+      <div style="position:absolute;inset:0;background-image:url('${bg}');
+                  background-size:cover;background-position:${pos};"></div>
+      ${inner}
+    </div>`;
 
   // ── 封面 ──
-  fillPage(coverData);
-  pdf.setFillColor(panelRgba[0], panelRgba[1], panelRgba[2]);
-  // jsPDF 不支持 rgba，用 GState 设透明度
-  const gs = (pdf as any).GState ? new (pdf as any).GState({ opacity: panelRgba[3] }) : null;
-  if (gs) (pdf as any).setGState(gs);
-  pdf.roundedRect(M, H * 0.36, W - M * 2, 128, 6, 6, "F");
-  if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 1 }));
-  pdf.setTextColor(titleRgb[0], titleRgb[1], titleRgb[2]);
-  pdf.setFontSize(24);
-  pdf.text(titleZh, W / 2, H * 0.36 + 52, { align: "center" });
-  pdf.setFontSize(11);
-  pdf.setTextColor(textRgb[0], textRgb[1], textRgb[2]);
-  pdf.text(titleEn, W / 2, H * 0.36 + 80, { align: "center" });
+  pdf.addImage(await renderPage(pageShell(coverImage, "center 40%", `
+    <div style="position:absolute;left:56px;right:56px;top:34%;
+                background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.66);
+                border-radius:6px;padding:46px 40px;text-align:center;
+                box-shadow:0 18px 60px rgba(40,36,70,.18);">
+      <div style="font-size:12px;letter-spacing:.4em;color:#7A6E94;">LINGXI FIELD</div>
+      <div style="font-size:34px;color:#3A2E52;margin-top:18px;letter-spacing:.12em;">${titleZh}</div>
+      <div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${titleEn}</div>
+    </div>`)), "JPEG", 0, 0, PW, PH);
 
   // ── 正文：每章一页 ──
-  chapters.forEach((ch, i) => {
+  for (let i = 0; i < chapters.length; i++) {
+    const ch = chapters[i];
+    const bg = bodyImages[i % bodyImages.length];
+    const pos = SHIFTS[Math.floor(i / bodyImages.length) % SHIFTS.length];
     pdf.addPage();
-    // 图与取景一起轮换：4张图 × 3个取景位 = 12 种画面，
-    // 11 章保证不重样。
-    const SHIFTS = [0.12, 0.5, 0.88];
-    fillPage(bodyData[i % bodyData.length], SHIFTS[Math.floor(i / bodyData.length) % SHIFTS.length]);
-
-    const lines = wrapCN(ch.body, FS, W - M * 2 - PAD * 2);
-    const panelH = Math.min(H - M * 2, PAD * 2 + 58 + lines.length * LH);
-
-    // 玻璃面板：填充 + 内发光 + 描边。
-    // 单纯一块半透明色是"白框"，加上这两层才有玻璃的体积感——
-    // 内发光模拟光在玻璃内部的散射，描边模拟边缘的折射高光。
-    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: panelRgba[3] }));
-    pdf.setFillColor(panelRgba[0], panelRgba[1], panelRgba[2]);
-    pdf.roundedRect(M, M, W - M * 2, panelH, 8, 8, "F");
-    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 0.30 }));
-    pdf.setFillColor(255, 255, 255);
-    pdf.roundedRect(M + 6, M + 6, W - M * 2 - 12, panelH - 12, 6, 6, "F");
-    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 0.55 }));
-    pdf.setDrawColor(225, 220, 245);
-    pdf.setLineWidth(0.8);
-    pdf.roundedRect(M, M, W - M * 2, panelH, 8, 8, "S");
-    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 1 }));
-
-    // 档案式章头：维度编号 + 分隔线 + 章节名。
-    // 这一层是"报告感"的来源——没有它，每页就只是一段文字。
-    pdf.setFontSize(7.5);
-    pdf.setTextColor(150, 140, 175);
-    pdf.text(`LIFE RESILIENCE  ·  ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`, M + PAD, M + PAD + 4);
-
-    pdf.setTextColor(titleRgb[0], titleRgb[1], titleRgb[2]);
-    pdf.setFontSize(15);
-    pdf.text(ch.title, M + PAD, M + PAD + 26);
-
-    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 0.35 }));
-    pdf.setDrawColor(titleRgb[0], titleRgb[1], titleRgb[2]);
-    pdf.setLineWidth(0.6);
-    pdf.line(M + PAD, M + PAD + 36, M + PAD + 54, M + PAD + 36);
-    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 1 }));
-
-    pdf.setTextColor(textRgb[0], textRgb[1], textRgb[2]);
-    pdf.setFontSize(FS);
-    let y = M + PAD + 58;
-    for (const ln of lines) {
-      if (y > M + panelH - PAD) break;
-      if (ln) pdf.text(ln, M + PAD, y);
-      y += LH;
-    }
-
-    pdf.setFontSize(8);
-    pdf.setTextColor(150, 150, 165);
-    pdf.text("lingxifield.com", M, H - 22);
-    pdf.text(`${i + 1} / ${chapters.length}`, W - M, H - 22, { align: "right" });
-  });
+    pdf.addImage(await renderPage(pageShell(bg, pos, `
+      <div style="position:absolute;left:52px;right:52px;top:60px;
+                  background:rgba(255,255,255,.44);border:1px solid rgba(255,255,255,.62);
+                  border-radius:6px;padding:38px 40px;
+                  box-shadow:0 18px 56px rgba(40,36,70,.16);">
+        <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">
+          LIFE RESILIENCE · ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}
+        </div>
+        <div style="font-size:23px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${ch.title}</div>
+        <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>
+        <div style="font-size:14.5px;line-height:2.05;color:#2E2742;white-space:pre-wrap;">${
+          ch.body.replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        }</div>
+      </div>
+      <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
+      <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${i + 1} / ${chapters.length}</div>`
+    )), "JPEG", 0, 0, PW, PH);
+  }
 
   // ── 尾页 ──
   pdf.addPage();
-  fillPage(endData);
+  pdf.addImage(await renderPage(pageShell(endImage, "center 50%", "")), "JPEG", 0, 0, PW, PH);
 
+  document.body.removeChild(stage);
   pdf.save(fileName);
 }
