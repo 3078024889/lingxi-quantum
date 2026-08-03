@@ -612,7 +612,7 @@ export default function LifeMapFlow() {
             <div className="lm-core" />
           </div>
           <div className="relative z-10">
-            <div className="lx-pdf-lifemap mx-auto max-w-2xl px-8 py-10">
+            <div className="lx-glass-lifemap mx-auto max-w-2xl px-8 py-10">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("发现你的生命频率", "Discover Your Life Frequency")}
             </p>
@@ -876,7 +876,7 @@ export default function LifeMapFlow() {
       {stage === "loading" && (
         <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
           <div className="lm-core lm-core-active" />
-          <div className="lx-pdf-lifemap mt-10 space-y-3 px-8 py-6">
+          <div className="lx-glass-lifemap mt-10 space-y-3 px-8 py-6">
             {LOADING_STEPS.slice(0, loadingStep + 1).map((s, i) => (
               <p key={i} className={`font-display text-base ${i === loadingStep ? "text-lm2-text" : "text-lm2-text-dim/75"}`}>
                 <Bi zh={s.zh} en={s.en} />
@@ -890,7 +890,7 @@ export default function LifeMapFlow() {
         <section className="px-6 py-20">
           <div className="mx-auto max-w-2xl">
             {resumedDraft && (
-              <div className="lx-pdf-lifemap mb-6 px-6 py-5 text-center">
+              <div className="lx-glass-lifemap mb-6 px-6 py-5 text-center">
                 <p className="text-sm leading-6 text-lm2-text">
                   <Bi
                     zh="欢迎回来——你之前有一次没走完的解锁，信息已经帮你恢复好了。"
@@ -913,7 +913,7 @@ export default function LifeMapFlow() {
                 </div>
               </div>
             )}
-            <div className="lx-pdf-lifemap px-8 py-8 text-center">
+            <div className="lx-glass-lifemap px-8 py-8 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("你的生命频率报告", "Your Life Frequency Report")}
             </p>
@@ -938,7 +938,7 @@ export default function LifeMapFlow() {
             </div>
 
             {/* 真实星盘：用已验证的行星黄经数据，画出标准占星轮图 */}
-            <div className="lx-pdf-lifemap mt-8 p-6">
+            <div className="lx-glass-lifemap mt-8 p-6">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的星盘" en="Your Natal Chart" />
               </p>
@@ -970,7 +970,7 @@ export default function LifeMapFlow() {
                   { label: t("木星", "Jupiter"), v: isEn() ? report.facts.jupiter.signEn : report.facts.jupiter.signZh },
                   { label: t("土星", "Saturn"), v: isEn() ? report.facts.saturn.signEn : report.facts.saturn.signZh },
                 ].map((p) => (
-                  <div key={p.label} className="lx-pdf-lifemap px-3 py-2 text-center backdrop-blur-xl">
+                  <div key={p.label} className="lx-glass-lifemap px-3 py-2 text-center backdrop-blur-xl">
                     <p className="text-[11px] uppercase tracking-widest2 text-lm2-text-dim/80">{p.label}</p>
                     <p className="mt-1 font-display text-sm text-lm2-text">{p.v}</p>
                   </div>
@@ -1053,7 +1053,7 @@ export default function LifeMapFlow() {
             )}
 
             {(phoneNumber.trim() || plateNumber.trim()) && (
-              <div className="lx-pdf-lifemap mt-8 p-6 sm:p-8">
+              <div className="lx-glass-lifemap mt-8 p-6 sm:p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                   <Bi zh="数字能量解读" en="Number Energy Reading" />
                 </p>
@@ -1089,7 +1089,7 @@ export default function LifeMapFlow() {
             )}
 
             {parsed.stageName && (
-              <div className="lx-pdf-lifemap mt-8 p-6 sm:p-8">
+              <div className="lx-glass-lifemap mt-8 p-6 sm:p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                   <Bi zh="当前生命阶段" en="Your Current Life Stage" />
                 </p>
@@ -1104,7 +1104,7 @@ export default function LifeMapFlow() {
               </p>
               <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {parsed.keywords.map((k, i) => (
-                  <div key={i} className="lx-pdf-lifemap p-4 text-center backdrop-blur-xl">
+                  <div key={i} className="lx-glass-lifemap p-4 text-center backdrop-blur-xl">
                     <p className="font-display text-xl text-lm2-text">✨ {k.word}</p>
                     <p className="mt-1 text-xs text-lm2-text-dim/70">{k.desc}</p>
                   </div>
@@ -1112,7 +1112,7 @@ export default function LifeMapFlow() {
               </div>
             </div>
 
-            <div className="lx-pdf-lifemap mt-14 p-8 text-center">
+            <div className="lx-glass-lifemap mt-14 p-8 text-center">
               <p className="font-display text-lg text-lm2-text">
                 🔒 <Bi zh="以上，只是命盘最外层的骨架。" en="What you've seen so far is only the outer frame of your chart." />
               </p>

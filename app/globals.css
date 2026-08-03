@@ -352,21 +352,39 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
      换成渐变是倒退。 */
 
 .lx-glass {
-  /* v279 灵犀雾玻璃。
-     不是白玻璃（会被极光亮带吞掉），也不是黑面板（会变暗色仪表盘）。
-     是紫蓝雾气中的透明晶体：有温度的雾，不是透明空气。
-     v280 调整：背景那条中央压暗带移除之后（它挡住了首屏的意识球），
-     对比度改由面板承担，所以雾玻璃需要比 0.32 稍实一点。
-     用 0.50–0.58 的渐变：仍然是雾，不是实心面板，
-     背景的极光依然透得过来，但文字在任何位置都站得住。 */
   position: relative;
-  background: linear-gradient(135deg, rgba(80,130,220,0.20), rgba(130,80,200,0.16));
-  border: 1px solid rgba(190, 220, 255, 0.28);
-  backdrop-filter: blur(24px) saturate(1.04);
-  -webkit-backdrop-filter: blur(24px) saturate(1.04);
-  box-shadow: 0 0 44px rgba(80, 160, 255, 0.14),
-              inset 0 0 60px rgba(255, 255, 255, 0.045);
+  /* GPT 那版的紫蓝极光玻璃：亮紫 → 青蓝的斜向渐变。
+     色相直接用他的，这是"高级玻璃"的来源。 */
+  background: linear-gradient(135deg, rgba(180,150,255,0.18), rgba(80,220,255,0.09));
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  /* saturate(160%) 让透过来的紫和青变浓——这是通透玻璃与
+     灰蒙蒙塑料片的分界线，之前只写 1.12 等于没加。 */
+  backdrop-filter: blur(25px) saturate(160%);
+  -webkit-backdrop-filter: blur(25px) saturate(160%);
+  /* 外阴影给漂浮感，内阴影给厚度：玻璃是有体积的，不是一张贴纸 */
+  box-shadow: 0 25px 80px rgba(4, 8, 26, 0.45),
+              inset 0 0 40px rgba(255, 255, 255, 0.08);
   border-radius: 4px;
+  overflow: hidden;
+}
+
+/* 关键补充：新背景视频有几条很亮的青绿极光带（约 77,169,156），
+   面板滑过那里时，通透玻璃下的正文对比度只有 2.6，文字会消失。
+   解法不是把玻璃做厚（那就不通透了），而是给面板内容区垫一层
+   极淡的暗色——它几乎看不出来，但足以把文字托住。
+   这样玻璃保持 GPT 那版的通透，可读性也不牺牲。 */
+.lx-glass > *,
+[class*="lx-glass-"] > * {
+  position: relative;
+  z-index: 1;
+}
+.lx-glass::before,
+[class*="lx-glass-"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(10,14,32,0.48), rgba(14,10,30,0.42));
+  pointer-events: none;
 }
 
 /* 八个产品的专属色调，取自各自 PDF 封面 page-0.png 的实际取样色。
@@ -379,8 +397,8 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-qian,
 .lx-glass-tarot,
 .lx-glass-relation,
-.lx-glass-lifemap { background: linear-gradient(135deg, rgba(95,145,230,0.20), rgba(135,95,210,0.16)); border-color: rgba(190,220,255,0.28); }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(90,180,150,0.20), rgba(70,140,190,0.16)); border-color: rgba(190,220,255,0.28); }
+.lx-glass-lifemap { background: linear-gradient(135deg, rgba(64,100,156,0.42), rgba(92,68,142,0.38)); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(52,120,100,0.42), rgba(40,84,112,0.38)); }
 .lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
 .lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
 .lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }
@@ -421,65 +439,78 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 }
 
 /* ══════════════════════════════════════════════════════
-   灵犀场 PDF 档案面板 v283（全新体系，不在旧版上改）
+   灵犀场玻璃面板 v284
 
-   新素材是浅色的（中心亮度 210-240，接近白），跟旧版深底完全相反，
-   所以整套文字方案跟着反过来：浅底 + 深色墨字。
-   这样才保得住新 PDF 那种晨雾水彩的通透，
-   如果继续用白字，就必须给面板加深色遮罩，等于把新素材压回旧样子。
+   v283 试过把 PDF 图铺进面板当底——效果不好：面板尺寸和 PDF 比例
+   对不上，铺进去只能看到图的中间一小块，是截图不是完整画面，
+   而且十个产品的图各不相同，整站看下去很杂。撤掉。
 
-   面板本身是一层白色雾玻璃（0.42），作用有两个：
-     · 把十个产品各自不同的底色统一到相近的明度，文字才好统一
-     · 保留 PDF 图案透出来，但不与文字抢
-   实测对比度（墨字 #2A2438）：最浅的今日运势 12.7，最深的塔罗 11.0
+   回到玻璃面板。新视频比旧的暗很多（中位亮度 39,43,72），所以面板
+   可以做得比以前任何一版都透。但新视频有几条很亮的青绿极光带
+   （约 77,169,156），实测面板做到 0.20 时那里的正文只有 3.05，
+   读不清；提到 0.42 后是 4.18，暗部仍有 10.0，通透感没丢。产品之间用色相区分，不用底图区分——
+   同样能认出"我在哪个产品里"，但整站是统一的。
    ══════════════════════════════════════════════════════ */
 
-[class*="lx-pdf-"] {
+.lx-glass {
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: linear-gradient(135deg, rgba(58,72,140,0.42), rgba(74,58,130,0.38));
+  border: 1px solid rgba(190, 215, 255, 0.26);
+  /* saturate(160%) 是关键，之前只写了 1.12，差太远。
+     它让透过玻璃的背景颜色变浓——这是"通透玻璃"和"灰蒙蒙塑料片"
+     的分界线。不加饱和，透过来的紫和青是灰的，怎么调透明度都显脏。 */
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  /* 外阴影给漂浮感，内阴影给厚度——玻璃是有体积的，不是一张贴纸 */
+  box-shadow: 0 24px 70px rgba(4, 8, 26, 0.42),
+              inset 0 0 44px rgba(255, 255, 255, 0.09);
   border-radius: 4px;
-  box-shadow: 0 8px 44px rgba(30, 26, 52, 0.28),
-              inset 0 0 60px rgba(255, 255, 255, 0.30);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  color: #3D3652;
+  overflow: hidden;
 }
-[class*="lx-pdf-"]::before {
+
+/* 边缘扫光：一道极淡的光每 9 秒扫过一次。
+   频率刻意放慢——太频繁会变成"闪"，慢到几乎察觉不到才像光在流动。 */
+.lx-glass::after,
+[class*="lx-glass-"]::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 4px;
-  background: linear-gradient(160deg, rgba(255,255,255,0.46), rgba(255,255,255,0.38));
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: linear-gradient(118deg, transparent 35%, rgba(255,255,255,0.10) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: lx-shine 9s ease-in-out infinite;
   pointer-events: none;
 }
-[class*="lx-pdf-"] > * { position: relative; z-index: 1; }
+@keyframes lx-shine { 45%, 100% { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .lx-glass::after, [class*="lx-glass-"]::after { animation: none; opacity: 0; }
+}
 
-/* 浅底面板内的文字色——覆盖全站深色主题的白字。
-   用属性选择器一次覆盖 text-bone / text-lattice / text-amber 这类类名，
-   不需要去每个组件里改。 */
-[class*="lx-pdf-"] .text-bone,
-[class*="lx-pdf-"] .text-bone-dim,
-[class*="lx-pdf-"] .text-bone-soft { color: #2A2438 !important; }
-[class*="lx-pdf-"] .text-bone-mute { color: #5A5270 !important; }
-[class*="lx-pdf-"] .text-lattice { color: #1F6F63 !important; }
-[class*="lx-pdf-"] .text-amber   { color: #7A4E9E !important; }
-[class*="lx-pdf-"] .text-rose    { color: #A63D74 !important; }
-[class*="lx-pdf-"] input,
-[class*="lx-pdf-"] textarea { color: #2A2438; }
-[class*="lx-pdf-"] input::placeholder { color: #7A7290; }
-
-/* 十个产品各自的 PDF 首张作底 */
-.lx-pdf-resilience { background-image: url("/images/resilience-full/page-0.png"); }
-.lx-pdf-romance    { background-image: url("/images/romance-full/page-0.png"); }
-.lx-pdf-wealth     { background-image: url("/images/wealth-full/page-0.png"); }
-.lx-pdf-daily      { background-image: url("/images/daily-tide-full/page-0.png"); }
-.lx-pdf-qian       { background-image: url("/images/qian-full/page-0.png"); }
-.lx-pdf-tarot      { background-image: url("/images/tarot-full/page-0.png"); }
-.lx-pdf-relation   { background-image: url("/images/relationship-full/general/page-0.png"); }
-.lx-pdf-lifemap    { background-image: url("/images/lifemap/page-0.png"); }
+/* 八个产品的色相。只改色相不改透明度，保证整站通透一致。 */
+.lx-glass-resilience,
+.lx-glass-romance,
+.lx-glass-wealth,
+.lx-glass-daily,
+.lx-glass-qian,
+.lx-glass-tarot,
+.lx-glass-relation,
+.lx-glass-lifemap {
+  position: relative;
+  border: 1px solid rgba(190, 215, 255, 0.26);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 24px 70px rgba(4, 8, 26, 0.42),
+              inset 0 0 44px rgba(255, 255, 255, 0.09);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(52,120,100,0.42), rgba(40,84,112,0.38)); }
+.lx-glass-romance    { background: linear-gradient(135deg, rgba(190,110,170,0.20), rgba(140,90,190,0.17)); }
+.lx-glass-wealth     { background: linear-gradient(135deg, rgba(90,130,215,0.20), rgba(130,95,200,0.17)); }
+.lx-glass-daily      { background: linear-gradient(135deg, rgba(80,180,205,0.20), rgba(85,125,205,0.17)); }
+.lx-glass-qian       { background: linear-gradient(135deg, rgba(150,120,210,0.20), rgba(110,95,195,0.17)); }
+.lx-glass-tarot      { background: linear-gradient(135deg, rgba(150,100,225,0.21), rgba(100,115,220,0.17)); }
+.lx-glass-relation   { background: linear-gradient(135deg, rgba(105,140,220,0.20), rgba(160,105,205,0.17)); }
+.lx-glass-lifemap    { background: linear-gradient(135deg, rgba(95,145,225,0.20), rgba(135,100,205,0.17)); }
 
 /* v277：修炼次第卡片。
    悬停时轻微上浮 + 边框泛紫，暗示"可以进去"，但不做夸张位移——

@@ -45,11 +45,17 @@ function buildChapters(dimStr: string, typeZh: string): ChapterMeta[] {
 const endsCleanly = (s: string) => /[。！？.!?」”】]\s*$/.test(s.trim());
 function parseAndValidate(raw: string, count: number, finishReason?: string) {
   let sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
-  const minAcceptable = Math.max(1, Math.floor(count * 0.8));
-  if (finishReason === "length" && sections.length > 0 && !endsCleanly(sections[sections.length - 1])) {
-    sections = sections.slice(0, -1);
-  }
-  const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 30 && endsCleanly(s));
+  // v284修复：原来是 Math.floor(count * 0.8)——第一批4章只要出3章就算"有效"。
+  // 配合下面丢弃截断章节的逻辑，结果是报告少一章而系统认为一切正常。
+  // 用户看到的就是"报告到第5点就断了"。章节必须全部拿到，没有折扣。
+  const minAcceptable = count;
+  // v284：末章因 token 上限被截断时，之前是直接丢掉它然后放行——
+  // 那等于把"生成失败"伪装成"生成成功"。现在保留它并让 valid=false，
+  // 交给上层重试；重试仍失败会走降级路径，至少用户能看到明确提示，
+  // 而不是拿到一份自己不知道少了内容的报告。
+  const truncated = finishReason === "length" && sections.length > 0
+    && !endsCleanly(sections[sections.length - 1]);
+  const valid = !truncated && sections.length >= minAcceptable && sections.every((s) => s.length >= 30 && endsCleanly(s));
   return { sections, valid };
 }
 

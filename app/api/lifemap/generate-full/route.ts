@@ -276,10 +276,28 @@ export async function POST(req: Request) {
     // 兜底清理：去掉AI偶尔漏改的markdown星号，见 lib/text-clean.ts 顶部注释。
     const text = rawText ? stripMarkdownArtifacts(rawText) : rawText;
     const finishReason = data?.choices?.[0]?.finish_reason;
+    // v284：之前这里检测到截断只写了一行日志，然后照样把残缺内容存进
+    // 数据库、返回给用户——用户付了钱拿到一份缺章的报告，而系统认为
+    // 一切正常。这是"报告写到一半就断了"的直接原因。
+    // 现在改成：截断即视为失败，整轮重试一次；重试仍截断则明确报错，
+    // 不入库。宁可让用户看到"请重试"，也不能给一份自己不知道少了
+    // 内容的报告。
     if (finishReason === "length") {
-      // 回复被 max_tokens 截断了——留个日志，下次再出现"报告缺了最后一节"
-      // 这类问题，第一时间就知道是这个原因，不用再靠猜。
-      console.error("[generate-full] AI 回复被 max_tokens 截断，finish_reason=length，submission id:", body.id);
+      console.error("[generate-full] AI 回复被 max_tokens 截断，重试一次。submission id:", body.id);
+      const retry = await callOnce();
+      if (retry.ok) {
+        const rd = await retry.json();
+        const rt = rd?.choices?.[0]?.message?.content?.trim();
+        const rFinish = rd?.choices?.[0]?.finish_reason;
+        if (rt && rFinish !== "length") {
+          const cleaned = stripMarkdownArtifacts(rt);
+          const uf = lang === "en" ? { full_report_en: cleaned } : { full_report: cleaned };
+          await supabase.from("life_map_submissions").update(uf).eq("id", body.id);
+          return NextResponse.json({ fullReport: cleaned, resilienceScore: resilience.score, resilienceBreakdown: resilience.breakdown, romanceScore: romance.score, romanceStyle: romance.style, hasTaoHua: romance.taoHua.hasTaoHua });
+        }
+      }
+      console.error("[generate-full] 重试后仍被截断，不入库。submission id:", body.id);
+      return NextResponse.json({ error: "这份图谱内容较长，本次生成未能完整写完。请稍后再试一次，不会重复扣费。" }, { status: 503 });
     }
     if (!text) {
       console.error("[generate-full] AI 没有返回内容，submission id:", body.id, "AI原始返回:", JSON.stringify(data));

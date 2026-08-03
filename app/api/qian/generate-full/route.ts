@@ -137,7 +137,9 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
     // 原因，不是AI真的经常生成失败，是校验本身太严格。这次放宽：
     // 只要求段数不少于预期的80%（向下取整，至少留1段），且每段不能
     // 短得离谱（20字，不是之前的60字——60字对这种密度的内容也偏严）。
-    const minAcceptable = Math.max(1, Math.floor(batch.count * 0.8));
+    // v284：章节必须全部拿到，不接受80%折扣（原逻辑会让报告少一章而不报错）
+    let truncated = false;
+    const minAcceptable = batch.count;
     // 如果接口明确告诉我们这次是被 max_tokens 截断的（finish_reason
     // === "length"），最后一段大概率是写到一半被硬切的——之前的校验
     // 完全没检查这个，只要段数够、每段够长，就当成正常内容展示，这才
@@ -145,9 +147,9 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
     // 真正原因。这里补上：只要命中截断信号，且最后一段结尾不像正常
     // 收尾，就把这半句话丢掉，不展示不完整的内容。
     if (finishReason === "length" && sections.length > 0 && !endsCleanly(sections[sections.length - 1])) {
-      sections = sections.slice(0, -1);
+      truncated = true;
     }
-    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 20 && endsCleanly(s));
+    const valid = !truncated && sections.length >= minAcceptable && sections.every((s) => s.length >= 20 && endsCleanly(s));
     return { sections, valid };
   };
 

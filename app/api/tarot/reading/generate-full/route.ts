@@ -100,11 +100,13 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, promp
 
   const parseAndValidate = (raw: string, finishReason?: string) => {
     let sections = raw.split(/===\s*\d+\s*===/).map((s) => s.trim()).filter(Boolean);
-    const minAcceptable = Math.max(1, Math.floor(batch.count * 0.8));
+    // v284：章节必须全部拿到，不接受80%折扣（原逻辑会让报告少一章而不报错）
+    let truncated = false;
+    const minAcceptable = batch.count;
     if (finishReason === "length" && sections.length > 0 && !endsCleanly(sections[sections.length - 1])) {
-      sections = sections.slice(0, -1);
+      truncated = true;
     }
-    const valid = sections.length >= minAcceptable && sections.every((s) => s.length >= 15 && endsCleanly(s));
+    const valid = !truncated && sections.length >= minAcceptable && sections.every((s) => s.length >= 15 && endsCleanly(s));
     return { sections, valid };
   };
 

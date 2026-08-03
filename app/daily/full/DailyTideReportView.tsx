@@ -109,7 +109,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
   if (status === "checking") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <div className="lx-pdf-daily px-6 py-10">
+        <div className="lx-glass-daily px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
           <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命韧性档案，第一次生成需要一点时间……", "The field is unfolding your full Resilience Archive — the first generation takes a little while…")}</p>
         </div>
@@ -157,7 +157,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
-      <div className="flex items-center justify-between lx-pdf-daily px-6 py-4">
+      <div className="flex items-center justify-between lx-glass-daily px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀场 · 生命韧性档案" en="Lingxi Field · Life Resilience Archive" />
         </p>

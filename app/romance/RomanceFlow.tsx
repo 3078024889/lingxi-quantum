@@ -228,7 +228,7 @@ export default function RomanceFlow() {
     return (
       <>
       <div ref={reportRef} className="mx-auto max-w-xl px-6 py-16">
-        <div className="flex items-center justify-between gap-3 lx-pdf-romance px-6 py-4 text-center">
+        <div className="flex items-center justify-between gap-3 lx-glass-romance px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
             <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
           </p>
@@ -241,7 +241,7 @@ export default function RomanceFlow() {
           </button>
         </div>
 
-        <div className="mt-6 flex flex-col items-center lx-pdf-romance p-8">
+        <div className="mt-6 flex flex-col items-center lx-glass-romance p-8">
           <svg viewBox="0 0 180 180" className="w-44" style={{ filter: "drop-shadow(0 0 14px rgba(255,143,209,0.45))" }}>
             <circle cx="90" cy="90" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12" />
             <circle
@@ -258,7 +258,7 @@ export default function RomanceFlow() {
           </p>
         </div>
 
-        <div className="mt-4 lx-pdf-romance p-6">
+        <div className="mt-4 lx-glass-romance p-6">
           <p className="text-base leading-9 text-bone-dim">{t(OVERALL[band(result.score)].zh, OVERALL[band(result.score)].en)}</p>
         </div>
 
@@ -268,7 +268,7 @@ export default function RomanceFlow() {
         </div>
 
         {STYLE_BAND_INSIGHT[`${result.style}|${band(result.score)}`] && (
-          <div className="mt-4 lx-pdf-romance p-6">
+          <div className="mt-4 lx-glass-romance p-6">
             <p className="text-sm uppercase tracking-widest2 text-bone"><Bi zh="这个风格 × 这个磁场强度，具体会怎样" en="This Style × This Field Strength" /></p>
             <p className="mt-2 text-base leading-8 text-bone-dim">
               {t(STYLE_BAND_INSIGHT[`${result.style}|${band(result.score)}`].zh, STYLE_BAND_INSIGHT[`${result.style}|${band(result.score)}`].en)}
@@ -288,7 +288,7 @@ export default function RomanceFlow() {
           </div>
         )}
 
-        <div className="mt-4 lx-pdf-romance p-6">
+        <div className="mt-4 lx-glass-romance p-6">
           <p className="text-sm uppercase tracking-widest2 text-lattice"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
           <p className="mt-2 text-base leading-8 text-bone-dim">
             <Bi
@@ -298,7 +298,7 @@ export default function RomanceFlow() {
           </p>
         </div>
 
-        <div className="mt-6 lx-pdf-romance px-6 py-3 text-center">
+        <div className="mt-6 lx-glass-romance px-6 py-3 text-center">
           <p className="text-sm text-bone-dim">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言。" en="This is a reference for self-reflection, not a prophecy about your relationships." />
           </p>
@@ -306,7 +306,7 @@ export default function RomanceFlow() {
       </div>
 
       <div className="mx-auto mt-6 max-w-xl px-6">
-        <div className="lx-pdf-romance p-6 text-center">
+        <div className="lx-glass-romance p-6 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-bone">
             <Bi zh="想看得更深？" en="Want to go deeper?" />
           </p>
@@ -336,7 +336,7 @@ export default function RomanceFlow() {
             背景的卡片里——那张封面图底部本来就印着"lingxifield.com"
             这类落款文字，输入框叠上去，两边文字互相打架，看不清楚。
             这里拆成单独一块纯色玻璃面板，不再压在任何背景图上。 */}
-        <div className="lx-pdf-romance mt-4 p-6 text-center">
+        <div className="lx-glass-romance mt-4 p-6 text-center">
           <input
             type="text"
             value={unlockName}
@@ -358,7 +358,7 @@ export default function RomanceFlow() {
       {/* v261：这段"查看完整生命图谱"的引导，之前排在1-11点清单前面，
           这次挪到解锁按钮之后。 */}
       <div className="mx-auto mt-6 max-w-xl px-6">
-        <div className="lx-pdf-romance p-6 text-center">
+        <div className="lx-glass-romance p-6 text-center">
           <p className="text-base leading-8 text-bone-dim">
             <Bi
               zh="同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
@@ -387,7 +387,7 @@ export default function RomanceFlow() {
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">
-      <div className="lx-pdf-romance p-6 sm:p-8">
+      <div className="lx-glass-romance p-6 sm:p-8">
         <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
           <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
         </p>
@@ -402,7 +402,7 @@ export default function RomanceFlow() {
         </p>
       </div>
 
-      <div className="mt-6 lx-pdf-romance p-6">
+      <div className="mt-6 lx-glass-romance p-6">
         <p className="text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -422,7 +422,7 @@ export default function RomanceFlow() {
       </div>
 
       {error && (
-        <div className="mt-4 lx-pdf-romance p-4">
+        <div className="mt-4 lx-glass-romance p-4">
           <p className="text-sm text-rose">{error}</p>
         </div>
       )}

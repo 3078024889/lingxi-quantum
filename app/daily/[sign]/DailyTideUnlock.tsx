@@ -85,7 +85,7 @@ export default function DailyTideUnlock() {
   return (
     <>
     <div
-      className="lx-pdf-daily mt-6 p-6 text-center"
+      className="lx-glass-daily mt-6 p-6 text-center"
     >
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
         <Bi zh="想看得更深？" en="Want to go deeper?" />
@@ -126,7 +126,7 @@ export default function DailyTideUnlock() {
       // 背景图，图片底部本来就带着网址水印，卡片一长，输入框刚好落在
       // 水印那一片区域，看起来很花、看不清。这次把这一段整个挪出来，
       // 单独放一张没有背景图干扰的纯色卡片，不再跟水印打架。
-      <div className="mx-auto mt-4 max-w-md lx-pdf-daily p-6 text-center">
+      <div className="mx-auto mt-4 max-w-md lx-glass-daily p-6 text-center">
         <div className="flex flex-wrap items-center justify-center gap-2">
           <input
             type="text" value={name} onChange={(e) => setName(e.target.value)}

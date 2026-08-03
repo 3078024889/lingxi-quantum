@@ -25,7 +25,7 @@ export default function TarotPage() {
       <Nav />
       <main className="pt-24">
         <div className="mx-auto max-w-md px-6 py-16 text-center">
-          <div className="lx-pdf-tarot p-6 sm:p-8">
+          <div className="lx-glass-tarot p-6 sm:p-8">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
               <Bi zh="灵犀量子塔罗 · 今日一卡" en="Lingxi Quantum Tarot · Today's Card" />
             </p>
