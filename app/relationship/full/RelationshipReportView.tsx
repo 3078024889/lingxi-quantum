@@ -362,7 +362,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
               className="relative mt-6 overflow-hidden rounded-sm p-6"
               style={{
                 backgroundColor: "#2a162e",
-                backgroundImage: `linear-gradient(rgba(42,22,46,0.84), rgba(42,22,46,0.84)), url(/images/relationship-full/${folder}/page-${bgIndex}.jpg)`,
+                backgroundImage: `linear-gradient(rgba(42,22,46,0.84), rgba(42,22,46,0.84)), url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
                 backgroundSize: "cover", backgroundPosition: "center",
               }}
             >

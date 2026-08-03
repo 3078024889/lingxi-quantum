@@ -183,7 +183,7 @@ export default function RomanceReportView({ id }: { id: string }) {
         </div>
 
         {sections.map((content, i) => {
-          const bg = `/images/romance-full/page-${(i % 4) + 1}.jpg`;
+          const bg = `/images/romance-full/page-${(i % 4) + 1}.png`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
             <div

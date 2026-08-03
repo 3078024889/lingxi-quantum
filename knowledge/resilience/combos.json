@@ -88,6 +88,86 @@
         "zh": "先看整体形状：你的五项之间没有极端的落差，也没有哪一项高到能定义你——它们大致平齐，互相支撑。这种结构在灵犀场里叫「经纬」：没有单一主梁，靠彼此织成的关系承力。\n\n这个形状最容易被读得平淡，因为总分说明不了什么。但真正的信息不在总分，在维度之间的关系里：同一个人，某一项略高、某一项略低，这个落差本身就是线索——它会指出你的系统是被什么唤醒的，又在什么地方悄悄漏。\n\n所以后面几章，比起看每一项的分数，更值得看的是它们放在一起说明了什么。读完之后可以回头找出最高和最低的两项，把它们并排看一眼。那一眼通常比任何单项都说明问题。",
         "en": "Start with the overall shape: there's no extreme gap between your five, and none stands high enough to define you — they run roughly level, supporting one another. In this field that structure is called a lattice: no single main beam, load carried by the relationships woven between them.\n\nThis shape reads as unremarkable, because the total says little. The real information isn't in the total but in the relationships between dimensions: in one person, one slightly higher and one slightly lower — that gap is itself a lead. It shows what wakes your system, and where it quietly leaks.\n\nSo as you read the chapters below, what they say together is worth more than what each says alone. Afterwards, go back and set your highest and lowest side by side. That one look usually explains more than any single dimension."
       }
+    },
+    {
+      "id": "r.x.crisis-vs-daily",
+      "chapter": "04-crisis",
+      "when": {
+        "contrast": [
+          "crisisRebound",
+          "stressRecovery"
+        ],
+        "gapMin": 35
+      },
+      "priority": 25,
+      "fieldText": {
+        "zh": "这一项单看是强的，但它真正的意思要跟压力恢复那一项放在一起才看得清楚。\n\n你的系统是被事件唤醒的：真正的低谷来临时，它会自动进入聚焦，效率高得连你自己都意外。而日常里那些不构成事件的消耗——反复的沟通、没有结论的等待、一件件不重要的小事——没有一件大到能触发这套机制，所以它们只是安静地累积。\n\n这不是矛盾，是同一套系统的两面：能被大事点着的引擎，通常不会为小事启动。所以真正需要主动安排的，不是大事之后的休整——那个你自己会做——是日常里那些没人会提醒你的空隙。\n\n第 8 章会再回到这里，从消耗的角度看同一件事。",
+        "en": "Read alone this dimension is strong, but what it actually means only becomes clear alongside stress recovery.\n\nYour system is woken by events: when a real low point arrives it focuses automatically, with an efficiency that surprises even you. The daily drains that don't qualify as events — the repeated conversations, the waiting without resolution, one unimportant thing after another — none is large enough to trigger that mechanism, so they simply accumulate, quietly.\n\nThis isn't a contradiction. It's two faces of one system: an engine that ignites for large things generally won't start for small ones. So what needs deliberate scheduling isn't the recovery after something big — you do that yourself — it's the gaps in ordinary days that no one will remind you about.\n\nChapter 8 returns to this from the angle of consumption."
+      }
+    },
+    {
+      "id": "r.x.persist-vs-recovery",
+      "chapter": "08-drain",
+      "when": {
+        "contrast": [
+          "persistence",
+          "stressRecovery"
+        ],
+        "gapMin": 30
+      },
+      "priority": 25,
+      "fieldText": {
+        "zh": "你的消耗不来自强度，来自时长。\n\n这两项放在一起会看到一个具体的机制：坚持能力强的人，撑住的时间远超过恢复能力所能覆盖的范围。别人在撑不住的时候会停，那个「撑不住」其实是一道保护——它强制中断了消耗。而你撑得住，所以这道保护不会触发，消耗就一直累积到某个你自己也说不清的时刻。\n\n所以你的疲惫往往是突然出现的，而且找不到具体原因——因为它不是某一件事造成的，是很多件事在一段太长的时间里叠出来的。\n\n对应的做法不是提高恢复能力，是设一个不依赖感觉的中断点：不是「累了就休息」，是「到第几天就停一次」，不管当时觉不觉得需要。",
+        "en": "Your drain doesn't come from intensity. It comes from duration.\n\nPut these two together and a specific mechanism appears: someone with strong persistence holds far longer than their recovery can cover. Other people stop when they can't hold — and that inability is itself a protection, forcibly interrupting the drain. You can hold, so the protection never triggers, and consumption accumulates until some moment you can't quite account for.\n\nWhich is why your tiredness tends to arrive suddenly and without a locatable cause — it wasn't produced by one thing, but by many things stacked across a stretch that ran too long.\n\nThe corresponding move isn't improving recovery. It's setting an interruption point that doesn't rely on how you feel: not rest when tired, but stop on day N, regardless of whether it seems necessary at the time."
+      }
+    },
+    {
+      "id": "r.x.stable-vs-adapt",
+      "chapter": "06-stability",
+      "when": {
+        "contrast": [
+          "emotionalStability",
+          "adaptability"
+        ],
+        "gapMin": 30
+      },
+      "priority": 25,
+      "fieldText": {
+        "zh": "你的稳定是真的，但它有一个具体的来源，值得说清楚。\n\n把这一项和变化适应放在一起看：你的稳定，很大一部分建立在「事情按预期进行」之上。预期之内，你几乎不被外界带走；预期被打破的那一刻，稳定会突然掉一截，掉的幅度往往超过事情本身的分量。\n\n这解释了一件你可能困惑过的事：为什么有些明明不大的变动，会让你反应那么大。不是你脆弱，是那件事同时动了两样东西——事情本身，加上你赖以稳定的那个结构。\n\n所以要加固的不是情绪，是预期的弹性：在计划里预留一个「如果不是这样，那就……」的分支。有备选方案的时候，变化就不再动摇结构本身。",
+        "en": "Your steadiness is real, and it has a specific source worth naming.\n\nSet this alongside adaptability: a large part of your stability rests on things proceeding as expected. Within expectation, you're barely moved by what happens outside. The moment expectation breaks, stability drops sharply — often further than the event itself warrants.\n\nThat explains something you may have puzzled over: why some genuinely minor changes provoke such a large reaction in you. It isn't fragility. That event moved two things at once — the situation itself, and the structure your steadiness rests on.\n\nSo what needs reinforcing isn't the emotion; it's the elasticity of expectation. Build one branch into your plans: if not this, then. With an alternative in place, change stops shaking the structure itself."
+      }
+    },
+    {
+      "id": "r.x.path-allhigh",
+      "chapter": "09-path",
+      "when": {
+        "bothHigh": [
+          "crisisRebound",
+          "persistence",
+          "emotionalStability"
+        ]
+      },
+      "priority": 25,
+      "fieldText": {
+        "zh": "读到这里，前面几章你大概已经发现一件事：你的问题几乎没有一个是「做不到」。\n\n这正是这一段的课题所在。当承受力不再是限制，真正的变量就从能力转向了选择——什么值得扛、扛到哪里为止、什么该由别人扛。这些问题对结构薄的人不成立，因为他们本来就没得选；对你成立，而且没有人会替你问。\n\n更麻烦的是，能力强会让选择变得更难而不是更容易：因为每一件事你都做得成，所以每一件都显得值得做。判断的依据不能再是「我能不能」，那个答案永远是能。\n\n可以换一个问法，慢慢答：如果不需要向任何人证明什么，我会先放下哪一件。这个问题对你比「下一步做什么」有用得多。",
+        "en": "By this point in the report you've probably noticed something: almost none of your issues is a matter of can't.\n\nThat is precisely the work of this stretch. When capacity stops being the constraint, the real variable shifts from ability to choice — what's worth carrying, where the carrying ends, what belongs to someone else. Those questions don't arise for a thin structure; there was never a choice. They arise for you, and no one else will ask them on your behalf.\n\nWorse, strong capacity makes choosing harder rather than easier: because you can succeed at all of them, all of them look worth doing. The basis for judgment can no longer be can I — that answer is always yes.\n\nTry a different question, and answer it slowly: if I needed to prove nothing to anyone, which would I set down first. For you that question is far more useful than what should I do next."
+      }
+    },
+    {
+      "id": "r.x.summary-blade",
+      "chapter": "11-summary",
+      "when": {
+        "contrast": [
+          "crisisRebound",
+          "stressRecovery"
+        ],
+        "gapMin": 40
+      },
+      "priority": 26,
+      "fieldText": {
+        "zh": "如果这份档案只留下一句话，是这句：你的强和你的薄，是同一件事。\n\n整份报告读下来，你可能已经注意到同一个模式反复出现在不同章节里——被事件唤醒的引擎、撑得住所以不会停、大事扛得住小事磨得慌。它们不是五个独立的特点，是一套结构在五个位置上的不同显影。\n\n这套结构的名字在第 1 章说过：刃。它能切，是因为它不厚。想把它变厚，就等于让它变钝——多数试图「补短板」的努力最后都卡在这里，改了很久，把锋利也一起磨掉了。\n\n所以方向不是变厚，是知道在什么位置用力。刀有刀的用法：该切的时候切，不该切的时候收起来，不要拿它当锤子用。而收起来这件事，恰恰是这套结构最不擅长、也最值得练的。\n\n下一次你发现自己又在硬扛一件其实不需要你扛的事，那就是这份档案真正被用上的时刻。",
+        "en": "If only one sentence survives this archive, let it be this: your strength and your thinness are the same fact.\n\nReading through, you've likely noticed one pattern recurring across different chapters — an engine woken by events, the ability to hold that means you never stop, large things carried while small ones wear you down. These aren't five separate traits. They're one structure developing differently at five positions.\n\nChapter 1 named it: a blade. It cuts because it isn't thick. Making it thicker means making it duller — most attempts at shoring up weaknesses stall exactly here, having worked a long time and ground away the edge along with everything else.\n\nSo the direction isn't thickness; it's knowing where to place the weight. A blade has its uses: cut when cutting is called for, put it away when it isn't, and don't use it as a hammer. And putting it away is precisely what this structure does worst, and what's most worth practising.\n\nThe next time you catch yourself carrying something that didn't need to be yours — that's the moment this archive is actually being used."
+      }
     }
   ]
 }

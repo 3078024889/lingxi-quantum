@@ -183,7 +183,7 @@ export default function WealthReportView({ id }: { id: string }) {
         </div>
 
         {sections.map((content, i) => {
-          const bg = `/images/wealth-full/page-${(i % 10) + 1}.jpg`;
+          const bg = `/images/wealth-full/page-${(i % 4) + 1}.png`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
             <div
