@@ -353,17 +353,18 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 
 .lx-glass {
   position: relative;
-  /* GPT 那版的紫蓝极光玻璃：亮紫 → 青蓝的斜向渐变。
-     色相直接用他的，这是"高级玻璃"的来源。 */
-  background: linear-gradient(135deg, rgba(180,150,255,0.18), rgba(80,220,255,0.09));
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  /* saturate(160%) 让透过来的紫和青变浓——这是通透玻璃与
-     灰蒙蒙塑料片的分界线，之前只写 1.12 等于没加。 */
-  backdrop-filter: blur(25px) saturate(160%);
-  -webkit-backdrop-filter: blur(25px) saturate(160%);
-  /* 外阴影给漂浮感，内阴影给厚度：玻璃是有体积的，不是一张贴纸 */
-  box-shadow: 0 25px 80px rgba(4, 8, 26, 0.45),
-              inset 0 0 40px rgba(255, 255, 255, 0.08);
+  /* v285：更透 + 紫色内发光。
+     背景推向紫晶之后，暗部亮度从 (39,43,72) 升到 (72,64,130)，
+     可读性反而变好（青绿亮带上的正文从 2.6 升到 5.1），
+     所以玻璃可以做得比之前任何一版都透。
+     内发光用紫（rgba(180,120,255)）而不是白——白色内光会让玻璃
+     显得"塑料"，紫色内光才像水晶。 */
+  background: linear-gradient(135deg, rgba(180,150,255,0.16), rgba(80,220,255,0.08));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(30px) saturate(165%);
+  -webkit-backdrop-filter: blur(30px) saturate(165%);
+  box-shadow: 0 0 80px rgba(160, 100, 255, 0.25),
+              inset 0 0 60px rgba(255, 180, 255, 0.12);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -383,7 +384,7 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(10,14,32,0.48), rgba(14,10,30,0.42));
+  background: linear-gradient(160deg, rgba(16,10,34,0.36), rgba(20,12,38,0.30));
   pointer-events: none;
 }
 
@@ -397,8 +398,8 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-qian,
 .lx-glass-tarot,
 .lx-glass-relation,
-.lx-glass-lifemap { background: linear-gradient(135deg, rgba(64,100,156,0.42), rgba(92,68,142,0.38)); }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(52,120,100,0.42), rgba(40,84,112,0.38)); }
+.lx-glass-lifemap { background: linear-gradient(135deg, rgba(160,180,255,0.16), rgba(190,145,255,0.08)); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(150,220,200,0.16), rgba(90,200,255,0.08)); }
 .lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
 .lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
 .lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }
@@ -414,14 +415,17 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    注意保留 color 作为兜底：少数浏览器不支持 background-clip:text，
    不加兜底会变成完全透明、整行标题消失。 */
 .lx-hero-title {
-  color: #EEE5FF;
+  /* v285：渐变从"紫→青→紫"改为"月白→紫晶→青"，与紫晶背景同源。
+     字重更细、字距更大——参考意见说得对：现在的排版太紧，
+     灵犀场应该像艺术书，不像产品说明页。 */
+  color: #F4EDFF;
   font-weight: 200;
-  letter-spacing: 0.28em;
-  background: linear-gradient(90deg, #E9D8FF 0%, #91E8FF 50%, #D8B7FF 100%);
+  letter-spacing: 0.34em;
+  background: linear-gradient(96deg, #F4EDFF 0%, #C89BFF 48%, #7FEBD8 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 32px rgba(140, 220, 255, 0.55));
+  filter: drop-shadow(0 0 36px rgba(180, 120, 255, 0.50));
 }
 
 /* 呼吸光：给需要"活着"的元素用，8 秒一个循环，比心跳慢，
@@ -495,15 +499,15 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
 .lx-glass-relation,
 .lx-glass-lifemap {
   position: relative;
-  border: 1px solid rgba(190, 215, 255, 0.26);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  box-shadow: 0 24px 70px rgba(4, 8, 26, 0.42),
-              inset 0 0 44px rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(30px) saturate(165%);
+  -webkit-backdrop-filter: blur(30px) saturate(165%);
+  box-shadow: 0 0 80px rgba(160, 100, 255, 0.25),
+              inset 0 0 60px rgba(255, 180, 255, 0.12);
   border-radius: 4px;
   overflow: hidden;
 }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(52,120,100,0.42), rgba(40,84,112,0.38)); }
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(150,220,200,0.16), rgba(90,200,255,0.08)); }
 .lx-glass-romance    { background: linear-gradient(135deg, rgba(190,110,170,0.20), rgba(140,90,190,0.17)); }
 .lx-glass-wealth     { background: linear-gradient(135deg, rgba(90,130,215,0.20), rgba(130,95,200,0.17)); }
 .lx-glass-daily      { background: linear-gradient(135deg, rgba(80,180,205,0.20), rgba(85,125,205,0.17)); }
@@ -553,10 +557,10 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    面板保持 4px 直角，两者不冲突。 */
 .lx-portal-btn {
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(190,150,255,.26), rgba(120,220,220,.22));
+  background: linear-gradient(90deg, rgba(200,155,255,.30), rgba(127,235,216,.20));
   border: 1px solid rgba(255,255,255,.30);
   color: #EDE9FF;
-  box-shadow: 0 0 30px rgba(190,150,255,.34);
+  box-shadow: 0 0 38px rgba(180,120,255,.42);
   transition: transform .4s ease, box-shadow .4s ease;
 }
 .lx-portal-btn:hover {

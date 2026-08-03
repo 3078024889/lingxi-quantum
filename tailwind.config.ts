@@ -11,9 +11,9 @@ const config: Config = {
         "void-deep": "#0f2038",
 
         // ===== Lingxi Typography System V4（多轮迭代后的定版色值） =====
-        lattice: "#76F5E5",
+        lattice: "#7FEBD8",
         "lattice-dim": "#7CC4B4",
-        amber: "#C78BFF",
+        amber: "#C89BFF",
         // v281：原 #FF9FD6 太艳，压在桃花 PDF 的粉色底上几乎糊掉。
         // 柔化并提亮，只作强调用，不再当正文色。
         rose: "#E8B8D4",
@@ -21,12 +21,12 @@ const config: Config = {
         // v277：正文不用纯白。效果图那个感觉的关键之一，是文字带一点
         // 蓝紫，与深蓝紫的底同源，读起来像"从同一片光里长出来"，
         // 而纯白永远像"贴上去的"。降幅很小，可读性不受影响。
-        bone: "#F2EEFF",
-        "bone-dim": "#D7E5FF",
+        bone: "#F4EDFF",
+        "bone-dim": "#DED6F5",
         // v274：新增两档实色。之前大量文字用 text-bone-dim/70、/85 这类
         // 透明度稀释，压在极光背景上实际亮度只剩七八成，远看就"糊"进背景，
         // 这是"字太浅、没有打开欲望"的技术根因。改用实色，亮度可控。
-        "bone-soft": "#D7E5FF",
+        "bone-soft": "#D3CBEE",
         "bone-mute": "#B2BACE",
         title: "#F0E6FF",
         "lm-violet": "#D8B8FF",
@@ -39,9 +39,9 @@ const config: Config = {
         "lm2-bg": "rgba(62,58,96,0.58)",        // 对齐雾玻璃底
         "lm2-bg-deep": "rgba(52,48,84,0.62)",
         "lm2-card": "rgba(96,86,132,0.50)",     // 对齐雾玻璃亮侧
-        "lm2-text": "#F2EEFF",                  // 对齐 bone
-        "lm2-text-dim": "#D7E5FF",              // 对齐 bone-dim
-        "lm2-title": "#F2EEFF",
+        "lm2-text": "#F4EDFF",                  // 对齐 bone
+        "lm2-text-dim": "#DED6F5",              // 对齐 bone-dim
+        "lm2-title": "#F4EDFF",
         "lm2-rose": "#D8A8C8",                  // 柔化，原 #FF9FD6 过艳
         "lm2-amber": "#C9A8D8",                 // 对齐 amber
         "lm2-mint": "#9FD8D0",                  // 对齐 lattice

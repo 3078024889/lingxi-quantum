@@ -77,23 +77,33 @@ export default function AuroraVideoBand() {
       {/* 极轻的暗角，压一压视频最亮区域，让全站文字（珍珠白/黄金/极光青）
           在任何画面亮度下都还留有一点余量，不需要再靠光晕这类补丁。 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,transparent_0%,rgba(8,6,20,0.35)_100%)]" />
-      {/* v283：新背景视频本身就是深色的（中位亮度 39,43,72），
-          比旧素材暗得多，所以不再需要之前那几层厚重的压暗——
-          那些是为旧的浅色视频准备的，继续留着会把新素材压死。
-          现在只留极轻的一层统一调性，加一层极光增强把紫青托起来。 */}
+      {/* v285：从"科技蓝"推向"紫晶意识场"。
+          诊断很准：之前的层偏蓝灰（#344b72 那种），像科技官网后台。
+          效果图的核心不是蓝，是"蓝紫宇宙 + 生命光谱"。
+          处方：紫 +40%、青绿 +20%、蓝 -25%。
+
+          三层：
+          1) 底色渐变 #070b28 → #151c55 → #27164d
+             注意底部是紫（#27164d）不是蓝——这是"暗→光→暗"层次的关键，
+             之前整体亮度平均，所以没有纵深。
+          2) 四团能量光：左紫、右青绿、底部暖紫、中心蓝
+             暖紫那团是之前完全没有的，它让画面有"晨光"而不只是"夜"。
+          3) screen 混合——是加光不是加暗，极光的流动才透得出来。 */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(6,10,26,0.20) 0%, rgba(10,18,42,0.10) 50%, rgba(8,14,34,0.18) 100%)",
+            "linear-gradient(180deg, rgba(7,11,40,0.52) 0%, rgba(21,28,85,0.30) 52%, rgba(39,22,77,0.44) 100%)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 66% 60% at 18% 36%, rgba(170,120,255,0.16), transparent 70%)," +
-            "radial-gradient(ellipse 60% 54% at 82% 32%, rgba(110,240,220,0.14), transparent 68%)",
+            "radial-gradient(circle at 20% 30%, rgba(155,108,255,0.34), transparent 42%)," +
+            "radial-gradient(circle at 80% 30%, rgba(88,230,200,0.22), transparent 38%)," +
+            "radial-gradient(circle at 50% 82%, rgba(217,140,255,0.30), transparent 40%)," +
+            "radial-gradient(circle at 50% 46%, rgba(36,61,143,0.20), transparent 46%)",
           mixBlendMode: "screen",
         }}
       />
