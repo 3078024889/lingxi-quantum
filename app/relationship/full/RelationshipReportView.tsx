@@ -188,8 +188,8 @@ export default function RelationshipReportView({ id }: { id: string }) {
         // 关系共振主题——之前跟生命图谱用的是完全一样的紫色，两份不同
         // 产品的PDF长得一样。这次换成偏暖的玫瑰紫，呼应"两个人的连接"
         // 这个更温暖的调性，跟生命图谱那种偏冷的宇宙深紫区分开。
-        bgColorRgb: [42, 22, 46],
-        bgColorHex: "#2a162e",
+        bgColorRgb: [246, 244, 240],
+        bgColorHex: "#F6F4F0",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);

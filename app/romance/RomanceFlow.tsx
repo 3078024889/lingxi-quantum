@@ -210,8 +210,8 @@ export default function RomanceFlow() {
         // 粉桃花主题——卡片和PDF背景都换成更接近"粉/玫瑰"色调的暖色，
         // 跟品牌粉色（rose）和桃花海报插画呼应，不再是偏冷、发黑的
         // 深酒红色。
-        bgColorRgb: [44, 20, 32],
-        bgColorHex: "#2c1420",
+        bgColorRgb: [246, 244, 240],
+        bgColorHex: "#F6F4F0",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);

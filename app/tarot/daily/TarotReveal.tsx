@@ -52,8 +52,8 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
         containerRef: reportRef.current,
         fileName: `灵犀今日塔罗-${card.nameZh}.pdf`,
         // 紫罗兰神秘主题，呼应塔罗牌本身的视觉调性。
-        bgColorRgb: [26, 14, 40],
-        bgColorHex: "#1a0e28",
+        bgColorRgb: [246, 244, 240],
+        bgColorHex: "#F6F4F0",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);

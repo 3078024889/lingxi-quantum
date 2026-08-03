@@ -95,8 +95,8 @@ export default function DailyTideReportView({ id }: { id: string }) {
         reportTitleZh: `${name || "你的"}生命韧性档案`,
         reportTitleEn: `${name || "Your"} Life Resilience Archive`,
         chapterTitles: SECTION_TITLES,
-        bgColorRgb: [10, 20, 42],
-        bgColorHex: "#0a142a",
+        bgColorRgb: [246, 244, 240],
+        bgColorHex: "#F6F4F0",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);

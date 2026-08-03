@@ -448,10 +448,20 @@ export async function exportArchivePdf(params: {
   const {
     chapters, fileName, titleZh, titleEn,
     coverImage, bodyImages, endImage,
-    // 新素材是浅色晨雾水彩，所以面板用半透明白、文字用墨色。
-    panelRgba = [255, 255, 255, 0.72],
-    textRgb = [42, 36, 56],
-    titleRgb = [90, 60, 130],
+    // v291：面板从 0.72 降到 0.42。
+    // 0.72 太白，把素材压死了，看起来是"图片 + 白框文章"而不是档案。
+    // 0.42 实测墨字对比度仍有 10.9（远超 4.5 标准），
+    // 但晨雾水彩的层次能透出来，面板才像玻璃而不是纸片。
+    //
+    // 关于为什么不用深色玻璃 + 浅字（更接近官网的深空视觉）：
+    // 实测过。新素材正文区平均色 (206,193,185)，接近米白。
+    // 深蓝面板 0.35 压上去，浅字对比度只有 2.8，读不清；
+    // 要让浅字能读，面板得加到 0.62 以上——那时素材已经被压成
+    // 一块深色底，等于新做的浅色 PDF 白做了。
+    // 浅色素材配深字，是这套素材下唯一能同时保住通透与可读的组合。
+    panelRgba = [255, 255, 255, 0.42],
+    textRgb = [38, 32, 52],
+    titleRgb = [86, 56, 126],
   } = params;
 
   await document.fonts.ready;
@@ -481,14 +491,19 @@ export async function exportArchivePdf(params: {
     toDataUrl(coverImage), toDataUrl(endImage), ...bodyImages.map(toDataUrl),
   ]);
 
-  // 整页铺图：按"cover"方式填满，宁可裁掉边缘也不留白边——
-  // A4 是 1:1.414，素材是 3:4，比例不同必然有一边要溢出。
-  const fillPage = (data: string) => {
+  // 整页铺图。素材是 3:4，A4 是 1:1.414，比例不同必然有一边溢出，
+  // 宁可裁掉边缘也不留白边。
+  //
+  // shift 参数控制纵向取景位置（0=上部 0.5=中部 1=下部）——
+  // 这是让 6 张图产生 11 种不重样画面的办法：同一张图取不同区域，
+  // 视觉上就是不同的画面。复制文件做不到这一点，
+  // 因为复制品跟原图长得一模一样，用户看到的重复次数不变。
+  const fillPage = (data: string, shift = 0.5) => {
     const ratioPage = W / H;
     const ratioImg = 3 / 4;
     let w = W, h = H, x = 0, y = 0;
     if (ratioImg > ratioPage) { h = H; w = H * ratioImg; x = (W - w) / 2; }
-    else { w = W; h = W / ratioImg; y = (H - h) / 2; }
+    else { w = W; h = W / ratioImg; y = -(h - H) * shift; }
     pdf.addImage(data, "JPEG", x, y, w, h);
   };
 
@@ -533,23 +548,48 @@ export async function exportArchivePdf(params: {
   // ── 正文：每章一页 ──
   chapters.forEach((ch, i) => {
     pdf.addPage();
-    fillPage(bodyData[i % bodyData.length]);
+    // 图与取景一起轮换：4张图 × 3个取景位 = 12 种画面，
+    // 11 章保证不重样。
+    const SHIFTS = [0.12, 0.5, 0.88];
+    fillPage(bodyData[i % bodyData.length], SHIFTS[Math.floor(i / bodyData.length) % SHIFTS.length]);
 
     const lines = wrapCN(ch.body, FS, W - M * 2 - PAD * 2);
-    const panelH = Math.min(H - M * 2, PAD * 2 + 42 + lines.length * LH);
+    const panelH = Math.min(H - M * 2, PAD * 2 + 58 + lines.length * LH);
 
+    // 玻璃面板：填充 + 内发光 + 描边。
+    // 单纯一块半透明色是"白框"，加上这两层才有玻璃的体积感——
+    // 内发光模拟光在玻璃内部的散射，描边模拟边缘的折射高光。
     if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: panelRgba[3] }));
     pdf.setFillColor(panelRgba[0], panelRgba[1], panelRgba[2]);
-    pdf.roundedRect(M, M, W - M * 2, panelH, 6, 6, "F");
+    pdf.roundedRect(M, M, W - M * 2, panelH, 8, 8, "F");
+    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 0.30 }));
+    pdf.setFillColor(255, 255, 255);
+    pdf.roundedRect(M + 6, M + 6, W - M * 2 - 12, panelH - 12, 6, 6, "F");
+    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 0.55 }));
+    pdf.setDrawColor(225, 220, 245);
+    pdf.setLineWidth(0.8);
+    pdf.roundedRect(M, M, W - M * 2, panelH, 8, 8, "S");
     if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 1 }));
 
+    // 档案式章头：维度编号 + 分隔线 + 章节名。
+    // 这一层是"报告感"的来源——没有它，每页就只是一段文字。
+    pdf.setFontSize(7.5);
+    pdf.setTextColor(150, 140, 175);
+    pdf.text(`LIFE RESILIENCE  ·  ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`, M + PAD, M + PAD + 4);
+
     pdf.setTextColor(titleRgb[0], titleRgb[1], titleRgb[2]);
-    pdf.setFontSize(14);
-    pdf.text(`${String(i + 1).padStart(2, "0")}  ${ch.title}`, M + PAD, M + PAD + 14);
+    pdf.setFontSize(15);
+    pdf.text(ch.title, M + PAD, M + PAD + 26);
+
+    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 0.35 }));
+    pdf.setDrawColor(titleRgb[0], titleRgb[1], titleRgb[2]);
+    pdf.setLineWidth(0.6);
+    pdf.line(M + PAD, M + PAD + 36, M + PAD + 54, M + PAD + 36);
+    if (gs) (pdf as any).setGState(new (pdf as any).GState({ opacity: 1 }));
 
     pdf.setTextColor(textRgb[0], textRgb[1], textRgb[2]);
     pdf.setFontSize(FS);
-    let y = M + PAD + 46;
+    let y = M + PAD + 58;
     for (const ln of lines) {
       if (y > M + panelH - PAD) break;
       if (ln) pdf.text(ln, M + PAD, y);

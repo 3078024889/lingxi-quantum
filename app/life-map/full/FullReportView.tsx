@@ -263,8 +263,8 @@ export default function FullReportView({ id }: { id: string }) {
         reportTitleZh: `${coreTypeName || "你的"}生命图谱`,
         reportTitleEn: `${coreTypeName || "Your"} Life Map`,
         chapterTitles,
-        bgColorRgb: [36, 26, 68],
-        bgColorHex: "#241a44",
+        bgColorRgb: [246, 244, 240],
+        bgColorHex: "#F6F4F0",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);

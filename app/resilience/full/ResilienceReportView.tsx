@@ -174,7 +174,17 @@ export default function ResilienceReportView({ id }: { id: string }) {
         </button>
       </div>
 
-      <div ref={reportRef} className="mt-4">
+      <div
+        ref={reportRef}
+        className="mt-4 rounded-sm"
+        style={{
+          // 整份报告共用一张连续背景，fixed 让它在滚动时像一整张长卷
+          // 在下面延展，而不是每章各自一张缩略图。
+          backgroundImage: "url(/images/resilience-full/page-1.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}>
         <div
           className="relative overflow-hidden rounded-sm"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/resilience-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
@@ -186,15 +196,17 @@ export default function ResilienceReportView({ id }: { id: string }) {
           </div>
         </div>
 
+        {/* v291：每章原本各贴一张不同的 PDF 图 + 墨绿遮罩，
+            结果整份报告读下来像一堆截图拼在一起，而且墨绿是旧素材
+            时代的颜色，跟现在的浅色新素材冲突。
+            改为：整份报告共用一张连续的背景（在外层容器上，
+            background-attachment: fixed，滚动时像一整张长卷在下面延展），
+            各章用玻璃面板浮在上面——面板之间因此有了统一感，
+            背景也真正透得出来。 */}
         {sections.map((content, i) => {
-          const bg = `/images/resilience-full/page-${(i % 4) + 1}.png`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
-            <div
-              key={i}
-              className="relative mt-4 overflow-hidden rounded-sm"
-              style={{ backgroundColor: "#09251f", backgroundImage: `linear-gradient(rgba(9,37,31,0.55), rgba(9,37,31,0.55)), url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
-            >
+            <div key={i} className="lx-glass-resilience relative mt-4 overflow-hidden">
               <div className="p-8">
                 <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300/90">
                   <Bi zh={title.titleZh} en={title.titleEn} />

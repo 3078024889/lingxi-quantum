@@ -225,8 +225,8 @@ export default function ResilienceFlow() {
         fileName: "灵犀生命韧性指数.pdf",
         // 扎根/沉稳主题——深森林绿打底，呼应"韧性、恢复力、稳固"这个
         // 产品的调性，不是全站统一的深蓝背景。
-        bgColorRgb: [12, 32, 26],
-        bgColorHex: "#0c201a",
+        bgColorRgb: [246, 244, 240],
+        bgColorHex: "#F6F4F0",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);

@@ -95,8 +95,8 @@ export default function RomanceReportView({ id }: { id: string }) {
         reportTitleZh: `${name || "你的"}桃花磁场档案`,
         reportTitleEn: `${name || "Your"} Romance Magnetism Archive`,
         chapterTitles: SECTION_TITLES,
-        bgColorRgb: [44, 20, 32],
-        bgColorHex: "#2c1420",
+        bgColorRgb: [246, 244, 240],
+        bgColorHex: "#F6F4F0",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
