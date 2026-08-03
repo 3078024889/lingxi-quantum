@@ -369,7 +369,7 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   border-radius: 4px;
 }
 
-/* 八个产品的专属色调，取自各自 PDF 封面 page-0.jpg 的实际取样色。
+/* 八个产品的专属色调，取自各自 PDF 封面 page-0.png 的实际取样色。
    现在遮罩只有 0.30，色调是"染"上去的一层薄色，不是盖住背景，
    所以产品身份能认出来，极光也仍然透得过去。 */
 .lx-glass-resilience,
@@ -420,52 +420,66 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   .lx-breath { animation: none; opacity: 0.85; }
 }
 
-/* ────────── PDF 底纹面板 v276 ──────────
-   之前理解错了方向：我取了各产品 PDF 封面的"颜色"做色调，
-   但要的是把那张 PDF 图本身当成框的底。
-   生命韧性那棵树、字压在树上的效果，应该出现在这个产品的每一个框里，
-   而不只是 1-11 点预告那一块。
+/* ══════════════════════════════════════════════════════
+   灵犀场 PDF 档案面板 v283（全新体系，不在旧版上改）
 
-   做法：每个产品一个类，背景是该产品的真实 PDF 页图 +
-   一层暗罩保证可读。暗罩数值是按每张图文字区实测色算出来的，
-   不是拍脑袋定的。以生命韧性的树图为例：
-     文字区平均 (109,125,90)，bone-soft 直接压上去对比度只有 3.06
-     加 0.35 暗罩后降到 (74,86,68)，对比度 5.34 —— 过线，
-     且树的形状与金色根系仍然清楚可见。
+   新素材是浅色的（中心亮度 210-240，接近白），跟旧版深底完全相反，
+   所以整套文字方案跟着反过来：浅底 + 深色墨字。
+   这样才保得住新 PDF 那种晨雾水彩的通透，
+   如果继续用白字，就必须给面板加深色遮罩，等于把新素材压回旧样子。
 
-   背景用 fixed 让同一产品内多个面板共享同一张图的不同区域，
-   滚动时像是一整张 PDF 在下面延展，而不是每个框各贴一张缩略图。 */
+   面板本身是一层白色雾玻璃（0.42），作用有两个：
+     · 把十个产品各自不同的底色统一到相近的明度，文字才好统一
+     · 保留 PDF 图案透出来，但不与文字抢
+   实测对比度（墨字 #2A2438）：最浅的今日运势 12.7，最深的塔罗 11.0
+   ══════════════════════════════════════════════════════ */
 
 [class*="lx-pdf-"] {
   position: relative;
-  border: 1px solid rgba(220, 220, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 4px;
-  box-shadow: 0 0 40px rgba(160, 150, 255, 0.12),
-              inset 0 0 40px rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 44px rgba(30, 26, 52, 0.28),
+              inset 0 0 60px rgba(255, 255, 255, 0.30);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  color: #3D3652;
 }
-/* 暗罩用伪元素叠在图上、内容之下，这样图片本身不需要预处理，
-   换 PDF 图的时候只改 background-image 一行即可。 */
 [class*="lx-pdf-"]::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 4px;
-  background: linear-gradient(180deg, rgba(5,11,36,0.60) 0%, rgba(8,21,54,0.46) 50%, rgba(5,11,36,0.60) 100%);
+  background: linear-gradient(160deg, rgba(255,255,255,0.46), rgba(255,255,255,0.38));
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   pointer-events: none;
 }
 [class*="lx-pdf-"] > * { position: relative; z-index: 1; }
 
-.lx-pdf-resilience { background-image: url("/images/resilience-full/page-1.jpg"); }
-.lx-pdf-romance    { background-image: url("/images/romance-full/page-1.jpg"); }
-.lx-pdf-wealth     { background-image: url("/images/wealth-full/page-1.jpg"); }
-.lx-pdf-daily      { background-image: url("/images/daily-tide-full/page-1.jpg"); }
-.lx-pdf-qian       { background-image: url("/images/qian-full/page-1.jpg"); }
-.lx-pdf-tarot      { background-image: url("/images/tarot-full/page-1.jpg"); }
-.lx-pdf-relation   { background-image: url("/images/relationship-full/general/page-1.jpg"); }
-.lx-pdf-lifemap    { background-image: url("/images/lifemap/page-1.jpg"); }
+/* 浅底面板内的文字色——覆盖全站深色主题的白字。
+   用属性选择器一次覆盖 text-bone / text-lattice / text-amber 这类类名，
+   不需要去每个组件里改。 */
+[class*="lx-pdf-"] .text-bone,
+[class*="lx-pdf-"] .text-bone-dim,
+[class*="lx-pdf-"] .text-bone-soft { color: #2A2438 !important; }
+[class*="lx-pdf-"] .text-bone-mute { color: #5A5270 !important; }
+[class*="lx-pdf-"] .text-lattice { color: #1F6F63 !important; }
+[class*="lx-pdf-"] .text-amber   { color: #7A4E9E !important; }
+[class*="lx-pdf-"] .text-rose    { color: #A63D74 !important; }
+[class*="lx-pdf-"] input,
+[class*="lx-pdf-"] textarea { color: #2A2438; }
+[class*="lx-pdf-"] input::placeholder { color: #7A7290; }
+
+/* 十个产品各自的 PDF 首张作底 */
+.lx-pdf-resilience { background-image: url("/images/resilience-full/page-0.png"); }
+.lx-pdf-romance    { background-image: url("/images/romance-full/page-0.png"); }
+.lx-pdf-wealth     { background-image: url("/images/wealth-full/page-0.png"); }
+.lx-pdf-daily      { background-image: url("/images/daily-tide-full/page-0.png"); }
+.lx-pdf-qian       { background-image: url("/images/qian-full/page-0.png"); }
+.lx-pdf-tarot      { background-image: url("/images/tarot-full/page-0.png"); }
+.lx-pdf-relation   { background-image: url("/images/relationship-full/general/page-0.png"); }
+.lx-pdf-lifemap    { background-image: url("/images/lifemap/page-0.png"); }
 
 /* v277：修炼次第卡片。
    悬停时轻微上浮 + 边框泛紫，暗示"可以进去"，但不做夸张位移——

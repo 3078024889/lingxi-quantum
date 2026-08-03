@@ -271,7 +271,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         className={printMode ? "rel-print-mode mt-8 px-1 py-4" : "mt-8 px-1 py-4"}
         style={{
           backgroundColor: "#2a162e",
-          backgroundImage: `linear-gradient(rgba(42,22,46,0.86), rgba(42,22,46,0.86)), url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.jpg)`,
+          backgroundImage: `linear-gradient(rgba(42,22,46,0.86), rgba(42,22,46,0.86)), url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png)`,
           backgroundSize: "cover", backgroundPosition: "top center", backgroundAttachment: "local",
         }}
       >

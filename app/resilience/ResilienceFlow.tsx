@@ -248,7 +248,7 @@ export default function ResilienceFlow() {
     return (
       <>
       <div ref={reportRef} className="mx-auto max-w-xl px-6 py-16">
-        <div className="flex items-center justify-between gap-3 lx-glass px-6 py-4 text-center">
+        <div className="flex items-center justify-between gap-3 lx-pdf-resilience px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
             <Bi zh="灵犀场 · 生命韧性指数" en="Lingxi Field · Life Resilience Index" />
           </p>
@@ -261,7 +261,7 @@ export default function ResilienceFlow() {
           </button>
         </div>
 
-        <div className="mt-8 flex flex-col items-center lx-glass p-8">
+        <div className="mt-8 flex flex-col items-center lx-pdf-resilience p-8">
           <svg viewBox="0 0 180 180" className="w-44" style={{ filter: "drop-shadow(0 0 14px rgba(199,156,255,0.45))" }}>
             <circle cx="90" cy="90" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12" />
             <circle
@@ -284,11 +284,11 @@ export default function ResilienceFlow() {
           </div>
         </div>
 
-        <div className="mt-6 lx-glass p-6">
+        <div className="mt-6 lx-pdf-resilience p-6">
           <p className="text-base leading-9 text-bone-dim">{t(OVERALL[band(result.score)].zh, OVERALL[band(result.score)].en)}</p>
         </div>
 
-        <div className="mt-4 lx-glass p-6">
+        <div className="mt-4 lx-pdf-resilience p-6">
           <div className="space-y-3">
             {dims.map((d) => (
               <div key={d} className="flex items-center gap-3">
@@ -317,7 +317,7 @@ export default function ResilienceFlow() {
         </div>
 
         {PAIR_INSIGHT[`${strongest}|${weakest}`] && (
-          <div className="mt-4 lx-glass p-6">
+          <div className="mt-4 lx-pdf-resilience p-6">
             <p className="text-sm uppercase tracking-widest2 text-lattice"><Bi zh="这两项放在一起，会是什么样" en="When These Two Meet" /></p>
             <p className="mt-2 text-base leading-8 text-bone-dim">
               {t(PAIR_INSIGHT[`${strongest}|${weakest}`].zh, PAIR_INSIGHT[`${strongest}|${weakest}`].en)}
@@ -325,7 +325,7 @@ export default function ResilienceFlow() {
           </div>
         )}
 
-        <div className="mt-4 lx-glass p-6">
+        <div className="mt-4 lx-pdf-resilience p-6">
           <p className="text-sm uppercase tracking-widest2 text-lattice"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
           <p className="mt-2 text-base leading-8 text-bone-dim">
             <Bi
@@ -335,7 +335,7 @@ export default function ResilienceFlow() {
           </p>
         </div>
 
-        <div className="mt-6 lx-glass px-6 py-3 text-center">
+        <div className="mt-6 lx-pdf-resilience px-6 py-3 text-center">
           <p className="text-sm text-bone-dim">
             <Bi zh="这是一份自我探索与反思的参考，不是命运预言。" en="This is a reference for self-reflection, not a prophecy." />
           </p>
@@ -442,7 +442,7 @@ export default function ResilienceFlow() {
         </p>
       </div>
 
-      <div className="mt-6 lx-glass p-6">
+      <div className="mt-6 lx-pdf-resilience p-6">
         <p className="text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -462,7 +462,7 @@ export default function ResilienceFlow() {
       </div>
 
       {error && (
-        <div className="mt-4 lx-glass p-4">
+        <div className="mt-4 lx-pdf-resilience p-4">
           <p className="text-sm text-rose">{error}</p>
         </div>
       )}

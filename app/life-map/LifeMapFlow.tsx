@@ -612,7 +612,7 @@ export default function LifeMapFlow() {
             <div className="lm-core" />
           </div>
           <div className="relative z-10">
-            <div className="lx-glass-lifemap mx-auto max-w-2xl px-8 py-10">
+            <div className="lx-pdf-lifemap mx-auto max-w-2xl px-8 py-10">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               🌌 {t("发现你的生命频率", "Discover Your Life Frequency")}
             </p>

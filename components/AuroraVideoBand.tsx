@@ -77,24 +77,23 @@ export default function AuroraVideoBand() {
       {/* 极轻的暗角，压一压视频最亮区域，让全站文字（珍珠白/黄金/极光青）
           在任何画面亮度下都还留有一点余量，不需要再靠光晕这类补丁。 */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,transparent_0%,rgba(8,6,20,0.35)_100%)]" />
-      {/* v282：深空极光场域。
-          方向：背景深一点、玻璃透一点、文字亮一点、意识球突出一点。
-          底色 #050B24 —— 不是黑洞，是宇宙夜空。
-          三层极光对着素材本身的走向托光：左紫、中青、右蓝绿。 */}
+      {/* v283：新背景视频本身就是深色的（中位亮度 39,43,72），
+          比旧素材暗得多，所以不再需要之前那几层厚重的压暗——
+          那些是为旧的浅色视频准备的，继续留着会把新素材压死。
+          现在只留极轻的一层统一调性，加一层极光增强把紫青托起来。 */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(5,11,36,0.52) 0%, rgba(16,29,69,0.34) 55%, rgba(7,17,38,0.56) 100%)",
+            "linear-gradient(180deg, rgba(6,10,26,0.20) 0%, rgba(10,18,42,0.10) 50%, rgba(8,14,34,0.18) 100%)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 62% 58% at 20% 40%, rgba(190,110,255,0.26), transparent 62%)," +
-            "radial-gradient(ellipse 58% 54% at 50% 45%, rgba(120,220,255,0.22), transparent 58%)," +
-            "radial-gradient(ellipse 58% 52% at 80% 35%, rgba(80,255,220,0.20), transparent 62%)",
+            "radial-gradient(ellipse 66% 60% at 18% 36%, rgba(170,120,255,0.16), transparent 70%)," +
+            "radial-gradient(ellipse 60% 54% at 82% 32%, rgba(110,240,220,0.14), transparent 68%)",
           mixBlendMode: "screen",
         }}
       />

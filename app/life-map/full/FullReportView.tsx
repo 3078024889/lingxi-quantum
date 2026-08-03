@@ -357,7 +357,7 @@ export default function FullReportView({ id }: { id: string }) {
              误当成多出来的"章节"，导致后面12个真章节的标题全部错位。 */}
           <div
             className="relative overflow-hidden rounded-sm"
-            style={{ aspectRatio: "3 / 4", backgroundColor: "#1a2038", backgroundImage: "url(/images/lifemap/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+            style={{ aspectRatio: "3 / 4", backgroundColor: "#1a2038", backgroundImage: "url(/images/lifemap/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
           >
             <div className="absolute inset-x-0 top-[26%] text-center">
               <h1 className="font-display text-2xl font-light text-white lm2-print-title" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}>

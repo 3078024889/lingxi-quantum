@@ -73,17 +73,17 @@ function describeDuration(days: number, langEn: boolean): string {
 type PayStatus = "loading" | "review" | "waiting" | "success" | "error";
 
 // 场域订单卡片用的缩略图——直接复用每个产品完整报告页已经在用的
-// 封面图（page-0.jpg），不用额外生成新素材。关系共振按关系类型分了
+// 封面图（page-0.png），不用额外生成新素材。关系共振按关系类型分了
 // 三套图，这里统一用general这一套做订单卡缩略图（不影响报告本身
 // 用的是哪一套，报告页自己会按relationshipType选对应的那套）。
 const THUMB_BY_PRODUCT: Record<string, string> = {
   "life-map-report": "/images/lifemap/compass-poster.jpg",
-  "relationship-resonance": "/images/relationship-full/general/page-0.jpg",
-  "qian-reading": "/images/qian-full/page-0.jpg",
-  "tarot-reading": "/images/tarot-full/page-0.jpg",
-  "resilience-report": "/images/resilience-full/page-0.jpg",
-  "romance-report": "/images/romance-full/page-0.jpg",
-  "daily-tide-report": "/images/daily-tide-full/page-0.jpg",
+  "relationship-resonance": "/images/relationship-full/general/page-0.png",
+  "qian-reading": "/images/qian-full/page-0.png",
+  "tarot-reading": "/images/tarot-full/page-0.png",
+  "resilience-report": "/images/resilience-full/page-0.png",
+  "romance-report": "/images/romance-full/page-0.png",
+  "daily-tide-report": "/images/daily-tide-full/page-0.png",
   breath: "/images/practice/quantum-pause-chart.jpg",
   intuition: "/images/practice/intuition-chart.jpg",
   "heart-reset": "/images/practice/heart-reset-chart.jpg",

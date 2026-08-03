@@ -155,7 +155,7 @@ export default function QianFlow() {
           </p>
         </div>
 
-        <div className="mt-6 lx-glass p-6">
+        <div className="mt-6 lx-pdf-qian p-6">
           <p className="text-sm text-bone-dim">{t("称呼（选填）", "Name (optional)")}</p>
           <input
             value={name} onChange={(e) => setName(e.target.value)}
@@ -181,7 +181,7 @@ export default function QianFlow() {
         </div>
 
         {error && (
-          <div className="mt-4 lx-glass p-4">
+          <div className="mt-4 lx-pdf-qian p-4">
             <p className="text-sm text-rose">{error}</p>
           </div>
         )}
@@ -226,7 +226,7 @@ export default function QianFlow() {
 
       <div className="mt-8 grid grid-cols-3 gap-3">
         {signs?.map((s, i) => (
-          <div key={i} className="overflow-hidden lx-glass text-center">
+          <div key={i} className="overflow-hidden lx-pdf-qian text-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/images/qian/${String(s.index).padStart(2, "0")}.jpg`} alt={s.nameZh} className="block aspect-[2/3] w-full object-cover" />
             <div className="p-3">
@@ -246,7 +246,7 @@ export default function QianFlow() {
 
       <div
         className="mt-8 rounded-sm border border-amber/25 p-6 text-center"
-        style={{ backgroundImage: "linear-gradient(rgba(42,36,52,0.5), rgba(42,36,52,0.5)), url(/images/qian-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "top" }}
+        style={{ backgroundImage: "linear-gradient(rgba(42,36,52,0.5), rgba(42,36,52,0.5)), url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
       >
         <p className="font-display text-base text-bone">
           <Bi zh="三枚生命原型，只是入口。" en="Three signs are only the entrance." />

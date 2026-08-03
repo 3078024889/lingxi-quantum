@@ -173,7 +173,7 @@ export default function RomanceReportView({ id }: { id: string }) {
       <div ref={reportRef} className="mt-4">
         <div
           className="relative overflow-hidden rounded-sm"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
             <h1 className="font-display text-2xl font-light text-white" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.6)" }}>
@@ -203,7 +203,7 @@ export default function RomanceReportView({ id }: { id: string }) {
 
         <div
           className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
             <Bi zh="你的生命场，自然绽放。" en="Your field blooms naturally." />

@@ -352,7 +352,7 @@ export default function RelationshipFlow() {
         <div
           className="lx-pdf-relation mt-8 p-6"
           style={{
-            backgroundImage: `linear-gradient(rgba(20,16,30,0.38), rgba(20,16,30,0.38)), url(/images/relationship-full/${relationshipType}/page-0.jpg)`,
+            backgroundImage: `linear-gradient(rgba(20,16,30,0.38), rgba(20,16,30,0.38)), url(/images/relationship-full/${relationshipType}/page-0.png)`,
             backgroundSize: "cover", backgroundPosition: "center",
           }}
         >

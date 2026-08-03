@@ -226,7 +226,7 @@ export default function QianReport({ id }: { id: string }) {
       <div ref={reportRef}>
       <div
         className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center"
-        style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.72), rgba(42,36,52,0.72)), url(/images/qian-full/page-0.jpg)", backgroundSize: "cover", backgroundPosition: "top" }}
+        style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.72), rgba(42,36,52,0.72)), url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
@@ -273,7 +273,7 @@ export default function QianReport({ id }: { id: string }) {
       {(lifeStage || abilityMap.length > 0) && (
         <div
           className="relative mt-6 overflow-hidden rounded-sm border border-amber/20 p-6"
-          style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.8), rgba(42,36,52,0.8)), url(/images/qian-full/page-1.jpg)", backgroundSize: "cover", backgroundPosition: "top" }}
+          style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.8), rgba(42,36,52,0.8)), url(/images/qian-full/page-1.png)", backgroundSize: "cover", backgroundPosition: "top" }}
         >
           <p className="text-center text-xs uppercase tracking-widest2 text-amber/90">
             <Bi zh="灵签生成页面 · Oracle Activation" en="Oracle Activation" />
@@ -341,7 +341,7 @@ export default function QianReport({ id }: { id: string }) {
       {sections[sections.length - 1] && (
         <div
           className="lx-pdf-qian relative mt-5 overflow-hidden p-6"
-          style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.82), rgba(42,36,52,0.82)), url(/images/qian-full/page-5.jpg)", backgroundSize: "cover", backgroundPosition: "top" }}
+          style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.82), rgba(42,36,52,0.82)), url(/images/qian-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "top" }}
         >
           {LAYER_TITLES[sections.length - 1] && (
             <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">

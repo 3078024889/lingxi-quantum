@@ -55,7 +55,7 @@ export default function DailyIndexPage() {
               <Link
                 key={s.slug}
                 href={`/daily/${s.slug}`}
-                className="group flex flex-col items-center gap-2 lx-glass py-6 transition hover:border-lattice/40"
+                className="group flex flex-col items-center gap-2 lx-pdf-daily py-6 transition hover:border-lattice/40"
               >
                 <span className="font-display text-3xl text-lattice transition group-hover:text-amber">{s.glyph}</span>
                 <span className="text-sm text-bone-dim"><Bi zh={s.zh} en={s.en} /></span>
