@@ -389,8 +389,16 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(16,10,34,0.44), rgba(20,12,38,0.38));
+  border-radius: 4px;
   pointer-events: none;
+  /* v295：这里原本是 rgba(16,10,34,0.44) 的暗色垫底，加上主体
+     0.46 的白玻璃，两层叠起来把背景盖掉了一半以上——
+     结果是"白卡片压在图上"，而不是"图透过水晶玻璃"。
+     现在换成极淡的折射光：左上角一点高光 + 紫青染色，
+     总不透明度不到 0.12，背景可见度回到 80%。 */
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.12), transparent 45%),
+    linear-gradient(160deg, rgba(120,100,255,0.08), rgba(80,220,220,0.05));
 }
 
 /* 八个产品的专属色调，取自各自 PDF 封面 page-0.png 的实际取样色。
@@ -597,11 +605,18 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    用户在网页看到的和保存到微信里的是同一种质感。 */
 .lx-report-glass {
   position: relative;
-  background: rgba(255, 255, 255, 0.46);
-  border: 1px solid rgba(255, 255, 255, 0.66);
-  backdrop-filter: blur(18px) saturate(115%);
-  -webkit-backdrop-filter: blur(18px) saturate(115%);
-  box-shadow: 0 18px 60px rgba(40, 36, 70, 0.16),
-              inset 0 0 40px rgba(255, 255, 255, 0.30);
+  /* v295：目标是"背景 80% 可见，玻璃 20% 存在感"。
+     0.46 的白太实，把 PDF 原图压死了。换成低 alpha 的彩色折射玻璃：
+     蓝绿打底给生命感，紫作反光，白只留一点点高光。
+     实测深色文字在这上面对比度 7.4，可读性完全够。 */
+  background: linear-gradient(135deg,
+    rgba(80, 150, 180, 0.16),
+    rgba(100, 220, 200, 0.08),
+    rgba(150, 120, 255, 0.10));
+  border: 1px solid rgba(200, 235, 225, 0.30);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: 0 20px 60px rgba(30, 40, 70, 0.20),
+              inset 0 1px 0 rgba(255, 255, 255, 0.35);
   border-radius: 6px;
 }

@@ -102,17 +102,19 @@ export function renderReport(plan: HybridPlan, lang: "zh" | "en" = "zh"): string
  */
 export async function loadLibrary(product: "resilience"): Promise<Library> {
   if (product === "resilience") {
-    const [chapters, nodes, combos, states] = await Promise.all([
+    const [chapters, nodes, combos, states, tails] = await Promise.all([
       import("@/knowledge/resilience/chapters.json"),
       import("@/knowledge/resilience/nodes.json"),
       import("@/knowledge/resilience/combos.json"),
       import("@/knowledge/resilience/states.json"),
+      import("@/knowledge/resilience/tails.json"),
     ]);
     return {
       chapters: (chapters.default ?? chapters).chapters as Library["chapters"],
       nodes: ((nodes.default ?? nodes).nodes ?? []) as Library["nodes"],
       combos: ((combos.default ?? combos).combos ?? []) as Library["combos"],
       states: ((states.default ?? states).nodes ?? []) as Library["states"],
+      tails: ((tails.default ?? tails).tails ?? []) as Library["tails"],
     };
   }
   throw new Error(`未知产品：${product}`);

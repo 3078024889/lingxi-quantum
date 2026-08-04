@@ -5,6 +5,7 @@ import { computeLifeVector, calculateResilience, type LifeVectorInput } from "@/
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { planReport, loadLibrary } from "@/lib/hybrid-report";
+import { archetypeOf } from "@/lib/archetype";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -14,6 +15,12 @@ const ZHIPU_ENDPOINT = "https://open.bigmodel.cn/api/paas/v4/chat/completions";
 const DIM_ZH: Record<string, string> = {
   stressRecovery: "压力恢复能力", adaptability: "变化适应能力", crisisRebound: "危机反弹能力",
   persistence: "长期坚持能力", emotionalStability: "精神稳定能力",
+};
+
+const DIM_EN: Record<string, string> = {
+  stressRecovery: "Stress Recovery", adaptability: "Adaptability",
+  crisisRebound: "Crisis Rebound", persistence: "Persistence",
+  emotionalStability: "Emotional Stability",
 };
 
 const noAiRule = "\n\n【最高优先级规则】全文任何情况下都不能出现\"AI\"这两个字母，也不能用\"人工智能\"\"机器人\"\"程序\"这类词替代——灵犀是「场」，不是「AI产品」，这条规则优先于其余任何一条要求。";
@@ -218,9 +225,20 @@ export async function POST(req: Request) {
     console.error("[resilience] 知识库缺口:", plan.gapChapterKeys.join(","), "分数:", JSON.stringify(breakdown));
   }
 
-  const allSections: string[] = plan.chapters
+  // v295：在 11 章之前插入一页数据画像。
+  // 之前报告直接从解读开始，用户看不到"我的五项到底是多少、
+  // 谁高谁低、凭什么这样判断"——那正是"这是在说所有人还是在说我"
+  // 这个疑问的来源。把数据本身摆出来，解读才有落点。
+  const arch = archetypeOf(breakdown);
+  const ranked = Object.entries(breakdown).sort((a, b) => b[1] - a[1]);
+  const bar = (v: number) => "█".repeat(Math.round(v / 10)) + "░".repeat(10 - Math.round(v / 10));
+  const profile = lang === "en"
+    ? `Your Five Dimensions\n\n${ranked.map(([k, v]) => `${(DIM_EN[k] ?? k).padEnd(22)} ${bar(v)}  ${v}`).join("\n")}\n\nHighest: ${DIM_EN[ranked[0][0]] ?? ranked[0][0]} (${ranked[0][1]})\nLowest: ${DIM_EN[ranked[4][0]] ?? ranked[4][0]} (${ranked[4][1]})\nSpread: ${ranked[0][1] - ranked[4][1]}\n\nStructural form: ${arch.en}\nBasis: ${arch.reason}\n\nThis form comes from the shape of the five, not their height — two people with the same average and different distributions are read differently.`
+    : `你的五项分数\n\n${ranked.map(([k, v]) => `${(DIM_ZH[k] ?? k).padEnd(6, "　")} ${bar(v)}  ${v}`).join("\n")}\n\n最高：${DIM_ZH[ranked[0][0]] ?? ranked[0][0]}（${ranked[0][1]}）\n最低：${DIM_ZH[ranked[4][0]] ?? ranked[4][0]}（${ranked[4][1]}）\n落差：${ranked[0][1] - ranked[4][1]} 分\n\n结构形态：${arch.zh}\n判定依据：${arch.reason}\n\n这个形态取自五项之间的形状，不是分数的高低——同样的平均分，分布不同，读出来是两个人。`;
+
+  const allSections: string[] = [profile, ...plan.chapters
     .map((ch) => (lang === "en" ? ch.ruleTextEn : ch.ruleTextZh) ?? "")
-    .filter((x) => x.trim());
+    .filter((x) => x.trim())];
 
   if (allSections.length === 0) {
     return NextResponse.json({ error: "场域这次的回应不完整，请稍后再试一次。" }, { status: 500 });

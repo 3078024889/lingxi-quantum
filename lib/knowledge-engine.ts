@@ -148,8 +148,23 @@ function stateMatches(w: StateNode["when"], state: FieldState | null, scores: Sc
   return true;
 }
 
+/** 章末校验：一句用户能对照自己记忆当场确认或否认的具体描述。
+    这是对抗 Barnum 效应的核心手段——研究显示，让报告显得"通用"的
+    正是模糊、用"有时候"对冲、全是好话这三件事；而破解它的唯一方法
+    是给出可证伪的陈述：一句对某些人明确是错的话。
+    说对了，用户会有"它怎么知道"的反应；说错了，用户也知道这份报告
+    是在认真判断而不是恭维——两种结果都比模糊的正确更有价值。 */
+export type TailNode = {
+  id: string;
+  chapter: string;
+  dim: string;
+  band: BandKey;
+  fieldText: { zh: string; en: string };
+};
+
 export type Library = {
   nodes: StructureNode[];
+  tails?: TailNode[];
   combos: ComboNode[];
   states?: StateNode[];
   chapters: { key: string; dim: string | null; titleZh: string; titleEn: string }[];
@@ -200,6 +215,27 @@ export function buildReport(
           zh: picked.fieldText.zh,
           en: picked.fieldText.en,
         });
+        // v295：把 corePattern / shadowSide / growthDirection 输出给用户。
+        // 这三个字段每个节点一直都有，但之前只当写作脚手架用，从未呈现——
+        // 它们本身就是"深层机制 / 风险模式 / 提升路径"，是这份报告
+        // 最有结构感的部分，藏着不用等于浪费了已经写好的内容。
+        // 用三段式小标题呈现，让每一章从"一段文字"变成"一份分析"。
+        blocks.push({
+          source: "structure",
+          id: picked.id + ".mech",
+          zh: `　
+【运作机制】${picked.corePattern}
+
+【要留意的】${picked.shadowSide}
+
+【下一步】${picked.growthDirection}`,
+          en: `　
+[Mechanism] ${picked.corePattern}
+
+[Watch for] ${picked.shadowSide}
+
+[Next step] ${picked.growthDirection}`,
+        });
       }
     }
 
@@ -213,6 +249,16 @@ export function buildReport(
     if (hitStates.length > 0) {
       const s = hitStates[0];
       blocks.push({ source: "state", id: s.id, zh: s.fieldText.zh, en: s.fieldText.en });
+    }
+
+    // 4. 章末校验——放在最后，因为它要求用户回头对照自己的记忆，
+    //    只有在读完这一章的内容之后提出才有意义。
+    if (ch.dim) {
+      const band = bandOf(scores[ch.dim] ?? 50);
+      const tail = (lib.tails ?? []).find(
+        (t) => t.chapter === ch.key && t.dim === ch.dim && t.band === band
+      );
+      if (tail) blocks.push({ source: "state", id: tail.id, zh: tail.fieldText.zh, en: tail.fieldText.en });
     }
 
     return { chapter: ch.key, titleZh: ch.titleZh, titleEn: ch.titleEn, blocks };

@@ -12,6 +12,9 @@ import { getProduct } from "@/lib/plans";
 // v236：11章节，跟 app/api/resilience/generate-full/route.ts 里
 // buildChapters() 的顺序必须完全一致。
 const SECTION_TITLES = [
+  // v295：第一节是数据画像——先摆出五项分数与形态判定依据，
+  // 再进入解读。之前直接从解读开始，用户没有落点。
+  { titleZh: "◆ 你的五项结构", titleEn: "◆ Your Five Dimensions" },
   { titleZh: "① 生命韧性源点", titleEn: "① Where Your Resilience Begins" },
   { titleZh: "② 压力恢复能力", titleEn: "② Stress Recovery" },
   { titleZh: "③ 变化适应能力", titleEn: "③ Adaptability to Change" },

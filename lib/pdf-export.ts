@@ -500,7 +500,7 @@ export async function exportArchivePdf(params: {
   // ── 封面 ──
   pdf.addImage(await renderPage(pageShell(coverImage, "center 40%", `
     <div style="position:absolute;left:56px;right:56px;top:34%;
-                background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.66);
+                background:linear-gradient(135deg,rgba(80,150,180,.16),rgba(150,120,255,.10));border:1px solid rgba(200,235,225,.34);
                 border-radius:6px;padding:46px 40px;text-align:center;
                 box-shadow:0 18px 60px rgba(40,36,70,.18);">
       <div style="font-size:12px;letter-spacing:.4em;color:#7A6E94;">LINGXI FIELD</div>
@@ -516,7 +516,7 @@ export async function exportArchivePdf(params: {
     pdf.addPage();
     pdf.addImage(await renderPage(pageShell(bg, pos, `
       <div style="position:absolute;left:52px;right:52px;top:60px;
-                  background:rgba(255,255,255,.44);border:1px solid rgba(255,255,255,.62);
+                  background:linear-gradient(135deg,rgba(80,150,180,.17),rgba(100,220,200,.09),rgba(150,120,255,.11));border:1px solid rgba(200,235,225,.34);
                   border-radius:6px;padding:38px 40px;
                   box-shadow:0 18px 56px rgba(40,36,70,.16);">
         <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">

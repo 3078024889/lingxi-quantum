@@ -1,0 +1,255 @@
+{
+  "_comment": "章末校验。对抗 Barnum 效应的核心内容：必须可证伪——说一句对某些人明确是错的话。禁止使用『有时候』『可能』『往往』这类对冲词，那正是通用文案的标志。描述具体行为与场景，不描述人格。",
+  "tails": [
+    {
+      "id": "tail.02-stress.vlow",
+      "chapter": "02-stress",
+      "dim": "stressRecovery",
+      "band": "vlow",
+      "fieldText": {
+        "zh": "灵犀校验：压力最大的那几天，你比平时更容易忘记吃饭或吃得很随便，而不是吃得更多。如果是这样，那不是食欲问题——你的系统在高压时会把维持性的事整个降级，进食只是其中最容易被看见的一项。",
+        "en": "Field check: on your most pressured days, you more often forget to eat or eat carelessly, rather than eating more. If that's true, it isn't an appetite issue — under pressure your system downgrades maintenance tasks wholesale, and eating is simply the most visible one."
+      }
+    },
+    {
+      "id": "tail.02-stress.low",
+      "chapter": "02-stress",
+      "dim": "stressRecovery",
+      "band": "low",
+      "fieldText": {
+        "zh": "灵犀校验：你缓过来的方式，多半不是「休息一天」，而是「把某件具体的事做完」。真正让你放松下来的往往不是躺着，是那件悬着的事终于结账了。如果是这样，你的恢复入口是完成，不是休息——这两者要用的方法完全不同。",
+        "en": "Field check: the way you come back is usually not taking a day off but finishing one specific thing. What actually lets you relax isn't lying down; it's the pending thing finally being settled. If so, your recovery entrance is completion, not rest — and those two require completely different methods."
+      }
+    },
+    {
+      "id": "tail.02-stress.mid",
+      "chapter": "02-stress",
+      "dim": "stressRecovery",
+      "band": "mid",
+      "fieldText": {
+        "zh": "灵犀校验：同样是累，你在自己家里恢复得比在别人的空间里快，而且差别不小。如果确实如此，那说明你的恢复对「不需要留意别人」这个条件的依赖，比你以为的重。",
+        "en": "Field check: tired in the same way, you recover noticeably faster in your own space than in someone else's. If that holds, your recovery depends on the condition of not having to attend to anyone far more than you'd assumed."
+      }
+    },
+    {
+      "id": "tail.02-stress.high",
+      "chapter": "02-stress",
+      "dim": "stressRecovery",
+      "band": "high",
+      "fieldText": {
+        "zh": "灵犀校验：事情过去之后，你很少回想它，而身边有人会反复提起同一件事。如果是这样，那不是你比较豁达——是你的系统在事情结束的那一刻就归档了，包括那些其实还没消化完的部分。",
+        "en": "Field check: once something is over you rarely revisit it, while people around you bring the same event up again and again. If that's the case, it isn't that you're more easygoing — your system files things the moment they end, including the parts that were never fully processed."
+      }
+    },
+    {
+      "id": "tail.02-stress.vhigh",
+      "chapter": "02-stress",
+      "dim": "stressRecovery",
+      "band": "vhigh",
+      "fieldText": {
+        "zh": "灵犀校验：别人跟你说很累的时候，你脑子里第一反应通常是「那可以试试……」，而不是「确实挺累的」。如果是这样，那说明恢复对你太容易，以至于你很难想象缓不过来是什么状态。",
+        "en": "Field check: when someone tells you they're exhausted, your first internal response is usually you could try… rather than that does sound exhausting. If so, recovery comes so easily to you that it's hard to imagine what not recovering feels like."
+      }
+    },
+    {
+      "id": "tail.03-adapt.vlow",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "vlow",
+      "fieldText": {
+        "zh": "灵犀校验：计划被打乱之后，你会先把整件事在脑子里重新过一遍，而这个过程中别人以为你在发呆或者不高兴。如果是这样，那不是情绪问题——那是你的系统在重新铺线，只是从外面看不出来。",
+        "en": "Field check: after a plan breaks, you run the whole thing through again internally — and during that, people assume you're spacing out or upset. If that's true, it isn't emotion. Your system is relaying the track; it just isn't visible from outside."
+      }
+    },
+    {
+      "id": "tail.03-adapt.low",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "low",
+      "fieldText": {
+        "zh": "灵犀校验：临时改约会让你不舒服，即使新的安排更好。如果确实是这样，那说明消耗你的不是那件事本身，是「已经安排好的东西又要重排」这个动作。",
+        "en": "Field check: a last-minute change of plan bothers you even when the new arrangement is better. If that's accurate, what drains you isn't the event — it's the act of re-arranging something already settled."
+      }
+    },
+    {
+      "id": "tail.03-adapt.mid",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "mid",
+      "fieldText": {
+        "zh": "灵犀校验：如果变化提前一天告诉你，你几乎没有反应；如果是当场通知，你需要缓一下。如果这个差别确实存在，那你要的从来不是「更能适应」，是提前量。",
+        "en": "Field check: told a day in advance, a change barely registers; told on the spot, you need a moment. If that difference is real, what you need was never greater adaptability — it's advance notice."
+      }
+    },
+    {
+      "id": "tail.03-adapt.high",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "high",
+      "fieldText": {
+        "zh": "灵犀校验：别人还在讨论「怎么会这样」的时候，你已经在想下一步了，而且会觉得这个讨论有点浪费时间。如果是这样，你和身边人的节奏差在起点，不在能力。",
+        "en": "Field check: while others are still discussing how did this happen, you're already on the next step, and the discussion feels like a waste of time. If so, the gap between you and them is in starting point, not capability."
+      }
+    },
+    {
+      "id": "tail.03-adapt.vhigh",
+      "chapter": "03-adapt",
+      "dim": "adaptability",
+      "band": "vhigh",
+      "fieldText": {
+        "zh": "灵犀校验：你很少为取消的计划感到可惜，别人可能因此觉得你不在乎。如果确实如此，那不是不在乎——是你的注意力已经在新版本上了，旧版本对你来说是真的过去了。",
+        "en": "Field check: you rarely regret a cancelled plan, and people may read that as indifference. If that's accurate, it isn't indifference — your attention has already moved to the new version, and the old one is genuinely over for you."
+      }
+    },
+    {
+      "id": "tail.04-crisis.vlow",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "vlow",
+      "fieldText": {
+        "zh": "灵犀校验：真正出事的时候，你的第一反应是安静下来，而不是马上打电话或采取行动。如果是这样，那不是慌了——是你的系统在评估还能不能动，这个评估本身需要时间。",
+        "en": "Field check: when something actually goes wrong, your first response is to go quiet rather than immediately call someone or act. If so, that isn't panic — your system is assessing whether it can still move, and that assessment takes time."
+      }
+    },
+    {
+      "id": "tail.04-crisis.low",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "low",
+      "fieldText": {
+        "zh": "灵犀校验：冲击刚发生的那几天你其实还撑得住，真正难的是一两周之后。如果确实是这样，那说明你的低点不在事发当时，而在支撑用完之后——所以最需要有人在的时刻，往往是所有人都以为你已经没事了的时候。",
+        "en": "Field check: the first days after a shock you actually hold up; the hard part comes a week or two later. If that's true, your low point isn't at the event but after the support runs out — which means the moment you most need someone present is usually when everyone assumes you're already fine."
+      }
+    },
+    {
+      "id": "tail.04-crisis.mid",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "mid",
+      "fieldText": {
+        "zh": "灵犀校验：有明确对手的困难，你反弹得快；没有对手、只能等的困难，你缓得慢。如果这个差别成立，那你的反弹机制需要的是「有事可做」，不是「有多强」。",
+        "en": "Field check: difficulties with a clear opponent you rebound from quickly; difficulties with no opponent, where you can only wait, take far longer. If that difference holds, your rebound mechanism runs on having something to do, not on being strong."
+      }
+    },
+    {
+      "id": "tail.04-crisis.high",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "high",
+      "fieldText": {
+        "zh": "灵犀校验：出事的时候你反而睡得着，事情解决之后那几天才开始失眠。如果是这样，那说明你的系统在危机中会推迟结算，账单是在安全之后才送到的。",
+        "en": "Field check: during the crisis you can still sleep; the insomnia starts in the days after it's resolved. If so, your system defers settlement during an emergency — the bill arrives only once you're safe."
+      }
+    },
+    {
+      "id": "tail.04-crisis.vhigh",
+      "chapter": "04-crisis",
+      "dim": "crisisRebound",
+      "band": "vhigh",
+      "fieldText": {
+        "zh": "灵犀校验：危机里，别人会不自觉地看向你等你先动，而你自己没觉得这是负担。如果是这样，那说明你已经默认承担了一个没人任命过、也没人替换的位置。",
+        "en": "Field check: in a crisis, people look toward you without meaning to, waiting for you to move first — and you don't experience that as a burden. If so, you have by default taken a position no one appointed you to and no one relieves you from."
+      }
+    },
+    {
+      "id": "tail.05-persist.vlow",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "vlow",
+      "fieldText": {
+        "zh": "灵犀校验：你开始过很多件事，其中大部分停在第三周左右。如果这个时间点大致对得上，那不是意志力问题——第三周是新鲜感耗尽、成果还没出现的那个交叉点，所有人都在那里掉下去，只是有人有外部结构接着。",
+        "en": "Field check: you've started many things, and most of them stopped around the third week. If that timing roughly matches, it isn't willpower — week three is where novelty runs out and results haven't appeared yet. Everyone falls there; some just have an external structure to catch them."
+      }
+    },
+    {
+      "id": "tail.05-persist.low",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "low",
+      "fieldText": {
+        "zh": "灵犀校验：有人一起做的时候你能坚持很久，一个人就容易停。如果确实如此，那你缺的不是动力，是见证——事情有没有被人看见，对你的持续供能影响比你以为的大。",
+        "en": "Field check: with someone alongside you can keep going a long time; alone it stops easily. If that's accurate, what you lack isn't motivation but witness — whether something is seen by another person affects your fuel supply more than you'd think."
+      }
+    },
+    {
+      "id": "tail.05-persist.mid",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "mid",
+      "fieldText": {
+        "zh": "灵犀校验：你认可的事能做很久，接下来的事很快耗尽。如果是这样，那你的坚持力其实相当稳定，只是它只对一种燃料有反应——意义，而不是纪律。",
+        "en": "Field check: things you believe in you can sustain for a long time; things you merely accepted drain you fast. If so, your persistence is actually quite stable — it simply responds to only one fuel: meaning, not discipline."
+      }
+    },
+    {
+      "id": "tail.05-persist.high",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "high",
+      "fieldText": {
+        "zh": "灵犀校验：有些事你已经不太想做了，但还在做，而且不是因为有人要求。如果确实有这样一件事，那它就是这一章真正在说的东西——能撑住的人，最难的不是开始，是允许自己停。",
+        "en": "Field check: there are things you no longer want to do and are still doing, and not because anyone requires it. If such a thing exists, it is what this chapter is actually about — for someone who can hold, the hard part was never starting. It's permitting yourself to stop."
+      }
+    },
+    {
+      "id": "tail.05-persist.vhigh",
+      "chapter": "05-persist",
+      "dim": "persistence",
+      "band": "vhigh",
+      "fieldText": {
+        "zh": "灵犀校验：别人劝你放弃的时候，你心里的反应是「他们不了解情况」，而不是「也许该想想」。如果是这样，那说明外部的止损信号在你这里会被自动降级——而你的内部信号又不会响。",
+        "en": "Field check: when people advise you to quit, your internal response is they don't understand the situation rather than maybe I should consider it. If so, external stop-loss signals get automatically downgraded in you — and your internal one doesn't fire."
+      }
+    },
+    {
+      "id": "tail.06-stability.vlow",
+      "chapter": "06-stability",
+      "dim": "emotionalStability",
+      "band": "vlow",
+      "fieldText": {
+        "zh": "灵犀校验：情绪起来之前，你的身体先有反应——胃、肩膀或者呼吸变浅，而你往往是事后才想起来那个信号出现过。如果是这样，你的预警系统其实是好的，只是接收端还没接上。",
+        "en": "Field check: before a feeling rises, your body responds first — stomach, shoulders, or breath going shallow — and you usually only recall the signal afterwards. If so, your early-warning system works fine; the receiver just isn't connected yet."
+      }
+    },
+    {
+      "id": "tail.06-stability.low",
+      "chapter": "06-stability",
+      "dim": "emotionalStability",
+      "band": "low",
+      "fieldText": {
+        "zh": "灵犀校验：让你波动最大的，通常不是事情本身，是「说不清哪里不对」的那种状况。如果确实如此，那你需要的不是更稳，是更快命名——一件事一旦被说清楚，你的反应会立刻小很多。",
+        "en": "Field check: what moves you most isn't usually the event itself but situations where you can't say what's wrong. If that's accurate, what you need isn't more steadiness but faster naming — once something is stated clearly, your reaction drops sharply."
+      }
+    },
+    {
+      "id": "tail.06-stability.mid",
+      "chapter": "06-stability",
+      "dim": "emotionalStability",
+      "band": "mid",
+      "fieldText": {
+        "zh": "灵犀校验：同样的话，某个人说你没反应，另一个人说你就会起波澜。如果这个差别明显，那波动的来源不在情绪调节，在那段关系里还没解决的东西。",
+        "en": "Field check: the same words from one person leave you unmoved and from another set something off. If that difference is pronounced, the source isn't emotional regulation — it's something unresolved in that particular relationship."
+      }
+    },
+    {
+      "id": "tail.06-stability.high",
+      "chapter": "06-stability",
+      "dim": "emotionalStability",
+      "band": "high",
+      "fieldText": {
+        "zh": "灵犀校验：场面乱的时候大家会看你，而你确实接得住。但事后很少有人问你当时什么感觉。如果是这样，那份稳定已经变成了一个默认设置——对别人是，对你自己也是。",
+        "en": "Field check: when things get chaotic people look to you, and you do hold it. But afterwards, few ask how it was for you. If so, that steadiness has become a default setting — for them, and for you as well."
+      }
+    },
+    {
+      "id": "tail.06-stability.vhigh",
+      "chapter": "06-stability",
+      "dim": "emotionalStability",
+      "band": "vhigh",
+      "fieldText": {
+        "zh": "灵犀校验：你已经很久没有真正生过气了，而且你不确定那是修养还是麻木。如果这个不确定确实存在，它本身就是这一章最值得看的地方。",
+        "en": "Field check: it has been a long time since you were genuinely angry, and you aren't certain whether that's composure or numbness. If that uncertainty is real, it is itself the most worthwhile thing in this chapter."
+      }
+    }
+  ]
+}
