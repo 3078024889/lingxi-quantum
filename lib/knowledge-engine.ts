@@ -209,6 +209,16 @@ export function buildReport(
       );
       const picked = pickVariant(candidates, `${seed}|${ch.key}|${band}`);
       if (picked) {
+        // v296：核心洞察句。corePattern 本来就是这一章最凝练的一句判断，
+        // 放在最前面——用户翻开这一章，第一眼看到的就是"关于我的那句话"，
+        // 而不是先读三百字才知道在说什么。
+        // 这是"被看见"的那一下，也是决定用户会不会继续读下去的地方。
+        blocks.push({
+          source: "structure",
+          id: picked.id + ".core",
+          zh: `❖ ${picked.corePattern}`,
+          en: `❖ ${picked.corePattern}`,
+        });
         blocks.push({
           source: "structure",
           id: picked.id,
@@ -224,14 +234,10 @@ export function buildReport(
           source: "structure",
           id: picked.id + ".mech",
           zh: `　
-【运作机制】${picked.corePattern}
-
 【要留意的】${picked.shadowSide}
 
 【下一步】${picked.growthDirection}`,
           en: `　
-[Mechanism] ${picked.corePattern}
-
 [Watch for] ${picked.shadowSide}
 
 [Next step] ${picked.growthDirection}`,

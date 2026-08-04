@@ -170,7 +170,9 @@ export async function exportGlassPdf(params: {
 }): Promise<void> {
   const { fileName, reportTitleZh, reportTitleEn, chapterTitles } = params;
   const bgRgb = params.bgColorRgb ?? PRINT_BG_RGB;
-  const bgHex = params.bgColorHex ?? "#0d0d1a";
+  // v296：默认底色从深色 #0d0d1a 改为浅色。新 PDF 素材是浅色晨雾水彩，
+  // 深色底会让截图边缘出现黑框，跟素材冲突。
+  const bgHex = params.bgColorHex ?? "#F6F4F0";
 
   let coverEl: HTMLElement | undefined;
   let contentEls: HTMLElement[];

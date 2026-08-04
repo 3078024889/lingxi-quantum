@@ -620,3 +620,27 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
               inset 0 1px 0 rgba(255, 255, 255, 0.35);
   border-radius: 6px;
 }
+
+/* v296：报告页浅色玻璃内的文字色。
+   之前网页里页头页尾用深色主题的白字（text-bone），
+   压在浅色玻璃上几乎看不见——用户反馈"网页里字是白色，
+   其他文字是黑色的，自然是黑色的看得清"。
+   这里用属性选择器一次覆盖，不需要去每个组件改 className，
+   数值与 PDF 完全一致，保证网页看到的和下载保存的是同一种质感。 */
+.lx-report-glass,
+.lx-report-glass .text-bone,
+.lx-report-glass .text-bone-dim,
+.lx-report-glass .text-bone-soft { color: #2E2742; }
+.lx-report-glass .text-bone-mute { color: #6B6285; }
+.lx-report-glass .text-lattice   { color: #1F6F63; }
+.lx-report-glass .text-amber     { color: #6D4A9C; }
+.lx-report-glass .text-rose      { color: #A63D74; }
+.lx-report-glass h1,
+.lx-report-glass h2,
+.lx-report-glass h3 { color: #3A2E52; }
+.lx-report-glass input,
+.lx-report-glass textarea { color: #2E2742; }
+.lx-report-glass input::placeholder { color: #7A7290; }
+/* 分隔线与边框也要跟着变浅，否则深色描边在浅玻璃上很突兀 */
+.lx-report-glass .border-white\/10,
+.lx-report-glass .border-white\/15 { border-color: rgba(58, 46, 82, 0.14) !important; }

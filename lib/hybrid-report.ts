@@ -100,22 +100,66 @@ export function renderReport(plan: HybridPlan, lang: "zh" | "en" = "zh"): string
  * 用静态 import 而非 fs 读取——Next.js 构建时会把 JSON 打进产物，
  * 运行时零文件 IO、零延迟，也不依赖部署环境的文件系统布局。
  */
-export async function loadLibrary(product: "resilience"): Promise<Library> {
-  if (product === "resilience") {
-    const [chapters, nodes, combos, states, tails] = await Promise.all([
-      import("@/knowledge/resilience/chapters.json"),
-      import("@/knowledge/resilience/nodes.json"),
-      import("@/knowledge/resilience/combos.json"),
-      import("@/knowledge/resilience/states.json"),
-      import("@/knowledge/resilience/tails.json"),
-    ]);
-    return {
-      chapters: (chapters.default ?? chapters).chapters as Library["chapters"],
-      nodes: ((nodes.default ?? nodes).nodes ?? []) as Library["nodes"],
-      combos: ((combos.default ?? combos).combos ?? []) as Library["combos"],
-      states: ((states.default ?? states).nodes ?? []) as Library["states"],
-      tails: ((tails.default ?? tails).tails ?? []) as Library["tails"],
-    };
-  }
-  throw new Error(`未知产品：${product}`);
+export type ProductKey =
+  | "resilience" | "romance" | "wealth" | "qian"
+  | "tarot" | "relationship" | "life-map" | "daily";
+
+/**
+ * 载入某个产品的知识库。
+ *
+ * 用静态 import 而非 fs 读取——Next.js 构建时会把 JSON 打进产物，
+ * 运行时零文件 IO、零延迟，也不依赖部署环境的文件系统布局。
+ *
+ * 新产品要接入，只需要：
+ *   1. 在 knowledge/<产品>/ 下建好四个 JSON（见 docs/CONTENT-SPEC.md）
+ *   2. 在下面的 LOADERS 里加一行
+ * 内容写进 JSON 就生效，不需要改引擎或接口。
+ */
+const LOADERS: Record<ProductKey, () => Promise<any[]>> = {
+  resilience: () => Promise.all([
+    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
+    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
+    import("@/knowledge/resilience/tails.json")]),
+  romance: () => Promise.all([
+    import("@/knowledge/romance/chapters.json"), import("@/knowledge/romance/nodes.json"),
+    import("@/knowledge/romance/combos.json"), import("@/knowledge/romance/states.json"),
+    import("@/knowledge/romance/tails.json")]),
+  wealth: () => Promise.all([
+    import("@/knowledge/wealth/chapters.json"), import("@/knowledge/wealth/nodes.json"),
+    import("@/knowledge/wealth/combos.json"), import("@/knowledge/wealth/states.json"),
+    import("@/knowledge/wealth/tails.json")]),
+  qian: () => Promise.all([
+    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
+    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
+    import("@/knowledge/resilience/tails.json")]),
+  tarot: () => Promise.all([
+    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
+    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
+    import("@/knowledge/resilience/tails.json")]),
+  relationship: () => Promise.all([
+    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
+    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
+    import("@/knowledge/resilience/tails.json")]),
+  "life-map": () => Promise.all([
+    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
+    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
+    import("@/knowledge/resilience/tails.json")]),
+  daily: () => Promise.all([
+    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
+    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
+    import("@/knowledge/resilience/tails.json")]),
+};
+
+export async function loadLibrary(product: ProductKey): Promise<Library> {
+  const loader = LOADERS[product];
+  if (!loader) throw new Error(`未知产品：${product}`);
+  const [chapters, nodes, combos, states, tails] = await loader();
+  const pick = (m: any, k: string) => (m.default ?? m)[k] ?? [];
+  return {
+    chapters: pick(chapters, "chapters") as Library["chapters"],
+    nodes: pick(nodes, "nodes") as Library["nodes"],
+    combos: pick(combos, "combos") as Library["combos"],
+    states: pick(states, "nodes") as Library["states"],
+    tails: pick(tails, "tails") as Library["tails"],
+  };
 }

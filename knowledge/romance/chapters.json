@@ -1,0 +1,71 @@
+{
+  "_comment": "桃花磁场 11章。dim 必须对齐线上真实维度键，否则规则引擎命中不了。第1章总览 dim=null，由组合节点承担。",
+  "chapters": [
+    {
+      "key": "01-origin",
+      "dim": null,
+      "titleZh": "桃花磁场源点",
+      "titleEn": "Origin"
+    },
+    {
+      "key": "02-socialDrive",
+      "dim": "socialDrive",
+      "titleZh": "存在感",
+      "titleEn": "Presence"
+    },
+    {
+      "key": "03-creativity",
+      "dim": "creativity",
+      "titleZh": "表达力",
+      "titleEn": "Expression"
+    },
+    {
+      "key": "04-adaptability",
+      "dim": "adaptability",
+      "titleZh": "开放度",
+      "titleEn": "Openness"
+    },
+    {
+      "key": "05-ambition",
+      "dim": "ambition",
+      "titleZh": "自信场",
+      "titleEn": "Self-Assurance"
+    },
+    {
+      "key": "06-emotionalDepth",
+      "dim": "emotionalDepth",
+      "titleZh": "共振力",
+      "titleEn": "Resonance"
+    },
+    {
+      "key": "07-hidden",
+      "dim": "socialDrive",
+      "titleZh": "你没在用的吸引力",
+      "titleEn": "你没在用的吸引力"
+    },
+    {
+      "key": "08-drain",
+      "dim": "emotionalDepth",
+      "titleZh": "关系里的消耗点",
+      "titleEn": "关系里的消耗点"
+    },
+    {
+      "key": "09-path",
+      "dim": "creativity",
+      "titleZh": "磁场进化路径",
+      "titleEn": "磁场进化路径"
+    },
+    {
+      "key": "10-practice",
+      "dim": "adaptability",
+      "titleZh": "灵犀场关系实践",
+      "titleEn": "灵犀场关系实践"
+    },
+    {
+      "key": "11-summary",
+      "dim": "ambition",
+      "titleZh": "桃花磁场总结",
+      "titleEn": "桃花磁场总结"
+    }
+  ]
+}

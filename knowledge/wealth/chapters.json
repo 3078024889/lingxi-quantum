@@ -1,0 +1,71 @@
+{
+  "_comment": "财富创造 11章。dim 必须对齐线上真实维度键，否则规则引擎命中不了。第1章总览 dim=null，由组合节点承担。",
+  "chapters": [
+    {
+      "key": "01-origin",
+      "dim": null,
+      "titleZh": "财富创造源点",
+      "titleEn": "Origin"
+    },
+    {
+      "key": "02-insight",
+      "dim": "insight",
+      "titleZh": "洞察力",
+      "titleEn": "Insight"
+    },
+    {
+      "key": "03-build",
+      "dim": "build",
+      "titleZh": "构建力",
+      "titleEn": "Building"
+    },
+    {
+      "key": "04-connect",
+      "dim": "connect",
+      "titleZh": "连接力",
+      "titleEn": "Connection"
+    },
+    {
+      "key": "05-express",
+      "dim": "express",
+      "titleZh": "表达力",
+      "titleEn": "Expression"
+    },
+    {
+      "key": "06-risk",
+      "dim": "risk",
+      "titleZh": "风险承担力",
+      "titleEn": "Risk-Bearing"
+    },
+    {
+      "key": "07-hidden",
+      "dim": "insight",
+      "titleZh": "你没在用的那条路",
+      "titleEn": "你没在用的那条路"
+    },
+    {
+      "key": "08-drain",
+      "dim": "risk",
+      "titleZh": "价值流失点",
+      "titleEn": "价值流失点"
+    },
+    {
+      "key": "09-path",
+      "dim": "build",
+      "titleZh": "财富进化路径",
+      "titleEn": "财富进化路径"
+    },
+    {
+      "key": "10-practice",
+      "dim": "connect",
+      "titleZh": "灵犀场创造实践",
+      "titleEn": "灵犀场创造实践"
+    },
+    {
+      "key": "11-summary",
+      "dim": "express",
+      "titleZh": "财富创造总结",
+      "titleEn": "财富创造总结"
+    }
+  ]
+}

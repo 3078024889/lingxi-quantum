@@ -306,7 +306,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         )}
 
         {resonance && (
-          <div className="lx-glass-relation mt-6 space-y-6 p-6">
+          <div className="lx-report-glass mt-6 space-y-6 p-6">
             {resonance.resonant.length > 0 && (
               <div>
                 <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="共鸣点 · 共享的驱动力" en="Resonance · Shared Drives" /></p>
@@ -381,7 +381,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           );
         })}
 
-        <div className="lx-glass-relation mt-6 p-5 text-center">
+        <div className="lx-report-glass mt-6 p-5 text-center">
           <p className="text-sm text-bone-dim">
             <Bi zh="这是一份自我探索与反思的参考，不是关系预言——关系的走向，始终由两个人共同选择。" en="This is a reference for reflection, not a prophecy about your relationship — its course is always shaped by both people, together." />
           </p>
@@ -433,7 +433,7 @@ function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: 
   });
 
   return (
-    <div className="lx-glass-relation p-5">
+    <div className="lx-report-glass p-5">
       <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="生命向量对比" en="Life Vector Comparison" /></p>
       <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
         <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-56 w-56 shrink-0">
