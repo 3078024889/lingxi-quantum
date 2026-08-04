@@ -590,3 +590,18 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
     0 0 120px rgba(150, 100, 255, 0.60),
     0 0 220px rgba(50, 220, 255, 0.30);
 }
+
+/* v293：报告页专用浅色玻璃。
+   新 PDF 素材是浅色晨雾水彩，深色面板压上去会显脏、把画面压死；
+   浅色玻璃才透得出底下的画，也与下载的 PDF 保持一致——
+   用户在网页看到的和保存到微信里的是同一种质感。 */
+.lx-report-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(255, 255, 255, 0.66);
+  backdrop-filter: blur(18px) saturate(115%);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
+  box-shadow: 0 18px 60px rgba(40, 36, 70, 0.16),
+              inset 0 0 40px rgba(255, 255, 255, 0.30);
+  border-radius: 6px;
+}

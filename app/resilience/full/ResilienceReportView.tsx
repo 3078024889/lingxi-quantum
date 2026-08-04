@@ -99,8 +99,9 @@ export default function ResilienceReportView({ id }: { id: string }) {
         titleZh: `${name || "你的"}生命韧性档案`,
         titleEn: `${name || "Your"} Life Resilience Archive`,
         coverImage: "/images/resilience-full/page-0.png",
-        bodyImages: [1, 2, 3, 4].map((n) => `/images/resilience-full/page-${n}.png`),
-        endImage: "/images/resilience-full/page-5.png",
+        // v293：素材补到 12 张，11 章各用一张专属图，不再循环取景。
+        bodyImages: Array.from({ length: 11 }, (_, k) => `/images/resilience-full/page-${k + 1}.png`),
+        endImage: "/images/resilience-full/page-11.png",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -208,8 +209,8 @@ export default function ResilienceReportView({ id }: { id: string }) {
             没有收藏欲。现在每章占满一屏、背景是完整的 PDF 原图、
             文字浮在玻璃面板上——用户随手一截就是一整张艺术画面。 */}
         {sections.map((content, i) => {
-          const bg = `/images/resilience-full/page-${(i % 4) + 1}.png`;
-          const posY = ["12%", "50%", "88%"][Math.floor(i / 4) % 3];
+          // 12 张素材：page-0 封面 / page-1..11 每章一张 / page-11 兼作尾页
+          const bg = `/images/resilience-full/page-${Math.min(i + 1, 11)}.png`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
             <section
@@ -218,18 +219,22 @@ export default function ResilienceReportView({ id }: { id: string }) {
               style={{
                 backgroundImage: `url(${bg})`,
                 backgroundSize: "cover",
-                backgroundPosition: `center ${posY}`,
+                backgroundPosition: "center",
               }}
             >
-              <div className="lx-glass-resilience mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
-                <p className="font-display text-[11px] uppercase tracking-[0.34em] text-bone-mute">
+              {/* v293：网页面板改用与 PDF 一致的浅色玻璃。
+                  用户反馈下载的 PDF 白框好看、网页黑框不好看——
+                  因为新素材是浅色晨雾水彩，深色面板压在上面显得脏，
+                  浅色玻璃才透得出底下的画。 */}
+              <div className="lx-report-glass mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
+                <p className="font-display text-[11px] uppercase tracking-[0.34em] text-[#8C7FA8]">
                   LIFE RESILIENCE · {String(i + 1).padStart(2, "0")} / {String(sections.length).padStart(2, "0")}
                 </p>
-                <h3 className="mt-4 font-display text-xl font-light tracking-[0.08em] text-bone sm:text-2xl">
+                <h3 className="mt-4 font-display text-xl font-light tracking-[0.08em] text-[#3A2E52] sm:text-2xl">
                   <Bi zh={title.titleZh} en={title.titleEn} />
                 </h3>
-                <div className="mt-3 h-px w-14 bg-amber/50" />
-                <div className="mt-6 space-y-4 text-[15px] leading-[2] text-bone-dim">
+                <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
+                <div className="mt-6 space-y-4 text-[15px] leading-[2] text-[#2E2742]">
                   {content.split("\n\n").filter(Boolean).map((para, k) => (
                     <p key={k}>{para}</p>
                   ))}

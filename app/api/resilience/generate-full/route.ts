@@ -147,8 +147,9 @@ async function generateBatch(key: string, lang: "zh" | "en", batch: Batch, isLas
 }
 
 export async function POST(req: Request) {
-  const key = process.env.ZHIPU_API_KEY;
-  if (!key) return NextResponse.json({ error: "尚未配置灵犀解析（缺少 ZHIPU_API_KEY）。" }, { status: 503 });
+  // v293：生命韧性已完全由规则引擎产出，不再需要 ZHIPU_API_KEY。
+  // 之前这里留着 key 检查——如果 key 失效或未配置，连纯规则的报告
+  // 都会被这一行拦下返回 503，那是完全没必要的失败。已移除。
 
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
