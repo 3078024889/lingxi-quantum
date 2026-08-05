@@ -627,14 +627,22 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
    其他文字是黑色的，自然是黑色的看得清"。
    这里用属性选择器一次覆盖，不需要去每个组件改 className，
    数值与 PDF 完全一致，保证网页看到的和下载保存的是同一种质感。 */
+/* v299：上面的注释描述了旧问题，但当时的修复方案（.lx-report-glass
+   .text-lattice 这类精确class选择器）只覆盖了不带透明度的写法。
+   代码里大量用的其实是 text-lattice/85、text-amber/90、text-rose/80
+   这类带透明度的写法，Tailwind编译后是不同的class名，完全没被上面
+   覆盖到——这些文字在浅色玻璃面板上颜色还是给深色背景设计的浅色调，
+   是同一类"看不清"的bug，只是没有白字那么极端，容易被漏掉。这里
+   改用属性选择器一次性覆盖同一色系所有透明度变体，新增透明度写法
+   不用再加新CSS规则。同时补上 text-emerald-300（生命韧性等报告页
+   头部用到，之前完全没被覆盖）。 */
 .lx-report-glass,
-.lx-report-glass .text-bone,
-.lx-report-glass .text-bone-dim,
-.lx-report-glass .text-bone-soft { color: #2E2742; }
-.lx-report-glass .text-bone-mute { color: #6B6285; }
-.lx-report-glass .text-lattice   { color: #1F6F63; }
-.lx-report-glass .text-amber     { color: #6D4A9C; }
-.lx-report-glass .text-rose      { color: #A63D74; }
+.lx-report-glass [class*="text-bone"] { color: #2E2742; }
+.lx-report-glass [class*="text-lattice"]      { color: #1F6F63; }
+.lx-report-glass [class*="text-amber"]        { color: #6D4A9C; }
+.lx-report-glass [class*="text-rose"]         { color: #A63D74; }
+.lx-report-glass [class*="text-emerald-300"]  { color: #1F6F63; }
+.lx-report-glass [class*="text-bone-mute"] { color: #6B6285; }
 .lx-report-glass h1,
 .lx-report-glass h2,
 .lx-report-glass h3 { color: #3A2E52; }

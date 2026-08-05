@@ -225,15 +225,16 @@ export default function QianReport({ id }: { id: string }) {
 
       <div ref={reportRef}>
       <div
-        className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center"
-        style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.72), rgba(42,36,52,0.72)), url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
+        className="relative overflow-hidden rounded-sm"
+        style={{ backgroundImage: "url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
       >
+        <div className="lx-report-glass mx-4 my-8 px-6 py-12 text-center sm:mx-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
         <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice">
           LINGXI LIFE ORACLE
         </p>
-        <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
+        <h1 className="mt-4 font-display text-3xl font-light sm:text-4xl">
           {name || t("你的", "Your")} <Bi zh="生命原型档案" en="Life Archetype Blueprint" />
         </h1>
         <p className="mt-1 font-display text-sm text-lattice">
@@ -268,44 +269,47 @@ export default function QianReport({ id }: { id: string }) {
           {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
         </p>
         <p className="mt-1 text-xs text-bone-soft">lingxifield.com</p>
+        </div>
       </div>
 
       {(lifeStage || abilityMap.length > 0) && (
         <div
-          className="relative mt-6 overflow-hidden rounded-sm border border-amber/20 p-6"
-          style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.8), rgba(42,36,52,0.8)), url(/images/qian-full/page-1.png)", backgroundSize: "cover", backgroundPosition: "top" }}
+          className="relative mt-6 overflow-hidden rounded-sm"
+          style={{ backgroundImage: "url(/images/qian-full/page-1.png)", backgroundSize: "cover", backgroundPosition: "top" }}
         >
-          <p className="text-center text-xs uppercase tracking-widest2 text-amber/90">
-            <Bi zh="灵签生成页面 · Oracle Activation" en="Oracle Activation" />
-          </p>
-          {lifeStage && (
-            <div className="mt-4 text-center">
-              <p className="text-xs uppercase tracking-widest2 text-amber/80">
-                <Bi zh="当前所处阶段" en="Current Life Stage" />
-              </p>
-              <p className="mt-1 font-display text-lg text-bone">
-                <Bi zh={lifeStage.zh} en={lifeStage.en} />
-              </p>
-            </div>
-          )}
-          {abilityMap.length > 0 && (
-            <div className="mt-5 space-y-3 border-t border-white/10 pt-5">
-              <p className="text-xs uppercase tracking-widest2 text-lattice">
-                <Bi zh="天赋能力地图" en="Talent & Ability Map" />
-              </p>
-              {abilityMap.map((a) => (
-                <div key={a.key}>
-                  <div className="flex items-center justify-between text-xs text-bone-dim">
-                    <span><Bi zh={a.zh} en={a.en} /></span>
-                    <span className="text-amber">{a.score}</span>
+          <div className="lx-report-glass mx-4 my-8 p-6 sm:mx-6">
+            <p className="text-center text-xs uppercase tracking-widest2 text-amber/90">
+              <Bi zh="灵签生成页面 · Oracle Activation" en="Oracle Activation" />
+            </p>
+            {lifeStage && (
+              <div className="mt-4 text-center">
+                <p className="text-xs uppercase tracking-widest2 text-amber/80">
+                  <Bi zh="当前所处阶段" en="Current Life Stage" />
+                </p>
+                <p className="mt-1 font-display text-lg">
+                  <Bi zh={lifeStage.zh} en={lifeStage.en} />
+                </p>
+              </div>
+            )}
+            {abilityMap.length > 0 && (
+              <div className="mt-5 space-y-3 border-t border-white/10 pt-5">
+                <p className="text-xs uppercase tracking-widest2 text-lattice">
+                  <Bi zh="天赋能力地图" en="Talent & Ability Map" />
+                </p>
+                {abilityMap.map((a) => (
+                  <div key={a.key}>
+                    <div className="flex items-center justify-between text-xs text-bone-dim">
+                      <span><Bi zh={a.zh} en={a.en} /></span>
+                      <span className="text-amber">{a.score}</span>
+                    </div>
+                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[#3A2E52]/12">
+                      <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${a.score}%` }} />
+                    </div>
                   </div>
-                  <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-                    <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${a.score}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -317,42 +321,46 @@ export default function QianReport({ id }: { id: string }) {
       {QIAN_PAGE_GROUPS.map((group, gi) => (
         <div
           key={gi}
-          className="lx-report-glass relative mt-5 overflow-hidden p-6"
-          style={{ backgroundColor: "#2a2434", backgroundImage: `linear-gradient(rgba(42,36,52,0.82), rgba(42,36,52,0.82)), url(/images/qian-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "top" }}
+          className="relative mt-5 overflow-hidden rounded-sm"
+          style={{ backgroundImage: `url(/images/qian-full/${group.bg}.png)`, backgroundSize: "cover", backgroundPosition: "top" }}
         >
-          <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-amber/90">
-            <Bi zh={group.titleZh} en={group.titleEn} />
-          </p>
-          {group.indices.map((idx) => (
-            sections[idx] ? (
-              <div key={idx} className={idx !== group.indices[0] ? "mt-6 border-t border-white/10 pt-5" : ""}>
-                {LAYER_TITLES[idx] && (
-                  <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">
-                    <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
-                  </p>
-                )}
-                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
-              </div>
-            ) : null
-          ))}
+          <div className="lx-report-glass mx-4 my-8 p-6 sm:mx-6 sm:p-8">
+            <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-amber/90">
+              <Bi zh={group.titleZh} en={group.titleEn} />
+            </p>
+            {group.indices.map((idx) => (
+              sections[idx] ? (
+                <div key={idx} className={idx !== group.indices[0] ? "mt-6 border-t border-white/10 pt-5" : ""}>
+                  {LAYER_TITLES[idx] && (
+                    <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">
+                      <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
+                    </p>
+                  )}
+                  <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
+                </div>
+              ) : null
+            ))}
+          </div>
         </div>
       ))}
 
       {sections[sections.length - 1] && (
         <div
-          className="lx-report-glass relative mt-5 overflow-hidden p-6"
-          style={{ backgroundColor: "#2a2434", backgroundImage: "linear-gradient(rgba(42,36,52,0.82), rgba(42,36,52,0.82)), url(/images/qian-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "top" }}
+          className="relative mt-5 overflow-hidden rounded-sm"
+          style={{ backgroundImage: "url(/images/qian-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "top" }}
         >
-          {LAYER_TITLES[sections.length - 1] && (
-            <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">
-              <Bi zh={LAYER_TITLES[sections.length - 1].zh} en={LAYER_TITLES[sections.length - 1].en} />
-            </p>
-          )}
-          <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[sections.length - 1]}</p>
-          <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
-            <p className="font-display text-sm italic text-lattice/85">
-              <Bi zh="场已回应。" en="The field has spoken." />
-            </p>
+          <div className="lx-report-glass mx-4 my-8 p-6 sm:mx-6 sm:p-8">
+            {LAYER_TITLES[sections.length - 1] && (
+              <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">
+                <Bi zh={LAYER_TITLES[sections.length - 1].zh} en={LAYER_TITLES[sections.length - 1].en} />
+              </p>
+            )}
+            <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[sections.length - 1]}</p>
+            <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
+              <p className="font-display text-sm italic text-lattice/85">
+                <Bi zh="场已回应。" en="The field has spoken." />
+              </p>
+            </div>
           </div>
         </div>
       )}
