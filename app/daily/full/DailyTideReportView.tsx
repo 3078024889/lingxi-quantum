@@ -9,20 +9,22 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 
-// v236：11章节，跟 app/api/daily-tide/generate-full/route.ts 里
-// buildChapters() 的顺序必须完全一致。
+// v297修复：这份数组之前是从 resilience 组件直接复制过来的，跟
+// app/api/daily-tide/generate-full/route.ts 里 buildChapters() 实际
+// 返回的 11 条潮汐主题章节完全对不上——用户看到的每一章标题都是错的。
+// 现在改成跟后端顺序、数量完全一致的 11 条标题。
 const SECTION_TITLES = [
-  { titleZh: "① 生命韧性源点", titleEn: "① Where Your Resilience Begins" },
-  { titleZh: "② 压力恢复能力", titleEn: "② Stress Recovery" },
-  { titleZh: "③ 变化适应能力", titleEn: "③ Adaptability to Change" },
-  { titleZh: "④ 危机反弹能力", titleEn: "④ Crisis Rebound" },
-  { titleZh: "⑤ 长期坚持能力", titleEn: "⑤ Long-Term Persistence" },
-  { titleZh: "⑥ 精神稳定结构", titleEn: "⑥ Emotional Stability Structure" },
-  { titleZh: "⑦ 隐藏恢复模式", titleEn: "⑦ Hidden Recovery Pattern" },
-  { titleZh: "⑧ 能量消耗地图", titleEn: "⑧ Energy Drain Map" },
-  { titleZh: "⑨ 韧性进化路径", titleEn: "⑨ Resilience Growth Path" },
-  { titleZh: "⑩ 灵犀场恢复实践", titleEn: "⑩ A Personal Recovery Practice" },
-  { titleZh: "⑪ 生命韧性总结", titleEn: "⑪ Resilience Summary" },
+  { titleZh: "① 今日潮汐入口", titleEn: "① Today's Tide Gate" },
+  { titleZh: "② 今日行动潮", titleEn: "② Today's Action Tide" },
+  { titleZh: "③ 今日创造潮", titleEn: "③ Today's Creation Tide" },
+  { titleZh: "④ 今日关系潮", titleEn: "④ Today's Connection Tide" },
+  { titleZh: "⑤ 今日价值流动潮", titleEn: "⑤ Today's Value Flow Tide" },
+  { titleZh: "⑥ 今日内在潮汐", titleEn: "⑥ Today's Inner Tide" },
+  { titleZh: "⑦ 未来7日潮汐趋势", titleEn: "⑦ The Next 7 Days" },
+  { titleZh: "⑧ 未来30日潮汐趋势", titleEn: "⑧ The Next 30 Days" },
+  { titleZh: "⑨ 未来90日能量周期", titleEn: "⑨ The Next 90 Days" },
+  { titleZh: "⑩ 灵犀场今日连接", titleEn: "⑩ Today's Practice" },
+  { titleZh: "⑪ 今日运势潮汐总结", titleEn: "⑪ Tide Summary" },
 ];
 
 export default function DailyTideReportView({ id }: { id: string }) {
@@ -91,9 +93,9 @@ export default function DailyTideReportView({ id }: { id: string }) {
       const { exportGlassPdf } = await import("@/lib/pdf-export");
       await exportGlassPdf({
         containerRef: reportRef.current,
-        fileName: `灵犀生命韧性档案-${name || "report"}.pdf`,
-        reportTitleZh: `${name || "你的"}生命韧性档案`,
-        reportTitleEn: `${name || "Your"} Life Resilience Archive`,
+        fileName: `灵犀今日运势潮汐档案-${name || "report"}.pdf`,
+        reportTitleZh: `${name || "你的"}今日运势潮汐档案`,
+        reportTitleEn: `${name || "Your"} Daily Fortune Tide Archive`,
         chapterTitles: SECTION_TITLES,
         bgColorRgb: [246, 244, 240],
         bgColorHex: "#F6F4F0",
@@ -111,7 +113,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命韧性档案，第一次生成需要一点时间……", "The field is unfolding your full Resilience Archive — the first generation takes a little while…")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整今日运势潮汐报告，第一次生成需要一点时间……", "The field is unfolding your full Daily Fortune Tide report — the first generation takes a little while…")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
@@ -125,7 +127,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
   if (status === "locked") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <p className="font-display text-2xl text-bone">🔒 <Bi zh="尚未解锁这份生命韧性档案" en="Not yet unlocked" /></p>
+        <p className="font-display text-2xl text-bone">🔒 <Bi zh="尚未解锁这份今日运势潮汐报告" en="Not yet unlocked" /></p>
         <button
           onClick={unlock}
           className="mt-8 bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
@@ -138,7 +140,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
             productId="daily-tide-report"
             submissionId={id}
             priceRmb={getProduct("daily-tide-report")?.priceRmb ?? 0}
-            productName={{ zh: "生命韧性指数 · 完整档案", en: "Life Resilience Index · Full Archive" }}
+            productName={{ zh: "今日运势潮汐 · 深度报告", en: "Daily Fortune Tide · Deep Report" }}
             onClose={() => setShowWechatPay(false)}
             onSuccess={() => window.location.reload()}
           />
@@ -159,7 +161,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-          <Bi zh="灵犀场 · 生命韧性档案" en="Lingxi Field · Life Resilience Archive" />
+          <Bi zh="灵犀场 · 今日运势潮汐" en="Lingxi Field · Daily Fortune Tide" />
         </p>
         <button
           onClick={downloadPdf}
@@ -176,8 +178,8 @@ export default function DailyTideReportView({ id }: { id: string }) {
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/daily-tide-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
-            <h1 className="font-display text-2xl font-light text-white" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.6)" }}>
-              {name || t("你的", "Your")} <Bi zh="生命韧性档案" en="Resilience Archive" />
+            <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
+              {name || t("你的", "Your")} <Bi zh="今日运势潮汐档案" en="Daily Tide Archive" />
             </h1>
           </div>
         </div>
@@ -205,7 +207,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
           className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/daily-tide-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
-          <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
+          <p className="font-display text-sm italic text-[#2E2742]" style={{ textShadow: "0 2px 16px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
             <Bi zh="潮汐涨落，节奏自有其时，你与它同行。" en="Tides rise and fall in their own time — you move with them." />
           </p>
         </div>

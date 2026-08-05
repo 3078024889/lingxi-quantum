@@ -111,7 +111,7 @@ export default function RomanceReportView({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整桃花磁场档案，第一次生成需要一点时间……", "The field is unfolding your full Resilience Archive — the first generation takes a little while…")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整桃花磁场档案，第一次生成需要一点时间……", "The field is unfolding your full Romance Magnetism Archive — the first generation takes a little while…")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(242,145,176,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
@@ -138,7 +138,7 @@ export default function RomanceReportView({ id }: { id: string }) {
             productId="romance-report"
             submissionId={id}
             priceRmb={getProduct("romance-report")?.priceRmb ?? 0}
-            productName={{ zh: "生命韧性指数 · 完整档案", en: "Life Resilience Index · Full Archive" }}
+            productName={{ zh: "桃花磁场指数 · 完整档案", en: "Romance Magnetism Index · Full Archive" }}
             onClose={() => setShowWechatPay(false)}
             onSuccess={() => window.location.reload()}
           />
@@ -176,8 +176,8 @@ export default function RomanceReportView({ id }: { id: string }) {
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
-            <h1 className="font-display text-2xl font-light text-white" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.6)" }}>
-              {name || t("你的", "Your")} <Bi zh="桃花磁场档案" en="Resilience Archive" />
+            <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
+              {name || t("你的", "Your")} <Bi zh="桃花磁场档案" en="Romance Magnetism Archive" />
             </h1>
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function RomanceReportView({ id }: { id: string }) {
           className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
-          <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
+          <p className="font-display text-sm italic text-[#2E2742]" style={{ textShadow: "0 2px 16px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
             <Bi zh="你的生命场，自然绽放。" en="Your field blooms naturally." />
           </p>
         </div>

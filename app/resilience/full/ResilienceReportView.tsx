@@ -194,7 +194,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/resilience-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
-            <h1 className="font-display text-2xl font-light text-white" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.6)" }}>
+            <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
               {name || t("你的", "Your")} <Bi zh="生命韧性档案" en="Resilience Archive" />
             </h1>
           </div>
@@ -251,7 +251,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
           className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/resilience-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
-          <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
+          <p className="font-display text-sm italic text-[#2E2742]" style={{ textShadow: "0 2px 16px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
             <Bi zh="生命会弯曲，生命会成长，生命会继续展开。" en="Life bends. Life grows. Life continues." />
           </p>
         </div>

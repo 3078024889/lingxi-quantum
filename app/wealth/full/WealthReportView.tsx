@@ -9,20 +9,26 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 
-// v236：11章节，跟 app/api/wealth/generate-full/route.ts 里
-// buildChapters() 的顺序必须完全一致。
+// v297修复：这份数组之前是从 resilience 组件直接复制过来的，
+// 12 条韧性主题标题，跟 app/api/wealth/generate-full/route.ts 里
+// buildChapters() 实际返回的 11 条财富主题章节完全对不上——用户看到
+// 的每一章标题都是错的（比如财富报告第一章内容是"财富创造源点"，
+// 标题却显示"① 生命韧性源点"）。现在改成跟后端 buildChapters()
+// 顺序、数量完全一致的 11 条财富主题标题，且财富后端没有像
+// resilience 那样在最前面插入一个额外的总览段落，所以这里不加
+// 序号前缀的 0 号项。
 const SECTION_TITLES = [
-  { titleZh: "① 生命韧性源点", titleEn: "① Where Your Resilience Begins" },
-  { titleZh: "② 压力恢复能力", titleEn: "② Stress Recovery" },
-  { titleZh: "③ 变化适应能力", titleEn: "③ Adaptability to Change" },
-  { titleZh: "④ 危机反弹能力", titleEn: "④ Crisis Rebound" },
-  { titleZh: "⑤ 长期坚持能力", titleEn: "⑤ Long-Term Persistence" },
-  { titleZh: "⑥ 精神稳定结构", titleEn: "⑥ Emotional Stability Structure" },
-  { titleZh: "⑦ 隐藏恢复模式", titleEn: "⑦ Hidden Recovery Pattern" },
-  { titleZh: "⑧ 能量消耗地图", titleEn: "⑧ Energy Drain Map" },
-  { titleZh: "⑨ 韧性进化路径", titleEn: "⑨ Resilience Growth Path" },
-  { titleZh: "⑩ 灵犀场恢复实践", titleEn: "⑩ A Personal Recovery Practice" },
-  { titleZh: "⑪ 生命韧性总结", titleEn: "⑪ Resilience Summary" },
+  { titleZh: "① 财富创造源点", titleEn: "① Where Your Creation Begins" },
+  { titleZh: "② 天赋结构地图", titleEn: "② Talent Structure Map" },
+  { titleZh: "③ 价值表达方式", titleEn: "③ How Value Gets Expressed" },
+  { titleZh: "④ 财富流动模式", titleEn: "④ Value Flow Pattern" },
+  { titleZh: "⑤ 资源连接方式", titleEn: "⑤ Resource Connection Style" },
+  { titleZh: "⑥ 创造阻碍模式", titleEn: "⑥ Creative Obstacle Pattern" },
+  { titleZh: "⑦ 长期复利结构", titleEn: "⑦ Long-Term Compounding Structure" },
+  { titleZh: "⑧ 合作与共创潜力", titleEn: "⑧ Collaboration Potential" },
+  { titleZh: "⑨ 个人价值品牌", titleEn: "⑨ Personal Value Brand" },
+  { titleZh: "⑩ 财富进化路径", titleEn: "⑩ Wealth Evolution Path" },
+  { titleZh: "⑪ 财富创造总结", titleEn: "⑪ Wealth Creation Summary" },
 ];
 
 export default function WealthReportView({ id }: { id: string }) {
@@ -91,9 +97,9 @@ export default function WealthReportView({ id }: { id: string }) {
       const { exportGlassPdf } = await import("@/lib/pdf-export");
       await exportGlassPdf({
         containerRef: reportRef.current,
-        fileName: `灵犀生命韧性档案-${name || "report"}.pdf`,
-        reportTitleZh: `${name || "你的"}生命韧性档案`,
-        reportTitleEn: `${name || "Your"} Life Resilience Archive`,
+        fileName: `灵犀财富创造档案-${name || "report"}.pdf`,
+        reportTitleZh: `${name || "你的"}财富创造档案`,
+        reportTitleEn: `${name || "Your"} Wealth Creation Archive`,
         chapterTitles: SECTION_TITLES,
         bgColorRgb: [246, 244, 240],
         bgColorHex: "#F6F4F0",
@@ -111,7 +117,7 @@ export default function WealthReportView({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命韧性档案，第一次生成需要一点时间……", "The field is unfolding your full Resilience Archive — the first generation takes a little while…")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整财富创造地图，第一次生成需要一点时间……", "The field is unfolding your full Wealth Creation Archive — the first generation takes a little while…")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(232,183,101,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
@@ -125,7 +131,7 @@ export default function WealthReportView({ id }: { id: string }) {
   if (status === "locked") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <p className="font-display text-2xl text-bone">🔒 <Bi zh="尚未解锁这份生命韧性档案" en="Not yet unlocked" /></p>
+        <p className="font-display text-2xl text-bone">🔒 <Bi zh="尚未解锁这份财富创造地图" en="Not yet unlocked" /></p>
         <button
           onClick={unlock}
           className="mt-8 bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
@@ -138,7 +144,7 @@ export default function WealthReportView({ id }: { id: string }) {
             productId="wealth-report"
             submissionId={id}
             priceRmb={getProduct("wealth-report")?.priceRmb ?? 0}
-            productName={{ zh: "生命韧性指数 · 完整档案", en: "Life Resilience Index · Full Archive" }}
+            productName={{ zh: "财富创造地图 · 完整档案", en: "Wealth Creation Map · Full Archive" }}
             onClose={() => setShowWechatPay(false)}
             onSuccess={() => window.location.reload()}
           />
@@ -159,7 +165,7 @@ export default function WealthReportView({ id }: { id: string }) {
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-amber/80">
-          <Bi zh="灵犀场 · 生命韧性档案" en="Lingxi Field · Life Resilience Archive" />
+          <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
         </p>
         <button
           onClick={downloadPdf}
@@ -176,8 +182,8 @@ export default function WealthReportView({ id }: { id: string }) {
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/wealth-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
-            <h1 className="font-display text-2xl font-light text-white" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.6)" }}>
-              {name || t("你的", "Your")} <Bi zh="生命韧性档案" en="Resilience Archive" />
+            <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
+              {name || t("你的", "Your")} <Bi zh="财富创造地图" en="Wealth Creation Map" />
             </h1>
           </div>
         </div>
@@ -203,9 +209,9 @@ export default function WealthReportView({ id }: { id: string }) {
 
         <div
           className="relative mt-4 flex items-end justify-center overflow-hidden rounded-sm p-8"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/wealth-full/page-11.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
+          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/wealth-full/page-11.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
-          <p className="font-display text-sm italic text-white" style={{ textShadow: "0 2px 14px rgba(0,0,0,0.7)" }}>
+          <p className="font-display text-sm italic text-[#2E2742]" style={{ textShadow: "0 2px 16px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
             <Bi zh="价值不是被找到的，是被创造出来的。" en="Value isn't found. It's created." />
           </p>
         </div>

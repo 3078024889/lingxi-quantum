@@ -195,6 +195,126 @@ drop policy if exists "own tarot reading submissions" on public.tarot_reading_su
 create policy "own tarot reading submissions" on public.tarot_reading_submissions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+-- ========================================
+-- v298：合并整理——以下几张表之前只存在于各自独立的
+-- SQL-v225/v226/v228/v237/v245 文件里，从未被并进这份总表结构。
+-- 结果是本文件的头部注释("若已执行过旧版，本文件可重复执行")其实
+-- 不成立——一个全新环境只跑这份 schema.sql，会缺生命韧性/桃花磁场/
+-- 今日运势潮汐/财富创造地图这四个产品的提交表，以及限流、今日运势
+-- AI正文缓存这两张支撑表。现在把它们全部合并进来，之前独立的
+-- SQL-v225/226/228/237/245/261/262 六个文件内容已完整覆盖，可以
+-- 归档。
+-- ========================================
+
+-- 生命韧性指数 · 完整档案
+create table if not exists public.resilience_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text,
+  birth_input jsonb not null,
+  facts jsonb not null,
+  full_report text,
+  full_report_en text,
+  created_at timestamptz default now()
+);
+alter table public.resilience_submissions enable row level security;
+drop policy if exists "own resilience submissions" on public.resilience_submissions;
+create policy "own resilience submissions" on public.resilience_submissions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- 桃花磁场指数 · 完整档案
+create table if not exists public.romance_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text,
+  birth_input jsonb not null,
+  facts jsonb not null,
+  full_report text,
+  full_report_en text,
+  created_at timestamptz default now()
+);
+alter table public.romance_submissions enable row level security;
+drop policy if exists "own romance submissions" on public.romance_submissions;
+create policy "own romance submissions" on public.romance_submissions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- 今日运势潮汐 · 深度报告
+create table if not exists public.daily_tide_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text,
+  birth_input jsonb not null,
+  facts jsonb not null,
+  generated_date text not null, -- YYYY-MM-DD，报告是"从这一天开始往后看"的快照，不是每天都变
+  full_report text,
+  full_report_en text,
+  created_at timestamptz default now()
+);
+alter table public.daily_tide_submissions enable row level security;
+drop policy if exists "own daily tide submissions" on public.daily_tide_submissions;
+create policy "own daily tide submissions" on public.daily_tide_submissions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- 财富创造地图 · 完整档案
+create table if not exists public.wealth_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text,
+  facts jsonb not null,
+  full_report text,
+  full_report_en text,
+  created_at timestamptz default now()
+);
+-- v261/v262：建表时漏了这一列，保存接口一直在写这个字段，导致
+-- "Could not find the 'birth_input' column" 报错。
+alter table public.wealth_submissions add column if not exists birth_input jsonb;
+alter table public.wealth_submissions enable row level security;
+drop policy if exists "own wealth submissions" on public.wealth_submissions;
+create policy "own wealth submissions" on public.wealth_submissions
+  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- v225：全站接口限流用的计数表 + 校验函数
+create table if not exists public.rate_limits (
+  id text primary key,
+  window_start timestamptz not null default now(),
+  count integer not null default 0
+);
+
+create or replace function public.rate_limit_check(p_key text, p_limit int, p_window_seconds int)
+returns boolean
+language plpgsql
+as $$
+declare
+  v_count int;
+begin
+  insert into public.rate_limits (id, window_start, count)
+  values (p_key, now(), 1)
+  on conflict (id) do update
+    set count = case
+          when rate_limits.window_start < now() - (p_window_seconds || ' seconds')::interval
+            then 1
+          else rate_limits.count + 1
+        end,
+        window_start = case
+          when rate_limits.window_start < now() - (p_window_seconds || ' seconds')::interval
+            then now()
+          else rate_limits.window_start
+        end
+  returning count into v_count;
+
+  return v_count <= p_limit;
+end;
+$$;
+
+-- v226：今日运势 AI 正文缓存——同一天同一星座只生成一次
+create table if not exists public.daily_fortune_cache (
+  id text primary key,       -- 格式：YYYY-MM-DD_星座slug，中文正文额外带 _en 后缀区分英文版
+  content text not null,
+  created_at timestamptz not null default now()
+);
+-- 可选：定期清掉超过30天的旧缓存（不是必须，表本身很小）：
+-- delete from public.daily_fortune_cache where created_at < now() - interval '30 days';
+
 alter table public.life_map_submissions enable row level security;
 alter table public.orders          enable row level security;
 
