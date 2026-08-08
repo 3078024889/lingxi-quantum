@@ -60,6 +60,10 @@ export default function FullReportView({ id }: { id: string }) {
   const [downloading, setDownloading] = useState(false);
   const [printMode, setPrintMode] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
+  // v300：档案式导出要把每章自己的图表单独截图、嵌进该章的玻璃面板。
+  // 生命图谱的图表分散在第2/3/6/7/13章（五行、紫微、大运、频率、数字能量），
+  // 这里按章节序号存一份引用，导出时按 index 取。
+  const figureRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const [sections, setSections] = useState<string[]>([]);
   const [coreTypeName, setCoreTypeName] = useState("");
   const [facts, setFacts] = useState<ChartFacts | null>(null);
@@ -244,27 +248,40 @@ export default function FullReportView({ id }: { id: string }) {
     // 不然html2canvas可能截到样式切换前的旧画面。
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     try {
-      const { exportGlassPdf } = await import("@/lib/pdf-export");
-      const children = Array.from(reportRef.current.children) as HTMLElement[];
-      const [coverEl, ...chapterEls] = children;
-      // 这份报告的分组截图逻辑，之前经过专门调优（标题跟星盘图绑在一起
-      // 截图、每个章节的图表拆成独立节点避免被从中间切断），这次没有
-      // 重新拆分这套结构，只是在外面加了目录页和页码——目录条目数量
-      // 因此对应的是"实际截图时分成了几大块"，不是每一个细分小节都单独
-      // 列一条，这个是如实反映当前技术实现，不是数错了。
-      const chapterTitles = chapterEls.map((_, i) => ({
-        titleZh: i === 0 ? "核心类型与命盘总览" : `深度解析 · 第${i}部分`,
-        titleEn: i === 0 ? "Core Type & Chart Overview" : `Deep Analysis · Part ${i}`,
-      }));
-      await exportGlassPdf({
-        coverEl,
-        chapterEls,
+      // v300：迁到档案式导出，与其余产品统一。
+      // 之前没迁是因为报告里有五张真实图表（五行分布、紫微命盘、
+      // 大运时间线、频率自测、数字能量），而当时的 exportArchivePdf
+      // 只接受纯文本章节，硬迁会把图表全部弄丢。现在导出器支持章节
+      // 挂载 DOM 元素，图表会被单独截图、作为插图嵌进对应那一章。
+      const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
+      const FIGURE_CAPTIONS: Record<number, { zh: string; en: string }> = {
+        1: { zh: "五行分布——看的不是哪一行最多，是五者之间的失衡在哪里。",
+             en: "The distribution of the five elements — what matters is not which is largest, but where the imbalance sits." },
+        2: { zh: "紫微命盘十二宫。", en: "The twelve palaces of your Ziwei chart." },
+        5: { zh: "大运时间线——每一段的起始年龄。",
+             en: "Your major luck cycles — the starting age of each phase." },
+        6: { zh: "频率自测三项：能量 · 清晰 · 对齐。",
+             en: "Three self-assessed frequencies: energy, clarity, alignment." },
+        12: { zh: "数字能量环——手机号与车牌号各自的灵动数。",
+              en: "Number energy rings — the resonance number of your phone and plate." },
+      };
+      await exportArchivePdf({
+        chapters: sections.map((body, i) => ({
+          title: (langEn ? SECTION_TITLES[i]?.en : SECTION_TITLES[i]?.zh) ?? `第 ${i + 1} 章`,
+          body: stripMarkdownArtifacts(body),
+          figure: figureRefs.current[i] && figureRefs.current[i]!.offsetHeight > 8
+            ? figureRefs.current[i]
+            : null,
+          figureCaption: FIGURE_CAPTIONS[i] ? t(FIGURE_CAPTIONS[i].zh, FIGURE_CAPTIONS[i].en) : undefined,
+        })),
         fileName: `灵犀生命图谱-${coreTypeName || "report"}.pdf`,
-        reportTitleZh: `${coreTypeName || "你的"}生命图谱`,
-        reportTitleEn: `${coreTypeName || "Your"} Life Map`,
-        chapterTitles,
-        bgColorRgb: [246, 244, 240],
-        bgColorHex: "#F6F4F0",
+        titleZh: `${coreTypeName || "你的"}生命图谱`,
+        titleEn: `${coreTypeName || "Your"} Life Map`,
+        eyebrow: "LIFE MAP",
+        theme: ARCHIVE_THEMES.lifemap,
+        coverImage: "/images/lifemap/page-0.png",
+        bodyImages: Array.from({ length: 11 }, (_, k) => `/images/lifemap/page-${k + 1}.png`),
+        endImage: "/images/lifemap/page-11.png",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -460,11 +477,16 @@ export default function FullReportView({ id }: { id: string }) {
               </p>
               <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{stripMarkdownArtifacts(content)}</div>
             </div>
-            {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
-            {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
-            {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
-            {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
-            {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
+            {/* v300：每个图表包一层带 ref 的容器，导出时可按章取到它，
+                单独截图后作为插图嵌进该章的玻璃面板——不再是"图表跟正文
+                一起被整块截图再按高度切"，也就不会被从中间切开。 */}
+            <div ref={(el) => { figureRefs.current[i] = el; }}>
+              {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
+              {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
+              {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
+              {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
+              {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
+            </div>
             {i === 13 && (
               <div className="mt-4 flex justify-center">
                 <div className="overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 240 }}>

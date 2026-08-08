@@ -90,7 +90,7 @@ function resolveDestination(order: OrderRow): { href: string; labelZh: string; l
     "life-map-report": "/life-map/full",
     "relationship-resonance": "/relationship/full",
     "qian-reading": "/qian/full",
-    "tarot-reading": "/tarot/reading/full",
+    "tarot-reading": "/mirror/reading/full",
     "resilience-report": "/resilience/full",
     "romance-report": "/romance/full",
     "daily-tide-report": "/daily/full",

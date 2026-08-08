@@ -89,6 +89,11 @@ export default function RelationshipReportView({ id }: { id: string }) {
   const [downloading, setDownloading] = useState(false);
   const [printMode, setPrintMode] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
+  // v300：档案式导出需要把图表单独截图嵌进玻璃面板，所以这两块
+  // 图表要能被单独拿到。radarRef = 双生命雷达图（第1章插图），
+  // resonanceRef = 共鸣/互补/摩擦三组分数条（第2章插图）。
+  const radarRef = useRef<HTMLDivElement>(null);
+  const resonanceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -170,13 +175,15 @@ export default function RelationshipReportView({ id }: { id: string }) {
     setPrintMode(true);
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     try {
-      const { exportGlassPdf } = await import("@/lib/pdf-export");
-      const children = Array.from(reportRef.current.children) as HTMLElement[];
-      const [coverEl, ...chapterEls] = children;
-      const chapterTitles = chapterEls.map((_, i) => ({
-        titleZh: i === 0 ? "关系共振总览" : `深度解析 · 第${i}部分`,
-        titleEn: i === 0 ? "Resonance Overview" : `Deep Analysis · Part ${i}`,
-      }));
+      // v300：迁到档案式导出，与其余产品统一。
+      // 关系共振以前没迁，是因为报告里有真实图表（双生命雷达图、
+      // 共鸣/互补/摩擦分数条），而当时的 exportArchivePdf 只接受纯文本
+      // 章节，硬迁会把图表弄丢。现在导出器支持章节挂载 DOM 元素，
+      // 图表会被单独截图、作为插图嵌进玻璃面板，不再丢失。
+      const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
+      const relKeyForPdf: "romantic" | "business" | "general" =
+        relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
+      const titles = CHAPTER_TITLES[relKeyForPdf];
       const reportTitle = names ? `${names.a} × ${names.b}` : "report";
       // v300：之前不管测的是哪一种关系，导出的文件名一律叫
       // "灵犀关系共振-A × B.pdf"，标题也只写"关系共振图谱"。
@@ -190,18 +197,32 @@ export default function RelationshipReportView({ id }: { id: string }) {
           : relType === "general"
           ? { zh: "其他关系共振", en: "Other Relationship Resonance" }
           : { zh: "亲密关系共振", en: "Romantic Relationship Resonance" };
-      await exportGlassPdf({
-        coverEl,
-        chapterEls,
+      await exportArchivePdf({
+        chapters: sections.map((body, i) => ({
+          title: (langEn ? titles[i]?.en : titles[i]?.zh) ?? `第 ${i + 1} 章`,
+          body,
+          // 第 1 章配双生命雷达图，第 2 章配共振分数条——把图放在
+          // 它真正说明的那一章旁边，而不是全堆在封面后面。
+          figure: i === 0 ? radarRef.current : i === 1 ? resonanceRef.current : null,
+          figureCaption:
+            i === 0
+              ? t("两份生命向量叠放在同一张图上——重合处是共鸣，错开处是互补。",
+                  "Two life vectors laid over one another — where they overlap is resonance; where they diverge is complement.")
+              : i === 1
+              ? t("共鸣点 · 互补点 · 摩擦点，按强度排列。",
+                  "Resonance, complement, and friction — ordered by intensity.")
+              : undefined,
+        })),
         fileName: `灵犀${relLabel.zh}档案-${reportTitle}.pdf`,
-        reportTitleZh: `${reportTitle} · ${relLabel.zh}图谱`,
-        reportTitleEn: `${reportTitle} · ${relLabel.en}`,
-        chapterTitles,
-        // 关系共振主题——之前跟生命图谱用的是完全一样的紫色，两份不同
-        // 产品的PDF长得一样。这次换成偏暖的玫瑰紫，呼应"两个人的连接"
-        // 这个更温暖的调性，跟生命图谱那种偏冷的宇宙深紫区分开。
-        bgColorRgb: [246, 244, 240],
-        bgColorHex: "#F6F4F0",
+        titleZh: `${reportTitle} · ${relLabel.zh}图谱`,
+        titleEn: `${reportTitle} · ${relLabel.en}`,
+        eyebrow: "RELATIONSHIP RESONANCE",
+        theme: ARCHIVE_THEMES.relationship,
+        // 三种关系各有一整套专属素材，不共用——亲密偏暖、商业偏理性、
+        // 其他偏开阔，这是三个产品而不是一个产品的三个选项。
+        coverImage: `/images/relationship-full/${relKeyForPdf}/page-0.png`,
+        bodyImages: Array.from({ length: 11 }, (_, k) => `/images/relationship-full/${relKeyForPdf}/page-${k + 1}.png`),
+        endImage: `/images/relationship-full/${relKeyForPdf}/page-11.png`,
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -312,13 +333,13 @@ export default function RelationshipReportView({ id }: { id: string }) {
         </div>
 
         {vectors && (
-          <div className="mt-6">
+          <div className="mt-6" ref={radarRef}>
             <ResonanceRadar vA={vectors.a} vB={vectors.b} nameA={names?.a || "A"} nameB={names?.b || "B"} langEn={langEn} />
           </div>
         )}
 
         {resonance && (
-          <div className="lx-report-glass mt-6 space-y-6 p-6">
+          <div className="lx-report-glass mt-6 space-y-6 p-6" ref={resonanceRef}>
             {resonance.resonant.length > 0 && (
               <div>
                 <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="共鸣点 · 共享的驱动力" en="Resonance · Shared Drives" /></p>

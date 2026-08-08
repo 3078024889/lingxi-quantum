@@ -13,6 +13,34 @@ export async function middleware(request: NextRequest) {
   // （根路径"/"本身除外），永久重定向（308）到去掉斜杠的版本，保留
   // 查询参数——一次性解决这一类问题，不用每发现一个就手动加一条。
   const { pathname } = request.nextUrl;
+
+  // ────────────────────────────────────────────────────────────
+  // v300：/tarot → /mirror 永久重定向
+  // ────────────────────────────────────────────────────────────
+  // 产品从「灵犀量子塔罗」改名为「灵犀量子生命镜像」，路由随之
+  // 从 /tarot 迁到 /mirror。原因是 PayPal 把 "Psychic or
+  // fortune-teller services" 列为禁止类目，而审核会直接看 URL——
+  // 只改页面文案、URL 里还留着 tarot，等于没改。
+  //
+  // 但 /tarot 这些 URL 已经被搜索引擎收录、也可能被用户收藏和
+  // 分享过。直接删掉会全部变成 404，累积的权重和外链一起丢掉。
+  // 用 308（永久重定向且保留请求方法）把权重传递到新路径，
+  // 同时保留查询参数——报告页是靠 ?id=xxx 定位的，参数丢了
+  // 用户点开旧链接会看到一个空报告。
+  //
+  // 这条规则放在最前面，必须先于下面的去尾斜杠逻辑执行，
+  // 否则 /tarot/ 会先被 308 到 /tarot 再被 308 到 /mirror，
+  // 白白多一跳。
+  if (pathname === "/tarot" || pathname.startsWith("/tarot/")) {
+    const target = request.nextUrl.clone();
+    target.pathname = "/mirror" + pathname.slice("/tarot".length);
+    // 顺手把尾斜杠一起去掉，避免二次跳转
+    if (target.pathname.length > 1 && target.pathname.endsWith("/")) {
+      target.pathname = target.pathname.slice(0, -1);
+    }
+    return NextResponse.redirect(target, 308);
+  }
+
   if (pathname.length > 1 && pathname.endsWith("/")) {
     const cleanUrl = request.nextUrl.clone();
     cleanUrl.pathname = pathname.slice(0, -1);

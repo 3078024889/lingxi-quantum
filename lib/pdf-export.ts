@@ -491,7 +491,20 @@ export const ARCHIVE_THEMES: Record<string, ArchiveGlassTheme> = {
 };
 
 export async function exportArchivePdf(params: {
-  chapters: { title: string; body: string }[];
+  chapters: {
+    title: string;
+    body: string;
+    /**
+     * v300：章节可以挂一个真实 DOM 元素（图表、雷达图、分数条）。
+     * 生命图谱和关系共振的报告里有真实图表，如果只接受纯文本，
+     * 迁到档案式排版就会把图表弄丢——所以这里允许章节带一个元素，
+     * 导出时先把它单独截成图，再作为插图嵌进玻璃面板里。
+     * 截图在正文之前进行，因为面板高度的测量必须把插图算进去。
+     */
+    figure?: HTMLElement | null;
+    /** 插图下方的说明文字 */
+    figureCaption?: string;
+  }[];
   fileName: string;
   titleZh: string;
   titleEn: string;
@@ -595,7 +608,7 @@ export async function exportArchivePdf(params: {
   const PANEL_BOTTOM_SAFE = 56; // 给页脚留的空间
   const MAX_PANEL_H = PX_H - PANEL_TOP - PANEL_BOTTOM_SAFE;
 
-  const panelHtml = (headline: string, title: string, bodyHtml: string) => `
+  const panelHtml = (headline: string, title: string, bodyHtml: string, figureHtml = "") => `
       <div id="lx-panel" style="position:absolute;left:52px;right:52px;top:${PANEL_TOP}px;
                   background:${theme.gradient};border:1px solid ${theme.border};
                   border-radius:6px;padding:38px 40px;
@@ -605,6 +618,7 @@ export async function exportArchivePdf(params: {
           ? `<div style="font-size:23px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${title}</div>
              <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>`
           : `<div style="height:18px;"></div>`}
+        ${figureHtml}
         <div style="font-size:14.5px;line-height:2.05;color:#2E2742;white-space:pre-wrap;">${bodyHtml}</div>
       </div>`;
 
@@ -615,9 +629,29 @@ export async function exportArchivePdf(params: {
     return el ? el.offsetHeight : 0;
   };
 
+  /**
+   * v300：把章节自带的图表元素单独截成一张图，包成可嵌入面板的 HTML。
+   * 图表本身通常是深色主题（雷达图、分数条画在深底上），直接放进浅色
+   * 玻璃面板会很突兀，所以给它加一层浅色底和描边，让它看起来像档案里
+   * 贴上去的一帧插图，而不是从另一个页面抠下来的截图。
+   */
+  const captureFigure = async (el: HTMLElement, caption?: string): Promise<string> => {
+    await waitForImages(el);
+    const canvas = await html2canvas(el, { backgroundColor: null, scale: 2, useCORS: true });
+    const data = canvas.toDataURL("image/png");
+    return `
+      <div style="margin:0 0 26px;padding:14px;border-radius:4px;
+                  background:rgba(255,255,255,.28);border:1px solid rgba(200,235,225,.42);">
+        <img src="${data}" style="display:block;width:100%;height:auto;" />
+        ${caption
+          ? `<div style="margin-top:10px;font-size:11px;line-height:1.7;color:#6B6285;text-align:center;">${caption}</div>`
+          : ""}
+      </div>`;
+  };
+
   /** 把一章拆成若干"页面级"的正文块，保证每块都装得下 */
-  const paginateChapter = (headline: string, title: string, body: string): string[] => {
-    if (measurePanel(panelHtml(headline, title, escapeHtml(body))) <= MAX_PANEL_H) {
+  const paginateChapter = (headline: string, title: string, body: string, figureHtml: string): string[] => {
+    if (measurePanel(panelHtml(headline, title, escapeHtml(body), figureHtml)) <= MAX_PANEL_H) {
       return [body];
     }
     // 以空行分段；单段仍超高时再退一步按句号切
@@ -631,7 +665,8 @@ export async function exportArchivePdf(params: {
       const candidate = [...buf, unit];
       const isFirst = pages.length === 0;
       const h = measurePanel(
-        panelHtml(headline, isFirst ? title : "", escapeHtml(candidate.join("\n\n")))
+        // 插图只出现在该章的第一页，续页不重复贴图
+        panelHtml(headline, isFirst ? title : "", escapeHtml(candidate.join("\n\n")), isFirst ? figureHtml : "")
       );
       if (h > MAX_PANEL_H && buf.length > 0) {
         pages.push(buf.join("\n\n"));
@@ -645,19 +680,24 @@ export async function exportArchivePdf(params: {
   };
 
   // 先把所有章节铺平成"页"，这样才能先知道总页数、再画正确的页码
-  type BodyPage = { chapterIndex: number; title: string; body: string; isContinued: boolean };
+  type BodyPage = { chapterIndex: number; title: string; body: string; isContinued: boolean; figureHtml: string };
   const bodyPages: BodyPage[] = [];
   for (let i = 0; i < chapters.length; i++) {
     const ch = chapters[i];
     const headline = `${eyebrow} · ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
-    const parts = paginateChapter(headline, ch.title, ch.body);
+    const figureHtml = ch.figure ? await captureFigure(ch.figure, ch.figureCaption) : "";
+    const parts = paginateChapter(headline, ch.title, ch.body, figureHtml);
     parts.forEach((body, k) => {
-      bodyPages.push({ chapterIndex: i, title: ch.title, body, isContinued: k > 0 });
+      bodyPages.push({
+        chapterIndex: i, title: ch.title, body,
+        isContinued: k > 0,
+        figureHtml: k === 0 ? figureHtml : "",
+      });
     });
   }
 
   for (let p = 0; p < bodyPages.length; p++) {
-    const { chapterIndex, title, body, isContinued } = bodyPages[p];
+    const { chapterIndex, title, body, isContinued, figureHtml } = bodyPages[p];
     const bg = bodyImages[chapterIndex % bodyImages.length];
     const pos = SHIFTS[Math.floor(chapterIndex / bodyImages.length) % SHIFTS.length];
     const headline =
@@ -665,7 +705,7 @@ export async function exportArchivePdf(params: {
       (isContinued ? " · 续" : "");
     pdf.addPage();
     pdf.addImage(await renderPage(pageShell(bg, pos, `
-      ${panelHtml(headline, isContinued ? "" : title, escapeHtml(body))}
+      ${panelHtml(headline, isContinued ? "" : title, escapeHtml(body), figureHtml)}
       <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
       <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${p + 1} / ${bodyPages.length}</div>`
     )), "JPEG", 0, 0, PW, PH);

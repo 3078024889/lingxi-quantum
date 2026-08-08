@@ -44,26 +44,48 @@ export default function PracticeIndex() {
             <Bi zh="修炼技术" en="Practices" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
-            <Bi zh="心为门户，万法唯心" en="The heart is the gateway; all ways are of the heart" />
+            <Bi zh="心为门户，万法由心而启" en="The heart is the gateway — all ways open from within it" />
           </h1>
           <p className="mx-auto mt-3 max-w-xl font-display text-sm italic text-lattice/85 sm:text-base">
             <Bi
-              zh="源自远古遥远星系的智慧传承，以古老又切合当下的声音呈现。"
-              en="A wisdom lineage from ancient, distant star systems — voiced anew for the present moment."
+              zh="源自遥远星系的智慧传承，以古老文明的觉知语言，结合当下生命体验重新呈现。"
+              en="A wisdom lineage from distant star systems — carried in the language of an ancient civilisation's awareness, and given form again through the life you are living now."
             />
           </p>
-          <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
-            <Bi
-              zh="四道修炼各自成一条完整的路，也可以一起深入，让彼此呼应。「四项合集」收纳了这四条路径，此后新加入的练习，也会自然汇入其中。"
-              en="Each of the four practices is a complete path on its own — or walk them together and let them echo one another. The Four-in-One Set holds all four paths, and any practice added later flows naturally into it."
-            />
-          </p>
-          <p className="mx-auto mt-8 max-w-2xl font-display text-xl leading-9 text-lattice sm:text-2xl">
-            <Bi zh="越呼吸越清明，唯有心通道打开，万法皆成。" en="The more you breathe, the clearer you become; only when the heart's channel opens do all ways complete." />
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-9 text-bone-dim">
-            <Bi zh="解锁的其他早已存在的能力，会随之显现——你只是忆起了自己。" en="Other abilities, already within you, appear in turn — you are only remembering yourself." />
-          </p>
+          <div className="mx-auto mt-8 max-w-2xl space-y-5 text-base leading-9 text-bone-dim">
+            <p>
+              <Bi
+                zh="四道修炼，各自构成一条完整的内在路径。它们可以独立深入，也可以彼此交融，在不同阶段形成相互支持的修炼体系。"
+                en="Each of the four practices forms a complete inner path in its own right. They can be entered alone or allowed to interweave, becoming, at different stages, a system in which each supports the others."
+              />
+            </p>
+            <p>
+              <Bi
+                zh="「四项合集」汇聚这四条路径，并作为灵犀场修炼体系的核心入口。未来新增的修炼方式，也将在这一体系中自然连接、持续展开。"
+                en="The Four-in-One Set gathers these four paths and serves as the central entrance to the Lingxi Field practice system. Practices added in future will connect within this same system and continue to unfold there."
+              />
+            </p>
+          </div>
+          <div className="mx-auto mt-10 max-w-2xl space-y-5">
+            <p className="font-display text-xl leading-9 text-lattice sm:text-2xl">
+              <Bi
+                zh="呼吸，是回归觉知的入口。"
+                en="Breath is the entrance through which awareness returns."
+              />
+            </p>
+            <p className="text-base leading-9 text-bone-dim">
+              <Bi
+                zh="当呼吸逐渐深入，意识开始从外在纷扰中回收，重新触及内在的清明与稳定。当心的门户开启，万千方法皆成为认识自身的路径。"
+                en="As the breath deepens, consciousness withdraws from outer disturbance and touches again the clarity and steadiness within. When the gateway of the heart opens, ten thousand methods all become ways of knowing yourself."
+              />
+            </p>
+            <p className="text-base leading-9 text-bone-dim">
+              <Bi
+                zh="那些原本存在于生命深处的能力，会随着意识的展开逐渐显现。你不是获得了某种新的力量，而是在一次次回归之中，重新忆起自身本有的完整。"
+                en="The capacities that were always present in the depths of your life emerge gradually as consciousness unfolds. You are not acquiring some new power — with each return, you are remembering the wholeness that was yours to begin with."
+              />
+            </p>
+          </div>
           </div>
         </section>
 

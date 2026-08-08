@@ -25,7 +25,7 @@ const CAPS: Cap[] = [
     subs: [
       { zh: "生命图谱", en: "Life Blueprint", descZh: "探索你携带而来的生命结构。", descEn: "Explore the life structure you were born carrying.", href: "/life-map" },
       { zh: "灵犀生命灵签", en: "Lingxi Life Oracle", descZh: "唤醒属于你的生命象征。", descEn: "Awaken the life symbols that belong to you.", href: "/qian" },
-      { zh: "灵犀量子生命镜像", en: "Lingxi Quantum Life Mirror", descZh: "通过象征镜像，探索此刻意识正在呈现的主题。", descEn: "Explore the theme your consciousness is presenting right now, through symbolic mirrors.", href: "/tarot" },
+      { zh: "灵犀量子生命镜像", en: "Lingxi Quantum Life Mirror", descZh: "通过象征镜像，探索此刻意识正在呈现的主题。", descEn: "Explore the theme your consciousness is presenting right now, through symbolic mirrors.", href: "/mirror" },
       { zh: "关系共振", en: "Relationship Resonance", descZh: "探索人与人之间的连接与镜像。", descEn: "Explore the connection and mirroring between two people.", href: "/relationship" },
       { zh: "生命韧性指数", en: "Life Resilience Index", descZh: "探索面对变化时的内在力量。", descEn: "Explore your inner strength in the face of change.", href: "/resilience" },
       { zh: "桃花磁场", en: "Love Resonance", descZh: "探索情感连接中的模式与能量。", descEn: "Explore the patterns and energy within emotional connection.", href: "/romance" },

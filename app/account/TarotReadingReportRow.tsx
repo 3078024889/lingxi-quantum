@@ -37,7 +37,7 @@ export default function TarotReadingReportRow({
 
   return (
     <div className="flex items-center gap-2 rounded-sm border border-white/10 bg-void-deep px-2 py-1">
-      <Link href={`/tarot/reading/full?id=${id}`} className="flex flex-1 items-center justify-between px-3 py-2 transition hover:opacity-80">
+      <Link href={`/mirror/reading/full?id=${id}`} className="flex flex-1 items-center justify-between px-3 py-2 transition hover:opacity-80">
         <span className="font-display text-lattice">{title || <Bi zh="未命名记录" en="Untitled reading" />}</span>
         <span className="text-xs text-bone-dim">{date}</span>
       </Link>

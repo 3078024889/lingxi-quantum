@@ -8,7 +8,7 @@ const ITEMS = [
   { href: "/life-map", zh: "生命图谱", en: "Life Map", getZh: "五套真实系统交叉解读的完整命盘档案", getEn: "A full chart, cross-read across five real systems" },
   { href: "/relationship", zh: "关系共振", en: "Relationship Resonance", getZh: "两份命盘的十项生命向量对照", getEn: "Ten life-vector dimensions compared across two charts" },
   { href: "/qian", zh: "灵犀生命灵签", en: "Lingxi Life Oracle", getZh: "三重生命原型的完整解读档案", getEn: "A full reading across three life archetype layers" },
-  { href: "/tarot", zh: "灵犀量子生命镜像", en: "Lingxi Quantum Life Mirror", getZh: "三张生命镜像牌的完整生命镜像档案", getEn: "A full life-mirror reading from three cards" },
+  { href: "/mirror", zh: "灵犀量子生命镜像", en: "Lingxi Quantum Life Mirror", getZh: "三张生命镜像牌的完整生命镜像档案", getEn: "A full life-mirror reading from three cards" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", getZh: "五项确定性分数，看清你的韧性类型", getEn: "Five deterministic scores, mapping your resilience type" },
   { href: "/romance", zh: "桃花磁场测试", en: "Romance Magnetism", getZh: "你的吸引力风格与磁场分数，即时呈现", getEn: "Your attraction style and magnetism score, shown right away" },
   { href: "/wealth", zh: "财富创造地图", en: "Wealth Creation Map", getZh: "五个创造维度分数与你的创造类型，即时呈现", getEn: "Five creation dimension scores and your creation type, shown right away" },
