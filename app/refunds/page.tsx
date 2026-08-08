@@ -41,8 +41,8 @@ export default function RefundsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="灵犀场提供的部分内容属于即时生成数字体验，例如生命图谱、关系探索、灵犀生命灵签、量子塔罗、个性化探索报告。这些内容会根据用户提交的信息生成，并在完成后立即提供访问权限。"
-                en="Some content on Lingxi Field is an instantly generated digital experience — for example, the Life Map, relationship exploration, the Lingxi Life Oracle, Quantum Tarot, and personalized exploration reports. This content is generated from the information you submit and access is granted immediately once it's complete."
+                zh="灵犀场提供的部分内容属于即时生成数字体验，例如生命图谱、关系探索、灵犀生命灵签、量子生命镜像、个性化探索报告。这些内容会根据用户提交的信息生成，并在完成后立即提供访问权限。"
+                en="Some content on Lingxi Field is an instantly generated digital experience — for example, the Life Map, relationship exploration, the Lingxi Life Oracle, Quantum Life Mirror, and personalized exploration reports. This content is generated from the information you submit and access is granted immediately once it's complete."
               />
             </p>
           </section>

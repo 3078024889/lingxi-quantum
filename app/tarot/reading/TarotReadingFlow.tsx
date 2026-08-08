@@ -12,14 +12,14 @@ import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 
 const TAROT_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀量子塔罗的三张生命镜像牌是随机的吗？", qEn: "Are the three life mirror cards in Lingxi Quantum Tarot random?",
-    aZh: "不是。灵犀量子塔罗不是传统意义上的随机抽牌——当你进入灵犀场，你提供的出生信息会成为一个独特的生命坐标，场域通过这一组坐标，与78张原创生命镜像牌产生对应连接。三张牌分别映照：过去留下的意识痕迹、当前正在发生的生命共振、未来正在形成的可能方向。它不是告诉你命运已经写好，而是像一面镜子，让隐藏在意识深处的信息，有机会被看见。",
-    aEn: "No. Lingxi Quantum Tarot isn't a random draw in the traditional sense. When you enter Lingxi Field, the birth information you provide becomes a unique life coordinate, and the field forms a corresponding connection between that coordinate and a set of 78 original life mirror cards. The three cards mirror: the traces your past has left in consciousness, the resonance happening in your life right now, and the possible directions your future is forming. It doesn't tell you fate is already written — it's a mirror, giving information hidden in consciousness a chance to be seen.",
+    qZh: "灵犀量子生命镜像的三张镜像是随机的吗？", qEn: "Are the three mirrors in Lingxi Quantum Life Mirror random?",
+    aZh: "不是。灵犀量子生命镜像不是传统意义上的随机抽牌——当你进入灵犀场，你提供的出生信息会成为一个独特的生命坐标，场域通过这一组坐标，与78张原创生命镜像牌产生对应连接。三张牌分别映照：过去留下的意识痕迹、当前正在发生的生命共振、未来正在形成的可能方向。它不是告诉你命运已经写好，而是像一面镜子，让隐藏在意识深处的信息，有机会被看见。",
+    aEn: "No. Lingxi Quantum Life Mirror isn't a random draw in the traditional sense. When you enter Lingxi Field, the birth information you provide becomes a unique life coordinate, and the field forms a corresponding connection between that coordinate and a set of 78 original life mirror cards. The three cards mirror: the traces your past has left in consciousness, the resonance happening in your life right now, and the possible directions your future is forming. It doesn't tell you fate is already written — it's a mirror, giving information hidden in consciousness a chance to be seen.",
   },
   {
-    qZh: "灵犀量子塔罗跟传统塔罗牌有什么不同？", qEn: "How is Lingxi Quantum Tarot different from traditional tarot?",
-    aZh: "传统塔罗更多依靠随机抽取、象征牌面、解读者经验。灵犀量子塔罗建立的是另一种路径——不是等待随机答案出现，而是让你的生命信息，与原创象征体系产生对应。78张生命镜像牌，是灵犀场原创的意识象征库，每一张牌都代表一种生命主题：觉醒、选择、连接、创造、转变。三张牌组合起来，不是预测未来，而是一份与你当前生命状态对应的内在观察。",
-    aEn: "Traditional tarot relies more on random drawing, symbolic imagery, and a reader's experience. Lingxi Quantum Tarot builds a different path — instead of waiting for a random answer to appear, it lets your life information correspond with an original symbolic system. The 78 life mirror cards are Lingxi Field's own library of consciousness symbols, each representing a life theme: awakening, choice, connection, creation, transformation. The three cards together don't predict the future — they form an inner observation that corresponds to your current life state.",
+    qZh: "灵犀量子生命镜像跟传统占卜有什么不同？", qEn: "How is Lingxi Quantum Life Mirror different from traditional divination?",
+    aZh: "传统塔罗更多依靠随机抽取、象征牌面、解读者经验。灵犀量子生命镜像建立的是另一种路径——不是等待随机答案出现，而是让你的生命信息，与原创象征体系产生对应。78张生命镜像牌，是灵犀场原创的意识象征库，每一张牌都代表一种生命主题：觉醒、选择、连接、创造、转变。三张牌组合起来，不是预测未来，而是一份与你当前生命状态对应的内在观察。",
+    aEn: "Traditional divination relies more on random drawing, symbolic imagery, and a reader's experience. Lingxi Quantum Life Mirror builds a different path — instead of waiting for a random answer to appear, it lets your life information correspond with an original symbolic system. The 78 life mirror cards are Lingxi Field's own library of consciousness symbols, each representing a life theme: awakening, choice, connection, creation, transformation. The three cards together don't predict the future — they form an inner observation that corresponds to your current life state.",
   },
 ];
 
@@ -132,7 +132,7 @@ export default function TarotReadingFlow() {
       <div className="mx-auto max-w-md px-6 py-16">
         <div className="lx-glass-tarot p-6 sm:p-8">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh="灵犀量子塔罗" en="Lingxi Quantum Tarot" />
+            <Bi zh="灵犀量子生命镜像" en="Lingxi Quantum Life Mirror" />
           </p>
           <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
             <Bi zh="三张生命镜像牌，正在等待与你相遇" en="Three life mirror cards are waiting to meet you" />
@@ -225,7 +225,7 @@ export default function TarotReadingFlow() {
     <div className="mx-auto max-w-xl px-6 py-16">
       <div className="lx-glass-tarot px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-          <Bi zh="灵犀量子塔罗 · 三张牌阵深度解读" en="Lingxi Quantum Tarot · Three-Card Deep Reading" />
+          <Bi zh="灵犀量子生命镜像 · 三重镜像深度解读" en="Lingxi Quantum Life Mirror · Three-Mirror Deep Reading" />
         </p>
       </div>
       <h1 className="mt-6 text-center font-display text-2xl font-light text-bone">

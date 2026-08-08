@@ -5,7 +5,7 @@ import TarotReadingReport from "./TarotReadingReport";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "你的三张牌阵解读 | 灵犀量子塔罗 · Lingxi",
+  title: "你的三重生命镜像解读 | 灵犀量子生命镜像 · Lingxi",
   robots: { index: false, follow: false },
 };
 

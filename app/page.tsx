@@ -44,8 +44,8 @@ const HOME_FAQ: BilingualFaqItem[] = [
   },
   {
     qZh: "灵犀场提供哪些产品？", qEn: "What products does Lingxi Field offer?",
-    aZh: "场域精测（生命图谱、关系共振、生命灵签、量子塔罗、生命韧性指数、桃花磁场指数、今日运势潮汐）、梦境智能、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、潜意识重塑、多维叙事。",
-    aEn: "Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, Life Resilience Index, Romance Magnetism Index, Daily Fortune Tide), Dream Intelligence, the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Subconscious Rewriting, and Dimensional Narrative.",
+    aZh: "场域精测（生命图谱、关系共振、生命灵签、量子生命镜像、生命韧性指数、桃花磁场指数、今日运势潮汐）、梦境智能、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、潜意识重塑、多维叙事。",
+    aEn: "Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Life Mirror, Life Resilience Index, Romance Magnetism Index, Daily Fortune Tide), Dream Intelligence, the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Subconscious Rewriting, and Dimensional Narrative.",
   },
   {
     qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",

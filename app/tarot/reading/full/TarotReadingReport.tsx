@@ -136,23 +136,27 @@ export default function TarotReadingReport({ id }: { id: string }) {
     if (!reportRef.current) return;
     setDownloading(true);
     try {
-      const { exportGlassPdf } = await import("@/lib/pdf-export");
-      const chapterTitles = [
-        ...(frequencyMap.length > 0 ? [{ titleZh: "量子意识矩阵", titleEn: "Quantum Consciousness Matrix" }] : []),
-        ...TAROT_PAGE_GROUPS.map((g) => ({ titleZh: g.titleZh, titleEn: g.titleEn })),
-        ...(sections.length >= 11 ? [{ titleZh: "量子封印页", titleEn: "Quantum Seal" }] : []),
-      ];
-      await exportGlassPdf({
-        containerRef: reportRef.current,
-        fileName: `灵犀量子塔罗-${name || "reading"}.pdf`,
-        reportTitleZh: "你的灵犀量子生命镜像",
-        reportTitleEn: "Your Lingxi Quantum Life Mirror",
-        chapterTitles,
-        // 量子塔罗主题——深靛紫打底，跟生命灵签（默认近黑深蓝）、
-        // 生命图谱/关系共振（深紫）都区分开，呼应"量子镜像"这个
-        // 更神秘、更深邃的产品调性。
-        bgColorRgb: [246, 244, 240],
-        bgColorHex: "#F6F4F0",
+      // v300：改用档案式导出。之前用 exportGlassPdf（把网页整段截图
+      // 再按高度切片），而网页这一版已经改成"整屏原图 + 浅色玻璃面板"，
+      // 两边就对不上了——网页清透、PDF 还是网页截图的观感。
+      // 这里按 11 个层级各自成章（不再按 3 个分组打包），每章一张专属
+      // 素材，跟生命韧性/桃花/财富/潮汐走同一套排版。
+      const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
+      await exportArchivePdf({
+        chapters: sections
+          .map((body, i) => ({
+            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? `第 ${i + 1} 章`,
+            body,
+          }))
+          .filter((c) => c.body && c.body.trim()),
+        fileName: `灵犀量子生命镜像-${name || "reading"}.pdf`,
+        titleZh: `${name || "你的"}量子生命镜像档案`,
+        titleEn: `${name || "Your"} Quantum Life Mirror Archive`,
+        eyebrow: "QUANTUM LIFE MIRROR",
+        theme: ARCHIVE_THEMES.tarot,
+        coverImage: "/images/tarot-full/page-0.png",
+        bodyImages: Array.from({ length: 11 }, (_, k) => `/images/tarot-full/page-${k + 1}.png`),
+        endImage: "/images/tarot-full/page-11.png",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -196,7 +200,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
             productId="tarot-reading"
             submissionId={id}
             priceRmb={getProduct("tarot-reading")?.priceRmb ?? 0}
-            productName={{ zh: "灵犀量子塔罗 · 生命镜像档案", en: "Lingxi Quantum Tarot · Life Mirror" }}
+            productName={{ zh: "灵犀量子生命镜像 · 完整档案", en: "Lingxi Quantum Life Mirror · Full Archive" }}
             onClose={() => setShowWechatPay(false)}
             onSuccess={() => window.location.reload()}
           />
@@ -217,7 +221,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-          <Bi zh="灵犀量子塔罗 · 生命镜像档案" en="Lingxi Quantum Tarot · Personal Consciousness Blueprint" />
+          <Bi zh="灵犀量子生命镜像 · 完整档案" en="Lingxi Quantum Life Mirror · Personal Consciousness Blueprint" />
         </p>
         <button
           onClick={downloadPdf}
@@ -302,9 +306,10 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {TAROT_PAGE_GROUPS.map((group, gi) => (
         <div
           key={gi}
-          className="lx-report-glass relative mt-5 overflow-hidden p-6"
-          style={{ backgroundColor: "#181030", backgroundImage: `linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/${group.bg}.jpg)`, backgroundSize: "cover", backgroundPosition: "center" }}
+          className="relative mt-5 flex min-h-[80vh] items-center justify-center overflow-hidden rounded-sm"
+          style={{ backgroundImage: `url(/images/tarot-full/${group.bg}.png)`, backgroundSize: "cover", backgroundPosition: "center" }}
         >
+          <div className="lx-report-glass mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
           <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-lattice/90">
             <Bi zh={group.titleZh} en={group.titleEn} />
           </p>
@@ -320,14 +325,16 @@ export default function TarotReadingReport({ id }: { id: string }) {
               </div>
             ) : null
           ))}
+          </div>
         </div>
       ))}
 
       {(sections[9] || sections[10]) && (
         <div
-          className="lx-report-glass relative mt-5 overflow-hidden p-6"
-          style={{ backgroundColor: "#181030", backgroundImage: "linear-gradient(rgba(24,16,48,0.82), rgba(24,16,48,0.82)), url(/images/tarot-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "center" }}
+          className="relative mt-5 flex min-h-[80vh] items-center justify-center overflow-hidden rounded-sm"
+          style={{ backgroundImage: "url(/images/tarot-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
+          <div className="lx-report-glass mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
           {[9, 10].map((idx) =>
             sections[idx] ? (
               <div key={idx} className={idx !== 9 ? "mt-6 border-t border-white/10 pt-5" : ""}>
@@ -344,6 +351,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
             <p className="font-display text-sm italic text-lattice/85">
               <Bi zh="每一种可能，都等待意识选择。" en="Every possibility exists until consciousness chooses." />
             </p>
+          </div>
           </div>
         </div>
       )}

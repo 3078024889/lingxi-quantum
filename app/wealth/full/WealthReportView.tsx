@@ -94,15 +94,25 @@ export default function WealthReportView({ id }: { id: string }) {
     if (!reportRef.current) return;
     setDownloading(true);
     try {
-      const { exportGlassPdf } = await import("@/lib/pdf-export");
-      await exportGlassPdf({
-        containerRef: reportRef.current,
-        fileName: `灵犀财富创造档案-${name || "report"}.pdf`,
-        reportTitleZh: `${name || "你的"}财富创造档案`,
-        reportTitleEn: `${name || "Your"} Wealth Creation Archive`,
-        chapterTitles: SECTION_TITLES,
-        bgColorRgb: [246, 244, 240],
-        bgColorHex: "#F6F4F0",
+      // v300：统一改用档案式导出（原本只有生命韧性用了这套）。
+      // 旧的 exportGlassPdf 是"把网页整段截图再按高度切片"，出来像
+      // 网页截图；exportArchivePdf 是每章独立成页、PDF 原图整页铺满、
+      // 文字压在半透明玻璃面板上，跟网页看到的是同一张脸。
+      const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
+      await exportArchivePdf({
+        chapters: sections.map((body, i) => ({
+          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? `第 ${i + 1} 章`,
+          body,
+        })),
+        fileName: `灵犀财富创造地图-${name || "report"}.pdf`,
+        titleZh: `${name || "你的"}财富创造地图`,
+        titleEn: `${name || "Your"} Wealth Creation Map`,
+        eyebrow: "WEALTH CREATION",
+        theme: ARCHIVE_THEMES.wealth,
+        coverImage: "/images/wealth-full/page-0.png",
+        // 12 张素材：page-0 封面 / page-1..11 每章一张 / page-11 兼作尾页
+        bodyImages: Array.from({ length: 11 }, (_, k) => `/images/wealth-full/page-${k + 1}.png`),
+        endImage: "/images/wealth-full/page-11.png",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -164,7 +174,7 @@ export default function WealthReportView({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
-        <p className="font-display text-sm uppercase tracking-widest2 text-amber/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-[#2E2742]">
           <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
         </p>
         <button
@@ -188,22 +198,35 @@ export default function WealthReportView({ id }: { id: string }) {
           </div>
         </div>
 
+        {/* v300：与生命韧性对齐——每章占满一屏、背景是完整的 PDF 原图、
+            文字浮在浅色玻璃面板上。之前这里是深色遮罩小卡片
+            （backgroundColor + rgba 深色渐变 + text-bone-dim 浅字），
+            那是旧深色素材时代的写法；新素材是浅色晨雾水彩，深色遮罩
+            会把画压死，而且跟下载下来的 PDF 完全是两种东西。 */}
         {sections.map((content, i) => {
-          const bg = `/images/wealth-full/page-${(i % 4) + 1}.png`;
+          const bg = `/images/wealth-full/page-${Math.min(i + 1, 11)}.png`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
-            <div
+            <section
               key={i}
-              className="relative mt-4 overflow-hidden rounded-sm"
-              style={{ backgroundColor: "#1a2038", backgroundImage: `linear-gradient(rgba(30,34,64,0.52), rgba(30,34,64,0.52)), url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
+              className="relative mt-6 flex min-h-[92vh] items-center justify-center overflow-hidden rounded-sm"
+              style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
-              <div className="p-8">
-                <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
-                  <Bi zh={title.titleZh} en={title.titleEn} />
+              <div className="lx-report-glass mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
+                <p className="font-display text-[11px] uppercase tracking-[0.34em] text-[#8C7FA8]">
+                  WEALTH CREATION · {String(i + 1).padStart(2, "0")} / {String(sections.length).padStart(2, "0")}
                 </p>
-                <p className="mt-4 whitespace-pre-line text-base leading-9 text-bone-dim">{content}</p>
+                <h3 className="mt-4 font-display text-xl font-light tracking-[0.08em] text-[#3A2E52] sm:text-2xl">
+                  <Bi zh={title.titleZh} en={title.titleEn} />
+                </h3>
+                <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
+                <div className="mt-6 space-y-4 text-[15px] leading-[2] text-[#2E2742]">
+                  {content.split("\n\n").filter(Boolean).map((para, k) => (
+                    <p key={k}>{para}</p>
+                  ))}
+                </div>
               </div>
-            </div>
+            </section>
           );
         })}
 

@@ -228,7 +228,7 @@ export default async function FieldOrdersPage() {
   const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string; hintEn: string; rows: OrderRow[] }[] = [
     {
       key: "field-test", titleZh: "场域精测", titleEn: "Field Insight Tests",
-      hintZh: "生命图谱、关系共振、生命韧性、桃花磁场、财富地图、今日运势、量子塔罗、生命灵签——每项各自一次性解锁，永久保存。",
+      hintZh: "生命图谱、关系共振、生命韧性、桃花磁场、财富地图、今日运势、量子生命镜像、生命灵签——每项各自一次性解锁，永久保存。",
       hintEn: "Life Map, Relationship Resonance, Resilience, Romance, Wealth, Daily Tide, Tarot, Life Oracle — each unlocked once, permanently.",
       rows: fieldTestOrders,
     },

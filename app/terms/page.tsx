@@ -41,8 +41,8 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="Lingxi Field 灵犀场（以下简称「灵犀场」「本平台」或「我们」）是一个提供数字化意识探索与个人成长体验的平台。平台通过生命图谱、关系探索、生命灵签、量子塔罗、梦境记录、显化实践以及相关探索模块，为用户提供个性化数字体验内容。部分体验内容会根据用户提供的信息，结合数据计算、象征体系与智能生成技术形成个人化内容。"
-                en="Lingxi Field ('Lingxi Field,' 'the platform,' or 'we') is a platform offering digital consciousness exploration and personal-growth experiences. Through the Life Map, relationship exploration, the Life Oracle, Quantum Tarot, dream journaling, manifestation practice, and related exploration modules, the platform provides personalized digital experience content. Some content is generated based on the information you provide, combined with data computation, symbolic systems, and intelligent generation technology."
+                zh="Lingxi Field 灵犀场（以下简称「灵犀场」「本平台」或「我们」）是一个提供数字化意识探索与个人成长体验的平台。平台通过生命图谱、关系探索、生命灵签、量子生命镜像、梦境记录、显化实践以及相关探索模块，为用户提供个性化数字体验内容。部分体验内容会根据用户提供的信息，结合数据计算、象征体系与智能生成技术形成个人化内容。"
+                en="Lingxi Field ('Lingxi Field,' 'the platform,' or 'we') is a platform offering digital consciousness exploration and personal-growth experiences. Through the Life Map, relationship exploration, the Life Oracle, Quantum Life Mirror, dream journaling, manifestation practice, and related exploration modules, the platform provides personalized digital experience content. Some content is generated based on the information you provide, combined with data computation, symbolic systems, and intelligent generation technology."
               />
             </p>
           </section>
@@ -77,8 +77,8 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="灵犀场部分功能属于数字内容体验，包括生命图谱、灵犀生命灵签、量子塔罗、关系探索、梦境探索。内容生成后会绑定至用户账户，用户可以查看个人生成内容。"
-                en="Some features on Lingxi Field are digital content experiences, including the Life Map, Lingxi Life Oracle, Quantum Tarot, relationship exploration, and dream exploration. Once generated, content is bound to your account, and you can view content you've generated."
+                zh="灵犀场部分功能属于数字内容体验，包括生命图谱、灵犀生命灵签、量子生命镜像、关系探索、梦境探索。内容生成后会绑定至用户账户，用户可以查看个人生成内容。"
+                en="Some features on Lingxi Field are digital content experiences, including the Life Map, Lingxi Life Oracle, Quantum Life Mirror, relationship exploration, and dream exploration. Once generated, content is bound to your account, and you can view content you've generated."
               />
             </p>
           </section>

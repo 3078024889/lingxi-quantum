@@ -270,7 +270,7 @@ export default async function AccountPage() {
               )}
 
               {tarotReadingReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 量子塔罗" titleEn="Unlocked · Quantum Tarot" count={tarotReadingReports.length}>
+                <CollapsibleSection titleZh="已解锁订单 · 量子生命镜像" titleEn="Unlocked · Quantum Life Mirror" count={tarotReadingReports.length}>
                   {tarotReadingReports.map((r) => (
                     <TarotReadingReportRow
                       key={r.id}

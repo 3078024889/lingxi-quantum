@@ -614,11 +614,40 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
     rgba(100, 220, 200, 0.08),
     rgba(150, 120, 255, 0.10));
   border: 1px solid rgba(200, 235, 225, 0.30);
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  /* ─────────────────────────────────────────────────────────────
+     v300：这里是"网页面板发白发厚、下载的 PDF 却清透漂亮"这个
+     长期问题的真正根因，不在颜色、不在透明度，在 backdrop-filter。
+
+     两边用的是同一份 CSS，但渲染路径完全不同：
+       · 浏览器：真的执行 backdrop-filter，把面板背后 22px 范围内的
+         画面糊成一团，再叠 150% 饱和。底图的极光、云、水面全被抹成
+         一片均匀的浅色，视觉上就是"一块厚白板"——不是白得过头，是
+         底下的画被模糊掉了，没东西可透。
+       · html2canvas（生成 PDF 用的）：根本不支持 backdrop-filter，
+         直接忽略。所以 PDF 里的面板是低透明度彩色玻璃直接压在
+         清晰的原图上——这才是你截图三里那种清透质感。
+
+     也就是说：PDF 好看不是因为 PDF 做了什么，是因为它跳过了这行。
+     修法不是去调 alpha（越调越浑），是把模糊降到"只留一点点玻璃
+     折射感"的程度。6px 足以让面板看起来是块玻璃，又不会把底下的
+     画糊掉；饱和度保持 1，不再人为提色，网页和 PDF 才是同一张脸。
+     ───────────────────────────────────────────────────────────── */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   box-shadow: 0 20px 60px rgba(30, 40, 70, 0.20),
               inset 0 1px 0 rgba(255, 255, 255, 0.35);
   border-radius: 6px;
+}
+
+/* v300：极低端设备 / 不支持 backdrop-filter 的浏览器兜底——
+   没有玻璃折射时，纯低 alpha 渐变压在照片上文字会不好读，
+   这时候（也只有这时候）补一点底色保证对比度。 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lx-report-glass {
+    background: linear-gradient(135deg,
+      rgba(246, 244, 240, 0.72),
+      rgba(240, 244, 248, 0.68));
+  }
 }
 
 /* v296：报告页浅色玻璃内的文字色。

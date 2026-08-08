@@ -20,8 +20,8 @@ const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
   },
   {
     qZh: "灵犀场·全构造解锁包含什么？", qEn: "What does Lingxi Field's Everything Unlocked include?",
-    aZh: "灵犀场全构造解锁，是进入完整灵犀场体验的一种方式，连接灵犀场目前开放的多个探索维度：场域精测（生命图谱、关系共振、生命灵签、量子塔罗等生命结构探索）、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、显化与梦境探索（记录梦境、理解象征、探索意识与现实创造之间的连接）、多维叙事系统（持续展开的意识文学与未来探索内容），以及未来灵犀场持续生长的新模块。它不是开通更多功能，而是进入一个完整的生命探索空间。",
-    aEn: "Everything Unlocked is a way into the complete Lingxi Field experience, connecting the exploration dimensions currently open on the site: Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Tarot, and other life-structure exploration), the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Manifestation & Dream Exploration (recording dreams, understanding symbols, exploring the connection between consciousness and reality-creation), the Dimensional Narrative system (continuously unfolding consciousness literature and future exploration), and new modules as Lingxi Field keeps growing. It isn't unlocking more features — it's entering a complete space for self-exploration.",
+    aZh: "灵犀场全构造解锁，是进入完整灵犀场体验的一种方式，连接灵犀场目前开放的多个探索维度：场域精测（生命图谱、关系共振、生命灵签、量子生命镜像等生命结构探索）、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、显化与梦境探索（记录梦境、理解象征、探索意识与现实创造之间的连接）、多维叙事系统（持续展开的意识文学与未来探索内容），以及未来灵犀场持续生长的新模块。它不是开通更多功能，而是进入一个完整的生命探索空间。",
+    aEn: "Everything Unlocked is a way into the complete Lingxi Field experience, connecting the exploration dimensions currently open on the site: Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Life Mirror, and other life-structure exploration), the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Manifestation & Dream Exploration (recording dreams, understanding symbols, exploring the connection between consciousness and reality-creation), the Dimensional Narrative system (continuously unfolding consciousness literature and future exploration), and new modules as Lingxi Field keeps growing. It isn't unlocking more features — it's entering a complete space for self-exploration.",
   },
   {
     qZh: "为什么会设计「全构造解锁」这一层？", qEn: "Why does Everything Unlocked exist as its own tier?",
@@ -349,7 +349,7 @@ export default async function MembershipPage({
                 </div>
                 <div className="rounded-sm border border-white/10 bg-void-deep p-4">
                   <p className="text-sm text-bone">🔮 <Bi zh="场域精测·不限次数" en="Field Insights · Unlimited" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="生命图谱、关系共振、生命灵签、量子塔罗，不限次数深度解析。" en="Life Map, Relationship Resonance, Life Oracle, Quantum Tarot — unlimited deep readings." /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="生命图谱、关系共振、生命灵签、量子生命镜像，不限次数深度解析。" en="Life Map, Relationship Resonance, Life Oracle, Quantum Life Mirror — unlimited deep readings." /></p>
                 </div>
                 <div className="rounded-sm border border-white/10 bg-void-deep p-4">
                   <p className="text-sm text-bone">✨ <Bi zh="后续新增内容" en="Everything added later" /></p>

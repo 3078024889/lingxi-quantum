@@ -178,12 +178,24 @@ export default function RelationshipReportView({ id }: { id: string }) {
         titleEn: i === 0 ? "Resonance Overview" : `Deep Analysis · Part ${i}`,
       }));
       const reportTitle = names ? `${names.a} × ${names.b}` : "report";
+      // v300：之前不管测的是哪一种关系，导出的文件名一律叫
+      // "灵犀关系共振-A × B.pdf"，标题也只写"关系共振图谱"。
+      // 关系共振底下其实是三个独立产品（亲密 / 合伙商业 / 其他），
+      // 三份档案的章节结构、素材、解读角度都不一样，文件名却看不出
+      // 区别——用户测了两种关系，下载下来两个文件长得一模一样，
+      // 存到微信里根本分不清哪份是哪份。这里让关系类型进文件名和标题。
+      const relLabel =
+        relType === "business"
+          ? { zh: "合伙商业关系共振", en: "Business Partnership Resonance" }
+          : relType === "general"
+          ? { zh: "其他关系共振", en: "Other Relationship Resonance" }
+          : { zh: "亲密关系共振", en: "Romantic Relationship Resonance" };
       await exportGlassPdf({
         coverEl,
         chapterEls,
-        fileName: `灵犀关系共振-${reportTitle}.pdf`,
-        reportTitleZh: `${reportTitle} 关系共振图谱`,
-        reportTitleEn: `${reportTitle} · Relationship Resonance`,
+        fileName: `灵犀${relLabel.zh}档案-${reportTitle}.pdf`,
+        reportTitleZh: `${reportTitle} · ${relLabel.zh}图谱`,
+        reportTitleEn: `${reportTitle} · ${relLabel.en}`,
         chapterTitles,
         // 关系共振主题——之前跟生命图谱用的是完全一样的紫色，两份不同
         // 产品的PDF长得一样。这次换成偏暖的玫瑰紫，呼应"两个人的连接"

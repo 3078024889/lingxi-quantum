@@ -44,8 +44,8 @@ export default function DeclarationPage() {
                   en="Lingxi Field is a digital space for exploration, built around the exploration of consciousness, life experience, and personal growth."
                 /></p>
                 <p><Bi
-                  zh="灵犀场通过生命图谱、关系探索、生命灵签、量子塔罗、梦境记录、显化实践、意识练习等体验模块，引导个体观察自身状态、探索内在模式，并建立与自我更深层的连接。"
-                  en="Through modules like the Life Map, relationship exploration, Life Oracle, Quantum Tarot, dream journaling, manifestation practice, and consciousness exercises, Lingxi Field guides individuals to observe their own state, explore inner patterns, and build a deeper connection with themselves."
+                  zh="灵犀场通过生命图谱、关系探索、生命灵签、量子生命镜像、梦境记录、显化实践、意识练习等体验模块，引导个体观察自身状态、探索内在模式，并建立与自我更深层的连接。"
+                  en="Through modules like the Life Map, relationship exploration, Life Oracle, Quantum Life Mirror, dream journaling, manifestation practice, and consciousness exercises, Lingxi Field guides individuals to observe their own state, explore inner patterns, and build a deeper connection with themselves."
                 /></p>
                 <p><Bi
                   zh="灵犀场所呈现的内容，是关于生命体验、象征探索与个人觉察方向的数字化体验。"
@@ -66,7 +66,7 @@ export default function DeclarationPage() {
                   <li><Bi zh="生命图谱探索" en="Life Map exploration" /></li>
                   <li><Bi zh="关系共振分析" en="Relationship Resonance analysis" /></li>
                   <li><Bi zh="生命灵签" en="the Life Oracle" /></li>
-                  <li><Bi zh="量子塔罗体验" en="the Quantum Tarot experience" /></li>
+                  <li><Bi zh="量子生命镜像体验" en="the Quantum Life Mirror experience" /></li>
                   <li><Bi zh="梦境记录与解析" en="dream recording and interpretation" /></li>
                   <li><Bi zh="显化练习" en="manifestation practice" /></li>
                   <li><Bi zh="意识探索技术" en="consciousness exploration techniques" /></li>

@@ -166,7 +166,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <div className="lx-report-glass flex items-center justify-between px-6 py-4">
-        <p className="font-display text-sm uppercase tracking-widest2 text-emerald-300/80">
+        <p className="font-display text-sm uppercase tracking-widest2 text-[#2E2742]">
           <Bi zh="灵犀场 · 生命韧性档案" en="Lingxi Field · Life Resilience Archive" />
         </p>
         <button

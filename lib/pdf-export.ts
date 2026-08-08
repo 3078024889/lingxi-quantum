@@ -143,7 +143,7 @@ export async function exportSimplePdf(params: {
 
   // v227：之前这个导出函数（今日运势/生命韧性指数/桃花磁场指数用的
   // 这一份）完全没有盖网址，跟另一个导出函数（生命图谱/生命灵签/
-  // 关系共振/量子塔罗用的那一份）不一致。统一在保存前，给这份PDF
+  // 关系共振/量子生命镜像用的那一份）不一致。统一在保存前，给这份PDF
   // 产生的每一页都盖上网址。
   const totalPages = pdf.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
@@ -431,6 +431,65 @@ export async function exportGlassPdf(params: {
 // 中文断行——jsPDF 的 splitTextToSize 对中文支持不好，所以下面
 // 用按字符宽度估算的方式手动折行。
 
+// v300：这个函数原本是生命韧性一个产品专用的（眉标 "LIFE RESILIENCE"
+// 直接写死在模板里）。现在桃花磁场、财富创造、今日潮汐、灵签、塔罗
+// 都要用同一套档案式排版，所以把三个原本写死的东西提出来做参数：
+//   · eyebrow —— 每页顶部那行英文眉标
+//   · glass   —— 玻璃面板的渐变，允许每个产品有自己的色温
+//                （桃花偏玫瑰、财富偏金、潮汐偏青），但透明度区间
+//                统一，保证"是同一个场域的不同房间"，不是六种风格
+//   · shifts  —— 素材不足 11 张时的取景位循环
+// 没传的一律回落到生命韧性那套已经验证过的数值，老调用不受影响。
+export type ArchiveGlassTheme = {
+  /** 面板渐变的三个色标，alpha 建议维持在 0.08–0.18，超过就会盖住底图 */
+  gradient: string;
+  /** 面板描边 */
+  border: string;
+};
+
+export const ARCHIVE_THEMES: Record<string, ArchiveGlassTheme> = {
+  // 生命韧性：青绿 + 紫，v290–v299 已上线验证过的基准
+  resilience: {
+    gradient: "linear-gradient(135deg,rgba(80,150,180,.17),rgba(100,220,200,.09),rgba(150,120,255,.11))",
+    border: "rgba(200,235,225,.34)",
+  },
+  // 桃花磁场：玫瑰 + 蜜金，暖一档，但不加深
+  romance: {
+    gradient: "linear-gradient(135deg,rgba(210,140,170,.16),rgba(240,190,170,.09),rgba(170,130,220,.10))",
+    border: "rgba(240,225,230,.34)",
+  },
+  // 财富创造：琥珀 + 翡翠，金而不俗
+  wealth: {
+    gradient: "linear-gradient(135deg,rgba(200,165,105,.16),rgba(120,200,175,.09),rgba(150,130,215,.10))",
+    border: "rgba(238,230,215,.34)",
+  },
+  // 今日潮汐：水青 + 晨蓝，最冷的一档，呼应"潮汐"
+  daily: {
+    gradient: "linear-gradient(135deg,rgba(90,165,190,.17),rgba(120,215,215,.09),rgba(140,150,230,.10))",
+    border: "rgba(205,235,238,.34)",
+  },
+  // 生命灵签：檀色 + 紫，偏东方
+  qian: {
+    gradient: "linear-gradient(135deg,rgba(180,145,120,.16),rgba(200,180,150,.09),rgba(155,125,205,.11))",
+    border: "rgba(238,228,218,.34)",
+  },
+  // 量子共振（原塔罗）：靛紫 + 星蓝
+  tarot: {
+    gradient: "linear-gradient(135deg,rgba(130,120,205,.17),rgba(110,180,220,.09),rgba(180,130,205,.10))",
+    border: "rgba(225,225,242,.34)",
+  },
+  // 关系共振：双色交织，比单产品多一层
+  relationship: {
+    gradient: "linear-gradient(135deg,rgba(190,140,175,.16),rgba(110,190,195,.09),rgba(150,125,220,.11))",
+    border: "rgba(235,228,235,.34)",
+  },
+  // 生命图谱：宇宙紫
+  lifemap: {
+    gradient: "linear-gradient(135deg,rgba(120,130,200,.17),rgba(150,190,220,.09),rgba(170,130,215,.11))",
+    border: "rgba(226,230,242,.34)",
+  },
+};
+
 export async function exportArchivePdf(params: {
   chapters: { title: string; body: string }[];
   fileName: string;
@@ -439,11 +498,17 @@ export async function exportArchivePdf(params: {
   coverImage: string;
   bodyImages: string[];
   endImage: string;
+  /** 每页顶部的英文眉标，如 "LIFE RESILIENCE"。不传则用 "LINGXI FIELD" */
+  eyebrow?: string;
+  /** 玻璃面板色调，取 ARCHIVE_THEMES 里的一项；不传用 resilience 基准 */
+  theme?: ArchiveGlassTheme;
   panelRgba?: [number, number, number, number];
   textRgb?: [number, number, number];
   titleRgb?: [number, number, number];
 }): Promise<void> {
   const { chapters, fileName, titleZh, titleEn, coverImage, bodyImages, endImage } = params;
+  const eyebrow = params.eyebrow ?? "LINGXI FIELD";
+  const theme = params.theme ?? ARCHIVE_THEMES.resilience;
 
   // ⚠️ 为什么不用 jsPDF 原生文本：
   // jsPDF 内置字体只有 Helvetica/Times/Courier 这几种西文字体，
@@ -502,7 +567,7 @@ export async function exportArchivePdf(params: {
   // ── 封面 ──
   pdf.addImage(await renderPage(pageShell(coverImage, "center 40%", `
     <div style="position:absolute;left:56px;right:56px;top:34%;
-                background:linear-gradient(135deg,rgba(80,150,180,.16),rgba(150,120,255,.10));border:1px solid rgba(200,235,225,.34);
+                background:${theme.gradient};border:1px solid ${theme.border};
                 border-radius:6px;padding:46px 40px;text-align:center;
                 box-shadow:0 18px 60px rgba(40,36,70,.18);">
       <div style="font-size:12px;letter-spacing:.4em;color:#7A6E94;">LINGXI FIELD</div>
@@ -511,27 +576,98 @@ export async function exportArchivePdf(params: {
     </div>`)), "JPEG", 0, 0, PW, PH);
 
   // ── 正文：每章一页 ──
-  for (let i = 0; i < chapters.length; i++) {
-    const ch = chapters[i];
-    const bg = bodyImages[i % bodyImages.length];
-    const pos = SHIFTS[Math.floor(i / bodyImages.length) % SHIFTS.length];
-    pdf.addPage();
-    pdf.addImage(await renderPage(pageShell(bg, pos, `
-      <div style="position:absolute;left:52px;right:52px;top:60px;
-                  background:linear-gradient(135deg,rgba(80,150,180,.17),rgba(100,220,200,.09),rgba(150,120,255,.11));border:1px solid rgba(200,235,225,.34);
+  //
+  // v300 修复一个会静默吞内容的 BUG：
+  // 玻璃面板是 position:absolute + top:60px，外层 pageShell 又是
+  // 固定高度 1123px 且 overflow:hidden。也就是说——章节文字只要比
+  // 一页装得下的量多，多出来的部分不会报错、不会换页，会被 overflow
+  // 直接切掉，PDF 里那一章就少了一截，而且看不出少了。生命韧性因为
+  // 每章正文都控制在 400 字上下，一直没撞上；桃花/财富/潮汐这些章节
+  // 更长的产品一旦切过来，必然踩中。
+  //
+  // 修法：截图之前先真量一次高度。面板放不下就按"空行分段"把正文
+  // 拆成若干页，只在段落边界断开（不在句子中间断），后续页标"（续）"
+  // 并且不重复画标题。页脚页码因此改成按"实际生成的页数"编号，不是
+  // 按章节序号——否则拆过页之后页码会对不上。
+  const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+  const PANEL_TOP = 60;
+  const PANEL_BOTTOM_SAFE = 56; // 给页脚留的空间
+  const MAX_PANEL_H = PX_H - PANEL_TOP - PANEL_BOTTOM_SAFE;
+
+  const panelHtml = (headline: string, title: string, bodyHtml: string) => `
+      <div id="lx-panel" style="position:absolute;left:52px;right:52px;top:${PANEL_TOP}px;
+                  background:${theme.gradient};border:1px solid ${theme.border};
                   border-radius:6px;padding:38px 40px;
                   box-shadow:0 18px 56px rgba(40,36,70,.16);">
-        <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">
-          LIFE RESILIENCE · ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}
-        </div>
-        <div style="font-size:23px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${ch.title}</div>
-        <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>
-        <div style="font-size:14.5px;line-height:2.05;color:#2E2742;white-space:pre-wrap;">${
-          ch.body.replace(/&/g, "&amp;").replace(/</g, "&lt;")
-        }</div>
-      </div>
+        <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">${headline}</div>
+        ${title
+          ? `<div style="font-size:23px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${title}</div>
+             <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>`
+          : `<div style="height:18px;"></div>`}
+        <div style="font-size:14.5px;line-height:2.05;color:#2E2742;white-space:pre-wrap;">${bodyHtml}</div>
+      </div>`;
+
+  /** 把面板放进舞台量一次真实高度（不截图，只测量，很快） */
+  const measurePanel = (html: string): number => {
+    stage.innerHTML = html;
+    const el = stage.querySelector<HTMLElement>("#lx-panel");
+    return el ? el.offsetHeight : 0;
+  };
+
+  /** 把一章拆成若干"页面级"的正文块，保证每块都装得下 */
+  const paginateChapter = (headline: string, title: string, body: string): string[] => {
+    if (measurePanel(panelHtml(headline, title, escapeHtml(body))) <= MAX_PANEL_H) {
+      return [body];
+    }
+    // 以空行分段；单段仍超高时再退一步按句号切
+    let units = body.split(/\n\s*\n/).filter((s) => s.trim());
+    if (units.length <= 1) {
+      units = body.match(/[^。！？.!?\n]+[。！？.!?]?/g)?.filter((s) => s.trim()) ?? [body];
+    }
+    const pages: string[] = [];
+    let buf: string[] = [];
+    for (const unit of units) {
+      const candidate = [...buf, unit];
+      const isFirst = pages.length === 0;
+      const h = measurePanel(
+        panelHtml(headline, isFirst ? title : "", escapeHtml(candidate.join("\n\n")))
+      );
+      if (h > MAX_PANEL_H && buf.length > 0) {
+        pages.push(buf.join("\n\n"));
+        buf = [unit];
+      } else {
+        buf = candidate;
+      }
+    }
+    if (buf.length > 0) pages.push(buf.join("\n\n"));
+    return pages;
+  };
+
+  // 先把所有章节铺平成"页"，这样才能先知道总页数、再画正确的页码
+  type BodyPage = { chapterIndex: number; title: string; body: string; isContinued: boolean };
+  const bodyPages: BodyPage[] = [];
+  for (let i = 0; i < chapters.length; i++) {
+    const ch = chapters[i];
+    const headline = `${eyebrow} · ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
+    const parts = paginateChapter(headline, ch.title, ch.body);
+    parts.forEach((body, k) => {
+      bodyPages.push({ chapterIndex: i, title: ch.title, body, isContinued: k > 0 });
+    });
+  }
+
+  for (let p = 0; p < bodyPages.length; p++) {
+    const { chapterIndex, title, body, isContinued } = bodyPages[p];
+    const bg = bodyImages[chapterIndex % bodyImages.length];
+    const pos = SHIFTS[Math.floor(chapterIndex / bodyImages.length) % SHIFTS.length];
+    const headline =
+      `${eyebrow} · ${String(chapterIndex + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}` +
+      (isContinued ? " · 续" : "");
+    pdf.addPage();
+    pdf.addImage(await renderPage(pageShell(bg, pos, `
+      ${panelHtml(headline, isContinued ? "" : title, escapeHtml(body))}
       <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
-      <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${i + 1} / ${chapters.length}</div>`
+      <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${p + 1} / ${bodyPages.length}</div>`
     )), "JPEG", 0, 0, PW, PH);
   }
 

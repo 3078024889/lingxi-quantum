@@ -136,18 +136,26 @@ export default function QianReport({ id }: { id: string }) {
     if (!reportRef.current) return;
     setDownloading(true);
     try {
-      const { exportGlassPdf } = await import("@/lib/pdf-export");
-      const chapterTitles = [
-        ...((lifeStage || abilityMap.length > 0) ? [{ titleZh: "灵签生成页面", titleEn: "Oracle Activation" }] : []),
-        ...QIAN_PAGE_GROUPS.map((g) => ({ titleZh: g.titleZh, titleEn: g.titleEn })),
-        ...(sections[sections.length - 1] ? [{ titleZh: "灵犀封印页", titleEn: "Oracle Seal" }] : []),
-      ];
-      await exportGlassPdf({
-        containerRef: reportRef.current,
+      // v300：改用档案式导出，与生命韧性/桃花/财富/潮汐/量子生命镜像
+      // 统一。之前是 exportGlassPdf（网页整段截图再切片），出来的观感
+      // 是"网页截图集"；现在每章独立成页、素材整页铺满、文字压在浅色
+      // 玻璃面板上，跟网页看到的是同一张脸。
+      const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
+      await exportArchivePdf({
+        chapters: sections
+          .map((body, i) => ({
+            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? `第 ${i + 1} 章`,
+            body,
+          }))
+          .filter((c) => c.body && c.body.trim()),
         fileName: `灵犀生命灵签-${name || "report"}.pdf`,
-        reportTitleZh: `${name || "你的"}生命原型档案`,
-        reportTitleEn: `${name || "Your"} Life Archetype Blueprint`,
-        chapterTitles,
+        titleZh: `${name || "你的"}生命原型档案`,
+        titleEn: `${name || "Your"} Life Archetype Blueprint`,
+        eyebrow: "LIFE ORACLE",
+        theme: ARCHIVE_THEMES.qian,
+        coverImage: "/images/qian-full/page-0.png",
+        bodyImages: Array.from({ length: 11 }, (_, k) => `/images/qian-full/page-${k + 1}.png`),
+        endImage: "/images/qian-full/page-11.png",
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
