@@ -31,11 +31,24 @@ export type StructureNode = {
   fieldText: { zh: string; en: string };
 };
 
+// ── 联锁槽位（Slot） ──
+// v301：contrast/bothLow/bothHigh 只能表达两维之间的粗糙关系，
+// 写到第三个产品就会发现不够用——真正值钱的交叉洞察往往是
+// "A维很高 × B维偏低 × C维中等"这种三维以上的具体形状。
+// Slot 把条件拆成槽位：每个槽位钉住一个维度允许落在哪些分数带。
+// 全部槽位同时被填满，联锁才咬合（interlock）。
+// 槽位允许的带越少、槽位数越多，条件越具体，说中时越像"只属于我"。
+export type Slot = {
+  dim: string;
+  bands: BandKey[]; // 该维度的分数带落在其中任意一个即视为填满
+};
+
 export type ComboCond = {
   contrast?: [string, string]; // [高维, 低维]
   bothLow?: string[];
   bothHigh?: string[];
   gapMin?: number;             // 反差阈值，默认 40
+  interlock?: Slot[];          // v301：多维联锁，全部槽位填满才命中
 };
 
 export type ComboNode = {
@@ -95,16 +108,21 @@ function hash(seed: string): number {
 }
 
 // 按权重确定性地挑一个变体。weight 缺省为 1。
+// v301：weight=0 表示被知识健身房淘汰——内容留在库里等改写，
+// 但引擎不再选它。全组都被淘汰时回落到全组参与（覆盖率红线：
+// 宁可给一段平庸的话，不能给一章空白）。
 function pickVariant<T extends { weight?: number }>(items: T[], seed: string): T | null {
   if (items.length === 0) return null;
-  if (items.length === 1) return items[0];
-  const total = items.reduce((sum, it) => sum + (it.weight ?? 1), 0);
-  let point = hash(seed) % total;
-  for (const it of items) {
+  const alive = items.filter((it) => (it.weight ?? 1) > 0);
+  const pool = alive.length > 0 ? alive : items;
+  if (pool.length === 1) return pool[0];
+  const total = pool.reduce((sum, it) => sum + (it.weight ?? 1), 0);
+  let point = hash(seed) % Math.max(1, total);
+  for (const it of pool) {
     point -= it.weight ?? 1;
     if (point < 0) return it;
   }
-  return items[items.length - 1];
+  return pool[pool.length - 1];
 }
 
 // ── 组合条件判定 ──
@@ -133,7 +151,40 @@ function comboMatches(cond: ComboCond, scores: Scores): boolean {
     }
   }
 
+  // v301：联锁判定。每个槽位都必须被真实分数填满——注意这里
+  // 对缺失维度直接判不命中，而不是用 50 兜底：联锁内容是写给
+  // 特定形状的人的，宁可不出现，也不能凭默认值硬说。
+  if (cond.interlock) {
+    for (const slot of cond.interlock) {
+      const v = scores[slot.dim];
+      if (v == null) return false;
+      if (!slot.bands.includes(bandOf(v))) return false;
+    }
+  }
+
   return true;
+}
+
+// ── 组合具体度（comboSpecificity） ──
+// v301：命中多条组合时，"更具体的"应该压过"优先级数字更大的"——
+// priority 是人工拍的，具体度是条件本身算出来的，后者更可信。
+// 计分：contrast 记 2（两维一关系）；bothLow/bothHigh 每维记 1；
+// interlock 每个槽位记 1 分底分，再按允许带数加成——只允许 1 个带
+// 加 0.8，允许全部 5 个带加 0（等于没约束）。
+// 排序规则见 buildReport：先 specificity 降序，再 priority 降序，
+// 最后按 id 字典序兜底，保证确定性。
+export function comboSpecificity(cond: ComboCond): number {
+  let s = 0;
+  if (cond.contrast) s += 2;
+  if (cond.bothLow) s += cond.bothLow.length;
+  if (cond.bothHigh) s += cond.bothHigh.length;
+  if (cond.interlock) {
+    for (const slot of cond.interlock) {
+      const bandCount = Math.min(5, Math.max(1, slot.bands.length));
+      s += 1 + ((5 - bandCount) / 5);
+    }
+  }
+  return s;
 }
 
 function stateMatches(w: StateNode["when"], state: FieldState | null, scores: Scores): boolean {
@@ -189,11 +240,17 @@ export function buildReport(
   return lib.chapters.map((ch) => {
     const blocks: RenderedChapter["blocks"] = [];
 
-    // 1. 组合节点优先——命中多条时取 priority 最高的一条。
+    // 1. 组合节点优先——命中多条时先比具体度（comboSpecificity），
+    //    再比 priority，最后按 id 兜底保证确定性。
     //    只取一条，不堆叠：两段组合内容放在一起会互相削弱。
     const hitCombos = lib.combos
       .filter((c) => c.chapter === ch.key && comboMatches(c.when, scores))
-      .sort((a, b) => b.priority - a.priority);
+      .sort(
+        (a, b) =>
+          comboSpecificity(b.when) - comboSpecificity(a.when) ||
+          b.priority - a.priority ||
+          a.id.localeCompare(b.id)
+      );
 
     if (hitCombos.length > 0) {
       const c = hitCombos[0];

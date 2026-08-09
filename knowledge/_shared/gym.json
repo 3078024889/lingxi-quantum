@@ -1,0 +1,43 @@
+{
+  "_comment": "知识健身房（gym）配置。核心想法：同一个 (章节, 维度, 分数带) 里的多个变体是在同一个擂台上竞争的选手。gym 按可复算的启发式给每个节点打分（0-100），组内按分排序，冠军（champion）晋级——weight 提到 championWeight，被 hash 选中的概率翻倍；长期垫底且低于 retireBelow 的节点被淘汰——weight 降为 0，引擎不再选它，但内容保留在库里供改写。全部规则读这里，不写死在脚本里：调标准是改数据，不是改代码。",
+  "_determinism": "评分只依赖节点文本本身，不依赖时间、不依赖随机数。同一份库任何时候跑出的榜单完全一致。",
+  "scoring": {
+    "_comment": "五项加权，总分 100，另有黑名单/词表扣分。判分哲学同写作纪律：温度来自具体，不来自形容词。",
+    "weights": {
+      "lengthFit": 20,
+      "scaffold": 25,
+      "bilingual": 15,
+      "concrete": 25,
+      "falsifiable": 15
+    },
+    "idealLengthZh": { "min": 120, "max": 320 },
+    "scaffoldMinChars": 8,
+    "minLengthEn": 80,
+    "concreteMarkers": [
+      "一件", "一次", "一个人", "早上", "睡前", "分钟", "小时",
+      "第一口", "另一个房间", "具体", "上一次", "最近一次",
+      "反复", "等待", "沟通", "安排", "记下", "说给", "对照"
+    ],
+    "concreteFullScoreHits": 3,
+    "falsifiableMarkers": [
+      "最近一次", "上一次", "回想", "对照", "当场", "你可以验证",
+      "如果这句不对", "说错了", "不符合就"
+    ],
+    "penaltyPerAvoidWord": 30,
+    "penaltyPerLexiconHit": 10
+  },
+  "promotion": {
+    "_comment": "冠军晋级：组内（同章节+维度+分数带）分数最高、且达到 minScoreToPromote 的节点，weight 提为 championWeight。组内只有一个节点时无竞争，不晋级。",
+    "championWeight": 2,
+    "minScoreToPromote": 70
+  },
+  "elimination": {
+    "_comment": "淘汰：分数低于 retireBelow 的节点 weight 降为 0（引擎的确定性选择会跳过 weight=0）。keepCoverage=true 时绝不淘汰组内最后一个节点——覆盖率红线高于质量红线：宁可给用户一段平庸的话，不能给一章空白。",
+    "retireBelow": 40,
+    "keepCoverage": true
+  },
+  "champions": {
+    "_comment": "冠军榜。由 scripts/gym-knowledge.mjs --apply 写入，人工不要手改。键是 组ID（章节|维度|带），值是当前冠军节点 id 与得分。",
+    "records": {}
+  }
+}

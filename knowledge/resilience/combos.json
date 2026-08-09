@@ -1,5 +1,54 @@
 {
+  "_comment": "v301 起支持联锁节点（when.interlock）：多个槽位（dim × 允许的分数带）全部填满才命中。联锁条件比 contrast/bothLow/bothHigh 更具体，引擎按 comboSpecificity 排序时会自然压过粗条件——同章同时命中时，说得更准的那条先出。",
   "combos": [
+    {
+      "id": "r.lock.quiet-anchor",
+      "chapter": "07-hidden",
+      "priority": 22,
+      "when": {
+        "interlock": [
+          { "dim": "emotionalStability", "bands": ["high", "vhigh"] },
+          { "dim": "stressRecovery", "bands": ["vlow", "low"] },
+          { "dim": "persistence", "bands": ["high", "vhigh"] }
+        ]
+      },
+      "fieldText": {
+        "zh": "这三项放在一起，拼出一个别人几乎看不出来的形状：你外面是稳的，里面是慢的，中间靠坚持撑着。\n\n情绪稳定让你在任何场合都显得没事，坚持能力让你确实也能一直没事下去——所以从外面看，你是那个不用担心的人。但恢复那一项说了实话：消耗回落得很慢，稳定的表面下面，补给一直是紧的。这不是伪装，你没有骗任何人，只是这套结构天然把消耗藏在最里面，连你自己都常常最后一个知道。\n\n对照一下最近一次真正的疲惫：别人是不是完全没看出来，而你自己也是拖到很晚才承认的。如果是，那这段说的就是你。\n\n可以做的一件具体的事：挑一个人，把「我最近其实比看起来累」这句话原样说出去一次。不为求助，只为让这套结构里第一次有一个外部的知情者。",
+        "en": "Put these three together and they form a shape almost no one else can see: steady on the outside, slow on the inside, held up in between by persistence.\n\nEmotional steadiness makes you look fine in any setting, and persistence means you genuinely can keep being fine — so from the outside, you're the one nobody worries about. But the recovery dimension tells the truth: the drain settles slowly, and beneath the steady surface the supply runs tight. This isn't pretense — you're not deceiving anyone. The structure simply stores its costs in the innermost place, and you're often the last to know.\n\nCheck it against the last time you were genuinely worn down: did others miss it entirely, and did you yourself admit it only late? If so, this passage is about you.\n\nOne concrete thing to do: pick one person and say, word for word, \"I've been more tired than I look.\" Not to ask for help — just so that, for the first time, someone outside the structure knows."
+      }
+    },
+    {
+      "id": "r.lock.event-engine",
+      "chapter": "04-crisis",
+      "priority": 22,
+      "when": {
+        "interlock": [
+          { "dim": "crisisRebound", "bands": ["high", "vhigh"] },
+          { "dim": "adaptability", "bands": ["high", "vhigh"] },
+          { "dim": "persistence", "bands": ["vlow", "low"] }
+        ]
+      },
+      "fieldText": {
+        "zh": "这三项咬合在一起，说明你的系统是为「事件」设计的，不是为「日程」设计的。\n\n危机反弹和变化适应同时偏高：突发的事情不但压不垮你，反而会把你点亮——方向变了你转得快，局面塌了你起得快。但长期坚持那一项偏低，把这套结构的另一面也说了出来：没有事件的平路上，这台引擎不点火。别人觉得难的是意外，你觉得难的是重复。\n\n最常见的误读是把这读成「没有毅力」，然后逼自己用意志力硬撑长线——那是拿短跑的身体跑马拉松，输了还怪自己。更准的读法是：你的续航不是靠撑出来的，是靠把长线切成一段一段的事件。同一件事，包装成「连续做一百天」你会在第九天离开；包装成「十个各有交付的小仗」，你能打完。\n\n下一次接长期任务之前，先做这一步：把它切成有明确结束点的段落，每段结束都算一次完成。你的引擎认的是完成，不是坚持。",
+        "en": "These three lock together into one statement: your system is built for events, not for schedules.\n\nCrisis rebound and adaptability both run high — sudden things don't crush you, they switch you on. When direction changes you turn fast; when things collapse you get up fast. But long-term persistence runs low, which states the other side of the same structure: on flat road, with no event in sight, this engine doesn't ignite. What others find hard is the unexpected; what you find hard is repetition.\n\nThe common misreading is \"no willpower,\" followed by forcing yourself through long hauls on grit — a sprinter's body running a marathon, then blaming itself for losing. The more accurate reading: your endurance doesn't come from holding on; it comes from cutting the long line into a series of events. The same project framed as \"do it daily for a hundred days\" loses you by day nine; framed as ten small campaigns, each with its own delivery, you finish.\n\nBefore your next long-term commitment, do this first: cut it into segments with explicit endpoints, and count each segment as a completion. Your engine responds to completions, not to persistence."
+      }
+    },
+    {
+      "id": "r.lock.slow-keel",
+      "chapter": "09-path",
+      "priority": 22,
+      "when": {
+        "interlock": [
+          { "dim": "persistence", "bands": ["high", "vhigh"] },
+          { "dim": "adaptability", "bands": ["vlow", "low"] },
+          { "dim": "emotionalStability", "bands": ["mid", "high", "vhigh"] }
+        ]
+      },
+      "fieldText": {
+        "zh": "这三项放在一起，你的进化路径就有了具体的形状：你是长航结构——方向一旦定下，你走得比几乎所有人都远；但换向的成本，对你也比对别人高。\n\n坚持和稳定给了你别人羡慕的续航，变化适应偏低则说明每一次转向都真实地消耗你——不是你不愿意变，是变对这套结构来说本来就贵。所以你身上会同时出现两件看起来矛盾的事：走对方向的时候，你的积累深得惊人；方向该换而没换的时候，损失也一样深，因为你有能力把一条错的路走得很久。\n\n对照一下：上一次你离开一件早该离开的事，是不是拖了远超必要的时间。如果是，说明你的风险从来不在半途而废，在恰恰相反的地方。\n\n所以这条路径上最值得练的不是坚持——那是你已经有的——是定期把方向本身拿出来审一次。可以具体到这样：每个季度留一个小时，只回答一个问题：「这条路如果今天重选，我还选它吗。」答案是选，就继续走，不再自我怀疑；答案是不选，这一小时就替你省下了后面的一年。",
+        "en": "Put these three together and your evolution path takes a specific shape: you're built for long voyages — once a direction is set, you go further than almost anyone. But changing course costs you more than it costs others.\n\nPersistence and stability give you the endurance people envy; low adaptability means every turn genuinely drains you — not that you're unwilling to change, but that change is simply expensive for this structure. So two seemingly contradictory things are both true of you: on the right heading, your accumulation runs remarkably deep; and when a heading should change but doesn't, the loss runs just as deep — because you are capable of walking a wrong road for a very long time.\n\nCheck it: the last time you left something you should have left, did it take far longer than necessary? If so, your risk was never quitting halfway. It sits at the exact opposite end.\n\nWhich means the thing most worth practising on this path isn't persistence — you have that — it's auditing the direction itself on a schedule. Concretely: one hour per quarter, answering a single question — \"if I were choosing this road today, would I still choose it?\" If yes, keep walking, and drop the self-doubt. If no, that one hour just saved you the year that would have followed."
+      }
+    },
     {
       "id": "r.combo.crisis-vs-daily",
       "chapter": "02-stress",
