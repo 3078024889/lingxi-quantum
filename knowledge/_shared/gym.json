@@ -1,8 +1,8 @@
 {
-  "_comment": "知识健身房（gym）配置。核心想法：同一个 (章节, 维度, 分数带) 里的多个变体是在同一个擂台上竞争的选手。gym 按可复算的启发式给每个节点打分（0-100），组内按分排序，冠军（champion）晋级——weight 提到 championWeight，被 hash 选中的概率翻倍；长期垫底且低于 retireBelow 的节点被淘汰——weight 降为 0，引擎不再选它，但内容保留在库里供改写。全部规则读这里，不写死在脚本里：调标准是改数据，不是改代码。",
-  "_determinism": "评分只依赖节点文本本身，不依赖时间、不依赖随机数。同一份库任何时候跑出的榜单完全一致。",
+  "_comment": "知识健身房（gym）配置。v302 起完整落地佩德罗算法（出处见 docs/lingxi-foundation.md 第零节）：健身房不是静态裁判，是测试环境——节点被扔进数千种模拟用户分数形状（学习任务）里实战，穿过关卡的节点变得更强（weight 随层级上升），最强的竞争者送往下个层级，直至登顶。全部规则读这里，不写死在脚本里：调标准是改数据，不是改代码。",
+  "_determinism": "评分与实战全部可复算：只依赖节点文本、探针网格和固定种子，不依赖时间、不依赖随机数。同一份库任何时候跑出的榜单完全一致。",
   "scoring": {
-    "_comment": "五项加权，总分 100，另有黑名单/词表扣分。判分哲学同写作纪律：温度来自具体，不来自形容词。",
+    "_comment": "L1 文本关的五项加权，总分 100，另有黑名单/词表扣分。判分哲学同写作纪律：温度来自具体，不来自形容词。",
     "weights": {
       "lengthFit": 20,
       "scaffold": 25,
@@ -26,18 +26,34 @@
     "penaltyPerAvoidWord": 30,
     "penaltyPerLexiconHit": 10
   },
-  "promotion": {
-    "_comment": "冠军晋级：组内（同章节+维度+分数带）分数最高、且达到 minScoreToPromote 的节点，weight 提为 championWeight。组内只有一个节点时无竞争，不晋级。",
-    "championWeight": 2,
-    "minScoreToPromote": 70
+  "arena": {
+    "_comment": "佩德罗测试环境（实战场）。每个维度取 probes 里的探针值，做笛卡尔积构成模拟用户全集——5 维 × 6 探针 = 7776 种分数变体，与小说里'超过 7 千种变体，在各式的学习任务中展开测试'同量级。每个变体跑一遍真实的选择逻辑（组合判定→具体度排序→变体挑选），统计每个节点实际服务了多少个模拟用户、每条组合赢下了多少次章节。探针含 30/44 两个同带不同值的点，专门测 contrast 条件的 gapMin 敏感性。",
+    "probes": [12, 30, 44, 55, 70, 92],
+    "_seeds": "种子基。实际种子 = 种子基 × 模拟用户身份（分数形状）——真实世界里种子是每个用户的出生数据，人人不同，变体服务量按权重自然分布；固定种子会让全擂台挑中同一个变体，属于失真。",
+    "seeds": ["arena-seed-1", "arena-seed-2", "arena-seed-3"],
+    "maxProfiles": 50000
+  },
+  "levels": {
+    "_comment": "关卡（'这就像带有很多关卡的电子游戏'）。L0 报名：进库且 lint 通过。L1 文本关：静态质量分达标——写得好。L2 实战关：在实战场里真实服务到了模拟用户——用得上。L3 登顶：击败同擂台竞争者的冠军——最强。穿过关卡即变强：weight 按 weights 表随层级上升，被 hash 选中的概率随之提高。独苗（组内无竞争者）最高到 L2，登顶必须赢过别人。",
+    "textGate": { "minScore": 60 },
+    "arenaGate": { "minServedStructure": 10, "minWinsCombo": 10 },
+    "summit": { "requireCompetition": true },
+    "weights": { "L0": 1, "L1": 1, "L2": 2, "L3": 3 }
   },
   "elimination": {
-    "_comment": "淘汰：分数低于 retireBelow 的节点 weight 降为 0（引擎的确定性选择会跳过 weight=0）。keepCoverage=true 时绝不淘汰组内最后一个节点——覆盖率红线高于质量红线：宁可给用户一段平庸的话，不能给一章空白。",
+    "_comment": "淘汰：文本分低于 retireBelow 的节点 weight 降为 0（引擎的确定性选择会跳过 weight=0）。keepCoverage=true 时绝不淘汰组内最后一个节点——覆盖率红线高于质量红线：宁可给用户一段平庸的话，不能给一章空白。",
     "retireBelow": 40,
     "keepCoverage": true
   },
+  "reconstruction": {
+    "_comment": "哥白尼重构（'他会拾起这些代码串，编码重构成……这个'）。实战场跑完后，找出组合覆盖最薄弱的分数形状——大量章节回落到单维节点的模拟用户——从中提取联锁骨架（哪几个维度落在哪几个带），按服务人数排序输出提案。机器只提骨架，文字必须由人写：这是'运行时无 AI、成文无生成'铁律在重构环节的形态。已被现有联锁覆盖的形状自动跳过。",
+    "slotCount": 3,
+    "minUncoveredChapters": 3,
+    "maxProposals": 5,
+    "proposals": []
+  },
   "champions": {
-    "_comment": "冠军榜。由 scripts/gym-knowledge.mjs --apply 写入，人工不要手改。键是 组ID（章节|维度|带），值是当前冠军节点 id 与得分。",
+    "_comment": "冠军榜与层级台账。由 scripts/gym-knowledge.mjs --apply 写入，人工不要手改。键是擂台ID（产品|章节|维度|带），值是当前冠军节点 id、文本分、层级与实战服务数。",
     "records": {}
   }
 }
