@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { computeLifeVector, compareLifeVectors } from '@/lib/life-vector';
 import { generateStaticRelationshipReport } from '@/lib/knowledge-loader';
+import { getRelationshipProductMeta } from '@/lib/relationship-config';
 
-// 绕过 RLS 限制，确保服务器能强制写入
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
     }
 
-    // 1. 获取用户双人排盘原始数据
+    // 1. 获取双人排盘数据以及用户选择的关系类型 (romantic, business, general)
     const { data: submission, error: fetchError } = await supabase
       .from('relationship_submissions')
       .select('*')
@@ -28,12 +28,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
     }
 
-    // 2. 生命向量引擎计算（毫秒级，纯本地代码运算）
+    // 2. 向量计算
     const vectorA = computeLifeVector(submission.facts_a);
     const vectorB = computeLifeVector(submission.facts_b);
     const resonanceResult = compareLifeVectors(vectorA, vectorB);
 
-    // 如果已有缓存且不强制刷新，直接返回（彻底 0 延迟）
     if (submission.full_report && !forceRegenerate) {
       return NextResponse.json({
         success: true,
@@ -42,17 +41,22 @@ export async function POST(request: Request) {
       });
     }
 
-    const relType = submission.relationship_type || 'romantic';
+    // 3. 从我们刚建好的配置文件中获取关系的元数据（安全兜底为 romantic）
+    const rawRelType = submission.relationship_type || 'romantic';
+    const productMeta = getRelationshipProductMeta(rawRelType);
+    
+    // 映射给知识库加载器的具体指令类型 (romantic, business, general)
+    const engineRelationType = productMeta.id; 
 
-    // 3. 【核心降维打击】彻底切断大模型，直接调用本地神殿知识库瞬间拼装！
-    const finalReportText = generateStaticRelationshipReport(resonanceResult, relType);
+    // 4. 调用静态神殿，将高维法典与对应关系的行动指令瞬间拼装
+    const finalReportText = generateStaticRelationshipReport(resonanceResult, engineRelationType);
 
-    // 4. 将极速生成的顶级报告存入数据库
+    // 5. 写入数据库
     const { error: updateError } = await supabase
       .from('relationship_submissions')
       .update({
         full_report: finalReportText,
-        full_report_en: finalReportText // 同步存入英文占位，防止前端组件报错
+        full_report_en: finalReportText
       })
       .eq('id', id);
 
@@ -60,11 +64,11 @@ export async function POST(request: Request) {
       console.error("[灵犀场预警] 数据库更新报告失败:", updateError);
     }
 
-    // 5. 瞬间返回！不再看大模型厂商的脸色！
     return NextResponse.json({
       success: true,
       report: finalReportText,
-      vectors: { a: vectorA, b: vectorB }
+      vectors: { a: vectorA, b: vectorB },
+      productMeta // 顺便把高维名字带给前端
     });
 
   } catch (error: any) {
