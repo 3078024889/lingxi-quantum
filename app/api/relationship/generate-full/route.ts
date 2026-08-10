@@ -4,11 +4,15 @@ import { computeLifeVector, compareLifeVectors } from '@/lib/life-vector';
 import { generateStaticRelationshipReport } from '@/lib/knowledge-loader';
 import { getRelationshipProductMeta } from '@/lib/relationship-config';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// 强制动态渲染，防止 Vercel 编译期间报错
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  // 必须放在函数内部
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   try {
     const body = await request.json();
     const { id, forceRegenerate } = body;
@@ -17,7 +21,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
     }
 
-    // 1. 获取双人排盘数据以及用户选择的关系类型 (romantic, business, general)
     const { data: submission, error: fetchError } = await supabase
       .from('relationship_submissions')
       .select('*')
@@ -28,7 +31,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
     }
 
-    // 2. 向量计算
     const vectorA = computeLifeVector(submission.facts_a);
     const vectorB = computeLifeVector(submission.facts_b);
     const resonanceResult = compareLifeVectors(vectorA, vectorB);
@@ -41,17 +43,12 @@ export async function POST(request: Request) {
       });
     }
 
-    // 3. 从我们刚建好的配置文件中获取关系的元数据（安全兜底为 romantic）
     const rawRelType = submission.relationship_type || 'romantic';
     const productMeta = getRelationshipProductMeta(rawRelType);
-    
-    // 映射给知识库加载器的具体指令类型 (romantic, business, general)
     const engineRelationType = productMeta.id; 
 
-    // 4. 调用静态神殿，将高维法典与对应关系的行动指令瞬间拼装
     const finalReportText = generateStaticRelationshipReport(resonanceResult, engineRelationType);
 
-    // 5. 写入数据库
     const { error: updateError } = await supabase
       .from('relationship_submissions')
       .update({
@@ -68,7 +65,7 @@ export async function POST(request: Request) {
       success: true,
       report: finalReportText,
       vectors: { a: vectorA, b: vectorB },
-      productMeta // 顺便把高维名字带给前端
+      productMeta 
     });
 
   } catch (error: any) {
