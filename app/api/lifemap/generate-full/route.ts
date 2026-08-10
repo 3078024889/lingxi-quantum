@@ -11,11 +11,17 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, forceRegenerate } = body;
+    
+    // 兼容：前端可能传 id，也可能传 submissionId
+    const targetId = body.id || body.submissionId;
+    const forceRegenerate = body.forceRegenerate || false;
 
-    if (!id) return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
+    if (!targetId) {
+      console.error("[灵犀场预警] 缺少 ID，前端传来的 body:", body);
+      return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
+    }
 
-    // 智能探测可能的表名，彻底解决 Submission not found 问题
+    // 智能探测可能的表名
     const possibleTables = ['lifemap_submissions', 'lifemaps', 'life_map_submissions', 'lifemap_reports'];
     let submission = null;
     let matchedTable = '';
@@ -24,7 +30,7 @@ export async function POST(request: Request) {
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
-        .eq('id', id)
+        .eq('id', targetId)
         .single();
       
       if (data && !error) {
@@ -35,45 +41,40 @@ export async function POST(request: Request) {
     }
 
     if (!submission || !matchedTable) {
+      console.error(`[灵犀场预警] 在数据库中未找到 ID: ${targetId}`);
       return NextResponse.json({ error: 'Submission not found in any lifemap table' }, { status: 404 });
     }
 
-    // --- 极速物理计算层（毫秒级） ---
-    const v = computeLifeVector(submission.facts || submission.fact || {});
+    // --- 极速物理计算层（兼容 facts 或 fact 字段） ---
+    const rawFacts = submission.facts || submission.fact || {};
+    const v = computeLifeVector(rawFacts);
     const conflicts = findConflicts(v);
     const resilience = calculateResilience(v);
     const wealth = calculateWealthDetail(v);
     const traits = topTraits(v, 3);
     
-    // 如果已经有缓存且不需要强制重刷，瞬间返回（0毫秒延迟）
     if (submission.full_report && !forceRegenerate) {
       return NextResponse.json({ success: true, report: submission.full_report });
     }
 
-    // 提取用户填写的职业状态，实现动态场景映射 (Context Mapping)
     const userStatus = submission.occupation || 'default';
-
-    // --- 绝对降维打击：切断大模型，调用本地神殿拼接《法典》语料！ ---
     const calcData = { v, conflicts, resilience, wealth, topTraits: traits };
     const finalReportText = generateStaticLifeMapReport(calcData, userStatus);
 
-    // 将 13 章完整极品文案存入精准匹配的数据库表
+    // 将报告存入精准匹配的数据库表
     const { error: updateError } = await supabase
       .from(matchedTable)
       .update({
         full_report: finalReportText,
         full_report_en: finalReportText
       })
-      .eq('id', id);
+      .eq('id', targetId);
 
     if (updateError) {
       console.error("[灵犀场预警] 数据库更新报告失败:", updateError);
     }
 
-    return NextResponse.json({
-      success: true,
-      report: finalReportText
-    });
+    return NextResponse.json({ success: true, report: finalReportText });
 
   } catch (error: any) {
     console.error("[灵犀场预警] 生命图谱生成失败:", error);
