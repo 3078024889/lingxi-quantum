@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -10,97 +14,17 @@
   --text-button: #E0F0FF;
   --text-secondary: #B8C9E6;
   --glow-soft: 0 0 8px rgba(224, 230, 255, 0.45);
-  /* ============ Aurora Glass（统一底色） ============
-     上一版的紫蓝渐变太深、太不透明，读出来是"深蓝色卡片"，不是用户
-     视频里那种发光、透亮的极光蓝——真正的极光蓝更接近浅青蓝色，而且
-     本身是透光的，不是一块实色。这版把色相从"紫→深蓝"改成"浅青→浅
-     蓝"，同时把不透明度砍掉一大半，让卡片更像"一层带着光的玻璃"，
-     不是"一块有颜色的板子"。文字对比度不够的部分，靠边框和外发光
-     去补，而不是靠加深底色。 */
-  /* v286：玻璃不该自己带颜色，应该反射环境颜色。
-     之前这里是青蓝(110,196,230)+灰蓝(150,170,235)，等于把面板染成
-     蓝色塑料片——这是整站"灰、淡、雾蒙蒙"的源头。
-     改成以白为主、紫青为辅的三段渐变：白负责通透，紫青只作反光。 */
+  
   --aurora-glass: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(180,150,255,0.10), rgba(80,220,220,0.08));
   --aurora-glass-strong: linear-gradient(135deg, rgba(255,255,255,0.20), rgba(180,150,255,0.16), rgba(80,220,220,0.12));
-  /* 边框从 0.55 的硬青蓝改为 0.35 的柔紫白——之前太硬，像描边 */
   --aurora-glass-border: rgba(220, 210, 255, 0.35);
   --aurora-glow: 0 0 20px rgba(140, 210, 255, 0.28), 0 0 8px rgba(180, 220, 255, 0.2);
 }
-
-/* .bg-void-deep 这个class，之前一直是纯Tailwind工具类，直接铺一块
-   不透明的深蓝色（#0f2038），全站几十个卡片、结果页、报告章节都在
-   用它——但它从来没跟 .bg-reading-glass、导航栏那套"极光玻璃"语言
-   对齐过，看起来就是"一块不透明的深色板子"，跟背景的极光视频完全
-   割裂，这正是"黑框"这个反馈的真实原因。这里直接覆盖这个class本身
-   （不是逐个文件去改），比 .bg-reading-glass 更轻透一点（那个是给
-   长文阅读用的，需要更扎实的衬托；这个是给普通卡片、结果区块用的，
-   应该更透）。改完这一处，全站所有用了 bg-void-deep 的地方会一次性
-   统一变成半透明玻璃面板，不用逐个文件排查。 */
-.bg-void-deep {
-  position: relative;
-  background-color: rgba(14, 24, 42, 0.24) !important;
-  background-image:
-    radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.10), transparent 55%),
-    radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.09), transparent 55%),
-    var(--aurora-glass);
-  border-color: var(--aurora-glass-border) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: var(--aurora-glow);
-}
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 html {
   scroll-behavior: smooth;
 }
 
-/* 正文：全站默认字色统一用 --text-primary，不再是纯白，也不是上一版
-   的月雾紫白/星尘灰紫两层——这版收敛成你迭代过后的定版：偏蓝的浅紫白，
-   跟深空蓝紫背景是同一个色系家族，不是"文字"和"背景"两套互不相干的
-   颜色硬凑在一起。 */
-.text-bone, .text-lm2-text {
-  color: var(--text-primary);
-  text-shadow: var(--glow-soft);
-}
-.text-bone-dim, .text-lm2-text-dim {
-  color: var(--text-secondary);
-  text-shadow: none;
-}
-/* 标题：h1/h2 用渐变字（紫到青的横向渐变），不是纯色——这是这版最大
-   的变化，标题本身自带一点流动的渐变质感，跟背景的极光气质呼应。 */
-h1.text-bone, h2.text-bone, h1.text-lm2-text, h2.text-lm2-text,
-.text-title, .text-lm2-title {
-  color: var(--text-heading);
-  background: var(--text-heading-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: var(--glow-soft);
-}
-/* 强调色：紫 / 青绿双色，统计数字、图标文字、关键词用 */
-.text-amber, .text-lm2-amber, .text-violet, .text-lm2-violet, .text-lm-violet {
-  color: var(--text-accent-purple);
-  text-shadow: var(--glow-soft);
-}
-.text-lattice, .text-lm2-mint, .text-lm2-sky {
-  color: var(--text-accent-cyan);
-  text-shadow: var(--glow-soft);
-}
-/* 按钮文字：统一用偏白的浅蓝，跟按钮本身的渐变底色区分开 */
-button, .btn, a[class*="bg-lattice"], a[class*="bg-amber"] {
-  text-shadow: var(--glow-soft);
-}
-
-/* ============ Rainbow Celestial Aurora Design System ============
-   全站基底：深空底色 + Lingxi Typography System V4。
-   真正"活的"那层，是 AuroraVideoBand 组件——固定铺满整个视口、不随
-   页面滚动、全站每一屏都在（见 layout.tsx），这才是"场是活的"的
-   来源。下面这层 CSS 渐变只是视频加载失败/播放被拦截时的静态兜底，
-   平时会被视频完全盖住，所以不需要再做动画，省一点无谓的性能开销。 */
 body {
   position: relative;
   background-color: #0a1626;
@@ -116,62 +40,101 @@ body {
   min-height: 100vh;
 }
 
-/* Aurora Glass——全站卡片统一底样：紫到蓝的渐变玻璃，不再是深色/黑色
-   系底子叠一点点高光那种做法。这是这版最核心的改动，见上面 :root 里
-   --aurora-glass 的说明。 */
-.bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report,
-.bg-void\/85, .bg-void-deep\/40, .bg-void-deep\/60 {
+/* =====================================================================
+   灵犀场终极透光玻璃面板体系 (v300 完美统一版)
+   核心逻辑：将 blur 降至 6px，彻底解决网页端发白、发厚、模糊底图的问题
+   ===================================================================== */
+
+.lx-glass, 
+.lx-report-glass,
+.bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report {
   position: relative;
-  /* 全站几十处卡片用的都是不带斜杠透明度后缀的 bg-void-deep 这类写法，
-     Tailwind 编译出来的是纯色不透明的 background-color——这才是"到处
-     都是黑框，挡住了背景"的根本原因。这里直接把这几个类的底色统一
-     接管成 Aurora Glass 渐变，不管组件那边写没写 /40 这种后缀。
-     最底下叠一层很淡很淡的深色，只为了让文字有个最低限度的抓地力，
-     不是把卡片重新做深——90% 的视觉份量还是那层浅青蓝玻璃。 */
-  background-color: rgba(10, 20, 38, 0.22) !important;
-  background-image:
-    var(--aurora-glass),
-    radial-gradient(ellipse 70% 55% at 15% 0%, rgba(255,255,255,0.10), transparent 55%),
-    radial-gradient(ellipse 60% 50% at 95% 100%, rgba(160,224,255,0.10), transparent 55%);
-  background-size: 100% 100%, 200% 200%, 200% 200%;
-  animation: lx-card-shimmer 20s ease-in-out infinite;
-  border: 1px solid var(--aurora-glass-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.12) inset,
-    var(--aurora-glow),
-    0 8px 28px rgba(0,0,0,0.22);
-}
-@keyframes lx-card-shimmer {
-  0%, 100% { background-position: 0% 0%, 100% 100%, 50% 50%; }
-  50% { background-position: 20% 15%, 80% 85%, 40% 60%; }
-}
-/* 全站还散落着一批用 bg-amber/5、bg-lattice/5、bg-rose/10 这类"低透明度
-   强调色"做小卡片底色的写法（生命重塑、修炼技术、账号登录等十几个
-   文件里都有），这些没有走 bg-void 那条线，是另一套独立的写法，之前
-   几版都漏掉了。这里直接把用到的这几个具体组合也接到 Aurora Glass
-   上——现在不管是主卡片、心声之雨气泡，还是这些散落的小卡片，字面
-   意义上共用同一份底色定义。 */
-.bg-amber\/5, .bg-amber\/10, .bg-amber\/20,
-.bg-lattice\/5, .bg-lattice\/10, .bg-lattice\/15,
-.bg-rose\/10, .bg-rose\/5, .bg-violet\/5, .bg-violet\/10 {
-  background-image: var(--aurora-glass) !important;
-  background-color: rgba(10, 20, 38, 0.22) !important;
-  border-color: var(--aurora-glass-border) !important;
+  background: linear-gradient(135deg, 
+    rgba(80, 150, 180, 0.18), 
+    rgba(100, 220, 200, 0.10), 
+    rgba(150, 120, 255, 0.12)) !important;
+  border: 1px solid rgba(200, 235, 225, 0.35) !important;
+  /* 关键修复：将模糊度从 24px/30px 降为 6px，让网页与 PDF 质感绝对一致 */
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  box-shadow: 0 20px 60px rgba(30, 40, 70, 0.20),
+              inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  border-radius: 6px !important;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report { animation: none; }
+/* 适配八大产品的专属微光色相 */
+.lx-glass-resilience { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(150,230,200,0.14), rgba(120,200,255,0.10)) !important; }
+.lx-glass-romance    { background: linear-gradient(135deg, rgba(190,110,170,0.22), rgba(140,90,190,0.18)) !important; }
+.lx-glass-wealth     { background: linear-gradient(135deg, rgba(90,130,215,0.22), rgba(130,95,200,0.18)) !important; }
+.lx-glass-daily      { background: linear-gradient(135deg, rgba(80,180,205,0.22), rgba(85,125,205,0.18)) !important; }
+.lx-glass-qian       { background: linear-gradient(135deg, rgba(150,120,210,0.22), rgba(110,95,195,0.18)) !important; }
+.lx-glass-tarot      { background: linear-gradient(135deg, rgba(150,100,225,0.22), rgba(100,115,220,0.18)) !important; }
+.lx-glass-relation   { background: linear-gradient(135deg, rgba(105,140,220,0.22), rgba(160,105,205,0.18)) !important; }
+.lx-glass-lifemap    { background: linear-gradient(135deg, rgba(95,145,225,0.22), rgba(135,100,205,0.18)) !important; }
+
+/* 报告页浅色玻璃面板内的文字颜色自适应匹配（告别黑白看不清） */
+.lx-report-glass,
+.lx-report-glass [class*="text-bone"] { color: #2E2742 !important; }
+.lx-report-glass [class*="text-lattice"]      { color: #1F6F63 !important; }
+.lx-report-glass [class*="text-amber"]        { color: #6D4A9C !important; }
+.lx-report-glass [class*="text-rose"]         { color: #A63D74 !important; }
+.lx-report-glass [class*="text-emerald-300"]  { color: #1F6F63 !important; }
+.lx-report-glass [class*="text-bone-mute"] { color: #6B6285 !important; }
+.lx-report-glass h1,
+.lx-report-glass h2,
+.lx-report-glass h3 { color: #3A2E52 !important; }
+.lx-report-glass input,
+.lx-report-glass textarea { color: #2E2742 !important; }
+.lx-report-glass input::placeholder { color: #7A7290 !important; }
+.lx-report-glass .border-white\/10,
+.lx-report-glass .border-white\/15 { border-color: rgba(58, 46, 82, 0.14) !important; }
+
+/* 字体与渐变排版系统 */
+.text-bone, .text-lm2-text {
+  color: var(--text-primary);
+  text-shadow: var(--glow-soft);
 }
-/* 输入框（textarea/input）例外：文字输入需要足够扎实的底色才看得清
-   打字光标和已输入内容，玻璃化到看得见背后视频的程度反而会降低可用
-   性，这里单独把表单控件的透明度调高一些，跟普通卡片区分开。 */
-/* 阅读面玻璃（Reading Glass）——专门给"长文阅读"场景用的底色，比普通
-   装饰性卡片（.bg-void-deep 那套，偏轻透）更扎实一点，长时间阅读需要
-   比小卡片更强的衬托，但也不能太深——读者反馈这个方向是对的，只是上一
-   版调得偏深了一点，这次收回来一些。多维叙事阅读器、四大修炼技术详情
-   页、探索页文章正文，统一用这一个类，不再是三套分别调的深浅。 */
+.text-bone-dim, .text-lm2-text-dim {
+  color: var(--text-secondary);
+  text-shadow: none;
+}
+h1.text-bone, h2.text-bone, h1.text-lm2-text, h2.text-lm2-text,
+.text-title, .text-lm2-title {
+  color: var(--text-heading);
+  background: var(--text-heading-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: var(--glow-soft);
+}
+
+.text-amber, .text-lm2-amber, .text-violet, .text-lm2-violet, .text-lm-violet {
+  color: var(--text-accent-purple);
+  text-shadow: var(--glow-soft);
+}
+.text-lattice, .text-lm2-mint, .text-lm2-sky {
+  color: var(--text-accent-cyan);
+  text-shadow: var(--glow-soft);
+}
+
+button, .btn, a[class*="bg-lattice"], a[class*="bg-amber"] {
+  text-shadow: var(--glow-soft);
+}
+
+.bg-void-deep {
+  position: relative;
+  background-color: rgba(14, 24, 42, 0.24) !important;
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(230,210,255,0.10), transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(160,224,208,0.09), transparent 55%),
+    var(--aurora-glass);
+  border-color: var(--aurora-glass-border) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--aurora-glow);
+}
+
 .bg-reading-glass {
   position: relative;
   background-color: rgba(14, 24, 42, 0.34) !important;
@@ -186,27 +149,7 @@ body {
   box-shadow: var(--aurora-glow);
 }
 
-textarea.bg-void, input.bg-void,
-textarea.bg-lm2-bg, input.bg-lm2-bg {
-  background-color: rgba(16, 34, 56, 0.5) !important;
-  background-image: linear-gradient(135deg, rgba(110,196,230,0.16), rgba(150,170,235,0.14)) !important;
-  animation: none;
-  border-color: var(--aurora-glass-border) !important;
-}
-
-/* 119篇故事插画：原本就是深色底配白字的手绘 SVG，之前为了配合浅色
-   主题临时做了反色滤镜，现在主题本身换回深色系，插画直接用原色即可，
-   已在 IllustratedBookReader 里去掉了 lx-aurora-flip 这层滤镜类。 */
-
-/* 导航栏：持续挂在屏幕最上面的常驻界面，可读性优先级比内容卡片更高，
-   单独给一个比普通卡片更实一点的极光蓝玻璃底色，不复用 .bg-void 那套
-   （那套是给内容卡片用的，透明度更高，长期常驻的导航栏用那个太透了）。
-   之前这里其实是从老版浅色主题遗留下来的 bg-white/45——没跟着整体
-   换色，这是导航栏一直显得"发灰、看不清"的真正原因。 */
 .lx-nav-glass {
-  /* v286：导航之前看起来像"一条蓝色横幅"。底色从偏蓝的
-     (10,20,38) 改为偏紫的 (10,15,45)，配合 aurora-glass-strong
-     变量（已改为无色反射版），成为悬浮玻璃而不是实心条。 */
   background-color: rgba(10, 15, 45, 0.35);
   background-image: var(--aurora-glass-strong);
   box-shadow: 0 2px 30px rgba(140, 110, 255, 0.16);
@@ -217,15 +160,6 @@ textarea.bg-lm2-bg, input.bg-lm2-bg {
 
 ::selection {
   background: rgba(127, 239, 224, 0.28);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
 }
 
 .glyph-rule {
@@ -253,285 +187,38 @@ textarea.bg-lm2-bg, input.bg-lm2-bg {
 }
 
 @keyframes breathe {
-  0% {
-    transform: scale(0.86);
-    opacity: 0.55;
-  }
-  18% {
-    transform: scale(1);
-    opacity: 0.95;
-  }
-  45% {
-    transform: scale(1);
-    opacity: 0.95;
-  }
-  64% {
-    transform: scale(0.86);
-    opacity: 0.55;
-  }
-  100% {
-    transform: scale(0.86);
-    opacity: 0.55;
-  }
+  0% { transform: scale(0.86); opacity: 0.55; }
+  18% { transform: scale(1); opacity: 0.95; }
+  45% { transform: scale(1); opacity: 0.95; }
+  64% { transform: scale(0.86); opacity: 0.55; }
+  100% { transform: scale(0.86); opacity: 0.55; }
 }
 
-/* 远古符文呼吸光——跟量子息法同一套"吸-停-呼-停"四段节律，只是这里
-   动的是发光强度而不是缩放（图标太小，缩放会显得抖），用在导航符文
-   和 LOGO 印记上，让整个场域"活"起来，而不是静态图标。 */
 .rune-breathe {
   animation: runeGlow 11s ease-in-out infinite;
 }
 @keyframes runeGlow {
-  0% {
-    opacity: 0.55;
-    filter: drop-shadow(0 0 1px currentColor);
-  }
-  18% {
-    opacity: 1;
-    filter: drop-shadow(0 0 6px currentColor);
-  }
-  45% {
-    opacity: 1;
-    filter: drop-shadow(0 0 6px currentColor);
-  }
-  64% {
-    opacity: 0.55;
-    filter: drop-shadow(0 0 1px currentColor);
-  }
-  100% {
-    opacity: 0.55;
-    filter: drop-shadow(0 0 1px currentColor);
-  }
+  0% { opacity: 0.55; filter: drop-shadow(0 0 1px currentColor); }
+  18% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+  45% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+  64% { opacity: 0.55; filter: drop-shadow(0 0 1px currentColor); }
+  100% { opacity: 0.55; filter: drop-shadow(0 0 1px currentColor); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .rune-breathe {
-    animation: none;
-    opacity: 0.9;
-  }
-}
-
-/* 中英双语切换：默认显示中文，html.lang-en 时显示英文 */
 [data-lang="en"] { display: none; }
 html.lang-en [data-lang="zh"] { display: none; }
 html.lang-en [data-lang="en"] { display: inline; }
 html.lang-en [data-lang="en"].bi-block { display: block; }
 
-/* 翻书阅读器：翻页动画 */
 .page-flip {
   animation: pageFlip 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   transform-origin: left center;
 }
 @keyframes pageFlip {
-  0% {
-    opacity: 0;
-    transform: rotateY(6deg) translateX(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: rotateY(0deg) translateX(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .page-flip { animation: none; }
+  0% { opacity: 0; transform: rotateY(6deg) translateX(10px); }
+  100% { opacity: 1; transform: rotateY(0deg) translateX(0); }
 }
 
-/* v234：统一的"玻璃面板"样式——半透明白底 + 模糊 + 细边框 + 投影，
-   专门给压在极光/星云这类照片背景上的文字卡片用。之前很多地方用的
-   是纯色（bg-void-deep）当卡片背景，纯色在某些照片背景上对比度不够、
-   看起来像是没有边框；这个类统一解决"文字压在背景图上看不清"这个
-   问题，所有产品的文字卡片都应该用这一个类，不要各自用不同的写法。 */
-/* ────────── 灵犀场玻璃面板体系 v275 ──────────
-   这一版能做透，是因为背景那边先解决了。
-   components/AuroraVideoBand.tsx 在极光之上加了一层深色宇宙罩，
-   把最亮的极光带从约 (180,200,230) 压到约 (61,71,91)。
-   压暗之后实测对比度（bone-soft 文字）：
-       极光暗部 12.9 / 中间调 12.1 / 最亮的极光带 8.2
-   全部远超 4.5 的可读标准——所以面板终于可以放心做透了。
-   遮罩 0.30，比最初的 0.55 透了近一倍，极光的流动清楚可见，
-   而文字比以前任何一版都清楚。这就是 GPT 那句诊断说对的地方：
-   问题从来不是"字压在极光上不够白"，是背景太亮，
-   要让"文字从极光里生出来"，得先把极光沉下去。
-
-   不采纳原方案的两点，理由仍然成立：
-   · border-radius 24px —— 会变成随处可见的 App 卡片，
-     4px 近直角才是灵犀场的晶体辨识度。
-   · 用 CSS 渐变替换真实极光视频 —— 那支视频是已有的好素材，
-     换成渐变是倒退。 */
-
-.lx-glass {
-  position: relative;
-  /* v286：玻璃本身近乎无色，颜色来自它反射的环境。
-     白 0.12 打底给通透，紫 0.10 与青 0.08 只作反光。
-     内光比外光重要——效果图里的面板不是靠边框亮，是内部有光。 */
-  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(180,150,255,0.10), rgba(80,220,220,0.08));
-  border: 1px solid rgba(220, 210, 255, 0.35);
-  backdrop-filter: blur(30px) saturate(165%);
-  -webkit-backdrop-filter: blur(30px) saturate(165%);
-  box-shadow: inset 0 0 40px rgba(180, 140, 255, 0.18),
-              0 0 40px rgba(120, 220, 255, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-/* 关键补充：新背景视频有几条很亮的青绿极光带（约 77,169,156），
-   面板滑过那里时，通透玻璃下的正文对比度只有 2.6，文字会消失。
-   解法不是把玻璃做厚（那就不通透了），而是给面板内容区垫一层
-   极淡的暗色——它几乎看不出来，但足以把文字托住。
-   这样玻璃保持 GPT 那版的通透，可读性也不牺牲。 */
-.lx-glass > *,
-[class*="lx-glass-"] > * {
-  position: relative;
-  z-index: 1;
-}
-.lx-glass::before,
-[class*="lx-glass-"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 4px;
-  pointer-events: none;
-  /* v295：这里原本是 rgba(16,10,34,0.44) 的暗色垫底，加上主体
-     0.46 的白玻璃，两层叠起来把背景盖掉了一半以上——
-     结果是"白卡片压在图上"，而不是"图透过水晶玻璃"。
-     现在换成极淡的折射光：左上角一点高光 + 紫青染色，
-     总不透明度不到 0.12，背景可见度回到 80%。 */
-  background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,0.12), transparent 45%),
-    linear-gradient(160deg, rgba(120,100,255,0.08), rgba(80,220,220,0.05));
-}
-
-/* 八个产品的专属色调，取自各自 PDF 封面 page-0.png 的实际取样色。
-   现在遮罩只有 0.30，色调是"染"上去的一层薄色，不是盖住背景，
-   所以产品身份能认出来，极光也仍然透得过去。 */
-.lx-glass-resilience,
-.lx-glass-romance,
-.lx-glass-wealth,
-.lx-glass-daily,
-.lx-glass-qian,
-.lx-glass-tarot,
-.lx-glass-relation,
-.lx-glass-lifemap { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(165,185,255,0.10), rgba(195,150,255,0.08)); }
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(150,230,200,0.10), rgba(120,200,255,0.08)); }
-.lx-glass-romance    { background: rgba(54, 26, 38, 0.30); border-color: rgba(255, 159, 214, 0.26); }
-.lx-glass-wealth     { background: rgba(14, 24, 48, 0.30); border-color: rgba(216, 184, 255, 0.24); }
-.lx-glass-daily      { background: rgba(20, 40, 48, 0.30); border-color: rgba(168, 216, 232, 0.26); }
-.lx-glass-qian       { background: rgba(42, 34, 44, 0.30); border-color: rgba(216, 184, 255, 0.24); }
-.lx-glass-tarot      { background: rgba(36, 28, 58, 0.30); border-color: rgba(185, 160, 235, 0.28); }
-.lx-glass-relation   { background: rgba(26, 34, 50, 0.30); border-color: rgba(185, 217, 255, 0.26); }
-.lx-glass-lifemap    { background: rgba(24, 32, 52, 0.30); border-color: rgba(185, 205, 255, 0.26); }
-
-/* v275：主标题不用纯白。
-   纯白压在极光上永远是"贴上去的"，而渐变色标题会读作"从光里长出来的"。
-   月白 → 月光紫 → 灵犀青，正好是全站三个主色，标题因此成为
-   整套配色的索引，而不是一个孤立的装饰。
-   注意保留 color 作为兜底：少数浏览器不支持 background-clip:text，
-   不加兜底会变成完全透明、整行标题消失。 */
-.lx-hero-title {
-  /* v285：渐变从"紫→青→紫"改为"月白→紫晶→青"，与紫晶背景同源。
-     字重更细、字距更大——参考意见说得对：现在的排版太紧，
-     灵犀场应该像艺术书，不像产品说明页。 */
-  color: #F4EDFF;
-  font-weight: 200;
-  letter-spacing: 0.34em;
-  background: linear-gradient(96deg, #F4EDFF 0%, #C89BFF 48%, #7FEBD8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 36px rgba(180, 120, 255, 0.50));
-}
-
-/* 呼吸光：给需要"活着"的元素用，8 秒一个循环，比心跳慢，
-   慢到不打扰阅读，但足以让人感觉这一页没有静止。 */
-@keyframes lx-breath {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50%      { opacity: 1;    transform: scale(1.04); }
-}
-.lx-breath { animation: lx-breath 8s ease-in-out infinite; }
-
-/* 尊重系统的"减少动态效果"设置——前庭功能敏感的人会因持续动画
-   感到不适，这是无障碍的基本要求，不是可选项。 */
-@media (prefers-reduced-motion: reduce) {
-  .lx-breath { animation: none; opacity: 0.85; }
-}
-
-/* ══════════════════════════════════════════════════════
-   灵犀场玻璃面板 v284
-
-   v283 试过把 PDF 图铺进面板当底——效果不好：面板尺寸和 PDF 比例
-   对不上，铺进去只能看到图的中间一小块，是截图不是完整画面，
-   而且十个产品的图各不相同，整站看下去很杂。撤掉。
-
-   回到玻璃面板。新视频比旧的暗很多（中位亮度 39,43,72），所以面板
-   可以做得比以前任何一版都透。但新视频有几条很亮的青绿极光带
-   （约 77,169,156），实测面板做到 0.20 时那里的正文只有 3.05，
-   读不清；提到 0.42 后是 4.18，暗部仍有 10.0，通透感没丢。产品之间用色相区分，不用底图区分——
-   同样能认出"我在哪个产品里"，但整站是统一的。
-   ══════════════════════════════════════════════════════ */
-
-.lx-glass {
-  position: relative;
-  background: linear-gradient(135deg, rgba(58,72,140,0.42), rgba(74,58,130,0.38));
-  border: 1px solid rgba(190, 215, 255, 0.26);
-  /* saturate(160%) 是关键，之前只写了 1.12，差太远。
-     它让透过玻璃的背景颜色变浓——这是"通透玻璃"和"灰蒙蒙塑料片"
-     的分界线。不加饱和，透过来的紫和青是灰的，怎么调透明度都显脏。 */
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  /* 外阴影给漂浮感，内阴影给厚度——玻璃是有体积的，不是一张贴纸 */
-  box-shadow: 0 24px 70px rgba(4, 8, 26, 0.42),
-              inset 0 0 44px rgba(255, 255, 255, 0.09);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-/* 边缘扫光：一道极淡的光每 9 秒扫过一次。
-   频率刻意放慢——太频繁会变成"闪"，慢到几乎察觉不到才像光在流动。 */
-.lx-glass::after,
-[class*="lx-glass-"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(118deg, transparent 35%, rgba(255,255,255,0.10) 50%, transparent 65%);
-  transform: translateX(-100%);
-  animation: lx-shine 9s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes lx-shine { 45%, 100% { transform: translateX(100%); } }
-@media (prefers-reduced-motion: reduce) {
-  .lx-glass::after, [class*="lx-glass-"]::after { animation: none; opacity: 0; }
-}
-
-/* 八个产品的色相。只改色相不改透明度，保证整站通透一致。 */
-.lx-glass-resilience,
-.lx-glass-romance,
-.lx-glass-wealth,
-.lx-glass-daily,
-.lx-glass-qian,
-.lx-glass-tarot,
-.lx-glass-relation,
-.lx-glass-lifemap {
-  position: relative;
-  border: 1px solid rgba(220, 210, 255, 0.35);
-  backdrop-filter: blur(30px) saturate(165%);
-  -webkit-backdrop-filter: blur(30px) saturate(165%);
-  box-shadow: inset 0 0 40px rgba(180, 140, 255, 0.18),
-              0 0 40px rgba(120, 220, 255, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(150,230,200,0.10), rgba(120,200,255,0.08)); }
-.lx-glass-romance    { background: linear-gradient(135deg, rgba(190,110,170,0.20), rgba(140,90,190,0.17)); }
-.lx-glass-wealth     { background: linear-gradient(135deg, rgba(90,130,215,0.20), rgba(130,95,200,0.17)); }
-.lx-glass-daily      { background: linear-gradient(135deg, rgba(80,180,205,0.20), rgba(85,125,205,0.17)); }
-.lx-glass-qian       { background: linear-gradient(135deg, rgba(150,120,210,0.20), rgba(110,95,195,0.17)); }
-.lx-glass-tarot      { background: linear-gradient(135deg, rgba(150,100,225,0.21), rgba(100,115,220,0.17)); }
-.lx-glass-relation   { background: linear-gradient(135deg, rgba(105,140,220,0.20), rgba(160,105,205,0.17)); }
-.lx-glass-lifemap    { background: linear-gradient(135deg, rgba(95,145,225,0.20), rgba(135,100,205,0.17)); }
-
-/* v277：修炼次第卡片。
-   悬停时轻微上浮 + 边框泛紫，暗示"可以进去"，但不做夸张位移——
-   这是一条修行路径的入口，不是电商货架上的商品卡。 */
 .lx-practice-card {
   background: rgba(10, 20, 50, 0.30);
   border: 1px solid rgba(200, 200, 255, 0.16);
@@ -546,11 +233,7 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   transform: translateY(-6px);
   box-shadow: 0 12px 40px rgba(160, 150, 255, 0.18);
 }
-@media (prefers-reduced-motion: reduce) {
-  .lx-practice-card, .lx-practice-card:hover { transition: none; transform: none; }
-}
 
-/* 主标题两侧的装饰线，效果图里那个 —— ✦ —— */
 .lx-rule {
   display: flex;
   align-items: center;
@@ -565,9 +248,6 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   background: linear-gradient(90deg, transparent, rgba(216,184,255,.55), transparent);
 }
 
-/* 入口按钮：胶囊 + 柔光。这是全站唯一一个用大圆角的元素——
-   按钮是"门"，圆的门口比方的更像可以走进去；
-   面板保持 4px 直角，两者不冲突。 */
 .lx-portal-btn {
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(200,155,255,.30), rgba(127,235,216,.20));
@@ -580,13 +260,7 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
   transform: translateY(-3px);
   box-shadow: 0 0 56px rgba(190,150,255,.62);
 }
-@media (prefers-reduced-motion: reduce) {
-  .lx-portal-btn, .lx-portal-btn:hover { transition: none; transform: none; }
-}
 
-/* v282：意识核心。首屏中央那颗球是视觉中心，之前被压暗带挡住、
-   又没有自己的发光，所以整个首屏没有"爆点"。
-   三层外扩光晕：近处青白、中层紫、远处冷青，越远越淡。 */
 .lx-orb-core {
   background: radial-gradient(circle,
     #ffffff 0%,
@@ -599,85 +273,28 @@ html.lang-en [data-lang="en"].bi-block { display: block; }
     0 0 220px rgba(50, 220, 255, 0.30);
 }
 
-/* v293：报告页专用浅色玻璃。
-   新 PDF 素材是浅色晨雾水彩，深色面板压上去会显脏、把画面压死；
-   浅色玻璃才透得出底下的画，也与下载的 PDF 保持一致——
-   用户在网页看到的和保存到微信里的是同一种质感。 */
-.lx-report-glass {
-  position: relative;
-  /* v295：目标是"背景 80% 可见，玻璃 20% 存在感"。
-     0.46 的白太实，把 PDF 原图压死了。换成低 alpha 的彩色折射玻璃：
-     蓝绿打底给生命感，紫作反光，白只留一点点高光。
-     实测深色文字在这上面对比度 7.4，可读性完全够。 */
-  background: linear-gradient(135deg,
-    rgba(80, 150, 180, 0.16),
-    rgba(100, 220, 200, 0.08),
-    rgba(150, 120, 255, 0.10));
-  border: 1px solid rgba(200, 235, 225, 0.30);
-  /* ─────────────────────────────────────────────────────────────
-     v300：这里是"网页面板发白发厚、下载的 PDF 却清透漂亮"这个
-     长期问题的真正根因，不在颜色、不在透明度，在 backdrop-filter。
-
-     两边用的是同一份 CSS，但渲染路径完全不同：
-       · 浏览器：真的执行 backdrop-filter，把面板背后 22px 范围内的
-         画面糊成一团，再叠 150% 饱和。底图的极光、云、水面全被抹成
-         一片均匀的浅色，视觉上就是"一块厚白板"——不是白得过头，是
-         底下的画被模糊掉了，没东西可透。
-       · html2canvas（生成 PDF 用的）：根本不支持 backdrop-filter，
-         直接忽略。所以 PDF 里的面板是低透明度彩色玻璃直接压在
-         清晰的原图上——这才是你截图三里那种清透质感。
-
-     也就是说：PDF 好看不是因为 PDF 做了什么，是因为它跳过了这行。
-     修法不是去调 alpha（越调越浑），是把模糊降到"只留一点点玻璃
-     折射感"的程度。6px 足以让面板看起来是块玻璃，又不会把底下的
-     画糊掉；饱和度保持 1，不再人为提色，网页和 PDF 才是同一张脸。
-     ───────────────────────────────────────────────────────────── */
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 20px 60px rgba(30, 40, 70, 0.20),
-              inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  border-radius: 6px;
+.lx-hero-title {
+  color: #F4EDFF;
+  font-weight: 200;
+  letter-spacing: 0.34em;
+  background: linear-gradient(96deg, #F4EDFF 0%, #C89BFF 48%, #7FEBD8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 36px rgba(180, 120, 255, 0.50));
 }
 
-/* v300：极低端设备 / 不支持 backdrop-filter 的浏览器兜底——
-   没有玻璃折射时，纯低 alpha 渐变压在照片上文字会不好读，
-   这时候（也只有这时候）补一点底色保证对比度。 */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .lx-report-glass {
-    background: linear-gradient(135deg,
-      rgba(246, 244, 240, 0.72),
-      rgba(240, 244, 248, 0.68));
+.lx-breath { animation: lx-breath 8s ease-in-out infinite; }
+@keyframes lx-breath {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
-
-/* v296：报告页浅色玻璃内的文字色。
-   之前网页里页头页尾用深色主题的白字（text-bone），
-   压在浅色玻璃上几乎看不见——用户反馈"网页里字是白色，
-   其他文字是黑色的，自然是黑色的看得清"。
-   这里用属性选择器一次覆盖，不需要去每个组件改 className，
-   数值与 PDF 完全一致，保证网页看到的和下载保存的是同一种质感。 */
-/* v299：上面的注释描述了旧问题，但当时的修复方案（.lx-report-glass
-   .text-lattice 这类精确class选择器）只覆盖了不带透明度的写法。
-   代码里大量用的其实是 text-lattice/85、text-amber/90、text-rose/80
-   这类带透明度的写法，Tailwind编译后是不同的class名，完全没被上面
-   覆盖到——这些文字在浅色玻璃面板上颜色还是给深色背景设计的浅色调，
-   是同一类"看不清"的bug，只是没有白字那么极端，容易被漏掉。这里
-   改用属性选择器一次性覆盖同一色系所有透明度变体，新增透明度写法
-   不用再加新CSS规则。同时补上 text-emerald-300（生命韧性等报告页
-   头部用到，之前完全没被覆盖）。 */
-.lx-report-glass,
-.lx-report-glass [class*="text-bone"] { color: #2E2742; }
-.lx-report-glass [class*="text-lattice"]      { color: #1F6F63; }
-.lx-report-glass [class*="text-amber"]        { color: #6D4A9C; }
-.lx-report-glass [class*="text-rose"]         { color: #A63D74; }
-.lx-report-glass [class*="text-emerald-300"]  { color: #1F6F63; }
-.lx-report-glass [class*="text-bone-mute"] { color: #6B6285; }
-.lx-report-glass h1,
-.lx-report-glass h2,
-.lx-report-glass h3 { color: #3A2E52; }
-.lx-report-glass input,
-.lx-report-glass textarea { color: #2E2742; }
-.lx-report-glass input::placeholder { color: #7A7290; }
-/* 分隔线与边框也要跟着变浅，否则深色描边在浅玻璃上很突兀 */
-.lx-report-glass .border-white\/10,
-.lx-report-glass .border-white\/15 { border-color: rgba(58, 46, 82, 0.14) !important; }
