@@ -36,7 +36,7 @@ function loadJsonFile(category: string, filename: string) {
 }
 
 // ==========================================
-// 1. 关系共振图谱引擎
+// 1. 关系共振图谱引擎 (v300 11页终极排版)
 // ==========================================
 export function generateStaticRelationshipReport(resonanceData: any, relationType: string = 'romantic') {
   const combosData = loadJsonFile('relationship', 'combos.json');
@@ -56,8 +56,6 @@ export function generateStaticRelationshipReport(resonanceData: any, relationTyp
     if (node) {
       resonantText = `${node.title}\n\n${node.full_narrative}`;
       actionText += `【同频指令】\n${node.action_dendrite?.[relationType] || node.action_dendrite?.default || ''}\n\n`;
-    } else {
-      resonantText = `你们在【${resonanceData.resonant[0].labelZh}】上产生了极强的同频共振，这是你们天然的吸引力底座。`;
     }
   }
 
@@ -66,8 +64,6 @@ export function generateStaticRelationshipReport(resonanceData: any, relationTyp
     if (node) {
       complementaryText = `${node.title}\n\n${node.full_narrative}`;
       actionText += `【互补指令】\n${node.action_dendrite?.[relationType] || node.action_dendrite?.default || ''}\n\n`;
-    } else {
-      complementaryText = `你们在【${resonanceData.complementary[0].labelZh}】形成了一组精妙的互补谐波。`;
     }
   }
 
@@ -76,52 +72,59 @@ export function generateStaticRelationshipReport(resonanceData: any, relationTyp
     if (node) {
       frictionText = `${node.title}\n\n${node.full_narrative}`;
       actionText += `【摩擦调音】\n${node.action_dendrite?.[relationType] || node.action_dendrite?.default || ''}\n\n`;
-    } else {
-      frictionText = `你们在【${resonanceData.friction[0].labelZh}】上存在能量摩擦，需要重点调音。`;
     }
   }
 
-  return `===01===\n${resonantText || '（暂缺场域数据）'}\n===02===\n${complementaryText || '（平行的灵魂轨迹）'}\n===03===\n${frictionText || '（极其稳定的场域）'}\n===04===\n在时间的长河中，这段关系不是为了束缚，而是为了让你们在这面镜子里，重新忆起自己灵魂原本的模样。保持你们的连贯性（Coherence），关系自然会走向它最高维的形态。\n===05===\n【场域专属行动指令】\n${actionText.trim()}`;
+  // 拼接完整的 11 章 PDF 骨架，完美对应 11 张背景图
+  let report = "";
+  report += "===01===\n【场域引言】\n在灵犀场的观测中，你们的相遇并非随机的布朗运动，而是两股独立主权（Sovereign）能量的必然交织。在这个场域里，没有谁需要被拯救，也没有谁需要被改造。你们是两面镜子，映照出彼此灵魂深处最隐秘的几何结构。\n";
+  report += `===02===\n${resonantText || '【罕见的独立频率】\n你们的能量场呈现出一种罕见的独立性。你们的吸引力不来自于相似，而来自于对彼此未知维度的探索欲望。'}\n`;
+  report += `===03===\n${complementaryText || '【平行的灵魂轨迹】\n你们在多数维度上保持着平行的频率，这意味着你们极少试图去控制或改变对方，你们的动力来源于并肩同行。'}\n`;
+  report += `===04===\n${frictionText || '【绝对稳定的场域】\n在灵犀场的观测中，你们的场域非常稳定，几乎没有核爆级的能量摩擦。这为你们提供了极大的安全感。'}\n`;
+  report += "===05===\n【能量边界与底色】\n在这段关系中，你们最大的挑战不是外界的阻力，而是内部能量的互相吞噬。请记住，爱是结构性的智能，不设立边界的付出只会导致微细信任之躯的崩溃。无论多亲密，永远为自己保留20%的绝对主权空间。\n";
+  report += "===06===\n【时间法则：印记交织】\n从玛雅历法的维度来看，你们处于一种极其特殊的‘拓展与隐藏’频率上。当你们在日常中感到平淡时，这其实是场域在蓄力；而当危机来临时，你们往往能爆发出让周围人震惊的默契。对方是你生命结构里潜藏的降落伞。\n";
+  report += "===07===\n【财富显化与物质共振】\n你们的结合不仅是情感的交织，更是一台强悍的显化引擎。只要你们停止在情绪层面的内耗，将那股拉扯的力量转向外部世界，你们完全有能力在三维世界中共同铸造出极其坚固的物质基础和商业版图。\n";
+  report += "===08===\n【信息降噪与沟通协议】\n你们之间80%的争吵，其实都源于‘频率失真’。一方表达的是A，另一方接收到的却是带有情绪滤镜的B。下一次发生分歧时，请尝试静默3分钟，不带任何评判地复述对方的话，你们会发现问题瞬间消散。\n";
+  report += "===09===\n【前世印记与灵魂契约】\n你们的灵魂在降生前，曾在更高维度签订过一份契约。你们答应在这一世重逢，用彼此最不舒服的方式，逼迫对方打破原本僵化的自我边界，从而完成一次跨越维度的进化。\n";
+  report += "===10===\n【长期演化导航】\n在时间的长河中，这段关系不是为了束缚，而是为了让你们在这面镜子里，重新忆起自己灵魂原本的模样。保持你们的连贯性（Coherence），接纳一切失控，关系自然会走向它最高维的形态。\n";
+  report += `===11===\n【场域专属调音指令】\n${actionText.trim() || "退回各自的空间，先让自己的场域恢复连贯性。"}\n`;
+
+  return report;
 }
 
 // ==========================================
-// 2. 生命图谱引擎 (Life Map)
+// 2. 生命图谱引擎 (Life Map) 保持原样
 // ==========================================
 export function generateStaticLifeMapReport(calcData: any, userStatus: string = 'default') {
   const { topTraits, conflicts, wealth, resilience } = calcData;
   const nodesData = loadJsonFile('life-map', 'nodes.json')?.nodes || [];
   const combosData = loadJsonFile('life-map', 'combos.json')?.combos || [];
 
-  // --- 01. 核心矛盾场域 (Conflicts) ---
   let conflictText = "";
   if (conflicts && conflicts.length > 0) {
-    const conflictId = `freedom_vs_stability`; // 优先匹配底层定义好的矛盾ID，这里做动态匹配
     const comboNode = combosData.find((c: any) => c.condition?.conflict === `${conflicts[0].a}_vs_${conflicts[0].b}`) 
-                   || combosData[0]; // 兜底抓取第一个
+                   || combosData[0];
     if (comboNode) {
       conflictText = `${comboNode.title}\n\n${comboNode.full_narrative}\n\n【场域调音指令】\n${comboNode.growthDirection?.[userStatus] || comboNode.growthDirection?.default}`;
     }
   }
 
-  // --- 02. 财富显化原型 (Wealth) ---
   let wealthText = "";
   if (wealth && wealth.type) {
     const wNode = nodesData.find((n: any) => n.dimension === 'wealth_archetype' && n.archetype === wealth.type)
-               || nodesData.find((n: any) => n.dimension === 'wealth_archetype'); // 兜底
+               || nodesData.find((n: any) => n.dimension === 'wealth_archetype');
     if (wNode) {
       wealthText = `${wNode.full_narrative}\n\n【财富显化动作】\n${wNode.growthDirection?.[userStatus] || wNode.growthDirection?.default}`;
     }
   }
 
-  // --- 03. 生命韧性与高敏雷达 (Resilience) ---
   let resText = "";
   const rNode = nodesData.find((n: any) => n.dimension === 'resilience' && n.band === 'vlow') 
-             || nodesData.find((n: any) => n.dimension === 'fusion_need'); // 兜底节点
+             || nodesData.find((n: any) => n.dimension === 'fusion_need');
   if (rNode) {
     resText = `${rNode.full_narrative || rNode.fieldText?.zh}\n\n【高敏雷达护城河】\n${rNode.growthDirection?.[userStatus] || rNode.growthDirection?.default}`;
   }
 
-  // 拼接 13 章完整生命图谱 PDF 骨架
   let report = "";
   report += `===01===\n在灵犀场的观测中，你是一个拥有独立主权（Sovereign）的灵魂。你的生命并非随机生成的碎片，而是一套精密的几何结构。你底层最核心的驱动力是【${topTraits[0]?.labelZh || '自由与探索'}】。你一生的课题，不是去迎合外界的模具，而是将这股能量提纯，直到它能与宇宙源头发出最纯粹的共振（Resonance）。\n`;
   report += `===02===\n【八字与底层矛盾扫描】\n${conflictText}\n`;
