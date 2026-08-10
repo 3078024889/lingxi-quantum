@@ -4,8 +4,6 @@ import React, { useEffect, useState, use } from 'react';
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 
-export const metadata = { title: "关系共振图谱 | 灵犀 · Relationship Resonance Map | Lingxi" };
-
 export default function RelationshipFullPage({ searchParams }: { searchParams: Promise<{ id?: string }> | { id?: string } }) {
   // 适配 Next.js 13/14/15 的 searchParams 异步解析
   const resolvedParams = searchParams instanceof Promise ? use(searchParams) : searchParams;
@@ -16,6 +14,9 @@ export default function RelationshipFullPage({ searchParams }: { searchParams: P
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // 动态设置网页标题，完美绕过 Vercel 报错
+    document.title = "关系共振图谱 | 灵犀 · Relationship Resonance Map | Lingxi";
+
     async function fetchStaticReport() {
       if (!id) {
         setError('缺少报告 ID。');
@@ -24,7 +25,6 @@ export default function RelationshipFullPage({ searchParams }: { searchParams: P
       }
 
       try {
-        // 直接请求我们刚刚重构好的 0-Token 静态后端接口
         const res = await fetch('/api/relationship/generate-full', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
