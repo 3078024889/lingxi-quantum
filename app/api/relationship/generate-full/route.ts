@@ -8,7 +8,7 @@ import { getRelationshipProductMeta } from '@/lib/relationship-config';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
-  // 必须放在函数内部
+  // 【关键修复】必须放在 POST 函数内部，防止 Vercel 编译崩溃
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   const supabase = createClient(supabaseUrl, supabaseKey);
