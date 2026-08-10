@@ -3,25 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 import { computeLifeVector, findConflicts, calculateResilience, calculateWealthDetail, topTraits } from '@/lib/life-vector';
 import { generateStaticLifeMapReport } from '@/lib/knowledge-loader';
 
-// 绕过 RLS 强制写入数据库
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// 强制动态渲染，防止 Vercel 在编译时提前静态验算导致崩溃
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
+  // 【关键修复】将初始化移入函数内部，确保只在用户请求时获取环境变量
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
   try {
     const body = await request.json();
-    
-    // 兼容：前端可能传 id，也可能传 submissionId
-    const targetId = body.id || body.submissionId;
-    const forceRegenerate = body.forceRegenerate || false;
+    const { id, forceRegenerate } = body;
 
-    if (!targetId) {
-      console.error("[灵犀场预警] 缺少 ID，前端传来的 body:", body);
-      return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
-    }
+    if (!id) return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
 
-    // 智能探测可能的表名
     const possibleTables = ['lifemap_submissions', 'lifemaps', 'life_map_submissions', 'lifemap_reports'];
     let submission = null;
     let matchedTable = '';
@@ -30,7 +26,7 @@ export async function POST(request: Request) {
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
-        .eq('id', targetId)
+        .eq('id', id)
         .single();
       
       if (data && !error) {
@@ -41,13 +37,10 @@ export async function POST(request: Request) {
     }
 
     if (!submission || !matchedTable) {
-      console.error(`[灵犀场预警] 在数据库中未找到 ID: ${targetId}`);
       return NextResponse.json({ error: 'Submission not found in any lifemap table' }, { status: 404 });
     }
 
-    // --- 极速物理计算层（兼容 facts 或 fact 字段） ---
-    const rawFacts = submission.facts || submission.fact || {};
-    const v = computeLifeVector(rawFacts);
+    const v = computeLifeVector(submission.facts || submission.fact || {});
     const conflicts = findConflicts(v);
     const resilience = calculateResilience(v);
     const wealth = calculateWealthDetail(v);
@@ -61,14 +54,13 @@ export async function POST(request: Request) {
     const calcData = { v, conflicts, resilience, wealth, topTraits: traits };
     const finalReportText = generateStaticLifeMapReport(calcData, userStatus);
 
-    // 将报告存入精准匹配的数据库表
     const { error: updateError } = await supabase
       .from(matchedTable)
       .update({
         full_report: finalReportText,
         full_report_en: finalReportText
       })
-      .eq('id', targetId);
+      .eq('id', id);
 
     if (updateError) {
       console.error("[灵犀场预警] 数据库更新报告失败:", updateError);
