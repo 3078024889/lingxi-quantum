@@ -85,20 +85,33 @@ function categoryOf(productId: string): "field-test" | "membership" | "narrative
 // 报告类产品要带上submission_id才能跳到具体那一份；叙事单篇要跳到
 // 对应文章；修炼技术、显化订阅、叙事年度解锁这些没有"某一份具体
 // 报告"的产品，跳到对应的功能入口页。
+//
+// v301：真实事故修复——之前 submission_id 缺失时直接 return null，
+// 导致这笔订单在场域入口里"查看报告/下载PDF"整个按钮都不渲染，
+// 用户会觉得"报告不见了"。现在两步兜底：
+//   1) 服务端按 user_id 在对应提交表里就近查一次（见下方
+//      backfillSubmissionIds），能找回大多数老订单的精确链接；
+//   2) 实在查不到，也不再返回 null——退化成跳到产品免费页，
+//      并用不同的文案告诉用户"这是笔老订单，请联系客服核对"，
+//      而不是让整张订单卡片看起来像坏掉了。
+export const REPORT_BASE: Record<string, string> = {
+  "life-map-report": "/life-map/full",
+  "relationship-resonance": "/relationship/full",
+  "qian-reading": "/qian/full",
+  "tarot-reading": "/mirror/reading/full",
+  "resilience-report": "/resilience/full",
+  "romance-report": "/romance/full",
+  "daily-tide-report": "/daily/full",
+  "wealth-report": "/wealth/full",
+};
+
 function resolveDestination(order: OrderRow): { href: string; labelZh: string; labelEn: string } | null {
-  const REPORT_BASE: Record<string, string> = {
-    "life-map-report": "/life-map/full",
-    "relationship-resonance": "/relationship/full",
-    "qian-reading": "/qian/full",
-    "tarot-reading": "/mirror/reading/full",
-    "resilience-report": "/resilience/full",
-    "romance-report": "/romance/full",
-    "daily-tide-report": "/daily/full",
-    "wealth-report": "/wealth/full",
-  };
   if (REPORT_BASE[order.product_id]) {
-    if (!order.submission_id) return null; // 极老的订单可能没存这一列，没法精确跳转
-    return { href: `${REPORT_BASE[order.product_id]}?id=${order.submission_id}`, labelZh: "查看报告 / 下载PDF", labelEn: "View Report / Download PDF" };
+    if (order.submission_id) {
+      return { href: `${REPORT_BASE[order.product_id]}?id=${order.submission_id}`, labelZh: "查看报告 / 下载PDF", labelEn: "View Report / Download PDF" };
+    }
+    // 兜底也没查到——不返回 null，退化成跳产品页，按钮仍然可见可点。
+    return { href: REPORT_BASE[order.product_id], labelZh: "订单较早·点击核对", labelEn: "Older order · click to verify" };
   }
   const PRACTICE_BASE: Record<string, string> = {
     breath: "/practice/breath", intuition: "/practice/intuition",
@@ -206,6 +219,56 @@ function OrderCard({ o }: { o: OrderRow }) {
   );
 }
 
+// v301：submission_id 缺失订单的兜底——按 product_id 找到对应的提交表，
+// 在该表里查这个用户名下的所有提交记录，取"created_at 早于等于订单
+// 下单时间、且离下单时间最近"的那一条（正常流程是先提交测评数据、
+// 紧接着才去下单，两者时间点必然挨得很近，这个假设站得住）。
+// 找不到就保持 submission_id 为空，交给上面 resolveDestination 的
+// 第二层兜底处理，不强行拼一个可能是错的链接。
+const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
+  "life-map-report": "life_map_submissions",
+  "relationship-resonance": "relationship_submissions",
+  "qian-reading": "qian_submissions",
+  "tarot-reading": "tarot_reading_submissions",
+  "resilience-report": "resilience_submissions",
+  "romance-report": "romance_submissions",
+  "daily-tide-report": "daily_tide_submissions",
+  "wealth-report": "wealth_submissions",
+};
+
+async function backfillSubmissionIds(
+  supabase: ReturnType<typeof createClient>,
+  userId: string,
+  orders: OrderRow[]
+): Promise<OrderRow[]> {
+  const missing = orders.filter((o) => !o.submission_id && SUBMISSION_TABLE_BY_PRODUCT[o.product_id]);
+  if (missing.length === 0) return orders;
+
+  // 按表分组查一次，避免每笔订单单独查一次数据库。
+  const tablesNeeded = Array.from(new Set(missing.map((o) => SUBMISSION_TABLE_BY_PRODUCT[o.product_id])));
+  const subsByTable: Record<string, { id: string; created_at: string }[]> = {};
+  await Promise.all(
+    tablesNeeded.map(async (table) => {
+      const { data, error } = await supabase
+        .from(table)
+        .select("id, created_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (!error) subsByTable[table] = (data as { id: string; created_at: string }[]) ?? [];
+    })
+  );
+
+  return orders.map((o) => {
+    if (o.submission_id || !SUBMISSION_TABLE_BY_PRODUCT[o.product_id]) return o;
+    const table = SUBMISSION_TABLE_BY_PRODUCT[o.product_id];
+    const candidates = (subsByTable[table] ?? []).filter((s) => new Date(s.created_at) <= new Date(o.created_at));
+    if (candidates.length === 0) return o;
+    // 已按 created_at 倒序取回，第一条就是"早于下单时间里最近的一条"。
+    return { ...o, submission_id: candidates[0].id };
+  });
+}
+
 export default async function FieldOrdersPage() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -219,6 +282,7 @@ export default async function FieldOrdersPage() {
       .order("created_at", { ascending: false })
       .limit(100);
     orders = (data as OrderRow[]) ?? [];
+    orders = await backfillSubmissionIds(supabase, user.id, orders);
   }
 
   const fieldTestOrders = orders.filter((o) => categoryOf(o.product_id) === "field-test");
