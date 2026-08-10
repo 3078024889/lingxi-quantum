@@ -15,18 +15,31 @@ export async function POST(request: Request) {
 
     if (!id) return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
 
-    const { data: submission, error: fetchError } = await supabase
-      .from('lifemap_submissions')
-      .select('*')
-      .eq('id', id)
-      .single();
+    // 智能探测可能的表名，彻底解决 Submission not found 问题
+    const possibleTables = ['lifemap_submissions', 'lifemaps', 'life_map_submissions', 'lifemap_reports'];
+    let submission = null;
+    let matchedTable = '';
 
-    if (fetchError || !submission) {
-      return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
+    for (const tableName of possibleTables) {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (data && !error) {
+        submission = data;
+        matchedTable = tableName;
+        break;
+      }
+    }
+
+    if (!submission || !matchedTable) {
+      return NextResponse.json({ error: 'Submission not found in any lifemap table' }, { status: 404 });
     }
 
     // --- 极速物理计算层（毫秒级） ---
-    const v = computeLifeVector(submission.facts);
+    const v = computeLifeVector(submission.facts || submission.fact || {});
     const conflicts = findConflicts(v);
     const resilience = calculateResilience(v);
     const wealth = calculateWealthDetail(v);
@@ -44,12 +57,12 @@ export async function POST(request: Request) {
     const calcData = { v, conflicts, resilience, wealth, topTraits: traits };
     const finalReportText = generateStaticLifeMapReport(calcData, userStatus);
 
-    // 将 13 章完整极品文案存入数据库
+    // 将 13 章完整极品文案存入精准匹配的数据库表
     const { error: updateError } = await supabase
-      .from('lifemap_submissions')
+      .from(matchedTable)
       .update({
         full_report: finalReportText,
-        full_report_en: finalReportText // 存一份防止多语言报错
+        full_report_en: finalReportText
       })
       .eq('id', id);
 
