@@ -7,14 +7,14 @@ import { generateStaticLifeMapReport } from '@/lib/knowledge-loader';
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
-  // 【关键修复】将初始化移入函数内部，确保只在用户请求时获取环境变量
+  // 【关键修复】必须放在函数内部，只有请求时才读取环境变量
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
     const body = await request.json();
-    const { id, forceRegenerate } = body;
+    const { id, forceRegenerate, lang } = body;
 
     if (!id) return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
 
@@ -23,12 +23,7 @@ export async function POST(request: Request) {
     let matchedTable = '';
 
     for (const tableName of possibleTables) {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select('*')
-        .eq('id', id)
-        .single();
-      
+      const { data, error } = await supabase.from(tableName).select('*').eq('id', id).single();
       if (data && !error) {
         submission = data;
         matchedTable = tableName;
@@ -40,26 +35,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Submission not found in any lifemap table' }, { status: 404 });
     }
 
+    // 判断是去查英文缓存还是中文缓存
+    const targetReportCol = lang === 'en' ? 'full_report_en' : 'full_report';
+    if (submission[targetReportCol] && !forceRegenerate) {
+      return NextResponse.json({ success: true, report: submission[targetReportCol] });
+    }
+
     const v = computeLifeVector(submission.facts || submission.fact || {});
     const conflicts = findConflicts(v);
     const resilience = calculateResilience(v);
     const wealth = calculateWealthDetail(v);
     const traits = topTraits(v, 3);
     
-    if (submission.full_report && !forceRegenerate) {
-      return NextResponse.json({ success: true, report: submission.full_report });
-    }
-
     const userStatus = submission.occupation || 'default';
     const calcData = { v, conflicts, resilience, wealth, topTraits: traits };
-    const finalReportText = generateStaticLifeMapReport(calcData, userStatus);
 
+    // ⚡ 降维打击：将前端传来的 lang 塞进知识库引擎
+    const finalReportText = generateStaticLifeMapReport(calcData, userStatus, lang);
+
+    // 存入对应语言的字段
     const { error: updateError } = await supabase
       .from(matchedTable)
-      .update({
-        full_report: finalReportText,
-        full_report_en: finalReportText
-      })
+      .update({ [targetReportCol]: finalReportText })
       .eq('id', id);
 
     if (updateError) {
