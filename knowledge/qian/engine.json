@@ -1,0 +1,9 @@
+{
+  "engine": "lib/qian-knowledge.ts",
+  "audit": "scripts/audit-qian-knowledge.mjs",
+  "knowledgeVersion": "qian-2026.08.1",
+  "expectedChapters": 11,
+  "semanticBands": 13,
+  "signPools": { "origin": 24, "soul": 24, "walker": 16 },
+  "status": "active"
+}

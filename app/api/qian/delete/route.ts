@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = createClient()
+  const admin = createAdminClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -18,7 +20,7 @@ export async function POST(req: Request) {
   }
   if (!body.id) return NextResponse.json({ error: "缺少记录 ID。" }, { status: 400 });
 
-  const { data, error } = await supabase
+  const { data, error } = await admin
     .from("qian_submissions")
     .delete()
     .eq("id", body.id)

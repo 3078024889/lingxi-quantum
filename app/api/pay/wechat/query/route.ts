@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   if (order.status === "paid") {
     return NextResponse.json({ paid: true });
   }
-  if (!order.provider_payment_id) {
+  if (order.provider !== "wechat" || !order.provider_payment_id) {
     return NextResponse.json({ paid: false });
   }
 
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
   // 可能会因为网络原因延迟或者丢失，前端轮询这个接口，是给用户体验加
   // 一层保险，不会出现"明明扫码付完了、页面却一直转圈"这种情况。
   try {
-    const { paid } = await queryWechatOrder(order.provider_payment_id);
+    const { paid } = await queryWechatOrder(order.provider_payment_id, Math.round(Number(order.amount_rmb) * 100));
     if (paid) {
       // v253：之前这里不管fulfillPaidOrder成不成功，都直接告诉前端
       // "已支付"，带用户跳转过去——这正是"钱到账了、页面也提示成功、

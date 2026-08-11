@@ -1,0 +1,9 @@
+{
+  "engine": "lib/lifemap-knowledge.ts",
+  "audit": "scripts/audit-lifemap-knowledge.mjs",
+  "knowledgeVersion": "life-map-2026.08.1",
+  "expectedChapters": 15,
+  "semanticBands": 13,
+  "bodyImagePolicy": "cover-page-0 plus cyclic page-1-to-page-11",
+  "status": "active"
+}

@@ -91,25 +91,17 @@ export default function TarotReadingReport({ id }: { id: string }) {
         let data = await res.json();
         if (!res.ok || !data.fullReport) {
           setStatus("error");
-          setError((data.error || t("生成失败，请稍后再试。", "Generation failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
+          setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
           return;
         }
-        let parts = (data.fullReport as string)
+        const parts = (data.fullReport as string)
           .split(/===\s*\d+\s*===/)
-          .map((s: string) => s.trim())
+          .map((section: string) => section.trim())
           .filter(Boolean);
-        // v237：升级前生成的旧缓存是12段（价值创造地图之前还没合并），
-        // 检测到段数偏多，自动重新生成成新的11段结构。
-        if (parts.length > 11) {
-          console.error("[tarot report] 检测到旧版本缓存（" + parts.length + "段），自动升级为11章节新结构");
-          res = await fetchReport(true);
-          data = await res.json();
-          if (res.ok && data.fullReport) {
-            parts = (data.fullReport as string)
-              .split(/===\s*\d+\s*===/)
-              .map((s: string) => s.trim())
-              .filter(Boolean);
-          }
+        if (parts.length !== LAYER_TITLES.length) {
+          setStatus("error");
+          setError(t("报告章节不完整，请稍后重新打开。", "The report is incomplete. Please reopen it shortly."));
+          return;
         }
         setSections(parts);
         if (Array.isArray(data.frequencyMap)) setFrequencyMap(data.frequencyMap);
@@ -171,8 +163,8 @@ export default function TarotReadingReport({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命镜像档案，第一次生成需要一点时间……", "The field is unfolding your full consciousness blueprint — the first generation takes a little while…")}</p>
-          <p className="mt-3 text-xs text-bone-soft">{t("若长时间没有反应，按 F5 刷新一下页面即可，不会影响已经生成的内容。", "If nothing happens for a while, press F5 to refresh — this won't affect anything already generated.")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的完整生命镜像，三张牌与生命向量正在完成确定性组合……", "The field is composing your Life Mirror deterministically from three cards and your life vector…")}</p>
+          <p className="mt-3 text-xs text-bone-soft">{t("每一章都在同步生成判断证据、反证问题与行动协议。", "Each chapter includes evidence, counterevidence, and an action protocol.")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }

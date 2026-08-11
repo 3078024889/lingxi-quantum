@@ -577,6 +577,8 @@ export async function exportArchivePdf(params: {
       ${inner}
     </div>`;
 
+  const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
   // ── 封面 ──
   pdf.addImage(await renderPage(pageShell(coverImage, "center 40%", `
     <div style="position:absolute;left:56px;right:56px;top:34%;
@@ -584,8 +586,8 @@ export async function exportArchivePdf(params: {
                 border-radius:6px;padding:46px 40px;text-align:center;
                 box-shadow:0 18px 60px rgba(40,36,70,.18);">
       <div style="font-size:12px;letter-spacing:.4em;color:#7A6E94;">LINGXI FIELD</div>
-      <div style="font-size:34px;color:#3A2E52;margin-top:18px;letter-spacing:.12em;">${titleZh}</div>
-      <div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${titleEn}</div>
+      <div style="font-size:34px;color:#3A2E52;margin-top:18px;letter-spacing:.12em;">${escapeHtml(titleZh)}</div>
+      <div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${escapeHtml(titleEn)}</div>
     </div>`)), "JPEG", 0, 0, PW, PH);
 
   // ── 正文：每章一页 ──
@@ -602,8 +604,6 @@ export async function exportArchivePdf(params: {
   // 拆成若干页，只在段落边界断开（不在句子中间断），后续页标"（续）"
   // 并且不重复画标题。页脚页码因此改成按"实际生成的页数"编号，不是
   // 按章节序号——否则拆过页之后页码会对不上。
-  const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-
   const PANEL_TOP = 60;
   const PANEL_BOTTOM_SAFE = 56; // 给页脚留的空间
   const MAX_PANEL_H = PX_H - PANEL_TOP - PANEL_BOTTOM_SAFE;
@@ -613,9 +613,9 @@ export async function exportArchivePdf(params: {
                   background:${theme.gradient};border:1px solid ${theme.border};
                   border-radius:6px;padding:38px 40px;
                   box-shadow:0 18px 56px rgba(40,36,70,.16);">
-        <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">${headline}</div>
+        <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">${escapeHtml(headline)}</div>
         ${title
-          ? `<div style="font-size:23px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${title}</div>
+          ? `<div style="font-size:23px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${escapeHtml(title)}</div>
              <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>`
           : `<div style="height:18px;"></div>`}
         ${figureHtml}

@@ -112,13 +112,10 @@ export function dayRuler(now: Date = new Date()): { zh: string; en: string } {
   return DAY_RULER[now.getUTCDay()];
 }
 
-// 能量潮汐——这不是我们编的比喻，是真实的潮汐力学：新月和满月时，
-// 太阳和月亮的引力沿同一条线叠加（要么同向、要么正对），潮汐力最强，
-// 叫"大潮"（spring tide）；上弦月和下弦月时，太阳和月亮的引力互相
-// 垂直、部分抵消，潮汐力最弱，叫"小潮"（neap tide）。这套周期真实
-// 存在、可以在任何潮汐表网站查证，不是占星附会。用月相角度算出一个
-// 0-100的"潮汐强度"，公式上就是"离新月/满月（0°/180°）越近，数值
-// 越高；离上下弦月（90°/270°）越近，数值越低"。
+// 日月排列潮汐指数只表达月相所代表的日月排列关系：越接近新月或
+// 满月越高，越接近上下弦越低。它不是用户所在地的真实潮位或潮差；
+// 真实海潮还受到经纬度、海岸地形、水深、气象与日月距离等因素影响。
+// 产品叙事必须保留这条边界，不能把解释性指标伪装成当地潮汐预报。
 export function tideLevel(phaseAngleDeg: number): number {
   const rad = (phaseAngleDeg * Math.PI) / 180;
   return Math.round(50 + 50 * Math.cos(2 * rad));
@@ -138,18 +135,45 @@ export function futureTideSnapshot(now: Date = new Date()): { day7: number; day3
   return { day7: tideLevelAt(7, now), day30: tideLevelAt(30, now), day90: tideLevelAt(90, now) };
 }
 
+export type TideTrajectory = {
+  days: number; start: number; end: number; min: number; max: number; average: number;
+  risingDays: number; fallingDays: number; turningPoints: number;
+};
+
+export function tideTrajectory(days: number, now: Date = new Date()): TideTrajectory {
+  const safeDays = Math.max(1, Math.min(180, Math.round(days)));
+  const values = Array.from({ length: safeDays + 1 }, (_, day) => tideLevelAt(day, now));
+  let risingDays = 0, fallingDays = 0, turningPoints = 0, previousDirection = 0;
+  for (let i = 1; i < values.length; i++) {
+    const direction = Math.sign(values[i] - values[i - 1]);
+    if (direction > 0) risingDays += 1;
+    if (direction < 0) fallingDays += 1;
+    if (direction !== 0 && previousDirection !== 0 && direction !== previousDirection) turningPoints += 1;
+    if (direction !== 0) previousDirection = direction;
+  }
+  return {
+    days: safeDays, start: values[0], end: values[values.length - 1],
+    min: Math.min(...values), max: Math.max(...values),
+    average: Math.round(values.reduce((sum, value) => sum + value, 0) / values.length),
+    risingDays, fallingDays, turningPoints,
+  };
+}
+
 // 未来几天潮汐会怎么变——这是真实可预测的天文现象（月亮绕地球一圈
 // 的周期是确定的，不是占卜），可以放心往前推算，跟"预言你的人生"是
 //两回事：这里预测的是潮汐这个自然现象本身，不是这个人的命运。
 export type NextTidePeak = { kind: "spring" | "neap"; daysAway: number; date: string };
 
 export function nextTidePeak(now: Date = new Date()): NextTidePeak {
-  // targetLon: 0=新月(大潮), 180=满月(大潮)——两个都搜，取更近的那个。
-  const toNew = Astronomy.SearchMoonPhase(0, now, 30);
-  const toFull = Astronomy.SearchMoonPhase(180, now, 30);
-  const candidates: { kind: "spring"; date: Date }[] = [];
-  if (toNew) candidates.push({ kind: "spring", date: toNew.date });
-  if (toFull) candidates.push({ kind: "spring", date: toFull.date });
+  const targets: { angle: number; kind: "spring" | "neap" }[] = [
+    { angle: 0, kind: "spring" }, { angle: 90, kind: "neap" },
+    { angle: 180, kind: "spring" }, { angle: 270, kind: "neap" },
+  ];
+  const candidates: { kind: "spring" | "neap"; date: Date }[] = [];
+  for (const target of targets) {
+    const result = Astronomy.SearchMoonPhase(target.angle, now, 30);
+    if (result) candidates.push({ kind: target.kind, date: result.date });
+  }
   candidates.sort((a, b) => a.date.getTime() - b.date.getTime());
   const nearest = candidates[0];
   if (!nearest) return { kind: "spring", daysAway: 0, date: now.toISOString().slice(0, 10) };

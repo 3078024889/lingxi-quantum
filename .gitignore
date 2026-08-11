@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+.vercel/
+.DS_Store
+Thumbs.db
+npm-debug.log*
+pnpm-debug.log*
+
+# Private source material; derived knowledge must be reviewed before commit.
+/research/source-materials/raw/
+/research/source-materials/private-text/

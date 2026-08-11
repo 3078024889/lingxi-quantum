@@ -112,8 +112,7 @@ export default function QianFlow() {
       }, 2200);
     } catch (e) {
       console.error("[qian shake] 提交出错:", e);
-      const detail = e instanceof Error ? e.message : String(e);
-      setError(t(`连接场域时出错，请稍后再试。（技术细节：${detail}）`, `Error connecting to the field — please try again. (Detail: ${detail})`));
+      setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setStage("form");
     }
   };

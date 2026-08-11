@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin";
 import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
 
 export const runtime = "nodejs";
@@ -9,7 +10,8 @@ export const runtime = "nodejs";
 // 字段里（跟表单提交时存的格式完全一致），前端拿到成功响应后再调用
 // generate-full 的 regenerate，就能生成一份包含数字能量解读的新报告。
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = createClient()
+  const admin = createAdminClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -25,7 +27,7 @@ export async function POST(req: Request) {
   }
   if (!body.id) return NextResponse.json({ error: "缺少提交记录 ID。" }, { status: 400 });
 
-  const { data: submission, error: fetchErr } = await supabase
+  const { data: submission, error: fetchErr } = await admin
     .from("life_map_submissions")
     .select("focus, user_id")
     .eq("id", body.id)
@@ -55,13 +57,13 @@ export async function POST(req: Request) {
     focus += ` · 车牌号数字能量：${r.digitsOnly}（总和${r.totalSum}，${r.lingdong.zh}）`;
   }
 
-  const { error: updateErr } = await supabase
+  const { error: updateErr } = await admin
     .from("life_map_submissions")
     .update({ focus })
     .eq("id", body.id);
 
   if (updateErr) {
-    return NextResponse.json({ error: "更新失败，请稍后再试。", detail: updateErr.message }, { status: 500 });
+    return NextResponse.json({ error: "更新失败，请稍后再试。" }, { status: 500 });
   }
   return NextResponse.json({ ok: true });
 }

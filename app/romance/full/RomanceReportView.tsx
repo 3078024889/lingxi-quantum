@@ -21,7 +21,7 @@ const SECTION_TITLES = [
   { titleZh: "⑦ 吸引力成长方向", titleEn: "⑦ Attraction Growth Direction" },
   { titleZh: "⑧ 情感阻碍地图", titleEn: "⑧ Emotional Obstacle Map" },
   { titleZh: "⑨ 理想连接模式", titleEn: "⑨ Ideal Connection Style" },
-  { titleZh: "⑩ 桃花磁场故事", titleEn: "⑩ A Symbolic Story" },
+  { titleZh: "⑩ 二十一天关系实践", titleEn: "⑩ Twenty-One-Day Practice" },
   { titleZh: "⑪ 桃花磁场总结", titleEn: "⑪ Field Summary" },
 ];
 
@@ -121,7 +121,7 @@ export default function RomanceReportView({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整桃花磁场档案，第一次生成需要一点时间……", "The field is unfolding your full Romance Magnetism Archive — the first generation takes a little while…")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的完整桃花磁场档案……", "The field is composing your Romance Magnetism Archive…")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(242,145,176,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }

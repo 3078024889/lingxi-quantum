@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin";
 import { computeHumanDesign } from "@/lib/human-design-calc";
 
 export const runtime = "nodejs";
@@ -10,7 +11,8 @@ export const runtime = "nodejs";
 // 纯天文计算、完全确定性的，所以可以只用当年存的出生信息，把这一项补
 // 算出来，不需要用户重新走一遍表单，也不需要重新花钱调用AI。
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = createClient()
+  const admin = createAdminClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -26,7 +28,7 @@ export async function POST(req: Request) {
   }
   if (!body.id) return NextResponse.json({ error: "缺少提交记录 ID。" }, { status: 400 });
 
-  const { data: submission, error: fetchErr } = await supabase
+  const { data: submission, error: fetchErr } = await admin
     .from("life_map_submissions")
     .select("facts, birth_input, user_id")
     .eq("id", body.id)
@@ -63,8 +65,8 @@ export async function POST(req: Request) {
     const humanDesign = computeHumanDesign(birthUTC);
     const newFacts = { ...facts, humanDesign };
 
-    const { error: updateErr } = await supabase
-      .from("life_map_submissions")
+    const { error: updateErr } = await admin
+    .from("life_map_submissions")
       .update({ facts: newFacts })
       .eq("id", body.id);
     if (updateErr) {

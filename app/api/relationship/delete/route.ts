@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // 跟 app/api/lifemap/delete/route.ts 是同一套逻辑，只是换了一张表——
 // 关系共振图谱之前完全没有删除入口（场域入口页面那边，之前那一块
 // 只是个纯 <Link>，没有配套的删除接口），这里补上。
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = createClient()
+  const admin = createAdminClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -21,7 +23,7 @@ export async function POST(req: Request) {
   }
   if (!body.id) return NextResponse.json({ error: "缺少图谱 ID。" }, { status: 400 });
 
-  const { data, error } = await supabase
+  const { data, error } = await admin
     .from("relationship_submissions")
     .delete()
     .eq("id", body.id)

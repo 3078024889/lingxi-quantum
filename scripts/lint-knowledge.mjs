@@ -12,6 +12,17 @@ import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = "knowledge";
+const productArgIndex = process.argv.indexOf("--product");
+const selectedProduct = productArgIndex >= 0 ? process.argv[productArgIndex + 1] : null;
+
+if (productArgIndex >= 0 && (!selectedProduct || !/^[a-z0-9-]+$/.test(selectedProduct))) {
+  console.error("用法：node scripts/lint-knowledge.mjs [--product resilience]");
+  process.exit(2);
+}
+if (selectedProduct && !existsSync(join(ROOT, selectedProduct))) {
+  console.error(`未知知识产品：${selectedProduct}`);
+  process.exit(2);
+}
 
 // ── 一、玄词黑名单 ──
 // 判定标准只有一个：这句话写完之后，能不能回答"所以具体是什么"。
@@ -61,13 +72,20 @@ function walk(dir) {
   });
 }
 
-// 把节点里所有面向用户的文字抽出来一起检查
+// 把不同版本知识节点中所有面向用户的文字抽出来一起检查。
+function collectText(value) {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(collectText);
+  if (value && typeof value === "object") return Object.values(value).flatMap(collectText);
+  return [];
+}
+
 function userFacingText(node) {
-  const parts = [];
-  if (node.fieldText) { parts.push(node.fieldText.zh, node.fieldText.en); }
-  if (node.textZh) parts.push(node.textZh);
-  if (node.textEn) parts.push(node.textEn);
-  return parts.filter(Boolean).join("\n");
+  const fields = [
+    "fieldText", "textZh", "textEn", "full_narrative",
+    "core_dendrite", "shadow_dendrite", "growthDirection",
+  ];
+  return fields.flatMap((field) => collectText(node[field])).filter(Boolean).join("\n");
 }
 
 function report(file, id, msg) {
@@ -75,7 +93,12 @@ function report(file, id, msg) {
   console.error(`✗ ${file}${id ? ` [${id}]` : ""}\n  ${msg}`);
 }
 
-for (const file of walk(ROOT)) {
+const scanRoots = selectedProduct
+  ? [join(ROOT, "_shared"), join(ROOT, selectedProduct)]
+  : [ROOT];
+const files = [...new Set(scanRoots.flatMap(walk))];
+
+for (const file of files) {
   let data;
   try {
     data = JSON.parse(readFileSync(file, "utf8"));
@@ -122,8 +145,11 @@ for (const file of walk(ROOT)) {
     }
 
     if (!text.trim()) {
-      report(file, id, "没有面向用户的正文（fieldText / textZh）");
+      report(file, id, "没有面向用户的正文（支持 fieldText / textZh / full_narrative 等字段）");
       continue;
+    }
+    if (/\[cite(?:\s*:\s*|\s+)\d+\]/i.test(text)) {
+      report(file, id, "存在未解析的 [cite] 引用标记；出版前必须替换为真实来源或删除。");
     }
 
     for (const g of GROUPS) {
@@ -145,20 +171,46 @@ console.log(`\n检查了 ${checked} 个节点。`);
 // 用户付了钱翻到第二章什么都没有。这种洞必须在构建期堵死，不能靠
 // 人记得。规则：每个章节的主维度，五个分数带必须都至少有一个节点。
 const BANDS = ["vlow", "low", "mid", "high", "vhigh"];
-for (const dir of readdirSync(ROOT).filter((d) => d !== "_shared")) {
+const coverageDirs = readdirSync(ROOT).filter(
+  (dir) => dir !== "_shared" && (!selectedProduct || dir === selectedProduct)
+);
+for (const dir of coverageDirs) {
+  const enginePath = join(ROOT, dir, "engine.json");
+  if (existsSync(enginePath)) {
+    const manifest = JSON.parse(readFileSync(enginePath, "utf8"));
+    if (!existsSync(manifest.engine) || !existsSync(manifest.audit)) {
+      report(enginePath, dir, "代码型知识引擎缺少有效的 engine 或 audit 文件。");
+    }
+    continue;
+  }
   const chPath = join(ROOT, dir, "chapters.json");
   const nodePath = join(ROOT, dir, "nodes.json");
+  const comboPath = join(ROOT, dir, "combos.json");
   if (!existsSync(chPath) || !existsSync(nodePath)) continue;
-  let chapters, nodes;
+  let chapters, nodes, combos;
   try {
     chapters = JSON.parse(readFileSync(chPath, "utf8")).chapters ?? [];
     nodes = JSON.parse(readFileSync(nodePath, "utf8")).nodes ?? [];
+    combos = existsSync(comboPath)
+      ? JSON.parse(readFileSync(comboPath, "utf8")).combos ?? []
+      : [];
   } catch { continue; }
 
   for (const ch of chapters) {
-    // dim 为 null 的总览章节没有单一主维度，不按分数带覆盖——
-    // 它由本相节点（八相）承担，覆盖检查用另一套规则，见下方。
-    if (!ch.dim) continue;
+    // dim 为 null 的总览章必须有无条件组合兜底，否则普通分数组合会空白。
+    if (!ch.dim) {
+      const hasDefault = combos.some(
+        (combo) => combo.chapter === ch.key && Object.keys(combo.when ?? {}).length === 0
+      );
+      if (!hasDefault) {
+        report(
+          `${dir}/combos.json`,
+          ch.key,
+          "覆盖缺口：总览章缺少无条件默认组合，部分用户会得到空白开篇。"
+        );
+      }
+      continue;
+    }
     for (const band of BANDS) {
       const has = nodes.some(
         (n) => n.chapter === ch.key && n.dim === ch.dim && n.band === band

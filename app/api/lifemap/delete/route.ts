@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // 有些人不想让某一份报告继续留着（比如拿别人的信息随便测过、或者单纯
 // 想清理掉），给他们删除自己报告的权利——但要先确认这份报告真的是
 // 这个人自己的，不能让谁都能拿着任意 id 来删别人的记录。
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = createClient()
+  const admin = createAdminClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -24,7 +26,7 @@ export async function POST(req: Request) {
   // RLS 本身也会挡住删别人的记录，这里的 .eq("user_id", user.id) 是双重
   // 保险，同时也让"删除了 0 行"（记录不存在或不是自己的）这种情况，
   // 能被明确识别出来，而不是静默地什么都没发生。
-  const { data, error } = await supabase
+  const { data, error } = await admin
     .from("life_map_submissions")
     .delete()
     .eq("id", body.id)

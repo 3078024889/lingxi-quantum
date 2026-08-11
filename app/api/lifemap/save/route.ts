@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // v261：之前这里没有设置maxDuration——不显式配置的话，Vercel默认的
 // 函数运行时长上限，比这个接口真实需要的计算+数据库写入时间更容易
@@ -10,7 +11,8 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const supabase = createClient();
+  const supabase = createClient()
+  const admin = createAdminClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -36,7 +38,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "请求格式有误。" }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await admin
     .from("life_map_submissions")
     .insert({
       user_id: user.id,
@@ -59,7 +61,7 @@ export async function POST(req: Request) {
     // 把真实的数据库错误信息带回前端（记录在浏览器控制台），方便定位——
     // 最常见的原因是 life_map_submissions 表还没在 Supabase 里建好。
     return NextResponse.json(
-      { error: "保存失败，请稍后再试。", detail: error?.message || "unknown", code: error?.code || null },
+      { error: "保存失败，请稍后再试。"},
       { status: 500 }
     );
   }

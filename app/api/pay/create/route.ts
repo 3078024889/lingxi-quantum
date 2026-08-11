@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     } catch (e) {
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
       return NextResponse.json(
-        { error: "支付网关返回异常", detail: e instanceof Error ? e.message : String(e) },
+        { error: "支付网关返回异常"},
         { status: 500 }
       );
     }

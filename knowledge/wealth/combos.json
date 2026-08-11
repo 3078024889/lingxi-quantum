@@ -1,3 +1,64 @@
 {
-  "combos": []
+  "combos": [
+    {
+      "id": "w.01-origin.insight-over-build",
+      "chapter": "01-origin",
+      "when": { "contrast": ["insight", "build"], "gapMin": 25 },
+      "priority": 100,
+      "fieldText": {
+        "zh": "你的财富创造结构存在一条清晰落差：判断形成得比系统承接得快。你更容易先看见方向、问题或机会，但价值在进入流程、产品和持续交付时减速。这不是「想得多做得少」的性格判词，而是一条可验证链路：回看最近三个好判断，其中有多少形成了可重复交付；如果多数已经稳定运行，这个组合判断就不成立。整份地图的主任务，是保护洞察速度，同时为它建立更小、更快闭合的构建容器。",
+        "en": "Your wealth-creation structure contains a clear gap: judgment forms faster than systems can receive it. You see direction, problems, or opportunity early, while value slows when it enters process, product, and sustained delivery. This is not a personality verdict about thinking more than doing; it is a testable chain. Review three recent strong judgments and ask how many became repeatable delivery. If most already run reliably, this combination does not hold. The map's central task is to protect the speed of insight while building smaller containers that close faster."
+      }
+    },
+    {
+      "id": "w.01-origin.express-over-build",
+      "chapter": "01-origin",
+      "when": { "contrast": ["express", "build"], "gapMin": 25 },
+      "priority": 95,
+      "fieldText": {
+        "zh": "你的价值信号跑在承接结构前面：外界能够注意到你、理解你，甚至愿意靠近，但后续交付、复用或转化没有同样速度。证据是表达带来的询问是否经常超过你能稳定接住的数量；若每次注意力都有清晰去向，这项判断不成立。这里的重点不是降低表达，而是让每一次被看见都有唯一下一步，并让这一步不依赖你临场解释。",
+        "en": "Your value signal runs ahead of the structure that receives it. People can notice, understand, and approach you, while delivery, reuse, or conversion does not move at the same speed. The evidence is whether expression generates more inquiries than you can receive consistently. If attention already has a clear destination every time, this reading does not hold. The priority is not to reduce expression, but to give each moment of visibility one next step that does not depend on live explanation."
+      }
+    },
+    {
+      "id": "w.01-origin.build-over-express",
+      "chapter": "01-origin",
+      "when": { "contrast": ["build", "express"], "gapMin": 25 },
+      "priority": 90,
+      "fieldText": {
+        "zh": "你的结构先于声量成熟：能够做出可靠成果，也愿意维护长期系统，但外界获得的信号不足，价值容易被困在已有关系或内部场景。核对近半年最满意的三个成果，有多少被目标对象实际看见；如果多数已经形成稳定传播，这项判断不成立。整份地图不会要求你变成高频表达者，而是要找到一种与你的构建节奏一致、能够持续留下证据的表达方式。",
+        "en": "Your structure matures before your signal. You can produce reliable outcomes and maintain systems over time, while the outside world receives too little evidence, leaving value inside existing relationships or internal settings. Check the three outcomes you value most from the last six months: how many were actually seen by their intended audience? If most already circulate consistently, this reading does not hold. The map does not ask you to become a high-frequency communicator, but to find an expression rhythm that matches your building rhythm and leaves durable proof."
+      }
+    },
+    {
+      "id": "w.01-origin.network-amplifier",
+      "chapter": "01-origin",
+      "when": { "bothHigh": ["connect", "express"] },
+      "priority": 85,
+      "fieldText": {
+        "zh": "你的创造路径具有明显的网络放大特征：价值不只来自你做了什么，也来自你能否让信息、关系和机会在正确的人之间快速流动。这个组合的优势是传播与协作启动快，风险是注意力先于交付能力膨胀。反证很直接：如果你的成果主要靠独立深作、几乎不依赖他人回应，这个组合就不是主轴。阅读后续章节时，要特别比较连接力带来的机会数量，是否与构建力能够承接的数量一致。",
+        "en": "Your creation path shows strong network amplification. Value comes not only from what you make, but from how quickly information, relationships, and opportunity move between the right people. The advantage is rapid communication and collaboration; the risk is attention expanding before delivery capacity. The counterevidence is direct: if your results mainly come from independent deep work and depend little on response from others, this is not the main axis. In later chapters, compare the volume of opportunity created by connection with the volume your building capacity can actually receive."
+      }
+    },
+    {
+      "id": "w.01-origin.scout",
+      "chapter": "01-origin",
+      "when": { "bothHigh": ["insight", "risk"] },
+      "priority": 80,
+      "fieldText": {
+        "zh": "你的财富创造更接近侦察者结构：既能较早识别变化，也愿意在信息不完整时行动。它带来窗口期优势，同时要求两条纪律——判断必须留下证据，实验必须限制损失。若你虽然看得早却长期等待确定，或敢行动但很少基于明确判断，这个组合不成立。后续最值得关注的是洞察能否进入小规模实验，以及风险是否被隔离在不会伤及整体选择权的范围内。",
+        "en": "Your wealth-creation pattern resembles a scout: you can identify change early and act before information is complete. That creates a timing advantage and requires two disciplines: judgment must leave evidence, and experiments must limit loss. If you see early but wait for certainty, or act boldly without explicit judgment, this combination does not hold. The key questions in later chapters are whether insight enters small experiments and whether risk remains isolated from the system's overall freedom to choose."
+      }
+    },
+    {
+      "id": "w.01-origin.default",
+      "chapter": "01-origin",
+      "when": {},
+      "priority": 1,
+      "fieldText": {
+        "zh": "你的财富地图不回答「会不会有钱」，而是追踪一条可观察的价值链：你如何看见问题，如何把判断建成成果，如何让成果抵达他人，又如何在不确定中保护继续选择的能力。五项分数的意义不在高低，而在它们是否首尾相连。阅读这份报告时，请用最近一年真实发生过的项目、合作和取舍逐章核对；不符合你的描述应被当作反证，而不是要求你迁就报告。真正有用的地图，会指出价值在哪一段开始流动，也会暴露它在哪一段停止。",
+        "en": "This wealth map does not answer whether you will become rich. It traces an observable value chain: how you notice problems, build judgment into outcomes, let those outcomes reach others, and preserve the ability to choose under uncertainty. The five scores matter less as heights than as links in one chain. Test each chapter against real projects, collaborations, and tradeoffs from the last year. A description that does not fit should be treated as counterevidence, not something you must adapt yourself to. A useful map shows where value starts moving and where it stops."
+      }
+    }
+  ]
 }

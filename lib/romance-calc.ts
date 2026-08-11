@@ -79,10 +79,14 @@ export function attractionStyle(v: LifeVector): AttractionStyle {
   return "gentle";
 }
 
+export type RomanceDim = "socialDrive" | "creativity" | "adaptability" | "ambition" | "emotionalDepth";
+export type RomanceBreakdown = Record<RomanceDim, number>;
+
 export type RomanceProfile = {
   score: number; // 0-100，桃花磁场指数
   style: AttractionStyle;
   taoHua: TaoHuaResult;
+  breakdown: RomanceBreakdown;
 };
 
 export function calculateRomance(v: LifeVector, pillars: {
@@ -90,10 +94,21 @@ export function calculateRomance(v: LifeVector, pillars: {
 }): RomanceProfile {
   const clamp = (n: number) => Math.max(0, Math.min(100, Math.round(n)));
   const taoHua = findTaoHua(pillars);
-  const base = v.socialDrive * 0.35 + v.creativity * 0.3 + v.emotionalDepth * 0.25 + v.adaptability * 0.1;
+  const breakdown: RomanceBreakdown = {
+    socialDrive: clamp(v.socialDrive),
+    creativity: clamp(v.creativity),
+    adaptability: clamp(v.adaptability),
+    ambition: clamp(v.ambition),
+    emotionalDepth: clamp(v.emotionalDepth),
+  };
+  const base =
+    breakdown.socialDrive * 0.35 +
+    breakdown.creativity * 0.3 +
+    breakdown.emotionalDepth * 0.25 +
+    breakdown.adaptability * 0.1;
   // 命带桃花，在传统说法里代表"异性缘/人际吸引力更容易被看见"——
   // 给一个有限度的加分（不是决定性因素，是在已经算好的底分上，加一点
   // 传统命理视角的修正，跟其余维度一样只占一部分权重）。
   const score = clamp(base + (taoHua.hasTaoHua ? 12 : 0));
-  return { score, style: attractionStyle(v), taoHua };
+  return { score, style: attractionStyle(v), taoHua, breakdown };
 }

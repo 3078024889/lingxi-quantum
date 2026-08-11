@@ -244,9 +244,11 @@ export function verifyWechatNotifySignature(params: {
 // 主动查询一笔订单的支付状态——前端轮询用，用户扫码付款之后，页面每隔
 // 几秒来问一次"付了没"，不完全依赖webhook（webhook可能因为网络原因
 // 延迟或者丢失，主动查询是一层保险）。
-export async function queryWechatOrder(outTradeNo: string): Promise<{ paid: boolean; raw: unknown }> {
+export async function queryWechatOrder(outTradeNo: string, expectedAmountFen: number): Promise<{ paid: boolean; raw: unknown }> {
   const data = await wechatRequest("GET", `/v3/pay/transactions/out-trade-no/${outTradeNo}?mchid=${MCH_ID}`);
-  return { paid: data.trade_state === "SUCCESS", raw: data };
+  const amountMatches = data.amount && data.amount.currency === "CNY" && Number(data.amount.total) === expectedAmountFen
+  if (data.trade_state === "SUCCESS" && !amountMatches) throw new Error("WeChat payment amount or currency did not match the local order.")
+  return { paid: data.trade_state === "SUCCESS", raw: data }
 }
 
 // 解密微信支付webhook回调里的资源密文——微信推送过来的支付结果通知，

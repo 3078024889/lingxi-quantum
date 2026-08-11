@@ -1,0 +1,16 @@
+{
+    "engine":  "lib/life-mirror-knowledge.ts",
+    "audit":  "scripts/audit-life-mirror-knowledge.mjs",
+    "knowledgeVersion":  "life-mirror-2026.08.1",
+    "chapterCount":  11,
+    "expectedChapters":  11,
+    "semanticBands":  13,
+    "cardCount":  78,
+    "runtimeModelDependency":  false,
+    "publication":  {
+                        "coverImages":  1,
+                        "bodyImages":  11,
+                        "format":  "web-pdf-unified"
+                    },
+    "status":  "active"
+}

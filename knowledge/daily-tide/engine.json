@@ -1,0 +1,15 @@
+{
+    "engine":  "lib/daily-tide-knowledge.ts",
+    "audit":  "scripts/audit-daily-tide-knowledge.mjs",
+    "knowledgeVersion":  "daily-tide-2026.08.1",
+    "chapterCount":  11,
+    "expectedChapters":  11,
+    "semanticBands":  13,
+    "runtimeModelDependency":  false,
+    "publication":  {
+                        "coverImages":  1,
+                        "bodyImages":  11,
+                        "format":  "web-pdf-unified"
+                    },
+    "status":  "active"
+}

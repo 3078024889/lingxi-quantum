@@ -1,5 +1,5 @@
 import Link from "next/link";
-import LingxiPortal from "@/components/LingxiPortal";
+import LivingFieldHero from "@/components/LivingFieldHero";
 import PracticeLadder from "@/components/PracticeLadder";
 import OriginSection from "@/components/OriginSection";
 import FieldEntry from "@/components/FieldEntry";
@@ -63,7 +63,7 @@ export default function Home() {
       <FarewellBanner />
       <main className="relative overflow-hidden">
         {/* 1. 入口：意识显化系统 */}
-        <LingxiPortal />
+        <LivingFieldHero />
       <PracticeLadder />
 
         {/* 2. 灵犀是什么 / 来自何处（创造源，紧跟入口） */}

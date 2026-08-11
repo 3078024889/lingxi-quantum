@@ -41,31 +41,31 @@
       "key": "07-hidden",
       "dim": "insight",
       "titleZh": "你没在用的那条路",
-      "titleEn": "你没在用的那条路"
+      "titleEn": "The Route Not Yet in Use"
     },
     {
       "key": "08-drain",
       "dim": "risk",
       "titleZh": "价值流失点",
-      "titleEn": "价值流失点"
+      "titleEn": "Where Value Leaks"
     },
     {
       "key": "09-path",
       "dim": "build",
       "titleZh": "财富进化路径",
-      "titleEn": "财富进化路径"
+      "titleEn": "Wealth Evolution Path"
     },
     {
       "key": "10-practice",
       "dim": "connect",
       "titleZh": "灵犀场创造实践",
-      "titleEn": "灵犀场创造实践"
+      "titleEn": "A Creation Practice"
     },
     {
       "key": "11-summary",
       "dim": "express",
       "titleZh": "财富创造总结",
-      "titleEn": "财富创造总结"
+      "titleEn": "Wealth Creation Synthesis"
     }
   ]
 }

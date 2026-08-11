@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   const calendarType = (body as { calendarType?: string }).calendarType === "lunar" ? "lunar" : "solar";
   if (
     typeof inputYear !== "number" || typeof inputMonth !== "number" || typeof inputDay !== "number" ||
-    inputYear < 1 || inputYear > 2100 || inputMonth < 1 || inputMonth > 12 || inputDay < 1 || inputDay > 31
+    inputYear < 1 || inputYear > new Date().getFullYear() || inputMonth < 1 || inputMonth > 12 || inputDay < 1 || inputDay > 31
   ) {
     return NextResponse.json({ error: "出生日期无效，请检查年月日是否都填写了完整的数字。" }, { status: 400 });
   }
@@ -74,29 +74,12 @@ export async function POST(req: Request) {
 
     if (insertErr || !submission) {
       console.error("[qian save] 写入失败，Supabase 原始错误:", insertErr);
-      if (insertErr?.code === "42P01") {
-        // Postgres错误码 42P01 = relation does not exist——最可能的原因：
-        // qian_submissions 这张新表还没在 Supabase 项目里建出来，需要
-        // 重新跑一次 supabase/schema.sql（跟之前修炼心得记录踩的是
-        // 同一个坑）。
-        return NextResponse.json(
-          { error: "保存失败：数据库里还没有这张表。需要在 Supabase 后台的 SQL Editor 里，重新运行一次 schema.sql 这个文件（不会影响已有数据），建出 qian_submissions 这张表。" },
-          { status: 500 }
-        );
-      }
-      // 除了上面这个最常见的原因，这里不再猜第二种可能——直接把
-      // Supabase返回的原始错误信息（code+message）暴露出来，用户
-      // 截图发过来，就能一次性看到真实原因，不用一轮一轮来回猜。
-      const rawDetail = insertErr
-        ? `${insertErr.code ?? "无错误码"}: ${insertErr.message ?? "无错误信息"}`
-        : "写入后没有返回记录（原因未知）";
-      return NextResponse.json({ error: `保存失败，请稍后再试。（技术细节：${rawDetail}）` }, { status: 500 });
+      return NextResponse.json({ error: "保存失败，请稍后再试。" }, { status: 500 });
     }
 
     return NextResponse.json({ id: submission.id, signIndexes: submission.sign_indexes });
-  } catch (e) {
-    console.error("[qian save] 计算失败:", e);
-    const msg = e instanceof Error ? e.message : String(e);
-    return NextResponse.json({ error: `计算失败，请检查出生信息。（技术细节：${msg}）` }, { status: 500 });
+  } catch (error) {
+    console.error("[qian save] 计算失败:", error);
+    return NextResponse.json({ error: "计算失败，请检查出生信息。" }, { status: 500 });
   }
 }

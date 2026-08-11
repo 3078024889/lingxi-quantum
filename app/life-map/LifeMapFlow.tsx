@@ -284,7 +284,7 @@ export default function LifeMapFlow() {
 
   const submit = async () => {
     const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
-    if (!y || !m || !d || y < 1 || y > 2026 || m < 1 || m > 12 || d < 1 || d > 31) {
+    if (!y || !m || !d || y < 1 || y > new Date().getFullYear() || m < 1 || m > 12 || d < 1 || d > 31) {
       setError(t("请填写完整、有效的出生日期（年份支持公元1年至今，暂不支持公元前）。", "Please enter a complete, valid birth date (year 1 CE to present; BCE dates aren't supported yet)."));
       return;
     }

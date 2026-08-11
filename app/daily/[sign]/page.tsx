@@ -11,14 +11,12 @@ import DownloadResultPdfButton from "@/components/DownloadResultPdfButton";
 import ShareButton from "@/components/ShareButton";
 import DailyTideUnlock from "./DailyTideUnlock";
 
-// v261：这个页面首次访问某个星座、某一天的时候，会现场调用AI生成内容
-// （之后同一天同一个星座的访问会走缓存，很快），首次生成这一次如果
-// 稍微慢一点，默认的函数超时很容易不够用，导致点了星座卡半天没反应。
+// The page uses deterministic astronomy calculations and local knowledge composition.
 export const maxDuration = 30;
 
 // 每次访问都重新算（不是纯静态页）——不然月相和月亮星座这些"应该每天
 // 变"的数据，会被Next.js当成一成不变的静态内容缓存住，失去"每日"
-// 的意义。计算本身很便宜（不调用AI，纯天文公式），不缓存也没问题。
+// 的意义。计算与知识编排均在本地完成，不依赖模型接口。
 export const dynamic = "force-dynamic";
 
 export function generateMetadata({ params }: { params: { sign: string } }) {
@@ -43,10 +41,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
   const nextTide = nextTidePeak();
   const todayLabel = new Date(transit.date + "T00:00:00Z").toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
 
-  // v226：正文优先用真正针对"今天+这个星座"生成、并按天缓存的内容——
-  // 具体理由见 lib/daily-fortune-ai.ts 顶部注释。生成失败（比如密钥
-  // 没配、接口一时不通）时，退回旧的月相+元素关系模板组合，保证页面
-  // 任何时候都有内容可看，不会因为AI这一步失败就整页空白。
+  // Chinese and English previews share the same deterministic date snapshot.
   const [fortuneZh, fortuneEn] = await Promise.all([
     getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, tide, nextTide, lang: "zh" }),
     getDailyFortuneContent({ signSlug: sign.slug, signZh: sign.zh, signEn: sign.en, transit, retro, ruler, relation, tide, nextTide, lang: "en" }),
@@ -105,8 +100,8 @@ export default async function DailySignPage({ params }: { params: { sign: string
               </div>
               <p className="mt-2 text-xs leading-6 text-bone-soft">
                 <Bi
-                  zh={`真实潮汐力学换算——新月满月时潮汐最强，上下弦月时最弱。${nextTide.daysAway === 0 ? "今天正好处在潮汐的转折点。" : `再过${nextTide.daysAway}天，会到达这轮潮汐的${nextTide.kind === "spring" ? "峰值（大潮）" : "低点（小潮）"}。`}`}
-                  en={`A real tidal-mechanics reading — strongest at new/full moon, weakest at the quarters. ${nextTide.daysAway === 0 ? "Today sits right at a turning point." : `In ${nextTide.daysAway} day${nextTide.daysAway > 1 ? "s" : ""}, this cycle reaches its ${nextTide.kind === "spring" ? "peak (spring tide)" : "low (neap tide)"}.`}`}
+                  zh={`日月排列潮汐指数——越接近新月或满月数值越高，越接近上下弦数值越低；它不是所在地的真实潮位。${nextTide.daysAway === 0 ? "今天正好处在潮汐的转折点。" : `再过${nextTide.daysAway}天，会到达这轮潮汐的${nextTide.kind === "spring" ? "峰值（大潮）" : "低点（小潮）"}。`}`}
+                  en={`A lunar-solar alignment index — higher near new/full moons and lower near the quarters; it is not a local sea-level forecast. ${nextTide.daysAway === 0 ? "Today sits right at a turning point." : `In ${nextTide.daysAway} day${nextTide.daysAway > 1 ? "s" : ""}, this cycle reaches its ${nextTide.kind === "spring" ? "peak (spring tide)" : "low (neap tide)"}.`}`}
                 />
               </p>
             </div>

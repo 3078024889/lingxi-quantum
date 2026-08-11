@@ -1,354 +1,704 @@
 {
-  "nodes": [
-    {
-      "id": "w.02-insight.vlow",
-      "chapter": "02-insight",
-      "dim": "insight",
-      "band": "vlow",
-      "weight": 1,
-      "corePattern": "机会需要被明确指出来才看得见",
-      "shadowSide": "错过的不是能力，是没有建立信息入口",
-      "growthDirection": "固定订阅两个信息源，每周只看一次，看完记一句",
-      "fieldText": {
-        "zh": "你看见机会的方式，需要它被明确指出来——别人说了、写在明面上、已经有人在做，你才会注意到。这一项分数很低，说的是这件事。它常被理解成眼光问题，但更准确的说法是：你还没有建立起自己的信息入口，所以所有信息都是被动到达的，而被动到达的信息通常已经过了最值钱的阶段。这件事可以从很小的地方补：固定两个跟你领域相关的信息源，每周只看一次，看完写一句「这周我注意到什么」。写四次之后你会开始提前看到东西——不是眼光变好了，是入口通了。",
-        "en": "The way you see opportunity requires it to be pointed out — someone said it, it's written plainly, someone is already doing it. That's what a very low score here describes. It usually gets read as a question of judgment. More accurately: you haven't yet built your own information intake, so everything arrives passively — and information that arrives passively has generally passed its most valuable stage. This can be repaired from something very small: fix two sources relevant to your field, check them once a week, and write one line afterwards — what did I notice this week. After four entries you'll start seeing things earlier. Not because your judgment improved, but because the intake opened."
-      }
-    },
-    {
-      "id": "w.02-insight.low",
-      "chapter": "02-insight",
-      "dim": "insight",
-      "band": "low",
-      "weight": 1,
-      "corePattern": "能识别机会，但确认速度慢，常错过窗口",
-      "shadowSide": "反复验证的过程本身消耗掉了时机",
-      "growthDirection": "给自己设一个判断上限：三天之内做决定，信息不全也决定",
-      "fieldText": {
-        "zh": "你能识别机会，问题在确认它需要的时间——你会反复验证，等更多信息，直到确定为止。而机会的窗口通常比确认过程短。这不是犹豫，是你的系统把「判断错」的代价估得比「错过」高得多，所以宁可慢。可以试着调这个权重：给自己设一个判断上限，比如三天，到期就决定，信息不全也决定。前几次会不舒服，但你会发现错过的成本，往往比判断失误的成本更高，而且不可追。",
-        "en": "You can identify an opportunity; the problem is how long confirming it takes — you verify repeatedly, wait for more information, until you're certain. And the window is usually shorter than the confirmation. This isn't hesitation. Your system prices getting it wrong far above missing it, so it prefers slow. Try adjusting that weighting: set a decision ceiling — three days, say — and decide when it expires, incomplete information and all. The first few times will be uncomfortable. You'll find the cost of missing usually runs higher than the cost of misjudging, and unlike misjudging, it can't be recovered."
-      }
-    },
-    {
-      "id": "w.02-insight.mid",
-      "chapter": "02-insight",
-      "dim": "insight",
-      "band": "mid",
-      "weight": 1,
-      "corePattern": "在熟悉领域洞察敏锐，陌生领域几乎失灵",
-      "shadowSide": "以为洞察是通用能力，于是在陌生领域也相信直觉",
-      "growthDirection": "进入新领域时先用规则判断，别用直觉，直觉需要积累才准",
-      "fieldText": {
-        "zh": "你的洞察力是分领域的：熟悉的地方，你几乎能提前感觉到什么要发生；陌生的地方，判断力会明显下降，而你不一定察觉得到。这是所有洞察力的共性——它不是通用能力，是经验密度的产物。风险在于：你在熟悉领域养成的自信，会被带进陌生领域，而那里你的直觉还没有依据。可行的做法是分开对待：熟悉领域可以信直觉，陌生领域先用规则（数据、他人经验、明确的判断标准），等积累够了再放开直觉。",
-        "en": "Your insight is domain-specific: in familiar territory you can almost feel what's coming; in unfamiliar territory your judgment drops noticeably, and you may not register it. This is true of all insight — it isn't a general capacity but a product of experience density. The risk: confidence built in familiar ground travels into unfamiliar ground, where your intuition has no basis yet. The workable approach is to treat them separately: trust intuition where you're experienced, and in new territory use rules first — data, others' experience, explicit criteria — until enough has accumulated to let intuition run."
-      }
-    },
-    {
-      "id": "w.02-insight.high",
-      "chapter": "02-insight",
-      "dim": "insight",
-      "band": "high",
-      "weight": 1,
-      "corePattern": "能提前看到趋势，判断快且多数时候准",
-      "shadowSide": "看得太早，别人还不理解，容易孤立地承担风险",
-      "growthDirection": "把判断写下来并标日期，让它可被验证，也让别人看得见你的准确率",
-      "fieldText": {
-        "zh": "你能比多数人早看到东西——趋势还没成形，你已经感觉到了。这在财富创造上是罕见的优势，但它有一个具体的困境：看得太早等于没人相信你。别人要等到事情明朗才会跟上，而那时你已经承担了最不确定的那一段风险，并且是独自承担的。可以做一件很实际的事：把你的判断写下来，标上日期。不用给任何人看。半年后回头核对，你会得到一份自己的准确率记录——这份记录既能校准你自己的信心，也是将来说服别人最有力的东西。",
-        "en": "You see things earlier than most — a trend hasn't formed and you already sense it. In wealth creation that's a rare advantage, and it comes with a specific bind: seeing early means no one believes you. Others wait until things are clear, and by then you've already carried the most uncertain stretch of risk, alone. One very practical thing to do: write your judgments down with dates. Show no one. Check back in six months and you'll have a record of your own hit rate — which calibrates your confidence and is the most persuasive thing you'll ever have when convincing others."
-      }
-    },
-    {
-      "id": "w.02-insight.vhigh",
-      "chapter": "02-insight",
-      "dim": "insight",
-      "band": "vhigh",
-      "weight": 1,
-      "corePattern": "洞察几乎是即时的，能看穿表层结构直达机制",
-      "shadowSide": "看得太透，容易低估执行的难度与他人的节奏",
-      "growthDirection": "把一个已看清的判断完整执行到底，而不是转向下一个",
-      "fieldText": {
-        "zh": "你的洞察几乎是即时的——事情摆在面前，你很快就能看穿它的表层，直接看到底下的机制。这种能力稀缺，也确实带来了别人拿不到的判断力。它的代价很具体：看得太透的人，容易低估执行的难度。因为在你脑子里那件事已经完成了，剩下的只是「去做」，而现实里「去做」往往占了九成的成本和时间。所以真正值得练的不是看得更清楚，是把一个已经看清的判断完整执行到底——而不是在执行到一半时，被下一个更有意思的判断带走。",
-        "en": "Your insight is nearly immediate — a situation appears and you quickly see through its surface to the mechanism beneath. That capacity is scarce and gives you judgment others can't reach. Its cost is specific: people who see through things easily tend to underestimate execution. In your head the thing is already finished, and what remains is merely doing it — while in reality doing it accounts for ninety percent of the cost and time. So what's worth practising isn't seeing more clearly. It's carrying one already-clear judgment all the way through, rather than being pulled away mid-execution by the next more interesting one."
-      }
-    },
-    {
-      "id": "w.03-build.vlow",
-      "chapter": "03-build",
-      "dim": "build",
-      "band": "vlow",
-      "weight": 1,
-      "corePattern": "想法很多但很少变成可运行的东西",
-      "shadowSide": "反复启动新想法，旧的从未完成，累积不出资产",
-      "growthDirection": "只做一件，做到能给别人看为止，再考虑下一件",
-      "fieldText": {
-        "zh": "想法到东西之间那段距离，目前是你最大的缺口。你不缺想法，缺的是把其中任何一个做到「能给别人看」的程度。这一项分数很低，说的是这件事。它的代价是复利的：没有完成的东西不会累积，所以做了很多年也没有资产。可行的做法只有一条，而且很朴素：只做一件，做到能给别人看为止。不用最好的那个想法，选一个你现在就能开始的。完成本身会带来第二样东西——下一次启动时，系统会相信这件事能被做完。",
-        "en": "The distance between an idea and a thing is your largest gap right now. You don't lack ideas; you lack having taken any one of them to the point where it can be shown. That's what a very low score here describes. The cost compounds: unfinished things don't accumulate, so years of work leave no asset. There's one workable move, and it's plain: do one thing, until it can be shown. It needn't be your best idea — pick one you can start now. Finishing brings a second thing with it: next time you start, the system will believe this can be completed."
-      }
-    },
-    {
-      "id": "w.03-build.low",
-      "chapter": "03-build",
-      "dim": "build",
-      "band": "low",
-      "weight": 1,
-      "corePattern": "能做出东西，但缺少让它持续运转的结构",
-      "shadowSide": "做完就停，没有下一步的接口，成果无法生长",
-      "growthDirection": "每完成一件，立刻加一个能让它继续被用到的接口",
-      "fieldText": {
-        "zh": "你做得出东西，问题在于做完之后它就停在那里了——没有下一步，没有别人可以接上的接口，所以每一件成果都是孤立的一次性产出。这不是能力问题，是结构问题：你的成果之间没有连接，所以不会互相带动。可以在每完成一件事之后加一步：想一个「谁会用到它、怎么用得到」的接口。哪怕只是把它放到一个别人能找到的地方。有接口的成果会自己长，没接口的成果只能等你再做一次。",
-        "en": "You do make things; the problem is that once made, they stop there — no next step, no interface for anyone else to pick up, so every output is an isolated one-off. That isn't a capability issue, it's a structural one: your outputs aren't connected, so they don't pull each other forward. Add one step after finishing anything: think of an interface — who would use this, and how would they reach it. Even just putting it somewhere findable. Outputs with an interface grow on their own; outputs without one wait for you to make the next."
-      }
-    },
-    {
-      "id": "w.03-build.mid",
-      "chapter": "03-build",
-      "dim": "build",
-      "band": "mid",
-      "weight": 1,
-      "corePattern": "能建成，但依赖自己在场，离开就停转",
-      "shadowSide": "把自己嵌进了系统的每一环，无法脱身去做新的",
-      "growthDirection": "找出最占时间的一环，先把它交出去或自动化",
-      "fieldText": {
-        "zh": "你能把事情建起来并让它运转，前提是你在场。这一项的真实限制不是能力，是你把自己嵌进了系统的每一环——所以系统能跑，但你走不开，也就腾不出手做下一件。这是很多人卡住的地方，而且卡的时间往往以年计。突破点是具体的：找出你目前最占时间的那一环，先把它交出去或者自动化掉，不管做得有多粗糙。腾出来的那部分时间，才是你真正的产能。",
-        "en": "You can build something and keep it running, provided you're present. The real constraint here isn't capability — it's that you've embedded yourself into every link of the system, so it runs but you can't step away, and therefore can't start the next thing. This is where many people stall, often for years. The breakthrough is concrete: find the link that currently eats the most of your time and hand it off or automate it, however crudely. The time that frees up is your actual capacity."
-      }
-    },
-    {
-      "id": "w.03-build.high",
-      "chapter": "03-build",
-      "dim": "build",
-      "band": "high",
-      "weight": 1,
-      "corePattern": "能把复杂的事组织成可运转的系统",
-      "shadowSide": "系统建得太好，容易一直优化它而不是做新的",
-      "growthDirection": "定期问一次：这个系统还需要我优化，还是我在用优化回避新开始",
-      "fieldText": {
-        "zh": "把复杂的事组织成一个能自己运转的系统——这是你身上最值钱的能力，而且比洞察力更稀缺，因为看得见的人多，做得出来的人少。要留意的是它的一个副作用：系统建得越好，你越容易一直待在里面优化它。优化有明确的反馈、有掌控感、也确实有价值，所以它是最容易被合理化的拖延形式。可以定期问一次：这个系统现在还需要我优化，还是我在用优化回避一次新的开始。",
-        "en": "Organizing something complex into a system that runs itself is the most valuable capacity you carry, and it's rarer than insight — plenty of people can see; few can build. Watch one side effect: the better the system, the easier it is to stay inside it optimizing. Optimization gives clear feedback, a sense of control, and genuine value, which makes it the most easily rationalized form of postponement. Ask periodically: does this system still need my optimization, or am I using optimization to avoid a new beginning."
-      }
-    },
-    {
-      "id": "w.03-build.vhigh",
-      "chapter": "03-build",
-      "dim": "build",
-      "band": "vhigh",
-      "weight": 1,
-      "corePattern": "构建能力极强，能同时维持多个系统",
-      "shadowSide": "能力太强导致什么都自己建，错过合作的杠杆",
-      "growthDirection": "下一件事刻意不自己建，找一个已有的接上去",
-      "fieldText": {
-        "zh": "你的构建能力强到可以同时维持多个系统，而且不觉得吃力。这确实带来了很多结果，但它有一个隐形的天花板：什么都能自己建的人，很少去用别人已经建好的东西。而财富真正的放大器往往不是自己建得多快，是接上了谁的系统。可以在下一件事上刻意反着来：不自己建，找一个已有的接上去。这会不舒服，因为那意味着接受别人的设计，包括你觉得可以更好的地方。但杠杆恰恰在这里——自己建的上限是你的时间，接上去的上限不是。",
-        "en": "Your building capacity runs strong enough to maintain several systems at once without strain. That has produced real results, and it carries an invisible ceiling: someone who can build anything rarely uses what others have already built. And wealth's real amplifier is usually not how fast you build, but whose system you connect to. Try deliberately reversing on the next thing: don't build it, find something existing and connect. It will be uncomfortable, because it means accepting someone else's design, including the parts you could do better. But that's exactly where the leverage is — what you build alone is capped by your time; what you connect to isn't."
-      }
-    },
-    {
-      "id": "w.04-connect.vlow",
-      "chapter": "04-connect",
-      "dim": "connect",
-      "band": "vlow",
-      "weight": 1,
-      "corePattern": "价值创造几乎完全独立完成，外部资源未被调用",
-      "shadowSide": "独立本身没问题，但它让所有增长都受限于个人产能",
-      "growthDirection": "每月主动联系一个人，不带目的，只是让对方知道你在做什么",
-      "fieldText": {
-        "zh": "你的价值几乎完全是自己创造出来的——不太借助外部资源，也不太主动建立关系。这不是缺陷，很多扎实的东西正是这样做出来的。但它有一个明确的数学限制：所有增长都被锁在你的个人产能上，你能做多少，就是上限。补这一项不需要变成社交型的人，那也不现实。可以做一件很低门槛的事：每个月主动联系一个人，不带任何目的，只是让对方知道你最近在做什么。连接的价值从来不在当下，在你需要的时候有人已经知道你是谁。",
-        "en": "Your value is almost entirely self-created — little use of external resources, little deliberate relationship-building. That isn't a flaw; a great deal of solid work gets made exactly this way. It carries one clear mathematical limit: all growth is locked to your personal capacity, and what you can do alone is the ceiling. Repairing this doesn't require becoming a social person — that isn't realistic anyway. One low-threshold move: each month, reach out to one person with no agenda, simply letting them know what you've been working on. Connection's value is never in the moment; it's that when you need it, someone already knows who you are."
-      }
-    },
-    {
-      "id": "w.04-connect.low",
-      "chapter": "04-connect",
-      "dim": "connect",
-      "band": "low",
-      "weight": 1,
-      "corePattern": "有连接但偏被动，关系需要对方先开口",
-      "shadowSide": "被动等于把主动权交出去，机会流向那些先开口的人",
-      "growthDirection": "把一件已完成的东西主动发给三个可能用得上的人",
-      "fieldText": {
-        "zh": "你有连接，但多数是被动形成的——对方先开口，你才回应。这样的关系质量往往不差，问题在于数量和时机：主动权在别人手里，所以机会到你这里时通常已经过了一手。补的方式不用改变性格，只需要改变一个动作：把你已经做完的一件东西，主动发给三个可能用得上的人。不是推销，只是让它被看见。这一步之所以有效，是因为你本来就有东西，缺的只是让它出现在需要它的人面前。",
-        "en": "You have connections, but most formed passively — the other person spoke first and you responded. The quality of such relationships is often fine; the issue is quantity and timing: the initiative sits with others, so opportunities reach you secondhand. Repairing this needn't change your temperament, only one action: take something you've already finished and send it to three people who might use it. Not selling — just letting it be seen. This works precisely because you already have the thing; what's missing is putting it in front of whoever needs it."
-      }
-    },
-    {
-      "id": "w.04-connect.mid",
-      "chapter": "04-connect",
-      "dim": "connect",
-      "band": "mid",
-      "weight": 1,
-      "corePattern": "连接质量高但范围窄，集中在少数几个人身上",
-      "shadowSide": "圈子稳定意味着信息同质，新机会很少从熟人来",
-      "growthDirection": "每季度进入一个自己不熟悉的场合，只听不说也行",
-      "fieldText": {
-        "zh": "你的连接质量不错，但范围偏窄——集中在少数几个熟悉的人身上，关系很深，圈子很稳。稳定的圈子有一个隐形代价：信息高度同质。你听到的和他们听到的是同一批东西，所以新机会很少从这里来。研究关系网络的人发现过一件反直觉的事：真正带来机会的往往不是最亲近的关系，是那些不太熟的。可以每季度进入一个自己不熟悉的场合，不用社交，只听不说也行——你要的不是人脉，是不同的信息源。",
-        "en": "Your connections are of good quality but narrow — concentrated on a few familiar people, deep relationships, a stable circle. Stable circles carry a hidden cost: highly homogeneous information. What you hear and what they hear is the same set, so new opportunities rarely arrive from here. People who study networks found something counterintuitive: opportunities tend to come not from your closest ties but from loose ones. Once a quarter, enter a setting you're unfamiliar with — no need to socialize, listening is enough. What you're after isn't contacts. It's a different information source."
-      }
-    },
-    {
-      "id": "w.04-connect.high",
-      "chapter": "04-connect",
-      "dim": "connect",
-      "band": "high",
-      "weight": 1,
-      "corePattern": "能自然建立并维持有价值的连接",
-      "shadowSide": "连接多了，注意力被分散，深度合作反而难以形成",
-      "growthDirection": "从现有关系里挑三个，把它们从认识推进到共事",
-      "fieldText": {
-        "zh": "你能自然地建立并维持有价值的连接——这在财富创造里是真正的杠杆，因为它让你的产能不再受限于自己的时间。要留意的是量到质的转折：连接多到一定程度之后，边际价值会下降，因为注意力被摊薄了，每一段关系都停在「认识」这一层，没有一段推进到「共事」。而真正产生价值的从来是后者。可以从现有关系里挑三个，想办法把它们从认识推进到一次具体的合作——哪怕很小。三个深度连接的价值，通常高于三十个熟人。",
-        "en": "You build and maintain valuable connections naturally — real leverage in wealth creation, because it uncouples your output from your own hours. Watch the turn from quantity to quality: past a certain number, marginal value drops as attention thins out, and every relationship stalls at acquaintance without one advancing to working together. Value has always come from the latter. Pick three existing relationships and find a way to move them from knowing each other to one concrete collaboration, however small. Three deep connections generally outweigh thirty acquaintances."
-      }
-    },
-    {
-      "id": "w.04-connect.vhigh",
-      "chapter": "04-connect",
-      "dim": "connect",
-      "band": "vhigh",
-      "weight": 1,
-      "corePattern": "连接能力极强，是资源与信息的天然枢纽",
-      "shadowSide": "枢纽位置消耗大，容易把时间全用在别人的事上",
-      "growthDirection": "每周留出一段不被任何人打扰的时间做自己的事",
-      "fieldText": {
-        "zh": "你是资源和信息的天然枢纽——人和机会都会往你这里汇，而且这个过程几乎不费力。这个位置的价值极高，代价也很具体：枢纽是被消耗的位置。所有人的事都会经过你，于是你的时间被切成碎片，最后发现自己一直在推进别人的事，自己的事停在原地好几年。这不是因为你不够自律，是枢纽这个位置本身的物理属性。所以必须人为设一段隔离时间：每周留出一段完全不被打扰的时间做自己的事，把它当成和别人的约会一样不可取消。",
-        "en": "You're a natural hub for resources and information — people and opportunities converge on you, and it costs you almost nothing. The value of that position is very high, and so is its specific cost: a hub is a consumed position. Everyone's business passes through you, your time fragments, and eventually you notice you've been advancing other people's work while your own has sat still for years. That isn't a discipline failure; it's a physical property of the position. So the isolation has to be built deliberately: reserve a block each week that nothing interrupts, and treat it as uncancellable as an appointment with someone else."
-      }
-    },
-    {
-      "id": "w.05-express.vlow",
-      "chapter": "05-express",
-      "dim": "express",
-      "band": "vlow",
-      "weight": 1,
-      "corePattern": "做得好但几乎不说，价值只有直接接触的人知道",
-      "shadowSide": "沉默让价值被低估，也让定价权落在别人手里",
-      "growthDirection": "把做过的一件事写成三句话，发在一个公开的地方",
-      "fieldText": {
-        "zh": "你做的东西质量不差，问题是几乎没有人知道——你不说，也不太愿意说。这一项分数很低，说的是这件事。它的直接后果是定价权：别人无法判断你的价值，就只能按最低的标准估，而你也无从反驳，因为确实没有可见的凭据。这件事的起点可以非常小：把你做过的一件事写成三句话——做了什么、解决了什么、结果如何——发在一个公开的地方。不用讲得漂亮，只需要它存在。第一句写出来之后，后面会容易很多。",
-        "en": "What you make is of decent quality; the problem is that almost no one knows — you don't say so, and don't much want to. That's what a very low score here describes. Its direct consequence is pricing power: unable to assess your value, others default to the lowest estimate, and you can't argue, because no visible evidence exists. The starting point can be very small: write one thing you've done as three sentences — what you did, what it solved, how it turned out — and post it somewhere public. It needn't be well written; it only needs to exist. After the first one, the rest come much easier."
-      }
-    },
-    {
-      "id": "w.05-express.low",
-      "chapter": "05-express",
-      "dim": "express",
-      "band": "low",
-      "weight": 1,
-      "corePattern": "能说清楚，但只在被问到时才说",
-      "shadowSide": "被动表达意味着你的价值只能被动被发现",
-      "growthDirection": "主动说一次，不等别人问",
-      "fieldText": {
-        "zh": "你能把事情说清楚，前提是有人问。没人问的时候，你默认不说——因为觉得说了像是自夸，或者觉得东西好自然会有人看见。后一个想法值得纠正一下：东西好不会自动被看见，尤其在信息过载的环境里。被动表达的结果是你的价值只能被动被发现，而发现的速度取决于运气。可以试一次主动的：不等别人问，直接把一件事说出来。第一次会不舒服，但你会发现别人的反应通常比你预想的正面得多。",
-        "en": "You can explain things clearly, provided someone asks. When no one asks, your default is silence — because speaking feels like boasting, or because good work will surely be noticed. The second belief is worth correcting: good work is not noticed automatically, least of all in an environment saturated with information. Passive expression means your value can only be discovered passively, at a speed determined by luck. Try one active instance: without waiting to be asked, say the thing. The first time is uncomfortable, and you'll find people's response is generally far more positive than you expected."
-      }
-    },
-    {
-      "id": "w.05-express.mid",
-      "chapter": "05-express",
-      "dim": "express",
-      "band": "mid",
-      "weight": 1,
-      "corePattern": "对熟悉的人说得清楚，面对陌生受众会失准",
-      "shadowSide": "以为是表达技巧问题，其实是没有为对方重新组织信息",
-      "growthDirection": "说之前先想一句：对方最关心的是什么",
-      "fieldText": {
-        "zh": "你对熟悉的人能说得很清楚，但面对陌生的受众，效果会明显下降。这通常被理解成表达技巧不够，实际上是另一件事：对熟人你不需要重新组织信息，因为共同背景已经在那儿了；对陌生人你需要，而这一步经常被跳过。可行的做法很简单：开口之前先想一句「对方最关心的是什么」，然后从那里开始讲，而不是从你自己的顺序开始讲。这一个动作，通常比任何表达训练都管用。",
-        "en": "You explain things clearly to people you know, and the effect drops noticeably with an unfamiliar audience. This usually gets read as insufficient technique. It's something else: with familiar people you don't need to reorganize information, because the shared context is already there; with strangers you do, and that step routinely gets skipped. The workable move is simple: before speaking, ask what does this person care about most, and begin there rather than in your own order. That single move generally outperforms any amount of presentation training."
-      }
-    },
-    {
-      "id": "w.05-express.high",
-      "chapter": "05-express",
-      "dim": "express",
-      "band": "high",
-      "weight": 1,
-      "corePattern": "能把复杂的事讲得别人愿意听并理解",
-      "shadowSide": "讲得太好，容易被当成主要能力，实际产出被低估",
-      "growthDirection": "让作品先出现，说明后出现",
-      "fieldText": {
-        "zh": "你能把复杂的事讲到别人愿意听、并且真的听懂——这是被严重低估的一种能力，因为多数有内容的人讲不清楚，多数讲得清楚的人没有内容。要留意的是一个真实的风险：讲得太好的人，容易被认为「主要能力是讲」，而实际的产出被折价。这个印象一旦形成很难扭转。可行的做法是调整出场顺序：让作品先出现，说明后出现。同样的话，在作品之后说是解释，在作品之前说是承诺——两者的分量完全不同。",
-        "en": "You can take something complex and present it so people want to listen and actually understand — a badly underrated capacity, because most people with substance can't explain it and most who explain well have no substance. Watch one real risk: someone who presents very well gets read as mainly a presenter, and their actual output is discounted. That impression, once formed, is hard to reverse. The workable adjustment is order of appearance: let the work arrive first and the explanation second. The same words after the work are an explanation; before it, they're a promise — and the two carry entirely different weight."
-      }
-    },
-    {
-      "id": "w.05-express.vhigh",
-      "chapter": "05-express",
-      "dim": "express",
-      "band": "vhigh",
-      "weight": 1,
-      "corePattern": "表达力极强，能塑造他人对一件事的理解方式",
-      "shadowSide": "影响力大意味着说错的成本也放大",
-      "growthDirection": "说之前确认一次：这是我验证过的，还是我推测的",
-      "fieldText": {
-        "zh": "你的表达能力强到可以塑造别人对一件事的理解方式——不只是让人听懂，是让人接受你的框架。这是财富创造里最高杠杆的能力之一，也是责任最重的一个。因为影响力放大的不只是正确，还有错误：你说错一件事的成本，比表达力弱的人高出很多倍，而且往往在很久之后才显现。所以值得养成一个习惯：说之前确认一次——这是我验证过的，还是我推测的。把这两者分开说，短期看会削弱说服力，长期看是你最值钱的资产。",
-        "en": "Your expression is strong enough to shape how others understand something — not merely making them follow, but having them adopt your frame. It's among the highest-leverage capacities in wealth creation, and the one carrying the most responsibility, because influence amplifies error as much as accuracy: the cost of your getting something wrong runs many times higher than for someone with weaker expression, and it usually surfaces much later. So one habit is worth building: before speaking, check — is this something I verified, or something I inferred. Separating the two weakens persuasion in the short run and is your most valuable asset in the long one."
-      }
-    },
-    {
-      "id": "w.06-risk.vlow",
-      "chapter": "06-risk",
-      "dim": "risk",
-      "band": "vlow",
-      "weight": 1,
-      "corePattern": "对不确定性的容忍度很低，倾向于完全规避",
-      "shadowSide": "规避风险的代价是所有高回报路径同时被排除",
-      "growthDirection": "做一件损失可承受的小尝试，重点是体验不确定本身",
-      "fieldText": {
-        "zh": "你对不确定性的容忍度很低——不确定的事，你的默认反应是不做。这不是胆量问题，多数时候是因为你承担不起损失，或者曾经承担过一次代价很大的。要说清楚的是：规避风险本身是理性的，问题在于它的代价是隐形的——所有高回报的路径都同时被排除了，而这个损失不会出现在任何账单上。如果要动，从损失完全可承受的地方开始：金额小到就算全没了也不影响生活。重点不在收益，在于让系统体验一次「不确定并没有毁掉什么」。",
-        "en": "Your tolerance for uncertainty is very low — faced with an uncertain thing, your default is not to. That isn't about courage; usually it's that you can't absorb the loss, or once absorbed a very costly one. To be clear: avoiding risk is rational. The problem is that its cost is invisible — every high-return path is excluded at the same time, and that loss appears on no statement. If you want to move, start where the loss is entirely bearable: an amount small enough that losing all of it changes nothing. The point isn't the return. It's letting your system experience once that uncertainty didn't destroy anything."
-      }
-    },
-    {
-      "id": "w.06-risk.low",
-      "chapter": "06-risk",
-      "dim": "risk",
-      "band": "low",
-      "weight": 1,
-      "corePattern": "能承担小风险，但一旦涉及可见损失就撤回",
-      "shadowSide": "撤回的时机往往在最难受、也最接近转折的那一段",
-      "growthDirection": "决定前先写下退出条件，到了才退，不凭当时的感觉退",
-      "fieldText": {
-        "zh": "你能承担一定的风险，但当损失变得可见时，会撤回。这个撤回的时机值得注意：它通常发生在最难受的那一段，而那一段往往也最接近转折。原因是心理上的——账面损失带来的痛感，大约是同等收益带来的快感的两倍，所以人在浮亏时的判断力会明显下降。可行的做法不是变得更能扛，是把决定提前：在投入之前就写下退出条件，什么情况出现我就退。到了条件才退，不凭当时的感觉退。开始时写的那个你，比中途的你清醒得多。",
-        "en": "You can carry some risk, and withdraw once the loss becomes visible. The timing of that withdrawal is worth noting: it typically happens in the most uncomfortable stretch — which is also often closest to the turn. The reason is psychological: the pain of a paper loss runs roughly twice the pleasure of an equivalent gain, so judgment degrades noticeably while underwater. The workable move isn't becoming more able to endure; it's deciding earlier: write the exit condition before committing — what would have to happen for me to withdraw. Withdraw when the condition is met, not when the feeling arrives. The version of you at the start is far clearer than the one mid-way."
-      }
-    },
-    {
-      "id": "w.06-risk.mid",
-      "chapter": "06-risk",
-      "dim": "risk",
-      "band": "mid",
-      "weight": 1,
-      "corePattern": "风险承担与领域相关，熟悉的地方敢下注",
-      "shadowSide": "把领域内的胆量误读成通用胆量，跨界时容易估错",
-      "growthDirection": "跨领域时把仓位降到熟悉领域的三分之一",
-      "fieldText": {
-        "zh": "你的风险承担是分领域的：熟悉的地方你敢下注，而且判断通常不差；陌生的地方会明显收缩。这个分布本身是健康的，问题出在跨界的时候——人容易把领域内的胆量当成通用胆量，用同样的力度进入自己没有依据的地方。可行的做法很直接：跨领域时把仓位降到熟悉领域的三分之一。不是因为你更胆小，是因为在那里你的判断还没有积累，而仓位应该匹配判断的可靠度，不是匹配你的信心。",
-        "en": "Your risk-taking is domain-dependent: where you're experienced you'll place a bet, and your judgment is usually decent; where you're not, you contract noticeably. That distribution is healthy in itself. The problem shows up when crossing over — people mistake domain-specific nerve for general nerve, and enter unfamiliar ground at the same weight. The direct move: when crossing domains, size down to a third of what you'd use where you're experienced. Not from timidity — because your judgment hasn't accumulated there, and position size should match the reliability of your judgment, not the level of your confidence."
-      }
-    },
-    {
-      "id": "w.06-risk.high",
-      "chapter": "06-risk",
-      "dim": "risk",
-      "band": "high",
-      "weight": 1,
-      "corePattern": "能在不确定中行动，且承受得住浮动",
-      "shadowSide": "承受力强容易导致仓位过重，一次失误代价放大",
-      "growthDirection": "把单次投入控制在总量的可承受比例内，不管多有把握",
-      "fieldText": {
-        "zh": "你能在不确定中行动，而且承受得住过程里的浮动——这在财富创造里是稀缺的，因为多数人是在浮动中出局的，不是在判断上出局的。要留意的正是这份承受力带来的副作用：因为你扛得住，所以仓位容易越来越重，而重仓的问题不在于赢面，在于一次失误的代价被同步放大了。可行的原则很老派但有效：不管多有把握，单次投入都控制在总量的可承受比例内。有把握的时候仍然守规则，那才是规则真正起作用的时刻。",
-        "en": "You can act inside uncertainty and withstand the swings along the way — scarce in wealth creation, since most people are knocked out by volatility rather than by judgment. Watch the side effect of that endurance: because you can take it, position sizes creep heavier, and the problem with heavy positions isn't the odds — it's that the cost of a single error is amplified in step. The principle is old-fashioned and effective: however confident you are, cap any single commitment at a bearable share of the whole. Keeping the rule when you're confident is exactly when the rule does its work."
-      }
-    },
-    {
-      "id": "w.06-risk.vhigh",
-      "chapter": "06-risk",
-      "dim": "risk",
-      "band": "vhigh",
-      "weight": 1,
-      "corePattern": "对风险几乎无感，能在极不确定的环境中持续行动",
-      "shadowSide": "无感意味着预警系统不响，危险信号会被一并吸收",
-      "growthDirection": "设一个不依赖感觉的外部止损，交给规则而不是判断",
-      "fieldText": {
-        "zh": "你对风险几乎无感——极不确定的环境里，别人已经动不了，你还能持续行动。这是罕见的，也确实带来了别人拿不到的机会。但这里有一个必须说清楚的风险：无感意味着你的预警系统不响。多数人靠恐惧来刹车，那套机制虽然粗糙，但确实拦下过很多灾难；你没有这道刹车，所以危险信号会被一并吸收掉，等到问题浮现时往往已经很深。所以你需要的不是更谨慎——那对你没用——是一个不依赖感觉的外部止损：写成规则，到点执行，不重新判断。",
-        "en": "You're nearly insensate to risk — in highly uncertain conditions where others have stopped moving, you keep acting. That's rare, and it has reached opportunities others couldn't. One risk has to be stated plainly: insensate means your early-warning system doesn't fire. Most people brake on fear — a crude mechanism that has nonetheless prevented many disasters. You don't have that brake, so danger signals get absorbed along with everything else, and by the time a problem surfaces it's usually deep. What you need isn't more caution — that won't work on you — it's an external stop-loss that doesn't depend on feeling: written as a rule, executed on trigger, not re-judged in the moment."
-      }
-    }
-  ]
+    "nodes":  [
+                  {
+                      "id":  "w.02-insight.vlow",
+                      "chapter":  "02-insight",
+                      "dim":  "insight",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "机会需要被明确指出来才看得见",
+                      "shadowSide":  "错过的不是能力，是没有建立信息入口",
+                      "growthDirection":  "固定订阅两个信息源，每周只看一次，看完记一句",
+                      "fieldText":  {
+                                        "zh":  "你看见机会的方式，需要它被明确指出来——别人说了、写在明面上、已经有人在做，你才会注意到。这一项分数很低，说的是这件事。它常被理解成眼光问题，但更准确的说法是：你还没有建立起自己的信息入口，所以所有信息都是被动到达的，而被动到达的信息通常已经过了最值钱的阶段。这件事可以从很小的地方补：固定两个跟你领域相关的信息源，每周只看一次，看完写一句「这周我注意到什么」。写四次之后你会开始提前看到东西——不是眼光变好了，是入口通了。",
+                                        "en":  "The way you see opportunity requires it to be pointed out — someone said it, it\u0027s written plainly, someone is already doing it. That\u0027s what a very low score here describes. It usually gets read as a question of judgment. More accurately: you haven\u0027t yet built your own information intake, so everything arrives passively — and information that arrives passively has generally passed its most valuable stage. This can be repaired from something very small: fix two sources relevant to your field, check them once a week, and write one line afterwards — what did I notice this week. After four entries you\u0027ll start seeing things earlier. Not because your judgment improved, but because the intake opened."
+                                    }
+                  },
+                  {
+                      "id":  "w.02-insight.low",
+                      "chapter":  "02-insight",
+                      "dim":  "insight",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "能识别机会，但确认速度慢，常错过窗口",
+                      "shadowSide":  "反复验证的过程本身消耗掉了时机",
+                      "growthDirection":  "给自己设一个判断上限：三天之内做决定，信息不全也决定",
+                      "fieldText":  {
+                                        "zh":  "你能识别机会，问题在确认它需要的时间——你会反复验证，等更多信息，直到确定为止。而机会的窗口通常比确认过程短。这不是犹豫，是你的系统把「判断错」的代价估得比「错过」高得多，所以宁可慢。可以试着调这个权重：给自己设一个判断上限，比如三天，到期就决定，信息不全也决定。前几次会不舒服，但你会发现错过的成本，往往比判断失误的成本更高，而且不可追。",
+                                        "en":  "You can identify an opportunity; the problem is how long confirming it takes — you verify repeatedly, wait for more information, until you\u0027re certain. And the window is usually shorter than the confirmation. This isn\u0027t hesitation. Your system prices getting it wrong far above missing it, so it prefers slow. Try adjusting that weighting: set a decision ceiling — three days, say — and decide when it expires, incomplete information and all. The first few times will be uncomfortable. You\u0027ll find the cost of missing usually runs higher than the cost of misjudging, and unlike misjudging, it can\u0027t be recovered."
+                                    }
+                  },
+                  {
+                      "id":  "w.02-insight.mid",
+                      "chapter":  "02-insight",
+                      "dim":  "insight",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "在熟悉领域洞察敏锐，陌生领域几乎失灵",
+                      "shadowSide":  "以为洞察是通用能力，于是在陌生领域也相信直觉",
+                      "growthDirection":  "进入新领域时先用规则判断，别用直觉，直觉需要积累才准",
+                      "fieldText":  {
+                                        "zh":  "你的洞察力是分领域的：熟悉的地方，你几乎能提前感觉到什么要发生；陌生的地方，判断力会明显下降，而你不一定察觉得到。这是所有洞察力的共性——它不是通用能力，是经验密度的产物。风险在于：你在熟悉领域养成的自信，会被带进陌生领域，而那里你的直觉还没有依据。可行的做法是分开对待：熟悉领域可以信直觉，陌生领域先用规则（数据、他人经验、明确的判断标准），等积累够了再放开直觉。",
+                                        "en":  "Your insight is domain-specific: in familiar territory you can almost feel what\u0027s coming; in unfamiliar territory your judgment drops noticeably, and you may not register it. This is true of all insight — it isn\u0027t a general capacity but a product of experience density. The risk: confidence built in familiar ground travels into unfamiliar ground, where your intuition has no basis yet. The workable approach is to treat them separately: trust intuition where you\u0027re experienced, and in new territory use rules first — data, others\u0027 experience, explicit criteria — until enough has accumulated to let intuition run."
+                                    }
+                  },
+                  {
+                      "id":  "w.02-insight.high",
+                      "chapter":  "02-insight",
+                      "dim":  "insight",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "能提前看到趋势，判断快且多数时候准",
+                      "shadowSide":  "看得太早，别人还不理解，容易孤立地承担风险",
+                      "growthDirection":  "把判断写下来并标日期，让它可被验证，也让别人看得见你的准确率",
+                      "fieldText":  {
+                                        "zh":  "你能比多数人早看到东西——趋势还没成形，你已经感觉到了。这在财富创造上是罕见的优势，但它有一个具体的困境：看得太早等于没人相信你。别人要等到事情明朗才会跟上，而那时你已经承担了最不确定的那一段风险，并且是独自承担的。可以做一件很实际的事：把你的判断写下来，标上日期。不用给任何人看。半年后回头核对，你会得到一份自己的准确率记录——这份记录既能校准你自己的信心，也是将来说服别人最有力的东西。",
+                                        "en":  "You see things earlier than most — a trend hasn\u0027t formed and you already sense it. In wealth creation that\u0027s a rare advantage, and it comes with a specific bind: seeing early means no one believes you. Others wait until things are clear, and by then you\u0027ve already carried the most uncertain stretch of risk, alone. One very practical thing to do: write your judgments down with dates. Show no one. Check back in six months and you\u0027ll have a record of your own hit rate — which calibrates your confidence and is the most persuasive thing you\u0027ll ever have when convincing others."
+                                    }
+                  },
+                  {
+                      "id":  "w.02-insight.vhigh",
+                      "chapter":  "02-insight",
+                      "dim":  "insight",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "洞察几乎是即时的，能看穿表层结构直达机制",
+                      "shadowSide":  "看得太透，容易低估执行的难度与他人的节奏",
+                      "growthDirection":  "把一个已看清的判断完整执行到底，而不是转向下一个",
+                      "fieldText":  {
+                                        "zh":  "你的洞察几乎是即时的——事情摆在面前，你很快就能看穿它的表层，直接看到底下的机制。这种能力稀缺，也确实带来了别人拿不到的判断力。它的代价很具体：看得太透的人，容易低估执行的难度。因为在你脑子里那件事已经完成了，剩下的只是「去做」，而现实里「去做」往往占了九成的成本和时间。所以真正值得练的不是看得更清楚，是把一个已经看清的判断完整执行到底——而不是在执行到一半时，被下一个更有意思的判断带走。",
+                                        "en":  "Your insight is nearly immediate — a situation appears and you quickly see through its surface to the mechanism beneath. That capacity is scarce and gives you judgment others can\u0027t reach. Its cost is specific: people who see through things easily tend to underestimate execution. In your head the thing is already finished, and what remains is merely doing it — while in reality doing it accounts for ninety percent of the cost and time. So what\u0027s worth practising isn\u0027t seeing more clearly. It\u0027s carrying one already-clear judgment all the way through, rather than being pulled away mid-execution by the next more interesting one."
+                                    }
+                  },
+                  {
+                      "id":  "w.03-build.vlow",
+                      "chapter":  "03-build",
+                      "dim":  "build",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "想法很多但很少变成可运行的东西",
+                      "shadowSide":  "反复启动新想法，旧的从未完成，累积不出资产",
+                      "growthDirection":  "只做一件，做到能给别人看为止，再考虑下一件",
+                      "fieldText":  {
+                                        "zh":  "想法到东西之间那段距离，目前是你最大的缺口。你不缺想法，缺的是把其中任何一个做到「能给别人看」的程度。这一项分数很低，说的是这件事。它的代价是复利的：没有完成的东西不会累积，所以做了很多年也没有资产。可行的做法只有一条，而且很朴素：只做一件，做到能给别人看为止。不用最好的那个想法，选一个你现在就能开始的。完成本身会带来第二样东西——下一次启动时，系统会相信这件事能被做完。",
+                                        "en":  "The distance between an idea and a thing is your largest gap right now. You don\u0027t lack ideas; you lack having taken any one of them to the point where it can be shown. That\u0027s what a very low score here describes. The cost compounds: unfinished things don\u0027t accumulate, so years of work leave no asset. There\u0027s one workable move, and it\u0027s plain: do one thing, until it can be shown. It needn\u0027t be your best idea — pick one you can start now. Finishing brings a second thing with it: next time you start, the system will believe this can be completed."
+                                    }
+                  },
+                  {
+                      "id":  "w.03-build.low",
+                      "chapter":  "03-build",
+                      "dim":  "build",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "能做出东西，但缺少让它持续运转的结构",
+                      "shadowSide":  "做完就停，没有下一步的接口，成果无法生长",
+                      "growthDirection":  "每完成一件，立刻加一个能让它继续被用到的接口",
+                      "fieldText":  {
+                                        "zh":  "你做得出东西，问题在于做完之后它就停在那里了——没有下一步，没有别人可以接上的接口，所以每一件成果都是孤立的一次性产出。这不是能力问题，是结构问题：你的成果之间没有连接，所以不会互相带动。可以在每完成一件事之后加一步：想一个「谁会用到它、怎么用得到」的接口。哪怕只是把它放到一个别人能找到的地方。有接口的成果会自己长，没接口的成果只能等你再做一次。",
+                                        "en":  "You do make things; the problem is that once made, they stop there — no next step, no interface for anyone else to pick up, so every output is an isolated one-off. That isn\u0027t a capability issue, it\u0027s a structural one: your outputs aren\u0027t connected, so they don\u0027t pull each other forward. Add one step after finishing anything: think of an interface — who would use this, and how would they reach it. Even just putting it somewhere findable. Outputs with an interface grow on their own; outputs without one wait for you to make the next."
+                                    }
+                  },
+                  {
+                      "id":  "w.03-build.mid",
+                      "chapter":  "03-build",
+                      "dim":  "build",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "能建成，但依赖自己在场，离开就停转",
+                      "shadowSide":  "把自己嵌进了系统的每一环，无法脱身去做新的",
+                      "growthDirection":  "找出最占时间的一环，先把它交出去或自动化",
+                      "fieldText":  {
+                                        "zh":  "你能把事情建起来并让它运转，前提是你在场。这一项的真实限制不是能力，是你把自己嵌进了系统的每一环——所以系统能跑，但你走不开，也就腾不出手做下一件。这是很多人卡住的地方，而且卡的时间往往以年计。突破点是具体的：找出你目前最占时间的那一环，先把它交出去或者自动化掉，不管做得有多粗糙。腾出来的那部分时间，才是你真正的产能。",
+                                        "en":  "You can build something and keep it running, provided you\u0027re present. The real constraint here isn\u0027t capability — it\u0027s that you\u0027ve embedded yourself into every link of the system, so it runs but you can\u0027t step away, and therefore can\u0027t start the next thing. This is where many people stall, often for years. The breakthrough is concrete: find the link that currently eats the most of your time and hand it off or automate it, however crudely. The time that frees up is your actual capacity."
+                                    }
+                  },
+                  {
+                      "id":  "w.03-build.high",
+                      "chapter":  "03-build",
+                      "dim":  "build",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "能把复杂的事组织成可运转的系统",
+                      "shadowSide":  "系统建得太好，容易一直优化它而不是做新的",
+                      "growthDirection":  "定期问一次：这个系统还需要我优化，还是我在用优化回避新开始",
+                      "fieldText":  {
+                                        "zh":  "把复杂的事组织成一个能自己运转的系统——这是你身上最值钱的能力，而且比洞察力更稀缺，因为看得见的人多，做得出来的人少。要留意的是它的一个副作用：系统建得越好，你越容易一直待在里面优化它。优化有明确的反馈、有掌控感、也确实有价值，所以它是最容易被合理化的拖延形式。可以定期问一次：这个系统现在还需要我优化，还是我在用优化回避一次新的开始。",
+                                        "en":  "Organizing something complex into a system that runs itself is the most valuable capacity you carry, and it\u0027s rarer than insight — plenty of people can see; few can build. Watch one side effect: the better the system, the easier it is to stay inside it optimizing. Optimization gives clear feedback, a sense of control, and genuine value, which makes it the most easily rationalized form of postponement. Ask periodically: does this system still need my optimization, or am I using optimization to avoid a new beginning."
+                                    }
+                  },
+                  {
+                      "id":  "w.03-build.vhigh",
+                      "chapter":  "03-build",
+                      "dim":  "build",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "构建能力极强，能同时维持多个系统",
+                      "shadowSide":  "能力太强导致什么都自己建，错过合作的杠杆",
+                      "growthDirection":  "下一件事刻意不自己建，找一个已有的接上去",
+                      "fieldText":  {
+                                        "zh":  "你的构建能力强到可以同时维持多个系统，而且不觉得吃力。这确实带来了很多结果，但它有一个隐形的天花板：什么都能自己建的人，很少去用别人已经建好的东西。而财富真正的放大器往往不是自己建得多快，是接上了谁的系统。可以在下一件事上刻意反着来：不自己建，找一个已有的接上去。这会不舒服，因为那意味着接受别人的设计，包括你觉得可以更好的地方。但杠杆恰恰在这里——自己建的上限是你的时间，接上去的上限不是。",
+                                        "en":  "Your building capacity runs strong enough to maintain several systems at once without strain. That has produced real results, and it carries an invisible ceiling: someone who can build anything rarely uses what others have already built. And wealth\u0027s real amplifier is usually not how fast you build, but whose system you connect to. Try deliberately reversing on the next thing: don\u0027t build it, find something existing and connect. It will be uncomfortable, because it means accepting someone else\u0027s design, including the parts you could do better. But that\u0027s exactly where the leverage is — what you build alone is capped by your time; what you connect to isn\u0027t."
+                                    }
+                  },
+                  {
+                      "id":  "w.04-connect.vlow",
+                      "chapter":  "04-connect",
+                      "dim":  "connect",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "价值创造几乎完全独立完成，外部资源未被调用",
+                      "shadowSide":  "独立本身没问题，但它让所有增长都受限于个人产能",
+                      "growthDirection":  "每月主动联系一个人，不带目的，只是让对方知道你在做什么",
+                      "fieldText":  {
+                                        "zh":  "你的价值几乎完全是自己创造出来的——不太借助外部资源，也不太主动建立关系。这不是缺陷，很多扎实的东西正是这样做出来的。但它有一个明确的数学限制：所有增长都被锁在你的个人产能上，你能做多少，就是上限。补这一项不需要变成社交型的人，那也不现实。可以做一件很低门槛的事：每个月主动联系一个人，不带任何目的，只是让对方知道你最近在做什么。连接的价值从来不在当下，在你需要的时候有人已经知道你是谁。",
+                                        "en":  "Your value is almost entirely self-created — little use of external resources, little deliberate relationship-building. That isn\u0027t a flaw; a great deal of solid work gets made exactly this way. It carries one clear mathematical limit: all growth is locked to your personal capacity, and what you can do alone is the ceiling. Repairing this doesn\u0027t require becoming a social person — that isn\u0027t realistic anyway. One low-threshold move: each month, reach out to one person with no agenda, simply letting them know what you\u0027ve been working on. Connection\u0027s value is never in the moment; it\u0027s that when you need it, someone already knows who you are."
+                                    }
+                  },
+                  {
+                      "id":  "w.04-connect.low",
+                      "chapter":  "04-connect",
+                      "dim":  "connect",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "有连接但偏被动，关系需要对方先开口",
+                      "shadowSide":  "被动等于把主动权交出去，机会流向那些先开口的人",
+                      "growthDirection":  "把一件已完成的东西主动发给三个可能用得上的人",
+                      "fieldText":  {
+                                        "zh":  "你有连接，但多数是被动形成的——对方先开口，你才回应。这样的关系质量往往不差，问题在于数量和时机：主动权在别人手里，所以机会到你这里时通常已经过了一手。补的方式不用改变性格，只需要改变一个动作：把你已经做完的一件东西，主动发给三个可能用得上的人。不是推销，只是让它被看见。这一步之所以有效，是因为你本来就有东西，缺的只是让它出现在需要它的人面前。",
+                                        "en":  "You have connections, but most formed passively — the other person spoke first and you responded. The quality of such relationships is often fine; the issue is quantity and timing: the initiative sits with others, so opportunities reach you secondhand. Repairing this needn\u0027t change your temperament, only one action: take something you\u0027ve already finished and send it to three people who might use it. Not selling — just letting it be seen. This works precisely because you already have the thing; what\u0027s missing is putting it in front of whoever needs it."
+                                    }
+                  },
+                  {
+                      "id":  "w.04-connect.mid",
+                      "chapter":  "04-connect",
+                      "dim":  "connect",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "连接质量高但范围窄，集中在少数几个人身上",
+                      "shadowSide":  "圈子稳定意味着信息同质，新机会很少从熟人来",
+                      "growthDirection":  "每季度进入一个自己不熟悉的场合，只听不说也行",
+                      "fieldText":  {
+                                        "zh":  "你的连接质量不错，但范围偏窄——集中在少数几个熟悉的人身上，关系很深，圈子很稳。稳定的圈子有一个隐形代价：信息高度同质。你听到的和他们听到的是同一批东西，所以新机会很少从这里来。研究关系网络的人发现过一件反直觉的事：真正带来机会的往往不是最亲近的关系，是那些不太熟的。可以每季度进入一个自己不熟悉的场合，不用社交，只听不说也行——你要的不是人脉，是不同的信息源。",
+                                        "en":  "Your connections are of good quality but narrow — concentrated on a few familiar people, deep relationships, a stable circle. Stable circles carry a hidden cost: highly homogeneous information. What you hear and what they hear is the same set, so new opportunities rarely arrive from here. People who study networks found something counterintuitive: opportunities tend to come not from your closest ties but from loose ones. Once a quarter, enter a setting you\u0027re unfamiliar with — no need to socialize, listening is enough. What you\u0027re after isn\u0027t contacts. It\u0027s a different information source."
+                                    }
+                  },
+                  {
+                      "id":  "w.04-connect.high",
+                      "chapter":  "04-connect",
+                      "dim":  "connect",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "能自然建立并维持有价值的连接",
+                      "shadowSide":  "连接多了，注意力被分散，深度合作反而难以形成",
+                      "growthDirection":  "从现有关系里挑三个，把它们从认识推进到共事",
+                      "fieldText":  {
+                                        "zh":  "你能自然地建立并维持有价值的连接——这在财富创造里是真正的杠杆，因为它让你的产能不再受限于自己的时间。要留意的是量到质的转折：连接多到一定程度之后，边际价值会下降，因为注意力被摊薄了，每一段关系都停在「认识」这一层，没有一段推进到「共事」。而真正产生价值的从来是后者。可以从现有关系里挑三个，想办法把它们从认识推进到一次具体的合作——哪怕很小。三个深度连接的价值，通常高于三十个熟人。",
+                                        "en":  "You build and maintain valuable connections naturally — real leverage in wealth creation, because it uncouples your output from your own hours. Watch the turn from quantity to quality: past a certain number, marginal value drops as attention thins out, and every relationship stalls at acquaintance without one advancing to working together. Value has always come from the latter. Pick three existing relationships and find a way to move them from knowing each other to one concrete collaboration, however small. Three deep connections generally outweigh thirty acquaintances."
+                                    }
+                  },
+                  {
+                      "id":  "w.04-connect.vhigh",
+                      "chapter":  "04-connect",
+                      "dim":  "connect",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "连接能力极强，是资源与信息的天然枢纽",
+                      "shadowSide":  "枢纽位置消耗大，容易把时间全用在别人的事上",
+                      "growthDirection":  "每周留出一段不被任何人打扰的时间做自己的事",
+                      "fieldText":  {
+                                        "zh":  "你是资源和信息的天然枢纽——人和机会都会往你这里汇，而且这个过程几乎不费力。这个位置的价值极高，代价也很具体：枢纽是被消耗的位置。所有人的事都会经过你，于是你的时间被切成碎片，最后发现自己一直在推进别人的事，自己的事停在原地好几年。这不是因为你不够自律，是枢纽这个位置本身的物理属性。所以必须人为设一段隔离时间：每周留出一段完全不被打扰的时间做自己的事，把它当成和别人的约会一样不可取消。",
+                                        "en":  "You\u0027re a natural hub for resources and information — people and opportunities converge on you, and it costs you almost nothing. The value of that position is very high, and so is its specific cost: a hub is a consumed position. Everyone\u0027s business passes through you, your time fragments, and eventually you notice you\u0027ve been advancing other people\u0027s work while your own has sat still for years. That isn\u0027t a discipline failure; it\u0027s a physical property of the position. So the isolation has to be built deliberately: reserve a block each week that nothing interrupts, and treat it as uncancellable as an appointment with someone else."
+                                    }
+                  },
+                  {
+                      "id":  "w.05-express.vlow",
+                      "chapter":  "05-express",
+                      "dim":  "express",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "做得好但几乎不说，价值只有直接接触的人知道",
+                      "shadowSide":  "沉默让价值被低估，也让定价权落在别人手里",
+                      "growthDirection":  "把做过的一件事写成三句话，发在一个公开的地方",
+                      "fieldText":  {
+                                        "zh":  "你做的东西质量不差，问题是几乎没有人知道——你不说，也不太愿意说。这一项分数很低，说的是这件事。它的直接后果是定价权：别人无法判断你的价值，就只能按最低的标准估，而你也无从反驳，因为确实没有可见的凭据。这件事的起点可以非常小：把你做过的一件事写成三句话——做了什么、解决了什么、结果如何——发在一个公开的地方。不用讲得漂亮，只需要它存在。第一句写出来之后，后面会容易很多。",
+                                        "en":  "What you make is of decent quality; the problem is that almost no one knows — you don\u0027t say so, and don\u0027t much want to. That\u0027s what a very low score here describes. Its direct consequence is pricing power: unable to assess your value, others default to the lowest estimate, and you can\u0027t argue, because no visible evidence exists. The starting point can be very small: write one thing you\u0027ve done as three sentences — what you did, what it solved, how it turned out — and post it somewhere public. It needn\u0027t be well written; it only needs to exist. After the first one, the rest come much easier."
+                                    }
+                  },
+                  {
+                      "id":  "w.05-express.low",
+                      "chapter":  "05-express",
+                      "dim":  "express",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "能说清楚，但只在被问到时才说",
+                      "shadowSide":  "被动表达意味着你的价值只能被动被发现",
+                      "growthDirection":  "主动说一次，不等别人问",
+                      "fieldText":  {
+                                        "zh":  "你能把事情说清楚，前提是有人问。没人问的时候，你默认不说——因为觉得说了像是自夸，或者觉得东西好自然会有人看见。后一个想法值得纠正一下：东西好不会自动被看见，尤其在信息过载的环境里。被动表达的结果是你的价值只能被动被发现，而发现的速度取决于运气。可以试一次主动的：不等别人问，直接把一件事说出来。第一次会不舒服，但你会发现别人的反应通常比你预想的正面得多。",
+                                        "en":  "You can explain things clearly, provided someone asks. When no one asks, your default is silence — because speaking feels like boasting, or because good work will surely be noticed. The second belief is worth correcting: good work is not noticed automatically, least of all in an environment saturated with information. Passive expression means your value can only be discovered passively, at a speed determined by luck. Try one active instance: without waiting to be asked, say the thing. The first time is uncomfortable, and you\u0027ll find people\u0027s response is generally far more positive than you expected."
+                                    }
+                  },
+                  {
+                      "id":  "w.05-express.mid",
+                      "chapter":  "05-express",
+                      "dim":  "express",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "对熟悉的人说得清楚，面对陌生受众会失准",
+                      "shadowSide":  "以为是表达技巧问题，其实是没有为对方重新组织信息",
+                      "growthDirection":  "说之前先想一句：对方最关心的是什么",
+                      "fieldText":  {
+                                        "zh":  "你对熟悉的人能说得很清楚，但面对陌生的受众，效果会明显下降。这通常被理解成表达技巧不够，实际上是另一件事：对熟人你不需要重新组织信息，因为共同背景已经在那儿了；对陌生人你需要，而这一步经常被跳过。可行的做法很简单：开口之前先想一句「对方最关心的是什么」，然后从那里开始讲，而不是从你自己的顺序开始讲。这一个动作，通常比任何表达训练都管用。",
+                                        "en":  "You explain things clearly to people you know, and the effect drops noticeably with an unfamiliar audience. This usually gets read as insufficient technique. It\u0027s something else: with familiar people you don\u0027t need to reorganize information, because the shared context is already there; with strangers you do, and that step routinely gets skipped. The workable move is simple: before speaking, ask what does this person care about most, and begin there rather than in your own order. That single move generally outperforms any amount of presentation training."
+                                    }
+                  },
+                  {
+                      "id":  "w.05-express.high",
+                      "chapter":  "05-express",
+                      "dim":  "express",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "能把复杂的事讲得别人愿意听并理解",
+                      "shadowSide":  "讲得太好，容易被当成主要能力，实际产出被低估",
+                      "growthDirection":  "让作品先出现，说明后出现",
+                      "fieldText":  {
+                                        "zh":  "你能把复杂的事讲到别人愿意听、并且真的听懂——这是被严重低估的一种能力，因为多数有内容的人讲不清楚，多数讲得清楚的人没有内容。要留意的是一个真实的风险：讲得太好的人，容易被认为「主要能力是讲」，而实际的产出被折价。这个印象一旦形成很难扭转。可行的做法是调整出场顺序：让作品先出现，说明后出现。同样的话，在作品之后说是解释，在作品之前说是承诺——两者的分量完全不同。",
+                                        "en":  "You can take something complex and present it so people want to listen and actually understand — a badly underrated capacity, because most people with substance can\u0027t explain it and most who explain well have no substance. Watch one real risk: someone who presents very well gets read as mainly a presenter, and their actual output is discounted. That impression, once formed, is hard to reverse. The workable adjustment is order of appearance: let the work arrive first and the explanation second. The same words after the work are an explanation; before it, they\u0027re a promise — and the two carry entirely different weight."
+                                    }
+                  },
+                  {
+                      "id":  "w.05-express.vhigh",
+                      "chapter":  "05-express",
+                      "dim":  "express",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "表达力极强，能塑造他人对一件事的理解方式",
+                      "shadowSide":  "影响力大意味着说错的成本也放大",
+                      "growthDirection":  "说之前确认一次：这是我验证过的，还是我推测的",
+                      "fieldText":  {
+                                        "zh":  "你的表达能力强到可以塑造别人对一件事的理解方式——不只是让人听懂，是让人接受你的框架。这是财富创造里最高杠杆的能力之一，也是责任最重的一个。因为影响力放大的不只是正确，还有错误：你说错一件事的成本，比表达力弱的人高出很多倍，而且往往在很久之后才显现。所以值得养成一个习惯：说之前确认一次——这是我验证过的，还是我推测的。把这两者分开说，短期看会削弱说服力，长期看是你最值钱的资产。",
+                                        "en":  "Your expression is strong enough to shape how others understand something — not merely making them follow, but having them adopt your frame. It\u0027s among the highest-leverage capacities in wealth creation, and the one carrying the most responsibility, because influence amplifies error as much as accuracy: the cost of your getting something wrong runs many times higher than for someone with weaker expression, and it usually surfaces much later. So one habit is worth building: before speaking, check — is this something I verified, or something I inferred. Separating the two weakens persuasion in the short run and is your most valuable asset in the long one."
+                                    }
+                  },
+                  {
+                      "id":  "w.06-risk.vlow",
+                      "chapter":  "06-risk",
+                      "dim":  "risk",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "对不确定性的容忍度很低，倾向于完全规避",
+                      "shadowSide":  "规避风险的代价是所有高回报路径同时被排除",
+                      "growthDirection":  "做一件损失可承受的小尝试，重点是体验不确定本身",
+                      "fieldText":  {
+                                        "zh":  "你对不确定性的容忍度很低——不确定的事，你的默认反应是不做。这不是胆量问题，多数时候是因为你承担不起损失，或者曾经承担过一次代价很大的。要说清楚的是：规避风险本身是理性的，问题在于它的代价是隐形的——所有高回报的路径都同时被排除了，而这个损失不会出现在任何账单上。如果要动，从损失完全可承受的地方开始：金额小到就算全没了也不影响生活。重点不在收益，在于让系统体验一次「不确定并没有毁掉什么」。",
+                                        "en":  "Your tolerance for uncertainty is very low — faced with an uncertain thing, your default is not to. That isn\u0027t about courage; usually it\u0027s that you can\u0027t absorb the loss, or once absorbed a very costly one. To be clear: avoiding risk is rational. The problem is that its cost is invisible — every high-return path is excluded at the same time, and that loss appears on no statement. If you want to move, start where the loss is entirely bearable: an amount small enough that losing all of it changes nothing. The point isn\u0027t the return. It\u0027s letting your system experience once that uncertainty didn\u0027t destroy anything."
+                                    }
+                  },
+                  {
+                      "id":  "w.06-risk.low",
+                      "chapter":  "06-risk",
+                      "dim":  "risk",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "能承担小风险，但一旦涉及可见损失就撤回",
+                      "shadowSide":  "撤回的时机往往在最难受、也最接近转折的那一段",
+                      "growthDirection":  "决定前先写下退出条件，到了才退，不凭当时的感觉退",
+                      "fieldText":  {
+                                        "zh":  "你能承担一定的风险，但当损失变得可见时，会撤回。这个撤回的时机值得注意：它通常发生在最难受的那一段，而那一段往往也最接近转折。原因是心理上的——账面损失带来的痛感，大约是同等收益带来的快感的两倍，所以人在浮亏时的判断力会明显下降。可行的做法不是变得更能扛，是把决定提前：在投入之前就写下退出条件，什么情况出现我就退。到了条件才退，不凭当时的感觉退。开始时写的那个你，比中途的你清醒得多。",
+                                        "en":  "You can carry some risk, and withdraw once the loss becomes visible. The timing of that withdrawal is worth noting: it typically happens in the most uncomfortable stretch — which is also often closest to the turn. The reason is psychological: the pain of a paper loss runs roughly twice the pleasure of an equivalent gain, so judgment degrades noticeably while underwater. The workable move isn\u0027t becoming more able to endure; it\u0027s deciding earlier: write the exit condition before committing — what would have to happen for me to withdraw. Withdraw when the condition is met, not when the feeling arrives. The version of you at the start is far clearer than the one mid-way."
+                                    }
+                  },
+                  {
+                      "id":  "w.06-risk.mid",
+                      "chapter":  "06-risk",
+                      "dim":  "risk",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "风险承担与领域相关，熟悉的地方敢下注",
+                      "shadowSide":  "把领域内的胆量误读成通用胆量，跨界时容易估错",
+                      "growthDirection":  "跨领域时把仓位降到熟悉领域的三分之一",
+                      "fieldText":  {
+                                        "zh":  "你的风险承担是分领域的：熟悉的地方你敢下注，而且判断通常不差；陌生的地方会明显收缩。这个分布本身是健康的，问题出在跨界的时候——人容易把领域内的胆量当成通用胆量，用同样的力度进入自己没有依据的地方。可行的做法很直接：跨领域时把仓位降到熟悉领域的三分之一。不是因为你更胆小，是因为在那里你的判断还没有积累，而仓位应该匹配判断的可靠度，不是匹配你的信心。",
+                                        "en":  "Your risk-taking is domain-dependent: where you\u0027re experienced you\u0027ll place a bet, and your judgment is usually decent; where you\u0027re not, you contract noticeably. That distribution is healthy in itself. The problem shows up when crossing over — people mistake domain-specific nerve for general nerve, and enter unfamiliar ground at the same weight. The direct move: when crossing domains, size down to a third of what you\u0027d use where you\u0027re experienced. Not from timidity — because your judgment hasn\u0027t accumulated there, and position size should match the reliability of your judgment, not the level of your confidence."
+                                    }
+                  },
+                  {
+                      "id":  "w.06-risk.high",
+                      "chapter":  "06-risk",
+                      "dim":  "risk",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "能在不确定中行动，且承受得住浮动",
+                      "shadowSide":  "承受力强容易导致仓位过重，一次失误代价放大",
+                      "growthDirection":  "把单次投入控制在总量的可承受比例内，不管多有把握",
+                      "fieldText":  {
+                                        "zh":  "你能在不确定中行动，而且承受得住过程里的浮动——这在财富创造里是稀缺的，因为多数人是在浮动中出局的，不是在判断上出局的。要留意的正是这份承受力带来的副作用：因为你扛得住，所以仓位容易越来越重，而重仓的问题不在于赢面，在于一次失误的代价被同步放大了。可行的原则很老派但有效：不管多有把握，单次投入都控制在总量的可承受比例内。有把握的时候仍然守规则，那才是规则真正起作用的时刻。",
+                                        "en":  "You can act inside uncertainty and withstand the swings along the way — scarce in wealth creation, since most people are knocked out by volatility rather than by judgment. Watch the side effect of that endurance: because you can take it, position sizes creep heavier, and the problem with heavy positions isn\u0027t the odds — it\u0027s that the cost of a single error is amplified in step. The principle is old-fashioned and effective: however confident you are, cap any single commitment at a bearable share of the whole. Keeping the rule when you\u0027re confident is exactly when the rule does its work."
+                                    }
+                  },
+                  {
+                      "id":  "w.06-risk.vhigh",
+                      "chapter":  "06-risk",
+                      "dim":  "risk",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "对风险几乎无感，能在极不确定的环境中持续行动",
+                      "shadowSide":  "无感意味着预警系统不响，危险信号会被一并吸收",
+                      "growthDirection":  "设一个不依赖感觉的外部止损，交给规则而不是判断",
+                      "fieldText":  {
+                                        "zh":  "你对风险几乎无感——极不确定的环境里，别人已经动不了，你还能持续行动。这是罕见的，也确实带来了别人拿不到的机会。但这里有一个必须说清楚的风险：无感意味着你的预警系统不响。多数人靠恐惧来刹车，那套机制虽然粗糙，但确实拦下过很多灾难；你没有这道刹车，所以危险信号会被一并吸收掉，等到问题浮现时往往已经很深。所以你需要的不是更谨慎——那对你没用——是一个不依赖感觉的外部止损：写成规则，到点执行，不重新判断。",
+                                        "en":  "You\u0027re nearly insensate to risk — in highly uncertain conditions where others have stopped moving, you keep acting. That\u0027s rare, and it has reached opportunities others couldn\u0027t. One risk has to be stated plainly: insensate means your early-warning system doesn\u0027t fire. Most people brake on fear — a crude mechanism that has nonetheless prevented many disasters. You don\u0027t have that brake, so danger signals get absorbed along with everything else, and by the time a problem surfaces it\u0027s usually deep. What you need isn\u0027t more caution — that won\u0027t work on you — it\u0027s an external stop-loss that doesn\u0027t depend on feeling: written as a rule, executed on trigger, not re-judged in the moment."
+                                    }
+                  },
+                  {
+                      "id":  "w.07-hidden.vlow",
+                      "chapter":  "07-hidden",
+                      "dim":  "insight",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "未被使用的路，不在更大胆地判断，而在建立稳定的信息入口",
+                      "shadowSide":  "把看不见机会误读成没有机会，于是只在别人已经验证过的地方行动",
+                      "growthDirection":  "连续四周访谈一位真实使用者，每次只记录一个反复出现但尚未被解决的问题",
+                      "fieldText":  {
+                                        "zh":  "这一带最容易被忽略的能力不是预测，而是倾听。你的判断系统目前需要外部事实先出现，才有足够材料形成洞察；这意味着最有价值的隐藏路径，是主动靠近问题发生的现场，而不是在脑中寻找灵感。验证它的方法很具体：回看最近三次让你后知后觉的机会，前期是否都缺少真实用户、客户或一线信息。如果你其实长期在现场，却仍然判断偏慢，这项解释就不成立，真正阻点更可能在决策权限。接下来四周，每周访谈一位真实使用者，只记一个反复出现、仍未被解决的问题。四条记录会比泛读更多资讯更接近你的价值入口。",
+                                        "en":  "The unused capacity here is not prediction but listening. Your judgment currently needs external facts before it has enough material to form insight, so the hidden route is to move closer to where problems actually occur rather than wait for inspiration. Check the last three opportunities you recognized late: were real users, customers, or frontline signals absent early on? If you were already close to the field and still moved slowly, this reading does not hold; decision authority is the more likely bottleneck. For four weeks, interview one real user each week and record one recurring unresolved problem. Those four observations will reveal more than a broad stream of information."
+                                    }
+                  },
+                  {
+                      "id":  "w.07-hidden.low",
+                      "chapter":  "07-hidden",
+                      "dim":  "insight",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "你没有缺少判断，只是判断常在事情结束后才变得清晰",
+                      "shadowSide":  "复盘能力被留在过去，没有被转成下一次行动前的检查表",
+                      "growthDirection":  "把最近一次后知后觉写成三个早期信号，并在下一次决定前逐项检查",
+                      "fieldText":  {
+                                        "zh":  "你未使用的那条路藏在复盘里。事情结束后，你通常能说清哪里不对、哪个信号早就出现；问题是这些认识没有被保存成下一次可调用的规则，于是每次都重新交一次学费。可以核对最近两次错过或误判：你是否在结果出来后迅速理解了原因。如果不是，说明问题仍在信息入口；如果是，这项判断就有证据。把最近一次后知后觉拆成三个可观察的早期信号，写进决定前检查表。下一次只负责检查，不要求立刻相信直觉。洞察开始复利的标志，是过去的经验能提前进入下一次选择。",
+                                        "en":  "Your unused route sits inside retrospective judgment. Once an event is over, you can often explain what was wrong and which signal appeared early; the problem is that those observations are not stored as rules available next time, so each decision pays the same tuition again. Check two recent misses: did the cause become clear quickly after the outcome? If not, the issue is still information intake. If yes, this reading has evidence. Turn the most recent hindsight into three observable early signals and place them on a pre-decision checklist. Next time, only check them; you do not have to trust intuition immediately. Insight begins compounding when past experience enters the next choice before the outcome."
+                                    }
+                  },
+                  {
+                      "id":  "w.07-hidden.mid",
+                      "chapter":  "07-hidden",
+                      "dim":  "insight",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "隐藏机会来自跨领域迁移，而不是在熟悉领域继续加深同一种判断",
+                      "shadowSide":  "熟悉环境里的稳定表现，会让可迁移的方法被误认为只是行业经验",
+                      "growthDirection":  "选一个相邻领域，把自己最可靠的一条判断规则改写成对方也能使用的版本",
+                      "fieldText":  {
+                                        "zh":  "你的洞察在熟悉情境里已经可用，未被使用的是迁移能力：你可能把一条真正通用的方法，当成了只适用于当前行业的经验。证据通常出现在别人向你请教时——你给出的不是答案，而是一种拆问题的顺序。如果从未有人在不同主题上重复向你寻求判断，这项解释就需要保留，优势可能仍然高度依赖领域。选一个相邻领域，把自己最可靠的一条判断规则改写成对方也能执行的三步流程，再找一个人试用。能被别处复用的判断，才可能从个人经验变成可交换的方法资产。",
+                                        "en":  "Your insight already works in familiar settings; the unused capacity is transfer. You may be treating a genuinely reusable method as experience that belongs only to your current field. Evidence often appears when others ask for help: what you provide is not an answer but a sequence for breaking down the problem. If nobody seeks your judgment across different topics, keep this interpretation tentative; the strength may still be domain-bound. Choose one adjacent field, rewrite your most reliable judgment rule as a three-step process someone there can execute, and let one person test it. Judgment that travels can become an exchangeable method rather than private experience."
+                                    }
+                  },
+                  {
+                      "id":  "w.07-hidden.high",
+                      "chapter":  "07-hidden",
+                      "dim":  "insight",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "你没在用的不是洞察本身，而是把洞察变成可验证提案的能力",
+                      "shadowSide":  "看得早却只停留在提醒和评论，价值在被市场验证前就散掉了",
+                      "growthDirection":  "为一个判断写下对象、问题、验证指标和七天内能完成的最小实验",
+                      "fieldText":  {
+                                        "zh":  "你已经经常比周围人更早看见结构变化，但看见不等于创造价值。隐藏路径在于把判断压缩成可验证提案：它服务谁、解决什么、出现什么结果才算判断正确。回看最近三条你曾明确说过的趋势，如果其中有两条后来发生，却没有形成作品、项目或合作，这项判断成立；如果你一直能迅速落地，阻点应转去检查构建或连接。选一个当前判断，写下对象、问题、验证指标，以及七天内可以完成的最小实验。洞察只有进入实验，才从个人敏锐变成公共价值。",
+                                        "en":  "You often see structural change earlier than people around you, but seeing is not yet value creation. The hidden route is to compress judgment into a testable proposition: who it serves, what it solves, and what result would count as confirmation. Review three trends you stated clearly. If two later occurred without becoming an artifact, project, or collaboration, this reading holds. If you routinely move into execution, inspect building or connection instead. Take one current judgment and write its audience, problem, success measure, and the smallest experiment possible within seven days. Insight becomes public value only when it enters a test."
+                                    }
+                  },
+                  {
+                      "id":  "w.07-hidden.vhigh",
+                      "chapter":  "07-hidden",
+                      "dim":  "insight",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "真正未使用的能力，是让别人理解你的判断过程，而不只是接受结论",
+                      "shadowSide":  "结论到得太快，旁人只能依赖你，无法与你共同判断",
+                      "growthDirection":  "公开拆解一次判断：列出信号、排除项、阈值和什么情况会推翻结论",
+                      "fieldText":  {
+                                        "zh":  "你的判断速度很快，隐藏的下一层不是更准，而是可传递。只给结论时，别人要么相信你、要么拒绝你；两种结果都没有形成共同能力。可观察证据是：团队在你不在场时，是否很难复现你曾做对的选择。如果他们已经能独立使用同一套标准，这项判断不成立，你的下一步应是授权而非解释。选择一次近期判断，公开写出你看见的信号、排除过的解释、触发行动的阈值，以及什么新证据会推翻结论。能被质疑和复现的洞察，才会成为系统资产，而不是个人神话。",
+                                        "en":  "Your judgment is fast; the unused next layer is not greater accuracy but transferability. When you provide only conclusions, others either trust or reject you, and neither outcome builds shared capacity. The observable evidence is whether a team can reproduce choices you made well when you are absent. If they already use the same criteria independently, this reading does not hold; delegation is the next issue, not explanation. Take one recent judgment and publish the signals you noticed, alternatives you ruled out, threshold that triggered action, and evidence that would overturn the conclusion. Insight that can be challenged and reproduced becomes a system asset rather than a personal myth."
+                                    }
+                  },
+                  {
+                      "id":  "w.08-drain.vlow",
+                      "chapter":  "08-drain",
+                      "dim":  "risk",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "价值主要流失在没有进入现实交换，而不是项目做得不够好",
+                      "shadowSide":  "用继续准备换取安全感，最终让反馈永远无法到达",
+                      "growthDirection":  "把一个未完成成果交给一位真实对象，只问他是否愿意继续了解",
+                      "fieldText":  {
+                                        "zh":  "这一结构最大的流失点发生在交换之前：成果留在准备、修改和等待里，没有遇见真实对象。风险感受很强时，系统会把「尚未发布」当成安全，但代价是你也得不到任何能修正方向的反馈。核对过去三个月：是否有一件投入超过十小时、却从未给目标对象看过的成果。如果没有，这项判断不成立，应检查表达或连接。选其中一件，以未完成版本交给一位真实对象，不求购买，只问他是否愿意继续了解。第一笔要收回的不是钱，是现实反馈。",
+                                        "en":  "The largest leak in this structure occurs before exchange: work remains in preparation, revision, and waiting, never meeting a real recipient. When risk sensitivity is strong, unpublished feels safe, but it also blocks every signal that could correct direction. Check the last three months: is there something that took more than ten hours and was never shown to its intended audience? If not, this reading does not hold; inspect expression or connection. Give one unfinished version to one real recipient. Do not ask for a purchase; ask only whether they would want to know more. The first return to recover is not money but reality-based feedback."
+                                    }
+                  },
+                  {
+                      "id":  "w.08-drain.low",
+                      "chapter":  "08-drain",
+                      "dim":  "risk",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "价值在过度降低承诺和价格时流失，安全被换成了不可持续",
+                      "shadowSide":  "为了减少被拒绝的风险，先主动削弱了成果的边界与回报",
+                      "growthDirection":  "下一次报价不先降价，只缩小交付范围，并记录对方真实反应",
+                      "fieldText":  {
+                                        "zh":  "你并非完全不进入交换，但容易在交换前主动让步：降低价格、增加交付、模糊边界，以此减少被拒绝的不适。短期看更安全，长期却会让每次成交都难以持续。证据不是你是否收费，而是完成一次交换后是否常出现「投入比预想多很多」。如果没有，这项判断可以排除。下一次遇到预算阻力时，不先降价，只缩小交付范围，并记录对方的真实反应。你需要验证的不是自己敢不敢要价，而是市场是否真的要求你牺牲边界。",
+                                        "en":  "You do enter exchange, but often concede before it begins: lowering price, adding delivery, or blurring boundaries to reduce the discomfort of rejection. It feels safer in the short term and makes each agreement harder to sustain. The evidence is not whether you charge; it is whether an exchange often ends with far more effort than expected. If that rarely happens, discard this reading. At the next budget objection, do not lower the price first; reduce scope and record the actual response. What needs testing is not whether you dare to ask, but whether the market truly requires you to surrender your boundaries."
+                                    }
+                  },
+                  {
+                      "id":  "w.08-drain.mid",
+                      "chapter":  "08-drain",
+                      "dim":  "risk",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "价值流失来自决策标准随情境变化，同类机会被不同规则处理",
+                      "shadowSide":  "有时过度保守、有时突然加码，结果难以形成可复盘的经验",
+                      "growthDirection":  "为同类机会固定三个准入条件和一个退出条件，连续使用五次再调整",
+                      "fieldText":  {
+                                        "zh":  "你的风险承受处在可用区间，真正的流失不是太保守或太冒进，而是标准不稳定：熟人介绍时容易放宽，压力大时容易收紧，兴奋时又会突然加码。这样每次结果都很难比较，经验也无法累积。回看五次相近决定，如果理由彼此不同而事后都能自圆其说，这项判断成立；如果标准一直一致，流失点应在其他维度。为同类机会写三个准入条件和一个退出条件，连续使用五次再修改。财富系统需要的不是每次都判断正确，而是错误能够被比较和修正。",
+                                        "en":  "Your risk capacity sits in a workable range. The leak is not excessive caution or boldness but unstable criteria: referrals may receive looser rules, pressure tighter ones, excitement a sudden increase. Outcomes then become incomparable and experience cannot accumulate. Review five similar decisions. If each used different reasons that only made sense afterwards, this reading holds. If your criteria were consistent, look elsewhere. Write three entry conditions and one exit condition for a recurring class of opportunity, then use them five times before changing them. A wealth system does not need every judgment to be right; it needs errors that can be compared and corrected."
+                                    }
+                  },
+                  {
+                      "id":  "w.08-drain.high",
+                      "chapter":  "08-drain",
+                      "dim":  "risk",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "价值流失在同时承诺太多，单个机会没有获得足够完成度",
+                      "shadowSide":  "能承受不确定，让未关闭的项目持续堆积而不触发警报",
+                      "growthDirection":  "列出全部进行中承诺，冻结新增七天，并明确关闭至少一项",
+                      "fieldText":  {
+                                        "zh":  "你能承受多个不确定项目同时存在，这让机会进入得很快，也让价值从未完成的缝隙中流走。问题不是选择错，而是每个选择都保持开放，注意力不断支付切换成本。证据很容易核对：当前是否有三项以上需要你主动推进、却连续两周没有实质进展的承诺。如果没有，这项解释不成立。列出全部进行中承诺，冻结新增七天，并明确关闭至少一项——完成、转交或取消都算。高风险承受真正需要的配套，不是更多机会，而是更强的关闭能力。",
+                                        "en":  "You can tolerate several uncertain projects at once. Opportunities enter quickly, while value leaks through unfinished edges. The issue is not choosing badly but keeping every choice open and repeatedly paying switching costs. The evidence is simple: are there more than three commitments requiring your initiative that have made no material progress for two weeks? If not, this reading does not hold. List every active commitment, freeze new ones for seven days, and explicitly close at least one by finishing, handing off, or cancelling it. High risk capacity needs stronger closure, not more opportunity."
+                                    }
+                  },
+                  {
+                      "id":  "w.08-drain.vhigh",
+                      "chapter":  "08-drain",
+                      "dim":  "risk",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "最大的流失不是波动，而是把可恢复试错变成不可逆暴露",
+                      "shadowSide":  "对压力的耐受掩盖了单次失败可能伤及整个系统的结构风险",
+                      "growthDirection":  "把核心资产、日常现金流和实验资金物理隔离，任何实验不得跨越隔离线",
+                      "fieldText":  {
+                                        "zh":  "你对波动的耐受很高，真正危险的流失点因此不在情绪，而在结构：实验一旦与核心资产、日常现金流或长期信誉绑在一起，原本可恢复的错误会变成不可逆暴露。验证它时不要问自己是否害怕，而要看最坏结果是否会影响基本运转。如果所有实验早已隔离，这项判断不成立。把核心资产、日常现金流和实验资金分开记录，最好使用不同账户或权限；任何新实验都不能跨越隔离线。这里不是投资建议，而是一条系统原则：允许局部失败，禁止一次判断带走全部选择权。",
+                                        "en":  "Your tolerance for volatility is high, so the dangerous leak is structural rather than emotional. When an experiment is tied to core assets, operating cash flow, or long-term reputation, a recoverable error becomes irreversible exposure. Do not test this by asking whether you feel afraid; ask whether the worst outcome would impair basic operation. If every experiment is already isolated, this reading does not hold. Record core assets, operating cash, and experimental funds separately, preferably with different accounts or permissions, and never let a new experiment cross the boundary. This is not investment advice but a system principle: permit local failure and prevent one judgment from removing every future choice."
+                                    }
+                  },
+                  {
+                      "id":  "w.09-path.vlow",
+                      "chapter":  "09-path",
+                      "dim":  "build",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "进化起点是让价值拥有一个最小容器，而不是建立完整系统",
+                      "shadowSide":  "一想到流程、产品和长期维护就放弃，导致能力始终只能临时出售",
+                      "growthDirection":  "把一项重复做过的工作整理成一页清单，并让另一个人照着完成一次",
+                      "fieldText":  {
+                                        "zh":  "构建力处在这一带时，谈平台、流程或品牌体系都太早。真正有效的路径，是先证明你的价值能离开当下的临场发挥，进入一个最小容器。证据是同类任务每次都从头开始，质量依赖你当天状态；如果你已经有稳定模板，这项判断不成立。选一件至少做过三次的工作，把步骤写成一页清单，让另一个人不经口头解释完成一次。哪里卡住就补哪里。第一套系统不需要漂亮，它只需要让一次经验不必再次从零发生。",
+                                        "en":  "At this level of building capacity, a platform, process, or brand system is premature. The effective path is to prove that your value can leave live improvisation and enter a minimal container. Evidence is that similar tasks restart from zero and quality depends on your condition that day. If stable templates already exist, this reading does not hold. Choose work you have done at least three times, write a one-page checklist, and let another person complete it without verbal explanation. Repair only where they get stuck. The first system need not be elegant; it only needs to keep one experience from beginning at zero again."
+                                    }
+                  },
+                  {
+                      "id":  "w.09-path.low",
+                      "chapter":  "09-path",
+                      "dim":  "build",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "进化路径是完成一个闭环，而不是同时改善所有环节",
+                      "shadowSide":  "局部动作很多，却没有一条从需求到交付再到反馈的完整路径",
+                      "growthDirection":  "选一个最小服务或作品，在十四天内走完需求、交付、反馈和一次修订",
+                      "fieldText":  {
+                                        "zh":  "你已有若干可用动作，但它们还没有首尾相连：会创造、会沟通，也做过交付，却很少把一次真实反馈带回下一版。价值因此停在零散项目里，不能形成复利。检查最近一次成果，是否能清楚指出它来自什么需求、交给谁、反馈如何改变了下一版；若四项都能回答，这项判断不成立。选择一个最小服务或作品，在十四天内完整走过需求、交付、反馈和一次修订。不要同时优化品牌、渠道与价格。先让一条路径闭合，系统才有可以重复的骨架。",
+                                        "en":  "You already have useful actions, but they are not connected end to end: creation, communication, and delivery may all occur, while real feedback rarely returns into the next version. Value remains in isolated projects and cannot compound. Inspect the last output: can you name the need, recipient, feedback, and revision it caused? If all four are clear, this reading does not hold. Choose one minimal service or artifact and complete need, delivery, feedback, and one revision within fourteen days. Do not optimize brand, channel, and price at the same time. Close one path first; repetition needs a complete skeleton."
+                                    }
+                  },
+                  {
+                      "id":  "w.09-path.mid",
+                      "chapter":  "09-path",
+                      "dim":  "build",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "现有流程可以工作，进化点在识别哪一步值得标准化",
+                      "shadowSide":  "平均用力维护所有环节，把本可放大的优势困在日常操作里",
+                      "growthDirection":  "记录一次完整交付各步骤耗时，只标准化耗时最高且重复最多的一步",
+                      "fieldText":  {
+                                        "zh":  "你的系统已经能交付结果，但仍主要靠经验维持。下一步不是把所有事情流程化，而是找到最值得固定的一步。平均标准化会制造文档负担，真正的复利来自高频、高耗时、又不需要每次重新判断的环节。若你已经能准确看到时间花在哪里，这项判断可以跳过。记录一次完整交付中每一步的耗时和返工次数，只选择耗时最高且重复最多的一步，为它建立模板、检查点或自动化。一个被释放的瓶颈，比十份没人使用的流程文件更有价值。",
+                                        "en":  "Your system can already deliver, but experience still holds it together. The next step is not to process everything; it is to identify the one step worth fixing. Blanket standardization creates documentation burden. Compounding comes from work that is frequent, costly, and does not require fresh judgment each time. If you already know exactly where time goes, skip this reading. Record the time and rework for every step in one delivery, then standardize only the step that is both most expensive and most repeated through a template, checkpoint, or automation. One released bottleneck is worth more than ten unused process documents."
+                                    }
+                  },
+                  {
+                      "id":  "w.09-path.high",
+                      "chapter":  "09-path",
+                      "dim":  "build",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "系统已经成形，进化点从亲自保证质量转向设计可委托的质量",
+                      "shadowSide":  "因为自己做得更快更稳，关键环节长期无法离开本人",
+                      "growthDirection":  "选择一项成熟工作，写清验收标准并允许他人用不同方法达到同一结果",
+                      "fieldText":  {
+                                        "zh":  "你的构建能力已经能形成可靠成果，新的瓶颈往往是你本人：因为自己做更快、更稳，于是关键环节始终回到你手里。可验证证据是休息或离开时，交付是否明显减速；如果系统照常运行，这项判断不成立。选择一项成熟工作，不写操作步骤，只写结果必须满足的三到五条验收标准，让另一个人用自己的方法完成。允许过程不同，只在标准上校准。真正可扩展的系统不是复制你的动作，而是在没有你的情况下仍能保护质量。",
+                                        "en":  "Your building capacity already produces reliable outcomes; the new bottleneck is often you. Because you are faster and steadier, critical work keeps returning to your hands. The test is whether delivery slows markedly when you rest or leave. If the system continues normally, this reading does not hold. Choose one mature task and write only three to five acceptance criteria, not operating steps. Let someone else reach the result in their own way. Permit a different process and calibrate only against the standard. A scalable system does not copy your movements; it protects quality in your absence."
+                                    }
+                  },
+                  {
+                      "id":  "w.09-path.vhigh",
+                      "chapter":  "09-path",
+                      "dim":  "build",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "进化方向不是继续建造，而是持续决定什么不值得进入系统",
+                      "shadowSide":  "结构能力过强，会把临时需求也建设成需要长期维护的永久设施",
+                      "growthDirection":  "为所有新流程设置三十天试用期，到期必须删除、合并或正式保留",
+                      "fieldText":  {
+                                        "zh":  "你能把混乱迅速变成结构，代价是结构本身会不断增加。临时需求、一次例外、某个人的偏好，都可能被建成需要长期维护的设施。证据是现有流程中是否存在半年没人解释得清、又没人敢删除的部分；如果结构一直轻量，这项判断不成立。为所有新流程设置三十天试用期，到期必须做出删除、合并或正式保留的决定，并指定维护责任。高构建力的稀缺动作不是再造一个系统，而是保护系统免于被自己的能力拖重。",
+                                        "en":  "You can turn disorder into structure quickly, and the cost is that structure keeps accumulating. Temporary needs, one-off exceptions, and individual preferences can become permanent facilities requiring maintenance. Evidence is whether current processes contain parts nobody can explain after six months and nobody dares remove. If your structure remains light, this reading does not hold. Give every new process a thirty-day trial. At expiry it must be deleted, merged, or formally retained with an owner. The scarce action at very high building capacity is not constructing another system but protecting the system from the weight of your own ability."
+                                    }
+                  },
+                  {
+                      "id":  "w.10-practice.vlow",
+                      "chapter":  "10-practice",
+                      "dim":  "connect",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "连接练习的起点不是扩大人脉，而是完成一次具体、低压力的价值对话",
+                      "shadowSide":  "把连接理解成社交表现，门槛被抬高到无法开始",
+                      "growthDirection":  "给一位熟悉的人发送一句具体信息：我正在解决什么，以及想听他哪一条真实反馈",
+                      "fieldText":  {
+                                        "zh":  "这一带不适合要求自己认识更多人。连接首先是让价值信息准确到达一个人，而不是在群体里表现。过去一个月若你很少向任何人具体说出自己正在解决什么问题，这项判断成立；若你经常清楚表达，阻点可能在后续跟进。今天只做一次低压力练习：选择一位熟悉的人，发两句话——我正在解决什么，以及我希望听到他的哪一条真实反馈。不推销，不寒暄，不请求引荐。一次清晰抵达，比新增十个没有上下文的联系人更接近有效连接。",
+                                        "en":  "This level does not need a larger network. Connection begins when value information reaches one person accurately, not when you perform socially in a group. If you rarely told anyone exactly what problem you were solving in the past month, this reading holds. If you communicate clearly and often, the bottleneck may be follow-through. Make one low-pressure move today: choose someone familiar and send two sentences stating what you are solving and the one piece of honest feedback you want. No pitch, small talk, or request for an introduction. One clear arrival is closer to real connection than ten contacts without context."
+                                    }
+                  },
+                  {
+                      "id":  "w.10-practice.low",
+                      "chapter":  "10-practice",
+                      "dim":  "connect",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "连接不是一次性的勇气问题，而是让弱关系拥有稳定、不过度的节奏",
+                      "shadowSide":  "需要资源时才联系，使每次开口都显得目的过重",
+                      "growthDirection":  "建立五人弱关系清单，每周只向一人发送一条与对方真正相关的信息",
+                      "fieldText":  {
+                                        "zh":  "你能建立连接，但它常在需要帮助时才被启动，于是每次开口都承载太多目的。真正需要练的是低负担的持续性。验证方式是查看近三个月的联系记录：是否多数对话都由明确请求开始；如果平时已有自然往来，这项判断不成立。建立一个五人的弱关系清单，每周只联系一人，发送一条与对方工作或兴趣真正相关的信息，不附带请求。五周后再观察哪些关系自然产生了第二次对话。资源网络不是临时调用的名单，而是长期存在的双向注意。",
+                                        "en":  "You can connect, but connection often activates only when help is needed, so every approach carries too much purpose. The capacity to train is low-burden continuity. Check three months of messages: did most conversations begin with a request? If natural contact already exists, this reading does not hold. Create a list of five weak ties. Each week send one person something genuinely relevant to their work or interest, with no request attached. After five weeks, observe which relationships naturally created a second conversation. A resource network is not a list to call under pressure; it is sustained, mutual attention."
+                                    }
+                  },
+                  {
+                      "id":  "w.10-practice.mid",
+                      "chapter":  "10-practice",
+                      "dim":  "connect",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "你已有可用关系，练习重点是看清每段关系中价值如何双向流动",
+                      "shadowSide":  "对所有人使用同一种合作方式，导致部分关系长期失衡",
+                      "growthDirection":  "画一张十人交换地图，分别写下你能提供什么、对方能提供什么和当前缺少哪一步",
+                      "fieldText":  {
+                                        "zh":  "你的连接能力足以形成合作，但关系的价值流向未必清晰。有些关系信息很多却没有行动，有些一直由你提供，有些只有需要时才出现。若你能明确说出核心关系的双向价值与下一步，这项判断可以排除。选十位与你当前方向相关的人，分别写下你能提供什么、对方可能提供什么、以及当前缺少的下一步。不要给关系打分，只看交换是否具体。然后选择最清晰的一组，发起一个一小时内能够完成的小合作。连接开始产生复利，通常不是因为认识更多人，而是已有关系终于有了清楚的接口。",
+                                        "en":  "Your connection capacity is sufficient for collaboration, but value flow within relationships may be unclear. Some relationships carry information without action, some rely on you to provide, and some appear only when needed. If you can state the mutual value and next step of core relationships clearly, discard this reading. Choose ten people relevant to your current direction and write what you can offer, what they may offer, and the missing next step. Do not score the relationship; ask whether exchange is concrete. Then choose the clearest pair and propose a collaboration that can be completed within an hour. Connection compounds when existing relationships gain clear interfaces, not merely when the network grows."
+                                    }
+                  },
+                  {
+                      "id":  "w.10-practice.high",
+                      "chapter":  "10-practice",
+                      "dim":  "connect",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "连接已是优势，练习重点是设置边界与可复制的引荐机制",
+                      "shadowSide":  "人和机会持续汇聚到你这里，使个人注意力成为网络瓶颈",
+                      "growthDirection":  "为常见引荐写三条准入标准，并把一次匹配交给规则而不是临场人情",
+                      "fieldText":  {
+                                        "zh":  "人和机会容易通过你发生连接，这项优势若只靠个人判断和随时响应，很快会把你的注意力变成瓶颈。证据是你是否经常收到「帮我认识某人」或「你觉得谁合适」的请求；如果很少，这项判断不成立。选最常见的一类引荐，写下三条准入标准：双方需要具备什么、哪些情况不连接、引荐后由谁推进。下一次严格按标准执行。边界不是降低温度，而是让信任不会因为过度使用而贬值；机制也不是冷漠，而是让高质量连接不再完全依赖你的即时精力。",
+                                        "en":  "People and opportunities connect through you easily. If that advantage depends only on personal judgment and constant response, your attention becomes the network bottleneck. Evidence is whether requests such as introduce me to or who would fit arrive frequently. If they do not, this reading does not hold. For the most common introduction, write three entry rules: what both sides must have, when you will not connect them, and who owns the next step. Apply the rules strictly once. Boundaries do not reduce warmth; they protect trust from overuse. A mechanism is not coldness; it keeps good connection from depending entirely on your immediate energy."
+                                    }
+                  },
+                  {
+                      "id":  "w.10-practice.vhigh",
+                      "chapter":  "10-practice",
+                      "dim":  "connect",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "你的连接能力已形成中心节点，下一步是让网络在没有你时也能流动",
+                      "shadowSide":  "所有路径都经过你，会累积权力、信息拥堵和单点失效风险",
+                      "growthDirection":  "挑选三位可信节点互相认识，并明确授权他们独立完成一次匹配",
+                      "fieldText":  {
+                                        "zh":  "你已经不只是参与关系网络，而是在许多关系之间充当中心节点。它带来影响力，也带来单点风险：信息、信任和机会都等你确认，网络越大，你越容易成为它最慢的一段。核对一个事实：当你离开一周，合作是否明显停滞；如果不会，这项判断不成立。选择三位判断可靠、边界清楚的人，让他们彼此认识，并明确授权他们独立完成一次资源匹配，不必经过你批准。成熟的连接力不是让所有人更依赖中心，而是让更多可信节点获得流动能力。",
+                                        "en":  "You are no longer only participating in a relationship network; you function as a central node between many relationships. That creates influence and single-point risk: information, trust, and opportunity wait for your confirmation, and as the network grows you may become its slowest segment. Test one fact: does collaboration noticeably stall when you leave for a week? If not, this reading does not hold. Choose three people with sound judgment and clear boundaries, introduce them to one another, and explicitly authorize one resource match without your approval. Mature connection does not make everyone depend more on the center; it gives more trusted nodes the ability to move."
+                                    }
+                  },
+                  {
+                      "id":  "w.11-summary.vlow",
+                      "chapter":  "11-summary",
+                      "dim":  "express",
+                      "band":  "vlow",
+                      "weight":  1,
+                      "corePattern":  "你的价值并非不存在，而是尚未形成别人能够识别和回应的外部证据",
+                      "shadowSide":  "长期沉默会让市场只能根据缺席做判断，再好的内部能力也无法被交换",
+                      "growthDirection":  "七天内发布一个最小证据：样例、前后对比、过程记录或可体验原型",
+                      "fieldText":  {
+                                        "zh":  "整份地图最后要收束到一个事实：你拥有的能力与外界能够识别的价值之间，目前还有距离。表达力很低不等于没有内容，它意味着别人缺少可以据此回应的证据。检查身边熟悉你的人，能否用一句具体话说出你解决过什么问题；如果他们能，这项判断不成立，阻点可能是连接。七天内发布一个最小证据，可以是样例、前后对比、过程记录或可体验原型，不需要完整介绍自己。你的创造者身份不会靠一句定位诞生，它会由连续可见的证据逐渐被世界确认。",
+                                        "en":  "The map closes on one fact: there is currently distance between the capacity you hold and the value others can recognize. Very low expression does not mean empty content; it means others lack evidence they can respond to. Ask whether people who know you can state one specific problem you have solved. If they can, this reading does not hold and connection may be the bottleneck. Publish one minimal proof within seven days: a sample, before-and-after comparison, process note, or usable prototype. You do not need a complete self-description. A creator identity is not born from a positioning sentence; it is confirmed by a sequence of visible evidence."
+                                    }
+                  },
+                  {
+                      "id":  "w.11-summary.low",
+                      "chapter":  "11-summary",
+                      "dim":  "express",
+                      "band":  "low",
+                      "weight":  1,
+                      "corePattern":  "你的价值能够被看见，但信息仍然过宽，别人难以判断何时应该找你",
+                      "shadowSide":  "为了不遗漏任何能力而说得太多，最终没有一个问题与你稳定关联",
+                      "growthDirection":  "连续四次只围绕同一类对象、同一个问题和同一种结果表达",
+                      "fieldText":  {
+                                        "zh":  "你已经在表达，但外界收到的信息可能仍然过宽：会什么、做过什么都能说，却难以形成「遇到这个问题就想到你」的稳定联结。验证方式是看最近四次公开表达，是否服务不同对象、讨论不同问题；如果主题一直集中，这项判断不成立。接下来的四次表达只保留三个不变项：同一类对象、同一个问题、同一种结果，案例和形式可以变化。收窄不是删除能力，而是先给市场一个明确入口。身份先被一个问题记住，之后才有空间承载更完整的你。",
+                                        "en":  "You are expressing value, but the signal may still be too broad. You can list skills and experience, yet no stable association forms between you and a particular problem. Check the last four public expressions: did they serve different audiences and discuss different problems? If the theme was already concentrated, this reading does not hold. Keep three things unchanged for the next four expressions: one audience, one problem, and one kind of result. Cases and formats may vary. Narrowing does not erase capacity; it gives the market a clear entrance. An identity is remembered through one problem before it can carry a fuller range."
+                                    }
+                  },
+                  {
+                      "id":  "w.11-summary.mid",
+                      "chapter":  "11-summary",
+                      "dim":  "express",
+                      "band":  "mid",
+                      "weight":  1,
+                      "corePattern":  "表达已经可用，创造者身份需要靠持续重复而不是寻找更惊艳的说法",
+                      "shadowSide":  "每次都换角度和语言，使单次内容不错却无法形成长期识别",
+                      "growthDirection":  "确定一句核心主张，在未来八次表达中保留原句，只改变证据与案例",
+                      "fieldText":  {
+                                        "zh":  "你的表达足以让人理解，当前缺少的不是技巧，而是识别的连续性。中间带最容易陷入一个误区：每次都想说得更新、更完整，于是观点不断变化，外界只记得单篇内容，记不住你。若你已经持续重复同一核心主张并被他人复述，这项判断不成立。确定一句你愿意负责的核心主张，在未来八次表达中保留原句，只改变证据、案例和场景。重复不是贫乏，而是让一个判断穿过噪声。创造者身份形成的时刻，是别人开始替你说出那句话。",
+                                        "en":  "Your expression is clear enough to be understood. What is missing is continuity of recognition, not technique. The middle range often changes angle and language each time in search of something newer or more complete, so individual pieces work while the person behind them remains hard to remember. If others already repeat a core claim you state consistently, this reading does not hold. Choose one claim you are willing to stand behind and keep its wording through the next eight expressions, changing only evidence, examples, and context. Repetition is not lack; it lets judgment cross noise. Creator identity forms when others begin saying the sentence for you."
+                                    }
+                  },
+                  {
+                      "id":  "w.11-summary.high",
+                      "chapter":  "11-summary",
+                      "dim":  "express",
+                      "band":  "high",
+                      "weight":  1,
+                      "corePattern":  "表达已经带来注意力，下一步是把注意力导向可承接、可交付的价值入口",
+                      "shadowSide":  "持续输出获得认可，却没有清晰下一步，注意力在赞同之后立即散去",
+                      "growthDirection":  "为最常被认可的一类表达设置唯一入口：预约、样例、产品或合作说明",
+                      "fieldText":  {
+                                        "zh":  "你能够让观点被看见，也容易获得回应。整份地图的收束因此不在「再表达更多」，而在注意力之后发生什么。可观察证据是：高互动内容是否很少带来咨询、试用、合作或购买；如果转化路径已经稳定，这项判断不成立。找出最常被认可的一类表达，只设置一个下一步入口，可以是预约、样例、产品页或合作说明，并让它与原内容解决同一个问题。注意力不是价值交换的完成，只是门被打开。你的创造者身份需要一个能够承接这扇门的真实结构。",
+                                        "en":  "You can make ideas visible and receive response. The map therefore closes not on expressing more, but on what happens after attention. The observable evidence is whether highly engaged work rarely leads to inquiry, trial, collaboration, or purchase. If conversion is already stable, this reading does not hold. Find the type of expression most often recognized and give it one next step only: a booking, sample, product page, or collaboration note that solves the same problem as the original content. Attention is not the completion of exchange; it only opens the door. Your creator identity needs a real structure able to receive that opening."
+                                    }
+                  },
+                  {
+                      "id":  "w.11-summary.vhigh",
+                      "chapter":  "11-summary",
+                      "dim":  "express",
+                      "band":  "vhigh",
+                      "weight":  1,
+                      "corePattern":  "你已拥有强信号，最后的课题是减少表达，让信誉不被频率和承诺稀释",
+                      "shadowSide":  "影响力会奖励持续发声，容易让观点速度超过验证速度",
+                      "growthDirection":  "建立发布阈值：没有新证据、新方法或可承担的新承诺，就不增加一个新主张",
+                      "fieldText":  {
+                                        "zh":  "你的表达本身已经构成影响力，财富地图最后指向的是克制。强表达会得到即时反馈，反馈又推动更快发声；当观点速度超过验证速度，短期注意力增加，长期信誉却可能被稀释。检查最近十次公开判断，有多少包含新证据、新方法或你愿意承担的明确承诺；如果大多数都有，这项判断不成立。为发布设置阈值：三者都没有时，不增加新主张，只补充已有判断的证据与边界。成熟的创造者身份不是占据更多声音，而是让每次出现都值得被认真对待。",
+                                        "en":  "Your expression already carries influence, so the wealth map closes on restraint. Strong expression receives immediate feedback, which rewards speaking faster. When the speed of claims exceeds the speed of verification, short-term attention rises while long-term credibility can thin. Review your last ten public judgments: how many contained new evidence, a new method, or a clear commitment you were willing to carry? If most did, this reading does not hold. Set a publication threshold: without one of those three, add no new claim; strengthen the evidence and boundary of an existing one instead. A mature creator identity does not occupy more sound. It makes each appearance worth taking seriously."
+                                    }
+                  }
+              ]
 }

@@ -37,11 +37,19 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const { data: order } = await admin
       .from("orders")
-      .select("id")
+      .select("id, amount_usd, provider")
       .eq("provider_payment_id", paypalOrderId)
       .single();
     if (order) {
-      await fulfillPaidOrder(order.id);
+      const amount = event.resource && event.resource.amount
+      const receivedCents = amount ? Math.round(Number(amount.value) * 100) : -1
+      const expectedCents = Math.round(Number(order.amount_usd) * 100)
+      if (order.provider !== "paypal" || !amount || amount.currency_code !== "USD" || receivedCents !== expectedCents) {
+        console.error("[paypal webhook] payment did not match local order", { orderId: order.id })
+        return NextResponse.json({ error: "Payment mismatch" }, { status: 422 })
+      }
+      const result = await fulfillPaidOrder(order.id)
+      if (!result.ok) return NextResponse.json({ error: "Fulfillment pending" }, { status: 500 })
     }
   }
 

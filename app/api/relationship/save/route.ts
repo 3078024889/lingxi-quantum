@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     // 不是这里的范围判断需要收紧或放宽。
     if (
       typeof p.year !== "number" || typeof p.month !== "number" || typeof p.day !== "number" ||
-      p.year < 1 || p.year > 2026 || p.month < 1 || p.month > 12 || p.day < 1 || p.day > 31
+      p.year < 1 || p.year > new Date().getFullYear() || p.month < 1 || p.month > 12 || p.day < 1 || p.day > 31
     ) {
       return NextResponse.json({ error: "出生日期无效，请检查年月日是否都填写了完整的数字。" }, { status: 400 });
     }

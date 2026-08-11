@@ -6,7 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "audit:knowledge": "node scripts/lint-knowledge.mjs",
+    "audit:lifemap": "node scripts/audit-lifemap-knowledge.mjs",
+    "audit:life-mirror": "node scripts/audit-life-mirror-knowledge.mjs",
+    "audit:daily-tide": "node scripts/audit-daily-tide-knowledge.mjs",
+    "audit:qian": "node scripts/audit-qian-knowledge.mjs",
+    "audit:resilience": "node scripts/lint-knowledge.mjs --product resilience",
+    "audit:wealth": "node scripts/lint-knowledge.mjs --product wealth",
+    "audit:romance": "node scripts/audit-romance-knowledge.mjs",
+    "audit:report-routes": "node scripts/audit-report-routes.mjs",
+    "audit:security": "node scripts/audit-security.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.122.0",

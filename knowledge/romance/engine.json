@@ -1,0 +1,8 @@
+{
+  "engine": "lib/romance-knowledge.ts",
+  "audit": "scripts/audit-romance-knowledge.mjs",
+  "knowledgeVersion": "romance-2026.08.1",
+  "expectedChapters": 11,
+  "semanticBands": 13,
+  "status": "active"
+}

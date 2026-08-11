@@ -27,7 +27,7 @@ function resolveBirth(p: PersonInput): BirthInput {
 function validPerson(p: Partial<PersonInput>): p is PersonInput {
   return (
     typeof p.year === "number" && typeof p.month === "number" && typeof p.day === "number" &&
-    p.year >= 1 && p.year <= 2026 && p.month >= 1 && p.month <= 12 && p.day >= 1 && p.day <= 31
+    p.year >= 1 && p.year <= new Date().getFullYear() && p.month >= 1 && p.month <= 12 && p.day >= 1 && p.day <= 31
   );
 }
 

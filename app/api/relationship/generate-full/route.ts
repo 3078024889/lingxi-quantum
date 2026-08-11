@@ -1,75 +1,126 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { computeLifeVector, compareLifeVectors } from '@/lib/life-vector';
-import { generateStaticRelationshipReport } from '@/lib/knowledge-loader';
-import { getRelationshipProductMeta } from '@/lib/relationship-config';
+import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  compareLifeVectors,
+  computeLifeVector,
+  type LifeVectorInput,
+} from "@/lib/life-vector";
+import { generateStaticRelationshipReport } from "@/lib/knowledge-loader";
+import { REVIEW_MODE } from "@/lib/reviewMode";
 
-// 强制动态渲染，防止 Vercel 编译期间报错
-export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+export const maxDuration = 30;
+
+function sectionCount(report: string): number {
+  return report
+    .split(/===\s*(?:\d+|SECTION)\s*===/)
+    .map((part) => part.trim())
+    .filter(Boolean).length;
+}
 
 export async function POST(request: Request) {
-  // 【关键修复】必须放在 POST 函数内部，防止 Vercel 编译崩溃
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!REVIEW_MODE && !user) {
+    return NextResponse.json({ error: "请先登录。" }, { status: 401 });
+  }
+
+  let body: { id?: string; lang?: "zh" | "en"; regenerate?: boolean };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "请求格式有误。" }, { status: 400 });
+  }
+
+  if (!body.id || typeof body.id !== "string") {
+    return NextResponse.json({ error: "缺少 submission id。" }, { status: 400 });
+  }
+
+  const admin = createAdminClient();
+  const { data: submission, error: fetchError } = await admin
+    .from("relationship_submissions")
+    .select("id,user_id,name_a,name_b,relationship_type,facts_a,facts_b,full_report,full_report_en")
+    .eq("id", body.id)
+    .single();
+
+  if (fetchError || !submission) {
+    return NextResponse.json({ error: "找不到这份提交记录。" }, { status: 404 });
+  }
+
+  if (!REVIEW_MODE && submission.user_id !== user!.id) {
+    return NextResponse.json({ error: "无权访问这份记录。" }, { status: 403 });
+  }
+
+  if (!REVIEW_MODE) {
+    const { data: unlockRows, error: unlockError } = await admin
+      .from("unlocks")
+      .select("expires_at")
+      .eq("user_id", user!.id)
+      .eq("product_id", "relationship-resonance");
+
+    if (unlockError) {
+      console.error("[relationship/generate-full] unlock lookup failed:", unlockError);
+      return NextResponse.json({ error: "暂时无法确认解锁状态，请稍后再试。" }, { status: 503 });
+    }
+
+    const now = Date.now();
+    const unlocked = (unlockRows ?? []).some(
+      (row: { expires_at: string | null }) =>
+        !row.expires_at || new Date(row.expires_at).getTime() > now,
+    );
+    if (!unlocked) {
+      return NextResponse.json({ error: "尚未解锁完整报告。" }, { status: 402 });
+    }
+  }
 
   try {
-    const body = await request.json();
-    const { id, forceRegenerate } = body;
+    const lang = body.lang === "en" ? "en" : "zh";
+    const cacheField = lang === "en" ? "full_report_en" : "full_report";
+    const cached = submission[cacheField] as string | null;
+    const vectorA = computeLifeVector(submission.facts_a as LifeVectorInput);
+    const vectorB = computeLifeVector(submission.facts_b as LifeVectorInput);
+    const resonance = compareLifeVectors(vectorA, vectorB);
 
-    if (!id) {
-      return NextResponse.json({ error: 'Missing submission ID' }, { status: 400 });
-    }
-
-    const { data: submission, error: fetchError } = await supabase
-      .from('relationship_submissions')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (fetchError || !submission) {
-      return NextResponse.json({ error: 'Submission not found' }, { status: 404 });
-    }
-
-    const vectorA = computeLifeVector(submission.facts_a);
-    const vectorB = computeLifeVector(submission.facts_b);
-    const resonanceResult = compareLifeVectors(vectorA, vectorB);
-
-    if (submission.full_report && !forceRegenerate) {
+    if (cached && sectionCount(cached) >= 11 && !body.regenerate) {
       return NextResponse.json({
-        success: true,
-        report: submission.full_report,
-        vectors: { a: vectorA, b: vectorB }
+        fullReport: cached,
+        resonance,
+        vectors: { a: vectorA, b: vectorB },
       });
     }
 
-    const rawRelType = submission.relationship_type || 'romantic';
-    const productMeta = getRelationshipProductMeta(rawRelType);
-    const engineRelationType = productMeta.id; 
+    const fullReport = generateStaticRelationshipReport({
+      nameA: submission.name_a,
+      nameB: submission.name_b,
+      vectorA,
+      vectorB,
+      resonance,
+      relationshipType: submission.relationship_type,
+      lang,
+    });
 
-    const finalReportText = generateStaticRelationshipReport(resonanceResult, engineRelationType);
-
-    const { error: updateError } = await supabase
-      .from('relationship_submissions')
-      .update({
-        full_report: finalReportText,
-        full_report_en: finalReportText
-      })
-      .eq('id', id);
+    const { error: updateError } = await admin
+      .from("relationship_submissions")
+      .update({ [cacheField]: fullReport })
+      .eq("id", submission.id)
+      .eq("user_id", submission.user_id);
 
     if (updateError) {
-      console.error("[灵犀场预警] 数据库更新报告失败:", updateError);
+      console.error("[relationship/generate-full] report cache failed:", updateError);
+      return NextResponse.json({ error: "报告已生成，但保存失败，请稍后再试。" }, { status: 503 });
     }
 
     return NextResponse.json({
-      success: true,
-      report: finalReportText,
+      fullReport,
+      resonance,
       vectors: { a: vectorA, b: vectorB },
-      productMeta 
     });
-
-  } catch (error: any) {
-    console.error("[灵犀场预警] 关系共振生成失败:", error);
-    return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
+  } catch (error) {
+    console.error("[relationship/generate-full] generation failed:", error);
+    return NextResponse.json({ error: "场域展开报告时出错，请稍后再试。" }, { status: 500 });
   }
 }

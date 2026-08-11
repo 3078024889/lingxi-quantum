@@ -134,6 +134,7 @@ function CheckoutInner() {
     appId: string; timeStamp: string; nonceStr: string; package: string; signType: "RSA"; paySign: string;
   } | null>(null);
   const wechatCode = params.get("code") ?? undefined;
+  const wechatState = params.get("state") ?? undefined;
 
   function invokeWeixinPay(
     jsapi: { appId: string; timeStamp: string; nonceStr: string; package: string; signType: string; paySign: string },
@@ -241,7 +242,7 @@ function CheckoutInner() {
       const res = await fetch("/api/pay/wechat/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId, submissionId, ...(wechatCode ? { code: wechatCode } : {}) }),
+        body: JSON.stringify({ productId, submissionId, ...(wechatCode ? { code: wechatCode, state: wechatState } : {}) }),
       });
       const rawText = await res.text();
       let data: {

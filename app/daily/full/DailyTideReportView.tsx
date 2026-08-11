@@ -65,7 +65,13 @@ export default function DailyTideReportView({ id }: { id: string }) {
           setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
           return;
         }
-        setSections((data.fullReport as string).split("===SECTION===").map((s) => s.trim()).filter(Boolean));
+        const nextSections = (data.fullReport as string).split("===SECTION===").map((s) => s.trim()).filter(Boolean);
+        if (nextSections.length !== SECTION_TITLES.length) {
+          setStatus("error");
+          setError(t("报告章节不完整，请稍后重新打开。", "The report is incomplete. Please reopen it shortly."));
+          return;
+        }
+        setSections(nextSections);
         setStatus("ready");
       } catch (e) {
         console.error("[report view] 请求失败:", e);
@@ -123,7 +129,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整今日运势潮汐报告，第一次生成需要一点时间……", "The field is unfolding your full Daily Fortune Tide report — the first generation takes a little while…")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的今日潮汐档案，日期快照与生命向量正在完成确定性组合……", "The field is composing your Daily Tide archive from a deterministic date snapshot and life vector…")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }

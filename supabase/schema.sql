@@ -363,3 +363,131 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- Security hardening: internal service-only tables and RPC
+alter table public.rate_limits enable row level security
+;
+alter table public.daily_fortune_cache enable row level security
+;
+revoke all on table public.rate_limits from anon, authenticated
+;
+revoke all on table public.daily_fortune_cache from anon, authenticated
+;
+revoke execute on function public.rate_limit_check(text, integer, integer) from public, anon, authenticated
+;
+grant execute on function public.rate_limit_check(text, integer, integer) to service_role
+;
+
+-- RLS ownership filters and payment callbacks depend on these indexes at scale
+create index if not exists orders_provider_payment_id_idx on public.orders (provider_payment_id)
+;
+create index if not exists orders_user_id_idx on public.orders (user_id)
+;
+create index if not exists life_map_submissions_user_id_idx on public.life_map_submissions (user_id)
+;
+create index if not exists relationship_submissions_user_id_idx on public.relationship_submissions (user_id)
+;
+create index if not exists resilience_submissions_user_id_idx on public.resilience_submissions (user_id)
+;
+create index if not exists romance_submissions_user_id_idx on public.romance_submissions (user_id)
+;
+create index if not exists daily_tide_submissions_user_id_idx on public.daily_tide_submissions (user_id)
+;
+create index if not exists wealth_submissions_user_id_idx on public.wealth_submissions (user_id)
+;
+create index if not exists qian_submissions_user_id_idx on public.qian_submissions (user_id)
+;
+create index if not exists tarot_reading_submissions_user_id_idx on public.tarot_reading_submissions (user_id)
+;
+
+-- Atomic payment fulfillment prevents duplicate entitlement extension under concurrent callbacks
+create or replace function public.fulfill_paid_order(p_order_id uuid, p_days integer)
+returns jsonb
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_order public.orders%rowtype
+;
+  v_now timestamptz := now()
+;
+  v_until timestamptz
+;
+begin
+  if p_days < 1 or p_days > 3650 then
+    return jsonb_build_object('ok', false, 'error', 'invalid_duration')
+;
+  end if
+;
+
+  select * into v_order from public.orders where id = p_order_id for update
+;
+  if not found then
+    return jsonb_build_object('ok', false, 'error', 'order_not_found')
+;
+  end if
+;
+  if v_order.status = 'paid' then
+    return jsonb_build_object('ok', true, 'alreadyPaid', true)
+;
+  end if
+;
+
+  if v_order.product_type = 'permanent' then
+    insert into public.unlocks (user_id, product_id, expires_at)
+    values (v_order.user_id, v_order.product_id, null)
+    on conflict (user_id, product_id) do update set expires_at = null
+;
+    if v_order.product_id = 'bundle' then
+      insert into public.unlocks (user_id, product_id, expires_at)
+      select v_order.user_id, product_id, null
+      from unnest(array['breath', 'intuition', 'heart-reset', 'ascending-heart']) product_id
+      on conflict (user_id, product_id) do update set expires_at = null
+;
+    end if
+;
+  elsif v_order.product_id = any(array['day', 'month', 'year']) then
+    update public.profiles
+    set manifest_until = greatest(coalesce(manifest_until, v_now), v_now) + make_interval(days => p_days)
+    where id = v_order.user_id
+;
+    if not found then raise exception 'profile_not_found'
+;
+    end if
+;
+  else
+    select greatest(coalesce(expires_at, v_now), v_now)
+    into v_until from public.unlocks
+    where user_id = v_order.user_id and product_id = v_order.product_id
+    for update
+;
+    v_until := coalesce(v_until, v_now) + make_interval(days => p_days)
+;
+    insert into public.unlocks (user_id, product_id, expires_at)
+    values (v_order.user_id, v_order.product_id, v_until)
+    on conflict (user_id, product_id) do update
+    set expires_at = greatest(coalesce(public.unlocks.expires_at, v_now), v_now) + make_interval(days => p_days)
+;
+  end if
+;
+
+  update public.orders set status = 'paid', paid_at = v_now where id = p_order_id
+;
+  return jsonb_build_object('ok', true, 'alreadyPaid', false)
+;
+end
+;
+$$
+;
+
+revoke execute on function public.fulfill_paid_order(uuid, integer) from public, anon, authenticated
+;
+grant execute on function public.fulfill_paid_order(uuid, integer) to service_role
+;
+
+-- Paid report rows are written only by authenticated server routes
+revoke insert, update, delete on table public.life_map_submissions, public.relationship_submissions, public.resilience_submissions, public.romance_submissions, public.daily_tide_submissions, public.wealth_submissions, public.qian_submissions, public.tarot_reading_submissions from anon, authenticated
+;
+grant select on table public.life_map_submissions, public.relationship_submissions, public.resilience_submissions, public.romance_submissions, public.daily_tide_submissions, public.wealth_submissions, public.qian_submissions, public.tarot_reading_submissions to authenticated
+;

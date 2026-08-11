@@ -13,6 +13,7 @@ export const maxDuration = 30;
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const orderId = searchParams.get("orderId");
+  const paypalToken = searchParams.get("token");
   const dest = searchParams.get("dest") || "/account";
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
 
@@ -22,7 +23,7 @@ export async function GET(req: Request) {
 
   const admin = createAdminClient();
   const { data: order } = await admin.from("orders").select("*").eq("id", orderId).single();
-  if (!order || !order.provider_payment_id) {
+  if (!order || order.provider !== "paypal" || !order.provider_payment_id || paypalToken !== order.provider_payment_id) {
     return NextResponse.redirect(`${baseUrl}/membership?error=order_not_found`);
   }
 
@@ -33,9 +34,10 @@ export async function GET(req: Request) {
   }
 
   try {
-    const result = await capturePaypalOrder(order.provider_payment_id);
+    const result = await capturePaypalOrder(order.provider_payment_id, Number(order.amount_usd));
     if (result.status === "COMPLETED" || result.status === "ALREADY_CAPTURED") {
-      await fulfillPaidOrder(orderId);
+      const fulfillment = await fulfillPaidOrder(orderId)
+      if (!fulfillment.ok) return NextResponse.redirect(`${baseUrl}/membership?pending=1`)
       return NextResponse.redirect(`${baseUrl}${dest}`);
     }
     // 比如 PENDING（PayPal 有时会对一些付款方式做人工风控审核）——这种

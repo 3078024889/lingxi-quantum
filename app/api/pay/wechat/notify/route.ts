@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const { data: order } = await admin
       .from("orders")
-      .select("id")
+      .select("id, amount_rmb, provider")
       .eq("provider_payment_id", outTradeNo)
       .single();
     if (!order) {
@@ -53,13 +53,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ code: "FAIL", message: "订单不存在" }, { status: 404 });
     }
 
-    const result = await fulfillPaidOrder(order.id);
+    const paymentAmount = decrypted.amount as { total: number; currency: string } | undefined
+    const expectedFen = Math.round(Number(order.amount_rmb) * 100)
+    if (order.provider !== "wechat" || !paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {
+      console.error("[wechat notify] payment did not match local order", { orderId: order.id })
+      return NextResponse.json({ code: "FAIL", message: "订单校验失败" }, { status: 422 })
+    }
+    const result = await fulfillPaidOrder(order.id)
     if (!result.ok) {
-      console.error("[wechat notify] 微信webhook确认已支付，但解锁写入失败:", result.error, "order id:", order.id);
-      // 依然回SUCCESS给微信——不是因为不重要，是因为让微信不停重试
-      // 这个webhook，解决不了背后真正的写入失败原因，只会重复报同一个
-      // 错误。订单这边因为fulfillPaidOrder失败时不会被标记成paid，
-      // 用户自己在场域入口的"待确认订单"里还能重新点查询、重试。
+      console.error("[wechat notify] fulfillment failed", { orderId: order.id, error: result.error })
+      return NextResponse.json({ code: "FAIL", message: "权益开通待重试" }, { status: 500 })
     }
     return NextResponse.json({ code: "SUCCESS", message: "成功" });
   } catch (e) {

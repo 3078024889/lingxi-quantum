@@ -170,8 +170,8 @@ export default function QianReport({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在展开你的完整生命原型档案，第一次生成需要一点时间……", "The field is unfolding your full life archetype blueprint — the first generation takes a little while…")}</p>
-          <p className="mt-3 text-xs text-bone-soft">{t("若长时间没有反应，按 F5 刷新一下页面即可，不会影响已经生成的内容。", "If nothing happens for a while, press F5 to refresh — this won't affect anything already generated.")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的完整生命原型档案……", "The field is composing your full life archetype blueprint locally…")}</p>
+          <p className="mt-3 text-xs text-bone-soft">{t("三重签象与生命向量正在完成确定性组合。", "The three signs and life vector are being composed deterministically.")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(199,156,255,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }

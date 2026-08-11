@@ -28,6 +28,9 @@ export type StructureNode = {
   corePattern: string;
   shadowSide: string;
   growthDirection: string;
+  corePatternEn?: string;
+  shadowSideEn?: string;
+  growthDirectionEn?: string;
   fieldText: { zh: string; en: string };
 };
 
@@ -217,7 +220,7 @@ export function buildReport(
           source: "structure",
           id: picked.id + ".core",
           zh: `❖ ${picked.corePattern}`,
-          en: `❖ ${picked.corePattern}`,
+          en: picked.corePatternEn ? `❖ ${picked.corePatternEn}` : "",
         });
         blocks.push({
           source: "structure",
@@ -237,10 +240,12 @@ export function buildReport(
 【要留意的】${picked.shadowSide}
 
 【下一步】${picked.growthDirection}`,
-          en: `　
-[Watch for] ${picked.shadowSide}
+          en: picked.shadowSideEn && picked.growthDirectionEn
+            ? `　
+[Watch for] ${picked.shadowSideEn}
 
-[Next step] ${picked.growthDirection}`,
+[Next step] ${picked.growthDirectionEn}`
+            : "",
         });
       }
     }

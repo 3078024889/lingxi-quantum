@@ -107,7 +107,7 @@ export async function createPaypalOrder(params: {
 // 用户在 PayPal 页面点了"同意付款"、跳回我们网站之后，服务端调这个来真正扣款。
 // 返回 "COMPLETED" 才算钱到账；PayPal 有可能返回其他状态（比如需要人工审核的
 // PENDING），那种情况不应该当作已付款处理。
-export async function capturePaypalOrder(orderId: string): Promise<{ status: string; raw: any }> {
+export async function capturePaypalOrder(orderId: string, expectedAmountUsd: number): Promise<{ status: string; raw: any }> {
   const token = await getPaypalAccessToken();
   const res = await fetchWithTimeout(`${paypalBaseUrl()}/v2/checkout/orders/${orderId}/capture`, {
     method: "POST",
@@ -123,7 +123,13 @@ export async function capturePaypalOrder(orderId: string): Promise<{ status: str
     }
     throw new Error(`PayPal 扣款失败：${JSON.stringify(data)}`);
   }
-  return { status: data.status, raw: data };
+  const capturedAmount = data.purchase_units[0].payments.captures[0].amount
+  const capturedCents = Math.round(Number(capturedAmount.value) * 100)
+  const expectedCents = Math.round(expectedAmountUsd * 100)
+  if (data.status === "COMPLETED" && (capturedAmount.currency_code !== "USD" || capturedCents !== expectedCents)) {
+    throw new Error("PayPal capture amount or currency did not match the local order.")
+  }
+  return { status: data.status, raw: data }
 }
 
 // 校验 PayPal Webhook 回调确实来自 PayPal 本人，不是伪造的。需要在 PayPal 开发者

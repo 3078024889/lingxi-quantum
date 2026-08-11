@@ -4,4 +4,8 @@
 // │         —— 给你检查里面的内容和图片用                          │
 // │  false = 恢复正常收费（审查完毕、准备正式上线时改这里）        │
 // └──────────────────────────────────────────────────────────────┘
-export const REVIEW_MODE = true;
+// Review bypasses are development-only. A public build can never unlock paid
+// content, even if the environment variable is accidentally enabled.
+export const REVIEW_MODE =
+  process.env.NODE_ENV !== "production" &&
+  process.env.NEXT_PUBLIC_REVIEW_MODE === "true";
