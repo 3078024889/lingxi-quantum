@@ -1,0 +1,76 @@
+{
+  "_comment": "灵犀场统一词表（lexicon）。目的：同一个概念在全部知识库里只用一个词。用户在第2章读到「恢复」、第7章读到「回血」、PDF里读到「充电」，会以为是三件事——术语漂移是最隐蔽的质量流失。规则：写节点时概念用 zh 列出的规范词；synonyms 里的词允许在口语化语境出现但不作为章节术语；avoid 里的词一律不许出现（gym 评分会扣分，可视需要升级进 avoid-words.json 变成 lint 硬错误）。",
+  "_usage": "scripts/gym-knowledge.mjs 读取本文件：avoid 命中按 penaltyPerLexiconHit 扣分；synonyms 命中不扣分只提示。新概念先加进这里，再开始写节点。",
+  "terms": [
+    {
+      "key": "field",
+      "zh": "灵犀场",
+      "en": "the Field",
+      "synonyms": [],
+      "avoid": ["能量场", "气场", "磁场空间"]
+    },
+    {
+      "key": "recovery",
+      "zh": "恢复",
+      "en": "recovery",
+      "synonyms": ["回落", "往回走"],
+      "avoid": ["回血", "充电", "满血复活"]
+    },
+    {
+      "key": "drain",
+      "zh": "消耗",
+      "en": "drain",
+      "synonyms": ["磨损"],
+      "avoid": ["掉血", "被吸走能量"]
+    },
+    {
+      "key": "buffer",
+      "zh": "缓冲",
+      "en": "buffer",
+      "synonyms": ["余量"],
+      "avoid": ["护体", "结界"]
+    },
+    {
+      "key": "pattern",
+      "zh": "模式",
+      "en": "pattern",
+      "synonyms": ["结构", "路径"],
+      "avoid": ["宿命轨迹", "天命"]
+    },
+    {
+      "key": "band",
+      "zh": "分数带",
+      "en": "band",
+      "synonyms": ["区间"],
+      "avoid": ["等级", "段位"]
+    },
+    {
+      "key": "interlock",
+      "zh": "联锁",
+      "en": "interlock",
+      "synonyms": [],
+      "avoid": ["命盘锁", "封印"]
+    },
+    {
+      "key": "state",
+      "zh": "状态层",
+      "en": "state layer",
+      "synonyms": ["近况"],
+      "avoid": ["运势", "流年"]
+    },
+    {
+      "key": "structure",
+      "zh": "结构层",
+      "en": "structure layer",
+      "synonyms": ["底图", "地图"],
+      "avoid": ["命格", "先天命数"]
+    },
+    {
+      "key": "practice",
+      "zh": "练习",
+      "en": "practice",
+      "synonyms": ["尝试", "小事"],
+      "avoid": ["修行", "功课", "开光"]
+    }
+  ]
+}
