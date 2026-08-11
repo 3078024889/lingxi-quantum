@@ -94,7 +94,7 @@ function categoryOf(productId: string): "field-test" | "membership" | "narrative
 //   2) 实在查不到，也不再返回 null——退化成跳到产品免费页，
 //      并用不同的文案告诉用户"这是笔老订单，请联系客服核对"，
 //      而不是让整张订单卡片看起来像坏掉了。
-export const REPORT_BASE: Record<string, string> = {
+const REPORT_BASE: Record<string, string> = {
   "life-map-report": "/life-map/full",
   "relationship-resonance": "/relationship/full",
   "qian-reading": "/qian/full",
