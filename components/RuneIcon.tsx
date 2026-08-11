@@ -28,7 +28,7 @@ const paths: Record<RuneKind, JSX.Element> = {
       <circle cx="12" cy="12" r="8.5" />
       <circle cx="12" cy="12" r="4.5" />
       {[0, 60, 120, 180, 240, 300].map((a) => (
-        <line key={a} x1="12" y1="12" x2={12 + 8.5 * Math.cos((a * Math.PI) / 180)} y2={12 + 8.5 * Math.sin((a * Math.PI) / 180)} />
+        <line key={a} x1="12" y1="12" x2={Number((12 + 8.5 * Math.cos((a * Math.PI) / 180)).toFixed(6))} y2={Number((12 + 8.5 * Math.sin((a * Math.PI) / 180)).toFixed(6))} />
       ))}
       <circle cx="12" cy="12" r="0.9" fill="currentColor" />
     </g>

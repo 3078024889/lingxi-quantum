@@ -236,7 +236,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
         </div>
       )}
 
-      <style>{`
+      <style suppressHydrationWarning>{`
         .sb-box {
           display: flex; align-items: center; gap: 6px;
           width: 100%; max-width: 15rem;

@@ -289,7 +289,7 @@ export default function FieldVoices() {
         );
       })}
 
-      <style>{`
+      <style suppressHydrationWarning>{`
         .fv-rain {
           -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
           mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%);
