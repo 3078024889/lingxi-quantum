@@ -80,7 +80,7 @@ export async function POST(req: Request) {
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
     const dest =
-      typeof returnPath === "string" && returnPath.startsWith("/") ? returnPath : "/account?paid=1";
+      typeof returnPath === "string" && returnPath.startsWith("/") ? returnPath : "/account?payment=complete";
 
     try {
       const { id: paypalOrderId, approveUrl } = await createPaypalOrder({

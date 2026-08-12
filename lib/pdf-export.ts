@@ -103,8 +103,8 @@ export async function exportSimplePdf(params: {
   for (const chunk of children) {
     if (!chunk || chunk.offsetHeight < 2) continue;
     await waitForImages(chunk);
-    const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+    const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 1.55, useCORS: true });
+    const imgData = canvas.toDataURL("image/jpeg", 0.9);
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const usableHeight = pageHeight - MARGIN * 2;
@@ -210,8 +210,8 @@ export async function exportGlassPdf(params: {
   fillPageBackground();
   if (coverEl && coverEl.offsetHeight > 2) {
     await waitForImages(coverEl);
-    const canvas = await html2canvas(coverEl, { backgroundColor: bgHex, scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+    const canvas = await html2canvas(coverEl, { backgroundColor: bgHex, scale: 1.55, useCORS: true });
+    const imgData = canvas.toDataURL("image/jpeg", 0.9);
     const imgWidth = pageWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const y = Math.max(0, (pageHeight - imgHeight) / 2);
@@ -265,8 +265,8 @@ export async function exportGlassPdf(params: {
   pdf.addPage();
   fillPageBackground();
   try {
-    const tocCanvas = await html2canvas(tocContainer, { backgroundColor: bgHex, scale: 2, useCORS: true });
-    const tocImgData = tocCanvas.toDataURL("image/jpeg", 0.95);
+    const tocCanvas = await html2canvas(tocContainer, { backgroundColor: bgHex, scale: 1.55, useCORS: true });
+    const tocImgData = tocCanvas.toDataURL("image/jpeg", 0.9);
     const tocImgWidth = pageWidth;
     const tocImgHeight = Math.min((tocCanvas.height * tocImgWidth) / tocCanvas.width, pageHeight);
     pdf.addImage(tocImgData, "JPEG", 0, 0, tocImgWidth, tocImgHeight);
@@ -348,8 +348,8 @@ export async function exportGlassPdf(params: {
     const { pieces, cleanup } = splitTallChapter(chapter);
     for (const piece of pieces) {
     await waitForImages(piece);
-    const canvas = await html2canvas(piece, { backgroundColor: bgHex, scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+    const canvas = await html2canvas(piece, { backgroundColor: bgHex, scale: 1.55, useCORS: true });
+    const imgData = canvas.toDataURL("image/jpeg", 0.9);
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const usableHeight = pageHeight - MARGIN * 2;
@@ -561,9 +561,9 @@ export async function exportArchivePdf(params: {
     // 图片解码完成后再等一帧，否则偶发截到半张图
     await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 60)));
     const canvas = await html2canvas(stage, {
-      width: PX_W, height: PX_H, scale: 2, useCORS: true, backgroundColor: "#F6F4F0",
+      width: PX_W, height: PX_H, scale: 1.55, useCORS: true, backgroundColor: "#F6F4F0",
     });
-    return canvas.toDataURL("image/jpeg", 0.95);
+    return canvas.toDataURL("image/jpeg", 0.9);
   };
 
   // 每章换一个纵向取景位，让 4 张图产生 12 种画面，11 章不重样
@@ -637,7 +637,7 @@ export async function exportArchivePdf(params: {
    */
   const captureFigure = async (el: HTMLElement, caption?: string): Promise<string> => {
     await waitForImages(el);
-    const canvas = await html2canvas(el, { backgroundColor: null, scale: 2, useCORS: true });
+    const canvas = await html2canvas(el, { backgroundColor: null, scale: 1.55, useCORS: true });
     const data = canvas.toDataURL("image/png");
     return `
       <div style="margin:0 0 26px;padding:14px;border-radius:4px;

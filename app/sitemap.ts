@@ -37,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/learn/moon-manifestation", "/learn/law-of-attraction-vs", "/learn/subconscious-power",
     "/learn/dream", "/learn/dream-symbols", "/learn/more-dream-meanings", "/learn/recurring-dreams",
     "/learn/lucid-dreaming", "/learn/remember-dreams", "/learn/sleep-paralysis", "/learn/dreams-premonition",
-    "/learn/wingmakers", "/learn/higher-self", "/learn/how-to-meditate", "/learn/raise-frequency",
+    "/learn/inner-sovereignty", "/learn/higher-self", "/learn/how-to-meditate", "/learn/raise-frequency",
     "/learn/chakras", "/learn/synchronicity", "/learn/awakening",
     "/glossary", "/dream", "/live-as", "/practice",
     "/practice/breath", "/practice/heart-reset", "/practice/ascending-heart", "/practice/intuition",

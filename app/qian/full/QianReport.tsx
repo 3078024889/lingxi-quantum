@@ -231,7 +231,7 @@ export default function QianReport({ id }: { id: string }) {
         </button>
       </div>
 
-      <div ref={reportRef}>
+      <div ref={reportRef} className="lx-report-tone-light">
       <div
         className="relative overflow-hidden rounded-sm"
         style={{ backgroundImage: "url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}

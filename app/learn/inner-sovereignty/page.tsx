@@ -7,7 +7,7 @@ export const metadata = {
   title: "主权与完整：灵犀场修炼体系的思路",
   description:
     "灵犀场的四项修炼技术，围绕两个朴素的概念展开：主权——为自己的状态负责；完整——把碎片化的自我，重新接回同一条线上。An introduction to the thinking behind Lingxi's practices.",
-  alternates: { canonical: "/learn/wingmakers" },
+  alternates: { canonical: "/learn/inner-sovereignty" },
 };
 
 const faq = [

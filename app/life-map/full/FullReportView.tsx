@@ -361,7 +361,7 @@ export default function FullReportView({ id }: { id: string }) {
             en="No need to download it right now — this report stays saved under Field Entrance, and you can come back to it anytime."
           />
         </p>
-        <div ref={reportRef} className={printMode ? "lm2-print-mode px-1 py-4" : "bg-lm2-report px-1 py-4"}>
+        <div ref={reportRef} className={printMode ? "lm2-print-mode lx-report-tone-light px-1 py-4" : "lx-report-tone-light px-1 py-4"}>
         <div>
           {/* v227：封面图本身已经带了"LINGXI FIELD / 生命图谱 / Life Map"
              这些标题文字和网址，不用在HTML里重复画一遍标题——这里只叠加
@@ -384,7 +384,7 @@ export default function FullReportView({ id }: { id: string }) {
           </div>
 
           {lifemapTypeImage(coreTypeName) && (
-            <div className="mt-6 flex justify-center">
+            <div className="lx-report-art-page lx-art-lifemap-1 mt-6 justify-center">
               <div className="lm2-card overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 280 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={lifemapTypeImage(coreTypeName)!} alt={coreTypeName} className="block w-full" />
@@ -393,7 +393,7 @@ export default function FullReportView({ id }: { id: string }) {
           )}
 
           {facts && (
-            <div className="mt-8 lx-report-glass p-6 backdrop-blur-xl">
+            <div className="lx-report-art-page lx-report-glass lx-art-lifemap-2 mt-8 p-6">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的星盘" en="Your Natal Chart" />
               </p>
@@ -407,7 +407,7 @@ export default function FullReportView({ id }: { id: string }) {
         </div>
 
         {freePreview && (
-          <div className="lx-report-glass mt-10 p-6 sm:p-8">
+          <div className="lx-report-art-page lx-report-glass lx-art-lifemap-3 mt-10 p-6 sm:p-8">
             {freePreview.echoText && (
               <p className="text-base leading-9 text-lm2-text">{freePreview.echoText}</p>
             )}
@@ -439,7 +439,7 @@ export default function FullReportView({ id }: { id: string }) {
         )}
 
         {facts?.humanDesign && (
-          <div className="lx-report-glass mt-8 p-6 sm:p-8">
+          <div className="lx-report-art-page lx-report-glass lx-art-lifemap-4 mt-8 p-6 sm:p-8">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               <Bi zh="人类图 · 门" en="Human Design · Gates" />
             </p>
@@ -538,7 +538,7 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
         return (
           <div key={it.label} className="flex flex-col items-center">
             <svg viewBox="0 0 72 72" className="w-20" style={{ filter: `drop-shadow(0 0 8px ${color}70)` }}>
-              <circle cx="36" cy="36" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="6" />
+              <circle cx="36" cy="36" r={r} fill="none" stroke="var(--report-chart-grid)" strokeWidth="6" />
               <circle
                 cx="36" cy="36" r={r} fill="none" stroke={color} strokeWidth="6" strokeLinecap="round"
                 strokeDasharray={`${c}`} strokeDashoffset={`${c * (1 - pct / 100)}`}
@@ -549,7 +549,7 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
               <circle cx="36" cy="36" r="3" fill={color} opacity="0.9">
                 <animate attributeName="r" values="2.5;3.5;2.5" dur={`${2.2 + idx * 0.5}s`} repeatCount="indefinite" />
               </circle>
-              <text x="36" y="41" textAnchor="middle" fontSize="17" fill="#F4EFFF" fontFamily="serif">{it.total}</text>
+              <text x="36" y="41" textAnchor="middle" fontSize="17" fill="var(--report-chart-text)" fontFamily="serif">{it.total}</text>
             </svg>
             <p className="mt-1 text-center text-xs text-lm2-text-dim">{it.label}</p>
           </div>
@@ -572,8 +572,8 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
   return (
     <div className="mt-5 flex flex-col items-center gap-5 lx-report-glass p-6 backdrop-blur-xl sm:flex-row sm:items-start">
       <svg viewBox="0 0 260 260" className="w-56 shrink-0">
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-        <circle cx={cx} cy={cy} r={r - 20} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--report-chart-grid)" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={r - 20} fill="none" stroke="var(--report-chart-grid)" strokeWidth="1" />
         {hd.personality.map((g, i) => {
           const rad = ((g.longitude - 90) * Math.PI) / 180;
           const x = cx + r * Math.cos(rad);
@@ -591,7 +591,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
         })}
         <circle cx={cx} cy={cy} r="34" fill="rgba(240,200,104,0.12)" stroke="#F0C868" strokeWidth="1" />
         <text x={cx} y={cy - 4} textAnchor="middle" fontSize="11" fill="#F0C868" fontFamily="serif">{hd.sunConsciousGate}</text>
-        <text x={cx} y={cy + 12} textAnchor="middle" fontSize="8" fill="#D9D3E8">门 {hd.sunUnconsciousGate}</text>
+        <text x={cx} y={cy + 12} textAnchor="middle" fontSize="8" fill="var(--report-chart-text)">门 {hd.sunUnconsciousGate}</text>
       </svg>
       <div className="grid flex-1 grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-lm2-text-dim sm:grid-cols-3">
         {hd.personality.map((g) => (
@@ -633,7 +633,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
       <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
         <svg viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`} className="h-36 w-36 shrink-0">
           {gridRings.map((pts, i) => (
-            <polygon key={i} points={pts} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+            <polygon key={i} points={pts} fill="none" stroke="var(--report-chart-grid)" strokeWidth="1" />
           ))}
           <polygon points={radarPath} fill="rgba(199,156,255,0.28)" stroke="#C79CFF" strokeWidth="1.5">
             <animate attributeName="opacity" values=".75;1;.75" dur="3.4s" repeatCount="indefinite" />
@@ -642,7 +642,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
             <circle key={i} cx={p.x} cy={p.y} r="2.6" fill={items[i].color} />
           ))}
           {radarPoints.map((p, i) => (
-            <text key={i} x={p.labelX} y={p.labelY} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="#DDE6FF">
+            <text key={i} x={p.labelX} y={p.labelY} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="var(--report-chart-text)">
               {items[i].label}
             </text>
           ))}
@@ -691,7 +691,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
         return (
           <div key={it.label} className="flex flex-col items-center">
             <svg viewBox="0 0 64 64" className="w-16" style={{ filter: `drop-shadow(0 0 6px ${it.color}70)` }}>
-              <circle cx="32" cy="32" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="6" />
+              <circle cx="32" cy="32" r={r} fill="none" stroke="var(--report-chart-grid)" strokeWidth="6" />
               <circle
                 cx="32" cy="32" r={r} fill="none" stroke={it.color} strokeWidth="6" strokeLinecap="round"
                 strokeDasharray={`${c}`} strokeDashoffset={`${c * (1 - pct / 100)}`}
@@ -702,7 +702,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
               <circle cx="32" cy="32" r="3" fill={it.color} opacity="0.9">
                 <animate attributeName="r" values="2.5;3.5;2.5" dur={`${2.2 + idx * 0.4}s`} repeatCount="indefinite" />
               </circle>
-              <text x="32" y="37" textAnchor="middle" fontSize="16" fill="#F4EFFF" fontFamily="serif">{it.v}</text>
+              <text x="32" y="37" textAnchor="middle" fontSize="16" fill="var(--report-chart-text)" fontFamily="serif">{it.v}</text>
             </svg>
             <p className="mt-1 text-center text-xs text-lm2-text-dim">{it.label}</p>
           </div>

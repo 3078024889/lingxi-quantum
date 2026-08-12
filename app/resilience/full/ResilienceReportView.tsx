@@ -178,16 +178,21 @@ export default function ResilienceReportView({ id }: { id: string }) {
 
   return (
       <div className="min-h-screen px-2 pb-24 pt-12 md:px-8">
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="lx-report-tone-light max-w-4xl mx-auto space-y-12">
           
           {/* 顶部标题区 */}
-          <div className="text-center space-y-4 mb-8 print:hidden">
-            <h1 className="text-3xl md:text-5xl font-light tracking-widest text-heading">
-              生命韧性档案
-            </h1>
-            <p className="text-base opacity-70 tracking-widest">
-              Lingxi Field · Life Resilience Archive
-            </p>
+          <div className="mb-8 flex items-start justify-between gap-4 print:hidden">
+            <div>
+              <h1 className="text-3xl font-light tracking-widest text-heading md:text-5xl"><Bi zh={"\u751f\u547d\u97e7\u6027\u6863\u6848"} en="Life Resilience Archive" /></h1>
+              <p className="mt-3 text-base tracking-widest opacity-70">Lingxi Field / Life Resilience Archive</p>
+            </div>
+            <button
+              onClick={downloadPdf}
+              disabled={downloading}
+              className="flex shrink-0 items-center gap-2 rounded-sm border border-lattice/40 px-4 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone disabled:opacity-50"
+            >
+              {downloading ? <><PortalSpinner /><Bi zh={"\u6b63\u5728\u751f\u6210 PDF..."} en="Generating PDF..." /></> : <Bi zh={"\u4e0b\u8f7d PDF"} en="Download PDF" />}
+            </button>
           </div>
 
           {/* ========================================================
@@ -269,13 +274,6 @@ export default function ResilienceReportView({ id }: { id: string }) {
           {/* 底部功能区 */}
           <div className="text-center space-y-8 pt-12 print:hidden">
             <div className="flex flex-col items-center gap-6">
-              <button 
-                onClick={downloadPdf}
-                disabled={downloading}
-                className="lx-portal-btn px-10 py-4 text-lg md:text-xl font-bold tracking-widest cursor-pointer"
-              >
-                {downloading ? <><PortalSpinner /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载完整档案 PDF" en="Download Full Archive PDF" />}
-              </button>
               <ShareButton
                 text={t("我做了一份灵犀生命韧性档案，去看看你自己的：", "I got my Lingxi Life Resilience Archive — check out your own:")}
                 url="https://lingxifield.com/resilience"

@@ -44,7 +44,7 @@ const data: ArticleData = {
   },
   related: [
     { href: "/learn/higher-self", zh: "什么是高我", en: "What is the higher self" },
-    { href: "/learn/wingmakers", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
+    { href: "/learn/inner-sovereignty", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
   ],
 };
 

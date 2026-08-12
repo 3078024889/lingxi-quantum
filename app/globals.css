@@ -45,52 +45,71 @@ body {
    核心逻辑：将 blur 降至 6px，彻底解决网页端发白、发厚、模糊底图的问题
    ===================================================================== */
 
-.lx-glass, 
-.lx-report-glass,
-.bg-void, .bg-void-deep, .bg-lm2-card, .bg-lm2-report {
+.lx-glass,
+.lx-report-glass {
   position: relative;
-  background: linear-gradient(135deg, 
-    rgba(80, 150, 180, 0.13),
-    rgba(100, 220, 200, 0.07),
-    rgba(150, 120, 255, 0.08)) !important;
-  border: 1px solid rgba(200, 235, 225, 0.35) !important;
-  /* 关键修复：将模糊度从 24px/30px 降为 6px，让网页与 PDF 质感绝对一致 */
-  backdrop-filter: blur(4px) saturate(1.08) !important;
-  -webkit-backdrop-filter: blur(4px) saturate(1.08) !important;
-  box-shadow: 0 20px 60px rgba(30, 40, 70, 0.20),
-              inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  color: var(--report-text, #29243b);
+  background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(235,250,248,.09), rgba(229,218,255,.11)) !important;
+  border: 1px solid rgba(255,255,255,.48) !important;
+  backdrop-filter: blur(2.5px) saturate(1.06) !important;
+  -webkit-backdrop-filter: blur(2.5px) saturate(1.06) !important;
+  box-shadow: 0 18px 48px rgba(31,40,68,.13), inset 0 1px 0 rgba(255,255,255,.52) !important;
   border-radius: 6px !important;
   overflow: hidden;
 }
 
-/* 适配八大产品的专属微光色相 */
-.lx-glass-resilience { background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(150,230,200,0.14), rgba(120,200,255,0.10)) !important; }
-.lx-glass-romance    { background: linear-gradient(135deg, rgba(190,110,170,0.22), rgba(140,90,190,0.18)) !important; }
-.lx-glass-wealth     { background: linear-gradient(135deg, rgba(90,130,215,0.22), rgba(130,95,200,0.18)) !important; }
-.lx-glass-daily      { background: linear-gradient(135deg, rgba(80,180,205,0.22), rgba(85,125,205,0.18)) !important; }
-.lx-glass-qian       { background: linear-gradient(135deg, rgba(150,120,210,0.22), rgba(110,95,195,0.18)) !important; }
-.lx-glass-tarot      { background: linear-gradient(135deg, rgba(150,100,225,0.22), rgba(100,115,220,0.18)) !important; }
-.lx-glass-relation   { background: linear-gradient(135deg, rgba(105,140,220,0.22), rgba(160,105,205,0.18)) !important; }
-.lx-glass-lifemap    { background: linear-gradient(135deg, rgba(95,145,225,0.22), rgba(135,100,205,0.18)) !important; }
+/* Report artwork is measured offline. Runtime image sampling would be slower and
+   less reliable across browsers, so every publication page opts into a tone. */
+.lx-report-tone-light {
+  --report-text: #29243b; --report-heading: #352c4d; --report-muted: #5b536f;
+  --report-accent: #176f68; --report-chart-text: #403650; --report-chart-grid: rgba(55,46,75,.22);
+}
+.lx-report-tone-dark {
+  --report-text: #f7f3ff; --report-heading: #fff; --report-muted: #d9dded;
+  --report-accent: #9cf3df; --report-chart-text: #f8f4ff; --report-chart-grid: rgba(235,242,255,.28);
+}
+.lx-report-tone-light .lx-report-glass { background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(250,252,255,.12), rgba(236,250,246,.10)) !important; }
+.lx-report-tone-dark .lx-report-glass { background: linear-gradient(135deg, rgba(7,17,35,.20), rgba(25,31,63,.11), rgba(25,70,72,.10)) !important; border-color: rgba(222,239,255,.38) !important; }
+.lx-report-tone-light .lx-report-glass, .lx-report-tone-light .lx-report-glass p, .lx-report-tone-light .lx-report-glass li, .lx-report-tone-light .lx-report-glass span {
+  color: var(--report-text) !important; font-weight: 550; text-shadow: 0 1px 1px rgba(255,255,255,.92), 0 0 8px rgba(255,255,255,.55);
+}
+.lx-report-tone-dark .lx-report-glass, .lx-report-tone-dark .lx-report-glass p, .lx-report-tone-dark .lx-report-glass li, .lx-report-tone-dark .lx-report-glass span {
+  color: var(--report-text) !important; font-weight: 550; text-shadow: 0 1px 2px rgba(3,8,22,.88), 0 0 8px rgba(3,8,22,.48);
+}
+.lx-report-tone-light .lx-report-glass h1, .lx-report-tone-light .lx-report-glass h2, .lx-report-tone-light .lx-report-glass h3,
+.lx-report-tone-dark .lx-report-glass h1, .lx-report-tone-dark .lx-report-glass h2, .lx-report-tone-dark .lx-report-glass h3 {
+  color: var(--report-heading) !important; -webkit-text-fill-color: currentColor; font-weight: 600;
+}
+.lx-report-tone-light .lx-report-glass [class*="text-lattice"], .lx-report-tone-light .lx-report-glass [class*="text-emerald-300"] { color: #176f68 !important; }
+.lx-report-tone-light .lx-report-glass [class*="text-amber"] { color: #6d4891 !important; }
+.lx-report-tone-light .lx-report-glass [class*="text-rose"] { color: #9a315f !important; }
+.lx-report-tone-light .lx-report-glass [class*="text-bone-mute"], .lx-report-tone-light .lx-report-glass [class*="text-bone-dim"], .lx-report-tone-light .lx-report-glass [class*="text-bone-soft"] { color: var(--report-muted) !important; }
+.lx-report-glass input, .lx-report-glass textarea { color: #2e2742 !important; }
+.lx-report-glass input::placeholder { color: #7a7290 !important; }
+.lx-report-glass .border-white\/10, .lx-report-glass .border-white\/15 { border-color: rgba(58,46,82,.14) !important; }
 
-/* 报告页浅色玻璃面板内的文字颜色自适应匹配（告别黑白看不清） */
-.lx-report-glass,
-.lx-report-glass [class*="text-bone"] { color: #2E2742 !important; }
-.lx-report-glass [class*="text-lattice"]      { color: #1F6F63 !important; }
-.lx-report-glass [class*="text-amber"]        { color: #6D4A9C !important; }
-.lx-report-glass [class*="text-rose"]         { color: #A63D74 !important; }
-.lx-report-glass [class*="text-emerald-300"]  { color: #1F6F63 !important; }
-.lx-report-glass [class*="text-bone-mute"] { color: #6B6285 !important; }
-.lx-report-glass h1,
-.lx-report-glass h2,
-.lx-report-glass h3 { color: #3A2E52 !important; }
-.lx-report-glass input,
-.lx-report-glass textarea { color: #2E2742 !important; }
-.lx-report-glass input::placeholder { color: #7A7290 !important; }
-.lx-report-glass .border-white\/10,
-.lx-report-glass .border-white\/15 { border-color: rgba(58, 46, 82, 0.14) !important; }
+/* Product tints stay subtle so the original artwork remains visible. */
+.lx-glass-resilience, .lx-glass-romance, .lx-glass-wealth, .lx-glass-daily,
+.lx-glass-qian, .lx-glass-tarot, .lx-glass-relation, .lx-glass-lifemap { background-color: transparent !important; }
 
-/* 字体与渐变排版系统 */
+.lx-report-art-page {
+  position: relative;
+  display: flex;
+  min-height: min(920px, 78vh);
+  align-items: center;
+  overflow: hidden;
+  border-radius: 6px;
+  padding: clamp(1rem, 4vw, 2rem);
+  background-size: cover;
+  background-position: center;
+}
+.lx-art-lifemap-1 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-1.png') !important; }
+.lx-art-lifemap-2 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-2.png') !important; }
+.lx-art-lifemap-3 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-3.png') !important; }
+.lx-art-lifemap-4 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-4.png') !important; }
+.lx-report-chart text { fill: var(--report-chart-text) !important; font-weight: 600; text-shadow: none; }
+.lx-report-chart .lx-chart-grid { stroke: var(--report-chart-grid) !important; }
+/* Typography and gradient system. */
 .text-bone, .text-lm2-text {
   color: var(--text-primary);
   text-shadow: var(--glow-soft);

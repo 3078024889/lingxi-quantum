@@ -301,10 +301,9 @@ export default function RelationshipReportView({ id }: { id: string }) {
 
       <div
         ref={reportRef}
-        className={printMode ? "rel-print-mode mt-8 px-1 py-4" : "mt-8 px-1 py-4"}
+        className={printMode ? "rel-print-mode lx-report-tone-light mt-8 px-1 py-4" : "lx-report-tone-light mt-8 px-1 py-4"}
         style={{
-          backgroundColor: "#2a162e",
-          backgroundImage: `linear-gradient(rgba(20,24,48,0.20), rgba(42,22,46,0.28)), url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png)`,
+          backgroundImage: `url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png)`,
           backgroundSize: "cover", backgroundPosition: "top center", backgroundAttachment: "local",
         }}
       >
@@ -391,8 +390,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
               key={i}
               className="relative mt-6 flex min-h-[78vh] items-center overflow-hidden rounded-sm p-4 sm:min-h-[920px] sm:p-8"
               style={{
-                backgroundColor: "#2a162e",
-                backgroundImage: `linear-gradient(rgba(255,255,255,0.08), rgba(30,24,58,0.24)), url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
+                backgroundImage: `url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
                 backgroundSize: "cover", backgroundPosition: "center",
               }}
             >
@@ -475,7 +473,7 @@ function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: 
           <polygon points={pointsFor(vA)} fill="rgba(140,210,255,0.22)" stroke="#8CD2FF" strokeWidth="1.5" />
           <polygon points={pointsFor(vB)} fill="rgba(232,183,101,0.20)" stroke="#E8B765" strokeWidth="1.5" />
           {labelPoints.map((p, i) => (
-            <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="8.5" fill="#DDE6FF">
+            <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="8.5" fill="var(--report-chart-text)">
               {p.label}
             </text>
           ))}

@@ -224,7 +224,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
         </button>
       </div>
 
-      <div ref={reportRef}>
+      <div ref={reportRef} className="lx-report-tone-light">
       {/* 封面——LOGO+标题+已揭示的三张牌，就是封面本身，不需要另外
           设计一张专门的封面插画。这个区块本身是reportRef的第一个
           直接子元素，PDF导出会把它当成独立的一页/一个章节截图。 */}

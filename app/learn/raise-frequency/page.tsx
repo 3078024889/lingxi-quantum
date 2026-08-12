@@ -41,7 +41,7 @@ const data: ArticleData = {
     href: "/practice", btnZh: "进入修炼技术", btnEn: "Open the practices",
   },
   related: [
-    { href: "/learn/wingmakers", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
+    { href: "/learn/inner-sovereignty", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
     { href: "/glossary", zh: "核心术语表", en: "Core glossary" },
   ],
 };

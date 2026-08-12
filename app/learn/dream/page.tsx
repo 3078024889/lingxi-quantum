@@ -114,7 +114,7 @@ export default function DreamArticle() {
             <Bi zh="延伸：" en="Related: " />
             <Link href="/learn/manifestation" className="text-lattice hover:text-amber"><Bi zh="什么是显化" en="What manifestation is" /></Link>
             {" · "}
-            <Link href="/learn/wingmakers" className="text-lattice hover:text-amber"><Bi zh="主权与完整导览" en="Sovereignty & Wholeness" /></Link>
+            <Link href="/learn/inner-sovereignty" className="text-lattice hover:text-amber"><Bi zh="主权与完整导览" en="Sovereignty & Wholeness" /></Link>
           </p>
         </article>
       </main>

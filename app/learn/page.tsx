@@ -60,7 +60,7 @@ const groups: Group[] = [
   {
     zh: "灵性与修炼", en: "Spirit & Practice",
     items: [
-      { href: "/learn/wingmakers", zh: "主权与完整：灵犀场修炼体系的思路", en: "Sovereignty & Wholeness: The Thinking Behind the Practices" },
+      { href: "/learn/inner-sovereignty", zh: "主权与完整：灵犀场修炼体系的思路", en: "Sovereignty & Wholeness: The Thinking Behind the Practices" },
       { href: "/learn/higher-self", zh: "什么是高我？如何与高我连接", en: "What is the higher self, and how to connect" },
       { href: "/learn/how-to-meditate", zh: "如何冥想：新手入门指南", en: "How to meditate: a beginner's guide" },
       { href: "/learn/raise-frequency", zh: "如何提升意识频率", en: "How to raise your frequency" },

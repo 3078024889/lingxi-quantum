@@ -450,11 +450,11 @@ export default function LifeMapFlow() {
         }
       }
       if (REVIEW_MODE) {
-        window.location.href = `/life-map/full?id=${id}&paid=1`;
+        window.location.href = `/life-map/full?id=${id}`;
         return;
       }
       // v256：改成跳转到独立付款页，不再用弹窗。
-      window.location.href = `/checkout?productId=life-map-report&submissionId=${id}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/life-map/full?id=${id}&paid=1`)}`;
+      window.location.href = `/checkout?productId=life-map-report&submissionId=${id}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/life-map/full?id=${id}`)}`;
     } catch (e) {
       console.error("解锁完整报告出错:", e);
       setError(t("网络错误，请稍后再试。", "Network error, please try again later."));
@@ -558,11 +558,11 @@ export default function LifeMapFlow() {
     }
     setSubmissionId(result.id);
     if (REVIEW_MODE) {
-      window.location.href = `/life-map/full?id=${result.id}&paid=1`;
+      window.location.href = `/life-map/full?id=${result.id}`;
       return;
     }
     // v256：改成跳转到独立付款页，不再用弹窗。
-    window.location.href = `/checkout?productId=life-map-report&submissionId=${result.id}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/life-map/full?id=${result.id}&paid=1`)}`;
+    window.location.href = `/checkout?productId=life-map-report&submissionId=${result.id}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/life-map/full?id=${result.id}`)}`;
   };
 
   // ---------- 解析灵犀返回的三段式正文 ----------

@@ -188,7 +188,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
         </button>
       </div>
 
-      <div ref={reportRef} className="mt-4">
+      <div ref={reportRef} className="lx-report-tone-light mt-4">
         <div
           className="relative overflow-hidden rounded-sm"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/daily-tide-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
