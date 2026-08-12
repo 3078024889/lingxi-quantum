@@ -518,10 +518,19 @@ export async function exportArchivePdf(params: {
   panelRgba?: [number, number, number, number];
   textRgb?: [number, number, number];
   titleRgb?: [number, number, number];
+  /** A card or key artifact that must occupy its own printed page. */
+  featurePages?: {
+    image: string;
+    title: string;
+    subtitle?: string;
+    eyebrow?: string;
+    backgroundImage?: string;
+  }[];
 }): Promise<void> {
   const { chapters, fileName, titleZh, titleEn, coverImage, bodyImages, endImage } = params;
   const eyebrow = params.eyebrow ?? "LINGXI FIELD";
   const theme = params.theme ?? ARCHIVE_THEMES.resilience;
+  const featurePages = params.featurePages ?? [];
 
   // ⚠️ 为什么不用 jsPDF 原生文本：
   // jsPDF 内置字体只有 Helvetica/Times/Courier 这几种西文字体，
@@ -589,6 +598,27 @@ export async function exportArchivePdf(params: {
       <div style="font-size:34px;color:#3A2E52;margin-top:18px;letter-spacing:.12em;">${escapeHtml(titleZh)}</div>
       <div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${escapeHtml(titleEn)}</div>
     </div>`)), "JPEG", 0, 0, PW, PH);
+
+  // A card is a focal reading object.  Rendering it through this shared page
+  // primitive prevents it from becoming a cover thumbnail or being split by
+  // the normal prose pagination path.
+  for (let i = 0; i < featurePages.length; i++) {
+    const feature = featurePages[i];
+    const bg = feature.backgroundImage ?? bodyImages[i % bodyImages.length] ?? coverImage;
+    pdf.addPage();
+    pdf.addImage(await renderPage(pageShell(bg, SHIFTS[i % SHIFTS.length], `
+      <div style="position:absolute;inset:48px 52px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+                  background:${theme.gradient};border:1px solid ${theme.border};border-radius:6px;padding:34px 42px;
+                  box-shadow:0 18px 56px rgba(40,36,70,.16);text-align:center;">
+        <div style="font-size:11px;letter-spacing:.32em;color:#8C7FA8;">${escapeHtml(feature.eyebrow ?? eyebrow)}</div>
+        <img src="${feature.image}" style="display:block;width:270px;max-width:78%;max-height:570px;object-fit:contain;margin:22px auto 24px;border-radius:4px;border:1px solid rgba(255,255,255,.62);box-shadow:0 20px 44px rgba(28,25,53,.23);" />
+        <div style="font-size:24px;color:#3A2E52;letter-spacing:.06em;">${escapeHtml(feature.title)}</div>
+        ${feature.subtitle ? `<div style="font-size:13px;line-height:1.8;color:#6B6285;margin-top:10px;letter-spacing:.04em;">${escapeHtml(feature.subtitle)}</div>` : ""}
+      </div>
+      <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
+      <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${i + 1} / ${featurePages.length}</div>`
+    )), "JPEG", 0, 0, PW, PH);
+  }
 
   // ── 正文：每章一页 ──
   //

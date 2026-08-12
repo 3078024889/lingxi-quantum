@@ -158,6 +158,54 @@ body {
 .lx-report-tone-light .lx-report-chart path {
   vector-effect: non-scaling-stroke;
 }
+
+/* Publication reading is deliberately separate from the product UI.  Reports
+   need the calm rhythm of a book: Chinese serif type, a generous measure, and
+   enough leading for long-form reflection on both paper and small screens. */
+.lx-report-tone-light,
+.lx-report-tone-dark {
+  --lx-publication-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, SimSun, Georgia, serif;
+}
+.lx-report-tone-light .whitespace-pre-line,
+.lx-report-tone-dark .whitespace-pre-line {
+  font-family: var(--lx-publication-serif) !important;
+  font-size: clamp(1.125rem, 1.8vw, 1.1875rem) !important;
+  line-height: 2.05 !important;
+  letter-spacing: 0.018em;
+}
+/* Charts are evidence, not decorative thumbnails.  The dedicated surface
+   keeps labels legible whether the surrounding publication artwork is light
+   or dark, and gives SVGs room to breathe. */
+.lx-report-chart {
+  margin-top: 2rem !important;
+  padding: clamp(1.25rem, 3vw, 2rem) !important;
+  border: 1px solid color-mix(in srgb, var(--report-heading, #352c4d) 18%, transparent) !important;
+  background: color-mix(in srgb, #fff 42%, transparent) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.68), 0 14px 32px rgba(31,40,68,.10) !important;
+}
+.lx-report-tone-dark .lx-report-chart {
+  background: rgba(9, 19, 42, .42) !important;
+  border-color: rgba(231,241,255,.30) !important;
+}
+.lx-report-chart svg {
+  min-width: 7.5rem;
+  min-height: 7.5rem;
+}
+.lx-report-chart .h-36.w-36 { height: 11rem !important; width: 11rem !important; }
+.lx-report-chart .w-20 { width: 6.25rem !important; }
+.lx-report-chart .w-16 { width: 5.25rem !important; }
+
+/* One card is one contemplative moment, never a thumbnail in a three-column
+   grid.  This primitive is shared by Life Mirror and Life Oracle. */
+.lx-publication-card-page { min-height: min(1267px, calc((100vw - 1.5rem) * 1.414)); }
+.lx-publication-card-page .lx-publication-card-art {
+  width: min(100%, 21rem);
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,.62);
+  box-shadow: 0 24px 54px rgba(28,25,53,.24), inset 0 0 0 1px rgba(255,255,255,.26);
+}
 .lx-report-art-page {
   position: relative;
   display: flex;

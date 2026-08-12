@@ -37,6 +37,12 @@ const mirror = readFileSync(resolve(root, "app/mirror/reading/full/TarotReadingR
 const oracle = readFileSync(resolve(root, "app/qian/full/QianReport.tsx"), "utf8");
 if (!mirror.includes("lx-publication-cover lx-mirror-cover")) failures.push("life-mirror: vertical readable cover is missing");
 if (!oracle.includes("lx-publication-cover")) failures.push("life-oracle: vertical cover is missing");
+for (const [name, source] of [["life-mirror", mirror], ["life-oracle", oracle]]) {
+  if (!source.includes("featurePages:" )) failures.push(`${name}: PDF card pages are not declared through the shared exporter`);
+  if (!source.includes("lx-publication-card-page")) failures.push(`${name}: web card pages are not using the publication card primitive`);
+}
+const legacyTarot = readFileSync(resolve(root, "app/tarot/reading/full/TarotReadingReport.tsx"), "utf8");
+if (!legacyTarot.includes("featurePages:") || !legacyTarot.includes("lx-publication-card-page")) failures.push("legacy tarot: card-page parity with life-mirror is broken");
 if (!relationship.includes("const bgIndex = (i % 11) + 1;")) failures.push("relationship: body artwork is not cyclic");
 for (const view of views.slice(2, 5)) {
   const source = readFileSync(resolve(root, view), "utf8");
@@ -44,7 +50,7 @@ for (const view of views.slice(2, 5)) {
 }
 
 const css = readFileSync(resolve(root, "app/globals.css"), "utf8");
-for (const token of [".lx-publication-page", ".lx-report-glass-readable", ".lx-report-chart text"]) {
+for (const token of [".lx-publication-page", ".lx-report-glass-readable", ".lx-report-chart text", ".lx-publication-card-page", "--lx-publication-serif"]) {
   if (!css.includes(token)) failures.push(`app/globals.css: missing ${token}`);
 }
 
@@ -55,4 +61,5 @@ if (failures.length > 0) {
 console.log("PASS publication width: 9 views / 10 products use the 896px system");
 console.log("PASS artwork: life-map, relationship, romance, wealth and daily pages cycle original assets");
 console.log("PASS readability: transparent glass and chart contrast primitives are present");
+console.log("PASS card pagination: every Life Mirror and Life Oracle card owns a web and PDF page");
 console.log("PASS compatibility: mirror and legacy tarot report routes share the same publication system");

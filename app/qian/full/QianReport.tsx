@@ -156,6 +156,12 @@ export default function QianReport({ id }: { id: string }) {
         coverImage: "/images/qian-full/page-0.png",
         bodyImages: Array.from({ length: 11 }, (_, k) => `/images/qian-full/page-${k + 1}.png`),
         endImage: "/images/qian-full/page-11.png",
+        featurePages: signs.map((sign, i) => ({
+          image: `/images/qian/${String(sign.index).padStart(2, "0")}.jpg`,
+          title: langEn ? sign.nameEn : sign.nameZh,
+          subtitle: langEn ? TIER_LABELS[sign.tier].en : TIER_LABELS[sign.tier].zh,
+          eyebrow: `LIFE ORACLE · ${String(i + 1).padStart(2, "0")}`,
+        })),
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -252,26 +258,6 @@ export default function QianReport({ id }: { id: string }) {
           <Bi zh="三枚灵签，三个维度，一张属于你的生命地图。" en="Three signs, three dimensions — one life map that's entirely your own." />
         </p>
 
-        <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-3">
-          {signs.map((s, i) => (
-            <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 text-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/images/qian/${String(s.index).padStart(2, "0")}.jpg`} alt={s.nameZh} className="block aspect-[2/3] w-full object-cover" />
-            </div>
-          ))}
-        </div>
-        <div className="mx-auto mt-3 grid max-w-md grid-cols-3 gap-3 text-center">
-          {signs.map((s, i) => (
-            <div key={i}>
-              <p className="text-[11px] uppercase tracking-widest2 text-amber/80">
-                <Bi zh={TIER_LABELS[s.tier].zh} en={TIER_LABELS[s.tier].en} />
-              </p>
-              <p className="mt-1 text-xs text-bone">
-                <Bi zh={s.nameZh} en={s.nameEn} />
-              </p>
-            </div>
-          ))}
-        </div>
 
         <p className="mt-8 text-xs text-bone-soft">
           {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
@@ -279,6 +265,22 @@ export default function QianReport({ id }: { id: string }) {
         <p className="mt-1 text-xs text-bone-soft">lingxifield.com</p>
         </div>
       </div>
+
+      {signs.map((sign, i) => (
+        <section
+          key={`${sign.index}-${i}`}
+          className="lx-publication-page lx-publication-card-page relative mt-5 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10"
+          style={{ backgroundImage: `url(/images/qian-full/page-${(i % 3) + 1}.png)`, backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          <div className="lx-report-glass lx-report-glass-readable flex w-full flex-col items-center px-7 py-10 text-center sm:px-12">
+            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh={TIER_LABELS[sign.tier].zh} en={TIER_LABELS[sign.tier].en} /></p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`/images/qian/${String(sign.index).padStart(2, "0")}.jpg`} alt={sign.nameZh} className="lx-publication-card-art mt-6" />
+            <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl"><Bi zh={sign.nameZh} en={sign.nameEn} /></h2>
+            <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh="这一签独占一页，让它在你的生命档案中完整显现。" en="This sign receives its own page, complete within your life archive." /></p>
+          </div>
+        </section>
+      ))}
 
       {(lifeStage || abilityMap.length > 0) && (
         <div

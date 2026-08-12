@@ -149,6 +149,12 @@ export default function TarotReadingReport({ id }: { id: string }) {
         coverImage: "/images/tarot-full/page-0.png",
         bodyImages: Array.from({ length: 11 }, (_, k) => `/images/tarot-full/page-${k + 1}.png`),
         endImage: "/images/tarot-full/page-11.png",
+        featurePages: cards.map((card, i) => ({
+          image: `/images/tarot/${String(card.index).padStart(2, "0")}.jpg`,
+          title: langEn ? card.nameEn : card.nameZh,
+          subtitle: langEn ? positions[i]?.en : positions[i]?.zh,
+          eyebrow: `QUANTUM LIFE MIRROR · ${String(i + 1).padStart(2, "0")}`,
+        })),
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -244,32 +250,28 @@ export default function TarotReadingReport({ id }: { id: string }) {
           <Bi zh="三张牌不是答案，而是你与自己深层意识的一次对话。" en="These three cards are not an answer — they are a conversation with your own deeper consciousness." />
         </p>
 
-        <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-3">
-          {cards.map((c, i) => (
-            <div key={i} className="overflow-hidden rounded-sm border border-lattice/25 text-center">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/images/tarot/${String(c.index).padStart(2, "0")}.jpg`} alt={c.nameZh} className="block aspect-[2/3] w-full object-cover" />
-            </div>
-          ))}
-        </div>
-        <div className="mx-auto mt-3 grid max-w-md grid-cols-3 gap-3 text-center">
-          {cards.map((c, i) => (
-            <div key={i}>
-              <p className="text-[11px] uppercase tracking-widest2 text-amber/80">
-                <Bi zh={positions[i].zh} en={positions[i].en} />
-              </p>
-              <p className="mt-1 text-xs text-bone">
-                <Bi zh={c.nameZh} en={c.nameEn} />
-              </p>
-            </div>
-          ))}
-        </div>
 
         <p className="mt-8 text-xs text-bone-soft">
           {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
         </p>
         <p className="mt-1 text-xs text-bone-soft">lingxifield.com</p>
       </div>
+
+      {cards.map((card, i) => (
+        <section
+          key={`${card.index}-${i}`}
+          className="lx-publication-page lx-publication-card-page relative mt-5 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10"
+          style={{ backgroundImage: `url(/images/tarot-full/page-${(i % 3) + 1}.png)`, backgroundSize: "cover", backgroundPosition: "center" }}
+        >
+          <div className="lx-report-glass lx-report-glass-readable flex w-full flex-col items-center px-7 py-10 text-center sm:px-12">
+            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh={positions[i].zh} en={positions[i].en} /></p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`/images/tarot/${String(card.index).padStart(2, "0")}.jpg`} alt={card.nameZh} className="lx-publication-card-art mt-6" />
+            <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl"><Bi zh={card.nameZh} en={card.nameEn} /></h2>
+            <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh="让这一张牌单独停驻，作为此刻与你对话的意识镜面。" en="Let this card stand alone as the consciousness mirror for this moment." /></p>
+          </div>
+        </section>
+      ))}
 
       {frequencyMap.length > 0 && (
         <div
