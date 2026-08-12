@@ -6,6 +6,10 @@ import {
   type ResonancePoint,
 } from "@/lib/life-vector";
 import { composeDendriticChapter, semanticBand } from "@/lib/dendritic-engine";
+import {
+  activateRelationshipProtocols,
+  mergeRelationshipProtocols,
+} from "@/lib/relationship-dendrites";
 
 type Lang = "zh" | "en";
 type RelationshipType = "romantic" | "business" | "general";
@@ -300,9 +304,16 @@ export function generateStaticRelationshipReport(input: RelationshipReportInput)
     const scene = zh
       ? "现实观察：未来七天只记录一次与" + dimLabel(dim, lang) + "有关的具体事件，包括触发点、两人的第一反应、恢复连接所需时间。"
       : "Reality check: during the next seven days, record one event involving " + dimLabel(dim, lang) + ", including the trigger, each first response, and time to reconnect.";
-    const composed = composeDendriticChapter({
-      chapter: String(index + 1).padStart(2, "0"),
-      slots: {
+    const chapterId = String(index + 1).padStart(2, "0");
+    const activated = activateRelationshipProtocols({
+      vectorA: a,
+      vectorB: b,
+      relationshipType: type,
+      lang,
+      seed: [nameA, nameB, type, chapterId].join("|"),
+      chapter: chapterId,
+    });
+    const slots = mergeRelationshipProtocols({
         judgment: chapter,
         evidence: evidence(nameA, nameB, dim, a, b, lang),
         mechanism: zh
@@ -312,8 +323,11 @@ export function generateStaticRelationshipReport(input: RelationshipReportInput)
         shadow: zh ? "阴影机制：" + cell.shadow + "。" : "Shadow mechanism: it " + cell.shadowEn + ".",
         counterevidence,
         action: zh ? "行动协议：" + cell.action + "。" : "Action protocol: " + cell.actionEn + ".",
-      },
-      activated: [],
+    }, activated);
+    const composed = composeDendriticChapter({
+      chapter: chapterId,
+      slots,
+      activated,
       evidence: [
         { key: dim + ".a", label: nameA + " " + dimLabel(dim, lang), value: a[dim], source: "comparison" },
         { key: dim + ".b", label: nameB + " " + dimLabel(dim, lang), value: b[dim], source: "comparison" },

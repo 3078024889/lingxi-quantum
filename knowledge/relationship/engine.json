@@ -1,0 +1,13 @@
+{
+  "engine": "lib/relationship-dendrites.ts",
+  "composer": "lib/knowledge-loader.ts",
+  "audit": "scripts/audit-relationship-knowledge.mjs",
+  "knowledgeVersion": "2026.08.2",
+  "expectedChapters": 11,
+  "semanticBands": 13,
+  "protocolNodes": 13,
+  "contexts": ["romantic", "business", "general"],
+  "legacyFiles": ["knowledge/relationship/nodes.json", "knowledge/relationship/combos.json"],
+  "legacyRuntimeStatus": "inactive-reference-only",
+  "status": "active"
+}

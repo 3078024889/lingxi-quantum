@@ -8,6 +8,7 @@ import {
 } from "@/lib/life-vector";
 import { generateStaticRelationshipReport } from "@/lib/knowledge-loader";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { RELATIONSHIP_KNOWLEDGE_VERSION } from "@/lib/relationship-dendrites";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -17,6 +18,10 @@ function sectionCount(report: string): number {
     .split(/===\s*(?:\d+|SECTION)\s*===/)
     .map((part) => part.trim())
     .filter(Boolean).length;
+}
+
+function currentKnowledge(report: string): boolean {
+  return report.startsWith(`<!-- relationship-knowledge:${RELATIONSHIP_KNOWLEDGE_VERSION} -->`);
 }
 
 export async function POST(request: Request) {
@@ -85,7 +90,7 @@ export async function POST(request: Request) {
     const vectorB = computeLifeVector(submission.facts_b as LifeVectorInput);
     const resonance = compareLifeVectors(vectorA, vectorB);
 
-    if (cached && sectionCount(cached) >= 11 && !body.regenerate) {
+    if (cached && currentKnowledge(cached) && sectionCount(cached) >= 11 && !body.regenerate) {
       return NextResponse.json({
         fullReport: cached,
         resonance,
@@ -93,7 +98,7 @@ export async function POST(request: Request) {
       });
     }
 
-    const fullReport = generateStaticRelationshipReport({
+    const generatedReport = generateStaticRelationshipReport({
       nameA: submission.name_a,
       nameB: submission.name_b,
       vectorA,
@@ -102,6 +107,7 @@ export async function POST(request: Request) {
       relationshipType: submission.relationship_type,
       lang,
     });
+    const fullReport = "<!-- relationship-knowledge:" + RELATIONSHIP_KNOWLEDGE_VERSION + " -->\n" + generatedReport;
 
     const { error: updateError } = await admin
       .from("relationship_submissions")

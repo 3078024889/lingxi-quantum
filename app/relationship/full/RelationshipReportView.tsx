@@ -72,6 +72,14 @@ const CHAPTER_TITLES: Record<"romantic" | "business" | "general", { zh: string; 
   ],
 };
 
+function parseReportSections(report: string): string[] {
+  return stripMarkdownArtifacts(report)
+    .replace(/^<!--\s*relationship-knowledge:[^>]+-->\s*/i, "")
+    .split(/===\s*(?:\d+|SECTION)\s*===/)
+    .map((section) => section.trim())
+    .filter(Boolean);
+}
+
 export default function RelationshipReportView({ id }: { id: string }) {
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
@@ -133,10 +141,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         // 缓存着的报告）和新的"===SECTION==="分隔符，不然老用户已经
         // 付费生成过的报告，这次升级后会突然解析不出来、整段展示成
         // 一大团文字。
-        let parts = stripMarkdownArtifacts(data.fullReport as string)
-          .split(/===\s*(?:\d+|SECTION)\s*===/)
-          .map((s: string) => s.trim())
-          .filter(Boolean);
+        let parts = parseReportSections(data.fullReport as string);
         // v235：升级前生成、缓存下来的报告只有5段——这次章节结构升级
         // 到了11段，直接展示这份旧缓存会导致内容和新的11个章节标题
         // 对不上（比如第6段的旧内容，被贴上新结构里"关系成长路径"
@@ -148,10 +153,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           res = await fetchReport(true);
           data = await res.json();
           if (res.ok && data.fullReport) {
-            parts = stripMarkdownArtifacts(data.fullReport as string)
-              .split(/===\s*(?:\d+|SECTION)\s*===/)
-              .map((s: string) => s.trim())
-              .filter(Boolean);
+            parts = parseReportSections(data.fullReport as string);
           }
         }
         setSections(parts);
