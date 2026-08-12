@@ -12,12 +12,13 @@
     "audit:life-mirror": "node scripts/audit-life-mirror-knowledge.mjs",
     "audit:daily-tide": "node scripts/audit-daily-tide-knowledge.mjs",
     "audit:qian": "node scripts/audit-qian-knowledge.mjs",
-    "audit:resilience": "node scripts/lint-knowledge.mjs --product resilience",
+    "audit:resilience": "node scripts/audit-resilience-knowledge.cjs",
     "audit:wealth": "node scripts/lint-knowledge.mjs --product wealth",
     "audit:romance": "node scripts/audit-romance-knowledge.mjs",
     "audit:relationship": "node scripts/audit-relationship-knowledge.mjs",
     "test:relationship": "node scripts/test-relationship-report.cjs",
     "audit:report-routes": "node scripts/audit-report-routes.mjs",
+    "audit:publication": "node scripts/audit-publication-ui.mjs",
     "audit:security": "node scripts/audit-security.mjs"
   },
   "dependencies": {

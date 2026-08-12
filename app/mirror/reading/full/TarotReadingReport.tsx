@@ -210,7 +210,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-16">
+    <div className="mx-auto max-w-4xl px-3 py-16 sm:px-6">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀量子生命镜像 · 完整档案" en="Lingxi Quantum Life Mirror · Personal Consciousness Blueprint" />
@@ -228,7 +228,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {/* 封面——LOGO+标题+已揭示的三张牌，就是封面本身，不需要另外
           设计一张专门的封面插画。这个区块本身是reportRef的第一个
           直接子元素，PDF导出会把它当成独立的一页/一个章节截图。 */}
-      <div className="relative overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center" style={{ backgroundColor: "#181030", backgroundImage: "linear-gradient(rgba(24,16,48,0.22), rgba(24,16,48,0.30)), url(/images/tarot-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}>
+      <div className="lx-publication-page relative flex items-center justify-center overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center" style={{ backgroundColor: "#181030", backgroundImage: "url(/images/tarot-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
         <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice">
@@ -273,8 +273,8 @@ export default function TarotReadingReport({ id }: { id: string }) {
 
       {frequencyMap.length > 0 && (
         <div
-          className="relative mt-8 overflow-hidden rounded-sm border border-white/10 p-6"
-          style={{ backgroundColor: "#181030", backgroundImage: "linear-gradient(rgba(24,16,48,0.24), rgba(24,16,48,0.32)), url(/images/tarot-full/page-1.png)", backgroundSize: "cover", backgroundPosition: "center" }}
+          className="lx-publication-page relative mt-8 flex items-center justify-center overflow-hidden rounded-sm border border-white/10 p-6"
+          style={{ backgroundColor: "#181030", backgroundImage: "url(/images/tarot-full/page-1.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <p className="text-center text-xs uppercase tracking-widest2 text-lattice/90">
             <Bi zh="量子意识矩阵 · Quantum Consciousness Matrix" en="Quantum Consciousness Matrix" />
@@ -298,10 +298,10 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {TAROT_PAGE_GROUPS.map((group, gi) => (
         <div
           key={gi}
-          className="relative mt-5 flex min-h-[80vh] items-center justify-center overflow-hidden rounded-sm"
+          className="lx-publication-page relative mt-5 flex items-center justify-center overflow-hidden rounded-sm"
           style={{ backgroundImage: `url(/images/tarot-full/${group.bg}.png)`, backgroundSize: "cover", backgroundPosition: "center" }}
         >
-          <div className="lx-report-glass mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
+          <div className="lx-report-glass lx-report-glass-readable my-10 px-8 py-10 sm:px-10 sm:py-12">
           <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-lattice/90">
             <Bi zh={group.titleZh} en={group.titleEn} />
           </p>
@@ -323,10 +323,10 @@ export default function TarotReadingReport({ id }: { id: string }) {
 
       {(sections[9] || sections[10]) && (
         <div
-          className="relative mt-5 flex min-h-[80vh] items-center justify-center overflow-hidden rounded-sm"
+          className="lx-publication-page relative mt-5 flex items-center justify-center overflow-hidden rounded-sm"
           style={{ backgroundImage: "url(/images/tarot-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "center" }}
         >
-          <div className="lx-report-glass mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
+          <div className="lx-report-glass lx-report-glass-readable my-10 px-8 py-10 sm:px-10 sm:py-12">
           {[9, 10].map((idx) =>
             sections[idx] ? (
               <div key={idx} className={idx !== 9 ? "mt-6 border-t border-white/10 pt-5" : ""}>

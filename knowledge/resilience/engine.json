@@ -1,0 +1,14 @@
+{
+  "engine": "lib/knowledge-engine.ts",
+  "loader": "lib/hybrid-report.ts",
+  "route": "app/api/resilience/generate-full/route.ts",
+  "audit": "scripts/audit-resilience-knowledge.cjs",
+  "knowledgeVersion": "resilience-2026.08.2",
+  "expectedKnowledgeChapters": 11,
+  "expectedPublishedSections": 12,
+  "dimensions": 5,
+  "semanticBands": 5,
+  "exhaustiveScoreShapes": 3125,
+  "bodyImagePolicy": "page-1-to-page-11-cyclic",
+  "status": "active"
+}

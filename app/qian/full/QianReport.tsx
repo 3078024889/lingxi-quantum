@@ -217,7 +217,7 @@ export default function QianReport({ id }: { id: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-16">
+    <div className="mx-auto max-w-4xl px-3 py-16 sm:px-6">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀生命灵签 · 生命原型档案" en="Lingxi Life Oracle · Personal Life Archetype Blueprint" />
@@ -233,10 +233,10 @@ export default function QianReport({ id }: { id: string }) {
 
       <div ref={reportRef} className="lx-report-tone-light">
       <div
-        className="relative overflow-hidden rounded-sm"
+        className="lx-publication-page relative flex items-center justify-center overflow-hidden rounded-sm"
         style={{ backgroundImage: "url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
       >
-        <div className="lx-report-glass mx-4 my-8 px-6 py-12 text-center sm:mx-6">
+        <div className="lx-report-glass lx-report-glass-readable my-8 px-6 py-12 text-center sm:mx-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
         <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice">
@@ -282,10 +282,10 @@ export default function QianReport({ id }: { id: string }) {
 
       {(lifeStage || abilityMap.length > 0) && (
         <div
-          className="relative mt-6 overflow-hidden rounded-sm"
+          className="lx-publication-page relative mt-6 flex items-center justify-center overflow-hidden rounded-sm"
           style={{ backgroundImage: "url(/images/qian-full/page-1.png)", backgroundSize: "cover", backgroundPosition: "top" }}
         >
-          <div className="lx-report-glass mx-4 my-8 p-6 sm:mx-6">
+          <div className="lx-report-glass lx-report-glass-readable my-8 p-6 sm:mx-6">
             <p className="text-center text-xs uppercase tracking-widest2 text-amber/90">
               <Bi zh="灵签生成页面 · Oracle Activation" en="Oracle Activation" />
             </p>
@@ -329,10 +329,10 @@ export default function QianReport({ id }: { id: string }) {
       {QIAN_PAGE_GROUPS.map((group, gi) => (
         <div
           key={gi}
-          className="relative mt-5 overflow-hidden rounded-sm"
+          className="lx-publication-page relative mt-5 flex items-center justify-center overflow-hidden rounded-sm"
           style={{ backgroundImage: `url(/images/qian-full/${group.bg}.png)`, backgroundSize: "cover", backgroundPosition: "top" }}
         >
-          <div className="lx-report-glass mx-4 my-8 p-6 sm:mx-6 sm:p-8">
+          <div className="lx-report-glass lx-report-glass-readable my-8 p-6 sm:mx-6 sm:p-8">
             <p className="mb-4 text-center text-xs uppercase tracking-widest2 text-amber/90">
               <Bi zh={group.titleZh} en={group.titleEn} />
             </p>
@@ -354,10 +354,10 @@ export default function QianReport({ id }: { id: string }) {
 
       {sections[sections.length - 1] && (
         <div
-          className="relative mt-5 overflow-hidden rounded-sm"
+          className="lx-publication-page relative mt-5 flex items-center justify-center overflow-hidden rounded-sm"
           style={{ backgroundImage: "url(/images/qian-full/page-5.png)", backgroundSize: "cover", backgroundPosition: "top" }}
         >
-          <div className="lx-report-glass mx-4 my-8 p-6 sm:mx-6 sm:p-8">
+          <div className="lx-report-glass lx-report-glass-readable my-8 p-6 sm:mx-6 sm:p-8">
             {LAYER_TITLES[sections.length - 1] && (
               <p className="mb-3 text-xs uppercase tracking-widest2 text-lattice">
                 <Bi zh={LAYER_TITLES[sections.length - 1].zh} en={LAYER_TITLES[sections.length - 1].en} />

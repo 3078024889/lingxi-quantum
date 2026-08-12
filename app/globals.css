@@ -92,6 +92,36 @@ body {
 .lx-glass-resilience, .lx-glass-romance, .lx-glass-wealth, .lx-glass-daily,
 .lx-glass-qian, .lx-glass-tarot, .lx-glass-relation, .lx-glass-lifemap { background-color: transparent !important; }
 
+.lx-publication-page {
+  min-height: min(1267px, calc((100vw - 1.5rem) * 1.414));
+  background-repeat: no-repeat;
+  image-rendering: auto;
+}
+.lx-report-glass-readable {
+  background: linear-gradient(135deg, rgba(255,255,255,.34), rgba(250,252,255,.20), rgba(237,247,245,.17)) !important;
+  backdrop-filter: blur(3px) saturate(1.04) !important;
+  -webkit-backdrop-filter: blur(3px) saturate(1.04) !important;
+  box-shadow: 0 20px 54px rgba(31,40,68,.12), inset 0 1px 0 rgba(255,255,255,.62) !important;
+}
+.lx-publication-page > .lx-report-glass {
+  width: calc(100% - clamp(2rem, 9vw, 8rem));
+  max-width: 48rem;
+  margin-inline: auto;
+}
+.lx-report-tone-light .lx-report-chart text,
+.lx-report-tone-light .lx-report-chart-label {
+  fill: #312a43 !important;
+  color: #312a43 !important;
+  font-weight: 700 !important;
+  paint-order: stroke fill;
+  stroke: rgba(255,255,255,.82);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+.lx-report-tone-light .lx-report-chart line,
+.lx-report-tone-light .lx-report-chart path {
+  vector-effect: non-scaling-stroke;
+}
 .lx-report-art-page {
   position: relative;
   display: flex;
@@ -103,10 +133,10 @@ body {
   background-size: cover;
   background-position: center;
 }
-.lx-art-lifemap-1 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-1.png') !important; }
-.lx-art-lifemap-2 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-2.png') !important; }
-.lx-art-lifemap-3 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-3.png') !important; }
-.lx-art-lifemap-4 { background-image: linear-gradient(135deg,rgba(255,255,255,.18),rgba(236,250,246,.08)),url('/images/lifemap/page-4.png') !important; }
+.lx-art-lifemap-1 { background-image: url('/images/lifemap/page-1.png') !important; }
+.lx-art-lifemap-2 { background-image: url('/images/lifemap/page-2.png') !important; }
+.lx-art-lifemap-3 { background-image: url('/images/lifemap/page-3.png') !important; }
+.lx-art-lifemap-4 { background-image: url('/images/lifemap/page-4.png') !important; }
 .lx-report-chart text { fill: var(--report-chart-text) !important; font-weight: 600; text-shadow: none; }
 .lx-report-chart .lx-chart-grid { stroke: var(--report-chart-grid) !important; }
 /* Typography and gradient system. */

@@ -172,7 +172,7 @@ export default function WealthReportView({ id }: { id: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-16">
+    <div className="mx-auto max-w-4xl px-3 py-16 sm:px-6">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-[#2E2742]">
           <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
@@ -204,15 +204,15 @@ export default function WealthReportView({ id }: { id: string }) {
             那是旧深色素材时代的写法；新素材是浅色晨雾水彩，深色遮罩
             会把画压死，而且跟下载下来的 PDF 完全是两种东西。 */}
         {sections.map((content, i) => {
-          const bg = `/images/wealth-full/page-${Math.min(i + 1, 11)}.png`;
+          const bg = `/images/wealth-full/page-${(i % 11) + 1}.png`;
           const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
           return (
             <section
               key={i}
-              className="relative mt-6 flex min-h-[92vh] items-center justify-center overflow-hidden rounded-sm"
+              className="lx-publication-page relative mt-6 flex items-center justify-center overflow-hidden rounded-sm"
               style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
-              <div className="lx-report-glass mx-5 my-10 max-w-2xl px-8 py-10 sm:px-10 sm:py-12">
+              <div className="lx-report-glass lx-report-glass-readable my-10 px-8 py-10 sm:px-10 sm:py-12">
                 <p className="font-display text-[11px] uppercase tracking-[0.34em] text-[#8C7FA8]">
                   WEALTH CREATION · {String(i + 1).padStart(2, "0")} / {String(sections.length).padStart(2, "0")}
                 </p>

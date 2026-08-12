@@ -263,7 +263,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-16">
+    <div className="mx-auto max-w-4xl px-3 py-16 sm:px-6">
       <style>{`
         /* 跟生命图谱PDF导出用同一套打印底色方案，两份报告的PDF看起来
            是同一个产品家族，不是风格不统一的两套东西。 */
@@ -384,19 +384,19 @@ export default function RelationshipReportView({ id }: { id: string }) {
           const isSeal = i === sections.length - 1;
           const folder = relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
           // 三类关系都已具备 page-1..11，每章使用自己的出版底图。
-          const bgIndex = Math.min(i + 1, 11);
+          const bgIndex = (i % 11) + 1;
           const relKey: "romantic" | "business" | "general" = relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
           const chapterTitle = CHAPTER_TITLES[relKey][i];
           return (
             <div
               key={i}
-              className="relative mt-6 flex min-h-[78vh] items-center overflow-hidden rounded-sm p-4 sm:min-h-[920px] sm:p-8"
+              className="lx-publication-page relative mt-6 flex items-center overflow-hidden rounded-sm p-4 sm:p-8"
               style={{
                 backgroundImage: `url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
                 backgroundSize: "cover", backgroundPosition: "center",
               }}
             >
-              <div className="lx-report-glass w-full px-6 py-8 sm:px-10 sm:py-12">
+              <div className="lx-report-glass lx-report-glass-readable px-6 py-8 sm:px-10 sm:py-12">
               <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={chapterTitle?.zh ?? ""} en={chapterTitle?.en ?? ""} />
               </p>
