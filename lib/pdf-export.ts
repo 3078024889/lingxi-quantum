@@ -104,7 +104,7 @@ export async function exportSimplePdf(params: {
     if (!chunk || chunk.offsetHeight < 2) continue;
     await waitForImages(chunk);
     const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const usableHeight = pageHeight - MARGIN * 2;
@@ -211,7 +211,7 @@ export async function exportGlassPdf(params: {
   if (coverEl && coverEl.offsetHeight > 2) {
     await waitForImages(coverEl);
     const canvas = await html2canvas(coverEl, { backgroundColor: bgHex, scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
     const imgWidth = pageWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const y = Math.max(0, (pageHeight - imgHeight) / 2);
@@ -266,7 +266,7 @@ export async function exportGlassPdf(params: {
   fillPageBackground();
   try {
     const tocCanvas = await html2canvas(tocContainer, { backgroundColor: bgHex, scale: 2, useCORS: true });
-    const tocImgData = tocCanvas.toDataURL("image/jpeg", 0.92);
+    const tocImgData = tocCanvas.toDataURL("image/jpeg", 0.95);
     const tocImgWidth = pageWidth;
     const tocImgHeight = Math.min((tocCanvas.height * tocImgWidth) / tocCanvas.width, pageHeight);
     pdf.addImage(tocImgData, "JPEG", 0, 0, tocImgWidth, tocImgHeight);
@@ -349,7 +349,7 @@ export async function exportGlassPdf(params: {
     for (const piece of pieces) {
     await waitForImages(piece);
     const canvas = await html2canvas(piece, { backgroundColor: bgHex, scale: 2, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const usableHeight = pageHeight - MARGIN * 2;
@@ -563,7 +563,7 @@ export async function exportArchivePdf(params: {
     const canvas = await html2canvas(stage, {
       width: PX_W, height: PX_H, scale: 2, useCORS: true, backgroundColor: "#F6F4F0",
     });
-    return canvas.toDataURL("image/jpeg", 0.92);
+    return canvas.toDataURL("image/jpeg", 0.95);
   };
 
   // 每章换一个纵向取景位，让 4 张图产生 12 种画面，11 章不重样
@@ -611,15 +611,15 @@ export async function exportArchivePdf(params: {
   const panelHtml = (headline: string, title: string, bodyHtml: string, figureHtml = "") => `
       <div id="lx-panel" style="position:absolute;left:52px;right:52px;top:${PANEL_TOP}px;
                   background:${theme.gradient};border:1px solid ${theme.border};
-                  border-radius:6px;padding:38px 40px;
+                  border-radius:6px;padding:42px 44px;
                   box-shadow:0 18px 56px rgba(40,36,70,.16);">
         <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">${escapeHtml(headline)}</div>
         ${title
-          ? `<div style="font-size:23px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${escapeHtml(title)}</div>
+          ? `<div style="font-size:25px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${escapeHtml(title)}</div>
              <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>`
           : `<div style="height:18px;"></div>`}
         ${figureHtml}
-        <div style="font-size:14.5px;line-height:2.05;color:#2E2742;white-space:pre-wrap;">${bodyHtml}</div>
+        <div style="font-size:16.5px;line-height:2.02;color:#2E2742;letter-spacing:.015em;white-space:pre-wrap;">${bodyHtml}</div>
       </div>`;
 
   /** 把面板放进舞台量一次真实高度（不截图，只测量，很快） */

@@ -304,7 +304,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         className={printMode ? "rel-print-mode mt-8 px-1 py-4" : "mt-8 px-1 py-4"}
         style={{
           backgroundColor: "#2a162e",
-          backgroundImage: `linear-gradient(rgba(42,22,46,0.86), rgba(42,22,46,0.86)), url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png)`,
+          backgroundImage: `linear-gradient(rgba(20,24,48,0.20), rgba(42,22,46,0.28)), url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png)`,
           backgroundSize: "cover", backgroundPosition: "top center", backgroundAttachment: "local",
         }}
       >
@@ -382,27 +382,25 @@ export default function RelationshipReportView({ id }: { id: string }) {
         {sections.map((content, i) => {
           const isSeal = i === sections.length - 1;
           const folder = relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
-          // v235：11个章节，只有4张正文背景图（page-1到page-4，page-0是
-          // 封面、page-5留给封印页）可以循环用——不用为每个章节单独画
-          // 一张图，效果上仍然是"连续几页不会背景完全一样"（4张轮流），
-          // 跟之前讨论的"背景图不够就轮换用"是同一个思路。
-          const bgIndex = isSeal ? 5 : (i % 4) + 1;
+          // 三类关系都已具备 page-1..11，每章使用自己的出版底图。
+          const bgIndex = Math.min(i + 1, 11);
           const relKey: "romantic" | "business" | "general" = relType === "business" ? "business" : relType === "general" ? "general" : "romantic";
           const chapterTitle = CHAPTER_TITLES[relKey][i];
           return (
             <div
               key={i}
-              className="relative mt-6 overflow-hidden rounded-sm p-6"
+              className="relative mt-6 flex min-h-[78vh] items-center overflow-hidden rounded-sm p-4 sm:min-h-[920px] sm:p-8"
               style={{
                 backgroundColor: "#2a162e",
-                backgroundImage: `linear-gradient(rgba(42,22,46,0.84), rgba(42,22,46,0.84)), url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
+                backgroundImage: `linear-gradient(rgba(255,255,255,0.08), rgba(30,24,58,0.24)), url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
                 backgroundSize: "cover", backgroundPosition: "center",
               }}
             >
+              <div className="lx-report-glass w-full px-6 py-8 sm:px-10 sm:py-12">
               <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={chapterTitle?.zh ?? ""} en={chapterTitle?.en ?? ""} />
               </p>
-              <div className="mt-3 whitespace-pre-line text-base leading-9 text-bone-dim">{stripMarkdownArtifacts(content)}</div>
+              <div className="mt-5 whitespace-pre-line text-[15px] leading-[2] tracking-[0.02em] text-bone-dim sm:text-lg sm:leading-[2.05]">{stripMarkdownArtifacts(content)}</div>
               {isSeal && (
                 <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
                   <p className="font-display text-sm italic text-lattice/85">
@@ -410,6 +408,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
                   </p>
                 </div>
               )}
+              </div>
             </div>
           );
         })}

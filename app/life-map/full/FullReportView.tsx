@@ -469,41 +469,37 @@ export default function FullReportView({ id }: { id: string }) {
             // 下的直接子节点）——PDF导出是按"每个直接子节点单独截图"来
             // 做的，图表现在会被单独截一张图，不会再跟着文字一起被从
             // 中间切开。
+            const bgImage = `/images/lifemap/page-${(i % 11) + 1}.png`;
             return (
-            <Fragment key={i}>
-            <div className="break-inside-avoid">
-              <p className="font-display text-xs uppercase tracking-widest2 text-lm2-violet">
-                {String(i + 1).padStart(2, "0")} · <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
-              </p>
-              <div className="mt-3 whitespace-pre-line text-base leading-9 text-lm2-text-dim">{stripMarkdownArtifacts(content)}</div>
-            </div>
-            {/* v300：每个图表包一层带 ref 的容器，导出时可按章取到它，
-                单独截图后作为插图嵌进该章的玻璃面板——不再是"图表跟正文
-                一起被整块截图再按高度切"，也就不会被从中间切开。 */}
-            <div ref={(el) => { figureRefs.current[i] = el; }}>
-              {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
-              {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
-              {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
-              {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
-              {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
-            </div>
-            {i === 13 && (
-              <div className="mt-4 flex justify-center">
-                <div className="overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 240 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/resilience/resilience.jpg" alt="Life Resilience Index" className="block w-full" />
+              <div
+                key={i}
+                className="relative flex min-h-[78vh] items-center overflow-hidden rounded-sm p-4 sm:min-h-[920px] sm:p-8"
+                style={{
+                  backgroundImage: `url(${bgImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="lx-report-glass w-full px-6 py-8 sm:px-10 sm:py-12">
+                  <p className="font-display text-[11px] uppercase tracking-[0.34em] text-[#8C7FA8]">
+                    LIFE MAP · {String(i + 1).padStart(2, "0")} / {String(sections.length).padStart(2, "0")}
+                  </p>
+                  <h2 className="mt-4 font-display text-2xl font-light tracking-[0.08em] text-[#3A2E52] sm:text-3xl">
+                    <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
+                  </h2>
+                  <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
+                  <div className="mt-6 whitespace-pre-line text-[15px] leading-[2] tracking-[0.02em] text-[#2E2742] sm:text-lg sm:leading-[2.05]">
+                    {stripMarkdownArtifacts(content)}
+                  </div>
+                  <div ref={(el) => { figureRefs.current[i] = el; }}>
+                    {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
+                    {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
+                    {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
+                    {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
+                    {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
+                  </div>
                 </div>
               </div>
-            )}
-            {i === 14 && (
-              <div className="mt-4 flex justify-center">
-                <div className="overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 240 }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/romance/romance.jpg" alt="Romance Magnetism Map" className="block w-full" />
-                </div>
-              </div>
-            )}
-            </Fragment>
             );
           })}
         </div>

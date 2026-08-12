@@ -8,8 +8,8 @@ import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
+import PortalSpinner from "@/components/PortalSpinner";
+import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 const SECTION_TITLES = [
   { titleZh: "◆ 你的五项结构", titleEn: "◆ Your Five Dimensions" },
@@ -35,6 +35,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
   const [name, setName] = useState("");
   const [sections, setSections] = useState<string[]>([]);
   const [showWechatPay, setShowWechatPay] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     document.title = "生命韧性档案 | 灵犀 · Resilience Archive | Lingxi";
@@ -69,10 +70,10 @@ export default function ResilienceReportView({ id }: { id: string }) {
           return;
         }
         
-        // 兼容全新的 ===0X=== 分隔符体系
+        // 同时兼容历史数字标记和树突引擎的 SECTION 标记。
         const reportText = data.report || data.fullReport;
         const parts = reportText
-          .split(/===\s*\d+\s*===/)
+          .split(/===\s*(?:\d+|SECTION)\s*===/)
           .map((s: string) => s.trim())
           .filter(Boolean);
           
@@ -96,8 +97,31 @@ export default function ResilienceReportView({ id }: { id: string }) {
     setShowWechatPay(true);
   };
 
-  const handlePrint = () => {
-    window.print();
+  const downloadPdf = async () => {
+    if (downloading || sections.length === 0) return;
+    setDownloading(true);
+    try {
+      const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
+      await exportArchivePdf({
+        chapters: sections.map((body, i) => ({
+          title: langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh,
+          body: stripMarkdownArtifacts(body),
+        })),
+        fileName: `灵犀生命韧性档案-${name || "report"}.pdf`,
+        titleZh: `${name || "你的"} · 生命韧性档案`,
+        titleEn: `${name || "Your"} · Life Resilience Archive`,
+        eyebrow: "LIFE RESILIENCE",
+        theme: ARCHIVE_THEMES.resilience,
+        coverImage: "/images/resilience-full/page-0.png",
+        bodyImages: Array.from({ length: 11 }, (_, k) => `/images/resilience-full/page-${k + 1}.png`),
+        endImage: "/images/resilience-full/page-11.png",
+      });
+    } catch (error) {
+      console.error("PDF 生成失败:", error);
+      alert(t("PDF 生成失败，请稍后重试。", "PDF generation failed. Please try again."));
+    } finally {
+      setDownloading(false);
+    }
   };
 
   if (status === "checking") {
@@ -153,9 +177,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
   }
 
   return (
-    <>
-      <Nav />
-      <main className="pt-24 min-h-screen pb-24 px-2 md:px-8 bg-[#0a1626]">
+      <div className="min-h-screen px-2 pb-24 pt-12 md:px-8">
         <div className="max-w-4xl mx-auto space-y-12">
           
           {/* 顶部标题区 */}
@@ -216,7 +238,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
                     </div>
 
                     {/* 【字号放大核心区】：text-xl md:text-2xl lg:text-3xl */}
-                    <div className="prose prose-invert max-w-none text-xl md:text-2xl lg:text-3xl leading-[2.4] tracking-wider text-[#2E2742]">
+                    <div className="max-w-none text-[15px] leading-[2] tracking-[0.02em] text-[#2E2742] sm:text-lg sm:leading-[2.05]">
                       {content.split('\n').map((para, pIdx) => {
                         const trimmedPara = para.trim();
                         if (!trimmedPara) return null;
@@ -248,10 +270,11 @@ export default function ResilienceReportView({ id }: { id: string }) {
           <div className="text-center space-y-8 pt-12 print:hidden">
             <div className="flex flex-col items-center gap-6">
               <button 
-                onClick={handlePrint}
+                onClick={downloadPdf}
+                disabled={downloading}
                 className="lx-portal-btn px-10 py-4 text-lg md:text-xl font-bold tracking-widest cursor-pointer"
               >
-                <Bi zh="保存 / 打印完整档案 (PDF)" en="Save / Print Full Archive (PDF)" />
+                {downloading ? <><PortalSpinner /><Bi zh="正在生成 PDF…" en="Generating PDF…" /></> : <Bi zh="下载完整档案 PDF" en="Download Full Archive PDF" />}
               </button>
               <ShareButton
                 text={t("我做了一份灵犀生命韧性档案，去看看你自己的：", "I got my Lingxi Life Resilience Archive — check out your own:")}
@@ -262,8 +285,6 @@ export default function ResilienceReportView({ id }: { id: string }) {
           </div>
 
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
   );
 }
