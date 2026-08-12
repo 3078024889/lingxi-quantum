@@ -29,7 +29,14 @@ if (!lifemap.includes("/images/lifemap/page-${(i % 11) + 1}.png")) failures.push
 for (const page of [2, 3, 4]) {
   if (!lifemap.includes(`lx-art-lifemap-${page}`)) failures.push(`life-map: artwork page ${page} is missing`);
 }
-const relationship = readFileSync(resolve(root, views[1]), "utf8");
+const relationship = readFileSync(resolve(root, views[1]), "utf8");if (relationship.includes("maxWidth: 220")) failures.push("relationship: hero artwork regressed to the legacy small size");
+if (!relationship.includes("min(100%, 340px)")) failures.push("relationship: premium hero artwork size is missing");
+if (!relationship.includes("sm:text-[19px]")) failures.push("relationship: reading typography is below the comfort baseline");
+if (!relationship.includes("lx-report-glass-airy")) failures.push("relationship: airy reading glass is missing");
+const mirror = readFileSync(resolve(root, "app/mirror/reading/full/TarotReadingReport.tsx"), "utf8");
+const oracle = readFileSync(resolve(root, "app/qian/full/QianReport.tsx"), "utf8");
+if (!mirror.includes("lx-publication-cover lx-mirror-cover")) failures.push("life-mirror: vertical readable cover is missing");
+if (!oracle.includes("lx-publication-cover")) failures.push("life-oracle: vertical cover is missing");
 if (!relationship.includes("const bgIndex = (i % 11) + 1;")) failures.push("relationship: body artwork is not cyclic");
 for (const view of views.slice(2, 5)) {
   const source = readFileSync(resolve(root, view), "utf8");

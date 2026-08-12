@@ -103,6 +103,42 @@ body {
   -webkit-backdrop-filter: blur(3px) saturate(1.04) !important;
   box-shadow: 0 20px 54px rgba(31,40,68,.12), inset 0 1px 0 rgba(255,255,255,.62) !important;
 }
+.lx-report-glass-airy {
+  background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(250,252,255,.13), rgba(237,247,245,.10)) !important;
+  backdrop-filter: blur(2px) saturate(1.03) !important;
+  -webkit-backdrop-filter: blur(2px) saturate(1.03) !important;
+}
+.lx-report-tone-light .lx-report-glass-airy,
+.lx-report-tone-light .lx-report-glass-airy p,
+.lx-report-tone-light .lx-report-glass-airy li,
+.lx-report-tone-light .lx-report-glass-airy span {
+  font-weight: 500 !important;
+  text-shadow: 0 1px 1px rgba(255,255,255,.9), 0 0 5px rgba(255,255,255,.4);
+}
+.lx-publication-cover { flex-direction: column; }
+.lx-mirror-cover::before {
+  content: "";
+  position: absolute;
+  inset: clamp(2rem, 8vw, 6rem);
+  z-index: 0;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(255,255,255,.3), rgba(250,252,255,.14), rgba(237,247,245,.1));
+  backdrop-filter: blur(2px) saturate(1.04);
+  -webkit-backdrop-filter: blur(2px) saturate(1.04);
+  box-shadow: 0 20px 54px rgba(31,40,68,.12), inset 0 1px 0 rgba(255,255,255,.62);
+}
+.lx-mirror-cover > * { position: relative; z-index: 1; }
+.lx-report-tone-light .lx-mirror-cover,
+.lx-report-tone-light .lx-mirror-cover p,
+.lx-report-tone-light .lx-mirror-cover span,
+.lx-report-tone-light .lx-mirror-cover h1,
+.lx-report-tone-light .lx-mirror-cover h2,
+.lx-report-tone-light .lx-mirror-cover h3 {
+  color: #302941 !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: 0 1px 1px rgba(255,255,255,.95), 0 0 7px rgba(255,255,255,.65) !important;
+}
 .lx-publication-page > .lx-report-glass {
   width: calc(100% - clamp(2rem, 9vw, 8rem));
   max-width: 48rem;

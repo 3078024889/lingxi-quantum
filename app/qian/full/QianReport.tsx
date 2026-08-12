@@ -233,7 +233,7 @@ export default function QianReport({ id }: { id: string }) {
 
       <div ref={reportRef} className="lx-report-tone-light">
       <div
-        className="lx-publication-page relative flex items-center justify-center overflow-hidden rounded-sm"
+        className="lx-publication-page lx-publication-cover relative flex items-center justify-center overflow-hidden rounded-sm"
         style={{ backgroundImage: "url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
       >
         <div className="lx-report-glass lx-report-glass-readable my-8 px-6 py-12 text-center sm:mx-6">

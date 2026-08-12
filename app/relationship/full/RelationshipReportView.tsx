@@ -318,12 +318,12 @@ export default function RelationshipReportView({ id }: { id: string }) {
             <Bi zh="亲密关系共振" en="Romantic Relationship Resonance" />
           )}
         </p>
-        <h1 className="mt-2 font-display text-3xl font-light text-bone text-center">
+        <h1 className="mt-2 text-center font-display text-3xl font-medium text-[#3A2E52]">
           {names ? `${names.a} × ${names.b}` : ""}
         </h1>
 
         <div className="mt-4 flex justify-center">
-          <div className="overflow-hidden rounded-sm border border-lattice/20" style={{ maxWidth: 220 }}>
+          <div className="overflow-hidden rounded-sm border border-lattice/20 shadow-[0_18px_50px_rgba(52,38,80,.16)]" style={{ width: "min(100%, 340px)" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`/images/relationship/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}.jpg`}
@@ -396,11 +396,11 @@ export default function RelationshipReportView({ id }: { id: string }) {
                 backgroundSize: "cover", backgroundPosition: "center",
               }}
             >
-              <div className="lx-report-glass lx-report-glass-readable px-6 py-8 sm:px-10 sm:py-12">
+              <div className="lx-report-glass lx-report-glass-airy px-6 py-8 sm:px-12 sm:py-14">
               <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={chapterTitle?.zh ?? ""} en={chapterTitle?.en ?? ""} />
               </p>
-              <div className="mt-5 whitespace-pre-line text-[15px] leading-[2] tracking-[0.02em] text-bone-dim sm:text-lg sm:leading-[2.05]">{stripMarkdownArtifacts(content)}</div>
+              <div className="mt-6 whitespace-pre-line text-[17px] font-normal leading-[2.05] tracking-[0.015em] text-bone-dim sm:text-[19px] sm:leading-[2.12]">{stripMarkdownArtifacts(content)}</div>
               {isSeal && (
                 <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
                   <p className="font-display text-sm italic text-lattice/85">
@@ -468,14 +468,14 @@ function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: 
     <div className="lx-report-glass p-5">
       <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="生命向量对比" en="Life Vector Comparison" /></p>
       <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="h-56 w-56 shrink-0">
+        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="aspect-square h-auto w-full max-w-72 shrink-0 sm:max-w-80">
           {gridRings.map((pts, i) => (
             <polygon key={i} points={pts} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
           ))}
           <polygon points={pointsFor(vA)} fill="rgba(140,210,255,0.22)" stroke="#8CD2FF" strokeWidth="1.5" />
           <polygon points={pointsFor(vB)} fill="rgba(232,183,101,0.20)" stroke="#E8B765" strokeWidth="1.5" />
           {labelPoints.map((p, i) => (
-            <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="8.5" fill="var(--report-chart-text)">
+            <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="9.5" fontWeight="700" fill="var(--report-chart-text)">
               {p.label}
             </text>
           ))}
