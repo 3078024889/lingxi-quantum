@@ -15,6 +15,10 @@ const checks = [
   ["rate limit RPC is service-only", read("supabase/schema.sql").includes("revoke execute on function public.rate_limit_check")],
   ["CSP report-only is enabled", read("next.config.js").includes("Content-Security-Policy-Report-Only")],
   ["API does not expose detail fields", !["app/api/lifemap/save/route.ts", "app/api/lifemap/update-numbers/route.ts", "app/api/pay/create/route.ts", "app/api/pay/wechat/create/route.ts"].some((path) => read(path).includes("detail:"))],
+  ["checkout honors an existing unlock before creating an order", (() => {
+    const checkout = read("app/checkout/page.tsx")
+    return checkout.includes('.from("unlocks")') && checkout.indexOf('.from("unlocks")') < checkout.indexOf("await createOrder()")
+  })()],
 ]
 
 let failed = false

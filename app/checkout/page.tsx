@@ -323,12 +323,39 @@ function CheckoutInner() {
   };
 
   useEffect(() => {
-    if (product && !startedRef.current) {
-      startedRef.current = true;
-      createOrder();
-    }
+    if (!product || startedRef.current) return;
+    startedRef.current = true;
+
+    const checkAccessBeforeOrdering = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data: unlock, error: unlockError } = await supabase
+          .from("unlocks")
+          .select("expires_at")
+          .eq("user_id", user.id)
+          .eq("product_id", productId)
+          .maybeSingle();
+
+        if (!unlockError && unlock) {
+          const active = !unlock.expires_at || new Date(unlock.expires_at).getTime() > Date.now();
+          if (active) {
+            router.replace(redirectTo);
+            return;
+          }
+        }
+      }
+
+      await createOrder();
+    };
+
+    void checkAccessBeforeOrdering();
+    // createOrder intentionally remains tied to this one-shot checkout initialization.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product]);
+  }, [product, productId, redirectTo, router]);
 
   useEffect(() => {
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
@@ -358,7 +385,7 @@ function CheckoutInner() {
         // v274：等待态也要有框。之前这里是一段裸文字浮在极光背景上，
         // 跟前后都有玻璃面板的页面割裂，看起来像页面坏了。
         <div className="lx-glass mt-10 p-8 text-center">
-          <p className="text-sm text-bone-soft"><Bi zh="正在生成场域订单……" en="Creating your field order…" /></p>
+          <p className="text-sm text-bone-soft"><Bi zh="正在确认访问权限……" en="Confirming your access…" /></p>
         </div>
       )}
 
