@@ -112,8 +112,8 @@ export async function exportSimplePdf(params: {
   for (const chunk of children) {
     if (!chunk || chunk.offsetHeight < 2) continue;
     await waitForImages(chunk);
-    const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 1.55, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.9);
+    const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const usableHeight = pageHeight - MARGIN * 2;
@@ -219,8 +219,8 @@ export async function exportGlassPdf(params: {
   fillPageBackground();
   if (coverEl && coverEl.offsetHeight > 2) {
     await waitForImages(coverEl);
-    const canvas = await html2canvas(coverEl, { backgroundColor: bgHex, scale: 1.55, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.9);
+    const canvas = await html2canvas(coverEl, { backgroundColor: bgHex, scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidth = pageWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const y = Math.max(0, (pageHeight - imgHeight) / 2);
@@ -274,8 +274,8 @@ export async function exportGlassPdf(params: {
   pdf.addPage();
   fillPageBackground();
   try {
-    const tocCanvas = await html2canvas(tocContainer, { backgroundColor: bgHex, scale: 1.55, useCORS: true });
-    const tocImgData = tocCanvas.toDataURL("image/jpeg", 0.9);
+    const tocCanvas = await html2canvas(tocContainer, { backgroundColor: bgHex, scale: 2, useCORS: true });
+    const tocImgData = tocCanvas.toDataURL("image/jpeg", 0.92);
     const tocImgWidth = pageWidth;
     const tocImgHeight = Math.min((tocCanvas.height * tocImgWidth) / tocCanvas.width, pageHeight);
     pdf.addImage(tocImgData, "JPEG", 0, 0, tocImgWidth, tocImgHeight);
@@ -357,8 +357,8 @@ export async function exportGlassPdf(params: {
     const { pieces, cleanup } = splitTallChapter(chapter);
     for (const piece of pieces) {
     await waitForImages(piece);
-    const canvas = await html2canvas(piece, { backgroundColor: bgHex, scale: 1.55, useCORS: true });
-    const imgData = canvas.toDataURL("image/jpeg", 0.9);
+    const canvas = await html2canvas(piece, { backgroundColor: bgHex, scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL("image/jpeg", 0.92);
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const usableHeight = pageHeight - MARGIN * 2;
@@ -589,9 +589,9 @@ export async function exportArchivePdf(params: {
     // 图片解码完成后再等一帧，否则偶发截到半张图
     await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 60)));
     const canvas = await html2canvas(stage, {
-      width: PX_W, height: PX_H, scale: 1.55, useCORS: true, backgroundColor: "#F6F4F0",
+      width: PX_W, height: PX_H, scale: 2, useCORS: true, backgroundColor: "#F6F4F0",
     });
-    return canvas.toDataURL("image/jpeg", 0.9);
+    return canvas.toDataURL("image/jpeg", 0.92);
   };
 
   // 每章换一个纵向取景位，让 4 张图产生 12 种画面，11 章不重样
@@ -658,7 +658,9 @@ export async function exportArchivePdf(params: {
   const MAX_PANEL_H = PX_H - PANEL_TOP - PANEL_BOTTOM_SAFE;
 
   const panelHtml = (headline: string, title: string, bodyHtml: string, figureHtml = "", layout: "left" | "center" | "right" = "center") => {
-    const placement = layout === "left" ? "left:44px;right:104px" : layout === "right" ? "left:104px;right:44px" : "left:72px;right:72px";
+    // PDF uses one centred publication grid. The artwork may shift its focal point,
+    // but the reading column must not wobble from page to page.
+    const placement = "left:64px;right:64px";
     return `
       <div id="lx-panel" style="position:absolute;${placement};top:${PANEL_TOP}px;
                   background:${theme.gradient};border:1px solid ${theme.border};
@@ -689,7 +691,7 @@ export async function exportArchivePdf(params: {
    */
   const captureFigure = async (el: HTMLElement, caption?: string): Promise<string> => {
     await waitForImages(el);
-    const canvas = await html2canvas(el, { backgroundColor: null, scale: 1.55, useCORS: true });
+    const canvas = await html2canvas(el, { backgroundColor: null, scale: 2, useCORS: true });
     const data = canvas.toDataURL("image/png");
     return `
       <div style="margin:0 0 26px;padding:18px;border-radius:3px;
@@ -701,7 +703,8 @@ export async function exportArchivePdf(params: {
       </div>`;
   };
 
-  /** 把一章拆成若干"页面级"的正文块，保证每块都装得下 */
+  /** Historical single-chapter paginator, kept only for migration reference. */
+  /* istanbul ignore next */
   const paginateChapter = (headline: string, title: string, body: string, figureHtml: string): string[] => {
     if (measurePanel(panelHtml(headline, title, escapeHtml(body), figureHtml)) <= MAX_PANEL_H) {
       return [body];
@@ -731,9 +734,65 @@ export async function exportArchivePdf(params: {
     return pages;
   };
 
+  type FlowSection = {
+    chapterIndex: number;
+    title: string;
+    units: string[];
+    continued?: boolean;
+  };
+  type FlowProsePage = { kind: "prose"; sections: FlowSection[] };
+  type FlowChartPage = { kind: "chart"; chapterIndex: number; title: string; body: string; figureHtml: string };
+  type FlowPage = FlowProsePage | FlowChartPage;
+
+  const flowPanelHtml = (headline: string, sections: FlowSection[]) => `
+    <div id="lx-panel" style="position:absolute;left:64px;right:64px;top:${PANEL_TOP}px;
+                background:${theme.gradient};border:1px solid ${theme.border};
+                border-radius:3px;padding:40px 52px;
+                box-shadow:0 10px 40px rgba(35,30,55,.035);">
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;letter-spacing:.34em;color:#686176;">${escapeHtml(headline)}</div>
+      ${sections.map((section, index) => `
+        <section style="${index > 0 ? `margin-top:30px;padding-top:26px;border-top:1px solid ${theme.border};` : ""}break-inside:avoid-page;">
+          <div style="font-family:'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+                      font-size:${section.continued ? "18px" : "24px"};font-weight:500;color:#292638;
+                      margin:14px 0 6px;letter-spacing:.045em;">
+            ${escapeHtml(section.title)}${section.continued ? `<span style="font-size:12px;color:#7A7484;margin-left:9px;">续</span>` : ""}
+          </div>
+          <div style="width:52px;height:1px;background:${theme.accent};opacity:.58;margin-bottom:20px;"></div>
+          <div style="max-width:42em;font-size:16px;font-weight:400;line-height:1.88;color:#454151;
+                      letter-spacing:.012em;white-space:pre-wrap;">${escapeHtml(section.units.join("\n\n"))}</div>
+        </section>`).join("")}
+    </div>`;
+
+  const flowPanelFits = (sections: FlowSection[]): boolean => {
+    const first = sections[0]?.chapterIndex ?? 0;
+    const last = sections[sections.length - 1]?.chapterIndex ?? first;
+    const range = first === last
+      ? String(first + 1).padStart(2, "0")
+      : `${String(first + 1).padStart(2, "0")}-${String(last + 1).padStart(2, "0")}`;
+    return measurePanel(flowPanelHtml(`${eyebrow} / ${range} / ${String(chapters.length).padStart(2, "0")}`, sections)) <= MAX_PANEL_H;
+  };
+
+  const chapterUnits = (body: string): string[] => {
+    const paragraphs = body.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+    if (paragraphs.length > 1) return paragraphs;
+    // Unicode escapes keep this source encoding-safe while still splitting
+    // Chinese and English prose on real sentence boundaries.
+    const sentenceUnits = body.match(/[^\u3002\uff01\uff1f!?\n]+[\u3002\uff01\uff1f!?]?/g)
+      ?.map((s) => s.trim())
+      .filter(Boolean);
+    if (sentenceUnits?.length) return sentenceUnits;
+    /* legacy fallback */
+    return body.match(/[^。！？!?\n]+[。！？!?]?/g)?.map((s) => s.trim()).filter(Boolean) ?? [body];
+  };
+
   // 先把所有章节铺平成"页"，这样才能先知道总页数、再画正确的页码
-  type BodyPage = { chapterIndex: number; title: string; body: string; isContinued: boolean; figureHtml: string; chartOnly?: boolean };
-  const bodyPages: BodyPage[] = [];
+  const bodyPages: FlowPage[] = [];
+  let currentPage: FlowProsePage | null = null;
+  const flushCurrentPage = () => {
+    if (currentPage?.sections.length) bodyPages.push(currentPage);
+    currentPage = null;
+  };
+  /* Legacy one-chapter-per-page paginator.
   for (let i = 0; i < chapters.length; i++) {
     const ch = chapters[i];
     const headline = `${eyebrow} · ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
@@ -765,6 +824,81 @@ export async function exportArchivePdf(params: {
   }
 
   // ── 尾页 ──
+  */
+
+  for (let chapterIndex = 0; chapterIndex < chapters.length; chapterIndex++) {
+    const chapter = chapters[chapterIndex];
+    const units = chapterUnits(chapter.body);
+    let offset = 0;
+    let continued = false;
+
+    while (offset < units.length) {
+      if (!currentPage) currentPage = { kind: "prose", sections: [] };
+      const seedSize = continued ? 1 : Math.min(2, units.length - offset);
+      const seed: FlowSection = {
+        chapterIndex,
+        title: chapter.title,
+        units: units.slice(offset, offset + seedSize),
+        continued,
+      };
+      const seededSections = [...currentPage.sections, seed];
+
+      if (currentPage.sections.length > 0 && !flowPanelFits(seededSections)) {
+        flushCurrentPage();
+        continue;
+      }
+
+      currentPage.sections.push(seed);
+      offset += seedSize;
+      while (offset < units.length) {
+        const lastSection = currentPage.sections[currentPage.sections.length - 1];
+        const candidateSection = { ...lastSection, units: [...lastSection.units, units[offset]] };
+        const candidateSections = [...currentPage.sections.slice(0, -1), candidateSection];
+        if (!flowPanelFits(candidateSections)) break;
+        currentPage.sections = candidateSections;
+        offset += 1;
+      }
+
+      if (offset < units.length) {
+        flushCurrentPage();
+        continued = true;
+      }
+    }
+
+    if (chapter.figure) {
+      flushCurrentPage();
+      bodyPages.push({
+        kind: "chart",
+        chapterIndex,
+        title: chapter.title,
+        body: chapter.figureCaption ?? "",
+        figureHtml: await captureFigure(chapter.figure, chapter.figureCaption),
+      });
+    }
+  }
+  flushCurrentPage();
+
+  for (let pageIndex = 0; pageIndex < bodyPages.length; pageIndex++) {
+    const page = bodyPages[pageIndex];
+    const chapterIndex = page.kind === "chart" ? page.chapterIndex : page.sections[0].chapterIndex;
+    const lastChapterIndex = page.kind === "chart" ? chapterIndex : page.sections[page.sections.length - 1].chapterIndex;
+    const bg = bodyImages[chapterIndex % bodyImages.length];
+    const pos = SHIFTS[Math.floor(chapterIndex / bodyImages.length) % SHIFTS.length];
+    const range = chapterIndex === lastChapterIndex
+      ? String(chapterIndex + 1).padStart(2, "0")
+      : `${String(chapterIndex + 1).padStart(2, "0")}-${String(lastChapterIndex + 1).padStart(2, "0")}`;
+    const headline = `${eyebrow} / ${range} / ${String(chapters.length).padStart(2, "0")}`;
+    const content = page.kind === "chart"
+      ? panelHtml(headline, page.title, escapeHtml(page.body), page.figureHtml)
+      : flowPanelHtml(headline, page.sections);
+    pdf.addPage();
+    pdf.addImage(await renderPage(pageShell(bg, pos, `
+      ${content}
+      <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
+      <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${pageIndex + 1} / ${bodyPages.length}</div>`
+    )), "JPEG", 0, 0, PW, PH);
+  }
+
   pdf.addPage();
   pdf.addImage(await renderPage(pageShell(endImage, "center 50%", "")), "JPEG", 0, 0, PW, PH);
 

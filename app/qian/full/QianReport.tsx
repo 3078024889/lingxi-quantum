@@ -22,7 +22,7 @@ const LAYER_TITLES = [
   { zh: "② 源流签深度解析", en: "② Origin Sign Deep Dive" },
   { zh: "③ 灵魂签深度解析", en: "③ Soul Sign Deep Dive" },
   { zh: "④ 行者签深度解析", en: "④ Walker Sign Deep Dive" },
-  { zh: "⑤ 三签融合分析", en: "⑤ Three-Sign Fusion" },
+  { zh: "⑤ 三签联锁生命公式", en: "⑤ Three-Sign Linked Life Formula" },
   { zh: "⑥ 价值创造地图", en: "⑥ Value Creation Map" },
   { zh: "⑦ 关系映射", en: "⑦ Relationship Mapping" },
   { zh: "⑧ 当下生命主题", en: "⑧ Current Life Theme" },

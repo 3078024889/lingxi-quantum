@@ -1185,7 +1185,7 @@ export default function LifeMapFlow() {
                   </p>
                 </div>
                 <div>
-                  <p className="font-display text-sm text-lm2-violet">11 · <Bi zh="前世今生印记 · 纯属脑洞" en="Past & Future Imprint · Just for Fun" /></p>
+                  <p className="font-display text-sm text-lm2-violet">11 · <Bi zh="象征叙事镜面" en="Symbolic Narrative Mirror" /></p>
                   <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
                     <Bi zh="这是灵犀场中的创意叙事空间。根据你的命盘元素，创造一段象征性的生命故事——它不是历史证明，而是一种想象与自我探索，通过故事看见自己与生命主题之间的连接。" en="A creative narrative corner of the field. Using your chart's elements, it weaves a symbolic vignette of your life — not a historical claim, but a piece of imagination and self-exploration, seeing your connection to your life's themes through story." />
                   </p>

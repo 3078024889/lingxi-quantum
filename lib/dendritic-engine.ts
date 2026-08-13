@@ -226,9 +226,11 @@ export function composeDendriticChapter(args: {
   slots: ChapterSlots;
   activated: ActivatedNode[];
   evidence: EvidenceItem[];
+  presentation?: "diagnostic" | "editorial";
+  editorialIndex?: number;
 }): ComposedChapter {
   assertChapterSlots(args.slots);
-  const paragraphs = [
+  const diagnosticParagraphs = [
     args.slots.judgment,
     args.slots.evidence,
     args.slots.mechanism,
@@ -238,6 +240,32 @@ export function composeDendriticChapter(args: {
     args.slots.action,
     args.slots.narrative,
   ].filter((value): value is string => Boolean(value?.trim()));
+  const stripDiagnosticHeading = (value: string) => value
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.replace(
+      /^(结构证据|深层机制|现实观察|阴影机制|反证校验|行动协议|Structural evidence|Mechanism|Reality check|Shadow mechanism|Counter-check|Action protocol)\s*[:：]\s*/i,
+      "",
+    ))
+    .join("\n\n");
+  const editorialIndex = args.editorialIndex ?? 0;
+  const editorialParagraphs = [
+    args.slots.judgment,
+    args.slots.mechanism,
+    editorialIndex % 2 === 0 ? args.slots.scenario : args.slots.shadow,
+    editorialIndex % 3 === 2 ? args.slots.counterevidence : undefined,
+    args.slots.action,
+    args.slots.narrative,
+  ]
+    .filter((value): value is string => Boolean(value?.trim()))
+    .map(stripDiagnosticHeading);
+  const sourceParagraphs = args.presentation === "editorial" ? editorialParagraphs : diagnosticParagraphs;
+  const seen = new Set<string>();
+  const paragraphs = sourceParagraphs.filter((paragraph) => {
+    const key = paragraph.replace(/\s+/g, " ").trim();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
   const text = paragraphs.join("\n\n");
   const safetyFlags = auditSafety(text);
   if (safetyFlags.length > 0) {

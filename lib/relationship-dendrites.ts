@@ -11,7 +11,7 @@ import { activateDendrites } from "@/lib/dendritic-engine";
 type Lang = "zh" | "en";
 type RelationshipType = "romantic" | "business" | "general";
 
-const VERSION = "2026.08.2";
+const VERSION = "2026.08.3-editorial-flow";
 
 type ProtocolCopy = {
   id: string;

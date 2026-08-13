@@ -56,9 +56,22 @@ for (const relationshipType of Object.keys(expected)) {
   const sections = first.split(/===\s*(?:\d+|SECTION)\s*===/).map((part) => part.trim()).filter(Boolean);
   if (first !== second) throw new Error(`${relationshipType}: output is not deterministic`);
   if (sections.length !== 11) throw new Error(`${relationshipType}: expected 11 chapters, received ${sections.length}`);
+  const legacyHeadings = [
+    "Structural evidence:", "Mechanism:", "Reality check:",
+    "Shadow mechanism:", "Counter-check:", "Action protocol:",
+  ];
+  for (const heading of legacyHeadings) {
+    if (first.includes(heading)) throw new Error(`${relationshipType}: diagnostic heading leaked into editorial report: ${heading}`);
+  }
+  const paragraphs = first
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.replace(/===\d+===/g, "").replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+  const uniqueRatio = new Set(paragraphs).size / Math.max(1, paragraphs.length);
+  if (uniqueRatio < 0.98) throw new Error(`${relationshipType}: paragraph uniqueness below editorial threshold (${uniqueRatio.toFixed(3)})`);
   for (const phrase of expected[relationshipType]) {
     if (!first.includes(phrase)) throw new Error(`${relationshipType}: missing protocol phrase ${phrase}`);
   }
-  if (first.length < 9000) throw new Error(`${relationshipType}: report depth below threshold (${first.length})`);
-  console.log(`PASS relationship sample: ${relationshipType}, 11 chapters, ${first.length} characters`);
+  if (first.length < 6500) throw new Error(`${relationshipType}: report depth below threshold (${first.length})`);
+  console.log(`PASS relationship sample: ${relationshipType}, 11 chapters, ${first.length} characters, ${(uniqueRatio * 100).toFixed(1)}% unique paragraphs`);
 }

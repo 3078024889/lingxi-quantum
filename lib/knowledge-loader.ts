@@ -293,6 +293,7 @@ export function generateStaticRelationshipReport(input: RelationshipReportInput)
     shared, shared, emotion, valueDim, communication, gap,
     growth, gap, shared, growth, gap,
   ];
+  const seenEditorialParagraphs = new Set<string>();
   const enriched = chapters.map((chapter, index) => {
     const dim = chapterDims[index];
     const cell = CELLS[dim];
@@ -328,12 +329,24 @@ export function generateStaticRelationshipReport(input: RelationshipReportInput)
       chapter: chapterId,
       slots,
       activated,
+      presentation: "editorial",
+      editorialIndex: index,
       evidence: [
         { key: dim + ".a", label: nameA + " " + dimLabel(dim, lang), value: a[dim], source: "comparison" },
         { key: dim + ".b", label: nameB + " " + dimLabel(dim, lang), value: b[dim], source: "comparison" },
       ],
     });
-    return composed.text;
+    // A protocol may activate in several chapters, but a paid archive should not
+    // print the same paragraph twice. Keep the first, best contextual occurrence.
+    return composed.text
+      .split(/\n\s*\n/)
+      .filter((paragraph) => {
+        const key = paragraph.replace(/\s+/g, " ").trim();
+        if (!key || seenEditorialParagraphs.has(key)) return false;
+        seenEditorialParagraphs.add(key);
+        return true;
+      })
+      .join("\n\n");
   });
 
   return enriched.map((chapter, index) => "===" + String(index + 1).padStart(2, "0") + "===" + String.fromCharCode(10) + chapter).join(String.fromCharCode(10));

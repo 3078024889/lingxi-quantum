@@ -20,9 +20,9 @@ const SECTION_TITLES = [
   { titleZh: "④ 今日关系潮", titleEn: "④ Today's Connection Tide" },
   { titleZh: "⑤ 今日价值流动潮", titleEn: "⑤ Today's Value Flow Tide" },
   { titleZh: "⑥ 今日内在潮汐", titleEn: "⑥ Today's Inner Tide" },
-  { titleZh: "⑦ 未来7日潮汐趋势", titleEn: "⑦ The Next 7 Days" },
-  { titleZh: "⑧ 未来30日潮汐趋势", titleEn: "⑧ The Next 30 Days" },
-  { titleZh: "⑨ 未来90日能量周期", titleEn: "⑨ The Next 90 Days" },
+  { titleZh: "⑦ 未来7日观察窗口", titleEn: "⑦ 7-Day Observation Window" },
+  { titleZh: "⑧ 未来30日调整窗口", titleEn: "⑧ 30-Day Adjustment Window" },
+  { titleZh: "⑨ 未来90日节律窗口", titleEn: "⑨ 90-Day Rhythm Window" },
   { titleZh: "⑩ 灵犀场今日连接", titleEn: "⑩ Today's Practice" },
   { titleZh: "⑪ 今日运势潮汐总结", titleEn: "⑪ Tide Summary" },
 ];

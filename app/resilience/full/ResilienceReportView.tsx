@@ -12,7 +12,7 @@ import PortalSpinner from "@/components/PortalSpinner";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 
 const SECTION_TITLES = [
-  { titleZh: "◆ 你的五项结构", titleEn: "◆ Your Five Dimensions" },
+  { titleZh: "◆ 你的恢复链 · 五项结构", titleEn: "◆ Your Recovery Chain · Five Dimensions" },
   { titleZh: "① 生命韧性源点", titleEn: "① Where Your Resilience Begins" },
   { titleZh: "② 压力恢复能力", titleEn: "② Stress Recovery" },
   { titleZh: "③ 变化适应能力", titleEn: "③ Adaptability to Change" },

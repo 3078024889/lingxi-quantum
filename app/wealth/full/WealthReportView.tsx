@@ -28,7 +28,7 @@ const SECTION_TITLES = [
   { titleZh: "⑧ 合作与共创潜力", titleEn: "⑧ Collaboration Potential" },
   { titleZh: "⑨ 个人价值品牌", titleEn: "⑨ Personal Value Brand" },
   { titleZh: "⑩ 财富进化路径", titleEn: "⑩ Wealth Evolution Path" },
-  { titleZh: "⑪ 财富创造总结", titleEn: "⑪ Wealth Creation Summary" },
+  { titleZh: "⑪ 财富创造闭环", titleEn: "⑪ Your Wealth Creation Loop" },
 ];
 
 export default function WealthReportView({ id }: { id: string }) {

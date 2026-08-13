@@ -68,6 +68,10 @@ const exporter = readFileSync(resolve(root, "lib/pdf-export.ts"), "utf8");
 if (!exporter.includes("'Noto Sans SC'")) failures.push("pdf-export: Noto Sans SC body font is missing");
 if (!exporter.includes("stage.remove()")) failures.push("pdf-export: failed export cleanup is missing");
 if (!exporter.includes("preloadPdfAssets")) failures.push("pdf-export: publication artwork preload is missing");
+if (!exporter.includes("scale: 2")) failures.push("pdf-export: A4 raster resolution is below the resilience publication baseline");
+if (!exporter.includes("flowPanelFits")) failures.push("pdf-export: cross-chapter publication flow is missing");
+if (!exporter.includes("Math.min(2, units.length - offset)")) failures.push("pdf-export: orphan heading protection is missing");
+if (!exporter.includes('const placement = "left:64px;right:64px"')) failures.push("pdf-export: centred A4 reading grid is missing");
 if (!css.includes("--lx-header-height")) failures.push("app/globals.css: report header safe offset is missing");
 
 const reportRoutes = [
