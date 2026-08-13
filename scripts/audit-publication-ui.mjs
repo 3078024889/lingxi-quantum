@@ -61,8 +61,9 @@ const css = readFileSync(resolve(root, "app/globals.css"), "utf8");
 for (const token of [".lx-publication-page", ".lx-report-glass-readable", ".lx-report-chart text", ".lx-publication-card-page", "--lx-publication-serif", "--lx-publication-sans", ".lx-publication-copy"]) {
   if (!css.includes(token)) failures.push(`app/globals.css: missing ${token}`);
 }
-if (!css.includes('"Noto Sans SC"')) failures.push("app/globals.css: Noto Sans SC report body is missing");
-if (!css.includes("backdrop-filter: blur(2px)")) failures.push("app/globals.css: report glass exceeds the 2px blur limit");
+for (const token of ["PingFang SC", "HarmonyOS Sans SC", "--report-title: #292638", "--report-body: #454151", ".lx-report-main", "backdrop-filter: none", ".lx-page-layout-left", ".lx-page-layout-right"]) {
+  if (!css.includes(token)) failures.push(`app/globals.css: missing publication token ${token}`);
+}
 const exporter = readFileSync(resolve(root, "lib/pdf-export.ts"), "utf8");
 if (!exporter.includes("'Noto Sans SC'")) failures.push("pdf-export: Noto Sans SC body font is missing");
 if (!exporter.includes("stage.remove()")) failures.push("pdf-export: failed export cleanup is missing");
@@ -95,7 +96,8 @@ if (failures.length > 0) {
 }
 console.log("PASS publication width: 9 views / 10 products use the 896px system");
 console.log("PASS artwork: life-map, relationship, romance, wealth and daily pages cycle original assets");
-console.log("PASS readability: all report families use the Noto Sans reading body, Noto Serif headings and 2px Aurora glass system");
+console.log("PASS readability: all report families use modern Sans body/section type and blur-free mineral-paper veils");
+console.log("PASS safe area: all full-report routes use the measured navigation offset");
 console.log("PASS card pagination: Life Map, Life Mirror and Life Oracle cards own full web and PDF pages");
 console.log("PASS compatibility: mirror and legacy tarot report routes share the same publication system");
 console.log("PASS language: all complete-report routes select Chinese or English report caches explicitly");

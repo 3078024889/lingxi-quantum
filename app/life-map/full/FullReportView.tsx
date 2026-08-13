@@ -362,7 +362,7 @@ export default function FullReportView({ id }: { id: string }) {
             en="No need to download it right now — this report stays saved under Field Entrance, and you can come back to it anytime."
           />
         </p>
-        <div ref={reportRef} className={printMode ? "lm2-print-mode lx-report-tone-light px-1 py-4" : "lx-report-tone-light px-1 py-4"}>
+        <div ref={reportRef} className={printMode ? "lm2-print-mode lx-report-tone-light lx-theme-lifemap px-1 py-4" : "lx-report-tone-light lx-theme-lifemap px-1 py-4"}>
         <div>
           {/* v227：封面图本身已经带了"LINGXI FIELD / 生命图谱 / Life Map"
              这些标题文字和网址，不用在HTML里重复画一遍标题——这里只叠加
@@ -480,10 +480,11 @@ export default function FullReportView({ id }: { id: string }) {
             // 做的，图表现在会被单独截一张图，不会再跟着文字一起被从
             // 中间切开。
             const bgImage = `/images/lifemap/page-${(i % 11) + 1}.png`;
+            const hasFigure = (i === 1 && !!facts) || (i === 2 && !!facts?.ziwei) || (i === 5 && !!facts) || (i === 6 && !!freqScores) || (i === 12 && numberEnergy.length > 0);
             return (
-              <div
-                key={i}
-                className="lx-publication-page relative flex items-center overflow-hidden rounded-sm p-4 sm:p-8"
+              <Fragment key={i}>
+              <section
+                className={`lx-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative flex items-center overflow-hidden rounded-sm p-4 sm:p-8`}
                 style={{
                   backgroundImage: `url(${bgImage})`,
                   backgroundSize: "cover",
@@ -501,15 +502,24 @@ export default function FullReportView({ id }: { id: string }) {
                   <div className="lx-publication-copy mt-6 whitespace-pre-line text-[#423753]">
                     {stripMarkdownArtifacts(content)}
                   </div>
-                  <div ref={(el) => { figureRefs.current[i] = el; }}>
+                </div>
+              </section>
+              {hasFigure && (
+                <section
+                  className={`lx-publication-page lx-report-page--chart lx-page-layout-${["right", "center", "left"][i % 3]} relative flex items-center overflow-hidden rounded-sm p-4 sm:p-8`}
+                  style={{ backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center" }}
+                >
+                  <div className="lx-report-glass lx-report-glass-readable px-6 py-8 sm:px-10 sm:py-12" ref={(el) => { figureRefs.current[i] = el; }}>
+                    <p className="lx-report-chart-title">{langEn ? "DATA PORTRAIT" : "数据肖像"}</p>
                     {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
                     {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
                     {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
                     {i === 6 && freqScores && <FrequencyChart scores={freqScores} />}
                     {i === 12 && numberEnergy.length > 0 && <NumberEnergyChart items={numberEnergy} />}
                   </div>
-                </div>
-              </div>
+                </section>
+              )}
+              </Fragment>
             );
           })}
         </div>
@@ -582,7 +592,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
   const colors = ["#F0C868", "#8EDBD2", "#D8B8FF", "#FF9FD6"];
   return (
     <div className="lx-report-chart mt-8 flex flex-col items-center gap-7">
-      <svg viewBox="0 0 260 260" className="w-56 shrink-0">
+      <svg viewBox="-42 -42 344 344" className="w-[min(88vw,460px)] max-w-full shrink-0 overflow-visible">
         <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--report-chart-grid)" strokeWidth="1" />
         <circle cx={cx} cy={cy} r={r - 20} fill="none" stroke="var(--report-chart-grid)" strokeWidth="1" />
         {hd.personality.map((g, i) => {
@@ -601,10 +611,10 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
           );
         })}
         <circle cx={cx} cy={cy} r="34" fill="rgba(240,200,104,0.12)" stroke="#F0C868" strokeWidth="1" />
-        <text x={cx} y={cy - 4} textAnchor="middle" fontSize="11" fill="#F0C868" fontFamily="serif">{hd.sunConsciousGate}</text>
-        <text x={cx} y={cy + 12} textAnchor="middle" fontSize="8" fill="var(--report-chart-text)">门 {hd.sunUnconsciousGate}</text>
+        <text x={cx} y={cy - 5} textAnchor="middle" fontSize="16" fontWeight="500" fill="#766A9C">{hd.sunConsciousGate}</text>
+        <text x={cx} y={cy + 15} textAnchor="middle" fontSize="12.5" fill="var(--report-chart-text)">{langEn ? "Gate" : "门"} {hd.sunUnconsciousGate}</text>
       </svg>
-      <div className="grid w-full grid-cols-2 gap-x-5 gap-y-2 text-sm text-lm2-text-dim sm:grid-cols-3">
+      <div className="grid w-full grid-cols-2 gap-x-5 gap-y-2 text-[13px] text-lm2-text-dim sm:grid-cols-3">
         {hd.personality.map((g) => (
           <span key={g.key}>{langEn ? g.en : g.zh} — {langEn ? "Gate" : "门"} {g.gate}.{g.line}</span>
         ))}
@@ -640,7 +650,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
     }).join(" ")
   );
   return (
-    <div className="lx-report-chart mt-5 lx-report-glass p-5 backdrop-blur-xl">
+    <div className="lx-report-chart mt-5 p-5">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="命局五行分布" en="Element Balance" /></p>
       <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
         <svg viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`} className="h-36 w-36 shrink-0">
@@ -697,7 +707,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
     { label: "内外对齐感", en: "Alignment", v: scores.alignment, color: "#FFCB61" },
   ];
   return (
-    <div className="lx-report-chart mt-5 grid grid-cols-3 gap-4 lx-report-glass p-5 backdrop-blur-xl">
+    <div className="lx-report-chart mt-5 grid grid-cols-3 gap-4 p-5">
       {items.map((it, idx) => {
         const pct = (it.v / 5) * 100;
         const r = 26, c = 2 * Math.PI * r;
@@ -743,7 +753,7 @@ function ZiweiGrid({
   const byBranch = new Map(palaces.map((p) => [p.earthlyBranch, p]));
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
   return (
-    <div className="lx-report-chart mt-5 lx-report-glass p-5 backdrop-blur-xl">
+    <div className="lx-report-chart mt-5 p-5">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="紫微十二宫" en="The Twelve Ziwei Palaces" /></p>
       <div className="mt-4 grid grid-cols-4 gap-1.5">
         {ZIWEI_GRID_BRANCHES.flat().map((branch, i) => {
@@ -801,7 +811,7 @@ function DaYunTimeline({ startAge }: { startAge: number | null }) {
   const periods = Array.from({ length: 5 }).map((_, i) => start + i * 10);
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
   return (
-    <div className="lx-report-chart mt-5 lx-report-glass p-5 backdrop-blur-xl">
+    <div className="lx-report-chart mt-5 p-5">
       <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="大运时间轴" en="Major Luck Cycle Timeline" /></p>
       <div className="relative mt-6 pb-2">
         <div className="absolute left-0 right-0 top-3 h-0.5 bg-gradient-to-r from-lm2-rose via-lm2-amber via-lm2-mint to-lm2-violet opacity-40" />

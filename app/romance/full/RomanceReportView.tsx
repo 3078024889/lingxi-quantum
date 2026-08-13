@@ -180,7 +180,7 @@ export default function RomanceReportView({ id }: { id: string }) {
         </button>
       </div>
 
-      <div ref={reportRef} className="lx-report-tone-light mt-4">
+      <div ref={reportRef} className="lx-report-tone-light lx-theme-romance mt-4">
         <div
           className="relative overflow-hidden rounded-sm"
           style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
@@ -203,7 +203,7 @@ export default function RomanceReportView({ id }: { id: string }) {
           return (
             <section
               key={i}
-              className="lx-publication-page relative mt-6 flex items-center justify-center overflow-hidden rounded-sm"
+              className={`lx-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative mt-6 flex items-center overflow-hidden rounded-sm`}
               style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
               <div className="lx-report-glass lx-report-glass-readable my-10 px-8 py-10 sm:px-10 sm:py-12">

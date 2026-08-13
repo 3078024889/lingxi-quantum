@@ -310,7 +310,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
 
       <div
         ref={reportRef}
-        className={printMode ? "rel-print-mode lx-report-tone-light mt-8 px-1 py-4" : "lx-report-tone-light mt-8 px-1 py-4"}
+        className={`${printMode ? "rel-print-mode " : ""}lx-report-tone-light lx-theme-${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"} mt-8 px-1 py-4`}
         style={{
           backgroundImage: `url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png)`,
           backgroundSize: "cover", backgroundPosition: "top center", backgroundAttachment: "local",
@@ -353,11 +353,12 @@ export default function RelationshipReportView({ id }: { id: string }) {
                 <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="共鸣点 · 共享的驱动力" en="Resonance · Shared Drives" /></p>
                 <div className="mt-3 space-y-2">
                   {resonance.resonant.map((r, i) => (
-                    <div key={i} className="flex items-center gap-3 text-sm">
-                      <span className="w-28 shrink-0 text-bone-dim">{t(r.labelZh, r.labelEn)}</span>
-                      <div className="flex h-2 flex-1 gap-0.5 overflow-hidden rounded-full bg-white/5">
-                        <div className="h-full rounded-l-full bg-lattice" style={{ width: `${r.a}%` }} />
-                        <div className="h-full rounded-r-full bg-amber" style={{ width: `${r.b}%` }} />
+                    <div key={i} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 text-[13px]">
+                      <span className="text-bone-dim">{t(r.labelZh, r.labelEn)}</span>
+                      <span className="tabular-nums text-bone-soft">{r.a} / {r.b}</span>
+                      <div className="col-span-2 flex h-[5px] overflow-hidden rounded-[2px] bg-[rgba(60,55,70,.06)]">
+                        <div className="h-full bg-[#7789A5]" style={{ width: `${r.a}%` }} />
+                        <div className="h-full bg-[#A46F84]" style={{ width: `${r.b}%` }} />
                       </div>
                     </div>
                   ))}
@@ -397,7 +398,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           return (
             <div
               key={i}
-              className="lx-publication-page relative mt-6 flex items-center overflow-hidden rounded-sm p-4 sm:p-8"
+              className={`lx-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative mt-6 flex items-center overflow-hidden rounded-sm p-4 sm:p-8`}
               style={{
                 backgroundImage: `url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
                 backgroundSize: "cover", backgroundPosition: "center",
@@ -448,7 +449,7 @@ const RADAR_DIMS: LifeVectorDim[] = [
 ];
 
 function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: LifeVector; nameA: string; nameB: string; langEn: boolean }) {
-  const SIZE = 220, CENTER = 110, MAX_R = 82;
+  const SIZE = 500, CENTER = 250, MAX_R = 164;
   const angleFor = (i: number) => -Math.PI / 2 + (i * 2 * Math.PI) / RADAR_DIMS.length;
   const pointsFor = (v: LifeVector) =>
     RADAR_DIMS.map((dim, i) => {
@@ -465,38 +466,38 @@ function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: 
   const labelPoints = RADAR_DIMS.map((dim, i) => {
     const angle = angleFor(i);
     return {
-      x: CENTER + (MAX_R + 20) * Math.cos(angle),
-      y: CENTER + (MAX_R + 20) * Math.sin(angle),
+      x: CENTER + (MAX_R + 52) * Math.cos(angle),
+      y: CENTER + (MAX_R + 52) * Math.sin(angle),
       label: langEn ? DIM_LABEL[dim].en : DIM_LABEL[dim].zh,
     };
   });
 
   return (
-    <div className="lx-report-glass p-5">
-      <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="生命向量对比" en="Life Vector Comparison" /></p>
-      <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-        <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="aspect-square h-auto w-full max-w-72 shrink-0 sm:max-w-80">
+    <div className="lx-report-chart lx-report-page--chart p-5">
+      <p className="lx-report-chart-title"><Bi zh="生命向量对比" en="Life Vector Comparison" /></p>
+      <div className="mt-4 flex flex-col items-center">
+        <svg viewBox={`-42 -36 ${SIZE + 84} ${SIZE + 76}`} className="aspect-square h-auto w-full max-w-[500px] overflow-visible">
           {gridRings.map((pts, i) => (
-            <polygon key={i} points={pts} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+            <polygon key={i} points={pts} fill="none" stroke="rgba(65,60,80,.12)" strokeWidth="1" />
           ))}
-          <polygon points={pointsFor(vA)} fill="rgba(140,210,255,0.22)" stroke="#8CD2FF" strokeWidth="1.5" />
-          <polygon points={pointsFor(vB)} fill="rgba(232,183,101,0.20)" stroke="#E8B765" strokeWidth="1.5" />
+          <polygon points={pointsFor(vA)} fill="rgba(119,137,165,.09)" stroke="#7789A5" strokeWidth="1.7" />
+          <polygon points={pointsFor(vB)} fill="rgba(164,111,132,.09)" stroke="#A46F84" strokeWidth="1.7" />
           {labelPoints.map((p, i) => (
-            <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="9.5" fontWeight="700" fill="var(--report-chart-text)">
+            <text key={i} x={p.x} y={p.y} textAnchor="middle" dominantBaseline="middle" fontSize="13" fontWeight="500" fill="#454151">
               {p.label}
             </text>
           ))}
         </svg>
-        <div className="space-y-2 text-xs">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-[13px]">
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#8CD2FF" }} />
+            <span className="h-2 w-5 rounded-[2px]" style={{ background: "#7789A5" }} />
             <span className="text-bone-dim">{nameA}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#E8B765" }} />
+            <span className="h-2 w-5 rounded-[2px]" style={{ background: "#A46F84" }} />
             <span className="text-bone-dim">{nameB}</span>
           </div>
-          <p className="mt-3 max-w-[12rem] text-xs leading-5 text-bone-soft">
+          <p className="w-full max-w-[42em] text-center text-xs leading-5 text-bone-soft">
             <Bi
               zh="两个形状重叠的地方，是两人共享的驱动力；差得远的地方，往往就是下方文字里写到的互补或摩擦点。"
               en="Where the two shapes overlap is shared drive; where they differ most is usually the complementary or friction point discussed below."

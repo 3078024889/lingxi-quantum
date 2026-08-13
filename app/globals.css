@@ -46,8 +46,7 @@ body {
    核心逻辑：将 blur 降至 6px，彻底解决网页端发白、发厚、模糊底图的问题
    ===================================================================== */
 
-.lx-glass,
-.lx-report-glass {
+.lx-glass {
   position: relative;
   color: var(--report-text, #29243b);
   background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(235,250,248,.09), rgba(229,218,255,.11)) !important;
@@ -59,30 +58,41 @@ body {
   overflow: hidden;
 }
 
+.lx-report-glass {
+  position: relative;
+  color: var(--report-body, #454151);
+  background: linear-gradient(135deg, rgba(252,250,247,.64), rgba(248,246,250,.48)) !important;
+  border: 1px solid rgba(255,255,255,.28) !important;
+  border-radius: 3px !important;
+  box-shadow: 0 10px 40px rgba(35,30,55,.035) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* Full reports sit below the measured fixed navigation, never underneath it. */
-main:has(.lx-report-tone-light),
-main:has(.lx-report-tone-dark) {
+.lx-report-main {
   padding-top: calc(var(--lx-header-height) + 24px) !important;
 }
 
 @media print {
-  main:has(.lx-report-tone-light), main:has(.lx-report-tone-dark) { padding-top: 0 !important; }
+  .lx-report-main { padding-top: 0 !important; }
 }
 
 /* Report artwork is measured offline. Runtime image sampling would be slower and
    less reliable across browsers, so every publication page opts into a tone. */
 .lx-report-tone-light {
-  --report-text: #403b50; --report-heading: #2e2942; --report-muted: #686176;
-  --report-accent: #7968ae; --report-chart-text: #403b50; --report-chart-grid: rgba(64,59,80,.13);
+  --report-title: #292638; --report-body: #454151; --report-secondary: #696473; --report-caption: #7a7484;
+  --report-text: var(--report-body); --report-heading: var(--report-title); --report-muted: var(--report-secondary);
+  --report-accent: #766a9c; --report-secondary-accent: #b79a63; --report-chart-text: #454151; --report-chart-grid: rgba(65,60,80,.12);
 }
 .lx-report-tone-dark {
   --report-text: #f7f3ff; --report-heading: #fff; --report-muted: #d9dded;
   --report-accent: #9cf3df; --report-chart-text: #f8f4ff; --report-chart-grid: rgba(235,242,255,.28);
 }
-.lx-report-tone-light .lx-report-glass { background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(250,252,255,.12), rgba(236,250,246,.10)) !important; }
+.lx-report-tone-light .lx-report-glass { background: linear-gradient(135deg, rgba(252,250,247,.64), rgba(248,246,250,.48)) !important; }
 .lx-report-tone-dark .lx-report-glass { background: linear-gradient(135deg, rgba(7,17,35,.20), rgba(25,31,63,.11), rgba(25,70,72,.10)) !important; border-color: rgba(222,239,255,.38) !important; }
 .lx-report-tone-light .lx-report-glass, .lx-report-tone-light .lx-report-glass p, .lx-report-tone-light .lx-report-glass li, .lx-report-tone-light .lx-report-glass span {
-  color: var(--report-text) !important; font-weight: 450; text-shadow: 0 1px 1px rgba(255,255,255,.92), 0 0 8px rgba(255,255,255,.55);
+  color: var(--report-body) !important; font-weight: 400; text-shadow: none;
 }
 .lx-report-tone-dark .lx-report-glass, .lx-report-tone-dark .lx-report-glass p, .lx-report-tone-dark .lx-report-glass li, .lx-report-tone-dark .lx-report-glass span {
   color: var(--report-text) !important; font-weight: 550; text-shadow: 0 1px 2px rgba(3,8,22,.88), 0 0 8px rgba(3,8,22,.48);
@@ -110,11 +120,22 @@ main:has(.lx-report-tone-dark) {
 }
 .lx-report-glass-readable {
   background: linear-gradient(135deg, rgba(252,250,247,.64), rgba(248,246,250,.48)) !important;
-  backdrop-filter: blur(.6px) saturate(1.02) !important;
-  -webkit-backdrop-filter: blur(.6px) saturate(1.02) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   border-color: rgba(255,255,255,.28) !important;
   border-radius: 3px !important;
   box-shadow: 0 10px 40px rgba(35,30,55,.035), inset 0 1px 0 rgba(255,255,255,.34) !important;
+}
+.lx-report-glass-readable::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 0, rgba(255,255,255,.10) 18px, rgba(255,255,255,.10) calc(100% - 18px), transparent 100%);
+}
+.lx-report-glass-readable > * { position: relative; z-index: 1; }
+.lx-report-body-strong {
+  background: linear-gradient(135deg, rgba(252,250,247,.72), rgba(248,246,250,.58)) !important;
 }
 .lx-report-glass-airy {
   background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(250,252,255,.13), rgba(237,247,245,.10)) !important;
@@ -153,19 +174,29 @@ main:has(.lx-report-tone-dark) {
   text-shadow: 0 1px 1px rgba(255,255,255,.95), 0 0 7px rgba(255,255,255,.65) !important;
 }
 .lx-publication-page > .lx-report-glass {
-  width: calc(100% - clamp(2rem, 9vw, 8rem));
-  max-width: 48rem;
+  width: calc(100% - clamp(1.5rem, 9vw, 8rem));
+  max-width: 50rem;
   margin-inline: auto;
 }
+.lx-page-layout-left > .lx-report-glass { margin-left: clamp(.75rem, 4vw, 3rem); margin-right: auto; }
+.lx-page-layout-right > .lx-report-glass { margin-left: auto; margin-right: clamp(.75rem, 4vw, 3rem); }
+.lx-theme-lifemap { --report-accent:#766a9c; --report-secondary-accent:#b79a63; }
+.lx-theme-resilience { --report-accent:#557f79; --report-secondary-accent:#77a5a0; }
+.lx-theme-romantic { --report-accent:#a46f84; --report-secondary-accent:#7789a5; }
+.lx-theme-business { --report-accent:#a98754; --report-secondary-accent:#668a83; }
+.lx-theme-general { --report-accent:#71818e; --report-secondary-accent:#7b8072; }
+.lx-theme-romance { --report-accent:#ae748a; --report-secondary-accent:#8d789e; }
+.lx-theme-wealth { --report-accent:#a6834e; --report-secondary-accent:#6d8c8d; }
+.lx-theme-daily { --report-accent:#66899c; --report-secondary-accent:#81769a; }
+.lx-theme-qian { --report-accent:#796b8b; --report-secondary-accent:#a28a61; }
+.lx-theme-mirror { --report-accent:#686b97; --report-secondary-accent:#8574a0; }
 .lx-report-tone-light .lx-report-chart text,
 .lx-report-tone-light .lx-report-chart-label {
   fill: #312a43 !important;
   color: #312a43 !important;
-  font-weight: 700 !important;
-  paint-order: stroke fill;
-  stroke: rgba(255,255,255,.82);
-  stroke-width: 2px;
-  stroke-linejoin: round;
+  font-weight: 500 !important;
+  paint-order: normal;
+  stroke: none;
 }
 .lx-report-tone-light .lx-report-chart line,
 .lx-report-tone-light .lx-report-chart path {
@@ -178,41 +209,41 @@ main:has(.lx-report-tone-dark) {
 .lx-report-tone-light,
 .lx-report-tone-dark {
   --lx-publication-serif: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
-  --lx-publication-sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "Inter", sans-serif;
+  --lx-publication-sans: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Noto Sans SC", "Inter", sans-serif;
 }
 .lx-report-tone-light .whitespace-pre-line,
 .lx-report-tone-dark .whitespace-pre-line {
   font-family: var(--lx-publication-sans) !important;
-  font-size: clamp(.96875rem, 1.55vw, 1.0625rem) !important;
-  line-height: 1.82 !important;
-  letter-spacing: 0.018em;
+  font-size: 1rem !important;
+  line-height: 1.88 !important;
+  letter-spacing: 0.012em;
 }
 .lx-publication-copy {
   font-family: var(--lx-publication-sans) !important;
-  font-size: clamp(.96875rem, 1.55vw, 1.0625rem) !important;
+  font-size: 1rem !important;
   font-weight: 400 !important;
   line-height: 1.88 !important;
   letter-spacing: 0.012em;
 }
 .lx-publication-copy p { margin-bottom: 1.25em; }
-.lx-publication-page h1,
 .lx-publication-page h2,
 .lx-publication-page h3,
-.lx-report-glass-readable h1,
 .lx-report-glass-readable h2,
 .lx-report-glass-readable h3 {
-  font-family: var(--lx-publication-serif) !important;
+  font-family: var(--lx-publication-sans) !important;
   font-weight: 500 !important;
 }
+.lx-publication-page h1,
+.lx-publication-cover h2 { font-family: var(--lx-publication-serif) !important; font-weight: 500 !important; }
 .lx-publication-page h1 {
   font-size: clamp(2rem, 4vw, 2.45rem) !important;
   line-height: 1.2 !important;
   letter-spacing: .075em !important;
 }
 .lx-publication-page h2 {
-  font-size: clamp(1.7rem, 3vw, 2.05rem) !important;
-  line-height: 1.32 !important;
-  letter-spacing: .055em !important;
+  font-size: clamp(1.45rem, 2.5vw, 1.8rem) !important;
+  line-height: 1.4 !important;
+  letter-spacing: .045em !important;
 }
 .lx-publication-page h3 {
   font-family: var(--lx-publication-sans) !important;
@@ -232,10 +263,26 @@ main:has(.lx-report-tone-dark) {
 .lx-report-chart {
   margin-top: 2rem !important;
   padding: clamp(1.25rem, 3vw, 2rem) !important;
-  border: 1px solid color-mix(in srgb, var(--report-heading, #352c4d) 18%, transparent) !important;
-  background: color-mix(in srgb, #fff 42%, transparent) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.68), 0 14px 32px rgba(31,40,68,.10) !important;
-  overflow: hidden;
+  border: 1px solid rgba(50,45,70,.10) !important;
+  background: rgba(255,255,255,.24) !important;
+  box-shadow: none !important;
+  overflow: visible;
+}
+.lx-report-page--chart { align-items: flex-start; }
+.lx-report-page--chart > .lx-report-glass { max-width: 51.25rem; }
+.lx-report-chart-title { color: var(--report-accent) !important; font-size: .90625rem; font-weight: 600; letter-spacing: .04em; }
+.lx-insight { border-left: 1px solid var(--report-accent); padding-left: 1rem; break-inside: avoid; }
+.lx-publication-page h2, .lx-publication-page h3, .lx-report-chart, .lx-insight, .lx-publication-page figure { break-inside: avoid; }
+.lx-publication-page h2, .lx-publication-page h3 { break-after: avoid; }
+.lx-publication-copy { max-width: 42em; }
+
+@media (max-width: 640px) {
+  .lx-report-main { padding-top: calc(var(--lx-header-height) + 24px) !important; }
+  .lx-publication-page { min-height: calc((100vw - 24px) * 1.414); padding-inline: 0 !important; }
+  .lx-publication-page > .lx-report-glass { width: calc(100% - 24px); margin-inline: 12px; padding: 24px 20px 28px !important; }
+  .lx-publication-copy, .lx-report-tone-light .whitespace-pre-line, .lx-report-tone-dark .whitespace-pre-line { font-size: .96875rem !important; line-height: 1.9 !important; }
+  .lx-report-chart { padding-inline: 18px !important; }
+  .lx-report-chart svg { width: 100%; overflow: visible; }
 }
 .lx-report-chart svg { overflow: visible; }
 .lx-report-chart text { font-family: var(--lx-publication-sans) !important; }

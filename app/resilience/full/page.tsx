@@ -19,7 +19,7 @@ export default function ResilienceFullPage({
   return (
     <>
       <Nav />
-      <main className="min-h-screen pt-24">
+    <main className="lx-report-main min-h-screen">
         {!id ? (
           <div className="mx-auto max-w-md px-6 py-24 text-center">
             <p className="font-display text-2xl text-bone">

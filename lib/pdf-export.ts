@@ -454,48 +454,50 @@ export type ArchiveGlassTheme = {
   gradient: string;
   /** 面板描边 */
   border: string;
+  accent: string;
+  secondary: string;
 };
 
 export const ARCHIVE_THEMES: Record<string, ArchiveGlassTheme> = {
   // 生命韧性：青绿 + 紫，v290–v299 已上线验证过的基准
   resilience: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(226,247,241,.22))",
-    border: "rgba(190,224,216,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#557F79", secondary: "#77A5A0",
   },
   // 桃花磁场：玫瑰 + 蜜金，暖一档，但不加深
   romance: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(252,234,243,.22))",
-    border: "rgba(240,211,224,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#AE748A", secondary: "#8D789E",
   },
   // 财富创造：琥珀 + 翡翠，金而不俗
   wealth: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(247,238,213,.22))",
-    border: "rgba(235,220,183,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#A6834E", secondary: "#6D8C8D",
   },
   // 今日潮汐：水青 + 晨蓝，最冷的一档，呼应"潮汐"
   daily: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(225,240,250,.22))",
-    border: "rgba(192,221,239,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#66899C", secondary: "#81769A",
   },
   // 生命灵签：檀色 + 紫，偏东方
   qian: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(245,237,229,.22))",
-    border: "rgba(232,216,204,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#796B8B", secondary: "#A28A61",
   },
   // 量子共振（原塔罗）：靛紫 + 星蓝
   tarot: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(232,231,249,.22))",
-    border: "rgba(214,211,239,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#686B97", secondary: "#8574A0",
   },
   // 关系共振：双色交织，比单产品多一层
   relationship: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(244,232,240,.22))",
-    border: "rgba(229,210,222,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#A46F84", secondary: "#7789A5",
   },
   // 生命图谱：宇宙紫
   lifemap: {
-    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(231,235,250,.22))",
-    border: "rgba(208,215,240,.52)",
+    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
+    border: "rgba(255,255,255,.28)", accent: "#766A9C", secondary: "#B79A63",
   },
 };
 
@@ -626,7 +628,7 @@ export async function exportArchivePdf(params: {
     pdf.addImage(await renderPage(pageShell(bg, SHIFTS[i % SHIFTS.length], `
       <div style="position:absolute;inset:48px 52px;display:flex;flex-direction:column;align-items:center;justify-content:center;
                   background:${theme.gradient};border:1px solid ${theme.border};border-radius:6px;padding:34px 42px;
-                  box-shadow:0 18px 56px rgba(40,36,70,.16);text-align:center;">
+                  box-shadow:0 10px 40px rgba(35,30,55,.035);text-align:center;">
         <div style="font-size:11px;letter-spacing:.32em;color:#8C7FA8;">${escapeHtml(feature.eyebrow ?? eyebrow)}</div>
         <img src="${feature.image}" style="display:block;width:420px;max-width:86%;max-height:690px;object-fit:contain;margin:22px auto 24px;border-radius:4px;border:1px solid rgba(255,255,255,.62);box-shadow:0 20px 44px rgba(28,25,53,.23);" />
         <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:24px;color:#2E2942;letter-spacing:.06em;">${escapeHtml(feature.title)}</div>
@@ -655,19 +657,22 @@ export async function exportArchivePdf(params: {
   const PANEL_BOTTOM_SAFE = 56; // 给页脚留的空间
   const MAX_PANEL_H = PX_H - PANEL_TOP - PANEL_BOTTOM_SAFE;
 
-  const panelHtml = (headline: string, title: string, bodyHtml: string, figureHtml = "") => `
-      <div id="lx-panel" style="position:absolute;left:52px;right:52px;top:${PANEL_TOP}px;
+  const panelHtml = (headline: string, title: string, bodyHtml: string, figureHtml = "", layout: "left" | "center" | "right" = "center") => {
+    const placement = layout === "left" ? "left:44px;right:104px" : layout === "right" ? "left:104px;right:44px" : "left:72px;right:72px";
+    return `
+      <div id="lx-panel" style="position:absolute;${placement};top:${PANEL_TOP}px;
                   background:${theme.gradient};border:1px solid ${theme.border};
-                  border-radius:6px;padding:42px 44px;
-                  box-shadow:0 18px 56px rgba(40,36,70,.16);">
+                  border-radius:3px;padding:44px 54px;
+                  box-shadow:0 10px 40px rgba(35,30,55,.035);">
         <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;letter-spacing:.34em;color:#686176;">${escapeHtml(headline)}</div>
         ${title
-          ? `<div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:25px;color:#2E2942;margin:16px 0 6px;letter-spacing:.06em;">${escapeHtml(title)}</div>
-             <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>`
+          ? `<div style="font-family:'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei','Noto Sans SC',sans-serif;font-size:25px;font-weight:500;color:#292638;margin:16px 0 6px;letter-spacing:.045em;">${escapeHtml(title)}</div>
+             <div style="width:52px;height:1px;background:${theme.accent};opacity:.58;margin-bottom:22px;"></div>`
           : `<div style="height:18px;"></div>`}
         ${figureHtml}
-        <div style="font-size:16.5px;line-height:1.82;color:#403B50;letter-spacing:.018em;white-space:pre-wrap;">${bodyHtml}</div>
+        <div style="max-width:42em;font-size:16px;font-weight:400;line-height:1.88;color:#454151;letter-spacing:.012em;white-space:pre-wrap;">${bodyHtml}</div>
       </div>`;
+  };
 
   /** 把面板放进舞台量一次真实高度（不截图，只测量，很快） */
   const measurePanel = (html: string): number => {
@@ -687,8 +692,8 @@ export async function exportArchivePdf(params: {
     const canvas = await html2canvas(el, { backgroundColor: null, scale: 1.55, useCORS: true });
     const data = canvas.toDataURL("image/png");
     return `
-      <div style="margin:0 0 26px;padding:14px;border-radius:4px;
-                  background:rgba(255,255,255,.28);border:1px solid rgba(200,235,225,.42);">
+      <div style="margin:0 0 26px;padding:18px;border-radius:3px;
+                  background:rgba(255,255,255,.24);border:1px solid rgba(50,45,70,.10);">
         <img src="${data}" style="display:block;width:100%;height:auto;" />
         ${caption
           ? `<div style="margin-top:10px;font-size:11px;line-height:1.7;color:#6B6285;text-align:center;">${caption}</div>`
@@ -727,24 +732,25 @@ export async function exportArchivePdf(params: {
   };
 
   // 先把所有章节铺平成"页"，这样才能先知道总页数、再画正确的页码
-  type BodyPage = { chapterIndex: number; title: string; body: string; isContinued: boolean; figureHtml: string };
+  type BodyPage = { chapterIndex: number; title: string; body: string; isContinued: boolean; figureHtml: string; chartOnly?: boolean };
   const bodyPages: BodyPage[] = [];
   for (let i = 0; i < chapters.length; i++) {
     const ch = chapters[i];
     const headline = `${eyebrow} · ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
     const figureHtml = ch.figure ? await captureFigure(ch.figure, ch.figureCaption) : "";
-    const parts = paginateChapter(headline, ch.title, ch.body, figureHtml);
+    const parts = paginateChapter(headline, ch.title, ch.body, "");
     parts.forEach((body, k) => {
       bodyPages.push({
         chapterIndex: i, title: ch.title, body,
         isContinued: k > 0,
-        figureHtml: k === 0 ? figureHtml : "",
+        figureHtml: "",
       });
     });
+    if (figureHtml) bodyPages.push({ chapterIndex: i, title: ch.title, body: ch.figureCaption ?? "", isContinued: false, figureHtml, chartOnly: true });
   }
 
   for (let p = 0; p < bodyPages.length; p++) {
-    const { chapterIndex, title, body, isContinued, figureHtml } = bodyPages[p];
+    const { chapterIndex, title, body, isContinued, figureHtml, chartOnly } = bodyPages[p];
     const bg = bodyImages[chapterIndex % bodyImages.length];
     const pos = SHIFTS[Math.floor(chapterIndex / bodyImages.length) % SHIFTS.length];
     const headline =
@@ -752,7 +758,7 @@ export async function exportArchivePdf(params: {
       (isContinued ? " · 续" : "");
     pdf.addPage();
     pdf.addImage(await renderPage(pageShell(bg, pos, `
-      ${panelHtml(headline, isContinued ? "" : title, escapeHtml(body), figureHtml)}
+      ${panelHtml(headline, isContinued ? "" : title, escapeHtml(body), figureHtml, (["center", "left", "right"] as const)[chapterIndex % 3])}
       <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
       <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${p + 1} / ${bodyPages.length}</div>`
     )), "JPEG", 0, 0, PW, PH);

@@ -41,21 +41,19 @@ export default function NatalChartWheel({
     return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
   };
 
-  // 简单避让：行星角度太接近时，径向错开显示，避免符号重叠看不清
+  // 出版避让：同一角区的节点交替进入三条轨道，避免相邻节点重叠。
   const sorted = [...points].sort((a, b) => a.longitude - b.longitude);
   const adjusted = sorted.map((p, i) => {
-    let rOffset = 0;
-    if (i > 0) {
-      const prev = sorted[i - 1];
+    const nearby = sorted.slice(0, i).filter((prev) => {
       const diff = Math.min(Math.abs(p.longitude - prev.longitude), 360 - Math.abs(p.longitude - prev.longitude));
-      if (diff < 8) rOffset = 16;
-    }
-    return { ...p, r: planetRingR - rOffset };
+      return diff < 12;
+    }).length;
+    return { ...p, r: planetRingR - (nearby % 3) * 18 };
   });
 
   return (
-    <div className="mx-auto mt-6 max-w-sm">
-      <svg viewBox="0 0 400 400" className="mx-auto w-full">
+    <div className="mx-auto mt-6 w-[min(88vw,480px)] max-w-full">
+      <svg viewBox="-42 -32 484 464" className="mx-auto w-full overflow-visible">
         <defs>
           <radialGradient id="natal-bg" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#f7f0ff" />
@@ -105,7 +103,7 @@ export default function NatalChartWheel({
         </circle>
       </svg>
 
-      <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-1.5 text-xs text-lm2-text-dim">
+      <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-2 text-[13px] text-lm2-text-dim sm:grid-cols-3">
         {points.map((p) => (
           <span key={p.nameZh} className="inline-flex items-center gap-1">
             <span style={{ color: p.color }}>{p.glyph}</span>
