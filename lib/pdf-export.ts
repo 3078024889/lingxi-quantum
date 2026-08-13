@@ -63,6 +63,15 @@ async function waitForImages(el: HTMLElement): Promise<void> {
   if (promises.length > 0) await Promise.all(promises);
 }
 
+async function preloadPdfAssets(urls: string[]): Promise<void> {
+  await Promise.all([...new Set(urls.filter(Boolean))].map((url) => new Promise<void>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error(`PDF artwork failed to load: ${url}`));
+    image.src = url;
+  })));
+}
+
 export type PdfChapterMeta = { titleZh: string; titleEn: string };
 
 // 给桃花磁场、生命韧性指数、今日运势这类"单屏即时结果"用的轻量版
@@ -530,6 +539,9 @@ export async function exportArchivePdf(params: {
   const { chapters, fileName, titleZh, titleEn, coverImage, bodyImages, endImage } = params;
   const eyebrow = params.eyebrow ?? "LINGXI FIELD";
   const theme = params.theme ?? ARCHIVE_THEMES.resilience;
+  if (!coverImage || !endImage || bodyImages.length === 0) {
+    throw new Error("PDF export is missing required publication artwork.");
+  }
   const featurePages = params.featurePages ?? [];
 
   // ⚠️ 为什么不用 jsPDF 原生文本：
@@ -551,6 +563,7 @@ export async function exportArchivePdf(params: {
   ]);
 
   await document.fonts.ready;
+  await preloadPdfAssets([coverImage, endImage, ...bodyImages, ...featurePages.flatMap((page) => [page.image, page.backgroundImage ?? ""])]);
 
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
   const PW = pdf.internal.pageSize.getWidth();

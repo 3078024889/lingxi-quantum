@@ -66,6 +66,8 @@ if (!css.includes("backdrop-filter: blur(2px)")) failures.push("app/globals.css:
 const exporter = readFileSync(resolve(root, "lib/pdf-export.ts"), "utf8");
 if (!exporter.includes("'Noto Sans SC'")) failures.push("pdf-export: Noto Sans SC body font is missing");
 if (!exporter.includes("stage.remove()")) failures.push("pdf-export: failed export cleanup is missing");
+if (!exporter.includes("preloadPdfAssets")) failures.push("pdf-export: publication artwork preload is missing");
+if (!css.includes("--lx-header-height")) failures.push("app/globals.css: report header safe offset is missing");
 
 const reportRoutes = [
   "app/api/lifemap/generate-full/route.ts",
@@ -81,6 +83,10 @@ for (const route of reportRoutes) {
   const source = readFileSync(resolve(root, route), "utf8");
   if (!source.includes('lang === "en"')) failures.push(`${route}: English report selection is missing`);
   if (!source.includes("full_report_en")) failures.push(`${route}: English report cache is missing`);
+}
+for (const view of views) {
+  const source = readFileSync(resolve(root, view), "utf8");
+  if (!source.includes("[id, langEn]")) failures.push(`${view}: report does not reload when language changes`);
 }
 
 if (failures.length > 0) {

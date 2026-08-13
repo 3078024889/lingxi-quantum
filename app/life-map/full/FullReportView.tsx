@@ -8,6 +8,7 @@ import NatalChartWheel from "../NatalChartWheel";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
 import { lifemapTypeImage } from "@/lib/lifemap-type-images";
 import ShareButton from "@/components/ShareButton";
+import { useLang } from "@/lib/useLang";
 
 type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
 type HumanDesignResult = { personality: GateActivation[]; design: GateActivation[]; sunConsciousGate: number; sunUnconsciousGate: number };
@@ -44,16 +45,7 @@ const SECTION_TITLES = [
 
 export default function FullReportView({ id }: { id: string }) {
   // 同 LifeMapFlow：首次渲染固定为 false，避免 hydration 不匹配报错，挂载后再同步真实语言。
-  const [langEn, setLangEn] = useState(false);
-  useEffect(() => {
-    setLangEn(document.documentElement.classList.contains("lang-en"));
-    const observer = new MutationObserver(() => {
-      setLangEn(document.documentElement.classList.contains("lang-en"));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-  const isEn = () => langEn;
+  const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
 
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
@@ -420,7 +412,7 @@ export default function FullReportView({ id }: { id: string }) {
         )}
         </div>
 
-        {freePreview && (
+        {!langEn && freePreview && (
           <section className="lx-publication-page lx-art-lifemap-3 relative mt-10 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10">
             <div className="lx-report-glass lx-report-glass-readable w-full px-7 py-10 sm:px-12">
             {freePreview.echoText && (
@@ -581,6 +573,7 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
 // 真实的黄道经度，摆在圆周上对应的角度，中心显示太阳门（意识/潜意识）
 // 这个人类图里权重最高的信息，不再是一串纯文字列表。
 function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
+  const langEn = useLang();
   const cx = 130, cy = 130, r = 96;
   const glyphs: Record<string, string> = {
     sun: "☉", earth: "⊕", moon: "☽", mercury: "☿", venus: "♀",
@@ -613,7 +606,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
       </svg>
       <div className="grid w-full grid-cols-2 gap-x-5 gap-y-2 text-sm text-lm2-text-dim sm:grid-cols-3">
         {hd.personality.map((g) => (
-          <span key={g.key}>{g.zh} — 门 {g.gate}.{g.line}</span>
+          <span key={g.key}>{langEn ? g.en : g.zh} — {langEn ? "Gate" : "门"} {g.gate}.{g.line}</span>
         ))}
       </div>
     </div>
@@ -621,6 +614,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
 }
 
 function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; metal: number; water: number } }) {
+  const langEn = useLang();
   const items = [
     { label: "木", en: "Wood", v: wx.wood, color: "#7FE7C4" },
     { label: "火", en: "Fire", v: wx.fire, color: "#FF8FD1" },
@@ -661,14 +655,14 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
           ))}
           {radarPoints.map((p, i) => (
             <text key={i} x={p.labelX} y={p.labelY} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="var(--report-chart-text)">
-              {items[i].label}
+              {langEn ? items[i].en : items[i].label}
             </text>
           ))}
         </svg>
         <div className="w-full flex-1 space-y-3">
         {items.map((it, idx) => (
           <div key={it.label} className="flex items-center gap-3">
-            <span className="w-10 shrink-0 font-display text-sm text-lm2-text">{it.label}</span>
+            <span className="w-10 shrink-0 font-display text-sm text-lm2-text">{langEn ? it.en : it.label}</span>
             <div className="h-3 flex-1 overflow-hidden rounded-full bg-lm2-text/10">
               <div
                 className="lm2-wx-bar h-full rounded-full"
@@ -696,6 +690,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
 
 // 频率自测图：三项分数用环形进度呈现，比纯数字更直观
 function FrequencyChart({ scores }: { scores: { energy: number; clarity: number; alignment: number } }) {
+  const langEn = useLang();
   const items = [
     { label: "能量水平", en: "Energy", v: scores.energy, color: "#FF8FD1" },
     { label: "头脑清晰度", en: "Clarity", v: scores.clarity, color: "#5FE8FF" },
@@ -722,7 +717,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
               </circle>
               <text x="32" y="37" textAnchor="middle" fontSize="16" fill="var(--report-chart-text)" fontFamily="serif">{it.v}</text>
             </svg>
-            <p className="mt-1 text-center text-xs text-lm2-text-dim">{it.label}</p>
+            <p className="mt-1 text-center text-xs text-lm2-text-dim">{langEn ? it.en : it.label}</p>
           </div>
         );
       })}
@@ -744,6 +739,7 @@ function ZiweiGrid({
 }: {
   palaces: { name: string; earthlyBranch: string; majorStars: { name: string; brightness: string }[]; isSoulPalace: boolean; isBodyPalace: boolean }[];
 }) {
+  const langEn = useLang();
   const byBranch = new Map(palaces.map((p) => [p.earthlyBranch, p]));
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
   return (
@@ -756,7 +752,7 @@ function ZiweiGrid({
             if (i === 5) {
               return (
                 <div key="center" className="col-span-2 row-span-2 flex flex-col items-center justify-center rounded-sm border border-lm2-violet/20 bg-lm2-violet/5">
-                  <span className="lm2-ziwei-glow font-display text-lg text-lm2-violet">紫微</span>
+                  <span className="lm2-ziwei-glow font-display text-lg text-lm2-violet">{langEn ? "Ziwei" : "紫微"}</span>
                   <span className="mt-1 text-[9px] text-lm2-text-dim">Ziwei Doushu</span>
                 </div>
               );
@@ -775,16 +771,16 @@ function ZiweiGrid({
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[9px] text-lm2-text-dim">{branch}</span>
+                <span className="text-[9px] text-lm2-text-dim">{langEn ? `Palace ${i + 1}` : branch}</span>
                 {(p?.isSoulPalace || p?.isBodyPalace) && (
                   <span className="text-[8px]" style={{ color }}>
                     {p?.isSoulPalace ? "命" : ""}{p?.isBodyPalace ? "身" : ""}
                   </span>
                 )}
               </div>
-              <p className="text-[11px] font-medium text-lm2-text">{p?.name ?? ""}</p>
+              <p className="text-[11px] font-medium text-lm2-text">{langEn ? "Ziwei Palace" : p?.name ?? ""}</p>
               <p className="text-[8px] leading-tight text-lm2-text-dim">
-                {p?.majorStars.map((s) => s.name).join("·") || "—"}
+                {langEn ? "Astrological markers" : p?.majorStars.map((s) => s.name).join("·") || "—"}
               </p>
             </div>
           );
@@ -800,6 +796,7 @@ function ZiweiGrid({
 
 // 大运时间轴：从起运年龄开始，横向展开几个十年周期，比一段段文字更容易一眼看懂节奏
 function DaYunTimeline({ startAge }: { startAge: number | null }) {
+  const langEn = useLang();
   const start = startAge ?? 8;
   const periods = Array.from({ length: 5 }).map((_, i) => start + i * 10);
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];

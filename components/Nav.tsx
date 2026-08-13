@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Bi from "./Bi";
@@ -36,11 +36,22 @@ const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [testsOpen, setTestsOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
   const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/mirror") || pathname?.startsWith("/qian");
 
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const updateHeight = () => document.documentElement.style.setProperty("--lx-header-height", `${header.offsetHeight}px`);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <header className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">
+    <header ref={headerRef} className="lx-nav-glass fixed inset-x-0 top-0 z-40 border-b border-amber/15 backdrop-blur-xl">
       <nav className="mx-auto max-w-6xl px-6 py-4">
         <div className="flex items-center justify-between gap-4">
           <Link

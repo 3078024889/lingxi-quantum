@@ -86,7 +86,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
       }
     };
     load();
-  }, [id]);
+  }, [id, langEn]);
 
   const unlock = () => {
     if (REVIEW_MODE) {

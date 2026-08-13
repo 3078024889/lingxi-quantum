@@ -166,7 +166,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
       }
     };
     load();
-  }, [id]);
+  }, [id, langEn]);
 
   // 跟生命图谱完整报告用的是同一套导出方式（见 app/life-map/full/
   // FullReportView.tsx 里 downloadPdf 的详细注释）：按"每个章节"单独

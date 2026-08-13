@@ -118,7 +118,7 @@ export default function QianReport({ id }: { id: string }) {
     };
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, langEn]);
 
   const unlock = () => {
     if (REVIEW_MODE) {
