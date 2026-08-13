@@ -405,7 +405,8 @@ export default function FullReportView({ id }: { id: string }) {
           )}
 
           {facts && (
-            <div className="lx-report-art-page lx-publication-page lx-report-glass lx-report-glass-readable lx-art-lifemap-2 mt-8 p-6">
+            <section className="lx-publication-page lx-art-lifemap-2 relative mt-8 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10">
+              <div className="lx-report-glass lx-report-glass-readable w-full px-7 py-10 sm:px-12">
               <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
                 <Bi zh="你的星盘" en="Your Natal Chart" />
               </p>
@@ -414,12 +415,14 @@ export default function FullReportView({ id }: { id: string }) {
               mercury={facts.mercury.longitude} venus={facts.venus.longitude} mars={facts.mars.longitude}
               jupiter={facts.jupiter.longitude} saturn={facts.saturn.longitude}
             />
-          </div>
+              </div>
+            </section>
         )}
         </div>
 
         {freePreview && (
-          <div className="lx-report-art-page lx-publication-page lx-report-glass lx-report-glass-readable lx-art-lifemap-3 mt-10 p-6 sm:p-8">
+          <section className="lx-publication-page lx-art-lifemap-3 relative mt-10 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10">
+            <div className="lx-report-glass lx-report-glass-readable w-full px-7 py-10 sm:px-12">
             {freePreview.echoText && (
               <p className="text-base leading-9 text-lm2-text">{freePreview.echoText}</p>
             )}
@@ -447,22 +450,25 @@ export default function FullReportView({ id }: { id: string }) {
                 </div>
               </div>
             )}
-          </div>
+            </div>
+          </section>
         )}
 
         {facts?.humanDesign && (
-          <div className="lx-report-art-page lx-publication-page lx-report-glass lx-report-glass-readable lx-art-lifemap-4 mt-8 p-6 sm:p-8">
+          <section className="lx-publication-page lx-art-lifemap-4 relative mt-8 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10">
+            <div className="lx-report-glass lx-report-glass-readable w-full px-7 py-10 sm:px-12">
             <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
               <Bi zh="人类图 · 门" en="Human Design · Gates" />
             </p>
-            <p className="mt-2 text-xs leading-6 text-lm2-text-dim">
+            <p className="lx-publication-copy mt-5 text-lm2-text-dim">
               <Bi
                 zh="太阳门是人类图里权重最高的单一信息（约占人格印记70%），已经用真实天文计算得出，下面列出的每一个门也是如此。完整的类型与内在权威解读，将在后续版本中加入。"
                 en="The Sun gate is the single highest-weighted piece of information in Human Design (roughly 70% of the personality imprint), and it's computed from real astronomy — as is every gate listed below. Full Type and Authority readings will arrive in a future update."
               />
             </p>
             <HumanDesignChart hd={facts.humanDesign} />
-          </div>
+            </div>
+          </section>
         )}
 
         <div className="mt-12 space-y-14">
@@ -582,7 +588,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
   };
   const colors = ["#F0C868", "#8EDBD2", "#D8B8FF", "#FF9FD6"];
   return (
-    <div className="lx-report-chart mt-5 flex flex-col items-center gap-5 lx-report-glass p-6 backdrop-blur-xl sm:flex-row sm:items-start">
+    <div className="lx-report-chart mt-8 flex flex-col items-center gap-7">
       <svg viewBox="0 0 260 260" className="w-56 shrink-0">
         <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--report-chart-grid)" strokeWidth="1" />
         <circle cx={cx} cy={cy} r={r - 20} fill="none" stroke="var(--report-chart-grid)" strokeWidth="1" />
@@ -605,7 +611,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
         <text x={cx} y={cy - 4} textAnchor="middle" fontSize="11" fill="#F0C868" fontFamily="serif">{hd.sunConsciousGate}</text>
         <text x={cx} y={cy + 12} textAnchor="middle" fontSize="8" fill="var(--report-chart-text)">门 {hd.sunUnconsciousGate}</text>
       </svg>
-      <div className="grid flex-1 grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-lm2-text-dim sm:grid-cols-3">
+      <div className="grid w-full grid-cols-2 gap-x-5 gap-y-2 text-sm text-lm2-text-dim sm:grid-cols-3">
         {hd.personality.map((g) => (
           <span key={g.key}>{g.zh} — 门 {g.gate}.{g.line}</span>
         ))}

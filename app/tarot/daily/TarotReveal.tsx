@@ -219,9 +219,9 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
         </p>
         <a
           href="/life-map"
-          className="mt-5 inline-block bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+          className="mt-6 inline-block border border-lattice/45 px-5 py-2 font-display text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
         >
-          <Bi zh="查看我的完整生命图谱 →" en="See My Full Life Map →" />
+          <Bi zh="继续探索：完整生命图谱 →" en="Continue exploring: Full Life Map →" />
         </a>
       </div>
 

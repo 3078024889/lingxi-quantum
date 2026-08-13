@@ -114,7 +114,7 @@ export default function DailyTideUnlock() {
       {!expanded ? (
         <button
           onClick={() => setExpanded(true)}
-          className="mt-4 border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
+          className="mt-5 w-full bg-lattice px-7 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep shadow-[0_12px_28px_rgba(126,232,196,.22)] transition hover:bg-amber"
         >
           <Bi zh="展开今日运势潮汐深度报告 →" en="Unfold the Deep Tide Report →" />
         </button>

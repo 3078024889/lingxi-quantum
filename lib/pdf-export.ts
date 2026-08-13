@@ -450,43 +450,43 @@ export type ArchiveGlassTheme = {
 export const ARCHIVE_THEMES: Record<string, ArchiveGlassTheme> = {
   // 生命韧性：青绿 + 紫，v290–v299 已上线验证过的基准
   resilience: {
-    gradient: "linear-gradient(135deg,rgba(80,150,180,.17),rgba(100,220,200,.09),rgba(150,120,255,.11))",
-    border: "rgba(200,235,225,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(226,247,241,.22))",
+    border: "rgba(190,224,216,.52)",
   },
   // 桃花磁场：玫瑰 + 蜜金，暖一档，但不加深
   romance: {
-    gradient: "linear-gradient(135deg,rgba(210,140,170,.16),rgba(240,190,170,.09),rgba(170,130,220,.10))",
-    border: "rgba(240,225,230,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(252,234,243,.22))",
+    border: "rgba(240,211,224,.52)",
   },
   // 财富创造：琥珀 + 翡翠，金而不俗
   wealth: {
-    gradient: "linear-gradient(135deg,rgba(200,165,105,.16),rgba(120,200,175,.09),rgba(150,130,215,.10))",
-    border: "rgba(238,230,215,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(247,238,213,.22))",
+    border: "rgba(235,220,183,.52)",
   },
   // 今日潮汐：水青 + 晨蓝，最冷的一档，呼应"潮汐"
   daily: {
-    gradient: "linear-gradient(135deg,rgba(90,165,190,.17),rgba(120,215,215,.09),rgba(140,150,230,.10))",
-    border: "rgba(205,235,238,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(225,240,250,.22))",
+    border: "rgba(192,221,239,.52)",
   },
   // 生命灵签：檀色 + 紫，偏东方
   qian: {
-    gradient: "linear-gradient(135deg,rgba(180,145,120,.16),rgba(200,180,150,.09),rgba(155,125,205,.11))",
-    border: "rgba(238,228,218,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(245,237,229,.22))",
+    border: "rgba(232,216,204,.52)",
   },
   // 量子共振（原塔罗）：靛紫 + 星蓝
   tarot: {
-    gradient: "linear-gradient(135deg,rgba(130,120,205,.17),rgba(110,180,220,.09),rgba(180,130,205,.10))",
-    border: "rgba(225,225,242,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(232,231,249,.22))",
+    border: "rgba(214,211,239,.52)",
   },
   // 关系共振：双色交织，比单产品多一层
   relationship: {
-    gradient: "linear-gradient(135deg,rgba(190,140,175,.16),rgba(110,190,195,.09),rgba(150,125,220,.11))",
-    border: "rgba(235,228,235,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(244,232,240,.22))",
+    border: "rgba(229,210,222,.52)",
   },
   // 生命图谱：宇宙紫
   lifemap: {
-    gradient: "linear-gradient(135deg,rgba(120,130,200,.17),rgba(150,190,220,.09),rgba(170,130,215,.11))",
-    border: "rgba(226,230,242,.34)",
+    gradient: "linear-gradient(135deg,rgba(255,255,255,.34),rgba(231,235,250,.22))",
+    border: "rgba(208,215,240,.52)",
   },
 };
 
@@ -564,6 +564,10 @@ export async function exportArchivePdf(params: {
     `position:fixed;left:-99999px;top:0;width:${PX_W}px;height:${PX_H}px;overflow:hidden;`;
   document.body.appendChild(stage);
 
+  // PDF 截图失败时也必须撤走舞台。否则残留的 A4 DOM 会占用内存，
+  // 让用户下一次点击下载时把一次偶发失败放大成持续失败。
+  try {
+
   const renderPage = async (html: string): Promise<string> => {
     stage.innerHTML = html;
     await waitForImages(stage);
@@ -580,7 +584,7 @@ export async function exportArchivePdf(params: {
 
   const pageShell = (bg: string, pos: string, inner: string) => `
     <div style="position:relative;width:${PX_W}px;height:${PX_H}px;overflow:hidden;
-                font-family:'Noto Serif SC','Songti SC','SimSun',serif;">
+                font-family:'Noto Sans SC','Source Han Sans SC','Microsoft YaHei',Arial,sans-serif;">
       <div style="position:absolute;inset:0;background-image:url('${bg}');
                   background-size:cover;background-position:${pos};"></div>
       ${inner}
@@ -594,8 +598,8 @@ export async function exportArchivePdf(params: {
                 background:${theme.gradient};border:1px solid ${theme.border};
                 border-radius:6px;padding:46px 40px;text-align:center;
                 box-shadow:0 18px 60px rgba(40,36,70,.18);">
-      <div style="font-size:12px;letter-spacing:.4em;color:#7A6E94;">LINGXI FIELD</div>
-      <div style="font-size:34px;color:#3A2E52;margin-top:18px;letter-spacing:.12em;">${escapeHtml(titleZh)}</div>
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12px;letter-spacing:.4em;color:#686176;">LINGXI FIELD</div>
+      <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:34px;color:#2E2942;margin-top:18px;letter-spacing:.08em;">${escapeHtml(titleZh)}</div>
       <div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${escapeHtml(titleEn)}</div>
     </div>`)), "JPEG", 0, 0, PW, PH);
 
@@ -612,7 +616,7 @@ export async function exportArchivePdf(params: {
                   box-shadow:0 18px 56px rgba(40,36,70,.16);text-align:center;">
         <div style="font-size:11px;letter-spacing:.32em;color:#8C7FA8;">${escapeHtml(feature.eyebrow ?? eyebrow)}</div>
         <img src="${feature.image}" style="display:block;width:420px;max-width:86%;max-height:690px;object-fit:contain;margin:22px auto 24px;border-radius:4px;border:1px solid rgba(255,255,255,.62);box-shadow:0 20px 44px rgba(28,25,53,.23);" />
-        <div style="font-size:24px;color:#3A2E52;letter-spacing:.06em;">${escapeHtml(feature.title)}</div>
+        <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:24px;color:#2E2942;letter-spacing:.06em;">${escapeHtml(feature.title)}</div>
         ${feature.subtitle ? `<div style="font-size:13px;line-height:1.8;color:#6B6285;margin-top:10px;letter-spacing:.04em;">${escapeHtml(feature.subtitle)}</div>` : ""}
       </div>
       <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
@@ -643,13 +647,13 @@ export async function exportArchivePdf(params: {
                   background:${theme.gradient};border:1px solid ${theme.border};
                   border-radius:6px;padding:42px 44px;
                   box-shadow:0 18px 56px rgba(40,36,70,.16);">
-        <div style="font-size:11px;letter-spacing:.34em;color:#8C7FA8;">${escapeHtml(headline)}</div>
+        <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:11px;letter-spacing:.34em;color:#686176;">${escapeHtml(headline)}</div>
         ${title
-          ? `<div style="font-size:25px;color:#3A2E52;margin:16px 0 6px;letter-spacing:.06em;">${escapeHtml(title)}</div>
+          ? `<div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:25px;color:#2E2942;margin:16px 0 6px;letter-spacing:.06em;">${escapeHtml(title)}</div>
              <div style="width:52px;height:1px;background:#B9A6D6;margin-bottom:22px;"></div>`
           : `<div style="height:18px;"></div>`}
         ${figureHtml}
-        <div style="font-size:16.5px;line-height:2.02;color:#2E2742;letter-spacing:.015em;white-space:pre-wrap;">${bodyHtml}</div>
+        <div style="font-size:16.5px;line-height:1.82;color:#403B50;letter-spacing:.018em;white-space:pre-wrap;">${bodyHtml}</div>
       </div>`;
 
   /** 把面板放进舞台量一次真实高度（不截图，只测量，很快） */
@@ -745,6 +749,8 @@ export async function exportArchivePdf(params: {
   pdf.addPage();
   pdf.addImage(await renderPage(pageShell(endImage, "center 50%", "")), "JPEG", 0, 0, PW, PH);
 
-  document.body.removeChild(stage);
   pdf.save(fileName);
+  } finally {
+    stage.remove();
+  }
 }

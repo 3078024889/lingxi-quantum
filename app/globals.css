@@ -4,7 +4,7 @@
 
 :root {
   --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "Inter", system-ui, sans-serif;
   /* ============ Lingxi Typography System V4（定版） ============ */
   --text-primary: #DDE6FF;
   --text-heading: #F0E6FF;
@@ -51,8 +51,8 @@ body {
   color: var(--report-text, #29243b);
   background: linear-gradient(135deg, rgba(255,255,255,.18), rgba(235,250,248,.09), rgba(229,218,255,.11)) !important;
   border: 1px solid rgba(255,255,255,.48) !important;
-  backdrop-filter: blur(2.5px) saturate(1.06) !important;
-  -webkit-backdrop-filter: blur(2.5px) saturate(1.06) !important;
+  backdrop-filter: blur(2px) saturate(1.04) !important;
+  -webkit-backdrop-filter: blur(2px) saturate(1.04) !important;
   box-shadow: 0 18px 48px rgba(31,40,68,.13), inset 0 1px 0 rgba(255,255,255,.52) !important;
   border-radius: 6px !important;
   overflow: hidden;
@@ -61,8 +61,8 @@ body {
 /* Report artwork is measured offline. Runtime image sampling would be slower and
    less reliable across browsers, so every publication page opts into a tone. */
 .lx-report-tone-light {
-  --report-text: #29243b; --report-heading: #352c4d; --report-muted: #5b536f;
-  --report-accent: #176f68; --report-chart-text: #403650; --report-chart-grid: rgba(55,46,75,.22);
+  --report-text: #403b50; --report-heading: #2e2942; --report-muted: #686176;
+  --report-accent: #7968ae; --report-chart-text: #403b50; --report-chart-grid: rgba(64,59,80,.13);
 }
 .lx-report-tone-dark {
   --report-text: #f7f3ff; --report-heading: #fff; --report-muted: #d9dded;
@@ -98,10 +98,10 @@ body {
   image-rendering: auto;
 }
 .lx-report-glass-readable {
-  background: linear-gradient(135deg, rgba(255,255,255,.76), rgba(250,248,255,.65), rgba(238,249,246,.60)) !important;
-  backdrop-filter: blur(8px) saturate(1.08) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.08) !important;
-  box-shadow: 0 20px 54px rgba(31,40,68,.16), inset 0 1px 0 rgba(255,255,255,.78) !important;
+  background: linear-gradient(135deg, rgba(255,255,255,.42), rgba(250,247,255,.30)) !important;
+  backdrop-filter: blur(2px) saturate(1.04) !important;
+  -webkit-backdrop-filter: blur(2px) saturate(1.04) !important;
+  box-shadow: 0 14px 50px rgba(42,34,65,.07), inset 0 1px 0 rgba(255,255,255,.42) !important;
 }
 .lx-report-glass-airy {
   background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(250,252,255,.13), rgba(237,247,245,.10)) !important;
@@ -164,23 +164,33 @@ body {
    enough leading for long-form reflection on both paper and small screens. */
 .lx-report-tone-light,
 .lx-report-tone-dark {
-  --lx-publication-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", STSong, SimSun, Georgia, serif;
+  --lx-publication-serif: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+  --lx-publication-sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "Inter", sans-serif;
 }
 .lx-report-tone-light .whitespace-pre-line,
 .lx-report-tone-dark .whitespace-pre-line {
-  font-family: var(--lx-publication-serif) !important;
-  font-size: clamp(1.125rem, 1.8vw, 1.1875rem) !important;
-  line-height: 2.05 !important;
+  font-family: var(--lx-publication-sans) !important;
+  font-size: clamp(.96875rem, 1.55vw, 1.0625rem) !important;
+  line-height: 1.82 !important;
   letter-spacing: 0.018em;
 }
 .lx-publication-copy {
-  font-family: var(--lx-publication-serif) !important;
-  font-size: clamp(1.125rem, 1.8vw, 1.1875rem) !important;
+  font-family: var(--lx-publication-sans) !important;
+  font-size: clamp(.96875rem, 1.55vw, 1.0625rem) !important;
   font-weight: 400 !important;
-  line-height: 2.08 !important;
+  line-height: 1.82 !important;
   letter-spacing: 0.018em;
 }
-.lx-publication-copy p { margin-bottom: 1.4em; }
+.lx-publication-copy p { margin-bottom: 1.25em; }
+.lx-publication-page h1,
+.lx-publication-page h2,
+.lx-publication-page h3,
+.lx-report-glass-readable h1,
+.lx-report-glass-readable h2,
+.lx-report-glass-readable h3 {
+  font-family: var(--lx-publication-serif) !important;
+  font-weight: 500 !important;
+}
 /* Charts are evidence, not decorative thumbnails.  The dedicated surface
    keeps labels legible whether the surrounding publication artwork is light
    or dark, and gives SVGs room to breathe. */

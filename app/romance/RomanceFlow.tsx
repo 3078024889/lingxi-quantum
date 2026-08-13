@@ -369,7 +369,7 @@ export default function RomanceFlow() {
             href="/life-map"
             className="mt-5 inline-block border border-lattice/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
           >
-            <Bi zh="查看完整生命图谱 →" en="See Your Full Life Map →" />
+            <Bi zh="继续探索：完整生命图谱 →" en="Continue exploring: Full Life Map →" />
           </a>
         </div>
       </div>

@@ -143,7 +143,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
             ))}
           </div>
 
-          <div className="mt-8 lx-glass-daily p-6 text-center">
+          <div className="mt-10 border-t border-white/10 pt-6 text-center">
             <p className="text-sm leading-7 text-bone-dim">
               <Bi
                 zh="今日运势潮汐读取的是：宇宙当前运行状态，与你太阳星座之间产生的连接——像一份「今日意识天气」，帮你观察今天适合关注什么、调整什么、顺应什么。而生命图谱不同，它读取的是你出生那一刻、属于你的完整生命坐标。一个观察今天，一个探索你。"
@@ -152,9 +152,9 @@ export default async function DailySignPage({ params }: { params: { sign: string
             </p>
             <a
               href="/life-map"
-              className="mt-5 inline-block bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+              className="mt-4 inline-block border border-lattice/45 px-5 py-2 font-display text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
             >
-              <Bi zh="查看我的完整生命图谱 →" en="See My Full Life Map →" />
+              <Bi zh="继续探索：完整生命图谱 →" en="Continue exploring: Full Life Map →" />
             </a>
           </div>
 
