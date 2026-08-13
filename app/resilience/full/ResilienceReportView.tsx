@@ -218,19 +218,19 @@ export default function ResilienceReportView({ id }: { id: string }) {
               ======================================================== */}
           {sections.map((content, i) => {
             // 素材有 page-1 到 page-11，确保不越界
-            const bgNum = Math.min(i + 1, 11);
+            const bgNum = (i % 11) + 1;
             const bgImageUrl = `/images/resilience-full/page-${bgNum}.png`;
             const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
 
             return (
-              <div key={i} className="relative w-full aspect-[1/1.414] overflow-hidden rounded-xl shadow-2xl print:shadow-none print:w-full print:h-screen print:rounded-none page-break-after-always">
+              <div key={i} className="lx-publication-page relative flex w-full items-center justify-center overflow-hidden rounded-xl p-4 shadow-2xl print:shadow-none print:w-full print:h-screen print:rounded-none page-break-after-always sm:p-8">
                 <div 
                   className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
                   style={{ backgroundImage: `url('${bgImageUrl}'), linear-gradient(135deg, #1e293b, #0f172a)` }}
                 />
                 
-                <div className="absolute inset-0 z-10 flex flex-col justify-center items-center p-6 md:p-16">
-                  <div className="lx-report-glass p-8 md:p-12 w-full max-h-[95%] overflow-y-auto custom-scrollbar shadow-2xl">
+                <div className="relative z-10 flex w-full flex-col items-center justify-center py-8 md:py-16">
+                  <div className="lx-report-glass lx-report-glass-readable w-full p-8 shadow-2xl md:p-12">
                     
                     {/* 章节标题 */}
                     <div className="text-center mb-8 border-b border-[#3A2E52]/10 pb-6">
@@ -243,7 +243,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
                     </div>
 
                     {/* 【字号放大核心区】：text-xl md:text-2xl lg:text-3xl */}
-                    <div className="max-w-none text-[15px] leading-[2] tracking-[0.02em] text-[#2E2742] sm:text-lg sm:leading-[2.05]">
+                    <div className="lx-publication-copy max-w-none text-[#423753]">
                       {content.split('\n').map((para, pIdx) => {
                         const trimmedPara = para.trim();
                         if (!trimmedPara) return null;
@@ -258,7 +258,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
                         }
                         
                         return (
-                          <p key={pIdx} className="mb-6 text-justify indent-8">
+                          <p key={pIdx} className="text-justify indent-8">
                             {trimmedPara}
                           </p>
                         );

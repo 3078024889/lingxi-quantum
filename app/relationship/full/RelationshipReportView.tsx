@@ -225,6 +225,13 @@ export default function RelationshipReportView({ id }: { id: string }) {
         coverImage: `/images/relationship-full/${relKeyForPdf}/page-0.png`,
         bodyImages: Array.from({ length: 11 }, (_, k) => `/images/relationship-full/${relKeyForPdf}/page-${k + 1}.png`),
         endImage: `/images/relationship-full/${relKeyForPdf}/page-11.png`,
+        featurePages: [{
+          image: `/images/relationship/${relKeyForPdf}.jpg`,
+          title: relLabel.zh,
+          subtitle: reportTitle,
+          eyebrow: "RELATIONSHIP RESONANCE · CORE CARD",
+          backgroundImage: `/images/relationship-full/${relKeyForPdf}/page-1.png`,
+        }],
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -323,7 +330,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         </h1>
 
         <div className="mt-4 flex justify-center">
-          <div className="overflow-hidden rounded-sm border border-lattice/20 shadow-[0_18px_50px_rgba(52,38,80,.16)]" style={{ width: "min(100%, 340px)" }}>
+          <div className="overflow-hidden rounded-sm border border-lattice/20 shadow-[0_18px_50px_rgba(52,38,80,.16)]" style={{ width: "min(100%, 480px)" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`/images/relationship/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}.jpg`}
@@ -396,11 +403,11 @@ export default function RelationshipReportView({ id }: { id: string }) {
                 backgroundSize: "cover", backgroundPosition: "center",
               }}
             >
-              <div className="lx-report-glass lx-report-glass-airy px-6 py-8 sm:px-12 sm:py-14">
+              <div className="lx-report-glass lx-report-glass-readable px-6 py-8 sm:px-12 sm:py-14">
               <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={chapterTitle?.zh ?? ""} en={chapterTitle?.en ?? ""} />
               </p>
-              <div className="mt-6 whitespace-pre-line text-[17px] font-normal leading-[2.05] tracking-[0.015em] text-bone-dim sm:text-[19px] sm:leading-[2.12]">{stripMarkdownArtifacts(content)}</div>
+              <div className="lx-publication-copy mt-6 whitespace-pre-line text-[#423753]">{stripMarkdownArtifacts(content)}</div>
               {isSeal && (
                 <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
                   <p className="font-display text-sm italic text-lattice/85">

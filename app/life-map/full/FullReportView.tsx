@@ -282,6 +282,15 @@ export default function FullReportView({ id }: { id: string }) {
         coverImage: "/images/lifemap/page-0.png",
         bodyImages: Array.from({ length: 11 }, (_, k) => `/images/lifemap/page-${k + 1}.png`),
         endImage: "/images/lifemap/page-11.png",
+        featurePages: lifemapTypeImage(coreTypeName)
+          ? [{
+              image: lifemapTypeImage(coreTypeName)!,
+              title: coreTypeName,
+              subtitle: t("你的核心生命原型卡", "Your core life archetype card"),
+              eyebrow: "LIFE MAP · CORE ARCHETYPE",
+              backgroundImage: "/images/lifemap/page-1.png",
+            }]
+          : [],
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -384,12 +393,15 @@ export default function FullReportView({ id }: { id: string }) {
           </div>
 
           {lifemapTypeImage(coreTypeName) && (
-            <div className="lx-report-art-page lx-art-lifemap-1 mt-6 justify-center">
-              <div className="lm2-card overflow-hidden rounded-sm border border-lm2-text/15" style={{ maxWidth: 280 }}>
+            <section className="lx-publication-page lx-publication-card-page lx-art-lifemap-1 mt-6 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10">
+              <div className="lx-report-glass lx-report-glass-readable flex w-full flex-col items-center px-7 py-10 text-center sm:px-12">
+                <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="核心生命原型" en="Core Life Archetype" /></p>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={lifemapTypeImage(coreTypeName)!} alt={coreTypeName} className="block w-full" />
+                <img src={lifemapTypeImage(coreTypeName)!} alt={coreTypeName} className="lx-publication-card-art mt-6" />
+                <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl">{coreTypeName}</h2>
+                <p className="mt-3 text-sm leading-7 text-lm2-text-dim"><Bi zh="这张生命原型卡以完整原图独占一页，并同步进入你的 PDF 档案。" en="This full original archetype card owns its page and is included in your PDF archive." /></p>
               </div>
-            </div>
+            </section>
           )}
 
           {facts && (
@@ -488,7 +500,7 @@ export default function FullReportView({ id }: { id: string }) {
                     <Bi zh={SECTION_TITLES[i]?.zh ?? ""} en={SECTION_TITLES[i]?.en ?? ""} />
                   </h2>
                   <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
-                  <div className="mt-6 whitespace-pre-line text-[15px] leading-[2] tracking-[0.02em] text-[#2E2742] sm:text-lg sm:leading-[2.05]">
+                  <div className="lx-publication-copy mt-6 whitespace-pre-line text-[#423753]">
                     {stripMarkdownArtifacts(content)}
                   </div>
                   <div ref={(el) => { figureRefs.current[i] = el; }}>

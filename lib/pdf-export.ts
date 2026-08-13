@@ -611,7 +611,7 @@ export async function exportArchivePdf(params: {
                   background:${theme.gradient};border:1px solid ${theme.border};border-radius:6px;padding:34px 42px;
                   box-shadow:0 18px 56px rgba(40,36,70,.16);text-align:center;">
         <div style="font-size:11px;letter-spacing:.32em;color:#8C7FA8;">${escapeHtml(feature.eyebrow ?? eyebrow)}</div>
-        <img src="${feature.image}" style="display:block;width:270px;max-width:78%;max-height:570px;object-fit:contain;margin:22px auto 24px;border-radius:4px;border:1px solid rgba(255,255,255,.62);box-shadow:0 20px 44px rgba(28,25,53,.23);" />
+        <img src="${feature.image}" style="display:block;width:420px;max-width:86%;max-height:690px;object-fit:contain;margin:22px auto 24px;border-radius:4px;border:1px solid rgba(255,255,255,.62);box-shadow:0 20px 44px rgba(28,25,53,.23);" />
         <div style="font-size:24px;color:#3A2E52;letter-spacing:.06em;">${escapeHtml(feature.title)}</div>
         ${feature.subtitle ? `<div style="font-size:13px;line-height:1.8;color:#6B6285;margin-top:10px;letter-spacing:.04em;">${escapeHtml(feature.subtitle)}</div>` : ""}
       </div>

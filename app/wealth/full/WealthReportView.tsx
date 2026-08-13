@@ -220,7 +220,7 @@ export default function WealthReportView({ id }: { id: string }) {
                   <Bi zh={title.titleZh} en={title.titleEn} />
                 </h3>
                 <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
-                <div className="mt-6 space-y-4 text-[15px] leading-[2] text-[#2E2742]">
+                <div className="lx-publication-copy mt-6 space-y-4 text-[#423753]">
                   {content.split("\n\n").filter(Boolean).map((para, k) => (
                     <p key={k}>{para}</p>
                   ))}

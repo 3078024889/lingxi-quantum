@@ -71,7 +71,7 @@ body {
 .lx-report-tone-light .lx-report-glass { background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(250,252,255,.12), rgba(236,250,246,.10)) !important; }
 .lx-report-tone-dark .lx-report-glass { background: linear-gradient(135deg, rgba(7,17,35,.20), rgba(25,31,63,.11), rgba(25,70,72,.10)) !important; border-color: rgba(222,239,255,.38) !important; }
 .lx-report-tone-light .lx-report-glass, .lx-report-tone-light .lx-report-glass p, .lx-report-tone-light .lx-report-glass li, .lx-report-tone-light .lx-report-glass span {
-  color: var(--report-text) !important; font-weight: 550; text-shadow: 0 1px 1px rgba(255,255,255,.92), 0 0 8px rgba(255,255,255,.55);
+  color: var(--report-text) !important; font-weight: 450; text-shadow: 0 1px 1px rgba(255,255,255,.92), 0 0 8px rgba(255,255,255,.55);
 }
 .lx-report-tone-dark .lx-report-glass, .lx-report-tone-dark .lx-report-glass p, .lx-report-tone-dark .lx-report-glass li, .lx-report-tone-dark .lx-report-glass span {
   color: var(--report-text) !important; font-weight: 550; text-shadow: 0 1px 2px rgba(3,8,22,.88), 0 0 8px rgba(3,8,22,.48);
@@ -98,10 +98,10 @@ body {
   image-rendering: auto;
 }
 .lx-report-glass-readable {
-  background: linear-gradient(135deg, rgba(255,255,255,.34), rgba(250,252,255,.20), rgba(237,247,245,.17)) !important;
-  backdrop-filter: blur(3px) saturate(1.04) !important;
-  -webkit-backdrop-filter: blur(3px) saturate(1.04) !important;
-  box-shadow: 0 20px 54px rgba(31,40,68,.12), inset 0 1px 0 rgba(255,255,255,.62) !important;
+  background: linear-gradient(135deg, rgba(255,255,255,.76), rgba(250,248,255,.65), rgba(238,249,246,.60)) !important;
+  backdrop-filter: blur(8px) saturate(1.08) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.08) !important;
+  box-shadow: 0 20px 54px rgba(31,40,68,.16), inset 0 1px 0 rgba(255,255,255,.78) !important;
 }
 .lx-report-glass-airy {
   background: linear-gradient(135deg, rgba(255,255,255,.24), rgba(250,252,255,.13), rgba(237,247,245,.10)) !important;
@@ -173,6 +173,14 @@ body {
   line-height: 2.05 !important;
   letter-spacing: 0.018em;
 }
+.lx-publication-copy {
+  font-family: var(--lx-publication-serif) !important;
+  font-size: clamp(1.125rem, 1.8vw, 1.1875rem) !important;
+  font-weight: 400 !important;
+  line-height: 2.08 !important;
+  letter-spacing: 0.018em;
+}
+.lx-publication-copy p { margin-bottom: 1.4em; }
 /* Charts are evidence, not decorative thumbnails.  The dedicated surface
    keeps labels legible whether the surrounding publication artwork is light
    or dark, and gives SVGs room to breathe. */
@@ -199,7 +207,7 @@ body {
    grid.  This primitive is shared by Life Mirror and Life Oracle. */
 .lx-publication-card-page { min-height: min(1267px, calc((100vw - 1.5rem) * 1.414)); }
 .lx-publication-card-page .lx-publication-card-art {
-  width: min(100%, 21rem);
+  width: min(100%, 30rem);
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 4px;
@@ -209,7 +217,7 @@ body {
 .lx-report-art-page {
   position: relative;
   display: flex;
-  min-height: min(920px, 78vh);
+  min-height: min(1267px, calc((100vw - 1.5rem) * 1.414));
   align-items: center;
   overflow: hidden;
   border-radius: 6px;

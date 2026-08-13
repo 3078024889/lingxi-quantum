@@ -30,9 +30,9 @@ for (const page of [2, 3, 4]) {
   if (!lifemap.includes(`lx-art-lifemap-${page}`)) failures.push(`life-map: artwork page ${page} is missing`);
 }
 const relationship = readFileSync(resolve(root, views[1]), "utf8");if (relationship.includes("maxWidth: 220")) failures.push("relationship: hero artwork regressed to the legacy small size");
-if (!relationship.includes("min(100%, 340px)")) failures.push("relationship: premium hero artwork size is missing");
-if (!relationship.includes("sm:text-[19px]")) failures.push("relationship: reading typography is below the comfort baseline");
-if (!relationship.includes("lx-report-glass-airy")) failures.push("relationship: airy reading glass is missing");
+if (!relationship.includes("min(100%, 480px)")) failures.push("relationship: full-size relationship card is missing");
+if (!relationship.includes("lx-publication-copy")) failures.push("relationship: shared publication typography is missing");
+if (!relationship.includes("lx-report-glass-readable")) failures.push("relationship: readable publication panel is missing");
 const mirror = readFileSync(resolve(root, "app/mirror/reading/full/TarotReadingReport.tsx"), "utf8");
 const oracle = readFileSync(resolve(root, "app/qian/full/QianReport.tsx"), "utf8");
 if (!mirror.includes("lx-publication-cover lx-mirror-cover")) failures.push("life-mirror: vertical readable cover is missing");
@@ -43,14 +43,19 @@ for (const [name, source] of [["life-mirror", mirror], ["life-oracle", oracle]])
 }
 const legacyTarot = readFileSync(resolve(root, "app/tarot/reading/full/TarotReadingReport.tsx"), "utf8");
 if (!legacyTarot.includes("featurePages:") || !legacyTarot.includes("lx-publication-card-page")) failures.push("legacy tarot: card-page parity with life-mirror is broken");
+if (!lifemap.includes("featurePages:") || !lifemap.includes("lx-publication-card-page")) failures.push("life-map: full-size archetype card is missing from web or PDF");
 if (!relationship.includes("const bgIndex = (i % 11) + 1;")) failures.push("relationship: body artwork is not cyclic");
 for (const view of views.slice(2, 5)) {
   const source = readFileSync(resolve(root, view), "utf8");
   if (!source.includes("page-${(i % 11) + 1}.png")) failures.push(`${view}: body artwork is not cyclic`);
 }
+for (const view of ["app/daily/full/DailyTideReportView.tsx", "app/romance/full/RomanceReportView.tsx", "app/wealth/full/WealthReportView.tsx", "app/resilience/full/ResilienceReportView.tsx"]) {
+  const source = readFileSync(resolve(root, view), "utf8");
+  if (!source.includes("lx-publication-copy")) failures.push(`${view}: shared publication typography is missing`);
+}
 
 const css = readFileSync(resolve(root, "app/globals.css"), "utf8");
-for (const token of [".lx-publication-page", ".lx-report-glass-readable", ".lx-report-chart text", ".lx-publication-card-page", "--lx-publication-serif"]) {
+for (const token of [".lx-publication-page", ".lx-report-glass-readable", ".lx-report-chart text", ".lx-publication-card-page", "--lx-publication-serif", ".lx-publication-copy"]) {
   if (!css.includes(token)) failures.push(`app/globals.css: missing ${token}`);
 }
 
@@ -60,6 +65,6 @@ if (failures.length > 0) {
 }
 console.log("PASS publication width: 9 views / 10 products use the 896px system");
 console.log("PASS artwork: life-map, relationship, romance, wealth and daily pages cycle original assets");
-console.log("PASS readability: transparent glass and chart contrast primitives are present");
-console.log("PASS card pagination: every Life Mirror and Life Oracle card owns a web and PDF page");
+console.log("PASS readability: all report families use the shared serif reading and contrast system");
+console.log("PASS card pagination: Life Map, Life Mirror and Life Oracle cards own full web and PDF pages");
 console.log("PASS compatibility: mirror and legacy tarot report routes share the same publication system");
