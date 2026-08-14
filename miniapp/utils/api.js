@@ -49,5 +49,3 @@ async function publicRequest(path) {
 }
 
 module.exports = { API_BASE, login, request, publicRequest, wxLogin }
-
-\n

@@ -60,5 +60,3 @@ alter table public.orders add column if not exists channel text;
 create unique index if not exists orders_provider_payment_unique_idx
   on public.orders (provider, provider_payment_id)
   where provider_payment_id is not null;
-
-\n

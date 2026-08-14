@@ -29,5 +29,3 @@ export async function exchangeMiniCode(code: string) {
   }
   return { openid: data.openid, unionid: data.unionid ?? null, sessionKey: data.session_key };
 }
-
-\n

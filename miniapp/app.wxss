@@ -19,5 +19,3 @@ page { background: #101936; color: #eef1ff; font-family: "PingFang SC", "Microso
 .lx-section-title { font-size: 34rpx; font-weight: 500; letter-spacing: 3rpx; margin-bottom: 24rpx; }
 .lx-empty { padding: 80rpx 32rpx; text-align: center; color: rgba(235,239,255,.58); line-height: 1.8; }
 .lx-loading { padding: 100rpx 0; text-align: center; color: #77d7cf; letter-spacing: 4rpx; }
-
-\n

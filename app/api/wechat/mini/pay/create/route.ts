@@ -65,5 +65,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "支付准备失败，请稍后重试" }, { status: 500 });
   }
 }
-
-\n

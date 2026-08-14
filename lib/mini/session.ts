@@ -32,5 +32,3 @@ export async function requireMiniSession(req: Request): Promise<MiniSession | nu
   if (error || !data) return null;
   return { userId: data.user_id, openid: data.openid, expiresAt: data.expires_at };
 }
-
-\n

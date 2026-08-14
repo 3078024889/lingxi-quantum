@@ -44,5 +44,3 @@ export function buildMiniVirtualPayment(input: {
     signature: hmacSha256Hex(decryptMiniSecret(input.encryptedSessionKey), signData),
   };
 }
-
-\n

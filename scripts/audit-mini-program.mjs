@@ -35,5 +35,3 @@ check("server notification uses atomic fulfillment", /fulfillPaidOrder\(order\.i
 check("secrets are environment-only", /WECHAT_MINI_VPAY_APP_KEY=/.test(env) && /WECHAT_MINI_SESSION_ENCRYPTION_KEY=/.test(env));
 
 if (failed) process.exit(1);
-
-\n

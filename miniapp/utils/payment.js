@@ -35,5 +35,3 @@ async function payForSku(skuId, submissionId) {
 }
 
 module.exports = { payForSku }
-
-\n
