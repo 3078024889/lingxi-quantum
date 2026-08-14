@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
-import { productFromMiniSku } from "@/lib/mini/catalog";
+import { miniSkuForProduct } from "@/lib/mini/catalog";
 import { safeEqualHex } from "@/lib/mini/crypto";
 
 export const runtime = "nodejs";
@@ -93,14 +93,14 @@ export async function POST(req: Request) {
       .eq("user_id", order.user_id)
       .maybeSingle();
 
-    const expectedProduct = productFromMiniSku(payload.GoodsInfo.ProductId);
+    const expectedSku = miniSkuForProduct(order.product_id);
     const expectedFen = Math.round(Number(order.amount_rmb) * 100);
     const actualFen = Number(payload.GoodsInfo.ActualPrice);
     const attachMatches = !payload.GoodsInfo.Attach || payload.GoodsInfo.Attach === order.id;
     const quantityMatches = Number(payload.GoodsInfo.Quantity ?? 1) === 1;
     if (
-      !expectedProduct ||
-      expectedProduct.id !== order.product_id ||
+      !expectedSku ||
+      expectedSku !== payload.GoodsInfo.ProductId ||
       !identity ||
       (callbackOpenid ? identity.openid !== callbackOpenid : false) ||
       actualFen !== expectedFen ||

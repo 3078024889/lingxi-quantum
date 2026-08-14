@@ -1,1 +1,24 @@
-<view class="lx-page"><view class="lx-orbit"></view><field-nav/><view wx:if="{{item}}" class="lx-content"><view class="detail lx-veil"><view class="lx-kicker">LINGXI ARCHIVE</view><view class="lx-title">{{item.name}}</view><view class="lx-subtitle">{{item.note}}</view><view class="promise"><view>结构识别</view><view>现实映射</view><view>反证条件</view><view>行动实验</view></view><view class="lx-price price">¥ {{item.priceFen / 100}}</view><button class="lx-button" loading="{{paying}}" bindtap="pay">开启这份生命档案</button><view class="fineprint">虚拟内容将在支付确认后自动交付。最终权益以服务端支付通知为准。</view></view></view></view>
+<view class="lx-page">
+  <view class="lx-orbit"></view>
+  <view class="product-nav">
+    <view class="back" bindtap="back"><text class="back-arrow">‹</text><text>返回</text></view>
+    <view class="nav-brand">灵犀场</view>
+    <view class="nav-spacer"></view>
+  </view>
+  <view wx:if="{{loading}}" class="lx-loading detail-state">正在展开内容…</view>
+  <view wx:elif="{{loadError}}" class="lx-content detail-state">
+    <view class="lx-empty lx-veil"><view>{{loadError}}</view><button class="lx-button compact" bindtap="loadItem">重新连接</button></view>
+  </view>
+  <view wx:elif="{{item}}" class="lx-content">
+    <view class="detail lx-veil">
+      <view class="lx-kicker">{{item.category === 'narrative' ? 'MULTIDIMENSIONAL NARRATIVE' : 'LINGXI ARCHIVE'}}</view>
+      <view class="lx-title">{{item.name}}</view>
+      <view class="lx-subtitle">{{item.note}}</view>
+      <view class="promise" wx:if="{{item.category === 'report'}}"><view>结构识别</view><view>现实映射</view><view>反证条件</view><view>行动实验</view></view>
+      <view class="narrative-promise" wx:else>一次进入，一年内回到这段叙事，让不同生命阶段读出新的回应。</view>
+      <view class="lx-price price">¥ {{item.priceFen / 100}}</view>
+      <button class="lx-button" disabled="{{paying}}" loading="{{paying}}" bindtap="pay">{{item.category === 'narrative' ? '开启这篇叙事' : '开启这份生命档案'}}</button>
+      <view class="fineprint">虚拟内容将在支付确认后自动交付。最终权益以服务端支付通知为准。</view>
+    </view>
+  </view>
+</view>

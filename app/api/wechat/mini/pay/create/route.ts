@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { productFromMiniSku } from "@/lib/mini/catalog";
+import { productForMiniPurchase } from "@/lib/mini/catalog";
 import { encryptMiniSecret } from "@/lib/mini/crypto";
 import { requireMiniSession } from "@/lib/mini/session";
 import { buildMiniVirtualPayment, miniVirtualPayConfigured } from "@/lib/mini/virtual-pay";
@@ -15,11 +15,11 @@ export async function POST(req: Request) {
   if (!miniVirtualPayConfigured()) return NextResponse.json({ error: "虚拟支付尚未完成服务端配置" }, { status: 503 });
 
   try {
-    const body = (await req.json()) as { skuId?: unknown; code?: unknown; submissionId?: unknown };
-    if (typeof body.skuId !== "string" || typeof body.code !== "string") {
+    const body = (await req.json()) as { skuId?: unknown; productId?: unknown; code?: unknown; submissionId?: unknown };
+    if (typeof body.skuId !== "string" || typeof body.productId !== "string" || typeof body.code !== "string") {
       return NextResponse.json({ error: "支付参数不完整" }, { status: 400 });
     }
-    const product = productFromMiniSku(body.skuId);
+    const product = productForMiniPurchase(body.skuId, body.productId);
     if (!product) return NextResponse.json({ error: "商品不存在" }, { status: 404 });
 
     // 每次支付前重新 wx.login，保证 signature 使用最新 session_key。

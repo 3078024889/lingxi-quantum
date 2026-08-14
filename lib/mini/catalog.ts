@@ -1,4 +1,3 @@
-import { createHash } from "crypto";
 import { allProducts, getProduct, type Product } from "@/lib/plans";
 import { NARRATIVES } from "@/lib/narratives";
 
@@ -58,19 +57,20 @@ function categoryFor(productId: string): MiniCatalogItem["category"] {
 }
 
 // 微信道具 ID 仅允许英文字母、数字、下划线且最长 20 位。
-// 固定商品使用可读 ID；数量会持续增长的叙事使用稳定哈希，避免改标题导致已发布道具失效。
+// 叙事按价格共用道具；具体交付对象由已校验的 productId 与服务端订单绑定。
+// 这样新增文章无需为每篇内容重复创建微信道具，同时不会混淆用户权益。
 export function miniSkuForProduct(productId: string): string {
   const fixed = FIXED_SKUS[productId];
   if (fixed) return fixed;
-  return `n_${createHash("sha256").update(productId).digest("hex").slice(0, 16)}`;
+  const product = getProduct(productId);
+  if (!product || UNAVAILABLE_NARRATIVE_IDS.has(productId)) return "";
+  return `nar_${Math.round(product.priceRmb * 100)}`;
 }
 
-export function productFromMiniSku(skuId: string): Product | undefined {
-  const fixedProductId = Object.entries(FIXED_SKUS).find(([, value]) => value === skuId)?.[0];
-  if (fixedProductId) return getProduct(fixedProductId);
-  return allProducts.find(
-    (product) => !UNAVAILABLE_NARRATIVE_IDS.has(product.id) && miniSkuForProduct(product.id) === skuId
-  );
+export function productForMiniPurchase(skuId: string, productId: string): Product | undefined {
+  const product = getProduct(productId);
+  if (!product || UNAVAILABLE_NARRATIVE_IDS.has(productId)) return undefined;
+  return miniSkuForProduct(product.id) === skuId ? product : undefined;
 }
 
 export function getMiniCatalog(): MiniCatalogItem[] {

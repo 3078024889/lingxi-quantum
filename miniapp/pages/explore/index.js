@@ -8,5 +8,8 @@ Page({
     } catch (_) { wx.showToast({ title: '场域暂未响应', icon: 'none' }) }
     finally { this.setData({ loading: false }) }
   },
-  open(event) { wx.navigateTo({ url: `/pages/product/index?sku=${event.currentTarget.dataset.sku}` }) },
+  open(event) {
+    const { sku, product } = event.currentTarget.dataset
+    wx.navigateTo({ url: `/pages/product/index?sku=${encodeURIComponent(sku)}&product=${encodeURIComponent(product)}&from=explore` })
+  },
 })

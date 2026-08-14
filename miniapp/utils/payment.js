@@ -18,11 +18,11 @@ function supportsVirtualPay() {
   return typeof wx.requestVirtualPayment === 'function' || wx.canIUse('requestVirtualPayment')
 }
 
-async function payForSku(skuId, submissionId) {
+async function payForSku(skuId, productId, submissionId) {
   if (!supportsVirtualPay()) throw new Error('当前微信版本过低，请升级微信后再试')
   const { code } = await wxLogin()
   const result = await request('/api/wechat/mini/pay/create', {
-    method: 'POST', data: { skuId, code, submissionId },
+    method: 'POST', data: { skuId, productId, code, submissionId },
   })
   return new Promise((resolve, reject) => wx.requestVirtualPayment({
     ...result.payment,

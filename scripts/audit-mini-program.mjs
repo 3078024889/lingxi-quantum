@@ -29,7 +29,10 @@ check("server verifies mini identity before creating an order", /freshWxSession\
 check("client success never fulfills entitlement", !/fulfill|unlock|status:\s*['\"]paid/.test(paymentClient));
 check("server notification is signature protected", /verifiedByWechat\(req\)/.test(notify));
 check("server notification verifies amount", /actualFen !== expectedFen/.test(notify));
-check("server notification verifies product", /expectedProduct\.id !== order\.product_id/.test(notify));
+check(
+  "server notification verifies product",
+  /expectedSku !== payload\.GoodsInfo\.ProductId/.test(notify) && /miniSkuForProduct\(order\.product_id\)/.test(notify)
+);
 check("server notification verifies user identity", /identity\.openid !== callbackOpenid/.test(notify));
 check("server notification uses atomic fulfillment", /fulfillPaidOrder\(order\.id\)/.test(notify));
 check("secrets are environment-only", /WECHAT_MINI_VPAY_APP_KEY=/.test(env) && /WECHAT_MINI_SESSION_ENCRYPTION_KEY=/.test(env));
