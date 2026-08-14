@@ -1,0 +1,18 @@
+{
+  "appid": "wxbf4ae90406e7e26b",
+  "projectname": "lingxi-field",
+  "description": "Lingxi Field native WeChat Mini Program",
+  "miniprogramRoot": "./",
+  "compileType": "miniprogram",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "minified": true,
+    "urlCheck": true,
+    "postcss": true,
+    "coverView": true,
+    "lazyloadPlaceholderEnable": true
+  }
+}
+
+\n

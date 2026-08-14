@@ -63,9 +63,9 @@ export async function POST(request: Request) {
   if (!REVIEW_MODE) {
     const { data: unlockRows, error: unlockError } = await admin
       .from("unlocks")
-      .select("expires_at")
+      .select("product_id, expires_at")
       .eq("user_id", user!.id)
-      .eq("product_id", "relationship-resonance");
+      .in("product_id", ["relationship-resonance", "everything"]);
 
     if (unlockError) {
       console.error("[relationship/generate-full] unlock lookup failed:", unlockError);
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
 
     const now = Date.now();
     const unlocked = (unlockRows ?? []).some(
-      (row: { expires_at: string | null }) =>
+      (row: { product_id: string; expires_at: string | null }) =>
         !row.expires_at || new Date(row.expires_at).getTime() > now,
     );
     if (!unlocked) {

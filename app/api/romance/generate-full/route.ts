@@ -76,7 +76,7 @@ export async function POST(req: Request) {
 
     const unlocked = (unlockRows ?? []).some(
       (unlock: { product_id: string; expires_at: string | null }) =>
-        unlock.product_id === "romance-report" &&
+        (unlock.product_id === "romance-report" || unlock.product_id === "everything") &&
         (!unlock.expires_at || new Date(unlock.expires_at) > new Date()),
     );
 

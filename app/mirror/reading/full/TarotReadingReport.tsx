@@ -137,13 +137,14 @@ export default function TarotReadingReport({ id }: { id: string }) {
       await exportArchivePdf({
         chapters: sections
           .map((body, i) => ({
-            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? `第 ${i + 1} 章`,
+            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
             body,
           }))
           .filter((c) => c.body && c.body.trim()),
-        fileName: `灵犀量子生命镜像-${name || "reading"}.pdf`,
+        fileName: langEn ? `Lingxi-Quantum-Life-Mirror-${name || "reading"}.pdf` : `灵犀量子生命镜像-${name || "reading"}.pdf`,
         titleZh: `${name || "你的"}量子生命镜像档案`,
         titleEn: `${name || "Your"} Quantum Life Mirror Archive`,
+        language: langEn ? "en" : "zh",
         eyebrow: "QUANTUM LIFE MIRROR",
         theme: ARCHIVE_THEMES.tarot,
         coverImage: "/images/tarot-full/page-0.png",
@@ -266,7 +267,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
           <div className="lx-report-glass lx-report-glass-readable flex w-full flex-col items-center px-7 py-10 text-center sm:px-12">
             <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh={positions[i].zh} en={positions[i].en} /></p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/images/tarot/${String(card.index).padStart(2, "0")}.jpg`} alt={card.nameZh} className="lx-publication-card-art mt-6" />
+              <img src={`/images/tarot/${String(card.index).padStart(2, "0")}.jpg`} alt={langEn ? card.nameEn : card.nameZh} className="lx-publication-card-art mt-6" />
             <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl"><Bi zh={card.nameZh} en={card.nameEn} /></h2>
             <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh="让这一张牌单独停驻，作为此刻与你对话的意识镜面。" en="Let this card stand alone as the consciousness mirror for this moment." /></p>
           </div>

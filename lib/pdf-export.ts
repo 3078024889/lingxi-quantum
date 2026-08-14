@@ -519,6 +519,8 @@ export async function exportArchivePdf(params: {
   fileName: string;
   titleZh: string;
   titleEn: string;
+  /** 当前报告语言。英文档案必须单语输出，不能在封面残留中文标题。 */
+  language?: "zh" | "en";
   coverImage: string;
   bodyImages: string[];
   endImage: string;
@@ -539,6 +541,9 @@ export async function exportArchivePdf(params: {
   }[];
 }): Promise<void> {
   const { chapters, fileName, titleZh, titleEn, coverImage, bodyImages, endImage } = params;
+  const language = params.language ?? "zh";
+  const primaryTitle = language === "en" ? titleEn : titleZh;
+  const secondaryTitle = language === "en" ? "" : titleEn;
   const eyebrow = params.eyebrow ?? "LINGXI FIELD";
   const theme = params.theme ?? ARCHIVE_THEMES.resilience;
   if (!coverImage || !endImage || bodyImages.length === 0) {
@@ -614,8 +619,8 @@ export async function exportArchivePdf(params: {
                 border-radius:6px;padding:46px 40px;text-align:center;
                 box-shadow:0 18px 60px rgba(40,36,70,.18);">
       <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12px;letter-spacing:.4em;color:#686176;">LINGXI FIELD</div>
-      <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:34px;color:#2E2942;margin-top:18px;letter-spacing:.08em;">${escapeHtml(titleZh)}</div>
-      <div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${escapeHtml(titleEn)}</div>
+      <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:34px;color:#2E2942;margin-top:18px;letter-spacing:.08em;">${escapeHtml(primaryTitle)}</div>
+      ${secondaryTitle ? `<div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${escapeHtml(secondaryTitle)}</div>` : ""}
     </div>`)), "JPEG", 0, 0, PW, PH);
 
   // A card is a focal reading object.  Rendering it through this shared page

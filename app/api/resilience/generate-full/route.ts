@@ -54,7 +54,9 @@ export async function POST(req: Request) {
   if (!REVIEW_MODE) {
     const { data: unlockRows } = await admin.from("unlocks").select("product_id, expires_at").eq("user_id", user!.id);
     const unlocked = (unlockRows ?? []).some(
-      (u: { product_id: string; expires_at: string | null }) => u.product_id === "resilience-report" && (!u.expires_at || new Date(u.expires_at) > new Date())
+      (u: { product_id: string; expires_at: string | null }) =>
+        (u.product_id === "resilience-report" || u.product_id === "everything") &&
+        (!u.expires_at || new Date(u.expires_at) > new Date())
     );
     if (!unlocked) return NextResponse.json({ error: "尚未解锁完整报告。" }, { status: 402 });
   }

@@ -6,7 +6,7 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import NatalChartWheel from "../NatalChartWheel";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
-import { lifemapTypeImage } from "@/lib/lifemap-type-images";
+import { lifemapTypeImage, lifemapTypeNameEn } from "@/lib/lifemap-type-images";
 import ShareButton from "@/components/ShareButton";
 import { useLang } from "@/lib/useLang";
 
@@ -259,16 +259,17 @@ export default function FullReportView({ id }: { id: string }) {
       };
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? SECTION_TITLES[i]?.en : SECTION_TITLES[i]?.zh) ?? `第 ${i + 1} 章`,
+          title: (langEn ? SECTION_TITLES[i]?.en : SECTION_TITLES[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body: stripMarkdownArtifacts(body),
           figure: figureRefs.current[i] && figureRefs.current[i]!.offsetHeight > 8
             ? figureRefs.current[i]
             : null,
           figureCaption: FIGURE_CAPTIONS[i] ? t(FIGURE_CAPTIONS[i].zh, FIGURE_CAPTIONS[i].en) : undefined,
         })),
-        fileName: `灵犀生命图谱-${coreTypeName || "report"}.pdf`,
+        fileName: langEn ? `Lingxi-Life-Map-${lifemapTypeNameEn(coreTypeName) || "report"}.pdf` : `灵犀生命图谱-${coreTypeName || "report"}.pdf`,
         titleZh: `${coreTypeName || "你的"}生命图谱`,
-        titleEn: `${coreTypeName || "Your"} Life Map`,
+        titleEn: `${lifemapTypeNameEn(coreTypeName) || "Your"} Life Map`,
+        language: langEn ? "en" : "zh",
         eyebrow: "LIFE MAP",
         theme: ARCHIVE_THEMES.lifemap,
         coverImage: "/images/lifemap/page-0.png",
@@ -277,7 +278,7 @@ export default function FullReportView({ id }: { id: string }) {
         featurePages: lifemapTypeImage(coreTypeName)
           ? [{
               image: lifemapTypeImage(coreTypeName)!,
-              title: coreTypeName,
+              title: langEn ? lifemapTypeNameEn(coreTypeName) : coreTypeName,
               subtitle: t("你的核心生命原型卡", "Your core life archetype card"),
               eyebrow: "LIFE MAP · CORE ARCHETYPE",
               backgroundImage: "/images/lifemap/page-1.png",
@@ -379,7 +380,7 @@ export default function FullReportView({ id }: { id: string }) {
           >
             <div className="absolute inset-x-0 top-[26%] text-center">
               <h1 className="font-display text-2xl font-light text-white lm2-print-title" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}>
-                {coreTypeName}
+          {langEn ? lifemapTypeNameEn(coreTypeName) : coreTypeName}
               </h1>
             </div>
           </div>
@@ -390,7 +391,7 @@ export default function FullReportView({ id }: { id: string }) {
                 <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="核心生命原型" en="Core Life Archetype" /></p>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={lifemapTypeImage(coreTypeName)!} alt={coreTypeName} className="lx-publication-card-art mt-6" />
-                <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl">{coreTypeName}</h2>
+            <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl">{langEn ? lifemapTypeNameEn(coreTypeName) : coreTypeName}</h2>
                 <p className="mt-3 text-sm leading-7 text-lm2-text-dim"><Bi zh="这张生命原型卡以完整原图独占一页，并同步进入你的 PDF 档案。" en="This full original archetype card owns its page and is included in your PDF archive." /></p>
               </div>
             </section>
@@ -784,7 +785,7 @@ function ZiweiGrid({
                 <span className="text-[9px] text-lm2-text-dim">{langEn ? `Palace ${i + 1}` : branch}</span>
                 {(p?.isSoulPalace || p?.isBodyPalace) && (
                   <span className="text-[8px]" style={{ color }}>
-                    {p?.isSoulPalace ? "命" : ""}{p?.isBodyPalace ? "身" : ""}
+                        {p?.isSoulPalace ? (langEn ? "Life" : "命") : ""}{p?.isBodyPalace ? (langEn ? "Body" : "身") : ""}
                   </span>
                 )}
               </div>

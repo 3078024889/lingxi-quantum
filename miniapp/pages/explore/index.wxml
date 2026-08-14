@@ -1,0 +1,3 @@
+<view class="lx-page"><field-nav/><view class="lx-content"><view class="lx-kicker">FIELD INSIGHTS</view><view class="lx-title">场域精测</view><view class="lx-subtitle">每一份都不是更多文字，而是新的认识层级。</view><view wx:if="{{loading}}" class="lx-loading">正在读取场域…</view><view wx:else class="lx-grid lx-section"><view wx:for="{{items}}" wx:key="skuId" class="lx-card lx-veil" data-sku="{{item.skuId}}" bindtap="open"><view class="lx-card-title">{{item.name}}</view><view class="lx-card-note">{{item.note}}</view><view class="lx-price">¥ {{item.priceFen / 100}}</view></view></view></view></view>
+
+\n

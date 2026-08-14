@@ -123,7 +123,7 @@ function resolveDestination(order: OrderRow): { href: string; labelZh: string; l
   if (order.product_id === "bundle") return { href: "/practice", labelZh: "查看全部修炼技术", labelEn: "View All Practices" };
   if (["day", "month", "year"].includes(order.product_id)) return { href: "/live-as", labelZh: "进入意识显化", labelEn: "Enter Manifestation" };
   if (order.product_id === "narrative-all") return { href: "/narrative", labelZh: "浏览全部多维叙事", labelEn: "Browse All Narratives" };
-  if (order.product_id === "everything") return { href: "/narrative", labelZh: "浏览多维叙事与修炼技术", labelEn: "Browse Narratives & Practices" };
+  if (order.product_id === "everything") return { href: "/account", labelZh: "进入完整灵犀场", labelEn: "Enter the Full Lingxi Field" };
   // 剩下的都是多维叙事单篇——product_id本身就是文章slug
   return { href: `/narrative/${order.product_id}`, labelZh: "阅读全文", labelEn: "Read Full Piece" };
 }
@@ -298,13 +298,13 @@ export default async function FieldOrdersPage() {
     },
     {
       key: "membership", titleZh: "修炼技术与会员", titleEn: "Practices & Membership",
-      hintZh: "4项修炼技术（永久）+ 显化订阅（单日/月度/年度）+ 多维叙事年度解锁/全构造解锁（按天数计有效期）。",
+        hintZh: "4 项修炼技术（永久）+ 显化订阅（单日/月度/年度）+ 多维叙事年度解锁 + 神尊年度全域通行证。",
       hintEn: "4 practice techniques (permanent) + Manifestation passes (day/month/year) + Narrative/Everything bundles (time-limited).",
       rows: membershipOrders,
     },
     {
       key: "narrative", titleZh: "多维叙事", titleEn: "Narratives",
-      hintZh: "按篇购买的长篇与短篇小说，每篇解锁一年；若已购「多维叙事年度解锁」或「全构造解锁」，覆盖范围内的篇目不用单独购买。",
+        hintZh: "按篇购买的长篇与短篇小说，每篇解锁一年；若已购「多维叙事年度解锁」或有效期内的「神尊·全域解锁」，覆盖范围内的篇目不用单独购买。",
       hintEn: "Individually purchased short and long narrative pieces, each unlocked for one year; already covered if you hold the Narrative or Everything bundle.",
       rows: narrativeOrders,
     },

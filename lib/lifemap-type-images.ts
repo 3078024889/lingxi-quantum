@@ -32,3 +32,12 @@ export function lifemapTypeImage(nameZh: string): string | null {
   const slug = LIFEMAP_TYPE_IMAGE[nameZh];
   return slug ? `/images/lifemap-types/${slug}.jpg` : null;
 }
+
+/** 数据库存中文原型名；英文报告通过同一图片 slug 反查稳定的英文名。 */
+export function lifemapTypeNameEn(nameZh: string): string {
+  const slug = LIFEMAP_TYPE_IMAGE[nameZh];
+  if (!slug) return nameZh;
+  return Object.entries(LIFEMAP_TYPE_IMAGE).find(
+    ([name, mappedSlug]) => mappedSlug === slug && /^[\x00-\x7F]+$/.test(name),
+  )?.[0] ?? nameZh;
+}

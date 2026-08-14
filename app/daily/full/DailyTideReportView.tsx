@@ -103,12 +103,13 @@ export default function DailyTideReportView({ id }: { id: string }) {
       const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? `第 ${i + 1} 章`,
+          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body,
         })),
-        fileName: `灵犀今日潮汐-${name || "report"}.pdf`,
+        fileName: langEn ? `Lingxi-Daily-Tide-${name || "report"}.pdf` : `灵犀今日潮汐-${name || "report"}.pdf`,
         titleZh: `${name || "你的"}今日运势潮汐`,
         titleEn: `${name || "Your"} Daily Fortune Tide`,
+        language: langEn ? "en" : "zh",
         eyebrow: "DAILY TIDE",
         theme: ARCHIVE_THEMES.daily,
         coverImage: "/images/daily-tide-full/page-0.png",

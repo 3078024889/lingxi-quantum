@@ -95,12 +95,13 @@ export default function RomanceReportView({ id }: { id: string }) {
       const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? `第 ${i + 1} 章`,
+          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body,
         })),
-        fileName: `灵犀桃花磁场档案-${name || "report"}.pdf`,
+        fileName: langEn ? `Lingxi-Romance-Field-${name || "report"}.pdf` : `灵犀桃花磁场档案-${name || "report"}.pdf`,
         titleZh: `${name || "你的"}桃花磁场档案`,
         titleEn: `${name || "Your"} Romance Magnetism Archive`,
+        language: langEn ? "en" : "zh",
         eyebrow: "ROMANCE FIELD",
         theme: ARCHIVE_THEMES.romance,
         coverImage: "/images/romance-full/page-0.png",

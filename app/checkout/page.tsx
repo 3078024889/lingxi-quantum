@@ -333,16 +333,18 @@ function CheckoutInner() {
       } = await supabase.auth.getUser();
 
       if (user) {
-        const { data: unlock, error: unlockError } = await supabase
+        const { data: unlocks, error: unlockError } = await supabase
           .from("unlocks")
-          .select("expires_at")
+          .select("product_id, expires_at")
           .eq("user_id", user.id)
-          .eq("product_id", productId)
-          .maybeSingle();
+          .in("product_id", [productId, "everything"]);
 
-        if (!unlockError && unlock) {
-          const active = !unlock.expires_at || new Date(unlock.expires_at).getTime() > Date.now();
-          if (active) {
+        if (!unlockError && unlocks) {
+          const now = Date.now();
+          const hasAccess = unlocks.some((unlock: { expires_at: string | null }) =>
+            !unlock.expires_at || new Date(unlock.expires_at).getTime() > now
+          );
+          if (hasAccess) {
             router.replace(redirectTo);
             return;
           }

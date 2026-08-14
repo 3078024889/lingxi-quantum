@@ -15,16 +15,16 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
   {
     qZh: "灵犀场的能量交换项目分几种？", qEn: "How many kinds of energy exchange does Lingxi Field offer?",
-    aZh: "分两类：一次性开启类（四大修炼技术等），完成一次能量交换后永久有效；周期性场域连接（显化与梦境解读、多维叙事年度解锁、灵犀场全构造解锁），按周期连接，到期后由你自行决定是否延续，不会自动扣款。",
-    aEn: "There are two kinds: one-time openings (like the Four Practices), permanently active after a single energy exchange; and periodic field connections (Manifestation & Dream Interpretation, the yearly Narrative unlock, and Everything Unlocked), connected for a fixed period, with renewal always your own choice — nothing auto-charges.",
+    aZh: "分两类：一次性开启类（四大修炼技术等），完成一次能量交换后永久有效；周期性场域连接（显化与梦境解读、多维叙事年度解锁、神尊·全域解锁），按周期连接，到期后由你自行决定是否延续，不会自动扣款。",
+    aEn: "There are two kinds: one-time openings (like the Four Practices), permanently active after a single energy exchange; and periodic field connections (Manifestation & Dream Interpretation, the yearly Narrative unlock, and Sovereign · All-Field Access), connected for a fixed period, with renewal always your own choice — nothing auto-charges.",
   },
   {
-    qZh: "灵犀场·全构造解锁包含什么？", qEn: "What does Lingxi Field's Everything Unlocked include?",
-    aZh: "灵犀场全构造解锁，是进入完整灵犀场体验的一种方式，连接灵犀场目前开放的多个探索维度：场域精测（生命图谱、关系共振、生命灵签、量子生命镜像等生命结构探索）、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、显化与梦境探索（记录梦境、理解象征、探索意识与现实创造之间的连接）、多维叙事系统（持续展开的意识文学与未来探索内容），以及未来灵犀场持续生长的新模块。它不是开通更多功能，而是进入一个完整的生命探索空间。",
-    aEn: "Everything Unlocked is a way into the complete Lingxi Field experience, connecting the exploration dimensions currently open on the site: Field Insights (Life Map, Relationship Resonance, Life Oracle, Quantum Life Mirror, and other life-structure exploration), the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Manifestation & Dream Exploration (recording dreams, understanding symbols, exploring the connection between consciousness and reality-creation), the Dimensional Narrative system (continuously unfolding consciousness literature and future exploration), and new modules as Lingxi Field keeps growing. It isn't unlocking more features — it's entering a complete space for self-exploration.",
+    qZh: "神尊·全域解锁包含什么？", qEn: "What does Sovereign · All-Field Access include?",
+    aZh: "神尊·全域解锁是一份为期一年的全域通行证：有效期内解锁灵犀场全部付费内容，包括场域精测的 10 个核心产品、四大修炼技术、显化与梦境探索、多维叙事与订阅内容，也自动包含这一年内未来发布的任何新报告、新修炼技术与新场域模块。它不是若干权益的拼盘，而是完整进入持续生长的灵犀场。",
+    aEn: "Sovereign · All-Field Access is a one-year pass to every paid Lingxi Field experience: all ten Field Insight products, the Four Practices, Manifestation & Dream Exploration, Dimensional Narratives and subscriptions, plus any new report, practice, or field module released while the pass remains active. It is not a bundle of isolated benefits; it is complete entry into an evolving Lingxi Field.",
   },
   {
-    qZh: "为什么会设计「全构造解锁」这一层？", qEn: "Why does Everything Unlocked exist as its own tier?",
+    qZh: "为什么会设计「神尊·全域解锁」这一层？", qEn: "Why does Sovereign · All-Field Access exist as its own tier?",
     aZh: "灵犀场最初并不是为了创造一个个独立工具。生命图谱帮助看见结构，关系共振帮助理解连接，修炼技术帮助回到内在，显化练习帮助创造现实，多维叙事帮助拓展意识——这些模块背后，本质上都指向同一个方向：理解自己。当这些部分连接起来，它们才真正形成一个完整的场。",
     aEn: "Lingxi Field wasn't originally created as a set of separate tools. The Life Map helps you see your structure. Relationship Resonance helps you understand connection. The practices help you return inward. Manifestation helps you create reality. Dimensional Narrative helps you expand consciousness. Underneath, these all point toward the same thing: understanding yourself. Connected together, they form a genuinely complete field.",
   },
@@ -42,7 +42,7 @@ const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
 
 
 
-export const metadata = { title: "能量交换 | 灵犀场 · Energy Exchange | Lingxi", description: "能量交换：进入灵犀场的四大修炼技术、显化与梦境解读、多维叙事，或一次性开启全构造。完成后场域自动开启。Enter Lingxi Field's practices, manifestation module, narratives, or unlock everything at once.", alternates: { canonical: "/membership" } };
+export const metadata = { title: "能量交换 | 灵犀场 · Energy Exchange | Lingxi", description: "能量交换：以神尊年度全域通行证进入全部付费内容，或单独开启场域精测、修炼技术、显化梦境与多维叙事。Sovereign annual access opens every paid Lingxi Field experience, including future releases during the active term.", alternates: { canonical: "/membership" } };
 
 // 灵犀场不像普通SaaS会员那样写"权益包含"，写的是"进入什么场域、
 // 开启什么能力、获得什么长期体验"——每个产品下面配一份具体的
@@ -248,12 +248,66 @@ export default async function MembershipPage({
           </div>
         </section>
 
-        {/* 一、四大修炼技术 */}
-        <section className="px-6 pb-16">
+        {/* 一、神尊全域解锁：最高层级先建立价值锚点 */}
+        {everything && (
+        <section id="sovereign" className="scroll-mt-28 border-t border-white/5 px-6 py-16">
+          <div className="mx-auto max-w-3xl">
+            <div className="mb-8 text-center">
+              <h2 className="font-display text-3xl font-light text-bone">
+                <Bi zh="一 · 神尊全域解锁" en="I · Sovereign · All-Field Access" />
+              </h2>
+              <p className="mt-3 text-sm text-bone-dim"><Bi zh="年度全域通行证 · 当前与未来全部付费内容" en="Annual all-field pass · every current and future paid experience" /></p>
+            </div>
+            <div className="rounded-sm border border-amber/50 bg-amber/5 p-10 text-center">
+              <span className="mb-4 inline-block w-fit rounded-sm bg-amber/20 px-3 py-1 font-display text-xs tracking-widest2 text-amber">
+                <Bi zh="神尊层级" en="Sovereign Tier" />
+              </span>
+              <h3 className="font-display text-2xl text-bone"><Bi zh={everything.name} en={everything.nameEn} /></h3>
+              <PriceTag priceRmb={everything.priceRmb} days={everything.days} type={everything.type} />
+
+              <p className="mx-auto mt-6 max-w-md text-xs uppercase tracking-widest2 text-lattice"><Bi zh="有效期内 · 全站付费内容与未来新增全部开放" en="During the active term · every paid experience and future release" /></p>
+              <div className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
+                  <p className="text-sm text-bone">🔮 <Bi zh="场域精测·不限次数" en="Field Insights · Unlimited" /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="10 个核心产品与完整生命档案。" en="All ten core products and complete life archives." /></p>
+                </div>
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
+                  <p className="text-sm text-bone">🌌 <Bi zh="意识显化体系" en="Conscious Manifestation" /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="探索意识如何影响现实创造。" en="Explore how consciousness shapes the reality you create." /></p>
+                </div>
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
+                  <p className="text-sm text-bone">🌙 <Bi zh="梦境解析体系" en="Dream Interpretation" /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="理解梦境中的潜意识信息。" en="Understand what the subconscious communicates through dreams." /></p>
+                </div>
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
+                  <p className="text-sm text-bone">🌀 <Bi zh="全部修炼技术" en="Every Practice" /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="包含当前四大路径与年内未来新增技术。" en="The Four Practices plus new techniques released during the year." /></p>
+                </div>
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
+                  <p className="text-sm text-bone">📖 <Bi zh="多维叙事与订阅" en="Narratives & Subscriptions" /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="持续阅读灵犀场原创意识记录。" en="Read Lingxi Field's original consciousness records as they grow." /></p>
+                </div>
+                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
+                  <p className="text-sm text-bone">✨ <Bi zh="未来新增全部包含" en="All Future Releases Included" /></p>
+                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="新报告、新修炼技术与新场域模块自动加入。" en="New reports, practices, and field modules join automatically." /></p>
+                </div>
+              </div>
+
+              <p className="mt-8 font-display text-sm text-lattice"><Bi zh="一年全域通行，进入持续生长的完整灵犀场。" en="One year of all-field access to an evolving Lingxi Field." /></p>
+              <div className="mx-auto mt-6 max-w-xs">
+                <PlanButton productId={everything.id} loggedIn={!!user} highlight nameZh={everything.name} nameEn={everything.nameEn} />
+              </div>
+            </div>
+          </div>
+        </section>
+        )}
+
+        {/* 二、四大修炼技术 */}
+        <section id="practices" className="scroll-mt-28 px-6 pb-16">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
               <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="一 · 四大修炼技术" en="I · The Four Practices" />
+                <Bi zh="二 · 核心修炼技术" en="II · Core Practices" />
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -264,12 +318,12 @@ export default async function MembershipPage({
           </div>
         </section>
 
-        {/* 二、显化与梦境解读 */}
-        <section className="border-t border-white/5 px-6 py-16">
+        {/* 三、显化与梦境解读 */}
+        <section id="manifestation" className="scroll-mt-28 border-t border-white/5 px-6 py-16">
           <div className="mx-auto max-w-5xl">
             <div className="mb-10 text-center">
               <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="二 · 显化与梦境解读" en="II · Manifestation & Dream Interpretation" />
+                <Bi zh="三 · 显化与梦境解读" en="III · Manifestation & Dream Interpretation" />
               </h2>
               <p className="mt-3 text-sm text-bone-dim"><Bi zh="进入你的潜意识叙事空间" en="Enter your subconscious narrative space" /></p>
             </div>
@@ -281,13 +335,13 @@ export default async function MembershipPage({
           </div>
         </section>
 
-        {/* 三、多维叙事 */}
+        {/* 四、多维叙事 */}
         {narrativeAll && (
-        <section className="border-t border-white/5 px-6 py-16">
+        <section id="narratives" className="scroll-mt-28 border-t border-white/5 px-6 py-16 pb-28">
           <div className="mx-auto max-w-2xl">
             <div className="mb-8 text-center">
               <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="三 · 多维叙事" en="III · Dimensional Narrative" />
+                <Bi zh="四 · 多维叙事" en="IV · Dimensional Narrative" />
               </h2>
               <p className="mt-3 text-sm text-bone-dim"><Bi zh="阅读不同意识层级中的现实结构" en="Read the structure of reality across different levels of consciousness" /></p>
             </div>
@@ -309,67 +363,6 @@ export default async function MembershipPage({
               </div>
             </div>
           </div>
-        </section>
-        )}
-
-        {/* 四、灵犀场全构造解锁（核心会员） */}
-        {everything && (
-        <section className="border-t border-white/5 px-6 py-16 pb-28">
-          <div className="mx-auto max-w-3xl">
-            <div className="mb-8 text-center">
-              <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="四 · 灵犀场全构造解锁" en="IV · Lingxi Field · Everything Unlocked" />
-              </h2>
-              <p className="mt-3 text-sm text-bone-dim"><Bi zh="进入灵犀场完整体验层" en="Enter the full experience layer of Lingxi Field" /></p>
-            </div>
-            <div className="rounded-sm border border-amber/50 bg-amber/5 p-10 text-center">
-              <span className="mb-4 inline-block w-fit rounded-sm bg-amber/20 px-3 py-1 font-display text-xs tracking-widest2 text-amber">
-                <Bi zh="神尊层级" en="Sovereign Tier" />
-              </span>
-              <h3 className="font-display text-2xl text-bone"><Bi zh={everything.name} en={everything.nameEn} /></h3>
-              <PriceTag priceRmb={everything.priceRmb} days={everything.days} type={everything.type} />
-
-              <p className="mx-auto mt-6 max-w-md text-xs uppercase tracking-widest2 text-lattice"><Bi zh="全站能量交换项目 · 开放全部" en="Every energy exchange on the site · fully open" /></p>
-              <div className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🌌 <Bi zh="意识显化体系" en="Conscious Manifestation" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="探索意识如何影响现实创造。" en="Explore how consciousness shapes the reality you create." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🌙 <Bi zh="梦境解析体系" en="Dream Interpretation" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="理解梦境中的潜意识信息。" en="Understand what the subconscious communicates through dreams." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🌀 <Bi zh="修炼技术体系" en="The Practices" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="完整进入四大修炼路径。" en="Full access to all four practice paths." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">📖 <Bi zh="多维叙事体系" en="Dimensional Narrative" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="持续阅读灵犀场原创意识记录。" en="Read Lingxi Field's original consciousness records, as they grow." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🔮 <Bi zh="场域精测·不限次数" en="Field Insights · Unlimited" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="生命图谱、关系共振、生命灵签、量子生命镜像，不限次数深度解析。" en="Life Map, Relationship Resonance, Life Oracle, Quantum Life Mirror — unlimited deep readings." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">✨ <Bi zh="后续新增内容" en="Everything added later" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="未来开放的新场域模块，同步体验。" en="New field modules, as they open, included automatically." /></p>
-                </div>
-              </div>
-
-              <p className="mt-8 font-display text-sm text-lattice"><Bi zh="一次进入，开启完整灵犀场体验路径。" en="One entry. The full path through Lingxi Field opens." /></p>
-              <div className="mx-auto mt-6 max-w-xs">
-                <PlanButton productId={everything.id} loggedIn={!!user} highlight nameZh={everything.name} nameEn={everything.nameEn} />
-              </div>
-            </div>
-          </div>
-
-          <p className="mx-auto mt-12 max-w-2xl text-center text-xs leading-6 text-bone-soft">
-            <Bi
-              zh="能量交换完成后，场域自动开启，无需等待人工确认。四大修炼技术永久有效；显化与梦境解读、多维叙事、全构造解锁到期可续期，时间自动累加。"
-              en="Once the energy exchange completes, the Field opens automatically — no manual confirmation needed. The Four Practices are yours forever; Manifestation & Dream Interpretation, Dimensional Narrative, and Everything Unlocked can be renewed on expiry, with time added automatically."
-            />
-          </p>
         </section>
         )}
 

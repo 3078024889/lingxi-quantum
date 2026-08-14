@@ -1,0 +1,5 @@
+<view class="lx-page"><view class="lx-orbit"></view><field-nav /><view class="lx-content">
+  <view class="hero"><view class="lx-kicker">A Living Digital Field</view><view class="lx-title">不是浏览一个网站。<br/>是进入一片会回应你的场。</view><view class="lx-subtitle">精测、梦境、显化、叙事与修炼，在同一条生命路径上相互照亮。</view></view>
+  <view class="lx-grid lx-section"><view wx:for="{{entries}}" wx:key="title" class="lx-card lx-veil" data-index="{{index}}" bindtap="enter"><view class="lx-card-title">{{item.title}}</view><view class="lx-card-note">{{item.note}}</view><view class="arrow">进入 →</view></view></view>
+  <view class="lx-veil manifesto"><view class="lx-kicker">LINGXI FIELD</view><view class="lx-section-title">此刻就是入口</view><view class="lx-subtitle">不承诺替你预测人生。我们提供结构、镜面与可验证的行动，让你重新看见选择。</view></view>
+</view></view>

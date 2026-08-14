@@ -1,0 +1,2 @@
+const { request } = require('../../utils/api')
+Page({ data: { loading: true, orders: [], unlocks: [], manifestUntil: null }, onShow() { this.load() }, async load() { this.setData({ loading: true }); try { const me = await request('/api/wechat/mini/me'); this.setData({ orders: me.orders, unlocks: me.unlocks, manifestUntil: me.manifestUntil }) } catch (_) { wx.showToast({ title: '登录状态未就绪', icon: 'none' }) } finally { this.setData({ loading: false }) } }, openOrder() { wx.showToast({ title: '权益已同步到我的场域', icon: 'none' }) } })

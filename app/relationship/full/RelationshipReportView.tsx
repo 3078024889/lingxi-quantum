@@ -201,7 +201,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           : { zh: "亲密关系共振", en: "Romantic Relationship Resonance" };
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? titles[i]?.en : titles[i]?.zh) ?? `第 ${i + 1} 章`,
+          title: (langEn ? titles[i]?.en : titles[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body,
           // 第 1 章配双生命雷达图，第 2 章配共振分数条——把图放在
           // 它真正说明的那一章旁边，而不是全堆在封面后面。
@@ -215,9 +215,10 @@ export default function RelationshipReportView({ id }: { id: string }) {
                   "Resonance, complement, and friction — ordered by intensity.")
               : undefined,
         })),
-        fileName: `灵犀${relLabel.zh}档案-${reportTitle}.pdf`,
+        fileName: langEn ? `Lingxi-${relLabel.en}-${reportTitle}.pdf` : `灵犀${relLabel.zh}档案-${reportTitle}.pdf`,
         titleZh: `${reportTitle} · ${relLabel.zh}图谱`,
         titleEn: `${reportTitle} · ${relLabel.en}`,
+        language: langEn ? "en" : "zh",
         eyebrow: "RELATIONSHIP RESONANCE",
         theme: ARCHIVE_THEMES.relationship,
         // 三种关系各有一整套专属素材，不共用——亲密偏暖、商业偏理性、
@@ -227,7 +228,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
         endImage: `/images/relationship-full/${relKeyForPdf}/page-11.png`,
         featurePages: [{
           image: `/images/relationship/${relKeyForPdf}.jpg`,
-          title: relLabel.zh,
+          title: langEn ? relLabel.en : relLabel.zh,
           subtitle: reportTitle,
           eyebrow: "RELATIONSHIP RESONANCE · CORE CARD",
           backgroundImage: `/images/relationship-full/${relKeyForPdf}/page-1.png`,

@@ -101,12 +101,13 @@ export default function WealthReportView({ id }: { id: string }) {
       const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? `第 ${i + 1} 章`,
+          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body,
         })),
-        fileName: `灵犀财富创造地图-${name || "report"}.pdf`,
+        fileName: langEn ? `Lingxi-Wealth-Creation-${name || "report"}.pdf` : `灵犀财富创造地图-${name || "report"}.pdf`,
         titleZh: `${name || "你的"}财富创造地图`,
         titleEn: `${name || "Your"} Wealth Creation Map`,
+        language: langEn ? "en" : "zh",
         eyebrow: "WEALTH CREATION",
         theme: ARCHIVE_THEMES.wealth,
         coverImage: "/images/wealth-full/page-0.png",

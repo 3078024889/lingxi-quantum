@@ -248,15 +248,15 @@ export default function RelationshipFlow() {
       // 已经解锁过"关系共振图谱"的人（买过一次，规则是永久解锁、可以
       // 反复测不同的两人），这里不应该再走一次付款——直接带去结果页，
       // 结果页那边的接口自己会认这份解锁状态。
-      const { data: unlockRows } = await supabase.from("unlocks").select("product_id").eq("user_id", user.id);
-      // v267修复：之前这里把"everything"（灵犀场·全构造解锁）也当成
-      // 已经覆盖了关系共振——但everything这个产品自己的文案写的是
-      // "解锁全部多维叙事与全部修炼技术"，从不包含8个场域精测报告，
-      // 后端解锁校验那边也确实不认everything。误判的后果：买过
-      // everything、但没单独买过关系共振的人，点"提交"会被这里误认成
-      // "已解锁"，跳过结账页直接去报告页，报告页一查真实状态又是
-      // "没解锁"——现在去掉这个误判。
-      const already = (unlockRows ?? []).some((r: { product_id: string }) => r.product_id === "relationship-resonance");
+      const { data: unlockRows } = await supabase
+        .from("unlocks")
+        .select("product_id, expires_at")
+        .eq("user_id", user.id);
+      const now = Date.now();
+      const already = (unlockRows ?? []).some((r: { product_id: string; expires_at: string | null }) => {
+        const active = !r.expires_at || new Date(r.expires_at).getTime() > now;
+        return active && (r.product_id === "relationship-resonance" || r.product_id === "everything");
+      });
       if (already) {
         router.push(`/relationship/full?id=${saveData.id}`);
         return;

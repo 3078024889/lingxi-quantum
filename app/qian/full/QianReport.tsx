@@ -144,13 +144,14 @@ export default function QianReport({ id }: { id: string }) {
       await exportArchivePdf({
         chapters: sections
           .map((body, i) => ({
-            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? `第 ${i + 1} 章`,
+            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
             body,
           }))
           .filter((c) => c.body && c.body.trim()),
-        fileName: `灵犀生命灵签-${name || "report"}.pdf`,
+        fileName: langEn ? `Lingxi-Life-Oracle-${name || "report"}.pdf` : `灵犀生命灵签-${name || "report"}.pdf`,
         titleZh: `${name || "你的"}生命原型档案`,
         titleEn: `${name || "Your"} Life Archetype Blueprint`,
+        language: langEn ? "en" : "zh",
         eyebrow: "LIFE ORACLE",
         theme: ARCHIVE_THEMES.qian,
         coverImage: "/images/qian-full/page-0.png",
@@ -275,7 +276,7 @@ export default function QianReport({ id }: { id: string }) {
           <div className="lx-report-glass lx-report-glass-readable flex w-full flex-col items-center px-7 py-10 text-center sm:px-12">
             <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh={TIER_LABELS[sign.tier].zh} en={TIER_LABELS[sign.tier].en} /></p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/images/qian/${String(sign.index).padStart(2, "0")}.jpg`} alt={sign.nameZh} className="lx-publication-card-art mt-6" />
+              <img src={`/images/qian/${String(sign.index).padStart(2, "0")}.jpg`} alt={langEn ? sign.nameEn : sign.nameZh} className="lx-publication-card-art mt-6" />
             <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl"><Bi zh={sign.nameZh} en={sign.nameEn} /></h2>
             <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh="这一签独占一页，让它在你的生命档案中完整显现。" en="This sign receives its own page, complete within your life archive." /></p>
           </div>

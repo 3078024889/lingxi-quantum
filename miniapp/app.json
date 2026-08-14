@@ -1,0 +1,31 @@
+{
+  "pages": [
+    "pages/field/index",
+    "pages/explore/index",
+    "pages/narratives/index",
+    "pages/profile/index",
+    "pages/product/index",
+    "pages/web/index"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#111a3a",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#8d91ae",
+    "selectedColor": "#76dfd2",
+    "backgroundColor": "#101936",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/field/index", "text": "场域" },
+      { "pagePath": "pages/explore/index", "text": "精测" },
+      { "pagePath": "pages/narratives/index", "text": "叙事" },
+      { "pagePath": "pages/profile/index", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
+
+\n

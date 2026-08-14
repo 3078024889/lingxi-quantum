@@ -20,6 +20,9 @@
     "audit:report-routes": "node scripts/audit-report-routes.mjs",
     "audit:publication": "node scripts/audit-publication-ui.mjs",
     "audit:security": "node scripts/audit-security.mjs"
+    ,"audit:mini-program": "node scripts/audit-mini-program.mjs",
+    "audit:report-language": "node scripts/audit-report-language.mjs",
+    "audit:sovereign-access": "node scripts/audit-sovereign-access.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.122.0",
