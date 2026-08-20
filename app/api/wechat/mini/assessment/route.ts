@@ -19,6 +19,42 @@ type PersonPayload = {
   hour?: unknown; minute?: unknown; hasTime?: unknown;
 };
 
+type ExplorationProfile = {
+  gender?: unknown; city?: unknown; profession?: unknown; relationshipStatus?: unknown;
+  practiceStatus?: unknown; focus?: unknown; currentState?: unknown; energyLevel?: unknown;
+  clarityLevel?: unknown; alignmentLevel?: unknown; relationshipStage?: unknown;
+};
+
+const LABELS = {
+  focus: { all: "全面探索", wealth: "财富与事业", relationship: "感情与关系", direction: "人生方向", growth: "内在成长" },
+  currentState: { transforming: "转化中", lost: "有些迷失", breakthrough: "准备突破", stable: "相对稳定", exploring: "正在探索" },
+} as const;
+
+function enumValue<T extends string>(value: unknown, values: readonly T[], fallback: T) {
+  return typeof value === "string" && values.includes(value as T) ? value as T : fallback;
+}
+
+function boundedText(value: unknown, length: number) {
+  return typeof value === "string" ? value.trim().slice(0, length) : "";
+}
+
+function parseProfile(raw: ExplorationProfile | undefined) {
+  const focus = enumValue(raw?.focus, ["all", "wealth", "relationship", "direction", "growth"] as const, "all");
+  const currentState = enumValue(raw?.currentState, ["transforming", "lost", "breakthrough", "stable", "exploring"] as const, "exploring");
+  const score = (value: unknown) => Math.min(5, Math.max(1, Number.isInteger(Number(value)) ? Number(value) : 3));
+  return {
+    focus, currentState, city: boundedText(raw?.city, 60), gender: enumValue(raw?.gender, ["female", "male", "other"] as const, "other"),
+    profession: boundedText(raw?.profession, 80), relationshipStatus: enumValue(raw?.relationshipStatus, ["single", "dating", "married", "complicated"] as const, "single"),
+    practiceStatus: enumValue(raw?.practiceStatus, ["regular", "occasional", "curious", "none"] as const, "none"),
+    relationshipStage: enumValue(raw?.relationshipStage, ["understanding", "deepening", "tension", "repair"] as const, "understanding"),
+    energyLevel: score(raw?.energyLevel), clarityLevel: score(raw?.clarityLevel), alignmentLevel: score(raw?.alignmentLevel),
+  };
+}
+
+function contextLine(profile: ReturnType<typeof parseProfile>) {
+  return `你选择从「${LABELS.focus[profile.focus]}」进入，当前更接近「${LABELS.currentState[profile.currentState]}」。`;
+}
+
 function parsePerson(raw: PersonPayload, label = "你的") {
   const year = Number(raw.year), month = Number(raw.month), day = Number(raw.day);
   const hour = raw.hasTime ? Number(raw.hour) : 12;
@@ -50,7 +86,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json() as {
-      productId?: unknown; person?: PersonPayload; personB?: PersonPayload; relationshipType?: unknown; focus?: unknown;
+      productId?: unknown; person?: PersonPayload; personB?: PersonPayload; relationshipType?: unknown; profile?: ExplorationProfile;
     };
     if (typeof body.productId !== "string" || !SUPPORTED_PRODUCTS.has(body.productId)) {
       return NextResponse.json({ error: "这项精测暂未开放资料采集" }, { status: 400 });
@@ -60,7 +96,8 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const a = parsePerson(body.person);
     const facts = computeLifeMapFacts(a.birthInput);
-    const focus = typeof body.focus === "string" ? body.focus.trim().slice(0, 120) : "";
+    const profile = parseProfile(body.profile);
+    const contextualFacts = { ...facts, mini_exploration_profile: profile };
 
     if (body.productId === "relationship-resonance") {
       if (!body.personB) return NextResponse.json({ error: "关系共振需要两个人的资料" }, { status: 400 });
@@ -71,7 +108,7 @@ export async function POST(req: Request) {
       const { data, error } = await admin.from("relationship_submissions").insert({
         user_id: session.userId, name_a: a.name, name_b: b.name,
         birth_input_a: a.birthInput, birth_input_b: b.birthInput,
-        facts_a: facts, facts_b: factsB, relationship_type: relationshipType,
+        facts_a: contextualFacts, facts_b: { ...factsB, mini_exploration_profile: profile }, relationship_type: relationshipType,
       }).select("id").single();
       if (error || !data) throw new Error(`relationship insert: ${error?.code ?? "unknown"}`);
       const resonance = compareLifeVectors(computeLifeVector(facts), computeLifeVector(factsB));
@@ -80,8 +117,8 @@ export async function POST(req: Request) {
         eyebrow: `${a.name} × ${b.name} · 双生命结构`,
         title: strongest ? `共同驱动力：${strongest.labelZh}` : "相似之外，更重要的是你们如何互相改变",
         insight: strongest
-          ? `你们在「${strongest.labelZh}」上拥有可辨认的共振，但完整报告真正要回答的是：谁先靠近、谁负责收束，以及差异在什么情境下会变成互补或摩擦。`
-          : "你们的价值不在一个简单的匹配分数，而在距离、角色与现实情境如何改变这段关系。",
+          ? `${contextLine(profile)} 你们在「${strongest.labelZh}」上拥有可辨认的共振；完整报告会继续回答谁先靠近、谁负责收束，以及差异在什么情境下会变成互补或摩擦。`
+          : `${contextLine(profile)} 你们的价值不在一个简单的匹配分数，而在距离、角色与现实情境如何改变这段关系。`,
         traits: resonance.resonant.slice(0, 3).map((item) => ({ label: item.labelZh, score: Math.round((item.a + item.b) / 2) })),
       }});
     }
@@ -89,43 +126,44 @@ export async function POST(req: Request) {
     let table = "life_map_submissions";
     let row: Record<string, unknown> = {};
     let preview = basePreview(facts);
+    preview = { ...preview, insight: `${contextLine(profile)} ${preview.insight}` };
 
     if (body.productId === "life-map-report") {
-      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts,
-        core_type_name: preview.title, free_narrative: preview.insight, focus: focus || "全域结构",
-        current_state: "探索中", energy_level: 3, clarity_level: 3, alignment_level: 3 };
+      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts: contextualFacts,
+        core_type_name: preview.title, free_narrative: preview.insight, focus: LABELS.focus[profile.focus],
+        current_state: LABELS.currentState[profile.currentState], energy_level: profile.energyLevel, clarity_level: profile.clarityLevel, alignment_level: profile.alignmentLevel };
     } else if (body.productId === "qian-reading") {
       table = "qian_submissions";
       const signs = drawThreeSigns(facts);
-      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts, sign_indexes: signs.map((s) => s.index) };
+      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts: contextualFacts, sign_indexes: signs.map((s) => s.index) };
       preview = { eyebrow: "三签已由你的四柱确定", title: signs.map((s) => s.nameZh).join(" → "),
-        insight: `真正独属于你的不是三枚签各自的含义，而是「${signs[0].nameZh}」如何被「${signs[1].nameZh}」修正，最后在「${signs[2].nameZh}」中落地。`,
+        insight: `${contextLine(profile)}真正独属于你的不是三枚签各自的含义，而是「${signs[0].nameZh}」如何被「${signs[1].nameZh}」修正，最后在「${signs[2].nameZh}」中落地。`,
         traits: signs.map((s, index) => ({ label: ["源流签", "灵魂签", "行者签"][index], score: s.index + 1 })) };
     } else if (body.productId === "tarot-reading") {
       table = "tarot_reading_submissions";
       const spread = drawTarotSpread(facts);
-      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts,
+      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts: contextualFacts,
         hidden_index: spread.hidden.index, present_index: spread.present.index, future_index: spread.future.index };
       preview = { eyebrow: "三重镜像已形成", title: `${spread.hidden.nameZh} → ${spread.present.nameZh} → ${spread.future.nameZh}`,
-        insight: "三张牌不是三个孤立答案。完整档案会解释正在释放什么、穿越什么，以及什么现实证据代表新的结构真正形成。",
+        insight: `${contextLine(profile)}三张牌不是三个孤立答案。完整档案会解释正在释放什么、穿越什么，以及什么现实证据代表新的结构真正形成。`,
         traits: [{ label: "潜意识镜像", score: spread.hidden.index + 1 }, { label: "当下共振", score: spread.present.index + 1 }, { label: "未来展开", score: spread.future.index + 1 }] };
     } else {
       table = body.productId === "resilience-report" ? "resilience_submissions" :
         body.productId === "romance-report" ? "romance_submissions" :
         body.productId === "daily-tide-report" ? "daily_tide_submissions" : "wealth_submissions";
-      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts,
+      row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts: contextualFacts,
         ...(body.productId === "daily-tide-report" ? { generated_date: new Date().toISOString().slice(0, 10) } : {}) };
       const vector = computeLifeVector(facts);
       if (body.productId === "resilience-report") {
         const result = calculateResilience(vector);
         const weakest = Object.entries(result.breakdown).sort((x, y) => x[1] - y[1])[0];
         preview = { eyebrow: `生命韧性初步结构 · ${result.score}`, title: "恢复不是一个分数，而是一条链",
-          insight: `你的恢复链目前最值得继续读取的是最低承载段（${weakest[1]}）。完整档案会说明受扰、回收、重启与稳态之间究竟卡在哪里。`,
+          insight: `${contextLine(profile)}你的恢复链目前最值得继续读取的是最低承载段（${weakest[1]}）。完整档案会说明受扰、回收、重启与稳态之间究竟卡在哪里。`,
           traits: Object.entries(result.breakdown).slice(0, 3).map(([label, score]) => ({ label, score })) };
       } else if (body.productId === "wealth-report") {
         const result = calculateWealthDetail(vector);
         preview = { eyebrow: `财富创造初步结构 · ${result.typeLabelZh}`, title: "财富没有堵在能力，而堵在闭环最窄处",
-          insight: `你的价值创造更接近「${result.typeLabelZh}」。完整地图会继续定位从发现价值到表达、交换、留存与复制之间的最窄瓶颈。`,
+          insight: `${contextLine(profile)}你的价值创造更接近「${result.typeLabelZh}」。完整地图会继续定位从发现价值到表达、交换、留存与复制之间的最窄瓶颈。`,
           traits: Object.entries(result.breakdown).slice(0, 3).map(([label, score]) => ({ label, score })) };
       }
     }

@@ -3,11 +3,16 @@ const { payForSku } = require('../../utils/payment')
 
 const TODAY = new Date()
 const defaults = () => ({ name: '', year: '', month: '', day: '', hour: '12', minute: '00', hasTime: false })
+const profileDefaults = () => ({
+  gender: '', city: '', profession: '', relationshipStatus: '', practiceStatus: '',
+  focus: 'all', currentState: 'exploring', energyLevel: 3, clarityLevel: 3, alignmentLevel: 3,
+  relationshipStage: 'understanding',
+})
 
 Page({
   data: {
     loading: true, calculating: false, paying: false, item: null, preview: null, submissionId: '',
-    person: defaults(), personB: defaults(), relationshipType: 'romantic', focus: '',
+    person: defaults(), personB: defaults(), relationshipType: 'romantic', profile: profileDefaults(),
     isRelationship: false, currentYear: TODAY.getFullYear(), error: '',
   },
   async onLoad(options) {
@@ -31,7 +36,18 @@ Page({
   },
   toggleTime(event) { this.setData({ 'person.hasTime': event.detail.value, preview: null }) },
   toggleTimeB(event) { this.setData({ 'personB.hasTime': event.detail.value, preview: null }) },
-  inputFocus(event) { this.setData({ focus: event.detail.value }) },
+  inputProfile(event) {
+    const key = event.currentTarget.dataset.key
+    this.setData({ [`profile.${key}`]: event.detail.value, preview: null })
+  },
+  chooseProfile(event) {
+    const key = event.currentTarget.dataset.key
+    this.setData({ [`profile.${key}`]: event.detail.value, preview: null })
+  },
+  chooseLevel(event) {
+    const key = event.currentTarget.dataset.key
+    this.setData({ [`profile.${key}`]: Number(event.currentTarget.dataset.value), preview: null })
+  },
   chooseRelation(event) { this.setData({ relationshipType: event.detail.value }) },
   payloadPerson(person) {
     return { ...person, year: Number(person.year), month: Number(person.month), day: Number(person.day), hour: Number(person.hour), minute: Number(person.minute) }
@@ -46,7 +62,7 @@ Page({
         person: this.payloadPerson(this.data.person),
         personB: this.data.isRelationship ? this.payloadPerson(this.data.personB) : undefined,
         relationshipType: this.data.relationshipType,
-        focus: this.data.focus,
+        profile: this.data.profile,
       }})
       this.setData({ preview: result.preview, submissionId: result.submissionId })
       setTimeout(() => wx.pageScrollTo({ selector: '#preview', duration: 360 }), 80)
