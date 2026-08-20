@@ -3,6 +3,7 @@ import "./globals.css";
 import FieldVoices from "@/components/FieldVoices";
 import AuroraVideoBand from "@/components/AuroraVideoBand";
 import ClickRipple from "@/components/ClickRipple";
+import MiniEmbedMode from "@/components/MiniEmbedMode";
 
 const SITE = "https://lingxifield.com";
 
@@ -113,6 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
       </head>
       <body className="font-body antialiased">
+        <MiniEmbedMode />
         <div className="grain" aria-hidden="true" />
         <AuroraVideoBand />
         <FieldVoices />

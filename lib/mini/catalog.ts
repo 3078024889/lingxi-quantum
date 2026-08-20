@@ -11,6 +11,9 @@ export type MiniCatalogItem = {
   days: number | null;
   category: "report" | "practice" | "membership" | "narrative";
   note: string;
+  /** Server-delivered intake hint. Native clients need no upload for copy/flow changes. */
+  assessmentKind?: "life-map" | "relationship" | "daily-tide" | "birth" | "resilience" | "romance" | "wealth";
+  assessmentIntro?: string;
 };
 
 const FIXED_SKUS: Record<string, string> = {
@@ -49,6 +52,26 @@ const UNAVAILABLE_NARRATIVE_IDS = new Set(
   NARRATIVES.filter((item) => item.status === "soon").map((item) => item.slug)
 );
 
+const REPORT_INTAKE: Record<string, Pick<MiniCatalogItem, "assessmentKind" | "assessmentIntro">> = {
+  "life-map-report": {
+    assessmentKind: "life-map",
+    assessmentIntro: "完整生命坐标：出生资料、当下状态与可选的数字能量附录。",
+  },
+  "relationship-resonance": {
+    assessmentKind: "relationship",
+    assessmentIntro: "两份真实资料共同生成关系结构；可选择亲密、合伙或其他关系。",
+  },
+  "daily-tide-report": {
+    assessmentKind: "daily-tide",
+    assessmentIntro: "先从你的星座进入今日潮汐；完整深读再使用出生日期校准。",
+  },
+  "qian-reading": { assessmentKind: "birth", assessmentIntro: "用真实出生资料确定你的三重生命签。" },
+  "tarot-reading": { assessmentKind: "birth", assessmentIntro: "用真实出生资料生成当下三镜联合生命公式。" },
+  "resilience-report": { assessmentKind: "resilience", assessmentIntro: "出生结构结合你此刻的恢复状态，绘制个人恢复链。" },
+  "romance-report": { assessmentKind: "romance", assessmentIntro: "出生结构结合你的关系状态，读取吸引与靠近时序。" },
+  "wealth-report": { assessmentKind: "wealth", assessmentIntro: "出生结构结合职业与行动状态，定位价值创造的瓶颈。" },
+};
+
 function categoryFor(productId: string): MiniCatalogItem["category"] {
   if (REPORT_IDS.has(productId)) return "report";
   if (PRACTICE_IDS.has(productId)) return "practice";
@@ -84,5 +107,6 @@ export function getMiniCatalog(): MiniCatalogItem[] {
     days: product.days ?? null,
     category: categoryFor(product.id),
     note: categoryFor(product.id) === "narrative" ? getNarrative(product.id)?.teaser ?? product.note : product.note,
+    ...REPORT_INTAKE[product.id],
   }));
 }

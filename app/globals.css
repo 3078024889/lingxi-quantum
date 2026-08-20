@@ -391,6 +391,23 @@ button, .btn, a[class*="bg-lattice"], a[class*="bg-amber"] {
   box-shadow: 0 2px 30px rgba(140, 110, 255, 0.16);
 }
 
+/* Native WeChat web-view: retain the living artwork, but prioritise legibility
+   over translucent effects that are softened by the iOS embedded browser. */
+html.lx-mini-embed .lx-nav-glass { display: none; }
+html.lx-mini-embed main { padding-top: calc(env(safe-area-inset-top) + 24px) !important; }
+html.lx-mini-embed .bg-reading-glass {
+  background-color: rgba(9, 19, 43, 0.82) !important;
+  background-image: linear-gradient(135deg, rgba(34, 53, 93, 0.9), rgba(10, 22, 49, 0.84)) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.24);
+}
+html.lx-mini-embed .bg-reading-glass .font-display {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 400;
+}
+html.lx-mini-embed .bg-reading-glass .text-bone { color: #f7f8ff !important; text-shadow: none; }
+html.lx-mini-embed .bg-reading-glass .text-bone-soft,
+html.lx-mini-embed .bg-reading-glass .text-bone-dim { color: #d3dced !important; }
+
 .lx-entry-accordion summary::-webkit-details-marker { display: none; }
 .lx-entry-accordion summary { list-style: none; }
 

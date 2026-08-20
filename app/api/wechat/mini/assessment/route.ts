@@ -5,6 +5,7 @@ import { computeLifeMapFacts, type BirthInput } from "@/lib/lifemap-calc";
 import { calculateResilience, calculateWealthDetail, compareLifeVectors, computeLifeVector, topTraits } from "@/lib/life-vector";
 import { drawThreeSigns } from "@/lib/qian-draw";
 import { drawTarotSpread } from "@/lib/tarot-spread";
+import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -17,6 +18,7 @@ const SUPPORTED_PRODUCTS = new Set([
 type PersonPayload = {
   name?: unknown; year?: unknown; month?: unknown; day?: unknown;
   hour?: unknown; minute?: unknown; hasTime?: unknown;
+  phone?: unknown; plate?: unknown;
 };
 
 type ExplorationProfile = {
@@ -67,7 +69,35 @@ function parsePerson(raw: PersonPayload, label = "你的") {
     throw new Error(`${label}出生日期或时间不完整`);
   }
   const birthInput: BirthInput = { year, month, day, hour, minute, hasTime: Boolean(raw.hasTime) };
-  return { name: typeof raw.name === "string" ? raw.name.trim().slice(0, 40) : "", birthInput };
+  return {
+    name: typeof raw.name === "string" ? raw.name.trim().slice(0, 40) : "",
+    phone: boundedText(raw.phone, 32),
+    plate: boundedText(raw.plate, 32),
+    birthInput,
+  };
+}
+
+const DAILY_SIGNS = new Map([
+  ["aries", "白羊座"], ["taurus", "金牛座"], ["gemini", "双子座"], ["cancer", "巨蟹座"],
+  ["leo", "狮子座"], ["virgo", "处女座"], ["libra", "天秤座"], ["scorpio", "天蝎座"],
+  ["sagittarius", "射手座"], ["capricorn", "摩羯座"], ["aquarius", "水瓶座"], ["pisces", "双鱼座"],
+]);
+
+function dailySign(value: unknown) {
+  return typeof value === "string" && DAILY_SIGNS.has(value) ? value : "aries";
+}
+
+function lifeMapFocus(profile: ReturnType<typeof parseProfile>, person: ReturnType<typeof parsePerson>) {
+  let focus = LABELS.focus[profile.focus];
+  if (person.phone) {
+    const result = analyzePhoneNumber(person.phone);
+    if (result.digitsOnly) focus += ` · 手机号数字能量：${result.digitsOnly}（总和${result.totalSum}，${result.lingdong.zh}）`;
+  }
+  if (person.plate) {
+    const result = analyzePlateNumber(person.plate);
+    if (result.digitsOnly) focus += ` · 车牌号数字能量：${result.digitsOnly}（总和${result.totalSum}，${result.lingdong.zh}）`;
+  }
+  return focus;
 }
 
 function basePreview(facts: ReturnType<typeof computeLifeMapFacts>) {
@@ -86,7 +116,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json() as {
-      productId?: unknown; person?: PersonPayload; personB?: PersonPayload; relationshipType?: unknown; profile?: ExplorationProfile;
+      productId?: unknown; person?: PersonPayload; personB?: PersonPayload; relationshipType?: unknown; profile?: ExplorationProfile; sign?: unknown;
     };
     if (typeof body.productId !== "string" || !SUPPORTED_PRODUCTS.has(body.productId)) {
       return NextResponse.json({ error: "这项精测暂未开放资料采集" }, { status: 400 });
@@ -97,7 +127,11 @@ export async function POST(req: Request) {
     const a = parsePerson(body.person);
     const facts = computeLifeMapFacts(a.birthInput);
     const profile = parseProfile(body.profile);
-    const contextualFacts = { ...facts, mini_exploration_profile: profile };
+    const contextualFacts = {
+      ...facts,
+      mini_exploration_profile: profile,
+      ...(body.productId === "daily-tide-report" ? { mini_daily_sign: dailySign(body.sign) } : {}),
+    };
 
     if (body.productId === "relationship-resonance") {
       if (!body.personB) return NextResponse.json({ error: "关系共振需要两个人的资料" }, { status: 400 });
@@ -130,7 +164,7 @@ export async function POST(req: Request) {
 
     if (body.productId === "life-map-report") {
       row = { user_id: session.userId, name: a.name || null, birth_input: a.birthInput, facts: contextualFacts,
-        core_type_name: preview.title, free_narrative: preview.insight, focus: LABELS.focus[profile.focus],
+        core_type_name: preview.title, free_narrative: preview.insight, focus: lifeMapFocus(profile, a),
         current_state: LABELS.currentState[profile.currentState], energy_level: profile.energyLevel, clarity_level: profile.clarityLevel, alignment_level: profile.alignmentLevel };
     } else if (body.productId === "qian-reading") {
       table = "qian_submissions";
@@ -165,6 +199,14 @@ export async function POST(req: Request) {
         preview = { eyebrow: `财富创造初步结构 · ${result.typeLabelZh}`, title: "财富没有堵在能力，而堵在闭环最窄处",
           insight: `${contextLine(profile)}你的价值创造更接近「${result.typeLabelZh}」。完整地图会继续定位从发现价值到表达、交换、留存与复制之间的最窄瓶颈。`,
           traits: Object.entries(result.breakdown).slice(0, 3).map(([label, score]) => ({ label, score })) };
+      } else if (body.productId === "daily-tide-report") {
+        const sign = dailySign(body.sign);
+        preview = {
+          eyebrow: `${DAILY_SIGNS.get(sign)} · 今日潮汐深读`,
+          title: "今天先推进什么，什么值得暂缓",
+          insight: `你已从${DAILY_SIGNS.get(sign)}进入今日潮汐。完整深读会把星座入口与你的出生结构一起转换为今日行动、关系与观察窗口，而不是事件预测。`,
+          traits: topTraits(vector, 3).map((item) => ({ label: item.labelZh, score: item.score })),
+        };
       }
     }
 
