@@ -1,1 +1,1 @@
-.narrative { margin-bottom: 20rpx; min-height: auto; }
+.narrative{margin-bottom:18rpx;min-height:0;padding:34rpx 30rpx}.story-label{color:#7adfd4;font-family:Georgia,serif;letter-spacing:4rpx;font-size:19rpx}.story-open{margin-top:26rpx;color:#e9cc91;font-size:23rpx;letter-spacing:2rpx}

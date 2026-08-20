@@ -1,5 +1,5 @@
 import { allProducts, getProduct, type Product } from "@/lib/plans";
-import { NARRATIVES } from "@/lib/narratives";
+import { NARRATIVES, getNarrative } from "@/lib/narratives";
 
 export type MiniCatalogItem = {
   skuId: string;
@@ -83,6 +83,6 @@ export function getMiniCatalog(): MiniCatalogItem[] {
     accessType: product.type,
     days: product.days ?? null,
     category: categoryFor(product.id),
-    note: product.note,
+    note: categoryFor(product.id) === "narrative" ? getNarrative(product.id)?.teaser ?? product.note : product.note,
   }));
 }

@@ -1,3 +1,5 @@
+const { publicRequest } = require('../../utils/api')
+
 Page({
   data: {
     entries: [
@@ -7,10 +9,22 @@ Page({
       { title: '潜意识重塑', note: '看见反复出现的生命模式，重新选择内在路径', web: '/#gates' },
       { title: '多维叙事', note: '进入为灵魂准备的付费阅读空间', path: '/pages/narratives/index' },
     ],
+    exchanges: [],
+  },
+  async onLoad() {
+    try {
+      const data = await publicRequest('/api/wechat/mini/catalog')
+      const priority = ['everything', 'narrative-all', 'breath', 'intuition', 'heart-reset', 'ascending-heart', 'year', 'month']
+      this.setData({ exchanges: priority.map(id => data.items.find(item => item.productId === id)).filter(Boolean) })
+    } catch (_) {}
   },
   enter(event) {
     const item = this.data.entries[event.currentTarget.dataset.index]
     if (item.path) return wx.switchTab({ url: item.path })
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(item.web)}` })
+  },
+  openExchange(event) {
+    const item = this.data.exchanges[event.currentTarget.dataset.index]
+    wx.navigateTo({ url: `/pages/product/index?sku=${encodeURIComponent(item.skuId)}&product=${encodeURIComponent(item.productId)}&from=field` })
   },
 })

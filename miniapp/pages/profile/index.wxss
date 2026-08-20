@@ -1,1 +1,4 @@
-.order { min-height: auto; margin-bottom: 18rpx; }.arrow { color: #76ded2; margin-top: 16rpx; font-size: 23rpx; }
+.order { min-height: auto; margin-bottom: 18rpx; }
+.arrow { color: #76ded2; margin-top: 16rpx; font-size: 23rpx; }
+.benefit { margin-bottom: 14rpx; padding: 24rpx 28rpx; font-size: 26rpx; }
+.benefit-date { color: #aeb3c9; margin-top: 8rpx; font-size: 22rpx; }

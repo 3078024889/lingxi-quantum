@@ -1,1 +1,2 @@
 .hero { padding: 72rpx 6rpx 26rpx; }.arrow { margin-top: 26rpx; color: #79ded3; font-size: 22rpx; letter-spacing: 3rpx; }.manifesto { margin-top: 52rpx; padding: 42rpx 34rpx 46rpx; }
+.exchange-title{margin-top:16rpx}.exchange-list{margin-top:26rpx}.exchange{display:flex;align-items:center;justify-content:space-between;gap:24rpx;margin-top:14rpx;padding:24rpx}.exchange .lx-card-title{font-size:27rpx}.exchange-price{flex:none;color:#eacb8e;font-family:Georgia,serif;font-size:24rpx}

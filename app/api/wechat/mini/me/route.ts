@@ -22,7 +22,10 @@ export async function GET(req: Request) {
   return NextResponse.json({
     userId: session.userId,
     manifestUntil: profile?.manifest_until ?? null,
-    unlocks: (unlocks ?? []).filter((item) => !item.expires_at || Date.parse(item.expires_at) > now),
+    unlocks: (unlocks ?? []).filter((item) => !item.expires_at || Date.parse(item.expires_at) > now).map((item) => ({
+      ...item,
+      productName: getProduct(item.product_id)?.name ?? item.product_id,
+    })),
     orders: (orders ?? []).map((order) => ({
       ...order,
       productName: getProduct(order.product_id)?.name ?? order.product_id,

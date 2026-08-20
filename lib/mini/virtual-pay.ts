@@ -37,8 +37,6 @@ export function buildMiniVirtualPayment(input: {
   });
   return {
     mode: MINI_VIRTUAL_PAY_MODE,
-    env: sandbox ? 1 : 0,
-    offerId,
     signData,
     paySig: hmacSha256Hex(appKey, `requestVirtualPayment&${signData}`),
     signature: hmacSha256Hex(decryptMiniSecret(input.encryptedSessionKey), signData),

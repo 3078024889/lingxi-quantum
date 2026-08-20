@@ -2,8 +2,8 @@ const { request, wxLogin } = require('./api')
 
 const ERROR_MESSAGES = {
   '-4': '本次交易触发安全保护，请稍后再试',
-  '-15001': '支付参数异常，请联系客服',
-  '-15002': '订单号已使用，请重新发起',
+  '-15001': '微信提示缺少支付参数。请记录本页错误码并联系客服',
+  '-15002': '微信提示支付参数无效，请重新进入后再试',
   '-15003': '支付系统繁忙，请稍后再试',
   '-15005': '微信登录态失效，请重新进入',
   '-15006': '支付签名校验失败，请联系客服',
@@ -29,7 +29,13 @@ async function payForSku(skuId, productId, submissionId) {
     success: () => resolve({ orderId: result.orderId }),
     fail: (error) => {
       if (Number(error.errCode) === -2) return reject(Object.assign(new Error('cancelled'), { cancelled: true }))
-      reject(new Error(ERROR_MESSAGES[String(error.errCode)] || error.errMsg || '支付未完成'))
+      const platform = (wx.getDeviceInfo ? wx.getDeviceInfo().platform : wx.getSystemInfoSync().platform || '').toLowerCase()
+      const code = String(error.errCode == null ? 'unknown' : error.errCode)
+      console.error('[virtual payment failed]', { code, message: error.errMsg, platform, skuId, productId })
+      if (platform === 'ios' && (code === '-15001' || code === '-15002')) {
+        return reject(new Error(`iPhone 虚拟支付通道尚未正确启用（错误码 ${code}）。请先用安卓真机验证普通虚拟支付；iPhone 正式支付需在微信后台启用并配置苹果 IAP。`))
+      }
+      reject(new Error(`${ERROR_MESSAGES[code] || error.errMsg || '支付未完成'}（错误码 ${code}）`))
     },
   }))
 }

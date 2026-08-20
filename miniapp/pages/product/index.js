@@ -12,6 +12,9 @@ Page({
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')
       const item = data.items.find(candidate => candidate.productId === this.options.product && candidate.skuId === this.options.sku)
+      if (item && item.category === 'report') {
+        return wx.redirectTo({ url: `/pages/assessment/index?sku=${encodeURIComponent(item.skuId)}&product=${encodeURIComponent(item.productId)}` })
+      }
       this.setData({ item: item || null, loadError: item ? '' : '这份内容暂未进入小程序目录' })
     } catch (_) {
       this.setData({ loadError: '场域连接暂时中断，请稍后重试' })
