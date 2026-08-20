@@ -11,3 +11,4 @@
 .price { margin-top: 54rpx; font-size: 42rpx; }
 .fineprint { margin-top: 24rpx; font-size: 21rpx; line-height: 1.7; color: rgba(235,239,255,.45); }
 .compact { width: 280rpx; margin-left: auto; margin-right: auto; }
+.owned-note{margin:28rpx 0 18rpx;color:#76ded2;font-size:25rpx;letter-spacing:2rpx}

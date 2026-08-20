@@ -18,9 +18,11 @@
       <view class="narrative-promise" wx:if="{{item.category === 'narrative'}}">这不是一篇被标题包装的商品。先让上面这句话与你发生关系；只有当你想知道它如何继续，才需要进入全文。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'practice'}}">不是观看一套课程，而是把一项可重复的修炼带回身体与日常。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'membership'}}">在有效期内进入对应场域；神尊全域解锁同时包含未来新增的报告、叙事、修炼技术与场域模块。</view>
-      <view class="lx-price price">¥ {{item.priceFen / 100}}</view>
-      <button class="lx-button" disabled="{{paying}}" loading="{{paying}}" bindtap="pay">{{item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案'}}</button>
-      <view class="fineprint">虚拟内容将在支付确认后自动交付。最终权益以服务端支付通知为准。</view>
+      <view wx:if="{{owned}}" class="owned-note">已在你的场域中 ✓</view>
+      <view wx:else class="lx-price price">¥ {{item.priceFen / 100}}</view>
+      <button wx:if="{{owned}}" class="lx-button" disabled="{{opening}}" loading="{{opening}}" bindtap="openOwned">{{item.category === 'report' ? '打开完整生命档案' : item.category === 'narrative' ? '阅读全文' : item.category === 'practice' ? '进入修炼' : '进入已开启场域'}}</button>
+      <button wx:else class="lx-button" disabled="{{paying}}" loading="{{paying}}" bindtap="pay">{{item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案'}}</button>
+      <view class="fineprint">{{owned ? '阅读权限会由服务端再次核验，确保内容只向已开启的账户开放。' : '虚拟内容将在支付确认后自动交付。最终权益以服务端支付通知为准。'}}</view>
     </view>
   </view>
 </view>

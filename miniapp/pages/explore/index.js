@@ -10,6 +10,6 @@ Page({
   },
   open(event) {
     const { sku, product } = event.currentTarget.dataset
-    wx.navigateTo({ url: `/pages/assessment/index?sku=${encodeURIComponent(sku)}&product=${encodeURIComponent(product)}` })
+    wx.navigateTo({ url: `/pages/product/index?sku=${encodeURIComponent(sku)}&product=${encodeURIComponent(product)}&from=explore` })
   },
 })

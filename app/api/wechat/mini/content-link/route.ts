@@ -1,0 +1,61 @@
+import { randomBytes } from "crypto";
+import { NextResponse } from "next/server";
+import { hasUnlock } from "@/lib/access";
+import { encryptMiniSecret } from "@/lib/mini/crypto";
+import { requireMiniSession } from "@/lib/mini/session";
+import { getNarrative } from "@/lib/narratives";
+import { getProduct } from "@/lib/plans";
+import { createAdminClient } from "@/lib/supabase/admin";
+
+export const runtime = "nodejs";
+
+const PRACTICE_ROUTES: Record<string, string> = {
+  breath: "/practice/breath",
+  intuition: "/practice/intuition",
+  "heart-reset": "/practice/heart-reset",
+  "ascending-heart": "/practice/ascending-heart",
+};
+
+function destinationFor(productId: string): string | null {
+  if (PRACTICE_ROUTES[productId]) return PRACTICE_ROUTES[productId];
+  if (productId === "narrative-all") return "/narrative";
+  if (productId === "everything") return "/account/orders";
+  if (["day", "month", "year"].includes(productId)) return "/live-as";
+  const narrative = getNarrative(productId);
+  return narrative && narrative.status !== "soon" ? `/narrative/${productId}` : null;
+}
+
+export async function POST(req: Request) {
+  const session = await requireMiniSession(req);
+  if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
+
+  const body = (await req.json().catch(() => ({}))) as { productId?: unknown };
+  if (typeof body.productId !== "string" || (!getProduct(body.productId) && !getNarrative(body.productId))) {
+    return NextResponse.json({ error: "内容参数无效" }, { status: 400 });
+  }
+  const destination = destinationFor(body.productId);
+  if (!destination) return NextResponse.json({ error: "这项内容暂不支持在小程序内打开" }, { status: 404 });
+
+  const admin = createAdminClient();
+  const [{ data: unlocks }, { data: profile }] = await Promise.all([
+    admin.from("unlocks").select("product_id, expires_at").eq("user_id", session.userId),
+    admin.from("profiles").select("manifest_until").eq("id", session.userId).maybeSingle(),
+  ]);
+  const now = Date.now();
+  const activeUnlocks = (unlocks ?? [])
+    .filter((item) => !item.expires_at || Date.parse(item.expires_at) > now)
+    .map((item) => item.product_id);
+  const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
+  if (!manifestActive && !hasUnlock(activeUnlocks, body.productId)) {
+    return NextResponse.json({ error: "这项权益尚未开启或已到期" }, { status: 403 });
+  }
+
+  // 票据仅传递用户、内容和时限。打开端会重新检查权益，不能靠前端参数取得阅读权。
+  const ticket = encryptMiniSecret(JSON.stringify({
+    userId: session.userId,
+    productId: body.productId,
+    expiresAt: Date.now() + 2 * 60 * 1000,
+    nonce: randomBytes(12).toString("base64url"),
+  }));
+  return NextResponse.json({ path: `/api/wechat/mini/content-open?ticket=${encodeURIComponent(ticket)}` });
+}

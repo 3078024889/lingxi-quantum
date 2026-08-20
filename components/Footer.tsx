@@ -9,7 +9,7 @@ const channels = [
   { label: "小红书", href: "https://xhslink.cn/m/8rig9AtdDvK", note: "灵犀场" },
   { label: "微博", href: "https://weibo.com/u/4003799090", note: "灵犀场" },
   { label: "哔哩哔哩", href: "https://b23.tv/VhatqCq", note: "灵犀场" },
-  { label: "快手 · 代表作品", href: "https://v.kuaishou.com/JJpeoAZZ", note: "打开快手" },
+  { label: "快手", href: "https://v.kuaishou.com/JX4QlFW2", note: "灵犀场" },
   { label: "抖音 · 代表作品", href: "https://v.douyin.com/WG4QmhbliNk", note: "打开抖音" },
   { label: "视频号 · 代表作品", href: "https://weixin.qq.com/sph/ALRC3hOXy3", note: "打开微信视频号" },
 ];
@@ -71,7 +71,7 @@ export default function Footer() {
               <p className="mt-4 text-[13px] text-bone-dim">
                 <span className="text-bone-soft">服务号：</span>灵犀场lingxifield
                 <span className="mx-2 opacity-40">·</span>
-                <span className="text-bone-soft">小程序：</span>灵犀场 lingxifield
+                <span className="text-bone-soft">小程序：</span>灵犀场lingxifileld
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-3 rounded-sm border border-white/10 bg-white/[0.035] p-3">

@@ -1,7 +1,7 @@
-const { publicRequest } = require('../../utils/api')
+const { publicRequest, request } = require('../../utils/api')
 const { payForSku } = require('../../utils/payment')
 Page({
-  data: { item: null, loading: true, loadError: '', paying: false, from: 'explore' },
+  data: { item: null, loading: true, loadError: '', paying: false, opening: false, owned: false, from: 'explore' },
   async onLoad(options) {
     this.options = options
     this.setData({ from: options.from === 'narratives' ? 'narratives' : 'explore' })
@@ -12,10 +12,16 @@ Page({
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')
       const item = data.items.find(candidate => candidate.productId === this.options.product && candidate.skuId === this.options.sku)
-      if (item && item.category === 'report') {
+      const me = await request('/api/wechat/mini/me').catch(() => null)
+      const owned = !!(me && item && (
+        (me.manifestUntil && Date.parse(me.manifestUntil) > Date.now()) ||
+        (me.orders || []).some(order => order.product_id === item.productId) ||
+        (me.unlocks || []).some(unlock => unlock.product_id === item.productId || unlock.product_id === 'everything' || (item.category === 'narrative' && unlock.product_id === 'narrative-all'))
+      ))
+      if (item && item.category === 'report' && !owned) {
         return wx.redirectTo({ url: `/pages/assessment/index?sku=${encodeURIComponent(item.skuId)}&product=${encodeURIComponent(item.productId)}` })
       }
-      this.setData({ item: item || null, loadError: item ? '' : '这份内容暂未进入小程序目录' })
+      this.setData({ item: item || null, owned, loadError: item ? '' : '这份内容暂未进入小程序目录' })
     } catch (_) {
       this.setData({ loadError: '场域连接暂时中断，请稍后重试' })
     } finally { this.setData({ loading: false }) }
@@ -37,5 +43,22 @@ Page({
       if (!error.cancelled) await wx.showModal({ title: '未完成支付', content: error.message || '请稍后再试', showCancel: false, confirmText: '返回' })
     }
     finally { this.setData({ paying: false }) }
+  },
+  async openOwned() {
+    if (!this.data.item || this.data.opening) return
+    this.setData({ opening: true })
+    try {
+      if (this.data.item.category === 'report') {
+        const me = await request('/api/wechat/mini/me')
+        const order = (me.orders || []).find(item => item.product_id === this.data.item.productId && item.submission_id)
+        if (!order) throw { data: { error: '未找到可打开的完整档案，请从“我的场域”刷新后重试' } }
+        const result = await request('/api/wechat/mini/report-link', { method: 'POST', data: { orderId: order.id } })
+        return wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+      }
+      const result = await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: this.data.item.productId } })
+      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+    } catch (error) {
+      wx.showModal({ title: '内容暂未打开', content: (error.data && error.data.error) || '权益正在同步，请稍后重试', showCancel: false })
+    } finally { this.setData({ opening: false }) }
   },
 })

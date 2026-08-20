@@ -1,0 +1,74 @@
+import { NextResponse } from "next/server";
+import { hasUnlock } from "@/lib/access";
+import { decryptMiniSecret } from "@/lib/mini/crypto";
+import { getNarrative } from "@/lib/narratives";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
+
+export const runtime = "nodejs";
+
+const PRACTICE_ROUTES: Record<string, string> = {
+  breath: "/practice/breath",
+  intuition: "/practice/intuition",
+  "heart-reset": "/practice/heart-reset",
+  "ascending-heart": "/practice/ascending-heart",
+};
+
+type Ticket = { userId: string; productId: string; expiresAt: number; nonce: string };
+
+function destinationFor(productId: string): string | null {
+  if (PRACTICE_ROUTES[productId]) return PRACTICE_ROUTES[productId];
+  if (productId === "narrative-all") return "/narrative";
+  if (productId === "everything") return "/account/orders";
+  if (["day", "month", "year"].includes(productId)) return "/live-as";
+  const narrative = getNarrative(productId);
+  return narrative && narrative.status !== "soon" ? `/narrative/${productId}` : null;
+}
+
+function fail(req: Request, message: string) {
+  const url = new URL("/account", req.url);
+  url.searchParams.set("miniError", message);
+  return NextResponse.redirect(url, 302);
+}
+
+export async function GET(req: Request) {
+  const ticketText = new URL(req.url).searchParams.get("ticket");
+  if (!ticketText || ticketText.length > 2048) return fail(req, "内容链接无效");
+  try {
+    const ticket = JSON.parse(decryptMiniSecret(ticketText)) as Ticket;
+    const destinationPath = destinationFor(ticket.productId);
+    if (!ticket.userId || !ticket.nonce || ticket.expiresAt < Date.now() || !destinationPath) {
+      return fail(req, "内容链接已过期");
+    }
+
+    const admin = createAdminClient();
+    const [{ data: unlocks }, { data: profile }, userResult] = await Promise.all([
+      admin.from("unlocks").select("product_id, expires_at").eq("user_id", ticket.userId),
+      admin.from("profiles").select("manifest_until").eq("id", ticket.userId).maybeSingle(),
+      admin.auth.admin.getUserById(ticket.userId),
+    ]);
+    const now = Date.now();
+    const activeUnlocks = (unlocks ?? [])
+      .filter((item) => !item.expires_at || Date.parse(item.expires_at) > now)
+      .map((item) => item.product_id);
+    const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
+    const email = userResult.data.user?.email;
+    if ((!manifestActive && !hasUnlock(activeUnlocks, ticket.productId)) || !email) {
+      return fail(req, "内容权益尚未同步");
+    }
+
+    const link = await admin.auth.admin.generateLink({ type: "magiclink", email });
+    const tokenHash = link.data.properties?.hashed_token;
+    if (link.error || !tokenHash) return fail(req, "内容登录暂不可用");
+    const supabase = createClient();
+    const verification = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "magiclink" });
+    if (verification.error || verification.data.user?.id !== ticket.userId) return fail(req, "内容身份校验失败");
+
+    const destination = new URL(destinationPath, req.url);
+    destination.searchParams.set("mini", "1");
+    return NextResponse.redirect(destination);
+  } catch (error) {
+    console.error("[mini content open] failed", error instanceof Error ? error.message : "unknown");
+    return fail(req, "内容链接无效");
+  }
+}
