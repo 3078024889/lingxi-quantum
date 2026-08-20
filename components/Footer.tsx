@@ -1,5 +1,18 @@
 import Link from "next/link";
+import Image from "next/image";
 import Bi from "./Bi";
+
+const channels = [
+  { label: "X", href: "https://x.com/lingxifield?s=11", note: "@lingxifield" },
+  { label: "YouTube", href: "https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X", note: "@lingxifield" },
+  { label: "TikTok", href: "https://www.tiktok.com/@lingxifield.com?_r=1&_t=ZS-992D5yRI2m8", note: "@lingxifield.com" },
+  { label: "小红书", href: "https://xhslink.cn/m/8rig9AtdDvK", note: "灵犀场" },
+  { label: "微博", href: "https://weibo.com/u/4003799090", note: "灵犀场" },
+  { label: "哔哩哔哩", href: "https://b23.tv/VhatqCq", note: "灵犀场" },
+  { label: "快手 · 代表作品", href: "https://v.kuaishou.com/JJpeoAZZ", note: "打开快手" },
+  { label: "抖音 · 代表作品", href: "https://v.douyin.com/WG4QmhbliNk", note: "打开抖音" },
+  { label: "视频号 · 代表作品", href: "https://weixin.qq.com/sph/ALRC3hOXy3", note: "打开微信视频号" },
+];
 
 export default function Footer() {
   return (
@@ -38,6 +51,37 @@ export default function Footer() {
             <Bi zh="退款政策" en="Refunds" />
           </Link>
         </div>
+        <section className="w-full border-t border-white/10 pt-6" aria-label="Lingxi Field official channels">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <p className="font-display text-xs tracking-widest2 text-lattice">
+                <Bi zh="关注灵犀场" en="FOLLOW LINGXI FIELD" />
+              </p>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-bone-dim">
+                <Bi zh="在不同场域继续相遇：短片、叙事、日常记录与新入口会从这里向外延展。" en="Continue the encounter across short films, narratives, field notes, and new portals." />
+              </p>
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px] text-bone-dim">
+                {channels.map((channel) => (
+                  <a key={channel.label} href={channel.href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-baseline gap-1 hover:text-lattice">
+                    <span>{channel.label}</span>
+                    <span className="text-[10px] opacity-60 group-hover:opacity-100">{channel.note} ↗</span>
+                  </a>
+                ))}
+              </div>
+              <p className="mt-4 text-[13px] text-bone-dim">
+                <span className="text-bone-soft">服务号：</span>灵犀场lingxifield
+                <span className="mx-2 opacity-40">·</span>
+                <span className="text-bone-soft">小程序：</span>灵犀场 lingxifield
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-3 rounded-sm border border-white/10 bg-white/[0.035] p-3">
+              <Image src="/images/lingxifield-wechat-service-qr.jpg" alt="灵犀场lingxifield 服务号二维码" width={92} height={92} className="h-[92px] w-[92px] rounded-[2px]" />
+              <p className="max-w-24 text-xs leading-5 text-bone-dim">
+                <Bi zh="扫码关注服务号，接收场域新入口与内容更新。" en="Scan to follow for new portals and field updates." />
+              </p>
+            </div>
+          </div>
+        </section>
         </div>
         {/* 免责声明——说清楚服务性质，不构成医疗/金融/法律等专业建议，
             这条不用Bi切换（两种语言都常驻显示），因为这是给所有访客
