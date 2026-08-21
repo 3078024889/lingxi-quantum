@@ -1,5 +1,6 @@
 import { allProducts, getProduct, type Product } from "@/lib/plans";
 import { NARRATIVES, getNarrative } from "@/lib/narratives";
+import { MEMBERSHIP_CONTENT, type MembershipBenefit } from "@/lib/membership-content";
 
 export type MiniCatalogItem = {
   skuId: string;
@@ -19,6 +20,10 @@ export type MiniCatalogItem = {
   assessmentDescription?: string;
   assessmentCta?: string;
   knowledgeNodes?: string[];
+  detailDescription?: string;
+  benefits?: MembershipBenefit[];
+  closing?: string;
+  cta?: string;
 };
 
 const FIXED_SKUS: Record<string, string> = {
@@ -142,7 +147,9 @@ export function productForMiniPurchase(skuId: string, productId: string): Produc
 }
 
 export function getMiniCatalog(): MiniCatalogItem[] {
-  return allProducts.filter((product) => !UNAVAILABLE_NARRATIVE_IDS.has(product.id)).map((product) => ({
+  return allProducts.filter((product) => !UNAVAILABLE_NARRATIVE_IDS.has(product.id)).map((product) => {
+    const membershipContent = MEMBERSHIP_CONTENT[product.id];
+    return ({
     skuId: miniSkuForProduct(product.id),
     productId: product.id,
     name: product.name,
@@ -152,7 +159,12 @@ export function getMiniCatalog(): MiniCatalogItem[] {
     days: product.days ?? null,
     category: categoryFor(product.id),
     webPath: REPORT_WEB_PATHS[product.id],
-    note: categoryFor(product.id) === "narrative" ? getNarrative(product.id)?.teaser ?? product.note : product.note,
+    note: membershipContent?.description ?? (categoryFor(product.id) === "narrative" ? getNarrative(product.id)?.teaser ?? product.note : product.note),
+    detailDescription: membershipContent?.description,
+    benefits: membershipContent?.benefits,
+    closing: membershipContent?.closing,
+    cta: membershipContent?.cta,
     ...REPORT_INTAKE[product.id],
-  }));
+    });
+  });
 }

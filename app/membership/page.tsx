@@ -11,6 +11,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import { MEMBERSHIP_CONTENT } from "@/lib/membership-content";
 
 const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
   {
@@ -141,20 +142,20 @@ function PriceTag({ priceRmb, days, type }: { priceRmb: number; days?: number; t
 function PracticeCard({ id, loggedIn }: { id: string; loggedIn: boolean }) {
   const p = getProduct(id);
   const b = BULLETS[id];
-  if (!p || !b) return null;
+  const shared = MEMBERSHIP_CONTENT[id];
+  if (!p || !b || !shared) return null;
   return (
     <div className="flex flex-col rounded-sm border border-white/10 bg-reading-glass p-8">
       <h3 className="font-display text-2xl text-bone"><Bi zh={p.name} en={p.nameEn} /></h3>
-      <p className="mt-2 text-sm text-lattice"><Bi zh={b.headerZh} en={b.headerEn} /></p>
+      <p className="mt-2 text-sm text-lattice"><Bi zh={shared.description} en={b.headerEn} /></p>
       <PriceTag priceRmb={p.priceRmb} type={p.type} />
-      <p className="mt-2 text-xs text-bone-soft"><Bi zh="一次能量交换，永久开启。" en="One energy exchange, open forever." /></p>
       <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice/60"><Bi zh="获得：" en="You receive:" /></p>
       <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-bone-dim">
         {b.items.map((it, i) => (
-          <li key={i}>· <Bi zh={it.zh} en={it.en} /></li>
+          <li key={i}>· <Bi zh={shared.benefits[i]?.title ?? it.zh} en={it.en} /></li>
         ))}
       </ul>
-      <p className="mt-4 text-xs italic text-bone-soft"><Bi zh={b.closingZh} en={b.closingEn} /></p>
+      <p className="mt-4 text-xs italic text-bone-soft"><Bi zh={shared.closing ?? b.closingZh} en={b.closingEn} /></p>
       <div className="mt-6">
         <PlanButton productId={p.id} loggedIn={loggedIn} nameZh={p.name} nameEn={p.nameEn} />
       </div>
@@ -165,7 +166,8 @@ function PracticeCard({ id, loggedIn }: { id: string; loggedIn: boolean }) {
 function ManifestCard({ id, loggedIn, tierZh, tierEn }: { id: string; loggedIn: boolean; tierZh: string; tierEn: string }) {
   const p = getProduct(id);
   const b = MANIFEST_BULLETS[id];
-  if (!p || !b) return null;
+  const shared = MEMBERSHIP_CONTENT[id];
+  if (!p || !b || !shared) return null;
   return (
     <div className={`flex flex-col rounded-sm border p-8 ${p.highlight ? "border-amber/50 bg-amber/5" : "border-white/10 bg-reading-glass"}`}>
       {p.highlight && (
@@ -174,11 +176,12 @@ function ManifestCard({ id, loggedIn, tierZh, tierEn }: { id: string; loggedIn: 
         </span>
       )}
       <h3 className="font-display text-xl text-bone"><Bi zh={tierZh} en={tierEn} /></h3>
+      <p className="mt-2 text-sm text-lattice"><Bi zh={shared.description} en={p.noteEn} /></p>
       <PriceTag priceRmb={p.priceRmb} days={p.days} type={p.type} />
       <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice/60"><Bi zh="开启：" en="Unlocks:" /></p>
       <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-bone-dim">
         {b.items.map((it, i) => (
-          <li key={i}>· <Bi zh={it.zh} en={it.en} /></li>
+          <li key={i}>· <Bi zh={shared.benefits[i]?.title ?? it.zh} en={it.en} /></li>
         ))}
       </ul>
       <div className="mt-6">
@@ -213,6 +216,8 @@ export default async function MembershipPage({
 
   const narrativeAll = getProduct("narrative-all");
   const everything = getProduct("everything");
+  const narrativeContent = MEMBERSHIP_CONTENT["narrative-all"];
+  const everythingContent = MEMBERSHIP_CONTENT.everything;
 
   return (
     <>
@@ -263,6 +268,7 @@ export default async function MembershipPage({
                 <Bi zh="神尊层级" en="Sovereign Tier" />
               </span>
               <h3 className="font-display text-2xl text-bone"><Bi zh={everything.name} en={everything.nameEn} /></h3>
+              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-bone-dim"><Bi zh={everythingContent.description} en={everything.noteEn} /></p>
               <PriceTag priceRmb={everything.priceRmb} days={everything.days} type={everything.type} />
 
               <p className="mx-auto mt-6 max-w-md text-xs uppercase tracking-widest2 text-lattice"><Bi zh="有效期内 · 全站付费内容与未来新增全部开放" en="During the active term · every paid experience and future release" /></p>
@@ -347,6 +353,7 @@ export default async function MembershipPage({
             </div>
             <div className="rounded-sm border border-white/10 bg-reading-glass p-8 text-center">
               <h3 className="font-display text-xl text-bone"><Bi zh={narrativeAll.name} en={narrativeAll.nameEn} /></h3>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-bone-dim"><Bi zh={narrativeContent.description} en={narrativeAll.noteEn} /></p>
               <PriceTag priceRmb={narrativeAll.priceRmb} days={narrativeAll.days} type={narrativeAll.type} />
               <ul className="mx-auto mt-6 max-w-xs space-y-1.5 text-left text-sm leading-6 text-bone-dim">
                 <li>· <Bi zh="长篇意识传输" en="Long-form consciousness transmissions" /></li>

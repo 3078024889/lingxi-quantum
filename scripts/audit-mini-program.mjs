@@ -27,6 +27,8 @@ const accountLinkStart = read("app/api/wechat/mini/account-link/start/route.ts")
 const accountLinkConfirm = read("app/api/wechat/mini/account-link/confirm/route.ts");
 const accountLinkPanel = read("app/account/MiniAccountLinkPanel.tsx");
 const accountLinkSql = read("sql-history/SQL-v301-mini-account-link.sql");
+const fieldView = read("miniapp/pages/field/index.wxml");
+const membershipContent = read("lib/membership-content.ts");
 const miniSources = fs.readdirSync(path.join(root, "miniapp"), { recursive: true })
   .filter((file) => typeof file === "string" && /\.(js|json|wxml|wxss)$/.test(file))
   .map((file) => read(path.join("miniapp", file))).join("\n");
@@ -60,5 +62,8 @@ check("account-link UI asks for an explicit confirmation", /确认连接此账�
 check("account migration does not guess identity from email or phone", !/email|phone|手机号|邮箱/i.test(`${accountLinkStart}\n${accountLinkConfirm}\n${accountLinkSql}`));
 check("account migration preserves report, order, and entitlement records", /public\.unlocks/.test(accountLinkSql) && /public\.orders/.test(accountLinkSql) && /public\.wealth_submissions/.test(accountLinkSql));
 check("account migration RPC is service-role-only", /revoke execute[\s\S]*from public, anon, authenticated/.test(accountLinkSql) && /grant execute[\s\S]*to service_role/.test(accountLinkSql));
+check("membership cards use product-specific shared publication copy", /MEMBERSHIP_CONTENT/.test(catalog) && /item\.benefits/.test(fieldView) && /item\.cta/.test(fieldView));
+check("membership landing copy uses field, archive, exploration, and connection language", ["场域", "档案", "探索", "连接", "觉察"].every((term) => `${fieldView}\n${membershipContent}`.includes(term)));
+check("Mini Program membership page no longer repeats generic permanent-sales copy", !/一次能量交换，永久开启/.test(fieldView));
 
 if (failed) process.exit(1);

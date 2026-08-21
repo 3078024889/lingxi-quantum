@@ -15,12 +15,12 @@ export type Product = {
 };
 
 export const cultivationProducts: Product[] = [
-  { id: "breath", name: "量子息法", nameEn: "Quantum Breath Method", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
-  { id: "intuition", name: "直觉丹道", nameEn: "The Intuitive Way", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
-  { id: "heart-reset", name: "归零心诀", nameEn: "Heart Reset", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
-  { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 55, priceRmb: 398, type: "permanent", note: "一次能量交换，永久开启", noteEn: "One energy exchange — open forever.", group: "cultivation" },
+  { id: "breath", name: "量子息法", nameEn: "Quantum Breath Method", priceUsd: 55, priceRmb: 398, type: "permanent", note: "进入身体与意识重新同步的入口。", noteEn: "An entrance to bringing body and consciousness back into sync.", group: "cultivation" },
+  { id: "intuition", name: "直觉丹道", nameEn: "The Intuitive Way", priceUsd: 55, priceRmb: 398, type: "permanent", note: "开启内在感知与直觉连接。", noteEn: "Open inner perception and intuitive connection.", group: "cultivation" },
+  { id: "heart-reset", name: "归零心诀", nameEn: "Heart Reset", priceUsd: 55, priceRmb: 398, type: "permanent", note: "回到内在中心的位置。", noteEn: "Return to your inner center.", group: "cultivation" },
+  { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 55, priceRmb: 398, type: "permanent", note: "从内在觉察走向生命展开。", noteEn: "Move from inner awareness toward life unfolding.", group: "cultivation" },
   { id: "narrative-all", name: "多维叙事 · 年度解锁", nameEn: "All Narratives · Yearly", priceUsd: 93, priceRmb: 666, type: "subscription", days: 365, note: "一年内解锁全部多维叙事，含日后新增的全部篇目", noteEn: "One year of access to every narrative, including all added later.", highlight: true, group: "cultivation" },
-  { id: "everything", name: "神尊 · 全域解锁", nameEn: "Sovereign · All-Field Access", priceUsd: 1204, priceRmb: 8668, type: "subscription", days: 365, note: "一年内解锁灵犀场全部付费内容，并自动包含有效期内未来发布的报告、修炼技术、叙事与新场域模块", noteEn: "One year of access to every paid Lingxi Field experience, automatically including reports, practices, narratives, and new field modules released during the active term.", highlight: true, group: "cultivation" },
+  { id: "everything", name: "神尊 · 全域解锁", nameEn: "Sovereign · All-Field Access", priceUsd: 1204, priceRmb: 8666, type: "subscription", days: 365, note: "一年内解锁灵犀场全部内容，并自动包含有效期内未来新增的报告、修炼技术、叙事与场域模块。", noteEn: "One year of all-field access, including future reports, practices, narratives, and field modules released during the active term.", highlight: true, group: "cultivation" },
 ];
 
 export const manifestationProducts: Product[] = [

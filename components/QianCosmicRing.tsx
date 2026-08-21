@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 // ────────────────────────────────────────────────────────────────────
 // 灵犀生命灵签 · 宇宙签库环形视觉（真·3D版）
@@ -30,6 +30,22 @@ function RingPlaceholder() {
   );
 }
 
+function MiniRingFallback() {
+  return (
+    <div className="relative flex h-[340px] w-full items-center justify-center overflow-hidden">
+      <div className="absolute h-64 w-64 rounded-full border border-violet-200/20 shadow-[0_0_90px_rgba(165,116,255,.22)]" />
+      <div className="absolute h-48 w-48 rotate-45 rounded-full border border-cyan-200/20" />
+      <div className="absolute h-32 w-32 rounded-full border border-amber/25" />
+      <div className="lx-ring-fallback-glow h-24 w-24 rounded-full" />
+      <p className="absolute bottom-8 font-display text-xs tracking-[0.3em] text-violet-100/70">六十四枚生命原型 · 正在回应</p>
+      <style>{`
+        .lx-ring-fallback-glow { background: radial-gradient(circle, rgba(199,156,255,0.58), transparent 70%); filter: blur(16px); animation: lx-ring-fallback-breathe 2.4s ease-in-out infinite; }
+        @keyframes lx-ring-fallback-breathe { 0%,100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 0.95; transform: scale(1.12); } }
+      `}</style>
+    </div>
+  );
+}
+
 export default function QianCosmicRing({
   highlightIndexes,
   paused,
@@ -37,11 +53,23 @@ export default function QianCosmicRing({
   highlightIndexes?: number[];
   paused?: boolean;
 }) {
+  const [mode, setMode] = useState<"checking" | "webgl" | "mini">("checking");
+
+  useEffect(() => {
+    // WeChat DevTools' simulated web-view can crash while initializing the
+    // Three.js renderer even though physical phones support it. The Mini
+    // Program receives a stable branded fallback; the full website keeps 3D.
+    const embedded = new URLSearchParams(window.location.search).get("mini") === "1";
+    setMode(embedded ? "mini" : "webgl");
+  }, []);
+
   return (
     <div className="mx-auto h-[340px] w-full max-w-2xl">
-      <Suspense fallback={<RingPlaceholder />}>
-        <QianCosmicRingScene highlightIndexes={highlightIndexes} paused={paused} />
-      </Suspense>
+      {mode === "webgl" ? (
+        <Suspense fallback={<RingPlaceholder />}>
+          <QianCosmicRingScene highlightIndexes={highlightIndexes} paused={paused} />
+        </Suspense>
+      ) : mode === "mini" ? <MiniRingFallback /> : <RingPlaceholder />}
     </div>
   );
 }

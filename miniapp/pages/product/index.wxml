@@ -14,6 +14,9 @@
       <view class="lx-kicker">{{item.category === 'narrative' ? 'MULTIDIMENSIONAL NARRATIVE' : 'LINGXI ARCHIVE'}}</view>
       <view class="lx-title">{{item.name}}</view>
       <view class="lx-subtitle">{{item.note}}</view>
+      <view wx:if="{{item.detailDescription}}" class="detail-description">{{item.detailDescription}}</view>
+      <view wx:if="{{item.benefits.length}}" class="detail-benefits"><view wx:for="{{item.benefits}}" wx:key="title" class="detail-benefit"><view class="detail-benefit-title">{{item.title}}</view><view wx:if="{{item.detail}}" class="detail-benefit-note">{{item.detail}}</view></view></view>
+      <view wx:if="{{item.closing}}" class="detail-closing">{{item.closing}}</view>
       <view class="promise" wx:if="{{item.category === 'report'}}"><view>结构识别</view><view>现实映射</view><view>反证条件</view><view>行动实验</view></view>
       <view class="narrative-promise" wx:if="{{item.category === 'narrative'}}">先不要急着寻找答案。<br/>静静感受：这段叙事，是否映照了你正在经历，却尚未完全表达的生命状态。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'practice'}}">不是观看一套课程，而是把一项可重复的修炼带回身体与日常。</view>
@@ -21,7 +24,7 @@
       <view wx:if="{{owned}}" class="owned-note">已在你的场域中 ✓</view>
       <view wx:else class="lx-price price">¥ {{item.priceFen / 100}}</view>
       <button wx:if="{{owned}}" class="lx-button" disabled="{{opening}}" loading="{{opening}}" bindtap="openOwned">{{item.category === 'report' ? '打开完整生命档案' : item.category === 'narrative' ? '阅读全文' : item.category === 'practice' ? '进入修炼' : '进入已开启场域'}}</button>
-      <button wx:else class="lx-button" disabled="{{paying}}" loading="{{paying}}" bindtap="pay">{{item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案'}}</button>
+      <button wx:else class="lx-button" disabled="{{paying}}" loading="{{paying}}" bindtap="pay">{{item.cta || (item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案')}}</button>
       <view class="fineprint">{{owned ? '阅读权限会由服务端再次核验，确保内容只向已开启的账户开放。' : '虚拟内容将在支付确认后自动交付。最终权益以服务端支付通知为准。'}}</view>
     </view>
   </view>

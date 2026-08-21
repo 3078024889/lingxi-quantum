@@ -10,13 +10,22 @@ Page({
       { title: '多维叙事', note: '探索不同视角的生命故事。每一次阅读，都是与自身经验的重新连接。', path: '/pages/narratives/index' },
     ],
     exchanges: [],
+    expandedProductId: '',
   },
   async onLoad() {
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')
       const priority = ['everything', 'narrative-all', 'breath', 'intuition', 'heart-reset', 'ascending-heart', 'year', 'month']
-      this.setData({ exchanges: priority.map(id => data.items.find(item => item.productId === id)).filter(Boolean) })
+      const exchanges = priority.map(id => data.items.find(item => item.productId === id)).filter(Boolean).map(item => ({
+        ...item,
+        priceLabel: `¥${item.priceFen / 100}${item.accessType === 'permanent' ? ' 永久' : item.days === 30 ? ' / 月' : ' / 年'}`,
+      }))
+      this.setData({ exchanges })
     } catch (_) {}
+  },
+  toggleExchange(event) {
+    const productId = event.currentTarget.dataset.product
+    this.setData({ expandedProductId: this.data.expandedProductId === productId ? '' : productId })
   },
   enter(event) {
     const item = this.data.entries[event.currentTarget.dataset.index]

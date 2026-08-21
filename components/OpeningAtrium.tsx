@@ -54,7 +54,7 @@ export default function OpeningAtrium() {
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(114,76,210,.28),rgba(3,2,20,.96)_72%)]" />
 
-      <div className="relative mx-auto grid h-[100dvh] w-full max-w-[168.75dvh] grid-cols-1 gap-px bg-violet-200/15 lg:grid-cols-3 lg:p-3">
+      <div className="relative grid h-[100dvh] w-full grid-cols-1 gap-px bg-violet-200/15 lg:grid-cols-3">
         <div
           role="img"
           aria-label="灵犀场入场视觉"

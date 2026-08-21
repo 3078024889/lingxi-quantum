@@ -12,3 +12,4 @@
 .fineprint { margin-top: 24rpx; font-size: 21rpx; line-height: 1.7; color: rgba(235,239,255,.45); }
 .compact { width: 280rpx; margin-left: auto; margin-right: auto; }
 .owned-note{margin:28rpx 0 18rpx;color:#76ded2;font-size:25rpx;letter-spacing:2rpx}
+.detail-description{margin-top:32rpx;color:rgba(242,245,255,.9);font-family:Georgia,"Noto Serif SC",serif;font-size:27rpx;line-height:1.8}.detail-benefits{margin-top:26rpx}.detail-benefit{margin-top:12rpx;padding:14rpx 0 14rpx 20rpx;border-left:2rpx solid rgba(118,222,210,.48)}.detail-benefit-title{color:rgba(244,246,255,.92);font-size:25rpx}.detail-benefit-note{margin-top:7rpx;color:rgba(224,231,248,.62);font-size:22rpx;line-height:1.65}.detail-closing{margin-top:28rpx;color:#a7eee8;font-size:23rpx;line-height:1.75}
