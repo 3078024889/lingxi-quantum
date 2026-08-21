@@ -51,6 +51,10 @@ Page({
   explore() { wx.switchTab({ url: '/pages/explore/index' }) },
   narratives() { wx.switchTab({ url: '/pages/narratives/index' }) },
   website() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
+  openPolicy(event) {
+    const path = event.currentTarget.dataset.path
+    if (path) wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(path)}` })
+  },
   async connectExistingAccount() {
     try {
       wx.showLoading({ title: '正在准备安全连接' })

@@ -30,6 +30,8 @@ const accountLinkSql = read("sql-history/SQL-v301-mini-account-link.sql");
 const fieldView = read("miniapp/pages/field/index.wxml");
 const membershipContent = read("lib/membership-content.ts");
 const profileClient = read("miniapp/pages/profile/index.js");
+const profileView = read("miniapp/pages/profile/index.wxml");
+const productView = read("miniapp/pages/product/index.wxml");
 const contentDestinations = read("lib/mini/content-destinations.ts");
 const miniSources = fs.readdirSync(path.join(root, "miniapp"), { recursive: true })
   .filter((file) => typeof file === "string" && /\.(js|json|wxml|wxss)$/.test(file))
@@ -72,6 +74,15 @@ check(
   /confirmOpenWebArchive/.test(profileClient) &&
     /无需再次购买/.test(profileClient) &&
     /isMiniWebArchiveProduct\(productId\).*return "\/account\/orders"/s.test(contentDestinations)
+);
+check(
+  "purchase screen discloses delivery, validity, renewal, and requires policy consent",
+  ["交付方式", "权益期限", "不会自动续费", "/terms", "/refunds", "/privacy", "agreed"].every((term) => `${productView}\n${productClient}`.includes(term))
+);
+check("purchase screen offers a WeChat customer-service route", /open-type="contact"/.test(productView));
+check(
+  "My Field exposes terms, refunds, privacy, declaration, about, and support",
+  ["/terms", "/refunds", "/privacy", "/declaration", "/about", "open-type=\"contact\""].every((term) => profileView.includes(term)) && /openPolicy/.test(profileClient)
 );
 
 if (failed) process.exit(1);
