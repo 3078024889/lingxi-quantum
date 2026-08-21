@@ -85,7 +85,7 @@ export default function Home() {
               <p className="mt-6 font-display text-xl leading-relaxed text-bone sm:text-2xl">
                 <Bi
                   zh={<>因为真正的探索，不是向外寻找答案，<br />而是重新认识自己——向内，看见意识深处的声音，觉察、理解，逐渐忆起那个真实的自己。</>}
-                  en={<>Because true exploration isn't about searching outward for answers —<br />it's about knowing yourself again. Turn inward, hear the voice beneath awareness, notice, understand, and slowly remember who you really are.</>}
+                  en={<>Because true exploration isn’t about searching outward for answers —<br />it’s about knowing yourself again. Turn inward, hear the voice beneath awareness, notice, understand, and slowly remember who you really are.</>}
                 />
               </p>
             </div>
@@ -94,7 +94,7 @@ export default function Home() {
               <p className="mt-6 font-display text-xl leading-relaxed text-bone sm:text-2xl">
                 <Bi
                   zh={<>显化不是改变世界，而是让你的意识、行动、选择，与想创造的现实逐渐对齐——当内在清晰，现实开始回应。</>}
-                  en={<>Manifestation isn't about changing the world — it's about bringing your awareness, actions, and choices into alignment with the reality you want to create. When the inside is clear, reality starts to answer.</>}
+                  en={<>Manifestation isn’t about changing the world — it’s about bringing your awareness, actions, and choices into alignment with the reality you want to create. When the inside is clear, reality starts to answer.</>}
                 />
               </p>
             </div>

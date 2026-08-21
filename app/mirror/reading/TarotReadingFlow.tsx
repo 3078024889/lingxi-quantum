@@ -139,7 +139,7 @@ export default function TarotReadingFlow() {
           <p className="mt-4 text-base leading-8 text-bone-dim">
             <Bi
               zh={<>你抽取的，不是随机答案，而是一面来自内在的镜子。进入灵犀场，三张生命镜像牌将根据你的命盘数据展开：<br />🌙 看见过去留下的意识痕迹<br />☀️ 理解此刻正在发生的生命共振<br />⭐ 探索未来正在形成的可能方向<br />三张牌不是告诉你命运是什么，而是帮助你看见：你正在经历什么，为什么会经历，以及下一步可以如何选择。</>}
-              en={<>What you draw is not a random answer — it's a mirror from within. Entering Lingxi Field, three life mirror cards unfold from your chart data:<br />🌙 See the traces your past has left in consciousness<br />☀️ Understand the resonance happening right now<br />⭐ Explore the possibilities your future is forming<br />These cards don't tell you what fate is. They help you see what you're going through, why, and what you can choose next.</>}
+              en={<>What you draw is not a random answer — it’s a mirror from within. Entering Lingxi Field, three life mirror cards unfold from your chart data:<br />🌙 See the traces your past has left in consciousness<br />☀️ Understand the resonance happening right now<br />⭐ Explore the possibilities your future is forming<br />These cards don’t tell you what fate is. They help you see what you’re going through, why, and what you can choose next.</>}
             />
           </p>
         </div>
