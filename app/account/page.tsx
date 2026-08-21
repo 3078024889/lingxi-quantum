@@ -6,6 +6,7 @@ import LoginForm from "./LoginForm";
 import SignOutButton from "./SignOutButton";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
+import MiniAccountLinkPanel from "./MiniAccountLinkPanel";
 import RelationshipReportRow from "./RelationshipReportRow";
 import ReportRow from "./ReportRow";
 import QianReportRow from "./QianReportRow";
@@ -20,7 +21,10 @@ import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "进入场域 | 灵犀 · Enter the Field | Lingxi" };
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams?: { miniLink?: string } }) {
+  const miniLink = typeof searchParams?.miniLink === "string" && searchParams.miniLink.length <= 2048
+    ? searchParams.miniLink
+    : null;
   const supabase = createClient();
   const {
     data: { user },
@@ -174,6 +178,7 @@ export default async function AccountPage() {
         <section className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-6 py-24 text-center">
           {user ? (
             <>
+              {miniLink && <MiniAccountLinkPanel ticket={miniLink} />}
               <div className="bg-void-deep w-full rounded-sm px-8 py-10">
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
                 <Bi zh="你已连接至场域" en="You are connected to the field" />
@@ -345,7 +350,7 @@ export default async function AccountPage() {
                 <Bi zh="用邮箱和密码登录或注册。验证后，你的现实回路、练习记录与显化轨迹，将在云端安全同步。" en="Sign in or register with email and password. Once verified, your Reality Loop, practice records, and manifestation trail sync securely to the cloud." />
               </p>
               <div className="mt-12 w-full">
-                <LoginForm />
+                <LoginForm afterAuthPath={miniLink ? `/account?miniLink=${encodeURIComponent(miniLink)}` : "/live-as"} />
               </div>
               </div>
             </>

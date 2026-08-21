@@ -8,7 +8,8 @@ const STORAGE_KEY = "lingxi-opening-atrium-seen-v1";
 
 export default function OpeningAtrium() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [visible, setVisible] = useState(true);
+  const [checked, setChecked] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [ready, setReady] = useState(false);
   const [ended, setEnded] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -17,9 +18,11 @@ export default function OpeningAtrium() {
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("skipIntro") === "1" || localStorage.getItem(STORAGE_KEY)) {
       setVisible(false);
+      setChecked(true);
       return;
     }
-
+    setVisible(true);
+    setChecked(true);
   }, []);
 
   const enter = () => {
@@ -37,11 +40,15 @@ export default function OpeningAtrium() {
       await video.play();
       setPlaying(true);
     } catch {
+      // Keep the poster and offer a clear direct entrance if the device blocks
+      // inline MP4 playback. A tap must never appear to do nothing.
       setVideoAvailable(false);
     }
   };
 
-  if (!visible) return null;
+  // Avoid SSR rendering the poster, then hiding it one frame later when the
+  // browser reads its saved "seen" state. That was the visible flash on return.
+  if (!checked || !visible) return null;
 
   return (
     <section
@@ -60,6 +67,10 @@ export default function OpeningAtrium() {
               className="h-full w-full object-cover"
               muted
               playsInline
+              webkit-playsinline="true"
+              x5-playsinline="true"
+              x5-video-player-type="h5"
+              x5-video-player-fullscreen="false"
               preload="metadata"
               poster={POSTER}
               onCanPlay={() => setReady(true)}

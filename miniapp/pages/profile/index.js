@@ -37,6 +37,17 @@ Page({
   explore() { wx.switchTab({ url: '/pages/explore/index' }) },
   narratives() { wx.switchTab({ url: '/pages/narratives/index' }) },
   website() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
+  async connectExistingAccount() {
+    try {
+      wx.showLoading({ title: '正在准备安全连接' })
+      const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
+      wx.hideLoading()
+      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+    } catch (error) {
+      wx.hideLoading()
+      wx.showModal({ title: '暂时无法连接账户', content: (error.data && error.data.error) || '请稍后重试', showCancel: false })
+    }
+  },
   async openOrder(event) {
     const order = event.currentTarget.dataset.order
     if (!order) return

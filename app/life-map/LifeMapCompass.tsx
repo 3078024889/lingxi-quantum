@@ -98,19 +98,16 @@ export default function LifeMapCompass() {
       </div>
       <div className="relative mx-auto mt-8 aspect-square w-full max-w-lg overflow-hidden rounded-2xl shadow-[0_0_60px_rgba(240,200,104,0.18)]">
         <video
-          autoPlay
-          muted
           loop
           playsInline
-          preload="metadata"
+          preload="none"
           poster="/images/lifemap/compass-poster.jpg"
           className="h-full w-full object-contain"
           x5-playsinline="true"
           x5-video-player-type="h5"
           x5-video-player-fullscreen="false"
           webkit-playsinline="true"
-          disablePictureInPicture
-          controls={false}
+          controls
           aria-label="灵犀生命图谱大罗盘 · Lingxi Life Compass"
         >
           <source src="/images/lifemap/compass.webm" type="video/webm" />

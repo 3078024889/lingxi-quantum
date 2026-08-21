@@ -9,6 +9,7 @@ const ERROR_MESSAGES = {
   '-15006': '支付签名校验失败，请联系客服',
   '-15007': '微信登录态过期，请重新发起',
   '-15010': '该内容的微信虚拟支付道具尚未发布。不是你的付款问题，请等待商家发布后再试',
+  '-15011': '当前是沙箱测试环境。iPhone 不支持小程序虚拟支付沙箱，请使用安卓真机测试，或等待商家切换至已发布的正式支付环境',
   '-15013': '商品价格配置不一致，请联系客服',
   '-15014': '商品配置正在生效，请十分钟后再试',
   '-15020': '操作过快，请稍后再试',
@@ -24,12 +25,15 @@ async function payForSku(skuId, productId, submissionId) {
   const result = await request('/api/wechat/mini/pay/create', {
     method: 'POST', data: { skuId, productId, code, submissionId },
   })
+  const platform = (wx.getDeviceInfo ? wx.getDeviceInfo().platform : wx.getSystemInfoSync().platform || '').toLowerCase()
+  if (result.sandbox && platform === 'ios') {
+    throw new Error('当前是沙箱测试环境。iPhone 不支持小程序虚拟支付沙箱；请使用安卓真机完成支付验收。正式版切换为已发布的生产支付环境后，iPhone 才可支付。')
+  }
   return new Promise((resolve, reject) => wx.requestVirtualPayment({
     ...result.payment,
     success: () => resolve({ orderId: result.orderId }),
     fail: (error) => {
       if (Number(error.errCode) === -2) return reject(Object.assign(new Error('cancelled'), { cancelled: true }))
-      const platform = (wx.getDeviceInfo ? wx.getDeviceInfo().platform : wx.getSystemInfoSync().platform || '').toLowerCase()
       const code = String(error.errCode == null ? 'unknown' : error.errCode)
       console.error('[virtual payment failed]', { code, message: error.errMsg, platform, skuId, productId })
       if (platform === 'ios' && (code === '-15001' || code === '-15002')) {

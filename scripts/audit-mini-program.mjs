@@ -17,6 +17,16 @@ const env = read(".env.example");
 const payCreate = read("app/api/wechat/mini/pay/create/route.ts");
 const notify = read("app/api/wechat/mini/pay/notify/route.ts");
 const paymentClient = read("miniapp/utils/payment.js");
+const catalog = read("lib/mini/catalog.ts");
+const exploreClient = read("miniapp/pages/explore/index.js");
+const exploreView = read("miniapp/pages/explore/index.wxml");
+const productClient = read("miniapp/pages/product/index.js");
+const reportRoutes = read("miniapp/utils/report-routes.js");
+const virtualPay = read("miniapp/utils/payment.js");
+const accountLinkStart = read("app/api/wechat/mini/account-link/start/route.ts");
+const accountLinkConfirm = read("app/api/wechat/mini/account-link/confirm/route.ts");
+const accountLinkPanel = read("app/account/MiniAccountLinkPanel.tsx");
+const accountLinkSql = read("sql-history/SQL-v301-mini-account-link.sql");
 const miniSources = fs.readdirSync(path.join(root, "miniapp"), { recursive: true })
   .filter((file) => typeof file === "string" && /\.(js|json|wxml|wxss)$/.test(file))
   .map((file) => read(path.join("miniapp", file))).join("\n");
@@ -36,5 +46,19 @@ check(
 check("server notification verifies user identity", /identity\.openid !== callbackOpenid/.test(notify));
 check("server notification uses atomic fulfillment", /fulfillPaidOrder\(order\.id\)/.test(notify));
 check("secrets are environment-only", /WECHAT_MINI_VPAY_APP_KEY=/.test(env) && /WECHAT_MINI_SESSION_ENCRYPTION_KEY=/.test(env));
+const reportWebPaths = ["/life-map", "/relationship", "/qian", "/tarot", "/resilience", "/romance", "/daily", "/wealth"];
+check("all eight report entries map to their web product routes", reportWebPaths.every((route) => catalog.includes(`: \"${route}\"`) && reportRoutes.includes(`'${route}'`)));
+check("report discovery opens the shared web product source", /getReportWebPath/.test(exploreClient) && /pages\/web\/index/.test(exploreClient));
+check("report discovery does not restore the removed preliminary archive funnel", !/初读档案|生成我的初读档案/.test(exploreView));
+check("removed preliminary archive page is not registered or reachable", !app.pages.includes("pages/assessment/index") && !/pages\/assessment/.test(productClient));
+check("iPhone sandbox payment is stopped before WeChat returns a platform error", /result\.sandbox && platform === 'ios'/.test(virtualPay));
+check("account linking begins only from a valid Mini Program session", /requireMiniSession\(req\)/.test(accountLinkStart));
+check("account-link hand-off is encrypted, random, and short-lived", /encryptMiniSecret/.test(accountLinkStart) && /randomBytes/.test(accountLinkStart) && /10 \* 60 \* 1000/.test(accountLinkStart));
+check("account linking requires the target web account to be signed in", /supabase\.auth\.getUser\(\)/.test(accountLinkConfirm));
+check("account linking rechecks the live Mini identity before migration", /wechat_mini_identities/.test(accountLinkConfirm) && /identity\.user_id !== ticket\.sourceUserId/.test(accountLinkConfirm));
+check("account-link UI asks for an explicit confirmation", /确认连接此账户/.test(accountLinkPanel) && /不会猜测或自动合并账户/.test(accountLinkPanel));
+check("account migration does not guess identity from email or phone", !/email|phone|手机号|邮箱/i.test(`${accountLinkStart}\n${accountLinkConfirm}\n${accountLinkSql}`));
+check("account migration preserves report, order, and entitlement records", /public\.unlocks/.test(accountLinkSql) && /public\.orders/.test(accountLinkSql) && /public\.wealth_submissions/.test(accountLinkSql));
+check("account migration RPC is service-role-only", /revoke execute[\s\S]*from public, anon, authenticated/.test(accountLinkSql) && /grant execute[\s\S]*to service_role/.test(accountLinkSql));
 
 if (failed) process.exit(1);

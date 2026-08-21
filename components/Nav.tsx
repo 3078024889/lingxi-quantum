@@ -45,6 +45,13 @@ export default function Nav() {
     if (!header) return;
     const updateHeight = () => document.documentElement.style.setProperty("--lx-header-height", `${header.offsetHeight}px`);
     updateHeight();
+    // Older embedded WebViews can render the navigation perfectly well but do
+    // not implement ResizeObserver. Do not crash the entire page for a resize
+    // enhancement; a window resize listener is a safe fallback.
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateHeight);
+      return () => window.removeEventListener("resize", updateHeight);
+    }
     const observer = new ResizeObserver(updateHeight);
     observer.observe(header);
     return () => observer.disconnect();

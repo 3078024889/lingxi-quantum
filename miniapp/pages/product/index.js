@@ -1,5 +1,6 @@
 const { publicRequest, request } = require('../../utils/api')
 const { payForSku } = require('../../utils/payment')
+const { getReportWebPath } = require('../../utils/report-routes')
 Page({
   data: { item: null, loading: true, loadError: '', paying: false, opening: false, owned: false, from: 'explore' },
   async onLoad(options) {
@@ -19,7 +20,9 @@ Page({
         (me.unlocks || []).some(unlock => unlock.product_id === item.productId || unlock.product_id === 'everything' || (item.category === 'narrative' && unlock.product_id === 'narrative-all'))
       ))
       if (item && item.category === 'report' && !owned) {
-        return wx.redirectTo({ url: `/pages/assessment/index?sku=${encodeURIComponent(item.skuId)}&product=${encodeURIComponent(item.productId)}` })
+        const path = getReportWebPath(item)
+        if (!path) throw new Error('这份精测暂未开放')
+        return wx.redirectTo({ url: `/pages/web/index?path=${encodeURIComponent(path)}` })
       }
       this.setData({ item: item || null, owned, loadError: item ? '' : '这份内容暂未进入小程序目录' })
     } catch (_) {

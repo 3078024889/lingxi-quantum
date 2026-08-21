@@ -59,7 +59,13 @@ export async function POST(req: Request) {
       orderId: order.id,
       encryptedSessionKey,
     });
-    return NextResponse.json({ orderId: order.id, payment });
+    // The client needs this non-secret flag to avoid invoking an iOS-incompatible
+    // sandbox payment sheet. It contains no credential or payment signature.
+    return NextResponse.json({
+      orderId: order.id,
+      payment,
+      sandbox: process.env.WECHAT_MINI_VPAY_ENV === "sandbox",
+    });
   } catch (error) {
     console.error("[mini virtual pay] create failed", error instanceof Error ? error.message : "unknown");
     return NextResponse.json({ error: "支付准备失败，请稍后重试" }, { status: 500 });

@@ -11,6 +11,8 @@ export type MiniCatalogItem = {
   days: number | null;
   category: "report" | "practice" | "membership" | "narrative";
   note: string;
+  /** Public web product route. Report entry pages stay the single source of truth across web and Mini Program. */
+  webPath?: string;
   /** Server-delivered intake hint. Native clients need no upload for copy/flow changes. */
   assessmentKind?: "life-map" | "relationship" | "daily-tide" | "birth" | "resilience" | "romance" | "wealth";
   assessmentIntro?: string;
@@ -49,6 +51,17 @@ const REPORT_IDS = new Set([
   "daily-tide-report",
   "wealth-report",
 ]);
+
+const REPORT_WEB_PATHS: Record<string, string> = {
+  "life-map-report": "/life-map",
+  "relationship-resonance": "/relationship",
+  "qian-reading": "/qian",
+  "tarot-reading": "/tarot",
+  "resilience-report": "/resilience",
+  "romance-report": "/romance",
+  "daily-tide-report": "/daily",
+  "wealth-report": "/wealth",
+};
 const PRACTICE_IDS = new Set(["breath", "intuition", "heart-reset", "ascending-heart"]);
 const MEMBERSHIP_IDS = new Set(["day", "month", "year", "narrative-all", "everything"]);
 const UNAVAILABLE_NARRATIVE_IDS = new Set(
@@ -138,6 +151,7 @@ export function getMiniCatalog(): MiniCatalogItem[] {
     accessType: product.type,
     days: product.days ?? null,
     category: categoryFor(product.id),
+    webPath: REPORT_WEB_PATHS[product.id],
     note: categoryFor(product.id) === "narrative" ? getNarrative(product.id)?.teaser ?? product.note : product.note,
     ...REPORT_INTAKE[product.id],
   }));

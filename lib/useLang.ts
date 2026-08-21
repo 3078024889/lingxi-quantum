@@ -13,6 +13,9 @@ export function useLang() {
   const [langEn, setLangEn] = useState(false);
   useEffect(() => {
     setLangEn(document.documentElement.classList.contains("lang-en"));
+    // Some embedded WeChat WebViews lack MutationObserver. Language switching is
+    // an enhancement; its absence must never take down a paid product page.
+    if (typeof MutationObserver === "undefined") return;
     const observer = new MutationObserver(() => {
       setLangEn(document.documentElement.classList.contains("lang-en"));
     });

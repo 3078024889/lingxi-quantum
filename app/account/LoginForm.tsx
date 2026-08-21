@@ -7,7 +7,7 @@ import { useLang } from "@/lib/useLang";
 
 type Mode = "signin" | "signup";
 
-export default function LoginForm() {
+export default function LoginForm({ afterAuthPath = "/live-as" }: { afterAuthPath?: string }) {
   const router = useRouter();
   const supabase = createClient();
   const langEn = useLang();
@@ -43,7 +43,7 @@ export default function LoginForm() {
         setMode("signin");
         return;
       }
-      router.push("/live-as");
+      router.push(afterAuthPath);
       router.refresh();
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -52,7 +52,7 @@ export default function LoginForm() {
         setError(t("登录失败：", "Sign-in failed: ") + translate(error.message));
         return;
       }
-      router.push("/live-as");
+      router.push(afterAuthPath);
       router.refresh();
     }
   };
