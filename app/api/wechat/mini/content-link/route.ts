@@ -1,6 +1,7 @@
 import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 import { hasUnlock } from "@/lib/access";
+import { miniContentDestination } from "@/lib/mini/content-destinations";
 import { encryptMiniSecret } from "@/lib/mini/crypto";
 import { requireMiniSession } from "@/lib/mini/session";
 import { getNarrative } from "@/lib/narratives";
@@ -8,22 +9,6 @@ import { getProduct } from "@/lib/plans";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
-
-const PRACTICE_ROUTES: Record<string, string> = {
-  breath: "/practice/breath",
-  intuition: "/practice/intuition",
-  "heart-reset": "/practice/heart-reset",
-  "ascending-heart": "/practice/ascending-heart",
-};
-
-function destinationFor(productId: string): string | null {
-  if (PRACTICE_ROUTES[productId]) return PRACTICE_ROUTES[productId];
-  if (productId === "narrative-all") return "/narrative";
-  if (productId === "everything") return "/account/orders";
-  if (["day", "month", "year"].includes(productId)) return "/live-as";
-  const narrative = getNarrative(productId);
-  return narrative && narrative.status !== "soon" ? `/narrative/${productId}` : null;
-}
 
 export async function POST(req: Request) {
   const session = await requireMiniSession(req);
@@ -33,7 +18,7 @@ export async function POST(req: Request) {
   if (typeof body.productId !== "string" || (!getProduct(body.productId) && !getNarrative(body.productId))) {
     return NextResponse.json({ error: "内容参数无效" }, { status: 400 });
   }
-  const destination = destinationFor(body.productId);
+  const destination = miniContentDestination(body.productId);
   if (!destination) return NextResponse.json({ error: "这项内容暂不支持在小程序内打开" }, { status: 404 });
 
   const admin = createAdminClient();

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isMiniWebArchiveProduct } from "@/lib/mini/content-destinations";
 import { requireMiniSession } from "@/lib/mini/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
@@ -25,10 +26,12 @@ export async function GET(req: Request) {
     unlocks: (unlocks ?? []).filter((item) => !item.expires_at || Date.parse(item.expires_at) > now).map((item) => ({
       ...item,
       productName: getProduct(item.product_id)?.name ?? item.product_id,
+      webOnly: isMiniWebArchiveProduct(item.product_id),
     })),
     orders: (orders ?? []).map((order) => ({
       ...order,
       productName: getProduct(order.product_id)?.name ?? order.product_id,
+      webOnly: !order.submission_id && isMiniWebArchiveProduct(order.product_id),
     })),
   });
 }

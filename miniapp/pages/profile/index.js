@@ -7,6 +7,19 @@ function displayDate(value) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 }
 
+function confirmOpenWebArchive() {
+  return new Promise((resolve) => {
+    wx.showModal({
+      title: '前往网页档案',
+      content: '这项历史档案保存在已连接的网页灵犀账户中。确认后将安全登录并带你前往，无需再次购买。',
+      confirmText: '打开网页',
+      cancelText: '暂不打开',
+      success: (result) => resolve(result.confirm),
+      fail: () => resolve(false),
+    })
+  })
+}
+
 Page({
   data: { loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null },
   onShow() { this.load() },
@@ -54,6 +67,7 @@ Page({
     if (!order) return
     this.setData({ opening: order.id })
     try {
+      if (order.webOnly && !(await confirmOpenWebArchive())) return
       const result = order.submission_id
         ? await request('/api/wechat/mini/report-link', { method: 'POST', data: { orderId: order.id } })
         : await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: order.product_id } })
@@ -69,6 +83,7 @@ Page({
     if (!unlock) return
     this.setData({ opening: unlock.product_id })
     try {
+      if (unlock.webOnly && !(await confirmOpenWebArchive())) return
       const result = await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: unlock.product_id } })
       wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
     } catch (error) {

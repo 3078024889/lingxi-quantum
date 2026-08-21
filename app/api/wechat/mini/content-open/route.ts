@@ -1,29 +1,13 @@
 import { NextResponse } from "next/server";
 import { hasUnlock } from "@/lib/access";
+import { miniContentDestination } from "@/lib/mini/content-destinations";
 import { decryptMiniSecret } from "@/lib/mini/crypto";
-import { getNarrative } from "@/lib/narratives";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
-const PRACTICE_ROUTES: Record<string, string> = {
-  breath: "/practice/breath",
-  intuition: "/practice/intuition",
-  "heart-reset": "/practice/heart-reset",
-  "ascending-heart": "/practice/ascending-heart",
-};
-
 type Ticket = { userId: string; productId: string; expiresAt: number; nonce: string };
-
-function destinationFor(productId: string): string | null {
-  if (PRACTICE_ROUTES[productId]) return PRACTICE_ROUTES[productId];
-  if (productId === "narrative-all") return "/narrative";
-  if (productId === "everything") return "/account/orders";
-  if (["day", "month", "year"].includes(productId)) return "/live-as";
-  const narrative = getNarrative(productId);
-  return narrative && narrative.status !== "soon" ? `/narrative/${productId}` : null;
-}
 
 function fail(req: Request, message: string) {
   const url = new URL("/account", req.url);
@@ -36,7 +20,7 @@ export async function GET(req: Request) {
   if (!ticketText || ticketText.length > 2048) return fail(req, "内容链接无效");
   try {
     const ticket = JSON.parse(decryptMiniSecret(ticketText)) as Ticket;
-    const destinationPath = destinationFor(ticket.productId);
+    const destinationPath = miniContentDestination(ticket.productId);
     if (!ticket.userId || !ticket.nonce || ticket.expiresAt < Date.now() || !destinationPath) {
       return fail(req, "内容链接已过期");
     }
