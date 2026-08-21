@@ -71,7 +71,7 @@ export default function Footer() {
               <p className="mt-4 text-[13px] text-bone-dim">
                 <span className="text-bone-soft">服务号：</span>灵犀场lingxifield
                 <span className="mx-2 opacity-40">·</span>
-                <span className="text-bone-soft">小程序：</span>灵犀场lingxifileld
+                <span className="text-bone-soft">小程序：</span>灵犀场lingxifield
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row">

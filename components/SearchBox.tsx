@@ -203,7 +203,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           )}
           {results.pages.length > 0 && (
             <div className="sb-group">
-              <div className="sb-group-label">页面</div>
+              <div className="sb-group-label"><span data-lang="zh">页面</span><span data-lang="en">Pages</span></div>
               {results.pages.map((p) => (
                 <Link
                   key={p.slug}
@@ -219,7 +219,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
           )}
           {results.stories.length > 0 && (
             <div className="sb-group">
-              <div className="sb-group-label">多维叙事</div>
+              <div className="sb-group-label"><span data-lang="zh">多维叙事</span><span data-lang="en">Narratives</span></div>
               {results.stories.map((n) => (
                 <Link
                   key={n.slug}

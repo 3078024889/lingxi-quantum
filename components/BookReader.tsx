@@ -110,8 +110,9 @@ function BookInstance({
             </div>
           ) : isEnd ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
-              <p className="font-display text-2xl tracking-widest2 text-lattice">✧ 完 ✧</p>
-              <p className="mt-4 text-sm text-bone-soft">愿它在你的场里继续展开</p>
+              <p className="font-display text-2xl tracking-widest2 text-lattice">✧ 完 · End ✧</p>
+              <p className="mt-4 text-sm text-bone-soft" data-lang="zh">愿它在你的场里继续展开</p>
+              <p className="mt-4 text-sm text-bone-soft" data-lang="en">May it continue to unfold within your field</p>
             </div>
           ) : (
             <Page>{pages[page]}</Page>
@@ -146,17 +147,19 @@ function BookInstance({
           disabled={isCover}
           className="bg-void-deep rounded-sm px-3 py-1.5 font-display uppercase tracking-widest2 transition hover:border-lattice/60 hover:text-lattice disabled:opacity-30"
         >
-          ← 上一页
+          <span data-lang="zh">← 上一页</span>
+          <span data-lang="en">← Prev</span>
         </button>
         <span className="bg-void-deep rounded-sm px-3 py-1.5 font-display tracking-widest2">
-          {isCover ? "封面" : isPaywall ? "· · ·" : isEnd ? "完" : `${page + 1} / ${pages.length}`}
+          {isCover ? <><span data-lang="zh">封面</span><span data-lang="en">Cover</span></> : isPaywall ? "· · ·" : isEnd ? <><span data-lang="zh">完</span><span data-lang="en">End</span></> : `${page + 1} / ${pages.length}`}
         </span>
         <button
           onClick={() => go(1)}
           disabled={isEnd || isPaywall}
           className="bg-void-deep rounded-sm px-3 py-1.5 font-display uppercase tracking-widest2 transition hover:border-lattice/60 hover:text-lattice disabled:opacity-30"
         >
-          下一页 →
+          <span data-lang="zh">下一页 →</span>
+          <span data-lang="en">Next →</span>
         </button>
       </div>
     </div>
