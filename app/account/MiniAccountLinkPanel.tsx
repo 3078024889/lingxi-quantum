@@ -23,7 +23,7 @@ export default function MiniAccountLinkPanel({ ticket }: { ticket: string }) {
       const data = await response.json();
       if (!response.ok || !data.ok) throw new Error(data.error || t("账户连接未完成", "Account link failed"));
       setState("done");
-      setMessage(t("已连接。你的既有权益与报告现在会在小程序"我的场域"中出现。", "Connected. Your existing entitlements and reports will now appear in the mini-program under My Field."));
+      setMessage(t("已连接。你的既有权益与报告现在会在小程序「我的场域」中出现。", "Connected. Your existing entitlements and reports will now appear in the mini-program under My Field."));
       router.refresh();
     } catch (error) {
       setState("error");

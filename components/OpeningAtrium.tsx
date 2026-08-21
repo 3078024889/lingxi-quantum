@@ -2,8 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const POSTER = "/images/entrance/lingxi-opening-poster.jpg?v=20260821-3";
-const VIDEO_MP4 = "/images/entrance/lingxi-opening.mp4?v=20260821-3";
+// Desktop keeps the original 16:9 entrance film. Mobile gets its own 9:16 cut
+// so the frame fills a phone screen instead of being cropped by object-cover.
+const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
+const DESKTOP_POSTER = "/images/entrance/lingxi-opening-poster.jpg?v=20260821-3";
+const DESKTOP_VIDEO_MP4 = "/images/entrance/lingxi-opening.mp4?v=20260821-3";
+const MOBILE_POSTER = "/images/entrance/lingxi-opening-poster-mobile.jpg?v=20260821-3";
+const MOBILE_VIDEO_MP4 = "/images/entrance/lingxi-opening-mobile.mp4?v=20260821-3";
 
 export default function OpeningAtrium() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -12,6 +17,20 @@ export default function OpeningAtrium() {
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const [videoAvailable, setVideoAvailable] = useState(true);
   const [ended, setEnded] = useState(false);
+  // Lazy-initialized so the client's first render already reads the real
+  // viewport (avoids a poster flash/swap after hydration).
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(DESKTOP_BREAKPOINT).matches
+  );
+  const POSTER = isDesktop ? DESKTOP_POSTER : MOBILE_POSTER;
+
+  useEffect(() => {
+    const mql = window.matchMedia(DESKTOP_BREAKPOINT);
+    setIsDesktop(mql.matches);
+    const handleChange = (event: MediaQueryListEvent) => setIsDesktop(event.matches);
+    mql.addEventListener("change", handleChange);
+    return () => mql.removeEventListener("change", handleChange);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -59,7 +78,7 @@ export default function OpeningAtrium() {
           role="img"
           aria-label="灵犀场入场视觉"
           className="hidden min-h-0 bg-cover bg-center lg:block"
-          style={{ backgroundImage: `url(${POSTER})` }}
+          style={{ backgroundImage: `url(${DESKTOP_POSTER})` }}
         />
 
         <div className="relative min-h-0 overflow-hidden bg-[#080622] shadow-[0_0_70px_rgba(126,90,255,.28)]">
@@ -84,7 +103,10 @@ export default function OpeningAtrium() {
               onEnded={() => setEnded(true)}
               onError={() => setVideoAvailable(false)}
             >
-              <source src={VIDEO_MP4} type="video/mp4" />
+              {/* Browser picks the first matching source: desktop viewports get
+                  the 16:9 film, everything narrower falls through to the 9:16 cut. */}
+              <source media={DESKTOP_BREAKPOINT} src={DESKTOP_VIDEO_MP4} type="video/mp4" />
+              <source src={MOBILE_VIDEO_MP4} type="video/mp4" />
             </video>
           ) : (
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${POSTER})` }} />
@@ -145,7 +167,7 @@ export default function OpeningAtrium() {
           role="img"
           aria-label="灵犀场入场视觉"
           className="hidden min-h-0 bg-cover bg-center lg:block"
-          style={{ backgroundImage: `url(${POSTER})` }}
+          style={{ backgroundImage: `url(${DESKTOP_POSTER})` }}
         />
       </div>
     </section>
