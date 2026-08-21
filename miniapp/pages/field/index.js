@@ -3,11 +3,11 @@ const { publicRequest } = require('../../utils/api')
 Page({
   data: {
     entries: [
-      { title: '场域精测', note: '十种生命档案体验，从结构中看见自己', path: '/pages/explore/index' },
-      { title: '意识显化', note: '把愿景带回现实证据与每日行动', web: '/live-as' },
-      { title: '梦境探索', note: '记录梦的回声，辨认潜意识的线索', web: '/dream' },
-      { title: '潜意识重塑', note: '看见反复出现的生命模式，重新选择内在路径', web: '/#gates' },
-      { title: '多维叙事', note: '进入为灵魂准备的付费阅读空间', path: '/pages/narratives/index' },
+      { title: '场域精测', note: '探索生命底层结构。不是为了被定义，而是看见自身已有的模式。', path: '/pages/explore/index' },
+      { title: '意识显化', note: '让愿望与现实重新连接。看见你的意识，如何塑造真实的路径。', web: '/live-as' },
+      { title: '梦境探索', note: '梦境，是未被语言表达的信息。从潜意识的线索中，重新理解自己。', web: '/dream' },
+      { title: '潜意识重塑', note: '看见隐藏的惯性。改变并非否定过去，而是让新的可能进入生命。', web: '/#gates' },
+      { title: '多维叙事', note: '探索不同视角的生命故事。每一次阅读，都是与自身经验的重新连接。', path: '/pages/narratives/index' },
     ],
     exchanges: [],
   },
@@ -27,4 +27,5 @@ Page({
     const item = this.data.exchanges[event.currentTarget.dataset.index]
     wx.navigateTo({ url: `/pages/product/index?sku=${encodeURIComponent(item.skuId)}&product=${encodeURIComponent(item.productId)}&from=field` })
   },
+  openWebsite() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
 })

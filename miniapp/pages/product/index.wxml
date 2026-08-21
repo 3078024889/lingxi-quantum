@@ -15,7 +15,7 @@
       <view class="lx-title">{{item.name}}</view>
       <view class="lx-subtitle">{{item.note}}</view>
       <view class="promise" wx:if="{{item.category === 'report'}}"><view>结构识别</view><view>现实映射</view><view>反证条件</view><view>行动实验</view></view>
-      <view class="narrative-promise" wx:if="{{item.category === 'narrative'}}">这不是一篇被标题包装的商品。先让上面这句话与你发生关系；只有当你想知道它如何继续，才需要进入全文。</view>
+      <view class="narrative-promise" wx:if="{{item.category === 'narrative'}}">先不要急着寻找答案。<br/>静静感受：这段叙事，是否映照了你正在经历，却尚未完全表达的生命状态。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'practice'}}">不是观看一套课程，而是把一项可重复的修炼带回身体与日常。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'membership'}}">在有效期内进入对应场域；神尊全域解锁同时包含未来新增的报告、叙事、修炼技术与场域模块。</view>
       <view wx:if="{{owned}}" class="owned-note">已在你的场域中 ✓</view>

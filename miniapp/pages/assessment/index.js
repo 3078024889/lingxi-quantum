@@ -18,7 +18,7 @@ Page({
   data: {
     loading: true, calculating: false, paying: false, item: null, preview: null, submissionId: '',
     person: defaults(), personB: defaults(), relationshipType: 'romantic', profile: profileDefaults(),
-    isRelationship: false, assessmentKind: 'birth', zodiac: 'aries', zodiacs: ZODIACS,
+    isRelationship: false, assessmentKind: 'birth', zodiac: 'aries', zodiacs: ZODIACS, dailyCalibrated: false,
     currentYear: TODAY.getFullYear(), error: '',
   },
   async onLoad(options) {
@@ -60,6 +60,7 @@ Page({
   },
   chooseRelation(event) { this.setData({ relationshipType: event.detail.value }) },
   chooseZodiac(event) { this.setData({ zodiac: event.detail.value, preview: null }) },
+  toggleDailyCalibration(event) { this.setData({ dailyCalibrated: event.detail.value, preview: null }) },
   openDailyTide() {
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(`/daily/${this.data.zodiac}`)}` })
   },

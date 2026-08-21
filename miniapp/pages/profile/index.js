@@ -36,6 +36,7 @@ Page({
   clearSearch() { this.applyFilter('') },
   explore() { wx.switchTab({ url: '/pages/explore/index' }) },
   narratives() { wx.switchTab({ url: '/pages/narratives/index' }) },
+  website() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
   async openOrder(event) {
     const order = event.currentTarget.dataset.order
     if (!order) return

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 
 const POSTER = "/images/entrance/lingxi-opening-poster.jpg";
-const VIDEO = "/images/entrance/lingxi-opening.webm";
 const VIDEO_MP4 = "/images/entrance/lingxi-opening.mp4";
 const STORAGE_KEY = "lingxi-opening-atrium-seen-v1";
 
@@ -12,6 +11,7 @@ export default function OpeningAtrium() {
   const [visible, setVisible] = useState(true);
   const [ready, setReady] = useState(false);
   const [ended, setEnded] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const [videoAvailable, setVideoAvailable] = useState(true);
 
   useEffect(() => {
@@ -20,14 +20,25 @@ export default function OpeningAtrium() {
       return;
     }
 
-    const video = videoRef.current;
-    if (!video || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    video.play().catch(() => undefined);
   }, []);
 
   const enter = () => {
     localStorage.setItem(STORAGE_KEY, "1");
     setVisible(false);
+  };
+
+  const playOpening = async () => {
+    const video = videoRef.current;
+    if (!video || !videoAvailable) {
+      enter();
+      return;
+    }
+    try {
+      await video.play();
+      setPlaying(true);
+    } catch {
+      setVideoAvailable(false);
+    }
   };
 
   if (!visible) return null;
@@ -52,10 +63,13 @@ export default function OpeningAtrium() {
               preload="metadata"
               poster={POSTER}
               onCanPlay={() => setReady(true)}
-              onEnded={() => setEnded(true)}
+              onPlay={() => setPlaying(true)}
+              onEnded={() => {
+                setEnded(true);
+                setPlaying(false);
+              }}
               onError={() => setVideoAvailable(false)}
             >
-              <source src={VIDEO} type="video/webm" />
               <source src={VIDEO_MP4} type="video/mp4" />
             </video>
           ) : (
@@ -68,10 +82,21 @@ export default function OpeningAtrium() {
               跳过 · 进入场域
             </button>
           </div>
+          {!playing && !ended && (
+            <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-center px-6">
+              <button
+                onClick={playOpening}
+                disabled={videoAvailable && !ready}
+                className="border border-cyan-100/75 bg-[#090820]/55 px-6 py-4 font-display text-sm tracking-[0.18em] text-cyan-50 shadow-[0_0_38px_rgba(140,225,255,.22)] backdrop-blur-sm transition hover:border-white hover:bg-cyan-100 hover:text-[#08071c] disabled:cursor-wait disabled:opacity-70"
+              >
+                {videoAvailable ? (ready ? "播放开场短剧" : "正在准备开场短剧") : "进入灵犀场"}
+              </button>
+            </div>
+          )}
           <div className="absolute inset-x-0 bottom-0 p-6 text-center sm:p-9">
             <p className="font-display text-sm tracking-[0.24em] text-violet-100/90">观测 · 觉察 · 连接</p>
             <button onClick={enter} className="mt-4 border border-cyan-200/60 bg-cyan-100/10 px-7 py-3 font-display text-sm tracking-[0.16em] text-cyan-50 transition hover:bg-cyan-100 hover:text-[#08071c]">
-              {ended ? "进入灵犀场" : ready ? "跳过短剧" : "进入灵犀场"}
+              直接进入场域
             </button>
           </div>
         </div>
