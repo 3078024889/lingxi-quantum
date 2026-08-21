@@ -20,7 +20,7 @@ export const cultivationProducts: Product[] = [
   { id: "heart-reset", name: "归零心诀", nameEn: "Heart Reset", priceUsd: 55, priceRmb: 398, type: "permanent", note: "回到内在中心的位置。", noteEn: "Return to your inner center.", group: "cultivation" },
   { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 55, priceRmb: 398, type: "permanent", note: "从内在觉察走向生命展开。", noteEn: "Move from inner awareness toward life unfolding.", group: "cultivation" },
   { id: "narrative-all", name: "多维叙事 · 年度解锁", nameEn: "All Narratives · Yearly", priceUsd: 93, priceRmb: 666, type: "subscription", days: 365, note: "一年内解锁全部多维叙事，含日后新增的全部篇目", noteEn: "One year of access to every narrative, including all added later.", highlight: true, group: "cultivation" },
-  { id: "everything", name: "神尊 · 全域解锁", nameEn: "Sovereign · All-Field Access", priceUsd: 1204, priceRmb: 8666, type: "subscription", days: 365, note: "一年内解锁灵犀场全部内容，并自动包含有效期内未来新增的报告、修炼技术、叙事与场域模块。", noteEn: "One year of all-field access, including future reports, practices, narratives, and field modules released during the active term.", highlight: true, group: "cultivation" },
+  { id: "everything", name: "神尊 · 全域解锁", nameEn: "Sovereign · All-Field Access", priceUsd: 1204, priceRmb: 8668, type: "subscription", days: 365, note: "一年内解锁灵犀场全部内容，并自动包含有效期内未来新增的报告、修炼技术、叙事与场域模块。", noteEn: "One year of all-field access, including future reports, practices, narratives, and field modules released during the active term.", highlight: true, group: "cultivation" },
 ];
 
 export const manifestationProducts: Product[] = [

@@ -5,5 +5,11 @@
 .archive-tools { display: flex; align-items: center; gap: 16rpx; margin: 18rpx 0 20rpx; padding: 14rpx 20rpx; }
 .archive-tools input { flex: 1; color: #eef5ff; font-size: 26rpx; }
 .clear-search { color: #76ded2; font-size: 24rpx; }
+.manifest-entry { display: block; width: 100%; margin: 28rpx 0 20rpx; padding: 30rpx; border: 1rpx solid rgba(125, 224, 215, .52); border-radius: 8rpx; background: linear-gradient(125deg, rgba(90, 68, 162, .34), rgba(40, 139, 151, .22)); color: #eef8ff; text-align: left; box-shadow: 0 18rpx 50rpx rgba(4, 14, 45, .24); }
+.manifest-entry::after { border: 0; }
+.manifest-kicker { color: #7de0d7; font-size: 19rpx; letter-spacing: 4rpx; }
+.manifest-title { margin-top: 12rpx; font-family: Georgia, serif; font-size: 36rpx; letter-spacing: 3rpx; }
+.manifest-note { margin-top: 12rpx; color: #c5d1e5; font-size: 24rpx; line-height: 1.7; }
+.manifest-action { margin-top: 22rpx; color: #8be8dc; font-size: 24rpx; }
 .quick-links { display: flex; gap: 16rpx; margin-bottom: 30rpx; }
 .quick-link { flex: 1; margin: 0; padding: 16rpx 10rpx; border: 1rpx solid rgba(125, 224, 215, .45); border-radius: 6rpx; background: rgba(85, 135, 173, .18); color: #dcecff; font-size: 24rpx; line-height: 1.4; }

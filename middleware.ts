@@ -3,6 +3,26 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // 中间件：在每次请求时刷新登录会话，保持登录状态。
 export async function middleware(request: NextRequest) {
+  // 支付、登录和 OAuth 状态都依赖同源 Cookie。若同一站点同时允许
+  // www 与裸域运行，用户从微信分享链接进入 www、再回到备案裸域时，
+  // 浏览器会把它们当成两个会话空间。这里在任何业务逻辑之前统一主域，
+  // 同时保留路径与查询参数，让所有手机、桌面浏览器和微信 WebView 都
+  // 使用唯一身份域。这样不仅修复微信授权回跳，也避免同一账号在两个
+  // 域名下看起来像两个人。
+  // Vercel/反向代理后的 nextUrl 可能携带内部主机名，因此优先读取转发
+  // 主机头；本地与无代理环境再回落到标准 Host / nextUrl。
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const requestHostname = (forwardedHost || request.headers.get("host") || request.nextUrl.hostname)
+    .split(":")[0]
+    .toLowerCase();
+  if (requestHostname === "www.lingxifield.cn" || requestHostname === "www.lingxifield.com") {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.protocol = "https:";
+    canonicalUrl.hostname = requestHostname.slice(4);
+    canonicalUrl.port = "";
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
+
   // v227：Search Console 报的 /narrative/（带斜杠）404——根因是这个
   // 项目没有配置 trailingSlash，Next.js 默认区分"/narrative"和
   // "/narrative/"这两个不同的URL，只有前者能匹配到真实页面，后者

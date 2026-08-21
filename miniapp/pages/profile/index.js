@@ -34,6 +34,7 @@ Page({
   },
   onSearch(event) { this.applyFilter(event.detail.value) },
   clearSearch() { this.applyFilter('') },
+  manifestation() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/live-as')}` }) },
   explore() { wx.switchTab({ url: '/pages/explore/index' }) },
   narratives() { wx.switchTab({ url: '/pages/narratives/index' }) },
   website() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },

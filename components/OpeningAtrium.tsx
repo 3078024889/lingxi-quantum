@@ -92,6 +92,12 @@ export default function OpeningAtrium() {
 
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#030214]/45 via-transparent to-[#030214]/70" />
 
+          <div className="pointer-events-none absolute inset-x-0 top-[12%] z-[6] px-5 text-center text-white [text-shadow:0_2px_22px_rgba(3,2,20,.95)] sm:top-[14%]">
+            <p className="font-display text-3xl font-light tracking-[0.24em] sm:text-4xl">灵犀场</p>
+            <p className="mt-2 text-[10px] uppercase tracking-[0.48em] text-cyan-100/90">Lingxi Field</p>
+            <div className="mx-auto mt-4 h-px w-20 bg-gradient-to-r from-transparent via-cyan-100/80 to-transparent" />
+          </div>
+
           <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
             <button
               type="button"

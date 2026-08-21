@@ -4,6 +4,13 @@ const read = (path) => fs.readFileSync(path, "utf8")
 const checks = [
   ["production review bypass is impossible", read("lib/reviewMode.ts").includes('process.env.NODE_ENV !== "production"')],
   ["OAuth redirect is restricted to checkout", read("app/api/pay/wechat/oauth-url/route.ts").includes('redirect.pathname !== "/checkout"')],
+  ["WeChat OAuth uses one canonical CN identity domain", (() => {
+    const middleware = read("middleware.ts")
+    const oauth = read("app/api/pay/wechat/oauth-url/route.ts")
+    return middleware.includes('requestHostname === "www.lingxifield.cn"') &&
+      middleware.includes('canonicalUrl.hostname = requestHostname.slice(4)') &&
+      oauth.includes('new Set(["https://lingxifield.cn"])')
+  })()],
   ["OAuth state uses HttpOnly cookie", read("app/api/pay/wechat/oauth-url/route.ts").includes("httpOnly: true")],
   ["WeChat create verifies OAuth state", read("app/api/pay/wechat/create/route.ts").includes("expectedState")],
   ["PayPal return binds provider token", read("app/api/pay/paypal/return/route.ts").includes("paypalToken !== order.provider_payment_id")],

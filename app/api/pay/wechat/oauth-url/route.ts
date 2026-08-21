@@ -10,14 +10,9 @@ const OAUTH_STATE_COOKIE = "lingxi_wechat_oauth_state";
 function allowedRedirect(raw: string, requestUrl: URL): URL | null {
   try {
     const redirect = new URL(raw);
-    const configuredOrigin = new URL(
-      process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com"
-    ).origin;
-    const allowedOrigins = new Set([
-      configuredOrigin,
-      "https://lingxifield.com",
-      "https://lingxifield.cn",
-    ]);
+    // 微信网页授权只回到备案主域。不要把 .com 或 www 变体加入这里：
+    // 它们会让 OAuth state / 登录 Cookie 跨域，并在微信侧再次被拒绝。
+    const allowedOrigins = new Set(["https://lingxifield.cn"]);
     if (process.env.NODE_ENV !== "production") {
       allowedOrigins.add(requestUrl.origin);
     }
