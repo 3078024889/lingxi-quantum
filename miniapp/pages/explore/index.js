@@ -17,4 +17,17 @@ Page({
     // 再次发生内容降级、字段缺失和流程漂移。
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(path)}` })
   },
+  onShareAppMessage() {
+    return {
+      title: '灵犀场 · 场域精测',
+      path: '/pages/explore/index',
+      imageUrl: '/images/share-cover.jpg',
+    }
+  },
+  onShareTimeline() {
+    return {
+      title: '灵犀场 · 场域精测',
+      imageUrl: '/images/share-cover.jpg',
+    }
+  },
 })

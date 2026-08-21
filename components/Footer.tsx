@@ -74,11 +74,19 @@ export default function Footer() {
                 <span className="text-bone-soft">小程序：</span>灵犀场lingxifileld
               </p>
             </div>
-            <div className="flex shrink-0 items-center gap-3 rounded-sm border border-white/10 bg-white/[0.035] p-3">
-              <Image src="/images/lingxifield-wechat-service-qr.jpg" alt="灵犀场lingxifield 服务号二维码" width={92} height={92} className="h-[92px] w-[92px] rounded-[2px]" />
-              <p className="max-w-24 text-xs leading-5 text-bone-dim">
-                <Bi zh="扫码关注服务号，接收场域新入口与内容更新。" en="Scan to follow for new portals and field updates." />
-              </p>
+            <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+              <div className="flex items-center gap-3 rounded-sm border border-white/10 bg-white/[0.035] p-3">
+                <Image src="/images/lingxifield-wechat-service-qr.jpg" alt="灵犀场lingxifield 服务号二维码" width={92} height={92} className="h-[92px] w-[92px] rounded-[2px]" />
+                <p className="max-w-24 text-xs leading-5 text-bone-dim">
+                  <Bi zh="扫码关注服务号，接收场域新入口与内容更新。" en="Scan to follow for new portals and field updates." />
+                </p>
+              </div>
+              <div className="flex items-center gap-3 rounded-sm border border-white/10 bg-white/[0.035] p-3">
+                <Image src="/images/miniapp-qrcode.png" alt="灵犀场小程序二维码" width={92} height={92} className="h-[92px] w-[92px] rounded-[2px]" />
+                <p className="max-w-24 text-xs leading-5 text-bone-dim">
+                  <Bi zh="扫码进入灵犀场小程序。" en="Scan to open the mini-program." />
+                </p>
+              </div>
             </div>
           </div>
         </section>

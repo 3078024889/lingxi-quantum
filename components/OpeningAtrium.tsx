@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const POSTER = "/images/entrance/lingxi-opening-poster.jpg?v=20260821-2";
-const VIDEO_MP4 = "/images/entrance/lingxi-opening.mp4?v=20260821-2";
+const POSTER = "/images/entrance/lingxi-opening-poster.jpg?v=20260821-3";
+const VIDEO_MP4 = "/images/entrance/lingxi-opening.mp4?v=20260821-3";
 
 export default function OpeningAtrium() {
   const videoRef = useRef<HTMLVideoElement>(null);

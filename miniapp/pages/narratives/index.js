@@ -19,4 +19,17 @@ Page({
     const { sku, product } = event.currentTarget.dataset
     wx.navigateTo({ url: `/pages/product/index?sku=${encodeURIComponent(sku)}&product=${encodeURIComponent(product)}&from=narratives` })
   },
+  onShareAppMessage() {
+    return {
+      title: '灵犀场 · 多维叙事',
+      path: '/pages/narratives/index',
+      imageUrl: '/images/share-cover.jpg',
+    }
+  },
+  onShareTimeline() {
+    return {
+      title: '灵犀场 · 多维叙事',
+      imageUrl: '/images/share-cover.jpg',
+    }
+  },
 })

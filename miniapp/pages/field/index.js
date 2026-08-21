@@ -37,4 +37,17 @@ Page({
     wx.navigateTo({ url: `/pages/product/index?sku=${encodeURIComponent(item.skuId)}&product=${encodeURIComponent(item.productId)}&from=field` })
   },
   openWebsite() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
+  onShareAppMessage() {
+    return {
+      title: '灵犀场 · 步入你的意识场域',
+      path: '/pages/field/index',
+      imageUrl: '/images/share-cover.jpg',
+    }
+  },
+  onShareTimeline() {
+    return {
+      title: '灵犀场 · 观测 · 觉察 · 连接',
+      imageUrl: '/images/share-cover.jpg',
+    }
+  },
 })
