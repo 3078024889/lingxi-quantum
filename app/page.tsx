@@ -12,6 +12,7 @@ import FarewellBanner from "@/components/FarewellBanner";
 import { gates } from "@/lib/gates";
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import OpeningAtrium from "@/components/OpeningAtrium";
 
 const GATES_FAQ: BilingualFaqItem[] = [
   {
@@ -59,6 +60,7 @@ const HOME_FAQ: BilingualFaqItem[] = [
 export default function Home() {
   return (
     <>
+      <OpeningAtrium />
       <Nav />
       <FarewellBanner />
       <main className="relative overflow-hidden">
