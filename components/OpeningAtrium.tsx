@@ -2,22 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Desktop keeps the 16:9 entrance film. Mobile gets its own 9:16 cut so the
-// frame fills a phone screen instead of being cropped by object-cover.
+// Full-bleed entrance film — no side panels. Desktop plays the 16:9 cut,
+// mobile plays its own 9:16 cut, chosen in JS below.
 //
 // v304: switched away from <video><source media="..."> for picking the
 // right file. That attribute is meant for <picture>, and support for it on
 // <video>/<source> is inconsistent across mobile browsers and WeChat's
 // embedded webview (X5/xweb) — some of them just ignore the media query and
-// always load the first <source>, which is why the phone was loading the
-// desktop file (or nothing). We now pick the URL in JS with
+// always load the first <source>. We pick the URL in JS with
 // window.matchMedia and render a single <video src="..."> element, which
 // every platform handles the same way.
 //
-// Also re-encoded both source films to H.264 — the originals were HEVC,
-// which only decodes reliably in Safari/iOS. Chrome, most Android WeChat
-// webviews, and Windows browsers can't play HEVC in <video> at all, so it
-// was silently failing there.
+// v304: also re-encoded both source films to H.264 — the originals were
+// HEVC, which only decodes reliably in Safari/iOS.
+//
+// v307: dropped the old 3-column layout (video in the middle, static
+// character art on either side). It's a single full-screen video now on
+// every breakpoint, same as mobile always was.
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
 const ASSET_VERSION = "20260822-v304";
 const DESKTOP_POSTER = `/images/entrance/lingxi-opening-poster-desktop.jpg?v=${ASSET_VERSION}`;
@@ -94,98 +95,82 @@ export default function OpeningAtrium() {
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(114,76,210,.28),rgba(3,2,20,.96)_72%)]" />
 
-      <div className="relative grid h-[100dvh] w-full grid-cols-1 gap-px bg-violet-200/15 lg:grid-cols-3">
-        <div
-          role="img"
-          aria-label="灵犀场入场视觉"
-          className="hidden min-h-0 bg-cover bg-center lg:block"
-          style={{ backgroundImage: `url(${DESKTOP_POSTER})` }}
-        />
+      <div className="relative h-[100dvh] w-full overflow-hidden bg-[#080622] shadow-[0_0_70px_rgba(126,90,255,.28)]">
+        {videoAvailable ? (
+          <video
+            ref={videoRef}
+            src={VIDEO_SRC}
+            className="absolute inset-0 h-full w-full object-cover"
+            autoPlay
+            muted={muted}
+            playsInline
+            webkit-playsinline="true"
+            x5-playsinline="true"
+            x5-video-player-type="h5"
+            x5-video-player-fullscreen="false"
+            preload="auto"
+            poster={POSTER}
+            onCanPlay={() => {
+              const video = videoRef.current;
+              if (video?.paused && !ended) void video.play().catch(() => setAutoplayBlocked(true));
+            }}
+            onPlay={() => setAutoplayBlocked(false)}
+            onEnded={() => setEnded(true)}
+            onError={() => setVideoAvailable(false)}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${POSTER})` }} />
+        )}
 
-        <div className="relative min-h-0 overflow-hidden bg-[#080622] shadow-[0_0_70px_rgba(126,90,255,.28)]">
-          {videoAvailable ? (
-            <video
-              ref={videoRef}
-              src={VIDEO_SRC}
-              className="absolute inset-0 h-full w-full object-cover"
-              autoPlay
-              muted={muted}
-              playsInline
-              webkit-playsinline="true"
-              x5-playsinline="true"
-              x5-video-player-type="h5"
-              x5-video-player-fullscreen="false"
-              preload="auto"
-              poster={POSTER}
-              onCanPlay={() => {
-                const video = videoRef.current;
-                if (video?.paused && !ended) void video.play().catch(() => setAutoplayBlocked(true));
-              }}
-              onPlay={() => setAutoplayBlocked(false)}
-              onEnded={() => setEnded(true)}
-              onError={() => setVideoAvailable(false)}
-            />
-          ) : (
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${POSTER})` }} />
-          )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#030214]/45 via-transparent to-[#030214]/70" />
 
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#030214]/45 via-transparent to-[#030214]/70" />
-
-          <div className="pointer-events-none absolute inset-x-0 top-[12%] z-[6] px-5 text-center text-white [text-shadow:0_2px_22px_rgba(3,2,20,.95)] sm:top-[14%]">
-            <p className="font-display text-3xl font-light tracking-[0.24em] sm:text-4xl">灵犀场</p>
-            <p className="mt-2 text-[10px] uppercase tracking-[0.48em] text-cyan-100/90">Lingxi Field</p>
-            <div className="mx-auto mt-4 h-px w-20 bg-gradient-to-r from-transparent via-cyan-100/80 to-transparent" />
-          </div>
-
-          <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
-            <button
-              type="button"
-              onClick={toggleSound}
-              disabled={!videoAvailable}
-              className="border border-white/35 bg-[#05031a]/55 px-4 py-2.5 text-xs tracking-[0.12em] text-white/90 backdrop-blur-md transition hover:border-cyan-200 hover:text-cyan-100 disabled:opacity-50"
-            >
-              {muted ? "开启声音" : "静音播放"}
-            </button>
-            <button
-              type="button"
-              onClick={enterField}
-              className="border border-cyan-100/60 bg-[#05031a]/55 px-4 py-2.5 text-xs tracking-[0.12em] text-cyan-50 backdrop-blur-md transition hover:bg-cyan-100 hover:text-[#08071c]"
-            >
-              跳过 · 进入灵犀场
-            </button>
-          </div>
-
-          {(autoplayBlocked || ended) && videoAvailable && (
-            <div className="absolute inset-0 z-[5] flex items-center justify-center px-6">
-              <button
-                type="button"
-                onClick={playVideo}
-                className="border border-cyan-100/75 bg-[#07051d]/60 px-7 py-4 font-display text-sm tracking-[0.18em] text-cyan-50 shadow-[0_0_38px_rgba(140,225,255,.22)] backdrop-blur-md transition hover:bg-cyan-100 hover:text-[#08071c]"
-              >
-                {ended ? "重新播放入场影像" : "播放入场影像"}
-              </button>
-            </div>
-          )}
-
-          <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-8 text-center sm:px-8">
-            <p className="font-display text-[11px] uppercase tracking-[0.34em] text-cyan-100/90">Lingxi Field · Opening</p>
-            <p className="mt-2 font-display text-sm tracking-[0.24em] text-violet-100/90">观测 · 觉察 · 连接</p>
-            <button
-              type="button"
-              onClick={enterField}
-              className="mt-4 w-full border border-cyan-200/60 bg-cyan-100/10 py-3.5 font-display text-sm tracking-[0.16em] text-cyan-50 backdrop-blur-md transition hover:bg-cyan-100 hover:text-[#08071c]"
-            >
-              进入灵犀场
-            </button>
-          </div>
+        <div className="pointer-events-none absolute inset-x-0 top-[12%] z-[6] px-5 text-center text-white [text-shadow:0_2px_22px_rgba(3,2,20,.95)] sm:top-[14%]">
+          <p className="font-display text-3xl font-light tracking-[0.24em] sm:text-4xl">灵犀场</p>
+          <p className="mt-2 text-[10px] uppercase tracking-[0.48em] text-cyan-100/90">Lingxi Field</p>
+          <div className="mx-auto mt-4 h-px w-20 bg-gradient-to-r from-transparent via-cyan-100/80 to-transparent" />
         </div>
 
-        <div
-          role="img"
-          aria-label="灵犀场入场视觉"
-          className="hidden min-h-0 bg-cover bg-center lg:block"
-          style={{ backgroundImage: `url(${DESKTOP_POSTER})` }}
-        />
+        <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-3 px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
+          <button
+            type="button"
+            onClick={toggleSound}
+            disabled={!videoAvailable}
+            className="border border-white/35 bg-[#05031a]/55 px-4 py-2.5 text-xs tracking-[0.12em] text-white/90 backdrop-blur-md transition hover:border-cyan-200 hover:text-cyan-100 disabled:opacity-50"
+          >
+            {muted ? "开启声音" : "静音播放"}
+          </button>
+          <button
+            type="button"
+            onClick={enterField}
+            className="border border-cyan-100/60 bg-[#05031a]/55 px-4 py-2.5 text-xs tracking-[0.12em] text-cyan-50 backdrop-blur-md transition hover:bg-cyan-100 hover:text-[#08071c]"
+          >
+            跳过 · 进入灵犀场
+          </button>
+        </div>
+
+        {(autoplayBlocked || ended) && videoAvailable && (
+          <div className="absolute inset-0 z-[5] flex items-center justify-center px-6">
+            <button
+              type="button"
+              onClick={playVideo}
+              className="border border-cyan-100/75 bg-[#07051d]/60 px-7 py-4 font-display text-sm tracking-[0.18em] text-cyan-50 shadow-[0_0_38px_rgba(140,225,255,.22)] backdrop-blur-md transition hover:bg-cyan-100 hover:text-[#08071c]"
+            >
+              {ended ? "重新播放入场影像" : "播放入场影像"}
+            </button>
+          </div>
+        )}
+
+        <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-8 text-center sm:px-8">
+          <p className="font-display text-[11px] uppercase tracking-[0.34em] text-cyan-100/90">Lingxi Field · Opening</p>
+          <p className="mt-2 font-display text-sm tracking-[0.24em] text-violet-100/90">观测 · 觉察 · 连接</p>
+          <button
+            type="button"
+            onClick={enterField}
+            className="mt-4 w-full border border-cyan-200/60 bg-cyan-100/10 py-3.5 font-display text-sm tracking-[0.16em] text-cyan-50 backdrop-blur-md transition hover:bg-cyan-100 hover:text-[#08071c]"
+          >
+            进入灵犀场
+          </button>
+        </div>
       </div>
     </section>
   );
