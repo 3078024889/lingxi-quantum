@@ -2,13 +2,28 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Desktop keeps the original 16:9 entrance film. Mobile gets its own 9:16 cut
-// so the frame fills a phone screen instead of being cropped by object-cover.
+// Desktop keeps the 16:9 entrance film. Mobile gets its own 9:16 cut so the
+// frame fills a phone screen instead of being cropped by object-cover.
+//
+// v304: switched away from <video><source media="..."> for picking the
+// right file. That attribute is meant for <picture>, and support for it on
+// <video>/<source> is inconsistent across mobile browsers and WeChat's
+// embedded webview (X5/xweb) — some of them just ignore the media query and
+// always load the first <source>, which is why the phone was loading the
+// desktop file (or nothing). We now pick the URL in JS with
+// window.matchMedia and render a single <video src="..."> element, which
+// every platform handles the same way.
+//
+// Also re-encoded both source films to H.264 — the originals were HEVC,
+// which only decodes reliably in Safari/iOS. Chrome, most Android WeChat
+// webviews, and Windows browsers can't play HEVC in <video> at all, so it
+// was silently failing there.
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
-const DESKTOP_POSTER = "/images/entrance/lingxi-opening-poster.jpg?v=20260821-3";
-const DESKTOP_VIDEO_MP4 = "/images/entrance/lingxi-opening.mp4?v=20260821-3";
-const MOBILE_POSTER = "/images/entrance/lingxi-opening-poster-mobile.jpg?v=20260821-3";
-const MOBILE_VIDEO_MP4 = "/images/entrance/lingxi-opening-mobile.mp4?v=20260821-3";
+const ASSET_VERSION = "20260822-v304";
+const DESKTOP_POSTER = `/images/entrance/lingxi-opening-poster-desktop.jpg?v=${ASSET_VERSION}`;
+const DESKTOP_VIDEO_MP4 = `/images/entrance/lingxi-opening-desktop.mp4?v=${ASSET_VERSION}`;
+const MOBILE_POSTER = `/images/entrance/lingxi-opening-poster-mobile.jpg?v=${ASSET_VERSION}`;
+const MOBILE_VIDEO_MP4 = `/images/entrance/lingxi-opening-mobile.mp4?v=${ASSET_VERSION}`;
 
 export default function OpeningAtrium() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -23,6 +38,7 @@ export default function OpeningAtrium() {
     () => typeof window !== "undefined" && window.matchMedia(DESKTOP_BREAKPOINT).matches
   );
   const POSTER = isDesktop ? DESKTOP_POSTER : MOBILE_POSTER;
+  const VIDEO_SRC = isDesktop ? DESKTOP_VIDEO_MP4 : MOBILE_VIDEO_MP4;
 
   useEffect(() => {
     const mql = window.matchMedia(DESKTOP_BREAKPOINT);
@@ -40,8 +56,13 @@ export default function OpeningAtrium() {
     // can follow the permitted inline muted-autoplay path.
     video.defaultMuted = true;
     video.muted = true;
+    setAutoplayBlocked(false);
+    setEnded(false);
+    video.load();
     void video.play().catch(() => setAutoplayBlocked(true));
-  }, []);
+    // Re-run whenever the source actually changes (viewport crossing the
+    // desktop breakpoint), so the new file is loaded and (re)played.
+  }, [VIDEO_SRC]);
 
   const enterField = () => setVisible(false);
 
@@ -85,6 +106,7 @@ export default function OpeningAtrium() {
           {videoAvailable ? (
             <video
               ref={videoRef}
+              src={VIDEO_SRC}
               className="absolute inset-0 h-full w-full object-cover"
               autoPlay
               muted={muted}
@@ -102,12 +124,7 @@ export default function OpeningAtrium() {
               onPlay={() => setAutoplayBlocked(false)}
               onEnded={() => setEnded(true)}
               onError={() => setVideoAvailable(false)}
-            >
-              {/* Browser picks the first matching source: desktop viewports get
-                  the 16:9 film, everything narrower falls through to the 9:16 cut. */}
-              <source media={DESKTOP_BREAKPOINT} src={DESKTOP_VIDEO_MP4} type="video/mp4" />
-              <source src={MOBILE_VIDEO_MP4} type="video/mp4" />
-            </video>
+            />
           ) : (
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${POSTER})` }} />
           )}
