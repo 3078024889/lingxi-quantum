@@ -159,7 +159,7 @@ export default function TarotReadingFlow() {
           </div>
           <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
             <input type="checkbox" checked={hasTime} onChange={(e) => setHasTime(e.target.checked)} />
-            <Bi zh="知道具体出生时间（选填，未来展开那张牌会更准）" en="I know the exact birth time (optional, sharpens the Future card)" />
+            <Bi zh="补充出生时间（选填）" en="Add birth time (optional)" />
           </label>
           {hasTime && (
             <div className="mt-2 grid grid-cols-2 gap-2">
@@ -167,6 +167,9 @@ export default function TarotReadingFlow() {
               <input value={minute} onChange={(e) => setMinute(e.target.value)} placeholder={t("分", "Minute")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
             </div>
           )}
+          <p className="mt-2 text-xs leading-5 text-bone-soft">
+            <Bi zh="如愿意补充，可用于展开三重镜像之间与时间位置相关的结构层次；不填写也可继续探索。" en="If provided, birth time can unfold time-and-position layers connecting the three mirrors. You can continue without it." />
+          </p>
         </div>
 
         {error && (
