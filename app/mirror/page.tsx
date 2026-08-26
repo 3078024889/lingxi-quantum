@@ -1,6 +1,7 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import TarotReadingFlow from "./reading/TarotReadingFlow";
+import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +16,8 @@ export default function TarotPage() {
     <>
       <Nav />
       <main className="pt-24">
-        <TarotReadingFlow />
+        <FieldProductIntroduction href="/mirror" />
+        <div id="field-assessment"><TarotReadingFlow /></div>
       </main>
       <Footer />
     </>

@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 
 const DAILY_FAQ: BilingualFaqItem[] = [
   {
@@ -34,23 +35,16 @@ export default function DailyIndexPage() {
     <>
       <Nav />
       <main className="pt-24">
-        <div className="mx-auto max-w-2xl px-6 py-16 text-center">
-          <div className="lx-glass-daily p-6 sm:p-8">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-              <Bi zh="灵犀场 · 今日潮汐" en="Lingxi Field · Today’s Tide" />
-            </p>
-            <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-              <Bi zh="感受当下的宇宙节律" en="Feel the Cosmic Rhythm of This Moment" />
-            </h1>
-            <p className="mt-4 text-base leading-8 text-bone-dim">
-              <Bi
-                zh={`宇宙的刻度，每一天都在变化。今天的真实月相是${transit.moonPhaseZh}，月亮此刻在${transit.moonSignZh}座。选择你的太阳星座，在纷繁的日常里，看见自己此刻正处于怎样的节律之中。`}
-                en={`The universe’s measure changes every day. Today’s real lunar phase is ${transit.moonPhaseEn}, with the Moon in ${transit.moonSignEn}. Choose your Sun sign and notice the rhythm you are moving through now.`}
-              />
-            </p>
-          </div>
+        <FieldProductIntroduction href="/daily" />
+        <div id="field-assessment" className="mx-auto max-w-2xl px-6 py-8 text-center">
+          <p className="text-sm leading-7 text-bone-soft">
+            <Bi
+              zh={`今日真实月相：${transit.moonPhaseZh} · 月亮位于${transit.moonSignZh}座 · 每日数据更新`}
+              en={`Today’s real lunar phase: ${transit.moonPhaseEn} · Moon in ${transit.moonSignEn} · Updated daily`}
+            />
+          </p>
 
-          <div className="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-4">
+          <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4">
             {ZODIAC_SIGNS.map((s) => (
               <Link
                 key={s.slug}

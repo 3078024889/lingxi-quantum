@@ -19,6 +19,7 @@
     "test:relationship": "node scripts/test-relationship-report.cjs",
     "audit:report-routes": "node scripts/audit-report-routes.mjs",
     "audit:publication": "node scripts/audit-publication-ui.mjs",
+    "audit:field-insights": "node scripts/audit-field-insights.mjs",
     "audit:security": "node scripts/audit-security.mjs"
     ,"audit:mini-program": "node scripts/audit-mini-program.mjs",
     "audit:report-language": "node scripts/audit-report-language.mjs",

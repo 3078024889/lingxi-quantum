@@ -13,17 +13,17 @@ import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 
 const ROMANCE_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "桃花磁场分数是如何形成的？", qEn: "How does the Romance Magnetism score form?",
+    qZh: "桃花磁场指数是如何形成的？", qEn: "How does the Romance Resonance Index form?",
     aZh: "吸引力，从来不只是外貌，也来自表达方式、情绪温度、存在感、连接他人的方式。灵犀场通过你的生命结构信息，观察与你「连接世界」相关的象征节点：你容易通过什么方式被感知、你释放怎样的关系信号、哪一种状态下你的魅力更容易自然展开，同时结合传统象征体系中的桃花标记，形成一份关于个人吸引力风格的探索。它不是告诉你「一定会遇见谁」，而是帮助你发现，你的生命磁场，正在如何与世界发生连接。",
     aEn: "Attraction was never just about looks — it also comes from how you express, your emotional warmth, your presence, and how you connect with others. Lingxi Field observes the symbolic nodes tied to how you connect with the world: how you tend to be perceived, what relational signal you give off, and in which state your charm unfolds most naturally — cross-checked against the classical Peach Blossom marker, forming an exploration of your own attraction style. It doesn't tell you 'who you'll meet.' It helps you discover how your field is already connecting with the world.",
   },
   {
-    qZh: "桃花磁场是不是要开启完整探索才能看？", qEn: "Do I need to open the full exploration to see my Romance Magnetism?",
+    qZh: "桃花磁场是不是要开启完整探索才能看？", qEn: "Do I need to open the full exploration to see my Romance Resonance Index?",
     aZh: "桃花磁场是一处轻量的自我探索入口，帮助你快速认识自己的吸引力来源、关系互动模式、容易被别人感受到的一面。真正完整的关系结构，会在生命图谱与关系共振中进一步展开——因为吸引力只是连接的开始，理解自己，才是关系真正的起点。",
-    aEn: "Romance Magnetism is a light, standalone entrance for self-exploration — it helps you quickly recognize where your attraction comes from, how you interact in connection, and the side of you others tend to notice. A more complete relational structure unfolds further in the Life Map and Relationship Resonance — because attraction is only the beginning of connection. Understanding yourself is where a relationship truly starts.",
+    aEn: "The Romance Resonance Index is a light, standalone entrance for self-exploration. It helps you recognize where attraction flows naturally, how you connect, and what others tend to feel in your presence. A fuller relational structure unfolds in the Life Blueprint and Relationship Resonance, because attraction is only the beginning of connection.",
   },
   {
-    qZh: "桃花磁场分数高低代表什么？", qEn: "What does a higher or lower Romance Magnetism score mean?",
+    qZh: "桃花磁场指数高低代表什么？", qEn: "What does a higher or lower Romance Resonance Index mean?",
     aZh: "它不是魅力排行榜，也不是判断一个人是否受欢迎——灵犀场看到的是「你的存在感，是如何被世界接收」。有些人的吸引力属于第一眼，出现时便容易被注意；有些人的吸引力属于长期，越深入了解越容易感受到价值；有些人的吸引力属于特定环境，在熟悉领域、热爱的事情中会自然发光。不同结构，没有高低，只有不同的表达方式。",
     aEn: "It isn't a charisma leaderboard, and it doesn't judge how popular someone is — what Lingxi Field observes is how your presence is received by the world. Some people's pull is instant, noticed the moment they arrive. Some are a slow burn, felt more deeply the longer you know them. Some shine brightest in a particular setting — in familiar territory, doing what they love. Different structures aren't ranked. They're just different modes of expression.",
   },
@@ -230,7 +230,7 @@ export default function RomanceFlow() {
       <div ref={reportRef} className="mx-auto max-w-xl px-6 py-16">
         <div className="flex items-center justify-between gap-3 lx-glass-romance px-6 py-4 text-center">
           <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
-            <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
+            <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Resonance Index" />
           </p>
           <button
             onClick={downloadPdf}
@@ -376,7 +376,7 @@ export default function RomanceFlow() {
 
       <div className="mx-auto mt-4 max-w-xl px-6 text-center">
         <ShareButton
-          text={t("我测了灵犀场的桃花磁场指数，去看看你自己的：", "I got my Lingxi Field Romance Magnetism reading — check out your own:")}
+          text={t("我连接了灵犀场的桃花磁场指数，去感知你自己的：", "I explored my Lingxi Field Romance Resonance Index — sense your own:")}
           url="https://lingxifield.com/romance"
           label={{ zh: "分享这份结果", en: "Share this result" }}
         />
@@ -387,22 +387,7 @@ export default function RomanceFlow() {
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">
-      <div className="lx-glass-romance p-6 sm:p-8">
-        <p className="font-display text-sm uppercase tracking-widest2 text-amber/90">
-          <Bi zh="灵犀场 · 桃花磁场指数" en="Lingxi Field · Romance Magnetism Index" />
-        </p>
-        <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-          <Bi zh="你的吸引力，正在向世界传递什么？" en="What is your magnetism telling the world?" />
-        </h1>
-        <p className="mt-4 text-base leading-8 text-bone-dim">
-          <Bi
-            zh="每个人都有自己的吸引方式——有人靠表达，有人靠温度，有人无需刻意靠近，也会让别人感受到他的存在。吸引力不仅是外在表现，更是一种生命互动方式。场域读取你的生命结构，探索你的吸引力来源、你的关系连接模式、你容易被哪类人感受到，以及你在人际互动中的独特频率。了解自己的磁场，不是为了证明「有没有桃花」，而是看见你正在如何与世界建立连接——即时呈现，不需要登录。"
-            en="Everyone has their own way of drawing people in — some through expression, some through warmth, some simply by being present. Magnetism isn't only about how you appear; it's a way of interacting with life. The field reads your structure to explore where your pull comes from, how you connect, who tends to feel it, and your own frequency in how you meet people. This isn't about proving you 'have romance luck' — it's about seeing how you're already connecting with the world, shown to you right away, no sign-in needed."
-          />
-        </p>
-      </div>
-
-      <div className="mt-6 lx-glass-romance p-6">
+      <div className="lx-glass-romance p-6">
         <p className="text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -432,7 +417,7 @@ export default function RomanceFlow() {
         disabled={loading || !year || !month || !day}
         className="mt-6 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
       >
-        {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="测出我的桃花磁场指数" en="Get My Romance Magnetism Index" />}
+        {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="连接我的桃花磁场" en="Connect with My Romance Field" />}
       </button>
       <FaqSection items={ROMANCE_FAQ} />
     </div>

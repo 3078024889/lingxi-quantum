@@ -178,7 +178,7 @@ export default function LifeMapFlow() {
   const isEn = () => langEn;
   const t = (zh: string, en: string) => (langEn ? en : zh);
 
-  const [stage, setStage] = useState<Stage>("landing");
+  const [stage, setStage] = useState<Stage>("form");
   const [name, setName] = useState("");
   const [calendarType, setCalendarType] = useState<"solar" | "lunar">("solar");
   const [year, setYear] = useState("");
@@ -1169,7 +1169,7 @@ export default function LifeMapFlow() {
                 <div>
                   <p className="font-display text-sm text-lm2-violet">08 · <Bi zh="关系共振地图" en="Relationship Resonance Map" /></p>
                   <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
-                    <Bi zh="关系，是两个生命结构的相遇。完整解析亲密关系中的互动模式、情感表达方式、家族影响，以及你在人群中的角色——看见你如何连接别人，也看见关系如何推动你的成长。" en="A relationship is where two life structures meet. The full reading covers how you interact in intimacy, how you express emotion, family influence, and your role among others — seeing how you connect, and how connection grows you." />
+                    <Bi zh="关系，是两个生命结构的相遇。完整解析会照见深度关系中的互动模式、情感表达、内在需求与安全感，也看见关系如何推动彼此成长。" en="A relationship is where two life structures meet. The full reading reflects interaction patterns, emotional expression, inner needs, and felt safety within deep relationships, and how connection invites both people to grow." />
                   </p>
                 </div>
                 <div>

@@ -131,21 +131,6 @@ export default function WealthFlow() {
           之后的分数/维度/预告/解锁按钮也各自独立成块，跟生命韧性、
           桃花磁场现在的结构对齐。 */}
       <div className="lx-glass-wealth p-6 text-center">
-        <p className="font-display text-sm uppercase tracking-widest2 text-amber">
-          <Bi zh="灵犀场 · 财富创造地图" en="Lingxi Field · Wealth Creation Map" />
-        </p>
-        <p className="mt-2 text-xs uppercase tracking-widest2 text-bone-mute">
-          <Bi zh="找到你与生俱来的财富创造方式" en="Find the wealth-creation way you were born with" />
-        </p>
-        <p className="mt-4 text-sm leading-7 text-bone-dim">
-          <Bi
-            zh="财富不是简单的数字。它来自你如何发现机会、如何创造价值、如何连接资源、如何让你的能力进入现实世界——这份地图不是预测你会不会发财，是探索你携带而来的那种独特创造方式。"
-            en="Wealth isn't just a number. It comes from how you spot opportunity, create value, connect resources, and bring your ability into the real world — this map isn't a prediction of whether you'll get rich, it's an exploration of the specific way you're built to create."
-          />
-        </p>
-      </div>
-
-      <div className="lx-glass-wealth mt-4 p-6 text-center">
         <input
           type="text" value={name} onChange={(e) => setName(e.target.value)}
           placeholder={t("你的名字（选填）", "Your name (optional)")}
@@ -169,7 +154,7 @@ export default function WealthFlow() {
 
         {!result && (
           <button onClick={calc} disabled={calculating} className="mt-6 flex w-full items-center justify-center gap-2 bg-amber py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice disabled:opacity-50">
-            {calculating ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="展开我的财富创造频率 →" en="Reveal My Creation Frequency →" />}
+            {calculating ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="进入我的财富创造频率 →" en="Enter My Wealth-Creation Frequency →" />}
           </button>
         )}
         {error && !result && <ErrorWithLoginPrompt error={error} className="mt-3" />}

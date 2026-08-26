@@ -1,11 +1,12 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import RomanceFlow from "./RomanceFlow";
+import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 
 export const metadata = {
   title: "桃花磁场指数 | 灵犀场 Romance Resonance Index | Lingxi Field",
   description:
-    "从真实出生数据算出桃花磁场分数、吸引力风格，核对命理古法「命带桃花」标记，即时呈现，无需登录。Romance magnetism score, attraction style, and a classical Peach Blossom chart check, shown right away.",
+    "沿着你的生命结构，照见吸引、靠近与关系感知的磁场纹理。Explore attraction, approach, and relational perception through your life structure.",
   alternates: { canonical: "/romance" },
 };
 
@@ -14,7 +15,8 @@ export default function RomancePage() {
     <>
       <Nav />
       <main className="pt-24">
-        <RomanceFlow />
+        <FieldProductIntroduction href="/romance" />
+        <div id="field-assessment"><RomanceFlow /></div>
       </main>
       <Footer />
     </>

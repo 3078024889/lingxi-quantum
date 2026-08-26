@@ -129,22 +129,7 @@ export default function TarotReadingFlow() {
   if (stage === "form") {
     return (
       <div className="mx-auto max-w-md px-6 py-16">
-        <div className="lx-glass-tarot p-6 sm:p-8">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh="灵犀量子生命镜像" en="Lingxi Quantum Life Mirror" />
-          </p>
-          <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-            <Bi zh="三张生命镜像牌，正在等待与你相遇" en="Three life mirror cards are waiting to meet you" />
-          </h1>
-          <p className="mt-4 text-base leading-8 text-bone-dim">
-            <Bi
-              zh={<>你抽取的，不是随机答案，而是一面来自内在的镜子。进入灵犀场，三张生命镜像牌将根据你的命盘数据展开：<br />🌙 看见过去留下的意识痕迹<br />☀️ 理解此刻正在发生的生命共振<br />⭐ 探索未来正在形成的可能方向<br />三张牌不是告诉你命运是什么，而是帮助你看见：你正在经历什么，为什么会经历，以及下一步可以如何选择。</>}
-              en={<>What you draw is not a random answer — it’s a mirror from within. Entering Lingxi Field, three life mirror cards unfold from your chart data:<br />🌙 See the traces your past has left in consciousness<br />☀️ Understand the resonance happening right now<br />⭐ Explore the possibilities your future is forming<br />These cards don’t tell you what fate is. They help you see what you’re going through, why, and what you can choose next.</>}
-            />
-          </p>
-        </div>
-
-        <div className="mt-6 lx-glass-tarot p-6">
+        <div className="lx-glass-tarot p-6">
           <p className="text-sm text-bone-dim">{t("怎么称呼你（选填）", "What should we call you (optional)")}</p>
           <input
             value={name} onChange={(e) => setName(e.target.value)}

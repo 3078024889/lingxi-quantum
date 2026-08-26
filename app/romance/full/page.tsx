@@ -31,7 +31,7 @@ export default function RomanceFullPage({
               className="mt-8 inline-block border border-lattice/40 px-8 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
             >
               <span data-lang="zh">返回桃花磁场指数</span>
-              <span data-lang="en">Back to Romance Magnetism Index</span>
+              <span data-lang="en">Back to Romance Resonance Index</span>
             </a>
           </div>
         ) : (

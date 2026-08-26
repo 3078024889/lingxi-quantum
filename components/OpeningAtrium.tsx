@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 // character art on either side). It's a single full-screen video now on
 // every breakpoint, same as mobile always was.
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
-const ASSET_VERSION = "20260826-v308";
+const ASSET_VERSION = "20260826-v310";
 const DESKTOP_POSTER = `/images/entrance/lingxi-opening-poster-desktop.jpg?v=${ASSET_VERSION}`;
 const DESKTOP_VIDEO_MP4 = `/images/entrance/lingxi-opening-desktop.mp4?v=${ASSET_VERSION}`;
 const MOBILE_POSTER = `/images/entrance/lingxi-opening-poster-mobile.jpg?v=${ASSET_VERSION}`;

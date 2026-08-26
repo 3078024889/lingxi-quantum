@@ -100,7 +100,7 @@ export default function RomanceReportView({ id }: { id: string }) {
         })),
         fileName: langEn ? `Lingxi-Romance-Field-${name || "report"}.pdf` : `灵犀桃花磁场档案-${name || "report"}.pdf`,
         titleZh: `${name || "你的"}桃花磁场档案`,
-        titleEn: `${name || "Your"} Romance Magnetism Archive`,
+        titleEn: `${name || "Your"} Romance Resonance Archive`,
         language: langEn ? "en" : "zh",
         eyebrow: "ROMANCE FIELD",
         theme: ARCHIVE_THEMES.romance,
@@ -122,7 +122,7 @@ export default function RomanceReportView({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的完整桃花磁场档案……", "The field is composing your Romance Magnetism Archive…")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的完整桃花磁场档案……", "The field is composing your Romance Resonance Archive…")}</p>
         </div>
         <style>{`
           .lx-checking-glow { background: radial-gradient(circle, rgba(242,145,176,0.5), transparent 70%); filter: blur(14px); animation: lx-checking-breathe 2.2s ease-in-out infinite; }
@@ -149,7 +149,7 @@ export default function RomanceReportView({ id }: { id: string }) {
             productId="romance-report"
             submissionId={id}
             priceRmb={getProduct("romance-report")?.priceRmb ?? 0}
-            productName={{ zh: "桃花磁场指数 · 完整档案", en: "Romance Magnetism Index · Full Archive" }}
+            productName={{ zh: "桃花磁场指数 · 完整档案", en: "Romance Resonance Index · Full Archive" }}
             onClose={() => setShowWechatPay(false)}
             onSuccess={() => window.location.reload()}
           />
@@ -170,7 +170,7 @@ export default function RomanceReportView({ id }: { id: string }) {
     <div className="mx-auto max-w-4xl px-3 py-16 sm:px-6">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-[#2E2742]">
-          <Bi zh="灵犀场 · 桃花磁场档案" en="Lingxi Field · Romance Magnetism Archive" />
+          <Bi zh="灵犀场 · 桃花磁场档案" en="Lingxi Field · Romance Resonance Archive" />
         </p>
         <button
           onClick={downloadPdf}
@@ -188,7 +188,7 @@ export default function RomanceReportView({ id }: { id: string }) {
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
             <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
-              {name || t("你的", "Your")} <Bi zh="桃花磁场档案" en="Romance Magnetism Archive" />
+              {name || t("你的", "Your")} <Bi zh="桃花磁场档案" en="Romance Resonance Archive" />
             </h1>
           </div>
         </div>
@@ -237,7 +237,7 @@ export default function RomanceReportView({ id }: { id: string }) {
 
       <div className="mt-6 text-center">
         <ShareButton
-          text={t("我做了一份灵犀桃花磁场档案，去看看你自己的：", "I got my Lingxi Romance Magnetism Archive — check out your own:")}
+          text={t("我做了一份灵犀桃花磁场档案，去看看你自己的：", "I received my Lingxi Romance Resonance Archive — explore your own:")}
           url="https://lingxifield.com/romance"
           label={{ zh: "分享这份结果", en: "Share this result" }}
         />

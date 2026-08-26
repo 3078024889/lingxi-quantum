@@ -1,11 +1,12 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WealthFlow from "./WealthFlow";
+import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 
 export const metadata = {
   title: "财富创造地图 | 灵犀场 Wealth Creation Map | Lingxi Field",
   description:
-    "从真实出生数据算出你的创造类型与五个财富维度分数，即时呈现，无需登录——不是预测发财，是探索你如何创造价值。Your creation type and five wealth dimension scores, shown right away.",
+    "沿着生命结构照见创造、行动、资源与价值流动的纹理，理解你的价值适合从哪里生长，又如何自然进入现实。Witness how your value grows and enters the world through your creative structure.",
   alternates: { canonical: "/wealth" },
 };
 
@@ -14,7 +15,8 @@ export default function WealthPage() {
     <>
       <Nav />
       <main className="pt-24">
-        <WealthFlow />
+        <FieldProductIntroduction href="/wealth" />
+        <div id="field-assessment"><WealthFlow /></div>
       </main>
       <Footer />
     </>

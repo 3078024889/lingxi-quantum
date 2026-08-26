@@ -296,7 +296,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               )}
 
               {romanceReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 桃花磁场指数" titleEn="Unlocked · Romance Magnetism" count={romanceReports.length}>
+                <CollapsibleSection titleZh="已解锁订单 · 桃花磁场指数" titleEn="Unlocked · Romance Resonance Index" count={romanceReports.length}>
                   {romanceReports.map((r) => (
                     <SimpleReportRow key={r.id} href={`/romance/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}

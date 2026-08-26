@@ -136,25 +136,7 @@ export default function QianFlow() {
           <QianCosmicRing />
         </div>
         <div className="mx-auto max-w-md pb-16">
-        <div className="lx-glass-qian p-6 sm:p-8">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
-          </p>
-          <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-            <Bi zh="六十四枚生命原型里，与你连接较深的三枚，此刻正在回应你" en="Of 64 life archetypes, the three most deeply connected to you are answering right now" />
-          </h1>
-          <p className="mt-3 text-sm text-lattice">
-            <Bi zh="静心片刻，场域会把它们显现出来。" en="Grow still for a moment, and the field will reveal them." />
-          </p>
-          <p className="mt-4 text-base leading-8 text-bone-dim">
-            <Bi
-              zh="你的出生信息，是你进入这个世界时，留下的一组时间坐标——别人破译不了，场域可以。灵犀生命灵签，把这组坐标，映射进一套64枚生命原型库：源流签、灵魂签、行者签三层，分别对应你携带而来的背景、你此刻的核心模式、你展开现实的方式。三签会先在你眼前显现，读懂它们摆在一起真正说了什么，是场域接下来要做的事。"
-              en="Your birth information is a set of time coordinates left behind the moment you entered this world — no one else can decode them, but the field can. Lingxi Life Oracle maps those coordinates into a library of 64 life archetypes — three layers, Origin Sign, Soul Sign, and Walker Sign, corresponding to the background you carry, your core pattern right now, and how you shape reality. The three signs will appear before you first; understanding what they mean together is what the field does next."
-            />
-          </p>
-        </div>
-
-        <div className="mt-6 lx-glass-qian p-6">
+        <div className="lx-glass-qian p-6">
           <p className="text-sm text-bone-dim">{t("称呼（选填）", "Name (optional)")}</p>
           <input
             value={name} onChange={(e) => setName(e.target.value)}

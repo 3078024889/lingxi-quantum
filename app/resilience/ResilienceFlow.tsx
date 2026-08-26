@@ -401,8 +401,8 @@ export default function ResilienceFlow() {
         <div className="lx-glass-resilience p-6 text-center">
           <p className="text-base leading-8 text-bone-dim">
             <Bi
-              zh="同一份命盘还能算出：你的财富来源类型是哪一种、你在亲密关系里的核心矛盾是什么、你的桃花磁场和吸引力风格——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
-              en="The same chart also determines your wealth archetype, the core tension in your close relationships, and your romance magnetism — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
+              zh="同一份生命结构还能展开：你的财富创造方式、你在深度关系中的核心互动、你的桃花磁场与吸引频率。完整生命图谱会让这些维度彼此交叉映照，而不是各自成为孤立的答案。"
+              en="The same life structure can also unfold your wealth-creation style, core interactions in deep relationships, and romance resonance. The full Life Blueprint cross-reflects these dimensions rather than treating them as isolated answers."
             />
           </p>
           <a
@@ -427,22 +427,7 @@ export default function ResilienceFlow() {
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">
-      <div className="lx-glass-resilience p-6 sm:p-8">
-        <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-          <Bi zh="灵犀场 · 生命韧性指数" en="Lingxi Field · Life Resilience Index" />
-        </p>
-        <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-          <Bi zh="当人生改变方向，你的生命系统如何接住自己？" en="When life changes direction, how does your system catch you?" />
-        </h1>
-        <p className="mt-4 text-base leading-8 text-bone-dim">
-          <Bi
-            zh="真正的韧性，不是永远没有压力，而是在变化、困难、不确定出现时，你是否拥有重新调整自己的能力。很多时候我们只知道「我还能不能撑住」，却很少知道「我的生命系统，是如何恢复的」。场域从你的生命结构中，探索五项核心韧性维度——压力恢复、变化适应、危机反弹、长期坚持、精神稳定。了解自己的韧性结构，不是为了给自己贴标签，而是知道你的力量来自哪里、你的消耗发生在哪里，以及如何更好地支持自己——即时呈现，不需要登录。"
-            en="True resilience isn't the absence of pressure — it's whether you can re-adjust when change, difficulty, or uncertainty shows up. Most of the time we only know 'can I still hold on,' and rarely know 'how does my system actually recover.' The field explores five core dimensions from your life structure — stress recovery, adaptability, crisis rebound, persistence, emotional stability. Understanding your resilience isn't about labeling yourself — it's knowing where your strength comes from, where your drain happens, and how to support yourself better, shown to you right away, no sign-in needed."
-          />
-        </p>
-      </div>
-
-      <div className="mt-6 lx-glass-resilience p-6">
+      <div className="lx-glass-resilience p-6">
         <p className="text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -472,7 +457,7 @@ export default function ResilienceFlow() {
         disabled={loading || !year || !month || !day}
         className="mt-6 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
       >
-        {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="测出我的生命韧性指数" en="Get My Resilience Index" />}
+        {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="展开我的生命韧性指数" en="Unfold My Life Resilience Index" />}
       </button>
       <FaqSection items={RESILIENCE_FAQ} />
     </div>

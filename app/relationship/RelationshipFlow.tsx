@@ -274,24 +274,18 @@ export default function RelationshipFlow() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-        <Bi zh="灵犀场 · 关系共振图谱" en="Lingxi Field · Relationship Resonance Map" />
+        <Bi zh="选择共振类型" en="Choose a Resonance Type" />
       </p>
-      <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-        <Bi zh="不是合不合，而是看见两个生命如何相遇" en="Not whether you match — seeing how two lives meet" />
-      </h1>
-      <p className="mt-4 max-w-xl text-base leading-8 text-bone-dim">
-        <Bi
-          zh="灵犀场不会告诉你「你们很配」——它会照见，两个人各自的十项生命向量放在一起时，哪几项数值几乎重合（天然共鸣）、哪几项恰好互补对齐（天然分工）、哪几项同时冲得很高却没有另一端接住（真实的摩擦点）。这些数值，来自两份完整命盘——西方占星、中式八字、紫微斗数、玛雅Tzolkin、吠陀占星——彼此印证出的具体位置，不是「你水瓶座他天蝎座所以很配」这种笼统说法。"
-          en={`Lingxi Field won't tell you "you're compatible." It will reveal, across ten life-vector dimensions, exactly where your two charts align almost precisely (natural resonance), where they land on opposite ends of the same axis (natural complementarity), and where you're both running hot on the same drive with nothing to balance it (a real friction point) — all traced to specific positions across two full charts (Western astrology, Chinese Bazi, Ziwei Doushu, Maya Tzolkin, Vedic astrology), not "you're an Aquarius, they're a Scorpio, so..."`}
-        />
-      </p>
+      <h2 className="mt-4 font-display text-2xl font-light text-bone sm:text-3xl">
+        <Bi zh="你们正在体验怎样的连接？" en="What kind of connection are you experiencing?" />
+      </h2>
 
       <div className="lx-glass-relation mt-8 p-5">
         <p className="text-sm text-bone-dim"><Bi zh="你们之间，正在形成怎样的连接？" en="What connection is forming between you two?" /></p>
         <div className="mt-3 grid grid-cols-3 gap-3">
           {([
             { id: "romantic", zh: "深度关系共振", en: "Deep Relationship Resonance", img: "/images/relationship/romantic.jpg" },
-            { id: "business", zh: "合伙/商业", en: "Business", img: "/images/relationship/business.jpg" },
+            { id: "business", zh: "合伙商业关系", en: "Business Partnership", img: "/images/relationship/business.jpg" },
             { id: "general", zh: "其他关系", en: "Other", img: "/images/relationship/general.jpg" },
           ] as const).map((opt) => (
             <button
@@ -316,14 +310,14 @@ export default function RelationshipFlow() {
           )}
           {relationshipType === "business" && (
             <Bi
-              zh="🤝 合伙商业共振——看见两个人在创造、决策、资源交换中的不同角色，探索谁更适合推动、谁更擅长稳定，哪些地方容易协同、哪些地方需要提前理解。"
-              en="🤝 Partnership Resonance — see the different roles you each play in creating, deciding, and exchanging resources. Who's built to push forward, who's built to hold steady, where you naturally sync, and where it helps to understand each other first."
+              zh="🤝 合伙商业关系——照见双方在创造、决策、行动与资源流动中的不同位置，理解彼此如何形成互补与协同，也看见怎样的节奏更适合长期共创。"
+              en="🤝 Business Partnership — see where each person stands in creation, decisions, action, and resource flow; understand how you complement and coordinate, and which rhythm best supports lasting co-creation."
             />
           )}
           {relationshipType === "general" && (
             <Bi
-              zh="🌌 其他关系共振——朋友、家人、导师、伙伴，每一次连接都有它形成的原因。探索彼此之间如何影响、如何支持，以及这段关系带来的生命意义。"
-              en="🌌 Other Resonance — friends, family, mentors, companions. Every connection forms for a reason. Explore how you shape each other, how you support each other, and what this relationship means in your life."
+              zh="🌌 其他关系——适用于家人、朋友、伙伴、导师与重要同行者。照见彼此如何影响、支持与触发，也看见这段连接正在各自生命中形成怎样的位置。"
+              en="🌌 Other Relationship — for family, friends, collaborators, mentors, and important companions. See how you influence, support, and activate one another, and the place this connection is forming in each life."
             />
           )}
         </div>
@@ -346,7 +340,7 @@ export default function RelationshipFlow() {
           disabled={previewing}
           className="mt-8 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
-          {previewing ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="展开共鸣与互补点 →" en="Reveal Resonance & Complementarity →" />}
+          {previewing ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="开启共振探索 →" en="Begin the Resonance Exploration →" />}
         </button>
       ) : (
         <div

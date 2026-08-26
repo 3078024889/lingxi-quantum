@@ -40,7 +40,7 @@ const SECTION_TITLES = [
   { zh: "象征叙事镜面", en: "Symbolic Narrative Mirror" },
   { zh: "数字能量解读（手机号 / 车牌号）", en: "Number Energy Reading (Phone & Plate)" },
   { zh: "生命韧性指数", en: "Your Life Resilience Index" },
-  { zh: "桃花磁场地图", en: "Your Romance Magnetism Map" },
+  { zh: "桃花磁场地图", en: "Your Romance Resonance Map" },
 ];
 
 export default function FullReportView({ id }: { id: string }) {

@@ -57,7 +57,7 @@ export const resilienceProducts: Product[] = [
 ];
 
 export const romanceProducts: Product[] = [
-  { id: "romance-report", name: "桃花磁场指数 · 完整档案", nameEn: "Romance Magnetism Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的桃花磁场档案——五个磁场维度、吸引力风格、命理桃花星，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Romance Magnetism Archive — your five field dimensions, attraction style, and traditional chart signals — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "romance-report", name: "桃花磁场指数 · 完整档案", nameEn: "Romance Resonance Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的桃花磁场档案——五个磁场维度、吸引力风格、命理桃花星，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Romance Resonance Archive — five field dimensions, attraction style, and traditional chart signals — determined by your real birth data. Yours to keep and revisit anytime.", group: "cultivation" },
 ];
 
 export const dailyTideProducts: Product[] = [
