@@ -41,7 +41,7 @@ export const lifeMapProducts: Product[] = [
 ];
 
 export const relationshipProducts: Product[] = [
-  { id: "relationship-resonance", name: "关系共振图谱", nameEn: "Relationship Resonance Map", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你与任意一人的共振分析——亲密关系、合伙、任何两人关系皆可，永久保存、可测多次", noteEn: "One exchange unlocks resonance analysis between you and anyone — romantic, business, or any pairing. Yours to keep, test as many pairs as you like.", group: "cultivation" },
+  { id: "relationship-resonance", name: "关系共振图谱", nameEn: "Relationship Resonance Map", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你与任意一人的共振分析——深度关系、合伙商业或其他重要连接皆可，永久保存、可测多次", noteEn: "One exchange unlocks resonance analysis between you and anyone — a deep relationship, business partnership, or other important connection. Yours to keep, test as many pairs as you like.", group: "cultivation" },
 ];
 
 export const qianProducts: Product[] = [
@@ -61,7 +61,7 @@ export const romanceProducts: Product[] = [
 ];
 
 export const dailyTideProducts: Product[] = [
-  { id: "daily-tide-report", name: "今日运势潮汐 · 深度报告", nameEn: "Daily Fortune Tide · Deep Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁从今天起的深度潮汐报告——今日六重潮汐 + 未来7/30/90天真实潮汐趋势，永久保存、可再读", noteEn: "One exchange unlocks a deep tide report starting today — six daily tides plus real 7/30/90-day tide trends. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "daily-tide-report", name: "今日潮汐 · 深度报告", nameEn: "Today’s Tide · Deep Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁从今天起的深度潮汐报告——今日六重潮汐 + 未来7/30/90天真实潮汐趋势，永久保存、可再读", noteEn: "One exchange unlocks a deep tide report starting today — six daily tides plus real 7/30/90-day tide trends. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const wealthProducts: Product[] = [

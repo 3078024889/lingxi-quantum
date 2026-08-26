@@ -21,6 +21,14 @@ const SHARE_TITLES = {
   '/live-as': '灵犀场 · 意识显化',
   '/dream': '灵犀场 · 探索梦境',
   '/#gates': '灵犀场 · 重塑潜意识',
+  '/life-map': '生命图谱 · 照见你的生命结构',
+  '/relationship': '关系共振 · 照见两个生命的交汇',
+  '/resilience': '生命韧性指数 · 看见生命如何接住自己',
+  '/romance': '桃花磁场指数 · 连接真实的吸引频率',
+  '/wealth': '财富创造地图 · 照见你与丰盛对齐的方式',
+  '/daily': '灵犀场 · 今日潮汐',
+  '/mirror': '灵犀量子生命镜像 · 三重镜像',
+  '/qian': '灵犀生命灵签 · 意识坐标读取',
 }
 
 function shareTitleFor(path) {

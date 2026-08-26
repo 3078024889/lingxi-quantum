@@ -116,7 +116,7 @@ export default function DailyTideUnlock() {
           onClick={() => setExpanded(true)}
           className="mt-5 w-full bg-lattice px-7 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep shadow-[0_12px_28px_rgba(126,232,196,.22)] transition hover:bg-amber"
         >
-          <Bi zh="展开今日运势潮汐深度报告 →" en="Unfold the Deep Tide Report →" />
+          <Bi zh="展开今日潮汐深度报告 →" en="Unfold the Deep Today’s Tide Report →" />
         </button>
       ) : null}
       {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}

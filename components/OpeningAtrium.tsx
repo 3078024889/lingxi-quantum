@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 // character art on either side). It's a single full-screen video now on
 // every breakpoint, same as mobile always was.
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
-const ASSET_VERSION = "20260822-v304";
+const ASSET_VERSION = "20260826-v308";
 const DESKTOP_POSTER = `/images/entrance/lingxi-opening-poster-desktop.jpg?v=${ASSET_VERSION}`;
 const DESKTOP_VIDEO_MP4 = `/images/entrance/lingxi-opening-desktop.mp4?v=${ASSET_VERSION}`;
 const MOBILE_POSTER = `/images/entrance/lingxi-opening-poster-mobile.jpg?v=${ASSET_VERSION}`;
@@ -100,7 +100,12 @@ export default function OpeningAtrium() {
           <video
             ref={videoRef}
             src={VIDEO_SRC}
-            className="absolute inset-0 h-full w-full object-cover"
+            // Desktop source contains a composed human figure. object-cover
+            // enlarged and cropped that frame on common laptop/ultrawide
+            // viewports until only the centre of the face remained. Preserve
+            // the complete desktop composition; the surrounding field absorbs
+            // any letterboxing. Mobile keeps its dedicated full-bleed cut.
+            className={`absolute inset-0 h-full w-full ${isDesktop ? "object-contain" : "object-cover"}`}
             autoPlay
             muted={muted}
             playsInline

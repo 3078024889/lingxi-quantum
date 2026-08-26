@@ -4,7 +4,7 @@ import RelationshipFlow from "./RelationshipFlow";
 
 export const metadata = {
   title: "关系共振图谱 | 灵犀 · Relationship Resonance Map | Lingxi",
-  description: "输入两个人的出生信息，看两份生命向量放在一起，哪里共鸣、哪里互补、哪里容易摩擦——适用于亲密关系、合伙、任何两人关系。",
+  description: "输入两个人的出生信息，照见两套生命结构如何靠近、映照、互补与共同形成关系——适用于深度关系共振、合伙商业关系与其他重要连接。",
   alternates: { canonical: "/relationship" },
 };
 

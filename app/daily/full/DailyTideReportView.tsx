@@ -24,7 +24,7 @@ const SECTION_TITLES = [
   { titleZh: "⑧ 未来30日调整窗口", titleEn: "⑧ 30-Day Adjustment Window" },
   { titleZh: "⑨ 未来90日节律窗口", titleEn: "⑨ 90-Day Rhythm Window" },
   { titleZh: "⑩ 灵犀场今日连接", titleEn: "⑩ Today's Practice" },
-  { titleZh: "⑪ 今日运势潮汐总结", titleEn: "⑪ Tide Summary" },
+  { titleZh: "⑪ 今日潮汐总结", titleEn: "⑪ Today’s Tide Summary" },
 ];
 
 export default function DailyTideReportView({ id }: { id: string }) {
@@ -107,8 +107,8 @@ export default function DailyTideReportView({ id }: { id: string }) {
           body,
         })),
         fileName: langEn ? `Lingxi-Daily-Tide-${name || "report"}.pdf` : `灵犀今日潮汐-${name || "report"}.pdf`,
-        titleZh: `${name || "你的"}今日运势潮汐`,
-        titleEn: `${name || "Your"} Daily Fortune Tide`,
+        titleZh: `${name || "你的"}今日潮汐`,
+        titleEn: `${name || "Your"} Today’s Tide`,
         language: langEn ? "en" : "zh",
         eyebrow: "DAILY TIDE",
         theme: ARCHIVE_THEMES.daily,
@@ -144,7 +144,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
   if (status === "locked") {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
-        <p className="font-display text-2xl text-bone">🔒 <Bi zh="尚未解锁这份今日运势潮汐报告" en="Not yet unlocked" /></p>
+        <p className="font-display text-2xl text-bone">🔒 <Bi zh="尚未解锁这份今日潮汐报告" en="This Today’s Tide report is not yet unlocked" /></p>
         <button
           onClick={unlock}
           className="mt-8 bg-lattice px-8 py-3 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
@@ -157,7 +157,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
             productId="daily-tide-report"
             submissionId={id}
             priceRmb={getProduct("daily-tide-report")?.priceRmb ?? 0}
-            productName={{ zh: "今日运势潮汐 · 深度报告", en: "Daily Fortune Tide · Deep Report" }}
+            productName={{ zh: "今日潮汐 · 深度报告", en: "Today’s Tide · Deep Report" }}
             onClose={() => setShowWechatPay(false)}
             onSuccess={() => window.location.reload()}
           />
@@ -178,7 +178,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
     <div className="mx-auto max-w-4xl px-3 py-16 sm:px-6">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-[#2E2742]">
-          <Bi zh="灵犀场 · 今日运势潮汐" en="Lingxi Field · Daily Fortune Tide" />
+          <Bi zh="灵犀场 · 今日潮汐" en="Lingxi Field · Today’s Tide" />
         </p>
         <button
           onClick={downloadPdf}
@@ -196,7 +196,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
         >
           <div className="absolute inset-x-0 top-[30%] text-center">
             <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
-              {name || t("你的", "Your")} <Bi zh="今日运势潮汐档案" en="Daily Tide Archive" />
+              {name || t("你的", "Your")} <Bi zh="今日潮汐档案" en="Today’s Tide Archive" />
             </h1>
           </div>
         </div>
@@ -245,7 +245,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
 
       <div className="mt-6 text-center">
         <ShareButton
-          text={t("我做了一份灵犀今日运势潮汐深度报告，去看看你自己的：", "I got my Lingxi Daily Fortune Tide report — check out your own:")}
+          text={t("我做了一份灵犀今日潮汐深度报告，去看看你自己的：", "I received my Lingxi Today’s Tide report — explore your own:")}
           url="https://lingxifield.com/daily"
           label={{ zh: "分享这份结果", en: "Share this result" }}
         />

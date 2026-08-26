@@ -39,8 +39,8 @@ const STATIC_PAGES: StaticEntry[] = [
   // 正式产品名——之前这类搜索就是你说的"搜不到"的典型例子，这里把口语
   // 说法也写进标题里，搜索是简单的字符串匹配，标题里出现过的词才搜得到。
   { slug: "resilience", title: "生命韧性指数 · 命硬不硬测试", titleEn: "Life Resilience Index", href: "/resilience" },
-  { slug: "romance", title: "桃花磁场测试 · 桃花运", titleEn: "Romance Magnetism Index", href: "/romance" },
-  { slug: "daily", title: "今日运势潮汐 · 每日星座运势", titleEn: "Daily Fortune Tide", href: "/daily" },
+  { slug: "romance", title: "桃花磁场指数", titleEn: "Romance Resonance Index", href: "/romance" },
+  { slug: "daily", title: "今日潮汐 · 宇宙节律", titleEn: "Today’s Tide", href: "/daily" },
   { slug: "tarot", title: "灵犀量子生命镜像 · 与生命场建立连接", titleEn: "Lingxi Quantum Life Mirror · Connect with the Field", href: "/mirror" },
   { slug: "tarot-daily", title: "今日塔罗 · 每日一卡", titleEn: "Tarot · Daily Card", href: "/mirror/daily" },
   { slug: "qian", title: "灵犀生命灵签 · 摇签 · 求签", titleEn: "Lingxi Life Oracle · Sign Drawing", href: "/qian" },

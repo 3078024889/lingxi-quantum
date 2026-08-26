@@ -3,7 +3,7 @@ export const RELATIONSHIP_PRODUCTS = {
   romantic: {
     id: 'romantic',
     name: '【镜像之桥 · 亲密共振档案】',
-    subtitle: 'Soul Mirror: Intimate Resonance Archive',
+    subtitle: 'Soul Mirror: Deep Relationship Resonance Archive',
     description: '解码两人能量场的宿命纠缠、深水区摩擦与无条件之爱的边界。',
     price: 68
   },

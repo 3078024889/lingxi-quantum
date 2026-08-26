@@ -23,7 +23,7 @@ export function generateMetadata({ params }: { params: { sign: string } }) {
   const sign = ZODIAC_SIGNS.find((s) => s.slug === params.sign);
   if (!sign) return {};
   return {
-    title: `${sign.zh}座今日运势潮汐 · 每日更新 | 灵犀场 ${sign.en} Daily Fortune Tide | Lingxi Field`,
+    title: `${sign.zh}座今日潮汐 · 每日更新 | 灵犀场 ${sign.en} Today’s Tide | Lingxi Field`,
     description: `${sign.zh}座今天的真实月相、月亮星座与能量潮汐解读，每天更新，即时查看。Today's real transit and energy-tide reading for ${sign.en}, updated daily.`,
     alternates: { canonical: `/daily/${sign.slug}` },
   };
@@ -56,11 +56,11 @@ export default async function DailySignPage({ params }: { params: { sign: string
         <div className="mx-auto max-w-xl px-6 py-16">
           <div className="flex items-center justify-between gap-3 lx-glass-daily px-6 py-4 text-center">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-              <Bi zh="灵犀场 · 今日运势潮汐" en="Lingxi Field · Daily Fortune Tide" />
+              <Bi zh="灵犀场 · 今日潮汐" en="Lingxi Field · Today’s Tide" />
             </p>
             <DownloadResultPdfButton
               targetId="daily-result"
-              fileName={`灵犀今日运势潮汐-${sign.zh}座.pdf`}
+              fileName={`灵犀今日潮汐-${sign.zh}座.pdf`}
               bgColorRgb={[14, 16, 42]}
               bgColorHex="#0e102a"
               colorClass="shrink-0 border-lattice/40 text-lattice hover:border-lattice hover:bg-lattice/10"
@@ -72,7 +72,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
           <div className="mt-6 flex flex-col items-center lx-glass-daily p-8 text-center">
             <span className="font-display text-5xl text-lattice">{sign.glyph}</span>
             <h1 className="mt-3 font-display text-3xl font-light text-bone">
-              <Bi zh={`${sign.zh}座 · 今日运势潮汐`} en={`${sign.en} · Daily Fortune Tide`} />
+              <Bi zh={`${sign.zh}座 · 今日潮汐`} en={`${sign.en} · Today’s Tide`} />
             </h1>
             <p className="mt-2 text-xs text-bone-soft">{todayLabel}</p>
             <p className="mt-3 text-xs text-bone-dim">
@@ -80,7 +80,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
             </p>
             <div className="mt-5 overflow-hidden rounded-sm border border-lattice/20" style={{ maxWidth: 220 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/daily/daily.jpg" alt="Daily Fortune Tide" className="block w-full" />
+              <img src="/images/daily/daily.jpg" alt="Today’s Tide" className="block w-full" />
             </div>
           </div>
 
@@ -124,9 +124,9 @@ export default async function DailySignPage({ params }: { params: { sign: string
           <div className="mt-4 text-center">
             <div className="mt-3">
               <ShareButton
-                text={`我测了灵犀场${sign.zh}座今日运势潮汐，去看看你的星座：/ My Lingxi Field ${sign.en} field test today — check your sign:`}
+                text={`我感知了灵犀场${sign.zh}座今日潮汐，去看看你的星座：/ I explored the Lingxi Field ${sign.en} Today’s Tide — find your sign:`}
                 url={`https://lingxifield.com/daily/${sign.slug}`}
-                label={{ zh: "分享今日运势潮汐", en: "Share today's field test" }}
+                label={{ zh: "分享今日潮汐", en: "Share Today’s Tide" }}
               />
             </div>
           </div>
@@ -146,7 +146,7 @@ export default async function DailySignPage({ params }: { params: { sign: string
           <div className="mt-10 border-t border-white/10 pt-6 text-center">
             <p className="text-sm leading-7 text-bone-dim">
               <Bi
-                zh="今日运势潮汐读取的是：宇宙当前运行状态，与你太阳星座之间产生的连接——像一份「今日意识天气」，帮你观察今天适合关注什么、调整什么、顺应什么。而生命图谱不同，它读取的是你出生那一刻、属于你的完整生命坐标。一个观察今天，一个探索你。"
+                zh="今日潮汐读取宇宙当前运行状态与你太阳星座之间的连接——像一份当下的节律参照，帮助你观察今天适合关注、调整与顺应什么。生命图谱读取的是你出生时的完整生命坐标：一个感受此刻，一个探索更长的生命旅程。"
                 en="Today's horoscope reads the connection between the sky's current state and your Sun sign \u2014 a kind of \u201cweather report for today's consciousness,\u201d helping you notice what to focus on, adjust, or move with. Your Life Map is different \u2014 it reads the full set of coordinates that belong only to you, from the moment you were born. One observes today. The other explores you."
               />
             </p>

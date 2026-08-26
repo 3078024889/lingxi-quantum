@@ -198,7 +198,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           ? { zh: "合伙商业关系共振", en: "Business Partnership Resonance" }
           : relType === "general"
           ? { zh: "其他关系共振", en: "Other Relationship Resonance" }
-          : { zh: "亲密关系共振", en: "Romantic Relationship Resonance" };
+          : { zh: "深度关系共振", en: "Deep Relationship Resonance" };
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
           title: (langEn ? titles[i]?.en : titles[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
@@ -323,7 +323,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           ) : relType === "general" ? (
             <Bi zh="其他关系共振" en="Other Relationship Resonance" />
           ) : (
-            <Bi zh="亲密关系共振" en="Romantic Relationship Resonance" />
+            <Bi zh="深度关系共振" en="Deep Relationship Resonance" />
           )}
         </p>
         <h1 className="mt-2 text-center font-display text-3xl font-medium text-[#3A2E52]">

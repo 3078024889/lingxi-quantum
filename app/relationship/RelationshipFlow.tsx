@@ -15,9 +15,9 @@ const RELATIONSHIP_FAQ: BilingualFaqItem[] = [
     aEn: "Lingxi Field isn't concerned with whether you two 'match.' The real question was never 'is this person my correct answer' — it's 'why did we meet' and 'what structure is this connection showing.' The Relationship Resonance Map maps both people's life information into the same relational field, observing where they naturally resonate (like two frequencies drawing close), where they complement each other (one person's strength becomes the other's support), and where friction tends to arise (not about who's right, but about seeing each other's different modes of expression). It isn't a verdict of 'compatible' or 'not' — it's a map that helps you understand how the relationship actually runs.",
   },
   {
-    qZh: "关系共振图谱只能看情侣关系吗？", qEn: "Can the Relationship Resonance Map only be used for romantic couples?",
-    aZh: "不是，关系是生命中最丰富的连接形式。灵犀场目前提供三种入口：亲密关系（探索彼此吸引的来源、情绪互动方式、长期相处中的共振与挑战）、合伙商业关系（探索价值观连接、创造方式、合作节奏、资源互补）、其他关系（朋友、家人、导师、重要生命伙伴）。不同关系会展开不同观察角度，因为爱情、友情、事业，本质上都是不同形式的生命连接。",
-    aEn: "No — relationships are the richest form of connection in life. Lingxi Field currently offers three entrances: intimate relationships (exploring where attraction comes from, emotional interaction styles, and the resonance and challenges of long-term closeness), business partnerships (exploring shared values, creative style, working rhythm, and complementary resources), and other relationships (friends, family, mentors, significant life companions). Different relationships open different angles of observation, because romance, friendship, and work are all, at their core, different forms of life connection.",
+    qZh: "关系共振只能用于伴侣关系吗？", qEn: "Is Relationship Resonance only for partners?",
+    aZh: "不是。灵犀场提供三种入口：深度关系共振，照见彼此靠近的方式、情感流动、内在需求与安全感如何相互回应；合伙商业关系，照见双方在创造、决策、行动与资源流动中的互补与协同；其他关系，适用于家人、朋友、伙伴、导师与重要同行者。",
+    aEn: "No. Lingxi Field offers three entrances: Deep Relationship Resonance explores how you approach one another and how emotional flow, inner needs, and felt safety respond; Business Partnership explores complementarity in creation, decisions, action, and resources; Other Relationship includes family, friends, collaborators, mentors, and important companions.",
   },
   {
     qZh: "一次场域入口开启，能看几段关系？", qEn: "How many relationships does one field entrance opening cover?",
@@ -100,7 +100,7 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
 const TYPE_COPY: Record<"romantic" | "business" | "general", { previewLabel: { zh: string; en: string }; unlockLabel: { zh: string; en: string } }> = {
   romantic: {
     previewLabel: { zh: "关系星图入口已开启", en: "Your Star Map Has Opened" },
-    unlockLabel: { zh: "展开完整亲密关系档案", en: "Unfold the Full Relationship Archive" },
+    unlockLabel: { zh: "展开完整深度关系共振档案", en: "Unfold the Full Deep Resonance Archive" },
   },
   business: {
     previewLabel: { zh: "商业共振入口已开启", en: "Your Business Resonance Has Opened" },
@@ -290,7 +290,7 @@ export default function RelationshipFlow() {
         <p className="text-sm text-bone-dim"><Bi zh="你们之间，正在形成怎样的连接？" en="What connection is forming between you two?" /></p>
         <div className="mt-3 grid grid-cols-3 gap-3">
           {([
-            { id: "romantic", zh: "亲密关系", en: "Romantic", img: "/images/relationship/romantic.jpg" },
+            { id: "romantic", zh: "深度关系共振", en: "Deep Relationship Resonance", img: "/images/relationship/romantic.jpg" },
             { id: "business", zh: "合伙/商业", en: "Business", img: "/images/relationship/business.jpg" },
             { id: "general", zh: "其他关系", en: "Other", img: "/images/relationship/general.jpg" },
           ] as const).map((opt) => (
@@ -310,8 +310,8 @@ export default function RelationshipFlow() {
         <div className="mt-4 text-sm leading-7 text-bone-dim">
           {relationshipType === "romantic" && (
             <Bi
-              zh="💞 亲密关系共振——看见彼此吸引的来源、情感表达方式、深层需求差异，以及关系中的成长主题。"
-              en="💞 Romantic Resonance — see where the attraction comes from, how you each express emotion, where your deeper needs differ, and the theme this relationship is growing you through."
+              zh="💞 深度关系共振——照见彼此靠近的方式、情感流动、内在需求与安全感如何相互回应。"
+              en="💞 Deep Relationship Resonance — see how you approach one another and how emotional flow, inner needs, and felt safety respond."
             />
           )}
           {relationshipType === "business" && (

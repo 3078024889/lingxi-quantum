@@ -304,7 +304,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               )}
 
               {dailyTideReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 今日运势潮汐" titleEn="Unlocked · Daily Fortune Tide" count={dailyTideReports.length}>
+                <CollapsibleSection titleZh="已解锁订单 · 今日潮汐" titleEn="Unlocked · Today’s Tide" count={dailyTideReports.length}>
                   {dailyTideReports.map((r) => (
                     <SimpleReportRow key={r.id} href={`/daily/full?id=${r.id}`} title={r.name || r.generated_date} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
