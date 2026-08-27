@@ -6,7 +6,7 @@ Page({
   data: {
     loading: true, submitting: false, paying: false, lang: 'zh',
     item: null, product: null, engine: null, questionIndex: 0,
-    responses: {}, selected: '', result: null, submissionId: '',
+    responses: {}, selected: '', result: null, submissionId: '', unlocked: false,
     name: '', partnerName: '', relationshipType: 'deep', error: '',
   },
   async onLoad(options) {
@@ -55,9 +55,9 @@ Page({
         productId: this.productId, responses: this.data.responses,
         name: this.data.name, partnerName: this.data.partnerName, relationshipType: this.data.relationshipType,
       } })
-      this.setData({ result: data.result, submissionId: data.submissionId })
+      this.setData({ result: data.result, submissionId: data.submissionId, unlocked: !!data.unlocked })
     } catch (error) {
-      this.setData({ error: (error.data && error.data.error) || '树突联锁暂未完成，请稍后重试' })
+      this.setData({ error: (error.data && error.data.error) || '树突结构连接暂未完成，请稍后重试' })
     } finally { this.setData({ submitting: false }) }
   },
   async pay() {
@@ -77,6 +77,15 @@ Page({
       if (!error.cancelled) wx.showModal({ title: '未完成支付', content: error.message || '请稍后再试', showCancel: false })
     } finally { this.setData({ paying: false }) }
   },
+  async openUnlockedReport() {
+    if (!this.data.submissionId || !this.productId) return
+    try {
+      const result = await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: this.productId, submissionId: this.data.submissionId } })
+      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+    } catch (error) {
+      wx.showModal({ title: '档案暂未打开', content: (error.data && error.data.error) || '请确认微信身份已连接到拥有权益的灵犀账户', showCancel: false })
+    }
+  },
   copyWebLink() {
     const pathByProduct = {
       'life-map-report':'life-map','relationship-resonance':'relationship','resilience-report':'resilience',
@@ -86,7 +95,7 @@ Page({
     const path = pathByProduct[this.productId] || ''
     wx.setClipboardData({ data: `${API_BASE.replace('.cn', '.com')}/${path}` })
   },
-  restart() { this.setData({ questionIndex: 0, responses: {}, selected: '', result: null, submissionId: '', error: '' }) },
+  restart() { this.setData({ questionIndex: 0, responses: {}, selected: '', result: null, submissionId: '', unlocked: false, error: '' }) },
   onShareAppMessage() {
     return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', path: `/pages/assessment/index?product=${encodeURIComponent(this.productId)}`, imageUrl: '/images/share-cover.jpg' }
   },

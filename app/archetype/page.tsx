@@ -5,7 +5,7 @@ import Bi from "@/components/Bi";
 
 export const metadata: Metadata = {
   title: "生命原型 | 灵犀场",
-  description: "八个场域精测节点汇入此刻的主原型、隐藏原型与行动原型。",
+  description: "八个独立场域的有效节点汇入此刻，形成当前生命原型结构。",
 };
 
 export default function LifeArchetypePage() {

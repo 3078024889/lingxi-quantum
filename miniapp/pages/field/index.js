@@ -6,6 +6,7 @@ Page({
       { title: '场域精测', note: '探索生命底层结构。不是为了被定义，而是看见自身已有的模式。', path: '/pages/explore/index' },
       { title: '意识显化', note: '让愿望与现实重新连接。看见你的意识，如何塑造真实的路径。', web: '/live-as' },
       { title: '梦境探索', note: '梦境，是未被语言表达的信息。从潜意识的线索中，重新理解自己。', web: '/dream' },
+      { title: '修炼技术', note: '把觉察带入呼吸、身体与日常节律，在可重复的练习中建立真实改变。', web: '/practice' },
       { title: '潜意识重塑', note: '看见隐藏的惯性。改变并非否定过去，而是让新的可能进入生命。', web: '/#gates' },
       { title: '多维叙事', note: '探索不同视角的生命故事。每一次阅读，都是与自身经验的重新连接。', path: '/pages/narratives/index' },
     ],

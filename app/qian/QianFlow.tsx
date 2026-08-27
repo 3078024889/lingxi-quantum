@@ -26,7 +26,7 @@ const QIAN_FAQ: BilingualFaqItem[] = [
   },
   {
     qZh: "生命灵签的完整解读包含什么内容？", qEn: "What does the full Life Oracle reading include?",
-    aZh: "完整生命灵签不是简单解释三枚签的含义，它会展开：三重生命原型总览、源流签深度解析、灵魂签深度解析、行者签深度解析、三签融合关系、财富创造系统、关系模式分析、事业使命地图、当前人生阶段、隐藏天赋探索、灵犀场成长路径、生命宣言，共12个章节。最终生成的是一份属于你的生命原型档案。",
+    aZh: "完整生命灵签不是简单解释三枚签的含义，它会展开：三签结构总览、源流签深度解析、灵魂签深度解析、行者签深度解析、三签融合关系、财富创造系统、关系模式分析、事业使命地图、当前人生阶段、隐藏天赋探索、灵犀场成长路径、生命宣言，共12个章节。最终生成的是一份属于你的生命原型档案。",
     aEn: "The full Life Oracle reading isn't a simple explanation of what three signs mean — it unfolds: an overview of your three archetypes, deep dives into the Origin, Soul, and Walker signs, how the three fuse together, a wealth creation system, relationship pattern analysis, a career and mission map, your current life stage, hidden talent exploration, a Lingxi Field growth path, and a personal life declaration — 12 sections in total. What forms is a life archetype record that's entirely your own.",
   },
 ];

@@ -1,3 +1,5 @@
+import { getFieldProductCopy, type FieldProductCopy, type FieldResultMode } from "@/lib/mini/field-product-copy";
+
 /**
  * Lingxifield Dendritic Assessment Engine v2
  *
@@ -11,8 +13,8 @@
 export type DendriteOption = { id: string; zh: string; en: string; activates: Record<string, number> };
 export type DendriteQuestion = { id: string; sectionZh: string; sectionEn: string; zh: string; en: string; options: DendriteOption[] };
 export type DendriteNode = { id: string; zh: string; en: string; meaningZh: string; meaningEn: string; actionZh: string; actionEn: string };
-export type DendriteProduct = {
-  productId: string; nameZh: string; nameEn: string; leadZh: string; leadEn: string;
+export type DendriteProduct = FieldProductCopy & {
+  productId: string; leadZh: string; leadEn: string;
   sourceZh: string; sourceEn: string; nodes: DendriteNode[]; questions: DendriteQuestion[];
 };
 
@@ -21,9 +23,6 @@ type Seed = Omit<DendriteProduct, "questions"> & { prompts: Prompt[] };
 
 const node = (id: string, zh: string, en: string, meaningZh: string, meaningEn: string, actionZh: string, actionEn: string): DendriteNode =>
   ({ id, zh, en, meaningZh, meaningEn, actionZh, actionEn });
-
-const sharedSourceZh = "依据产品研究文档中的情境题、量表与选择题重构；回答只用于激活灵犀场树突知识节点。";
-const sharedSourceEn = "Reconstructed from the product's documented scenarios, scales and choices; responses only activate Lingxifield dendritic knowledge nodes.";
 
 const lifeNodes = [
   node("exploration","探索驱动","Exploration","你从未知、变化与新可能中获得生命感。","You gain aliveness through the unknown, change and possibility.","为探索设置一个可回收的小范围。","Give exploration a small, reversible boundary."),
@@ -167,16 +166,22 @@ const archetypePrompts: Prompt[] = [
   ["行动落点","Action point","接下来七天，什么最需要成为行动？","What most needs to become action in the next seven days?",["blueprint","romance","tide","oracle"]],
 ];
 
+function makeSeed(productId: string, nodes: DendriteNode[], prompts: Prompt[]): Seed {
+  const copy = getFieldProductCopy(productId);
+  if (!copy) throw new Error(`missing field product copy: ${productId}`);
+  return { productId, ...copy, leadZh: copy.cardDefinitionZh, leadEn: copy.cardDefinitionEn, sourceZh: copy.readingZh, sourceEn: copy.readingEn, nodes, prompts };
+}
+
 const seeds: Seed[] = [
-  {productId:"life-map-report",nameZh:"生命图谱",nameEn:"Life Blueprint",leadZh:"从现实选择中照见你的生命结构",leadEn:"See your life structure through lived choices",sourceZh:sharedSourceZh,sourceEn:sharedSourceEn,nodes:lifeNodes,prompts:lifePrompts},
-  {productId:"relationship-resonance",nameZh:"关系共振",nameEn:"Relationship Resonance",leadZh:"照见两个生命如何靠近、回应与形成边界",leadEn:"See how two lives approach, respond and form boundaries",sourceZh:sharedSourceZh,sourceEn:sharedSourceEn,nodes:relationshipNodes,prompts:relationshipPrompts},
-  {productId:"resilience-report",nameZh:"生命韧性指数",nameEn:"Life Resilience Index",leadZh:"照见变化发生时系统如何接住自己",leadEn:"See how your system catches itself through change",sourceZh:sharedSourceZh,sourceEn:sharedSourceEn,nodes:resilienceNodes,prompts:resiliencePrompts},
-  {productId:"romance-report",nameZh:"桃花磁场指数",nameEn:"Romance Resonance Index",leadZh:"照见你的吸引、靠近、筛选与回应方式",leadEn:"See how you attract, approach, discern and respond",sourceZh:sharedSourceZh,sourceEn:sharedSourceEn,nodes:romanceNodes,prompts:romancePrompts},
-  {productId:"wealth-report",nameZh:"财富创造地图",nameEn:"Wealth Creation Map",leadZh:"照见价值如何被发现、创造、连接与放大",leadEn:"See how value is discovered, created, connected and amplified",sourceZh:sharedSourceZh,sourceEn:sharedSourceEn,nodes:wealthNodes,prompts:wealthPrompts},
-  {productId:"daily-tide-report",nameZh:"今日潮汐",nameEn:"Today's Tide",leadZh:"读取此刻的状态节律，不预测事件",leadEn:"Read the present rhythm without predicting events",sourceZh:"依照今日状态潮汐文档保留四个状态维度与一个今日焦点；短而高频，不人为扩题。",sourceEn:"Keeps the documented four state dimensions and one daily focus; brief by design for repeat use.",nodes:tideNodes,prompts:tidePrompts},
-  {productId:"tarot-reading",nameZh:"灵犀量子生命镜像",nameEn:"Lingxi Quantum Life Mirror",leadZh:"在过往、当下与展开中看见此刻",leadEn:"See this moment through past, present and unfolding",sourceZh:"依照生命三棱镜文档保留一个主题与九重核心互动，避免过度测试破坏直觉映照。",sourceEn:"Keeps one theme and nine core interactions as documented, avoiding over-testing that would weaken intuitive reflection.",nodes:mirrorNodes,prompts:mirrorPrompts},
-  {productId:"qian-reading",nameZh:"灵犀生命灵签",nameEn:"Lingxi Life Oracle",leadZh:"读取源流、灵魂与行者三层生命原型",leadEn:"Read Source, Soul and Wayfarer archetype layers",sourceZh:"围绕现有 64 枚生命原型库，以源流、灵魂、行者三层各四题建立坐标。",sourceEn:"Builds coordinates for the existing 64-archetype library through four questions each for Source, Soul and Wayfarer.",nodes:qianNodes,prompts:qianPrompts},
-  {productId:"life-archetype",nameZh:"生命原型",nameEn:"Life Archetype",leadZh:"让八重场域在此刻汇成一幅生命原型",leadEn:"Let eight fields converge into a life archetype for this moment",sourceZh:"依照生命原型文档：当前主题加三次直觉选择，并调用已完成的八重场域历史节点。",sourceEn:"Follows the Life Archetype document: a current theme plus three intuitive choices, enriched by completed history across eight fields.",nodes:archetypeNodes,prompts:archetypePrompts},
+  makeSeed("life-map-report", lifeNodes, lifePrompts),
+  makeSeed("relationship-resonance", relationshipNodes, relationshipPrompts),
+  makeSeed("resilience-report", resilienceNodes, resiliencePrompts),
+  makeSeed("romance-report", romanceNodes, romancePrompts),
+  makeSeed("wealth-report", wealthNodes, wealthPrompts),
+  makeSeed("daily-tide-report", tideNodes, tidePrompts),
+  makeSeed("tarot-reading", mirrorNodes, mirrorPrompts),
+  makeSeed("qian-reading", qianNodes, qianPrompts),
+  makeSeed("life-archetype", archetypeNodes, archetypePrompts),
 ];
 
 function buildQuestions(seed: Seed): DendriteQuestion[] {
@@ -208,11 +213,58 @@ export type DendriteResult = {
 };
 
 export function archetypeCardIndexesFor(nodes:Array<{id:string;score:number}>) {
-  return nodes.slice(0,3).map((item,index)=>[...`${item.id}:${item.score}:${index}`].reduce((sum,char)=>(sum*33+char.charCodeAt(0))%64,17));
+  return nodes.slice(0,1).map((item,index)=>[...`${item.id}:${item.score}:${index}`].reduce((sum,char)=>(sum*33+char.charCodeAt(0))%64,17));
 }
 function oracleCardIndexesFor(nodes:Array<{id:string;score:number}>) {
   const hash=(item:{id:string;score:number},index:number,size:number)=>[...`${item.id}:${item.score}:${index}`].reduce((sum,char)=>(sum*31+char.charCodeAt(0))%size,11);
   return [hash(nodes[0],0,24),24+hash(nodes[1],1,24),48+hash(nodes[2],2,16)];
+}
+
+function chapterBody(mode: FieldResultMode, product: DendriteProduct, dominant: DendriteResult["dominant"], quiet: DendriteResult["nodes"][number], left: DendriteResult["nodes"][number], right: DendriteResult["nodes"][number], historyProducts: number) {
+  const first = dominant[0], second = dominant[1], third = dominant[2];
+  const bodies: Record<FieldResultMode, { zh: string; en: string }> = {
+    core: {
+      zh: `本次读取中，「${first.zh}」最先来到前景，并与「${second.zh}」「${third.zh}」共同形成${product.nameZh}的当前主结构。${first.meaningZh}这是一段当前证据，不是固定人格。`,
+      en: `${first.en} moves to the foreground and combines with ${second.en} and ${third.en} as the present core of ${product.nameEn}. ${first.meaningEn} This is current evidence, not a fixed identity.`,
+    },
+    primary: {
+      zh: `「${first.zh}」是当前最稳定的信号。${first.meaningZh}它的意义不在分数高低，而在于它是否跨越不同题目与情境持续出现。`,
+      en: `${first.en} is the most stable current signal. ${first.meaningEn} Its value lies not in the number alone, but in whether it persists across different scenarios.`,
+    },
+    secondary: {
+      zh: `「${second.zh}」与「${third.zh}」决定主要力量如何进入现实。前者提供运行方式，后者显示当前情境对它的调节；两者之间的差异值得回到实际经历确认。`,
+      en: `${second.en} and ${third.en} shape how the primary signal enters reality. One supplies an operating mode while the other shows contextual regulation; confirm their difference against lived experience.`,
+    },
+    edge: {
+      zh: `「${left.zh}」与「${right.zh}」是本次最清晰的共同激活连接。它们可能彼此增强，也可能让同一种现实反应反复出现。观察两者何时同时启动，比单看任一节点更有价值。`,
+      en: `${left.en} and ${right.en} form the clearest co-activation edge. They may reinforce each other or repeat one lived response. When they activate together matters more than either node alone.`,
+    },
+    quiet: {
+      zh: `「${quiet.zh}」目前尚未进入前景，并不表示缺失或不足。它可能未被当前情境调用，也可能被更强信号暂时遮住。下一阶段可观察：${quiet.actionZh}`,
+      en: `${quiet.en} is not currently foregrounded; this does not mean absence or deficiency. It may be unused by this context or masked by stronger signals. Next, observe: ${quiet.actionEn}`,
+    },
+    cost: {
+      zh: `当前结构的潜在代价来自「${first.zh}」持续高强度运行，而「${quiet.zh}」缺少参与。代价不等同于问题；它提示系统可能在哪个位置消耗更多注意力、关系空间或恢复容量。`,
+      en: `A possible cost appears when ${first.en} operates continuously while ${quiet.en} participates less. Cost is not a defect; it marks where attention, relational space or recovery capacity may be spent.`,
+    },
+    action: {
+      zh: `只进入一个现实动作：${first.actionZh}完成后不要急着评价结果，记录它是否让「${second.zh}」与「${third.zh}」发生变化。`,
+      en: `Take only one real-world action: ${first.actionEn} Afterwards, do not judge immediately; note whether ${second.en} and ${third.en} shift.`,
+    },
+    evidence: {
+      zh: `这一结构由 ${product.questions.length} 次有效互动形成。系统读取跨题目重复出现的节点、相邻选择形成的连接及强弱差异；证据只来自本次真实选择${historyProducts ? `与 ${historyProducts} 个已授权历史场域` : ""}。`,
+      en: `This structure formed through ${product.questions.length} valid interactions. It reads repeated nodes, edges created by adjacent choices and relative signal strength, using only this session${historyProducts ? ` and ${historyProducts} authorized history fields` : ""}.`,
+    },
+    history: {
+      zh: historyProducts > 0 ? `已有 ${historyProducts} 个用户授权保存的场域参与本次读取。历史节点只提供长期与近期变化的参照，不会覆盖此刻的真实选择。` : "当前尚无足够的已授权历史场域。本章因此只呈现本次选择形成的初始结构；保存更多独立场域后，长期与近期信号才会逐渐分开。",
+      en: historyProducts > 0 ? `${historyProducts} user-authorized saved fields contribute here. History provides context for long-term and recent change without overriding present choices.` : "There is not yet enough authorized field history. This chapter therefore shows an initial structure from today's choices; longer and recent signals can separate as more fields are saved.",
+    },
+    timeline: {
+      zh: "一次记录只属于今天。连续记录后，系统才会比较能量、负载、专注与连接容量的变化；未记录的日期保持 Missing，不按零分参与趋势。",
+      en: "One entry belongs only to today. With continued records, energy, load, focus and connection capacity can be compared over time; missing dates remain Missing and never enter the trend as zero.",
+    },
+  };
+  return bodies[mode];
 }
 
 export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteResult["nodes"],edges:DendriteResult["edges"],historyProducts=0):DendriteResult {
@@ -222,22 +274,19 @@ export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteRes
   const left=ordered.find(item=>item.id===strongestEdge?.from)??dominant[0];
   const right=ordered.find(item=>item.id===strongestEdge?.to)??dominant[1];
   const quiet=ordered[ordered.length-1];
+  const hasClearSignal = dominant[0].score - dominant[2].score >= 6;
+  const chapters = product.resultOutline.map((section) => ({ id: section.id, titleZh: section.zh, titleEn: section.en, bodyZh: chapterBody(section.mode, product, dominant, quiet, left, right, historyProducts).zh, bodyEn: chapterBody(section.mode, product, dominant, quiet, left, right, historyProducts).en }));
   const result:DendriteResult={
     algorithm:"lingxifield-dendritic-v2",nodes:ordered,dominant,edges,
-    titleZh:`${dominant[0].zh} × ${dominant[1].zh} × ${dominant[2].zh}`,
-    titleEn:`${dominant[0].en} × ${dominant[1].en} × ${dominant[2].en}`,
-    insightZh:`此刻最清晰的结构从「${dominant[0].zh}」开始，经由「${dominant[1].zh}」与「${dominant[2].zh}」形成联锁。这不是固定人格或未来判定，而是本次真实选择激活的当前结构。`,
-    insightEn:`The clearest current structure begins with ${dominant[0].en}, linked through ${dominant[1].en} and ${dominant[2].en}. This is not a fixed personality or future verdict, but a present structure activated by your lived choices.`,
-    chapters:[
-      {id:"core",titleZh:"当前核心结构",titleEn:"Current Core Structure",bodyZh:`「${dominant[0].zh}」位于当前前景：${dominant[0].meaningZh}「${dominant[1].zh}」与「${dominant[2].zh}」并非附属标签，而是共同决定这股力量如何进入现实。`,bodyEn:`${dominant[0].en} is foregrounded: ${dominant[0].meaningEn} ${dominant[1].en} and ${dominant[2].en} jointly shape how it enters reality.`},
-      {id:"link",titleZh:"联锁增强",titleEn:"Linked Reinforcement",bodyZh:`本次选择中，「${left.zh}」与「${right.zh}」形成最强共现连接。它意味着两者往往会一起被启动，也可能相互放大。观察现实中它们何时同时出现，比单看分数更重要。`,bodyEn:`${left.en} and ${right.en} form the strongest co-activation edge. They tend to start together and may amplify one another; observe when they co-occur in lived experience.`},
-      {id:"tension",titleZh:"尚未进入前景",titleEn:"Not Yet Foregrounded",bodyZh:`「${quiet.zh}」目前信号较低，并不代表缺失。它可能尚未被当前情境调用，也可能被更强节点暂时抑制。可以在未来一周观察：${quiet.actionZh}`,bodyEn:`${quiet.en} is quieter, not absent. It may be unused by the current context or temporarily inhibited by stronger nodes. Over the next week: ${quiet.actionEn}`},
-      {id:"practice",titleZh:"现实观察点",titleEn:"Reality Observation",bodyZh:`建议从「${dominant[0].zh}」开始：${dominant[0].actionZh}完成后，记录它是否改变了「${dominant[1].zh}」与「${dominant[2].zh}」的状态。真实经历仍是确认这份读取的最终参照。`,bodyEn:`Begin with ${dominant[0].en}: ${dominant[0].actionEn} Then note whether it shifts ${dominant[1].en} and ${dominant[2].en}. Lived experience remains the final reference.`},
-    ],
+    titleZh:hasClearSignal?`${dominant[0].zh} × ${dominant[1].zh} × ${dominant[2].zh}`:"当前信号尚未形成明显结构",
+    titleEn:hasClearSignal?`${dominant[0].en} × ${dominant[1].en} × ${dominant[2].en}`:"No Distinct Structure Has Formed Yet",
+    insightZh:hasClearSignal?`「${dominant[0].zh}」目前最清晰，并与「${dominant[1].zh}」「${dominant[2].zh}」共同形成${product.nameZh}的当前结构。它不是固定人格或未来判定。`:`本次节点分布较为接近，尚不足以形成可信的主导标签。先保留这份记录，等待更多真实情境提供证据。`,
+    insightEn:hasClearSignal?`${dominant[0].en} is clearest and joins ${dominant[1].en} and ${dominant[2].en} in the current ${product.nameEn} structure. It is not a fixed identity or future verdict.`:`The current node distribution is too close to support a reliable dominant label. Keep this record and let further lived contexts provide evidence.`,
+    chapters,
     evidence:{answered:product.questions.length,total:product.questions.length,historyProducts,sourceZh:product.sourceZh,sourceEn:product.sourceEn},
   };
   if(product.productId==="life-archetype"){
-    result.archetypeCardIndexes=archetypeCardIndexesFor(dominant);result.cardRolesZh=["主原型","隐藏原型","行动原型"];result.cardRolesEn=["Main Archetype","Hidden Archetype","Action Archetype"];
+    result.archetypeCardIndexes=archetypeCardIndexesFor(dominant);result.cardRolesZh=[historyProducts > 0 ? "八重场域汇流原型" : "当前初始原型"];result.cardRolesEn=[historyProducts > 0 ? "Eight-field Convergent Archetype" : "Initial Current Archetype"];
   } else if(product.productId==="qian-reading"){
     result.archetypeCardIndexes=oracleCardIndexesFor(dominant);result.cardRolesZh=["源流签","灵魂签","行者签"];result.cardRolesEn=["Source Sign","Soul Sign","Wayfarer Sign"];
   }

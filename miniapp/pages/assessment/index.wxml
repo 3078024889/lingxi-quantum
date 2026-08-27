@@ -2,11 +2,13 @@
   <view wx:if="{{loading}}" class="lx-loading">正在连接树突场域…</view>
   <view wx:elif="{{error && !product}}" class="lx-empty lx-veil">{{error}}</view>
   <block wx:elif="{{product}}">
-    <view class="topline"><view class="lx-kicker">LINGXIFIELD DENDRITIC ASSESSMENT</view><button class="lang" bindtap="toggleLang">{{lang === 'zh' ? 'EN' : '中'}}</button></view>
-    <view class="lx-title">{{lang === 'zh' ? product.nameZh : product.nameEn}}</view>
-    <view class="lx-subtitle">{{lang === 'zh' ? product.leadZh : product.leadEn}}</view>
-    <view class="engine lx-veil">{{lang === 'zh' ? engine.zh : engine.en}}</view>
-    <view class="source-line">{{lang === 'zh' ? product.sourceZh : product.sourceEn}}</view>
+    <view class="topline"><view class="lx-kicker">FIELD {{product.field}} · {{product.layer === 'convergence' ? (lang === 'zh' ? '汇流层' : 'CONVERGENCE') : 'FIELD INSIGHT'}}</view><button class="lang" bindtap="toggleLang">{{lang === 'zh' ? 'EN' : '中'}}</button></view>
+    <view class="lx-title">{{product.nameZh}}</view>
+    <view class="product-name-en">{{product.nameEn}}</view>
+    <view class="core-title">{{lang === 'zh' ? product.coreTitleZh : product.coreTitleEn}}</view>
+    <view class="overview"><view wx:for="{{lang === 'zh' ? product.overviewZh : product.overviewEn}}" wx:key="*this">{{item}}</view></view>
+    <view class="reading-note lx-veil"><view class="reading-title">{{lang === 'zh' ? '本产品读取什么' : 'WHAT THIS PRODUCT READS'}}</view><view>{{lang === 'zh' ? product.readingZh : product.readingEn}}</view></view>
+    <view class="structure-row"><text wx:for="{{lang === 'zh' ? product.structureZh : product.structureEn}}" wx:key="*this">{{item}}</text></view>
     <view class="duration">{{engine.questionCount}} {{lang === 'zh' ? '个结构节点 · 约' : 'structural interactions · about'}} {{engine.estimatedMinutes}} {{lang === 'zh' ? '分钟' : 'min'}}</view>
 
     <view wx:if="{{!result}}" class="panel lx-veil">
@@ -20,19 +22,20 @@
       <view class="question-section">{{lang === 'zh' ? product.questions[questionIndex].sectionZh : product.questions[questionIndex].sectionEn}}</view>
       <view class="question">{{lang === 'zh' ? product.questions[questionIndex].zh : product.questions[questionIndex].en}}</view>
       <view class="options"><view wx:for="{{product.questions[questionIndex].options}}" wx:key="id" class="option {{selected === item.id ? 'selected' : ''}}" data-value="{{item.id}}" bindtap="choose"><view class="orb"></view><text>{{lang === 'zh' ? item.zh : item.en}}</text></view></view>
-      <view class="actions"><button wx:if="{{questionIndex > 0}}" class="ghost" bindtap="previous">{{lang === 'zh' ? '返回' : 'Back'}}</button><button class="next" loading="{{submitting}}" disabled="{{submitting}}" bindtap="next">{{questionIndex + 1 === product.questions.length ? (lang === 'zh' ? '形成树突图谱' : 'Form dendrite map') : (lang === 'zh' ? '继续' : 'Continue')}}</button></view>
+      <view class="actions"><button wx:if="{{questionIndex > 0}}" class="ghost" bindtap="previous">{{lang === 'zh' ? '返回' : 'Back'}}</button><button class="next" loading="{{submitting}}" disabled="{{submitting}}" bindtap="next">{{questionIndex + 1 === product.questions.length ? (lang === 'zh' ? product.ctaZh : product.ctaEn) : (lang === 'zh' ? '继续' : 'Continue')}}</button></view>
       <view wx:if="{{error}}" class="error">{{error}}</view>
     </view>
 
     <view wx:else class="result lx-veil">
-      <view class="result-kicker">{{lang === 'zh' ? '此刻的联锁结构' : 'CURRENT LINKED STRUCTURE'}}</view>
+      <view class="result-kicker">{{lang === 'zh' ? '此刻的连接结构' : 'CURRENT CONNECTED STRUCTURE'}}</view>
       <view class="result-title">{{lang === 'zh' ? result.titleZh : result.titleEn}}</view>
       <view class="nodes"><view wx:for="{{result.nodes}}" wx:key="id" class="node"><view class="node-label"><text>{{lang === 'zh' ? item.zh : item.en}}</text><text>{{item.score}}</text></view><view class="bar"><view style="width: {{item.score}}%"></view></view></view></view>
       <view class="insight">{{lang === 'zh' ? result.insightZh : result.insightEn}}</view>
       <view class="chapters"><view wx:for="{{result.chapters}}" wx:key="id" class="chapter"><view class="chapter-title">{{lang === 'zh' ? item.titleZh : item.titleEn}}</view><view class="chapter-body">{{lang === 'zh' ? item.bodyZh : item.bodyEn}}</view></view></view>
       <view class="evidence">{{lang === 'zh' ? '本次读取' : 'This reading'}} · {{result.evidence.answered}} / {{result.evidence.total}}<text wx:if="{{result.evidence.historyProducts > 0}}"> · {{lang === 'zh' ? '已连接历史场域' : 'history fields linked'}} {{result.evidence.historyProducts}}</text></view>
       <view wx:if="{{result.cardRolesZh}}" class="archetype-roles"><text wx:for="{{lang === 'zh' ? result.cardRolesZh : result.cardRolesEn}}" wx:key="*this">{{item}}</text></view>
-      <button class="lx-button" loading="{{paying}}" disabled="{{paying}}" bindtap="pay">{{lang === 'zh' ? '开启完整场域档案' : 'Open Full Field Archive'}} · ¥{{item.priceFen / 100}}</button>
+      <button wx:if="{{unlocked}}" class="lx-button" bindtap="openUnlockedReport"><text>{{lang === 'zh' ? '打开完整' : 'Open Full '}}</text><text>{{lang === 'zh' ? product.nameZh : product.nameEn}}</text><text>{{lang === 'zh' ? '报告' : ' Report'}}</text></button>
+      <button wx:else class="lx-button" loading="{{paying}}" disabled="{{paying}}" bindtap="pay"><text>{{lang === 'zh' ? '保存完整' : 'Save Full '}}</text><text>{{lang === 'zh' ? product.nameZh : product.nameEn}}</text><text>{{lang === 'zh' ? '至场域档案' : ' to My Field'}}</text> · ¥{{item.priceFen / 100}}</button>
       <view class="share-actions"><button open-type="share">{{lang === 'zh' ? '转发分享' : 'Share'}}</button><button bindtap="copyWebLink">{{lang === 'zh' ? '复制官网链接' : 'Copy web link'}}</button><button bindtap="restart">{{lang === 'zh' ? '重新观测' : 'Restart'}}</button></view>
     </view>
   </block>

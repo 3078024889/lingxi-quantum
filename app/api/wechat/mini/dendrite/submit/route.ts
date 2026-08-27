@@ -61,11 +61,15 @@ export async function POST(req: Request) {
       user_id: session.userId, product_id: productId, input, result, algorithm_version: result.algorithm,
     }).select("id").single();
     if (error || !data) throw new Error(`insert failed: ${error?.code ?? "unknown"}`);
-    return NextResponse.json({ submissionId: data.id, result });
+    const { data: unlockRows } = await admin.from("unlocks").select("product_id, expires_at")
+      .eq("user_id", session.userId).in("product_id", [productId, "everything"]);
+    const now = Date.now();
+    const unlocked = (unlockRows ?? []).some((row) => !row.expires_at || Date.parse(row.expires_at) > now);
+    return NextResponse.json({ submissionId: data.id, result, unlocked });
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknown";
     if (message.startsWith("missing response")) return NextResponse.json({ error: "请完成全部节点选择" }, { status: 400 });
     console.error("[mini dendrite submit] failed", message);
-    return NextResponse.json({ error: "树突联锁暂未完成，请稍后重试" }, { status: 500 });
+    return NextResponse.json({ error: "树突结构连接暂未完成，请稍后重试" }, { status: 500 });
   }
 }

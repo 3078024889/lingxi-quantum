@@ -29,6 +29,10 @@ const nextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
       },
       {
+        source: "/media/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
         source: "/images/mini-products/:path*",
         headers: [
           { key: "Access-Control-Allow-Origin", value: "https://mp.weixin.qq.com" },

@@ -11,7 +11,7 @@ export async function GET(req: Request) {
       id: "lingxifield-dendritic-v2",
       questionCount: product.questions.length,
       estimatedMinutes: Math.max(2, Math.ceil(product.questions.length * 0.28)),
-      zh: "小程序使用灵犀场树突知识网络：真实选择会激活产品专属节点，并经联锁传播、结构抑制与跨节点校准形成当前结构；它不读取星盘，也不预测事件。",
+      zh: "小程序使用灵犀场树突知识网络：真实选择会激活产品专属节点，节点相连后经过结构增强、抑制与跨节点校准形成当前结构；它不读取星盘，也不预测事件。",
       en: "The Mini Program uses the Lingxifield Dendritic Knowledge Network: lived choices activate product-specific nodes that undergo linked propagation, structural inhibition and cross-node calibration. It does not read an astronomical chart or predict events.",
     },
   // Assessment configuration changes with each release. Never let the Mini

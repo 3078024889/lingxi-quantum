@@ -1,6 +1,7 @@
 import { allProducts, getProduct, type Product } from "@/lib/plans";
 import { NARRATIVES, getNarrative } from "@/lib/narratives";
 import { MEMBERSHIP_CONTENT, type MembershipBenefit } from "@/lib/membership-content";
+import { FIELD_PRODUCT_COPY } from "@/lib/mini/field-product-copy";
 
 export type MiniCatalogItem = {
   skuId: string;
@@ -18,8 +19,13 @@ export type MiniCatalogItem = {
   assessmentKind?: "life-map" | "relationship" | "daily-tide" | "birth" | "resilience" | "romance" | "wealth" | "archetype";
   assessmentIntro?: string;
   assessmentDescription?: string;
+  assessmentDescriptionEn?: string;
   assessmentCta?: string;
+  assessmentCtaEn?: string;
   knowledgeNodes?: string[];
+  knowledgeNodesEn?: string[];
+  field?: string;
+  fieldLayer?: "field" | "convergence";
   detailDescription?: string;
   benefits?: MembershipBenefit[];
   closing?: string;
@@ -76,71 +82,21 @@ const UNAVAILABLE_NARRATIVE_IDS = new Set(
   NARRATIVES.filter((item) => item.status === "soon").map((item) => item.slug)
 );
 
-const REPORT_INTAKE: Record<string, Pick<MiniCatalogItem, "assessmentKind" | "assessmentIntro" | "assessmentDescription" | "assessmentCta" | "knowledgeNodes">> = {
-  "life-map-report": {
-    assessmentKind: "life-map",
-    assessmentIntro: "五条意识流在场域中交汇，温柔且如实地照见你携带而来的独特生命结构。",
-    assessmentDescription: "生命图谱 · 照见你的生命结构",
-    assessmentCta: "开始探索 →",
-    knowledgeNodes: ["生命骨架", "交叉验证", "现实运行", "长期路径"],
-  },
-  "relationship-resonance": {
-    assessmentKind: "relationship",
-    assessmentIntro: "两份真实资料共同生成关系结构；可选择深度关系共振、合伙商业关系或其他关系。",
-    assessmentDescription: "关系共振 · 照见两个生命的交汇",
-    assessmentCta: "开启共振探索 →",
-    knowledgeNodes: ["双生命坐标", "吸引与距离", "角色与边界", "修复实验"],
-  },
-  "daily-tide-report": {
-    assessmentKind: "daily-tide",
-    assessmentIntro: "先从星座进入今日节奏；当你需要更深的个人映照，再选择出生资料校准。",
-    assessmentDescription: "今日潮汐 · 感受当下的宇宙节律",
-    assessmentCta: "感知我的今日潮汐 →",
-    knowledgeNodes: ["今日行动", "关系窗口", "观察变量", "节律回看"],
-  },
-  "qian-reading": {
-    assessmentKind: "birth", assessmentIntro: "从真实出生资料出发，读取此刻与你相关的三重生命讯息。",
-    assessmentDescription: "意识坐标读取 · 看见此刻与你发生回应的三枚生命原型",
-    assessmentCta: "开启我的生命灵签 →", knowledgeNodes: ["源流签", "灵魂签", "行者签", "三签联锁"],
-  },
-  "tarot-reading": {
-    assessmentKind: "birth", assessmentIntro: "从真实出生资料出发，映照当下状态与未被发现的内在可能。",
-    assessmentDescription: "在过往、当下与展开的三重镜像中，看见此刻的自己。",
-    assessmentCta: "与灵犀场连接 →", knowledgeNodes: ["过往镜像", "当下镜像", "展开镜像", "现实确认"],
-  },
-  "resilience-report": {
-    assessmentKind: "resilience", assessmentIntro: "出生结构结合你此刻的恢复状态，绘制个人恢复链。",
-    assessmentDescription: "当现实发生偏转，照见生命系统如何重新接住自己。",
-    assessmentCta: "展开我的生命韧性指数 →", knowledgeNodes: ["冲击", "回收", "重启", "稳态"],
-  },
-  "romance-report": {
-    assessmentKind: "romance", assessmentIntro: "出生结构结合你的关系状态，读取吸引与靠近时序。",
-    assessmentDescription: "你的频率，正在唤醒怎样的共振。",
-    assessmentCta: "连接我的桃花磁场 →", knowledgeNodes: ["吸引", "靠近", "建立", "边界"],
-  },
-  "wealth-report": {
-    assessmentKind: "wealth", assessmentIntro: "出生结构结合职业与行动状态，定位价值创造的瓶颈。",
-    assessmentDescription: "照见你与丰盛对齐的方式。",
-    assessmentCta: "进入我的财富创造频率 →", knowledgeNodes: ["发现价值", "构建表达", "资源交换", "留存复制"],
-  },
-  "life-archetype": {
-    assessmentKind: "archetype", assessmentIntro: "八个场域节点在此刻汇入同一张树突网络，展开主原型、隐藏原型与行动原型。",
-    assessmentDescription: "生命原型 · 看见此刻正在被激活的三重结构",
-    assessmentCta: "展开我的生命原型 →", knowledgeNodes: ["主原型", "隐藏原型", "行动原型", "八域联锁"],
-  },
+const ASSESSMENT_KIND: Record<string, NonNullable<MiniCatalogItem["assessmentKind"]>> = {
+  "life-map-report": "life-map", "relationship-resonance": "relationship", "daily-tide-report": "daily-tide",
+  "qian-reading": "birth", "tarot-reading": "birth", "resilience-report": "resilience",
+  "romance-report": "romance", "wealth-report": "wealth", "life-archetype": "archetype",
 };
 
-const REPORT_DISPLAY_NAMES: Record<string, { zh: string; en: string }> = {
-  "life-map-report": { zh: "生命图谱", en: "Life Blueprint" },
-  "relationship-resonance": { zh: "关系共振", en: "Relationship Resonance" },
-  "resilience-report": { zh: "生命韧性指数", en: "Life Resilience Index" },
-  "romance-report": { zh: "桃花磁场指数", en: "Romance Resonance Index" },
-  "wealth-report": { zh: "财富创造地图", en: "Wealth Creation Map" },
-  "daily-tide-report": { zh: "今日潮汐", en: "Today’s Tide" },
-  "tarot-reading": { zh: "灵犀量子生命镜像", en: "Lingxi Quantum Life Mirror" },
-  "qian-reading": { zh: "灵犀生命灵签", en: "Lingxi Life Oracle" },
-  "life-archetype": { zh: "生命原型", en: "Life Archetype" },
-};
+const REPORT_INTAKE = Object.fromEntries(Object.entries(FIELD_PRODUCT_COPY).map(([productId, copy]) => [productId, {
+  assessmentKind: ASSESSMENT_KIND[productId],
+  assessmentIntro: copy.overviewZh.join("\n\n"),
+  assessmentDescription: copy.cardDefinitionZh,
+  assessmentCta: copy.ctaZh,
+  knowledgeNodes: copy.keywordsZh,
+}])) as Record<string, Pick<MiniCatalogItem, "assessmentKind" | "assessmentIntro" | "assessmentDescription" | "assessmentCta" | "knowledgeNodes">>;
+
+const REPORT_DISPLAY_NAMES = Object.fromEntries(Object.entries(FIELD_PRODUCT_COPY).map(([productId, copy]) => [productId, { zh: copy.nameZh, en: copy.nameEn }])) as Record<string, { zh: string; en: string }>;
 
 function categoryFor(productId: string): MiniCatalogItem["category"] {
   if (REPORT_IDS.has(productId)) return "report";
@@ -184,6 +140,11 @@ export function getMiniCatalog(): MiniCatalogItem[] {
     benefits: membershipContent?.benefits,
     closing: membershipContent?.closing,
     cta: membershipContent?.cta,
+    field: FIELD_PRODUCT_COPY[product.id]?.field,
+    fieldLayer: FIELD_PRODUCT_COPY[product.id]?.layer,
+    assessmentDescriptionEn: FIELD_PRODUCT_COPY[product.id]?.cardDefinitionEn,
+    assessmentCtaEn: FIELD_PRODUCT_COPY[product.id]?.ctaEn,
+    knowledgeNodesEn: FIELD_PRODUCT_COPY[product.id]?.keywordsEn,
     ...REPORT_INTAKE[product.id],
     });
   });

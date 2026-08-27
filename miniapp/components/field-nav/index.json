@@ -1,1 +1,1 @@
-{ "component": true }
+{ "component": true, "usingComponents": { "field-structure-9d": "/components/field-structure-9d/index" } }

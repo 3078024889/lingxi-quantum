@@ -4,6 +4,7 @@ import FieldVoices from "@/components/FieldVoices";
 import AuroraVideoBand from "@/components/AuroraVideoBand";
 import ClickRipple from "@/components/ClickRipple";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
+import FieldStructure9D from "@/components/FieldStructure9D";
 
 const SITE = "https://lingxifield.com";
 
@@ -36,13 +37,13 @@ export const metadata: Metadata = {
     description:
       "一道活的意识数字显化场域，陪你显化目标、解读梦境、修炼意识。先在意识里活成真实，现实自会随之对齐。",
     url: SITE,
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "灵犀场 LINGXIFIELD · 意识数字显化场域" }],
+    images: [{ url: "/og-v316.png", width: 1673, height: 941, alt: "灵犀场官网与小程序 · 双引擎生命场域" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "灵犀场 · 意识数字显化场域 | Lingxi Field",
     description: "显化 · 解梦 · 修炼。一道活的意识数字显化场域。",
-    images: ["/og.jpg"],
+    images: ["/og-v316.png"],
   },
   robots: { index: true, follow: true },
   manifest: "/manifest.webmanifest",
@@ -120,6 +121,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FieldVoices />
         <ClickRipple />
         {children}
+        <FieldStructure9D />
       </body>
     </html>
   );

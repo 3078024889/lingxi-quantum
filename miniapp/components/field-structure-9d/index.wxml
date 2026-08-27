@@ -1,0 +1,18 @@
+<button wx:if="{{!open}}" class="field-9d-trigger" bindtap="openPanel" aria-label="打开9D场域结构">
+  <text class="field-9d-mark">9D</text>
+  <text class="field-9d-label">场域结构</text>
+</button>
+<view wx:else class="field-9d-mask" catchtouchmove="">
+  <view class="field-9d-sheet">
+    <view class="field-9d-head">
+      <view class="field-9d-kicker">9D FIELD STRUCTURE</view>
+      <view class="field-9d-title">灵犀场 · 9D 产品结构</view>
+      <view class="field-9d-note">意识为核心，八域相连，场域持续展开</view>
+    </view>
+    <video id="fieldStructureVideo" class="field-9d-video" src="https://lingxifield.cn/media/lingxifield-9d-field-structure-v316.mp4" poster="https://lingxifield.cn/images/9d-field-structure-poster-v316.png" muted autoplay loop show-center-play-btn="{{false}}" controls="{{fullscreen}}" bindfullscreenchange="onFullscreenChange"></video>
+    <view class="field-9d-actions">
+      <button bindtap="expandVideo">展开查看</button>
+      <button bindtap="closePanel">收起</button>
+    </view>
+  </view>
+</view>

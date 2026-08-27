@@ -24,5 +24,7 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
   const cards = (result.archetypeCardIndexes ?? []).map((index) => LIFE_SIGNS[index]).filter(Boolean).map((card) => ({
     index: card.index, nameZh: card.nameZh, nameEn: card.nameEn,
   }));
-  return <MiniDendriteReport productName={getProduct(data.product_id)?.name ?? data.product_id} createdAt={data.created_at} result={result} cards={cards} cardRolesZh={result.cardRolesZh ?? ["主原型", "隐藏原型", "行动原型"]} cardRolesEn={result.cardRolesEn ?? ["Main Archetype", "Hidden Archetype", "Action Archetype"]} />;
+  const fallbackRolesZh = data.product_id === "qian-reading" ? ["源流签", "灵魂签", "行者签"] : data.product_id === "life-archetype" ? ["当前原型"] : [];
+  const fallbackRolesEn = data.product_id === "qian-reading" ? ["Source Sign", "Soul Sign", "Wayfarer Sign"] : data.product_id === "life-archetype" ? ["Current Archetype"] : [];
+  return <MiniDendriteReport productName={getProduct(data.product_id)?.name ?? data.product_id} createdAt={data.created_at} result={result} cards={cards} cardRolesZh={result.cardRolesZh ?? fallbackRolesZh} cardRolesEn={result.cardRolesEn ?? fallbackRolesEn} />;
 }

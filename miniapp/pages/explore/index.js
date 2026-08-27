@@ -4,7 +4,7 @@ Page({
   async onLoad() {
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')
-      this.setData({ items: data.items.filter(item => item.category === 'report') })
+      this.setData({ items: data.items.filter(item => item.category === 'report').sort((a, b) => Number(a.field) - Number(b.field)) })
     } catch (_) { wx.showToast({ title: '场域暂未响应', icon: 'none' }) }
     finally { this.setData({ loading: false }) }
   },

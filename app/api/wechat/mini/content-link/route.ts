@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   const session = await requireMiniSession(req);
   if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
 
-  const body = (await req.json().catch(() => ({}))) as { productId?: unknown };
+  const body = (await req.json().catch(() => ({}))) as { productId?: unknown; submissionId?: unknown };
   if (typeof body.productId !== "string" || (!getProduct(body.productId) && !getNarrative(body.productId))) {
     return NextResponse.json({ error: "内容参数无效" }, { status: 400 });
   }
@@ -22,6 +22,12 @@ export async function POST(req: Request) {
   if (!destination) return NextResponse.json({ error: "这项内容暂不支持在小程序内打开" }, { status: 404 });
 
   const admin = createAdminClient();
+  const submissionId = typeof body.submissionId === "string" ? body.submissionId : null;
+  if (submissionId) {
+    const { data: assessment } = await admin.from("mini_dendrite_assessments").select("id, product_id")
+      .eq("id", submissionId).eq("user_id", session.userId).eq("product_id", body.productId).maybeSingle();
+    if (!assessment) return NextResponse.json({ error: "这份场域记录不存在或不属于当前账户" }, { status: 404 });
+  }
   const [{ data: unlocks }, { data: profile }] = await Promise.all([
     admin.from("unlocks").select("product_id, expires_at").eq("user_id", session.userId),
     admin.from("profiles").select("manifest_until").eq("id", session.userId).maybeSingle(),
@@ -39,6 +45,7 @@ export async function POST(req: Request) {
   const ticket = encryptMiniSecret(JSON.stringify({
     userId: session.userId,
     productId: body.productId,
+    ...(submissionId ? { submissionId } : {}),
     expiresAt: Date.now() + 2 * 60 * 1000,
     nonce: randomBytes(12).toString("base64url"),
   }));

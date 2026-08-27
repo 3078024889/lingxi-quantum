@@ -69,7 +69,7 @@ export const wealthProducts: Product[] = [
 ];
 
 export const lifeArchetypeProducts: Product[] = [
-  { id: "life-archetype", name: "生命原型", nameEn: "Life Archetype", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "汇合八个场域精测节点，展开此刻的主原型、隐藏原型与行动原型。", noteEn: "Converges eight Field Insight nodes into your current Main, Hidden, and Action archetypes.", group: "cultivation" },
+  { id: "life-archetype", name: "生命原型", nameEn: "Life Archetype", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "汇合八个独立场域的有效节点，形成此刻的生命原型结构。", noteEn: "Converges authorized evidence from eight independent fields into the life archetype structure of this moment.", group: "cultivation" },
 ];
 
 export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts];
