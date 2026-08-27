@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 // character art on either side). It's a single full-screen video now on
 // every breakpoint, same as mobile always was.
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
-const ASSET_VERSION = "20260827-v312";
+const ASSET_VERSION = "20260827-v313";
 // The desktop file name is intentionally versioned. Reusing the former URL
 // allowed the CDN/browser cache to keep serving the removed 38-second film.
 const DESKTOP_VIDEO_MP4 = `/images/entrance/lingxi-opening-desktop-v310.mp4?v=${ASSET_VERSION}`;
@@ -34,15 +34,20 @@ export default function OpeningAtrium() {
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const [videoAvailable, setVideoAvailable] = useState(true);
   const [ended, setEnded] = useState(false);
-  // Lazy-initialized so the client's first render already reads the real
-  // viewport (avoids a poster flash/swap after hydration).
-  const [isDesktop, setIsDesktop] = useState(
-    () => typeof window !== "undefined" && window.matchMedia(DESKTOP_BREAKPOINT).matches
-  );
+  // Keep the first server and client render identical. Reading matchMedia in
+  // the state initializer caused a hydration mismatch: React kept the
+  // server-rendered mobile src even when the client state was already desktop.
+  // `null` means the viewport has not been resolved yet, so no wrong video is
+  // downloaded or displayed during hydration.
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   // Do not reuse the deleted desktop poster: it contains imagery from the old
   // film and can remain visible while the new asset is loading.
-  const POSTER = isDesktop ? undefined : MOBILE_POSTER;
-  const VIDEO_SRC = isDesktop ? DESKTOP_VIDEO_MP4 : MOBILE_VIDEO_MP4;
+  const POSTER = isDesktop === false ? MOBILE_POSTER : undefined;
+  const VIDEO_SRC = isDesktop === true
+    ? DESKTOP_VIDEO_MP4
+    : isDesktop === false
+      ? MOBILE_VIDEO_MP4
+      : null;
 
   useEffect(() => {
     const mql = window.matchMedia(DESKTOP_BREAKPOINT);
@@ -53,6 +58,7 @@ export default function OpeningAtrium() {
   }, []);
 
   useEffect(() => {
+    if (!VIDEO_SRC) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -99,7 +105,7 @@ export default function OpeningAtrium() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(114,76,210,.28),rgba(3,2,20,.96)_72%)]" />
 
       <div className="relative h-[100dvh] w-full overflow-hidden bg-[#080622] shadow-[0_0_70px_rgba(126,90,255,.28)]">
-        {videoAvailable ? (
+        {VIDEO_SRC && videoAvailable ? (
           <video
             ref={videoRef}
             src={VIDEO_SRC}
@@ -108,7 +114,7 @@ export default function OpeningAtrium() {
             // viewports until only the centre of the face remained. Preserve
             // the complete desktop composition; the surrounding field absorbs
             // any letterboxing. Mobile keeps its dedicated full-bleed cut.
-            className={`absolute inset-0 h-full w-full ${isDesktop ? "object-contain" : "object-cover"}`}
+            className={`absolute inset-0 h-full w-full ${isDesktop === true ? "object-contain" : "object-cover"}`}
             autoPlay
             muted={muted}
             playsInline
@@ -145,7 +151,7 @@ export default function OpeningAtrium() {
           <button
             type="button"
             onClick={toggleSound}
-            disabled={!videoAvailable}
+            disabled={!VIDEO_SRC || !videoAvailable}
             className="border border-white/35 bg-[#05031a]/55 px-4 py-2.5 text-xs tracking-[0.12em] text-white/90 backdrop-blur-md transition hover:border-cyan-200 hover:text-cyan-100 disabled:opacity-50"
           >
             {muted ? "开启声音" : "静音播放"}
@@ -159,7 +165,7 @@ export default function OpeningAtrium() {
           </button>
         </div>
 
-        {(autoplayBlocked || ended) && videoAvailable && (
+        {(autoplayBlocked || ended) && VIDEO_SRC && videoAvailable && (
           <div className="absolute inset-0 z-[5] flex items-center justify-center px-6">
             <button
               type="button"

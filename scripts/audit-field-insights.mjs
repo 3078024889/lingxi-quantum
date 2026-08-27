@@ -45,8 +45,10 @@ for (const stale of ["今日运势潮汐", "Daily Fortune Tide", "亲密关系�
 }
 
 const opening = read("components/OpeningAtrium.tsx");
-if (!opening.includes('isDesktop ? "object-contain" : "object-cover"')) fail("desktop entrance video can be cropped again");
-if (!opening.includes('ASSET_VERSION = "20260827-v312"')) fail("entrance asset cache key was not advanced");
+if (!opening.includes('isDesktop === true ? "object-contain" : "object-cover"')) fail("desktop entrance video can be cropped again");
+if (!opening.includes("useState<boolean | null>(null)")) fail("entrance viewport selection can hydrate with the wrong video again");
+if (!opening.includes("VIDEO_SRC && videoAvailable")) fail("entrance can render a video before the viewport is resolved");
+if (!opening.includes('ASSET_VERSION = "20260827-v313"')) fail("entrance asset cache key was not advanced");
 if (!opening.includes("/images/entrance/lingxi-opening-desktop-v310.mp4")) fail("desktop entrance does not reference the new 30-second file");
 if (opening.includes("/images/entrance/lingxi-opening-desktop.mp4")) fail("desktop entrance still references the cached 38-second URL");
 if (opening.includes("/images/entrance/lingxi-opening-poster-desktop.jpg")) fail("desktop entrance still references the deleted old poster");
