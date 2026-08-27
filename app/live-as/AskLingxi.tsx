@@ -24,7 +24,7 @@ type QA = { id?: string; created_at?: string; question: string; answer: string |
 
 export default function AskLingxi() {
   const supabase = createClient();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams() ?? new URLSearchParams();
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
   const [question, setQuestion] = useState("");

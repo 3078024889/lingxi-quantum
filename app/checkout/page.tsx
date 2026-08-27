@@ -91,7 +91,7 @@ const THUMB_BY_PRODUCT: Record<string, string> = {
 };
 
 function CheckoutInner() {
-  const params = useSearchParams();
+  const params = useSearchParams() ?? new URLSearchParams();
   const router = useRouter();
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);

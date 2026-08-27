@@ -43,7 +43,8 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "daily", title: "今日潮汐 · 宇宙节律", titleEn: "Today’s Tide", href: "/daily" },
   { slug: "tarot", title: "灵犀量子生命镜像 · 与生命场建立连接", titleEn: "Lingxi Quantum Life Mirror · Connect with the Field", href: "/mirror" },
   { slug: "tarot-daily", title: "今日塔罗 · 每日一卡", titleEn: "Tarot · Daily Card", href: "/mirror/daily" },
-  { slug: "qian", title: "灵犀生命灵签 · 摇签 · 求签", titleEn: "Lingxi Life Oracle · Sign Drawing", href: "/qian" },
+  { slug: "qian", title: "灵犀生命灵签 · 意识坐标读取", titleEn: "Lingxi Life Oracle · Consciousness Coordinate Reading", href: "/qian" },
+  { slug: "life-archetype", title: "生命原型 · 八域树突汇流", titleEn: "Life Archetype · Eight-Field Dendrite Convergence", href: "/archetype" },
 ];
 
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的

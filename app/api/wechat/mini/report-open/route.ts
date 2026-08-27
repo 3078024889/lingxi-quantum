@@ -14,6 +14,7 @@ const REPORT_ROUTES: Record<string, string> = {
   "romance-report": "/romance/full",
   "daily-tide-report": "/daily/full",
   "wealth-report": "/wealth/full",
+  "life-archetype": "/mini-report",
 };
 
 type Ticket = { orderId: string; userId: string; expiresAt: number; nonce: string };
@@ -45,11 +46,18 @@ export async function GET(req: Request) {
         .maybeSingle(),
       admin.auth.admin.getUserById(ticket.userId),
     ]);
-    const reportRoute = order ? REPORT_ROUTES[order.product_id] : undefined;
+    let reportRoute = order ? REPORT_ROUTES[order.product_id] : undefined;
     const email = userResult.data.user?.email;
     if (!order || !reportRoute || !order.submission_id || !email) {
       return safeFailure(req, "档案权益尚未同步");
     }
+    const { data: dendriteSubmission } = await admin
+      .from("mini_dendrite_assessments")
+      .select("id")
+      .eq("id", order.submission_id)
+      .eq("user_id", ticket.userId)
+      .maybeSingle();
+    if (dendriteSubmission) reportRoute = "/mini-report";
 
     // 为同一个影子账户创建一次性 OTP，并在服务端换取标准 Supabase Cookie 会话。
     const link = await admin.auth.admin.generateLink({ type: "magiclink", email });

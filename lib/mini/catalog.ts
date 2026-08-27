@@ -15,7 +15,7 @@ export type MiniCatalogItem = {
   /** Public web product route. Report entry pages stay the single source of truth across web and Mini Program. */
   webPath?: string;
   /** Server-delivered intake hint. Native clients need no upload for copy/flow changes. */
-  assessmentKind?: "life-map" | "relationship" | "daily-tide" | "birth" | "resilience" | "romance" | "wealth";
+  assessmentKind?: "life-map" | "relationship" | "daily-tide" | "birth" | "resilience" | "romance" | "wealth" | "archetype";
   assessmentIntro?: string;
   assessmentDescription?: string;
   assessmentCta?: string;
@@ -35,6 +35,7 @@ const FIXED_SKUS: Record<string, string> = {
   "romance-report": "rpt_romance",
   "daily-tide-report": "rpt_tide",
   "wealth-report": "rpt_wealth",
+  "life-archetype": "rpt_archetype",
   breath: "pr_breath",
   intuition: "pr_intuition",
   "heart-reset": "pr_heart",
@@ -55,6 +56,7 @@ const REPORT_IDS = new Set([
   "romance-report",
   "daily-tide-report",
   "wealth-report",
+  "life-archetype",
 ]);
 
 const REPORT_WEB_PATHS: Record<string, string> = {
@@ -66,6 +68,7 @@ const REPORT_WEB_PATHS: Record<string, string> = {
   "romance-report": "/romance",
   "daily-tide-report": "/daily",
   "wealth-report": "/wealth",
+  "life-archetype": "/archetype",
 };
 const PRACTICE_IDS = new Set(["breath", "intuition", "heart-reset", "ascending-heart"]);
 const MEMBERSHIP_IDS = new Set(["day", "month", "year", "narrative-all", "everything"]);
@@ -120,6 +123,23 @@ const REPORT_INTAKE: Record<string, Pick<MiniCatalogItem, "assessmentKind" | "as
     assessmentDescription: "照见你与丰盛对齐的方式。",
     assessmentCta: "进入我的财富创造频率 →", knowledgeNodes: ["发现价值", "构建表达", "资源交换", "留存复制"],
   },
+  "life-archetype": {
+    assessmentKind: "archetype", assessmentIntro: "八个场域节点在此刻汇入同一张树突网络，展开主原型、隐藏原型与行动原型。",
+    assessmentDescription: "生命原型 · 看见此刻正在被激活的三重结构",
+    assessmentCta: "展开我的生命原型 →", knowledgeNodes: ["主原型", "隐藏原型", "行动原型", "八域联锁"],
+  },
+};
+
+const REPORT_DISPLAY_NAMES: Record<string, { zh: string; en: string }> = {
+  "life-map-report": { zh: "生命图谱", en: "Life Blueprint" },
+  "relationship-resonance": { zh: "关系共振", en: "Relationship Resonance" },
+  "resilience-report": { zh: "生命韧性指数", en: "Life Resilience Index" },
+  "romance-report": { zh: "桃花磁场指数", en: "Romance Resonance Index" },
+  "wealth-report": { zh: "财富创造地图", en: "Wealth Creation Map" },
+  "daily-tide-report": { zh: "今日潮汐", en: "Today’s Tide" },
+  "tarot-reading": { zh: "灵犀量子生命镜像", en: "Lingxi Quantum Life Mirror" },
+  "qian-reading": { zh: "灵犀生命灵签", en: "Lingxi Life Oracle" },
+  "life-archetype": { zh: "生命原型", en: "Life Archetype" },
 };
 
 function categoryFor(productId: string): MiniCatalogItem["category"] {
@@ -152,8 +172,8 @@ export function getMiniCatalog(): MiniCatalogItem[] {
     return ({
     skuId: miniSkuForProduct(product.id),
     productId: product.id,
-    name: product.name,
-    nameEn: product.nameEn,
+    name: REPORT_DISPLAY_NAMES[product.id]?.zh ?? product.name,
+    nameEn: REPORT_DISPLAY_NAMES[product.id]?.en ?? product.nameEn,
     priceFen: Math.round(product.priceRmb * 100),
     accessType: product.type,
     days: product.days ?? null,

@@ -11,6 +11,7 @@ dist/
 Thumbs.db
 npm-debug.log*
 pnpm-debug.log*
+/release/
 
 # Private source material; derived knowledge must be reviewed before commit.
 /research/source-materials/raw/

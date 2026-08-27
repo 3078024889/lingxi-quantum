@@ -536,6 +536,25 @@ revoke insert, update, delete on table public.life_map_submissions, public.relat
 grant select on table public.life_map_submissions, public.relationship_submissions, public.resilience_submissions, public.romance_submissions, public.daily_tide_submissions, public.wealth_submissions, public.qian_submissions, public.tarot_reading_submissions to authenticated
 ;
 
+-- v314: Mini Program's independent Copernican Dendrite assessment archive.
+-- It is deliberately separate from the web astronomical submission tables.
+create table if not exists public.mini_dendrite_assessments (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  product_id text not null check (product_id in ('life-map-report','relationship-resonance','resilience-report','romance-report','wealth-report','daily-tide-report','tarot-reading','qian-reading','life-archetype')),
+  input jsonb not null,
+  result jsonb not null,
+  algorithm_version text not null default 'copernican-dendrite-v1',
+  created_at timestamptz not null default now()
+);
+create index if not exists mini_dendrite_assessments_user_created_idx on public.mini_dendrite_assessments (user_id, created_at desc);
+create index if not exists mini_dendrite_assessments_user_product_idx on public.mini_dendrite_assessments (user_id, product_id, created_at desc);
+alter table public.mini_dendrite_assessments enable row level security;
+drop policy if exists "own mini dendrite assessments read" on public.mini_dendrite_assessments;
+create policy "own mini dendrite assessments read" on public.mini_dendrite_assessments for select using (auth.uid() = user_id);
+revoke insert, update, delete on table public.mini_dendrite_assessments from anon, authenticated;
+grant select on table public.mini_dendrite_assessments to authenticated;
+
 -- v301: explicit Mini Program <-> existing web account connection.
 -- Keep this in the canonical schema as well as SQL-v301 so a new environment
 -- gets the same secure account-link capability in one pass.
@@ -566,6 +585,7 @@ begin
   update public.romance_submissions set user_id = p_target_user_id where user_id = p_source_user_id; get diagnostics v_rows = row_count; v_report_count := v_report_count + v_rows;
   update public.daily_tide_submissions set user_id = p_target_user_id where user_id = p_source_user_id; get diagnostics v_rows = row_count; v_report_count := v_report_count + v_rows;
   update public.wealth_submissions set user_id = p_target_user_id where user_id = p_source_user_id; get diagnostics v_rows = row_count; v_report_count := v_report_count + v_rows;
+  update public.mini_dendrite_assessments set user_id = p_target_user_id where user_id = p_source_user_id; get diagnostics v_rows = row_count; v_report_count := v_report_count + v_rows;
   update public.wechat_mini_sessions set user_id = p_target_user_id where user_id = p_source_user_id and openid = p_openid;
   update public.wechat_mini_identities set user_id = p_target_user_id, updated_at = now() where openid = p_openid;
   return jsonb_build_object('ok', true, 'ordersMoved', v_order_count, 'reportsMoved', v_report_count);

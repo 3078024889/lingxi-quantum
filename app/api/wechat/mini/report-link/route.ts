@@ -15,6 +15,7 @@ const REPORT_ROUTES: Record<string, string> = {
   "romance-report": "/romance/full",
   "daily-tide-report": "/daily/full",
   "wealth-report": "/wealth/full",
+  "life-archetype": "/mini-report",
 };
 
 export async function POST(req: Request) {

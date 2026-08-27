@@ -10,6 +10,7 @@ import ShareButton from "@/components/ShareButton";
 import { getProduct } from "@/lib/plans";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
+import BirthDateGuidance, { BirthTimeOptionalCopy, type CalendarType } from "@/components/BirthDateGuidance";
 
 const RESILIENCE_FAQ: BilingualFaqItem[] = [
   {
@@ -130,6 +131,7 @@ export default function ResilienceFlow() {
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
+  const [calendarType, setCalendarType] = useState<CalendarType>("solar");
   const [hasTime, setHasTime] = useState(false);
   const [hour, setHour] = useState("12");
   const [minute, setMinute] = useState("0");
@@ -165,7 +167,7 @@ export default function ResilienceFlow() {
         body: JSON.stringify({
           year: parseInt(year, 10), month: parseInt(month, 10), day: parseInt(day, 10),
           hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0,
-          hasTime, name: unlockName,
+          hasTime, calendarType, name: unlockName,
         }),
       });
       const data = await res.json();
@@ -198,7 +200,7 @@ export default function ResilienceFlow() {
         body: JSON.stringify({
           year: parseInt(year, 10), month: parseInt(month, 10), day: parseInt(day, 10),
           hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0,
-          hasTime,
+          hasTime, calendarType,
         }),
       });
       const data = await res.json();
@@ -428,7 +430,7 @@ export default function ResilienceFlow() {
   return (
     <div className="mx-auto max-w-md px-6 py-16">
       <div className="lx-glass-resilience p-6">
-        <p className="text-sm text-bone-dim">{t("出生年月日", "Birth date")}</p>
+        <BirthDateGuidance value={calendarType} onChange={setCalendarType} />
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
           <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -436,7 +438,7 @@ export default function ResilienceFlow() {
         </div>
         <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
           <input type="checkbox" checked={hasTime} onChange={(e) => setHasTime(e.target.checked)} />
-          <Bi zh="知道具体出生时间（选填，能看得更细）" en="I know the exact birth time (optional)" />
+          <BirthTimeOptionalCopy />
         </label>
         {hasTime && (
           <div className="mt-2 grid grid-cols-2 gap-2">

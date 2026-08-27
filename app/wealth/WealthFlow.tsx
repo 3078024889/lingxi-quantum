@@ -9,6 +9,7 @@ import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 import { getProduct } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/client";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import BirthDateGuidance, { BirthTimeOptionalCopy, type CalendarType } from "@/components/BirthDateGuidance";
 
 // v245：财富创造地图——跟生命韧性/桃花磁场同一套模式：免费快测（不
 // 登录、不调用AI，纯计算）→ 付费11章节深度报告（AI现场生成、缓存）。
@@ -46,6 +47,7 @@ export default function WealthFlow() {
 
   const [name, setName] = useState("");
   const [year, setYear] = useState(""); const [month, setMonth] = useState(""); const [day, setDay] = useState("");
+  const [calendarType, setCalendarType] = useState<CalendarType>("solar");
   const [hour, setHour] = useState(""); const [minute, setMinute] = useState(""); const [hasTime, setHasTime] = useState(false);
   const [calculating, setCalculating] = useState(false);
   const [result, setResult] = useState<WealthResult | null>(null);
@@ -64,7 +66,7 @@ export default function WealthFlow() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           year: parseInt(year, 10), month: parseInt(month, 10), day: parseInt(day, 10),
-          hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0, hasTime,
+          hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0, hasTime, calendarType,
         }),
       });
       const data = await res.json();
@@ -100,7 +102,7 @@ export default function WealthFlow() {
         body: JSON.stringify({
           year: parseInt(year, 10), month: parseInt(month, 10), day: parseInt(day, 10),
           hour: hasTime ? parseInt(hour, 10) : 12, minute: hasTime ? parseInt(minute, 10) : 0,
-          hasTime, name,
+          hasTime, calendarType, name,
         }),
       });
       const data = await res.json();
@@ -136,6 +138,7 @@ export default function WealthFlow() {
           placeholder={t("你的名字（选填）", "Your name (optional)")}
           className="w-full rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-amber/60"
         />
+        <BirthDateGuidance value={calendarType} onChange={setCalendarType} className="mt-5 text-left" />
         <div className="mt-3 flex items-center justify-center gap-2">
           <input type="number" value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Y")} className="w-20 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />
           <input type="number" value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "M")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />
@@ -143,7 +146,7 @@ export default function WealthFlow() {
         </div>
         <label className="mt-3 flex items-center justify-center gap-2 text-xs text-bone-dim">
           <input type="checkbox" checked={hasTime} onChange={(e) => setHasTime(e.target.checked)} />
-          <Bi zh="知道具体出生时间（选填，能看得更准）" en="I know my exact birth time (optional, more precise)" />
+          <BirthTimeOptionalCopy />
         </label>
         {hasTime && (
           <div className="mt-2 flex items-center justify-center gap-2">

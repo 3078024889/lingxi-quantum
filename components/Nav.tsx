@@ -31,6 +31,7 @@ const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon
   { href: "/daily", zh: "今日潮汐", en: "Today’s Tide", rune: "mandala" },
   { href: "/mirror", zh: "灵犀量子生命镜像", en: "Lingxi Quantum Life Mirror", rune: "twin" },
   { href: "/qian", zh: "灵犀生命灵签", en: "Lingxi Life Oracle", rune: "crystal" },
+  { href: "/archetype", zh: "生命原型", en: "Life Archetype", rune: "twin" },
 ];
 
 export default function Nav() {
@@ -38,7 +39,7 @@ export default function Nav() {
   const [testsOpen, setTestsOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
-  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/mirror") || pathname?.startsWith("/qian");
+  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/mirror") || pathname?.startsWith("/qian") || pathname?.startsWith("/archetype");
 
   useEffect(() => {
     const header = headerRef.current;

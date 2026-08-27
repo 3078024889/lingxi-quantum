@@ -2,7 +2,7 @@ import Bi from "@/components/Bi";
 import { getFieldInsight } from "@/components/FieldInsightsSection";
 
 type Props = {
-  href: "/life-map" | "/relationship" | "/resilience" | "/romance" | "/wealth" | "/daily" | "/mirror" | "/qian";
+  href: "/life-map" | "/relationship" | "/resilience" | "/romance" | "/wealth" | "/daily" | "/mirror" | "/qian" | "/archetype";
 };
 
 export default function FieldProductIntroduction({ href }: Props) {
@@ -36,9 +36,14 @@ export default function FieldProductIntroduction({ href }: Props) {
           {item.timeZh && (
             <div className="mt-8 border-l border-lattice/45 bg-lattice/[.035] px-5 py-4 text-sm leading-7 text-bone-soft">
               <p className="font-display text-lattice">
-                <Bi zh="出生时间｜选填" en="Birth time · Optional" />
+                <Bi zh="出生日期" en="Birth date" />
               </p>
-              <p className="mt-1"><Bi zh={item.timeZh} en={item.timeEn || ""} /></p>
+              <p className="mt-1">
+                <Bi
+                  zh="请选择实际使用的历法：阳历（公历）或农历。两种历法并不相同，通常身份证日期为阳历，知晓是农历的选农历；海外用户一般直接选择阳历。若补充具体出生时刻，图谱可展开更细的时间层次与结构连接。"
+                  en="Choose the calendar actually used for this date: Gregorian (solar) or Chinese lunar. They are different calendar systems. Dates on identity documents are usually Gregorian; choose lunar only when you know the recorded date is lunar. Users outside China can generally choose Gregorian. Adding the specific birth time can reveal finer time layers and structural connections."
+                />
+              </p>
             </div>
           )}
 

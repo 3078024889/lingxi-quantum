@@ -17,6 +17,7 @@ const productPages = {
   "app/daily/page.tsx": "/daily",
   "app/mirror/page.tsx": "/mirror",
   "app/qian/page.tsx": "/qian",
+  "app/archetype/page.tsx": "/archetype",
 };
 
 for (const [file, href] of Object.entries(productPages)) {
@@ -56,7 +57,7 @@ if (!fs.existsSync(path.join(root, "public/images/entrance/lingxi-opening-deskto
 if (fs.existsSync(path.join(root, "public/images/entrance/lingxi-opening-desktop.mp4"))) fail("old 38-second desktop file still exists");
 
 if (!process.exitCode) {
-  console.log("PASS field insights: all eight product pages share the bilingual editorial source");
+  console.log("PASS field insights: all nine product pages share the bilingual editorial source");
   console.log("PASS naming: stale public product names are absent");
   console.log("PASS entrance film: desktop preserves the complete frame and only references the uniquely named 30-second asset");
 }

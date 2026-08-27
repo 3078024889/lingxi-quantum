@@ -676,13 +676,13 @@ export default function LifeMapFlow() {
                 <label className="block text-sm text-lm2-text-dim"><Bi zh="出生日期" en="Birth Date" /></label>
                 <p className="mt-1 text-xs leading-5 text-lm2-text-dim/80">
                   <Bi
-                    zh="中国身份证上的出生日期，有的写的是阳历（公历/西历，国际通用的那种），有的写的是农历（中国传统历法）——两者是完全不同的历法系统，同一串数字，按错了历法，算出来的命盘会整个错位。不确定的话，通常身份证上写的是阳历；海外用户，一般直接选阳历即可。"
-                    en="On Chinese ID cards, the birth date is sometimes Gregorian (Solar/Western calendar), sometimes Chinese Lunar — these are entirely different calendar systems, and picking the wrong one will throw off every calculation. If unsure, ID cards usually show the Gregorian date; users outside China should simply select Gregorian."
+                    zh="请选择实际使用的历法：阳历（公历）或农历。两种历法并不相同，通常身份证日期为阳历，知晓是农历的选农历；海外用户一般直接选择阳历。若补充具体出生时刻，图谱可展开更细的时间层次与结构连接。"
+                    en="Choose the calendar actually used for this date: Gregorian (solar) or Chinese lunar. They are different calendar systems. Dates on identity documents are usually Gregorian; choose lunar only when you know the recorded date is lunar. Users outside China can generally choose Gregorian. Adding the specific birth time can reveal finer time layers and structural connections."
                   />
                 </p>
                 <div className="mt-3 grid grid-cols-2 gap-3">
                   <button onClick={() => setCalendarType("solar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "solar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
-                    <Bi zh="阳历（公历/西历）" en="Gregorian (Solar / Western)" />
+                    <Bi zh="阳历（公历）" en="Gregorian (Solar)" />
                   </button>
                   <button onClick={() => setCalendarType("lunar")} className={`rounded-sm border px-4 py-3 text-sm transition ${calendarType === "lunar" ? "border-lm2-violet bg-lm2-violet/10 text-lm2-text" : "border-lm2-text/20 bg-lm2-bg/40 text-lm2-text-dim hover:border-lm2-violet/40"}`}>
                     <Bi zh="农历（中国传统历法）" en="Chinese Lunar Calendar" />
@@ -697,7 +697,7 @@ export default function LifeMapFlow() {
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="block text-sm text-lm2-text-dim"><Bi zh="出生时间" en="Birth Time" /></label>
+                  <label className="block text-sm text-lm2-text-dim"><Bi zh="具体出生时刻（选填）" en="Specific birth time (optional)" /></label>
                   <button onClick={() => setHasTime((v) => !v)} className="text-xs text-lm2-violet underline underline-offset-4">
                     {hasTime ? t("不知道也可以", "I don't know it") : t("我知道具体时间", "I know the exact time")}
                   </button>

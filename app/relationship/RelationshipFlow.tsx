@@ -7,6 +7,7 @@ import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import { getProduct } from "@/lib/plans";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import BirthDateGuidance, { BirthTimeOptionalCopy, type CalendarType } from "@/components/BirthDateGuidance";
 
 const RELATIONSHIP_FAQ: BilingualFaqItem[] = [
   {
@@ -33,8 +34,8 @@ const RELATIONSHIP_FAQ: BilingualFaqItem[] = [
 
 
 
-type Person = { name: string; year: string; month: string; day: string; hour: string; minute: string; hasTime: boolean };
-const emptyPerson: Person = { name: "", year: "", month: "", day: "", hour: "12", minute: "0", hasTime: false };
+type Person = { name: string; year: string; month: string; day: string; hour: string; minute: string; hasTime: boolean; calendarType: CalendarType };
+const emptyPerson: Person = { name: "", year: "", month: "", day: "", hour: "12", minute: "0", hasTime: false, calendarType: "solar" };
 
 // 之前这里的语言判断是"每次调用时，直接读一次 document.documentElement
 // 的class"——这在渲染的那一刻能读到对的值，但切换语言那个按钮，只是
@@ -74,7 +75,7 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
         placeholder={t("姓名（或称呼，必填）", "Name (or however you refer to them) *")}
         className="mt-4 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-sm text-bone outline-none focus:border-lattice/60"
       />
-      <p className="mt-3 text-xs text-bone-soft">{t("出生年月日（必填）", "Birth date (required)")}</p>
+      <BirthDateGuidance value={person.calendarType} onChange={(calendarType) => setPerson({ ...person, calendarType })} className="mt-4" />
       <div className="mt-1.5 grid grid-cols-3 gap-2">
         <input value={person.year} onChange={(e) => setPerson({ ...person, year: e.target.value })} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
         <input value={person.month} onChange={(e) => setPerson({ ...person, month: e.target.value })} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -82,7 +83,7 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
       </div>
       <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
         <input type="checkbox" checked={person.hasTime} onChange={(e) => setPerson({ ...person, hasTime: e.target.checked })} />
-        <Bi zh="知道具体出生时间（选填，能看得更细）" en="I know the exact birth time (optional, for a finer reading)" />
+        <BirthTimeOptionalCopy />
       </label>
       {person.hasTime && (
         <div className="mt-2 grid grid-cols-2 gap-2">
@@ -186,7 +187,7 @@ export default function RelationshipFlow() {
     const toBirth = (p: Person) => ({
       year: parseInt(p.year, 10), month: parseInt(p.month, 10), day: parseInt(p.day, 10),
       hour: p.hasTime ? parseInt(p.hour, 10) : 12, minute: p.hasTime ? parseInt(p.minute, 10) : 0,
-      hasTime: p.hasTime,
+      hasTime: p.hasTime, calendarType: p.calendarType,
     });
     try {
       const res = await fetch("/api/relationship/calc", {
@@ -229,7 +230,7 @@ export default function RelationshipFlow() {
       name: p.name.trim(),
       year: parseInt(p.year, 10), month: parseInt(p.month, 10), day: parseInt(p.day, 10),
       hour: p.hasTime ? parseInt(p.hour, 10) : 12, minute: p.hasTime ? parseInt(p.minute, 10) : 0,
-      hasTime: p.hasTime,
+      hasTime: p.hasTime, calendarType: p.calendarType,
     });
 
     try {

@@ -10,6 +10,7 @@ const REPORT_WEB_PATHS = {
   'romance-report': '/romance',
   'daily-tide-report': '/daily',
   'wealth-report': '/wealth',
+  'life-archetype': '/archetype',
 }
 
 function getReportWebPath(item) {

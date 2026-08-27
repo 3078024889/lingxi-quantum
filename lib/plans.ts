@@ -68,7 +68,11 @@ export const wealthProducts: Product[] = [
   { id: "wealth-report", name: "财富创造地图 · 完整档案", nameEn: "Wealth Creation Map · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的财富创造地图——五个创造维度、创造类型、价值流动路径，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Wealth Creation Map — your five creative dimensions, creation type, and value flow path — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts];
+export const lifeArchetypeProducts: Product[] = [
+  { id: "life-archetype", name: "生命原型", nameEn: "Life Archetype", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "汇合八个场域精测节点，展开此刻的主原型、隐藏原型与行动原型。", noteEn: "Converges eight Field Insight nodes into your current Main, Hidden, and Action archetypes.", group: "cultivation" },
+];
+
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }

@@ -19,6 +19,7 @@ export const MINI_WEB_ARCHIVE_PRODUCT_IDS = new Set([
   "romance-report",
   "daily-tide-report",
   "wealth-report",
+  "life-archetype",
 ]);
 
 export function isMiniWebArchiveProduct(productId: string): boolean {
