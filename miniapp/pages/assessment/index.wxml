@@ -1,11 +1,13 @@
-<view class="lx-page"><field-nav/><view class="lx-content assessment">
+<view class="lx-page"><field-nav show-back="{{true}}" title="场域精测"/><view class="lx-content assessment">
   <view wx:if="{{loading}}" class="lx-loading">正在连接树突场域…</view>
   <view wx:elif="{{error && !product}}" class="lx-empty lx-veil">{{error}}</view>
   <block wx:elif="{{product}}">
-    <view class="topline"><view class="lx-kicker">COPERNICAN DENDRITE FIELD</view><button class="lang" bindtap="toggleLang">{{lang === 'zh' ? 'EN' : '中'}}</button></view>
+    <view class="topline"><view class="lx-kicker">LINGXIFIELD DENDRITIC ASSESSMENT</view><button class="lang" bindtap="toggleLang">{{lang === 'zh' ? 'EN' : '中'}}</button></view>
     <view class="lx-title">{{lang === 'zh' ? product.nameZh : product.nameEn}}</view>
     <view class="lx-subtitle">{{lang === 'zh' ? product.leadZh : product.leadEn}}</view>
     <view class="engine lx-veil">{{lang === 'zh' ? engine.zh : engine.en}}</view>
+    <view class="source-line">{{lang === 'zh' ? product.sourceZh : product.sourceEn}}</view>
+    <view class="duration">{{engine.questionCount}} {{lang === 'zh' ? '个结构节点 · 约' : 'structural interactions · about'}} {{engine.estimatedMinutes}} {{lang === 'zh' ? '分钟' : 'min'}}</view>
 
     <view wx:if="{{!result}}" class="panel lx-veil">
       <view wx:if="{{product.productId === 'relationship-resonance'}}" class="identity-block">
@@ -15,6 +17,7 @@
       </view>
       <view class="progress"><view style="width: {{(questionIndex + 1) * 100 / product.questions.length}}%"></view></view>
       <view class="counter">{{questionIndex + 1}} / {{product.questions.length}}</view>
+      <view class="question-section">{{lang === 'zh' ? product.questions[questionIndex].sectionZh : product.questions[questionIndex].sectionEn}}</view>
       <view class="question">{{lang === 'zh' ? product.questions[questionIndex].zh : product.questions[questionIndex].en}}</view>
       <view class="options"><view wx:for="{{product.questions[questionIndex].options}}" wx:key="id" class="option {{selected === item.id ? 'selected' : ''}}" data-value="{{item.id}}" bindtap="choose"><view class="orb"></view><text>{{lang === 'zh' ? item.zh : item.en}}</text></view></view>
       <view class="actions"><button wx:if="{{questionIndex > 0}}" class="ghost" bindtap="previous">{{lang === 'zh' ? '返回' : 'Back'}}</button><button class="next" loading="{{submitting}}" disabled="{{submitting}}" bindtap="next">{{questionIndex + 1 === product.questions.length ? (lang === 'zh' ? '形成树突图谱' : 'Form dendrite map') : (lang === 'zh' ? '继续' : 'Continue')}}</button></view>
@@ -26,6 +29,8 @@
       <view class="result-title">{{lang === 'zh' ? result.titleZh : result.titleEn}}</view>
       <view class="nodes"><view wx:for="{{result.nodes}}" wx:key="id" class="node"><view class="node-label"><text>{{lang === 'zh' ? item.zh : item.en}}</text><text>{{item.score}}</text></view><view class="bar"><view style="width: {{item.score}}%"></view></view></view></view>
       <view class="insight">{{lang === 'zh' ? result.insightZh : result.insightEn}}</view>
+      <view class="chapters"><view wx:for="{{result.chapters}}" wx:key="id" class="chapter"><view class="chapter-title">{{lang === 'zh' ? item.titleZh : item.titleEn}}</view><view class="chapter-body">{{lang === 'zh' ? item.bodyZh : item.bodyEn}}</view></view></view>
+      <view class="evidence">{{lang === 'zh' ? '本次读取' : 'This reading'}} · {{result.evidence.answered}} / {{result.evidence.total}}<text wx:if="{{result.evidence.historyProducts > 0}}"> · {{lang === 'zh' ? '已连接历史场域' : 'history fields linked'}} {{result.evidence.historyProducts}}</text></view>
       <view wx:if="{{result.cardRolesZh}}" class="archetype-roles"><text wx:for="{{lang === 'zh' ? result.cardRolesZh : result.cardRolesEn}}" wx:key="*this">{{item}}</text></view>
       <button class="lx-button" loading="{{paying}}" disabled="{{paying}}" bindtap="pay">{{lang === 'zh' ? '开启完整场域档案' : 'Open Full Field Archive'}} · ¥{{item.priceFen / 100}}</button>
       <view class="share-actions"><button open-type="share">{{lang === 'zh' ? '转发分享' : 'Share'}}</button><button bindtap="copyWebLink">{{lang === 'zh' ? '复制官网链接' : 'Copy web link'}}</button><button bindtap="restart">{{lang === 'zh' ? '重新观测' : 'Restart'}}</button></view>

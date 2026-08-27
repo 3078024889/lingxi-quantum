@@ -544,7 +544,7 @@ create table if not exists public.mini_dendrite_assessments (
   product_id text not null check (product_id in ('life-map-report','relationship-resonance','resilience-report','romance-report','wealth-report','daily-tide-report','tarot-reading','qian-reading','life-archetype')),
   input jsonb not null,
   result jsonb not null,
-  algorithm_version text not null default 'copernican-dendrite-v1',
+  algorithm_version text not null default 'lingxifield-dendritic-v2',
   created_at timestamptz not null default now()
 );
 create index if not exists mini_dendrite_assessments_user_created_idx on public.mini_dendrite_assessments (user_id, created_at desc);

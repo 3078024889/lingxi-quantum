@@ -75,7 +75,7 @@ function PersonForm({ person, setPerson, label }: { person: Person; setPerson: (
         placeholder={t("姓名（或称呼，必填）", "Name (or however you refer to them) *")}
         className="mt-4 w-full rounded-sm border border-white/15 bg-void px-4 py-3 text-sm text-bone outline-none focus:border-lattice/60"
       />
-      <BirthDateGuidance value={person.calendarType} onChange={(calendarType) => setPerson({ ...person, calendarType })} className="mt-4" />
+      <BirthDateGuidance value={person.calendarType} onChange={(calendarType) => setPerson({ ...person, calendarType })} context="relationship" showDescription={false} className="mt-4" />
       <div className="mt-1.5 grid grid-cols-3 gap-2">
         <input value={person.year} onChange={(e) => setPerson({ ...person, year: e.target.value })} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
         <input value={person.month} onChange={(e) => setPerson({ ...person, month: e.target.value })} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -324,7 +324,14 @@ export default function RelationshipFlow() {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="lx-glass-relation mt-6 border-l border-lattice/45 px-5 py-4 text-xs leading-6 text-bone-dim">
+        <Bi
+          zh="出生日期：请选择实际使用的历法——阳历（公历）或农历。两种历法并不相同，通常身份证日期为阳历，知晓是农历的选农历；海外用户一般直接选择阳历。若补充双方具体出生时刻，关系共振可展开更细的时间位置层次与互动结构连接。"
+          en="Birth dates: choose the calendar actually used—Gregorian (solar) or Chinese lunar. They are different calendar systems. Dates on identity documents are usually Gregorian; choose lunar only when known. Users outside China can generally choose Gregorian. Adding both specific birth times can reveal finer timing layers and interaction structures within Relationship Resonance."
+        />
+      </div>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <PersonForm person={a} setPerson={setA} label={t("第一个人", "Person A")} />
         <PersonForm person={b} setPerson={setB} label={t("第二个人", "Person B")} />
       </div>

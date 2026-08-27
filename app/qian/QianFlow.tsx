@@ -145,7 +145,7 @@ export default function QianFlow() {
             placeholder={t("怎么称呼你", "What should we call you")}
             className="mt-2 w-full rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60"
           />
-          <BirthDateGuidance value={calendarType} onChange={setCalendarType} className="mt-4" />
+          <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="qian" className="mt-4" />
           <div className="mt-2 grid grid-cols-3 gap-2">
             <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
             <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />

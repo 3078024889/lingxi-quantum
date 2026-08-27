@@ -138,7 +138,7 @@ export default function WealthFlow() {
           placeholder={t("你的名字（选填）", "Your name (optional)")}
           className="w-full rounded-sm border border-white/15 bg-transparent px-3 py-2 text-center text-sm text-bone outline-none focus:border-amber/60"
         />
-        <BirthDateGuidance value={calendarType} onChange={setCalendarType} className="mt-5 text-left" />
+        <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="wealth" className="mt-5 text-left" />
         <div className="mt-3 flex items-center justify-center gap-2">
           <input type="number" value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Y")} className="w-20 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />
           <input type="number" value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "M")} className="w-16 rounded-sm border border-white/15 bg-transparent px-2 py-2 text-center text-sm text-bone outline-none focus:border-amber/60" />

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireMiniSession } from "@/lib/mini/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { archetypeCardIndexesFor, calculateDendrite, getDendriteProduct } from "@/lib/mini/dendrite-engine";
+import { calculateDendrite, finalizeDendriteResult, getDendriteProduct } from "@/lib/mini/dendrite-engine";
 
 export const runtime = "nodejs";
 
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     // The ninth product is a meta-reading. Existing Mini Program assessment
     // history contributes a bounded signal without allowing one old result to
-    // overpower the user's current five responses.
+    // overpower the user's current four intuitive responses.
     if (productId === "life-archetype") {
       const { data: history } = await admin.from("mini_dendrite_assessments")
         .select("product_id, result")
@@ -47,11 +47,7 @@ export async function POST(req: Request) {
         const topScore = Number((row.result as { dominant?: Array<{ score?: number }> })?.dominant?.[0]?.score ?? 0);
         result.nodes = result.nodes.map((node) => node.id === nodeId ? { ...node, score: Math.min(100, node.score + Math.round(topScore * 0.08)) } : node);
       }
-      result.nodes.sort((a, b) => b.score - a.score);
-      result.dominant = result.nodes.slice(0, 3);
-      result.titleZh = result.dominant.map((node) => node.zh).join(" × ");
-      result.titleEn = result.dominant.map((node) => node.en).join(" × ");
-      result.archetypeCardIndexes = archetypeCardIndexesFor(result.dominant);
+      result = finalizeDendriteResult(product, result.nodes, result.edges, latestProducts.size);
     }
 
     const input = {

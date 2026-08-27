@@ -8,9 +8,14 @@ export async function GET(req: Request) {
   return NextResponse.json({
     product,
     engine: {
-      id: "copernican-dendrite-v1",
-      zh: "小程序使用灵犀哥白尼树突算法：你的每次选择会激活知识节点，节点之间通过联锁传播形成当前结构；它不读取星盘，也不预测事件。",
-      en: "The Mini Program uses Lingxi’s Copernican Dendrite Engine: each response activates knowledge nodes, whose linked propagation forms a current structure. It does not read an astronomical chart or predict events.",
+      id: "lingxifield-dendritic-v2",
+      questionCount: product.questions.length,
+      estimatedMinutes: Math.max(2, Math.ceil(product.questions.length * 0.28)),
+      zh: "小程序使用灵犀场树突知识网络：真实选择会激活产品专属节点，并经联锁传播、结构抑制与跨节点校准形成当前结构；它不读取星盘，也不预测事件。",
+      en: "The Mini Program uses the Lingxifield Dendritic Knowledge Network: lived choices activate product-specific nodes that undergo linked propagation, structural inhibition and cross-node calibration. It does not read an astronomical chart or predict events.",
     },
-  }, { headers: { "Cache-Control": "public, max-age=300, stale-while-revalidate=3600" } });
+  // Assessment configuration changes with each release. Never let the Mini
+  // Program receive an older question bank from a CDN/browser cache after a
+  // deployment (V314's five-question bank was otherwise allowed to linger).
+  }, { headers: { "Cache-Control": "no-store, max-age=0", "CDN-Cache-Control": "no-store" } });
 }

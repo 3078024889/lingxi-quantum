@@ -1,1 +1,4 @@
-.pulse { width: 12rpx; height: 12rpx; border-radius: 50%; background: #80e5d7; box-shadow: 0 0 24rpx #80e5d7; }
+.lx-nav{position:relative;z-index:8;box-sizing:border-box;min-height:132rpx;padding:calc(env(safe-area-inset-top) + 30rpx) 30rpx 22rpx;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(7,16,43,.5),transparent)}
+.nav-left{display:flex;align-items:center;gap:18rpx;min-width:0}.lx-brand{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:Georgia,"Noto Serif SC",serif;font-size:27rpx;letter-spacing:8rpx;color:#f3e8ca}
+.back{box-sizing:border-box;width:58rpx;height:58rpx;margin:0;padding:0;border:1rpx solid rgba(131,224,215,.38);border-radius:50%;background:rgba(8,24,51,.32);color:#c8fff8;font-family:Georgia,serif;font-size:48rpx;font-weight:300;line-height:50rpx}.back::after{border:0}
+.pulse{width:12rpx;height:12rpx;border-radius:50%;background:#80e5d7;box-shadow:0 0 24rpx #80e5d7}

@@ -17,6 +17,8 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     titleZh: string; titleEn: string; insightZh: string; insightEn: string;
     nodes: Array<{ id: string; zh: string; en: string; score: number }>;
     dominant: Array<{ id: string; zh: string; en: string; score: number }>;
+    chapters?: Array<{ id: string; titleZh: string; titleEn: string; bodyZh: string; bodyEn: string }>;
+    evidence?: { answered: number; total: number; historyProducts: number; sourceZh: string; sourceEn: string };
     archetypeCardIndexes?: number[]; cardRolesZh?: string[]; cardRolesEn?: string[];
   };
   const cards = (result.archetypeCardIndexes ?? []).map((index) => LIFE_SIGNS[index]).filter(Boolean).map((card) => ({

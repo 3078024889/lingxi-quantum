@@ -61,7 +61,10 @@ check("all nine report entries retain public web reference routes", reportWebPat
 check("report discovery opens the native dendrite assessment", /pages\/assessment\/index/.test(exploreClient) && !/pages\/web\/index/.test(exploreClient));
 check("report discovery does not restore the removed preliminary archive funnel", !/初读档案|生成我的初读档案/.test(exploreView));
 check("native assessment is registered without the removed preliminary archive copy", app.pages.includes("pages/assessment/index") && !/YOUR FIRST REFLECTION|初读档案|免费预览/.test(`${assessmentView}\n${assessmentClient}`));
-check("dendrite engine is deterministic and contains all nine products", /copernican-dendrite-v1/.test(dendriteEngine) && /life-archetype/.test(dendriteEngine) && /calculateDendrite/.test(dendriteEngine));
+check("dendrite engine v2 is deterministic and contains all nine products", /lingxifield-dendritic-v2/.test(dendriteEngine) && /life-archetype/.test(dendriteEngine) && /calculateDendrite/.test(dendriteEngine));
+check("product-specific question banks replace the five-question template", ["lifePrompts","relationshipPrompts","resiliencePrompts","romancePrompts","wealthPrompts","tidePrompts","mirrorPrompts","qianPrompts","archetypePrompts"].every((name) => dendriteEngine.includes(name)) && !/makeQuestions\(seed/.test(dendriteEngine));
+check("dendritic result contains evidence and publication chapters", /chapters:/.test(dendriteEngine) && /evidence:/.test(dendriteEngine) && /Linked Reinforcement/.test(dendriteEngine) && /Reality Observation/.test(dendriteEngine));
+check("assessment exposes a native page back control", /show-back="\{\{true\}\}"/.test(assessmentView));
 check("native assessment supports forwarding and copying the web reference link", /onShareAppMessage/.test(assessmentClient) && /onShareTimeline/.test(assessmentClient) && /setClipboardData/.test(assessmentClient));
 check("dendrite archives are owner-readable, server-writable, and included in account migration", /enable row level security/.test(dendriteSql) && /revoke insert, update, delete/.test(dendriteSql) && /auth\.uid\(\) = user_id/.test(dendriteSql) && /update public\.mini_dendrite_assessments set user_id/.test(dendriteSql));
 check("iPhone sandbox payment is stopped before WeChat returns a platform error", /result\.sandbox && platform === 'ios'/.test(virtualPay));

@@ -1,1 +1,7 @@
-<view class="lx-nav"><view class="lx-brand">灵犀场</view><view class="pulse"></view></view>
+<view class="lx-nav">
+  <view class="nav-left">
+    <button wx:if="{{showBack}}" class="back" bindtap="back" aria-label="返回">‹</button>
+    <view class="lx-brand">{{title}}</view>
+  </view>
+  <view class="pulse"></view>
+</view>

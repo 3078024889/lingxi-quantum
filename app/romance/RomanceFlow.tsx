@@ -390,7 +390,7 @@ export default function RomanceFlow() {
   return (
     <div className="mx-auto max-w-md px-6 py-16">
       <div className="lx-glass-romance p-6">
-        <BirthDateGuidance value={calendarType} onChange={setCalendarType} />
+        <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="romance" />
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
           <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
