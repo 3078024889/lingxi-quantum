@@ -1,0 +1,16 @@
+export const FIELD_STRUCTURE_LINKS = [
+  { href: "/live-as", zh: "意识显化", en: "Manifestation", x: 50, y: 48 },
+  { href: "/dream", zh: "梦境探索", en: "Dream Exploration", x: 24, y: 23 },
+  { href: "/practice", zh: "修炼技术", en: "Cultivation", x: 20, y: 74 },
+  { href: "/#gates", zh: "潜意识重塑", en: "Subconscious", x: 78, y: 22 },
+  { href: "/narrative", zh: "多维叙事", en: "Narratives", x: 80, y: 73 },
+  { href: "/life-map", zh: "生命图谱", en: "Life Blueprint", x: 41, y: 23 },
+  { href: "/relationship", zh: "关系共振", en: "Relationship", x: 31, y: 35 },
+  { href: "/resilience", zh: "生命韧性", en: "Resilience", x: 29, y: 54 },
+  { href: "/romance", zh: "桃花磁场", en: "Romance", x: 39, y: 66 },
+  { href: "/wealth", zh: "财富创造", en: "Wealth", x: 61, y: 66 },
+  { href: "/daily", zh: "今日潮汐", en: "Today's Tide", x: 70, y: 53 },
+  { href: "/mirror", zh: "生命镜像", en: "Life Mirror", x: 70, y: 36 },
+  { href: "/qian", zh: "生命灵签", en: "Life Oracle", x: 60, y: 23 },
+  { href: "/archetype", zh: "生命原型", en: "Life Archetype", x: 50, y: 35 },
+] as const;

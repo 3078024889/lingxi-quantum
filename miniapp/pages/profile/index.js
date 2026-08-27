@@ -21,18 +21,24 @@ function confirmOpenWebArchive() {
 }
 
 Page({
-  data: { loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null },
+  data: { loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null, archetype: null },
   onShow() { this.load() },
   async load() {
     this.setData({ loading: true })
     try {
       const me = await request('/api/wechat/mini/me')
-      const orderedIds = new Set((me.orders || []).map((item) => item.product_id))
-      const orders = (me.orders || []).map((item) => ({ ...item, paidLabel: displayDate(item.paid_at) }))
+      const allArchives = [...(me.archives || []), ...(me.orders || [])]
+      const seen = new Set()
+      const orders = allArchives.filter((item) => {
+        const key = `${item.product_id}:${item.submission_id || item.id}`
+        if (seen.has(key)) return false
+        seen.add(key); return true
+      }).map((item) => ({ ...item, paidLabel: displayDate(item.paid_at || item.created_at) }))
+      const orderedIds = new Set(orders.map((item) => item.product_id))
       const unlocks = (me.unlocks || [])
         .filter((item) => !orderedIds.has(item.product_id))
         .map((item) => ({ ...item, expiryLabel: item.expires_at ? `有效至 ${displayDate(item.expires_at)}` : '长期有效' }))
-      this.setData({ orders, unlocks, manifestUntil: me.manifestUntil, query: '' })
+      this.setData({ orders, unlocks, manifestUntil: me.manifestUntil, archetype: me.archetype, query: '' })
       this.applyFilter('')
     } catch (_) {
       wx.showToast({ title: '登录状态未就绪', icon: 'none' })
@@ -72,7 +78,9 @@ Page({
     this.setData({ opening: order.id })
     try {
       if (order.webOnly && !(await confirmOpenWebArchive())) return
-      const result = order.submission_id
+      const result = order.assessment
+        ? await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: order.product_id, submissionId: order.submission_id } })
+        : order.submission_id
         ? await request('/api/wechat/mini/report-link', { method: 'POST', data: { orderId: order.id } })
         : await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: order.product_id } })
       wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })

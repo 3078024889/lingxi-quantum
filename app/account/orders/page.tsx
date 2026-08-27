@@ -5,6 +5,7 @@ import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
 import OrderActions from "../OrderActions";
+import { hasUnlock } from "@/lib/access";
 
 export const metadata = {
   title: "场域订单 | 灵犀场 Lingxi Field",
@@ -22,6 +23,7 @@ type OrderRow = {
   submission_name: string | null;
   created_at: string;
   paid_at: string | null;
+  archive_only?: boolean;
 };
 
 // v265：场域订单中心按你要的结构重做——不再是一条时间线糊到底的
@@ -33,6 +35,7 @@ type OrderRow = {
 const FIELD_TEST_IDS = [
   "life-map-report", "relationship-resonance", "qian-reading", "tarot-reading",
   "resilience-report", "romance-report", "daily-tide-report", "wealth-report",
+  "life-archetype",
 ];
 const MEMBERSHIP_IDS = [
   "breath", "intuition", "heart-reset", "ascending-heart",
@@ -106,6 +109,7 @@ const REPORT_BASE: Record<string, string> = {
 };
 
 function resolveDestination(order: OrderRow): { href: string; labelZh: string; labelEn: string } | null {
+  if (order.archive_only && order.submission_id) return { href: `/mini-report?id=${order.submission_id}`, labelZh: "查看完整档案 / 下载PDF", labelEn: "View Full Archive / Download PDF" };
   if (REPORT_BASE[order.product_id]) {
     if (order.submission_id) {
       return { href: `${REPORT_BASE[order.product_id]}?id=${order.submission_id}`, labelZh: "查看报告 / 下载PDF", labelEn: "View Report / Download PDF" };
@@ -133,7 +137,7 @@ function OrderCard({ o }: { o: OrderRow }) {
   const dest = resolveDestination(o);
   const isPaid = o.status === "paid";
   const amount = o.amount_rmb ?? (o.amount_usd ? `$${o.amount_usd}` : "—");
-  const amountDisplay = o.amount_rmb ? `¥${o.amount_rmb}` : amount;
+  const amountDisplay = o.archive_only ? "已归档" : o.amount_rmb ? `¥${o.amount_rmb}` : amount;
 
   // 有效期——只有已支付、且是有到期时间的订阅制产品才需要算。
   let expiryLabel: string | null = null;
@@ -152,7 +156,7 @@ function OrderCard({ o }: { o: OrderRow }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] uppercase tracking-widest2 text-bone-mute">
-            <Bi zh="场域订单号" en="Field Order No." /> {o.id}
+            <Bi zh={o.archive_only ? "场域档案号" : "场域订单号"} en={o.archive_only ? "Field Archive No." : "Field Order No."} /> {o.id}
           </p>
           {dest ? (
             <Link href={dest.href} className="mt-1 block font-display text-lg text-lattice hover:text-amber">
@@ -200,7 +204,7 @@ function OrderCard({ o }: { o: OrderRow }) {
         <div className="shrink-0 text-right">
           <p className="font-display text-xl text-bone">{amountDisplay}</p>
           <p className={`mt-2 inline-block rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-widest2 ${isPaid ? "border border-lattice/40 text-lattice" : "border border-amber/40 text-amber"}`}>
-            {isPaid ? <Bi zh="已支付" en="Paid" /> : <Bi zh="待支付" en="Pending" />}
+            {o.archive_only ? <Bi zh="已保存" en="Archived" /> : isPaid ? <Bi zh="已支付" en="Paid" /> : <Bi zh="待支付" en="Pending" />}
           </p>
         </div>
       </div>
@@ -275,13 +279,20 @@ export default async function FieldOrdersPage() {
 
   let orders: OrderRow[] = [];
   if (user) {
-    const { data } = await supabase
-      .from("orders")
-      .select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(100);
-    orders = (data as OrderRow[]) ?? [];
+    const [{ data }, { data: miniArchives }, { data: unlockRows }, { data: profile }] = await Promise.all([
+      supabase.from("orders").select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
+      supabase.from("mini_dendrite_assessments").select("id, product_id, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
+      supabase.from("unlocks").select("product_id, expires_at").eq("user_id", user.id),
+      supabase.from("profiles").select("manifest_until").eq("id", user.id).maybeSingle(),
+    ]);
+    const now = Date.now();
+    const activeUnlocks = (unlockRows ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > now).map((row) => row.product_id);
+    const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
+    const visibleArchives = (miniArchives ?? []).filter((row) => row.product_id === "life-archetype" || manifestActive || hasUnlock(activeUnlocks, row.product_id));
+    orders = [
+      ...((data as OrderRow[]) ?? []),
+      ...(visibleArchives.map((row) => ({ id: `A-${row.id}`, product_id: row.product_id, product_type: "field-archive", amount_rmb: null, amount_usd: 0, status: "paid", submission_id: row.id, submission_name: "小程序树突场域档案", created_at: row.created_at, paid_at: row.created_at, archive_only: true })) as OrderRow[]),
+    ].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
     orders = await backfillSubmissionIds(supabase, user.id, orders);
   }
 

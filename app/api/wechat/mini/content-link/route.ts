@@ -23,10 +23,12 @@ export async function POST(req: Request) {
 
   const admin = createAdminClient();
   const submissionId = typeof body.submissionId === "string" ? body.submissionId : null;
+  let derivedArchetypeAccess = false;
   if (submissionId) {
     const { data: assessment } = await admin.from("mini_dendrite_assessments").select("id, product_id")
       .eq("id", submissionId).eq("user_id", session.userId).eq("product_id", body.productId).maybeSingle();
     if (!assessment) return NextResponse.json({ error: "这份场域记录不存在或不属于当前账户" }, { status: 404 });
+    derivedArchetypeAccess = body.productId === "life-archetype";
   }
   const [{ data: unlocks }, { data: profile }] = await Promise.all([
     admin.from("unlocks").select("product_id, expires_at").eq("user_id", session.userId),
@@ -37,7 +39,7 @@ export async function POST(req: Request) {
     .filter((item) => !item.expires_at || Date.parse(item.expires_at) > now)
     .map((item) => item.product_id);
   const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
-  if (!manifestActive && !hasUnlock(activeUnlocks, body.productId)) {
+  if (!derivedArchetypeAccess && !manifestActive && !hasUnlock(activeUnlocks, body.productId)) {
     return NextResponse.json({ error: "这项权益尚未开启或已到期" }, { status: 403 });
   }
 

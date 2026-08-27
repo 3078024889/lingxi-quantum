@@ -3,6 +3,7 @@ import { getDendriteProduct } from "@/lib/mini/dendrite-engine";
 
 export async function GET(req: Request) {
   const productId = new URL(req.url).searchParams.get("productId") ?? "";
+  if (productId === "life-archetype") return NextResponse.json({ error: "生命原型由一年内八个已开启场域自动生成，不是第九份测评" }, { status: 409 });
   const product = getDendriteProduct(productId);
   if (!product) return NextResponse.json({ error: "这项树突精测暂未开放" }, { status: 404 });
   return NextResponse.json({

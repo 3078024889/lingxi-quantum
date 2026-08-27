@@ -40,7 +40,8 @@ export async function GET(req: Request) {
       .map((item) => item.product_id);
     const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
     const email = userResult.data.user?.email;
-    if ((!manifestActive && !hasUnlock(activeUnlocks, ticket.productId)) || !email || (ticket.submissionId && !assessmentResult.data)) {
+    const derivedArchetypeAccess = ticket.productId === "life-archetype" && !!ticket.submissionId && !!assessmentResult.data;
+    if ((!derivedArchetypeAccess && !manifestActive && !hasUnlock(activeUnlocks, ticket.productId)) || !email || (ticket.submissionId && !assessmentResult.data)) {
       return fail(req, "内容权益尚未同步");
     }
 

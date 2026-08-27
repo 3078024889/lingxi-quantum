@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { requireMiniSession } from "@/lib/mini/session";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { calculateDendrite, finalizeDendriteResult, getDendriteProduct } from "@/lib/mini/dendrite-engine";
+import { calculateDendrite, getDendriteProduct } from "@/lib/mini/dendrite-engine";
+import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
 
 export const runtime = "nodejs";
 
@@ -16,39 +17,13 @@ export async function POST(req: Request) {
     const body = await req.json() as { productId?: unknown; responses?: unknown; name?: unknown; partnerName?: unknown; relationshipType?: unknown };
     const productId = typeof body.productId === "string" ? body.productId : "";
     const product = getDendriteProduct(productId);
+    if (productId === "life-archetype") return NextResponse.json({ error: "生命原型不是单独测评；一年内八个基础场域全部开启后由系统自动生成" }, { status: 409 });
     if (!product || !body.responses || typeof body.responses !== "object" || Array.isArray(body.responses)) {
       return NextResponse.json({ error: "精测资料不完整" }, { status: 400 });
     }
     const responses = body.responses as Record<string, string>;
     let result = calculateDendrite(product, responses);
     const admin = createAdminClient();
-
-    // The ninth product is a meta-reading. Existing Mini Program assessment
-    // history contributes a bounded signal without allowing one old result to
-    // overpower the user's current four intuitive responses.
-    if (productId === "life-archetype") {
-      const { data: history } = await admin.from("mini_dendrite_assessments")
-        .select("product_id, result")
-        .eq("user_id", session.userId)
-        .neq("product_id", "life-archetype")
-        .order("created_at", { ascending: false })
-        .limit(32);
-      const latestProducts = new Set<string>();
-      const boostByProduct: Record<string, string> = {
-        "life-map-report":"blueprint", "relationship-resonance":"resonance", "resilience-report":"resilience",
-        "romance-report":"romance", "wealth-report":"wealth", "daily-tide-report":"tide",
-        "tarot-reading":"mirror", "qian-reading":"oracle",
-      };
-      for (const row of history ?? []) {
-        if (latestProducts.has(row.product_id)) continue;
-        latestProducts.add(row.product_id);
-        const nodeId = boostByProduct[row.product_id];
-        if (!nodeId) continue;
-        const topScore = Number((row.result as { dominant?: Array<{ score?: number }> })?.dominant?.[0]?.score ?? 0);
-        result.nodes = result.nodes.map((node) => node.id === nodeId ? { ...node, score: Math.min(100, node.score + Math.round(topScore * 0.08)) } : node);
-      }
-      result = finalizeDendriteResult(product, result.nodes, result.edges, latestProducts.size);
-    }
 
     const input = {
       responses,
@@ -65,7 +40,8 @@ export async function POST(req: Request) {
       .eq("user_id", session.userId).in("product_id", [productId, "everything"]);
     const now = Date.now();
     const unlocked = (unlockRows ?? []).some((row) => !row.expires_at || Date.parse(row.expires_at) > now);
-    return NextResponse.json({ submissionId: data.id, result, unlocked });
+    const archetype = await ensureLifeArchetype(session.userId).catch(() => null);
+    return NextResponse.json({ submissionId: data.id, result, unlocked, archetype });
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknown";
     if (message.startsWith("missing response")) return NextResponse.json({ error: "请完成全部节点选择" }, { status: 400 });

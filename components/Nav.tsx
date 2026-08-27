@@ -7,6 +7,7 @@ import Bi from "./Bi";
 import LangToggle from "./LangToggle";
 import SearchBox from "./SearchBox";
 import RuneIcon, { RuneKind } from "./RuneIcon";
+import { FIELD_STRUCTURE_LINKS } from "@/lib/field-structure-links";
 
 const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
   { href: "/live-as", zh: "意识显化", en: "Manifestation", rune: "eye" },
@@ -157,28 +158,12 @@ export default function Nav() {
                     )}
                   </button>
                   {testsOpen && (
-                    <div className="bg-void-deep absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-sm border border-white/10 p-2 shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
-                      {preciseTests.map((item) =>
-                        item.soon ? (
-                          <div key={item.zh} className="flex cursor-not-allowed items-center justify-between gap-2 rounded-sm px-3 py-2.5 text-bone-soft">
-                            <span className="flex items-center gap-2">
-                              <RuneIcon kind={item.rune} className="h-3.5 w-3.5" />
-                              <Bi zh={item.zh} en={item.en} />
-                            </span>
-                            <span className="text-[11px] uppercase tracking-widest2"><Bi zh="即将上线" en="Soon" /></span>
-                          </div>
-                        ) : (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setTestsOpen(false)}
-                            className="flex items-center gap-2 rounded-sm px-3 py-2.5 text-bone transition hover:bg-white/5 hover:text-lattice"
-                          >
-                            <RuneIcon kind={item.rune} className="h-3.5 w-3.5" />
-                            <Bi zh={item.zh} en={item.en} />
-                          </Link>
-                        )
-                      )}
+                    <div className="bg-void-deep absolute left-1/2 top-full z-50 mt-2 w-[min(760px,84vw)] -translate-x-1/2 overflow-hidden rounded-sm border border-white/10 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.58)]">
+                      <div className="relative aspect-[16/9] overflow-hidden bg-[#030923]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/9d-field-navigation-v317.png" alt="灵犀场可交互产品结构导航" className="h-full w-full object-cover" />
+                        {FIELD_STRUCTURE_LINKS.map((item) => <Link key={item.href} href={item.href} title={`${item.zh} · ${item.en}`} aria-label={`${item.zh} · ${item.en}`} onClick={() => setTestsOpen(false)} className="absolute aspect-square w-[8.5%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-lattice/10 bg-lattice/[.03] transition hover:border-lattice/70 hover:bg-lattice/20 hover:shadow-[0_0_24px_rgba(137,237,226,.55)] focus-visible:border-lattice" style={{ left: `${item.x}%`, top: `${item.y}%` }} />)}
+                      </div>
+                      <p className="px-3 py-2 text-center text-[10px] tracking-[.2em] text-lattice"><Bi zh="点击场域节点进入 · 9D 场域结构导航" en="Select a field node · 9D Field Structure Navigation" /></p>
                     </div>
                   )}
                 </div>
