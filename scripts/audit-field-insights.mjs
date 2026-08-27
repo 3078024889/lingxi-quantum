@@ -46,10 +46,15 @@ for (const stale of ["今日运势潮汐", "Daily Fortune Tide", "亲密关系�
 
 const opening = read("components/OpeningAtrium.tsx");
 if (!opening.includes('isDesktop ? "object-contain" : "object-cover"')) fail("desktop entrance video can be cropped again");
-if (!opening.includes('ASSET_VERSION = "20260826-v310"')) fail("entrance asset cache key was not advanced");
+if (!opening.includes('ASSET_VERSION = "20260827-v312"')) fail("entrance asset cache key was not advanced");
+if (!opening.includes("/images/entrance/lingxi-opening-desktop-v310.mp4")) fail("desktop entrance does not reference the new 30-second file");
+if (opening.includes("/images/entrance/lingxi-opening-desktop.mp4")) fail("desktop entrance still references the cached 38-second URL");
+if (opening.includes("/images/entrance/lingxi-opening-poster-desktop.jpg")) fail("desktop entrance still references the deleted old poster");
+if (!fs.existsSync(path.join(root, "public/images/entrance/lingxi-opening-desktop-v310.mp4"))) fail("new 30-second desktop file is missing");
+if (fs.existsSync(path.join(root, "public/images/entrance/lingxi-opening-desktop.mp4"))) fail("old 38-second desktop file still exists");
 
 if (!process.exitCode) {
   console.log("PASS field insights: all eight product pages share the bilingual editorial source");
   console.log("PASS naming: stale public product names are absent");
-  console.log("PASS entrance film: desktop preserves the complete frame and uses the v310 cache key");
+  console.log("PASS entrance film: desktop preserves the complete frame and only references the uniquely named 30-second asset");
 }

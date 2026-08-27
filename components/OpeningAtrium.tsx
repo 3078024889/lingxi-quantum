@@ -20,9 +20,10 @@ import { useEffect, useRef, useState } from "react";
 // character art on either side). It's a single full-screen video now on
 // every breakpoint, same as mobile always was.
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
-const ASSET_VERSION = "20260826-v310";
-const DESKTOP_POSTER = `/images/entrance/lingxi-opening-poster-desktop.jpg?v=${ASSET_VERSION}`;
-const DESKTOP_VIDEO_MP4 = `/images/entrance/lingxi-opening-desktop.mp4?v=${ASSET_VERSION}`;
+const ASSET_VERSION = "20260827-v312";
+// The desktop file name is intentionally versioned. Reusing the former URL
+// allowed the CDN/browser cache to keep serving the removed 38-second film.
+const DESKTOP_VIDEO_MP4 = `/images/entrance/lingxi-opening-desktop-v310.mp4?v=${ASSET_VERSION}`;
 const MOBILE_POSTER = `/images/entrance/lingxi-opening-poster-mobile.jpg?v=${ASSET_VERSION}`;
 const MOBILE_VIDEO_MP4 = `/images/entrance/lingxi-opening-mobile.mp4?v=${ASSET_VERSION}`;
 
@@ -38,7 +39,9 @@ export default function OpeningAtrium() {
   const [isDesktop, setIsDesktop] = useState(
     () => typeof window !== "undefined" && window.matchMedia(DESKTOP_BREAKPOINT).matches
   );
-  const POSTER = isDesktop ? DESKTOP_POSTER : MOBILE_POSTER;
+  // Do not reuse the deleted desktop poster: it contains imagery from the old
+  // film and can remain visible while the new asset is loading.
+  const POSTER = isDesktop ? undefined : MOBILE_POSTER;
   const VIDEO_SRC = isDesktop ? DESKTOP_VIDEO_MP4 : MOBILE_VIDEO_MP4;
 
   useEffect(() => {
@@ -124,7 +127,10 @@ export default function OpeningAtrium() {
             onError={() => setVideoAvailable(false)}
           />
         ) : (
-          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${POSTER})` }} />
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={POSTER ? { backgroundImage: `url(${POSTER})` } : undefined}
+          />
         )}
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#030214]/45 via-transparent to-[#030214]/70" />
