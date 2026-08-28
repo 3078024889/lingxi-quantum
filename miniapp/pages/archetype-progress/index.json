@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "生命原型 · 八流归一",
+  "usingComponents": {
+    "field-nav": "/components/field-nav/index"
+  }
+}

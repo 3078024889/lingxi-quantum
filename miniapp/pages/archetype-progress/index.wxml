@@ -1,0 +1,27 @@
+<view class="lx-page"><field-nav/><view class="lx-content archetype-page">
+  <view class="lx-kicker">FIELD 09 · CONVERGENCE</view>
+  <view class="lx-title">生命原型 · 八流归一</view>
+  <view class="lx-subtitle">Life Archetype · Eight Streams as One</view>
+  <view class="manifesto lx-veil">
+    <view>生命原型并非一次测定，而是由八条生命支流共同汇聚而成。</view>
+    <view>自第一条支流开启之日起，365 天内完成八项场域精测。当八条支流全部解锁，灵犀场将自动整合每一次场域记录，生成完整的生命原型报告。</view>
+    <view>它呈现的不是八份结果的叠加，而是当关系、韧性、创造、状态与生命结构彼此交汇后，逐渐显现出的整体轮廓。</view>
+    <view class="closing">八流汇聚，原型自现。</view>
+  </view>
+  <view wx:if="{{loading}}" class="lx-loading">正在读取八流进度…</view>
+  <block wx:else>
+    <view class="progress lx-veil">
+      <view class="progress-head"><text>八流进度</text><text>{{progress.completed || 0}} / 8</text></view>
+      <view class="track"><view class="fill" style="width: {{(progress.completed || 0) * 12.5}}%"></view></view>
+      <view class="window">{{progress.windowLabel}}</view>
+    </view>
+    <view class="tributaries">
+      <view wx:for="{{progress.tributaries}}" wx:key="productId" class="tributary lx-veil {{item.completed ? 'complete' : ''}}">
+        <view class="status-dot"></view><view class="tributary-copy"><view class="tributary-name">{{item.nameZh}}</view><view class="tributary-en">{{item.nameEn}}</view><view wx:if="{{item.noteZh}}" class="tributary-note">{{item.noteZh}}</view></view>
+        <view class="tributary-status">{{item.statusLabel}}<text wx:if="{{item.dateLabel}}"> · {{item.dateLabel}}</text></view>
+      </view>
+    </view>
+    <button wx:if="{{progress.ready}}" class="lx-button" bindtap="openReport">展开完整生命原型报告 →</button>
+    <button wx:else class="lx-button" bindtap="continueAssessment">继续完成未抵达的支流 →</button>
+  </block>
+</view></view>

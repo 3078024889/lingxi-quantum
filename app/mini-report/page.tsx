@@ -5,6 +5,17 @@ import { LIFE_SIGNS } from "@/lib/qian-data";
 import MiniDendriteReport from "./MiniDendriteReport";
 import { hasUnlock } from "@/lib/access";
 
+function deterministicSelection<T>(items: T[], seed: number, count: number) {
+  const pool = [...items];
+  const selected: T[] = [];
+  let state = (seed || 1) >>> 0;
+  while (pool.length && selected.length < count) {
+    state = (state * 1664525 + 1013904223) >>> 0;
+    selected.push(pool.splice(state % pool.length, 1)[0]);
+  }
+  return selected;
+}
+
 export default async function MiniReportPage({ searchParams }: { searchParams: { id?: string } }) {
   if (!searchParams.id) redirect("/account");
   const supabase = createClient();
@@ -57,9 +68,9 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
   ].flatMap((dir) => Array.from({ length: 12 }, (_, index) => `/images/${dir}/page-${index}.png`));
   const artSeed = result.artworkIndex ?? result.dominant.reduce((sum, node) => sum + node.score, 0);
   const artworks = data.product_id === "life-archetype"
-    ? [archetypePool[artSeed % archetypePool.length], archetypePool[(artSeed + 37) % archetypePool.length]]
+    ? deterministicSelection(archetypePool, artSeed, 8)
     : fullArtDir[data.product_id]
-      ? [0, 5, 9].map((offset) => `/images/${fullArtDir[data.product_id]}/page-${(artSeed + offset) % 12}.png`)
+      ? deterministicSelection(Array.from({ length: 12 }, (_, index) => `/images/${fullArtDir[data.product_id]}/page-${index}.png`), artSeed, 6)
       : [];
   const fallbackRolesZh = data.product_id === "qian-reading" ? ["源流签", "灵魂签", "行者签"] : data.product_id === "life-archetype" ? ["当前原型"] : [];
   const fallbackRolesEn = data.product_id === "qian-reading" ? ["Source Sign", "Soul Sign", "Wayfarer Sign"] : data.product_id === "life-archetype" ? ["Current Archetype"] : [];

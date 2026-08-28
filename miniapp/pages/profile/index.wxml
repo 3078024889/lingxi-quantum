@@ -7,11 +7,12 @@
 
     <view wx:if="{{loading}}" class="lx-loading">正在同步权益…</view>
     <block wx:else>
-      <view wx:if="{{archetype}}" class="archetype-progress lx-veil">
+      <view wx:if="{{archetype}}" class="archetype-progress lx-veil" bindtap="openArchetypeProgress">
         <view class="lx-kicker">FIELD 09 · CONVERGENCE</view>
         <view class="lx-card-title">生命原型 · 八流归一</view>
         <view wx:if="{{archetype.ready}}" class="lx-card-note">八条生命支流已经汇聚。系统读取的不是八份结果的叠加，而是跨域增强、承接差与现实入口；完整报告已自动保存到下方生命档案。</view>
         <view wx:else class="lx-card-note">已完成并解锁 {{archetype.completed}} / 8 条生命支流。自第一条完成之日起 365 天内让八流全部抵达，生命原型将自动生成，无需另行购买。</view>
+        <view class="arrow">查看八流详细进度 →</view>
       </view>
       <button class="manifest-entry lx-veil" bindtap="manifestation">
         <view class="manifest-kicker">CORE FIELD · 意识显化</view>

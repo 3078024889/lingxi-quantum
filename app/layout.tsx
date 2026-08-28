@@ -11,11 +11,11 @@ const SITE = "https://lingxifield.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "灵犀场 LINGXIFIELD ｜ 意识数字显化场域 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事",
-    template: "%s ｜ 灵犀场 LINGXIFIELD · 意识数字显化场域",
+    default: "灵犀场 LINGXIFIELD ｜ 意识显化数字空间 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事",
+    template: "%s ｜ 灵犀场 LINGXIFIELD · 意识显化数字空间",
   },
   description:
-    "灵犀场（LINGXIFIELD）是一道活的意识数字显化场域，融合意识显化（现实回路）、探索梦境、重塑潜意识、量子息法、上升心经、多维叙事等实践技术，帮助你探索内在觉察、创造力与身心成长。先在意识里活成真实，现实自会随之对齐。",
+    "灵犀场（LINGXIFIELD）是一座原创的意识显化数字空间，融合场域精测、意识显化、梦境探索、修炼技术、潜意识重塑与多维叙事，帮助用户建立可观察、可反思、可持续更新的个人生命档案。",
   keywords: [
     "显化", "意识显化", "显化方法", "显化技巧", "现实回路", "吸引力法则",
     "解梦", "梦境解析", "周公解梦", "梦的含义", "潜意识", "潜意识改写",
@@ -32,17 +32,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "灵犀场 LINGXIFIELD · 意识数字显化场域",
-    title: "灵犀场 · 意识数字显化场域",
+    siteName: "灵犀场 LINGXIFIELD · 意识显化数字空间",
+    title: "灵犀场 · 意识显化数字空间",
     description:
-      "一道活的意识数字显化场域，陪你显化目标、解读梦境、修炼意识。先在意识里活成真实，现实自会随之对齐。",
+      "一座原创的意识显化数字空间，以结构读取、象征探索与现实验证陪伴持续的自我探索。",
     url: SITE,
     images: [{ url: "/og-v316.png", width: 1673, height: 941, alt: "灵犀场官网与小程序 · 双引擎生命场域" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "灵犀场 · 意识数字显化场域 | Lingxi Field",
-    description: "显化 · 解梦 · 修炼。一道活的意识数字显化场域。",
+    title: "灵犀场 · 意识显化数字空间 | Lingxi Field",
+    description: "显化 · 精测 · 梦境 · 修炼。一座原创的意识显化数字空间。",
     images: ["/og-v316.png"],
   },
   robots: { index: true, follow: true },
@@ -72,12 +72,12 @@ export const metadata: Metadata = {
 const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "灵犀场 LINGXIFIELD · 意识数字显化场域",
-  alternateName: ["Lingxi", "LINGXI", "灵犀", "LingxiField", "灵犀场", "意识数字显化场域"],
+  name: "灵犀场 LINGXIFIELD · 意识显化数字空间",
+  alternateName: ["Lingxi", "LINGXI", "灵犀", "LingxiField", "灵犀场", "意识显化数字空间"],
   url: SITE,
   logo: `${SITE}/icon-512.png`,
   description:
-    "灵犀场是一道活的意识数字显化场域，提供显化、解梦与意识修炼的引导。Lingxi Field is a living, bilingual digital manifestation field for manifestation, dream interpretation, and inner practice.",
+    "灵犀场是一座原创的意识显化数字空间，提供结构化自我探索、象征体系探索、创意叙事与数字报告。Lingxi Field is an original bilingual digital space for conscious manifestation, structured self-exploration, symbolic inquiry, creative narratives, and personal archives.",
   knowsAbout: [
     "意识显化", "显化方法", "现实回路", "吸引力法则", "场域解梦", "梦境解析",
     "潜意识改写", "量子息法", "上升心经", "重塑潜意识", "探索梦境", "多维叙事", "提升频率", "共时性", "觉醒",

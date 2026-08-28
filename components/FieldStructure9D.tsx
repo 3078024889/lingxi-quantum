@@ -6,7 +6,7 @@ import SearchBox from "@/components/SearchBox";
 import { FIELD_STRUCTURE_LINKS } from "@/lib/field-structure-links";
 import styles from "./FieldStructure9D.module.css";
 
-const VIDEO_SRC = "/media/lingxifield-9d-field-structure-v317-h264.mp4";
+const VIDEO_SRC = "/media/lingxifield-9d-field-structure-v320.mp4";
 const MAP_SRC = "/images/9d-field-navigation-v317.png";
 
 type Position = { x: number; y: number } | null;
@@ -59,6 +59,7 @@ function FloatingFieldVideo() {
   const [expanded, setExpanded] = useState(false);
   const [muted, setMuted] = useState(true);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const { position, dragHandlers } = useFloatingDrag(expanded);
   useEffect(() => { if (window.matchMedia("(min-width: 769px)").matches) setOpen(true); }, []);
   useEffect(() => { if (open) void videoRef.current?.play().catch(() => undefined); }, [open]);
@@ -66,7 +67,12 @@ function FloatingFieldVideo() {
     {!open ? <button className={`${styles.crystal} ${styles.videoCrystal}`} type="button" onClick={() => setOpen(true)} aria-label="打开 9D 场域结构影片"><span>9D</span><small>结构影片</small></button> :
       <div className={`${styles.panel} ${styles.videoPanel}`} role="dialog" aria-modal={expanded ? "true" : "false"} aria-label="灵犀场 9D 产品结构影片">
         <header className={styles.header} {...dragHandlers}><div><p className={styles.kicker}>9D FIELD STRUCTURE</p><h2>灵犀场 · 9D 产品结构</h2><p>意识为核心，八域相连，场域持续展开</p></div><span className={styles.dragHint}>✦ 拖动</span></header>
-        <div className={styles.media}>{videoFailed ? <div className={styles.videoError}><p>影片暂未载入</p><button type="button" onClick={() => { setVideoFailed(false); requestAnimationFrame(() => { videoRef.current?.load(); void videoRef.current?.play().catch(() => undefined); }); }}>重新载入</button></div> : <video ref={videoRef} src={VIDEO_SRC} muted={muted} autoPlay loop playsInline preload="auto" controls={expanded} onCanPlay={() => void videoRef.current?.play().catch(() => undefined)} onError={() => setVideoFailed(true)} />}</div>
+        <div className={styles.media}>
+          <video key={reloadKey} ref={videoRef} muted={muted} autoPlay loop playsInline preload="metadata" controls={expanded} onLoadedMetadata={() => setVideoFailed(false)} onPlaying={() => setVideoFailed(false)} onCanPlay={() => void videoRef.current?.play().catch(() => undefined)} onError={() => setVideoFailed(true)}>
+            <source src={VIDEO_SRC} type="video/mp4" />
+          </video>
+          {videoFailed && <div className={styles.videoError}><p>影片连接中断</p><div><button type="button" onClick={() => { setVideoFailed(false); setReloadKey((value) => value + 1); }}>重新连接</button><a href={VIDEO_SRC} target="_blank" rel="noreferrer">直接播放</a></div></div>}
+        </div>
         <div className={styles.actions}><button type="button" onClick={() => { setMuted((value) => !value); void videoRef.current?.play().catch(() => undefined); }}>{muted ? "开启声音" : "静音"}</button><button type="button" onClick={() => setExpanded((value) => !value)}>{expanded ? "缩小" : "展开查看"}</button><button type="button" onClick={() => { videoRef.current?.pause(); setExpanded(false); setOpen(false); }}>收起</button></div>
       </div>}
   </aside>;

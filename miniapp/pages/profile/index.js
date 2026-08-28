@@ -57,6 +57,7 @@ Page({
   manifestation() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/live-as')}` }) },
   explore() { wx.switchTab({ url: '/pages/explore/index' }) },
   narratives() { wx.switchTab({ url: '/pages/narratives/index' }) },
+  openArchetypeProgress() { wx.navigateTo({ url: '/pages/archetype-progress/index' }) },
   website() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
   openPolicy(event) {
     const path = event.currentTarget.dataset.path

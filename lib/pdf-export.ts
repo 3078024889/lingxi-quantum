@@ -105,7 +105,11 @@ export async function exportSimplePdf(params: {
   };
   fillPageBackground();
 
-  const children = Array.from(containerRef.children) as HTMLElement[];
+  const children = (Array.from(containerRef.children) as HTMLElement[]).flatMap((child) =>
+    child.classList.contains("space-y-5") && child.children.length > 1
+      ? Array.from(child.children) as HTMLElement[]
+      : [child]
+  );
   let cursorY = MARGIN;
   let placedAnything = false;
 

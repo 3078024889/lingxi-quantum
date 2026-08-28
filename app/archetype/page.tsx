@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 import Bi from "@/components/Bi";
+import ArchetypeProgress from "./ArchetypeProgress";
 
 export const metadata: Metadata = {
   title: "生命原型 | 灵犀场",
@@ -16,7 +17,7 @@ export default function LifeArchetypePage() {
         <FieldProductIntroduction href="/archetype" />
         <section id="field-assessment" className="lx-glass mx-auto max-w-4xl border border-lattice/20 p-7 sm:p-10 lg:p-12">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh="小程序独有 · 灵犀场树突演算" en="MINI PROGRAM EXCLUSIVE · LINGXIFIELD DENDRITIC ENGINE" />
+            <Bi zh="双入口汇流 · 灵犀场树突演算" en="TWO ENTRANCES · LINGXIFIELD DENDRITIC ENGINE" />
           </p>
           <h2 className="mt-5 font-display text-2xl font-light text-bone sm:text-3xl">
             <Bi zh="同一组生命主题，两种不同的读取方式" en="The same life themes, read through two distinct paths" />
@@ -40,13 +41,15 @@ export default function LifeArchetypePage() {
           </div>
 
           <div className="mt-8 space-y-5 border-t border-white/10 pt-8 text-[15px] leading-8 text-bone-dim sm:text-base sm:leading-9">
-            <p><Bi zh="两条路径彼此独立，也可以彼此映照。生命原型，是小程序中八重场域汇流后最集中的一次读取。它不在判断“你属于哪一种人”，而是在读取：此刻，生命中的哪些结构正在同时来到前景。" en="The two paths remain independent, yet can reflect one another. Life Archetype is the most concentrated reading after eight Mini Program fields converge. It does not decide what kind of person you are; it reads which life structures are arriving in the foreground together now." /></p>
-            <p><Bi zh="有些节点长期稳定，有些最近才增强；有些彼此支持，也有些正在形成张力。完成的场域精测越丰富，可调用的历史节点越完整；第一次进入，也可以从当前主题与真实选择形成第一组结构记录。" en="Some nodes remain stable over time; others have only recently intensified. Some support one another, while others form tension. More completed Field Insights provide richer historical evidence; a first visit can still form an initial structural record from your current theme and honest choices." /></p>
+            <p><Bi zh="生命原型并非一次测定，而是由八条生命支流共同汇聚而成。自第一条支流开启之日起，365 天内完成八项场域精测；当八条支流全部解锁，灵犀场将自动整合每一次场域记录，生成完整的生命原型报告。" en="Life Archetype is not a single assessment. It emerges when eight tributaries of life converge. Complete and unlock all eight Field Insights within 365 days of the first tributary, and Lingxi Field will automatically generate the full Life Archetype archive." /></p>
+            <p><Bi zh="它呈现的不是八份结果的叠加，而是当关系、韧性、创造、状态与生命结构彼此交汇后，逐渐显现出的整体轮廓。有些节点彼此增强，有些构成张力，也有些为现实承接保留空间。" en="It is not eight results stacked together. It reveals the whole contour that appears when relationship, resilience, creation, state, and life structure intersect: some nodes reinforce one another, some form tension, and others preserve capacity for reality to receive change." /></p>
+            <p className="font-display text-xl text-lattice"><Bi zh="八流汇聚，原型自现。" en="When eight streams converge, the archetype reveals itself." /></p>
           </div>
 
           <div className="mt-9 border-l border-lattice/50 bg-lattice/[.035] px-5 py-4 text-sm leading-7 text-bone-soft">
-            <Bi zh="请在微信小程序「灵犀场 lingxifield」→「场域精测」中进入「生命原型」。" en="Open “Life Archetype” in the Lingxifield WeChat Mini Program under “Field Insights”." />
+            <Bi zh="关系共振的深度关系、合伙商业与其他关系采用三套独立题目；完成其中任意一种，即计入一条关系支流。若三种都完成，它们会作为更丰富的关系证据进入同一份生命原型，不重复占位。" en="Relationship Resonance has three independent paths: deep relationship, business partnership, and other relationship. Completing any one counts as the relationship tributary; completing all three enriches the same Life Archetype with broader relational evidence without occupying extra tributary slots." />
           </div>
+          <ArchetypeProgress />
         </section>
       </main>
     </>

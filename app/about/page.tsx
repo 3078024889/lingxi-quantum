@@ -62,8 +62,8 @@ export default function AboutPage() {
           <section>
             <p>
               <Bi
-                zh="灵犀场致力于帮助用户通过不同视角理解自己，探索个人经历、行为模式与内在倾向之间的联系。"
-                en="By combining user-provided information with structured analysis models and narrative experiences, Lingxi Field helps users explore personal patterns, relationships, and self-awareness from different perspectives."
+                zh="灵犀场是一座原创的意识显化数字空间。它以结构化场域精测、象征体系探索、创意叙事与可持续更新的数字生命档案，帮助用户观察个人经历、行为模式、关系结构与现实选择之间的联系。"
+                en="Lingxi Field is an original digital space for conscious manifestation. Through structured Field Insights, symbolic inquiry, creative narratives, and evolving personal archives, it helps people observe the relationships among lived experience, behavior, relational structure, and real-world choice."
               />
             </p>
             <p className="mt-4">
