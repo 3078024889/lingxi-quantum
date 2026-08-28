@@ -5,6 +5,7 @@ import { createAdminClient, isSupabaseAdminConfigured } from "@/lib/supabase/adm
 import { getProduct } from "@/lib/plans";
 import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
 import { hasUnlock } from "@/lib/access";
+import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 
 export async function GET(req: Request) {
   try {
@@ -25,7 +26,7 @@ export async function GET(req: Request) {
       .eq("status", "paid")
       .order("paid_at", { ascending: false })
       .limit(50),
-    admin.from("mini_dendrite_assessments").select("id, product_id, created_at")
+    admin.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at")
       .eq("user_id", session.userId).order("created_at", { ascending: false }).limit(100),
   ]);
     const now = Date.now();
@@ -44,7 +45,10 @@ export async function GET(req: Request) {
       productName: getProduct(order.product_id)?.name ?? order.product_id,
       webOnly: !order.submission_id && isMiniWebArchiveProduct(order.product_id),
     })),
-    archives: (assessments ?? []).filter((assessment) => assessment.product_id === "life-archetype" || manifestActive || hasUnlock(activeUnlockIds, assessment.product_id)).map((assessment) => ({
+    archives: (assessments ?? []).filter((assessment, index, all) => {
+      if (assessment.product_id === "life-archetype") return assessment.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM);
+      return manifestActive || hasUnlock(activeUnlockIds, assessment.product_id);
+    }).map((assessment) => ({
       id: `assessment:${assessment.id}`,
       submission_id: assessment.id,
       product_id: assessment.product_id,

@@ -3,7 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
 import { LIFE_SIGNS } from "@/lib/qian-data";
 import MiniDendriteReport from "./MiniDendriteReport";
+import MiniLifeArchetypeReport from "./MiniLifeArchetypeReport";
 import { hasUnlock } from "@/lib/access";
+import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
+import { MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult } from "@/lib/mini/dendrite-engine";
 
 function deterministicSelection<T>(items: T[], seed: number, count: number) {
   const pool = [...items];
@@ -25,6 +28,10 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     .select("id, product_id, input, result, algorithm_version, created_at")
     .eq("id", searchParams.id).eq("user_id", user.id).maybeSingle();
   if (!data) redirect("/account/orders");
+  if (data.product_id === "life-archetype" && data.algorithm_version !== MINI_LIFE_ARCHETYPE_ALGORITHM) {
+    const refreshed = await ensureLifeArchetype(user.id);
+    if (refreshed.ready && refreshed.submissionId && refreshed.submissionId !== data.id) redirect(`/mini-report?id=${refreshed.submissionId}`);
+  }
   if (data.product_id !== "life-archetype") {
     const [{ data: unlockRows }, { data: profile }] = await Promise.all([
       supabase.from("unlocks").select("product_id, expires_at").eq("user_id", user.id),
@@ -35,7 +42,7 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
     if (!manifestActive && !hasUnlock(activeUnlocks, data.product_id)) redirect("/account/orders");
   }
-  const result = data.result as {
+  const result = data.result as DendriteResult & {
     titleZh: string; titleEn: string; insightZh: string; insightEn: string;
     nodes: Array<{ id: string; zh: string; en: string; score: number }>;
     dominant: Array<{ id: string; zh: string; en: string; score: number }>;
@@ -74,5 +81,6 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
       : [];
   const fallbackRolesZh = data.product_id === "qian-reading" ? ["源流签", "灵魂签", "行者签"] : data.product_id === "life-archetype" ? ["当前原型"] : [];
   const fallbackRolesEn = data.product_id === "qian-reading" ? ["Source Sign", "Soul Sign", "Wayfarer Sign"] : data.product_id === "life-archetype" ? ["Current Archetype"] : [];
+  if (data.product_id === "life-archetype") return <MiniLifeArchetypeReport subjectName={subjectName} createdAt={data.created_at} result={result} artworks={artworks} />;
   return <MiniDendriteReport productId={data.product_id} productName={productName} subjectName={subjectName} createdAt={data.created_at} result={result} cards={cards} artworks={artworks} cardRolesZh={result.cardRolesZh ?? fallbackRolesZh} cardRolesEn={result.cardRolesEn ?? fallbackRolesEn} />;
 }

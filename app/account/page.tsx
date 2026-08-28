@@ -18,6 +18,9 @@ import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
+import { isSupabaseAdminConfigured } from "@/lib/supabase/admin";
+import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
+import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 
 export const metadata = { title: "进入场域 | 灵犀 · Enter the Field | Lingxi" };
 
@@ -31,6 +34,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   let manifestUntil: string | null = null;
   let unlocks: string[] = [];
   if (user && supabase) {
+    if (isSupabaseAdminConfigured()) await ensureLifeArchetype(user.id).catch(() => null);
     const { data: profile } = await supabase
       .from("profiles")
       .select("manifest_until")
@@ -66,6 +70,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   let romanceReports: { id: string; name: string | null; created_at: string }[] = [];
   let dailyTideReports: { id: string; name: string | null; generated_date: string; created_at: string }[] = [];
   let wealthReports: { id: string; name: string | null; created_at: string }[] = [];
+  let lifeArchetypeReports: { id: string; created_at: string; input: { name?: string } | null }[] = [];
   // v252：生成过二维码、但还没被确认为已支付的订单——万一支付弹窗
   // 中途意外关闭（误触背景、或者用户直接切走了），这里给一条"事后
   // 还能回来确认"的路。只列最近的、状态还不是paid的订单，付过的和
@@ -75,7 +80,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
     const [
       { data: reports }, { data: relReports }, { data: qReports }, { data: trReports },
       { data: resReports }, { data: romReports }, { data: dtReports }, { data: wReports },
-      { data: poReports },
+      { data: archetypeReports }, { data: poReports },
     ] = await Promise.all([
       supabase
         .from("life_map_submissions")
@@ -126,6 +131,14 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
         .order("created_at", { ascending: false })
         .limit(10),
       supabase
+        .from("mini_dendrite_assessments")
+        .select("id, created_at, input")
+        .eq("user_id", user.id)
+        .eq("product_id", "life-archetype")
+        .eq("algorithm_version", MINI_LIFE_ARCHETYPE_ALGORITHM)
+        .order("created_at", { ascending: false })
+        .limit(1),
+      supabase
         .from("orders")
         .select("id, product_id, created_at, amount_usd")
         .eq("user_id", user.id)
@@ -143,6 +156,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
     romanceReports = romReports ?? [];
     dailyTideReports = dtReports ?? [];
     wealthReports = wReports ?? [];
+    lifeArchetypeReports = (archetypeReports ?? []) as typeof lifeArchetypeReports;
     pendingOrders = poReports ?? [];
   }
 
@@ -163,7 +177,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   const narrativeMap = new Map(NARRATIVES.map((n) => [n.slug, n.title]));
   const REPORT_PRODUCT_IDS = new Set([
     "life-map-report", "relationship-resonance", "qian-reading", "tarot-reading",
-    "resilience-report", "romance-report", "wealth-report", "daily-tide-report",
+    "resilience-report", "romance-report", "wealth-report", "daily-tide-report", "life-archetype",
   ]);
   const narrativeUnlocks = unlocks.filter((id) => narrativeMap.has(id));
   const plainUnlocks = unlocks.filter((id) => !narrativeMap.has(id) && !REPORT_PRODUCT_IDS.has(id));
@@ -313,6 +327,14 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                 <CollapsibleSection titleZh="已解锁订单 · 财富创造地图" titleEn="Unlocked · Wealth Creation Map" count={wealthReports.length}>
                   {wealthReports.map((r) => (
                     <SimpleReportRow key={r.id} href={`/wealth/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
+                  ))}
+                </CollapsibleSection>
+              )}
+
+              {lifeArchetypeReports.length > 0 && (
+                <CollapsibleSection titleZh="生命原型 · 八流归一" titleEn="Life Archetype · Eight-stream Convergence" count={lifeArchetypeReports.length}>
+                  {lifeArchetypeReports.map((r) => (
+                    <SimpleReportRow key={r.id} href={`/mini-report?id=${r.id}`} title={r.input?.name || "当前生命原型档案"} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
                 </CollapsibleSection>
               )}

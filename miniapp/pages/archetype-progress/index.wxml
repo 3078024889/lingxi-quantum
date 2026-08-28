@@ -1,4 +1,4 @@
-<view class="lx-page"><field-nav/><view class="lx-content archetype-page">
+<view class="lx-page"><field-nav showBack="{{true}}" title="生命原型"/><view class="lx-content archetype-page">
   <view class="lx-kicker">FIELD 09 · CONVERGENCE</view>
   <view class="lx-title">生命原型 · 八流归一</view>
   <view class="lx-subtitle">Life Archetype · Eight Streams as One</view>

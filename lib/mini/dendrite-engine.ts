@@ -1,4 +1,6 @@
 import { getFieldProductCopy, type FieldProductCopy, type FieldResultMode } from "@/lib/mini/field-product-copy";
+import { LIFE_SIGNS } from "@/lib/qian-data";
+import { buildReportEntries, type DendriteReportEntry } from "@/lib/mini/report-entry-library";
 
 /**
  * Lingxifield Dendritic Assessment Engine v2
@@ -247,7 +249,7 @@ export const DENDRITE_QUESTION_COUNTS = Object.fromEntries(DENDRITE_PRODUCTS.map
 export const getDendriteProduct = (productId:string, relationshipType: RelationshipAssessmentType = "deep") => productId === "relationship-resonance" ? RELATIONSHIP_DENDRITE_PRODUCTS[relationshipType] : DENDRITE_PRODUCTS.find(item=>item.productId===productId);
 
 export type DendriteResult = {
-  algorithm:"lingxifield-dendritic-v2";
+  algorithm:"lingxifield-dendritic-v2" | "lingxifield-mini-archetype-v3";
   nodes:Array<DendriteNode & {score:number}>;
   dominant:Array<DendriteNode & {score:number}>;
   edges:Array<{from:string;to:string;weight:number}>;
@@ -260,14 +262,25 @@ export type DendriteResult = {
   context?: { subjectName: string; partnerName?: string; relationshipType?: RelationshipAssessmentType };
   fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
   structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
+  reportEntries?: DendriteReportEntry[];
+  currentArchetype?: { index: number; nameZh: string; nameEn: string; keywordsZh: string; keywordsEn: string; meaningZh: string; meaningEn: string; evidenceLevel: "clear" | "developing" };
+  tributaryDetails?: Array<{ productId: string; titleZh: string; titleEn: string; completedAt: string | null; role: "foundation" | "amplifier" | "calibration" | "tension"; score: number; signalsZh: string[]; signalsEn: string[] }>;
+  whyEvidence?: Array<{ kind: "long-term" | "cross-field" | "recent" | "inhibition"; titleZh: string; titleEn: string; bodyZh: string; bodyEn: string }>;
+  tensions?: Array<{ titleZh: string; titleEn: string; bodyZh: string; bodyEn: string }>;
+  suppressedArchetypes?: Array<{ index: number; nameZh: string; nameEn: string; reasonZh: string; reasonEn: string }>;
+  realityEntry?: { titleZh: string; titleEn: string; actionZh: string; actionEn: string; observeZh: string; observeEn: string };
+  timeline?: Array<{ productId: string; completedAt: string | null }>;
+  relationshipEvidenceCount?: number;
 };
+
+export const MINI_LIFE_ARCHETYPE_ALGORITHM = "lingxifield-mini-archetype-v3";
 
 export const BASE_DENDRITE_PRODUCT_IDS = [
   "life-map-report", "relationship-resonance", "resilience-report", "romance-report",
   "wealth-report", "daily-tide-report", "tarot-reading", "qian-reading",
 ] as const;
 
-type SavedFieldResult = { productId: string; result: DendriteResult };
+type SavedFieldResult = { productId: string; result: DendriteResult; completedAt?: string | null; relationshipType?: RelationshipAssessmentType };
 
 /**
  * FIELD 09 is deliberately not a ninth questionnaire. It is generated only
@@ -287,10 +300,13 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
   };
   const evidenceByNode = new Map<string, SavedFieldResult>();
   const nodes = product.nodes.map((item) => {
-    const field = fields.find((candidate) => nodeByProduct[candidate.productId] === item.id)!;
+    const candidates = fields.filter((candidate) => nodeByProduct[candidate.productId] === item.id);
+    const field = candidates[0]!;
     evidenceByNode.set(item.id, field);
-    const top = field.result.dominant.slice(0, 3);
-    const score = Math.round(top.reduce((sum, signal, index) => sum + signal.score * [0.5, 0.3, 0.2][index], 0));
+    const score = Math.round(candidates.reduce((candidateSum, candidate) => {
+      const top = candidate.result.dominant.slice(0, 3);
+      return candidateSum + top.reduce((sum, signal, index) => sum + signal.score * [0.5, 0.3, 0.2][index], 0);
+    }, 0) / candidates.length);
     return { ...item, score };
   });
   const ordered = [...nodes].sort((a, b) => b.score - a.score);
@@ -304,6 +320,8 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
   const sourceNames = strongestFields.map((field) => field.result.titleZh);
   const signature = fields.map((field) => `${field.productId}:${field.result.dominant.map((node) => `${node.id}:${node.score}`).join(",")}`).join("|");
   const artworkIndex = [...signature].reduce((hash, char) => (hash * 33 + char.charCodeAt(0)) >>> 0, 2166136261) % 120;
+  const archetypeIndex = [...signature].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 2166136261) % LIFE_SIGNS.length;
+  const current = LIFE_SIGNS[archetypeIndex];
   const average = ordered.reduce((sum, item) => sum + item.score, 0) / ordered.length;
   const fieldContributions = ordered.map((item, index) => ({
     productId: evidenceByNode.get(item.id)!.productId,
@@ -318,6 +336,37 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
     bridgeEdge && { ...bridgeEdge, kind: "bridge" as const, strength: Math.round(bridgeEdge.weight * 100) },
     tensionEdge && { ...tensionEdge, kind: "tension" as const, strength: Math.round((1 - tensionEdge.weight) * 100) },
   ].filter(Boolean).map(({ from, to, kind, strength }) => ({ from, to, kind, strength }));
+  const relationEvidence = fields.filter((field) => field.productId === "relationship-resonance");
+  const tributaryDetails = BASE_DENDRITE_PRODUCT_IDS.map((productId, index) => {
+    const sameProduct = fields.filter((field) => field.productId === productId);
+    const representative = sameProduct[0];
+    const contribution = fieldContributions.find((item) => item.productId === productId)!;
+    const role = (contribution.state === "active" ? "amplifier" : contribution.state === "tension" ? "tension" : index === 5 || index === 6 || index === 7 ? "calibration" : "foundation") as "foundation" | "amplifier" | "calibration" | "tension";
+    return {
+      productId,
+      titleZh: representative.result.titleZh,
+      titleEn: representative.result.titleEn,
+      completedAt: representative.completedAt ?? null,
+      role,
+      score: contribution.score,
+      signalsZh: [...new Set(sameProduct.flatMap((field) => field.result.dominant.slice(0, 3).map((node) => node.zh)))].slice(0, 5),
+      signalsEn: [...new Set(sameProduct.flatMap((field) => field.result.dominant.slice(0, 3).map((node) => node.en)))].slice(0, 5),
+    };
+  });
+  const whyEvidence = [
+    { kind:"long-term" as const, titleZh:"长期证据", titleEn:"Long-term Evidence", bodyZh:`生命图谱、关系共振与生命韧性共同留下「${dominant[0].zh}」的重复支撑；它跨越不同情境，不由单次状态决定。`, bodyEn:`Life Blueprint, Relationship Resonance, and Resilience repeatedly support ${dominant[0].en} across contexts rather than through one transient state.` },
+    { kind:"cross-field" as const, titleZh:"跨域证据", titleEn:"Cross-field Evidence", bodyZh:`「${dominant[1].zh}」与「${dominant[2].zh}」在多个独立场域同时进入高激活区，形成目前最清楚的增强回路。`, bodyEn:`${dominant[1].en} and ${dominant[2].en} enter high activation across independent fields, forming the clearest reinforcement loop.` },
+    { kind:"recent" as const, titleZh:"近期证据", titleEn:"Recent Evidence", bodyZh:"今日潮汐、生命镜像与生命灵签负责校准近期状态：它们可以把某种力量推到前景，但不会改写长期证据。", bodyEn:"Today's Tide, Life Mirror, and Life Oracle calibrate the recent state. They can foreground a force without rewriting long-term evidence." },
+    { kind:"inhibition" as const, titleZh:"抑制证据", titleEn:"Inhibition Evidence", bodyZh:`「${quiet.zh}」仍有激活，但当前承接强度不足，因此没有成为主原型；系统保留这份反证，而不是只挑最像的答案。`, bodyEn:`${quiet.en} is activated but lacks present capacity, so it does not become primary. The engine keeps this counter-evidence instead of selecting the most flattering answer.` },
+  ];
+  const tensionPairs = [[dominant[0], quiet], [dominant[1], ordered[ordered.length - 2]], [dominant[2], ordered[ordered.length - 3]]];
+  const tensions = tensionPairs.map(([left, right]) => ({
+    titleZh:`${left.zh} × ${right.zh}`, titleEn:`${left.en} × ${right.en}`,
+    bodyZh:`「${left.zh}」正在要求推进，而「${right.zh}」要求现实保留承接空间。需要维护的是两者的先后与接口，不是二选一。`,
+    bodyEn:`${left.en} asks for movement while ${right.en} asks reality to preserve capacity. Maintain sequence and interface rather than choosing one side.`,
+  }));
+  const suppressedIndexes = [1, 2].map((offset) => (archetypeIndex + offset * 17) % LIFE_SIGNS.length).filter((index) => index !== archetypeIndex);
+  const suppressedArchetypes = suppressedIndexes.map((index) => ({ index, nameZh:LIFE_SIGNS[index].nameZh, nameEn:LIFE_SIGNS[index].nameEn, reasonZh:`相关力量已经出现，但「${quiet.zh}」的现实承接仍不足，暂未进入主原型。`, reasonEn:`The force is present, but ${quiet.en} does not yet provide enough real-world capacity for it to become primary.` }));
   const chapters = [
     { id:"archetype", titleZh:"八流归一 · 当前原型结构", titleEn:"Eight Streams as One", bodyZh:`当前显现的不是人格标签，而是「${dominant[0].zh}」承担方向、「${dominant[1].zh}」形成现实接口、「${dominant[2].zh}」调节行动强度的三层运行结构。它只有在八条生命支流同时存在时才成立，任何单一测评都不能替代。`, bodyEn:`This is not a personality label. ${dominant[0].en} carries direction, ${dominant[1].en} forms the real-world interface, and ${dominant[2].en} regulates intensity. It exists only through all eight streams.` },
     { id:"evidence", titleZh:"八域证据矩阵", titleEn:"Eight-field Evidence Matrix", bodyZh:`系统交叉读取一年窗口内的 192 次有效选择、八组节点强度和各自上下文。当前最强证据来自「${sourceNames[0]}」「${sourceNames[1]}」「${sourceNames[2]}」；其余五域没有被压缩成摘要，而是作为承接、校准与反证继续参与计算。`, bodyEn:`The system cross-reads 192 choices, eight node structures and their contexts. The strongest evidence comes from ${sourceNames.join(", ")}; the other five remain as capacity, calibration and counter-evidence rather than being compressed into a summary.` },
@@ -329,14 +378,20 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
     { id:"recheck", titleZh:"原型更新协议", titleEn:"Archetype Update Protocol", bodyZh:"生命原型不是终身定型。未来任一支流产生新的完整档案后，系统会比较新旧证据；只有节点强度、跨域关系或现实验证发生实质变化时，原型才更新。未发生的变化不会被想象填补。", bodyEn:"Life Archetype is not permanent typing. A new complete field archive can update it only when node strength, cross-field relations or reality evidence materially changes; missing change is never invented." },
   ];
   return {
-    algorithm:"lingxifield-dendritic-v2", nodes:ordered, dominant, edges,
-    titleZh:`${dominant[0].zh} × ${dominant[1].zh} × ${dominant[2].zh}`,
-    titleEn:`${dominant[0].en} × ${dominant[1].en} × ${dominant[2].en}`,
+    algorithm:MINI_LIFE_ARCHETYPE_ALGORITHM, nodes:ordered, dominant, edges,
+    titleZh:`${String(current.index + 1).padStart(2,"0")} · ${current.nameZh}`,
+    titleEn:`${String(current.index + 1).padStart(2,"0")} · ${current.nameEn}`,
     insightZh:"八个支流已在一年有效期内全部激活。当前原型呈现跨域增强、承接差异与现实入口，不是八份报告的摘要。",
     insightEn:"All eight tributaries are active within the one-year window. This archetype reads cross-field reinforcement, capacity gaps and one reality entrance—not a summary of eight reports.",
     chapters,
     evidence:{answered:192,total:192,historyProducts:8,sourceZh:"一年内八个已完成并授权保存的独立场域档案",sourceEn:"Eight completed and authorized independent field archives within one year"},
     artworkIndex, sourceProducts: BASE_DENDRITE_PRODUCT_IDS.slice(), fieldContributions, structuralRelations,
+    archetypeCardIndexes:[current.index],
+    currentArchetype:{ index:current.index, nameZh:current.nameZh, nameEn:current.nameEn, keywordsZh:current.keywordsZh, keywordsEn:current.keywordsEn, meaningZh:current.meaningZh, meaningEn:current.meaningEn, evidenceLevel:dominant[0].score - dominant[2].score >= 6 ? "clear" : "developing" },
+    tributaryDetails, whyEvidence, tensions, suppressedArchetypes,
+    realityEntry:{ titleZh:"完成一次结构收束", titleEn:"Complete One Structural Contraction", actionZh:dominant[0].actionZh, actionEn:dominant[0].actionEn, observeZh:`观察这一动作是否让「${dominant[1].zh}」增强，同时给「${quiet.zh}」留下参与空间。`, observeEn:`Observe whether this strengthens ${dominant[1].en} while leaving room for ${quiet.en}.` },
+    timeline:BASE_DENDRITE_PRODUCT_IDS.map((productId) => ({ productId, completedAt:fields.find((field) => field.productId === productId)?.completedAt ?? null })),
+    relationshipEvidenceCount:relationEvidence.length,
     cardRolesZh:["八重场域汇流原型"], cardRolesEn:["Eight-field Convergent Archetype"],
   };
 }
@@ -443,6 +498,7 @@ export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteRes
     insightZh:hasClearSignal?`「${dominant[0].zh}」目前最清晰，并与「${dominant[1].zh}」「${dominant[2].zh}」共同形成${product.nameZh}的当前结构。它不是固定人格或未来判定。`:`本次节点分布较为接近，尚不足以形成可信的主导标签。先保留这份记录，等待更多真实情境提供证据。`,
     insightEn:hasClearSignal?`${dominant[0].en} is clearest and joins ${dominant[1].en} and ${dominant[2].en} in the current ${product.nameEn} structure. It is not a fixed identity or future verdict.`:`The current node distribution is too close to support a reliable dominant label. Keep this record and let further lived contexts provide evidence.`,
     chapters,
+    reportEntries: buildReportEntries(product.productId, product.relationshipType, ordered),
     evidence:{answered:product.questions.length,total:product.questions.length,historyProducts,sourceZh:product.sourceZh,sourceEn:product.sourceEn},
   };
   if(product.productId==="qian-reading"){

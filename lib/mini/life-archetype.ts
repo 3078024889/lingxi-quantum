@@ -1,6 +1,6 @@
 import { hasUnlock } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { BASE_DENDRITE_PRODUCT_IDS, calculateLifeArchetypeFromReports, type DendriteResult } from "@/lib/mini/dendrite-engine";
+import { BASE_DENDRITE_PRODUCT_IDS, calculateLifeArchetypeFromReports, MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult, type RelationshipAssessmentType } from "@/lib/mini/dendrite-engine";
 
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
@@ -19,7 +19,7 @@ export const LIFE_ARCHETYPE_TRIBUTARIES = [
 export async function ensureLifeArchetype(userId: string) {
   const admin = createAdminClient();
   const now = Date.now();
-  const { data: existing } = await admin.from("mini_dendrite_assessments").select("id, created_at")
+  const { data: existing } = await admin.from("mini_dendrite_assessments").select("id, created_at, algorithm_version")
     .eq("user_id", userId).eq("product_id", "life-archetype").order("created_at", { ascending: false }).limit(1).maybeSingle();
   const [{ data: unlocks }, { data: profile }] = await Promise.all([
     admin.from("unlocks").select("product_id, expires_at, created_at").eq("user_id", userId),
@@ -29,7 +29,7 @@ export async function ensureLifeArchetype(userId: string) {
   const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
   const cutoff = new Date(now - YEAR_MS).toISOString();
   const { data: rows } = await admin.from("mini_dendrite_assessments")
-    .select("id, product_id, result, created_at")
+    .select("id, product_id, input, result, created_at")
     .eq("user_id", userId).in("product_id", BASE_DENDRITE_PRODUCT_IDS as unknown as string[])
     .gte("created_at", cutoff).order("created_at", { ascending: false }).limit(96);
   const latest = new Map<string, NonNullable<typeof rows>[number]>();
@@ -43,25 +43,36 @@ export async function ensureLifeArchetype(userId: string) {
     const hasAccess = manifestActive || hasUnlock(active, item.productId);
     return {
       ...item,
-      completed: !!existing || (!!row && hasAccess),
-      assessmentCompleted: !!existing || !!row,
-      accessActive: !!existing || hasAccess,
+      completed: !!row && hasAccess,
+      assessmentCompleted: !!row,
+      accessActive: hasAccess,
       completedAt: row?.created_at ?? null,
     };
   });
   if (missing.length) {
-    if (existing) return { ready: true, generated: false, archived: true, submissionId: existing.id, completed: 8, missing: [] as string[], tributaries, firstCompletedAt, windowEndsAt };
-    return { ready: false, missing, completed: completedIds.length, firstCompletedAt, windowEndsAt, tributaries };
+    return { ready: false, missing, completed: completedIds.length, firstCompletedAt, windowEndsAt, tributaries, archivedSubmissionId: existing?.id ?? null };
   }
 
+  const relationshipRows = (rows ?? []).filter((row) => row.product_id === "relationship-resonance");
+  const relationshipByType = new Map<string, NonNullable<typeof rows>[number]>();
+  for (const row of relationshipRows) {
+    const relationshipType = ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType ?? "deep";
+    if (!relationshipByType.has(relationshipType)) relationshipByType.set(relationshipType, row);
+  }
   const sourceRows = BASE_DENDRITE_PRODUCT_IDS.map((productId) => latest.get(productId)!);
+  const enrichedSourceRows = [...sourceRows.filter((row) => row.product_id !== "relationship-resonance"), ...relationshipByType.values()];
   const newestSource = sourceRows.reduce((max, row) => Math.max(max, Date.parse(row.created_at)), 0);
-  if (existing && Date.parse(existing.created_at) >= newestSource) return { ready: true, generated: false, submissionId: existing.id, completed: 8, missing: [] as string[], firstCompletedAt, windowEndsAt, tributaries };
+  if (existing && existing.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && Date.parse(existing.created_at) >= newestSource) return { ready: true, generated: false, submissionId: existing.id, completed: 8, missing: [] as string[], firstCompletedAt, windowEndsAt, tributaries };
 
-  const result = calculateLifeArchetypeFromReports(sourceRows.map((row) => ({ productId: row.product_id, result: row.result as DendriteResult })));
+  const result = calculateLifeArchetypeFromReports(enrichedSourceRows.map((row) => ({
+    productId: row.product_id,
+    result: row.result as DendriteResult,
+    completedAt: row.created_at,
+    relationshipType: ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType,
+  })));
   const { data, error } = await admin.from("mini_dendrite_assessments").insert({
     user_id: userId, product_id: "life-archetype",
-    input: { sourceAssessmentIds: sourceRows.map((row) => row.id), sourceWindowDays: 365, firstCompletedAt, windowEndsAt, generatedAt: new Date().toISOString() },
+    input: { sourceAssessmentIds: enrichedSourceRows.map((row) => row.id), sourceWindowDays: 365, firstCompletedAt, windowEndsAt, generatedAt: new Date().toISOString(), relationshipEvidenceCount: relationshipByType.size },
     result, algorithm_version: result.algorithm,
   }).select("id").single();
   if (error || !data) throw new Error(`life archetype insert failed: ${error?.code ?? "unknown"}`);

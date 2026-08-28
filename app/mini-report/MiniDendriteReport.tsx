@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import Bi from "@/components/Bi";
+import ReportReturnBar from "./ReportReturnBar";
+import type { DendriteReportEntry } from "@/lib/mini/report-entry-library";
 
 type Result = {
   titleZh: string; titleEn: string; insightZh: string; insightEn: string;
@@ -11,6 +13,7 @@ type Result = {
   evidence?: { answered: number; total: number; historyProducts: number; sourceZh: string; sourceEn: string };
   fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
   structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
+  reportEntries?: DendriteReportEntry[];
 };
 const FIELD_LABELS: Record<string, string> = {
   "life-map-report":"生命图谱", "relationship-resonance":"关系共振", "resilience-report":"生命韧性",
@@ -37,6 +40,10 @@ export default function MiniDendriteReport({ productId, productName, subjectName
   const [downloadError, setDownloadError] = useState("");
   const nodeLabels = new Map(result.nodes.map((node) => [node.id, node.zh]));
   const editorial = PRODUCT_EDITORIAL[productId] ?? PRODUCT_EDITORIAL["life-map-report"];
+  const entryChapters = [...new Set((result.reportEntries ?? []).map((entry) => entry.chapterId))].map((chapterId) => ({
+    chapterId,
+    entries: (result.reportEntries ?? []).filter((entry) => entry.chapterId === chapterId),
+  }));
   const download = async () => {
     if (!reportRef.current || downloading) return;
     setDownloadError("");
@@ -50,7 +57,9 @@ export default function MiniDendriteReport({ productId, productName, subjectName
     } finally { setDownloading(false); }
   };
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_15%_10%,rgba(126,91,180,.35),transparent_32%),radial-gradient(circle_at_85%_25%,rgba(43,156,168,.28),transparent_36%),#0a1330] px-5 py-16 text-bone">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_15%_10%,rgba(126,91,180,.35),transparent_32%),radial-gradient(circle_at_85%_25%,rgba(43,156,168,.28),transparent_36%),#0a1330] text-bone">
+      <ReportReturnBar miniLabel="返回我的场域" />
+      <div className="px-5 py-12">
       <div ref={reportRef} className="mx-auto max-w-3xl space-y-5">
         <header className="lx-glass p-7 sm:p-10">
           <p className="text-xs uppercase tracking-[.32em] text-lattice">LINGXIFIELD DENDRITIC ARCHIVE</p>
@@ -81,10 +90,12 @@ export default function MiniDendriteReport({ productId, productName, subjectName
         {result.fieldContributions?.length ? <section className="lx-glass p-7 sm:p-10"><h2 className="font-display text-xl text-lattice">八重场域贡献</h2><p className="mt-3 text-sm leading-7 text-bone-dim">八域仍保持各自证据，不被压缩成一段总结。状态显示它们当前在原型中的作用位置。</p><div className="mt-6 grid gap-3 sm:grid-cols-2">{result.fieldContributions.map((field) => <article key={field.productId} className="border border-white/10 bg-white/[.035] p-4"><div className="flex items-center justify-between gap-3 text-sm"><span>{FIELD_LABELS[field.productId] ?? field.productId}</span><span className="text-lattice">{field.score} · {CONTRIBUTION_LABELS[field.state]}</span></div></article>)}</div></section> : null}
         {result.structuralRelations?.length ? <section className="lx-glass p-7 sm:p-10"><h2 className="font-display text-xl text-lattice">结构关系矩阵</h2><div className="mt-6 space-y-3">{result.structuralRelations.map((relation, index) => <div key={`${relation.from}-${relation.to}-${index}`} className="flex items-center justify-between gap-4 border-b border-white/10 pb-3 text-sm text-bone-dim"><span>{nodeLabels.get(relation.from) ?? relation.from} → {nodeLabels.get(relation.to) ?? relation.to}</span><span className="text-lattice">{{ reinforce:"增强", bridge:"桥接", tension:"张力" }[relation.kind]} · {relation.strength}</span></div>)}</div></section> : null}
         {(result.chapters ?? []).map((chapter, index) => <div key={chapter.id} className="space-y-5"><section className="lx-glass p-7 sm:p-10"><p className="text-xs tracking-[.28em] text-lattice">{String(index + 1).padStart(2, "0")}</p><h2 className="mt-3 font-display text-2xl"><Bi zh={chapter.titleZh} en={chapter.titleEn} /></h2><p className="mt-5 whitespace-pre-line leading-8 text-bone-dim"><Bi zh={chapter.bodyZh} en={chapter.bodyEn} /></p><div className="mt-7 grid gap-3 border-t border-white/10 pt-6 sm:grid-cols-2"><p className="text-sm leading-7 text-bone-soft"><span className="text-lattice">结构证据 · </span>{result.dominant[index % result.dominant.length]?.zh} {result.dominant[index % result.dominant.length]?.score} / 100</p><p className="text-sm leading-7 text-bone-soft"><span className="text-lattice">验证方向 · </span>{result.dominant[index % result.dominant.length]?.actionZh}</p></div>{index === 0 && <div className="mt-6 border-l border-lattice/40 pl-4 text-sm leading-7 text-lattice">证据 → 结构机制 → 现实影响 → 可验证动作</div>}</section>{artworks[index + 1] && <figure className="lx-publication-card-page relative min-h-[620px] overflow-hidden border border-white/15"><img src={artworks[index + 1]} alt={`${productName} 结构图 ${index + 1}`} className="absolute inset-0 h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#07102c] via-[#07102c]/28 to-transparent"/><figcaption className="absolute inset-x-0 bottom-0 p-7 sm:p-10"><p className="text-xs tracking-[.26em] text-lattice">{String(index + 1).padStart(2, "0")} · STRUCTURAL PLATE</p><h3 className="mt-3 font-display text-3xl text-bone"><Bi zh={chapter.titleZh} en={chapter.titleEn} /></h3><p className="mt-4 line-clamp-4 max-w-2xl leading-8 text-bone-soft"><Bi zh={chapter.bodyZh} en={chapter.bodyEn} /></p></figcaption></figure>}</div>)}
+        {entryChapters.map(({ chapterId, entries }, chapterIndex) => <section key={chapterId} className="lx-pdf-page lx-glass min-h-[980px] p-7 sm:p-10"><p className="text-xs uppercase tracking-[.28em] text-lattice">ARCHIVE CHAPTER {String(chapterIndex + 1).padStart(2,"0")} / 06</p><h2 className="mt-4 font-display text-2xl text-bone"><Bi zh={entries[0]?.chapterZh ?? "结构档案"} en={entries[0]?.chapterEn ?? "Structural Archive"}/></h2><div className="mt-7 grid gap-4">{entries.map((entry,index)=><article key={entry.id} className="border border-white/12 bg-white/[.035] p-5"><div className="flex items-start justify-between gap-4"><h3 className="font-display text-lg text-lattice">{String(chapterIndex*4+index+1).padStart(2,"0")} · <Bi zh={entry.titleZh} en={entry.titleEn}/></h3><span className="shrink-0 text-[10px] text-bone-mute">{{clear:"证据清晰",developing:"正在形成",open:"保持开放"}[entry.confidence]}</span></div><p className="mt-3 text-sm leading-7 text-bone-soft"><Bi zh={entry.structureZh} en={entry.structureEn}/></p><p className="mt-3 text-sm leading-7 text-bone-dim"><span className="text-lattice">形成机制 · </span><Bi zh={entry.mechanismZh} en={entry.mechanismEn}/></p><p className="mt-3 text-sm leading-7 text-bone-dim"><span className="text-lattice">现实出现 · </span><Bi zh={entry.realityZh} en={entry.realityEn}/></p>{entry.costZh&&<p className="mt-3 text-sm leading-7 text-bone-dim"><span className="text-purple-200">当前代价 · </span><Bi zh={entry.costZh} en={entry.costEn ?? ""}/></p>}<p className="mt-3 text-sm leading-7 text-lattice"><span>可移动点 · </span><Bi zh={entry.actionZh} en={entry.actionEn}/></p></article>)}</div></section>)}
         {result.evidence && <section className="lx-glass p-7 text-sm leading-8 text-bone-dim"><p className="text-lattice"><Bi zh={`结构证据 · ${result.evidence.answered}/${result.evidence.total} 次有效互动${result.evidence.historyProducts ? ` · ${result.evidence.historyProducts} 个历史场域` : ""}`} en={`Structural evidence · ${result.evidence.answered}/${result.evidence.total} valid interactions${result.evidence.historyProducts ? ` · ${result.evidence.historyProducts} history fields` : ""}`} /></p><p className="mt-3"><Bi zh={result.evidence.sourceZh} en={result.evidence.sourceEn} /></p></section>}
         <section className="lx-glass p-7 text-sm leading-8 text-bone-dim"><Bi zh="本报告来自小程序中的灵犀场树突知识网络：真实选择激活产品专属知识节点，节点相连后经过结构增强、抑制与交叉校准形成当前结构。它不同于官网以天文与历法数据展开的结构演算；两种路径可相互参照，但都不构成命运预测、医疗建议或替你作出的决定。" en="This report comes from the Mini Program’s Lingxifield Dendritic Knowledge Network: lived choices activate product-specific nodes that connect through structural amplification, inhibition, and cross-calibration. It differs from the website’s astronomical and calendrical calculation. The two paths can cross-reflect, but neither predicts fate, provides medical advice, or makes decisions for you." /></section>
       </div>
       <div className="mx-auto mt-6 max-w-3xl"><button onClick={download} disabled={downloading} className="w-full border border-lattice/50 bg-lattice/10 py-4 text-sm tracking-widest2 text-lattice">{downloading ? "正在生成 PDF…" : "下载 PDF · DOWNLOAD"}</button>{downloaded && <p className="mt-3 text-center text-xs leading-6 text-lattice">PDF 已生成并交给当前设备下载；本报告实例也已保存在小程序「我的场域」，无需再次购买。</p>}{downloadError && <p className="mt-3 text-center text-xs leading-6 text-rose-300">{downloadError}</p>}<p className="mt-3 text-center text-[11px] text-bone-dim">档案编号 · {productId}</p></div>
+      </div>
     </main>
   );
 }

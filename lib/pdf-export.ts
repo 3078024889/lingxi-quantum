@@ -118,6 +118,16 @@ export async function exportSimplePdf(params: {
     await waitForImages(chunk);
     const canvas = await html2canvas(chunk, { backgroundColor: bgColorHex, scale: 2, useCORS: true });
     const imgData = canvas.toDataURL("image/jpeg", 0.92);
+    if (chunk.classList.contains("lx-pdf-page")) {
+      if (placedAnything) { pdf.addPage(); fillPageBackground(); }
+      const scale = Math.min(pageWidth / canvas.width, pageHeight / canvas.height);
+      const renderedWidth = canvas.width * scale;
+      const renderedHeight = canvas.height * scale;
+      pdf.addImage(imgData, "JPEG", (pageWidth - renderedWidth) / 2, (pageHeight - renderedHeight) / 2, renderedWidth, renderedHeight);
+      placedAnything = true;
+      cursorY = pageHeight;
+      continue;
+    }
     const imgWidth = pageWidth - MARGIN * 2;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     const usableHeight = pageHeight - MARGIN * 2;
