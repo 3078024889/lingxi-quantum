@@ -1,5 +1,7 @@
+import { createHash } from "node:crypto";
 import { hasUnlock } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { subjectFromAssessment, type SubjectIdentity } from "@/lib/report-subject";
 import { BASE_DENDRITE_PRODUCT_IDS, calculateLifeArchetypeFromReports, MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult, type RelationshipAssessmentType } from "@/lib/mini/dendrite-engine";
 
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
@@ -15,66 +17,91 @@ export const LIFE_ARCHETYPE_TRIBUTARIES = [
   { productId: "qian-reading", nameZh: "生命灵签", nameEn: "Life Oracle" },
 ] as const;
 
-/** Create FIELD 09 once all eight paid/authorized tributaries are active. */
-export async function ensureLifeArchetype(userId: string) {
-  const admin = createAdminClient();
-  const now = Date.now();
-  const { data: existing } = await admin.from("mini_dendrite_assessments").select("id, created_at, algorithm_version")
-    .eq("user_id", userId).eq("product_id", "life-archetype").order("created_at", { ascending: false }).limit(1).maybeSingle();
-  const [{ data: unlocks }, { data: profile }] = await Promise.all([
-    admin.from("unlocks").select("product_id, expires_at, created_at").eq("user_id", userId),
-    admin.from("profiles").select("manifest_until").eq("id", userId).maybeSingle(),
-  ]);
-  const active = (unlocks ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > now).map((row) => row.product_id);
-  const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
-  const cutoff = new Date(now - YEAR_MS).toISOString();
-  const { data: rows } = await admin.from("mini_dendrite_assessments")
-    .select("id, product_id, input, result, created_at")
-    .eq("user_id", userId).in("product_id", BASE_DENDRITE_PRODUCT_IDS as unknown as string[])
-    .gte("created_at", cutoff).order("created_at", { ascending: false }).limit(96);
-  const latest = new Map<string, NonNullable<typeof rows>[number]>();
-  for (const row of rows ?? []) if (!latest.has(row.product_id)) latest.set(row.product_id, row);
+type AssessmentRow = { id: string; product_id: string; input: unknown; result: unknown; created_at: string; algorithm_version?: string };
+
+function sourceDigest(rows: AssessmentRow[]) {
+  return createHash("sha256").update(rows.map((row) => `${row.id}:${row.created_at}:${JSON.stringify(row.result)}`).join("|")).digest("hex");
+}
+
+function subjectGroups(userId: string, rows: AssessmentRow[]) {
+  const groups = new Map<string, { subject: SubjectIdentity; rows: AssessmentRow[] }>();
+  for (const row of rows) {
+    const subject = subjectFromAssessment(userId, row.input);
+    if (!subject) continue;
+    const current = groups.get(subject.subjectId) ?? { subject, rows: [] };
+    current.rows.push(row);
+    groups.set(subject.subjectId, current);
+  }
+  return groups;
+}
+
+function progressForSubject(subject: SubjectIdentity, rows: AssessmentRow[], active: string[], manifestActive: boolean) {
+  const latest = new Map<string, AssessmentRow>();
+  for (const row of rows) if (!latest.has(row.product_id)) latest.set(row.product_id, row);
   const completedIds = BASE_DENDRITE_PRODUCT_IDS.filter((productId) => latest.has(productId) && (manifestActive || hasUnlock(active, productId)));
   const missing = BASE_DENDRITE_PRODUCT_IDS.filter((productId) => !completedIds.includes(productId));
   const firstCompletedAt = [...latest.values()].reduce<string | null>((first, row) => !first || Date.parse(row.created_at) < Date.parse(first) ? row.created_at : first, null);
   const windowEndsAt = firstCompletedAt ? new Date(Date.parse(firstCompletedAt) + YEAR_MS).toISOString() : null;
-  const tributaries = LIFE_ARCHETYPE_TRIBUTARIES.map((item) => {
+  return { subject, latest, completedIds, missing, firstCompletedAt, windowEndsAt, tributaries: LIFE_ARCHETYPE_TRIBUTARIES.map((item) => {
     const row = latest.get(item.productId);
-    const hasAccess = manifestActive || hasUnlock(active, item.productId);
-    return {
-      ...item,
-      completed: !!row && hasAccess,
-      assessmentCompleted: !!row,
-      accessActive: hasAccess,
-      completedAt: row?.created_at ?? null,
-    };
-  });
-  if (missing.length) {
-    return { ready: false, missing, completed: completedIds.length, firstCompletedAt, windowEndsAt, tributaries, archivedSubmissionId: existing?.id ?? null };
-  }
+    const accessActive = manifestActive || hasUnlock(active, item.productId);
+    return { ...item, completed: !!row && accessActive, assessmentCompleted: !!row, accessActive, completedAt: row?.created_at ?? null, reportId: row?.id ?? null };
+  }) };
+}
 
-  const relationshipRows = (rows ?? []).filter((row) => row.product_id === "relationship-resonance");
-  const relationshipByType = new Map<string, NonNullable<typeof rows>[number]>();
+async function loadSubjectState(userId: string) {
+  const admin = createAdminClient();
+  const now = Date.now();
+  const cutoff = new Date(now - YEAR_MS).toISOString();
+  const [{ data: unlocks }, { data: profile }, { data: rows }, { data: archetypes }] = await Promise.all([
+    admin.from("unlocks").select("product_id, expires_at").eq("user_id", userId),
+    admin.from("profiles").select("manifest_until").eq("id", userId).maybeSingle(),
+    admin.from("mini_dendrite_assessments").select("id, product_id, input, result, created_at, algorithm_version").eq("user_id", userId).in("product_id", BASE_DENDRITE_PRODUCT_IDS as unknown as string[]).gte("created_at", cutoff).order("created_at", { ascending: false }).limit(240),
+    admin.from("mini_dendrite_assessments").select("id, input, created_at, algorithm_version").eq("user_id", userId).eq("product_id", "life-archetype").order("created_at", { ascending: false }).limit(32),
+  ]);
+  const active = (unlocks ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > now).map((row) => row.product_id);
+  const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
+  return { admin, active, manifestActive, groups: subjectGroups(userId, (rows ?? []) as AssessmentRow[]), archetypes: (archetypes ?? []) as AssessmentRow[] };
+}
+
+export async function listLifeArchetypeSubjects(userId: string) {
+  const state = await loadSubjectState(userId);
+  return [...state.groups.values()].map(({ subject, rows }) => {
+    const progress = progressForSubject(subject, rows, state.active, state.manifestActive);
+    const archive = state.archetypes.find((row) => (row.input as { subjectId?: string } | null)?.subjectId === subject.subjectId);
+    return { subject, completed: progress.completedIds.length, missing: progress.missing, tributaries: progress.tributaries, firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, archivedSubmissionId: archive?.id ?? null };
+  }).sort((left, right) => right.completed - left.completed || left.subject.displayName.localeCompare(right.subject.displayName, "zh-CN"));
+}
+
+/** Generate only from eight valid reports belonging to the same primary subject. */
+export async function ensureLifeArchetype(userId: string, requestedSubjectId?: string) {
+  const state = await loadSubjectState(userId);
+  const candidates = [...state.groups.values()].map(({ subject, rows }) => ({ subject, rows, progress: progressForSubject(subject, rows, state.active, state.manifestActive) }));
+  const selected = requestedSubjectId ? candidates.find((item) => item.subject.subjectId === requestedSubjectId) : candidates.sort((a, b) => b.progress.completedIds.length - a.progress.completedIds.length)[0];
+  if (!selected) return { ready: false, completed: 0, missing: BASE_DENDRITE_PRODUCT_IDS.slice(), tributaries: LIFE_ARCHETYPE_TRIBUTARIES.map((item) => ({ ...item, completed: false })) };
+  const { subject, rows, progress } = selected;
+  const matchingArchive = state.archetypes.find((row) => (row.input as { subjectId?: string } | null)?.subjectId === subject.subjectId);
+  if (progress.missing.length) return { ready: false, subject, completed: progress.completedIds.length, missing: progress.missing, firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, tributaries: progress.tributaries, archivedSubmissionId: matchingArchive?.id ?? null };
+
+  const relationshipRows = rows.filter((row) => row.product_id === "relationship-resonance");
+  const relationshipByType = new Map<string, AssessmentRow>();
   for (const row of relationshipRows) {
     const relationshipType = ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType ?? "deep";
     if (!relationshipByType.has(relationshipType)) relationshipByType.set(relationshipType, row);
   }
-  const sourceRows = BASE_DENDRITE_PRODUCT_IDS.map((productId) => latest.get(productId)!);
+  const sourceRows = BASE_DENDRITE_PRODUCT_IDS.map((productId) => progress.latest.get(productId)!);
   const enrichedSourceRows = [...sourceRows.filter((row) => row.product_id !== "relationship-resonance"), ...relationshipByType.values()];
-  const newestSource = sourceRows.reduce((max, row) => Math.max(max, Date.parse(row.created_at)), 0);
-  if (existing && existing.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && Date.parse(existing.created_at) >= newestSource) return { ready: true, generated: false, submissionId: existing.id, completed: 8, missing: [] as string[], firstCompletedAt, windowEndsAt, tributaries };
+  const sourceHash = sourceDigest(enrichedSourceRows);
+  const archiveInput = matchingArchive?.input as { sourceHash?: string } | null;
+  if (matchingArchive && matchingArchive.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && archiveInput?.sourceHash === sourceHash) return { ready: true, generated: false, subject, submissionId: matchingArchive.id, completed: 8, missing: [] as string[], firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, tributaries: progress.tributaries };
 
-  const result = calculateLifeArchetypeFromReports(enrichedSourceRows.map((row) => ({
-    productId: row.product_id,
-    result: row.result as DendriteResult,
-    completedAt: row.created_at,
-    relationshipType: ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType,
-  })));
-  const { data, error } = await admin.from("mini_dendrite_assessments").insert({
+  const result = calculateLifeArchetypeFromReports(enrichedSourceRows.map((row) => ({ productId: row.product_id, result: row.result as DendriteResult, completedAt: row.created_at, relationshipType: ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType })));
+  result.context = { subjectName: subject.displayName, subjectId: subject.subjectId };
+  const { data, error } = await state.admin.from("mini_dendrite_assessments").insert({
     user_id: userId, product_id: "life-archetype",
-    input: { sourceAssessmentIds: enrichedSourceRows.map((row) => row.id), sourceWindowDays: 365, firstCompletedAt, windowEndsAt, generatedAt: new Date().toISOString(), relationshipEvidenceCount: relationshipByType.size },
+    input: { subjectId: subject.subjectId, subjectIdentity: subject, sourceAssessmentIds: enrichedSourceRows.map((row) => row.id), sourceReportHashes: enrichedSourceRows.map((row) => sourceDigest([row])), sourceHash, sourceWindowDays: 365, firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, generatedAt: new Date().toISOString(), relationshipEvidenceCount: relationshipByType.size },
     result, algorithm_version: result.algorithm,
   }).select("id").single();
   if (error || !data) throw new Error(`life archetype insert failed: ${error?.code ?? "unknown"}`);
-  return { ready: true, generated: true, submissionId: data.id, completed: 8, missing: [] as string[], firstCompletedAt, windowEndsAt, tributaries };
+  return { ready: true, generated: true, subject, submissionId: data.id, completed: 8, missing: [] as string[], firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, tributaries: progress.tributaries };
 }

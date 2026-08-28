@@ -26,8 +26,12 @@ export type DendriteReportEntry = {
   realityEn: string;
   costZh?: string;
   costEn?: string;
+  strengthZh?: string;
+  strengthEn?: string;
   actionZh: string;
   actionEn: string;
+  observationZh: string;
+  observationEn: string;
 };
 
 type EntryBlueprint = { chaptersZh: string[]; chaptersEn: string[]; titlesZh: string[] };
@@ -115,8 +119,14 @@ export function buildReportEntries(productId: string, relationshipType: "deep" |
         costZh: `当前代价不来自「${primary.zh}」本身，而来自它持续高强度运行、同时「${counter.zh}」没有进入承接位置。`,
         costEn: `The current cost does not come from ${primary.en} itself, but from its sustained intensity while ${counter.en} remains outside the capacity position.`,
       } : {}),
+      ...(primary.score >= 64 ? {
+        strengthZh: `结构优势在于「${primary.zh}」已经可以被稳定调用，并由「${support.zh}」把洞察转成可被现实接收的形式。`,
+        strengthEn: `${primary.en} is already reliably available, while ${support.en} translates insight into a form reality can receive.`,
+      } : {}),
       actionZh: `${primary.actionZh}只做一次，并记录它是否让「${support.zh}」更容易被现实看见。`,
       actionEn: `${primary.actionEn} Do it once and record whether it makes ${support.en} more visible in reality.`,
+      observationZh: `下一次相似情境出现时，观察「${primary.zh}」与「${support.zh}」谁先启动，以及「${counter.zh}」是否获得了真实参与空间。`,
+      observationEn: `In the next similar situation, observe whether ${primary.en} or ${support.en} starts first, and whether ${counter.en} receives real room to participate.`,
     };
   });
 }

@@ -26,7 +26,7 @@ export async function GET(req: Request) {
       .eq("status", "paid")
       .order("paid_at", { ascending: false })
       .limit(50),
-    admin.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at")
+    admin.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at, input")
       .eq("user_id", session.userId).order("created_at", { ascending: false }).limit(100),
   ]);
     const now = Date.now();
@@ -46,7 +46,10 @@ export async function GET(req: Request) {
       webOnly: !order.submission_id && isMiniWebArchiveProduct(order.product_id),
     })),
     archives: (assessments ?? []).filter((assessment, index, all) => {
-      if (assessment.product_id === "life-archetype") return assessment.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM);
+      if (assessment.product_id === "life-archetype") {
+        const subjectId = (assessment.input as { subjectId?: string } | null)?.subjectId;
+        return assessment.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
+      }
       return manifestActive || hasUnlock(activeUnlockIds, assessment.product_id);
     }).map((assessment) => ({
       id: `assessment:${assessment.id}`,

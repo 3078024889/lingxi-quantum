@@ -3,6 +3,7 @@ import { requireMiniSession } from "@/lib/mini/session";
 import { createAdminClient, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 import { calculateDendrite, getDendriteProduct, type RelationshipAssessmentType } from "@/lib/mini/dendrite-engine";
 import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
+import { makeSubjectIdentity } from "@/lib/report-subject";
 
 export const runtime = "nodejs";
 
@@ -31,16 +32,18 @@ export async function POST(req: Request) {
     if (productId === "relationship-resonance" && !partnerName) return NextResponse.json({ error: "请填写关系双方的称呼" }, { status: 400 });
     const responses = body.responses as Record<string, string>;
     let result = calculateDendrite(product, responses);
-    result.context = { subjectName: name, ...(partnerName ? { partnerName } : {}), ...(productId === "relationship-resonance" ? { relationshipType } : {}) };
     const admin = createAdminClient();
-
-    const input = {
+    const baseInput = {
       responses,
       name,
       partnerName,
       relationshipType: productId === "relationship-resonance" ? relationshipType : null,
       completedAt: new Date().toISOString(),
     };
+    const subjectIdentity = makeSubjectIdentity(session.userId, baseInput);
+    if (!subjectIdentity) return NextResponse.json({ error: "无法确认报告主体，请重新填写姓名" }, { status: 400 });
+    result.context = { subjectName: name, subjectId: subjectIdentity.subjectId, ...(partnerName ? { partnerName } : {}), ...(productId === "relationship-resonance" ? { relationshipType } : {}) };
+    const input = { ...baseInput, subjectId: subjectIdentity.subjectId, subjectIdentity, ...(productId === "relationship-resonance" ? { primarySubjectId: subjectIdentity.subjectId, participantNames: [name, partnerName] } : {}) };
     const { data, error } = await admin.from("mini_dendrite_assessments").insert({
       user_id: session.userId, product_id: productId, input, result, algorithm_version: result.algorithm,
     }).select("id").single();
@@ -49,7 +52,7 @@ export async function POST(req: Request) {
       .eq("user_id", session.userId).in("product_id", [productId, "everything"]);
     const now = Date.now();
     const unlocked = (unlockRows ?? []).some((row) => !row.expires_at || Date.parse(row.expires_at) > now);
-    const archetype = await ensureLifeArchetype(session.userId).catch(() => null);
+    const archetype = await ensureLifeArchetype(session.userId, subjectIdentity.subjectId).catch(() => null);
     return NextResponse.json({ submissionId: data.id, result, unlocked, archetype });
   } catch (error) {
     const message = error instanceof Error ? error.message : "unknown";

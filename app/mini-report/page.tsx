@@ -1,23 +1,11 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
-import { LIFE_SIGNS } from "@/lib/qian-data";
 import MiniDendriteReport from "./MiniDendriteReport";
 import MiniLifeArchetypeReport from "./MiniLifeArchetypeReport";
 import { hasUnlock } from "@/lib/access";
 import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult } from "@/lib/mini/dendrite-engine";
-
-function deterministicSelection<T>(items: T[], seed: number, count: number) {
-  const pool = [...items];
-  const selected: T[] = [];
-  let state = (seed || 1) >>> 0;
-  while (pool.length && selected.length < count) {
-    state = (state * 1664525 + 1013904223) >>> 0;
-    selected.push(pool.splice(state % pool.length, 1)[0]);
-  }
-  return selected;
-}
 
 export default async function MiniReportPage({ searchParams }: { searchParams: { id?: string } }) {
   if (!searchParams.id) redirect("/account");
@@ -29,7 +17,8 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     .eq("id", searchParams.id).eq("user_id", user.id).maybeSingle();
   if (!data) redirect("/account/orders");
   if (data.product_id === "life-archetype" && data.algorithm_version !== MINI_LIFE_ARCHETYPE_ALGORITHM) {
-    const refreshed = await ensureLifeArchetype(user.id);
+    const priorInput = (data.input ?? {}) as { subjectId?: string };
+    const refreshed = await ensureLifeArchetype(user.id, priorInput.subjectId);
     if (refreshed.ready && refreshed.submissionId && refreshed.submissionId !== data.id) redirect(`/mini-report?id=${refreshed.submissionId}`);
   }
   if (data.product_id !== "life-archetype") {
@@ -54,33 +43,13 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
   };
   const input = (data.input ?? {}) as { name?: string; partnerName?: string; relationshipType?: "deep" | "business" | "other" };
-  const relationshipNames = { deep: "关系共振 · 深度关系", business: "关系共振 · 合伙商业", other: "关系共振 · 其他关系" } as const;
+  const relationshipNames = { deep: "深度关系共振", business: "合伙商业共振", other: "其他关系共振" } as const;
   const productName = data.product_id === "life-archetype"
     ? "生命原型 · 八流归一"
     : data.product_id === "relationship-resonance"
       ? relationshipNames[input.relationshipType ?? "deep"]
       : getProduct(data.product_id)?.name ?? data.product_id;
   const subjectName = input.partnerName ? `${input.name || "我"} × ${input.partnerName}` : input.name || "未命名生命档案";
-  const cards = data.product_id === "qian-reading" ? (result.archetypeCardIndexes ?? []).map((index) => LIFE_SIGNS[index]).filter(Boolean).map((card) => ({
-    index: card.index, nameZh: card.nameZh, nameEn: card.nameEn,
-  })) : [];
-  const fullArtDir: Record<string, string> = {
-    "life-map-report":"lifemap", "relationship-resonance":input.relationshipType === "business" ? "relationship-full/business" : input.relationshipType === "deep" ? "relationship-full/romantic" : "relationship-full/general", "resilience-report":"resilience-full",
-    "romance-report":"romance-full", "wealth-report":"wealth-full", "daily-tide-report":"daily-tide-full",
-    "tarot-reading":"tarot-full", "qian-reading":"qian-full",
-  };
-  const archetypePool = [
-    "lifemap", "relationship-full/general", "relationship-full/business", "relationship-full/romantic",
-    "resilience-full", "romance-full", "wealth-full", "daily-tide-full", "tarot-full", "qian-full",
-  ].flatMap((dir) => Array.from({ length: 12 }, (_, index) => `/images/${dir}/page-${index}.png`));
-  const artSeed = result.artworkIndex ?? result.dominant.reduce((sum, node) => sum + node.score, 0);
-  const artworks = data.product_id === "life-archetype"
-    ? deterministicSelection(archetypePool, artSeed, 8)
-    : fullArtDir[data.product_id]
-      ? deterministicSelection(Array.from({ length: 12 }, (_, index) => `/images/${fullArtDir[data.product_id]}/page-${index}.png`), artSeed, 6)
-      : [];
-  const fallbackRolesZh = data.product_id === "qian-reading" ? ["源流签", "灵魂签", "行者签"] : data.product_id === "life-archetype" ? ["当前原型"] : [];
-  const fallbackRolesEn = data.product_id === "qian-reading" ? ["Source Sign", "Soul Sign", "Wayfarer Sign"] : data.product_id === "life-archetype" ? ["Current Archetype"] : [];
-  if (data.product_id === "life-archetype") return <MiniLifeArchetypeReport subjectName={subjectName} createdAt={data.created_at} result={result} artworks={artworks} />;
-  return <MiniDendriteReport productId={data.product_id} productName={productName} subjectName={subjectName} createdAt={data.created_at} result={result} cards={cards} artworks={artworks} cardRolesZh={result.cardRolesZh ?? fallbackRolesZh} cardRolesEn={result.cardRolesEn ?? fallbackRolesEn} />;
+  if (data.product_id === "life-archetype") return <MiniLifeArchetypeReport reportId={data.id} subjectName={subjectName} createdAt={data.created_at} result={result} />;
+  return <MiniDendriteReport reportId={data.id} relationshipType={input.relationshipType} productId={data.product_id} productName={productName} subjectName={subjectName} createdAt={data.created_at} result={result} />;
 }

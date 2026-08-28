@@ -3,99 +3,53 @@
 import { useRef, useState } from "react";
 import Bi from "@/components/Bi";
 import ReportReturnBar from "./ReportReturnBar";
+import { PublicationCopy, PublicationLabel, PublicationPage } from "./PublicationPage";
+import { PDF_ASSET_REGISTRY, productArtKey, selectPdfArt } from "@/lib/report-art-registry";
 import type { DendriteReportEntry } from "@/lib/mini/report-entry-library";
 
 type Result = {
-  titleZh: string; titleEn: string; insightZh: string; insightEn: string;
-  nodes: Array<{ id: string; zh: string; en: string; score: number; actionZh?: string; actionEn?: string }>;
-  dominant: Array<{ id: string; zh: string; en: string; score: number; actionZh?: string; actionEn?: string }>;
-  chapters?: Array<{ id: string; titleZh: string; titleEn: string; bodyZh: string; bodyEn: string }>;
-  evidence?: { answered: number; total: number; historyProducts: number; sourceZh: string; sourceEn: string };
-  fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
-  structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
-  reportEntries?: DendriteReportEntry[];
-};
-const FIELD_LABELS: Record<string, string> = {
-  "life-map-report":"生命图谱", "relationship-resonance":"关系共振", "resilience-report":"生命韧性",
-  "romance-report":"桃花磁场", "wealth-report":"财富创造", "daily-tide-report":"今日潮汐",
-  "tarot-reading":"生命镜像", "qian-reading":"生命灵签",
-};
-const CONTRIBUTION_LABELS = { "long-term":"长期底层", recent:"近期参与", active:"当前前景", tension:"承接张力" } as const;
-const PRODUCT_EDITORIAL: Record<string, { solveZh: string; solveEn: string; mechanismZh: string; mechanismEn: string; actionZh: string; actionEn: string }> = {
-  "life-map-report": { solveZh:"辨认长期结构与当下角色之间是否仍在同一条线上。", solveEn:"Distinguish enduring structure from the role currently being maintained.", mechanismZh:"读取跨情境反复出现的本源倾向、现实适应与适应成本。", mechanismEn:"Read recurring source tendencies, real-world adaptation, and its cost.", actionZh:"用一组无人要求时的自然选择，校准正在承担的现实角色。", actionEn:"Calibrate the role you carry against choices made without external demand." },
-  "relationship-resonance": { solveZh:"看见两个人之间真实形成的第三种关系结构，而不是计算匹配率。", solveEn:"Reveal the third structure formed between two people rather than a compatibility score.", mechanismZh:"比较靠近、表达、安全、边界、冲突与修复如何互相传递。", mechanismEn:"Compare how approach, expression, safety, boundary, conflict, and repair transmit.", actionZh:"把一处感知落差改写为双方都能验证的回应。", actionEn:"Turn one perception gap into a response both people can verify." },
-  "resilience-report": { solveZh:"区分表面恢复、内部可用能量与尚未计算的恢复成本。", solveEn:"Separate visible recovery, usable inner energy, and uncounted recovery cost.", mechanismZh:"读取压力进入、承接、回弹与再次投入之间的时间差。", mechanismEn:"Read the timing gaps among pressure, capacity, rebound, and re-entry.", actionZh:"建立七天双轨记录，让功能恢复与真实容量分别留下证据。", actionEn:"Create a seven-day dual record of functional recovery and actual capacity." },
-  "romance-report": { solveZh:"辨认吸引信号在哪里形成、被表达，又在哪里停止进入双向互动。", solveEn:"Locate where attraction forms, becomes visible, and stops becoming mutual.", mechanismZh:"读取靠近许可、边界、可见度与现实回应的共同结构。", mechanismEn:"Read permission to approach, boundary, visibility, and real response together.", actionZh:"发出一个清晰、有边界、可被回应的兴趣信号。", actionEn:"Send one clear, bounded, answerable signal of interest." },
-  "wealth-report": { solveZh:"识别价值创造与现实交换之间最具体的断点。", solveEn:"Identify the precise break between value creation and real exchange.", mechanismZh:"追踪价值被创造、命名、交付、验证、复制与承接的路径。", mechanismEn:"Trace how value is created, named, delivered, verified, repeated, and received.", actionZh:"把一个已有成果改写成明确对象、交付形式与下一次交换。", actionEn:"Turn one existing result into a user, deliverable, and next exchange." },
-  "daily-tide-report": { solveZh:"让今天的决定与今天真实可用的容量保持一致。", solveEn:"Align today's decisions with capacity actually available today.", mechanismZh:"读取能量、负载、专注与连接窗口，而不是把状态误判成人格。", mechanismEn:"Read energy, load, focus, and connection windows without mistaking state for identity.", actionZh:"调整一项任务强度，并在一天结束时验证容量是否回升。", actionEn:"Adjust one task's intensity and verify whether capacity returns by day's end." },
-  "tarot-reading": { solveZh:"把经验、现实条件与行动空间从同一个镜面中重新分开。", solveEn:"Separate experience, real conditions, and action space from one symbolic mirror.", mechanismZh:"以三重镜像打开互不替代的观察位置，不把象征当作未来判定。", mechanismEn:"Use three mirrors as distinct viewpoints without turning symbols into predictions.", actionZh:"移动一个最小现实变量，观察整张结构图如何改变。", actionEn:"Move one small real-world variable and observe how the structure changes." },
-  "qian-reading": { solveZh:"让难以命名的经验获得象征坐标，再回到现实验证。", solveEn:"Give unnamed experience a symbolic coordinate, then return it to reality for verification.", mechanismZh:"以源流、灵魂与行者三重位置校准注意力、意义与行动。", mechanismEn:"Calibrate attention, meaning, and action through Source, Soul, and Wayfarer positions.", actionZh:"选择一条最有触动的象征句，为它安排三天内可观察的行动。", actionEn:"Choose the most resonant symbolic line and give it an observable three-day action." },
-  "life-archetype": { solveZh:"读取八条支流共同形成的主轴、增强回路、承接差与真实张力。", solveEn:"Read the shared axis, reinforcement loops, capacity gaps, and real tensions formed by eight tributaries.", mechanismZh:"交叉计算 192 次选择、八组节点与跨域关系，不把八份报告压缩成摘要。", mechanismEn:"Cross-read 192 choices, eight node systems, and inter-field relations without reducing them to a summary.", actionZh:"选择一个同时触及主轴与承接差的七日实验，为下一次原型更新提供新证据。", actionEn:"Run one seven-day experiment touching both primary axis and capacity gap, creating evidence for the next update." },
+  titleZh:string; titleEn:string; insightZh:string; insightEn:string;
+  nodes:Array<{id:string;zh:string;en:string;score:number;actionZh?:string;actionEn?:string}>;
+  dominant:Array<{id:string;zh:string;en:string;score:number;actionZh?:string;actionEn?:string}>;
+  evidence?:{answered:number;total:number;historyProducts:number;sourceZh:string;sourceEn:string};
+  structuralRelations?:Array<{from:string;to:string;kind:"reinforce"|"bridge"|"tension";strength:number}>;
+  reportEntries?:DendriteReportEntry[];
 };
 
-export default function MiniDendriteReport({ productId, productName, subjectName, createdAt, result, cards, artworks, cardRolesZh, cardRolesEn }: { productId: string; productName: string; subjectName: string; createdAt: string; result: Result; cards: Array<{ index: number; nameZh: string; nameEn: string }>; artworks: string[]; cardRolesZh: string[]; cardRolesEn: string[] }) {
-  const reportRef = useRef<HTMLDivElement>(null);
-  const [downloading, setDownloading] = useState(false);
-  const [downloaded, setDownloaded] = useState(false);
-  const [downloadError, setDownloadError] = useState("");
-  const nodeLabels = new Map(result.nodes.map((node) => [node.id, node.zh]));
-  const editorial = PRODUCT_EDITORIAL[productId] ?? PRODUCT_EDITORIAL["life-map-report"];
-  const entryChapters = [...new Set((result.reportEntries ?? []).map((entry) => entry.chapterId))].map((chapterId) => ({
-    chapterId,
-    entries: (result.reportEntries ?? []).filter((entry) => entry.chapterId === chapterId),
-  }));
-  const download = async () => {
-    if (!reportRef.current || downloading) return;
-    setDownloadError("");
-    setDownloading(true);
-    try {
-      const { exportSimplePdf } = await import("@/lib/pdf-export");
-      await exportSimplePdf({ containerRef: reportRef.current, fileName: `${productName}-树突场域档案.pdf`, bgColorRgb: [10, 19, 48], bgColorHex: "#0A1330" });
-      setDownloaded(true);
-    } catch {
-      setDownloadError("PDF 暂未完成，请保留本页并稍后重试；网页档案已安全保存在“我的场域”。");
-    } finally { setDownloading(false); }
-  };
-  return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_15%_10%,rgba(126,91,180,.35),transparent_32%),radial-gradient(circle_at_85%_25%,rgba(43,156,168,.28),transparent_36%),#0a1330] text-bone">
-      <ReportReturnBar miniLabel="返回我的场域" />
-      <div className="px-5 py-12">
-      <div ref={reportRef} className="mx-auto max-w-3xl space-y-5">
-        <header className="lx-glass p-7 sm:p-10">
-          <p className="text-xs uppercase tracking-[.32em] text-lattice">LINGXIFIELD DENDRITIC ARCHIVE</p>
-          <h1 className="mt-5 font-display text-3xl sm:text-5xl">{productName}</h1>
-          <p className="mt-3 text-sm tracking-[.18em] text-lattice">档案主体 · {subjectName}</p>
-          <p className="mt-3 text-sm text-bone-dim">{new Date(createdAt).toLocaleString("zh-CN")}</p>
-          <div className="mt-8 border-l border-lattice/50 pl-5">
-            <p className="font-display text-2xl text-lattice"><Bi zh={result.titleZh} en={result.titleEn} /></p>
-            <p className="mt-4 leading-8 text-bone-dim"><Bi zh={result.insightZh} en={result.insightEn} /></p>
-          </div>
-        </header>
-        <section className="grid gap-4 sm:grid-cols-3">
-          <article className="lx-glass p-6"><p className="text-xs tracking-[.2em] text-lattice">01 · 当前解决什么</p><p className="mt-4 leading-7 text-bone-dim"><Bi zh={editorial.solveZh} en={editorial.solveEn} /></p></article>
-          <article className="lx-glass p-6"><p className="text-xs tracking-[.2em] text-lattice">02 · 如何形成判断</p><p className="mt-4 leading-7 text-bone-dim"><Bi zh={editorial.mechanismZh} en={editorial.mechanismEn} /></p></article>
-          <article className="lx-glass p-6"><p className="text-xs tracking-[.2em] text-lattice">03 · 现实验证入口</p><p className="mt-4 leading-7 text-bone-dim"><Bi zh={editorial.actionZh} en={editorial.actionEn} /></p></article>
-        </section>
-        {artworks[0] && <figure className="lx-publication-card-page relative min-h-[620px] overflow-hidden border border-white/15">
-          {/* eslint-disable-next-line @next/next/no-img-element */}<img src={artworks[0]} alt={`${productName} 原型结构图`} className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#08102c] via-[#08102c]/35 to-[#08102c]/10" />
-          <figcaption className="absolute inset-x-0 bottom-0 p-7 sm:p-10"><p className="text-xs tracking-[.28em] text-lattice">LINGXIFIELD ORIGINAL FIELD PLATE</p><h2 className="mt-4 font-display text-3xl text-bone"><Bi zh={result.titleZh} en={result.titleEn} /></h2><p className="mt-4 max-w-2xl leading-8 text-bone-soft"><Bi zh={result.insightZh} en={result.insightEn} /></p></figcaption>
-        </figure>}
-        {cards.length > 0 && <section className="grid gap-5 sm:grid-cols-3">{cards.map((card, index) => <article key={`${card.index}-${index}`} className="lx-glass overflow-hidden p-4 text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}<img src={`/images/qian/${String(card.index).padStart(2, "0")}.jpg`} alt={card.nameZh} className="mx-auto aspect-[2/3] w-full object-cover" />
-          <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice"><Bi zh={cardRolesZh[index] ?? "生命原型"} en={cardRolesEn[index] ?? "Life Archetype"} /></p>
-          <p className="mt-2 font-display text-lg"><Bi zh={card.nameZh} en={card.nameEn} /></p>
-        </article>)}</section>}
-        <section className="lx-glass p-7 sm:p-10"><h2 className="font-display text-xl text-lattice"><Bi zh="节点激活图" en="Node Activation Map" /></h2><div className="mt-6 space-y-4">{result.nodes.map((node) => <div key={node.id}><div className="flex justify-between text-sm text-bone-dim"><span><Bi zh={node.zh} en={node.en} /></span><span>{node.score}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-lattice to-purple-300" style={{ width: `${node.score}%` }} /></div></div>)}</div></section>
-        {result.fieldContributions?.length ? <section className="lx-glass p-7 sm:p-10"><h2 className="font-display text-xl text-lattice">八重场域贡献</h2><p className="mt-3 text-sm leading-7 text-bone-dim">八域仍保持各自证据，不被压缩成一段总结。状态显示它们当前在原型中的作用位置。</p><div className="mt-6 grid gap-3 sm:grid-cols-2">{result.fieldContributions.map((field) => <article key={field.productId} className="border border-white/10 bg-white/[.035] p-4"><div className="flex items-center justify-between gap-3 text-sm"><span>{FIELD_LABELS[field.productId] ?? field.productId}</span><span className="text-lattice">{field.score} · {CONTRIBUTION_LABELS[field.state]}</span></div></article>)}</div></section> : null}
-        {result.structuralRelations?.length ? <section className="lx-glass p-7 sm:p-10"><h2 className="font-display text-xl text-lattice">结构关系矩阵</h2><div className="mt-6 space-y-3">{result.structuralRelations.map((relation, index) => <div key={`${relation.from}-${relation.to}-${index}`} className="flex items-center justify-between gap-4 border-b border-white/10 pb-3 text-sm text-bone-dim"><span>{nodeLabels.get(relation.from) ?? relation.from} → {nodeLabels.get(relation.to) ?? relation.to}</span><span className="text-lattice">{{ reinforce:"增强", bridge:"桥接", tension:"张力" }[relation.kind]} · {relation.strength}</span></div>)}</div></section> : null}
-        {(result.chapters ?? []).map((chapter, index) => <div key={chapter.id} className="space-y-5"><section className="lx-glass p-7 sm:p-10"><p className="text-xs tracking-[.28em] text-lattice">{String(index + 1).padStart(2, "0")}</p><h2 className="mt-3 font-display text-2xl"><Bi zh={chapter.titleZh} en={chapter.titleEn} /></h2><p className="mt-5 whitespace-pre-line leading-8 text-bone-dim"><Bi zh={chapter.bodyZh} en={chapter.bodyEn} /></p><div className="mt-7 grid gap-3 border-t border-white/10 pt-6 sm:grid-cols-2"><p className="text-sm leading-7 text-bone-soft"><span className="text-lattice">结构证据 · </span>{result.dominant[index % result.dominant.length]?.zh} {result.dominant[index % result.dominant.length]?.score} / 100</p><p className="text-sm leading-7 text-bone-soft"><span className="text-lattice">验证方向 · </span>{result.dominant[index % result.dominant.length]?.actionZh}</p></div>{index === 0 && <div className="mt-6 border-l border-lattice/40 pl-4 text-sm leading-7 text-lattice">证据 → 结构机制 → 现实影响 → 可验证动作</div>}</section>{artworks[index + 1] && <figure className="lx-publication-card-page relative min-h-[620px] overflow-hidden border border-white/15"><img src={artworks[index + 1]} alt={`${productName} 结构图 ${index + 1}`} className="absolute inset-0 h-full w-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#07102c] via-[#07102c]/28 to-transparent"/><figcaption className="absolute inset-x-0 bottom-0 p-7 sm:p-10"><p className="text-xs tracking-[.26em] text-lattice">{String(index + 1).padStart(2, "0")} · STRUCTURAL PLATE</p><h3 className="mt-3 font-display text-3xl text-bone"><Bi zh={chapter.titleZh} en={chapter.titleEn} /></h3><p className="mt-4 line-clamp-4 max-w-2xl leading-8 text-bone-soft"><Bi zh={chapter.bodyZh} en={chapter.bodyEn} /></p></figcaption></figure>}</div>)}
-        {entryChapters.map(({ chapterId, entries }, chapterIndex) => <section key={chapterId} className="lx-pdf-page lx-glass min-h-[980px] p-7 sm:p-10"><p className="text-xs uppercase tracking-[.28em] text-lattice">ARCHIVE CHAPTER {String(chapterIndex + 1).padStart(2,"0")} / 06</p><h2 className="mt-4 font-display text-2xl text-bone"><Bi zh={entries[0]?.chapterZh ?? "结构档案"} en={entries[0]?.chapterEn ?? "Structural Archive"}/></h2><div className="mt-7 grid gap-4">{entries.map((entry,index)=><article key={entry.id} className="border border-white/12 bg-white/[.035] p-5"><div className="flex items-start justify-between gap-4"><h3 className="font-display text-lg text-lattice">{String(chapterIndex*4+index+1).padStart(2,"0")} · <Bi zh={entry.titleZh} en={entry.titleEn}/></h3><span className="shrink-0 text-[10px] text-bone-mute">{{clear:"证据清晰",developing:"正在形成",open:"保持开放"}[entry.confidence]}</span></div><p className="mt-3 text-sm leading-7 text-bone-soft"><Bi zh={entry.structureZh} en={entry.structureEn}/></p><p className="mt-3 text-sm leading-7 text-bone-dim"><span className="text-lattice">形成机制 · </span><Bi zh={entry.mechanismZh} en={entry.mechanismEn}/></p><p className="mt-3 text-sm leading-7 text-bone-dim"><span className="text-lattice">现实出现 · </span><Bi zh={entry.realityZh} en={entry.realityEn}/></p>{entry.costZh&&<p className="mt-3 text-sm leading-7 text-bone-dim"><span className="text-purple-200">当前代价 · </span><Bi zh={entry.costZh} en={entry.costEn ?? ""}/></p>}<p className="mt-3 text-sm leading-7 text-lattice"><span>可移动点 · </span><Bi zh={entry.actionZh} en={entry.actionEn}/></p></article>)}</div></section>)}
-        {result.evidence && <section className="lx-glass p-7 text-sm leading-8 text-bone-dim"><p className="text-lattice"><Bi zh={`结构证据 · ${result.evidence.answered}/${result.evidence.total} 次有效互动${result.evidence.historyProducts ? ` · ${result.evidence.historyProducts} 个历史场域` : ""}`} en={`Structural evidence · ${result.evidence.answered}/${result.evidence.total} valid interactions${result.evidence.historyProducts ? ` · ${result.evidence.historyProducts} history fields` : ""}`} /></p><p className="mt-3"><Bi zh={result.evidence.sourceZh} en={result.evidence.sourceEn} /></p></section>}
-        <section className="lx-glass p-7 text-sm leading-8 text-bone-dim"><Bi zh="本报告来自小程序中的灵犀场树突知识网络：真实选择激活产品专属知识节点，节点相连后经过结构增强、抑制与交叉校准形成当前结构。它不同于官网以天文与历法数据展开的结构演算；两种路径可相互参照，但都不构成命运预测、医疗建议或替你作出的决定。" en="This report comes from the Mini Program’s Lingxifield Dendritic Knowledge Network: lived choices activate product-specific nodes that connect through structural amplification, inhibition, and cross-calibration. It differs from the website’s astronomical and calendrical calculation. The two paths can cross-reflect, but neither predicts fate, provides medical advice, or makes decisions for you." /></section>
-      </div>
-      <div className="mx-auto mt-6 max-w-3xl"><button onClick={download} disabled={downloading} className="w-full border border-lattice/50 bg-lattice/10 py-4 text-sm tracking-widest2 text-lattice">{downloading ? "正在生成 PDF…" : "下载 PDF · DOWNLOAD"}</button>{downloaded && <p className="mt-3 text-center text-xs leading-6 text-lattice">PDF 已生成并交给当前设备下载；本报告实例也已保存在小程序「我的场域」，无需再次购买。</p>}{downloadError && <p className="mt-3 text-center text-xs leading-6 text-rose-300">{downloadError}</p>}<p className="mt-3 text-center text-[11px] text-bone-dim">档案编号 · {productId}</p></div>
-      </div>
-    </main>
-  );
+const EDITORIAL: Record<string, [string,string,string]> = {
+  "life-map-report":["长期结构与现实角色是否仍在同一条线上","跨情境读取本源倾向、现实适应与适应成本","以无人要求时的自然选择校准现实角色"],
+  "relationship-resonance":["两个人真实形成的第三种关系结构","比较靠近、表达、安全、边界、冲突与修复","把一处感知落差改写为双方可验证的回应"],
+  "resilience-report":["表面恢复、可用能量与恢复成本之间的差","读取压力进入、承接、回弹与再次投入的时间差","建立七天双轨记录，分别记录功能与容量"],
+  "romance-report":["吸引在哪里形成，又在哪里停止进入双向互动","共同读取可见度、靠近许可、边界与现实回应","发出一个清晰、有边界且可被回应的兴趣信号"],
+  "wealth-report":["价值创造与现实交换之间的具体断点","追踪价值的创造、命名、交付、验证与复制","把一个已有成果改写成可交换的现实交付"],
+  "daily-tide-report":["让今天的决定与今天真实可用的容量一致","读取能量、负载、专注与连接窗口","调整一项任务强度并在日末验证容量"],
+  "tarot-reading":["从同一面镜像中分开经验、条件与行动空间","以三重镜像打开互不替代的观察位置","移动一个最小现实变量并记录反馈"],
+  "qian-reading":["让难以命名的经验获得象征坐标","以源流、灵魂与行者校准意义和行动","将最有触动的象征句转成三日观察"],
+};
+const confidenceLabel={clear:"证据清晰",developing:"正在形成",open:"保持开放"} as const;
+
+export default function MiniDendriteReport({reportId,relationshipType,productId,productName,subjectName,createdAt,result}:{reportId:string;relationshipType?:string;productId:string;productName:string;subjectName:string;createdAt:string;result:Result}) {
+  const reportRef=useRef<HTMLDivElement>(null);
+  const [downloading,setDownloading]=useState(false); const [downloaded,setDownloaded]=useState(false); const [downloadError,setDownloadError]=useState("");
+  const artPool=PDF_ASSET_REGISTRY[productArtKey(productId,relationshipType)];
+  const art=(page:number)=>selectPdfArt(artPool,reportId,page).src;
+  const entries=(result.reportEntries??[]).slice(0,24);
+  const entryPairs=Array.from({length:12},(_,index)=>entries.slice(index*2,index*2+2));
+  const nodeById=new Map(result.nodes.map((node)=>[node.id,node.zh]));
+  const editorial=EDITORIAL[productId]??EDITORIAL["life-map-report"];
+  const total=18;
+  const download=async()=>{if(!reportRef.current||downloading)return;setDownloading(true);setDownloadError("");try{const{exportPublicationPagesPdf}=await import("@/lib/pdf-export");await exportPublicationPagesPdf({containerRef:reportRef.current,fileName:`${productName}-完整场域档案.pdf`});setDownloaded(true);}catch(error){console.error(error);setDownloadError("PDF 未能完整生成。系统已阻止空图或残缺页面下载，请稍后重试；网页档案仍已保存。");}finally{setDownloading(false);}};
+  return <main className="min-h-screen bg-[radial-gradient(circle_at_12%_8%,rgba(127,91,180,.34),transparent_30%),radial-gradient(circle_at_88%_24%,rgba(43,156,168,.28),transparent_35%),#0a1330] text-bone">
+    <ReportReturnBar miniLabel="返回我的场域"/>
+    <div ref={reportRef} className="space-y-7 px-3 py-8 sm:px-6">
+      <PublicationPage index={1} total={total} eyebrow="LINGXIFIELD DENDRITIC ARCHIVE" title={productName} art={art(1)} layout="cover"><PublicationLabel>档案主体 · {subjectName}</PublicationLabel><p className="mt-3 text-xs opacity-70">{new Date(createdAt).toLocaleString("zh-CN")}</p><p className="mt-6 font-display text-2xl text-[#bff8ec]"><Bi zh={result.titleZh} en={result.titleEn}/></p><PublicationCopy><Bi zh={result.insightZh} en={result.insightEn}/></PublicationCopy></PublicationPage>
+      <PublicationPage index={2} total={total} eyebrow="EDITORIAL POSITION" title="这份报告真正读取什么" art={art(2)}><div className="grid gap-4">{["当前解决什么","如何形成判断","现实验证入口"].map((label,index)=><article key={label} className="border-l border-[#78b8b7] pl-4"><PublicationLabel>{String(index+1).padStart(2,"0")} · {label}</PublicationLabel><PublicationCopy>{editorial[index]}</PublicationCopy></article>)}</div></PublicationPage>
+      <PublicationPage index={3} total={total} eyebrow="NODE ACTIVATION MAP" title="节点激活与主轴" art={art(3)}><div className="grid grid-cols-2 gap-x-6 gap-y-3">{result.nodes.map((node)=><div key={node.id}><div className="flex justify-between text-[11px]"><span>{node.zh}</span><span>{node.score}</span></div><div className="mt-1.5 h-1.5 bg-[#514f67]/12"><div className="h-full bg-gradient-to-r from-[#79c9c1] to-[#a98bce]" style={{width:`${node.score}%`}}/></div></div>)}</div><PublicationCopy muted>高分不等于优点，低分也不等于缺陷。它们表示哪些结构更常进入前景，哪些仍需要现实场景继续验证。</PublicationCopy></PublicationPage>
+      {entryPairs.map((pair,pairIndex)=><PublicationPage key={pairIndex} index={pairIndex+4} total={total} eyebrow={`ARCHIVE ENTRIES ${String(pairIndex*2+1).padStart(2,"0")}–${String(pairIndex*2+2).padStart(2,"0")}`} title={pair[0]?.chapterZh??"结构档案"} art={art(pairIndex+4)}><div className="grid gap-3">{pair.map((entry,offset)=><article key={entry.id} className="border border-[#4c4966]/15 bg-white/45 p-3.5"><div className="flex items-start justify-between gap-4"><h3 className="font-display text-[16px] text-[#38485b]">{String(pairIndex*2+offset+1).padStart(2,"0")} · {entry.titleZh}</h3><span className="shrink-0 text-[9px] text-[#777083]">{confidenceLabel[entry.confidence]}</span></div><p className="mt-2 text-[11px] leading-[1.65]"><span className="text-[#5b8588]">结构 · </span>{entry.structureZh}</p><p className="mt-1.5 text-[11px] leading-[1.65]"><span className="text-[#5b8588]">机制 · </span>{entry.mechanismZh}</p><p className="mt-1.5 text-[11px] leading-[1.65]"><span className="text-[#5b8588]">现实 · </span>{entry.realityZh}</p><p className="mt-1.5 text-[11px] leading-[1.65]"><span className="text-[#7a6591]">可移动点 · </span>{entry.actionZh}</p><p className="mt-1.5 text-[10px] leading-[1.55] text-[#6e6877]">观察：{entry.observationZh}</p></article>)}</div></PublicationPage>)}
+      <PublicationPage index={16} total={total} eyebrow="STRUCTURAL RELATIONS" title="增强、桥接与张力" art={art(16)}><div className="grid gap-4">{(result.structuralRelations??[]).map((relation,index)=><article key={index} className="border-l border-[#78b8b7] pl-4"><PublicationLabel>{{reinforce:"共同增强",bridge:"现实桥接",tension:"结构张力"}[relation.kind]} · {relation.strength}</PublicationLabel><p className="mt-2 font-display text-xl">{nodeById.get(relation.from)} × {nodeById.get(relation.to)}</p><PublicationCopy muted>这条关系来自节点共现与差值，不是单项分数的重新命名。下一次相似情境中，观察两者的启动先后和现实承接。</PublicationCopy></article>)}</div></PublicationPage>
+      <PublicationPage index={17} total={total} eyebrow="EVIDENCE AND ACTION" title="证据边界与验证路径" art={art(17)}><PublicationCopy>{result.evidence?.sourceZh??"本报告依据 24 次完整选择构建。缺失证据保持缺失，不由想象补全。"}</PublicationCopy><div className="mt-5 border border-[#4c4966]/15 bg-white/45 p-5"><PublicationLabel>下一次记录</PublicationLabel><PublicationCopy>{result.dominant[0]?.actionZh??editorial[2]}</PublicationCopy></div><PublicationCopy muted>完成动作后，只记录现实反馈：发生了什么、谁如何回应、结构是否移动。不要用一次情绪替代证据。</PublicationCopy></PublicationPage>
+      <PublicationPage index={18} total={total} eyebrow="LINGXIFIELD ORIGINAL FIELD" title="让报告回到现实" art={art(18)} layout="full"><PublicationCopy>这份档案不是一组漂亮结论，而是一套可再次验证的观察坐标。24 个条目都保留自己的证据位置；下一次记录将检验结构是否真的改变。</PublicationCopy><p className="mt-6 font-display text-2xl text-[#bff8ec]">证据 → 结构机制 → 现实影响 → 可验证行动</p><p className="mt-6 text-[10px] leading-6 opacity-70">用于个人探索与反思体验，不构成医疗、金融、法律或其他专业建议。</p></PublicationPage>
+    </div>
+    <div className="mx-auto max-w-[794px] px-3 pb-16 sm:px-6"><button onClick={download} disabled={downloading} className="w-full border border-lattice/50 bg-lattice/10 py-4 text-sm tracking-widest2 text-lattice">{downloading?"正在生成固定 A4 PDF…":"下载 18 页完整 PDF · DOWNLOAD"}</button>{downloaded&&<p className="mt-3 text-center text-xs text-lattice">18 页完整档案已生成；每一页均包含正文与专属艺术图。</p>}{downloadError&&<p className="mt-3 text-center text-xs text-rose-300">{downloadError}</p>}</div>
+  </main>;
 }

@@ -282,16 +282,18 @@ export default async function FieldOrdersPage() {
   if (user && supabase) {
     const [{ data }, { data: miniArchives }, { data: unlockRows }, { data: profile }] = await Promise.all([
       supabase.from("orders").select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
-      supabase.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
+      supabase.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at, input").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
       supabase.from("unlocks").select("product_id, expires_at").eq("user_id", user.id),
       supabase.from("profiles").select("manifest_until").eq("id", user.id).maybeSingle(),
     ]);
     const now = Date.now();
     const activeUnlocks = (unlockRows ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > now).map((row) => row.product_id);
     const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
-    const visibleArchives = (miniArchives ?? []).filter((row, index, all) => row.product_id === "life-archetype"
-      ? row.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM)
-      : manifestActive || hasUnlock(activeUnlocks, row.product_id));
+    const visibleArchives = (miniArchives ?? []).filter((row, index, all) => {
+      if (row.product_id !== "life-archetype") return manifestActive || hasUnlock(activeUnlocks, row.product_id);
+      const subjectId = (row.input as { subjectId?: string } | null)?.subjectId;
+      return row.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
+    });
     orders = [
       ...((data as OrderRow[]) ?? []),
       ...(visibleArchives.map((row) => ({ id: `A-${row.id}`, product_id: row.product_id, product_type: "field-archive", amount_rmb: null, amount_usd: 0, status: "paid", submission_id: row.id, submission_name: "小程序树突场域档案", created_at: row.created_at, paid_at: row.created_at, archive_only: true })) as OrderRow[]),

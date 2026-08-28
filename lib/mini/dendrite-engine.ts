@@ -240,7 +240,7 @@ function buildQuestions(seed: Seed): DendriteQuestion[] {
 
 export const DENDRITE_PRODUCTS: DendriteProduct[] = seeds.map(seed => ({...seed,questions:buildQuestions(seed)}));
 export const RELATIONSHIP_DENDRITE_PRODUCTS: Record<RelationshipAssessmentType, DendriteProduct> = {
-  deep: { ...DENDRITE_PRODUCTS.find((item) => item.productId === "relationship-resonance")!, nameZh:"关系共振 · 深度关系", nameEn:"Relationship Resonance · Deep Relationship" },
+  deep: { ...DENDRITE_PRODUCTS.find((item) => item.productId === "relationship-resonance")!, nameZh:"深度关系共振", nameEn:"Deep Relationship Resonance" },
   business: (() => { const seed = makeSeed("relationship-resonance", businessRelationshipNodes, businessRelationshipPrompts, "business"); return { ...seed, nameZh:"关系共振 · 合伙商业", nameEn:"Relationship Resonance · Business Partnership", coreTitleZh:"看见共同创造怎样成为可持续的合伙结构", coreTitleEn:"See how co-creation becomes a sustainable partnership", questions: buildQuestions(seed) }; })(),
   other: (() => { const seed = makeSeed("relationship-resonance", otherRelationshipNodes, otherRelationshipPrompts, "other"); return { ...seed, nameZh:"关系共振 · 其他关系", nameEn:"Relationship Resonance · Other Relationship", coreTitleZh:"看见角色、边界与互惠怎样形成这段关系", coreTitleEn:"See how roles, boundaries and reciprocity form this relationship", questions: buildQuestions(seed) }; })(),
 };
@@ -249,7 +249,7 @@ export const DENDRITE_QUESTION_COUNTS = Object.fromEntries(DENDRITE_PRODUCTS.map
 export const getDendriteProduct = (productId:string, relationshipType: RelationshipAssessmentType = "deep") => productId === "relationship-resonance" ? RELATIONSHIP_DENDRITE_PRODUCTS[relationshipType] : DENDRITE_PRODUCTS.find(item=>item.productId===productId);
 
 export type DendriteResult = {
-  algorithm:"lingxifield-dendritic-v2" | "lingxifield-mini-archetype-v3";
+  algorithm:"lingxifield-dendritic-v2" | "lingxifield-life-archetype-v4";
   nodes:Array<DendriteNode & {score:number}>;
   dominant:Array<DendriteNode & {score:number}>;
   edges:Array<{from:string;to:string;weight:number}>;
@@ -259,7 +259,7 @@ export type DendriteResult = {
   archetypeCardIndexes?:number[];cardRolesZh?:string[];cardRolesEn?:string[];
   artworkIndex?: number;
   sourceProducts?: string[];
-  context?: { subjectName: string; partnerName?: string; relationshipType?: RelationshipAssessmentType };
+  context?: { subjectName: string; subjectId?: string; partnerName?: string; relationshipType?: RelationshipAssessmentType };
   fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
   structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
   reportEntries?: DendriteReportEntry[];
@@ -273,7 +273,7 @@ export type DendriteResult = {
   relationshipEvidenceCount?: number;
 };
 
-export const MINI_LIFE_ARCHETYPE_ALGORITHM = "lingxifield-mini-archetype-v3";
+export const MINI_LIFE_ARCHETYPE_ALGORITHM = "lingxifield-life-archetype-v4";
 
 export const BASE_DENDRITE_PRODUCT_IDS = [
   "life-map-report", "relationship-resonance", "resilience-report", "romance-report",

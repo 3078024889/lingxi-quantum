@@ -74,6 +74,16 @@ if (!exporter.includes("Math.min(2, units.length - offset)")) failures.push("pdf
 if (!exporter.includes('const placement = "left:64px;right:64px"')) failures.push("pdf-export: centred A4 reading grid is missing");
 if (!css.includes("--lx-header-height")) failures.push("app/globals.css: report header safe offset is missing");
 
+const miniPublication = readFileSync(resolve(root, "app/mini-report/MiniDendriteReport.tsx"), "utf8");
+const archetypePublication = readFileSync(resolve(root, "app/mini-report/MiniLifeArchetypeReport.tsx"), "utf8");
+const artRegistry = readFileSync(resolve(root, "lib/report-art-registry.ts"), "utf8");
+if (!miniPublication.includes("exportPublicationPagesPdf") || !archetypePublication.includes("exportPublicationPagesPdf")) failures.push("mini publications: fixed-page exporter is not shared");
+if (!miniPublication.includes("entryPairs") || !miniPublication.includes("length:12")) failures.push("mini publications: 24 entries are not laid out as twelve two-entry pages");
+if (!archetypePublication.includes("total=24") || !archetypePublication.includes("REPORT PROVENANCE") || !archetypePublication.includes("CONTINUOUS OBSERVATION")) failures.push("Life Archetype: complete 24-module publication is missing");
+if (/\/images\/qian\//.test(archetypePublication)) failures.push("Life Archetype: 64 Life Oracle card artwork leaked into the publication");
+if (!artRegistry.includes("WEB_ARCHETYPE_PDF_ART_POOL") || !artRegistry.includes("/shared/report-assets")) failures.push("PDF artwork: formal text-free asset registry is missing");
+if (!exporter.includes("exportPublicationPagesPdf") || !exporter.includes("No fixed publication pages")) failures.push("pdf-export: strict fixed A4 publication path is missing");
+
 const reportRoutes = [
   "app/api/lifemap/generate-full/route.ts",
   "app/api/relationship/generate-full/route.ts",

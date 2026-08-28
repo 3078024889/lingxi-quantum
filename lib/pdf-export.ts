@@ -179,6 +179,60 @@ export async function exportSimplePdf(params: {
   pdf.save(fileName);
 }
 
+/**
+ * Fixed-page publication exporter used by the Mini Program archives and the
+ * eight-stream Life Archetype. Every direct child is already an A4 editorial
+ * page, so this path never slices a long browser screenshot into arbitrary
+ * fragments. Missing artwork is a hard failure instead of becoming a blank
+ * PDF page.
+ */
+export async function exportPublicationPagesPdf(params: {
+  containerRef: HTMLElement;
+  fileName: string;
+  bgColorRgb?: [number, number, number];
+  bgColorHex?: string;
+}): Promise<void> {
+  const {
+    containerRef,
+    fileName,
+    bgColorRgb = [238, 235, 245],
+    bgColorHex = "#EEEAF5",
+  } = params;
+  await document.fonts.ready;
+  const pages = Array.from(containerRef.children).filter((node): node is HTMLElement =>
+    node instanceof HTMLElement && node.classList.contains("lx-pdf-page")
+  );
+  if (!pages.length) throw new Error("No fixed publication pages were found");
+
+  const overflowingPage = pages.find((page) => page.scrollHeight > page.clientHeight + 2 || page.scrollWidth > page.clientWidth + 2);
+  if (overflowingPage) {
+    const index = pages.indexOf(overflowingPage) + 1;
+    throw new Error(`Publication page ${index} overflows its fixed A4 frame`);
+  }
+
+  const artworkUrls = pages.flatMap((page) => Array.from(page.querySelectorAll("img")).map((image) => image.currentSrc || image.src));
+  await preloadPdfAssets(artworkUrls);
+  for (const page of pages) {
+    await waitForImages(page);
+    const broken = Array.from(page.querySelectorAll("img")).find((image) => !image.complete || image.naturalWidth < 1);
+    if (broken) throw new Error(`PDF artwork is unavailable: ${broken.getAttribute("src") ?? "unknown"}`);
+  }
+
+  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import("html2canvas"), import("jspdf")]);
+  const pdf = new jsPDF({ unit: "pt", format: "a4" });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  for (let index = 0; index < pages.length; index++) {
+    if (index > 0) pdf.addPage();
+    pdf.setFillColor(...bgColorRgb);
+    pdf.rect(0, 0, pageWidth, pageHeight, "F");
+    const canvas = await html2canvas(pages[index], { backgroundColor: bgColorHex, scale: 2, useCORS: true, logging: false });
+    const data = canvas.toDataURL("image/jpeg", 0.94);
+    pdf.addImage(data, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+  }
+  pdf.save(fileName);
+}
+
 
 export async function exportGlassPdf(params: {
   containerRef?: HTMLElement; // 简单场景：直接传整个容器，工具自己把第一个直接子元素当封面、其余当正文
