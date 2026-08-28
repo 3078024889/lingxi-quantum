@@ -1,11 +1,17 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import type { User } from "@supabase/supabase-js";
 
 export function isSupabasePublicConfigured() {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  if (!url || !key || key.length < 20) return false;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:" || parsed.protocol === "http:";
+  } catch {
+    return false;
+  }
 }
 
 // 服务器端 Supabase 客户端（用于读取登录状态）。
@@ -32,4 +38,18 @@ export function createClient() {
       },
     }
   );
+}
+
+export async function getServerUser(client: ReturnType<typeof createClient>): Promise<User | null> {
+  try {
+    const { data, error } = await client.auth.getUser();
+    if (error) {
+      console.error("[supabase auth] unavailable", error.code);
+      return null;
+    }
+    return data.user;
+  } catch (error) {
+    console.error("[supabase auth] request failed", error instanceof Error ? error.message : "unknown");
+    return null;
+  }
 }

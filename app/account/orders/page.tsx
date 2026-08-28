@@ -2,7 +2,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
-import { createClient, isSupabasePublicConfigured } from "@/lib/supabase/server";
+import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
 import OrderActions from "../OrderActions";
 import { hasUnlock } from "@/lib/access";
@@ -275,9 +275,7 @@ async function backfillSubmissionIds(
 
 export default async function FieldOrdersPage() {
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
-  const { data: { user } } = supabase
-    ? await supabase.auth.getUser()
-    : { data: { user: null } };
+  const user = supabase ? await getServerUser(supabase) : null;
 
   let orders: OrderRow[] = [];
   if (user && supabase) {

@@ -17,7 +17,7 @@ import CollapsibleSection from "./CollapsibleSection";
 import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
-import { createClient, isSupabasePublicConfigured } from "@/lib/supabase/server";
+import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 
 export const metadata = { title: "进入场域 | 灵犀 · Enter the Field | Lingxi" };
 
@@ -26,9 +26,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
     ? searchParams.miniLink
     : null;
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
-  const { data: { user } } = supabase
-    ? await supabase.auth.getUser()
-    : { data: { user: null } };
+  const user = supabase ? await getServerUser(supabase) : null;
 
   let manifestUntil: string | null = null;
   let unlocks: string[] = [];

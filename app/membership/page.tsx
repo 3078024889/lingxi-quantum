@@ -8,7 +8,7 @@ import {
   manifestationProducts,
   getProduct,
 } from "@/lib/plans";
-import { createClient, isSupabasePublicConfigured } from "@/lib/supabase/server";
+import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import { MEMBERSHIP_CONTENT } from "@/lib/membership-content";
@@ -197,9 +197,7 @@ export default async function MembershipPage({
   searchParams: { canceled?: string; pending?: string; error?: string };
 }) {
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
-  const { data: { user } } = supabase
-    ? await supabase.auth.getUser()
-    : { data: { user: null } };
+  const user = supabase ? await getServerUser(supabase) : null;
 
   // PayPal已经不可用（企业账户被注销），这几条状态提示原本是PayPal
   // 跳转回来的场景专用的，现在支付走的是微信扫码（弹窗内直接完成，

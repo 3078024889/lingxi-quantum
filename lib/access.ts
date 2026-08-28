@@ -1,4 +1,4 @@
-import { createClient, isSupabasePublicConfigured } from "@/lib/supabase/server";
+import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { NARRATIVES } from "@/lib/narratives";
 
@@ -19,11 +19,7 @@ export async function getAccess() {
   }
 
   const supabase = createClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError) {
-    console.error("[access] Supabase auth unavailable", authError.code);
-    return { user: null, manifestActive: false, unlocks: [] as string[] };
-  }
+  const user = await getServerUser(supabase);
 
   if (!user) {
     return { user: null, manifestActive: false, unlocks: [] as string[] };
