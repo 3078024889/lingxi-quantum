@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDendriteProduct } from "@/lib/mini/dendrite-engine";
+import { getDendriteProduct, RELATIONSHIP_DENDRITE_PRODUCTS } from "@/lib/mini/dendrite-engine";
 
 export async function GET(req: Request) {
   const productId = new URL(req.url).searchParams.get("productId") ?? "";
@@ -8,6 +8,7 @@ export async function GET(req: Request) {
   if (!product) return NextResponse.json({ error: "这项树突精测暂未开放" }, { status: 404 });
   return NextResponse.json({
     product,
+    ...(productId === "relationship-resonance" ? { relationshipVariants: RELATIONSHIP_DENDRITE_PRODUCTS } : {}),
     engine: {
       id: "lingxifield-dendritic-v2",
       questionCount: product.questions.length,

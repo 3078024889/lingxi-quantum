@@ -10,6 +10,14 @@ function check(label, condition) {
 function read(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
 }
+function promptBank(name, nextName) {
+  const start = dendriteEngine.indexOf(`const ${name}`);
+  const end = dendriteEngine.indexOf(`const ${nextName}`, start + 1);
+  return dendriteEngine.slice(start, end);
+}
+function promptCount(source) {
+  return (source.match(/\[\["[^"]+","[^"]+"\]|,\["[^"]+","[^"]+"\]/g) || []).length;
+}
 
 const project = JSON.parse(read("miniapp/project.config.json"));
 const app = JSON.parse(read("miniapp/app.json"));
@@ -23,6 +31,7 @@ const exploreView = read("miniapp/pages/explore/index.wxml");
 const assessmentClient = read("miniapp/pages/assessment/index.js");
 const assessmentView = read("miniapp/pages/assessment/index.wxml");
 const dendriteSql = read("sql-history/SQL-v314-mini-dendrite-assessments.sql");
+const dendriteReliabilitySql = read("sql-history/SQL-v318-mini-dendrite-reliability.sql");
 const dendriteEngine = read("lib/mini/dendrite-engine.ts");
 const fieldProductCopy = read("lib/mini/field-product-copy.ts");
 const catalogRoute = read("app/api/wechat/mini/catalog/route.ts");
@@ -42,6 +51,8 @@ const fieldClient = read("miniapp/pages/field/index.js");
 const fieldNavView = read("miniapp/components/field-nav/index.wxml");
 const fieldStructureView = read("miniapp/components/field-structure-9d/index.wxml");
 const fieldStructureClient = read("miniapp/components/field-structure-9d/index.js");
+const desktopFieldStructure = read("components/FieldStructure9D.tsx");
+const desktopNav = read("components/Nav.tsx");
 const membershipContent = read("lib/membership-content.ts");
 const profileClient = read("miniapp/pages/profile/index.js");
 const profileView = read("miniapp/pages/profile/index.wxml");
@@ -72,7 +83,10 @@ check("report discovery opens the native dendrite assessment", /pages\/assessmen
 check("report discovery does not restore the removed preliminary archive funnel", !/初读档案|生成我的初读档案/.test(exploreView));
 check("native assessment is registered without the removed preliminary archive copy", app.pages.includes("pages/assessment/index") && !/YOUR FIRST REFLECTION|初读档案|免费预览/.test(`${assessmentView}\n${assessmentClient}`));
 check("dendrite engine v2 is deterministic and contains all nine products", /lingxifield-dendritic-v2/.test(dendriteEngine) && /life-archetype/.test(dendriteEngine) && /calculateDendrite/.test(dendriteEngine));
-check("product-specific question banks replace the five-question template", ["lifePrompts","relationshipPrompts","resiliencePrompts","romancePrompts","wealthPrompts","tidePrompts","mirrorPrompts","qianPrompts","archetypePrompts"].every((name) => dendriteEngine.includes(name)) && !/makeQuestions\(seed/.test(dendriteEngine));
+check("product-specific question banks replace the five-question template", ["lifePrompts","deepRelationshipPrompts","businessRelationshipPrompts","otherRelationshipPrompts","resiliencePrompts","romancePrompts","wealthPrompts","tidePrompts","mirrorPrompts","qianPrompts","archetypePrompts"].every((name) => dendriteEngine.includes(name)) && !/makeQuestions\(seed/.test(dendriteEngine));
+const relationshipBanks = [promptBank("deepRelationshipPrompts", "businessRelationshipPrompts"), promptBank("businessRelationshipPrompts", "otherRelationshipPrompts"), promptBank("otherRelationshipPrompts", "resiliencePrompts")];
+check("three relationship paths use independent 24-interaction banks", /RELATIONSHIP_DENDRITE_PRODUCTS/.test(dendriteEngine) && relationshipBanks.every((bank) => promptCount(bank) === 24) && new Set(relationshipBanks).size === 3 && /relationshipVariants/.test(assessmentClient));
+check("every assessment records a named archive subject", /请填写档案称呼/.test(assessmentClient) && /你的姓名或称呼（必填）/.test(assessmentView) && /partnerName/.test(assessmentView));
 check("dendritic result contains evidence and publication chapters", /chapters/.test(dendriteEngine) && /evidence:/.test(dendriteEngine) && /chapterBody/.test(dendriteEngine));
 check("all nine products own distinct definitions and result outlines", (fieldProductCopy.match(/cardDefinitionZh: "/g) || []).length === 9 && (fieldProductCopy.match(/resultOutline: \[/g) || []).length === 9);
 check("technical methodology appears on the Field Insight home instead of every assessment", /一次答案不会直接对应一句结论/.test(exploreView) && !/engine\.zh|product\.sourceZh/.test(assessmentView) && /product\.readingZh/.test(assessmentView));
@@ -80,7 +94,8 @@ check("legacy Copernican naming is absent from current Mini Program sources", !/
 check("public Mini Program copy no longer uses the legacy linking term", !/联锁/.test(miniSources));
 check("Cultivation Techniques completes the six-entry living field grid", /title: '修炼技术'/.test(fieldClient) && /web: '\/practice'/.test(fieldClient));
 check("9D field structure is shared through the native field navigation", /field-structure-9d/.test(fieldNavView) && /lingxifield-9d-field-structure-v317-h264\.mp4/.test(fieldStructureView));
-check("9D Mini Program film is streamed on demand with mute, loop and fullscreen", /muted autoplay loop/.test(fieldStructureView) && /requestFullScreen/.test(fieldStructureClient) && /closePanel/.test(fieldStructureClient));
+check("9D Mini Program film is streamed on demand with controllable sound and fullscreen", /muted="\{\{muted\}\}"/.test(fieldStructureView) && /toggleAudio/.test(fieldStructureClient) && /requestFullScreen/.test(fieldStructureClient) && /closePanel/.test(fieldStructureClient));
+check("desktop 9D navigation and film are separate draggable surfaces", /FloatingFieldNavigator/.test(desktopFieldStructure) && /FloatingFieldVideo/.test(desktopFieldStructure) && /useFloatingDrag/.test(desktopFieldStructure) && !/FIELD_STRUCTURE_LINKS/.test(desktopNav));
 check("Life Archetype is an automatic eight-field convergence, not an oracle-card product", /layer: "convergence"/.test(fieldProductCopy) && /calculateLifeArchetypeFromReports/.test(dendriteEngine) && /BASE_DENDRITE_PRODUCT_IDS/.test(dendriteEngine) && !/主原型|隐藏原型|行动原型/.test(`${fieldProductCopy}\n${dendriteEngine}`));
 check("catalog and assessment configuration cannot serve stale product copy", /no-store/.test(catalogRoute) && /no-store/.test(read("app/api/wechat/mini/dendrite/config/route.ts")));
 check("unlocked assessments open only after ownership and entitlement revalidation", /unlocked/.test(dendriteSubmit) && /mini_dendrite_assessments/.test(contentLink) && /submissionId/.test(contentOpen) && /hasUnlock/.test(contentOpen));
@@ -88,6 +103,7 @@ check("audit account grant is limited to one email and all nine report products"
 check("assessment exposes a native page back control", /show-back="\{\{true\}\}"/.test(assessmentView));
 check("native assessment supports forwarding and copying the web reference link", /onShareAppMessage/.test(assessmentClient) && /onShareTimeline/.test(assessmentClient) && /setClipboardData/.test(assessmentClient));
 check("dendrite archives are owner-readable, server-writable, and included in account migration", /enable row level security/.test(dendriteSql) && /revoke insert, update, delete/.test(dendriteSql) && /auth\.uid\(\) = user_id/.test(dendriteSql) && /update public\.mini_dendrite_assessments set user_id/.test(dendriteSql));
+check("V318 can repair a missing native archive table", /create table if not exists public\.mini_dendrite_assessments/.test(dendriteReliabilitySql) && /grant all on table public\.mini_dendrite_assessments to service_role/.test(dendriteReliabilitySql));
 check("iPhone sandbox payment is stopped before WeChat returns a platform error", /result\.sandbox && platform === 'ios'/.test(virtualPay));
 check("account linking begins only from a valid Mini Program session", /requireMiniSession\(req\)/.test(accountLinkStart));
 check("account-link hand-off is encrypted, random, and short-lived", /encryptMiniSecret/.test(accountLinkStart) && /randomBytes/.test(accountLinkStart) && /10 \* 60 \* 1000/.test(accountLinkStart));

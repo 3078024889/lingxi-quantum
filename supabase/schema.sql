@@ -536,7 +536,7 @@ revoke insert, update, delete on table public.life_map_submissions, public.relat
 grant select on table public.life_map_submissions, public.relationship_submissions, public.resilience_submissions, public.romance_submissions, public.daily_tide_submissions, public.wealth_submissions, public.qian_submissions, public.tarot_reading_submissions to authenticated
 ;
 
--- v314: Mini Program's independent Copernican Dendrite assessment archive.
+-- v318: Mini Program's independent Dendritic assessment archive.
 -- It is deliberately separate from the web astronomical submission tables.
 create table if not exists public.mini_dendrite_assessments (
   id uuid primary key default gen_random_uuid(),

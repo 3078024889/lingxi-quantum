@@ -9,9 +9,10 @@
       <view class="field-9d-title">灵犀场 · 9D 产品结构</view>
       <view class="field-9d-note">意识为核心，八域相连，场域持续展开</view>
     </view>
-    <video wx:if="{{!videoFailed}}" id="fieldStructureVideo" class="field-9d-video" src="https://lingxifield.cn/media/lingxifield-9d-field-structure-v317-h264.mp4" poster="https://lingxifield.cn/images/9d-field-structure-poster-v316.png" muted autoplay loop show-center-play-btn="{{false}}" controls="{{fullscreen}}" binderror="onVideoError" bindfullscreenchange="onFullscreenChange"></video>
+    <video wx:if="{{!videoFailed}}" id="fieldStructureVideo" class="field-9d-video" src="https://lingxifield.cn/media/lingxifield-9d-field-structure-v317-h264.mp4" poster="https://lingxifield.cn/images/9d-field-structure-poster-v316.png" muted="{{muted}}" autoplay loop show-center-play-btn="{{false}}" controls="{{fullscreen}}" binderror="onVideoError" bindfullscreenchange="onFullscreenChange"></video>
     <image wx:else class="field-9d-video field-9d-fallback" src="https://lingxifield.cn/images/9d-field-navigation-v317.png" mode="aspectFit"></image>
     <view class="field-9d-actions">
+      <button wx:if="{{!videoFailed}}" class="sound" bindtap="toggleAudio">{{muted ? '◉ 开启声音' : '◌ 静音'}}</button>
       <button bindtap="expandVideo">展开查看</button>
       <button bindtap="closePanel">收起</button>
     </view>

@@ -13,9 +13,11 @@ import { getFieldProductCopy, type FieldProductCopy, type FieldResultMode } from
 export type DendriteOption = { id: string; zh: string; en: string; activates: Record<string, number> };
 export type DendriteQuestion = { id: string; sectionZh: string; sectionEn: string; zh: string; en: string; options: DendriteOption[] };
 export type DendriteNode = { id: string; zh: string; en: string; meaningZh: string; meaningEn: string; actionZh: string; actionEn: string };
+export type RelationshipAssessmentType = "deep" | "business" | "other";
 export type DendriteProduct = FieldProductCopy & {
   productId: string; leadZh: string; leadEn: string;
   sourceZh: string; sourceEn: string; nodes: DendriteNode[]; questions: DendriteQuestion[];
+  relationshipType?: RelationshipAssessmentType;
 };
 
 type Prompt = [sectionZh: string, sectionEn: string, zh: string, en: string, nodeIds?: string[]];
@@ -43,6 +45,26 @@ const relationshipNodes = [
   node("repair","修复能力","Repair","关系能否在受伤、误解或中断后重新连接。","Whether connection can reform after hurt or rupture.","完成一次具体承认、回应和后续行动。","Complete one acknowledgment, response and follow-through."),
   node("vigilance","关系警觉","Vigilance","你会提前扫描拒绝、失控或不一致的信号。","You scan early for rejection, loss of control or inconsistency.","把事实、推测和旧经验分成三栏。","Separate facts, assumptions and old experience."),
   node("selfhold","自我持守","Self-holding","你在连接中保留自己的感受、节奏与选择。","You retain your feelings, pace and choices in connection.","靠近之前先确认自己的真实意愿。","Confirm your real willingness before moving closer."),
+];
+const businessRelationshipNodes = [
+  node("role","角色位置","Role Clarity","双方是否清楚各自负责、决定与承诺的边界。","Whether responsibility, decisions and commitments have clear owners.","把一项共同事项写成明确的角色与交付。","Give one shared task an explicit owner and deliverable."),
+  node("decision","共同决策","Decision","信息、权力与判断如何进入共同决策。","How information, authority and judgment enter joint decisions.","约定一类决定由谁提案、谁确认。","Define who proposes and who confirms one decision type."),
+  node("resource","资源流动","Resource Flow","时间、资金、人脉与能力是否被透明配置。","Whether time, money, network and capability are allocated transparently.","列出一项资源的投入、用途与退出条件。","Name one resource's input, use and exit condition."),
+  node("execution","执行节奏","Execution","双方推进、反馈与收尾的速度是否能够衔接。","Whether pace, feedback and closure can connect across both parties.","建立一个双方都能兑现的反馈周期。","Set a feedback cycle both can keep."),
+  node("trust","协作信任","Trust","可验证行动与信息透明怎样形成长期信任。","How verifiable action and transparency create durable trust.","用一次可核验交付代替口头确认。","Replace verbal assurance with one verifiable delivery."),
+  node("disagreement","分歧处理","Disagreement","利益与判断不同出现时，系统怎样处理而不伤害合作。","How the system handles different interests and judgments without damaging collaboration.","把对人的判断改写为对方案的比较。","Turn judgment of people into comparison of options."),
+  node("accountability","责任承接","Accountability","承诺偏离后是否有人承认、补救并更新机制。","Whether deviation leads to acknowledgment, repair and system update.","为一次偏离确认补救动作与截止时间。","Give one deviation a repair action and deadline."),
+  node("continuity","长期共创","Continuity","合作能否在收益、压力与变化中保持可持续。","Whether collaboration remains viable through gain, pressure and change.","确认继续合作必须守住的一个条件。","Confirm one condition required for continuing together."),
+];
+const otherRelationshipNodes = [
+  node("definition","关系定义","Definition","双方是否对这段关系的名称、位置与责任有相近理解。","Whether both understand the relationship's name, place and responsibility similarly.","用一句话分别描述这段关系是什么。","Each describe this relationship in one sentence."),
+  node("expectation","期待校准","Expectation","未说出的期待是否正在替双方安排角色。","Whether unspoken expectations are assigning roles.","说出一个期待，并允许对方真实回应。","Name one expectation and allow a real response."),
+  node("distance","距离节奏","Distance","靠近、联系与独处的频率是否彼此适合。","Whether contact, closeness and space fit both parties.","确认一个双方舒适的联系节奏。","Confirm a contact rhythm comfortable for both."),
+  node("support","支持方式","Support","关心能否以对方真正接收得到的方式出现。","Whether care arrives in a form the other can receive.","直接询问此刻需要陪伴、建议还是行动。","Ask whether presence, advice or action is needed."),
+  node("reciprocity","往来平衡","Reciprocity","投入、回应与情感劳动是否长期单向。","Whether effort, response and emotional labor remain one-sided.","观察三次互动中谁发起、谁承接。","Observe who initiates and holds across three interactions."),
+  node("boundary","边界位置","Boundary","亲近、责任与个人空间之间是否有清晰位置。","Whether closeness, duty and personal space have clear positions.","说清一个愿意承担与一个不能承担。","Name one responsibility you accept and one you do not."),
+  node("transition","关系变化","Transition","关系进入新阶段时，旧的相处方式是否仍被沿用。","Whether old interaction rules persist after the relationship changes.","为当前阶段重新确认一次关系规则。","Reconfirm one relationship rule for the current stage."),
+  node("repair","连接修复","Repair","误解、疏远或中断后能否重新建立真实往来。","Whether real contact can return after misunderstanding or distance.","完成一次承认、澄清与后续动作。","Complete one acknowledgment, clarification and follow-through."),
 ];
 const resilienceNodes = [
   node("recovery","恢复节律","Recovery","消耗之后回到可用状态的速度与方式。","How you return to usable capacity after depletion.","为恢复安排真实空间，而非剩余时间。","Schedule real recovery space, not leftover time."),
@@ -121,11 +143,23 @@ const lifePrompts: Prompt[] = [
   ...prompts("结构量表","Structural scale",[["当方向清晰时，你能迅速进入行动。","When direction is clear, you can move quickly."],["你需要稳定节奏，才能持续投入。","You need a stable rhythm for sustained engagement."],["你能敏锐感受到环境与他人的变化。","You readily perceive shifts in context and people."],["你习惯把分散经验整理成结构。","You tend to organize scattered experience into structure."],["重要关系会显著影响你的选择。","Important relationships strongly affect your choices."],["你愿意进入问题背后更深的意义。","You are willing to enter the deeper meaning beneath a problem."]],lifeNodes.map(n=>n.id)),
   ...prompts("现实两难","Lived dilemmas",[["自由探索与稳定承诺同时出现时，你更靠近哪边？","When exploration and stable commitment conflict, where do you lean?"],["独立决定与共同协商冲突时，你如何取舍？","How do you choose between autonomy and joint agreement?"],["立即行动与继续理解冲突时，你更常选择什么？","What do you choose between immediate action and deeper understanding?"],["照顾他人感受与守住自己边界冲突时，你怎样回应？","How do you respond when care conflicts with boundaries?"],["计划被打断时，你更依靠调整还是重建秩序？","After disruption, do you adapt or rebuild order?"],["外部机会很多但内在不确定时，你从哪里确认？","Where do you confirm direction amid many opportunities and inner uncertainty?"]],lifeNodes.map(n=>n.id)),
 ];
-const relationshipPrompts: Prompt[] = [
+const deepRelationshipPrompts: Prompt[] = [
   ...prompts("靠近与表达","Approach and expression",[["当你想靠近一个重要的人时，通常怎样发出信号？","How do you signal approach to someone important?"],["对方回应变慢时，你最先注意到什么？","What do you notice first when responses slow?"],["需要被理解时，你通常怎样表达？","How do you express a need to be understood?"],["关系进入更深层时，什么让你感到安心？","What creates safety as connection deepens?"],["需要独处时，你会如何告诉对方？","How do you communicate a need for space?"],["对方情绪强烈时，你自然站在哪个位置？","What position do you take around strong emotion?"]],relationshipNodes.map(n=>n.id)),
   ...prompts("差异与修复","Difference and repair",[["意见冲突出现时，你的第一反应是什么？","What is your first response to conflict?"],["争执之后，你更容易等待还是主动修复？","After conflict, do you wait or initiate repair?"],["被误解时，你最希望对方做什么？","What do you most want when misunderstood?"],["对方越过边界时，你通常怎样处理？","What do you do when a boundary is crossed?"],["承诺没有兑现时，你如何判断这段关系？","How do you read an unkept promise?"],["同一个问题重复出现时，你更想改变什么？","What do you want to change when a problem repeats?"]],relationshipNodes.map(n=>n.id)),
   ...prompts("共同创造","Co-creation",[["两个人要做共同决定时，你更自然承担什么？","What do you naturally carry in joint decisions?"],["双方节奏不同时，你通常怎样协调？","How do you coordinate different rhythms?"],["关系需要长期维护时，什么最重要？","What matters most in sustaining a relationship?"],["亲近与自由同时重要时，你如何平衡？","How do you balance closeness and freedom?"],["一方处于低谷时，怎样的支持最适合你？","What support feels right when one person is low?"],["此刻这段关系最需要被看见的结构是什么？","What structure most needs to be seen now?"]],relationshipNodes.map(n=>n.id)),
   ...prompts("关系校准","Relational calibration",[["你以为自己表达清楚时，对方通常接收到什么？","What does the other receive when you think you were clear?"],["关系安稳时，你是否仍能说出不同意见？","Can you voice difference when the relationship feels safe?"],["支持对方时，你更容易解决问题还是陪伴感受？","Do you solve or accompany when offering support?"],["一次修复真正完成的标志是什么？","What marks a repair as complete?"],["你会在什么时候为了关系放弃自己的位置？","When do you abandon your position for connection?"],["这段关系目前最缺少哪一种可验证的回应？","What verifiable response is most missing now?"]],relationshipNodes.map(n=>n.id)),
+];
+const businessRelationshipPrompts: Prompt[] = [
+  ...prompts("角色与决策","Roles and decisions",[["开始一项共同项目时，最先需要确认什么？","What must be confirmed first in a shared project?"],["双方判断不同但必须决定时，你通常怎样推进？","How do you proceed when judgments differ but a decision is required?"],["谁拥有最终决定权不清楚时，会发生什么？","What happens when final authority is unclear?"],["你的优势在合作中更适合承担哪个位置？","Which role best uses your strength in collaboration?"],["对方越过原有职责时，你会怎样回应？","How do you respond when the other crosses an agreed role?"],["共同目标发生变化时，谁应该先提出校准？","Who should initiate recalibration when the shared aim changes?"]],businessRelationshipNodes.map(n=>n.id)),
+  ...prompts("资源与执行","Resources and execution",[["时间、资金和能力需要重新分配时，你先看什么？","What comes first when time, money and capability need reallocation?"],["一项任务延迟时，你最需要获得哪种信息？","What information matters most when delivery is delayed?"],["双方推进速度不同时，怎样的机制最有效？","What mechanism works when execution speeds differ?"],["资源投入明显不对等时，你如何提出？","How do you raise unequal resource contribution?"],["一个成果进入交付前，谁来确认完成标准？","Who confirms the definition of done before delivery?"],["外部机会突然增加时，合作最容易在哪一环失稳？","Where does collaboration destabilize when opportunity suddenly grows?"]],businessRelationshipNodes.map(n=>n.id)),
+  ...prompts("信任与分歧","Trust and disagreement",[["你通过什么判断对方值得长期合作？","What tells you someone is a durable collaborator?"],["一次承诺没有兑现时，你首先需要什么？","What do you need first after an unkept commitment?"],["利益发生冲突时，怎样的讨论仍然是安全的？","What keeps discussion safe when interests conflict?"],["重要信息没有及时共享时，你怎样理解？","How do you read important information being withheld or delayed?"],["对方质疑你的方案时，你更容易保护什么？","What do you protect when your proposal is challenged?"],["一次分歧真正结束的标志是什么？","What marks a business disagreement as resolved?"]],businessRelationshipNodes.map(n=>n.id)),
+  ...prompts("长期共创","Long-term creation",[["合作取得成果后，下一步最需要建立什么？","What should be built after shared success?"],["压力上升时，双方最容易失去哪个约定？","Which agreement is most easily lost under pressure?"],["一方承担过多时，怎样重新分配才可信？","How can overloaded responsibility be credibly redistributed?"],["合作是否继续，你最重视哪项现实证据？","What evidence matters most when deciding whether to continue?"],["怎样的反馈频率最能减少误判？","What feedback cadence best reduces misreading?"],["这段合作目前最缺少哪一种可验证机制？","What verifiable mechanism is most missing now?"]],businessRelationshipNodes.map(n=>n.id)),
+];
+const otherRelationshipPrompts: Prompt[] = [
+  ...prompts("关系位置","Relationship position",[["你会怎样描述你们现在的关系？","How would you describe this relationship now?"],["对方可能用同一个名称理解这段关系吗？","Would the other use the same name for it?"],["这段关系中，你默认承担了什么角色？","What role have you assumed by default?"],["哪一种期待从未被真正说出来？","Which expectation has never been spoken?"],["关系发生变化后，什么仍沿用旧规则？","What still follows old rules after the relationship changed?"],["你希望这段关系在生活中处于什么位置？","What place should this relationship hold in life?"]],otherRelationshipNodes.map(n=>n.id)),
+  ...prompts("距离与支持","Distance and support",[["多久联系一次最接近你的真实舒适度？","What contact rhythm truly fits you?"],["对方需要帮助时，你最自然提供什么？","What support do you naturally offer?"],["你需要支持时，最希望对方怎样出现？","How do you want the other to show up when you need support?"],["一段时间没有联系，你通常怎样理解？","How do you interpret a period without contact?"],["对方靠得太近时，你会如何调节距离？","How do you regulate when the other comes too close?"],["怎样的陪伴会让你感到被真正理解？","What presence makes you feel understood?"]],otherRelationshipNodes.map(n=>n.id)),
+  ...prompts("往来与边界","Reciprocity and boundaries",[["连续三次互动都是你发起时，你会怎样？","What do you do after initiating three interactions in a row?"],["对方提出超出你能力的请求时，你如何回应？","How do you respond to a request beyond your capacity?"],["关心与责任混在一起时，你怎样区分？","How do you separate care from obligation?"],["不同生活阶段让距离改变时，你最想守住什么？","What do you preserve when life stages change distance?"],["你在哪种情况下会为了维持关系压低自己？","When do you diminish yourself to preserve connection?"],["什么边界能让这段关系更长久而不是更疏远？","What boundary supports durability rather than distance?"]],otherRelationshipNodes.map(n=>n.id)),
+  ...prompts("变化与修复","Change and repair",[["误解出现后，谁更常主动解释？","Who usually explains after misunderstanding?"],["关系冷却时，你需要确认事实还是保留空间？","Do you need facts or space when contact cools?"],["一次真诚道歉需要包含什么才可信？","What makes an apology credible?"],["过去未解决的问题怎样进入现在？","How does an unresolved past issue enter the present?"],["如果关系需要重新定义，你最担心什么？","What worries you about redefining the relationship?"],["这段关系目前最需要哪一种具体回应？","What concrete response does this relationship need now?"]],otherRelationshipNodes.map(n=>n.id)),
 ];
 const resiliencePrompts: Prompt[] = [
   ...prompts("冲击反应","Impact response",[["计划突然偏转时，你的第一反应是什么？","What is your first response when plans shift?"],["连续压力出现时，身体最先发出什么信号？","What signal appears first under repeated pressure?"],["一件重要的事失败后，你通常怎样度过最初阶段？","How do you move through the first stage after failure?"],["未知持续太久时，你更容易卡在哪里？","Where do you get stuck when uncertainty lasts?"],["外部要求快速增加时，你会先保护什么？","What do you protect first as demands rise?"],["支持突然减少时，你依靠什么回稳？","What stabilizes you when support drops?"]],resilienceNodes.map(n=>n.id)),
@@ -172,15 +206,15 @@ const archetypePrompts: Prompt[] = [
   ["行动落点","Action point","接下来七天，什么最需要成为行动？","What most needs to become action in the next seven days?",["blueprint","romance","tide","oracle"]],
 ];
 
-function makeSeed(productId: string, nodes: DendriteNode[], prompts: Prompt[]): Seed {
+function makeSeed(productId: string, nodes: DendriteNode[], prompts: Prompt[], relationshipType?: RelationshipAssessmentType): Seed {
   const copy = getFieldProductCopy(productId);
   if (!copy) throw new Error(`missing field product copy: ${productId}`);
-  return { productId, ...copy, leadZh: copy.cardDefinitionZh, leadEn: copy.cardDefinitionEn, sourceZh: copy.readingZh, sourceEn: copy.readingEn, nodes, prompts };
+  return { productId, ...copy, leadZh: copy.cardDefinitionZh, leadEn: copy.cardDefinitionEn, sourceZh: copy.readingZh, sourceEn: copy.readingEn, nodes, prompts, relationshipType };
 }
 
 const seeds: Seed[] = [
   makeSeed("life-map-report", lifeNodes, lifePrompts),
-  makeSeed("relationship-resonance", relationshipNodes, relationshipPrompts),
+  makeSeed("relationship-resonance", relationshipNodes, deepRelationshipPrompts, "deep"),
   makeSeed("resilience-report", resilienceNodes, resiliencePrompts),
   makeSeed("romance-report", romanceNodes, romancePrompts),
   makeSeed("wealth-report", wealthNodes, wealthPrompts),
@@ -203,9 +237,14 @@ function buildQuestions(seed: Seed): DendriteQuestion[] {
 }
 
 export const DENDRITE_PRODUCTS: DendriteProduct[] = seeds.map(seed => ({...seed,questions:buildQuestions(seed)}));
+export const RELATIONSHIP_DENDRITE_PRODUCTS: Record<RelationshipAssessmentType, DendriteProduct> = {
+  deep: { ...DENDRITE_PRODUCTS.find((item) => item.productId === "relationship-resonance")!, nameZh:"关系共振 · 深度关系", nameEn:"Relationship Resonance · Deep Relationship" },
+  business: (() => { const seed = makeSeed("relationship-resonance", businessRelationshipNodes, businessRelationshipPrompts, "business"); return { ...seed, nameZh:"关系共振 · 合伙商业", nameEn:"Relationship Resonance · Business Partnership", coreTitleZh:"看见共同创造怎样成为可持续的合伙结构", coreTitleEn:"See how co-creation becomes a sustainable partnership", questions: buildQuestions(seed) }; })(),
+  other: (() => { const seed = makeSeed("relationship-resonance", otherRelationshipNodes, otherRelationshipPrompts, "other"); return { ...seed, nameZh:"关系共振 · 其他关系", nameEn:"Relationship Resonance · Other Relationship", coreTitleZh:"看见角色、边界与互惠怎样形成这段关系", coreTitleEn:"See how roles, boundaries and reciprocity form this relationship", questions: buildQuestions(seed) }; })(),
+};
 export const DENDRITE_PRODUCT_IDS = new Set(DENDRITE_PRODUCTS.map(item=>item.productId));
 export const DENDRITE_QUESTION_COUNTS = Object.fromEntries(DENDRITE_PRODUCTS.map(item=>[item.productId,item.questions.length]));
-export const getDendriteProduct = (productId:string) => DENDRITE_PRODUCTS.find(item=>item.productId===productId);
+export const getDendriteProduct = (productId:string, relationshipType: RelationshipAssessmentType = "deep") => productId === "relationship-resonance" ? RELATIONSHIP_DENDRITE_PRODUCTS[relationshipType] : DENDRITE_PRODUCTS.find(item=>item.productId===productId);
 
 export type DendriteResult = {
   algorithm:"lingxifield-dendritic-v2";
@@ -218,6 +257,9 @@ export type DendriteResult = {
   archetypeCardIndexes?:number[];cardRolesZh?:string[];cardRolesEn?:string[];
   artworkIndex?: number;
   sourceProducts?: string[];
+  context?: { subjectName: string; partnerName?: string; relationshipType?: RelationshipAssessmentType };
+  fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
+  structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
 };
 
 export const BASE_DENDRITE_PRODUCT_IDS = [
@@ -262,12 +304,29 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
   const sourceNames = strongestFields.map((field) => field.result.titleZh);
   const signature = fields.map((field) => `${field.productId}:${field.result.dominant.map((node) => `${node.id}:${node.score}`).join(",")}`).join("|");
   const artworkIndex = [...signature].reduce((hash, char) => (hash * 33 + char.charCodeAt(0)) >>> 0, 2166136261) % 120;
+  const average = ordered.reduce((sum, item) => sum + item.score, 0) / ordered.length;
+  const fieldContributions = ordered.map((item, index) => ({
+    productId: evidenceByNode.get(item.id)!.productId,
+    score: item.score,
+    state: (index < 2 ? "active" : item.score < average - 12 ? "tension" : index < 5 ? "recent" : "long-term") as "long-term" | "recent" | "active" | "tension",
+  }));
+  const strongestEdge = edges[0];
+  const bridgeEdge = edges.find((edge) => edge.weight < strongestEdge.weight && edge.weight >= 0.62) ?? edges[1];
+  const tensionEdge = [...edges].sort((a, b) => a.weight - b.weight)[0];
+  const structuralRelations = [
+    strongestEdge && { ...strongestEdge, kind: "reinforce" as const, strength: Math.round(strongestEdge.weight * 100) },
+    bridgeEdge && { ...bridgeEdge, kind: "bridge" as const, strength: Math.round(bridgeEdge.weight * 100) },
+    tensionEdge && { ...tensionEdge, kind: "tension" as const, strength: Math.round((1 - tensionEdge.weight) * 100) },
+  ].filter(Boolean).map(({ from, to, kind, strength }) => ({ from, to, kind, strength }));
   const chapters = [
-    { id:"archetype", titleZh:"当前原型结构", titleEn:"Current Archetype Structure", bodyZh:`当前来到前景的不是一个人格标签，而是「${dominant[0].zh}」提供方向、「${dominant[1].zh}」提供现实接口、「${dominant[2].zh}」调节行动强度的三层结构。三者必须同时读取，任何单一结果都不足以代替这一结构。`, bodyEn:`This is not a personality label. ${dominant[0].en} supplies direction, ${dominant[1].en} a real-world interface, and ${dominant[2].en} regulates intensity. None of the three can substitute for the whole structure.` },
-    { id:"evidence", titleZh:"跨域证据链", titleEn:"Cross-field Evidence Chain", bodyZh:`结构由八份一年内有效档案交叉形成。当前最强的三条证据分别是「${sourceNames[0]}」「${sourceNames[1]}」「${sourceNames[2]}」。系统保留它们各自的节点、强度与上下文，只把能够跨域相连的部分带入原型。`, bodyEn:`Eight valid archives from the past year form this structure. The three strongest evidence lines are ${sourceNames.join(", ")}. Their nodes, strength and context remain distinct; only cross-field connections enter the archetype.` },
-    { id:"relation", titleZh:"相互增强的位置", titleEn:"Mutual Reinforcement", bodyZh:`「${dominant[0].zh}」与「${dominant[1].zh}」当前具有最强的结构邻近：前者若获得现实入口，后者会被增强；后者若持续缺席，前者容易停留在理解而无法形成新证据。`, bodyEn:`${dominant[0].en} and ${dominant[1].en} currently have the strongest structural proximity. A real-world entrance amplifies both; without it, insight may fail to become new evidence.` },
-    { id:"tension", titleZh:"真实张力", titleEn:"Structural Tension", bodyZh:`「${quiet.zh}」并非能力不足，而是它与当前前景结构的参与度最低。真正的张力在于：高强度节点会继续推动系统，而较弱节点尚未提供足够承接。若忽略这一差异，推进速度可能高于现实容量。`, bodyEn:`${quiet.en} is not a deficit; it participates least in the current foreground. Strong nodes may move faster than the quieter field can hold, creating a gap between momentum and capacity.` },
-    { id:"entry", titleZh:"唯一现实入口", titleEn:"One Reality Entry", bodyZh:`未来七天只验证一个动作：${dominant[0].actionZh}同时记录它是否增强「${dominant[1].zh}」，以及是否让「${quiet.zh}」获得更多参与。原型的价值来自新证据，而不是再次解释旧结论。`, bodyEn:`For seven days, test one action only: ${dominant[0].actionEn} Record whether it strengthens ${dominant[1].en} and gives ${quiet.en} more participation. An archetype gains value from new evidence, not another summary of old conclusions.` },
+    { id:"archetype", titleZh:"八流归一 · 当前原型结构", titleEn:"Eight Streams as One", bodyZh:`当前显现的不是人格标签，而是「${dominant[0].zh}」承担方向、「${dominant[1].zh}」形成现实接口、「${dominant[2].zh}」调节行动强度的三层运行结构。它只有在八条生命支流同时存在时才成立，任何单一测评都不能替代。`, bodyEn:`This is not a personality label. ${dominant[0].en} carries direction, ${dominant[1].en} forms the real-world interface, and ${dominant[2].en} regulates intensity. It exists only through all eight streams.` },
+    { id:"evidence", titleZh:"八域证据矩阵", titleEn:"Eight-field Evidence Matrix", bodyZh:`系统交叉读取一年窗口内的 192 次有效选择、八组节点强度和各自上下文。当前最强证据来自「${sourceNames[0]}」「${sourceNames[1]}」「${sourceNames[2]}」；其余五域没有被压缩成摘要，而是作为承接、校准与反证继续参与计算。`, bodyEn:`The system cross-reads 192 choices, eight node structures and their contexts. The strongest evidence comes from ${sourceNames.join(", ")}; the other five remain as capacity, calibration and counter-evidence rather than being compressed into a summary.` },
+    { id:"axis", titleZh:"主轴如何运转", titleEn:"How the Primary Axis Operates", bodyZh:`「${dominant[0].zh}」决定系统更自然地从哪里启动；「${dominant[1].zh}」决定这股力量怎样被关系与现实接住；「${dominant[2].zh}」则决定它能否持续。真正值得观察的是三者的传递顺序，而不是谁的分数最高。`, bodyEn:`${dominant[0].en} initiates the system, ${dominant[1].en} determines how reality receives it, and ${dominant[2].en} determines continuity. Their sequence matters more than rank.` },
+    { id:"relation", titleZh:"增强回路", titleEn:"Reinforcement Loop", bodyZh:`「${dominant[0].zh}」与「${dominant[1].zh}」形成当前最强增强回路：前者一旦获得清楚的现实入口，后者会扩大反馈；反馈又反过来稳定前者。若入口含糊，这一回路会从创造转为内耗。`, bodyEn:`${dominant[0].en} and ${dominant[1].en} form the strongest loop. A clear real-world entrance amplifies feedback; an ambiguous one turns the same loop into friction.` },
+    { id:"tension", titleZh:"张力与承接差", titleEn:"Tension and Capacity Gap", bodyZh:`「${quiet.zh}」不是短板，而是当前参与度最低的承接变量。当高强度支流继续推进、它仍未进入结构时，系统会出现“理解已经发生，现实尚未容纳”的时差。需要调节的是节奏与接口，而不是继续加大意志。`, bodyEn:`${quiet.en} is not a deficit but the least-participating capacity variable. When strong streams advance without it, insight outruns reality. Adjust rhythm and interface rather than force.` },
+    { id:"latent", titleZh:"尚未被使用的能力", titleEn:"Latent Capacity", bodyZh:`较安静的支流保留了另一种可能：${quiet.actionZh}它的作用不是削弱当前主轴，而是为主轴增加容错、边界与持续性。只有它开始提供现实证据，原型才会从单向推进转为稳定循环。`, bodyEn:`The quieter stream holds another possibility: ${quiet.actionEn} It adds tolerance, boundary and continuity to the primary axis rather than weakening it.` },
+    { id:"entry", titleZh:"七日现实入口", titleEn:"Seven-day Reality Entry", bodyZh:`未来七天只验证一个动作：${dominant[0].actionZh}完成后分别记录三件事：它是否增强「${dominant[1].zh}」、是否给「${quiet.zh}」留下参与空间、是否产生一个外部可见的新结果。原型的价值来自新证据，而不是再次解释旧结论。`, bodyEn:`For seven days, test one action only: ${dominant[0].actionEn} Record whether it strengthens ${dominant[1].en}, leaves room for ${quiet.en}, and produces one externally visible result.` },
+    { id:"recheck", titleZh:"原型更新协议", titleEn:"Archetype Update Protocol", bodyZh:"生命原型不是终身定型。未来任一支流产生新的完整档案后，系统会比较新旧证据；只有节点强度、跨域关系或现实验证发生实质变化时，原型才更新。未发生的变化不会被想象填补。", bodyEn:"Life Archetype is not permanent typing. A new complete field archive can update it only when node strength, cross-field relations or reality evidence materially changes; missing change is never invented." },
   ];
   return {
     algorithm:"lingxifield-dendritic-v2", nodes:ordered, dominant, edges,
@@ -277,7 +336,7 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
     insightEn:"All eight tributaries are active within the one-year window. This archetype reads cross-field reinforcement, capacity gaps and one reality entrance—not a summary of eight reports.",
     chapters,
     evidence:{answered:192,total:192,historyProducts:8,sourceZh:"一年内八个已完成并授权保存的独立场域档案",sourceEn:"Eight completed and authorized independent field archives within one year"},
-    artworkIndex, sourceProducts: BASE_DENDRITE_PRODUCT_IDS.slice(),
+    artworkIndex, sourceProducts: BASE_DENDRITE_PRODUCT_IDS.slice(), fieldContributions, structuralRelations,
     cardRolesZh:["八重场域汇流原型"], cardRolesEn:["Eight-field Convergent Archetype"],
   };
 }
@@ -290,7 +349,7 @@ function oracleCardIndexesFor(nodes:Array<{id:string;score:number}>) {
   return [hash(nodes[0],0,24),24+hash(nodes[1],1,24),48+hash(nodes[2],2,16)];
 }
 
-function productDiagnosis(productId: string, first: DendriteResult["dominant"][number], second: DendriteResult["dominant"][number], quiet: DendriteResult["nodes"][number]) {
+function productDiagnosis(product: DendriteProduct, first: DendriteResult["dominant"][number], second: DendriteResult["dominant"][number], quiet: DendriteResult["nodes"][number]) {
   const layers: Record<string, { mechanism: string; impact: string; verify: string }> = {
     "life-map-report": { mechanism:`需要核对的不是“你是什么类型”，而是「${first.zh}」这一本源倾向进入现实后，是否被「${second.zh}」转译，或因「${quiet.zh}」参与不足而发生偏移。`, impact:"若偏移长期存在，能力仍在，但日常选择会越来越像在维持角色，而不是使用自己的自然结构。", verify:"分别记录一个无人要求时的自然选择与一个现实责任中的选择，比较两者差异。" },
     "relationship-resonance": { mechanism:`关系断点不在抽象的合不合适，而在「${first.zh}」发出的信号能否被「${second.zh}」接收，以及「${quiet.zh}」缺席时双方怎样误读。`, impact:"同一份在意可能被翻译成完全不同的支持语言，最终形成感知落差而非感情缺失。", verify:"完成一次只描述事实、感受和具体请求的对话，观察对方实际接收到什么。" },
@@ -301,12 +360,28 @@ function productDiagnosis(productId: string, first: DendriteResult["dominant"][n
     "tarot-reading": { mechanism:`三重镜像把「${first.zh}」放在前景，再用「${second.zh}」打开第二观察面；「${quiet.zh}」是尚未被纳入判断的变量。`, impact:"停滞往往不是没有答案，而是经验、现实条件与行动空间被压在同一个观察位置。", verify:"把已知事实、旧经验和条件路径分成三栏，移动其中一个最小变量。" },
     "qian-reading": { mechanism:`象征坐标由「${first.zh}」确定注意力中心，「${second.zh}」提供现实方向；「${quiet.zh}」提醒你不要把象征误读成结论。`, impact:"灵签的价值不在给出未来，而在让难以命名的经验获得一个可回到现实验证的位置。", verify:"选择一条最有触动的象征句，为它安排一个三天内可观察的现实动作。" },
   };
-  return layers[productId] ?? { mechanism:"当前结构需要回到真实情境确认。", impact:"分数只表示本次证据强度。", verify:first.actionZh };
+  if (product.productId === "relationship-resonance") {
+    const relationshipLayers: Record<RelationshipAssessmentType, { mechanism: string; impact: string; verify: string }> = {
+      deep: layers["relationship-resonance"],
+      business: {
+        mechanism:`合伙结构的关键不是性格互补，而是「${first.zh}」形成的价值与决策信号，能否经由「${second.zh}」进入可追溯的分工、授权和交付；「${quiet.zh}」参与不足时，口头共识最容易在现实执行中失真。`,
+        impact:"当贡献、风险和最终决定权没有被显式记录，关系中的善意会被迫承担制度的工作，久而久之形成隐性失衡。",
+        verify:"选择一个正在推进的共同事项，用同一页写清目标、负责人、截止点、验收标准和分歧升级路径。",
+      },
+      other: {
+        mechanism:`这段社会关系的运行质量取决于「${first.zh}」能否被「${second.zh}」正确接收，并在「${quiet.zh}」所代表的边界或互惠位置留下清楚证据。`,
+        impact:"若角色、频率和帮助边界长期模糊，一方会把礼貌当承诺，另一方则把临时支持当成永久义务。",
+        verify:"用一句话确认彼此当前的关系角色，再对下一次互动的时间、范围或回应方式作一个可验证约定。",
+      },
+    };
+    return relationshipLayers[product.relationshipType ?? "deep"];
+  }
+  return layers[product.productId] ?? { mechanism:"当前结构需要回到真实情境确认。", impact:"分数只表示本次证据强度。", verify:first.actionZh };
 }
 
 function chapterBody(mode: FieldResultMode, product: DendriteProduct, dominant: DendriteResult["dominant"], quiet: DendriteResult["nodes"][number], left: DendriteResult["nodes"][number], right: DendriteResult["nodes"][number], historyProducts: number) {
   const first = dominant[0], second = dominant[1], third = dominant[2];
-  const diagnosis = productDiagnosis(product.productId, first, second, quiet);
+  const diagnosis = productDiagnosis(product, first, second, quiet);
   const bodies: Record<FieldResultMode, { zh: string; en: string }> = {
     core: {
       zh: `本次读取中，「${first.zh}」最先来到前景，并与「${second.zh}」「${third.zh}」共同形成${product.nameZh}的当前主结构。${first.meaningZh}${diagnosis.mechanism}这是一段当前证据，不是固定人格。`,

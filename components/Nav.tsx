@@ -7,7 +7,6 @@ import Bi from "./Bi";
 import LangToggle from "./LangToggle";
 import SearchBox from "./SearchBox";
 import RuneIcon, { RuneKind } from "./RuneIcon";
-import { FIELD_STRUCTURE_LINKS } from "@/lib/field-structure-links";
 
 const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
   { href: "/live-as", zh: "意识显化", en: "Manifestation", rune: "eye" },
@@ -158,12 +157,11 @@ export default function Nav() {
                     )}
                   </button>
                   {testsOpen && (
-                    <div className="bg-void-deep absolute left-1/2 top-full z-50 mt-2 w-[min(760px,84vw)] -translate-x-1/2 overflow-hidden rounded-sm border border-white/10 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.58)]">
-                      <div className="relative aspect-[16/9] overflow-hidden bg-[#030923]">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}<img src="/images/9d-field-navigation-v317.png" alt="灵犀场可交互产品结构导航" className="h-full w-full object-cover" />
-                        {FIELD_STRUCTURE_LINKS.map((item) => <Link key={item.href} href={item.href} title={`${item.zh} · ${item.en}`} aria-label={`${item.zh} · ${item.en}`} onClick={() => setTestsOpen(false)} className="absolute aspect-square w-[8.5%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-lattice/10 bg-lattice/[.03] transition hover:border-lattice/70 hover:bg-lattice/20 hover:shadow-[0_0_24px_rgba(137,237,226,.55)] focus-visible:border-lattice" style={{ left: `${item.x}%`, top: `${item.y}%` }} />)}
+                    <div className="bg-void-deep absolute left-1/2 top-full z-50 mt-2 w-[min(620px,84vw)] -translate-x-1/2 rounded-sm border border-white/10 p-4 shadow-[0_18px_70px_rgba(0,0,0,0.58)]">
+                      <p className="px-2 pb-3 text-[10px] tracking-[.22em] text-lattice"><Bi zh="八个独立场域 · 一个汇流层" en="Eight independent fields · one convergence layer" /></p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {preciseTests.map((item) => <Link key={item.href} href={item.href} onClick={() => setTestsOpen(false)} className="flex items-center gap-2 border border-white/10 bg-white/[.025] px-3 py-3 text-xs text-bone-dim transition hover:border-lattice/50 hover:text-lattice"><RuneIcon kind={item.rune} className="h-3.5 w-3.5 text-lattice" /><Bi zh={item.zh} en={item.en} /></Link>)}
                       </div>
-                      <p className="px-3 py-2 text-center text-[10px] tracking-[.2em] text-lattice"><Bi zh="点击场域节点进入 · 9D 场域结构导航" en="Select a field node · 9D Field Structure Navigation" /></p>
                     </div>
                   )}
                 </div>

@@ -2,6 +2,7 @@ Component({
   data: {
     open: false,
     fullscreen: false,
+    muted: true,
     videoFailed: false,
     left: 300,
     top: 540,
@@ -37,6 +38,10 @@ Component({
     expandVideo() {
       const context = wx.createVideoContext('fieldStructureVideo', this)
       context.requestFullScreen({ direction: 90 })
+    },
+    toggleAudio() {
+      const muted = !this.data.muted
+      this.setData({ muted }, () => wx.createVideoContext('fieldStructureVideo', this).play())
     },
     closePanel() {
       wx.createVideoContext('fieldStructureVideo', this).pause()

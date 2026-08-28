@@ -5,7 +5,7 @@ const { API_BASE } = require('../../utils/api')
 Page({
   data: {
     loading: true, submitting: false, paying: false, lang: 'zh',
-    item: null, product: null, engine: null, questionIndex: 0,
+    item: null, product: null, engine: null, relationshipVariants: null, questionIndex: 0,
     responses: {}, selected: '', result: null, submissionId: '', unlocked: false,
     name: '', partnerName: '', relationshipType: 'deep', error: '',
   },
@@ -18,14 +18,18 @@ Page({
       ])
       const item = catalog.items.find((candidate) => candidate.productId === this.productId)
       if (!item) throw new Error('missing product')
-      this.setData({ item, product: config.product, engine: config.engine })
+      this.setData({ item, product: config.product, engine: config.engine, relationshipVariants: config.relationshipVariants || null })
     } catch (_) { this.setData({ error: '这片场域暂未完成连接' }) }
     finally { this.setData({ loading: false }) }
   },
   toggleLang() { this.setData({ lang: this.data.lang === 'zh' ? 'en' : 'zh' }) },
   inputName(event) { this.setData({ name: event.detail.value.slice(0, 40) }) },
   inputPartner(event) { this.setData({ partnerName: event.detail.value.slice(0, 40) }) },
-  chooseRelationship(event) { this.setData({ relationshipType: event.currentTarget.dataset.value }) },
+  chooseRelationship(event) {
+    const relationshipType = event.currentTarget.dataset.value
+    const product = this.data.relationshipVariants && this.data.relationshipVariants[relationshipType]
+    this.setData({ relationshipType, ...(product ? { product, questionIndex: 0, responses: {}, selected: '' } : {}) })
+  },
   choose(event) {
     const question = this.data.product.questions[this.data.questionIndex]
     const selected = event.currentTarget.dataset.value
@@ -46,9 +50,8 @@ Page({
   },
   async submit() {
     if (this.data.submitting) return
-    if (this.productId === 'relationship-resonance' && (!this.data.name.trim() || !this.data.partnerName.trim())) {
-      return wx.showToast({ title: '请填写双方称呼', icon: 'none' })
-    }
+    if (!this.data.name.trim()) return wx.showToast({ title: '请填写档案称呼', icon: 'none' })
+    if (this.productId === 'relationship-resonance' && !this.data.partnerName.trim()) return wx.showToast({ title: '请填写双方称呼', icon: 'none' })
     this.setData({ submitting: true, error: '' })
     try {
       const data = await request('/api/wechat/mini/dendrite/submit', { method: 'POST', data: {

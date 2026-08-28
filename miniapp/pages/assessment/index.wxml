@@ -12,9 +12,13 @@
     <view class="duration">{{engine.questionCount}} {{lang === 'zh' ? '个结构节点 · 约' : 'structural interactions · about'}} {{engine.estimatedMinutes}} {{lang === 'zh' ? '分钟' : 'min'}}</view>
 
     <view wx:if="{{!result}}" class="panel lx-veil">
-      <view wx:if="{{product.productId === 'relationship-resonance'}}" class="identity-block">
-        <input value="{{name}}" maxlength="40" bindinput="inputName" placeholder="{{lang === 'zh' ? '你的称呼' : 'Your name'}}"/>
-        <input value="{{partnerName}}" maxlength="40" bindinput="inputPartner" placeholder="{{lang === 'zh' ? '对方称呼' : 'Other person'}}"/>
+      <view class="identity-block">
+        <view class="identity-label">{{product.productId === 'relationship-resonance' ? (lang === 'zh' ? '关系双方 · 用于生成专属档案' : 'BOTH PEOPLE · FOR THE PERSONAL ARCHIVE') : (lang === 'zh' ? '档案称呼 · 用于写入我的场域' : 'ARCHIVE NAME · SAVED TO MY FIELD')}}</view>
+        <input type="text" value="{{name}}" maxlength="40" cursor-spacing="120" bindinput="inputName" placeholder="{{lang === 'zh' ? '你的姓名或称呼（必填）' : 'Your name or preferred name *'}}" placeholder-style="color:rgba(224,232,255,.46)"/>
+        <input wx:if="{{product.productId === 'relationship-resonance'}}" type="text" value="{{partnerName}}" maxlength="40" cursor-spacing="120" bindinput="inputPartner" placeholder="{{lang === 'zh' ? '对方姓名或称呼（必填）' : 'Other person *'}}" placeholder-style="color:rgba(224,232,255,.46)"/>
+      </view>
+      <view wx:if="{{product.productId === 'relationship-resonance'}}" class="relationship-variant">
+        <view class="variant-note">{{lang === 'zh' ? '请选择真实关系类型。三类入口分别读取不同的 24 个结构节点。' : 'Choose the lived relationship. Each path uses its own 24 interactions.'}}</view>
         <view class="relation-types"><text class="{{relationshipType === 'deep' ? 'active' : ''}}" data-value="deep" bindtap="chooseRelationship">深度关系</text><text class="{{relationshipType === 'business' ? 'active' : ''}}" data-value="business" bindtap="chooseRelationship">合伙商业</text><text class="{{relationshipType === 'other' ? 'active' : ''}}" data-value="other" bindtap="chooseRelationship">其他关系</text></view>
       </view>
       <view class="progress"><view style="width: {{(questionIndex + 1) * 100 / product.questions.length}}%"></view></view>

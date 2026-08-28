@@ -32,12 +32,22 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     evidence?: { answered: number; total: number; historyProducts: number; sourceZh: string; sourceEn: string };
     archetypeCardIndexes?: number[]; cardRolesZh?: string[]; cardRolesEn?: string[];
     artworkIndex?: number;
+    fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
+    structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
   };
+  const input = (data.input ?? {}) as { name?: string; partnerName?: string; relationshipType?: "deep" | "business" | "other" };
+  const relationshipNames = { deep: "关系共振 · 深度关系", business: "关系共振 · 合伙商业", other: "关系共振 · 其他关系" } as const;
+  const productName = data.product_id === "life-archetype"
+    ? "生命原型 · 八流归一"
+    : data.product_id === "relationship-resonance"
+      ? relationshipNames[input.relationshipType ?? "deep"]
+      : getProduct(data.product_id)?.name ?? data.product_id;
+  const subjectName = input.partnerName ? `${input.name || "我"} × ${input.partnerName}` : input.name || "未命名生命档案";
   const cards = data.product_id === "qian-reading" ? (result.archetypeCardIndexes ?? []).map((index) => LIFE_SIGNS[index]).filter(Boolean).map((card) => ({
     index: card.index, nameZh: card.nameZh, nameEn: card.nameEn,
   })) : [];
   const fullArtDir: Record<string, string> = {
-    "life-map-report":"lifemap", "relationship-resonance":"relationship-full/general", "resilience-report":"resilience-full",
+    "life-map-report":"lifemap", "relationship-resonance":input.relationshipType === "business" ? "relationship-full/business" : input.relationshipType === "deep" ? "relationship-full/romantic" : "relationship-full/general", "resilience-report":"resilience-full",
     "romance-report":"romance-full", "wealth-report":"wealth-full", "daily-tide-report":"daily-tide-full",
     "tarot-reading":"tarot-full", "qian-reading":"qian-full",
   };
@@ -53,5 +63,5 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
       : [];
   const fallbackRolesZh = data.product_id === "qian-reading" ? ["源流签", "灵魂签", "行者签"] : data.product_id === "life-archetype" ? ["当前原型"] : [];
   const fallbackRolesEn = data.product_id === "qian-reading" ? ["Source Sign", "Soul Sign", "Wayfarer Sign"] : data.product_id === "life-archetype" ? ["Current Archetype"] : [];
-  return <MiniDendriteReport productId={data.product_id} productName={getProduct(data.product_id)?.name ?? data.product_id} createdAt={data.created_at} result={result} cards={cards} artworks={artworks} cardRolesZh={result.cardRolesZh ?? fallbackRolesZh} cardRolesEn={result.cardRolesEn ?? fallbackRolesEn} />;
+  return <MiniDendriteReport productId={data.product_id} productName={productName} subjectName={subjectName} createdAt={data.created_at} result={result} cards={cards} artworks={artworks} cardRolesZh={result.cardRolesZh ?? fallbackRolesZh} cardRolesEn={result.cardRolesEn ?? fallbackRolesEn} />;
 }
