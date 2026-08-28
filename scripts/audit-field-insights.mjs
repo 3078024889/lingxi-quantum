@@ -3,6 +3,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
+const miniSource = read("miniapp/components/field-structure-9d/index.wxml");
 const fail = (message) => {
   console.error(`FAIL field insights: ${message}`);
   process.exitCode = 1;
@@ -63,7 +64,8 @@ if (!layout.includes("/og-v316.png") || !fs.existsSync(path.join(root, "public/o
 if (fs.existsSync(path.join(root, "public/og.jpg"))) fail("old social sharing image still exists");
 if (!layout.includes("<FieldStructure9D />") || !fieldStructure.includes("lingxifield-9d-field-structure-v317-h264.mp4")) fail("global 9D Field Structure is not mounted");
 if (!fs.existsSync(path.join(root, "public/media/lingxifield-9d-field-structure-v317-h264.mp4"))) fail("H.264 9D Field Structure film is missing");
-if (!/muted autoPlay loop playsInline/.test(fieldStructure)) fail("9D film does not preserve muted autoplay looping");
+if (!/muted=\{muted\} autoPlay loop playsInline/.test(fieldStructure)) fail("9D film does not preserve muted autoplay looping with user-controlled sound");
+if (/9d-field-structure-poster-v316/.test(`${fieldStructure}\n${miniSource}`) || fs.existsSync(path.join(root, "public/images/9d-field-structure-poster-v316.png"))) fail("obsolete 9D poster still covers the film");
 if (!/lg:grid-cols-\[\.8fr_1\.15fr_1\.55fr\]/.test(footer)) fail("footer has not been compacted into the balanced grid");
 if (/联锁/.test(`${publicSource}\n${fieldStructure}`)) fail("legacy linking term remains in current public website copy");
 

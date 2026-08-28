@@ -2,7 +2,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
 import OrderActions from "../OrderActions";
 import { hasUnlock } from "@/lib/access";
@@ -274,11 +274,13 @@ async function backfillSubmissionIds(
 }
 
 export default async function FieldOrdersPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const supabase = isSupabasePublicConfigured() ? createClient() : null;
+  const { data: { user } } = supabase
+    ? await supabase.auth.getUser()
+    : { data: { user: null } };
 
   let orders: OrderRow[] = [];
-  if (user) {
+  if (user && supabase) {
     const [{ data }, { data: miniArchives }, { data: unlockRows }, { data: profile }] = await Promise.all([
       supabase.from("orders").select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
       supabase.from("mini_dendrite_assessments").select("id, product_id, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),

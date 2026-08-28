@@ -50,6 +50,9 @@ Component({
     onFullscreenChange(event) {
       this.setData({ fullscreen: Boolean(event.detail.fullScreen) })
     },
+    retryVideo() {
+      this.setData({ videoFailed: false }, () => wx.createVideoContext('fieldStructureVideo', this).play())
+    },
     onVideoError() { this.setData({ videoFailed: true }) },
   },
 })

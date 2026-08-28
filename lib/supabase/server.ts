@@ -1,8 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+export function isSupabasePublicConfigured() {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
+  );
+}
+
 // 服务器端 Supabase 客户端（用于读取登录状态）。
 export function createClient() {
+  if (!isSupabasePublicConfigured()) throw new Error("SUPABASE_PUBLIC_CONFIG_MISSING");
   const cookieStore = cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

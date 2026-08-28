@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { NARRATIVES } from "@/lib/narratives";
 
@@ -13,10 +13,17 @@ export async function getAccess() {
     };
   }
 
+  if (!isSupabasePublicConfigured()) {
+    console.error("[access] Supabase public configuration is missing");
+    return { user: null, manifestActive: false, unlocks: [] as string[] };
+  }
+
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError) {
+    console.error("[access] Supabase auth unavailable", authError.code);
+    return { user: null, manifestActive: false, unlocks: [] as string[] };
+  }
 
   if (!user) {
     return { user: null, manifestActive: false, unlocks: [] as string[] };

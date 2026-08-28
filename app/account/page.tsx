@@ -17,7 +17,7 @@ import CollapsibleSection from "./CollapsibleSection";
 import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import CosmicField from "@/components/CosmicField";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, isSupabasePublicConfigured } from "@/lib/supabase/server";
 
 export const metadata = { title: "进入场域 | 灵犀 · Enter the Field | Lingxi" };
 
@@ -25,14 +25,14 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   const miniLink = typeof searchParams?.miniLink === "string" && searchParams.miniLink.length <= 2048
     ? searchParams.miniLink
     : null;
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const supabase = isSupabasePublicConfigured() ? createClient() : null;
+  const { data: { user } } = supabase
+    ? await supabase.auth.getUser()
+    : { data: { user: null } };
 
   let manifestUntil: string | null = null;
   let unlocks: string[] = [];
-  if (user) {
+  if (user && supabase) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("manifest_until")
@@ -73,7 +73,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   // 还能回来确认"的路。只列最近的、状态还不是paid的订单，付过的和
   // 从没生成过订单的都不会出现在这里。
   let pendingOrders: { id: string; product_id: string; created_at: string; amount_usd: number }[] = [];
-  if (user) {
+  if (user && supabase) {
     const [
       { data: reports }, { data: relReports }, { data: qReports }, { data: trReports },
       { data: resReports }, { data: romReports }, { data: dtReports }, { data: wReports },

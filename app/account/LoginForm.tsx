@@ -9,7 +9,6 @@ type Mode = "signin" | "signup";
 
 export default function LoginForm({ afterAuthPath = "/live-as" }: { afterAuthPath?: string }) {
   const router = useRouter();
-  const supabase = createClient();
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
   const [mode, setMode] = useState<Mode>("signin");
@@ -29,6 +28,14 @@ export default function LoginForm({ afterAuthPath = "/live-as" }: { afterAuthPat
       return;
     }
     setLoading(true);
+    let supabase;
+    try {
+      supabase = createClient();
+    } catch {
+      setLoading(false);
+      setError(t("场域登录配置正在同步，请稍后再试", "Field login configuration is syncing. Please try again shortly."));
+      return;
+    }
 
     if (mode === "signup") {
       const { error } = await supabase.auth.signUp({ email, password });

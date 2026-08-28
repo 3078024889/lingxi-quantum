@@ -122,7 +122,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
       ? topPage.href
       : topStory
       ? `/narrative/${topStory.slug}`
-      : `/live-as?ask=${encodeURIComponent(query)}`;
+      : `/learn?q=${encodeURIComponent(query)}`;
     setFocused(false);
     router.push(href);
   };
@@ -191,7 +191,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
              不管上面搜到多少东西，这个入口都保证是打开面板第一眼就
              看到的内容。 */}
           <Link
-            href={`/live-as?ask=${encodeURIComponent(q)}`}
+            href={`/learn?q=${encodeURIComponent(q)}`}
             onClick={() => setFocused(false)}
             className="sb-ask-link"
           >

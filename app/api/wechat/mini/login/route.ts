@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 import { encryptMiniSecret, sha256 } from "@/lib/mini/crypto";
 import { createMiniSession } from "@/lib/mini/session";
 import { exchangeMiniCode, miniWechatConfigured } from "@/lib/mini/wechat";
@@ -11,6 +11,7 @@ export const maxDuration = 15;
 
 export async function POST(req: Request) {
   if (!miniWechatConfigured()) return NextResponse.json({ error: "小程序登录尚未配置" }, { status: 503 });
+  if (!isSupabaseAdminConfigured()) return NextResponse.json({ error: "场域服务配置尚未同步，请提供参考码 V319-CONFIG" }, { status: 503 });
   if (!(await checkRateLimit(`mini-login:${getClientIp(req)}`, 30, 600))) {
     return NextResponse.json({ error: "请求过于频繁，请稍后再试" }, { status: 429 });
   }

@@ -21,7 +21,7 @@ function confirmOpenWebArchive() {
 }
 
 Page({
-  data: { loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null, archetype: null },
+  data: { loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null, archetype: { ready: false, completed: 0, missing: [] } },
   onShow() { this.load() },
   async load() {
     this.setData({ loading: true })
@@ -40,8 +40,9 @@ Page({
         .map((item) => ({ ...item, expiryLabel: item.expires_at ? `有效至 ${displayDate(item.expires_at)}` : '长期有效' }))
       this.setData({ orders, unlocks, manifestUntil: me.manifestUntil, archetype: me.archetype, query: '' })
       this.applyFilter('')
-    } catch (_) {
-      wx.showToast({ title: '登录状态未就绪', icon: 'none' })
+    } catch (error) {
+      this.setData({ archetype: { ready: false, completed: 0, missing: [] } })
+      wx.showToast({ title: (error.data && error.data.error) || '登录状态未就绪', icon: 'none' })
     } finally {
       this.setData({ loading: false })
     }

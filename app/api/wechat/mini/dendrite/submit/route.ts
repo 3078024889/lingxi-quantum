@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireMiniSession } from "@/lib/mini/session";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 import { calculateDendrite, getDendriteProduct, type RelationshipAssessmentType } from "@/lib/mini/dendrite-engine";
 import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
 
@@ -11,9 +11,12 @@ function shortText(value: unknown, max: number) {
 }
 
 export async function POST(req: Request) {
-  const session = await requireMiniSession(req);
-  if (!session) return NextResponse.json({ error: "登录状态已失效，请重新进入小程序" }, { status: 401 });
   try {
+    if (!isSupabaseAdminConfigured()) {
+      return NextResponse.json({ error: "场域服务配置尚未同步，请联系灵犀场并提供参考码 V319-CONFIG" }, { status: 503 });
+    }
+    const session = await requireMiniSession(req);
+    if (!session) return NextResponse.json({ error: "登录状态已失效，请重新进入小程序" }, { status: 401 });
     const body = await req.json() as { productId?: unknown; responses?: unknown; name?: unknown; partnerName?: unknown; relationshipType?: unknown };
     const productId = typeof body.productId === "string" ? body.productId : "";
     const relationshipType: RelationshipAssessmentType = body.relationshipType === "business" ? "business" : body.relationshipType === "other" ? "other" : "deep";
@@ -53,6 +56,6 @@ export async function POST(req: Request) {
     if (message.startsWith("missing response")) return NextResponse.json({ error: "请完成全部节点选择" }, { status: 400 });
     if (message.startsWith("assessment-storage:")) return NextResponse.json({ error: "场域档案暂未写入，请联系灵犀场并提供参考码 V318-SAVE" }, { status: 503 });
     console.error("[mini dendrite submit] failed", message);
-    return NextResponse.json({ error: "树突结构连接暂未完成，请稍后重试" }, { status: 500 });
+    return NextResponse.json({ error: "场域节点暂未写入，请稍后重试并提供参考码 V319-DENDRITE" }, { status: 500 });
   }
 }
