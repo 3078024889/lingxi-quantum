@@ -32,3 +32,10 @@ V323 publication contract:
 - body copy is 12.5pt in print and at least 17px on small screens;
 - each 24-entry product publishes one evidence entry per page rather than shrinking two entries into one page;
 - the complete Life Archetype publishes 24 independent inference modules.
+
+V325 cross-platform geometry:
+
+- Web and Mini Program exports use the same 794 x 1123 A4 stage;
+- cover, feature, chapter, footer, and Mini Program publication pages use a 64px left/right gutter;
+- the export fallback is the same neutral `#EEF0F6`, never a dark or product-coloured canvas;
+- the Life Archetype cover must display all eight completed tributaries and `8 / 8`, not three dominant structural nodes.

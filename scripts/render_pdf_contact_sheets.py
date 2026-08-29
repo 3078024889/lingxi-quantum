@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 PDF_DIR = ROOT / "output" / "pdf"
 OUT_DIR = PDF_DIR / "contact-sheets"
-TMP_DIR = ROOT / "tmp" / "v324-pdf-pages"
+TMP_DIR = ROOT / "tmp" / "v325-pdf-pages"
 PDFTOPPM = Path(r"C:\Users\30780\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\pdftoppm.exe")
 
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -17,7 +17,7 @@ TMP_DIR.mkdir(parents=True, exist_ok=True)
 thumb_w, thumb_h = 238, 337
 gap, label_h, columns = 14, 28, 4
 
-for pdf in sorted(PDF_DIR.glob("v324-*-qa.pdf")):
+for pdf in sorted(PDF_DIR.glob("v325-*-qa.pdf")):
     render_dir = TMP_DIR / pdf.stem
     render_dir.mkdir(parents=True, exist_ok=True)
     prefix = render_dir / "page"
@@ -39,4 +39,4 @@ for pdf in sorted(PDF_DIR.glob("v324-*-qa.pdf")):
         draw.text((x + 6, y + thumb_h + 7), f"PAGE {index + 1:02d}", fill="#bff8ec", font=ImageFont.load_default())
     sheet.save(OUT_DIR / f"{pdf.stem}-contact-sheet.png", optimize=True)
 
-print(f"PASS V324 contact sheets: {len(list(OUT_DIR.glob('v324-*-contact-sheet.png')))}")
+print(f"PASS V325 contact sheets: {len(list(OUT_DIR.glob('v325-*-contact-sheet.png')))}")

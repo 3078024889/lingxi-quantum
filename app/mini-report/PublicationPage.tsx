@@ -23,7 +23,7 @@ export function PublicationPage({
     <section className="lx-pdf-page lx-publication-page lx-report-tone-light relative mx-auto aspect-[210/297] w-full max-w-[794px] overflow-hidden bg-[#eef0f6] text-[#292638] shadow-[0_24px_90px_rgba(16,20,45,.3)]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={art} alt="" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="relative z-10 flex h-full flex-col px-[7%] py-[6%]">
+      <div className="relative z-10 flex h-full flex-col px-[8.06%] py-[6%]">
         <header className="flex items-start justify-between gap-6 text-[10px] uppercase tracking-[.28em]">
           <span className="font-semibold text-[#557f79]">{eyebrow}</span>
           <span className="text-[#696473]">{String(index).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>

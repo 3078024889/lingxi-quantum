@@ -195,8 +195,8 @@ export async function exportPublicationPagesPdf(params: {
   const {
     containerRef,
     fileName,
-    bgColorRgb = [7, 19, 45],
-    bgColorHex = "#07132D",
+    bgColorRgb = [238, 240, 246],
+    bgColorHex = "#EEF0F6",
   } = params;
   await document.fonts.ready;
   const pages = Array.from(containerRef.children).filter((node): node is HTMLElement =>
@@ -682,7 +682,7 @@ export async function exportArchivePdf(params: {
 
   // ── 封面 ──
   pdf.addImage(await renderPage(pageShell(coverImage, "center 40%", `
-    <div style="position:absolute;left:56px;right:56px;top:34%;
+    <div style="position:absolute;left:64px;right:64px;top:34%;
                 background:${theme.gradient};border:1px solid ${theme.border};
                 border-radius:6px;padding:46px 40px;text-align:center;
                 box-shadow:0 18px 60px rgba(40,36,70,.18);">
@@ -699,7 +699,7 @@ export async function exportArchivePdf(params: {
     const bg = feature.backgroundImage ?? bodyImages[i % bodyImages.length] ?? coverImage;
     pdf.addPage();
     pdf.addImage(await renderPage(pageShell(bg, SHIFTS[i % SHIFTS.length], `
-      <div style="position:absolute;inset:48px 52px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      <div style="position:absolute;top:48px;bottom:48px;left:64px;right:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;
                   background:${theme.gradient};border:1px solid ${theme.border};border-radius:6px;padding:34px 42px;
                   box-shadow:0 10px 40px rgba(35,30,55,.035);text-align:center;">
         <div style="font-size:11px;letter-spacing:.32em;color:#8C7FA8;">${escapeHtml(feature.eyebrow ?? eyebrow)}</div>
@@ -707,8 +707,8 @@ export async function exportArchivePdf(params: {
         <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:24px;color:#2E2942;letter-spacing:.06em;">${escapeHtml(feature.title)}</div>
         ${feature.subtitle ? `<div style="font-size:13px;line-height:1.8;color:#6B6285;margin-top:10px;letter-spacing:.04em;">${escapeHtml(feature.subtitle)}</div>` : ""}
       </div>
-      <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
-      <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${i + 1} / ${featurePages.length}</div>`
+      <div style="position:absolute;left:64px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
+      <div style="position:absolute;right:64px;bottom:26px;font-size:10px;color:#9990AE;">${i + 1} / ${featurePages.length}</div>`
     )), "JPEG", 0, 0, PW, PH);
   }
 
@@ -967,8 +967,8 @@ export async function exportArchivePdf(params: {
     pdf.addPage();
     pdf.addImage(await renderPage(pageShell(bg, pos, `
       ${content}
-      <div style="position:absolute;left:52px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
-      <div style="position:absolute;right:52px;bottom:26px;font-size:10px;color:#9990AE;">${pageIndex + 1} / ${bodyPages.length}</div>`
+      <div style="position:absolute;left:64px;bottom:26px;font-size:10px;color:#9990AE;">lingxifield.com</div>
+      <div style="position:absolute;right:64px;bottom:26px;font-size:10px;color:#9990AE;">${pageIndex + 1} / ${bodyPages.length}</div>`
     )), "JPEG", 0, 0, PW, PH);
   }
 
