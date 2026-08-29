@@ -20,20 +20,21 @@ export function PublicationPage({
   const cover = layout === "cover";
   const full = layout === "full";
   return (
-    <section className="lx-pdf-page relative mx-auto aspect-[210/297] w-full max-w-[794px] overflow-hidden bg-[#f0edf6] text-[#292638] shadow-[0_24px_90px_rgba(16,20,45,.3)]">
+    <section className={`lx-pdf-page lx-archive-publication-page relative mx-auto aspect-[210/297] w-full max-w-[794px] overflow-hidden text-[#f7f4ff] shadow-[0_24px_90px_rgba(3,8,28,.42)] ${cover ? "lx-archive-publication-cover" : ""}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={art} alt="" className={`absolute object-cover ${cover || full ? "inset-0 h-full w-full" : "inset-x-0 top-0 h-[39%] w-full"}`} />
-      <div className={`absolute inset-0 ${cover ? "bg-gradient-to-b from-[#101936]/20 via-[#101936]/36 to-[#101936]/90" : full ? "bg-gradient-to-b from-[#eef0f6]/5 via-[#eef0f6]/40 to-[#eef0f6]/96" : "bg-gradient-to-b from-transparent via-transparent to-[#f0edf6]"}`} />
-      <div className={`relative z-10 flex h-full flex-col px-[7%] py-[6%] ${cover ? "text-white" : ""}`}>
+      <img src={art} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      <div className={`absolute inset-0 ${cover ? "bg-gradient-to-b from-[#07132d]/12 via-[#07132d]/28 to-[#07132d]/78" : full ? "bg-gradient-to-b from-[#07132d]/12 via-[#07132d]/34 to-[#07132d]/72" : "bg-gradient-to-br from-[#07132d]/24 via-[#10193c]/20 to-[#07132d]/54"}`} />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(255,255,255,.18),transparent_34%),radial-gradient(circle_at_88%_84%,rgba(111,239,222,.10),transparent_31%)]" />
+      <div className="relative z-10 flex h-full flex-col px-[7%] py-[6%] text-white">
         <header className="flex items-start justify-between gap-6 text-[10px] uppercase tracking-[.28em]">
-          <span className={cover ? "text-[#bff8ec]" : "text-[#5a7b83]"}>{eyebrow}</span>
-          <span className={cover ? "text-white/65" : "text-[#777083]"}>{String(index).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+          <span className="text-[#bff8ec]">{eyebrow}</span>
+          <span className="text-white/70">{String(index).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         </header>
-        <div className={`${cover ? "mt-auto" : full ? "mt-auto" : "mt-[38%]"}`}>
-          <h2 className={`font-display text-[30px] font-light leading-tight sm:text-[38px] ${cover ? "text-white" : "text-[#292638]"}`}>{title}</h2>
-          <div className={`mt-5 ${cover || full ? "rounded-sm border border-white/35 bg-[#101936]/72 p-6 text-white backdrop-blur-sm" : "rounded-sm border border-[#4c4966]/15 bg-white/55 p-6"}`}>{children}</div>
+        <div className={cover || full ? "mt-auto" : "my-auto"}>
+          <h2 className="font-display text-[32px] font-light leading-tight text-white drop-shadow-[0_2px_14px_rgba(2,8,28,.72)] sm:text-[42px]">{title}</h2>
+          <div className="lx-archive-glass mt-5 p-7 sm:p-9">{children}</div>
         </div>
-        <footer className={`mt-auto flex items-center justify-between border-t pt-3 text-[9px] tracking-[.18em] ${cover ? "border-white/20 text-white/60" : "border-[#4c4966]/15 text-[#777083]"}`}>
+        <footer className="mt-auto flex items-center justify-between border-t border-white/20 pt-3 text-[9px] tracking-[.18em] text-white/65">
           <span>LINGXIFIELD ORIGINAL ARCHIVE</span><span>lingxifield.com</span>
         </footer>
       </div>
@@ -42,9 +43,9 @@ export function PublicationPage({
 }
 
 export function PublicationCopy({ children, muted = false }: { children: ReactNode; muted?: boolean }) {
-  return <p className={`text-[13px] leading-[1.8] sm:text-[15px] sm:leading-[1.9] ${muted ? "opacity-75" : ""}`}>{children}</p>;
+  return <p className={`lx-archive-copy ${muted ? "opacity-82" : ""}`}>{children}</p>;
 }
 
 export function PublicationLabel({ children }: { children: ReactNode }) {
-  return <p className="text-[10px] uppercase tracking-[.22em] text-[#6f8f94]">{children}</p>;
+  return <p className="text-[11px] font-semibold uppercase tracking-[.22em] text-[#9cf3df]">{children}</p>;
 }

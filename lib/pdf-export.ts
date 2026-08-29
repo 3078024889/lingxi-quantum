@@ -195,8 +195,8 @@ export async function exportPublicationPagesPdf(params: {
   const {
     containerRef,
     fileName,
-    bgColorRgb = [238, 235, 245],
-    bgColorHex = "#EEEAF5",
+    bgColorRgb = [7, 19, 45],
+    bgColorHex = "#07132D",
   } = params;
   await document.fonts.ready;
   const pages = Array.from(containerRef.children).filter((node): node is HTMLElement =>
@@ -226,7 +226,7 @@ export async function exportPublicationPagesPdf(params: {
     if (index > 0) pdf.addPage();
     pdf.setFillColor(...bgColorRgb);
     pdf.rect(0, 0, pageWidth, pageHeight, "F");
-    const canvas = await html2canvas(pages[index], { backgroundColor: bgColorHex, scale: 2, useCORS: true, logging: false });
+    const canvas = await html2canvas(pages[index], { backgroundColor: bgColorHex, scale: 2, useCORS: true, logging: false, windowWidth: 794, windowHeight: 1123 });
     const data = canvas.toDataURL("image/jpeg", 0.94);
     pdf.addImage(data, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
   }
@@ -745,7 +745,7 @@ export async function exportArchivePdf(params: {
              <div style="width:52px;height:1px;background:${theme.accent};opacity:.58;margin-bottom:22px;"></div>`
           : `<div style="height:18px;"></div>`}
         ${figureHtml}
-        <div style="max-width:42em;font-size:16px;font-weight:400;line-height:1.88;color:#454151;letter-spacing:.012em;white-space:pre-wrap;">${bodyHtml}</div>
+        <div style="max-width:42em;font-size:17px;font-weight:400;line-height:1.86;color:#3f394d;letter-spacing:.012em;white-space:pre-wrap;">${bodyHtml}</div>
       </div>`;
   };
 
@@ -831,7 +831,7 @@ export async function exportArchivePdf(params: {
             ${escapeHtml(section.title)}${section.continued ? `<span style="font-size:12px;color:#7A7484;margin-left:9px;">续</span>` : ""}
           </div>
           <div style="width:52px;height:1px;background:${theme.accent};opacity:.58;margin-bottom:20px;"></div>
-          <div style="max-width:42em;font-size:16px;font-weight:400;line-height:1.88;color:#454151;
+          <div style="max-width:42em;font-size:17px;font-weight:400;line-height:1.86;color:#3f394d;
                       letter-spacing:.012em;white-space:pre-wrap;">${escapeHtml(section.units.join("\n\n"))}</div>
         </section>`).join("")}
     </div>`;

@@ -21,11 +21,14 @@ Each formal product owns six text-free vertical plates:
 
 The web Life Archetype publication uses `WEB_ARCHETYPE_PDF_ART_POOL`, a dedicated cross-field set selected only from these text-free plates. It never uses the 64 Life Oracle card images.
 
-Publication contract:
+V323 publication contract:
 
 - fixed A4 pages only;
 - artwork and report copy share each page;
 - no navigation, buttons, or browser fragments inside PDF pages;
 - missing artwork aborts the export;
-- each 24-entry product publishes six chapters of four entries across twelve entry pages;
+- every page keeps its full-height art field visible beneath a translucent aurora-glass reading layer;
+- opaque pink/paper blocks are forbidden;
+- body copy is 12.5pt in print and at least 17px on small screens;
+- each 24-entry product publishes one evidence entry per page rather than shrinking two entries into one page;
 - the complete Life Archetype publishes 24 independent inference modules.

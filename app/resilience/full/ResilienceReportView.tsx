@@ -224,14 +224,14 @@ export default function ResilienceReportView({ id }: { id: string }) {
             const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
 
             return (
-                  <div key={i} className={`lx-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative flex w-full items-center overflow-hidden rounded-sm p-4 print:w-full print:h-screen print:rounded-none page-break-after-always sm:p-8`}>
+                  <div key={i} className={`lx-publication-page lx-resilience-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative flex w-full items-center overflow-hidden rounded-sm p-4 print:w-full print:h-screen print:rounded-none page-break-after-always sm:p-8`}>
                 <div 
                   className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
                   style={{ backgroundImage: `url('${bgImageUrl}'), linear-gradient(135deg, #1e293b, #0f172a)` }}
                 />
                 
-                <div className="relative z-10 flex w-full flex-col items-center justify-center py-8 md:py-16">
-                  <div className="lx-report-glass lx-report-glass-readable w-full p-8 shadow-2xl md:p-12">
+                <div className="relative z-10 flex w-full flex-col justify-center py-8 md:py-16">
+                  <div className="lx-resilience-reading-column lx-report-glass lx-report-glass-readable p-8 shadow-2xl md:p-12">
                     
                     {/* 章节标题 */}
                     <div className="text-center mb-8 border-b border-[#3A2E52]/10 pb-6">

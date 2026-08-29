@@ -78,11 +78,17 @@ const miniPublication = readFileSync(resolve(root, "app/mini-report/MiniDendrite
 const archetypePublication = readFileSync(resolve(root, "app/mini-report/MiniLifeArchetypeReport.tsx"), "utf8");
 const artRegistry = readFileSync(resolve(root, "lib/report-art-registry.ts"), "utf8");
 if (!miniPublication.includes("exportPublicationPagesPdf") || !archetypePublication.includes("exportPublicationPagesPdf")) failures.push("mini publications: fixed-page exporter is not shared");
-if (!miniPublication.includes("entryPairs") || !miniPublication.includes("length:12")) failures.push("mini publications: 24 entries are not laid out as twelve two-entry pages");
+if (!miniPublication.includes("const total=30") || !miniPublication.includes("entries.map")) failures.push("mini publications: 24 evidence entries are not preserved as one readable page each");
 if (!archetypePublication.includes("total=24") || !archetypePublication.includes("REPORT PROVENANCE") || !archetypePublication.includes("CONTINUOUS OBSERVATION")) failures.push("Life Archetype: complete 24-module publication is missing");
 if (/\/images\/qian\//.test(archetypePublication)) failures.push("Life Archetype: 64 Life Oracle card artwork leaked into the publication");
 if (!artRegistry.includes("WEB_ARCHETYPE_PDF_ART_POOL") || !artRegistry.includes("/shared/report-assets")) failures.push("PDF artwork: formal text-free asset registry is missing");
 if (!exporter.includes("exportPublicationPagesPdf") || !exporter.includes("No fixed publication pages")) failures.push("pdf-export: strict fixed A4 publication path is missing");
+for (const token of [".lx-archive-publication-page", ".lx-archive-glass", "font-size: 12.5pt", ".lx-resilience-reading-column"]) {
+  if (!css.includes(token)) failures.push(`shared aurora publication: missing ${token}`);
+}
+const publicationPage = readFileSync(resolve(root, "app/mini-report/PublicationPage.tsx"), "utf8");
+if (publicationPage.includes("bg-[#f0edf6]") || publicationPage.includes("h-[39%]")) failures.push("mini publications: legacy opaque paper or cropped artwork remains");
+if (!publicationPage.includes("lx-archive-glass") || !publicationPage.includes("h-full w-full object-cover")) failures.push("mini publications: full-field artwork and shared glass are missing");
 
 const reportRoutes = [
   "app/api/lifemap/generate-full/route.ts",
@@ -110,7 +116,8 @@ if (failures.length > 0) {
 }
 console.log("PASS publication width: 9 views / 10 products use the 896px system");
 console.log("PASS artwork: life-map, relationship, romance, wealth and daily pages cycle original assets");
-console.log("PASS readability: all report families use modern Sans body/section type and blur-free mineral-paper veils");
+console.log("PASS readability: all report families use elderly-friendly Sans body type over aurora-glass reading surfaces");
+console.log("PASS Mini Program pagination: all 24 evidence entries retain one readable A4 page each");
 console.log("PASS safe area: all full-report routes use the measured navigation offset");
 console.log("PASS card pagination: Life Map, Life Mirror and Life Oracle cards own full web and PDF pages");
 console.log("PASS compatibility: mirror and legacy tarot report routes share the same publication system");
