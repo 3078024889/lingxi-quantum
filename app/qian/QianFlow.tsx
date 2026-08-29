@@ -15,19 +15,19 @@ import BirthDateGuidance, { BirthTimeOptionalCopy, type CalendarType } from "@/c
 
 const QIAN_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀生命灵签的64枚生命原型是随机摇出来的吗？", qEn: "Are the 64 archetypes in Lingxi Life Oracle randomly drawn?",
-    aZh: "不是。当你进入灵犀场，你的出生信息会成为一组独特的生命坐标，这组坐标会与64枚生命原型产生对应连接，展开三重生命镜像：源流签映照你携带而来的生命背景，以及那些早已形成的深层倾向；灵魂签观察你内在最核心的意识模式，以及此刻正在经历的生命主题；行者签探索你如何走向现实世界，以及未来展开自己的方式。三枚生命原型不是随机出现的答案，它们更像三面镜子，分别照见你的过去、现在，以及正在形成的方向。",
-    aEn: "No. When you enter Lingxi Field, your birth information becomes a unique set of life coordinates, which form a corresponding connection with 64 life archetypes, unfolding three layers of life mirroring: the Origin Sign reflects the background you carry and the deep-set tendencies already formed within you; the Soul Sign observes your core conscious pattern and the theme you're currently living through; the Walker Sign explores how you move into the world and the way your future unfolds. The three archetypes aren't a random answer — they're closer to three mirrors, each reflecting your past, present, and the direction now forming.",
+    qZh: "灵犀生命灵签的 64 枚签象是随机摇出来的吗？", qEn: "Are the 64 signs in Lingxi Life Oracle randomly drawn?",
+    aZh: "不是。当你进入灵犀场，出生信息会成为一组确定的生命坐标，并与 64 枚原创签象形成对应连接，展开源流签、灵魂签与行者签三重映照。三枚签象不是随机答案，也不等同于八流汇聚后自动形成的归一档案；它们分别照见背景、当下与正在形成的行动方向。",
+    aEn: "No. Birth information forms a deterministic coordinate that maps to 64 original signs: Origin, Soul, and Wayfarer. These signs are not random answers and are separate from the archive generated only after all eight streams converge.",
   },
   {
     qZh: "生命灵签和传统抽签有什么不同？", qEn: "How is Lingxi Life Oracle different from traditional divination?",
-    aZh: "传统抽签通常关注「结果是什么」「吉还是凶」。生命灵签关注的是「我为什么会成为现在的我」「我的生命结构正在表达什么」——它不是从未知中寻找答案，而是从你已经携带的信息中，重新整理那些容易被日常忽略的线索。64枚生命原型，是灵犀场原创设计的一套象征体系，每一个原型都代表一种生命主题：创造、连接、觉察、转变、探索、成长。三重生命签组合在一起，形成属于你的生命原型档案，不是替你定义人生，而是帮助你重新认识自己。",
-    aEn: "Traditional divination usually asks 'what's the outcome' or 'is it good or bad luck.' Lingxi Life Oracle asks 'why did I become who I am' and 'what is my life structure expressing.' It isn't searching for an answer in the unknown — it's reorganizing clues you already carry, ones that everyday life tends to overlook. The 64 life archetypes are an original symbolic system created for Lingxi Field, each representing a life theme: creation, connection, awareness, transformation, exploration, growth. The three signs together form your own life archetype record — not defining your life for you, but helping you recognize yourself again.",
+    aZh: "传统抽签通常关注「结果是什么」「吉还是凶」。生命灵签不判吉凶，而是把三重签象与用户已经携带的真实资料共同整理为一份可回到现实复核的象征档案。它不替人定义人生，也不占用八流归一产品的名称与生成逻辑。",
+    aEn: "Traditional divination often asks whether an outcome is fortunate. Life Oracle instead organizes three symbolic signs with the user's real inputs into an archive that can return to lived verification. It does not define a life or reuse the separate eight-stream archive's name or generation logic.",
   },
   {
     qZh: "生命灵签的完整解读包含什么内容？", qEn: "What does the full Life Oracle reading include?",
-    aZh: "完整生命灵签不是简单解释三枚签的含义，它会展开：三签结构总览、源流签深度解析、灵魂签深度解析、行者签深度解析、三签融合关系、财富创造系统、关系模式分析、事业使命地图、当前人生阶段、隐藏天赋探索、灵犀场成长路径、生命宣言，共12个章节。最终生成的是一份属于你的生命原型档案。",
-    aEn: "The full Life Oracle reading isn't a simple explanation of what three signs mean — it unfolds: an overview of your three archetypes, deep dives into the Origin, Soul, and Walker signs, how the three fuse together, a wealth creation system, relationship pattern analysis, a career and mission map, your current life stage, hidden talent exploration, a Lingxi Field growth path, and a personal life declaration — 12 sections in total. What forms is a life archetype record that's entirely your own.",
+    aZh: "完整生命灵签不是简单解释三枚签的含义。它展开三签结构总览、源流签、灵魂签、行者签、三签连接、价值创造、关系映射、当下主题、隐藏力量、现实实践与灵签总结，共 11 个章节，最终形成一份独立的生命灵签档案。",
+    aEn: "The complete reading unfolds 11 sections across the three signs, their connection, value creation, relationships, present theme, hidden strength, practice, and final oracle synthesis. The result is a distinct Life Oracle archive.",
   },
 ];
 
@@ -37,7 +37,7 @@ type Stage = "form" | "gathering" | "shaking" | "revealed";
 
 
 const TEASER_CHAPTERS: { titleZh: string; titleEn: string; descZh: string; descEn: string }[] = [
-  { titleZh: "\u751f\u547d\u4e09\u539f\u578b\u603b\u89c8", titleEn: "Three Archetypes Overview", descZh: "\u628a\u4e09\u91cd\u7b7e\u7684\u6838\u5fc3\u7279\u8d28\u63d0\u70bc\u6210\u4e00\u6761\u300cXX\u2192XX\u2192XX\u300d\u7684\u751f\u547d\u516c\u5f0f\u2014\u2014\u4e0d\u662f\u4e09\u4e2a\u7b7e\u540d\u5b57\u7684\u5806\u780c\uff0c\u662f\u4e00\u6761\u6709\u65b9\u5411\u611f\u7684\u5c55\u5f00\u8def\u7ebf\u3002", descEn: "Your three signs distilled into a single life formula \u2014 not three names stacked together, but a route with a direction." },
+  { titleZh: "\u4e09\u91cd\u7075\u7b7e\u603b\u89c8", titleEn: "Three Signs Overview", descZh: "\u628a\u4e09\u91cd\u7b7e\u7684\u6838\u5fc3\u7279\u8d28\u63d0\u70bc\u6210\u4e00\u6761\u300cXX\u2192XX\u2192XX\u300d\u7684\u751f\u547d\u516c\u5f0f\u2014\u2014\u4e0d\u662f\u4e09\u4e2a\u7b7e\u540d\u5b57\u7684\u5806\u780c\uff0c\u662f\u4e00\u6761\u6709\u65b9\u5411\u611f\u7684\u5c55\u5f00\u8def\u7ebf\u3002", descEn: "Your three signs distilled into a single life formula \u2014 not three names stacked together, but a route with a direction." },
   { titleZh: "\u6e90\u6d41\u7b7e\u6df1\u5ea6\u89e3\u6790", titleEn: "Origin Sign Deep Dive", descZh: "\u4f60\u643a\u5e26\u800c\u6765\u7684\u539f\u59cb\u9891\u7387\u3001\u751f\u547d\u4f18\u52bf\u662f\u4ec0\u4e48\uff0c\u4f18\u52bf\u53cd\u9762\u53c8\u5bb9\u6613\u5e26\u6765\u4ec0\u4e48\u6f5c\u5728\u6311\u6218\u2014\u2014\u4e0d\u662f\u7b80\u5355\u5938\u5956\uff0c\u662f\u6709\u5177\u4f53\u753b\u9762\u611f\u7684\u5224\u65ad\u3002", descEn: "The raw frequency you were born carrying, your real advantage, and the specific shadow side of that same advantage." },
   { titleZh: "\u7075\u9b42\u7b7e\u6df1\u5ea6\u89e3\u6790", titleEn: "Soul Sign Deep Dive", descZh: "\u4f60\u771f\u6b63\u7684\u5185\u5728\u9a71\u52a8\u529b\u662f\u4ec0\u4e48\u3001\u5929\u8d4b\u65b9\u5411\u9002\u5408\u5f80\u54ea\u8d70\u3001\u6f5c\u610f\u8bc6\u91cc\u5bb9\u6613\u91cd\u590d\u51fa\u73b0\u7684\u6a21\u5f0f\u662f\u4ec0\u4e48\u3002", descEn: "What actually drives you underneath, where your gift wants to go, and the pattern your subconscious keeps replaying." },
   { titleZh: "\u884c\u8005\u7b7e\u6df1\u5ea6\u89e3\u6790", titleEn: "Walker Sign Deep Dive", descZh: "\u4f60\u7684\u884c\u52a8\u529b\u6a21\u5f0f\u3001\u521b\u9020\u73b0\u5b9e\u7684\u5177\u4f53\u8def\u5f84\uff0c\u4ee5\u53ca\u4e00\u53e5\u53ea\u5bf9\u4f60\u6210\u7acb\u7684\u4eba\u751f\u884c\u52a8\u63d0\u9192\u3002", descEn: "How you actually move, your specific path for turning ideas into reality, and one action reminder that fits you and only you." },
@@ -232,12 +232,12 @@ export default function QianFlow() {
         style={{ backgroundImage: "linear-gradient(rgba(42,36,52,0.5), rgba(42,36,52,0.5)), url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
       >
         <p className="font-display text-base text-bone">
-          <Bi zh="三枚生命原型，只是入口。" en="Three signs are only the entrance." />
+          <Bi zh="三枚灵签，只是入口。" en="Three signs are only the entrance." />
         </p>
         <p className="mt-3 text-sm leading-7 text-bone-dim">
           <Bi
-            zh="真正重要的，不是单独看某一枚签，而是看见它们之间如何连接、如何共同构成你的生命结构。场域会进一步展开：你的核心天赋倾向、你正在经历的人生主题、你的内在驱动力，以及那些反复出现、值得被理解的生命模式——当这些碎片被重新连接，你看到的不再是一枚签，而是一幅属于你的生命原型地图。"
-            en="What matters isn't reading each sign alone — it's seeing how they connect, and what structure they form together. The field goes further: your core talents, the theme you're living through, your inner drive, and the patterns that keep resurfacing and are worth understanding. Once these pieces reconnect, what you see is no longer a single sign — it's a map of your own life archetype."
+            zh="真正重要的，不是单独看某一枚签，而是看见它们之间如何连接、如何共同构成你的生命结构。场域会进一步展开：你的核心天赋倾向、你正在经历的人生主题、你的内在驱动力，以及那些反复出现、值得被理解的生命模式——当这些碎片被重新连接，你看到的不再是一枚签，而是一幅完整的三重灵签地图。"
+            en="What matters isn't reading each sign alone — it's seeing how they connect and what structure they form together. Once these pieces reconnect, what you see is no longer one sign, but a complete three-sign map."
           />
         </p>
         <div className="mt-8 space-y-5 border-t border-white/10 pt-8 text-left">

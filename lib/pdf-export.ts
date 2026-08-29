@@ -204,12 +204,6 @@ export async function exportPublicationPagesPdf(params: {
   );
   if (!pages.length) throw new Error("No fixed publication pages were found");
 
-  const overflowingPage = pages.find((page) => page.scrollHeight > page.clientHeight + 2 || page.scrollWidth > page.clientWidth + 2);
-  if (overflowingPage) {
-    const index = pages.indexOf(overflowingPage) + 1;
-    throw new Error(`Publication page ${index} overflows its fixed A4 frame`);
-  }
-
   const artworkUrls = pages.flatMap((page) => Array.from(page.querySelectorAll("img")).map((image) => image.currentSrc || image.src));
   await preloadPdfAssets(artworkUrls);
   for (const page of pages) {
@@ -222,13 +216,40 @@ export async function exportPublicationPagesPdf(params: {
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  for (let index = 0; index < pages.length; index++) {
-    if (index > 0) pdf.addPage();
-    pdf.setFillColor(...bgColorRgb);
-    pdf.rect(0, 0, pageWidth, pageHeight, "F");
-    const canvas = await html2canvas(pages[index], { backgroundColor: bgColorHex, scale: 2, useCORS: true, logging: false, windowWidth: 794, windowHeight: 1123 });
-    const data = canvas.toDataURL("image/jpeg", 0.94);
-    pdf.addImage(data, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+  // Mobile pages are allowed to grow vertically so no text is clipped in the
+  // WebView. PDF pagination must therefore be measured against a separate A4
+  // canvas, never against the responsive page currently visible on the phone.
+  const staging = document.createElement("div");
+  staging.setAttribute("aria-hidden", "true");
+  Object.assign(staging.style, {
+    position: "fixed", left: "-10000px", top: "0", width: "794px",
+    height: "1123px", overflow: "hidden", pointerEvents: "none",
+  });
+  document.body.appendChild(staging);
+  try {
+    for (let index = 0; index < pages.length; index++) {
+      const clone = pages[index].cloneNode(true) as HTMLElement;
+      Object.assign(clone.style, {
+        width: "794px", minWidth: "794px", maxWidth: "794px",
+        height: "1123px", minHeight: "1123px", maxHeight: "1123px",
+        aspectRatio: "auto", overflow: "hidden", margin: "0",
+      });
+      staging.replaceChildren(clone);
+      await waitForImages(clone);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      if (clone.scrollHeight > 1125 || clone.scrollWidth > 796) {
+        throw new Error(`Publication page ${index + 1} overflows its fixed A4 export frame`);
+      }
+      if (index > 0) pdf.addPage();
+      pdf.setFillColor(...bgColorRgb);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      const canvas = await html2canvas(clone, { backgroundColor: bgColorHex, scale: 2, useCORS: true, logging: false, width: 794, height: 1123, windowWidth: 794, windowHeight: 1123 });
+      if (canvas.width < 2 || canvas.height < 2) throw new Error(`Publication page ${index + 1} rendered blank`);
+      const data = canvas.toDataURL("image/jpeg", 0.94);
+      pdf.addImage(data, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+    }
+  } finally {
+    staging.remove();
   }
   pdf.save(fileName);
 }

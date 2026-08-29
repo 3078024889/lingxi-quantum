@@ -12,7 +12,7 @@ export type LifeSign = {
 };
 
 // ────────────────────────────────────────────────────────────────────
-// 灵犀生命灵签 · 64枚生命原型库
+// 灵犀生命灵签 · 64 枚原创签象库
 // ────────────────────────────────────────────────────────────────────
 // 不是60甲子的另一种叫法——60甲子负责的是"周期计算"，这64枚签，
 // 代表的是人类意识里反复出现的64个生命主题（对应《易经》64卦这个
@@ -101,7 +101,7 @@ function attachIndex(list: Omit<LifeSign, "index" | "tier" | "tierIndex">[], tie
   return list.map((s, i) => ({ ...s, index: startIndex + i, tier, tierIndex: i }));
 }
 
-// 64枚生命原型签，全局编号0-63：0-23源流签、24-47灵魂签、48-63行者签
+// 64 枚原创签象，全局编号 0-63：0-23 源流签、24-47 灵魂签、48-63 行者签
 export const LIFE_SIGNS: LifeSign[] = [
   ...attachIndex(originSigns, "origin", 0),
   ...attachIndex(soulSigns, "soul", 24),

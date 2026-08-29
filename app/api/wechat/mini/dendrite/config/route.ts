@@ -11,6 +11,7 @@ export async function GET(req: Request) {
     ...(productId === "relationship-resonance" ? { relationshipVariants: RELATIONSHIP_DENDRITE_PRODUCTS } : {}),
     engine: {
       id: "lingxifield-dendritic-v2",
+      questionBankVersion: "V327",
       questionCount: product.questions.length,
       estimatedMinutes: Math.max(2, Math.ceil(product.questions.length * 0.28)),
       zh: "小程序使用灵犀场树突知识网络：真实选择会激活产品专属节点，节点相连后经过结构增强、抑制与跨节点校准形成当前结构；它不读取星盘，也不预测事件。",

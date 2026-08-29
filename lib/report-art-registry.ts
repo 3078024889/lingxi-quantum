@@ -26,6 +26,9 @@ export const PDF_ASSET_REGISTRY: Record<PdfProductKey, PdfArtAsset[]> = {
   "life-oracle": pool("life-oracle"),
 };
 
+/** Sixty text-free publication artworks shared by result-only experiments. */
+export const ALL_REPORT_PDF_ART: PdfArtAsset[] = Object.values(PDF_ASSET_REGISTRY).flat();
+
 export function stableHash(value: string) {
   let hash = 2166136261;
   for (let index = 0; index < value.length; index++) {

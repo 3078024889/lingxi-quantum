@@ -34,6 +34,19 @@ export type DendriteReportEntry = {
   observationEn: string;
 };
 
+export type ReportEvidenceLeaf = {
+  sourceProductId?: string;
+  sourceRelationshipType?: "deep" | "business" | "other";
+  questionId: string;
+  promptZh: string;
+  promptEn: string;
+  answerId: string;
+  answerZh: string;
+  answerEn: string;
+  nodeIds: string[];
+  strength: number;
+};
+
 type EntryBlueprint = { chaptersZh: string[]; chaptersEn: string[]; titlesZh: string[] };
 
 const split = (value: string) => value.split("|");
@@ -89,16 +102,17 @@ function confidenceFor(score: number): DendriteReportEntry["confidence"] {
   return score >= 72 ? "clear" : score >= 48 ? "developing" : "open";
 }
 
-export function buildReportEntries(productId: string, relationshipType: "deep" | "business" | "other" | undefined, ordered: ReportSignal[]): DendriteReportEntry[] {
+export function buildReportEntries(productId: string, relationshipType: "deep" | "business" | "other" | undefined, ordered: ReportSignal[], leaves: ReportEvidenceLeaf[] = []): DendriteReportEntry[] {
   const key = productId === "relationship-resonance" ? `${productId}:${relationshipType ?? "deep"}` : productId;
   const spec = BLUEPRINTS[key];
   if (!spec || ordered.length < 3) return [];
   return spec.titlesZh.map((titleZh, index) => {
-    const primary = ordered[index % ordered.length];
-    const support = ordered[(index * 3 + 1) % ordered.length];
+    const leaf = leaves[index];
+    const primary = ordered.find((item) => leaf?.nodeIds.includes(item.id)) ?? ordered[index % ordered.length];
+    const support = ordered.find((item) => item.id !== primary.id && leaf?.nodeIds.includes(item.id)) ?? ordered[(index * 3 + 1) % ordered.length];
     const counter = ordered[(ordered.length - 1 - (index % ordered.length) + ordered.length) % ordered.length];
     const chapterIndex = Math.floor(index / 4);
-    const evidenceNodeIds = [...new Set([primary.id, support.id, counter.id])];
+    const evidenceNodeIds = [...new Set([...(leaf?.nodeIds ?? []), primary.id, support.id, counter.id])];
     const hasCost = primary.score >= 68 && counter.score <= 46;
     return {
       id: `${key}-${String(index + 1).padStart(2, "0")}`,
@@ -109,23 +123,23 @@ export function buildReportEntries(productId: string, relationshipType: "deep" |
       titleEn: `${spec.chaptersEn[chapterIndex]} · Observation ${String(index + 1).padStart(2, "0")}`,
       evidenceNodeIds,
       confidence: confidenceFor(Math.round((primary.score + support.score) / 2)),
-      structureZh: `本次多题证据首先指向「${primary.zh}」，并由「${support.zh}」决定它怎样进入现实；「${counter.zh}」目前参与较弱，因此这里呈现的是当前结构，而不是固定人格。`,
-      structureEn: `${primary.en} leads the cross-question evidence, while ${support.en} shapes how it reaches reality. ${counter.en} participates less, so this is a present structure rather than a fixed identity.`,
-      mechanismZh: `${primary.meaningZh}当它与「${support.zh}」在不同情境重复相连时，系统才把这组信号纳入本条目；单独一道题不会直接产生结论。`,
+      structureZh: leaf ? `问及“${leaf.promptZh}”，你选择“${leaf.answerZh}”。此叶先动「${primary.zh}」，并牵「${support.zh}」入枝；「${counter.zh}」在全卷中较静，故所断在当下，不以一答定其人。` : `诸答相参，「${primary.zh}」先见其势；「${support.zh}」为其入世之门。「${counter.zh}」此刻声微，故所断在当下，不以一时之象定其人。`,
+      structureEn: leaf ? `When asked “${leaf.promptEn}”, you chose “${leaf.answerEn}”. This evidence leaf activates ${primary.en} and connects it with ${support.en}; ${counter.en} remains quieter across the archive, so this is present evidence rather than a fixed identity.` : `${primary.en} leads the cross-question evidence, while ${support.en} shapes how it reaches reality. ${counter.en} participates less, so this is a present structure rather than a fixed identity.`,
+      mechanismZh: `${primary.meaningZh}然一叶不足成枝：本叶强度为 ${leaf?.strength.toFixed(2) ?? "待核"}，只有它与「${support.zh}」在其他情境反复相连，且「${counter.zh}」没有形成足够反证，本条判断才成立。证据节点为 ${evidenceNodeIds.join("、")}。`,
       mechanismEn: `${primary.meaningEn} This entry appears only when it repeatedly connects with ${support.en} across contexts; no single answer creates the conclusion.`,
-      realityZh: `现实中可观察的是：需要调用「${primary.zh}」时，你是否也为「${support.zh}」留下了可见接口；两者不同步时，行动、关系或状态会在中途失去传递。`,
+      realityZh: `验之于日用：当「${primary.zh}」被调用时，现实中是否同时出现「${support.zh}」的可见接口。二者若失其先后，行动、关系或状态常在中途断流；二者若能相承，结果才真正落地。`,
       realityEn: `Observe whether ${support.en} has a visible interface when ${primary.en} is needed. When they lose sequence, action, relationship, or state stops transmitting midway.`,
       ...(hasCost ? {
-        costZh: `当前代价不来自「${primary.zh}」本身，而来自它持续高强度运行、同时「${counter.zh}」没有进入承接位置。`,
+        costZh: `其耗不在「${primary.zh}」本身，而在其久行不息、「${counter.zh}」又未入承接之位。力虽可用，代价仍须入账。`,
         costEn: `The current cost does not come from ${primary.en} itself, but from its sustained intensity while ${counter.en} remains outside the capacity position.`,
       } : {}),
       ...(primary.score >= 64 ? {
-        strengthZh: `结构优势在于「${primary.zh}」已经可以被稳定调用，并由「${support.zh}」把洞察转成可被现实接收的形式。`,
+        strengthZh: `其长在「${primary.zh}」已可稳定调用，又有「${support.zh}」把内在所得译成现实可接之形。`,
         strengthEn: `${primary.en} is already reliably available, while ${support.en} translates insight into a form reality can receive.`,
       } : {}),
-      actionZh: `${primary.actionZh}只做一次，并记录它是否让「${support.zh}」更容易被现实看见。`,
+      actionZh: `今只行一事：${primary.actionZh}不求一次证明结论，只记录它是否让「${support.zh}」更易被现实看见。`,
       actionEn: `${primary.actionEn} Do it once and record whether it makes ${support.en} more visible in reality.`,
-      observationZh: `下一次相似情境出现时，观察「${primary.zh}」与「${support.zh}」谁先启动，以及「${counter.zh}」是否获得了真实参与空间。`,
+      observationZh: `候相似情境再至，记「${primary.zh}」与「${support.zh}」孰先启动，并察「${counter.zh}」是否得到真实参与空间；有据则续，无据则止。`,
       observationEn: `In the next similar situation, observe whether ${primary.en} or ${support.en} starts first, and whether ${counter.en} receives real room to participate.`,
     };
   });

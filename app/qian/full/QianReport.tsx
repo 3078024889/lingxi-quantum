@@ -18,7 +18,7 @@ import { getProduct } from "@/lib/plans";
 // 行者签这三签的具体内容完全没动，这是这个产品最有价值的部分，不
 // 会因为改名字就换掉）。
 const LAYER_TITLES = [
-  { zh: "① 生命三原型总览", en: "① Three Archetypes Overview" },
+  { zh: "① 三重灵签总览", en: "① Three Signs Overview" },
   { zh: "② 源流签深度解析", en: "② Origin Sign Deep Dive" },
   { zh: "③ 灵魂签深度解析", en: "③ Soul Sign Deep Dive" },
   { zh: "④ 行者签深度解析", en: "④ Walker Sign Deep Dive" },
@@ -149,8 +149,8 @@ export default function QianReport({ id }: { id: string }) {
           }))
           .filter((c) => c.body && c.body.trim()),
         fileName: langEn ? `Lingxi-Life-Oracle-${name || "report"}.pdf` : `灵犀生命灵签-${name || "report"}.pdf`,
-        titleZh: `${name || "你的"}生命原型档案`,
-        titleEn: `${name || "Your"} Life Archetype Blueprint`,
+        titleZh: `${name || "你的"}生命灵签档案`,
+        titleEn: `${name || "Your"} Life Oracle Archive`,
         language: langEn ? "en" : "zh",
         eyebrow: "LIFE ORACLE",
         theme: ARCHIVE_THEMES.qian,
@@ -177,7 +177,7 @@ export default function QianReport({ id }: { id: string }) {
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <div className="lx-report-glass px-6 py-10">
           <div className="lx-checking-glow mx-auto h-14 w-14 rounded-full" />
-          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的完整生命原型档案……", "The field is composing your full life archetype blueprint locally…")}</p>
+          <p className="mt-6 text-sm leading-7 text-bone-dim">{t("场域正在编排你的完整生命灵签档案……", "The field is composing your complete Life Oracle archive locally…")}</p>
           <p className="mt-3 text-xs text-bone-soft">{t("三重签象与生命向量正在完成确定性组合。", "The three signs and life vector are being composed deterministically.")}</p>
         </div>
         <style>{`
@@ -227,7 +227,7 @@ export default function QianReport({ id }: { id: string }) {
     <div className="mx-auto max-w-4xl px-3 py-16 sm:px-6">
       <div className="flex items-center justify-between lx-report-glass px-6 py-4">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-          <Bi zh="灵犀生命灵签 · 生命原型档案" en="Lingxi Life Oracle · Personal Life Archetype Blueprint" />
+          <Bi zh="灵犀生命灵签 · 完整档案" en="Lingxi Life Oracle · Complete Archive" />
         </p>
         <button
           onClick={downloadPdf}
@@ -250,10 +250,10 @@ export default function QianReport({ id }: { id: string }) {
           LINGXI LIFE ORACLE
         </p>
         <h1 className="mt-4 font-display text-3xl font-light sm:text-4xl">
-          {name || t("你的", "Your")} <Bi zh="生命原型档案" en="Life Archetype Blueprint" />
+          {name || t("你的", "Your")} <Bi zh="生命灵签档案" en="Life Oracle Archive" />
         </h1>
         <p className="mt-1 font-display text-sm text-lattice">
-          <Bi zh="灵犀生命灵签 · 生命原型档案" en="Lingxi Life Oracle · Personal Life Archetype Blueprint" />
+          <Bi zh="灵犀生命灵签 · 完整档案" en="Lingxi Life Oracle · Complete Archive" />
         </p>
         <p className="mt-4 text-sm leading-7 text-bone-dim">
           <Bi zh="三枚灵签，三个维度，一张属于你的生命地图。" en="Three signs, three dimensions — one life map that's entirely your own." />

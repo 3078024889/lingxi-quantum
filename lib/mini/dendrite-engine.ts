@@ -1,6 +1,6 @@
 import { getFieldProductCopy, type FieldProductCopy, type FieldResultMode } from "@/lib/mini/field-product-copy";
 import { LIFE_SIGNS } from "@/lib/qian-data";
-import { buildReportEntries, type DendriteReportEntry } from "@/lib/mini/report-entry-library";
+import { buildReportEntries, type DendriteReportEntry, type ReportEvidenceLeaf } from "@/lib/mini/report-entry-library";
 
 /**
  * Lingxifield Dendritic Assessment Engine v2
@@ -233,7 +233,24 @@ function buildQuestions(seed: Seed): DendriteQuestion[] {
     return { id:`q${questionIndex+1}`,sectionZh,sectionEn,zh,en,options:selectedIds.map((id,optionIndex) => {
       const current = byId.get(id)!;
       const companion = selectedIds[(optionIndex+2)%selectedIds.length];
-      return {id:`${questionIndex+1}-${optionIndex+1}`,zh:current.meaningZh,en:current.meaningEn,activates:{[id]:1,[companion]:0.22}};
+      // A question bank is not valid when 24 screens merely replay the same
+      // four answer sentences. Keep the evidence mapping deterministic, but
+      // vary the response register so every screen asks for a fresh judgment
+      // instead of rewarding memory of the previous option order.
+      const register = (questionIndex + optionIndex) % 4;
+      const optionZh = [
+        current.meaningZh,
+        current.actionZh,
+        `我会先从「${current.zh}」进入：${current.actionZh}`,
+        `此刻更像「${current.zh}」在起作用：${current.meaningZh}`,
+      ][register];
+      const optionEn = [
+        current.meaningEn,
+        current.actionEn,
+        `I would enter through ${current.en}: ${current.actionEn}`,
+        `This feels most like ${current.en} in action: ${current.meaningEn}`,
+      ][register];
+      return {id:`${questionIndex+1}-${optionIndex+1}`,zh:optionZh,en:optionEn,activates:{[id]:1,[companion]:0.22}};
     })};
   });
 }
@@ -249,7 +266,7 @@ export const DENDRITE_QUESTION_COUNTS = Object.fromEntries(DENDRITE_PRODUCTS.map
 export const getDendriteProduct = (productId:string, relationshipType: RelationshipAssessmentType = "deep") => productId === "relationship-resonance" ? RELATIONSHIP_DENDRITE_PRODUCTS[relationshipType] : DENDRITE_PRODUCTS.find(item=>item.productId===productId);
 
 export type DendriteResult = {
-  algorithm:"lingxifield-dendritic-v2" | "lingxifield-life-archetype-v4";
+  algorithm:"lingxifield-dendritic-v2" | "lingxifield-life-archetype-v5";
   nodes:Array<DendriteNode & {score:number}>;
   dominant:Array<DendriteNode & {score:number}>;
   edges:Array<{from:string;to:string;weight:number}>;
@@ -263,6 +280,7 @@ export type DendriteResult = {
   fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
   structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
   reportEntries?: DendriteReportEntry[];
+  evidenceLeaves?: ReportEvidenceLeaf[];
   currentArchetype?: { index: number; nameZh: string; nameEn: string; keywordsZh: string; keywordsEn: string; meaningZh: string; meaningEn: string; evidenceLevel: "clear" | "developing" };
   tributaryDetails?: Array<{ productId: string; titleZh: string; titleEn: string; completedAt: string | null; role: "foundation" | "amplifier" | "calibration" | "tension"; score: number; signalsZh: string[]; signalsEn: string[] }>;
   whyEvidence?: Array<{ kind: "long-term" | "cross-field" | "recent" | "inhibition"; titleZh: string; titleEn: string; bodyZh: string; bodyEn: string }>;
@@ -273,7 +291,7 @@ export type DendriteResult = {
   relationshipEvidenceCount?: number;
 };
 
-export const MINI_LIFE_ARCHETYPE_ALGORITHM = "lingxifield-life-archetype-v4";
+export const MINI_LIFE_ARCHETYPE_ALGORITHM = "lingxifield-life-archetype-v5";
 
 export const BASE_DENDRITE_PRODUCT_IDS = [
   "life-map-report", "relationship-resonance", "resilience-report", "romance-report",
@@ -293,6 +311,7 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
   if (!product || new Set(fields.map((field) => field.productId)).size !== BASE_DENDRITE_PRODUCT_IDS.length) {
     throw new Error("life archetype requires eight recent fields");
   }
+  const evidenceLeaves = fields.flatMap((field) => (field.result.evidenceLeaves ?? []).map((leaf) => ({ ...leaf, sourceProductId: field.productId, ...(field.relationshipType ? { sourceRelationshipType: field.relationshipType } : {}) })));
   const nodeByProduct: Record<string, string> = {
     "life-map-report":"blueprint", "relationship-resonance":"resonance", "resilience-report":"resilience",
     "romance-report":"romance", "wealth-report":"wealth", "daily-tide-report":"tide",
@@ -369,7 +388,7 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
   const suppressedArchetypes = suppressedIndexes.map((index) => ({ index, nameZh:LIFE_SIGNS[index].nameZh, nameEn:LIFE_SIGNS[index].nameEn, reasonZh:`相关力量已经出现，但「${quiet.zh}」的现实承接仍不足，暂未进入主原型。`, reasonEn:`The force is present, but ${quiet.en} does not yet provide enough real-world capacity for it to become primary.` }));
   const chapters = [
     { id:"archetype", titleZh:"八流归一 · 当前原型结构", titleEn:"Eight Streams as One", bodyZh:`当前显现的不是人格标签，而是「${dominant[0].zh}」承担方向、「${dominant[1].zh}」形成现实接口、「${dominant[2].zh}」调节行动强度的三层运行结构。它只有在八条生命支流同时存在时才成立，任何单一测评都不能替代。`, bodyEn:`This is not a personality label. ${dominant[0].en} carries direction, ${dominant[1].en} forms the real-world interface, and ${dominant[2].en} regulates intensity. It exists only through all eight streams.` },
-    { id:"evidence", titleZh:"八域证据矩阵", titleEn:"Eight-field Evidence Matrix", bodyZh:`系统交叉读取一年窗口内的 192 次有效选择、八组节点强度和各自上下文。当前最强证据来自「${sourceNames[0]}」「${sourceNames[1]}」「${sourceNames[2]}」；其余五域没有被压缩成摘要，而是作为承接、校准与反证继续参与计算。`, bodyEn:`The system cross-reads 192 choices, eight node structures and their contexts. The strongest evidence comes from ${sourceNames.join(", ")}; the other five remain as capacity, calibration and counter-evidence rather than being compressed into a summary.` },
+    { id:"evidence", titleZh:"八域证据矩阵", titleEn:"Eight-field Evidence Matrix", bodyZh:`系统交叉读取一年窗口内八条支流的底层选择、节点强度与各自上下文；本次保留 ${evidenceLeaves.length} 枚可回溯 Evidence Leaf。当前最强证据来自「${sourceNames[0]}」「${sourceNames[1]}」「${sourceNames[2]}」；其余支流不被压成摘要，而是作为承接、校准与反证继续参与。旧版档案未保存的叶节点保持缺失，不由系统补写。`, bodyEn:`The system cross-reads the underlying choices, node structures, and contexts of eight streams, preserving ${evidenceLeaves.length} traceable Evidence Leaves. The strongest evidence comes from ${sourceNames.join(", ")}; other streams remain as capacity, calibration, and counter-evidence. Leaves absent from legacy archives remain missing and are never invented.` },
     { id:"axis", titleZh:"主轴如何运转", titleEn:"How the Primary Axis Operates", bodyZh:`「${dominant[0].zh}」决定系统更自然地从哪里启动；「${dominant[1].zh}」决定这股力量怎样被关系与现实接住；「${dominant[2].zh}」则决定它能否持续。真正值得观察的是三者的传递顺序，而不是谁的分数最高。`, bodyEn:`${dominant[0].en} initiates the system, ${dominant[1].en} determines how reality receives it, and ${dominant[2].en} determines continuity. Their sequence matters more than rank.` },
     { id:"relation", titleZh:"增强回路", titleEn:"Reinforcement Loop", bodyZh:`「${dominant[0].zh}」与「${dominant[1].zh}」形成当前最强增强回路：前者一旦获得清楚的现实入口，后者会扩大反馈；反馈又反过来稳定前者。若入口含糊，这一回路会从创造转为内耗。`, bodyEn:`${dominant[0].en} and ${dominant[1].en} form the strongest loop. A clear real-world entrance amplifies feedback; an ambiguous one turns the same loop into friction.` },
     { id:"tension", titleZh:"张力与承接差", titleEn:"Tension and Capacity Gap", bodyZh:`「${quiet.zh}」不是短板，而是当前参与度最低的承接变量。当高强度支流继续推进、它仍未进入结构时，系统会出现“理解已经发生，现实尚未容纳”的时差。需要调节的是节奏与接口，而不是继续加大意志。`, bodyEn:`${quiet.en} is not a deficit but the least-participating capacity variable. When strong streams advance without it, insight outruns reality. Adjust rhythm and interface rather than force.` },
@@ -384,7 +403,8 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
     insightZh:"八个支流已在一年有效期内全部激活。当前原型呈现跨域增强、承接差异与现实入口，不是八份报告的摘要。",
     insightEn:"All eight tributaries are active within the one-year window. This archetype reads cross-field reinforcement, capacity gaps and one reality entrance—not a summary of eight reports.",
     chapters,
-    evidence:{answered:192,total:192,historyProducts:8,sourceZh:"一年内八个已完成并授权保存的独立场域档案",sourceEn:"Eight completed and authorized independent field archives within one year"},
+    evidence:{answered:evidenceLeaves.length,total:evidenceLeaves.length,historyProducts:8,sourceZh:"一年内八个已完成并授权保存的独立场域档案",sourceEn:"Eight completed and authorized independent field archives within one year"},
+    evidenceLeaves,
     artworkIndex, sourceProducts: BASE_DENDRITE_PRODUCT_IDS.slice(), fieldContributions, structuralRelations,
     archetypeCardIndexes:[current.index],
     currentArchetype:{ index:current.index, nameZh:current.nameZh, nameEn:current.nameEn, keywordsZh:current.keywordsZh, keywordsEn:current.keywordsEn, meaningZh:current.meaningZh, meaningEn:current.meaningEn, evidenceLevel:dominant[0].score - dominant[2].score >= 6 ? "clear" : "developing" },
@@ -482,7 +502,7 @@ function chapterBody(mode: FieldResultMode, product: DendriteProduct, dominant: 
   return bodies[mode];
 }
 
-export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteResult["nodes"],edges:DendriteResult["edges"],historyProducts=0):DendriteResult {
+export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteResult["nodes"],edges:DendriteResult["edges"],historyProducts=0,evidenceLeaves:ReportEvidenceLeaf[]=[]):DendriteResult {
   const ordered=[...nodes].sort((a,b)=>b.score-a.score);
   const dominant=ordered.slice(0,3);
   const strongestEdge=[...edges].sort((a,b)=>b.weight-a.weight)[0];
@@ -498,7 +518,8 @@ export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteRes
     insightZh:hasClearSignal?`「${dominant[0].zh}」目前最清晰，并与「${dominant[1].zh}」「${dominant[2].zh}」共同形成${product.nameZh}的当前结构。它不是固定人格或未来判定。`:`本次节点分布较为接近，尚不足以形成可信的主导标签。先保留这份记录，等待更多真实情境提供证据。`,
     insightEn:hasClearSignal?`${dominant[0].en} is clearest and joins ${dominant[1].en} and ${dominant[2].en} in the current ${product.nameEn} structure. It is not a fixed identity or future verdict.`:`The current node distribution is too close to support a reliable dominant label. Keep this record and let further lived contexts provide evidence.`,
     chapters,
-    reportEntries: buildReportEntries(product.productId, product.relationshipType, ordered),
+    reportEntries: buildReportEntries(product.productId, product.relationshipType, ordered, evidenceLeaves),
+    evidenceLeaves,
     evidence:{answered:product.questions.length,total:product.questions.length,historyProducts,sourceZh:product.sourceZh,sourceEn:product.sourceEn},
   };
   if(product.productId==="qian-reading"){
@@ -509,11 +530,12 @@ export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteRes
 
 export function calculateDendrite(product:DendriteProduct,responses:Record<string,string>):DendriteResult {
   const activation=Object.fromEntries(product.nodes.map(item=>[item.id,0])) as Record<string,number>;
-  const edgeMap=new Map<string,number>();let previous:string[]=[];
+  const edgeMap=new Map<string,number>();let previous:string[]=[];const evidenceLeaves:ReportEvidenceLeaf[]=[];
   for(const question of product.questions){
     const option=question.options.find(candidate=>candidate.id===responses[question.id]);
     if(!option) throw new Error(`missing response: ${question.id}`);
     const active=Object.keys(option.activates);
+    evidenceLeaves.push({sourceProductId:product.productId,...(product.relationshipType?{sourceRelationshipType:product.relationshipType}:{}),questionId:question.id,promptZh:question.zh,promptEn:question.en,answerId:option.id,answerZh:option.zh,answerEn:option.en,nodeIds:active,strength:Number(Object.values(option.activates).reduce((sum,value)=>sum+value,0).toFixed(2))});
     for(const [id,weight] of Object.entries(option.activates)) activation[id]+=weight;
     for(const from of previous) for(const to of active){if(from===to)continue;const key=[from,to].sort().join("|");edgeMap.set(key,(edgeMap.get(key)??0)+0.35);}
     previous=active;
@@ -522,5 +544,5 @@ export function calculateDendrite(product:DendriteProduct,responses:Record<strin
   for(let pass=0;pass<3;pass+=1){const delta:Record<string,number>={};for(const edge of edges){delta[edge.to]=(delta[edge.to]??0)+activation[edge.from]*edge.weight*0.12;delta[edge.from]=(delta[edge.from]??0)+activation[edge.to]*edge.weight*0.12;}for(const [id,value] of Object.entries(delta)) activation[id]+=value;}
   const max=Math.max(...Object.values(activation),1);
   const nodes=product.nodes.map(item=>({...item,score:Math.max(6,Math.round(activation[item.id]/max*100))}));
-  return finalizeDendriteResult(product,nodes,edges);
+  return finalizeDendriteResult(product,nodes,edges,0,evidenceLeaves);
 }
