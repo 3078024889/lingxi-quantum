@@ -27,8 +27,8 @@ V323 publication contract:
 - artwork and report copy share each page;
 - no navigation, buttons, or browser fragments inside PDF pages;
 - missing artwork aborts the export;
-- every page keeps its full-height art field visible beneath a translucent aurora-glass reading layer;
-- opaque pink/paper blocks are forbidden;
+- every page keeps its full-height art field visible beneath the same translucent light-glass reading layer used by web reports;
+- no Mini Program-specific colour veil, dark glass, opaque pink block, or paper template is permitted;
 - body copy is 12.5pt in print and at least 17px on small screens;
 - each 24-entry product publishes one evidence entry per page rather than shrinking two entries into one page;
 - the complete Life Archetype publishes 24 independent inference modules.

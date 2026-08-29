@@ -83,12 +83,12 @@ if (!archetypePublication.includes("total=24") || !archetypePublication.includes
 if (/\/images\/qian\//.test(archetypePublication)) failures.push("Life Archetype: 64 Life Oracle card artwork leaked into the publication");
 if (!artRegistry.includes("WEB_ARCHETYPE_PDF_ART_POOL") || !artRegistry.includes("/shared/report-assets")) failures.push("PDF artwork: formal text-free asset registry is missing");
 if (!exporter.includes("exportPublicationPagesPdf") || !exporter.includes("No fixed publication pages")) failures.push("pdf-export: strict fixed A4 publication path is missing");
-for (const token of [".lx-archive-publication-page", ".lx-archive-glass", "font-size: 12.5pt", ".lx-resilience-reading-column"]) {
+for (const token of [".lx-report-glass-readable", "font-size: 12.5pt", ".lx-resilience-reading-column"]) {
   if (!css.includes(token)) failures.push(`shared aurora publication: missing ${token}`);
 }
 const publicationPage = readFileSync(resolve(root, "app/mini-report/PublicationPage.tsx"), "utf8");
-if (publicationPage.includes("bg-[#f0edf6]") || publicationPage.includes("h-[39%]")) failures.push("mini publications: legacy opaque paper or cropped artwork remains");
-if (!publicationPage.includes("lx-archive-glass") || !publicationPage.includes("h-full w-full object-cover")) failures.push("mini publications: full-field artwork and shared glass are missing");
+if (publicationPage.includes("h-[39%]") || publicationPage.includes("lx-archive-glass") || publicationPage.includes("bg-gradient-to-br from-[#07132d]")) failures.push("mini publications: legacy coloured publication layer remains");
+if (!publicationPage.includes("lx-report-glass-readable") || !publicationPage.includes("h-full w-full object-cover")) failures.push("mini publications: full-field artwork and original web glass are missing");
 
 const reportRoutes = [
   "app/api/lifemap/generate-full/route.ts",
