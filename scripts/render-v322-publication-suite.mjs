@@ -8,14 +8,25 @@ const require=createRequire(import.meta.url);
 const {chromium}=require(process.env.NODE_PATH?path.join(process.env.NODE_PATH,"playwright"):"playwright");
 const root=path.resolve(import.meta.dirname,"..");
 const outDir=path.join(root,"output","pdf"); fs.mkdirSync(outDir,{recursive:true});
-// Four representative outputs exercise the same shared publication contract:
-// resilience, relationship, life map, and the cross-field archetype.
-const products=[["resilience","生命韧性"],["deep-relationship","深度关系共振"],["life-map","生命图谱"]];
+// Render every formal product asset family, not only representative samples.
+// Life Archetype is exported separately as the automatic convergence archive.
+const products=[
+  ["life-map","生命图谱"],
+  ["deep-relationship","深度关系共振"],
+  ["business-relationship","合伙商业关系共振"],
+  ["other-relationship","其他关系共振"],
+  ["resilience","生命韧性"],
+  ["romance","桃花磁场"],
+  ["wealth","财富创造地图"],
+  ["daily-tide","今日潮汐"],
+  ["life-mirror","生命镜像"],
+  ["life-oracle","生命灵签"],
+];
 const entryTitles=["结构源点","自然运行方式","现实适应","隐性代价","启动机制","承接机制","边界表达","连接方式","压力反应","恢复入口","价值识别","现实交换","重复模式","场景切换","增强回路","结构张力","低估能力","当前盲区","行动接口","反馈回路","长期观察","近期变化","验证动作","下一次记录"];
 const archetypeTitles=["生命原型 · 八流归一","档案来源与主体边界","当前生命原型","原型源点","三条主轴","长期稳定结构","隐性结构","场景切换机制","关系中的原型表达","创造与价值路径","压力下的原型变化","第二结构与适应层","跨域增强回路","结构张力","被抑制的力量","树突连接图谱","当前盲区","被低估的能力","现实承接条件","现实验证入口","八流时间轨迹","证据与置信边界","持续观察协议","八流汇聚，原型自现"];
 const esc=(value)=>String(value).replace(/[&<>"']/g,(char)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
 const assetCache=new Map();
-const asset=(key,page)=>{const file=path.join(root,"public","shared","report-assets",key,`${String(((page-1)%6)+1).padStart(2,"0")}.png`);if(!assetCache.has(file))assetCache.set(file,`data:image/png;base64,${fs.readFileSync(file).toString("base64")}`);return assetCache.get(file);};
+const asset=(key,page)=>{const name=`${String(((page-1)%6)+1).padStart(2,"0")}.png`;const cacheKey=`${key}/${name}`;if(!assetCache.has(cacheKey))assetCache.set(cacheKey,`https://assets.lingxifield.local/${cacheKey}`);return assetCache.get(cacheKey);};
 const css=`<style>@page{size:A4;margin:0}*{box-sizing:border-box}html,body{margin:0;background:#eef0f6;font-family:"Microsoft YaHei","Noto Sans SC",sans-serif;color:#454151;-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{position:relative;width:210mm;height:297mm;overflow:hidden;page-break-after:always;background:#eef0f6}.page:last-child{page-break-after:auto}.art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.veil{display:none}.frame{position:relative;z-index:1;height:100%;padding:15mm 16.93mm;display:flex;flex-direction:column}.meta{display:flex;justify-content:space-between;font-size:8pt;font-weight:600;letter-spacing:.22em;color:#557f79}.content{margin:auto 0}.cover .content,.full .content{margin-top:auto;color:#454151}.title{font-family:Georgia,"Noto Serif SC",serif;font-weight:400;font-size:27pt;line-height:1.2;margin:0 0 7mm;color:#302941;text-shadow:0 1px 7px rgba(255,255,255,.98)}.panel{padding:9mm;border:1px solid rgba(255,255,255,.46);border-radius:1mm;background:linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48));box-shadow:0 3mm 12mm rgba(35,30,55,.05),inset 0 .3mm 0 rgba(255,255,255,.42)}.copy{font-size:12.5pt;line-height:1.78;margin:0 0 4mm;color:#454151}.label{font-size:8.5pt;font-weight:600;letter-spacing:.2em;color:#557f79;margin:0 0 2mm}.entry{padding:6mm;border:1px solid rgba(76,73,102,.14);background:rgba(255,255,255,.24);margin-bottom:3mm}.entry h3{font:400 17pt Georgia,"Noto Serif SC",serif;color:#302941;margin:0 0 4mm}.entry p{font-size:11.5pt;line-height:1.72;margin:2.5mm 0}.footer{margin-top:auto;border-top:1px solid rgba(76,73,102,.16);padding-top:3mm;display:flex;justify-content:space-between;font-size:6.5pt;letter-spacing:.15em;color:#696473}.nodes{display:grid;grid-template-columns:1fr 1fr;gap:5mm}.node{font-size:10.5pt;border-bottom:1px solid rgba(76,73,102,.16);padding-bottom:2mm}.accent{font:400 19pt Georgia,"Noto Serif SC",serif;color:#557f79}.streams{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm 7mm;margin:5mm 0}.stream{font-size:10.5pt;padding-bottom:2mm;border-bottom:1px solid rgba(76,73,102,.16)}</style>`;
 const page=(index,total,key,title,body,{cover=false,full=false}={})=>`<section class="page ${cover?"cover":""} ${full?"full":""}"><img class="art" src="${asset(key,index)}"><div class="veil"></div><div class="frame"><div class="meta"><span>LINGXIFIELD ORIGINAL ARCHIVE</span><span>${String(index).padStart(2,"0")} / ${String(total).padStart(2,"0")}</span></div><div class="content"><h1 class="title">${esc(title)}</h1><div class="panel">${body}</div></div><div class="footer"><span>FIXED A4 PUBLICATION</span><span>lingxifield.com</span></div></div></section>`;
 const productHtml=(key,name)=>{
@@ -29,7 +40,26 @@ const productHtml=(key,name)=>{
 };
 const archetypeHtml=()=>archetypeTitles.map((title,i)=>page(i+1,24,["life-map","deep-relationship","resilience","romance","wealth","daily-tide","life-mirror","life-oracle"][i%8],title,i===0?`<p class="label">EIGHT-STREAM CONVERGENCE · 8 / 8</p><div class="streams">${["生命图谱","关系共振","生命韧性","桃花磁场","财富创造地图","今日潮汐","生命镜像","生命灵签"].map((name)=>`<div class="stream"><span style="color:#557f79;margin-right:2mm">●</span>${name}</div>`).join("")}</div><p class="copy">八条生命支流均已完成并进入同一座场域；本档案从完整八流证据开始展开。</p>`:`<p class="label">INFERENCE MODULE</p><p class="accent">方向 × 承接 × 校准</p><p class="copy">本模块读取跨域证据之间的连接关系，不复述任一单独产品结论，也不把八份报告压缩成摘要。所有判断保留证据边界，并回到可观察的现实动作。</p><p class="copy">This module cross-reads independent evidence, preserves tensions and missing data, and returns the structure to an observable real-world action.</p>`,{cover:i===0,full:i===23})).join("");
 
-const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||"C:/Program Files/Google/Chrome/Application/chrome.exe"}); const browserPage=await browser.newPage({viewport:{width:794,height:1123}});
-for(const [key,name] of products){await browserPage.setContent(`<!doctype html><html><head><meta charset="utf-8">${css}</head><body>${productHtml(key,name)}</body></html>`,{waitUntil:"load"});await browserPage.waitForFunction(()=>[...document.images].every((img)=>img.complete&&img.naturalWidth>0));const overflow=await browserPage.$$eval(".page",pages=>pages.filter((page)=>page.scrollHeight>page.clientHeight+1).length);if(overflow)throw new Error(`${key}: ${overflow} overflowing pages`);await browserPage.pdf({path:path.join(outDir,`v325-${key}-cross-platform-visual-qa.pdf`),format:"A4",printBackground:true,preferCSSPageSize:true});}
-await browserPage.setContent(`<!doctype html><html><head><meta charset="utf-8">${css}</head><body>${archetypeHtml()}</body></html>`,{waitUntil:"load"});await browserPage.waitForFunction(()=>[...document.images].every((img)=>img.complete&&img.naturalWidth>0));const overflow=await browserPage.$$eval(".page",pages=>pages.filter((page)=>page.scrollHeight>page.clientHeight+1).length);if(overflow)throw new Error(`life-archetype: ${overflow} overflowing pages`);await browserPage.pdf({path:path.join(outDir,"v325-life-archetype-cross-platform-visual-qa.pdf"),format:"A4",printBackground:true,preferCSSPageSize:true});await browser.close();
-console.log(`PASS V325 PDF suite: ${products.length+1} cross-platform visual publications rendered to ${outDir}`);
+const renderPublication=async(key,html,fileName)=>{
+  const output=path.join(outDir,fileName);
+  if(fs.existsSync(output)&&fs.statSync(output).size>1000000){console.log(`SKIP ${key}: existing complete PDF`);return;}
+  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||"C:/Program Files/Google/Chrome/Application/chrome.exe"});
+  try{
+    const browserPage=await browser.newPage({viewport:{width:794,height:1123}});
+    await browserPage.route("https://assets.lingxifield.local/**",async(route)=>{
+      const url=new URL(route.request().url());
+      const relative=url.pathname.replace(/^\//,"");
+      const file=path.join(root,"public","shared","report-assets",...relative.split("/"));
+      await route.fulfill({status:200,contentType:"image/png",body:fs.readFileSync(file)});
+    });
+    await browserPage.setContent(`<!doctype html><html><head><meta charset="utf-8">${css}</head><body>${html}</body></html>`,{waitUntil:"load"});
+    await browserPage.waitForFunction(()=>[...document.images].every((img)=>img.complete&&img.naturalWidth>0));
+    const overflow=await browserPage.$$eval(".page",pages=>pages.filter((page)=>page.scrollHeight>page.clientHeight+1).length);
+    if(overflow)throw new Error(`${key}: ${overflow} overflowing pages`);
+    await browserPage.pdf({path:output,format:"A4",printBackground:true,preferCSSPageSize:true});
+    console.log(`PASS ${key}`);
+  }finally{await browser.close();}
+};
+for(const [key,name] of products)await renderPublication(key,productHtml(key,name),`v326-${key}-cross-platform-visual-qa.pdf`);
+await renderPublication("life-archetype",archetypeHtml(),"v326-life-archetype-cross-platform-visual-qa.pdf");
+console.log(`PASS V326 PDF suite: ${products.length+1} cross-platform visual publications rendered to ${outDir}`);

@@ -39,3 +39,9 @@ V325 cross-platform geometry:
 - cover, feature, chapter, footer, and Mini Program publication pages use a 64px left/right gutter;
 - the export fallback is the same neutral `#EEF0F6`, never a dark or product-coloured canvas;
 - the Life Archetype cover must display all eight completed tributaries and `8 / 8`, not three dominant structural nodes.
+
+V326 complete-product visual acceptance:
+
+- QA export covers all ten formal product asset families plus the automatic Life Archetype convergence archive;
+- each standard product renders 30 fixed A4 pages, while Life Archetype renders 24 fixed A4 pages;
+- every page is raster-reviewed through product contact sheets, so shared-code parity is verified as output rather than assumed from implementation.
