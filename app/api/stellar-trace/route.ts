@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { calculateStellarTrace, type StellarTraceInput } from "@/lib/stellar-trace";
+import { getAccess, hasUnlock } from "@/lib/access";
 
 export const runtime = "nodejs";
 
 const text = (value: unknown, max: number) => typeof value === "string" ? value.trim().slice(0, max) : "";
 export async function POST(req: Request) {
   try {
+    const access = await getAccess();
+    if (!access.user) return NextResponse.json({ error: "请先登录并开启星迹研究权益" }, { status: 401 });
+    if (!access.manifestActive && !hasUnlock(access.unlocks, "stellar-trace")) return NextResponse.json({ error: "星迹研究权益尚未开启" }, { status: 403 });
     const body = await req.json() as Partial<StellarTraceInput> & { consent?: boolean };
     const input: StellarTraceInput = {
       name: text(body.name, 40), birthDate: text(body.birthDate, 10), birthTime: text(body.birthTime, 5),

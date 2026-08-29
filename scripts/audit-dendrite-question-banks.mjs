@@ -42,15 +42,17 @@ for (const [label, symbol] of banks) {
   }
 }
 
-if (!source.includes('questionBankVersion: "V327"') && !readFileSync(resolve(process.cwd(), "app/api/wechat/mini/dendrite/config/route.ts"), "utf8").includes('questionBankVersion: "V327"')) {
-  failures.push("question bank version was not advanced to V327");
+if (!readFileSync(resolve(process.cwd(), "app/api/wechat/mini/dendrite/config/route.ts"), "utf8").includes('questionBankVersion: "V328"')) {
+  failures.push("question bank version was not advanced to V328");
 }
-if (!source.includes("const register = (questionIndex + optionIndex) % 4") || !source.includes("optionZh")) {
-  failures.push("answer choices still reuse one fixed node sentence across all 24 screens");
+if (!source.includes("const permutations = seed.nodes.flatMap") || !source.includes("evidenceDimension") || !source.includes("answerSemantic") || !source.includes("counterNodeIds")) {
+  failures.push("questions do not own independent semantic dimensions and ordered node mappings");
 }
-if (!source.includes("evidenceLeaves.push") || !source.includes("promptZh:question.zh") || !source.includes("answerZh:option.zh")) {
+if (!source.includes("evidenceLeaves.push") || !source.includes("promptZh:question.zh") || !source.includes("answerZh:option.zh") || !source.includes("evidenceDimension:question.evidenceDimension")) {
   failures.push("24 responses are not persisted as independent Evidence Leaves");
 }
+if (!source.includes('polarity:"support"') || !source.includes("question.options.filter")) failures.push("selected support and unselected counter-evidence are not persisted");
+if (!source.includes('在「${zh.replace(/[？。]/g,"")}」这一情境里')) failures.push("answer copy is not bound to the actual question context");
 
 if (failures.length) {
   console.error(failures.map((item) => `FAIL ${item}`).join("\n"));

@@ -15,6 +15,10 @@ Page({
       wx.navigateTo({ url: '/pages/archetype-progress/index' })
       return
     }
+    if (item.productId === 'stellar-trace') {
+      wx.navigateTo({ url: `/pages/product/index?product=${encodeURIComponent(item.productId)}&sku=${encodeURIComponent(item.skuId)}&from=explore` })
+      return
+    }
     wx.navigateTo({ url: `/pages/assessment/index?product=${encodeURIComponent(item.productId)}` })
   },
   onShareAppMessage() {

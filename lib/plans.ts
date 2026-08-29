@@ -40,6 +40,10 @@ export const lifeMapProducts: Product[] = [
   { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你的完整命盘解读，永久保存、随时回看", noteEn: "One exchange unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
 ];
 
+export const stellarTraceProducts: Product[] = [
+  { id: "stellar-trace", name: "灵犀场星迹 · 万里追踪", nameEn: "Lingxi Stellar Trace", priceUsd: 95.5, priceRmb: 688, type: "permanent", note: "九域天文事实、四层透明投影与圆周收敛检验形成的研究档案；方向或距离证据不足时，系统主动停止，不制造坐标。", noteEn: "A research archive joining nine-field astronomy, four transparent projections, and circular convergence gates. The engine stops when direction or distance evidence is insufficient.", group: "cultivation" },
+];
+
 export const relationshipProducts: Product[] = [
   { id: "relationship-resonance", name: "关系共振图谱", nameEn: "Relationship Resonance Map", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你与任意一人的共振分析——深度关系、合伙商业或其他重要连接皆可，永久保存、可测多次", noteEn: "One exchange unlocks resonance analysis between you and anyone — a deep relationship, business partnership, or other important connection. Yours to keep, test as many pairs as you like.", group: "cultivation" },
 ];
@@ -72,7 +76,7 @@ export const lifeArchetypeProducts: Product[] = [
   { id: "life-archetype", name: "生命原型", nameEn: "Life Archetype", priceUsd: 0, priceRmb: 0, type: "permanent", note: "一年内八个独立场域全部开启后自动生成，不单独售卖。", noteEn: "Generated automatically after all eight independent fields are opened within one year; not sold separately.", group: "cultivation" },
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts];
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...stellarTraceProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }

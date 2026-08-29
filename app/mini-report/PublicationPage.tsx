@@ -20,7 +20,7 @@ export function PublicationPage({
   const cover = layout === "cover";
   const full = layout === "full";
   return (
-    <section className="lx-pdf-page lx-publication-page lx-report-tone-light relative mx-auto aspect-[210/297] w-full max-w-[794px] bg-[#eef0f6] text-[#292638] shadow-[0_24px_90px_rgba(16,20,45,.3)]">
+    <section className="lx-pdf-page lx-publication-page lx-report-tone-light relative mx-auto min-h-[920px] w-full max-w-[794px] bg-[#eef0f6] text-[#292638] shadow-[0_24px_90px_rgba(16,20,45,.3)] sm:aspect-[210/297] sm:min-h-0">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={art} alt="" className="absolute inset-0 h-full w-full object-cover" />
       <div className="relative z-10 flex h-full flex-col px-[8.06%] py-[6%]">

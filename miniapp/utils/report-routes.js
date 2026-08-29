@@ -2,6 +2,7 @@
 // older web deployment. Keep these public entry routes in the Mini Program as
 // a compatibility fallback; the web route itself remains the product source.
 const REPORT_WEB_PATHS = {
+  'stellar-trace': '/stellar-trace',
   'life-map-report': '/life-map',
   'relationship-resonance': '/relationship',
   'qian-reading': '/qian',

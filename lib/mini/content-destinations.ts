@@ -11,6 +11,7 @@ const PRACTICE_ROUTES: Record<string, string> = {
 // 这不是“内容不支持”，而是应带用户进入已经安全登录的网页档案馆，
 // 由网页账户展示历史订单、档案与下载内容。
 export const MINI_WEB_ARCHIVE_PRODUCT_IDS = new Set([
+  "stellar-trace",
   "life-map-report",
   "relationship-resonance",
   "qian-reading",
@@ -27,6 +28,7 @@ export function isMiniWebArchiveProduct(productId: string): boolean {
 }
 
 export function miniContentDestination(productId: string): string | null {
+  if (productId === "stellar-trace") return "/stellar-trace";
   if (PRACTICE_ROUTES[productId]) return PRACTICE_ROUTES[productId];
   if (isMiniWebArchiveProduct(productId)) return "/account/orders";
   if (productId === "narrative-all") return "/narrative";

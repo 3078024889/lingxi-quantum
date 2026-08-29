@@ -1,116 +1,55 @@
 import * as Astronomy from "astronomy-engine";
 import { createHash } from "node:crypto";
+import { analyzeCircularDirections, normalizeBearing, type CircularDirectionAnalysis } from "@/lib/stellar-trace-math";
 
-export type StellarTraceInput = {
-  name: string;
-  birthDate: string;
-  birthTime?: string;
-  lastContactAt: string;
-  lastKnownLat: number;
-  lastKnownLon: number;
-  context?: string;
-};
-
+export type StellarTraceInput = { name:string; birthDate:string; birthTime?:string; lastContactAt:string; lastKnownLat:number; lastKnownLon:number; context?:string };
+type NineFieldPosition = { id:string; nameZh:string; longitude:number };
+export type NineFieldSnapshot = { epoch:"birth"|"last-contact"|"current"; labelZh:string; julianDay:number; fields:NineFieldPosition[] };
 export type TraceEvidence = {
-  id: "time-palace" | "three-pass" | "host-guest" | "moving-line";
-  labelZh: string;
-  bearing: number;
-  range: [number, number];
-  distanceBand: "近" | "中" | "远";
-  environmentZh: string[];
-  evidenceZh: string;
+  id:"time-phase"|"inner-planet"|"outer-planet"|"contact-frame"; labelZh:string; bearing:number;
+  sourceFieldIds:string[]; rawValues:number[]; projectionRuleId:string; projectionBasisZh:string;
+  relativeRangeBand:"低迁移象"|"中迁移象"|"高迁移象";
+  distanceTrace:{ rawSymbol:"low"|"medium"|"high"; normalizationRuleId:"symbolic-angular-amplitude-v1"; resultingRangeKm:null; calibrationStatus:"uncalibrated" };
 };
-
 export type StellarTraceResult = {
-  version: "lingxifield-stellar-trace-v1";
-  generatedAt: string;
-  inquiryJulianDay: number;
-  nineFields: Array<{ id: string; nameZh: string; longitude: number }>;
-  evidence: TraceEvidence[];
-  bearing: number;
-  sector: [number, number];
-  distanceKm: [number, number];
-  candidate: { lat: number; lon: number; radiusKm: number };
-  convergence: number;
-  environmentZh: string[];
-  artIndexes: [number, number];
-  boundaryZh: string;
+  version:"lingxifield-stellar-trace-v2"; generatedAt:string; lastKnown:{lat:number;lon:number}; snapshots:NineFieldSnapshot[];
+  evidence:TraceEvidence[]; direction:CircularDirectionAnalysis;
+  distance:{status:"uncalibrated";rangeKm:null;evidence:TraceEvidence["distanceTrace"][];explanationZh:string};
+  candidateRegions:[]; candidateCenter:null; environmentZh:string[]; artIndexes:[number,number]; modelBoundaryZh:string; safetyBoundaryZh:string;
 };
 
-const bodies: Array<{ id: string; nameZh: string; body?: Astronomy.Body }> = [
-  { id: "sun", nameZh: "太阳" },
-  { id: "mercury", nameZh: "水星", body: "Mercury" as Astronomy.Body },
-  { id: "venus", nameZh: "金星", body: "Venus" as Astronomy.Body },
-  { id: "earth", nameZh: "地球", body: "Earth" as Astronomy.Body },
-  { id: "mars", nameZh: "火星", body: "Mars" as Astronomy.Body },
-  { id: "jupiter", nameZh: "木星", body: "Jupiter" as Astronomy.Body },
-  { id: "saturn", nameZh: "土星", body: "Saturn" as Astronomy.Body },
-  { id: "uranus", nameZh: "天王星", body: "Uranus" as Astronomy.Body },
-  { id: "neptune", nameZh: "海王星", body: "Neptune" as Astronomy.Body },
+const bodies:Array<{id:string;nameZh:string;body?:Astronomy.Body}> = [
+  {id:"sun",nameZh:"太阳"},{id:"mercury",nameZh:"水星",body:"Mercury" as Astronomy.Body},{id:"venus",nameZh:"金星",body:"Venus" as Astronomy.Body},
+  {id:"earth",nameZh:"地球",body:"Earth" as Astronomy.Body},{id:"mars",nameZh:"火星",body:"Mars" as Astronomy.Body},{id:"jupiter",nameZh:"木星",body:"Jupiter" as Astronomy.Body},
+  {id:"saturn",nameZh:"土星",body:"Saturn" as Astronomy.Body},{id:"uranus",nameZh:"天王星",body:"Uranus" as Astronomy.Body},{id:"neptune",nameZh:"海王星",body:"Neptune" as Astronomy.Body},
 ];
-
-const normalize = (value: number) => ((value % 360) + 360) % 360;
-const round = (value: number, digits = 2) => Number(value.toFixed(digits));
-const hashInt = (value: string) => Number.parseInt(createHash("sha256").update(value).digest("hex").slice(0, 12), 16);
-
-function heliocentricLongitude(body: Astronomy.Body | undefined, at: Date) {
-  if (!body) return 0;
-  const vector = Astronomy.HelioVector(body, at);
-  return normalize(Math.atan2(vector.y, vector.x) * 180 / Math.PI);
+const round=(value:number,digits=3)=>Number(value.toFixed(digits));
+const hashInt=(value:string)=>Number.parseInt(createHash("sha256").update(value).digest("hex").slice(0,12),16);
+function longitude(body:Astronomy.Body|undefined,at:Date){if(!body)return normalizeBearing(Astronomy.SunPosition(at).elon);const v=Astronomy.HelioVector(body,at);return normalizeBearing(Math.atan2(v.y,v.x)*180/Math.PI)}
+function snapshot(epoch:NineFieldSnapshot["epoch"],labelZh:string,at:Date):NineFieldSnapshot{return{epoch,labelZh,julianDay:round(Astronomy.MakeTime(at).ut+2451545,5),fields:bodies.map(item=>({id:item.id,nameZh:item.nameZh,longitude:round(longitude(item.body,at))}))}}
+function field(s:NineFieldSnapshot,id:string){return s.fields.find(item=>item.id===id)?.longitude??0}
+function signedDelta(to:number,from:number){return((to-from+540)%360)-180}
+function symbolicBand(amplitude:number):Pick<TraceEvidence,"relativeRangeBand"|"distanceTrace">{const rawSymbol=amplitude<45?"low":amplitude<110?"medium":"high";return{relativeRangeBand:rawSymbol==="low"?"低迁移象":rawSymbol==="medium"?"中迁移象":"高迁移象",distanceTrace:{rawSymbol,normalizationRuleId:"symbolic-angular-amplitude-v1",resultingRangeKm:null,calibrationStatus:"uncalibrated"}}}
+function evidenceFrom(id:TraceEvidence["id"],labelZh:string,sourceFieldIds:string[],rawValues:number[],projectionBasisZh:string):TraceEvidence{
+  const analysis=analyzeCircularDirections(rawValues);const bearing=analysis.diagnosticMean??0;const amplitude=rawValues.reduce((sum,value)=>sum+Math.abs(value),0)/Math.max(1,rawValues.length);
+  return{id,labelZh,bearing:round(bearing,1),sourceFieldIds,rawValues:rawValues.map(value=>round(value)),projectionRuleId:`${id}-angular-projection-v2`,projectionBasisZh,...symbolicBand(amplitude)};
 }
 
-function destination(lat: number, lon: number, bearing: number, distanceKm: number) {
-  const radius = 6371.0088;
-  const angular = distanceKm / radius;
-  const phi1 = lat * Math.PI / 180;
-  const lambda1 = lon * Math.PI / 180;
-  const theta = bearing * Math.PI / 180;
-  const phi2 = Math.asin(Math.sin(phi1) * Math.cos(angular) + Math.cos(phi1) * Math.sin(angular) * Math.cos(theta));
-  const lambda2 = lambda1 + Math.atan2(Math.sin(theta) * Math.sin(angular) * Math.cos(phi1), Math.cos(angular) - Math.sin(phi1) * Math.sin(phi2));
-  return { lat: phi2 * 180 / Math.PI, lon: ((lambda2 * 180 / Math.PI + 540) % 360) - 180 };
-}
-
-function circularMean(values: number[]) {
-  const x = values.reduce((sum, value) => sum + Math.cos(value * Math.PI / 180), 0);
-  const y = values.reduce((sum, value) => sum + Math.sin(value * Math.PI / 180), 0);
-  return normalize(Math.atan2(y, x) * 180 / Math.PI);
-}
-
-export function calculateStellarTrace(input: StellarTraceInput, now = new Date()): StellarTraceResult {
-  const birthMoment = new Date(`${input.birthDate}T${input.birthTime || "12:00"}:00+08:00`);
-  const lastContact = new Date(input.lastContactAt);
-  if (!Number.isFinite(birthMoment.getTime()) || !Number.isFinite(lastContact.getTime())) throw new Error("invalid trace time");
-  const nineFields = bodies.map((item) => ({ id: item.id, nameZh: item.nameZh, longitude: round(heliocentricLongitude(item.body, now), 3) }));
-  const signature = `${input.name}|${birthMoment.toISOString()}|${lastContact.toISOString()}|${round(input.lastKnownLat, 4)}|${round(input.lastKnownLon, 4)}|${now.toISOString().slice(0, 13)}`;
-  const seed = hashInt(signature);
-  const astro = nineFields.reduce((sum, item, index) => sum + item.longitude * (index + 1), 0);
-  const bases = [seed % 360, normalize(astro / 9), normalize((seed >>> 7) + nineFields[4].longitude), normalize((seed >>> 13) + nineFields[6].longitude)];
-  const center = circularMean(bases);
-  const environments = ["水域", "道路", "高地", "低洼", "建筑群", "交通节点", "林木", "开阔地"];
-  const labels: TraceEvidence["id"][] = ["time-palace", "three-pass", "host-guest", "moving-line"];
-  const zh = ["时宫方证", "三传行证", "主客远近证", "动爻环境证"];
-  const evidence = bases.map((bearing, index): TraceEvidence => {
-    const spread = 18 + ((seed >>> (index * 3)) % 10);
-    return {
-      id: labels[index], labelZh: zh[index], bearing: round(bearing, 1),
-      range: [round(normalize(bearing - spread), 1), round(normalize(bearing + spread), 1)],
-      distanceBand: ((seed >>> (index + 5)) % 3 === 0 ? "近" : (seed >>> (index + 5)) % 3 === 1 ? "中" : "远"),
-      environmentZh: [environments[(seed + index * 3) % environments.length]],
-      evidenceZh: index === 0 ? "取年命、行迹中断时刻与当下纪元，定其方证。" : index === 1 ? "取时序迁移与方位重合，察其行止。" : index === 2 ? "取内外层级与时间差，定远近带。" : "取动位与环境象，作为现实线索的复核条件。",
-    };
-  });
-  const deviations = bases.map((value) => Math.min(Math.abs(value - center), 360 - Math.abs(value - center)));
-  const convergence = Math.max(18, Math.round(100 - deviations.reduce((sum, value) => sum + value, 0) / deviations.length));
-  const elapsedHours = Math.max(1, (now.getTime() - lastContact.getTime()) / 3600000);
-  const centerDistance = Math.min(360, Math.max(12, 18 + (seed % 54) + Math.log2(elapsedHours + 1) * 7));
-  const distanceKm: [number, number] = [Math.round(centerDistance * .62), Math.round(centerDistance * 1.38)];
-  const point = destination(input.lastKnownLat, input.lastKnownLon, center, centerDistance);
-  return {
-    version: "lingxifield-stellar-trace-v1", generatedAt: now.toISOString(), inquiryJulianDay: round(Astronomy.MakeTime(now).ut + 2451545, 5),
-    nineFields, evidence, bearing: round(center, 1), sector: [round(normalize(center - 22.5), 1), round(normalize(center + 22.5), 1)],
-    distanceKm, candidate: { lat: round(point.lat, 2), lon: round(point.lon, 2), radiusKm: Math.max(12, Math.round((distanceKm[1] - distanceKm[0]) / 2)) },
-    convergence, environmentZh: [...new Set(evidence.flatMap((item) => item.environmentZh))].slice(0, 4),
-    artIndexes: [seed % 60, (seed * 17 + 23) % 60],
-    boundaryZh: "本结果是古代时间方位规则、真实天文坐标与现代地理投影形成的实验性候选区域，不是对人员现实位置的事实认定，不等同于 GPS、通信基站、警方或救援机构定位。涉及人员安全时，请立即使用警方、通信、交通与紧急救援等可核验渠道。",
-  };
+export function calculateStellarTrace(input:StellarTraceInput,now=new Date()):StellarTraceResult{
+  const birthMoment=new Date(`${input.birthDate}T${input.birthTime||"12:00"}:00+08:00`);const lastContact=new Date(input.lastContactAt);
+  if(!Number.isFinite(birthMoment.getTime())||!Number.isFinite(lastContact.getTime())||lastContact>now)throw new Error("invalid trace time");
+  const snapshots=[snapshot("birth","生时九域",birthMoment),snapshot("last-contact","最后有效联系九域",lastContact),snapshot("current","当前九域",now)];const[birth,contact,current]=snapshots;
+  const evidence:TraceEvidence[]=[
+    evidenceFrom("time-phase","时间相位投影",["sun","earth"],[signedDelta(field(contact,"sun"),field(birth,"sun")),signedDelta(field(current,"earth"),field(contact,"earth"))],"比较生时、最后联系与当前纪元的日地角变化；它是象征方向投影，不是地理观测。"),
+    evidenceFrom("inner-planet","内行星变化投影",["mercury","venus","mars"],["mercury","venus","mars"].map(id=>signedDelta(field(current,id),field(contact,id))),"读取水星、金星、火星自最后有效联系至今的角位移并作圆周合成。"),
+    evidenceFrom("outer-planet","外行星变化投影",["jupiter","saturn","uranus","neptune"],["jupiter","saturn","uranus","neptune"].map(id=>signedDelta(field(current,id),field(contact,id))),"读取木星至海王星的慢周期角位移；只提供独立时间尺度，不代表现实位置。"),
+    evidenceFrom("contact-frame","联系时刻框架投影",["sun","mars","saturn"],[field(contact,"sun"),field(contact,"mars"),field(contact,"saturn")],"以最后有效联系时刻的太阳、火星、土星经度组成审计用方向框架。"),
+  ];
+  const base=analyzeCircularDirections(evidence.map(item=>item.bearing));const seed=hashInt(`${input.name}|${birthMoment.toISOString()}|${lastContact.toISOString()}`);
+  const direction:CircularDirectionAnalysis={...base,diagnosticMean:base.diagnosticMean===null?null:round(base.diagnosticMean,1),resultantLength:round(base.resultantLength),circularDispersion:round(base.circularDispersion),circularStdDegrees:base.circularStdDegrees===null?null:round(base.circularStdDegrees,1),sector:base.sector?[round(base.sector[0],1),round(base.sector[1],1)]:null,modes:base.modes.map(mode=>({...mode,center:round(mode.center,1),mass:round(mode.mass),resultantLength:round(mode.resultantLength),bearings:mode.bearings.map(value=>round(value,1))}))};
+  return{version:"lingxifield-stellar-trace-v2",generatedAt:now.toISOString(),lastKnown:{lat:round(input.lastKnownLat,4),lon:round(input.lastKnownLon,4)},snapshots,evidence,direction,
+    distance:{status:"uncalibrated",rangeKm:null,evidence:evidence.map(item=>item.distanceTrace),explanationZh:"四层投影目前只能形成相对迁移象，尚无经过史料校核与盲测标定的公里映射规则。因此本版不输出公里距离。"},candidateRegions:[],candidateCenter:null,
+    environmentZh:input.context?["现实线索已记录，尚未由模型自动解释"]:["尚无可核验的现实环境线索"],artIndexes:[seed%60,(seed*17+23)%60],
+    modelBoundaryZh:"九域为可复算的天文事实层；四层为透明展示的象征投影层。二者之间尚未建立经过盲测验证的现实人员位置因果关系。",
+    safetyBoundaryZh:"本结果不读取设备、通信、GPS 或实时行踪，不提供人员现实位置事实认定，也不得用于跟踪、骚扰或监控。涉及人员安全时，请立即使用警方、通信、交通与紧急救援等可核验渠道。"};
 }

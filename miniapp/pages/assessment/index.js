@@ -14,7 +14,7 @@ Page({
     try {
       const [catalog, config] = await Promise.all([
         publicRequest('/api/wechat/mini/catalog'),
-        publicRequest(`/api/wechat/mini/dendrite/config?productId=${encodeURIComponent(this.productId)}&bank=V327`),
+        publicRequest(`/api/wechat/mini/dendrite/config?productId=${encodeURIComponent(this.productId)}&bank=V328`),
       ])
       const item = catalog.items.find((candidate) => candidate.productId === this.productId)
       if (!item) throw new Error('missing product')

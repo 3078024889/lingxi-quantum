@@ -48,7 +48,7 @@ Page({
         (me.orders || []).some(order => order.product_id === item.productId) ||
         (me.unlocks || []).some(unlock => unlock.product_id === item.productId || unlock.product_id === 'everything' || (item.category === 'narrative' && unlock.product_id === 'narrative-all'))
       ))
-      if (item && item.category === 'report' && !owned) {
+      if (item && item.category === 'report' && !owned && item.productId !== 'stellar-trace') {
         const path = getReportWebPath(item)
         if (!path) throw new Error('这份精测暂未开放')
         return wx.redirectTo({ url: `/pages/web/index?path=${encodeURIComponent(path)}` })
@@ -96,7 +96,7 @@ Page({
     if (!this.data.item || this.data.opening) return
     this.setData({ opening: true })
     try {
-      if (this.data.item.category === 'report') {
+      if (this.data.item.category === 'report' && this.data.item.productId !== 'stellar-trace') {
         const me = await request('/api/wechat/mini/me')
         const order = (me.orders || []).find(item => item.product_id === this.data.item.productId && item.submission_id)
         if (!order) throw { data: { error: '未找到可打开的完整档案，请从“我的场域”刷新后重试' } }

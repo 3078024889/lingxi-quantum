@@ -12,8 +12,8 @@ import { buildReportEntries, type DendriteReportEntry, type ReportEvidenceLeaf }
  * astronomical/temporal calculation.
  */
 
-export type DendriteOption = { id: string; zh: string; en: string; activates: Record<string, number> };
-export type DendriteQuestion = { id: string; sectionZh: string; sectionEn: string; zh: string; en: string; options: DendriteOption[] };
+export type DendriteOption = { id: string; zh: string; en: string; activates: Record<string, number>; polarity: "support"; answerSemantic: string };
+export type DendriteQuestion = { id: string; sectionZh: string; sectionEn: string; zh: string; en: string; evidenceDimension: string; options: DendriteOption[] };
 export type DendriteNode = { id: string; zh: string; en: string; meaningZh: string; meaningEn: string; actionZh: string; actionEn: string };
 export type RelationshipAssessmentType = "deep" | "business" | "other";
 export type DendriteProduct = FieldProductCopy & {
@@ -228,29 +228,22 @@ const seeds: Seed[] = [
 
 function buildQuestions(seed: Seed): DendriteQuestion[] {
   const byId = new Map(seed.nodes.map(item => [item.id,item]));
+  const permutations = seed.nodes.flatMap((first) => seed.nodes.flatMap((second) => first.id === second.id ? [] :
+    seed.nodes.flatMap((third) => [first.id,second.id].includes(third.id) ? [] :
+      seed.nodes.filter((fourth) => ![first.id,second.id,third.id].includes(fourth.id)).map((fourth) => [first.id,second.id,third.id,fourth.id]))));
   return seed.prompts.map(([sectionZh,sectionEn,zh,en,ids],questionIndex) => {
-    const selectedIds = ids?.filter(id => byId.has(id)) ?? cycle(seed.nodes.map(item=>item.id),questionIndex);
-    return { id:`q${questionIndex+1}`,sectionZh,sectionEn,zh,en,options:selectedIds.map((id,optionIndex) => {
+    const allowed = ids?.filter(id => byId.has(id));
+    const candidates = allowed && allowed.length >= 4
+      ? permutations.filter((signature) => signature.every((id) => allowed.includes(id)))
+      : permutations;
+    const selectedIds = candidates[(questionIndex * 37 + sectionZh.length * 11) % candidates.length];
+    const evidenceDimension = `${seed.productId}.${seed.relationshipType ?? "base"}.${String(questionIndex + 1).padStart(2,"0")}.${sectionEn.toLowerCase().replace(/[^a-z0-9]+/g,"-")}`;
+    return { id:`q${questionIndex+1}`,sectionZh,sectionEn,zh,en,evidenceDimension,options:selectedIds.map((id,optionIndex) => {
       const current = byId.get(id)!;
       const companion = selectedIds[(optionIndex+2)%selectedIds.length];
-      // A question bank is not valid when 24 screens merely replay the same
-      // four answer sentences. Keep the evidence mapping deterministic, but
-      // vary the response register so every screen asks for a fresh judgment
-      // instead of rewarding memory of the previous option order.
-      const register = (questionIndex + optionIndex) % 4;
-      const optionZh = [
-        current.meaningZh,
-        current.actionZh,
-        `我会先从「${current.zh}」进入：${current.actionZh}`,
-        `此刻更像「${current.zh}」在起作用：${current.meaningZh}`,
-      ][register];
-      const optionEn = [
-        current.meaningEn,
-        current.actionEn,
-        `I would enter through ${current.en}: ${current.actionEn}`,
-        `This feels most like ${current.en} in action: ${current.meaningEn}`,
-      ][register];
-      return {id:`${questionIndex+1}-${optionIndex+1}`,zh:optionZh,en:optionEn,activates:{[id]:1,[companion]:0.22}};
+      const optionZh=`在「${zh.replace(/[？。]/g,"")}」这一情境里，我更接近「${current.zh}」：${optionIndex%2===0?current.meaningZh:current.actionZh}`;
+      const optionEn=`In this specific situation, I lean toward ${current.en}: ${optionIndex%2===0?current.meaningEn:current.actionEn}`;
+      return {id:`${questionIndex+1}-${optionIndex+1}`,zh:optionZh,en:optionEn,polarity:"support",answerSemantic:`${evidenceDimension}:${id}:support`,activates:{[id]:1,[companion]:0.22}};
     })};
   });
 }
@@ -535,7 +528,8 @@ export function calculateDendrite(product:DendriteProduct,responses:Record<strin
     const option=question.options.find(candidate=>candidate.id===responses[question.id]);
     if(!option) throw new Error(`missing response: ${question.id}`);
     const active=Object.keys(option.activates);
-    evidenceLeaves.push({sourceProductId:product.productId,...(product.relationshipType?{sourceRelationshipType:product.relationshipType}:{}),questionId:question.id,promptZh:question.zh,promptEn:question.en,answerId:option.id,answerZh:option.zh,answerEn:option.en,nodeIds:active,strength:Number(Object.values(option.activates).reduce((sum,value)=>sum+value,0).toFixed(2))});
+    const counterNodeIds=[...new Set(question.options.filter((candidate)=>candidate.id!==option.id).map((candidate)=>Object.keys(candidate.activates)[0]))];
+    evidenceLeaves.push({sourceProductId:product.productId,...(product.relationshipType?{sourceRelationshipType:product.relationshipType}:{}),questionId:question.id,evidenceDimension:question.evidenceDimension,promptZh:question.zh,promptEn:question.en,answerId:option.id,answerZh:option.zh,answerEn:option.en,answerSemantic:option.answerSemantic,polarity:option.polarity,nodeIds:active,counterNodeIds,strength:Number(Object.values(option.activates).reduce((sum,value)=>sum+value,0).toFixed(2))});
     for(const [id,weight] of Object.entries(option.activates)) activation[id]+=weight;
     for(const from of previous) for(const to of active){if(from===to)continue;const key=[from,to].sort().join("|");edgeMap.set(key,(edgeMap.get(key)??0)+0.35);}
     previous=active;

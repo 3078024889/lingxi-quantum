@@ -23,6 +23,18 @@ export type FieldProductCopy = {
 };
 
 export const FIELD_PRODUCT_COPY: Record<string, FieldProductCopy> = {
+  "stellar-trace": {
+    field: "00", layer: "field", nameZh: "灵犀场星迹 · 万里追踪", nameEn: "Lingxi Stellar Trace",
+    cardDefinitionZh: "先检验方向是否成立，再决定坐标能否出现。", cardDefinitionEn: "Test whether a direction qualifies before any coordinate may appear.",
+    keywordsZh: ["九域天文", "四层投影", "圆周收敛", "证据停止门"], keywordsEn: ["Nine-field Astronomy", "Four Projections", "Circular Convergence", "Evidence Gate"],
+    ctaZh: "进入星迹研究场 →", ctaEn: "Enter Stellar Trace →",
+    coreTitleZh: "让每一个方向结论先通过资格检验", coreTitleEn: "Make every directional claim earn its right to exist",
+    overviewZh: ["九域天文位置属于可复算事实；四层方向属于实验投影。系统同时呈现圆周均值、集中度、离散度与多峰结构。", "方向不收敛、距离未校准或现实证据不足时，P50、P75、P90 区域保持 Missing，不生成假精确坐标。"],
+    overviewEn: ["Nine-field positions are reproducible astronomical facts; four directions are experimental projections. Circular mean, concentration, dispersion and modes remain visible together.", "When direction diverges, distance is uncalibrated, or reality evidence is insufficient, P50/P75/P90 remain Missing and no false-precision coordinate is produced."],
+    readingZh: "星迹读取的是模型证据资格，不是设备定位，也不声称知道人员现实位置。", readingEn: "Stellar Trace reads model eligibility, not device location, and never claims to know a person's real position.",
+    structureZh: ["九域事实", "四层投影", "圆周资格", "停止条件"], structureEn: ["Nine Fields", "Four Projections", "Circular Gate", "Stop Conditions"],
+    resultOutline: [{id:"facts",zh:"九域事实层",en:"Nine-field Facts",mode:"evidence"},{id:"projection",zh:"四层投影",en:"Four Projections",mode:"secondary"},{id:"gate",zh:"方向资格门",en:"Direction Gate",mode:"core"},{id:"boundary",zh:"模型停止条件",en:"Model Stop Conditions",mode:"cost"}],
+  },
   "life-map-report": {
     field: "01", layer: "field", nameZh: "生命图谱", nameEn: "Life Blueprint",
     cardDefinitionZh: "看见长期反复出现的生命结构。", cardDefinitionEn: "See the life structures that persist across contexts.",

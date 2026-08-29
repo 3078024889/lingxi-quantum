@@ -38,12 +38,16 @@ export type ReportEvidenceLeaf = {
   sourceProductId?: string;
   sourceRelationshipType?: "deep" | "business" | "other";
   questionId: string;
+  evidenceDimension: string;
   promptZh: string;
   promptEn: string;
   answerId: string;
   answerZh: string;
   answerEn: string;
+  answerSemantic: string;
+  polarity: "support";
   nodeIds: string[];
+  counterNodeIds: string[];
   strength: number;
 };
 
