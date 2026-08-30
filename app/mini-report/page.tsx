@@ -6,6 +6,7 @@ import MiniLifeArchetypeReport from "./MiniLifeArchetypeReport";
 import { hasUnlock } from "@/lib/access";
 import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult } from "@/lib/mini/dendrite-engine";
+import { buildReportEntries } from "@/lib/mini/report-entry-library";
 
 export default async function MiniReportPage({ searchParams }: { searchParams: { id?: string } }) {
   if (!searchParams.id) redirect("/account");
@@ -51,5 +52,12 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
       : getProduct(data.product_id)?.name ?? data.product_id;
   const subjectName = input.partnerName ? `${input.name || "我"} × ${input.partnerName}` : input.name || "未命名生命档案";
   if (data.product_id === "life-archetype") return <MiniLifeArchetypeReport reportId={data.id} subjectName={subjectName} createdAt={data.created_at} result={result} />;
-  return <MiniDendriteReport reportId={data.id} relationshipType={input.relationshipType} productId={data.product_id} productName={productName} subjectName={subjectName} createdAt={data.created_at} result={result} />;
+  // Rebuild publication prose from immutable nodes and Evidence Leaves on read.
+  // Earlier archives receive the current eleven-reading language layer without
+  // rewriting the user's original answers or calculation trace.
+  const publicationResult = {
+    ...result,
+    reportEntries: buildReportEntries(data.product_id, input.relationshipType, result.nodes, result.evidenceLeaves ?? []),
+  };
+  return <MiniDendriteReport reportId={data.id} relationshipType={input.relationshipType} productId={data.product_id} productName={productName} subjectName={subjectName} createdAt={data.created_at} result={publicationResult} />;
 }

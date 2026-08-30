@@ -36,20 +36,16 @@ export function sanitizeStellarTraceDraft(value: unknown): StellarTraceDraft {
 }
 
 export function stellarTraceCompleteness(draft: StellarTraceDraft) {
-  return [draft.name, draft.birthDate, draft.birthTime, draft.birthPlace, draft.lastContactAt,
-    draft.lastKnownPlace && draft.lastKnownLat && draft.lastKnownLon, draft.movementDirection, draft.context]
+  return [draft.name, draft.relationship, draft.birthDate, draft.birthTime, draft.birthPlace,
+    draft.lastContactAt, draft.lastKnownPlace, draft.lastKnownLat, draft.lastKnownLon,
+    draft.movementDirection, draft.context]
     .filter(Boolean).length;
 }
 
 export function stellarTraceCoreCompleteness(draft: StellarTraceDraft) {
-  const lat = Number(draft.lastKnownLat), lon = Number(draft.lastKnownLon);
-  const locationResolved = !!draft.lastKnownPlace && !!draft.lastKnownLat && !!draft.lastKnownLon &&
-    Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180;
-  return [!!draft.name, /^\d{4}-\d{2}-\d{2}$/.test(draft.birthDate), /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(draft.lastContactAt), locationResolved].filter(Boolean).length;
+  return [!!draft.name, /^\d{4}-\d{2}-\d{2}$/.test(draft.birthDate), /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(draft.lastContactAt), !!draft.lastKnownPlace].filter(Boolean).length;
 }
 
 export function stellarTraceEssentialComplete(draft: StellarTraceDraft) {
-  const lat = Number(draft.lastKnownLat), lon = Number(draft.lastKnownLon);
-  return !!draft.name && /^\d{4}-\d{2}-\d{2}$/.test(draft.birthDate) && /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(draft.lastContactAt) && !!draft.lastKnownPlace && !!draft.lastKnownLat && !!draft.lastKnownLon &&
-    Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180;
+  return stellarTraceCoreCompleteness(draft) === 4;
 }

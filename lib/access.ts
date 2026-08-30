@@ -1,6 +1,7 @@
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { NARRATIVES } from "@/lib/narratives";
+import { ensureAuditAccountAccess } from "@/lib/audit-access";
 
 // 检查当前用户的访问权限
 export async function getAccess() {
@@ -24,6 +25,10 @@ export async function getAccess() {
   if (!user) {
     return { user: null, manifestActive: false, unlocks: [] as string[] };
   }
+
+  await ensureAuditAccountAccess(user).catch((error) => {
+    console.error("[audit access] grant failed", error instanceof Error ? error.message : "unknown");
+  });
 
   const { data: profile } = await supabase
     .from("profiles")

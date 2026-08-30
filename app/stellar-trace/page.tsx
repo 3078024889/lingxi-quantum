@@ -4,6 +4,7 @@ import { getAccess, hasUnlock } from "@/lib/access";
 import { cookies } from "next/headers";
 import { decryptMiniSecret } from "@/lib/mini/crypto";
 import { sanitizeStellarTraceDraft, type StellarTraceDraft } from "@/lib/stellar-trace-intake";
+import Nav from "@/components/Nav";
 
 export const metadata: Metadata = {
   title: "灵犀场星迹 · 万里寻踪 | Lingxi Stellar Trace",
@@ -19,5 +20,5 @@ export default async function StellarTracePage() {
     try { initialDraft = sanitizeStellarTraceDraft(JSON.parse(decryptMiniSecret(encryptedDraft))); }
     catch { initialDraft = null; }
   }
-  return <StellarTraceExperience unlocked={access.manifestActive || hasUnlock(access.unlocks, "stellar-trace")} initialDraft={initialDraft} />;
+  return <><Nav/><div style={{ paddingTop: "var(--lx-header-height, 112px)" }}><StellarTraceExperience unlocked={access.manifestActive || hasUnlock(access.unlocks, "stellar-trace")} initialDraft={initialDraft} /></div></>;
 }

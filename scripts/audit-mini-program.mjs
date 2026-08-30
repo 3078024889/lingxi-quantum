@@ -42,7 +42,8 @@ const catalogRoute = read("app/api/wechat/mini/catalog/route.ts");
 const contentLink = read("app/api/wechat/mini/content-link/route.ts");
 const contentOpen = read("app/api/wechat/mini/content-open/route.ts");
 const dendriteSubmit = read("app/api/wechat/mini/dendrite/submit/route.ts");
-const auditUnlockSql = read("sql-history/SQL-v316-audit-account-unlocks.sql");
+const auditUnlockSql = read("sql-history/SQL-v331-audit-account-everything.sql");
+const auditAccess = read("lib/audit-access.ts");
 const productClient = read("miniapp/pages/product/index.js");
 const reportRoutes = read("miniapp/utils/report-routes.js");
 const plans = read("lib/plans.ts");
@@ -117,7 +118,7 @@ check("all ten assessments generate eleven product-specific readings from 24 evi
 check("Life Archetype progress has an explicit native return control", /showBack="\{\{true\}\}"/.test(archetypeProgressView));
 check("catalog and assessment configuration cannot serve stale product copy", /no-store/.test(catalogRoute) && /no-store/.test(read("app/api/wechat/mini/dendrite/config/route.ts")));
 check("unlocked assessments open only after ownership and entitlement revalidation", /unlocked/.test(dendriteSubmit) && /mini_dendrite_assessments/.test(contentLink) && /submissionId/.test(contentOpen) && /hasUnlock/.test(contentOpen));
-check("audit account grant is limited to one email and all nine report products", /945462373@qq\.com/.test(auditUnlockSql) && (auditUnlockSql.match(/'life-map-report'|'relationship-resonance'|'resilience-report'|'romance-report'|'wealth-report'|'daily-tide-report'|'tarot-reading'|'qian-reading'|'life-archetype'/g) || []).length >= 9);
+check("audit account grant is exact, idempotent, and covers current and future paid content", /945462373@qq\.com/.test(auditUnlockSql) && /'everything'/.test(auditUnlockSql) && /AUDIT_EMAIL = "945462373@qq.com"/.test(auditAccess) && /product_id: "everything"/.test(auditAccess));
 check("assessment exposes a native page back control", /show-back="\{\{true\}\}"/.test(assessmentView));
 check("native assessment supports forwarding and copying the web reference link", /onShareAppMessage/.test(assessmentClient) && /onShareTimeline/.test(assessmentClient) && /setClipboardData/.test(assessmentClient));
 check("dendrite archives are owner-readable, server-writable, and included in account migration", /enable row level security/.test(dendriteSql) && /revoke insert, update, delete/.test(dendriteSql) && /auth\.uid\(\) = user_id/.test(dendriteSql) && /update public\.mini_dendrite_assessments set user_id/.test(dendriteSql));

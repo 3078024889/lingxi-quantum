@@ -21,6 +21,7 @@ import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/s
 import { isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
+import { ensureAuditAccountAccess } from "@/lib/audit-access";
 
 export const metadata = { title: "进入场域 | 灵犀 · Enter the Field | Lingxi" };
 
@@ -34,6 +35,9 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   let manifestUntil: string | null = null;
   let unlocks: string[] = [];
   if (user && supabase) {
+    // The owner's exact review account receives one idempotent all-content grant
+    // before this page reads entitlements, so /account itself is the recovery path.
+    await ensureAuditAccountAccess(user).catch((error) => console.error("[audit access]", error));
     if (isSupabaseAdminConfigured()) await ensureLifeArchetype(user.id).catch(() => null);
     const { data: profile } = await supabase
       .from("profiles")

@@ -5,12 +5,12 @@ import type { StellarTraceResult } from "@/lib/stellar-trace";
 import { PublicationCopy, PublicationLabel, PublicationPage } from "@/app/mini-report/PublicationPage";
 import { ALL_REPORT_PDF_ART } from "@/lib/report-art-registry";
 import StellarTraceVisualization from "@/app/stellar-trace/StellarTraceVisualization";
-import { EMPTY_STELLAR_TRACE_DRAFT, STELLAR_TRACE_DRAFT_KEY, sanitizeStellarTraceDraft, stellarTraceCompleteness, stellarTraceEssentialComplete, type StellarTraceDraft } from "@/lib/stellar-trace-intake";
+import { EMPTY_STELLAR_TRACE_DRAFT, STELLAR_TRACE_DRAFT_KEY, sanitizeStellarTraceDraft, stellarTraceCompleteness, stellarTraceCoreCompleteness, stellarTraceEssentialComplete, type StellarTraceDraft } from "@/lib/stellar-trace-intake";
 
 const art = (index: number) => ALL_REPORT_PDF_ART[index % ALL_REPORT_PDF_ART.length].src;
 const levelZh = { divergent: "发散", weak: "弱收敛", moderate: "中等收敛", strong: "较强收敛", high: "高度收敛" } as const;
 const bodies = ["太阳", "水星", "金星", "地球", "火星", "木星", "土星", "天王星", "海王星"];
-const inputClass = "mt-2 w-full border border-white/15 bg-void/50 px-4 py-3 text-base text-bone outline-none transition focus:border-lattice";
+const inputClass = "mt-2 w-full border border-white/15 bg-void/50 px-4 py-3 text-base !text-bone caret-lattice outline-none opacity-100 transition [-webkit-text-fill-color:#F0EDF7] focus:border-lattice";
 
 function sectorLabel(sector: [number, number] | null) {
   if (!sector) return "尚未成域";
@@ -26,8 +26,15 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
   const [loading, setLoading] = useState(false);
   const [exporting, setExporting] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
-  const completeness = stellarTraceCompleteness(draft);
+  const visibleCompleteness = stellarTraceCompleteness(draft);
+  const coreCompleteness = stellarTraceCoreCompleteness(draft);
   const essentialComplete = stellarTraceEssentialComplete(draft);
+  const coreMissing = [
+    !draft.name && "寻踪对象姓名",
+    !/^\d{4}-\d{2}-\d{2}$/.test(draft.birthDate) && "完整出生日期",
+    !/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(draft.lastContactAt) && "完整联系日期与时间",
+    !draft.lastKnownPlace && "最后已知位置",
+  ].filter(Boolean).join("、");
 
   useEffect(() => {
     if (initialDraft) return;
@@ -39,7 +46,7 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError("");
-    if (!essentialComplete) { setError("请先完整填写姓名、出生日期、最后有效联系时间、最后已知位置与经纬度。"); return; }
+    if (!essentialComplete) { setError(`核心锚点尚缺：${coreMissing || "请检查日期与时间格式"}。`); return; }
     if (!consent) { setError("请先确认资料来源与使用规则。"); return; }
     if (!unlocked && !boundaryConsent) { setError("请先确认支付前结果边界。"); return; }
     try { window.localStorage.setItem(STELLAR_TRACE_DRAFT_KEY, JSON.stringify(draft)); } catch { /* Continue without persistence. */ }
@@ -79,7 +86,7 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
     </section>
 
     <form onSubmit={submit} className="mx-auto mt-12 max-w-5xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-xl sm:p-8">
-      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs tracking-[.26em] text-amber">01 · 寻踪档案</p><h2 className="mt-2 font-display text-3xl">基础坐标</h2></div><div className="min-w-[180px]"><p className="text-xs text-bone-dim">档案完整度 <strong className="text-lattice">{completeness} / 8</strong></p><div className="mt-2 h-1 overflow-hidden bg-white/10"><div className="h-full bg-gradient-to-r from-lattice to-amber transition-all" style={{ width: `${completeness / 8 * 100}%` }}/></div></div></div>
+      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs tracking-[.26em] text-amber">01 · 寻踪档案</p><h2 className="mt-2 font-display text-3xl">基础坐标</h2></div><div className="min-w-[220px]"><p className="text-xs text-bone-dim">可见资料 <strong className="text-lattice">{visibleCompleteness} / 11</strong> · 核心锚点 <strong className="text-amber">{coreCompleteness} / 4</strong></p><div className="mt-2 h-1 overflow-hidden bg-white/10"><div className="h-full bg-gradient-to-r from-lattice to-amber transition-all" style={{ width: `${visibleCompleteness / 11 * 100}%` }}/></div></div></div>
       <p className="mt-4 max-w-3xl text-sm leading-7 text-bone-dim">一切寻迹，先定其人，复定其时。姓名用于锚定对象，生时用于还原初始天文坐标；出生地点与时间越完整，九域基准越清晰。</p>
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         <label className="text-xs tracking-wider text-bone-dim">寻踪对象姓名 *<input required value={draft.name} onChange={(e) => update("name", e.target.value)} maxLength={40} className={inputClass}/><span className="mt-1 block text-[10px] text-bone-mute">用于建立本次星迹档案与身份锚点</span></label>
@@ -93,13 +100,13 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         <label className="text-xs tracking-wider text-bone-dim">最后有效联系时间 *<input required type="datetime-local" value={draft.lastContactAt} onChange={(e) => update("lastContactAt", e.target.value)} className={inputClass}/></label>
         <label className="text-xs tracking-wider text-bone-dim">最后已知位置 *<input required value={draft.lastKnownPlace} onChange={(e) => update("lastKnownPlace", e.target.value)} maxLength={120} placeholder="城市、道路、建筑或可核验地点" className={inputClass}/></label>
-        <label className="text-xs tracking-wider text-bone-dim">最后已知纬度 *<input required type="number" step="0.0001" min="-90" max="90" value={draft.lastKnownLat} onChange={(e) => update("lastKnownLat", e.target.value)} placeholder="31.2304" className={inputClass}/></label>
-        <label className="text-xs tracking-wider text-bone-dim">最后已知经度 *<input required type="number" step="0.0001" min="-180" max="180" value={draft.lastKnownLon} onChange={(e) => update("lastKnownLon", e.target.value)} placeholder="121.4737" className={inputClass}/></label>
+        <label className="text-xs tracking-wider text-bone-dim">最后已知纬度（选填）<input type="number" step="0.0001" min="-90" max="90" value={draft.lastKnownLat} onChange={(e) => update("lastKnownLat", e.target.value)} placeholder="31.2304" className={inputClass}/></label>
+        <label className="text-xs tracking-wider text-bone-dim">最后已知经度（选填）<input type="number" step="0.0001" min="-180" max="180" value={draft.lastKnownLon} onChange={(e) => update("lastKnownLon", e.target.value)} placeholder="121.4737" className={inputClass}/></label>
         <label className="text-xs tracking-wider text-bone-dim sm:col-span-2">最后一次已知移动方向<input value={draft.movementDirection} onChange={(e) => update("movementDirection", e.target.value)} maxLength={60} placeholder="例如：向北、沿某道路向西；未知可留空" className={inputClass}/></label>
         <label className="text-xs tracking-wider text-bone-dim sm:col-span-2">最后一次有效信息<textarea value={draft.context} onChange={(e) => update("context", e.target.value)} maxLength={500} rows={3} placeholder="例如：18:20 电话联系；随后从某地出发，乘车向北；21:00 后未再取得有效联系。" className={`${inputClass} resize-none leading-7`}/></label>
       </div>
 
-      <div className="mt-8 border border-lattice/20 bg-void/30 p-5"><p className="text-xs leading-6 text-bone-dim">{essentialComplete ? "已具备生时、最后有效联系时间与最后已知坐标，可进入九域与四层证据推演。" : "请补齐必填锚点；选填资料不足时，对应层级将保持未定。"}</p><p className="mt-2 text-xs text-amber">权益自支付成功起 7 天内有效。</p></div>
+      <div className="mt-8 border border-lattice/20 bg-void/30 p-5"><p className="text-xs leading-6 text-bone-dim">{essentialComplete ? "四项核心锚点已齐，可正常进入支付与九域推演；其余资料用于增加现实参照，不阻断开启。" : `尚缺：${coreMissing || "请检查日期与时间格式"}。页面中的部分日期不完整时，即使看见文字也不会被算作有效时间。`}</p><p className="mt-2 text-xs text-amber">权益自支付成功起 7 天内有效。</p></div>
       {!unlocked && <div className="mt-6 border border-amber/35 bg-amber/[.06] p-5"><p className="text-xs tracking-[.2em] text-amber">支付前结果边界</p><p className="mt-3 text-sm leading-7 text-bone-soft">¥688 购买的是九域天文事实、四层透明投影、圆周收敛检验及其研究档案，不是保证生成唯一方向、公里距离或现实坐标。若证据不足，系统仍会交付完整据链与推演边界，并主动停止在尚未成域的层级。</p><p className="mt-2 text-xs leading-6 text-bone-dim">技术故障、重复支付或支付后无法开启，依《退款政策》处理；模型停止于证界不等同于技术故障。</p></div>}
       {!unlocked && <label className="mt-5 flex items-start gap-3 text-xs leading-6 text-bone-dim"><input required type="checkbox" checked={boundaryConsent} onChange={(e) => setBoundaryConsent(e.target.checked)} className="mt-1"/><span>我已理解：本次付费保证交付推演与证据档案，不保证形成唯一候选坐标；证不足时，结果可能为“尚未成域”。</span></label>}
       <label className="mt-5 flex items-start gap-3 text-xs leading-6 text-bone-dim"><input required type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1"/><span>我确认所填资料来源真实，并知悉本模型不得用于跟踪、骚扰、监控或替代警方与救援定位。<span className="mt-1 block"><a href="/terms" className="text-lattice">《服务条款》</a> · <a href="/refunds" className="text-lattice">《退款政策》</a> · <a href="/privacy" className="text-lattice">《隐私政策》</a> · <a href="/declaration" className="text-lattice">《免责声明》</a></span></span></label>

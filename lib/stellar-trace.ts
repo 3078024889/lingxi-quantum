@@ -2,7 +2,7 @@ import * as Astronomy from "astronomy-engine";
 import { createHash } from "node:crypto";
 import { analyzeCircularDirections, normalizeBearing, type CircularDirectionAnalysis } from "@/lib/stellar-trace-math";
 
-export type StellarTraceInput = { name:string; relationship?:string; birthDate:string; birthTime?:string; birthPlace?:string; lastContactAt:string; lastKnownPlace?:string; lastKnownLat:number; lastKnownLon:number; movementDirection?:string; context?:string };
+export type StellarTraceInput = { name:string; relationship?:string; birthDate:string; birthTime?:string; birthPlace?:string; lastContactAt:string; lastKnownPlace?:string; lastKnownLat:number|null; lastKnownLon:number|null; movementDirection?:string; context?:string };
 type NineFieldPosition = { id:string; nameZh:string; longitude:number };
 export type NineFieldSnapshot = { epoch:"birth"|"last-contact"|"current"; labelZh:string; observedAt:string; julianDay:number; fields:NineFieldPosition[] };
 export type TraceEvidence = {
@@ -12,7 +12,7 @@ export type TraceEvidence = {
   distanceTrace:{ rawSymbol:"low"|"medium"|"high"; normalizationRuleId:"symbolic-angular-amplitude-v1"; resultingRangeKm:null; calibrationStatus:"uncalibrated" };
 };
 export type StellarTraceResult = {
-  version:"lingxifield-stellar-trace-v2"; generatedAt:string; lastKnown:{lat:number;lon:number}; snapshots:NineFieldSnapshot[];
+  version:"lingxifield-stellar-trace-v2"; generatedAt:string; lastKnown:{lat:number|null;lon:number|null}; snapshots:NineFieldSnapshot[];
   evidence:TraceEvidence[]; direction:CircularDirectionAnalysis;
   distance:{status:"uncalibrated";rangeKm:null;evidence:TraceEvidence["distanceTrace"][];explanationZh:string};
   candidateRegions:[]; candidateCenter:null; environmentZh:string[]; artIndexes:[number,number]; modelBoundaryZh:string; safetyBoundaryZh:string;
@@ -51,7 +51,7 @@ export function calculateStellarTrace(input:StellarTraceInput,now=new Date()):St
   ];
   const base=analyzeCircularDirections(evidence.map(item=>item.bearing));const seed=hashInt(`${input.name}|${birthMoment.toISOString()}|${lastContact.toISOString()}`);
   const direction:CircularDirectionAnalysis={...base,diagnosticMean:base.diagnosticMean===null?null:round(base.diagnosticMean,1),resultantLength:round(base.resultantLength),circularDispersion:round(base.circularDispersion),circularStdDegrees:base.circularStdDegrees===null?null:round(base.circularStdDegrees,1),sector:base.sector?[round(base.sector[0],1),round(base.sector[1],1)]:null,modes:base.modes.map(mode=>({...mode,center:round(mode.center,1),mass:round(mode.mass),resultantLength:round(mode.resultantLength),bearings:mode.bearings.map(value=>round(value,1))}))};
-  return{version:"lingxifield-stellar-trace-v2",generatedAt:now.toISOString(),lastKnown:{lat:round(input.lastKnownLat,4),lon:round(input.lastKnownLon,4)},snapshots,evidence,direction,
+  return{version:"lingxifield-stellar-trace-v2",generatedAt:now.toISOString(),lastKnown:{lat:input.lastKnownLat==null?null:round(input.lastKnownLat,4),lon:input.lastKnownLon==null?null:round(input.lastKnownLon,4)},snapshots,evidence,direction,
     distance:{status:"uncalibrated",rangeKm:null,evidence:evidence.map(item=>item.distanceTrace),explanationZh:"四层投影目前只能形成相对迁移象，尚无经过史料校核与盲测标定的公里映射规则。因此本版不输出公里距离。"},candidateRegions:[],candidateCenter:null,
     environmentZh:input.context?["现实线索已记录，尚未由模型自动解释"]:["尚无可核验的现实环境线索"],artIndexes:[seed%60,(seed*17+23)%60],
     modelBoundaryZh:"九域为可复算的天文事实层；四层为透明展示的象征投影层。二者之间尚未建立经过盲测验证的现实人员位置因果关系。",

@@ -78,10 +78,13 @@ for (const token of ['left:64px;right:64px;top:34%', 'top:48px;bottom:48px;left:
 if (!css.includes("--lx-header-height")) failures.push("app/globals.css: report header safe offset is missing");
 
 const miniPublication = readFileSync(resolve(root, "app/mini-report/MiniDendriteReport.tsx"), "utf8");
+const miniPublicationPage = readFileSync(resolve(root, "app/mini-report/page.tsx"), "utf8");
 const archetypePublication = readFileSync(resolve(root, "app/mini-report/MiniLifeArchetypeReport.tsx"), "utf8");
 const artRegistry = readFileSync(resolve(root, "lib/report-art-registry.ts"), "utf8");
 if (!miniPublication.includes("exportPublicationPagesPdf") || !archetypePublication.includes("exportPublicationPagesPdf")) failures.push("mini publications: fixed-page exporter is not shared");
-if (!miniPublication.includes("const total=18") || !miniPublication.includes("slice(0,11)") || !miniPublication.includes("证据追溯")) failures.push("mini publications: eleven main readings and the 24-leaf evidence appendix are not preserved");
+if (!miniPublication.includes("const total=16") || !miniPublication.includes("slice(0,11)") || !miniPublication.includes("来处印记") || !miniPublication.includes("entry.briefZh")) failures.push("mini publications: eleven titled readings and the 24-leaf original-echo appendix are not preserved");
+if (/全卷总断|本卷取证|结构关系|result\.dominant\[/.test(miniPublication)) failures.push("mini publications: dominant-triple or proposal-style legacy pages remain");
+if (!miniPublicationPage.includes("buildReportEntries") || !miniPublication.includes("cleanLegacyAnswer")) failures.push("mini publications: saved archives are not rehydrated through the current reading layer");
 if (!archetypePublication.includes("total=24") || !archetypePublication.includes("REPORT PROVENANCE") || !archetypePublication.includes("CONTINUOUS OBSERVATION")) failures.push("Life Archetype: complete 24-module publication is missing");
 if (!archetypePublication.includes("STREAM_IDS") || !archetypePublication.includes('8 / 8') || !archetypePublication.includes("STREAM_IDS.map")) failures.push("Life Archetype: cover does not visibly confirm all eight tributaries");
 if (/\/images\/qian\//.test(archetypePublication)) failures.push("Life Archetype: 64 Life Oracle card artwork leaked into the publication");

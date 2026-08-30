@@ -241,8 +241,8 @@ function buildQuestions(seed: Seed): DendriteQuestion[] {
     return { id:`q${questionIndex+1}`,sectionZh,sectionEn,zh,en,evidenceDimension,options:selectedIds.map((id,optionIndex) => {
       const current = byId.get(id)!;
       const companion = selectedIds[(optionIndex+2)%selectedIds.length];
-      const optionZh=`在「${zh.replace(/[？。]/g,"")}」这一情境里，我更接近「${current.zh}」：${optionIndex%2===0?current.meaningZh:current.actionZh}`;
-      const optionEn=`In this specific situation, I lean toward ${current.en}: ${optionIndex%2===0?current.meaningEn:current.actionEn}`;
+      const optionZh=`${current.zh} · ${optionIndex%2===0?current.meaningZh:current.actionZh}`;
+      const optionEn=`${current.en} · ${optionIndex%2===0?current.meaningEn:current.actionEn}`;
       return {id:`${questionIndex+1}-${optionIndex+1}`,zh:optionZh,en:optionEn,polarity:"support",answerSemantic:`${evidenceDimension}:${id}:support`,activates:{[id]:1,[companion]:0.22}};
     })};
   });
