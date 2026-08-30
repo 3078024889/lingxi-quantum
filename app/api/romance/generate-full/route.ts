@@ -88,7 +88,9 @@ export async function POST(req: Request) {
   const cachedField = lang === "en" ? "full_report_en" : "full_report";
   const cachedReport = submission[cachedField];
 
-  if (typeof cachedReport === "string" && !body.regenerate && countSections(cachedReport) === 11) {
+  const currentPublication = typeof cachedReport === "string" && countSections(cachedReport) === 11 &&
+    (lang === "en" || !cachedReport.includes("结构证据："));
+  if (currentPublication && !body.regenerate) {
     return NextResponse.json({ fullReport: cachedReport, cached: true });
   }
 

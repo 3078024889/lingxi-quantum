@@ -74,7 +74,7 @@ export async function POST(req: Request) {
     const cachedField = lang === "en" ? "full_report_en" : "full_report";
     const cached = submission[cachedField];
     const currentCache = typeof cached === "string" && sectionCount(cached) === 11 &&
-      (cached.includes("结构证据：") || cached.includes("Structural evidence:"));
+      (lang === "en" ? cached.includes("Structural evidence:") : !cached.includes("结构证据："));
 
     if (currentCache && !body.regenerate) {
       return NextResponse.json({ fullReport: cached, frequencyMap: report.frequencyMap, practice: report.practice, cached: true });

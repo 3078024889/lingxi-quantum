@@ -71,7 +71,8 @@ export async function POST(req: Request) {
   if (submission[cachedField] && !body.regenerate) {
     const cachedText = submission[cachedField] as string;
     const cachedCount = cachedText.split(/===\s*(?:\d+|SECTION)\s*===/).map((s: string) => s.trim()).filter(Boolean).length;
-    if (cachedCount >= 12) {
+    const currentPublication = cachedCount >= 12 && (lang === "en" || !cachedText.includes("结构证据："));
+    if (currentPublication) {
       return NextResponse.json({ fullReport: cachedText });
     }
     // 少于8段，说明是升级前生成的旧版5段报告——不直接返回，往下走

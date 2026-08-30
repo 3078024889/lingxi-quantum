@@ -83,10 +83,11 @@ export async function POST(req: Request) {
   if (submission[cachedField] && !body.regenerate) {
     const cachedText = submission[cachedField] as string;
     const sectionCount = cachedText
-      .split(/===s*(?:d+|SECTION)s*===/)
+      .split(/===\s*(?:\d+|SECTION)\s*===/)
       .map((section: string) => section.trim())
       .filter(Boolean).length;
-    if (sectionCount >= 12) {
+    const currentPublication = sectionCount >= 12 && (lang === "en" || !cachedText.includes("结构证据："));
+    if (currentPublication) {
       return NextResponse.json({ fullReport: cachedText });
     }
   }

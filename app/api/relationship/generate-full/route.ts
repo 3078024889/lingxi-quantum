@@ -90,7 +90,9 @@ export async function POST(request: Request) {
     const vectorB = computeLifeVector(submission.facts_b as LifeVectorInput);
     const resonance = compareLifeVectors(vectorA, vectorB);
 
-    if (cached && currentKnowledge(cached) && sectionCount(cached) >= 11 && !body.regenerate) {
+    const currentPublication = cached && currentKnowledge(cached) && sectionCount(cached) >= 11 &&
+      (lang === "en" || !cached.includes("结构证据："));
+    if (currentPublication && !body.regenerate) {
       return NextResponse.json({
         fullReport: cached,
         resonance,

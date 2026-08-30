@@ -111,6 +111,7 @@ for (const route of reportRoutes) {
   const source = readFileSync(resolve(root, route), "utf8");
   if (!source.includes('lang === "en"')) failures.push(`${route}: English report selection is missing`);
   if (!source.includes("full_report_en")) failures.push(`${route}: English report cache is missing`);
+  if (!/!\w+\.includes\("结构证据："\)/.test(source)) failures.push(`${route}: legacy score-dump Chinese cache is not invalidated`);
 }
 for (const view of views) {
   const source = readFileSync(resolve(root, view), "utf8");

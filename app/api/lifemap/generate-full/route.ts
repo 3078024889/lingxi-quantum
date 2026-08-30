@@ -87,7 +87,7 @@ export async function POST(req: Request) {
   const isCurrentStaticReport =
     typeof cached === "string" &&
     countSections(cached) === 15 &&
-    (cached.includes("结构证据：") || cached.includes("Structural evidence:"));
+    (lang === "en" ? cached.includes("Structural evidence:") : !cached.includes("结构证据："));
 
   if (isCurrentStaticReport && !body.regenerate) {
     return NextResponse.json({ fullReport: cached, cached: true });
