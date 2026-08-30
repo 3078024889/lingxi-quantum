@@ -36,7 +36,11 @@ function evidenceFrom(id:TraceEvidence["id"],labelZh:string,sourceFieldIds:strin
 }
 
 export function calculateStellarTrace(input:StellarTraceInput,now=new Date()):StellarTraceResult{
-  const birthMoment=new Date(`${input.birthDate}T${input.birthTime||"12:00"}:00+08:00`);const lastContact=new Date(input.lastContactAt);
+  const birthMoment=new Date(`${input.birthDate}T${input.birthTime||"12:00"}:00+08:00`);
+  const contactSource=/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(input.lastContactAt)
+    ? `${input.lastContactAt.replace(" ","T")}:00+08:00`
+    : input.lastContactAt;
+  const lastContact=new Date(contactSource);
   if(!Number.isFinite(birthMoment.getTime())||!Number.isFinite(lastContact.getTime())||lastContact>now)throw new Error("invalid trace time");
   const snapshots=[snapshot("birth","生时九域",birthMoment),snapshot("last-contact","最后有效联系九域",lastContact),snapshot("current","当前九域",now)];const[birth,contact,current]=snapshots;
   const evidence:TraceEvidence[]=[

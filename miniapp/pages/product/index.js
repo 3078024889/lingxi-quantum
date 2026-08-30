@@ -33,20 +33,28 @@ function confirmPurchase(item, validityLabel) {
   })
 }
 
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds))
+
 Page({
   data: {
     item: null, loading: true, loadError: '', paying: false, opening: false, owned: false, agreed: false, riskAcknowledged: false, deliveryLabel: '', validityLabel: '', from: 'explore',
     relationshipOptions: ['本人', '家人', '伴侣', '朋友', '同事', '其他'], relationshipValues: ['self', 'family', 'partner', 'friend', 'colleague', 'other'], relationshipIndex: 1,
+    directionOptions: ['不详', '向北', '东北', '向东', '东南', '向南', '西南', '向西', '西北'], directionIndex: 0,
     stellarDraft: { name: '', relationship: 'family', birthDate: '', birthTime: '', birthPlace: '', lastContactAt: '', lastKnownPlace: '', lastKnownLat: '', lastKnownLon: '', movementDirection: '', context: '' },
-    stellarCompleteness: 0, stellarEssentialComplete: false,
+    today: '', lastContactDate: '', lastContactTime: '', stellarCompleteness: 0, stellarCoreComplete: 0, stellarEnhancementComplete: 0, stellarMissingHint: '', stellarEssentialComplete: false,
   },
   async onLoad(options) {
     this.options = options
+    const now = new Date()
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    this.setData({ today })
     if (options.product === 'stellar-trace') {
       const saved = wx.getStorageSync('lingxifield_stellar_trace_draft_v1')
       if (saved && typeof saved === 'object') {
         const relationshipIndex = Math.max(0, this.data.relationshipValues.indexOf(saved.relationship))
-        this.setData({ stellarDraft: { ...this.data.stellarDraft, ...saved }, relationshipIndex })
+        const directionIndex = Math.max(0, this.data.directionOptions.indexOf(saved.movementDirection || '不详'))
+        const contactParts = String(saved.lastContactAt || '').split(/[T ]/)
+        this.setData({ stellarDraft: { ...this.data.stellarDraft, ...saved }, relationshipIndex, directionIndex, lastContactDate: contactParts[0] || '', lastContactTime: contactParts[1] || '' })
       }
       this.refreshStellarCompleteness()
     }
@@ -108,12 +116,58 @@ Page({
       this.refreshStellarCompleteness()
     })
   },
+  saveStellarDraft(nextData = {}) {
+    this.setData(nextData, () => {
+      wx.setStorageSync('lingxifield_stellar_trace_draft_v1', this.data.stellarDraft)
+      this.refreshStellarCompleteness()
+    })
+  },
+  onBirthDateChange(event) { this.saveStellarDraft({ 'stellarDraft.birthDate': event.detail.value }) },
+  onBirthTimeChange(event) { this.saveStellarDraft({ 'stellarDraft.birthTime': event.detail.value }) },
+  onLastContactDateChange(event) {
+    const lastContactDate = event.detail.value
+    const lastContactAt = this.data.lastContactTime ? `${lastContactDate} ${this.data.lastContactTime}` : lastContactDate
+    this.saveStellarDraft({ lastContactDate, 'stellarDraft.lastContactAt': lastContactAt })
+  },
+  onLastContactTimeChange(event) {
+    const lastContactTime = event.detail.value
+    const lastContactAt = this.data.lastContactDate ? `${this.data.lastContactDate} ${lastContactTime}` : ''
+    this.saveStellarDraft({ lastContactTime, 'stellarDraft.lastContactAt': lastContactAt })
+  },
+  onDirectionChange(event) {
+    const directionIndex = Number(event.detail.value) || 0
+    const movementDirection = directionIndex === 0 ? '' : this.data.directionOptions[directionIndex]
+    this.saveStellarDraft({ directionIndex, 'stellarDraft.movementDirection': movementDirection })
+  },
+  chooseLastKnownLocation() {
+    wx.chooseLocation({
+      success: (location) => this.saveStellarDraft({
+        'stellarDraft.lastKnownPlace': location.address || location.name || this.data.stellarDraft.lastKnownPlace,
+        'stellarDraft.lastKnownLat': String(location.latitude),
+        'stellarDraft.lastKnownLon': String(location.longitude),
+      }),
+      fail: (error) => {
+        if (String(error && error.errMsg).includes('cancel')) return
+        wx.showModal({ title: '地图暂未打开', content: '请在微信设置中允许位置信息权限后重试。这里选择的是最后可确认地点，不是你当前的位置。', showCancel: false })
+      },
+    })
+  },
   refreshStellarCompleteness() {
     const d = this.data.stellarDraft
-    const completeness = [d.name, d.birthDate, d.birthTime, d.birthPlace, d.lastContactAt, d.lastKnownPlace && d.lastKnownLat && d.lastKnownLon, d.movementDirection, d.context].filter(Boolean).length
+    const locationResolved = !!d.lastKnownPlace && !!d.lastKnownLat && !!d.lastKnownLon
+    const coreChecks = [!!d.name, /^\d{4}-\d{2}-\d{2}$/.test(d.birthDate), /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(d.lastContactAt), locationResolved]
+    const enhancementChecks = [!!d.birthTime, !!d.birthPlace, !!d.movementDirection, !!d.context]
+    const coreComplete = coreChecks.filter(Boolean).length
+    const enhancementComplete = enhancementChecks.filter(Boolean).length
+    const completeness = coreComplete + enhancementComplete
     const lat = Number(d.lastKnownLat), lon = Number(d.lastKnownLon)
-    const essential = !!d.name && /^\d{4}-\d{2}-\d{2}$/.test(d.birthDate) && !!d.lastContactAt && !!d.lastKnownPlace && !!d.lastKnownLat && !!d.lastKnownLon && Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180
-    this.setData({ stellarCompleteness: completeness, stellarEssentialComplete: essential })
+    const essential = coreComplete === 4 && Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180
+    const missing = []
+    if (!coreChecks[0]) missing.push('姓名')
+    if (!coreChecks[1]) missing.push('出生日期')
+    if (!coreChecks[2]) missing.push('最后有效联系日期与时间')
+    if (!coreChecks[3]) missing.push('地图选点')
+    this.setData({ stellarCompleteness: completeness, stellarCoreComplete: coreComplete, stellarEnhancementComplete: enhancementComplete, stellarMissingHint: missing.join('、'), stellarEssentialComplete: essential })
   },
   openPolicy(event) {
     const path = event.currentTarget.dataset.path
@@ -129,6 +183,19 @@ Page({
     try {
       await payForSku(this.data.item.skuId, this.data.item.productId)
       wx.hideLoading()
+      if (this.data.item.productId === 'stellar-trace') {
+        wx.showLoading({ title: '正在形成星迹' })
+        for (let attempt = 0; attempt < 8; attempt += 1) {
+          try {
+            const result = await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: 'stellar-trace', stellarDraft: this.data.stellarDraft } })
+            wx.hideLoading()
+            return wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+          } catch (_) { await wait(1000 + attempt * 250) }
+        }
+        wx.hideLoading()
+        await wx.showModal({ title: '权益正在确认', content: '支付已完成，7 天权益正在由微信同步。请稍后从“我的场域”打开星迹，即可用本档案推演，无需再次付费。', showCancel: false })
+        return wx.switchTab({ url: '/pages/profile/index' })
+      }
       await wx.showModal({ title: '开启已完成', content: '服务端正在确认并交付权益。若暂未显示，请稍后在“我的场域”下拉刷新。', showCancel: false })
       wx.switchTab({ url: '/pages/profile/index' })
     } catch (error) {
@@ -139,6 +206,7 @@ Page({
   },
   async openOwned() {
     if (!this.data.item || this.data.opening) return
+    if (this.data.item.productId === 'stellar-trace' && !this.data.stellarEssentialComplete) return wx.showToast({ title: '请先补齐四项核心锚点', icon: 'none' })
     this.setData({ opening: true })
     try {
       if (this.data.item.category === 'report' && this.data.item.productId !== 'stellar-trace') {

@@ -26,6 +26,7 @@
     "audit:stellar-trace": "node scripts/audit-stellar-trace.mjs",
     "audit:stellar-intake": "node scripts/audit-stellar-intake-flow.mjs",
     "audit:report-language": "node scripts/audit-report-language.mjs",
+    "audit:report-slots": "node scripts/audit-report-reading-slots.mjs",
     "audit:sovereign-access": "node scripts/audit-sovereign-access.mjs"
   },
   "dependencies": {

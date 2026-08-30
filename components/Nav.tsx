@@ -23,6 +23,7 @@ const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
 // 就在导航栏最外层再挤一个新入口——导航栏本身的宽度是有限的，这样
 // 收纳，以后加测试产品也不会让顶栏变得越来越挤。
 const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon?: boolean }[] = [
+  { href: "/stellar-trace", zh: "灵犀场星迹 · 万里寻踪", en: "Stellar Trace", rune: "compass" },
   { href: "/life-map", zh: "生命图谱", en: "Life Map", rune: "mandala" },
   { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", rune: "crystal" },
@@ -39,7 +40,7 @@ export default function Nav() {
   const [testsOpen, setTestsOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
-  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/mirror") || pathname?.startsWith("/qian") || pathname?.startsWith("/archetype");
+  const testsActive = pathname?.startsWith("/stellar-trace") || pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/mirror") || pathname?.startsWith("/qian") || pathname?.startsWith("/archetype");
 
   useEffect(() => {
     const header = headerRef.current;
@@ -158,7 +159,7 @@ export default function Nav() {
                   </button>
                   {testsOpen && (
                     <div className="bg-void-deep absolute left-1/2 top-full z-50 mt-2 w-[min(620px,84vw)] -translate-x-1/2 rounded-sm border border-white/10 p-4 shadow-[0_18px_70px_rgba(0,0,0,0.58)]">
-                      <p className="px-2 pb-3 text-[10px] tracking-[.22em] text-lattice"><Bi zh="八个独立场域 · 一个汇流层" en="Eight independent fields · one convergence layer" /></p>
+                      <p className="px-2 pb-3 text-[10px] tracking-[.22em] text-lattice"><Bi zh="九项场域入口 · 一个汇流层" en="Nine field entrances · one convergence layer" /></p>
                       <div className="grid grid-cols-3 gap-2">
                         {preciseTests.map((item) => <Link key={item.href} href={item.href} onClick={() => setTestsOpen(false)} className="flex items-center gap-2 border border-white/10 bg-white/[.025] px-3 py-3 text-xs text-bone-dim transition hover:border-lattice/50 hover:text-lattice"><RuneIcon kind={item.rune} className="h-3.5 w-3.5 text-lattice" /><Bi zh={item.zh} en={item.en} /></Link>)}
                       </div>

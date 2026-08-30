@@ -247,6 +247,19 @@ export function composeDendriticChapter(args: {
       "",
     ))
     .join("\n\n");
+  const tightenChinese = (value: string, position: number) => {
+    if (!/[\u3400-\u9fff]/u.test(value)) return value;
+    const tightened = value
+      .replace(/(?:这说明|这意味着|可能表明|从某个角度来看|从某种意义上说|你需要意识到)[，：]?/gu, "")
+      .replace(/在一定程度上/gu, "")
+      .replace(/需要注意的是[，：]?/gu, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (position === 0 && !/^(断曰|总断|其势)/u.test(tightened)) return `断曰：${tightened}`;
+    if (position === 1 && !/^(其故|其所以然)/u.test(tightened)) return `其故：${tightened}`;
+    if (position >= 3 && !/^(验之|行之|可试)/u.test(tightened)) return `验之于日用：${tightened}`;
+    return tightened;
+  };
   const editorialIndex = args.editorialIndex ?? 0;
   const editorialParagraphs = [
     args.slots.judgment,
@@ -257,7 +270,8 @@ export function composeDendriticChapter(args: {
     args.slots.narrative,
   ]
     .filter((value): value is string => Boolean(value?.trim()))
-    .map(stripDiagnosticHeading);
+    .map(stripDiagnosticHeading)
+    .map(tightenChinese);
   const sourceParagraphs = args.presentation === "editorial" ? editorialParagraphs : diagnosticParagraphs;
   const seen = new Set<string>();
   const paragraphs = sourceParagraphs.filter((paragraph) => {

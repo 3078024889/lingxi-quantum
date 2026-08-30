@@ -23,6 +23,7 @@ const CAPS: Cap[] = [
     href: "/life-map",
     subLabelZh: "包含：", subLabelEn: "Includes:",
     subs: [
+      { zh: "灵犀场星迹 · 万里寻踪", en: "Lingxi Stellar Trace", descZh: "循时而索迹，因星而见位；证不足，则止于证界。", descEn: "Trace through time and celestial reference; stop where evidence ends.", href: "/stellar-trace" },
       { zh: "生命图谱", en: "Life Blueprint", descZh: "探索你携带而来的生命结构。", descEn: "Explore the life structure you were born carrying.", href: "/life-map" },
       { zh: "灵犀生命灵签", en: "Lingxi Life Oracle", descZh: "唤醒属于你的生命象征。", descEn: "Awaken the life symbols that belong to you.", href: "/qian" },
       { zh: "生命原型", en: "Life Archetype", descZh: "让八个场域节点汇入此刻的三重原型。", descEn: "Converge eight field nodes into your current threefold archetype.", href: "/archetype" },
@@ -30,6 +31,7 @@ const CAPS: Cap[] = [
       { zh: "关系共振", en: "Relationship Resonance", descZh: "探索人与人之间的连接与镜像。", descEn: "Explore the connection and mirroring between two people.", href: "/relationship" },
       { zh: "生命韧性指数", en: "Life Resilience Index", descZh: "探索面对变化时的内在力量。", descEn: "Explore your inner strength in the face of change.", href: "/resilience" },
       { zh: "桃花磁场", en: "Love Resonance", descZh: "探索情感连接中的模式与能量。", descEn: "Explore the patterns and energy within emotional connection.", href: "/romance" },
+      { zh: "财富创造地图", en: "Wealth Creation Map", descZh: "辨认价值如何生成、交换、承接与放大。", descEn: "See how value is created, exchanged, held, and amplified.", href: "/wealth" },
       { zh: "今日潮汐", en: "Today’s Tide", descZh: "感受当下的宇宙节律。", descEn: "Feel the cosmic rhythm of this moment.", href: "/daily" },
     ],
   },
