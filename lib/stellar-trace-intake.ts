@@ -8,6 +8,7 @@ export type StellarTraceDraft = {
   birthPlace: string;
   lastContactAt: string;
   lastKnownPlace: string;
+  lastKnownMapLabel: string;
   lastKnownLat: string;
   lastKnownLon: string;
   movementDirection: string;
@@ -16,7 +17,7 @@ export type StellarTraceDraft = {
 
 export const EMPTY_STELLAR_TRACE_DRAFT: StellarTraceDraft = {
   name: "", relationship: "family", birthDate: "", birthTime: "", birthPlace: "",
-  lastContactAt: "", lastKnownPlace: "", lastKnownLat: "", lastKnownLon: "",
+  lastContactAt: "", lastKnownPlace: "", lastKnownMapLabel: "", lastKnownLat: "", lastKnownLon: "",
   movementDirection: "", context: "",
 };
 
@@ -25,27 +26,55 @@ const clean = (value: unknown, max: number) => typeof value === "string" ? value
 export function sanitizeStellarTraceDraft(value: unknown): StellarTraceDraft {
   const input = value && typeof value === "object" ? value as Partial<StellarTraceDraft> : {};
   const relationships = new Set<StellarTraceDraft["relationship"]>(["self", "family", "partner", "friend", "colleague", "other"]);
+  const birthDate = clean(input.birthDate, 10);
+  const birthTime = clean(input.birthTime, 5);
+  const lastContactAt = clean(input.lastContactAt, 40);
+  const lastKnownLat = clean(input.lastKnownLat, 20);
+  const lastKnownLon = clean(input.lastKnownLon, 20);
+  const coordinatesValid = validCoordinates({ lastKnownLat, lastKnownLon });
   return {
     name: clean(input.name, 40),
     relationship: relationships.has(input.relationship as StellarTraceDraft["relationship"]) ? input.relationship as StellarTraceDraft["relationship"] : "other",
-    birthDate: clean(input.birthDate, 10), birthTime: clean(input.birthTime, 5), birthPlace: clean(input.birthPlace, 80),
-    lastContactAt: clean(input.lastContactAt, 40), lastKnownPlace: clean(input.lastKnownPlace, 120),
-    lastKnownLat: clean(input.lastKnownLat, 20), lastKnownLon: clean(input.lastKnownLon, 20),
+    birthDate: validIsoDate(birthDate) ? birthDate : "", birthTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(birthTime) ? birthTime : "", birthPlace: clean(input.birthPlace, 80),
+    lastContactAt: validContactAt(lastContactAt) ? lastContactAt : "", lastKnownPlace: clean(input.lastKnownPlace, 120), lastKnownMapLabel: clean(input.lastKnownMapLabel, 160),
+    lastKnownLat: coordinatesValid ? lastKnownLat : "", lastKnownLon: coordinatesValid ? lastKnownLon : "",
     movementDirection: clean(input.movementDirection, 60), context: clean(input.context, 500),
   };
 }
 
 export function stellarTraceCompleteness(draft: StellarTraceDraft) {
+  const [contactDate = "", contactTime = ""] = draft.lastContactAt.split(/[T ]/);
+  const mapPoint = validCoordinates(draft);
   return [draft.name, draft.relationship, draft.birthDate, draft.birthTime, draft.birthPlace,
-    draft.lastContactAt, draft.lastKnownPlace, draft.lastKnownLat, draft.lastKnownLon,
+    contactDate, contactTime, draft.lastKnownPlace, mapPoint,
     draft.movementDirection, draft.context]
     .filter(Boolean).length;
 }
 
+export function validCoordinates(draft: Pick<StellarTraceDraft, "lastKnownLat" | "lastKnownLon">) {
+  const lat = Number(draft.lastKnownLat);
+  const lon = Number(draft.lastKnownLon);
+  return draft.lastKnownLat !== "" && draft.lastKnownLon !== "" && Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180;
+}
+
+export function validIsoDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return year >= 1900 && date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day && date.getTime() <= Date.now();
+}
+
+export function validContactAt(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(value)) return false;
+  const [date, time] = value.split(/[T ]/);
+  if (!validIsoDate(date) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return false;
+  return new Date(`${date}T${time}:00`).getTime() <= Date.now();
+}
+
 export function stellarTraceCoreCompleteness(draft: StellarTraceDraft) {
-  return [!!draft.name, /^\d{4}-\d{2}-\d{2}$/.test(draft.birthDate), /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(draft.lastContactAt), !!draft.lastKnownPlace].filter(Boolean).length;
+  return [!!draft.name, validIsoDate(draft.birthDate), validContactAt(draft.lastContactAt), !!draft.lastKnownPlace, validCoordinates(draft)].filter(Boolean).length;
 }
 
 export function stellarTraceEssentialComplete(draft: StellarTraceDraft) {
-  return stellarTraceCoreCompleteness(draft) === 4;
+  return stellarTraceCoreCompleteness(draft) === 5;
 }

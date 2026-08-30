@@ -5,7 +5,8 @@ import type { StellarTraceResult } from "@/lib/stellar-trace";
 import { PublicationCopy, PublicationLabel, PublicationPage } from "@/app/mini-report/PublicationPage";
 import { ALL_REPORT_PDF_ART } from "@/lib/report-art-registry";
 import StellarTraceVisualization from "@/app/stellar-trace/StellarTraceVisualization";
-import { EMPTY_STELLAR_TRACE_DRAFT, STELLAR_TRACE_DRAFT_KEY, sanitizeStellarTraceDraft, stellarTraceCompleteness, stellarTraceCoreCompleteness, stellarTraceEssentialComplete, type StellarTraceDraft } from "@/lib/stellar-trace-intake";
+import PreciseMapPicker from "@/app/stellar-trace/PreciseMapPicker";
+import { EMPTY_STELLAR_TRACE_DRAFT, STELLAR_TRACE_DRAFT_KEY, sanitizeStellarTraceDraft, stellarTraceCompleteness, stellarTraceCoreCompleteness, stellarTraceEssentialComplete, validContactAt, validCoordinates, validIsoDate, type StellarTraceDraft } from "@/lib/stellar-trace-intake";
 
 const art = (index: number) => ALL_REPORT_PDF_ART[index % ALL_REPORT_PDF_ART.length].src;
 const levelZh = { divergent: "发散", weak: "弱收敛", moderate: "中等收敛", strong: "较强收敛", high: "高度收敛" } as const;
@@ -31,10 +32,14 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
   const essentialComplete = stellarTraceEssentialComplete(draft);
   const coreMissing = [
     !draft.name && "寻踪对象姓名",
-    !/^\d{4}-\d{2}-\d{2}$/.test(draft.birthDate) && "完整出生日期",
-    !/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(draft.lastContactAt) && "完整联系日期与时间",
-    !draft.lastKnownPlace && "最后已知位置",
+    !validIsoDate(draft.birthDate) && "有效出生日期（1900 年以后且不得晚于今天）",
+    !validContactAt(draft.lastContactAt) && "有效联系日期与时间（不得晚于现在）",
+    !draft.lastKnownPlace && "最后已知位置说明",
+    !validCoordinates(draft) && "精准地图选点",
   ].filter(Boolean).join("、");
+  const today = new Date().toISOString().slice(0, 10);
+  const [lastContactDate = "", lastContactTime = ""] = draft.lastContactAt.split(/[T ]/);
+  const updateContact = (date: string, time: string) => update("lastContactAt", date && time ? `${date} ${time}` : date);
 
   useEffect(() => {
     if (initialDraft) return;
@@ -86,32 +91,32 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
     </section>
 
     <form onSubmit={submit} className="mx-auto mt-12 max-w-5xl border border-white/10 bg-white/[.045] p-5 backdrop-blur-xl sm:p-8">
-      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs tracking-[.26em] text-amber">01 · 寻踪档案</p><h2 className="mt-2 font-display text-3xl">基础坐标</h2></div><div className="min-w-[220px]"><p className="text-xs text-bone-dim">可见资料 <strong className="text-lattice">{visibleCompleteness} / 11</strong> · 核心锚点 <strong className="text-amber">{coreCompleteness} / 4</strong></p><div className="mt-2 h-1 overflow-hidden bg-white/10"><div className="h-full bg-gradient-to-r from-lattice to-amber transition-all" style={{ width: `${visibleCompleteness / 11 * 100}%` }}/></div></div></div>
+      <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs tracking-[.26em] text-amber">01 · 寻踪档案</p><h2 className="mt-2 font-display text-3xl">基础坐标</h2></div><div className="min-w-[220px]"><p className="text-xs text-bone-dim">资料完整度 <strong className="text-lattice">{visibleCompleteness} / 11</strong> · 开启必填 <strong className="text-amber">{coreCompleteness} / 5</strong></p><div className="mt-2 h-1 overflow-hidden bg-white/10"><div className="h-full bg-gradient-to-r from-lattice to-amber transition-all" style={{ width: `${visibleCompleteness / 11 * 100}%` }}/></div></div></div>
       <p className="mt-4 max-w-3xl text-sm leading-7 text-bone-dim">一切寻迹，先定其人，复定其时。姓名用于锚定对象，生时用于还原初始天文坐标；出生地点与时间越完整，九域基准越清晰。</p>
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
         <label className="text-xs tracking-wider text-bone-dim">寻踪对象姓名 *<input required value={draft.name} onChange={(e) => update("name", e.target.value)} maxLength={40} className={inputClass}/><span className="mt-1 block text-[10px] text-bone-mute">用于建立本次星迹档案与身份锚点</span></label>
         <label className="text-xs tracking-wider text-bone-dim">与寻踪对象的关系 *<select value={draft.relationship} onChange={(e) => update("relationship", e.target.value as StellarTraceDraft["relationship"])} className={inputClass}><option value="self">本人</option><option value="family">家人</option><option value="partner">伴侣</option><option value="friend">朋友</option><option value="colleague">同事</option><option value="other">其他</option></select></label>
-        <label className="text-xs tracking-wider text-bone-dim">真实出生日期 *<input required type="date" value={draft.birthDate} onChange={(e) => update("birthDate", e.target.value)} className={inputClass}/></label>
+        <label className="text-xs tracking-wider text-bone-dim">真实出生日期 *<input required type="date" min="1900-01-01" max={today} value={draft.birthDate} onChange={(e) => update("birthDate", e.target.value)} className={inputClass}/><span className="mt-1 block text-[10px] text-bone-mute">固定格式 YYYY-MM-DD；不得晚于今天</span></label>
         <label className="text-xs tracking-wider text-bone-dim">出生时间<input type="time" value={draft.birthTime} onChange={(e) => update("birthTime", e.target.value)} className={inputClass}/><span className="mt-1 block text-[10px] text-bone-mute">若知，请尽量精确；未知亦可继续</span></label>
         <label className="text-xs tracking-wider text-bone-dim sm:col-span-2">出生地点<input value={draft.birthPlace} onChange={(e) => update("birthPlace", e.target.value)} maxLength={80} placeholder="填写城市即可，若可提供更具体地点则更佳" className={inputClass}/></label>
       </div>
 
       <div className="mt-10 border-t border-white/10 pt-8"><p className="text-xs tracking-[.26em] text-amber">02 · 行迹锚点</p><h2 className="mt-2 font-display text-3xl">最后可证之处</h2><p className="mt-4 max-w-3xl text-sm leading-7 text-bone-dim">寻踪不从虚处起。最后一次能够确认的时间、地点与行动，是现实推演的起点。</p></div>
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
-        <label className="text-xs tracking-wider text-bone-dim">最后有效联系时间 *<input required type="datetime-local" value={draft.lastContactAt} onChange={(e) => update("lastContactAt", e.target.value)} className={inputClass}/></label>
-        <label className="text-xs tracking-wider text-bone-dim">最后已知位置 *<input required value={draft.lastKnownPlace} onChange={(e) => update("lastKnownPlace", e.target.value)} maxLength={120} placeholder="城市、道路、建筑或可核验地点" className={inputClass}/></label>
-        <label className="text-xs tracking-wider text-bone-dim">最后已知纬度（选填）<input type="number" step="0.0001" min="-90" max="90" value={draft.lastKnownLat} onChange={(e) => update("lastKnownLat", e.target.value)} placeholder="31.2304" className={inputClass}/></label>
-        <label className="text-xs tracking-wider text-bone-dim">最后已知经度（选填）<input type="number" step="0.0001" min="-180" max="180" value={draft.lastKnownLon} onChange={(e) => update("lastKnownLon", e.target.value)} placeholder="121.4737" className={inputClass}/></label>
-        <label className="text-xs tracking-wider text-bone-dim sm:col-span-2">最后一次已知移动方向<input value={draft.movementDirection} onChange={(e) => update("movementDirection", e.target.value)} maxLength={60} placeholder="例如：向北、沿某道路向西；未知可留空" className={inputClass}/></label>
+        <label className="text-xs tracking-wider text-bone-dim">最后有效联系日期 *<input required type="date" min="1900-01-01" max={today} value={lastContactDate} onChange={(e) => updateContact(e.target.value, lastContactTime)} className={inputClass}/><span className="mt-1 block text-[10px] text-bone-mute">固定格式 YYYY-MM-DD</span></label>
+        <label className="text-xs tracking-wider text-bone-dim">最后有效联系时间 *<input required type="time" value={lastContactTime} onChange={(e) => updateContact(lastContactDate, e.target.value)} className={inputClass}/><span className="mt-1 block text-[10px] text-bone-mute">固定格式 HH:MM</span></label>
+        <label className="text-xs tracking-wider text-bone-dim sm:col-span-2">最后已知位置说明 *<input required value={draft.lastKnownPlace} onChange={(e) => update("lastKnownPlace", e.target.value)} maxLength={120} placeholder="例如：广州市天河区某道路、建筑入口或可核验地点" className={inputClass}/><span className="mt-1 block text-[10px] text-bone-mute">先写地点名称，再在下方地图确认精准点；无需查询或手填经纬度</span></label>
+        <PreciseMapPicker lat={draft.lastKnownLat} lon={draft.lastKnownLon} place={draft.lastKnownPlace} onConfirm={({ lat, lon }) => setDraft((current) => ({ ...current, lastKnownMapLabel: current.lastKnownPlace, lastKnownLat: lat.toFixed(7), lastKnownLon: lon.toFixed(7) }))}/>
+        <label className="text-xs tracking-wider text-bone-dim sm:col-span-2">最后一次已知移动方向<select value={draft.movementDirection} onChange={(e) => update("movementDirection", e.target.value)} className={inputClass}><option value="">不详 / 尚无可证方向</option><option value="向北">向北</option><option value="东北">东北</option><option value="向东">向东</option><option value="东南">东南</option><option value="向南">向南</option><option value="西南">西南</option><option value="向西">向西</option><option value="西北">西北</option></select></label>
         <label className="text-xs tracking-wider text-bone-dim sm:col-span-2">最后一次有效信息<textarea value={draft.context} onChange={(e) => update("context", e.target.value)} maxLength={500} rows={3} placeholder="例如：18:20 电话联系；随后从某地出发，乘车向北；21:00 后未再取得有效联系。" className={`${inputClass} resize-none leading-7`}/></label>
       </div>
 
-      <div className="mt-8 border border-lattice/20 bg-void/30 p-5"><p className="text-xs leading-6 text-bone-dim">{essentialComplete ? "四项核心锚点已齐，可正常进入支付与九域推演；其余资料用于增加现实参照，不阻断开启。" : `尚缺：${coreMissing || "请检查日期与时间格式"}。页面中的部分日期不完整时，即使看见文字也不会被算作有效时间。`}</p><p className="mt-2 text-xs text-amber">权益自支付成功起 7 天内有效。</p></div>
+      <div className="mt-8 border border-lattice/20 bg-void/30 p-5"><p className="text-xs leading-6 text-bone-dim">{essentialComplete ? "五项开启锚点已齐，可正常进入支付与九域推演；其余资料用于增加现实参照，不阻断开启。" : `尚缺：${coreMissing || "请检查日期、时间与地图选点"}。无效日期、未来时间或仅有地点文字但未完成地图选点，都不会被误算为有效锚点。`}</p><p className="mt-2 text-xs text-amber">权益自支付成功起 7 天内有效。</p></div>
       {!unlocked && <div className="mt-6 border border-amber/35 bg-amber/[.06] p-5"><p className="text-xs tracking-[.2em] text-amber">支付前结果边界</p><p className="mt-3 text-sm leading-7 text-bone-soft">¥688 购买的是九域天文事实、四层透明投影、圆周收敛检验及其研究档案，不是保证生成唯一方向、公里距离或现实坐标。若证据不足，系统仍会交付完整据链与推演边界，并主动停止在尚未成域的层级。</p><p className="mt-2 text-xs leading-6 text-bone-dim">技术故障、重复支付或支付后无法开启，依《退款政策》处理；模型停止于证界不等同于技术故障。</p></div>}
       {!unlocked && <label className="mt-5 flex items-start gap-3 text-xs leading-6 text-bone-dim"><input required type="checkbox" checked={boundaryConsent} onChange={(e) => setBoundaryConsent(e.target.checked)} className="mt-1"/><span>我已理解：本次付费保证交付推演与证据档案，不保证形成唯一候选坐标；证不足时，结果可能为“尚未成域”。</span></label>}
       <label className="mt-5 flex items-start gap-3 text-xs leading-6 text-bone-dim"><input required type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1"/><span>我确认所填资料来源真实，并知悉本模型不得用于跟踪、骚扰、监控或替代警方与救援定位。<span className="mt-1 block"><a href="/terms" className="text-lattice">《服务条款》</a> · <a href="/refunds" className="text-lattice">《退款政策》</a> · <a href="/privacy" className="text-lattice">《隐私政策》</a> · <a href="/declaration" className="text-lattice">《免责声明》</a></span></span></label>
       <button disabled={loading || !essentialComplete || !consent || (!unlocked && !boundaryConsent)} className="mt-7 w-full border border-lattice/60 bg-lattice/10 px-6 py-4 text-sm tracking-[.18em] text-lattice disabled:cursor-not-allowed disabled:opacity-40">{loading ? "九域正在合参…" : unlocked ? "展开四证合度" : "确认边界并开启 · ¥688"}</button>
-      <p className="mt-3 text-center text-[11px] text-bone-mute">{unlocked ? "本次权益有效期内可重新推演。" : "建档完成后进入支付；支付成功起 7 天内可重新推演。"}</p>
+      <p className="mt-3 text-center text-[11px] text-bone-mute">{unlocked ? "资料确认后形成本次星迹档案。" : "建档完成并确认边界后进入支付。"}</p>
       {error && <p className="mt-4 text-center text-sm text-rose-300">{error}</p>}
     </form>
 

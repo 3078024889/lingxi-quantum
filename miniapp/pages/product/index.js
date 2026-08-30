@@ -40,8 +40,9 @@ Page({
     item: null, loading: true, loadError: '', paying: false, opening: false, owned: false, agreed: false, riskAcknowledged: false, deliveryLabel: '', validityLabel: '', from: 'explore',
     relationshipOptions: ['本人', '家人', '伴侣', '朋友', '同事', '其他'], relationshipValues: ['self', 'family', 'partner', 'friend', 'colleague', 'other'], relationshipIndex: 1,
     directionOptions: ['不详', '向北', '东北', '向东', '东南', '向南', '西南', '向西', '西北'], directionIndex: 0,
-    stellarDraft: { name: '', relationship: 'family', birthDate: '', birthTime: '', birthPlace: '', lastContactAt: '', lastKnownPlace: '', lastKnownLat: '', lastKnownLon: '', movementDirection: '', context: '' },
-    today: '', lastContactDate: '', lastContactTime: '', stellarCompleteness: 0, stellarCoreComplete: 0, stellarEnhancementComplete: 0, stellarMissingHint: '', stellarEssentialComplete: false,
+    stellarDraft: { name: '', relationship: 'family', birthDate: '', birthTime: '', birthPlace: '', lastContactAt: '', lastKnownPlace: '', lastKnownMapLabel: '', lastKnownLat: '', lastKnownLon: '', movementDirection: '', context: '' },
+    stellarName: '', stellarBirthPlace: '', stellarLastKnownPlace: '', stellarContext: '',
+    today: '', lastContactDate: '', lastContactTime: '', stellarCompleteness: 0, stellarCoreComplete: 0, stellarMissingHint: '', stellarEssentialComplete: false,
   },
   async onLoad(options) {
     this.options = options
@@ -51,10 +52,17 @@ Page({
     if (options.product === 'stellar-trace') {
       const saved = wx.getStorageSync('lingxifield_stellar_trace_draft_v1')
       if (saved && typeof saved === 'object') {
+        const validDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value || '') && new Date(`${value}T00:00:00`).getTime() <= Date.now() && Number(value.slice(0, 4)) >= 1900
+        const validTime = (value) => /^([01]\d|2[0-3]):[0-5]\d$/.test(value || '')
         const relationshipIndex = Math.max(0, this.data.relationshipValues.indexOf(saved.relationship))
         const directionIndex = Math.max(0, this.data.directionOptions.indexOf(saved.movementDirection || '不详'))
         const contactParts = String(saved.lastContactAt || '').split(/[T ]/)
-        this.setData({ stellarDraft: { ...this.data.stellarDraft, ...saved }, relationshipIndex, directionIndex, lastContactDate: contactParts[0] || '', lastContactTime: contactParts[1] || '' })
+        const contactDate = validDate(contactParts[0]) ? contactParts[0] : ''
+        const contactTime = validTime(contactParts[1]) ? contactParts[1] : ''
+        const lat = Number(saved.lastKnownLat), lon = Number(saved.lastKnownLon)
+        const coordinatesValid = saved.lastKnownLat !== '' && saved.lastKnownLon !== '' && Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180
+        const merged = { ...this.data.stellarDraft, ...saved, birthDate: validDate(saved.birthDate) ? saved.birthDate : '', birthTime: validTime(saved.birthTime) ? saved.birthTime : '', lastContactAt: contactDate && contactTime ? `${contactDate} ${contactTime}` : '', lastKnownMapLabel: saved.lastKnownMapLabel || saved.lastKnownPlace || '', lastKnownLat: coordinatesValid ? String(saved.lastKnownLat) : '', lastKnownLon: coordinatesValid ? String(saved.lastKnownLon) : '' }
+        this.setData({ stellarDraft: merged, stellarName: merged.name || '', stellarBirthPlace: merged.birthPlace || '', stellarLastKnownPlace: merged.lastKnownPlace || '', stellarContext: merged.context || '', relationshipIndex, directionIndex, lastContactDate: contactDate, lastContactTime: contactTime })
       }
       this.refreshStellarCompleteness()
     }
@@ -103,8 +111,9 @@ Page({
   },
   onStellarInput(event) {
     const key = event.currentTarget.dataset.key
+    const flat = event.currentTarget.dataset.flat
     if (!key) return
-    this.setData({ [`stellarDraft.${key}`]: event.detail.value }, () => {
+    this.setData({ [`stellarDraft.${key}`]: event.detail.value, ...(flat ? { [flat]: event.detail.value } : {}) }, () => {
       wx.setStorageSync('lingxifield_stellar_trace_draft_v1', this.data.stellarDraft)
       this.refreshStellarCompleteness()
     })
@@ -142,7 +151,7 @@ Page({
   chooseLastKnownLocation() {
     wx.chooseLocation({
       success: (location) => this.saveStellarDraft({
-        'stellarDraft.lastKnownPlace': location.address || location.name || this.data.stellarDraft.lastKnownPlace,
+        'stellarDraft.lastKnownMapLabel': location.address || location.name || this.data.stellarDraft.lastKnownPlace,
         'stellarDraft.lastKnownLat': String(location.latitude),
         'stellarDraft.lastKnownLon': String(location.longitude),
       }),
@@ -154,20 +163,22 @@ Page({
   },
   refreshStellarCompleteness() {
     const d = this.data.stellarDraft
-    const locationResolved = !!d.lastKnownPlace && !!d.lastKnownLat && !!d.lastKnownLon
-    const coreChecks = [!!d.name, /^\d{4}-\d{2}-\d{2}$/.test(d.birthDate), /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(d.lastContactAt), locationResolved]
-    const enhancementChecks = [!!d.birthTime, !!d.birthPlace, !!d.movementDirection, !!d.context]
+    const validDate = (value) => { if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false; const date = new Date(`${value}T00:00:00`); return !Number.isNaN(date.getTime()) && date.getFullYear() >= 1900 && date.getTime() <= Date.now() }
+    const validContact = /^\d{4}-\d{2}-\d{2}[ T]([01]\d|2[0-3]):[0-5]\d$/.test(d.lastContactAt) && new Date(d.lastContactAt.replace(' ', 'T')).getTime() <= Date.now()
+    const locationResolved = !!d.lastKnownLat && !!d.lastKnownLon
+    const coreChecks = [!!d.name, validDate(d.birthDate), validContact, !!d.lastKnownPlace, locationResolved]
+    const visibleChecks = [!!d.name, !!d.relationship, validDate(d.birthDate), !!d.birthTime, !!d.birthPlace, !!this.data.lastContactDate, !!this.data.lastContactTime, !!d.lastKnownPlace, locationResolved, !!d.movementDirection, !!d.context]
     const coreComplete = coreChecks.filter(Boolean).length
-    const enhancementComplete = enhancementChecks.filter(Boolean).length
-    const completeness = coreComplete + enhancementComplete
+    const completeness = visibleChecks.filter(Boolean).length
     const lat = Number(d.lastKnownLat), lon = Number(d.lastKnownLon)
-    const essential = coreComplete === 4 && Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180
+    const essential = coreComplete === 5 && Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lon) && lon >= -180 && lon <= 180
     const missing = []
     if (!coreChecks[0]) missing.push('姓名')
     if (!coreChecks[1]) missing.push('出生日期')
     if (!coreChecks[2]) missing.push('最后有效联系日期与时间')
-    if (!coreChecks[3]) missing.push('地图选点')
-    this.setData({ stellarCompleteness: completeness, stellarCoreComplete: coreComplete, stellarEnhancementComplete: enhancementComplete, stellarMissingHint: missing.join('、'), stellarEssentialComplete: essential })
+    if (!coreChecks[3]) missing.push('最后已知位置说明')
+    if (!coreChecks[4]) missing.push('精准地图选点')
+    this.setData({ stellarCompleteness: completeness, stellarCoreComplete: coreComplete, stellarMissingHint: missing.join('、'), stellarEssentialComplete: essential })
   },
   openPolicy(event) {
     const path = event.currentTarget.dataset.path
@@ -206,7 +217,7 @@ Page({
   },
   async openOwned() {
     if (!this.data.item || this.data.opening) return
-    if (this.data.item.productId === 'stellar-trace' && !this.data.stellarEssentialComplete) return wx.showToast({ title: '请先补齐四项核心锚点', icon: 'none' })
+    if (this.data.item.productId === 'stellar-trace' && !this.data.stellarEssentialComplete) return wx.showToast({ title: '请先补齐五项开启锚点', icon: 'none' })
     this.setData({ opening: true })
     try {
       if (this.data.item.category === 'report' && this.data.item.productId !== 'stellar-trace') {

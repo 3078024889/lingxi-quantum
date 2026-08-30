@@ -37,7 +37,7 @@ Page({
       const orderedIds = new Set(orders.map((item) => item.product_id))
       const unlocks = (me.unlocks || [])
         .filter((item) => !orderedIds.has(item.product_id))
-        .map((item) => ({ ...item, expiryLabel: item.expires_at ? `有效至 ${displayDate(item.expires_at)}` : '长期有效' }))
+        .map((item) => ({ ...item, expiryLabel: item.product_id === 'stellar-trace' && item.expires_at ? `7 天内可重新推演 · 有效至 ${displayDate(item.expires_at)}` : item.expires_at ? `有效至 ${displayDate(item.expires_at)}` : '长期有效' }))
       this.setData({ orders, unlocks, manifestUntil: me.manifestUntil, archetype: me.archetype, query: '' })
       this.applyFilter('')
     } catch (error) {

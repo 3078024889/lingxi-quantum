@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { calculateStellarTrace, type StellarTraceInput } from "@/lib/stellar-trace";
 import { getAccess, hasUnlock } from "@/lib/access";
+import { validContactAt, validCoordinates, validIsoDate } from "@/lib/stellar-trace-intake";
 
 export const runtime = "nodejs";
 
@@ -17,8 +18,8 @@ export async function POST(req: Request) {
       lastKnownPlace: text(body.lastKnownPlace, 120), movementDirection: text(body.movementDirection, 60), context: text(body.context, 500),
     };
     if (!body.consent) return NextResponse.json({ error: "请先确认资料使用边界与现实安全说明" }, { status: 400 });
-    if (!input.name || !/^\d{4}-\d{2}-\d{2}$/.test(input.birthDate) || !/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(input.lastContactAt) || !input.lastKnownPlace) return NextResponse.json({ error: "请完整填写寻踪对象、出生日期、最后有效联系日期与时间、最后已知位置" }, { status: 400 });
-    if ((input.lastKnownLat != null && (!Number.isFinite(input.lastKnownLat) || input.lastKnownLat < -90 || input.lastKnownLat > 90)) || (input.lastKnownLon != null && (!Number.isFinite(input.lastKnownLon) || input.lastKnownLon < -180 || input.lastKnownLon > 180))) return NextResponse.json({ error: "最后已知坐标不在有效经纬度范围" }, { status: 400 });
+    if (!input.name || !validIsoDate(input.birthDate) || !validContactAt(input.lastContactAt) || !input.lastKnownPlace) return NextResponse.json({ error: "请完整填写寻踪对象、有效出生日期、最后有效联系日期与时间、最后已知位置说明" }, { status: 400 });
+    if (!validCoordinates({ lastKnownLat: input.lastKnownLat == null ? "" : String(input.lastKnownLat), lastKnownLon: input.lastKnownLon == null ? "" : String(input.lastKnownLon) })) return NextResponse.json({ error: "请先在精准地图中确认最后可证位置" }, { status: 400 });
     return NextResponse.json(calculateStellarTrace(input), { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("[stellar trace] failed", error instanceof Error ? error.message : "unknown");
