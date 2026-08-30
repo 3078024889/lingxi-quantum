@@ -41,7 +41,7 @@ export const lifeMapProducts: Product[] = [
 ];
 
 export const stellarTraceProducts: Product[] = [
-  { id: "stellar-trace", name: "灵犀场星迹 · 万里追踪", nameEn: "Lingxi Stellar Trace", priceUsd: 95.5, priceRmb: 688, type: "permanent", note: "九域天文事实、四层透明投影与圆周收敛检验形成的研究档案；方向或距离证据不足时，系统主动停止，不制造坐标。", noteEn: "A research archive joining nine-field astronomy, four transparent projections, and circular convergence gates. The engine stops when direction or distance evidence is insufficient.", group: "cultivation" },
+{ id: "stellar-trace", name: "灵犀场星迹 · 万里寻踪", nameEn: "Lingxi Stellar Trace", priceUsd: 95.5, priceRmb: 688, type: "subscription", days: 7, note: "九域天文事实、四层透明投影与圆周收敛检验形成的研究档案；自支付成功起 7 天内可重新推演，方向或距离证据不足时系统主动止于证界，不制造坐标。", noteEn: "A seven-day research archive joining nine-field astronomy, four transparent projections, and circular convergence gates. The engine stops when evidence is insufficient.", group: "cultivation" },
 ];
 
 export const relationshipProducts: Product[] = [

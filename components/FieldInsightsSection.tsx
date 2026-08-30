@@ -6,7 +6,7 @@ export type FieldInsight = { href:string; no:string; glyph:string; zh:string; en
 // One editorial source for all nine entrances. Product pages remain the source
 // of forms and reports; this is the complete bilingual orientation layer.
 const INSIGHTS: FieldInsight[] = [
-  {href:"/stellar-trace",no:"00",glyph:"✧",zh:"灵犀场星迹 · 万里追踪",en:"Lingxi Stellar Trace",leadZh:"先验其方，再论其位",leadEn:"Qualify direction before speaking of place",bodyZh:[
+{href:"/stellar-trace",no:"00",glyph:"✧",zh:"灵犀场星迹 · 万里寻踪",en:"Lingxi Stellar Trace",leadZh:"先验其方，再论其位",leadEn:"Qualify direction before speaking of place",bodyZh:[
     "星迹不是把天文数据装饰成一个坐标。九域天体位置属于可以复算的事实层；四层方向只是等待检验的实验投影层。",
     "每次推演同时计算圆周均值、集中度 R、离散度与方向簇。四层彼此发散时，系统明确写下“方位未收敛”，不会把幽灵均值包装成主方向。",
     "距离层也必须交代规则来源。未经史料校核与盲测标定的近、中、远，不会被擅自翻译成公里数；方向或距离任一层没有资格，候选区域便保持 Missing。",

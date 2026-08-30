@@ -2,9 +2,9 @@ import * as Astronomy from "astronomy-engine";
 import { createHash } from "node:crypto";
 import { analyzeCircularDirections, normalizeBearing, type CircularDirectionAnalysis } from "@/lib/stellar-trace-math";
 
-export type StellarTraceInput = { name:string; birthDate:string; birthTime?:string; lastContactAt:string; lastKnownLat:number; lastKnownLon:number; context?:string };
+export type StellarTraceInput = { name:string; relationship?:string; birthDate:string; birthTime?:string; birthPlace?:string; lastContactAt:string; lastKnownPlace?:string; lastKnownLat:number; lastKnownLon:number; movementDirection?:string; context?:string };
 type NineFieldPosition = { id:string; nameZh:string; longitude:number };
-export type NineFieldSnapshot = { epoch:"birth"|"last-contact"|"current"; labelZh:string; julianDay:number; fields:NineFieldPosition[] };
+export type NineFieldSnapshot = { epoch:"birth"|"last-contact"|"current"; labelZh:string; observedAt:string; julianDay:number; fields:NineFieldPosition[] };
 export type TraceEvidence = {
   id:"time-phase"|"inner-planet"|"outer-planet"|"contact-frame"; labelZh:string; bearing:number;
   sourceFieldIds:string[]; rawValues:number[]; projectionRuleId:string; projectionBasisZh:string;
@@ -26,7 +26,7 @@ const bodies:Array<{id:string;nameZh:string;body?:Astronomy.Body}> = [
 const round=(value:number,digits=3)=>Number(value.toFixed(digits));
 const hashInt=(value:string)=>Number.parseInt(createHash("sha256").update(value).digest("hex").slice(0,12),16);
 function longitude(body:Astronomy.Body|undefined,at:Date){if(!body)return normalizeBearing(Astronomy.SunPosition(at).elon);const v=Astronomy.HelioVector(body,at);return normalizeBearing(Math.atan2(v.y,v.x)*180/Math.PI)}
-function snapshot(epoch:NineFieldSnapshot["epoch"],labelZh:string,at:Date):NineFieldSnapshot{return{epoch,labelZh,julianDay:round(Astronomy.MakeTime(at).ut+2451545,5),fields:bodies.map(item=>({id:item.id,nameZh:item.nameZh,longitude:round(longitude(item.body,at))}))}}
+function snapshot(epoch:NineFieldSnapshot["epoch"],labelZh:string,at:Date):NineFieldSnapshot{return{epoch,labelZh,observedAt:at.toISOString(),julianDay:round(Astronomy.MakeTime(at).ut+2451545,5),fields:bodies.map(item=>({id:item.id,nameZh:item.nameZh,longitude:round(longitude(item.body,at))}))}}
 function field(s:NineFieldSnapshot,id:string){return s.fields.find(item=>item.id===id)?.longitude??0}
 function signedDelta(to:number,from:number){return((to-from+540)%360)-180}
 function symbolicBand(amplitude:number):Pick<TraceEvidence,"relativeRangeBand"|"distanceTrace">{const rawSymbol=amplitude<45?"low":amplitude<110?"medium":"high";return{relativeRangeBand:rawSymbol==="low"?"低迁移象":rawSymbol==="medium"?"中迁移象":"高迁移象",distanceTrace:{rawSymbol,normalizationRuleId:"symbolic-angular-amplitude-v1",resultingRangeKm:null,calibrationStatus:"uncalibrated"}}}

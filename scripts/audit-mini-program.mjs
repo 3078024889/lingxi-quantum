@@ -64,6 +64,8 @@ const profileClient = read("miniapp/pages/profile/index.js");
 const profileView = read("miniapp/pages/profile/index.wxml");
 const productView = read("miniapp/pages/product/index.wxml");
 const contentDestinations = read("lib/mini/content-destinations.ts");
+const checkout = read("app/checkout/page.tsx");
+const stellarExperience = read("app/stellar-trace/StellarTraceExperience.tsx");
 const miniSources = fs.readdirSync(path.join(root, "miniapp"), { recursive: true })
   .filter((file) => typeof file === "string" && /\.(js|json|wxml|wxss)$/.test(file))
   .map((file) => read(path.join("miniapp", file))).join("\n");
@@ -87,6 +89,10 @@ const reportWebPaths = ["/stellar-trace", "/life-map", "/relationship", "/qian",
 check("all ten report entries retain public web reference routes", reportWebPaths.every((route) => catalog.includes(`: \"${route}\"`) && reportRoutes.includes(`'${route}'`)));
 check("Stellar Trace is the first cross-platform Field Insight at RMB 688", /id: "stellar-trace"[\s\S]*priceRmb: 688/.test(plans) && /"stellar-trace": "rpt_stellar_trace"/.test(catalog) && /field: "00"/.test(fieldProductCopy) && fieldInsights.indexOf('href:"/stellar-trace"') < fieldInsights.indexOf('href:"/life-map"'));
 check("Mini Program purchases and opens Stellar Trace without a fake questionnaire submission", /productId === 'stellar-trace'/.test(exploreClient) && /item\.productId !== 'stellar-trace'/.test(productClient) && /productId === "stellar-trace"\) return "\/stellar-trace"/.test(contentDestinations));
+check("Stellar Trace is a seven-day entitlement, never permanent access", /id: "stellar-trace"[\s\S]{0,260}type: "subscription", days: 7/.test(plans) && /支付成功起 7 天有效/.test(exploreView) && /item\.productId !== 'stellar-trace'/.test(productView));
+check("Stellar Trace requires its eight-part intake before payment", ["寻踪对象姓名", "真实出生日期", "出生地点", "最后有效联系时间", "最后已知位置", "最后一次已知移动方向", "最后一次有效信息", "stellarCompleteness"].every((term) => `${productView}\n${productClient}`.includes(term)) && /STELLAR_TRACE_DRAFT_KEY/.test(checkout) && /确认边界并开启/.test(stellarExperience));
+check("Stellar Trace discloses non-convergence before payment", /riskAcknowledged/.test(productClient) && /支付前结果边界/.test(productView) && /不保证形成唯一候选坐标/.test(productView) && /模型止于证界不等同于技术故障/.test(productView));
+check("Mini-to-web Stellar Trace intake is encrypted and never placed in a URL", /stellarDraft/.test(contentLink) && /encryptMiniSecret\(JSON\.stringify\(ticket\.stellarDraft\)\)/.test(contentOpen) && !/searchParams\.set\(["']stellarDraft/.test(contentOpen));
 check("report discovery opens the native dendrite assessment", /pages\/assessment\/index/.test(exploreClient) && !/pages\/web\/index/.test(exploreClient));
 check("report discovery does not restore the removed preliminary archive funnel", !/初读档案|生成我的初读档案/.test(exploreView));
 check("native assessment is registered without the removed preliminary archive copy", app.pages.includes("pages/assessment/index") && !/YOUR FIRST REFLECTION|初读档案|免费预览/.test(`${assessmentView}\n${assessmentClient}`));

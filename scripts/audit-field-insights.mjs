@@ -20,6 +20,8 @@ const productPages = {
   "app/qian/page.tsx": "/qian",
   "app/archetype/page.tsx": "/archetype",
 };
+const stellarTrace = read("app/stellar-trace/page.tsx");
+const fieldInsightsSource = read("components/FieldInsightsSection.tsx");
 
 for (const [file, href] of Object.entries(productPages)) {
   const source = read(file);
@@ -27,6 +29,9 @@ for (const [file, href] of Object.entries(productPages)) {
   if (!source.includes(`href="${href}"`)) fail(`${file} is connected to the wrong editorial entry`);
   if (!source.includes('id="field-assessment"')) fail(`${file} has no assessment anchor`);
 }
+if (!stellarTrace.includes("StellarTraceExperience")) fail("Stellar Trace does not mount its dedicated live instrument");
+if (!fieldInsightsSource.includes('{href:"/stellar-trace",no:"00"')) fail("Stellar Trace is not the first Field Insight product");
+if (!fieldInsightsSource.includes("灵犀场星迹 · 万里寻踪")) fail("Stellar Trace public name is stale");
 
 const publicFiles = [
   ...Object.keys(productPages),
@@ -70,7 +75,7 @@ if (!/lg:grid-cols-\[\.8fr_1\.15fr_1\.55fr\]/.test(footer)) fail("footer has not
 if (/联锁/.test(`${publicSource}\n${fieldStructure}`)) fail("legacy linking term remains in current public website copy");
 
 if (!process.exitCode) {
-  console.log("PASS field insights: all nine product pages share the bilingual editorial source");
+  console.log("PASS field insights: nine assessment pages share the editorial source and Stellar Trace owns the first live-instrument entry");
   console.log("PASS naming: stale public product names are absent");
   console.log("PASS entrance film: desktop preserves the complete frame and only references the uniquely named 30-second asset");
   console.log("PASS 9D field structure: global responsive film, fresh OG image, and compact footer are active");
