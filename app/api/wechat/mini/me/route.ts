@@ -47,8 +47,9 @@ export async function GET(req: Request) {
     })),
     archives: (assessments ?? []).filter((assessment, index, all) => {
       if (assessment.product_id === "life-archetype") {
-        const subjectId = (assessment.input as { subjectId?: string } | null)?.subjectId;
-        return assessment.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
+        const archiveInput=(assessment.input as { subjectId?: string; identityVerified?: boolean } | null);
+        const subjectId = archiveInput?.subjectId;
+        return assessment.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && archiveInput?.identityVerified === true && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string; identityVerified?: boolean } | null)?.identityVerified === true && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
       }
       return manifestActive || hasUnlock(activeUnlockIds, assessment.product_id);
     }).map((assessment) => ({

@@ -1,6 +1,9 @@
 import { getFieldProductCopy, type FieldProductCopy, type FieldResultMode } from "@/lib/mini/field-product-copy";
 import { LIFE_SIGNS } from "@/lib/qian-data";
 import { buildReportEntries, type DendriteReportEntry, type ReportEvidenceLeaf } from "@/lib/mini/report-entry-library";
+import { auditLifeArchetypeCoverage, BASE_DENDRITE_PRODUCT_IDS, type LifeArchetypeCoverageAudit } from "@/lib/mini/life-archetype-gate";
+export { auditLifeArchetypeCoverage, BASE_DENDRITE_PRODUCT_IDS } from "@/lib/mini/life-archetype-gate";
+export type { LifeArchetypeCoverageAudit } from "@/lib/mini/life-archetype-gate";
 
 /**
  * Lingxifield Dendritic Assessment Engine v2
@@ -259,7 +262,7 @@ export const DENDRITE_QUESTION_COUNTS = Object.fromEntries(DENDRITE_PRODUCTS.map
 export const getDendriteProduct = (productId:string, relationshipType: RelationshipAssessmentType = "deep") => productId === "relationship-resonance" ? RELATIONSHIP_DENDRITE_PRODUCTS[relationshipType] : DENDRITE_PRODUCTS.find(item=>item.productId===productId);
 
 export type DendriteResult = {
-  algorithm:"lingxifield-dendritic-v2" | "lingxifield-life-archetype-v5";
+  algorithm:"lingxifield-dendritic-v2" | "lingxifield-life-archetype-v5" | "lingxifield-life-archetype-v6";
   nodes:Array<DendriteNode & {score:number}>;
   dominant:Array<DendriteNode & {score:number}>;
   edges:Array<{from:string;to:string;weight:number}>;
@@ -282,16 +285,144 @@ export type DendriteResult = {
   realityEntry?: { titleZh: string; titleEn: string; actionZh: string; actionEn: string; observeZh: string; observeEn: string };
   timeline?: Array<{ productId: string; completedAt: string | null }>;
   relationshipEvidenceCount?: number;
+  archetypeReadings?: LifeArchetypeReading[];
+  archetypeCoverage?: LifeArchetypeCoverageAudit;
 };
 
-export const MINI_LIFE_ARCHETYPE_ALGORITHM = "lingxifield-life-archetype-v5";
+export type LifeArchetypeEvidenceLevel = "established" | "strong" | "developing" | "conditional" | "insufficient";
+export type LifeArchetypeReading = {
+  id: string;
+  titleZh: string;
+  titleEn: string;
+  briefZh: string;
+  briefEn: string;
+  classicalZh: string;
+  evidenceZh: string;
+  verificationZh: string;
+  supportStreams: string[];
+  counterStreams: string[];
+  evidenceLeafIds: string[];
+  evidenceCount: number;
+  evidenceLevel: LifeArchetypeEvidenceLevel;
+};
+export const MINI_LIFE_ARCHETYPE_ALGORITHM = "lingxifield-life-archetype-v6";
 
-export const BASE_DENDRITE_PRODUCT_IDS = [
-  "life-map-report", "relationship-resonance", "resilience-report", "romance-report",
-  "wealth-report", "daily-tide-report", "tarot-reading", "qian-reading",
+export type SavedFieldResult = { productId: string; result: DendriteResult; completedAt?: string | null; relationshipType?: RelationshipAssessmentType };
+
+const ARCHETYPE_READING_SPECS = [
+  ["原型之核","Archetype Core","见诸流相会之后，何力仍居其中。"],
+  ["生命本色","Life Ground","去角色与应答，辨其自然所守。"],
+  ["发端","First Impulse","察一事未形之前，心力由何处先动。"],
+  ["所向","Life Direction","辨诸力久行之后，究竟欲往何方。"],
+  ["感知之门","Gate of Perception","看世界由何门先入其心。"],
+  ["判断之机","Formation of Judgment","见所感如何沉淀为所断。"],
+  ["起行之法","Way of Beginning","辨意念跨入现实的第一步。"],
+  ["成事之器","Vessel of Completion","看何种结构足以托住所长。"],
+  ["亲疏之度","Measure of Nearness","察亲近与退守之间的自然尺度。"],
+  ["共振之法","Way of Resonance","见何种回应能使其力相续。"],
+  ["边界之所在","Seat of Boundary","辨所愿承与不可承之界。"],
+  ["关系所付之价","Relational Cost","核一段连接久行所费何物。"],
+  ["价值所生","Birth of Value","看何物经其手而真正增益。"],
+  ["交换之门","Gate of Exchange","辨所创如何被看见、接住与交换。"],
+  ["承富之量","Capacity for Wealth","量所得增加之后，现实能承几何。"],
+  ["现实之器","Instrument of Reality","见天赋以何种日用结构落地。"],
+  ["两难之轴","Axis of Dilemma","察两力相牵时，何处最难两全。"],
+  ["过强之力","Overused Strength","见长处用之过度，如何反成其耗。"],
+  ["被抑之能","Inhibited Capacity","辨已有其力而尚无其位之处。"],
+  ["盲区之源","Origin of Blindness","看何种惯性使一类证据久被轻置。"],
+  ["压力之变","Change under Pressure","察事急之时，原有结构如何改形。"],
+  ["当前之时","Present Season","辨长势与近况交会于何时。"],
+  ["第二原型","Second Archetype","旧路受阻时，见何力可继其生。"],
+  ["下一转轴","Next Pivot","只取一轴，使全局得以转身。"],
 ] as const;
 
-type SavedFieldResult = { productId: string; result: DendriteResult; completedAt?: string | null; relationshipType?: RelationshipAssessmentType };
+const ARCHETYPE_BODY_FORMS: Array<(a:string,b:string,c:string)=>string> = [
+  (a,b,c)=>`其核常先见于「${a}」，遇「${b}」而得其形，复以「${c}」辨其真。三关皆通，心力方可久用；一关失位，所长亦会折返为耗。`,
+  (a,b,c)=>`去其角色与应答，仍可见「${a}」自守于内；「${b}」使此本色不至孤悬，「${c}」则令其随境而不失其宗。`,
+  (a,b,c)=>`一事未形，先动者多为「${a}」；念将成行，又须「${b}」开门。若「${c}」迟而未应，常有欲行复止之候。`,
+  (a,b,c)=>`久观其行，所向由「${a}」定远近，由「${b}」定可否，由「${c}」定进退之时。故方向虽一，抵达之法未必恒同。`,
+  (a,b,c)=>`外物入心，先触「${a}」，继经「${b}」筛其轻重；「${c}」若过盛，细微可成负载，若得其度，幽隐亦能被察。`,
+  (a,b,c)=>`所感未即为所断。其判断先以「${a}」聚证，再由「${b}」排其序，终让「${c}」校其现实。证有相逆，便留其隙。`,
+  (a,b,c)=>`其起行不贵声势，贵在「${a}」先定一寸，「${b}」随即承之一寸；「${c}」能见回声，则小步亦可生长为长路。`,
+  (a,b,c)=>`成事须器。「${a}」为材，「${b}」为度，「${c}」为收束。材盛而无度则散，度严而无材则滞，能收其尾方称成。`,
+  (a,b,c)=>`亲近之时，「${a}」使其愿见于人，「${b}」护其不失于己；「${c}」掌远近之节。近而可呼吸，疏而不断意，斯为合度。`,
+  (a,b,c)=>`相应之道，不在一味同声。以「${a}」发真意，以「${b}」受彼声，再由「${c}」容其差；有来有往，方成共振。`,
+  (a,b,c)=>`其界生于「${a}」所珍，明于「${b}」所能承，落实于「${c}」所敢言。界不明，则善意易越位；界既明，亲近反得久。`,
+  (a,b,c)=>`一段关系所费，常不在相见之时，而在「${a}」久候、「${b}」代偿、「${c}」无处安放之处。能辨所费，方知此缘可行几何。`,
+  (a,b,c)=>`价值初生于「${a}」所见，成熟于「${b}」所整，显用于「${c}」所成。只见其意尚非价值，能使现实因之增益，方可计之。`,
+  (a,b,c)=>`交换之门有三钥：「${a}」使所创可名，「${b}」使所予可受，「${c}」使来往有界。门若不开，多加辛力亦难成流。`,
+  (a,b,c)=>`所得渐增，先问「${a}」能否接其量，再问「${b}」能否守其序，终问「${c}」能否容其变。承富在器，不独在得。`,
+  (a,b,c)=>`才情欲落于日用，须借「${a}」定对象，借「${b}」立流程，借「${c}」收反馈。无器之才多成灵光，有器方能反复生效。`,
+  (a,b,c)=>`两难起处，一边由「${a}」催其进，一边由「${b}」劝其守；「${c}」正是转轴。能改先后与条件，未必须弃其一端。`,
+  (a,b,c)=>`长处过用，亦会改形：「${a}」可转为执，「${b}」可转为负，「${c}」可转为频繁校正。知其将溢之候，收一分胜添三分。`,
+  (a,b,c)=>`「${a}」已有其芽，却常被「${b}」压在事后；惟当「${c}」给予时间与边界，此能方肯现身。未发非无，只是尚无其位。`,
+  (a,b,c)=>`盲处多由熟路所成。「${a}」久居前景，「${b}」遂被轻置；「${c}」虽屡示异证，亦易被旧解吸收。欲破其盲，先许反证成立。`,
+  (a,b,c)=>`事急之时，「${a}」先被放大，「${b}」退为维持，「${c}」或至事后方归。此变可护一时，却不可久居；压力既退，须还其原序。`,
+  (a,b,c)=>`此刻之时，长势在「${a}」，近潮在「${b}」，现实门槛落于「${c}」。宜顺其可成之一段，不以短潮改写长根。`,
+  (a,b,c)=>`旧路若阻，第二生机可由「${a}」借「${b}」另开一径；「${c}」负责保其底线。此径不废旧长，惟换一器以续其用。`,
+  (a,b,c)=>`下一转轴不宜多取。先移动「${a}」与「${b}」相接之处，再看「${c}」是否随之入位；一处真动，全局自会给出新证。`,
+];
+
+const ARCHETYPE_VERIFICATION_PROMPTS = [
+  "取一件无人催促仍会反复去做的事，察何力始终居中。",
+  "分别记下独处时与承担角色时的自然选择，比较二者所守。",
+  "回看最近三次真正开始的事情，只记第一动作从何而来。",
+  "列出三项长期投入，删去外界评价后，看它们共同指向何处。",
+  "在同一环境中记录最先被你注意的三个细节，辨其入口。",
+  "取一次判断正确与一次判断失误，比较证据如何被排序。",
+  "为久悬之事做一个二十分钟起步动作，观察清晰是否随行动而来。",
+  "检查一件已完成之事的流程、边界与收尾，找出真正承事之器。",
+  "比较一次过近与一次过远的关系经验，找出可呼吸的距离。",
+  "完成一次清楚表达与真实倾听，观察回应是否形成往返。",
+  "说清一个愿意承担与一个不能承担，记录关系是否反而更明。",
+  "连续七日记录一段关系所耗的时间、注意力与恢复成本。",
+  "取一个已有成果，确认它使谁的现实发生了何种可见增益。",
+  "把一项价值写成对象、交付与回报，检验交换之门卡在何处。",
+  "记录所得增加后最先失序的部分，以此量现实承接。",
+  "把一个灵感固定为可重复流程，七日后看它能否再次生效。",
+  "面对两难时改一次先后或条件，不急着舍弃任何一端。",
+  "观察长处将溢之前的身体、情绪与关系信号，提前收一分。",
+  "在低压力且有边界的一小时中，观察平日未发之能会否出现。",
+  "主动寻找一条与自我判断相反的现实证据，不急于解释掉它。",
+  "压力退后记录恢复次序，看哪些力量仍停留在应急位置。",
+  "分开记录长期重复与本周波动，勿让一日之潮覆盖长根。",
+  "旧法受阻时只换一种承接方式，观察原有能力能否续用。",
+  "未来七日只移动一个接口；若外部结果随之改变，此轴方可暂立。",
+] as const;
+
+const FIELD_NAMES: Record<string, string> = {
+  "life-map-report":"生命图谱", "relationship-resonance":"关系共振", "resilience-report":"生命韧性",
+  "romance-report":"桃花磁场", "wealth-report":"财富创造地图", "daily-tide-report":"今日潮汐",
+  "tarot-reading":"生命镜像", "qian-reading":"生命灵签",
+};
+
+function buildArchetypeReadings(fields: SavedFieldResult[], coverage: LifeArchetypeCoverageAudit): LifeArchetypeReading[] {
+  const streams = BASE_DENDRITE_PRODUCT_IDS.slice();
+  const byStream = new Map<string,SavedFieldResult[]>(streams.map((productId)=>[productId, fields.filter((field)=>field.productId===productId)]));
+  const readings = ARCHETYPE_READING_SPECS.map(([titleZh,titleEn,briefZh],index) => {
+    const supportStreams: string[] = [streams[index%8], streams[(index+3)%8], streams[(index+5)%8]];
+    const selected = supportStreams.map((productId,streamIndex)=>{
+      const reports=byStream.get(productId)!;
+      const leaves=reports.flatMap((field)=>field.result.evidenceLeaves ?? []).sort((a,b)=>b.strength-a.strength || a.questionId.localeCompare(b.questionId));
+      const leaf=leaves[(index*3+streamIndex*5)%leaves.length];
+      const report=reports[(index+streamIndex)%reports.length];
+      const nodeId=leaf.nodeIds[0] ?? report.result.dominant[0]?.id;
+      const node=report.result.nodes.find((item)=>item.id===nodeId) ?? report.result.dominant[0];
+      return {productId,leaf,node};
+    });
+    const signals=[...new Set(selected.map((item)=>item.node?.zh).filter(Boolean))];
+    const a=signals[0] ?? "内在所守"; const b=signals[1] ?? "现实所承"; const c=signals[2] ?? "当下所应";
+    const counterStreams=[...new Set(selected.filter((item)=>item.leaf.counterNodeIds.length>0).map((item)=>item.productId))];
+    const evidenceCount=selected.length;
+    const evidenceLevel:LifeArchetypeEvidenceLevel=counterStreams.length>1?"conditional":evidenceCount>=3?"strong":"developing";
+    const evidenceZh=`证据链：${selected.map((item)=>`${FIELD_NAMES[item.productId]} ${item.leaf.questionId}「${item.leaf.answerZh}」`).join("；")}。${counterStreams.length?`相逆之证见于${counterStreams.map((id)=>FIELD_NAMES[id]).join("、")}，故保留条件边界。`:"三流同向，暂立为强证。"}`;
+    const verificationZh=`现实可验：${ARCHETYPE_VERIFICATION_PROMPTS[index]}若事实未复现，此处未定，以新证为准。`;
+    return { id:`a${String(index+1).padStart(2,"0")}`, titleZh,titleEn,briefZh,briefEn:titleEn, classicalZh:ARCHETYPE_BODY_FORMS[index](a,b,c), evidenceZh,verificationZh,supportStreams,counterStreams,evidenceLeafIds:selected.map((item)=>`${item.productId}:${item.leaf.questionId}:${item.leaf.answerId}`),evidenceCount,evidenceLevel };
+  });
+  coverage.streamEvidence.forEach((item)=>{item.readingCount=readings.filter((reading)=>reading.supportStreams.includes(item.productId)).length;});
+  if (coverage.streamEvidence.some((item)=>item.readingCount<3)) throw new Error("life archetype reading coverage is incomplete");
+  return readings;
+}
 
 /**
  * FIELD 09 is deliberately not a ninth questionnaire. It is generated only
@@ -299,12 +430,12 @@ type SavedFieldResult = { productId: string; result: DendriteResult; completedAt
  * The calculation preserves disagreements between fields as tension instead
  * of flattening eight reports into a prose summary.
  */
-export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): DendriteResult {
+export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[], options: { identityVerified: boolean }): DendriteResult {
   const product = getDendriteProduct("life-archetype");
-  if (!product || new Set(fields.map((field) => field.productId)).size !== BASE_DENDRITE_PRODUCT_IDS.length) {
-    throw new Error("life archetype requires eight recent fields");
-  }
+  if (!product) throw new Error("life archetype product is unavailable");
+  const archetypeCoverage = auditLifeArchetypeCoverage(fields, options.identityVerified);
   const evidenceLeaves = fields.flatMap((field) => (field.result.evidenceLeaves ?? []).map((leaf) => ({ ...leaf, sourceProductId: field.productId, ...(field.relationshipType ? { sourceRelationshipType: field.relationshipType } : {}) })));
+  const archetypeReadings = buildArchetypeReadings(fields, archetypeCoverage);
   const nodeByProduct: Record<string, string> = {
     "life-map-report":"blueprint", "relationship-resonance":"resonance", "resilience-report":"resilience",
     "romance-report":"romance", "wealth-report":"wealth", "daily-tide-report":"tide",
@@ -328,8 +459,6 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
   }))).sort((a, b) => b.weight - a.weight);
   const dominant = ordered.slice(0, 3);
   const quiet = ordered[ordered.length - 1];
-  const strongestFields = dominant.map((item) => evidenceByNode.get(item.id)!);
-  const sourceNames = strongestFields.map((field) => field.result.titleZh);
   const signature = fields.map((field) => `${field.productId}:${field.result.dominant.map((node) => `${node.id}:${node.score}`).join(",")}`).join("|");
   const artworkIndex = [...signature].reduce((hash, char) => (hash * 33 + char.charCodeAt(0)) >>> 0, 2166136261) % 120;
   const archetypeIndex = [...signature].reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) >>> 0, 2166136261) % LIFE_SIGNS.length;
@@ -365,12 +494,10 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
       signalsEn: [...new Set(sameProduct.flatMap((field) => field.result.dominant.slice(0, 3).map((node) => node.en)))].slice(0, 5),
     };
   });
-  const whyEvidence = [
-    { kind:"long-term" as const, titleZh:"长期证据", titleEn:"Long-term Evidence", bodyZh:`生命图谱、关系共振与生命韧性共同留下「${dominant[0].zh}」的重复支撑；它跨越不同情境，不由单次状态决定。`, bodyEn:`Life Blueprint, Relationship Resonance, and Resilience repeatedly support ${dominant[0].en} across contexts rather than through one transient state.` },
-    { kind:"cross-field" as const, titleZh:"跨域证据", titleEn:"Cross-field Evidence", bodyZh:`「${dominant[1].zh}」与「${dominant[2].zh}」在多个独立场域同时进入高激活区，形成目前最清楚的增强回路。`, bodyEn:`${dominant[1].en} and ${dominant[2].en} enter high activation across independent fields, forming the clearest reinforcement loop.` },
-    { kind:"recent" as const, titleZh:"近期证据", titleEn:"Recent Evidence", bodyZh:"今日潮汐、生命镜像与生命灵签负责校准近期状态：它们可以把某种力量推到前景，但不会改写长期证据。", bodyEn:"Today's Tide, Life Mirror, and Life Oracle calibrate the recent state. They can foreground a force without rewriting long-term evidence." },
-    { kind:"inhibition" as const, titleZh:"抑制证据", titleEn:"Inhibition Evidence", bodyZh:`「${quiet.zh}」仍有激活，但当前承接强度不足，因此没有成为主原型；系统保留这份反证，而不是只挑最像的答案。`, bodyEn:`${quiet.en} is activated but lacks present capacity, so it does not become primary. The engine keeps this counter-evidence instead of selecting the most flattering answer.` },
-  ];
+  const whyEvidence = archetypeReadings.slice(0,4).map((reading,index)=>({
+    kind:(["long-term","cross-field","recent","inhibition"] as const)[index], titleZh:reading.titleZh, titleEn:reading.titleEn,
+    bodyZh:reading.classicalZh, bodyEn:reading.briefEn,
+  }));
   const tensionPairs = [[dominant[0], quiet], [dominant[1], ordered[ordered.length - 2]], [dominant[2], ordered[ordered.length - 3]]];
   const tensions = tensionPairs.map(([left, right]) => ({
     titleZh:`${left.zh} × ${right.zh}`, titleEn:`${left.en} × ${right.en}`,
@@ -379,16 +506,7 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
   }));
   const suppressedIndexes = [1, 2].map((offset) => (archetypeIndex + offset * 17) % LIFE_SIGNS.length).filter((index) => index !== archetypeIndex);
   const suppressedArchetypes = suppressedIndexes.map((index) => ({ index, nameZh:LIFE_SIGNS[index].nameZh, nameEn:LIFE_SIGNS[index].nameEn, reasonZh:`相关力量已经出现，但「${quiet.zh}」的现实承接仍不足，暂未进入主原型。`, reasonEn:`The force is present, but ${quiet.en} does not yet provide enough real-world capacity for it to become primary.` }));
-  const chapters = [
-    { id:"archetype", titleZh:"八流归一 · 当前原型结构", titleEn:"Eight Streams as One", bodyZh:`当前显现的不是人格标签，而是「${dominant[0].zh}」承担方向、「${dominant[1].zh}」形成现实接口、「${dominant[2].zh}」调节行动强度的三层运行结构。它只有在八条生命支流同时存在时才成立，任何单一测评都不能替代。`, bodyEn:`This is not a personality label. ${dominant[0].en} carries direction, ${dominant[1].en} forms the real-world interface, and ${dominant[2].en} regulates intensity. It exists only through all eight streams.` },
-    { id:"evidence", titleZh:"八域证据矩阵", titleEn:"Eight-field Evidence Matrix", bodyZh:`系统交叉读取一年窗口内八条支流的底层选择、节点强度与各自上下文；本次保留 ${evidenceLeaves.length} 枚可回溯 Evidence Leaf。当前最强证据来自「${sourceNames[0]}」「${sourceNames[1]}」「${sourceNames[2]}」；其余支流不被压成摘要，而是作为承接、校准与反证继续参与。旧版档案未保存的叶节点保持缺失，不由系统补写。`, bodyEn:`The system cross-reads the underlying choices, node structures, and contexts of eight streams, preserving ${evidenceLeaves.length} traceable Evidence Leaves. The strongest evidence comes from ${sourceNames.join(", ")}; other streams remain as capacity, calibration, and counter-evidence. Leaves absent from legacy archives remain missing and are never invented.` },
-    { id:"axis", titleZh:"主轴如何运转", titleEn:"How the Primary Axis Operates", bodyZh:`「${dominant[0].zh}」决定系统更自然地从哪里启动；「${dominant[1].zh}」决定这股力量怎样被关系与现实接住；「${dominant[2].zh}」则决定它能否持续。真正值得观察的是三者的传递顺序，而不是谁的分数最高。`, bodyEn:`${dominant[0].en} initiates the system, ${dominant[1].en} determines how reality receives it, and ${dominant[2].en} determines continuity. Their sequence matters more than rank.` },
-    { id:"relation", titleZh:"增强回路", titleEn:"Reinforcement Loop", bodyZh:`「${dominant[0].zh}」与「${dominant[1].zh}」形成当前最强增强回路：前者一旦获得清楚的现实入口，后者会扩大反馈；反馈又反过来稳定前者。若入口含糊，这一回路会从创造转为内耗。`, bodyEn:`${dominant[0].en} and ${dominant[1].en} form the strongest loop. A clear real-world entrance amplifies feedback; an ambiguous one turns the same loop into friction.` },
-    { id:"tension", titleZh:"张力与承接差", titleEn:"Tension and Capacity Gap", bodyZh:`「${quiet.zh}」不是短板，而是当前参与度最低的承接变量。当高强度支流继续推进、它仍未进入结构时，系统会出现“理解已经发生，现实尚未容纳”的时差。需要调节的是节奏与接口，而不是继续加大意志。`, bodyEn:`${quiet.en} is not a deficit but the least-participating capacity variable. When strong streams advance without it, insight outruns reality. Adjust rhythm and interface rather than force.` },
-    { id:"latent", titleZh:"尚未被使用的能力", titleEn:"Latent Capacity", bodyZh:`较安静的支流保留了另一种可能：${quiet.actionZh}它的作用不是削弱当前主轴，而是为主轴增加容错、边界与持续性。只有它开始提供现实证据，原型才会从单向推进转为稳定循环。`, bodyEn:`The quieter stream holds another possibility: ${quiet.actionEn} It adds tolerance, boundary and continuity to the primary axis rather than weakening it.` },
-    { id:"entry", titleZh:"七日现实入口", titleEn:"Seven-day Reality Entry", bodyZh:`未来七天只验证一个动作：${dominant[0].actionZh}完成后分别记录三件事：它是否增强「${dominant[1].zh}」、是否给「${quiet.zh}」留下参与空间、是否产生一个外部可见的新结果。原型的价值来自新证据，而不是再次解释旧结论。`, bodyEn:`For seven days, test one action only: ${dominant[0].actionEn} Record whether it strengthens ${dominant[1].en}, leaves room for ${quiet.en}, and produces one externally visible result.` },
-    { id:"recheck", titleZh:"原型更新协议", titleEn:"Archetype Update Protocol", bodyZh:"生命原型不是终身定型。未来任一支流产生新的完整档案后，系统会比较新旧证据；只有节点强度、跨域关系或现实验证发生实质变化时，原型才更新。未发生的变化不会被想象填补。", bodyEn:"Life Archetype is not permanent typing. A new complete field archive can update it only when node strength, cross-field relations or reality evidence materially changes; missing change is never invented." },
-  ];
+  const chapters = archetypeReadings.slice(0,8).map((reading)=>({ id:reading.id, titleZh:reading.titleZh, titleEn:reading.titleEn, bodyZh:reading.classicalZh, bodyEn:reading.briefEn }));
   return {
     algorithm:MINI_LIFE_ARCHETYPE_ALGORITHM, nodes:ordered, dominant, edges,
     titleZh:`${String(current.index + 1).padStart(2,"0")} · ${current.nameZh}`,
@@ -397,7 +515,7 @@ export function calculateLifeArchetypeFromReports(fields: SavedFieldResult[]): D
     insightEn:"All eight tributaries are active within the one-year window. This archetype reads cross-field reinforcement, capacity gaps and one reality entrance—not a summary of eight reports.",
     chapters,
     evidence:{answered:evidenceLeaves.length,total:evidenceLeaves.length,historyProducts:8,sourceZh:"一年内八个已完成并授权保存的独立场域档案",sourceEn:"Eight completed and authorized independent field archives within one year"},
-    evidenceLeaves,
+    evidenceLeaves, archetypeReadings, archetypeCoverage,
     artworkIndex, sourceProducts: BASE_DENDRITE_PRODUCT_IDS.slice(), fieldContributions, structuralRelations,
     archetypeCardIndexes:[current.index],
     currentArchetype:{ index:current.index, nameZh:current.nameZh, nameEn:current.nameEn, keywordsZh:current.keywordsZh, keywordsEn:current.keywordsEn, meaningZh:current.meaningZh, meaningEn:current.meaningEn, evidenceLevel:dominant[0].score - dominant[2].score >= 6 ? "clear" : "developing" },

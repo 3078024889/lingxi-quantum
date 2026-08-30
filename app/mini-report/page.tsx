@@ -17,10 +17,12 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     .select("id, product_id, input, result, algorithm_version, created_at")
     .eq("id", searchParams.id).eq("user_id", user.id).maybeSingle();
   if (!data) redirect("/account/orders");
-  if (data.product_id === "life-archetype" && data.algorithm_version !== MINI_LIFE_ARCHETYPE_ALGORITHM) {
-    const priorInput = (data.input ?? {}) as { subjectId?: string };
+  const archiveInput = (data.input ?? {}) as { name?: string; partnerName?: string; relationshipType?: "deep" | "business" | "other"; subjectId?: string; identityVerified?: boolean };
+  if (data.product_id === "life-archetype" && (data.algorithm_version !== MINI_LIFE_ARCHETYPE_ALGORITHM || archiveInput.identityVerified !== true)) {
+    const priorInput = archiveInput;
     const refreshed = await ensureLifeArchetype(user.id, priorInput.subjectId);
     if (refreshed.ready && refreshed.submissionId && refreshed.submissionId !== data.id) redirect(`/mini-report?id=${refreshed.submissionId}`);
+    redirect(`/archetype?status=${encodeURIComponent(("blockedReason" in refreshed && refreshed.blockedReason) || "identity-required")}`);
   }
   if (data.product_id !== "life-archetype") {
     const [{ data: unlockRows }, { data: profile }] = await Promise.all([
@@ -43,7 +45,7 @@ export default async function MiniReportPage({ searchParams }: { searchParams: {
     fieldContributions?: Array<{ productId: string; score: number; state: "long-term" | "recent" | "active" | "tension" }>;
     structuralRelations?: Array<{ from: string; to: string; kind: "reinforce" | "bridge" | "tension"; strength: number }>;
   };
-  const input = (data.input ?? {}) as { name?: string; partnerName?: string; relationshipType?: "deep" | "business" | "other" };
+  const input = archiveInput;
   const relationshipNames = { deep: "深度关系共振", business: "合伙商业共振", other: "其他关系共振" } as const;
   const productName = data.product_id === "life-archetype"
     ? "生命原型 · 八流归一"

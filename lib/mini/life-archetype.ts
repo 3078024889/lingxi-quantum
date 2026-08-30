@@ -77,7 +77,18 @@ export async function listLifeArchetypeSubjects(userId: string) {
 export async function ensureLifeArchetype(userId: string, requestedSubjectId?: string) {
   const state = await loadSubjectState(userId);
   const candidates = [...state.groups.values()].map(({ subject, rows }) => ({ subject, rows, progress: progressForSubject(subject, rows, state.active, state.manifestActive) }));
-  const selected = requestedSubjectId ? candidates.find((item) => item.subject.subjectId === requestedSubjectId) : candidates.sort((a, b) => b.progress.completedIds.length - a.progress.completedIds.length)[0];
+  const completedCandidates = candidates.filter((item) => item.progress.completedIds.length === BASE_DENDRITE_PRODUCT_IDS.length);
+  const selected = requestedSubjectId
+    ? candidates.find((item) => item.subject.subjectId === requestedSubjectId)
+    : completedCandidates.length === 1
+      ? completedCandidates[0]
+      : completedCandidates.length > 1
+        ? undefined
+        : candidates.sort((a, b) => b.progress.completedIds.length - a.progress.completedIds.length)[0];
+  if (!requestedSubjectId && completedCandidates.length > 1) return {
+    ready: false, subjectSelectionRequired: true, completed: 8, missing: [] as string[],
+    tributaries: LIFE_ARCHETYPE_TRIBUTARIES.map((item) => ({ ...item, completed: false })),
+  };
   if (!selected) return { ready: false, completed: 0, missing: BASE_DENDRITE_PRODUCT_IDS.slice(), tributaries: LIFE_ARCHETYPE_TRIBUTARIES.map((item) => ({ ...item, completed: false })) };
   const { subject, rows, progress } = selected;
   const matchingArchive = state.archetypes.find((row) => (row.input as { subjectId?: string } | null)?.subjectId === subject.subjectId);
@@ -92,14 +103,21 @@ export async function ensureLifeArchetype(userId: string, requestedSubjectId?: s
   const sourceRows = BASE_DENDRITE_PRODUCT_IDS.map((productId) => progress.latest.get(productId)!);
   const enrichedSourceRows = [...sourceRows.filter((row) => row.product_id !== "relationship-resonance"), ...relationshipByType.values()];
   const sourceHash = sourceDigest(enrichedSourceRows);
-  const archiveInput = matchingArchive?.input as { sourceHash?: string } | null;
-  if (matchingArchive && matchingArchive.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && archiveInput?.sourceHash === sourceHash) return { ready: true, generated: false, subject, submissionId: matchingArchive.id, completed: 8, missing: [] as string[], firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, tributaries: progress.tributaries };
+  const archiveInput = matchingArchive?.input as { sourceHash?: string; identityVerified?: boolean } | null;
+  if (matchingArchive && matchingArchive.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && archiveInput?.sourceHash === sourceHash && archiveInput.identityVerified === true) return { ready: true, generated: false, subject, submissionId: matchingArchive.id, completed: 8, missing: [] as string[], firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, tributaries: progress.tributaries };
 
-  const result = calculateLifeArchetypeFromReports(enrichedSourceRows.map((row) => ({ productId: row.product_id, result: row.result as DendriteResult, completedAt: row.created_at, relationshipType: ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType })));
+  const identityVerified = enrichedSourceRows.every((row) => subjectFromAssessment(userId, row.input)?.subjectId === subject.subjectId);
+  let result: DendriteResult;
+  try {
+    result = calculateLifeArchetypeFromReports(enrichedSourceRows.map((row) => ({ productId: row.product_id, result: row.result as DendriteResult, completedAt: row.created_at, relationshipType: ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType })), { identityVerified });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "life archetype evidence audit failed";
+    return { ready:false, blockedReason:message.includes("identity")?"identity-mismatch":message.includes("evidence leaves")?"legacy-evidence-missing":message.includes("365")?"outside-365-days":"coverage-incomplete", subject, completed:8, missing:[] as string[], firstCompletedAt:progress.firstCompletedAt, windowEndsAt:progress.windowEndsAt, tributaries:progress.tributaries };
+  }
   result.context = { subjectName: subject.displayName, subjectId: subject.subjectId };
   const { data, error } = await state.admin.from("mini_dendrite_assessments").insert({
     user_id: userId, product_id: "life-archetype",
-    input: { subjectId: subject.subjectId, subjectIdentity: subject, sourceAssessmentIds: enrichedSourceRows.map((row) => row.id), sourceReportHashes: enrichedSourceRows.map((row) => sourceDigest([row])), sourceHash, sourceWindowDays: 365, firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, generatedAt: new Date().toISOString(), relationshipEvidenceCount: relationshipByType.size },
+    input: { name:subject.displayName, subjectId: subject.subjectId, subjectIdentity: subject, normalizedSubjectName:subject.normalizedName, identityVerified:true, engineVersion:"v6", sourceAssessmentIds: enrichedSourceRows.map((row) => row.id), sourceReportHashes: enrichedSourceRows.map((row) => sourceDigest([row])), sourceHash, sourceWindowDays: 365, firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, generatedAt: new Date().toISOString(), relationshipEvidenceCount: relationshipByType.size, coverageAudit:result.archetypeCoverage },
     result, algorithm_version: result.algorithm,
   }).select("id").single();
   if (error || !data) throw new Error(`life archetype insert failed: ${error?.code ?? "unknown"}`);

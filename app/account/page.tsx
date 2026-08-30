@@ -74,7 +74,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   let romanceReports: { id: string; name: string | null; created_at: string }[] = [];
   let dailyTideReports: { id: string; name: string | null; generated_date: string; created_at: string }[] = [];
   let wealthReports: { id: string; name: string | null; created_at: string }[] = [];
-  let lifeArchetypeReports: { id: string; created_at: string; input: { name?: string } | null }[] = [];
+  let lifeArchetypeReports: { id: string; created_at: string; input: { name?: string; identityVerified?: boolean } | null }[] = [];
   // v252：生成过二维码、但还没被确认为已支付的订单——万一支付弹窗
   // 中途意外关闭（误触背景、或者用户直接切走了），这里给一条"事后
   // 还能回来确认"的路。只列最近的、状态还不是paid的订单，付过的和
@@ -160,7 +160,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
     romanceReports = romReports ?? [];
     dailyTideReports = dtReports ?? [];
     wealthReports = wReports ?? [];
-    lifeArchetypeReports = (archetypeReports ?? []) as typeof lifeArchetypeReports;
+    lifeArchetypeReports = ((archetypeReports ?? []) as typeof lifeArchetypeReports).filter((report)=>report.input?.identityVerified===true);
     pendingOrders = poReports ?? [];
   }
 

@@ -291,8 +291,9 @@ export default async function FieldOrdersPage() {
     const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
     const visibleArchives = (miniArchives ?? []).filter((row, index, all) => {
       if (row.product_id !== "life-archetype") return manifestActive || hasUnlock(activeUnlocks, row.product_id);
-      const subjectId = (row.input as { subjectId?: string } | null)?.subjectId;
-      return row.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
+      const archiveInput=(row.input as { subjectId?: string; identityVerified?: boolean } | null);
+      const subjectId = archiveInput?.subjectId;
+      return row.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && archiveInput?.identityVerified === true && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string; identityVerified?: boolean } | null)?.identityVerified === true && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
     });
     orders = [
       ...((data as OrderRow[]) ?? []),
