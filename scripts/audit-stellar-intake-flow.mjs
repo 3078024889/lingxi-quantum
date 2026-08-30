@@ -22,7 +22,7 @@ try {
   const button = page.locator('button:has-text("确认边界并开启")');
   if (!(await button.isDisabled())) throw new Error("payment entry must stay disabled before required intake");
   await page.locator('label:has-text("寻踪对象姓名") input').fill("支付前建档验收");
-  await page.locator('label:has-text("真实出生日期") input').fill("1990-05-01");
+  await page.locator('label:has-text("真实出生日期") input').fill("0200-05-01");
   await page.locator('label:has-text("最后有效联系日期") input').fill("2026-08-29");
   await page.locator('label:has-text("最后有效联系时间") input').fill("18:30");
   await page.locator('label:has-text("最后已知位置说明") input').fill("上海市验收坐标");
@@ -40,14 +40,16 @@ try {
   await page.screenshot({ path: path.join(outDir, "v3281-stellar-intake-mobile.png"), fullPage: true });
   await button.click();
   await page.waitForURL(/\/checkout\?.*productId=stellar-trace/, { timeout: 10000 });
-  const stored = await page.evaluate(() => window.localStorage.getItem("lingxifield:stellar-trace:draft:v1"));
-  if (!stored || !stored.includes("支付前建档验收")) throw new Error("intake was not preserved before checkout");
+  const stored = await page.evaluate(() => window.localStorage.getItem("lingxifield:stellar-trace:draft:v2"));
+  if (!stored || !stored.includes("支付前建档验收") || !stored.includes("0200-05-01")) throw new Error("intake was not preserved before checkout or ancient year was rejected");
 
   await page.evaluate(() => { window.localStorage.clear(); window.name = ""; });
-  await page.goto(`${baseUrl}/checkout?productId=stellar-trace&redirect=%2Fstellar-trace&intake=complete`, { waitUntil: "domcontentloaded" });
+  await page.goto(`${baseUrl}/checkout?productId=stellar-trace&redirect=%2Fstellar-trace&intake=complete`, { waitUntil: "commit" }).catch((error) => {
+    if (!String(error).includes("ERR_ABORTED")) throw error;
+  });
   try { await page.waitForURL(/\/stellar-trace\?intake=required/, { timeout: 20000 }); }
   catch {
-    const diagnostics = await page.evaluate(() => ({ url: location.href, draft: localStorage.getItem("lingxifield:stellar-trace:draft:v1"), windowName: window.name, text: document.body.innerText.slice(0, 500) }));
+    const diagnostics = await page.evaluate(() => ({ url: location.href, draft: localStorage.getItem("lingxifield:stellar-trace:draft:v2"), windowName: window.name, text: document.body.innerText.slice(0, 500) }));
     diagnostics.browserErrors = browserErrors;
     throw new Error(`direct checkout guard failed: ${JSON.stringify(diagnostics)}`);
   }

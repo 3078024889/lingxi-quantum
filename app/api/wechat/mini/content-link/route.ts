@@ -7,7 +7,7 @@ import { requireMiniSession } from "@/lib/mini/session";
 import { getNarrative } from "@/lib/narratives";
 import { getProduct } from "@/lib/plans";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sanitizeStellarTraceDraft, stellarTraceEssentialComplete } from "@/lib/stellar-trace-intake";
+import { sanitizeStellarTraceDraft, stellarTraceMissingFields } from "@/lib/stellar-trace-intake";
 
 export const runtime = "nodejs";
 
@@ -24,8 +24,9 @@ export async function POST(req: Request) {
 
   const admin = createAdminClient();
   const stellarDraft = body.productId === "stellar-trace" ? sanitizeStellarTraceDraft(body.stellarDraft) : null;
-  if (body.productId === "stellar-trace" && (!stellarDraft || !stellarTraceEssentialComplete(stellarDraft))) {
-    return NextResponse.json({ error: "请先完成寻踪档案必填项" }, { status: 400 });
+  const stellarMissing = stellarDraft ? stellarTraceMissingFields(stellarDraft) : [];
+  if (body.productId === "stellar-trace" && (!stellarDraft || stellarMissing.length > 0)) {
+    return NextResponse.json({ error: `寻踪档案尚缺：${stellarMissing.join("、") || "有效必填资料"}`, missingFields: stellarMissing }, { status: 400 });
   }
   const submissionId = typeof body.submissionId === "string" ? body.submissionId : null;
   let derivedArchetypeAccess = false;

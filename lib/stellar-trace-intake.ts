@@ -1,4 +1,4 @@
-export const STELLAR_TRACE_DRAFT_KEY = "lingxifield:stellar-trace:draft:v1";
+export const STELLAR_TRACE_DRAFT_KEY = "lingxifield:stellar-trace:draft:v2";
 
 export type StellarTraceDraft = {
   name: string;
@@ -45,8 +45,8 @@ export function sanitizeStellarTraceDraft(value: unknown): StellarTraceDraft {
 export function stellarTraceCompleteness(draft: StellarTraceDraft) {
   const [contactDate = "", contactTime = ""] = draft.lastContactAt.split(/[T ]/);
   const mapPoint = validCoordinates(draft);
-  return [draft.name, draft.relationship, draft.birthDate, draft.birthTime, draft.birthPlace,
-    contactDate, contactTime, draft.lastKnownPlace, mapPoint,
+  return [draft.name, draft.relationship, validIsoDate(draft.birthDate), /^([01]\d|2[0-3]):[0-5]\d$/.test(draft.birthTime), draft.birthPlace,
+    validIsoDate(contactDate), validContactAt(draft.lastContactAt) && !!contactTime, draft.lastKnownPlace, mapPoint,
     draft.movementDirection, draft.context]
     .filter(Boolean).length;
 }
@@ -60,8 +60,10 @@ export function validCoordinates(draft: Pick<StellarTraceDraft, "lastKnownLat" |
 export function validIsoDate(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const [year, month, day] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  return year >= 1900 && date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day && date.getTime() <= Date.now();
+  const date = new Date(0);
+  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCFullYear(year, month - 1, day);
+  return year >= 1 && date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day && date.getTime() <= Date.now();
 }
 
 export function validContactAt(value: string) {
@@ -72,7 +74,17 @@ export function validContactAt(value: string) {
 }
 
 export function stellarTraceCoreCompleteness(draft: StellarTraceDraft) {
-  return [!!draft.name, validIsoDate(draft.birthDate), validContactAt(draft.lastContactAt), !!draft.lastKnownPlace, validCoordinates(draft)].filter(Boolean).length;
+  return 5 - stellarTraceMissingFields(draft).length;
+}
+
+export function stellarTraceMissingFields(draft: StellarTraceDraft) {
+  return [
+    !draft.name && "寻踪对象姓名",
+    !validIsoDate(draft.birthDate) && "有效出生日期（公元 0001 年至今）",
+    !validContactAt(draft.lastContactAt) && "最后有效联系日期与时间（不得晚于现在）",
+    !draft.lastKnownPlace && "最后已知位置说明",
+    !validCoordinates(draft) && "精准地图选点",
+  ].filter((field): field is string => !!field);
 }
 
 export function stellarTraceEssentialComplete(draft: StellarTraceDraft) {

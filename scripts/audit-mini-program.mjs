@@ -67,6 +67,7 @@ const productView = read("miniapp/pages/product/index.wxml");
 const contentDestinations = read("lib/mini/content-destinations.ts");
 const checkout = read("app/checkout/page.tsx");
 const stellarExperience = read("app/stellar-trace/StellarTraceExperience.tsx");
+const stellarMiniIntake = read("miniapp/utils/stellar-trace-intake.js");
 const miniSources = fs.readdirSync(path.join(root, "miniapp"), { recursive: true })
   .filter((file) => typeof file === "string" && /\.(js|json|wxml|wxss)$/.test(file))
   .map((file) => read(path.join("miniapp", file))).join("\n");
@@ -92,6 +93,8 @@ check("Stellar Trace is the first cross-platform Field Insight at RMB 688", /id:
 check("Mini Program purchases and opens Stellar Trace without a fake questionnaire submission", /productId === 'stellar-trace'/.test(exploreClient) && /item\.productId !== 'stellar-trace'/.test(productClient) && /productId === "stellar-trace"\) return "\/stellar-trace"/.test(contentDestinations));
 check("Stellar Trace is a seven-day entitlement, never permanent access", /id: "stellar-trace"[\s\S]{0,260}type: "subscription", days: 7/.test(plans) && /支付成功起 7 天有效/.test(exploreView) && /item\.productId !== 'stellar-trace'/.test(productView));
 check("Stellar Trace requires its unified eleven-part intake before payment", ["寻踪对象姓名", "与寻踪对象的关系", "真实出生日期", "出生时间", "出生地点", "最后有效联系日期", "最后有效联系时间", "最后已知位置说明", "精准地图选点", "最后一次已知移动方向", "最后一次有效信息"].every((term) => `${productView}\n${productClient}`.includes(term)) && productView.includes("stellarCompleteness * 9.0909") && /STELLAR_TRACE_DRAFT_KEY/.test(checkout) && /确认边界并开启/.test(stellarExperience));
+check("Stellar Trace Mini Program uses one canonical v2 intake instead of display and payload twins", /lingxifield_stellar_trace_draft_v2/.test(stellarMiniIntake) && /sanitizeStellarDraft/.test(productClient) && /buildStellarDraft\(\)/.test(productClient) && !/stellarDraft:\s*\{/.test(productClient) && !/stellarDraft\./.test(productView));
+check("Stellar Trace accepts historical subjects from year 0001 through today", /year >= 1/.test(stellarMiniIntake) && /start="0001-01-01"/.test(productView) && /min="0001-01-01"/.test(stellarExperience));
 check("Stellar Trace rerun wording stays in My Field instead of the purchase channel", !/重新推演星迹 · 7天内免付/.test(productView) && /7 天内可重新推演/.test(profileClient));
 check("Stellar Trace discloses non-convergence before payment", /riskAcknowledged/.test(productClient) && /支付前结果边界/.test(productView) && /不保证形成唯一候选坐标/.test(productView) && /模型止于证界不等同于技术故障/.test(productView));
 check("Mini-to-web Stellar Trace intake is encrypted and never placed in a URL", /stellarDraft/.test(contentLink) && /encryptMiniSecret\(JSON\.stringify\(ticket\.stellarDraft\)\)/.test(contentOpen) && !/searchParams\.set\(["']stellarDraft/.test(contentOpen));
