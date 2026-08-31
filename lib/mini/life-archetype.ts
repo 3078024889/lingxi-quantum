@@ -3,6 +3,7 @@ import { hasUnlock } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { subjectFromAssessment, type SubjectIdentity } from "@/lib/report-subject";
 import { BASE_DENDRITE_PRODUCT_IDS, calculateDendrite, calculateLifeArchetypeFromReports, getDendriteProduct, MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult, type RelationshipAssessmentType } from "@/lib/mini/dendrite-engine";
+import { webPublicationEvidence } from "@/lib/mini/web-report-evidence";
 
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
@@ -18,6 +19,52 @@ export const LIFE_ARCHETYPE_TRIBUTARIES = [
 ] as const;
 
 type AssessmentRow = { id: string; product_id: string; input: unknown; result: unknown; created_at: string; algorithm_version?: string };
+
+type WebReportSpec = {
+  productId: string;
+  table: string;
+  select: string;
+  nameField: string;
+};
+
+const WEB_REPORT_SPECS: WebReportSpec[] = [
+  { productId:"life-map-report", table:"life_map_submissions", select:"id,name,birth_input,full_report,created_at", nameField:"name" },
+  { productId:"relationship-resonance", table:"relationship_submissions", select:"id,name_a,name_b,birth_input_a,relationship_type,full_report,created_at", nameField:"name_a" },
+  { productId:"resilience-report", table:"resilience_submissions", select:"id,name,birth_input,full_report,created_at", nameField:"name" },
+  { productId:"romance-report", table:"romance_submissions", select:"id,name,birth_input,full_report,created_at", nameField:"name" },
+  { productId:"wealth-report", table:"wealth_submissions", select:"id,name,birth_input,full_report,created_at", nameField:"name" },
+  { productId:"daily-tide-report", table:"daily_tide_submissions", select:"id,name,birth_input,full_report,created_at", nameField:"name" },
+  { productId:"tarot-reading", table:"tarot_reading_submissions", select:"id,name,birth_input,full_report,created_at", nameField:"name" },
+  { productId:"qian-reading", table:"qian_submissions", select:"id,name,birth_input,full_report,created_at", nameField:"name" },
+];
+
+function relationshipTypeFromWeb(value: unknown): RelationshipAssessmentType {
+  return value === "business" ? "business" : value === "general" ? "other" : "deep";
+}
+
+function webRowToAssessment(spec: WebReportSpec, row: Record<string, unknown>): AssessmentRow | null {
+  const rawName = row[spec.nameField];
+  const name = typeof rawName === "string" ? rawName.trim() : "";
+  const report = typeof row.full_report === "string" ? row.full_report.trim() : "";
+  const id = typeof row.id === "string" ? row.id : "";
+  const createdAt = typeof row.created_at === "string" ? row.created_at : "";
+  if (!name || !report || !id || !createdAt) return null;
+  const relationshipType = spec.productId === "relationship-resonance" ? relationshipTypeFromWeb(row.relationship_type) : undefined;
+  const result = webPublicationEvidence({ id, productId:spec.productId, report, relationshipType });
+  if (!result) return null;
+  const birth = (spec.productId === "relationship-resonance" ? row.birth_input_a : row.birth_input) as Record<string, unknown> | null;
+  const birthDate = birth && [birth.year,birth.month,birth.day].every((value) => typeof value === "number")
+    ? `${String(birth.year).padStart(4,"0")}-${String(birth.month).padStart(2,"0")}-${String(birth.day).padStart(2,"0")}`
+    : undefined;
+  return {
+    id:`web:${spec.table}:${id}`,
+    product_id:spec.productId,
+    input:{ name, ...(birthDate?{birthDate}:{}), source:"web-publication", ...(relationshipType?{relationshipType}:{}), ...(typeof row.name_b === "string"?{partnerName:row.name_b}: {}) },
+    result,
+    created_at:createdAt,
+    algorithm_version:"web-publication-v1",
+  };
+}
 
 function hasEvidenceLeaves(row: AssessmentRow) {
   const leaves = (row.result as { evidenceLeaves?: unknown[] } | null)?.evidenceLeaves;
@@ -92,15 +139,27 @@ async function loadSubjectState(userId: string) {
   const admin = createAdminClient();
   const now = Date.now();
   const cutoff = new Date(now - YEAR_MS).toISOString();
-  const [{ data: unlocks }, { data: profile }, { data: rows }, { data: archetypes }] = await Promise.all([
+  const [{ data: unlocks }, { data: profile }, { data: rows }, { data: archetypes }, webResults] = await Promise.all([
     admin.from("unlocks").select("product_id, expires_at").eq("user_id", userId),
     admin.from("profiles").select("manifest_until").eq("id", userId).maybeSingle(),
     admin.from("mini_dendrite_assessments").select("id, product_id, input, result, created_at, algorithm_version").eq("user_id", userId).in("product_id", BASE_DENDRITE_PRODUCT_IDS as unknown as string[]).gte("created_at", cutoff).order("created_at", { ascending: false }).limit(240),
     admin.from("mini_dendrite_assessments").select("id, input, created_at, algorithm_version").eq("user_id", userId).eq("product_id", "life-archetype").order("created_at", { ascending: false }).limit(32),
+    Promise.all(WEB_REPORT_SPECS.map(async (spec) => ({
+      spec,
+      response: await admin.from(spec.table).select(spec.select).eq("user_id",userId).gte("created_at",cutoff).order("created_at",{ascending:false}).limit(48),
+    }))),
   ]);
   const active = (unlocks ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > now).map((row) => row.product_id);
   const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
-  const hydratedRows = ((rows ?? []) as AssessmentRow[]).map(rehydrateEvidence);
+  const webRows = webResults.flatMap(({ spec, response }) => {
+    if (response.error) {
+      console.error(`[life-archetype] failed to read ${spec.table}`, response.error.code);
+      return [] as AssessmentRow[];
+    }
+    return ((response.data ?? []) as unknown as Record<string,unknown>[]).map((row) => webRowToAssessment(spec,row)).filter((row):row is AssessmentRow=>!!row);
+  });
+  const hydratedRows = [...((rows ?? []) as AssessmentRow[]).map(rehydrateEvidence), ...webRows]
+    .sort((left,right)=>Date.parse(right.created_at)-Date.parse(left.created_at));
   return { admin, active, manifestActive, groups: subjectGroups(userId, hydratedRows), archetypes: (archetypes ?? []) as AssessmentRow[] };
 }
 

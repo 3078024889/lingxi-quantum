@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
-import { stripMarkdownArtifacts } from "@/lib/text-clean";
+import { stripMarkdownArtifacts, stripRepeatedHeading } from "@/lib/text-clean";
 import { DIM_LABEL, type LifeVector, type LifeVectorDim } from "@/lib/life-vector";
 import SpiralField from "@/components/SpiralField";
 import PortalSpinner from "@/components/PortalSpinner";
@@ -217,8 +217,12 @@ export default function RelationshipReportView({ id }: { id: string }) {
               : undefined,
         })),
         fileName: langEn ? `Lingxi-${relLabel.en}-${reportTitle}.pdf` : `灵犀${relLabel.zh}档案-${reportTitle}.pdf`,
-        titleZh: `${reportTitle} · ${relLabel.zh}图谱`,
-        titleEn: `${reportTitle} · ${relLabel.en}`,
+        titleZh: `你的灵犀${relLabel.zh}`,
+        titleEn: `Your Lingxi ${relLabel.en}`,
+        subjectName: reportTitle,
+        coverStatementZh: relType === "business" ? "盟以利合，更须以责相守；观其同向，亦察其相争。" : relType === "general" ? "缘有远近，情有分寸；明其所连，亦定其所止。" : "相遇非答案，照见方是；观其所亲，亦察其所惧。",
+        coverStatementEn: relType === "business" ? "Alliance begins in shared value and endures through explicit responsibility." : relType === "general" ? "Every bond has a fitting distance; see what joins it and where it must stop." : "Meeting is not the answer; the bond reveals how each approaches and withdraws.",
+        archiveLabelZh: `灵犀场${relLabel.zh}档案`,
         language: langEn ? "en" : "zh",
         eyebrow: "RELATIONSHIP RESONANCE",
         theme: ARCHIVE_THEMES.relationship,
@@ -403,7 +407,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
               <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
                 {String(i + 1).padStart(2, "0")} · <Bi zh={chapterTitle?.zh ?? ""} en={chapterTitle?.en ?? ""} />
               </p>
-              <div className="lx-publication-copy mt-6 whitespace-pre-line text-[#423753]">{stripMarkdownArtifacts(content)}</div>
+              <div className="lx-publication-copy mt-6 whitespace-pre-line text-[#423753]">{stripRepeatedHeading(content, langEn ? chapterTitle?.en ?? "" : chapterTitle?.zh ?? "")}</div>
               {isSeal && (
                 <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
                   <p className="font-display text-sm italic text-lattice/85">

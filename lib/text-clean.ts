@@ -24,3 +24,24 @@ export function stripMarkdownArtifacts(text: string): string {
       .trim()
   );
 }
+
+function normalizedReportHeading(value: string) {
+  return stripMarkdownArtifacts(value)
+    .replace(/^[\s①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳◆◇·.、\-—0-9]+/u, "")
+    .replace(/[\s：:｜|【】\[\]（）()]+/gu, "")
+    .toLocaleLowerCase("zh-CN");
+}
+
+/** Removes a generator-emitted chapter heading when the publication shell
+ * already renders that same title. It only inspects the leading line so body
+ * references to the chapter theme remain untouched.
+ */
+export function stripRepeatedHeading(text: string, visibleTitle: string): string {
+  const cleaned = stripMarkdownArtifacts(text);
+  const lines = cleaned.split("\n");
+  const first = normalizedReportHeading(lines[0] ?? "");
+  const title = normalizedReportHeading(visibleTitle);
+  if (!first || !title) return cleaned;
+  const same = first === title || (first.length >= 4 && title.length >= 4 && (first.includes(title) || title.includes(first)));
+  return same ? lines.slice(1).join("\n").trim() : cleaned;
+}

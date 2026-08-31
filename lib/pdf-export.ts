@@ -637,6 +637,12 @@ export async function exportArchivePdf(params: {
   fileName: string;
   titleZh: string;
   titleEn: string;
+  /** Cover identity and editorial line shared by every paid archive. */
+  subjectName?: string;
+  coverStatementZh?: string;
+  coverStatementEn?: string;
+  archiveLabelZh?: string;
+  archiveLabelEn?: string;
   /** 当前报告语言。英文档案必须单语输出，不能在封面残留中文标题。 */
   language?: "zh" | "en";
   coverImage: string;
@@ -688,7 +694,8 @@ export async function exportArchivePdf(params: {
   ]);
 
   await document.fonts.ready;
-  await preloadPdfAssets([coverImage, endImage, ...bodyImages, ...featurePages.flatMap((page) => [page.image, page.backgroundImage ?? ""])]);
+  const brandLogo = "/images/lingxifield-logo.png";
+  await preloadPdfAssets([brandLogo, coverImage, endImage, ...bodyImages, ...featurePages.flatMap((page) => [page.image, page.backgroundImage ?? ""])]);
 
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
   const PW = pdf.internal.pageSize.getWidth();
@@ -730,15 +737,37 @@ export async function exportArchivePdf(params: {
 
   const escapeHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+  const normalizedTitle = (value: string) => value.replace(/^#{1,4}\s*/, "").replace(/^\d{1,2}\s*[·.、-]\s*/, "").replace(/[：:]+$/, "").trim();
+  const withoutRepeatedTitle = (body: string, title: string) => {
+    const lines = body.split("\n");
+    const first = normalizedTitle(lines[0] ?? "");
+    return first && first === normalizedTitle(title) ? lines.slice(1).join("\n").trim() : body.trim();
+  };
+  const subjectName = params.subjectName?.trim() || (language === "en" ? "Personal Archive" : "个人场域档案");
+  const coverStatement = language === "en"
+    ? (params.coverStatementEn ?? "A field archive grounded in calculation, evidence, and lived verification.")
+    : (params.coverStatementZh ?? "取其时，参其证，照见此刻生命结构。");
+  const archiveLabel = language === "en"
+    ? (params.archiveLabelEn ?? "LINGXI FIELD ARCHIVE")
+    : (params.archiveLabelZh ?? "灵犀场生命档案");
+  const issuedDate = new Date().toISOString().slice(0,10).replace(/-/g,"/");
+
   // ── 封面 ──
   pdf.addImage(await renderPage(pageShell(coverImage, "center 40%", `
-    <div style="position:absolute;left:64px;right:64px;top:34%;
-                background:${theme.gradient};border:1px solid ${theme.border};
-                border-radius:6px;padding:46px 40px;text-align:center;
-                box-shadow:0 18px 60px rgba(40,36,70,.18);">
-      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12px;letter-spacing:.4em;color:#686176;">LINGXI FIELD</div>
-      <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:34px;color:#2E2942;margin-top:18px;letter-spacing:.08em;">${escapeHtml(primaryTitle)}</div>
-      ${secondaryTitle ? `<div style="font-size:13px;color:#6B6285;margin-top:14px;letter-spacing:.06em;">${escapeHtml(secondaryTitle)}</div>` : ""}
+    <div style="position:absolute;left:64px;right:64px;top:112px;bottom:112px;
+                display:flex;flex-direction:column;align-items:center;justify-content:center;
+                background:linear-gradient(145deg,rgba(255,253,250,.78),rgba(246,243,250,.64));
+                border:1px solid rgba(255,255,255,.72);border-radius:8px;padding:48px 46px;text-align:center;
+                box-shadow:0 22px 70px rgba(40,36,70,.16);">
+      <img src="${brandLogo}" style="width:74px;height:74px;object-fit:cover;border-radius:3px;box-shadow:0 10px 28px rgba(35,28,58,.22);" />
+      <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:12px;letter-spacing:.42em;color:#686176;margin-top:22px;">${escapeHtml(eyebrow)}</div>
+      <div style="font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:36px;line-height:1.35;color:#2E2942;margin-top:24px;letter-spacing:.07em;">${escapeHtml(primaryTitle)}</div>
+      ${secondaryTitle ? `<div style="font-size:13px;color:#6B6285;margin-top:12px;letter-spacing:.12em;">${escapeHtml(secondaryTitle)}</div>` : ""}
+      <div style="width:64px;height:1px;background:${theme.accent};opacity:.58;margin:24px 0 20px;"></div>
+      <div style="max-width:560px;font-family:'Noto Serif SC','Source Han Serif SC',serif;font-size:16px;line-height:1.9;color:#423B55;letter-spacing:.035em;">${escapeHtml(coverStatement)}</div>
+      <div style="font-size:12px;color:#6F687D;margin-top:34px;letter-spacing:.08em;">${escapeHtml(subjectName)} · ${issuedDate}</div>
+      <div style="font-size:11px;color:#8C8498;margin-top:9px;letter-spacing:.12em;">${escapeHtml(archiveLabel)}</div>
+      <div style="font-size:11px;color:#8C8498;margin-top:8px;letter-spacing:.08em;">lingxifield.com · lingxifield.cn</div>
     </div>`)), "JPEG", 0, 0, PW, PH);
 
   // A card is a focal reading object.  Rendering it through this shared page
@@ -917,7 +946,7 @@ export async function exportArchivePdf(params: {
   };
   /* Legacy one-chapter-per-page paginator.
   for (let i = 0; i < chapters.length; i++) {
-    const ch = chapters[i];
+    const ch = { ...chapters[i], body: withoutRepeatedTitle(chapters[i].body, chapters[i].title) };
     const headline = `${eyebrow} · ${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
     const figureHtml = ch.figure ? await captureFigure(ch.figure, ch.figureCaption) : "";
     const parts = paginateChapter(headline, ch.title, ch.body, "");
@@ -950,7 +979,8 @@ export async function exportArchivePdf(params: {
   */
 
   for (let chapterIndex = 0; chapterIndex < chapters.length; chapterIndex++) {
-    const chapter = chapters[chapterIndex];
+    const sourceChapter = chapters[chapterIndex];
+    const chapter = { ...sourceChapter, body: withoutRepeatedTitle(sourceChapter.body, sourceChapter.title) };
     const units = chapterUnits(chapter.body);
     let offset = 0;
     let continued = false;

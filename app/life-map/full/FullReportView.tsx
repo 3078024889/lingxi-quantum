@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import NatalChartWheel from "../NatalChartWheel";
-import { stripMarkdownArtifacts } from "@/lib/text-clean";
+import { stripMarkdownArtifacts, stripRepeatedHeading } from "@/lib/text-clean";
 import { lifemapTypeImage, lifemapTypeNameEn } from "@/lib/lifemap-type-images";
 import ShareButton from "@/components/ShareButton";
 import { useLang } from "@/lib/useLang";
@@ -57,6 +57,7 @@ export default function FullReportView({ id }: { id: string }) {
   // 这里按章节序号存一份引用，导出时按 index 取。
   const figureRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const [sections, setSections] = useState<string[]>([]);
+  const [name, setName] = useState("");
   const [coreTypeName, setCoreTypeName] = useState("");
   const [facts, setFacts] = useState<ChartFacts | null>(null);
   const [freqScores, setFreqScores] = useState<{ energy: number; clarity: number; alignment: number } | null>(null);
@@ -80,10 +81,11 @@ export default function FullReportView({ id }: { id: string }) {
 
       const { data: submission } = await supabase
         .from("life_map_submissions")
-        .select("core_type_name, facts, birth_input, energy_level, clarity_level, alignment_level, focus, free_narrative")
+        .select("name, core_type_name, facts, birth_input, energy_level, clarity_level, alignment_level, focus, free_narrative")
         .eq("id", id)
         .single();
       if (submission?.core_type_name) setCoreTypeName(submission.core_type_name);
+      if (submission?.name) setName(submission.name);
       let loadedFacts = submission?.facts as ChartFacts | undefined;
       if (loadedFacts) setFacts(loadedFacts);
       // 老报告（"人类图·门"这个板块上线之前生成的）facts 里没有 humanDesign
@@ -268,8 +270,12 @@ export default function FullReportView({ id }: { id: string }) {
           figureCaption: FIGURE_CAPTIONS[i] ? t(FIGURE_CAPTIONS[i].zh, FIGURE_CAPTIONS[i].en) : undefined,
         })),
         fileName: langEn ? `Lingxi-Life-Map-${lifemapTypeNameEn(coreTypeName) || "report"}.pdf` : `灵犀生命图谱-${coreTypeName || "report"}.pdf`,
-        titleZh: `${coreTypeName || "你的"}生命图谱`,
-        titleEn: `${lifemapTypeNameEn(coreTypeName) || "Your"} Life Map`,
+        titleZh: "你的灵犀生命图谱",
+        titleEn: "Your Lingxi Life Blueprint",
+        subjectName: name || coreTypeName || "未署名",
+        coverStatementZh: "命非一言可尽；循其生时与诸证，见所长、所蔽与可转之机。",
+        coverStatementEn: "A life is not contained by one label; follow its time and evidence to see strength, shadow, and the next pivot.",
+        archiveLabelZh: "灵犀场生命图谱档案",
         language: langEn ? "en" : "zh",
         eyebrow: "LIFE MAP",
         theme: ARCHIVE_THEMES.lifemap,
@@ -502,7 +508,7 @@ export default function FullReportView({ id }: { id: string }) {
                   </h2>
                   <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
                   <div className="lx-publication-copy mt-6 whitespace-pre-line text-[#423753]">
-                    {stripMarkdownArtifacts(content)}
+                    {stripRepeatedHeading(content, langEn ? SECTION_TITLES[i]?.en ?? "" : SECTION_TITLES[i]?.zh ?? "")}
                   </div>
                 </div>
               </section>

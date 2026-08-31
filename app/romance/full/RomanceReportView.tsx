@@ -8,6 +8,7 @@ import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
+import { stripRepeatedHeading } from "@/lib/text-clean";
 
 // v236：11章节，跟 app/api/romance/generate-full/route.ts 里
 // buildChapters() 的顺序必须完全一致。
@@ -99,8 +100,12 @@ export default function RomanceReportView({ id }: { id: string }) {
           body,
         })),
         fileName: langEn ? `Lingxi-Romance-Field-${name || "report"}.pdf` : `灵犀桃花磁场档案-${name || "report"}.pdf`,
-        titleZh: `${name || "你的"}桃花磁场档案`,
-        titleEn: `${name || "Your"} Romance Resonance Archive`,
+        titleZh: "你的灵犀桃花磁场",
+        titleEn: "Your Lingxi Romance Field",
+        subjectName: name || "未署名",
+        coverStatementZh: "花开有候，缘起有因；见其所引，亦辨其所拒。",
+        coverStatementEn: "Attraction has a season and a cause; see what draws near and what keeps distance.",
+        archiveLabelZh: "灵犀场桃花磁场档案",
         language: langEn ? "en" : "zh",
         eyebrow: "ROMANCE FIELD",
         theme: ARCHIVE_THEMES.romance,
@@ -216,7 +221,7 @@ export default function RomanceReportView({ id }: { id: string }) {
                 </h3>
                 <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
                 <div className="lx-publication-copy mt-6 space-y-4 text-[#423753]">
-                  {content.split("\n\n").filter(Boolean).map((para, k) => (
+                  {stripRepeatedHeading(content, langEn ? title.titleEn : title.titleZh).split("\n\n").filter(Boolean).map((para, k) => (
                     <p key={k}>{para}</p>
                   ))}
                 </div>

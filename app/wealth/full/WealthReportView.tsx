@@ -8,6 +8,7 @@ import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
+import { stripRepeatedHeading } from "@/lib/text-clean";
 
 // v297修复：这份数组之前是从 resilience 组件直接复制过来的，
 // 12 条韧性主题标题，跟 app/api/wealth/generate-full/route.ts 里
@@ -105,8 +106,12 @@ export default function WealthReportView({ id }: { id: string }) {
           body,
         })),
         fileName: langEn ? `Lingxi-Wealth-Creation-${name || "report"}.pdf` : `灵犀财富创造地图-${name || "report"}.pdf`,
-        titleZh: `${name || "你的"}财富创造地图`,
-        titleEn: `${name || "Your"} Wealth Creation Map`,
+        titleZh: "你的灵犀财富创造地图",
+        titleEn: "Your Lingxi Wealth Creation Map",
+        subjectName: name || "未署名",
+        coverStatementZh: "财非逐末，实由价值而生；察其所创，明其所承。",
+        coverStatementEn: "Wealth follows created value; see what you make and what you can truly carry.",
+        archiveLabelZh: "灵犀场财富创造档案",
         language: langEn ? "en" : "zh",
         eyebrow: "WEALTH CREATION",
         theme: ARCHIVE_THEMES.wealth,
@@ -222,7 +227,7 @@ export default function WealthReportView({ id }: { id: string }) {
                 </h3>
                 <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
                 <div className="lx-publication-copy mt-6 space-y-4 text-[#423753]">
-                  {content.split("\n\n").filter(Boolean).map((para, k) => (
+                  {stripRepeatedHeading(content, langEn ? title.titleEn : title.titleZh).split("\n\n").filter(Boolean).map((para, k) => (
                     <p key={k}>{para}</p>
                   ))}
                 </div>

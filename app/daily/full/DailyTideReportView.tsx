@@ -8,6 +8,7 @@ import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
+import { stripRepeatedHeading } from "@/lib/text-clean";
 
 // v297修复：这份数组之前是从 resilience 组件直接复制过来的，跟
 // app/api/daily-tide/generate-full/route.ts 里 buildChapters() 实际
@@ -107,8 +108,12 @@ export default function DailyTideReportView({ id }: { id: string }) {
           body,
         })),
         fileName: langEn ? `Lingxi-Daily-Tide-${name || "report"}.pdf` : `灵犀今日潮汐-${name || "report"}.pdf`,
-        titleZh: `${name || "你的"}今日潮汐`,
-        titleEn: `${name || "Your"} Today’s Tide`,
+        titleZh: "你的灵犀今日潮汐",
+        titleEn: "Your Lingxi Daily Tide",
+        subjectName: name || "未署名",
+        coverStatementZh: "潮有进退，事有张弛；识今日之势，取一进，守一止。",
+        coverStatementEn: "Every tide advances and recedes; choose one act to advance and one to withhold.",
+        archiveLabelZh: "灵犀场今日潮汐档案",
         language: langEn ? "en" : "zh",
         eyebrow: "DAILY TIDE",
         theme: ARCHIVE_THEMES.daily,
@@ -224,7 +229,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
                 </h3>
                 <div className="mt-3 h-px w-14 bg-[#B9A6D6]" />
                 <div className="lx-publication-copy mt-6 space-y-4 text-[#423753]">
-                  {content.split("\n\n").filter(Boolean).map((para, k) => (
+                  {stripRepeatedHeading(content, langEn ? title.titleEn : title.titleZh).split("\n\n").filter(Boolean).map((para, k) => (
                     <p key={k}>{para}</p>
                   ))}
                 </div>

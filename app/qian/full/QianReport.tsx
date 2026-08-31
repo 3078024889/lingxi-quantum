@@ -9,6 +9,7 @@ import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
+import { stripRepeatedHeading } from "@/lib/text-clean";
 
 // 四段解读对应doc21的报告设计——不是随便起的名字，是"三签怎么组合→
 // 天赋数字地图→当前处在哪个阶段→接下来具体练什么"这条完整的自我
@@ -148,8 +149,12 @@ export default function QianReport({ id }: { id: string }) {
           }))
           .filter((c) => c.body && c.body.trim()),
         fileName: langEn ? `Lingxi-Life-Oracle-${name || "report"}.pdf` : `灵犀生命灵签-${name || "report"}.pdf`,
-        titleZh: `${name || "你的"}生命灵签档案`,
-        titleEn: `${name || "Your"} Life Oracle Archive`,
+        titleZh: "你的灵犀生命灵签",
+        titleEn: "Your Lingxi Life Oracle",
+        subjectName: name || "未署名",
+        coverStatementZh: "签不代决，惟照此心；观其所问，明其所守与所行。",
+        coverStatementEn: "The oracle does not decide for you; it reveals the question, the guardrail, and the next act.",
+        archiveLabelZh: "灵犀场生命灵签档案",
         language: langEn ? "en" : "zh",
         eyebrow: "LIFE ORACLE",
         theme: ARCHIVE_THEMES.qian,
@@ -346,7 +351,7 @@ export default function QianReport({ id }: { id: string }) {
                       <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
                     </p>
                   )}
-                  <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
+                  <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{stripRepeatedHeading(sections[idx], langEn ? LAYER_TITLES[idx]?.en ?? "" : LAYER_TITLES[idx]?.zh ?? "")}</p>
                 </div>
               ) : null
             ))}
@@ -365,7 +370,7 @@ export default function QianReport({ id }: { id: string }) {
                 <Bi zh={LAYER_TITLES[sections.length - 1].zh} en={LAYER_TITLES[sections.length - 1].en} />
               </p>
             )}
-            <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[sections.length - 1]}</p>
+            <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{stripRepeatedHeading(sections[sections.length - 1], langEn ? LAYER_TITLES[sections.length - 1]?.en ?? "" : LAYER_TITLES[sections.length - 1]?.zh ?? "")}</p>
             <div className="mt-6 border-t border-lattice/25 pt-5 text-center">
               <p className="font-display text-sm italic text-lattice/85">
                 <Bi zh="场已回应。" en="The field has spoken." />

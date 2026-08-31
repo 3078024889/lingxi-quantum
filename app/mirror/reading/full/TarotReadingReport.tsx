@@ -9,6 +9,7 @@ import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
+import { stripRepeatedHeading } from "@/lib/text-clean";
 
 // v237：12段合并成11段——财富创造地图+事业使命地图合并成"价值创造
 // 地图"，三张牌（hidden/present/future）的具体解析内容完全没动。
@@ -143,8 +144,12 @@ export default function TarotReadingReport({ id }: { id: string }) {
           }))
           .filter((c) => c.body && c.body.trim()),
         fileName: langEn ? `Lingxi-Quantum-Life-Mirror-${name || "reading"}.pdf` : `灵犀量子生命镜像-${name || "reading"}.pdf`,
-        titleZh: `${name || "你的"}量子生命镜像档案`,
-        titleEn: `${name || "Your"} Quantum Life Mirror Archive`,
+        titleZh: "你的灵犀量子生命镜像",
+        titleEn: "Your Lingxi Quantum Life Mirror",
+        subjectName: name || "未署名",
+        coverStatementZh: "三张牌非答案，乃你与自身深层意识的一次对话。",
+        coverStatementEn: "Three cards are not an answer, but a dialogue with the deeper self.",
+        archiveLabelZh: "灵犀量子生命镜像档案",
         language: langEn ? "en" : "zh",
         eyebrow: "QUANTUM LIFE MIRROR",
         theme: ARCHIVE_THEMES.tarot,
@@ -317,7 +322,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
                     <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
                   </p>
                 )}
-                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
+                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{stripRepeatedHeading(sections[idx], langEn ? LAYER_TITLES[idx]?.en ?? "" : LAYER_TITLES[idx]?.zh ?? "")}</p>
               </div>
             ) : null
           ))}
@@ -339,7 +344,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
                     <Bi zh={LAYER_TITLES[idx].zh} en={LAYER_TITLES[idx].en} />
                   </p>
                 )}
-                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{sections[idx]}</p>
+                <p className="whitespace-pre-line text-base leading-9 text-bone-dim">{stripRepeatedHeading(sections[idx], langEn ? LAYER_TITLES[idx]?.en ?? "" : LAYER_TITLES[idx]?.zh ?? "")}</p>
               </div>
             ) : null
           )}

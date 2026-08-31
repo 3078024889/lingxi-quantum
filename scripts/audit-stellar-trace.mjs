@@ -22,13 +22,13 @@ const review=math.analyzeCircularDirections([15,116.6,182.7,320.8]);
 if(Math.abs(review.resultantLength-0.139)>0.003)failures.push(`review sample R expected ~0.139, got ${review.resultantLength}`);
 if(review.modes.length<1)failures.push("multi-mode description is absent");
 const engine=readFileSync(resolve(process.cwd(),"lib/stellar-trace.ts"),"utf8");
-for(const token of ['version:"lingxifield-stellar-trace-v3"','priorityFrom(direction,evidence,input)','candidateRegions','candidateCenter','distanceClue(input.context)','reachabilityBand(input.context,hours)','sourceKind:"astronomical-symbolic"|"reported-reality"','resultingRangeKm:null'])if(!engine.includes(token))failures.push(`engine missing ${token}`);
+for(const token of ['version:"lingxifield-stellar-trace-v3"','priorityFrom(direction,evidence,input)','candidateRegions','candidateZones','mobilityScenarioBands(hours)','candidateCenter','distanceClue(input.context)','reachabilityBand(input.context,hours)','sourceKind:"astronomical-symbolic"|"reported-reality"','resultingRangeKm:null'])if(!engine.includes(token))failures.push(`engine missing ${token}`);
 if(!engine.includes('reality?.bearing??'))failures.push("reported reality direction must outrank symbolic means");
 const visualization=readFileSync(resolve(process.cwd(),"app/stellar-trace/StellarTraceVisualization.tsx"),"utf8");
 for(const token of ['const stages = ["定时", "落证", "合度", "显域"]','data-stellar-visualization={mode}','mode === "print"','主核验方位 · <strong>'])if(!visualization.includes(token))failures.push(`visualization missing ${token}`);
 if(visualization.includes("P50")||visualization.includes("P75")||visualization.includes("P90"))failures.push("visualization must not invent calibrated probability regions");
 const experience=readFileSync(resolve(process.cwd(),"app/stellar-trace/StellarTraceExperience.tsx"),"utf8");
-for(const token of ['循时而索迹，因星而见位。','title="诸证合度"','title="九域据链 · 现实核验"','主核验方位','现实核验次序','权益自支付成功起 7 天内有效','支付前结果边界','保证交付九域历算','不把天文角度伪装成公里距离或现实坐标'])if(!experience.includes(token))failures.push(`experience missing ${token}`);
+for(const token of ['循时而索迹，因星而见位。','title="诸证合度"','title="三层候选区 · 现实核验"','主核验方位','现实核验次序','权益自支付成功起 7 天内有效','支付前结果边界','保证交付九域历算','候选区是移动情景'])if(!experience.includes(token))failures.push(`experience missing ${token}`);
 for(const stale of ['方向资格检验','证据链与停止条件','次簇'])if(experience.includes(stale))failures.push(`experience retains stale term ${stale}`);
 if(failures.length){console.error(failures.map(item=>`FAIL ${item}`).join("\n"));process.exit(1)}
 console.log(`PASS ${cases.length} circular cases; divergent samples create no ghost direction or coordinate`);

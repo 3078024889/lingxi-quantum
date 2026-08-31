@@ -21,7 +21,9 @@ export type StellarTraceResult = {
   version:"lingxifield-stellar-trace-v3"; generatedAt:string; lastKnown:{lat:number|null;lon:number|null}; snapshots:NineFieldSnapshot[];
   evidence:TraceEvidence[]; direction:CircularDirectionAnalysis; priority:TracePriority;
   distance:{status:"reported"|"reachability"|"uncalibrated";rangeKm:[number,number]|null;sourceZh:string;evidence:TraceEvidence["distanceTrace"][];explanationZh:string};
-  candidateRegions:Array<{bearingRange:[number,number];distanceRangeKm:[number,number];areaKm2:number;basis:"reported-distance"|"reachability-envelope"}>; candidateCenter:{lat:number;lon:number;radiusKm:number}|null; environmentZh:string[]; artIndexes:[number,number]; modelBoundaryZh:string; safetyBoundaryZh:string;
+  candidateRegions:Array<{bearingRange:[number,number];distanceRangeKm:[number,number];areaKm2:number;basis:"reported-distance"|"reachability-envelope"|"mobility-scenario"}>; candidateCenter:{lat:number;lon:number;radiusKm:number}|null;
+  candidateZones:Array<{rank:1|2|3;labelZh:string;distanceRangeKm:[number,number];bearingRange:[number,number];center:{lat:number;lon:number}|null;radiusKm:number;basisZh:string;verificationZh:string}>;
+  environmentZh:string[]; artIndexes:[number,number]; modelBoundaryZh:string; safetyBoundaryZh:string;
 };
 
 const bodies:Array<{id:string;nameZh:string;body?:Astronomy.Body}> = [
@@ -73,6 +75,18 @@ function reachabilityBand(context:string|undefined,hours:number):{range:[number,
 }
 function destination(lat:number,lon:number,bearing:number,distanceKm:number){const radius=6371;const delta=distanceKm/radius;const theta=bearing*Math.PI/180;const phi1=lat*Math.PI/180;const lambda1=lon*Math.PI/180;const phi2=Math.asin(Math.sin(phi1)*Math.cos(delta)+Math.cos(phi1)*Math.sin(delta)*Math.cos(theta));const lambda2=lambda1+Math.atan2(Math.sin(theta)*Math.sin(delta)*Math.cos(phi1),Math.cos(delta)-Math.sin(phi1)*Math.sin(phi2));return{lat:round(phi2*180/Math.PI,5),lon:round((((lambda2*180/Math.PI)+540)%360)-180,5)};}
 
+function mobilityScenarioBands(hours:number):Array<{labelZh:string;range:[number,number];basisZh:string;verificationZh:string}>{
+  const active=Math.max(.5,Math.min(hours,12));
+  const nearMax=round(Math.max(3,Math.min(8,active*1.2)),1);
+  const localMax=round(Math.max(18,Math.min(60,active*6)),1);
+  const outwardMax=round(Math.max(60,Math.min(180,active*18)),1);
+  return[
+    {labelZh:"第一候选区 · 近域滞留",range:[0,nearMax],basisZh:"未见交通方式时，先排查步行、短暂停留与近域折返情景。",verificationZh:"逐点核对沿向出口、便利店、医院、公园、停车点与公共交通入口。"},
+    {labelZh:"第二候选区 · 城域转移",range:[nearMax,localMax],basisZh:"以行迹中断后首十二小时为观察窗，列出道路或公共交通的城域可达情景。",verificationZh:"按班次与道路时序核对车站、换乘节点、常用联系人及依法可调取记录。"},
+    {labelZh:"第三候选区 · 外向转运",range:[localMax,outwardMax],basisZh:"保留驾车、铁路或跨城转移的外层假设，避免只查近域造成遗漏。",verificationZh:"先以票务、车辆、收费站与跨城联系等现实证据判断是否启用本层；无证则降级。"},
+  ];
+}
+
 export function calculateStellarTrace(input:StellarTraceInput,now=new Date()):StellarTraceResult{
   const birthMoment=new Date(`${input.birthDate}T${input.birthTime||"12:00"}:00+08:00`);
   const contactSource=/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}$/.test(input.lastContactAt)
@@ -92,9 +106,25 @@ export function calculateStellarTrace(input:StellarTraceInput,now=new Date()):St
   const base=analyzeCircularDirections(evidence.map(item=>item.bearing));const seed=hashInt(`${input.name}|${birthMoment.toISOString()}|${lastContact.toISOString()}`);
   const direction:CircularDirectionAnalysis={...base,diagnosticMean:base.diagnosticMean===null?null:round(base.diagnosticMean,1),resultantLength:round(base.resultantLength),circularDispersion:round(base.circularDispersion),circularStdDegrees:base.circularStdDegrees===null?null:round(base.circularStdDegrees,1),sector:base.sector?[round(base.sector[0],1),round(base.sector[1],1)]:null,modes:base.modes.map(mode=>({...mode,center:round(mode.center,1),mass:round(mode.mass),resultantLength:round(mode.resultantLength),bearings:mode.bearings.map(value=>round(value,1))}))};
   const priority=priorityFrom(direction,evidence,input);
-  const hours=Math.max(0,(now.getTime()-lastContact.getTime())/3600000);const reportedDistance=distanceClue(input.context);const reachable=reportedDistance?null:reachabilityBand(input.context,hours);const range=reportedDistance??reachable?.range??null;const distanceStatus=reportedDistance?"reported":reachable?"reachability":"uncalibrated";const halfWidth=((priority.primarySector[1]-priority.primarySector[0]+360)%360)/2;const midpoint=range?(range[0]+range[1])/2:0;const center=range&&input.lastKnownLat!=null&&input.lastKnownLon!=null?destination(input.lastKnownLat,input.lastKnownLon,priority.primaryBearing,midpoint):null;const radius=range?round(Math.max((range[1]-range[0])/2,midpoint*Math.sin(halfWidth*Math.PI/180)),1):0;const candidateCenter=center?{...center,radiusKm:radius}:null;const area=range?round(((halfWidth*2)/360)*Math.PI*(range[1]**2-range[0]**2),1):0;const candidateRegions=range?[{bearingRange:priority.primarySector,distanceRangeKm:range,areaKm2:area,basis:reportedDistance?"reported-distance" as const:"reachability-envelope" as const}]:[];
+  const hours=Math.max(0,(now.getTime()-lastContact.getTime())/3600000);
+  const reportedDistance=distanceClue(input.context);
+  const reachable=reportedDistance?null:reachabilityBand(input.context,hours);
+  const range=reportedDistance??reachable?.range??null;
+  const distanceStatus=reportedDistance?"reported":reachable?"reachability":"uncalibrated";
+  const halfWidth=((priority.primarySector[1]-priority.primarySector[0]+360)%360)/2;
+  const midpoint=range?(range[0]+range[1])/2:0;
+  const center=range&&input.lastKnownLat!=null&&input.lastKnownLon!=null?destination(input.lastKnownLat,input.lastKnownLon,priority.primaryBearing,midpoint):null;
+  const radius=range?round(Math.max((range[1]-range[0])/2,midpoint*Math.sin(halfWidth*Math.PI/180)),1):0;
+  const candidateCenter=center?{...center,radiusKm:radius}:null;
+  const scenarioSource=range?[{labelZh:"第一候选区 · 现实线索带",range,basisZh:reportedDistance?"由最后一次有效信息中的明确距离建立。":`由${reachable!.mode}线索的首轮可达边界建立。`,verificationZh:"先以交通、通信与现场时序逐点核验；相逆即舍。"}]:mobilityScenarioBands(hours);
+  const candidateZones=scenarioSource.map((scenario,index)=>{
+    const scenarioMid=(scenario.range[0]+scenario.range[1])/2;
+    const scenarioCenter=input.lastKnownLat!=null&&input.lastKnownLon!=null?destination(input.lastKnownLat,input.lastKnownLon,priority.primaryBearing,scenarioMid):null;
+    return{rank:(index+1) as 1|2|3,labelZh:scenario.labelZh,distanceRangeKm:scenario.range,bearingRange:priority.primarySector,center:scenarioCenter,radiusKm:round(Math.max((scenario.range[1]-scenario.range[0])/2,scenarioMid*Math.sin(halfWidth*Math.PI/180)),1),basisZh:scenario.basisZh,verificationZh:scenario.verificationZh};
+  });
+  const candidateRegions=candidateZones.map((zone)=>({bearingRange:zone.bearingRange,distanceRangeKm:zone.distanceRangeKm,areaKm2:round(((halfWidth*2)/360)*Math.PI*(zone.distanceRangeKm[1]**2-zone.distanceRangeKm[0]**2),1),basis:(reportedDistance?"reported-distance":reachable?"reachability-envelope":"mobility-scenario") as "reported-distance"|"reachability-envelope"|"mobility-scenario"}));
   return{version:"lingxifield-stellar-trace-v3",generatedAt:now.toISOString(),lastKnown:{lat:input.lastKnownLat==null?null:round(input.lastKnownLat,4),lon:input.lastKnownLon==null?null:round(input.lastKnownLon,4)},snapshots,evidence,direction,priority,
-    distance:{status:distanceStatus,rangeKm:range,sourceZh:reportedDistance?"最后一次有效信息中的明确距离":reachable?`${reachable.mode}与行迹中断后首个十二小时的可达上界`:"尚无现实距离或交通方式证据",evidence:evidence.map(item=>item.distanceTrace),explanationZh:reportedDistance?`已从最后一次有效信息中读取明确距离，并以原单位换算为 ${range![0]}—${range![1]} km 的现实核验带。` : reachable?`依据“${reachable.mode}”线索形成 0—${range![1]} km 的首轮可达核验带；这是交通可达边界，不是人员所在概率。`:`天文角位移不换算为地表里程；未提供明确距离或交通方式时，模型停止生成距离与坐标。`},candidateRegions,candidateCenter,
+    distance:{status:distanceStatus,rangeKm:range,sourceZh:reportedDistance?"最后一次有效信息中的明确距离":reachable?`${reachable.mode}与行迹中断后首个十二小时的可达上界`:"三层现实移动情景",evidence:evidence.map(item=>item.distanceTrace),explanationZh:reportedDistance?`已从最后一次有效信息中读取明确距离，并以原单位换算为 ${range![0]}—${range![1]} km 的现实核验带。` : reachable?`依据“${reachable.mode}”线索形成 0—${range![1]} km 的首轮可达核验带；这是交通可达边界，不是人员所在概率。`:`未提供明确距离或交通方式，系统不把天文角位移伪装成里程，而是展开近域、城域、外向三层候选区；每层均须由现实记录启用或排除。`},candidateRegions,candidateCenter,candidateZones,
     environmentZh:input.context?["现实线索已记录，尚未由模型自动解释"]:["尚无可核验的现实环境线索"],artIndexes:[seed%60,(seed*17+23)%60],
     modelBoundaryZh:"九域历算可复算；四层合参用于排列现实核验次序。主核验方向是本次计算结论，现实位置仍须由交通、通信与现场记录复核。",
     safetyBoundaryZh:"本结果不读取设备、通信、GPS 或实时行踪，不提供人员现实位置事实认定，也不得用于跟踪、骚扰或监控。涉及人员安全时，请立即使用警方、通信、交通与紧急救援等可核验渠道。"};

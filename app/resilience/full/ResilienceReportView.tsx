@@ -9,7 +9,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import PortalSpinner from "@/components/PortalSpinner";
-import { stripMarkdownArtifacts } from "@/lib/text-clean";
+import { stripMarkdownArtifacts, stripRepeatedHeading } from "@/lib/text-clean";
 
 const SECTION_TITLES = [
   { titleZh: "◆ 你的恢复链 · 五项结构", titleEn: "◆ Your Recovery Chain · Five Dimensions" },
@@ -109,8 +109,12 @@ export default function ResilienceReportView({ id }: { id: string }) {
           body: stripMarkdownArtifacts(body),
         })),
         fileName: langEn ? `Lingxi-Life-Resilience-${name || "report"}.pdf` : `灵犀生命韧性档案-${name || "report"}.pdf`,
-        titleZh: `${name || "你的"} · 生命韧性档案`,
-        titleEn: `${name || "Your"} · Life Resilience Archive`,
+        titleZh: "你的灵犀生命韧性",
+        titleEn: "Your Lingxi Life Resilience",
+        subjectName: name || "未署名",
+        coverStatementZh: "韧非强忍，乃受冲而不失其本，复起而知所养。",
+        coverStatementEn: "Resilience is not endurance alone, but returning without losing the root.",
+        archiveLabelZh: "灵犀场生命韧性档案",
         language: langEn ? "en" : "zh",
         eyebrow: "LIFE RESILIENCE",
         theme: ARCHIVE_THEMES.resilience,
@@ -246,7 +250,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
 
                     {/* 【字号放大核心区】：text-xl md:text-2xl lg:text-3xl */}
                     <div className="lx-publication-copy max-w-none text-[#423753]">
-                      {content.split('\n').map((para, pIdx) => {
+                      {stripRepeatedHeading(content, langEn ? title.titleEn : title.titleZh).split('\n').map((para, pIdx) => {
                         const trimmedPara = para.trim();
                         if (!trimmedPara) return null;
                         

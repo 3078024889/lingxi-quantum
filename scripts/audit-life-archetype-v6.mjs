@@ -29,6 +29,8 @@ expectBlocked("outside 365 days",()=>auditLifeArchetypeCoverage(caseA.map((item,
 const root=process.cwd();
 const engine=fs.readFileSync(path.join(root,"lib","mini","dendrite-engine.ts"),"utf8");
 const reportUi=fs.readFileSync(path.join(root,"app","mini-report","MiniLifeArchetypeReport.tsx"),"utf8");
+const archetypeLoader=fs.readFileSync(path.join(root,"lib","mini","life-archetype.ts"),"utf8");
+const webEvidenceAdapter=fs.readFileSync(path.join(root,"lib","mini","web-report-evidence.ts"),"utf8");
 const readingSpecSource=engine.slice(engine.indexOf("const ARCHETYPE_READING_SPECS"),engine.indexOf("] as const;",engine.indexOf("const ARCHETYPE_READING_SPECS")));
 assert.equal((readingSpecSource.match(/^  \["/gm)??[]).length,24,"V6 must define 24 reading questions");
 const bodySource=engine.slice(engine.indexOf("const ARCHETYPE_BODY_FORMS"),engine.indexOf("];",engine.indexOf("const ARCHETYPE_BODY_FORMS")));
@@ -40,5 +42,10 @@ assert.match(engine,/archetypeReadings/);
 assert.match(engine,/readingCount<3/);
 assert.doesNotMatch(reportUi,/result\.dominant|topNames|primary=result/);
 assert.match(reportUi,/readings\.length!==24/);
+for(const table of ["life_map_submissions","relationship_submissions","resilience_submissions","romance_submissions","wealth_submissions","daily_tide_submissions","tarot_reading_submissions","qian_submissions"]) assert.match(archetypeLoader,new RegExp(table));
+assert.match(archetypeLoader,/webPublicationEvidence/);
+assert.match(archetypeLoader,/365\s*\*\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/);
+assert.match(webEvidenceAdapter,/web-published-chapter/);
+assert.match(webEvidenceAdapter,/responseKind: "preset"/);
 
-console.log("PASS Life Archetype V6: identity, 365-day, 8-stream, relationship-density, legacy-evidence and 24-reading audits");
+console.log("PASS Life Archetype V6: identity, 365-day, 8-stream web+mini evidence, relationship-density, legacy-evidence and 24-reading audits");

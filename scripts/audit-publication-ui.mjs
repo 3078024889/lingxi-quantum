@@ -16,6 +16,9 @@ const views = [
   "app/tarot/reading/full/TarotReadingReport.tsx",
 ];
 const failures = [];
+const editorial = readFileSync(resolve(root, "lib/classical-editorial.ts"), "utf8");
+if (!editorial.includes('CLASSICAL_EDITORIAL_VERSION = "V336"')) failures.push("editorial: V336 cache invalidation is missing");
+if (!editorial.includes('const CHAPTER_MOVES = ["断曰", "所以然", "验于事", "反观", "行法"]')) failures.push("editorial: five-move classical chapter architecture is missing");
 
 for (const view of views) {
   const source = readFileSync(resolve(root, view), "utf8");
@@ -73,7 +76,7 @@ if (!/scale:\s*[23]/.test(exporter)) failures.push("pdf-export: A4 raster resolu
 if (!exporter.includes("flowPanelFits")) failures.push("pdf-export: cross-chapter publication flow is missing");
 if (!exporter.includes("Math.min(2, units.length - offset)")) failures.push("pdf-export: orphan heading protection is missing");
 if (!exporter.includes('const placement = "left:64px;right:64px"')) failures.push("pdf-export: centred A4 reading grid is missing");
-for (const token of ['left:64px;right:64px;top:34%', 'top:48px;bottom:48px;left:64px;right:64px', 'bgColorHex = "#EEF0F6"']) {
+for (const token of ['left:64px;right:64px;top:112px;bottom:112px', 'top:48px;bottom:48px;left:64px;right:64px', 'bgColorHex = "#EEF0F6"']) {
   if (!exporter.includes(token)) failures.push(`pdf-export: cross-platform A4 geometry is missing ${token}`);
 }
 if (!css.includes("--lx-header-height")) failures.push("app/globals.css: report header safe offset is missing");
@@ -91,6 +94,7 @@ if (!archetypePublication.includes("coverage.streamEvidence") || !archetypePubli
 if (/\/images\/qian\//.test(archetypePublication)) failures.push("Life Archetype: 64 Life Oracle card artwork leaked into the publication");
 if (!artRegistry.includes("WEB_ARCHETYPE_PDF_ART_POOL") || !artRegistry.includes("/shared/report-assets")) failures.push("PDF artwork: formal text-free asset registry is missing");
 if (!exporter.includes("exportPublicationPagesPdf") || !exporter.includes("No fixed publication pages")) failures.push("pdf-export: strict fixed A4 publication path is missing");
+for (const token of ["lingxifield-logo.png", "coverStatementZh", "subjectName", "lingxifield.com · lingxifield.cn", "withoutRepeatedTitle(sourceChapter.body"]) if (!exporter.includes(token)) failures.push(`pdf-export: unified archive cover is missing ${token}`);
 for (const token of [".lx-report-glass-readable", "font-size: 12.5pt", ".lx-resilience-reading-column"]) {
   if (!css.includes(token)) failures.push(`shared aurora publication: missing ${token}`);
 }
@@ -133,4 +137,4 @@ console.log("PASS safe area: all full-report routes use the measured navigation 
 console.log("PASS card pagination: Life Map, Life Mirror and Life Oracle cards own full web and PDF pages");
 console.log("PASS compatibility: mirror and legacy tarot report routes share the same publication system");
 console.log("PASS language: all complete-report routes select Chinese or English report caches explicitly");
-console.log("PASS editorial: all web report caches require V335 classical prose and all reading columns are centred");
+console.log("PASS editorial: all web report caches require V336 classical prose and all reading columns are centred");
