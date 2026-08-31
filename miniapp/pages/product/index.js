@@ -108,10 +108,19 @@ Page({
     const flat = event.currentTarget.dataset.flat
     if (!flat) return
     const value = event.detail.value == null ? '' : String(event.detail.value)
-    this.setData({ [flat]: value })
+    // Do not setData on every keystroke. Re-rendering a controlled native input
+    // interrupts the Chinese IME composition buffer in some WeChat versions,
+    // which made the name field appear unable to accept text.
+    this.data[flat] = value
     clearTimeout(this.stellarDraftTimer)
     this.stellarDraftTimer = setTimeout(() => this.persistStellarDraft(), 280)
     return value
+  },
+  onStellarBlur(event) {
+    const flat = event.currentTarget.dataset.flat
+    if (!flat) return
+    const value = event.detail.value == null ? '' : String(event.detail.value)
+    this.setData({ [flat]: value }, () => this.persistStellarDraft())
   },
   onRelationshipChange(event) {
     const relationshipIndex = Number(event.detail.value) || 0

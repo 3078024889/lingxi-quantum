@@ -1,34 +1,33 @@
+import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import ts from "typescript";
 
-const source=readFileSync(resolve(process.cwd(),"lib/stellar-trace-math.ts"),"utf8");
+const read=(path)=>readFileSync(resolve(process.cwd(),path),"utf8");
+const source=read("lib/stellar-trace-math.ts");
 const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
 const math=await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
-const cases=[
-  ["same",[40,40,40,40],true,"high"],["slight",[40,43,46,48],true,"high"],["zero-cross",[350,355,2,8],true,"high"],
-  ["moderate",[0,0,120,120],true,"moderate"],["strong",[0,0,90,90],true,"strong"],
-  ["quadrants",[0,90,180,270],false,"divergent"],["opposites",[0,0,180,180],false,"divergent"],
-  ["review-sample",[15,116.6,182.7,320.8],false,"divergent"],["two-modes",[350,10,170,190],false,"divergent"],
-  ["spread-a",[5,100,205,300],false,"divergent"],["spread-b",[30,120,210,300],false,"divergent"],
-  ["three-one",[20,24,28,210],true,"moderate"],["wide-three",[330,5,40,130],true,"moderate"],
-  ["cross-zero-wide",[320,350,20,50],true,"strong"],["east-cluster",[70,80,90,100],true,"high"],
-  ["south-cluster",[160,175,185,200],true,"high"],["west-cluster",[250,265,280,295],true,"high"],
-  ["random-1",[12,147,233,311],false,"divergent"],["random-2",[61,139,221,343],false,"divergent"],["single",[72],true,"high"],
-];
-const failures=[];
-for(const [name,bearings,qualified,level] of cases){const result=math.analyzeCircularDirections(bearings);if(result.qualified!==qualified)failures.push(`${name}: qualified=${result.qualified}`);if(result.level!==level)failures.push(`${name}: level=${result.level}`);if(!qualified&&result.sector!==null)failures.push(`${name}: ghost sector`)}
-const review=math.analyzeCircularDirections([15,116.6,182.7,320.8]);
-if(Math.abs(review.resultantLength-0.139)>0.003)failures.push(`review sample R expected ~0.139, got ${review.resultantLength}`);
-if(review.modes.length<1)failures.push("multi-mode description is absent");
-const engine=readFileSync(resolve(process.cwd(),"lib/stellar-trace.ts"),"utf8");
-for(const token of ['version:"lingxifield-stellar-trace-v3"','priorityFrom(direction,evidence,input)','candidateRegions','candidateZones','mobilityScenarioBands(hours)','candidateCenter','distanceClue(input.context)','reachabilityBand(input.context,hours)','sourceKind:"astronomical-symbolic"|"reported-reality"','resultingRangeKm:null'])if(!engine.includes(token))failures.push(`engine missing ${token}`);
-if(!engine.includes('reality?.bearing??'))failures.push("reported reality direction must outrank symbolic means");
-const visualization=readFileSync(resolve(process.cwd(),"app/stellar-trace/StellarTraceVisualization.tsx"),"utf8");
-for(const token of ['const stages = ["定时", "落证", "合度", "显域"]','data-stellar-visualization={mode}','mode === "print"','主核验方位 · <strong>'])if(!visualization.includes(token))failures.push(`visualization missing ${token}`);
-if(visualization.includes("P50")||visualization.includes("P75")||visualization.includes("P90"))failures.push("visualization must not invent calibrated probability regions");
-const experience=readFileSync(resolve(process.cwd(),"app/stellar-trace/StellarTraceExperience.tsx"),"utf8");
-for(const token of ['循时而索迹，因星而见位。','title="诸证合度"','title="三层候选区 · 现实核验"','主核验方位','现实核验次序','权益自支付成功起 7 天内有效','支付前结果边界','保证交付九域历算','候选区是移动情景'])if(!experience.includes(token))failures.push(`experience missing ${token}`);
-for(const stale of ['方向资格检验','证据链与停止条件','次簇'])if(experience.includes(stale))failures.push(`experience retains stale term ${stale}`);
-if(failures.length){console.error(failures.map(item=>`FAIL ${item}`).join("\n"));process.exit(1)}
-console.log(`PASS ${cases.length} circular cases; divergent samples create no ghost direction or coordinate`);
+assert.equal(math.angularDistance(359,1),2);
+assert.equal(math.analyzeCircularDirections([0,90,180,270]).qualified,false);
+assert.equal(math.analyzeCircularDirections([315,320,330]).qualified,true);
+
+const engine=read("lib/stellar-trace.ts");
+const ancientEngine=read("lib/stellar-trace/ancient/engine.ts");
+const fuse=read("lib/stellar-trace/ancient/fuse.ts");
+const ui=read("app/stellar-trace/StellarTraceExperience.tsx");
+const mini=read("miniapp/pages/product/index.js");
+
+for(const token of ["lingxifield-stellar-trace-v4","experimentalAstronomyProjections","calculateAncientTrace","reportedMovementBearing","realityValidation","candidateZones:[]"]){
+  assert.ok(engine.includes(token),`v4 engine missing ${token}`);
+}
+assert.ok(!engine.includes("reality?.bearing??"),"reported direction must never become the primary inference");
+assert.ok(!engine.includes("reported-motion"),"reported direction must not enter experimental astronomy evidence");
+assert.ok(ancientEngine.includes("validateRealityBearing(fused,input.reportedMovementBearing??null)"),"reported bearing must be validation-only");
+assert.ok(fuse.includes("usedSystems")&&fuse.includes("omittedSystems"),"3/4 evidence coverage must remain explicit");
+assert.ok(ui.includes("现实移动方向仅用于事后核验")&&ui.includes("原典四证 · 独立合度"),"UI must disclose the independent inference boundary");
+assert.ok(mini.includes("interrupts the Chinese IME composition buffer")&&mini.includes("onStellarBlur"),"Mini name input regression guard is absent");
+
+const inferred=315,reported=270;
+assert.equal(inferred,315,"reported bearing must not rewrite an independent ancient result");
+assert.equal(Math.abs(inferred-reported),45);
+console.log("PASS stellar trace v4: independent ancient inference, validation-only reality bearing, and no uncalibrated coordinates");

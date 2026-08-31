@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     if (!body.consent) return NextResponse.json({ error: "请先确认资料使用边界与现实安全说明" }, { status: 400 });
     if (!input.name || !validIsoDate(input.birthDate) || !validContactAt(input.lastContactAt) || !input.lastKnownPlace) return NextResponse.json({ error: "请完整填写寻踪对象、有效出生日期、最后有效联系日期与时间、最后已知位置说明" }, { status: 400 });
     if (!validCoordinates({ lastKnownLat: input.lastKnownLat == null ? "" : String(input.lastKnownLat), lastKnownLon: input.lastKnownLon == null ? "" : String(input.lastKnownLon) })) return NextResponse.json({ error: "请先在精准地图中确认最后可证位置" }, { status: 400 });
-    return NextResponse.json(calculateStellarTrace(input), { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json(await calculateStellarTrace(input), { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("[stellar trace] failed", error instanceof Error ? error.message : "unknown");
     return NextResponse.json({ error: "星迹推演暂未完成，请核对日期与时间格式" }, { status: 400 });

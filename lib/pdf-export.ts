@@ -242,6 +242,13 @@ export async function exportPublicationPagesPdf(params: {
   }
 
   const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import("html2canvas"), import("jspdf")]);
+  const inMiniProgram = new URLSearchParams(window.location.search).get("mini") === "1";
+  // WeChat WebViews are far more memory constrained than desktop browsers.
+  // A 25-page archive at 2x scale keeps hundreds of MB of canvas buffers alive
+  // and is killed before deliverPdf can run. 1x remains print-legible at A4
+  // dimensions and each canvas is explicitly released after insertion.
+  const captureScale = inMiniProgram ? 1 : 2;
+  const jpegQuality = inMiniProgram ? 0.84 : 0.94;
   const pdf = new jsPDF({ unit: "pt", format: "a4" });
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
@@ -272,10 +279,14 @@ export async function exportPublicationPagesPdf(params: {
       if (index > 0) pdf.addPage();
       pdf.setFillColor(...bgColorRgb);
       pdf.rect(0, 0, pageWidth, pageHeight, "F");
-      const canvas = await html2canvas(clone, { backgroundColor: bgColorHex, scale: 2, useCORS: true, logging: false, width: 794, height: 1123, windowWidth: 794, windowHeight: 1123 });
+      const canvas = await html2canvas(clone, { backgroundColor: bgColorHex, scale: captureScale, useCORS: true, logging: false, width: 794, height: 1123, windowWidth: 794, windowHeight: 1123 });
       if (canvas.width < 2 || canvas.height < 2) throw new Error(`Publication page ${index + 1} rendered blank`);
-      const data = canvas.toDataURL("image/jpeg", 0.94);
+      const data = canvas.toDataURL("image/jpeg", jpegQuality);
       pdf.addImage(data, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+      canvas.width = 1;
+      canvas.height = 1;
+      staging.replaceChildren();
+      if (inMiniProgram) await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
     }
   } finally {
     staging.remove();

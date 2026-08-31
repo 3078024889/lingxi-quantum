@@ -38,15 +38,15 @@ export const metadata: Metadata = {
       "一座原创的意识显化数字空间，以结构读取、象征探索与现实验证陪伴持续的自我探索。",
     url: SITE,
     images: [
-      { url: "https://lingxifield.com/og-v335.png?v=20260831", width: 1673, height: 941, alt: "灵犀场官网与小程序 · 双引擎生命场域" },
-      { url: "https://lingxifield.cn/og-v335.png?v=20260831", width: 1673, height: 941, alt: "灵犀场官网与小程序 · 双引擎生命场域" },
+      { url: "https://lingxifield.com/og-v337.png?v=20260831", width: 1672, height: 941, alt: "灵犀场官网与小程序 · 双主理人数字生命场域" },
+      { url: "https://lingxifield.cn/og-v337.png?v=20260831", width: 1672, height: 941, alt: "灵犀场官网与小程序 · 双主理人数字生命场域" },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "灵犀场 · 意识显化数字空间 | Lingxi Field",
     description: "显化 · 精测 · 梦境 · 修炼。一座原创的意识显化数字空间。",
-    images: ["https://lingxifield.com/og-v335.png?v=20260831"],
+    images: ["https://lingxifield.com/og-v337.png?v=20260831"],
   },
   robots: { index: true, follow: true },
   manifest: "/manifest.webmanifest",
