@@ -65,7 +65,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
           setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
           return;
         }
-        const nextSections = (data.fullReport as string).split("===SECTION===").map((s) => s.trim()).filter(Boolean);
+        const nextSections = (data.fullReport as string).replace(/<!--\s*classical-editorial:[^>]+-->/g, "").split("===SECTION===").map((s) => s.trim()).filter(Boolean);
         if (nextSections.length !== SECTION_TITLES.length) {
           setStatus("error");
           setError(t("报告章节不完整，请稍后重新打开。", "The report is incomplete. Please reopen it shortly."));

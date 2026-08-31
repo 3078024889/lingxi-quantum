@@ -7,7 +7,8 @@
     "pages/archetype-progress/index",
     "pages/assessment/index",
     "pages/product/index",
-    "pages/web/index"
+    "pages/web/index",
+    "pages/pdf/index"
   ],
   "window": {
     "navigationStyle": "custom",

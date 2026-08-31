@@ -2,7 +2,7 @@ import { classicalizeChineseSection } from "@/lib/classical-editorial";
 
 export type ReportSignal={id:string;zh:string;en:string;score:number;meaningZh:string;meaningEn:string;actionZh:string;actionEn:string};
 export type DendriteReportEntry={id:string;chapterId:string;chapterZh:string;chapterEn:string;titleZh:string;titleEn:string;briefZh:string;evidenceNodeIds:string[];confidence:"clear"|"developing"|"open";structureZh:string;structureEn:string;mechanismZh:string;mechanismEn:string;realityZh:string;realityEn:string;costZh?:string;costEn?:string;strengthZh?:string;strengthEn?:string;actionZh:string;actionEn:string;observationZh:string;observationEn:string};
-export type ReportEvidenceLeaf={sourceProductId?:string;sourceRelationshipType?:"deep"|"business"|"other";questionId:string;evidenceDimension:string;promptZh:string;promptEn:string;answerId:string;answerZh:string;answerEn:string;answerSemantic:string;polarity:"support";nodeIds:string[];counterNodeIds:string[];strength:number};
+export type ReportEvidenceLeaf={sourceProductId?:string;sourceRelationshipType?:"deep"|"business"|"other";questionId:string;evidenceDimension:string;promptZh:string;promptEn:string;answerId:string;answerZh:string;answerEn:string;answerSemantic:string;polarity:"support";nodeIds:string[];counterNodeIds:string[];strength:number;responseKind?:"preset"|"custom";matchConfidence?:number};
 export type ReadingSlot={zh:string;en:string};
 const names=(zh:string,en:string):ReadingSlot[]=>{const z=zh.split("|");const e=en.split("|");return z.map((v,i)=>({zh:v,en:e[i]}))};
 
@@ -115,11 +115,11 @@ function distinct(ordered:ReportSignal[],index:number,leaves:ReportEvidenceLeaf[
 export function readingSlotsFor(productId:string,relationshipType:"deep"|"business"|"other"|undefined){const key=productId==="relationship-resonance"?`${productId}:${relationshipType??"deep"}`:productId;return{key,slots:PRODUCT_READING_SLOTS[key]??[]}}
 export function buildReportEntries(productId:string,relationshipType:"deep"|"business"|"other"|undefined,ordered:ReportSignal[],leaves:ReportEvidenceLeaf[]=[]):DendriteReportEntry[]{
  const{key,slots}=readingSlotsFor(productId,relationshipType);const briefs=PRODUCT_BRIEFS[key]??[];if(slots.length!==11||briefs.length!==11||ordered.length<3)return[];
- return slots.map((slot,index)=>{const{primary,support,counter,picked}=distinct(ordered,index,leaves);const evidenceNodeIds=[...new Set([primary.id,support.id,counter.id,...picked.flatMap(x=>x.nodeIds)])];
+ return slots.map((slot,index)=>{const{primary,support,counter,picked}=distinct(ordered,index,leaves);const evidenceNodeIds=[...new Set([primary.id,support.id,counter.id,...picked.flatMap(x=>x.nodeIds)])];const customLeaf=picked.find(item=>item.responseKind==="custom");const customEcho=customLeaf?` 本人另述：“${customLeaf.answerZh.slice(0,96)}”。此语作为独立证叶入卷，不冒充预设选择。`:"";
  return{id:`${key}-${String(index+1).padStart(2,"0")}`,chapterId:`${key}-reading-${index+1}`,chapterZh:slot.zh,chapterEn:slot.en,titleZh:slot.zh,titleEn:slot.en,briefZh:briefs[index],evidenceNodeIds,confidence:confidence(Math.round((primary.score+support.score)/2)),
  structureZh:classicalizeChineseSection(structureWriters[index](primary,support,counter),index*5),structureEn:`${primary.en} leads, ${support.en} carries it, while ${counter.en} participates less. This concerns sequence, not identity.`,
  mechanismZh:classicalizeChineseSection(mechanismWriters[index](primary,support),index*5+1),mechanismEn:`Independent contexts connect ${primary.en} with ${support.en}; no single answer forms this reading.`,
- realityZh:classicalizeChineseSection(realityWriters[index](slot,primary,support),index*5+2),realityEn:`Test this in daily life by observing the sequence of ${primary.en} and ${support.en}.`,
+ realityZh:classicalizeChineseSection(realityWriters[index](slot,primary,support)+customEcho,index*5+2),realityEn:`Test this in daily life by observing the sequence of ${primary.en} and ${support.en}.${customLeaf?` The self-authored response, "${customLeaf.answerEn.slice(0,96)}", remains an independent evidence leaf.`:""}`,
  actionZh:classicalizeChineseSection(actionWriters[index](primary,support),index*5+3),actionEn:`${primary.actionEn} Record one observable response, then see whether ${support.en} enters more clearly.`,
  observationZh:classicalizeChineseSection(observationWriters[index](primary,support),index*5+4),observationEn:`Across three comparable situations, record sequence, cost, and outcome; preserve counterevidence.`};});
 }

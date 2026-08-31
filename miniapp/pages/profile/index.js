@@ -110,7 +110,7 @@ Page({
     return {
       title: '灵犀场 · 步入你的意识场域',
       path: '/pages/field/index',
-      imageUrl: '/images/share-cover.jpg',
+      imageUrl: 'https://lingxifield.cn/og-v335.png?v=20260831',
     }
   },
 })

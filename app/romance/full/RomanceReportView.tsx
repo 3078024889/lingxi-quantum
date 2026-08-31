@@ -63,7 +63,7 @@ export default function RomanceReportView({ id }: { id: string }) {
           setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
           return;
         }
-        setSections((data.fullReport as string).split("===SECTION===").map((s) => s.trim()).filter(Boolean));
+        setSections((data.fullReport as string).replace(/<!--\s*classical-editorial:[^>]+-->/g, "").split("===SECTION===").map((s) => s.trim()).filter(Boolean));
         setStatus("ready");
       } catch (e) {
         console.error("[report view] 请求失败:", e);

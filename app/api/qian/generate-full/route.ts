@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { computeLifeVector, type LifeVectorInput } from "@/lib/life-vector";
 import { LIFE_SIGNS, type LifeSign } from "@/lib/qian-data";
+import { drawThreeSigns } from "@/lib/qian-draw";
 import { generateStaticQianReport } from "@/lib/qian-knowledge";
 import { computeLifeMapFacts, type BirthInput } from "@/lib/lifemap-calc";
 import { REVIEW_MODE } from "@/lib/reviewMode";
@@ -112,14 +113,29 @@ export async function POST(req: Request) {
     }
   }
 
-  const signs = validSigns(submission.sign_indexes);
-  if (!signs) {
-    console.error("[qian] 签索引损坏:", submission.sign_indexes, "submission id:", body.id);
-    return NextResponse.json({ error: "生命签数据不完整，请重新读取。" }, { status: 422 });
-  }
-
   try {
     const facts = vectorFactsForSubmission(submission as Record<string, unknown>);
+    let signs = validSigns(submission.sign_indexes);
+    if (!signs) {
+      // Early qian records used more than one sign-index convention.  A paid
+      // archive must not become unreadable merely because its cached indexes
+      // predate the current three-pool layout.  Rebuild the same deterministic
+      // three signs from the immutable birth facts, then heal the record.
+      const birth = submission.birth_input as BirthInput | null;
+      if (!birth || typeof birth.year !== "number" || typeof birth.month !== "number" || typeof birth.day !== "number") {
+        throw new Error("qian submission has neither valid sign indexes nor repairable birth input");
+      }
+      const repairedFacts = computeLifeMapFacts(birth);
+      signs = drawThreeSigns(repairedFacts);
+      const repairedIndexes = signs.map((sign) => sign.index);
+      const { error: repairError } = await admin
+        .from("qian_submissions")
+        .update({ sign_indexes: repairedIndexes })
+        .eq("id", body.id)
+        .eq("user_id", submission.user_id);
+      if (repairError) console.error("[qian] 签索引自愈保存失败:", repairError, "submission id:", body.id);
+      submission.sign_indexes = repairedIndexes;
+    }
     const vector = computeLifeVector(facts);
     const seed = createHash("sha256")
       .update(JSON.stringify({ submissionId: body.id, lang, signIndexes: submission.sign_indexes, vector }))

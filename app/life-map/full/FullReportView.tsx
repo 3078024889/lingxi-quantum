@@ -184,6 +184,7 @@ export default function FullReportView({ id }: { id: string }) {
           return;
         }
         const parts = (data.fullReport as string)
+          .replace(/<!--\s*classical-editorial:[^>]+-->/g, "")
           .split(/===\s*\d+\s*===/)
           .map((s) => s.trim())
           .filter(Boolean);

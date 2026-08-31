@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
     const session = await requireMiniSession(req);
     if (!session) return NextResponse.json({ error: "登录状态已失效，请重新进入小程序" }, { status: 401 });
-    const body = await req.json() as { productId?: unknown; responses?: unknown; name?: unknown; partnerName?: unknown; relationshipType?: unknown };
+    const body = await req.json() as { productId?: unknown; responses?: unknown; customResponses?: unknown; name?: unknown; partnerName?: unknown; relationshipType?: unknown };
     const productId = typeof body.productId === "string" ? body.productId : "";
     const relationshipType: RelationshipAssessmentType = body.relationshipType === "business" ? "business" : body.relationshipType === "other" ? "other" : "deep";
     const product = getDendriteProduct(productId, relationshipType);
@@ -31,10 +31,14 @@ export async function POST(req: Request) {
     if (!name) return NextResponse.json({ error: "请填写这份生命档案的称呼" }, { status: 400 });
     if (productId === "relationship-resonance" && !partnerName) return NextResponse.json({ error: "请填写关系双方的称呼" }, { status: 400 });
     const responses = body.responses as Record<string, string>;
-    let result = calculateDendrite(product, responses);
+    const customResponses = body.customResponses && typeof body.customResponses === "object" && !Array.isArray(body.customResponses)
+      ? Object.fromEntries(Object.entries(body.customResponses as Record<string, unknown>).map(([key,value])=>[key,shortText(value,240)]))
+      : {};
+    let result = calculateDendrite(product, responses, customResponses);
     const admin = createAdminClient();
     const baseInput = {
       responses,
+      customResponses,
       name,
       partnerName,
       relationshipType: productId === "relationship-resonance" ? relationshipType : null,

@@ -26,6 +26,8 @@
       <view class="question-section">{{lang === 'zh' ? product.questions[questionIndex].sectionZh : product.questions[questionIndex].sectionEn}}</view>
       <view class="question">{{lang === 'zh' ? product.questions[questionIndex].zh : product.questions[questionIndex].en}}</view>
       <view class="options"><view wx:for="{{product.questions[questionIndex].options}}" wx:key="id" class="option {{selected === item.id ? 'selected' : ''}}" data-value="{{item.id}}" bindtap="choose"><view class="orb"></view><text>{{lang === 'zh' ? item.zh : item.en}}</text></view></view>
+      <view class="option custom-option {{selected === '__custom__' ? 'selected' : ''}}" data-value="__custom__" bindtap="choose"><view class="orb"></view><text>{{lang === 'zh' ? '以上都不贴近 · 写下我自己的答案' : 'None fits · Write my own answer'}}</text></view>
+      <textarea wx:if="{{selected === '__custom__'}}" class="custom-answer" value="{{customAnswer}}" maxlength="240" cursor-spacing="140" auto-height bindinput="inputCustom" placeholder="{{lang === 'zh' ? '请用自己的话写下此刻真实的答案（2—240 字）' : 'Write the answer that is true for you (2–240 characters)'}}" placeholder-style="color:rgba(224,232,255,.42)"/>
       <view class="actions"><button wx:if="{{questionIndex > 0}}" class="ghost" bindtap="previous">{{lang === 'zh' ? '返回' : 'Back'}}</button><button class="next" loading="{{submitting}}" disabled="{{submitting}}" bindtap="next">{{questionIndex + 1 === product.questions.length ? (lang === 'zh' ? product.ctaZh : product.ctaEn) : (lang === 'zh' ? '继续' : 'Continue')}}</button></view>
       <view wx:if="{{error}}" class="error">{{error}}</view>
     </view>

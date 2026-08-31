@@ -6,7 +6,7 @@ Page({
   data: {
     loading: true, submitting: false, paying: false, lang: 'zh',
     item: null, product: null, engine: null, relationshipVariants: null, questionIndex: 0,
-    responses: {}, selected: '', result: null, submissionId: '', unlocked: false,
+    responses: {}, customResponses: {}, selected: '', customAnswer: '', result: null, submissionId: '', unlocked: false,
     name: '', partnerName: '', relationshipType: 'deep', error: '',
   },
   async onLoad(options) {
@@ -28,25 +28,31 @@ Page({
   chooseRelationship(event) {
     const relationshipType = event.currentTarget.dataset.value
     const product = this.data.relationshipVariants && this.data.relationshipVariants[relationshipType]
-    this.setData({ relationshipType, ...(product ? { product, questionIndex: 0, responses: {}, selected: '' } : {}) })
+    this.setData({ relationshipType, ...(product ? { product, questionIndex: 0, responses: {}, customResponses: {}, selected: '', customAnswer: '' } : {}) })
   },
   choose(event) {
     const question = this.data.product.questions[this.data.questionIndex]
     const selected = event.currentTarget.dataset.value
-    this.setData({ selected, [`responses.${question.id}`]: selected })
+    this.setData({ selected, [`responses.${question.id}`]: selected, ...(selected === '__custom__' ? {} : { customAnswer: '' }) })
+  },
+  inputCustom(event) {
+    const question = this.data.product.questions[this.data.questionIndex]
+    const value = event.detail.value.slice(0, 240)
+    this.setData({ selected: '__custom__', customAnswer: value, [`responses.${question.id}`]: '__custom__', [`customResponses.${question.id}`]: value })
   },
   previous() {
     if (this.data.questionIndex <= 0) return
     const questionIndex = this.data.questionIndex - 1
     const question = this.data.product.questions[questionIndex]
-    this.setData({ questionIndex, selected: this.data.responses[question.id] || '' })
+    this.setData({ questionIndex, selected: this.data.responses[question.id] || '', customAnswer: this.data.customResponses[question.id] || '' })
   },
   next() {
     if (!this.data.selected) return wx.showToast({ title: '请选择最接近此刻的一项', icon: 'none' })
+    if (this.data.selected === '__custom__' && this.data.customAnswer.trim().length < 2) return wx.showToast({ title: '请写下你的真实答案', icon: 'none' })
     const nextIndex = this.data.questionIndex + 1
     if (nextIndex >= this.data.product.questions.length) return this.submit()
     const nextQuestion = this.data.product.questions[nextIndex]
-    this.setData({ questionIndex: nextIndex, selected: this.data.responses[nextQuestion.id] || '' })
+    this.setData({ questionIndex: nextIndex, selected: this.data.responses[nextQuestion.id] || '', customAnswer: this.data.customResponses[nextQuestion.id] || '' })
   },
   async submit() {
     if (this.data.submitting) return
@@ -55,7 +61,7 @@ Page({
     this.setData({ submitting: true, error: '' })
     try {
       const data = await request('/api/wechat/mini/dendrite/submit', { method: 'POST', data: {
-        productId: this.productId, responses: this.data.responses,
+        productId: this.productId, responses: this.data.responses, customResponses: this.data.customResponses,
         name: this.data.name, partnerName: this.data.partnerName, relationshipType: this.data.relationshipType,
       } })
       this.setData({ result: data.result, submissionId: data.submissionId, unlocked: !!data.unlocked })
@@ -98,9 +104,9 @@ Page({
     const path = pathByProduct[this.productId] || ''
     wx.setClipboardData({ data: `${API_BASE.replace('.cn', '.com')}/${path}` })
   },
-  restart() { this.setData({ questionIndex: 0, responses: {}, selected: '', result: null, submissionId: '', unlocked: false, error: '' }) },
+  restart() { this.setData({ questionIndex: 0, responses: {}, customResponses: {}, selected: '', customAnswer: '', result: null, submissionId: '', unlocked: false, error: '' }) },
   onShareAppMessage() {
-    return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', path: `/pages/assessment/index?product=${encodeURIComponent(this.productId)}`, imageUrl: '/images/share-cover.jpg' }
+    return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', path: `/pages/assessment/index?product=${encodeURIComponent(this.productId)}`, imageUrl: 'https://lingxifield.cn/og-v335.png?v=20260831' }
   },
-  onShareTimeline() { return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', imageUrl: '/images/share-cover.jpg' } },
+  onShareTimeline() { return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', imageUrl: 'https://lingxifield.cn/og-v335.png?v=20260831' } },
 })

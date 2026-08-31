@@ -25,13 +25,13 @@ Page({
     return {
       title: '灵犀场 · 场域精测',
       path: '/pages/explore/index',
-      imageUrl: '/images/share-cover.jpg',
+      imageUrl: 'https://lingxifield.cn/og-v335.png?v=20260831',
     }
   },
   onShareTimeline() {
     return {
       title: '灵犀场 · 场域精测',
-      imageUrl: '/images/share-cover.jpg',
+      imageUrl: 'https://lingxifield.cn/og-v335.png?v=20260831',
     }
   },
 })

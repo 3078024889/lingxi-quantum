@@ -298,6 +298,7 @@ export type DendriteResult = {
   relationshipEvidenceCount?: number;
   archetypeReadings?: LifeArchetypeReading[];
   archetypeCoverage?: LifeArchetypeCoverageAudit;
+  customEvidence?: { total: number; matched: number; open: number };
 };
 
 export type LifeArchetypeEvidenceLevel = "established" | "strong" | "developing" | "conditional" | "insufficient";
@@ -650,16 +651,29 @@ export function finalizeDendriteResult(product:DendriteProduct,nodes:DendriteRes
   return result;
 }
 
-export function calculateDendrite(product:DendriteProduct,responses:Record<string,string>):DendriteResult {
+function lexicalUnits(value:string){const normalized=value.normalize("NFKC").toLocaleLowerCase("zh-CN").replace(/[\p{P}\p{S}\s]+/gu,"");if(!normalized)return new Set<string>();if(normalized.length===1)return new Set([normalized]);const units=new Set<string>();for(let index=0;index<normalized.length-1;index+=1)units.add(normalized.slice(index,index+2));return units;}
+function overlapScore(input:Set<string>,corpus:Set<string>){if(!input.size||!corpus.size)return 0;let matches=0;for(const unit of input)if(corpus.has(unit))matches+=1;return matches/Math.sqrt(input.size*corpus.size);}
+function customAnswerActivation(product:DendriteProduct,question:DendriteQuestion,text:string){
+  const candidateIds=[...new Set(question.options.flatMap(option=>Object.keys(option.activates)))];
+  const inputUnits=lexicalUnits(text);
+  const ranked=candidateIds.map(id=>{const node=product.nodes.find(item=>item.id===id);const optionText=question.options.filter(option=>option.activates[id]!=null).map(option=>`${option.zh} ${option.en}`).join(" ");const corpus=node?`${node.zh} ${node.en} ${node.meaningZh} ${node.meaningEn} ${node.actionZh} ${node.actionEn} ${optionText}`:optionText;return{id,score:overlapScore(inputUnits,lexicalUnits(corpus))};}).sort((left,right)=>right.score-left.score||left.id.localeCompare(right.id));
+  const best=ranked[0]?.score??0;
+  if(best<0.075)return{activates:{} as Record<string,number>,confidence:0,candidateIds};
+  const selected=ranked.filter(item=>item.score>=Math.max(0.075,best*.72)).slice(0,2);
+  const total=selected.reduce((sum,item)=>sum+item.score,0)||1;
+  return{activates:Object.fromEntries(selected.map(item=>[item.id,Number((0.82*item.score/total).toFixed(3))])),confidence:Number(Math.min(1,best).toFixed(3)),candidateIds};
+}
+
+export function calculateDendrite(product:DendriteProduct,responses:Record<string,string>,customResponses:Record<string,string>={}):DendriteResult {
   const activation=Object.fromEntries(product.nodes.map(item=>[item.id,0])) as Record<string,number>;
-  const edgeMap=new Map<string,number>();let previous:string[]=[];const evidenceLeaves:ReportEvidenceLeaf[]=[];
+  const edgeMap=new Map<string,number>();let previous:string[]=[];const evidenceLeaves:ReportEvidenceLeaf[]=[];let customTotal=0;let customMatched=0;
   for(const question of product.questions){
-    const option=question.options.find(candidate=>candidate.id===responses[question.id]);
-    if(!option) throw new Error(`missing response: ${question.id}`);
-    const active=Object.keys(option.activates);
-    const counterNodeIds=[...new Set(question.options.filter((candidate)=>candidate.id!==option.id).map((candidate)=>Object.keys(candidate.activates)[0]))];
-    evidenceLeaves.push({sourceProductId:product.productId,...(product.relationshipType?{sourceRelationshipType:product.relationshipType}:{}),questionId:question.id,evidenceDimension:question.evidenceDimension,promptZh:question.zh,promptEn:question.en,answerId:option.id,answerZh:option.zh,answerEn:option.en,answerSemantic:option.answerSemantic,polarity:option.polarity,nodeIds:active,counterNodeIds,strength:Number(Object.values(option.activates).reduce((sum,value)=>sum+value,0).toFixed(2))});
-    for(const [id,weight] of Object.entries(option.activates)) activation[id]+=weight;
+    const answerId=responses[question.id];const customText=(customResponses[question.id]??"").trim().slice(0,240);const option=question.options.find(candidate=>candidate.id===answerId);
+    if(!option&&answerId!=="__custom__")throw new Error(`missing response: ${question.id}`);if(answerId==="__custom__"&&!customText)throw new Error(`missing custom response: ${question.id}`);
+    const custom=answerId==="__custom__"?customAnswerActivation(product,question,customText):null;const activates=custom?.activates??option!.activates;const active=Object.keys(activates);const counterNodeIds=custom?.candidateIds??[...new Set(question.options.filter(candidate=>candidate.id!==option!.id).map(candidate=>Object.keys(candidate.activates)[0]))];
+    if(custom){customTotal+=1;if(active.length)customMatched+=1;}
+    evidenceLeaves.push({sourceProductId:product.productId,...(product.relationshipType?{sourceRelationshipType:product.relationshipType}:{}),questionId:question.id,evidenceDimension:question.evidenceDimension,promptZh:question.zh,promptEn:question.en,answerId:custom?"custom":option!.id,answerZh:custom?customText:option!.zh,answerEn:custom?customText:option!.en,answerSemantic:custom?`custom:${question.evidenceDimension}`:option!.answerSemantic,polarity:"support",nodeIds:active,counterNodeIds,strength:Number(Object.values(activates).reduce((sum,value)=>sum+value,0).toFixed(2)),responseKind:custom?"custom":"preset",...(custom?{matchConfidence:custom.confidence}:{})});
+    for(const [id,weight] of Object.entries(activates)) activation[id]+=weight;
     for(const from of previous) for(const to of active){if(from===to)continue;const key=[from,to].sort().join("|");edgeMap.set(key,(edgeMap.get(key)??0)+0.35);}
     previous=active;
   }
@@ -667,5 +681,5 @@ export function calculateDendrite(product:DendriteProduct,responses:Record<strin
   for(let pass=0;pass<3;pass+=1){const delta:Record<string,number>={};for(const edge of edges){delta[edge.to]=(delta[edge.to]??0)+activation[edge.from]*edge.weight*0.12;delta[edge.from]=(delta[edge.from]??0)+activation[edge.to]*edge.weight*0.12;}for(const [id,value] of Object.entries(delta)) activation[id]+=value;}
   const max=Math.max(...Object.values(activation),1);
   const nodes=product.nodes.map(item=>({...item,score:Math.max(6,Math.round(activation[item.id]/max*100))}));
-  return finalizeDendriteResult(product,nodes,edges,0,evidenceLeaves);
+  const result=finalizeDendriteResult(product,nodes,edges,0,evidenceLeaves);result.customEvidence={total:customTotal,matched:customMatched,open:customTotal-customMatched};return result;
 }

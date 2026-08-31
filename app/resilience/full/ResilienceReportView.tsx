@@ -73,6 +73,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
         // 同时兼容历史数字标记和树突引擎的 SECTION 标记。
         const reportText = data.report || data.fullReport;
         const parts = reportText
+          .replace(/<!--\s*classical-editorial:[^>]+-->/g, "")
           .split(/===\s*(?:\d+|SECTION)\s*===/)
           .map((s: string) => s.trim())
           .filter(Boolean);

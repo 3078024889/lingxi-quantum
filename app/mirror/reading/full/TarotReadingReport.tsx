@@ -95,6 +95,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
           return;
         }
         const parts = (data.fullReport as string)
+          .replace(/<!--\s*classical-editorial:[^>]+-->/g, "")
           .split(/===\s*\d+\s*===/)
           .map((section: string) => section.trim())
           .filter(Boolean);

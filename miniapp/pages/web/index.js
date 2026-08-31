@@ -46,13 +46,13 @@ Page({
     return {
       title: shareTitleFor(this.data.path),
       path: `/pages/web/index?path=${encodeURIComponent(this.data.path)}`,
-      imageUrl: '/images/share-cover.jpg',
+      imageUrl: 'https://lingxifield.cn/og-v335.png?v=20260831',
     }
   },
   onShareTimeline() {
     return {
       title: shareTitleFor(this.data.path),
-      imageUrl: '/images/share-cover.jpg',
+      imageUrl: 'https://lingxifield.cn/og-v335.png?v=20260831',
     }
   },
 })

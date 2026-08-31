@@ -89,10 +89,12 @@ export default function QianReport({ id }: { id: string }) {
           setError((data.error || t("生成失败，请稍后再试。", "Generation failed — please try again.")) + (data.detail ? ` (${data.detail})` : ""));
           return;
         }
-        let parts = (data.fullReport as string)
+        const splitReport = (report: string) => report
+          .replace(/<!--\s*classical-editorial:[^>]+-->/g, "")
           .split(/===\s*\d+\s*===/)
           .map((s: string) => s.trim())
           .filter(Boolean);
+        let parts = splitReport(data.fullReport as string);
         // v237：升级前生成、缓存下来的报告是12段（财富创造+事业使命还
         // 没合并），这次合并成了11段——检测到缓存段数偏多，自动触发
         // 一次重新生成，升级成新结构，不用用户自己点"重新生成"。
@@ -101,10 +103,7 @@ export default function QianReport({ id }: { id: string }) {
           res = await fetchReport(true);
           data = await res.json();
           if (res.ok && data.fullReport) {
-            parts = (data.fullReport as string)
-              .split(/===\s*\d+\s*===/)
-              .map((s: string) => s.trim())
-              .filter(Boolean);
+            parts = splitReport(data.fullReport as string);
           }
         }
         setSections(parts);

@@ -68,6 +68,10 @@ const contentDestinations = read("lib/mini/content-destinations.ts");
 const checkout = read("app/checkout/page.tsx");
 const stellarExperience = read("app/stellar-trace/StellarTraceExperience.tsx");
 const stellarMiniIntake = read("miniapp/utils/stellar-trace-intake.js");
+const pdfExport = read("lib/pdf-export.ts");
+const pdfTransfer = read("app/api/pdf-transfer/route.ts");
+const pdfDownload = read("app/api/wechat/mini/pdf-download/route.ts");
+const pdfPage = read("miniapp/pages/pdf/index.js");
 const miniSources = fs.readdirSync(path.join(root, "miniapp"), { recursive: true })
   .filter((file) => typeof file === "string" && /\.(js|json|wxml|wxss)$/.test(file))
   .map((file) => read(path.join("miniapp", file))).join("\n");
@@ -106,6 +110,7 @@ check("product-specific question banks replace the five-question template", ["li
 const relationshipBanks = [promptBank("deepRelationshipPrompts", "businessRelationshipPrompts"), promptBank("businessRelationshipPrompts", "otherRelationshipPrompts"), promptBank("otherRelationshipPrompts", "resiliencePrompts")];
 check("three relationship paths use independent 24-interaction banks", /RELATIONSHIP_DENDRITE_PRODUCTS/.test(dendriteEngine) && relationshipBanks.every((bank) => promptCount(bank) === 24) && new Set(relationshipBanks).size === 3 && /relationshipVariants/.test(assessmentClient));
 check("every assessment records a named archive subject", /请填写档案称呼/.test(assessmentClient) && /你的姓名或称呼（必填）/.test(assessmentView) && /partnerName/.test(assessmentView));
+check("every question accepts a self-authored answer as an independent evidence variable", /__custom__/.test(assessmentView) && /customResponses/.test(assessmentClient) && /customAnswerActivation/.test(dendriteEngine) && /responseKind:custom\?"custom":"preset"/.test(dendriteEngine) && /不冒充预设选择/.test(reportEntryLibrary));
 check("dendritic result contains evidence and publication chapters", /chapters/.test(dendriteEngine) && /evidence:/.test(dendriteEngine) && /chapterBody/.test(dendriteEngine));
 check("all ten products own distinct definitions and result outlines", (fieldProductCopy.match(/cardDefinitionZh: "/g) || []).length === 10 && (fieldProductCopy.match(/resultOutline: \[/g) || []).length === 10);
 check("technical methodology appears on the Field Insight home instead of every assessment", /一次答案不会直接对应一句结论/.test(exploreView) && !/engine\.zh|product\.sourceZh/.test(assessmentView) && /product\.readingZh/.test(assessmentView));
@@ -125,6 +130,8 @@ check("unlocked assessments open only after ownership and entitlement revalidati
 check("audit account grant is exact, idempotent, and covers current and future paid content", /945462373@qq\.com/.test(auditUnlockSql) && /'everything'/.test(auditUnlockSql) && /AUDIT_EMAIL = "945462373@qq.com"/.test(auditAccess) && /product_id: "everything"/.test(auditAccess));
 check("assessment exposes a native page back control", /show-back="\{\{true\}\}"/.test(assessmentView));
 check("native assessment supports forwarding and copying the web reference link", /onShareAppMessage/.test(assessmentClient) && /onShareTimeline/.test(assessmentClient) && /setClipboardData/.test(assessmentClient));
+check("all native shares use the current cache-busted OG artwork", !/share-cover\.jpg/.test(miniSources) && (miniSources.match(/og-v335\.png\?v=20260831/g) || []).length >= 8);
+check("Mini Program PDF uses native WeChat download and open-document menu", app.pages.includes("pages/pdf/index") && /deliverPdf/.test(pdfExport) && /createSignedUploadUrl/.test(pdfTransfer) && /report-pdfs/.test(pdfDownload) && /wx\.downloadFile/.test(pdfPage) && /showMenu: true/.test(pdfPage));
 check("dendrite archives are owner-readable, server-writable, and included in account migration", /enable row level security/.test(dendriteSql) && /revoke insert, update, delete/.test(dendriteSql) && /auth\.uid\(\) = user_id/.test(dendriteSql) && /update public\.mini_dendrite_assessments set user_id/.test(dendriteSql));
 check("V318 can repair a missing native archive table", /create table if not exists public\.mini_dendrite_assessments/.test(dendriteReliabilitySql) && /grant all on table public\.mini_dendrite_assessments to service_role/.test(dendriteReliabilitySql));
 check("iPhone sandbox payment is stopped before WeChat returns a platform error", /result\.sandbox && platform === 'ios'/.test(virtualPay));

@@ -14,6 +14,35 @@ const AMBER_RGB: [number, number, number] = [232, 183, 101]; // 对应品牌金�
 const LATTICE_RGB: [number, number, number] = [199, 156, 255]; // 对应品牌紫色 lattice
 const BONE_DIM_RGB: [number, number, number] = [168, 168, 190]; // 偏灰的正文色
 
+type DownloadablePdf = { output(type: "blob"): Blob; save(fileName: string): void };
+
+async function deliverPdf(pdf: DownloadablePdf, fileName: string) {
+  const inMiniProgram = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("mini") === "1";
+  if (!inMiniProgram) {
+    pdf.save(fileName);
+    return;
+  }
+  const blob = pdf.output("blob");
+  const prepare = await fetch("/api/pdf-transfer", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "prepare", fileName, size: blob.size }),
+  });
+  const ticket = await prepare.json() as { bucket?: string; path?: string; token?: string; error?: string };
+  if (!prepare.ok || !ticket.bucket || !ticket.path || !ticket.token) throw new Error(ticket.error || "微信 PDF 中转未能建立");
+  const { createClient } = await import("@/lib/supabase/client");
+  const upload = await createClient().storage.from(ticket.bucket).uploadToSignedUrl(ticket.path, ticket.token, blob, { contentType: "application/pdf" });
+  if (upload.error) throw new Error("PDF 已生成，但未能写入微信下载中转");
+  const finalize = await fetch("/api/pdf-transfer", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "finalize", path: ticket.path, fileName }),
+  });
+  const ready = await finalize.json() as { downloadUrl?: string; error?: string };
+  if (!finalize.ok || !ready.downloadUrl) throw new Error(ready.error || "微信 PDF 下载地址未能生成");
+  const mini = (window as Window & { wx?: { miniProgram?: { navigateTo(args: { url: string }): void } } }).wx?.miniProgram;
+  if (!mini) throw new Error("请在灵犀场小程序内打开报告后保存 PDF");
+  mini.navigateTo({ url: `/pages/pdf/index?url=${encodeURIComponent(ready.downloadUrl)}&name=${encodeURIComponent(fileName)}` });
+}
+
 // v234：这是"PDF只有封面用上了背景图、后面的章节全被纯色盖住"这个
 // 问题的真正根因——html2canvas 截图的时候，如果元素的CSS背景图片
 // （无论是<img>标签还是style里的background-image）这时候还没真正
@@ -176,7 +205,7 @@ export async function exportSimplePdf(params: {
     pdf.text(`lingxifield.com`, MARGIN, pageHeight - 14);
   }
 
-  pdf.save(fileName);
+  await deliverPdf(pdf, fileName);
 }
 
 /**
@@ -251,7 +280,7 @@ export async function exportPublicationPagesPdf(params: {
   } finally {
     staging.remove();
   }
-  pdf.save(fileName);
+  await deliverPdf(pdf, fileName);
 }
 
 
@@ -504,7 +533,7 @@ export async function exportGlassPdf(params: {
     pdf.text(`${idx + 1} / ${contentPageNumbers.length}`, pageWidth - MARGIN - 30, pageHeight - 20);
   });
 
-  pdf.save(fileName);
+  await deliverPdf(pdf, fileName);
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -996,7 +1025,7 @@ export async function exportArchivePdf(params: {
   pdf.addPage();
   pdf.addImage(await renderPage(pageShell(endImage, "center 50%", "")), "JPEG", 0, 0, PW, PH);
 
-  pdf.save(fileName);
+  await deliverPdf(pdf, fileName);
   } finally {
     stage.remove();
   }

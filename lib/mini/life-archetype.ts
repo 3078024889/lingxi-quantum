@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { hasUnlock } from "@/lib/access";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { subjectFromAssessment, type SubjectIdentity } from "@/lib/report-subject";
-import { BASE_DENDRITE_PRODUCT_IDS, calculateLifeArchetypeFromReports, MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult, type RelationshipAssessmentType } from "@/lib/mini/dendrite-engine";
+import { BASE_DENDRITE_PRODUCT_IDS, calculateDendrite, calculateLifeArchetypeFromReports, getDendriteProduct, MINI_LIFE_ARCHETYPE_ALGORITHM, type DendriteResult, type RelationshipAssessmentType } from "@/lib/mini/dendrite-engine";
 
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
@@ -22,6 +22,30 @@ type AssessmentRow = { id: string; product_id: string; input: unknown; result: u
 function hasEvidenceLeaves(row: AssessmentRow) {
   const leaves = (row.result as { evidenceLeaves?: unknown[] } | null)?.evidenceLeaves;
   return Array.isArray(leaves) && leaves.length > 0;
+}
+
+function relationshipTypeFromInput(input: unknown): RelationshipAssessmentType {
+  const value = (input ?? {}) as { relationshipType?: unknown };
+  return value.relationshipType === "business" ? "business" : value.relationshipType === "other" || value.relationshipType === "general" ? "other" : "deep";
+}
+
+function rehydrateEvidence(row: AssessmentRow): AssessmentRow {
+  if (hasEvidenceLeaves(row)) return row;
+  const input = row.input && typeof row.input === "object" && !Array.isArray(row.input)
+    ? row.input as { responses?: unknown; customResponses?: unknown }
+    : null;
+  if (!input?.responses || typeof input.responses !== "object" || Array.isArray(input.responses)) return row;
+  const product = getDendriteProduct(row.product_id, relationshipTypeFromInput(row.input));
+  if (!product) return row;
+  try {
+    const customResponses = input.customResponses && typeof input.customResponses === "object" && !Array.isArray(input.customResponses)
+      ? input.customResponses as Record<string, string>
+      : {};
+    const rebuilt = calculateDendrite(product, input.responses as Record<string, string>, customResponses);
+    return { ...row, result: { ...rebuilt, context: (row.result as DendriteResult | null)?.context ?? rebuilt.context }, algorithm_version: rebuilt.algorithm };
+  } catch {
+    return row;
+  }
 }
 
 function sourceDigest(rows: AssessmentRow[]) {
@@ -76,7 +100,8 @@ async function loadSubjectState(userId: string) {
   ]);
   const active = (unlocks ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > now).map((row) => row.product_id);
   const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
-  return { admin, active, manifestActive, groups: subjectGroups(userId, (rows ?? []) as AssessmentRow[]), archetypes: (archetypes ?? []) as AssessmentRow[] };
+  const hydratedRows = ((rows ?? []) as AssessmentRow[]).map(rehydrateEvidence);
+  return { admin, active, manifestActive, groups: subjectGroups(userId, hydratedRows), archetypes: (archetypes ?? []) as AssessmentRow[] };
 }
 
 export async function listLifeArchetypeSubjects(userId: string) {

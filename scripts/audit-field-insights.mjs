@@ -65,7 +65,7 @@ if (fs.existsSync(path.join(root, "public/images/entrance/lingxi-opening-desktop
 const layout = read("app/layout.tsx");
 const fieldStructure = read("components/FieldStructure9D.tsx");
 const footer = read("components/Footer.tsx");
-if (!layout.includes("/og-v316.png") || !fs.existsSync(path.join(root, "public/og-v316.png"))) fail("new social sharing image is not active");
+if (!layout.includes("/og-v335.png") || !fs.existsSync(path.join(root, "public/og-v335.png"))) fail("new social sharing image is not active");
 if (fs.existsSync(path.join(root, "public/og.jpg"))) fail("old social sharing image still exists");
 if (!layout.includes("<FieldStructure9D />") || !fieldStructure.includes("lingxifield-9d-field-structure-v320.mp4")) fail("global 9D Field Structure is not mounted");
 if (!fs.existsSync(path.join(root, "public/media/lingxifield-9d-field-structure-v320.mp4"))) fail("H.264 9D Field Structure film is missing");

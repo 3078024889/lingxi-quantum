@@ -75,6 +75,7 @@ const CHAPTER_TITLES: Record<"romantic" | "business" | "general", { zh: string; 
 function parseReportSections(report: string): string[] {
   return stripMarkdownArtifacts(report)
     .replace(/^<!--\s*relationship-knowledge:[^>]+-->\s*/i, "")
+    .replace(/<!--\s*classical-editorial:[^>]+-->/g, "")
     .split(/===\s*(?:\d+|SECTION)\s*===/)
     .map((section) => section.trim())
     .filter(Boolean);
