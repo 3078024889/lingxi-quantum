@@ -1,3 +1,5 @@
+import { classicalizeChineseSection } from "@/lib/classical-editorial";
+
 export type ReportSignal={id:string;zh:string;en:string;score:number;meaningZh:string;meaningEn:string;actionZh:string;actionEn:string};
 export type DendriteReportEntry={id:string;chapterId:string;chapterZh:string;chapterEn:string;titleZh:string;titleEn:string;briefZh:string;evidenceNodeIds:string[];confidence:"clear"|"developing"|"open";structureZh:string;structureEn:string;mechanismZh:string;mechanismEn:string;realityZh:string;realityEn:string;costZh?:string;costEn?:string;strengthZh?:string;strengthEn?:string;actionZh:string;actionEn:string;observationZh:string;observationEn:string};
 export type ReportEvidenceLeaf={sourceProductId?:string;sourceRelationshipType?:"deep"|"business"|"other";questionId:string;evidenceDimension:string;promptZh:string;promptEn:string;answerId:string;answerZh:string;answerEn:string;answerSemantic:string;polarity:"support";nodeIds:string[];counterNodeIds:string[];strength:number};
@@ -115,9 +117,9 @@ export function buildReportEntries(productId:string,relationshipType:"deep"|"bus
  const{key,slots}=readingSlotsFor(productId,relationshipType);const briefs=PRODUCT_BRIEFS[key]??[];if(slots.length!==11||briefs.length!==11||ordered.length<3)return[];
  return slots.map((slot,index)=>{const{primary,support,counter,picked}=distinct(ordered,index,leaves);const evidenceNodeIds=[...new Set([primary.id,support.id,counter.id,...picked.flatMap(x=>x.nodeIds)])];
  return{id:`${key}-${String(index+1).padStart(2,"0")}`,chapterId:`${key}-reading-${index+1}`,chapterZh:slot.zh,chapterEn:slot.en,titleZh:slot.zh,titleEn:slot.en,briefZh:briefs[index],evidenceNodeIds,confidence:confidence(Math.round((primary.score+support.score)/2)),
- structureZh:structureWriters[index](primary,support,counter),structureEn:`${primary.en} leads, ${support.en} carries it, while ${counter.en} participates less. This concerns sequence, not identity.`,
- mechanismZh:mechanismWriters[index](primary,support),mechanismEn:`Independent contexts connect ${primary.en} with ${support.en}; no single answer forms this reading.`,
- realityZh:realityWriters[index](slot,primary,support),realityEn:`Test this in daily life by observing the sequence of ${primary.en} and ${support.en}.`,
- actionZh:actionWriters[index](primary,support),actionEn:`${primary.actionEn} Record one observable response, then see whether ${support.en} enters more clearly.`,
- observationZh:observationWriters[index](primary,support),observationEn:`Across three comparable situations, record sequence, cost, and outcome; preserve counterevidence.`};});
+ structureZh:classicalizeChineseSection(structureWriters[index](primary,support,counter),index*5),structureEn:`${primary.en} leads, ${support.en} carries it, while ${counter.en} participates less. This concerns sequence, not identity.`,
+ mechanismZh:classicalizeChineseSection(mechanismWriters[index](primary,support),index*5+1),mechanismEn:`Independent contexts connect ${primary.en} with ${support.en}; no single answer forms this reading.`,
+ realityZh:classicalizeChineseSection(realityWriters[index](slot,primary,support),index*5+2),realityEn:`Test this in daily life by observing the sequence of ${primary.en} and ${support.en}.`,
+ actionZh:classicalizeChineseSection(actionWriters[index](primary,support),index*5+3),actionEn:`${primary.actionEn} Record one observable response, then see whether ${support.en} enters more clearly.`,
+ observationZh:classicalizeChineseSection(observationWriters[index](primary,support),index*5+4),observationEn:`Across three comparable situations, record sequence, cost, and outcome; preserve counterevidence.`};});
 }

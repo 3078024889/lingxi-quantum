@@ -19,6 +19,11 @@ export const LIFE_ARCHETYPE_TRIBUTARIES = [
 
 type AssessmentRow = { id: string; product_id: string; input: unknown; result: unknown; created_at: string; algorithm_version?: string };
 
+function hasEvidenceLeaves(row: AssessmentRow) {
+  const leaves = (row.result as { evidenceLeaves?: unknown[] } | null)?.evidenceLeaves;
+  return Array.isArray(leaves) && leaves.length > 0;
+}
+
 function sourceDigest(rows: AssessmentRow[]) {
   return createHash("sha256").update(rows.map((row) => `${row.id}:${row.created_at}:${JSON.stringify(row.result)}`).join("|")).digest("hex");
 }
@@ -37,15 +42,25 @@ function subjectGroups(userId: string, rows: AssessmentRow[]) {
 
 function progressForSubject(subject: SubjectIdentity, rows: AssessmentRow[], active: string[], manifestActive: boolean) {
   const latest = new Map<string, AssessmentRow>();
-  for (const row of rows) if (!latest.has(row.product_id)) latest.set(row.product_id, row);
-  const completedIds = BASE_DENDRITE_PRODUCT_IDS.filter((productId) => latest.has(productId) && (manifestActive || hasUnlock(active, productId)));
+  const latestEvidenceReady = new Map<string, AssessmentRow>();
+  for (const row of rows) {
+    if (!latest.has(row.product_id)) latest.set(row.product_id, row);
+    if (hasEvidenceLeaves(row) && !latestEvidenceReady.has(row.product_id)) latestEvidenceReady.set(row.product_id, row);
+  }
+  // A saved, same-subject report inside the 365-day window remains a valid
+  // tributary even after its short individual reading entitlement expires.
+  // Current access controls whether that report can be reopened, not whether
+  // its already-recorded evidence may participate in Life Archetype.
+  const completedIds = BASE_DENDRITE_PRODUCT_IDS.filter((productId) => latest.has(productId));
   const missing = BASE_DENDRITE_PRODUCT_IDS.filter((productId) => !completedIds.includes(productId));
+  const evidenceMissing = completedIds.filter((productId) => !latestEvidenceReady.has(productId));
   const firstCompletedAt = [...latest.values()].reduce<string | null>((first, row) => !first || Date.parse(row.created_at) < Date.parse(first) ? row.created_at : first, null);
   const windowEndsAt = firstCompletedAt ? new Date(Date.parse(firstCompletedAt) + YEAR_MS).toISOString() : null;
-  return { subject, latest, completedIds, missing, firstCompletedAt, windowEndsAt, tributaries: LIFE_ARCHETYPE_TRIBUTARIES.map((item) => {
+  return { subject, latest, latestEvidenceReady, completedIds, missing, evidenceMissing, firstCompletedAt, windowEndsAt, tributaries: LIFE_ARCHETYPE_TRIBUTARIES.map((item) => {
     const row = latest.get(item.productId);
+    const evidenceRow = latestEvidenceReady.get(item.productId);
     const accessActive = manifestActive || hasUnlock(active, item.productId);
-    return { ...item, completed: !!row && accessActive, assessmentCompleted: !!row, accessActive, completedAt: row?.created_at ?? null, reportId: row?.id ?? null };
+    return { ...item, completed: !!row, assessmentCompleted: !!row, evidenceReady: !!evidenceRow, needsRetest: !!row && !evidenceRow, accessActive, completedAt: (evidenceRow ?? row)?.created_at ?? null, reportId: (evidenceRow ?? row)?.id ?? null };
   }) };
 }
 
@@ -94,13 +109,18 @@ export async function ensureLifeArchetype(userId: string, requestedSubjectId?: s
   const matchingArchive = state.archetypes.find((row) => (row.input as { subjectId?: string } | null)?.subjectId === subject.subjectId);
   if (progress.missing.length) return { ready: false, subject, completed: progress.completedIds.length, missing: progress.missing, firstCompletedAt: progress.firstCompletedAt, windowEndsAt: progress.windowEndsAt, tributaries: progress.tributaries, archivedSubmissionId: matchingArchive?.id ?? null };
 
-  const relationshipRows = rows.filter((row) => row.product_id === "relationship-resonance");
+  const relationshipRows = rows.filter((row) => row.product_id === "relationship-resonance" && hasEvidenceLeaves(row));
   const relationshipByType = new Map<string, AssessmentRow>();
   for (const row of relationshipRows) {
     const relationshipType = ((row.input ?? {}) as { relationshipType?: RelationshipAssessmentType }).relationshipType ?? "deep";
     if (!relationshipByType.has(relationshipType)) relationshipByType.set(relationshipType, row);
   }
-  const sourceRows = BASE_DENDRITE_PRODUCT_IDS.map((productId) => progress.latest.get(productId)!);
+  if (progress.evidenceMissing.length) return {
+    ready:false, blockedReason:"legacy-evidence-missing", blockedProductIds:progress.evidenceMissing,
+    subject, completed:8, missing:[] as string[], firstCompletedAt:progress.firstCompletedAt,
+    windowEndsAt:progress.windowEndsAt, tributaries:progress.tributaries,
+  };
+  const sourceRows = BASE_DENDRITE_PRODUCT_IDS.map((productId) => progress.latestEvidenceReady.get(productId)!);
   const enrichedSourceRows = [...sourceRows.filter((row) => row.product_id !== "relationship-resonance"), ...relationshipByType.values()];
   const sourceHash = sourceDigest(enrichedSourceRows);
   const archiveInput = matchingArchive?.input as { sourceHash?: string; identityVerified?: boolean } | null;

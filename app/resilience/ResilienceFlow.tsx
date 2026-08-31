@@ -377,13 +377,7 @@ export default function ResilienceFlow() {
             和解锁按钮从压着封面图背景的卡片里拆出来，单独一块纯色玻璃
             面板，不再跟封面图底部的"lingxifield.com"落款文字叠在一起。 */}
         <div className="lx-glass-resilience mt-4 p-6 text-center">
-          <input
-            type="text"
-            value={unlockName}
-            onChange={(e) => setUnlockName(e.target.value)}
-            placeholder={t("你的名字（选填）", "Your name (optional)")}
-            className="w-full rounded-sm border border-white/15 bg-transparent px-4 py-2 text-center text-sm text-bone outline-none focus:border-emerald-400/60"
-          />
+          <p className="text-sm text-bone-dim"><Bi zh={`报告主体：${unlockName.trim() || "未命名"}`} en={`Archive subject: ${unlockName.trim() || "Unnamed"}`} /></p>
           <button
             onClick={unlock}
             disabled={unlocking}
@@ -430,6 +424,10 @@ export default function ResilienceFlow() {
   return (
     <div className="mx-auto max-w-md px-6 py-16">
       <div className="lx-glass-resilience p-6">
+        <label className="block text-xs tracking-wider text-bone-dim">
+          <Bi zh="姓名" en="Name" />
+          <input type="text" value={unlockName} onChange={(e) => setUnlockName(e.target.value)} placeholder={t("请输入本次报告使用的姓名", "Name used for this archive")} className="mt-2 w-full rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+        </label>
         <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="resilience" />
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />

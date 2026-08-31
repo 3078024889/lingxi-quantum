@@ -276,21 +276,16 @@ body {
 .lx-publication-page h2, .lx-publication-page h3 { break-after: avoid; }
 .lx-publication-copy { max-width: 42em; }
 
-/* Resilience keeps a real reading/art split on wide screens. The panel owns
-   58% of the page, leaving the remaining field artwork visible as meaning,
-   not decoration. Tablet opens the reading column slightly; mobile stacks. */
+/* Resilience follows the shared archive grid: all chapters keep one centered
+   reading column across web, mobile and exported PDF. */
 .lx-resilience-publication-page .lx-resilience-reading-column {
-  width: 58%;
-  min-width: 34rem;
-  margin-right: auto;
-}
-.lx-resilience-publication-page:nth-of-type(even) .lx-resilience-reading-column {
-  margin-left: auto;
-  margin-right: 0;
+  width: min(84%, 45rem);
+  min-width: 0;
+  margin-inline: auto;
 }
 @media (max-width: 1100px) {
   .lx-resilience-publication-page .lx-resilience-reading-column {
-    width: 64%;
+    width: min(88%, 45rem);
     min-width: 0;
   }
 }

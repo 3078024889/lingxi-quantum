@@ -9,6 +9,7 @@ import {
 import { generateStaticRelationshipReport } from "@/lib/knowledge-loader";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { RELATIONSHIP_KNOWLEDGE_VERSION } from "@/lib/relationship-dendrites";
+import { CLASSICAL_EDITORIAL_MARKER, stampClassicalReport } from "@/lib/classical-editorial";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -91,7 +92,7 @@ export async function POST(request: Request) {
     const resonance = compareLifeVectors(vectorA, vectorB);
 
     const currentPublication = cached && currentKnowledge(cached) && sectionCount(cached) >= 11 &&
-      (lang === "en" || !cached.includes("结构证据："));
+      (lang === "en" || (cached.includes(CLASSICAL_EDITORIAL_MARKER) && !cached.includes("结构证据：")));
     if (currentPublication && !body.regenerate) {
       return NextResponse.json({
         fullReport: cached,
@@ -109,7 +110,8 @@ export async function POST(request: Request) {
       relationshipType: submission.relationship_type,
       lang,
     });
-    const fullReport = "<!-- relationship-knowledge:" + RELATIONSHIP_KNOWLEDGE_VERSION + " -->\n" + generatedReport;
+    const publicationReport = lang === "zh" ? stampClassicalReport(generatedReport) : generatedReport;
+    const fullReport = "<!-- relationship-knowledge:" + RELATIONSHIP_KNOWLEDGE_VERSION + " -->\n" + publicationReport;
 
     const { error: updateError } = await admin
       .from("relationship_submissions")

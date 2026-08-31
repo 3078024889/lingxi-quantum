@@ -171,7 +171,7 @@ function CheckoutInner() {
       if (window.name) {
         try {
           const handoff = JSON.parse(window.name) as { kind?: string; draft?: unknown };
-          if (handoff.kind === "lingxifield-stellar-trace-draft-v2") {
+          if (handoff.kind === "lingxifield-stellar-trace-draft-v3") {
             const received = sanitizeStellarTraceDraft(handoff.draft);
             if (!saved && stellarTraceEssentialComplete(received)) {
               saved = JSON.stringify(received);

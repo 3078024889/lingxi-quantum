@@ -30,7 +30,7 @@ try {
   await page.getByRole("button", { name: "确认此精准位置" }).click();
   const intakeForm = page.locator('form:has-text("01 · 寻踪档案")');
   const boundaryText = await intakeForm.innerText();
-  for (const token of ["支付前结果边界", "不保证形成唯一候选坐标", "尚未成域", "《退款政策》"]) if (!boundaryText.includes(token)) throw new Error(`payment boundary missing ${token}`);
+  for (const token of ["支付前结果边界", "主核验方向与扇区", "不伪换算成公里数或现实坐标", "《退款政策》"]) if (!boundaryText.includes(token)) throw new Error(`payment boundary missing ${token}`);
   const confirmations = intakeForm.locator('input[type="checkbox"]');
   if (await confirmations.count() < 2) throw new Error("Stellar Trace needs separate boundary and source confirmations");
   await confirmations.nth(0).check();
@@ -40,7 +40,7 @@ try {
   await page.screenshot({ path: path.join(outDir, "v3281-stellar-intake-mobile.png"), fullPage: true });
   await button.click();
   await page.waitForURL(/\/checkout\?.*productId=stellar-trace/, { timeout: 10000 });
-  const stored = await page.evaluate(() => window.localStorage.getItem("lingxifield:stellar-trace:draft:v2"));
+  const stored = await page.evaluate(() => window.localStorage.getItem("lingxifield:stellar-trace:draft:v3"));
   if (!stored || !stored.includes("支付前建档验收") || !stored.includes("0200-05-01")) throw new Error("intake was not preserved before checkout or ancient year was rejected");
 
   await page.evaluate(() => { window.localStorage.clear(); window.name = ""; });
@@ -49,7 +49,7 @@ try {
   });
   try { await page.waitForURL(/\/stellar-trace\?intake=required/, { timeout: 20000 }); }
   catch {
-    const diagnostics = await page.evaluate(() => ({ url: location.href, draft: localStorage.getItem("lingxifield:stellar-trace:draft:v2"), windowName: window.name, text: document.body.innerText.slice(0, 500) }));
+    const diagnostics = await page.evaluate(() => ({ url: location.href, draft: localStorage.getItem("lingxifield:stellar-trace:draft:v3"), windowName: window.name, text: document.body.innerText.slice(0, 500) }));
     diagnostics.browserErrors = browserErrors;
     throw new Error(`direct checkout guard failed: ${JSON.stringify(diagnostics)}`);
   }

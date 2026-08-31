@@ -9,6 +9,7 @@ import {
 import { computeLifeVector, type LifeVectorInput } from "@/lib/life-vector";
 import { generateStaticDailyTideReport } from "@/lib/daily-tide-knowledge";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { CLASSICAL_EDITORIAL_MARKER } from "@/lib/classical-editorial";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -100,7 +101,7 @@ export async function POST(req: Request) {
     const cachedField = lang === "en" ? "full_report_en" : "full_report";
     const cached = submission[cachedField];
     const currentCache = typeof cached === "string" && sectionCount(cached) === 11 &&
-      (lang === "en" ? cached.includes("Structural evidence:") : !cached.includes("结构证据："));
+      (lang === "en" ? cached.includes("Structural evidence:") : (cached.includes(CLASSICAL_EDITORIAL_MARKER) && !cached.includes("结构证据：")));
 
     if (currentCache && !body.regenerate) {
       return NextResponse.json({

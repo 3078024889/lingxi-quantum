@@ -14,6 +14,7 @@ import {
   type LifeVectorDim,
 } from "@/lib/life-vector";
 import type { LifeSign } from "@/lib/qian-data";
+import { stampClassicalReport } from "@/lib/classical-editorial";
 
 type Lang = "zh" | "en";
 
@@ -55,7 +56,7 @@ type DimensionGuide = {
   actionEn: string;
 };
 
-const KNOWLEDGE_VERSION = "qian-2026.08.1";
+const KNOWLEDGE_VERSION = "qian-2026.08.2-classical";
 const DIMS = Object.keys(DIM_LABEL) as LifeVectorDim[];
 
 const GUIDE: Record<LifeVectorDim, DimensionGuide> = {
@@ -515,7 +516,9 @@ export function generateStaticQianReport(input: StaticQianInput): StaticQianRepo
 
   const traces = chapters.map((chapter) => chapter.trace);
   return {
-    fullReport: chapters.map((chapter, index) => "===" + (index + 1) + "===\n" + chapter.text).join("\n\n"),
+    fullReport: zh
+      ? stampClassicalReport(chapters.map((chapter, index) => "===" + (index + 1) + "===\n" + chapter.text).join("\n\n"))
+      : chapters.map((chapter, index) => "===" + (index + 1) + "===\n" + chapter.text).join("\n\n"),
     traces,
     activatedNodeIds: traces.flatMap((trace) => trace.activatedNodeIds),
     knowledgeVersion: KNOWLEDGE_VERSION,

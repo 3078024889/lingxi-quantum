@@ -330,7 +330,7 @@ export function generateStaticRelationshipReport(input: RelationshipReportInput)
       slots,
       activated,
       presentation: "editorial",
-      editorialIndex: index,
+      editorialIndex: index + (type === "business" ? 24 : type === "general" ? 48 : 0),
       evidence: [
         { key: dim + ".a", label: nameA + " " + dimLabel(dim, lang), value: a[dim], source: "comparison" },
         { key: dim + ".b", label: nameB + " " + dimLabel(dim, lang), value: b[dim], source: "comparison" },

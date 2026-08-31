@@ -5,7 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 import { computeLifeVector, type LifeVectorInput } from "@/lib/life-vector";
 import { LIFE_SIGNS, type LifeSign } from "@/lib/qian-data";
 import { generateStaticQianReport } from "@/lib/qian-knowledge";
+import { computeLifeMapFacts, type BirthInput } from "@/lib/lifemap-calc";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { CLASSICAL_EDITORIAL_MARKER } from "@/lib/classical-editorial";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -15,6 +17,22 @@ type RequestBody = {
   lang?: "zh" | "en";
   regenerate?: boolean;
 };
+
+function usableVectorFacts(value: unknown): value is LifeVectorInput {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const facts = value as Partial<LifeVectorInput>;
+  return !!facts.sunElement && !!facts.moonElement && !!facts.mercury?.element && !!facts.venus?.element &&
+    !!facts.mars?.element && !!facts.jupiter?.element && !!facts.saturn?.element && !!facts.dayMasterElement && !!facts.wuXingCount;
+}
+
+function vectorFactsForSubmission(submission: Record<string, unknown>): LifeVectorInput {
+  if (usableVectorFacts(submission.facts)) return submission.facts;
+  const birth = submission.birth_input as BirthInput | null;
+  if (!birth || typeof birth.year !== "number" || typeof birth.month !== "number" || typeof birth.day !== "number") {
+    throw new Error("legacy qian submission has neither complete facts nor birth input");
+  }
+  return computeLifeMapFacts(birth) as LifeVectorInput;
+}
 
 function countSections(report: string): number {
   return (report.match(/===\s*\d+\s*===/g) ?? []).length;
@@ -101,8 +119,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const facts = submission.facts as Record<string, unknown>;
-    const vector = computeLifeVector(facts as LifeVectorInput);
+    const facts = vectorFactsForSubmission(submission as Record<string, unknown>);
+    const vector = computeLifeVector(facts);
     const seed = createHash("sha256")
       .update(JSON.stringify({ submissionId: body.id, lang, signIndexes: submission.sign_indexes, vector }))
       .digest("hex");
@@ -113,7 +131,7 @@ export async function POST(req: Request) {
     const isCurrentStaticReport =
       typeof cached === "string" &&
       countSections(cached) === 11 &&
-      (lang === "en" ? cached.includes("Structural evidence:") : !cached.includes("结构证据："));
+      (lang === "en" ? cached.includes("Structural evidence:") : (cached.includes(CLASSICAL_EDITORIAL_MARKER) && !cached.includes("结构证据：")));
 
     if (isCurrentStaticReport && !body.regenerate) {
       return NextResponse.json({

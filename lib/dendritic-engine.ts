@@ -1,4 +1,5 @@
 import { createHash } from "crypto";
+import { classicalizeChineseSection } from "@/lib/classical-editorial";
 
 export const DENDRITIC_ENGINE_VERSION = "1.0.0";
 export const DEFAULT_KNOWLEDGE_VERSION = "2026.08";
@@ -248,24 +249,6 @@ export function composeDendriticChapter(args: {
     ))
     .join("\n\n");
   const editorialIndex = args.editorialIndex ?? [...args.chapter].reduce((sum,char)=>sum+char.charCodeAt(0),0);
-  const tightenChinese = (value: string, position: number) => {
-    if (!/[\u3400-\u9fff]/u.test(value)) return value;
-    const tightened = value
-      .replace(/(?:这说明|这意味着|可能表明|从某个角度来看|从某种意义上说|你需要意识到)[，：]?/gu, "")
-      .replace(/在一定程度上/gu, "")
-      .replace(/需要注意的是[，：]?/gu, "")
-      .replace(/\s+/g, " ")
-      .trim();
-    const openings=["观之","断曰","所见","其要","据此","察其本","明其轴","合而观之"];
-    const mechanisms=["其故","究其所以","其机在此","内里相因","循其脉络","所以成之"];
-    const realities=["落于日用","置于现实","验之近事","观其所行","返观其用","求证于事"];
-    const actions=["可试","行之一事","今取一径","欲移其势","可由此入","且行此步"];
-    if (position === 0 && !/^(断曰|总断|其势|观之|所见|其要|据此|察其本|明其轴|合而观之)/u.test(tightened)) return `${openings[editorialIndex%openings.length]}：${tightened}`;
-    if (position === 1 && !/^(其故|其所以然|究其所以|其机在此|内里相因|循其脉络|所以成之)/u.test(tightened)) return `${mechanisms[editorialIndex%mechanisms.length]}：${tightened}`;
-    if (position === 2 && !/^(验之|落于日用|置于现实|验之近事|观其所行|返观其用|求证于事)/u.test(tightened)) return `${realities[editorialIndex%realities.length]}：${tightened}`;
-    if (position >= 3 && !/^(验之|行之|可试|今取一径|欲移其势|可由此入|且行此步)/u.test(tightened)) return `${actions[editorialIndex%actions.length]}：${tightened}`;
-    return tightened;
-  };
   const editorialParagraphs = [
     args.slots.judgment,
     args.slots.mechanism,
@@ -276,7 +259,7 @@ export function composeDendriticChapter(args: {
   ]
     .filter((value): value is string => Boolean(value?.trim()))
     .map(stripDiagnosticHeading)
-    .map(tightenChinese);
+    .map((value, position) => classicalizeChineseSection(value, editorialIndex + position));
   // Chinese publication keeps raw scores and calculation keys in trace.evidence,
   // not in the paid reading prose. The reader receives judgment, mechanism,
   // lived verification and action; auditors retain the exact facts below.

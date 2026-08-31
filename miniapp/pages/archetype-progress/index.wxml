@@ -10,17 +10,25 @@
   </view>
   <view wx:if="{{loading}}" class="lx-loading">正在读取八流进度…</view>
   <block wx:else>
+    <view wx:if="{{subjects.length}}" class="subject-panel lx-veil">
+      <view class="subject-label">核对报告主体</view>
+      <picker mode="selector" range="{{subjects}}" range-key="displayName" value="{{subjectIndex}}" bindchange="selectSubject">
+        <view class="subject-value">{{progress.subject.displayName || '请选择同一姓名主体'}} · {{progress.completed || 0}}/8</view>
+      </picker>
+      <view class="subject-note">八条支流只按同一姓名汇聚，不会混用同账户下的其他人。</view>
+    </view>
     <view class="progress lx-veil">
       <view class="progress-head"><text>八流进度</text><text>{{progress.completed || 0}} / 8</text></view>
       <view class="track"><view class="fill" style="width: {{(progress.completed || 0) * 12.5}}%"></view></view>
       <view class="window">{{progress.windowLabel}}</view>
     </view>
     <view class="tributaries">
-      <view wx:for="{{progress.tributaries}}" wx:key="productId" class="tributary lx-veil {{item.completed ? 'complete' : ''}}">
+      <view wx:for="{{progress.tributaries}}" wx:key="productId" class="tributary lx-veil {{item.completed && item.evidenceReady ? 'complete' : ''}} {{item.needsRetest ? 'needs-retest' : ''}}">
         <view class="status-dot"></view><view class="tributary-copy"><view class="tributary-name">{{item.nameZh}}</view><view class="tributary-en">{{item.nameEn}}</view><view wx:if="{{item.noteZh}}" class="tributary-note">{{item.noteZh}}</view></view>
         <view class="tributary-status">{{item.statusLabel}}<text wx:if="{{item.dateLabel}}"> · {{item.dateLabel}}</text></view>
       </view>
     </view>
+    <view wx:if="{{progress.blockedReason === 'legacy-evidence-missing'}}" class="blocked lx-veil">八流记录虽齐，但标注为“旧版缺证据”的支流无法进入树突汇流。请以当前姓名重新完成这些支流；其余已汇入档案无需重测。</view>
     <button wx:if="{{progress.ready}}" class="lx-button" bindtap="openReport">展开完整生命原型报告 →</button>
     <button wx:else class="lx-button" bindtap="continueAssessment">继续完成未抵达的支流 →</button>
   </block>

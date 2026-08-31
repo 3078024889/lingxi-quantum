@@ -1,5 +1,5 @@
-const CACHE_KEY = 'lingxifield_stellar_trace_draft_v2'
-const LEGACY_CACHE_KEYS = ['lingxifield_stellar_trace_draft_v1']
+const CACHE_KEY = 'lingxifield_stellar_trace_draft_v3'
+const LEGACY_CACHE_KEYS = ['lingxifield_stellar_trace_draft_v1', 'lingxifield_stellar_trace_draft_v2']
 
 const EMPTY_DRAFT = Object.freeze({
   name: '', relationship: 'family', birthDate: '', birthTime: '', birthPlace: '',

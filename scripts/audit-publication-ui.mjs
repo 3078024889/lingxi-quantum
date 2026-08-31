@@ -22,6 +22,7 @@ for (const view of views) {
   if (!source.includes("max-w-4xl")) failures.push(`${view}: publication width is not max-w-4xl`);
   if (!source.includes("lx-publication-page") && !source.includes("aspect-[1/1.414]")) failures.push(`${view}: missing A4 publication page primitive`);
   if (source.includes("linear-gradient(rgba(24,16,48")) failures.push(`${view}: legacy dark artwork veil remains`);
+  if (/lx-page-layout-\$\{/.test(source) || /\["center",\s*"left",\s*"right"\]/.test(source)) failures.push(`${view}: alternating left/right report layout remains`);
 }
 
 const lifemap = readFileSync(resolve(root, views[0]), "utf8");
@@ -68,7 +69,7 @@ const exporter = readFileSync(resolve(root, "lib/pdf-export.ts"), "utf8");
 if (!exporter.includes("'Noto Sans SC'")) failures.push("pdf-export: Noto Sans SC body font is missing");
 if (!exporter.includes("stage.remove()")) failures.push("pdf-export: failed export cleanup is missing");
 if (!exporter.includes("preloadPdfAssets")) failures.push("pdf-export: publication artwork preload is missing");
-if (!exporter.includes("scale: 2")) failures.push("pdf-export: A4 raster resolution is below the resilience publication baseline");
+if (!/scale:\s*[23]/.test(exporter)) failures.push("pdf-export: A4 raster resolution is below the resilience publication baseline");
 if (!exporter.includes("flowPanelFits")) failures.push("pdf-export: cross-chapter publication flow is missing");
 if (!exporter.includes("Math.min(2, units.length - offset)")) failures.push("pdf-export: orphan heading protection is missing");
 if (!exporter.includes('const placement = "left:64px;right:64px"')) failures.push("pdf-export: centred A4 reading grid is missing");
@@ -112,6 +113,7 @@ for (const route of reportRoutes) {
   if (!source.includes('lang === "en"')) failures.push(`${route}: English report selection is missing`);
   if (!source.includes("full_report_en")) failures.push(`${route}: English report cache is missing`);
   if (!/!\w+\.includes\("结构证据："\)/.test(source)) failures.push(`${route}: legacy score-dump Chinese cache is not invalidated`);
+  if (!source.includes("CLASSICAL_EDITORIAL_MARKER")) failures.push(`${route}: classical editorial cache marker is missing`);
 }
 for (const view of views) {
   const source = readFileSync(resolve(root, view), "utf8");
@@ -131,3 +133,4 @@ console.log("PASS safe area: all full-report routes use the measured navigation 
 console.log("PASS card pagination: Life Map, Life Mirror and Life Oracle cards own full web and PDF pages");
 console.log("PASS compatibility: mirror and legacy tarot report routes share the same publication system");
 console.log("PASS language: all complete-report routes select Chinese or English report caches explicitly");
+console.log("PASS editorial: all web report caches require V335 classical prose and all reading columns are centred");

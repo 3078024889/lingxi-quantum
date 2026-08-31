@@ -1,8 +1,9 @@
 import { composeDendriticChapter, semanticBand, type ActivatedNode, type ChapterTrace, type DendriticNode, type EvidenceItem } from "@/lib/dendritic-engine";
+import { stampClassicalReport } from "@/lib/classical-editorial";
 import type { LifeVector } from "@/lib/life-vector";
 import type { ElementRelation, MoonPhaseKey, NextTidePeak, RetrogradeInfo, TideTrajectory, TodayTransit } from "@/lib/daily-transit";
 
-export const DAILY_TIDE_KNOWLEDGE_VERSION = "daily-tide-2026.08.1";
+export const DAILY_TIDE_KNOWLEDGE_VERSION = "daily-tide-2026.08.2-classical";
 type Lang = "zh" | "en";
 type Scores = Record<string, number>;
 
@@ -254,7 +255,9 @@ export function generateStaticDailyTideReport(input: DailyTideKnowledgeInput): S
   if (chapters.length !== 11) throw new Error("Daily Tide must produce exactly 11 chapters.");
   const traces = chapters.map(x => x.trace);
   return {
-    fullReport: chapters.map(x => x.text).join("\n\n===SECTION===\n\n"),
+    fullReport: input.lang === "zh"
+      ? stampClassicalReport(chapters.map(x => x.text).join("\n\n===SECTION===\n\n"))
+      : chapters.map(x => x.text).join("\n\n===SECTION===\n\n"),
     traces, activatedNodeIds: traces.flatMap(x => x.activatedNodeIds),
     knowledgeVersion: DAILY_TIDE_KNOWLEDGE_VERSION, scores,
   };

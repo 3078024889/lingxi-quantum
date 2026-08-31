@@ -6,6 +6,7 @@ import { computeLifeVector, type LifeVectorInput } from "@/lib/life-vector";
 import { calculateRomance } from "@/lib/romance-calc";
 import { generateStaticRomanceReport } from "@/lib/romance-knowledge";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { CLASSICAL_EDITORIAL_MARKER } from "@/lib/classical-editorial";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
   const cachedReport = submission[cachedField];
 
   const currentPublication = typeof cachedReport === "string" && countSections(cachedReport) === 11 &&
-    (lang === "en" || !cachedReport.includes("结构证据："));
+    (lang === "en" || (cachedReport.includes(CLASSICAL_EDITORIAL_MARKER) && !cachedReport.includes("结构证据：")));
   if (currentPublication && !body.regenerate) {
     return NextResponse.json({ fullReport: cachedReport, cached: true });
   }

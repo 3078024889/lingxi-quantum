@@ -226,13 +226,6 @@ export default function RelationshipReportView({ id }: { id: string }) {
         coverImage: `/images/relationship-full/${relKeyForPdf}/page-0.png`,
         bodyImages: Array.from({ length: 11 }, (_, k) => `/images/relationship-full/${relKeyForPdf}/page-${k + 1}.png`),
         endImage: `/images/relationship-full/${relKeyForPdf}/page-11.png`,
-        featurePages: [{
-          image: `/images/relationship/${relKeyForPdf}.jpg`,
-          title: langEn ? relLabel.en : relLabel.zh,
-          subtitle: reportTitle,
-          eyebrow: "RELATIONSHIP RESONANCE · CORE CARD",
-          backgroundImage: `/images/relationship-full/${relKeyForPdf}/page-1.png`,
-        }],
       });
     } catch (e) {
       console.error("PDF 生成失败:", e);
@@ -399,7 +392,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
           return (
             <div
               key={i}
-              className={`lx-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative mt-6 flex items-center overflow-hidden rounded-sm p-4 sm:p-8`}
+              className="lx-publication-page lx-page-layout-center relative mt-6 flex items-center overflow-hidden rounded-sm p-4 sm:p-8"
               style={{
                 backgroundImage: `url(/images/relationship-full/${folder}/page-${bgIndex}.png)`,
                 backgroundSize: "cover", backgroundPosition: "center",

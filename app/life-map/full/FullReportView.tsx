@@ -485,7 +485,7 @@ export default function FullReportView({ id }: { id: string }) {
             return (
               <Fragment key={i}>
               <section
-                className={`lx-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative flex items-center overflow-hidden rounded-sm p-4 sm:p-8`}
+                className="lx-publication-page lx-page-layout-center relative flex items-center overflow-hidden rounded-sm p-4 sm:p-8"
                 style={{
                   backgroundImage: `url(${bgImage})`,
                   backgroundSize: "cover",
@@ -507,7 +507,7 @@ export default function FullReportView({ id }: { id: string }) {
               </section>
               {hasFigure && (
                 <section
-                  className={`lx-publication-page lx-report-page--chart lx-page-layout-${["right", "center", "left"][i % 3]} relative flex items-center overflow-hidden rounded-sm p-4 sm:p-8`}
+                  className="lx-publication-page lx-report-page--chart lx-page-layout-center relative flex items-center overflow-hidden rounded-sm p-4 sm:p-8"
                   style={{ backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center" }}
                 >
                   <div className="lx-report-glass lx-report-glass-readable px-6 py-8 sm:px-10 sm:py-12" ref={(el) => { figureRefs.current[i] = el; }}>

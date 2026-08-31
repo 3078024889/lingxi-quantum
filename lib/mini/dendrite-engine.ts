@@ -2,6 +2,7 @@ import { getFieldProductCopy, type FieldProductCopy, type FieldResultMode } from
 import { LIFE_SIGNS } from "@/lib/qian-data";
 import { buildReportEntries, type DendriteReportEntry, type ReportEvidenceLeaf } from "@/lib/mini/report-entry-library";
 import { auditLifeArchetypeCoverage, BASE_DENDRITE_PRODUCT_IDS, type LifeArchetypeCoverageAudit } from "@/lib/mini/life-archetype-gate";
+import V330QuestionBank from "@/lib/mini/v330-question-bank.json";
 export { auditLifeArchetypeCoverage, BASE_DENDRITE_PRODUCT_IDS } from "@/lib/mini/life-archetype-gate";
 export type { LifeArchetypeCoverageAudit } from "@/lib/mini/life-archetype-gate";
 
@@ -27,6 +28,7 @@ export type DendriteProduct = FieldProductCopy & {
 
 type Prompt = [sectionZh: string, sectionEn: string, zh: string, en: string, nodeIds?: string[]];
 type Seed = Omit<DendriteProduct, "questions"> & { prompts: Prompt[] };
+type V330Question = { id:string; sectionZh:string; zh:string; evidenceDimension:string; options:Array<{id:string;zh:string;answerSemantic:string}> };
 
 const node = (id: string, zh: string, en: string, meaningZh: string, meaningEn: string, actionZh: string, actionEn: string): DendriteNode =>
   ({ id, zh, en, meaningZh, meaningEn, actionZh, actionEn });
@@ -234,24 +236,33 @@ function buildQuestions(seed: Seed): DendriteQuestion[] {
   const permutations = seed.nodes.flatMap((first) => seed.nodes.flatMap((second) => first.id === second.id ? [] :
     seed.nodes.flatMap((third) => [first.id,second.id].includes(third.id) ? [] :
       seed.nodes.filter((fourth) => ![first.id,second.id,third.id].includes(fourth.id)).map((fourth) => [first.id,second.id,third.id,fourth.id]))));
+  const bankKey = seed.productId === "relationship-resonance" ? `${seed.productId}-${seed.relationshipType ?? "deep"}` : seed.productId;
+  const v330 = (V330QuestionBank.products as Record<string,{questions:V330Question[]}>)[bankKey]?.questions;
+  if (!v330 || v330.length !== seed.prompts.length) throw new Error(`missing V330 question bank: ${bankKey}`);
   return seed.prompts.map(([sectionZh,sectionEn,zh,en,ids],questionIndex) => {
     const allowed = ids?.filter(id => byId.has(id));
     const candidates = allowed && allowed.length >= 4
       ? permutations.filter((signature) => signature.every((id) => allowed.includes(id)))
       : permutations;
     const selectedIds = candidates[(questionIndex * 37 + sectionZh.length * 11) % candidates.length];
-    const evidenceDimension = `${seed.productId}.${seed.relationshipType ?? "base"}.${String(questionIndex + 1).padStart(2,"0")}.${sectionEn.toLowerCase().replace(/[^a-z0-9]+/g,"-")}`;
-    return { id:`q${questionIndex+1}`,sectionZh,sectionEn,zh,en,evidenceDimension,options:selectedIds.map((id,optionIndex) => {
+    const source = v330[questionIndex];
+    const evidenceDimension = `${seed.productId}.${seed.relationshipType ?? "base"}.${String(questionIndex + 1).padStart(2,"0")}.${source.evidenceDimension}`;
+    return { id:source.id,sectionZh:source.sectionZh,sectionEn,zh:source.zh,en,evidenceDimension,options:selectedIds.map((id,optionIndex) => {
       const current = byId.get(id)!;
       const companion = selectedIds[(optionIndex+2)%selectedIds.length];
-      const optionZh=`${current.zh} · ${optionIndex%2===0?current.meaningZh:current.actionZh}`;
       const optionEn=`${current.en} · ${optionIndex%2===0?current.meaningEn:current.actionEn}`;
-      return {id:`${questionIndex+1}-${optionIndex+1}`,zh:optionZh,en:optionEn,polarity:"support",answerSemantic:`${evidenceDimension}:${id}:support`,activates:{[id]:1,[companion]:0.22}};
+      const sourceOption=source.options[optionIndex];
+      return {id:sourceOption.id,zh:sourceOption.zh,en:optionEn,polarity:"support",answerSemantic:`${evidenceDimension}:${sourceOption.answerSemantic}:${id}:support`,activates:{[id]:1,[companion]:0.22}};
     })};
   });
 }
 
-export const DENDRITE_PRODUCTS: DendriteProduct[] = seeds.map(seed => ({...seed,questions:buildQuestions(seed)}));
+export const DENDRITE_PRODUCTS: DendriteProduct[] = seeds.map(seed => ({
+  ...seed,
+  // Life Archetype is a generated eight-stream archive, never a questionnaire.
+  // V330 belongs only to the ten assessable paths (including three relationship paths).
+  questions: seed.productId === "life-archetype" ? [] : buildQuestions(seed),
+}));
 export const RELATIONSHIP_DENDRITE_PRODUCTS: Record<RelationshipAssessmentType, DendriteProduct> = {
   deep: { ...DENDRITE_PRODUCTS.find((item) => item.productId === "relationship-resonance")!, nameZh:"深度关系共振", nameEn:"Deep Relationship Resonance" },
   business: (() => { const seed = makeSeed("relationship-resonance", businessRelationshipNodes, businessRelationshipPrompts, "business"); return { ...seed, nameZh:"关系共振 · 合伙商业", nameEn:"Relationship Resonance · Business Partnership", coreTitleZh:"看见共同创造怎样成为可持续的合伙结构", coreTitleEn:"See how co-creation becomes a sustainable partnership", questions: buildQuestions(seed) }; })(),

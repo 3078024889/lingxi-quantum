@@ -210,7 +210,7 @@ export default function WealthReportView({ id }: { id: string }) {
           return (
             <section
               key={i}
-              className={`lx-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative mt-6 flex items-center overflow-hidden rounded-sm`}
+              className="lx-publication-page lx-page-layout-center relative mt-6 flex items-center overflow-hidden rounded-sm"
               style={{ backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center" }}
             >
               <div className="lx-report-glass lx-report-glass-readable my-10 px-8 py-10 sm:px-10 sm:py-12">

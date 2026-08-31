@@ -107,7 +107,11 @@ Page({
   onStellarInput(event) {
     const flat = event.currentTarget.dataset.flat
     if (!flat) return
-    this.setData({ [flat]: event.detail.value }, () => this.persistStellarDraft())
+    const value = event.detail.value == null ? '' : String(event.detail.value)
+    this.setData({ [flat]: value })
+    clearTimeout(this.stellarDraftTimer)
+    this.stellarDraftTimer = setTimeout(() => this.persistStellarDraft(), 280)
+    return value
   },
   onRelationshipChange(event) {
     const relationshipIndex = Number(event.detail.value) || 0
@@ -128,6 +132,10 @@ Page({
     const draft = this.buildStellarDraft()
     wx.setStorageSync(STELLAR_CACHE_KEY, draft)
     this.refreshStellarCompleteness(draft)
+  },
+  onUnload() {
+    clearTimeout(this.stellarDraftTimer)
+    if (this.data.item && this.data.item.productId === 'stellar-trace') this.persistStellarDraft()
   },
   saveStellarFields(nextData = {}) { this.setData(nextData, () => this.persistStellarDraft()) },
   onBirthDateChange(event) { this.saveStellarFields({ stellarBirthDate: event.detail.value }) },

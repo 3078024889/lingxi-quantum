@@ -58,7 +58,7 @@ function priorityFrom(direction:CircularDirectionAnalysis,evidence:TraceEvidence
     secondaryBearing:secondary==null?null:round(secondary,1),secondaryDirectionZh:secondary==null?null:directionName(secondary),
     basisZh:hasRealityAnchor?`主序同时纳入已知移动方向“${input.movementDirection}”；现实证据优先于象征投影。`:`主序来自${direction.qualified?"全局圆周合度":strongestMode?.count>=2?"最大证据簇":"圆周诊断中心"}，只作为现实核验顺序，不作人员位置认定。`,
     conflictsZh:direction.qualified?[]:[`全局集中度 R=${round(direction.resultantLength)}，各证尚未完全同向。`,secondary==null?"未形成稳定次簇；主方位须以现实记录复核。":`另有${directionName(secondary)}向证据，与主簇并存。`],
-    verificationZh:[`从“${input.lastKnownPlace||"最后可证地点"}”开始核验，不从推演方位替代事实起点。`,hasRealityAnchor?`先核对“${input.movementDirection}”沿线的交通、联系人与可依法调取的记录。`:`优先核对${directionName(primary)}向已有联系人、交通与公开可核验记录。`,`若现实记录与${directionName(primary)}向不符，立即以现实记录为准，并保留${secondary==null?"其他方向":"次序方向"}继续排查。`],
+    verificationZh:[`起点已定为“${input.lastKnownPlace||"最后可证地点"}”；先查该点向${directionName(primary)}的近域出口、道路与公共交通节点。`,hasRealityAnchor?`现实锚点为“${input.movementDirection}”：优先核对该方向沿线联系人、交通与依法可调取的时序记录。`:`第二层核验${directionName(primary)}向已有联系人、交通与公开可核验记录，不以天文角度替代事实。`,`若现实记录与${directionName(primary)}向相逆，立即舍弃该方向判断，以现实记录为准，并转查${secondary==null?"相邻扇区":directionName(secondary)+"向次序"}。`],
   };
 }
 
@@ -82,8 +82,8 @@ export function calculateStellarTrace(input:StellarTraceInput,now=new Date()):St
   const direction:CircularDirectionAnalysis={...base,diagnosticMean:base.diagnosticMean===null?null:round(base.diagnosticMean,1),resultantLength:round(base.resultantLength),circularDispersion:round(base.circularDispersion),circularStdDegrees:base.circularStdDegrees===null?null:round(base.circularStdDegrees,1),sector:base.sector?[round(base.sector[0],1),round(base.sector[1],1)]:null,modes:base.modes.map(mode=>({...mode,center:round(mode.center,1),mass:round(mode.mass),resultantLength:round(mode.resultantLength),bearings:mode.bearings.map(value=>round(value,1))}))};
   const priority=priorityFrom(direction,evidence,input);
   return{version:"lingxifield-stellar-trace-v3",generatedAt:now.toISOString(),lastKnown:{lat:input.lastKnownLat==null?null:round(input.lastKnownLat,4),lon:input.lastKnownLon==null?null:round(input.lastKnownLon,4)},snapshots,evidence,direction,priority,
-    distance:{status:"uncalibrated",rangeKm:null,evidence:evidence.map(item=>item.distanceTrace),explanationZh:"四层投影目前只能形成相对迁移象，尚无经过史料校核与盲测标定的公里映射规则。因此本版不输出公里距离。"},candidateRegions:[],candidateCenter:null,
+    distance:{status:"uncalibrated",rangeKm:null,evidence:evidence.map(item=>item.distanceTrace),explanationZh:`本卷已经给出从“${input.lastKnownPlace||"最后可证地点"}”出发的主核验方位、角度、扇区与现实核验次序。天文角位移不是地表里程，故不把 ${priority.primaryBearing}° 伪换算成公里数；距离须由交通、通信或现场记录另行确定。`},candidateRegions:[],candidateCenter:null,
     environmentZh:input.context?["现实线索已记录，尚未由模型自动解释"]:["尚无可核验的现实环境线索"],artIndexes:[seed%60,(seed*17+23)%60],
-    modelBoundaryZh:"九域为可复算的天文事实层；四层为透明展示的象征投影层。二者之间尚未建立经过盲测验证的现实人员位置因果关系。",
+    modelBoundaryZh:"九域历算可复算；四层合参用于排列现实核验次序。主核验方向是本次计算结论，现实位置仍须由交通、通信与现场记录复核。",
     safetyBoundaryZh:"本结果不读取设备、通信、GPS 或实时行踪，不提供人员现实位置事实认定，也不得用于跟踪、骚扰或监控。涉及人员安全时，请立即使用警方、通信、交通与紧急救援等可核验渠道。"};
 }

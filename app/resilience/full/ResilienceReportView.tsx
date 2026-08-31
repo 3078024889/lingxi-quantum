@@ -224,7 +224,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
             const title = SECTION_TITLES[i] ?? { titleZh: `第${i + 1}段`, titleEn: `Section ${i + 1}` };
 
             return (
-                  <div key={i} className={`lx-publication-page lx-resilience-publication-page lx-page-layout-${["center", "left", "right"][i % 3]} relative flex w-full items-center overflow-hidden rounded-sm p-4 print:w-full print:h-screen print:rounded-none page-break-after-always sm:p-8`}>
+                  <div key={i} className="lx-publication-page lx-resilience-publication-page lx-page-layout-center relative flex w-full items-center overflow-hidden rounded-sm p-4 print:h-screen print:w-full print:rounded-none page-break-after-always sm:p-8">
                 <div 
                   className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
                   style={{ backgroundImage: `url('${bgImageUrl}'), linear-gradient(135deg, #1e293b, #0f172a)` }}

@@ -7,5 +7,6 @@ for(const key of expected){const escaped=key.replace(/[.*+?^${}()|[\]\\]/g,"\\$&
 for(const banned of ["问及“","你选择“","当前解决什么","如何形成判断","现实验证入口"]){if(source.includes(banned))failures.push(`banned user-facing phrase: ${banned}`)}
 if(all.length!==110)failures.push(`expected 110 distinct slots, got ${all.length}`);
 for(const banned of ["其势以「${primary.zh}」为先","三处异境相参","今试一事：","后遇同类情境"]){if(source.includes(banned))failures.push(`repeated report template remains: ${banned}`)}
+if(!source.includes('classicalizeChineseSection'))failures.push('all Mini Program report entries must pass through the shared classical editorial layer');
 if(failures.length){console.error(failures.join("\n"));process.exit(1)}
 console.log("Report reading-slot audit passed: 10 products, 110 distinct readings, no answer-grading prose.");

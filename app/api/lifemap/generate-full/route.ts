@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { computeLifeVector, type LifeVectorInput } from "@/lib/life-vector";
 import { generateStaticLifeMapReport } from "@/lib/lifemap-knowledge";
+import { CLASSICAL_EDITORIAL_MARKER } from "@/lib/classical-editorial";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -87,7 +88,7 @@ export async function POST(req: Request) {
   const isCurrentStaticReport =
     typeof cached === "string" &&
     countSections(cached) === 15 &&
-    (lang === "en" ? cached.includes("Structural evidence:") : !cached.includes("结构证据："));
+    (lang === "en" ? cached.includes("Structural evidence:") : (cached.includes(CLASSICAL_EDITORIAL_MARKER) && !cached.includes("结构证据：")));
 
   if (isCurrentStaticReport && !body.regenerate) {
     return NextResponse.json({ fullReport: cached, cached: true });

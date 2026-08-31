@@ -3,7 +3,7 @@ import { isMiniWebArchiveProduct } from "@/lib/mini/content-destinations";
 import { requireMiniSession } from "@/lib/mini/session";
 import { createAdminClient, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
-import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
+import { ensureLifeArchetype, listLifeArchetypeSubjects } from "@/lib/mini/life-archetype";
 import { hasUnlock } from "@/lib/access";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 
@@ -15,7 +15,11 @@ export async function GET(req: Request) {
     const session = await requireMiniSession(req);
     if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
     const admin = createAdminClient();
-    const archetype = await ensureLifeArchetype(session.userId).catch(() => ({ ready: false, completed: 0, missing: [] as string[] }));
+    const requestedSubjectId = new URL(req.url).searchParams.get("subjectId") || undefined;
+    const [archetype, archetypeSubjects] = await Promise.all([
+      ensureLifeArchetype(session.userId, requestedSubjectId).catch(() => ({ ready: false, completed: 0, missing: [] as string[] })),
+      listLifeArchetypeSubjects(session.userId).catch(() => []),
+    ]);
     const [{ data: profile }, { data: unlocks }, { data: orders }, { data: assessments }] = await Promise.all([
     admin.from("profiles").select("manifest_until").eq("id", session.userId).maybeSingle(),
     admin.from("unlocks").select("product_id, expires_at").eq("user_id", session.userId),
@@ -64,6 +68,7 @@ export async function GET(req: Request) {
       webOnly: false,
     })),
       archetype,
+      archetypeSubjects,
     });
   } catch (error) {
     console.error("[mini me] failed", error instanceof Error ? error.message : "unknown");

@@ -1,62 +1,33 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const source = readFileSync(resolve(process.cwd(), "lib/mini/dendrite-engine.ts"), "utf8");
-const banks = [
-  ["life-map", "lifePrompts"],
-  ["relationship-deep", "deepRelationshipPrompts"],
-  ["relationship-business", "businessRelationshipPrompts"],
-  ["relationship-other", "otherRelationshipPrompts"],
-  ["resilience", "resiliencePrompts"],
-  ["romance", "romancePrompts"],
-  ["wealth", "wealthPrompts"],
-  ["daily-tide", "tidePrompts"],
-  ["life-mirror", "mirrorPrompts"],
-  ["life-oracle", "qianPrompts"],
+const bank = JSON.parse(readFileSync(resolve(process.cwd(), "lib/mini/v330-question-bank.json"), "utf8"));
+const engine = readFileSync(resolve(process.cwd(), "lib/mini/dendrite-engine.ts"), "utf8");
+const config = readFileSync(resolve(process.cwd(), "app/api/wechat/mini/dendrite/config/route.ts"), "utf8");
+const expected = [
+  "life-map-report", "relationship-resonance-deep", "relationship-resonance-business", "relationship-resonance-other",
+  "resilience-report", "romance-report", "wealth-report", "daily-tide-report", "tarot-reading", "qian-reading",
 ];
-
 const failures = [];
-const globalZh = new Map();
-for (const [label, symbol] of banks) {
-  const start = source.indexOf(`const ${symbol}: Prompt[] = [`);
-  const end = source.indexOf("\nconst ", start + 10);
-  if (start < 0 || end < 0) {
-    failures.push(`${label}: bank source not found`);
-    continue;
-  }
-  const block = source.slice(start, end);
-  const groupedRows = [...block.matchAll(/\[\["([^"]+)","([^"]+)"\]|,\["([^"]+)","([^"]+)"\]/g)]
-    .map((match) => [match[1] ?? match[3], match[2] ?? match[4]]);
-  const directRows = [...block.matchAll(/^\s{2}\["[^"]+","[^"]+","([^"]+)","([^"]+)",/gm)]
-    .map((match) => [match[1], match[2]]);
-  const rows = [...directRows, ...groupedRows];
-  const zh = rows.map((row) => row[0]);
-  const en = rows.map((row) => row[1]);
-  if (rows.length !== 24) failures.push(`${label}: expected 24 questions, found ${rows.length}`);
-  if (new Set(zh).size !== zh.length) failures.push(`${label}: repeated Chinese question`);
-  if (new Set(en).size !== en.length) failures.push(`${label}: repeated English question`);
-  for (const question of zh) {
-    const prior = globalZh.get(question);
-    if (prior) failures.push(`${label}: duplicates question from ${prior}: ${question}`);
-    else globalZh.set(question, label);
+const questions = [];
+const options = [];
+if (bank.version !== "V330" || bank.questionCount !== 240 || bank.optionCount !== 960) failures.push("V330 metadata must declare 240 questions and 960 options");
+for (const key of expected) {
+  const product = bank.products[key];
+  if (!product) { failures.push(`${key}: missing`); continue; }
+  if (product.questions.length !== 24) failures.push(`${key}: expected 24 questions, got ${product.questions.length}`);
+  const productQuestions = product.questions.map((question) => question.zh);
+  if (new Set(productQuestions).size !== 24) failures.push(`${key}: repeated question`);
+  for (const question of product.questions) {
+    questions.push(question.zh);
+    if (question.options.length !== 4 || new Set(question.options.map((option) => option.zh)).size !== 4) failures.push(`${key}/${question.id}: options are not four distinct paths`);
+    options.push(...question.options.map((option) => option.zh));
   }
 }
+if (questions.length !== 240 || new Set(questions).size !== 240) failures.push(`expected 240 globally unique questions, got ${new Set(questions).size}`);
+if (options.length !== 960 || new Set(options).size !== 960) failures.push(`expected 960 globally unique options, got ${new Set(options).size}`);
+for (const marker of ["V330QuestionBank", "source.options[optionIndex]", "sourceOption.answerSemantic", "evidenceLeaves.push", "counterNodeIds"]) if (!engine.includes(marker)) failures.push(`engine is not wired to V330 marker: ${marker}`);
+if (!config.includes('questionBankVersion: "V330-OFFICIAL-960"')) failures.push("config does not expose the official V330 version");
 
-if (!readFileSync(resolve(process.cwd(), "app/api/wechat/mini/dendrite/config/route.ts"), "utf8").includes('questionBankVersion: "V331"')) {
-  failures.push("question bank version was not advanced to V331");
-}
-if (!source.includes("const permutations = seed.nodes.flatMap") || !source.includes("evidenceDimension") || !source.includes("answerSemantic") || !source.includes("counterNodeIds")) {
-  failures.push("questions do not own independent semantic dimensions and ordered node mappings");
-}
-if (!source.includes("evidenceLeaves.push") || !source.includes("promptZh:question.zh") || !source.includes("answerZh:option.zh") || !source.includes("evidenceDimension:question.evidenceDimension")) {
-  failures.push("24 responses are not persisted as independent Evidence Leaves");
-}
-if (!source.includes('polarity:"support"') || !source.includes("question.options.filter")) failures.push("selected support and unselected counter-evidence are not persisted");
-if (!source.includes('const optionZh=`${current.zh} · ${optionIndex%2===0?current.meaningZh:current.actionZh}`')) failures.push("answer copy does not render the selected semantic node concisely");
-if (source.includes('在「${zh.replace(/[？。]/g,"")}」这一情境里')) failures.push("answer copy redundantly repeats the full question");
-
-if (failures.length) {
-  console.error(failures.map((item) => `FAIL ${item}`).join("\n"));
-  process.exit(1);
-}
-console.log(`PASS ${banks.length} product paths each expose 24 distinct questions (${globalZh.size} unique Chinese prompts)`);
+if (failures.length) { console.error(failures.map((item) => `FAIL ${item}`).join("\n")); process.exit(1); }
+console.log("PASS V330 official mini-program bank: 10 paths, 240 unique questions, 960 unique answer paths.");

@@ -51,7 +51,7 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
     if (!unlocked) {
       // window.name survives the intentional .com → .cn WeChat OAuth hand-off.
       // The checkout consumes and clears it immediately, so PII is not placed in a URL.
-      window.name = JSON.stringify({ kind: "lingxifield-stellar-trace-draft-v2", draft });
+      window.name = JSON.stringify({ kind: "lingxifield-stellar-trace-draft-v3", draft });
       window.location.href = "/checkout?productId=stellar-trace&redirect=%2Fstellar-trace&intake=complete";
       return;
     }
@@ -105,8 +105,8 @@ export default function StellarTraceExperience({ unlocked = false, initialDraft 
       </div>
 
       <div className="mt-8 border border-lattice/20 bg-void/30 p-5"><p className="text-xs leading-6 text-bone-dim">{essentialComplete ? "五项开启锚点已齐，可正常进入支付与九域推演；其余资料用于增加现实参照，不阻断开启。" : `尚缺：${coreMissing || "请检查日期、时间与地图选点"}。无效日期、未来时间或仅有地点文字但未完成地图选点，都不会被误算为有效锚点。`}</p><p className="mt-2 text-xs text-amber">权益自支付成功起 7 天内有效。</p></div>
-      {!unlocked && <div className="mt-6 border border-amber/35 bg-amber/[.06] p-5"><p className="text-xs tracking-[.2em] text-amber">支付前结果边界</p><p className="mt-3 text-sm leading-7 text-bone-soft">¥688 购买的是九域天文事实、四层透明投影、圆周收敛检验及其研究档案，不是保证生成唯一方向、公里距离或现实坐标。若证据不足，系统仍会交付完整据链与推演边界，并主动停止在尚未成域的层级。</p><p className="mt-2 text-xs leading-6 text-bone-dim">技术故障、重复支付或支付后无法开启，依《退款政策》处理；模型停止于证界不等同于技术故障。</p></div>}
-      {!unlocked && <label className="mt-5 flex items-start gap-3 text-xs leading-6 text-bone-dim"><input required type="checkbox" checked={boundaryConsent} onChange={(e) => setBoundaryConsent(e.target.checked)} className="mt-1"/><span>我已理解：本次付费保证交付推演与证据档案，不保证形成唯一候选坐标；证不足时，结果可能为“尚未成域”。</span></label>}
+      {!unlocked && <div className="mt-6 border border-amber/35 bg-amber/[.06] p-5"><p className="text-xs tracking-[.2em] text-amber">支付前结果边界</p><p className="mt-3 text-sm leading-7 text-bone-soft">¥688 保证交付九域历算、四层合参、主核验方向与扇区、现实核验次序及完整研究档案。天文角度不伪换算成公里数或现实坐标；实际位置仍须以交通、通信和现场记录复核。</p><p className="mt-2 text-xs leading-6 text-bone-dim">技术故障、重复支付或支付后无法开启，依《退款政策》处理。</p></div>}
+      {!unlocked && <label className="mt-5 flex items-start gap-3 text-xs leading-6 text-bone-dim"><input required type="checkbox" checked={boundaryConsent} onChange={(e) => setBoundaryConsent(e.target.checked)} className="mt-1"/><span>我已理解：本次付费会给出主核验方向、扇区与核验次序，但不把天文角度伪装成公里距离或现实坐标。</span></label>}
       <label className="mt-5 flex items-start gap-3 text-xs leading-6 text-bone-dim"><input required type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1"/><span>我确认所填资料来源真实，并知悉本模型不得用于跟踪、骚扰、监控或替代警方与救援定位。<span className="mt-1 block"><a href="/terms" className="text-lattice">《服务条款》</a> · <a href="/refunds" className="text-lattice">《退款政策》</a> · <a href="/privacy" className="text-lattice">《隐私政策》</a> · <a href="/declaration" className="text-lattice">《免责声明》</a></span></span></label>
       <button disabled={loading || !essentialComplete || !consent || (!unlocked && !boundaryConsent)} className="mt-7 w-full border border-lattice/60 bg-lattice/10 px-6 py-4 text-sm tracking-[.18em] text-lattice disabled:cursor-not-allowed disabled:opacity-40">{loading ? "九域正在合参…" : unlocked ? "展开四证合度" : "确认边界并开启 · ¥688"}</button>
       <p className="mt-3 text-center text-[11px] text-bone-mute">{unlocked ? "资料确认后形成本次星迹档案。" : "建档完成并确认边界后进入支付。"}</p>

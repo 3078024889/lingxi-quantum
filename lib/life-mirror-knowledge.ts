@@ -1,8 +1,9 @@
 import { composeDendriticChapter, semanticBand, type ActivatedNode, type ChapterTrace, type DendriticNode, type EvidenceItem } from "@/lib/dendritic-engine";
+import { stampClassicalReport } from "@/lib/classical-editorial";
 import { DIM_LABEL, type LifeVector, type LifeVectorDim } from "@/lib/life-vector";
 import type { TarotCard } from "@/lib/tarot-data";
 
-export const LIFE_MIRROR_KNOWLEDGE_VERSION = "life-mirror-2026.08.1";
+export const LIFE_MIRROR_KNOWLEDGE_VERSION = "life-mirror-2026.08.2-classical";
 type Lang = "zh" | "en";
 
 export type MirrorFrequency = {
@@ -236,7 +237,9 @@ export function generateStaticLifeMirrorReport(input: LifeMirrorInput): StaticLi
   if (chapters.length !== 11) throw new Error("Life Mirror must produce exactly 11 chapters.");
   const traces = chapters.map(x => x.trace);
   return {
-    fullReport: chapters.map((x, index) => "===" + (index + 1) + "===\n" + x.text).join("\n\n"),
+    fullReport: input.lang === "zh"
+      ? stampClassicalReport(chapters.map((x, index) => "===" + (index + 1) + "===\n" + x.text).join("\n\n"))
+      : chapters.map((x, index) => "===" + (index + 1) + "===\n" + x.text).join("\n\n"),
     frequencyMap: buildMirrorFrequencyMap(input.vector), practice: { zh: practice.zh, en: practice.en },
     traces, activatedNodeIds: traces.flatMap(x => x.activatedNodeIds),
     knowledgeVersion: LIFE_MIRROR_KNOWLEDGE_VERSION,

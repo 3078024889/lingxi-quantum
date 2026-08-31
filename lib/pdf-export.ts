@@ -683,9 +683,9 @@ export async function exportArchivePdf(params: {
     // 图片解码完成后再等一帧，否则偶发截到半张图
     await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 60)));
     const canvas = await html2canvas(stage, {
-      width: PX_W, height: PX_H, scale: 2, useCORS: true, backgroundColor: "#F6F4F0",
+      width: PX_W, height: PX_H, scale: 3, useCORS: true, backgroundColor: "#F6F4F0",
     });
-    return canvas.toDataURL("image/jpeg", 0.92);
+    return canvas.toDataURL("image/jpeg", 0.98);
   };
 
   // 每章换一个纵向取景位，让 4 张图产生 12 种画面，11 章不重样

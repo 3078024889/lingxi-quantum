@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { computeLifeVector, calculateWealthDetail, type LifeVectorInput } from "@/lib/life-vector";
 import { planReport, loadLibrary } from "@/lib/hybrid-report";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { CLASSICAL_EDITORIAL_MARKER, classicalizeChineseSection, stampClassicalReport } from "@/lib/classical-editorial";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -86,7 +87,7 @@ export async function POST(req: Request) {
       .split(/===\s*(?:\d+|SECTION)\s*===/)
       .map((section: string) => section.trim())
       .filter(Boolean).length;
-    const currentPublication = sectionCount >= 12 && (lang === "en" || !cachedText.includes("结构证据："));
+    const currentPublication = sectionCount >= 12 && (lang === "en" || (cachedText.includes(CLASSICAL_EDITORIAL_MARKER) && !cachedText.includes("结构证据：")));
     if (currentPublication) {
       return NextResponse.json({ fullReport: cachedText });
     }
@@ -179,7 +180,12 @@ export async function POST(req: Request) {
 
 ${prose?.trim() ?? ""}`;
   });
-  const fullReport = [profile, ...chapterSections].join("\n\n===SECTION===\n\n");
+  const rawSections = [profile, ...chapterSections];
+  const editedSections = lang === "zh"
+    ? rawSections.map((section, index) => classicalizeChineseSection(section, index))
+    : rawSections;
+  const joinedReport = editedSections.join("\n\n===SECTION===\n\n");
+  const fullReport = lang === "zh" ? stampClassicalReport(joinedReport) : joinedReport;
 
   const { error: updateError } = await admin
     .from("wealth_submissions")

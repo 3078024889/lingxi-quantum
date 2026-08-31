@@ -1,4 +1,4 @@
-export const STELLAR_TRACE_DRAFT_KEY = "lingxifield:stellar-trace:draft:v2";
+export const STELLAR_TRACE_DRAFT_KEY = "lingxifield:stellar-trace:draft:v3";
 
 export type StellarTraceDraft = {
   name: string;

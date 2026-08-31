@@ -6,6 +6,7 @@ import {
   type DendriticNode,
   type EvidenceItem,
 } from "@/lib/dendritic-engine";
+import { stampClassicalReport } from "@/lib/classical-editorial";
 import {
   DIM_LABEL,
   calculateResilience,
@@ -46,7 +47,7 @@ export type StaticLifeMapReport = {
   romance: RomanceProfile;
 };
 
-const KNOWLEDGE_VERSION = "life-map-2026.08.1";
+const KNOWLEDGE_VERSION = "life-map-2026.08.2-classical";
 const DIMS = Object.keys(DIM_LABEL) as LifeVectorDim[];
 
 const DIM_MECHANISM_ZH: Record<LifeVectorDim, string> = {
@@ -430,9 +431,10 @@ export function generateStaticLifeMapReport(input: StaticLifeMapInput): StaticLi
   ];
 
   const traces: ChapterTrace[] = chapters.map((chapter) => chapter.trace);
-  const fullReport = chapters
+  const joinedReport = chapters
     .map((chapter, index) => "===" + (index + 1) + "===\n" + chapter.text)
     .join("\n\n");
+  const fullReport = zh ? stampClassicalReport(joinedReport) : joinedReport;
 
   return {
     fullReport,

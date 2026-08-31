@@ -6,6 +6,7 @@ import {
   type DendriticNode,
   type EvidenceItem,
 } from "@/lib/dendritic-engine";
+import { stampClassicalReport } from "@/lib/classical-editorial";
 import type {
   AttractionStyle,
   RomanceBreakdown,
@@ -38,7 +39,7 @@ type Cell = {
   action: string;
 };
 
-const KNOWLEDGE_VERSION = "romance-2026.08.1";
+const KNOWLEDGE_VERSION = "romance-2026.08.2-classical";
 const SECTION_SEPARATOR = "\n\n===SECTION===\n\n";
 const DIMS: RomanceDim[] = ["socialDrive", "creativity", "adaptability", "ambition", "emotionalDepth"];
 
@@ -376,7 +377,9 @@ export function generateStaticRomanceReport(input: StaticRomanceReportInput): St
 
   const traces = chapters.map((chapter) => chapter.trace);
   return {
-    fullReport: chapters.map((chapter) => chapter.text).join(SECTION_SEPARATOR),
+    fullReport: zh
+      ? stampClassicalReport(chapters.map((chapter) => chapter.text).join(SECTION_SEPARATOR))
+      : chapters.map((chapter) => chapter.text).join(SECTION_SEPARATOR),
     traces,
     activatedNodeIds: traces.flatMap((trace) => trace.activatedNodeIds),
     knowledgeVersion: KNOWLEDGE_VERSION,

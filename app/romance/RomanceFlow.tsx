@@ -339,13 +339,7 @@ export default function RomanceFlow() {
             这类落款文字，输入框叠上去，两边文字互相打架，看不清楚。
             这里拆成单独一块纯色玻璃面板，不再压在任何背景图上。 */}
         <div className="lx-glass-romance mt-4 p-6 text-center">
-          <input
-            type="text"
-            value={unlockName}
-            onChange={(e) => setUnlockName(e.target.value)}
-            placeholder={t("你的名字（选填）", "Your name (optional)")}
-            className="w-full rounded-sm border border-white/15 bg-transparent px-4 py-2 text-center text-sm text-bone outline-none focus:border-rose/60"
-          />
+          <p className="text-sm text-bone-dim"><Bi zh={`报告主体：${unlockName.trim() || "未命名"}`} en={`Archive subject: ${unlockName.trim() || "Unnamed"}`} /></p>
           <button
             onClick={unlock}
             disabled={unlocking}
@@ -390,6 +384,10 @@ export default function RomanceFlow() {
   return (
     <div className="mx-auto max-w-md px-6 py-16">
       <div className="lx-glass-romance p-6">
+        <label className="block text-xs tracking-wider text-bone-dim">
+          <Bi zh="姓名" en="Name" />
+          <input type="text" value={unlockName} onChange={(e) => setUnlockName(e.target.value)} placeholder={t("请输入本次报告使用的姓名", "Name used for this archive")} className="mt-2 w-full rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-rose/60" />
+        </label>
         <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="romance" />
         <div className="mt-2 grid grid-cols-3 gap-2">
           <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
