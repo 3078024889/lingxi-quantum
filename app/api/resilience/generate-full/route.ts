@@ -6,6 +6,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import { planReport, loadLibrary } from "@/lib/hybrid-report";
 import { archetypeOf } from "@/lib/archetype";
 import { CLASSICAL_EDITORIAL_MARKER, classicalizeChineseSection, stampClassicalReport } from "@/lib/classical-editorial";
+import { compileHybridLivingSections } from "@/lib/report-v340/web-adapter";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -108,9 +109,9 @@ export async function POST(req: Request) {
     ? `Your Five Dimensions\n\n${ranked.map(([k, v]) => `${(DIM_EN[k] ?? k).padEnd(22)} ${bar(v)}  ${v}`).join("\n")}\n\nHighest: ${DIM_EN[ranked[0][0]] ?? ranked[0][0]} (${ranked[0][1]})\nLowest: ${DIM_EN[ranked[4][0]] ?? ranked[4][0]} (${ranked[4][1]})\nSpread: ${ranked[0][1] - ranked[4][1]}\n\nStructural form: ${arch.en}\nBasis: ${arch.reason}\n\nThis form comes from the shape of the five, not their height — two people with the same average and different distributions are read differently.`
     : `你的五项分数\n\n${ranked.map(([k, v]) => `${(DIM_ZH[k] ?? k).padEnd(6, "　")} ${bar(v)}  ${v}`).join("\n")}\n\n最高：${DIM_ZH[ranked[0][0]] ?? ranked[0][0]}（${ranked[0][1]}）\n最低：${DIM_ZH[ranked[4][0]] ?? ranked[4][0]}（${ranked[4][1]}）\n落差：${ranked[0][1] - ranked[4][1]} 分\n\n结构形态：${arch.zh}\n判定依据：${arch.reason}\n\n这个形态取自五项之间的形状，不是分数的高低——同样的平均分，分布不同，读出来是两个人。`;
 
-  const rawSections: string[] = [profile, ...plan.chapters
-    .map((ch) => (lang === "en" ? ch.ruleTextEn : ch.ruleTextZh) ?? "")
-    .filter((x) => x.trim())];
+  const rawSections: string[] = lang === "zh"
+    ? [profile, ...compileHybridLivingSections({product:"resilience",library:lib,scores:breakdown,chapters:plan.chapters})]
+    : [profile, ...plan.chapters.map((ch) => ch.ruleTextEn ?? "").filter((x) => x.trim())];
   const allSections = lang === "zh"
     ? rawSections.map((section, index) => classicalizeChineseSection(section, index))
     : rawSections;

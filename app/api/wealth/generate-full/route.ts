@@ -5,6 +5,7 @@ import { computeLifeVector, calculateWealthDetail, type LifeVectorInput } from "
 import { planReport, loadLibrary } from "@/lib/hybrid-report";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { CLASSICAL_EDITORIAL_MARKER, classicalizeChineseSection, stampClassicalReport } from "@/lib/classical-editorial";
+import { compileHybridLivingSections } from "@/lib/report-v340/web-adapter";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -173,12 +174,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const chapterSections = plan.chapters.map((chapter) => {
-    const title = lang === "en" ? chapter.titleEn : chapter.titleZh;
-    const prose = lang === "en" ? chapter.ruleTextEn : chapter.ruleTextZh;
-    return `${title}
+  const chapterSections = lang === "zh" ? compileHybridLivingSections({product:"wealth",library,scores:breakdown,chapters:plan.chapters}) : plan.chapters.map((chapter) => {
+    return `${chapter.titleEn}
 
-${prose?.trim() ?? ""}`;
+${chapter.ruleTextEn?.trim() ?? ""}`;
   });
   const rawSections = [profile, ...chapterSections];
   const editedSections = lang === "zh"

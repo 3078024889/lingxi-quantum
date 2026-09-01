@@ -327,6 +327,7 @@ export function generateStaticRelationshipReport(input: RelationshipReportInput)
     }, activated);
     const composed = composeDendriticChapter({
       chapter: chapterId,
+      livingProduct: type === "business" ? "relationship-business" : type === "general" ? "relationship-other" : "relationship-deep",
       slots,
       activated,
       presentation: "editorial",

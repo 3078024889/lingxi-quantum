@@ -17,8 +17,10 @@ const views = [
 ];
 const failures = [];
 const editorial = readFileSync(resolve(root, "lib/classical-editorial.ts"), "utf8");
-if (!editorial.includes('CLASSICAL_EDITORIAL_VERSION = "V336"')) failures.push("editorial: V336 cache invalidation is missing");
-if (!editorial.includes('const CHAPTER_MOVES = ["断曰", "所以然", "验于事", "反观", "行法"]')) failures.push("editorial: five-move classical chapter architecture is missing");
+const livingCompiler = readFileSync(resolve(root, "lib/report-v340/living-report-compiler.ts"), "utf8");
+const webAdapter = readFileSync(resolve(root, "lib/report-v340/web-adapter.ts"), "utf8");
+if (!editorial.includes('CLASSICAL_EDITORIAL_VERSION = "V340.1-LIVING-WEB"')) failures.push("editorial: V340.1 web cache invalidation is missing");
+if (!["compileLivingChapter", "strengthWhenActive", "costWhenOverused", "falsifiers", "compileDendriticLivingText"].every((token) => `${livingCompiler}\n${webAdapter}`.includes(token))) failures.push("editorial: evidence-grown V340 chapter architecture is missing");
 
 for (const view of views) {
   const source = readFileSync(resolve(root, view), "utf8");
@@ -137,4 +139,4 @@ console.log("PASS safe area: all full-report routes use the measured navigation 
 console.log("PASS card pagination: Life Map, Life Mirror and Life Oracle cards own full web and PDF pages");
 console.log("PASS compatibility: mirror and legacy tarot report routes share the same publication system");
 console.log("PASS language: all complete-report routes select Chinese or English report caches explicitly");
-console.log("PASS editorial: all web report caches require V336 classical prose and all reading columns are centred");
+console.log("PASS editorial: all web report caches require V340.1 living prose and all reading columns are centred");

@@ -8,12 +8,17 @@ import type {
 
 const banned = [
   /这说明/u, /这意味着/u, /可能表明/u, /从某个角度/u,
-  /不是.+而是/u, /你需要意识到/u, /在一定程度上/u,
+  /不是[^。！？；\n]+而是/u, /你需要意识到/u, /在一定程度上/u,
   /综合来看/u, /总体而言/u,
 ];
 
 function sentenceEnd(s:string) {
   return /[。！？；]$/u.test(s) ? s : `${s}。`;
+}
+function withoutEnd(s:string){return s.replace(/[。！？；]+$/u,"");}
+function countZh(value:number){
+  const digits=["零","一","二","三","四","五","六","七","八","九","十"];
+  return value>=0&&value<=10?digits[value]:String(value);
 }
 
 function evidenceLevel(pattern: CrossEvidencePattern): LivingChapter["evidenceLevelZh"] {
@@ -42,29 +47,28 @@ function writeVerdict(pattern: CrossEvidencePattern) {
   }
 
   return sentenceEnd(
-    `${p.coreTruth}；${s.coreTruth}${c ? `。惟${c.titleZh}尚弱，故其力有成处，亦有失守处` : ""}`
+      `${withoutEnd(p.coreTruth)}；${withoutEnd(s.coreTruth)}${c ? `。惟${c.titleZh}尚弱，故其力有成处，亦有失守处` : ""}`
   );
 }
 
 function writeBody(pattern: CrossEvidencePattern, spec: LivingChapterSpec) {
   const p = pattern.primary;
   const s = pattern.support;
-  const scenes = [...p.livedScenes, ...(s?.livedScenes ?? [])].slice(0,3);
+  const scenes = [...new Set([...p.livedScenes, ...(s?.livedScenes ?? [])])].slice(0,3);
 
-  const opening = `断曰：${writeVerdict(pattern)}`;
+  const opening = writeVerdict(pattern);
   const mechanism = s
-    ? `其机不在一答。${new Set(pattern.leaves.map(x=>x.context)).size}种情境同见此势：${p.titleZh}先发，${s.titleZh}承之。${p.costWhenOverused}`
-    : `其证尚单，未宜强断。${p.suppressedForm}`;
+    ? `${countZh(new Set(pattern.leaves.map(x=>x.context)).size)}路独立证据同归于此：${p.titleZh}先发，${s.titleZh}承之。其力得位，${sentenceEnd(p.strengthWhenActive)}其过在${sentenceEnd(p.costWhenOverused)}`
+    : `其证尚单，未宜强断。${sentenceEnd(p.suppressedForm)}`;
 
   const lived = scenes.length
-    ? `验于事：${scenes.map(sentenceEnd).join("")}`
-    : `验于事：须回看近三次同类事件，若所见不能重复出现，此断即应撤回。`;
+    ? `落实于事，常见如下：${scenes.map(sentenceEnd).join("")}`
+    : `须回看近三次同类事件；若所见不能重复出现，此断即应撤回。`;
 
-  const cost = `反观：${p.strengthWhenActive}${sentenceEnd(p.costWhenOverused)}`;
+  const resolveText = spec.resolves.replace(/不是([^，。；\n]+?)[，,]?\s*而是/gu,"非$1，实为");
+  const resolve = `故此章不求定性，只求一事：${sentenceEnd(resolveText)}`;
 
-  const resolve = `所解：${spec.resolves}`;
-
-  return [opening, mechanism, lived, cost, resolve].join("\n\n");
+  return [opening, mechanism, lived, resolve].join("\n\n").replace(/([。！？；])\1+/gu,"$1");
 }
 
 function writeVerification(pattern: CrossEvidencePattern) {
@@ -74,7 +78,8 @@ function writeVerification(pattern: CrossEvidencePattern) {
   ].slice(0,2);
 
   if (falsifiers.length) {
-    return `现实复核：未来14日只看两件事——${falsifiers.join("；")}。若连续出现反例，此节点降级，不再立为主轴。`;
+    const unique=[...new Set(falsifiers.map(sentenceEnd))];
+    return `现实复核：未来14日只看${unique.length>1?"两件事":"一件事"}——${unique.join("")}若连续出现反例，此节点降级，不再立为主轴。`.replace(/([。！？；])\1+/gu,"$1");
   }
 
   return "现实复核：取最近三次同类事件，记录事实、行动、结果；若三次不能复现，本章不得继续维持高置信。";
@@ -91,7 +96,7 @@ export function compileLivingChapter(
       id: spec.id,
       titleZh: spec.titleZh,
       verdictZh: "证尚不足，不提前立论。",
-      bodyZh: `此章须由至少${spec.minIndependentContexts}种独立情境互证；当前仅得${evidenceContexts}种。宁留其白，不以一答定人。`,
+      bodyZh: `此章须由至少${countZh(spec.minIndependentContexts)}种独立情境互证；当前仅得${countZh(evidenceContexts)}种。宁留其白，不以一答定人。`,
       verificationZh: "待新的真实情境进入后再读。",
       evidenceLevelZh: "尚不立论",
       evidenceTrace: pattern.leaves.map(x=>({leafId:x.id,dimension:x.dimension,context:x.context})),
@@ -101,7 +106,7 @@ export function compileLivingChapter(
   const bodyZh = writeBody(pattern, spec);
 
   for (const rule of banned) {
-    if (rule.test(bodyZh)) throw new Error(`V340 language audit failed: ${rule}`);
+    if (rule.test(bodyZh)) throw new Error(`V340 language audit failed in ${spec.id}: ${rule} · ${bodyZh.slice(0,240)}`);
   }
 
   return {

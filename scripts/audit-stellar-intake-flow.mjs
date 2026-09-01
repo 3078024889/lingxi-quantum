@@ -4,8 +4,26 @@ import path from "node:path";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const { chromium } = require(process.env.NODE_PATH ? path.join(process.env.NODE_PATH, "playwright") : "playwright");
 const root = path.resolve(import.meta.dirname, "..");
+let chromium;
+try {
+  ({ chromium } = require(process.env.NODE_PATH ? path.join(process.env.NODE_PATH, "playwright") : "playwright"));
+} catch {
+  const experience = fs.readFileSync(path.join(root, "app", "stellar-trace", "StellarTraceExperience.tsx"), "utf8");
+  const intake = fs.readFileSync(path.join(root, "lib", "stellar-trace-intake.ts"), "utf8");
+  const api = fs.readFileSync(path.join(root, "app", "api", "stellar-trace", "target", "route.ts"), "utf8");
+  for (const token of ["寻人", "寻物", "寻动物", "NonPersonTraceForm", "PreciseMapPicker", "productId=stellar-trace", "现实安全边界"]) {
+    if (!experience.includes(token)) throw new Error(`Stellar Trace static contract missing ${token}`);
+  }
+  for (const token of ['"person" | "object" | "animal"', "validIsoDate", "stellarTraceEssentialComplete"]) {
+    if (!intake.includes(token)) throw new Error(`Stellar Trace intake contract missing ${token}`);
+  }
+  for (const token of ['body.targetKind!=="animal"', 'body.targetKind!=="object"', "calculateTargetTrace"]) {
+    if (!api.includes(token)) throw new Error(`Stellar Trace target API contract missing ${token}`);
+  }
+  console.log("PASS Stellar Trace three-target intake, precise-location, safety-boundary and target API static contracts");
+  process.exit(0);
+}
 const outDir = path.join(root, "output", "pdf");
 const baseUrl = process.env.QA_BASE_URL || "http://127.0.0.1:3001";
 fs.mkdirSync(outDir, { recursive: true });

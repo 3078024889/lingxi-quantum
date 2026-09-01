@@ -28,6 +28,8 @@
     "audit:report-language": "node scripts/audit-report-language.mjs",
     "audit:report-slots": "node scripts/audit-report-reading-slots.mjs",
     "audit:living-v340": "node scripts/audit-living-v340.mjs",
+    "audit:web-living-v340": "node scripts/audit-web-living-v340.mjs",
+    "audit:web-living-runtime-v340": "node scripts/audit-web-living-runtime-v340.cjs",
     "audit:sovereign-access": "node scripts/audit-sovereign-access.mjs",
     "audit:life-archetype-v6": "node --experimental-strip-types scripts/audit-life-archetype-v6.mjs"
   },

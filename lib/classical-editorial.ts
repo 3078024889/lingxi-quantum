@@ -5,7 +5,7 @@
  * Living prose must already have been composed from evidence, cost, lived scene
  * and falsifier. The guard only protects evidence blocks and normalizes layout.
  */
-export const CLASSICAL_EDITORIAL_VERSION = "V340";
+export const CLASSICAL_EDITORIAL_VERSION = "V340.1-LIVING-WEB";
 export const CLASSICAL_EDITORIAL_MARKER = `<!-- classical-editorial:${CLASSICAL_EDITORIAL_VERSION} -->`;
 
 const BANNED = ["这说明","这意味着","可能表明","综合来看","总体而言","从某个角度","你需要意识到","在一定程度上"];

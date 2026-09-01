@@ -25,6 +25,7 @@ export type HybridChapter = {
   ruleTextZh: string | null;
   ruleTextEn: string | null;
   source: "rule" | "gap";
+  blockIds: string[];
 };
 
 export type HybridPlan = {
@@ -56,6 +57,7 @@ export function planReport(
       return {
         key: ch.chapter, titleZh: ch.titleZh, titleEn: ch.titleEn,
         ruleTextZh: null, ruleTextEn: null, source: "gap",
+        blockIds: [],
       };
     }
     // 一章内可能有多块（组合/单维 + 状态层），用空行连接成完整章节
@@ -64,6 +66,7 @@ export function planReport(
       ruleTextZh: ch.blocks.map((b) => b.zh).join("\n\n"),
       ruleTextEn: ch.blocks.map((b) => b.en).join("\n\n"),
       source: "rule",
+      blockIds: ch.blocks.map((block) => block.id),
     };
   });
 

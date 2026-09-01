@@ -1,5 +1,7 @@
 import { createHash } from "crypto";
 import { classicalizeChineseSection } from "@/lib/classical-editorial";
+import { compileDendriticLivingText } from "@/lib/report-v340/web-adapter";
+import type { ReportProductKey } from "@/lib/report-v340/types";
 
 export const DENDRITIC_ENGINE_VERSION = "1.0.0";
 export const DEFAULT_KNOWLEDGE_VERSION = "2026.08";
@@ -229,6 +231,7 @@ export function composeDendriticChapter(args: {
   evidence: EvidenceItem[];
   presentation?: "diagnostic" | "editorial";
   editorialIndex?: number;
+  livingProduct?: ReportProductKey;
 }): ComposedChapter {
   assertChapterSlots(args.slots);
   const diagnosticParagraphs = [
@@ -264,6 +267,20 @@ export function composeDendriticChapter(args: {
   // not in the paid reading prose. The reader receives judgment, mechanism,
   // lived verification and action; auditors retain the exact facts below.
   const chinesePublication = /[\u3400-\u9fff]/u.test(args.slots.judgment);
+  if (chinesePublication) {
+    const inferredProduct = args.activated[0]?.node.product;
+    const product: ReportProductKey = args.livingProduct ?? ({
+      "life-map":"life-map", qian:"life-oracle", romance:"romance",
+      "daily-tide":"daily-tide", "life-mirror":"life-mirror",
+      "relationship-resonance":"relationship-deep",
+    } as Record<string,ReportProductKey>)[inferredProduct];
+    if (!product) throw new Error(`V340 product mapping missing for ${inferredProduct || args.chapter}`);
+    const chapterIndex = Math.max(0, Number.parseInt(args.chapter.match(/\d+/)?.[0] ?? "1", 10) - 1);
+    const text = compileDendriticLivingText({product,chapterIndex,chapterKey:args.chapter,slots:args.slots,activated:args.activated,evidence:args.evidence});
+    const safetyFlags = auditSafety(text);
+    if (safetyFlags.length > 0) throw new Error("Dendritic safety violation: " + safetyFlags.join(", "));
+    return {text,trace:{engineVersion:DENDRITIC_ENGINE_VERSION,knowledgeVersion:args.knowledgeVersion??DEFAULT_KNOWLEDGE_VERSION,chapter:args.chapter,activatedNodeIds:args.activated.map(item=>item.node.id),evidence:args.evidence,safetyFlags}};
+  }
   const sourceParagraphs = args.presentation === "editorial" || chinesePublication
     ? editorialParagraphs
     : diagnosticParagraphs.map(stripDiagnosticHeading);
