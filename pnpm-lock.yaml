@@ -20,6 +20,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.108.2
         version: 2.112.2
+      '@yhjs/bagua':
+        specifier: 1.0.0
+        version: 1.0.0
       '@yhjs/dunjia':
         specifier: ^1.0.1
         version: 1.0.1
@@ -4753,13 +4756,13 @@ snapshots:
     dependencies:
       ansi-styles: 4.0.0
       string-width: 4.2.0
-      strip-ansi: 6.0.0
+      strip-ansi: 6.0.1
 
   wrap-ansi@7.0.0:
     dependencies:
       ansi-styles: 4.0.0
       string-width: 4.2.0
-      strip-ansi: 6.0.1
+      strip-ansi: 6.0.0
 
   wrap-ansi@8.1.0:
     dependencies:
