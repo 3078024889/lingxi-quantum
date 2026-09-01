@@ -29,6 +29,7 @@ const SHARE_TITLES = {
   '/daily': '灵犀场 · 今日潮汐',
   '/mirror': '灵犀量子生命镜像 · 三重镜像',
   '/qian': '灵犀生命灵签 · 意识坐标读取',
+  '/stellar-trace': '灵犀场星迹 · 寻人寻物寻动物',
 }
 
 function shareTitleFor(path) {

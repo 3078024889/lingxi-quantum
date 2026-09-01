@@ -150,7 +150,9 @@ function rotate<T>(arr:T[], offset:number){
 
 export function createQimenProvider() {
   return async function qimenProvider(input: StellarAncientInput): Promise<QimenChart|null> {
-    if(input.targetKind==="animal"&&input.targetSubtype!=="livestock")return null;
+    // 《占走失六畜》可覆盖犬与明确的牲畜门类。猫、泛称鸟类和
+    // “其他动物”不因现代习性相似而被偷换进六畜用神。
+    if(input.targetKind==="animal"&&!new Set(["dog","livestock"]).has(input.targetSubtype??""))return null;
     const query = new Date(input.queryTime);
     if (Number.isNaN(query.getTime())) return null;
 

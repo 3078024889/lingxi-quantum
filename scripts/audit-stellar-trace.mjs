@@ -16,6 +16,8 @@ const ancientEngine=read("lib/stellar-trace/ancient/engine.ts");
 const fuse=read("lib/stellar-trace/ancient/fuse.ts");
 const ui=read("app/stellar-trace/StellarTraceExperience.tsx");
 const mini=read("miniapp/pages/product/index.js");
+const explore=read("miniapp/pages/explore/index.js");
+const exporter=read("lib/pdf-export.ts");
 
 for(const token of ["lingxifield-stellar-trace-v4","experimentalAstronomyProjections","calculatePersonTrace","reportedMovementBearing","realityValidation","candidateZones:[]"]){
   assert.ok(engine.includes(token),`v4 engine missing ${token}`);
@@ -28,7 +30,9 @@ assert.ok(read("lib/stellar-trace/person/orchestrator.ts").includes("createQimen
 assert.ok(read("lib/stellar-trace/providers/liuren-provider.ts").includes("special-method-unverified")&&!read("lib/stellar-trace/providers/liuren-provider.ts").includes('xuanwuBranch:"子",\n        transmissions:["","",""]'),"unverified Liuren special methods must stop without a placeholder bearing");
 assert.ok(fuse.includes("usedSystems")&&fuse.includes("omittedSystems"),"3/4 evidence coverage must remain explicit");
 assert.ok(ui.includes("现实移动方向仅用于事后核验")&&ui.includes("原典四证 · 独立合度"),"UI must disclose the independent inference boundary");
-assert.ok(mini.includes("interrupts the Chinese IME composition buffer")&&mini.includes("onStellarBlur"),"Mini name input regression guard is absent");
+assert.ok(/options\.product === 'stellar-trace'[\s\S]{0,180}wx\.redirectTo/.test(mini)&&/item\.productId === 'stellar-trace'[\s\S]{0,180}pages\/web\/index/.test(explore),"Mini Stellar Trace must bypass the native form and open the web field");
+assert.ok(exporter.includes("exportStellarTracePdf")&&exporter.includes('scale: 2')&&exporter.includes('toDataURL("image/png")'),"Stellar Trace must own a 2x PNG PDF exporter");
+assert.ok(ui.includes("AncientEvidenceDetail")&&ui.includes("下载 3 页高清"),"Stellar Trace must publish expanded source-traced evidence pages");
 
 const inferred=315,reported=270;
 assert.equal(inferred,315,"reported bearing must not rewrite an independent ancient result");

@@ -16,7 +16,7 @@ Page({
       return
     }
     if (item.productId === 'stellar-trace') {
-      wx.navigateTo({ url: `/pages/product/index?product=${encodeURIComponent(item.productId)}&sku=${encodeURIComponent(item.skuId)}&from=explore` })
+      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/stellar-trace')}` })
       return
     }
     wx.navigateTo({ url: `/pages/assessment/index?product=${encodeURIComponent(item.productId)}` })

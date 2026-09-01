@@ -310,6 +310,69 @@ export async function exportPublicationPagesPdf(params: {
   await deliverPdf(pdf, fileName);
 }
 
+/**
+ * Stellar Trace publishes only three fixed A4 pages. It therefore does not
+ * inherit the 1x/JPEG memory compromise used by long Mini Program archives.
+ * PNG at 2x preserves the fine Chinese strokes, compass lines and translucent
+ * evidence panels while each canvas is still released before the next page.
+ */
+export async function exportStellarTracePdf(params: {
+  containerRef: HTMLElement;
+  fileName: string;
+}): Promise<void> {
+  const { containerRef, fileName } = params;
+  await document.fonts.ready;
+  const pages = Array.from(containerRef.children).filter((node): node is HTMLElement =>
+    node instanceof HTMLElement && node.classList.contains("lx-pdf-page")
+  );
+  if (!pages.length) throw new Error("No Stellar Trace publication pages were found");
+
+  const artworkUrls = pages.flatMap((page) => Array.from(page.querySelectorAll("img")).map((image) => image.currentSrc || image.src));
+  await preloadPdfAssets(artworkUrls);
+  const [{ default: html2canvas }, { jsPDF }] = await Promise.all([import("html2canvas"), import("jspdf")]);
+  const pdf = new jsPDF({ unit: "pt", format: "a4", compress: true });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const staging = document.createElement("div");
+  staging.setAttribute("aria-hidden", "true");
+  Object.assign(staging.style, {
+    position: "fixed", left: "-10000px", top: "0", width: "794px",
+    height: "1123px", overflow: "hidden", pointerEvents: "none",
+  });
+  document.body.appendChild(staging);
+
+  try {
+    for (let index = 0; index < pages.length; index++) {
+      const clone = pages[index].cloneNode(true) as HTMLElement;
+      Object.assign(clone.style, {
+        width: "794px", minWidth: "794px", maxWidth: "794px",
+        height: "1123px", minHeight: "1123px", maxHeight: "1123px",
+        aspectRatio: "auto", overflow: "hidden", margin: "0",
+      });
+      staging.replaceChildren(clone);
+      await waitForImages(clone);
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      if (clone.scrollHeight > 1125 || clone.scrollWidth > 796) throw new Error(`Stellar Trace page ${index + 1} overflows its A4 frame`);
+      const canvas = await html2canvas(clone, {
+        backgroundColor: "#EEF0F6", scale: 2, useCORS: true, logging: false,
+        width: 794, height: 1123, windowWidth: 794, windowHeight: 1123,
+      });
+      if (canvas.width !== 1588 || canvas.height !== 2246) throw new Error(`Stellar Trace page ${index + 1} did not render at 2x`);
+      if (index > 0) pdf.addPage();
+      pdf.setFillColor(238, 240, 246);
+      pdf.rect(0, 0, pageWidth, pageHeight, "F");
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+      canvas.width = 1;
+      canvas.height = 1;
+      staging.replaceChildren();
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    }
+  } finally {
+    staging.remove();
+  }
+  await deliverPdf(pdf, fileName);
+}
+
 
 export async function exportGlassPdf(params: {
   containerRef?: HTMLElement; // 简单场景：直接传整个容器，工具自己把第一个直接子元素当封面、其余当正文

@@ -48,24 +48,14 @@ Page({
     today: '', lastContactDate: '', lastContactTime: '', stellarCompleteness: 0, stellarCoreComplete: 0, stellarMissingHint: '', stellarEssentialComplete: false,
   },
   async onLoad(options) {
+    if (options.product === 'stellar-trace') {
+      wx.redirectTo({ url: `/pages/web/index?path=${encodeURIComponent('/stellar-trace')}` })
+      return
+    }
     this.options = options
     const now = new Date()
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
     this.setData({ today })
-    if (options.product === 'stellar-trace') {
-      STELLAR_LEGACY_CACHE_KEYS.forEach(key => wx.removeStorageSync(key))
-      const saved = sanitizeStellarDraft(wx.getStorageSync(STELLAR_CACHE_KEY) || EMPTY_STELLAR_DRAFT)
-      const [lastContactDate = '', lastContactTime = ''] = saved.lastContactAt.split(/[T ]/)
-      this.setData({
-        targetIndex:Math.max(0,this.data.targetValues.indexOf(saved.targetKind||'person')),
-        targetSubtypeIndex:Math.max(0,(saved.targetKind==='animal'?this.data.animalSubtypeValues:this.data.objectSubtypeValues).indexOf(saved.targetSubtype||'')),
-        stellarName: saved.name, relationshipIndex: Math.max(0, this.data.relationshipValues.indexOf(saved.relationship)),
-        stellarBirthDate: saved.birthDate, stellarBirthTime: saved.birthTime, stellarBirthPlace: saved.birthPlace,
-        lastContactDate, lastContactTime, stellarLastKnownPlace: saved.lastKnownPlace,
-        stellarLastKnownMapLabel: saved.lastKnownMapLabel, stellarLastKnownLat: saved.lastKnownLat, stellarLastKnownLon: saved.lastKnownLon,
-        directionIndex: Math.max(0, this.data.directionOptions.indexOf(saved.movementDirection || '不详')), stellarContext: saved.context,
-      }, () => this.persistStellarDraft())
-    }
     this.setData({ from: options.from === 'narratives' ? 'narratives' : 'explore' })
     await this.loadItem()
   },
