@@ -13,25 +13,28 @@
     <view class="detail lx-veil">
       <view class="lx-kicker">{{item.category === 'narrative' ? 'MULTIDIMENSIONAL NARRATIVE' : 'LINGXI ARCHIVE'}}</view>
       <view class="lx-title">{{item.name}}</view>
+      <view wx:if="{{item.nameEn}}" class="detail-name-en">{{item.nameEn}}</view>
       <view class="lx-subtitle">{{item.note}}</view>
+      <view wx:if="{{item.noteEn}}" class="detail-copy-en">{{item.noteEn}}</view>
       <view wx:if="{{item.detailDescription}}" class="detail-description">{{item.detailDescription}}</view>
-      <view wx:if="{{item.benefits.length}}" class="detail-benefits"><view wx:for="{{item.benefits}}" wx:key="title" class="detail-benefit"><view class="detail-benefit-title">{{item.title}}</view><view wx:if="{{item.detail}}" class="detail-benefit-note">{{item.detail}}</view></view></view>
+      <view wx:if="{{item.detailDescriptionEn}}" class="detail-copy-en">{{item.detailDescriptionEn}}</view>
+      <view wx:if="{{item.benefits.length}}" class="detail-benefits"><view wx:for="{{item.benefits}}" wx:key="title" class="detail-benefit"><view class="detail-benefit-title">{{item.title}}</view><view wx:if="{{item.titleEn}}" class="detail-benefit-en">{{item.titleEn}}</view><view wx:if="{{item.detail}}" class="detail-benefit-note">{{item.detail}}</view><view wx:if="{{item.detailEn}}" class="detail-benefit-en">{{item.detailEn}}</view></view></view>
       <view wx:if="{{item.closing}}" class="detail-closing">{{item.closing}}</view>
-      <view class="promise" wx:if="{{item.category === 'report'}}"><view>结构识别</view><view>现实映射</view><view>反证条件</view><view>行动实验</view></view>
+      <view wx:if="{{item.closingEn}}" class="detail-copy-en">{{item.closingEn}}</view>
+      <view class="promise" wx:if="{{item.category === 'report'}}"><view>结构识别<text>STRUCTURE</text></view><view>现实映射<text>REALITY</text></view><view>反证条件<text>FALSIFIER</text></view><view>行动实验<text>EXPERIMENT</text></view></view>
       <view class="narrative-promise" wx:if="{{item.category === 'narrative'}}">先不要急着寻找答案。<br/>静静感受：这段叙事，是否映照了你正在经历，却尚未完全表达的生命状态。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'practice'}}">不是观看一套课程，而是把一项可重复的修炼带回身体与日常。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'membership'}}">在有效期内进入对应场域；神尊全域解锁同时包含未来新增的报告、叙事、修炼技术与场域模块。</view>
       <view wx:if="{{owned}}" class="owned-note">已在你的场域中 ✓</view>
       <view wx:if="{{item.productId === 'stellar-trace'}}" class="stellar-intake">
+        <view class="stellar-field"><view class="stellar-label">寻觅目标 · TRACE TARGET</view><picker mode="selector" range="{{targetOptions}}" value="{{targetIndex}}" bindchange="onTargetChange"><view class="stellar-picker">{{targetOptions[targetIndex]}}</view></picker></view>
         <view class="stellar-intake-head"><view><view class="stellar-step">01 · 寻踪档案</view><view class="stellar-intake-title">基础坐标</view></view><view class="stellar-completeness">{{stellarCompleteness}} / 11 · 必填 {{stellarCoreComplete}} / 5</view></view>
         <view class="stellar-progress"><view style="width: {{stellarCompleteness * 9.0909}}%"></view></view>
         <view class="stellar-progress-caption">资料完整度按 11 项统一计算；选填项增加现实参照，不阻断支付</view>
-        <view class="stellar-intro">一切寻迹，先定其人，复定其时。姓名用于锚定对象，生时用于还原初始天文坐标；出生地点与时间越完整，九域基准越清晰。</view>
-        <view class="stellar-field"><view class="stellar-label">寻踪对象姓名 *</view><input value="{{stellarName}}" data-flat="stellarName" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="40" cursor-spacing="120" always-embed="true" confirm-type="next" placeholder="用于建立本次星迹档案"/></view>
-        <view class="stellar-field"><view class="stellar-label">与寻踪对象的关系 *</view><picker mode="selector" range="{{relationshipOptions}}" value="{{relationshipIndex}}" bindchange="onRelationshipChange"><view class="stellar-picker">{{relationshipOptions[relationshipIndex]}}</view></picker></view>
-        <view class="stellar-field"><view class="stellar-label">真实出生日期 *</view><picker mode="date" value="{{stellarBirthDate}}" start="0001-01-01" end="{{today}}" bindchange="onBirthDateChange"><view class="stellar-picker {{stellarBirthDate ? '' : 'is-placeholder'}}">{{stellarBirthDate || '点击选择固定日期'}}</view></picker><view class="stellar-help">支持公元 0001 年至今。</view></view>
-        <view class="stellar-field"><view class="stellar-label">出生时间</view><picker mode="time" value="{{stellarBirthTime}}" bindchange="onBirthTimeChange"><view class="stellar-picker {{stellarBirthTime ? '' : 'is-placeholder'}}">{{stellarBirthTime || '点击选择；未知可留空'}}</view></picker></view>
-        <view class="stellar-field"><view class="stellar-label">出生地点</view><input value="{{stellarBirthPlace}}" data-flat="stellarBirthPlace" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="80" cursor-spacing="120" always-embed="true" placeholder="填写城市即可"/></view>
+        <view class="stellar-intro">{{targetIndex === 0 ? '寻人以身份与生时为原典锚点；寻物与寻动物不伪造出生资料，改以最后确认点、接触链与现实行为层建立档案。' : '物品与动物没有出生历算必填项。系统只读取最后确认点与目标类别；古法证据未成即止，现实搜索建议另层呈现。'}}</view>
+        <view class="stellar-field"><view class="stellar-label">{{targetIndex === 0 ? '寻踪对象姓名 *' : targetIndex === 1 ? '物品名称 *' : '动物名字 *'}}</view><input value="{{stellarName}}" data-flat="stellarName" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="40" cursor-spacing="120" always-embed="true" confirm-type="next" placeholder="用于建立本次星迹档案"/></view>
+        <view wx:if="{{targetIndex !== 0}}" class="stellar-field"><view class="stellar-label">目标类别 · TARGET TYPE *</view><picker mode="selector" range="{{targetIndex === 2 ? animalSubtypeOptions : objectSubtypeOptions}}" value="{{targetSubtypeIndex}}" bindchange="onTargetSubtypeChange"><view class="stellar-picker">{{targetIndex === 2 ? animalSubtypeOptions[targetSubtypeIndex] : objectSubtypeOptions[targetSubtypeIndex]}}</view></picker><view class="stellar-help">类别只决定可合法启用的古法规则与现实搜索层，不用于反造答案。</view></view>
+        <block wx:if="{{targetIndex === 0}}"><view class="stellar-field"><view class="stellar-label">与寻踪对象的关系 *</view><picker mode="selector" range="{{relationshipOptions}}" value="{{relationshipIndex}}" bindchange="onRelationshipChange"><view class="stellar-picker">{{relationshipOptions[relationshipIndex]}}</view></picker></view><view class="stellar-field"><view class="stellar-label">真实出生日期 *</view><picker mode="date" value="{{stellarBirthDate}}" start="0001-01-01" end="{{today}}" bindchange="onBirthDateChange"><view class="stellar-picker {{stellarBirthDate ? '' : 'is-placeholder'}}">{{stellarBirthDate || '点击选择固定日期'}}</view></picker><view class="stellar-help">支持公元 0001 年至今。</view></view><view class="stellar-field"><view class="stellar-label">出生时间</view><picker mode="time" value="{{stellarBirthTime}}" bindchange="onBirthTimeChange"><view class="stellar-picker {{stellarBirthTime ? '' : 'is-placeholder'}}">{{stellarBirthTime || '点击选择；未知可留空'}}</view></picker></view><view class="stellar-field"><view class="stellar-label">出生地点</view><input value="{{stellarBirthPlace}}" data-flat="stellarBirthPlace" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="80" cursor-spacing="120" always-embed="true" placeholder="填写城市即可"/></view></block>
         <view class="stellar-divider"></view>
         <view class="stellar-step">02 · 行迹锚点</view><view class="stellar-intake-title">最后可证之处</view>
         <view class="stellar-intro">寻踪不从虚处起。最后一次能够确认的时间、地点与行动，是现实推演的起点。</view>
@@ -52,7 +55,7 @@
       <view wx:if="{{!owned}}" class="agreement">
         <view wx:if="{{item.productId === 'stellar-trace'}}" class="stellar-risk">
           <view class="stellar-risk-title">支付前结果边界</view>
-          <view class="stellar-risk-copy">五项开启锚点完整后，系统将交付九域事实、原典四证覆盖、独立圆周合度与现实方向核验。用户填写的移动方向只作事后核验，不参与原典主向；古法距离未校准时不制造公里数或坐标。</view>
+          <view class="stellar-risk-copy">五项开启锚点完整后，系统将交付九域事实、原典四证覆盖、独立圆周合度与现实方向核验。用户填写的移动方向只作事后核验，不参与原典主向；古法距离未校准时不制造公里数或坐标。本研究不保证形成唯一候选坐标，证不足时明确止于证界。</view>
           <view class="stellar-risk-note">技术故障、重复支付或支付后无法开启，依《退款政策》处理；模型止于证界不等同于技术故障。</view>
           <checkbox-group bindchange="onRiskAcknowledgementChange">
             <label class="agreement-check stellar-risk-check"><checkbox value="risk-confirmed" checked="{{riskAcknowledged}}" color="#e6c987"/><text>我已理解：现实方向不会成为系统答案；只有真实原典证据通过合度门时才形成候选方位。</text></label>
@@ -69,7 +72,7 @@
         </view>
       </view>
       <button wx:if="{{owned}}" class="lx-button" disabled="{{opening || (item.productId === 'stellar-trace' && !stellarEssentialComplete)}}" loading="{{opening}}" bindtap="openOwned">{{item.productId === 'stellar-trace' ? '进入已开启星迹' : item.category === 'report' ? '打开完整生命档案' : item.category === 'narrative' ? '阅读全文' : item.category === 'practice' ? '进入修炼' : '进入已开启场域'}}</button>
-      <button wx:else class="lx-button" disabled="{{paying || !agreed || (item.productId === 'stellar-trace' && (!stellarEssentialComplete || !riskAcknowledged))}}" loading="{{paying}}" bindtap="pay">{{item.productId === 'stellar-trace' ? '确认边界并开启 · ¥688' : item.cta || (item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案')}}</button>
+      <button wx:else class="lx-button" disabled="{{paying || !agreed || (item.productId === 'stellar-trace' && (!stellarEssentialComplete || !riskAcknowledged))}}" loading="{{paying}}" bindtap="pay">{{item.productId === 'stellar-trace' ? '确认边界并开启 · ¥688' : item.cta || (item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案')}}<text wx:if="{{item.ctaEn}}"> · {{item.ctaEn}}</text></button>
       <view class="fineprint">{{owned ? '阅读权限会由服务端再次核验，确保内容只向已开启的账户开放。' : '虚拟内容将在支付确认后自动交付。最终权益以服务端支付通知为准。'}}</view>
       <button class="support-button" open-type="contact">付款或权益需要协助？联系微信客服</button>
     </view>

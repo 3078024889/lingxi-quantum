@@ -1,6 +1,8 @@
 export const STELLAR_TRACE_DRAFT_KEY = "lingxifield:stellar-trace:draft:v3";
 
 export type StellarTraceDraft = {
+  targetKind: "person" | "object" | "animal";
+  targetSubtype: string;
   name: string;
   relationship: "self" | "family" | "partner" | "friend" | "colleague" | "other";
   birthDate: string;
@@ -16,7 +18,7 @@ export type StellarTraceDraft = {
 };
 
 export const EMPTY_STELLAR_TRACE_DRAFT: StellarTraceDraft = {
-  name: "", relationship: "family", birthDate: "", birthTime: "", birthPlace: "",
+  targetKind:"person", targetSubtype:"", name: "", relationship: "family", birthDate: "", birthTime: "", birthPlace: "",
   lastContactAt: "", lastKnownPlace: "", lastKnownMapLabel: "", lastKnownLat: "", lastKnownLon: "",
   movementDirection: "", context: "",
 };
@@ -26,6 +28,7 @@ const clean = (value: unknown, max: number) => typeof value === "string" ? value
 export function sanitizeStellarTraceDraft(value: unknown): StellarTraceDraft {
   const input = value && typeof value === "object" ? value as Partial<StellarTraceDraft> : {};
   const relationships = new Set<StellarTraceDraft["relationship"]>(["self", "family", "partner", "friend", "colleague", "other"]);
+  const targetKinds=new Set<StellarTraceDraft["targetKind"]>(["person","object","animal"]);
   const birthDate = clean(input.birthDate, 10);
   const birthTime = clean(input.birthTime, 5);
   const lastContactAt = clean(input.lastContactAt, 40);
@@ -33,6 +36,8 @@ export function sanitizeStellarTraceDraft(value: unknown): StellarTraceDraft {
   const lastKnownLon = clean(input.lastKnownLon, 20);
   const coordinatesValid = validCoordinates({ lastKnownLat, lastKnownLon });
   return {
+    targetKind:targetKinds.has(input.targetKind as StellarTraceDraft["targetKind"])?input.targetKind as StellarTraceDraft["targetKind"]:"person",
+    targetSubtype:clean(input.targetSubtype,40),
     name: clean(input.name, 40),
     relationship: relationships.has(input.relationship as StellarTraceDraft["relationship"]) ? input.relationship as StellarTraceDraft["relationship"] : "other",
     birthDate: validIsoDate(birthDate) ? birthDate : "", birthTime: /^([01]\d|2[0-3]):[0-5]\d$/.test(birthTime) ? birthTime : "", birthPlace: clean(input.birthPlace, 80),
@@ -45,7 +50,7 @@ export function sanitizeStellarTraceDraft(value: unknown): StellarTraceDraft {
 export function stellarTraceCompleteness(draft: StellarTraceDraft) {
   const [contactDate = "", contactTime = ""] = draft.lastContactAt.split(/[T ]/);
   const mapPoint = validCoordinates(draft);
-  return [draft.name, draft.relationship, validIsoDate(draft.birthDate), /^([01]\d|2[0-3]):[0-5]\d$/.test(draft.birthTime), draft.birthPlace,
+  return [draft.name, draft.targetKind==="person"&&draft.relationship, draft.targetKind!=="person"||validIsoDate(draft.birthDate), draft.targetKind==="person"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(draft.birthTime), draft.targetKind==="person"&&draft.birthPlace,
     validIsoDate(contactDate), validContactAt(draft.lastContactAt) && !!contactTime, draft.lastKnownPlace, mapPoint,
     draft.movementDirection, draft.context]
     .filter(Boolean).length;
@@ -79,8 +84,8 @@ export function stellarTraceCoreCompleteness(draft: StellarTraceDraft) {
 
 export function stellarTraceMissingFields(draft: StellarTraceDraft) {
   return [
-    !draft.name && "寻踪对象姓名",
-    !validIsoDate(draft.birthDate) && "有效出生日期（公元 0001 年至今）",
+    !draft.name && (draft.targetKind==="person"?"寻踪对象姓名":"目标名称"),
+    draft.targetKind==="person"&&!validIsoDate(draft.birthDate) && "有效出生日期（公元 0001 年至今）",
     !validContactAt(draft.lastContactAt) && "最后有效联系日期与时间（不得晚于现在）",
     !draft.lastKnownPlace && "最后已知位置说明",
     !validCoordinates(draft) && "精准地图选点",

@@ -40,6 +40,9 @@ Page({
   data: {
     item: null, loading: true, loadError: '', paying: false, opening: false, owned: false, agreed: false, riskAcknowledged: false, deliveryLabel: '', validityLabel: '', from: 'explore',
     relationshipOptions: ['本人', '家人', '伴侣', '朋友', '同事', '其他'], relationshipValues: ['self', 'family', 'partner', 'friend', 'colleague', 'other'], relationshipIndex: 1,
+    targetOptions:['寻人 · PERSON','寻物 · OBJECT','寻动物 · ANIMAL'],targetValues:['person','object','animal'],targetIndex:0,
+    objectSubtypeOptions:['钱包','手机','钥匙','证件 / 文件','首饰','包袋','车辆','其他物品'],objectSubtypeValues:['wallet','phone','keys','document','jewelry','bag','vehicle','other'],
+    animalSubtypeOptions:['猫','狗','鸟','牲畜','其他动物'],animalSubtypeValues:['cat','dog','bird','livestock','other'],targetSubtypeIndex:0,
     directionOptions: ['不详', '向北', '东北', '向东', '东南', '向南', '西南', '向西', '西北'], directionIndex: 0,
     stellarName: '', stellarBirthDate: '', stellarBirthTime: '', stellarBirthPlace: '', stellarLastKnownPlace: '', stellarLastKnownMapLabel: '', stellarLastKnownLat: '', stellarLastKnownLon: '', stellarContext: '',
     today: '', lastContactDate: '', lastContactTime: '', stellarCompleteness: 0, stellarCoreComplete: 0, stellarMissingHint: '', stellarEssentialComplete: false,
@@ -54,6 +57,8 @@ Page({
       const saved = sanitizeStellarDraft(wx.getStorageSync(STELLAR_CACHE_KEY) || EMPTY_STELLAR_DRAFT)
       const [lastContactDate = '', lastContactTime = ''] = saved.lastContactAt.split(/[T ]/)
       this.setData({
+        targetIndex:Math.max(0,this.data.targetValues.indexOf(saved.targetKind||'person')),
+        targetSubtypeIndex:Math.max(0,(saved.targetKind==='animal'?this.data.animalSubtypeValues:this.data.objectSubtypeValues).indexOf(saved.targetSubtype||'')),
         stellarName: saved.name, relationshipIndex: Math.max(0, this.data.relationshipValues.indexOf(saved.relationship)),
         stellarBirthDate: saved.birthDate, stellarBirthTime: saved.birthTime, stellarBirthPlace: saved.birthPlace,
         lastContactDate, lastContactTime, stellarLastKnownPlace: saved.lastKnownPlace,
@@ -126,9 +131,12 @@ Page({
     const relationshipIndex = Number(event.detail.value) || 0
     this.setData({ relationshipIndex }, () => this.persistStellarDraft())
   },
+  onTargetChange(event){const targetIndex=Number(event.detail.value)||0;this.setData({targetIndex,targetSubtypeIndex:0},()=>this.persistStellarDraft())},
+  onTargetSubtypeChange(event){const targetSubtypeIndex=Number(event.detail.value)||0;this.setData({targetSubtypeIndex},()=>this.persistStellarDraft())},
   buildStellarDraft() {
     const movementDirection = this.data.directionIndex === 0 ? '' : this.data.directionOptions[this.data.directionIndex]
     return sanitizeStellarDraft({
+      targetKind:this.data.targetValues[this.data.targetIndex],targetSubtype:this.data.targetIndex===2?this.data.animalSubtypeValues[this.data.targetSubtypeIndex]:this.data.targetIndex===1?this.data.objectSubtypeValues[this.data.targetSubtypeIndex]:'',
       name: this.data.stellarName, relationship: this.data.relationshipValues[this.data.relationshipIndex],
       birthDate: this.data.stellarBirthDate, birthTime: this.data.stellarBirthTime, birthPlace: this.data.stellarBirthPlace,
       lastContactAt: this.data.lastContactDate && this.data.lastContactTime ? `${this.data.lastContactDate} ${this.data.lastContactTime}` : '',

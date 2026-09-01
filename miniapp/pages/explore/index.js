@@ -1,6 +1,6 @@
 const { publicRequest } = require('../../utils/api')
 Page({
-  data: { loading: true, items: [] },
+  data: { loading: true, items: [], engineLine1: 'Web · Astronomical & Temporal Structure', engineLine2: 'Mini Program · Lingxifield Dendritic Assessment' },
   async onLoad() {
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')

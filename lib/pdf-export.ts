@@ -16,6 +16,22 @@ const BONE_DIM_RGB: [number, number, number] = [168, 168, 190]; // 偏灰的正�
 
 type DownloadablePdf = { output(type: "blob"): Blob; save(fileName: string): void };
 
+type MiniBridge={navigateTo(args:{url:string;success?:()=>void;fail?:(error:{errMsg?:string})=>void}):void;getEnv?(callback:(result:{miniprogram:boolean})=>void):void};
+
+async function waitForMiniBridge():Promise<MiniBridge>{
+  const started=Date.now();
+  while(Date.now()-started<8000){
+    const bridge=(window as Window&{wx?:{miniProgram?:MiniBridge}}).wx?.miniProgram;
+    if(bridge){
+      if(!bridge.getEnv)return bridge;
+      const inMini=await new Promise<boolean>(resolve=>bridge.getEnv?.(result=>resolve(result.miniprogram)));
+      if(inMini)return bridge;
+    }
+    await new Promise(resolve=>setTimeout(resolve,120));
+  }
+  throw new Error("PDF 已生成，但微信原生保存桥接尚未就绪；请关闭报告后从小程序重新打开再试");
+}
+
 async function deliverPdf(pdf: DownloadablePdf, fileName: string) {
   const inMiniProgram = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("mini") === "1";
   if (!inMiniProgram) {
@@ -38,9 +54,9 @@ async function deliverPdf(pdf: DownloadablePdf, fileName: string) {
   });
   const ready = await finalize.json() as { downloadUrl?: string; error?: string };
   if (!finalize.ok || !ready.downloadUrl) throw new Error(ready.error || "微信 PDF 下载地址未能生成");
-  const mini = (window as Window & { wx?: { miniProgram?: { navigateTo(args: { url: string }): void } } }).wx?.miniProgram;
-  if (!mini) throw new Error("请在灵犀场小程序内打开报告后保存 PDF");
-  mini.navigateTo({ url: `/pages/pdf/index?url=${encodeURIComponent(ready.downloadUrl)}&name=${encodeURIComponent(fileName)}` });
+  const downloadUrl=ready.downloadUrl;
+  const mini=await waitForMiniBridge();
+  await new Promise<void>((resolve,reject)=>mini.navigateTo({url:`/pages/pdf/index?url=${encodeURIComponent(downloadUrl)}&name=${encodeURIComponent(fileName)}`,success:resolve,fail:error=>reject(new Error(error.errMsg||"微信未能打开 PDF 保存页"))}));
 }
 
 // v234：这是"PDF只有封面用上了背景图、后面的章节全被纯色盖住"这个

@@ -1,5 +1,7 @@
 import { calculateAncientTrace } from "../ancient/engine";
 import type { StellarAncientInput } from "../ancient/types";
+import { createQimenProvider } from "../providers/qimen-provider";
+import { createLiurenProvider } from "../providers/liuren-provider";
 import type {
   ObjectTraceInput,
   TargetRealityHints,
@@ -71,6 +73,8 @@ export async function calculateObjectTrace(
   options: TargetTraceOptions = {},
 ): Promise<TargetTraceResult> {
   const ancientInput: StellarAncientInput = {
+    targetKind: "object",
+    targetSubtype: input.objectKind,
     subjectName: input.targetName,
     birthDate: "1900-01-01", // Placeholder only; object trace providers must not consume birth fields.
     birthTime: null,
@@ -86,7 +90,7 @@ export async function calculateObjectTrace(
 
   const ancient = await calculateAncientTrace(
     ancientInput,
-    options.providers ?? {},
+    options.providers ?? { qimen:createQimenProvider(), liuren:createLiurenProvider() },
     { calibratedDistanceKm: options.calibratedDistanceKm ?? null },
   );
 
@@ -103,5 +107,4 @@ export async function calculateObjectTrace(
     ],
   };
 }
-
 

@@ -36,6 +36,7 @@ export type AncientTraceResult = {
   environmentZh: string[];
   evidence: RuleTrace[];
   warningsZh: string[];
+  debug?: Record<string, unknown>;
 };
 
 export type LiuYaoCast = {
@@ -45,6 +46,8 @@ export type LiuYaoCast = {
 };
 
 export type StellarAncientInput = {
+  targetKind?: "person" | "object" | "animal";
+  targetSubtype?: string | null;
   subjectName: string;
   birthDate: string;
   birthTime?: string | null;
@@ -67,14 +70,21 @@ export type QimenChart = {
   doorByPalace?: Partial<Record<"坎"|"艮"|"震"|"巽"|"离"|"坤"|"兑"|"乾"|"中", string>>;
   dun?: "阴遁" | "阳遁";
   ju?: number;
+  noteZh?: string;
+  debug?: Record<string, unknown>;
+  targetRuleId?: "QM-XR-NM-001" | "QM-OBJECT-001" | "QM-ANIMAL-001";
 };
 
 export type LiurenChart = {
-  xuanwuBranch: "子"|"丑"|"寅"|"卯"|"辰"|"巳"|"午"|"未"|"申"|"酉"|"戌"|"亥";
+  xuanwuBranch?: "子"|"丑"|"寅"|"卯"|"辰"|"巳"|"午"|"未"|"申"|"酉"|"戌"|"亥";
   transmissions?: [string,string,string];
   lessons?: string[];
   travelSignal?: "near"|"far"|"unknown";
   environmentTags?: string[];
+  decisionStatus?: "complete" | "special-method-unverified";
+  transmissionMethod?: string;
+  noteZh?: string;
+  debug?: Record<string, unknown>;
 };
 
 export type TaiyiChart = {
@@ -121,4 +131,3 @@ export type RealityValidation = {
   angularDelta: number|null;
   noteZh: string;
 };
-

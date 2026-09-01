@@ -3,10 +3,10 @@
   <view class="lx-content">
     <view class="lx-kicker">FIELD INSIGHT</view>
     <view class="lx-title">场域精测</view>
-    <view class="lx-subtitle">十个入口，汇入同一座生命场域<br/><text class="subtitle-en">Ten entrances into one living field.</text></view>
+    <view class="lx-subtitle">十个入口，汇入同一座生命场域<text class="subtitle-en">Ten entrances into one living field.</text></view>
     <view class="home-intro">星迹研究、生命结构、关系、韧性、吸引、价值创造、状态节律与象征映照，在不同入口中分别展开；完成后的有效记录，可以继续进入个人场域档案。</view>
     <view class="architecture lx-veil"><view><text class="architecture-count">8</text><text> 个原型支流</text></view><view class="architecture-plus">+</view><view><text class="architecture-count">1</text><text> 个汇流层</text></view></view>
-    <view class="engine-note lx-veil"><view class="engine-title">双引擎 · 两种观察路径</view><view>官网从天文、历法与时间坐标进入，展开相对稳定的生命结构。</view><view class="engine-paragraph">微信小程序从真实选择、行为情境与当下状态进入，通过灵犀场树突知识网络持续形成个人结构记录。</view><view class="engine-en">Web · Astronomical &amp; Temporal Structure<br/>Mini Program · Lingxifield Dendritic Assessment</view></view>
+    <view class="engine-note lx-veil"><view class="engine-title">双引擎 · 两种观察路径</view><view>官网从天文、历法与时间坐标进入，展开相对稳定的生命结构。</view><view class="engine-paragraph">微信小程序从真实选择、行为情境与当下状态进入，通过灵犀场树突知识网络持续形成个人结构记录。</view><view class="engine-en"><text>{{engineLine1}}</text><text>{{engineLine2}}</text></view></view>
     <view class="method-note">一次答案不会直接对应一句结论。每题拥有独立证据维度、答案语义与节点签名；多个结构信号经过激活、增强、抑制与交叉校准后，才形成当前结果。</view>
     <view class="flow"><text>观测 Observe</text><text>照见 Reflect</text><text>确认 Recognize</text></view>
     <view wx:if="{{loading}}" class="lx-loading">正在读取场域…</view>

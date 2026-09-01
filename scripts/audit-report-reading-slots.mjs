@@ -1,12 +1,22 @@
+import assert from "node:assert/strict";
 import fs from "node:fs";
-const source=fs.readFileSync("lib/mini/report-entry-library.ts","utf8");
-const expected=["life-map-report","relationship-resonance:deep","relationship-resonance:business","relationship-resonance:other","resilience-report","romance-report","wealth-report","daily-tide-report","tarot-reading","qian-reading"];
-const failures=[];const all=[];
-for(const key of expected){const escaped=key.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");const match=source.match(new RegExp(`"${escaped}":names\\("([^"]+)"`));if(!match){failures.push(`${key}: missing`);continue}const titles=match[1].split("|");if(titles.length!==11)failures.push(`${key}: expected 11, got ${titles.length}`);for(const title of titles){if(all.includes(title))failures.push(`${key}: duplicate title ${title}`);all.push(title)}}
-for(const key of expected){const escaped=key.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");const match=source.match(new RegExp(`"${escaped}":"([^"]+)"\\.split\\("\\|"\\)`));if(!match){failures.push(`${key}: missing eleven reading briefs`);continue}if(match[1].split("|").length!==11)failures.push(`${key}: expected 11 reading briefs`) }
-for(const banned of ["问及“","你选择“","当前解决什么","如何形成判断","现实验证入口"]){if(source.includes(banned))failures.push(`banned user-facing phrase: ${banned}`)}
-if(all.length!==110)failures.push(`expected 110 distinct slots, got ${all.length}`);
-for(const banned of ["其势以「${primary.zh}」为先","三处异境相参","今试一事：","后遇同类情境"]){if(source.includes(banned))failures.push(`repeated report template remains: ${banned}`)}
-if(!source.includes('classicalizeChineseSection'))failures.push('all Mini Program report entries must pass through the shared classical editorial layer');
-if(failures.length){console.error(failures.join("\n"));process.exit(1)}
-console.log("Report reading-slot audit passed: 10 products, 110 distinct readings, no answer-grading prose.");
+
+const registry=fs.readFileSync("lib/report-v340/product-chapter-registry.ts","utf8");
+const library=fs.readFileSync("lib/mini/report-entry-library.ts","utf8");
+const compiler=fs.readFileSync("lib/report-v340/living-report-compiler.ts","utf8");
+const products=["life-map","relationship-deep","relationship-business","relationship-other","resilience","romance","wealth","daily-tide","life-mirror","life-oracle"];
+let total=0;
+for(let index=0;index<products.length;index+=1){
+  const key=products[index];
+  const start=registry.indexOf(`"${key}": mk("${key}", [`);
+  assert.ok(start>=0,`${key}: missing V340 chapter system`);
+  const end=index+1<products.length?registry.indexOf(`"${products[index+1]}": mk`,start):registry.lastIndexOf("]),");
+  const block=registry.slice(start,end);
+  const count=(block.match(/^\s*\["/gm)||[]).length;
+  assert.equal(count,11,`${key}: expected 11 living chapters, got ${count}`);
+  total+=count;
+}
+assert.equal(total,110);
+for(const oldWriter of ["structureWriters","mechanismWriters","realityWriters","actionWriters","observationWriters","classicalizeChineseSection"]){assert.ok(!library.includes(oldWriter),`removed template writer remains: ${oldWriter}`);}
+for(const token of ["compileLivingChapter","costWhenOverused","falsifiers","distinctLeaves","evidenceDimension","不改作预设答案"]){assert.ok(`${library}\n${compiler}`.includes(token),`V340 living compiler missing ${token}`);}
+console.log("PASS V340 report core: 10 independent systems, 110 living chapters, cross-context evidence, cost and falsifiers; legacy writers removed.");

@@ -21,3 +21,4 @@
 .support-contact { width: 100%; margin: 18rpx 0 0; border: 1rpx solid rgba(125,224,215,.4); border-radius: 6rpx; background: rgba(85,135,173,.16); color: #8be8dc; font-size: 24rpx; }
 .support-contact::after { border: 0; }
 .support-note { margin-top: 16rpx; color: rgba(224,231,248,.5); font-size: 21rpx; line-height: 1.7; }
+.profile-en,.section-en{display:block;margin-top:10rpx;color:rgba(220,229,250,.5);font-family:Georgia,serif;font-size:20rpx;line-height:1.6;letter-spacing:1rpx}.section-en{margin-top:5rpx;font-size:18rpx;letter-spacing:2rpx}

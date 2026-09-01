@@ -2,7 +2,7 @@ const CACHE_KEY = 'lingxifield_stellar_trace_draft_v3'
 const LEGACY_CACHE_KEYS = ['lingxifield_stellar_trace_draft_v1', 'lingxifield_stellar_trace_draft_v2']
 
 const EMPTY_DRAFT = Object.freeze({
-  name: '', relationship: 'family', birthDate: '', birthTime: '', birthPlace: '',
+  targetKind:'person', targetSubtype:'', name: '', relationship: 'family', birthDate: '', birthTime: '', birthPlace: '',
   lastContactAt: '', lastKnownPlace: '', lastKnownMapLabel: '', lastKnownLat: '', lastKnownLon: '',
   movementDirection: '', context: '',
 })
@@ -47,6 +47,8 @@ function sanitizeDraft(value) {
   const relationships = ['self', 'family', 'partner', 'friend', 'colleague', 'other']
   const draft = {
     ...EMPTY_DRAFT,
+    targetKind: ['person','object','animal'].includes(input.targetKind) ? input.targetKind : 'person',
+    targetSubtype: clean(input.targetSubtype, 40),
     name: clean(input.name, 40),
     relationship: relationships.includes(input.relationship) ? input.relationship : 'family',
     birthDate: validDate(input.birthDate) ? input.birthDate : '',
@@ -70,14 +72,14 @@ function sanitizeDraft(value) {
 function evaluateDraft(draft) {
   const [contactDate = '', contactTime = ''] = draft.lastContactAt.split(/[T ]/)
   const required = [
-    [!!draft.name, '姓名'],
-    [validDate(draft.birthDate), '出生日期'],
+    [!!draft.name, draft.targetKind === 'person' ? '姓名' : '目标名称'],
+    [draft.targetKind !== 'person' || validDate(draft.birthDate), '出生日期'],
     [validContactAt(draft.lastContactAt), '最后有效联系日期与时间'],
     [!!draft.lastKnownPlace, '最后已知位置说明'],
     [validCoordinates(draft), '精准地图选点'],
   ]
   const visible = [
-    !!draft.name, !!draft.relationship, validDate(draft.birthDate), validTime(draft.birthTime), !!draft.birthPlace,
+    !!draft.name, draft.targetKind === 'person' && !!draft.relationship, draft.targetKind !== 'person' || validDate(draft.birthDate), draft.targetKind === 'person' && validTime(draft.birthTime), draft.targetKind === 'person' && !!draft.birthPlace,
     validDate(contactDate), validContactAt(draft.lastContactAt) && !!contactTime, !!draft.lastKnownPlace,
     validCoordinates(draft), !!draft.movementDirection, !!draft.context,
   ]

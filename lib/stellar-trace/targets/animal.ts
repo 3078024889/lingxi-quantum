@@ -1,5 +1,6 @@
 import { calculateAncientTrace } from "../ancient/engine";
 import type { StellarAncientInput } from "../ancient/types";
+import { createQimenProvider } from "../providers/qimen-provider";
 import type {
   AnimalTraceInput,
   TargetRealityHints,
@@ -72,6 +73,8 @@ export async function calculateAnimalTrace(
   options: TargetTraceOptions = {},
 ): Promise<TargetTraceResult> {
   const ancientInput: StellarAncientInput = {
+    targetKind: "animal",
+    targetSubtype: input.animalKind,
     subjectName: input.targetName,
     birthDate: "1900-01-01", // Not used by animal/object ancient modules unless a provider explicitly requires it.
     birthTime: null,
@@ -87,7 +90,7 @@ export async function calculateAnimalTrace(
 
   const ancient = await calculateAncientTrace(
     ancientInput,
-    options.providers ?? {},
+    options.providers ?? (input.animalKind==="livestock"?{qimen:createQimenProvider()}:{}),
     { calibratedDistanceKm: options.calibratedDistanceKm ?? null },
   );
 
@@ -99,10 +102,9 @@ export async function calculateAnimalTrace(
     ancient,
     realityHints: practicalAnimalHints(input),
     notesZh: [
-      "当前提供的古籍材料主要充分支持行人、逃亡、捕获、失物、方位、远近等规则；动物专属古法规则尚未建立独立来源库，因此本模块不伪造“六畜专断”。",
-      "动物结果中的原典层只使用已接入且可追溯的通用寻踪模块；动物习性只进入现实搜索优先级，不反向污染古法方位。",
+      input.animalKind==="livestock"?"牲畜类仅在《占走失六畜》明确用神规则可复算时进入奇门原典层；其余证据不足即止。":"猫、狗、鸟等尚无真实六爻起卦输入，故动物原典层不生成伪方位；当前只交付现实行为搜索次序。",
+      "动物习性只进入现实搜索优先级，不反向污染古法方位。",
     ],
   };
 }
-
 

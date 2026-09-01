@@ -1,1 +1,2 @@
 .narrative{margin-bottom:18rpx;min-height:0;padding:34rpx 30rpx}.story-label{color:#7adfd4;font-family:Georgia,serif;letter-spacing:4rpx;font-size:19rpx}.story-open{margin-top:26rpx;color:#e9cc91;font-size:23rpx;letter-spacing:2rpx}
+.page-en,.card-en,.card-note-en{display:block;margin-top:16rpx;color:rgba(220,229,250,.52);font-family:Georgia,serif;font-size:20rpx;line-height:1.65}.card-en{margin-top:7rpx;color:rgba(126,226,214,.68);letter-spacing:2rpx}.card-note-en{margin-top:10rpx}

@@ -101,8 +101,8 @@ export function renderReport(plan: HybridPlan, lang: "zh" | "en" = "zh"): string
  * 运行时零文件 IO、零延迟，也不依赖部署环境的文件系统布局。
  */
 export type ProductKey =
-  | "resilience" | "romance" | "wealth" | "qian"
-  | "tarot" | "relationship" | "life-map" | "daily";
+  | "life-map" | "relationship-deep" | "relationship-business" | "relationship-other"
+  | "resilience" | "romance" | "wealth" | "daily-tide" | "life-mirror" | "life-oracle";
 
 /**
  * 载入某个产品的知识库。
@@ -115,7 +115,7 @@ export type ProductKey =
  *   2. 在下面的 LOADERS 里加一行
  * 内容写进 JSON 就生效，不需要改引擎或接口。
  */
-const LOADERS: Record<ProductKey, () => Promise<any[]>> = {
+const LOADERS: Partial<Record<ProductKey, () => Promise<any[]>>> = {
   resilience: () => Promise.all([
     import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
     import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
@@ -128,31 +128,11 @@ const LOADERS: Record<ProductKey, () => Promise<any[]>> = {
     import("@/knowledge/wealth/chapters.json"), import("@/knowledge/wealth/nodes.json"),
     import("@/knowledge/wealth/combos.json"), import("@/knowledge/wealth/states.json"),
     import("@/knowledge/wealth/tails.json")]),
-  qian: () => Promise.all([
-    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
-    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
-    import("@/knowledge/resilience/tails.json")]),
-  tarot: () => Promise.all([
-    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
-    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
-    import("@/knowledge/resilience/tails.json")]),
-  relationship: () => Promise.all([
-    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
-    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
-    import("@/knowledge/resilience/tails.json")]),
-  "life-map": () => Promise.all([
-    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
-    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
-    import("@/knowledge/resilience/tails.json")]),
-  daily: () => Promise.all([
-    import("@/knowledge/resilience/chapters.json"), import("@/knowledge/resilience/nodes.json"),
-    import("@/knowledge/resilience/combos.json"), import("@/knowledge/resilience/states.json"),
-    import("@/knowledge/resilience/tails.json")]),
 };
 
 export async function loadLibrary(product: ProductKey): Promise<Library> {
   const loader = LOADERS[product];
-  if (!loader) throw new Error(`未知产品：${product}`);
+  if (!loader) throw new Error(`产品 ${product} 尚未迁入独立规则库；V340 禁止回落到 resilience。`);
   const [chapters, nodes, combos, states, tails] = await loader();
   const pick = (m: any, k: string) => (m.default ?? m)[k] ?? [];
   return {

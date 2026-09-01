@@ -17,12 +17,15 @@ const fuse=read("lib/stellar-trace/ancient/fuse.ts");
 const ui=read("app/stellar-trace/StellarTraceExperience.tsx");
 const mini=read("miniapp/pages/product/index.js");
 
-for(const token of ["lingxifield-stellar-trace-v4","experimentalAstronomyProjections","calculateAncientTrace","reportedMovementBearing","realityValidation","candidateZones:[]"]){
+for(const token of ["lingxifield-stellar-trace-v4","experimentalAstronomyProjections","calculatePersonTrace","reportedMovementBearing","realityValidation","candidateZones:[]"]){
   assert.ok(engine.includes(token),`v4 engine missing ${token}`);
 }
 assert.ok(!engine.includes("reality?.bearing??"),"reported direction must never become the primary inference");
 assert.ok(!engine.includes("reported-motion"),"reported direction must not enter experimental astronomy evidence");
 assert.ok(ancientEngine.includes("validateRealityBearing(fused,input.reportedMovementBearing??null)"),"reported bearing must be validation-only");
+assert.ok(engine.includes('targetKind:"person"'),"person trace must enter the canonical V339 orchestrator");
+assert.ok(read("lib/stellar-trace/person/orchestrator.ts").includes("createQimenProvider")&&read("lib/stellar-trace/person/orchestrator.ts").includes("createLiurenProvider"),"Qimen and Liuren canonical providers must be active");
+assert.ok(read("lib/stellar-trace/providers/liuren-provider.ts").includes("special-method-unverified")&&!read("lib/stellar-trace/providers/liuren-provider.ts").includes('xuanwuBranch:"子",\n        transmissions:["","",""]'),"unverified Liuren special methods must stop without a placeholder bearing");
 assert.ok(fuse.includes("usedSystems")&&fuse.includes("omittedSystems"),"3/4 evidence coverage must remain explicit");
 assert.ok(ui.includes("现实移动方向仅用于事后核验")&&ui.includes("原典四证 · 独立合度"),"UI must disclose the independent inference boundary");
 assert.ok(mini.includes("interrupts the Chinese IME composition buffer")&&mini.includes("onStellarBlur"),"Mini name input regression guard is absent");

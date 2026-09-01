@@ -3,7 +3,7 @@
   <view class="lx-content">
     <view class="lx-kicker">MY FIELD</view>
     <view class="lx-title">我的场域</view>
-    <view class="lx-subtitle">你的探索记录，都将在这里延续。<br/>每一次观测、觉察与变化，<br/>都将沉淀为专属于你的生命档案。</view>
+    <view class="lx-subtitle">你的探索记录，都将在这里延续。<br/>每一次观测、觉察与变化，<br/>都将沉淀为专属于你的生命档案。<text class="profile-en">Your observations, reflections and changes continue here as a living personal archive.</text></view>
 
     <view wx:if="{{loading}}" class="lx-loading">正在同步权益…</view>
     <block wx:else>
@@ -33,7 +33,7 @@
       </view>
 
       <view class="lx-section">
-        <view class="lx-section-title">生命档案与已开启内容</view>
+        <view class="lx-section-title">生命档案与已开启内容<text class="section-en">LIFE ARCHIVES & OPEN FIELDS</text></view>
         <view wx:if="{{!filteredOrders.length}}" class="lx-empty lx-veil">尚未找到已购内容。<br/>可前往场域精测或多维叙事继续探索。</view>
         <view wx:for="{{filteredOrders}}" wx:key="id" class="lx-card lx-veil order" data-order="{{item}}" bindtap="openOrder">
           <view class="lx-card-title">{{item.submission_name || item.productName}}</view>
@@ -43,7 +43,7 @@
       </view>
 
       <view class="lx-section">
-        <view class="lx-section-title">长期与订阅权益</view>
+        <view class="lx-section-title">长期与订阅权益<text class="section-en">LONG-TERM ACCESS</text></view>
         <view wx:if="{{!filteredUnlocks.length}}" class="lx-card lx-veil"><view class="lx-card-note">目前没有单独的订阅权益。</view></view>
         <view wx:for="{{filteredUnlocks}}" wx:key="product_id" class="benefit lx-veil" data-unlock="{{item}}" bindtap="openUnlock">
           <view>{{item.productName || item.product_id}}</view>
@@ -52,7 +52,7 @@
       </view>
 
       <view class="lx-section">
-        <view class="lx-section-title">账号连接</view>
+        <view class="lx-section-title">账号连接<text class="section-en">ACCOUNT CONNECTION</text></view>
         <view class="lx-card lx-veil">
           <view class="lx-card-note">已有网页灵犀账户或已购报告？登录后确认连接，即可迁入既有权益与报告；系统不会自动猜测或合并身份。</view>
           <button class="lx-button compact" bindtap="connectExistingAccount">连接已有灵犀账户</button>
@@ -60,7 +60,7 @@
       </view>
 
       <view class="lx-section">
-        <view class="lx-section-title">规则与支持</view>
+        <view class="lx-section-title">规则与支持<text class="section-en">POLICIES & SUPPORT</text></view>
         <view class="support-list lx-veil">
           <view class="support-link" data-path="/terms" bindtap="openPolicy"><text>服务条款</text><text class="support-arrow">›</text></view>
           <view class="support-link" data-path="/refunds" bindtap="openPolicy"><text>退款政策</text><text class="support-arrow">›</text></view>
