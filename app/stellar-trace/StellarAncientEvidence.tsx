@@ -14,8 +14,8 @@ const SYSTEM_ZH: Record<AncientSystem, string> = {
 const STATUS_ZH: Record<AncientTraceResult["status"], string> = {
   ok: "本证成立",
   partial: "本证未全",
-  "missing-input": "缺少真实输入",
-  unsupported: "规则尚未接入",
+  "missing-input": "本法不适用",
+  unsupported: "本法不适用",
 };
 
 const DISTANCE_ZH: Record<string, string> = {
@@ -50,12 +50,12 @@ export function formedAncientResults(ancient: AncientTraceEnvelope) {
 
 export function AncientEvidenceDetail({ ancient, kind }: { ancient: AncientTraceEnvelope; kind: TraceKind }) {
   const formed = formedAncientResults(ancient);
-  const omitted = ancient.results.filter((item) => !formed.includes(item));
+  const engineCount = ancient.results.length;
 
   return <div className="space-y-3">
     <div className="grid grid-cols-2 gap-3 border-b border-[#4c4966]/15 pb-3 text-[11px] leading-5 text-[#565162]">
-      <p>原典覆盖<br/><strong className="text-[17px] text-[#557f79]">{formed.length} / 4</strong></p>
-      <p>诸证合度<br/><strong className="text-[17px] text-[#557f79]">R = {ancient.fused.resultantLength.toFixed(3)}</strong></p>
+      <p>时法成向<br/><strong className="text-[17px] text-[#557f79]">{formed.length} / {engineCount}</strong></p>
+      <p>方向一致度<br/><strong className="text-[17px] text-[#557f79]">R = {ancient.fused.resultantLength.toFixed(3)}</strong></p>
     </div>
     {formed.length ? formed.map((item, index) => {
       const primary = item.evidence.find((entry) => !entry.ruleId.startsWith("MOD-"));
@@ -74,11 +74,8 @@ export function AncientEvidenceDetail({ ancient, kind }: { ancient: AncientTrace
         <p className="mt-2 text-[11px] leading-5 text-[#454151]">断曰：{moduleVerdict(item)}</p>
         {!!item.environmentZh.length && <p className="mt-1 text-[10px] leading-4 text-[#696473]">环境象：{item.environmentZh.join("、")}。此象只用于现实核验，不等同具体地址。</p>}
       </section>;
-    }) : <section className="border border-[#8b6759]/25 bg-white/45 p-4 text-[12px] leading-6 text-[#565162]">四证均未得到可复算输入。本页明确保留证界，不以名称、习性、已知移动方向或天文投影反造古法方位。</section>}
-    <section className="border border-[#4c4966]/15 bg-white/30 p-3">
-      <p className="text-[10px] font-semibold tracking-[.16em] text-[#696473]">未入合度之证</p>
-      {omitted.map((item) => <p key={item.system} className="mt-1 text-[10px] leading-4 text-[#696473]">{SYSTEM_ZH[item.system]} · {STATUS_ZH[item.status]}：{item.warningsZh[0] || "未形成可复算结果。"}</p>)}
-    </section>
+    }) : <section className="border border-[#8b6759]/25 bg-white/45 p-4 text-[12px] leading-6 text-[#565162]">当前目标类别没有形成可复算的时法方位。报告转入现实搜索次序，不增加玄学式交互，也不以名称、习性、已知移动方向或天文投影反造方位。</section>}
+    <p className="text-[10px] leading-4 text-[#696473]">R 只表示已成方位之间的圆周一致程度，不是定位概率，也不代表现实精度。</p>
   </div>;
 }
 

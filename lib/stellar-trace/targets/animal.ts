@@ -90,7 +90,7 @@ export async function calculateAnimalTrace(
 
   const ancient = await calculateAncientTrace(
     ancientInput,
-    options.providers ?? (["dog","livestock"].includes(input.animalKind)?{qimen:createQimenProvider()}:{}),
+    options.providers ?? (input.animalKind==="livestock"?{qimen:createQimenProvider()}:{}),
     { calibratedDistanceKm: options.calibratedDistanceKm ?? null },
   );
 
@@ -102,7 +102,7 @@ export async function calculateAnimalTrace(
     ancient,
     realityHints: practicalAnimalHints(input),
     notesZh: [
-      ["dog","livestock"].includes(input.animalKind)?"犬与明确牲畜门类已进入《占走失六畜》奇门证；没有第二套真实起局输入时，只交付单证方位，不伪称多证主向。":"猫、泛称鸟类与其他动物尚无适用的奇门六畜用神；没有真实六爻起卦时继续止于证界，只交付现实行为搜索次序。",
+      input.animalKind==="livestock"?"牛羊牲畜按《占走失六畜》明载的死门落宫形成单项方位；未满足双式合参时不伪称唯一主向。":"宠物类别不强套牛羊、骡驴或马的古法用神；本档案直接交付现实行为搜索次序，不增加玄学式交互。",
       "动物习性只进入现实搜索优先级，不反向污染古法方位。",
     ],
   };

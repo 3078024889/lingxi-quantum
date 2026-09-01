@@ -55,7 +55,7 @@
       <view wx:if="{{!owned}}" class="agreement">
         <view wx:if="{{item.productId === 'stellar-trace'}}" class="stellar-risk">
           <view class="stellar-risk-title">支付前结果边界</view>
-          <view class="stellar-risk-copy">五项开启锚点完整后，系统将交付九域事实、原典四证覆盖、独立圆周合度与现实方向核验。用户填写的移动方向只作事后核验，不参与原典主向；古法距离未校准时不制造公里数或坐标。本研究不保证形成唯一候选坐标，证不足时明确止于证界。</view>
+          <view class="stellar-risk-copy">五项开启锚点完整后，系统将交付九域事实、奇门与六壬自动排盘、双式方向合参与现实方向核验。所有时法由查询时刻自动历算，不增加玄学式交互；用户填写的移动方向只作事后核验，不参与时法主向。古法距离未校准时不制造公里数或坐标。</view>
           <view class="stellar-risk-note">技术故障、重复支付或支付后无法开启，依《退款政策》处理；模型止于证界不等同于技术故障。</view>
           <checkbox-group bindchange="onRiskAcknowledgementChange">
             <label class="agreement-check stellar-risk-check"><checkbox value="risk-confirmed" checked="{{riskAcknowledged}}" color="#e6c987"/><text>我已理解：现实方向不会成为系统答案；只有真实原典证据通过合度门时才形成候选方位。</text></label>

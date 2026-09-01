@@ -1,6 +1,6 @@
 "use client";
 
-import { PointerEvent, WheelEvent, useMemo, useRef, useState } from "react";
+import { PointerEvent, WheelEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type Point = { lat: number; lon: number };
 type Props = { lat: string; lon: string; place: string; onConfirm: (point: Point) => void };
@@ -27,7 +27,10 @@ export default function PreciseMapPicker({ lat, lon, place, onConfirm }: Props) 
   const [center, setCenter] = useState<Point>(initial);
   const [zoom, setZoom] = useState(lat && lon ? 16 : 4);
   const [locating, setLocating] = useState(false);
+  const [mini, setMini] = useState(false);
+  const [bridgeError, setBridgeError] = useState(false);
   const drag = useRef<{ x: number; y: number; center: Point } | null>(null);
+  useEffect(() => { setMini(new URLSearchParams(window.location.search).get("mini") === "1"); }, []);
   const tiles = useMemo(() => {
     const centerX = lonToWorldX(center.lon, zoom), centerY = latToWorldY(center.lat, zoom);
     const baseX = Math.floor(centerX / TILE), baseY = Math.floor(centerY / TILE);
@@ -54,10 +57,19 @@ export default function PreciseMapPicker({ lat, lon, place, onConfirm }: Props) 
     setLocating(true);
     navigator.geolocation.getCurrentPosition((position) => { setCenter({ lat: position.coords.latitude, lon: position.coords.longitude }); setZoom(16); setLocating(false); }, () => setLocating(false), { enableHighAccuracy: true, timeout: 10000 });
   }
+  function openPicker() {
+    if (!mini) { setOpen(true); return; }
+    setBridgeError(false);
+    const navigateTo = (window as unknown as { wx?: { miniProgram?: { navigateTo?: (options: { url: string; fail?: () => void }) => void } } }).wx?.miniProgram?.navigateTo;
+    if (!navigateTo) { setBridgeError(true); return; }
+    navigateTo({ url: "/pages/stellar-location/index", fail: () => setBridgeError(true) });
+  }
 
   return <div className="sm:col-span-2">
     <p className="text-xs tracking-wider text-bone-dim">精准地图选点 *</p>
-    <button type="button" onClick={() => setOpen(true)} className="mt-2 w-full border border-amber/45 bg-amber/[.07] px-4 py-4 text-sm text-amber">{lat && lon ? "重新选择精准地图位置" : "打开地图并选择精准位置"}</button>
+    <button type="button" onClick={openPicker} className="mt-2 w-full border border-amber/45 bg-amber/[.07] px-4 py-4 text-sm text-amber">{mini ? (lat && lon ? "用微信地图重新选点" : "使用微信地图选择精准位置") : (lat && lon ? "重新选择精准地图位置" : "打开地图并选择精准位置")}</button>
+    {mini && <p className="mt-2 text-[10px] leading-5 text-bone-mute">微信内调用原生地图与设备定位，不加载可能被拦截的网页地图瓦片。</p>}
+    {bridgeError && <p className="mt-2 text-xs leading-5 text-rose-300">微信地图尚未就绪，请稍候重试；若仍未打开，请返回小程序后重新进入星迹。</p>}
     {lat && lon && <div className="mt-2 border-l-2 border-lattice bg-void/35 px-4 py-3 text-xs leading-6 text-bone-dim"><span className="block text-bone">{place || "最后可证之处"}</span>地图坐标已建立 · {Number(lat).toFixed(6)}, {Number(lon).toFixed(6)}</div>}
     {open && <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#020715]/90 p-4" role="dialog" aria-modal="true" aria-label="精准地图选点">
       <div className="w-full max-w-3xl border border-white/15 bg-[#091631] p-4 shadow-2xl sm:p-6">

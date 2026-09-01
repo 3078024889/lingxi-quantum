@@ -102,7 +102,7 @@ export type AncientProviders = {
 export type LastKnownCoordinate = { lat: number; lon: number; label?: string };
 
 export type AncientTraceEnvelope = {
-  version: "lingxifield-ancient-trace-v1";
+  version: "lingxifield-ancient-trace-v1" | "lingxifield-ancient-trace-v2";
   generatedAt: string;
   results: AncientTraceResult[];
   fused: FusedAncientDirection;
