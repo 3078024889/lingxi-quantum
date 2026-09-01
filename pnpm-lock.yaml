@@ -20,6 +20,12 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.108.2
         version: 2.112.2
+      '@yhjs/dunjia':
+        specifier: ^1.0.1
+        version: 1.0.1
+      '@yhjs/liuren':
+        specifier: ^1.0.0
+        version: 1.0.0
       astronomy-engine:
         specifier: ^2.1.19
         version: 2.1.19
@@ -482,6 +488,22 @@ packages:
     resolution: {integrity: sha512-Yy19y6O2GJq8f7CHf7L0nxL8bf4PZCPaVOCgJrusOeFHY1LvHgYXnmnXg6N5iwAnbgbZCDjo60SiM6IPJi9C5g==}
     peerDependencies:
       react: '>= 16.8.0'
+
+  '@yhjs/bagua@1.0.0':
+    resolution: {integrity: sha512-zpbNOFX1WVhCbsx8JgdPafN6+Z+jn/zMvYRmhayk0hksWB9WvXKuiW2YYiAkwNIK6ZIi9WCts7ztRZWn/bP0LQ==, tarball: https://registry.npmjs.org/@yhjs/bagua/-/bagua-1.0.0.tgz}
+    engines: {node: '>=16.0.0'}
+
+  '@yhjs/dunjia@1.0.1':
+    resolution: {integrity: sha512-cPVbvAL0mYd0fABfWx7d6q5n2xA4Nr6LQm5FeJW2mPAJDbZiMcTOUy2uaSCXsn1tYtqe/Ce61hVYmEaK1izHKg==}
+    engines: {node: '>=16.0.0'}
+
+  '@yhjs/liuren@1.0.0':
+    resolution: {integrity: sha512-lXgECLseAYA4VPprdcT7VN2ezi3+rH7bgpQ5jkfBhpbDNPu6pYtxThuMp85+46qfem6+KQhkU6Qq17YZaH+2zQ==, tarball: https://registry.npmjs.org/@yhjs/liuren/-/liuren-1.0.0.tgz}
+    engines: {node: '>=16.0.0'}
+
+  '@yhjs/lunar@1.0.1':
+    resolution: {integrity: sha512-oQcaS0MB/+F2HILuog58LjrtM3cU/qYWdkyHXp1MkyBACLbCP/lFGZD4rAnarmb6bVnnGzE4NQvXvWMAF3CHiQ==}
+    engines: {node: '>=16.0.0'}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -2702,6 +2724,22 @@ snapshots:
     dependencies:
       '@use-gesture/core': 10.3.1
       react: 18.3.1
+
+  '@yhjs/bagua@1.0.0': {}
+
+  '@yhjs/dunjia@1.0.1':
+    dependencies:
+      '@yhjs/bagua': 1.0.0
+      '@yhjs/lunar': 1.0.1
+
+  '@yhjs/liuren@1.0.0':
+    dependencies:
+      '@yhjs/bagua': 1.0.0
+      '@yhjs/lunar': 1.0.1
+
+  '@yhjs/lunar@1.0.1':
+    dependencies:
+      '@yhjs/bagua': 1.0.0
 
   acorn-jsx@5.3.2(acorn@8.18.0):
     dependencies:
