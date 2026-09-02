@@ -20,5 +20,5 @@ export default async function StellarTracePage() {
     try { initialDraft = sanitizeStellarTraceDraft(JSON.parse(decryptMiniSecret(encryptedDraft))); }
     catch { initialDraft = null; }
   }
-  return <><Nav/><div style={{ paddingTop: "var(--lx-header-height, 112px)" }}><StellarTraceExperience unlocked={access.manifestActive || hasUnlock(access.unlocks, "stellar-trace")} initialDraft={initialDraft} /></div></>;
+  return <><Nav/><div data-stellar-release="v342-final" style={{ paddingTop: "var(--lx-header-height, 112px)" }}><StellarTraceExperience unlocked={access.manifestActive || hasUnlock(access.unlocks, "stellar-trace")} initialDraft={initialDraft} /></div></>;
 }
