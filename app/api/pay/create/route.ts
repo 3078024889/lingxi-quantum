@@ -10,6 +10,9 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   try {
     const { productId, submissionId, returnPath } = await req.json();
+    if (productId === "stellar-trace") {
+      return NextResponse.json({ error: "星迹已下架，不再接受新订单。" }, { status: 410 });
+    }
     const product = getProduct(productId);
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });

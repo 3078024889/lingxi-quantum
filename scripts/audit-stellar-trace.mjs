@@ -1,45 +1,40 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import ts from "typescript";
 
-const read=(path)=>readFileSync(resolve(process.cwd(),path),"utf8");
-const source=read("lib/stellar-trace-math.ts");
-const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.ES2020}}).outputText;
-const math=await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
-assert.equal(math.angularDistance(359,1),2);
-assert.equal(math.analyzeCircularDirections([0,90,180,270]).qualified,false);
-assert.equal(math.analyzeCircularDirections([315,320,330]).qualified,true);
+const root = process.cwd();
+const read = (file) => readFileSync(resolve(root, file), "utf8");
 
-const engine=read("lib/stellar-trace.ts");
-const ancientEngine=read("lib/stellar-trace/ancient/engine.ts");
-const fuse=read("lib/stellar-trace/ancient/fuse.ts");
-const ui=read("app/stellar-trace/StellarTraceExperience.tsx");
-const mini=read("miniapp/pages/product/index.js");
-const miniApp=JSON.parse(read("miniapp/app.json"));
-const miniLocation=read("miniapp/pages/stellar-location/index.js");
-const mapPicker=read("app/stellar-trace/PreciseMapPicker.tsx");
-const explore=read("miniapp/pages/explore/index.js");
-const exporter=read("lib/pdf-export.ts");
+const plans = read("lib/plans.ts");
+const catalog = read("lib/mini/catalog.ts");
+const fieldCopy = read("lib/mini/field-product-copy.ts");
+const insights = read("components/FieldInsightsSection.tsx");
+const nav = read("components/Nav.tsx");
+const portal = read("components/LingxiPortal.tsx");
+const sitemap = read("app/sitemap.ts");
+const retiredPage = read("app/stellar-trace/page.tsx");
+const generationApi = read("app/api/stellar-trace/route.ts");
+const targetApi = read("app/api/stellar-trace/target/route.ts");
+const paypal = read("app/api/pay/create/route.ts");
+const wechat = read("app/api/pay/wechat/create/route.ts");
+const miniPay = read("app/api/wechat/mini/pay/create/route.ts");
+const miniApp = JSON.parse(read("miniapp/app.json"));
+const miniExplore = read("miniapp/pages/explore/index.js");
+const miniProduct = read("miniapp/pages/product/index.js");
+const historicalDestinations = read("lib/mini/content-destinations.ts");
+const historicalLink = read("app/api/wechat/mini/content-link/route.ts");
 
-for(const token of ["lingxifield-stellar-trace-v4","experimentalAstronomyProjections","calculatePersonTrace","reportedMovementBearing","realityValidation","candidateZones:[]"]){
-  assert.ok(engine.includes(token),`v4 engine missing ${token}`);
+for (const source of [plans, catalog, fieldCopy, insights, nav, portal, sitemap]) {
+  assert.ok(!source.includes('id: "stellar-trace"') && !source.includes('href:"/stellar-trace"') && !source.includes('href: "/stellar-trace"'), "retired product remains discoverable or purchasable");
 }
-assert.ok(!engine.includes("reality?.bearing??"),"reported direction must never become the primary inference");
-assert.ok(!engine.includes("reported-motion"),"reported direction must not enter experimental astronomy evidence");
-assert.ok(ancientEngine.includes("validateRealityBearing(fused,input.reportedMovementBearing??null)"),"reported bearing must be validation-only");
-assert.ok(engine.includes('targetKind:"person"'),"person trace must enter the canonical V339 orchestrator");
-assert.ok(read("lib/stellar-trace/person/orchestrator.ts").includes("createQimenProvider")&&read("lib/stellar-trace/person/orchestrator.ts").includes("createLiurenProvider"),"Qimen and Liuren canonical providers must be active");
-assert.ok(read("lib/stellar-trace/providers/qimen-provider.ts").includes("@yhjs/dunjia@1.0.1")&&read("lib/stellar-trace/providers/liuren-provider.ts").includes("@yhjs/liuren@1.0.0"),"Qimen and Liuren must expose versioned full-chart engines");
-assert.ok(!ancientEngine.includes("runLiuyao")&&!ancientEngine.includes("runTaiyi"),"paid report must not promise inactive casts or unverified engines");
-assert.ok(fuse.includes("usedSystems")&&fuse.includes("g.r>=.65"),"two-engine direction agreement gate must remain explicit");
-assert.ok(ui.includes("现实移动方向仅用于事后核验")&&ui.includes("双式时法 · 独立合参")&&!ui.includes("原典四证"),"UI must disclose the independent two-engine boundary");
-assert.ok(/options\.product === 'stellar-trace'[\s\S]{0,180}wx\.redirectTo/.test(mini)&&/item\.productId === 'stellar-trace'[\s\S]{0,180}pages\/web\/index/.test(explore),"Mini Stellar Trace must bypass the native form and open the web field");
-assert.ok(miniApp.pages.includes("pages/stellar-location/index")&&/wx\.chooseLocation/.test(miniLocation)&&/pickedLat/.test(miniLocation)&&/miniProgram\?\.navigateTo/.test(mapPicker),"Mini WebView must use native WeChat location picking instead of blocked web tiles");
-assert.ok(exporter.includes("exportStellarTracePdf")&&exporter.includes('scale: 2')&&exporter.includes('toDataURL("image/png")'),"Stellar Trace must own a 2x PNG PDF exporter");
-assert.ok(ui.includes("AncientEvidenceDetail")&&ui.includes("下载 3 页高清"),"Stellar Trace must publish expanded source-traced evidence pages");
+assert.ok(retiredPage.includes("星迹已停止开放") && retiredPage.includes("历史订单与档案记录会继续保留"), "old deep link must show an accountable retirement notice");
+for (const api of [generationApi, targetApi, paypal, wechat, miniPay]) {
+  assert.match(api, /status:\s*410/, "generation and payment APIs must hard-block Stellar Trace");
+}
+assert.ok(!miniApp.pages.includes("pages/stellar-location/index") && !miniApp.permission && !miniApp.requiredPrivateInfos, "retired Mini Program must not request location access");
+assert.ok(!existsSync(resolve(root, "miniapp/pages/stellar-location/index.js")) && !existsSync(resolve(root, "miniapp/utils/stellar-trace-intake.js")), "retired native location and intake code must not ship");
+assert.ok(/productId !== 'stellar-trace'/.test(miniExplore), "cached Mini catalogs must still filter the retired product");
+assert.ok(/options\.product === 'stellar-trace'[\s\S]{0,180}wx\.redirectTo/.test(miniProduct), "old Mini deep links must reach the retirement notice");
+assert.ok(/"stellar-trace"/.test(historicalDestinations) && /body\.productId !== "stellar-trace"/.test(historicalLink), "historical entitlements must remain readable without restoring sales");
 
-const inferred=315,reported=270;
-assert.equal(inferred,315,"reported bearing must not rewrite an independent ancient result");
-assert.equal(Math.abs(inferred-reported),45);
-console.log("PASS stellar trace v4: native Mini location bridge, two time-method engines, validation-only reality bearing, and no uncalibrated coordinates");
+console.log("PASS Stellar Trace retirement: discovery removed, new sales and generation blocked, Mini location permission removed, historical records preserved.");

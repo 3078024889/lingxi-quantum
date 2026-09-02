@@ -39,6 +39,9 @@ export async function POST(req: Request) {
     }
 
     const { productId, submissionId, code, state } = await req.json();
+    if (productId === "stellar-trace") {
+      return NextResponse.json({ error: "星迹已下架，不再接受新订单。" }, { status: 410 });
+    }
     // code存在，说明前端是在微信内置浏览器里、已经走完静默授权拿到了
     // 微信的一次性code——这种场景走JSAPI（直接在微信里弹收银台），
     // 不再是Native扫码（微信自己的内置浏览器不允许自己弹二维码给自己

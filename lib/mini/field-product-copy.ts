@@ -23,18 +23,6 @@ export type FieldProductCopy = {
 };
 
 export const FIELD_PRODUCT_COPY: Record<string, FieldProductCopy> = {
-  "stellar-trace": {
-    field: "00", layer: "field", nameZh: "灵犀场星迹 · 万里寻踪", nameEn: "Lingxi Stellar Trace",
-    cardDefinitionZh: "循时而索迹，因星而见位；证不足，则止于证界。", cardDefinitionEn: "Trace through time and stars; stop where evidence ends.",
-    keywordsZh: ["九域坐标", "四证合度", "推演边界", "七日有效"], keywordsEn: ["Nine-field Coordinates", "Four-evidence Convergence", "Inference Boundary", "Seven-day Access"],
-    ctaZh: "建立寻踪档案 →", ctaEn: "Build a Stellar Trace Archive →",
-    coreTitleZh: "让每一个方向结论先经过四证合度", coreTitleEn: "Make every directional claim pass four-evidence convergence",
-    overviewZh: ["九域天文位置属于可复算事实；原典规则独立起局并进入圆周合度，九域实验投影不再冒充古法证据。", "用户提供的现实移动方向只在原典结果形成后核验偏差；证据不足或距离未校准时，不生成假精确坐标。"],
-    overviewEn: ["Nine-field positions remain reproducible astronomical facts. Source-traced systems are calculated independently and then enter circular convergence; experimental astronomy never impersonates an ancient rule.", "A reported movement direction is used only after inference for reality validation. No false coordinate is produced when evidence or distance calibration is absent."],
-    readingZh: "星迹读取的是模型证据资格，不是设备定位，也不声称知道人员现实位置。", readingEn: "Stellar Trace reads model eligibility, not device location, and never claims to know a person's real position.",
-    structureZh: ["九域事实", "原典四证", "现实核验", "推演边界"], structureEn: ["Nine Fields", "Source-traced Evidence", "Reality Validation", "Inference Boundary"],
-    resultOutline: [{id:"facts",zh:"九域事实层",en:"Nine-field Facts",mode:"evidence"},{id:"ancient",zh:"原典四证层",en:"Source-traced Evidence",mode:"secondary"},{id:"gate",zh:"独立圆周合度",en:"Independent Circular Convergence",mode:"core"},{id:"boundary",zh:"现实核验与推演边界",en:"Reality Validation and Boundary",mode:"cost"}],
-  },
   "life-map-report": {
     field: "01", layer: "field", nameZh: "生命图谱", nameEn: "Life Blueprint",
     cardDefinitionZh: "看见长期反复出现的生命结构。", cardDefinitionEn: "See the life structures that persist across contexts.",

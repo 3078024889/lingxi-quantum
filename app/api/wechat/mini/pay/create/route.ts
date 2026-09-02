@@ -19,6 +19,9 @@ export async function POST(req: Request) {
     if (typeof body.skuId !== "string" || typeof body.productId !== "string" || typeof body.code !== "string") {
       return NextResponse.json({ error: "支付参数不完整" }, { status: 400 });
     }
+    if (body.productId === "stellar-trace") {
+      return NextResponse.json({ error: "星迹已下架，不再接受新订单。" }, { status: 410 });
+    }
     const product = productForMiniPurchase(body.skuId, body.productId);
     if (!product) return NextResponse.json({ error: "商品不存在" }, { status: 404 });
 

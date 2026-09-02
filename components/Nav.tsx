@@ -23,7 +23,6 @@ const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
 // 就在导航栏最外层再挤一个新入口——导航栏本身的宽度是有限的，这样
 // 收纳，以后加测试产品也不会让顶栏变得越来越挤。
 const preciseTests: { href: string; zh: string; en: string; rune: RuneKind; soon?: boolean }[] = [
-  { href: "/stellar-trace", zh: "灵犀场星迹 · 万里寻踪", en: "Stellar Trace", rune: "compass" },
   { href: "/life-map", zh: "生命图谱", en: "Life Map", rune: "mandala" },
   { href: "/relationship", zh: "关系共振", en: "Resonance", rune: "twin" },
   { href: "/resilience", zh: "生命韧性指数", en: "Life Resilience Index", rune: "crystal" },
@@ -40,7 +39,7 @@ export default function Nav() {
   const [testsOpen, setTestsOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
-  const testsActive = pathname?.startsWith("/stellar-trace") || pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/mirror") || pathname?.startsWith("/qian") || pathname?.startsWith("/archetype");
+  const testsActive = pathname?.startsWith("/life-map") || pathname?.startsWith("/relationship") || pathname?.startsWith("/resilience") || pathname?.startsWith("/romance") || pathname?.startsWith("/wealth") || pathname?.startsWith("/daily") || pathname?.startsWith("/mirror") || pathname?.startsWith("/qian") || pathname?.startsWith("/archetype");
 
   useEffect(() => {
     const header = headerRef.current;

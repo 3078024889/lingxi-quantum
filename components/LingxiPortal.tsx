@@ -23,7 +23,6 @@ const CAPS: Cap[] = [
     href: "/life-map",
     subLabelZh: "包含：", subLabelEn: "Includes:",
     subs: [
-      { zh: "灵犀场星迹 · 万里寻踪", en: "Lingxi Stellar Trace", descZh: "循时而索迹，因星而见位；证不足，则止于证界。", descEn: "Trace through time and celestial reference; stop where evidence ends.", href: "/stellar-trace" },
       { zh: "生命图谱", en: "Life Blueprint", descZh: "探索你携带而来的生命结构。", descEn: "Explore the life structure you were born carrying.", href: "/life-map" },
       { zh: "灵犀生命灵签", en: "Lingxi Life Oracle", descZh: "唤醒属于你的生命象征。", descEn: "Awaken the life symbols that belong to you.", href: "/qian" },
       { zh: "生命原型", en: "Life Archetype", descZh: "让八个场域节点汇入此刻的三重原型。", descEn: "Converge eight field nodes into your current threefold archetype.", href: "/archetype" },

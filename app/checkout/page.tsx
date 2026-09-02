@@ -10,7 +10,6 @@ import Bi from "@/components/Bi";
 import { getProduct } from "@/lib/plans";
 import { useLang } from "@/lib/useLang";
 import { createClient } from "@/lib/supabase/client";
-import { STELLAR_TRACE_DRAFT_KEY, sanitizeStellarTraceDraft, stellarTraceEssentialComplete } from "@/lib/stellar-trace-intake";
 
 // v259：二维码中间加一个小色块+文字，区分"这是哪家的码"——不是去用
 // 微信/支付宝的官方图标（那是他们的注册商标，不能拿来用），是用
@@ -101,7 +100,6 @@ function CheckoutInner() {
   const submissionId = params.get("submissionId") ?? undefined;
   const contentName = params.get("name") ?? "";
   const redirectTo = params.get("redirect") ?? "/account/orders";
-  const intakeState = params.get("intake") ?? "";
   const product = getProduct(productId);
 
   const [status, setStatus] = useState<PayStatus>("loading");
@@ -109,7 +107,7 @@ function CheckoutInner() {
   const [error, setError] = useState("");
   const [checkingNow, setCheckingNow] = useState(false);
   const [buyerEmail, setBuyerEmail] = useState("");
-  const [stellarIntakeChecked, setStellarIntakeChecked] = useState(productId !== "stellar-trace");
+  const stellarIntakeChecked = true;
   const orderIdRef = useRef<string | null>(null);
   const codeUrlRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -162,32 +160,6 @@ function CheckoutInner() {
       run();
     }
   }
-
-  useEffect(() => {
-    if (productId !== "stellar-trace") { setStellarIntakeChecked(true); return; }
-    let saved: string | null = null;
-    try {
-      saved = window.localStorage.getItem(STELLAR_TRACE_DRAFT_KEY);
-      if (window.name) {
-        try {
-          const handoff = JSON.parse(window.name) as { kind?: string; draft?: unknown };
-          if (handoff.kind === "lingxifield-stellar-trace-draft-v3") {
-            const received = sanitizeStellarTraceDraft(handoff.draft);
-            if (!saved && stellarTraceEssentialComplete(received)) {
-              saved = JSON.stringify(received);
-              window.localStorage.setItem(STELLAR_TRACE_DRAFT_KEY, saved);
-            }
-            window.name = "";
-          }
-        } catch { /* Ignore window.name values owned by other pages. */ }
-      }
-    } catch { saved = null; }
-    let ready = false;
-    try { ready = intakeState === "complete" && !!saved && stellarTraceEssentialComplete(sanitizeStellarTraceDraft(JSON.parse(saved))); }
-    catch { ready = false; }
-    if (!ready) { window.location.replace("/stellar-trace?intake=required"); return; }
-    setStellarIntakeChecked(true);
-  }, [intakeState, productId]);
 
   useEffect(() => {
     if (!stellarIntakeChecked) return;

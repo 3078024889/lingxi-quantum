@@ -26,53 +26,24 @@
       <view class="narrative-promise" wx:elif="{{item.category === 'practice'}}">不是观看一套课程，而是把一项可重复的修炼带回身体与日常。</view>
       <view class="narrative-promise" wx:elif="{{item.category === 'membership'}}">在有效期内进入对应场域；神尊全域解锁同时包含未来新增的报告、叙事、修炼技术与场域模块。</view>
       <view wx:if="{{owned}}" class="owned-note">已在你的场域中 ✓</view>
-      <view wx:if="{{item.productId === 'stellar-trace'}}" class="stellar-intake">
-        <view class="stellar-field"><view class="stellar-label">寻觅目标 · TRACE TARGET</view><picker mode="selector" range="{{targetOptions}}" value="{{targetIndex}}" bindchange="onTargetChange"><view class="stellar-picker">{{targetOptions[targetIndex]}}</view></picker></view>
-        <view class="stellar-intake-head"><view><view class="stellar-step">01 · 寻踪档案</view><view class="stellar-intake-title">基础坐标</view></view><view class="stellar-completeness">{{stellarCompleteness}} / 11 · 必填 {{stellarCoreComplete}} / 5</view></view>
-        <view class="stellar-progress"><view style="width: {{stellarCompleteness * 9.0909}}%"></view></view>
-        <view class="stellar-progress-caption">资料完整度按 11 项统一计算；选填项增加现实参照，不阻断支付</view>
-        <view class="stellar-intro">{{targetIndex === 0 ? '寻人以身份与生时为原典锚点；寻物与寻动物不伪造出生资料，改以最后确认点、接触链与现实行为层建立档案。' : '物品与动物没有出生历算必填项。系统只读取最后确认点与目标类别；古法证据未成即止，现实搜索建议另层呈现。'}}</view>
-        <view class="stellar-field"><view class="stellar-label">{{targetIndex === 0 ? '寻踪对象姓名 *' : targetIndex === 1 ? '物品名称 *' : '动物名字 *'}}</view><input value="{{stellarName}}" data-flat="stellarName" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="40" cursor-spacing="120" always-embed="true" confirm-type="next" placeholder="用于建立本次星迹档案"/></view>
-        <view wx:if="{{targetIndex !== 0}}" class="stellar-field"><view class="stellar-label">目标类别 · TARGET TYPE *</view><picker mode="selector" range="{{targetIndex === 2 ? animalSubtypeOptions : objectSubtypeOptions}}" value="{{targetSubtypeIndex}}" bindchange="onTargetSubtypeChange"><view class="stellar-picker">{{targetIndex === 2 ? animalSubtypeOptions[targetSubtypeIndex] : objectSubtypeOptions[targetSubtypeIndex]}}</view></picker><view class="stellar-help">类别只决定可合法启用的古法规则与现实搜索层，不用于反造答案。</view></view>
-        <block wx:if="{{targetIndex === 0}}"><view class="stellar-field"><view class="stellar-label">与寻踪对象的关系 *</view><picker mode="selector" range="{{relationshipOptions}}" value="{{relationshipIndex}}" bindchange="onRelationshipChange"><view class="stellar-picker">{{relationshipOptions[relationshipIndex]}}</view></picker></view><view class="stellar-field"><view class="stellar-label">真实出生日期 *</view><picker mode="date" value="{{stellarBirthDate}}" start="0001-01-01" end="{{today}}" bindchange="onBirthDateChange"><view class="stellar-picker {{stellarBirthDate ? '' : 'is-placeholder'}}">{{stellarBirthDate || '点击选择固定日期'}}</view></picker><view class="stellar-help">支持公元 0001 年至今。</view></view><view class="stellar-field"><view class="stellar-label">出生时间</view><picker mode="time" value="{{stellarBirthTime}}" bindchange="onBirthTimeChange"><view class="stellar-picker {{stellarBirthTime ? '' : 'is-placeholder'}}">{{stellarBirthTime || '点击选择；未知可留空'}}</view></picker></view><view class="stellar-field"><view class="stellar-label">出生地点</view><input value="{{stellarBirthPlace}}" data-flat="stellarBirthPlace" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="80" cursor-spacing="120" always-embed="true" placeholder="填写城市即可"/></view></block>
-        <view class="stellar-divider"></view>
-        <view class="stellar-step">02 · 行迹锚点</view><view class="stellar-intake-title">最后可证之处</view>
-        <view class="stellar-intro">寻踪不从虚处起。最后一次能够确认的时间、地点与行动，是现实推演的起点。</view>
-        <view class="stellar-field"><view class="stellar-label">最后有效联系日期 *</view><picker mode="date" value="{{lastContactDate}}" start="0001-01-01" end="{{today}}" bindchange="onLastContactDateChange"><view class="stellar-picker {{lastContactDate ? '' : 'is-placeholder'}}">{{lastContactDate || '点击选择日期'}}</view></picker></view>
-        <view class="stellar-field"><view class="stellar-label">最后有效联系时间 *</view><picker mode="time" value="{{lastContactTime}}" bindchange="onLastContactTimeChange"><view class="stellar-picker {{lastContactTime ? '' : 'is-placeholder'}}">{{lastContactTime || '点击选择时间'}}</view></picker></view>
-        <view class="stellar-field"><view class="stellar-label">最后已知位置说明 *</view><input value="{{stellarLastKnownPlace}}" data-flat="stellarLastKnownPlace" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="120" cursor-spacing="120" always-embed="true" placeholder="城市、道路、建筑入口或可核验地点"/><view class="stellar-help">写明地点名称，再用下方地图确认精准点。</view></view>
-        <view class="stellar-field"><view class="stellar-label">精准地图选点 *</view><button class="stellar-map-button" bindtap="chooseLastKnownLocation">{{stellarLastKnownLat && stellarLastKnownLon ? '重新选择精准地图位置' : '在地图中选择最后可证之处'}}</button><view wx:if="{{stellarLastKnownLat && stellarLastKnownLon}}" class="stellar-location-result"><view>{{stellarLastKnownMapLabel || stellarLastKnownPlace}}</view><text>坐标已由地图建立 · {{stellarLastKnownLat}}, {{stellarLastKnownLon}}</text></view><view wx:else class="stellar-help">无需查询或手填经纬度。请选择当事人最后一次可确认的位置，不是你当前所在位置。</view></view>
-        <view class="stellar-field"><view class="stellar-label">最后一次已知移动方向</view><picker mode="selector" range="{{directionOptions}}" value="{{directionIndex}}" bindchange="onDirectionChange"><view class="stellar-picker {{directionIndex ? '' : 'is-placeholder'}}">{{directionOptions[directionIndex]}}</view></picker></view>
-        <view class="stellar-field"><view class="stellar-label">最后一次有效信息</view><textarea value="{{stellarContext}}" data-flat="stellarContext" bindinput="onStellarInput" bindblur="onStellarBlur" maxlength="500" cursor-spacing="120" auto-height placeholder="例如：18:20 电话联系；随后从某地出发，乘车向北。"></textarea></view>
-        <view class="stellar-ready {{stellarEssentialComplete ? 'ready' : ''}}">{{stellarEssentialComplete ? (owned ? '五项开启锚点已齐，可进入已开启的星迹档案。' : '五项开启锚点已齐；确认边界后即可支付并生成本次推演结果。') : '尚缺：' + stellarMissingHint + '。补齐后即可开启；其余资料可留空。'}}</view>
-      </view>
       <view wx:if="{{!owned}}" class="lx-price price">¥ {{item.priceFen / 100}}</view>
       <view wx:if="{{!owned}}" class="purchase-disclosure">
         <view class="disclosure-row"><view class="disclosure-label">交付方式</view><view class="disclosure-value">{{deliveryLabel}}</view></view>
         <view class="disclosure-row"><view class="disclosure-label">权益期限</view><view class="disclosure-value">{{validityLabel}}</view></view>
-        <view wx:if="{{item.productId !== 'stellar-trace'}}" class="disclosure-row"><view class="disclosure-label">续费方式</view><view class="disclosure-value">不会自动续费，到期后由你决定是否继续</view></view>
+        <view class="disclosure-row"><view class="disclosure-label">续费方式</view><view class="disclosure-value">不会自动续费，到期后由你决定是否继续</view></view>
       </view>
       <view wx:if="{{!owned}}" class="agreement">
-        <view wx:if="{{item.productId === 'stellar-trace'}}" class="stellar-risk">
-          <view class="stellar-risk-title">支付前结果边界</view>
-          <view class="stellar-risk-copy">五项开启锚点完整后，系统将交付九域事实、奇门与六壬自动排盘、双式方向合参与现实方向核验。所有时法由查询时刻自动历算，不增加玄学式交互；用户填写的移动方向只作事后核验，不参与时法主向。古法距离未校准时不制造公里数或坐标。</view>
-          <view class="stellar-risk-note">技术故障、重复支付或支付后无法开启，依《退款政策》处理；模型止于证界不等同于技术故障。</view>
-          <checkbox-group bindchange="onRiskAcknowledgementChange">
-            <label class="agreement-check stellar-risk-check"><checkbox value="risk-confirmed" checked="{{riskAcknowledged}}" color="#e6c987"/><text>我已理解：现实方向不会成为系统答案；只有真实原典证据通过合度门时才形成候选方位。</text></label>
-          </checkbox-group>
-        </view>
         <checkbox-group bindchange="onAgreementChange">
-          <label class="agreement-check"><checkbox value="confirmed" checked="{{agreed}}" color="#76ded2"/><text>{{item.productId === 'stellar-trace' ? '我确认资料来源真实，并知悉本模型不得替代警方、通信与救援定位' : '我已阅读并同意'}}</text></label>
+          <label class="agreement-check"><checkbox value="confirmed" checked="{{agreed}}" color="#76ded2"/><text>我已阅读并同意</text></label>
         </checkbox-group>
         <view class="agreement-links">
           <text class="policy-link" data-path="/terms" bindtap="openPolicy">《服务条款》</text>
           <text class="policy-link" data-path="/refunds" bindtap="openPolicy">《退款政策》</text>
           <text class="policy-link" data-path="/privacy" bindtap="openPolicy">《隐私政策》</text>
-          <text wx:if="{{item.productId === 'stellar-trace'}}" class="policy-link" data-path="/declaration" bindtap="openPolicy">《免责声明》</text>
         </view>
       </view>
-      <button wx:if="{{owned}}" class="lx-button" disabled="{{opening || (item.productId === 'stellar-trace' && !stellarEssentialComplete)}}" loading="{{opening}}" bindtap="openOwned">{{item.productId === 'stellar-trace' ? '进入已开启星迹' : item.category === 'report' ? '打开完整生命档案' : item.category === 'narrative' ? '阅读全文' : item.category === 'practice' ? '进入修炼' : '进入已开启场域'}}</button>
-      <button wx:else class="lx-button" disabled="{{paying || !agreed || (item.productId === 'stellar-trace' && (!stellarEssentialComplete || !riskAcknowledged))}}" loading="{{paying}}" bindtap="pay">{{item.productId === 'stellar-trace' ? '确认边界并开启 · ¥688' : item.cta || (item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案')}}<text wx:if="{{item.ctaEn}}"> · {{item.ctaEn}}</text></button>
+      <button wx:if="{{owned}}" class="lx-button" disabled="{{opening}}" loading="{{opening}}" bindtap="openOwned">{{item.category === 'report' ? '打开完整生命档案' : item.category === 'narrative' ? '阅读全文' : item.category === 'practice' ? '进入修炼' : '进入已开启场域'}}</button>
+      <button wx:else class="lx-button" disabled="{{paying || !agreed}}" loading="{{paying}}" bindtap="pay">{{item.cta || (item.category === 'narrative' ? '进入完整叙事' : item.category === 'practice' ? '开启这项修炼' : item.category === 'membership' ? '开启场域权益' : '开启这份生命档案')}}<text wx:if="{{item.ctaEn}}"> · {{item.ctaEn}}</text></button>
       <view class="fineprint">{{owned ? '阅读权限会由服务端再次核验，确保内容只向已开启的账户开放。' : '虚拟内容将在支付确认后自动交付。最终权益以服务端支付通知为准。'}}</view>
       <button class="support-button" open-type="contact">付款或权益需要协助？联系微信客服</button>
     </view>

@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/gate/origin", "/gate/relation", "/gate/wealth", "/gate/health", "/gate/mind", "/gate/destiny",
     "/membership",
     // 九个场域精测入口；生命原型同时说明小程序树突引擎与网页天文引擎的边界。
-    "/life-map", "/relationship", "/resilience", "/romance", "/wealth", "/daily", "/mirror", "/mirror/reading", "/mirror/daily", "/qian", "/archetype", "/stellar-trace", "/terms", "/privacy", "/refunds", "/about",
+    "/life-map", "/relationship", "/resilience", "/romance", "/wealth", "/daily", "/mirror", "/mirror/reading", "/mirror/daily", "/qian", "/archetype", "/terms", "/privacy", "/refunds", "/about",
     // 十二星座各自的每日运势页——每一个都对应"今天XX座运势"这种真实
     // 高搜索量的查询意图，单独收录进sitemap，而不是只收一个/daily
     // 入口，更容易被搜索引擎索引到具体星座的那个词。

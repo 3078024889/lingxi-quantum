@@ -39,7 +39,6 @@ export type MiniCatalogItem = {
 
 const FIXED_SKUS: Record<string, string> = {
   "life-map-report": "rpt_lifemap",
-  "stellar-trace": "rpt_stellar_trace",
   "relationship-resonance": "rpt_relation",
   "qian-reading": "rpt_qian",
   "tarot-reading": "rpt_mirror",
@@ -60,7 +59,6 @@ const FIXED_SKUS: Record<string, string> = {
 };
 
 const REPORT_IDS = new Set([
-  "stellar-trace",
   "life-map-report",
   "relationship-resonance",
   "qian-reading",
@@ -73,7 +71,6 @@ const REPORT_IDS = new Set([
 ]);
 
 const REPORT_WEB_PATHS: Record<string, string> = {
-  "stellar-trace": "/stellar-trace",
   "life-map-report": "/life-map",
   "relationship-resonance": "/relationship",
   "qian-reading": "/qian",
@@ -91,7 +88,7 @@ const UNAVAILABLE_NARRATIVE_IDS = new Set(
 );
 
 const ASSESSMENT_KIND: Record<string, NonNullable<MiniCatalogItem["assessmentKind"]>> = {
-  "stellar-trace": "birth", "life-map-report": "life-map", "relationship-resonance": "relationship", "daily-tide-report": "daily-tide",
+  "life-map-report": "life-map", "relationship-resonance": "relationship", "daily-tide-report": "daily-tide",
   "qian-reading": "birth", "tarot-reading": "birth", "resilience-report": "resilience",
   "romance-report": "romance", "wealth-report": "wealth", "life-archetype": "archetype",
 };

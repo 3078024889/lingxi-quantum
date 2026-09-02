@@ -3,18 +3,9 @@ import Bi from "./Bi";
 
 export type FieldInsight = { href:string; no:string; glyph:string; zh:string; en:string; leadZh:string; leadEn:string; bodyZh:string[]; bodyEn:string[]; timeZh?:string; timeEn?:string; ctaZh:string; ctaEn:string; closingZh?:string; closingEn?:string };
 
-// One editorial source for all nine entrances. Product pages remain the source
+// One editorial source for the active entrances. Product pages remain the source
 // of forms and reports; this is the complete bilingual orientation layer.
 const INSIGHTS: FieldInsight[] = [
-{href:"/stellar-trace",no:"00",glyph:"✧",zh:"灵犀场星迹 · 万里寻踪",en:"Lingxi Stellar Trace",leadZh:"先验其方，再论其位",leadEn:"Qualify direction before speaking of place",bodyZh:[
-    "星迹不是把天文数据装饰成一个坐标。九域天体位置属于可以复算的事实层；四层方向只是等待检验的实验投影层。",
-    "每次推演同时计算圆周均值、集中度 R、离散度与方向簇。四层彼此发散时，系统明确写下“方位未收敛”，不会把幽灵均值包装成主方向。",
-    "距离层也必须交代规则来源。未经史料校核与盲测标定的近、中、远，不会被擅自翻译成公里数；方向或距离任一层没有资格，候选区域便保持 Missing。",
-    "它是一项持续校准的坐标场研究，不读取设备、通信或实时行踪，也不能替代警方与救援定位。"],bodyEn:[
-    "Stellar Trace never decorates astronomical data as a coordinate. Nine-field positions are reproducible facts; four directions are experimental projections awaiting qualification.",
-    "Every run exposes circular mean, concentration R, dispersion, and directional modes. Divergent evidence is named as divergent rather than turned into a ghost direction.",
-    "Distance also requires a traceable rule. Uncalibrated symbolic bands never become kilometres; when either direction or distance is unqualified, candidate regions remain Missing.",
-    "This is an evolving coordinate-field study. It reads no device, communication, or live movement data and never replaces police or rescue location methods."],ctaZh:"进入星迹研究场 · ¥688",ctaEn:"Enter Stellar Trace · ¥688"},
   {href:"/life-map",no:"01",glyph:"🌌",zh:"生命图谱",en:"Life Blueprint",leadZh:"照见你的生命结构",leadEn:"Witness the structure of your life",bodyZh:[
     "你的每一次呼吸与选择，并非随机的散落，而是内在意识与此时此地持续共振的显化。",
     "在这里，西方占星、中式八字、紫微斗数、玛雅圣历与吠陀占星，是五条交汇的意识流。它们在这个活的场域中共同流淌，化作一面多维的镜像，温柔且如实地照见你携带而来的独特生命结构。",

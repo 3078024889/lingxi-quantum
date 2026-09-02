@@ -7,7 +7,6 @@
     "pages/archetype-progress/index",
     "pages/assessment/index",
     "pages/product/index",
-    "pages/stellar-location/index",
     "pages/web/index",
     "pages/pdf/index"
   ],
@@ -29,11 +28,5 @@
     ]
   },
   "sitemapLocation": "sitemap.json",
-  "permission": {
-    "scope.userLocation": {
-      "desc": "用于由用户主动选择星迹档案中的最后已知位置"
-    }
-  },
-  "requiredPrivateInfos": ["chooseLocation"],
   "lazyCodeLoading": "requiredComponents"
 }

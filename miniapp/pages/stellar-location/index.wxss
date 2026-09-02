@@ -1,9 +1,0 @@
-page { min-height: 100%; background: #111a3a; color: #f0edf7; }
-.page { min-height: 100vh; box-sizing: border-box; padding: 96rpx 48rpx 64rpx; background: radial-gradient(circle at 20% 8%, rgba(117, 92, 183, .32), transparent 36%), #111a3a; }
-.mark { color: #76dfd2; font-size: 22rpx; letter-spacing: 5rpx; }
-.title { margin-top: 32rpx; font-size: 52rpx; font-weight: 300; }
-.copy { margin-top: 32rpx; color: #b6bad0; font-size: 28rpx; line-height: 1.9; }
-.primary, .secondary { margin-top: 56rpx; border-radius: 0; font-size: 28rpx; }
-.primary { border: 1rpx solid #76dfd2; background: rgba(118, 223, 210, .10); color: #76dfd2; }
-.secondary { margin-top: 24rpx; border: 1rpx solid rgba(255,255,255,.18); background: transparent; color: #b6bad0; }
-.error { margin-top: 28rpx; color: #f2a6b3; font-size: 24rpx; line-height: 1.7; }

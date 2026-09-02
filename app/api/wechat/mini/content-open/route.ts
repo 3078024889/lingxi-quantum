@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { hasUnlock } from "@/lib/access";
 import { miniContentDestination } from "@/lib/mini/content-destinations";
-import { decryptMiniSecret, encryptMiniSecret } from "@/lib/mini/crypto";
+import { decryptMiniSecret } from "@/lib/mini/crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
-type Ticket = { userId: string; productId: string; submissionId?: string; stellarDraft?: unknown; expiresAt: number; nonce: string };
+type Ticket = { userId: string; productId: string; submissionId?: string; expiresAt: number; nonce: string };
 
 function fail(req: Request, message: string) {
   const url = new URL("/account", req.url);
@@ -55,13 +55,7 @@ export async function GET(req: Request) {
     const destination = new URL(destinationPath, req.url);
     destination.searchParams.set("mini", "1");
     if (ticket.submissionId) destination.searchParams.set("id", ticket.submissionId);
-    const response = NextResponse.redirect(destination);
-    if (ticket.productId === "stellar-trace" && ticket.stellarDraft) {
-      response.cookies.set("lingxi_stellar_trace_draft", encryptMiniSecret(JSON.stringify(ticket.stellarDraft)), {
-        httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", maxAge: 30 * 60, path: "/stellar-trace",
-      });
-    }
-    return response;
+    return NextResponse.redirect(destination);
   } catch (error) {
     console.error("[mini content open] failed", error instanceof Error ? error.message : "unknown");
     return fail(req, "内容链接无效");

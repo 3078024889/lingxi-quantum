@@ -1,8 +1,0 @@
-<view class="page">
-  <view class="mark">STELLAR TRACE · PRECISE LOCATION</view>
-  <view class="title">选择最后可证位置</view>
-  <view class="copy">这里调用微信原生地图。拖动地图并确认准确地点后，坐标会自动带回星迹网页，已填写的档案不会丢失。</view>
-  <button class="primary" bindtap="choose">{{choosing ? '正在打开微信地图…' : '打开微信地图选点'}}</button>
-  <button class="secondary" bindtap="back">返回星迹</button>
-  <view wx:if="{{error}}" class="error">{{error}}</view>
-</view>

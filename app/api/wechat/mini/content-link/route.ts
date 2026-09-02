@@ -7,7 +7,6 @@ import { requireMiniSession } from "@/lib/mini/session";
 import { getNarrative } from "@/lib/narratives";
 import { getProduct } from "@/lib/plans";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { sanitizeStellarTraceDraft, stellarTraceMissingFields } from "@/lib/stellar-trace-intake";
 
 export const runtime = "nodejs";
 
@@ -15,19 +14,14 @@ export async function POST(req: Request) {
   const session = await requireMiniSession(req);
   if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
 
-  const body = (await req.json().catch(() => ({}))) as { productId?: unknown; submissionId?: unknown; stellarDraft?: unknown };
-  if (typeof body.productId !== "string" || (!getProduct(body.productId) && !getNarrative(body.productId))) {
+  const body = (await req.json().catch(() => ({}))) as { productId?: unknown; submissionId?: unknown };
+  if (typeof body.productId !== "string" || (body.productId !== "stellar-trace" && !getProduct(body.productId) && !getNarrative(body.productId))) {
     return NextResponse.json({ error: "内容参数无效" }, { status: 400 });
   }
   const destination = miniContentDestination(body.productId);
   if (!destination) return NextResponse.json({ error: "这项内容暂不支持在小程序内打开" }, { status: 404 });
 
   const admin = createAdminClient();
-  const stellarDraft = body.productId === "stellar-trace" ? sanitizeStellarTraceDraft(body.stellarDraft) : null;
-  const stellarMissing = stellarDraft ? stellarTraceMissingFields(stellarDraft) : [];
-  if (body.productId === "stellar-trace" && (!stellarDraft || stellarMissing.length > 0)) {
-    return NextResponse.json({ error: `寻踪档案尚缺：${stellarMissing.join("、") || "有效必填资料"}`, missingFields: stellarMissing }, { status: 400 });
-  }
   const submissionId = typeof body.submissionId === "string" ? body.submissionId : null;
   let derivedArchetypeAccess = false;
   if (submissionId) {
@@ -54,7 +48,6 @@ export async function POST(req: Request) {
     userId: session.userId,
     productId: body.productId,
     ...(submissionId ? { submissionId } : {}),
-    ...(stellarDraft ? { stellarDraft } : {}),
     expiresAt: Date.now() + 2 * 60 * 1000,
     nonce: randomBytes(12).toString("base64url"),
   }));

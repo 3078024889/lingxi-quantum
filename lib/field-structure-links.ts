@@ -5,7 +5,6 @@ export const FIELD_STRUCTURE_LINKS = [
   { href: "/#gates", zh: "潜意识重塑", en: "Subconscious", x: 78, y: 22 },
   { href: "/narrative", zh: "多维叙事", en: "Narratives", x: 80, y: 73 },
   { href: "/life-map", zh: "生命图谱", en: "Life Blueprint", x: 41, y: 23 },
-  { href: "/stellar-trace", zh: "灵犀场星迹", en: "Stellar Trace", x: 50, y: 14 },
   { href: "/relationship", zh: "关系共振", en: "Relationship", x: 31, y: 35 },
   { href: "/resilience", zh: "生命韧性", en: "Resilience", x: 29, y: 54 },
   { href: "/romance", zh: "桃花磁场", en: "Romance", x: 39, y: 66 },
