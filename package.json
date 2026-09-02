@@ -21,6 +21,8 @@
     "audit:publication": "node scripts/audit-publication-ui.mjs",
     "audit:field-insights": "node scripts/audit-field-insights.mjs",
     "audit:security": "node scripts/audit-security.mjs",
+    "audit:alipay": "node scripts/audit-alipay.mjs",
+    "test:alipay-crypto": "node --experimental-strip-types scripts/test-alipay-crypto.mjs",
     "audit:mini-program": "node scripts/audit-mini-program.mjs",
     "audit:dendrite-questions": "node scripts/audit-dendrite-question-banks.mjs",
     "audit:stellar-trace": "node scripts/audit-stellar-trace.mjs",

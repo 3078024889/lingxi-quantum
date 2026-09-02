@@ -64,13 +64,10 @@ function describeDuration(days: number, langEn: boolean): string {
   return `${days} 天`;
 }
 
-// v259：重新做了一遍流程，跟之前不一样的地方——之前是进页面直接弹
-// 二维码，这次改成先有一个"订单确认"阶段：真实订单号、商品、数量、
-// 金额、买家信息（登录邮箱）、支付方式选择，全部先摆出来，用户看清楚
-// 之后点"立即支付"，这时候才展示二维码。订单本身在"订单确认"这个
-// 阶段就已经真实创建好了（不是等点了"立即支付"才创建）——这样订单号
-// 从一开始展示的就是真实、已经存在于数据库里的号码，不是占位符。
+// 支付前先展示商品、金额、账号与支付方式；只有用户主动提交支付后才创建
+// 网关订单，避免用户只浏览确认页就留下无意义的 pending 订单。
 type PayStatus = "loading" | "review" | "waiting" | "success" | "error";
+type PaymentMethod = "wechat" | "alipay";
 
 // 场域订单卡片用的缩略图——直接复用每个产品完整报告页已经在用的
 // 封面图（page-0.png），不用额外生成新素材。关系共振按关系类型分了
@@ -107,6 +104,8 @@ function CheckoutInner() {
   const [error, setError] = useState("");
   const [checkingNow, setCheckingNow] = useState(false);
   const [buyerEmail, setBuyerEmail] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("wechat");
+  const [alipayAvailable, setAlipayAvailable] = useState(false);
   const stellarIntakeChecked = true;
   const orderIdRef = useRef<string | null>(null);
   const codeUrlRef = useRef<string | null>(null);
@@ -169,6 +168,13 @@ function CheckoutInner() {
     });
   }, [stellarIntakeChecked]);
 
+  useEffect(() => {
+    fetch("/api/pay/alipay/status", { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : { available: false })
+      .then((data: { available?: boolean }) => setAlipayAvailable(data.available === true))
+      .catch(() => setAlipayAvailable(false));
+  }, []);
+
   const checkPaidOnce = async (manual = false) => {
     if (!orderIdRef.current || doneRef.current) return;
     if (manual) setCheckingNow(true);
@@ -200,9 +206,8 @@ function CheckoutInner() {
     return () => document.removeEventListener("visibilitychange", onVisible);
   }, []);
 
-  // 第一步：创建真实订单——拿到真实订单号，但先不展示二维码，只展示
-  // 订单信息本身，等用户看清楚了、主动点"立即支付"才进入下一步。
-  const createOrder = async () => {
+  // 用户主动选择微信并提交后，再创建微信网关订单。
+  const createOrder = async (): Promise<boolean> => {
     setStatus("loading");
     setError("");
 
@@ -213,7 +218,7 @@ function CheckoutInner() {
     // "不允许的授权回跳地址"，OAuth 与登录 Cookie 也始终保持同源。
     if (isWechatBrowser && !isWechatCanonicalDomain) {
       window.location.replace(cnSwitchUrl);
-      return;
+      return false;
     }
 
     if (isWechatBrowser && !wechatCode && isWechatCanonicalDomain) {
@@ -224,14 +229,14 @@ function CheckoutInner() {
         if (!res.ok || !data.url) {
           setStatus("error");
           setError((data.error || "微信网页授权初始化失败"));
-          return;
+          return false;
         }
         window.location.href = data.url;
-        return; // 页面即将跳转，不用再往下走
+        return false; // 页面即将跳转，不用再往下走
       } catch {
         setStatus("error");
         setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
-        return;
+        return false;
       }
     }
 
@@ -254,7 +259,7 @@ function CheckoutInner() {
       } catch {
         setStatus("error");
         setError(`场域连接超时或服务暂时不可用，请稍后再试。（状态码 ${res.status}）`);
-        return;
+        return false;
       }
       if (!res.ok || !data.orderId || (!data.codeUrl && !data.jsapi)) {
         // 微信的code是一次性的——如果是重试导致的失败（用户点了"重试"，
@@ -278,20 +283,45 @@ function CheckoutInner() {
             const redirectUri = clean.toString();
             const r2 = await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(redirectUri)}`);
             const d2 = await r2.json();
-            if (r2.ok && d2.url) { window.location.href = d2.url; return; }
+            if (r2.ok && d2.url) { window.location.href = d2.url; return false; }
           } catch { /* 掉到下面正常报错分支 */ }
         }
         setStatus("error");
         setError((data.error || "创建订单失败") + (data.detail ? ` (${data.detail})` : ""));
-        return;
+        return false;
       }
       orderIdRef.current = data.orderId;
       if (data.jsapi) jsapiParamsRef.current = data.jsapi;
       if (data.codeUrl) codeUrlRef.current = data.codeUrl;
       setStatus("review");
+      return true;
     } catch {
       setStatus("error");
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
+      return false;
+    }
+  };
+
+  const createAlipayOrder = async () => {
+    setStatus("loading");
+    setError("");
+    try {
+      const res = await fetch("/api/pay/alipay/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, submissionId, returnPath: redirectTo }),
+      });
+      const data = await res.json() as { url?: string; orderId?: string; error?: string };
+      if (!res.ok || !data.url || !data.orderId) {
+        setStatus("error");
+        setError(data.error || t("支付宝订单创建失败", "Could not create the Alipay order"));
+        return;
+      }
+      orderIdRef.current = data.orderId;
+      window.location.assign(data.url);
+    } catch {
+      setStatus("error");
+      setError(t("连接支付宝时出错，请稍后再试。", "Could not connect to Alipay — please try again."));
     }
   };
 
@@ -299,6 +329,14 @@ function CheckoutInner() {
   // 微信原生收银台，不展示二维码（微信不允许在自己的浏览器里弹码给
   // 自己扫）；其它场景保持原来的Native扫码。
   const payNow = async () => {
+    if (paymentMethod === "alipay") {
+      await createAlipayOrder();
+      return;
+    }
+    if (!codeUrlRef.current && !jsapiParamsRef.current) {
+      const created = await createOrder();
+      if (!created) return;
+    }
     if (jsapiParamsRef.current) {
       setStatus("waiting");
       invokeWeixinPay(
@@ -348,11 +386,11 @@ function CheckoutInner() {
         }
       }
 
-      await createOrder();
+      setStatus("review");
     };
 
     void checkAccessBeforeOrdering();
-    // createOrder intentionally remains tied to this one-shot checkout initialization.
+    // Access is checked before any payment-provider order can be created.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product, productId, redirectTo, router, stellarIntakeChecked]);
 
@@ -399,7 +437,7 @@ function CheckoutInner() {
           <div className="mt-6 overflow-hidden rounded-sm border border-white/10 bg-void-deep/80 backdrop-blur-sm">
             <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-5 py-3">
               <p className="text-[11px] uppercase tracking-widest2 text-bone-mute">
-                <Bi zh="场域订单号" en="Field Order No." /> {orderIdRef.current}
+                <Bi zh="场域订单号" en="Field Order No." /> {orderIdRef.current ?? t("提交支付后生成", "Created on payment")}
               </p>
               <p className="text-[11px] uppercase tracking-widest2 text-lattice">
                 <Bi zh="待支付" en="Pending" />
@@ -469,13 +507,26 @@ function CheckoutInner() {
           <div className="mt-6">
             <p className="text-xs uppercase tracking-widest2 text-bone-dim"><Bi zh="支付方式" en="Payment Method" /></p>
             <div className="mt-3 grid grid-cols-2 gap-3">
-              <div className="rounded-sm border border-lattice bg-lattice/10 p-4 text-center text-lattice">
-                <p className="font-display text-sm"><Bi zh="✓ 微信支付" en="✓ WeChat Pay" /></p>
-              </div>
-              <div className="cursor-not-allowed rounded-sm border border-white/10 p-4 text-center text-bone-mute">
-                <p className="font-display text-sm"><Bi zh="支付宝" en="Alipay" /></p>
-                <p className="mt-1 text-[10px] uppercase tracking-widest2"><Bi zh="即将上线" en="Coming Soon" /></p>
-              </div>
+              <button
+                type="button"
+                onClick={() => setPaymentMethod("wechat")}
+                aria-pressed={paymentMethod === "wechat"}
+                className={`rounded-sm border p-4 text-center transition ${paymentMethod === "wechat" ? "border-lattice bg-lattice/10 text-lattice" : "border-white/10 text-bone-dim hover:border-white/25"}`}
+              >
+                <p className="font-display text-sm"><Bi zh={`${paymentMethod === "wechat" ? "✓ " : ""}微信支付`} en={`${paymentMethod === "wechat" ? "✓ " : ""}WeChat Pay`} /></p>
+              </button>
+              <button
+                type="button"
+                onClick={() => { if (alipayAvailable) setPaymentMethod("alipay"); }}
+                disabled={!alipayAvailable}
+                aria-pressed={paymentMethod === "alipay"}
+                className={`rounded-sm border p-4 text-center transition ${paymentMethod === "alipay" ? "border-[#1677ff] bg-[#1677ff]/10 text-[#6ca7ff]" : alipayAvailable ? "border-white/10 text-bone-dim hover:border-white/25" : "cursor-not-allowed border-white/10 text-bone-mute opacity-60"}`}
+              >
+                <p className="font-display text-sm"><Bi zh={`${paymentMethod === "alipay" ? "✓ " : ""}支付宝`} en={`${paymentMethod === "alipay" ? "✓ " : ""}Alipay`} /></p>
+                <p className="mt-1 text-[10px] uppercase tracking-widest2">
+                  <Bi zh={alipayAvailable ? "网页安全收银台" : "审核完成后开放"} en={alipayAvailable ? "Secure web checkout" : "Pending approval"} />
+                </p>
+              </button>
             </div>
           </div>
 
@@ -559,7 +610,7 @@ function CheckoutInner() {
             </a>
           ) : (
             <button
-              onClick={createOrder}
+              onClick={payNow}
               className="mt-4 border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice"
             >
               <Bi zh="重试" en="Try Again" />

@@ -42,7 +42,15 @@ const checks = [
     )
   })()],  ["checkout honors an existing unlock before creating an order", (() => {
     const checkout = read("app/checkout/page.tsx")
-    return checkout.includes('.from("unlocks")') && checkout.indexOf('.from("unlocks")') < checkout.indexOf("await createOrder()")
+    const accessStart = checkout.indexOf("const checkAccessBeforeOrdering")
+    const accessEnd = checkout.indexOf("void checkAccessBeforeOrdering()", accessStart)
+    const accessBlock = checkout.slice(accessStart, accessEnd)
+    return accessStart >= 0 &&
+      accessEnd > accessStart &&
+      accessBlock.includes('.from("unlocks")') &&
+      accessBlock.includes('setStatus("review")') &&
+      !accessBlock.includes("createOrder()") &&
+      checkout.includes("const created = await createOrder()")
   })()],
 ]
 
