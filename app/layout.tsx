@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
     default: "灵犀场 LINGXIFIELD｜AI短剧制作、视频生成、AI编程与意识显化平台",
-    template: "%s ｜ 灵犀场 LINGXIFIELD · 意识显化数字空间",
+    template: "%s ｜ 灵犀场 LINGXIFIELD",
   },
   description:
     "灵犀场（LINGXIFIELD）是融合 AI 短剧制作、视频生成、AI 编程、网站与应用构建部署、意识显化与场域精测的中英双语智能数字空间。",
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "灵犀场 LINGXIFIELD · 意识显化数字空间",
-    title: "灵犀场 · 意识显化数字空间",
+    siteName: "灵犀场 SASI · LINGXIFIELD",
+    title: "灵犀场 SASI｜AI短剧制作、视频生成、AI编程、网站构建部署与意识显化",
     description:
-      "意识显化、场域精测、AI短剧与编程构建汇入同一座双语数字空间。",
+      "AI短剧、故事板、配音、视频生成、AI编程与网站部署汇入同一座双语数字空间，并连接意识显化与场域精测。",
     url: SITE,
     images: [
       { url: "https://lingxifield.cn/og-v337.png?v=20260831", width: 1672, height: 941, alt: "灵犀场官网与小程序 · 双主理人数字生命场域" },
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "灵犀场 · 意识显化数字空间 | Lingxi Field",
-    description: "显化 · 精测 · AI创作 · 编程构建。一座连接内在探索与真实交付的数字空间。",
+    title: "灵犀场 SASI｜AI创作、视频生成与编程构建",
+    description: "AI短剧 · 视频生成 · AI编程 · 网站部署 · 意识显化与场域精测。",
     images: ["https://lingxifield.cn/og-v337.png?v=20260831"],
   },
   robots: { index: true, follow: true },
@@ -74,12 +74,12 @@ export const metadata: Metadata = {
 const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "灵犀场 LINGXIFIELD · 意识显化数字空间",
+  name: "灵犀场 SASI · LINGXIFIELD",
   alternateName: ["Lingxi", "LINGXI", "灵犀", "LingxiField", "灵犀场", "意识显化数字空间"],
   url: SITE,
   logo: `${SITE}/icon-512.png`,
   description:
-    "灵犀场是一座融合意识探索、个人数字报告、AI短剧与编程构建的双语数字空间。Lingxi Field is a bilingual digital space for conscious exploration, personal reports, AI drama and software creation.",
+    "灵犀场 SASI 是融合 AI 短剧、视频生成、编程构建、意识显化与个人数字报告的双语智能数字空间。LingxiField SASI is a bilingual space for AI creation, software delivery and conscious exploration.",
   knowsAbout: [
     "意识显化", "显化方法", "现实回路", "吸引力法则", "AI短剧", "网站构建", "编程部署",
     "潜意识改写", "量子息法", "上升心经", "重塑潜意识", "提升频率", "共时性", "觉醒",
@@ -92,8 +92,8 @@ const orgJsonLd = {
 const siteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "灵犀场 LingxiField",
-  alternateName: "LINGXI",
+  name: "灵犀场 SASI · LingxiField",
+  alternateName: "LINGXIFIELD SASI",
   url: SITE,
   inLanguage: ["zh-CN", "en"],
   potentialAction: {

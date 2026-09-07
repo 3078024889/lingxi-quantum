@@ -2,6 +2,8 @@ import fs from "node:fs";
 
 const read = (path) => fs.readFileSync(path, "utf8");
 const workspace = read("app/sasi/SasiWorkspace.tsx");
+const home = read("app/page.tsx");
+const legacySasi = read("app/sasi/page.tsx");
 const catalog = read("lib/sasi/catalog.ts");
 const prepare = read("app/api/sasi/prepare/route.ts");
 const readiness = read("lib/sasi/readiness.ts");
@@ -17,7 +19,7 @@ const providers = [...catalog.matchAll(/costRmbPerSecond:\s*([\d.]+), sellRmbPer
 
 const checks = [
   [workspace.includes('type Lang = "zh" | "en"') && legal.includes("bodyZh") && legal.includes("bodyEn"), "SASI workspace and legal rules are bilingual"],
-  [workspace.includes("SASI Auto") && workspace.includes("Professional Mode"), "simple auto routing and optional professional mode"],
+  [workspace.includes("SASI Auto") && workspace.includes("Advanced settings and model choice"), "simple auto routing and optional advanced model mode"],
   [prepare.includes("explicitEpisodes") && prepare.includes("suggestedEpisodes") && productSpec.includes("绝不默认 100 集"), "episode count is inferred, never preset to 100"],
   [prepare.includes("requiresFinalCostConfirmation: true") && schema.includes("reserve_sasi_points"), "quote confirmation precedes atomic reservation"],
   [workspace.includes("预算不足") && budgetSpec.includes("不得隐藏降级"), "budget-quality mismatch blocks silent downgrade"],
@@ -25,8 +27,12 @@ const checks = [
   [catalog.includes("Math.round(price * POINTS_PER_RMB)") && !catalog.includes("Math.ceil(price * POINTS_PER_RMB)"), "currency-to-points conversion avoids floating overcharge"],
   [readiness.includes("process.env.OPENAI_API_KEY") && !workspace.includes("OPENAI_API_KEY"), "provider credentials remain server-side"],
   [schema.includes("enable row level security") && schema.includes("service_role") && schema.includes("sasi_node_dependencies"), "RLS, service writes and dependency graph schema"],
-  [middleware.includes('"/dream"') && middleware.includes('target.pathname = "/sasi"'), "retired Dream routes redirect to SASI"],
-  [miniField.includes("灵犀场 SASI") && miniField.includes("web: '/sasi'"), "Mini Program includes the audited SASI entry"],
+  [middleware.includes('"/dream"') && middleware.includes('target.pathname = "/"'), "retired Dream routes redirect to the SASI home"],
+  [home.includes("<SasiWorkspace") && legacySasi.includes('permanentRedirect("/")') && middleware.includes('pathname === "/sasi"'), "SASI is the canonical root and /sasi permanently redirects"],
+  [workspace.includes("SASI DRAMA") && workspace.includes("SASI BUILD") && workspace.includes("你想创造什么"), "Drama and Build are equal home entrances"],
+  [workspace.includes("Add files") && workspace.includes("onDrop={drop}") && workspace.includes("onPaste={handlePaste}"), "unified input supports click, drag and paste staging"],
+  [workspace.includes("余额与充值") && !workspace.includes("积分与充值"), "public billing language uses RMB balance"],
+  [miniField.includes("灵犀场 SASI") && miniField.includes("web: '/'"), "Mini Program opens the canonical SASI home"],
   [fs.existsSync("skills/sasi-web-builder/SKILL.md") && fs.existsSync("skills/sasi-short-drama/SKILL.md"), "official Build and Drama Skills exist"],
   [legal.includes("不提供内容社区发布") && legal.includes("does not operate a publishing community"), "no-publishing boundary is explicit"],
 ];

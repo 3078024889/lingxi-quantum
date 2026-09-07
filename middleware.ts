@@ -34,6 +34,15 @@ export async function middleware(request: NextRequest) {
   // 查询参数——一次性解决这一类问题，不用每发现一个就手动加一条。
   const { pathname } = request.nextUrl;
 
+  // SASI 已经成为根首页；旧的 /sasi 只保留为永久兼容入口，避免形成
+  // 两份相同的可索引内容。
+  if (pathname === "/sasi") {
+    const target = request.nextUrl.clone();
+    target.pathname = "/";
+    target.search = "";
+    return NextResponse.redirect(target, 308);
+  }
+
   // 梦境探索产品已经撤下。旧入口与曾经围绕该产品建立的专题页统一
   // 返回新的 SASI 工作台，避免搜索结果继续把用户带入已退休板块。
   const retiredDreamPaths = new Set([
@@ -43,7 +52,7 @@ export async function middleware(request: NextRequest) {
   ]);
   if (retiredDreamPaths.has(pathname)) {
     const target = request.nextUrl.clone();
-    target.pathname = "/sasi";
+    target.pathname = "/";
     target.search = "";
     return NextResponse.redirect(target, 308);
   }

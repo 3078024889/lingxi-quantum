@@ -84,6 +84,6 @@ export default function FieldStructure9D() {
   const [embedded, setEmbedded] = useState(true);
   const pathname = usePathname();
   useEffect(() => setEmbedded(new URLSearchParams(window.location.search).get("mini") === "1"), []);
-  if (embedded || pathname.startsWith("/sasi") || pathname.startsWith("/legal/sasi")) return null;
+  if (embedded || pathname === "/" || pathname.startsWith("/sasi") || pathname.startsWith("/legal/sasi")) return null;
   return <><FloatingFieldNavigator /><FloatingFieldVideo /></>;
 }

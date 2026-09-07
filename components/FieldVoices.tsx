@@ -191,7 +191,7 @@ export default function FieldVoices() {
   const voiceOf = (d: Node) =>
     hovered === d.id ? VOICES[d.vi] : d.id in speaking ? VOICES[d.vi] : null;
 
-  if (pathname.startsWith("/sasi") || pathname.startsWith("/legal/sasi")) return null;
+  if (pathname === "/" || pathname.startsWith("/sasi") || pathname.startsWith("/legal/sasi")) return null;
 
   return (
     <div className="fv-rain pointer-events-none fixed inset-0 z-30 overflow-hidden" aria-hidden="true">
