@@ -203,11 +203,6 @@ export default async function MembershipPage({
     ? { tone: "error", zh: "付款遇到了问题，还没有完成扣款。可以重试一次，如果反复失败，联系我们看看是不是账户那边的原因。", en: "Something went wrong and the payment didn't go through. Try again, or reach out if it keeps failing." }
     : null;
 
-  const narrativeAll = getProduct("__retired_narrative_all");
-  const everything = getProduct("__retired_everything");
-  const narrativeContent = MEMBERSHIP_CONTENT["narrative-all"];
-  const everythingContent = MEMBERSHIP_CONTENT.everything;
-
   return (
     <>
       <Nav />
@@ -242,61 +237,6 @@ export default async function MembershipPage({
           </div>
         </section>
 
-        {/* 一、神尊全域解锁：最高层级先建立价值锚点 */}
-        {everything && (
-        <section id="sovereign" className="scroll-mt-28 border-t border-white/5 px-6 py-16">
-          <div className="mx-auto max-w-3xl">
-            <div className="mb-8 text-center">
-              <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="一 · 神尊全域解锁" en="I · Sovereign · All-Field Access" />
-              </h2>
-              <p className="mt-3 text-sm text-bone-dim"><Bi zh="年度全域通行证 · 当前与未来全部付费内容" en="Annual all-field pass · every current and future paid experience" /></p>
-            </div>
-            <div className="rounded-sm border border-amber/50 bg-amber/5 p-10 text-center">
-              <span className="mb-4 inline-block w-fit rounded-sm bg-amber/20 px-3 py-1 font-display text-xs tracking-widest2 text-amber">
-                <Bi zh="神尊层级" en="Sovereign Tier" />
-              </span>
-              <h3 className="font-display text-2xl text-bone"><Bi zh={everything.name} en={everything.nameEn} /></h3>
-              <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-bone-dim"><Bi zh={everythingContent.description} en={everything.noteEn} /></p>
-              <PriceTag priceRmb={everything.priceRmb} days={everything.days} type={everything.type} />
-
-              <p className="mx-auto mt-6 max-w-md text-xs uppercase tracking-widest2 text-lattice"><Bi zh="有效期内 · 全站付费内容与未来新增全部开放" en="During the active term · every paid experience and future release" /></p>
-              <div className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🔮 <Bi zh="场域精测·不限次数" en="Field Insights · Unlimited" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="10 个核心产品与完整生命档案。" en="All ten core products and complete life archives." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🌌 <Bi zh="意识显化体系" en="Conscious Manifestation" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="探索意识如何影响现实创造。" en="Explore how consciousness shapes the reality you create." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🌙 <Bi zh="梦境解析体系" en="Dream Interpretation" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="理解梦境中的潜意识信息。" en="Understand what the subconscious communicates through dreams." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">🌀 <Bi zh="全部修炼技术" en="Every Practice" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="包含当前四大路径与年内未来新增技术。" en="The Four Practices plus new techniques released during the year." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">📖 <Bi zh="多维叙事与订阅" en="Narratives & Subscriptions" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="持续阅读灵犀场原创意识记录。" en="Read Lingxi Field's original consciousness records as they grow." /></p>
-                </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep p-4">
-                  <p className="text-sm text-bone">✨ <Bi zh="未来新增全部包含" en="All Future Releases Included" /></p>
-                  <p className="mt-1 text-xs text-bone-dim"><Bi zh="新报告、新修炼技术与新场域模块自动加入。" en="New reports, practices, and field modules join automatically." /></p>
-                </div>
-              </div>
-
-              <p className="mt-8 font-display text-sm text-lattice"><Bi zh="一年全域通行，进入持续生长的完整灵犀场。" en="One year of all-field access to an evolving Lingxi Field." /></p>
-              <div className="mx-auto mt-6 max-w-xs">
-                <PlanButton productId={everything.id} loggedIn={!!user} highlight nameZh={everything.name} nameEn={everything.nameEn} />
-              </div>
-            </div>
-          </div>
-        </section>
-        )}
-
         {/* 二、四大修炼技术 */}
         <section id="practices" className="scroll-mt-28 px-6 pb-16">
           <div className="mx-auto max-w-6xl">
@@ -329,38 +269,6 @@ export default async function MembershipPage({
             </div>
           </div>
         </section>
-
-        {/* 四、多维叙事 */}
-        {narrativeAll && (
-        <section id="narratives" className="scroll-mt-28 border-t border-white/5 px-6 py-16 pb-28">
-          <div className="mx-auto max-w-2xl">
-            <div className="mb-8 text-center">
-              <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="四 · 多维叙事" en="IV · Dimensional Narrative" />
-              </h2>
-              <p className="mt-3 text-sm text-bone-dim"><Bi zh="阅读不同意识层级中的现实结构" en="Read the structure of reality across different levels of consciousness" /></p>
-            </div>
-            <div className="rounded-sm border border-white/10 bg-reading-glass p-8 text-center">
-              <h3 className="font-display text-xl text-bone"><Bi zh={narrativeAll.name} en={narrativeAll.nameEn} /></h3>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-bone-dim"><Bi zh={narrativeContent.description} en={narrativeAll.noteEn} /></p>
-              <PriceTag priceRmb={narrativeAll.priceRmb} days={narrativeAll.days} type={narrativeAll.type} />
-              <ul className="mx-auto mt-6 max-w-xs space-y-1.5 text-left text-sm leading-6 text-bone-dim">
-                <li>· <Bi zh="长篇意识传输" en="Long-form consciousness transmissions" /></li>
-                <li>· <Bi zh="现实重写记录" en="Reality-rewrite records" /></li>
-                <li>· <Bi zh="场域叙事档案" en="Field narrative archives" /></li>
-                <li>· <Bi zh="场域观测日志" en="Field observation logs" /></li>
-                <li>· <Bi zh="持续更新的原创多维故事" en="Original dimensional stories, continuously updated" /></li>
-              </ul>
-              <p className="mx-auto mt-4 max-w-xs text-xs italic text-bone-soft">
-                <Bi zh="现实不是单一发生的结果，而是意识与生命持续交汇后的展开。" en="Reality is not a single outcome. It unfolds from the ongoing meeting of consciousness and life." />
-              </p>
-              <div className="mx-auto mt-6 max-w-[220px]">
-                <PlanButton productId={narrativeAll.id} loggedIn={!!user} nameZh={narrativeAll.name} nameEn={narrativeAll.nameEn} />
-              </div>
-            </div>
-          </div>
-        </section>
-        )}
 
         <div className="mx-auto max-w-2xl px-6 pb-24">
           <FaqSection items={MEMBERSHIP_FAQ} />

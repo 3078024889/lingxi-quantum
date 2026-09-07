@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   keywords: [
     "显化", "意识显化", "显化方法", "显化技巧", "现实回路", "吸引力法则",
     "解梦", "梦境解析", "周公解梦", "梦的含义", "潜意识", "潜意识改写",
-    "修炼", "冥想", "量子息法", "归零心诀", "直觉丹道", "上升心经", "重塑潜意识", "探索梦境", "多维叙事", "提升频率", "脉轮", "共时性", "觉醒", "更高的自己",
+    "修炼", "冥想", "量子息法", "归零心诀", "直觉丹道", "上升心经", "重塑潜意识", "探索梦境", "提升频率", "脉轮", "共时性", "觉醒", "更高的自己",
     "场域", "共振", "临在", "校准", "相干", "忆起", "主权", "完整",
     "manifestation", "how to manifest", "manifestation methods", "reality loop", "law of attraction",
     "dream interpretation", "dream meaning", "lucid dreaming", "subconscious mind",
@@ -38,7 +38,6 @@ export const metadata: Metadata = {
       "一座原创的意识显化数字空间，以结构读取、象征探索与现实验证陪伴持续的自我探索。",
     url: SITE,
     images: [
-      { url: "https://lingxifield.com/og-v337.png?v=20260831", width: 1672, height: 941, alt: "灵犀场官网与小程序 · 双主理人数字生命场域" },
       { url: "https://lingxifield.cn/og-v337.png?v=20260831", width: 1672, height: 941, alt: "灵犀场官网与小程序 · 双主理人数字生命场域" },
     ],
   },
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "灵犀场 · 意识显化数字空间 | Lingxi Field",
     description: "显化 · 精测 · 梦境 · 修炼。一座原创的意识显化数字空间。",
-    images: ["https://lingxifield.com/og-v337.png?v=20260831"],
+    images: ["https://lingxifield.cn/og-v337.png?v=20260831"],
   },
   robots: { index: true, follow: true },
   manifest: "/manifest.webmanifest",
@@ -80,10 +79,10 @@ const orgJsonLd = {
   url: SITE,
   logo: `${SITE}/icon-512.png`,
   description:
-    "灵犀场是一座原创的意识显化数字空间，提供结构化自我探索、象征体系探索、创意叙事与数字报告。Lingxi Field is an original bilingual digital space for conscious manifestation, structured self-exploration, symbolic inquiry, creative narratives, and personal archives.",
+    "灵犀场是一座原创的意识显化数字空间，提供结构化自我探索、象征体系探索、意识练习与个人数字报告。Lingxi Field is an original bilingual digital space for conscious manifestation, structured self-exploration, symbolic inquiry, guided practices, and personal digital reports.",
   knowsAbout: [
     "意识显化", "显化方法", "现实回路", "吸引力法则", "场域解梦", "梦境解析",
-    "潜意识改写", "量子息法", "上升心经", "重塑潜意识", "探索梦境", "多维叙事", "提升频率", "共时性", "觉醒",
+    "潜意识改写", "量子息法", "上升心经", "重塑潜意识", "探索梦境", "提升频率", "共时性", "觉醒",
     "场域", "共振", "临在", "校准", "主权", "完整",
     "manifestation", "law of attraction", "dream interpretation", "lucid dreaming",
     "subconscious mind", "meditation", "consciousness", "spiritual awakening", "higher self", "chakras",

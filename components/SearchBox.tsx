@@ -3,13 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 
 /* 场域搜索 · 导航搜索框
  * 特点：
- * - 输入即时匹配多维叙事（标题/简介，中英双语）
- * - 也收录站内几个核心页面，方便直接跳转
+ * - 输入即时匹配站内核心页面，方便直接跳转
  * - 点击/聚焦框体时，绽放一圈局部水波纹（与全站的 ClickRipple 是两回事，
  *   这个水波纹只在框内出现，强调"这是一个可以被触碰的场域入口"）
  */
@@ -20,15 +18,13 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug: "dream", title: "探索梦境", titleEn: "Dreams", href: "/dream" },
   { slug: "practice", title: "修炼技术", titleEn: "Practices", href: "/practice" },
   { slug: "gates", title: "重塑潜意识", titleEn: "Rewrite", href: "/#gates" },
-  { slug: "narrative", title: "多维叙事", titleEn: "Narratives", href: "/narrative" },
   { slug: "learn", title: "探索", titleEn: "Learn", href: "/learn" },
   { slug: "membership", title: "能量交换场", titleEn: "Access", href: "/membership" },
   { slug: "number-energy", title: "手机号车牌号测试", titleEn: "Number Energy", href: "/tools/number-energy" },
   { slug: "life-map", title: "生命图谱", titleEn: "Life Map", href: "/life-map" },
   // 之前这里只收录了大类目（"修炼技术"这种），四项具体的修炼技术各自
   // 叫什么名字，完全没被收进来——搜具体的"量子息法"，只能匹配到大类
-  // 目名称里完全不沾边的字，自然搜不到，会掉进"没有结果"或者误撞进
-  // 多维叙事里某篇不相关内容的标题/简介。这里把四个具体名字都补上。
+  // 目名称里完全不沾边的字，自然搜不到。这里把四个具体名字都补上。
   { slug: "practice-breath", title: "量子息法", titleEn: "Quantum Breath Method", href: "/practice/breath" },
   { slug: "practice-intuition", title: "直觉丹道", titleEn: "The Intuitive Way", href: "/practice/intuition" },
   { slug: "practice-heart-reset", title: "归零心诀", titleEn: "Heart Reset", href: "/practice/heart-reset" },
@@ -50,7 +46,7 @@ const STATIC_PAGES: StaticEntry[] = [
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的
 // "搜索星域故事、修炼技术"这种通用占位符，更能让人知道"原来可以搜这些"。
 const PLACEHOLDER_HINTS = [
-  { zh: "试试搜「共鸣礁」", en: 'Try "The Resonance Reef"' },
+  { zh: "试试搜「探索梦境」", en: 'Try "Dreams"' },
   { zh: "试试搜「量子息法」", en: 'Try "Quantum Breath Method"' },
   { zh: "试试搜「生命图谱」", en: 'Try "Life Map"' },
   { zh: "试试搜「显化」", en: 'Try "Manifestation"' },
@@ -75,21 +71,14 @@ export default function SearchBox({ className = "" }: { className?: string }) {
 
   const results = useMemo(() => {
     const query = q.trim().toLowerCase();
-    if (!query) return { pages: [], stories: [] };
+    if (!query) return { pages: [] };
     const pages = STATIC_PAGES.filter(
       (p) => p.title.includes(q.trim()) || p.titleEn.toLowerCase().includes(query)
     ).slice(0, 4);
-    const stories = NARRATIVES.filter(
-      (n) =>
-        n.title.includes(q.trim()) ||
-        n.titleEn.toLowerCase().includes(query) ||
-        n.teaser.includes(q.trim()) ||
-        n.teaserEn.toLowerCase().includes(query)
-    ).slice(0, 8);
-    return { pages, stories };
+    return { pages };
   }, [q]);
 
-  const hasResults = results.pages.length > 0 || results.stories.length > 0;
+  const hasResults = results.pages.length > 0;
 
   const fireRipple = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = boxRef.current?.getBoundingClientRect();
@@ -117,12 +106,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
     const query = q.trim();
     if (!query) return;
     const topPage = results.pages[0];
-    const topStory = results.stories[0];
-    const href = topPage
-      ? topPage.href
-      : topStory
-      ? `/narrative/${topStory.slug}`
-      : `/learn?q=${encodeURIComponent(query)}`;
+    const href = topPage?.href ?? `/learn?q=${encodeURIComponent(query)}`;
     setFocused(false);
     router.push(href);
   };
@@ -182,14 +166,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
 
       {focused && q && (
         <div className="sb-panel">
-          {/* 这个"向灵犀提问"入口，这次特意放在结果列表最上方，而不是
-             最下方——如果搜的词命中了好几篇多维叙事（很常见的词，比如
-             "信息"，在150多篇故事的简介里，撞上的概率不低），下面这个
-             面板本身有滚动、有最大高度限制，放在最下面的话，前面结果
-             一多，这个入口就会被挤到要滚动到底才能看到的地方，等于
-             "渲染了，但用户根本看不见、以为它不存在"。挪到最上面，
-             不管上面搜到多少东西，这个入口都保证是打开面板第一眼就
-             看到的内容。 */}
+          {/* 未命中页面时仍可把问题带入探索页。 */}
           <Link
             href={`/learn?q=${encodeURIComponent(q)}`}
             onClick={() => setFocused(false)}
@@ -214,22 +191,6 @@ export default function SearchBox({ className = "" }: { className?: string }) {
                 >
                   <span>{p.title}</span>
                   <span className="sb-item-en">{p.titleEn}</span>
-                </Link>
-              ))}
-            </div>
-          )}
-          {results.stories.length > 0 && (
-            <div className="sb-group">
-              <div className="sb-group-label"><span data-lang="zh">多维叙事</span><span data-lang="en">Narratives</span></div>
-              {results.stories.map((n) => (
-                <Link
-                  key={n.slug}
-                  href={`/narrative/${n.slug}`}
-                  onClick={() => setFocused(false)}
-                  className="sb-item"
-                >
-                  <span>{n.title}</span>
-                  <span className="sb-item-en">{n.titleEn}</span>
                 </Link>
               ))}
             </div>
