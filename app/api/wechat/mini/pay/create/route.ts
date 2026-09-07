@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     }
     const product = productForMiniPurchase(body.skuId, body.productId);
     if (!product) return NextResponse.json({ error: "商品不存在" }, { status: 404 });
+    if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });
 
     // 每次支付前重新 wx.login，保证 signature 使用最新 session_key。
     const freshWxSession = await exchangeMiniCode(body.code);

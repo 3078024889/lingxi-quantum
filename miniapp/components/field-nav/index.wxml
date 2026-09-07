@@ -3,6 +3,9 @@
     <button wx:if="{{showBack}}" class="back" bindtap="back" aria-label="返回">‹</button>
     <view class="lx-brand">{{title}}</view>
   </view>
-  <view class="pulse"></view>
+  <view class="nav-actions">
+    <button class="lang" bindtap="toggleLanguage" aria-label="切换中英文">{{lang === 'en' ? '中' : 'EN'}}</button>
+    <view class="pulse"></view>
+  </view>
 </view>
 <field-structure-9d />

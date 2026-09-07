@@ -1,4 +1,5 @@
 const { publicRequest } = require('../../utils/api')
+const { initPage } = require('../../utils/i18n')
 
 Page({
   data: {
@@ -8,16 +9,16 @@ Page({
       { title: '梦境探索', titleEn: 'Dream Field', note: '梦境，是未被语言表达的信息。从潜意识的线索中，重新理解自己。', noteEn: 'Read what experience has not yet been able to say directly.', web: '/dream' },
       { title: '修炼技术', titleEn: 'Practice Systems', note: '把觉察带入呼吸、身体与日常节律，在可重复的练习中建立真实改变。', noteEn: 'Bring awareness into breath, body and repeatable daily practice.', web: '/practice' },
       { title: '潜意识重塑', titleEn: 'Subconscious Repatterning', note: '看见隐藏的惯性。改变并非否定过去，而是让新的可能进入生命。', noteEn: 'See hidden inertia and make room for a different response.', web: '/#gates' },
-      { title: '多维叙事', titleEn: 'Multidimensional Narratives', note: '探索不同视角的生命故事。每一次阅读，都是与自身经验的重新连接。', noteEn: 'Meet lived experience again through another point of view.', path: '/pages/narratives/index' },
     ],
     exchanges: [],
     expandedProductId: '',
     practiceKicker: 'PRACTICE & ACCESS',
   },
   async onLoad() {
+    initPage(this)
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')
-      const priority = ['everything', 'narrative-all', 'breath', 'intuition', 'heart-reset', 'ascending-heart', 'year', 'month']
+      const priority = ['day', 'month', 'year']
       const exchanges = priority.map(id => data.items.find(item => item.productId === id)).filter(Boolean).map(item => ({
         ...item,
         priceLabel: `¥${item.priceFen / 100}${item.accessType === 'permanent' ? ' 永久' : item.days === 30 ? ' / 月' : ' / 年'}`,
@@ -25,6 +26,7 @@ Page({
       this.setData({ exchanges })
     } catch (_) {}
   },
+  onShow() { initPage(this) },
   toggleExchange(event) {
     const productId = event.currentTarget.dataset.product
     this.setData({ expandedProductId: this.data.expandedProductId === productId ? '' : productId })

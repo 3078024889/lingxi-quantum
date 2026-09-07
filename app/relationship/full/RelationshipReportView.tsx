@@ -8,6 +8,7 @@ import { DIM_LABEL, type LifeVector, type LifeVectorDim } from "@/lib/life-vecto
 import SpiralField from "@/components/SpiralField";
 import PortalSpinner from "@/components/PortalSpinner";
 import ShareButton from "@/components/ShareButton";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 
 // 同一个 bug、同一个修法：见 RelationshipFlow.tsx 里的注释——直接读
 // document.documentElement 的class不会随语言切换按钮重新渲染，改用
@@ -310,11 +311,18 @@ export default function RelationshipReportView({ id }: { id: string }) {
       <div
         ref={reportRef}
         className={`${printMode ? "rel-print-mode " : ""}lx-report-tone-light lx-theme-${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"} mt-8 px-1 py-4`}
-        style={{
-          backgroundImage: `url(/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png)`,
-          backgroundSize: "cover", backgroundPosition: "top center", backgroundAttachment: "local",
-        }}
       >
+        <UnifiedReportCover
+          art={`/images/relationship-full/${relType === "business" ? "business" : relType === "general" ? "general" : "romantic"}/page-0.png`}
+          eyebrow="LINGXI RELATIONSHIP RESONANCE"
+          titleZh={relType === "business" ? "合伙商业关系" : relType === "general" ? "重要关系" : "亲密关系"}
+          titleEn={relType === "business" ? "Business Partnership" : relType === "general" ? "Significant Relationship" : "Intimate Relationship"}
+          archiveZh="灵犀场 · 关系共振档案"
+          archiveEn="Lingxi Field · Relationship Resonance Archive"
+          statementZh="不是替两个人决定去留，而是照见吸引、互补、摩擦与边界如何同时发生。"
+          statementEn="It does not decide whether two people stay or leave; it reveals how attraction, complementarity, friction and boundaries coexist."
+          subject={names ? `${names.a} × ${names.b}` : ""}
+        />
         <p className="text-center font-display text-xs uppercase tracking-widest2 text-amber">
           {relType === "business" ? (
             <Bi zh="合伙商业关系共振" en="Business Partnership Resonance" />

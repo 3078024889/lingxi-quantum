@@ -8,7 +8,7 @@ import BreathStructure from "@/components/BreathStructure";
 import BreathDiagram from "@/components/diagrams/BreathDiagram";
 import PracticeChart from "@/components/PracticeChart";
 import CosmicField from "@/components/CosmicField";
-import { getAccess, hasUnlock } from "@/lib/access";
+import { getAccess } from "@/lib/access";
 
 export const metadata = {
   title: "量子息法 | 灵犀 · Quantum Breath Method | Lingxi",
@@ -66,8 +66,8 @@ const AXIS_POINTS = [
 ];
 
 export default async function BreathPage() {
-  const { user, unlocks } = await getAccess();
-  const unlocked = !!user && hasUnlock(unlocks, "breath");
+  const { user } = await getAccess();
+  const unlocked = true;
 
   return (
     <>
@@ -80,7 +80,7 @@ export default async function BreathPage() {
           </div>
           <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
             <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-              <Bi zh="修炼技术 · 单次激活 · 永久有效" en="Practice · one activation · yours forever" />
+              <Bi zh="修炼技术 · 免费开放" en="Practice · Free Access" />
             </p>
             <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
               <Bi zh="量子息法" en="The Quantum Breath Method" />

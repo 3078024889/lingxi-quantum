@@ -1,6 +1,7 @@
 const { publicRequest, request } = require('../../utils/api')
 const { payForSku } = require('../../utils/payment')
 const { getReportWebPath } = require('../../utils/report-routes')
+const { initPage } = require('../../utils/i18n')
 
 function describeDelivery(item) {
   if (item.category === 'narrative') return '支付确认后自动加入“我的场域”，可进入完整叙事'
@@ -32,10 +33,12 @@ function confirmPurchase(item, validityLabel) {
 
 Page({
   data: {
+    lang: 'zh',
     item: null, loading: true, loadError: '', paying: false, opening: false,
     owned: false, agreed: false, deliveryLabel: '', validityLabel: '', from: 'explore',
   },
   async onLoad(options) {
+    initPage(this)
     if (options.product === 'stellar-trace') {
       wx.redirectTo({ url: `/pages/web/index?path=${encodeURIComponent('/stellar-trace')}` })
       return
@@ -44,6 +47,7 @@ Page({
     this.setData({ from: options.from === 'narratives' ? 'narratives' : 'explore' })
     await this.loadItem()
   },
+  onShow() { initPage(this) },
   async loadItem() {
     this.setData({ loading: true, loadError: '' })
     try {

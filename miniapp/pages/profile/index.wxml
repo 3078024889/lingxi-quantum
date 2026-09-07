@@ -22,19 +22,19 @@
       </button>
 
       <view class="archive-tools lx-veil">
-        <input value="{{query}}" placeholder="搜索已购报告、叙事或修炼" bindinput="onSearch"/>
+        <input value="{{query}}" placeholder="{{lang === 'en' ? 'Search reports and access' : '搜索报告与权益'}}" bindinput="onSearch"/>
         <view wx:if="{{query}}" class="clear-search" bindtap="clearSearch">清除</view>
       </view>
 
       <view class="quick-links">
         <button class="quick-link" bindtap="explore">探索场域精测</button>
-        <button class="quick-link" bindtap="narratives">浏览多维叙事</button>
+        <button class="quick-link" bindtap="free">{{lang === 'en' ? 'Free dream & practice' : '免费梦境与修炼'}}</button>
         <button class="quick-link" bindtap="website">进入灵犀场官网</button>
       </view>
 
       <view class="lx-section">
         <view class="lx-section-title">生命档案与已开启内容<text class="section-en">LIFE ARCHIVES & OPEN FIELDS</text></view>
-        <view wx:if="{{!filteredOrders.length}}" class="lx-empty lx-veil">尚未找到已购内容。<br/>可前往场域精测或多维叙事继续探索。</view>
+        <view wx:if="{{!filteredOrders.length}}" class="lx-empty lx-veil">{{lang === 'en' ? 'No report found. Continue with Field Insights or free exploration.' : '尚未找到报告。可前往场域精测或免费探索继续。'}}</view>
         <view wx:for="{{filteredOrders}}" wx:key="id" class="lx-card lx-veil order" data-order="{{item}}" bindtap="openOrder">
           <view class="lx-card-title">{{item.submission_name || item.productName}}</view>
           <view class="lx-card-note">{{item.webOnly ? '网页历史档案' : '权益已开启'}} · {{item.paidLabel}}</view>
@@ -56,6 +56,7 @@
         <view class="lx-card lx-veil">
           <view class="lx-card-note">已有网页灵犀账户或已购报告？登录后确认连接，即可迁入既有权益与报告；系统不会自动猜测或合并身份。</view>
           <button class="lx-button compact" bindtap="connectExistingAccount">连接已有灵犀账户</button>
+          <button class="lx-button compact secondary" bindtap="switchAccount">{{lang === 'en' ? 'Switch account' : '切换账户'}}</button>
         </view>
       </view>
 

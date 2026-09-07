@@ -1,0 +1,6 @@
+<view class="lx-page"><field-nav/><view class="lx-content">
+  <view class="lx-kicker">FREE EXPLORATION</view>
+  <view class="lx-title">{{lang === 'en' ? 'Free Dream & Practice' : '免费梦境与修炼'}}</view>
+  <view class="lx-subtitle">{{lang === 'en' ? 'No purchase is required. Open any practice and continue on the web.' : '无需购买。选择梦境或修炼技术后，直接进入网页继续。'}}</view>
+  <view class="lx-section"><view wx:for="{{items}}" wx:key="path" class="lx-card lx-veil" data-index="{{index}}" bindtap="open"><view class="lx-card-title">{{lang === 'en' ? item.titleEn : item.title}}</view><view class="lx-card-note">{{lang === 'en' ? item.noteEn : item.note}}</view><view class="arrow">{{lang === 'en' ? 'OPEN FREE →' : '免费进入 →'}}</view></view></view>
+</view></view>

@@ -412,10 +412,10 @@ function CheckoutInner() {
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
       <h1 className="font-display text-2xl font-light text-bone">
-        <Bi zh="场域订单" en="Field Order" />
+        <Bi zh="数字服务订单" en="Digital Service Order" />
       </h1>
       <p className="mt-1 text-xs text-bone-mute">
-        <Bi zh="确认这次能量交换的内容，无误后再提交支付" en="Confirm this exchange before you submit payment" />
+        <Bi zh="请确认软件服务、交付内容与金额，无误后再提交支付" en="Confirm the software service, deliverable and amount before payment" />
       </p>
 
       {status === "loading" && (
@@ -437,7 +437,7 @@ function CheckoutInner() {
           <div className="mt-6 overflow-hidden rounded-sm border border-white/10 bg-void-deep/80 backdrop-blur-sm">
             <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-5 py-3">
               <p className="text-[11px] uppercase tracking-widest2 text-bone-mute">
-                <Bi zh="场域订单号" en="Field Order No." /> {orderIdRef.current ?? t("提交支付后生成", "Created on payment")}
+                <Bi zh="数字服务订单号" en="Digital Service Order No." /> {orderIdRef.current ?? t("提交支付后生成", "Created on payment")}
               </p>
               <p className="text-[11px] uppercase tracking-widest2 text-lattice">
                 <Bi zh="待支付" en="Pending" />
@@ -482,7 +482,7 @@ function CheckoutInner() {
                 看得见的承诺，不是买完才知道。 */}
             <div className="border-t border-white/10 px-5 py-3">
               <p className="text-xs uppercase tracking-widest2 text-bone-mute">
-                <Bi zh="本次交换包含" en="This Exchange Includes" />
+                <Bi zh="本次数字服务包含" en="This Digital Service Includes" />
               </p>
               <p className="mt-1.5 text-xs leading-6 text-bone-dim">
                 <Bi zh={product.note} en={product.noteEn} />
@@ -501,6 +501,11 @@ function CheckoutInner() {
               <p className="text-xs text-bone-dim"><Bi zh="应付总额" en="Total Due" /></p>
               <p className="font-display text-xl text-amber">¥{product.priceRmb}</p>
             </div>
+            {paymentMethod === "alipay" && (
+              <div className="mt-3 border border-[#1677ff]/25 bg-[#1677ff]/10 px-4 py-3 text-xs leading-6 text-bone-dim">
+                <Bi zh="建议在手机浏览器打开本页并使用支付宝，跳转与回到报告的体验更顺畅；电脑端也可继续使用支付宝网页收银台。" en="For the smoothest redirect and return experience, open this page in a mobile browser and use Alipay. Desktop Alipay checkout remains available." />
+              </div>
+            )}
           </div>
 
           {/* 支付方式选择 */}

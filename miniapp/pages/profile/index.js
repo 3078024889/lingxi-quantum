@@ -1,4 +1,5 @@
-const { request } = require('../../utils/api')
+const { request, switchAccount } = require('../../utils/api')
+const { initPage } = require('../../utils/i18n')
 
 function displayDate(value) {
   if (!value) return ''
@@ -21,8 +22,9 @@ function confirmOpenWebArchive() {
 }
 
 Page({
-  data: { loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null, archetype: { ready: false, completed: 0, missing: [] } },
-  onShow() { this.load() },
+  data: { lang: 'zh', loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null, archetype: { ready: false, completed: 0, missing: [] } },
+  onLoad() { initPage(this) },
+  onShow() { initPage(this); this.load() },
   async load() {
     this.setData({ loading: true })
     try {
@@ -56,7 +58,7 @@ Page({
   clearSearch() { this.applyFilter('') },
   manifestation() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/live-as')}` }) },
   explore() { wx.switchTab({ url: '/pages/explore/index' }) },
-  narratives() { wx.switchTab({ url: '/pages/narratives/index' }) },
+  free() { wx.switchTab({ url: '/pages/free/index' }) },
   openArchetypeProgress() { wx.navigateTo({ url: '/pages/archetype-progress/index' }) },
   website() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
   openPolicy(event) {
@@ -73,6 +75,20 @@ Page({
       wx.hideLoading()
       wx.showModal({ title: '暂时无法连接账户', content: (error.data && error.data.error) || '请稍后重试', showCancel: false })
     }
+  },
+  switchAccount() {
+    wx.showModal({
+      title: this.data.lang === 'en' ? 'Switch account' : '切换账户',
+      content: this.data.lang === 'en' ? 'This clears the local session and signs in again with the WeChat identity currently active on this device. Existing reports will not be deleted.' : '这会清除本机登录会话，并使用当前设备正在使用的微信身份重新登录。既有报告不会被删除。',
+      confirmText: this.data.lang === 'en' ? 'Switch' : '确认切换',
+      success: async ({ confirm }) => {
+        if (!confirm) return
+        wx.showLoading({ title: this.data.lang === 'en' ? 'Switching' : '正在切换' })
+        try { await switchAccount(); await this.load(); wx.showToast({ title: this.data.lang === 'en' ? 'Switched' : '已重新登录', icon: 'success' }) }
+        catch (_) { wx.showModal({ title: this.data.lang === 'en' ? 'Unable to switch' : '切换失败', content: this.data.lang === 'en' ? 'Please switch the WeChat identity in Developer Tools or WeChat, then try again.' : '请先在开发者工具或微信中切换微信身份，再重试。', showCancel: false }) }
+        finally { wx.hideLoading() }
+      },
+    })
   },
   async openOrder(event) {
     const order = event.currentTarget.dataset.order

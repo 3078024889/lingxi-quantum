@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
@@ -187,16 +188,7 @@ export default function RomanceReportView({ id }: { id: string }) {
       </div>
 
       <div ref={reportRef} className="lx-report-tone-light lx-theme-romance mt-4">
-        <div
-          className="relative overflow-hidden rounded-sm"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/romance-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
-        >
-          <div className="absolute inset-x-0 top-[30%] text-center">
-            <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
-              {name || t("你的", "Your")} <Bi zh="桃花磁场档案" en="Romance Resonance Archive" />
-            </h1>
-          </div>
-        </div>
+        <UnifiedReportCover art="/images/romance-full/page-0.png" eyebrow="LINGXI ROMANCE RESONANCE" titleZh="桃花磁场" titleEn="Romance Resonance" archiveZh="灵犀场 · 吸引模式档案" archiveEn="Lingxi Field · Attraction Pattern Archive" statementZh="不是预言一段关系，而是照见你如何靠近、辨认与承接亲密。" statementEn="Not a prediction of romance, but a mirror of how you approach, recognize and sustain intimacy." subject={name} />
 
         {/* v300：与生命韧性对齐——每章占满一屏、背景是完整的 PDF 原图、
             文字浮在浅色玻璃面板上。之前这里是深色遮罩小卡片

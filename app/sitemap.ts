@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
-import { NARRATIVES } from "@/lib/narratives";
 import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +32,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/learn/manifestation", "/learn/manifestation-methods", "/learn/manifestation-not-working",
     "/learn/manifestation-signs", "/learn/manifestation-journal", "/learn/manifest-money",
     "/learn/manifest-person", "/learn/manifest-love", "/learn/method-369", "/learn/affirmations", "/learn/dream-same-person", "/learn/twin-flame", "/learn/inner-friction", "/learn/what-is-consciousness", "/learn/letting-go", "/learn/angel-numbers", "/learn/emptiness", "/learn/energy-drain",
-    "/narrative", ...NARRATIVES.map((n) => `/narrative/${n.slug}`),
     "/learn/moon-manifestation", "/learn/law-of-attraction-vs", "/learn/subconscious-power",
     "/learn/dream", "/learn/dream-symbols", "/learn/more-dream-meanings", "/learn/recurring-dreams",
     "/learn/lucid-dreaming", "/learn/remember-dreams", "/learn/sleep-paralysis", "/learn/dreams-premonition",

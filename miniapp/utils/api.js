@@ -48,4 +48,14 @@ async function publicRequest(path) {
   return rawRequest({ url: `${API_BASE}${path}`, method: 'GET' })
 }
 
-module.exports = { API_BASE, login, request, publicRequest, wxLogin }
+async function switchAccount() {
+  wx.removeStorageSync('lx_mini_token')
+  wx.removeStorageSync('lx_mini_expires')
+  const app = getApp({ allowDefault: true })
+  if (app && app.globalData) app.globalData.ready = false
+  const token = await login(true)
+  if (app && app.globalData) app.globalData.ready = true
+  return token
+}
+
+module.exports = { API_BASE, login, request, publicRequest, wxLogin, switchAccount }

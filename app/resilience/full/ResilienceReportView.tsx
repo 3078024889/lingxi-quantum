@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
@@ -204,20 +205,7 @@ export default function ResilienceReportView({ id }: { id: string }) {
           {/* ========================================================
               第 1 页：封面 (Background: page-0.png)
               ======================================================== */}
-          <div className="relative w-full aspect-[1/1.414] overflow-hidden rounded-xl shadow-2xl print:shadow-none print:w-full print:h-screen print:rounded-none page-break-after-always">
-            <div className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-                 style={{ backgroundImage: `url('/images/resilience-full/page-0.png'), linear-gradient(135deg, #1e293b, #0f172a)` }} />
-            <div className="absolute inset-0 z-10 flex flex-col justify-center items-center p-6 md:p-16">
-              <div className="lx-report-glass p-8 md:p-12 w-full max-h-[90%] shadow-2xl flex flex-col justify-center items-center h-1/2">
-                <h1 className="font-display text-4xl md:text-6xl font-light tracking-[0.08em] text-[#3A2E52] text-center" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
-                  {name || t("你的", "Your")} <Bi zh="生命韧性档案" en="Resilience Archive" />
-                </h1>
-                <p className="mt-6 text-lg md:text-xl text-[#3A2E52]/80 tracking-widest">
-                  Life Resilience Index
-                </p>
-              </div>
-            </div>
-          </div>
+          <UnifiedReportCover art="/images/resilience-full/page-0.png" eyebrow="LINGXI LIFE RESILIENCE" titleZh="生命韧性" titleEn="Life Resilience" archiveZh="灵犀场 · 恢复结构档案" archiveEn="Lingxi Field · Recovery Structure Archive" statementZh="受冲时，究竟何力使你不散；每一次撑回来，又留下什么后账。" statementEn="See what keeps you intact under impact, and what each recovery quietly costs." subject={name} />
 
           {/* ========================================================
               第 2-12 页：正文章节 (Background: page-1.png 到 page-11.png)

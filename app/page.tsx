@@ -45,8 +45,8 @@ const HOME_FAQ: BilingualFaqItem[] = [
   },
   {
     qZh: "灵犀场提供哪些产品？", qEn: "What products does Lingxi Field offer?",
-    aZh: "场域精测（生命图谱、关系共振、生命灵签、量子生命镜像、生命韧性指数、桃花磁场指数、财富创造地图、今日潮汐）、梦境智能、四大修炼技术（量子息法、直觉丹道、归零心诀、上升心经）、潜意识重塑、多维叙事。",
-    aEn: "Field Insights (Life Blueprint, Relationship Resonance, Life Oracle, Quantum Life Mirror, Life Resilience Index, Romance Resonance Index, Wealth Creation Map, Today’s Tide), Dream Intelligence, the Four Practices (Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart), Subconscious Rewriting, and Dimensional Narrative.",
+    aZh: "场域精测（生命图谱、关系共振、生命灵签、量子生命镜像、生命韧性指数、桃花磁场指数、财富创造地图、今日潮汐）、免费梦境探索、四大免费修炼技术，以及意识显化空间。",
+    aEn: "Field Insights, free Dream Exploration, four free practices, and the Manifestation Space.",
   },
   {
     qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",
@@ -131,20 +131,6 @@ export default function Home() {
         </section>
 
         {/* 6. 量子息法 */}
-        {/* 5.5 多维叙事入口 */}
-        <section className="px-6 py-24 sm:py-28">
-          <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12 text-center">
-            <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="多维叙事入口" en="Dimensional Narratives" /></p>
-            <h2 className="mt-6 font-display text-4xl font-light text-bone"><Bi zh="阅读不同意识层级中的现实结构" en="Read reality across levels of consciousness" /></h2>
-            <p className="mx-auto mt-6 max-w-xl text-base leading-9 text-bone-dim">
-              <Bi zh="长篇传输 · 现实重写记录 · 场域叙事 · 场域观测日志——灵犀原创，持续生长的意识记录。现实不是被经历的，而是被不同层级的意识持续生成。" en="Novels · Reality Rewrite Records · Field Narratives · Field Observation Logs — original records from the Field, growing without end. Reality is not experienced; it is continuously generated." />
-            </p>
-            <Link href="/narrative" className="mt-10 inline-block border border-amber/50 px-10 py-4 font-display text-sm uppercase tracking-widest2 text-amber transition hover:bg-amber hover:text-void-deep">
-              <Bi zh="进入多维叙事" en="Enter the Narratives" />
-            </Link>
-          </div>
-        </section>
-
         <section className="border-t border-white/5 bg-void-deep px-6 py-28 sm:py-36">
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-16 sm:flex-row sm:justify-between">
             <div className="max-w-md">

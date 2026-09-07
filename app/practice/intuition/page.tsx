@@ -3,7 +3,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import GateMind from "@/components/gates/GateMind";
 import PracticeGate from "@/components/PracticeGate";
-import { getAccess, hasUnlock } from "@/lib/access";
+import { getAccess } from "@/lib/access";
 import IntuitionDiagram from "@/components/diagrams/IntuitionDiagram";
 import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
@@ -11,8 +11,8 @@ import Bi from "@/components/Bi";
 export const metadata = { title: "直觉丹道 · 修炼技术 | 灵犀 · The Intuitive Way | Lingxi", description: "直觉丹道：区分世界的声音与心之深处的耳语，四步修炼法重铸情感历史、接取内在声音。The Intuitive Way — a four-step practice recasting emotional history and accessing the inner voice." };
 
 export default async function IntuitionPage() {
-  const { user, unlocks } = await getAccess();
-  const unlocked = !!user && hasUnlock(unlocks, "intuition");
+  const { user } = await getAccess();
+  const unlocked = true;
 
   return (
     <>

@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
@@ -195,16 +196,7 @@ export default function DailyTideReportView({ id }: { id: string }) {
       </div>
 
       <div ref={reportRef} className="lx-report-tone-light lx-theme-daily mt-4">
-        <div
-          className="relative overflow-hidden rounded-sm"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/daily-tide-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
-        >
-          <div className="absolute inset-x-0 top-[30%] text-center">
-            <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
-              {name || t("你的", "Your")} <Bi zh="今日潮汐档案" en="Today’s Tide Archive" />
-            </h1>
-          </div>
-        </div>
+        <UnifiedReportCover art="/images/daily-tide-full/page-0.png" eyebrow="LINGXI DAILY TIDE" titleZh="今日潮汐" titleEn="Today’s Tide" archiveZh="灵犀场 · 当日节律档案" archiveEn="Lingxi Field · Daily Rhythm Archive" statementZh="不替你决定今日，只把当下可用之力与应避之耗照明。" statementEn="It does not decide your day; it illuminates the forces available now and the drains worth avoiding." subject={name} />
 
         {/* v300：与生命韧性对齐——每章占满一屏、背景是完整的 PDF 原图、
             文字浮在浅色玻璃面板上。之前这里是深色遮罩小卡片

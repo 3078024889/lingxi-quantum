@@ -6,16 +6,16 @@ import ClickRipple from "@/components/ClickRipple";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import FieldStructure9D from "@/components/FieldStructure9D";
 
-const SITE = "https://lingxifield.com";
+const SITE = "https://lingxifield.cn";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: "灵犀场 LINGXIFIELD ｜ 意识显化数字空间 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事",
+    default: "灵犀场 LINGXIFIELD ｜ 意识显化数字空间 · 场域精测 · 免费梦境 · 免费修炼",
     template: "%s ｜ 灵犀场 LINGXIFIELD · 意识显化数字空间",
   },
   description:
-    "灵犀场（LINGXIFIELD）是一座原创的意识显化数字空间，融合场域精测、意识显化、梦境探索、修炼技术、潜意识重塑与多维叙事，帮助用户建立可观察、可反思、可持续更新的个人生命档案。",
+    "灵犀场（LINGXIFIELD）是一座原创的意识显化数字空间，融合场域精测、意识显化、免费梦境探索、免费修炼技术与潜意识重塑，帮助用户建立可观察、可反思、可持续更新的个人生命档案。",
   keywords: [
     "显化", "意识显化", "显化方法", "显化技巧", "现实回路", "吸引力法则",
     "解梦", "梦境解析", "周公解梦", "梦的含义", "潜意识", "潜意识改写",

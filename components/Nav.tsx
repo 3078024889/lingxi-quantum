@@ -13,7 +13,6 @@ const links: { href: string; zh: string; en: string; rune: RuneKind }[] = [
   { href: "/dream", zh: "探索梦境", en: "Dreams", rune: "crescent" },
   { href: "/practice", zh: "修炼技术", en: "Practices", rune: "flame" },
   { href: "/#gates", zh: "重塑潜意识", en: "Rewrite", rune: "spiral" },
-  { href: "/narrative", zh: "多维叙事", en: "Narratives", rune: "infinity" },
   { href: "/learn", zh: "探索", en: "Learn", rune: "compass" },
   { href: "/membership", zh: "能量交换场", en: "Access", rune: "crystal" },
 ];
@@ -74,8 +73,8 @@ export default function Nav() {
             </span>
             <span className="mt-1 hidden font-display text-[12px] tracking-[0.1em] text-lattice/85 sm:text-[13px] md:block md:text-sm">
               <Bi
-                zh="意识显化数字空间 · 场域精测 · 探索梦境 · 修炼技术 · 重塑潜意识 · 多维叙事"
-                en="A Living Digital Space for Conscious Manifestation · Field Insights · Dreams · Practices · Rewrite · Narratives"
+                zh="意识显化数字空间 · 场域精测 · 免费梦境 · 免费修炼 · 重塑潜意识"
+                en="Manifestation Space · Field Insights · Free Dreams · Free Practices · Subconscious Rewrite"
               />
             </span>
           </Link>

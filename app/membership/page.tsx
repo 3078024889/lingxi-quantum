@@ -12,27 +12,18 @@ import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/s
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 import { MEMBERSHIP_CONTENT } from "@/lib/membership-content";
+import Link from "next/link";
 
 const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
   {
     qZh: "灵犀场的能量交换项目分几种？", qEn: "How many kinds of energy exchange does Lingxi Field offer?",
-    aZh: "分两类：一次性开启类（四大修炼技术等），完成一次能量交换后永久有效；周期性场域连接（显化与梦境解读、多维叙事年度解锁、神尊·全域解锁），按周期连接，到期后由你自行决定是否延续，不会自动扣款。",
-    aEn: "There are two kinds: one-time openings (like the Four Practices), permanently active after a single energy exchange; and periodic field connections (Manifestation & Dream Interpretation, the yearly Narrative unlock, and Sovereign · All-Field Access), connected for a fixed period, with renewal always your own choice — nothing auto-charges.",
-  },
-  {
-    qZh: "神尊·全域解锁包含什么？", qEn: "What does Sovereign · All-Field Access include?",
-    aZh: "神尊·全域解锁是一份为期一年的全域通行证：有效期内解锁灵犀场全部付费内容，包括场域精测的 10 个核心产品、四大修炼技术、显化与梦境探索、多维叙事与订阅内容，也自动包含这一年内未来发布的任何新报告、新修炼技术与新场域模块。它不是若干权益的拼盘，而是完整进入持续生长的灵犀场。",
-    aEn: "Sovereign · All-Field Access is a one-year pass to every paid Lingxi Field experience: all ten Field Insight products, the Four Practices, Manifestation & Dream Exploration, Dimensional Narratives and subscriptions, plus any new report, practice, or field module released while the pass remains active. It is not a bundle of isolated benefits; it is complete entry into an evolving Lingxi Field.",
-  },
-  {
-    qZh: "为什么会设计「神尊·全域解锁」这一层？", qEn: "Why does Sovereign · All-Field Access exist as its own tier?",
-    aZh: "灵犀场最初并不是为了创造一个个独立工具。生命图谱帮助看见结构，关系共振帮助理解连接，修炼技术帮助回到内在，显化练习帮助创造现实，多维叙事帮助拓展意识——这些模块背后，本质上都指向同一个方向：理解自己。当这些部分连接起来，它们才真正形成一个完整的场。",
-    aEn: "Lingxi Field wasn't originally created as a set of separate tools. The Life Map helps you see your structure. Relationship Resonance helps you understand connection. The practices help you return inward. Manifestation helps you create reality. Dimensional Narrative helps you expand consciousness. Underneath, these all point toward the same thing: understanding yourself. Connected together, they form a genuinely complete field.",
+    aZh: "当前只有两类收费服务：场域精测的单份数字报告，以及意识显化的单日、月度或年度连接。梦境探索和四大修炼技术均已免费开放；订阅到期后由你自行决定是否延续，不会自动扣款。",
+    aEn: "Only two service types are paid: individual Field Insight reports and one-day, monthly or yearly access to the Manifestation Space. Dream Exploration and all four practices are free. Nothing renews automatically.",
   },
   {
     qZh: "灵犀场支持哪些方式进入？", qEn: "How can I enter Lingxi Field's energy exchange?",
-    aZh: "灵犀场正在逐步开放不同地区的能量交换方式，目前支持微信支付，接下来会陆续开通支付宝等更多国内渠道，海外支付渠道也在持续接入中——会根据全球用户的使用习惯，开放更多便捷、安全的进入方式。",
-    aEn: "Lingxi Field is gradually opening energy-exchange options across different regions. WeChat Pay is currently supported, with Alipay and other domestic channels coming soon, and international payment options in ongoing development — more convenient, secure ways to enter will open as global usage grows.",
+    aZh: "当前支持微信支付与支付宝网页支付。手机浏览器使用支付宝的跳转与返回体验通常更顺畅；电脑端也可继续使用网页收银台。",
+    aEn: "WeChat Pay and Alipay web payment are supported. Alipay generally redirects and returns more smoothly in a mobile browser, while desktop web checkout remains available.",
   },
   {
     qZh: "灵犀场为什么叫「能量交换」，不直接叫「付款」？", qEn: "Why does Lingxi Field call it 'energy exchange' instead of 'payment'?",
@@ -43,7 +34,7 @@ const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
 
 
 
-export const metadata = { title: "能量交换 | 灵犀场 · Energy Exchange | Lingxi", description: "能量交换：以神尊年度全域通行证进入全部付费内容，或单独开启场域精测、修炼技术、显化梦境与多维叙事。Sovereign annual access opens every paid Lingxi Field experience, including future releases during the active term.", alternates: { canonical: "/membership" } };
+export const metadata = { title: "数字服务与订阅 | 灵犀场 · Digital Services | Lingxi", description: "灵犀场数字服务：场域精测个人报告与意识显化固定期限订阅；梦境探索和修炼技术免费开放。", alternates: { canonical: "/membership" } };
 
 // 灵犀场不像普通SaaS会员那样写"权益包含"，写的是"进入什么场域、
 // 开启什么能力、获得什么长期体验"——每个产品下面配一份具体的
@@ -139,7 +130,7 @@ function PriceTag({ priceRmb, days, type }: { priceRmb: number; days?: number; t
   );
 }
 
-function PracticeCard({ id, loggedIn }: { id: string; loggedIn: boolean }) {
+function PracticeCard({ id }: { id: string; loggedIn: boolean }) {
   const p = getProduct(id);
   const b = BULLETS[id];
   const shared = MEMBERSHIP_CONTENT[id];
@@ -148,7 +139,7 @@ function PracticeCard({ id, loggedIn }: { id: string; loggedIn: boolean }) {
     <div className="flex flex-col rounded-sm border border-white/10 bg-reading-glass p-8">
       <h3 className="font-display text-2xl text-bone"><Bi zh={p.name} en={p.nameEn} /></h3>
       <p className="mt-2 text-sm text-lattice"><Bi zh={shared.description} en={b.headerEn} /></p>
-      <PriceTag priceRmb={p.priceRmb} type={p.type} />
+      <p className="mt-5 font-display text-2xl text-lattice"><Bi zh="免费开放" en="Free Access" /></p>
       <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice/60"><Bi zh="获得：" en="You receive:" /></p>
       <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-bone-dim">
         {b.items.map((it, i) => (
@@ -157,7 +148,7 @@ function PracticeCard({ id, loggedIn }: { id: string; loggedIn: boolean }) {
       </ul>
       <p className="mt-4 text-xs italic text-bone-soft"><Bi zh={shared.closing ?? b.closingZh} en={b.closingEn} /></p>
       <div className="mt-6">
-        <PlanButton productId={p.id} loggedIn={loggedIn} nameZh={p.name} nameEn={p.nameEn} />
+        <Link href={`/practice/${p.id}`} className="block border border-lattice/45 px-5 py-3 text-center text-sm text-lattice"><Bi zh="免费进入" en="Open Free" /></Link>
       </div>
     </div>
   );
@@ -212,8 +203,8 @@ export default async function MembershipPage({
     ? { tone: "error", zh: "付款遇到了问题，还没有完成扣款。可以重试一次，如果反复失败，联系我们看看是不是账户那边的原因。", en: "Something went wrong and the payment didn't go through. Try again, or reach out if it keeps failing." }
     : null;
 
-  const narrativeAll = getProduct("narrative-all");
-  const everything = getProduct("everything");
+  const narrativeAll = getProduct("__retired_narrative_all");
+  const everything = getProduct("__retired_everything");
   const narrativeContent = MEMBERSHIP_CONTENT["narrative-all"];
   const everythingContent = MEMBERSHIP_CONTENT.everything;
 
@@ -311,7 +302,7 @@ export default async function MembershipPage({
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
               <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="二 · 核心修炼技术" en="II · Core Practices" />
+                <Bi zh="一 · 免费修炼技术" en="I · Free Core Practices" />
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -327,9 +318,9 @@ export default async function MembershipPage({
           <div className="mx-auto max-w-5xl">
             <div className="mb-10 text-center">
               <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="三 · 显化与梦境解读" en="III · Manifestation & Dream Interpretation" />
+                <Bi zh="二 · 意识显化订阅" en="II · Manifestation Subscription" />
               </h2>
-              <p className="mt-3 text-sm text-bone-dim"><Bi zh="进入你的潜意识叙事空间" en="Enter your subconscious narrative space" /></p>
+              <p className="mt-3 text-sm text-bone-dim"><Bi zh="固定期限连接，不自动续费；梦境探索另行免费开放" en="Fixed-term access with no automatic renewal; Dream Exploration is free separately" /></p>
             </div>
             <div className="grid gap-6 sm:grid-cols-3">
               <ManifestCard id="day" loggedIn={!!user} tierZh="单日体验" tierEn="One-Day Pass" />

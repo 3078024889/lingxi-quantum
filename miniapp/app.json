@@ -2,7 +2,7 @@
   "pages": [
     "pages/field/index",
     "pages/explore/index",
-    "pages/narratives/index",
+    "pages/free/index",
     "pages/profile/index",
     "pages/archetype-progress/index",
     "pages/assessment/index",
@@ -23,7 +23,7 @@
     "list": [
       { "pagePath": "pages/field/index", "text": "灵犀场" },
       { "pagePath": "pages/explore/index", "text": "场域精测" },
-      { "pagePath": "pages/narratives/index", "text": "多维叙事" },
+      { "pagePath": "pages/free/index", "text": "免费探索" },
       { "pagePath": "pages/profile/index", "text": "我的" }
     ]
   },

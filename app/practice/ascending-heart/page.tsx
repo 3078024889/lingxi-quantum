@@ -3,15 +3,15 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import GateDestiny from "@/components/gates/GateDestiny";
 import PracticeGate from "@/components/PracticeGate";
-import { getAccess, hasUnlock } from "@/lib/access";
+import { getAccess } from "@/lib/access";
 import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
 
 export const metadata = { title: "上升心经 · 修炼技术 | 灵犀 · The Ascending Heart Sutra | Lingxi", description: "上升心经：光体正迁移向胸腺间的「上升心经」，四式呼吸法助你在行星轴与中枢太阳轴的交汇点上活化自身。The Ascending Heart Sutra — a four-form breath practice at the meeting point of the planetary and central-sun axes." };
 
 export default async function AscendingHeartPage() {
-  const { user, unlocks } = await getAccess();
-  const unlocked = !!user && hasUnlock(unlocks, "ascending-heart");
+  const { user } = await getAccess();
+  const unlocked = true;
 
   return (
     <>

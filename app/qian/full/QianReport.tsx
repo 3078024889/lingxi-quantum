@@ -10,6 +10,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import { stripRepeatedHeading } from "@/lib/text-clean";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 
 // 四段解读对应doc21的报告设计——不是随便起的名字，是"三签怎么组合→
 // 天赋数字地图→当前处在哪个阶段→接下来具体练什么"这条完整的自我
@@ -243,33 +244,7 @@ export default function QianReport({ id }: { id: string }) {
       </div>
 
       <div ref={reportRef} className="lx-report-tone-light lx-theme-qian">
-      <div
-        className="lx-publication-page lx-publication-cover relative flex items-center justify-center overflow-hidden rounded-sm"
-        style={{ backgroundImage: "url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
-      >
-        <div className="lx-report-glass lx-report-glass-readable my-8 px-6 py-12 text-center sm:mx-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
-        <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice">
-          LINGXI LIFE ORACLE
-        </p>
-        <h1 className="mt-4 font-display text-3xl font-light sm:text-4xl">
-          {name || t("你的", "Your")} <Bi zh="生命灵签档案" en="Life Oracle Archive" />
-        </h1>
-        <p className="mt-1 font-display text-sm text-lattice">
-          <Bi zh="灵犀生命灵签 · 完整档案" en="Lingxi Life Oracle · Complete Archive" />
-        </p>
-        <p className="mt-4 text-sm leading-7 text-bone-dim">
-          <Bi zh="三枚灵签，三个维度，一张属于你的生命地图。" en="Three signs, three dimensions — one life map that's entirely your own." />
-        </p>
-
-
-        <p className="mt-8 text-xs text-bone-soft">
-          {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
-        </p>
-        <p className="mt-1 text-xs text-bone-soft">lingxifield.com</p>
-        </div>
-      </div>
+      <UnifiedReportCover art="/images/qian-full/page-0.png" eyebrow="LINGXI LIFE ORACLE" titleZh="生命灵签" titleEn="Life Oracle" archiveZh="灵犀场 · 三重象征档案" archiveEn="Lingxi Field · Three-Sign Archive" statementZh="三枚灵签不是答案，而是与你当下结构展开的一次对话。" statementEn="Three signs are not answers, but a dialogue with the structure of your present life." subject={name} />
 
       {signs.map((sign, i) => (
         <section

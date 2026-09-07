@@ -10,6 +10,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
 import { getProduct } from "@/lib/plans";
 import { stripRepeatedHeading } from "@/lib/text-clean";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 
 // v237：12段合并成11段——财富创造地图+事业使命地图合并成"价值创造
 // 地图"，三张牌（hidden/present/future）的具体解析内容完全没动。
@@ -241,28 +242,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       {/* 封面——LOGO+标题+已揭示的三张牌，就是封面本身，不需要另外
           设计一张专门的封面插画。这个区块本身是reportRef的第一个
           直接子元素，PDF导出会把它当成独立的一页/一个章节截图。 */}
-      <div className="lx-publication-page lx-publication-cover lx-mirror-cover relative flex items-center justify-center overflow-hidden rounded-sm border border-lattice/25 px-6 py-12 text-center" style={{ backgroundColor: "#181030", backgroundImage: "url(/images/tarot-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto h-16 w-16" />
-        <p className="mt-4 font-display text-xs uppercase tracking-widest2 text-lattice">
-          LINGXI QUANTUM TAROT
-        </p>
-        <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
-          <Bi zh="你的灵犀量子生命镜像" en="Your Lingxi Quantum Life Mirror" />
-        </h1>
-        <p className="mt-1 font-display text-sm text-lattice">
-          <Bi zh="灵犀量子生命镜像档案" en="Personal Consciousness Blueprint Report" />
-        </p>
-        <p className="mt-4 text-sm leading-7 text-bone-dim">
-          <Bi zh="三张牌不是答案，而是你与自己深层意识的一次对话。" en="These three cards are not an answer — they are a conversation with your own deeper consciousness." />
-        </p>
-
-
-        <p className="mt-8 text-xs text-bone-soft">
-          {name ? `${name} · ` : ""}{new Date().toLocaleDateString(langEn ? "en-US" : "zh-CN")}
-        </p>
-        <p className="mt-1 text-xs text-bone-soft">lingxifield.com</p>
-      </div>
+      <UnifiedReportCover art="/images/tarot-full/page-0.png" eyebrow="LINGXI LIFE MIRROR" titleZh="生命镜像" titleEn="Life Mirror" archiveZh="灵犀场 · 三重镜像档案" archiveEn="Lingxi Field · Three-Mirror Archive" statementZh="三张牌不是答案，而是你与自己深层意识的一次对话。" statementEn="These three cards are not answers, but a conversation with your deeper consciousness." subject={name} />
 
       {cards.map((card, i) => (
         <section

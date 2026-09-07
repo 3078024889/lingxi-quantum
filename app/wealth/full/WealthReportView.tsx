@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
 import Bi from "@/components/Bi";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 import ShareButton from "@/components/ShareButton";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import WechatPayModal from "@/components/WechatPayModal";
@@ -193,16 +194,7 @@ export default function WealthReportView({ id }: { id: string }) {
       </div>
 
       <div ref={reportRef} className="lx-report-tone-light lx-theme-wealth mt-4">
-        <div
-          className="relative overflow-hidden rounded-sm"
-          style={{ aspectRatio: "3 / 4", backgroundImage: "url(/images/wealth-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
-        >
-          <div className="absolute inset-x-0 top-[30%] text-center">
-            <h1 className="font-display text-2xl font-light text-[#3A2E52]" style={{ textShadow: "0 2px 20px rgba(255,255,255,0.85), 0 1px 2px rgba(255,255,255,0.9)" }}>
-              {name || t("你的", "Your")} <Bi zh="财富创造地图" en="Wealth Creation Map" />
-            </h1>
-          </div>
-        </div>
+        <UnifiedReportCover art="/images/wealth-full/page-0.png" eyebrow="LINGXI WEALTH CREATION MAP" titleZh="财富创造地图" titleEn="Wealth Creation Map" archiveZh="灵犀场 · 价值流动档案" archiveEn="Lingxi Field · Value Flow Archive" statementZh="何事经你之手而增值；何力可一次建立、反复生效。" statementEn="See what gains value through you, and what can be built once to keep working." subject={name} />
 
         {/* v300：与生命韧性对齐——每章占满一屏、背景是完整的 PDF 原图、
             文字浮在浅色玻璃面板上。之前这里是深色遮罩小卡片

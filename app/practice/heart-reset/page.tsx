@@ -3,15 +3,15 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import GateHealth from "@/components/gates/GateHealth";
 import PracticeGate from "@/components/PracticeGate";
-import { getAccess, hasUnlock } from "@/lib/access";
+import { getAccess } from "@/lib/access";
 import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
 
 export const metadata = { title: "归零心诀 · 修炼技术 | 灵犀 · Heart Reset | Lingxi", description: "归零心诀：一套四步呼吸重置练习，让心从信息超载与能量耗散中清空、回归清明与慈悲。The Heart Reset — a four-step breathing practice that clears the heart back to clarity and compassion." };
 
 export default async function HeartResetPage() {
-  const { user, unlocks } = await getAccess();
-  const unlocked = !!user && hasUnlock(unlocks, "heart-reset");
+  const { user } = await getAccess();
+  const unlocked = true;
 
   return (
     <>

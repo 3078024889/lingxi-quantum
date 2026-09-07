@@ -104,12 +104,24 @@ export const MEMBERSHIP_CONTENT: Record<string, MembershipContent> = {
     cta: "开启这项修炼",
     ctaEn: "BEGIN THIS PRACTICE",
   },
+  day: {
+    description: "用一天建立一个真实的意识显化记录。",
+    descriptionEn: "Use one day to establish a real manifestation record.",
+    benefits: [
+      { title: "当日意图记录", titleEn: "Daily intention record" },
+      { title: "现实行动拆解", titleEn: "Real-world action breakdown" },
+      { title: "当日反馈复盘", titleEn: "End-of-day reflection" },
+      { title: "显化日记保存", titleEn: "Saved manifestation journal" },
+    ],
+    cta: "开启单日体验",
+    ctaEn: "OPEN ONE DAY",
+  },
   year: {
     description: "一年探索旅程，最佳价值。",
     descriptionEn: "A year-long journey for sustained observation and the fullest value.",
     benefits: [
       { title: "显化记录空间", titleEn: "Manifestation record space" },
-      { title: "梦境探索档案", titleEn: "Dream exploration archive" },
+      { title: "现实行动与反馈档案", titleEn: "Action and feedback archive" },
       { title: "长期意识成长轨迹", titleEn: "Long-term awareness trajectory" },
       { title: "年度生命主题回顾", titleEn: "Annual life-theme review" },
     ],
@@ -121,7 +133,7 @@ export const MEMBERSHIP_CONTENT: Record<string, MembershipContent> = {
     descriptionEn: "Keep the field open month by month as patterns begin to reveal themselves over time.",
     benefits: [
       { title: "每月显化观察", titleEn: "Monthly manifestation observation" },
-      { title: "梦境持续解析", titleEn: "Ongoing dream interpretation" },
+      { title: "现实行动持续复盘", titleEn: "Ongoing action review" },
       { title: "潜意识变化记录", titleEn: "Subconscious change records" },
       { title: "阶段性生命主题整理", titleEn: "Periodic life-theme review" },
     ],

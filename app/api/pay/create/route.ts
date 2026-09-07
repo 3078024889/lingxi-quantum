@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     }
+    if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });
 
     const supabase = createClient();
     const {

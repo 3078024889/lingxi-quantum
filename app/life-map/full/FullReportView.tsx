@@ -9,6 +9,7 @@ import { stripMarkdownArtifacts, stripRepeatedHeading } from "@/lib/text-clean";
 import { lifemapTypeImage, lifemapTypeNameEn } from "@/lib/lifemap-type-images";
 import ShareButton from "@/components/ShareButton";
 import { useLang } from "@/lib/useLang";
+import UnifiedReportCover from "@/components/UnifiedReportCover";
 
 type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
 type HumanDesignResult = { personality: GateActivation[]; design: GateActivation[]; sunConsciousGate: number; sunUnconsciousGate: number };
@@ -381,16 +382,7 @@ export default function FullReportView({ id }: { id: string }) {
              "reportRef的第一个直接子元素=封面，其余每个直接子元素各自
              对应一个章节"来切的，如果这里拆成好几个平级的<div>，会被
              误当成多出来的"章节"，导致后面12个真章节的标题全部错位。 */}
-          <div
-            className="relative overflow-hidden rounded-sm"
-            style={{ aspectRatio: "3 / 4", backgroundColor: "#1a2038", backgroundImage: "url(/images/lifemap/page-0.png)", backgroundSize: "cover", backgroundPosition: "center" }}
-          >
-            <div className="absolute inset-x-0 top-[26%] text-center">
-              <h1 className="font-display text-2xl font-light text-white lm2-print-title" style={{ textShadow: "0 2px 18px rgba(0,0,0,0.55)" }}>
-          {langEn ? lifemapTypeNameEn(coreTypeName) : coreTypeName}
-              </h1>
-            </div>
-          </div>
+          <UnifiedReportCover art="/images/lifemap/page-0.png" eyebrow="LINGXI LIFE MAP" titleZh="生命图谱" titleEn="Life Map" archiveZh="灵犀场 · 生命结构档案" archiveEn="Lingxi Field · Life Structure Archive" statementZh={`诸法不是标签，而是从不同尺度照见同一生命结构。${coreTypeName ? ` 核心原型：${coreTypeName}。` : ""}`} statementEn={`Multiple systems are not labels; they observe one life structure at different scales.${coreTypeName ? ` Core archetype: ${lifemapTypeNameEn(coreTypeName)}.` : ""}`} subject={name} />
 
           {lifemapTypeImage(coreTypeName) && (
             <section className="lx-publication-page lx-publication-card-page lx-art-lifemap-1 mt-6 flex items-center justify-center overflow-hidden rounded-sm p-6 sm:p-10">

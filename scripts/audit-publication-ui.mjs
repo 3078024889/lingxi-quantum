@@ -41,8 +41,8 @@ if (!relationship.includes("lx-publication-copy")) failures.push("relationship: 
 if (!relationship.includes("lx-report-glass-readable")) failures.push("relationship: readable publication panel is missing");
 const mirror = readFileSync(resolve(root, "app/mirror/reading/full/TarotReadingReport.tsx"), "utf8");
 const oracle = readFileSync(resolve(root, "app/qian/full/QianReport.tsx"), "utf8");
-if (!mirror.includes("lx-publication-cover lx-mirror-cover")) failures.push("life-mirror: vertical readable cover is missing");
-if (!oracle.includes("lx-publication-cover")) failures.push("life-oracle: vertical cover is missing");
+if (!mirror.includes("UnifiedReportCover")) failures.push("life-mirror: shared publication cover is missing");
+if (!oracle.includes("UnifiedReportCover")) failures.push("life-oracle: shared publication cover is missing");
 for (const [name, source] of [["life-mirror", mirror], ["life-oracle", oracle]]) {
   if (!source.includes("featurePages:" )) failures.push(`${name}: PDF card pages are not declared through the shared exporter`);
   if (!source.includes("lx-publication-card-page")) failures.push(`${name}: web card pages are not using the publication card primitive`);

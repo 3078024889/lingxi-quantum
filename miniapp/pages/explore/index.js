@@ -1,13 +1,16 @@
 const { publicRequest } = require('../../utils/api')
+const { initPage } = require('../../utils/i18n')
 Page({
-  data: { loading: true, items: [], engineLine1: 'Web · Astronomical & Temporal Structure', engineLine2: 'Mini Program · Lingxifield Dendritic Assessment' },
+  data: { lang: 'zh', loading: true, items: [], engineLine1: 'Web · Astronomical & Temporal Structure', engineLine2: 'Mini Program · Lingxifield Dendritic Assessment' },
   async onLoad() {
+    initPage(this)
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')
       this.setData({ items: data.items.filter(item => item.category === 'report' && item.productId !== 'stellar-trace').sort((a, b) => Number(a.field) - Number(b.field)) })
     } catch (_) { wx.showToast({ title: '场域暂未响应', icon: 'none' }) }
     finally { this.setData({ loading: false }) }
   },
+  onShow() { initPage(this) },
   async open(event) {
     const item = this.data.items[event.currentTarget.dataset.index]
     if (!item || !item.productId) return wx.showToast({ title: '该场域暂未开放', icon: 'none' })

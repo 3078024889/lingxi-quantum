@@ -71,18 +71,6 @@ const CAPS: Cap[] = [
       { zh: "一致性模式", en: "Coherence Pattern" },
     ],
   },
-  {
-    key: "narrative", glyph: "∞", zh: "多维叙事", en: "Dimensional Narrative",
-    descZh: "每个人都是自己生命故事的创造者。", descEn: "Every person is the creator of their own life story.",
-    href: "/narrative",
-    subLabelZh: "探索：", subLabelEn: "Explore:",
-    subs: [
-      { zh: "宇宙文学", en: "Cosmic Stories" },
-      { zh: "未来文明", en: "Future Civilization" },
-      { zh: "意识故事", en: "Conscious Narratives" },
-      { zh: "无限创造", en: "Infinite Creation" },
-    ],
-  },
 ];
 
 const EXPLORE_LIST: { zh: string; en: string }[] = [
@@ -120,8 +108,8 @@ export default function LingxiPortal() {
 
         <p className="mx-auto mt-6 max-w-2xl text-base leading-9 text-bone-dim">
           <Bi
-            zh="灵犀场是一处探索意识与生命可能性的个人空间。融合生命图谱、场域精测、梦境智能、潜意识重塑、东方智慧修炼与多维叙事，连接你内在的觉察、创造力与无限可能。"
-            en="Lingxi Field is a personal space for exploring consciousness and the possibilities of life. Integrating life mapping, field insights, dream intelligence, subconscious transformation, ancient wisdom practices, and dimensional narratives, it connects you with deeper awareness, creativity, and infinite possibilities."
+            zh="灵犀场是一处探索意识与生命可能性的个人数字空间。场域精测帮助看见结构，免费梦境探索与修炼技术帮助把觉察带回现实，意识显化空间承接持续练习。"
+            en="Lingxi Field is a personal digital space for exploring consciousness and life possibilities. Field Insights reveal structure; free Dream Exploration and practices bring awareness into daily life; the Manifestation Space supports sustained practice."
           />
         </p>
 

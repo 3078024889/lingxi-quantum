@@ -29,6 +29,7 @@ export async function POST(req: Request) {
     }
     const product = getProduct(productId);
     if (!product) return NextResponse.json({ error: "无效的项目" }, { status: 400 });
+    if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需创建支付订单。" }, { status: 400 });
 
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -75,7 +76,7 @@ export async function POST(req: Request) {
       const paymentUrl = createAlipayPaymentUrl({
         outTradeNo,
         amountRmb: product.priceRmb,
-        subject: `灵犀场 · ${product.name}`,
+        subject: product.group === "manifestation" ? "灵犀场意识练习软件服务" : "灵犀场个人数字报告服务",
         notifyUrl: `${baseUrl}/api/pay/alipay/notify`,
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,

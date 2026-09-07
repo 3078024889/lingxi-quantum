@@ -25,15 +25,20 @@ export function PublicationPage({
       <img src={art} alt="" className="absolute inset-0 h-full w-full object-cover" />
       <div className="relative z-10 flex h-full flex-col px-[8.06%] py-[6%]">
         <header className="flex items-start justify-between gap-6 text-[10px] uppercase tracking-[.28em]">
-          <span className="font-semibold text-[#557f79]">{eyebrow}</span>
+          <span className="font-semibold text-[#557f79]">{cover ? "LINGXIFIELD ORIGINAL ARCHIVE" : eyebrow}</span>
           <span className="text-[#696473]">{String(index).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         </header>
         <div className={cover || full ? "mt-auto" : "my-auto"}>
-          <h2 className="font-display text-[32px] font-light leading-tight text-[#302941] drop-shadow-[0_1px_8px_rgba(255,255,255,.96)] sm:text-[42px]">{title}</h2>
+          {cover && <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="mx-auto mb-4 h-14 w-14 rounded-sm" />
+            <p className="mb-4 text-center text-[10px] font-semibold uppercase tracking-[.3em] text-[#557f79]">{eyebrow}</p>
+          </>}
+          <h2 className={`font-display text-[32px] font-light leading-tight text-[#302941] drop-shadow-[0_1px_8px_rgba(255,255,255,.96)] sm:text-[42px] ${cover ? "text-center" : ""}`}>{title}</h2>
           <div className="lx-report-glass lx-report-glass-readable mt-5 p-7 sm:p-9">{children}</div>
         </div>
         <footer className="mt-auto flex items-center justify-between border-t border-[#4c4966]/18 pt-3 text-[9px] tracking-[.18em] text-[#696473]">
-          <span>LINGXIFIELD ORIGINAL ARCHIVE</span><span>lingxifield.com</span>
+          <span>LINGXIFIELD ORIGINAL ARCHIVE</span><span>lingxifield.cn</span>
         </footer>
       </div>
     </section>

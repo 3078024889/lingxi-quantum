@@ -2,3 +2,4 @@
 .nav-left{display:flex;align-items:center;gap:18rpx;min-width:0}.lx-brand{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:Georgia,"Noto Serif SC",serif;font-size:27rpx;letter-spacing:8rpx;color:#f3e8ca}
 .back{box-sizing:border-box;width:58rpx;height:58rpx;margin:0;padding:0;border:1rpx solid rgba(131,224,215,.38);border-radius:50%;background:rgba(8,24,51,.32);color:#c8fff8;font-family:Georgia,serif;font-size:48rpx;font-weight:300;line-height:50rpx}.back::after{border:0}
 .pulse{width:12rpx;height:12rpx;border-radius:50%;background:#80e5d7;box-shadow:0 0 24rpx #80e5d7}
+.nav-actions{display:flex;align-items:center;gap:18rpx}.lang{min-width:68rpx;height:50rpx;margin:0;padding:0 14rpx;border:1rpx solid rgba(131,224,215,.4);border-radius:2rpx;background:rgba(8,24,51,.36);color:#c8fff8;font-family:Georgia,serif;font-size:21rpx;line-height:48rpx;letter-spacing:2rpx}.lang::after{border:0}

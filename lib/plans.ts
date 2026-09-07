@@ -1,5 +1,4 @@
 // 能量交换 · 定价结构（双语）
-import { NARRATIVES } from "./narratives";
 export type Product = {
   id: string;
   name: string;
@@ -15,26 +14,21 @@ export type Product = {
 };
 
 export const cultivationProducts: Product[] = [
-  { id: "breath", name: "量子息法", nameEn: "Quantum Breath Method", priceUsd: 55, priceRmb: 398, type: "permanent", note: "进入身体与意识重新同步的入口。", noteEn: "An entrance to bringing body and consciousness back into sync.", group: "cultivation" },
-  { id: "intuition", name: "直觉丹道", nameEn: "The Intuitive Way", priceUsd: 55, priceRmb: 398, type: "permanent", note: "开启内在感知与直觉连接。", noteEn: "Open inner perception and intuitive connection.", group: "cultivation" },
-  { id: "heart-reset", name: "归零心诀", nameEn: "Heart Reset", priceUsd: 55, priceRmb: 398, type: "permanent", note: "回到内在中心的位置。", noteEn: "Return to your inner center.", group: "cultivation" },
-  { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 55, priceRmb: 398, type: "permanent", note: "从内在觉察走向生命展开。", noteEn: "Move from inner awareness toward life unfolding.", group: "cultivation" },
-  { id: "narrative-all", name: "多维叙事 · 年度解锁", nameEn: "All Narratives · Yearly", priceUsd: 93, priceRmb: 666, type: "subscription", days: 365, note: "一年内解锁全部多维叙事，含日后新增的全部篇目", noteEn: "One year of access to every narrative, including all added later.", highlight: true, group: "cultivation" },
-  { id: "everything", name: "神尊 · 全域解锁", nameEn: "Sovereign · All-Field Access", priceUsd: 1204, priceRmb: 8668, type: "subscription", days: 365, note: "一年内解锁灵犀场全部付费内容，并自动包含有效期内未来发布的报告、修炼技术、叙事与场域模块。", noteEn: "One year of all paid content, including future reports, practices, narratives, and field modules released during the active term.", highlight: true, group: "cultivation" },
+  { id: "breath", name: "量子息法", nameEn: "Quantum Breath Method", priceUsd: 0, priceRmb: 0, type: "permanent", note: "免费开放：让身体与注意力重新同步。", noteEn: "Free access: bring body and attention back into sync.", group: "cultivation" },
+  { id: "intuition", name: "直觉丹道", nameEn: "The Intuitive Way", priceUsd: 0, priceRmb: 0, type: "permanent", note: "免费开放：练习辨认内在感知。", noteEn: "Free access: practise recognizing inner perception.", group: "cultivation" },
+  { id: "heart-reset", name: "归零心诀", nameEn: "Heart Reset", priceUsd: 0, priceRmb: 0, type: "permanent", note: "免费开放：回到内在中心。", noteEn: "Free access: return to your inner center.", group: "cultivation" },
+  { id: "ascending-heart", name: "上升心经", nameEn: "Ascending Heart", priceUsd: 0, priceRmb: 0, type: "permanent", note: "免费开放：让觉察进入行动与生活。", noteEn: "Free access: carry awareness into action and life.", group: "cultivation" },
 ];
 
 export const manifestationProducts: Product[] = [
-  { id: "day", name: "单日体验", nameEn: "One-Day Pass", priceUsd: 5.5, priceRmb: 39.9, type: "subscription", days: 1, note: "体验一天显化与梦境解读", noteEn: "Experience Manifestation & Dream Interpretation for a day.", group: "manifestation" },
+  { id: "day", name: "单日体验", nameEn: "One-Day Pass", priceUsd: 1.5, priceRmb: 9.9, type: "subscription", days: 1, note: "体验一天意识显化空间", noteEn: "Experience the manifestation space for one day.", group: "manifestation" },
   { id: "month", name: "月度探索", nameEn: "Monthly", priceUsd: 23, priceRmb: 168, type: "subscription", days: 30, note: "每月持续对齐", noteEn: "Stay aligned, month after month.", highlight: true, group: "manifestation" },
   { id: "year", name: "年度旅程", nameEn: "Yearly", priceUsd: 139, priceRmb: 999, type: "subscription", days: 365, note: "一年深度旅程，最佳价值", noteEn: "A year-long journey — best value.", group: "manifestation" },
 ];
 
 // 多维叙事：短篇 $1，长篇 $5，一次能量交换，终身可看
-export const narrativeProducts: Product[] = NARRATIVES.map((n) => ({
-  id: n.slug, name: n.title, nameEn: n.titleEn, priceUsd: Math.round((n.price / 7.2) * 100) / 100, priceRmb: n.price, type: "subscription" as const, days: 365,
-  note: "一次能量交换，解锁一年，一年内可反复阅读", noteEn: "One energy exchange unlocks this piece for one year of reading.",
-  group: "cultivation" as const,
-}));
+// 旧叙事内容不再作为在售商品。保留空导出，避免历史订单读取路径崩溃。
+export const narrativeProducts: Product[] = [];
 
 export const lifeMapProducts: Product[] = [
   { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你的完整命盘解读，永久保存、随时回看", noteEn: "One exchange unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
