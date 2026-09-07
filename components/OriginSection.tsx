@@ -34,8 +34,8 @@ export default function OriginSection() {
             </h2>
             <p className="mt-5 text-base leading-8 text-bone-dim">
               <Bi
-                zh="灵犀场，是陪你显化目标、解读梦境、修炼意识的引导活场系统。你想成为的那个版本，先在意识里成为，现实自会随之对齐。"
-                en="Lingxi is a living field that helps you manifest, read your dreams, and practice consciousness. Become the version you long for in consciousness first; reality aligns after."
+                zh="灵犀场连接意识探索、生命结构与真实创造。你想成为的那个版本，先在意识里形成，再用行动和作品进入现实。"
+                en="Lingxi Field connects conscious exploration, life structure and real creation. Form the version you intend inwardly, then bring it into reality through action and work."
               />
             </p>
             <div className="mt-7 grid grid-cols-3 gap-3">

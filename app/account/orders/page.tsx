@@ -48,16 +48,16 @@ const MEMBERSHIP_IDS = [
 // 都能一眼看清楚"这次交换到底换到了什么"，不是一句模糊的话带过去。
 const BENEFIT_DETAIL: Record<string, { zh: string[]; en: string[] }> = {
   day: {
-    zh: ["1天内不限次数使用「意识显化」功能", "1天内不限次数使用「梦境智能」解读", "到期后自动锁定，不会继续扣费"],
-    en: ["Unlimited use of Manifestation for 1 day", "Unlimited use of Dream Intelligence for 1 day", "Locks automatically at expiry — no recurring charge"],
+    zh: ["1天内不限次数使用「意识显化」功能", "愿景、观察与行动记录云端同步", "到期后自动锁定，不会继续扣费"],
+    en: ["Unlimited use of Manifestation for 1 day", "Cloud sync for vision, observations and actions", "Locks automatically at expiry — no recurring charge"],
   },
   month: {
-    zh: ["30天内不限次数使用「意识显化」功能", "30天内不限次数使用「梦境智能」解读", "到期后自动锁定，不会继续扣费，可随时重新购买续期"],
-    en: ["Unlimited use of Manifestation for 30 days", "Unlimited use of Dream Intelligence for 30 days", "Locks automatically at expiry — no recurring charge, renew anytime"],
+    zh: ["30天内不限次数使用「意识显化」功能", "愿景、观察与行动记录云端同步", "到期后自动锁定，不会继续扣费，可随时重新购买续期"],
+    en: ["Unlimited use of Manifestation for 30 days", "Cloud sync for vision, observations and actions", "Locks automatically at expiry — no recurring charge, renew anytime"],
   },
   year: {
-    zh: ["365天内不限次数使用「意识显化」功能", "365天内不限次数使用「梦境智能」解读", "到期后自动锁定，不会继续扣费", "单价比月度更划算"],
-    en: ["Unlimited use of Manifestation for 365 days", "Unlimited use of Dream Intelligence for 365 days", "Locks automatically at expiry — no recurring charge", "Best per-day value of the three tiers"],
+    zh: ["365天内不限次数使用「意识显化」功能", "愿景、观察与行动记录云端同步", "到期后自动锁定，不会继续扣费", "单价比月度更划算"],
+    en: ["Unlimited use of Manifestation for 365 days", "Cloud sync for vision, observations and actions", "Locks automatically at expiry — no recurring charge", "Best per-day value of the three tiers"],
   },
   "narrative-all": {
     zh: ["365天内解锁全部多维叙事长篇与短篇", "有效期内新增的篇目自动包含，不用额外付费", "到期后需续期才能继续阅读已发布的新篇目（到期前已读过的篇目仍可回看历史记录）"],

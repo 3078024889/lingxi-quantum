@@ -45,7 +45,7 @@ function randX(): number {
  * 数字即可，下面的下落/绽放逻辑不用动。 */
 const STATS = [
   { glyph: "✦", base: 128742, suffix: "+", zh: "生命图谱已生成", en: "Life maps generated" },
-  { glyph: "☾", base: 98315, suffix: "+", zh: "梦境解析记录", en: "Dreams interpreted" },
+  { glyph: "✦", base: 98315, suffix: "+", zh: "意识观察记录", en: "Awareness records" },
   { glyph: "♡", base: 68942, suffix: "+", zh: "修炼者在场域中成长", en: "Practitioners growing here" },
   { glyph: "◈", base: 36, suffix: "", zh: "多维系统融合", en: "Systems integrated" },
 ];
@@ -190,6 +190,8 @@ export default function FieldVoices() {
 
   const voiceOf = (d: Node) =>
     hovered === d.id ? VOICES[d.vi] : d.id in speaking ? VOICES[d.vi] : null;
+
+  if (pathname.startsWith("/sasi") || pathname.startsWith("/legal/sasi")) return null;
 
   return (
     <div className="fv-rain pointer-events-none fixed inset-0 z-30 overflow-hidden" aria-hidden="true">

@@ -169,7 +169,7 @@ export default function DeclarationPage() {
                   <li><Bi zh="关系探索体验" en="the relationship exploration experience" /></li>
                   <li><Bi zh="灵签体验" en="the Life Oracle experience" /></li>
                   <li><Bi zh="意识练习模块" en="consciousness practice modules" /></li>
-                  <li><Bi zh="梦境探索周期" en="dream exploration cycles" /></li>
+                  <li><Bi zh="意识观察周期" en="awareness observation cycles" /></li>
                 </ul>
                 <p><Bi zh="相关体验权限开启后，将与用户账户进行绑定。" en="Once opened, the corresponding access is bound to your account." /></p>
                 <p><Bi

@@ -34,6 +34,20 @@ export async function middleware(request: NextRequest) {
   // 查询参数——一次性解决这一类问题，不用每发现一个就手动加一条。
   const { pathname } = request.nextUrl;
 
+  // 梦境探索产品已经撤下。旧入口与曾经围绕该产品建立的专题页统一
+  // 返回新的 SASI 工作台，避免搜索结果继续把用户带入已退休板块。
+  const retiredDreamPaths = new Set([
+    "/dream", "/learn/dream", "/learn/dream-symbols", "/learn/more-dream-meanings",
+    "/learn/recurring-dreams", "/learn/lucid-dreaming", "/learn/remember-dreams",
+    "/learn/sleep-paralysis", "/learn/dreams-premonition", "/learn/dream-same-person",
+  ]);
+  if (retiredDreamPaths.has(pathname)) {
+    const target = request.nextUrl.clone();
+    target.pathname = "/sasi";
+    target.search = "";
+    return NextResponse.redirect(target, 308);
+  }
+
   // ────────────────────────────────────────────────────────────
   // v300：/tarot → /mirror 永久重定向
   // ────────────────────────────────────────────────────────────

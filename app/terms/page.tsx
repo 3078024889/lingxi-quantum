@@ -77,7 +77,7 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="灵犀场部分功能属于数字内容体验，包括生命图谱、灵犀生命灵签、量子生命镜像、关系探索、梦境探索。内容生成后会绑定至用户账户，用户可以查看个人生成内容。"
+                zh="灵犀场部分功能属于数字内容体验，包括生命图谱、灵犀生命灵签、量子生命镜像、关系探索、意识显化与 SASI 创作工作流。内容生成后会绑定至用户账户，用户可以查看个人生成内容。"
                 en="Some features on Lingxi Field are digital content experiences, including the Life Map, Lingxi Life Oracle, Quantum Life Mirror, relationship exploration, and dream exploration. Once generated, content is bound to your account, and you can view content you've generated."
               />
             </p>

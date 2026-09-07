@@ -15,7 +15,7 @@ import Bi from "@/components/Bi";
 type StaticEntry = { slug: string; title: string; titleEn: string; href: string };
 const STATIC_PAGES: StaticEntry[] = [
   { slug: "live-as", title: "意识显化", titleEn: "Manifestation", href: "/live-as" },
-  { slug: "dream", title: "探索梦境", titleEn: "Dreams", href: "/dream" },
+  { slug: "sasi", title: "灵犀场 SASI · 编程构建与 AI 短剧", titleEn: "Lingxi SASI · Build and AI Drama", href: "/sasi" },
   { slug: "practice", title: "修炼技术", titleEn: "Practices", href: "/practice" },
   { slug: "gates", title: "重塑潜意识", titleEn: "Rewrite", href: "/#gates" },
   { slug: "learn", title: "探索", titleEn: "Learn", href: "/learn" },
@@ -46,7 +46,7 @@ const STATIC_PAGES: StaticEntry[] = [
 // 输入框空着的时候，轮流显示几个真实存在的例子做提示——比干巴巴的
 // "搜索星域故事、修炼技术"这种通用占位符，更能让人知道"原来可以搜这些"。
 const PLACEHOLDER_HINTS = [
-  { zh: "试试搜「探索梦境」", en: 'Try "Dreams"' },
+  { zh: "试试搜「AI短剧」", en: 'Try "AI Drama"' },
   { zh: "试试搜「量子息法」", en: 'Try "Quantum Breath Method"' },
   { zh: "试试搜「生命图谱」", en: 'Try "Life Map"' },
   { zh: "试试搜「显化」", en: 'Try "Manifestation"' },

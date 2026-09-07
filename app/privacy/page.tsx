@@ -41,8 +41,8 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3">
               <Bi
-                zh="为了提供灵犀场体验，我们可能收集：账户信息（例如邮箱地址，用于账户登录和身份验证）；探索数据（包括出生日期、出生时间（可选）、出生地点（可选）、用户主动填写的愿景、梦境记录、个人探索记录）；技术信息（包括浏览器类型、设备信息、页面访问记录，用于网站运行、安全维护和体验优化）。"
-                en="To provide the Lingxi Field experience, we may collect: account information (such as your email address, used for login and identity verification); exploration data (including birth date, birth time (optional), birth place (optional), visions you choose to enter, dream journal entries, and your personal exploration records); and technical information (including browser type, device information, and page-visit records, used to run the site, maintain security, and improve the experience)."
+                zh="为了提供灵犀场体验，我们可能收集：账户信息（例如邮箱地址，用于登录与身份验证）；用户主动填写的愿景、个人探索记录与 SASI 创作项目资料；生成场域精测所需的出生日期、出生时间（可选）和出生地点（可选）；以及保障运行与安全所需的浏览器、设备、访问和错误日志。"
+                en="To provide Lingxi Field, we may process account information used for login; visions, personal exploration records and SASI project materials you choose to provide; birth date, optional birth time and optional birth place needed for Field Insight reports; and browser, device, access and error logs needed for operation and security."
               />
             </p>
           </section>

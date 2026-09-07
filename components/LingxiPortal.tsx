@@ -1,9 +1,7 @@
 import Link from "next/link";
 import Bi from "./Bi";
 
-// 六大探索领域——每个领域下面挂了具体的子项目清单，跟场域精测下拉
-// 菜单里真实存在的7个产品、探索梦境的3个子功能等等一一对应，不是
-// 只写六个笼统的标题。
+// 核心领域——每个领域下面挂具体的子项目清单，而不是笼统标题。
 type SubItem = { zh: string; en: string; descZh?: string; descEn?: string; href?: string };
 type Cap = {
   key: string; glyph: string; zh: string; en: string;
@@ -35,14 +33,14 @@ const CAPS: Cap[] = [
     ],
   },
   {
-    key: "dream", glyph: "🌙", zh: "梦境智能", en: "Dream Intelligence",
-    descZh: "梦境并非随机出现的画面，而可能是潜意识与你交流的语言。", descEn: "Dreams are not merely random images, but a language through which your subconscious communicates.",
-    href: "/dream",
-    subLabelZh: "探索：", subLabelEn: "Explore:",
+    key: "sasi", glyph: "✦", zh: "SASI 创作工作台", en: "SASI Creation Studio",
+    descZh: "从产品构建到短剧制作，把想法推进为可交付成果。", descEn: "Move ideas into deliverable software and short-drama projects.",
+    href: "/sasi",
+    subLabelZh: "包含：", subLabelEn: "Includes:",
     subs: [
-      { zh: "梦境记录", en: "Dream Journal" },
-      { zh: "梦境解析", en: "Dream Interpretation" },
-      { zh: "梦境符号", en: "Dream Symbols" },
+      { zh: "编程构建部署", en: "Code, Build & Deploy" },
+      { zh: "AI 短剧工作流", en: "AI Drama Workflow" },
+      { zh: "Skill 中心", en: "Skill Center" },
     ],
   },
   {
@@ -76,7 +74,7 @@ const CAPS: Cap[] = [
 const EXPLORE_LIST: { zh: string; en: string }[] = [
   { zh: "你的生命结构，", en: "your life structure," },
   { zh: "潜意识中的隐藏模式，", en: "the hidden patterns within your subconscious," },
-  { zh: "梦境传递的信息，", en: "the messages within your dreams," },
+  { zh: "创意成为作品的路径，", en: "the path from ideas to deliverables," },
   { zh: "意识创造现实的力量，", en: "the power of consciousness to shape reality," },
   { zh: "以及正在展开的未来可能。", en: "and the possibilities unfolding ahead." },
 ];
@@ -108,8 +106,8 @@ export default function LingxiPortal() {
 
         <p className="mx-auto mt-6 max-w-2xl text-base leading-9 text-bone-dim">
           <Bi
-            zh="灵犀场是一处探索意识与生命可能性的个人数字空间。场域精测帮助看见结构，免费梦境探索与修炼技术帮助把觉察带回现实，意识显化空间承接持续练习。"
-            en="Lingxi Field is a personal digital space for exploring consciousness and life possibilities. Field Insights reveal structure; free Dream Exploration and practices bring awareness into daily life; the Manifestation Space supports sustained practice."
+            zh="灵犀场是一座连接意识探索与真实创造的数字空间。场域精测帮助看见结构，修炼技术 FREE 与重塑潜意识 FREE 把觉察带回现实，SASI 将产品与故事推进为可交付作品。"
+            en="Lingxi Field connects inner exploration with real creation. Field Insights reveal structure, Practices FREE and Subconscious Rewrite FREE bring awareness into daily life, and SASI advances software and stories into deliverable work."
           />
         </p>
 

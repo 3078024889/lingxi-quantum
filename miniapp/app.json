@@ -23,7 +23,7 @@
     "list": [
       { "pagePath": "pages/field/index", "text": "灵犀场" },
       { "pagePath": "pages/explore/index", "text": "场域精测" },
-      { "pagePath": "pages/free/index", "text": "免费探索" },
+      { "pagePath": "pages/free/index", "text": "修炼技术" },
       { "pagePath": "pages/profile/index", "text": "我的" }
     ]
   },

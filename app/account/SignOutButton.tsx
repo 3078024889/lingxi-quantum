@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import Bi from "@/components/Bi";
 
 export default function SignOutButton() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function SignOutButton() {
       }}
       className="w-full border border-white/15 py-4 font-display text-sm uppercase tracking-widest2 text-bone-dim transition hover:border-lattice/40 hover:text-lattice"
     >
-      离开场域（退出登录）
+      <Bi zh="退出账户" en="Sign out" />
     </button>
   );
 }

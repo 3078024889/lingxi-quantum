@@ -27,7 +27,7 @@ export const MEMBERSHIP_CONTENT: Record<string, MembershipContent> = {
     benefits: [
       { title: "场域精测 · 不限次数", detail: "10个核心产品与完整生命档案。", titleEn: "Unlimited Field Insight", detailEn: "Ten core products and your complete living archive." },
       { title: "意识显化体系", detail: "探索意识与现实创造。", titleEn: "Living Manifestation", detailEn: "Explore how awareness participates in creating reality." },
-      { title: "梦境解析体系", detail: "理解梦境中的潜意识信息。", titleEn: "Dream Intelligence", detailEn: "Read the subconscious information carried by dreams." },
+      { title: "显化行动档案", detail: "记录愿景、观察与现实行动的对齐过程。", titleEn: "Manifestation Action Archive", detailEn: "Track alignment across vision, observation and real-world action." },
       { title: "全部修炼技术", detail: "包含当前四大路径与未来新增技术。", titleEn: "All Practice Systems", detailEn: "The four current paths and every practice added later." },
       { title: "多维叙事与订阅", detail: "持续阅读灵犀场原创意识记录。", titleEn: "Narratives and Dispatches", detailEn: "Ongoing access to original Lingxi Field records." },
       { title: "未来新增全部包含", detail: "新报告、新修炼技术与新场域模块自动加入。", titleEn: "Future Releases Included", detailEn: "New reports, practices and field modules join automatically." },

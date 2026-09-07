@@ -19,7 +19,7 @@ function withMiniContext(path) {
 const SHARE_TITLES = {
   '/': '灵犀场 · 步入你的意识场域',
   '/live-as': '灵犀场 · 意识显化',
-  '/dream': '灵犀场 · 探索梦境',
+  '/sasi': '灵犀场 SASI · AI 创作工作台',
   '/#gates': '灵犀场 · 重塑潜意识',
   '/life-map': '生命图谱 · 照见你的生命结构',
   '/relationship': '关系共振 · 照见两个生命的交汇',

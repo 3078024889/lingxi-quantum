@@ -24,12 +24,15 @@ export default function Footer() {
               <Bi zh="灵犀场 LINGXIFIELD" en="LINGXIFIELD" />
             </p>
             <p className="mt-3 max-w-52 text-xs leading-6 text-bone-soft">
-              <Bi zh="一道活的意识场。观测、觉察、连接，让内在结构回到现实。" en="A living field for observation, awareness, and connection." />
+              <Bi zh="灵犀场 LINGXIFIELD 是集 AI 创作与意识显化于一体的智能数字空间，支持 AI 短剧制作、剧本解析、故事板与身份板生成、AI 配音与长视频生成、AI 编程、网站与应用构建部署，以及意识显化与场域精测。" en="LINGXIFIELD is an intelligent digital space uniting AI creation and manifestation, with AI drama production, script analysis, storyboards and identity boards, voice and long-form video workflows, AI coding, website and app delivery, manifestation, and field insights." />
             </p>
           </div>
           <nav className="grid grid-cols-2 gap-x-5 gap-y-3 text-[13px] text-bone-dim" aria-label="Footer">
           <Link href="/practice" className="hover:text-lattice">
-            <Bi zh="修炼技术" en="Practices" />
+            <Bi zh="修炼技术 FREE" en="Practices FREE" />
+          </Link>
+          <Link href="/sasi" className="hover:text-lattice">
+            <Bi zh="灵犀场 SASI" en="LingxiField SASI" />
           </Link>
           <Link href="/live-as" className="hover:text-lattice">
             <Bi zh="显化活在此版本中的你" en="Live This Version" />
@@ -54,6 +57,9 @@ export default function Footer() {
           </Link>
           <Link href="/refunds" className="hover:text-lattice">
             <Bi zh="退款政策" en="Refunds" />
+          </Link>
+          <Link href="/legal/sasi" className="hover:text-lattice">
+            <Bi zh="SASI 法律与规则" en="SASI Legal & Rules" />
           </Link>
           </nav>
           <section className="border-white/10 lg:border-l lg:pl-7" aria-label="Lingxi Field official channels">

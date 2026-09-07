@@ -28,7 +28,7 @@
 
       <view class="quick-links">
         <button class="quick-link" bindtap="explore">探索场域精测</button>
-        <button class="quick-link" bindtap="free">{{lang === 'en' ? 'Free dream & practice' : '免费梦境与修炼'}}</button>
+        <button class="quick-link" bindtap="free">{{lang === 'en' ? 'Practices FREE' : '修炼技术 FREE'}}</button>
         <button class="quick-link" bindtap="website">进入灵犀场官网</button>
       </view>
 

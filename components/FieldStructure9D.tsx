@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { PointerEvent, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import SearchBox from "@/components/SearchBox";
 import { FIELD_STRUCTURE_LINKS } from "@/lib/field-structure-links";
 import styles from "./FieldStructure9D.module.css";
@@ -81,7 +82,8 @@ function FloatingFieldVideo() {
 /** Desktop uses two independent floating surfaces: navigation and film. */
 export default function FieldStructure9D() {
   const [embedded, setEmbedded] = useState(true);
+  const pathname = usePathname();
   useEffect(() => setEmbedded(new URLSearchParams(window.location.search).get("mini") === "1"), []);
-  if (embedded) return null;
+  if (embedded || pathname.startsWith("/sasi") || pathname.startsWith("/legal/sasi")) return null;
   return <><FloatingFieldNavigator /><FloatingFieldVideo /></>;
 }

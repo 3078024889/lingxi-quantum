@@ -45,8 +45,8 @@ const HOME_FAQ: BilingualFaqItem[] = [
   },
   {
     qZh: "灵犀场提供哪些产品？", qEn: "What products does Lingxi Field offer?",
-    aZh: "场域精测（生命图谱、关系共振、生命灵签、量子生命镜像、生命韧性指数、桃花磁场指数、财富创造地图、今日潮汐）、免费梦境探索、四大免费修炼技术，以及意识显化空间。",
-    aEn: "Field Insights, free Dream Exploration, four free practices, and the Manifestation Space.",
+    aZh: "场域精测、意识显化空间、修炼技术 FREE、重塑潜意识 FREE，以及 SASI 编程构建部署与 AI 短剧工作流。",
+    aEn: "Field Insights, the Manifestation Space, Practices FREE, Subconscious Rewrite FREE, and SASI workflows for software delivery and AI drama production.",
   },
   {
     qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",

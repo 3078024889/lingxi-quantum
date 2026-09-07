@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LoginForm from "./LoginForm";
 import SignOutButton from "./SignOutButton";
+import SwitchAccountButton from "./SwitchAccountButton";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
 import MiniAccountLinkPanel from "./MiniAccountLinkPanel";
@@ -211,7 +212,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               {/* 会员状态 */}
               <div className="mt-8 w-full space-y-3 text-left">
                 <div className="rounded-sm border border-white/10 bg-void-deep px-5 py-4">
-                  <p className="text-sm text-bone-dim"><Bi zh="显化与梦境解读" en="Manifestation & Dream Interpretation" /></p>
+                  <p className="text-sm text-bone-dim"><Bi zh="意识显化" en="Manifestation" /></p>
                   <p className="mt-1 font-display text-lg text-lattice">
                     {manifestActive ? (
                       <>
@@ -345,6 +346,12 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
 
               <div className="mt-8 flex w-full flex-col gap-4">
                 <Link
+                  href="/sasi"
+                  className="w-full bg-bone py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice"
+                >
+                  <Bi zh="进入灵犀场 SASI 工作台" en="Enter Lingxi SASI Studio" />
+                </Link>
+                <Link
                   href="/live-as"
                   className="w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
                 >
@@ -357,6 +364,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                   <Bi zh="能量交换 / 续期" en="Energy Exchange / Renew" />
                 </Link>
                 <ChangePasswordForm />
+                <SwitchAccountButton />
                 <SignOutButton />
                 <DeleteAccountButton />
               </div>

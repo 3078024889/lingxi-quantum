@@ -15,7 +15,7 @@ const MOODS: Mood[] = [
   { key: "calm", emoji: "🕊️", zh: "我想平息焦虑", en: "Calm anxiety", href: "/gate/mind", accent: "#7CE0D3", replyZh: "先回到呼吸，再回到自己。", replyEn: "Return to the breath, then to yourself." },
   { key: "confidence", emoji: "✨", zh: "我想找回自信与价值", en: "Reclaim self-worth", href: "/gate/mind", accent: "#7CE0D3", replyZh: "你本自具足，只是忘了。", replyEn: "You are already whole — you only forgot." },
   { key: "direction", emoji: "🧭", zh: "我想看清人生方向", en: "See my life's direction", href: "/gate/destiny", accent: "#E8B765", replyZh: "方向，藏在你最深的渴望里。", replyEn: "Direction hides in your deepest longing." },
-  { key: "dream", emoji: "🌙", zh: "我想读懂我的梦", en: "Decode my dreams", href: "/dream", accent: "#C77D9C", replyZh: "梦，是潜意识写给你的信。", replyEn: "Dreams are letters from your deeper self." },
+  { key: "create", emoji: "🎬", zh: "我想制作网站或短剧", en: "Build a site or drama", href: "/sasi", accent: "#C77D9C", replyZh: "把想法拆成可以交付的作品。", replyEn: "Turn the idea into something deliverable." },
   { key: "manifest", emoji: "🌅", zh: "我准备显化新现实", en: "Manifest a new reality", href: "/live-as", accent: "#7CE0D3", replyZh: "活在那个已经拥有的版本里。", replyEn: "Live as the version that already has it." },
 ];
 

@@ -1,6 +1,6 @@
 export const FIELD_STRUCTURE_LINKS = [
   { href: "/live-as", zh: "意识显化", en: "Manifestation", x: 50, y: 48 },
-  { href: "/dream", zh: "梦境探索", en: "Dream Exploration", x: 24, y: 23 },
+  { href: "/sasi", zh: "SASI 创作", en: "SASI Studio", x: 24, y: 23 },
   { href: "/practice", zh: "修炼技术", en: "Cultivation", x: 20, y: 74 },
   { href: "/#gates", zh: "潜意识重塑", en: "Subconscious", x: 78, y: 22 },
   { href: "/life-map", zh: "生命图谱", en: "Life Blueprint", x: 41, y: 23 },

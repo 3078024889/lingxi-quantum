@@ -17,8 +17,8 @@ import Link from "next/link";
 const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
   {
     qZh: "灵犀场的能量交换项目分几种？", qEn: "How many kinds of energy exchange does Lingxi Field offer?",
-    aZh: "当前只有两类收费服务：场域精测的单份数字报告，以及意识显化的单日、月度或年度连接。梦境探索和四大修炼技术均已免费开放；订阅到期后由你自行决定是否延续，不会自动扣款。",
-    aEn: "Only two service types are paid: individual Field Insight reports and one-day, monthly or yearly access to the Manifestation Space. Dream Exploration and all four practices are free. Nothing renews automatically.",
+    aZh: "当前收费服务为场域精测单份数字报告、意识显化固定期限连接，以及未来启用的 SASI 模型积分。四大修炼技术免费开放；订阅到期后由你自行决定是否延续，不会自动扣款。",
+    aEn: "Paid services are individual Field Insight reports, fixed-term Manifestation access, and future SASI model credits. All four practices are free. Nothing renews automatically.",
   },
   {
     qZh: "灵犀场支持哪些方式进入？", qEn: "How can I enter Lingxi Field's energy exchange?",
@@ -34,7 +34,7 @@ const MEMBERSHIP_FAQ: BilingualFaqItem[] = [
 
 
 
-export const metadata = { title: "数字服务与订阅 | 灵犀场 · Digital Services | Lingxi", description: "灵犀场数字服务：场域精测个人报告与意识显化固定期限订阅；梦境探索和修炼技术免费开放。", alternates: { canonical: "/membership" } };
+export const metadata = { title: "数字服务与订阅 | 灵犀场 · Digital Services | Lingxi", description: "灵犀场数字服务：场域精测个人报告、意识显化固定期限订阅，以及免费开放的重塑潜意识与修炼技术。", alternates: { canonical: "/membership" } };
 
 // 灵犀场不像普通SaaS会员那样写"权益包含"，写的是"进入什么场域、
 // 开启什么能力、获得什么长期体验"——每个产品下面配一份具体的
@@ -88,15 +88,15 @@ const MANIFEST_BULLETS: Record<string, { items: { zh: string; en: string }[] }> 
   day: {
     items: [
       { zh: "当日显化状态读取", en: "A reading of today's manifestation state" },
-      { zh: "梦境象征解析", en: "Dream symbol interpretation" },
-      { zh: "潜意识信息探索", en: "Exploring subconscious signals" },
+      { zh: "愿景与行动对齐记录", en: "Vision and action alignment records" },
+      { zh: "潜意识模式观察", en: "Observing subconscious patterns" },
       { zh: "当前生命主题观察", en: "Observing your current life theme" },
     ],
   },
   month: {
     items: [
       { zh: "每月显化观察", en: "Monthly manifestation observation" },
-      { zh: "梦境持续解析", en: "Ongoing dream interpretation" },
+      { zh: "显化进度持续回顾", en: "Ongoing manifestation review" },
       { zh: "潜意识变化记录", en: "Tracking subconscious shifts" },
       { zh: "阶段性生命主题整理", en: "Organizing your life theme by phase" },
     ],
@@ -104,7 +104,7 @@ const MANIFEST_BULLETS: Record<string, { items: { zh: string; en: string }[] }> 
   year: {
     items: [
       { zh: "显化记录空间", en: "A space for manifestation records" },
-      { zh: "梦境探索档案", en: "A dream exploration archive" },
+      { zh: "年度显化行动档案", en: "An annual manifestation action archive" },
       { zh: "长期意识成长轨迹", en: "Your long-term consciousness growth trajectory" },
       { zh: "年度生命主题回顾", en: "An annual life-theme review" },
     ],
@@ -242,7 +242,7 @@ export default async function MembershipPage({
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
               <h2 className="font-display text-3xl font-light text-bone">
-                <Bi zh="一 · 免费修炼技术" en="I · Free Core Practices" />
+                <Bi zh="一 · 修炼技术 FREE" en="I · Practices FREE" />
               </h2>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -253,14 +253,14 @@ export default async function MembershipPage({
           </div>
         </section>
 
-        {/* 三、显化与梦境解读 */}
+        {/* 三、意识显化 */}
         <section id="manifestation" className="scroll-mt-28 border-t border-white/5 px-6 py-16">
           <div className="mx-auto max-w-5xl">
             <div className="mb-10 text-center">
               <h2 className="font-display text-3xl font-light text-bone">
                 <Bi zh="二 · 意识显化订阅" en="II · Manifestation Subscription" />
               </h2>
-              <p className="mt-3 text-sm text-bone-dim"><Bi zh="固定期限连接，不自动续费；梦境探索另行免费开放" en="Fixed-term access with no automatic renewal; Dream Exploration is free separately" /></p>
+              <p className="mt-3 text-sm text-bone-dim"><Bi zh="固定期限连接，不自动续费；与 SASI 积分相互独立" en="Fixed-term access with no automatic renewal; separate from SASI credits" /></p>
             </div>
             <div className="grid gap-6 sm:grid-cols-3">
               <ManifestCard id="day" loggedIn={!!user} tierZh="单日体验" tierEn="One-Day Pass" />

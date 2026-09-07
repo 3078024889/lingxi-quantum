@@ -41,15 +41,15 @@ export default async function LiveAsPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25"><CosmicField className="h-full w-auto" /></div>
           <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh="显化与梦境解读" en="Manifestation & Dream Interpretation" />
+            <Bi zh="意识显化" en="Manifestation" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
             <Bi zh="显化活在此版本中的你" en="Live as the you in this version" />
           </h1>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
             <Bi
-              zh="潜意识分不清现实与想象。每天花 5–10 分钟，进入已经拥有的生活状态，写下今天的感受与你正在做的事——像它已经发生一样。不断重复，保持对齐、保持信任与连贯，直到某天，物质世界中早已对齐的指引来临。显化达成，感恩。"
-              en="The subconscious cannot tell reality from imagination. Spend 5–10 minutes a day entering the state of already having it — write today's feelings and what you are doing, as if it has already happened. Repeat, stay aligned, keep trust and coherence, until one day the guidance already aligned in the material world arrives. Manifested, with gratitude."
+              zh="每天花 5–10 分钟，清晰写下你想创造的生活、今天真实感受到的状态，以及能够向它靠近的一步行动。持续观察、校准与实践，让愿景、选择和现实行动逐渐一致。"
+              en="Spend 5–10 minutes a day clarifying the life you want to create, the state you genuinely feel today, and one action that can move you closer. Keep observing, adjusting and practicing until vision, choice and real-world action gradually align."
             />
           </p>
           </div>
@@ -62,12 +62,12 @@ export default async function LiveAsPage() {
             ) : (
               <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-8 text-center">
                 <p className="font-display text-2xl text-bone">
-                  <Bi zh="开启「显化与梦境解读」以进入现实回路" en="Unlock Manifestation & Dream Interpretation to enter the Reality Loop" />
+                  <Bi zh="开启「意识显化」以进入现实回路" en="Unlock Manifestation to enter the Reality Loop" />
                 </p>
                 <p className="mx-auto mt-4 max-w-md text-base leading-8 text-bone-dim">
                   <Bi
-                    zh="现实回路是「显化与梦境解读」订阅模块的核心练习。订阅后，你的愿景与每日书写将在云端安全同步，换任何设备都能继续。"
-                    en="The Reality Loop is the core practice of the Manifestation & Dream Interpretation module. Once subscribed, your vision and daily writing sync securely to the cloud, so you can continue on any device."
+                    zh="现实回路是「意识显化」订阅模块的核心练习。订阅后，你的愿景、观察与每日行动记录将在云端安全同步，换任何设备都能继续。"
+                    en="The Reality Loop is the core practice of the Manifestation subscription. Once subscribed, your vision, observations and daily actions sync securely to the cloud, so you can continue on any device."
                   />
                 </p>
                 <Link

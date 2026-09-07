@@ -12,7 +12,7 @@
 // 缺节点，属于必须修复的缺陷，会被 reportGaps() 报出来，
 // 而不是悄悄交给模型糊过去——那样会让缺口永远藏着。
 //
-// AI 只保留在三处真正接自由文本的功能：提问灵犀、梦境探索、
+// AI 只保留在真正接自由文本且需要生成能力的功能中：提问灵犀、
 // 意识显化签到，且只当后备（见 lib/gate-tone.ts 的关键词优先策略）。
 
 import { buildReport, type Library, type Scores, type FieldState } from "@/lib/knowledge-engine";
