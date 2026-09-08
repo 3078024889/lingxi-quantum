@@ -14,13 +14,13 @@ import {
   budgetAssessment,
   CREDIT_PACKS,
   routeForQuality,
-  SASI_CAPABILITIES,
   SASI_QUALITY_TIERS,
   SASI_SKILLS,
   type SasiQuality,
 } from "@/lib/sasi/catalog";
 import { SasiProductionAccount, SasiProjectProduction } from "@/app/sasi/SasiProductionPanels";
 import CangXuanDirectorStudio from "@/app/sasi/CangXuanDirectorStudio";
+import ConnectionCenter from "@/app/sasi/ConnectionCenter";
 
 type Lang = "zh" | "en";
 type Theme = "light" | "dark";
@@ -120,12 +120,14 @@ function UploadHub({
   onAdd,
   onRemove,
   onNotice,
+  onOpenConnections,
 }: {
   lang: Lang;
   files: StagedFile[];
   onAdd: (files: File[]) => void;
   onRemove: (id: string) => void;
   onNotice: (message: string) => void;
+  onOpenConnections?: () => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -161,7 +163,7 @@ function UploadHub({
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" onClick={() => inputRef.current?.click()} className="rounded-full border border-current/15 px-3 py-2 text-xs font-medium">＋ {copy(lang, "添加附件", "Add files")}</button>
           <button type="button" onClick={() => onNotice(copy(lang, "项目资产已进入私有隔离与索引体系；请先建立或打开项目查看归属资产。", "Project assets now use private quarantine and indexing; create or open a project to review its owned assets."))} className="rounded-full border border-current/15 px-3 py-2 text-xs opacity-70">{copy(lang, "我的资产", "My Assets")}</button>
-          <button type="button" onClick={() => onNotice(copy(lang, "GitHub 授权尚未启用；目前可以上传 ZIP、README 或报错截图。", "GitHub authorization is not enabled yet; upload a ZIP, README or error screenshot for now."))} className="rounded-full border border-current/15 px-3 py-2 text-xs opacity-70">GitHub</button>
+          <button type="button" onClick={() => onOpenConnections ? onOpenConnections() : onNotice(copy(lang,"请从左侧能力中枢打开 GitHub 与部署连接指引。","Open Capability Center from the sidebar for GitHub and deployment setup."))} className="rounded-full border border-current/15 px-3 py-2 text-xs opacity-70">GitHub · {copy(lang,"连接指引","Setup")}</button>
           <span className="text-xs opacity-45">{copy(lang, "拖拽、多文件或粘贴图片 · 单文件最大 100MB", "Drag, multi-select or paste images · 100MB per file")}</span>
         </div>
         {files.length > 0 && (
@@ -400,7 +402,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
               <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_290px]">
                 <div className={`rounded-3xl border p-5 ${panel}`}>
                   <textarea value={homeBrief} onChange={(event) => setHomeBrief(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "你想创造什么？也可以直接粘贴文字、图片，或添加剧本、项目 ZIP、截图和视频……", "What do you want to create? Paste text or images, or add a script, project ZIP, screenshot or video…")} className="min-h-24 w-full resize-none bg-transparent text-base leading-7 outline-none" />
-                  <UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} />
+                  <UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} onOpenConnections={()=>setView("connections")} />
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex flex-wrap gap-2">{[
                       ["制作短剧", "Drama", "drama"], ["构建网站", "Website", "code"], ["生成视频", "Video", "drama"], ["导入剧本", "Import script", "drama"],
@@ -471,9 +473,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
             <section><p className="text-xs font-semibold uppercase tracking-[.2em] text-[#7657ff]">CAPABILITY LIBRARY</p><h1 className="mt-3 text-4xl font-semibold">{copy(lang, "把成熟方法沉淀为可复用的专业能力", "Turn proven methods into reusable professional capability")}</h1><div className="mt-6 flex flex-wrap gap-2">{[["discover", "探索能力", "Discover"], ["mine", "我的能力", "My capabilities"], ["create", "编制与发布", "Author & publish"]].map(([id, zh, en]) => <button key={id} onClick={() => setSkillTab(id as typeof skillTab)} className={`rounded-full px-4 py-2 text-sm ${skillTab === id ? "bg-[#7657ff] text-white" : "border border-current/15"}`}>{copy(lang, zh, en)}</button>)}</div>{skillTab === "discover" ? <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{SASI_SKILLS.map((skill, index) => <article key={skill.id} className={`rounded-3xl border p-6 ${panel}`}><span className="text-2xl text-[#7657ff]">{skill.glyph}</span><h2 className="mt-5 text-lg font-semibold">{copy(lang, skill.zh, skill.en)}</h2><p className="mt-3 text-sm leading-6 opacity-55">{copy(lang, skill.noteZh, skill.noteEn)}</p><p className="mt-5 text-sm font-semibold">{index < 3 ? copy(lang, "基础能力 · 已纳入", "Core · Included") : copy(lang, "专业能力 · 即将开放", "Signature · Coming soon")}</p></article>)}</div> : <div className={`mt-7 rounded-3xl border p-7 ${panel}`}><h2 className="text-2xl font-semibold">{skillTab === "mine" ? copy(lang, "我的能力组合", "My capability set") : copy(lang, "编制并发布专业能力", "Author and publish a capability")}</h2><p className="mt-4 max-w-2xl leading-7 opacity-60">{copy(lang, "创作者能力开放前，将先完成隔离运行、权限说明、来源验证与专业审阅。未来每项能力都以适用场景、交付标准与使用授权呈现，而不是以低价工具陈列。", "Creator capabilities open after isolated execution, permission disclosure, provenance checks and professional review. Each capability will be presented by fit, delivery standard and usage license—not as a bargain tool listing.")}</p><button onClick={() => setNotice(copy(lang, "隔离运行与专业审阅体系就绪后，将开放创作者提交。", "Creator submissions open after isolated execution and professional review are ready."))} className="mt-6 rounded-xl border border-current/20 px-5 py-3 text-sm">{copy(lang, "查看准入标准", "View admission standard")}</button></div>}</section>
           )}
 
-          {view === "connections" && (
-            <section><p className="text-xs font-semibold uppercase tracking-[.2em] text-[#7657ff]">SASI CAPABILITY CENTER</p><h1 className="mt-3 text-4xl font-semibold">{copy(lang, "能力由 SASI 统筹，复杂度留在幕后", "Capabilities orchestrated, complexity kept behind the scenes")}</h1><p className="mt-4 max-w-3xl leading-8 opacity-60">{copy(lang, "SASI 依据目标、素材、制作规格与交付标准组织能力，让底层技术保持无感；拥有独立技术体系的专业团队，未来可在专属区域接入自有能力账户。", "SASI composes capabilities around intent, material, production grade and delivery standard while keeping underlying technology effortless. Professional teams with independent systems may later connect external capability accounts in a dedicated area.")}</p><div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{SASI_CAPABILITIES.map((capability) => <article key={capability.id} className={`rounded-3xl border p-6 ${panel}`}><div className="flex items-start justify-between gap-3"><div><h2 className="text-lg font-semibold">{copy(lang, capability.zh, capability.en)}</h2><p className="mt-1 text-[11px] uppercase tracking-[.16em] opacity-40">{capability.kind === "video" ? copy(lang, "创意制作", "Creative production") : copy(lang, "认知与构建", "Intelligence & build")}</p></div><span className={`rounded-full px-3 py-1 text-[11px] ${capability.status === "curated" ? "bg-emerald-500/10 text-emerald-600" : "bg-amber-500/10 text-amber-600"}`}>{capability.status === "curated" ? copy(lang, "由 SASI 管理", "SASI managed") : copy(lang, "分阶段开放", "Staged release")}</span></div><p className="mt-4 text-sm leading-6 opacity-55">{copy(lang, capability.noteZh, capability.noteEn)}</p></article>)}</div><div className={`mt-7 rounded-2xl border p-5 ${panel}`}><p className="text-sm font-medium">{copy(lang, "专业接入 · External Capability Access", "Professional access · External Capability Access")}</p><p className="mt-2 max-w-3xl text-xs leading-6 opacity-55">{copy(lang, "面向已有技术团队与供应协议的专业用户。正式开放时将采用服务端加密、权限隔离与可撤销授权，不在普通创作输入中收集任何凭证。", "For professional teams with existing supplier agreements. Access will use server-side encryption, isolation and revocable authorization; credentials are never collected in ordinary creative input.")}</p></div></section>
-          )}
+          {view === "connections" && <ConnectionCenter lang={lang} dark={dark} />}
 
           {view === "billing" && <SasiProductionAccount lang={lang} dark={dark} accountEmail={accountEmail} onNotice={setNotice} />}
 
