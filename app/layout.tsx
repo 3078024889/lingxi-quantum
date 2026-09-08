@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import FieldVoices from "@/components/FieldVoices";
-import AuroraVideoBand from "@/components/AuroraVideoBand";
-import ClickRipple from "@/components/ClickRipple";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
-import FieldStructure9D from "@/components/FieldStructure9D";
 
 const SITE = "https://lingxifield.cn";
+const SHARE_IMAGE = `${SITE}/og-sasi-20260908.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -38,14 +35,14 @@ export const metadata: Metadata = {
       "AI短剧、故事板、配音、视频生成、AI编程与网站部署汇入同一座双语数字空间，并连接意识显化与场域精测。",
     url: SITE,
     images: [
-      { url: "https://lingxifield.cn/og-v337.png?v=20260831", width: 1672, height: 941, alt: "灵犀场官网与小程序 · 双主理人数字生命场域" },
+      { url: SHARE_IMAGE, width: 1672, height: 941, alt: "灵犀场 SASI · 一念成片，一念显化" },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "灵犀场 SASI｜AI创作、视频生成与编程构建",
     description: "AI短剧 · 视频生成 · AI编程 · 网站部署 · 意识显化与场域精测。",
-    images: ["https://lingxifield.cn/og-v337.png?v=20260831"],
+    images: [SHARE_IMAGE],
   },
   robots: { index: true, follow: true },
   manifest: "/manifest.webmanifest",
@@ -105,7 +102,7 @@ const siteJsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -119,11 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-body antialiased">
         <MiniEmbedMode />
         <div className="grain" aria-hidden="true" />
-        <AuroraVideoBand />
-        <FieldVoices />
-        <ClickRipple />
-        {children}
-        <FieldStructure9D />
+        <div className="lx-site-content">{children}</div>
       </body>
     </html>
   );

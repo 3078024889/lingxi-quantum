@@ -7,6 +7,7 @@ import AskLingxi from "./AskLingxi";
 import { getAccess } from "@/lib/access";
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import { ConsoleCard, ConsolePanel, ConsoleSectionTitle, ConsoleStatus, FieldConsole } from "@/components/FieldConsole";
 
 const LIVE_AS_FAQ: BilingualFaqItem[] = [
   {
@@ -22,8 +23,6 @@ const LIVE_AS_FAQ: BilingualFaqItem[] = [
 ];
 
 
-import CosmicField from "@/components/CosmicField";
-
 export const metadata = {
   title: "显化活在此版本中的你 · 现实回路 | 灵犀 · Live as the You in This Version | Lingxi",
   description: "现实回路显化练习：每天 5–10 分钟，先在意识里活成「已经拥有」的版本，写下今日感受，让现实随之对齐。The Reality Loop manifestation practice — live as the version who already has it. | 灵犀场 LingxiField",
@@ -36,27 +35,25 @@ export default async function LiveAsPage() {
   return (
     <>
       <Nav />
-      <main className="pt-16">
-        <section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
-          <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25"><CosmicField className="h-full w-auto" /></div>
-          <div className="bg-void-deep mx-auto max-w-3xl rounded-sm px-8 py-12">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh="意识显化" en="Manifestation" />
-          </p>
-          <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
-            <Bi zh="显化活在此版本中的你" en="Live as the you in this version" />
-          </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
-            <Bi
-              zh="每天花 5–10 分钟，清晰写下你想创造的生活、今天真实感受到的状态，以及能够向它靠近的一步行动。持续观察、校准与实践，让愿景、选择和现实行动逐渐一致。"
-              en="Spend 5–10 minutes a day clarifying the life you want to create, the state you genuinely feel today, and one action that can move you closer. Keep observing, adjusting and practicing until vision, choice and real-world action gradually align."
-            />
-          </p>
-          </div>
-        </section>
-
-        <section className="px-6 pb-28">
-          <div className="mx-auto max-w-2xl space-y-16">
+      <FieldConsole
+        eyebrow="意识显化 · REALITY ALIGNMENT" eyebrowEn="MANIFESTATION · REALITY ALIGNMENT"
+        title="把意图，变成真实的现实" titleEn="Turn intention into lived reality"
+        description="从一个清晰的想法开始，让觉察、选择与行动彼此对齐，把你想要的生活显化为看得见的结果。"
+        descriptionEn="Begin with a clear intention, then align awareness, choice and action until the life you imagine becomes a visible result."
+        heroImage="/images/hero-lightbody.jpg"
+        features={[{zh:"意图澄明",en:"Clear intention",glyph:"✧"},{zh:"现实校准",en:"Reality alignment",glyph:"◎"},{zh:"灵感行动",en:"Inspired action",glyph:"↗"},{zh:"持续回看",en:"Ongoing reflection",glyph:"◌"}]}
+        aside={<>
+          <ConsoleStatus title="你的显化空间" titleEn="Your manifestation space"><p className="mt-3"><Bi zh={user ? (manifestActive ? "现实回路已开启，你可以继续今日记录。" : "你的账户已连接；开启意识显化后即可同步完整现实回路。") : "登录后，你的意图、观察与行动记录会进入个人场域。"} en={user ? (manifestActive ? "Your Reality Loop is active. Continue today's entry." : "Your account is connected. Unlock Manifestation to sync the full Reality Loop.") : "Sign in to carry intentions, reflections and actions into your private field."} /></p><Link href={user ? (manifestActive ? "#reality-loop" : "/membership") : "/account"} className="mt-4 inline-flex text-xs text-lattice"><Bi zh={user && manifestActive ? "继续现实回路 →" : "进入个人场域 →"} en={user && manifestActive ? "Continue the loop →" : "Enter your field →"} /></Link></ConsoleStatus>
+          <ConsoleStatus glyph="☀" title="今日指引" titleEn="Today’s orientation" tone="gold"><p className="mt-3"><Bi zh="先写清真正想创造的经验，再选择今天能够完成的一步。现实校准从可验证的行动开始。" en="Name the experience you truly want, then choose one action possible today. Alignment begins with verifiable action." /></p></ConsoleStatus>
+        </>}
+      >
+        <div id="reality-loop">
+          <ConsolePanel>
+            <p className="text-xs font-semibold uppercase tracking-[.2em] text-lattice"><Bi zh="意图工作台" en="INTENTION WORKSPACE" /></p>
+            <h2 className="mt-3 text-2xl font-semibold text-bone"><Bi zh="你想让什么，开始进入现实？" en="What do you want to bring into reality?" /></h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-bone-dim"><Bi zh="每天用 5–10 分钟写下愿景、今天真实的状态和下一步行动。系统保留原有的完整现实回路，不用虚拟进度替代真实记录。" en="Spend 5–10 minutes naming your vision, current state and next action. Your complete Reality Loop remains here, with real records rather than invented progress." /></p>
+          </ConsolePanel>
+          <div className="mt-4">
             {manifestActive ? (
               <RealityLoop />
             ) : (
@@ -78,7 +75,15 @@ export default async function LiveAsPage() {
                 </Link>
               </div>
             )}
-
+          </div>
+          <ConsoleSectionTitle zh="显化路径" en="Manifestation path" />
+          <div className="lx-console-card-grid">
+            <ConsoleCard href="/learn/manifestation-journal" image="/images/narratives/power-of-belief-1.jpg" title="愿景输入" titleEn="Goal Intention" description="写下内心真正渴望的经验，让意图拥有清晰边界。" descriptionEn="Give your desired experience a clear and honest boundary." />
+            <ConsoleCard href="/learn/manifestation-methods" image="/images/lifemap/content-bg-1.jpg" title="显化蓝图" titleEn="Manifestation Blueprint" description="把愿景拆解为状态、选择、资源与行动。" descriptionEn="Translate vision into state, choice, resources and action." />
+            <ConsoleCard href="/daily" image="/images/daily/daily.jpg" title="现实校准" titleEn="Reality Alignment" description="对齐内在信念与外在行动，校准当下。" descriptionEn="Align inner belief and outer action in the present." />
+            <ConsoleCard href="/learn/manifestation-signs" image="/images/narratives/profound-synchronicity-1.jpg" title="进程回看" titleEn="Progress Reflection" description="从真实记录中看见变化，而不是追逐虚构征兆。" descriptionEn="Witness change through your records, not invented signs." />
+          </div>
+          <div className="mt-8">
             {user ? (
               <AskLingxi />
             ) : (
@@ -101,11 +106,11 @@ export default async function LiveAsPage() {
               </div>
             )}
           </div>
-        </section>
-        <div className="mx-auto max-w-2xl px-6 pb-24">
+        </div>
+        <div className="mt-10">
           <FaqSection items={LIVE_AS_FAQ} />
         </div>
-      </main>
+      </FieldConsole>
       <Footer />
     </>
   );

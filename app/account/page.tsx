@@ -17,7 +17,6 @@ import PendingOrdersPanel from "./PendingOrdersPanel";
 import CollapsibleSection from "./CollapsibleSection";
 import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
-import CosmicField from "@/components/CosmicField";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
@@ -26,10 +25,18 @@ import { ensureAuditAccountAccess } from "@/lib/audit-access";
 
 export const metadata = { title: "进入场域 | 灵犀 · Enter the Field | Lingxi" };
 
-export default async function AccountPage({ searchParams }: { searchParams?: { miniLink?: string } }) {
+export default async function AccountPage({ searchParams }: { searchParams?: { miniLink?: string; next?: string } }) {
   const miniLink = typeof searchParams?.miniLink === "string" && searchParams.miniLink.length <= 2048
     ? searchParams.miniLink
     : null;
+  const requestedNext = typeof searchParams?.next === "string" ? searchParams.next : null;
+  const afterAuthPath = requestedNext
+    && requestedNext.startsWith("/")
+    && !requestedNext.startsWith("//")
+    && !requestedNext.includes("\\")
+    && requestedNext.length <= 512
+      ? requestedNext
+      : "/live-as";
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
   const user = supabase ? await getServerUser(supabase) : null;
 
@@ -191,7 +198,6 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
     <>
       <Nav />
       <main className="pt-16">
-        <div className="pointer-events-none fixed inset-0 -z-10 flex items-center justify-center opacity-20"><CosmicField className="h-full w-auto" /></div>
         <section className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-6 py-24 text-center">
           {user ? (
             <>
@@ -382,7 +388,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                 <Bi zh="用邮箱和密码登录或注册。验证后，你的现实回路、练习记录与显化轨迹，将在云端安全同步。" en="Sign in or register with email and password. Once verified, your Reality Loop, practice records, and manifestation trail sync securely to the cloud." />
               </p>
               <div className="mt-12 w-full">
-                <LoginForm afterAuthPath={miniLink ? `/account?miniLink=${encodeURIComponent(miniLink)}` : "/live-as"} />
+                <LoginForm afterAuthPath={miniLink ? `/account?miniLink=${encodeURIComponent(miniLink)}` : afterAuthPath} />
               </div>
               </div>
             </>

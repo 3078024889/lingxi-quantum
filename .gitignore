@@ -6,6 +6,12 @@ dist/
 .env
 .env.local
 .env.*.local
+supabase/.temp/
+supabase/.branches/
+/output/
+/tmp/
+/outputs/*.pdf
+/outputs/*.png
 .vercel/
 .DS_Store
 Thumbs.db

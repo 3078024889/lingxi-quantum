@@ -20,6 +20,7 @@ const PRACTICE_FAQ: BilingualFaqItem[] = [
 
 
 import PracticeJournal from "./PracticeJournal";
+import { ConsoleCard, ConsolePanel, ConsoleSectionTitle, ConsoleStatus, FieldConsole } from "@/components/FieldConsole";
 
 export const metadata = { title: "修炼技术 | 灵犀 · Practices | Lingxi", description: "四项意识修炼技术：量子息法、直觉丹道、归零心诀、上升心经，各自成径，也可合一深入。Four consciousness practices — the Quantum Breath Method, the Intuitive Way, Heart Reset, and the Ascending Heart Sutra — each a complete path on its own.", alternates: { canonical: "/practice" } };
 
@@ -34,25 +35,9 @@ export default function PracticeIndex() {
   return (
     <>
       <Nav />
-      <main className="pt-16">
-        <section className="relative overflow-hidden px-6 py-24 text-center">
-          <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-35">
-            <GateOrigin className="h-[440px] w-[440px]" />
-          </div>
-          <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            <Bi zh="修炼技术" en="Practices" />
-          </p>
-          <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
-            <Bi zh="心为门户，万法由心而启" en="The heart is the gateway — all ways open from within it" />
-          </h1>
-          <p className="mx-auto mt-3 max-w-xl font-display text-sm italic text-lattice/85 sm:text-base">
-            <Bi
-              zh="源自遥远星系的智慧传承，以古老文明的觉知语言，结合当下生命体验重新呈现。"
-              en="A wisdom lineage from distant star systems — carried in the language of an ancient civilisation's awareness, and given form again through the life you are living now."
-            />
-          </p>
-          <div className="mx-auto mt-8 max-w-2xl space-y-5 text-base leading-9 text-bone-dim">
+      <FieldConsole eyebrow="修炼技术 · INNER PRACTICE" eyebrowEn="INNER PRACTICE" title="修炼技术，让更好的自己成为日常" titleEn="Let a clearer self become your daily life" description="把古老觉知与现代节律结合，形成可实践、可感受、可持续的内在修炼路径。" descriptionEn="Bring ancient awareness into a contemporary rhythm through practical, felt and sustainable inner work." heroImage="/images/practice/quantum-pause-chart.jpg" features={[{zh:"科学节律",en:"Measured rhythm",glyph:"◌"},{zh:"每日可练",en:"Daily practice",glyph:"ϟ"},{zh:"真实记录",en:"Real journal",glyph:"▥"},{zh:"回到自己",en:"Return within",glyph:"♡"}]} aside={<><ConsoleStatus title="今日练习" titleEn="Today's practice" tone="cyan"><p className="mt-3"><Bi zh="从最简单的一次呼吸开始。系统不会伪造连续天数；完成记录后，你的真实轨迹才会在个人场域中累积。" en="Begin with one simple breath. No streak is invented; your trajectory grows only from completed records in your private field." /></p><Link href="/practice/breath" className="mt-4 inline-flex text-xs text-lattice"><Bi zh="开始量子息法 →" en="Begin Quantum Breath →" /></Link></ConsoleStatus><ConsoleStatus glyph="✦" title="修炼次序" titleEn="Practice sequence"><ul><li><Bi zh="设定当下意图" en="Set the present intention" /></li><li><Bi zh="进入身体与呼吸" en="Enter body and breath" /></li><li><Bi zh="观察而不评判" en="Observe without judgment" /></li><li><Bi zh="记录真实感受" en="Record what was felt" /></li><li><Bi zh="把清晰带回行动" en="Carry clarity into action" /></li></ul></ConsoleStatus></>}>
+        <ConsolePanel>
+          <div className="grid items-center gap-6 md:grid-cols-[180px_1fr]"><div className="mx-auto"><GateOrigin className="h-[150px] w-[150px]" /></div><div><p className="text-xs uppercase tracking-[.18em] text-lattice"><Bi zh="四道修炼 · 一座内在场域" en="FOUR PATHS · ONE INNER FIELD" /></p><h2 className="mt-3 text-2xl font-semibold text-bone"><Bi zh="心为门户，万法由心而启" en="The heart is the gateway" /></h2><div className="mt-4 space-y-3 text-sm leading-7 text-bone-dim">
             <p>
               <Bi
                 zh="四道修炼，各自构成一条完整的内在路径。它们可以独立深入，也可以彼此交融，在不同阶段形成相互支持的修炼体系。"
@@ -65,57 +50,37 @@ export default function PracticeIndex() {
                 en="The Four-in-One Set gathers these four paths and serves as the central entrance to the Lingxi Field practice system. Practices added in future will connect within this same system and continue to unfold there."
               />
             </p>
-          </div>
-          <div className="mx-auto mt-10 max-w-2xl space-y-5">
-            <p className="font-display text-xl leading-9 text-lattice sm:text-2xl">
+            <p className="font-display text-lg leading-8 text-lattice">
               <Bi
                 zh="呼吸，是回归觉知的入口。"
                 en="Breath is the entrance through which awareness returns."
               />
             </p>
-            <p className="text-base leading-9 text-bone-dim">
+            <p>
               <Bi
                 zh="当呼吸逐渐深入，意识开始从外在纷扰中回收，重新触及内在的清明与稳定。当心的门户开启，万千方法皆成为认识自身的路径。"
                 en="As the breath deepens, consciousness withdraws from outer disturbance and touches again the clarity and steadiness within. When the gateway of the heart opens, ten thousand methods all become ways of knowing yourself."
               />
             </p>
-            <p className="text-base leading-9 text-bone-dim">
+            <p>
               <Bi
                 zh="那些原本存在于生命深处的能力，会随着意识的展开逐渐显现。你不是获得了某种新的力量，而是在一次次回归之中，重新忆起自身本有的完整。"
                 en="The capacities that were always present in the depths of your life emerge gradually as consciousness unfolds. You are not acquiring some new power — with each return, you are remembering the wholeness that was yours to begin with."
               />
             </p>
-          </div>
-          </div>
-        </section>
-
-        <section className="px-6 pb-28">
-          <div className="mx-auto max-w-4xl">
-            <div className="grid gap-6 sm:grid-cols-2">
-              {practices.map((p) => (
-                <Link
-                  key={p.href}
-                  href={p.href}
-                  className="group rounded-sm border border-white/10 bg-void-deep p-8 transition hover:border-lattice/40"
-                >
-                  <h2 className="font-display text-2xl text-bone group-hover:text-lattice">
-                    <Bi zh={p.name} en={p.nameEn} />
-                  </h2>
-                  <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh={p.line} en={p.lineEn} /></p>
-                  <span className="mt-5 inline-block font-display text-xs uppercase tracking-widest2 text-lattice">
-                    <Bi zh="进入 →" en="Enter →" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-10">
-              <PracticeJournal />
-            </div>
-            <FaqSection items={PRACTICE_FAQ} />
-          </div>
-        </section>
-      </main>
+          </div></div></div>
+        </ConsolePanel>
+        <ConsoleSectionTitle zh="四道修炼" en="Four practices" />
+        <div className="lx-console-card-grid">
+          <ConsoleCard href="/practice/breath" image="/images/breath-rhythm.jpeg" title="量子息法" titleEn="Quantum Breath" description={practices[0].line} descriptionEn={practices[0].lineEn} />
+          <ConsoleCard href="/practice/ascending-heart" image="/images/hero-lightbody.jpg" title="上升心经" titleEn="Ascending Heart" description={practices[3].line} descriptionEn={practices[3].lineEn} />
+          <ConsoleCard href="/practice/intuition" image="/images/narratives/our-sovereign-infinite-self-1.jpg" title="直觉丹道" titleEn="Intuitive Way" description={practices[1].line} descriptionEn={practices[1].lineEn} />
+          <ConsoleCard href="/practice/heart-reset" image="/images/narratives/role-of-the-heart-1.jpg" title="归零心诀" titleEn="Heart Reset" description={practices[2].line} descriptionEn={practices[2].lineEn} />
+        </div>
+        <ConsoleSectionTitle zh="修炼记录" en="Practice journal" />
+        <PracticeJournal />
+        <div className="mt-9"><FaqSection items={PRACTICE_FAQ} /></div>
+      </FieldConsole>
       <Footer />
     </>
   );

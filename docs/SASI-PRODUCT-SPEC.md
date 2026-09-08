@@ -6,9 +6,9 @@
 
 LingxiField SASI unites a consciousness space with an AI creation space. Its promise is: From Intention to Creation.
 
-平台不是模型导航站。简单模式只问用户想做什么、目标、时长、画幅、质量与预算，由路由器选择模型和 Skills；专业模式才显示 Provider、Model、Prompt、Seed、分辨率、声音模型等参数。
+平台不是模型导航站。标准体验只询问用户想创造什么、交付目标、篇幅、制作规格与投入边界，由 SASI Auto 组织专业能力；具体供应商、采购数据与技术凭证不进入普通用户体验。
 
-This is not a model directory. Simple Mode asks for intent, outcome, duration, aspect ratio, quality and budget, then routes models and Skills automatically. Provider and model controls belong in Professional Mode.
+This is not a model directory. The standard experience asks for intent, outcome, scope, production grade and allocation boundary, then orchestrates professional capabilities automatically. Suppliers, procurement data and technical credentials stay outside the ordinary user experience.
 
 ## 两个生产系统 / Two Production Systems
 
@@ -36,11 +36,11 @@ Every node supports editing, targeted regeneration, locking, version copy, compa
 
 Character and scene identity boards preserve continuity. Each storyboard shot records cast, scene, duration, action, expression, dialogue, camera, motion, sound, prompts and references.
 
-## Skills 与 BYOK / Skills and BYOK
+## 能力作品与专业接入 / Capabilities and Professional Access
 
-首批仅开放平台维护、版本化的官方 Skills。用户上传与交易必须等沙箱、权限声明、恶意行为审查和版本隔离完成后开放。BYOK 密钥只允许服务端加密保存、脱敏显示、测试、轮换与删除；不得写入浏览器存储、数据库明文或日志。
+首批仅开放平台维护、版本化的官方能力。用户编制与授权必须等隔离运行、权限声明、恶意行为审查和版本隔离完成后开放。外部能力凭证只允许服务端加密保存、脱敏显示、测试、轮换与删除；不得写入浏览器存储、数据库明文或日志。
 
-Only versioned official Skills launch first. User publishing waits for sandboxing, permission declarations, malicious-behavior review and version isolation. BYOK keys must be encrypted server-side, masked, testable, rotatable and deletable—never stored in browser storage, plaintext database fields or logs.
+Only versioned official capabilities launch first. Creator publishing waits for isolated execution, permission declarations, malicious-behavior review and version isolation. External capability credentials must be encrypted server-side, masked, testable, rotatable and deletable—never stored in browser storage, plaintext database fields or logs.
 
 ## 边界 / Boundaries
 

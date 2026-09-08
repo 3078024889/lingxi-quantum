@@ -23,6 +23,20 @@ export async function fulfillPaidOrder(orderId: string): Promise<FulfillmentResu
     return { ok: false, error: "订单产品配置无效。" }
   }
 
+  if (product.group === "production" && product.sasiPoints) {
+    const rpcResult = await admin.rpc("credit_sasi_topup", { p_order_id: orderId })
+    if (rpcResult.error) {
+      console.error("[fulfillPaidOrder] SASI top-up failed", {
+        orderId,
+        code: rpcResult.error.code,
+        message: rpcResult.error.message,
+      })
+      return { ok: false, error: "制作账户入账暂未完成，请稍后重试。" }
+    }
+    const result = rpcResult.data as FulfillmentResult | null
+    return result?.ok ? result : { ok: false, error: result?.error ?? "制作账户入账暂未完成，请稍后重试。" }
+  }
+
   const rpcResult = await admin.rpc("fulfill_paid_order", {
     p_order_id: orderId,
     p_days: product.days == null ? 365 : product.days,

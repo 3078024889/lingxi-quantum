@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
 import { createPaypalOrder } from "@/lib/paypal";
+import { safeLocalReturnPath, sasiPaidProductionEnabled } from "@/lib/sasi/payment-gate";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -16,6 +17,9 @@ export async function POST(req: Request) {
     const product = getProduct(productId);
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
+    }
+    if (product.group === "production" && !sasiPaidProductionEnabled()) {
+      return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });
 
@@ -71,6 +75,7 @@ export async function POST(req: Request) {
         product_id: product.id,
         product_type: product.type,
         amount_usd: product.priceUsd,
+        amount_rmb: product.priceRmb,
         status: "pending",
         provider: "paypal",
         ...(typeof submissionId === "string" ? { submission_id: submissionId } : {}),
@@ -83,8 +88,7 @@ export async function POST(req: Request) {
     }
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
-    const dest =
-      typeof returnPath === "string" && returnPath.startsWith("/") ? returnPath : "/account?payment=complete";
+    const dest = safeLocalReturnPath(returnPath, "/account?payment=complete");
 
     try {
       const { id: paypalOrderId, approveUrl } = await createPaypalOrder({

@@ -10,7 +10,8 @@ export type Product = {
   note: string;
   noteEn: string;
   highlight?: boolean;
-  group: "cultivation" | "manifestation";
+  group: "cultivation" | "manifestation" | "production";
+  sasiPoints?: number;
 };
 
 export const cultivationProducts: Product[] = [
@@ -66,7 +67,13 @@ export const lifeArchetypeProducts: Product[] = [
   { id: "life-archetype", name: "生命原型", nameEn: "Life Archetype", priceUsd: 0, priceRmb: 0, type: "permanent", note: "一年内八个独立场域全部开启后自动生成，不单独售卖。", noteEn: "Generated automatically after all eight independent fields are opened within one year; not sold separately.", group: "cultivation" },
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts];
+export const sasiProductionProducts: Product[] = [
+  { id: "sasi-credit-entry", name: "创作启程", nameEn: "Creative Start", priceUsd: 3, priceRmb: 20, type: "permanent", note: "为首次真实制作建立清晰的制作边界。", noteEn: "Establish a clear boundary for a first live production.", group: "production", sasiPoints: 2000 },
+  { id: "sasi-credit-studio", name: "持续制作", nameEn: "Studio Flow", priceUsd: 15, priceRmb: 100, type: "permanent", note: "承接连续镜头、版本复核与阶段性交付。", noteEn: "Support continuing shots, revisions and staged delivery.", group: "production", sasiPoints: 10000 },
+  { id: "sasi-credit-reserve", name: "工作室储备", nameEn: "Studio Reserve", priceUsd: 75, priceRmb: 500, type: "permanent", note: "面向多镜头项目的稳定制作储备。", noteEn: "A stable production reserve for multi-shot projects.", group: "production", sasiPoints: 50000 },
+];
+
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts, ...sasiProductionProducts];
 export function getProduct(id: string) {
   return allProducts.find((p) => p.id === id);
 }

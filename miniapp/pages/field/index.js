@@ -45,13 +45,13 @@ Page({
     return {
       title: '灵犀场 · 步入你的意识场域',
       path: '/pages/field/index',
-      imageUrl: 'https://lingxifield.cn/mini-share-v337.jpg?v=20260831',
+      imageUrl: 'https://lingxifield.cn/og-sasi-20260908.png',
     }
   },
   onShareTimeline() {
     return {
       title: '灵犀场 · 观测 · 觉察 · 连接',
-      imageUrl: 'https://lingxifield.cn/mini-share-v337.jpg?v=20260831',
+      imageUrl: 'https://lingxifield.cn/og-sasi-20260908.png',
     }
   },
 })

@@ -9,29 +9,66 @@ const prepare = read("app/api/sasi/prepare/route.ts");
 const readiness = read("lib/sasi/readiness.ts");
 const middleware = read("middleware.ts");
 const miniField = read("miniapp/pages/field/index.js");
-const schema = read("supabase/sasi-schema.sql");
+const schema = read("supabase/migrations/20260908090000_sasi_foundation.sql");
 const legal = read("app/legal/sasi/page.tsx");
 const productSpec = read("docs/SASI-PRODUCT-SPEC.md");
 const budgetSpec = read("docs/SASI-BUDGET-QUALITY.md");
+const platformStrategy = read("docs/SASI-PLATFORM-STRATEGY.md");
+const publicCatalog = read("app/api/sasi/catalog/route.ts");
+const providerEconomics = read("lib/sasi/provider-economics.ts");
+const projectsRoute = read("app/api/sasi/projects/route.ts");
+const projectProposal = read("lib/sasi/project-proposal.ts");
+const assetPrepare = read("app/api/sasi/assets/prepare/route.ts");
+const assetInspect = read("app/api/sasi/assets/[id]/inspect/route.ts");
+const projectDetail = read("app/api/sasi/projects/[id]/route.ts");
+const productionSchema = read("supabase/migrations/20260908160000_sasi_production_kernel.sql");
+const provider = read("lib/sasi/provider.ts");
+const production = read("lib/sasi/production.ts");
+const productionPanel = read("app/sasi/SasiProductionPanels.tsx");
+const jobsRoute = read("app/api/sasi/jobs/route.ts");
+const accountRoute = read("app/api/sasi/account/route.ts");
+const paymentGate = read("lib/sasi/payment-gate.ts");
+const fulfillment = read("lib/fulfill-order.ts");
+const aigcLabel = read("lib/sasi/aigc-label.ts");
 
-const providers = [...catalog.matchAll(/costRmbPerSecond:\s*([\d.]+), sellRmbPerSecond:\s*([\d.]+)/g)]
-  .map((match) => ({ cost: Number(match[1]), sell: Number(match[2]) }));
+const internalCosts = [...providerEconomics.matchAll(/supplierCostPerSecond:\s*([\d.]+)/g)]
+  .map((match) => Number(match[1]));
 
 const checks = [
   [workspace.includes('type Lang = "zh" | "en"') && legal.includes("bodyZh") && legal.includes("bodyEn"), "SASI workspace and legal rules are bilingual"],
-  [workspace.includes("SASI Auto") && workspace.includes("Advanced settings and model choice"), "simple auto routing and optional advanced model mode"],
-  [prepare.includes("explicitEpisodes") && prepare.includes("suggestedEpisodes") && productSpec.includes("绝不默认 100 集"), "episode count is inferred, never preset to 100"],
-  [prepare.includes("requiresFinalCostConfirmation: true") && schema.includes("reserve_sasi_points"), "quote confirmation precedes atomic reservation"],
-  [workspace.includes("预算不足") && budgetSpec.includes("不得隐藏降级"), "budget-quality mismatch blocks silent downgrade"],
-  [catalog.includes("POINTS_PER_RMB = 100") && providers.length >= 4 && providers.every((item) => item.sell > item.cost), "credit ratio and positive provider margin guard"],
-  [catalog.includes("Math.round(price * POINTS_PER_RMB)") && !catalog.includes("Math.ceil(price * POINTS_PER_RMB)"), "currency-to-points conversion avoids floating overcharge"],
-  [readiness.includes("process.env.OPENAI_API_KEY") && !workspace.includes("OPENAI_API_KEY"), "provider credentials remain server-side"],
+  [workspace.includes("SASI Auto") && workspace.includes("Capability Center") && !workspace.includes("Model Connections"), "outcome-first auto orchestration and capability center"],
+  [projectProposal.includes("explicitEpisodes") && projectProposal.includes("suggestedEpisodes") && productSpec.includes("绝不默认 100 集"), "episode count is inferred, never preset to 100"],
+  [projectProposal.includes("requiresProductionAuthorization: true") && schema.includes("reserve_sasi_points"), "production authorization precedes atomic reservation"],
+  [workspace.includes("尚未对齐") && budgetSpec.includes("不得隐藏降级"), "allocation-quality mismatch blocks silent downgrade"],
+  [catalog.includes("ROUTE_CREDITS_PER_SECOND") && internalCosts.length >= 3 && providerEconomics.includes('import "server-only"'), "public production credits and supplier economics are separated"],
+  [catalog.includes("Math.round((ROUTE_CREDITS_PER_SECOND") && !catalog.includes("Math.ceil("), "production-credit calculation avoids rounding up"],
+  [provider.includes('import "server-only"') && provider.includes('env("XAI_API_KEY")') && provider.includes('env("OPENAI_API_KEY")') && provider.includes('env("DASHSCOPE_API_KEY")') && !workspace.includes("XAI_API_KEY"), "multi-provider credentials remain server-side"],
   [schema.includes("enable row level security") && schema.includes("service_role") && schema.includes("sasi_node_dependencies"), "RLS, service writes and dependency graph schema"],
   [middleware.includes('"/dream"') && middleware.includes('target.pathname = "/"'), "retired Dream routes redirect to the SASI home"],
   [home.includes("<SasiWorkspace") && legacySasi.includes('permanentRedirect("/")') && middleware.includes('pathname === "/sasi"'), "SASI is the canonical root and /sasi permanently redirects"],
   [workspace.includes("SASI DRAMA") && workspace.includes("SASI BUILD") && workspace.includes("你想创造什么"), "Drama and Build are equal home entrances"],
   [workspace.includes("Add files") && workspace.includes("onDrop={drop}") && workspace.includes("onPaste={handlePaste}"), "unified input supports click, drag and paste staging"],
-  [workspace.includes("余额与充值") && !workspace.includes("积分与充值"), "public billing language uses RMB balance"],
+  [workspace.includes("制作账户") && workspace.includes("项目投入边界") && !workspace.includes("人民币余额"), "public language uses production account and allocation boundary"],
+  [publicCatalog.includes("SASI_CAPABILITIES") && !publicCatalog.includes("provider-economics") && !publicCatalog.includes("POINTS_PER_RMB"), "public catalog does not expose procurement economics"],
+  [platformStrategy.includes("结果先于工具") && platformStrategy.includes("供应商采购价"), "platform strategy separates outcome language from internal procurement"],
+  [projectsRoute.includes("auth.getUser()") && projectsRoute.includes('rpc("create_sasi_project"') && !projectsRoute.includes("createAdminClient"), "project creation derives ownership from the authenticated session"],
+  [schema.includes("sasi_projects_user_request_uidx") && schema.includes("p_request_id uuid") && projectsRoute.includes("Idempotency-Key"), "project creation is idempotent across retries"],
+  [schema.includes("where p.id = project_id and p.user_id = auth.uid()") && schema.includes("grant select on public.sasi_projects, public.sasi_nodes, public.sasi_node_dependencies to authenticated"), "project graph reads work under RLS and node ownership is project-bound"],
+  [projectProposal.includes("SASI_BUILD_STAGES") && projectProposal.includes("SASI_DRAMA_STAGES") && schema.includes("sasi_node_dependencies"), "persistent projects start with a real editable dependency graph"],
+  [workspace.includes('fetch("/api/sasi/projects"') && workspace.includes("持续生长的项目"), "workspace creates and lists persisted SASI projects"],
+  [schema.includes("sasi-quarantine") && schema.includes("external_scan_required") && schema.includes("sasi_assets_search_idx"), "private quarantine assets have scan gates and a search index"],
+  [assetPrepare.includes("createSignedUploadUrl") && assetPrepare.includes("safeAssetPath(user.id, projectId") && !assetPrepare.includes("signedUrl:"), "upload tickets use server-owned paths and expose no reusable service credential"],
+  [assetInspect.includes("sha256(bytes)") && assetInspect.includes("inspectText(bytes)") && assetInspect.includes("external_scan_required"), "safe text is hashed and indexed while binary assets remain gated"],
+  [projectDetail.includes('from("sasi_nodes")') && projectDetail.includes('from("sasi_assets")') && workspace.includes("SASI STORY GRAPH"), "project workspace reads persisted nodes and quarantined assets"],
+  [productionSchema.includes("credit_sasi_topup") && productionSchema.includes("create_and_reserve_sasi_job") && productionSchema.includes("settle_sasi_job") && productionSchema.includes("release_sasi_job"), "top-up, reservation, settlement and release are atomic service-only operations"],
+  [paymentGate.includes("SASI_CONTENT_LABELING_ENABLED") && paymentGate.includes("SASI_AIGC_LABEL_MODE") && paymentGate.includes("SASI_JOBS_ENABLED") && paymentGate.includes("SASI_REFUND_FLOW_TESTED") && fulfillment.includes('product.group === "production"'), "paid production cannot open before fulfillment, refund and safety gates"],
+  [provider.includes('"seedance" | "xai" | "openai" | "wan"') && provider.includes('env("ARK_API_KEY")') && provider.includes("SASI_VERIFIED_VIDEO_PROVIDERS"), "only verified first-party video routes are eligible"],
+  [provider.includes("preferredProvider") && jobsRoute.includes("providerPreference") && productionPanel.includes('"professional"') && productionPanel.includes("SASI Auto"), "auto routing and explicit professional routing share one verified provider gate"],
+  [provider.includes("cost_in_usd_ticks") && production.includes("providerCostMinor") && production.includes("supplierCost"), "xAI reported cost is retained for settlement evidence"],
+  [jobsRoute.includes("Idempotency-Key") && jobsRoute.includes("create_and_reserve_sasi_job") && jobsRoute.includes("dispatchSasiJob"), "job authorization is idempotent and reserves before provider dispatch"],
+  [production.includes("UNTRUSTED_DELIVERY_HOST") && production.includes("AIGC_LABEL_REQUIRES_MP4") && production.includes('from("sasi-deliveries")'), "provider delivery is host-restricted, signature-checked and private"],
+  [aigcLabel.includes('new TextEncoder().encode("AIGC")') && aigcLabel.includes('Label: "1"') && production.includes("AIGC_METADATA_VERIFICATION_FAILED") && jobsRoute.includes("cleanVisualExportRequested"), "clean visual exports retain standard AIGC metadata and agreement evidence"],
+  [accountRoute.includes('from("sasi_wallets")') && accountRoute.includes('from("sasi_credit_ledger")') && accountRoute.includes('from("sasi_deliveries")'), "production account exposes owned ledger, jobs and deliveries"],
   [miniField.includes("灵犀场 SASI") && miniField.includes("web: '/'"), "Mini Program opens the canonical SASI home"],
   [fs.existsSync("skills/sasi-web-builder/SKILL.md") && fs.existsSync("skills/sasi-short-drama/SKILL.md"), "official Build and Drama Skills exist"],
   [legal.includes("不提供内容社区发布") && legal.includes("does not operate a publishing community"), "no-publishing boundary is explicit"],

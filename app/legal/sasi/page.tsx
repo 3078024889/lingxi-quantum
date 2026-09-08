@@ -5,7 +5,7 @@ import Bi from "@/components/Bi";
 
 export const metadata: Metadata = {
   title: "SASI 法律与规则 · Legal & Rules",
-  description: "灵犀场 SASI 用户服务、AI创作、计费退款、BYOK、Skill、知识产权与生成内容标识规则。",
+  description: "灵犀场 SASI 用户服务、AI创作、制作账户、外部能力接入、知识产权与生成内容标识规则。",
 };
 
 const sections = [
@@ -25,17 +25,17 @@ const sections = [
     bodyEn: "Users must hold lawful rights to uploaded text, scripts, novels, likenesses, voices, images, video, code and Skills. Unauthorized impersonation, voice cloning, copyright or trademark infringement, privacy violations and misuse of trade secrets are prohibited. The platform may reject, pause or remove unlawful, infringing or high-risk tasks.",
   },
   {
-    titleZh: "四、余额、计费与退款", titleEn: "4. Credits, Billing and Refunds",
-    bodyZh: "SASI 余额与意识显化等独立产品分开。收费任务先展示预计费用、质量、预算差额和风险；用户确认后冻结余额，按实际消耗结算并释放差额。未产生不可退成本的失败任务退回相应冻结额；第三方已产生的不可退费用按确认页规则处理。主观审美不符不当然构成系统故障，重新生成如产生新调用须再次报价。",
-    bodyEn: "SASI credits are separate from products such as Manifestation. Paid jobs show estimated cost, quality, budget gap and risk before funds are reserved. Actual usage is settled and the difference released. Failed work without non-refundable provider cost is returned; unavoidable provider charges follow the confirmation terms. Subjective dissatisfaction is not automatically a system fault, and paid regeneration requires a new quote.",
+    titleZh: "四、制作账户、结算与退还", titleEn: "4. Production Account, Settlement and Returns",
+    bodyZh: "SASI 制作账户与意识显化等独立产品分开。需使用制作额度的任务会先展示制作提案、规格、投入上限和风险；用户授权后锁定相应额度，按实际执行结算并归还未使用部分。未产生不可退外部支出的失败任务退回相应额度；已经发生且不可撤销的外部支出按授权页规则处理。主观审美不符不当然构成系统故障，重新制作如产生新的外部调用须再次获得授权。",
+    bodyEn: "The SASI production account is separate from products such as Manifestation. Work requiring production allocation presents a proposal, grade, ceiling and risk before authorization. The required allocation is then secured, actual execution is settled, and unused portions are returned. Failed work without non-refundable external expense is returned; unavoidable external charges follow the authorization terms. Subjective dissatisfaction is not automatically a system fault, and a new external run requires renewed authorization.",
   },
   {
-    titleZh: "五、BYOK 与第三方服务", titleEn: "5. BYOK and Third-party Services",
-    bodyZh: "使用自有 Key 时，模型费用由用户与 Provider 直接结算；SASI 仅可在用户主动任务所需范围内使用该 Key，并可另行收取已提前展示的工作流或 Premium Skill 费用。Provider 的价格、限流、地区限制、停机与账号规则由其自身条款决定。",
-    bodyEn: "With BYOK, model fees are settled directly between the user and provider. SASI may use the key only for user-initiated work and may separately charge a clearly disclosed workflow or Premium Skill fee. Provider pricing, limits, regional availability, outages and account rules remain governed by that provider.",
+    titleZh: "五、外部能力接入", titleEn: "5. External Capability Access",
+    bodyZh: "专业用户接入自有外部能力账户时，相关服务支出由用户与外部服务方直接结算；SASI 仅可在用户主动授权任务所需范围内使用相应凭证，并可另行收取已提前展示的编排或专业能力授权额度。外部服务的价格、限流、地区限制、停机与账户规则由其自身条款决定。",
+    bodyEn: "When professional users connect an external capability account, related service charges are settled directly with that service. SASI may use the credential only for user-authorized work and may separately require clearly disclosed orchestration or professional-capability allocation. Pricing, limits, regional availability, outages and account rules remain governed by the external service.",
   },
   {
-    titleZh: "六、Skill 发布与交易", titleEn: "6. Skill Publishing and Transactions",
+    titleZh: "六、能力作品发布与授权", titleEn: "6. Capability Publishing and Licensing",
     bodyZh: "用户 Skill 上线前须经过权限声明、版本隔离与安全审查。禁止恶意软件、后门、凭证窃取、未授权攻击、违法生成和假冒官方 Skill。创作者须拥有合法权利；平台可审核、拒绝、下架、暂停结算或处理退款。交易和创作者分成在相关功能正式开放前另行公示。",
     bodyEn: "User Skills require permission declarations, version isolation and security review before release. Malware, backdoors, credential theft, unauthorized attacks, unlawful generation and fake official Skills are prohibited. Creators must hold lawful rights. The platform may review, reject, remove, suspend settlement or issue refunds. Marketplace terms and revenue share will be published before launch.",
   },
@@ -51,8 +51,8 @@ const sections = [
   },
   {
     titleZh: "九、AI 生成内容标识与导出", titleEn: "9. AI Content Labels and Export",
-    bodyZh: "平台将按适用法律与技术要求预留显式标识、隐式标识和文件元数据标记。用户导出后不得非法删除、篡改或隐匿依法必须保留的标识。SASI 不提供内容社区发布；用户自行发布时还须遵守目标平台规则与所在地法律。",
-    bodyEn: "The platform reserves visible labels, invisible markers and file metadata as required by applicable law and technical standards. Users must not unlawfully remove, alter or conceal required labels after export. SASI does not operate a publishing community; users must follow destination-platform rules and local law when publishing elsewhere.",
+    bodyZh: "交付页面将在作品周边持续展示“AI 生成合成”提示；成片文件写入包含生成属性、服务提供者和作品编号的 AIGC 元数据。SASI 不叠加持续占据画面的品牌水印，也不提供内容社区发布。用户逐任务申请洁净画面导出时，应确认对外发布标识义务；平台依法留存申请对象、任务、协议版本与时间记录不少于六个月。用户自行发布时，应主动使用目标平台提供的 AI 内容标识功能，不得恶意删除、篡改、伪造或隐匿依法必须保留的标识。",
+    bodyEn: "Delivery surfaces continuously disclose that a work is AI-generated, while the exported file carries AIGC metadata identifying its generated status, provider and production ID. SASI does not impose a persistent branded visual watermark and does not operate a publishing community. A clean visual export is requested per task with acknowledgement of publication-label duties; recipient, task, agreement version and time records are retained for at least six months. When publishing elsewhere, users must use the destination platform's AI-content disclosure and must not maliciously delete, alter, forge or conceal required labels.",
   },
 ];
 
