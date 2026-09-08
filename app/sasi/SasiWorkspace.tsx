@@ -20,10 +20,11 @@ import {
   type SasiQuality,
 } from "@/lib/sasi/catalog";
 import { SasiProductionAccount, SasiProjectProduction } from "@/app/sasi/SasiProductionPanels";
+import CangXuanDirectorStudio from "@/app/sasi/CangXuanDirectorStudio";
 
 type Lang = "zh" | "en";
 type Theme = "light" | "dark";
-type View = "home" | "drama" | "code" | "skills" | "connections" | "billing" | "project";
+type View = "home" | "director" | "drama" | "code" | "skills" | "connections" | "billing" | "project";
 type RouteHint = "drama" | "code" | "auto";
 
 type StagedFile = {
@@ -62,6 +63,7 @@ const ACCEPTED_EXTENSIONS = new Set([
 
 const studioNav: { id: View; zh: string; en: string; glyph: string }[] = [
   { id: "home", zh: "SASI 首页", en: "SASI Home", glyph: "✦" },
+  { id: "director", zh: "苍玄 AI 导演", en: "CangXuan Director", glyph: "◈" },
   { id: "drama", zh: "影像创作", en: "Story Studio", glyph: "▶" },
   { id: "code", zh: "产品构建", en: "Product Studio", glyph: "</>" },
   { id: "skills", zh: "能力作品库", en: "Capability Library", glyph: "◇" },
@@ -180,7 +182,8 @@ function UploadHub({
 
 export default function SasiWorkspace({ accountEmail }: { accountEmail: string | null }) {
   const [lang, setLang] = useState<Lang>("zh");
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
+  const [themeReady, setThemeReady] = useState(false);
   const [view, setView] = useState<View>("home");
   const [mobileNav, setMobileNav] = useState(false);
   const [homeBrief, setHomeBrief] = useState("");
@@ -196,14 +199,16 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   useEffect(() => {
     const storedTheme = window.localStorage.getItem("lingxi-site-theme");
     if (storedTheme === "light" || storedTheme === "dark") setTheme(storedTheme);
+    setThemeReady(true);
     const requestedView = new URLSearchParams(window.location.search).get("view");
-    const routeView: Record<string, View> = { home: "home", drama: "drama", build: "code", skills: "skills", capabilities: "connections", billing: "billing", project: "project" };
+    const routeView: Record<string, View> = { home: "home", director: "director", drama: "drama", build: "code", skills: "skills", capabilities: "connections", billing: "billing", project: "project" };
     if (requestedView && routeView[requestedView]) setView(routeView[requestedView]);
   }, []);
   useEffect(() => {
+    if (!themeReady) return;
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem("lingxi-site-theme", theme);
-  }, [theme]);
+  }, [theme, themeReady]);
   const [preparing, setPreparing] = useState(false);
   const [projects, setProjects] = useState<SasiProjectSummary[]>([]);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
@@ -408,13 +413,13 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
               <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
                 {[
-                  ["drama","▶","AI 短剧工坊","Drama Studio","从剧本到完整视频"],
-                  ["code","</>","编程构建部署","Build & Deploy","从需求到真正上线"],
-                  ["skills","◇","能力作品库","Capabilities","沉淀与复用专业能力"],
-                  ["connections","◎","AI 能力中枢","AI Orchestration","由 SASI 智能调度"],
-                  ["billing","◉","制作账户","Production Account","清晰、安全的投入边界"],
-                ].map(([target,glyph,zh,en,note]) => <button key={target} type="button" onClick={() => setView(target as View)} className={`rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><span className="text-lg text-[#7f9fff]">{glyph}</span><h2 className="mt-3 text-sm font-semibold">{copy(lang,zh,en)}</h2><p className="mt-1 text-[10px] leading-5 opacity-45">{note}</p></button>)}
-                <Link href="/account" className={`rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><span className="text-lg text-[#7f9fff]">○</span><h2 className="mt-3 text-sm font-semibold">{copy(lang,"我的场域","My Field")}</h2><p className="mt-1 text-[10px] leading-5 opacity-45">{copy(lang,"项目、作品与生命档案","Projects, works and life archive")}</p></Link>
+                  {target:"director",art:"director",zh:"苍玄 AI 导演",en:"CangXuan Director",note:"从想法到导演方案"},
+                  {target:"code",art:"build",zh:"编程构建部署",en:"Build & Deploy",note:"从需求到真正上线"},
+                  {target:"skills",art:"capability",zh:"能力作品库",en:"Capabilities",note:"沉淀与复用专业能力"},
+                  {target:"connections",art:"orchestration",zh:"AI 能力中枢",en:"AI Orchestration",note:"由 SASI 智能调度"},
+                  {target:"billing",art:"billing",zh:"制作账户",en:"Production Account",note:"清晰、安全的投入边界"},
+                ].map((item) => <button key={item.target} type="button" onClick={() => setView(item.target as View)} className={`sasi-home-tile rounded-2xl border text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><span className={`sasi-home-tile-art art-${item.art}`} /><span className="block p-4"><h2 className="text-sm font-semibold">{copy(lang,item.zh,item.en)}</h2><p className="mt-1 text-[10px] leading-5 opacity-45">{item.note}</p></span></button>)}
+                <Link href="/account" className={`sasi-home-tile rounded-2xl border text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><span className="sasi-home-tile-art art-field"/><span className="block p-4"><h2 className="text-sm font-semibold">{copy(lang,"我的场域","My Field")}</h2><p className="mt-1 text-[10px] leading-5 opacity-45">{copy(lang,"项目、作品与生命档案","Projects, works and life archive")}</p></span></Link>
               </div>
 
               <div className="mt-6 grid gap-5 lg:grid-cols-2">
@@ -438,6 +443,8 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           )}
 
           {view === "project" && projectDetail && <SasiProjectProduction detail={projectDetail} lang={lang} dark={dark} onReload={() => openProject(projectDetail.project.id)} onNotice={setNotice} />}
+
+          {view === "director" && <CangXuanDirectorStudio lang={lang} dark={dark} onEnterProduction={(story) => { setScript(story); setView("drama"); }} />}
 
           {view === "code" && (
             <section>

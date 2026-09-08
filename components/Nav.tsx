@@ -59,11 +59,11 @@ export default function Nav() {
   const pathname = usePathname() || "/";
   const [open, setOpen] = useState(false);
   const [insightsOpen, setInsightsOpen] = useState(() => insights.some((item) => activeFor(pathname, item.href)));
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
 
   useEffect(() => {
     const stored = window.localStorage.getItem("lingxi-site-theme");
-    const next = stored === "light" ? "light" : "dark";
+    const next = stored === "dark" ? "dark" : "light";
     setTheme(next);
     document.documentElement.dataset.theme = next;
   }, []);
