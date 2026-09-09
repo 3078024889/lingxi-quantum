@@ -5,6 +5,7 @@ const panels = fs.readFileSync("app/sasi/SasiV3Panels.tsx", "utf8");
 const manifestation = fs.readFileSync("app/live-as/page.tsx", "utf8");
 const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
+const projectRoute = fs.readFileSync("app/api/sasi/projects/[id]/route.ts", "utf8");
 
 const checks = [
   ["canonical SASI promise", workspace.includes("把想法，变成真实可用的作品") && workspace.includes("一键成片，一念即达，一念显化")],
@@ -19,6 +20,9 @@ const checks = [
   ["artwork uses ratio-safe rendering", css.includes("aspect-ratio:1.424/1") && css.includes("object-fit:cover")],
   ["ambient motion respects reduced motion", css.includes("prefers-reduced-motion") && workspace.includes("sasi-v3-ambient-video")],
   ["mockup screenshots are not embedded", !workspace.includes("codex-clipboard") && !panels.includes("codex-clipboard")],
+  ["work library has real project actions", ["rename","duplicate","export","delete"].every((value)=>panels.includes(`\"${value}\"`)) && panels.includes("lingxifield.sasi.project.v1")],
+  ["project mutations enforce ownership and origin", projectRoute.includes("isSameOriginMutation") && projectRoute.includes("authenticatedOwner") && projectRoute.includes("PROJECT_HAS_ACTIVE_JOB")],
+  ["project deletion cleans private storage", projectRoute.includes("sasi-quarantine") === false && projectRoute.includes("admin.storage.from(bucket).remove(paths)")],
 ];
 
 let failed = false;

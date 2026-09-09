@@ -16,11 +16,75 @@ const templateCards = [
   { title: "故事宇宙模板", en: "Story Universe", note: "建立世界规则、人物关系和可持续扩展的叙事资产。", prompt: "建立一个可以持续生长的故事宇宙：明确世界规则、时代与空间、核心冲突、人物关系、不可改变的角色锚点、第一季主线和后续扩展接口。", art: "field", target: "director" },
 ] as const;
 
-export function SasiWorkLibrary({ lang, dark, projects, loaded, onOpen, onCreate }: { lang: Lang; dark: boolean; projects: Project[]; loaded: boolean; onOpen: (id: string) => void; onCreate: (view: "director" | "drama" | "code", preset?: string) => void }) {
+export function SasiWorkLibrary({ lang, dark, projects, loaded, onOpen, onCreate, onRefresh }: { lang: Lang; dark: boolean; projects: Project[]; loaded: boolean; onOpen: (id: string) => void; onCreate: (view: "director" | "drama" | "code", preset?: string) => void; onRefresh: () => Promise<void> }) {
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState("");
   const panel = dark ? "border-white/10 bg-white/[.035]" : "border-black/10 bg-white";
   const visible = projects.filter((item) => (filter === "all" || item.kind === filter) && item.title.toLowerCase().includes(query.toLowerCase()));
+
+  async function projectAction(action: "rename" | "duplicate" | "export" | "delete", project: Project) {
+    if (busyId) return;
+    setFeedback("");
+    if (action === "rename") {
+      const title = window.prompt(tr(lang, "输入新的作品名称", "Enter a new project name"), project.title)?.trim();
+      if (!title || title === project.title) return;
+      setBusyId(project.id);
+      const response = await fetch(`/api/sasi/projects/${project.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title }) });
+      setBusyId(null);
+      if (!response.ok) return setFeedback(tr(lang, "重命名失败，请确认服务器密钥与登录状态。", "Rename failed. Check server configuration and sign-in."));
+      await onRefresh();
+      return setFeedback(tr(lang, "作品名称已保存。", "Project name saved."));
+    }
+
+    if (action === "delete") {
+      if (!window.confirm(tr(lang, `确定永久删除“${project.title}”吗？项目图谱和已交付资产记录将一并删除，运行中的任务不会被允许删除。`, `Permanently delete “${project.title}”? Its graph and delivery records will be removed. Active jobs cannot be deleted.`))) return;
+      setBusyId(project.id);
+      const response = await fetch(`/api/sasi/projects/${project.id}`, { method: "DELETE" });
+      const result = await response.json().catch(() => ({}));
+      setBusyId(null);
+      if (!response.ok) return setFeedback(result.error === "PROJECT_HAS_ACTIVE_JOB" ? tr(lang, "项目仍有运行中的任务，请完成或取消任务后再删除。", "This project still has an active job.") : tr(lang, "删除失败，作品仍被保留。", "Delete failed; the project was kept."));
+      await onRefresh();
+      return setFeedback(result.cleanupPending ? tr(lang, "项目已删除；个别云端对象等待后台清理。", "Project deleted; some cloud objects await cleanup.") : tr(lang, "项目及其云端资产记录已删除。", "Project and cloud asset records deleted."));
+    }
+
+    setBusyId(project.id);
+    const detailResponse = await fetch(`/api/sasi/projects/${project.id}`, { cache: "no-store" });
+    if (!detailResponse.ok) {
+      setBusyId(null);
+      return setFeedback(tr(lang, "项目详情暂时无法读取。", "Project details are temporarily unavailable."));
+    }
+    const detail = await detailResponse.json();
+    if (action === "export") {
+      const payload = { schema: "lingxifield.sasi.project.v1", exportedAt: new Date().toISOString(), ...detail };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${project.title.replace(/[\\/:*?\"<>|]/g, "-") || "sasi-project"}.json`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      setBusyId(null);
+      return setFeedback(tr(lang, "项目图谱已导出为可迁移 JSON。", "Project graph exported as portable JSON."));
+    }
+
+    const sourceInput = detail.nodes?.find((node: { type?: string }) => node.type === "project-understanding")?.input ?? {};
+    const brief = typeof sourceInput.brief === "string" && sourceInput.brief.trim().length >= (project.kind === "build" ? 12 : 20)
+      ? sourceInput.brief
+      : tr(lang, `复制“${project.title}”的生产结构，作为一个可继续编辑的新项目。`, `Duplicate the production structure of “${project.title}” as a new editable project.`);
+    const response = await fetch("/api/sasi/projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+      body: JSON.stringify({ kind: project.kind, language: lang, brief: `${brief}\n\n${tr(lang, "结构副本", "Structure copy")}`, seconds: sourceInput.seconds, quality: sourceInput.quality, episodes: sourceInput.requestedEpisodes, attachments: [] }),
+    });
+    setBusyId(null);
+    if (!response.ok) return setFeedback(tr(lang, "复制失败，原项目没有受到影响。", "Copy failed; the original project was not changed."));
+    const created = await response.json();
+    await onRefresh();
+    setFeedback(tr(lang, "已复制生产结构；出于隐私与存储安全，原文件不会被重复复制。", "Production structure copied. Source files are not duplicated for privacy and storage safety."));
+    if (created.project?.id) onOpen(created.project.id);
+  }
   return <section>
     <div className="sasi-v3-page-hero art-works">
       <p className="sasi-v3-kicker">MY CREATIVE ARCHIVE</p>
@@ -39,8 +103,9 @@ export function SasiWorkLibrary({ lang, dark, projects, loaded, onOpen, onCreate
     </div>
 
     <div className="mt-8 flex items-end justify-between"><div><p className="sasi-v3-kicker">YOUR WORKS</p><h2 className="mt-2 text-2xl font-semibold">{tr(lang,"持续生长的作品","Works in progress")}</h2></div><span className="text-xs opacity-45">{tr(lang,"真实项目会显示在这里","Saved projects appear here")}</span></div>
+    {feedback && <div role="status" className="mt-4 rounded-2xl border border-[#6d70ff]/25 bg-[#6d70ff]/5 px-4 py-3 text-xs leading-5 text-[#5a50d6]">{feedback}</div>}
     <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      {!loaded ? <div className={`rounded-3xl border p-6 ${panel}`}>{tr(lang,"正在读取作品…","Loading works…")}</div> : visible.length ? visible.map((project,index)=><button key={project.id} onClick={()=>onOpen(project.id)} className={`group overflow-hidden rounded-3xl border text-left transition hover:-translate-y-1 ${panel}`}><span className={`sasi-library-art art-${project.kind === "drama" ? "director" : "build"} art-shift-${index%3}`}/><span className="block p-5"><span className="text-[10px] uppercase tracking-[.18em] text-[#6d70ff]">{project.kind === "drama" ? "AI DRAMA" : "BUILD & DEPLOY"}</span><h3 className="mt-2 truncate font-semibold">{project.title}</h3><p className="mt-2 text-xs opacity-45">v{project.currentVersion} · {project.nodeCount ?? 0} {tr(lang,"个生产节点","production nodes")}</p><span className="mt-5 inline-block text-xs font-semibold">{tr(lang,"继续创作 →","Continue →")}</span></span></button>) : <div className={`col-span-full rounded-3xl border p-8 text-center ${panel}`}><h3 className="text-xl font-semibold">{tr(lang,"你的第一件作品，从一个清晰想法开始。","Your first work begins with one clear idea.")}</h3><p className="mt-3 text-sm opacity-55">{tr(lang,"先从下面的成熟模板开始，不必面对空白页面。","Start from a mature template below—never a blank page.")}</p></div>}
+      {!loaded ? <div className={`rounded-3xl border p-6 ${panel}`}>{tr(lang,"正在读取作品…","Loading works…")}</div> : visible.length ? visible.map((project,index)=><article key={project.id} className={`group overflow-hidden rounded-3xl border transition hover:-translate-y-1 ${panel}`}><button type="button" onClick={()=>onOpen(project.id)} className="block w-full text-left"><span className={`sasi-library-art art-${project.kind === "drama" ? "director" : "build"} art-shift-${index%3}`}/><span className="block px-5 pt-5"><span className="text-[10px] uppercase tracking-[.18em] text-[#6d70ff]">{project.kind === "drama" ? "AI DRAMA" : "BUILD & DEPLOY"}</span><h3 className="mt-2 truncate font-semibold">{project.title}</h3><p className="mt-2 text-xs opacity-45">v{project.currentVersion} · {project.nodeCount ?? 0} {tr(lang,"个生产节点","production nodes")}{project.updatedAt ? ` · ${new Date(project.updatedAt).toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US")}` : ""}</p><span className="mt-4 inline-block text-xs font-semibold">{tr(lang,"继续创作 →","Continue →")}</span></span></button><div className="m-5 mt-4 grid grid-cols-4 gap-2 border-t border-current/10 pt-4">{([ ["rename",tr(lang,"改名","Rename")], ["duplicate",tr(lang,"复制","Copy")], ["export",tr(lang,"导出","Export")], ["delete",tr(lang,"删除","Delete")] ] as const).map(([action,label])=><button key={action} type="button" disabled={busyId===project.id} onClick={()=>projectAction(action,project)} className={`rounded-lg border border-current/10 px-2 py-2 text-[10px] transition hover:border-[#6d70ff]/50 hover:text-[#6d70ff] disabled:opacity-30 ${action==="delete"?"hover:border-red-400 hover:text-red-500":""}`}>{busyId===project.id?"…":label}</button>)}</div></article>) : <div className={`col-span-full rounded-3xl border p-8 text-center ${panel}`}><h3 className="text-xl font-semibold">{tr(lang,"你的第一件作品，从一个清晰想法开始。","Your first work begins with one clear idea.")}</h3><p className="mt-3 text-sm opacity-55">{tr(lang,"先从下面的成熟模板开始，不必面对空白页面。","Start from a mature template below—never a blank page.")}</p></div>}
     </div>
 
     <div className="mt-10"><p className="sasi-v3-kicker">INSPIRATION TEMPLATES</p><h2 className="mt-2 text-3xl font-semibold">{tr(lang,"灵感模板","Inspiration templates")}</h2><p className="mt-3 max-w-3xl text-sm leading-7 opacity-55">{tr(lang,"从一个成熟起点开始，而不是面对空白页面。挑一个模板，替换成你的内容，SASI 会继续帮你推进到真实可用的作品。","Begin from a mature starting point. Choose a template, replace it with your content, and let SASI move it toward a usable work.")}</p></div>

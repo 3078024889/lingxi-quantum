@@ -226,6 +226,24 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   const quote = useMemo(() => budgetAssessment(productionRoute, seconds, budget), [productionRoute, seconds, budget]);
   const suggestedRoute = routeFor(files, homeBrief);
 
+  async function refreshProjects() {
+    if (!accountEmail) {
+      setProjects([]);
+      setProjectsLoaded(true);
+      return;
+    }
+    setProjectsLoaded(false);
+    try {
+      const response = await fetch("/api/sasi/projects", { cache: "no-store" });
+      const result = response.ok ? await response.json() : { projects: [] };
+      setProjects(Array.isArray(result.projects) ? result.projects : []);
+    } catch {
+      setProjects([]);
+    } finally {
+      setProjectsLoaded(true);
+    }
+  }
+
   async function openProject(projectId: string) {
     setNotice(copy(lang, "正在展开项目图谱…", "Opening project graph…"));
     const response = await fetch(`/api/sasi/projects/${projectId}`, { cache: "no-store" });
@@ -239,12 +257,13 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   }
 
   useEffect(() => {
+    let active = true;
     if (!accountEmail) {
       setProjects([]);
       setProjectsLoaded(true);
-      return;
+      return () => { active = false; };
     }
-    let active = true;
+    setProjectsLoaded(false);
     fetch("/api/sasi/projects", { cache: "no-store" })
       .then(async (response) => response.ok ? response.json() : { projects: [] })
       .then((result) => { if (active) setProjects(Array.isArray(result.projects) ? result.projects : []); })
@@ -491,7 +510,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
           {view === "billing" && <SasiProductionAccount lang={lang} dark={dark} accountEmail={accountEmail} onNotice={setNotice} />}
 
-          {view === "works" && <SasiWorkLibrary lang={lang} dark={dark} projects={projects} loaded={projectsLoaded} onOpen={openProject} onCreate={(target,preset)=>{ if(preset){ setHomeBrief(preset); if(target==="drama") setScript(preset); if(target==="code") setBrief(preset); if(target==="director") window.localStorage.setItem("cangxuan-director-draft-v1",JSON.stringify({title:"",premise:preset,protagonist:"",mode:"motion-comic",genre:"古装复仇",episodes:24,secondsPerEpisode:60})); } setView(target); }} />}
+          {view === "works" && <SasiWorkLibrary lang={lang} dark={dark} projects={projects} loaded={projectsLoaded} onOpen={openProject} onRefresh={refreshProjects} onCreate={(target,preset)=>{ if(preset){ setHomeBrief(preset); if(target==="drama") setScript(preset); if(target==="code") setBrief(preset); if(target==="director") window.localStorage.setItem("cangxuan-director-draft-v1",JSON.stringify({title:"",premise:preset,protagonist:"",mode:"motion-comic",genre:"古装复仇",episodes:24,secondsPerEpisode:60})); } setView(target); }} />}
 
           {view === "account" && <SasiAccountCenter lang={lang} dark={dark} accountEmail={accountEmail} onOpenBilling={()=>setView("billing")} onOpenModels={()=>setView("connections")} />}
 
