@@ -7,6 +7,7 @@ const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
 const projectRoute = fs.readFileSync("app/api/sasi/projects/[id]/route.ts", "utf8");
 const footer = fs.readFileSync("components/Footer.tsx", "utf8");
+const connections = fs.readFileSync("app/sasi/ConnectionCenter.tsx", "utf8");
 const squareProductCovers = ["cangxuan-director-v1.png","ai-drama-studio-v1.png","build-deploy-v1.png","skills-marketplace-v1.png","models-api-v1.png","balance-usage-v1.png","works-library-v1.png","account-security-v1.png"];
 
 const checks = [
@@ -29,6 +30,9 @@ const checks = [
   ["Skills combines discovery, owned capabilities and authoring", ["探索能力","我的能力","编制与发布","sasi-skills-grid"].every((value)=>workspace.includes(value))],
   ["Skills exposes problem-led category filters", ["导演","短剧","编程","提示词","审校","部署","素材"].every((value)=>workspace.includes(value))],
   ["Skills separates enabled flows from planned capability", workspace.includes("内置流程 · 已启用") && workspace.includes("专业能力 · 即将开放") && fs.readFileSync("lib/sasi/catalog.ts","utf8").includes('status: "planned"')],
+  ["Models & API separates six capability areas", ["模型与 API","图像与视频","开发与部署","安全与密钥","计费边界","训练资料库"].every((value)=>connections.includes(value))],
+  ["provider cards derive truthful verification state", ["未连接","已安全保存 · 待验证","正在验证","验证成功","验证失败","/api/sasi/connections/test"].every((value)=>connections.includes(value))],
+  ["connection center preserves security and unsupported-provider boundaries", connections.includes("保存凭证不等于验证成功") && connections.includes("SSRF 防护") && connections.includes("腾讯云双密钥签名尚未开放")],
   ["SASI home uses an independent cinematic asset", css.includes("sasi-home-hero-v2.png") && fs.existsSync("public/images/console/sasi-home-hero-v2.png")],
   ["SASI home follows the dense product-console hierarchy", ["sasi-home-v4-command","sasi-home-v4-products","sasi-home-v4-recent","sasi-home-v4-flow","sasi-home-v4-news"].every((value)=>workspace.includes(value))],
   ["home product grid presents all eight entries in one desktop row", css.includes("grid-template-columns:repeat(8,minmax(0,1fr))") && css.includes("@media(max-width:1500px){.sasi-home-v4-products{grid-template-columns:repeat(4,minmax(0,1fr))")],

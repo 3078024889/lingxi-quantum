@@ -3,81 +3,137 @@
 import { useEffect, useMemo, useState } from "react";
 import { BUILD_CONNECTORS, SASI_INTEGRATIONS, TRAINING_SOURCES, type SasiIntegration } from "@/lib/sasi/integration-catalog";
 
-type Props={ lang:"zh"|"en"; dark:boolean; accountEmail:string|null };
-type Tab="models"|"build"|"billing"|"training";
-type Connection={provider:string;keyHint:string;healthStatus:"stored"|"checking"|"healthy"|"unhealthy";lastCheckedAt:string|null;lastErrorCode:string|null};
+type Props = { lang: "zh" | "en"; dark: boolean; accountEmail: string | null };
+type Tab = "models" | "media" | "build" | "security" | "billing" | "training";
+type Connection = { provider: string; keyHint: string; healthStatus: "stored" | "checking" | "healthy" | "unhealthy"; lastCheckedAt: string | null; lastErrorCode: string | null };
 
-export default function ConnectionCenter({ lang,dark,accountEmail }:Props){
-  const [tab,setTab]=useState<Tab>("models");
-  const [selected,setSelected]=useState<SasiIntegration>(SASI_INTEGRATIONS[0]);
-  const [cost,setCost]=useState(10);
-  const [apiKey,setApiKey]=useState("");
-  const [connections,setConnections]=useState<Connection[]>([]);
-  const [vaultState,setVaultState]=useState<"loading"|"ready"|"login"|"unavailable">("loading");
-  const [busy,setBusy]=useState<"save"|"test"|"delete"|null>(null);
-  const [message,setMessage]=useState("");
-  const panel=dark?"border-white/10 bg-white/[.035]":"border-[#e3e9f1] bg-white shadow-[0_14px_36px_rgba(38,57,83,.055)]";
-  const t=(zh:string,en:string)=>lang==="zh"?zh:en;
-  const managed=useMemo(()=>Math.max(1,Math.round(cost*2*100)/100),[cost]);
-  const orchestration=useMemo(()=>Math.max(.5,Math.round(cost*.2*100)/100),[cost]);
-  const tabs:Array<[Tab,string,string]>=[["models","模型与 API","Models & API"],["build","构建与部署","Build & Deploy"],["billing","计费边界","Billing"],["training","训练资料库","Training Data"]];
-  const connection=connections.find(item=>item.provider===selected.id);
-  const vaultSupported=selected.id!=="tencent";
+const MODEL_IDS = new Set(["openai", "xai", "anthropic", "gemini"]);
+const MEDIA_IDS = new Set(["openai", "xai", "luma", "volcengine", "aliyun", "tencent"]);
 
-  useEffect(()=>{
-    if(!accountEmail){setVaultState("login");return;}
-    let alive=true;
-    fetch("/api/sasi/connections",{cache:"no-store"}).then(async response=>({response,body:await response.json().catch(()=>({}))})).then(({response,body})=>{
-      if(!alive)return;
-      if(response.ok){setConnections(body.connections??[]);setVaultState("ready");}
-      else setVaultState(response.status===401?"login":"unavailable");
-    }).catch(()=>alive&&setVaultState("unavailable"));
-    return()=>{alive=false;};
-  },[accountEmail]);
+export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
+  const [tab, setTab] = useState<Tab>("models");
+  const [selected, setSelected] = useState<SasiIntegration>(SASI_INTEGRATIONS[0]);
+  const [cost, setCost] = useState(10);
+  const [apiKey, setApiKey] = useState("");
+  const [connections, setConnections] = useState<Connection[]>([]);
+  const [vaultState, setVaultState] = useState<"loading" | "ready" | "login" | "unavailable">("loading");
+  const [busy, setBusy] = useState<"save" | "test" | "delete" | null>(null);
+  const [message, setMessage] = useState("");
+  const t = (zh: string, en: string) => lang === "zh" ? zh : en;
+  const managed = useMemo(() => Math.max(1, Math.round(cost * 2 * 100) / 100), [cost]);
+  const orchestration = useMemo(() => Math.max(.5, Math.round(cost * .2 * 100) / 100), [cost]);
+  const connection = connections.find((item) => item.provider === selected.id);
+  const vaultSupported = selected.id !== "tencent";
+  const visibleProviders = SASI_INTEGRATIONS.filter((item) => tab === "models" ? MODEL_IDS.has(item.id) : MEDIA_IDS.has(item.id));
+  const tabs: Array<[Tab, string, string, string]> = [
+    ["models", "模型与 API", "Models & API", "文"],
+    ["media", "图像与视频", "Image & Video", "影"],
+    ["build", "开发与部署", "Build & Deploy", "构"],
+    ["security", "安全与密钥", "Security & Keys", "钥"],
+    ["billing", "计费边界", "Cost Boundary", "费"],
+    ["training", "训练资料库", "Training Data", "数"],
+  ];
 
-  async function saveConnection(){
-    if(!apiKey.trim()||busy)return; setBusy("save");setMessage("");
-    const response=await fetch("/api/sasi/connections",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider:selected.id,apiKey})});
-    const body=await response.json().catch(()=>({}));
-    if(response.ok){setConnections(items=>[...items.filter(item=>item.provider!==selected.id),{provider:selected.id,keyHint:body.keyHint,healthStatus:"stored",lastCheckedAt:null,lastErrorCode:null}]);setApiKey("");setMessage(t("已加密保存；请执行连接验证。","Encrypted and stored. Run connection test next."));}
-    else setMessage(`${t("保存失败","Save failed")}: ${body.error??response.status}`);
+  useEffect(() => {
+    if (!accountEmail) { setVaultState("login"); return; }
+    let alive = true;
+    fetch("/api/sasi/connections", { cache: "no-store" })
+      .then(async (response) => ({ response, body: await response.json().catch(() => ({})) }))
+      .then(({ response, body }) => {
+        if (!alive) return;
+        if (response.ok) { setConnections(body.connections ?? []); setVaultState("ready"); }
+        else setVaultState(response.status === 401 ? "login" : "unavailable");
+      })
+      .catch(() => alive && setVaultState("unavailable"));
+    return () => { alive = false; };
+  }, [accountEmail]);
+
+  function statusFor(provider: string) {
+    const item = connections.find((entry) => entry.provider === provider);
+    if (!item) return { label: t("未连接", "Not connected"), tone: "idle" };
+    if (item.healthStatus === "healthy") return { label: t("验证成功", "Verified"), tone: "healthy" };
+    if (item.healthStatus === "checking") return { label: t("正在验证", "Checking"), tone: "checking" };
+    if (item.healthStatus === "unhealthy") return { label: t("验证失败", "Failed"), tone: "failed" };
+    return { label: t("已安全保存 · 待验证", "Stored · verify next"), tone: "stored" };
+  }
+
+  function selectProvider(item: SasiIntegration, targetTab?: "models" | "media") {
+    setSelected(item);
+    setMessage("");
+    if (targetTab) setTab(targetTab);
+  }
+
+  async function saveConnection() {
+    if (!apiKey.trim() || busy) return;
+    setBusy("save"); setMessage("");
+    const response = await fetch("/api/sasi/connections", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: selected.id, apiKey }) });
+    const body = await response.json().catch(() => ({}));
+    if (response.ok) {
+      setConnections((items) => [...items.filter((item) => item.provider !== selected.id), { provider: selected.id, keyHint: body.keyHint, healthStatus: "stored", lastCheckedAt: null, lastErrorCode: null }]);
+      setApiKey(""); setMessage(t("已加密保存。下一步请执行连接验证，验证通过后才可用于生产。", "Encrypted and stored. Test the connection before using it for production."));
+    } else setMessage(`${t("保存失败", "Save failed")}: ${body.error ?? response.status}`);
     setBusy(null);
   }
-  async function testConnection(){
-    if(!connection||busy)return;setBusy("test");setMessage("");
-    const response=await fetch("/api/sasi/connections/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider:selected.id})});
-    const body=await response.json().catch(()=>({}));
-    setConnections(items=>items.map(item=>item.provider===selected.id?{...item,healthStatus:body.healthStatus??"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:body.errorCode??body.error??null}:item));
-    setMessage(response.ok?t("连接验证通过。供应商账户仍需保持余额和模型权限。","Connection verified. Provider balance and model access are still required."):`${t("验证未通过","Verification failed")}: ${body.errorCode??body.error??response.status}`);setBusy(null);
+
+  async function testConnection() {
+    if (!connection || busy) return;
+    setBusy("test"); setMessage("");
+    const response = await fetch("/api/sasi/connections/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: selected.id }) });
+    const body = await response.json().catch(() => ({}));
+    setConnections((items) => items.map((item) => item.provider === selected.id ? { ...item, healthStatus: body.healthStatus ?? "unhealthy", lastCheckedAt: new Date().toISOString(), lastErrorCode: body.errorCode ?? body.error ?? null } : item));
+    setMessage(response.ok ? t("连接验证通过。供应商账户仍需保持余额、模型权限和地区可用性。", "Connection verified. Provider balance, model access and regional availability are still required.") : `${t("验证未通过", "Verification failed")}: ${body.errorCode ?? body.error ?? response.status}`);
+    setBusy(null);
   }
-  async function deleteConnection(){
-    if(!connection||busy||!window.confirm(t("确认撤销并永久删除这项加密凭证？","Revoke and permanently delete this encrypted credential?")))return;
-    setBusy("delete");setMessage("");
-    const response=await fetch(`/api/sasi/connections?provider=${encodeURIComponent(selected.id)}`,{method:"DELETE"});
-    if(response.ok){setConnections(items=>items.filter(item=>item.provider!==selected.id));setMessage(t("凭证已删除。","Credential deleted."));}else{const body=await response.json().catch(()=>({}));setMessage(`${t("删除失败","Delete failed")}: ${body.error??response.status}`);}setBusy(null);
+
+  async function deleteConnection() {
+    if (!connection || busy || !window.confirm(t("确认撤销并永久删除这项加密凭证？", "Revoke and permanently delete this encrypted credential?"))) return;
+    setBusy("delete"); setMessage("");
+    const response = await fetch(`/api/sasi/connections?provider=${encodeURIComponent(selected.id)}`, { method: "DELETE" });
+    if (response.ok) { setConnections((items) => items.filter((item) => item.provider !== selected.id)); setMessage(t("凭证已删除。", "Credential deleted.")); }
+    else { const body = await response.json().catch(() => ({})); setMessage(`${t("删除失败", "Delete failed")}: ${body.error ?? response.status}`); }
+    setBusy(null);
   }
-  return <section>
-    <div className="sasi-director-hero rounded-[28px] border border-current/10 p-7 sm:p-10">
-      <p className="text-xs font-semibold uppercase tracking-[.22em] text-[#7657ff]">SASI · CAPABILITY CONNECTION</p>
-      <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-[-.04em] sm:text-6xl">{t("连接能力，不交出创作主权","Connect capability. Keep creative control.")}</h1>
-      <p className="mt-4 max-w-3xl text-base leading-8 opacity-65">{t("专业用户可从官方入口创建自己的 API 与云端连接，由供应商直接向用户计费。此处提供真实跳转和安全步骤；在授权回调与服务端密钥保险箱完成前，不显示虚假的“已连接”。","Professional users can create their own API and cloud connections through official entry points, with providers billing them directly. This center offers real links and safe steps; it does not claim a connection before authorization callbacks and a server-side vault exist.")}</p>
+
+  const providerGrid = (items: SasiIntegration[]) => <div className="sasi-connect-provider-grid">{items.map((item) => {
+    const state = statusFor(item.id);
+    return <article key={item.id} className={selected.id === item.id ? "selected" : ""}>
+      <button type="button" className="sasi-connect-provider-main" onClick={() => selectProvider(item)}>
+        <span className="sasi-connect-provider-logo" style={{ background: item.color }}>{item.name.slice(0, 2)}</span>
+        <span className="sasi-connect-provider-copy"><b>{item.name}</b><small>{item.product}</small></span>
+        <em className={`status-${state.tone}`}>{state.label}</em>
+      </button>
+      <p>{t(item.noteZh, item.noteEn)}</p>
+      <div className="sasi-connect-tags">{item.supports.map((value) => <span key={value}>{value}</span>)}</div>
+      <footer><a href={item.keyUrl} target="_blank" rel="noreferrer">{t("官方入口", "Official setup")} ↗</a><a href={item.docsUrl} target="_blank" rel="noreferrer">{t("官方文档", "Official docs")} ↗</a><button type="button" onClick={() => selectProvider(item)}>{connection?.provider === item.id ? t("管理连接", "Manage") : t("接入指引", "Setup guide")} →</button></footer>
+    </article>;
+  })}</div>;
+
+  const setupPanel = <aside className="sasi-connect-setup" data-testid="api-walkthrough">
+    <header><span className="sasi-connect-provider-logo" style={{ background: selected.color }}>{selected.name.slice(0, 2)}</span><div><small>OFFICIAL SETUP</small><h2>{selected.name}</h2><p>{selected.product}</p></div><em className={`status-${statusFor(selected.id).tone}`}>{statusFor(selected.id).label}</em></header>
+    <div className="sasi-connect-env"><span>{t("服务端环境变量", "Server environment variable")}</span><code>{selected.env}</code></div>
+    <ol>{(lang === "zh" ? selected.stepsZh : selected.stepsEn).map((step, index) => <li key={step}><b>{String(index + 1).padStart(2, "0")}</b><span>{step}</span></li>)}</ol>
+    <div className="sasi-connect-official"><a href={selected.keyUrl} target="_blank" rel="noreferrer">{t("打开官方创建页", "Open official setup")} ↗</a><a href={selected.docsUrl} target="_blank" rel="noreferrer">{t("阅读官方文档", "Read official docs")} ↗</a></div>
+    <div className="sasi-connect-vault" data-testid="byok-vault">
+      <div><h3>{t("我的加密连接", "My encrypted connection")}</h3>{connection && <span>{connection.keyHint}</span>}</div>
+      {!vaultSupported ? <p>{t("腾讯云需要 SecretId、SecretKey 与 TC3 签名。当前仅保留官方指引，双凭证适配完成前不能保存。", "Tencent Cloud requires SecretId, SecretKey and TC3 signing. Saving remains unavailable until dual-secret support is complete.")}</p> : vaultState === "ready" && !connection ? <><input type="password" autoComplete="off" spellCheck={false} value={apiKey} onChange={(event) => setApiKey(event.target.value)} placeholder={t("粘贴 API Key；不会写入浏览器或 Git", "Paste API key; never stored in browser or Git")} /><button type="button" disabled={busy !== null || apiKey.trim().length < 12} onClick={saveConnection}>{busy === "save" ? t("正在加密保存…", "Encrypting…") : t("加密保存凭证", "Encrypt & save")}</button></> : connection ? <div className="sasi-connect-actions"><button type="button" disabled={busy !== null} onClick={testConnection}>{busy === "test" ? t("正在验证…", "Testing…") : t("验证连接", "Test connection")}</button><button type="button" disabled={busy !== null} onClick={deleteConnection}>{busy === "delete" ? t("正在删除…", "Deleting…") : t("撤销并删除", "Revoke & delete")}</button></div> : <p>{vaultState === "login" ? t("请先登录场域账户，再建立归属于你的加密连接。", "Sign in to create an encrypted connection owned by your account.") : vaultState === "loading" ? t("正在读取保险箱状态…", "Loading vault status…") : t("保险箱当前不可用。请核对数据库迁移与服务端加密主密钥。", "The vault is unavailable. Check database migrations and the server encryption key.")}</p>}
+      {connection?.lastCheckedAt && <small>{t("最近验证", "Last verified")}: {new Date(connection.lastCheckedAt).toLocaleString(lang === "zh" ? "zh-CN" : "en-US")}{connection.lastErrorCode ? ` · ${connection.lastErrorCode}` : ""}</small>}
+      {message && <p className="sasi-connect-message">{message}</p>}
     </div>
-    <div className="mt-6 flex flex-wrap gap-2" role="tablist">{tabs.map(([id,zh,en])=><button key={id} type="button" role="tab" aria-selected={tab===id} onClick={()=>setTab(id)} className={`rounded-full px-4 py-2 text-sm ${tab===id?"bg-[#7657ff] text-white":"border border-current/15"}`}>{t(zh,en)}</button>)}</div>
+    <p className="sasi-connect-key-note">{t("凭证只通过登录后的表单发送到 SASI 服务端加密保险箱，不写入浏览器存储、页面日志或代码仓库。", "Credentials are sent only to the signed-in server vault, never browser storage, page logs or source control.")}</p>
+  </aside>;
 
-    {tab==="models"&&<div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_390px]">
-      <div className="grid gap-4 md:grid-cols-2">{SASI_INTEGRATIONS.map((item)=><button key={item.id} type="button" onClick={()=>setSelected(item)} className={`rounded-3xl border p-5 text-left transition ${selected.id===item.id?"border-[#7657ff] bg-[#7657ff]/[.07]":panel}`}><div className="flex items-start justify-between gap-4"><span className="grid h-11 w-11 place-items-center rounded-2xl text-sm font-bold text-white" style={{background:item.color}}>{item.name.slice(0,2)}</span><span className="rounded-full bg-amber-500/10 px-3 py-1 text-[10px] text-amber-600">{t("官方引导 · 待授权","Guide · authorization required")}</span></div><h2 className="mt-4 text-lg font-semibold">{item.name} <span className="font-normal opacity-45">· {item.product}</span></h2><div className="mt-3 flex flex-wrap gap-2">{item.supports.map(v=><span key={v} className="rounded-full border border-current/10 px-2.5 py-1 text-[10px] opacity-60">{v}</span>)}</div><p className="mt-4 text-xs leading-6 opacity-55">{t(item.noteZh,item.noteEn)}</p></button>)}</div>
-      <aside className={`h-fit rounded-3xl border p-6 xl:sticky xl:top-6 ${panel}`} data-testid="api-walkthrough"><p className="text-xs uppercase tracking-[.18em] text-[#7657ff]">OFFICIAL SETUP</p><h2 className="mt-3 text-2xl font-semibold">{selected.name} · {selected.product}</h2><p className="mt-2 text-xs opacity-50">{selected.env}</p><div className="my-5 h-28 overflow-hidden rounded-2xl border border-current/10 bg-gradient-to-br from-[#7657ff]/15 via-transparent to-[#2ed3ff]/15 p-4"><div className="flex h-full items-center gap-3"><div className="grid h-12 w-12 place-items-center rounded-2xl text-white" style={{background:selected.color}}>{selected.name.slice(0,2)}</div><div className="flex-1 space-y-2"><div className="h-2 w-2/3 rounded bg-current/15"/><div className="h-2 w-full rounded bg-current/10"/><div className="h-7 w-1/2 rounded-lg bg-[#7657ff]"/></div></div></div><ol className="space-y-3">{(lang==="zh"?selected.stepsZh:selected.stepsEn).map((step,index)=><li key={step} className="flex gap-3 text-xs leading-6"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#7657ff]/12 text-[#7657ff]">{index+1}</span><span className="opacity-65">{step}</span></li>)}</ol><div className="mt-5 grid grid-cols-2 gap-2"><a href={selected.keyUrl} target="_blank" rel="noreferrer" className="rounded-xl bg-[#7657ff] px-3 py-3 text-center text-xs font-semibold text-white">{t("打开官方创建页 ↗","Open official setup ↗")}</a><a href={selected.docsUrl} target="_blank" rel="noreferrer" className="rounded-xl border border-current/15 px-3 py-3 text-center text-xs">{t("阅读官方文档 ↗","Read official docs ↗")}</a></div><p className="mt-4 rounded-xl bg-amber-500/10 p-3 text-[11px] leading-5 text-amber-700">{t("密钥仅通过登录后的加密连接表单发送到 SASI 服务端；不会写入浏览器存储、日志或 Git。","Keys are sent only through the signed-in encrypted connection form to the SASI server; they are never stored in browser storage, logs or Git.")}</p>
-        <div className="mt-5 border-t border-current/10 pt-5" data-testid="byok-vault"><div className="flex items-center justify-between gap-3"><h3 className="font-semibold">{t("我的加密连接","My encrypted connection")}</h3><span className={`rounded-full px-2.5 py-1 text-[10px] ${connection?.healthStatus==="healthy"?"bg-emerald-500/10 text-emerald-600":connection?"bg-amber-500/10 text-amber-600":"bg-current/[.06]"}`}>{connection?`${connection.keyHint} · ${connection.healthStatus}`:vaultState==="ready"?t("未连接","Not connected"):vaultState==="login"?t("请先登录","Sign in first"):t("保险箱未就绪","Vault unavailable")}</span></div>
-          {!vaultSupported?<p className="mt-3 text-xs leading-6 opacity-55">{t("腾讯云需要 SecretId、SecretKey 与 TC3 请求签名，当前保留官方引导，待双凭证签名适配完成后开放保存。","Tencent Cloud requires SecretId, SecretKey and TC3 signing. Official guidance remains available until dual-secret signing is implemented.")}</p>:vaultState==="ready"&&!connection?<><input type="password" autoComplete="off" spellCheck={false} value={apiKey} onChange={e=>setApiKey(e.target.value)} placeholder={t("粘贴后只发送到加密保险箱","Sent only to the encrypted vault")} className="mt-3 w-full rounded-xl border border-current/15 bg-transparent px-4 py-3 text-sm outline-none"/><button type="button" disabled={busy!==null||apiKey.trim().length<12} onClick={saveConnection} className="mt-2 w-full rounded-xl bg-[#151515] py-3 text-xs font-semibold text-white disabled:opacity-40">{busy==="save"?t("正在加密保存…","Encrypting…"):t("加密保存凭证","Encrypt & save")}</button></>:connection?<div className="mt-3 grid grid-cols-2 gap-2"><button type="button" disabled={busy!==null} onClick={testConnection} className="rounded-xl bg-emerald-600 px-3 py-3 text-xs font-semibold text-white disabled:opacity-40">{busy==="test"?t("正在验证…","Testing…"):t("验证连接","Test connection")}</button><button type="button" disabled={busy!==null} onClick={deleteConnection} className="rounded-xl border border-rose-500/30 px-3 py-3 text-xs text-rose-600 disabled:opacity-40">{busy==="delete"?t("正在删除…","Deleting…"):t("撤销并删除","Revoke & delete")}</button></div>:<p className="mt-3 text-xs leading-6 opacity-55">{vaultState==="login"?t("登录场域账户后，才可建立归属于你的加密连接。","Sign in to create an encrypted connection owned by your account."):t("请先部署 BYOK 数据库迁移并配置服务端主密钥。","Deploy the BYOK migration and configure the server master key first.")}</p>}
-          {message&&<p className="mt-3 rounded-xl border border-current/10 p-3 text-[11px] leading-5">{message}</p>}
-        </div>
-      </aside>
-    </div>}
+  return <section className={`sasi-connection-center ${dark ? "is-dark" : "is-light"}`}>
+    <header className="sasi-connect-hero"><div><p>SASI · CAPABILITY CONNECTION</p><h1>{t("模型与 API", "Models & API")}</h1><strong>{t("连接能力，不交出创作主权。", "Connect capability without giving up creative control.")}</strong><span>{t("用你自己的官方账户连接文字、图片、视频与开发服务。供应商直接向你计费，SASI 只负责安全保存、状态验证和创作调度。", "Connect text, image, video and development services through your own official accounts. Providers bill you directly; SASI handles secure storage, verification and orchestration.")}</span></div><div className="sasi-connect-proof"><b>{connections.filter((item) => item.healthStatus === "healthy").length}</b><span>{t("项连接已验证", "verified connections")}</span><small>{t("保存凭证不等于验证成功", "Stored does not mean verified")}</small></div></header>
+    <nav className="sasi-connect-tabs" aria-label={t("能力连接分类", "Connection categories")}>{tabs.map(([id, zh, en, glyph]) => <button type="button" key={id} onClick={() => setTab(id)} className={tab === id ? "active" : ""}><span>{glyph}</span>{t(zh, en)}</button>)}</nav>
 
-    {tab==="build"&&<div className="mt-6 grid gap-4 lg:grid-cols-2">{BUILD_CONNECTORS.map(item=><article key={item.id} className={`rounded-3xl border p-6 ${panel}`}><div className="flex items-center justify-between"><div><p className="text-xs uppercase tracking-[.16em] opacity-40">{t(item.roleZh,item.roleEn)}</p><h2 className="mt-2 text-2xl font-semibold">{item.name}</h2></div><span className="rounded-full bg-amber-500/10 px-3 py-1 text-[10px] text-amber-600">{item.status==="oauth-required"?"OAuth 待接入":"人工配置"}</span></div><ol className="mt-5 space-y-3">{item.stepsZh.map((step,index)=><li key={step} className="flex gap-3 text-sm leading-6"><span className="text-[#7657ff]">0{index+1}</span><span className="opacity-65">{step}</span></li>)}</ol><div className="mt-5 flex gap-2"><a href={item.url} target="_blank" rel="noreferrer" className="rounded-xl bg-[#151515] px-4 py-3 text-xs text-white">{t("打开官方入口 ↗","Open official entry ↗")}</a><a href={item.docs} target="_blank" rel="noreferrer" className="rounded-xl border border-current/15 px-4 py-3 text-xs">{t("权限说明 ↗","Permissions ↗")}</a></div></article>)}</div>}
+    {(tab === "models" || tab === "media") && <div className="sasi-connect-main"><main><div className="sasi-connect-section-title"><div><small>{tab === "models" ? "INTELLIGENCE PROVIDERS" : "VISUAL PRODUCTION PROVIDERS"}</small><h2>{tab === "models" ? t("选择理解、编剧与编程能力", "Choose reasoning, writing and coding capability") : t("选择图片与视频生产能力", "Choose image and video production capability")}</h2></div><p>{t("点击供应商后，右侧会切换为对应官方步骤与真实连接状态。", "Select a provider to show its official setup and real connection status.")}</p></div>{providerGrid(visibleProviders)}</main>{setupPanel}</div>}
 
-    {tab==="billing"&&<div className="mt-6 grid gap-5 lg:grid-cols-[.9fr_1.1fr]"><div className={`rounded-3xl border p-6 ${panel}`}><p className="text-xs uppercase tracking-[.18em] text-[#7657ff]">RMB COST STUDY</p><h2 className="mt-3 text-2xl font-semibold">{t("输入供应商预计成本","Enter provider estimate")}</h2><label className="mt-5 block text-xs opacity-60">{t("供应商成本（人民币）","Provider cost (RMB)")}<input type="number" min="0" step="0.1" value={cost} onChange={e=>setCost(Math.max(0,Number(e.target.value)||0))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-4 py-3 text-xl outline-none"/></label><p className="mt-4 text-[11px] leading-5 opacity-45">{t("这是政策计算器，不是付款页面，也不会调用模型。实际订单必须在供应商实时询价后锁定。","This is a policy calculator, not checkout, and it calls no model. Real orders require a fresh provider quote.")}</p></div><div className="grid gap-4 sm:grid-cols-2"><article className={`rounded-3xl border p-6 ${panel}`}><span className="rounded-full bg-[#7657ff]/10 px-3 py-1 text-xs text-[#7657ff]">平台代理</span><p className="mt-5 text-4xl font-semibold">¥{managed.toFixed(2)}</p><p className="mt-3 text-sm leading-6 opacity-60">{t(`供应商 ¥${cost.toFixed(2)} × 2.0。覆盖导演编排、存储、重试、支付退款风险与平台毛利。`,`Provider ¥${cost.toFixed(2)} × 2.0 for orchestration, storage, retries, payment risk and margin.`)}</p></article><article className={`rounded-3xl border p-6 ${panel}`}><span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs text-emerald-600">BYOK 推荐</span><p className="mt-5 text-4xl font-semibold">¥{orchestration.toFixed(2)}</p><p className="mt-3 text-sm leading-6 opacity-60">{t(`供应商 ¥${cost.toFixed(2)} 由用户直接支付；SASI 仅收约 0.2×（最低 ¥0.50）的导演编排费，订阅套餐可包含。`,`The user pays provider ¥${cost.toFixed(2)} directly; SASI charges about 0.2× (min ¥0.50) orchestration, potentially included in a plan.`)}</p></article></div></div>}
+    {tab === "build" && <div><div className="sasi-connect-section-title"><div><small>DEVELOPMENT CONNECTIONS</small><h2>{t("从仓库到公网，每个连接各司其职", "A separate connection for every step from repository to public web")}</h2></div><p>{t("这里负责授权与状态读取，真正执行仍回到编程构建部署工作流。", "This area manages authorization and status; execution remains in Build & Deploy.")}</p></div><div className="sasi-connect-build-grid">{BUILD_CONNECTORS.map((item) => <article key={item.id}><header><span>{item.name.slice(0, 2)}</span><div><small>{t(item.roleZh, item.roleEn)}</small><h3>{item.name}</h3></div><em>{item.status === "oauth-required" ? t("OAuth 尚未接入", "OAuth pending") : t("需要人工配置", "Manual setup")}</em></header><ol>{(lang === "zh" ? item.stepsZh : item.stepsEn).map((step, index) => <li key={step}><b>0{index + 1}</b><span>{step}</span></li>)}</ol><footer><a href={item.url} target="_blank" rel="noreferrer">{t("打开官方入口", "Official entry")} ↗</a><a href={item.docs} target="_blank" rel="noreferrer">{t("权限说明", "Permissions")} ↗</a></footer></article>)}</div></div>}
 
-    {tab==="training"&&<div className="mt-6"><div className={`rounded-3xl border p-6 ${panel}`}><p className="text-xs uppercase tracking-[.18em] text-[#7657ff]">CANGXUAN TRAINING PATH</p><h2 className="mt-3 text-2xl font-semibold">{t("不拿厂商私有训练集，训练自己的导演能力","Train proprietary directing intelligence—not on vendors’ private datasets")}</h2><div className="mt-5 grid gap-3 md:grid-cols-4">{[["01","结构化知识","导演规则与可检索知识库"],["02","许可样本","故事→人物→分镜配对"],["03","偏好评分","基于明确同意的反馈"],["04","专项微调","编剧、分镜和评分小模型"]].map(([n,title,note])=><div key={n} className="rounded-2xl border border-current/10 p-4"><span className="text-xs text-[#7657ff]">{n}</span><h3 className="mt-3 font-semibold">{title}</h3><p className="mt-2 text-xs leading-5 opacity-50">{note}</p></div>)}</div></div><div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{TRAINING_SOURCES.map(source=><article key={source.name} className={`rounded-3xl border p-5 ${panel}`}><div className="flex items-start justify-between gap-3"><h3 className="font-semibold">{source.name}</h3><span className={`rounded-full px-2.5 py-1 text-[10px] ${source.state==="preferred"?"bg-emerald-500/10 text-emerald-600":source.state==="research"?"bg-slate-500/10":"bg-amber-500/10 text-amber-600"}`}>{source.state==="preferred"?"优先":source.state==="research"?"研究限定":"逐项核验"}</span></div><p className="mt-2 text-[11px] uppercase tracking-[.12em] opacity-40">{source.license}</p><p className="mt-4 text-xs leading-6 opacity-60">{source.useZh}</p><a href={source.url} target={source.url.startsWith("http")?"_blank":undefined} rel={source.url.startsWith("http")?"noreferrer":undefined} className="mt-4 inline-block text-xs text-[#7657ff]">{t("查看来源与许可 ↗","Review source & license ↗")}</a></article>)}</div><p className="mt-5 rounded-2xl border border-rose-500/20 bg-rose-500/[.06] p-4 text-xs leading-6 text-rose-700">{t("禁止项：抓取或购买来源不明的厂商训练数据、默认把用户作品用于训练、仅凭“可下载”就判断可商用。每个素材都必须保存来源、许可版本、署名和地域限制。","Prohibited: sourcing opaque vendor training data, training on user work by default, or treating downloadable as commercially licensed. Preserve provenance, license version, attribution and territory for every asset.")}</p></div>}
+    {tab === "security" && <div className="sasi-connect-security"><section><small>CONNECTION LEDGER</small><h2>{t("所有密钥与连接状态，一处看清", "Every credential and connection status in one place")}</h2><p>{t("只有供应商真实响应通过后才显示“验证成功”。你可以随时验证、轮换或永久删除自己的凭证。", "A connection is verified only after the provider responds successfully. Test, rotate or permanently remove your credentials at any time.")}</p><div>{SASI_INTEGRATIONS.map((item) => { const state = statusFor(item.id); const saved = connections.find((entry) => entry.provider === item.id); return <button type="button" key={item.id} onClick={() => selectProvider(item, MODEL_IDS.has(item.id) ? "models" : "media")}><span style={{ background: item.color }}>{item.name.slice(0, 2)}</span><div><b>{item.name}</b><small>{saved?.keyHint ?? t("尚未保存凭证", "No credential stored")}</small></div><em className={`status-${state.tone}`}>{state.label}</em><i>→</i></button>; })}</div></section><aside><small>SECURITY BOUNDARY</small><h2>{t("密钥属于你，权限必须最小化", "Your keys, with least privilege")}</h2><ul><li><b>01</b><span>{t("浏览器不持久保存明文密钥", "No plaintext keys persisted in browser")}</span></li><li><b>02</b><span>{t("服务端按账户加密与隔离", "Server encryption scoped to each account")}</span></li><li><b>03</b><span>{t("测试连接受到频率限制", "Connection tests are rate limited")}</span></li><li><b>04</b><span>{t("日志、页面和 Git 不回显密钥", "Keys never appear in logs, UI or Git")}</span></li></ul><p>{t("当前自定义 OpenAI-Compatible API 和腾讯云双密钥签名尚未开放。完成 endpoint 白名单、SSRF 防护与双凭证签名后再启用。", "Custom OpenAI-compatible endpoints and Tencent dual-secret signing are not yet open. Endpoint allowlisting, SSRF protection and dual-secret signing come first.")}</p></aside></div>}
+
+    {tab === "billing" && <div className="sasi-connect-billing"><section><small>RMB COST STUDY</small><h2>{t("先看清一次创作会花多少钱", "See the cost before creating")}</h2><label>{t("供应商预计成本（人民币）", "Estimated provider cost (RMB)")}<input type="number" min="0" step="0.1" value={cost} onChange={(event) => setCost(Math.max(0, Number(event.target.value) || 0))} /></label><p>{t("这是政策计算器，不是付款页面，也不会调用模型。真实订单必须重新读取供应商报价。", "This is a policy calculator, not checkout, and does not call a model. Real orders require a fresh provider quote.")}</p></section><article><span>{t("平台代理", "Managed")}</span><b>¥{managed.toFixed(2)}</b><p>{t(`供应商 ¥${cost.toFixed(2)} × 2.0，覆盖调度、存储、重试、支付与退款风险。`, `Provider ¥${cost.toFixed(2)} × 2.0 for orchestration, storage, retries and payment risk.`)}</p></article><article><span>BYOK {t("推荐", "Recommended")}</span><b>¥{orchestration.toFixed(2)}</b><p>{t(`供应商 ¥${cost.toFixed(2)} 由用户直接支付；SASI 仅计算约 0.2×、最低 ¥0.50 的编排服务。`, `You pay provider ¥${cost.toFixed(2)} directly; SASI estimates about 0.2×, minimum ¥0.50, for orchestration.`)}</p></article></div>}
+
+    {tab === "training" && <div><section className="sasi-connect-training-head"><small>CANGXUAN DATA PATH</small><h2>{t("只使用来源清楚、许可明确的数据", "Use only data with clear provenance and permission")}</h2><p>{t("不获取厂商私有训练集，不默认拿用户作品训练。先建立导演知识、许可样本和明确同意的反馈，再讨论专项微调。", "No vendor-private training sets and no default training on user work. Start with directing knowledge, licensed samples and explicit opt-in feedback before fine-tuning.")}</p></section><div className="sasi-connect-training-grid">{TRAINING_SOURCES.map((source) => <article key={source.name}><header><h3>{source.name}</h3><span>{source.state === "preferred" ? t("优先", "Preferred") : source.state === "research" ? t("研究限定", "Research only") : t("逐项核验", "Verify")}</span></header><small>{source.license}</small><p>{t(source.useZh, source.useEn)}</p><a href={source.url} target={source.url.startsWith("http") ? "_blank" : undefined} rel={source.url.startsWith("http") ? "noreferrer" : undefined}>{t("查看来源与许可", "Source & license")} ↗</a></article>)}</div><p className="sasi-connect-training-warning">{t("禁止：抓取或购买来源不明的厂商训练数据、默认把用户作品用于训练、把“可下载”等同于“可商用”。", "Prohibited: opaque vendor training data, default training on user work, or treating downloadable as commercially licensed.")}</p></div>}
   </section>;
 }
