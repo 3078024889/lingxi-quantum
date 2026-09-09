@@ -391,26 +391,26 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
         <button type="button" onClick={() => { setView("home"); setMobileNav(false); }} className="mb-7 flex items-center gap-3 text-left">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="h-10 w-10 rounded-xl" />
-          <div><p className="font-display text-lg tracking-[.12em]">灵犀场 SASI</p><p className="text-[10px] uppercase tracking-[.2em] opacity-50">Create · Build · Deliver</p></div>
+          <div><p className="font-display text-lg tracking-[.12em]">灵犀场 SASI</p><p className="text-[11px] uppercase tracking-[.18em] opacity-55">Create · Build · Deliver</p></div>
         </button>
 
-        <p className="mb-2 text-[10px] uppercase tracking-[.22em] opacity-45">SASI Studio</p>
+        <p className="mb-2 text-[11px] uppercase tracking-[.2em] opacity-50">SASI Studio</p>
         <nav className="space-y-1">
           {studioNav.map((item) => (
             <button key={item.id} onClick={() => { setView(item.id); setMobileNav(false); }} className={`flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition ${view === item.id ? (dark ? "border-[#668cff]/25 bg-[#27365d] text-white shadow-[inset_2px_0_#72d7ff]" : "border-[#6958d8]/15 bg-[#e7e9ff] text-[#171717] shadow-[inset_2px_0_#6958d8]") : "border-transparent hover:bg-current/5"}`}>
-              <span className="w-7 text-center font-mono text-xs">{item.glyph}</span><span><b className="block text-sm font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-0.5 block text-[10px] font-normal opacity-48">{item.en}</small></span>
+              <span className="w-7 text-center font-mono text-xs">{item.glyph}</span><span><b className="block text-[15px] font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-1 block text-[11px] font-normal opacity-55">{item.en}</small></span>
             </button>
           ))}
         </nav>
 
-        <p className="mb-2 mt-7 text-[10px] uppercase tracking-[.22em] opacity-45">{copy(lang, "第二层 · LINGXI FIELD", "SECOND LAYER · LINGXI FIELD")}</p>
+        <p className="mb-2 mt-7 text-[11px] uppercase tracking-[.2em] opacity-50">{copy(lang, "第二层 · LINGXI FIELD", "SECOND LAYER · LINGXI FIELD")}</p>
         <nav className="space-y-1">
-          {fieldNav.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm opacity-70 transition hover:bg-current/5 hover:opacity-100"><span className="w-7 text-center">{item.glyph}</span><span><b className="block text-sm font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-0.5 block text-[10px] font-normal opacity-48">{item.en}</small></span></Link>)}
+          {fieldNav.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm opacity-75 transition hover:bg-current/5 hover:opacity-100"><span className="w-7 text-center">{item.glyph}</span><span><b className="block text-[15px] font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-1 block text-[11px] font-normal opacity-55">{item.en}</small></span></Link>)}
         </nav>
 
         <div className="mt-auto space-y-3 border-t border-current/10 pt-4">
           <div className="flex gap-2"><button onClick={() => setLang(lang === "zh" ? "en" : "zh")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{lang === "zh" ? "EN" : "中文"}</button><button onClick={() => setTheme(dark ? "light" : "dark")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{dark ? "☀ Light" : "☾ Dark"}</button></div>
-          <Link href={accountEmail ? "/account" : "/account?next=%2Fsasi"} className="block rounded-xl border border-current/15 px-3 py-3"><p className="truncate text-sm">{accountEmail ?? copy(lang, "连接场域账户", "Connect account")}</p><p className="mt-1 text-[10px] opacity-50">{accountEmail ? copy(lang, "设置 · 切换 · 退出", "Settings · Switch · Sign out") : copy(lang, "登录后同步项目、作品与制作额度", "Sign in to sync projects, works and production allocation")}</p></Link>
+          <Link href={accountEmail ? "/account" : "/account?next=%2Fsasi"} className="block rounded-xl border border-current/15 px-3 py-3"><p className="truncate text-sm">{accountEmail ?? copy(lang, "连接场域账户", "Connect account")}</p><p className="mt-1 text-[11px] leading-5 opacity-55">{accountEmail ? copy(lang, "设置 · 切换 · 退出", "Settings · Switch · Sign out") : copy(lang, "登录后同步项目、作品与制作额度", "Sign in to sync projects, works and production allocation")}</p></Link>
         </div>
       </aside>
 
