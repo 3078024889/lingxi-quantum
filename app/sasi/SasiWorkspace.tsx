@@ -21,10 +21,11 @@ import {
 import { SasiProductionAccount, SasiProjectProduction } from "@/app/sasi/SasiProductionPanels";
 import CangXuanDirectorStudio from "@/app/sasi/CangXuanDirectorStudio";
 import ConnectionCenter from "@/app/sasi/ConnectionCenter";
+import { DramaVisualWorkspace, SasiAccountCenter, SasiWorkLibrary } from "@/app/sasi/SasiV3Panels";
 
 type Lang = "zh" | "en";
 type Theme = "light" | "dark";
-type View = "home" | "director" | "drama" | "code" | "skills" | "connections" | "billing" | "project";
+type View = "home" | "director" | "drama" | "code" | "skills" | "connections" | "billing" | "works" | "account" | "project";
 type RouteHint = "drama" | "code" | "auto";
 
 type StagedFile = {
@@ -64,11 +65,13 @@ const ACCEPTED_EXTENSIONS = new Set([
 const studioNav: { id: View; zh: string; en: string; glyph: string }[] = [
   { id: "home", zh: "SASI 首页", en: "SASI Home", glyph: "✦" },
   { id: "director", zh: "苍玄 AI 导演", en: "CangXuan Director", glyph: "◈" },
-  { id: "drama", zh: "影像创作", en: "Story Studio", glyph: "▶" },
-  { id: "code", zh: "产品构建", en: "Product Studio", glyph: "</>" },
-  { id: "skills", zh: "能力作品库", en: "Capability Library", glyph: "◇" },
-  { id: "connections", zh: "能力中枢", en: "Capability Center", glyph: "⌁" },
-  { id: "billing", zh: "制作账户", en: "Production Account", glyph: "◎" },
+  { id: "drama", zh: "AI 短剧工坊", en: "AI Drama Studio", glyph: "▶" },
+  { id: "code", zh: "编程构建部署", en: "Build & Deploy", glyph: "</>" },
+  { id: "skills", zh: "Skills", en: "Skills", glyph: "◇" },
+  { id: "connections", zh: "模型与 API", en: "Models & API", glyph: "⌁" },
+  { id: "billing", zh: "余额与用量", en: "Balance & Usage", glyph: "◎" },
+  { id: "works", zh: "我的作品库", en: "My Works", glyph: "▣" },
+  { id: "account", zh: "我的账户", en: "My Account", glyph: "○" },
 ];
 
 const fieldNav = [
@@ -203,7 +206,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     if (storedTheme === "light" || storedTheme === "dark") setTheme(storedTheme);
     setThemeReady(true);
     const requestedView = new URLSearchParams(window.location.search).get("view");
-    const routeView: Record<string, View> = { home: "home", director: "director", drama: "drama", build: "code", skills: "skills", capabilities: "connections", billing: "billing", project: "project" };
+    const routeView: Record<string, View> = { home: "home", director: "director", drama: "drama", build: "code", skills: "skills", capabilities: "connections", models: "connections", billing: "billing", works: "works", account: "account", project: "project" };
     if (requestedView && routeView[requestedView]) setView(routeView[requestedView]);
   }, []);
   useEffect(() => {
@@ -217,6 +220,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   const [projectDetail, setProjectDetail] = useState<SasiProjectDetail | null>(null);
   const projectRequestId = useRef<string | null>(null);
   const [skillTab, setSkillTab] = useState<"discover" | "mine" | "create">("discover");
+  const [dramaTab, setDramaTab] = useState<"overview" | "continuity" | "shots">("overview");
   const dark = theme === "dark";
   const productionRoute = routeForQuality(quality);
   const quote = useMemo(() => budgetAssessment(productionRoute, seconds, budget), [productionRoute, seconds, budget]);
@@ -390,11 +394,15 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
       </aside>
 
       <main className="min-h-screen px-5 pb-16 pt-20 lg:ml-[286px] lg:px-10 lg:pt-8">
-        <header className="mx-auto flex max-w-[1280px] items-center justify-between border-b border-current/10 pb-5"><div><p className="text-xs uppercase tracking-[.22em] opacity-45">Lingxifield Sovereign AI Studio</p><p className="mt-2 text-sm opacity-65">{copy(lang, "从意图，到可交付作品", "From intent to deliverable work")}</p></div><button onClick={() => setView("billing")} className={`rounded-xl px-4 py-2 text-sm ${dark ? "bg-[#d9ff73] text-black" : "bg-black text-white"}`}>{copy(lang, "制作账户", "Production account")}</button></header>
+        <header className="mx-auto flex max-w-[1280px] items-center justify-between border-b border-current/10 pb-5"><div><p className="text-xs uppercase tracking-[.22em] opacity-45">Lingxifield Sovereign AI Studio</p><p className="mt-2 text-sm opacity-65">{copy(lang, "从意图，到可交付作品", "From intent to deliverable work")}</p></div><button onClick={() => setView("account")} className={`rounded-xl px-4 py-2 text-sm ${dark ? "bg-[#d9ff73] text-black" : "bg-black text-white"}`}>{copy(lang, "我的账户", "My account")}</button></header>
 
         <div className="mx-auto mt-8 max-w-[1280px]">
           {view === "home" && (
-            <section className="sasi-hero-surface">
+            <section className="sasi-hero-surface sasi-v3-home">
+              <video className="sasi-v3-ambient-video" autoPlay muted loop playsInline preload="metadata" poster="/images/sky/aurora-hero-poster.jpg" aria-hidden="true">
+                <source src="/images/sky/aurora-hero.webm" type="video/webm" />
+                <source src="/images/sky/aurora-hero.mp4" type="video/mp4" />
+              </video>
               <p className="text-xs font-semibold uppercase tracking-[.2em] text-[#7657ff]">LINGXIFIELD SASI</p>
               <h1 className="mt-3 max-w-5xl text-4xl font-semibold tracking-[-.04em] sm:text-5xl lg:text-6xl">{copy(lang, "把想法，变成真实可用的作品", "Turn ideas into work people can use")}</h1>
               <p className="mt-4 max-w-4xl text-base leading-8 opacity-60">{copy(lang, "一个想法，在这里变成网站、应用、短剧与视频。一键成片，一念即达，一念显化。SASI 贯穿理解、策划、制作、审校与交付，让复杂系统退居幕后。", "One idea becomes a website, app, drama or film here. SASI carries it through direction, making, review and delivery while complexity stays behind the scenes.")}</p>
@@ -417,11 +425,11 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
                 {[
                   {target:"director",art:"director",zh:"苍玄 AI 导演",en:"CangXuan Director",note:"从想法到导演方案"},
                   {target:"code",art:"build",zh:"编程构建部署",en:"Build & Deploy",note:"从需求到真正上线"},
-                  {target:"skills",art:"capability",zh:"能力作品库",en:"Capabilities",note:"沉淀与复用专业能力"},
-                  {target:"connections",art:"orchestration",zh:"AI 能力中枢",en:"AI Orchestration",note:"由 SASI 智能调度"},
-                  {target:"billing",art:"billing",zh:"制作账户",en:"Production Account",note:"清晰、安全的投入边界"},
+                  {target:"skills",art:"capability",zh:"Skills",en:"Skills",note:"发现、组合与复用专业能力"},
+                  {target:"connections",art:"orchestration",zh:"模型与 API",en:"Models & API",note:"自带密钥，连接全球能力"},
+                  {target:"billing",art:"billing",zh:"余额与用量",en:"Balance & Usage",note:"透明估算与真实消耗"},
+                  {target:"works",art:"field",zh:"我的作品库",en:"My Works",note:"继续、导出与部署作品"},
                 ].map((item) => <button key={item.target} type="button" onClick={() => setView(item.target as View)} className={`sasi-home-tile rounded-2xl border text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><span className={`sasi-home-tile-art art-${item.art}`} /><span className="block p-4"><h2 className="text-sm font-semibold">{copy(lang,item.zh,item.en)}</h2><p className="mt-1 text-[10px] leading-5 opacity-45">{item.note}</p></span></button>)}
-                <Link href="/account" className={`sasi-home-tile rounded-2xl border text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><span className="sasi-home-tile-art art-field"/><span className="block p-4"><h2 className="text-sm font-semibold">{copy(lang,"我的场域","My Field")}</h2><p className="mt-1 text-[10px] leading-5 opacity-45">{copy(lang,"项目、作品与生命档案","Projects, works and life archive")}</p></span></Link>
               </div>
 
               <div className="mt-6 grid gap-5 lg:grid-cols-2">
@@ -459,6 +467,9 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           {view === "drama" && (
             <section>
               <p className="text-xs font-semibold uppercase tracking-[.2em] text-[#e04d70]">SASI DRAMA</p><h1 className="mt-3 text-4xl font-semibold sm:text-5xl">{copy(lang, "从任意素材，到可逐步修改的成片工作流", "From any source to an editable production workflow")}</h1>
+              <p className="mt-4 max-w-4xl text-base leading-8 opacity-60">{copy(lang,"不是只生成一个漂亮镜头，而是让人物、剧情、场景和声音在整部作品里持续成立。","Go beyond one beautiful shot—keep characters, story, setting and sound coherent across the whole work.")}</p>
+              <div className="mt-6 flex flex-wrap gap-2">{[["overview","项目总览"],["continuity","人物与连续性"],["shots","分镜与镜头生产"]].map(([id,label])=><button key={id} onClick={()=>setDramaTab(id as typeof dramaTab)} className={`rounded-full px-4 py-2 text-sm ${dramaTab===id?"bg-[#e04d70] text-white":"border border-current/15"}`}>{copy(lang,label,id)}</button>)}</div>
+              {dramaTab === "overview" && <>
               <div className="mt-6 flex flex-wrap gap-2">{[["我只有一个想法", "I have an idea"], ["我有完整剧本", "I have a script"], ["我有小说 / 故事", "I have a novel"], ["我已经有角色", "I have characters"], ["我已有故事板", "I have storyboards"], ["只生成一个镜头", "Generate one shot"]].map(([zh, en]) => <button key={zh} type="button" onClick={() => setScript(copy(lang, zh, en))} className="rounded-full border border-current/15 px-4 py-2 text-xs hover:border-[#e04d70]">{copy(lang, zh, en)}</button>)}</div>
               <div className="mt-6 grid gap-4 xl:grid-cols-[1fr_360px]">
                 <div className={`rounded-3xl border p-6 ${panel}`}><textarea value={script} onChange={(event) => setScript(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "写下创意，或导入剧本、小说、人物图、故事板、音频和已有视频……", "Write an idea or import a script, novel, character image, storyboard, audio or existing video…")} className="min-h-36 w-full resize-none bg-transparent text-base leading-7 outline-none"/><UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} /><div className="mt-5 grid gap-3 sm:grid-cols-2"><label className="text-xs opacity-60">{copy(lang, "目标总时长（5–600秒）", "Total duration (5–600 sec)")}<input type="number" min={5} max={600} value={seconds} onChange={(event) => setSeconds(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "集数（留空由 SASI 建议）", "Episodes (optional)")}<input type="number" min={1} max={200} value={episodes} onChange={(event) => setEpisodes(event.target.value)} placeholder={copy(lang, "动态分析，不预设", "Dynamic, not preset")} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "项目投入边界（制作额度）", "Project allocation (credits)")}<input type="number" min={0} step="100" value={budget} onChange={(event) => setBudget(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作规格", "Production grade")}<select value={quality} onChange={(event) => setQuality(event.target.value as SasiQuality)} className={`mt-2 w-full rounded-xl border border-current/15 px-3 py-3 text-base outline-none ${dark ? "bg-[#11151b]" : "bg-white"}`}>{SASI_QUALITY_TIERS.map((item) => <option key={item.id} value={item.id}>{copy(lang, item.zh, item.en)}</option>)}</select></label></div><p className="mt-4 text-xs leading-5 opacity-50">{copy(lang, "SASI Auto 将按叙事价值调度制作能力；无需选择模型或管理技术账户。", "SASI Auto allocates production capability by narrative value; no model or technical account selection is required.")}</p><button disabled={preparing} onClick={() => prepare("drama")} className="mt-6 w-full rounded-xl bg-[#e04d70] py-3 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-50">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并形成提案", "Create project & proposal")}</button></div>
@@ -466,6 +477,9 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
               </div>
               <div className="mt-7"><div className="mb-3 flex items-center justify-between"><h2 className="text-lg font-semibold">{copy(lang, "可逐幕审阅的制作链", "A production chain reviewed scene by scene")}</h2><span className="text-xs opacity-45">{copy(lang, "每一步都保留创作主权", "Creative control at every stage")}</span></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">{(lang === "zh" ? workflowZh : workflowEn).map((item, index) => <div key={item} className="rounded-2xl border border-current/10 p-4"><p className="text-xs opacity-35">{String(index + 1).padStart(2, "0")}</p><p className="mt-3 text-sm font-medium">{item}</p><p className="mt-2 text-[11px] opacity-45">{index < 3 ? copy(lang, "分析后可修改", "Editable after analysis") : copy(lang, "生成、编辑或重做", "Generate, edit or redo")}</p></div>)}</div></div>
               <div className="mt-7 rounded-3xl border border-current/10 p-6"><p className="text-xs uppercase tracking-[.2em] text-[#e04d70]">{copy(lang, "典藏级关键镜头", "Signature key shots")}</p><p className="mt-3 leading-7 opacity-65">{copy(lang, "SASI 会把最高制作规格集中于人物登场、高潮、战斗与情绪特写，并为承接叙事的镜头匹配恰当方案；每次调整都会先呈现作品表现与制作额度的变化。", "SASI concentrates the highest production grade on entrances, climaxes, action and emotional close-ups, then assigns the right approach to supporting shots. Every revision reveals its impact on creative finish and production allocation first.")}</p></div>
+              </>}
+              {dramaTab === "continuity" && <DramaVisualWorkspace lang={lang} dark={dark} mode="continuity" />}
+              {dramaTab === "shots" && <DramaVisualWorkspace lang={lang} dark={dark} mode="shots" />}
             </section>
           )}
 
@@ -476,6 +490,10 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           {view === "connections" && <ConnectionCenter lang={lang} dark={dark} accountEmail={accountEmail} />}
 
           {view === "billing" && <SasiProductionAccount lang={lang} dark={dark} accountEmail={accountEmail} onNotice={setNotice} />}
+
+          {view === "works" && <SasiWorkLibrary lang={lang} dark={dark} projects={projects} loaded={projectsLoaded} onOpen={openProject} onCreate={(target,preset)=>{ if(preset){ setHomeBrief(preset); if(target==="drama") setScript(preset); if(target==="code") setBrief(preset); if(target==="director") window.localStorage.setItem("cangxuan-director-draft-v1",JSON.stringify({title:"",premise:preset,protagonist:"",mode:"motion-comic",genre:"古装复仇",episodes:24,secondsPerEpisode:60})); } setView(target); }} />}
+
+          {view === "account" && <SasiAccountCenter lang={lang} dark={dark} accountEmail={accountEmail} onOpenBilling={()=>setView("billing")} onOpenModels={()=>setView("connections")} />}
 
           <footer className="mt-16 border-t border-current/10 py-8"><p className="text-xs uppercase tracking-[.2em] opacity-40">{copy(lang, "法律与规则", "Legal & Rules")}</p><div className="mt-4 flex flex-wrap gap-x-5 gap-y-3">{(lang === "zh" ? legalZh : legalEn).map((label) => <Link key={label} href="/legal/sasi" className="text-xs opacity-55 hover:opacity-100">{label}</Link>)}</div><p className="mt-6 max-w-4xl text-xs leading-6 opacity-40">{copy(lang, "SASI 专注于作品生产与交付，不运营内容发布社区。真实制作、制作账户、创作者能力与云端资产将在相应安全和结算体系就绪后分阶段开放。", "SASI focuses on production and delivery rather than operating a publishing community. Live production, production accounts, creator capabilities and cloud assets open in stages after their safety and settlement systems are ready.")}</p></footer>
         </div>

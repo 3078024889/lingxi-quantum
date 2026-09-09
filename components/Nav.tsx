@@ -11,9 +11,14 @@ type NavItem = { href: string; zh: string; en: string; rune: RuneKind; badge?: s
 
 const creation: NavItem[] = [
   { href: "/", zh: "SASI 首页", en: "SASI Home", rune: "crystal" },
-  { href: "/?view=drama", zh: "影像创作", en: "Screen Studio", rune: "crescent" },
-  { href: "/?view=build", zh: "产品构建", en: "Build & Deliver", rune: "mandala" },
-  { href: "/learn", zh: "探索灵感", en: "Explore", rune: "compass" },
+  { href: "/?view=director", zh: "苍玄 AI 导演", en: "CangXuan Director", rune: "eye" },
+  { href: "/?view=drama", zh: "AI 短剧工坊", en: "AI Drama Studio", rune: "crescent" },
+  { href: "/?view=build", zh: "编程构建部署", en: "Build & Deploy", rune: "mandala" },
+  { href: "/?view=skills", zh: "Skills", en: "Skills", rune: "crystal" },
+  { href: "/?view=models", zh: "模型与 API", en: "Models & API", rune: "twin" },
+  { href: "/?view=billing", zh: "余额与用量", en: "Balance & Usage", rune: "flame" },
+  { href: "/?view=works", zh: "我的作品库", en: "My Works", rune: "compass" },
+  { href: "/?view=account", zh: "我的账户", en: "My Account", rune: "figure" },
 ];
 
 const field: NavItem[] = [

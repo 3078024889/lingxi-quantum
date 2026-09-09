@@ -83,6 +83,28 @@ export default async function LiveAsPage() {
             <ConsoleCard href="/daily" artwork="field-tide" title="现实校准" titleEn="Reality Alignment" description="对齐内在信念与外在行动，校准当下。" descriptionEn="Align inner belief and outer action in the present." />
             <ConsoleCard href="/learn/manifestation-signs" artwork="field-resilience" title="进程回看" titleEn="Progress Reflection" description="从真实记录中看见变化，而不是追逐虚构征兆。" descriptionEn="Witness change through your records, not invented signs." />
           </div>
+          <ConsoleSectionTitle zh="显化成果档案" en="Manifestation evidence archive" />
+          <ConsolePanel className="overflow-hidden">
+            <div className="grid gap-7 lg:grid-cols-[.8fr_1.2fr]">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[.2em] text-lattice">REALITY EVIDENCE</p>
+                <h2 className="mt-3 text-3xl font-semibold text-bone"><Bi zh="这里记录的不是空想" en="This is not a record of wishful thinking" /></h2>
+                <p className="mt-4 text-sm leading-7 text-bone-dim"><Bi zh="它记录一个想法如何经过时间、选择与行动，真正进入物质世界。你可以写下开始日期、关键路径、行动时长、第一次可见结果与最终落地证据。" en="It records how an idea moves through time, choice and action into the physical world—with dates, milestones, effort and visible evidence." /></p>
+                <div className="mt-6 rounded-2xl border border-lattice/20 bg-lattice/5 p-4 text-xs leading-6 text-bone-dim"><Bi zh="下方为结构示例，不代表当前用户的真实进度。登录并完成记录后，才会形成属于你的显化档案。" en="The example below demonstrates structure; it is not your personal progress. Your archive is created only from records you complete." /></div>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  ["想法开始时间","2026.07.03"],
+                  ["最初想法","把灵犀场做成真正可用的 AI 创作与意识平台"],
+                  ["中间路径","重构导航 / 分层品牌 / 建立视觉资产 / 接入生产工作流"],
+                  ["现实行动时长","持续推进 68 天"],
+                  ["第一次可见结果","完成首页与核心页面结构"],
+                  ["落地时间","2026.09.09"],
+                  ["进入物质世界的结果","网站重构方案成型，可进入真实开发、验证与交付"],
+                ].map(([label,value],index)=><div key={label} className={`rounded-2xl border border-white/10 bg-void-deep/55 p-4 ${index===6?"sm:col-span-2":""}`}><p className="text-[10px] uppercase tracking-[.16em] text-lattice/70">{String(index+1).padStart(2,"0")}</p><h3 className="mt-2 text-xs font-semibold text-bone">{label}</h3><p className="mt-2 text-sm leading-6 text-bone-dim">{value}</p></div>)}
+              </div>
+            </div>
+          </ConsolePanel>
           <div className="mt-8">
             {user ? (
               <AskLingxi />

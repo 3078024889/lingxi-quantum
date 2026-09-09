@@ -24,6 +24,7 @@
     "audit:alipay": "node scripts/audit-alipay.mjs",
     "audit:sasi": "node scripts/audit-sasi.mjs",
     "audit:cangxuan": "node scripts/audit-cangxuan.mjs",
+    "audit:sasi-v3": "node scripts/audit-sasi-v3.mjs",
     "test:sasi-ledger": "node scripts/test-sasi-production-ledger.mjs",
     "test:alipay-crypto": "node --experimental-strip-types scripts/test-alipay-crypto.mjs",
     "audit:mini-program": "node scripts/audit-mini-program.mjs",
