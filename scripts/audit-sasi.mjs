@@ -55,7 +55,7 @@ const checks = [
   [schema.includes("sasi_projects_user_request_uidx") && schema.includes("p_request_id uuid") && projectsRoute.includes("Idempotency-Key"), "project creation is idempotent across retries"],
   [schema.includes("where p.id = project_id and p.user_id = auth.uid()") && schema.includes("grant select on public.sasi_projects, public.sasi_nodes, public.sasi_node_dependencies to authenticated"), "project graph reads work under RLS and node ownership is project-bound"],
   [projectProposal.includes("SASI_BUILD_STAGES") && projectProposal.includes("SASI_DRAMA_STAGES") && schema.includes("sasi_node_dependencies"), "persistent projects start with a real editable dependency graph"],
-  [workspace.includes('fetch("/api/sasi/projects"') && workspace.includes("持续生长的项目"), "workspace creates and lists persisted SASI projects"],
+  [workspace.includes('fetch("/api/sasi/projects"') && workspace.includes("setProjects(") && workspace.includes('async function prepare(kind: "code" | "drama")'), "workspace creates and lists persisted SASI projects"],
   [schema.includes("sasi-quarantine") && schema.includes("external_scan_required") && schema.includes("sasi_assets_search_idx"), "private quarantine assets have scan gates and a search index"],
   [assetPrepare.includes("createSignedUploadUrl") && assetPrepare.includes("safeAssetPath(user.id, projectId") && !assetPrepare.includes("signedUrl:"), "upload tickets use server-owned paths and expose no reusable service credential"],
   [assetInspect.includes("sha256(bytes)") && assetInspect.includes("inspectText(bytes)") && assetInspect.includes("external_scan_required"), "safe text is hashed and indexed while binary assets remain gated"],

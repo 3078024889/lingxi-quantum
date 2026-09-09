@@ -26,5 +26,5 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const user = isSupabasePublicConfigured() ? await getServerUser(createClient()) : null;
-  return <><SasiWorkspace accountEmail={user?.email ?? null} /><div className="lg:ml-[286px]"><Footer /></div></>;
+  return <><SasiWorkspace accountEmail={user?.email ?? null} /><div className="lg:ml-[260px]"><Footer /></div></>;
 }

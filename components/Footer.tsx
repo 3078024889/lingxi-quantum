@@ -37,11 +37,13 @@ export default function Footer() {
 
         <nav className="lx-footer-links" aria-label="SASI">
           <p className="lx-footer-title">SASI</p>
-          <Link href="/"><Bi zh="创作首页" en="Creation Home" /></Link>
-          <Link href="/?view=drama"><Bi zh="影像创作" en="Screen Studio" /></Link>
-          <Link href="/?view=build"><Bi zh="产品构建" en="Build & Deliver" /></Link>
-          <Link href="/?view=skills"><Bi zh="能力作品库" en="Capabilities" /></Link>
-          <Link href="/?view=billing"><Bi zh="制作账户" en="Production Account" /></Link>
+          <Link href="/"><Bi zh="SASI 首页" en="SASI Home" /></Link>
+          <Link href="/?view=director"><Bi zh="苍玄 AI 导演" en="CangXuan Director" /></Link>
+          <Link href="/?view=drama"><Bi zh="AI 短剧工坊" en="AI Drama Studio" /></Link>
+          <Link href="/?view=build"><Bi zh="编程构建部署" en="Build & Deploy" /></Link>
+          <Link href="/?view=skills"><Bi zh="Skills" en="Skills" /></Link>
+          <Link href="/?view=models"><Bi zh="模型与 API" en="Models & API" /></Link>
+          <Link href="/?view=works"><Bi zh="作品库" en="My Works" /></Link>
         </nav>
 
         <section className="lx-footer-links">

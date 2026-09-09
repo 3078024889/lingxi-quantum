@@ -6,6 +6,7 @@ const manifestation = fs.readFileSync("app/live-as/page.tsx", "utf8");
 const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
 const projectRoute = fs.readFileSync("app/api/sasi/projects/[id]/route.ts", "utf8");
+const footer = fs.readFileSync("components/Footer.tsx", "utf8");
 
 const checks = [
   ["canonical SASI promise", workspace.includes("把想法，变成真实可用的作品") && workspace.includes("一键成片，一念即达，一念显化")],
@@ -20,6 +21,9 @@ const checks = [
   ["artwork uses ratio-safe rendering", css.includes("aspect-ratio:1.424/1") && css.includes("object-fit:cover")],
   ["SASI home uses an independent cinematic asset", css.includes("sasi-home-hero-v2.png") && fs.existsSync("public/images/console/sasi-home-hero-v2.png")],
   ["SASI home follows the dense product-console hierarchy", ["sasi-home-v4-command","sasi-home-v4-products","sasi-home-v4-recent","sasi-home-v4-flow","sasi-home-v4-news"].every((value)=>workspace.includes(value))],
+  ["home product grid is four cards per desktop row", css.includes("grid-template-columns:repeat(4,minmax(0,1fr))")],
+  ["notification bell exposes truthful updates", workspace.includes("查看通知") && workspace.includes("角色连续性工作台正在构建") && workspace.includes("真实供应商生成闭环待验证")],
+  ["footer uses current product taxonomy", ["苍玄 AI 导演","AI 短剧工坊","编程构建部署","模型与 API","作品库"].every((value)=>footer.includes(value)) && !["影像创作","产品构建","能力作品库","制作账户"].some((value)=>footer.includes(value))],
   ["mockup screenshots are not embedded", !workspace.includes("codex-clipboard") && !panels.includes("codex-clipboard")],
   ["work library has real project actions", ["rename","duplicate","export","delete"].every((value)=>panels.includes(`\"${value}\"`)) && panels.includes("lingxifield.sasi.project.v1")],
   ["project mutations enforce ownership and origin", projectRoute.includes("isSameOriginMutation") && projectRoute.includes("authenticatedOwner") && projectRoute.includes("PROJECT_HAS_ACTIVE_JOB")],
