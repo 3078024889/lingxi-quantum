@@ -348,6 +348,27 @@ html[data-theme="light"] .sasi-cangxuan-kicker { color:#674cff; }
 html[data-theme="light"] .sasi-cangxuan-lead { color:rgba(29,45,70,.76); }
 html[data-theme="light"] .sasi-cangxuan-features { color:#167bb8; }
 @media(max-width:760px){.sasi-cangxuan-hero{min-height:420px;justify-content:flex-end}.sasi-cangxuan-hero::before{background-image:linear-gradient(0deg,rgba(5,13,26,.98) 0%,rgba(5,13,26,.8) 58%,rgba(5,13,26,.12) 100%),url('/images/sasi/director/cangxuan-director-hero-v1.png');background-position:center,68% center}.sasi-cangxuan-hero h1{font-size:40px}.sasi-cangxuan-hero h2{font-size:22px}.sasi-cangxuan-lead{font-size:15px}html[data-theme="light"] .sasi-cangxuan-hero::before{background-image:linear-gradient(0deg,#fff 0%,rgba(255,255,255,.86) 60%,rgba(255,255,255,.08) 100%),url('/images/sasi/director/cangxuan-director-hero-v1.png')}}
+.cangxuan-mode-card { overflow:hidden; border:1px solid rgba(143,164,198,.24); border-radius:14px; background:#081522; color:inherit; text-align:left; transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease; }
+.cangxuan-mode-card:hover { transform:translateY(-3px); border-color:rgba(93,193,255,.72); box-shadow:0 12px 28px rgba(0,0,0,.22); }
+.cangxuan-mode-card.is-selected { border-color:#6f7cff; box-shadow:0 0 0 2px rgba(111,124,255,.22),0 14px 34px rgba(71,94,255,.18); }
+.cangxuan-mode-art { display:block; width:100%; aspect-ratio:1/1; overflow:hidden; background:#091522; }
+.cangxuan-mode-art img { display:block; width:100%; height:100%; object-fit:cover; }
+.cangxuan-mode-copy { display:block; min-height:168px; padding:14px; }
+.cangxuan-mode-copy strong { display:block; font-size:17px; line-height:1.35; }
+.cangxuan-mode-copy small { display:block; margin-top:4px; color:#72a7d6; font-size:12px; line-height:1.4; }
+.cangxuan-mode-copy>span { display:block; min-height:46px; margin-top:10px; color:rgba(220,232,248,.74); font-size:13px; line-height:1.6; }
+.cangxuan-mode-copy i { display:block; margin-top:12px; border:1px solid rgba(118,154,210,.32); border-radius:999px; padding:6px 10px; color:#dcecff; font-size:12px; font-style:normal; text-align:center; }
+.cangxuan-mode-card.is-selected .cangxuan-mode-copy i { border-color:transparent; background:linear-gradient(90deg,#8b5bff,#3f83ff); color:#fff; }
+.cangxuan-step-heading { display:flex; align-items:center; gap:14px; margin-top:26px; }
+.cangxuan-step-heading>span { display:grid; width:42px; height:42px; flex:0 0 auto; place-items:center; border-radius:50%; background:linear-gradient(145deg,#9a62ff,#367eff); color:#fff; font-size:20px; font-weight:750; box-shadow:0 8px 20px rgba(87,89,255,.24); }
+.cangxuan-step-heading h2 { font-size:22px; font-weight:700; }
+.cangxuan-step-heading p { margin-top:3px; color:rgba(214,226,244,.58); font-size:13px; }
+html[data-theme="light"] .cangxuan-mode-card { border-color:#dfe5ef; background:#fff; box-shadow:0 10px 26px rgba(40,58,84,.06); }
+html[data-theme="light"] .cangxuan-mode-art { background:#eef3fa; }
+html[data-theme="light"] .cangxuan-mode-copy small { color:#6682a5; }
+html[data-theme="light"] .cangxuan-mode-copy>span { color:rgba(30,47,72,.66); }
+html[data-theme="light"] .cangxuan-mode-copy i { border-color:#cad5e4; color:#263a56; }
+html[data-theme="light"] .cangxuan-step-heading p { color:rgba(30,47,72,.58); }
 
 /* =====================================================================
    灵犀场终极透光玻璃面板体系 (v300 完美统一版)

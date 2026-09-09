@@ -17,6 +17,7 @@ const foundryMigration=read("supabase/migrations/20260909130000_cangxuan_data_fo
 const checks=[
   ["six director modes",["motion-comic","short-drama","film","advertising","music-video","game-cg"].every(v=>director.includes(`\"${v}\"`))],
   ["director choices precede brief",studio.indexOf("director-mode-grid")<studio.indexOf("作品名")],
+  ["six director cards use independent original artwork",["cangxuan-director-v1.png","ai-drama-studio-v1.png","film-director-v1.png","advertising-director-v1.png","music-video-director-v1.png","game-cg-director-v1.png"].every(v=>studio.includes(v))&&["film-director-v1.png","advertising-director-v1.png","music-video-director-v1.png","game-cg-director-v1.png"].every(v=>fs.existsSync(`public/images/sasi/director/modes/${v}`))],
   ["official model guides",["platform.openai.com/api-keys","console.x.ai","console.anthropic.com","platform.lumalabs.ai","console.volcengine.com","bailian.console.aliyun.com","console.cloud.tencent.com"].every(v=>catalog.includes(v))],
   ["build connectors",["GitHub","Vercel","Supabase","Cloudflare"].every(v=>catalog.includes(v))],
   ["billing policies",center.includes("cost*2")&&center.includes("cost*.2")],

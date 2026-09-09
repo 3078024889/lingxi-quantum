@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { buildDirectorBlueprint, DIRECTOR_MODES, type DirectorBlueprint, type DirectorBrief, type DirectorMode } from "@/lib/sasi/cangxuan-director";
 import CangXuanDataFoundry from "@/app/sasi/CangXuanDataFoundry";
@@ -7,6 +8,14 @@ import CangXuanDataFoundry from "@/app/sasi/CangXuanDataFoundry";
 type Props = { lang: "zh" | "en"; dark: boolean; accountEmail: string | null; onEnterProduction: (story: string) => void };
 
 const initialBrief: DirectorBrief = { title: "", premise: "", protagonist: "", mode: "motion-comic", genre: "古装复仇", episodes: 24, secondsPerEpisode: 60 };
+const directorModeArt: Record<DirectorMode,string> = {
+  "motion-comic":"/images/sasi/cards/cangxuan-director-v1.png",
+  "short-drama":"/images/sasi/cards/ai-drama-studio-v1.png",
+  film:"/images/sasi/director/modes/film-director-v1.png",
+  advertising:"/images/sasi/director/modes/advertising-director-v1.png",
+  "music-video":"/images/sasi/director/modes/music-video-director-v1.png",
+  "game-cg":"/images/sasi/director/modes/game-cg-director-v1.png",
+};
 
 export default function CangXuanDirectorStudio({ lang, dark, accountEmail, onEnterProduction }: Props) {
   const [brief, setBrief] = useState(initialBrief);
@@ -44,9 +53,10 @@ export default function CangXuanDirectorStudio({ lang, dark, accountEmail, onEnt
 
     <div id="cangxuan-director-room" className="mt-6 scroll-mt-8">
       <div className="mb-3 flex items-end justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-[#7657ff]">DIRECTOR SERIES</p><h2 className="mt-2 text-xl font-semibold">{t("选择你的专业导演", "Choose your specialist director")}</h2></div><span className="hidden text-xs opacity-45 sm:block">{t("入口位于创作输入之前", "Choose before writing the brief")}</span></div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" data-testid="director-mode-grid">{DIRECTOR_MODES.map((item)=><button key={item.id} type="button" aria-pressed={brief.mode===item.id} onClick={()=>selectMode(item.id)} className={`group rounded-2xl border p-4 text-left transition ${brief.mode===item.id?"border-[#7657ff] bg-[#7657ff]/10 shadow-[0_12px_30px_rgba(118,87,255,.12)]":"border-current/10 hover:border-[#7657ff]/60"}`}><span className={`grid h-9 w-9 place-items-center rounded-xl text-sm font-semibold ${brief.mode===item.id?"bg-[#7657ff] text-white":"bg-current/[.06] text-[#7657ff]"}`}>{item.glyph}</span><strong className="mt-4 block text-sm">{t(item.zh,item.en)}</strong><span className="mt-1 block text-[11px] leading-5 opacity-50">{t(item.noteZh,item.noteEn)}</span></button>)}</div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" data-testid="director-mode-grid">{DIRECTOR_MODES.map((item)=><button key={item.id} type="button" aria-pressed={brief.mode===item.id} onClick={()=>selectMode(item.id)} className={`cangxuan-mode-card group ${brief.mode===item.id?"is-selected":""}`}><span className="cangxuan-mode-art"><Image src={directorModeArt[item.id]} alt="" width={1254} height={1254} sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"/></span><span className="cangxuan-mode-copy"><strong>{t(item.zh,item.en)}</strong><small>{item.en} Director</small><span>{t(item.noteZh,item.noteEn)}</span><i>{brief.mode===item.id?t("已选择","Selected"):t("选择","Select")}</i></span></button>)}</div>
     </div>
 
+    <div className="cangxuan-step-heading"><span>2</span><div><h2>{t("建立导演方案","Build the directing blueprint")}</h2><p>{t("系统根据你选择的导演类型，生成专属叙事规则、角色锁、镜头语言与连续性方案。","Generate mode-specific story rules, character locks, shot language and continuity guidance.")}</p></div></div>
     <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_330px]">
       <div className={`rounded-3xl border p-6 ${panel}`}>
         <div className="grid gap-4 sm:grid-cols-2">
