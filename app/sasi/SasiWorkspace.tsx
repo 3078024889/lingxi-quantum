@@ -186,6 +186,107 @@ function UploadHub({
   );
 }
 
+function BuildDeployConsole({
+  lang,
+  dark,
+  accountEmail,
+  brief,
+  setBrief,
+  files,
+  addFiles,
+  removeFile,
+  handlePaste,
+  preparing,
+  prepareProject,
+  projects,
+  openProject,
+  openConnections,
+  setNotice,
+}: {
+  lang: Lang;
+  dark: boolean;
+  accountEmail: string | null;
+  brief: string;
+  setBrief: (value: string) => void;
+  files: StagedFile[];
+  addFiles: (files: File[]) => void;
+  removeFile: (id: string) => void;
+  handlePaste: (event: ClipboardEvent<HTMLTextAreaElement>) => void;
+  preparing: boolean;
+  prepareProject: () => void;
+  projects: SasiProjectSummary[];
+  openProject: (projectId: string) => void;
+  openConnections: () => void;
+  setNotice: (message: string) => void;
+}) {
+  const buildProjects = projects.filter((project) => project.kind === "build");
+  const latestProject = buildProjects[0] ?? null;
+  const hasInput = brief.trim().length >= 12 || files.length > 0;
+  const statusItems = [
+    { name: "GitHub", note: copy(lang, "读取仓库、分支与提交", "Repository, branch and commits") },
+    { name: "Vercel", note: copy(lang, "读取构建、预览与公网部署", "Builds, previews and production") },
+    { name: "Supabase", note: copy(lang, "读取项目数据库与迁移状态", "Project database and migrations") },
+    { name: copy(lang, "自定义域名", "Custom domain"), note: copy(lang, "验证 DNS、SSL 与公网响应", "DNS, SSL and public response") },
+  ];
+  const deliverySteps = [
+    ["01", copy(lang, "理解需求", "Understand"), copy(lang, "目标、用户、边界与验收标准", "Goals, users, boundaries and acceptance"), hasInput ? copy(lang, "可规划", "Ready to plan") : copy(lang, "等待需求", "Awaiting brief")],
+    ["02", copy(lang, "形成方案", "Plan"), copy(lang, "页面、功能、数据与实施顺序", "Pages, features, data and sequence"), latestProject ? copy(lang, "项目已保存", "Project saved") : copy(lang, "尚未执行", "Not run")],
+    ["03", copy(lang, "代码与审阅", "Code & review"), copy(lang, "变更、测试、风险与审阅结论", "Changes, tests, risks and review"), copy(lang, "等待执行", "Awaiting run")],
+    ["04", copy(lang, "提交与上线", "Commit & launch"), copy(lang, "Git、构建、域名与公网证据", "Git, build, domain and public evidence"), copy(lang, "等待授权", "Awaiting approval")],
+  ];
+
+  return (
+    <section className={`sasi-build-console ${dark ? "is-dark" : "is-light"}`}>
+      <header className="sasi-build-heading">
+        <div>
+          <p>LINGXI FIELD · SASI BUILD</p>
+          <h1>{copy(lang, "编程构建部署", "Build & Deploy")}</h1>
+          <strong>{copy(lang, "从一句需求，到产品真正上线。", "From one requirement to a product that is truly live.")}</strong>
+          <span>{copy(lang, "SASI 把模糊想法拆成可执行任务，组织代码、测试与交付；每一步有状态，每个结果有证据。", "SASI turns an unclear idea into executable work, then organizes code, tests and delivery with a status and evidence for every result.")}</span>
+        </div>
+        <button type="button" onClick={() => document.getElementById("sasi-build-brief")?.focus()}>＋ {copy(lang, "新建项目", "New project")}</button>
+      </header>
+
+      <div className="sasi-build-project-bar">
+        <div><small>{copy(lang, "当前项目", "Current project")}</small><b>{latestProject?.title ?? copy(lang, "尚未建立项目", "No project yet")}</b>{latestProject && <button type="button" onClick={() => openProject(latestProject.id)}>{copy(lang, `打开 V${latestProject.currentVersion}`, `Open V${latestProject.currentVersion}`)} →</button>}</div>
+        <div className="sasi-build-integrations">
+          {statusItems.map((item) => <button type="button" key={item.name} onClick={openConnections}><span><b>{item.name}</b><small>{item.note}</small></span><em>{copy(lang, "待连接", "Connect")}</em></button>)}
+        </div>
+      </div>
+
+      <div className="sasi-build-grid">
+        <section className="sasi-build-panel sasi-build-demand">
+          <header><div><small>01 · BRIEF</small><h2>{copy(lang, "需求与任务", "Brief & tasks")}</h2></div><span>{hasInput ? copy(lang, "可以开始规划", "Ready to plan") : copy(lang, "先说清要解决什么", "Start with the problem")}</span></header>
+          <textarea id="sasi-build-brief" value={brief} onChange={(event) => setBrief(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "例如：根据这张页面截图重做首页；保留已有登录和数据库；适配手机端；测试通过后提交，但部署前先让我确认。", "Example: Rebuild the homepage from this screenshot, preserve login and data, support mobile, test and commit, then ask before deployment.")} />
+          <p className="sasi-build-guidance">{copy(lang, "写清用户、问题、必须保留的内容和完成标准，SASI 才能少走弯路。截图、报错、文档或代码可以直接附上。", "Name the user, problem, must-keep elements and acceptance criteria. Attach screenshots, errors, documents or code directly.")}</p>
+          <UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={removeFile} onNotice={setNotice} onOpenConnections={openConnections} />
+          <button type="button" disabled={preparing} onClick={prepareProject} className="sasi-build-primary">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并生成执行图谱", "Create project & execution graph")}</button>
+          {!accountEmail && <p className="sasi-build-boundary">{copy(lang, "建立可持续保存的项目需要先登录；当前输入与附件只保留在本次浏览器任务中。", "Sign in to persist a project. The current brief and files remain in this browser task only.")}</p>}
+          <div className="sasi-build-plan"><h3>{copy(lang, "交付路径", "Delivery path")}</h3>{deliverySteps.map(([number, title, note, status]) => <article key={number}><i>{number}</i><div><b>{title}</b><small>{note}</small></div><em>{status}</em></article>)}</div>
+        </section>
+
+        <section className="sasi-build-panel sasi-build-files">
+          <header><div><small>02 · SOURCE</small><h2>{copy(lang, "代码与文件", "Code & files")}</h2></div><span>{files.length ? copy(lang, `${files.length} 项待归属`, `${files.length} staged`) : copy(lang, "尚无来源", "No source yet")}</span></header>
+          <div className="sasi-build-source-head"><b>{copy(lang, "项目来源", "Project source")}</b><span>{copy(lang, "连接后才读取真实内容", "Live content appears after connection")}</span></div>
+          {files.length > 0 ? <div className="sasi-build-file-list">{files.map((file) => <article key={file.id}><span className="sasi-build-file-icon">{file.kind === "code" ? "</>" : "▧"}</span><div><b>{file.name}</b><small>{file.kind} · {formatBytes(file.size)}</small></div><button type="button" onClick={() => removeFile(file.id)} aria-label={copy(lang, "移除文件", "Remove file")}>×</button></article>)}</div> : <div className="sasi-build-empty"><span>⌘</span><h3>{copy(lang, "从真实材料开始", "Start from real material")}</h3><p>{copy(lang, "连接 GitHub 读取仓库，或在左侧上传现有代码、页面截图和报错日志。没有来源时，系统不会展示虚构的文件树。", "Connect GitHub to read a repository, or upload code, screenshots and error logs. No fictional file tree is shown without a source.")}</p><button type="button" onClick={openConnections}>{copy(lang, "连接 GitHub", "Connect GitHub")} →</button></div>}
+          <div className="sasi-build-truth"><h3>{copy(lang, "完成标准", "Definition of done")}</h3><ul><li>{copy(lang, "修改内容与原需求逐项对应", "Changes map to the brief")}</li><li>{copy(lang, "类型、构建与关键流程通过检查", "Types, build and key flows verified")}</li><li>{copy(lang, "用户原有功能与数据不被破坏", "Existing features and data preserved")}</li><li>{copy(lang, "提交、部署与公网验证分别记录", "Commit, deployment and public checks recorded separately")}</li></ul></div>
+        </section>
+
+        <aside className="sasi-build-panel sasi-build-release">
+          <header><div><small>03 · RELEASE</small><h2>{copy(lang, "部署与域名", "Deploy & domain")}</h2></div><span>{copy(lang, "等待连接", "Awaiting connection")}</span></header>
+          <p className="sasi-build-release-lead">{copy(lang, "代码完成不等于已经上线。这里分别核对预览、生产、数据库和域名，避免“看似完成，却无法访问”。", "Code complete is not live. Preview, production, database and domain are verified separately so finished-looking work does not fail in public.")}</p>
+          <div className="sasi-build-release-list">{[["Preview", copy(lang, "预览构建与页面验收", "Preview build and visual review")],["Production", copy(lang, "生产构建与版本证据", "Production build and version evidence")],["Database", copy(lang, "迁移、权限与服务健康", "Migrations, access and service health")],["DNS / SSL", copy(lang, "域名解析、证书与响应", "DNS, certificate and response")]].map(([title, note]) => <button type="button" key={title} onClick={openConnections}><span><b>{title}</b><small>{note}</small></span><em>{copy(lang, "待验证", "Verify")}</em></button>)}</div>
+          <div className="sasi-build-checks"><h3>{copy(lang, "上线检查", "Launch checks")}</h3>{[copy(lang, "环境变量完整且不暴露密钥", "Environment variables complete and secret"),copy(lang, "数据库迁移与权限已经核验", "Database migrations and access verified"),copy(lang, "生产构建无错误", "Production build succeeds"),copy(lang, "域名响应与版本一致", "Domain response matches the release")].map(item => <p key={item}><span>○</span>{item}</p>)}</div>
+          <button type="button" onClick={openConnections} className="sasi-build-secondary">{copy(lang, "配置连接与部署入口", "Configure connections & deployment")}</button>
+          <p className="sasi-build-boundary">{copy(lang, "部署属于外部写入操作。连接完成后仍会在执行前请求确认。", "Deployment is an external write and still requires confirmation after connections are ready.")}</p>
+        </aside>
+      </div>
+
+      {buildProjects.length > 0 && <section className="sasi-build-recent"><header><div><small>RECENT PROJECTS</small><h2>{copy(lang, "继续已有构建", "Continue a build")}</h2></div></header><div>{buildProjects.slice(0,4).map((project) => <button type="button" key={project.id} onClick={() => openProject(project.id)}><span>◇</span><div><b>{project.title}</b><small>V{project.currentVersion} · {copy(lang, "已保存项目图谱", "Saved project graph")}</small></div><em>→</em></button>)}</div></section>}
+    </section>
+  );
+}
+
 export default function SasiWorkspace({ accountEmail }: { accountEmail: string | null }) {
   const [lang, setLang] = useState<Lang>("zh");
   const [theme, setTheme] = useState<Theme>("light");
@@ -463,16 +564,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           {view === "director" && <CangXuanDirectorStudio lang={lang} dark={dark} accountEmail={accountEmail} onEnterProduction={(story) => { setScript(story); setView("drama"); }} />}
 
           {view === "code" && (
-            <section>
-              <div className="sasi-v3-page-hero art-build"><p className="sasi-v3-kicker">LINGXI FIELD · SASI BUILD</p><h1>{copy(lang, "从一句需求，到产品真正上线", "From one requirement to a live product")}</h1><p>{copy(lang, "带着想法、页面截图、报错日志或现有仓库进入工作流。SASI 帮你拆解产品、编写代码、完成测试，并把 Git 提交、部署结果与公网状态逐项交付。", "Bring an idea, screenshot, error log or repository. SASI plans the product, writes and tests the code, then delivers Git, deployment and public evidence step by step.")}</p><strong>{copy(lang,"代码完成不等于已经上线；每一步都有状态，每个结果都能核验。","Code complete is not the same as live—every step has a status and every result can be verified.")}</strong></div>
-              <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
-                <div className={`rounded-3xl border p-6 ${panel}`}><textarea value={brief} onChange={(event) => setBrief(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "描述产品、错误、现有仓库与部署目标……", "Describe the product, problem, repository and deployment target…")} className="min-h-40 w-full resize-none bg-transparent text-base leading-7 outline-none"/><UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} onOpenConnections={()=>setView("connections")} /><div className="mt-5 flex items-center justify-between gap-3"><span className="text-xs opacity-55">SASI Auto · {copy(lang, "快速 / 标准 / 深度", "Fast / Standard / Deep")}</span><button disabled={preparing} onClick={() => prepare("code")} className={`rounded-xl px-7 py-3 text-sm font-semibold disabled:cursor-wait disabled:opacity-50 ${dark ? "bg-white text-black" : "bg-black text-white"}`}>{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立真实项目", "Create project")}</button></div></div>
-                <aside className={`rounded-3xl border p-5 ${panel}`}><p className="text-xs uppercase tracking-[.18em] text-[#6d70ff]">REPOSITORY & DEPLOY</p><h2 className="mt-3 text-lg font-semibold">{copy(lang,"连接后读取真实状态","Connect for live status")}</h2><p className="mt-3 text-xs leading-6 opacity-55">{copy(lang,"GitHub 用于仓库、分支与提交；Vercel 用于构建、域名与部署结果。未连接时不会伪造成功记录。","GitHub provides repositories, branches and commits; Vercel provides builds, domains and deployment results. No success records are fabricated before connection.")}</p><div className="mt-5 space-y-2">{[["GitHub",copy(lang,"仓库与提交证据","Repository & commit evidence")],["Vercel",copy(lang,"构建与公网状态","Build & public status")]].map(([name,note])=><button key={name} onClick={()=>setView("connections")} className="flex w-full items-center justify-between rounded-xl border border-current/10 px-4 py-3 text-left"><span><b className="block text-xs">{name}</b><small className="mt-1 block opacity-45">{note}</small></span><span className="text-[#6d70ff]">＋</span></button>)}</div></aside>
-              </div>
-              <div className="mt-6"><div className="flex items-end justify-between gap-4"><div><p className="sasi-v3-kicker">DELIVERY EVIDENCE</p><h2 className="mt-2 text-2xl font-semibold">{copy(lang,"从构建到上线的状态链","Evidence from build to live")}</h2></div><span className="text-xs opacity-45">{copy(lang,"连接后自动更新","Updates after connection")}</span></div><div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{[["01","代码与审阅", "本地变更、检查结果、风险说明"],["02","Git 提交","提交哈希、目标分支、推送结果"],["03","部署构建","部署编号、构建日志、运行状态"],["04","公网验证","域名响应、版本证据、可访问时间"]].map(([step,title,note])=><article key={step} className={`rounded-2xl border p-5 ${panel}`}><span className="text-xs text-[#6d70ff]">{step}</span><h3 className="mt-3 font-semibold">{copy(lang,title,title)}</h3><p className="mt-2 text-xs leading-5 opacity-50">{copy(lang,note,note)}</p><span className="mt-4 inline-flex rounded-full bg-current/5 px-3 py-1 text-[10px] opacity-45">{copy(lang,"等待项目执行","Awaiting project run")}</span></article>)}</div></div>
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">{SASI_SKILLS.filter((skill) => (skill.modes as readonly string[]).includes("code")).map((skill) => <div key={skill.id} className="rounded-2xl border border-current/10 p-5"><p className="font-medium"><span className="mr-2 text-[#7657ff]">{skill.glyph}</span>{copy(lang, skill.zh, skill.en)}</p><p className="mt-2 text-xs leading-5 opacity-55">{copy(lang, skill.noteZh, skill.noteEn)}</p></div>)}</div>
-              {projects.some((project)=>project.kind==="build") && <div className="mt-8"><div className="flex items-end justify-between"><h2 className="text-2xl font-semibold">{copy(lang,"最近的构建项目","Recent build projects")}</h2><button onClick={()=>setView("works")} className="text-xs text-[#6d70ff]">{copy(lang,"查看全部 →","View all →")}</button></div><div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">{projects.filter((project)=>project.kind==="build").slice(0,3).map(project=><button key={project.id} onClick={()=>openProject(project.id)} className={`rounded-2xl border p-5 text-left ${panel}`}><span className="text-[10px] uppercase tracking-[.16em] text-[#6d70ff]">BUILD GRAPH</span><h3 className="mt-3 truncate font-semibold">{project.title}</h3><p className="mt-2 text-xs opacity-45">v{project.currentVersion} · {copy(lang,"打开真实项目图谱","Open persisted project graph")}</p></button>)}</div></div>}
-            </section>
+            <BuildDeployConsole lang={lang} dark={dark} accountEmail={accountEmail} brief={brief} setBrief={setBrief} files={files} addFiles={addFiles} removeFile={(id) => setFiles((current) => current.filter((file) => file.id !== id))} handlePaste={handlePaste} preparing={preparing} prepareProject={() => prepare("code")} projects={projects} openProject={openProject} openConnections={() => setView("connections")} setNotice={setNotice} />
           )}
 
           {view === "drama" && (
