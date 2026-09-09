@@ -228,6 +228,64 @@ html[data-theme="light"] .sasi-hero-surface::before { background-image:linear-gr
 .sasi-home-tile-art.art-billing { background-image:url('/images/console/field-products-v1.png'); background-position:66.666% 0; }
 .sasi-home-tile-art.art-field { background-position:100% 0; }
 
+/* SASI Home V4 — dense cinematic product console, rebuilt one product at a time. */
+.sasi-home-v4 { color:#edf3ff; }
+.sasi-home-v4-hero { position:relative; min-height:410px; overflow:hidden; border-radius:4px; padding:28px 28px 22px; background-image:linear-gradient(90deg,rgba(4,13,25,.98) 0%,rgba(4,13,25,.91) 38%,rgba(4,13,25,.38) 67%,rgba(4,13,25,.05) 100%),url('/images/console/sasi-home-hero-v2.png'); background-position:center; background-size:cover; box-shadow:inset 0 0 0 1px rgba(98,168,255,.16); }
+.sasi-home-v4-kicker { color:#9cb8ff; font-size:10px; font-weight:700; letter-spacing:.34em; }
+.sasi-home-v4-mark { margin-top:8px; font-size:clamp(2.7rem,5vw,5.4rem); font-weight:800; letter-spacing:.06em; line-height:1; }
+.sasi-home-v4-hero h1 { margin-top:2px; max-width:800px; background:linear-gradient(92deg,#fff 0%,#e6eaff 52%,#c56cff 90%); background-clip:text; color:transparent; font-size:clamp(2.2rem,4.3vw,4.5rem); font-weight:750; letter-spacing:-.045em; line-height:1.06; }
+.sasi-home-v4-lead { margin-top:14px; max-width:780px; color:rgba(235,242,255,.78); font-size:15px; line-height:1.75; }
+.sasi-home-v4-features { display:flex; flex-wrap:wrap; gap:22px; margin-top:14px; color:#77dbff; font-size:11px; }
+.sasi-home-v4-command { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:12px; max-width:1030px; margin-top:20px; border:1px solid rgba(113,151,255,.72); border-radius:16px; padding:8px 9px 8px 16px; background:rgba(7,17,37,.76); box-shadow:0 0 24px rgba(91,102,255,.16),inset 0 0 28px rgba(100,130,255,.06); backdrop-filter:blur(15px); }
+.sasi-home-v4-command > span { color:#7edfff; }
+.sasi-home-v4-command input { min-width:0; background:transparent; color:#eff5ff; font-size:13px; outline:none; }
+.sasi-home-v4-command input::placeholder { color:rgba(222,233,255,.46); }
+.sasi-home-v4-command button { border-radius:13px; padding:13px 24px; background:linear-gradient(100deg,#ae68ff,#356dff); color:#fff; font-size:13px; font-weight:700; box-shadow:0 8px 26px rgba(80,79,255,.38); }
+.sasi-home-v4-chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+.sasi-home-v4-chips button { border:1px solid rgba(170,197,240,.38); border-radius:999px; padding:7px 18px; color:rgba(235,242,255,.78); font-size:10px; transition:.2s ease; }
+.sasi-home-v4-chips button:hover { border-color:#72d7ff; color:#fff; background:rgba(74,119,255,.12); }
+.sasi-home-v4-products { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:10px; margin-top:10px; }
+.sasi-home-v4-product { min-width:0; overflow:hidden; border:1px solid rgba(131,160,204,.28); border-radius:10px; background:#081421; text-align:left; transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
+.sasi-home-v4-product:hover { transform:translateY(-3px); border-color:rgba(118,153,255,.8); box-shadow:0 12px 30px rgba(0,0,0,.3); }
+.sasi-home-v4-product .sasi-home-tile-art { aspect-ratio:1.42/1; }
+.sasi-home-tile-art.art-drama { background-position:0 100%; }
+.sasi-home-tile-art.art-skills { background-position:66.666% 0; }
+.sasi-home-tile-art.art-api { background-position:66.666% 100%; }
+.sasi-home-tile-art.art-works { background-position:100% 100%; }
+.sasi-home-tile-art.art-account { background-image:url('/images/console/field-products-v1.png'); background-position:33.333% 100%; }
+.sasi-home-v4-product-copy { position:relative; display:block; min-height:108px; padding:11px 27px 12px 12px; }
+.sasi-home-v4-product-copy b { display:block; font-size:13px; }
+.sasi-home-v4-product-copy small { display:block; margin-top:2px; color:rgba(190,207,234,.45); font-size:8px; }
+.sasi-home-v4-product-copy p { margin-top:9px; color:rgba(216,228,247,.62); font-size:9px; line-height:1.6; }
+.sasi-home-v4-product-copy i { position:absolute; right:9px; bottom:11px; display:grid; width:22px; height:22px; place-items:center; border-radius:50%; background:rgba(134,165,214,.16); color:#e4efff; font-size:11px; font-style:normal; }
+.sasi-home-v4-lower { display:grid; grid-template-columns:1.45fr 1fr 1fr; gap:10px; margin-top:12px; }
+.sasi-home-v4-lower > section { min-width:0; border:1px solid rgba(131,160,204,.24); border-radius:10px; padding:12px; background:rgba(7,18,31,.88); }
+.sasi-home-v4-lower header { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.sasi-home-v4-lower header h2 { font-size:13px; font-weight:650; }
+.sasi-home-v4-lower header button { color:#829dff; font-size:9px; }
+.sasi-home-v4-recent { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:7px; }
+.sasi-home-v4-recent button { min-width:0; text-align:left; }
+.sasi-home-v4-recent-art { display:block; aspect-ratio:1.55/1; border-radius:7px; background-image:url('/images/console/platform-experience-v1.png'); background-size:400% 200%; }
+.sasi-home-v4-recent-art.recent-1 { background-position:0 0; }.sasi-home-v4-recent-art.recent-2 { background-position:33.333% 0; }.sasi-home-v4-recent-art.recent-3 { background-position:66.666% 100%; }.sasi-home-v4-recent-art.recent-4 { background-position:100% 0; }
+.sasi-home-v4-recent b { display:block; overflow:hidden; margin-top:7px; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.sasi-home-v4-recent small { color:rgba(207,222,244,.45); font-size:8px; }
+.sasi-home-v4-flow,.sasi-home-v4-news { display:grid; gap:5px; }
+.sasi-home-v4-flow li { display:grid; grid-template-columns:22px 78px 1fr; align-items:center; gap:7px; min-height:25px; border-radius:7px; padding:3px 8px; background:rgba(73,106,159,.13); }
+.sasi-home-v4-flow span { display:grid; width:19px; height:19px; place-items:center; border-radius:50%; background:linear-gradient(135deg,#b29cff,#77bdff); color:#07111d; font-size:9px; font-weight:800; }
+.sasi-home-v4-flow b,.sasi-home-v4-news b { font-size:9px; font-weight:650; }.sasi-home-v4-flow small { color:rgba(211,224,244,.48); font-size:8px; }
+.sasi-home-v4-news li { display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:28px; border-bottom:1px solid rgba(151,177,217,.1); }
+.sasi-home-v4-news time { color:rgba(188,207,238,.5); font-size:8px; }
+html[data-theme="light"] .sasi-home-v4 { color:#172235; }
+html[data-theme="light"] .sasi-home-v4-hero { background-image:linear-gradient(90deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.9) 43%,rgba(255,255,255,.3) 75%,rgba(255,255,255,.08)),url('/images/console/sasi-home-hero-v2.png'); box-shadow:inset 0 0 0 1px #e0e7f1,0 18px 48px rgba(32,54,88,.08); }
+html[data-theme="light"] .sasi-home-v4-mark { color:#172235; } html[data-theme="light"] .sasi-home-v4-lead { color:rgba(27,43,66,.72); }
+html[data-theme="light"] .sasi-home-v4-command { border-color:rgba(83,105,218,.4); background:rgba(255,255,255,.86); } html[data-theme="light"] .sasi-home-v4-command input { color:#172235; } html[data-theme="light"] .sasi-home-v4-command input::placeholder { color:rgba(30,47,74,.45); }
+html[data-theme="light"] .sasi-home-v4-chips button { border-color:rgba(49,72,108,.22); color:rgba(25,42,68,.7); }
+html[data-theme="light"] .sasi-home-v4-product,html[data-theme="light"] .sasi-home-v4-lower>section { border-color:#e1e7f0; background:#fff; box-shadow:0 10px 28px rgba(33,51,78,.07); }
+html[data-theme="light"] .sasi-home-v4-product-copy small,html[data-theme="light"] .sasi-home-v4-product-copy p,html[data-theme="light"] .sasi-home-v4-recent small,html[data-theme="light"] .sasi-home-v4-flow small { color:rgba(32,49,75,.5); }
+html[data-theme="light"] .sasi-home-v4-flow li { background:#f2f5fa; }
+@media(max-width:1380px){.sasi-home-v4-products{grid-template-columns:repeat(4,minmax(0,1fr))}.sasi-home-v4-lower{grid-template-columns:1fr 1fr}.sasi-home-v4-lower>section:first-child{grid-column:1/-1}}
+@media(max-width:760px){.sasi-home-v4-hero{min-height:auto;padding:24px 18px;background-position:62% center}.sasi-home-v4-command{grid-template-columns:auto minmax(0,1fr)}.sasi-home-v4-command button{grid-column:1/-1}.sasi-home-v4-products{grid-template-columns:repeat(2,minmax(0,1fr))}.sasi-home-v4-lower{grid-template-columns:1fr}.sasi-home-v4-lower>section:first-child{grid-column:auto}.sasi-home-v4-recent{grid-template-columns:repeat(2,minmax(0,1fr))}.sasi-home-v4-flow li{grid-template-columns:22px 85px 1fr}}
+
 /* SASI V3 — full product console, using generated artwork atlases rather than UI screenshots. */
 .sasi-v3-home { position:relative; isolation:isolate; }
 .sasi-v3-ambient-video { position:absolute; z-index:-3; top:-32px; right:-32px; width:64%; height:330px; border-radius:32px; object-fit:cover; object-position:center; opacity:.42; -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 36%,#000 100%); mask-image:linear-gradient(90deg,transparent 0%,#000 36%,#000 100%); pointer-events:none; }

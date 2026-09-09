@@ -187,11 +187,12 @@ function UploadHub({
 
 export default function SasiWorkspace({ accountEmail }: { accountEmail: string | null }) {
   const [lang, setLang] = useState<Lang>("zh");
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [themeReady, setThemeReady] = useState(false);
   const [view, setView] = useState<View>("home");
   const [mobileNav, setMobileNav] = useState(false);
   const [homeBrief, setHomeBrief] = useState("");
+  const [headerSearch, setHeaderSearch] = useState("");
   const [brief, setBrief] = useState("");
   const [script, setScript] = useState("");
   const [files, setFiles] = useState<StagedFile[]>([]);
@@ -385,7 +386,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   return (
     <div className={`sasi-workspace ${shell}`}>
       <button onClick={() => setMobileNav((value) => !value)} className="fixed left-4 top-4 z-50 rounded-xl border border-current/15 bg-inherit px-3 py-2 text-sm lg:hidden">☰ SASI</button>
-      <aside className={`${mobileNav ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 flex w-[286px] flex-col overflow-y-auto border-r p-5 transition lg:translate-x-0 ${dark ? "border-white/10 bg-[#0d1015]" : "border-black/10 bg-white"}`}>
+      <aside className={`${mobileNav ? "translate-x-0" : "-translate-x-full"} fixed inset-y-0 left-0 z-40 flex w-[260px] flex-col overflow-y-auto border-r p-4 transition lg:translate-x-0 ${dark ? "border-white/10 bg-[#07111d]" : "border-black/10 bg-white"}`}>
         <button type="button" onClick={() => { setView("home"); setMobileNav(false); }} className="mb-7 flex items-center gap-3 text-left">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/lingxifield-logo.png" alt="LINGXIFIELD" className="h-10 w-10 rounded-xl" />
@@ -396,14 +397,14 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
         <nav className="space-y-1">
           {studioNav.map((item) => (
             <button key={item.id} onClick={() => { setView(item.id); setMobileNav(false); }} className={`flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition ${view === item.id ? (dark ? "border-[#668cff]/25 bg-[#27365d] text-white shadow-[inset_2px_0_#72d7ff]" : "border-[#6958d8]/15 bg-[#e7e9ff] text-[#171717] shadow-[inset_2px_0_#6958d8]") : "border-transparent hover:bg-current/5"}`}>
-              <span className="w-7 text-center font-mono text-xs">{item.glyph}</span>{copy(lang, item.zh, item.en)}
+              <span className="w-7 text-center font-mono text-xs">{item.glyph}</span><span><b className="block text-sm font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-0.5 block text-[10px] font-normal opacity-48">{item.en}</small></span>
             </button>
           ))}
         </nav>
 
         <p className="mb-2 mt-7 text-[10px] uppercase tracking-[.22em] opacity-45">{copy(lang, "第二层 · LINGXI FIELD", "SECOND LAYER · LINGXI FIELD")}</p>
         <nav className="space-y-1">
-          {fieldNav.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm opacity-70 transition hover:bg-current/5 hover:opacity-100"><span className="w-7 text-center">{item.glyph}</span>{copy(lang, item.zh, item.en)}</Link>)}
+          {fieldNav.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm opacity-70 transition hover:bg-current/5 hover:opacity-100"><span className="w-7 text-center">{item.glyph}</span><span><b className="block text-sm font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-0.5 block text-[10px] font-normal opacity-48">{item.en}</small></span></Link>)}
         </nav>
 
         <div className="mt-auto space-y-3 border-t border-current/10 pt-4">
@@ -412,58 +413,38 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
         </div>
       </aside>
 
-      <main className="min-h-screen px-5 pb-16 pt-20 lg:ml-[286px] lg:px-10 lg:pt-8">
-        <header className="mx-auto flex max-w-[1280px] items-center justify-between border-b border-current/10 pb-5"><div><p className="text-xs uppercase tracking-[.22em] opacity-45">Lingxifield Sovereign AI Studio</p><p className="mt-2 text-sm opacity-65">{copy(lang, "从意图，到可交付作品", "From intent to deliverable work")}</p></div><button onClick={() => setView("account")} className={`rounded-xl px-4 py-2 text-sm ${dark ? "bg-[#d9ff73] text-black" : "bg-black text-white"}`}>{copy(lang, "我的账户", "My account")}</button></header>
+      <main className="min-h-screen px-4 pb-16 pt-20 lg:ml-[260px] lg:px-5 lg:pt-3">
+        <header className="mx-auto flex max-w-[1600px] items-center gap-4 border-b border-current/10 pb-3"><label className="hidden min-w-0 flex-1 items-center rounded-full border border-current/15 px-5 py-2.5 md:flex"><span className="mr-3 opacity-45">⌕</span><input value={headerSearch} onChange={(event)=>setHeaderSearch(event.target.value)} onKeyDown={(event)=>{if(event.key==="Enter"&&headerSearch.trim()){setHomeBrief(headerSearch.trim());setView("home");}}} placeholder={copy(lang,"搜索作品、功能、教程或输入你的想法…","Search works, features, guides or enter an idea…")} className="w-full bg-transparent text-xs outline-none"/></label><button onClick={()=>setView("home")} className="rounded-full border border-[#7994ff]/60 px-5 py-2 text-xs font-semibold">＋ {copy(lang,"创作","Create")}</button><button onClick={() => setView("account")} className="flex items-center gap-2 rounded-full px-2 py-1 text-xs"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#68d8ff] to-[#7657ff] text-white">◎</span><span className="hidden sm:block">{copy(lang,"探索更大的可能","Explore more")}</span></button></header>
 
-        <div className="mx-auto mt-8 max-w-[1280px]">
+        <div className="mx-auto mt-3 max-w-[1600px]">
           {view === "home" && (
-            <section className="sasi-hero-surface sasi-v3-home">
-              <video className="sasi-v3-ambient-video" autoPlay muted loop playsInline preload="metadata" poster="/images/sky/aurora-hero-poster.jpg" aria-hidden="true">
-                <source src="/images/sky/aurora-hero.webm" type="video/webm" />
-                <source src="/images/sky/aurora-hero.mp4" type="video/mp4" />
-              </video>
-              <p className="text-xs font-semibold uppercase tracking-[.2em] text-[#7657ff]">LINGXIFIELD SASI</p>
-              <h1 className="mt-3 max-w-5xl text-4xl font-semibold tracking-[-.04em] sm:text-5xl lg:text-6xl">{copy(lang, "把想法，变成真实可用的作品", "Turn ideas into work people can use")}</h1>
-              <p className="mt-4 max-w-4xl text-base leading-8 opacity-60">{copy(lang, "一个想法，在这里变成网站、应用、短剧与视频。一键成片，一念即达，一念显化。SASI 贯穿理解、策划、制作、审校与交付，让复杂系统退居幕后。", "One idea becomes a website, app, drama or film here. SASI carries it through direction, making, review and delivery while complexity stays behind the scenes.")}</p>
-
-              <div className="mt-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_290px]">
-                <div className={`rounded-3xl border p-5 ${panel}`}>
-                  <textarea value={homeBrief} onChange={(event) => setHomeBrief(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "你想创造什么？也可以直接粘贴文字、图片，或添加剧本、项目 ZIP、截图和视频……", "What do you want to create? Paste text or images, or add a script, project ZIP, screenshot or video…")} className="min-h-24 w-full resize-none bg-transparent text-base leading-7 outline-none" />
-                  <UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} onOpenConnections={()=>setView("connections")} />
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex flex-wrap gap-2">{[
-                      ["制作短剧", "Drama", "drama"], ["构建网站", "Website", "code"], ["生成视频", "Video", "drama"], ["导入剧本", "Import script", "drama"],
-                    ].map(([zh, en, target]) => <button key={zh} type="button" onClick={() => startFromHome(target as "drama" | "code")} className="rounded-full border border-current/15 px-3 py-2 text-xs hover:border-[#7657ff]">{copy(lang, zh, en)}</button>)}</div>
-                    <button type="button" onClick={() => startFromHome()} className="rounded-xl bg-gradient-to-r from-[#8f5cff] to-[#3979ff] px-6 py-3 text-sm font-semibold text-white shadow-[0_8px_28px_rgba(83,92,255,.28)]">✦ {suggestedRoute === "auto" ? copy(lang, "交给 SASI Auto →", "Use SASI Auto →") : suggestedRoute === "code" ? copy(lang, "进入构建工作流 →", "Open Build workflow →") : copy(lang, "进入短剧工作流 →", "Open Drama workflow →")}</button>
-                  </div>
-                </div>
-                <aside className={`rounded-3xl border p-5 ${panel}`}><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#7657ff]/15 text-[#a28cff]">◎</span><h2 className="font-semibold">{copy(lang,"快速规划你的创意","Rapid creative direction")}</h2></div><p className="mt-4 text-sm leading-7 opacity-55">{copy(lang,"SASI 先理解需求、形成执行图谱，再呈现投入边界、时间与交付预期。","SASI interprets the brief, forms an execution graph, then presents allocation, timing and delivery expectations.")}</p><ul className="mt-4 space-y-2 text-xs opacity-65"><li>✓ {copy(lang,"智能需求分析","Intent analysis")}</li><li>✓ {copy(lang,"生成执行计划","Execution plan")}</li><li>✓ {copy(lang,"预估制作边界","Production boundary")}</li></ul></aside>
+            <section className="sasi-home-v4">
+              <div className="sasi-home-v4-hero">
+                <p className="sasi-home-v4-kicker">LINGXI FIELD · SASI</p>
+                <p className="sasi-home-v4-mark">SASI</p>
+                <h1>{copy(lang,"把想法，变成真实可用的作品","Turn ideas into work people can use")}</h1>
+                <p className="sasi-home-v4-lead">{copy(lang,"一个想法，在这里变成网站、应用、短剧与视频。一键成片，一念即达，一念显化。SASI 贯穿理解、策划、制作、审校与交付，让复杂系统退居幕后。","One idea becomes a website, app, drama or film here. SASI carries it through understanding, direction, production, review and delivery while complexity stays behind the scenes.")}</p>
+                <div className="sasi-home-v4-features">{["一键成片","多模态创作","连接你的 API","专业工作流","从想法到上线"].map(item=><span key={item}>◇ {item}</span>)}</div>
+                <div className="sasi-home-v4-command"><span>✦</span><input value={homeBrief} onChange={(event)=>setHomeBrief(event.target.value)} onKeyDown={(event)=>{if(event.key==="Enter")startFromHome();}} placeholder={copy(lang,"你想创造什么？例如：一个产品官网、一个 AI 应用、一部短剧、一支宣传视频……","What do you want to create—a product site, AI app, drama or campaign film?")}/><button onClick={()=>startFromHome()}>{copy(lang,"开始创作 →","Start creating →")}</button></div>
+                <div className="sasi-home-v4-chips">{[["制作短剧","drama"],["构建网站","code"],["生成视频","drama"],["导入剧本","drama"],["设计应用","code"],["创意策划","director"],["连接 API","connections"]].map(([label,target])=><button key={label} onClick={()=>target==="connections"?setView("connections"):target==="director"?setView("director"):startFromHome(target as "drama"|"code")}>{label}</button>)}</div>
               </div>
 
-              <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-                {[
-                  {target:"director",art:"director",zh:"苍玄 AI 导演",en:"CangXuan Director",note:"从想法到导演方案"},
-                  {target:"code",art:"build",zh:"编程构建部署",en:"Build & Deploy",note:"从需求到真正上线"},
-                  {target:"skills",art:"capability",zh:"Skills",en:"Skills",note:"发现、组合与复用专业能力"},
-                  {target:"connections",art:"orchestration",zh:"模型与 API",en:"Models & API",note:"自带密钥，连接全球能力"},
-                  {target:"billing",art:"billing",zh:"余额与用量",en:"Balance & Usage",note:"透明估算与真实消耗"},
-                  {target:"works",art:"field",zh:"我的作品库",en:"My Works",note:"继续、导出与部署作品"},
-                ].map((item) => <button key={item.target} type="button" onClick={() => setView(item.target as View)} className={`sasi-home-tile rounded-2xl border text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><span className={`sasi-home-tile-art art-${item.art}`} /><span className="block p-4"><h2 className="text-sm font-semibold">{copy(lang,item.zh,item.en)}</h2><p className="mt-1 text-[10px] leading-5 opacity-45">{item.note}</p></span></button>)}
+              <div className="sasi-home-v4-products">{[
+                {target:"director",art:"director",zh:"苍玄 AI 导演",en:"CangXuan Director",note:"多类型导演方案，角色一致、剧作可控"},
+                {target:"drama",art:"drama",zh:"AI 短剧工坊",en:"AI Drama Studio",note:"从剧本到完整视频，一站式生产"},
+                {target:"code",art:"build",zh:"编程构建部署",en:"Build & Deploy",note:"用自然语言构建网站、应用与工具"},
+                {target:"skills",art:"skills",zh:"Skills",en:"Skills Marketplace",note:"安装即用的专业能力模块"},
+                {target:"connections",art:"api",zh:"模型与 API",en:"Models & API",note:"连接你自己的 AI，费用归属清晰"},
+                {target:"billing",art:"billing",zh:"余额与用量",en:"Balance & Usage",note:"成本先看见，真实消耗可追溯"},
+                {target:"works",art:"works",zh:"作品库",en:"My Works",note:"管理作品、版本、导出与交付"},
+                {target:"account",art:"account",zh:"我的账户",en:"My Account",note:"个人信息、账户安全与授权"},
+              ].map(item=><button key={item.target} onClick={()=>setView(item.target as View)} className="sasi-home-v4-product"><span className={`sasi-home-tile-art art-${item.art}`}/><span className="sasi-home-v4-product-copy"><b>{item.zh}</b><small>{item.en}</small><p>{item.note}</p><i>→</i></span></button>)}</div>
+
+              <div className="sasi-home-v4-lower">
+                <section><header><h2>▣ {copy(lang,"近期创作作品","Recent works")}</h2><button onClick={()=>setView("works")}>{copy(lang,"查看更多 →","View more →")}</button></header><div className="sasi-home-v4-recent">{(projects.length?projects.slice(0,4):[{id:"demo-1",kind:"drama" as const,title:"《她与星海》",currentVersion:1},{id:"demo-2",kind:"build" as const,title:"未来城市官网",currentVersion:1},{id:"demo-3",kind:"drama" as const,title:"品牌宣传片",currentVersion:1},{id:"demo-4",kind:"build" as const,title:"AI 旅行助手",currentVersion:1}]).map((project,index)=><button key={project.id} onClick={()=>project.id.startsWith("demo-")?setView(project.kind==="drama"?"drama":"code"):openProject(project.id)}><span className={`sasi-home-v4-recent-art recent-${index+1}`}/><b>{project.title}</b><small>{project.id.startsWith("demo-")?copy(lang,"示例模板 · 点击开始","Example · Start here"):project.kind==="drama"?copy(lang,"短剧 · 可继续创作","Drama · Continue"):copy(lang,"数字产品 · 可继续构建","Product · Continue")}</small></button>)}</div></section>
+                <section><header><h2>▣ {copy(lang,"创作流程","Creation flow")}</h2></header><ol className="sasi-home-v4-flow">{[["输入想法","描述你的需求"],["SASI 规划","生成方案与执行计划"],["AI 创作","逐步生成、随时调整"],["审校优化","检查质量与一致性"],["交付上线","导出作品与真实状态"]].map(([title,note],index)=><li key={title}><span>{index+1}</span><b>{title}</b><small>{note}</small></li>)}</ol></section>
+                <section><header><h2>▣ {copy(lang,"产品进展","Product progress")}</h2></header><ul className="sasi-home-v4-news"><li><b>作品库项目操作已完成</b><time>09-09</time></li><li><b>构建交付状态链已完成</b><time>09-09</time></li><li><b>模型与 API 安全连接已建立</b><time>09-09</time></li><li><b>短剧角色记忆正在构建</b><time>NEXT</time></li><li><b>真实供应商生成闭环待验证</b><time>GATED</time></li></ul></section>
               </div>
-
-              <div className="mt-6 grid gap-5 lg:grid-cols-2">
-                <button type="button" onClick={() => setView("drama")} className={`group rounded-3xl border p-7 text-left transition hover:-translate-y-1 hover:border-[#e04d70]/60 ${panel}`}><p className="text-sm font-semibold text-[#e04d70]">▶ SASI DRAMA</p><h2 className="mt-5 text-3xl font-semibold">{copy(lang, "从剧本，到完整视频", "From script to finished video")}</h2><p className="mt-4 leading-7 opacity-60">{copy(lang, "导入剧本或只说一个故事。自动分析人物、剧情、动态集数、身份板、场景、故事板、分镜、配音与视频方案；每一阶段都能修改。", "Import a script or tell one story. Analyze characters, plot, dynamic episode count, identity boards, scenes, storyboards, shots, voice and video—with editing at every stage.")}</p><span className="mt-7 inline-block text-sm font-semibold">{copy(lang, "开始制作 →", "Start creating →")}</span></button>
-                <button type="button" onClick={() => setView("code")} className={`group rounded-3xl border p-7 text-left transition hover:-translate-y-1 hover:border-[#7657ff]/60 ${panel}`}><p className="text-sm font-semibold text-[#7657ff]">&lt;/&gt; SASI BUILD</p><h2 className="mt-5 text-3xl font-semibold">{copy(lang, "从需求，到网站真正上线", "From requirement to a live product")}</h2><p className="mt-4 leading-7 opacity-60">{copy(lang, "描述需求或连接现有仓库，SASI 完成规划、编程、测试、修复与部署，并明确区分代码提交、部署和公网状态。", "Describe a requirement or connect a repository. SASI plans, codes, tests, repairs and deploys—with explicit commit, deployment and live-state evidence.")}</p><span className="mt-7 inline-block text-sm font-semibold">{copy(lang, "开始构建 →", "Start building →")}</span></button>
-              </div>
-
-              <div className="mt-7 rounded-3xl bg-[#151515] p-7 text-white"><p className="text-xs uppercase tracking-[.2em] text-[#d9ff73]">SASI ORCHESTRATION</p><div className="mt-4 grid gap-6 md:grid-cols-[1fr_auto]"><div><h2 className="text-2xl font-semibold">{copy(lang, "一个目标，由多重专业智能共同完成", "One ambition, orchestrated across specialist intelligence")}</h2><p className="mt-3 max-w-3xl leading-7 text-white/60">{copy(lang, "创作总控先理解意图、拆解制作链、设定投入边界，再为每个阶段调度最合适的能力。底层模型保持隐形，作品判断与交付结果始终在前。", "The creative command interprets intent, composes the production chain and establishes an allocation boundary before routing each stage. Underlying models stay out of the way; creative judgment and delivery remain primary.")}</p></div><div className="flex flex-wrap gap-2 self-center">{[copy(lang, "意图识别", "Intent"), copy(lang, "总导演", "Direction"), copy(lang, "制作统筹", "Production"), copy(lang, "品质审校", "Review")].map((label) => <span key={label} className="rounded-full border border-white/15 px-4 py-2 text-xs">{label}</span>)}</div></div></div>
-
-              {accountEmail && (
-                <section className="mt-7">
-                  <div className="mb-3 flex items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[.18em] opacity-40">ACTIVE WORKS</p><h2 className="mt-2 text-2xl font-semibold">{copy(lang, "持续生长的项目", "Works in progress")}</h2></div><span className="text-xs opacity-45">{copy(lang, "已写入项目图谱", "Persisted project graphs")}</span></div>
-                  {!projectsLoaded ? <div className={`rounded-2xl border p-5 text-sm opacity-55 ${panel}`}>{copy(lang, "正在读取项目…", "Loading projects…")}</div> : projects.length === 0 ? <div className={`rounded-2xl border p-5 text-sm leading-6 opacity-55 ${panel}`}>{copy(lang, "还没有已保存项目。进入影像创作或产品构建，建立第一条真实项目图谱。", "No saved projects yet. Enter Story Studio or Product Studio to create the first persistent project graph.")}</div> : <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{projects.slice(0, 6).map((project) => <button type="button" onClick={() => openProject(project.id)} key={project.id} className={`rounded-2xl border p-5 text-left transition hover:-translate-y-0.5 hover:border-[#7657ff]/50 ${panel}`}><div className="flex items-center justify-between gap-3"><span className={`rounded-full px-2.5 py-1 text-[10px] font-semibold ${project.kind === "drama" ? "bg-[#e04d70]/10 text-[#e04d70]" : "bg-[#7657ff]/10 text-[#7657ff]"}`}>{project.kind === "drama" ? "STORY" : "BUILD"}</span><span className="font-mono text-[10px] opacity-35">{project.id.slice(0, 8)}</span></div><h3 className="mt-4 truncate text-base font-semibold">{project.title}</h3><p className="mt-2 text-xs opacity-45">{copy(lang, `版本 ${project.currentVersion}${project.nodeCount ? ` · ${project.nodeCount} 个节点` : ""}`, `Version ${project.currentVersion}${project.nodeCount ? ` · ${project.nodeCount} nodes` : ""}`)}</p></button>)}</div>}
-                </section>
-              )}
             </section>
           )}
 
