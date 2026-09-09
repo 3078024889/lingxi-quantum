@@ -287,6 +287,65 @@ function BuildDeployConsole({
   );
 }
 
+function SkillsMarketplace({
+  lang,
+  dark,
+  activeTab,
+  setActiveTab,
+  openView,
+  setNotice,
+}: {
+  lang: Lang;
+  dark: boolean;
+  activeTab: "discover" | "mine" | "create";
+  setActiveTab: (tab: "discover" | "mine" | "create") => void;
+  openView: (view: View) => void;
+  setNotice: (message: string) => void;
+}) {
+  const [category, setCategory] = useState("all");
+  const categories = [
+    ["all", "全部", "All"], ["director", "导演", "Director"], ["drama", "短剧", "Drama"],
+    ["code", "编程", "Code"], ["prompt", "提示词", "Prompts"], ["review", "审校", "Review"],
+    ["deploy", "部署", "Deploy"], ["assets", "素材", "Assets"],
+  ] as const;
+  const visibleSkills = SASI_SKILLS.filter((skill) => activeTab === "mine" ? skill.status === "enabled" : category === "all" || skill.category === category);
+
+  function activateSkill(skill: (typeof SASI_SKILLS)[number]) {
+    if (skill.status !== "enabled") {
+      setNotice(copy(lang, `${skill.zh}仍在能力验证阶段，当前可查看规划，但不能作为已安装能力执行。`, `${skill.en} is still being validated. Its plan is visible, but it cannot run as an installed capability yet.`));
+      return;
+    }
+    if (skill.id === "deployment-guardian") openView("code");
+    else openView((skill.modes as readonly string[]).includes("code") ? "code" : "drama");
+    setNotice(copy(lang, `已带着“${skill.zh}”的工作方法进入对应工作流；外部写入与部署仍需单独确认。`, `Opened the matching workflow with ${skill.en}; external writes and deployment still require separate confirmation.`));
+  }
+
+  return (
+    <section className={`sasi-skills-market ${dark ? "is-dark" : "is-light"}`}>
+      <header className="sasi-skills-heading">
+        <div><p>LINGXI FIELD · SASI SKILLS</p><h1>Skills</h1><strong>{copy(lang, "把成熟方法，变成随时可调用的专业能力。", "Turn proven methods into professional capability on demand.")}</strong><span>{copy(lang, "不必每次从零摸索。为导演、短剧、网站构建与内容交付调用经过整理的方法，让复杂工作有步骤、有标准、有结果。", "Stop rebuilding the method from scratch. Bring structured expertise into directing, drama, product building and delivery—with steps, standards and outcomes.")}</span></div>
+        <div className="sasi-skills-heading-proof"><b>{SASI_SKILLS.filter((skill) => skill.status === "enabled").length}</b><span>{copy(lang, "项内置流程已可进入", "built-in flows available")}</span><small>{copy(lang, "其余能力明确标注为规划中", "Everything else is clearly marked as planned")}</small></div>
+      </header>
+
+      <nav className="sasi-skills-tabs" aria-label={copy(lang, "Skills 页面", "Skills sections")}>{([[
+        "discover", "探索能力", "Discover"], ["mine", "我的能力", "My capabilities"], ["create", "编制与发布", "Author & publish"]] as const).map(([id, zh, en]) => <button type="button" key={id} onClick={() => setActiveTab(id)} className={activeTab === id ? "active" : ""}>{copy(lang, zh, en)}{id === "mine" && <em>{SASI_SKILLS.filter((skill) => skill.status === "enabled").length}</em>}</button>)}</nav>
+
+      {activeTab !== "create" && <>
+        {activeTab === "discover" && <div className="sasi-skills-filters">{categories.map(([id, zh, en]) => <button type="button" key={id} onClick={() => setCategory(id)} className={category === id ? "active" : ""}>{copy(lang, zh, en)}</button>)}</div>}
+        <div className="sasi-skills-summary"><div><small>{activeTab === "mine" ? "MY CAPABILITIES" : "CAPABILITY LIBRARY"}</small><h2>{activeTab === "mine" ? copy(lang, "已经可以使用的能力", "Capabilities ready to use") : copy(lang, "按你要解决的问题选择能力", "Choose by the problem you need to solve")}</h2></div><p>{activeTab === "mine" ? copy(lang, "这些能力已经进入 SASI 内置工作流，不代表外部部署或付费调用已被自动授权。", "These capabilities are built into SASI workflows; external deployment and paid calls are not automatically authorized.") : copy(lang, "每张卡片说明它解决什么、适合哪里以及当前是否可用。", "Each card explains the problem, fit and real availability.")}</p></div>
+        <div className="sasi-skills-grid">{visibleSkills.map((skill) => <article key={skill.id} className={skill.status === "enabled" ? "is-enabled" : "is-planned"}>
+          <header><span>{skill.glyph}</span><em>{copy(lang, skill.category === "code" ? "编程" : skill.category === "deploy" ? "部署" : skill.category === "director" ? "导演" : skill.category === "drama" ? "短剧" : skill.category === "prompt" ? "提示词" : skill.category === "review" ? "审校" : "素材", skill.category)}</em></header>
+          <h3>{copy(lang, skill.zh, skill.en)}</h3><small>{skill.en}</small><p>{copy(lang, skill.noteZh, skill.noteEn)}</p><dl><dt>{copy(lang, "适用于", "Best for")}</dt><dd>{copy(lang, skill.fitZh, skill.fitEn)}</dd></dl>
+          <footer><span className={skill.status === "enabled" ? "ready" : "planned"}>{skill.status === "enabled" ? copy(lang, "内置流程 · 已启用", "Built in · Enabled") : copy(lang, "专业能力 · 即将开放", "Specialist · Coming soon")}</span><button type="button" onClick={() => activateSkill(skill)}>{skill.status === "enabled" ? copy(lang, "进入工作流", "Open workflow") : copy(lang, "查看规划", "View plan")} →</button></footer>
+        </article>)}</div>
+        <section className="sasi-skills-runtime"><div><small>HOW SASI SKILLS WORK</small><h2>{copy(lang, "能力被调用，但创作主权仍属于你", "Capability is invoked; creative control stays yours")}</h2><p>{copy(lang, "SASI 根据任务推荐合适的方法，你也可以手动指定。每项能力都说明输入、输出、权限和完成标准。", "SASI recommends a method by task, while you can still choose manually. Every capability declares its inputs, outputs, permissions and completion standard.")}</p></div><ol><li><b>01</b><span>{copy(lang, "理解任务后推荐", "Recommended after understanding")}</span></li><li><b>02</b><span>{copy(lang, "执行前展示权限", "Permissions shown before action")}</span></li><li><b>03</b><span>{copy(lang, "高风险操作再确认", "High-impact actions reconfirmed")}</span></li><li><b>04</b><span>{copy(lang, "结果与证据可核验", "Results and evidence verifiable")}</span></li></ol></section>
+      </>}
+
+      {activeTab === "create" && <section className="sasi-skills-author"><div><small>AUTHOR & PUBLISH</small><h2>{copy(lang, "把你的专业方法，编制成可复用能力", "Turn your professional method into reusable capability")}</h2><p>{copy(lang, "未来创作者可以定义适用场景、输入材料、执行步骤、交付标准与权限边界。发布前必须通过来源核验、隔离运行、安全审阅和版本管理。", "Creators will define fit, inputs, execution steps, delivery standards and permission boundaries. Publication requires provenance checks, isolated execution, security review and version control.")}</p><button type="button" onClick={() => setNotice(copy(lang, "能力编制器尚未开放提交。来源核验、隔离运行和专业审阅完成后，才会启用真实发布。", "Capability submission is not open yet. Real publishing starts only after provenance, isolation and professional review are ready."))}>{copy(lang, "查看开放条件", "View launch requirements")}</button></div><ol>{[["01","来源与版权","证明方法、资料与素材可以合法使用"],["02","权限说明","列明将读取、生成和写入什么"],["03","隔离验证","在安全环境中测试失败与异常路径"],["04","专业审阅","核对质量标准、适用范围与风险"],["05","版本发布","记录更新、兼容性与撤回机制"]].map(([number, title, note]) => <li key={number}><b>{number}</b><div><strong>{copy(lang, title, title)}</strong><span>{copy(lang, note, note)}</span></div><em>{copy(lang, "尚未开放", "Not open")}</em></li>)}</ol></section>}
+    </section>
+  );
+}
+
 export default function SasiWorkspace({ accountEmail }: { accountEmail: string | null }) {
   const [lang, setLang] = useState<Lang>("zh");
   const [theme, setTheme] = useState<Theme>("light");
@@ -595,7 +654,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           )}
 
           {view === "skills" && (
-            <section><p className="text-xs font-semibold uppercase tracking-[.2em] text-[#7657ff]">CAPABILITY LIBRARY</p><h1 className="mt-3 text-4xl font-semibold">{copy(lang, "把成熟方法沉淀为可复用的专业能力", "Turn proven methods into reusable professional capability")}</h1><div className="mt-6 flex flex-wrap gap-2">{[["discover", "探索能力", "Discover"], ["mine", "我的能力", "My capabilities"], ["create", "编制与发布", "Author & publish"]].map(([id, zh, en]) => <button key={id} onClick={() => setSkillTab(id as typeof skillTab)} className={`rounded-full px-4 py-2 text-sm ${skillTab === id ? "bg-[#7657ff] text-white" : "border border-current/15"}`}>{copy(lang, zh, en)}</button>)}</div>{skillTab === "discover" ? <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{SASI_SKILLS.map((skill, index) => <article key={skill.id} className={`rounded-3xl border p-6 ${panel}`}><span className="text-2xl text-[#7657ff]">{skill.glyph}</span><h2 className="mt-5 text-lg font-semibold">{copy(lang, skill.zh, skill.en)}</h2><p className="mt-3 text-sm leading-6 opacity-55">{copy(lang, skill.noteZh, skill.noteEn)}</p><p className="mt-5 text-sm font-semibold">{index < 3 ? copy(lang, "基础能力 · 已纳入", "Core · Included") : copy(lang, "专业能力 · 即将开放", "Signature · Coming soon")}</p></article>)}</div> : <div className={`mt-7 rounded-3xl border p-7 ${panel}`}><h2 className="text-2xl font-semibold">{skillTab === "mine" ? copy(lang, "我的能力组合", "My capability set") : copy(lang, "编制并发布专业能力", "Author and publish a capability")}</h2><p className="mt-4 max-w-2xl leading-7 opacity-60">{copy(lang, "创作者能力开放前，将先完成隔离运行、权限说明、来源验证与专业审阅。未来每项能力都以适用场景、交付标准与使用授权呈现，而不是以低价工具陈列。", "Creator capabilities open after isolated execution, permission disclosure, provenance checks and professional review. Each capability will be presented by fit, delivery standard and usage license—not as a bargain tool listing.")}</p><button onClick={() => setNotice(copy(lang, "隔离运行与专业审阅体系就绪后，将开放创作者提交。", "Creator submissions open after isolated execution and professional review are ready."))} className="mt-6 rounded-xl border border-current/20 px-5 py-3 text-sm">{copy(lang, "查看准入标准", "View admission standard")}</button></div>}</section>
+            <SkillsMarketplace lang={lang} dark={dark} activeTab={skillTab} setActiveTab={setSkillTab} openView={setView} setNotice={setNotice} />
           )}
 
           {view === "connections" && <ConnectionCenter lang={lang} dark={dark} accountEmail={accountEmail} />}
