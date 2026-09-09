@@ -9,6 +9,7 @@ const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
 const projectRoute = fs.readFileSync("app/api/sasi/projects/[id]/route.ts", "utf8");
 const footer = fs.readFileSync("components/Footer.tsx", "utf8");
 const connections = fs.readFileSync("app/sasi/ConnectionCenter.tsx", "utf8");
+const integrations = fs.readFileSync("lib/sasi/integration-catalog.ts", "utf8");
 const squareProductCovers = ["cangxuan-director-v1.png","ai-drama-studio-v1.png","build-deploy-v1.png","skills-marketplace-v1.png","models-api-v1.png","balance-usage-v1.png","works-library-v1.png","account-security-v1.png"];
 
 const checks = [
@@ -31,9 +32,11 @@ const checks = [
   ["Skills combines discovery, owned capabilities and authoring", ["探索能力","我的能力","编制与发布","sasi-skills-grid"].every((value)=>workspace.includes(value))],
   ["Skills exposes problem-led category filters", ["导演","短剧","编程","提示词","审校","部署","素材"].every((value)=>workspace.includes(value))],
   ["Skills separates enabled flows from planned capability", workspace.includes("内置流程 · 已启用") && workspace.includes("专业能力 · 即将开放") && fs.readFileSync("lib/sasi/catalog.ts","utf8").includes('status: "planned"')],
-  ["Models & API separates six capability areas", ["模型与 API","图像与视频","开发与部署","安全与密钥","计费边界","训练资料库"].every((value)=>connections.includes(value))],
+  ["Models & API separates six capability areas", ["模型与 API","图像与视频","SASI 编排","开发与部署","安全与密钥","训练资料库"].every((value)=>connections.includes(value))],
   ["provider cards derive truthful verification state", ["未连接","已安全保存 · 待验证","正在验证","验证成功","验证失败","/api/sasi/connections/test"].every((value)=>connections.includes(value))],
-  ["connection center preserves security and unsupported-provider boundaries", connections.includes("保存凭证不等于验证成功") && connections.includes("SSRF 防护") && connections.includes("腾讯云双密钥签名尚未开放")],
+  ["provider cards use verified brand marks and capability copy", connections.includes("PROVIDER_LOGOS") && connections.includes("logo`} />") && integrations.includes("跨媒介创作主线") && integrations.includes("人物档案与复杂资料")],
+  ["customer connection center excludes internal multiplier pricing", !connections.includes("RMB COST STUDY") && !connections.includes("× 2.0") && connections.includes("WHY SASI")],
+  ["connection center preserves security and unsupported-provider boundaries", connections.includes("未验证的连接不会标记为可生产") && connections.includes("SSRF 防护") && connections.includes("腾讯云双密钥签名尚未开放")],
   ["Balance & Usage combines verified dashboard with the real ledger", ["sasi-balance-kpis","sasi-balance-trend","sasi-balance-reserve","sasi-balance-ledger"].every((value)=>productionPanels.includes(value)) && css.includes(".sasi-balance-kpis")],
   ["balance metrics derive from owned 30-day jobs and ledger data", productionPanels.includes("recentJobs") && productionPanels.includes("settledPoints") && productionPanels.includes("supplierCost") && productionPanels.includes("account.ledger.slice") && fs.readFileSync("app/api/sasi/account/route.ts","utf8").includes('.gte("updated_at", thirtyDaysAgo)')],
   ["balance page does not fabricate usage or open checkout early", productionPanels.includes("当前不使用演示数据") && productionPanels.includes("支付接入后开放") && productionPanels.includes("前端按钮不会直接增加额度")],

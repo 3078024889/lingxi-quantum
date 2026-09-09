@@ -19,10 +19,12 @@ const templateCards = [
 export function SasiWorkLibrary({ lang, dark, projects, loaded, onOpen, onCreate, onRefresh }: { lang: Lang; dark: boolean; projects: Project[]; loaded: boolean; onOpen: (id: string) => void; onCreate: (view: "director" | "drama" | "code", preset?: string) => void; onRefresh: () => Promise<void> }) {
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sortMode, setSortMode] = useState<"updated" | "title">("updated");
   const [busyId, setBusyId] = useState<string | null>(null);
   const [feedback, setFeedback] = useState("");
   const panel = dark ? "border-white/10 bg-white/[.035]" : "border-black/10 bg-white";
-  const visible = projects.filter((item) => (filter === "all" || item.kind === filter) && item.title.toLowerCase().includes(query.toLowerCase()));
+  const visible = projects.filter((item) => (filter === "all" || item.kind === filter) && `${item.title} ${item.kind}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sortMode === "title" ? a.title.localeCompare(b.title,lang === "zh" ? "zh-CN" : "en") : String(b.updatedAt ?? "").localeCompare(String(a.updatedAt ?? "")));
 
   async function projectAction(action: "rename" | "duplicate" | "export" | "delete", project: Project) {
     if (busyId) return;
@@ -86,25 +88,19 @@ export function SasiWorkLibrary({ lang, dark, projects, loaded, onOpen, onCreate
     if (created.project?.id) onOpen(created.project.id);
   }
   return <section>
-    <div className="sasi-v3-page-hero art-works">
-      <p className="sasi-v3-kicker">MY CREATIVE ARCHIVE</p>
-      <h1>{tr(lang,"我的作品库","My Works")}</h1>
-      <p>{tr(lang,"把你做过的每一个网站、应用、短剧、视频与灵感成果，都留在这里；继续编辑、导出、上线，或从模板重新开始。","Keep every website, app, drama, video and spark of inspiration here—continue, export, publish or begin again from a template.")}</p>
-      <strong>{tr(lang,"看见你已经创造了什么，也看见你接下来还能创造什么。","See what you have created—and what you can create next.")}</strong>
+    <div className="sasi-v3-page-hero sasi-works-hero art-works">
+      <div><p className="sasi-v3-kicker">WORK LIBRARY</p><h1>{tr(lang,"我的作品库","My Works")}</h1><p>{tr(lang,"所有真实项目集中在这里：继续创作、复制结构、导出项目或安全删除，不再翻找散落的文件和生成记录。","Every real project in one place: continue, duplicate its structure, export it or delete it safely—without hunting through scattered files and generations.")}</p></div>
+      <div className="sasi-works-summary"><span><b>{loaded?projects.length:"…"}</b>{tr(lang,"全部项目","All projects")}</span><span><b>{loaded?projects.filter(p=>p.kind==="drama").length:"…"}</b>{tr(lang,"影像创作","Drama")}</span><span><b>{loaded?projects.filter(p=>p.kind==="build").length:"…"}</b>{tr(lang,"数字产品","Build")}</span></div>
     </div>
 
-    <div className={`mt-5 grid gap-3 rounded-3xl border p-4 md:grid-cols-[1fr_auto] ${panel}`}>
-      <input value={query} onChange={(e)=>setQuery(e.target.value)} className="rounded-2xl border border-current/10 bg-transparent px-4 py-3 text-sm outline-none" placeholder={tr(lang,"搜索作品、类型或项目名称…","Search works, types or projects…")}/>
-      <div className="flex flex-wrap gap-2">{[["all","全部"],["drama","短剧与视频"],["build","网站与应用"]].map(([id,label])=><button key={id} onClick={()=>setFilter(id)} className={`rounded-full px-4 py-2 text-xs ${filter===id?"bg-[#6958ff] text-white":"border border-current/15"}`}>{tr(lang,label,id)}</button>)}<button onClick={()=>onCreate("director")} className="rounded-full bg-gradient-to-r from-[#9a5cff] to-[#287cff] px-4 py-2 text-xs font-semibold text-white">＋ {tr(lang,"创造新作品","Create")}</button></div>
-    </div>
-
-    <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {[[projects.length,"全部作品"],[projects.filter(p=>p.kind==="drama").length,"影像项目"],[projects.filter(p=>p.kind==="build").length,"数字产品"],["云端同步","保存状态"]].map(([value,label])=><div key={String(label)} className={`rounded-2xl border p-4 ${panel}`}><strong className="text-2xl">{loaded?value:"…"}</strong><p className="mt-1 text-xs opacity-50">{label}</p></div>)}
+    <div className={`sasi-works-toolbar ${panel}`}>
+      <div className="sasi-works-types">{[["all",tr(lang,"全部","All"),projects.length],["drama",tr(lang,"短剧与视频","Drama & video"),projects.filter(p=>p.kind==="drama").length],["build",tr(lang,"网站与应用","Sites & apps"),projects.filter(p=>p.kind==="build").length]].map(([id,label,count])=><button key={String(id)} onClick={()=>setFilter(String(id))} className={filter===id?"active":""}>{label}<b>{loaded?count:"…"}</b></button>)}</div>
+      <div className="sasi-works-controls"><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder={tr(lang,"搜索作品名称或类型…","Search name or type…")}/><select value={sortMode} onChange={e=>setSortMode(e.target.value as "updated"|"title")} aria-label={tr(lang,"作品排序","Sort works")}><option value="updated">{tr(lang,"最近修改","Recently updated")}</option><option value="title">{tr(lang,"按名称","By name")}</option></select><button onClick={()=>setViewMode(viewMode==="grid"?"list":"grid")}>{viewMode==="grid"?tr(lang,"列表视图","List view"):tr(lang,"网格视图","Grid view")}</button><button onClick={()=>onCreate("director")} className="primary">＋ {tr(lang,"新建作品","New work")}</button></div>
     </div>
 
     <div className="mt-8 flex items-end justify-between"><div><p className="sasi-v3-kicker">YOUR WORKS</p><h2 className="mt-2 text-2xl font-semibold">{tr(lang,"持续生长的作品","Works in progress")}</h2></div><span className="text-xs opacity-45">{tr(lang,"真实项目会显示在这里","Saved projects appear here")}</span></div>
     {feedback && <div role="status" className="mt-4 rounded-2xl border border-[#6d70ff]/25 bg-[#6d70ff]/5 px-4 py-3 text-xs leading-5 text-[#5a50d6]">{feedback}</div>}
-    <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className={`mt-4 grid gap-4 ${viewMode==="grid"?"md:grid-cols-2 xl:grid-cols-3":"sasi-works-list"}`}>
       {!loaded ? <div className={`rounded-3xl border p-6 ${panel}`}>{tr(lang,"正在读取作品…","Loading works…")}</div> : visible.length ? visible.map((project,index)=><article key={project.id} className={`group overflow-hidden rounded-3xl border transition hover:-translate-y-1 ${panel}`}><button type="button" onClick={()=>onOpen(project.id)} className="block w-full text-left"><span className={`sasi-library-art art-${project.kind === "drama" ? "director" : "build"} art-shift-${index%3}`}/><span className="block px-5 pt-5"><span className="text-[10px] uppercase tracking-[.18em] text-[#6d70ff]">{project.kind === "drama" ? "AI DRAMA" : "BUILD & DEPLOY"}</span><h3 className="mt-2 truncate font-semibold">{project.title}</h3><p className="mt-2 text-xs opacity-45">v{project.currentVersion} · {project.nodeCount ?? 0} {tr(lang,"个生产节点","production nodes")}{project.updatedAt ? ` · ${new Date(project.updatedAt).toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US")}` : ""}</p><span className="mt-4 inline-block text-xs font-semibold">{tr(lang,"继续创作 →","Continue →")}</span></span></button><div className="m-5 mt-4 grid grid-cols-4 gap-2 border-t border-current/10 pt-4">{([ ["rename",tr(lang,"改名","Rename")], ["duplicate",tr(lang,"复制","Copy")], ["export",tr(lang,"导出","Export")], ["delete",tr(lang,"删除","Delete")] ] as const).map(([action,label])=><button key={action} type="button" disabled={busyId===project.id} onClick={()=>projectAction(action,project)} className={`rounded-lg border border-current/10 px-2 py-2 text-[10px] transition hover:border-[#6d70ff]/50 hover:text-[#6d70ff] disabled:opacity-30 ${action==="delete"?"hover:border-red-400 hover:text-red-500":""}`}>{busyId===project.id?"…":label}</button>)}</div></article>) : <div className={`col-span-full rounded-3xl border p-8 text-center ${panel}`}><h3 className="text-xl font-semibold">{tr(lang,"你的第一件作品，从一个清晰想法开始。","Your first work begins with one clear idea.")}</h3><p className="mt-3 text-sm opacity-55">{tr(lang,"先从下面的成熟模板开始，不必面对空白页面。","Start from a mature template below—never a blank page.")}</p></div>}
     </div>
 
