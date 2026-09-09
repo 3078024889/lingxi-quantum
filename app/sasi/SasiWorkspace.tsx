@@ -22,7 +22,7 @@ import {
 import { SasiProductionAccount, SasiProjectProduction } from "@/app/sasi/SasiProductionPanels";
 import CangXuanDirectorStudio from "@/app/sasi/CangXuanDirectorStudio";
 import ConnectionCenter from "@/app/sasi/ConnectionCenter";
-import { DramaVisualWorkspace, SasiAccountCenter, SasiWorkLibrary } from "@/app/sasi/SasiV3Panels";
+import { DramaOverviewConsole, DramaVisualWorkspace, SasiAccountCenter, SasiWorkLibrary } from "@/app/sasi/SasiV3Panels";
 
 type Lang = "zh" | "en";
 type Theme = "light" | "dark";
@@ -208,9 +208,12 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     const storedTheme = window.localStorage.getItem("lingxi-site-theme");
     if (storedTheme === "light" || storedTheme === "dark") setTheme(storedTheme);
     setThemeReady(true);
-    const requestedView = new URLSearchParams(window.location.search).get("view");
+    const search = new URLSearchParams(window.location.search);
+    const requestedView = search.get("view");
+    const requestedRoom = search.get("room");
     const routeView: Record<string, View> = { home: "home", director: "director", drama: "drama", build: "code", skills: "skills", capabilities: "connections", models: "connections", billing: "billing", works: "works", account: "account", project: "project" };
     if (requestedView && routeView[requestedView]) setView(routeView[requestedView]);
+    if (requestedRoom === "overview" || requestedRoom === "continuity" || requestedRoom === "shots") setDramaTab(requestedRoom);
   }, []);
   useEffect(() => {
     if (!themeReady) return;
@@ -224,6 +227,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   const projectRequestId = useRef<string | null>(null);
   const [skillTab, setSkillTab] = useState<"discover" | "mine" | "create">("discover");
   const [dramaTab, setDramaTab] = useState<"overview" | "continuity" | "shots">("overview");
+  const [showDramaCreate, setShowDramaCreate] = useState(false);
   const dark = theme === "dark";
   const productionRoute = routeForQuality(quality);
   const quote = useMemo(() => budgetAssessment(productionRoute, seconds, budget), [productionRoute, seconds, budget]);
@@ -480,8 +484,10 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
                 <p>{copy(lang,"不只生成一个漂亮镜头。SASI 先锁定人物、剧情、场景与声音，再把小说、剧本或一个想法推进为可逐步修改的制作流程。","Go beyond one beautiful shot. Lock character, story, setting and sound first, then move a novel, script or idea through an editable production workflow.")}</p>
                 <div><span>◎ {copy(lang,"角色一致","Consistent cast")}</span><span>▤ {copy(lang,"分集规划","Episode planning")}</span><span>▣ {copy(lang,"逐镜生产","Shot production")}</span><span>◇ {copy(lang,"成本先看清","Cost before action")}</span></div>
               </div>
-              <div className="mt-6 flex flex-wrap gap-2">{[["overview","项目总览"],["continuity","人物与连续性"],["shots","分镜与镜头生产"]].map(([id,label])=><button key={id} onClick={()=>setDramaTab(id as typeof dramaTab)} className={`rounded-full px-4 py-2 text-sm ${dramaTab===id?"bg-[#e04d70] text-white":"border border-current/15"}`}>{copy(lang,label,id)}</button>)}</div>
+              <nav className="drama-main-tabs" aria-label={copy(lang,"AI 短剧工坊工作台","AI Drama Studio workspaces")}>{[["overview","项目总览","Project Overview"],["continuity","人物与连续性","Character & Continuity"],["shots","故事板与镜头生产","Storyboard & Shot Production"]].map(([id,zh,en])=><button key={id} onClick={()=>{setDramaTab(id as typeof dramaTab);window.history.replaceState({},"",`/?view=drama&room=${id}`)}} className={dramaTab===id?"is-active":""}><b>{copy(lang,zh,en)}</b><small>AI {copy(lang,"短剧工坊","Drama Studio")}</small></button>)}</nav>
               {dramaTab === "overview" && <>
+              <DramaOverviewConsole lang={lang} onStart={()=>setShowDramaCreate(true)}/>
+              {showDramaCreate && <>
               <div className="mt-6 flex flex-wrap gap-2">{[["我只有一个想法", "I have an idea"], ["我有完整剧本", "I have a script"], ["我有小说 / 故事", "I have a novel"], ["我已经有角色", "I have characters"], ["我已有故事板", "I have storyboards"], ["只生成一个镜头", "Generate one shot"]].map(([zh, en]) => <button key={zh} type="button" onClick={() => setScript(copy(lang, zh, en))} className="rounded-full border border-current/15 px-4 py-2 text-xs hover:border-[#e04d70]">{copy(lang, zh, en)}</button>)}</div>
               <div className="mt-6 grid gap-4 xl:grid-cols-[1fr_360px]">
                 <div className={`rounded-3xl border p-6 ${panel}`}><textarea value={script} onChange={(event) => setScript(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "写下创意，或导入剧本、小说、人物图、故事板、音频和已有视频……", "Write an idea or import a script, novel, character image, storyboard, audio or existing video…")} className="min-h-36 w-full resize-none bg-transparent text-base leading-7 outline-none"/><UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} /><div className="mt-5 grid gap-3 sm:grid-cols-2"><label className="text-xs opacity-60">{copy(lang, "目标总时长（5–600秒）", "Total duration (5–600 sec)")}<input type="number" min={5} max={600} value={seconds} onChange={(event) => setSeconds(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "集数（留空由 SASI 建议）", "Episodes (optional)")}<input type="number" min={1} max={200} value={episodes} onChange={(event) => setEpisodes(event.target.value)} placeholder={copy(lang, "动态分析，不预设", "Dynamic, not preset")} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "项目投入边界（制作额度）", "Project allocation (credits)")}<input type="number" min={0} step="100" value={budget} onChange={(event) => setBudget(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作规格", "Production grade")}<select value={quality} onChange={(event) => setQuality(event.target.value as SasiQuality)} className={`mt-2 w-full rounded-xl border border-current/15 px-3 py-3 text-base outline-none ${dark ? "bg-[#11151b]" : "bg-white"}`}>{SASI_QUALITY_TIERS.map((item) => <option key={item.id} value={item.id}>{copy(lang, item.zh, item.en)}</option>)}</select></label></div><p className="mt-4 text-xs leading-5 opacity-50">{copy(lang, "SASI Auto 将按叙事价值调度制作能力；无需选择模型或管理技术账户。", "SASI Auto allocates production capability by narrative value; no model or technical account selection is required.")}</p><button disabled={preparing} onClick={() => prepare("drama")} className="mt-6 w-full rounded-xl bg-[#e04d70] py-3 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-50">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并形成提案", "Create project & proposal")}</button></div>
@@ -489,6 +495,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
               </div>
               <div className="mt-7"><div className="mb-3 flex items-center justify-between"><h2 className="text-lg font-semibold">{copy(lang, "可逐幕审阅的制作链", "A production chain reviewed scene by scene")}</h2><span className="text-xs opacity-45">{copy(lang, "每一步都保留创作主权", "Creative control at every stage")}</span></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">{(lang === "zh" ? workflowZh : workflowEn).map((item, index) => <div key={item} className="rounded-2xl border border-current/10 p-4"><p className="text-xs opacity-35">{String(index + 1).padStart(2, "0")}</p><p className="mt-3 text-sm font-medium">{item}</p><p className="mt-2 text-[11px] opacity-45">{index < 3 ? copy(lang, "分析后可修改", "Editable after analysis") : copy(lang, "生成、编辑或重做", "Generate, edit or redo")}</p></div>)}</div></div>
               <div className="mt-7 rounded-3xl border border-current/10 p-6"><p className="text-xs uppercase tracking-[.2em] text-[#e04d70]">{copy(lang, "典藏级关键镜头", "Signature key shots")}</p><p className="mt-3 leading-7 opacity-65">{copy(lang, "SASI 会把最高制作规格集中于人物登场、高潮、战斗与情绪特写，并为承接叙事的镜头匹配恰当方案；每次调整都会先呈现作品表现与制作额度的变化。", "SASI concentrates the highest production grade on entrances, climaxes, action and emotional close-ups, then assigns the right approach to supporting shots. Every revision reveals its impact on creative finish and production allocation first.")}</p></div>
+              </>}
               </>}
               {dramaTab === "continuity" && <DramaVisualWorkspace lang={lang} dark={dark} mode="continuity" />}
               {dramaTab === "shots" && <DramaVisualWorkspace lang={lang} dark={dark} mode="shots" />}
