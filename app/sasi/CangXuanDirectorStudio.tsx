@@ -32,11 +32,12 @@ export default function CangXuanDirectorStudio({ lang, dark, accountEmail, onEnt
   }
 
   return <section>
-    <div className="sasi-director-hero rounded-[28px] border border-current/10 p-7 sm:p-10">
-      <p className="text-xs font-semibold uppercase tracking-[.22em] text-[#7657ff]">LINGXI FIELD · CANGXUAN DIRECTOR</p>
-      <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-[-.04em] sm:text-6xl">{t("苍玄 AI 导演", "CangXuan AI Director")}</h1>
-      <p className="mt-4 max-w-3xl text-base leading-8 opacity-65">{t("先建立世界规则、人物圣经、分集节奏、镜头方案与连续性锁，再进入视频生产。这里生成的是可编辑导演基线，不会调用付费视频模型。", "Establish world rules, character bibles, episode rhythm, shots and continuity locks before production. This creates an editable directing baseline without calling a paid video model.")}</p>
-      <div className="mt-5 flex flex-wrap gap-2 text-xs"><span className="rounded-full border border-current/15 px-3 py-2">0 Token Director Core</span><span className="rounded-full border border-current/15 px-3 py-2">Local Draft</span><span className="rounded-full border border-current/15 px-3 py-2">No Video Charge</span></div>
+    <div className="sasi-director-hero sasi-cangxuan-hero rounded-[28px] border border-current/10 p-7 sm:p-10">
+      <p className="sasi-cangxuan-kicker">LINGXI FIELD · CANGXUAN DIRECTOR</p>
+      <h1>{t("苍玄 AI 导演", "CangXuan AI Director")}</h1>
+      <h2>{t("先建立世界规则，再进入视频生产。", "Build the world before producing the video.")}</h2>
+      <p className="sasi-cangxuan-lead">{t("理解故事、角色、场景与节奏，生成可执行的导演方案。让一致性的锁定，远离付费模型的反复试错。", "Understand story, character, setting and rhythm, then create an executable directing plan—locking continuity before costly model retries.")}</p>
+      <div className="sasi-cangxuan-features"><span>◎ {t("角色连续性控制","Character continuity")}</span><span>◇ {t("场景世界观设定","World design")}</span><span>▣ {t("镜头语言设计","Shot language")}</span><span>✦ {t("提示词智能编译","Prompt compilation")}</span></div>
     </div>
 
     <nav className={`mt-5 flex flex-wrap gap-2 rounded-2xl border p-2 ${panel}`} aria-label={t("苍玄工作区","CangXuan workspace")}><button type="button" onClick={()=>document.getElementById("cangxuan-director-room")?.scrollIntoView({behavior:"smooth"})} className="rounded-xl bg-[#7657ff] px-4 py-2.5 text-xs font-semibold text-white">{t("导演室","Director room")}</button><button type="button" onClick={()=>document.getElementById("cangxuan-data-foundry")?.scrollIntoView({behavior:"smooth"})} className="rounded-xl border border-current/15 px-4 py-2.5 text-xs font-semibold">{t("数据工厂与世界记忆","Data Foundry & World Memory")}</button><span className="self-center px-2 text-[11px] opacity-45">{t("不训练视频像素模型，先沉淀导演决策。","Directing intelligence first; no video-model training.")}</span></nav>
