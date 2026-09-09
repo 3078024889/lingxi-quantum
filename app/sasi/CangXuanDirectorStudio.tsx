@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { buildDirectorBlueprint, DIRECTOR_MODES, type DirectorBlueprint, type DirectorBrief, type DirectorMode } from "@/lib/sasi/cangxuan-director";
+import CangXuanDataFoundry from "@/app/sasi/CangXuanDataFoundry";
 
-type Props = { lang: "zh" | "en"; dark: boolean; onEnterProduction: (story: string) => void };
+type Props = { lang: "zh" | "en"; dark: boolean; accountEmail: string | null; onEnterProduction: (story: string) => void };
 
 const initialBrief: DirectorBrief = { title: "", premise: "", protagonist: "", mode: "motion-comic", genre: "古装复仇", episodes: 24, secondsPerEpisode: 60 };
 
-export default function CangXuanDirectorStudio({ lang, dark, onEnterProduction }: Props) {
+export default function CangXuanDirectorStudio({ lang, dark, accountEmail, onEnterProduction }: Props) {
   const [brief, setBrief] = useState(initialBrief);
   const [blueprint, setBlueprint] = useState<DirectorBlueprint | null>(null);
   const panel = dark ? "border-white/10 bg-white/[.035]" : "border-[#e3e9f1] bg-white shadow-[0_14px_36px_rgba(38,57,83,.065)]";
@@ -38,7 +39,9 @@ export default function CangXuanDirectorStudio({ lang, dark, onEnterProduction }
       <div className="mt-5 flex flex-wrap gap-2 text-xs"><span className="rounded-full border border-current/15 px-3 py-2">0 Token Director Core</span><span className="rounded-full border border-current/15 px-3 py-2">Local Draft</span><span className="rounded-full border border-current/15 px-3 py-2">No Video Charge</span></div>
     </div>
 
-    <div className="mt-6">
+    <nav className={`mt-5 flex flex-wrap gap-2 rounded-2xl border p-2 ${panel}`} aria-label={t("苍玄工作区","CangXuan workspace")}><button type="button" onClick={()=>document.getElementById("cangxuan-director-room")?.scrollIntoView({behavior:"smooth"})} className="rounded-xl bg-[#7657ff] px-4 py-2.5 text-xs font-semibold text-white">{t("导演室","Director room")}</button><button type="button" onClick={()=>document.getElementById("cangxuan-data-foundry")?.scrollIntoView({behavior:"smooth"})} className="rounded-xl border border-current/15 px-4 py-2.5 text-xs font-semibold">{t("数据工厂与世界记忆","Data Foundry & World Memory")}</button><span className="self-center px-2 text-[11px] opacity-45">{t("不训练视频像素模型，先沉淀导演决策。","Directing intelligence first; no video-model training.")}</span></nav>
+
+    <div id="cangxuan-director-room" className="mt-6 scroll-mt-8">
       <div className="mb-3 flex items-end justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-[#7657ff]">DIRECTOR SERIES</p><h2 className="mt-2 text-xl font-semibold">{t("选择你的专业导演", "Choose your specialist director")}</h2></div><span className="hidden text-xs opacity-45 sm:block">{t("入口位于创作输入之前", "Choose before writing the brief")}</span></div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" data-testid="director-mode-grid">{DIRECTOR_MODES.map((item)=><button key={item.id} type="button" aria-pressed={brief.mode===item.id} onClick={()=>selectMode(item.id)} className={`group rounded-2xl border p-4 text-left transition ${brief.mode===item.id?"border-[#7657ff] bg-[#7657ff]/10 shadow-[0_12px_30px_rgba(118,87,255,.12)]":"border-current/10 hover:border-[#7657ff]/60"}`}><span className={`grid h-9 w-9 place-items-center rounded-xl text-sm font-semibold ${brief.mode===item.id?"bg-[#7657ff] text-white":"bg-current/[.06] text-[#7657ff]"}`}>{item.glyph}</span><strong className="mt-4 block text-sm">{t(item.zh,item.en)}</strong><span className="mt-1 block text-[11px] leading-5 opacity-50">{t(item.noteZh,item.noteEn)}</span></button>)}</div>
     </div>
@@ -66,6 +69,7 @@ export default function CangXuanDirectorStudio({ lang, dark, onEnterProduction }
       <section className={`rounded-3xl border p-6 ${panel}`}><h2 className="text-xl font-semibold">{t("第一集镜头基线","Episode-one shot baseline")}</h2><div className="mt-4 overflow-x-auto"><table className="w-full min-w-[700px] text-left text-xs"><thead className="opacity-45"><tr><th className="pb-3">#</th><th>{t("时长","Duration")}</th><th>{t("景别与机位","Framing")}</th><th>{t("动作","Action")}</th><th>{t("声音","Sound")}</th></tr></thead><tbody>{blueprint.shots.map((s,i)=><tr key={i} className="border-t border-current/10"><td className="py-4 pr-4">{String(i+1).padStart(2,"0")}</td><td className="pr-4">{s.seconds}s</td><td className="pr-4">{s.framing}</td><td className="pr-4 opacity-65">{s.action}</td><td className="opacity-65">{s.sound}</td></tr>)}</tbody></table></div></section>
       <section className={`rounded-3xl border p-6 ${panel}`}><h2 className="text-xl font-semibold">{t("视频提示词编译稿","Provider prompt draft")}</h2><p className="mt-4 rounded-2xl border border-current/10 p-4 text-sm leading-7 opacity-70">{blueprint.providerPrompt}</p><div className="mt-4 flex flex-wrap justify-end gap-3"><button type="button" onClick={()=>navigator.clipboard?.writeText(blueprint.providerPrompt)} className="rounded-xl border border-current/15 px-5 py-3 text-sm">{t("复制提示词","Copy prompt")}</button><button type="button" onClick={()=>onEnterProduction(`${brief.title}\n${brief.premise}\n\n${blueprint.projectLine}\n\n${blueprint.providerPrompt}`)} className="rounded-xl bg-[#151515] px-5 py-3 text-sm font-semibold text-white">{t("进入影像生产 →","Enter production →")}</button></div></section>
     </div>}
+    <div id="cangxuan-data-foundry" className="scroll-mt-8"><CangXuanDataFoundry lang={lang} dark={dark} accountEmail={accountEmail}/></div>
   </section>;
 }
 

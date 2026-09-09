@@ -446,7 +446,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
           {view === "project" && projectDetail && <SasiProjectProduction detail={projectDetail} lang={lang} dark={dark} onReload={() => openProject(projectDetail.project.id)} onNotice={setNotice} />}
 
-          {view === "director" && <CangXuanDirectorStudio lang={lang} dark={dark} onEnterProduction={(story) => { setScript(story); setView("drama"); }} />}
+          {view === "director" && <CangXuanDirectorStudio lang={lang} dark={dark} accountEmail={accountEmail} onEnterProduction={(story) => { setScript(story); setView("drama"); }} />}
 
           {view === "code" && (
             <section>
