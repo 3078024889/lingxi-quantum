@@ -473,8 +473,13 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
           {view === "drama" && (
             <section>
-              <p className="text-xs font-semibold uppercase tracking-[.2em] text-[#e04d70]">SASI DRAMA</p><h1 className="mt-3 text-4xl font-semibold sm:text-5xl">{copy(lang, "从任意素材，到可逐步修改的成片工作流", "From any source to an editable production workflow")}</h1>
-              <p className="mt-4 max-w-4xl text-base leading-8 opacity-60">{copy(lang,"不是只生成一个漂亮镜头，而是让人物、剧情、场景和声音在整部作品里持续成立。","Go beyond one beautiful shot—keep characters, story, setting and sound coherent across the whole work.")}</p>
+              <div className="sasi-drama-hero">
+                <p className="sasi-drama-kicker">LINGXI FIELD · SASI DRAMA STUDIO</p>
+                <h1>{copy(lang,"AI 短剧工坊","AI Drama Studio")}</h1>
+                <h2>{copy(lang,"从剧本到完整成片，让每一集都认得同一个人。","From script to finished episodes—with one continuous cast.")}</h2>
+                <p>{copy(lang,"不只生成一个漂亮镜头。SASI 先锁定人物、剧情、场景与声音，再把小说、剧本或一个想法推进为可逐步修改的制作流程。","Go beyond one beautiful shot. Lock character, story, setting and sound first, then move a novel, script or idea through an editable production workflow.")}</p>
+                <div><span>◎ {copy(lang,"角色一致","Consistent cast")}</span><span>▤ {copy(lang,"分集规划","Episode planning")}</span><span>▣ {copy(lang,"逐镜生产","Shot production")}</span><span>◇ {copy(lang,"成本先看清","Cost before action")}</span></div>
+              </div>
               <div className="mt-6 flex flex-wrap gap-2">{[["overview","项目总览"],["continuity","人物与连续性"],["shots","分镜与镜头生产"]].map(([id,label])=><button key={id} onClick={()=>setDramaTab(id as typeof dramaTab)} className={`rounded-full px-4 py-2 text-sm ${dramaTab===id?"bg-[#e04d70] text-white":"border border-current/15"}`}>{copy(lang,label,id)}</button>)}</div>
               {dramaTab === "overview" && <>
               <div className="mt-6 flex flex-wrap gap-2">{[["我只有一个想法", "I have an idea"], ["我有完整剧本", "I have a script"], ["我有小说 / 故事", "I have a novel"], ["我已经有角色", "I have characters"], ["我已有故事板", "I have storyboards"], ["只生成一个镜头", "Generate one shot"]].map(([zh, en]) => <button key={zh} type="button" onClick={() => setScript(copy(lang, zh, en))} className="rounded-full border border-current/15 px-4 py-2 text-xs hover:border-[#e04d70]">{copy(lang, zh, en)}</button>)}</div>
