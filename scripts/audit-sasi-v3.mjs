@@ -2,6 +2,7 @@ import fs from "node:fs";
 
 const workspace = fs.readFileSync("app/sasi/SasiWorkspace.tsx", "utf8");
 const panels = fs.readFileSync("app/sasi/SasiV3Panels.tsx", "utf8");
+const productionPanels = fs.readFileSync("app/sasi/SasiProductionPanels.tsx", "utf8");
 const manifestation = fs.readFileSync("app/live-as/page.tsx", "utf8");
 const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
@@ -33,6 +34,9 @@ const checks = [
   ["Models & API separates six capability areas", ["模型与 API","图像与视频","开发与部署","安全与密钥","计费边界","训练资料库"].every((value)=>connections.includes(value))],
   ["provider cards derive truthful verification state", ["未连接","已安全保存 · 待验证","正在验证","验证成功","验证失败","/api/sasi/connections/test"].every((value)=>connections.includes(value))],
   ["connection center preserves security and unsupported-provider boundaries", connections.includes("保存凭证不等于验证成功") && connections.includes("SSRF 防护") && connections.includes("腾讯云双密钥签名尚未开放")],
+  ["Balance & Usage combines verified dashboard with the real ledger", ["sasi-balance-kpis","sasi-balance-trend","sasi-balance-reserve","sasi-balance-ledger"].every((value)=>productionPanels.includes(value)) && css.includes(".sasi-balance-kpis")],
+  ["balance metrics derive from owned jobs and ledger data", productionPanels.includes("recentJobs") && productionPanels.includes("settledPoints") && productionPanels.includes("supplierCost") && productionPanels.includes("account.ledger.slice")],
+  ["balance page does not fabricate usage or open checkout early", productionPanels.includes("当前不使用演示数据") && productionPanels.includes("支付接入后开放") && productionPanels.includes("前端按钮不会直接增加额度")],
   ["SASI home uses an independent cinematic asset", css.includes("sasi-home-hero-v2.png") && fs.existsSync("public/images/console/sasi-home-hero-v2.png")],
   ["SASI home follows the dense product-console hierarchy", ["sasi-home-v4-command","sasi-home-v4-products","sasi-home-v4-recent","sasi-home-v4-flow","sasi-home-v4-news"].every((value)=>workspace.includes(value))],
   ["home product grid presents all eight entries in one desktop row", css.includes("grid-template-columns:repeat(8,minmax(0,1fr))") && css.includes("@media(max-width:1500px){.sasi-home-v4-products{grid-template-columns:repeat(4,minmax(0,1fr))")],

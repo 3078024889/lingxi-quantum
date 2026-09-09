@@ -14,7 +14,9 @@ type Readiness = {
 };
 type Account = {
   wallet: { availablePoints: number; reservedPoints: number; updatedAt: string | null };
-  ledger: { id: string; kind: string; deltaAvailable: number; deltaReserved: number; createdAt: string }[];
+  ledger: { id: string; kind: string; deltaAvailable: number; deltaReserved: number; availableAfter: number; reservedAfter: number; referenceId: string | null; createdAt: string }[];
+  jobs: { id: string; status: string; settledPoints: number; output: Record<string, unknown>; createdAt: string; updatedAt: string }[];
+  deliveries: { id: string; createdAt: string }[];
   readiness: Readiness;
 };
 type ProjectProduction = {
@@ -26,6 +28,24 @@ type ProjectProduction = {
 
 const t = (lang: Lang, zh: string, en: string) => lang === "zh" ? zh : en;
 const tone = (dark: boolean) => dark ? "border-white/10 bg-white/[.035]" : "border-black/10 bg-white";
+
+function dateLabel(value: string, lang: Lang) {
+  return new Intl.DateTimeFormat(lang === "zh" ? "zh-CN" : "en-US", { month: "2-digit", day: "2-digit" }).format(new Date(value));
+}
+
+function ledgerLabel(kind: string, lang: Lang) {
+  const labels: Record<string, [string, string]> = {
+    topup: ["制作储备到账", "Allocation received"], reserve: ["项目额度锁定", "Project allocation secured"],
+    settle: ["制作任务结算", "Production settled"], release: ["未用额度归还", "Unused allocation returned"],
+    refund: ["订单退款", "Order refunded"], adjustment: ["账户校正", "Account adjustment"],
+  };
+  const value = labels[kind] ?? [kind, kind];
+  return t(lang, value[0], value[1]);
+}
+
+function chartPath(values: number[], max: number) {
+  return values.map((value, index) => `${index ? "L" : "M"} ${(index / Math.max(1, values.length - 1) * 720).toFixed(1)} ${(190 - value / Math.max(1, max) * 150).toFixed(1)}`).join(" ");
+}
 
 export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
   lang: Lang;
@@ -50,6 +70,33 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
   }, [accountEmail, lang, onNotice]);
 
   useEffect(() => { void load(); }, [load]);
+
+  const now = Date.now();
+  const recentJobs = (account?.jobs ?? []).filter((job) => now - new Date(job.updatedAt ?? job.createdAt).getTime() <= 30 * 86400000);
+  const settledUsage = recentJobs.filter((job) => job.status === "succeeded").reduce((sum, job) => sum + job.settledPoints, 0);
+  const successfulJobs = recentJobs.filter((job) => job.status === "succeeded").length;
+  const successRate = recentJobs.length ? Math.round(successfulJobs / recentJobs.length * 100) : null;
+  const supplierCosts = recentJobs.flatMap((job) => {
+    const cost = job.output?.supplierCost;
+    if (!cost || typeof cost !== "object") return [];
+    const value = cost as { minor?: unknown; currency?: unknown };
+    return typeof value.minor === "number" && value.currency === "CNY" ? [value.minor / 100] : [];
+  });
+  const supplierCost = supplierCosts.reduce((sum, value) => sum + value, 0);
+  const days = Array.from({ length: 30 }, (_, index) => {
+    const date = new Date(now - (29 - index) * 86400000);
+    return date.toISOString().slice(0, 10);
+  });
+  const usageTrend = days.map((day) => recentJobs.filter((job) => job.status === "succeeded" && (job.updatedAt ?? job.createdAt).slice(0, 10) === day).reduce((sum, job) => sum + job.settledPoints, 0));
+  const costTrend = days.map((day) => recentJobs.filter((job) => (job.updatedAt ?? job.createdAt).slice(0, 10) === day).reduce((sum, job) => {
+    const cost = job.output?.supplierCost;
+    if (!cost || typeof cost !== "object") return sum;
+    const value = cost as { minor?: unknown; currency?: unknown };
+    return typeof value.minor === "number" && value.currency === "CNY" ? sum + value.minor / 100 : sum;
+  }, 0));
+  const usageMax = Math.max(...usageTrend, 1);
+  const costMax = Math.max(...costTrend, 1);
+  const hasTrend = usageTrend.some(Boolean) || costTrend.some(Boolean);
 
   async function topUp(packId: string) {
     if (!accountEmail) { onNotice(t(lang, "请先连接场域账户。", "Connect your field account first.")); return; }
@@ -82,23 +129,29 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
   }
 
   const readiness = account?.readiness;
-  return <section>
-    <p className="text-xs font-semibold uppercase tracking-[.2em] text-[#7657ff]">PRODUCTION ACCOUNT</p>
-    <h1 className="mt-3 text-4xl font-semibold">{t(lang, "让每一次制作，在启动前拥有清晰边界", "Give every production a clear boundary before it begins")}</h1>
-    <p className="mt-4 max-w-3xl leading-8 opacity-60">{t(lang, "制作账户承接已经确认的项目投入。到账后形成制作额度；只有在项目授权完成时才锁定，未进入实际制作的部分自动归还。", "The production account holds confirmed project allocation. Settled funds become production credits, secured only after project authorization, with unused allocation returned automatically.")}</p>
-    {!accountEmail ? <div className={`mt-8 rounded-3xl border p-6 ${tone(dark)}`}>{t(lang, "连接场域账户后查看制作储备与完整流水。", "Connect your field account to view allocation and ledger history.")}</div> : <>
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        <article className={`rounded-3xl border p-6 ${tone(dark)}`}><p className="text-xs uppercase tracking-[.16em] opacity-45">AVAILABLE</p><p className="mt-3 text-4xl font-semibold">{loading ? "—" : (account?.wallet.availablePoints ?? 0).toLocaleString()}</p><p className="mt-2 text-xs opacity-50">{t(lang, "可调度制作额度", "Available production credits")}</p></article>
-        <article className={`rounded-3xl border p-6 ${tone(dark)}`}><p className="text-xs uppercase tracking-[.16em] opacity-45">RESERVED</p><p className="mt-3 text-4xl font-semibold">{loading ? "—" : (account?.wallet.reservedPoints ?? 0).toLocaleString()}</p><p className="mt-2 text-xs opacity-50">{t(lang, "正在制作中锁定", "Secured by active production")}</p></article>
+  const paymentOpen = Boolean(readiness?.productionAccountReady && Object.values(readiness.paymentChannels).some(Boolean));
+  return <section className={`sasi-balance ${dark ? "is-dark" : "is-light"}`}>
+    <header className="sasi-balance-hero"><div><p>PRODUCTION ACCOUNT · VERIFIED LEDGER</p><h1>{t(lang, "余额与用量", "Balance & Usage")}</h1><strong>{t(lang, "每一笔投入，都知道去了哪里。", "Know where every production credit goes.")}</strong><span>{t(lang, "生成前看见预计成本，执行时只锁定已授权额度，完成后按真实结果结算；未使用的部分自动归还。", "See estimated cost before generation, secure only authorized credits, settle against real results, and return anything unused.")}</span></div><div className="sasi-balance-state"><i className={readiness?.productionReady ? "ready" : "guarded"}/><b>{readiness?.productionReady ? t(lang, "制作账户可用", "Production enabled") : t(lang, "制作保护中", "Production guarded")}</b><small>{account?.wallet.updatedAt ? `${t(lang, "账本更新", "Ledger updated")} · ${dateLabel(account.wallet.updatedAt, lang)}` : t(lang, "等待真实账户数据", "Waiting for verified account data")}</small></div></header>
+
+    {!accountEmail ? <section className="sasi-balance-signin"><small>ACCOUNT REQUIRED</small><h2>{t(lang, "先连接你的场域账户", "Connect your field account")}</h2><p>{t(lang, "余额、额度锁定、供应商成本和制作流水均按账户隔离；登录后才会读取属于你的真实账本。", "Balances, reservations, supplier costs and production ledger are isolated by account and load only after sign-in.")}</p><button type="button" onClick={() => onNotice(t(lang, "请使用右上角账户入口登录。", "Use the account entry in the upper-right to sign in."))}>{t(lang, "前往账户入口", "Open account entry")} →</button></section> : <>
+      <div className="sasi-balance-kpis">
+        <article><span>{t(lang, "当前可用", "Available")}</span><b>{loading ? "—" : (account?.wallet.availablePoints ?? 0).toLocaleString()}</b><small>{t(lang, "可调度制作额度", "Production credits ready to use")}</small><i className="violet"/></article>
+        <article><span>{t(lang, "制作中锁定", "Reserved")}</span><b>{loading ? "—" : (account?.wallet.reservedPoints ?? 0).toLocaleString()}</b><small>{t(lang, "只属于已授权任务", "Only for authorized jobs")}</small><i className="cyan"/></article>
+        <article><span>{t(lang, "近 30 天实际结算", "30-day settled usage")}</span><b>{loading ? "—" : settledUsage.toLocaleString()}</b><small>{t(lang, "按成功任务的真实结算额度", "Verified successful-job settlement")}</small><i className="amber"/></article>
+        <article><span>{t(lang, "近 30 天制作任务", "30-day production jobs")}</span><b>{loading ? "—" : recentJobs.length.toLocaleString()}</b><small>{successRate == null ? t(lang, "暂无任务", "No jobs yet") : `${t(lang, "成功率", "Success rate")} ${successRate}%`}</small><i className="green"/></article>
       </div>
-      <div className="mt-6 grid gap-4 md:grid-cols-3">{CREDIT_PACKS.map((pack) => <article key={pack.id} className={`rounded-3xl border p-7 ${tone(dark)}`}><p className="text-xs uppercase tracking-[.18em] opacity-45">{t(lang, pack.zh, pack.en)}</p><p className="mt-3 text-3xl font-semibold">{pack.points.toLocaleString()} <span className="text-sm font-normal opacity-45">{t(lang, "制作额度", "credits")}</span></p><p className="mt-2 text-xs opacity-45">{t(lang, `结算金额 ¥${pack.priceRmb}`, `Settlement ${pack.priceUsd} USD`)}</p><button disabled={Boolean(paying)} onClick={() => void topUp(pack.id)} className="mt-7 w-full rounded-xl border border-current/20 py-3 text-sm disabled:opacity-40">{paying === pack.id ? t(lang, "正在进入收银台…", "Opening checkout…") : t(lang, "建立制作储备", "Establish allocation")}</button></article>)}</div>
-      {qr && <div className={`mt-6 flex flex-col items-center rounded-3xl border p-6 ${tone(dark)}`}><img src={qr} alt={t(lang, "微信支付二维码", "WeChat payment QR code")} className="h-56 w-56 rounded-xl bg-white p-2"/><p className="mt-3 text-sm opacity-60">{t(lang, "请使用微信完成确认，到账后刷新制作账户。", "Complete confirmation in WeChat, then refresh the production account.")}</p></div>}
-      <div className={`mt-6 rounded-2xl border p-5 text-sm leading-7 ${readiness?.productionReady ? "border-emerald-500/30 bg-emerald-500/10" : "border-amber-500/30 bg-amber-500/10"}`}>
-        {readiness?.productionReady
-          ? t(lang, "制作内核已通过账户、执行与内容标识三重门控。", "The production kernel has passed account, execution and content-labeling gates.")
-          : t(lang, "制作保护仍在生效：商户通道、影像执行与内容标识全部就绪前，系统不会接受真实制作授权。", "Production safeguards remain active: no live production authorization is accepted until merchant, video execution and content-labeling gates are all ready.")}
+
+      <div className="sasi-balance-middle">
+        <section className="sasi-balance-trend"><header><div><small>30-DAY VERIFIED USAGE</small><h2>{t(lang, "近 30 天用量趋势", "30-day usage trend")}</h2></div><div><span className="usage">{t(lang, "平台结算额度", "Settled credits")}</span><span className="cost">{t(lang, "人民币供应商成本", "CNY supplier cost")}</span></div></header><div className={`sasi-balance-chart ${hasTrend ? "has-data" : "is-empty"}`}><svg viewBox="0 0 720 220" role="img" aria-label={t(lang, "近三十天实际用量趋势", "Verified usage across the last 30 days")}><line x1="0" y1="40" x2="720" y2="40"/><line x1="0" y1="90" x2="720" y2="90"/><line x1="0" y1="140" x2="720" y2="140"/><line x1="0" y1="190" x2="720" y2="190"/><path className="usage" d={chartPath(usageTrend, usageMax)}/><path className="cost" d={chartPath(costTrend, costMax)}/></svg>{!hasTrend && <p>{t(lang, "产生真实制作结算后，这里会形成趋势；当前不使用演示数据。", "A trend appears after verified settlement. No demonstration data is used here.")}</p>}<footer><span>{dateLabel(`${days[0]}T00:00:00Z`, lang)}</span><em>{t(lang, "双线使用独立尺度，只比较走势", "Independent scales; compare trends only")}</em><span>{dateLabel(`${days[days.length - 1]}T00:00:00Z`, lang)}</span></footer></div><div className="sasi-balance-cost-proof"><span>{t(lang, "人民币供应商成本记录", "CNY supplier cost records")}</span><b>{supplierCosts.length ? `¥${supplierCost.toFixed(2)}` : "—"}</b><small>{supplierCosts.length ? t(lang, `来自 ${supplierCosts.length} 条带来源标记的回传或估算记录`, `${supplierCosts.length} returned or estimated records with source labels`) : t(lang, "暂无可核验成本，不以估算冒充真实消耗", "No verifiable cost yet; estimates are not shown as actual spend")}</small></div></section>
+
+        <aside className="sasi-balance-reserve"><small>PRODUCTION RESERVE</small><h2>{t(lang, "建立制作储备", "Establish production allocation")}</h2><p>{t(lang, "储备只进入 SASI 制作账户；外部 API 仍由对应供应商直接计费。支付接入前，所有金额仅作方案展示。", "Allocation funds only the SASI production account; external APIs remain provider-billed. Amounts are informational until checkout is connected.")}</p><div>{CREDIT_PACKS.map((pack, index) => <button key={pack.id} type="button" disabled={!paymentOpen || Boolean(paying)} onClick={() => void topUp(pack.id)} className={index === 1 ? "featured" : ""}><b>{pack.points.toLocaleString()}</b><span>{t(lang, "制作额度", "credits")}</span><small>{t(lang, `¥${pack.priceRmb} · ${pack.zh}`, `${pack.priceUsd} USD · ${pack.en}`)}</small></button>)}</div><button type="button" className="sasi-balance-checkout" disabled={!paymentOpen || Boolean(paying)} onClick={() => paymentOpen && void topUp(CREDIT_PACKS[1]?.id ?? CREDIT_PACKS[0].id)}>{paymentOpen ? t(lang, "进入安全收银台", "Open secure checkout") : t(lang, "支付接入后开放", "Available after payment integration")}</button><p className="boundary">{t(lang, "充值成功必须经过商户回调、订单校验和服务端入账，前端按钮不会直接增加额度。", "Credits are added only after merchant callback, order verification and server-side settlement; a button can never alter the balance directly.")}</p></aside>
       </div>
-      <div className={`mt-6 rounded-3xl border p-6 ${tone(dark)}`}><div className="flex items-center justify-between"><h2 className="font-semibold">{t(lang, "制作流水", "Production ledger")}</h2><button onClick={() => void load()} className="text-xs opacity-55">{t(lang, "刷新", "Refresh")}</button></div>{!account?.ledger.length ? <p className="mt-4 text-sm opacity-45">{t(lang, "尚无制作流水。", "No production ledger entries yet.")}</p> : <div className="mt-4 space-y-3">{account.ledger.slice(0, 10).map((entry) => <div key={entry.id} className="flex items-center justify-between border-t border-current/10 pt-3 text-xs"><span className="uppercase opacity-55">{entry.kind}</span><span>{entry.deltaAvailable > 0 ? "+" : ""}{entry.deltaAvailable.toLocaleString()}</span></div>)}</div>}</div>
+
+      {qr && <div className="sasi-balance-qr"><img src={qr} alt={t(lang, "微信支付二维码", "WeChat payment QR code")}/><p>{t(lang, "请使用微信完成确认，到账后刷新制作账户。", "Complete confirmation in WeChat, then refresh the production account.")}</p></div>}
+
+      <section className="sasi-balance-ledger"><header><div><small>ACCOUNT LEDGER</small><h2>{t(lang, "消费与额度明细", "Usage and allocation ledger")}</h2></div><button type="button" onClick={() => void load()} disabled={loading}>{loading ? t(lang, "正在刷新…", "Refreshing…") : t(lang, "刷新真实账本", "Refresh ledger")}</button></header>{!account?.ledger.length ? <div className="sasi-balance-empty"><b>{t(lang, "尚无制作流水", "No ledger entries yet")}</b><p>{t(lang, "首笔制作储备到账、任务锁定、结算、归还或退款后，都会在这里留下不可由前端伪造的记录。", "Top-ups, reservations, settlements, releases and refunds will appear here as server-owned records.")}</p></div> : <div className="sasi-balance-table"><div className="head"><span>{t(lang, "时间", "Time")}</span><span>{t(lang, "事项", "Event")}</span><span>{t(lang, "可用变动", "Available change")}</span><span>{t(lang, "锁定变动", "Reserved change")}</span><span>{t(lang, "变动后余额", "Balance after")}</span><span>{t(lang, "凭证", "Reference")}</span></div>{account.ledger.slice(0, 12).map((entry) => <div className="row" key={entry.id}><span>{new Date(entry.createdAt).toLocaleString(lang === "zh" ? "zh-CN" : "en-US", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })}</span><b>{ledgerLabel(entry.kind, lang)}</b><span className={entry.deltaAvailable < 0 ? "negative" : entry.deltaAvailable > 0 ? "positive" : ""}>{entry.deltaAvailable > 0 ? "+" : ""}{entry.deltaAvailable.toLocaleString()}</span><span className={entry.deltaReserved < 0 ? "negative" : entry.deltaReserved > 0 ? "positive" : ""}>{entry.deltaReserved > 0 ? "+" : ""}{entry.deltaReserved.toLocaleString()}</span><span>{entry.availableAfter.toLocaleString()} / {entry.reservedAfter.toLocaleString()}</span><code>{entry.referenceId ? `${entry.referenceId.slice(0, 8)}…` : "—"}</code></div>)}</div>}</section>
+
+      <div className={`sasi-balance-guard ${readiness?.productionReady ? "ready" : "guarded"}`}><b>{readiness?.productionReady ? t(lang, "制作内核已通过三重门控", "Production kernel passed all three gates") : t(lang, "制作保护仍在生效", "Production safeguards remain active")}</b><span>{readiness?.productionReady ? t(lang, "账户、执行与内容标识均已就绪。", "Account, execution and content labeling are ready.") : t(lang, "商户通道、影像执行与内容标识全部就绪前，系统不会接受真实制作授权。", "No live production authorization is accepted until merchant, video execution and content labeling are ready.")}</span></div>
     </>}
   </section>;
 }
