@@ -7,6 +7,7 @@ const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
 const projectRoute = fs.readFileSync("app/api/sasi/projects/[id]/route.ts", "utf8");
 const footer = fs.readFileSync("components/Footer.tsx", "utf8");
+const squareProductCovers = ["cangxuan-director-v1.png","ai-drama-studio-v1.png","build-deploy-v1.png","skills-marketplace-v1.png","models-api-v1.png","balance-usage-v1.png","works-library-v1.png","account-security-v1.png"];
 
 const checks = [
   ["canonical SASI promise", workspace.includes("把想法，变成真实可用的作品") && workspace.includes("一键成片，一念即达，一念显化")],
@@ -19,10 +20,11 @@ const checks = [
   ["manifestation records material evidence", ["显化成果档案","想法开始时间","现实行动时长","进入物质世界的结果"].every((value)=>manifestation.includes(value))],
   ["manifestation example is disclosed", manifestation.includes("下方为结构示例，不代表当前用户的真实进度")],
   ["artwork uses ratio-safe rendering", css.includes("aspect-ratio:1.424/1") && css.includes("object-fit:cover") && css.includes("aspect-ratio:16/9") && !css.includes("background-size:400% 200%")],
-  ["shared entry template balances artwork and readable copy", css.includes(".sasi-home-v4-product .sasi-home-tile-art { aspect-ratio:2.2/1") && css.includes(".sasi-home-v4-product-copy { position:relative; display:block; min-height:176px") && css.includes(".sasi-home-v4-product-copy b { display:block; font-size:20px") && css.includes(".sasi-home-v4-product-copy small { display:block; margin-top:5px") && css.includes("font-size:14px") && css.includes("font-size:15px")],
+  ["shared entry template uses independent square artwork and readable copy", css.includes(".sasi-product-cover { display:block; width:100%; aspect-ratio:1/1") && css.includes(".sasi-product-cover img { display:block; width:100%; height:100%; object-fit:cover") && css.includes(".sasi-home-v4-product-copy { position:relative; display:block; min-height:178px") && css.includes(".sasi-home-v4-product-copy b { display:block; font-size:17px") && css.includes("font-size:13px") && css.includes("font-size:14px")],
+  ["all eight homepage covers are independent square source files", squareProductCovers.every((file)=>fs.existsSync(`public/images/sasi/cards/${file}`) && workspace.includes(`/images/sasi/cards/${file}`)) && !workspace.includes("art-${item.art}")],
   ["SASI home uses an independent cinematic asset", css.includes("sasi-home-hero-v2.png") && fs.existsSync("public/images/console/sasi-home-hero-v2.png")],
   ["SASI home follows the dense product-console hierarchy", ["sasi-home-v4-command","sasi-home-v4-products","sasi-home-v4-recent","sasi-home-v4-flow","sasi-home-v4-news"].every((value)=>workspace.includes(value))],
-  ["home product grid is four cards per desktop row", css.includes("grid-template-columns:repeat(4,minmax(0,1fr))")],
+  ["home product grid presents all eight entries in one desktop row", css.includes("grid-template-columns:repeat(8,minmax(0,1fr))") && css.includes("@media(max-width:1500px){.sasi-home-v4-products{grid-template-columns:repeat(4,minmax(0,1fr))")],
   ["notification bell exposes truthful updates", workspace.includes("查看通知") && workspace.includes("角色连续性工作台正在构建") && workspace.includes("真实供应商生成闭环待验证")],
   ["footer uses current product taxonomy", ["苍玄 AI 导演","AI 短剧工坊","编程构建部署","模型与 API","作品库"].every((value)=>footer.includes(value)) && !["影像创作","产品构建","能力作品库","制作账户"].some((value)=>footer.includes(value))],
   ["mockup screenshots are not embedded", !workspace.includes("codex-clipboard") && !panels.includes("codex-clipboard")],

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   type ChangeEvent,
   type ClipboardEvent,
@@ -431,15 +432,15 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
               </div>
 
               <div className="sasi-home-v4-products">{[
-                {target:"director",art:"director",zh:"苍玄 AI 导演",en:"CangXuan Director",noteZh:"不会写分镜也能开拍。把故事拆成角色、场景、镜头与可执行导演方案。",noteEn:"Turn a story into characters, scenes, shots and an executable directing plan."},
-                {target:"drama",art:"drama",zh:"AI 短剧工坊",en:"AI Drama Studio",noteZh:"从剧本、人物与分镜进入成片流程，集中管理每一集并保持角色连续。",noteEn:"Move from script, cast and storyboard into an episode workflow with continuity."},
-                {target:"code",art:"build",zh:"编程构建部署",en:"Build & Deploy",noteZh:"说清需求即可开始。SASI 规划页面、功能与部署步骤，陪你把产品真正上线。",noteEn:"Describe the need; SASI plans the product, features and path to deployment."},
-                {target:"skills",art:"skills",zh:"Skills",en:"Skills Marketplace",noteZh:"按任务安装专业能力，让导演、写作、设计与构建工作流随项目协作。",noteEn:"Add specialist capabilities for directing, writing, design and product delivery."},
-                {target:"connections",art:"api",zh:"模型与 API",en:"Models & API",noteZh:"接入自己的模型账户，费用直接归属你；连接状态、权限与教程集中管理。",noteEn:"Connect your own providers with clear ownership, permissions and setup guidance."},
-                {target:"billing",art:"billing",zh:"余额与用量",en:"Balance & Usage",noteZh:"生成前看见预计成本，生成后核对真实消耗，不再承担失控的供应商费用。",noteEn:"See estimated cost before generation and verify actual usage afterwards."},
-                {target:"works",art:"works",zh:"作品库",en:"My Works",noteZh:"项目、模板、版本与交付文件统一保存，随时继续、复制、导出或交付。",noteEn:"Keep projects, templates, versions and deliverables together and reusable."},
-                {target:"account",art:"account",zh:"我的账户",en:"My Account",noteZh:"集中管理身份、安全、授权与团队权益，让每一项创作资产始终属于你。",noteEn:"Manage identity, security, access and team rights around your creative assets."},
-              ].map(item=><button key={item.target} onClick={()=>setView(item.target as View)} className="sasi-home-v4-product"><span className={`sasi-home-tile-art art-${item.art}`}/><span className="sasi-home-v4-product-copy"><b>{copy(lang,item.zh,item.en)}</b><small>{item.en}</small><p>{copy(lang,item.noteZh,item.noteEn)}</p><i>→</i></span></button>)}</div>
+                {target:"director",image:"/images/sasi/cards/cangxuan-director-v1.png",zh:"苍玄 AI 导演",en:"CangXuan Director",noteZh:"不会写分镜也能开拍。把故事拆成角色、场景、镜头与可执行导演方案。",noteEn:"Turn a story into characters, scenes, shots and an executable directing plan."},
+                {target:"drama",image:"/images/sasi/cards/ai-drama-studio-v1.png",zh:"AI 短剧工坊",en:"AI Drama Studio",noteZh:"从剧本、人物与分镜进入成片流程，集中管理每一集并保持角色连续。",noteEn:"Move from script, cast and storyboard into an episode workflow with continuity."},
+                {target:"code",image:"/images/sasi/cards/build-deploy-v1.png",zh:"编程构建部署",en:"Build & Deploy",noteZh:"说清需求即可开始。SASI 规划页面、功能与部署步骤，陪你把产品真正上线。",noteEn:"Describe the need; SASI plans the product, features and path to deployment."},
+                {target:"skills",image:"/images/sasi/cards/skills-marketplace-v1.png",zh:"Skills",en:"Skills Marketplace",noteZh:"按任务安装专业能力，让导演、写作、设计与构建工作流随项目协作。",noteEn:"Add specialist capabilities for directing, writing, design and product delivery."},
+                {target:"connections",image:"/images/sasi/cards/models-api-v1.png",zh:"模型与 API",en:"Models & API",noteZh:"接入自己的模型账户，费用直接归属你；连接状态、权限与教程集中管理。",noteEn:"Connect your own providers with clear ownership, permissions and setup guidance."},
+                {target:"billing",image:"/images/sasi/cards/balance-usage-v1.png",zh:"余额与用量",en:"Balance & Usage",noteZh:"生成前看见预计成本，生成后核对真实消耗，不再承担失控的供应商费用。",noteEn:"See estimated cost before generation and verify actual usage afterwards."},
+                {target:"works",image:"/images/sasi/cards/works-library-v1.png",zh:"作品库",en:"My Works",noteZh:"项目、模板、版本与交付文件统一保存，随时继续、复制、导出或交付。",noteEn:"Keep projects, templates, versions and deliverables together and reusable."},
+                {target:"account",image:"/images/sasi/cards/account-security-v1.png",zh:"我的账户",en:"My Account",noteZh:"集中管理身份、安全、授权与团队权益，让每一项创作资产始终属于你。",noteEn:"Manage identity, security, access and team rights around your creative assets."},
+              ].map(item=><button key={item.target} onClick={()=>setView(item.target as View)} className="sasi-home-v4-product"><span className="sasi-product-cover"><Image src={item.image} alt="" width={1024} height={1024} sizes="(max-width: 760px) 50vw, (max-width: 1180px) 50vw, 25vw"/></span><span className="sasi-home-v4-product-copy"><b>{copy(lang,item.zh,item.en)}</b><small>{item.en}</small><p>{copy(lang,item.noteZh,item.noteEn)}</p><i>→</i></span></button>)}</div>
 
               <div className="sasi-home-v4-lower">
                 <section><header><h2>▣ {copy(lang,"近期创作作品","Recent works")}</h2><button onClick={()=>setView("works")}>{copy(lang,"查看更多 →","View more →")}</button></header><div className="sasi-home-v4-recent">{(projects.length?projects.slice(0,4):[{id:"demo-1",kind:"drama" as const,title:"《她与星海》",currentVersion:1},{id:"demo-2",kind:"build" as const,title:"未来城市官网",currentVersion:1},{id:"demo-3",kind:"drama" as const,title:"品牌宣传片",currentVersion:1},{id:"demo-4",kind:"build" as const,title:"AI 旅行助手",currentVersion:1}]).map((project,index)=><button key={project.id} onClick={()=>project.id.startsWith("demo-")?setView(project.kind==="drama"?"drama":"code"):openProject(project.id)}><span className={`sasi-home-v4-recent-art recent-${index+1}`}/><b>{project.title}</b><small>{project.id.startsWith("demo-")?copy(lang,"示例模板 · 点击开始","Example · Start here"):project.kind==="drama"?copy(lang,"短剧 · 可继续创作","Drama · Continue"):copy(lang,"数字产品 · 可继续构建","Product · Continue")}</small></button>)}</div></section>
