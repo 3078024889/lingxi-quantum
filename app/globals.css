@@ -237,6 +237,7 @@ html[data-theme="light"] .sasi-hero-surface::before { background-image:linear-gr
 .sasi-v3-page-hero::before { content:""; position:absolute; inset:0 0 0 42%; z-index:-2; background-image:var(--sasi-v3-art); background-size:400% auto; background-position:var(--sasi-v3-x) var(--sasi-v3-y); background-repeat:no-repeat; }
 .sasi-v3-page-hero::after { content:""; position:absolute; inset:0; z-index:-1; background:linear-gradient(90deg,#fff 0%,#fff 42%,rgba(255,255,255,.9) 57%,rgba(255,255,255,.12) 100%); }
 .sasi-v3-page-hero.art-works { --sasi-v3-art:url('/images/console/platform-experience-v1.png'); --sasi-v3-x:100%; --sasi-v3-y:100%; }
+.sasi-v3-page-hero.art-build { --sasi-v3-art:url('/images/console/platform-experience-v1.png'); --sasi-v3-x:33.333%; --sasi-v3-y:0; }
 .sasi-v3-page-hero.art-account { --sasi-v3-art:url('/images/console/field-products-v1.png'); --sasi-v3-x:66.666%; --sasi-v3-y:0; }
 .sasi-v3-kicker { color:#6558e8; font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
 .sasi-v3-page-hero h1 { margin-top:12px; max-width:700px; font-size:clamp(2.5rem,5vw,4.8rem); font-weight:700; letter-spacing:-.05em; line-height:1.03; }
