@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { buildDirectorBlueprint, DIRECTOR_MODES, type DirectorBlueprint, type DirectorBrief, type DirectorMode } from "@/lib/sasi/cangxuan-director";
-import CangXuanDataFoundry from "@/app/sasi/CangXuanDataFoundry";
 
 type Props = { lang: "zh" | "en"; dark: boolean; accountEmail: string | null; onEnterProduction: (story: string) => void };
 
@@ -49,15 +48,23 @@ export default function CangXuanDirectorStudio({ lang, dark, accountEmail, onEnt
       <div className="sasi-cangxuan-features"><span>◎ {t("角色连续性控制","Character continuity")}</span><span>◇ {t("场景世界观设定","World design")}</span><span>▣ {t("镜头语言设计","Shot language")}</span><span>✦ {t("提示词智能编译","Prompt compilation")}</span></div>
     </div>
 
-    <nav className={`mt-5 flex flex-wrap gap-2 rounded-2xl border p-2 ${panel}`} aria-label={t("苍玄工作区","CangXuan workspace")}><button type="button" onClick={()=>document.getElementById("cangxuan-director-room")?.scrollIntoView({behavior:"smooth"})} className="rounded-xl bg-[#7657ff] px-4 py-2.5 text-xs font-semibold text-white">{t("导演室","Director room")}</button><button type="button" onClick={()=>document.getElementById("cangxuan-data-foundry")?.scrollIntoView({behavior:"smooth"})} className="rounded-xl border border-current/15 px-4 py-2.5 text-xs font-semibold">{t("数据工厂与世界记忆","Data Foundry & World Memory")}</button><span className="self-center px-2 text-[11px] opacity-45">{t("不训练视频像素模型，先沉淀导演决策。","Directing intelligence first; no video-model training.")}</span></nav>
-
     <div id="cangxuan-director-room" className="mt-6 scroll-mt-8">
       <div className="mb-3 flex items-end justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-[#7657ff]">DIRECTOR SERIES</p><h2 className="mt-2 text-xl font-semibold">{t("选择你的专业导演", "Choose your specialist director")}</h2></div><span className="hidden text-xs opacity-45 sm:block">{t("入口位于创作输入之前", "Choose before writing the brief")}</span></div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" data-testid="director-mode-grid">{DIRECTOR_MODES.map((item)=><button key={item.id} type="button" aria-pressed={brief.mode===item.id} onClick={()=>selectMode(item.id)} className={`cangxuan-mode-card group ${brief.mode===item.id?"is-selected":""}`}><span className="cangxuan-mode-art"><Image src={directorModeArt[item.id]} alt="" width={1254} height={1254} sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 17vw"/></span><span className="cangxuan-mode-copy"><strong>{t(item.zh,item.en)}</strong><small>{item.en} Director</small><span>{t(item.noteZh,item.noteEn)}</span><i>{brief.mode===item.id?t("已选择","Selected"):t("选择","Select")}</i></span></button>)}</div>
     </div>
 
     <div className="cangxuan-step-heading"><span>2</span><div><h2>{t("建立导演方案","Build the directing blueprint")}</h2><p>{t("系统根据你选择的导演类型，生成专属叙事规则、角色锁、镜头语言与连续性方案。","Generate mode-specific story rules, character locks, shot language and continuity guidance.")}</p></div></div>
-    <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_330px]">
+    <div className="cangxuan-blueprint-entries">
+      {[
+        ["⌘",t("叙事类型","Story form"),t("故事结构与情绪回报","Structure and emotional payoff")],
+        ["◇",t("世界规则","World rules"),t("时代、场景与因果边界","Era, setting and causality")],
+        ["◎",t("角色设定原则","Character design"),t("身份、欲望、造型与道具","Identity, desire, look and props")],
+        ["▣",t("镜头语言","Shot language"),t("景别、运动、光线与色调","Framing, movement, light and tone")],
+        ["✣",t("连续性规则","Continuity rules"),t("逐镜锁定可变化与不可变化","Lock what may and may not change")],
+        ["✦",t("提示词编译","Prompt compile"),t("生成可直接使用的镜头指令","Produce usable shot instructions")],
+      ].map(([glyph,title,note])=><button key={title} type="button" onClick={()=>document.getElementById("cangxuan-brief")?.scrollIntoView({behavior:"smooth",block:"center"})}><i>{glyph}</i><span><b>{title}</b><small>{note}</small></span></button>)}
+    </div>
+    <div id="cangxuan-brief" className="mt-5 grid scroll-mt-24 gap-5 xl:grid-cols-[minmax(0,1fr)_330px]">
       <div className={`rounded-3xl border p-6 ${panel}`}>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="text-xs opacity-65">{t("作品名", "Title")}<input value={brief.title} onChange={e=>setBrief({...brief,title:e.target.value})} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-4 py-3 text-sm outline-none" placeholder={t("例如：听见全家心声后", "e.g. The Voices Within")}/></label>
@@ -73,14 +80,15 @@ export default function CangXuanDirectorStudio({ lang, dark, accountEmail, onEnt
       <aside className={`rounded-3xl border p-6 ${panel}`}><p className="text-xs uppercase tracking-[.18em] text-[#7657ff]">DIRECTOR PIPELINE</p><ol className="mt-5 space-y-4 text-sm">{[t("项目理解与叙事约束","Brief & constraints"),t("人物圣经与视觉锁","Character bible"),t("分集结构与情绪曲线","Episode architecture"),t("分镜与摄影语言","Shots & cinematography"),t("连续性审校","Continuity audit"),t("进入可选视频生产","Optional production")].map((v,i)=><li key={v} className="flex gap-3"><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#7657ff]/12 text-xs text-[#7657ff]">{i+1}</span><span className="pt-1 opacity-70">{v}</span></li>)}</ol></aside>
     </div>
 
-    {blueprint && <div className="mt-7 space-y-5">
+    <div className="cangxuan-step-heading"><span>3</span><div><h2>{t("方案预览与进入制作","Preview and enter production")}</h2><p>{t("确认导演方案后再进入短剧工坊；角色、世界与镜头约束会随项目继续。","Review the blueprint before production; character, world and shot constraints continue with the project.")}</p></div></div>
+    {!blueprint && <section className={`cangxuan-preview-placeholder ${panel}`}><div><p className="sasi-v3-kicker">DIRECTOR PREVIEW</p><h3>{brief.title || t("你的作品将在这里形成导演基线","Your directing baseline will appear here")}</h3><p>{brief.premise || t("填写作品、人物与一句话故事，苍玄会整理世界规则、人物圣经、分集节奏、镜头语言和连续性锁。","Add the title, character and premise; CangXuan will organize world rules, a character bible, episode rhythm, shot language and continuity locks.")}</p></div><button type="button" onClick={createBlueprint}>{t("形成并预览导演方案 →","Create and preview blueprint →")}</button></section>}
+    {blueprint && <div className="mt-5 space-y-5">
       <section className={`rounded-3xl border p-6 ${panel}`}><p className="text-xs uppercase tracking-[.18em] text-[#7657ff]">DIRECTOR STATEMENT</p><h2 className="mt-3 text-2xl font-semibold">{brief.title || t("未命名作品","Untitled")}</h2><p className="mt-3 leading-8 opacity-70">{blueprint.projectLine}</p></section>
       <div className="grid gap-5 lg:grid-cols-3"><BlueprintList title={t("导演任务","Directing mandate")} items={blueprint.modeMandate} panel={panel}/><BlueprintList title={t("世界规则","World rules")} items={blueprint.worldRules} panel={panel}/><BlueprintList title={t("连续性锁","Continuity locks")} items={blueprint.continuityLocks} panel={panel}/></div>
       <section className={`rounded-3xl border p-6 ${panel}`}><h2 className="text-xl font-semibold">{t("人物圣经","Character bible")}</h2><div className="mt-4 grid gap-3 lg:grid-cols-3">{blueprint.characterBible.map(c=><article key={c.role} className="rounded-2xl border border-current/10 p-4"><p className="text-xs text-[#7657ff]">{c.role}</p><h3 className="mt-2 font-semibold">{c.identity}</h3><p className="mt-3 text-xs leading-6 opacity-60">{c.visualLock}</p><p className="mt-3 text-xs leading-6 opacity-60">{c.dramaticFunction}</p></article>)}</div></section>
       <section className={`rounded-3xl border p-6 ${panel}`}><h2 className="text-xl font-semibold">{t("第一集镜头基线","Episode-one shot baseline")}</h2><div className="mt-4 overflow-x-auto"><table className="w-full min-w-[700px] text-left text-xs"><thead className="opacity-45"><tr><th className="pb-3">#</th><th>{t("时长","Duration")}</th><th>{t("景别与机位","Framing")}</th><th>{t("动作","Action")}</th><th>{t("声音","Sound")}</th></tr></thead><tbody>{blueprint.shots.map((s,i)=><tr key={i} className="border-t border-current/10"><td className="py-4 pr-4">{String(i+1).padStart(2,"0")}</td><td className="pr-4">{s.seconds}s</td><td className="pr-4">{s.framing}</td><td className="pr-4 opacity-65">{s.action}</td><td className="opacity-65">{s.sound}</td></tr>)}</tbody></table></div></section>
       <section className={`rounded-3xl border p-6 ${panel}`}><h2 className="text-xl font-semibold">{t("视频提示词编译稿","Provider prompt draft")}</h2><p className="mt-4 rounded-2xl border border-current/10 p-4 text-sm leading-7 opacity-70">{blueprint.providerPrompt}</p><div className="mt-4 flex flex-wrap justify-end gap-3"><button type="button" onClick={()=>navigator.clipboard?.writeText(blueprint.providerPrompt)} className="rounded-xl border border-current/15 px-5 py-3 text-sm">{t("复制提示词","Copy prompt")}</button><button type="button" onClick={()=>onEnterProduction(`${brief.title}\n${brief.premise}\n\n${blueprint.projectLine}\n\n${blueprint.providerPrompt}`)} className="rounded-xl bg-[#151515] px-5 py-3 text-sm font-semibold text-white">{t("进入影像生产 →","Enter production →")}</button></div></section>
     </div>}
-    <div id="cangxuan-data-foundry" className="scroll-mt-8"><CangXuanDataFoundry lang={lang} dark={dark} accountEmail={accountEmail}/></div>
   </section>;
 }
 

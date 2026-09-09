@@ -10,12 +10,12 @@ export type DirectorBlueprint = {
 };
 
 export const DIRECTOR_MODES:Array<{ id:DirectorMode; zh:string; en:string; glyph:string; noteZh:string; noteEn:string; defaultGenre:string; defaultEpisodes:number; defaultSeconds:number }> = [
-  { id:"motion-comic", zh:"漫剧导演", en:"Motion Comic", glyph:"漫", noteZh:"小说、IP与连续角色", noteEn:"Novels, IP and consistent characters", defaultGenre:"古装复仇", defaultEpisodes:24, defaultSeconds:60 },
-  { id:"short-drama", zh:"短剧导演", en:"Short Drama", glyph:"剧", noteZh:"钩子、反转与商业节奏", noteEn:"Hooks, reversals and commercial rhythm", defaultGenre:"都市情感", defaultEpisodes:50, defaultSeconds:90 },
-  { id:"film", zh:"电影导演", en:"Film", glyph:"影", noteZh:"长叙事、表演与电影语言", noteEn:"Long-form story and cinematic language", defaultGenre:"悬疑反转", defaultEpisodes:1, defaultSeconds:300 },
-  { id:"advertising", zh:"广告导演", en:"Advertising", glyph:"告", noteZh:"产品价值与品牌记忆", noteEn:"Product value and brand recall", defaultGenre:"品牌广告", defaultEpisodes:1, defaultSeconds:30 },
-  { id:"music-video", zh:"MV 导演", en:"Music Video", glyph:"乐", noteZh:"音乐结构与视觉母题", noteEn:"Music structure and visual motifs", defaultGenre:"音乐叙事", defaultEpisodes:1, defaultSeconds:180 },
-  { id:"game-cg", zh:"游戏 CG 导演", en:"Game CG", glyph:"界", noteZh:"世界观、动作与奇观预演", noteEn:"Worldbuilding, action and spectacle", defaultGenre:"游戏幻想", defaultEpisodes:1, defaultSeconds:90 },
+  { id:"motion-comic", zh:"漫剧导演", en:"Motion Comic", glyph:"漫", noteZh:"把小说与 IP 拆成连续分集，统一人物造型、画风和叙事节奏。", noteEn:"Turn novels and IP into episodes with consistent characters, art direction and rhythm.", defaultGenre:"古装复仇", defaultEpisodes:24, defaultSeconds:60 },
+  { id:"short-drama", zh:"短剧导演", en:"Short Drama", glyph:"剧", noteZh:"围绕人物欲望安排钩子、冲突与反转，让每集都有推进和回报。", noteEn:"Shape hooks, conflict and reversals around desire so every episode advances and rewards.", defaultGenre:"都市情感", defaultEpisodes:50, defaultSeconds:90 },
+  { id:"film", zh:"电影导演", en:"Film", glyph:"影", noteZh:"以人物弧线统领长叙事、表演调度、摄影语法与声音母题。", noteEn:"Unify long-form story, performance, cinematography and sound through the character arc.", defaultGenre:"悬疑反转", defaultEpisodes:1, defaultSeconds:300 },
+  { id:"advertising", zh:"广告导演", en:"Advertising", glyph:"告", noteZh:"把产品利益转化为清晰创意、关键特写与可被记住的品牌画面。", noteEn:"Translate product value into a clear idea, signature shots and memorable brand imagery.", defaultGenre:"品牌广告", defaultEpisodes:1, defaultSeconds:30 },
+  { id:"music-video", zh:"MV 导演", en:"Music Video", glyph:"乐", noteZh:"跟随歌曲段落组织表演、视觉母题与情绪高潮，让声音拥有画面。", noteEn:"Map performance, visual motifs and emotional peaks to the song's structure.", defaultGenre:"音乐叙事", defaultEpisodes:1, defaultSeconds:180 },
+  { id:"game-cg", zh:"游戏 CG 导演", en:"Game CG", glyph:"界", noteZh:"先讲清世界规则与角色目标，再设计可读动作、奇观和视觉预演。", noteEn:"Establish world rules and character goals before readable action and spectacle.", defaultGenre:"游戏幻想", defaultEpisodes:1, defaultSeconds:90 },
 ];
 
 const genreTone:Record<string,string> = {
