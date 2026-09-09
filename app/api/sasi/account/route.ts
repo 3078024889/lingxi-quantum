@@ -13,10 +13,11 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
   const admin = createAdminClient();
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
   const [wallet, ledger, jobs, deliveries] = await Promise.all([
     admin.from("sasi_wallets").select("available_points,reserved_points,updated_at").eq("user_id", user.id).maybeSingle(),
     admin.from("sasi_credit_ledger").select("id,kind,delta_available,delta_reserved,available_after,reserved_after,reference_id,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
-    admin.from("sasi_jobs").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
+    admin.from("sasi_jobs").select("*").eq("user_id", user.id).gte("updated_at", thirtyDaysAgo).order("updated_at", { ascending: false }).limit(1000),
     admin.from("sasi_deliveries").select("id,project_id,job_id,media_kind,mime_type,byte_size,ai_generated,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
   ]);
   const firstError = wallet.error ?? ledger.error ?? jobs.error ?? deliveries.error;
@@ -41,6 +42,7 @@ export async function GET() {
       createdAt: entry.created_at,
     })),
     jobs: ((jobs.data ?? []) as SasiJobRow[]).map(publicSasiJob),
+    jobsTruncated: (jobs.data?.length ?? 0) >= 1000,
     deliveries: (deliveries.data ?? []).map((delivery) => ({
       id: delivery.id,
       projectId: delivery.project_id,

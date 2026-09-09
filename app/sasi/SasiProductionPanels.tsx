@@ -16,6 +16,7 @@ type Account = {
   wallet: { availablePoints: number; reservedPoints: number; updatedAt: string | null };
   ledger: { id: string; kind: string; deltaAvailable: number; deltaReserved: number; availableAfter: number; reservedAfter: number; referenceId: string | null; createdAt: string }[];
   jobs: { id: string; status: string; settledPoints: number; output: Record<string, unknown>; createdAt: string; updatedAt: string }[];
+  jobsTruncated: boolean;
   deliveries: { id: string; createdAt: string }[];
   readiness: Readiness;
 };
@@ -137,7 +138,7 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
       <div className="sasi-balance-kpis">
         <article><span>{t(lang, "当前可用", "Available")}</span><b>{loading ? "—" : (account?.wallet.availablePoints ?? 0).toLocaleString()}</b><small>{t(lang, "可调度制作额度", "Production credits ready to use")}</small><i className="violet"/></article>
         <article><span>{t(lang, "制作中锁定", "Reserved")}</span><b>{loading ? "—" : (account?.wallet.reservedPoints ?? 0).toLocaleString()}</b><small>{t(lang, "只属于已授权任务", "Only for authorized jobs")}</small><i className="cyan"/></article>
-        <article><span>{t(lang, "近 30 天实际结算", "30-day settled usage")}</span><b>{loading ? "—" : settledUsage.toLocaleString()}</b><small>{t(lang, "按成功任务的真实结算额度", "Verified successful-job settlement")}</small><i className="amber"/></article>
+        <article><span>{t(lang, "近 30 天实际结算", "30-day settled usage")}</span><b>{loading ? "—" : settledUsage.toLocaleString()}</b><small>{account?.jobsTruncated ? t(lang, "任务超过 1,000 条，当前为可核验下限", "Over 1,000 jobs; verified lower bound shown") : t(lang, "按成功任务的真实结算额度", "Verified successful-job settlement")}</small><i className="amber"/></article>
         <article><span>{t(lang, "近 30 天制作任务", "30-day production jobs")}</span><b>{loading ? "—" : recentJobs.length.toLocaleString()}</b><small>{successRate == null ? t(lang, "暂无任务", "No jobs yet") : `${t(lang, "成功率", "Success rate")} ${successRate}%`}</small><i className="green"/></article>
       </div>
 
