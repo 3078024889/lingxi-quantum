@@ -6,6 +6,8 @@ const productionPanels = fs.readFileSync("app/sasi/SasiProductionPanels.tsx", "u
 const manifestation = fs.readFileSync("app/live-as/page.tsx", "utf8");
 const manifestationGuide = fs.readFileSync("app/live-as/ManifestationGuide.tsx", "utf8");
 const realityLoop = fs.readFileSync("app/live-as/RealityLoop.tsx", "utf8");
+const lifeMapPage = fs.readFileSync("app/life-map/page.tsx", "utf8");
+const lifeMapFlow = fs.readFileSync("app/life-map/LifeMapFlow.tsx", "utf8");
 const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
 const fieldTests = fs.readFileSync("app/field-tests/page.tsx", "utf8");
@@ -35,6 +37,8 @@ const checks = [
   ["field insights exposes nine honest main products", ["生命图谱","生命灵签","量子生命镜像","关系共振","财富创造地图","今日潮汐","生命韧性指数","桃花磁场指数","生命原型"].every((value)=>fieldTests.includes(value)) && fieldTests.includes("关系共振内部保留亲密、商业合伙与其他关系三个选项") && !fieldTests.includes("89%")],
   ["life archetype uses open knowledge and real evidence progress", archetypePage.includes("12 OPEN KNOWLEDGE NODES") && archetypePage.includes("不是你的个性化结果，也不显示虚构分数") && archetypeProgress.includes("/api/archetype/progress") && archetypeProgress.includes("仅按有效记录计算")],
   ["manifestation uses a pure-white workspace and real daily fields", css.includes(".mf-page { color:#132440; background:#fff") && ["我正在显化的（我的愿景）","今天我在做什么","此刻我的感受","今日签到，连接灵犀场"].every((value)=>realityLoop.includes(value))],
+  ["life map uses a pure-white three-surface workbench", ["lm-workbench-form","lm-free-preview","lm-pdf-preview","每一个灵魂，都有一幅独一无二的生命图谱","A HIGHER YOU"].every((value)=>`${lifeMapPage}\n${lifeMapFlow}`.includes(value)) && css.includes(".lm-workbench-page { min-width:0") && css.includes("background:#fff") && !lifeMapPage.includes("FieldProductIntroduction")],
+  ["life map keeps real preview payment and PDF boundaries", ["/api/lifemap/calc","/api/lifemap/save","/checkout?productId=life-map-report","付款并生成后可下载","不是你的已生成 PDF"].every((value)=>lifeMapFlow.includes(value)) && !lifeMapFlow.includes("¥199")],
   ["second-layer product copy meets the readable floor", css.includes(".lx-console-card-copy > p:not(.lx-console-card-en)") && css.includes("font-size:15px") && css.includes(".archetype-foundation-grid p") && css.includes("font-size:16px")],
   ["artwork uses ratio-safe rendering", css.includes("aspect-ratio:1.424/1") && css.includes("object-fit:cover") && css.includes("aspect-ratio:16/9") && !css.includes("background-size:400% 200%")],
   ["shared entry template uses independent square artwork and readable copy", css.includes(".sasi-product-cover { display:block; width:100%; aspect-ratio:1/1") && css.includes(".sasi-product-cover img { display:block; width:100%; height:100%; object-fit:cover") && css.includes(".sasi-home-v4-product-copy { position:relative; display:block; min-height:178px") && css.includes(".sasi-home-v4-product-copy b { display:block; font-size:17px") && css.includes("font-size:13px") && css.includes("font-size:14px")],

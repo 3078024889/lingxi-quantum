@@ -316,34 +316,19 @@ export default function LifeMapFlow() {
       const professionLabel = profession === "other" ? professionCustom.trim() : professionOpt?.zh || "";
       const relationshipLabel = RELATIONSHIP_OPTIONS.find((r) => r.id === relationshipStatus)?.zh || "";
       const practiceLabel = PRACTICE_OPTIONS.find((p) => p.id === practiceStatus)?.zh || "";
-      const wx = facts.wuXingCount;
-      const wxStr = `木${wx.wood} 火${wx.fire} 土${wx.earth} 金${wx.metal} 水${wx.water}`;
-      const promptContent =
-        `【核心类型】${coreType.name}（${coreType.nameEn}）——${coreType.essence}\n` +
-        `【西方星盘】太阳：${facts.sunSignZh}；月亮：${facts.moonSignZh}；水星：${facts.mercury.signZh}；金星：${facts.venus.signZh}；火星：${facts.mars.signZh}；木星：${facts.jupiter.signZh}；土星：${facts.saturn.signZh}\n` +
-        `【中式命盘】四柱：${facts.yearPillar} ${facts.monthPillar} ${facts.dayPillar}${facts.hourPillar ? " " + facts.hourPillar : "（未知具体时辰）"}；` +
-        `日主：${facts.dayMasterGan}（${facts.dayMasterElement === "wood" ? "木" : facts.dayMasterElement === "fire" ? "火" : facts.dayMasterElement === "earth" ? "土" : facts.dayMasterElement === "metal" ? "金" : "水"}）；` +
-        `年干十神：${facts.yearShiShen}；月干十神：${facts.monthShiShen}；日柱纳音：${facts.dayDetail.naYin}；命局五行分布：${wxStr}\n` +
-        (facts.ziwei ? `【紫微斗数】命宫在${facts.ziwei.soulPalaceBranch}，身宫在${facts.ziwei.bodyPalaceBranch}，${facts.ziwei.fiveElementsClass}；命宫主星：${facts.ziwei.palaces.find(p => p.isSoulPalace)?.majorStars.map(s => s.name).join("、") || "无主星（借对宫星曜论）"}\n` : "") +
-        `【玛雅Tzolkin】${facts.maya.tone} ${facts.maya.sign}（${facts.maya.meaning}／数字${facts.maya.tone}：${facts.maya.toneMeaning}）\n` +
-        `【当前频率自测】能量水平${energyLevel}/5，头脑清晰度${clarityLevel}/5，内外对齐感${alignmentLevel}/5\n` +
-        `【用户最想探索】${focusLabel.zh}\n【用户当前状态】${stateLabel.zh}` +
-        (professionLabel ? `\n【用户职业】${professionLabel}` : "") +
-        (relationshipLabel ? `\n【当前感情状态】${relationshipLabel}` : "") +
-        (practiceLabel ? `\n【是否有修炼习惯】${practiceLabel}` : "") +
-        (name.trim() ? `\n【称呼】${name.trim()}` : "");
-
-      const aiRes = await fetch("/api/lingxi", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "lifemap", content: promptContent, lang: isEn() ? "en" : "zh" }),
-      });
-      const aiPayload = await aiRes.json();
-      if (!aiRes.ok || !aiPayload.text) throw new Error("ai failed");
+      // 免费预览必须在没有外部模型密钥时也稳定可用。它只使用上面已经算出的
+      // 天文、历法节点和用户亲自填写的状态，生成一份确定性的入口解读；
+      // 付费完整报告仍由带登录与付款校验的独立接口生成。
+      const clarityWord = clarityLevel <= 2 ? t("澄明", "Clarity") : t("定向", "Direction");
+      const energyWord = energyLevel <= 2 ? t("蓄能", "Renewal") : t("行动", "Action");
+      const alignmentWord = alignmentLevel <= 2 ? t("校准", "Alignment") : t("一致", "Coherence");
+      const freeNarrative = isEn()
+        ? `Your calculated chart brings ${coreType.nameEn} into focus: a ${facts.sunSignEn} Sun meeting the day-master signature ${facts.dayMasterGan}. This is not a prediction of a fixed future. It is a structured mirror for noticing how you direct attention, choose and act around ${focusLabel.en.toLowerCase()}.\n\n${stateLabel.en}|You described this moment as “${stateLabel.en.toLowerCase()}.” Begin by working with what is present now: energy ${energyLevel}/5, clarity ${clarityLevel}/5 and alignment ${alignmentLevel}/5. The useful next step is the one you can repeat in real life.\n\n${clarityWord},Name the decision that most needs a clear answer|${energyWord},Choose one action that matches the energy available today|${alignmentWord},Notice where your daily choice and inner value can move closer together`
+        : `真实排盘显示，你的核心生命原型为「${coreType.name}」：太阳落在${facts.sunSignZh}，并与日主「${facts.dayMasterGan}」共同构成这次生命结构入口。这不是对固定未来的预测，而是一面帮助你观察注意力、选择与行动方式的结构镜面；你此刻最想看清的是「${focusLabel.zh}」。\n\n${stateLabel.zh}|你把当下描述为「${stateLabel.zh}」。先不急着寻找一个包办人生的答案，从此刻真实状态开始：能量 ${energyLevel}/5、清晰度 ${clarityLevel}/5、内外对齐 ${alignmentLevel}/5。真正有用的下一步，是你能带回现实并持续验证的那一步。\n\n${clarityWord},写下当前最需要明确回答的一个选择|${energyWord},选择一个符合今天真实能量的具体行动|${alignmentWord},观察日常选择与内在价值可以靠近的地方`;
 
       clearInterval(stepTimer);
-      setReport({ facts, coreType, narrative: aiPayload.text });
-      setStage("report");
+      setReport({ facts, coreType, narrative: freeNarrative });
+      setStage("form");
 
       // 若已登录，保存这份提交记录，供之后解锁完整报告时使用；未登录则跳过，
       // 解锁完整报告时会引导先登录。手机号/车牌号如果填了，这里也折进去一起存——
@@ -360,7 +345,7 @@ export default function LifeMapFlow() {
       })() : undefined;
       await trySaveSubmission({
         y, m, d, hasTime, hour, minute,
-        facts, coreType, freeNarrative: aiPayload.text,
+        facts, coreType, freeNarrative,
         focusLabel, stateLabel, energyLevel, clarityLevel, alignmentLevel, name,
         professionLabel, relationshipLabel, practiceLabel,
         phoneReading, plateReading,
@@ -510,7 +495,7 @@ export default function LifeMapFlow() {
       setProfession(draft.profession); setProfessionCustom(draft.professionCustom);
       setRelationshipStatus(draft.relationshipStatus); setPracticeStatus(draft.practiceStatus);
       setPhoneNumber(draft.phoneNumber); setPlateNumber(draft.plateNumber);
-      setReport(draft.report); setStage("report");
+      setReport(draft.report); setStage("form");
       setResumedDraft(draft);
     };
     resume();
@@ -653,14 +638,10 @@ export default function LifeMapFlow() {
       )}
 
       {stage === "form" && (
-        <section className="px-6 py-20">
-          <div className="bg-reading-glass mx-auto max-w-xl px-6 py-10 sm:px-10">
-            <p className="text-center font-display text-sm uppercase tracking-widest2 text-lm2-violet">
-              <Bi zh="创建你的生命档案" en="Create Your Life Profile" />
-            </p>
-            <h2 className="mt-3 text-center font-display text-3xl font-light text-lm2-text">
-              <Bi zh="一、基础信息" en="I. Basic Information" />
-            </h2>
+        <section className="lm-workbench-shell">
+          <div className="lm-workbench-grid">
+          <div className="lm-workbench-column lm-workbench-form bg-reading-glass">
+            <div className="lm-column-title"><b>1</b><div><h2><Bi zh="填写信息" en="Enter Your Details" /></h2><p><Bi zh="填写真实信息，开启你的生命探索" en="Use real details to begin your exploration" /></p></div></div>
 
             <div className="mt-10 space-y-6">
               <div>
@@ -865,10 +846,72 @@ export default function LifeMapFlow() {
 
             <button
               onClick={submit}
-              className="mt-10 w-full bg-lm2-aurora py-4 font-display text-sm uppercase tracking-widest2 text-[#151222] shadow-[0_0_30px_rgba(180,150,255,0.4)] transition hover:brightness-110"
+              className="lm-primary-button mt-10 w-full"
             >
               {t("生成我的生命图谱", "Generate My Life Map")}
             </button>
+          </div>
+
+          <div className="lm-workbench-column lm-free-preview">
+            <div className="lm-column-title"><b>2</b><div><h2><Bi zh="免费预览" en="Free Preview" /></h2><p><Bi zh="根据你刚刚填写的信息生成，不使用示例分数" en="Generated from your own entries, never sample scores" /></p></div><span>FREE</span></div>
+            {resumedDraft && (
+              <div className="lm-resume-card">
+                <p><Bi zh="欢迎回来，你上次未完成的生命图谱已经恢复。" en="Welcome back. Your unfinished Life Map has been restored." /></p>
+                <button onClick={confirmResumedUnlock}><Bi zh="继续解锁" en="Continue unlocking" /> →</button>
+              </div>
+            )}
+            {!report || !parsed ? (
+              <div className="lm-preview-empty">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/lifemap/page-0.png" alt="生命图谱报告视觉预览" />
+                <p><Bi zh="先完成左侧信息，你将免费看到核心生命原型、真实命盘节点、当前阶段与三个行动关键词。" en="Complete the form to see your core archetype, calculated chart points, current phase and three action keywords." /></p>
+                <small><Bi zh="出生时间不知道也可以生成；信息越完整，可计算的结构层次越丰富。" en="You can continue without an exact birth time. More complete information opens more calculable layers." /></small>
+              </div>
+            ) : (
+              <div className="lm-generated-preview">
+                <div className="lm-generated-heading">
+                  {lifemapTypeImage(report.coreType.name) && <img src={lifemapTypeImage(report.coreType.name)!} alt={report.coreType.name} />}
+                  <div><small><Bi zh="你的生命频率报告" en="Your Life Frequency Report" /></small><h2>{isEn() ? report.coreType.nameEn : report.coreType.name}</h2><p>{t("太阳", "Sun")} {isEn() ? report.facts.sunSignEn : report.facts.sunSignZh} · {t("日主", "Day Master")} {report.facts.dayMasterGan}</p></div>
+                </div>
+                <blockquote>{parsed.echoText}</blockquote>
+                <div className="lm-fact-grid">
+                  <span><small><Bi zh="太阳星座" en="Sun" /></small><b>{isEn() ? report.facts.sunSignEn : report.facts.sunSignZh}</b></span>
+                  <span><small><Bi zh="月亮星座" en="Moon" /></small><b>{isEn() ? report.facts.moonSignEn : report.facts.moonSignZh}</b></span>
+                  <span><small><Bi zh="日主" en="Day Master" /></small><b>{report.facts.dayMasterGan}</b></span>
+                  <span><small><Bi zh="玛雅印记" en="Maya Sign" /></small><b>{report.facts.maya.tone} {isEn() ? report.facts.maya.signEn : report.facts.maya.sign}</b></span>
+                </div>
+                {parsed.stageName && <div className="lm-stage-summary"><small><Bi zh="当前生命阶段" en="Current Life Phase" /></small><h3>{parsed.stageName}</h3><p>{parsed.stageDesc}</p></div>}
+                {parsed.keywords.length > 0 && <div className="lm-keywords">{parsed.keywords.slice(0,3).map((k,i)=><span key={i}><b>{k.word}</b><small>{k.desc}</small></span>)}</div>}
+              </div>
+            )}
+            <div className="lm-unlock-card">
+              <div><small><Bi zh="完整生命图谱" en="Complete Life Blueprint" /></small><strong>¥{getProduct("life-map-report")?.priceRmb}</strong><p><Bi zh="生成订单前会再次确认；付款完成后生成完整报告并开放 PDF 下载。" en="You confirm again before an order is created. After payment, the complete report and PDF download become available." /></p></div>
+              <button onClick={unlockFull} disabled={!report || unlocking}>{unlocking ? t("正在准备支付…", "Preparing payment…") : t("解锁完整报告", "Unlock complete report")} →</button>
+              {error && <p className="lm-workbench-error">{error}</p>}
+            </div>
+          </div>
+
+          <aside className="lm-workbench-column lm-pdf-preview">
+            <div className="lm-column-title"><b>3</b><div><h2><Bi zh="完整 PDF 预览" en="Complete PDF Preview" /></h2><p><Bi zh="付款并生成后可下载、保存与回看" en="Download, save and revisit after generation" /></p></div></div>
+            <div className="lm-pdf-stack">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/lifemap/page-0.png" alt="生命图谱 PDF 封面预览" />
+            </div>
+            <div className="lm-pdf-contents">
+              <h3><Bi zh="完整报告包含" en="The complete report includes" /></h3>
+              <ol>
+                <li><b>01</b><span><Bi zh="生命结构总览" en="Life structure overview" /></span></li>
+                <li><b>02</b><span><Bi zh="性格与天赋画像" en="Gifts and character portrait" /></span></li>
+                <li><b>03</b><span><Bi zh="人生阶段分析" en="Life phase analysis" /></span></li>
+                <li><b>04</b><span><Bi zh="关系与情感模式" en="Relationship patterns" /></span></li>
+                <li><b>05</b><span><Bi zh="大运趋势解读" en="Long-cycle interpretation" /></span></li>
+                <li><b>06</b><span><Bi zh="财富与事业图谱" en="Wealth and career map" /></span></li>
+                <li><b>07</b><span><Bi zh="专属成长建议" en="Personal growth guidance" /></span></li>
+                <li><b>08</b><span><Bi zh="完整数据档案" en="Complete data archive" /></span></li>
+              </ol>
+            </div>
+            <div className="lm-pdf-boundary"><Bi zh="这里展示的是版式与章节预览，不是你的已生成 PDF。完成付款和报告生成后，下载入口才会开放。" en="This is a layout and chapter preview, not your generated PDF. Download opens only after payment and report generation." /></div>
+          </aside>
           </div>
         </section>
       )}
@@ -1211,7 +1254,6 @@ export default function LifeMapFlow() {
                 />
               </p>
               <div className="mt-8">
-                <p className="text-sm text-lm2-text-dim/80 line-through">¥199</p>
                 <p className="font-display text-4xl text-lm2-violet">¥{getProduct("life-map-report")?.priceRmb}</p>
               </div>
               <button

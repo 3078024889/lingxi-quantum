@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LifeMapFlow from "./LifeMapFlow";
-import FieldProductIntroduction from "@/components/FieldProductIntroduction";
+import Bi from "@/components/Bi";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +16,18 @@ export default function LifeMapPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen pt-16">
-        <FieldProductIntroduction href="/life-map" />
+      <main className="lm-workbench-page min-h-screen">
+        <header className="lm-workbench-hero">
+          <div>
+            <p><Bi zh="灵犀场 · LIFE BLUEPRINT" en="LINGXI FIELD · LIFE BLUEPRINT" /></p>
+            <h1><Bi zh="生命图谱" en="Life Blueprint" /></h1>
+            <span><Bi zh="填写信息 → 免费预览 → 解锁完整 PDF　｜　看见生命的结构，找到你的人生方向" en="Enter your details → Free preview → Unlock the complete PDF | See your life structure and find your direction" /></span>
+          </div>
+          <blockquote>
+            <strong><Bi zh="每一个灵魂，都有一幅独一无二的生命图谱" en="Every soul carries a one-of-a-kind life blueprint" /></strong>
+            <small>A HIGHER YOU&nbsp;&nbsp; A BRIGHTER WORLD</small>
+          </blockquote>
+        </header>
         <div id="field-assessment"><LifeMapFlow /></div>
       </main>
       <Footer />
