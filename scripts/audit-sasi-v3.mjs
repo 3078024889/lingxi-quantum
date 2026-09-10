@@ -20,7 +20,8 @@ const checks = [
   ["drama workspaces use removable blank templates", panels.includes("删除当前角色") && panels.includes("下面是空白制作模板") && !panels.includes("沈晚棠")],
   ["work library is not empty-state only", ["品牌官网模板","AI 短剧模板","产品应用模板","宣传视频模板","故事宇宙模板"].every((value)=>panels.includes(value))],
   ["work templates open with usable starter briefs", panels.includes("prompt: \"为我的品牌构建") && workspace.includes("setScript(preset)") && workspace.includes("setBrief(preset)")],
-  ["account and field are distinct", panels.includes("账户负责安全与结算；作品与生命档案分别留在作品库和我的场域")],
+  ["account center separates identity from works and usage", panels.includes("这里只管理身份、安全、订单凭证、文件与权限") && panels.includes("余额和真实用量回到独立结算页") && !panels.includes("onOpenBilling")],
+  ["account center avoids fabricated commerce and audit data", panels.includes("支付接入后开放") && panels.includes("统一下载审计尚未开放") && panels.includes("方案预览 · 暂不可购买")],
   ["manifestation records material evidence", ["显化成果档案","想法开始时间","现实行动时长","进入物质世界的结果"].every((value)=>manifestation.includes(value))],
   ["manifestation example is disclosed", manifestation.includes("下方为结构示例，不代表当前用户的真实进度")],
   ["artwork uses ratio-safe rendering", css.includes("aspect-ratio:1.424/1") && css.includes("object-fit:cover") && css.includes("aspect-ratio:16/9") && !css.includes("background-size:400% 200%")],
@@ -47,6 +48,7 @@ const checks = [
   ["footer uses current product taxonomy", ["苍玄 AI 导演","AI 短剧工坊","编程构建部署","模型与 API","作品库"].every((value)=>footer.includes(value)) && !["影像创作","产品构建","能力作品库","制作账户"].some((value)=>footer.includes(value))],
   ["mockup screenshots are not embedded", !workspace.includes("codex-clipboard") && !panels.includes("codex-clipboard")],
   ["work library has real project actions", ["rename","duplicate","export","delete"].every((value)=>panels.includes(`\"${value}\"`)) && panels.includes("lingxifield.sasi.project.v1")],
+  ["work library supports individual and bulk deletion", panels.includes("deleteSelected") && panels.includes("全选当前结果") && panels.includes("删除所选") && panels.includes('method: "DELETE"')],
   ["project mutations enforce ownership and origin", projectRoute.includes("isSameOriginMutation") && projectRoute.includes("authenticatedOwner") && projectRoute.includes("PROJECT_HAS_ACTIVE_JOB")],
   ["project deletion cleans private storage", projectRoute.includes("sasi-quarantine") === false && projectRoute.includes("admin.storage.from(bucket).remove(paths)")],
 ];
