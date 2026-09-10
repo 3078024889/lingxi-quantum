@@ -213,6 +213,77 @@ html[data-theme="light"] .lx-console-card-en { color:rgba(38,55,80,.43)!importan
 @media (max-width:820px) { .lx-console-main { padding:16px; } .lx-console-hero { min-height:auto; padding:24px 16px; } .lx-console-hero::before { inset:0 -30% 0 10%; } html[data-theme="light"] .lx-console-hero::before { inset:0; opacity:.2; } html[data-theme="light"] .lx-console-hero::after { background:rgba(255,255,255,.82); } .lx-console-card-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .lx-console-aside { grid-template-columns:1fr; } }
 @media (max-width:520px) { .lx-console-card-grid { grid-template-columns:1fr; } .lx-console-card { display:block; } .lx-console-card-art { height:auto; min-height:0; aspect-ratio:2.2/1; } .lx-console-card-glyph { height:145px; } .lx-console-card-copy { min-height:176px; } }
 
+/* Conscious Manifestation — a recurring practice space, not a progress dashboard. */
+.manifest-kicker { color:#82e8ff; font-size:10px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; }
+.manifest-connection-panel { display:grid; grid-template-columns:auto minmax(0,1fr) minmax(230px,300px); align-items:center; gap:24px; overflow:hidden; border:1px solid rgba(115,173,255,.24); border-radius:18px; padding:clamp(22px,2.6vw,34px); background:radial-gradient(circle at 4% 50%,rgba(111,78,255,.2),transparent 31%),linear-gradient(120deg,rgba(13,27,49,.96),rgba(6,17,32,.88)); box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 22px 54px rgba(0,0,0,.16); }
+.manifest-connection-orbit { position:relative; display:grid; height:92px; width:92px; flex:0 0 92px; place-items:center; border:1px solid rgba(137,191,255,.34); border-radius:50%; color:#bfa1ff; background:radial-gradient(circle,rgba(111,82,255,.32),rgba(17,33,62,.35) 52%,transparent 53%); box-shadow:0 0 42px rgba(95,99,255,.27),inset 0 0 25px rgba(97,219,255,.11); }
+.manifest-connection-orbit::before,.manifest-connection-orbit::after { content:""; position:absolute; inset:12px; border:1px solid rgba(119,224,255,.32); border-radius:50%; transform:rotate(32deg) scaleY(.42); }
+.manifest-connection-orbit::after { transform:rotate(-32deg) scaleY(.42); }
+.manifest-connection-orbit span { font-family:var(--font-display); font-size:34px; text-shadow:0 0 18px rgba(133,214,255,.8); }
+.manifest-connection-copy h2 { margin-top:8px; max-width:760px; color:#f4f7ff; font-size:clamp(1.45rem,2.3vw,2.35rem); font-weight:650; line-height:1.32; }
+.manifest-connection-copy > p:last-child { margin-top:10px; max-width:820px; color:rgba(218,230,249,.68); font-size:14px; line-height:1.85; }
+.manifest-connection-status { align-self:stretch; border-left:1px solid rgba(159,190,236,.16); padding:12px 0 12px 22px; }
+.manifest-connection-status > span { display:block; height:8px; width:8px; border-radius:50%; background:#71819c; box-shadow:0 0 0 5px rgba(113,129,156,.1); }
+.manifest-connection-status > span.is-live { background:#64e1b3; box-shadow:0 0 0 5px rgba(100,225,179,.1),0 0 16px rgba(100,225,179,.55); }
+.manifest-connection-status p { margin-top:20px; color:#eaf0ff; font-size:13px; font-weight:600; line-height:1.65; }
+.manifest-connection-status a { display:inline-flex; margin-top:18px; color:#83e2ff; font-size:12px; }
+.manifest-section-lead { max-width:850px; margin:-4px 3px 14px; color:rgba(211,224,244,.63); font-size:13px; line-height:1.8; }
+.manifest-stage-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px; }
+.manifest-stage-card { overflow:hidden; border:1px solid rgba(141,181,235,.22); border-radius:14px; background:linear-gradient(145deg,rgba(15,29,52,.96),rgba(7,18,34,.9)); transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
+.manifest-stage-card:hover { transform:translateY(-3px); border-color:rgba(116,211,255,.5); box-shadow:0 18px 42px rgba(3,10,25,.28); }
+.manifest-stage-art { position:relative; aspect-ratio:1.55/1; overflow:hidden; background:#07162d; }
+.manifest-stage-art::after { content:""; position:absolute; inset:0; background:linear-gradient(0deg,rgba(6,16,32,.7),transparent 55%); }
+.manifest-stage-art img { object-fit:cover; object-position:center 42%; transition:transform .55s ease,filter .35s ease; }
+.manifest-stage-card:hover img { transform:scale(1.035); filter:saturate(1.08); }
+.manifest-stage-art span { position:absolute; left:15px; bottom:13px; z-index:1; display:grid; height:38px; min-width:38px; place-items:center; border:1px solid rgba(177,143,255,.6); border-radius:999px; padding:0 8px; color:#fff; background:rgba(74,42,140,.72); font:700 13px/1 Inter,sans-serif; backdrop-filter:blur(9px); }
+.manifest-stage-copy { min-height:202px; padding:18px 19px 16px; }
+.manifest-stage-copy > p { color:#f3f6ff; font-size:18px; font-weight:650; line-height:1.45; }
+.manifest-stage-copy small { display:block; margin-top:10px; color:rgba(207,221,244,.65); font-size:12px; line-height:1.75; }
+.manifest-stage-copy b { display:block; margin-top:16px; color:#83e4ff; font-size:11px; font-weight:600; }
+.manifest-access-gate { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:18px; margin-top:14px; border:1px solid rgba(167,126,255,.3); border-radius:14px; padding:20px 22px; background:linear-gradient(110deg,rgba(83,48,156,.18),rgba(29,63,126,.12)); }
+.manifest-access-gate > span { display:grid; height:42px; width:42px; place-items:center; border:1px solid rgba(157,126,255,.4); border-radius:50%; color:#c2a4ff; font-size:24px; }
+.manifest-access-gate p { color:#eef3ff; font-size:14px; font-weight:650; }
+.manifest-access-gate small { display:block; margin-top:5px; color:rgba(211,224,244,.62); font-size:12px; line-height:1.7; }
+.manifest-access-gate a { white-space:nowrap; border:1px solid rgba(116,222,255,.35); border-radius:999px; padding:11px 16px; color:#8de8ff; font-size:11px; }
+.manifest-daily-shell { scroll-margin-top:30px; border:1px solid rgba(102,207,255,.27); border-radius:18px; padding:clamp(22px,3vw,38px); background:radial-gradient(circle at 92% 3%,rgba(110,73,231,.19),transparent 28%),linear-gradient(150deg,rgba(13,29,51,.97),rgba(6,17,31,.94)); box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 26px 60px rgba(0,0,0,.15); }
+.manifest-daily-heading { max-width:820px; margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid rgba(159,191,236,.16); }
+.manifest-daily-heading h2 { margin-top:8px; color:#f4f7ff; font-size:clamp(1.65rem,2.7vw,2.8rem); font-weight:650; line-height:1.25; }
+.manifest-daily-heading > p:last-child { margin-top:12px; color:rgba(215,228,248,.68); font-size:14px; line-height:1.8; }
+.manifest-truth-note { display:flex; align-items:flex-start; gap:12px; border:1px solid rgba(235,187,96,.24); border-radius:12px; padding:14px 17px; background:rgba(219,160,52,.075); color:rgba(229,233,244,.72); font-size:12px; line-height:1.75; }
+.manifest-truth-note > span { color:#ffd57e; font-size:17px; }
+.manifest-chapters { display:grid; gap:28px; margin-top:14px; }
+.manifest-chapter { scroll-margin-top:24px; display:grid; grid-template-columns:minmax(300px,.78fr) minmax(0,1.22fr); overflow:hidden; border:1px solid rgba(137,179,235,.2); border-radius:18px; background:linear-gradient(145deg,rgba(14,28,50,.97),rgba(7,17,32,.92)); box-shadow:0 25px 60px rgba(0,0,0,.14); }
+.manifest-chapter.is-reversed { grid-template-columns:minmax(0,1.22fr) minmax(300px,.78fr); }
+.manifest-chapter.is-reversed .manifest-chapter-art { order:2; }
+.manifest-chapter-art { position:relative; align-self:start; overflow:hidden; background:#07162d; }
+.manifest-chapter-art::after { content:""; position:absolute; inset:0; box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); pointer-events:none; }
+.manifest-chapter-art img { display:block; height:auto; width:100%; }
+.manifest-chapter-body { padding:clamp(24px,3vw,44px); }
+.manifest-chapter-number { color:#76dcff; font:700 10px/1.4 Inter,sans-serif; letter-spacing:.28em; }
+.manifest-chapter-body h2 { margin-top:10px; color:#f6f7ff; font-size:clamp(1.65rem,2.5vw,2.65rem); font-weight:650; line-height:1.2; }
+.manifest-chapter-intro { margin-top:14px; color:rgba(218,229,248,.71); font-size:14px; line-height:1.85; }
+.manifest-chapter-sections { display:grid; gap:18px; margin-top:24px; }
+.manifest-chapter-sections section { border-top:1px solid rgba(151,190,240,.14); padding-top:17px; }
+.manifest-chapter-sections h3 { color:#dfc7ff; font-size:13px; font-weight:650; letter-spacing:.04em; }
+.manifest-chapter-sections ul { display:grid; gap:9px; margin-top:11px; }
+.manifest-chapter-sections li { display:grid; grid-template-columns:28px minmax(0,1fr); gap:9px; color:rgba(221,231,247,.74); font-size:13px; line-height:1.68; }
+.manifest-chapter-sections li > span { color:#66dfff; font:600 9px/1.8 Inter,sans-serif; letter-spacing:.08em; }
+.manifest-chapter blockquote { margin-top:25px; border-left:2px solid #ddb568; padding:5px 0 5px 15px; color:#ffe3ad; font-family:var(--font-display); font-size:15px; line-height:1.8; }
+.manifest-faq { margin-top:36px; }
+html[data-theme="light"] .manifest-connection-panel,html[data-theme="light"] .manifest-stage-card,html[data-theme="light"] .manifest-daily-shell,html[data-theme="light"] .manifest-chapter { border-color:#dfe7f2; background:#fff; box-shadow:0 16px 42px rgba(38,57,83,.075); }
+html[data-theme="light"] .manifest-connection-panel { background:radial-gradient(circle at 2% 50%,rgba(121,91,255,.1),transparent 29%),#fff; }
+html[data-theme="light"] .manifest-connection-copy h2,html[data-theme="light"] .manifest-connection-status p,html[data-theme="light"] .manifest-stage-copy > p,html[data-theme="light"] .manifest-access-gate p,html[data-theme="light"] .manifest-daily-heading h2,html[data-theme="light"] .manifest-chapter-body h2 { color:#172235; }
+html[data-theme="light"] .manifest-connection-copy > p:last-child,html[data-theme="light"] .manifest-section-lead,html[data-theme="light"] .manifest-stage-copy small,html[data-theme="light"] .manifest-access-gate small,html[data-theme="light"] .manifest-daily-heading > p:last-child,html[data-theme="light"] .manifest-chapter-intro,html[data-theme="light"] .manifest-chapter-sections li { color:rgba(37,54,80,.7); }
+html[data-theme="light"] .manifest-connection-status { border-color:#e3e9f1; }
+html[data-theme="light"] .manifest-access-gate { border-color:#ded5f7; background:linear-gradient(110deg,#f8f5ff,#f5fbff); }
+html[data-theme="light"] .manifest-truth-note { border-color:#eee1c7; background:#fffaf0; color:#5f5545; }
+html[data-theme="light"] .manifest-chapter-sections section { border-color:#e6ebf2; }
+html[data-theme="light"] .manifest-chapter-sections h3 { color:#6a4b96; }
+html[data-theme="light"] .manifest-chapter blockquote { color:#765617; }
+@media (max-width:1100px) { .manifest-connection-panel { grid-template-columns:auto minmax(0,1fr); } .manifest-connection-status { grid-column:1/-1; border-left:0; border-top:1px solid rgba(159,190,236,.16); padding:18px 0 0; } .manifest-stage-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .manifest-chapter,.manifest-chapter.is-reversed { grid-template-columns:minmax(270px,.72fr) minmax(0,1.28fr); } }
+@media (max-width:760px) { .manifest-connection-panel { grid-template-columns:1fr; } .manifest-connection-orbit { height:72px; width:72px; } .manifest-connection-status { grid-column:auto; } .manifest-stage-grid { grid-template-columns:1fr; } .manifest-stage-card { display:grid; grid-template-columns:minmax(115px,.72fr) minmax(0,1.28fr); } .manifest-stage-art { min-height:100%; aspect-ratio:auto; } .manifest-stage-copy { min-height:0; padding:17px; } .manifest-stage-copy > p { font-size:16px; } .manifest-stage-copy small { display:-webkit-box; overflow:hidden; -webkit-box-orient:vertical; -webkit-line-clamp:3; } .manifest-access-gate { grid-template-columns:auto minmax(0,1fr); } .manifest-access-gate a { grid-column:1/-1; text-align:center; } .manifest-chapter,.manifest-chapter.is-reversed { grid-template-columns:1fr; } .manifest-chapter.is-reversed .manifest-chapter-art { order:0; } .manifest-chapter-art { max-height:none; } }
+@media (max-width:470px) { .manifest-stage-card { grid-template-columns:106px minmax(0,1fr); } .manifest-stage-copy { padding:14px; } .manifest-stage-copy b { margin-top:10px; } .manifest-connection-panel,.manifest-daily-shell { border-radius:14px; } .manifest-chapter-body { padding:22px 18px 26px; } }
+
 .sasi-hero-surface { position:relative; isolation:isolate; overflow:hidden; border-radius:24px; padding:clamp(18px,3vw,38px); }
 .sasi-hero-surface::before { content:""; position:absolute; inset:0; z-index:-2; background-image:linear-gradient(90deg,rgba(7,10,16,.97) 0%,rgba(7,10,16,.78) 56%,rgba(7,10,16,.15) 100%),url('/images/console/platform-experience-v1.png'); background-position:center,100% 0%; background-size:cover,400% auto; background-repeat:no-repeat; opacity:.9; }
 .sasi-hero-surface::after { content:""; position:absolute; inset:0; z-index:-1; border:1px solid rgba(157,196,255,.12); border-radius:inherit; pointer-events:none; }

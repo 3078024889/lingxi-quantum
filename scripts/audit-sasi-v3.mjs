@@ -4,6 +4,8 @@ const workspace = fs.readFileSync("app/sasi/SasiWorkspace.tsx", "utf8");
 const panels = fs.readFileSync("app/sasi/SasiV3Panels.tsx", "utf8");
 const productionPanels = fs.readFileSync("app/sasi/SasiProductionPanels.tsx", "utf8");
 const manifestation = fs.readFileSync("app/live-as/page.tsx", "utf8");
+const manifestationGuide = fs.readFileSync("app/live-as/ManifestationGuide.tsx", "utf8");
+const realityLoop = fs.readFileSync("app/live-as/RealityLoop.tsx", "utf8");
 const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
 const projectRoute = fs.readFileSync("app/api/sasi/projects/[id]/route.ts", "utf8");
@@ -22,8 +24,10 @@ const checks = [
   ["work templates open with usable starter briefs", panels.includes("prompt: \"为我的品牌构建") && workspace.includes("setScript(preset)") && workspace.includes("setBrief(preset)")],
   ["account center separates identity from works and usage", panels.includes("这里只管理身份、安全、订单凭证、文件与权限") && panels.includes("余额和真实用量回到独立结算页") && !panels.includes("onOpenBilling")],
   ["account center avoids fabricated commerce and audit data", panels.includes("支付接入后开放") && panels.includes("统一下载审计尚未开放") && panels.includes("方案预览 · 暂不可购买")],
-  ["manifestation records material evidence", ["显化成果档案","想法开始时间","现实行动时长","进入物质世界的结果"].every((value)=>manifestation.includes(value))],
-  ["manifestation example is disclosed", manifestation.includes("下方为结构示例，不代表当前用户的真实进度")],
+  ["manifestation exposes six honest entry windows", ["六段显化路径","六个入口免费可见","登录并激活意识显化后"].every((value)=>`${manifestation}\n${manifestationGuide}`.includes(value)) && ["manifestation-core.webp","manifestation-step-1.webp","manifestation-step-2.webp","manifestation-step-3.webp","manifestation-step-4.webp","manifestation-material.webp"].every((file)=>fs.existsSync(`public/images/manifestation/${file}`) && manifestationGuide.includes(file))],
+  ["manifestation gates full guidance behind real access", manifestation.includes("manifestActive &&") && manifestation.includes("ManifestationChapters") && manifestation.includes("RealityLoop") && manifestation.includes("不展示虚构进度")],
+  ["manifestation preserves real records and save failures", ["visions","reality_entries","今日记录没有保存成功","只统计你真正提交的日期"].every((value)=>`${realityLoop}\n${manifestation}`.includes(value))],
+  ["manifestation avoids promised material outcomes", manifestation.includes("不承诺任何特定外部结果") || manifestationGuide.includes("不承诺任何特定外部结果")],
   ["artwork uses ratio-safe rendering", css.includes("aspect-ratio:1.424/1") && css.includes("object-fit:cover") && css.includes("aspect-ratio:16/9") && !css.includes("background-size:400% 200%")],
   ["shared entry template uses independent square artwork and readable copy", css.includes(".sasi-product-cover { display:block; width:100%; aspect-ratio:1/1") && css.includes(".sasi-product-cover img { display:block; width:100%; height:100%; object-fit:cover") && css.includes(".sasi-home-v4-product-copy { position:relative; display:block; min-height:178px") && css.includes(".sasi-home-v4-product-copy b { display:block; font-size:17px") && css.includes("font-size:13px") && css.includes("font-size:14px")],
   ["all eight homepage covers are independent square source files", squareProductCovers.every((file)=>fs.existsSync(`public/images/sasi/cards/${file}`) && workspace.includes(`/images/sasi/cards/${file}`)) && !workspace.includes("art-${item.art}")],

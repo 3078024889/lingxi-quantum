@@ -74,12 +74,18 @@ export default function RealityLoop() {
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
-      const { data } = await supabase
+      const { data, error: saveError } = await supabase
         .from("reality_entries")
         .insert({ user_id: user.id, today: today.trim(), feeling: feeling.trim() })
         .select()
         .single();
-      if (data) setEntries((prev) => [data as Entry, ...prev]);
+      if (saveError || !data) {
+        setError(t("今日记录没有保存成功，请稍后重试。", "Today's entry was not saved. Please try again."));
+        setSending(false);
+        return;
+      }
+      setEntries((prev) => [data as Entry, ...prev]);
+      setSaved(true);
     }
     try {
       const res = await fetch("/api/lingxi", {
@@ -94,6 +100,7 @@ export default function RealityLoop() {
         setReading(payload.text);
         setToday("");
         setFeeling("");
+        window.setTimeout(() => setSaved(false), 3200);
       } else {
         setError(payload.error || t("场域暂时无法回应，请稍后再试。","The field cannot respond right now — please try again later."));
       }
@@ -137,7 +144,7 @@ export default function RealityLoop() {
           <p className="font-display text-3xl text-lattice">{streak}{t(" 天"," days")}</p>
         </div>
         <p className="max-w-xs text-right text-sm leading-6 text-bone-dim">
-          {t("每天重复，保持对齐。显化与时间无关，与对齐相关。","Repeat daily, stay aligned. Manifestation has nothing to do with time and everything to do with alignment.")}
+          {t("这不是连续天数竞赛。每一次真实返回，都会成为可回看的连接。","This is not a streak competition. Every genuine return becomes part of a connection you can review.")}
         </p>
       </div>
 
@@ -158,9 +165,9 @@ export default function RealityLoop() {
       </div>
 
       <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8">
-        <p className="font-display text-2xl text-bone">{t("进入「已经拥有」的状态","Enter the state of already having it")}</p>
+        <p className="font-display text-2xl text-bone">{t("安静十秒，进入「已经拥有」的状态","Become still for ten seconds and enter the state of already having")}</p>
         <p className="mt-3 text-sm leading-7 text-bone-dim">
-          {t("想象你已身处那个版本的生活。今天，处于这种状态中的你，要做什么？会有什么感受？","Imagine you already live that version of life. Today, in this state, what would you do? How would you feel?")}
+          {t("不要假装结果已被保证。只是暂时离开“我还缺什么”，想象已经身处那个版本的生活：今天的你会做什么，会有什么真实感受？","Do not pretend an outcome is guaranteed. Briefly step away from what is missing and imagine that version of life: what would you do today, and what would you genuinely feel?")}
         </p>
         <div className="mt-6 space-y-6">
           <div>
@@ -189,7 +196,7 @@ export default function RealityLoop() {
           disabled={sending}
           className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50 sm:w-auto sm:px-12"
         >
-          {sending ? t("正在送入场……","Sending into the field…") : saved ? t("已记录 · 感恩 ✦","Recorded · gratitude ✦") : t("今日签到 · 发送至场 ✦","Check in today · send to the field ✦")}
+          {sending ? t("正在送入场……","Sending into the field…") : saved ? t("今日连接已记录 ✦","Today's connection is recorded ✦") : t("今日签到 · 连接灵犀场 ✦","Check in today · connect with Lingxi Field ✦")}
         </button>
         {error && <p className="mt-4 text-sm text-rose">{error}</p>}
       </div>
@@ -198,7 +205,7 @@ export default function RealityLoop() {
 
       {reading && (
         <div className="relative overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] bg-void-deep p-7 sm:p-9">
-          <p className="font-display text-sm uppercase tracking-widest2 text-amber">{t("灵犀 · 来自场的回响","Lingxi · an echo from the field")}</p>
+          <p className="font-display text-sm uppercase tracking-widest2 text-amber">{t("灵犀场 · 今日回响","Lingxi Field · today's echo")}</p>
           <div className="mt-5 whitespace-pre-line text-base leading-9 text-bone">{reading}</div>
         </div>
       )}

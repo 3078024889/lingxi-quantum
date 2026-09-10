@@ -24,7 +24,7 @@ type QA = { id?: string; created_at?: string; question: string; answer: string |
 
 export default function AskLingxi() {
   const supabase = createClient();
-  const searchParams = useSearchParams() ?? new URLSearchParams();
+  const searchParams = useSearchParams();
   const langEn = useLang();
   const t = (zh: string, en: string) => (langEn ? en : zh);
   const [question, setQuestion] = useState("");
@@ -41,7 +41,7 @@ export default function AskLingxi() {
   // 看到的是页面最上方，会以为"什么都没发生"。这次补上另一半：带着
   // ?ask= 参数跳过来的时候，自动把页面滚动到这个板块的位置。
   useEffect(() => {
-    const fromSearch = searchParams.get("ask");
+    const fromSearch = searchParams?.get("ask");
     if (fromSearch) {
       setQuestion(fromSearch);
       requestAnimationFrame(() => {
@@ -112,11 +112,17 @@ export default function AskLingxi() {
   return (
     <div ref={rootRef} className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8 scroll-mt-24">
       <SpiralField active={sending} label={t("提问正在送入场域……", "Your question is entering the field…")} />
-      <p className="font-display text-2xl text-bone">{t("提问灵犀", "Ask Lingxi")}</p>
+      <p className="font-display text-2xl text-bone">{t("提问灵犀场", "Ask Lingxi Field")}</p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">
         {t(
           "读完一段多维叙事后未解的困惑，练习一项修炼技术时拿不准的细节——都可以在这里，说给灵犀场听。你的提问与灵犀场的回应，会一并留在你自己的日记里，成为这段旅程的一部分。",
-          "A question left unanswered after a story, a detail you're unsure of mid-practice — say it to Lingxi here. Your question and Lingxi's response will stay in your own journal, part of this journey."
+          "A question left unanswered after a story, a detail you're unsure of mid-practice — say it to Lingxi Field here. Your question and the field response will stay in your own journal, part of this journey."
+        )}
+      </p>
+      <p className="mt-2 text-xs leading-6 text-bone-dim/70">
+        {t(
+          "回应由灵犀场的生成式服务提供，可能存在偏差；它用于自我观察，不替代专业、医疗、法律或财务意见。",
+          "Responses are produced by Lingxi Field's generative service and may contain errors. They support reflection and do not replace professional, medical, legal or financial advice."
         )}
       </p>
       <div className="mt-6">
@@ -143,7 +149,7 @@ export default function AskLingxi() {
       {!loading && history.length > 0 && (
         <div className="mt-10 space-y-6">
           <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
-            {t("与灵犀场的对话", "Conversations with Lingxi")}
+            {t("与灵犀场的对话", "Conversations with Lingxi Field")}
           </p>
           {history.map((qa, i) => (
             <div key={qa.id || i} className="rounded-sm border border-white/10 bg-void-deep p-5">
@@ -151,7 +157,7 @@ export default function AskLingxi() {
               {qa.answer && (
                 <div className="mt-3 border-t border-white/10 pt-3">
                   <p className="text-xs uppercase tracking-widest2 text-amber/80">
-                    {t("灵犀场的回响", "Lingxi's echo")}
+                    {t("灵犀场的回响", "Echo from Lingxi Field")}
                   </p>
                   <p className="mt-2 whitespace-pre-line text-sm leading-7 text-bone-dim">{qa.answer}</p>
                 </div>

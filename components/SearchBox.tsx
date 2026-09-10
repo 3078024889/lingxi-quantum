@@ -172,7 +172,7 @@ export default function SearchBox({ className = "" }: { className?: string }) {
             onClick={() => setFocused(false)}
             className="sb-ask-link"
           >
-            <Bi zh={`向灵犀提问「${q}」→`} en={`Ask Lingxi about "${q}" →`} />
+            <Bi zh={`向灵犀场提问「${q}」→`} en={`Ask Lingxi Field about "${q}" →`} />
           </Link>
           {!hasResults && (
             <p className="sb-empty">
