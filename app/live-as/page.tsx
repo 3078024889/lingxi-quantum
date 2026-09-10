@@ -47,10 +47,10 @@ export default async function LiveAsPage() {
       <FieldConsole
         eyebrow="意识显化 · REALITY LOOP"
         eyebrowEn="MANIFESTATION · REALITY LOOP"
-        title="不是空想未来，而是每天回来"
-        titleEn="Not wishful thinking. A daily return."
-        description="先进入你想成为的状态，写下今天真实的行动与感受。持续与灵犀场连接，让愿景从语言进入选择，再进入现实。"
-        descriptionEn="Enter the state you are becoming, then record today’s real action and feeling. Keep returning to Lingxi Field so vision can move from language into choice and lived reality."
+        title="意识显化"
+        titleEn="Manifestation"
+        description="把意图变成可持续返回的现实回路：进入状态、书写今天、记录行动与感受，每天重新与灵犀场连接。"
+        descriptionEn="Turn intention into a Reality Loop you can return to: enter the state, write today, record action and feeling, and reconnect with Lingxi Field each day."
         heroArtwork="platform-manifestation"
         features={[
           { zh: "进入已拥有状态", en: "Enter the state", glyph: "◎" },

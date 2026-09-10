@@ -1,11 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import Bi from "@/components/Bi";
 
 type GuideChapter = {
   id: string;
   number: string;
-  image: string;
+  glyph: string;
   titleZh: string;
   titleEn: string;
   introZh: string;
@@ -24,7 +23,7 @@ const CHAPTERS: GuideChapter[] = [
   {
     id: "method",
     number: "01",
-    image: "/images/manifestation/manifestation-core.webp",
+    glyph: "◎",
     titleZh: "先看清完整路径",
     titleEn: "See the whole path first",
     introZh: "意识显化不是空想未来，而是把想要的生活写成今天的你：先稳定内在，再让现实行动慢慢跟上。",
@@ -55,7 +54,7 @@ const CHAPTERS: GuideChapter[] = [
   {
     id: "already-have",
     number: "02",
-    image: "/images/manifestation/manifestation-step-1.webp",
+    glyph: "◌",
     titleZh: "第一步：进入「已经拥有」的状态",
     titleEn: "Step one: enter the state of already having",
     introZh: "先进入那个版本，再开始书写。不是假装结果已经发生，而是暂时离开“我还缺什么”，感受那个版本会如何生活。",
@@ -86,7 +85,7 @@ const CHAPTERS: GuideChapter[] = [
   {
     id: "write-today",
     number: "03",
-    image: "/images/manifestation/manifestation-step-2.webp",
+    glyph: "▤",
     titleZh: "第二步：把未来写成今天",
     titleEn: "Step two: write the future as today",
     introZh: "把遥远愿望改写成今天能被身体、语言与行动承接的现实叙述。",
@@ -117,7 +116,7 @@ const CHAPTERS: GuideChapter[] = [
   {
     id: "action-feeling",
     number: "04",
-    image: "/images/manifestation/manifestation-step-3.webp",
+    glyph: "↗",
     titleZh: "第三步：写下行动，也写下感受",
     titleEn: "Step three: write action and feeling",
     introZh: "行动让愿景落地，感受让你辨认自己是否真正进入了那个版本。两者缺一，记录就容易变成计划或想象。",
@@ -148,7 +147,7 @@ const CHAPTERS: GuideChapter[] = [
   {
     id: "daily-return",
     number: "05",
-    image: "/images/manifestation/manifestation-step-4.webp",
+    glyph: "∞",
     titleZh: "第四步：每日签到，保持连接",
     titleEn: "Step four: return daily and stay connected",
     introZh: "最重要的不是一次写得多好，而是每天返回同一愿景、同一状态，与灵犀场持续建立可回看的连接。",
@@ -179,7 +178,7 @@ const CHAPTERS: GuideChapter[] = [
   {
     id: "material-reality",
     number: "06",
-    image: "/images/manifestation/manifestation-material.webp",
+    glyph: "◇",
     titleZh: "显化如何走向物质层面",
     titleEn: "How manifestation reaches material reality",
     introZh: "先在意识中对齐，再在现实中显现。这里观察的是内在、语言、选择、行动与结果之间的连续变化，不承诺任何特定外部结果。",
@@ -220,12 +219,9 @@ export function ManifestationEntrances({ unlocked, signedIn }: { unlocked: boole
   return (
     <>
       <div className="manifest-stage-grid">
-        {CHAPTERS.map((chapter, index) => (
+        {CHAPTERS.map((chapter) => (
           <Link key={chapter.id} href={unlocked ? `#${chapter.id}` : target} className="manifest-stage-card">
-            <div className="manifest-stage-art">
-              <Image src={chapter.image} alt="" fill priority={index === 0} sizes="(max-width: 720px) 100vw, (max-width: 1280px) 50vw, 33vw" />
-              <span>{chapter.number}</span>
-            </div>
+            <div className="manifest-stage-index"><span>{chapter.number}</span><b aria-hidden="true">{chapter.glyph}</b></div>
             <div className="manifest-stage-copy">
               <p><Bi zh={chapter.titleZh} en={chapter.titleEn} /></p>
               <small><Bi zh={chapter.introZh} en={chapter.introEn} /></small>
@@ -251,11 +247,9 @@ export function ManifestationEntrances({ unlocked, signedIn }: { unlocked: boole
 export function ManifestationChapters() {
   return (
     <div className="manifest-chapters">
-      {CHAPTERS.map((chapter, index) => (
-        <article id={chapter.id} key={chapter.id} className={`manifest-chapter ${index % 2 ? "is-reversed" : ""}`}>
-          <div className="manifest-chapter-art">
-            <Image src={chapter.image} alt={`${chapter.titleZh} · ${chapter.titleEn}`} width={1256} height={1256} sizes="(max-width: 960px) 100vw, 42vw" />
-          </div>
+      {CHAPTERS.map((chapter) => (
+        <article id={chapter.id} key={chapter.id} className="manifest-chapter">
+          <div className="manifest-chapter-rail" aria-hidden="true"><span>{chapter.number}</span><b>{chapter.glyph}</b><i /></div>
           <div className="manifest-chapter-body">
             <p className="manifest-chapter-number">CHAPTER {chapter.number}</p>
             <h2><Bi zh={chapter.titleZh} en={chapter.titleEn} /></h2>

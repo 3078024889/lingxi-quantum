@@ -106,7 +106,7 @@ export function ConsoleSectionTitle({ zh, en, actionHref, actionZh = "查看全�
   );
 }
 
-export function ConsoleCard({ href, image, artwork, glyph = "✦", title, titleEn, description, descriptionEn, badge }: { href: string; image?: string; artwork?: ConsoleArtwork; glyph?: string; title: string; titleEn: string; description: string; descriptionEn: string; badge?: string }) {
+export function ConsoleCard({ href, image, artwork, glyph = "✦", title, titleEn, description, descriptionEn, badge, tags, actionZh = "进入探索", actionEn = "Open" }: { href: string; image?: string; artwork?: ConsoleArtwork; glyph?: string; title: string; titleEn: string; description: string; descriptionEn: string; badge?: string; tags?: string[]; actionZh?: string; actionEn?: string }) {
   return (
     <Link href={href} className="lx-console-card group">
       {artwork ? <div className="lx-console-card-art is-atlas" style={artworkStyle(artwork)} /> : image ? <div className="lx-console-card-art" style={{ backgroundImage: `url('${image}')` }} /> : <div className="lx-console-card-glyph">{glyph}</div>}
@@ -115,7 +115,8 @@ export function ConsoleCard({ href, image, artwork, glyph = "✦", title, titleE
         <h3><Bi zh={title} en={titleEn} /></h3>
         <p className="lx-console-card-en">{titleEn}</p>
         <p><Bi zh={description} en={descriptionEn} /></p>
-        <span className="lx-console-card-arrow" aria-hidden="true">→</span>
+        {tags && <div className="lx-console-card-tags">{tags.map((tag) => <span key={tag}>{tag}</span>)}</div>}
+        <span className="lx-console-card-action"><Bi zh={actionZh} en={actionEn} /> <b aria-hidden="true">→</b></span>
       </div>
     </Link>
   );

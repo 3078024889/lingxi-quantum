@@ -8,6 +8,9 @@ const manifestationGuide = fs.readFileSync("app/live-as/ManifestationGuide.tsx",
 const realityLoop = fs.readFileSync("app/live-as/RealityLoop.tsx", "utf8");
 const css = fs.readFileSync("app/globals.css", "utf8");
 const navigation = fs.readFileSync("components/Nav.tsx", "utf8");
+const fieldTests = fs.readFileSync("app/field-tests/page.tsx", "utf8");
+const archetypePage = fs.readFileSync("app/archetype/page.tsx", "utf8");
+const archetypeProgress = fs.readFileSync("app/archetype/ArchetypeProgress.tsx", "utf8");
 const projectRoute = fs.readFileSync("app/api/sasi/projects/[id]/route.ts", "utf8");
 const footer = fs.readFileSync("components/Footer.tsx", "utf8");
 const connections = fs.readFileSync("app/sasi/ConnectionCenter.tsx", "utf8");
@@ -24,10 +27,14 @@ const checks = [
   ["work templates open with usable starter briefs", panels.includes("prompt: \"为我的品牌构建") && workspace.includes("setScript(preset)") && workspace.includes("setBrief(preset)")],
   ["account center separates identity from works and usage", panels.includes("这里只管理身份、安全、订单凭证、文件与权限") && panels.includes("余额和真实用量回到独立结算页") && !panels.includes("onOpenBilling")],
   ["account center avoids fabricated commerce and audit data", panels.includes("支付接入后开放") && panels.includes("统一下载审计尚未开放") && panels.includes("方案预览 · 暂不可购买")],
-  ["manifestation exposes six honest entry windows", ["六段显化路径","六个入口免费可见","登录并激活意识显化后"].every((value)=>`${manifestation}\n${manifestationGuide}`.includes(value)) && ["manifestation-core.webp","manifestation-step-1.webp","manifestation-step-2.webp","manifestation-step-3.webp","manifestation-step-4.webp","manifestation-material.webp"].every((file)=>fs.existsSync(`public/images/manifestation/${file}`) && manifestationGuide.includes(file))],
+  ["manifestation exposes six native entry windows", ["六段显化路径","六个入口免费可见","登录并激活意识显化后","manifest-stage-index","manifest-chapter-rail"].every((value)=>`${manifestation}\n${manifestationGuide}`.includes(value)) && !manifestationGuide.includes("next/image") && !manifestationGuide.includes("/images/manifestation/")],
   ["manifestation gates full guidance behind real access", manifestation.includes("manifestActive &&") && manifestation.includes("ManifestationChapters") && manifestation.includes("RealityLoop") && manifestation.includes("不展示虚构进度")],
   ["manifestation preserves real records and save failures", ["visions","reality_entries","今日记录没有保存成功","只统计你真正提交的日期"].every((value)=>`${realityLoop}\n${manifestation}`.includes(value))],
   ["manifestation avoids promised material outcomes", manifestation.includes("不承诺任何特定外部结果") || manifestationGuide.includes("不承诺任何特定外部结果")],
+  ["field navigation stays flat and product children live in the page", navigation.includes('href: "/field-tests"') && !navigation.includes("const insights") && !navigation.includes("insightsOpen")],
+  ["field insights exposes nine honest main products", ["生命图谱","生命灵签","量子生命镜像","关系共振","财富创造地图","今日潮汐","生命韧性指数","桃花磁场指数","生命原型"].every((value)=>fieldTests.includes(value)) && fieldTests.includes("关系共振内部保留亲密、商业合伙与其他关系三个选项") && !fieldTests.includes("89%")],
+  ["life archetype uses open knowledge and real evidence progress", archetypePage.includes("12 OPEN KNOWLEDGE NODES") && archetypePage.includes("不是你的个性化结果，也不显示虚构分数") && archetypeProgress.includes("/api/archetype/progress") && archetypeProgress.includes("仅按有效记录计算")],
+  ["second-layer product copy meets the readable floor", css.includes(".lx-console-card-copy > p:not(.lx-console-card-en)") && css.includes("font-size:15px") && css.includes(".archetype-foundation-grid p") && css.includes("font-size:16px")],
   ["artwork uses ratio-safe rendering", css.includes("aspect-ratio:1.424/1") && css.includes("object-fit:cover") && css.includes("aspect-ratio:16/9") && !css.includes("background-size:400% 200%")],
   ["shared entry template uses independent square artwork and readable copy", css.includes(".sasi-product-cover { display:block; width:100%; aspect-ratio:1/1") && css.includes(".sasi-product-cover img { display:block; width:100%; height:100%; object-fit:cover") && css.includes(".sasi-home-v4-product-copy { position:relative; display:block; min-height:178px") && css.includes(".sasi-home-v4-product-copy b { display:block; font-size:17px") && css.includes("font-size:13px") && css.includes("font-size:14px")],
   ["all eight homepage covers are independent square source files", squareProductCovers.every((file)=>fs.existsSync(`public/images/sasi/cards/${file}`) && workspace.includes(`/images/sasi/cards/${file}`)) && !workspace.includes("art-${item.art}")],

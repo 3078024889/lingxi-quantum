@@ -140,10 +140,10 @@ export default function RealityLoop() {
     <div className="space-y-12">
       <div className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-6 py-5">
         <div>
-          <p className="text-sm text-bone-dim">{t("已签到","Checked in")}</p>
+          <p className="text-base text-bone-dim">{t("已签到","Checked in")}</p>
           <p className="font-display text-3xl text-lattice">{streak}{t(" 天"," days")}</p>
         </div>
-        <p className="max-w-xs text-right text-sm leading-6 text-bone-dim">
+        <p className="max-w-md text-right text-base leading-7 text-bone-dim">
           {t("这不是连续天数竞赛。每一次真实返回，都会成为可回看的连接。","This is not a streak competition. Every genuine return becomes part of a connection you can review.")}
         </p>
       </div>
@@ -152,7 +152,7 @@ export default function RealityLoop() {
         <label className="font-display text-xl text-bone">
           {t("我正在显化的（我的愿景）","What I am manifesting (my vision)")}
         </label>
-        <p className="mt-2 text-sm text-bone-dim">
+        <p className="mt-2 text-base leading-7 text-bone-dim">
           {t("用现在时、肯定句，像它已经属于你一样写下来。这一项会一直保留。","Write it in the present tense, as an affirmation, as if it already belongs to you. This entry stays saved.")}
         </p>
         <textarea
@@ -166,12 +166,12 @@ export default function RealityLoop() {
 
       <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8">
         <p className="font-display text-2xl text-bone">{t("安静十秒，进入「已经拥有」的状态","Become still for ten seconds and enter the state of already having")}</p>
-        <p className="mt-3 text-sm leading-7 text-bone-dim">
+        <p className="mt-3 text-base leading-8 text-bone-dim">
           {t("不要假装结果已被保证。只是暂时离开“我还缺什么”，想象已经身处那个版本的生活：今天的你会做什么，会有什么真实感受？","Do not pretend an outcome is guaranteed. Briefly step away from what is missing and imagine that version of life: what would you do today, and what would you genuinely feel?")}
         </p>
         <div className="mt-6 space-y-6">
           <div>
-            <label className="text-sm text-lattice">{t("今天我在做什么","What I am doing today")}</label>
+            <label className="text-base text-lattice">{t("今天我在做什么","What I am doing today")}</label>
             <textarea
               value={today}
               onChange={(e) => setToday(e.target.value)}
@@ -181,7 +181,7 @@ export default function RealityLoop() {
             />
           </div>
           <div>
-            <label className="text-sm text-lattice">{t("此刻我的感受","How I feel right now")}</label>
+            <label className="text-base text-lattice">{t("此刻我的感受","How I feel right now")}</label>
             <textarea
               value={feeling}
               onChange={(e) => setFeeling(e.target.value)}
@@ -194,11 +194,11 @@ export default function RealityLoop() {
         <button
           onClick={checkIn}
           disabled={sending}
-          className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50 sm:w-auto sm:px-12"
+          className="mt-8 w-full bg-lattice py-4 font-display text-base tracking-wider text-void-deep transition hover:bg-amber disabled:opacity-50 sm:w-auto sm:px-12"
         >
           {sending ? t("正在送入场……","Sending into the field…") : saved ? t("今日连接已记录 ✦","Today's connection is recorded ✦") : t("今日签到 · 连接灵犀场 ✦","Check in today · connect with Lingxi Field ✦")}
         </button>
-        {error && <p className="mt-4 text-sm text-rose">{error}</p>}
+        {error && <p className="mt-4 text-base text-rose">{error}</p>}
       </div>
 
       <SpiralField active={sending} label={t("发送至场 · 灵犀场正在以光改写……","Sending to the field · Lingxi Field is rewriting with light…")} />
@@ -220,19 +220,19 @@ export default function RealityLoop() {
             {entries.map((e, i) => (
               <details key={e.id || i} open={i === 0} className="lx-entry-accordion group rounded-sm border border-white/10 bg-void-deep">
                 <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4">
-                  <span className="font-display text-sm tracking-widest2 text-amber">
+                  <span className="font-display text-base tracking-wider text-amber">
                     {e.entry_date
                       ? new Date(e.entry_date).toLocaleDateString(langEn ? "en-US" : "zh-CN")
                       : ""}
                   </span>
-                  <span className="text-bone-dim text-xs transition group-open:rotate-180">▾</span>
+                  <span className="text-bone-dim text-base transition group-open:rotate-180">▾</span>
                 </summary>
                 <div className="px-5 pb-5">
                   {e.today && (
                     <p className="text-base leading-8 text-bone">{e.today}</p>
                   )}
                   {e.feeling && (
-                    <p className="mt-2 text-sm leading-7 text-bone-dim">
+                    <p className="mt-2 text-base leading-8 text-bone-dim">
                       {t("感受：","Feeling: ")}{e.feeling}
                     </p>
                   )}
@@ -240,7 +240,7 @@ export default function RealityLoop() {
               </details>
             ))}
           </div>
-          <p className="bg-void-deep mx-auto mt-6 w-fit rounded-full px-4 py-2 text-center text-xs text-bone-dim">
+          <p className="bg-void-deep mx-auto mt-6 w-fit rounded-full px-4 py-2 text-center text-base text-bone-dim">
             {t("你的现实回路已在云端安全同步。","Your Reality Loop is synced securely to the cloud.")}
           </p>
         </div>
