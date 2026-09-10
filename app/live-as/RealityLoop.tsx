@@ -27,6 +27,11 @@ export default function RealityLoop() {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
+      if (process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_REVIEW_MODE === "true") {
+        setAuthed(true);
+        setLoading(false);
+        return;
+      }
       setAuthed(false);
       setLoading(false);
       return;
@@ -53,17 +58,6 @@ export default function RealityLoop() {
     load();
   }, [load]);
 
-  const saveVision = async (val: string) => {
-    setVision(val);
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-    await supabase
-      .from("visions")
-      .upsert({ user_id: user.id, vision: val, updated_at: new Date().toISOString() });
-  };
-
   const checkIn = async () => {
     if ((!today.trim() && !feeling.trim()) || sending) return;
     setError("");
@@ -74,6 +68,16 @@ export default function RealityLoop() {
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
+      if (vision.trim()) {
+        const { error: visionError } = await supabase
+          .from("visions")
+          .upsert({ user_id: user.id, vision: vision.trim(), updated_at: new Date().toISOString() });
+        if (visionError) {
+          setError(t("愿景没有保存成功，请稍后重试。", "Your vision was not saved. Please try again."));
+          setSending(false);
+          return;
+        }
+      }
       const { data, error: saveError } = await supabase
         .from("reality_entries")
         .insert({ user_id: user.id, today: today.trim(), feeling: feeling.trim() })
@@ -137,102 +141,48 @@ export default function RealityLoop() {
   ).size;
 
   return (
-    <div className="space-y-12">
-      <div className="flex items-center justify-between rounded-sm border border-white/10 bg-void-deep px-6 py-5">
-        <div>
-          <p className="text-base text-bone-dim">{t("已签到","Checked in")}</p>
-          <p className="font-display text-3xl text-lattice">{streak}{t(" 天"," days")}</p>
-        </div>
-        <p className="max-w-md text-right text-base leading-7 text-bone-dim">
-          {t("这不是连续天数竞赛。每一次真实返回，都会成为可回看的连接。","This is not a streak competition. Every genuine return becomes part of a connection you can review.")}
-        </p>
+    <div className="mf-loop">
+      <div className="mf-loop-grid">
+        <div className="mf-checkin-count"><div className="mf-checkin-ring"><span>✓</span></div><p>{t("已签到","Checked in")}</p><strong>{streak}<small>{t(" 天"," days")}</small></strong><i>{t("每一次返回，都留下真实记录。","Every return leaves a real record.")}</i></div>
+        <label className="mf-loop-field"><span>✦</span><b>{t("我正在显化的（我的愿景）","What I am manifesting")}</b><textarea value={vision} onChange={(e) => setVision(e.target.value)} rows={3} placeholder={t("例如：我正在稳定地活出更健康、更自由的生活……","For example: I am steadily living a healthier, freer life…")} /></label>
+        <label className="mf-loop-field"><span>↗</span><b>{t("今天我在做什么","What I am doing today")}</b><textarea value={today} onChange={(e) => setToday(e.target.value)} rows={3} placeholder={t("写下今天为此采取的具体行动……","Write the concrete action you are taking today…")} /></label>
+        <label className="mf-loop-field"><span>♡</span><b>{t("此刻我的感受","How I feel right now")}</b><textarea value={feeling} onChange={(e) => setFeeling(e.target.value)} rows={3} placeholder={t("写下此刻身体、情绪或信念中的真实感受……","Name what you genuinely feel in body, emotion or belief…")} /></label>
+        <div className="mf-checkin-action"><button onClick={checkIn} disabled={sending}>{sending ? t("正在保存……","Saving…") : saved ? t("今日连接已记录 ✦","Today's connection is recorded ✦") : t("今日签到，连接灵犀场 →","Check in and connect →")}</button><p>{t("愿景只在你修改时更新；行动与感受形成今天的记录。","Your vision updates only when changed; action and feeling form today's entry.")}</p></div>
       </div>
-
-      <div className="bg-void-deep rounded-sm px-6 py-6 sm:px-8">
-        <label className="font-display text-xl text-bone">
-          {t("我正在显化的（我的愿景）","What I am manifesting (my vision)")}
-        </label>
-        <p className="mt-2 text-base leading-7 text-bone-dim">
-          {t("用现在时、肯定句，像它已经属于你一样写下来。这一项会一直保留。","Write it in the present tense, as an affirmation, as if it already belongs to you. This entry stays saved.")}
-        </p>
-        <textarea
-          value={vision}
-          onChange={(e) => saveVision(e.target.value)}
-          rows={3}
-          placeholder={t("例如：我拥有一栋河边的房子，庭院里有一棵荔枝树……","e.g. I have a house by the river, with a lychee tree in the yard…")}
-          className="mt-4 w-full resize-none rounded-sm border border-white/15 bg-void px-5 py-4 text-base leading-8 text-bone outline-none transition focus:border-lattice/50"
-        />
-      </div>
-
-      <div className="rounded-sm border border-lattice/20 bg-lattice/5 p-6 sm:p-8">
-        <p className="font-display text-2xl text-bone">{t("安静十秒，进入「已经拥有」的状态","Become still for ten seconds and enter the state of already having")}</p>
-        <p className="mt-3 text-base leading-8 text-bone-dim">
-          {t("不要假装结果已被保证。只是暂时离开“我还缺什么”，想象已经身处那个版本的生活：今天的你会做什么，会有什么真实感受？","Do not pretend an outcome is guaranteed. Briefly step away from what is missing and imagine that version of life: what would you do today, and what would you genuinely feel?")}
-        </p>
-        <div className="mt-6 space-y-6">
-          <div>
-            <label className="text-base text-lattice">{t("今天我在做什么","What I am doing today")}</label>
-            <textarea
-              value={today}
-              onChange={(e) => setToday(e.target.value)}
-              rows={3}
-              placeholder={t("坐在庭院里喝茶，上午亲手洗车，下午在草坪上散步……","Sipping tea in the yard, washing the car in the morning, walking on the lawn in the afternoon…")}
-              className="mt-2 w-full resize-none rounded-sm border border-white/15 bg-void px-5 py-4 text-base leading-8 text-bone outline-none transition focus:border-lattice/50"
-            />
-          </div>
-          <div>
-            <label className="text-base text-lattice">{t("此刻我的感受","How I feel right now")}</label>
-            <textarea
-              value={feeling}
-              onChange={(e) => setFeeling(e.target.value)}
-              rows={3}
-              placeholder={t("平静、丰盛、被支持，深深地感恩……","calm, abundant, supported, deeply grateful…")}
-              className="mt-2 w-full resize-none rounded-sm border border-white/15 bg-void px-5 py-4 text-base leading-8 text-bone outline-none transition focus:border-lattice/50"
-            />
-          </div>
-        </div>
-        <button
-          onClick={checkIn}
-          disabled={sending}
-          className="mt-8 w-full bg-lattice py-4 font-display text-base tracking-wider text-void-deep transition hover:bg-amber disabled:opacity-50 sm:w-auto sm:px-12"
-        >
-          {sending ? t("正在送入场……","Sending into the field…") : saved ? t("今日连接已记录 ✦","Today's connection is recorded ✦") : t("今日签到 · 连接灵犀场 ✦","Check in today · connect with Lingxi Field ✦")}
-        </button>
-        {error && <p className="mt-4 text-base text-rose">{error}</p>}
-      </div>
+      {error && <p className="mf-loop-error">{error}</p>}
 
       <SpiralField active={sending} label={t("发送至场 · 灵犀场正在以光改写……","Sending to the field · Lingxi Field is rewriting with light…")} />
 
       {reading && (
-        <div className="relative overflow-hidden rounded-sm border border-[color:var(--aurora-glass-border)] bg-void-deep p-7 sm:p-9">
-          <p className="font-display text-sm uppercase tracking-widest2 text-amber">{t("灵犀场 · 今日回响","Lingxi Field · today's echo")}</p>
-          <div className="mt-5 whitespace-pre-line text-base leading-9 text-bone">{reading}</div>
+        <div className="mf-loop-reading">
+          <p>{t("灵犀场 · 今日回响","Lingxi Field · today's echo")}</p>
+          <div>{reading}</div>
         </div>
       )}
 
       {entries.length > 0 && (
-        <div>
-          <p className="font-display text-xl text-bone">{t("我的现实回路","My Reality Loop")}</p>
+        <div className="mf-loop-history">
+          <h3>{t("我的现实回路","My Reality Loop")}</h3>
           {/* 折叠结构：条目会随着每天签到不断变多，全部展开既拖慢渲染也不好看。
               默认只有最新一条展开，其余收成一行日期，点开再看内容——数据全部
               还在，只是视觉上和渲染上都轻量很多。 */}
-          <div className="mt-6 space-y-3">
+          <div>
             {entries.map((e, i) => (
-              <details key={e.id || i} open={i === 0} className="lx-entry-accordion group rounded-sm border border-white/10 bg-void-deep">
-                <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4">
-                  <span className="font-display text-base tracking-wider text-amber">
+              <details key={e.id || i} open={i === 0}>
+                <summary>
+                  <span>
                     {e.entry_date
                       ? new Date(e.entry_date).toLocaleDateString(langEn ? "en-US" : "zh-CN")
                       : ""}
                   </span>
-                  <span className="text-bone-dim text-base transition group-open:rotate-180">▾</span>
+                  <span>▾</span>
                 </summary>
-                <div className="px-5 pb-5">
+                <div>
                   {e.today && (
-                    <p className="text-base leading-8 text-bone">{e.today}</p>
+                    <p>{e.today}</p>
                   )}
                   {e.feeling && (
-                    <p className="mt-2 text-base leading-8 text-bone-dim">
+                    <p>
                       {t("感受：","Feeling: ")}{e.feeling}
                     </p>
                   )}
@@ -240,9 +190,6 @@ export default function RealityLoop() {
               </details>
             ))}
           </div>
-          <p className="bg-void-deep mx-auto mt-6 w-fit rounded-full px-4 py-2 text-center text-base text-bone-dim">
-            {t("你的现实回路已在云端安全同步。","Your Reality Loop is synced securely to the cloud.")}
-          </p>
         </div>
       )}
     </div>

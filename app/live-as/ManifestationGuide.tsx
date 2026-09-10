@@ -218,26 +218,26 @@ export function ManifestationEntrances({ unlocked, signedIn }: { unlocked: boole
   const target = unlocked ? "#daily-connection" : signedIn ? "/membership#manifestation" : "/account";
   return (
     <>
-      <div className="manifest-stage-grid">
+      <div className="mf-path-grid">
         {CHAPTERS.map((chapter) => (
-          <Link key={chapter.id} href={unlocked ? `#${chapter.id}` : target} className="manifest-stage-card">
-            <div className="manifest-stage-index"><span>{chapter.number}</span><b aria-hidden="true">{chapter.glyph}</b></div>
-            <div className="manifest-stage-copy">
+          <Link key={chapter.id} href={unlocked ? `#${chapter.id}` : target} className="mf-path-card">
+            <div className="mf-path-mark"><span>{chapter.number}</span><b aria-hidden="true">{chapter.glyph}</b></div>
+            <div className="mf-path-copy">
               <p><Bi zh={chapter.titleZh} en={chapter.titleEn} /></p>
               <small><Bi zh={chapter.introZh} en={chapter.introEn} /></small>
-              <b><Bi zh={unlocked ? "展开完整内容" : "查看简介"} en={unlocked ? "Open full chapter" : "View introduction"} /> →</b>
+              <b><Bi zh={unlocked ? "进入本章" : "继续这段练习"} en={unlocked ? "Open chapter" : "Continue this practice"} /> →</b>
             </div>
           </Link>
         ))}
       </div>
       {!unlocked && (
-        <div className="manifest-access-gate">
+        <div className="mf-invitation">
           <span aria-hidden="true">∞</span>
           <div>
-            <p><Bi zh="六个入口免费可见，完整练习在连接后展开" en="Six introductions are open; the complete practice unfolds after connection" /></p>
-            <small><Bi zh="登录并激活意识显化后，可阅读六章全部细节，进入每日书写、签到、场域回应与历史回看。这里不会显示虚构进度。" en="Sign in and activate Manifestation to read all six chapters, write and check in daily, receive a field response and review your real history. No invented progress is shown." /></small>
+            <p><Bi zh="当你准备好，让一次清晰的愿景成为每天都能回到的现实练习" en="When you are ready, let one clear vision become a daily practice you can return to" /></p>
+            <small><Bi zh="完整六章、今日书写、签到回看与灵犀场回应，会在你的个人空间中持续保存。" en="The six complete chapters, daily writing, check-in history and field responses remain together in your personal space." /></small>
           </div>
-          <Link href={target}><Bi zh={signedIn ? "查看意识显化订阅" : "登录后继续"} en={signedIn ? "View Manifestation access" : "Sign in to continue"} /> →</Link>
+          <Link href={target}><Bi zh={signedIn ? "开启持续连接" : "进入我的场域"} en={signedIn ? "Begin the ongoing connection" : "Enter My Field"} /> →</Link>
         </div>
       )}
     </>
@@ -246,15 +246,15 @@ export function ManifestationEntrances({ unlocked, signedIn }: { unlocked: boole
 
 export function ManifestationChapters() {
   return (
-    <div className="manifest-chapters">
+    <div className="mf-chapters">
       {CHAPTERS.map((chapter) => (
-        <article id={chapter.id} key={chapter.id} className="manifest-chapter">
-          <div className="manifest-chapter-rail" aria-hidden="true"><span>{chapter.number}</span><b>{chapter.glyph}</b><i /></div>
-          <div className="manifest-chapter-body">
-            <p className="manifest-chapter-number">CHAPTER {chapter.number}</p>
+        <article id={chapter.id} key={chapter.id} className="mf-chapter">
+          <div className="mf-chapter-mark" aria-hidden="true"><span>{chapter.number}</span><b>{chapter.glyph}</b></div>
+          <div className="mf-chapter-body">
+            <p className="mf-chapter-number">CHAPTER {chapter.number}</p>
             <h2><Bi zh={chapter.titleZh} en={chapter.titleEn} /></h2>
-            <p className="manifest-chapter-intro"><Bi zh={chapter.introZh} en={chapter.introEn} /></p>
-            <div className="manifest-chapter-sections">
+            <p className="mf-chapter-intro"><Bi zh={chapter.introZh} en={chapter.introEn} /></p>
+            <div className="mf-chapter-sections">
               {chapter.sections.map((section) => (
                 <section key={section.titleEn}>
                   <h3><Bi zh={section.titleZh} en={section.titleEn} /></h3>

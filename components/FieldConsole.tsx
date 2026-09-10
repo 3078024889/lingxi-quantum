@@ -51,6 +51,7 @@ export function FieldConsole({
   children,
   aside,
   footer,
+  className = "",
 }: {
   eyebrow: string;
   eyebrowEn: string;
@@ -64,9 +65,10 @@ export function FieldConsole({
   children: ReactNode;
   aside?: ReactNode;
   footer?: ReactNode;
+  className?: string;
 }) {
   return (
-    <main className="lx-console-main">
+    <main className={`lx-console-main ${className}`}>
       <section
         className={`lx-console-hero ${heroArtwork ? "has-atlas-art" : ""}`}
         style={heroArtwork ? artworkStyle(heroArtwork) : ({ "--lx-console-art": `url('${heroImage}')` } as React.CSSProperties)}
