@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CREDIT_PACKS } from "@/lib/sasi/catalog";
+import { sasiRmbBalanceV1Enabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import { sasiPublicReadiness } from "@/lib/sasi/readiness";
 import { publicSasiJob, type SasiJobRow } from "@/lib/sasi/production";
 
@@ -13,6 +14,7 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
   const admin = createAdminClient();
+  const rmbBalanceV1 = sasiRmbBalanceV1Enabled();
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
   const [wallet, ledger, jobs, deliveries] = await Promise.all([
     admin.from("sasi_wallets").select("available_points,reserved_points,updated_at").eq("user_id", user.id).maybeSingle(),
@@ -27,17 +29,17 @@ export async function GET() {
   }
   return NextResponse.json({
     wallet: {
-      availablePoints: wallet.data?.available_points ?? 0,
-      reservedPoints: wallet.data?.reserved_points ?? 0,
+      balanceFen: wallet.data?.available_points ?? 0,
+      reservedAmountFen: wallet.data?.reserved_points ?? 0,
       updatedAt: wallet.data?.updated_at ?? null,
     },
     ledger: (ledger.data ?? []).map((entry) => ({
       id: entry.id,
       kind: entry.kind,
-      deltaAvailable: entry.delta_available,
-      deltaReserved: entry.delta_reserved,
-      availableAfter: entry.available_after,
-      reservedAfter: entry.reserved_after,
+      deltaBalanceFen: entry.delta_available,
+      deltaReservedFen: entry.delta_reserved,
+      balanceAfterFen: entry.available_after,
+      reservedAfterFen: entry.reserved_after,
       referenceId: entry.reference_id,
       createdAt: entry.created_at,
     })),
@@ -53,7 +55,8 @@ export async function GET() {
       aiGenerated: delivery.ai_generated,
       createdAt: delivery.created_at,
     })),
-    packs: CREDIT_PACKS,
+    packs: CREDIT_PACKS.filter((pack) => sasiTopupProductEnabled(pack.id)),
+    rmbBalanceV1,
     readiness: sasiPublicReadiness(),
   }, { headers: { "Cache-Control": "no-store" } });
 }

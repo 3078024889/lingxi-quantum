@@ -10,7 +10,7 @@ import {
   wechatPayConfigured,
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
-import { sasiPaidProductionEnabled } from "@/lib/sasi/payment-gate";
+import { sasiPaidProductionEnabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     }
-    if (product.group === "production" && !sasiPaidProductionEnabled()) {
+    if (product.group === "production" && (!sasiPaidProductionEnabled() || !sasiTopupProductEnabled(product.id))) {
       return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });

@@ -1,4 +1,8 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Bi from "@/components/Bi";
 
 type GuideChapter = {
@@ -18,6 +22,22 @@ type GuideChapter = {
   quoteZh: string;
   quoteEn: string;
 };
+
+type ChapterVisual = {
+  cover: string;
+  layout: "hero-band" | "media-left" | "media-right" | "split" | "editorial";
+  practiceZh: [string, string, string];
+  practiceEn: [string, string, string];
+};
+
+const CHAPTER_VISUALS: ChapterVisual[] = [
+  { cover: "/images/manifestation/chapter-01.png", layout: "hero-band", practiceZh: ["选定一个愿景，今天只写一个能验证的动作。", "行动前后，我的身体与情绪发生了什么变化？", "明天回看：这个动作是否让我更接近真实生活？"], practiceEn: ["Choose one vision and one action you can verify today.", "What changed in body and emotion before and after it?", "Tomorrow: did this action move the vision into lived reality?"] },
+  { cover: "/images/manifestation/chapter-02.png", layout: "media-left", practiceZh: ["安静十秒，用一句话描述已经拥有时的生活方式。", "此刻最先出现的是松弛、抗拒，还是清晰？", "明天回看：我是否从这个状态做出了一次选择？"], practiceEn: ["Pause for ten seconds and describe how the having-self lives.", "Did ease, resistance or clarity appear first?", "Tomorrow: did one choice come from this state?"] },
+  { cover: "/images/manifestation/chapter-03.png", layout: "media-right", practiceZh: ["把一句“以后想要”改写成今天正在发生的具体句子。", "这句话读起来真实、安定，还是用力过度？", "明天回看：哪一个细节已经在现实里出现？"], practiceEn: ["Rewrite one someday-wish as a concrete present-tense sentence.", "Does it feel truthful, steady or forced?", "Tomorrow: which detail has appeared in reality?"] },
+  { cover: "/images/manifestation/chapter-04.png", layout: "split", practiceZh: ["完成一个十五分钟以内、可以留下证据的小行动。", "写下动作完成后的真实感受，不要求积极。", "明天回看：行动与感受是否互相支持？"], practiceEn: ["Complete one evidence-bearing action within fifteen minutes.", "Record the honest feeling afterward; it need not be positive.", "Tomorrow: did action and feeling support each other?"] },
+  { cover: "/images/manifestation/chapter-05.png", layout: "media-left", practiceZh: ["在固定时间返回同一愿景，留下今天的一条记录。", "今天的基线比昨天更稳、相同，还是更散？", "明天回看：连续性是否比强烈情绪更有力量？"], practiceEn: ["Return to the same vision at a fixed time and leave one entry.", "Is today steadier, unchanged or more scattered than yesterday?", "Tomorrow: was continuity stronger than intensity?"] },
+  { cover: "/images/manifestation/chapter-06.png", layout: "editorial", practiceZh: ["记录一个外部可观察的变化：回应、机会、完成物或关系行动。", "它带来的感受与原先想象有什么不同？", "明天回看：这是真实证据，还是仍需继续观察？"], practiceEn: ["Record one observable change: response, opportunity, output or relational action.", "How did it feel compared with the imagined result?", "Tomorrow: is this evidence, or does it still need observation?"] },
+];
 
 const CHAPTERS: GuideChapter[] = [
   {
@@ -219,10 +239,11 @@ export function ManifestationEntrances({ unlocked, signedIn }: { unlocked: boole
   return (
     <>
       <div className="mf-path-grid">
-        {CHAPTERS.map((chapter) => (
+        {CHAPTERS.map((chapter, index) => (
           <Link key={chapter.id} href={unlocked ? `#${chapter.id}` : target} className="mf-path-card">
-            <div className="mf-path-mark"><span>{chapter.number}</span><b aria-hidden="true">{chapter.glyph}</b></div>
+            <div className="mf-path-cover"><Image src={CHAPTER_VISUALS[index].cover} alt="" fill sizes="(max-width: 720px) 100vw, (max-width: 1350px) 50vw, 33vw" /></div>
             <div className="mf-path-copy">
+              <span className="mf-path-index">{chapter.number}</span>
               <p><Bi zh={chapter.titleZh} en={chapter.titleEn} /></p>
               <small><Bi zh={chapter.introZh} en={chapter.introEn} /></small>
               <b><Bi zh={unlocked ? "进入本章" : "继续这段练习"} en={unlocked ? "Open chapter" : "Continue this practice"} /> →</b>
@@ -245,11 +266,30 @@ export function ManifestationEntrances({ unlocked, signedIn }: { unlocked: boole
 }
 
 export function ManifestationChapters() {
+  const [activeId, setActiveId] = useState(CHAPTERS[0].id);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (visible?.target.id) setActiveId(visible.target.id);
+    }, { rootMargin: "-18% 0px -58%", threshold: [0.08, 0.25, 0.5] });
+    CHAPTERS.forEach((chapter) => {
+      const node = document.getElementById(chapter.id);
+      if (node) observer.observe(node);
+    });
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="mf-chapters">
-      {CHAPTERS.map((chapter) => (
-        <article id={chapter.id} key={chapter.id} className="mf-chapter">
-          <div className="mf-chapter-mark" aria-hidden="true"><span>{chapter.number}</span><b>{chapter.glyph}</b></div>
+    <div className="mf-reader">
+      <nav className="mf-rail" aria-label="Manifestation chapters">
+        <p><Bi zh="六段显化路径" en="Six-part path" /></p>
+        {CHAPTERS.map((chapter) => <a key={chapter.id} href={`#${chapter.id}`} className={activeId === chapter.id ? "is-active" : ""}><b>{chapter.number}</b><span><Bi zh={chapter.titleZh.replace(/^第.步：/, "")} en={chapter.titleEn.replace(/^Step .+: /, "")} /></span><i>{activeId === chapter.id ? "●" : "○"}</i></a>)}
+      </nav>
+      <div className="mf-chapters">
+      {CHAPTERS.map((chapter, index) => (
+        <article id={chapter.id} key={chapter.id} className={`mf-chapter is-${CHAPTER_VISUALS[index].layout}`}>
+          <div className="mf-chapter-cover"><Image src={CHAPTER_VISUALS[index].cover} alt="" fill sizes="(max-width: 1024px) 100vw, 900px" /></div>
           <div className="mf-chapter-body">
             <p className="mf-chapter-number">CHAPTER {chapter.number}</p>
             <h2><Bi zh={chapter.titleZh} en={chapter.titleEn} /></h2>
@@ -267,9 +307,15 @@ export function ManifestationChapters() {
               ))}
             </div>
             <blockquote><Bi zh={chapter.quoteZh} en={chapter.quoteEn} /></blockquote>
+            <section className="mf-practice-card">
+              <div><span>TODAY</span><h3><Bi zh="今日执行卡" en="Today&apos;s practice" /></h3></div>
+              <ol>{CHAPTER_VISUALS[index].practiceZh.map((item, practiceIndex) => <li key={item}><b>0{practiceIndex + 1}</b><Bi zh={item} en={CHAPTER_VISUALS[index].practiceEn[practiceIndex]} /></li>)}</ol>
+              <a href="#daily-connection"><Bi zh="带回今日现实回路" en="Bring this into today&apos;s Reality Loop" /> →</a>
+            </section>
           </div>
         </article>
       ))}
+      </div>
     </div>
   );
 }

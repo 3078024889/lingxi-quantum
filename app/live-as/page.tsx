@@ -52,7 +52,7 @@ export default async function LiveAsPage() {
         titleEn={manifestActive ? "Connect with Lingxi Field today" : "Manifestation"}
         description={manifestActive ? "持续的连接，会让你在日常中看见更多可能。" : "进入状态，写下今天，让行动与感受一起发生；每天回来，与正在成为的自己重新相遇。"}
         descriptionEn={manifestActive ? "A continuing connection helps you notice more possibilities in everyday life." : "Enter the state, write today, and let action and feeling move together. Return each day to meet the self you are becoming."}
-        heroArtwork="platform-manifestation"
+        heroImage="/images/manifestation/hero-v2.png"
         features={[
           { zh: "进入已拥有状态", en: "Enter the state", glyph: "◎" },
           { zh: "用现在时书写", en: "Write in the present", glyph: "▤" },
@@ -86,7 +86,13 @@ export default async function LiveAsPage() {
             <ManifestationEntrances unlocked signedIn />
             <ManifestationChapters />
 
-            <section className="mf-support-grid"><div><AskLingxi /></div><div className="mf-faq"><FaqSection items={LIVE_AS_FAQ} /></div></section>
+            <header className="mf-final-head">
+              <p><Bi zh="终章 · 继续深挖" en="FINAL CHAPTER · GO DEEPER" /></p>
+              <h2><Bi zh="方法走完之后，把不确定的地方交给灵犀场" en="After the method, bring what remains uncertain to Lingxi Field" /></h2>
+              <span><Bi zh="先完成六段方法与今日记录，再提出一个具体、可回到现实验证的问题。" en="Complete the path and today&apos;s record first, then ask one concrete question you can test in reality." /></span>
+            </header>
+            <section className="mf-support-grid"><div><AskLingxi /></div></section>
+            <div className="mf-faq mf-faq-final"><FaqSection items={LIVE_AS_FAQ} /></div>
           </>
         )}
 

@@ -11,7 +11,7 @@ export type Product = {
   noteEn: string;
   highlight?: boolean;
   group: "cultivation" | "manifestation" | "production";
-  sasiPoints?: number;
+  sasiAmountFen?: number;
 };
 
 export const cultivationProducts: Product[] = [
@@ -68,12 +68,40 @@ export const lifeArchetypeProducts: Product[] = [
 ];
 
 export const sasiProductionProducts: Product[] = [
-  { id: "sasi-credit-entry", name: "创作启程", nameEn: "Creative Start", priceUsd: 3, priceRmb: 20, type: "permanent", note: "为首次真实制作建立清晰的制作边界。", noteEn: "Establish a clear boundary for a first live production.", group: "production", sasiPoints: 2000 },
-  { id: "sasi-credit-studio", name: "持续制作", nameEn: "Studio Flow", priceUsd: 15, priceRmb: 100, type: "permanent", note: "承接连续镜头、版本复核与阶段性交付。", noteEn: "Support continuing shots, revisions and staged delivery.", group: "production", sasiPoints: 10000 },
-  { id: "sasi-credit-reserve", name: "工作室储备", nameEn: "Studio Reserve", priceUsd: 75, priceRmb: 500, type: "permanent", note: "面向多镜头项目的稳定制作储备。", noteEn: "A stable production reserve for multi-shot projects.", group: "production", sasiPoints: 50000 },
+  ...[
+    ["sasi-balance-10", "轻量体验", "Starter", 10, 1.5],
+    ["sasi-credit-entry", "创作启程", "Creative Start", 20, 3],
+    ["sasi-balance-50", "单次制作", "Single Production", 50, 7.5],
+    ["sasi-credit-studio", "持续制作", "Studio Flow", 100, 15],
+    ["sasi-balance-200", "系列起步", "Series Start", 200, 30],
+    ["sasi-credit-reserve", "工作室储备", "Studio Reserve", 500, 75],
+    ["sasi-balance-1000", "系列制作", "Series Production", 1000, 150],
+    ["sasi-balance-2000", "长期制作", "Long Production", 2000, 300],
+    ["sasi-balance-10000", "大型项目", "Major Production", 10000, 1500],
+  ].map(([id, name, nameEn, priceRmb, priceUsd]) => ({
+    id: String(id), name: String(name), nameEn: String(nameEn), priceRmb: Number(priceRmb), priceUsd: Number(priceUsd),
+    type: "permanent" as const, note: "充值人民币余额，用于用户明确确认后的 SASI 任务。", noteEn: "Top up the RMB balance for tasks explicitly approved by the user.",
+    group: "production" as const, sasiAmountFen: Number(priceRmb) * 100,
+  })),
 ];
 
 export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts, ...sasiProductionProducts];
 export function getProduct(id: string) {
-  return allProducts.find((p) => p.id === id);
+  const configured = allProducts.find((p) => p.id === id);
+  if (configured) return configured;
+  const custom = /^sasi-balance-custom-(\d{1,5})$/.exec(id);
+  const amountRmb = custom ? Number(custom[1]) : 0;
+  if (!Number.isInteger(amountRmb) || amountRmb < 10 || amountRmb > 10000) return undefined;
+  return {
+    id,
+    name: `SASI 余额充值 ¥${amountRmb}`,
+    nameEn: `SASI RMB balance ¥${amountRmb}`,
+    priceUsd: Number((amountRmb * 0.15).toFixed(2)),
+    priceRmb: amountRmb,
+    type: "permanent" as const,
+    note: "自定义人民币余额充值。",
+    noteEn: "Custom RMB balance top-up.",
+    group: "production" as const,
+    sasiAmountFen: amountRmb * 100,
+  };
 }

@@ -4,6 +4,8 @@ const read=(path)=>fs.readFileSync(path,"utf8");
 const director=read("lib/sasi/cangxuan-director.ts");
 const studio=read("app/sasi/CangXuanDirectorStudio.tsx");
 const center=read("app/sasi/ConnectionCenter.tsx");
+const productionPanels=read("app/sasi/SasiProductionPanels.tsx");
+const accountPanels=read("app/sasi/SasiV3Panels.tsx");
 const catalog=read("lib/sasi/integration-catalog.ts");
 const vault=read("lib/sasi/credential-vault.ts");
 const connectionApi=read("app/api/sasi/connections/route.ts");
@@ -20,7 +22,7 @@ const checks=[
   ["six director cards use independent original artwork",["cangxuan-director-v1.png","ai-drama-studio-v1.png","film-director-v1.png","advertising-director-v1.png","music-video-director-v1.png","game-cg-director-v1.png"].every(v=>studio.includes(v))&&["film-director-v1.png","advertising-director-v1.png","music-video-director-v1.png","game-cg-director-v1.png"].every(v=>fs.existsSync(`public/images/sasi/director/modes/${v}`))],
   ["official model guides",["platform.openai.com/api-keys","console.x.ai","console.anthropic.com","platform.lumalabs.ai","console.volcengine.com","bailian.console.aliyun.com","console.cloud.tencent.com"].every(v=>catalog.includes(v))],
   ["build connectors",["GitHub","Vercel","Supabase","Cloudflare"].every(v=>catalog.includes(v))],
-  ["billing policies",center.includes("cost*2")&&center.includes("cost*.2")],
+  ["billing policies",accountPanels.includes("ONE BALANCE MODEL")&&accountPanels.includes("无会员分级")&&productionPanels.includes("获取本次任务报价")&&!center.includes("cost*2")&&!center.includes("cost*.2")],
   ["browser never persists BYOK",center.includes('type="password"')&&!center.includes("localStorage")&&!center.includes("sessionStorage")],
   ["BYOK uses authenticated server-side AES-GCM",vault.includes('import "server-only"')&&vault.includes('aes-256-gcm')&&vault.includes("setAAD")&&connectionApi.includes("supabase.auth.getUser")],
   ["BYOK ciphertext is service-role only",migration.includes('using (false)')&&migration.includes('revoke all')&&migration.includes('service_role')],

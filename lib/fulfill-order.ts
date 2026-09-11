@@ -23,7 +23,7 @@ export async function fulfillPaidOrder(orderId: string): Promise<FulfillmentResu
     return { ok: false, error: "订单产品配置无效。" }
   }
 
-  if (product.group === "production" && product.sasiPoints) {
+  if (product.group === "production" && product.sasiAmountFen) {
     const rpcResult = await admin.rpc("credit_sasi_topup", { p_order_id: orderId })
     if (rpcResult.error) {
       console.error("[fulfillPaidOrder] SASI top-up failed", {

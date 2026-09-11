@@ -12,7 +12,7 @@ export const metadata = {
   alternates: { canonical: "/life-map" },
 };
 
-export default function LifeMapPage() {
+export default function LifeMapPage({ searchParams }: { searchParams?: { archive?: string } }) {
   return (
     <>
       <Nav />
@@ -28,7 +28,7 @@ export default function LifeMapPage() {
             <small>A HIGHER YOU&nbsp;&nbsp; A BRIGHTER WORLD</small>
           </blockquote>
         </header>
-        <div id="field-assessment"><LifeMapFlow /></div>
+        <div id="field-assessment"><LifeMapFlow initialArchiveId={searchParams?.archive} /></div>
       </main>
       <Footer />
     </>

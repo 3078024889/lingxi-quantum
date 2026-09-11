@@ -52,7 +52,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     nodes: (nodes ?? []).map((node) => ({ id: node.id, type: node.node_type, version: node.version, status: node.status, input: node.input, output: node.output, createdAt: node.created_at, updatedAt: node.updated_at })),
     dependencies: (dependencies ?? []).map((edge) => ({ upstreamNodeId: edge.upstream_node_id, downstreamNodeId: edge.downstream_node_id })),
     assets: (assets ?? []).map((asset) => ({ id: asset.id, name: asset.original_name, kind: asset.media_kind, declaredSize: asset.declared_size, verifiedSize: asset.verified_size, status: asset.status, rejectionReason: asset.rejection_reason, createdAt: asset.created_at, updatedAt: asset.updated_at })),
-    jobs: (jobs ?? []).map((job) => ({ id: job.id, nodeId: job.node_id, status: job.status, quotedPoints: job.quoted_points, reservedPoints: job.reserved_points, settledPoints: job.settled_points, input: job.input, output: job.output, errorCode: job.error_code, createdAt: job.created_at, updatedAt: job.updated_at })),
+    jobs: (jobs ?? []).map((job) => ({ id: job.id, nodeId: job.node_id, status: job.status, quotedAmountFen: job.quoted_points, reservedAmountFen: job.reserved_points, settledAmountFen: job.settled_points, input: job.input, output: job.output, errorCode: job.error_code, createdAt: job.created_at, updatedAt: job.updated_at })),
     deliveries: (deliveries ?? []).map((delivery) => ({ id: delivery.id, jobId: delivery.job_id, mediaKind: delivery.media_kind, mimeType: delivery.mime_type, byteSize: delivery.byte_size, aiGenerated: delivery.ai_generated, createdAt: delivery.created_at })),
   }, { headers: { "Cache-Control": "no-store" } });
 }

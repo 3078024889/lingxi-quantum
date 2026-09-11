@@ -25,7 +25,9 @@ export const SASI_CAPABILITIES: SasiCapability[] = [
   { id: "voice", zh: "声音叙事", en: "Sonic Narrative", kind: "video", status: "planned", noteZh: "统一角色声线、对白节奏、环境声与音乐位置。", noteEn: "Unify casting, dialogue rhythm, ambience and score placement." },
 ];
 
-const ROUTE_CREDITS_PER_SECOND: Record<string, number> = {
+// Integer fen only. The UI formats these values as RMB and never exposes an
+// internal point/credit unit.
+const ROUTE_AMOUNT_FEN_PER_SECOND: Record<string, number> = {
   "motion-essential": 69,
   "studio-balanced": 119,
   "signature-cinema": 349,
@@ -47,9 +49,15 @@ export const SASI_SKILLS = [
 ] as const;
 
 export const CREDIT_PACKS = [
-  { id: "sasi-credit-entry", points: 2000, priceRmb: 20, priceUsd: 3, zh: "创作启程", en: "Creative Start" },
-  { id: "sasi-credit-studio", points: 10000, priceRmb: 100, priceUsd: 15, zh: "持续制作", en: "Studio Flow" },
-  { id: "sasi-credit-reserve", points: 50000, priceRmb: 500, priceUsd: 75, zh: "工作室储备", en: "Studio Reserve" },
+  { id: "sasi-balance-10", amountFen: 1000, priceRmb: 10, priceUsd: 1.5, zh: "轻量体验", en: "Starter" },
+  { id: "sasi-credit-entry", amountFen: 2000, priceRmb: 20, priceUsd: 3, zh: "创作启程", en: "Creative Start" },
+  { id: "sasi-balance-50", amountFen: 5000, priceRmb: 50, priceUsd: 7.5, zh: "单次制作", en: "Single Production" },
+  { id: "sasi-credit-studio", amountFen: 10000, priceRmb: 100, priceUsd: 15, zh: "持续制作", en: "Studio Flow" },
+  { id: "sasi-balance-200", amountFen: 20000, priceRmb: 200, priceUsd: 30, zh: "系列起步", en: "Series Start" },
+  { id: "sasi-credit-reserve", amountFen: 50000, priceRmb: 500, priceUsd: 75, zh: "工作室储备", en: "Studio Reserve" },
+  { id: "sasi-balance-1000", amountFen: 100000, priceRmb: 1000, priceUsd: 150, zh: "系列制作", en: "Series Production" },
+  { id: "sasi-balance-2000", amountFen: 200000, priceRmb: 2000, priceUsd: 300, zh: "长期制作", en: "Long Production" },
+  { id: "sasi-balance-10000", amountFen: 1000000, priceRmb: 10000, priceUsd: 1500, zh: "大型项目", en: "Major Production" },
 ] as const;
 
 export function getSasiCreditPack(id: string) {
@@ -58,23 +66,23 @@ export function getSasiCreditPack(id: string) {
 
 export function productionQuote(routeId: string, seconds: number) {
   const duration = Math.max(5, Math.min(600, Math.round(seconds)));
-  const points = Math.round((ROUTE_CREDITS_PER_SECOND[routeId] ?? 0) * duration);
-  return { routeId, duration, points };
+  const amountFen = Math.round((ROUTE_AMOUNT_FEN_PER_SECOND[routeId] ?? 0) * duration);
+  return { routeId, duration, amountFen };
 }
 
 export function routeForQuality(quality: SasiQuality) {
   return SASI_QUALITY_TIERS.find((item) => item.id === quality)?.routeId ?? "motion-essential";
 }
 
-export function budgetAssessment(routeId: string, seconds: number, allocationPoints: number) {
+export function budgetAssessment(routeId: string, seconds: number, budgetFen: number) {
   const quote = productionQuote(routeId, seconds);
-  const budget = Math.max(0, Number.isFinite(allocationPoints) ? Math.round(allocationPoints) : 0);
-  const ratio = quote.points > 0 ? budget / quote.points : 0;
+  const budget = Math.max(0, Number.isFinite(budgetFen) ? Math.round(budgetFen) : 0);
+  const ratio = quote.amountFen > 0 ? budget / quote.amountFen : 0;
   const level = ratio >= 1 ? "sufficient" : ratio >= 0.65 ? "tradeoff" : "insufficient";
   return {
     ...quote,
     budget,
-    gap: Math.max(0, quote.points - budget),
+    gap: Math.max(0, quote.amountFen - budget),
     level,
     canConfirm: ratio >= 1,
   } as const;
