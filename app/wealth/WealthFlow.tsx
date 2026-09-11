@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import Link from "next/link";
 import { useLang } from "@/lib/useLang";
+import AssessmentWorkbench, { AssessmentEmpty } from "@/components/AssessmentWorkbench";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
@@ -85,6 +86,7 @@ export default function WealthFlow() {
 
   const unlock = async () => {
     if (!year || !month || !day || unlocking) return;
+    if (!window.confirm(t("确认解锁完整档案？接下来进入支付页面确认金额。", "Unlock the complete archive? Continue to checkout to confirm the price."))) return;
     setUnlocking(true);
     setError("");
     try {
@@ -113,26 +115,19 @@ export default function WealthFlow() {
       }
       setSubmissionId(data.id);
       if (REVIEW_MODE) {
-        window.location.href = `/wealth/full?id=${data.id}`;
+        window.location.href = `/wealth?archive=${data.id}`;
         return;
       }
       // v256：改成跳转到独立付款页，不再用弹窗。
-      window.location.href = `/checkout?productId=wealth-report&submissionId=${data.id}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/wealth/full?id=${data.id}`)}`;
+      window.location.href = `/checkout?productId=wealth-report&submissionId=${data.id}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/wealth?archive=${data.id}`)}`;
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setUnlocking(false);
     }
   };
 
-  return (
-    <div className="mx-auto max-w-xl px-6">
-      {/* v264：财富创造地图之前是"表单+分数+完整档案预告"全部挤在同一个
-          压着封面图的大盒子里，没有像生命韧性那样按内容性质拆成一段段
-          独立卡片，看起来就是一整块颜色，没有呼吸感。这次拆开：介绍页
-          单独一块（保留封面图氛围）、填写表单单独一块纯色卡片、算完
-          之后的分数/维度/预告/解锁按钮也各自独立成块，跟生命韧性、
-          桃花磁场现在的结构对齐。 */}
-      <div className="lx-glass-wealth p-6 text-center">
+    useEffect(() => { setResult(null); }, [year, month, day, hour, minute, hasTime, calendarType]);
+const input = (<div className="lx-glass-wealth p-6 text-center">
         <input
           type="text" value={name} onChange={(e) => setName(e.target.value)}
           placeholder={t("你的名字（选填）", "Your name (optional)")}
@@ -161,9 +156,8 @@ export default function WealthFlow() {
           </button>
         )}
         {error && !result && <ErrorWithLoginPrompt error={error} className="mt-3" />}
-      </div>
-
-      {result && (
+      </div>);
+const previewContent = (result ? (
         <>
           <div className="lx-glass-wealth mt-4 p-6 text-center">
             <p className="text-xs text-bone-soft"><Bi zh={`太阳星座：${result.sunSignZh}`} en={`Sun Sign: ${result.sunSignEn}`} /></p>
@@ -230,7 +224,6 @@ export default function WealthFlow() {
             </Link>
           </div>
         </>
-      )}
-    </div>
-  );
+      ) : <AssessmentEmpty product="wealth" />);
+return <AssessmentWorkbench product="wealth" busy={calculating || unlocking} input={input} preview={previewContent}   />;
 }

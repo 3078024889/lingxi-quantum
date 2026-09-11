@@ -7,12 +7,13 @@ export type CalendarType = "solar" | "lunar";
 type Props = {
   value: CalendarType;
   onChange: (value: CalendarType) => void;
-  context: "relationship" | "resilience" | "romance" | "wealth" | "mirror" | "qian";
+  context: "relationship" | "resilience" | "romance" | "wealth" | "mirror" | "qian" | "daily";
   className?: string;
   showDescription?: boolean;
 };
 
 const CONTEXT_COPY = {
+  daily: { zh: "若补充具体出生时刻，可使用更完整的时间坐标读取今日潮汐。", en: "A specific birth time provides a more complete time coordinate for your daily reading." },
   relationship: {
     zh: "若补充双方具体出生时刻，关系共振可展开更细的时间位置层次与互动结构连接。",
     en: "Adding both specific birth times can reveal finer timing layers and interaction structures within Relationship Resonance.",

@@ -21,8 +21,9 @@ const COVERS: Record<AssessmentProduct, string> = {
   resilience: "resilience-full", relationship: "relationship-full/romantic", daily: "daily-tide-full",
 };
 
-export function AssessmentEmpty() {
-  return <div className="aw-empty"><span aria-hidden>✧</span><h3><Bi zh="先看见自己，再决定深入" en="See yourself before going deeper" /></h3><p><Bi zh="填写姓名与出生日期，开启你的免费预览。结果会在这里展开，你可以先阅读，再决定是否解锁完整档案。" en="Enter your name and birth date to open your free preview here. Read it before deciding whether to unlock the complete archive." /></p></div>;
+export function AssessmentEmpty({ product }: { product?: AssessmentProduct }) {
+  const item = product ? getFieldInsight(`/${product}`) : null;
+  return <div className="aw-empty"><span aria-hidden>{item?.glyph || "✧"}</span><h3><Bi zh={item?.leadZh || "先看见自己，再决定深入"} en={item?.leadEn || "See yourself before going deeper"} /></h3><p><Bi zh="填写姓名与出生日期，开启你的免费预览。结果会在这里展开，你可以先阅读，再决定是否解锁完整档案。" en="Enter your name and birth date to open your free preview here. Read it before deciding whether to unlock the complete archive." /></p>{item && <blockquote className="mt-6 text-left"><Bi zh={item.bodyZh[0]} en={item.bodyEn[0]} /></blockquote>}</div>;
 }
 
 export default function AssessmentWorkbench({ product, input, preview, faq, busy = false, cover }: {
@@ -31,7 +32,7 @@ export default function AssessmentWorkbench({ product, input, preview, faq, busy
   const item = getFieldInsight(`/${product}`)!;
   const [focus, setFocus] = useState("balanced");
   const [archive, setArchive] = useState<string | null>(null);
-  useEffect(() => { setArchive(new URLSearchParams(window.location.search).get("archive")); }, []);
+  useEffect(() => { const id = new URLSearchParams(window.location.search).get("archive"); setArchive(id); if (id) setFocus("archive"); }, []);
   const Report = REPORTS[product];
   return <section className="aw" data-focus={focus} data-product={product}>
     <header className="aw-hero"><div><small>LINGXIFIELD · FIELD {item.no}</small><h1><Bi zh={product === "qian" ? "生命灵签" : item.zh} en={product === "qian" ? "Life Oracle" : item.en} /></h1><p><Bi zh="填写信息 → 免费预览 → 完整档案与 PDF" en="Your details → Free preview → Complete archive & PDF" /></p></div><blockquote><Bi zh={item.leadZh} en={item.leadEn} /></blockquote></header>

@@ -1,0 +1,122 @@
+"use client";
+import type {readDailyPreview} from "./actions";
+import Bi from "@/components/Bi";
+import Link from "next/link";
+import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
+import DownloadResultPdfButton from "@/components/DownloadResultPdfButton";
+import ShareButton from "@/components/ShareButton";
+
+
+export default function DailyPreview({data}: {data: NonNullable<Awaited<ReturnType<typeof readDailyPreview>>["preview"]>}) {
+ const {sign,transit,relation,retro,ruler,tide,nextTide,todayLabel,fortuneZh,fortuneEn,fallbackZh,fallbackEn}=data;
+return (        <div className="mx-auto max-w-xl px-6 py-16">
+          <div className="flex items-center justify-between gap-3 lx-glass-daily px-6 py-4 text-center">
+            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+              <Bi zh="灵犀场 · 今日潮汐" en="Lingxi Field · Today’s Tide" />
+            </p>
+            <DownloadResultPdfButton
+              targetId="daily-result"
+              fileName={`灵犀今日潮汐-${sign.zh}座.pdf`}
+              bgColorRgb={[14, 16, 42]}
+              bgColorHex="#0e102a"
+              colorClass="shrink-0 border-lattice/40 text-lattice hover:border-lattice hover:bg-lattice/10"
+            />
+          </div>
+
+          <div id="daily-result" className="mt-4">
+
+          <div className="mt-6 flex flex-col items-center lx-glass-daily p-8 text-center">
+            <span className="font-display text-5xl text-lattice">{sign.glyph}</span>
+            <h1 className="mt-3 font-display text-3xl font-light text-bone">
+              <Bi zh={`${sign.zh}座 · 今日潮汐`} en={`${sign.en} · Today’s Tide`} />
+            </h1>
+            <p className="mt-2 text-xs text-bone-soft">{todayLabel}</p>
+            <p className="mt-3 text-xs text-bone-dim">
+              <Bi zh={`月相：${transit.moonPhaseZh} · 月亮在${transit.moonSignZh}座`} en={`Moon Phase: ${transit.moonPhaseEn} · Moon in ${transit.moonSignEn}`} />
+            </p>
+            <div className="mt-5 overflow-hidden rounded-sm border border-lattice/20" style={{ maxWidth: 220 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/daily/daily.jpg" alt="Today’s Tide" className="block w-full" />
+            </div>
+          </div>
+
+          <div className="mt-4 lx-glass-daily p-6">
+            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="今日场域解读" en="Today's Field Reading" /></p>
+            <p className="mt-2 text-base leading-8 text-bone-dim">
+              <Bi zh={fortuneZh || fallbackZh} en={fortuneEn || fallbackEn} />
+            </p>
+
+            <div className="mt-5 border-t border-white/10 pt-5">
+              <div className="flex items-center justify-between">
+                <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh="能量潮汐" en="Energy Tide" /></p>
+                <p className="text-xs text-bone-dim">{tide}/100</p>
+              </div>
+              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
+                <div className="h-full rounded-full bg-gradient-to-r from-lattice to-amber" style={{ width: `${tide}%` }} />
+              </div>
+              <p className="mt-2 text-xs leading-6 text-bone-soft">
+                <Bi
+                  zh={`日月排列潮汐指数——越接近新月或满月数值越高，越接近上下弦数值越低；它不是所在地的真实潮位。${nextTide.daysAway === 0 ? "今天正好处在潮汐的转折点。" : `再过${nextTide.daysAway}天，会到达这轮潮汐的${nextTide.kind === "spring" ? "峰值（大潮）" : "低点（小潮）"}。`}`}
+                  en={`A lunar-solar alignment index — higher near new/full moons and lower near the quarters; it is not a local sea-level forecast. ${nextTide.daysAway === 0 ? "Today sits right at a turning point." : `In ${nextTide.daysAway} day${nextTide.daysAway > 1 ? "s" : ""}, this cycle reaches its ${nextTide.kind === "spring" ? "peak (spring tide)" : "low (neap tide)"}.`}`}
+                />
+              </p>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2 text-[11px] text-bone-soft">
+              <span className="rounded-sm border border-white/10 px-2 py-1">
+                <Bi zh={`当日守护星：${ruler.zh}`} en={`Day Ruler: ${ruler.en}`} />
+              </span>
+              {retro.length > 0 && (
+                <span className="rounded-sm border border-amber/25 px-2 py-1 text-amber">
+                  <Bi zh={`逆行中：${retro.map((r) => r.planetZh).join("、")}`} en={`Retrograde: ${retro.map((r) => r.planetEn).join(", ")}`} />
+                </span>
+              )}
+            </div>
+          </div>
+          </div>
+
+
+
+          <div className="mt-4 text-center">
+            <div className="mt-3">
+              <ShareButton
+                text={`我感知了灵犀场${sign.zh}座今日潮汐，去看看你的星座：/ I explored the Lingxi Field ${sign.en} Today’s Tide — find your sign:`}
+                url={`https://lingxifield.com/daily/${sign.slug}`}
+                label={{ zh: "分享今日潮汐", en: "Share Today’s Tide" }}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-6 gap-2 sm:grid-cols-12">
+            {ZODIAC_SIGNS.map((s) => (
+              <Link
+                key={s.slug}
+                href={`/daily/${s.slug}`}
+                className={`flex flex-col items-center gap-1 rounded-sm border py-3 text-lg transition ${s.slug === sign.slug ? "border-lattice bg-lattice/10 text-lattice" : "border-white/10 bg-void-deep text-bone-dim hover:border-lattice/40"}`}
+              >
+                {s.glyph}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-10 border-t border-white/10 pt-6 text-center">
+            <p className="text-sm leading-7 text-bone-dim">
+              <Bi
+                zh="今日潮汐读取宇宙当前运行状态与你太阳星座之间的连接——像一份当下的节律参照，帮助你观察今天适合关注、调整与顺应什么。生命图谱读取的是你出生时的完整生命坐标：一个感受此刻，一个探索更长的生命旅程。"
+                en="Today's horoscope reads the connection between the sky's current state and your Sun sign \u2014 a kind of \u201cweather report for today's consciousness,\u201d helping you notice what to focus on, adjust, or move with. Your Life Map is different \u2014 it reads the full set of coordinates that belong only to you, from the moment you were born. One observes today. The other explores you."
+              />
+            </p>
+            <a
+              href="/life-map"
+              className="mt-4 inline-block border border-lattice/45 px-5 py-2 font-display text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice hover:text-bone"
+            >
+              <Bi zh="继续探索：完整生命图谱 →" en="Continue exploring: Full Life Map →" />
+            </a>
+          </div>
+
+          <p className="mt-6 text-center text-xs text-bone-soft">
+            <Bi zh="太阳星座只是众多变量之一，仅供参考与反思。" en="Sun sign is just one of many variables — for reflection only." />
+          </p>
+        </div>
+);
+}

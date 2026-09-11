@@ -15,3 +15,15 @@ html[data-theme="light"] .aw{color:#223551}html[data-theme="light"] .aw-column{b
 .aw-intro details{margin-top:14px}.aw-intro summary{cursor:pointer;color:#668bbb}.aw-cover{position:relative;border-radius:14px;overflow:hidden}.aw-cover>img{width:100%;height:auto;display:block}.aw-cover>div{position:absolute;inset:40% 8% auto;padding:22px 10px;text-align:center;background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.7);border-radius:10px;color:#302941}.aw-cover small{letter-spacing:.18em;font-size:10px}.aw-cover h3{font-size:32px}.aw-cover p{font-size:12px}.aw-preview> .h-\[340px\]{height:240px}.aw-preview .aw-empty{padding-top:12px}.aw-empty>span{font-size:45px}
 
 html[data-theme="light"] .aw [class*="text-bone-dim/"]{color:#526580}html[data-theme="light"] .aw .aw-form button[aria-pressed=false]{background:#f0f3f9;color:#526580}.aw-form button:disabled{opacity:.6}
+.aw{--aw-accent:#8e82d4;--aw-glow:143,132,214;--aw-warm:#7bd5dc}
+.aw[data-product=romance]{--aw-accent:#d765a3;--aw-glow:239,159,205;--aw-warm:#f8b2ba}
+.aw[data-product=resilience]{--aw-accent:#389f96;--aw-glow:120,216,191;--aw-warm:#bae2b6}
+.aw[data-product=wealth]{--aw-accent:#ac8552;--aw-glow:224,198,146;--aw-warm:#cbb1ec}
+.aw[data-product=daily]{--aw-accent:#6f88cc;--aw-glow:164,183,236;--aw-warm:#b5dbf4}
+.aw[data-product=relationship]{--aw-accent:#9874cb;--aw-glow:183,151,224;--aw-warm:#e9becd}
+.aw-hero{background:radial-gradient(ellipse at right,rgba(var(--aw-glow),.2),transparent 65%),linear-gradient(115deg,rgba(123,213,220,.07),rgba(var(--aw-glow),.07))}
+.aw-column-title>b{background:linear-gradient(135deg,var(--aw-warm),var(--aw-accent))}
+.aw-intro h3,.aw-empty>span{color:var(--aw-accent)}
+.aw-empty blockquote{padding:20px;border:1px solid rgba(var(--aw-glow),.25);border-radius:16px;background:linear-gradient(135deg,rgba(var(--aw-glow),.08),transparent);font-size:14px;line-height:1.9}
+.aw-preview article{border-bottom:1px solid rgba(var(--aw-glow),.2);padding-bottom:18px}
+.aw input[type=number]{min-height:44px}.aw button{min-height:36px}.aw-column-title{position:relative}

@@ -2,7 +2,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
-import FieldProductIntroduction from "@/components/FieldProductIntroduction";
+import DailyFlow from "./DailyFlow";
 
 const DAILY_FAQ: BilingualFaqItem[] = [
   {
@@ -18,9 +18,6 @@ const DAILY_FAQ: BilingualFaqItem[] = [
 ];
 
 
-import Link from "next/link";
-import { ZODIAC_SIGNS } from "@/lib/lifemap-calc";
-import { computeTodayTransit } from "@/lib/daily-transit";
 
 export const metadata = {
   title: "今日潮汐 · 感受当下的宇宙节律 | 灵犀场 Today’s Tide | Lingxi Field",
@@ -28,40 +25,4 @@ export const metadata = {
   alternates: { canonical: "/daily" },
 };
 
-export default function DailyIndexPage() {
-  const transit = computeTodayTransit();
-
-  return (
-    <>
-      <Nav />
-      <main className="pt-24">
-        <FieldProductIntroduction href="/daily" />
-        <div id="field-assessment" className="mx-auto max-w-2xl px-6 py-8 text-center">
-          <p className="text-sm leading-7 text-bone-soft">
-            <Bi
-              zh={`今日真实月相：${transit.moonPhaseZh} · 月亮位于${transit.moonSignZh}座 · 每日数据更新`}
-              en={`Today’s real lunar phase: ${transit.moonPhaseEn} · Moon in ${transit.moonSignEn} · Updated daily`}
-            />
-          </p>
-
-          <div className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-4">
-            {ZODIAC_SIGNS.map((s) => (
-              <Link
-                key={s.slug}
-                href={`/daily/${s.slug}`}
-                className="group flex flex-col items-center gap-2 lx-glass-daily py-6 transition hover:border-lattice/40"
-              >
-                <span className="font-display text-3xl text-lattice transition group-hover:text-amber">{s.glyph}</span>
-                <span className="text-sm text-bone-dim"><Bi zh={s.zh} en={s.en} /></span>
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div className="mx-auto mt-16 max-w-2xl px-6">
-          <FaqSection items={DAILY_FAQ} />
-        </div>
-      </main>
-      <Footer />
-    </>
-  );
-}
+export default function DailyIndexPage(){return <><Nav/><main className="pt-4"><DailyFlow faq={<FaqSection items={DAILY_FAQ}/>}/></main><Footer/></>;}

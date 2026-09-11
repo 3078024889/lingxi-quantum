@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
+import AssessmentWorkbench, { AssessmentEmpty } from "@/components/AssessmentWorkbench";
 import Bi from "@/components/Bi";
 import type { TarotCard } from "@/lib/tarot-data";
 import { REVIEW_MODE } from "@/lib/reviewMode";
@@ -121,16 +122,15 @@ export default function TarotReadingFlow() {
   const unlock = () => {
     if (!submissionId) return;
     if (REVIEW_MODE) {
-      window.location.href = `/mirror/reading/full?id=${submissionId}`;
+      window.location.href = `/mirror?archive=${submissionId}`;
       return;
     }
     // v256：改成跳转到独立付款页，不再用弹窗。
-    window.location.href = `/checkout?productId=tarot-reading&submissionId=${submissionId}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/mirror/reading/full?id=${submissionId}`)}`;
+    window.location.href = `/checkout?productId=tarot-reading&submissionId=${submissionId}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/mirror?archive=${submissionId}`)}`;
   };
 
-  if (stage === "form") {
-    return (
-      <div className="mx-auto max-w-md px-6 py-16">
+    useEffect(() => { setStage("form"); setCards(null); setSubmissionId(null); }, [year, month, day, hour, minute, hasTime, calendarType]);
+const input = (<div className="mx-auto max-w-md px-6 py-16">
         <div className="lx-glass-tarot p-6">
           <p className="text-sm text-bone-dim">{t("怎么称呼你（选填）", "What should we call you (optional)")}</p>
           <input
@@ -176,14 +176,9 @@ export default function TarotReadingFlow() {
         >
           <Bi zh="不想连接完整场域？看看今天全场域共享的那一张牌 →" en="Not ready for the full connection? See today's card, shared by everyone →" />
         </a>
-        <FaqSection items={TAROT_FAQ} />
-      </div>
-    );
-  }
 
-  if (stage === "connecting") {
-    return (
-      <div className="mx-auto flex max-w-md flex-col items-center px-6 py-24 text-center">
+      </div>);
+const previewContent = (stage === "form" ? <AssessmentEmpty product="mirror" /> : stage === "connecting" ? (<div className="mx-auto flex max-w-md flex-col items-center px-6 py-24 text-center">
         <div className="lx-tr-glow h-20 w-20 rounded-full" />
         <div className="mt-8 space-y-3 lx-glass-tarot px-6 py-6 backdrop-blur-sm">
           {CONNECTING_LINES.map((line, i) => (
@@ -203,12 +198,7 @@ export default function TarotReadingFlow() {
           @keyframes lx-tr-line-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
           @media (prefers-reduced-motion: reduce) { .lx-tr-glow, .lx-tr-line { animation: none !important; opacity: 1; } }
         `}</style>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto max-w-xl px-6 py-16">
+      </div>) : (<div className="mx-auto max-w-xl px-6 py-16">
       <div className="lx-glass-tarot px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀量子生命镜像 · 三重镜像深度解读" en="Lingxi Quantum Life Mirror · Three-Mirror Deep Reading" />
@@ -268,6 +258,6 @@ export default function TarotReadingFlow() {
         </button>
         {error && <ErrorWithLoginPrompt error={error} className="mt-3" />}
       </div>
-    </div>
-  );
+    </div>));
+return <AssessmentWorkbench product="mirror" busy={stage === "connecting" || unlocking} input={input} preview={previewContent} faq={<FaqSection items={TAROT_FAQ} />}  />;
 }

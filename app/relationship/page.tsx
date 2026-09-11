@@ -1,7 +1,6 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import RelationshipFlow from "./RelationshipFlow";
-import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 
 export const metadata = {
   title: "关系共振 · 照见两个生命的交汇 | Lingxi Relationship Resonance",
@@ -13,8 +12,7 @@ export default function RelationshipPage() {
   return (
     <>
       <Nav />
-      <main className="pt-24">
-        <FieldProductIntroduction href="/relationship" />
+      <main className="pt-4">
         <div id="field-assessment"><RelationshipFlow /></div>
       </main>
       <Footer />

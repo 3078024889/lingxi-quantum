@@ -1,7 +1,6 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import RomanceFlow from "./RomanceFlow";
-import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 
 export const metadata = {
   title: "桃花磁场指数 | 灵犀场 Romance Resonance Index | Lingxi Field",
@@ -14,8 +13,7 @@ export default function RomancePage() {
   return (
     <>
       <Nav />
-      <main className="pt-24">
-        <FieldProductIntroduction href="/romance" />
+      <main className="pt-4">
         <div id="field-assessment"><RomanceFlow /></div>
       </main>
       <Footer />

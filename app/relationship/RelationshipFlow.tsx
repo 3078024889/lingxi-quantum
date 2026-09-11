@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import AssessmentWorkbench, { AssessmentEmpty } from "@/components/AssessmentWorkbench";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import { getProduct } from "@/lib/plans";
@@ -215,6 +216,7 @@ export default function RelationshipFlow() {
       return;
     }
     setError("");
+    if (!window.confirm(t("确认解锁完整档案？接下来进入支付页面确认金额。", "Unlock the complete archive? Continue to checkout to confirm the price."))) return;
     setSubmitting(true);
     const supabase = createClient();
     const {
@@ -259,29 +261,27 @@ export default function RelationshipFlow() {
         return active && (r.product_id === "relationship-resonance" || r.product_id === "everything");
       });
       if (already) {
-        router.push(`/relationship/full?id=${saveData.id}`);
+        router.push(`/relationship?archive=${saveData.id}`);
         return;
       }
 
       setSubmitting(false);
       // v256：改成跳转到独立付款页，不再用弹窗。
-      window.location.href = `/checkout?productId=relationship-resonance&submissionId=${saveData.id}&name=${encodeURIComponent(`${a.name} × ${b.name}`)}&redirect=${encodeURIComponent(`/relationship/full?id=${saveData.id}`)}`;
+      window.location.href = `/checkout?productId=relationship-resonance&submissionId=${saveData.id}&name=${encodeURIComponent(`${a.name} × ${b.name}`)}&redirect=${encodeURIComponent(`/relationship?archive=${saveData.id}`)}`;
     } catch {
       setSubmitting(false);
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
     }
   };
 
-  return (
-    <div className="mx-auto max-w-2xl px-6 py-16">
-      <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+    useEffect(() => { setPreview(null); }, [a, b, relationshipType]);
+const input = (<><p className="font-display text-sm uppercase tracking-widest2 text-lattice">
         <Bi zh="选择共振类型" en="Choose a Resonance Type" />
       </p>
-      <h2 className="mt-4 font-display text-2xl font-light text-bone sm:text-3xl">
+<h2 className="mt-4 font-display text-2xl font-light text-bone sm:text-3xl">
         <Bi zh="你们正在体验怎样的连接？" en="What kind of connection are you experiencing?" />
       </h2>
-
-      <div className="lx-glass-relation mt-8 p-5">
+<div className="lx-glass-relation mt-8 p-5">
         <p className="text-sm text-bone-dim"><Bi zh="你们之间，正在形成怎样的连接？" en="What connection is forming between you two?" /></p>
         <div className="mt-3 grid grid-cols-3 gap-3">
           {([
@@ -323,26 +323,21 @@ export default function RelationshipFlow() {
           )}
         </div>
       </div>
-
-      <div className="lx-glass-relation mt-6 border-l border-lattice/45 px-5 py-4 text-xs leading-6 text-bone-dim">
+<div className="lx-glass-relation mt-6 border-l border-lattice/45 px-5 py-4 text-xs leading-6 text-bone-dim">
         <Bi
           zh="出生日期：请选择实际使用的历法——阳历（公历）或农历。两种历法并不相同，通常身份证日期为阳历，知晓是农历的选农历；海外用户一般直接选择阳历。若补充双方具体出生时刻，关系共振可展开更细的时间位置层次与互动结构连接。"
           en="Birth dates: choose the calendar actually used—Gregorian (solar) or Chinese lunar. They are different calendar systems. Dates on identity documents are usually Gregorian; choose lunar only when known. Users outside China can generally choose Gregorian. Adding both specific birth times can reveal finer timing layers and interaction structures within Relationship Resonance."
         />
       </div>
-
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+<div className="mt-4 grid gap-4 sm:grid-cols-2">
         <PersonForm person={a} setPerson={setA} label={t("第一个人", "Person A")} />
         <PersonForm person={b} setPerson={setB} label={t("第二个人", "Person B")} />
       </div>
-
-      {error && (
+{error && (
         <div className="lx-glass-relation mt-4 p-4">
           <p className="text-sm text-rose">{error}</p>
         </div>
       )}
-
-      {!preview ? (
         <button
           onClick={runPreview}
           disabled={previewing}
@@ -350,7 +345,8 @@ export default function RelationshipFlow() {
         >
           {previewing ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="开启共振探索 →" en="Begin the Resonance Exploration →" />}
         </button>
-      ) : (
+      </>);
+const previewContent = (preview ? <>
         <div
           className="lx-glass-relation mt-8 p-6"
           style={{
@@ -431,13 +427,11 @@ export default function RelationshipFlow() {
             {submitting ? <><PortalSpinner /><Bi zh="正在准备…" en="Preparing…" /></> : <Bi zh={`${TYPE_COPY[relationshipType].unlockLabel.zh} · ¥${getProduct("relationship-resonance")?.priceRmb}`} en={`${TYPE_COPY[relationshipType].unlockLabel.en} · ¥${getProduct("relationship-resonance")?.priceRmb}`} />}
           </button>
         </div>
-      )}
       <div className="lx-glass-relation mt-3 p-3 text-center">
         <p className="text-sm text-bone-dim">
           <Bi zh="一次能量交换，为你和对方生成一份完整的关系共振图谱，保存在你的场域入口里，随时可以回看、下载。" en="One energy exchange generates a full Relationship Resonance Map for you and the other person, saved in your field entrance — revisit or download it anytime." />
         </p>
       </div>
-      <FaqSection items={RELATIONSHIP_FAQ} />
-    </div>
-  );
+</> : <AssessmentEmpty product="relationship" />);
+return <AssessmentWorkbench product="relationship" busy={previewing || submitting} input={input} preview={previewContent} faq={<FaqSection items={RELATIONSHIP_FAQ} />} cover={`/images/relationship-full/${relationshipType}/page-0.png`} />;
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef , useEffect} from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
+import AssessmentWorkbench, { AssessmentEmpty } from "@/components/AssessmentWorkbench";
 import Bi from "@/components/Bi";
 import PortalSpinner from "@/components/PortalSpinner";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
@@ -146,6 +147,7 @@ export default function ResilienceFlow() {
 
   const unlock = async () => {
     if (!year || !month || !day || unlocking) return;
+    if (!window.confirm(t("确认解锁完整档案？接下来进入支付页面确认金额。", "Unlock the complete archive? Continue to checkout to confirm the price."))) return;
     setUnlocking(true);
     setError("");
     try {
@@ -178,11 +180,11 @@ export default function ResilienceFlow() {
       }
       setSubmissionId(data.id);
       if (REVIEW_MODE) {
-        window.location.href = `/resilience/full?id=${data.id}`;
+        window.location.href = `/resilience?archive=${data.id}`;
         return;
       }
       // v256：改成跳转到独立付款页，不再用弹窗。
-      window.location.href = `/checkout?productId=resilience-report&submissionId=${data.id}&name=${encodeURIComponent(unlockName)}&redirect=${encodeURIComponent(`/resilience/full?id=${data.id}`)}`;
+      window.location.href = `/checkout?productId=resilience-report&submissionId=${data.id}&name=${encodeURIComponent(unlockName)}&redirect=${encodeURIComponent(`/resilience?archive=${data.id}`)}`;
     } catch {
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
       setUnlocking(false);
@@ -238,7 +240,47 @@ export default function ResilienceFlow() {
     }
   };
 
-  if (result) {
+    useEffect(() => { setResult(null); }, [year, month, day, hour, minute, hasTime, calendarType]);
+const input = (<div className="mx-auto max-w-md px-6 py-16">
+      <div className="lx-glass-resilience p-6">
+        <label className="block text-xs tracking-wider text-bone-dim">
+          <Bi zh="姓名" en="Name" />
+          <input type="text" value={unlockName} onChange={(e) => setUnlockName(e.target.value)} placeholder={t("请输入本次报告使用的姓名", "Name used for this archive")} className="mt-2 w-full rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+        </label>
+        <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="resilience" />
+        <div className="mt-2 grid grid-cols-3 gap-2">
+          <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+          <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+          <input value={day} onChange={(e) => setDay(e.target.value)} placeholder={t("日", "Day")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+        </div>
+        <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
+          <input type="checkbox" checked={hasTime} onChange={(e) => setHasTime(e.target.checked)} />
+          <BirthTimeOptionalCopy />
+        </label>
+        {hasTime && (
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <input value={hour} onChange={(e) => setHour(e.target.value)} placeholder={t("时（0-23）", "Hour (0-23)")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+            <input value={minute} onChange={(e) => setMinute(e.target.value)} placeholder={t("分", "Minute")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
+          </div>
+        )}
+      </div>
+
+      {error && (
+        <div className="mt-4 lx-glass-resilience p-4">
+          <p className="text-sm text-rose">{error}</p>
+        </div>
+      )}
+
+      <button
+        onClick={submit}
+        disabled={loading || !year || !month || !day}
+        className="mt-6 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+      >
+        {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="展开我的生命韧性指数" en="Unfold My Life Resilience Index" />}
+      </button>
+
+    </div>);
+const previewContent = ((() => { if (result) {
     const dims = DIM_ORDER.filter((d) => d in result.breakdown);
     const sorted = [...dims].sort((a, b) => result.breakdown[b] - result.breakdown[a]);
     const strongest = sorted[0];
@@ -419,47 +461,6 @@ export default function ResilienceFlow() {
       </div>
       </>
     );
-  }
-
-  return (
-    <div className="mx-auto max-w-md px-6 py-16">
-      <div className="lx-glass-resilience p-6">
-        <label className="block text-xs tracking-wider text-bone-dim">
-          <Bi zh="姓名" en="Name" />
-          <input type="text" value={unlockName} onChange={(e) => setUnlockName(e.target.value)} placeholder={t("请输入本次报告使用的姓名", "Name used for this archive")} className="mt-2 w-full rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-        </label>
-        <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="resilience" />
-        <div className="mt-2 grid grid-cols-3 gap-2">
-          <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-          <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-          <input value={day} onChange={(e) => setDay(e.target.value)} placeholder={t("日", "Day")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-        </div>
-        <label className="mt-3 flex items-center gap-2 text-xs text-bone-dim">
-          <input type="checkbox" checked={hasTime} onChange={(e) => setHasTime(e.target.checked)} />
-          <BirthTimeOptionalCopy />
-        </label>
-        {hasTime && (
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <input value={hour} onChange={(e) => setHour(e.target.value)} placeholder={t("时（0-23）", "Hour (0-23)")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-            <input value={minute} onChange={(e) => setMinute(e.target.value)} placeholder={t("分", "Minute")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
-          </div>
-        )}
-      </div>
-
-      {error && (
-        <div className="mt-4 lx-glass-resilience p-4">
-          <p className="text-sm text-rose">{error}</p>
-        </div>
-      )}
-
-      <button
-        onClick={submit}
-        disabled={loading || !year || !month || !day}
-        className="mt-6 flex w-full items-center justify-center gap-2 bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
-      >
-        {loading ? <><PortalSpinner /><Bi zh="正在计算…" en="Calculating…" /></> : <Bi zh="展开我的生命韧性指数" en="Unfold My Life Resilience Index" />}
-      </button>
-      <FaqSection items={RESILIENCE_FAQ} />
-    </div>
-  );
+  } return <AssessmentEmpty product="resilience" />; })());
+return <AssessmentWorkbench product="resilience" busy={loading || unlocking} input={input} preview={previewContent} faq={<FaqSection items={RESILIENCE_FAQ} />}  />;
 }

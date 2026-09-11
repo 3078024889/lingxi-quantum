@@ -1,7 +1,6 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import WealthFlow from "./WealthFlow";
-import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 
 export const metadata = {
   title: "财富创造地图 | 灵犀场 Wealth Creation Map | Lingxi Field",
@@ -14,8 +13,7 @@ export default function WealthPage() {
   return (
     <>
       <Nav />
-      <main className="pt-24">
-        <FieldProductIntroduction href="/wealth" />
+      <main className="pt-4">
         <div id="field-assessment"><WealthFlow /></div>
       </main>
       <Footer />

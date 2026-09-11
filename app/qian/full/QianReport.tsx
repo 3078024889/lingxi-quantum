@@ -49,6 +49,7 @@ export default function QianReport({ id }: { id: string }) {
   const t = (zh: string, en: string) => (langEn ? en : zh);
   const [status, setStatus] = useState<"checking" | "locked" | "ready" | "error">("checking");
   const [error, setError] = useState("");
+  const [retry, setRetry] = useState(0);
   const [name, setName] = useState("");
   const [signs, setSigns] = useState<typeof LIFE_SIGNS>([]);
   const [sections, setSections] = useState<string[]>([]);
@@ -61,6 +62,8 @@ export default function QianReport({ id }: { id: string }) {
 
   useEffect(() => {
     const load = async () => {
+      setStatus("checking");
+      setError("");
       const supabase = createClient();
       const { data: submission } = await supabase
         .from("qian_submissions")
@@ -119,7 +122,7 @@ export default function QianReport({ id }: { id: string }) {
     };
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, langEn]);
+  }, [id, langEn, retry]);
 
   const unlock = () => {
     if (REVIEW_MODE) {
@@ -224,6 +227,9 @@ export default function QianReport({ id }: { id: string }) {
     return (
       <div className="mx-auto max-w-md px-6 py-24 text-center">
         <p className="text-sm text-rose">{error}</p>
+        <button className="mt-5 rounded-lg border border-lattice/40 px-5 py-3 text-lattice" onClick={() => setRetry(value => value + 1)}>
+          <Bi zh="重新读取我的档案" en="Retry my archive" />
+        </button>
       </div>
     );
   }
