@@ -53,14 +53,18 @@ export default function QianCosmicRing({
   highlightIndexes?: number[];
   paused?: boolean;
 }) {
-  const [mode, setMode] = useState<"checking" | "webgl" | "mini">("checking");
+  const [mode, setMode] = useState<"checking" | "webgl" | "mini" | "still">("checking");
 
   useEffect(() => {
     // WeChat DevTools' simulated web-view can crash while initializing the
     // Three.js renderer even though physical phones support it. The Mini
     // Program receives a stable branded fallback; the full website keeps 3D.
     const embedded = new URLSearchParams(window.location.search).get("mini") === "1";
-    setMode(embedded ? "mini" : "webgl");
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setMode(motion.matches ? "still" : embedded ? "mini" : "webgl");
+    update();
+    motion.addEventListener("change", update);
+    return () => motion.removeEventListener("change", update);
   }, []);
 
   return (
@@ -69,7 +73,7 @@ export default function QianCosmicRing({
         <Suspense fallback={<RingPlaceholder />}>
           <QianCosmicRingScene highlightIndexes={highlightIndexes} paused={paused} />
         </Suspense>
-      ) : mode === "mini" ? <MiniRingFallback /> : <RingPlaceholder />}
+      ) : mode === "still" ? <div className="grid h-full grid-cols-8 gap-1 overflow-auto p-3" aria-label="六十四枚原创生命签库">{Array.from({ length: 64 }, (_, i) => <img key={i} src={`/images/qian/${String(i).padStart(2, "0")}.jpg`} alt={`生命签 ${i + 1}`} loading="lazy" className="aspect-[2/3] w-full rounded-sm object-cover" />)}</div> : mode === "mini" ? <MiniRingFallback /> : <RingPlaceholder />}
     </div>
   );
 }

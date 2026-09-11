@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useLang } from "@/lib/useLang";
+import AssessmentWorkbench, { AssessmentEmpty } from "@/components/AssessmentWorkbench";
 import Bi from "@/components/Bi";
 import type { LifeSign } from "@/lib/qian-data";
 import { TIER_LABELS } from "@/lib/qian-data";
@@ -68,9 +69,11 @@ export default function QianFlow() {
   const [signIndexes, setSignIndexes] = useState<number[] | null>(null);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [unlocking, setUnlocking] = useState(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const shake = async () => {
-    if (!year || !month || !day) return;
+    if (!year || !month || !day || stage === "gathering" || stage === "shaking") return;
     setError("");
     setStage("gathering");
     try {
@@ -79,7 +82,8 @@ export default function QianFlow() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) {
-        window.location.href = "/account";
+        setError(t("请先登录后读取生命灵签。", "Please sign in to read your Life Oracle."));
+        setStage("form");
         return;
       }
 
@@ -105,13 +109,13 @@ export default function QianFlow() {
       // 三个位置，视觉上是"环停下来，三枚签亮起来"，不是揭示阶段
       // 才突然冒出来。
       setSignIndexes(data.signIndexes as number[]);
-      setTimeout(() => setStage("shaking"), 900);
-      setTimeout(async () => {
+      timers.current.push(setTimeout(() => setStage("shaking"), 900));
+      timers.current.push(setTimeout(async () => {
         const { LIFE_SIGNS } = await import("@/lib/qian-data");
         setSigns((data.signIndexes as number[]).map((i) => LIFE_SIGNS[i]));
         setSubmissionId(data.id);
         setStage("revealed");
-      }, 2200);
+      }, 2200));
     } catch (e) {
       console.error("[qian shake] 提交出错:", e);
       setError(t("连接场域时出错，请稍后再试。", "Error connecting to the field — please try again."));
@@ -120,23 +124,21 @@ export default function QianFlow() {
   };
 
   const unlock = () => {
-    if (!submissionId) return;
+    if (!submissionId || unlocking) return;
+    if (!window.confirm(t(`确认解锁完整生命灵签 ¥${getProduct("qian-reading")?.priceRmb}？接下来进入支付页面。`, "Unlock the complete Life Oracle? Continue to checkout to confirm the price and pay."))) return;
+    setUnlocking(true);
     // 审核模式开启时，不走真实付款流程——直接跳到结果页，generate-full
     // 接口那边看到 REVIEW_MODE=true 会跳过解锁校验，直接生成内容。
     if (REVIEW_MODE) {
-      window.location.href = `/qian/full?id=${submissionId}`;
+      window.location.href = `/qian?archive=${submissionId}`;
       return;
     }
     // v256：改成跳转到独立付款页，不再用弹窗。
-    window.location.href = `/checkout?productId=qian-reading&submissionId=${submissionId}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/qian/full?id=${submissionId}`)}`;
+    window.location.href = `/checkout?productId=qian-reading&submissionId=${submissionId}&name=${encodeURIComponent(name)}&redirect=${encodeURIComponent(`/qian?archive=${submissionId}`)}`;
   };
 
-  if (stage === "form") {
-    return (
-      <div className="px-6 pt-8">
-        <div className="mx-auto max-w-2xl">
-          <QianCosmicRing />
-        </div>
+  const input = (<div className="px-6 pt-8">
+
         <div className="mx-auto max-w-md pb-16">
         <div className="lx-glass-qian p-6">
           <p className="text-sm text-bone-dim">{t("称呼（选填）", "Name (optional)")}</p>
@@ -145,7 +147,7 @@ export default function QianFlow() {
             placeholder={t("怎么称呼你", "What should we call you")}
             className="mt-2 w-full rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60"
           />
-          <BirthDateGuidance value={calendarType} onChange={setCalendarType} context="qian" className="mt-4" />
+          <BirthDateGuidance value={calendarType} onChange={(value) => { setCalendarType(value); setStage("form"); setSigns(null); setSignIndexes(null); setSubmissionId(null); }} context="qian" className="mt-4" />
           <div className="mt-2 grid grid-cols-3 gap-2">
             <input value={year} onChange={(e) => setYear(e.target.value)} placeholder={t("年", "Year")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
             <input value={month} onChange={(e) => setMonth(e.target.value)} placeholder={t("月", "Month")} className="rounded-sm border border-white/15 bg-void px-3 py-3 text-sm text-bone outline-none focus:border-lattice/60" />
@@ -165,26 +167,21 @@ export default function QianFlow() {
 
         {error && (
           <div className="mt-4 lx-glass-qian p-4">
-            <p className="text-sm text-rose">{error}</p>
+            <ErrorWithLoginPrompt error={error} />
           </div>
         )}
 
         <button
           onClick={shake}
-          disabled={!year || !month || !day}
+          disabled={!year || !month || !day || stage === "gathering" || stage === "shaking"}
           className="mt-6 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
         >
           <Bi zh="静心，读取生命签" en="Be Still, and Reveal" />
         </button>
-        <FaqSection items={QIAN_FAQ} />
-        </div>
-      </div>
-    );
-  }
 
-  if (stage === "gathering" || stage === "shaking") {
-    return (
-      <div className="mx-auto flex max-w-2xl flex-col items-center px-6 py-16 text-center">
+        </div>
+      </div>);
+  const preview = stage === "form" ? <><QianCosmicRing /><AssessmentEmpty /></> : stage === "gathering" || stage === "shaking" ? (<div className="mx-auto flex max-w-2xl flex-col items-center px-6 py-16 text-center">
         <QianCosmicRing
           highlightIndexes={stage === "shaking" ? signIndexes ?? undefined : undefined}
           paused={stage === "shaking"}
@@ -192,12 +189,8 @@ export default function QianFlow() {
         <p className="mt-2 font-display text-sm tracking-widest2 text-lattice">
           {stage === "gathering" ? <Bi zh="先静心，连接场域……" en="Growing still, connecting to the field…" /> : <Bi zh="三枚生命签，正从六十四枚中亮起……" en="Three signs are lighting up among the sixty-four…" />}
         </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto max-w-xl px-6 py-16">
+      </div>) : (<div className="mx-auto max-w-xl px-6 py-16">
+      <QianCosmicRing highlightIndexes={signIndexes ?? undefined} paused />
       <div className="lx-glass-qian px-6 py-4 text-center">
         <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
           <Bi zh="灵犀生命灵签 · 意识坐标读取" en="Lingxi Life Oracle · Reading Your Consciousness Coordinates" />
@@ -227,6 +220,14 @@ export default function QianFlow() {
         ))}
       </div>
 
+      <div className="mt-5 space-y-4">
+        {signs?.map(sign => (
+          <article key={sign.index} className="lx-glass-qian p-4">
+            <h3 className="text-lattice"><Bi zh={TIER_LABELS[sign.tier].zh} en={TIER_LABELS[sign.tier].en} /> · <Bi zh={sign.nameZh} en={sign.nameEn} /></h3>
+            <p className="mt-2 text-sm leading-7 text-bone-dim"><Bi zh={sign.meaningZh} en={sign.meaningEn} /></p>
+          </article>
+        ))}
+      </div>
       <div
         className="mt-8 rounded-sm border border-amber/25 p-6 text-center"
         style={{ backgroundImage: "linear-gradient(rgba(42,36,52,0.5), rgba(42,36,52,0.5)), url(/images/qian-full/page-0.png)", backgroundSize: "cover", backgroundPosition: "top" }}
@@ -281,6 +282,6 @@ export default function QianFlow() {
           </button>
         )}
       </div>
-    </div>
-  );
+    </div>);
+  return <AssessmentWorkbench product="qian" busy={stage === "gathering" || stage === "shaking"} input={<div onChange={() => { setStage("form"); setSigns(null); setSignIndexes(null); setSubmissionId(null); }}>{input}</div>} preview={preview} faq={<FaqSection items={QIAN_FAQ} />} />;
 }

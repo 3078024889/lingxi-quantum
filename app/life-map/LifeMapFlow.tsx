@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { getCoreType, type WesternElement, type ChineseElement } from "@/lib/lifemap-calc";
+import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
+import FieldProductIntroduction from "@/components/FieldProductIntroduction";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
 import { analyzePhoneNumber, analyzePlateNumber } from "@/lib/number-energy-calc";
@@ -11,6 +13,29 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import FullReportView from "./full/FullReportView";
 
 import { getProduct } from "@/lib/plans";
+
+const LIFEMAP_FAQ: BilingualFaqItem[] = [
+  {
+    qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",
+    aZh: "不是。灵犀场并不是一个告诉你「未来会发生什么」的预测工具，而是一处连接自我探索、生命结构理解与意识扩展的数字场域。它通过天文周期、传统象征体系、生命原型、多维叙事与意识探索模型，将这些不同维度的信息重新连接，帮助你从新的角度观察自己——这里不是替你定义人生，而是提供一面更深的镜子，你依然是自己生命的创造者。",
+    aEn: "No. Lingxi Field isn't a tool that tells you what will happen next — it's a digital field connecting self-exploration, an understanding of your life structure, and consciousness expansion. Drawing on astronomical cycles, traditional symbolic systems, life archetypes, dimensional narrative, and consciousness models, it reconnects these different dimensions of information to help you observe yourself from a new angle. This isn't about defining your life for you — it's a deeper mirror. You remain the creator of your own life.",
+  },
+  {
+    qZh: "生命图谱需要提供哪些信息？", qEn: "What information does the Life Map need?",
+    aZh: "出生日期是基础信息，出生时间与出生地点是更深层的信息节点。信息越完整，灵犀场能够展开的生命结构维度越丰富——但灵犀场并不是简单复制某一种命理体系，出生信息更像是一组进入生命旅程时留下的坐标，不是决定你的程序，而是一组用于观察自己的镜面数据。即使信息不完整，也能展开基础探索；完整信息则能打开更多层次的结构。",
+    aEn: "Your birth date is the foundation; birth time and birth place are deeper information nodes. The more complete the information, the richer the dimensions Lingxi Field can unfold — but Lingxi Field isn't simply replicating any one fortune-telling system. Birth information works more like a set of coordinates left behind as you entered this life's journey — not a program that determines you, but mirror data for observing yourself. Even incomplete information opens a basic exploration; complete information opens more layers of structure.",
+  },
+  {
+    qZh: "场域入口的展开和完整生命图谱有什么区别？", qEn: "What's the difference between the field entrance preview and the full Life Map?",
+    aZh: "灵犀场不会把生命探索切割成简单的「有」和「没有」。场域入口的展开，是让你先看见生命结构的轮廓——星体象征、生命原型、核心印记、基础频率。完整生命图谱，会进一步展开这些结构之间的连接关系：七大行星象征关系、八字生命结构、紫微结构探索、玛雅印记探索、人生周期导航、财富与创造路径、关系共振地图、灵犀场专属练习。最终形成的是一份属于你的生命探索档案，不是一张简单的命盘。",
+    aEn: "Lingxi Field doesn't split self-exploration into a simple 'have' or 'don't have.' The entrance preview lets you first see the outline of your life structure — planetary symbols, life archetypes, core imprints, base frequencies. The full Life Map unfolds the connections between these structures further: the seven planets' symbolic relationships, your Bazi life structure, your Ziwei structure, your Maya sign, life cycle navigation, wealth and creative pathways, a relationship resonance map, and a personal Lingxi Field practice. What forms is a complete self-exploration record — not a simple chart.",
+  },
+  {
+    qZh: "生命图谱可以下载PDF吗？", qEn: "Can I save the Life Map as a PDF?",
+    aZh: "可以。完整生命图谱生成后，会保存在你的场域入口里，你可以在线查看、下载PDF保存、随时返回回看，也可以删除。它不是一次性的答案，而是一份可以陪伴你持续探索自己的生命档案。",
+    aEn: "Yes. Once your full Life Map is generated, it's saved in your field entrance — you can view it online, download it as a PDF, come back to it anytime, or delete it. It isn't a one-time answer; it's a life record that can keep accompanying your ongoing self-exploration.",
+  },
+];
 
 type Focus = "wealth" | "relationship" | "direction" | "growth" | "all";
 type CurrentState = "transforming" | "lost" | "breakthrough" | "stable" | "exploring";
@@ -597,7 +622,8 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
           <div className={`lm-workbench-column lm-workbench-form bg-reading-glass ${mobilePane === "input" ? "is-mobile-active" : ""}`}>
             <div className="lm-column-title"><b>1</b><div><h2><Bi zh="填写信息" en="Enter Your Details" /></h2><p><Bi zh="填写真实信息，开启你的生命探索" en="Use real details to begin your exploration" /></p></div></div>
 
-            <details className="lm-form-group" open>
+            <div className="lm-restored-intro"><FieldProductIntroduction href="/life-map" compact targetId="lifemap-birth-input" /></div>
+            <details id="lifemap-birth-input" className="lm-form-group" open>
               <summary><span><b>01</b><Bi zh="身份与出生" en="Identity and birth" /></span><small><Bi zh="基础坐标" en="Core coordinates" /></small></summary>
             <div className="space-y-6">
               <div>
@@ -806,6 +832,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
 
             {error && <p className="mt-6 text-sm text-rose">{error}</p>}
 
+            <FaqSection items={LIFEMAP_FAQ} />
             <div className="lm-form-action">
               <div><span style={{ width: `${Math.max(8, completionPercent)}%` }} /><small>{t(`资料充实度 ${completionPercent}%`, `Profile depth ${completionPercent}%`)}</small></div>
               <button onClick={submit} disabled={calculating} className="lm-primary-button w-full">{calculating ? t("正在生成真实预览…", "Calculating your real preview…") : report ? t("更新我的免费预览", "Update my free preview") : t("生成免费预览", "Generate free preview")}</button>
@@ -844,16 +871,227 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
                   <div><small><Bi zh="你的生命频率报告" en="Your Life Frequency Report" /></small><h2>{isEn() ? report.coreType.nameEn : report.coreType.name}</h2><p>{t("太阳", "Sun")} {isEn() ? report.facts.sunSignEn : report.facts.sunSignZh} · {t("日主", "Day Master")} {report.facts.dayMasterGan}</p></div>
                 </div>
                 <blockquote>{parsed.echoText}</blockquote>
-                <div className="lm-fact-grid">
-                  <span><small><Bi zh="太阳星座" en="Sun" /></small><b>{isEn() ? report.facts.sunSignEn : report.facts.sunSignZh}</b></span>
-                  <span><small><Bi zh="月亮星座" en="Moon" /></small><b>{isEn() ? report.facts.moonSignEn : report.facts.moonSignZh}</b></span>
-                  <span><small><Bi zh="日主" en="Day Master" /></small><b>{report.facts.dayMasterGan}</b></span>
-                  <span><small><Bi zh="玛雅印记" en="Maya Sign" /></small><b>{report.facts.maya.tone} {isEn() ? report.facts.maya.signEn : report.facts.maya.sign}</b></span>
+<div className="lm-restored-content"><div className="mt-8 rounded-sm border border-lm2-violet/20 bg-lm2-violet/5 p-6 backdrop-blur-xl">
+              <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin · 吠陀占星" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin · Vedic Jyotish" />
+              </p>
+              <p className="mt-2 text-xs leading-6 text-lm2-text-dim/70">
+                <Bi
+                  zh="以下每一项，都由真实的天文与历法算法计算得出——七大行星的黄道位置，与专业占星软件同源；四柱八字的干支、纳音、地势，采用标准命理算法；紫微斗数的命宫身宫排布，用专门的排盘算法计算，并手动按古法逐步核对过命宫、身宫、五行局三项，确认与算法输出一致；玛雅Tzolkin圣历的图腾与数字，用儒略日精确推算，并用两个真实的历史节点（创世日、2012年长历终止日）验证过准确性。不是语言模型现场编的数字。"
+                  en="Every value below comes from real astronomical and calendrical calculation — planetary positions from the same class of method professional astrology software uses; Bazi characters, elements and stages from standard calendrical rules; Ziwei Doushu's Soul and Body Palace placement from a dedicated charting algorithm, manually cross-checked against the classical method for three key values; the Maya Tzolkin day sign and tone computed via Julian Day Number and verified against two real historical reference points. None of it is a number a language model made up."
+                />
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {[
+                  { label: t("太阳", "Sun"), v: isEn() ? report.facts.sunSignEn : report.facts.sunSignZh },
+                  { label: t("月亮", "Moon"), v: isEn() ? report.facts.moonSignEn : report.facts.moonSignZh },
+                  { label: t("水星", "Mercury"), v: isEn() ? report.facts.mercury.signEn : report.facts.mercury.signZh },
+                  { label: t("金星", "Venus"), v: isEn() ? report.facts.venus.signEn : report.facts.venus.signZh },
+                  { label: t("火星", "Mars"), v: isEn() ? report.facts.mars.signEn : report.facts.mars.signZh },
+                  { label: t("木星", "Jupiter"), v: isEn() ? report.facts.jupiter.signEn : report.facts.jupiter.signZh },
+                  { label: t("土星", "Saturn"), v: isEn() ? report.facts.saturn.signEn : report.facts.saturn.signZh },
+                ].map((p) => (
+                  <div key={p.label} className="lx-glass-lifemap px-3 py-2 text-center backdrop-blur-xl">
+                    <p className="text-[11px] uppercase tracking-widest2 text-lm2-text-dim/80">{p.label}</p>
+                    <p className="mt-1 font-display text-sm text-lm2-text">{p.v}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-lm2-text/10 pt-4 font-display text-sm text-lm2-text">
+                <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.yearPillar}</span>
+                <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.monthPillar}</span>
+                <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5">{report.facts.dayPillar}</span>
+                {report.facts.hourPillar && <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5">{report.facts.hourPillar}</span>}
+                {!report.facts.hourPillar && <span className="rounded-sm border border-lm2-text/5 px-3 py-1.5 text-lm2-text-dim/65">{t("时柱未知", "Hour pillar unknown")}</span>}
+              </div>
+              <p className="mt-3 text-center text-xs text-lm2-text-dim/72">
+                <Bi zh={`日柱纳音：${report.facts.dayDetail.naYin}　命局五行：木${report.facts.wuXingCount.wood} 火${report.facts.wuXingCount.fire} 土${report.facts.wuXingCount.earth} 金${report.facts.wuXingCount.metal} 水${report.facts.wuXingCount.water}`} en={`Day Pillar Na Yin: ${report.facts.dayDetail.naYin}　Element Balance: Wood ${report.facts.wuXingCount.wood} Fire ${report.facts.wuXingCount.fire} Earth ${report.facts.wuXingCount.earth} Metal ${report.facts.wuXingCount.metal} Water ${report.facts.wuXingCount.water}`} />
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-3 border-t border-lm2-text/10 pt-4">
+                <span className="rounded-sm border border-lm2-violet/30 bg-lm2-violet/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
+                  {t("玛雅印记", "Maya Sign")} {report.facts.maya.tone} {isEn() ? report.facts.maya.signEn : report.facts.maya.sign}
+                </span>
+              </div>
+              <p className="mt-2 text-center text-xs text-lm2-text-dim/72">{report.facts.maya.meaning} · {report.facts.maya.toneMeaning}</p>
+              {report.facts.ziwei && (
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-lm2-text/10 pt-4">
+                  <span className="rounded-sm border border-amber/40 bg-amber/10 px-3 py-1.5 font-display text-sm text-lm2-text">
+                    {t("紫微命宫", "Ziwei Soul Palace")} {report.facts.ziwei.soulPalaceBranch}
+                  </span>
+                  <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5 font-display text-sm text-lm2-text">
+                    {t("身宫", "Body Palace")} {report.facts.ziwei.bodyPalaceBranch}
+                  </span>
+                  <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5 font-display text-sm text-lm2-text">
+                    {report.facts.ziwei.fiveElementsClass}
+                  </span>
                 </div>
+              )}
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 border-t border-lm2-text/10 pt-4">
+                <span className="rounded-sm border border-lattice/40 bg-lattice/10 px-3 py-1.5 font-display text-sm text-lm2-text">
+                  {t("吠陀太阳", "Vedic Sun")} {isEn() ? report.facts.vedic.sunSidereal.signEn : report.facts.vedic.sunSidereal.signZh}
+                </span>
+                <span className="rounded-sm border border-lm2-text/10 px-3 py-1.5 font-display text-sm text-lm2-text">
+                  {t("吠陀月亮", "Vedic Moon")} {isEn() ? report.facts.vedic.moonSidereal.signEn : report.facts.vedic.moonSidereal.signZh}
+                </span>
+              </div>
+              <p className="mt-2 text-center text-xs text-lm2-text-dim/72">
+                {t(`岁差修正值 ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri恒星黄道`, `Ayanamsa ${report.facts.vedic.ayanamsa.toFixed(2)}° · Lahiri Sidereal`)}
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-3 border-t border-lm2-text/10 pt-4">
+                <span className="rounded-sm border border-lm2-mint/40 bg-lm2-mint/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
+                  {t("生命密码", "Life Path Number")} {report.facts.lifeCode.number}{report.facts.lifeCode.isMaster ? t("（大师数）", " (Master Number)") : ""}
+                </span>
+              </div>
+            </div>{report.facts.humanDesign && (
+              <div className="bg-reading-glass mt-8 p-6 sm:p-8">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                  <Bi zh="人类图 · 门" en="Human Design · Gates" />
+                </p>
+                <p className="mt-2 text-xs leading-6 text-lm2-text-dim">
+                  <Bi
+                    zh="太阳门，是人类图里权重最高的单一信息（约占人格印记70%），已经用真实天文计算得出，下面列出的每一个门也是如此。完整的类型（生产者/投射者/显示者/反映者）与内在权威解读，将在后续版本中加入。"
+                    en="The Sun gate is the single highest-weighted piece of information in Human Design (roughly 70% of the personality imprint), and it's computed from real astronomy — as is every gate listed below. Full Type (Generator / Projector / Manifestor / Reflector) and Authority readings will arrive in a future update."
+                  />
+                </p>
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                  <span className="rounded-sm border border-lm2-amber/40 bg-lm2-amber/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
+                    {t("太阳门（意识）", "Sun Gate (Conscious)")} {report.facts.humanDesign.sunConsciousGate}
+                  </span>
+                  <span className="rounded-sm border border-lm2-text/10 px-4 py-2 text-center font-display text-sm text-lm2-text">
+                    {t("太阳门（潜意识）", "Sun Gate (Unconscious)")} {report.facts.humanDesign.sunUnconsciousGate}
+                  </span>
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 border-t border-lm2-text/10 pt-4 text-xs text-lm2-text-dim sm:grid-cols-3">
+                  {report.facts.humanDesign.personality.map((g) => (
+                    <span key={g.key}>
+                      {isEn() ? g.en : g.zh} — {t("门", "Gate")} {g.gate}.{g.line}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {(phoneNumber.trim() || plateNumber.trim()) && (
+              <div className="lx-glass-lifemap mt-8 p-6 sm:p-8">
+                <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
+                  <Bi zh="数字能量解读" en="Number Energy Reading" />
+                </p>
+                {phoneNumber.trim() && (() => {
+                  const r = analyzePhoneNumber(phoneNumber);
+                  return (
+                    <div className="mt-4">
+                      <p className="text-sm text-lm2-text-dim">{t("手机号", "Phone")} {r.digitsOnly}</p>
+                      <p className="mt-1 font-display text-lg text-lm2-text">
+                        {t("总和灵动数", "Total number")} {r.totalSum} · <Bi zh={r.lingdong.zh} en={r.lingdong.en} />
+                      </p>
+                    </div>
+                  );
+                })()}
+                {plateNumber.trim() && (() => {
+                  const r = analyzePlateNumber(plateNumber);
+                  return (
+                    <div className="mt-4 border-t border-lm2-text/10 pt-4">
+                      <p className="text-sm text-lm2-text-dim">{t("车牌号", "Plate")} {r.digitsOnly}</p>
+                      <p className="mt-1 font-display text-lg text-lm2-text">
+                        {t("总和灵动数", "Total number")} {r.totalSum} · <Bi zh={r.lingdong.zh} en={r.lingdong.en} />
+                      </p>
+                    </div>
+                  );
+                })()}
+                <p className="mt-5 text-xs leading-6 text-lm2-text-dim">
+                  <Bi
+                    zh="这是民俗数字能量学（81数灵动数体系），是约定俗成的符号含义表，不是天文或统计意义上算出来的结论，供参考。"
+                    en="This is folk number-energy numerology (the 81-number system) — a conventional table of symbolic meanings, not an astronomically or statistically derived result. For reference only."
+                  />
+                </p>
+              </div>
+            )}
+
+            </div>
                 {parsed.stageName && <div className="lm-stage-summary"><small><Bi zh="当前生命阶段" en="Current Life Phase" /></small><h3>{parsed.stageName}</h3><p>{parsed.stageDesc}</p></div>}
                 {parsed.keywords.length > 0 && <div className="lm-keywords">{parsed.keywords.slice(0,3).map((k,i)=><span key={i}><b>{k.word}</b><small>{k.desc}</small></span>)}</div>}
               </div>
             )}
+            {report && <div className="lm-restored-content"><h3 className="mt-8 text-xl text-lm2-violet"><Bi zh="完整档案 · 十三项内容说明" en="Complete archive · Thirteen content highlights" /></h3><div className="mx-auto mt-8 max-w-xl space-y-6 text-left">
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">01 · <Bi zh="逐一解读" en="Planet by Planet" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="每一颗行星，都代表生命中的一种核心功能。完整解读不会停留在「你是什么星座」，而会展开：你的太阳如何表达自我，月亮如何影响情绪与内在需求，水星如何影响思考方式，金星如何影响关系与价值感，火星如何影响行动动力——七大行星之间的连接关系，共同组成你独特的生命表达方式。" en="Each planet represents a core function of your life. The reading goes past 'what sign are you' — it unfolds how your Sun expresses itself, how your Moon shapes emotion and inner need, how Mercury shapes thought, how Venus shapes relationships and value, how Mars shapes drive. The connections between all seven form your own way of expressing life." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">02 · <Bi zh="八字深层结构" en="Bazi, in Depth" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="八字不仅是四柱干支，每一个天干地支背后，都隐藏着更细微的生命结构。完整解析将展开十神关系、藏干信息、纳音象征、十二地势，加上胎元、命宫、身宫——从表层出生信息，深入到你的内在运行逻辑。" en="Bazi is more than four pillars of characters — behind every stem and branch is a finer structure. The full analysis unfolds Ten Gods, hidden stems, Na Yin, the twelve growth stages, plus the Fetal Origin, Soul Palace, and Body Palace — from surface birth data into the logic that runs underneath." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">03 · <Bi zh="紫微命盘详解" en="Your Ziwei Chart, Decoded" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="紫微斗数关注的不仅是「有什么星」，更重要的是这些星曜如何组合、如何在你的生命领域中产生作用。完整解析命宫、身宫、主星组合，以及不同人生领域中的表现方式，帮你理解天赋在哪里、成长课题是什么。" en="Ziwei Doushu isn't only about which stars are present — what matters more is how they combine and act across your life. The full reading covers your Soul Palace, Body Palace, and star combinations, and how they show up across different life domains — where your gifts are, and what you're here to grow through." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">04 · <Bi zh="玛雅印记详解" en="Your Maya Sign, Decoded" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="玛雅圣历是一套关于时间与意识象征的古老系统。你的图腾与数字不是简单的标签——完整解读会结合你的整体生命结构，探索你的象征主题、表达方式，以及你与时间节奏之间的连接。" en="The Maya Tzolkin is an ancient system of time and consciousness symbolism. Your day sign and tone are more than labels — the full reading places them inside your whole structure, exploring your symbolic theme, your way of expressing it, and your connection to the rhythm of time." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">05 · <Bi zh="大运走势" en="Major Luck Cycles" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="人生并不是静止的结构，不同阶段会展开不同主题。大运分析帮你观察未来周期中的主要方向、阶段性的变化趋势，以及可能出现的重要生命课题——不是预测固定未来，而是帮你理解自己正在进入怎样的人生阶段。" en="Life isn't a static structure — different phases unfold different themes. The Luck Cycle analysis shows the main direction of what's ahead, the shifts by phase, and the themes likely to surface — not a fixed prediction, but a way to understand what stage of life you're entering." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">06 · <Bi zh="频率自测解读" en="Your Self-Assessment, Interpreted" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="你的主观感受，也是生命探索的重要部分。把你填的能量状态、清晰程度、内在对齐感，跟你的命盘结构进行对照，看见你感受到的自己，与命盘结构呈现出的自己，是否存在不同。" en="Your subjective sense of things is part of the exploration too. Your self-rated energy, clarity, and inner alignment are set against your chart structure, to see whether the self you feel and the self your chart shows actually agree." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">07 · <Bi zh="财富与事业频率地图" en="Wealth & Career Map" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="财富不仅是结果，更是一种价值交换方式。完整分析你的创造优势、适合的发展方向、事业表达方式，以及财富形成路径，帮你理解什么样的方式更容易发挥你的生命价值。" en="Wealth is more than an outcome — it's a way value moves through you. The full analysis covers your creative strengths, the directions suited to you, how you express work, and how wealth tends to form for you — a way to see what lets your value actually move." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">08 · <Bi zh="关系共振地图" en="Relationship Resonance Map" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="关系，是两个生命结构的相遇。完整解析会照见深度关系中的互动模式、情感表达、内在需求与安全感，也看见关系如何推动彼此成长。" en="A relationship is where two life structures meet. The full reading reflects interaction patterns, emotional expression, inner needs, and felt safety within deep relationships, and how connection invites both people to grow." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">09 · <Bi zh="人生周期导航" en="Life Cycle Navigation" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="生命探索不应该停留在一次阅读。根据你的当前状态，生成30天关注主题、90天调整方向、365天长期成长路径——让生命图谱，成为持续陪伴你的导航。" en="Exploring your life shouldn't end after one read. Based on your current state, it generates a 30-day focus, a 90-day direction, and a 365-day long-term path — so your Life Map becomes a navigation that stays with you." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">10 · <Bi zh="专属灵犀场练习" en="A Personal Lingxi Field Practice" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="每个人的状态不同，适合自己的练习也应该不同。灵犀场根据你的生命结构，生成对应的呼吸练习、觉察方式、内在整理路径，帮助理解，逐渐进入实践。" en="Everyone's state is different, and what fits should be too. Based on your structure, the field generates a breathing practice, a way of noticing, and a path for inner clearing — from understanding, into practice." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">11 · <Bi zh="象征叙事镜面" en="Symbolic Narrative Mirror" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="这是灵犀场中的创意叙事空间。根据你的命盘元素，创造一段象征性的生命故事——它不是历史证明，而是一种想象与自我探索，通过故事看见自己与生命主题之间的连接。" en="A creative narrative corner of the field. Using your chart's elements, it weaves a symbolic vignette of your life — not a historical claim, but a piece of imagination and self-exploration, seeing your connection to your life's themes through story." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">12 · <Bi zh="完整报告可下载PDF" en="Downloadable PDF" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="你的生命探索会形成一份完整档案——支持PDF保存、长期查看、随时回顾，让这次探索，成为属于你的生命记录。" en="Your exploration becomes a complete record — saved as a PDF, kept long-term, revisited anytime. This exploration becomes a record that's yours." />
+                  </p>
+                </div>
+                <div>
+                  <p className="font-display text-sm text-lm2-violet">13 · <Bi zh="额外信息也不会被浪费" en="Nothing You Enter Goes Unused" /></p>
+                  <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
+                    <Bi zh="如果你填了手机号、车牌号或职业，你输入的每一项信息，都是连接你与灵犀场的一部分——不同信息会作为辅助维度，参与对应章节的交叉分析，让最终呈现的内容，更加贴近你的个人状态。" en="If you entered a phone number, license plate, or occupation, every piece you gave is part of your connection to the field — each becomes a supporting dimension, woven into the relevant section, so what you get back sits closer to who you actually are." />
+                  </p>
+                </div>
+              </div></div>}
             {report && <div className="lm-unlock-card">
               <div><small><Bi zh="完整生命图谱" en="Complete Life Blueprint" /></small><strong>¥{getProduct("life-map-report")?.priceRmb}</strong><p><Bi zh="生成订单前会再次确认；付款完成后生成完整报告并开放 PDF 下载。" en="You confirm again before an order is created. After payment, the complete report and PDF download become available." /></p></div>
               <button onClick={unlockFull} disabled={unlocking}>{unlocking ? t("正在准备支付…", "Preparing payment…") : t(`解锁完整档案 ¥${getProduct("life-map-report")?.priceRmb}`, `Unlock complete archive ¥${getProduct("life-map-report")?.priceRmb}`)} →</button>
@@ -873,7 +1111,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
                   <span><Bi zh="待解锁" en="LOCKED" /></span>
                 </div>
                 <h3><Bi zh="完整档案将在这里展开" en="Your complete archive will unfold here" /></h3>
-                <p><Bi zh="先在左侧生成真实免费预览。确认解锁并支付成功后，十五个以上的实际报告章节会直接进入右侧阅读区，并开放 PDF 下载；这里不再显示虚假的八条占位目录。" en="Generate your real free preview first. After confirmed payment, the actual report sections open directly in this reader with PDF download. No placeholder chapter list is shown." /></p>
+                <p><Bi zh="先在左侧生成真实免费预览。确认解锁并支付成功后，十五个以上的实际报告章节会直接进入右侧阅读区，并开放 PDF 下载。" en="Generate your real free preview first. After confirmed payment, the actual report sections open directly in this reader with PDF download." /></p>
               </div>
             )}
           </aside>
@@ -881,6 +1119,12 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
       </section>
 
       <style>{`
+        .lm-restored-content { font-size: 14px; line-height: 1.85; }
+        .lm-restored-content div { padding: 18px; }
+        .lm-restored-intro section { padding: 0; margin: 0 0 20px; }
+        .lm-restored-intro section div { padding: 18px; }
+        .lm-restored-intro h1 { font-size: 24px; }
+        .lm-restored-intro p { font-size: 14px; line-height: 1.9; }
         .lm-core {
           width: 120px; height: 120px; border-radius: 999px;
           background: conic-gradient(from 0deg, #E8869E, #E7B85C, #5FC79B, #5A9FDE, #A47ADC, #E8869E);

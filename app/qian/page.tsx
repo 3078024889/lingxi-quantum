@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import QianFlow from "./QianFlow";
-import FieldProductIntroduction from "@/components/FieldProductIntroduction";
+
 
 export const dynamic = "force-dynamic";
 
@@ -17,8 +17,7 @@ export default function QianPage() {
   return (
     <>
       <Nav />
-      <main className="pt-24">
-        <FieldProductIntroduction href="/qian" />
+      <main className="pt-4">
         <div id="field-assessment"><QianFlow /></div>
       </main>
       <Footer />
