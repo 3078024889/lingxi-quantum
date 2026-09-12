@@ -1,3 +1,4 @@
+import PracticeWorkspace from "@/components/PracticeWorkspace";
 export const dynamic = "force-dynamic";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -16,8 +17,7 @@ export default async function HeartResetPage() {
   return (
     <>
       <Nav />
-      <main className="pt-16">
-        <section className="relative overflow-hidden px-6 py-24 text-center">
+      <PracticeWorkspace practice="heart-reset" steps={[{"id":"practice-chapter-1","zh":"为何心需要归零","en":"Why the heart needs zeroing","level":"h2"},{"id":"practice-chapter-2","zh":"闭眼入静","en":"Close Your Eyes and Settle","level":"h3"},{"id":"practice-chapter-3","zh":"心区激活","en":"Activate the Heart Space","level":"h3"},{"id":"practice-chapter-4","zh":"绿色灌注","en":"Infuse with Green","level":"h3"},{"id":"practice-chapter-5","zh":"心观世界","en":"See the World Through the Heart","level":"h3"}]} hero={<section className="relative overflow-hidden px-6 py-24 text-center">
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-40">
             <GateHealth className="h-[420px] w-[420px]" />
           </div>
@@ -35,12 +35,13 @@ export default async function HeartResetPage() {
             />
           </p>
           </div>
-        </section>
+        </section>}>
+
 
         <section className="px-6 py-16">
           <div className="bg-reading-glass mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="为何心需要归零" en="Why the heart needs zeroing" /></h2>
+              <h2 id="practice-chapter-1" className="font-display text-3xl font-light text-bone"><Bi zh="为何心需要归零" en="Why the heart needs zeroing" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="任何复杂的有机体，甚或机器，都需要休息时间。休息是将系统所累积的压力进行清零重置的方式，这些压力源于不断增殖的信息超载和身体能量的流失或熵减。在整个清醒时间里，心都在通过心智和身体这样的感知镜头累积着这些压力。这些压力将稠密性增加于心的区域，那就如同浓雾，能够模糊掉心的理解性视野，进而遮蔽掉它所有品质中最为珍贵的慈悲性表达。"
@@ -68,7 +69,7 @@ export default async function HeartResetPage() {
               <div className="space-y-10">
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第一步" en="Step 1" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="闭眼入静" en="Close Your Eyes and Settle" /></h3>
+                  <h3 id="practice-chapter-2" className="mt-2 font-display text-2xl text-bone"><Bi zh="闭眼入静" en="Close Your Eyes and Settle" /></h3>
                   <p className="mt-3">
                     <Bi zh="闭上你的眼睛。将注意力集中于呼吸上。" en="Close your eyes. Bring your attention to your breath." />
                   </p>
@@ -76,7 +77,7 @@ export default async function HeartResetPage() {
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第二步" en="Step 2" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="心区激活" en="Activate the Heart Space" /></h3>
+                  <h3 id="practice-chapter-3" className="mt-2 font-display text-2xl text-bone"><Bi zh="心区激活" en="Activate the Heart Space" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="当你吸气时，想象那个环抱着心的空间变得活跃起来。你可能会在这个区域感觉到温暖。你可以将手放在你的心上。无论你是被如何引领的，都去将这温暖感觉成一种具有清洁性的能量。如果可以的话，保持住这种感觉，即使只有片刻。"
@@ -87,7 +88,7 @@ export default async function HeartResetPage() {
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第三步" en="Step 3" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="绿色灌注" en="Infuse with Green" /></h3>
+                  <h3 id="practice-chapter-4" className="mt-2 font-display text-2xl text-bone"><Bi zh="绿色灌注" en="Infuse with Green" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="如果你能做到的话，给这种温暖赋予一种生机勃勃的绿色——你在深深的原始森林中看到的那种。当你感觉到这种绿色的、温暖的能量时，允许它向上漂移进你的头部。"
@@ -98,7 +99,7 @@ export default async function HeartResetPage() {
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第四步" en="Step 4" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="心观世界" en="See the World Through the Heart" /></h3>
+                  <h3 id="practice-chapter-5" className="mt-2 font-display text-2xl text-bone"><Bi zh="心观世界" en="See the World Through the Heart" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="睁开你的眼睛，来通过你的心看这个世界。看着它，就如同你是用你的心在看，而不仅仅只是用你的眼-脑系统。这就是重置。"
@@ -120,7 +121,8 @@ export default async function HeartResetPage() {
             </PracticeGate>
           </div>
         </section>
-      </main>
+
+</PracticeWorkspace>
       <Footer />
     </>
   );

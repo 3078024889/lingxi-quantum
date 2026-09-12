@@ -20,7 +20,7 @@ const PRACTICE_LABEL: Record<Exclude<PracticeKey, "">, { zh: string; en: string 
 // 修炼心得记录——小仙女自己平时修炼心脏呼吸，会把体会记在手机备忘录
 // 里，这里给场域内一个更贴合视觉、能跨设备同步的地方去做同一件事。
 // 不调用AI、不生成任何解读，纯粹是"我自己的记录"。
-export default function PracticeJournal() {
+export default function PracticeJournal({ initialPractice = "" }: { initialPractice?: PracticeKey } = {}) {
   // 之前这里在组件最顶层直接 const supabase = createClient()——这行
   // 代码在"每次渲染"都会执行，包括 Next.js 构建阶段对这个页面做服务器
   // 端预渲染的那一次也会执行到。预渲染发生在构建环境里，不一定能拿到
@@ -35,7 +35,7 @@ export default function PracticeJournal() {
   const t = (zh: string, en: string) => (langEn ? en : zh);
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [entries, setEntries] = useState<Entry[]>([]);
-  const [practice, setPractice] = useState<PracticeKey>("");
+  const [practice, setPractice] = useState<PracticeKey>(initialPractice);
   const [content, setContent] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");

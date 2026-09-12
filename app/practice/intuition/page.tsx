@@ -1,3 +1,4 @@
+import PracticeWorkspace from "@/components/PracticeWorkspace";
 export const dynamic = "force-dynamic";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -17,8 +18,7 @@ export default async function IntuitionPage() {
   return (
     <>
       <Nav />
-      <main className="pt-16">
-        <section className="relative overflow-hidden px-6 py-24 text-center">
+      <PracticeWorkspace practice="intuition" steps={[{"id":"practice-chapter-1","zh":"背景与定位","en":"Background and positioning","level":"h2"},{"id":"practice-chapter-2","zh":"光体的本质","en":"The nature of the light-body","level":"h2"},{"id":"practice-chapter-3","zh":"两条轴的交汇","en":"Where the two axes meet","level":"h2"},{"id":"practice-chapter-4","zh":"光体的迁移与意义","en":"The light-body's migration, and its meaning","level":"h2"},{"id":"practice-chapter-5","zh":"建设者与光之承载者","en":"Builders and Light-Bearers","level":"h2"},{"id":"practice-chapter-6","zh":"呼吸与灵魂的关系","en":"Breath and the soul","level":"h2"},{"id":"practice-chapter-7","zh":"呼吸的终极目的","en":"The ultimate purpose of the breath","level":"h2"},{"id":"practice-chapter-8","zh":"心是什么","en":"What the heart is","level":"h2"},{"id":"practice-chapter-9","zh":"关于内在声音","en":"On the inner voice","level":"h2"},{"id":"practice-chapter-10","zh":"情感历史的清理","en":"Clearing the emotional history","level":"h2"},{"id":"practice-chapter-11","zh":"引文与投射","en":"Recitation and Projection","level":"h3"},{"id":"practice-chapter-12","zh":"容许光安顿","en":"Allowing the Light to Settle","level":"h3"},{"id":"practice-chapter-13","zh":"放手（臣服）","en":"Letting Go (Surrender)","level":"h3"},{"id":"practice-chapter-14","zh":"光之连接（光之分送）","en":"Light Connection (Distribution of Light)","level":"h3"}]} hero={<section className="relative overflow-hidden px-6 py-24 text-center">
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-40">
             <GateMind className="h-[420px] w-[420px]" />
           </div>
@@ -36,13 +36,14 @@ export default async function IntuitionPage() {
             />
           </p>
           </div>
-        </section>
+        </section>}>
+
 
         <section className="px-6 py-16">
           <div className="bg-reading-glass mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
-              <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>
+              <h2 id="practice-chapter-1" className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="本文传递的内容，源自来自远古遥远星系的智慧传承，以古老又切合当下的声音呈现。"
@@ -58,7 +59,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的本质" en="The nature of the light-body" /></h2>
+              <h2 id="practice-chapter-2" className="font-display text-3xl font-light text-bone"><Bi zh="光体的本质" en="The nature of the light-body" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="光体是神圣心智的一枚粒子，由中枢太阳投射，穿越第5、第4维度矩阵，最终在人类心脏内具体表现。它最初栖息于心脏，前七年内上移至松果腺，临终时返回第五维度。如今，在宏大觉醒时代，它正迁移回心脏方向，现核心栖息地位于胸腺（心脏与喉咙之间），被称为「上升心经」或「心脏之冠」。"
@@ -68,7 +69,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="两条轴的交汇" en="Where the two axes meet" /></h2>
+              <h2 id="practice-chapter-3" className="font-display text-3xl font-light text-bone"><Bi zh="两条轴的交汇" en="Where the two axes meet" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="行星轴（水平轴）：连接光体与地球物质存在，将光体接地锚定于行星。中枢太阳轴（垂直轴）：连接光体与中枢太阳源头，承载下降与上升的能量流。两条轴的交汇点——上升心经，正是个体的活化点。呼吸与想象力的整合，是最有效的活化工具。"
@@ -78,7 +79,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="光体的迁移与意义" en="The light-body's migration, and its meaning" /></h2>
+              <h2 id="practice-chapter-4" className="font-display text-3xl font-light text-bone"><Bi zh="光体的迁移与意义" en="The light-body's migration, and its meaning" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升心经，以便将能量充分绽放至行星栅格，实现其目的。"
@@ -94,7 +95,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="建设者与光之承载者" en="Builders and Light-Bearers" /></h2>
+              <h2 id="practice-chapter-5" className="font-display text-3xl font-light text-bone"><Bi zh="建设者与光之承载者" en="Builders and Light-Bearers" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="当下化身的人类中，有许多是「建设者」——设计新文化、金融、科技、灵性系统的设计师与工程师。"
@@ -110,7 +111,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="呼吸与灵魂的关系" en="Breath and the soul" /></h2>
+              <h2 id="practice-chapter-6" className="font-display text-3xl font-light text-bone"><Bi zh="呼吸与灵魂的关系" en="Breath and the soul" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="灵魂的呼吸由光体引导。光体智能的工作席位于上升心经。吸气时，中枢太阳的光能经顶轮流入，停驻于太阳神经丛，闪耀个人标识的金色光芒。呼气时，能量从太阳神经丛向上释放至上升心经，再向外绽放到行星轴，接地进第三维度所有存在的能量场。这种接地，灌注以人类仪具的内在聚合一致性，启动人类情感场，构建集体之心与连接性心智，使行星跨越维度栅栏。"
@@ -120,7 +121,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="呼吸的终极目的" en="The ultimate purpose of the breath" /></h2>
+              <h2 id="practice-chapter-7" className="font-display text-3xl font-light text-bone"><Bi zh="呼吸的终极目的" en="The ultimate purpose of the breath" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="吸气吸入中枢太阳的光，带入灵魂的工作室，添加进带有你个人指纹的爱，再释放给兄弟姊妹和地球——这一简单行为便创造了更高的连接。借此重新激活呼吸与心跳的联合，校准于宏大觉醒，将假象场留在身后。"
@@ -131,7 +132,7 @@ export default async function IntuitionPage() {
 
             <div>
               <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="二 · 内在声音与直觉丹道" en="II · The Inner Voice and Intuitive Alchemy" /></p>
-              <h2 className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="心是什么" en="What the heart is" /></h2>
+              <h2 id="practice-chapter-8" className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="心是什么" en="What the heart is" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="心远远不只是泵压血液的物质性肌肉。能量性心脏是物质性心脏的源头性模板——正如物质心脏分送氧气，能量心分送直觉性智能给心智。"
@@ -159,7 +160,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="关于内在声音" en="On the inner voice" /></h2>
+              <h2 id="practice-chapter-9" className="font-display text-3xl font-light text-bone"><Bi zh="关于内在声音" en="On the inner voice" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="这个世界的声音可以追溯到自我人格，而原创性的声音则出自心之深处的耳语和轻推。心的声音未必由话语构成，更多是感觉。心是多重层次的，真正内在的声音鸣奏着慈悲与理解的平衡。"
@@ -175,7 +176,7 @@ export default async function IntuitionPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-3xl font-light text-bone"><Bi zh="情感历史的清理" en="Clearing the emotional history" /></h2>
+              <h2 id="practice-chapter-10" className="font-display text-3xl font-light text-bone"><Bi zh="情感历史的清理" en="Clearing the emotional history" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="情感残骸并非铭刻在心本身，而是从心传递到大脑及其神经网络。清理需要因循同一条路线，是一个过程。它以宽恕性情感（慈悲频率）开始。心和大脑是一个联合系统，当被慈悲和理解的核心能量所夹带时，在三维度环境中表达固有智能会更为有效。"
@@ -200,7 +201,7 @@ export default async function IntuitionPage() {
               <div className="space-y-10">
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第一步" en="Step 1" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="引文与投射" en="Recitation and Projection" /></h3>
+                  <h3 id="practice-chapter-11" className="mt-2 font-display text-2xl text-bone"><Bi zh="引文与投射" en="Recitation and Projection" /></h3>
                   <p className="mt-3">
                     <Bi zh="念诵以下引文，同时仔细聆听，容许文字在心里形成直观的画面：" en="Recite the following passage, and as you do, listen closely, allowing the words to form an intuitive image within the heart:" />
                   </p>
@@ -220,7 +221,7 @@ export default async function IntuitionPage() {
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第二步" en="Step 2" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="容许光安顿" en="Allowing the Light to Settle" /></h3>
+                  <h3 id="practice-chapter-12" className="mt-2 font-display text-2xl text-bone"><Bi zh="容许光安顿" en="Allowing the Light to Settle" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="将光感知为一种非常精炼的金色薄雾，它悬浮着，在无法感知的层面却又运动着。重要的是去感觉：光在你头部的这种移动具有智能——一种重写的能力，正在重写、改编你的情感历史。这是一个过程，需要坚持践习一段时间——典型的是30天或更长。"
@@ -237,7 +238,7 @@ export default async function IntuitionPage() {
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第三步" en="Step 3" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="放手（臣服）" en="Letting Go (Surrender)" /></h3>
+                  <h3 id="practice-chapter-13" className="mt-2 font-display text-2xl text-bone"><Bi zh="放手（臣服）" en="Letting Go (Surrender)" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="完成前两步后，采取臣服或放手的姿态——对技术带来的结果放手，对情感历史正在被改变这一事实放手。"
@@ -257,7 +258,7 @@ export default async function IntuitionPage() {
 
                 <div className="border-l border-lattice/30 pl-6">
                   <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第四步" en="Step 4" /></p>
-                  <h3 className="mt-2 font-display text-2xl text-bone"><Bi zh="光之连接（光之分送）" en="Light Connection (Distribution of Light)" /></h3>
+                  <h3 id="practice-chapter-14" className="mt-2 font-display text-2xl text-bone"><Bi zh="光之连接（光之分送）" en="Light Connection (Distribution of Light)" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="原理：如同物质心脏通过血液将氧气分送全身，量子心藉由视觉能量和情感真实性将光分送给人类仪器的各个部分。"
@@ -294,7 +295,8 @@ export default async function IntuitionPage() {
             </PracticeGate>
           </div>
         </section>
-      </main>
+
+</PracticeWorkspace>
       <Footer />
     </>
   );

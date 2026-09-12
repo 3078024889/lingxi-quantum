@@ -1,3 +1,4 @@
+import PracticeWorkspace from "@/components/PracticeWorkspace";
 export const dynamic = "force-dynamic";
 import Nav from "@/components/Nav";
 import Bi from "@/components/Bi";
@@ -72,9 +73,7 @@ export default async function BreathPage() {
   return (
     <>
       <Nav />
-      <main className="pt-16">
-        {/* ── 开篇 ── */}
-        <section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
+      <PracticeWorkspace practice="breath" steps={[...standardSteps.map((step, index) => ({id: `practice-standard-${index}`, zh: step.title, en: step.titleEn, level: "h3"})),{"id":"practice-chapter-1","zh":"呼吸与本源意识","en":"Breath and primordial consciousness","level":"h2"},{"id":"practice-chapter-2","zh":"节律路径 · 完整练习图","en":"Rhythm path · the complete practice chart","level":"h2"},{"id":"practice-chapter-3","zh":"节律路径示意","en":"The rhythm path","level":"h3"},{"id":"practice-chapter-4","zh":"五秒呼吸节律","en":"The five-second breath rhythm","level":"h3"},{"id":"practice-chapter-5","zh":"标准五步法","en":"The standard five-step method","level":"h2"},{"id":"practice-chapter-6","zh":"交互式呼吸引导","en":"Interactive breath guide","level":"h2"}]} hero={<section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20">
             <CosmicField className="h-full w-auto" />
           </div>
@@ -106,12 +105,13 @@ export default async function BreathPage() {
               </p>
             </div>
           </div>
-        </section>
+        </section>}>
+
 
         {/* ── 呼吸与本源意识 ── */}
         <section className="border-t border-white/5 px-6 py-24">
           <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-            <h2 className="font-display text-3xl font-light text-bone">
+            <h2 id="practice-chapter-1" className="font-display text-3xl font-light text-bone">
               <Bi zh="呼吸与本源意识" en="Breath and primordial consciousness" />
             </h2>
             <div className="mt-10 space-y-8 text-base leading-9 text-bone-dim">
@@ -166,7 +166,7 @@ export default async function BreathPage() {
             {/* ── 节律路径 · 完整练习图 ── */}
             <section className="border-t border-white/5 px-6 py-24">
               <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-                <h2 className="font-display text-3xl font-light text-bone">
+                <h2 id="practice-chapter-2" className="font-display text-3xl font-light text-bone">
                   <Bi zh="节律路径 · 完整练习图" en="Rhythm path · the complete practice chart" />
                 </h2>
                 <div className="mt-6 space-y-4 text-base leading-9 text-bone-dim">
@@ -199,7 +199,7 @@ export default async function BreathPage() {
 
                 {/* ── 意识轴线坐标 ── */}
                 <div className="mt-16">
-                  <h3 className="text-center font-display text-lg font-light text-bone">
+                  <h3 id="practice-chapter-3" className="text-center font-display text-lg font-light text-bone">
                     <Bi zh="节律路径示意" en="The rhythm path" />
                   </h3>
                   <div className="mx-auto mt-6 flex max-w-md flex-wrap justify-center gap-x-5 gap-y-2">
@@ -240,7 +240,7 @@ export default async function BreathPage() {
 
                 {/* ── 五秒呼吸节律 ── */}
                 <div className="mt-16">
-                  <h3 className="text-center font-display text-lg font-light text-bone">
+                  <h3 id="practice-chapter-4" className="text-center font-display text-lg font-light text-bone">
                     <Bi zh="五秒呼吸节律" en="The five-second breath rhythm" />
                   </h3>
                   <figure className="mt-6">
@@ -261,12 +261,12 @@ export default async function BreathPage() {
             {/* ── 标准五步法 ── */}
             <section className="border-t border-white/5 px-6 py-24">
               <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-                <h2 className="font-display text-3xl font-light text-bone">
+                <h2 id="practice-chapter-5" className="font-display text-3xl font-light text-bone">
                   <Bi zh="标准五步法" en="The standard five-step method" />
                 </h2>
                 <div className="mt-12 space-y-14">
-                  {standardSteps.map((s) => (
-                    <div key={s.step} className="border-l border-lattice/30 pl-6">
+                  {standardSteps.map((s, index) => (
+                    <div id={`practice-standard-${index}`} key={s.step} className="border-l border-lattice/30 pl-6">
                       <p className="font-display text-sm uppercase tracking-widest2 text-amber">
                         <Bi zh={s.step} en={s.stepEn} />
                       </p>
@@ -288,7 +288,7 @@ export default async function BreathPage() {
             {/* ── 交互式呼吸引导 ── */}
             <section className="border-t border-white/5 px-6 py-24">
               <div className="mx-auto max-w-2xl">
-                <h2 className="mb-10 text-center font-display text-3xl font-light text-bone">
+                <h2 id="practice-chapter-6" className="mb-10 text-center font-display text-3xl font-light text-bone">
                   <Bi zh="交互式呼吸引导" en="Interactive breath guide" />
                 </h2>
                 <div className="bg-reading-glass px-6 py-16">
@@ -318,7 +318,8 @@ export default async function BreathPage() {
             </div>
           </section>
         )}
-      </main>
+
+</PracticeWorkspace>
       <Footer />
     </>
   );

@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import { ConsoleSectionTitle, ConsoleStatus, FieldConsole } from "@/components/FieldConsole";
-import ArchetypeProgress from "./ArchetypeProgress";
+import ArchetypeWorkspace from "./ArchetypeWorkspace";
 
 export const metadata: Metadata = {
   title: "生命原型 · 八流归一 | 灵犀场",
@@ -28,8 +28,8 @@ const FOUNDATIONS = [
 ] as const;
 
 export default function LifeArchetypePage() {
-  return <><Nav /><FieldConsole eyebrow="场域精测 · 汇流层" eyebrowEn="FIELD INSIGHTS · CONVERGENCE" title="生命原型，让八条生命支流汇成一张长期地图" titleEn="Life Archetype turns eight evidence streams into one evolving map" description="它不是另一份孤立测评。系统先核对同一主体、时间窗口与底层证据，再生成可追溯、可随新记录更新的原型档案。" descriptionEn="This is not another isolated test. The system verifies subject identity, time window and evidence before creating a traceable archetype archive that can evolve." heroArtwork="field-mirror" features={[{ zh: "同一主体核验", en: "Identity verified", glyph: "◎" }, { zh: "八流证据", en: "Eight evidence streams", glyph: "08" }, { zh: "365 天窗口", en: "365-day window", glyph: "◌" }, { zh: "版本持续更新", en: "Versioned evolution", glyph: "↻" }]} aside={<><ConsoleStatus glyph="◇" title="不是直接测出来" titleEn="Not a standalone test" tone="cyan"><p><Bi zh="生命原型只读取同一主体已经完成的八类场域证据。数据不足、身份不一致或旧记录缺证据时，系统会明确停止生成。" en="Life Archetype reads only eight completed same-subject evidence streams. Missing, mismatched or legacy evidence stops generation explicitly." /></p></ConsoleStatus><ConsoleStatus glyph="▣" title="完整报告交付" titleEn="Complete report delivery"><p><Bi zh="满足真实汇流条件后，账户可进入网页版完整档案。PDF 下载沿用正式报告交付流程，不以页面截图冒充报告。" en="Once real convergence conditions are met, the full web archive becomes available. PDF delivery follows the formal report flow and is never a webpage screenshot." /></p></ConsoleStatus></>}>
-    <section className="archetype-intro-grid">
+  return <><Nav /><FieldConsole className="archetype-console" eyebrow="场域精测 · 汇流层" eyebrowEn="FIELD INSIGHTS · CONVERGENCE" title="生命原型，让八条生命支流汇成一张长期地图" titleEn="Life Archetype turns eight evidence streams into one evolving map" description="它不是另一份孤立测评。系统先核对同一主体、时间窗口与底层证据，再生成可追溯、可随新记录更新的原型档案。" descriptionEn="This is not another isolated test. The system verifies subject identity, time window and evidence before creating a traceable archetype archive that can evolve." heroArtwork="field-mirror" features={[{ zh: "同一主体核验", en: "Identity verified", glyph: "◎" }, { zh: "八流证据", en: "Eight evidence streams", glyph: "08" }, { zh: "365 天窗口", en: "365-day window", glyph: "◌" }, { zh: "版本持续更新", en: "Versioned evolution", glyph: "↻" }]} aside={<><ConsoleStatus glyph="◇" title="不是直接测出来" titleEn="Not a standalone test" tone="cyan"><p><Bi zh="生命原型只读取同一主体已经完成的八类场域证据。数据不足、身份不一致或旧记录缺证据时，系统会明确停止生成。" en="Life Archetype reads only eight completed same-subject evidence streams. Missing, mismatched or legacy evidence stops generation explicitly." /></p></ConsoleStatus><ConsoleStatus glyph="▣" title="完整报告交付" titleEn="Complete report delivery"><p><Bi zh="满足真实汇流条件后，账户可进入网页版完整档案。PDF 下载沿用正式报告交付流程，不以页面截图冒充报告。" en="Once real convergence conditions are met, the full web archive becomes available. PDF delivery follows the formal report flow and is never a webpage screenshot." /></p></ConsoleStatus></>}>
+    <ArchetypeWorkspace>    <section className="archetype-intro-grid">
       <div className="archetype-portrait" role="img" aria-label="生命原型的多维意识场视觉" />
       <div className="archetype-intro-copy">
         <p className="archetype-kicker"><Bi zh="生命原型如何形成" en="HOW THE ARCHETYPE FORMS" /></p>
@@ -46,7 +46,6 @@ export default function LifeArchetypePage() {
       <div className="archetype-foundation-grid">{FOUNDATIONS.map(([zh, en, bodyZh, bodyEn], index) => <article key={en}><span>{String(index + 1).padStart(2, "0")}</span><h3><Bi zh={zh} en={en} /></h3><small>{en}</small><p><Bi zh={bodyZh} en={bodyEn} /></p></article>)}</div>
     </section>
 
-    <ConsoleSectionTitle zh="我的八流汇聚" en="My eight-stream convergence" actionHref="/field-tests" actionZh="返回场域精测" actionEn="Back to Field Insights" />
-    <div id="archetype-progress"><ArchetypeProgress /></div>
+</ArchetypeWorkspace>
   </FieldConsole><Footer /></>;
 }

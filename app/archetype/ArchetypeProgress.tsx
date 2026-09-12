@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 type Tributary = { productId: string; nameZh: string; nameEn: string; noteZh?: string; completed: boolean; assessmentCompleted?: boolean; needsRetest?: boolean; completedAt?: string | null };
 type Subject = { subject: { subjectId: string; displayName: string; birthDate?: string }; completed: number };
-type Progress = { authenticated: boolean; ready: boolean; completed: number; subject?: Subject["subject"]; subjects?: Subject[]; tributaries: Tributary[]; submissionId?: string; archivedSubmissionId?: string; blockedReason?: "identity-mismatch"|"legacy-evidence-missing"|"outside-365-days"|"coverage-incomplete"; subjectSelectionRequired?: boolean; error?: string };
+export type Progress = { authenticated: boolean; ready: boolean; completed: number; subject?: Subject["subject"]; subjects?: Subject[]; tributaries: Tributary[]; submissionId?: string; archivedSubmissionId?: string; blockedReason?: "identity-mismatch"|"legacy-evidence-missing"|"outside-365-days"|"coverage-incomplete"; subjectSelectionRequired?: boolean; error?: string };
 
 function blockedCopy(data: Progress) {
   if (data.subjectSelectionRequired) return "此账户已有多个完成八流的姓名主体。请选择姓名核对，系统不会自行合并或猜测。";
@@ -14,7 +14,7 @@ function blockedCopy(data: Progress) {
   return "自第一条支流开启之日起，365 天内完成八项同主体场域精测。八流齐备后，系统才会读取底层证据并生成完整原型档案。";
 }
 
-export default function ArchetypeProgress() {
+export default function ArchetypeProgress({onState}: {onState?: (data: Progress | null) => void} = {}) {
   const [data, setData] = useState<Progress | null>(null);
   const [selected, setSelected] = useState("");
   const [loading, setLoading] = useState(true);
@@ -37,11 +37,13 @@ export default function ArchetypeProgress() {
   }, []);
 
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => { onState?.(loading ? null : data); }, [data, loading, onState]);
 
   if (loading && !data) return <section className="archetype-progress-shell"><p className="archetype-progress-loading">正在核对同一报告主体的八条生命支流…</p></section>;
   if (loadError && !data) return <section className="archetype-progress-shell archetype-progress-signed-out"><div><p className="archetype-kicker">EVIDENCE SERVICE</p><h2>真实进度暂时无法读取</h2><p>{loadError}</p></div><button type="button" onClick={() => void load()}>重新读取 →</button></section>;
   if (!data?.authenticated) return <section className="archetype-progress-shell archetype-progress-signed-out"><div><p className="archetype-kicker">YOUR EVIDENCE MAP</p><h2>登录后查看真实八流进度</h2><p>系统只核对同一主体名下的有效报告，不会把同一账户中为家人、朋友或伴侣生成的档案混在一起。</p></div><a href="/account">登录并查看我的进度 →</a></section>;
 
+  const destinations: Record<string,string> = {"life-map-report":"/life-map","relationship-resonance":"/relationship","resilience-report":"/resilience","romance-report":"/romance","wealth-report":"/wealth","daily-tide-report":"/daily","tarot-reading":"/mirror","qian-reading":"/qian"};
   const percent = Math.round(((data.completed ?? 0) / 8) * 100);
   const reportId = data.submissionId ?? data.archivedSubmissionId;
 
@@ -51,9 +53,9 @@ export default function ArchetypeProgress() {
       <div className="archetype-progress-meter" aria-label={`已完成 ${data.completed ?? 0} 项，共 8 项`}><strong>{data.completed ?? 0}<small>/ 8</small></strong><span><i style={{ width: `${percent}%` }} /></span><p>{percent}% · 仅按有效记录计算</p></div>
     </div>
 
-    {(data.subjects?.length ?? 0) > 0 && <label className="archetype-subject-select">核对报告主体<select value={selected} onChange={(event) => { setSelected(event.target.value); if (event.target.value) void load(event.target.value); }}><option value="">请选择同一姓名主体</option>{data.subjects!.map((item) => <option key={item.subject.subjectId} value={item.subject.subjectId}>{item.subject.displayName} · {item.completed}/8</option>)}</select></label>}
+    {(data.subjects?.length ?? 0) > 0 && <label className="archetype-subject-select">核对报告主体<select disabled={loading} value={selected} onChange={(event) => { setSelected(event.target.value); if (event.target.value) void load(event.target.value); }}><option value="">请选择同一姓名主体</option>{data.subjects!.map((item) => <option key={item.subject.subjectId} value={item.subject.subjectId}>{item.subject.displayName} · {item.completed}/8</option>)}</select></label>}
 
-    <div className="archetype-stream-grid">{(data.tributaries ?? []).map((item, index) => <article key={item.productId} className={item.needsRetest ? "needs-retest" : item.completed ? "is-complete" : ""}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{item.nameZh}</h3><small>{item.nameEn}</small>{item.completedAt && <p>采用记录 · {new Date(item.completedAt).toLocaleString("zh-CN")}</p>}{item.noteZh && <p>{item.noteZh}</p>}</div><b>{item.needsRetest ? "旧版缺证据" : item.completed ? "已完成" : item.assessmentCompleted ? "待恢复权限" : "未开启"}</b></article>)}</div>
+    <div className="archetype-stream-grid">{(data.tributaries ?? []).map((item, index) => <article key={item.productId} className={item.needsRetest ? "needs-retest" : item.completed ? "is-complete" : ""}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{item.nameZh}</h3><small>{item.nameEn}</small>{item.completedAt && <p>采用记录 · {new Date(item.completedAt).toLocaleString("zh-CN")}</p>}{item.noteZh && <p>{item.noteZh}</p>}</div><b>{item.needsRetest ? "旧版缺证据" : item.completed ? "已完成" : item.assessmentCompleted ? "待恢复权限" : "未开启"}</b>{!item.completed && <a href={item.assessmentCompleted && !item.needsRetest ? "/account" : destinations[item.productId] || "/field-tests"}>{item.assessmentCompleted && !item.needsRetest ? "查看权限 →" : "继续这条支流 →"}</a>}</article>)}</div>
 
     {data.ready && reportId ? <a href={`/mini-report?id=${encodeURIComponent(reportId)}`} className="archetype-report-link">展开完整生命原型报告 →</a> : <div className="archetype-progress-boundary">{blockedCopy(data)}</div>}
     {data.error && <p className="archetype-progress-error">{data.error}</p>}

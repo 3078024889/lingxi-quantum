@@ -1,3 +1,4 @@
+import "@/components/practice-workspace.css";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -35,7 +36,7 @@ export default function PracticeIndex() {
   return (
     <>
       <Nav />
-      <FieldConsole eyebrow="修炼技术 · INNER PRACTICE" eyebrowEn="INNER PRACTICE" title="修炼技术，让更好的自己成为日常" titleEn="Let a clearer self become your daily life" description="把古老觉知与现代节律结合，形成可实践、可感受、可持续的内在修炼路径。" descriptionEn="Bring ancient awareness into a contemporary rhythm through practical, felt and sustainable inner work." heroArtwork="platform-practice" features={[{zh:"科学节律",en:"Measured rhythm",glyph:"◌"},{zh:"每日可练",en:"Daily practice",glyph:"ϟ"},{zh:"真实记录",en:"Real journal",glyph:"▥"},{zh:"回到自己",en:"Return within",glyph:"♡"}]} aside={<><ConsoleStatus title="今日练习" titleEn="Today's practice" tone="cyan"><p className="mt-3"><Bi zh="从最简单的一次呼吸开始。系统不会伪造连续天数；完成记录后，你的真实轨迹才会在个人场域中累积。" en="Begin with one simple breath. No streak is invented; your trajectory grows only from completed records in your private field." /></p><Link href="/practice/breath" className="mt-4 inline-flex text-xs text-lattice"><Bi zh="开始量子息法 →" en="Begin Quantum Breath →" /></Link></ConsoleStatus><ConsoleStatus glyph="✦" title="修炼次序" titleEn="Practice sequence"><ul><li><Bi zh="设定当下意图" en="Set the present intention" /></li><li><Bi zh="进入身体与呼吸" en="Enter body and breath" /></li><li><Bi zh="观察而不评判" en="Observe without judgment" /></li><li><Bi zh="记录真实感受" en="Record what was felt" /></li><li><Bi zh="把清晰带回行动" en="Carry clarity into action" /></li></ul></ConsoleStatus></>}>
+      <FieldConsole className="practice-console" eyebrow="修炼技术 · INNER PRACTICE" eyebrowEn="INNER PRACTICE" title="修炼技术，让更好的自己成为日常" titleEn="Let a clearer self become your daily life" description="把古老觉知与现代节律结合，形成可实践、可感受、可持续的内在修炼路径。" descriptionEn="Bring ancient awareness into a contemporary rhythm through practical, felt and sustainable inner work." heroArtwork="platform-practice" features={[{zh:"科学节律",en:"Measured rhythm",glyph:"◌"},{zh:"每日可练",en:"Daily practice",glyph:"ϟ"},{zh:"真实记录",en:"Real journal",glyph:"▥"},{zh:"回到自己",en:"Return within",glyph:"♡"}]} aside={<><ConsoleStatus title="今日练习" titleEn="Today's practice" tone="cyan"><p className="mt-3"><Bi zh="从最简单的一次呼吸开始。系统不会伪造连续天数；完成记录后，你的真实轨迹才会在个人场域中累积。" en="Begin with one simple breath. No streak is invented; your trajectory grows only from completed records in your private field." /></p><Link href="/practice/breath" className="mt-4 inline-flex text-xs text-lattice"><Bi zh="开始量子息法 →" en="Begin Quantum Breath →" /></Link></ConsoleStatus><ConsoleStatus glyph="✦" title="修炼次序" titleEn="Practice sequence"><ul><li><Bi zh="设定当下意图" en="Set the present intention" /></li><li><Bi zh="进入身体与呼吸" en="Enter body and breath" /></li><li><Bi zh="观察而不评判" en="Observe without judgment" /></li><li><Bi zh="记录真实感受" en="Record what was felt" /></li><li><Bi zh="把清晰带回行动" en="Carry clarity into action" /></li></ul></ConsoleStatus></>}>
         <ConsolePanel>
           <div className="grid items-center gap-6 md:grid-cols-[180px_1fr]"><div className="mx-auto"><GateOrigin className="h-[150px] w-[150px]" /></div><div><p className="text-xs uppercase tracking-[.18em] text-lattice"><Bi zh="四道修炼 · 一座内在场域" en="FOUR PATHS · ONE INNER FIELD" /></p><h2 className="mt-3 text-2xl font-semibold text-bone"><Bi zh="心为门户，万法由心而启" en="The heart is the gateway" /></h2><div className="mt-4 space-y-3 text-sm leading-7 text-bone-dim">
             <p>
@@ -73,9 +74,9 @@ export default function PracticeIndex() {
         <ConsoleSectionTitle zh="四道修炼" en="Four practices" />
         <div className="lx-console-card-grid">
           <ConsoleCard href="/practice/breath" artwork="platform-practice" title="量子息法" titleEn="Quantum Breath" description={practices[0].line} descriptionEn={practices[0].lineEn} />
-          <ConsoleCard href="/practice/ascending-heart" artwork="platform-manifestation" title="上升心经" titleEn="Ascending Heart" description={practices[3].line} descriptionEn={practices[3].lineEn} />
           <ConsoleCard href="/practice/intuition" artwork="field-mirror" title="直觉丹道" titleEn="Intuitive Way" description={practices[1].line} descriptionEn={practices[1].lineEn} />
           <ConsoleCard href="/practice/heart-reset" artwork="field-tide" title="归零心诀" titleEn="Heart Reset" description={practices[2].line} descriptionEn={practices[2].lineEn} />
+          <ConsoleCard href="/practice/ascending-heart" artwork="platform-manifestation" title="上升心经" titleEn="Ascending Heart" description={practices[3].line} descriptionEn={practices[3].lineEn} />
         </div>
         <ConsoleSectionTitle zh="修炼记录" en="Practice journal" />
         <PracticeJournal />

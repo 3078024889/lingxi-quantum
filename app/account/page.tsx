@@ -1,3 +1,5 @@
+import FieldMembership from "./FieldMembership";
+import "./field-account.css";
 export const dynamic = "force-dynamic";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -197,7 +199,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   return (
     <>
       <Nav />
-      <main className="pt-16">
+      <main className={user ? "field-account" : "pt-16"}>
         <section className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-6 py-24 text-center">
           {user ? (
             <>
@@ -215,6 +217,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               </p>
               </div>
 
+              <nav className="field-account-links" aria-label="我的场域快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
               {/* 会员状态 */}
               <div className="mt-8 w-full space-y-3 text-left">
                 <div className="rounded-sm border border-white/10 bg-void-deep px-5 py-4">
@@ -250,6 +253,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
 
               <PendingOrdersPanel orders={pendingOrders} />
 
+              <section id="field-archives" className="field-account-archives">
               {narrativeUnlocks.length > 0 && (
                 <CollapsibleSection titleZh="已解锁订单 · 多维叙事" titleEn="Unlocked · Narrative" count={narrativeUnlocks.length}>
                   {narrativeUnlocks.map((slug) => (
@@ -350,6 +354,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                 </CollapsibleSection>
               )}
 
+              </section>
               <div className="mt-8 flex w-full flex-col gap-4">
                 <Link
                   href="/sasi"
@@ -374,6 +379,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                 <SignOutButton />
                 <DeleteAccountButton />
               </div>
+              <FieldMembership />
             </>
           ) : (
             <>
