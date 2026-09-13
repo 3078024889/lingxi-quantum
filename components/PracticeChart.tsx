@@ -13,7 +13,7 @@ export default function PracticeChart({
     <figure className="mx-auto max-w-2xl">
       <div className="relative overflow-hidden rounded-sm border border-white/10">
         {/* 完整练习图 */}
-        <img src={src} alt={alt} className="block w-full" />
+        <img src={src} alt={alt} className="block w-full" loading="lazy" />
 
         {/* 动态光效层（不挡住保存，pointer-events-none） */}
         <div className="pointer-events-none absolute inset-0">
@@ -49,6 +49,10 @@ export default function PracticeChart({
 
       <figcaption className="mt-4 text-center text-sm leading-7 text-bone-soft">
         {alt}
+        <span className="mt-3 flex justify-center gap-6">
+          <a href={src} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">查看原图</a>
+          <a href={src} download className="text-blue-500 underline">保存练习图 ↓</a>
+        </span>
         <span className="mt-1 block text-xs text-lattice">
           长按（手机）或右键（电脑）即可保存这张练习图，随时查看
         </span>

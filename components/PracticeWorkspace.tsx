@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import Bi from "./Bi";
+import PracticeChart from "./PracticeChart";
 import PracticeJournal from "@/app/practice/PracticeJournal";
 import "./practice-workspace.css";
 
@@ -24,7 +25,7 @@ export default function PracticeWorkspace({ practice, steps, hero, children }: {
             <div><small>{String(i + 1).padStart(2, "0")} · FREE</small><h3><Bi zh={step.zh} en={step.en} /></h3><p className="practice-step-description">{GUIDANCE[practice][i]}</p><span><Bi zh="完整引导与练习 →" en="Read the guidance and begin →" /></span></div>
           </a>)}</div>
         </section>
-        <div className="practice-reading">{children}</div>
+        <section className="practice-original-chart" aria-label="原版修炼方法图"><h2>把这份练习带在身边</h2><PracticeChart src={practice === "breath" ? "/images/practice/quantum-breath-chart.png" : `/images/practice/${practice}-chart.jpg`} alt="原版修炼方法图 · 完整步骤" /></section><div className="practice-reading">{children}</div>
         <section id="practice-journal" className="practice-journal"><h2><Bi zh="今天的练习记录" en="Today's practice journal" /></h2><p><Bi zh="写下真实感受，把练习中的理解带回生活。" en="Record what you felt and carry the understanding into daily life." /></p><PracticeJournal initialPractice={practice} /></section>
       </div>
       <aside className="practice-sidebar">

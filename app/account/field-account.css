@@ -5,3 +5,8 @@ html[data-theme=light] .field-account{color:#293d57}html[data-theme=light] .fiel
 .field-membership>.field-membership-plans{grid-template-columns:1.05fr repeat(3,1fr)}.field-membership-why{padding:16px 8px}.field-membership-why p{font-size:14px;line-height:1.95;margin:15px 0}.field-membership-why a{display:block;font-size:14px;color:#8074ce;margin-top:20px}@media(max-width:1100px){.field-membership>.field-membership-plans{grid-template-columns:repeat(3,1fr)}.field-membership-why{grid-column:1/-1}}@media(max-width:700px){.field-membership>.field-membership-plans{grid-template-columns:1fr}}
 
 .field-account-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0}.field-account-stats>a{padding:23px;border:1px solid #abc3df44;background:linear-gradient(115deg,#effafa33,#ede8fc22);border-radius:18px}.field-account-stats span,.field-account-stats small{display:block;font-size:14px}.field-account-stats strong{display:block;font:36px/1.6 serif;color:#399fa9}.field-account-stats small{font-size:12px;color:#899bb2}.field-membership{margin-bottom:26px}@media(max-width:700px){.field-account-stats{grid-template-columns:1fr}}
+
+/* One surface: remove legacy tinted blocks without removing their content. */
+.field-account .bg-void-deep,.field-account .lx-glass,.field-account-stats>a,.field-membership,.field-membership article,.field-account-links>a{background:transparent!important;background-image:none!important;box-shadow:none!important}.field-account a[href="/account/orders"]{background:transparent!important}
+
+html[data-theme] .field-account .bg-void-deep,html[data-theme] .field-account .lx-glass{background:transparent!important;background-image:none!important;box-shadow:none!important}

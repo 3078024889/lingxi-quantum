@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import GateVisual from "@/components/GateVisual";
 import Bi from "@/components/Bi";
 import { gates } from "@/lib/gates";
 import { ConsoleCard, ConsolePanel, ConsoleSectionTitle, ConsoleStatus, FieldConsole } from "@/components/FieldConsole";
@@ -20,6 +19,6 @@ export default function SubconsciousPage() {
     <ConsoleSectionTitle zh="六道观察入口" en="Six observation gates" />
     <SubconsciousExplorer />
     <ConsoleSectionTitle zh="重塑路径" en="Rewriting path" />
-    <div className="lx-console-card-grid"><ConsoleCard href={`/gate/${gates[0]?.id}`} image="/images/subconscious/v2/mind.webp" title="信念扫描" titleEn="Belief Scan" description="辨认限制性信念如何进入当下解释。" descriptionEn="See how limiting beliefs shape present interpretation."/><ConsoleCard href={`/gate/${gates[1]?.id}`} image="/images/subconscious/v2/relation.webp" title="触发点识别" titleEn="Trigger Detection" description="从身体、情绪与事件中找到启动点。" descriptionEn="Locate activation through body, emotion and event."/><ConsoleCard href={`/gate/${gates[2]?.id}`} image="/images/subconscious/v2/health.webp" title="旧模式轨迹" titleEn="Old Pattern Loop" description="追溯反复选择，理解它曾经保护什么。" descriptionEn="Trace recurring choices and what they once protected."/><ConsoleCard href={`/gate/${gates[3]?.id}`} image="/images/subconscious/v2/origin.webp" title="新指令植入" titleEn="New Script Installation" description="用可执行的新选择替代抽象肯定。" descriptionEn="Replace abstract affirmation with an actionable choice."/></div>
+    <div className="lx-console-card-grid subconscious-path-grid"><ConsoleCard href={`/gate/${gates[0]?.id}`} image="/images/subconscious/v2/mind.webp" actionZh="看见我的信念" title="信念扫描" titleEn="Belief Scan" description="辨认限制性信念如何进入当下解释。" descriptionEn="See how limiting beliefs shape present interpretation."/><ConsoleCard href={`/gate/${gates[1]?.id}`} image="/images/subconscious/v2/relation.webp" actionZh="找到反应的起点" title="触发点识别" titleEn="Trigger Detection" description="从身体、情绪与事件中找到启动点。" descriptionEn="Locate activation through body, emotion and event."/><ConsoleCard href={`/gate/${gates[2]?.id}`} image="/images/subconscious/v2/health.webp" actionZh="读懂反复的选择" title="旧模式轨迹" titleEn="Old Pattern Loop" description="追溯反复选择，理解它曾经保护什么。" descriptionEn="Trace recurring choices and what they once protected."/><ConsoleCard href={`/gate/${gates[3]?.id}`} image="/images/subconscious/v2/origin.webp" actionZh="写下新的回应" title="新指令植入" titleEn="New Script Installation" description="用可执行的新选择替代抽象肯定。" descriptionEn="Replace abstract affirmation with an actionable choice."/></div>
   </FieldConsole><Footer /></>;
 }
