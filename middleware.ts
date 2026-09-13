@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // 梦境探索产品已经撤下。旧入口与曾经围绕该产品建立的专题页统一
-  // 返回新的 SASI 工作台，避免搜索结果继续把用户带入已退休板块。
+  // 返回当前探索指南，避免搜索结果继续把用户带入已退休板块。
   const retiredDreamPaths = new Set([
     "/dream", "/learn/dream", "/learn/dream-symbols", "/learn/more-dream-meanings",
     "/learn/recurring-dreams", "/learn/lucid-dreaming", "/learn/remember-dreams",
@@ -52,7 +52,7 @@ export async function middleware(request: NextRequest) {
   ]);
   if (retiredDreamPaths.has(pathname)) {
     const target = request.nextUrl.clone();
-    target.pathname = "/";
+    target.pathname = "/learn";
     target.search = "";
     return NextResponse.redirect(target, 308);
   }
