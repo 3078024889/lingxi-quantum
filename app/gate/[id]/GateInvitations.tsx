@@ -142,7 +142,7 @@ export default function GateInvitations({
         <button
           onClick={generate}
           disabled={loading}
-          className="bg-lattice px-7 py-3.5 font-display text-sm tracking-widest2 text-void-deep transition hover:bg-amber disabled:opacity-50"
+          className="gate-invitation-create bg-white border border-blue-200 px-7 py-3.5 font-display text-sm tracking-widest2 text-void-deep transition hover:bg-blue-50 disabled:opacity-50"
         >
           {loading ? (
             <Bi zh="灵犀场正在为你生成……" en="Lingxi Field is generating…" />

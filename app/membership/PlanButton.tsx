@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { REVIEW_MODE } from "@/lib/reviewMode";
+import { MEMBERSHIP_CONTENT } from "@/lib/membership-content";
 import { getProduct } from "@/lib/plans";
 
 // v258：这个按钮是修炼技术、显化订阅、多维叙事（单篇+年度解锁）
@@ -55,7 +56,9 @@ export default function PlanButton({
             : "border border-lattice/40 text-lattice hover:border-amber hover:text-amber"
         }`}
       >
-        {loggedIn ? (
+        {["day", "month", "year"].includes(productId) ? (
+          <><span data-lang="zh">{MEMBERSHIP_CONTENT[productId].cta} →</span><span data-lang="en">{MEMBERSHIP_CONTENT[productId].ctaEn} →</span></>
+        ) : loggedIn ? (
           <><span data-lang="zh">开始交换</span><span data-lang="en">Begin the exchange</span></>
         ) : (
           <><span data-lang="zh">登录后交换</span><span data-lang="en">Sign in to exchange</span></>

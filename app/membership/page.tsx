@@ -160,14 +160,14 @@ function ManifestCard({ id, loggedIn, tierZh, tierEn }: { id: string; loggedIn: 
   const shared = MEMBERSHIP_CONTENT[id];
   if (!p || !b || !shared) return null;
   return (
-    <div className={`flex flex-col rounded-sm border p-8 ${p.highlight ? "border-amber/50 bg-amber/5" : "border-white/10 bg-reading-glass"}`}>
+    <div id={"connection-"+id} className={`scroll-mt-24 flex flex-col rounded-sm border p-8 ${p.highlight ? "border-amber/50 bg-amber/5" : "border-white/10 bg-reading-glass"}`}>
       {p.highlight && (
         <span className="mb-4 inline-block w-fit rounded-sm bg-amber/20 px-3 py-1 font-display text-xs tracking-widest2 text-amber">
           <Bi zh="推荐" en="Recommended" />
         </span>
       )}
-      <h3 className="font-display text-xl text-bone"><Bi zh={tierZh} en={tierEn} /></h3>
-      <p className="mt-2 text-sm text-lattice"><Bi zh={shared.description} en={p.noteEn} /></p>
+      <h3 className="font-display text-xl text-bone"><Bi zh={p.name} en={tierEn} /></h3>
+      <p className="mt-2 text-sm text-lattice"><Bi zh={shared.description} en={shared.descriptionEn} /></p>
       <PriceTag priceRmb={p.priceRmb} days={p.days} type={p.type} />
       <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice/60"><Bi zh="开启：" en="Unlocks:" /></p>
       <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-bone-dim">

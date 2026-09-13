@@ -22,9 +22,9 @@ export const cultivationProducts: Product[] = [
 ];
 
 export const manifestationProducts: Product[] = [
-  { id: "day", name: "单日体验", nameEn: "One-Day Pass", priceUsd: 1.5, priceRmb: 9.9, type: "subscription", days: 1, note: "体验一天意识显化空间", noteEn: "Experience the manifestation space for one day.", group: "manifestation" },
-  { id: "month", name: "月度探索", nameEn: "Monthly", priceUsd: 23, priceRmb: 168, type: "subscription", days: 30, note: "每月持续对齐", noteEn: "Stay aligned, month after month.", highlight: true, group: "manifestation" },
-  { id: "year", name: "年度旅程", nameEn: "Yearly", priceUsd: 139, priceRmb: 999, type: "subscription", days: 365, note: "一年深度旅程，最佳价值", noteEn: "A year-long journey — best value.", group: "manifestation" },
+  { id: "day", name: "单日连接", nameEn: "One-Day Pass", priceUsd: 1.5, priceRmb: 9.9, type: "subscription", days: 1, note: "完成一次完整的场域进入", noteEn: "Experience the manifestation space for one day.", group: "manifestation" },
+  { id: "month", name: "月度连接", nameEn: "Monthly", priceUsd: 23, priceRmb: 168, type: "subscription", days: 30, note: "让每一次进入彼此相连", noteEn: "Stay aligned, month after month.", highlight: true, group: "manifestation" },
+  { id: "year", name: "年度连接", nameEn: "Yearly", priceUsd: 139, priceRmb: 999, type: "subscription", days: 365, note: "让长期经历逐渐汇成你的场域轨迹", noteEn: "A year-long journey — best value.", group: "manifestation" },
 ];
 
 // 多维叙事：短篇 $1，长篇 $5，一次能量交换，终身可看

@@ -15,13 +15,12 @@ import ReportRow from "./ReportRow";
 import QianReportRow from "./QianReportRow";
 import TarotReadingReportRow from "./TarotReadingReportRow";
 import SimpleReportRow from "./SimpleReportRow";
+import DeletableReportRow from "./DeletableReportRow";
 import PendingOrdersPanel from "./PendingOrdersPanel";
 import CollapsibleSection from "./CollapsibleSection";
 import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
-import { isSupabaseAdminConfigured } from "@/lib/supabase/admin";
-import { ensureLifeArchetype } from "@/lib/mini/life-archetype";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 import { ensureAuditAccountAccess } from "@/lib/audit-access";
 
@@ -48,7 +47,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
     // The owner's exact review account receives one idempotent all-content grant
     // before this page reads entitlements, so /account itself is the recovery path.
     await ensureAuditAccountAccess(user).catch((error) => console.error("[audit access]", error));
-    if (isSupabaseAdminConfigured()) await ensureLifeArchetype(user.id).catch(() => null);
+    // Reading the account must not regenerate a deliberately deleted archetype.
     const { data: profile } = await supabase
       .from("profiles")
       .select("manifest_until")
@@ -317,7 +316,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               {resilienceReports.length > 0 && (
                 <CollapsibleSection titleZh="已解锁订单 · 生命韧性指数" titleEn="Unlocked · Life Resilience" count={resilienceReports.length}>
                   {resilienceReports.map((r) => (
-                    <SimpleReportRow key={r.id} href={`/resilience/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
+                    <DeletableReportRow key={r.id} id={r.id} kind="resilience" href={`/resilience/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
                 </CollapsibleSection>
               )}
@@ -325,7 +324,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               {romanceReports.length > 0 && (
                 <CollapsibleSection titleZh="已解锁订单 · 桃花磁场指数" titleEn="Unlocked · Romance Resonance Index" count={romanceReports.length}>
                   {romanceReports.map((r) => (
-                    <SimpleReportRow key={r.id} href={`/romance/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
+                    <DeletableReportRow key={r.id} id={r.id} kind="romance" href={`/romance/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
                 </CollapsibleSection>
               )}
@@ -333,7 +332,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               {dailyTideReports.length > 0 && (
                 <CollapsibleSection titleZh="已解锁订单 · 今日潮汐" titleEn="Unlocked · Today’s Tide" count={dailyTideReports.length}>
                   {dailyTideReports.map((r) => (
-                    <SimpleReportRow key={r.id} href={`/daily/full?id=${r.id}`} title={r.name || r.generated_date} date={new Date(r.created_at).toLocaleDateString()} />
+                    <DeletableReportRow key={r.id} id={r.id} kind="daily" href={`/daily/full?id=${r.id}`} title={r.name || r.generated_date} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
                 </CollapsibleSection>
               )}
@@ -341,7 +340,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               {wealthReports.length > 0 && (
                 <CollapsibleSection titleZh="已解锁订单 · 财富创造地图" titleEn="Unlocked · Wealth Creation Map" count={wealthReports.length}>
                   {wealthReports.map((r) => (
-                    <SimpleReportRow key={r.id} href={`/wealth/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
+                    <DeletableReportRow key={r.id} id={r.id} kind="wealth" href={`/wealth/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
                 </CollapsibleSection>
               )}
@@ -349,7 +348,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               {lifeArchetypeReports.length > 0 && (
                 <CollapsibleSection titleZh="生命原型 · 八流归一" titleEn="Life Archetype · Eight-stream Convergence" count={lifeArchetypeReports.length}>
                   {lifeArchetypeReports.map((r) => (
-                    <SimpleReportRow key={r.id} href={`/mini-report?id=${r.id}`} title={r.input?.name || "当前生命原型档案"} date={new Date(r.created_at).toLocaleDateString()} />
+                    <DeletableReportRow key={r.id} id={r.id} kind="archetype" href={`/mini-report?id=${r.id}`} title={r.input?.name || "当前生命原型档案"} date={new Date(r.created_at).toLocaleDateString()} />
                   ))}
                 </CollapsibleSection>
               )}
