@@ -41,7 +41,7 @@ const data: ArticleData = {
     href: "/gate/mind", btnZh: "进入心灵之门", btnEn: "Open the Mind gate",
   },
   related: [
-    { href: "/learn/inner-sovereignty", zh: "主权与完整导览", en: "Sovereignty & Wholeness" },
+    { href: "/practice", zh: "从觉察到实践", en: "From awareness to practice" },
     { href: "/learn/how-to-meditate", zh: "如何冥想", en: "How to meditate" },
   ],
 };

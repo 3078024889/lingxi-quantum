@@ -198,7 +198,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
       <div className="mt-6 rounded-sm border border-amber/25 bg-amber/5 p-6 text-center">
         <p className="text-sm leading-7 text-bone-dim">
           <Bi
-            zh="今天的这张牌，是全场域共享的。想要专属于你自己的三张牌——潜意识镜像、当下共振、未来展开，由你真实的命盘确定，不是随机抽取。"
+            zh="今天的这张牌，是全场域共享的。想要专属于你自己的三张牌——潜意识镜像、当下共振、未来展开，由你真实的生命坐标确定，不是随机抽取。"
             en="Today's card is shared by everyone. For your own three cards — hidden pattern, present resonance, future possibility — determined by your real chart, not a random draw."
           />
         </p>
@@ -213,7 +213,7 @@ export default function TarotReveal({ card, tide, nextTide }: { card: TarotCard;
       <div className="mt-6 lx-glass-tarot p-6 text-center">
         <p className="text-sm leading-7 text-bone-dim">
           <Bi
-            zh="今天这张牌，是全宇宙今天共享的一个提示。想知道这张牌落在你自己独特的命盘上，会有什么更具体的含义，可以看看你的完整生命图谱。"
+            zh="今天这张牌，是全宇宙今天共享的一个提示。想知道这张牌落在你自己独特的生命坐标上，会有什么更具体的含义，可以看看你的完整生命图谱。"
             en="Today's card is a prompt shared by everyone today. To see what it means layered onto your own unique chart, take a look at your full Life Map."
           />
         </p>

@@ -262,7 +262,7 @@ export function generateStaticRomanceReport(input: StaticRomanceReportInput): St
   const cultural = zh
     ? taoHua.hasTaoHua
       ? `传统桃花标记出现在${taoHua.foundIn.join("、")}，对应地支“${taoHua.taohuaBranch}”。它在本报告中只作为文化观察镜头，不构成事件预言。`
-      : "命盘未命中传统桃花标记。这不表示吸引力不足；本报告仍以可观察的五维互动结构为核心。"
+      : "本次生命坐标未触发这一辅助观察标记。这不表示吸引力不足；本报告仍以可观察的五维互动结构为核心。"
     : taoHua.hasTaoHua
       ? "A traditional peach-blossom marker is present. It is used only as a cultural lens, never as an event prediction."
       : "No traditional peach-blossom marker appears. This does not imply reduced attraction.";

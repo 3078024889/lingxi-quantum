@@ -5,7 +5,6 @@ import Bi from "@/components/Bi";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
 import OrderActions from "../OrderActions";
-import { hasUnlock } from "@/lib/access";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 
 export const metadata = {
@@ -25,6 +24,7 @@ type OrderRow = {
   created_at: string;
   paid_at: string | null;
   archive_only?: boolean;
+  archive_href?: string;
 };
 
 // v265：场域订单中心按你要的结构重做——不再是一条时间线糊到底的
@@ -110,6 +110,7 @@ const REPORT_BASE: Record<string, string> = {
 };
 
 function resolveDestination(order: OrderRow): { href: string; labelZh: string; labelEn: string } | null {
+  if (order.archive_href) return {href:order.archive_href,labelZh:"回看报告 / 下载 PDF",labelEn:"Read report / Download PDF"};
   if (order.archive_only && order.submission_id) return { href: `/mini-report?id=${order.submission_id}`, labelZh: "查看完整档案 / 下载PDF", labelEn: "View Full Archive / Download PDF" };
   if (REPORT_BASE[order.product_id]) {
     if (order.submission_id) {
@@ -171,7 +172,7 @@ function OrderCard({ o }: { o: OrderRow }) {
             </p>
           )}
           <p className="mt-1 text-xs text-bone-dim">
-            <Bi zh="下单时间" en="Ordered" />：{new Date(o.created_at).toLocaleString()}
+            <Bi zh={o.archive_only ? "记录时间" : "下单时间"} en={o.archive_only ? "Recorded" : "Ordered"} />：{new Date(o.created_at).toLocaleString()}
             {o.paid_at && <> · <Bi zh="支付时间" en="Paid" />：{new Date(o.paid_at).toLocaleString()}</>}
           </p>
           {expiryLabel && (
@@ -219,7 +220,7 @@ function OrderCard({ o }: { o: OrderRow }) {
         </Link>
       )}
 
-      {!isPaid && <OrderActions orderId={o.id} />}
+      {!isPaid && !o.archive_only && <OrderActions orderId={o.id} />}
     </div>
   );
 }
@@ -274,32 +275,42 @@ async function backfillSubmissionIds(
   });
 }
 
-export default async function FieldOrdersPage() {
+export default async function FieldOrdersPage({searchParams}: {searchParams?: {page?: string}}) {
+  const page=Math.max(1,Math.min(10000,Math.floor(Number(searchParams?.page)||1)));
+  const offset=(page-1)*50;
+  let hasMore=false;
+  let loadFailed=false;
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
   const user = supabase ? await getServerUser(supabase) : null;
 
   let orders: OrderRow[] = [];
   if (user && supabase) {
-    const [{ data }, { data: miniArchives }, { data: unlockRows }, { data: profile }] = await Promise.all([
-      supabase.from("orders").select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
-      supabase.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at, input").eq("user_id", user.id).order("created_at", { ascending: false }).limit(100),
-      supabase.from("unlocks").select("product_id, expires_at").eq("user_id", user.id),
-      supabase.from("profiles").select("manifest_until").eq("id", user.id).maybeSingle(),
+    const [{ data, error: ordersError }, { data: miniArchives, error: archivesError }] = await Promise.all([
+      supabase.from("orders").select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at").eq("user_id", user.id).order("created_at", { ascending: false }).range(offset,offset+50),
+      supabase.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at, input").eq("user_id", user.id).order("created_at", { ascending: false }).range(offset,offset+50),
     ]);
-    const now = Date.now();
-    const activeUnlocks = (unlockRows ?? []).filter((row) => !row.expires_at || Date.parse(row.expires_at) > now).map((row) => row.product_id);
-    const manifestActive = !!profile?.manifest_until && Date.parse(profile.manifest_until) > now;
+    hasMore=(data?.length??0)>50||(miniArchives?.length??0)>50;
+    loadFailed=!!ordersError||!!archivesError;
     const visibleArchives = (miniArchives ?? []).filter((row, index, all) => {
-      if (row.product_id !== "life-archetype") return manifestActive || hasUnlock(activeUnlocks, row.product_id);
+      if (row.product_id !== "life-archetype") return true;
       const archiveInput=(row.input as { subjectId?: string; identityVerified?: boolean } | null);
       const subjectId = archiveInput?.subjectId;
       return row.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && archiveInput?.identityVerified === true && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string; identityVerified?: boolean } | null)?.identityVerified === true && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
     });
     orders = [
-      ...((data as OrderRow[]) ?? []),
-      ...(visibleArchives.map((row) => ({ id: `A-${row.id}`, product_id: row.product_id, product_type: "field-archive", amount_rmb: null, amount_usd: 0, status: "paid", submission_id: row.id, submission_name: "小程序树突场域档案", created_at: row.created_at, paid_at: row.created_at, archive_only: true })) as OrderRow[]),
+      ...((data as OrderRow[]) ?? []).slice(0,50),
+      ...(visibleArchives.slice(0,50).map((row) => ({ id: `A-${row.id}`, product_id: row.product_id, product_type: "field-archive", amount_rmb: null, amount_usd: 0, status: "archived", submission_id: row.id, submission_name: "小程序场域档案", created_at: row.created_at, paid_at: null, archive_only: true })) as OrderRow[]),
     ].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
     orders = await backfillSubmissionIds(supabase, user.id, orders);
+    const archiveSources=[['life_map_submissions','life-map-report','/life-map'],['relationship_submissions','relationship-resonance','/relationship'],['qian_submissions','qian-reading','/qian'],['tarot_reading_submissions','tarot-reading','/mirror'],['resilience_submissions','resilience-report','/resilience'],['romance_submissions','romance-report','/romance'],['daily_tide_submissions','daily-tide-report','/daily'],['wealth_submissions','wealth-report','/wealth']];
+    const saved=await Promise.all(archiveSources.map(async([table,productId,route])=>{
+      const {data:rows,error}=await supabase.from(table).select('id,created_at').eq('user_id',user.id).or('full_report.not.is.null,full_report_en.not.is.null').order('created_at',{ascending:false}).range(offset,offset+50);
+      if(error){loadFailed=true;return [];}
+      if((rows?.length??0)>50)hasMore=true;
+      return (rows??[]).slice(0,50).filter(row=>!orders.some(order=>order.submission_id===row.id&&order.product_id===productId)).map(row=>({id:'R-'+row.id,product_id:productId,product_type:'field-archive',amount_rmb:null,amount_usd:0,status:'archived',submission_id:row.id,submission_name:'已生成报告',created_at:row.created_at,paid_at:null,archive_only:true,archive_href:route+'?archive='+encodeURIComponent(row.id)} as OrderRow));
+    }));
+    orders=[...orders,...saved.flat()].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
+
   }
 
   const fieldTestOrders = orders.filter((o) => categoryOf(o.product_id) === "field-test");
@@ -309,7 +320,7 @@ export default async function FieldOrdersPage() {
   const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string; hintEn: string; rows: OrderRow[] }[] = [
     {
       key: "field-test", titleZh: "场域精测", titleEn: "Field Insight Tests",
-      hintZh: "生命图谱、关系共振、生命韧性、桃花磁场、财富地图、今日运势、量子生命镜像、生命灵签——每项各自一次性解锁，永久保存。",
+      hintZh: "生命图谱、关系共振、生命韧性、桃花磁场、财富地图、今日潮汐、量子生命镜像、生命灵签——每项各自一次性解锁，永久保存。",
       hintEn: "Life Map, Relationship Resonance, Resilience, Romance, Wealth, Daily Tide, Tarot, Life Oracle — each unlocked once, permanently.",
       rows: fieldTestOrders,
     },
@@ -350,12 +361,14 @@ export default async function FieldOrdersPage() {
             </p>
           )}
 
-          {user && orders.length === 0 && (
+          {loadFailed && <p role="alert" className="my-4 text-amber">部分记录暂时未能加载，请刷新重试。加载失败不会删除订单或报告。</p>}
+          {user && !loadFailed && orders.length === 0 && (
             <p className="lx-glass p-8 text-center text-sm text-bone-soft">
               <Bi zh="还没有任何订单——完成一次能量交换后，会出现在这里。" en="No orders yet — they'll appear here once you complete an exchange." />
             </p>
           )}
 
+          {user && <nav aria-label="订单与档案翻页" className="my-6 flex gap-6">{page>1&&<Link href={`/account/orders?page=${page-1}`}>← 上一页</Link>}<span>第 {page} 页</span>{hasMore&&<Link href={`/account/orders?page=${page+1}`}>更早的订单与档案 →</Link>}</nav>}
           {user && orders.length > 0 && (
             <div className="space-y-10">
               {SECTIONS.filter((s) => s.rows.length > 0).map((s) => (

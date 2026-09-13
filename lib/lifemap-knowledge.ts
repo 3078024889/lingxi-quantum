@@ -303,7 +303,7 @@ export function generateStaticLifeMapReport(input: StaticLifeMapInput): StaticLi
     }),
     compose({
       key: "03-ziwei", vector, lang, dims: [first, third],
-      judgment: zh ? "紫微章节只使用实际保存的宫位和星曜；没有主星或没有时辰时明确保留空白，不用想象补齐命盘。" : "This chapter uses only recorded palaces and stars. Missing birth-hour or major-star data remains explicitly missing.",
+      judgment: zh ? "紫微章节只使用实际保存的宫位和星曜；没有主星或没有时辰时明确保留空白，不用想象补齐生命坐标。" : "This chapter uses only recorded palaces and stars. Missing birth-hour or major-star data remains explicitly missing.",
       mechanism: ziwei + mechanism(first, lang) + mechanism(third, lang),
       scenario: zh ? "把命宫理解为常用自我组织方式，把身宫理解为行动逐渐稳定后的落点，再用你近三年的选择检查两者是否真的形成呼应。" : "Treat Life Palace as a common way of organizing self and Body Palace as a maturing action pattern, then test both against three years of choices.",
       shadow: zh ? "风险不在传统系统本身，而在读者为了获得确定答案，把没有记录的星曜、宫位或未来事件自行补全。" : "The risk is filling missing stars, palaces, or events in order to obtain certainty.",
@@ -340,7 +340,7 @@ export function generateStaticLifeMapReport(input: StaticLifeMapInput): StaticLi
     }),
     compose({
       key: "07-self-assessment", vector, lang, dims: [first, fifth],
-      judgment: zh ? "当前自测不是命盘附属品，而是检验长期结构在今天是否可用的即时数据。" : "The current self-assessment tests whether long-term structure is available today.",
+      judgment: zh ? "当前自测不是生命坐标附属品，而是检验长期结构在今天是否可用的即时数据。" : "The current self-assessment tests whether long-term structure is available today.",
       mechanism: (zh ? "当前自评：能量 " : "Current self-ratings: energy ") + selfScores.energy + (zh ? "、清晰 " : ", clarity ") + selfScores.clarity + (zh ? "、对齐 " : ", alignment ") + selfScores.alignment + "。" + mechanism(first, lang),
       scenario: zh ? "如果三项都高，检查这种高分是否经受过真实压力；如果三项都低，区分短期耗竭与长期模式；如果落差很大，优先研究最高项如何掩盖最低项。" : "If all are high, test them under real pressure; if low, separate temporary depletion from long patterns; if uneven, study how the highest may conceal the lowest.",
       shadow: zh ? "自评分数会受当天情绪、社会期待和评分习惯影响，不能单次用于确认固定状态。" : "Self-ratings reflect mood, social expectation, and scoring habits, so one sample cannot confirm a fixed state.",

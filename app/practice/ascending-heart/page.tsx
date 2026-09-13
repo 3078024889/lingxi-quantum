@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import GateDestiny from "@/components/gates/GateDestiny";
 import PracticeGate from "@/components/PracticeGate";
 import { getAccess } from "@/lib/access";
-import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
 
 export const metadata = { title: "上升心经 · 修炼技术 | 灵犀 · The Ascending Heart Sutra | Lingxi", description: "上升心经：光体正迁移向胸腺间的「上升心经」，四式呼吸法助你在行星轴与中枢太阳轴的交汇点上活化自身。The Ascending Heart Sutra — a four-form breath practice at the meeting point of the planetary and central-sun axes." };
@@ -131,7 +130,7 @@ export default async function AscendingHeartPage() {
 
             <PracticeGate unlocked={unlocked} user={!!user} productName="上升心经" productNameEn="The Ascending Heart Sutra">
               <div className="mb-12">
-                <PracticeChart src="/images/practice/ascending-heart-chart.jpg" alt="上升心经 · 完整练习图（吸气接引—呼气绽出—载波调频—节律合一，含四式呼吸法）" />
+
               </div>
               <div className="space-y-10">
                 <p className="text-sm leading-8 text-bone-dim">

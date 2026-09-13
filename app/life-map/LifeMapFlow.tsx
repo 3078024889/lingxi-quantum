@@ -16,18 +16,18 @@ import { getProduct } from "@/lib/plans";
 
 const LIFEMAP_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀场是算命网站吗？", qEn: "Is Lingxi Field a fortune-telling website?",
+    qZh: "生命图谱能够帮助我理解什么？", qEn: "What can a life blueprint help me understand?",
     aZh: "不是。灵犀场并不是一个告诉你「未来会发生什么」的预测工具，而是一处连接自我探索、生命结构理解与意识扩展的数字场域。它通过天文周期、传统象征体系、生命原型、多维叙事与意识探索模型，将这些不同维度的信息重新连接，帮助你从新的角度观察自己——这里不是替你定义人生，而是提供一面更深的镜子，你依然是自己生命的创造者。",
     aEn: "No. Lingxi Field isn't a tool that tells you what will happen next — it's a digital field connecting self-exploration, an understanding of your life structure, and consciousness expansion. Drawing on astronomical cycles, traditional symbolic systems, life archetypes, dimensional narrative, and consciousness models, it reconnects these different dimensions of information to help you observe yourself from a new angle. This isn't about defining your life for you — it's a deeper mirror. You remain the creator of your own life.",
   },
   {
     qZh: "生命图谱需要提供哪些信息？", qEn: "What information does the Life Map need?",
     aZh: "出生日期是基础信息，出生时间与出生地点是更深层的信息节点。信息越完整，灵犀场能够展开的生命结构维度越丰富——但灵犀场并不是简单复制某一种命理体系，出生信息更像是一组进入生命旅程时留下的坐标，不是决定你的程序，而是一组用于观察自己的镜面数据。即使信息不完整，也能展开基础探索；完整信息则能打开更多层次的结构。",
-    aEn: "Your birth date is the foundation; birth time and birth place are deeper information nodes. The more complete the information, the richer the dimensions Lingxi Field can unfold — but Lingxi Field isn't simply replicating any one fortune-telling system. Birth information works more like a set of coordinates left behind as you entered this life's journey — not a program that determines you, but mirror data for observing yourself. Even incomplete information opens a basic exploration; complete information opens more layers of structure.",
+    aEn: "Your birth date is the foundation; birth time and birth place are deeper information nodes. The more complete the information, the richer the dimensions Lingxi Field can unfold — but Lingxi Field isn't simply replicating any one interpretive tradition. Birth information works more like a set of coordinates left behind as you entered this life's journey — not a program that determines you, but mirror data for observing yourself. Even incomplete information opens a basic exploration; complete information opens more layers of structure.",
   },
   {
     qZh: "场域入口的展开和完整生命图谱有什么区别？", qEn: "What's the difference between the field entrance preview and the full Life Map?",
-    aZh: "灵犀场不会把生命探索切割成简单的「有」和「没有」。场域入口的展开，是让你先看见生命结构的轮廓——星体象征、生命原型、核心印记、基础频率。完整生命图谱，会进一步展开这些结构之间的连接关系：七大行星象征关系、八字生命结构、紫微结构探索、玛雅印记探索、人生周期导航、财富与创造路径、关系共振地图、灵犀场专属练习。最终形成的是一份属于你的生命探索档案，不是一张简单的命盘。",
+    aZh: "灵犀场不会把生命探索切割成简单的「有」和「没有」。场域入口的展开，是让你先看见生命结构的轮廓——星体象征、生命原型、核心印记、基础频率。完整生命图谱，会进一步展开这些结构之间的连接关系：七大行星象征关系、八字生命结构、紫微结构探索、玛雅印记探索、人生周期导航、财富与创造路径、关系共振地图、灵犀场专属练习。最终形成的是一份属于你的生命探索档案，不是一张简单的生命坐标。",
     aEn: "Lingxi Field doesn't split self-exploration into a simple 'have' or 'don't have.' The entrance preview lets you first see the outline of your life structure — planetary symbols, life archetypes, core imprints, base frequencies. The full Life Map unfolds the connections between these structures further: the seven planets' symbolic relationships, your Bazi life structure, your Ziwei structure, your Maya sign, life cycle navigation, wealth and creative pathways, a relationship resonance map, and a personal Lingxi Field practice. What forms is a complete self-exploration record — not a simple chart.",
   },
   {
@@ -154,7 +154,7 @@ const LOADING_STEPS = [
   { zh: "正在连接你的生命信息结构\u2026", en: "Connecting to your life information structure\u2026" },
   { zh: "✨ 推算七大行星的真实位置", en: "✨ Calculating the true positions of seven planets" },
   { zh: "✨ 排布你的四柱八字与十神", en: "✨ Charting your Four Pillars and Ten Gods" },
-  { zh: "✨ 排布你的紫微命盘", en: "✨ Charting your Ziwei Doushu palaces" },
+  { zh: "✨ 排布你的紫微生命坐标", en: "✨ Charting your Ziwei Doushu palaces" },
   { zh: "✨ 换算玛雅Tzolkin圣历印记", en: "✨ Converting your Maya Tzolkin day sign" },
   { zh: "✨ 交叉五套系统，生成你的核心类型", en: "✨ Cross-referencing five systems into your core type" },
 ];
@@ -800,7 +800,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
               <summary><span><b>04</b><Bi zh="当前频率自测" en="Current frequency" /></span><small><Bi zh="3 项已就绪" en="3 measures ready" /></small></summary>
             <p className="max-w-md text-sm leading-7 text-lm2-text-dim">
               <Bi
-                zh="命盘给出的是你与生俱来的结构，这三项，则是你此刻真实的状态——两者放在一起看，报告才知道，该把重点，放在哪里。"
+                zh="生命坐标给出的是你与生俱来的结构，这三项，则是你此刻真实的状态——两者放在一起看，报告才知道，该把重点，放在哪里。"
                 en="Your chart shows the structure you were born with. These three ratings show where you actually are right now — together, they tell the report where to focus."
               />
             </p>
@@ -861,7 +861,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
               <div className="lm-preview-empty">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/images/lifemap/page-0.png" alt="生命图谱报告视觉预览" />
-                <p><Bi zh="先完成左侧信息，你将免费看到核心生命原型、真实命盘节点、当前阶段与三个行动关键词。" en="Complete the form to see your core archetype, calculated chart points, current phase and three action keywords." /></p>
+                <p><Bi zh="先完成左侧信息，你将免费看到核心生命原型、真实生命坐标节点、当前阶段与三个行动关键词。" en="Complete the form to see your core archetype, calculated chart points, current phase and three action keywords." /></p>
                 <small><Bi zh="出生时间不知道也可以生成；信息越完整，可计算的结构层次越丰富。" en="You can continue without an exact birth time. More complete information opens more calculable layers." /></small>
               </div>
             ) : (
@@ -873,7 +873,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
                 <blockquote>{parsed.echoText}</blockquote>
 <div className="lm-restored-content"><div className="mt-8 rounded-sm border border-lm2-violet/20 bg-lm2-violet/5 p-6 backdrop-blur-xl">
               <p className="font-display text-sm uppercase tracking-widest2 text-lm2-violet">
-                <Bi zh="你的命盘数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin · 吠陀占星" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin · Vedic Jyotish" />
+                <Bi zh="你的生命坐标数据 · 西方占星 · 中式八字 · 紫微斗数 · 玛雅Tzolkin · 吠陀占星" en="Your Chart Data · Western Astrology · Chinese Bazi · Ziwei Doushu · Maya Tzolkin · Vedic Jyotish" />
               </p>
               <p className="mt-2 text-xs leading-6 text-lm2-text-dim/70">
                 <Bi
@@ -1026,7 +1026,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
                   </p>
                 </div>
                 <div>
-                  <p className="font-display text-sm text-lm2-violet">03 · <Bi zh="紫微命盘详解" en="Your Ziwei Chart, Decoded" /></p>
+                  <p className="font-display text-sm text-lm2-violet">03 · <Bi zh="紫微生命坐标详解" en="Your Ziwei Chart, Decoded" /></p>
                   <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
                     <Bi zh="紫微斗数关注的不仅是「有什么星」，更重要的是这些星曜如何组合、如何在你的生命领域中产生作用。完整解析命宫、身宫、主星组合，以及不同人生领域中的表现方式，帮你理解天赋在哪里、成长课题是什么。" en="Ziwei Doushu isn't only about which stars are present — what matters more is how they combine and act across your life. The full reading covers your Soul Palace, Body Palace, and star combinations, and how they show up across different life domains — where your gifts are, and what you're here to grow through." />
                   </p>
@@ -1046,7 +1046,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
                 <div>
                   <p className="font-display text-sm text-lm2-violet">06 · <Bi zh="频率自测解读" en="Your Self-Assessment, Interpreted" /></p>
                   <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
-                    <Bi zh="你的主观感受，也是生命探索的重要部分。把你填的能量状态、清晰程度、内在对齐感，跟你的命盘结构进行对照，看见你感受到的自己，与命盘结构呈现出的自己，是否存在不同。" en="Your subjective sense of things is part of the exploration too. Your self-rated energy, clarity, and inner alignment are set against your chart structure, to see whether the self you feel and the self your chart shows actually agree." />
+                    <Bi zh="你的主观感受，也是生命探索的重要部分。把你填的能量状态、清晰程度、内在对齐感，跟你的生命坐标结构进行对照，看见你感受到的自己，与生命坐标结构呈现出的自己，是否存在不同。" en="Your subjective sense of things is part of the exploration too. Your self-rated energy, clarity, and inner alignment are set against your chart structure, to see whether the self you feel and the self your chart shows actually agree." />
                   </p>
                 </div>
                 <div>
@@ -1076,7 +1076,7 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
                 <div>
                   <p className="font-display text-sm text-lm2-violet">11 · <Bi zh="象征叙事镜面" en="Symbolic Narrative Mirror" /></p>
                   <p className="mt-1.5 text-sm leading-7 text-lm2-text-dim">
-                    <Bi zh="这是灵犀场中的创意叙事空间。根据你的命盘元素，创造一段象征性的生命故事——它不是历史证明，而是一种想象与自我探索，通过故事看见自己与生命主题之间的连接。" en="A creative narrative corner of the field. Using your chart's elements, it weaves a symbolic vignette of your life — not a historical claim, but a piece of imagination and self-exploration, seeing your connection to your life's themes through story." />
+                    <Bi zh="这是灵犀场中的创意叙事空间。根据你的生命坐标元素，创造一段象征性的生命故事——它不是历史证明，而是一种想象与自我探索，通过故事看见自己与生命主题之间的连接。" en="A creative narrative corner of the field. Using your chart's elements, it weaves a symbolic vignette of your life — not a historical claim, but a piece of imagination and self-exploration, seeing your connection to your life's themes through story." />
                   </p>
                 </div>
                 <div>

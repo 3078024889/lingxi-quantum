@@ -373,8 +373,8 @@ const previewContent = ((() => { if (result) {
           <p className="text-sm uppercase tracking-widest2 text-lattice"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
           <p className="mt-2 text-base leading-8 text-bone-dim">
             <Bi
-              zh="不是临场编的。灵犀场底层是一套「生命向量引擎」——先用真实天文数据（此刻行星在黄道上的精确位置）和真实历法数据（你的四柱八字），算出一组固定的数字，压力恢复、危机反弹、精神稳定这些维度，全部是先算出分数，场域才根据这些已经算好的数字去写解读，不是场域自己决定要不要说你「韧性强」。同一份出生数据，任何时候重新算，前面的分数都是一样的——这是它跟一般算命网站最大的不同：别的网站是「直接问、直接给答案」，这里是「先算出结构，场域只负责讲清楚这个结构」。这五个维度的分数，是从你完整命盘里，只抽出跟「韧性」相关的这一部分。"
-              en="This isn't improvised. Underneath, Lingxi Field runs on a life-vector engine — real astronomical data (the planets' exact positions right now) and real calendrical data (your Bazi pillars) are used to compute a fixed set of numbers first — stress recovery, crisis rebound, emotional stability — before any text gets written. The field writes based on numbers already computed; it doesn't decide on its own whether to call you resilient. Recompute the same birth data anytime, and the underlying scores come out identical. That's the core difference from a typical fortune-telling site: they ask a question and hand you an answer directly; here, the structure is computed first, and the field only explains it. These five scores are pulled from just the resilience-related slice of your full chart."
+              zh="解读来自可复算的出生坐标与本地知识体系。系统先形成探索维度，再结合这些维度展开说明，帮助你观察连接方式、内在需要与行动习惯。同一组输入与计算时点会得到一致的结果；这些分数是自我探索的参照，不决定一个人的价值或未来。"
+              en="Readings use reproducible birth coordinates and a local knowledge system. Exploration dimensions are calculated before the explanation is composed. They offer a reference for observing needs, connections and habits; they do not determine personal worth or predict a future."
             />
           </p>
         </div>

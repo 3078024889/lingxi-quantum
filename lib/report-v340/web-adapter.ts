@@ -6,17 +6,19 @@ import type { ActivatedNode, ChapterSlots, EvidenceItem } from "@/lib/dendritic-
 
 const HEADING=/^(?:结构证据|深层机制|现实观察|阴影机制|反证校验|行动协议|断曰|所以然|验于事|反观|行法)\s*[:：]\s*/u;
 const DIM_ZH:Record<string,string>={freedomNeed:"自主空间",stabilityNeed:"稳定承载",creativity:"创造展开",discipline:"秩序执行",riskTolerance:"风险行动",emotionalDepth:"情感深度",introspection:"内省辨识",socialDrive:"连接驱动",ambition:"成就推进",adaptability:"变化适应",stressRecovery:"压力恢复",crisisRebound:"危机复起",persistence:"长期持续",emotionalStability:"精神稳定",insight:"机会洞察",build:"价值构建",connect:"资源连接",express:"价值表达",risk:"风险承接"};
-const dimZh=(value:string)=>DIM_ZH[value]??value;
+const DAILY_DIM_ZH:Record<string,string>={tideAmplitude:"日月排列潮汐指数",actionReadiness:"行动准备度",creativeFlow:"创造流动度",connectionFlow:"关系连接度",valueDiscernment:"价值辨识度",inwardPull:"向内牵引度",adaptation:"适应弹性",structure:"结构承载度"};
+const dimZh=(value:string)=>DIM_ZH[value]??DAILY_DIM_ZH[value]??"观察维度";
+const DAILY_CHAPTER_KEYS=["overview","action","creation","relationship","value","inner","day7","day30","day90","practice","summary"];
 
 function clean(value:string|undefined){return (value??"").replace(HEADING,"").replace(/本章只观察/gu,"所观者，").replace(/不被逐项翻译成/gu,"不逐项释作").replace(/说的不是([^，。；\n]+?)[，,]?\s*是/gu,"所指非$1，实为").replace(/不是([^，。；\n]+?)[，,]?\s*而是/gu,"非$1，实为").replace(/这说明/gu,"由此可见").replace(/这意味着/gu,"其后果为").replace(/可能表明/gu,"其证尚指向").replace(/综合来看|总体而言/gu,"合诸证而观").replace(/从某个角度/gu,"就此一端而观").replace(/你需要意识到/gu,"须知").replace(/在一定程度上/gu,"于此范围内").replace(/如果/gu,"若").replace(/应该/gu,"当").replace(/不要/gu,"勿").replace(/不能/gu,"不可").replace(/\r\n?/g,"\n").replace(/\n{3,}/g,"\n\n").replace(/([。！？；])\1+/gu,"$1").trim();}
 function clauses(value:string|undefined,limit=3){return clean(value).split(/\n\s*\n|(?<=[。！？；])/u).map(x=>x.trim()).filter(Boolean).slice(0,limit);}
 function sentence(value:string){const v=clean(value);return /[。！？；]$/u.test(v)?v:`${v}。`;}
 
 function appendixSpec(product:ReportProductKey,index:number,chapter:string):LivingChapterSpec{
-  return {id:`${product}-appendix-${index+1}`,product,titleZh:`证据附录 · ${chapter}`,question:"此项记录能支持什么，又不能支持什么？",resolves:"保留原始证据的解释边界，不以象征或单项分数替代人生。",minIndependentContexts:2,requiredDimensions:[],optionalDimensions:[],realityDomains:["daily","decision"]};
+  return {id:`${product}-appendix-${index+1}`,product,titleZh:`延伸观察 · ${index+1}`,question:"此项记录能支持什么，又不能支持什么？",resolves:"保留原始证据的解释边界，不以象征或单项分数替代人生。",minIndependentContexts:2,requiredDimensions:[],optionalDimensions:[],realityDomains:["daily","decision"]};
 }
 
-function specAt(product:ReportProductKey,index:number,chapter:string){return LIVING_REPORT_SPECS[product][index]??appendixSpec(product,index,chapter);}
+function specAt(product:ReportProductKey,index:number,chapter:string){const dailyIndex=product==="daily-tide"?DAILY_CHAPTER_KEYS.indexOf(chapter):-1;return LIVING_REPORT_SPECS[product][dailyIndex>=0?dailyIndex:index]??appendixSpec(product,index,chapter);}
 
 function evidenceLeaves(product:ReportProductKey,evidence:EvidenceItem[],supportId:string):EvidenceLeafV340[]{
   return evidence.map((item,index)=>({id:`${product}-${item.key}-${index}`,product,dimension:item.key,context:`${item.source}:${item.key}`,answerSemantic:`${item.label}=${String(item.value)}`,strength:typeof item.value==="number"?Math.max(0,Math.min(1,item.value/100)):0.65,confidence:item.source==="fact"?0.92:0.82,supports:[supportId],challenges:[],realityTags:[item.source,item.label]}));

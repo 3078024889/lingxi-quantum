@@ -34,7 +34,7 @@ export default function MiniLifeArchetypeReport({reportId,subjectName,createdAt,
   }
 
   return <main className="min-h-screen bg-[radial-gradient(circle_at_12%_8%,rgba(127,91,180,.34),transparent_30%),radial-gradient(circle_at_88%_24%,rgba(43,156,168,.28),transparent_35%),#07102c] text-bone">
-    <ReportReturnBar miniLabel="返回八流进度"/>
+    <ReportReturnBar miniLabel="返回八流进度"/><div className="sticky top-0 z-20 border-b border-lattice/20 bg-white/95 p-3 text-center"><button onClick={download} disabled={downloading} className="rounded-full border border-lattice/40 px-5 py-2 text-sm text-[#286a78]">{downloading?"正在生成完整档案…":"下载完整 PDF ↓"}</button>{error&&<p role="alert" className="mt-2 text-sm text-rose-600">{error}</p>}</div>
     <div ref={reportRef} className="space-y-7 px-3 py-8 sm:px-6">
       <PublicationPage index={1} total={total} eyebrow="LIFE ARCHETYPE V6 · EIGHT-STREAM CONVERGENCE" title={<Bi zh="生命原型 · 八流归一" en="Life Archetype · Eight Streams Converged"/>} art={art(1)} layout="cover">
         <div className="flex items-start justify-between gap-5"><div><PublicationLabel><Bi zh={`档案主体 · ${subjectName}`} en={`Archive subject · ${subjectName}`}/></PublicationLabel><p className="mt-2 text-xs leading-6 opacity-65">同账户 · 姓名完全核验 · 365 天窗口</p></div><p className="font-display text-3xl text-[#557f79]">8 / 8</p></div>

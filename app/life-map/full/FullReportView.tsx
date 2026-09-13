@@ -29,7 +29,7 @@ type ChartFacts = {
 const SECTION_TITLES = [
   { zh: "七大行星逐一解读", en: "The Seven Planets, One by One" },
   { zh: "八字深层结构", en: "The Deep Structure of Your Bazi" },
-  { zh: "紫微命盘详解", en: "Your Ziwei Chart, Decoded" },
+  { zh: "紫微生命坐标详解", en: "Your Ziwei Chart, Decoded" },
   { zh: "胎元 · 命宫 · 身宫（四柱体系）", en: "Fetal Origin · Life Palace · Body Palace (Bazi System)" },
   { zh: "玛雅印记详解", en: "Your Maya Sign, Decoded" },
   { zh: "大运走势", en: "Your Major Luck Cycles" },
@@ -206,9 +206,9 @@ export default function FullReportView({ id }: { id: string }) {
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
         <div className="lm-core lm-core-active" />
         <p className="mt-8 font-display text-lg text-lm2-text">
-          {status === "checking" ? t("正在确认解锁状态…", "Confirming your unlock…") : t("灵犀场正在为你，逐层展开这份完整命盘…", "Lingxi Field is unfolding your full chart, layer by layer…")}
+          {status === "checking" ? t("正在确认解锁状态…", "Confirming your unlock…") : t("灵犀场正在为你，逐层展开这份完整生命坐标…", "Lingxi Field is unfolding your full chart, layer by layer…")}
         </p>
-        <p className="mt-2 text-sm text-lm2-text-dim/80">{t("正在依据你的命盘事实与生命向量完成本地编排。", "Your chart facts and life vector are being composed locally.")}</p>
+        <p className="mt-2 text-sm text-lm2-text-dim/80">{t("正在依据你的生命坐标事实与生命向量完成本地编排。", "Your chart facts and life vector are being composed locally.")}</p>
         <style>{`.lm-core { width: 90px; height: 90px; border-radius: 999px; background: conic-gradient(from 0deg, #E8869E, #E7B85C, #5FC79B, #5A9FDE, #A47ADC, #E8869E); animation: lm-breathe 1.5s ease-in-out infinite, lm-spin 6s linear infinite; filter: blur(7px) saturate(0.9); opacity: .85; } @keyframes lm-breathe { 0%,100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.15); opacity: .95; } } @keyframes lm-spin { from { filter: blur(7px) saturate(0.9) hue-rotate(0deg); } to { filter: blur(7px) saturate(0.9) hue-rotate(360deg); } }`}</style>
       </div>
     );
@@ -245,7 +245,7 @@ export default function FullReportView({ id }: { id: string }) {
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
     try {
       // v300：迁到档案式导出，与其余产品统一。
-      // 之前没迁是因为报告里有五张真实图表（五行分布、紫微命盘、
+      // 之前没迁是因为报告里有五张真实图表（五行分布、紫微生命坐标、
       // 大运时间线、频率自测、数字能量），而当时的 exportArchivePdf
       // 只接受纯文本章节，硬迁会把图表全部弄丢。现在导出器支持章节
       // 挂载 DOM 元素，图表会被单独截图、作为插图嵌进对应那一章。
@@ -253,7 +253,7 @@ export default function FullReportView({ id }: { id: string }) {
       const FIGURE_CAPTIONS: Record<number, { zh: string; en: string }> = {
         1: { zh: "五行分布——看的不是哪一行最多，是五者之间的失衡在哪里。",
              en: "The distribution of the five elements — what matters is not which is largest, but where the imbalance sits." },
-        2: { zh: "紫微命盘十二宫。", en: "The twelve palaces of your Ziwei chart." },
+        2: { zh: "紫微生命坐标十二宫。", en: "The twelve palaces of your Ziwei chart." },
         5: { zh: "大运时间线——每一段的起始年龄。",
              en: "Your major luck cycles — the starting age of each phase." },
         6: { zh: "频率自测三项：能量 · 清晰 · 对齐。",
@@ -735,7 +735,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
   );
 }
 
-// 紫微十二宫方形图：传统命盘本来就是这样按地支固定方位排布的——
+// 紫微十二宫方形图：传统生命坐标本来就是这样按地支固定方位排布的——
 // 地支顺时针从"巳"起手在左上角，寅丑子亥收在左下角，中间空出来放核心信息。
 const ZIWEI_GRID_BRANCHES = [
   ["巳", "午", "未", "申"],

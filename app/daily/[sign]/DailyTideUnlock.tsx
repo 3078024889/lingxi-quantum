@@ -8,7 +8,7 @@ import { REVIEW_MODE } from "@/lib/reviewMode";
 import { useLang } from "@/lib/useLang";
 import ErrorWithLoginPrompt from "@/components/ErrorWithLoginPrompt";
 
-// v237：今日运势潮汐的付费深度报告入口——免费的星座今日运势（这个
+// v237：今日潮汐的付费深度报告入口——免费的星座今日运势（这个
 // 页面本身）完全不用出生时间，但深度报告需要真实出生数据才能算日主
 // 五行、交叉引用今天的具体天文数据，所以这里单独收集一次，跟星座
 // 选择是两件事。
@@ -92,7 +92,7 @@ export default function DailyTideUnlock() {
       </p>
       <p className="mt-2 text-sm leading-7 text-bone-dim">
         <Bi
-          zh="这只是今天的星座运势——加上你真实的出生信息，能展开一份从今天开始的深度潮汐报告：今日六重潮汐，加上未来7/30/90天真实算出来的潮汐趋势，可以下载、永久保存。"
+          zh="这只是今天的星座节律——加上你真实的出生信息，能展开一份从今天开始的深度潮汐报告：今日六重潮汐，加上未来7/30/90天真实算出来的潮汐趋势，可以下载、永久保存。"
           en="This is just today's sign-level reading — add your real birth data to unfold a deep tide report starting today: six daily tides, plus real 7/30/90-day tide trends, downloadable and yours to keep."
         />
       </p>

@@ -32,7 +32,7 @@ export const manifestationProducts: Product[] = [
 export const narrativeProducts: Product[] = [];
 
 export const lifeMapProducts: Product[] = [
-  { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你的完整命盘解读，永久保存、随时回看", noteEn: "One exchange unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
+  { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你的完整生命坐标解读，永久保存、随时回看", noteEn: "One exchange unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
 ];
 
 export const relationshipProducts: Product[] = [
@@ -40,11 +40,11 @@ export const relationshipProducts: Product[] = [
 ];
 
 export const qianProducts: Product[] = [
-  { id: "qian-reading", name: "灵犀生命灵签 · 场域解读", nameEn: "Lingxi Life Oracle · Field Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁属于你的三重生命签的完整解读——由你的真实命盘四柱确定，不是随机摇出，永久保存、可再读", noteEn: "One exchange unlocks the full reading of your three life signs — determined by your real chart pillars, not a random shake. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "qian-reading", name: "灵犀生命灵签 · 场域解读", nameEn: "Lingxi Life Oracle · Field Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁属于你的三重生命签的完整解读——由你的真实生命坐标四柱确定，不是随机摇出，永久保存、可再读", noteEn: "One exchange unlocks the full reading of your three life signs — determined by your real chart pillars, not a random shake. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const tarotReadingProducts: Product[] = [
-  { id: "tarot-reading", name: "灵犀量子生命镜像 · 三重镜像深度解读", nameEn: "Lingxi Quantum Life Mirror · Three-Mirror Deep Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁专属于你的三张牌阵——潜意识镜像、当下共振、未来展开，由你的真实命盘数据确定，不是随机抽取，永久保存、可再读", noteEn: "One exchange unlocks your own three-card spread — hidden pattern, present resonance, future possibility — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "tarot-reading", name: "灵犀量子生命镜像 · 三重镜像深度解读", nameEn: "Lingxi Quantum Life Mirror · Three-Mirror Deep Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁专属于你的三张牌阵——潜意识镜像、当下共振、未来展开，由你的真实生命坐标数据确定，不是随机抽取，永久保存、可再读", noteEn: "One exchange unlocks your own three-card spread — hidden pattern, present resonance, future possibility — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const resilienceProducts: Product[] = [

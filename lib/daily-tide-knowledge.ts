@@ -86,7 +86,7 @@ function activate(chapter: string, keys: string[], scores: Scores, contexts: str
       knowledgeVersion: DAILY_TIDE_KNOWLEDGE_VERSION, product: "daily-tide", chapter,
       kind: "basic", priority: 100 - i,
       conditions: { op: "score", dim: key, min: band.min, max: band.max },
-      dimensions: [key], fragments: { mechanism: `${key}:${band.min}-${band.max}` },
+      dimensions: [key], fragments: {},
       safetyTags: ["agency", "counterevidence", "non-predictive"],
     };
     return { node, reason: `score:${key}:${band.min}-${band.max}`, deterministicOrder: i };

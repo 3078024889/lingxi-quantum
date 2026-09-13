@@ -14,7 +14,7 @@ function blockedCopy(data: Progress) {
   return "自第一条支流开启之日起，365 天内完成八项同主体场域精测。八流齐备后，系统才会读取底层证据并生成完整原型档案。";
 }
 
-export default function ArchetypeProgress({onState}: {onState?: (data: Progress | null) => void} = {}) {
+export default function ArchetypeProgress({onState,onRead}: {onState?: (data: Progress | null) => void; onRead?: () => void} = {}) {
   const [data, setData] = useState<Progress | null>(null);
   const [selected, setSelected] = useState("");
   const [loading, setLoading] = useState(true);
@@ -57,7 +57,7 @@ export default function ArchetypeProgress({onState}: {onState?: (data: Progress 
 
     <div className="archetype-stream-grid">{(data.tributaries ?? []).map((item, index) => <article key={item.productId} className={item.needsRetest ? "needs-retest" : item.completed ? "is-complete" : ""}><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{item.nameZh}</h3><small>{item.nameEn}</small>{item.completedAt && <p>采用记录 · {new Date(item.completedAt).toLocaleString("zh-CN")}</p>}{item.noteZh && <p>{item.noteZh}</p>}</div><b>{item.needsRetest ? "旧版缺证据" : item.completed ? "已完成" : item.assessmentCompleted ? "待恢复权限" : "未开启"}</b>{!item.completed && <a href={item.assessmentCompleted && !item.needsRetest ? "/account" : destinations[item.productId] || "/field-tests"}>{item.assessmentCompleted && !item.needsRetest ? "查看权限 →" : "继续这条支流 →"}</a>}</article>)}</div>
 
-    {data.ready && reportId ? <a href={`/mini-report?id=${encodeURIComponent(reportId)}`} className="archetype-report-link">展开完整生命原型报告 →</a> : <div className="archetype-progress-boundary">{blockedCopy(data)}</div>}
+    {data.ready && reportId ? <a href={onRead ? "#archetype-archive" : `/mini-report?id=${encodeURIComponent(reportId)}`} onClick={onRead} className="archetype-report-link">展开完整生命原型报告 →</a> : <div className="archetype-progress-boundary">{blockedCopy(data)}</div>}
     {data.error && <p className="archetype-progress-error">{data.error}</p>}
   </section>;
 }

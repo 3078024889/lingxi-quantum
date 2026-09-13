@@ -22,6 +22,7 @@ const creation: NavItem[] = [
 ];
 
 const field: NavItem[] = [
+  { href: "/learn", zh: "探索", en: "Explore", rune: "compass" },
   { href: "/live-as", zh: "意识显化", en: "Manifestation", rune: "eye" },
   { href: "/field-tests", zh: "场域精测", en: "Field Insights", rune: "mandala" },
   { href: "/practice", zh: "修炼技术", en: "Practice", rune: "flame", badge: "FREE" },

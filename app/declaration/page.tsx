@@ -5,7 +5,7 @@ import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
 const DECLARATION_FAQ: BilingualFaqItem[] = [
   {
-    qZh: "灵犀场是人工智能生成的算命服务吗？", qEn: "Is Lingxi Field an AI-generated fortune-telling service?",
+    qZh: "灵犀场的解读如何生成？", qEn: "How are Lingxi Field readings created?",
     aZh: "不是。灵犀场并不是一个告诉你「未来会发生什么」的预测工具，而是一处连接自我探索、生命结构理解与意识扩展的数字场域。它通过天文周期、传统象征体系、生命原型、多维叙事与意识探索模型，将这些不同维度的信息重新连接，帮助你从新的角度观察自己——这里不是替你定义人生，而是提供一面更深的镜子，你依然是自己生命的创造者。",
     aEn: "No. Lingxi Field isn't a tool that tells you what will happen next — it's a digital field connecting self-exploration, an understanding of your life structure, and consciousness expansion. Drawing on astronomical cycles, traditional symbolic systems, life archetypes, dimensional narrative, and consciousness models, it reconnects these different dimensions of information to help you observe yourself from a new angle. This isn't about defining your life for you — it's a deeper mirror. You remain the creator of your own life.",
   },

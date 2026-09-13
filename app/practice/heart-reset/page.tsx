@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import GateHealth from "@/components/gates/GateHealth";
 import PracticeGate from "@/components/PracticeGate";
 import { getAccess } from "@/lib/access";
-import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
 
 export const metadata = { title: "归零心诀 · 修炼技术 | 灵犀 · Heart Reset | Lingxi", description: "归零心诀：一套四步呼吸重置练习，让心从信息超载与能量耗散中清空、回归清明与慈悲。The Heart Reset — a four-step breathing practice that clears the heart back to clarity and compassion." };
@@ -64,7 +63,7 @@ export default async function HeartResetPage() {
 
             <PracticeGate unlocked={unlocked} user={!!user} productName="归零心诀" productNameEn="Heart Reset">
               <div className="mb-12">
-                <PracticeChart src="/images/practice/heart-reset-chart.jpg" alt="归零心诀 · 完整练习图（闭眼入静—心区激活—绿色灌注—心观世界，含四步重置法）" />
+
               </div>
               <div className="space-y-10">
                 <div className="border-l border-lattice/30 pl-6">

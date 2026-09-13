@@ -59,7 +59,8 @@ const reports=[
   ...["romantic","business","general"].map(relationshipType=>[`relationship-${relationshipType}`,generateStaticRelationshipReport({nameA:"甲",nameB:"乙",vectorA:vector,vectorB:{...vector,freedomNeed:42,stabilityNeed:79,emotionalDepth:55},resonance:{resonant:[],complementary:[],friction:[]},relationshipType,lang:"zh"})]),
 ];
 for(const [label,report] of reports){
-  const stamped=label.startsWith("relationship-")||report.includes("<!-- classical-editorial:V340.1-LIVING-WEB -->");
+  const stamped=label.startsWith("relationship-")||report.includes("<!-- classical-editorial:V340.2-LIVING-WEB -->");
+  if (['daily-tide','romance'].includes(label) && /\b(?:structure|adaptation|day30|day90|actionReadiness|socialDrive)\b/.test(report)) throw new Error(label+' leaked an internal key');
   if(!stamped||!report.includes("现实复核"))throw new Error(`${label} production generator did not publish V340 living text`);
 }
 if(new Set(reports.map(([,report])=>report)).size!==reports.length)throw new Error("production report paths converged");

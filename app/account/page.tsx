@@ -78,7 +78,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   // 入口完全没查过这两张——这次一起补上，跟前两个用同一套列表样式。
   let qianReports: { id: string; name: string | null; created_at: string }[] = [];
   let tarotReadingReports: { id: string; name: string | null; created_at: string }[] = [];
-  // 生命韧性、桃花磁场、今日运势潮汐、财富创造地图——同样的道理，之前
+  // 生命韧性、桃花磁场、今日潮汐、财富创造地图——同样的道理，之前
   // 场域入口完全没查过这四张表，这次一起补上。
   let resilienceReports: { id: string; name: string | null; created_at: string }[] = [];
   let romanceReports: { id: string; name: string | null; created_at: string }[] = [];
@@ -196,6 +196,9 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
   const narrativeUnlocks = unlocks.filter((id) => narrativeMap.has(id));
   const plainUnlocks = unlocks.filter((id) => !narrativeMap.has(id) && !REPORT_PRODUCT_IDS.has(id));
 
+  let paidOrderCount: number | null = null;
+  let journalCount: number | null = null;
+  if(user && supabase){const [paid,journal]=await Promise.all([supabase.from("orders").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("status","paid"),supabase.from("practice_journal_entries").select("id",{count:"exact",head:true}).eq("user_id",user.id)]);paidOrderCount=paid.error?null:paid.count;journalCount=journal.error?null:journal.count;}
   return (
     <>
       <Nav />
@@ -213,11 +216,11 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               </h1>
               <p className="mt-4 text-base text-bone-dim">{user.email}</p>
               <p className="mt-6 max-w-sm text-base leading-9 text-bone-dim">
-                <Bi zh="你的现实回路与练习记录，已在云端安全同步。" en="Your Reality Loop and practice records are synced securely to the cloud." />
+                <Bi zh="在这里回看自己的探索、练习与订单，让每一次理解都有可以继续的地方。" en="Return to your explorations, practices and orders, and continue from what you have learned." />
               </p>
               </div>
 
-              <nav className="field-account-links" aria-label="我的场域快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
+              <div className="field-account-stats"><Link href="/account/orders"><span>已支付订单</span><strong>{paidOrderCount ?? "—"}</strong><small>{paidOrderCount === null ? "暂未能读取，请刷新重试" : "查看订单与已保存报告 →"}</small></Link><Link href="/practice"><span>免费修炼技术</span><strong>4</strong><small>完整引导，随时进入 →</small></Link><Link href="/practice#practice-journal"><span>我的练习记录</span><strong>{journalCount ?? "—"}</strong><small>{journalCount === null ? "暂未能读取，请刷新重试" : "回看自己记录的真实体验 →"}</small></Link></div><nav className="field-account-links" aria-label="我的场域快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
               {/* 会员状态 */}
               <div className="mt-8 w-full space-y-3 text-left">
                 <div className="rounded-sm border border-white/10 bg-void-deep px-5 py-4">
@@ -234,12 +237,9 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                   </p>
                 </div>
                 <div className="rounded-sm border border-white/10 bg-void-deep px-5 py-4">
-                  <p className="text-sm text-bone-dim"><Bi zh="已激活的修炼技术" en="Activated practices" /></p>
+                  <p className="text-sm text-bone-dim"><Bi zh="修炼技术" en="Practice techniques" /></p>
                   <p className="mt-1 font-display text-lg text-lattice">
-                    {plainUnlocks.length
-                      ? plainUnlocks.map((id) => nameMap[id] || id).join("、")
-                      : ""}
-                    {!plainUnlocks.length && <Bi zh="暂无" en="None yet" />}
+                    <Link href="/practice"><Bi zh="四项完整引导，免费开放 →" en="Four complete practices, freely available →" /></Link>
                   </p>
                 </div>
               </div>
@@ -253,7 +253,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
 
               <PendingOrdersPanel orders={pendingOrders} />
 
-              <section id="field-archives" className="field-account-archives">
+              <FieldMembership /><section id="field-archives" className="field-account-archives">
               {narrativeUnlocks.length > 0 && (
                 <CollapsibleSection titleZh="已解锁订单 · 多维叙事" titleEn="Unlocked · Narrative" count={narrativeUnlocks.length}>
                   {narrativeUnlocks.map((slug) => (
@@ -379,7 +379,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                 <SignOutButton />
                 <DeleteAccountButton />
               </div>
-              <FieldMembership />
+
             </>
           ) : (
             <>

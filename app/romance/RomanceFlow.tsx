@@ -336,8 +336,8 @@ const previewContent = ((() => { if (result) {
           <p className="text-sm uppercase tracking-widest2 text-lattice"><Bi zh="这个分数是怎么来的" en="Where This Score Comes From" /></p>
           <p className="mt-2 text-base leading-8 text-bone-dim">
             <Bi
-              zh="不是临场编的。灵犀场底层是一套「生命向量引擎」——先用真实天文数据（此刻行星在黄道上的精确位置）和真实历法数据（你的四柱八字），算出一组固定的数字，人格倾向、情感深度、社交驱动这些维度，全部是先算出分数，场域才根据这些已经算好的数字去写解读，不是场域自己决定要不要说你「有吸引力」。同一份出生数据，任何时候重新算，前面的分数都是一样的——这是它跟一般算命网站最大的不同：别的网站是「直接问、直接给答案」，这里是「先算出结构，场域只负责讲清楚这个结构」。这个桃花磁场分数，是从你完整命盘里，只抽出跟「吸引力」相关的这一部分。"
-              en="This isn't improvised. Underneath, Lingxi Field runs on a life-vector engine — real astronomical data (the planets' exact positions right now) and real calendrical data (your Bazi pillars) are used to compute a fixed set of numbers first — personality tendencies, emotional depth, social drive — before any text gets written. The field writes based on numbers already computed; it doesn't decide on its own whether to call you magnetic. Recompute the same birth data anytime, and the underlying scores come out identical. That's the core difference from a typical fortune-telling site: they ask a question and hand you an answer directly; here, the structure is computed first, and the field only explains it. This magnetism score is pulled from just the attraction-related slice of your full chart."
+              zh="解读来自可复算的出生坐标与本地知识体系。系统先形成探索维度，再结合这些维度展开说明，帮助你观察连接方式、内在需要与行动习惯。同一组输入与计算时点会得到一致的结果；这些分数是自我探索的参照，不决定一个人的价值或未来。"
+              en="Readings use reproducible birth coordinates and a local knowledge system. Exploration dimensions are calculated before the explanation is composed. They offer a reference for observing needs, connections and habits; they do not determine personal worth or predict a future."
             />
           </p>
         </div>
@@ -399,7 +399,7 @@ const previewContent = ((() => { if (result) {
         <div className="lx-glass-romance p-6 text-center">
           <p className="text-base leading-8 text-bone-dim">
             <Bi
-              zh="同一份命盘还能算出：你的生命韧性指数、你的财富来源类型、你内在最核心的矛盾是什么——这些现在都还没被解读。完整生命图谱会把这些维度全部展开，交叉引用同一组数据，不是另外重新算一份。"
+              zh="你也可以从同一组生命坐标，继续观察压力中的恢复方式、创造价值的路径，以及内在需要之间的张力。完整生命图谱将这些视角放在一起，帮助你把当下的理解连接到具体生活。"
               en="The same chart also determines your resilience index, your wealth archetype, and the core tension at your center — none of that has been unpacked yet. The full Life Map expands all of it, cross-referencing the same underlying data, not a separate calculation."
             />
           </p>

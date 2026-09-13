@@ -15,7 +15,7 @@ export default function WhyTrustLingxi() {
       </p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">
         <Bi
-          zh="不是临场编的。灵犀场底层是一套「生命向量引擎」——先用真实天文数据（此刻行星在黄道上的精确位置）和真实历法数据（你的四柱八字），算出一组固定的数字，人格倾向、情感深度、社交驱动这些维度，全部是先算出分数，灵犀才根据这些已经算好的数字去写解读，不是灵犀自己决定要不要说你「压力恢复能力强」。同一份出生数据，任何时候重新算，前面的分数都是一样的——这是它跟一般算命网站最大的不同：别的网站是「直接问、直接给答案」，这里是「先算出结构，灵犀只负责讲清楚这个结构」。"
+          zh="解读来自可复算的出生坐标与本地知识体系。系统先形成探索维度，再结合这些维度展开说明，帮助你观察连接方式、内在需要与行动习惯。同一组输入与计算时点会得到一致的结果；这些分数是自我探索的参照，不决定一个人的价值或未来。"
           en="This isn't improvised on the spot. Underneath, Lingxi Field runs a Life Vector Engine — real astronomical data (the exact position of the planets right now) and real calendrical data (your bazi pillars) get computed into a fixed set of numbers first. Traits like stress recovery or social drive are scored before any writing happens — Lingxi explains a structure that's already been calculated, it doesn't decide on its own whether to call you resilient. Run the same birth data again, and the underlying scores come out identical. That's the core difference from a typical horoscope site: most just ask and answer directly; this computes the structure first, and only asks Lingxi to explain it clearly."
         />
       </p>

@@ -7,7 +7,6 @@ import Link from "next/link";
 import BreathGuide from "./BreathGuide";
 import BreathStructure from "@/components/BreathStructure";
 import BreathDiagram from "@/components/diagrams/BreathDiagram";
-import PracticeChart from "@/components/PracticeChart";
 import CosmicField from "@/components/CosmicField";
 import { getAccess } from "@/lib/access";
 
@@ -73,7 +72,7 @@ export default async function BreathPage() {
   return (
     <>
       <Nav />
-      <PracticeWorkspace practice="breath" steps={[...standardSteps.map((step, index) => ({id: `practice-standard-${index}`, zh: step.title, en: step.titleEn, level: "h3"})),{"id":"practice-chapter-1","zh":"呼吸与本源意识","en":"Breath and primordial consciousness","level":"h2"},{"id":"practice-chapter-2","zh":"节律路径 · 完整练习图","en":"Rhythm path · the complete practice chart","level":"h2"},{"id":"practice-chapter-3","zh":"节律路径示意","en":"The rhythm path","level":"h3"},{"id":"practice-chapter-4","zh":"五秒呼吸节律","en":"The five-second breath rhythm","level":"h3"},{"id":"practice-chapter-5","zh":"标准五步法","en":"The standard five-step method","level":"h2"},{"id":"practice-chapter-6","zh":"交互式呼吸引导","en":"Interactive breath guide","level":"h2"}]} hero={<section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
+      <PracticeWorkspace practice="breath" steps={[...standardSteps.map((step, index) => ({id: `practice-standard-${index}`, zh: step.title, en: step.titleEn, level: "h3"})),{"id":"practice-chapter-1","zh":"呼吸与本源意识","en":"Breath and primordial consciousness","level":"h2"},{"id":"practice-chapter-2","zh":"节律路径 · 呼吸引导","en":"Rhythm path · breathing guidance","level":"h2"},{"id":"practice-chapter-3","zh":"节律路径示意","en":"The rhythm path","level":"h3"},{"id":"practice-chapter-4","zh":"五秒呼吸节律","en":"The five-second breath rhythm","level":"h3"},{"id":"practice-chapter-5","zh":"标准五步法","en":"The standard five-step method","level":"h2"},{"id":"practice-chapter-6","zh":"交互式呼吸引导","en":"Interactive breath guide","level":"h2"}]} hero={<section className="relative overflow-hidden px-6 py-20 text-center sm:py-28">
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20">
             <CosmicField className="h-full w-auto" />
           </div>
@@ -163,11 +162,11 @@ export default async function BreathPage() {
 
         {unlocked ? (
           <>
-            {/* ── 节律路径 · 完整练习图 ── */}
+            {/* ── 节律路径 · 呼吸引导 ── */}
             <section className="border-t border-white/5 px-6 py-24">
               <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
                 <h2 id="practice-chapter-2" className="font-display text-3xl font-light text-bone">
-                  <Bi zh="节律路径 · 完整练习图" en="Rhythm path · the complete practice chart" />
+                  <Bi zh="节律路径 · 呼吸引导" en="Rhythm path · breathing guidance" />
                 </h2>
                 <div className="mt-6 space-y-4 text-base leading-9 text-bone-dim">
                   <p>
@@ -185,10 +184,7 @@ export default async function BreathPage() {
                 </div>
 
                 <div className="mt-10">
-                  <PracticeChart
-                    src="/images/practice/quantum-breath-chart.png"
-                    alt="量子息法 · 完整练习图（吸气接引—呼气绽放—载波调频—节律合一，含标准五步法与五秒节律呼吸结构）"
-                  />
+
                 </div>
                 <p className="mt-5 text-center font-display text-sm tracking-widest2 text-lattice/85">
                   <Bi

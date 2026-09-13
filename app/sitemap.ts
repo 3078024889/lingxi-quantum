@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/learn/manifestation-signs", "/learn/manifestation-journal", "/learn/manifest-money",
     "/learn/manifest-person", "/learn/manifest-love", "/learn/method-369", "/learn/affirmations", "/learn/twin-flame", "/learn/inner-friction", "/learn/what-is-consciousness", "/learn/letting-go", "/learn/angel-numbers", "/learn/emptiness", "/learn/energy-drain",
     "/learn/moon-manifestation", "/learn/law-of-attraction-vs", "/learn/subconscious-power",
-    "/learn/inner-sovereignty", "/learn/higher-self", "/learn/how-to-meditate", "/learn/raise-frequency",
+    "/learn/higher-self", "/learn/how-to-meditate", "/learn/raise-frequency",
     "/learn/chakras", "/learn/synchronicity", "/learn/awakening",
     "/glossary", "/legal/sasi", "/live-as", "/field-tests", "/subconscious", "/practice",
     "/practice/breath", "/practice/heart-reset", "/practice/ascending-heart", "/practice/intuition",

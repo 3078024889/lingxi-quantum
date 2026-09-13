@@ -6,7 +6,6 @@ import GateMind from "@/components/gates/GateMind";
 import PracticeGate from "@/components/PracticeGate";
 import { getAccess } from "@/lib/access";
 import IntuitionDiagram from "@/components/diagrams/IntuitionDiagram";
-import PracticeChart from "@/components/PracticeChart";
 import Bi from "@/components/Bi";
 
 export const metadata = { title: "直觉丹道 · 修炼技术 | 灵犀 · The Intuitive Way | Lingxi", description: "直觉丹道：区分世界的声音与心之深处的耳语，四步修炼法重铸情感历史、接取内在声音。The Intuitive Way — a four-step practice recasting emotional history and accessing the inner voice." };
@@ -196,7 +195,7 @@ export default async function IntuitionPage() {
 
             <PracticeGate unlocked={unlocked} user={!!user} productName="直觉丹道" productNameEn="The Intuitive Way">
               <div className="mb-12">
-                <PracticeChart src="/images/practice/intuition-chart.jpg" alt="直觉丹道 · 完整练习图（引文与投射—容许光安顿—放手臣服—光之连接，含四步修炼法）" />
+
               </div>
               <div className="space-y-10">
                 <div className="border-l border-lattice/30 pl-6">
