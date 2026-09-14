@@ -13,6 +13,8 @@ export type SasiTaskQuote = {
   provider: string;
   model: string;
   amountFen: number;
+  rateVersion: string;
+  retailFenPerSecond: number;
   expiresAt: number;
 };
 

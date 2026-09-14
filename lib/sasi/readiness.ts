@@ -27,7 +27,8 @@ export function sasiReadiness() {
     && process.env.SASI_CONTENT_LABELING_MODE === SASI_AIGC_LABEL_MODE
     && Boolean(process.env.SASI_CONTENT_PRODUCER_CODE?.trim());
   const billing = billingFlag && paymentConfigured;
-  const jobs = jobsFlag && video.anyVerified;
+  const usageSettlementTested = process.env.SASI_USAGE_SETTLEMENT_TESTED === "true";
+  const jobs = jobsFlag && video.anyVerified && usageSettlementTested;
   return {
     catalog: true,
     providers: video.providers,
@@ -38,6 +39,7 @@ export function sasiReadiness() {
     billing,
     jobs,
     refundFlowTested,
+    usageSettlementTested,
     contentLabeling,
     productionReady: paymentConfigured && billing && jobs && refundFlowTested && contentLabeling,
   };
@@ -57,6 +59,7 @@ export function sasiPublicReadiness() {
     productionAccountReady: readiness.billing,
     executionReady: readiness.jobs,
     refundFlowTested: readiness.refundFlowTested,
+    usageSettlementTested: readiness.usageSettlementTested,
     contentLabelingReady: readiness.contentLabeling,
     paymentChannels: readiness.paymentChannels,
     productionReady: readiness.productionReady,

@@ -25,14 +25,6 @@ export const SASI_CAPABILITIES: SasiCapability[] = [
   { id: "voice", zh: "声音叙事", en: "Sonic Narrative", kind: "video", status: "planned", noteZh: "统一角色声线、对白节奏、环境声与音乐位置。", noteEn: "Unify casting, dialogue rhythm, ambience and score placement." },
 ];
 
-// Integer fen only. The UI formats these values as RMB and never exposes an
-// internal point/credit unit.
-const ROUTE_AMOUNT_FEN_PER_SECOND: Record<string, number> = {
-  "motion-essential": 69,
-  "studio-balanced": 119,
-  "signature-cinema": 349,
-};
-
 export const SASI_SKILLS = [
   { id: "website-architect", glyph: "</>", zh: "网站架构师", en: "Website Architect", category: "code", status: "enabled", fitZh: "网站 · 应用 · 产品重构", fitEn: "Sites · apps · product rebuilds", noteZh: "把模糊需求整理成页面结构、技术方案、数据模型与可核验的完成标准。", noteEn: "Turn an unclear brief into page structure, technical direction, data models and verifiable acceptance criteria.", modes: ["code"] },
   { id: "repository-builder", glyph: "⌘", zh: "仓库构建者", en: "Repository Builder", category: "code", status: "enabled", fitZh: "现有仓库 · 修复 · 功能开发", fitEn: "Repositories · fixes · features", noteZh: "先理解已有代码和用户资产，再实施、测试并交付可审阅的变更。", noteEn: "Understand existing code and user assets before implementing, testing and delivering reviewable changes.", modes: ["code"] },
@@ -64,26 +56,11 @@ export function getSasiCreditPack(id: string) {
   return CREDIT_PACKS.find((pack) => pack.id === id);
 }
 
-export function productionQuote(routeId: string, seconds: number) {
-  const duration = Math.max(5, Math.min(600, Math.round(seconds)));
-  const amountFen = Math.round((ROUTE_AMOUNT_FEN_PER_SECOND[routeId] ?? 0) * duration);
-  return { routeId, duration, amountFen };
-}
-
 export function routeForQuality(quality: SasiQuality) {
   return SASI_QUALITY_TIERS.find((item) => item.id === quality)?.routeId ?? "motion-essential";
 }
 
+// Project planning is not a binding quote. Only /api/sasi/quote can price a task.
 export function budgetAssessment(routeId: string, seconds: number, budgetFen: number) {
-  const quote = productionQuote(routeId, seconds);
-  const budget = Math.max(0, Number.isFinite(budgetFen) ? Math.round(budgetFen) : 0);
-  const ratio = quote.amountFen > 0 ? budget / quote.amountFen : 0;
-  const level = ratio >= 1 ? "sufficient" : ratio >= 0.65 ? "tradeoff" : "insufficient";
-  return {
-    ...quote,
-    budget,
-    gap: Math.max(0, quote.amountFen - budget),
-    level,
-    canConfirm: ratio >= 1,
-  } as const;
+  return {routeId, duration:Math.max(5,Math.min(600,Math.round(seconds))), budget:Math.max(0,Math.round(budgetFen)||0), amountFen:null, gap:null, level:"awaiting-quote" as const, canConfirm:false};
 }

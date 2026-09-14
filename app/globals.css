@@ -1462,3 +1462,14 @@ html[data-theme="light"] .text-lm2-violet { color:#69459b !important; text-shado
 
 /* Shared writing ink across desktop and mobile forms. */
 :root{--writing-ink:#2563eb}html[data-theme="dark"]{--writing-ink:#79aaff}html body input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="color"]),html body textarea,html body [contenteditable="true"]{color:var(--writing-ink)!important;-webkit-text-fill-color:var(--writing-ink)!important;caret-color:var(--writing-ink);font-weight:600}html body input::placeholder,html body textarea::placeholder{-webkit-text-fill-color:#8797b2!important;color:#8797b2!important;font-weight:400}.lx-side-badge{color:#3182f6!important;border:0!important;background:none!important;font-size:9px!important;padding:0!important;letter-spacing:.06em}
+
+/* SASI task-first entry: one visual anchor, compact working entrances. */
+.sasi-start-paths{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:22px 0 16px}
+.sasi-start-path{position:relative;text-align:left;border:1px solid #8da6d740;border-radius:22px;padding:24px;background:linear-gradient(135deg,#8adfff0c,#9574fa0c);transition:transform .2s,border-color .2s}
+.sasi-start-path:hover{transform:translateY(-3px);border-color:#8e8bff}
+.sasi-start-path>span{font:12px monospace;color:#8184bc}.sasi-start-path h2{font-size:21px;margin:16px 0 12px;font-weight:600}.sasi-start-path p{font-size:14px;line-height:1.9;opacity:.7;min-height:80px}.sasi-start-path strong{display:block;color:#7770ec;font-size:14px;margin-top:18px}
+.sasi-utility-links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.sasi-utility-links button{display:flex;justify-content:space-between;border:1px solid #8da6d730;border-radius:14px;padding:14px;font-size:13px}.sasi-task-contract{font-size:12px;line-height:1.8;opacity:.6;margin:16px 0 24px}
+.cangxuan-mode-art{aspect-ratio:16/9}.cangxuan-mode-copy>span{min-height:0}
+@media(max-width:760px){.sasi-start-paths{grid-template-columns:1fr}.sasi-start-path p{min-height:0}.sasi-utility-links{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.sasi-start-path{transition:none}.sasi-start-path:hover{transform:none}}
+@media(max-width:760px){html[data-theme="light"] .sasi-home-v4-hero{background-image:linear-gradient(90deg,rgba(255,255,255,.98),rgba(255,255,255,.88)),url('/images/console/sasi-home-hero-v2.png')}html[data-theme="dark"] .sasi-home-v4-hero{background-image:linear-gradient(90deg,rgba(4,13,25,.98),rgba(4,13,25,.86)),url('/images/console/sasi-home-hero-v2.png')}}

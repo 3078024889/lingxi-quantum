@@ -1,4 +1,5 @@
 import "server-only";
+import { settleVideoSeconds } from "@/lib/sasi/video-pricing";
 import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { pollSasiVideo, providerAssetAccess, submitSasiVideo, type SasiVideoSelection } from "@/lib/sasi/provider";
@@ -121,7 +122,24 @@ export async function refreshSasiJob(admin: SupabaseClient, job: SasiJobRow) {
     }, { onConflict: "job_id" });
     if (inserted.error) throw new Error("DELIVERY_RECORD_FAILED");
   }
+  // Usage must be written by a trusted reconciliation adapter after checking
+  // provider billing evidence. Requested duration is not billing evidence.
+  const usage = job.output.verifiedUsage as {billableSeconds?:number;reference?:string;source?:string} | undefined;
+  const approvedRate = Number(job.input.retailFenPerSecond);
+  const usageVerified = usage?.source === "provider-billing" && typeof usage.reference === "string" && usage.reference.length > 0 && Number.isSafeInteger(usage.billableSeconds) && Number.isSafeInteger(approvedRate) && approvedRate > 0;
+  const settlement = usageVerified ? settleVideoSeconds(usage!.billableSeconds!, {amountFen:job.quoted_points,retailFenPerSecond:approvedRate}) : null;
+  if (!settlement || settlement.requiresApproval) {
+    const errorCode = settlement?.requiresApproval ? "BUDGET_APPROVAL_REQUIRED" : "BILLING_USAGE_PENDING";
+    const output = {...job.output,deliveryReady:true,billingPending:true};
+    const pending = await admin.from("sasi_jobs").update({status:"running",error_code:errorCode,output,updated_at:new Date().toISOString()}).eq("id",job.id).in("status",["queued","running"]).select().single();
+    if (pending.error) throw new Error("BILLING_RECONCILIATION_STATE_FAILED");
+    return (pending.data ?? job) as SasiJobRow;
+  }
   const output = {
+    ...job.output,
+    billingPending: false,
+    billableSeconds: usage!.billableSeconds,
+    releasedAmountFen: settlement.releasedAmountFen,
     deliveryReady: true,
     providerResultReceived: true,
     aiGenerated: true,
@@ -133,7 +151,7 @@ export async function refreshSasiJob(admin: SupabaseClient, job: SasiJobRow) {
   };
   const settled = await admin.rpc("settle_sasi_job", {
     p_job_id: job.id,
-    p_actual_points: job.quoted_points,
+    p_actual_points: settlement.settledAmountFen,
     p_provider_cost_minor: provider.providerCostMinor,
     p_output: output,
   });

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { productionQuote, routeForQuality, type SasiQuality } from "@/lib/sasi/catalog";
+import { type SasiQuality } from "@/lib/sasi/catalog";
+import { quoteVideoTask } from "@/lib/sasi/video-pricing";
 import { sasiReadiness } from "@/lib/sasi/readiness";
 import { dispatchSasiJob, publicSasiJob, type SasiJobRow } from "@/lib/sasi/production";
 import { reviewSasiProductionInput } from "@/lib/sasi/safety";
@@ -74,14 +75,16 @@ export async function POST(request: Request) {
   if (!safety.ok) return NextResponse.json({ error: safety.error }, { status: 422 });
 
   const admin = createAdminClient();
-  const quote = productionQuote(routeForQuality(quality), duration);
   const selection = selectSasiVideoProvider({ quality, duration, aspectRatio, preferredProvider });
   if (!selection) return NextResponse.json({ error: "NO_VERIFIED_PROVIDER_FOR_FORMAT" }, { status: 503 });
+  let quote;
+  try { quote = quoteVideoTask(selection, duration); }
+  catch (error) { return NextResponse.json({error:error instanceof Error?error.message:"TASK_PRICING_UNAVAILABLE"},{status:503}); }
   const approved = verifySasiTaskQuote(quoteToken);
   if (!approved || approved.expiresAt < Date.now()) return NextResponse.json({ error: "QUOTE_REQUIRED_OR_EXPIRED" }, { status: 409 });
   if (approved.userId !== user.id || approved.projectId !== projectId || approved.nodeId !== nodeId || approved.promptHash !== hashSasiPrompt(prompt)
     || approved.duration !== quote.duration || approved.quality !== quality || approved.aspectRatio !== aspectRatio
-    || approved.provider !== selection.provider || approved.model !== selection.model || approved.amountFen !== quote.amountFen) {
+    || approved.provider !== selection.provider || approved.model !== selection.model || approved.amountFen !== quote.amountFen || approved.rateVersion !== quote.rateVersion || approved.retailFenPerSecond !== quote.retailFenPerSecond) {
     return NextResponse.json({ error: "QUOTE_CHANGED_REQUOTE_REQUIRED" }, { status: 409 });
   }
   const limited = await admin.rpc("rate_limit_check", { p_key: `sasi-job:${user.id}`, p_limit: 12, p_window_seconds: 3600 });
@@ -130,6 +133,8 @@ export async function POST(request: Request) {
       foundryPack,
       foundryInjected: Boolean(foundryPack && !foundryPack.empty),
       approvedAmountFen: quote.amountFen,
+      retailFenPerSecond: quote.retailFenPerSecond,
+      rateVersion: quote.rateVersion,
       quoteExpiresAt: approved.expiresAt,
     },
   });
@@ -149,5 +154,5 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "PROVIDER_SUBMIT_FAILED", job: refreshed.data ? publicSasiJob(refreshed.data as SasiJobRow) : null }, { status: 502 });
     }
   }
-  return NextResponse.json({ job: publicSasiJob(job), quote, foundryPack }, { status: reservation.created ? 201 : 200 });
+  return NextResponse.json({ job: publicSasiJob(job), quote: {amountFen:quote.amountFen,duration:quote.duration}, foundryPack }, { status: reservation.created ? 201 : 200 });
 }

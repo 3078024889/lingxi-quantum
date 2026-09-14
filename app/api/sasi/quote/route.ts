@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { productionQuote, routeForQuality, type SasiQuality } from "@/lib/sasi/catalog";
+import { type SasiQuality } from "@/lib/sasi/catalog";
 import { selectSasiVideoProvider, type SasiVideoProviderId } from "@/lib/sasi/provider";
+import { quoteVideoTask } from "@/lib/sasi/video-pricing";
 import { reviewSasiProductionInput } from "@/lib/sasi/safety";
 import { hashSasiPrompt, signSasiTaskQuote } from "@/lib/sasi/task-quote";
 
@@ -34,8 +35,10 @@ export async function POST(request: Request) {
   if (!project || (nodeId && !nodeResult.data)) return NextResponse.json({ error: "PROJECT_NOT_FOUND" }, { status: 404 });
   const selection = selectSasiVideoProvider({ quality, duration, aspectRatio, preferredProvider });
   if (!selection) return NextResponse.json({ error: "NO_VERIFIED_PROVIDER_FOR_FORMAT" }, { status: 503 });
-  const quote = productionQuote(routeForQuality(quality), duration);
-  const expiresAt = Date.now() + 10 * 60_000;
-  const token = signSasiTaskQuote({ userId: user.id, projectId, nodeId, promptHash: hashSasiPrompt(prompt), duration, quality, aspectRatio, provider: selection.provider, model: selection.model, amountFen: quote.amountFen, expiresAt });
+  let quote;
+  try { quote = quoteVideoTask(selection, duration); }
+  catch (error) { return NextResponse.json({error:error instanceof Error?error.message:"TASK_PRICING_UNAVAILABLE"},{status:503}); }
+  const expiresAt = quote.expiresAt;
+  const token = signSasiTaskQuote({ userId: user.id, projectId, nodeId, promptHash: hashSasiPrompt(prompt), duration, quality, aspectRatio, provider: selection.provider, model: selection.model, amountFen: quote.amountFen, rateVersion: quote.rateVersion, retailFenPerSecond: quote.retailFenPerSecond, expiresAt });
   return NextResponse.json({ quote: { amountFen: quote.amountFen, amountRmb: (quote.amountFen / 100).toFixed(2), expiresAt: new Date(expiresAt).toISOString(), token } }, { headers: { "Cache-Control": "no-store" } });
 }

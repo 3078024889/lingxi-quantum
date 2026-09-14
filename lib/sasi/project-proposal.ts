@@ -56,13 +56,19 @@ export function createProjectProposal(body: Record<string, unknown>) {
     };
   }
 
-  const seconds = Math.max(5, Math.min(600, Math.round(Number(body.seconds) || 30)));
-  const quality: SasiQuality = body.quality === "cinema" || body.quality === "balanced" ? body.quality : "fast";
-  const allocation = Math.max(0, Math.round(Number(body.budget) || 0));
-  const quote = budgetAssessment(routeForQuality(quality), seconds, allocation);
   const requestedEpisodes = Number(body.episodes);
-  const explicitEpisodes = Number.isInteger(requestedEpisodes) && requestedEpisodes > 0 ? Math.min(200, requestedEpisodes) : null;
-  const suggestedEpisodes = explicitEpisodes ?? (seconds <= 90 ? 1 : Math.max(2, Math.ceil(seconds / 90)));
+  const hasEpisodeSpec = body.secondsPerEpisode !== undefined;
+  const explicitEpisodes = Number.isInteger(requestedEpisodes) && requestedEpisodes > 0 && requestedEpisodes <= 200 ? requestedEpisodes : null;
+  const perEpisode = Number(body.secondsPerEpisode);
+  if (hasEpisodeSpec && (!explicitEpisodes || !Number.isSafeInteger(perEpisode) || perEpisode < 5 || perEpisode > 600)) return {ok:false as const,error:"INVALID_EPISODE_SPEC"};
+  const legacyTotal = Math.max(5, Math.min(600, Math.round(Number(body.seconds) || 30)));
+  const suggestedEpisodes = explicitEpisodes ?? (legacyTotal <= 90 ? 1 : Math.max(2, Math.ceil(legacyTotal / 90)));
+  const secondsPerEpisode = hasEpisodeSpec ? perEpisode : Math.ceil(legacyTotal / suggestedEpisodes);
+  const seconds = hasEpisodeSpec ? suggestedEpisodes * secondsPerEpisode : legacyTotal;
+  const quality: SasiQuality = body.quality === "cinema" || body.quality === "balanced" ? body.quality : "fast";
+  const allocation = body.budgetFen === undefined ? Math.round(Number(body.budget || 0) * 100) : Number(body.budgetFen);
+  if (!Number.isSafeInteger(allocation) || allocation < 0) return {ok:false as const,error:"INVALID_BUDGET"};
+  const quote = {...budgetAssessment(routeForQuality(quality), seconds, allocation),duration:seconds};
 
   return {
     ok: true as const,
@@ -70,9 +76,9 @@ export function createProjectProposal(body: Record<string, unknown>) {
     title: titleFromBrief(brief, kind),
     language,
     stages: [...SASI_DRAMA_STAGES],
-    input: { brief, attachments, seconds, quality, requestedEpisodes: explicitEpisodes },
+    input: { brief, attachments, seconds, secondsPerEpisode, episodes:suggestedEpisodes, budgetFen:allocation, quality, requestedEpisodes: explicitEpisodes },
     proposal: {
-      recommendation: { episodes: suggestedEpisodes, secondsPerEpisode: Math.ceil(seconds / suggestedEpisodes), totalSeconds: seconds, inferred: explicitEpisodes === null },
+      recommendation: { episodes: suggestedEpisodes, secondsPerEpisode, totalSeconds: seconds, inferred: explicitEpisodes === null },
       quote,
       generationBlocked: !quote.canConfirm,
       editableWorkflow: true,

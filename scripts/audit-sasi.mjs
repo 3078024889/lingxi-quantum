@@ -5,6 +5,7 @@ const workspace = read("app/sasi/SasiWorkspace.tsx");
 const home = read("app/page.tsx");
 const legacySasi = read("app/sasi/page.tsx");
 const catalog = read("lib/sasi/catalog.ts");
+const pricing = read("lib/sasi/video-pricing.ts");
 const prepare = read("app/api/sasi/prepare/route.ts");
 const readiness = read("lib/sasi/readiness.ts");
 const middleware = read("middleware.ts");
@@ -42,9 +43,9 @@ const checks = [
   [workspace.includes("SASI Auto") && workspace.includes("Capability Center") && !workspace.includes("Model Connections"), "outcome-first auto orchestration and capability center"],
   [projectProposal.includes("explicitEpisodes") && projectProposal.includes("suggestedEpisodes") && productSpec.includes("绝不默认 100 集"), "episode count is inferred, never preset to 100"],
   [projectProposal.includes("requiresProductionAuthorization: true") && schema.includes("reserve_sasi_points"), "production authorization precedes atomic reservation"],
-  [workspace.includes("尚未对齐") && budgetSpec.includes("不得隐藏降级"), "allocation-quality mismatch blocks silent downgrade"],
-  [catalog.includes("ROUTE_AMOUNT_FEN_PER_SECOND") && internalCosts.length >= 3 && providerEconomics.includes('import "server-only"'), "public RMB task price and supplier economics are separated"],
-  [catalog.includes("Math.round((ROUTE_AMOUNT_FEN_PER_SECOND") && !catalog.includes("Math.ceil("), "integer-fen task calculation avoids rounding up"],
+  [workspace.includes("报价待确认") && budgetSpec.includes("不得隐藏降级"), "allocation-quality mismatch blocks silent downgrade"],
+  [!catalog.includes("ROUTE_AMOUNT_FEN_PER_SECOND") && pricing.includes('import "server-only"') && pricing.includes("SASI_VIDEO_RATES_JSON"), "public RMB task price and supplier economics are separated"],
+  [pricing.includes("Number.isSafeInteger") && pricing.includes("rate.retailFenPerSecond*duration"), "integer-fen task calculation avoids rounding up"],
   [provider.includes('import "server-only"') && provider.includes('env("XAI_API_KEY")') && provider.includes('env("OPENAI_API_KEY")') && provider.includes('env("DASHSCOPE_API_KEY")') && !workspace.includes("XAI_API_KEY"), "multi-provider credentials remain server-side"],
   [schema.includes("enable row level security") && schema.includes("service_role") && schema.includes("sasi_node_dependencies"), "RLS, service writes and dependency graph schema"],
   [middleware.includes('"/dream"') && middleware.includes('target.pathname = "/"'), "retired Dream routes redirect to the SASI home"],
