@@ -30,10 +30,18 @@ const field: NavItem[] = [
   { href: "/account", zh: "我的场域", en: "My Field", rune: "figure" },
 ];
 
+const toolsNav: NavItem[] = [
+  { href: "/tools", zh: "在线工具", en: "Online Tools", rune: "mandala", badge: "NEW" },
+  { href: "/tools/compress-image-to-100kb", zh: "图片压到100KB", en: "Image → 100KB", rune: "crystal" },
+  { href: "/tools/file-type-detector", zh: "真实格式检测", en: "File type detect", rune: "eye" },
+  { href: "/tools/md5-sha256", zh: "MD5 / SHA256", en: "MD5 / SHA256", rune: "twin" },
+];
+
 function activeFor(pathname: string, href: string) {
   if (href.includes("?")) return false;
   if (href === "/") return pathname === "/";
   if (href === "/field-tests") return ["/field-tests", "/life-map", "/relationship", "/resilience", "/romance", "/wealth", "/daily", "/mirror", "/qian", "/archetype"].some((route) => pathname === route || pathname.startsWith(`${route}/`));
+  if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/");
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -91,6 +99,11 @@ export default function Nav() {
         <p className="lx-side-kicker"><Bi zh="第二层 · LINGXI FIELD" en="SECOND LAYER · LINGXI FIELD" /></p>
         <nav className="space-y-1" aria-label="Lingxi Field">
           {field.map((item) => <SideLink key={item.href} item={item} pathname={pathname} onNavigate={() => setOpen(false)} />)}
+        </nav>
+        <div className="lx-side-rule" />
+        <p className="lx-side-kicker"><Bi zh="工具 · TOOLS" en="TOOLS" /></p>
+        <nav className="space-y-1" aria-label="Online tools">
+          {toolsNav.map((item) => <SideLink key={item.href} item={item} pathname={pathname} onNavigate={() => setOpen(false)} />)}
         </nav>
       </div>
 

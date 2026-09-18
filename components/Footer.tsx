@@ -32,6 +32,7 @@ export default function Footer() {
           <Link href="/field-tests"><Bi zh="场域精测" en="Field Insights" /></Link>
           <Link href="/practice"><Bi zh="修炼技术" en="Practices" /></Link>
           <Link href="/subconscious"><Bi zh="重塑潜意识" en="Rewrite Mind" /></Link>
+          <Link href="/tools"><Bi zh="在线工具" en="Online Tools" /></Link>
           <Link href="/account"><Bi zh="我的场域" en="My Field" /></Link>
         </nav>
 

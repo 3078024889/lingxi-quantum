@@ -39,6 +39,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/practice/breath", "/practice/heart-reset", "/practice/ascending-heart", "/practice/intuition",
     "/gate/origin", "/gate/relation", "/gate/wealth", "/gate/health", "/gate/mind", "/gate/destiny",
     "/membership",
+    "/tools",
+    "/tools/png-to-jpg", "/tools/jpg-to-png", "/tools/webp-to-jpg",
+    "/tools/compress-image",
+    "/tools/compress-image-to-20kb", "/tools/compress-image-to-50kb",
+    "/tools/compress-image-to-100kb", "/tools/compress-image-to-200kb", "/tools/compress-image-to-500kb",
+    "/tools/resize-image", "/tools/remove-exif",
+    "/tools/file-type-detector", "/tools/md5-sha256", "/tools/file-compare",
+    "/tools/json-formatter", "/tools/timestamp-converter", "/tools/qr-code-generator",
+    "/tools/number-energy",
     // 九个场域精测入口；生命原型同时说明小程序树突引擎与网页天文引擎的边界。
     "/life-map", "/relationship", "/resilience", "/romance", "/wealth", "/daily", "/mirror", "/mirror/reading", "/mirror/daily", "/qian", "/archetype", "/terms", "/privacy", "/refunds", "/about",
     // 十二星座各自的每日运势页——每一个都对应"今天XX座运势"这种真实
