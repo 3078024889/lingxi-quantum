@@ -1,115 +1,158 @@
-# 灵犀 LINGXI · 第一阶段：首页 + 六道之门
+# 灵犀场 LINGXIFIELD · SASI
 
-这是新网站的第一阶段成果：星门首页、核心信条、六道之门（出身/关系/金钱/健康/心灵/命运）、
-量子暂停练习入口、以及"活在此版本中的你"付费模块入口。技术栈：**Next.js 14 + TypeScript + Tailwind CSS**，
-专为部署在 Vercel 设计。
+> 一念成片，一念即达，一念显化。  
+> 官网：**[lingxifield.com](https://lingxifield.com)** · **[lingxifield.cn](https://lingxifield.cn)**  
+> 仓库：https://github.com/3078024889/lingxi-quantum
 
----
+灵犀场（LingxiField）是融合 **SASI 智能创作平台**、**意识显化与场域精测**、**修炼技术**，以及 **在线小工具（本地优先）** 的中英双语数字空间。
 
-## 一、本地预览（可选，需要先安装 Node.js 18+）
-
-1. 解压本项目文件夹，进入目录：
-   ```bash
-   cd lingxi
-   npm install
-   npm run dev
-   ```
-2. 打开浏览器访问 `http://localhost:3000` 即可看到效果。
-
-> 如果你不想在自己电脑上装 Node.js，可以跳过这一步，直接进入下面的"上传到 GitHub + Vercel"。
+技术栈：**Next.js 14 · TypeScript · Tailwind CSS · Supabase · Vercel**
 
 ---
 
-## 二、上传到 GitHub（你来操作）
-
-1. 打开 [github.com](https://github.com)，登录你的账号（你之前部署 vercel.com/celestial9 用的应该是同一套 GitHub 账号）。
-2. 点击右上角 `+` → `New repository`。
-   - Repository name 建议填：`lingxi-quantum`（或你喜欢的名字）
-   - 选择 Private（私有仓库，建议先私有）
-   - 不要勾选"Add a README"（我们项目里已经有文件了）
-   - 点击 `Create repository`
-3. 新仓库建好后，GitHub 会给你一串命令，类似：
-   ```bash
-   git remote add origin https://github.com/你的用户名/lingxi-quantum.git
-   git branch -M main
-   git push -u origin main
-   ```
-   在你电脑上打开终端，进入项目文件夹后执行：
-   ```bash
-   cd lingxi
-   git init
-   git add .
-   git commit -m "灵犀第一阶段：首页与六道之门"
-   git remote add origin https://github.com/你的用户名/lingxi-quantum.git
-   git branch -M main
-   git push -u origin main
-   ```
-   （如果终端要你登录 GitHub，按提示用浏览器授权登录即可。）
-
----
-
-## 三、连接 Vercel 并部署
-
-由于你已经有 `vercel.com/celestial9` 这个团队空间：
-
-1. 登录 [vercel.com](https://vercel.com)，进入你的 `celestial9` 团队。
-2. 点击 `Add New...` → `Project`。
-3. 在 "Import Git Repository" 里找到刚才推送的 `lingxi-quantum` 仓库，点击 `Import`。
-   - 如果列表里没有，点 `Adjust GitHub App Permissions`，把这个新仓库的访问权限加给 Vercel。
-4. Framework Preset 会自动识别为 **Next.js**，不需要改任何设置。
-5. 点击 `Deploy`，等待 1-2 分钟。
-6. 部署成功后，Vercel 会给一个 `xxx.vercel.app` 的临时网址，点开就能看到上线后的网站。
-
-### 绑定你现有的域名（比如 wingmakers.com.cn 同主体的新域名，或者你想换成"灵犀"相关域名）
-
-1. 进入这个项目 → `Settings` → `Domains`。
-2. 输入你的域名，按提示在你域名服务商（比如阿里云/腾讯云）那边添加一条 CNAME 或 A 记录。
-3. 等待 DNS 生效（通常几分钟到几小时），Vercel 会自动签发 HTTPS 证书。
-
----
-
-## 四、以后怎么更新网站
-
-以后每次我给你新的代码文件，你只需要：
+## 本地开发
 
 ```bash
-cd lingxi
-# 把我给的新文件覆盖到对应位置
+# 建议 Node.js 18+
+cd lingxi-quantum
+npm install          # 或 pnpm install
+cp .env.example .env.local   # 填入 Supabase / 支付等密钥
+npm run dev
+```
+
+打开 http://localhost:3000
+
+> 不要把 `.pnpm-store/`、`node_modules/`、`.env.local` 提交进 Git。  
+> 仓库若曾误提交 package store，体积会膨胀到数百 MB——请确保 `.gitignore` 已忽略它们。
+
+---
+
+## 生产域名
+
+| 域名 | 用途 |
+|------|------|
+| https://lingxifield.com | 国际 / 主站 |
+| https://lingxifield.cn | 国内备案域；微信授权与支付优先 |
+| Vercel 预览 | `lingxi-quantum-*.vercel.app` |
+
+`middleware.ts` 会把 `www.lingxifield.com` / `www.lingxifield.cn` **308** 到裸域，并统一去掉多余尾斜杠。
+
+部署：推送 `main` 后 Vercel 自动构建。本地也可：
+
+```bash
 git add .
-git commit -m "更新说明，比如：新增量子呼吸练习页"
-git push
+git commit -m "说明本次改动"
+git push origin main
 ```
 
-**push 之后 Vercel 会自动重新部署，不需要任何手动操作**，1-2 分钟后线上网站就会更新。
+Windows 工作副本路径示例：`D:\lingxi-quantum`
 
 ---
 
-## 五、项目结构说明
+## 产品结构（现状）
 
-```
-lingxi/
-├── app/
-│   ├── layout.tsx       全局布局、字体、网站标题
-│   ├── page.tsx         首页（星门 + 六道之门 + 量子暂停入口）
-│   └── globals.css      全局样式（呼吸动画、噪点纹理等）
-├── components/
-│   └── BreathRing.tsx   首页"量子暂停"呼吸环动效
-├── lib/
-│   └── gates.ts         六道之门的文案与图片数据，改文案直接改这个文件
-├── public/images/       六道之门背景图（来自你提供的文档配图）
-└── package.json
-```
+### 1. SASI（站点首页 `/`）
 
-**你以后想自己改文案**，最简单的方式：打开 `lib/gates.ts`，改 `title` / `line` 字段里的文字，
-保存后 push，网站文案就更新了——不需要懂代码。
+面向结果的智能生产系统：理解目标 → 制作提案 → 能力编排 → 审校交付。  
+含苍玄 AI 导演、短剧工坊、编程构建部署、Skills、模型与制作账户等（见 `app/sasi/*`、`lib/sasi/*`）。
+
+旧路径 `/sasi` 永久重定向到 `/`。
+
+### 2. 第二层 · 灵犀场
+
+| 路径 | 说明 |
+|------|------|
+| `/live-as` | 意识显化 |
+| `/field-tests` | 场域精测入口 |
+| `/life-map` `/relationship` `/resilience` `/romance` `/wealth` `/daily` `/mirror` `/qian` `/archetype` | 各精测产品 |
+| `/practice` | 修炼技术（量子息法 等） |
+| `/subconscious` | 重塑潜意识 |
+| `/learn` `/glossary` `/narrative` | 探索与内容 |
+| `/account` | 我的场域 / 订单 |
+
+### 3. 在线工具 `/tools`（新增模块）
+
+定位：**遇到数字问题，丢进来就知道怎么回事，并尽量直接解决。**
+
+- 优先 **浏览器本地处理**，文件不上传服务器  
+- 统一 `ToolShell` + `registry`，禁止每个工具复制一套上传/SEO/错误组件  
+- 重型库仅在对应页面动态加载，避免首页 bundle 膨胀  
+
+**已上线（live）示例：**
+
+- 图片：PNG↔JPG、WebP 转换、压缩、精确压到 20/50/100/200/500KB、尺寸修改、清 EXIF  
+- 文件：真实格式检测（Magic Bytes）、MD5/SHA256、两文件一致性  
+- 通用：JSON 格式化、时间戳转换、二维码生成  
+- 场域：数字能量 `/tools/number-energy`
+
+**规划中（planned，诚实占位，无假按钮）：** HEIC、二维码读取、PDF 合并/拆分/压缩、图片↔PDF 等。
+
+架构说明见：`docs/TOOLS-MODULE-ARCHITECTURE.md`
 
 ---
 
-## 六、下一阶段计划
+## 目录速览
 
-1. 量子呼吸完整教程页（`/practice/breath`，含分步引导动画）
-2. "活在此版本中的你"——每日签到 + 现实回路书写页（核心付费体验）
-3. 登录系统（邮箱验证码）+ 用户宇宙星图可视化
-4. 支付接入（USDT / 微信 / 支付宝）—— 这一步需要你提供真实商户/收款配置
+```text
+app/                 路由与 API（SASI 首页、场域产品、tools、支付回调…）
+components/          共享 UI（Nav / Footer / 报告 / tools/*）
+lib/                 业务逻辑（sasi / 报告引擎 / tools 处理器…）
+knowledge/           场域知识库（写作纪律见 docs/）
+supabase/            schema 与 migrations
+miniapp/             微信小程序
+docs/                产品与审计文档
+scripts/             审计与 ingest 脚本
+public/              静态资源、OG、备案校验文件
+```
 
-我会按这个顺序继续给你完整代码和对应教程。
+---
+
+## 常用脚本
+
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run audit:security
+npm run audit:sasi
+# 更多 audit:* 见 package.json
+```
+
+---
+
+## 环境变量
+
+见 `.env.example`。至少需要：
+
+- `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`（服务端）
+- 支付相关：PayPal / 微信 / 支付宝（按已开通渠道）
+- SASI 制作开关与供应商密钥（未验收前保持 `false`）
+
+**切勿**把真实密钥提交进仓库。
+
+---
+
+## 内容与合规原则（摘要）
+
+- 运行时报告以确定性知识库 / 计算为主；自由文本入口的 AI 仅作解析器，不替用户编造命运或医疗结论。  
+- 不提供伪造法定公章等能力。  
+- 工具页广告不得遮挡核心操作（假下载按钮禁止）。  
+- PayPal 合规：产品命名避免 fortune-teller 类表述；旧 `/tarot` → `/mirror` 308。
+
+---
+
+## 更新日志
+
+大版本说明见 `CHANGELOG.md` 与 `docs/V*-RELEASE-NOTES.md`。
+
+---
+
+## 联系与备案
+
+- 站点：lingxifield.com / lingxifield.cn  
+- 备案：湘ICP备2026031465号  
+
+---
+
+*本 README 已替换「第一阶段：首页 + 六道之门」旧部署教程。若你本地 `D:\lingxi-quantum` 仍显示旧文档，请拉取 `main` 最新提交。*

@@ -22,3 +22,7 @@ pnpm-debug.log*
 # Private source material; derived knowledge must be reviewed before commit.
 /research/source-materials/raw/
 /research/source-materials/private-text/
+
+# Never commit package store (was bloating the repo ~800MB+)
+.pnpm-store/
+node_modules/
