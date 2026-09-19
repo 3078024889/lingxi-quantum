@@ -1,0 +1,6 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+export const metadata: Metadata = { title: "灵犀场 AI知识库｜AI学习助手、AI科研助手、试卷解析、论文阅读", description: "让教材、笔记、书籍与论文成为有出处、可检索的私人知识。学习与科研共用资料底座，从找到原文开始。", alternates: { canonical: "/ai-knowledge" } };
+export default function Page() { return <><Nav /><main className="mx-auto max-w-6xl px-6 py-20"><p className="text-sm tracking-widest text-lattice">LINGXI FIELD · KNOWLEDGE</p><h1 className="mt-5 text-4xl font-semibold">灵犀场 AI知识库</h1><p className="mt-6 max-w-3xl text-lg leading-8">让读过的知识，重新与你发生联系。从一份笔记到一个研究主题，把分散资料放在一起，让每一次查找都有出处。</p><div className="mt-10 grid gap-6 md:grid-cols-2">{[["/ai-learning", "灵犀场 AI学习助手", "教材、试卷、错题与笔记，从找到知识点与原文开始，逐步建立自己的学习资料库。"], ["/ai-research", "灵犀场 AI科研助手", "书籍、论文、实验记录与私人知识，放在同一个资料空间，检索原文、比较证据、继续研究。"]].map(([href, title, text]) => <Link key={href} className="rounded-3xl border p-8" href={href}><h2 className="text-2xl font-semibold">{title}</h2><p className="mt-5 leading-8">{text}</p><span className="mt-8 block text-lattice">带来我的资料 →</span></Link>)}</div><p className="mt-8 leading-7">当前可用：本地文本资料库与原文检索。自动试卷解析、带引用的 Agent 问答和研究工具执行正在建设，尚不收取这些能力的费用。</p></main><Footer /></>; }

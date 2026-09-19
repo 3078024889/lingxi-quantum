@@ -1,3 +1,4 @@
+import {loadProjectMemory,applyProjectMemory} from "@/lib/sasi/load-project-memory";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { type SasiQuality } from "@/lib/sasi/catalog";
@@ -38,7 +39,9 @@ export async function POST(request: Request) {
   let quote;
   try { quote = quoteVideoTask(selection, duration); }
   catch (error) { return NextResponse.json({error:error instanceof Error?error.message:"TASK_PRICING_UNAVAILABLE"},{status:503}); }
+  let memory;
+  try {memory=await loadProjectMemory(supabase,user.id,projectId);applyProjectMemory(prompt,memory.active);} catch(error){return NextResponse.json({error:error instanceof Error?error.message:"MEMORY_READ_FAILED"},{status:422});}
   const expiresAt = quote.expiresAt;
-  const token = signSasiTaskQuote({ userId: user.id, projectId, nodeId, promptHash: hashSasiPrompt(prompt), duration, quality, aspectRatio, provider: selection.provider, model: selection.model, amountFen: quote.amountFen, rateVersion: quote.rateVersion, retailFenPerSecond: quote.retailFenPerSecond, expiresAt });
+  const token = signSasiTaskQuote({ userId: user.id, projectId, nodeId, promptHash: hashSasiPrompt(prompt), duration, quality, aspectRatio, provider: selection.provider, model: selection.model, amountFen: quote.amountFen, rateVersion: quote.rateVersion, retailFenPerSecond: quote.retailFenPerSecond, memoryVersion:memory.version, expiresAt });
   return NextResponse.json({ quote: { amountFen: quote.amountFen, amountRmb: (quote.amountFen / 100).toFixed(2), expiresAt: new Date(expiresAt).toISOString(), token } }, { headers: { "Cache-Control": "no-store" } });
 }

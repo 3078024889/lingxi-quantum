@@ -31,7 +31,7 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
 
   const [{ data: project }, { data: nodes, error: nodeError }, { data: assets, error: assetError }, { data: jobs, error: jobError }, { data: deliveries, error: deliveryError }] = await Promise.all([
     supabase.from("sasi_projects").select("id,kind,title,language,current_version,created_at,updated_at").eq("id", params.id).eq("user_id", user.id).maybeSingle(),
-    supabase.from("sasi_nodes").select("id,node_type,version,status,input,output,created_at,updated_at").eq("project_id", params.id).eq("user_id", user.id).order("created_at"),
+    supabase.from("sasi_nodes").select("id,node_type,version,status,input,output,created_at,updated_at").eq("project_id", params.id).eq("user_id", user.id).neq("node_type", "project_memory_v1").order("created_at"),
     supabase.from("sasi_assets").select("id,original_name,media_kind,declared_size,verified_size,status,rejection_reason,created_at,updated_at").eq("project_id", params.id).eq("user_id", user.id).order("created_at"),
     supabase.from("sasi_jobs").select("id,node_id,status,quoted_points,reserved_points,settled_points,input,output,error_code,created_at,updated_at").eq("project_id", params.id).eq("user_id", user.id).order("created_at", { ascending: false }),
     supabase.from("sasi_deliveries").select("id,job_id,media_kind,mime_type,byte_size,ai_generated,created_at").eq("project_id", params.id).eq("user_id", user.id).order("created_at", { ascending: false }),

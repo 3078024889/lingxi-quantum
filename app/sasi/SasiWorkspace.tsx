@@ -18,6 +18,8 @@ import {
   SASI_SKILLS,
   type SasiQuality,
 } from "@/lib/sasi/catalog";
+import { SasiProjectMemory } from "./SasiProjectMemory";
+import { SASI_UPDATES } from "@/lib/sasi/updates";
 import { SasiProductionAccount, SasiProjectProduction } from "@/app/sasi/SasiProductionPanels";
 import CangXuanDirectorStudio from "@/app/sasi/CangXuanDirectorStudio";
 import ConnectionCenter from "@/app/sasi/ConnectionCenter";
@@ -355,6 +357,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     setViewState(next);
     const url = new URL(window.location.href);
     url.searchParams.set("view", next);
+    if (next !== "project") url.searchParams.delete("projectId");
     if (next !== "drama") url.searchParams.delete("room");
     if (url.href !== window.location.href) window.history.pushState({}, "", url);
   }
@@ -434,7 +437,17 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     setProjectDetail(await response.json());
     setNotice("");
     setView("project");
+    const url=new URL(window.location.href);url.searchParams.set("projectId",projectId);window.history.replaceState({},"",url);
   }
+
+  useEffect(()=>{
+    if(view!=="project"||!accountEmail)return;
+    const id=new URLSearchParams(window.location.search).get("projectId");
+    if(!id||projectDetail?.project.id===id)return;
+    let active=true;
+    void fetch(`/api/sasi/projects/${encodeURIComponent(id)}`,{cache:"no-store"}).then(async r=>{if(!r.ok)throw Error();const data=await r.json();if(active)setProjectDetail(data);}).catch(()=>{if(active)setNotice(copy(lang,"项目暂时无法读取，请从作品库重试。","Project unavailable. Please retry from your library."));});
+    return()=>{active=false;};
+  },[view,accountEmail,projectDetail?.project.id,lang]);
 
   useEffect(() => {
     let active = true;
@@ -573,7 +586,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           <div><p className="font-display text-lg tracking-[.12em]">灵犀场 SASI</p><p className="text-[11px] uppercase tracking-[.18em] opacity-55">Create · Build · Deliver</p></div>
         </button>
 
-        <p className="mb-2 text-[11px] uppercase tracking-[.2em] opacity-50">SASI Studio</p>
+        <details className="lx-nav-group" open><summary>SASI · 创作工作台</summary>
         <nav className="space-y-1">
           {studioNav.map((item) => (
             <button key={item.id} onClick={() => { setView(item.id); setMobileNav(false); }} className={`flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition ${view === item.id ? (dark ? "border-[#668cff]/25 bg-[#27365d] text-white shadow-[inset_2px_0_#72d7ff]" : "border-[#6958d8]/15 bg-[#e7e9ff] text-[#171717] shadow-[inset_2px_0_#6958d8]") : "border-transparent hover:bg-current/5"}`}>
@@ -582,11 +595,14 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           ))}
         </nav>
 
-        <p className="mb-2 mt-7 text-[11px] uppercase tracking-[.2em] opacity-50">{copy(lang, "第二层 · LINGXI FIELD", "SECOND LAYER · LINGXI FIELD")}</p>
+        </details><details className="lx-nav-group"><summary>{copy(lang, "灵犀场 · 探索与实践", "Lingxi Field")}</summary>
         <nav className="space-y-1">
           {fieldNav.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm opacity-75 transition hover:bg-current/5 hover:opacity-100"><span className="w-7 text-center">{item.glyph}</span><span><b className="block text-[15px] font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-1 block text-[11px] font-normal opacity-55">{item.en}</small></span></Link>)}
         </nav>
 
+        </details>
+        <details className="lx-nav-group"><summary>灵犀场 · 小工具</summary><Link className="block rounded-xl px-3 py-3 text-sm" href="/tools">图片、文件与日常工具 →</Link></details>
+        <details className="lx-nav-group"><summary>灵犀场 · AI知识库</summary>{[["/ai-knowledge", "AI知识库"], ["/ai-learning", "AI学习助手"], ["/ai-research", "AI科研助手"]].map(([href, title]) => <Link key={href} className="block rounded-xl px-3 py-3 text-sm" href={href}>{title} →</Link>)}</details>
         <div className="mt-auto space-y-3 border-t border-current/10 pt-4">
           <div className="flex gap-2"><button onClick={() => setLang(lang === "zh" ? "en" : "zh")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{lang === "zh" ? "EN" : "中文"}</button><button onClick={() => setTheme(dark ? "light" : "dark")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{dark ? "☀ Light" : "☾ Dark"}</button></div>
           <Link href={accountEmail ? "/account" : "/account?next=%2Fsasi"} className="block rounded-xl border border-current/15 px-3 py-3"><p className="truncate text-sm">{accountEmail ?? copy(lang, "连接场域账户", "Connect account")}</p><p className="mt-1 text-[11px] leading-5 opacity-55">{accountEmail ? copy(lang, "设置 · 切换 · 退出", "Settings · Switch · Sign out") : copy(lang, "登录后同步项目、作品与人民币余额", "Sign in to sync projects, works and RMB balance")}</p></Link>
@@ -594,7 +610,8 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
       </aside>
 
       <main className="min-h-screen px-4 pb-16 pt-20 lg:ml-[260px] lg:px-5 lg:pt-3">
-        <header className="relative mx-auto flex max-w-[1600px] items-center gap-3 border-b border-current/10 pb-3"><label className="hidden min-w-0 flex-1 items-center rounded-full border border-current/15 px-5 py-2.5 md:flex"><span className="mr-3 opacity-45">⌕</span><input value={headerSearch} onChange={(event)=>setHeaderSearch(event.target.value)} onKeyDown={(event)=>{if(event.key==="Enter"&&headerSearch.trim()){setHomeBrief(headerSearch.trim());setView("home");}}} placeholder={copy(lang,"搜索作品、功能、教程或输入你的想法…","Search works, features, guides or enter an idea…")} className="w-full bg-transparent text-sm outline-none"/></label><button onClick={()=>setView("home")} className="rounded-full border border-[#7994ff]/60 px-5 py-2 text-sm font-semibold">＋ {copy(lang,"创作","Create")}</button><button aria-label={copy(lang,"查看通知","View notifications")} aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(value=>!value)} className="relative grid h-10 w-10 place-items-center rounded-full border border-current/10"><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><i className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#ff566d] ring-2 ring-[var(--sasi-notice-ring)]"/></button><button onClick={() => setView("account")} className="flex items-center gap-2 rounded-full px-2 py-1 text-sm"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#68d8ff] to-[#7657ff] text-white">◎</span><span className="hidden sm:block">{copy(lang,"探索更大的可能","Explore more")}</span></button>{notificationsOpen&&<aside className={`absolute right-12 top-12 z-30 w-[min(380px,calc(100vw-32px))] rounded-2xl border p-4 shadow-2xl ${panel}`}><div className="flex items-center justify-between"><h2 className="font-semibold">{copy(lang,"公告与更新","News & updates")}</h2><button aria-label={copy(lang,"关闭通知","Close notifications")} onClick={()=>setNotificationsOpen(false)} className="grid h-7 w-7 place-items-center rounded-full border border-current/10 opacity-55">×</button></div><div className="mt-3 space-y-2">{[["作品库已支持导出与安全删除","已上线"],["SASI 首页视觉与入口完成重排","刚刚"],["角色连续性工作台正在构建","进行中"],["真实供应商生成闭环待验证","能力边界"]].map(([title,status])=><div key={title} className="rounded-xl border border-current/[.06] bg-current/[.045] p-3"><p className="text-sm font-medium">{title}</p><span className="mt-1 block text-xs text-[#6b75ff]">{status}</span></div>)}</div></aside>}</header>
+        <a href="/?view=billing#topup" className="sasi-recharge-ribbon"><span aria-hidden="true">✦</span><span className="sasi-recharge-window"><span>{copy(lang,"让下一个想法开始生长 · 充值创作余额 →","Make room for your next idea · Top up →")}</span></span></a>
+        <header className="relative mx-auto flex max-w-[1600px] items-center gap-3 border-b border-current/10 pb-3"><label className="hidden min-w-0 flex-1 items-center rounded-full border border-current/15 px-5 py-2.5 md:flex"><span className="mr-3 opacity-45">⌕</span><input value={headerSearch} onChange={(event)=>setHeaderSearch(event.target.value)} onKeyDown={(event)=>{if(event.key==="Enter"&&headerSearch.trim()){setHomeBrief(headerSearch.trim());setView("home");}}} placeholder={copy(lang,"搜索作品、功能、教程或输入你的想法…","Search works, features, guides or enter an idea…")} className="w-full bg-transparent text-sm outline-none"/></label><button onClick={()=>setView("home")} className="rounded-full border border-[#7994ff]/60 px-5 py-2 text-sm font-semibold">＋ {copy(lang,"创作","Create")}</button><button aria-label={copy(lang,"查看通知","View notifications")} aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(value=>!value)} className="relative grid h-10 w-10 place-items-center rounded-full border border-current/10"><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><i className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#ff566d] ring-2 ring-[var(--sasi-notice-ring)]"/></button><button onClick={() => setView("account")} className="flex items-center gap-2 rounded-full px-2 py-1 text-sm"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#68d8ff] to-[#7657ff] text-white">◎</span><span className="hidden sm:block">{copy(lang,"探索更大的可能","Explore more")}</span></button>{notificationsOpen&&<aside className={`absolute right-12 top-12 z-30 w-[min(380px,calc(100vw-32px))] rounded-2xl border p-4 shadow-2xl ${panel}`}><div className="flex items-center justify-between"><h2 className="font-semibold">{copy(lang,"公告与更新","News & updates")}</h2><button aria-label={copy(lang,"关闭通知","Close notifications")} onClick={()=>setNotificationsOpen(false)} className="grid h-7 w-7 place-items-center rounded-full border border-current/10 opacity-55">×</button></div><div className="mt-3 space-y-2">{SASI_UPDATES.map(item=><a href={item.href} key={item.id} className="block rounded-xl border border-current/10 p-3"><p className="text-sm font-medium">{copy(lang,item.zh,item.en)}</p><p className="mt-1 text-xs opacity-60">{copy(lang,item.detailZh,item.detailEn)}</p><time className="mt-2 block text-xs text-[#6b75ff]">{item.date}</time></a>)}</div></aside>}</header>
 
         <div className="mx-auto mt-3 max-w-[1600px]">
           {view === "home" && (
@@ -624,7 +641,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
               <div className="sasi-home-v4-lower">
                 <section><header><h2>▣ {copy(lang,projects.length?"继续最近的项目":"从一个创作示例开始",projects.length?"Recent projects":"Start from an example")}</h2><button onClick={()=>setView("works")}>{copy(lang,"查看更多 →","View more →")}</button></header><div className="sasi-home-v4-recent">{(projects.length?projects.slice(0,4):[{id:"demo-1",kind:"drama" as const,title:"《她与星海》",currentVersion:1},{id:"demo-2",kind:"build" as const,title:"未来城市官网",currentVersion:1},{id:"demo-3",kind:"drama" as const,title:"品牌宣传片",currentVersion:1},{id:"demo-4",kind:"build" as const,title:"AI 旅行助手",currentVersion:1}]).map((project,index)=><button key={project.id} onClick={()=>project.id.startsWith("demo-")?setView(project.kind==="drama"?"drama":"code"):openProject(project.id)}><span className={`sasi-home-v4-recent-art recent-${index+1}`}/><b>{project.title}</b><small>{project.id.startsWith("demo-")?copy(lang,"示例模板 · 点击开始","Example · Start here"):project.kind==="drama"?copy(lang,"短剧 · 可继续创作","Drama · Continue"):copy(lang,"数字产品 · 可继续构建","Product · Continue")}</small></button>)}</div></section>
                 <section><header><h2>▣ {copy(lang,"创作流程","Creation flow")}</h2></header><ol className="sasi-home-v4-flow">{[["输入想法","描述你的需求"],["SASI 规划","生成方案与执行计划"],["AI 创作","逐步生成、随时调整"],["审校优化","检查质量与一致性"],["交付上线","导出作品与真实状态"]].map(([title,note],index)=><li key={title}><span>{index+1}</span><b>{title}</b><small>{note}</small></li>)}</ol></section>
-                <section><header><h2>▣ {copy(lang,"公告与更新","News & updates")}</h2></header><ul className="sasi-home-v4-news"><li><b>作品库项目操作已完成</b><time>09-09</time></li><li><b>构建交付状态链已完成</b><time>09-09</time></li><li><b>模型与 API 安全连接已建立</b><time>09-09</time></li><li><b>短剧角色记忆正在构建</b><time>NEXT</time></li><li><b>真实供应商生成闭环待验证</b><time>GATED</time></li></ul></section>
+                <section><header><h2>▣ {copy(lang,"公告与更新","News & updates")}</h2></header><ul className="sasi-home-v4-news">{SASI_UPDATES.map(item=><li key={item.id}><a href={item.href}><b>{copy(lang,item.zh,item.en)}</b><small>{copy(lang,item.detailZh,item.detailEn)}</small></a><time dateTime={item.date}>{item.date.slice(5)}</time></li>)}</ul></section>
               </div>
             </section>
           )}
@@ -633,7 +650,8 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
             <section><button type="button" onClick={() => setView("home")} className="text-sm opacity-55 hover:opacity-100">← {copy(lang, "返回项目列表", "Back to projects")}</button><div className="mt-6 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[.2em] text-[#7657ff]">{projectDetail.project.kind === "drama" ? "SASI STORY GRAPH" : "SASI BUILD GRAPH"}</p><h1 className="mt-3 max-w-4xl text-4xl font-semibold">{projectDetail.project.title}</h1><p className="mt-3 font-mono text-xs opacity-35">{projectDetail.project.id}</p></div><span className="rounded-full border border-current/15 px-4 py-2 text-xs">{copy(lang, `版本 ${projectDetail.project.currentVersion}`, `Version ${projectDetail.project.currentVersion}`)}</span></div><div className="mt-8 grid gap-6 xl:grid-cols-[1fr_360px]"><div><h2 className="text-lg font-semibold">{copy(lang, "生产节点", "Production nodes")} <span className="ml-2 text-xs font-normal opacity-40">{projectDetail.dependencies.length} {copy(lang, "条依赖", "edges")}</span></h2><div className="mt-4 space-y-3">{projectDetail.nodes.map((node, index) => <article key={node.id} className={`flex items-center gap-4 rounded-2xl border p-4 ${panel}`}><span className="font-mono text-xs opacity-30">{String(index + 1).padStart(2, "0")}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{node.type.replaceAll("-", " ")}</p><p className="mt-1 text-[10px] uppercase tracking-[.15em] opacity-40">v{node.version}</p></div><span className={`rounded-full px-3 py-1 text-[10px] ${node.status === "ready" ? "bg-emerald-500/10 text-emerald-600" : "bg-current/5 opacity-55"}`}>{node.status}</span></article>)}</div></div><aside><h2 className="text-lg font-semibold">{copy(lang, "项目资产", "Project assets")}</h2><div className="mt-4 space-y-3">{projectDetail.assets.length === 0 ? <div className={`rounded-2xl border p-5 text-sm leading-6 opacity-50 ${panel}`}>{copy(lang, "尚无云端资产。下一次建立项目时添加文件，SASI 会将其写入隔离区并完成安全分流。", "No cloud assets yet. Add files when creating the next project; SASI will place them in quarantine and route them through inspection.")}</div> : projectDetail.assets.map((asset) => <article key={asset.id} className={`rounded-2xl border p-4 ${panel}`}><p className="truncate text-sm font-medium">{asset.name}</p><div className="mt-3 flex items-center justify-between text-[10px]"><span className="opacity-40">{formatBytes(asset.verifiedSize ?? asset.declaredSize)}</span><span className="uppercase tracking-[.12em] opacity-55">{asset.status.replaceAll("_", " ")}</span></div></article>)}</div></aside></div></section>
           )}
 
-          {view === "project" && projectDetail && <SasiProjectProduction detail={projectDetail} lang={lang} dark={dark} onReload={() => openProject(projectDetail.project.id)} onNotice={setNotice} />}
+          {view === "project" && projectDetail && <section><h1 className="my-6 text-2xl">{projectDetail.project.title}</h1><SasiProjectMemory key={projectDetail.project.id} projectId={projectDetail.project.id} lang={lang}/><SasiProjectProduction detail={projectDetail} lang={lang} dark={dark} onReload={() => openProject(projectDetail.project.id)} onNotice={setNotice} /></section>}
+          {view === "project" && !projectDetail && <p className="p-6"><Link href="/?view=works">{copy(lang,"打开作品库，继续你的项目 →","Open your library to continue →")}</Link></p>}
 
           {view === "director" && <CangXuanDirectorStudio lang={lang} dark={dark} accountEmail={accountEmail} onEnterProduction={(story) => { setScript(story); setView("drama"); }} />}
 

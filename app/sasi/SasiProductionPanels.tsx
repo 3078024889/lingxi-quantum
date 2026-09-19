@@ -62,6 +62,7 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
   const [loading, setLoading] = useState(false);
   const [paying, setPaying] = useState<string | null>(null);
   const [qr, setQr] = useState<string | null>(null);
+  const [pendingOrder,setPendingOrder]=useState<string|null>(null);
   const [customAmount, setCustomAmount] = useState(300);
 
   const load = useCallback(async () => {
@@ -76,6 +77,21 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
   }, [accountEmail, lang, onNotice]);
 
   useEffect(() => { void load(); }, [load]);
+  useEffect(()=>{
+    if(account && window.location.hash==="#topup") document.getElementById("topup")?.scrollIntoView({block:"start"});
+  },[account]);
+
+  useEffect(()=>{
+    if(!pendingOrder)return;
+    let stopped=false;let timer:ReturnType<typeof setTimeout>;let attempts=0;
+    async function check(){
+      try {const r=await fetch(`/api/pay/wechat/query?orderId=${encodeURIComponent(pendingOrder!)}`,{cache:"no-store"});const data=await r.json();
+        if(!stopped&&r.ok&&data.paid){setPendingOrder(null);setQr(null);await load();onNotice(t(lang,"支付已确认，余额已更新。","Payment confirmed. Balance refreshed."));return;}
+      }catch{/* Retain checkout and allow retry; never infer payment from a timeout. */}
+      if(!stopped&&++attempts<60)timer=setTimeout(check,5000);
+    }
+    timer=setTimeout(check,3000);return()=>{stopped=true;clearTimeout(timer);};
+  },[pendingOrder,load,lang,onNotice]);
 
   const now = Date.now();
   const recentJobs = (account?.jobs ?? []).filter((job) => now - new Date(job.updatedAt ?? job.createdAt).getTime() <= 30 * 86400000);
@@ -108,7 +124,7 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
     if (!accountEmail) { onNotice(t(lang, "请先连接场域账户。", "Connect your field account first.")); return; }
     const channels = account?.readiness.paymentChannels;
     const channel = channels?.alipay ? "alipay" : channels?.wechat ? "wechat" : channels?.paypal ? "paypal" : null;
-    if (!channel || !account?.readiness.productionAccountReady) {
+    if (!channel || !account?.readiness.productionReady) {
       onNotice(t(lang, "制作账户尚未开放收款；账本已就绪，但正式商户通道仍保持关闭。", "The production account is not accepting funds yet; the ledger is ready, while live merchant channels remain closed."));
       return;
     }
@@ -118,13 +134,14 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: packId, returnPath: "/?view=billing" }),
+        body: JSON.stringify({ productId: packId, returnPath: "/?view=billing#topup" }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "PAYMENT_CREATE_FAILED");
       if (typeof result.url === "string") { window.location.assign(result.url); return; }
       if (typeof result.codeUrl === "string") {
         const QRCode = (await import("qrcode")).default;
+        setPendingOrder(typeof result.orderId === "string" ? result.orderId : null);
         setQr(await QRCode.toDataURL(result.codeUrl, { width: 280, margin: 1 }));
         return;
       }
@@ -135,11 +152,11 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
   }
 
   const readiness = account?.readiness;
-  const paymentOpen = Boolean(readiness?.productionAccountReady && Object.values(readiness.paymentChannels).some(Boolean));
+  const paymentOpen = Boolean(readiness?.productionReady && Object.values(readiness.paymentChannels).some(Boolean));
   return <section className={`sasi-balance ${dark ? "is-dark" : "is-light"}`}>
-    <header className="sasi-balance-hero"><div><p>RMB BALANCE · VERIFIED LEDGER</p><h1>{t(lang, "余额与用量", "Balance & Usage")}</h1><strong>{t(lang, "只充值人民币余额，只为已确认的任务付费。", "One RMB balance. Pay only for tasks you approve.")}</strong><span>{t(lang, "SASI 先给出本次任务总价和预算上限；你明确确认后才预留余额，完成后按实际费用结算，未使用部分自动释放。", "SASI quotes the total task price and budget cap first. Balance is reserved only after your explicit confirmation, settled against actual cost, and unused funds are released.")}</span></div><div className="sasi-balance-state"><i className={readiness?.productionReady ? "ready" : "guarded"}/><b>{readiness?.productionReady ? t(lang, "任务账户可用", "Task account enabled") : t(lang, "任务保护中", "Task safeguards active")}</b><small>{account?.wallet.updatedAt ? `${t(lang, "账本更新", "Ledger updated")} · ${dateLabel(account.wallet.updatedAt, lang)}` : t(lang, "等待真实账户数据", "Waiting for verified account data")}</small></div></header>
+    <header className="sasi-balance-hero"><div><p>RMB BALANCE · VERIFIED LEDGER</p><h1>{t(lang, "余额与用量", "Balance & Usage")}</h1><strong>{t(lang, "为下一个作品，留一点创造的空间。", "One RMB balance. Pay only for tasks you approve.")}</strong><span>{t(lang, "SASI 先给出本次任务总价和预算上限；你明确确认后才预留余额，完成后按实际费用结算，未使用部分自动释放。", "SASI quotes the total task price and budget cap first. Balance is reserved only after your explicit confirmation, settled against actual cost, and unused funds are released.")}</span></div><div className="sasi-balance-state"><i className={readiness?.productionReady ? "ready" : "guarded"}/><b>{readiness?.productionReady ? t(lang, "任务账户可用", "Task account enabled") : t(lang, "任务保护中", "Task safeguards active")}</b><small>{account?.wallet.updatedAt ? `${t(lang, "账本更新", "Ledger updated")} · ${dateLabel(account.wallet.updatedAt, lang)}` : t(lang, "等待真实账户数据", "Waiting for verified account data")}</small></div></header>
 
-    {!accountEmail ? <section className="sasi-balance-signin"><small>ACCOUNT REQUIRED</small><h2>{t(lang, "先连接你的场域账户", "Connect your field account")}</h2><p>{t(lang, "余额、额度锁定、供应商成本和制作流水均按账户隔离；登录后才会读取属于你的真实账本。", "Balances, reservations, supplier costs and production ledger are isolated by account and load only after sign-in.")}</p><button type="button" onClick={() => onNotice(t(lang, "请使用右上角账户入口登录。", "Use the account entry in the upper-right to sign in."))}>{t(lang, "前往账户入口", "Open account entry")} →</button></section> : <>
+    {!accountEmail ? <section className="sasi-balance-signin"><small>ACCOUNT REQUIRED</small><h2>{t(lang, "先连接你的场域账户", "Connect your field account")}</h2><p>{t(lang, "余额、额度锁定、供应商成本和制作流水均按账户隔离；登录后才会读取属于你的真实账本。", "Balances, reservations, supplier costs and production ledger are isolated by account and load only after sign-in.")}</p><button type="button" onClick={() => window.location.assign("/account?next=" + encodeURIComponent("/?view=billing#topup"))}>{t(lang, "前往账户入口", "Open account entry")} →</button></section> : <>
       <div className="sasi-balance-kpis">
         <article><span>{t(lang, "可用余额", "Available balance")}</span><b>{loading ? "—" : money(account?.wallet.balanceFen ?? 0)}</b><small>{t(lang, "人民币余额", "RMB balance")}</small><i className="violet"/></article>
         <article><span>{t(lang, "当前任务预算", "Current task budget")}</span><b>{loading ? "—" : money(account?.wallet.reservedAmountFen ?? 0)}</b><small>{t(lang, "只属于已确认任务", "Only for approved tasks")}</small><i className="cyan"/></article>
@@ -150,7 +167,7 @@ export function SasiProductionAccount({ lang, dark, accountEmail, onNotice }: {
       <div className="sasi-balance-middle">
         <section className="sasi-balance-trend"><header><div><small>30-DAY VERIFIED USAGE</small><h2>{t(lang, "近 30 天用量趋势", "30-day usage trend")}</h2></div><div><span className="usage">{t(lang, "任务实际结算", "Task settlement")}</span><span className="cost">{t(lang, "人民币供应商成本", "CNY supplier cost")}</span></div></header><div className={`sasi-balance-chart ${hasTrend ? "has-data" : "is-empty"}`}><svg viewBox="0 0 720 220" role="img" aria-label={t(lang, "近三十天实际用量趋势", "Verified usage across the last 30 days")}><line x1="0" y1="40" x2="720" y2="40"/><line x1="0" y1="90" x2="720" y2="90"/><line x1="0" y1="140" x2="720" y2="140"/><line x1="0" y1="190" x2="720" y2="190"/><path className="usage" d={chartPath(usageTrend, usageMax)}/><path className="cost" d={chartPath(costTrend, costMax)}/></svg>{!hasTrend && <p>{t(lang, "产生真实制作结算后，这里会形成趋势；当前不使用演示数据。", "A trend appears after verified settlement. No demonstration data is used here.")}</p>}<footer><span>{dateLabel(`${days[0]}T00:00:00Z`, lang)}</span><em>{t(lang, "双线使用独立尺度，只比较走势", "Independent scales; compare trends only")}</em><span>{dateLabel(`${days[days.length - 1]}T00:00:00Z`, lang)}</span></footer></div><div className="sasi-balance-cost-proof"><span>{t(lang, "人民币供应商成本记录", "CNY supplier cost records")}</span><b>{supplierCosts.length ? `¥${supplierCost.toFixed(2)}` : "—"}</b><small>{supplierCosts.length ? t(lang, `来自 ${supplierCosts.length} 条带来源标记的回传或估算记录`, `${supplierCosts.length} returned or estimated records with source labels`) : t(lang, "暂无可核验成本，不以估算冒充真实消耗", "No verifiable cost yet; estimates are not shown as actual spend")}</small></div></section>
 
-        <aside className="sasi-balance-reserve"><small>TOP UP RMB BALANCE</small><h2>{t(lang, "充值余额", "Top up balance")}</h2><p>{t(lang, "只有一种收费方式：充值人民币余额。模型、导演、Skill、连续性与编排成本不会拆开显示，任务只展示最终总价。", "There is one charging model: top up the RMB balance. Model, directing, Skill, continuity and orchestration costs are never itemized; each task shows one final price.")}</p><div>{(account?.packs ?? []).map((pack, index) => <button key={pack.id} type="button" disabled={!paymentOpen || Boolean(paying)} onClick={() => void topUp(pack.id)} className={index === 3 ? "featured" : ""}><b>¥{pack.priceRmb.toLocaleString()}</b><span>{t(lang, "充值余额", "RMB balance")}</span><small>{t(lang, pack.zh, pack.en)}</small></button>)}</div>{account?.rmbBalanceV1 && <label className="sasi-balance-custom"><span>{t(lang, "自定义金额（¥10–¥10000）", "Custom amount (¥10–¥10000)")}</span><div><input type="number" min={10} max={10000} step={1} value={customAmount} onChange={(event) => setCustomAmount(Math.max(10, Math.min(10000, Math.round(Number(event.target.value) || 10))))}/><button type="button" disabled={!paymentOpen || Boolean(paying)} onClick={() => void topUp(`sasi-balance-custom-${customAmount}`)}>{t(lang, "充值", "Top up")} ¥{customAmount}</button></div></label>}<button type="button" className="sasi-balance-checkout" disabled={!paymentOpen || Boolean(paying) || !(account?.packs?.length)} onClick={() => paymentOpen && void topUp(account?.packs?.[Math.min(3, account.packs.length - 1)]?.id ?? "sasi-credit-studio")}>{paymentOpen ? t(lang, "进入安全收银台", "Open secure checkout") : t(lang, "支付接入后开放", "Available after payment integration")}</button><p className="boundary">{t(lang, "充值到账必须经过商户回调、订单金额校验与服务端入账；前端按钮永远不能直接增加余额。", "A top-up requires merchant callback, order amount verification and server-side crediting; a browser button can never alter the balance.")}</p></aside>
+        <aside id="topup" className="sasi-balance-reserve"><small>TOP UP RMB BALANCE</small><h2>{t(lang, "充值余额", "Top up balance")}</h2><p>{t(lang, "选择适合这次创作的金额。开始制作前，你会先看到方案与预算。", "There is one charging model: top up the RMB balance. Model, directing, Skill, continuity and orchestration costs are never itemized; each task shows one final price.")}</p><div>{(account?.packs ?? []).map((pack, index) => <button key={pack.id} type="button" disabled={!paymentOpen || Boolean(paying)} onClick={() => void topUp(pack.id)} className={index === 3 ? "featured" : ""}><b>¥{pack.priceRmb.toLocaleString()}</b><span>{t(lang, "充值余额", "RMB balance")}</span><small>{t(lang, pack.zh, pack.en)}</small></button>)}</div>{account?.rmbBalanceV1 && <label className="sasi-balance-custom"><span>{t(lang, "自定义金额（¥10–¥10000）", "Custom amount (¥10–¥10000)")}</span><div><input type="number" min={10} max={10000} step={1} value={customAmount} onChange={(event) => setCustomAmount(Math.max(10, Math.min(10000, Math.round(Number(event.target.value) || 10))))}/><button type="button" disabled={!paymentOpen || Boolean(paying)} onClick={() => void topUp(`sasi-balance-custom-${customAmount}`)}>{t(lang, "充值", "Top up")} ¥{customAmount}</button></div></label>}<button type="button" className="sasi-balance-checkout" disabled={!paymentOpen || Boolean(paying) || !(account?.packs?.length)} onClick={() => paymentOpen && void topUp(account?.packs?.[Math.min(3, account.packs.length - 1)]?.id ?? "sasi-credit-studio")}>{paymentOpen ? t(lang, "进入安全收银台", "Open secure checkout") : t(lang, "支付接入后开放", "Available after payment integration")}</button><p className="boundary">{t(lang, "支付确认后余额自动到账，可在账单中查看。遇到延迟，请刷新查询，避免重复支付。", "A top-up requires merchant callback, order amount verification and server-side crediting; a browser button can never alter the balance.")}</p></aside>
       </div>
 
       {qr && <div className="sasi-balance-qr"><img src={qr} alt={t(lang, "微信支付二维码", "WeChat payment QR code")}/><p>{t(lang, "请使用微信完成确认，到账后刷新制作账户。", "Complete confirmation in WeChat, then refresh the production account.")}</p></div>}

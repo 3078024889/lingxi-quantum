@@ -28,7 +28,7 @@ async function resolveSite(): Promise<string> {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const SITE = await resolveSite();
   const routes = [
-    "", "/learn",
+    "", "/learn", "/sasi/pricing", "/ai-knowledge", "/ai-learning", "/ai-research",
     "/learn/manifestation", "/learn/manifestation-methods", "/learn/manifestation-not-working",
     "/learn/manifestation-signs", "/learn/manifestation-journal", "/learn/manifest-money",
     "/learn/manifest-person", "/learn/manifest-love", "/learn/method-369", "/learn/affirmations", "/learn/twin-flame", "/learn/inner-friction", "/learn/what-is-consciousness", "/learn/letting-go", "/learn/angel-numbers", "/learn/emptiness", "/learn/energy-drain",

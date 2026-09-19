@@ -1,0 +1,12 @@
+# Research ingestion is versioned independently of the web deployment.
+/imports/
+/content/cangxuan-feed/
+/docs/design-references/
+/docs/research/
+/skills/devoured-2026-09-18/
+/skills/skills-devour-2026-09-18/
+/miniapp/
+/tmp/
+/build-*.log
+/build-*.png
+/.pnpm-store/

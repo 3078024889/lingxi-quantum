@@ -15,6 +15,7 @@ export type SasiTaskQuote = {
   amountFen: number;
   rateVersion: string;
   retailFenPerSecond: number;
+  memoryVersion?: string;
   expiresAt: number;
 };
 

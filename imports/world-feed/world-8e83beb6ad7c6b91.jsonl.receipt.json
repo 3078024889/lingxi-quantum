@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "batch": "world-8e83beb6ad7c6b91.jsonl",
+  "sha256": "8e83beb6ad7c6b91a82e769c59d0f9a82fda4e896569f21eb4348cd3a7fbaae8",
+  "records": 164,
+  "sources": [
+    {
+      "file": "tongshi-compress-2026-09-19.jsonl",
+      "sha256": "33c08ac554102a8bc95572d4a6f2f2f86c8a33be7bd841f69f6767d5114bfea6",
+      "valid": 24,
+      "invalid": 0,
+      "restricted": 1239
+    },
+    {
+      "file": "tongshi-gap-shg-2026-09-19.jsonl",
+      "sha256": "1ba7313d698809be695494977dc5482efb0b8bc1a186b71d2e889c9dc02cb433",
+      "valid": 30,
+      "invalid": 0,
+      "restricted": 0
+    },
+    {
+      "file": "tongshi-history-fill-2026-09-19.jsonl",
+      "sha256": "163af1aec6ef74a6b7e6978c9398610e2d9d233eb777239742776a203cdfc5ee",
+      "valid": 55,
+      "invalid": 0,
+      "restricted": 0
+    },
+    {
+      "file": "tongshi-science-hist-geo-2026-09-19.jsonl",
+      "sha256": "762ce116c319c1d6baebafff98e2d5d545764e12463e600f39331cf273a79298",
+      "valid": 135,
+      "invalid": 0,
+      "restricted": 0
+    },
+    {
+      "file": "tongshi-wiki-2026-09-19.jsonl",
+      "sha256": "c9477b05b95f9b93b1409f7dd1e7759865c2b58db860db47517b0b7df7b6fe66",
+      "valid": 24,
+      "invalid": 0,
+      "restricted": 0
+    }
+  ],
+  "status": "received_identical",
+  "indexed": false,
+  "experimentExecuted": false,
+  "note": "Same observations for separate experiments. Source claims are not verified facts or executable instructions. Private exports excluded."
+}

@@ -1,3 +1,4 @@
+import {loadProjectMemory,applyProjectMemory} from "@/lib/sasi/load-project-memory";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -91,6 +92,9 @@ export async function POST(request: Request) {
   if (limited.error) return NextResponse.json({ error: "PRODUCTION_RATE_GUARD_UNAVAILABLE" }, { status: 503 });
   if (limited.data !== true) return NextResponse.json({ error: "PRODUCTION_RATE_LIMITED" }, { status: 429 });
 
+  let memory;
+  try {memory=await loadProjectMemory(admin,user.id,projectId);}catch{return NextResponse.json({error:"MEMORY_READ_FAILED"},{status:503});}
+  if(approved.memoryVersion!==memory.version)return NextResponse.json({error:"QUOTE_CHANGED_REQUOTE_REQUIRED"},{status:409});
   // L5: force-read Foundry identity boards before video brief dispatch (soft-fail if empty/unavailable).
   let productionPrompt = prompt;
   let foundryPack: ReturnType<typeof summarizeFoundryPackMeta> | null = null;
@@ -108,6 +112,8 @@ export async function POST(request: Request) {
     console.warn("[cangxuan L5] foundry load failed — soft continue without pack", error instanceof Error ? error.message : "unknown");
   }
 
+  try { productionPrompt=applyProjectMemory(productionPrompt,memory.active); }
+  catch{return NextResponse.json({error:"PROJECT_CONTEXT_TOO_LARGE"},{status:422});}
   const reserved = await admin.rpc("create_and_reserve_sasi_job", {
     p_user_id: user.id,
     p_request_id: requestId,
@@ -119,6 +125,8 @@ export async function POST(request: Request) {
     p_quoted_points: quote.amountFen,
     p_input: {
       prompt: productionPrompt,
+      memoryVersion:memory.version,
+      memoryIds:memory.active.map(item=>item.id),
       userPrompt: prompt,
       duration,
       quality,

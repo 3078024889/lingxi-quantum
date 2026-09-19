@@ -21,6 +21,7 @@ export function sasiPaidProductionEnabled() {
     && process.env.SASI_CONTENT_LABELING_MODE === SASI_AIGC_LABEL_MODE
     && process.env.SASI_CONTENT_PRODUCER_CODE?.trim()
     && process.env.SASI_REFUND_FLOW_TESTED === "true"
+    && process.env.SASI_USAGE_SETTLEMENT_TESTED === "true"
     && video.anyVerified
   );
 }

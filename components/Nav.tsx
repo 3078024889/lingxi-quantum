@@ -91,20 +91,19 @@ export default function Nav() {
       </Link>
 
       <div className="lx-side-scroll">
-        <p className="lx-side-kicker">SASI · CREATE</p>
-        <nav className="space-y-1" aria-label="SASI creation">
-          {creation.map((item) => <SideLink key={item.href} item={item} pathname={pathname} onNavigate={() => setOpen(false)} />)}
-        </nav>
-        <div className="lx-side-rule" />
-        <p className="lx-side-kicker"><Bi zh="第二层 · LINGXI FIELD" en="SECOND LAYER · LINGXI FIELD" /></p>
-        <nav className="space-y-1" aria-label="Lingxi Field">
-          {field.map((item) => <SideLink key={item.href} item={item} pathname={pathname} onNavigate={() => setOpen(false)} />)}
-        </nav>
-        <div className="lx-side-rule" />
-        <p className="lx-side-kicker"><Bi zh="工具 · TOOLS" en="TOOLS" /></p>
-        <nav className="space-y-1" aria-label="Online tools">
-          {toolsNav.map((item) => <SideLink key={item.href} item={item} pathname={pathname} onNavigate={() => setOpen(false)} />)}
-        </nav>
+        {[
+          { title: "SASI · 创作工作台", items: creation },
+          { title: "灵犀场 · 探索与实践", items: field },
+          { title: "灵犀场 · 小工具", items: toolsNav },
+          { title: "灵犀场 · AI知识库", items: [
+            { href: "/ai-knowledge", zh: "AI知识库", en: "AI Knowledge", rune: "crystal" as RuneKind },
+            { href: "/ai-learning", zh: "AI学习助手", en: "AI Learning", rune: "eye" as RuneKind },
+            { href: "/ai-research", zh: "AI科研助手", en: "AI Research", rune: "mandala" as RuneKind },
+          ] },
+        ].map(group => <details key={`${group.title}:${pathname}`} className="lx-nav-group" open={group.items.some(item => activeFor(pathname, item.href))}>
+          <summary>{group.title}</summary>
+          <nav className="space-y-1" aria-label={group.title}>{group.items.map(item => <SideLink key={item.href} item={item} pathname={pathname} onNavigate={() => setOpen(false)} />)}</nav>
+        </details>)}
       </div>
 
       <div className="lx-side-actions">
