@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
+import { Analytics } from "@vercel/analytics/next";
 
 const SITE = "https://lingxifield.cn";
 const SHARE_IMAGE = `${SITE}/og-sasi-20260908.png`;
@@ -117,6 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MiniEmbedMode />
         <div className="grain" aria-hidden="true" />
         <div className="lx-site-content">{children}</div>
+        <Analytics />
       </body>
     </html>
   );
