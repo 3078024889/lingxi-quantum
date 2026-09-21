@@ -1,0 +1,7 @@
+{
+  "id": "PF-06",
+  "step": 4,
+  "type": "episode_gap",
+  "desc": "分集跳集缺中段",
+  "expect": "告警缺集，不假装连续"
+}

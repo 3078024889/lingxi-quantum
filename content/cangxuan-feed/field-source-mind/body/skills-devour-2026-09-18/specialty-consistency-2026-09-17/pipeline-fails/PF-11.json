@@ -1,0 +1,7 @@
+{
+  "id": "PF-11",
+  "step": 7,
+  "type": "seed_unstable",
+  "desc": "同提示词无种子声明却要求完全复现",
+  "expect": "标注不可强复现"
+}

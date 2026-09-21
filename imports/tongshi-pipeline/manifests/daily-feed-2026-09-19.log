@@ -1,0 +1,7 @@
+﻿2026-09-19T20:03:32.5913850+08:00 START real daily tongshi feed (anti-theater)
+2026-09-19T20:03:32.7819882+08:00 run C:\Users\30780\fill-hist-first.ps1
+2026-09-19T20:07:32.7702723+08:00 crawler exit=0
+2026-09-19T20:07:32.8157369+08:00 cards_on_disk n=135 path=D:\lingxi-quantum\imports\tongshi-pipeline\compressed\cards\tongshi-science-hist-geo-2026-09-19.jsonl
+2026-09-19T20:07:32.8891880+08:00 dual-fed history-fill sidecar
+2026-09-19T20:07:32.9430287+08:00 YIELD status=ok n=135
+2026-09-19T20:07:32.9450745+08:00 DONE_OK

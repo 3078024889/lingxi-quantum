@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-09-10T10:01:17.379Z",
+  "totals": {
+    "codex": {
+      "attempted": 127,
+      "ok": 127,
+      "fail": 0,
+      "chars": 2920436,
+      "pages": 3828
+    },
+    "17fen": {
+      "attempted": 14,
+      "ok": 14,
+      "fail": 0,
+      "chars": 1820666,
+      "pages": 2857
+    },
+    "wm36": {
+      "attempted": 36,
+      "ok": 36,
+      "fail": 0,
+      "chars": 215499,
+      "pages": 365
+    }
+  },
+  "skipped": {
+    "mp4": "D:\\\\17份\\\\鳞毛羽肤.mp4 — skipped",
+    "png": "Codex png not extracted"
+  }
+}

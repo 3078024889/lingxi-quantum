@@ -1,0 +1,18 @@
+{
+  "id": "SK-short-drama-storyboard",
+  "title": "short-drama-storyboard",
+  "rel": "drama-skills/skills/short-drama-storyboard/SKILL.md",
+  "wave": "wave1",
+  "chars": 7148,
+  "sha16": "e512754dce7197b0",
+  "drama_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "status": "DUAL_WRITTEN"
+}

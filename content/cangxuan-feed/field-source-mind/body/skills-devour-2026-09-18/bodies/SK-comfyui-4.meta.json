@@ -1,0 +1,18 @@
+{
+  "id": "SK-comfyui-4",
+  "title": "comfyui",
+  "rel": "ComfyUI-Agent-Kit/claude-code/skills/comfyui/SKILL.md",
+  "wave": "wave2-slim",
+  "chars": 48660,
+  "sha16": "913dcf31138ca334",
+  "drama_steps": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

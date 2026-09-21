@@ -1,0 +1,14 @@
+{
+  "id": "SK-huggingface-zerogpu",
+  "title": "huggingface-zerogpu",
+  "rel": "wave2/skills/skills/huggingface-zerogpu/SKILL.md",
+  "wave": "wave1",
+  "chars": 17286,
+  "sha16": "e08f11ce5af2368c",
+  "drama_steps": [
+    5,
+    6,
+    7
+  ],
+  "status": "DUAL_WRITTEN"
+}

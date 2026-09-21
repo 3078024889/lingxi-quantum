@@ -1,0 +1,12 @@
+{
+  "id": "A4-energetic-heart",
+  "title": "能量心脏",
+  "content_sha256_16": "a0ae8c505a271b0b",
+  "chars": 11253,
+  "raw_chars": 0,
+  "picked_raw": "best-of-a4-candidates",
+  "batch": "curriculum-AB-2026-09-17",
+  "peel": "v3-essay-anchor",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:46:25.790633+00:00"
+}

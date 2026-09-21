@@ -1,0 +1,13 @@
+{
+  "id": "SK-huggingface-paper-publisher",
+  "title": "huggingface-paper-publisher",
+  "rel": "wave2/skills/skills/huggingface-paper-publisher/SKILL.md",
+  "wave": "wave1",
+  "chars": 16427,
+  "sha16": "4e978131b0bf2a52",
+  "drama_steps": [
+    1,
+    4
+  ],
+  "status": "DUAL_WRITTEN"
+}

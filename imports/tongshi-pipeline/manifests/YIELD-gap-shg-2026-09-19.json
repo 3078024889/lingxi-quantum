@@ -1,0 +1,27 @@
+{
+  "at": "2026-09-19T03:00+00:00",
+  "n_cards": 30,
+  "approx_a4_pages_text": 5.5,
+  "chars": 8318,
+  "by_kind": {
+    "通识-科学": 10,
+    "通识-地理": 20
+  },
+  "log": [
+    "Category:物理学 FAIL:HTTP Error 429: Too Many Requests",
+    "Category:化学 FAIL:HTTP Error 429: Too Many Requests",
+    "Category:生物学:46",
+    "Category:生物学 FAIL:HTTP Error 429: Too Many Requests",
+    "Category:中国历史 FAIL:HTTP Error 429: Too Many Requests",
+    "Category:世界历史 FAIL:HTTP Error 429: Too Many Requests",
+    "Category:中国地理:21",
+    "Category:世界地理:0"
+  ],
+  "file": "/workspace/uploads/tongshi-pipeline/compressed/cards/tongshi-gap-shg-2026-09-19.jsonl",
+  "fills_gap": [
+    "通识-科学",
+    "通识-历史",
+    "通识-地理"
+  ],
+  "anti_theater": true
+}

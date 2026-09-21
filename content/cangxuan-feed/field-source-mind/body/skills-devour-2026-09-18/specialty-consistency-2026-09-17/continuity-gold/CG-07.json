@@ -1,0 +1,14 @@
+{
+  "id": "CG-07",
+  "span": [
+    "E04",
+    "E05"
+  ],
+  "must_hold": [
+    {
+      "fact": "顾衡黄盔88",
+      "break_if": "E05 换成白盔无场记"
+    }
+  ],
+  "expect_dkn": "CONFLICT"
+}

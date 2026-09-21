@@ -1,0 +1,107 @@
+[
+  {
+    "id": "ancient_arrow_site",
+    "label": "古箭计划遗址",
+    "chars": 1113,
+    "status": "THIN",
+    "file": "ancient_arrow_site.txt"
+  },
+  {
+    "id": "ascending_heart",
+    "label": "上升之心",
+    "chars": 7801,
+    "status": "READ",
+    "file": "ascending_heart.txt"
+  },
+  {
+    "id": "camelot",
+    "label": "卡米洛特访谈",
+    "chars": 43568,
+    "status": "READ",
+    "file": "camelot.txt"
+  },
+  {
+    "id": "consciousness_media",
+    "label": "意识媒体访谈",
+    "chars": 15382,
+    "status": "READ",
+    "file": "consciousness_media.txt"
+  },
+  {
+    "id": "energetic_heart",
+    "label": "能量心脏",
+    "chars": 15883,
+    "status": "READ",
+    "file": "energetic_heart.txt"
+  },
+  {
+    "id": "event_temples",
+    "label": "灵性行动主义殿堂/EventTemples",
+    "chars": 16779,
+    "status": "READ",
+    "file": "event_temples.txt"
+  },
+  {
+    "id": "living_from_heart",
+    "label": "源于心脏而活",
+    "chars": 36022,
+    "status": "READ",
+    "file": "living_from_heart.txt"
+  },
+  {
+    "id": "mahu_2008_1",
+    "label": "玛呼2008面访1",
+    "chars": 13229,
+    "status": "READ",
+    "file": "mahu_2008_1.txt"
+  },
+  {
+    "id": "mahu_2008_2",
+    "label": "玛呼2008面访2",
+    "chars": 17085,
+    "status": "READ",
+    "file": "mahu_2008_2.txt"
+  },
+  {
+    "id": "mahu_2008_3",
+    "label": "玛呼2008面访3",
+    "chars": 18796,
+    "status": "READ",
+    "file": "mahu_2008_3.txt"
+  },
+  {
+    "id": "mahu_2013",
+    "label": "玛呼2013电访",
+    "chars": 32818,
+    "status": "READ",
+    "file": "mahu_2013.txt"
+  },
+  {
+    "id": "mahu_interview_index",
+    "label": "玛呼访谈索引",
+    "chars": 297,
+    "status": "MISS",
+    "file": "mahu_interview_index.txt"
+  },
+  {
+    "id": "neruda_1",
+    "label": "聂鲁达访谈1",
+    "chars": 35940,
+    "status": "READ",
+    "file": "neruda_1.txt"
+  },
+  {
+    "id": "quantum_pause",
+    "label": "量子暂停",
+    "chars": 4142,
+    "status": "READ",
+    "file": "quantum_pause.txt"
+  },
+  {
+    "id": "six_virtues",
+    "label": "心脏六美德",
+    "chars": 1003,
+    "status": "THIN",
+    "file": "six_virtues.txt"
+  }
+]

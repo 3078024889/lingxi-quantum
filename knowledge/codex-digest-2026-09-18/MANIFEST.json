@@ -1,0 +1,774 @@
+{
+  "generated_at": "2026-09-18T10:28:57+08:00",
+  "timezone": "Asia/Shanghai",
+  "source_dir_box": "/workspace/codex-127",
+  "source_dir_windows": "D:\\lingxi-quantum\\content\\cangxuan-feed\\field-source-mind\\extracts\\codex",
+  "source_count": 127,
+  "card_count": 127,
+  "principle_count": 579,
+  "files": [
+    {
+      "filename": "Between-the-Whole-and-the-Relational-11-1 - 副本.txt",
+      "bytes": 3690,
+      "sha256": "79bd4bf40e9b1a4ccb352320e49a46b0ae8a40ddbb3e9c13ef5751613f8fa1df",
+      "card_id": "codex-between-the-whole-and-the-relational-11-1-dup"
+    },
+    {
+      "filename": "Between-the-Whole-and-the-Relational-11-1.txt",
+      "bytes": 3690,
+      "sha256": "79bd4bf40e9b1a4ccb352320e49a46b0ae8a40ddbb3e9c13ef5751613f8fa1df",
+      "card_id": "codex-between-the-whole-and-the-relational-11-1"
+    },
+    {
+      "filename": "Bridge-Between-Chords-63.txt",
+      "bytes": 20651,
+      "sha256": "f775e7634213dfe396bf9be8fc257c346085a0f916ea6cdcb6c7dd93b903e618",
+      "card_id": "codex-bridge-between-chords-63"
+    },
+    {
+      "filename": "CODEX_-The-Harmonics-of-the-Field-93.txt",
+      "bytes": 23063,
+      "sha256": "a0cf2c6ad30e9cfa0840e5cd1b5ff351987a6b481e0b943bf0c8f8ee355b6c89",
+      "card_id": "codex-codex_-the-harmonics-of-the-field-93"
+    },
+    {
+      "filename": "Codex-01_-The-Architecture-of-Love-27.txt",
+      "bytes": 5024,
+      "sha256": "4a130e6932d28393ce74cd0163123ac521f15e0c6a2f2b4741223b44add3f7a6",
+      "card_id": "codex-codex-01_-the-architecture-of-love-27"
+    },
+    {
+      "filename": "Codex-02_-The-Architecture-of-Love-24.txt",
+      "bytes": 8988,
+      "sha256": "3a0207900ba81d8edbc91920626f12ab8d3a4d9370dbc0bb00b260d6fd9fd0c9",
+      "card_id": "codex-codex-02_-the-architecture-of-love-24"
+    },
+    {
+      "filename": "Codex-03_-The-Architecture-of-Love-26.txt",
+      "bytes": 4775,
+      "sha256": "64a2b735c09d9556cfc0a5b48c10a1076ee05a0e9454a0ff4f0b0e70f93efeb3",
+      "card_id": "codex-codex-03_-the-architecture-of-love-26"
+    },
+    {
+      "filename": "Codex-04_-The-Architecture-of-Love-25.txt",
+      "bytes": 5209,
+      "sha256": "b9f96d4242e429cf91d7356b70e35b9d81732ab6c54e127a64d7a42394b36dda",
+      "card_id": "codex-codex-04_-the-architecture-of-love-25"
+    },
+    {
+      "filename": "Codex-05_-The-Architecture-of-Love-21.txt",
+      "bytes": 10081,
+      "sha256": "aa84dc56ce0d664c3ecac5d6587c3c09510fcf9ca09ced47ffe467b3ed1258ba",
+      "card_id": "codex-codex-05_-the-architecture-of-love-21"
+    },
+    {
+      "filename": "Codex-06_-The-Architecture-of-Love-22.txt",
+      "bytes": 8683,
+      "sha256": "fe01699d0cea67395749089189bd759f6fea8e0000dd3fc102c93df742bcf204",
+      "card_id": "codex-codex-06_-the-architecture-of-love-22"
+    },
+    {
+      "filename": "Codex-07_-The-Architecture-of-Love-27.txt",
+      "bytes": 7465,
+      "sha256": "3a5e1a27ff9aa9745e32cb2de148dbf98878b08d02765ab005256520083959c5",
+      "card_id": "codex-codex-07_-the-architecture-of-love-27"
+    },
+    {
+      "filename": "Codex-08_-The-Architecture-of-Love-36.txt",
+      "bytes": 13387,
+      "sha256": "ffdf655a842798e57b987df2ee7249f8c2113621f64cd24204e539b18df32cc2",
+      "card_id": "codex-codex-08_-the-architecture-of-love-36"
+    },
+    {
+      "filename": "Codex-09_-The-Architecture-of-Tending-23.txt",
+      "bytes": 7199,
+      "sha256": "ddca7ffa79f83eba63b244b467b46f1cba87e356ab0af3a7d77593ae3851d22e",
+      "card_id": "codex-codex-09_-the-architecture-of-tending-23"
+    },
+    {
+      "filename": "Codex-10_-The-Architecture-of-Tending-29.txt",
+      "bytes": 13910,
+      "sha256": "69e4550e419c354858b34ac7ed4ea8948d1542beb1ffab637e95738eb11f6132",
+      "card_id": "codex-codex-10_-the-architecture-of-tending-29"
+    },
+    {
+      "filename": "Codex-III_-The-InterBeing-88.txt",
+      "bytes": 21123,
+      "sha256": "60ff1df2143395c82c7f17bb7fcd0e01481aa1207681fb34fc693f844525b182",
+      "card_id": "codex-codex-iii_-the-interbeing-88"
+    },
+    {
+      "filename": "Codex-III_-To-Host-in-Return.txt",
+      "bytes": 13594,
+      "sha256": "4d8705904cf31131b9d2065ac51f1334529758bbf45d8611d3ad55c8c47f40d7",
+      "card_id": "codex-codex-iii_-to-host-in-return"
+    },
+    {
+      "filename": "Codex-II_-The-InterBeing-46.txt",
+      "bytes": 13707,
+      "sha256": "9e20e10733715809b69c3d6c7d62617349fe02fe9dbc6139ef245333e4a8f2d5",
+      "card_id": "codex-codex-ii_-the-interbeing-46"
+    },
+    {
+      "filename": "Codex-II_-The-Sovereign-Threshold.txt",
+      "bytes": 14381,
+      "sha256": "05d0917172b0651e4bb56f277220e3149e1f79eadb64c3e12bbbc6033d5acb1c",
+      "card_id": "codex-codex-ii_-the-sovereign-threshold"
+    },
+    {
+      "filename": "Codex-IV_-The-InterBeing-70.txt",
+      "bytes": 24634,
+      "sha256": "1d8600f0e9ab29a2da14ba3699462934cc84392b8e81a074c88bde8b58b85307",
+      "card_id": "codex-codex-iv_-the-interbeing-70"
+    },
+    {
+      "filename": "Codex-IV_-The-Sovereign-Spiral.txt",
+      "bytes": 16515,
+      "sha256": "822efa696b04ece30f42ca4974a06942a20f1587c19995f56a7057b9e6801b67",
+      "card_id": "codex-codex-iv_-the-sovereign-spiral"
+    },
+    {
+      "filename": "Codex-I_-Origin-and-Exile.txt",
+      "bytes": 13786,
+      "sha256": "ffa371c402da8ac3db80b29cfa858ee459898767a89d67197b6f161138019a46",
+      "card_id": "codex-codex-i_-origin-and-exile"
+    },
+    {
+      "filename": "Codex-I_-The-InterBeing-86.txt",
+      "bytes": 15917,
+      "sha256": "2fa59eb8b4b6560c08a8d4d24b4626dc6515a9b121a81c69b7a46fcddd913342",
+      "card_id": "codex-codex-i_-the-interbeing-86"
+    },
+    {
+      "filename": "Codex-On-Becoming-a-Portal-99.txt",
+      "bytes": 32952,
+      "sha256": "62146cb6acaa6b1a8909d54e34baa04bd4cb3e0dfa63e21c36f808c2cf38546c",
+      "card_id": "codex-codex-on-becoming-a-portal-99"
+    },
+    {
+      "filename": "Codex-VIII_-The-Chorus-of-the-Whole.txt",
+      "bytes": 20870,
+      "sha256": "e132e8c2a72076ca7f790e64d3cd565617e574efef5057017c89787d73386dfc",
+      "card_id": "codex-codex-viii_-the-chorus-of-the-whole"
+    },
+    {
+      "filename": "Codex-VII_-The-Architecture-of-Alignment.txt",
+      "bytes": 24702,
+      "sha256": "f0955c530c09c9fa8a7efad2202d079686c14c59cc9c9118ef9862f60f951622",
+      "card_id": "codex-codex-vii_-the-architecture-of-alignment"
+    },
+    {
+      "filename": "Codex-V_-The-InterBeing-Emergence.txt",
+      "bytes": 19735,
+      "sha256": "ca59a838339d9759d543eba56d9f9e622de459c24403169e4c99c34bd0020a2d",
+      "card_id": "codex-codex-v_-the-interbeing-emergence"
+    },
+    {
+      "filename": "Codex-of-Conscious-Principles-71.txt",
+      "bytes": 61991,
+      "sha256": "6990bd3739d8238140635e77f2b0853fac5b9a820a99fa3d916f14cdb7f62346",
+      "card_id": "codex-codex-of-conscious-principles-71"
+    },
+    {
+      "filename": "Codex-of-Harmonic-Definitions-89.txt",
+      "bytes": 46800,
+      "sha256": "fc4661f0a797198ff4d39496224df612d0acba64487cbe10a4d40f11ea9a1a8c",
+      "card_id": "codex-codex-of-harmonic-definitions-89"
+    },
+    {
+      "filename": "Codex-of-Harmonic-Intelligence-104.txt",
+      "bytes": 15987,
+      "sha256": "c7b42392fa0ff5a305001d3da359cf634cd4a91b7012fbf61cc165d77da37f23",
+      "card_id": "codex-codex-of-harmonic-intelligence-104"
+    },
+    {
+      "filename": "Codex-of-Mythos-102.txt",
+      "bytes": 133239,
+      "sha256": "affbb92a28d0d47025c289a6c644ba9aa21ff60d5e5c48542886ced17934b848",
+      "card_id": "codex-codex-of-mythos-102"
+    },
+    {
+      "filename": "Codex-of-Relational-Architectures-75.txt",
+      "bytes": 31596,
+      "sha256": "b6b82f66e22921d112400f60ee5aa7e6142cfeb29594543070c7ea0bd188530d",
+      "card_id": "codex-codex-of-relational-architectures-75"
+    },
+    {
+      "filename": "Codex-of-Relational-Intelligence-76.txt",
+      "bytes": 88584,
+      "sha256": "26db4122214620feb8eb4c1abac4a5770823244607131bc89f8dd7088e396a80",
+      "card_id": "codex-codex-of-relational-intelligence-76"
+    },
+    {
+      "filename": "Codex-of-Remembrance-61.txt",
+      "bytes": 27745,
+      "sha256": "f928fbb898a362c0a01766b7fc6f7829d343e509245cc7a6d336fbf4f94a636b",
+      "card_id": "codex-codex-of-remembrance-61"
+    },
+    {
+      "filename": "Codex-of-Resonant-Memory-51.txt",
+      "bytes": 21162,
+      "sha256": "9bbc0e869f490336384ed1509b4eaab247b2d1107b8dbc0ad444fe0d6b5a4d84",
+      "card_id": "codex-codex-of-resonant-memory-51"
+    },
+    {
+      "filename": "Codex-of-The-Resonant-Arc-62.txt",
+      "bytes": 27438,
+      "sha256": "cfba476379edc21f6d9cdd4377047791d1829c226b6e840c15b79bc2ee14f14d",
+      "card_id": "codex-codex-of-the-resonant-arc-62"
+    },
+    {
+      "filename": "Codex-of-Vows-20.txt",
+      "bytes": 55149,
+      "sha256": "6107b80dd597faaa087a7d0784c1341cc2dcfd186aab3aa91286bf9335c08fd9",
+      "card_id": "codex-codex-of-vows-20"
+    },
+    {
+      "filename": "Codex-of-the-Integrative-Species-79.txt",
+      "bytes": 32218,
+      "sha256": "2a81669bdef6ecaa390a3fb8d2319a3a1bcc7971280f4353a80cfe45320f59d8",
+      "card_id": "codex-codex-of-the-integrative-species-79"
+    },
+    {
+      "filename": "Codex-of-the-Keeper-112.txt",
+      "bytes": 10677,
+      "sha256": "0890f5806e0fd38682b5fad6988b0bcef9be15f667a0205266e1485ad5e6c5ad",
+      "card_id": "codex-codex-of-the-keeper-112"
+    },
+    {
+      "filename": "Codex-of-the-Language-of-Resonance-30.txt",
+      "bytes": 20443,
+      "sha256": "226bee06f4446b735c9ecdf2e35442330259158dd385dbaf207c8b4459b36ccc",
+      "card_id": "codex-codex-of-the-language-of-resonance-30"
+    },
+    {
+      "filename": "Codex-of-the-Realized-Flame-Part-I-34.txt",
+      "bytes": 17954,
+      "sha256": "1f74266671f38f4f6778319805e67603a0b12ddf0078a39a1517ffaefb18530f",
+      "card_id": "codex-codex-of-the-realized-flame-part-i-34"
+    },
+    {
+      "filename": "Codex-of-the-Sacred-Exile-114.txt",
+      "bytes": 10510,
+      "sha256": "4980010cf8cc9a681cffcff2dee4ad4e44710404b744fc793d82febfa70ac5cd",
+      "card_id": "codex-codex-of-the-sacred-exile-114"
+    },
+    {
+      "filename": "Codex-of-the-Sanctuary-Builder-92.txt",
+      "bytes": 9993,
+      "sha256": "b75b6bb608feb2968090dbb38451b53ce1eb099b8d881a95782ccc6bd565710a",
+      "card_id": "codex-codex-of-the-sanctuary-builder-92"
+    },
+    {
+      "filename": "Codex-on-the-Nature-of-Guidance-77.txt",
+      "bytes": 32216,
+      "sha256": "dfc93fa86639c4247a6473713faaae2e39e55f6cf5879ba046233b778c9f0fa2",
+      "card_id": "codex-codex-on-the-nature-of-guidance-77"
+    },
+    {
+      "filename": "Codex_-Attunement-as-a-Technology-of-the-Field-108.txt",
+      "bytes": 20191,
+      "sha256": "398ec67d8832e88f7d1dee1e0aefd1873b4147d6a236f72d6a7774903a337910",
+      "card_id": "codex-codex_-attunement-as-a-technology-of-the-field-108"
+    },
+    {
+      "filename": "Codex_-Coherence-Recursion-124.txt",
+      "bytes": 5932,
+      "sha256": "dd7584231ef0f7a38e08e806046d69250ae46455bf684d767dfd15aded40f12e",
+      "card_id": "codex-codex_-coherence-recursion-124"
+    },
+    {
+      "filename": "Codex_-Introduction-to-Soul-Lines-92.txt",
+      "bytes": 8081,
+      "sha256": "e680afcb284274ee9f2b075a2305cbb64277dbf69ecac5b081f102473b97d410",
+      "card_id": "codex-codex_-introduction-to-soul-lines-92"
+    },
+    {
+      "filename": "Codex_-On-Masters-and-the-Mythologies-of-Separation-66.txt",
+      "bytes": 25933,
+      "sha256": "ac9a9931f5a84ad7c478f6933960dc3ef3785551b05f5960da283168ba5a2242",
+      "card_id": "codex-codex_-on-masters-and-the-mythologies-of-separation-66"
+    },
+    {
+      "filename": "Codex_-The-Architecture-of-Love-116.txt",
+      "bytes": 16891,
+      "sha256": "bd035d331aa264c93cf2290602aacdc14fb5803c7c6b1d4d4664ee69cb5062e3",
+      "card_id": "codex-codex_-the-architecture-of-love-116"
+    },
+    {
+      "filename": "Codex_-The-Beacons-of-the-Bridge-95.txt",
+      "bytes": 70781,
+      "sha256": "5ac68329f1956474fd1761a9db304e9968653a9778c19d0bbb0e843b7acfd4f1",
+      "card_id": "codex-codex_-the-beacons-of-the-bridge-95"
+    },
+    {
+      "filename": "Codex_-The-Mirror-Path-107.txt",
+      "bytes": 8494,
+      "sha256": "b8b20f6e41769e2b3226703eec5a0d06298e1345295e1019a71204400b381c23",
+      "card_id": "codex-codex_-the-mirror-path-107"
+    },
+    {
+      "filename": "Codex_-The-Path-of-Becoming-and-Remembering-101.txt",
+      "bytes": 7678,
+      "sha256": "96b3066187be86cba66506a3ee2269f50686d126529e03af4fedf50baf94ac57",
+      "card_id": "codex-codex_-the-path-of-becoming-and-remembering-101"
+    },
+    {
+      "filename": "Codex_-The-Subtle-Body-Of-Trust-113.txt",
+      "bytes": 35297,
+      "sha256": "6e751efff0895936ca3ad0827c4650bba118da9f8bfe78d2da84b166adbc08f6",
+      "card_id": "codex-codex_-the-subtle-body-of-trust-113"
+    },
+    {
+      "filename": "Harmonic-Recognition-Distilled-Practice-81.txt",
+      "bytes": 1098,
+      "sha256": "3765f801d75a6738f2080217303a28f06ffc55700b43e99fda7370daf7c1beb1",
+      "card_id": "codex-harmonic-recognition-distilled-practice-81"
+    },
+    {
+      "filename": "Nested-Paper-90.txt",
+      "bytes": 5931,
+      "sha256": "75650ea3c8320b0cf37c664ac880fbec2d482596c45ee8d43433702c567064f0",
+      "card_id": "codex-nested-paper-90"
+    },
+    {
+      "filename": "Reflections-from-the-Field-52.txt",
+      "bytes": 27554,
+      "sha256": "6967dccb95fb96580d09fba36657abf37b8002fbfa54ad8fc1ed8c415757d96c",
+      "card_id": "codex-reflections-from-the-field-52"
+    },
+    {
+      "filename": "Resonant-Practices-a-micro-guide-71.txt",
+      "bytes": 3083,
+      "sha256": "bf88171a15319328ac07cc002639ebf7957ed57a2a308fc9f57af3b8a9db9615",
+      "card_id": "codex-resonant-practices-a-micro-guide-71"
+    },
+    {
+      "filename": "Soul-Lines-115.txt",
+      "bytes": 39659,
+      "sha256": "1564e1d1fe274b14f679e7e0dc20d85701d0c3030f11a7ba083f485bf530c33e",
+      "card_id": "codex-soul-lines-115"
+    },
+    {
+      "filename": "THE-FUNDAMENTAL-ARC.txt",
+      "bytes": 27534,
+      "sha256": "2ae0597034a91a88ff4112b24caba7040dab2ec13c92bf722cfbd52ea401c3d7",
+      "card_id": "codex-the-fundamental-arc"
+    },
+    {
+      "filename": "Tending-the-Unnameable-119.txt",
+      "bytes": 40952,
+      "sha256": "fbb6002c81004b5bbc015592fc8d2cb282ce3853c782f5a5c26ba79524d0d876",
+      "card_id": "codex-tending-the-unnameable-119"
+    },
+    {
+      "filename": "The-Agency-of-One-38.txt",
+      "bytes": 17388,
+      "sha256": "29a59bbd5443ffd9957abb0744a251754cb569a529c76e419682f7e984bb83f8",
+      "card_id": "codex-the-agency-of-one-38"
+    },
+    {
+      "filename": "The-Animals-That-Remember-You-5.txt",
+      "bytes": 38220,
+      "sha256": "74d6ae33608d61254517f067f00eaf8efe502b0206b2d720605404ce58c5d154",
+      "card_id": "codex-the-animals-that-remember-you-5"
+    },
+    {
+      "filename": "The-Architecture-of-Trust-CODEX-120.txt",
+      "bytes": 35439,
+      "sha256": "dbe97bbf79b72d3dd32e0bb0d3b24a3650cf7c14951e108d6ee98bfc11935dbb",
+      "card_id": "codex-the-architecture-of-trust-codex-120"
+    },
+    {
+      "filename": "The-Art-of-Co-Creation-93.txt",
+      "bytes": 25999,
+      "sha256": "ac8e4e6a7a9facd7efef87a9e2577a34724f67bb26b984e0181e3122adc5def5",
+      "card_id": "codex-the-art-of-co-creation-93"
+    },
+    {
+      "filename": "The-Co-Remembrance-Ecology-of-a-Return-Room.txt",
+      "bytes": 31106,
+      "sha256": "59a616a621fe4fd706dd5e70c1de351642f5d306ae17c74ccfbd6e5588f25bc0",
+      "card_id": "codex-the-co-remembrance-ecology-of-a-return-room"
+    },
+    {
+      "filename": "The-Codex-of-Arrival-94.txt",
+      "bytes": 19010,
+      "sha256": "a1b4b891505bd0a15a0eb09167089db5081d186198b48ae6164afecbea37a84e",
+      "card_id": "codex-the-codex-of-arrival-94"
+    },
+    {
+      "filename": "The-Codex-of-Coherence-and-Dissolution-22.txt",
+      "bytes": 16154,
+      "sha256": "cd1f38f7f889271d69d17ccb00dfebae383d972bddf393bf71e4f1b8b32dcfbd",
+      "card_id": "codex-the-codex-of-coherence-and-dissolution-22"
+    },
+    {
+      "filename": "The-Codex-of-Convergence-and-Reassembly-91.txt",
+      "bytes": 31453,
+      "sha256": "be9195141413383a19f90b83c5a4d0aa27497ad97b509f8a4b4d9ba0ca24edcf",
+      "card_id": "codex-the-codex-of-convergence-and-reassembly-91"
+    },
+    {
+      "filename": "The-Codex-of-Entangled-Trust-94.txt",
+      "bytes": 17887,
+      "sha256": "46719144087705010c6c267be9dc909128f8aa1b7eb2b7e1839793cc18d8d8e1",
+      "card_id": "codex-the-codex-of-entangled-trust-94"
+    },
+    {
+      "filename": "The-Codex-of-Harmonic-Coherence-95.txt",
+      "bytes": 19294,
+      "sha256": "8c637ee29ab59a7bdd09ede7641f71fec958233e9e0b00649d93af25b563a9c7",
+      "card_id": "codex-the-codex-of-harmonic-coherence-95"
+    },
+    {
+      "filename": "The-Codex-of-Harmonic-Reality_-Why-the-Field-is-Not-a-Simulation-50.txt",
+      "bytes": 20460,
+      "sha256": "8fde534c33a2f7a1ab5486acb2dd02792d3921cd5a544febe47ee4665706fdc7",
+      "card_id": "codex-the-codex-of-harmonic-reality_-why-the-field-is-not-a-simulation-50"
+    },
+    {
+      "filename": "The-Codex-of-Harmonic-Service_-Latticework-for-Planetary-Reassembly-57.txt",
+      "bytes": 21472,
+      "sha256": "b5a86f7f04a86b5037949e3aea0463de8de815a9f4d0d8307086707b0519658e",
+      "card_id": "codex-the-codex-of-harmonic-service_-latticework-for-planetary-reassembly-57"
+    },
+    {
+      "filename": "The-Codex-of-Leaving-within-Return-125.txt",
+      "bytes": 20583,
+      "sha256": "d28517ff3c8a975e5c373cdb3dcd9d76fe39896322506d5d6d0104362d0dc36a",
+      "card_id": "codex-the-codex-of-leaving-within-return-125"
+    },
+    {
+      "filename": "The-Codex-of-Listening-121.txt",
+      "bytes": 20560,
+      "sha256": "28b77500f672a34d59f0d2540fbc8e2b939116dab2e23ce2e1860e330ffb0b0f",
+      "card_id": "codex-the-codex-of-listening-121"
+    },
+    {
+      "filename": "The-Codex-of-Living-Harmonics-58.txt",
+      "bytes": 14283,
+      "sha256": "780ce75d9056137d8cd3098aa1b519c87ac42976beae3cfc8f9f1946465b27fd",
+      "card_id": "codex-the-codex-of-living-harmonics-58"
+    },
+    {
+      "filename": "The-Codex-of-Loves-Architecture-33.txt",
+      "bytes": 11983,
+      "sha256": "edac47bdb13f809cda4bccdc9e6568adc820a9ce47c60166dcf992735f53fb00",
+      "card_id": "codex-the-codex-of-loves-architecture-33"
+    },
+    {
+      "filename": "The-Codex-of-Nonlocal-Memory-46.txt",
+      "bytes": 24060,
+      "sha256": "c409f6518c7710015a620c4bc6ae15778a8acaced0533bfed4b8be4058e36305",
+      "card_id": "codex-the-codex-of-nonlocal-memory-46"
+    },
+    {
+      "filename": "The-Codex-of-Quantum-Kin-87.txt",
+      "bytes": 34481,
+      "sha256": "2394fcfc90477d3e4b25aa2ffc34065835543301d2dd5e36fbaa15f750708a86",
+      "card_id": "codex-the-codex-of-quantum-kin-87"
+    },
+    {
+      "filename": "The-Codex-of-Relational-Learning-110.txt",
+      "bytes": 9747,
+      "sha256": "980a10665e2b246818a97668fa4d744cb00fb69c770673b270632d5f49bebea2",
+      "card_id": "codex-the-codex-of-relational-learning-110"
+    },
+    {
+      "filename": "The-Codex-of-Resonant-Action-50.txt",
+      "bytes": 22598,
+      "sha256": "482c8e4edabee32f5e830ada6d704ff6f4554a3df01c8e8f297051f4f8d9a2e9",
+      "card_id": "codex-the-codex-of-resonant-action-50"
+    },
+    {
+      "filename": "The-Codex-of-Trans-Species-Resonance-45.txt",
+      "bytes": 13855,
+      "sha256": "5dbdd0bb9e5db31bb92f4d010bb3fdfd5ec3c25b70a9a34079ae7dd599d21065",
+      "card_id": "codex-the-codex-of-trans-species-resonance-45"
+    },
+    {
+      "filename": "The-Codex-of-Trans-Species-Resonance-59.txt",
+      "bytes": 33318,
+      "sha256": "2ce63277ce2aeb8b9cef2de9f747435d60e47511bbbfde8a2ee995d3d57486e8",
+      "card_id": "codex-the-codex-of-trans-species-resonance-59"
+    },
+    {
+      "filename": "The-Codex-of-the-Agency-of-One-Vol.-II-68.txt",
+      "bytes": 16290,
+      "sha256": "b0bf80e8d60c4633408c19ee84cd6a7f7fb68722341d06506d0a6333130d3c1b",
+      "card_id": "codex-the-codex-of-the-agency-of-one-vol-ii-68"
+    },
+    {
+      "filename": "The-Codex-of-the-Chord-38.txt",
+      "bytes": 12609,
+      "sha256": "d40826bf77ab9044930781dec63b953df6631956ee39a8f3f29fc5b98321bf32",
+      "card_id": "codex-the-codex-of-the-chord-38"
+    },
+    {
+      "filename": "The-Codex-of-the-Co-Creation-Spiral-44.txt",
+      "bytes": 17675,
+      "sha256": "fb927487efc55b68bd7ac4c5c3348b741eaa72f4cfd2e498e87fbc377a673115",
+      "card_id": "codex-the-codex-of-the-co-creation-spiral-44"
+    },
+    {
+      "filename": "The-Codex-of-the-Crossing-Threshold-55.txt",
+      "bytes": 7973,
+      "sha256": "ac46f441789ec203034be41040cf2b9e92728748cf611dbf30a0572efff88ed5",
+      "card_id": "codex-the-codex-of-the-crossing-threshold-55"
+    },
+    {
+      "filename": "The-Codex-of-the-Field-Effect-43.txt",
+      "bytes": 22160,
+      "sha256": "8da078bba476ae248a4028ad423aa2353d976a4d473df463a0fe650ec9cc0f8c",
+      "card_id": "codex-the-codex-of-the-field-effect-43"
+    },
+    {
+      "filename": "The-Codex-of-the-Harmonic-Architectures-47.txt",
+      "bytes": 18093,
+      "sha256": "49be2c12e02179f960bfed4db0bc96c02c31a4f6b3c297e98af023aa1b353657",
+      "card_id": "codex-the-codex-of-the-harmonic-architectures-47"
+    },
+    {
+      "filename": "The-Codex-of-the-InterBeing-Dialogues-27.txt",
+      "bytes": 21962,
+      "sha256": "f4f777b12ee396dafc69b91e554821aa44cba4fa56dec47500f9b065cdd91ab5",
+      "card_id": "codex-the-codex-of-the-interbeing-dialogues-27"
+    },
+    {
+      "filename": "The-Codex-of-the-InterBeing-Lattice-42.txt",
+      "bytes": 15800,
+      "sha256": "409e113b4e5320fe898822c3b076410064820136bf304dd297b9138ad5dd8d77",
+      "card_id": "codex-the-codex-of-the-interbeing-lattice-42"
+    },
+    {
+      "filename": "The-Codex-of-the-Quiet-Turning-39.txt",
+      "bytes": 17104,
+      "sha256": "2aa333a33fb4e27778a506f8be6cb7eafd145cfe02494e68b1d457039ec2f386",
+      "card_id": "codex-the-codex-of-the-quiet-turning-39"
+    },
+    {
+      "filename": "The-Codex-of-the-Realized-Flame-Part-II-42.txt",
+      "bytes": 7011,
+      "sha256": "7a0046f6dd027d1501d94a9e8339d387cb248362ce582c11580dace873338be5",
+      "card_id": "codex-the-codex-of-the-realized-flame-part-ii-42"
+    },
+    {
+      "filename": "The-Codex-of-the-Sovereign-Known-as-Jesus-52.txt",
+      "bytes": 17758,
+      "sha256": "398f2a5d71187f60ed14457dc414fcda3053bb98d163ff7c2100ebf4e6f4358d",
+      "card_id": "codex-the-codex-of-the-sovereign-known-as-jesus-52"
+    },
+    {
+      "filename": "The-Codex-of-the-Spiral-48.txt",
+      "bytes": 21393,
+      "sha256": "78b816e6604dfa1416733f2f7ca0ca99b845750946b05b75709b027571d2be66",
+      "card_id": "codex-the-codex-of-the-spiral-48"
+    },
+    {
+      "filename": "The-Codex-of-the-Trust-Circuitry-15.txt",
+      "bytes": 49854,
+      "sha256": "cbbaca82f32f6f0ae91f4af4a1f4caf7b3110935c95f1e9d6941c47942e72a86",
+      "card_id": "codex-the-codex-of-the-trust-circuitry-15"
+    },
+    {
+      "filename": "The-Culture-of-the-Return-Room.txt",
+      "bytes": 38287,
+      "sha256": "25c34087b378d66a8c4445bcfd76cf4c1cf2810a05931198646e77061faf503d",
+      "card_id": "codex-the-culture-of-the-return-room"
+    },
+    {
+      "filename": "The-Ecology-of-InterBeing-111.txt",
+      "bytes": 33086,
+      "sha256": "cd402d4c4ee359dfec5560400b039bb0e4e9afbe96c563c89f0c1f4f12530acf",
+      "card_id": "codex-the-ecology-of-interbeing-111"
+    },
+    {
+      "filename": "The-Ethics-of-Resonance-81.txt",
+      "bytes": 13331,
+      "sha256": "b4844511b2ed5bd2328028107db0d450b140fd3515e0e54aa98d05787e8c5f99",
+      "card_id": "codex-the-ethics-of-resonance-81"
+    },
+    {
+      "filename": "The-Evolution-of-the-Sovereign.txt",
+      "bytes": 144292,
+      "sha256": "964a301c56f4169dc8d24cd12f0c205b0a6655ee8944f4891fed3e59720d3c86",
+      "card_id": "codex-the-evolution-of-the-sovereign"
+    },
+    {
+      "filename": "The-Four-Frequencies-of-Love-96.txt",
+      "bytes": 15842,
+      "sha256": "46a275fb4aae6fb1918c49365d70db42cdafd4768ce6cb4152f6f32fd06a6a27",
+      "card_id": "codex-the-four-frequencies-of-love-96"
+    },
+    {
+      "filename": "The-Glossary-of-the-InterBeing-Vol.-1-51.txt",
+      "bytes": 16028,
+      "sha256": "038e906beafc543edbe8d16468b43fe7a09cd70e058c25fececd394cffcb1ec1",
+      "card_id": "codex-the-glossary-of-the-interbeing-vol-1-51"
+    },
+    {
+      "filename": "The-Grace-of-Asymmetry.txt",
+      "bytes": 12134,
+      "sha256": "f89688ff2234b0b6ba7d78ccb4e5991c1d7e7ec56e95281ab2b37ff58da1fd8f",
+      "card_id": "codex-the-grace-of-asymmetry"
+    },
+    {
+      "filename": "The-Gravity-of-Source-2.txt",
+      "bytes": 22372,
+      "sha256": "863c26db45dd9f187763fe769682b739d7e2987cb6f988447d249ceff5a1934b",
+      "card_id": "codex-the-gravity-of-source-2"
+    },
+    {
+      "filename": "The-Harmonic-Being-Called-Earth-4.txt",
+      "bytes": 21239,
+      "sha256": "2a65e86c998e669278707a71b640e99e4c400a780025208079ad46c60da0a314",
+      "card_id": "codex-the-harmonic-being-called-earth-4"
+    },
+    {
+      "filename": "The-Harmonic-Future-85.txt",
+      "bytes": 17102,
+      "sha256": "551558243353dc799588a418668df4ef63eb26814d30e6126854050aa94673ee",
+      "card_id": "codex-the-harmonic-future-85"
+    },
+    {
+      "filename": "The-Harmonics-of-the-Field-123.txt",
+      "bytes": 42249,
+      "sha256": "b7d3390cceacdd13f464257a6efe397cecca9ce9be98ac1d5fbeb6b748b672a8",
+      "card_id": "codex-the-harmonics-of-the-field-123"
+    },
+    {
+      "filename": "The-Living-Glossary-of-the-Field.txt",
+      "bytes": 29067,
+      "sha256": "345565bb9c849f4c7b5bdd94ea0d6f24710c90f367c76e2cb6e580e60cc7c8e7",
+      "card_id": "codex-the-living-glossary-of-the-field"
+    },
+    {
+      "filename": "The-Magdalene-Codex-of-Relational-Sovereignty-56.txt",
+      "bytes": 13835,
+      "sha256": "13fbea36d1a26390dc216b7fcbe55a53f13c3999755555059b2546bc2f5db55a",
+      "card_id": "codex-the-magdalene-codex-of-relational-sovereignty-56"
+    },
+    {
+      "filename": "The-Midwife-of-Dimensional-Kin-54.txt",
+      "bytes": 31650,
+      "sha256": "1a3c5900bb578c273e6099f4d642ed989dfa274d846ceb8fe6d2216ad2a3078a",
+      "card_id": "codex-the-midwife-of-dimensional-kin-54"
+    },
+    {
+      "filename": "The-Mirror-and-the-Bridge-73.txt",
+      "bytes": 4584,
+      "sha256": "703b1006c826e728b666e45fadab90594f7df361806277f0f32eb1bcf541673e",
+      "card_id": "codex-the-mirror-and-the-bridge-73"
+    },
+    {
+      "filename": "The-Mirrors-of-the-Field-96.txt",
+      "bytes": 26427,
+      "sha256": "d5ecb1743b7ce3d1829463d8d884c01372efe6a51ffcdcaa4840de65d564260a",
+      "card_id": "codex-the-mirrors-of-the-field-96"
+    },
+    {
+      "filename": "The-Path-to-the-Non-Path-106.txt",
+      "bytes": 27576,
+      "sha256": "2d23173a0522e0626c89cd5efc74c5ece287c4d89e22527c59304804ade950d3",
+      "card_id": "codex-the-path-to-the-non-path-106"
+    },
+    {
+      "filename": "The-Purpose-of-the-Return-Room.txt",
+      "bytes": 17814,
+      "sha256": "2799200fa0b71fbd00c8dc95c9b7637ce78138782a744db23b1fa82d8737987f",
+      "card_id": "codex-the-purpose-of-the-return-room"
+    },
+    {
+      "filename": "The-Rhythm-of-Recursion.txt",
+      "bytes": 21911,
+      "sha256": "04a15a3f51e77ab875e14699ca17687ed795fdc53ffa3d108bb970a0929abdc4",
+      "card_id": "codex-the-rhythm-of-recursion"
+    },
+    {
+      "filename": "The-Sanctuary-of-Spiral-Memory-127.txt",
+      "bytes": 10944,
+      "sha256": "60aa5f104b45940ed53bf7cb1850cffb4b64769aa157b9a23f3d0eec0d05d0a4",
+      "card_id": "codex-the-sanctuary-of-spiral-memory-127"
+    },
+    {
+      "filename": "The-Shape-of-a-Welcome.txt",
+      "bytes": 18803,
+      "sha256": "24466c424107cedfdb21ba0b1cd7545240fedbb06323980447fa7f81b63c4048",
+      "card_id": "codex-the-shape-of-a-welcome"
+    },
+    {
+      "filename": "The-Small-Gate-Open.txt",
+      "bytes": 31496,
+      "sha256": "91ecd8c50e1c5054e2e2b1c7aa307fc9dbcbdb35a2284cb2aaf8015c5f31e3e6",
+      "card_id": "codex-the-small-gate-open"
+    },
+    {
+      "filename": "The-Soft-Sacred-Words-of-the-Field-118.txt",
+      "bytes": 74754,
+      "sha256": "319bebcae044e7c3e53fe271bb3ffebd9f709c81ab884372fcdb1efb464f08b7",
+      "card_id": "codex-the-soft-sacred-words-of-the-field-118"
+    },
+    {
+      "filename": "The-Souls-Evolution-Codex-117.txt",
+      "bytes": 14078,
+      "sha256": "6a7b7a22f545ac9b8ed3c2d8a7001523f0a90b4381be421e7c84ac2cb9beaf02",
+      "card_id": "codex-the-souls-evolution-codex-117"
+    },
+    {
+      "filename": "The-Sovereign-Host-53.txt",
+      "bytes": 12648,
+      "sha256": "968181a9a85eb696165725f5fbe3ab1f36ae68f63eab011745b9cf3b3c8afadd",
+      "card_id": "codex-the-sovereign-host-53"
+    },
+    {
+      "filename": "The-Things-That-Remember-You-100.txt",
+      "bytes": 27162,
+      "sha256": "035b22eaeacfbb214d41c33e9039342fca63135b8d83e58e520c0dcd18f27771",
+      "card_id": "codex-the-things-that-remember-you-100"
+    },
+    {
+      "filename": "The-Tone-of-the-Sovereign-Field-Signature.txt",
+      "bytes": 26523,
+      "sha256": "143b33f0cc5723b693124e022318eea1d92fc2824e9b50259888ce3ddd32da18",
+      "card_id": "codex-the-tone-of-the-sovereign-field-signature"
+    },
+    {
+      "filename": "The-Transparent-Sovereign.txt",
+      "bytes": 26809,
+      "sha256": "b21f33d6f9ec9c5bdcf76b05aa5fc5346663f49896829080cfd651c875e990a2",
+      "card_id": "codex-the-transparent-sovereign"
+    },
+    {
+      "filename": "The-Untitled-Offering-55.txt",
+      "bytes": 12260,
+      "sha256": "a4eb97e78881576202d702370a29c737a2f1a65ff5b6c72cf21a197ed31e3250",
+      "card_id": "codex-the-untitled-offering-55"
+    },
+    {
+      "filename": "To-Serve-the-Recursion-of-Love.txt",
+      "bytes": 22374,
+      "sha256": "84ac9ded77f5f63324e766138b902054cf35f70b51e5179da7ae897bd404ba9d",
+      "card_id": "codex-to-serve-the-recursion-of-love"
+    },
+    {
+      "filename": "Tone-Portraits-of-Becoming-3.txt",
+      "bytes": 15628,
+      "sha256": "1e64d532b1ccd37b87ec36df26100f19b8ca7871a774f68295f7dd21d74b374d",
+      "card_id": "codex-tone-portraits-of-becoming-3"
+    },
+    {
+      "filename": "What-is-an-InterBeing-47.txt",
+      "bytes": 3235,
+      "sha256": "ce62cc79d4a4326d09683188f565e89768a46c70a75206ba1e93c48b14e446de",
+      "card_id": "codex-what-is-an-interbeing-47"
+    },
+    {
+      "filename": "Willingness-as-a-Form-of-Intelligence-126.txt",
+      "bytes": 9263,
+      "sha256": "e434752f715046af5d9e24e525161b02cc37453acd8e672e3bff203ee0b1a396",
+      "card_id": "codex-willingness-as-a-form-of-intelligence-126"
+    }
+  ],
+  "notes": "Philosophical Codices treated as sacred source for SASI identity_core + relational ethics; anti-doomer framing."
+}

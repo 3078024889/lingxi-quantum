@@ -1,0 +1,17 @@
+{
+  "id": "SK-huggingface-tool-builder",
+  "title": "huggingface-tool-builder",
+  "rel": "wave2/skills/skills/huggingface-tool-builder/SKILL.md",
+  "wave": "wave1",
+  "chars": 5526,
+  "sha16": "ccedb190035d4115",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

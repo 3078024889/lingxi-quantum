@@ -1,0 +1,17 @@
+{
+  "id": "SK-veo-3-2-prompter",
+  "title": "veo-3.2-prompter",
+  "rel": "wave2/pexo-skills/skills/veo-3.2-prompter/SKILL.md",
+  "wave": "wave1",
+  "chars": 3499,
+  "sha16": "23a45bf39d1d8a22",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

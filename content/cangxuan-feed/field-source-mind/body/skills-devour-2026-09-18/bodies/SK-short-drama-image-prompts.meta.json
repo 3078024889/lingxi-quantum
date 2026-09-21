@@ -1,0 +1,19 @@
+{
+  "id": "SK-short-drama-image-prompts",
+  "title": "short-drama-image-prompts",
+  "rel": "drama-skills/skills/short-drama-image-prompts/SKILL.md",
+  "wave": "wave1",
+  "chars": 1952,
+  "sha16": "b8b0f4e3cb61a84b",
+  "drama_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

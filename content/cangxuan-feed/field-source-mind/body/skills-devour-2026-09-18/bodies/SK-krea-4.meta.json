@@ -1,0 +1,13 @@
+{
+  "id": "SK-krea-4",
+  "title": "krea",
+  "rel": "ComfyUI-Agent-Kit/claude-code/skills/krea/SKILL.md",
+  "wave": "wave2-slim",
+  "chars": 10879,
+  "sha16": "7c06e311023c8c11",
+  "drama_steps": [
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

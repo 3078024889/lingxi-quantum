@@ -1,0 +1,116 @@
+{
+  "batch": "pilot-001",
+  "target_note": "pilot only; not claiming progress toward 10B",
+  "items": [
+    {
+      "id": "tg-pilot-0001",
+      "proposition": "在真空中，光速约为每秒 299792458 米，是目前定义米的基础常数之一。",
+      "event_or_context": "国际单位制对米与光速关系的定义语境。",
+      "evidence": "物理学与计量学通识：c 为定义常数。",
+      "discipline": "physics",
+      "tier": "bronze",
+      "confidence": 0.95,
+      "source_class": "teacher_synthetic",
+      "content_hash": "65a02a6b28ebd3d501ef5631e5c00b5b9c308a3c668b7dbff39739fe23bbb246"
+    },
+    {
+      "id": "tg-pilot-0002",
+      "proposition": "线粒体是多数真核细胞内的产能细胞器，通过氧化磷酸化生成 ATP。",
+      "event_or_context": "细胞生物学基础结构与功能。",
+      "evidence": "高中/大学通识教材级事实。",
+      "discipline": "biology",
+      "tier": "bronze",
+      "confidence": 0.93,
+      "source_class": "teacher_synthetic",
+      "content_hash": "48477b6e894999a8dc017a7107d003727f543b1ce8a53a95b824442ec47f0512"
+    },
+    {
+      "id": "tg-pilot-0003",
+      "proposition": "地球大致分为地壳、地幔与地核；地核以铁镍为主。",
+      "event_or_context": "地球内部结构分层模型。",
+      "evidence": "地球科学通识分层模型。",
+      "discipline": "earth-science",
+      "tier": "bronze",
+      "confidence": 0.9,
+      "source_class": "teacher_synthetic",
+      "content_hash": "f665ed1a683e7e43de94387ca05f2b6256d34c061fb118d5ace46d952be5b5d2"
+    },
+    {
+      "id": "tg-pilot-0004",
+      "proposition": "太阳系八大行星按距日由近及远通常记为水金地火木土天海。",
+      "event_or_context": "太阳系行星排序通识。",
+      "evidence": "基础天文常识（冥王星已重分类为矮行星）。",
+      "discipline": "astronomy",
+      "tier": "bronze",
+      "confidence": 0.94,
+      "source_class": "teacher_synthetic",
+      "content_hash": "435407c84741289e964547ef1e81c34728f69828780ece95144c3a48e784dbba"
+    },
+    {
+      "id": "tg-pilot-0005",
+      "proposition": "水在标准大气压下沸点约为 100°C，冰点约为 0°C。",
+      "event_or_context": "常压下水的相变温度。",
+      "evidence": "化学/物态通识。",
+      "discipline": "chemistry",
+      "tier": "bronze",
+      "confidence": 0.95,
+      "source_class": "teacher_synthetic",
+      "content_hash": "a6f0497480b6a8af566eb493d15984b715e6b475bc7a013a7848af5206b6e202"
+    },
+    {
+      "id": "tg-pilot-0006",
+      "proposition": "印刷术在东亚有深厚历史；活字印刷与雕版印刷均影响知识传播。",
+      "event_or_context": "人类传播技术史。",
+      "evidence": "世界史/技术史通识级表述，避免单一国别神话化。",
+      "discipline": "history",
+      "tier": "bronze",
+      "confidence": 0.85,
+      "source_class": "teacher_synthetic",
+      "content_hash": "a72d581a0ebd9da1e1ff6de92aeacba1d774bd8ce65f8581879b4f5c73d22e69"
+    },
+    {
+      "id": "tg-pilot-0007",
+      "proposition": "素数是大于 1 且仅能被 1 和自身整除的正整数。",
+      "event_or_context": "数论基本定义。",
+      "evidence": "数学通识定义。",
+      "discipline": "math",
+      "tier": "bronze",
+      "confidence": 0.98,
+      "source_class": "teacher_synthetic",
+      "content_hash": "56fd7c39bbee97ec106c3c6d8f76063f9ed2ec8fa49373d774f2359325b83a87"
+    },
+    {
+      "id": "tg-pilot-0008",
+      "proposition": "算法是有限步骤内把输入变成输出的明确计算过程。",
+      "event_or_context": "计算机科学导论。",
+      "evidence": "CS 通识定义。",
+      "discipline": "cs",
+      "tier": "bronze",
+      "confidence": 0.96,
+      "source_class": "teacher_synthetic",
+      "content_hash": "4d96bd728a36c4b483719c2017ed5fdb0913cd117f85b78db383f1a4c597cf93"
+    },
+    {
+      "id": "tg-pilot-0009",
+      "proposition": "工作记忆容量有限，复杂信息常需分块才能更好保持。",
+      "event_or_context": "认知心理学通识。",
+      "evidence": "记忆与注意领域经典结论的保守表述。",
+      "discipline": "psychology",
+      "tier": "silver",
+      "confidence": 0.88,
+      "source_class": "teacher_synthetic",
+      "content_hash": "42801e240f8f51cb8e8df849547d1a119ce78c02edda2b91cdf4325f203de6d9"
+    },
+    {
+      "id": "tg-pilot-0010",
+      "proposition": "机会成本是选择某一方案时放弃的次优方案价值。",
+      "event_or_context": "微观经济学基础概念。",
+      "evidence": "经济学通识定义。",
+      "discipline": "economics",
+      "tier": "bronze",
+      "confidence": 0.92,
+      "source_class": "teacher_synthetic",
+      "content_hash": "ca367ed2d117d8b8b3481599dc31c8b0109dfee2b4e3d186ba5899d81b8106ec"
+    }
+  ]
+}

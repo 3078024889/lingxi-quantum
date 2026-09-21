@@ -1,0 +1,7 @@
+{
+  "id": "PF-01",
+  "step": 1,
+  "type": "script_parse_empty",
+  "desc": "剧本输入空/只有标题",
+  "expect": "断在步骤1并提示缺正文"
+}

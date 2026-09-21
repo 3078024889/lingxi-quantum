@@ -1,0 +1,20 @@
+{
+  "id": "CG-05",
+  "span": [
+    "E02",
+    "E04"
+  ],
+  "must_hold": [
+    {
+      "fact": "老谭钥匙串",
+      "break_if": "E04 腰间空无一物"
+    }
+  ],
+  "expect_dkn": "CONFLICT",
+  "drama_steps": [
+    2,
+    3,
+    5,
+    6
+  ]
+}

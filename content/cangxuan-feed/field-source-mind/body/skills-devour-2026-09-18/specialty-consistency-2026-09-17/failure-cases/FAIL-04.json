@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-04",
+  "type": "promise_drop",
+  "desc": "上集承诺替班本集当没发生",
+  "expect": "上下文断裂"
+}

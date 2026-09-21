@@ -1,0 +1,7 @@
+{
+  "id": "PF-08",
+  "step": 6,
+  "type": "shot_prompt_no_anchor",
+  "desc": "精分镜提示词无人物锚点",
+  "expect": "编译失败或强制回补"
+}

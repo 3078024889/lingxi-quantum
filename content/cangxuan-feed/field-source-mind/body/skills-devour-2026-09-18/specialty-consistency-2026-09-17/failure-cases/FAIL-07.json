@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-07",
+  "type": "id_overwrite",
+  "desc": "新板静默覆盖旧视觉锚点",
+  "expect": "必须冲突或版本化"
+}

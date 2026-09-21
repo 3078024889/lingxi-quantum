@@ -1,0 +1,14 @@
+{
+  "id": "B7-why-heart-matters",
+  "title": "心脏为何重要",
+  "content_sha256_16": "c9adfd08a589775e",
+  "chars": 78673,
+  "raw_chars": 80090,
+  "peeled_ratio": 0.982,
+  "nav_lines_remaining": 0,
+  "picked_raw": "/workspace/run-1210/extracts/wmc_wwh.txt",
+  "batch": "curriculum-AB-2026-09-17",
+  "peel": "v2-nav-strip",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:46:04.917625+00:00"
+}

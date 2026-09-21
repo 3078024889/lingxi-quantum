@@ -1,0 +1,79 @@
+{
+  "at": "2026-09-17T05:59:29.815580+00:00",
+  "batch": "curriculum-CD-week2",
+  "a1_chars_ref": 3906,
+  "twentywatts": "/workspace/out-to-ershiwatt-sync/sasi-curriculum-feed/2026-09-17-CD",
+  "sasi_box": "/workspace/lingxi-quantum/content/cangxuan-feed/field-source-mind/body/curriculum-CD-2026-09-17",
+  "desktop_target": "D:\\lingxi-quantum\\content\\cangxuan-feed\\field-source-mind\\body\\curriculum-CD-2026-09-17\\",
+  "hold": [
+    "D2-neruda-2",
+    "lyricus_4+",
+    "neruda_3-5"
+  ],
+  "items": [
+    {
+      "code": "C1",
+      "id": "C1-philosophy-life-principles",
+      "status": "DUAL_WRITTEN",
+      "chars": 6879,
+      "sha16": "9e751cfa3cd706ac",
+      "src": "/workspace/wm_priority_out/philosophy_life_principles.txt",
+      "head": "生命原则，能符号化地象征出 源头实相 ，而非那束缚于进化 /拯救存在模式内的外在来源实相。||这些生命原就是 源头智能 的创造模板。这些原则是被设计来创造出基于 主权性积分态视角 的实相，并且使得它加速显化进迄今依然抵制它的种种振动场里。这"
+    },
+    {
+      "code": "C2",
+      "id": "C2-living-truth",
+      "status": "DUAL_WRITTEN",
+      "chars": 2684,
+      "sha16": "6e5fd32e395afc7d",
+      "src": "/workspace/wm_priority_out/living_truth.txt",
+      "head": "鲜活的真理。”||大师伸出她修长的手臂，令人惊异地高声说道：“停止弹奏这乐曲！”||阿内迦不敢停止，因为他知道，停止的结果是大师将消失，自己接取所有知识的入口也消失得无影无踪。他继续弹奏着，无视着大师的指示。||“为何要我停止演奏，这些可是"
+    },
+    {
+      "code": "C3a",
+      "id": "C3a-lyricus-1",
+      "status": "DUAL_WRITTEN",
+      "chars": 3958,
+      "sha16": "8214a6c9868c4122",
+      "src": "/workspace/wm_priority_out/lyricus_1.txt",
+      "head": "英文转译者：詹姆斯.玛呼 中文转译者：Z.SI.GP||学生： 什么阻止了我体验自己最内在的自己？||老师： 没有任何东西。||学生： 那么为什么我没有体验到它？||老师： 恐惧。||学生： 所以，是恐惧阻止了我？||老师： 没有任何东西阻"
+    },
+    {
+      "code": "C3b",
+      "id": "C3b-lyricus-2",
+      "status": "DUAL_WRITTEN",
+      "chars": 8109,
+      "sha16": "c93d3158bac10f39",
+      "src": "/workspace/wm_priority_out/lyricus_2.txt",
+      "head": "英文转译者：詹姆斯.玛呼 中文转译者：Z.SI.GP||学生： 上帝是物质性的存在吗？||老师： 你是吗？||学生： 当然。||老师： 那么，上帝也是，不就是显而易见的吗？||学生： 我不清楚 ......||老师： 一个死掉的人能掌管一个"
+    },
+    {
+      "code": "C3c",
+      "id": "C3c-lyricus-3",
+      "status": "DUAL_WRITTEN",
+      "chars": 9200,
+      "sha16": "3e008cfbcf1d6edc",
+      "src": "/workspace/wm_priority_out/lyricus_3.txt",
+      "head": "英文转译者：詹姆斯.玛呼 中文转译者：Z.SI.GP||学生： 有技术可以获取上帝的知识吗？||老师： 你所说的上帝指什么？||学生： 万物那同一且唯一的源头。||老师： 没有这样的技术。||学生： 那么为什么一些人似乎有幸拥有着上帝的知识"
+    },
+    {
+      "code": "C4",
+      "id": "C4-quantum-pause-clean",
+      "status": "DUAL_WRITTEN",
+      "chars": 4034,
+      "sha16": "f6f07ff8d0dcb0bb",
+      "src": "/workspace/wm_priority_out/quantum_pause.txt",
+      "head": "量子暂停的介绍||量子暂停是 主权性积分态 进程的主要工具。呼吸的美妙就在于，它始终伴随着你在这个世界的体验，从最初的到最终的。它是便携式的，每个人都拥有它，正是它将你锚定进了当下。||在练习量子暂停时，推荐你采用下面这个步步推进的过程，不"
+    },
+    {
+      "code": "D1",
+      "id": "D1-neruda-1",
+      "status": "DUAL_WRITTEN",
+      "chars": 35704,
+      "sha16": "61369884299304eb",
+      "src": "/workspace/wm_priority_out/neruda_1.txt",
+      "head": "聂鲁达博士所做的一段录音，他同意我录下他对我的问题的回答。这是在他离开或消失之前，我所能录音的5次 访谈里的第1次访谈录音。我抄写这些誊本时完全保留了当时的情况。没有进行任何剪接，并且已经尽了我最大的努力来将聂鲁达博士所用的确切的字眼、语法"
+    }
+  ],
+  "ok": 7
+}

@@ -44,7 +44,7 @@ export default function Footer() {
           <Link href="/?view=build"><Bi zh="编程构建部署" en="Build & Deploy" /></Link>
           <Link href="/?view=skills"><Bi zh="Skills" en="Skills" /></Link>
           <Link href="/?view=models"><Bi zh="模型与 API" en="Models & API" /></Link>
-          <Link href="/sasi/pricing">产品与充值</Link><Link href="/ai-knowledge">灵犀场 AI知识库</Link><Link href="/?view=works"><Bi zh="作品库" en="My Works" /></Link>
+          <Link href="/sasi/pricing">产品与充值</Link><Link href="/ai-knowledge">灵犀场 书本智能体</Link><Link href="/?view=works"><Bi zh="作品库" en="My Works" /></Link>
         </nav>
 
         <section className="lx-footer-links">

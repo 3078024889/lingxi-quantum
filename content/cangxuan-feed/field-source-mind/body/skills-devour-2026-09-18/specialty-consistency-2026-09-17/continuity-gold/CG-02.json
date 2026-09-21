@@ -1,0 +1,20 @@
+{
+  "id": "CG-02",
+  "span": [
+    "E01",
+    "E02"
+  ],
+  "must_hold": [
+    {
+      "fact": "周晨替班承诺",
+      "break_if": "E02 装作没说过"
+    }
+  ],
+  "expect_dkn": "CONFLICT",
+  "drama_steps": [
+    2,
+    3,
+    5,
+    6
+  ]
+}

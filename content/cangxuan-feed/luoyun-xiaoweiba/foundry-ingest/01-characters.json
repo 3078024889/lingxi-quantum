@@ -1,0 +1,69 @@
+[
+  {
+    "characterKey": "YXT",
+    "displayName": "云小棠",
+    "permanentIdentity": {
+      "role": "女主·小尾巴",
+      "face_lock": "圆杏眼、左颊浅雀斑、眉尾微翘、一缕翘发",
+      "costume_default": "外门浅蓝云纹袍袖口补丁、布靴、缺角云纹玉佩",
+      "voice_lock": "声线软、紧张吞音、倔时咬字清楚",
+      "ability": "杂灵根·借响（短眩晕/灵力乱为代价）",
+      "forbidden_drift": [
+        "禁冷艳御姐脸",
+        "禁丢缺角玉佩",
+        "禁开局全知全能",
+        "禁无师门羁绊孤傲"
+      ]
+    }
+  },
+  {
+    "characterKey": "LH",
+    "displayName": "陆衡",
+    "permanentIdentity": {
+      "role": "大师兄·听风峰",
+      "face_lock": "剑眉、右耳后风纹小痣",
+      "costume_default": "深青听风袍、软剑听潮",
+      "voice_lock": "稳、低、少废话",
+      "forbidden_drift": [
+        "禁油腻霸总",
+        "禁耳后痣消失",
+        "禁一见面失智告白"
+      ]
+    }
+  },
+  {
+    "characterKey": "SC",
+    "displayName": "沈澈",
+    "permanentIdentity": {
+      "role": "二师兄·墨符峰",
+      "face_lock": "薄唇、眼尾狭长、指尖淡墨",
+      "costume_default": "墨灰符袍、空白符纸、朱砂小瓶"
+    }
+  },
+  {
+    "characterKey": "HY",
+    "displayName": "寒砚",
+    "permanentIdentity": {
+      "role": "霜栖峰老祖",
+      "face_lock": "银白长发、高冷、目光霜雾感",
+      "note": "高冷护短反差"
+    }
+  },
+  {
+    "characterKey": "ZLC",
+    "displayName": "赵临川",
+    "permanentIdentity": {
+      "role": "对立外门弟子",
+      "face_lock": "左眉烫疤",
+      "costume_default": "朱红镶边袍+火纹护腕"
+    }
+  },
+  {
+    "characterKey": "XW",
+    "displayName": "小雾",
+    "permanentIdentity": {
+      "role": "灵宠",
+      "look": "脖系浅蓝布条，常藏袖中"
+    }
+  }
+]

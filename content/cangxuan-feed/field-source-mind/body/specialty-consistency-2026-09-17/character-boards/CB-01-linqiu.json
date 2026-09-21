@@ -1,0 +1,33 @@
+{
+  "id": "CB-01-linqiu",
+  "role_name": "林秋",
+  "identity": {
+    "age_band": "20s",
+    "occupation": "社区图书馆夜间值班",
+    "core_wound": "怕承诺落空，更怕自己也变成空口说好话的人",
+    "want": "把说出口的事做完",
+    "need": "允许自己慢，但不要假"
+  },
+  "visual_anchors": [
+    "旧军绿帆布包",
+    "左手腕细红绳",
+    "说话时先看地面再抬头"
+  ],
+  "voice": {
+    "register": "短句",
+    "forbid": [
+      "鸡汤口号",
+      "突然全知旁白"
+    ]
+  },
+  "relations": {
+    "CB-02-zhouchen": "青梅，信任但警惕被安慰套路"
+  },
+  "consistency_rules": [
+    "跨场不得无故丢掉红绳或帆布包，除非场记写明丢失",
+    "对陌生人不会一上来倾诉核心伤口",
+    "拒绝表演式关心：口头关怀必须配可验证行动"
+  ],
+  "provenance": "specialty-gold synthetic for DKN character-consistency exam; not from public.sasi_*",
+  "tongshi_bridge": "B5-genuine-heart: 真诚发出才算数，表演会被识破"
+}

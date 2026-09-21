@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Bi from "@/components/Bi";
+import TextWorkbench from "./TextWorkbench";
 import type { ToolMeta } from "@/lib/tools/types";
 import type { ToolRunResult } from "@/lib/tools/types";
 import { targetBytesForSlug } from "@/lib/tools/registry";
@@ -27,6 +28,7 @@ export default function ToolWorkbench({ tool }: Props) {
   }
 
   if (tool.slug === "json-formatter") return <JsonWorkbench />;
+  if (["text-counter", "remove-duplicate-lines", "remove-empty-lines", "url-encode-decode", "base64-encode-decode"].includes(tool.slug)) return <TextWorkbench slug={tool.slug} />;
   if (tool.slug === "timestamp-converter") return <TimestampWorkbench />;
   if (tool.slug === "qr-code-generator") return <QrWorkbench />;
 

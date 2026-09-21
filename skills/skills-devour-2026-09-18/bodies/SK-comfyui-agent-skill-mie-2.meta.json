@@ -1,0 +1,17 @@
+{
+  "id": "SK-comfyui-agent-skill-mie-2",
+  "title": "comfyui-agent-skill-mie",
+  "rel": "comfyui-agent-skill/SKILL.md",
+  "wave": "wave2-slim",
+  "chars": 12915,
+  "sha16": "1f0ae09ee761f295",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

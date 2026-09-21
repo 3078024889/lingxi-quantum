@@ -1,0 +1,9 @@
+{
+  "pack": "SASI自知与总补全",
+  "version": "V1",
+  "counts": {
+    "seedKnowledge": 18
+  },
+  "rightsScope": "opted_in_training",
+  "sourceType": "teacher_synthetic"
+}

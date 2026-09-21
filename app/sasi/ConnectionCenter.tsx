@@ -16,8 +16,8 @@ const PROVIDER_LOGOS:Record<string,string> = {
 };
 
 export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
-  const [tab, setTab] = useState<Tab>("models");
-  const [selected, setSelected] = useState<SasiIntegration>(SASI_INTEGRATIONS[0]);
+  const [tab, setTab] = useState<Tab>("media");
+  const [selected, setSelected] = useState<SasiIntegration>(SASI_INTEGRATIONS.find(item => item.id === "volcengine") ?? SASI_INTEGRATIONS[0]);
   const [apiKey, setApiKey] = useState("");
   const [connections, setConnections] = useState<Connection[]>([]);
   const [vaultState, setVaultState] = useState<"loading" | "ready" | "login" | "unavailable">("loading");
@@ -61,6 +61,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
 
   function selectProvider(item: SasiIntegration, targetTab?: "models" | "media") {
     setSelected(item);
+    setApiKey("");
     setMessage("");
     if (targetTab) setTab(targetTab);
   }

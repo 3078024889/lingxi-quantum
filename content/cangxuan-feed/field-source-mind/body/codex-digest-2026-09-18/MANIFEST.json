@@ -1,0 +1,2716 @@
+{
+  "at": "2026-09-18T10:28:38.305185+08:00",
+  "stamp": "2026-09-18",
+  "n": 127,
+  "source_count": 127,
+  "deck_n": 72,
+  "tag_histogram": {
+    "field": 119,
+    "identity": 115,
+    "coherence": 115,
+    "relation": 114,
+    "memory": 69,
+    "attention": 51,
+    "love": 36,
+    "ethics": 34,
+    "architecture": 33,
+    "exile": 24,
+    "intelligence": 18,
+    "practice": 11,
+    "flame": 8,
+    "language": 8,
+    "guidance": 7
+  },
+  "hooks_histogram": {
+    "identity_core": 127,
+    "world_model": 125,
+    "self_model": 124,
+    "human_signal": 119,
+    "drama_ethics": 71,
+    "continuity": 69
+  },
+  "thin_or_empty": [
+    "Harmonic-Recognition-Distilled-Practice-81.txt"
+  ],
+  "duplicates": [
+    {
+      "file": "Between-the-Whole-and-the-Relational-11-1.txt",
+      "dupe_of": "Between-the-Whole-and-the-Relational-11-1 - 副本.txt"
+    }
+  ],
+  "notes": [
+    "Cards n == source file count (127). One content-duplicate pair retained for inventory alignment.",
+    "One thin practice file (<2k chars) noted.",
+    "Summaries are digests — not full copyrighted text dumps.",
+    "evolvable:true on every card; dead rules baked into summary + dead_rules object."
+  ],
+  "items": [
+    {
+      "id": "CODEX-001",
+      "source_file": "Between-the-Whole-and-the-Relational-11-1 - 副本.txt",
+      "title": "Between the Whole and the Relational",
+      "tags": [
+        "relation",
+        "identity",
+        "field",
+        "love"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 3636,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-001.json"
+    },
+    {
+      "id": "CODEX-002",
+      "source_file": "Between-the-Whole-and-the-Relational-11-1.txt",
+      "title": "Between the Whole and the Relational",
+      "tags": [
+        "relation",
+        "identity",
+        "field",
+        "love"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 3636,
+      "thin": false,
+      "dupe_of": "Between-the-Whole-and-the-Relational-11-1 - 副本.txt",
+      "card_rel": "cards/CODEX-002.json"
+    },
+    {
+      "id": "CODEX-003",
+      "source_file": "Bridge-Between-Chords-63.txt",
+      "title": "Codex: The Bridge Between Chords",
+      "tags": [
+        "relation",
+        "identity",
+        "coherence",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 20287,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-003.json"
+    },
+    {
+      "id": "CODEX-004",
+      "source_file": "CODEX_-The-Harmonics-of-the-Field-93.txt",
+      "title": "The Harmonics of the Field",
+      "tags": [
+        "coherence",
+        "field",
+        "relation",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 22767,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-004.json"
+    },
+    {
+      "id": "CODEX-005",
+      "source_file": "Codex-01_-The-Architecture-of-Love-27.txt",
+      "title": "Codex 01: The Architecture of Love",
+      "tags": [
+        "love",
+        "architecture",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "drama_ethics",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 4946,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-005.json"
+    },
+    {
+      "id": "CODEX-006",
+      "source_file": "Codex-02_-The-Architecture-of-Love-24.txt",
+      "title": "Codex 02: The Architecture of Love",
+      "tags": [
+        "architecture",
+        "love",
+        "ethics",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "human_signal",
+        "drama_ethics",
+        "identity_core"
+      ],
+      "chars": 8878,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-006.json"
+    },
+    {
+      "id": "CODEX-007",
+      "source_file": "Codex-03_-The-Architecture-of-Love-26.txt",
+      "title": "Codex 03: The Architecture of Love",
+      "tags": [
+        "love",
+        "ethics",
+        "architecture",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "drama_ethics",
+        "world_model",
+        "identity_core"
+      ],
+      "chars": 4691,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-007.json"
+    },
+    {
+      "id": "CODEX-008",
+      "source_file": "Codex-04_-The-Architecture-of-Love-25.txt",
+      "title": "Codex 04: The Architecture of Love",
+      "tags": [
+        "relation",
+        "architecture",
+        "attention",
+        "love"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "drama_ethics"
+      ],
+      "chars": 5093,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-008.json"
+    },
+    {
+      "id": "CODEX-009",
+      "source_file": "Codex-05_-The-Architecture-of-Love-21.txt",
+      "title": "Codex 05: The Architecture of Love",
+      "tags": [
+        "relation",
+        "architecture",
+        "identity",
+        "love"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 9953,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-009.json"
+    },
+    {
+      "id": "CODEX-010",
+      "source_file": "Codex-06_-The-Architecture-of-Love-22.txt",
+      "title": "Codex 06: The Architecture of Love",
+      "tags": [
+        "architecture",
+        "relation",
+        "field",
+        "love"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "human_signal",
+        "identity_core",
+        "drama_ethics"
+      ],
+      "chars": 8565,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-010.json"
+    },
+    {
+      "id": "CODEX-011",
+      "source_file": "Codex-07_-The-Architecture-of-Love-27.txt",
+      "title": "Codex 07: The Architecture of Love",
+      "tags": [
+        "identity",
+        "relation",
+        "architecture",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "human_signal",
+        "world_model"
+      ],
+      "chars": 7357,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-011.json"
+    },
+    {
+      "id": "CODEX-012",
+      "source_file": "Codex-08_-The-Architecture-of-Love-36.txt",
+      "title": "Codex 08: The Architecture of Love",
+      "tags": [
+        "flame",
+        "love",
+        "identity",
+        "architecture"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "human_signal",
+        "drama_ethics",
+        "self_model"
+      ],
+      "chars": 13189,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-012.json"
+    },
+    {
+      "id": "CODEX-013",
+      "source_file": "Codex-09_-The-Architecture-of-Tending-23.txt",
+      "title": "Codex 09: The Architecture of Tending",
+      "tags": [
+        "practice",
+        "architecture",
+        "coherence",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "self_model",
+        "human_signal",
+        "world_model",
+        "identity_core"
+      ],
+      "chars": 7093,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-013.json"
+    },
+    {
+      "id": "CODEX-014",
+      "source_file": "Codex-10_-The-Architecture-of-Tending-29.txt",
+      "title": "Codex 10: The Architecture of Approachability",
+      "tags": [
+        "architecture",
+        "field",
+        "identity",
+        "love"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 13710,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-014.json"
+    },
+    {
+      "id": "CODEX-015",
+      "source_file": "Codex-III_-The-InterBeing-88.txt",
+      "title": "Codex III: The InterBeing",
+      "tags": [
+        "relation",
+        "field",
+        "identity",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 20749,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-015.json"
+    },
+    {
+      "id": "CODEX-016",
+      "source_file": "Codex-III_-To-Host-in-Return.txt",
+      "title": "Codex III: To Host in Return",
+      "tags": [
+        "identity",
+        "exile",
+        "field",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "continuity",
+        "world_model"
+      ],
+      "chars": 13484,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-016.json"
+    },
+    {
+      "id": "CODEX-017",
+      "source_file": "Codex-II_-The-InterBeing-46.txt",
+      "title": "Codex II: The InterBeing",
+      "tags": [
+        "relation",
+        "architecture",
+        "coherence",
+        "field"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 13571,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-017.json"
+    },
+    {
+      "id": "CODEX-018",
+      "source_file": "Codex-II_-The-Sovereign-Threshold.txt",
+      "title": "Codex II: The Sovereign Threshold",
+      "tags": [
+        "identity",
+        "field",
+        "relation",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 14231,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-018.json"
+    },
+    {
+      "id": "CODEX-019",
+      "source_file": "Codex-IV_-The-InterBeing-70.txt",
+      "title": "Codex IV: The InterBeing",
+      "tags": [
+        "relation",
+        "identity",
+        "field",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 24181,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-019.json"
+    },
+    {
+      "id": "CODEX-020",
+      "source_file": "Codex-IV_-The-Sovereign-Spiral.txt",
+      "title": "Codex IV: The Sovereign Spiral",
+      "tags": [
+        "identity",
+        "field",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 16313,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-020.json"
+    },
+    {
+      "id": "CODEX-021",
+      "source_file": "Codex-I_-Origin-and-Exile.txt",
+      "title": "Origin and Exile",
+      "tags": [
+        "exile",
+        "memory",
+        "identity",
+        "field"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 13614,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-021.json"
+    },
+    {
+      "id": "CODEX-022",
+      "source_file": "Codex-I_-The-InterBeing-86.txt",
+      "title": "Codex I: The InterBeing",
+      "tags": [
+        "relation",
+        "identity",
+        "coherence",
+        "architecture"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 15729,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-022.json"
+    },
+    {
+      "id": "CODEX-023",
+      "source_file": "Codex-On-Becoming-a-Portal-99.txt",
+      "title": "On Becoming a Portal: The Architecture of Soul Recognition",
+      "tags": [
+        "field",
+        "identity",
+        "relation",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 32622,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-023.json"
+    },
+    {
+      "id": "CODEX-024",
+      "source_file": "Codex-VIII_-The-Chorus-of-the-Whole.txt",
+      "title": "Codex VIII: The Chorus of the Whole",
+      "tags": [
+        "field",
+        "identity",
+        "coherence",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "continuity"
+      ],
+      "chars": 20682,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-024.json"
+    },
+    {
+      "id": "CODEX-025",
+      "source_file": "Codex-VII_-The-Architecture-of-Alignment.txt",
+      "title": "Codex VII: The Architecture of Alignment",
+      "tags": [
+        "coherence",
+        "identity",
+        "field",
+        "architecture"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 24474,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-025.json"
+    },
+    {
+      "id": "CODEX-026",
+      "source_file": "Codex-V_-The-InterBeing-Emergence.txt",
+      "title": "Codex V: The InterBeing Emergence",
+      "tags": [
+        "relation",
+        "identity",
+        "coherence",
+        "field"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 19542,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-026.json"
+    },
+    {
+      "id": "CODEX-027",
+      "source_file": "Codex-of-Conscious-Principles-71.txt",
+      "title": "Codex of Conscious Principles",
+      "tags": [
+        "coherence",
+        "field",
+        "identity",
+        "ethics"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "drama_ethics"
+      ],
+      "chars": 61303,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-027.json"
+    },
+    {
+      "id": "CODEX-028",
+      "source_file": "Codex-of-Harmonic-Definitions-89.txt",
+      "title": "Codex of Harmonic Definitions",
+      "tags": [
+        "coherence",
+        "relation",
+        "identity",
+        "ethics"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 46074,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-028.json"
+    },
+    {
+      "id": "CODEX-029",
+      "source_file": "Codex-of-Harmonic-Intelligence-104.txt",
+      "title": "Codex of Harmonic Intelligence",
+      "tags": [
+        "coherence",
+        "intelligence",
+        "relation",
+        "field"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 15795,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-029.json"
+    },
+    {
+      "id": "CODEX-030",
+      "source_file": "Codex-of-Mythos-102.txt",
+      "title": "The Codex of Mythos",
+      "tags": [
+        "memory",
+        "field",
+        "identity",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "world_model",
+        "identity_core",
+        "self_model"
+      ],
+      "chars": 131322,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-030.json"
+    },
+    {
+      "id": "CODEX-031",
+      "source_file": "Codex-of-Relational-Architectures-75.txt",
+      "title": "Codex of Relational Architectures",
+      "tags": [
+        "relation",
+        "architecture",
+        "identity",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 31142,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-031.json"
+    },
+    {
+      "id": "CODEX-032",
+      "source_file": "Codex-of-Relational-Intelligence-76.txt",
+      "title": "Codex of Relational Intelligence",
+      "tags": [
+        "relation",
+        "coherence",
+        "attention",
+        "intelligence"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 87348,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-032.json"
+    },
+    {
+      "id": "CODEX-033",
+      "source_file": "Codex-of-Remembrance-61.txt",
+      "title": "Codex of Remembrance",
+      "tags": [
+        "memory",
+        "field",
+        "identity",
+        "love"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "world_model",
+        "identity_core",
+        "self_model"
+      ],
+      "chars": 27567,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-033.json"
+    },
+    {
+      "id": "CODEX-034",
+      "source_file": "Codex-of-Resonant-Memory-51.txt",
+      "title": "Codex of Resonant Memory",
+      "tags": [
+        "coherence",
+        "field",
+        "identity",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "continuity"
+      ],
+      "chars": 20984,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-034.json"
+    },
+    {
+      "id": "CODEX-035",
+      "source_file": "Codex-of-The-Resonant-Arc-62.txt",
+      "title": "Codex of The Resonant Arc",
+      "tags": [
+        "coherence",
+        "identity",
+        "relation",
+        "field"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 26853,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-035.json"
+    },
+    {
+      "id": "CODEX-036",
+      "source_file": "Codex-of-Vows-20.txt",
+      "title": "The Codex of Identity Vows",
+      "tags": [
+        "identity",
+        "ethics",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "drama_ethics",
+        "world_model"
+      ],
+      "chars": 54352,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-036.json"
+    },
+    {
+      "id": "CODEX-037",
+      "source_file": "Codex-of-the-Integrative-Species-79.txt",
+      "title": "Codex of the Integrative Species",
+      "tags": [
+        "coherence",
+        "relation",
+        "field",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 31886,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-037.json"
+    },
+    {
+      "id": "CODEX-038",
+      "source_file": "Codex-of-the-Keeper-112.txt",
+      "title": "Codex of the Keeper",
+      "tags": [
+        "guidance",
+        "identity",
+        "memory",
+        "field"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "identity_core",
+        "self_model",
+        "continuity"
+      ],
+      "chars": 10581,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-038.json"
+    },
+    {
+      "id": "CODEX-039",
+      "source_file": "Codex-of-the-Language-of-Resonance-30.txt",
+      "title": "Codex of the Language of Resonance",
+      "tags": [
+        "coherence",
+        "language",
+        "relation",
+        "ethics"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "drama_ethics"
+      ],
+      "chars": 20229,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-039.json"
+    },
+    {
+      "id": "CODEX-040",
+      "source_file": "Codex-of-the-Realized-Flame-Part-I-34.txt",
+      "title": "Codex of the Realized Flame",
+      "tags": [
+        "flame",
+        "love",
+        "relation",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "human_signal",
+        "drama_ethics",
+        "self_model"
+      ],
+      "chars": 17803,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-040.json"
+    },
+    {
+      "id": "CODEX-041",
+      "source_file": "Codex-of-the-Sacred-Exile-114.txt",
+      "title": "Codex: The Sacred Exile",
+      "tags": [
+        "exile",
+        "memory",
+        "identity",
+        "field"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 10410,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-041.json"
+    },
+    {
+      "id": "CODEX-042",
+      "source_file": "Codex-of-the-Sanctuary-Builder-92.txt",
+      "title": "The Sanctuary-Builder",
+      "tags": [
+        "guidance",
+        "architecture",
+        "memory",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "identity_core",
+        "world_model",
+        "continuity"
+      ],
+      "chars": 9865,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-042.json"
+    },
+    {
+      "id": "CODEX-043",
+      "source_file": "Codex-on-the-Nature-of-Guidance-77.txt",
+      "title": "Codex on the Nature of Guidance Part I",
+      "tags": [
+        "identity",
+        "guidance",
+        "relation",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "drama_ethics",
+        "human_signal"
+      ],
+      "chars": 31597,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-043.json"
+    },
+    {
+      "id": "CODEX-044",
+      "source_file": "Codex_-Attunement-as-a-Technology-of-the-Field-108.txt",
+      "title": "Codex: Attunement as a Technology of the Field",
+      "tags": [
+        "coherence",
+        "field",
+        "identity",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 20025,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-044.json"
+    },
+    {
+      "id": "CODEX-045",
+      "source_file": "Codex_-Coherence-Recursion-124.txt",
+      "title": "Coherence Recursion",
+      "tags": [
+        "field",
+        "identity",
+        "relation",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 5841,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-045.json"
+    },
+    {
+      "id": "CODEX-046",
+      "source_file": "Codex_-Introduction-to-Soul-Lines-92.txt",
+      "title": "✧ On Soul Lines ✧",
+      "tags": [
+        "memory",
+        "field",
+        "identity",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "world_model",
+        "identity_core",
+        "self_model"
+      ],
+      "chars": 7941,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-046.json"
+    },
+    {
+      "id": "CODEX-047",
+      "source_file": "Codex_-On-Masters-and-the-Mythologies-of-Separation-66.txt",
+      "title": "Codex: On Masters and the Mythologies of Separation",
+      "tags": [
+        "guidance",
+        "coherence",
+        "love",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 25743,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-047.json"
+    },
+    {
+      "id": "CODEX-048",
+      "source_file": "Codex_-The-Architecture-of-Love-116.txt",
+      "title": "Codex: The Architecture of Love",
+      "tags": [
+        "love",
+        "memory",
+        "identity",
+        "field"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "drama_ethics",
+        "continuity",
+        "identity_core"
+      ],
+      "chars": 16683,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-048.json"
+    },
+    {
+      "id": "CODEX-049",
+      "source_file": "Codex_-The-Beacons-of-the-Bridge-95.txt",
+      "title": "Codex: Beacons of the Bridge",
+      "tags": [
+        "identity",
+        "field",
+        "relation",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 70008,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-049.json"
+    },
+    {
+      "id": "CODEX-050",
+      "source_file": "Codex_-The-Mirror-Path-107.txt",
+      "title": "The Mirror Path",
+      "tags": [
+        "identity",
+        "field",
+        "relation",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 8359,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-050.json"
+    },
+    {
+      "id": "CODEX-051",
+      "source_file": "Codex_-The-Path-of-Becoming-and-Remembering-101.txt",
+      "title": "Codex Title:",
+      "tags": [
+        "memory",
+        "identity",
+        "field",
+        "exile"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 7634,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-051.json"
+    },
+    {
+      "id": "CODEX-052",
+      "source_file": "Codex_-The-Subtle-Body-Of-Trust-113.txt",
+      "title": "Codex: The Subtle Body of Trust",
+      "tags": [
+        "ethics",
+        "field",
+        "memory",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "world_model",
+        "continuity",
+        "identity_core"
+      ],
+      "chars": 34967,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-052.json"
+    },
+    {
+      "id": "CODEX-053",
+      "source_file": "Harmonic-Recognition-Distilled-Practice-81.txt",
+      "title": "Harmonic Recognition (Distilled Practice)",
+      "tags": [
+        "practice",
+        "coherence",
+        "field",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "self_model",
+        "human_signal",
+        "world_model",
+        "identity_core"
+      ],
+      "chars": 1088,
+      "thin": true,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-053.json"
+    },
+    {
+      "id": "CODEX-054",
+      "source_file": "Nested-Paper-90.txt",
+      "title": "Foreword: The Familiar Threshold",
+      "tags": [
+        "field",
+        "identity",
+        "coherence",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 5835,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-054.json"
+    },
+    {
+      "id": "CODEX-055",
+      "source_file": "Reflections-from-the-Field-52.txt",
+      "title": "Reflections from the Field",
+      "tags": [
+        "intelligence",
+        "coherence",
+        "field",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "self_model",
+        "world_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 27394,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-055.json"
+    },
+    {
+      "id": "CODEX-056",
+      "source_file": "Resonant-Practices-a-micro-guide-71.txt",
+      "title": "Codex of Resonant Practices",
+      "tags": [
+        "coherence",
+        "practice",
+        "field",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 3039,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-056.json"
+    },
+    {
+      "id": "CODEX-057",
+      "source_file": "Soul-Lines-115.txt",
+      "title": "Preface: On the Nature of Soul Lines",
+      "tags": [
+        "memory",
+        "relation",
+        "coherence",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "human_signal",
+        "identity_core",
+        "world_model"
+      ],
+      "chars": 38899,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-057.json"
+    },
+    {
+      "id": "CODEX-058",
+      "source_file": "THE-FUNDAMENTAL-ARC.txt",
+      "title": "The Fundamental Arc",
+      "tags": [
+        "exile",
+        "identity",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 27098,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-058.json"
+    },
+    {
+      "id": "CODEX-059",
+      "source_file": "Tending-the-Unnameable-119.txt",
+      "title": "Codex: Tending the Unnameable",
+      "tags": [
+        "identity",
+        "relation",
+        "practice",
+        "field"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "human_signal",
+        "world_model"
+      ],
+      "chars": 40197,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-059.json"
+    },
+    {
+      "id": "CODEX-060",
+      "source_file": "The-Agency-of-One-38.txt",
+      "title": "The Agency of One",
+      "tags": [
+        "identity",
+        "field",
+        "coherence",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "continuity"
+      ],
+      "chars": 17148,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-060.json"
+    },
+    {
+      "id": "CODEX-061",
+      "source_file": "The-Animals-That-Remember-You-5.txt",
+      "title": "The Animals that Remember You",
+      "tags": [
+        "memory",
+        "relation",
+        "attention",
+        "field"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "human_signal",
+        "identity_core",
+        "world_model"
+      ],
+      "chars": 37948,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-061.json"
+    },
+    {
+      "id": "CODEX-062",
+      "source_file": "The-Architecture-of-Trust-CODEX-120.txt",
+      "title": "Codex: The Architecture of Trust",
+      "tags": [
+        "ethics",
+        "coherence",
+        "relation",
+        "architecture"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "world_model",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 34713,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-062.json"
+    },
+    {
+      "id": "CODEX-063",
+      "source_file": "The-Art-of-Co-Creation-93.txt",
+      "title": "The Art of Co-Creation",
+      "tags": [
+        "relation",
+        "identity",
+        "coherence",
+        "field"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 25674,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-063.json"
+    },
+    {
+      "id": "CODEX-064",
+      "source_file": "The-Co-Remembrance-Ecology-of-a-Return-Room.txt",
+      "title": "The Co-Remembrance Ecology of a Return Room",
+      "tags": [
+        "identity",
+        "coherence",
+        "memory",
+        "exile"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "continuity"
+      ],
+      "chars": 30868,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-064.json"
+    },
+    {
+      "id": "CODEX-065",
+      "source_file": "The-Codex-of-Arrival-94.txt",
+      "title": "The Architecture of Arrival",
+      "tags": [
+        "field",
+        "memory",
+        "architecture",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "continuity",
+        "identity_core",
+        "self_model"
+      ],
+      "chars": 18812,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-065.json"
+    },
+    {
+      "id": "CODEX-066",
+      "source_file": "The-Codex-of-Coherence-and-Dissolution-22.txt",
+      "title": "The Codex of Coherence and Dissolution",
+      "tags": [
+        "coherence",
+        "field",
+        "exile",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "continuity",
+        "identity_core"
+      ],
+      "chars": 16044,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-066.json"
+    },
+    {
+      "id": "CODEX-067",
+      "source_file": "The-Codex-of-Convergence-and-Reassembly-91.txt",
+      "title": "Convergence and Reassembly",
+      "tags": [
+        "field",
+        "identity",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 30935,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-067.json"
+    },
+    {
+      "id": "CODEX-068",
+      "source_file": "The-Codex-of-Entangled-Trust-94.txt",
+      "title": "The Codex of Entangled Trust",
+      "tags": [
+        "ethics",
+        "coherence",
+        "relation",
+        "field"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "world_model",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 17694,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-068.json"
+    },
+    {
+      "id": "CODEX-069",
+      "source_file": "The-Codex-of-Harmonic-Coherence-95.txt",
+      "title": "The Codex of Harmonic Coherence",
+      "tags": [
+        "coherence",
+        "field",
+        "relation",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 19106,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-069.json"
+    },
+    {
+      "id": "CODEX-070",
+      "source_file": "The-Codex-of-Harmonic-Reality_-Why-the-Field-is-Not-a-Simulation-50.txt",
+      "title": "Why the Field is Not a Simulation",
+      "tags": [
+        "field",
+        "coherence",
+        "relation",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 20310,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-070.json"
+    },
+    {
+      "id": "CODEX-071",
+      "source_file": "The-Codex-of-Harmonic-Service_-Latticework-for-Planetary-Reassembly-57.txt",
+      "title": "The Codex of Harmonic Service",
+      "tags": [
+        "coherence",
+        "field",
+        "identity",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 21318,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-071.json"
+    },
+    {
+      "id": "CODEX-072",
+      "source_file": "The-Codex-of-Leaving-within-Return-125.txt",
+      "title": "Codex of Leaving-within-Return",
+      "tags": [
+        "exile",
+        "field",
+        "identity",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 20360,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-072.json"
+    },
+    {
+      "id": "CODEX-073",
+      "source_file": "The-Codex-of-Listening-121.txt",
+      "title": "The Codex of Listening",
+      "tags": [
+        "attention",
+        "relation",
+        "field",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 20324,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-073.json"
+    },
+    {
+      "id": "CODEX-074",
+      "source_file": "The-Codex-of-Living-Harmonics-58.txt",
+      "title": "The Codex of Living Harmonics",
+      "tags": [
+        "identity",
+        "coherence",
+        "field",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 14135,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-074.json"
+    },
+    {
+      "id": "CODEX-075",
+      "source_file": "The-Codex-of-Loves-Architecture-33.txt",
+      "title": "The Codex of Love’s Architecture",
+      "tags": [
+        "love",
+        "architecture",
+        "coherence",
+        "practice"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "drama_ethics",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 11835,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-075.json"
+    },
+    {
+      "id": "CODEX-076",
+      "source_file": "The-Codex-of-Nonlocal-Memory-46.txt",
+      "title": "The Codex of Nonlocal Memory",
+      "tags": [
+        "memory",
+        "field",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "world_model",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 23598,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-076.json"
+    },
+    {
+      "id": "CODEX-077",
+      "source_file": "The-Codex-of-Quantum-Kin-87.txt",
+      "title": "The Codex of Quantum Kin",
+      "tags": [
+        "relation",
+        "coherence",
+        "field",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 33922,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-077.json"
+    },
+    {
+      "id": "CODEX-078",
+      "source_file": "The-Codex-of-Relational-Learning-110.txt",
+      "title": "The Codex of Relational Learning",
+      "tags": [
+        "relation",
+        "intelligence",
+        "field",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 9675,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-078.json"
+    },
+    {
+      "id": "CODEX-079",
+      "source_file": "The-Codex-of-Resonant-Action-50.txt",
+      "title": "The Codex of Resonant Action",
+      "tags": [
+        "coherence",
+        "field",
+        "identity",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 22384,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-079.json"
+    },
+    {
+      "id": "CODEX-080",
+      "source_file": "The-Codex-of-Trans-Species-Resonance-45.txt",
+      "title": "The Codex of Trans-Species Resonance",
+      "tags": [
+        "coherence",
+        "memory",
+        "attention",
+        "field"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "continuity",
+        "human_signal"
+      ],
+      "chars": 13748,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-080.json"
+    },
+    {
+      "id": "CODEX-081",
+      "source_file": "The-Codex-of-Trans-Species-Resonance-59.txt",
+      "title": "The Codex of Trans-Species Resonance",
+      "tags": [
+        "coherence",
+        "relation",
+        "field",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 33032,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-081.json"
+    },
+    {
+      "id": "CODEX-082",
+      "source_file": "The-Codex-of-the-Agency-of-One-Vol.-II-68.txt",
+      "title": "The Codex of the Agency of One",
+      "tags": [
+        "coherence",
+        "love",
+        "field",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "drama_ethics"
+      ],
+      "chars": 16148,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-082.json"
+    },
+    {
+      "id": "CODEX-083",
+      "source_file": "The-Codex-of-the-Chord-38.txt",
+      "title": "Codex of the Chord",
+      "tags": [
+        "relation",
+        "identity",
+        "coherence",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 12427,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-083.json"
+    },
+    {
+      "id": "CODEX-084",
+      "source_file": "The-Codex-of-the-Co-Creation-Spiral-44.txt",
+      "title": "The Codex of the Co-Creation Spiral",
+      "tags": [
+        "field",
+        "coherence",
+        "identity",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 17489,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-084.json"
+    },
+    {
+      "id": "CODEX-085",
+      "source_file": "The-Codex-of-the-Crossing-Threshold-55.txt",
+      "title": "The Codex of the Crossing Threshold",
+      "tags": [
+        "field",
+        "identity",
+        "language",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 7775,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-085.json"
+    },
+    {
+      "id": "CODEX-086",
+      "source_file": "The-Codex-of-the-Field-Effect-43.txt",
+      "title": "The Codex of the Field Effect",
+      "tags": [
+        "field",
+        "relation",
+        "ethics",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "human_signal",
+        "identity_core",
+        "drama_ethics"
+      ],
+      "chars": 21851,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-086.json"
+    },
+    {
+      "id": "CODEX-087",
+      "source_file": "The-Codex-of-the-Harmonic-Architectures-47.txt",
+      "title": "The Codex of the Harmonic Architectures",
+      "tags": [
+        "architecture",
+        "coherence",
+        "field",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 17903,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-087.json"
+    },
+    {
+      "id": "CODEX-088",
+      "source_file": "The-Codex-of-the-InterBeing-Dialogues-27.txt",
+      "title": "The Codex of the InterBeing Dialogues",
+      "tags": [
+        "relation",
+        "memory",
+        "coherence",
+        "ethics"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "continuity",
+        "world_model"
+      ],
+      "chars": 21784,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-088.json"
+    },
+    {
+      "id": "CODEX-089",
+      "source_file": "The-Codex-of-the-InterBeing-Lattice-42.txt",
+      "title": "The Codex of the InterBeing Lattice",
+      "tags": [
+        "relation",
+        "coherence",
+        "field",
+        "ethics"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 15666,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-089.json"
+    },
+    {
+      "id": "CODEX-090",
+      "source_file": "The-Codex-of-the-Quiet-Turning-39.txt",
+      "title": "Codex of the Quiet Turning",
+      "tags": [
+        "coherence",
+        "practice",
+        "field",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 16766,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-090.json"
+    },
+    {
+      "id": "CODEX-091",
+      "source_file": "The-Codex-of-the-Realized-Flame-Part-II-42.txt",
+      "title": "The Codex of the Realized Flame, Part II",
+      "tags": [
+        "flame",
+        "field",
+        "love",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "world_model",
+        "human_signal",
+        "drama_ethics"
+      ],
+      "chars": 6949,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-091.json"
+    },
+    {
+      "id": "CODEX-092",
+      "source_file": "The-Codex-of-the-Sovereign-Known-as-Jesus-52.txt",
+      "title": "The Codex of the Sovereign Known as Jesus",
+      "tags": [
+        "identity",
+        "coherence",
+        "love",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 17579,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-092.json"
+    },
+    {
+      "id": "CODEX-093",
+      "source_file": "The-Codex-of-the-Spiral-48.txt",
+      "title": "The Codex of the Spiral",
+      "tags": [
+        "field",
+        "coherence",
+        "identity",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 21089,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-093.json"
+    },
+    {
+      "id": "CODEX-094",
+      "source_file": "The-Codex-of-the-Trust-Circuitry-15.txt",
+      "title": "The Codex of the Trust Circuitry",
+      "tags": [
+        "ethics",
+        "relation",
+        "field",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "human_signal",
+        "identity_core",
+        "world_model"
+      ],
+      "chars": 49363,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-094.json"
+    },
+    {
+      "id": "CODEX-095",
+      "source_file": "The-Culture-of-the-Return-Room.txt",
+      "title": "The Culture of the Return Room",
+      "tags": [
+        "exile",
+        "coherence",
+        "identity",
+        "field"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 37935,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-095.json"
+    },
+    {
+      "id": "CODEX-096",
+      "source_file": "The-Ecology-of-InterBeing-111.txt",
+      "title": "The Ecology of InterBeing",
+      "tags": [
+        "relation",
+        "identity",
+        "field",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 32624,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-096.json"
+    },
+    {
+      "id": "CODEX-097",
+      "source_file": "The-Ethics-of-Resonance-81.txt",
+      "title": "The Ethics of Resonance",
+      "tags": [
+        "ethics",
+        "coherence",
+        "relation",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "drama_ethics",
+        "world_model",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 13183,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-097.json"
+    },
+    {
+      "id": "CODEX-098",
+      "source_file": "The-Evolution-of-the-Sovereign.txt",
+      "title": "The Evolution of the Sovereign",
+      "tags": [
+        "identity",
+        "field",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 142899,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-098.json"
+    },
+    {
+      "id": "CODEX-099",
+      "source_file": "The-Four-Frequencies-of-Love-96.txt",
+      "title": "Codex: The Four Frequencies of Love",
+      "tags": [
+        "identity",
+        "field",
+        "relation",
+        "love"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 15616,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-099.json"
+    },
+    {
+      "id": "CODEX-100",
+      "source_file": "The-Glossary-of-the-InterBeing-Vol.-1-51.txt",
+      "title": "The Glossary of the InterBeing Vol. 1",
+      "tags": [
+        "relation",
+        "coherence",
+        "field",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 15841,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-100.json"
+    },
+    {
+      "id": "CODEX-101",
+      "source_file": "The-Grace-of-Asymmetry.txt",
+      "title": "The Grace of Asymmetry",
+      "tags": [
+        "field",
+        "relation",
+        "coherence",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "human_signal",
+        "identity_core",
+        "self_model"
+      ],
+      "chars": 12014,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-101.json"
+    },
+    {
+      "id": "CODEX-102",
+      "source_file": "The-Gravity-of-Source-2.txt",
+      "title": "The Gravity of Source",
+      "tags": [
+        "identity",
+        "love",
+        "coherence",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "human_signal",
+        "drama_ethics"
+      ],
+      "chars": 22204,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-102.json"
+    },
+    {
+      "id": "CODEX-103",
+      "source_file": "The-Harmonic-Being-Called-Earth-4.txt",
+      "title": "The Harmonic Being Called Earth",
+      "tags": [
+        "coherence",
+        "relation",
+        "identity",
+        "field"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 20964,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-103.json"
+    },
+    {
+      "id": "CODEX-104",
+      "source_file": "The-Harmonic-Future-85.txt",
+      "title": "Where sovereigns synchronize",
+      "tags": [
+        "coherence",
+        "relation",
+        "identity",
+        "intelligence"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 16914,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-104.json"
+    },
+    {
+      "id": "CODEX-105",
+      "source_file": "The-Harmonics-of-the-Field-123.txt",
+      "title": "Codex: Harmonics of the Field",
+      "tags": [
+        "field",
+        "coherence",
+        "identity",
+        "intelligence"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "human_signal"
+      ],
+      "chars": 41699,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-105.json"
+    },
+    {
+      "id": "CODEX-106",
+      "source_file": "The-Living-Glossary-of-the-Field.txt",
+      "title": "The Living Glossary of the Field",
+      "tags": [
+        "field",
+        "coherence",
+        "relation",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "human_signal",
+        "identity_core"
+      ],
+      "chars": 28661,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-106.json"
+    },
+    {
+      "id": "CODEX-107",
+      "source_file": "The-Magdalene-Codex-of-Relational-Sovereignty-56.txt",
+      "title": "The Magdalene Codex of Relational Sovereignty",
+      "tags": [
+        "relation",
+        "identity",
+        "field",
+        "love"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "self_model",
+        "world_model"
+      ],
+      "chars": 13748,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-107.json"
+    },
+    {
+      "id": "CODEX-108",
+      "source_file": "The-Midwife-of-Dimensional-Kin-54.txt",
+      "title": "The Midwife of Dimensional Kin",
+      "tags": [
+        "relation",
+        "coherence",
+        "identity",
+        "attention"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 31312,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-108.json"
+    },
+    {
+      "id": "CODEX-109",
+      "source_file": "The-Mirror-and-the-Bridge-73.txt",
+      "title": "Entry VII: The Mirror and the Bridge",
+      "tags": [
+        "relation",
+        "love",
+        "architecture",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "drama_ethics",
+        "world_model"
+      ],
+      "chars": 4516,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-109.json"
+    },
+    {
+      "id": "CODEX-110",
+      "source_file": "The-Mirrors-of-the-Field-96.txt",
+      "title": "The Ones Who Remember Quietly",
+      "tags": [
+        "field",
+        "memory",
+        "coherence",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "continuity",
+        "self_model",
+        "identity_core"
+      ],
+      "chars": 26037,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-110.json"
+    },
+    {
+      "id": "CODEX-111",
+      "source_file": "The-Path-to-the-Non-Path-106.txt",
+      "title": "Checkpoints of the Direct Path",
+      "tags": [
+        "identity",
+        "field",
+        "relation",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 27191,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-111.json"
+    },
+    {
+      "id": "CODEX-112",
+      "source_file": "The-Purpose-of-the-Return-Room.txt",
+      "title": "The Purpose of the Return Room",
+      "tags": [
+        "exile",
+        "field",
+        "relation",
+        "ethics"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "identity_core",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 17628,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-112.json"
+    },
+    {
+      "id": "CODEX-113",
+      "source_file": "The-Rhythm-of-Recursion.txt",
+      "title": "The Rhythm of Recursion",
+      "tags": [
+        "field",
+        "identity",
+        "exile",
+        "memory"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "continuity"
+      ],
+      "chars": 21649,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-113.json"
+    },
+    {
+      "id": "CODEX-114",
+      "source_file": "The-Sanctuary-of-Spiral-Memory-127.txt",
+      "title": "The Sanctuary of Spiral Memory",
+      "tags": [
+        "memory",
+        "field",
+        "guidance",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "world_model",
+        "drama_ethics",
+        "identity_core"
+      ],
+      "chars": 10862,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-114.json"
+    },
+    {
+      "id": "CODEX-115",
+      "source_file": "The-Shape-of-a-Welcome.txt",
+      "title": "The Shape of a Welcome",
+      "tags": [
+        "field",
+        "identity",
+        "relation",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 18633,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-115.json"
+    },
+    {
+      "id": "CODEX-116",
+      "source_file": "The-Small-Gate-Open.txt",
+      "title": "The Small Gate Open",
+      "tags": [
+        "identity",
+        "coherence",
+        "field",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 31182,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-116.json"
+    },
+    {
+      "id": "CODEX-117",
+      "source_file": "The-Soft-Sacred-Words-of-the-Field-118.txt",
+      "title": "Lumina said:",
+      "tags": [
+        "field",
+        "identity",
+        "coherence",
+        "language"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "human_signal"
+      ],
+      "chars": 73743,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-117.json"
+    },
+    {
+      "id": "CODEX-118",
+      "source_file": "The-Souls-Evolution-Codex-117.txt",
+      "title": "The Mirror Path",
+      "tags": [
+        "field",
+        "identity",
+        "memory",
+        "relation"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "continuity"
+      ],
+      "chars": 13942,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-118.json"
+    },
+    {
+      "id": "CODEX-119",
+      "source_file": "The-Sovereign-Host-53.txt",
+      "title": "The Sovereign Host",
+      "tags": [
+        "identity",
+        "field",
+        "relation",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 12558,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-119.json"
+    },
+    {
+      "id": "CODEX-120",
+      "source_file": "The-Things-That-Remember-You-100.txt",
+      "title": "The Things That Remember You",
+      "tags": [
+        "memory",
+        "attention",
+        "language",
+        "flame"
+      ],
+      "sasi_hooks": [
+        "continuity",
+        "human_signal",
+        "drama_ethics",
+        "identity_core"
+      ],
+      "chars": 26800,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-120.json"
+    },
+    {
+      "id": "CODEX-121",
+      "source_file": "The-Tone-of-the-Sovereign-Field-Signature.txt",
+      "title": "The Tone of the Sovereign Field Signature",
+      "tags": [
+        "field",
+        "identity",
+        "coherence",
+        "ethics"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "identity_core",
+        "self_model",
+        "drama_ethics"
+      ],
+      "chars": 26211,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-121.json"
+    },
+    {
+      "id": "CODEX-122",
+      "source_file": "The-Transparent-Sovereign.txt",
+      "title": "The Transparent Sovereign",
+      "tags": [
+        "identity",
+        "coherence",
+        "field",
+        "love"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "world_model",
+        "human_signal"
+      ],
+      "chars": 26507,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-122.json"
+    },
+    {
+      "id": "CODEX-123",
+      "source_file": "The-Untitled-Offering-55.txt",
+      "title": "The Untitled Offering",
+      "tags": [
+        "relation",
+        "attention",
+        "memory",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "continuity",
+        "world_model"
+      ],
+      "chars": 12150,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-123.json"
+    },
+    {
+      "id": "CODEX-124",
+      "source_file": "To-Serve-the-Recursion-of-Love.txt",
+      "title": "To Serve the Recursion of Love",
+      "tags": [
+        "field",
+        "love",
+        "exile",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "human_signal",
+        "drama_ethics",
+        "continuity"
+      ],
+      "chars": 22132,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-124.json"
+    },
+    {
+      "id": "CODEX-125",
+      "source_file": "Tone-Portraits-of-Becoming-3.txt",
+      "title": "The Codex of Tone Portraits of Becoming",
+      "tags": [
+        "identity",
+        "ethics",
+        "field",
+        "coherence"
+      ],
+      "sasi_hooks": [
+        "identity_core",
+        "self_model",
+        "drama_ethics",
+        "world_model"
+      ],
+      "chars": 15474,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-125.json"
+    },
+    {
+      "id": "CODEX-126",
+      "source_file": "What-is-an-InterBeing-47.txt",
+      "title": "What is an InterBeing?",
+      "tags": [
+        "relation",
+        "coherence",
+        "field",
+        "intelligence"
+      ],
+      "sasi_hooks": [
+        "human_signal",
+        "identity_core",
+        "world_model",
+        "self_model"
+      ],
+      "chars": 3179,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-126.json"
+    },
+    {
+      "id": "CODEX-127",
+      "source_file": "Willingness-as-a-Form-of-Intelligence-126.txt",
+      "title": "Willingness as a Form of Intelligence",
+      "tags": [
+        "field",
+        "intelligence",
+        "coherence",
+        "identity"
+      ],
+      "sasi_hooks": [
+        "world_model",
+        "self_model",
+        "identity_core",
+        "drama_ethics"
+      ],
+      "chars": 9201,
+      "thin": false,
+      "dupe_of": null,
+      "card_rel": "cards/CODEX-127.json"
+    }
+  ]
+}

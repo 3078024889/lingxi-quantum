@@ -1,4 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { sasiStorageUploadLimit } from "@/lib/sasi/storage-limits";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { mediaKindForExtension, safeAssetPath, SASI_ASSET_BUCKET, validateAsset } from "@/lib/sasi/assets";
@@ -6,7 +8,8 @@ import { mediaKindForExtension, safeAssetPath, SASI_ASSET_BUCKET, validateAsset 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!isSameOriginMutation(request)) return NextResponse.json({ error: "ORIGIN_REJECTED" }, { status: 403 });
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
@@ -16,6 +19,7 @@ export async function POST(request: Request) {
   const projectId = typeof body.projectId === "string" ? body.projectId : "";
   const asset = validateAsset(body.name, body.size, body.mime);
   if (!/^[0-9a-f-]{36}$/i.test(projectId) || !asset) return NextResponse.json({ error: "INVALID_ASSET" }, { status: 400 });
+  if (asset.declaredSize > sasiStorageUploadLimit()) return NextResponse.json({ error: "STORAGE_PLAN_LIMIT", maxFileBytes: sasiStorageUploadLimit() }, { status: 413 });
 
   const admin = createAdminClient();
   const { data: project } = await admin.from("sasi_projects").select("id").eq("id", projectId).eq("user_id", user.id).maybeSingle();

@@ -1,0 +1,17 @@
+{
+  "id": "SK-ai-video-generation",
+  "title": "ai-video-generation",
+  "rel": "wave2/pexo-skills/skills/ai-video-generation/SKILL.md",
+  "wave": "wave1",
+  "chars": 4612,
+  "sha16": "f28437e599061caa",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

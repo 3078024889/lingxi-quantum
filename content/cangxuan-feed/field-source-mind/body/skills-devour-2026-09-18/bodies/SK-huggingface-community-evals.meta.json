@@ -1,0 +1,15 @@
+{
+  "id": "SK-huggingface-community-evals",
+  "title": "huggingface-community-evals",
+  "rel": "wave2/skills/skills/huggingface-community-evals/SKILL.md",
+  "wave": "wave1",
+  "chars": 6198,
+  "sha16": "0bcca13289268235",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

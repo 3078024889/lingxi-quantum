@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict'),ts=require('typescript');
 function load(file,stubs={}){const m={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports:m.exports,process:{env:{OPENAI_API_KEY:'test-key-never-used',XAI_API_KEY:'test-key-never-used'}},fetch(){throw Error('Unapproved external request')},require:n=>n==='server-only'?{}:stubs[n]||require(n)});return m.exports;}
-const catalog=load('lib/sasi/catalog.ts');const {createProjectProposal}=load('lib/sasi/project-proposal.ts',{'@/lib/sasi/catalog':catalog});
+const catalog=load('lib/sasi/catalog.ts');const {createProjectProposal}=load('lib/sasi/project-proposal.ts',{'@/lib/sasi/catalog':catalog,'@/lib/sasi/upload-policy':load('lib/sasi/upload-policy.ts')});
 const body={kind:'drama',brief:'这是一个关于失散姐妹重逢并一起创办公司的完整短剧故事',episodes:20,secondsPerEpisode:60,budgetFen:15000};
 const p=createProjectProposal(body);assert.equal(p.proposal.recommendation.totalSeconds,1200);assert.equal(p.proposal.recommendation.secondsPerEpisode,60);assert.equal(p.input.budgetFen,15000);assert.equal(p.proposal.quote.amountFen,null);assert.equal(p.proposal.quote.canConfirm,false);
 assert.equal(createProjectProposal({...body,episodes:201}).ok,false);assert.equal(createProjectProposal({...body,secondsPerEpisode:NaN}).ok,false);assert.equal(createProjectProposal({...body,budgetFen:1.1}).ok,false);

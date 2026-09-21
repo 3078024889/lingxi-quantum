@@ -1,0 +1,28 @@
+{
+  "at": "2026-09-19T02:56+00:00",
+  "n_cards": 1263,
+  "approx_a4_pages_text": 413.1,
+  "chars": 619644,
+  "domain_hits": {
+    "世界观/灵性": 596,
+    "技术/Agent": 391,
+    "商业/变现": 390,
+    "短剧/影像": 317,
+    "审美/叙事": 301,
+    "产品/组织": 294,
+    "人设/关系": 293,
+    "综合通识": 154,
+    "健康/生活": 112,
+    "失败/纠偏": 105,
+    "学习/方法": 90,
+    "tongshi": 24,
+    "wikipedia": 24,
+    "通识-地理": 19,
+    "通识-历史": 4,
+    "通识-科学": 1
+  },
+  "file": "/workspace/uploads/tongshi-pipeline/compressed/cards/tongshi-compress-2026-09-19.jsonl",
+  "note": "压自已有GPT导出原文+少量wiki；维基API限流中，外网万级改走本机00:05慢采",
+  "anti_theater": true,
+  "same_feed": true
+}

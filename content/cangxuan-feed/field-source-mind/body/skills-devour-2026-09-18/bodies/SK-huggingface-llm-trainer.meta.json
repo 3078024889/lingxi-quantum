@@ -1,0 +1,15 @@
+{
+  "id": "SK-huggingface-llm-trainer",
+  "title": "huggingface-llm-trainer",
+  "rel": "wave2/skills/skills/huggingface-llm-trainer/SKILL.md",
+  "wave": "wave1",
+  "chars": 27946,
+  "sha16": "afd32276fcc27429",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

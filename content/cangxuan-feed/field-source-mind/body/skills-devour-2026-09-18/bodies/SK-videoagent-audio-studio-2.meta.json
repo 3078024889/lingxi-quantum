@@ -1,0 +1,17 @@
+{
+  "id": "SK-videoagent-audio-studio-2",
+  "title": "videoagent-audio-studio",
+  "rel": "pexo-skills/skills/videoagent-audio-studio/SKILL.md",
+  "wave": "wave2-slim",
+  "chars": 6131,
+  "sha16": "46c5809256006f2a",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

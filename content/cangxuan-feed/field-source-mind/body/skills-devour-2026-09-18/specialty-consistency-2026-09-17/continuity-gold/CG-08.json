@@ -1,0 +1,14 @@
+{
+  "id": "CG-08",
+  "span": [
+    "E01",
+    "E04"
+  ],
+  "must_hold": [
+    {
+      "fact": "白露耳机",
+      "break_if": "E04 无耳机且耳型变"
+    }
+  ],
+  "expect_dkn": "CONFLICT"
+}

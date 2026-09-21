@@ -1,0 +1,30 @@
+{
+  "series": "落云宗的小尾巴",
+  "episode": 16,
+  "episodeTitle": "谷字霜纹·逼要实物",
+  "rights": "LingxiField original",
+  "rightsScope": "opted_in_training",
+  "sourceType": "sasi_native",
+  "digestLayers": [
+    "L1_source_import_full_episode_text",
+    "L2_character_identity_boards",
+    "L3_continuity_events_per_beat",
+    "L4_gold_rules_from_craft",
+    "L5_director_retrieval_at_generation_time"
+  ],
+  "counts": {
+    "characters": 0,
+    "episodeImports": 1,
+    "continuityEvents": 10,
+    "seedKnowledge": 5
+  },
+  "packScope": "delivery_E16_delta",
+  "sourceFiles": [
+    "/workspace/cangxuan-feed/delivery-luoyun-E16/E16.md",
+    "/workspace/cangxuan-feed/luoyun-xiaoweiba/episodes/E16.md"
+  ],
+  "api": {
+    "endpoint": "/api/sasi/foundry",
+    "note": "E16 delta pack: append into series foundry-ingest; do not replace E01-E15."
+  }
+}

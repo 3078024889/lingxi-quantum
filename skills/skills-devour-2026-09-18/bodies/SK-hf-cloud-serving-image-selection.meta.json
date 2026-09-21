@@ -1,0 +1,13 @@
+{
+  "id": "SK-hf-cloud-serving-image-selection",
+  "title": "hf-cloud-serving-image-selection",
+  "rel": "wave2/skills/skills/hf-cloud-serving-image-selection/SKILL.md",
+  "wave": "wave1",
+  "chars": 17393,
+  "sha16": "699efa49c4d99824",
+  "drama_steps": [
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

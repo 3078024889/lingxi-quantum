@@ -1,0 +1,13 @@
+{
+  "batch": "wiki-001",
+  "sources_enabled": 2,
+  "source_ids": [
+    "wikipedia-zh",
+    "wikipedia-en"
+  ],
+  "urls_connected": 16,
+  "items_ok": 16,
+  "items_fail": 9,
+  "requested": 25,
+  "note": "429 rate-limit on some titles; not 100亿 progress"
+}

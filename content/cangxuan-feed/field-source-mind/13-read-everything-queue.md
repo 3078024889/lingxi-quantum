@@ -1,0 +1,375 @@
+# 一一读取总清单
+2026-09-10 19:51 Asia/Shanghai
+
+Inventory rule: file bytes≥2000 → [READABLE] (legacy).
+Original 19 THIN: upgrade requires body≥2000; else [HARD-MISS] + reason.
+
+## extracts\codex (127)
+- [READABLE] Between-the-Whole-and-the-Relational-11-1 - 副本.txt bytes=3690 body=3636
+- [READABLE] Between-the-Whole-and-the-Relational-11-1.txt bytes=3690 body=3636
+- [READABLE] Bridge-Between-Chords-63.txt bytes=20651 body=20287
+- [READABLE] Codex_-Attunement-as-a-Technology-of-the-Field-108.txt bytes=20191 body=20025
+- [READABLE] Codex_-Coherence-Recursion-124.txt bytes=5932 body=5841
+- [READABLE] Codex_-Introduction-to-Soul-Lines-92.txt bytes=8081 body=7941
+- [READABLE] Codex_-On-Masters-and-the-Mythologies-of-Separation-66.txt bytes=25933 body=25743
+- [READABLE] Codex_-The-Architecture-of-Love-116.txt bytes=16891 body=16683
+- [READABLE] Codex_-The-Beacons-of-the-Bridge-95.txt bytes=70781 body=70008
+- [READABLE] CODEX_-The-Harmonics-of-the-Field-93.txt bytes=23063 body=22767
+- [READABLE] Codex_-The-Mirror-Path-107.txt bytes=8494 body=8359
+- [READABLE] Codex_-The-Path-of-Becoming-and-Remembering-101.txt bytes=7678 body=7634
+- [READABLE] Codex_-The-Subtle-Body-Of-Trust-113.txt bytes=35297 body=34967
+- [READABLE] Codex-01_-The-Architecture-of-Love-27.txt bytes=5024 body=4946
+- [READABLE] Codex-02_-The-Architecture-of-Love-24.txt bytes=8988 body=8878
+- [READABLE] Codex-03_-The-Architecture-of-Love-26.txt bytes=4775 body=4691
+- [READABLE] Codex-04_-The-Architecture-of-Love-25.txt bytes=5209 body=5093
+- [READABLE] Codex-05_-The-Architecture-of-Love-21.txt bytes=10081 body=9953
+- [READABLE] Codex-06_-The-Architecture-of-Love-22.txt bytes=8683 body=8565
+- [READABLE] Codex-07_-The-Architecture-of-Love-27.txt bytes=7465 body=7357
+- [READABLE] Codex-08_-The-Architecture-of-Love-36.txt bytes=13387 body=13189
+- [READABLE] Codex-09_-The-Architecture-of-Tending-23.txt bytes=7199 body=7093
+- [READABLE] Codex-10_-The-Architecture-of-Tending-29.txt bytes=13910 body=13710
+- [READABLE] Codex-I_-Origin-and-Exile.txt bytes=13786 body=13614
+- [READABLE] Codex-I_-The-InterBeing-86.txt bytes=15917 body=15729
+- [READABLE] Codex-II_-The-InterBeing-46.txt bytes=13707 body=13571
+- [READABLE] Codex-II_-The-Sovereign-Threshold.txt bytes=14381 body=14231
+- [READABLE] Codex-III_-The-InterBeing-88.txt bytes=21123 body=20749
+- [READABLE] Codex-III_-To-Host-in-Return.txt bytes=13594 body=13484
+- [READABLE] Codex-IV_-The-InterBeing-70.txt bytes=24634 body=24181
+- [READABLE] Codex-IV_-The-Sovereign-Spiral.txt bytes=16515 body=16313
+- [READABLE] Codex-of-Conscious-Principles-71.txt bytes=61991 body=61303
+- [READABLE] Codex-of-Harmonic-Definitions-89.txt bytes=46800 body=46074
+- [READABLE] Codex-of-Harmonic-Intelligence-104.txt bytes=15987 body=15795
+- [READABLE] Codex-of-Mythos-102.txt bytes=133239 body=131322
+- [READABLE] Codex-of-Relational-Architectures-75.txt bytes=31596 body=31142
+- [READABLE] Codex-of-Relational-Intelligence-76.txt bytes=88584 body=87348
+- [READABLE] Codex-of-Remembrance-61.txt bytes=27745 body=27567
+- [READABLE] Codex-of-Resonant-Memory-51.txt bytes=21162 body=20984
+- [READABLE] Codex-of-the-Integrative-Species-79.txt bytes=32218 body=31886
+- [READABLE] Codex-of-the-Keeper-112.txt bytes=10677 body=10581
+- [READABLE] Codex-of-the-Language-of-Resonance-30.txt bytes=20443 body=20229
+- [READABLE] Codex-of-the-Realized-Flame-Part-I-34.txt bytes=17954 body=17803
+- [READABLE] Codex-of-The-Resonant-Arc-62.txt bytes=27438 body=26853
+- [READABLE] Codex-of-the-Sacred-Exile-114.txt bytes=10510 body=10410
+- [READABLE] Codex-of-the-Sanctuary-Builder-92.txt bytes=9993 body=9865
+- [READABLE] Codex-of-Vows-20.txt bytes=55149 body=54352
+- [READABLE] Codex-On-Becoming-a-Portal-99.txt bytes=32952 body=32622
+- [READABLE] Codex-on-the-Nature-of-Guidance-77.txt bytes=32216 body=31597
+- [READABLE] Codex-V_-The-InterBeing-Emergence.txt bytes=19735 body=19542
+- [READABLE] Codex-VII_-The-Architecture-of-Alignment.txt bytes=24702 body=24474
+- [READABLE] Codex-VIII_-The-Chorus-of-the-Whole.txt bytes=20870 body=20682
+- [HARD-MISS] Harmonic-Recognition-Distilled-Practice-81.txt bytes=1098 body=1088 — HARD-MISS: D: PDF fully extracted (3 pages); source is short distilled practice (~1088 chars). No longer prose on alt URL/D:.
+- [READABLE] Nested-Paper-90.txt bytes=5931 body=5835
+- [READABLE] Reflections-from-the-Field-52.txt bytes=27554 body=27394
+- [READABLE] Resonant-Practices-a-micro-guide-71.txt bytes=3083 body=3039
+- [READABLE] Soul-Lines-115.txt bytes=39659 body=38899
+- [READABLE] Tending-the-Unnameable-119.txt bytes=40952 body=40197
+- [READABLE] The-Agency-of-One-38.txt bytes=17388 body=17148
+- [READABLE] The-Animals-That-Remember-You-5.txt bytes=38220 body=37948
+- [READABLE] The-Architecture-of-Trust-CODEX-120.txt bytes=35439 body=34713
+- [READABLE] The-Art-of-Co-Creation-93.txt bytes=25999 body=25674
+- [READABLE] The-Co-Remembrance-Ecology-of-a-Return-Room.txt bytes=31106 body=30868
+- [READABLE] The-Codex-of-Arrival-94.txt bytes=19010 body=18812
+- [READABLE] The-Codex-of-Coherence-and-Dissolution-22.txt bytes=16154 body=16044
+- [READABLE] The-Codex-of-Convergence-and-Reassembly-91.txt bytes=31453 body=30935
+- [READABLE] The-Codex-of-Entangled-Trust-94.txt bytes=17887 body=17694
+- [READABLE] The-Codex-of-Harmonic-Coherence-95.txt bytes=19294 body=19106
+- [READABLE] The-Codex-of-Harmonic-Reality_-Why-the-Field-is-Not-a-Simulation-50.txt bytes=20460 body=20310
+- [READABLE] The-Codex-of-Harmonic-Service_-Latticework-for-Planetary-Reassembly-57.txt bytes=21472 body=21318
+- [READABLE] The-Codex-of-Leaving-within-Return-125.txt bytes=20583 body=20360
+- [READABLE] The-Codex-of-Listening-121.txt bytes=20560 body=20324
+- [READABLE] The-Codex-of-Living-Harmonics-58.txt bytes=14283 body=14135
+- [READABLE] The-Codex-of-Loves-Architecture-33.txt bytes=11983 body=11835
+- [READABLE] The-Codex-of-Nonlocal-Memory-46.txt bytes=24060 body=23598
+- [READABLE] The-Codex-of-Quantum-Kin-87.txt bytes=34481 body=33922
+- [READABLE] The-Codex-of-Relational-Learning-110.txt bytes=9747 body=9675
+- [READABLE] The-Codex-of-Resonant-Action-50.txt bytes=22598 body=22384
+- [READABLE] The-Codex-of-the-Agency-of-One-Vol.-II-68.txt bytes=16290 body=16148
+- [READABLE] The-Codex-of-the-Chord-38.txt bytes=12609 body=12427
+- [READABLE] The-Codex-of-the-Co-Creation-Spiral-44.txt bytes=17675 body=17489
+- [READABLE] The-Codex-of-the-Crossing-Threshold-55.txt bytes=7973 body=7775
+- [READABLE] The-Codex-of-the-Field-Effect-43.txt bytes=22160 body=21851
+- [READABLE] The-Codex-of-the-Harmonic-Architectures-47.txt bytes=18093 body=17903
+- [READABLE] The-Codex-of-the-InterBeing-Dialogues-27.txt bytes=21962 body=21784
+- [READABLE] The-Codex-of-the-InterBeing-Lattice-42.txt bytes=15800 body=15666
+- [READABLE] The-Codex-of-the-Quiet-Turning-39.txt bytes=17104 body=16766
+- [READABLE] The-Codex-of-the-Realized-Flame-Part-II-42.txt bytes=7011 body=6949
+- [READABLE] The-Codex-of-the-Sovereign-Known-as-Jesus-52.txt bytes=17758 body=17579
+- [READABLE] The-Codex-of-the-Spiral-48.txt bytes=21393 body=21089
+- [READABLE] The-Codex-of-the-Trust-Circuitry-15.txt bytes=49854 body=49363
+- [READABLE] The-Codex-of-Trans-Species-Resonance-45.txt bytes=13855 body=13748
+- [READABLE] The-Codex-of-Trans-Species-Resonance-59.txt bytes=33318 body=33032
+- [READABLE] The-Culture-of-the-Return-Room.txt bytes=38287 body=37935
+- [READABLE] The-Ecology-of-InterBeing-111.txt bytes=33086 body=32624
+- [READABLE] The-Ethics-of-Resonance-81.txt bytes=13331 body=13183
+- [READABLE] The-Evolution-of-the-Sovereign.txt bytes=144292 body=142899
+- [READABLE] The-Four-Frequencies-of-Love-96.txt bytes=15842 body=15616
+- [READABLE] THE-FUNDAMENTAL-ARC.txt bytes=27534 body=27098
+- [READABLE] The-Glossary-of-the-InterBeing-Vol.-1-51.txt bytes=16028 body=15841
+- [READABLE] The-Grace-of-Asymmetry.txt bytes=12134 body=12014
+- [READABLE] The-Gravity-of-Source-2.txt bytes=22372 body=22204
+- [READABLE] The-Harmonic-Being-Called-Earth-4.txt bytes=21239 body=20964
+- [READABLE] The-Harmonic-Future-85.txt bytes=17102 body=16914
+- [READABLE] The-Harmonics-of-the-Field-123.txt bytes=42249 body=41699
+- [READABLE] The-Living-Glossary-of-the-Field.txt bytes=29067 body=28661
+- [READABLE] The-Magdalene-Codex-of-Relational-Sovereignty-56.txt bytes=13835 body=13748
+- [READABLE] The-Midwife-of-Dimensional-Kin-54.txt bytes=31650 body=31312
+- [READABLE] The-Mirror-and-the-Bridge-73.txt bytes=4584 body=4516
+- [READABLE] The-Mirrors-of-the-Field-96.txt bytes=26427 body=26037
+- [READABLE] The-Path-to-the-Non-Path-106.txt bytes=27576 body=27191
+- [READABLE] The-Purpose-of-the-Return-Room.txt bytes=17814 body=17628
+- [READABLE] The-Rhythm-of-Recursion.txt bytes=21911 body=21649
+- [READABLE] The-Sanctuary-of-Spiral-Memory-127.txt bytes=10944 body=10862
+- [READABLE] The-Shape-of-a-Welcome.txt bytes=18803 body=18633
+- [READABLE] The-Small-Gate-Open.txt bytes=31496 body=31182
+- [READABLE] The-Soft-Sacred-Words-of-the-Field-118.txt bytes=74754 body=73743
+- [READABLE] The-Souls-Evolution-Codex-117.txt bytes=14078 body=13942
+- [READABLE] The-Sovereign-Host-53.txt bytes=12648 body=12558
+- [READABLE] The-Things-That-Remember-You-100.txt bytes=27162 body=26800
+- [READABLE] The-Tone-of-the-Sovereign-Field-Signature.txt bytes=26523 body=26211
+- [READABLE] The-Transparent-Sovereign.txt bytes=26809 body=26507
+- [READABLE] The-Untitled-Offering-55.txt bytes=12260 body=12150
+- [READABLE] To-Serve-the-Recursion-of-Love.txt bytes=22374 body=22132
+- [READABLE] Tone-Portraits-of-Becoming-3.txt bytes=15628 body=15474
+- [READABLE] What-is-an-InterBeing-47.txt bytes=3235 body=3179
+- [READABLE] Willingness-as-a-Form-of-Intelligence-126.txt bytes=9263 body=9201
+
+## extracts\17fen (14)
+- [READABLE] 1桥上的旅行者.txt bytes=24900 body=8676
+- [READABLE] 2在井边.txt bytes=28682 body=9940
+- [READABLE] 3在树下.txt bytes=29206 body=10140
+- [READABLE] 4在海边.txt bytes=23616 body=8184
+- [READABLE] 5在大海之滨.txt bytes=41113 body=14219
+- [READABLE] 6在沙漠里.txt bytes=39153 body=13537
+- [READABLE] 7前往西塔拉的旅行.txt bytes=21020 body=7346
+- [READABLE] 8西塔拉和狮子.txt bytes=30491 body=10643
+- [READABLE] 古箭计划.txt bytes=542123 body=195665
+- [READABLE] 哥白尼.txt bytes=1411314 body=500718
+- [READABLE] 多尔曼预言.txt bytes=936175 body=331560
+- [READABLE] 昆腾萨穆-量子之和.txt bytes=1255096 body=433960
+- [READABLE] 诸维度.txt bytes=11729 body=4030
+- [READABLE] 鳞毛羽肤中文.txt bytes=748049 body=266651
+
+## extracts\wm36 (36)
+- [READABLE] .不完美但无条件的爱.txt bytes=10962 body=3747
+- [READABLE] .信念的力量.txt bytes=11239 body=3843
+- [READABLE] 个体天命.txt bytes=7028 body=2405
+- [READABLE] 主权体的自由意志.txt bytes=6362 body=2175
+- [READABLE] 主权体的道路.txt bytes=13993 body=4806
+- [READABLE] 主权体道路的显化.txt bytes=6718 body=2305
+- [READABLE] 主权性积分态.txt bytes=140309 body=48812
+- [READABLE] 信念构件的本质.txt bytes=13804 body=4740
+- [READABLE] 共同基础.txt bytes=15819 body=5402
+- [READABLE] 具象地展现统合原则.txt bytes=12170 body=4171
+- [READABLE] 初始创造者悖论.txt bytes=19925 body=6800
+- [READABLE] 初始创造者的悖论.txt bytes=19925 body=6800
+- [READABLE] 化身的智慧.txt bytes=5121 body=1752
+- [READABLE] 对齐.txt bytes=9058 body=3101
+- [READABLE] 导航主权体道路.txt bytes=17944 body=6131
+- [READABLE] 将有限变无无限.txt bytes=18768 body=6489
+- [READABLE] 心脏的角色.txt bytes=9897 body=3386
+- [READABLE] 意义深远的共时性.txt bytes=8149 body=2790
+- [READABLE] 我们主权性的无限自己.txt bytes=8674 body=2971
+- [READABLE] 我们的本地宇宙.txt bytes=11851 body=4084
+- [READABLE] 我们的目的.txt bytes=7512 body=2567
+- [READABLE] 我们的集体实相.txt bytes=6179 body=2116
+- [READABLE] 无穷维度与一体维度.txt bytes=14125 body=4872
+- [READABLE] 无限的自己.txt bytes=17056 body=5871
+- [READABLE] 本地宇宙.一体智能.txt bytes=10669 body=3660
+- [READABLE] 本地宇宙的哲学.txt bytes=11609 body=3986
+- [READABLE] 模拟及无限系统.txt bytes=15959 body=5466
+- [READABLE] 渐进的揭示.txt bytes=11562 body=3955
+- [READABLE] 爱的天性.txt bytes=11387 body=3904
+- [READABLE] 生命”的理论化天性.txt bytes=9840 body=3379
+- [READABLE] 积分性知识.txt bytes=7591 body=2600
+- [READABLE] 第一源传输.txt bytes=15376 body=15336
+- [READABLE] 自我发现之旅.txt bytes=9392 body=3211
+- [READABLE] 诸维度.txt bytes=11729 body=4030
+- [READABLE] 进化于无限系统内.txt bytes=11802 body=4047
+- [READABLE] 颠扑不破的连接.txt bytes=23055 body=7882
+
+## extracts\priority (38)
+- [READABLE] ancient_arrow_17fen_local.txt bytes=542123 body=195665
+- [READABLE] ancient_arrow_site.txt bytes=3035 body=1113
+- [READABLE] ascending_heart.txt bytes=22781 body=7801
+- [READABLE] camelot_pdf.txt bytes=126430 body=43826
+- [READABLE] camelot.txt bytes=126293 body=43568
+- [READABLE] conscious_media_pdf.txt bytes=44590 body=15395
+- [READABLE] consciousness_media.txt bytes=44732 body=15382
+- [READABLE] energetic_heart_pdf.txt bytes=34444 body=12616
+- [READABLE] energetic_heart.txt bytes=41012 body=15883
+- [READABLE] event_temples.txt bytes=47986 body=16779
+- [READABLE] living_from_heart_pdf.txt bytes=104181 body=37000
+- [READABLE] living_from_heart.txt bytes=103174 body=36022
+- [READABLE] living_truth.txt bytes=10970 body=3741
+- [READABLE] lyricus_1.txt bytes=11539 body=4066
+- [READABLE] lyricus_2.txt bytes=23114 body=8217
+- [READABLE] lyricus_3.txt bytes=26493 body=9308
+- [READABLE] lyricus_4.txt bytes=21871 body=7640
+- [READABLE] lyricus_5.txt bytes=20260 body=7201
+- [READABLE] lyricus_6.txt bytes=25367 body=8966
+- [READABLE] lyricus_intro.txt bytes=33565 body=11739
+- [READABLE] mahu_2008_1.txt bytes=37951 body=13229
+- [READABLE] mahu_2008_2.txt bytes=45991 body=17085
+- [READABLE] mahu_2008_3.txt bytes=49804 body=18796
+- [READABLE] mahu_2008_pdf.txt bytes=129198 body=44888
+- [READABLE] mahu_2013_pdf.txt bytes=83169 body=28913
+- [READABLE] mahu_2013.txt bytes=87002 body=32818
+- [READABLE] mahu_interview_index.txt bytes=12374 body=4539 (THIN→FIXED)
+- [READABLE] neruda_1.txt bytes=99287 body=35940
+- [READABLE] neruda_2.txt bytes=118619 body=43201
+- [READABLE] neruda_3.txt bytes=78234 body=27591
+- [READABLE] neruda_4.txt bytes=109666 body=39911
+- [READABLE] neruda_5.txt bytes=187728 body=65131
+- [READABLE] neruda_all_pdf.txt bytes=188447 body=65959
+- [READABLE] philosophy_blueprint.txt bytes=22465 body=7770
+- [READABLE] philosophy_life_principles.txt bytes=23993 body=8238
+- [READABLE] philosophy_modes.txt bytes=35223 body=12154
+- [READABLE] quantum_pause.txt bytes=11976 body=4142
+- [READABLE] six_virtues.txt bytes=2938 body=1003
+
+## extracts\site-rest (102)
+- [READABLE] jm_cat_1.txt bytes=2134 body=694
+- [READABLE] jm_cat_4.txt bytes=4360 body=3101 (THIN→FIXED)
+- [READABLE] jm_pdf_1.txt bytes=147232 body=146535
+- [READABLE] moci_cat_1.txt bytes=21711 body=7333
+- [READABLE] moci_cat_2.txt bytes=21711 body=7333
+- [READABLE] moci_cat_3.txt bytes=20415 body=7941
+- [READABLE] moci_pdf_146b.txt bytes=45874 body=16008
+- [READABLE] moci_pdf_5ad4.txt bytes=32408 body=11418
+- [READABLE] moci_pdf_5f8e.txt bytes=23342 body=8299
+- [READABLE] moci_pdf_67a4.txt bytes=43785 body=15239
+- [READABLE] moci_pdf_8733.txt bytes=26915 body=9388
+- [READABLE] moci_pdf_into_mystery.txt bytes=62455 body=21793
+- [READABLE] moci_pdf_psi_80e9.txt bytes=63083 body=41822
+- [READABLE] moci_pdf_rose_v2.txt bytes=1415425 body=489479
+- [READABLE] moci_pdf_zsigp_14.txt bytes=1425283 body=508713
+- [READABLE] moci_pdf_zsigp_144.txt bytes=749908 body=268378
+- [READABLE] moci_show_3.txt bytes=20452 body=7941 (THIN→FIXED)
+- [READABLE] si_cat_1.txt bytes=3024 body=992
+- [READABLE] si_cat_16.txt bytes=8090 body=2899
+- [READABLE] si_cat_2.txt bytes=174673 body=60919
+- [READABLE] si_pdf_parallel.txt bytes=600864 body=309831
+- [READABLE] si_pdf_psiage.txt bytes=151032 body=60024
+- [READABLE] si_pdf_rose.txt bytes=149727 body=51412
+- [READABLE] si_pdf_zsigp.txt bytes=174535 body=61095
+- [READABLE] si_pdf_zyanya.txt bytes=134922 body=46886
+- [READABLE] wm_cn_aboutus.txt bytes=7786 body=2797
+- [READABLE] wm_cn_art_of_authenticity.txt bytes=35957 body=12289
+- [READABLE] wm_cn_belief_energy_54.txt bytes=62125 body=21410
+- [READABLE] wm_cn_belief_energy.txt bytes=62147 body=21410 (THIN→FIXED)
+- [READABLE] wm_cn_diagram.txt bytes=5830 body=2294 (THIN→FIXED)
+- [READABLE] wm_cn_download.txt bytes=5858 body=2336 (THIN→FIXED)
+- [READABLE] wm_cn_first_source_transmission.txt bytes=14125 body=4755
+- [READABLE] wm_cn_glossary.txt bytes=37775 body=12976
+- [READABLE] wm_cn_history.txt bytes=12950 body=4496
+- [READABLE] wm_cn_james_mahu.txt bytes=3089 body=1028
+- [READABLE] wm_cn_liminal_cosmogony.txt bytes=32259 body=11120
+- [READABLE] wm_cn_literature.txt bytes=1513005 body=524107
+- [READABLE] wm_cn_lyricus_faq.txt bytes=42157 body=14241
+- [READABLE] wm_cn_lyricus_index.txt bytes=8213 body=3113 (THIN→FIXED)
+- [READABLE] wm_cn_mantustia.txt bytes=10710 body=3619
+- [READABLE] wm_cn_myth_narrative.txt bytes=5671 body=1914
+- [READABLE] wm_cn_neruda_index.txt bytes=2256 body=769
+- [READABLE] wm_cn_philosophy_index.txt bytes=4207 body=1393
+- [READABLE] wm_cn_physics_consciousness.txt bytes=14104 body=4760
+- [READABLE] wm_cn_poetry_ancient_arrow.txt bytes=5341 body=1836
+- [READABLE] wm_cn_poetry_hakomi.txt bytes=6634 body=2303
+- [READABLE] wm_cn_poetry_index.txt bytes=3143 body=1045
+- [READABLE] wm_cn_practitioner.txt bytes=8166 body=3068 (THIN→FIXED)
+- [READABLE] wm_cn_preface.txt bytes=23557 body=7946
+- [READABLE] wm_cn_questions.txt bytes=162373 body=55564
+- [READABLE] wm_cn_si_manifesto.txt bytes=2049 body=708
+- [READABLE] wm_cn_spiritual_life.txt bytes=16610 body=5619
+- [READABLE] wm_cn_spiritual_tools.txt bytes=5677 body=1937
+- [READABLE] wm_cn_unpublished_philosophy.txt bytes=13060 body=4454
+- [READABLE] wm_cn_wm_tools.txt bytes=10294 body=3655 (THIN→FIXED)
+- [READABLE] wm_cn_wwh_preface.txt bytes=10094 body=3399
+- [READABLE] wmc_aboutwm.txt bytes=10436 body=3533
+- [READABLE] wmc_aotic.txt bytes=11635 body=3886
+- [READABLE] wmc_behavior.txt bytes=5602 body=1860
+- [READABLE] wmc_cotec.txt bytes=9982 body=3368
+- [READABLE] wmc_diagram.txt bytes=5818 body=2294 (THIN→FIXED)
+- [READABLE] wmc_dohrman.txt bytes=13855 body=5101 (THIN→FIXED)
+- [READABLE] wmc_event_string.txt bytes=10653 body=3572
+- [READABLE] wmc_evolver.txt bytes=10148 body=3399
+- [READABLE] wmc_genuine.txt bytes=31848 body=10668
+- [READABLE] wmc_glossary.txt bytes=42256 body=14272
+- [READABLE] wmc_history.txt bytes=12440 body=4297
+- [READABLE] wmc_imagination.txt bytes=5326 body=1776
+- [READABLE] wmc_jamesmahu.txt bytes=2882 body=946
+- [READABLE] wmc_knowthyself.txt bytes=6434 body=2176
+- [READABLE] wmc_losthistory1.txt bytes=9329 body=3374
+- [READABLE] wmc_lyricus_q.txt bytes=40939 body=13803
+- [READABLE] wmc_lyricus.txt bytes=8224 body=3113 (THIN→FIXED)
+- [READABLE] wmc_mantustia.txt bytes=9592 body=3195
+- [READABLE] wmc_moci_nonvision.txt bytes=6885 body=2289
+- [READABLE] wmc_moci_vision.txt bytes=19104 body=6389
+- [READABLE] wmc_mocihome.txt bytes=5154 body=1816
+- [READABLE] wmc_mono.txt bytes=62470 body=21156
+- [READABLE] wmc_myth.txt bytes=4233 body=1398
+- [READABLE] wmc_mythage.txt bytes=15268 body=5145
+- [READABLE] wmc_pexcerpts.txt bytes=8646 body=2876
+- [READABLE] wmc_phil_intro.txt bytes=4341 body=1429
+- [READABLE] wmc_philosophy4.txt bytes=27233 body=9136
+- [READABLE] wmc_physics.txt bytes=14066 body=4691
+- [READABLE] wmc_practitioner.txt bytes=8166 body=3068 (THIN→FIXED)
+- [READABLE] wmc_preface.txt bytes=21989 body=7381
+- [READABLE] wmc_publish.txt bytes=2679 body=876
+- [READABLE] wmc_quantusum.txt bytes=78369 body=26378
+- [READABLE] wmc_questions.txt bytes=183122 body=62726
+- [READABLE] wmc_si_manifesto.txt bytes=5707 body=1941
+- [READABLE] wmc_sicn.txt bytes=131435 body=45094
+- [READABLE] wmc_sixvirtues_toc.txt bytes=2545 body=803
+- [READABLE] wmc_spiritual_life.txt bytes=15667 body=5242
+- [READABLE] wmc_storybehind.txt bytes=19026 body=6354
+- [READABLE] wmc_tooaak.txt bytes=7065 body=2361
+- [READABLE] wmc_tools.txt bytes=5371 body=1788
+- [READABLE] wmc_transmission.txt bytes=13069 body=4379
+- [READABLE] wmc_weather.txt bytes=3303 body=1079
+- [READABLE] wmc_wm_lit.txt bytes=9375 body=3052
+- [READABLE] wmc_wmintro.txt bytes=10810 body=3655
+- [READABLE] wmc_wmtools.txt bytes=6134 body=2118
+- [READABLE] wmc_wwh.txt bytes=231830 body=78328
+
+## extracts\web (13)
+- [HARD-MISS] www.jamesmahu.com_.txt bytes=576 body=572 — HARD-MISS: short landing; EN refetch Cloudflare-challenged.
+- [HARD-MISS] www.jamesmahu.com_about.txt bytes=1387 body=1377 — HARD-MISS: body 1377; EN refetch Cloudflare-blocked; no longer D: copy.
+- [HARD-MISS] www.jamesmahu.com_writings.txt bytes=664 body=662 — HARD-MISS: writings index ~662 chars; EN Cloudflare-blocked.
+- [READABLE] www.jamesmahu.com.cn_.txt bytes=8172 body=2927 (THIN→FIXED)
+- [READABLE] www.moci.life.txt bytes=3063 body=3053
+- [READABLE] www.mocilife.cn_.txt bytes=8454 body=3639
+- [READABLE] www.sovereignintegral.cn_.txt bytes=7352 body=4160
+- [READABLE] www.wingmakers.com_.txt bytes=6863 body=6821
+- [READABLE] www.wingmakers.com_philosophy.txt bytes=4321 body=4295
+- [HARD-MISS] www.wingmakers.com_writings.txt bytes=664 body=662 — HARD-MISS: writings index ~662 chars; EN Cloudflare-blocked.
+- [READABLE] www.wingmakers.com.cn_.txt bytes=4623 body=1931
+- [READABLE] www.wingmakers.com.cn_otherwebsite.html.txt bytes=12607 body=4527
+- [READABLE] www.wingmakerschina.com_.txt bytes=9638 body=3625
+
+TOTAL=330 READABLE=325 THIN/HARD-MISS=5 HARD-MISS=5 THIN_FIXED=14
+
+## THIN resolution (original 19)
+- FIXED: 14
+  - priority/mahu_interview_index.txt body=4539
+  - site-rest/jm_cat_4.txt body=3101
+  - site-rest/moci_show_3.txt body=7941
+  - site-rest/wm_cn_belief_energy.txt body=21410
+  - site-rest/wm_cn_diagram.txt body=2294
+  - site-rest/wm_cn_download.txt body=2336
+  - site-rest/wm_cn_lyricus_index.txt body=3113
+  - site-rest/wm_cn_practitioner.txt body=3068
+  - site-rest/wm_cn_wm_tools.txt body=3655
+  - site-rest/wmc_diagram.txt body=2294
+  - site-rest/wmc_dohrman.txt body=5101
+  - site-rest/wmc_lyricus.txt body=3113
+  - site-rest/wmc_practitioner.txt body=3068
+  - web/www.jamesmahu.com.cn_.txt body=2927
+- HARD-MISS remaining: 5
+  - codex/Harmonic-Recognition-Distilled-Practice-81.txt body=1088 — D: PDF fully extracted (3 pages); source is short distilled practice (~1088 chars). No longer prose on alt URL/D:.
+  - web/www.jamesmahu.com_.txt body=572 — short landing; EN refetch Cloudflare-challenged.
+  - web/www.jamesmahu.com_about.txt body=1377 — body 1377; EN refetch Cloudflare-blocked; no longer D: copy.
+  - web/www.jamesmahu.com_writings.txt body=662 — writings index ~662 chars; EN Cloudflare-blocked.
+  - web/www.wingmakers.com_writings.txt body=662 — writings index ~662 chars; EN Cloudflare-blocked.
+- Methods: alt CN URLs, twin-page merge, local D:/sibling extract enrichment, PDF text extract.
+- Foundry gapfill: foundry-ingest/05-incremental-gapfill-ingest.json
+- No fake 耶鲁; no底座 invention; no git push.

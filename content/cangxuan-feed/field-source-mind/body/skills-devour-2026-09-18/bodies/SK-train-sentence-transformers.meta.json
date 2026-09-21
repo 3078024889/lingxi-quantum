@@ -1,0 +1,16 @@
+{
+  "id": "SK-train-sentence-transformers",
+  "title": "train-sentence-transformers",
+  "rel": "wave2/skills/skills/train-sentence-transformers/SKILL.md",
+  "wave": "wave1",
+  "chars": 9783,
+  "sha16": "94d7f7db1e996a09",
+  "drama_steps": [
+    1,
+    2,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

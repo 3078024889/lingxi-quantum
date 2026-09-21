@@ -1,0 +1,14 @@
+{
+  "id": "SK-hf-mcp",
+  "title": "hf-mcp",
+  "rel": "wave2/skills/hf-mcp/skills/hf-mcp/SKILL.md",
+  "wave": "wave1",
+  "chars": 4708,
+  "sha16": "cbb26237cc8f2c59",
+  "drama_steps": [
+    5,
+    6,
+    7
+  ],
+  "status": "DUAL_WRITTEN"
+}

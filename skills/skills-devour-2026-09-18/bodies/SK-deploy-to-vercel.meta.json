@@ -1,0 +1,15 @@
+{
+  "id": "SK-deploy-to-vercel",
+  "title": "deploy-to-vercel",
+  "rel": "wave2/agent-skills/skills/deploy-to-vercel/SKILL.md",
+  "wave": "wave1",
+  "chars": 11458,
+  "sha16": "3d1ed967842cf105",
+  "drama_steps": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

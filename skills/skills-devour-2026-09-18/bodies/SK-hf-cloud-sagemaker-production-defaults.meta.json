@@ -1,0 +1,15 @@
+{
+  "id": "SK-hf-cloud-sagemaker-production-defaults",
+  "title": "hf-cloud-sagemaker-production-defaults",
+  "rel": "wave2/skills/skills/hf-cloud-sagemaker-production-defaults/SKILL.md",
+  "wave": "wave1",
+  "chars": 26700,
+  "sha16": "647f18b68979cb60",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "category": "RULE",
+    "title": "道具即契约",
+    "statement": "关键道具一旦公开为「钥/契约物」，禁拔禁交须当场兑现为规则与行动，不可只当气氛道具。",
+    "evidence": "E16寒砚当众「钥不是饵」+锁芯看守令：佩不离壁、人不出霜栖主脉；棠口头禅「嵌着。不拔。」",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "8b4bccdff9bc2459bad2596827543731253b58f00f89fd7ea3cd85c70241e7c4",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "通牒倒计时钩",
+    "statement": "敌方升级通牒须给出可感知倒计时与损失厌恶（人佩同迁·三日），并立刻用己方禁令对撞，形成双向时钟追更。",
+    "evidence": "E16半面具执事霜音「三日。佩进人走。」对撞寒砚「锁芯看守令」三日内守壁守峰。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "d2d1b3c72053bf4695e885d168d9fc8886af9d318d631ae2ceb3794e7f7d8b9b",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "RULE",
+    "title": "学舌升级须可压",
+    "statement": "杂灵/影怪学舌升级复读外敌词时，须有库存代价道具可压回，并禁止女主应全名，避免无解危机。",
+    "evidence": "E16息影学舌「棠——交——」；沈澈安神符贴缝压回；库存-1剩2；禁应全名。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "87d19b8c11099e7f7017cb460386eb854b201450bc88bac57c96ee0591813b46",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "额度满格可视化",
+    "statement": "护短能力有日额度时，二次用尽须口播「今日满」并写明身体代价，把规则爽感做成可见记账。",
+    "evidence": "E16借响2/2：借陆衡剑息+寒砚霜息封三钉；陆衡「第二次。今日满。」代价指尖+耳根麻。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "f911981d0997b6f8375b947966b867390bf6d68b939679db8ef67e8cd3f7bb69",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "CONTINUITY",
+    "title": "信息差误判三拍",
+    "statement": "禁足反派的误判须在三拍内被纸条/碎片打回：以为得手→敌方否认→反派掉价，保持未洗白。",
+    "evidence": "E16赵临川写「可动手」→黑影「佩未离壁。再逼。」→其心声「我成看门的了？」",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "b22ca9b4d9202fa95c65bedd228e2417fd9976192d9b9b9380db15d043bfe93f",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  }
+]

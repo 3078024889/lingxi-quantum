@@ -1,0 +1,24 @@
+{
+  "at": "2026-09-17T05:49:03.305494+00:00",
+  "track": "specialty-consistency",
+  "gate": "A+B FULL PASS",
+  "items": {
+    "character_boards": [
+      "CB-01-linqiu.json",
+      "CB-02-zhouchen.json"
+    ],
+    "continuity_gold": [
+      "CG-01-ep1-ep2.json"
+    ],
+    "beat_sheets": [
+      "BS-01-hallway.json"
+    ],
+    "dkn_samples": [
+      "DKN-character-consistency-v1.json"
+    ]
+  },
+  "paths": {
+    "twentywatts": "/workspace/out-to-ershiwatt-sync/sasi-curriculum-feed/specialty-consistency-2026-09-17",
+    "sasi_box": "/workspace/lingxi-quantum/content/cangxuan-feed/field-source-mind/body/specialty-consistency-2026-09-17"
+  }
+}

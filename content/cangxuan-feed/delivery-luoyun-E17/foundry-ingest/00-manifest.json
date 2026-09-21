@@ -1,0 +1,19 @@
+{
+  "series": "落云宗的小尾巴",
+  "episode": 17,
+  "episodeTitle": "霜栖旧禁·人佩同迁",
+  "rights": "LingxiField original",
+  "rightsScope": "opted_in_training",
+  "sourceType": "sasi_native",
+  "counts": {
+    "characters": 0,
+    "episodeImports": 1,
+    "continuityEvents": 9,
+    "seedKnowledge": 5
+  },
+  "packScope": "delivery_E17_delta",
+  "sourceFiles": [
+    "content/cangxuan-feed/delivery-luoyun-E17/E17.md",
+    "content/cangxuan-feed/luoyun-xiaoweiba/episodes/E17.md"
+  ]
+}

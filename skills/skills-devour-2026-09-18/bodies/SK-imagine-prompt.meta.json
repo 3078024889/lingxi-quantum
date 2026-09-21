@@ -1,0 +1,17 @@
+{
+  "id": "SK-imagine-prompt",
+  "title": "imagine-prompt",
+  "rel": "wave2/imagine-skill/skills/imagine-prompt/SKILL.md",
+  "wave": "wave1",
+  "chars": 2396,
+  "sha16": "342895eb03dde3f8",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

@@ -25,4 +25,5 @@ pnpm-debug.log*
 
 # Never commit package store (was bloating the repo ~800MB+)
 .pnpm-store/
+/public/media/ffmpeg-0.12.10/
 node_modules/

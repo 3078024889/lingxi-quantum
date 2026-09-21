@@ -1,0 +1,13 @@
+﻿import fs from "fs";
+const rawPath = "C:/Users/30780/Desktop/lingxi-quantum/content/cangxuan-feed/field-source-mind/_tools/_raw-html/www.wingmakers.com.cn_works.html_id_5.html";
+const html = fs.readFileSync(rawPath, "utf8");
+const idx = html.indexOf("作者");
+console.log("slice around author:");
+console.log(html.slice(Math.max(0, idx - 300), idx + 900));
+const before = html.slice(Math.max(0, idx - 2000), idx);
+const divs = [...before.matchAll(/<div[^>]{0,300}>/gi)].slice(-12);
+console.log("divs before author:");
+for (const d of divs) console.log(d[0]);
+const pri = fs.readFileSync("C:/Users/30780/Desktop/lingxi-quantum/content/cangxuan-feed/field-source-mind/extracts/priority/ascending_heart.txt", "utf8");
+console.log("priority ascending head:");
+console.log(pri.slice(0, 500));

@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-09-10T10:15:00Z",
+  "attempt": "web-retry-en-homepages",
+  "machineCurl": {
+    "https://www.wingmakers.com/": {
+      "ok": false,
+      "status": 403,
+      "error": "cloudflare_challenge"
+    },
+    "http://www.wingmakers.com/": {
+      "ok": false,
+      "status": 403,
+      "error": "cloudflare_challenge"
+    },
+    "https://www.jamesmahu.com/": {
+      "ok": false,
+      "status": 403,
+      "error": "cloudflare_challenge (was cert/timeout; now CF)"
+    },
+    "http://www.jamesmahu.com/": {
+      "ok": false,
+      "status": 403,
+      "error": "cloudflare_challenge"
+    }
+  },
+  "boxCurl": [
+    {
+      "url": "https://www.wingmakers.com/",
+      "ok": true,
+      "chars": 6821,
+      "status": 200,
+      "finalUrl": "https://wingmakers.com/",
+      "outPath": "extracts/web/www.wingmakers.com_.txt",
+      "via": "box-curl-browser-UA",
+      "note": "machine curl CF403; box egress OK"
+    },
+    {
+      "url": "https://www.wingmakers.com/philosophy/",
+      "ok": true,
+      "chars": 4295,
+      "status": 200,
+      "finalUrl": "https://wingmakers.com/philosophy/",
+      "outPath": "extracts/web/www.wingmakers.com_philosophy.txt",
+      "via": "box-curl-browser-UA",
+      "note": "machine curl CF403; box egress OK"
+    },
+    {
+      "url": "https://www.wingmakers.com/writings/",
+      "ok": true,
+      "chars": 662,
+      "status": 200,
+      "finalUrl": "https://wingmakers.com/writings/",
+      "outPath": "extracts/web/www.wingmakers.com_writings.txt",
+      "via": "box-curl-browser-UA",
+      "note": "machine curl CF403; box egress OK"
+    },
+    {
+      "url": "https://www.jamesmahu.com/",
+      "ok": true,
+      "chars": 572,
+      "status": 200,
+      "finalUrl": "https://jamesmahu.com/",
+      "outPath": "extracts/web/www.jamesmahu.com_.txt",
+      "via": "box-curl-browser-UA",
+      "note": "machine curl CF403; box egress OK"
+    },
+    {
+      "url": "https://www.jamesmahu.com/writings/",
+      "ok": true,
+      "chars": 662,
+      "status": 200,
+      "finalUrl": "https://jamesmahu.com/writings/",
+      "outPath": "extracts/web/www.jamesmahu.com_writings.txt",
+      "via": "box-curl-browser-UA",
+      "note": "machine curl CF403; box egress OK"
+    },
+    {
+      "url": "https://www.jamesmahu.com/about/",
+      "ok": true,
+      "chars": 1377,
+      "status": 200,
+      "finalUrl": "https://jamesmahu.com/about/",
+      "outPath": "extracts/web/www.jamesmahu.com_about.txt",
+      "via": "box-curl-browser-UA",
+      "note": "machine curl CF403; box egress OK"
+    }
+  ],
+  "archiveOrg": {
+    "https://web.archive.org/web/20231225031859/https://wingmakers.com/": {
+      "ok": true,
+      "status": 200,
+      "note": "machine archive OK but used live box content instead"
+    }
+  },
+  "webFetch": {
+    "https://www.wingmakers.com/": {
+      "ok": false,
+      "error": "403"
+    },
+    "https://www.jamesmahu.com/": {
+      "ok": false,
+      "error": "timeout"
+    }
+  },
+  "computerUse": "unavailable (no MCP skill)"
+}

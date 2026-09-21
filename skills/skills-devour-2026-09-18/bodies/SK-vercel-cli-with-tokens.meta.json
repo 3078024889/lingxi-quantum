@@ -1,0 +1,13 @@
+{
+  "id": "SK-vercel-cli-with-tokens",
+  "title": "vercel-cli-with-tokens",
+  "rel": "wave2/agent-skills/skills/vercel-cli-with-tokens/SKILL.md",
+  "wave": "wave1",
+  "chars": 10100,
+  "sha16": "521579b1f96cab08",
+  "drama_steps": [
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

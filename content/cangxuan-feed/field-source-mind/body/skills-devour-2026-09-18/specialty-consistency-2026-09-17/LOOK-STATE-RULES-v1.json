@@ -1,0 +1,44 @@
+{
+  "id": "LOOK-STATE-RULES-v1",
+  "evolvable": true,
+  "identity_core": [
+    "face_identity",
+    "body_silhouette",
+    "voice_print",
+    "species_baseline"
+  ],
+  "look_state": [
+    "wardrobe",
+    "hair",
+    "makeup",
+    "jewelry",
+    "props_held",
+    "cultivation_form",
+    "disguise",
+    "invisibility",
+    "injury_marks"
+  ],
+  "examples": [
+    {
+      "beat": "换装进夜宴",
+      "must": "wardrobe/jewelry 更新到夜宴款",
+      "must_not": "换脸"
+    },
+    {
+      "beat": "修仙化形·鹤形态",
+      "must": "cultivation_form=crane；silhouette可临时变",
+      "must_not": "事后无回形节拍仍保持鹤脸当人设"
+    },
+    {
+      "beat": "易容潜入",
+      "must": "disguise 生效且门禁认当前伪装",
+      "must_not": "仍用真身脸出门禁"
+    },
+    {
+      "beat": "隐身",
+      "must": "invisibility=true，出镜规则改为痕迹/声音",
+      "must_not": "正常露脸当可见"
+    }
+  ],
+  "gate": "pass iff identity_core match AND look_state == beat-legal state"
+}

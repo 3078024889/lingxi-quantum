@@ -1,0 +1,13 @@
+{
+  "id": "C4-quantum-pause-clean",
+  "code": "C4",
+  "title": "量子暂停（巩固·优先更干净长文）",
+  "sha16": "f6f07ff8d0dcb0bb",
+  "chars": 4034,
+  "raw_chars": 4202,
+  "src": "/workspace/wm_priority_out/quantum_pause.txt",
+  "batch": "curriculum-CD-week2",
+  "peel": "v3",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:59:29.808903+00:00"
+}

@@ -1,0 +1,14 @@
+{
+  "id": "B6-spiritual-activism",
+  "title": "灵性行动主义",
+  "content_sha256_16": "07c0e990ed9612e5",
+  "chars": 4612,
+  "raw_chars": 15565,
+  "peeled_ratio": 0.296,
+  "nav_lines_remaining": 0,
+  "picked_raw": "/workspace/run-1210/extracts/wmc_spiritual_activism.txt",
+  "batch": "curriculum-AB-2026-09-17",
+  "peel": "v2-nav-strip",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:46:04.903019+00:00"
+}

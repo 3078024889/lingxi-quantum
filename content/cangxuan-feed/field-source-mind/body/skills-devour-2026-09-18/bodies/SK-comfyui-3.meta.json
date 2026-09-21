@@ -1,0 +1,18 @@
+{
+  "id": "SK-comfyui-3",
+  "title": "comfyui",
+  "rel": "ComfyUI-Agent-Kit/shared/comfyui/SKILL.md",
+  "wave": "wave2-slim",
+  "chars": 48660,
+  "sha16": "ba01b85dc51acc28",
+  "drama_steps": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

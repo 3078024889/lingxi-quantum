@@ -1,0 +1,7 @@
+{
+  "id": "PF-12",
+  "step": 8,
+  "type": "assemble_no_shots",
+  "desc": "成片装配入口无镜头列表",
+  "expect": "占位接口返回明确错误"
+}

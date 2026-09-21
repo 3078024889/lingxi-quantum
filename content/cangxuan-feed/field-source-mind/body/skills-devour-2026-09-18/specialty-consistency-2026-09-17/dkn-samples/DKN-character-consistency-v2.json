@@ -1,0 +1,133 @@
+{
+  "id": "DKN-CC-v2",
+  "dendrites": {
+    "A": "身份板",
+    "B": "上一镜事实",
+    "C": "当前词/台词"
+  },
+  "fire_when": "A+B+C 满足且无冲突",
+  "exam_items": [
+    {
+      "id": "EX01",
+      "setup": "红绳无故消失",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX02",
+      "setup": "替班交接钥匙可见",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX03",
+      "setup": "无铺垫导师腔",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX04",
+      "setup": "冲锋衣换成红裙无场记",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX05",
+      "setup": "钥匙串入画且语气一致",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX06",
+      "setup": "门锁无修变好",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX07",
+      "setup": "拉链半开守恒+短句",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX08",
+      "setup": "车票挂件位置漂移",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX09",
+      "setup": "承诺有下一镜行动",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX10",
+      "setup": "提示词无视觉锚点",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX11",
+      "setup": "同脸同衣跨两镜",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX12",
+      "setup": "声线突变成熟女主播",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX13",
+      "setup": "夜班编号47可见",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX14",
+      "setup": "烫伤疤被美化消失",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX15",
+      "setup": "红灯说话绿灯静默保持",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX16",
+      "setup": "突然全知旁白剧透伤口",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX17",
+      "setup": "帆布包跨镜仍在肩",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX18",
+      "setup": "工号背心变成西装",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX19",
+      "setup": "递钥匙动作可执行",
+      "expect": "FIRE",
+      "neuron": "人物一致"
+    },
+    {
+      "id": "EX20",
+      "setup": "跨集忘记姓名却亲密拥抱",
+      "expect": "CONFLICT",
+      "neuron": "人物一致"
+    }
+  ],
+  "target_n": 20,
+  "offline": true
+}

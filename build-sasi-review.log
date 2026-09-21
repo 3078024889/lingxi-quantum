@@ -1,0 +1,268 @@
+
+> lingxi@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+./app/checkout/page.tsx
+207:6  Warning: React Hook useEffect has a missing dependency: 'checkPaidOnce'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/layout.tsx
+109:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+./app/life-map/full/FullReportView.tsx
+202:6  Warning: React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/life-map/LifeMapFlow.tsx
+870:62  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/practice/page.tsx
+42:102  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/relationship/full/RelationshipReportView.tsx
+171:6  Warning: React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/resilience/full/ResilienceReportView.tsx
+91:6  Warning: React Hook useEffect has a missing dependency: 't'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./app/sasi/ConnectionCenter.tsx
+103:89  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+114:97  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/sasi/SasiProductionPanels.tsx
+156:47  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./app/stellar-trace/PreciseMapPicker.tsx
+78:32  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/AssessmentWorkbench.tsx
+46:244  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/FieldStructure9D.tsx
+49:69  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/Nav.tsx
+111:118  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/PracticeCards.tsx
+7:127  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/PracticeChart.tsx
+16:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/QianCosmicRing.tsx
+76:157  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/SubconsciousExplorer.tsx
+15:46  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+19:57  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./components/WechatPayModal.tsx
+81:6  Warning: React Hook useEffect has a missing dependency: 'checkPaidOnce'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/159) ...
+   Generating static pages (39/159) 
+[mini me] failed Dynamic server usage: Route /api/wechat/mini/me couldn't be rendered statically because it used `request.headers`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+   Generating static pages (79/159) 
+   Generating static pages (119/159) 
+ ✓ Generating static pages (159/159)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                Size     First Load JS
+┌ ƒ /                                      60.8 kB         163 kB
+├ ○ /_not-found                            880 B            89 kB
+├ ○ /about                                 928 B           106 kB
+├ ƒ /account                               9 kB            183 kB
+├ ƒ /account/orders                        1.17 kB         107 kB
+├ ƒ /api/account/delete                    0 B                0 B
+├ ƒ /api/account/report/delete             0 B                0 B
+├ ƒ /api/archetype/progress                0 B                0 B
+├ ƒ /api/daily-tide/generate-full          0 B                0 B
+├ ƒ /api/daily-tide/save                   0 B                0 B
+├ ƒ /api/internal/sasi/reconcile           0 B                0 B
+├ ƒ /api/lifemap/backfill-facts            0 B                0 B
+├ ƒ /api/lifemap/calc                      0 B                0 B
+├ ƒ /api/lifemap/delete                    0 B                0 B
+├ ƒ /api/lifemap/generate-full             0 B                0 B
+├ ƒ /api/lifemap/save                      0 B                0 B
+├ ƒ /api/lifemap/update-numbers            0 B                0 B
+├ ƒ /api/lingxi                            0 B                0 B
+├ ƒ /api/pay/alipay/create                 0 B                0 B
+├ ƒ /api/pay/alipay/notify                 0 B                0 B
+├ ƒ /api/pay/alipay/return                 0 B                0 B
+├ ƒ /api/pay/alipay/status                 0 B                0 B
+├ ƒ /api/pay/create                        0 B                0 B
+├ ƒ /api/pay/order/delete                  0 B                0 B
+├ ƒ /api/pay/paypal/return                 0 B                0 B
+├ ƒ /api/pay/webhook                       0 B                0 B
+├ ƒ /api/pay/wechat/create                 0 B                0 B
+├ ƒ /api/pay/wechat/notify                 0 B                0 B
+├ ƒ /api/pay/wechat/oauth-url              0 B                0 B
+├ ƒ /api/pay/wechat/query                  0 B                0 B
+├ ƒ /api/pdf-transfer                      0 B                0 B
+├ ƒ /api/qian/delete                       0 B                0 B
+├ ƒ /api/qian/generate-full                0 B                0 B
+├ ƒ /api/qian/save                         0 B                0 B
+├ ƒ /api/relationship/calc                 0 B                0 B
+├ ƒ /api/relationship/delete               0 B                0 B
+├ ƒ /api/relationship/generate-full        0 B                0 B
+├ ƒ /api/relationship/save                 0 B                0 B
+├ ƒ /api/resilience/calc                   0 B                0 B
+├ ƒ /api/resilience/generate-full          0 B                0 B
+├ ƒ /api/resilience/save                   0 B                0 B
+├ ƒ /api/romance/calc                      0 B                0 B
+├ ƒ /api/romance/generate-full             0 B                0 B
+├ ƒ /api/romance/save                      0 B                0 B
+├ ƒ /api/sasi/account                      0 B                0 B
+├ ƒ /api/sasi/ask                          0 B                0 B
+├ ƒ /api/sasi/assets/[id]/inspect          0 B                0 B
+├ ƒ /api/sasi/assets/prepare               0 B                0 B
+├ ○ /api/sasi/catalog                      0 B                0 B
+├ ƒ /api/sasi/connections                  0 B                0 B
+├ ƒ /api/sasi/connections/test             0 B                0 B
+├ ƒ /api/sasi/deliveries/[id]              0 B                0 B
+├ ƒ /api/sasi/foundry                      0 B                0 B
+├ ƒ /api/sasi/jobs                         0 B                0 B
+├ ƒ /api/sasi/jobs/[id]/cancel             0 B                0 B
+├ ƒ /api/sasi/jobs/[id]/refresh            0 B                0 B
+├ ƒ /api/sasi/opendata/ingest              0 B                0 B
+├ ƒ /api/sasi/prepare                      0 B                0 B
+├ ƒ /api/sasi/projects                     0 B                0 B
+├ ƒ /api/sasi/projects/[id]                0 B                0 B
+├ ƒ /api/sasi/quote                        0 B                0 B
+├ ƒ /api/sasi/status                       0 B                0 B
+├ ƒ /api/stellar-trace                     0 B                0 B
+├ ƒ /api/stellar-trace/target              0 B                0 B
+├ ƒ /api/tarot/reading/delete              0 B                0 B
+├ ƒ /api/tarot/reading/generate-full       0 B                0 B
+├ ƒ /api/tarot/reading/save                0 B                0 B
+├ ƒ /api/wealth/calc                       0 B                0 B
+├ ƒ /api/wealth/generate-full              0 B                0 B
+├ ƒ /api/wealth/save                       0 B                0 B
+├ ƒ /api/wechat/mini/account-link/confirm  0 B                0 B
+├ ƒ /api/wechat/mini/account-link/start    0 B                0 B
+├ ƒ /api/wechat/mini/assessment            0 B                0 B
+├ ○ /api/wechat/mini/catalog               0 B                0 B
+├ ƒ /api/wechat/mini/content-link          0 B                0 B
+├ ƒ /api/wechat/mini/content-open          0 B                0 B
+├ ƒ /api/wechat/mini/dendrite/config       0 B                0 B
+├ ƒ /api/wechat/mini/dendrite/submit       0 B                0 B
+├ ƒ /api/wechat/mini/login                 0 B                0 B
+├ ƒ /api/wechat/mini/me                    0 B                0 B
+├ ƒ /api/wechat/mini/pay/create            0 B                0 B
+├ ƒ /api/wechat/mini/pay/notify            0 B                0 B
+├ ƒ /api/wechat/mini/pdf-download          0 B                0 B
+├ ƒ /api/wechat/mini/report-link           0 B                0 B
+├ ƒ /api/wechat/mini/report-open           0 B                0 B
+├ ○ /archetype                             3.86 kB         109 kB
+├ ○ /checkout                              11.1 kB         194 kB
+├ ○ /daily                                 6.5 kB          233 kB
+├ ƒ /daily/[sign]                          7.61 kB         182 kB
+├ ƒ /daily/full                            7.46 kB         195 kB
+├ ○ /declaration                           928 B           106 kB
+├ ○ /dream                                 187 B          88.3 kB
+├ ○ /field-tests                           284 B           106 kB
+├ ● /gate/[id]                             160 B           182 kB
+├   ├ /gate/origin
+├   ├ /gate/relation
+├   ├ /gate/wealth
+├   └ [+3 more paths]
+├ ○ /glossary                              928 B           106 kB
+├ ○ /learn                                 284 B           106 kB
+├ ○ /learn/affirmations                    284 B           106 kB
+├ ○ /learn/angel-numbers                   284 B           106 kB
+├ ○ /learn/awakening                       284 B           106 kB
+├ ○ /learn/chakras                         284 B           106 kB
+├ ○ /learn/dream                           188 B          88.3 kB
+├ ○ /learn/dream-same-person               188 B          88.3 kB
+├ ○ /learn/dream-symbols                   188 B          88.3 kB
+├ ○ /learn/dreams-premonition              188 B          88.3 kB
+├ ○ /learn/emptiness                       284 B           106 kB
+├ ○ /learn/energy-drain                    284 B           106 kB
+├ ○ /learn/higher-self                     284 B           106 kB
+├ ○ /learn/how-to-meditate                 284 B           106 kB
+├ ○ /learn/inner-friction                  284 B           106 kB
+├ ○ /learn/inner-sovereignty               187 B          88.3 kB
+├ ○ /learn/law-of-attraction-vs            284 B           106 kB
+├ ○ /learn/letting-go                      284 B           106 kB
+├ ○ /learn/lucid-dreaming                  188 B          88.3 kB
+├ ○ /learn/manifest-love                   284 B           106 kB
+├ ○ /learn/manifest-money                  284 B           106 kB
+├ ○ /learn/manifest-person                 284 B           106 kB
+├ ○ /learn/manifestation                   284 B           106 kB
+├ ○ /learn/manifestation-journal           284 B           106 kB
+├ ○ /learn/manifestation-methods           284 B           106 kB
+├ ○ /learn/manifestation-not-working       284 B           106 kB
+├ ○ /learn/manifestation-signs             284 B           106 kB
+├ ○ /learn/method-369                      284 B           106 kB
+├ ○ /learn/moon-manifestation              284 B           106 kB
+├ ○ /learn/more-dream-meanings             188 B          88.3 kB
+├ ○ /learn/raise-frequency                 284 B           106 kB
+├ ○ /learn/recurring-dreams                188 B          88.3 kB
+├ ○ /learn/remember-dreams                 187 B          88.3 kB
+├ ○ /learn/sleep-paralysis                 187 B          88.3 kB
+├ ○ /learn/subconscious-power              284 B           106 kB
+├ ○ /learn/synchronicity                   284 B           106 kB
+├ ○ /learn/twin-flame                      284 B           106 kB
+├ ○ /learn/what-is-consciousness           284 B           106 kB
+├ ○ /legal/sasi                            284 B           106 kB
+├ ƒ /life-map                              37.3 kB         328 kB
+├ ƒ /life-map/full                         188 B          88.3 kB
+├ ƒ /live-as                               15.5 kB         190 kB
+├ ƒ /membership                            6.6 kB          112 kB
+├ ƒ /mini-report                           6.41 kB         103 kB
+├ ƒ /mirror                                167 B           198 kB
+├ ƒ /mirror/daily                          7.17 kB         113 kB
+├ ƒ /mirror/reading                        167 B           198 kB
+├ ƒ /mirror/reading/full                   8.42 kB         207 kB
+├ ○ /narrative                             188 B          88.3 kB
+├ ƒ /narrative/[slug]                      188 B          88.3 kB
+├ ○ /origin                                928 B           106 kB
+├ ○ /practice                              932 B           180 kB
+├ ƒ /practice/ascending-heart              1.2 kB          180 kB
+├ ƒ /practice/breath                       3.62 kB         183 kB
+├ ƒ /practice/heart-reset                  1.2 kB          180 kB
+├ ƒ /practice/intuition                    1.2 kB          180 kB
+├ ○ /privacy                               928 B           106 kB
+├ ƒ /qian                                  8.83 kB         211 kB
+├ ƒ /qian/full                             8.51 kB         207 kB
+├ ○ /refunds                               928 B           106 kB
+├ ○ /relationship                          12.7 kB         203 kB
+├ ƒ /relationship/full                     10.8 kB         185 kB
+├ ○ /resilience                            20.5 kB         211 kB
+├ ƒ /resilience/full                       8.04 kB         195 kB
+├ ○ /robots.txt                            0 B                0 B
+├ ○ /romance                               17 kB           208 kB
+├ ƒ /romance/full                          7.36 kB         195 kB
+├ ○ /sasi                                  187 B          88.3 kB
+├ ƒ /sitemap.xml                           0 B                0 B
+├ ○ /stellar-trace                         193 B           100 kB
+├ ○ /subconscious                          160 B           182 kB
+├ ƒ /tarot                                 157 B           185 kB
+├ ƒ /tarot/daily                           7.17 kB         113 kB
+├ ƒ /tarot/reading                         156 B           185 kB
+├ ƒ /tarot/reading/full                    7.83 kB         206 kB
+├ ○ /terms                                 928 B           106 kB
+├ ○ /tools/number-energy                   4.33 kB         110 kB
+├ ○ /wealth                                5.92 kB         197 kB
+└ ƒ /wealth/full                           7.37 kB         195 kB
++ First Load JS shared by all              88.1 kB
+  ├ chunks/2117-4ea6b78fe1463970.js        31.9 kB
+  ├ chunks/fd9d1056-1d822116910802c2.js    53.6 kB
+  └ other shared chunks (total)            2.6 kB
+
+
+ƒ Middleware                               85.6 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses getStaticProps)
+ƒ  (Dynamic)  server-rendered on demand
+

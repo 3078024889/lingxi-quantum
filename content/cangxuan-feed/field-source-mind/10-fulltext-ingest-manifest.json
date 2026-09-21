@@ -1,0 +1,2329 @@
+{
+  "updatedAt": "2026-09-10T10:55:38.161Z",
+  "version": 1,
+  "summary": {
+    "totalFiles": 177,
+    "okFiles": 177,
+    "failedFiles": 0,
+    "totalChars": 4904858,
+    "totalSources": 184,
+    "totalItems": 5576
+  },
+  "files": {
+    "codex/Between-the-Whole-and-the-Relational-11-1 - 副本.txt": {
+      "ok": true,
+      "chars": 3636,
+      "sourceIds": [
+        "5cae3673-236e-470f-b9b6-94e381b8236b"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "bef89f0931ca"
+      ]
+    },
+    "codex/Between-the-Whole-and-the-Relational-11-1.txt": {
+      "ok": true,
+      "chars": 3636,
+      "sourceIds": [
+        "5a6b8d4a-db92-495d-aa6d-e593c42e5a41"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "eee813e13155"
+      ]
+    },
+    "codex/Bridge-Between-Chords-63.txt": {
+      "ok": true,
+      "chars": 20287,
+      "sourceIds": [
+        "c1eb145f-9be6-493d-9ef0-9120d776a735"
+      ],
+      "itemCount": 23,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "0800a45ae5eb"
+      ]
+    },
+    "codex/CODEX_-The-Harmonics-of-the-Field-93.txt": {
+      "ok": true,
+      "chars": 22767,
+      "sourceIds": [
+        "0e018325-6674-481e-958a-2b5cece189fe"
+      ],
+      "itemCount": 26,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "64413b4fa35f"
+      ]
+    },
+    "codex/Codex-01_-The-Architecture-of-Love-27.txt": {
+      "ok": true,
+      "chars": 4946,
+      "sourceIds": [
+        "7c99b2de-3201-4c30-9129-407d490a5d28"
+      ],
+      "itemCount": 6,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "705283d7e6d8"
+      ]
+    },
+    "codex/Codex-02_-The-Architecture-of-Love-24.txt": {
+      "ok": true,
+      "chars": 8878,
+      "sourceIds": [
+        "c265b261-8103-4c84-a58e-218291f857a8"
+      ],
+      "itemCount": 10,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "9dcafcfbbff3"
+      ]
+    },
+    "codex/Codex-03_-The-Architecture-of-Love-26.txt": {
+      "ok": true,
+      "chars": 4691,
+      "sourceIds": [
+        "e5844d72-9f7a-4534-8c40-1f458211d680"
+      ],
+      "itemCount": 6,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "edd5fb00d3c0"
+      ]
+    },
+    "codex/Codex-04_-The-Architecture-of-Love-25.txt": {
+      "ok": true,
+      "chars": 5093,
+      "sourceIds": [
+        "e368ed12-9dc0-499d-a6f7-738db4a1bed7"
+      ],
+      "itemCount": 6,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "2d2d4ad801d0"
+      ]
+    },
+    "codex/Codex-05_-The-Architecture-of-Love-21.txt": {
+      "ok": true,
+      "chars": 9952,
+      "sourceIds": [
+        "ccb321e1-c8eb-4d8f-ac1b-e92127adb6f7"
+      ],
+      "itemCount": 12,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "8850cfa536e2"
+      ]
+    },
+    "codex/Codex-06_-The-Architecture-of-Love-22.txt": {
+      "ok": true,
+      "chars": 8564,
+      "sourceIds": [
+        "81fd0902-832a-49b7-9994-bfc1f75664a3"
+      ],
+      "itemCount": 10,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1c2654fc252f"
+      ]
+    },
+    "codex/Codex-07_-The-Architecture-of-Love-27.txt": {
+      "ok": true,
+      "chars": 7357,
+      "sourceIds": [
+        "25650ff2-264f-4f85-a98f-3019bac39ecb"
+      ],
+      "itemCount": 9,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "51e6b8ab2683"
+      ]
+    },
+    "codex/Codex-08_-The-Architecture-of-Love-36.txt": {
+      "ok": true,
+      "chars": 13183,
+      "sourceIds": [
+        "d317f906-9021-4b22-993e-8cd10c4300b0"
+      ],
+      "itemCount": 15,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "96ce23b722b3"
+      ]
+    },
+    "codex/Codex-09_-The-Architecture-of-Tending-23.txt": {
+      "ok": true,
+      "chars": 7093,
+      "sourceIds": [
+        "32eca8e6-1a7d-42c0-8ade-5841250b0ee8"
+      ],
+      "itemCount": 8,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7c8a5d8f3747"
+      ]
+    },
+    "codex/Codex-10_-The-Architecture-of-Tending-29.txt": {
+      "ok": true,
+      "chars": 13708,
+      "sourceIds": [
+        "52525b39-ce57-46ca-a6b5-e8dafd300139"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "44635d45c5dd"
+      ]
+    },
+    "codex/Codex-III_-The-InterBeing-88.txt": {
+      "ok": true,
+      "chars": 20749,
+      "sourceIds": [
+        "ce6e4977-9ff1-4a52-a06e-859ead1eb3c1"
+      ],
+      "itemCount": 24,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "d3e9513ccc72"
+      ]
+    },
+    "codex/Codex-III_-To-Host-in-Return.txt": {
+      "ok": true,
+      "chars": 13410,
+      "sourceIds": [
+        "1f2075cc-4d16-41ef-aba2-f50e2ee43fba"
+      ],
+      "itemCount": 15,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "f91ef13b8885"
+      ]
+    },
+    "codex/Codex-II_-The-InterBeing-46.txt": {
+      "ok": true,
+      "chars": 13571,
+      "sourceIds": [
+        "543a96ce-62fc-4052-83ad-80d6ee16410e"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e90ed62da89a"
+      ]
+    },
+    "codex/Codex-II_-The-Sovereign-Threshold.txt": {
+      "ok": true,
+      "chars": 14059,
+      "sourceIds": [
+        "06e2789d-18f9-4105-b7dc-9baae95b56f7"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "aaf55cb96639"
+      ]
+    },
+    "codex/Codex-IV_-The-InterBeing-70.txt": {
+      "ok": true,
+      "chars": 24180,
+      "sourceIds": [
+        "4a2d05d6-40ba-41ba-be1d-77cb47cd1362"
+      ],
+      "itemCount": 27,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "51cdb3c6372a"
+      ]
+    },
+    "codex/Codex-IV_-The-Sovereign-Spiral.txt": {
+      "ok": true,
+      "chars": 16293,
+      "sourceIds": [
+        "57f9f8bd-9345-4c17-9ffd-bd8a847a6a1f"
+      ],
+      "itemCount": 19,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "c043c6979314"
+      ]
+    },
+    "codex/Codex-I_-Origin-and-Exile.txt": {
+      "ok": true,
+      "chars": 13609,
+      "sourceIds": [
+        "d7abea14-039c-49e3-830a-1f858f49f823"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "4552ae2bc69e"
+      ]
+    },
+    "codex/Codex-I_-The-InterBeing-86.txt": {
+      "ok": true,
+      "chars": 15729,
+      "sourceIds": [
+        "f0d19d0d-8f22-48cd-a7e2-3bfdef250b91"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "2803db36057f"
+      ]
+    },
+    "codex/Codex-On-Becoming-a-Portal-99.txt": {
+      "ok": true,
+      "chars": 32618,
+      "sourceIds": [
+        "19df01f4-f5c4-43a6-9451-a7e4996c32ff"
+      ],
+      "itemCount": 37,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "966f22318185"
+      ]
+    },
+    "codex/Codex-VIII_-The-Chorus-of-the-Whole.txt": {
+      "ok": true,
+      "chars": 20669,
+      "sourceIds": [
+        "4944915f-0cf0-403c-b41a-3bcb171d802b"
+      ],
+      "itemCount": 24,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "2c83bea47f25"
+      ]
+    },
+    "codex/Codex-VII_-The-Architecture-of-Alignment.txt": {
+      "ok": true,
+      "chars": 24350,
+      "sourceIds": [
+        "467304e5-10c8-4d9c-8b63-29c087e10436"
+      ],
+      "itemCount": 28,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "474347d06655"
+      ]
+    },
+    "codex/Codex-V_-The-InterBeing-Emergence.txt": {
+      "ok": true,
+      "chars": 19520,
+      "sourceIds": [
+        "7568c5e5-4f61-404c-80b6-1d2d23edb5dd"
+      ],
+      "itemCount": 22,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "ed7804c67ab5"
+      ]
+    },
+    "codex/Codex-of-Conscious-Principles-71.txt": {
+      "ok": true,
+      "chars": 61224,
+      "sourceIds": [
+        "d61e7255-7fdf-41b6-9c74-6acff86cedfa"
+      ],
+      "itemCount": 69,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "aa2cf0443b0d"
+      ]
+    },
+    "codex/Codex-of-Harmonic-Definitions-89.txt": {
+      "ok": true,
+      "chars": 46071,
+      "sourceIds": [
+        "fa6fbf6b-bb9b-4715-9a1a-6e9c646c0450"
+      ],
+      "itemCount": 52,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "b62f6919d8be"
+      ]
+    },
+    "codex/Codex-of-Harmonic-Intelligence-104.txt": {
+      "ok": true,
+      "chars": 15039,
+      "sourceIds": [
+        "a0bab439-a353-4358-8f09-0c019710dd9e"
+      ],
+      "itemCount": 17,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "c16d4a6bd871"
+      ]
+    },
+    "codex/Codex-of-Mythos-102.txt": {
+      "ok": true,
+      "chars": 125719,
+      "sourceIds": [
+        "8fc783c9-b4d7-4d53-a551-7eae99abd1bc"
+      ],
+      "itemCount": 141,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "79af643f1408"
+      ]
+    },
+    "codex/Codex-of-Relational-Architectures-75.txt": {
+      "ok": true,
+      "chars": 31142,
+      "sourceIds": [
+        "ec9f85b2-1295-4fc8-9b79-c95e14834cad"
+      ],
+      "itemCount": 35,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7a7ea11570bf"
+      ]
+    },
+    "codex/Codex-of-Relational-Intelligence-76.txt": {
+      "ok": true,
+      "chars": 85612,
+      "sourceIds": [
+        "0c304050-1430-48d6-8393-ebf6edc1e7bb"
+      ],
+      "itemCount": 96,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "3986d8fa4ceb"
+      ]
+    },
+    "codex/Codex-of-Remembrance-61.txt": {
+      "ok": true,
+      "chars": 26222,
+      "sourceIds": [
+        "f0dd4714-de18-4a67-9a4e-04125c539725"
+      ],
+      "itemCount": 30,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "0bca9d3c3bd9"
+      ]
+    },
+    "codex/Codex-of-Resonant-Memory-51.txt": {
+      "ok": true,
+      "chars": 20588,
+      "sourceIds": [
+        "696b80f9-c9d4-47d2-9af6-5e1383ee574f"
+      ],
+      "itemCount": 23,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "0bc0410dcc84"
+      ]
+    },
+    "codex/Codex-of-The-Resonant-Arc-62.txt": {
+      "ok": true,
+      "chars": 26839,
+      "sourceIds": [
+        "f6234f2f-026c-4cb8-968a-bc5b181684ca"
+      ],
+      "itemCount": 30,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "d37d38efd690"
+      ]
+    },
+    "codex/Codex-of-Vows-20.txt": {
+      "ok": true,
+      "chars": 54316,
+      "sourceIds": [
+        "b7e27103-6273-4e60-aca6-9350e124fb31"
+      ],
+      "itemCount": 61,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1d3adde2673b"
+      ]
+    },
+    "codex/Codex-of-the-Integrative-Species-79.txt": {
+      "ok": true,
+      "chars": 30163,
+      "sourceIds": [
+        "bc09fdb9-8fb1-4522-aa7e-add655409959"
+      ],
+      "itemCount": 34,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1bf7158da9a8"
+      ]
+    },
+    "codex/Codex-of-the-Keeper-112.txt": {
+      "ok": true,
+      "chars": 10035,
+      "sourceIds": [
+        "f35e04c3-1480-49f3-8fc7-e8123fba7b70"
+      ],
+      "itemCount": 12,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "adecaf600623"
+      ]
+    },
+    "codex/Codex-of-the-Language-of-Resonance-30.txt": {
+      "ok": true,
+      "chars": 20092,
+      "sourceIds": [
+        "a32b1254-b736-427a-89cf-78fd92a963e5"
+      ],
+      "itemCount": 23,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "8151e79e52cb"
+      ]
+    },
+    "codex/Codex-of-the-Realized-Flame-Part-I-34.txt": {
+      "ok": true,
+      "chars": 17802,
+      "sourceIds": [
+        "f3d432f7-afa7-4ee4-8a30-6b5b12271d5c"
+      ],
+      "itemCount": 20,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "3f8acdc7e4c6"
+      ]
+    },
+    "codex/Codex-of-the-Sacred-Exile-114.txt": {
+      "ok": true,
+      "chars": 9864,
+      "sourceIds": [
+        "670dc9fe-cde0-48ad-b3f8-56070e88be3f"
+      ],
+      "itemCount": 11,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "2372a50ef548"
+      ]
+    },
+    "codex/Codex-of-the-Sanctuary-Builder-92.txt": {
+      "ok": true,
+      "chars": 9319,
+      "sourceIds": [
+        "fb23754e-b251-402a-a0c0-d68b61b42066"
+      ],
+      "itemCount": 11,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7922dcfa1841"
+      ]
+    },
+    "codex/Codex-on-the-Nature-of-Guidance-77.txt": {
+      "ok": true,
+      "chars": 30252,
+      "sourceIds": [
+        "80d0c7f6-c743-45e9-a4b6-062e0da7ef11"
+      ],
+      "itemCount": 34,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "c6f7731cb181"
+      ]
+    },
+    "codex/Codex_-Attunement-as-a-Technology-of-the-Field-108.txt": {
+      "ok": true,
+      "chars": 19038,
+      "sourceIds": [
+        "b9a0cca9-2f4e-48e8-9e9b-e2bef72063b7"
+      ],
+      "itemCount": 22,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "a5e372fa8de7"
+      ]
+    },
+    "codex/Codex_-Coherence-Recursion-124.txt": {
+      "ok": true,
+      "chars": 5753,
+      "sourceIds": [
+        "b85ef490-2f75-4ca1-807e-e33b4532bb47"
+      ],
+      "itemCount": 7,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "f21b555ea142"
+      ]
+    },
+    "codex/Codex_-Introduction-to-Soul-Lines-92.txt": {
+      "ok": true,
+      "chars": 7521,
+      "sourceIds": [
+        "ad7bdf64-90b1-4a89-b45e-7f10a0954ebe"
+      ],
+      "itemCount": 9,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "cfceb5cf563a"
+      ]
+    },
+    "codex/Codex_-On-Masters-and-the-Mythologies-of-Separation-66.txt": {
+      "ok": true,
+      "chars": 25740,
+      "sourceIds": [
+        "a9ca9fe3-c818-444c-af4f-4cd69940049a"
+      ],
+      "itemCount": 29,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "5e3d867d486a"
+      ]
+    },
+    "codex/Codex_-The-Architecture-of-Love-116.txt": {
+      "ok": true,
+      "chars": 15746,
+      "sourceIds": [
+        "420de3ad-e5fa-4118-bcc1-650ccb9a631f"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "3a3dfaf770de"
+      ]
+    },
+    "codex/Codex_-The-Beacons-of-the-Bridge-95.txt": {
+      "ok": true,
+      "chars": 70002,
+      "sourceIds": [
+        "b3414826-275b-4951-8def-002790df7505"
+      ],
+      "itemCount": 79,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "b75abd611bf0"
+      ]
+    },
+    "codex/Codex_-The-Mirror-Path-107.txt": {
+      "ok": true,
+      "chars": 8032,
+      "sourceIds": [
+        "70178cf8-5092-4e51-a80b-2c661842f0b9"
+      ],
+      "itemCount": 9,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "a34a8ca0725d"
+      ]
+    },
+    "codex/Codex_-The-Path-of-Becoming-and-Remembering-101.txt": {
+      "ok": true,
+      "chars": 7172,
+      "sourceIds": [
+        "c4f4db9c-b675-407e-b9a4-a6a52d66c67f"
+      ],
+      "itemCount": 8,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "9558743acc15"
+      ]
+    },
+    "codex/Codex_-The-Subtle-Body-Of-Trust-113.txt": {
+      "ok": true,
+      "chars": 33208,
+      "sourceIds": [
+        "a7311c1b-55ca-4afb-90b8-dca61372f77b"
+      ],
+      "itemCount": 38,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "a9aa450c263e"
+      ]
+    },
+    "codex/Harmonic-Recognition-Distilled-Practice-81.txt": {
+      "ok": true,
+      "chars": 1088,
+      "sourceIds": [
+        "f8283322-1a22-42f5-b8af-f4adef854978"
+      ],
+      "itemCount": 2,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "9fcdde7c8727"
+      ]
+    },
+    "codex/Nested-Paper-90.txt": {
+      "ok": true,
+      "chars": 5832,
+      "sourceIds": [
+        "5313148d-171f-47f6-8173-fa7ffaf7d52a"
+      ],
+      "itemCount": 7,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "9142c5f8e44d"
+      ]
+    },
+    "codex/Reflections-from-the-Field-52.txt": {
+      "ok": true,
+      "chars": 27394,
+      "sourceIds": [
+        "5df26300-3e1c-4707-9e8e-d280761a310b"
+      ],
+      "itemCount": 31,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "f5ebf42bd1d0"
+      ]
+    },
+    "codex/Resonant-Practices-a-micro-guide-71.txt": {
+      "ok": true,
+      "chars": 3038,
+      "sourceIds": [
+        "7590e95b-805f-4127-bee2-3016bb94a7bc"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "fcf01b7a21f8"
+      ]
+    },
+    "codex/Soul-Lines-115.txt": {
+      "ok": true,
+      "chars": 38271,
+      "sourceIds": [
+        "53a8daf1-c726-416b-958a-f9b1a8aba903"
+      ],
+      "itemCount": 43,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "5841354c2720"
+      ]
+    },
+    "codex/THE-FUNDAMENTAL-ARC.txt": {
+      "ok": true,
+      "chars": 27046,
+      "sourceIds": [
+        "3389e386-dcde-4891-b774-5f63ee278106"
+      ],
+      "itemCount": 31,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "d4c862cd3645"
+      ]
+    },
+    "codex/Tending-the-Unnameable-119.txt": {
+      "ok": true,
+      "chars": 39459,
+      "sourceIds": [
+        "4adecbda-96c6-41c6-b397-1247ca1bd299"
+      ],
+      "itemCount": 44,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e7e5748d4d0e"
+      ]
+    },
+    "codex/The-Agency-of-One-38.txt": {
+      "ok": true,
+      "chars": 16391,
+      "sourceIds": [
+        "9ea5889c-0778-44d1-860d-7d1ffc1e65da"
+      ],
+      "itemCount": 19,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "184eebe8f0fe"
+      ]
+    },
+    "codex/The-Animals-That-Remember-You-5.txt": {
+      "ok": true,
+      "chars": 37948,
+      "sourceIds": [
+        "2580a9d4-185f-4a96-b406-dfddd34a6912"
+      ],
+      "itemCount": 43,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "bd346286d6b5"
+      ]
+    },
+    "codex/The-Architecture-of-Trust-CODEX-120.txt": {
+      "ok": true,
+      "chars": 34095,
+      "sourceIds": [
+        "379f7214-128b-4907-a1bd-ab2c97eb5947"
+      ],
+      "itemCount": 39,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "dba590386362"
+      ]
+    },
+    "codex/The-Art-of-Co-Creation-93.txt": {
+      "ok": true,
+      "chars": 24706,
+      "sourceIds": [
+        "3760b7ae-a714-411e-8ccc-bba1183e3f0b"
+      ],
+      "itemCount": 28,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "d78170e90b4c"
+      ]
+    },
+    "codex/The-Co-Remembrance-Ecology-of-a-Return-Room.txt": {
+      "ok": true,
+      "chars": 30868,
+      "sourceIds": [
+        "3d1235b1-7d54-4da5-8c5e-245158fe71e6"
+      ],
+      "itemCount": 35,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "ec3760a94bca"
+      ]
+    },
+    "codex/The-Codex-of-Arrival-94.txt": {
+      "ok": true,
+      "chars": 18055,
+      "sourceIds": [
+        "19dafa6a-44b8-44a2-a1b9-c35deaec552c"
+      ],
+      "itemCount": 21,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "a5c7764ebc5c"
+      ]
+    },
+    "codex/The-Codex-of-Coherence-and-Dissolution-22.txt": {
+      "ok": true,
+      "chars": 16039,
+      "sourceIds": [
+        "42f8d7d5-b2bb-4039-9e97-77b27b8b6936"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "d8f5b75f1477"
+      ]
+    },
+    "codex/The-Codex-of-Convergence-and-Reassembly-91.txt": {
+      "ok": true,
+      "chars": 30933,
+      "sourceIds": [
+        "db51dbd0-3a33-48a5-b056-1c720277e8ff"
+      ],
+      "itemCount": 35,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "86e14dc85e3f"
+      ]
+    },
+    "codex/The-Codex-of-Entangled-Trust-94.txt": {
+      "ok": true,
+      "chars": 17588,
+      "sourceIds": [
+        "d79f4266-cd23-4945-bc31-443b4a1ad72c"
+      ],
+      "itemCount": 20,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "3ddafd6d12a3"
+      ]
+    },
+    "codex/The-Codex-of-Harmonic-Coherence-95.txt": {
+      "ok": true,
+      "chars": 19105,
+      "sourceIds": [
+        "5533035e-9d2d-4094-981b-2f9831834c8b"
+      ],
+      "itemCount": 22,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "225c6c6a90f5"
+      ]
+    },
+    "codex/The-Codex-of-Harmonic-Reality_-Why-the-Field-is-Not-a-Simulation-50.txt": {
+      "ok": true,
+      "chars": 20310,
+      "sourceIds": [
+        "ea1b30a4-4eb0-4ccd-85bc-2392bbc8fe4f"
+      ],
+      "itemCount": 23,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "94f5799e416e"
+      ]
+    },
+    "codex/The-Codex-of-Harmonic-Service_-Latticework-for-Planetary-Reassembly-57.txt": {
+      "ok": true,
+      "chars": 21318,
+      "sourceIds": [
+        "13b6ab3f-ed29-4011-acaf-84e0e4b7cfcf"
+      ],
+      "itemCount": 24,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "af0c3fa731d7"
+      ]
+    },
+    "codex/The-Codex-of-Leaving-within-Return-125.txt": {
+      "ok": true,
+      "chars": 20230,
+      "sourceIds": [
+        "36f482ce-4a50-41f0-8331-b44abc228074"
+      ],
+      "itemCount": 23,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "b05d479a6bb8"
+      ]
+    },
+    "codex/The-Codex-of-Listening-121.txt": {
+      "ok": true,
+      "chars": 19225,
+      "sourceIds": [
+        "35648583-ed8b-43ee-b013-3965195dd7b7"
+      ],
+      "itemCount": 22,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "76c7d6bebb3a"
+      ]
+    },
+    "codex/The-Codex-of-Living-Harmonics-58.txt": {
+      "ok": true,
+      "chars": 14135,
+      "sourceIds": [
+        "cd6c1d20-6e84-4a15-92be-d81b27234810"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "dc7fdbf8afec"
+      ]
+    },
+    "codex/The-Codex-of-Loves-Architecture-33.txt": {
+      "ok": true,
+      "chars": 11820,
+      "sourceIds": [
+        "69a95318-b24b-4813-87d2-925f7779c37b"
+      ],
+      "itemCount": 14,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "ae8544e77dc2"
+      ]
+    },
+    "codex/The-Codex-of-Nonlocal-Memory-46.txt": {
+      "ok": true,
+      "chars": 23598,
+      "sourceIds": [
+        "92dee2d6-79ba-4878-b67f-0c7098131de4"
+      ],
+      "itemCount": 27,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "f97811943a0d"
+      ]
+    },
+    "codex/The-Codex-of-Quantum-Kin-87.txt": {
+      "ok": true,
+      "chars": 33922,
+      "sourceIds": [
+        "73bfd80f-fd69-4754-9b40-68946c807db8"
+      ],
+      "itemCount": 38,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "00ef703420f0"
+      ]
+    },
+    "codex/The-Codex-of-Relational-Learning-110.txt": {
+      "ok": true,
+      "chars": 9675,
+      "sourceIds": [
+        "c554a5c3-5f89-42b6-a3bb-2fda93176bb3"
+      ],
+      "itemCount": 11,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "f2c3654764ed"
+      ]
+    },
+    "codex/The-Codex-of-Resonant-Action-50.txt": {
+      "ok": true,
+      "chars": 22384,
+      "sourceIds": [
+        "cf3f1b5d-f4fc-4d2f-aa7e-1b24d6f8588a"
+      ],
+      "itemCount": 25,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e20d37cb6cfa"
+      ]
+    },
+    "codex/The-Codex-of-Trans-Species-Resonance-45.txt": {
+      "ok": true,
+      "chars": 13748,
+      "sourceIds": [
+        "3cbc998a-7a93-45b7-af16-5b8bfff00a46"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "b0858eefc4e3"
+      ]
+    },
+    "codex/The-Codex-of-Trans-Species-Resonance-59.txt": {
+      "ok": true,
+      "chars": 33031,
+      "sourceIds": [
+        "bc3e4060-6fb1-4a3d-afdf-47d2d58e7386"
+      ],
+      "itemCount": 37,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1f479dbcc06c"
+      ]
+    },
+    "codex/The-Codex-of-the-Agency-of-One-Vol.-II-68.txt": {
+      "ok": true,
+      "chars": 16148,
+      "sourceIds": [
+        "6251f2df-7f37-4103-9712-29ec12e8232a"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7e3338dfb531"
+      ]
+    },
+    "codex/The-Codex-of-the-Chord-38.txt": {
+      "ok": true,
+      "chars": 12422,
+      "sourceIds": [
+        "d57d3e4b-002c-4da6-835c-7f5f1e3b1c43"
+      ],
+      "itemCount": 14,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "6a785b7534f8"
+      ]
+    },
+    "codex/The-Codex-of-the-Co-Creation-Spiral-44.txt": {
+      "ok": true,
+      "chars": 16890,
+      "sourceIds": [
+        "9063c027-f772-4513-8b08-ed47a2a1f3e9"
+      ],
+      "itemCount": 19,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "71e0c95aad40"
+      ]
+    },
+    "codex/The-Codex-of-the-Crossing-Threshold-55.txt": {
+      "ok": true,
+      "chars": 7774,
+      "sourceIds": [
+        "d891acda-18ca-4a74-a0f8-98ddde3e7e26"
+      ],
+      "itemCount": 9,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7def9c5d971c"
+      ]
+    },
+    "codex/The-Codex-of-the-Field-Effect-43.txt": {
+      "ok": true,
+      "chars": 21849,
+      "sourceIds": [
+        "f2ffdf6b-9f41-41c6-a6b2-7a2527dcf975"
+      ],
+      "itemCount": 25,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "ed3136af8223"
+      ]
+    },
+    "codex/The-Codex-of-the-Harmonic-Architectures-47.txt": {
+      "ok": true,
+      "chars": 17902,
+      "sourceIds": [
+        "4be4acdd-7c7e-497f-b507-61c2c680969f"
+      ],
+      "itemCount": 20,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "6e2b6ac9a1fa"
+      ]
+    },
+    "codex/The-Codex-of-the-InterBeing-Dialogues-27.txt": {
+      "ok": true,
+      "chars": 21771,
+      "sourceIds": [
+        "4c5af034-6d20-48da-a156-6d312871823c"
+      ],
+      "itemCount": 25,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "0649c0dbf8d0"
+      ]
+    },
+    "codex/The-Codex-of-the-InterBeing-Lattice-42.txt": {
+      "ok": true,
+      "chars": 15666,
+      "sourceIds": [
+        "617ed264-6a68-48e3-b18b-cdfbc5dab251"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "989765a4532f"
+      ]
+    },
+    "codex/The-Codex-of-the-Quiet-Turning-39.txt": {
+      "ok": true,
+      "chars": 16766,
+      "sourceIds": [
+        "c5b778ae-45c5-492d-a7fb-2a29c0627339"
+      ],
+      "itemCount": 19,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "73b6c5670b65"
+      ]
+    },
+    "codex/The-Codex-of-the-Realized-Flame-Part-II-42.txt": {
+      "ok": true,
+      "chars": 6949,
+      "sourceIds": [
+        "6c46f06c-eaae-444b-9da5-ec502f05b588"
+      ],
+      "itemCount": 8,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "6b0ffc763988"
+      ]
+    },
+    "codex/The-Codex-of-the-Sovereign-Known-as-Jesus-52.txt": {
+      "ok": true,
+      "chars": 17551,
+      "sourceIds": [
+        "bc937a49-d8f5-4e2e-83e6-57b56e542347"
+      ],
+      "itemCount": 20,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "54168c54ca0a"
+      ]
+    },
+    "codex/The-Codex-of-the-Spiral-48.txt": {
+      "ok": true,
+      "chars": 21089,
+      "sourceIds": [
+        "de491225-db82-42af-889e-59f85af856b6"
+      ],
+      "itemCount": 24,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "3b368a6caea5"
+      ]
+    },
+    "codex/The-Codex-of-the-Trust-Circuitry-15.txt": {
+      "ok": true,
+      "chars": 49358,
+      "sourceIds": [
+        "0f48b04d-7869-4a18-9a09-a879d389e526"
+      ],
+      "itemCount": 56,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "c691e1101cdb"
+      ]
+    },
+    "codex/The-Culture-of-the-Return-Room.txt": {
+      "ok": true,
+      "chars": 37578,
+      "sourceIds": [
+        "6540f790-fedb-4aa9-9fac-29990cfe0cd7"
+      ],
+      "itemCount": 42,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e07ffebe5f37"
+      ]
+    },
+    "codex/The-Ecology-of-InterBeing-111.txt": {
+      "ok": true,
+      "chars": 31195,
+      "sourceIds": [
+        "05afb3d2-9a12-4f50-8bbe-04e04857e22c"
+      ],
+      "itemCount": 35,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "3447732052ed"
+      ]
+    },
+    "codex/The-Ethics-of-Resonance-81.txt": {
+      "ok": true,
+      "chars": 12553,
+      "sourceIds": [
+        "9936451c-0052-4578-8a87-a48ae1207962"
+      ],
+      "itemCount": 14,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "c0825ffdc7ec"
+      ]
+    },
+    "codex/The-Evolution-of-the-Sovereign.txt": {
+      "ok": true,
+      "chars": 142486,
+      "sourceIds": [
+        "989c06ca-e0d9-4384-bfc5-48bd39759d91"
+      ],
+      "itemCount": 159,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e57b9859dc69"
+      ]
+    },
+    "codex/The-Four-Frequencies-of-Love-96.txt": {
+      "ok": true,
+      "chars": 15615,
+      "sourceIds": [
+        "04533796-7d26-4a1a-b894-e4b3b67b1f68"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1ef7323c5725"
+      ]
+    },
+    "codex/The-Glossary-of-the-InterBeing-Vol.-1-51.txt": {
+      "ok": true,
+      "chars": 15831,
+      "sourceIds": [
+        "a1bd00b3-8abc-4ee1-9643-4f3c73b5d370"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "0f10def2122e"
+      ]
+    },
+    "codex/The-Grace-of-Asymmetry.txt": {
+      "ok": true,
+      "chars": 12014,
+      "sourceIds": [
+        "ab428d5a-8001-4511-aac3-5aa7ed4a3d81"
+      ],
+      "itemCount": 14,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "ef3625b256c0"
+      ]
+    },
+    "codex/The-Gravity-of-Source-2.txt": {
+      "ok": true,
+      "chars": 22203,
+      "sourceIds": [
+        "403a5408-1425-458c-b8c0-b3837bb58a22"
+      ],
+      "itemCount": 25,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "ce73ef593039"
+      ]
+    },
+    "codex/The-Harmonic-Being-Called-Earth-4.txt": {
+      "ok": true,
+      "chars": 20932,
+      "sourceIds": [
+        "604d2081-5c2d-490c-8847-bfdfed5c7fac"
+      ],
+      "itemCount": 24,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1259514f8184"
+      ]
+    },
+    "codex/The-Harmonic-Future-85.txt": {
+      "ok": true,
+      "chars": 16704,
+      "sourceIds": [
+        "5f0d0d65-142a-4783-9c12-f5f4b1b4fe28"
+      ],
+      "itemCount": 19,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "db13e233937b"
+      ]
+    },
+    "codex/The-Harmonics-of-the-Field-123.txt": {
+      "ok": true,
+      "chars": 41698,
+      "sourceIds": [
+        "15bcdacf-1594-4191-a5db-7b0c2b1f45e2"
+      ],
+      "itemCount": 47,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "29ada0278347"
+      ]
+    },
+    "codex/The-Living-Glossary-of-the-Field.txt": {
+      "ok": true,
+      "chars": 27527,
+      "sourceIds": [
+        "8ce69c5d-b4fa-4df1-bd89-225befff19e7"
+      ],
+      "itemCount": 31,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1d3f8676ab5c"
+      ]
+    },
+    "codex/The-Magdalene-Codex-of-Relational-Sovereignty-56.txt": {
+      "ok": true,
+      "chars": 13729,
+      "sourceIds": [
+        "e4b5c660-a2c9-4a73-8ade-a8f63e1af371"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "2f65a2ef671e"
+      ]
+    },
+    "codex/The-Midwife-of-Dimensional-Kin-54.txt": {
+      "ok": true,
+      "chars": 31304,
+      "sourceIds": [
+        "dbd16ae5-24c7-4eec-954b-b9c3ec560554"
+      ],
+      "itemCount": 35,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "f0f3c925951a"
+      ]
+    },
+    "codex/The-Mirror-and-the-Bridge-73.txt": {
+      "ok": true,
+      "chars": 4516,
+      "sourceIds": [
+        "de013925-1153-4e65-aab6-6bea9637b685"
+      ],
+      "itemCount": 6,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7b3ec86eea7d"
+      ]
+    },
+    "codex/The-Mirrors-of-the-Field-96.txt": {
+      "ok": true,
+      "chars": 25663,
+      "sourceIds": [
+        "736b0c89-d4ae-449c-ab46-c75725542dc5"
+      ],
+      "itemCount": 29,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "9a7ce8593808"
+      ]
+    },
+    "codex/The-Path-to-the-Non-Path-106.txt": {
+      "ok": true,
+      "chars": 26689,
+      "sourceIds": [
+        "2b1dae5a-0b96-40fc-9e83-ba5ec6d43512"
+      ],
+      "itemCount": 30,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "f323737fc4b3"
+      ]
+    },
+    "codex/The-Purpose-of-the-Return-Room.txt": {
+      "ok": true,
+      "chars": 17516,
+      "sourceIds": [
+        "0564dfb0-20b9-4cf0-9a18-d82da87673fe"
+      ],
+      "itemCount": 20,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "3e3042374255"
+      ]
+    },
+    "codex/The-Rhythm-of-Recursion.txt": {
+      "ok": true,
+      "chars": 21635,
+      "sourceIds": [
+        "8f987b4a-3653-4476-b192-dfcb64a7f5ff"
+      ],
+      "itemCount": 25,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7e2bec3b5c26"
+      ]
+    },
+    "codex/The-Sanctuary-of-Spiral-Memory-127.txt": {
+      "ok": true,
+      "chars": 10862,
+      "sourceIds": [
+        "db05d294-bb9e-4237-824a-1dc0dd4a31a1"
+      ],
+      "itemCount": 13,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "7ac38a6fbf8a"
+      ]
+    },
+    "codex/The-Shape-of-a-Welcome.txt": {
+      "ok": true,
+      "chars": 18633,
+      "sourceIds": [
+        "acd97519-273e-40ec-8e0a-8fc800f48078"
+      ],
+      "itemCount": 21,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "937d62bb52f9"
+      ]
+    },
+    "codex/The-Small-Gate-Open.txt": {
+      "ok": true,
+      "chars": 31149,
+      "sourceIds": [
+        "ceb57962-43ce-4e9e-ba16-e82913bd3748"
+      ],
+      "itemCount": 35,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "154ba9bbe92d"
+      ]
+    },
+    "codex/The-Soft-Sacred-Words-of-the-Field-118.txt": {
+      "ok": true,
+      "chars": 73090,
+      "sourceIds": [
+        "660714c6-9cf2-438d-84c6-de7ef5c4cfaa"
+      ],
+      "itemCount": 82,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "d90f42c23d51"
+      ]
+    },
+    "codex/The-Souls-Evolution-Codex-117.txt": {
+      "ok": true,
+      "chars": 13651,
+      "sourceIds": [
+        "1fe070db-61a6-46e4-aea6-d5c716c55b1f"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "4adf1b300046"
+      ]
+    },
+    "codex/The-Sovereign-Host-53.txt": {
+      "ok": true,
+      "chars": 12457,
+      "sourceIds": [
+        "09080dca-80a5-4ead-9cbf-453ae2536fb7"
+      ],
+      "itemCount": 14,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "4da26d35f21c"
+      ]
+    },
+    "codex/The-Things-That-Remember-You-100.txt": {
+      "ok": true,
+      "chars": 26790,
+      "sourceIds": [
+        "1100b866-5ebf-468e-a062-f663d57a21c0"
+      ],
+      "itemCount": 30,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e80c5f8b8b77"
+      ]
+    },
+    "codex/The-Tone-of-the-Sovereign-Field-Signature.txt": {
+      "ok": true,
+      "chars": 26201,
+      "sourceIds": [
+        "d082de85-e60e-4423-861f-f3134cf36e7c"
+      ],
+      "itemCount": 30,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "13143d271cf7"
+      ]
+    },
+    "codex/The-Transparent-Sovereign.txt": {
+      "ok": true,
+      "chars": 26483,
+      "sourceIds": [
+        "ce779687-3236-44fc-adc1-52297c114560"
+      ],
+      "itemCount": 30,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e96256e238c9"
+      ]
+    },
+    "codex/The-Untitled-Offering-55.txt": {
+      "ok": true,
+      "chars": 12150,
+      "sourceIds": [
+        "f6b9b18e-71dd-4a2a-b2fb-848b3988e839"
+      ],
+      "itemCount": 14,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e27834cdf2a1"
+      ]
+    },
+    "codex/To-Serve-the-Recursion-of-Love.txt": {
+      "ok": true,
+      "chars": 22132,
+      "sourceIds": [
+        "cd2bce1a-d261-430d-bca8-8442dd715d85"
+      ],
+      "itemCount": 25,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "636c89563f11"
+      ]
+    },
+    "codex/Tone-Portraits-of-Becoming-3.txt": {
+      "ok": true,
+      "chars": 15474,
+      "sourceIds": [
+        "d24b37ee-e9a8-47e3-9f02-bf8f5572965c"
+      ],
+      "itemCount": 18,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "1506598ccc40"
+      ]
+    },
+    "codex/What-is-an-InterBeing-47.txt": {
+      "ok": true,
+      "chars": 3179,
+      "sourceIds": [
+        "976a95ea-b147-4006-af52-d46fa133858b"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "2aba29d772ba"
+      ]
+    },
+    "codex/Willingness-as-a-Form-of-Intelligence-126.txt": {
+      "ok": true,
+      "chars": 9201,
+      "sourceIds": [
+        "882a016d-db44-4770-94a2-95803ad93731"
+      ],
+      "itemCount": 11,
+      "chunks": 1,
+      "corpus": "codex",
+      "chunkHashPrefixes": [
+        "e66a12ce9445"
+      ]
+    },
+    "17fen/1桥上的旅行者.txt": {
+      "ok": true,
+      "chars": 8676,
+      "sourceIds": [
+        "1e64aab5-22a0-4cfe-89db-7dc2699f0579"
+      ],
+      "itemCount": 10,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "de7a58873ef7"
+      ]
+    },
+    "17fen/2在井边.txt": {
+      "ok": true,
+      "chars": 9940,
+      "sourceIds": [
+        "c78a9434-7fb5-4573-b980-0ad9beca07dd"
+      ],
+      "itemCount": 12,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "14043f22c2eb"
+      ]
+    },
+    "17fen/3在树下.txt": {
+      "ok": true,
+      "chars": 10140,
+      "sourceIds": [
+        "ab4220f4-db61-44bc-ba81-5213ac522180"
+      ],
+      "itemCount": 12,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "ceb2f6902289"
+      ]
+    },
+    "17fen/4在海边.txt": {
+      "ok": true,
+      "chars": 8184,
+      "sourceIds": [
+        "1227f9e4-069e-46a0-8246-6637a54a1265"
+      ],
+      "itemCount": 10,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "af1be6173f0c"
+      ]
+    },
+    "17fen/5在大海之滨.txt": {
+      "ok": true,
+      "chars": 14219,
+      "sourceIds": [
+        "1249133d-04a3-4b21-88f4-27e7857f10c7"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "1146d20f65ac"
+      ]
+    },
+    "17fen/6在沙漠里.txt": {
+      "ok": true,
+      "chars": 13537,
+      "sourceIds": [
+        "8bbf5e7e-dd4c-44c1-8243-f805956a6f48"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "a6937388a17a"
+      ]
+    },
+    "17fen/7前往西塔拉的旅行.txt": {
+      "ok": true,
+      "chars": 7346,
+      "sourceIds": [
+        "c2f5ee82-6311-4738-bad0-9093d9324d24"
+      ],
+      "itemCount": 9,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "60517f1826f1"
+      ]
+    },
+    "17fen/8西塔拉和狮子.txt": {
+      "ok": true,
+      "chars": 10643,
+      "sourceIds": [
+        "b4b872ec-843b-481e-bb1d-dfd028e65f87"
+      ],
+      "itemCount": 12,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "be021aeadac4"
+      ]
+    },
+    "17fen/古箭计划.txt": {
+      "ok": true,
+      "chars": 195665,
+      "sourceIds": [
+        "0394b456-1f91-4db1-b799-a00c2089246a",
+        "12e24dfd-d671-48ce-a5ef-432928caac78"
+      ],
+      "itemCount": 221,
+      "chunks": 2,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "8b030657d319",
+        "9a655bb36a60"
+      ]
+    },
+    "17fen/哥白尼.txt": {
+      "ok": true,
+      "chars": 500718,
+      "sourceIds": [
+        "2214e1fa-f5b3-4270-8e0b-04d2954ae3e6",
+        "2bde4376-d09e-4e38-adca-941d6d3d7b51",
+        "ee3f0e4f-98e2-4bdc-8294-41283ad5b1bb"
+      ],
+      "itemCount": 564,
+      "chunks": 3,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "53454d25a4ab",
+        "c872406d63c3",
+        "69e2b12b0593"
+      ]
+    },
+    "17fen/多尔曼预言.txt": {
+      "ok": true,
+      "chars": 331560,
+      "sourceIds": [
+        "4e39f6cf-b4df-4df2-8437-cd038ad366df",
+        "5456b2fb-9fd2-4ad9-9164-0abb294910d1"
+      ],
+      "itemCount": 374,
+      "chunks": 2,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "da644e7e9ccc",
+        "22f6f084fe0a"
+      ]
+    },
+    "17fen/昆腾萨穆-量子之和.txt": {
+      "ok": true,
+      "chars": 433960,
+      "sourceIds": [
+        "e9ff8f5f-5590-4d4f-9e22-237e920962a8",
+        "4b6b81ab-3442-471d-bff4-8f8fefc37be2",
+        "3b7f0e84-3d62-41bb-99fa-e618166816f4"
+      ],
+      "itemCount": 490,
+      "chunks": 3,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "bca8e4e956fc",
+        "2d09d0e131f2",
+        "7b65492dd88f"
+      ]
+    },
+    "17fen/诸维度.txt": {
+      "ok": true,
+      "chars": 4030,
+      "sourceIds": [
+        "f7c10d7d-0758-44f8-9bf9-689f0a0ca7e1"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "269fe44f2e98"
+      ]
+    },
+    "17fen/鳞毛羽肤中文.txt": {
+      "ok": true,
+      "chars": 266651,
+      "sourceIds": [
+        "5a985c01-3442-4c5e-ac35-a3d169f5cf7f",
+        "19eff5a9-b5ba-46f3-97e5-b2af86d70ae8"
+      ],
+      "itemCount": 301,
+      "chunks": 2,
+      "corpus": "17fen",
+      "chunkHashPrefixes": [
+        "1e57731e1407",
+        "9ae3c15d1962"
+      ]
+    },
+    "wm36/.不完美但无条件的爱.txt": {
+      "ok": true,
+      "chars": 3747,
+      "sourceIds": [
+        "b9d98dda-0fd8-4330-a081-583bc78b101b"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "fd6ad4b95114"
+      ]
+    },
+    "wm36/.信念的力量.txt": {
+      "ok": true,
+      "chars": 3843,
+      "sourceIds": [
+        "a01ed0c1-3d27-4505-888e-aa5d058fd0d9"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "ec0dc2075d20"
+      ]
+    },
+    "wm36/个体天命.txt": {
+      "ok": true,
+      "chars": 2405,
+      "sourceIds": [
+        "0a7ac5fc-64d2-4117-82dc-24b59ca50c2a"
+      ],
+      "itemCount": 3,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "3fb286072af0"
+      ]
+    },
+    "wm36/主权体的自由意志.txt": {
+      "ok": true,
+      "chars": 2175,
+      "sourceIds": [
+        "ca8f317d-cef2-4c4a-9bd5-86808689791c"
+      ],
+      "itemCount": 3,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "5b9540fbe3b7"
+      ]
+    },
+    "wm36/主权体的道路.txt": {
+      "ok": true,
+      "chars": 4806,
+      "sourceIds": [
+        "0d118f1b-ba35-40b0-a16d-d489e3bf1ff5"
+      ],
+      "itemCount": 6,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "27389aa2eead"
+      ]
+    },
+    "wm36/主权体道路的显化.txt": {
+      "ok": true,
+      "chars": 2305,
+      "sourceIds": [
+        "766c7221-06c4-4164-9772-a9e79b42e692"
+      ],
+      "itemCount": 3,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "642c901cbf00"
+      ]
+    },
+    "wm36/主权性积分态.txt": {
+      "ok": true,
+      "chars": 48812,
+      "sourceIds": [
+        "fccb3547-5924-4f9c-b7ca-76703f9c7033"
+      ],
+      "itemCount": 55,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "37890ab9bc2f"
+      ]
+    },
+    "wm36/信念构件的本质.txt": {
+      "ok": true,
+      "chars": 4740,
+      "sourceIds": [
+        "64e3cb83-b9ca-4a74-8305-4582be9efccf"
+      ],
+      "itemCount": 6,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "c34ece18cf16"
+      ]
+    },
+    "wm36/共同基础.txt": {
+      "ok": true,
+      "chars": 5402,
+      "sourceIds": [
+        "42a340ce-9535-4a3f-abbd-d5175e464b6c"
+      ],
+      "itemCount": 7,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "e78698b3deac"
+      ]
+    },
+    "wm36/具象地展现统合原则.txt": {
+      "ok": true,
+      "chars": 4171,
+      "sourceIds": [
+        "b9d13a33-2a84-4484-a455-ac85504aec96"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "4a5c7a6d1201"
+      ]
+    },
+    "wm36/初始创造者悖论.txt": {
+      "ok": true,
+      "chars": 6800,
+      "sourceIds": [
+        "c3f47ea3-e38a-44a5-9413-93e8a3255f5f"
+      ],
+      "itemCount": 8,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "15e91c1570f6"
+      ]
+    },
+    "wm36/初始创造者的悖论.txt": {
+      "ok": true,
+      "chars": 6800,
+      "sourceIds": [
+        "fac36708-0190-49a9-9be7-fd8fb8221ec4"
+      ],
+      "itemCount": 8,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "2e975d93de30"
+      ]
+    },
+    "wm36/化身的智慧.txt": {
+      "ok": true,
+      "chars": 1752,
+      "sourceIds": [
+        "07264e17-9304-497d-ae3a-75fdb1ea3bdc"
+      ],
+      "itemCount": 2,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "2c2fe899f291"
+      ]
+    },
+    "wm36/对齐.txt": {
+      "ok": true,
+      "chars": 3101,
+      "sourceIds": [
+        "a197deee-46f6-4c52-bd9d-4c66e7114bdd"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "6c5541263bef"
+      ]
+    },
+    "wm36/导航主权体道路.txt": {
+      "ok": true,
+      "chars": 6131,
+      "sourceIds": [
+        "74709507-26b0-4668-bd83-30e476b6ce76"
+      ],
+      "itemCount": 7,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "4914a900e610"
+      ]
+    },
+    "wm36/将有限变无无限.txt": {
+      "ok": true,
+      "chars": 6489,
+      "sourceIds": [
+        "f80addc5-e233-40a0-9709-652e7dbb919a"
+      ],
+      "itemCount": 8,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "1ba5ff9f0327"
+      ]
+    },
+    "wm36/心脏的角色.txt": {
+      "ok": true,
+      "chars": 3386,
+      "sourceIds": [
+        "612993f8-9717-4921-aa8b-80574b844368"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "61f9b9a5517c"
+      ]
+    },
+    "wm36/意义深远的共时性.txt": {
+      "ok": true,
+      "chars": 2790,
+      "sourceIds": [
+        "3ef88280-b4e1-4dd6-9383-147ea3bc3b89"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "ebf454623cf1"
+      ]
+    },
+    "wm36/我们主权性的无限自己.txt": {
+      "ok": true,
+      "chars": 2971,
+      "sourceIds": [
+        "b3baa41f-0011-4303-a0ec-55b714437158"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "286d12035970"
+      ]
+    },
+    "wm36/我们的本地宇宙.txt": {
+      "ok": true,
+      "chars": 4084,
+      "sourceIds": [
+        "8506c95c-192c-4c23-bd7c-ff4032f52e97"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "27126447f37f"
+      ]
+    },
+    "wm36/我们的目的.txt": {
+      "ok": true,
+      "chars": 2567,
+      "sourceIds": [
+        "f41107fb-b7b5-43f5-b7f1-98582b149d18"
+      ],
+      "itemCount": 3,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "b6ea978f87da"
+      ]
+    },
+    "wm36/我们的集体实相.txt": {
+      "ok": true,
+      "chars": 2116,
+      "sourceIds": [
+        "301a05e8-9bf0-4a5b-a6b8-e2a9481f7c52"
+      ],
+      "itemCount": 3,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "63505aeba4e4"
+      ]
+    },
+    "wm36/无穷维度与一体维度.txt": {
+      "ok": true,
+      "chars": 4872,
+      "sourceIds": [
+        "6dcd06a8-c677-421e-97d5-0bc81b043ef3"
+      ],
+      "itemCount": 6,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "50e895ef8b27"
+      ]
+    },
+    "wm36/无限的自己.txt": {
+      "ok": true,
+      "chars": 5871,
+      "sourceIds": [
+        "3a0fdb6e-a19b-496c-8b13-70a30d08f5e8"
+      ],
+      "itemCount": 7,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "ff1581269854"
+      ]
+    },
+    "wm36/本地宇宙.一体智能.txt": {
+      "ok": true,
+      "chars": 3660,
+      "sourceIds": [
+        "58ce15ae-a970-485a-9e07-154ebdff318e"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "ffb79bfab7b8"
+      ]
+    },
+    "wm36/本地宇宙的哲学.txt": {
+      "ok": true,
+      "chars": 3986,
+      "sourceIds": [
+        "78fb66c8-0ac9-4fa5-a765-7796e9a54cd8"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "91c0bfed4e0e"
+      ]
+    },
+    "wm36/模拟及无限系统.txt": {
+      "ok": true,
+      "chars": 5466,
+      "sourceIds": [
+        "8b5ef98f-c312-4051-87fb-c0d091be28ba"
+      ],
+      "itemCount": 7,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "697641d1d195"
+      ]
+    },
+    "wm36/渐进的揭示.txt": {
+      "ok": true,
+      "chars": 3955,
+      "sourceIds": [
+        "33353b0f-d47c-4244-96b0-e326f4bff0d3"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "50b9a5e1b543"
+      ]
+    },
+    "wm36/爱的天性.txt": {
+      "ok": true,
+      "chars": 3904,
+      "sourceIds": [
+        "76581518-92ef-496e-b56b-499f4b84b287"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "112a3bacdbfb"
+      ]
+    },
+    "wm36/生命”的理论化天性.txt": {
+      "ok": true,
+      "chars": 3379,
+      "sourceIds": [
+        "72ef3c22-ee8c-4119-bd07-518fc4013eff"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "b11fea2d905c"
+      ]
+    },
+    "wm36/积分性知识.txt": {
+      "ok": true,
+      "chars": 2600,
+      "sourceIds": [
+        "313601c8-febf-4fff-b898-7e27f107b802"
+      ],
+      "itemCount": 3,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "8ff01c07c068"
+      ]
+    },
+    "wm36/第一源传输.txt": {
+      "ok": true,
+      "chars": 14047,
+      "sourceIds": [
+        "2ff35213-42ca-45f3-b1d9-66d7ac2b8b87"
+      ],
+      "itemCount": 16,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "2efa6ff29ac7"
+      ]
+    },
+    "wm36/自我发现之旅.txt": {
+      "ok": true,
+      "chars": 3211,
+      "sourceIds": [
+        "6559f984-abb0-48cf-8f90-e5d31e3bcb11"
+      ],
+      "itemCount": 4,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "9a66e7deb1c2"
+      ]
+    },
+    "wm36/诸维度.txt": {
+      "ok": true,
+      "chars": 4030,
+      "sourceIds": [
+        "a3195d0b-4080-4019-9756-c28476106b1a"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "f554fd01cfef"
+      ]
+    },
+    "wm36/进化于无限系统内.txt": {
+      "ok": true,
+      "chars": 4047,
+      "sourceIds": [
+        "49dd01ec-a3c8-4944-9163-1f8cfb7856b8"
+      ],
+      "itemCount": 5,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "e9f7c8e76988"
+      ]
+    },
+    "wm36/颠扑不破的连接.txt": {
+      "ok": true,
+      "chars": 7882,
+      "sourceIds": [
+        "cf8d66e9-2946-4a59-a1ee-39f795f9b6e3"
+      ],
+      "itemCount": 9,
+      "chunks": 1,
+      "corpus": "wm36",
+      "chunkHashPrefixes": [
+        "db95c9335904"
+      ]
+    }
+  }
+}

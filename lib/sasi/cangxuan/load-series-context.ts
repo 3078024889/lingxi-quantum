@@ -114,6 +114,9 @@ export async function loadDirectorFoundryPack(
   if (characterKeys.length) {
     charactersQuery = charactersQuery.in("character_key", characterKeys);
   }
+  // A new project must not inherit characters from a different story simply
+  // because both projects belong to the same user. Filter before the row limit.
+  if (projectId) charactersQuery = charactersQuery.eq("project_id", projectId);
 
   const { data: rawCharacters, error: charactersError } = await charactersQuery;
   if (charactersError) throw charactersError;
@@ -121,8 +124,7 @@ export async function loadDirectorFoundryPack(
   let selected = (rawCharacters ?? []) as Array<Record<string, unknown>>;
   if (projectId) {
     const projectScoped = selected.filter((row) => row.project_id === projectId);
-    const unscoped = selected.filter((row) => row.project_id == null);
-    selected = (projectScoped.length ? [...projectScoped, ...unscoped] : selected).slice(0, characterLimit);
+    selected = projectScoped.slice(0, characterLimit);
   } else {
     selected = selected.slice(0, characterLimit);
   }

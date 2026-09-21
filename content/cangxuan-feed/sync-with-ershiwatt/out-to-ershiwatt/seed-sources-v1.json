@@ -1,0 +1,37 @@
+{
+  "version": "v1",
+  "updated": "2026-09-10",
+  "policy": "公开可引用；遵守对方 API/robots；不盗版整本；不碰账密；求真不编假",
+  "sources": [
+    {
+      "id": "wikipedia-zh",
+      "name": "维基百科（中文）",
+      "class": "open_encyclopedia",
+      "base_url": "https://zh.wikipedia.org",
+      "api": "https://zh.wikipedia.org/w/api.php",
+      "rest_summary": "https://zh.wikipedia.org/api/rest_v1/page/summary/{title}",
+      "license_note": "CC BY-SA；摘要抽取为命题/证据，保留来源类",
+      "enabled": true
+    },
+    {
+      "id": "wikipedia-en",
+      "name": "Wikipedia (English)",
+      "class": "open_encyclopedia",
+      "base_url": "https://en.wikipedia.org",
+      "api": "https://en.wikipedia.org/w/api.php",
+      "rest_summary": "https://en.wikipedia.org/api/rest_v1/page/summary/{title}",
+      "license_note": "CC BY-SA",
+      "enabled": true
+    },
+    {
+      "id": "wikidata",
+      "name": "Wikidata",
+      "class": "open_data",
+      "base_url": "https://www.wikidata.org",
+      "api": "https://www.wikidata.org/w/api.php",
+      "license_note": "CC0 for data where applicable",
+      "enabled": false,
+      "note": "第二期接入实体属性流"
+    }
+  ]
+}

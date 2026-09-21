@@ -1,0 +1,20 @@
+{
+  "id": "CG-04",
+  "span": [
+    "E01",
+    "E03"
+  ],
+  "must_hold": [
+    {
+      "fact": "何岚冲锋衣内白Tee",
+      "break_if": "E03 换成红裙无场记"
+    }
+  ],
+  "expect_dkn": "CONFLICT",
+  "drama_steps": [
+    2,
+    3,
+    5,
+    6
+  ]
+}

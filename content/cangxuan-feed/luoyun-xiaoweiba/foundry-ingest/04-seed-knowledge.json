@@ -1,0 +1,167 @@
+[
+  {
+    "category": "RULE",
+    "title": "快兑现总则",
+    "statement": "首分钟必须出事或亮规则；禁止磨半天不兑现。",
+    "evidence": "首分钟必须出事或亮规则；禁止磨半天不兑现。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "32b377922af3a0304be56b8c4d2ca7eb38bbee553162aa643c99f2c0174faeb2"
+  },
+  {
+    "category": "RULE",
+    "title": "团宠跨季结构",
+    "statement": "团宠长线=新地图新敌人 + 固定护短群像（师兄/老祖）。",
+    "evidence": "团宠长线=新地图新敌人 + 固定护短群像（师兄/老祖）。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "9987e14ab69fa7876a1ee1888ebce9a5cc1ef9819503ad381f8d58c87107a7cf"
+  },
+  {
+    "category": "CONTINUITY",
+    "title": "借响代价锁",
+    "statement": "借响须有代价：短眩晕或灵力乱，禁止无代价开挂。",
+    "evidence": "借响须有代价：短眩晕或灵力乱，禁止无代价开挂。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "eb81acda89ca0b1305cf3339668a91276b5d0d2de9af22a33024ef1252f07861"
+  },
+  {
+    "category": "SHOT",
+    "title": "三轨加速",
+    "statement": "心声/表情字/Q版是漫剧加速器，关键节拍应三轨齐全。",
+    "evidence": "心声/表情字/Q版是漫剧加速器，关键节拍应三轨齐全。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "c4778ceb799015bfcb168acd12bc894b8b047bfff9e05daa032dbbea1ddf464c"
+  },
+  {
+    "category": "CONTINUITY",
+    "title": "女主人设锁",
+    "statement": "云小棠核心是「跟上」与被护短，禁止改成无羁绊孤傲女主。",
+    "evidence": "云小棠核心是「跟上」与被护短，禁止改成无羁绊孤傲女主。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "595d6a763115ba35a35a6de0d76e7835ca5d9815b49cdf2a4ccb023cda56e309"
+  },
+  {
+    "category": "RULE",
+    "title": "道具即契约",
+    "statement": "关键道具一旦公开为「钥/契约物」，禁拔禁交须当场兑现为规则与行动，不可只当气氛道具。",
+    "evidence": "E16寒砚当众「钥不是饵」+锁芯看守令：佩不离壁、人不出霜栖主脉；棠口头禅「嵌着。不拔。」",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "8b4bccdff9bc2459bad2596827543731253b58f00f89fd7ea3cd85c70241e7c4",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "通牒倒计时钩",
+    "statement": "敌方升级通牒须给出可感知倒计时与损失厌恶（人佩同迁·三日），并立刻用己方禁令对撞，形成双向时钟追更。",
+    "evidence": "E16半面具执事霜音「三日。佩进人走。」对撞寒砚「锁芯看守令」三日内守壁守峰。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "d2d1b3c72053bf4695e885d168d9fc8886af9d318d631ae2ceb3794e7f7d8b9b",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "RULE",
+    "title": "学舌升级须可压",
+    "statement": "杂灵/影怪学舌升级复读外敌词时，须有库存代价道具可压回，并禁止女主应全名，避免无解危机。",
+    "evidence": "E16息影学舌「棠——交——」；沈澈安神符贴缝压回；库存-1剩2；禁应全名。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "87d19b8c11099e7f7017cb460386eb854b201450bc88bac57c96ee0591813b46",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "额度满格可视化",
+    "statement": "护短能力有日额度时，二次用尽须口播「今日满」并写明身体代价，把规则爽感做成可见记账。",
+    "evidence": "E16借响2/2：借陆衡剑息+寒砚霜息封三钉；陆衡「第二次。今日满。」代价指尖+耳根麻。",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "f911981d0997b6f8375b947966b867390bf6d68b939679db8ef67e8cd3f7bb69",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "CONTINUITY",
+    "title": "信息差误判三拍",
+    "statement": "禁足反派的误判须在三拍内被纸条/碎片打回：以为得手→敌方否认→反派掉价，保持未洗白。",
+    "evidence": "E16赵临川写「可动手」→黑影「佩未离壁。再逼。」→其心声「我成看门的了？」",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "b22ca9b4d9202fa95c65bedd228e2417fd9976192d9b9b9380db15d043bfe93f",
+    "source_episode": 16,
+    "source_file": "E16.md"
+  },
+  {
+    "category": "RULE",
+    "title": "E17·人可借响佩不可迁",
+    "statement": "锁芯看守令：人可借响护场，佩不可迁出壁；同迁要求被旧禁挡在线外。",
+    "evidence": "E17 B3-B4 craft",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "ad4bf918d4775d5f0ea14c94ba279b34fadd4535fa7474d503888d6c3fce1b9d",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "E17·打脸≤2拍",
+    "statement": "息影学舌加压后同拍安神符压回；赵偷听当拍被纸条打脸——兑现快于吊胃口。",
+    "evidence": "E17 B5/B7",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "930f35c4aecaf5cc101866fe146c2303d1aee9fa88d64e70e51272ae537c316d",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "PREFERENCE",
+    "title": "E17·三护短可见站位",
+    "statement": "令/符/人三角同步半步，被看见的渴望同镜兑现，不靠旁白解释团宠。",
+    "evidence": "E17 B8",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "c3c6ba8a77f544bfa77a16e6be63ee931d2a27c796ec50f2c6d47e2cef3b5c41",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "E17·峰终钩温",
+    "statement": "结尾缺角钩温+名册点锁芯，峰值与终局同帧，服务下集。",
+    "evidence": "E17 B9 peak-end",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "04fe842ec68cf60196299ba3a647befffaffb430c7f0bc4e9552c66b94c76ce2",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "RULE",
+    "title": "E17·信息差分账",
+    "statement": "线外面具、线内旧禁、禁足赵三线信息差并行，禁止观众全知同步。",
+    "evidence": "E17 B1-B2-B7",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "99f973c691379fa8b5ab908e14a89fc4a60fc217b0ccca4c3e517853b3889e89",
+    "domain": "luoyun-xiaoweiba"
+  }
+]

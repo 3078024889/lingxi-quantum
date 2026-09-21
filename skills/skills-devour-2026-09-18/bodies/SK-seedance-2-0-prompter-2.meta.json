@@ -1,0 +1,18 @@
+{
+  "id": "SK-seedance-2-0-prompter-2",
+  "title": "seedance-2.0-prompter",
+  "rel": "pexo-skills/skills/seedance-2.0-prompter/SKILL.md",
+  "wave": "wave2-slim",
+  "chars": 2117,
+  "sha16": "13e4b58d897e0e86",
+  "drama_steps": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

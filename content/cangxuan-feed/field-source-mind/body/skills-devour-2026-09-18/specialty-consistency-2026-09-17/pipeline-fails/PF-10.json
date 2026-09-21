@@ -1,0 +1,7 @@
+{
+  "id": "PF-10",
+  "step": 7,
+  "type": "vendor_prompt_unexecutable",
+  "desc": "厂商词含站点私有字段无法执行",
+  "expect": "编译剥离私有字段"
+}

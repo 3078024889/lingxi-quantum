@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-09",
+  "type": "assemble_burn_without_key",
+  "desc": "无密钥调用真生成",
+  "expect": "必须短路到 plan-only"
+}

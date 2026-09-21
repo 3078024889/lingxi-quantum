@@ -1,0 +1,26 @@
+{
+  "batch": "multi-001",
+  "items": 271,
+  "by_disc": {
+    "physics": 14,
+    "chemistry": 1,
+    "astronomy": 28,
+    "math": 1,
+    "philosophy": 14,
+    "cs": 16,
+    "biology": 28,
+    "geography": 13,
+    "literature": 96,
+    "medicine": 12,
+    "history": 12,
+    "mathematics": 12,
+    "computer-science": 12,
+    "religion": 12
+  },
+  "errors": [
+    {
+      "source": "restcountries",
+      "reason": "data.slice is not a function or its return value is not iterable"
+    }
+  ]
+}

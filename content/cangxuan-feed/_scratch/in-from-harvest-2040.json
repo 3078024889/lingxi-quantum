@@ -1,0 +1,47 @@
+{
+  "at": "2026-09-10T12:53:31.363Z",
+  "rules": [
+    {
+      "id": "ershi-gi-ri",
+      "cat": "RULE",
+      "title": "GI赢认知·RI赢关系",
+      "statement": "感知打开先看：GI只谈赢认知/学习跃迁；RI谈关系不谈输赢。阶段目标≠跃迁已发生。",
+      "evidence": "in-from 2026-09-10-ershiwatt-distill 产品洞察"
+    },
+    {
+      "id": "ershi-unknown-prior",
+      "cat": "RULE",
+      "title": "未知用探索先验",
+      "statement": "证据不足时用 exploration prior（约0.5）而非默认「没有=结果好」。",
+      "evidence": "in-from ershiwatt-distill 可复用规则1"
+    },
+    {
+      "id": "ershi-seed-before-gi",
+      "cat": "RULE",
+      "title": "先RI稳定再看Capability GI",
+      "statement": "先做「稳定RI」之后，再看 Capability GI 是否合拍；seed/capability 峰值要分开记账。",
+      "evidence": "in-from ershiwatt-distill 可复用规则2"
+    },
+    {
+      "id": "ershi-core0",
+      "cat": "IDENTITY",
+      "title": "CORE-0不可被学习者改",
+      "statement": "目标不是算力堆叠；安全/主权/隐私前的学习可改手段不可改目的；日常学习按钮需Celestial对准。",
+      "evidence": "in-from experiment-logic CORE-0"
+    },
+    {
+      "id": "ershi-no-novel-channel",
+      "cat": "BOUNDARY",
+      "title": "创造者通道禁小说腔",
+      "statement": "创造者=celestial小仙女；通道=对话+意识之眼；禁小说式人格通灵当业务入口。",
+      "evidence": "in-from experiment-logic CREATOR"
+    },
+    {
+      "id": "ershi-self-learn",
+      "cat": "METHOD",
+      "title": "自学大于堆底座",
+      "statement": "持续对准的自学比堆模型/热点更关键；「自己能学习」不是口号。",
+      "evidence": "in-from experiment-logic B1"
+    }
+  ]
+}

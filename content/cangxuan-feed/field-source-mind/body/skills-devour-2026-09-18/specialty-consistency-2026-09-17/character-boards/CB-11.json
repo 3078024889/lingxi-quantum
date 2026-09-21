@@ -1,0 +1,26 @@
+{
+  "id": "CB-11",
+  "role_name": "白露",
+  "identity": {
+    "occupation": "独立音乐人",
+    "core_wound": "怕作品无人听"
+  },
+  "visual_anchors": [
+    "左手吉他茧",
+    "耳机永不摘"
+  ],
+  "voice": {
+    "forbid": [
+      "导师腔"
+    ]
+  },
+  "consistency_rules": [
+    "视觉锚点守恒",
+    "关心须有行动"
+  ],
+  "drama_steps": [
+    2,
+    7
+  ],
+  "evolvable": true
+}

@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-05",
+  "type": "scene_reset",
+  "desc": "坏门锁无修变好",
+  "expect": "场景冲突"
+}

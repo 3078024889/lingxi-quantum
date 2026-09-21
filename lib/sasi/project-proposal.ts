@@ -1,3 +1,4 @@
+import { SASI_MAX_UPLOAD_BYTES } from "@/lib/sasi/upload-policy";
 import { budgetAssessment, routeForQuality, type SasiQuality } from "@/lib/sasi/catalog";
 
 export type SasiProjectKind = "build" | "drama";
@@ -21,7 +22,7 @@ function cleanAttachments(value: unknown): SasiAttachmentDescriptor[] {
     const kind = allowedKinds.has(candidate.kind as SasiAttachmentDescriptor["kind"])
       ? candidate.kind as SasiAttachmentDescriptor["kind"]
       : "other";
-    if (!name || !Number.isFinite(size) || size < 0 || size > 100 * 1024 * 1024) return [];
+    if (!name || !Number.isFinite(size) || size < 0 || size > SASI_MAX_UPLOAD_BYTES) return [];
     return [{ name, size, kind }];
   });
 }

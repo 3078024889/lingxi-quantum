@@ -1,0 +1,21 @@
+{
+  "id": "CB-18",
+  "role_name": "莫沉",
+  "identity": {
+    "occupation": "夜班保安",
+    "core_wound": "怕再次漏报"
+  },
+  "visual_anchors": [
+    "对讲机挂左肩",
+    "帽檐压低"
+  ],
+  "drama_steps": [
+    2,
+    6
+  ],
+  "evolvable": true,
+  "consistency_rules": [
+    "锚点守恒",
+    "关心须行动"
+  ]
+}

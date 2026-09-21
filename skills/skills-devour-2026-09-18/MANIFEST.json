@@ -1,0 +1,1997 @@
+{
+  "at": "2026-09-18T00:33:51.059885+00:00",
+  "n": 121,
+  "by_wave": {
+    "wave1": 87,
+    "wave2-slim": 34
+  },
+  "priority_for_compiler": [
+    "SK-ai-video-storyboard",
+    "SK-video-prompt-engineer",
+    "SK-ai-short-drama",
+    "SK-seedance-director",
+    "SK-short-drama-write",
+    "SK-short-drama-video-prompts",
+    "SK-short-drama-edit",
+    "SK-short-drama-assets",
+    "SK-short-drama-image-prompts",
+    "SK-short-drama-storyboard",
+    "SK-short-drama-produce",
+    "SK-short-drama-review",
+    "SK-short-drama-develop",
+    "SK-short-drama-novel-analyze",
+    "SK-short-drama",
+    "SK-short-drama-knowhow",
+    "SK-seedance",
+    "SK-seedance-2",
+    "SK-seedance-2-0-prompter",
+    "SK-create-storyboard",
+    "SK-seedance-3",
+    "SK-seedance-4",
+    "SK-seedance-2-0-prompter-2"
+  ],
+  "items": [
+    {
+      "id": "SK-ai-video-storyboard",
+      "title": "ai-video-storyboard",
+      "rel": "ai-video-storyboard-skill/SKILL.md",
+      "wave": "wave1",
+      "chars": 7367,
+      "sha16": "7857231f55cc93a9",
+      "drama_steps": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-video-prompt-engineer",
+      "title": "video-prompt-engineer",
+      "rel": "video-prompt-engineer/SKILL.md",
+      "wave": "wave1",
+      "chars": 9889,
+      "sha16": "5bae2a2e1bc07435",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-ai-short-drama",
+      "title": "ai-short-drama",
+      "rel": "ai-short-drama-skill/SKILL.md",
+      "wave": "wave1",
+      "chars": 13615,
+      "sha16": "425ceddd35519893",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-seedance-director",
+      "title": "seedance-director",
+      "rel": "seedance-director/skills/seedance-director/SKILL.md",
+      "wave": "wave1",
+      "chars": 12823,
+      "sha16": "242b3306cd31a925",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-write",
+      "title": "short-drama-write",
+      "rel": "drama-skills/skills/short-drama-write/SKILL.md",
+      "wave": "wave1",
+      "chars": 3977,
+      "sha16": "79f626c62731f09c",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-video-prompts",
+      "title": "short-drama-video-prompts",
+      "rel": "drama-skills/skills/short-drama-video-prompts/SKILL.md",
+      "wave": "wave1",
+      "chars": 6535,
+      "sha16": "6e47f989ca44a9a2",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-edit",
+      "title": "short-drama-edit",
+      "rel": "drama-skills/skills/short-drama-edit/SKILL.md",
+      "wave": "wave1",
+      "chars": 4765,
+      "sha16": "4467e1c8bb27b4c1",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-assets",
+      "title": "short-drama-assets",
+      "rel": "drama-skills/skills/short-drama-assets/SKILL.md",
+      "wave": "wave1",
+      "chars": 2101,
+      "sha16": "e9038a2839624357",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-image-prompts",
+      "title": "short-drama-image-prompts",
+      "rel": "drama-skills/skills/short-drama-image-prompts/SKILL.md",
+      "wave": "wave1",
+      "chars": 1952,
+      "sha16": "b8b0f4e3cb61a84b",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-storyboard",
+      "title": "short-drama-storyboard",
+      "rel": "drama-skills/skills/short-drama-storyboard/SKILL.md",
+      "wave": "wave1",
+      "chars": 7148,
+      "sha16": "e512754dce7197b0",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-produce",
+      "title": "short-drama-produce",
+      "rel": "drama-skills/skills/short-drama-produce/SKILL.md",
+      "wave": "wave1",
+      "chars": 7030,
+      "sha16": "07bcf00d8a5c3b73",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-review",
+      "title": "short-drama-review",
+      "rel": "drama-skills/skills/short-drama-review/SKILL.md",
+      "wave": "wave1",
+      "chars": 2407,
+      "sha16": "1af13eba5bd800b1",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-develop",
+      "title": "short-drama-develop",
+      "rel": "drama-skills/skills/short-drama-develop/SKILL.md",
+      "wave": "wave1",
+      "chars": 4681,
+      "sha16": "1cf6bd814c6b7f47",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-novel-analyze",
+      "title": "short-drama-novel-analyze",
+      "rel": "drama-skills/skills/short-drama-novel-analyze/SKILL.md",
+      "wave": "wave1",
+      "chars": 7245,
+      "sha16": "3c60d9f05e0ac592",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama",
+      "title": "short-drama",
+      "rel": "drama-skills/skills/short-drama/SKILL.md",
+      "wave": "wave1",
+      "chars": 5348,
+      "sha16": "1657195f12ca07f5",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-short-drama-knowhow",
+      "title": "short-drama-knowhow",
+      "rel": "drama-skills/maintainers/skills/short-drama-knowhow/SKILL.md",
+      "wave": "wave1",
+      "chars": 3424,
+      "sha16": "dcbda81a7fc1df02",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-comfyui-agent-skill-mie",
+      "title": "comfyui-agent-skill-mie",
+      "rel": "wave2/comfyui-agent-skill/SKILL.md",
+      "wave": "wave1",
+      "chars": 12915,
+      "sha16": "cf146c2dc94613b0",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-minimax-h3",
+      "title": "minimax-h3",
+      "rel": "wave2/ComfyUI-Agent-Kit/shared/minimax-h3/SKILL.md",
+      "wave": "wave1",
+      "chars": 9396,
+      "sha16": "5422fa80c41a26fc",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-seedance",
+      "title": "seedance",
+      "rel": "wave2/ComfyUI-Agent-Kit/shared/seedance/SKILL.md",
+      "wave": "wave1",
+      "chars": 8019,
+      "sha16": "27dd51e4bcc359ad",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-comfyui",
+      "title": "comfyui",
+      "rel": "wave2/ComfyUI-Agent-Kit/shared/comfyui/SKILL.md",
+      "wave": "wave1",
+      "chars": 48660,
+      "sha16": "af5c26bfff7ff41c",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-krea",
+      "title": "krea",
+      "rel": "wave2/ComfyUI-Agent-Kit/shared/krea/SKILL.md",
+      "wave": "wave1",
+      "chars": 10879,
+      "sha16": "dba74ddac93d6074",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-minimax-h3-2",
+      "title": "minimax-h3",
+      "rel": "wave2/ComfyUI-Agent-Kit/claude-code/skills/minimax-h3/SKILL.md",
+      "wave": "wave1",
+      "chars": 9396,
+      "sha16": "23dba3291fabd26e",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-seedance-2",
+      "title": "seedance",
+      "rel": "wave2/ComfyUI-Agent-Kit/claude-code/skills/seedance/SKILL.md",
+      "wave": "wave1",
+      "chars": 8019,
+      "sha16": "13bd14e00c16fc4f",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-comfyui-2",
+      "title": "comfyui",
+      "rel": "wave2/ComfyUI-Agent-Kit/claude-code/skills/comfyui/SKILL.md",
+      "wave": "wave1",
+      "chars": 48660,
+      "sha16": "8dd6868eb827e39d",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-krea-2",
+      "title": "krea",
+      "rel": "wave2/ComfyUI-Agent-Kit/claude-code/skills/krea/SKILL.md",
+      "wave": "wave1",
+      "chars": 10879,
+      "sha16": "cda8aa8e04ecd565",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-product-video",
+      "title": "product-video",
+      "rel": "wave2/pexo-skills/skills/product-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4583,
+      "sha16": "d6aeca66a2b3d022",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-director",
+      "title": "videoagent-director",
+      "rel": "wave2/pexo-skills/skills/videoagent-director/SKILL.md",
+      "wave": "wave1",
+      "chars": 4755,
+      "sha16": "1a8ae1a9cbd5393a",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-video-ad",
+      "title": "video-ad",
+      "rel": "wave2/pexo-skills/skills/video-ad/SKILL.md",
+      "wave": "wave1",
+      "chars": 4569,
+      "sha16": "1d04489e9fa92d45",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-explainer-video",
+      "title": "explainer-video",
+      "rel": "wave2/pexo-skills/skills/explainer-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4570,
+      "sha16": "c3e960fd7a89abbc",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-video-studio",
+      "title": "videoagent-video-studio",
+      "rel": "wave2/pexo-skills/skills/videoagent-video-studio/SKILL.md",
+      "wave": "wave1",
+      "chars": 5785,
+      "sha16": "d334c3724b5bff22",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-launch-video",
+      "title": "launch-video",
+      "rel": "wave2/pexo-skills/skills/launch-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4667,
+      "sha16": "45cfeacfd86c1a4d",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-image-studio",
+      "title": "videoagent-image-studio",
+      "rel": "wave2/pexo-skills/skills/videoagent-image-studio/SKILL.md",
+      "wave": "wave1",
+      "chars": 6115,
+      "sha16": "5f1de3888b1a6123",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-ai-video-generation",
+      "title": "ai-video-generation",
+      "rel": "wave2/pexo-skills/skills/ai-video-generation/SKILL.md",
+      "wave": "wave1",
+      "chars": 4612,
+      "sha16": "f28437e599061caa",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-image-to-video",
+      "title": "image-to-video",
+      "rel": "wave2/pexo-skills/skills/image-to-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4595,
+      "sha16": "76709df271199d92",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-startup-video",
+      "title": "startup-video",
+      "rel": "wave2/pexo-skills/skills/startup-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4646,
+      "sha16": "56936d84cef87f4a",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-make-a-video",
+      "title": "make-a-video",
+      "rel": "wave2/pexo-skills/skills/make-a-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4571,
+      "sha16": "61216f1c6aaafab1",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-youtube-short-maker",
+      "title": "youtube-short-maker",
+      "rel": "wave2/pexo-skills/skills/youtube-short-maker/SKILL.md",
+      "wave": "wave1",
+      "chars": 4591,
+      "sha16": "330245b8297218f9",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-text-to-video",
+      "title": "text-to-video",
+      "rel": "wave2/pexo-skills/skills/text-to-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4714,
+      "sha16": "1aab5f93f9e9112a",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-veo-3-2-prompter",
+      "title": "veo-3.2-prompter",
+      "rel": "wave2/pexo-skills/skills/veo-3.2-prompter/SKILL.md",
+      "wave": "wave1",
+      "chars": 3499,
+      "sha16": "23a45bf39d1d8a22",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-pexo-agent",
+      "title": "pexo-agent",
+      "rel": "wave2/pexo-skills/skills/pexo-agent/SKILL.md",
+      "wave": "wave1",
+      "chars": 19007,
+      "sha16": "13f1a87b593bc10f",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-founder-video",
+      "title": "founder-video",
+      "rel": "wave2/pexo-skills/skills/founder-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4671,
+      "sha16": "c9fdf8b6d95a5a09",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-audio-studio",
+      "title": "videoagent-audio-studio",
+      "rel": "wave2/pexo-skills/skills/videoagent-audio-studio/SKILL.md",
+      "wave": "wave1",
+      "chars": 6131,
+      "sha16": "fe8e3c719c548e2b",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-tiktok-video-ad",
+      "title": "tiktok-video-ad",
+      "rel": "wave2/pexo-skills/skills/tiktok-video-ad/SKILL.md",
+      "wave": "wave1",
+      "chars": 4570,
+      "sha16": "2b31d391e47c9fab",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-seedance-2-0-prompter",
+      "title": "seedance-2.0-prompter",
+      "rel": "wave2/pexo-skills/skills/seedance-2.0-prompter/SKILL.md",
+      "wave": "wave1",
+      "chars": 2117,
+      "sha16": "718d09ca2d559b99",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-saas-video",
+      "title": "saas-video",
+      "rel": "wave2/pexo-skills/skills/saas-video/SKILL.md",
+      "wave": "wave1",
+      "chars": 4621,
+      "sha16": "c7c6fd64d9d3332a",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine",
+      "title": "imagine",
+      "rel": "wave2/imagine-skill/skills/imagine/SKILL.md",
+      "wave": "wave1",
+      "chars": 2023,
+      "sha16": "b4dbeb5037a95ca6",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-prompt",
+      "title": "imagine-prompt",
+      "rel": "wave2/imagine-skill/skills/imagine-prompt/SKILL.md",
+      "wave": "wave1",
+      "chars": 2396,
+      "sha16": "342895eb03dde3f8",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-tasks",
+      "title": "imagine-tasks",
+      "rel": "wave2/imagine-skill/skills/imagine-tasks/SKILL.md",
+      "wave": "wave1",
+      "chars": 1855,
+      "sha16": "020ac7f98cf3ebff",
+      "drama_steps": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-models",
+      "title": "imagine-models",
+      "rel": "wave2/imagine-skill/skills/imagine-models/SKILL.md",
+      "wave": "wave1",
+      "chars": 2439,
+      "sha16": "ba9b8833bc977e71",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-create",
+      "title": "imagine-create",
+      "rel": "wave2/imagine-skill/skills/imagine-create/SKILL.md",
+      "wave": "wave1",
+      "chars": 3892,
+      "sha16": "9f020c3db568acd1",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-mcp",
+      "title": "hf-mcp",
+      "rel": "wave2/skills/hf-mcp/skills/hf-mcp/SKILL.md",
+      "wave": "wave1",
+      "chars": 4708,
+      "sha16": "cbb26237cc8f2c59",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-trackio",
+      "title": "huggingface-trackio",
+      "rel": "wave2/skills/skills/huggingface-trackio/SKILL.md",
+      "wave": "wave1",
+      "chars": 4723,
+      "sha16": "68766c4990db3d1f",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-cloud-sagemaker-deployment-planner",
+      "title": "hf-cloud-sagemaker-deployment-planner",
+      "rel": "wave2/skills/skills/hf-cloud-sagemaker-deployment-planner/SKILL.md",
+      "wave": "wave1",
+      "chars": 7563,
+      "sha16": "cdbc0cd1315fbb68",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-paper-publisher",
+      "title": "huggingface-paper-publisher",
+      "rel": "wave2/skills/skills/huggingface-paper-publisher/SKILL.md",
+      "wave": "wave1",
+      "chars": 16427,
+      "sha16": "4e978131b0bf2a52",
+      "drama_steps": [
+        1,
+        4
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-transformers-js",
+      "title": "transformers-js",
+      "rel": "wave2/skills/skills/transformers-js/SKILL.md",
+      "wave": "wave1",
+      "chars": 23979,
+      "sha16": "a189bea4bf4f5c79",
+      "drama_steps": [
+        1,
+        4
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-datasets",
+      "title": "huggingface-datasets",
+      "rel": "wave2/skills/skills/huggingface-datasets/SKILL.md",
+      "wave": "wave1",
+      "chars": 4325,
+      "sha16": "37eacc041b0f7ebf",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-zerogpu",
+      "title": "huggingface-zerogpu",
+      "rel": "wave2/skills/skills/huggingface-zerogpu/SKILL.md",
+      "wave": "wave1",
+      "chars": 17286,
+      "sha16": "e08f11ce5af2368c",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-lora-space-builder",
+      "title": "huggingface-lora-space-builder",
+      "rel": "wave2/skills/skills/huggingface-lora-space-builder/SKILL.md",
+      "wave": "wave1",
+      "chars": 32781,
+      "sha16": "c6b0e5720d0ebff7",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-train-sentence-transformers",
+      "title": "train-sentence-transformers",
+      "rel": "wave2/skills/skills/train-sentence-transformers/SKILL.md",
+      "wave": "wave1",
+      "chars": 9783,
+      "sha16": "94d7f7db1e996a09",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-cloud-aws-context-discovery",
+      "title": "hf-cloud-aws-context-discovery",
+      "rel": "wave2/skills/skills/hf-cloud-aws-context-discovery/SKILL.md",
+      "wave": "wave1",
+      "chars": 3309,
+      "sha16": "827e26acfbc15473",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-llm-trainer",
+      "title": "huggingface-llm-trainer",
+      "rel": "wave2/skills/skills/huggingface-llm-trainer/SKILL.md",
+      "wave": "wave1",
+      "chars": 27946,
+      "sha16": "afd32276fcc27429",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-papers",
+      "title": "huggingface-papers",
+      "rel": "wave2/skills/skills/huggingface-papers/SKILL.md",
+      "wave": "wave1",
+      "chars": 8981,
+      "sha16": "6d948f243ba1933c",
+      "drama_steps": [
+        1,
+        4
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-local-models",
+      "title": "huggingface-local-models",
+      "rel": "wave2/skills/skills/huggingface-local-models/SKILL.md",
+      "wave": "wave1",
+      "chars": 3502,
+      "sha16": "3ca8dd3a68860362",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-gradio",
+      "title": "huggingface-gradio",
+      "rel": "wave2/skills/skills/huggingface-gradio/SKILL.md",
+      "wave": "wave1",
+      "chars": 24549,
+      "sha16": "2f2953feba1212f5",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-cli",
+      "title": "hf-cli",
+      "rel": "wave2/skills/skills/hf-cli/SKILL.md",
+      "wave": "wave1",
+      "chars": 31703,
+      "sha16": "47eeaa4141b7ad05",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-best",
+      "title": "huggingface-best",
+      "rel": "wave2/skills/skills/huggingface-best/SKILL.md",
+      "wave": "wave1",
+      "chars": 5122,
+      "sha16": "84d01711154512ec",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-cloud-sagemaker-iam-preflight",
+      "title": "hf-cloud-sagemaker-iam-preflight",
+      "rel": "wave2/skills/skills/hf-cloud-sagemaker-iam-preflight/SKILL.md",
+      "wave": "wave1",
+      "chars": 6344,
+      "sha16": "71328e4aa1a02aa7",
+      "drama_steps": [
+        1,
+        2,
+        4
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-cloud-sagemaker-production-defaults",
+      "title": "hf-cloud-sagemaker-production-defaults",
+      "rel": "wave2/skills/skills/hf-cloud-sagemaker-production-defaults/SKILL.md",
+      "wave": "wave1",
+      "chars": 26700,
+      "sha16": "647f18b68979cb60",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-cloud-python-env-setup",
+      "title": "hf-cloud-python-env-setup",
+      "rel": "wave2/skills/skills/hf-cloud-python-env-setup/SKILL.md",
+      "wave": "wave1",
+      "chars": 6057,
+      "sha16": "a5d03a52fdd4eea0",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-spaces",
+      "title": "huggingface-spaces",
+      "rel": "wave2/skills/skills/huggingface-spaces/SKILL.md",
+      "wave": "wave1",
+      "chars": 17296,
+      "sha16": "f8de45d3a378082e",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-cloud-serving-image-selection",
+      "title": "hf-cloud-serving-image-selection",
+      "rel": "wave2/skills/skills/hf-cloud-serving-image-selection/SKILL.md",
+      "wave": "wave1",
+      "chars": 17393,
+      "sha16": "699efa49c4d99824",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-vision-trainer",
+      "title": "huggingface-vision-trainer",
+      "rel": "wave2/skills/skills/huggingface-vision-trainer/SKILL.md",
+      "wave": "wave1",
+      "chars": 29162,
+      "sha16": "c3c9ba6e051e0471",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-trl-training",
+      "title": "trl-training",
+      "rel": "wave2/skills/skills/trl-training/SKILL.md",
+      "wave": "wave1",
+      "chars": 8234,
+      "sha16": "257cdd948a95a2a8",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-tool-builder",
+      "title": "huggingface-tool-builder",
+      "rel": "wave2/skills/skills/huggingface-tool-builder/SKILL.md",
+      "wave": "wave1",
+      "chars": 5526,
+      "sha16": "ccedb190035d4115",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-hf-mem",
+      "title": "hf-mem",
+      "rel": "wave2/skills/skills/hf-mem/SKILL.md",
+      "wave": "wave1",
+      "chars": 3159,
+      "sha16": "2ba6ae2e7effa975",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-huggingface-community-evals",
+      "title": "huggingface-community-evals",
+      "rel": "wave2/skills/skills/huggingface-community-evals/SKILL.md",
+      "wave": "wave1",
+      "chars": 6198,
+      "sha16": "0bcca13289268235",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-vercel-composition-patterns",
+      "title": "vercel-composition-patterns",
+      "rel": "wave2/agent-skills/skills/composition-patterns/SKILL.md",
+      "wave": "wave1",
+      "chars": 2446,
+      "sha16": "e9ce12dbce8eacb1",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-vercel-optimize",
+      "title": "vercel-optimize",
+      "rel": "wave2/agent-skills/skills/vercel-optimize/SKILL.md",
+      "wave": "wave1",
+      "chars": 16669,
+      "sha16": "5de7d20aa583b15f",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-writing-guidelines",
+      "title": "writing-guidelines",
+      "rel": "wave2/agent-skills/skills/writing-guidelines/SKILL.md",
+      "wave": "wave1",
+      "chars": 897,
+      "sha16": "d1a2ba7908ee43a7",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-vercel-react-native-skills",
+      "title": "vercel-react-native-skills",
+      "rel": "wave2/agent-skills/skills/react-native-skills/SKILL.md",
+      "wave": "wave1",
+      "chars": 4021,
+      "sha16": "64578fd4b4b1158c",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-vercel-react-view-transitions",
+      "title": "vercel-react-view-transitions",
+      "rel": "wave2/agent-skills/skills/react-view-transitions/SKILL.md",
+      "wave": "wave1",
+      "chars": 13559,
+      "sha16": "94ba295db8c6ed84",
+      "drama_steps": [
+        2,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-web-design-guidelines",
+      "title": "web-design-guidelines",
+      "rel": "wave2/agent-skills/skills/web-design-guidelines/SKILL.md",
+      "wave": "wave1",
+      "chars": 915,
+      "sha16": "c092ffcbc7d01066",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-vercel-react-best-practices",
+      "title": "vercel-react-best-practices",
+      "rel": "wave2/agent-skills/skills/react-best-practices/SKILL.md",
+      "wave": "wave1",
+      "chars": 6806,
+      "sha16": "fbbeb54193445ad1",
+      "drama_steps": [
+        1,
+        4,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-deploy-to-vercel",
+      "title": "deploy-to-vercel",
+      "rel": "wave2/agent-skills/skills/deploy-to-vercel/SKILL.md",
+      "wave": "wave1",
+      "chars": 11458,
+      "sha16": "3d1ed967842cf105",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-vercel-cli-with-tokens",
+      "title": "vercel-cli-with-tokens",
+      "rel": "wave2/agent-skills/skills/vercel-cli-with-tokens/SKILL.md",
+      "wave": "wave1",
+      "chars": 10100,
+      "sha16": "521579b1f96cab08",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-azure-openai-to-responses",
+      "title": "azure-openai-to-responses",
+      "rel": "wave2/generative-ai-for-beginners/.github/skills/azure-openai-to-responses/SKILL.md",
+      "wave": "wave1",
+      "chars": 6784,
+      "sha16": "4e76d3afc11c5feb",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-create-storyboard",
+      "title": "create-storyboard",
+      "rel": "create-storyboard-skill/skills/create-storyboard/SKILL.md",
+      "wave": "wave1",
+      "chars": 18605,
+      "sha16": "9fd2aff564107e27",
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-comfyui-agent-skill-mie-2",
+      "title": "comfyui-agent-skill-mie",
+      "rel": "comfyui-agent-skill/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 12915,
+      "sha16": "1f0ae09ee761f295",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-minimax-h3-3",
+      "title": "minimax-h3",
+      "rel": "ComfyUI-Agent-Kit/shared/minimax-h3/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 9396,
+      "sha16": "fbea7689b9017c29",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-seedance-3",
+      "title": "seedance",
+      "rel": "ComfyUI-Agent-Kit/shared/seedance/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 8019,
+      "sha16": "0f0a8b58386dd3c4",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-comfyui-3",
+      "title": "comfyui",
+      "rel": "ComfyUI-Agent-Kit/shared/comfyui/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 48660,
+      "sha16": "ba01b85dc51acc28",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-krea-3",
+      "title": "krea",
+      "rel": "ComfyUI-Agent-Kit/shared/krea/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 10879,
+      "sha16": "b71ff77ce8d3401f",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-minimax-h3-4",
+      "title": "minimax-h3",
+      "rel": "ComfyUI-Agent-Kit/claude-code/skills/minimax-h3/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 9396,
+      "sha16": "4be17bf7b1e912e9",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-seedance-4",
+      "title": "seedance",
+      "rel": "ComfyUI-Agent-Kit/claude-code/skills/seedance/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 8019,
+      "sha16": "9d1a5bcd43df54a6",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-comfyui-4",
+      "title": "comfyui",
+      "rel": "ComfyUI-Agent-Kit/claude-code/skills/comfyui/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 48660,
+      "sha16": "913dcf31138ca334",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-krea-4",
+      "title": "krea",
+      "rel": "ComfyUI-Agent-Kit/claude-code/skills/krea/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 10879,
+      "sha16": "7c06e311023c8c11",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-product-video-2",
+      "title": "product-video",
+      "rel": "pexo-skills/skills/product-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4583,
+      "sha16": "7023092c3a45666b",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-director-2",
+      "title": "videoagent-director",
+      "rel": "pexo-skills/skills/videoagent-director/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4755,
+      "sha16": "57ca812ae973dc12",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-video-ad-2",
+      "title": "video-ad",
+      "rel": "pexo-skills/skills/video-ad/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4569,
+      "sha16": "49dc7ea4e65fb114",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-explainer-video-2",
+      "title": "explainer-video",
+      "rel": "pexo-skills/skills/explainer-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4570,
+      "sha16": "c1e77eff277b8167",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-video-studio-2",
+      "title": "videoagent-video-studio",
+      "rel": "pexo-skills/skills/videoagent-video-studio/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 5785,
+      "sha16": "b02fc2f3605c59d5",
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-launch-video-2",
+      "title": "launch-video",
+      "rel": "pexo-skills/skills/launch-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4667,
+      "sha16": "1fe58c10ec915a1f",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-image-studio-2",
+      "title": "videoagent-image-studio",
+      "rel": "pexo-skills/skills/videoagent-image-studio/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 6115,
+      "sha16": "081deac53b67b6f1",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-ai-video-generation-2",
+      "title": "ai-video-generation",
+      "rel": "pexo-skills/skills/ai-video-generation/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4612,
+      "sha16": "8f3a3fedd344f551",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-image-to-video-2",
+      "title": "image-to-video",
+      "rel": "pexo-skills/skills/image-to-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4595,
+      "sha16": "a74b29ce1196a5f5",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-startup-video-2",
+      "title": "startup-video",
+      "rel": "pexo-skills/skills/startup-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4646,
+      "sha16": "2e8cf31dd93ebe0f",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-make-a-video-2",
+      "title": "make-a-video",
+      "rel": "pexo-skills/skills/make-a-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4571,
+      "sha16": "97f0a14517538d58",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-youtube-short-maker-2",
+      "title": "youtube-short-maker",
+      "rel": "pexo-skills/skills/youtube-short-maker/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4591,
+      "sha16": "a3cf26a4bf288f3a",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-text-to-video-2",
+      "title": "text-to-video",
+      "rel": "pexo-skills/skills/text-to-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4714,
+      "sha16": "16b346dac6f778d2",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-veo-3-2-prompter-2",
+      "title": "veo-3.2-prompter",
+      "rel": "pexo-skills/skills/veo-3.2-prompter/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 3499,
+      "sha16": "765bfbf6f24eac40",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-pexo-agent-2",
+      "title": "pexo-agent",
+      "rel": "pexo-skills/skills/pexo-agent/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 19007,
+      "sha16": "c615f0764fa8e036",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-founder-video-2",
+      "title": "founder-video",
+      "rel": "pexo-skills/skills/founder-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4671,
+      "sha16": "ad96d230173cdcce",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-videoagent-audio-studio-2",
+      "title": "videoagent-audio-studio",
+      "rel": "pexo-skills/skills/videoagent-audio-studio/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 6131,
+      "sha16": "46c5809256006f2a",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-tiktok-video-ad-2",
+      "title": "tiktok-video-ad",
+      "rel": "pexo-skills/skills/tiktok-video-ad/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4570,
+      "sha16": "05ad1659abd0cc85",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-seedance-2-0-prompter-2",
+      "title": "seedance-2.0-prompter",
+      "rel": "pexo-skills/skills/seedance-2.0-prompter/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 2117,
+      "sha16": "13e4b58d897e0e86",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-saas-video-2",
+      "title": "saas-video",
+      "rel": "pexo-skills/skills/saas-video/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 4621,
+      "sha16": "118438d8a13b0da0",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-2",
+      "title": "imagine",
+      "rel": "imagine-skill/skills/imagine/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 2023,
+      "sha16": "6ba2970fb40b53b8",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-prompt-2",
+      "title": "imagine-prompt",
+      "rel": "imagine-skill/skills/imagine-prompt/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 2396,
+      "sha16": "a9a8feb43edf871f",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-tasks-2",
+      "title": "imagine-tasks",
+      "rel": "imagine-skill/skills/imagine-tasks/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 1855,
+      "sha16": "260f29aac0ca9532",
+      "drama_steps": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-models-2",
+      "title": "imagine-models",
+      "rel": "imagine-skill/skills/imagine-models/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 2439,
+      "sha16": "344fafdfec9f8816",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    },
+    {
+      "id": "SK-imagine-create-2",
+      "title": "imagine-create",
+      "rel": "imagine-skill/skills/imagine-create/SKILL.md",
+      "wave": "wave2-slim",
+      "chars": 3892,
+      "sha16": "ae8ffc8748f8f09f",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "DUAL_WRITTEN"
+    }
+  ],
+  "d_disk_note": "将同步到 D:\\lingxi-quantum\\imports\\skills-devour-2026-09-18 与 skills\\devoured-2026-09-18",
+  "honest": "全球远不止这些；先吞对短剧一键成片最利好的开源包，后续继续搜吞"
+}

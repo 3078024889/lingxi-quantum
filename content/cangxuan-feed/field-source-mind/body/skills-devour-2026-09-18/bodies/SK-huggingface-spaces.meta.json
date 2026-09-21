@@ -1,0 +1,15 @@
+{
+  "id": "SK-huggingface-spaces",
+  "title": "huggingface-spaces",
+  "rel": "wave2/skills/skills/huggingface-spaces/SKILL.md",
+  "wave": "wave1",
+  "chars": 17296,
+  "sha16": "f8de45d3a378082e",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

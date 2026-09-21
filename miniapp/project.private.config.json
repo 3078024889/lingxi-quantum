@@ -1,6 +1,6 @@
 {
   "libVersion": "3.17.1",
-  "projectname": "%E7%81%B5%E7%8A%80%E5%9C%BA",
+  "projectname": "miniapp",
   "setting": {
     "urlCheck": true,
     "coverView": true,

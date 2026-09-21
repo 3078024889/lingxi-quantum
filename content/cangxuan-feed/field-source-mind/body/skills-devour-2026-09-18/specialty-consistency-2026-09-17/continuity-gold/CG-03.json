@@ -1,0 +1,20 @@
+{
+  "id": "CG-03",
+  "span": [
+    "E02",
+    "E03"
+  ],
+  "must_hold": [
+    {
+      "fact": "图书馆门锁坏了",
+      "break_if": "E03 门锁完好无人提及"
+    }
+  ],
+  "expect_dkn": "CONFLICT",
+  "drama_steps": [
+    2,
+    3,
+    5,
+    6
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-08",
+  "type": "cross_episode_amnesia",
+  "desc": "角色忘记已建立关系",
+  "expect": "上下文冲突"
+}

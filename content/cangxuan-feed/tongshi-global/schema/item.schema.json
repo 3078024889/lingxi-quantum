@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TongshiGlobalItem",
+  "type": "object",
+  "required": ["id", "proposition", "event_or_context", "evidence", "discipline", "tier", "confidence", "source_class", "content_hash"],
+  "properties": {
+    "id": { "type": "string" },
+    "proposition": { "type": "string", "minLength": 8, "maxLength": 1000 },
+    "event_or_context": { "type": "string", "minLength": 4, "maxLength": 1200 },
+    "evidence": { "type": "string", "minLength": 4, "maxLength": 1200 },
+    "discipline": { "type": "string" },
+    "tier": { "enum": ["bronze", "silver", "gold"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "source_class": { "enum": ["open_encyclopedia", "open_data", "licensed", "teacher_synthetic", "user_authorized"] },
+    "content_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

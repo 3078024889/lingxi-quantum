@@ -1,0 +1,19 @@
+{
+  "id": "SK-create-storyboard",
+  "title": "create-storyboard",
+  "rel": "create-storyboard-skill/skills/create-storyboard/SKILL.md",
+  "wave": "wave1",
+  "chars": 18605,
+  "sha16": "9fd2aff564107e27",
+  "drama_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "category": "RULE",
+    "title": "E17·人可借响佩不可迁",
+    "statement": "锁芯看守令：人可借响护场，佩不可迁出壁；同迁要求被旧禁挡在线外。",
+    "evidence": "E17 B3-B4 craft",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "ad4bf918d4775d5f0ea14c94ba279b34fadd4535fa7474d503888d6c3fce1b9d",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "E17·打脸≤2拍",
+    "statement": "息影学舌加压后同拍安神符压回；赵偷听当拍被纸条打脸——兑现快于吊胃口。",
+    "evidence": "E17 B5/B7",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "930f35c4aecaf5cc101866fe146c2303d1aee9fa88d64e70e51272ae537c316d",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "PREFERENCE",
+    "title": "E17·三护短可见站位",
+    "statement": "令/符/人三角同步半步，被看见的渴望同镜兑现，不靠旁白解释团宠。",
+    "evidence": "E17 B8",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "c3c6ba8a77f544bfa77a16e6be63ee931d2a27c796ec50f2c6d47e2cef3b5c41",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "SCRIPT",
+    "title": "E17·峰终钩温",
+    "statement": "结尾缺角钩温+名册点锁芯，峰值与终局同帧，服务下集。",
+    "evidence": "E17 B9 peak-end",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "04fe842ec68cf60196299ba3a647befffaffb430c7f0bc4e9552c66b94c76ce2",
+    "domain": "luoyun-xiaoweiba"
+  },
+  {
+    "category": "RULE",
+    "title": "E17·信息差分账",
+    "statement": "线外面具、线内旧禁、禁足赵三线信息差并行，禁止观众全知同步。",
+    "evidence": "E17 B1-B2-B7",
+    "tier": "gold",
+    "trainability": "trainable",
+    "review_status": "approved",
+    "content_hash": "99f973c691379fa8b5ab908e14a89fc4a60fc217b0ccca4c3e517853b3889e89",
+    "domain": "luoyun-xiaoweiba"
+  }
+]

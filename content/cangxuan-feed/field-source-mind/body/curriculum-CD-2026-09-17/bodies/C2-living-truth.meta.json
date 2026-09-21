@@ -1,0 +1,13 @@
+{
+  "id": "C2-living-truth",
+  "code": "C2",
+  "title": "鲜活的真理",
+  "sha16": "6e5fd32e395afc7d",
+  "chars": 2684,
+  "raw_chars": 3802,
+  "src": "/workspace/wm_priority_out/living_truth.txt",
+  "batch": "curriculum-CD-week2",
+  "peel": "v3",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:59:29.805709+00:00"
+}

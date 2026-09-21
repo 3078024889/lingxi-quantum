@@ -1,0 +1,326 @@
+{
+  "batch": "wiki-002",
+  "fetched_at": "2026-09-10T09:13:06.430Z",
+  "counts": {
+    "ok": 17,
+    "fail": 23,
+    "requested": 40
+  },
+  "errors": [
+    {
+      "title": "量子力学",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "细胞",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "大气层",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "化学反应",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "微积分",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "神经网络",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "通货膨胀",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "情绪",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "文艺复兴",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "道教",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "佛教",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "中医",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "解剖学",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "语言学",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "汉语",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "中国历史",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "第一次世界大战",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "地理学",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "生态学",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "热力学",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "Evolution",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "Galaxy",
+      "reason": "HTTP 429"
+    },
+    {
+      "title": "Periodic table",
+      "reason": "HTTP 429"
+    }
+  ],
+  "items": [
+    {
+      "id": "tg-wiki2-0001",
+      "proposition": "相對論 是关于时空和引力的理论，主要由爱因斯坦创立，依其研究对象的不同可分为狭义相对论和广义相对论。相对论和量子力学的提出给物理学带来了革命性的变化，它们共同奠定了现代物理学的基础。相对论极大地改变了人类对宇宙和自然的“常识性”观念，提出了“同时的相对性”、“四维时空”、“弯曲时空”等全新的概念。不过近年来，人们对于物理理论的分类有了一种新的认识——以其理论是否是决定论的来划分经典与非经典的物理学，即“非古典的＝量子的”。在这个意义下，相对论仍然是一种经典的理论。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 相对论 · https://zh.wikipedia.org/wiki/%E7%9B%B8%E5%AF%B9%E8%AE%BA",
+      "discipline": "physics",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E7%9B%B8%E5%AF%B9%E8%AE%BA",
+      "source_title": "相对论",
+      "content_hash": "b8553ad0658bf0d3090f8ca9a3f4d543ef178fa67aa3dae23ee90abcc6b47fae"
+    },
+    {
+      "id": "tg-wiki2-0002",
+      "proposition": "板块构造论，又稱板块构造假说、板块构造学说或板块构造学，總稱「板塊漂移」，是为了解释大陆漂移现象而发展出的一种地质学理论。该理论认为，地球的岩石圈是由板块拼合而成，海洋和陆地的位置會隨著板塊移動而不断变化。根据这种理论，地球内部构造的最外层分为两部分：外层的岩石圈和内层的软流圈。这种理论基于两种独立的地质观测结果：海底擴張和大陆漂移。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 板块构造论 · https://zh.wikipedia.org/wiki/%E6%9D%BF%E5%9D%97%E6%9E%84%E9%80%A0%E8%AE%BA",
+      "discipline": "earth-science",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E6%9D%BF%E5%9D%97%E6%9E%84%E9%80%A0%E8%AE%BA",
+      "source_title": "板块构造论",
+      "content_hash": "8a103a730a6813c7a36b991943659b6a19511f8162ab3124915cd7e809677f08"
+    },
+    {
+      "id": "tg-wiki2-0003",
+      "proposition": "元素週期表是依原子序數、核外電子排布情况和化学性质的相似性来排列化学元素的表格。一如其名，元素週期表的排列展现元素性质的週期性趋势。其中，週期表的横行被称作週期，纵列则被称作族。一般而言，在同一週期内，金属元素位于表的左端，非金属元素位于右端；同族的元素则大多具有相似化学性质。週期表中有四个族具有单独的别名，包括第1族（IA族）被称为碱金属、第2族（IIA族）被称为碱土金属、第17族（VIIA族）被称为卤素，以及第18族（VIIIA族）被称为稀有气体。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 元素周期表 · https://zh.wikipedia.org/wiki/%E5%85%83%E7%B4%A0%E5%91%A8%E6%9C%9F%E8%A1%A8",
+      "discipline": "chemistry",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E5%85%83%E7%B4%A0%E5%91%A8%E6%9C%9F%E8%A1%A8",
+      "source_title": "元素周期表",
+      "content_hash": "e4e5e3058e303802d6f643f525a737117dfccad0e4a97aa71596f21f6a3a5112"
+    },
+    {
+      "id": "tg-wiki2-0004",
+      "proposition": "勾股定理 是平面几何的基本定理。該定理的大意是在平面中，直角三角形的兩直角邊長的平方和等于斜边长的平方。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 勾股定理 · https://zh.wikipedia.org/wiki/%E5%8B%BE%E8%82%A1%E5%AE%9A%E7%90%86",
+      "discipline": "math",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E5%8B%BE%E8%82%A1%E5%AE%9A%E7%90%86",
+      "source_title": "勾股定理",
+      "content_hash": "5e37894340008dd8f98ad3527be1a0ed4e1a7b8b13079398a74e650a31e08130"
+    },
+    {
+      "id": "tg-wiki2-0005",
+      "proposition": "操作系统 是一组主管并控制计算机操作、运用和运行硬件、软件資源和提供公共服务来组织用户交互的相互关联的系统软件程序，同时也是计算机系统的核心与基石。操作系统需要处理如管理與配置内存、決定系統資源供需的優先次序、控制輸入與輸出裝置、操作网络與管理文件系统等基本事務。操作系统也提供一個讓使用者與系統互動的操作界面。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 操作系统 · https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F",
+      "discipline": "cs",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F",
+      "source_title": "操作系统",
+      "content_hash": "00b9ac9a5c2300e07b524bac217866a4e5d3b5cdbfba2178a59ef2dc02d198ce"
+    },
+    {
+      "id": "tg-wiki2-0006",
+      "proposition": "需求 與供給 在經濟學模型中用以決定市場的均衡價格和均衡產量。這個曲線模型的因果關係為價格是因、數量是果。這個模型適用於競爭性市場，而不適用於市場存在獨占或者寡占的情況，需求或者供給價格分別跟消費者的需求量和生產者的供給量挂鈎，形成市場兩種力量決定價格和產量的均衡。模型的需求与供給都是经济学的基本概念：需求指消費大众因需要一件产品而产生的购买要求；而供給就指企業生產响应大众购买需求而提供的产品供给。供不應求(物以稀為貴)傾向價格上升，供過於求(降價促銷)傾向價格下跌。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 需求與供給 · https://zh.wikipedia.org/wiki/%E9%9C%80%E6%B1%82%E8%88%87%E4%BE%9B%E7%B5%A6",
+      "discipline": "economics",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E9%9C%80%E6%B1%82%E8%88%87%E4%BE%9B%E7%B5%A6",
+      "source_title": "需求與供給",
+      "content_hash": "c3c640c094530f4ed825fd8afc8ac83f34dccfaed2b776d4a86ff225ee0b409d"
+    },
+    {
+      "id": "tg-wiki2-0007",
+      "proposition": "注意 或注意力，是一个医学或心理学概念，属于认知过程的一部分，是对环境的一部分或一方面的选择性警觉，或因局部刺激导致意识水平的提高与知觉的选择性集中。例如侧耳倾听某人的说话，而忽略房间内其他人的交谈；或者在驾驶汽车时接听手机。注意是心理学中研究最热门的题目之一。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 注意 · https://zh.wikipedia.org/wiki/%E6%B3%A8%E6%84%8F",
+      "discipline": "psychology",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E6%B3%A8%E6%84%8F",
+      "source_title": "注意",
+      "content_hash": "1f5c0f917363832e1461e9c8e789cf13c7fd895463f1b59daa0c2d212a26c2ec"
+    },
+    {
+      "id": "tg-wiki2-0008",
+      "proposition": "丝绸之路，简称丝路，指从汉唐古都长安/洛阳出發，經甘肅、新疆，到中亞、西亞、歐洲，並聯結地中海各國的陸上通道，最遠到達西亞諸國的陸上貿易通道，東漢時班超再次出使西域打通了荒廢已久的絲綢之路，将东端延伸到京师洛阳，西端延伸到歐洲（羅馬）。这条道路也被称为「陆上丝绸之路」，以区别日后另外两条冠以“丝绸之路”名称的交通路线。因为由这条路西运的货物中以絲綢製品的影響最大，故得此名。其基本走向定于两汉时期，包括南道、中道、北道三条路线。“丝绸之路”一词最早来自于德意志帝国地理学家費迪南·馮·李希霍芬男爵於1877年出版的一套五卷本的地图集。但实际上，丝绸之路并非是一条 “路”，而是一个穿越山川、沙漠和海洋且没有标识的道路网络，并且丝绸也只是货物中的一种。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 丝绸之路 · https://zh.wikipedia.org/wiki/%E4%B8%9D%E7%BB%B8%E4%B9%8B%E8%B7%AF",
+      "discipline": "history",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E4%B8%9D%E7%BB%B8%E4%B9%8B%E8%B7%AF",
+      "source_title": "丝绸之路",
+      "content_hash": "599d601758cc7c087ea7d657e721715fcc51f448accdc30cab886d1c217f3f7a"
+    },
+    {
+      "id": "tg-wiki2-0009",
+      "proposition": "A prime number is a natural number greater than 1 that is not a product of two smaller natural numbers.A natural number greater than 1 that is not prime is called a composite number.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · Prime number · https://en.wikipedia.org/wiki/Prime_number",
+      "discipline": "math",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Prime_number",
+      "source_title": "Prime number",
+      "content_hash": "fde4285fd2d3ce749b51422993235ec4336f8df762bfc5bed0aa5022c5d7a65b"
+    },
+    {
+      "id": "tg-wiki2-0010",
+      "proposition": "銀河系，古稱银河、天河、星河、天汉、銀漢等，是一個由众多恒星和星际介质组成的巨大星系。人类所生活的地球和太陽系就位于银河系当中。",
+      "event_or_context": "开放百科摘要 · lang=zh",
+      "evidence": "Wikipedia summary · 银河系 · https://zh.wikipedia.org/wiki/%E9%93%B6%E6%B2%B3%E7%B3%BB",
+      "discipline": "astronomy",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E9%93%B6%E6%B2%B3%E7%B3%BB",
+      "source_title": "银河系",
+      "content_hash": "3f9f9b6f05f76f667c17e7796b395ccd9cf1680f6815211652120edffdef520a"
+    },
+    {
+      "id": "tg-wiki2-0011",
+      "proposition": "Climate is the long-term weather pattern in a region, typically averaged over 30 years.More rigorously, it is the mean and variability of meteorological variables over a time spanning from months to millions of years.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · Climate · https://en.wikipedia.org/wiki/Climate",
+      "discipline": "earth-science",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Climate",
+      "source_title": "Climate",
+      "content_hash": "0084da0c4753ece4f8ea548e6133bc64d59dd6df086b1048e60928d9c6489d3a"
+    },
+    {
+      "id": "tg-wiki2-0012",
+      "proposition": "Calculus is the branch of mathematics that studies continuous change, and is the principal precursor of modern mathematical analysis.Originally called infinitesimal calculus or the calculus of infinitesimals, it has two major branches, differential calculus and integral calculus.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · Calculus · https://en.wikipedia.org/wiki/Calculus",
+      "discipline": "math",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Calculus",
+      "source_title": "Calculus",
+      "content_hash": "1df86638d4babc30c723e90dc4c29f47799b8b1b0bd5e5cab3300bf44a0fde2f"
+    },
+    {
+      "id": "tg-wiki2-0013",
+      "proposition": "Machine learning (ML) is a field of study in artificial intelligence concerned with the development and study of statistical algorithms that can learn from data and generalize to unseen data, and thus perform tasks without being explicitly programmed.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · Machine learning · https://en.wikipedia.org/wiki/Machine_learning",
+      "discipline": "cs",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Machine_learning",
+      "source_title": "Machine learning",
+      "content_hash": "4d009bf7924f5021bbc911213a0f20c050f0a51649431714d95cd990cb049a35"
+    },
+    {
+      "id": "tg-wiki2-0014",
+      "proposition": "Taoism or Daoism is a philosophical and religious tradition indigenous to China, emphasizing harmony with the Tao.With a range of meanings and interpretations in Chinese philosophy, translations of Tao include 'way', 'road', 'path', or 'technique', generally understood in the Taoist sense as an enigmatic process of transformation ultimately underlying reality.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · Taoism · https://en.wikipedia.org/wiki/Taoism",
+      "discipline": "religion",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Taoism",
+      "source_title": "Taoism",
+      "content_hash": "a46603d6af447d1b46cda5bf81114b66e80aef36bcbeef34c85d45e3b042b505"
+    },
+    {
+      "id": "tg-wiki2-0015",
+      "proposition": "Human anatomy is primarily the scientific study of the morphology of the human body.Anatomy is subdivided into gross anatomy and microscopic anatomy.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · Human anatomy · https://en.wikipedia.org/wiki/Human_anatomy",
+      "discipline": "medicine",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Human_anatomy",
+      "source_title": "Human anatomy",
+      "content_hash": "142dd51801185876cddb8e88abf4ef43e1b2ec3cfa48f43159a04a421f89a8fe"
+    },
+    {
+      "id": "tg-wiki2-0016",
+      "proposition": "Linguistics is the scientific study of language.Specific areas of linguistic description and analysis are syntax, semantics (meaning), morphology, phonetics, phonology, and pragmatics.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · Linguistics · https://en.wikipedia.org/wiki/Linguistics",
+      "discipline": "linguistics",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Linguistics",
+      "source_title": "Linguistics",
+      "content_hash": "a219470faf138aeb218ee8ae19074fcbb3b6110ca8362bda56ac4df154e331aa"
+    },
+    {
+      "id": "tg-wiki2-0017",
+      "proposition": "World War II, or the Second World War, was a global conflict between two coalitions: the Allies and the Axis powers.Nearly all of the world's countries participated, with many engaging in total war on an unprecedented scale.",
+      "event_or_context": "开放百科摘要 · lang=en",
+      "evidence": "Wikipedia summary · World War II · https://en.wikipedia.org/wiki/World_War_II",
+      "discipline": "history",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/World_War_II",
+      "source_title": "World War II",
+      "content_hash": "ad0684af234cd7fb1b2c9d10838ab9f7454e9fbbf5bb8100470d615f6bfc3498"
+    }
+  ]
+}

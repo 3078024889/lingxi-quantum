@@ -1,0 +1,14 @@
+{
+  "id": "SK-hf-cloud-sagemaker-iam-preflight",
+  "title": "hf-cloud-sagemaker-iam-preflight",
+  "rel": "wave2/skills/skills/hf-cloud-sagemaker-iam-preflight/SKILL.md",
+  "wave": "wave1",
+  "chars": 6344,
+  "sha16": "71328e4aa1a02aa7",
+  "drama_steps": [
+    1,
+    2,
+    4
+  ],
+  "status": "DUAL_WRITTEN"
+}

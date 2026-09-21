@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-01",
+  "type": "face_drift",
+  "desc": "同角色跨镜脸型漂移",
+  "expect": "冲突"
+}

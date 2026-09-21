@@ -1,0 +1,29 @@
+{
+  "source_count": 127,
+  "card_count": 127,
+  "principle_count": 579,
+  "sha256_of_index": "99ac9e585b85a5db9df1bd772055db448cc2a83e7f753e68213efe9de25f7800",
+  "aligned": true,
+  "timestamp": "2026-09-18T10:28:57+08:00",
+  "timezone": "Asia/Shanghai",
+  "artifacts": [
+    "MANIFEST.json",
+    "codex-digest-index.json",
+    "codex-principles-v1.json",
+    "codex-curriculum-feed.md",
+    "ALIGNMENT.json"
+  ],
+  "dual_write_targets": [
+    "D:\\lingxi-quantum\\knowledge\\codex-digest-2026-09-18\\\\",
+    "D:\\copernicus-twentywatts\\copernicus-twentywatts\\body\\codex-digest-2026-09-18\\\\",
+    "D:\\二十瓦特\\copernicus-twentywatts\\body\\codex-digest-2026-09-18\\\\"
+  ],
+  "box_mirrors": [
+    "/workspace/lingxi-quantum/knowledge/codex-digest-2026-09-18",
+    "/workspace/copernicus-twentywatts/body/codex-digest-2026-09-18",
+    "/workspace/out-to-ershiwatt-sync/sasi-curriculum-feed/codex-digest-2026-09-18",
+    "/workspace/codex-digest-work/out",
+    "/workspace/lingxi-quantum/content/cangxuan-feed/field-source-mind/body/codex-digest-2026-09-18"
+  ],
+  "notes": "Canonical success-criteria digest. AI is not the threat — human spirit/intelligence lag is. Parallel Groot cards/ tree may coexist as extras."
+}

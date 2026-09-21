@@ -1,0 +1,26 @@
+{
+  "id": "CB-12",
+  "role_name": "顾衡",
+  "identity": {
+    "occupation": "外卖骑手",
+    "core_wound": "雨天更拼"
+  },
+  "visual_anchors": [
+    "黄盔编号88",
+    "膝盖旧伤护膝"
+  ],
+  "voice": {
+    "forbid": [
+      "导师腔"
+    ]
+  },
+  "consistency_rules": [
+    "视觉锚点守恒",
+    "关心须有行动"
+  ],
+  "drama_steps": [
+    2,
+    7
+  ],
+  "evolvable": true
+}

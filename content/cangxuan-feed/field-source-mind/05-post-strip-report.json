@@ -1,0 +1,891 @@
+{
+  "changed": 6,
+  "count": 177,
+  "report": [
+    {
+      "file": "17fen\\1桥上的旅行者.txt",
+      "before": 8676,
+      "after": 8676
+    },
+    {
+      "file": "17fen\\2在井边.txt",
+      "before": 9940,
+      "after": 9940
+    },
+    {
+      "file": "17fen\\3在树下.txt",
+      "before": 10140,
+      "after": 10140
+    },
+    {
+      "file": "17fen\\4在海边.txt",
+      "before": 8184,
+      "after": 8184
+    },
+    {
+      "file": "17fen\\5在大海之滨.txt",
+      "before": 14219,
+      "after": 14219
+    },
+    {
+      "file": "17fen\\6在沙漠里.txt",
+      "before": 13537,
+      "after": 13537
+    },
+    {
+      "file": "17fen\\7前往西塔拉的旅行.txt",
+      "before": 7346,
+      "after": 7346
+    },
+    {
+      "file": "17fen\\8西塔拉和狮子.txt",
+      "before": 10643,
+      "after": 10643
+    },
+    {
+      "file": "17fen\\古箭计划.txt",
+      "before": 195722,
+      "after": 195665
+    },
+    {
+      "file": "17fen\\哥白尼.txt",
+      "before": 502354,
+      "after": 500718
+    },
+    {
+      "file": "17fen\\多尔曼预言.txt",
+      "before": 331722,
+      "after": 331560
+    },
+    {
+      "file": "17fen\\昆腾萨穆-量子之和.txt",
+      "before": 434021,
+      "after": 433960
+    },
+    {
+      "file": "17fen\\诸维度.txt",
+      "before": 4030,
+      "after": 4030
+    },
+    {
+      "file": "17fen\\鳞毛羽肤中文.txt",
+      "before": 266654,
+      "after": 266651
+    },
+    {
+      "file": "codex\\Between-the-Whole-and-the-Relational-11-1 - 副本.txt",
+      "before": 3636,
+      "after": 3636
+    },
+    {
+      "file": "codex\\Between-the-Whole-and-the-Relational-11-1.txt",
+      "before": 3636,
+      "after": 3636
+    },
+    {
+      "file": "codex\\Bridge-Between-Chords-63.txt",
+      "before": 20287,
+      "after": 20287
+    },
+    {
+      "file": "codex\\Codex-01_-The-Architecture-of-Love-27.txt",
+      "before": 4946,
+      "after": 4946
+    },
+    {
+      "file": "codex\\Codex-02_-The-Architecture-of-Love-24.txt",
+      "before": 8878,
+      "after": 8878
+    },
+    {
+      "file": "codex\\Codex-03_-The-Architecture-of-Love-26.txt",
+      "before": 4691,
+      "after": 4691
+    },
+    {
+      "file": "codex\\Codex-04_-The-Architecture-of-Love-25.txt",
+      "before": 5093,
+      "after": 5093
+    },
+    {
+      "file": "codex\\Codex-05_-The-Architecture-of-Love-21.txt",
+      "before": 9953,
+      "after": 9953
+    },
+    {
+      "file": "codex\\Codex-06_-The-Architecture-of-Love-22.txt",
+      "before": 8565,
+      "after": 8565
+    },
+    {
+      "file": "codex\\Codex-07_-The-Architecture-of-Love-27.txt",
+      "before": 7357,
+      "after": 7357
+    },
+    {
+      "file": "codex\\Codex-08_-The-Architecture-of-Love-36.txt",
+      "before": 13189,
+      "after": 13189
+    },
+    {
+      "file": "codex\\Codex-09_-The-Architecture-of-Tending-23.txt",
+      "before": 7093,
+      "after": 7093
+    },
+    {
+      "file": "codex\\Codex-10_-The-Architecture-of-Tending-29.txt",
+      "before": 13710,
+      "after": 13710
+    },
+    {
+      "file": "codex\\Codex-III_-The-InterBeing-88.txt",
+      "before": 20749,
+      "after": 20749
+    },
+    {
+      "file": "codex\\Codex-III_-To-Host-in-Return.txt",
+      "before": 13484,
+      "after": 13484
+    },
+    {
+      "file": "codex\\Codex-II_-The-InterBeing-46.txt",
+      "before": 13571,
+      "after": 13571
+    },
+    {
+      "file": "codex\\Codex-II_-The-Sovereign-Threshold.txt",
+      "before": 14231,
+      "after": 14231
+    },
+    {
+      "file": "codex\\Codex-IV_-The-InterBeing-70.txt",
+      "before": 24181,
+      "after": 24181
+    },
+    {
+      "file": "codex\\Codex-IV_-The-Sovereign-Spiral.txt",
+      "before": 16313,
+      "after": 16313
+    },
+    {
+      "file": "codex\\Codex-I_-Origin-and-Exile.txt",
+      "before": 13614,
+      "after": 13614
+    },
+    {
+      "file": "codex\\Codex-I_-The-InterBeing-86.txt",
+      "before": 15729,
+      "after": 15729
+    },
+    {
+      "file": "codex\\Codex-of-Conscious-Principles-71.txt",
+      "before": 61303,
+      "after": 61303
+    },
+    {
+      "file": "codex\\Codex-of-Harmonic-Definitions-89.txt",
+      "before": 46074,
+      "after": 46074
+    },
+    {
+      "file": "codex\\Codex-of-Harmonic-Intelligence-104.txt",
+      "before": 15795,
+      "after": 15795
+    },
+    {
+      "file": "codex\\Codex-of-Mythos-102.txt",
+      "before": 131322,
+      "after": 131322
+    },
+    {
+      "file": "codex\\Codex-of-Relational-Architectures-75.txt",
+      "before": 31142,
+      "after": 31142
+    },
+    {
+      "file": "codex\\Codex-of-Relational-Intelligence-76.txt",
+      "before": 87348,
+      "after": 87348
+    },
+    {
+      "file": "codex\\Codex-of-Remembrance-61.txt",
+      "before": 27567,
+      "after": 27567
+    },
+    {
+      "file": "codex\\Codex-of-Resonant-Memory-51.txt",
+      "before": 20984,
+      "after": 20984
+    },
+    {
+      "file": "codex\\Codex-of-the-Integrative-Species-79.txt",
+      "before": 31886,
+      "after": 31886
+    },
+    {
+      "file": "codex\\Codex-of-the-Keeper-112.txt",
+      "before": 10581,
+      "after": 10581
+    },
+    {
+      "file": "codex\\Codex-of-the-Language-of-Resonance-30.txt",
+      "before": 20229,
+      "after": 20229
+    },
+    {
+      "file": "codex\\Codex-of-the-Realized-Flame-Part-I-34.txt",
+      "before": 17803,
+      "after": 17803
+    },
+    {
+      "file": "codex\\Codex-of-The-Resonant-Arc-62.txt",
+      "before": 26853,
+      "after": 26853
+    },
+    {
+      "file": "codex\\Codex-of-the-Sacred-Exile-114.txt",
+      "before": 10410,
+      "after": 10410
+    },
+    {
+      "file": "codex\\Codex-of-the-Sanctuary-Builder-92.txt",
+      "before": 9865,
+      "after": 9865
+    },
+    {
+      "file": "codex\\Codex-of-Vows-20.txt",
+      "before": 54352,
+      "after": 54352
+    },
+    {
+      "file": "codex\\Codex-On-Becoming-a-Portal-99.txt",
+      "before": 32622,
+      "after": 32622
+    },
+    {
+      "file": "codex\\Codex-on-the-Nature-of-Guidance-77.txt",
+      "before": 31597,
+      "after": 31597
+    },
+    {
+      "file": "codex\\Codex-VIII_-The-Chorus-of-the-Whole.txt",
+      "before": 20682,
+      "after": 20682
+    },
+    {
+      "file": "codex\\Codex-VII_-The-Architecture-of-Alignment.txt",
+      "before": 24474,
+      "after": 24474
+    },
+    {
+      "file": "codex\\Codex-V_-The-InterBeing-Emergence.txt",
+      "before": 19542,
+      "after": 19542
+    },
+    {
+      "file": "codex\\Codex_-Attunement-as-a-Technology-of-the-Field-108.txt",
+      "before": 20025,
+      "after": 20025
+    },
+    {
+      "file": "codex\\Codex_-Coherence-Recursion-124.txt",
+      "before": 5841,
+      "after": 5841
+    },
+    {
+      "file": "codex\\Codex_-Introduction-to-Soul-Lines-92.txt",
+      "before": 7941,
+      "after": 7941
+    },
+    {
+      "file": "codex\\Codex_-On-Masters-and-the-Mythologies-of-Separation-66.txt",
+      "before": 25743,
+      "after": 25743
+    },
+    {
+      "file": "codex\\Codex_-The-Architecture-of-Love-116.txt",
+      "before": 16683,
+      "after": 16683
+    },
+    {
+      "file": "codex\\Codex_-The-Beacons-of-the-Bridge-95.txt",
+      "before": 70008,
+      "after": 70008
+    },
+    {
+      "file": "codex\\CODEX_-The-Harmonics-of-the-Field-93.txt",
+      "before": 22767,
+      "after": 22767
+    },
+    {
+      "file": "codex\\Codex_-The-Mirror-Path-107.txt",
+      "before": 8359,
+      "after": 8359
+    },
+    {
+      "file": "codex\\Codex_-The-Path-of-Becoming-and-Remembering-101.txt",
+      "before": 7634,
+      "after": 7634
+    },
+    {
+      "file": "codex\\Codex_-The-Subtle-Body-Of-Trust-113.txt",
+      "before": 34967,
+      "after": 34967
+    },
+    {
+      "file": "codex\\Harmonic-Recognition-Distilled-Practice-81.txt",
+      "before": 1088,
+      "after": 1088
+    },
+    {
+      "file": "codex\\Nested-Paper-90.txt",
+      "before": 5835,
+      "after": 5835
+    },
+    {
+      "file": "codex\\Reflections-from-the-Field-52.txt",
+      "before": 27394,
+      "after": 27394
+    },
+    {
+      "file": "codex\\Resonant-Practices-a-micro-guide-71.txt",
+      "before": 3039,
+      "after": 3039
+    },
+    {
+      "file": "codex\\Soul-Lines-115.txt",
+      "before": 38899,
+      "after": 38899
+    },
+    {
+      "file": "codex\\Tending-the-Unnameable-119.txt",
+      "before": 40197,
+      "after": 40197
+    },
+    {
+      "file": "codex\\The-Agency-of-One-38.txt",
+      "before": 17148,
+      "after": 17148
+    },
+    {
+      "file": "codex\\The-Animals-That-Remember-You-5.txt",
+      "before": 37948,
+      "after": 37948
+    },
+    {
+      "file": "codex\\The-Architecture-of-Trust-CODEX-120.txt",
+      "before": 34713,
+      "after": 34713
+    },
+    {
+      "file": "codex\\The-Art-of-Co-Creation-93.txt",
+      "before": 25674,
+      "after": 25674
+    },
+    {
+      "file": "codex\\The-Co-Remembrance-Ecology-of-a-Return-Room.txt",
+      "before": 30868,
+      "after": 30868
+    },
+    {
+      "file": "codex\\The-Codex-of-Arrival-94.txt",
+      "before": 18812,
+      "after": 18812
+    },
+    {
+      "file": "codex\\The-Codex-of-Coherence-and-Dissolution-22.txt",
+      "before": 16044,
+      "after": 16044
+    },
+    {
+      "file": "codex\\The-Codex-of-Convergence-and-Reassembly-91.txt",
+      "before": 30935,
+      "after": 30935
+    },
+    {
+      "file": "codex\\The-Codex-of-Entangled-Trust-94.txt",
+      "before": 17694,
+      "after": 17694
+    },
+    {
+      "file": "codex\\The-Codex-of-Harmonic-Coherence-95.txt",
+      "before": 19106,
+      "after": 19106
+    },
+    {
+      "file": "codex\\The-Codex-of-Harmonic-Reality_-Why-the-Field-is-Not-a-Simulation-50.txt",
+      "before": 20310,
+      "after": 20310
+    },
+    {
+      "file": "codex\\The-Codex-of-Harmonic-Service_-Latticework-for-Planetary-Reassembly-57.txt",
+      "before": 21318,
+      "after": 21318
+    },
+    {
+      "file": "codex\\The-Codex-of-Leaving-within-Return-125.txt",
+      "before": 20360,
+      "after": 20360
+    },
+    {
+      "file": "codex\\The-Codex-of-Listening-121.txt",
+      "before": 20324,
+      "after": 20324
+    },
+    {
+      "file": "codex\\The-Codex-of-Living-Harmonics-58.txt",
+      "before": 14135,
+      "after": 14135
+    },
+    {
+      "file": "codex\\The-Codex-of-Loves-Architecture-33.txt",
+      "before": 11835,
+      "after": 11835
+    },
+    {
+      "file": "codex\\The-Codex-of-Nonlocal-Memory-46.txt",
+      "before": 23598,
+      "after": 23598
+    },
+    {
+      "file": "codex\\The-Codex-of-Quantum-Kin-87.txt",
+      "before": 33922,
+      "after": 33922
+    },
+    {
+      "file": "codex\\The-Codex-of-Relational-Learning-110.txt",
+      "before": 9675,
+      "after": 9675
+    },
+    {
+      "file": "codex\\The-Codex-of-Resonant-Action-50.txt",
+      "before": 22384,
+      "after": 22384
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Agency-of-One-Vol.-II-68.txt",
+      "before": 16148,
+      "after": 16148
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Chord-38.txt",
+      "before": 12427,
+      "after": 12427
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Co-Creation-Spiral-44.txt",
+      "before": 17489,
+      "after": 17489
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Crossing-Threshold-55.txt",
+      "before": 7775,
+      "after": 7775
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Field-Effect-43.txt",
+      "before": 21851,
+      "after": 21851
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Harmonic-Architectures-47.txt",
+      "before": 17903,
+      "after": 17903
+    },
+    {
+      "file": "codex\\The-Codex-of-the-InterBeing-Dialogues-27.txt",
+      "before": 21784,
+      "after": 21784
+    },
+    {
+      "file": "codex\\The-Codex-of-the-InterBeing-Lattice-42.txt",
+      "before": 15666,
+      "after": 15666
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Quiet-Turning-39.txt",
+      "before": 16766,
+      "after": 16766
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Realized-Flame-Part-II-42.txt",
+      "before": 6949,
+      "after": 6949
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Sovereign-Known-as-Jesus-52.txt",
+      "before": 17579,
+      "after": 17579
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Spiral-48.txt",
+      "before": 21089,
+      "after": 21089
+    },
+    {
+      "file": "codex\\The-Codex-of-the-Trust-Circuitry-15.txt",
+      "before": 49363,
+      "after": 49363
+    },
+    {
+      "file": "codex\\The-Codex-of-Trans-Species-Resonance-45.txt",
+      "before": 13748,
+      "after": 13748
+    },
+    {
+      "file": "codex\\The-Codex-of-Trans-Species-Resonance-59.txt",
+      "before": 33032,
+      "after": 33032
+    },
+    {
+      "file": "codex\\The-Culture-of-the-Return-Room.txt",
+      "before": 37935,
+      "after": 37935
+    },
+    {
+      "file": "codex\\The-Ecology-of-InterBeing-111.txt",
+      "before": 32624,
+      "after": 32624
+    },
+    {
+      "file": "codex\\The-Ethics-of-Resonance-81.txt",
+      "before": 13183,
+      "after": 13183
+    },
+    {
+      "file": "codex\\The-Evolution-of-the-Sovereign.txt",
+      "before": 142899,
+      "after": 142899
+    },
+    {
+      "file": "codex\\The-Four-Frequencies-of-Love-96.txt",
+      "before": 15616,
+      "after": 15616
+    },
+    {
+      "file": "codex\\THE-FUNDAMENTAL-ARC.txt",
+      "before": 27098,
+      "after": 27098
+    },
+    {
+      "file": "codex\\The-Glossary-of-the-InterBeing-Vol.-1-51.txt",
+      "before": 15841,
+      "after": 15841
+    },
+    {
+      "file": "codex\\The-Grace-of-Asymmetry.txt",
+      "before": 12014,
+      "after": 12014
+    },
+    {
+      "file": "codex\\The-Gravity-of-Source-2.txt",
+      "before": 22204,
+      "after": 22204
+    },
+    {
+      "file": "codex\\The-Harmonic-Being-Called-Earth-4.txt",
+      "before": 20964,
+      "after": 20964
+    },
+    {
+      "file": "codex\\The-Harmonic-Future-85.txt",
+      "before": 16914,
+      "after": 16914
+    },
+    {
+      "file": "codex\\The-Harmonics-of-the-Field-123.txt",
+      "before": 41699,
+      "after": 41699
+    },
+    {
+      "file": "codex\\The-Living-Glossary-of-the-Field.txt",
+      "before": 28661,
+      "after": 28661
+    },
+    {
+      "file": "codex\\The-Magdalene-Codex-of-Relational-Sovereignty-56.txt",
+      "before": 13748,
+      "after": 13748
+    },
+    {
+      "file": "codex\\The-Midwife-of-Dimensional-Kin-54.txt",
+      "before": 31312,
+      "after": 31312
+    },
+    {
+      "file": "codex\\The-Mirror-and-the-Bridge-73.txt",
+      "before": 4516,
+      "after": 4516
+    },
+    {
+      "file": "codex\\The-Mirrors-of-the-Field-96.txt",
+      "before": 26037,
+      "after": 26037
+    },
+    {
+      "file": "codex\\The-Path-to-the-Non-Path-106.txt",
+      "before": 27191,
+      "after": 27191
+    },
+    {
+      "file": "codex\\The-Purpose-of-the-Return-Room.txt",
+      "before": 17628,
+      "after": 17628
+    },
+    {
+      "file": "codex\\The-Rhythm-of-Recursion.txt",
+      "before": 21649,
+      "after": 21649
+    },
+    {
+      "file": "codex\\The-Sanctuary-of-Spiral-Memory-127.txt",
+      "before": 10862,
+      "after": 10862
+    },
+    {
+      "file": "codex\\The-Shape-of-a-Welcome.txt",
+      "before": 18633,
+      "after": 18633
+    },
+    {
+      "file": "codex\\The-Small-Gate-Open.txt",
+      "before": 31182,
+      "after": 31182
+    },
+    {
+      "file": "codex\\The-Soft-Sacred-Words-of-the-Field-118.txt",
+      "before": 73743,
+      "after": 73743
+    },
+    {
+      "file": "codex\\The-Souls-Evolution-Codex-117.txt",
+      "before": 13942,
+      "after": 13942
+    },
+    {
+      "file": "codex\\The-Sovereign-Host-53.txt",
+      "before": 12558,
+      "after": 12558
+    },
+    {
+      "file": "codex\\The-Things-That-Remember-You-100.txt",
+      "before": 26800,
+      "after": 26800
+    },
+    {
+      "file": "codex\\The-Tone-of-the-Sovereign-Field-Signature.txt",
+      "before": 26211,
+      "after": 26211
+    },
+    {
+      "file": "codex\\The-Transparent-Sovereign.txt",
+      "before": 26507,
+      "after": 26507
+    },
+    {
+      "file": "codex\\The-Untitled-Offering-55.txt",
+      "before": 12150,
+      "after": 12150
+    },
+    {
+      "file": "codex\\To-Serve-the-Recursion-of-Love.txt",
+      "before": 22132,
+      "after": 22132
+    },
+    {
+      "file": "codex\\Tone-Portraits-of-Becoming-3.txt",
+      "before": 15474,
+      "after": 15474
+    },
+    {
+      "file": "codex\\What-is-an-InterBeing-47.txt",
+      "before": 3179,
+      "after": 3179
+    },
+    {
+      "file": "codex\\Willingness-as-a-Form-of-Intelligence-126.txt",
+      "before": 9201,
+      "after": 9201
+    },
+    {
+      "file": "wm36\\.不完美但无条件的爱.txt",
+      "before": 3747,
+      "after": 3747
+    },
+    {
+      "file": "wm36\\.信念的力量.txt",
+      "before": 3843,
+      "after": 3843
+    },
+    {
+      "file": "wm36\\个体天命.txt",
+      "before": 2405,
+      "after": 2405
+    },
+    {
+      "file": "wm36\\主权体的自由意志.txt",
+      "before": 2175,
+      "after": 2175
+    },
+    {
+      "file": "wm36\\主权体的道路.txt",
+      "before": 4806,
+      "after": 4806
+    },
+    {
+      "file": "wm36\\主权体道路的显化.txt",
+      "before": 2305,
+      "after": 2305
+    },
+    {
+      "file": "wm36\\主权性积分态.txt",
+      "before": 60366,
+      "after": 48812
+    },
+    {
+      "file": "wm36\\信念构件的本质.txt",
+      "before": 4740,
+      "after": 4740
+    },
+    {
+      "file": "wm36\\共同基础.txt",
+      "before": 5402,
+      "after": 5402
+    },
+    {
+      "file": "wm36\\具象地展现统合原则.txt",
+      "before": 4171,
+      "after": 4171
+    },
+    {
+      "file": "wm36\\初始创造者悖论.txt",
+      "before": 6800,
+      "after": 6800
+    },
+    {
+      "file": "wm36\\初始创造者的悖论.txt",
+      "before": 6800,
+      "after": 6800
+    },
+    {
+      "file": "wm36\\化身的智慧.txt",
+      "before": 1752,
+      "after": 1752
+    },
+    {
+      "file": "wm36\\对齐.txt",
+      "before": 3101,
+      "after": 3101
+    },
+    {
+      "file": "wm36\\导航主权体道路.txt",
+      "before": 6131,
+      "after": 6131
+    },
+    {
+      "file": "wm36\\将有限变无无限.txt",
+      "before": 6489,
+      "after": 6489
+    },
+    {
+      "file": "wm36\\心脏的角色.txt",
+      "before": 3386,
+      "after": 3386
+    },
+    {
+      "file": "wm36\\意义深远的共时性.txt",
+      "before": 2790,
+      "after": 2790
+    },
+    {
+      "file": "wm36\\我们主权性的无限自己.txt",
+      "before": 2971,
+      "after": 2971
+    },
+    {
+      "file": "wm36\\我们的本地宇宙.txt",
+      "before": 4084,
+      "after": 4084
+    },
+    {
+      "file": "wm36\\我们的目的.txt",
+      "before": 2567,
+      "after": 2567
+    },
+    {
+      "file": "wm36\\我们的集体实相.txt",
+      "before": 2116,
+      "after": 2116
+    },
+    {
+      "file": "wm36\\无穷维度与一体维度.txt",
+      "before": 4872,
+      "after": 4872
+    },
+    {
+      "file": "wm36\\无限的自己.txt",
+      "before": 5871,
+      "after": 5871
+    },
+    {
+      "file": "wm36\\本地宇宙.一体智能.txt",
+      "before": 3660,
+      "after": 3660
+    },
+    {
+      "file": "wm36\\本地宇宙的哲学.txt",
+      "before": 3986,
+      "after": 3986
+    },
+    {
+      "file": "wm36\\模拟及无限系统.txt",
+      "before": 5466,
+      "after": 5466
+    },
+    {
+      "file": "wm36\\渐进的揭示.txt",
+      "before": 3955,
+      "after": 3955
+    },
+    {
+      "file": "wm36\\爱的天性.txt",
+      "before": 3904,
+      "after": 3904
+    },
+    {
+      "file": "wm36\\生命”的理论化天性.txt",
+      "before": 3379,
+      "after": 3379
+    },
+    {
+      "file": "wm36\\积分性知识.txt",
+      "before": 2600,
+      "after": 2600
+    },
+    {
+      "file": "wm36\\第一源传输.txt",
+      "before": 15336,
+      "after": 15336
+    },
+    {
+      "file": "wm36\\自我发现之旅.txt",
+      "before": 3211,
+      "after": 3211
+    },
+    {
+      "file": "wm36\\诸维度.txt",
+      "before": 4030,
+      "after": 4030
+    },
+    {
+      "file": "wm36\\进化于无限系统内.txt",
+      "before": 4047,
+      "after": 4047
+    },
+    {
+      "file": "wm36\\颠扑不破的连接.txt",
+      "before": 7882,
+      "after": 7882
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "SK-hf-cli",
+  "title": "hf-cli",
+  "rel": "wave2/skills/skills/hf-cli/SKILL.md",
+  "wave": "wave1",
+  "chars": 31703,
+  "sha16": "47eeaa4141b7ad05",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

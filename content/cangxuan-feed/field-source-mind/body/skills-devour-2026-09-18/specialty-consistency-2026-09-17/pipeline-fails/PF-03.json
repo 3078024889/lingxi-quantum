@@ -1,0 +1,7 @@
+{
+  "id": "PF-03",
+  "step": 2,
+  "type": "id_board_visual_missing",
+  "desc": "身份板无视觉锚点",
+  "expect": "编译器拒绝进入分镜"
+}

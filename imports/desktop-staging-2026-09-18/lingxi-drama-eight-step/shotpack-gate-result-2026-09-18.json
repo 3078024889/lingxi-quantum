@@ -1,0 +1,52 @@
+{
+  "at": "2026-09-18T01:22:22.469Z",
+  "canon_fixture": {
+    "all_matched": true,
+    "rows": [
+      {
+        "shotId": "SH01",
+        "expect": "pass",
+        "ok": true,
+        "matched": true
+      },
+      {
+        "shotId": "SH07",
+        "expect": "pass",
+        "ok": true,
+        "matched": true
+      },
+      {
+        "shotId": "SH07-bad",
+        "expect": "fail",
+        "ok": false,
+        "matched": true
+      }
+    ]
+  },
+  "tracks_fixture": {
+    "id": "SHOTPACK-TRACKS-v1",
+    "gate_ok": true,
+    "issues": []
+  },
+  "bad_dialogue_fixture": {
+    "gate_ok": false,
+    "expect_fail": true,
+    "matched": true,
+    "issues": [
+      {
+        "track": "dialogue",
+        "code": "NO_SCRIPT_REF",
+        "fix": "对白行必须 scriptRef"
+      },
+      {
+        "track": "subtitle",
+        "code": "SUB_NE_DIALOGUE",
+        "fix": "字幕必须等于剧本对白"
+      }
+    ]
+  },
+  "contract_present": true,
+  "timeline_present": true,
+  "honest": "可控可拦可修；外站 API 一次零失误不保证；不过门不准进成片",
+  "pass": true
+}

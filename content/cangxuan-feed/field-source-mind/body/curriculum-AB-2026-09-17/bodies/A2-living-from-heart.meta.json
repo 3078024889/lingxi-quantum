@@ -1,0 +1,12 @@
+{
+  "id": "A2-living-from-heart",
+  "title": "源于心脏而活",
+  "content_sha256_16": "f261287ec8ea3f62",
+  "chars": 37000,
+  "raw_chars": 37078,
+  "picked_raw": "/workspace/wm_priority_out/living_from_heart_pdf.txt",
+  "batch": "curriculum-AB-2026-09-17",
+  "peel": "v3-essay-anchor",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:46:25.784716+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "cycle": "2026-09-10-1800",
+  "generated_at": "2026-09-10T18:07:27.406590+08:00",
+  "total_indexed": 60,
+  "prior_known": 20,
+  "new_this_batch": 40,
+  "fetch_errors": 0,
+  "sources": {
+    "vercel-labs/agent-skills": 9,
+    "addyosmani/agent-skills": 25,
+    "supabase/agent-skills": 2,
+    "apify/agent-skills": 2,
+    "microsoft/skills": 2,
+    "anthropics/skills_prior": 20
+  },
+  "rate_limit": {
+    "mode": "unauthenticated",
+    "core_limit": 60,
+    "note": "Observed remaining ~38-51 during tree fetches earlier this cycle; raw.githubusercontent.com used for frontmatter to conserve API quota. No auth token used."
+  }
+}

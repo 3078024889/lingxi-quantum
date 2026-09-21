@@ -1,0 +1,16 @@
+{
+  "id": "SK-ai-video-storyboard",
+  "title": "ai-video-storyboard",
+  "rel": "ai-video-storyboard-skill/SKILL.md",
+  "wave": "wave1",
+  "chars": 7367,
+  "sha16": "7857231f55cc93a9",
+  "drama_steps": [
+    3,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

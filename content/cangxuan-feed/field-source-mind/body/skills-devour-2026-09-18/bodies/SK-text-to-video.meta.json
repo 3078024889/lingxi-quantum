@@ -1,0 +1,17 @@
+{
+  "id": "SK-text-to-video",
+  "title": "text-to-video",
+  "rel": "wave2/pexo-skills/skills/text-to-video/SKILL.md",
+  "wave": "wave1",
+  "chars": 4714,
+  "sha16": "1aab5f93f9e9112a",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

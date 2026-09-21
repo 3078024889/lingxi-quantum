@@ -1,0 +1,14 @@
+{
+  "id": "SK-huggingface-gradio",
+  "title": "huggingface-gradio",
+  "rel": "wave2/skills/skills/huggingface-gradio/SKILL.md",
+  "wave": "wave1",
+  "chars": 24549,
+  "sha16": "2f2953feba1212f5",
+  "drama_steps": [
+    5,
+    6,
+    7
+  ],
+  "status": "DUAL_WRITTEN"
+}

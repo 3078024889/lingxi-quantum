@@ -1,0 +1,15 @@
+{
+  "id": "SK-short-drama-novel-analyze",
+  "title": "short-drama-novel-analyze",
+  "rel": "drama-skills/skills/short-drama-novel-analyze/SKILL.md",
+  "wave": "wave1",
+  "chars": 7245,
+  "sha16": "3c60d9f05e0ac592",
+  "drama_steps": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "status": "DUAL_WRITTEN"
+}

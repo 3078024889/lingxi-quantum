@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     "灵犀场在线工具：图片转换与精确压缩、文件真实格式检测、MD5/SHA256、JSON、时间戳、二维码等。优先浏览器本地处理，不上传服务器。",
   alternates: { canonical: "/tools" },
   openGraph: {
+      images: [{ url: "/og-sasi-20260920.png", width: 1672, height: 941, alt: "灵犀场 SASI · 一念即达" }],
     title: "灵犀场在线工具 · 本地处理，即开即用",
     description: "遇到数字问题，丢进来就知道怎么回事，并直接解决。",
     url: "/tools",

@@ -1,0 +1,150 @@
+[
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 17,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "峰外半张裂云面具要「人佩同迁」；陆衡握剑、沈澈挡棠；面具未越霜栖界。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E17.md",
+      "continuity_lock": "面具=裂云执事级；未越界；玉佩仍嵌内壁；今日借响0/2；白青袍见习",
+      "heart_voice": "（棠）「同迁……是要我走。」",
+      "prop_mask": "半张裂云面具线外",
+      "borrow_count": "0/2"
+    },
+    "content_hash": "485144ccffd042141b6c4aa5ac9377fe29ee4549e41aa00ded63ebb034c2c709"
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 17,
+    "scene": 2,
+    "sequence": 2,
+    "scriptEvent": "赵临川禁足屋误判同迁即走；黑影纸条回「佩未离壁。你闭嘴。」",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E17.md",
+      "continuity_lock": "赵禁足未破；碎片热冷交替；黑影线仍在",
+      "heart_voice": "（其）「我连纸条都不如。」",
+      "zhao_status": "禁足"
+    },
+    "content_hash": "9a8f68e32af8f2f6f6b1ee1ae48599fb2c77ebf864f66ea452beac4bf512b724"
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 17,
+    "scene": 3,
+    "sequence": 3,
+    "scriptEvent": "寒砚落血启霜栖旧禁「锁芯看守令」；霜光沿壁护嵌佩，不拔佩。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E17.md",
+      "continuity_lock": "锁芯看守令=启；佩仍嵌壁；借响仍2/日",
+      "heart_voice": "（澈）「她要把棠焊在壁上。」",
+      "lock_core_order": "enabled",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁"
+    },
+    "content_hash": "d5cc4062f3c032542bf6e86a03699c23644dee725d9da938d1783463a8390981"
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 17,
+    "scene": 4,
+    "sequence": 4,
+    "scriptEvent": "小棠对嵌壁玉佩借响第一记护场，未拔佩；面具线外退半寸。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E17.md",
+      "continuity_lock": "今日借响1/2；佩未离壁；面具退半寸未消失",
+      "heart_voice": "（棠）「借响换安稳，不换离开。」",
+      "borrow_count": "1/2"
+    },
+    "content_hash": "8912d9d21474619fe0b35aa0610aab0bf15f7ab4364d52edfd73865c0791bf3d"
+  },
+  {
+    "action": "event",
+    "characterKey": "SC",
+    "episode": 17,
+    "scene": 5,
+    "sequence": 5,
+    "scriptEvent": "息影学舌叠声加压；沈澈甩安神符贴廊柱，叠声压回单音。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E17.md",
+      "continuity_lock": "安神符-1（剩+2）；息影未进内堂；学舌被压",
+      "heart_voice": "（影）「符……烦。」",
+      "anshen_talisman": "+2"
+    },
+    "content_hash": "c9b89c99fd7d965e69579d705982fbdef8abe8b281c648049ef6a8d4270853cc"
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 17,
+    "scene": 6,
+    "sequence": 6,
+    "scriptEvent": "面具抛第二枚霜纹「迁」字，贴旧禁光膜外焦边进不来；丢出三日期限。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E17.md",
+      "continuity_lock": "「迁」字未入内；三日期限落地；锁芯令仍有效",
+      "heart_voice": "（砚）「他把期限扔过来，我接。」",
+      "deadline_days": 3,
+      "prop_qian_frost": "迁字线外"
+    },
+    "content_hash": "d5e9b87593857dd49d1f3d4015fd11d6c2eda9df5a7ae4fb36d3fd03da0fbca1"
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 17,
+    "scene": 7,
+    "sequence": 7,
+    "scriptEvent": "赵临川偷听「三日」被黑影纸条拍脸辱为废物；仍禁足。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E17.md",
+      "continuity_lock": "赵仍禁足；碎片未给坐标；黑影控场",
+      "heart_voice": "（其）「……废物也想赢一次。」"
+    },
+    "content_hash": "d5c041b9482ae1305ff96ffa4fc3dd2ad0f5fed2254faf57b4f369a8c0dd9069"
+  },
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 17,
+    "scene": 8,
+    "sequence": 8,
+    "scriptEvent": "寒砚护令、沈澈护符、陆衡护人三角同步半步；棠被护在嵌佩侧。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E17.md",
+      "continuity_lock": "三护短站位成立；棠未离壁；白青袍见习旁观",
+      "heart_voice": "（棠）「他们站我这边。」",
+      "guard_triangle": true
+    },
+    "content_hash": "bf9ede0441aad7fce2ffda3de9027956bc62c78c1214756a6a0ab0ef0b8ff27c"
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 17,
+    "scene": 9,
+    "sequence": 9,
+    "scriptEvent": "棠袖内缺角钩忽然温一下；峰外面具收声；闭关名册被人翻到「锁芯看守」页。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E17.md",
+      "continuity_lock": "缺角钩温=锁芯相关；佩仍嵌壁；借响1/2；安神符+2；三日期限；名册钩子",
+      "heart_voice": "（棠）「同迁是他们的词。我的词是守。」",
+      "prop_quejiao_gou": "warm",
+      "borrow_count": "1/2",
+      "anshen_talisman": "+2"
+    },
+    "content_hash": "ec128f203461b9de1f047013d6d3c9b7a6e7821dec654712fa393cb32deb2ca2"
+  }
+]

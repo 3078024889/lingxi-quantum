@@ -18,10 +18,11 @@ const footer = fs.readFileSync("components/Footer.tsx", "utf8");
 const connections = fs.readFileSync("app/sasi/ConnectionCenter.tsx", "utf8");
 const integrations = fs.readFileSync("lib/sasi/integration-catalog.ts", "utf8");
 
+const composer = fs.readFileSync("app/sasi/SasiComposer.tsx", "utf8");
 const checks = [
-  ["canonical SASI promise", workspace.includes("把想法，变成真实可用的作品") && workspace.includes("先形成方案，再确认本次预算")],
-  ["nine first-layer entries", ["SASI 首页","苍玄 AI 导演","AI 短剧工坊","编程构建部署","Skills","模型与 API","余额与用量","我的作品库","我的账户"].every((value)=>workspace.includes(value))],
-  ["second-layer navigation keeps all first-layer entrances", ["苍玄 AI 导演","AI 短剧工坊","编程构建部署","模型与 API","余额与用量","我的作品库","我的账户"].every((value)=>navigation.includes(value))],
+  ["conversation explains real availability", composer.includes("今天，你想让什么成为现实？") && composer.includes("完整成片与网站自动部署尚未开放")],
+  ["five focused workspace entries", ["新建创作","我的项目","创作 Skills","连接与 API","充值与账单"].every(value => workspace.includes(value))],
+  ["shared navigation follows the simplified workspace", ["新建创作","Skills","模型与 API","充值与账单","我的项目"].every(value => navigation.includes(value)) && navigation.includes("意识显化")],
   ["drama has three production rooms", ["项目总览","人物与连续性","故事板与镜头生产"].every((value)=>workspace.includes(value))],
   ["drama workspaces use removable blank templates", panels.includes("删除当前角色") && panels.includes("下面是空白制作模板") && !panels.includes("沈晚棠")],
   ["work library is not empty-state only", ["品牌官网模板","AI 短剧模板","产品应用模板","宣传视频模板","故事宇宙模板"].every((value)=>panels.includes(value))],
@@ -57,8 +58,8 @@ const checks = [
   ["balance metrics derive from owned 30-day jobs and ledger data", productionPanels.includes("recentJobs") && productionPanels.includes("settledAmountFen") && productionPanels.includes("supplierCost") && productionPanels.includes("account.ledger.slice") && fs.readFileSync("app/api/sasi/account/route.ts","utf8").includes('.gte("updated_at", thirtyDaysAgo)')],
   ["balance page does not fabricate usage or open checkout early", productionPanels.includes("当前不使用演示数据") && productionPanels.includes("支付接入后开放") && productionPanels.includes("readiness?.productionReady")],
   ["SASI uses one RMB balance and explicit server quote", productionPanels.includes("获取本次任务报价") && productionPanels.includes("确认执行 ·") && productionPanels.includes("/api/sasi/quote") && !productionPanels.includes("pack.points")],
-  ["SASI home uses an independent cinematic asset", css.includes("sasi-home-hero-v2.png") && fs.existsSync("public/images/console/sasi-home-hero-v2.png")],
-  ["SASI home preserves creation, recent work and guidance", ["sasi-home-v4-command","sasi-start-paths","sasi-home-v4-recent","sasi-home-v4-flow","sasi-home-v4-news"].every((value)=>workspace.includes(value))],
+  ["home replaces the cinematic dashboard with a composer", workspace.includes("<SasiComposer") && !workspace.includes("sasi-home-v4-hero")],
+  ["composer keeps real project history and direct creation", composer.includes("projects.slice(0, 4)") && composer.includes("onSubmit(kind)") && workspace.includes("prepare(kind, homeBrief)") && !composer.includes("demo-")],
   ["notification bell exposes truthful updates", workspace.includes("查看通知") && workspace.includes("SASI_UPDATES.map") && fs.readFileSync("lib/sasi/updates.ts","utf8").includes("2026-09-14")],
   ["footer uses current product taxonomy", ["苍玄 AI 导演","AI 短剧工坊","编程构建部署","模型与 API","作品库"].every((value)=>footer.includes(value)) && !["影像创作","产品构建","能力作品库","制作账户"].some((value)=>footer.includes(value))],
   ["mockup screenshots are not embedded", !workspace.includes("codex-clipboard") && !panels.includes("codex-clipboard")],

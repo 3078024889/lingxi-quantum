@@ -1,0 +1,15 @@
+{
+  "id": "SK-huggingface-lora-space-builder",
+  "title": "huggingface-lora-space-builder",
+  "rel": "wave2/skills/skills/huggingface-lora-space-builder/SKILL.md",
+  "wave": "wave1",
+  "chars": 32781,
+  "sha16": "c6b0e5720d0ebff7",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

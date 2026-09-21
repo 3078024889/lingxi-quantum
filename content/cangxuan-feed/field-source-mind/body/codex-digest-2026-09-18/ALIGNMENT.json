@@ -1,0 +1,24 @@
+{
+  "at": "2026-09-18T10:28:38.305185+08:00",
+  "order": "Celestial：格鲁特 dual-feed Lingxi SASI + Twenty Watts — identical trees, same n",
+  "n": 127,
+  "deck_n": 72,
+  "source_count": 127,
+  "destinations": {
+    "lingxi_sasi": "/workspace/lingxi-quantum/content/cangxuan-feed/field-source-mind/body/codex-digest-2026-09-18",
+    "twenty_watts": "/workspace/copernicus-twentywatts/body/codex-digest-2026-09-18",
+    "ershiwatt_sync": "/workspace/out-to-ershiwatt-sync/sasi-curriculum-feed/codex-digest-2026-09-18"
+  },
+  "same_n": true,
+  "same_manifest_n": true,
+  "files_per_tree": [
+    "cards/",
+    "MANIFEST.json",
+    "ALIGNMENT.json",
+    "README.md",
+    "principle-deck.json",
+    "cards.jsonl"
+  ],
+  "dead_rules_baked": true,
+  "evolvable_all": true
+}

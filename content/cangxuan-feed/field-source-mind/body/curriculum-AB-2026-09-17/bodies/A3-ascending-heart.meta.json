@@ -1,0 +1,12 @@
+{
+  "id": "A3-ascending-heart",
+  "title": "上升之心",
+  "content_sha256_16": "beefca5d6b3d79f3",
+  "chars": 7699,
+  "raw_chars": 7861,
+  "picked_raw": "/workspace/wm_priority_out/ascending_heart.txt",
+  "batch": "curriculum-AB-2026-09-17",
+  "peel": "v3-essay-anchor",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:46:25.790293+00:00"
+}

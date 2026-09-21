@@ -1,0 +1,258 @@
+{
+  "batch": "wiki-001",
+  "fetched_at": "2026-09-10T08:59:15.700Z",
+  "source_seed": "sources/seed-sources-v1.json",
+  "counts": {
+    "ok": 16,
+    "fail": 9,
+    "requested": 25
+  },
+  "errors": [
+    {
+      "title": "相对论",
+      "reason": "相对论 HTTP 429"
+    },
+    {
+      "title": "板块构造论",
+      "reason": "板块构造论 HTTP 429"
+    },
+    {
+      "title": "元素周期表",
+      "reason": "元素周期表 HTTP 429"
+    },
+    {
+      "title": "勾股定理",
+      "reason": "勾股定理 HTTP 429"
+    },
+    {
+      "title": "操作系统",
+      "reason": "操作系统 HTTP 429"
+    },
+    {
+      "title": "供需",
+      "reason": "供需 HTTP 429"
+    },
+    {
+      "title": "注意力",
+      "reason": "注意力 HTTP 429"
+    },
+    {
+      "title": "丝绸之路",
+      "reason": "丝绸之路 HTTP 429"
+    },
+    {
+      "title": "Prime number",
+      "reason": "Prime number HTTP 429"
+    }
+  ],
+  "items": [
+    {
+      "id": "tg-wiki-0001",
+      "proposition": "光速，指光在真空中的速率，是一個物理常數，一般記作c，精確值為299792458m/s（有时会取为3.00×108m/s）。這一數值之所以是精確值，是因為公尺的定義本身就是基於光速和國際時間標準的，任何对光速更精确的测定，都不会改变光速的精确值，相反地，将会使得人们对1公尺的定义更为精确。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=26477",
+      "evidence": "Wikipedia summary · 光速 · https://zh.wikipedia.org/wiki/%E5%85%89%E9%80%9F",
+      "discipline": "physics",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E5%85%89%E9%80%9F",
+      "source_title": "光速",
+      "content_hash": "3bee2ca7b9190cedc288361283b71e8e483cb23a51e8e6a0930868200f0221ee"
+    },
+    {
+      "id": "tg-wiki-0002",
+      "proposition": "线粒体 是一种存在于大多数真核细胞中的由两层膜包被的细胞器，直径在0.5到10微米左右。除了溶组织内阿米巴、蓝氏贾第鞭毛虫以及几种微孢子虫外，大多数真核细胞或多或少都拥有线粒体，但它们各自拥有的线粒体在大小、数量及外观等方面上都有所不同。这种细胞器拥有自身的遗传物质和遗传体系，但因其基因组大小有限，所以线粒体是一种半自主细胞器。线粒体是细胞内氧化磷酸化和合成三磷酸腺苷（ATP）的主要场所，为细胞的活动提供了化学能量，所以有“細胞的發電站” 之称。除了为细胞供能外，线粒体还参与诸如细胞分化、细胞信息传递和细胞凋亡等过程，并拥有调控细胞生长和细胞周期的能力。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=132186",
+      "evidence": "Wikipedia summary · 線粒體 · https://zh.wikipedia.org/wiki/%E7%B7%9A%E7%B2%92%E9%AB%94",
+      "discipline": "biology",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E7%B7%9A%E7%B2%92%E9%AB%94",
+      "source_title": "線粒體",
+      "content_hash": "5026623f13ff3ec99beccb5b6aab388040669fc8947f27f2c67155d15e2bfccb"
+    },
+    {
+      "id": "tg-wiki-0003",
+      "proposition": "地球的結構同其他类地行星相似，是层状的，它們可以藉由化学和流变学特性區分。地球拥有一層富含硅的地壳、一層熔融狀的地幔、一層液体的外核和一个固体的内核。这些对地球内部结构的认识来源自物理学证据和一些推断，这些证据包括火山喷出的物质和地震波。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=1111496",
+      "evidence": "Wikipedia summary · 地球構造 · https://zh.wikipedia.org/wiki/%E5%9C%B0%E7%90%83%E6%A7%8B%E9%80%A0",
+      "discipline": "earth-science",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E5%9C%B0%E7%90%83%E6%A7%8B%E9%80%A0",
+      "source_title": "地球構造",
+      "content_hash": "9ee47a3d0d7f7b6db86383646e9004041dc297368228a9873bd96a6272db245a"
+    },
+    {
+      "id": "tg-wiki-0004",
+      "proposition": "太陽系 是由太陽和圍繞其公转的各种天体组成的行星系统。太阳系形成于大约46億年前，由一个被称为太阳星云的原始分子雲在引力坍缩作用下形成太陽和原行星盤。之后原行星盘的局部吸积进一步形成了行星和其它天体。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=2315",
+      "evidence": "Wikipedia summary · 太阳系 · https://zh.wikipedia.org/wiki/%E5%A4%AA%E9%98%B3%E7%B3%BB",
+      "discipline": "astronomy",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E5%A4%AA%E9%98%B3%E7%B3%BB",
+      "source_title": "太阳系",
+      "content_hash": "f833e940f69c55146400cafeebe741b5a009c0a989caad8be469ea3c33d829c5"
+    },
+    {
+      "id": "tg-wiki-0005",
+      "proposition": "水（H2O）是一种无机化合物；在常温常壓且无杂质时，水是无色、无味、几乎不导电的透明液体，也可经蒸发形成气态水蒸气；蒸发可在任何温度下发生。在标准大气压下，水的凝固点是0 °C（32 °F；273 K），沸点是100 °C（212 °F；373 K）。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=3449",
+      "evidence": "Wikipedia summary · 水 · https://zh.wikipedia.org/wiki/%E6%B0%B4",
+      "discipline": "chemistry",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E6%B0%B4",
+      "source_title": "水",
+      "content_hash": "df6e7b7d09372f7922827c6e8d1f72ff091ca63c7e8ddb2e0545b66e4c9bfcf4"
+    },
+    {
+      "id": "tg-wiki-0006",
+      "proposition": "質數，又称素数，指在大於1的自然数中，除了和該数自身外，無法被其他自然数整除的数（也可定義為只有1與該數本身两个正因数的数）。大於1的自然數若不是質數，則稱之為合数（也稱為合成數）。例如，5是個質數，因為其正因數只有1與5。7是個質數，因為其正因數只有1與7。而4則是個合數，因為除了1與4外，2也是其正因數。6也是個合數，因為除了1與6外，2與3也是其正因數。算术基本定理確立了質數於数论裡的核心地位：任何大於1的整数均可被表示成一串唯一質數之乘積。為了確保該定理的唯一性，1被定義為不是質數，因為在因式分解中可以有任意多個1。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=17187",
+      "evidence": "Wikipedia summary · 质数 · https://zh.wikipedia.org/wiki/%E8%B4%A8%E6%95%B0",
+      "discipline": "math",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E8%B4%A8%E6%95%B0",
+      "source_title": "质数",
+      "content_hash": "45170f05b073f97df20d214dcc8928329da484281664478824cc53afa7244129"
+    },
+    {
+      "id": "tg-wiki-0007",
+      "proposition": "算法，在数学（算学）和计算机科学中指一个被定义好的、计算机可施行其指示的有限步骤或次序，常用于计算、数据处理和自动推理。算法可以使用条件语句通过各种途径转移代码执行（称为自动决策），并推导出有效的推论（称为自动推理），最终实现自动化。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=2672",
+      "evidence": "Wikipedia summary · 算法 · https://zh.wikipedia.org/wiki/%E7%AE%97%E6%B3%95",
+      "discipline": "cs",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E7%AE%97%E6%B3%95",
+      "source_title": "算法",
+      "content_hash": "9bfee379d07b29d90c8d6a72c346570962ba661ea07352e6ca8c5e21f42f6f9b"
+    },
+    {
+      "id": "tg-wiki-0008",
+      "proposition": "機會成本 是指決策過程中面臨多項選擇，而當中價值最高的選擇 有可能被放棄，又稱為替代性成本，就是俗語所說的世界上沒有白吃的午餐、魚與熊掌不可兼得。簡單來說，機會成本就是所犧牲的代價。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=69319",
+      "evidence": "Wikipedia summary · 机会成本 · https://zh.wikipedia.org/wiki/%E6%9C%BA%E4%BC%9A%E6%88%90%E6%9C%AC",
+      "discipline": "economics",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E6%9C%BA%E4%BC%9A%E6%88%90%E6%9C%AC",
+      "source_title": "机会成本",
+      "content_hash": "29120d065f885f4e411cdd2f9aaf8c80715185dc37587693b3913f662137c2a4"
+    },
+    {
+      "id": "tg-wiki-0009",
+      "proposition": "工作記憶 是一種記憶容量有限的認知系統，被用以暫時保存資訊。工作記憶對於推理以及指導決策和行為有重要影響。工作記憶通常與短期記憶同義使用，但一些理論家認為兩種形式的記憶是不同的，假設工作記憶允許對存儲的資訊進行操作，而短期記憶僅指資訊的短期存儲。工作記憶是認知心理學、神經心理學和神經科學的核心理論概念。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=4300749",
+      "evidence": "Wikipedia summary · 工作记忆 · https://zh.wikipedia.org/wiki/%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BF%86",
+      "discipline": "psychology",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E5%B7%A5%E4%BD%9C%E8%AE%B0%E5%BF%86",
+      "source_title": "工作记忆",
+      "content_hash": "cdf6b8ff6f7a94bba24f794589436ef30f2dfdf5d5640b579c9860c7ca425473"
+    },
+    {
+      "id": "tg-wiki-0010",
+      "proposition": "印刷是指将影像或文字原稿迅速大量复制的一种技术。一般使用印刷机将油墨印在纸张上，它是出版的基本组成部分。印刷机是能够在承印物上印刷的机械。活字印刷术被称为中国古代四大发明之一，可以说造纸术与印刷术这两项伟大的发明对人类文化知识的传播起到了决定性的作用。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=50203",
+      "evidence": "Wikipedia summary · 印刷 · https://zh.wikipedia.org/wiki/%E5%8D%B0%E5%88%B7",
+      "discipline": "history",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E5%8D%B0%E5%88%B7",
+      "source_title": "印刷",
+      "content_hash": "5395d72baa27d70c337cd71dafc3e282d86adb1d2baacdb20647cb50990ffe7a"
+    },
+    {
+      "id": "tg-wiki-0011",
+      "proposition": "脱氧核糖核酸 是一種生物大分子，可組成遺傳指令，引導生物發育與生命機能運作。主要功能是資訊儲存，可比喻為「藍圖」或「配方」。其中包含的指令，是建構細胞內其他的化合物，如蛋白質與核醣核酸所需。帶有蛋白質編碼的DNA片段稱為基因。其他的DNA序列，有些直接以本身構造發揮作用，有些則參與調控遺傳訊息的表現。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=3654",
+      "evidence": "Wikipedia summary · 脱氧核糖核酸 · https://zh.wikipedia.org/wiki/%E8%84%B1%E6%B0%A7%E6%A0%B8%E7%B3%96%E6%A0%B8%E9%85%B8",
+      "discipline": "biology",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E8%84%B1%E6%B0%A7%E6%A0%B8%E7%B3%96%E6%A0%B8%E9%85%B8",
+      "source_title": "脱氧核糖核酸",
+      "content_hash": "7278d05d609880efccf4d9e00c8383b81bb0f0f1429f37340599d950817ac5b1"
+    },
+    {
+      "id": "tg-wiki-0012",
+      "proposition": "黑洞 是一種天體，因自身極高的密度而產生極大的引力，以致所有的粒子與光等電磁輻射都無法逃逸。廣義相對論預測，足夠緊密的質量可以扭曲時空形成黑洞；不可能從該區域逃離的邊界稱為事件視界。雖然事件視界的範圍決定了穿越黑洞的物體是否被吸入其中，但其邊界本身並沒有可被觀測的特徵：黑洞不會反光，就像一個理想的黑體。",
+      "event_or_context": "开放百科摘要抽取 · lang=zh · pageid=19400",
+      "evidence": "Wikipedia summary · 黑洞 · https://zh.wikipedia.org/wiki/%E9%BB%91%E6%B4%9E",
+      "discipline": "astronomy",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://zh.wikipedia.org/wiki/%E9%BB%91%E6%B4%9E",
+      "source_title": "黑洞",
+      "content_hash": "0ae5d4109660b8311225fc0e01ceeb38f5f7d615d3918edae4a27e8215c9b525"
+    },
+    {
+      "id": "tg-wiki-0013",
+      "proposition": "The speed of light is the speed of electromagnetic waves.Light travels at slower speed inside materials like glass or water; its highest speed is in a vacuum.",
+      "event_or_context": "开放百科摘要抽取 · lang=en · pageid=28736",
+      "evidence": "Wikipedia summary · Speed of light · https://en.wikipedia.org/wiki/Speed_of_light",
+      "discipline": "physics",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Speed_of_light",
+      "source_title": "Speed of light",
+      "content_hash": "8b79a830920611027bf394caca3f81681c39cc7491c03de7aaed4d143b6a23e5"
+    },
+    {
+      "id": "tg-wiki-0014",
+      "proposition": "A mitochondrion is an organelle found in the cells of most eukaryotes, such as animals, plants and fungi.Mitochondria have a double membrane structure and use aerobic respiration to generate adenosine triphosphate (ATP), which is used throughout the cell as a source of chemical energy.",
+      "event_or_context": "开放百科摘要抽取 · lang=en · pageid=19588",
+      "evidence": "Wikipedia summary · Mitochondria · https://en.wikipedia.org/wiki/Mitochondria",
+      "discipline": "biology",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Mitochondria",
+      "source_title": "Mitochondria",
+      "content_hash": "cd8fca5bd6b06c387ef7b2887745b48b2793dd1e820f5b7f8c88bcfbdd447b5a"
+    },
+    {
+      "id": "tg-wiki-0015",
+      "proposition": "In mathematics and computer science, an algorithm is any well-defined set of instructions that when followed terminates after a finite number of steps that comprise a solution to a given computational problem.Advanced algorithms may utilize loops and involve many conditionals that decide the next step based on the inputs provided, resulting in long sequences of steps before halting, but all algorithms terminate by definition.",
+      "event_or_context": "开放百科摘要抽取 · lang=en · pageid=775",
+      "evidence": "Wikipedia summary · Algorithm · https://en.wikipedia.org/wiki/Algorithm",
+      "discipline": "cs",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Algorithm",
+      "source_title": "Algorithm",
+      "content_hash": "851c23275c63b2dd8b3141f5b77b299cf6cffdddcec553b11b92f63d63ddd505"
+    },
+    {
+      "id": "tg-wiki-0016",
+      "proposition": "Photosynthesis is a system of biological processes by which photopigment-bearing autotrophic organisms, such as most plants, algae and cyanobacteria, convert light energy—typically from sunlight—into the chemical energy necessary to fuel their metabolism.The term photosynthesis usually refers to oxygenic photosynthesis, a process that releases oxygen as a byproduct of water splitting.",
+      "event_or_context": "开放百科摘要抽取 · lang=en · pageid=24544",
+      "evidence": "Wikipedia summary · Photosynthesis · https://en.wikipedia.org/wiki/Photosynthesis",
+      "discipline": "biology",
+      "tier": "bronze",
+      "confidence": 0.82,
+      "source_class": "open_encyclopedia",
+      "source_url": "https://en.wikipedia.org/wiki/Photosynthesis",
+      "source_title": "Photosynthesis",
+      "content_hash": "b8d8daf68710480418fc7f67764a01ea23a239b17f14ce90ba891ab1fa85bb72"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "SK-huggingface-datasets",
+  "title": "huggingface-datasets",
+  "rel": "wave2/skills/skills/huggingface-datasets/SKILL.md",
+  "wave": "wave1",
+  "chars": 4325,
+  "sha16": "37eacc041b0f7ebf",
+  "drama_steps": [
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "SK-launch-video",
+  "title": "launch-video",
+  "rel": "wave2/pexo-skills/skills/launch-video/SKILL.md",
+  "wave": "wave1",
+  "chars": 4667,
+  "sha16": "45cfeacfd86c1a4d",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

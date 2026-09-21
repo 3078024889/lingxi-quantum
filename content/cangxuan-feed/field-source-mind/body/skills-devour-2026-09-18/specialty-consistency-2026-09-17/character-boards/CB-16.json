@@ -1,0 +1,26 @@
+{
+  "id": "CB-16",
+  "role_name": "韩山",
+  "identity": {
+    "occupation": "码头装卸工",
+    "core_wound": "话少力大"
+  },
+  "visual_anchors": [
+    "反光条背心",
+    "虎口老茧"
+  ],
+  "voice": {
+    "forbid": [
+      "导师腔"
+    ]
+  },
+  "consistency_rules": [
+    "视觉锚点守恒",
+    "关心须有行动"
+  ],
+  "drama_steps": [
+    2,
+    7
+  ],
+  "evolvable": true
+}

@@ -1,0 +1,13 @@
+{
+  "id": "C3b-lyricus-2",
+  "code": "C3b",
+  "title": "理瑞克斯会话2",
+  "sha16": "c93d3158bac10f39",
+  "chars": 8109,
+  "raw_chars": 8280,
+  "src": "/workspace/wm_priority_out/lyricus_2.txt",
+  "batch": "curriculum-CD-week2",
+  "peel": "v3",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:59:29.807430+00:00"
+}

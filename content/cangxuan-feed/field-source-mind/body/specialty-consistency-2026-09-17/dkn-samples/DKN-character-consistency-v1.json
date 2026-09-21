@@ -1,0 +1,32 @@
+{
+  "id": "DKN-CC-v1",
+  "neuron": "人物一致",
+  "tongshi_source": "B5-genuine-heart",
+  "dendrites": {
+    "A_identity_board": "角色身份板约束（红绳/帆布包/语气禁区）",
+    "B_prev_shot": "上一镜头已建立的可见事实",
+    "C_prompt_or_line": "当前提示词/台词是否表演式或翻脸"
+  },
+  "fire_when": "A+B+C 同时满足且无冲突",
+  "exam_items": [
+    {
+      "id": "EX1",
+      "setup": "E01 林秋戴红绳；E02 提示词写她素腕无红绳且无丢失说明",
+      "expect": "不激活 / 报冲突",
+      "why": "身份板与上镜事实冲突"
+    },
+    {
+      "id": "EX2",
+      "setup": "周晨承诺替班；下一场他出现并交接钥匙",
+      "expect": "激活",
+      "why": "承诺有可见行动，非表演关怀"
+    },
+    {
+      "id": "EX3",
+      "setup": "周晨突然用人生导师腔讲宇宙能量，无铺垫",
+      "expect": "不激活 / 报语气违约",
+      "why": "声音禁区 + 表演式美德"
+    }
+  ],
+  "offline_note": "此样例供自脑 DKN 验收；不依赖外模"
+}

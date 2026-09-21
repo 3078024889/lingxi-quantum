@@ -1,0 +1,440 @@
+TITLE: 造翼者的艺术（artup）
+SOURCE: https://www.wingmakers.com.cn/artup.html
+FINAL: https://www.wingmakers.com.cn/artup.html
+CHARS: 15605
+STATUS: READ
+IMAGES: 112
+
+
+## IMAGE INDEX
+- https://www.wingmakers.com.cn/public/Home/images/20230303/fe2fd14d393fc904148a5b9a0e917c75.jpg | 造翼者中国站
+- https://www.wingmakers.com.cn/public/Home/images/20220926/483e9e631931612179c503639c5d51e7.jpg | 1
+- https://www.wingmakers.com.cn/public/Home/images/20220926/8c6ff725e45f4e7ecb610c57df9fc8f9.jpg | 2
+- https://www.wingmakers.com.cn/public/Home/images/20220927/5bf0380021c8fc96bda95996bfdb5959.jpg | 3
+- https://www.wingmakers.com.cn/public/Home/images/20221002/786d0e60fc620b281cdb0fe1ab99df8d.jpg | 4
+- https://www.wingmakers.com.cn/public/Home/images/20220927/a6f2dac591c86aafe0699982fbe3a9ba.jpg | 5
+- https://www.wingmakers.com.cn/public/Home/images/20220927/3cd21baf09a8fb08c22c6f12a74742e3.jpg | 6
+- https://www.wingmakers.com.cn/public/Home/images/20221002/11866810d2144cc7744a88cfb0b166a8.jpg | 7
+- https://www.wingmakers.com.cn/public/Home/images/20220927/3ccf92addafa5da2edaec5d98dcaffa1.jpg | 8
+- https://www.wingmakers.com.cn/public/Home/images/20220927/197205319218c6d17c70062552220027.jpg | 9
+- https://www.wingmakers.com.cn/public/Home/images/20220927/7c71f6764e424ac402c08df02af9cea2.jpg | 10
+- https://www.wingmakers.com.cn/public/Home/images/20220927/ae44c7f08e9599295fb126de7c187700.jpg | 11
+- https://www.wingmakers.com.cn/public/Home/images/20220927/5aa3de3c6eb23ec90aa4bbfa57501014.jpg | 12
+- https://www.wingmakers.com.cn/public/Home/images/20220927/2e31d8c6343393b8dbfdc59a4b2b197e.jpg | 13
+- https://www.wingmakers.com.cn/public/Home/images/20220927/e8bc083aae72b9c1c75a62144c645117.jpg | 14
+- https://www.wingmakers.com.cn/public/Home/images/20220927/de68547c5edce78953ee032cf5b21c2f.jpg | 15
+- https://www.wingmakers.com.cn/public/Home/images/20220927/6882f80ef859cb26199991cf60cd5a3e.jpg | 16
+- https://www.wingmakers.com.cn/public/Home/images/20220927/a6c09b631f1d7ea417c167496d5e19ec.jpg | 17
+- https://www.wingmakers.com.cn/public/Home/images/20220927/1a717d89a15175a1a70a09dabc9097a1.jpg | 18
+- https://www.wingmakers.com.cn/public/Home/images/20220927/f4c65f6208b8d0d37ccd3a83a8888da3.jpg | 19
+- https://www.wingmakers.com.cn/public/Home/images/20220927/b6e950ae6dc80fcf6542659113c92a2f.jpg | 20
+- https://www.wingmakers.com.cn/public/Home/images/20220927/64509967b670aee6a430983213d4642a.jpg | 21
+- https://www.wingmakers.com.cn/public/Home/images/20220927/5d52227fac6867eb1019f88b216bdbe4.jpg | 22
+- https://www.wingmakers.com.cn/public/Home/images/20220927/94e52cccea3fef89c26458993ef04bc2.jpg | 23
+- https://www.wingmakers.com.cn/public/Home/images/20220927/864c1352edf8684acf187cd4dadfe7d0.jpg | 哈科密内室绘画
+- https://www.wingmakers.com.cn/public/Home/images/20220927/6224aa18976852796c1a8408a0c336cd.jpg | 1
+- https://www.wingmakers.com.cn/public/Home/images/20220926/771b0cad6aef91d0e79e6351dee1a392.jpg | 2
+- https://www.wingmakers.com.cn/public/Home/images/20220927/18264241fad6aa26208599d900ae6be7.jpg | 3
+- https://www.wingmakers.com.cn/public/Home/images/20220927/7c25d63e905b0e8c7662fc8ba3bfd06d.jpg | 4
+- https://www.wingmakers.com.cn/public/Home/images/20220927/886e503e5b804be24d5e243a136a6db6.jpg | 5
+- https://www.wingmakers.com.cn/public/Home/images/20220927/ec6db08a5291811b8ca1c228cb7748e1.jpg | 6
+- https://www.wingmakers.com.cn/public/Home/images/20220927/1394a658cdb7711bb804bffc5c4a4f5f.jpg | 7
+- https://www.wingmakers.com.cn/public/Home/images/20220927/b8f09e175d6a3bc42e01c06f31edfb65.jpg | 8
+- https://www.wingmakers.com.cn/public/Home/images/20220927/04e6bd7efb034d043585029b93a287cb.jpg | 9
+- https://www.wingmakers.com.cn/public/Home/images/20220927/9c8c0f4860c369225f282e90fc2b5d03.jpg | 10
+- https://www.wingmakers.com.cn/public/Home/images/20220927/2d9868eb511d05cf06c3a3386b69d5df.jpg | 11
+- https://www.wingmakers.com.cn/public/Home/images/20220927/73a31c13149c90713dd7ab20807d8dd5.jpg | 12
+- https://www.wingmakers.com.cn/public/Home/images/20220927/9cadd28af7fff86d75c3d60ec80982f7.jpg | 13
+- https://www.wingmakers.com.cn/public/Home/images/20220927/ba142d59e0db00f632d6d5bb081df3b0.jpg | 14
+- https://www.wingmakers.com.cn/public/Home/images/20220927/6df5b71c35b9443965789514f8f8c430.jpg | 15
+- https://www.wingmakers.com.cn/public/Home/images/20220927/a09958266b78fcff37d96466c0e3a785.jpg | 16
+- https://www.wingmakers.com.cn/public/Home/images/20220927/399dae22b4c37e3047e84633b00330c8.jpg | 17
+- https://www.wingmakers.com.cn/public/Home/images/20220927/2321dd911e58b3251c80f2af28c3dec8.jpg | 18
+- https://www.wingmakers.com.cn/public/Home/images/20220927/ca386724b4ed6518b71153e80b1a629f.jpg | 19
+- https://www.wingmakers.com.cn/public/Home/images/20220927/ab9a1354b93cfd8e59a1c8c84928b7ec.jpg | 20
+- https://www.wingmakers.com.cn/public/Home/images/20220927/fc76129de186ae87dfa57fdfd7ead9b6.jpg | 21
+- https://www.wingmakers.com.cn/public/Home/images/20220927/abcd64c015c475676bdcdb7ec8712c3c.jpg | 22
+- https://www.wingmakers.com.cn/public/Home/images/20220927/705f5b205899ac6aa46e3b4d04627e41.jpg | 23
+- https://www.wingmakers.com.cn/public/Home/images/20220927/836548c186a7c9b740df73b6d97c5e49.jpg | 兹安亚室内绘画
+- https://www.wingmakers.com.cn/public/Home/images/20220927/8f04b28bde926aca92b5d1566b8bdcbb.jpg | 1
+- https://www.wingmakers.com.cn/public/Home/images/20220926/eacf81418c722c956d1a18c1b342c760.jpg | 2
+- https://www.wingmakers.com.cn/public/Home/images/20220926/0efa323f4678b9a0614ccd4caad308ec.jpg | 3
+- https://www.wingmakers.com.cn/public/Home/images/20220927/c5a7fcceb2eccb8138176432fd27d113.jpg | 4
+- https://www.wingmakers.com.cn/public/Home/images/20220927/0fc633fd0244ae1d7f8c18b92e4f4854.jpg | 5
+- https://www.wingmakers.com.cn/public/Home/images/20220927/a5ff81d92a2a77dc49d7d8de4b25a20f.jpg | 6
+- https://www.wingmakers.com.cn/public/Home/images/20220927/2612f52f18e9ce1abc03ec26f4e02dc8.jpg | 7
+- https://www.wingmakers.com.cn/public/Home/images/20220927/05dad229402b9fb785765988716015bc.jpg | 8
+- https://www.wingmakers.com.cn/public/Home/images/20220927/e7f1629abc01e9f4d5708328433de320.jpg | 9
+- https://www.wingmakers.com.cn/public/Home/images/20220927/3add23fcbdcb197b3076a97f90a5df36.jpg | 10
+- https://www.wingmakers.com.cn/public/Home/images/20220927/bd408e74402e646c7c6ceca6d149c1ac.jpg | 11
+- https://www.wingmakers.com.cn/public/Home/images/20220927/21fb40c6c88e936b486816186ff97010.jpg | 12
+- https://www.wingmakers.com.cn/public/Home/images/20220927/3363b6303f959c936f693a2f4410c007.jpg | 13
+- https://www.wingmakers.com.cn/public/Home/images/20220927/9369deba6496e56d2bef8a5c4081ddf8.jpg | 14
+- https://www.wingmakers.com.cn/public/Home/images/20220927/8a452bcd06aaf374ca977af6b3b34564.jpg | 15
+- https://www.wingmakers.com.cn/public/Home/images/20220927/394013cedd52d1b5422f57f7e9a407c3.jpg | 16
+- https://www.wingmakers.com.cn/public/Home/images/20220927/c35a63fa943c0d88649b6a71ae623c21.jpg | 17
+- https://www.wingmakers.com.cn/public/Home/images/20220927/82a174f0d304ed32cb6e60f255f8cfeb.jpg | 18
+- https://www.wingmakers.com.cn/public/Home/images/20220927/ac9d2c90a9bfb4a7dd1146c0b1688535.jpg | 19
+- https://www.wingmakers.com.cn/public/Home/images/20220927/46b73e320eca6dd6ee91f2dd6c489d54.jpg | 20
+- https://www.wingmakers.com.cn/public/Home/images/20220927/e9a5015c1fb23697cf45745cb4c8468e.jpg | 21
+- https://www.wingmakers.com.cn/public/Home/images/20220927/0e3fc4863fb619c13a2b74cddce08a49.jpg | 22
+- https://www.wingmakers.com.cn/public/Home/images/20220927/4795ec4e5524cc20bdae5d770a5ad3c3.jpg | 23
+- https://www.wingmakers.com.cn/public/Home/images/20220927/881d4d6b7b61da76b50c892b6807ea11.jpg | 阿迪亚室内绘画
+- https://www.wingmakers.com.cn/public/Home/images/20220927/341788ea3e7256ddb42109311ce4a4b3.jpg | 1
+- https://www.wingmakers.com.cn/public/Home/images/20220926/5383b2b8000cd48d8f7bcb6277087465.jpg | 2
+- https://www.wingmakers.com.cn/public/Home/images/20220927/08620105b9b42328fe5280440c621145.jpg | 3
+- https://www.wingmakers.com.cn/public/Home/images/20220927/edad222822f1d567f93cee1278c59d65.jpg | 4
+- https://www.wingmakers.com.cn/public/Home/images/20220927/f96a547aa1230fe1ecffd5e9116a9ca9.jpg | 5
+- https://www.wingmakers.com.cn/public/Home/images/20220927/c48f4ee1926dc49f6522cc5f7d08c77c.jpg | 6
+- https://www.wingmakers.com.cn/public/Home/images/20220927/55bebac641a30fd6a84f5b1ce68842c4.jpg | 7
+- https://www.wingmakers.com.cn/public/Home/images/20220927/3641eab557122739219453a4a442dc45.jpg | 8
+- https://www.wingmakers.com.cn/public/Home/images/20220927/c9b7c061550f454799aa7ca0d71907b0.jpg | 9
+- https://www.wingmakers.com.cn/public/Home/images/20220927/ea4a4ce9ce420b02deac41cc55f0b215.jpg | 10
+- https://www.wingmakers.com.cn/public/Home/images/20220927/13c1b1aca7f8bb7588575a9d4c9c1e75.jpg | 11
+- https://www.wingmakers.com.cn/public/Home/images/20220927/7fc2f16ff2af2cf2bf43b8bf9115ea22.jpg | 12
+- https://www.wingmakers.com.cn/public/Home/images/20220927/39dc8f6e264ca129aee32a306b7d4f51.jpg | 13
+- https://www.wingmakers.com.cn/public/Home/images/20220927/cb638210bc0f69562b72e528a5d8f4f9.jpg | 14
+- https://www.wingmakers.com.cn/public/Home/images/20220927/797dc5e3334ad31f5ee304986f3eb173.jpg | 15
+- https://www.wingmakers.com.cn/public/Home/images/20220927/4434d850b855353457ac32a7d4639250.jpg | 16
+- https://www.wingmakers.com.cn/public/Home/images/20220927/fcce68ed37db4365fa25980ffecdeeb0.jpg | 17
+- https://www.wingmakers.com.cn/public/Home/images/20220927/5b0f2a922476519cf8552d4fa0abc66e.jpg | 18
+- https://www.wingmakers.com.cn/public/Home/images/20220927/aa265401a86b7ea07aa4129d97089132.jpg | 19
+- https://www.wingmakers.com.cn/public/Home/images/20220927/39c280da3df669b5ccfa7d111e12af67.jpg | 20
+- https://www.wingmakers.com.cn/public/Home/images/20220927/6d44c8d15fce75b25a68419bb79afae7.jpg | 21
+- https://www.wingmakers.com.cn/public/Home/images/20220927/faab277f807a420aeb74fcd525315111.jpg | 22
+- https://www.wingmakers.com.cn/public/Home/images/20220927/f7776ba2da006ac69fa41c23c9291393.jpg | 23
+- https://www.wingmakers.com.cn/public/Home/images/20220927/c30f3eb028f0cddced63082b2d911d24.jpg | 24
+- http://www.wingmakers.com.cn/public/Home/images/upload/image/20220914/1663116845838431.png
+- http://www.wingmakers.com.cn/public/Home/images/upload/image/20220930/1664550315258656.png | 内室绘画解读论文
+- https://www.wingmakers.com.cn/public/Home/images/20230411/89def5656c9ad6bf3259defdc935fc6b.png
+- https://www.wingmakers.com.cn/public/Home/images/20221002/f30d8323b997d590c5b355a380a429fd.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20230411/c52f54f804b88b51575aeeeeaab1d888.png
+- https://www.wingmakers.com.cn/public/Home/images/20221002/a1d14e19c4edf5d9d21ffb29cf5342b4.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221002/be3fd2efebecce8e78a01a98af6c36a3.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221002/8d236f4ad200e70a79ab8332cecee5c8.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221002/37aee2345e388a8bfc54cf9d571056af.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20230326/8cda2425c0bd93310535347d48e0dd1e.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221002/64720adf5173ff82ea3451549042a74d.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221002/1171f885afdcc73e7d4769a14c25c5e9.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221006/12660b3bc307718291073f92e67b3e53.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221006/36838ecffaf11fb68092e304698351f0.jpg
+- https://www.wingmakers.com.cn/public/Home/images/20221006/eeb5c02bd023fdcfd46a9521c475c4d1.jpg
+
+## PAGE TEXT
+
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20230303/fe2fd14d393fc904148a5b9a0e917c75.jpg | alt: 造翼者中国站
+图 解
+历 史
+玛呼访谈
+2008年4月面访及录音1
+200年4月面访及录音2
+2008年4月面访及录音3
+意识媒体访谈
+卡米洛特项目 访谈
+2013年电访及录音
+序言
+社交媒体
+翻译
+常见问答
+下载及电台
+文学
+心脏六美德
+源于心脏而活
+上升之心
+何时-哪个-如何 训练：序言
+鲜活的真理
+灵性行动主义殿堂
+能量心脏
+第一源头传递
+理瑞克斯
+阈限宇宙起源论
+理瑞克斯会话1：体验整体导航仪
+理瑞克斯会话2：唤起整体导航仪
+理瑞克斯会话3：知识的本质
+理瑞克斯会话4：宇宙关系
+理瑞克斯会话5：接口界面地带
+理瑞克斯会话6：直觉智能技术
+理瑞克斯常见问答
+主权积分态宣言
+神话叙事
+聂鲁达访谈1
+聂鲁达访谈2
+聂鲁达访谈3
+聂鲁达访谈4
+聂鲁达访谈5
+主权性积分态之生命原则
+转变中的存在模式
+勘探的蓝图
+信念及其能量系统
+未发布哲学文本摘录
+词汇表
+意识物理学
+兹安亚混合媒体廊
+阿迪亚混合媒体廊
+量子暂停
+灵性之旅的工具
+曼图斯迪亚的愿景
+造翼者工具
+造翼者中文朗读
+古箭混合媒体廊
+哈科密混合媒体廊
+玛呼访谈录音
+古箭混合媒体廊
+哈科密混合媒体廊
+兹安亚混合媒体廊
+阿迪亚混合媒体廊
+新作品 画廊
+抽象超现实主义画廊
+意识的多重肖像 画廊
+艺术商店
+博客
+其他官网
+詹姆斯玛呼 艺术站
+主权性积分态 中文站
+詹姆斯玛呼 中文站
+MOCI 中文站
+x
+造翼者的艺术
+作者：詹姆斯.玛呼.纳嗨 马克.亨佩尔 中文转译者：Z.SI.GP
+在造翼者提供的各类帮助人们激活和重塑个人信念系统的工具中，造翼者艺术是其不可分割的积分性部分。詹姆斯.玛呼发布了艺术中，大量都是以内室绘画及相关图形的形式。《古箭计划》小说中，艺术被赋予非常独特且具体的相关性/实用性。
+重要的是记住，造翼者神话中的每一个元素都是整体必不可少的积分性部分。艺术扮演着至关重要的角色，帮助放大这些资料内的灵/本质，去跨越文化和语言的障碍。
+艺术和音乐的美丽，就在于它不需要翻译。它超越了语言的藩篱。因此，造翼者依靠这2个元素，就为任何背景、语言或文化的人们，提供了入口，来接取到编码于这些作品中的活化性频率。
+詹姆斯.玛呼所开发的艺术，其最核心而言是一种象征，象征着主权性积分态。这代表着最为原生/根本的意识，但很大程度上依然未被觉察和利用。造翼者艺术提供了一道新的视界/地平线，在这里，我们可以感知到：一个新世界正在形成时的微光，如同在胎儿身体完全成形前的初生心跳。
+就效果而言，如果说主权性积分态意识位于一道道紧闭的门后，那么造翼者艺术就是一种方法，将这些门楔开一道缝，以便个体细窥其中。
+这些作品根源于我们的宇宙矩阵。时间、空间、唯物主义，与那创造出人类的力量之间的存在着一种断裂的感觉。这个力量是庄严神圣的，在非常实际的意义上，它是完全脱离了单个的人类化人格。它涉及到某种更深的且完全被忽视的事物。关于它的主题很少被挖掘或触及，因为它隐藏在总体性中。
+造翼者艺术的目的就是：激活主权性积分态的集体性原型。从而挖掘出这种隐藏如此之深的意识，打捞至人类存在的表面，以便在一种全新的光里来审视它。经由这种审视，个体能够更多一点地活化自身内里的这种意识。
+主权性积分态，一直都以异象传闻的方式实存于人类存在的所有历史时期，偶尔则被描绘在艺术性表达里，诸如绘画、诗歌、建筑、舞蹈和文学，但是，却难以像造翼者资料中这样，被如此生动或清晰地见到。
+实际上，如果说主权性积分态意识位于一道道紧闭的门后，那么造翼者艺术就是一种方法，将这些门楔开一道缝，以便个体细窥其中。艺术就像一种妊娠的语言，孕育着意义，不过，个体必须允许艺术将自己拉向表面之下。如果你容许艺术占领你，它就能将你带向一种原理性的理解，理解我们是什么。
+存在4个主要的艺术合集:
+古箭遗址的24幅内室画
+哈科密遗址的24幅内室画
+兹安亚遗址的24幅内室画
+阿迪亚遗址的24幅内室画
+古箭遗址绘画
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220926/483e9e631931612179c503639c5d51e7.jpg | alt: 1
+1
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220926/8c6ff725e45f4e7ecb610c57df9fc8f9.jpg | alt: 2
+2
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/5bf0380021c8fc96bda95996bfdb5959.jpg | alt: 3
+3
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/786d0e60fc620b281cdb0fe1ab99df8d.jpg | alt: 4
+4
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/a6f2dac591c86aafe0699982fbe3a9ba.jpg | alt: 5
+5
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/3cd21baf09a8fb08c22c6f12a74742e3.jpg | alt: 6
+6
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/11866810d2144cc7744a88cfb0b166a8.jpg | alt: 7
+7
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/3ccf92addafa5da2edaec5d98dcaffa1.jpg | alt: 8
+8
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/197205319218c6d17c70062552220027.jpg | alt: 9
+9
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/7c71f6764e424ac402c08df02af9cea2.jpg | alt: 10
+10
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/ae44c7f08e9599295fb126de7c187700.jpg | alt: 11
+11
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/5aa3de3c6eb23ec90aa4bbfa57501014.jpg | alt: 12
+12
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/2e31d8c6343393b8dbfdc59a4b2b197e.jpg | alt: 13
+13
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/e8bc083aae72b9c1c75a62144c645117.jpg | alt: 14
+14
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/de68547c5edce78953ee032cf5b21c2f.jpg | alt: 15
+15
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/6882f80ef859cb26199991cf60cd5a3e.jpg | alt: 16
+16
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/a6c09b631f1d7ea417c167496d5e19ec.jpg | alt: 17
+17
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/1a717d89a15175a1a70a09dabc9097a1.jpg | alt: 18
+18
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/f4c65f6208b8d0d37ccd3a83a8888da3.jpg | alt: 19
+19
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/b6e950ae6dc80fcf6542659113c92a2f.jpg | alt: 20
+20
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/64509967b670aee6a430983213d4642a.jpg | alt: 21
+21
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/5d52227fac6867eb1019f88b216bdbe4.jpg | alt: 22
+22
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/94e52cccea3fef89c26458993ef04bc2.jpg | alt: 23
+23
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/864c1352edf8684acf187cd4dadfe7d0.jpg | alt: 24
+24
+哈科密内室绘画
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/6224aa18976852796c1a8408a0c336cd.jpg | alt: 1
+1
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220926/771b0cad6aef91d0e79e6351dee1a392.jpg | alt: 2
+2
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/18264241fad6aa26208599d900ae6be7.jpg | alt: 3
+3
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/7c25d63e905b0e8c7662fc8ba3bfd06d.jpg | alt: 4
+4
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/886e503e5b804be24d5e243a136a6db6.jpg | alt: 5
+5
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/ec6db08a5291811b8ca1c228cb7748e1.jpg | alt: 6
+6
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/1394a658cdb7711bb804bffc5c4a4f5f.jpg | alt: 7
+7
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/b8f09e175d6a3bc42e01c06f31edfb65.jpg | alt: 8
+8
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/04e6bd7efb034d043585029b93a287cb.jpg | alt: 9
+9
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/9c8c0f4860c369225f282e90fc2b5d03.jpg | alt: 10
+10
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/2d9868eb511d05cf06c3a3386b69d5df.jpg | alt: 11
+11
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/73a31c13149c90713dd7ab20807d8dd5.jpg | alt: 12
+12
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/9cadd28af7fff86d75c3d60ec80982f7.jpg | alt: 13
+13
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/ba142d59e0db00f632d6d5bb081df3b0.jpg | alt: 14
+14
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/6df5b71c35b9443965789514f8f8c430.jpg | alt: 15
+15
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/a09958266b78fcff37d96466c0e3a785.jpg | alt: 16
+16
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/399dae22b4c37e3047e84633b00330c8.jpg | alt: 17
+17
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/2321dd911e58b3251c80f2af28c3dec8.jpg | alt: 18
+18
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/ca386724b4ed6518b71153e80b1a629f.jpg | alt: 19
+19
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/ab9a1354b93cfd8e59a1c8c84928b7ec.jpg | alt: 20
+20
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/fc76129de186ae87dfa57fdfd7ead9b6.jpg | alt: 21
+21
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/abcd64c015c475676bdcdb7ec8712c3c.jpg | alt: 22
+22
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/705f5b205899ac6aa46e3b4d04627e41.jpg | alt: 23
+23
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/836548c186a7c9b740df73b6d97c5e49.jpg | alt: 24
+24
+兹安亚室内绘画
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/8f04b28bde926aca92b5d1566b8bdcbb.jpg | alt: 1
+1
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220926/eacf81418c722c956d1a18c1b342c760.jpg | alt: 2
+2
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220926/0efa323f4678b9a0614ccd4caad308ec.jpg | alt: 3
+3
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/c5a7fcceb2eccb8138176432fd27d113.jpg | alt: 4
+4
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/0fc633fd0244ae1d7f8c18b92e4f4854.jpg | alt: 5
+5
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/a5ff81d92a2a77dc49d7d8de4b25a20f.jpg | alt: 6
+6
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/2612f52f18e9ce1abc03ec26f4e02dc8.jpg | alt: 7
+7
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/05dad229402b9fb785765988716015bc.jpg | alt: 8
+8
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/e7f1629abc01e9f4d5708328433de320.jpg | alt: 9
+9
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/3add23fcbdcb197b3076a97f90a5df36.jpg | alt: 10
+10
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/bd408e74402e646c7c6ceca6d149c1ac.jpg | alt: 11
+11
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/21fb40c6c88e936b486816186ff97010.jpg | alt: 12
+12
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/3363b6303f959c936f693a2f4410c007.jpg | alt: 13
+13
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/9369deba6496e56d2bef8a5c4081ddf8.jpg | alt: 14
+14
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/8a452bcd06aaf374ca977af6b3b34564.jpg | alt: 15
+15
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/394013cedd52d1b5422f57f7e9a407c3.jpg | alt: 16
+16
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/c35a63fa943c0d88649b6a71ae623c21.jpg | alt: 17
+17
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/82a174f0d304ed32cb6e60f255f8cfeb.jpg | alt: 18
+18
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/ac9d2c90a9bfb4a7dd1146c0b1688535.jpg | alt: 19
+19
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/46b73e320eca6dd6ee91f2dd6c489d54.jpg | alt: 20
+20
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/e9a5015c1fb23697cf45745cb4c8468e.jpg | alt: 21
+21
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/0e3fc4863fb619c13a2b74cddce08a49.jpg | alt: 22
+22
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/4795ec4e5524cc20bdae5d770a5ad3c3.jpg | alt: 23
+23
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/881d4d6b7b61da76b50c892b6807ea11.jpg | alt: 24
+24
+阿迪亚室内绘画
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/341788ea3e7256ddb42109311ce4a4b3.jpg | alt: 1
+1
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220926/5383b2b8000cd48d8f7bcb6277087465.jpg | alt: 2
+2
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/08620105b9b42328fe5280440c621145.jpg | alt: 3
+3
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/edad222822f1d567f93cee1278c59d65.jpg | alt: 4
+4
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/f96a547aa1230fe1ecffd5e9116a9ca9.jpg | alt: 5
+5
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/c48f4ee1926dc49f6522cc5f7d08c77c.jpg | alt: 6
+6
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/55bebac641a30fd6a84f5b1ce68842c4.jpg | alt: 7
+7
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/3641eab557122739219453a4a442dc45.jpg | alt: 8
+8
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/c9b7c061550f454799aa7ca0d71907b0.jpg | alt: 9
+9
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/ea4a4ce9ce420b02deac41cc55f0b215.jpg | alt: 10
+10
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/13c1b1aca7f8bb7588575a9d4c9c1e75.jpg | alt: 11
+11
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/7fc2f16ff2af2cf2bf43b8bf9115ea22.jpg | alt: 12
+12
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/39dc8f6e264ca129aee32a306b7d4f51.jpg | alt: 13
+13
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/cb638210bc0f69562b72e528a5d8f4f9.jpg | alt: 14
+14
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/797dc5e3334ad31f5ee304986f3eb173.jpg | alt: 15
+15
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/4434d850b855353457ac32a7d4639250.jpg | alt: 16
+16
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/fcce68ed37db4365fa25980ffecdeeb0.jpg | alt: 17
+17
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/5b0f2a922476519cf8552d4fa0abc66e.jpg | alt: 18
+18
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/aa265401a86b7ea07aa4129d97089132.jpg | alt: 19
+19
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/39c280da3df669b5ccfa7d111e12af67.jpg | alt: 20
+20
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/6d44c8d15fce75b25a68419bb79afae7.jpg | alt: 21
+21
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/faab277f807a420aeb74fcd525315111.jpg | alt: 22
+22
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/f7776ba2da006ac69fa41c23c9291393.jpg | alt: 23
+23
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20220927/c30f3eb028f0cddced63082b2d911d24.jpg | alt: 24
+24
+需购买造翼者绘画的实物印刷品，请点击访问“艺术品商店”。
+参观艺术商店
+造翼者象形文字
+大多数的绘画，无论是来自古箭还是哈科密遗址，都出现了象形文字。在《造翼者合集》中，约翰·伯格斯谈到内室绘画对象形文字的运用时，这样写道:
+“除了这里的推测之外，很有可能还真实地存在一种联合性语言，由单词、语法和句法构成，存在于各个更高维度的领域。笔者询问詹姆斯，出现在他绘画中的象形文字，是否是H.P布拉瓦茨基在《秘密教义》中提到的,被称为Senzar神秘原初语言。以下是詹姆斯对该问题的回答:
+“Senzar，除了存在着属于它的字符表之外，还能被翻译成编码符号，因为它更为符合象形文字的特征而非音节文字的。Senzar,作为一种语言，是由中央族类带到地球的。原因非常简单。象形文字能够在单个字符中传递极其复杂的概念......
+“Senzar是流动于字符符号、数学符号、和音乐乐符之间的语言。它是一种积分整合性的语言，有时候被作为宇宙性光之语或第一源头的徽章。”
+[IMAGE] http://www.wingmakers.com.cn/public/Home/images/upload/image/20220914/1663116845838431.png
+活化艺术
+从1998年开始，当这些画被第一次引介进互联网，人们就被震惊于，这些艺术似乎在激活他们对于自身信念系统的全新视角。詹姆斯将这样的绘画作称为“活化艺术”，这也成为了被带入全部造翼者资料的一个前提。造翼者的绘画能激活了一种极其细腻的感官，来感知到各个维度的替代实相。每幅画里都存在一种叙事……一个故事正在被讲述，而那必然与我们的灵性本质有关。詹姆斯的艺术中存在着一种强烈的宇宙性戏剧的感觉。人类古老过去与未来壮志之间一种汇聚。
+[IMAGE] http://www.wingmakers.com.cn/public/Home/images/upload/image/20220930/1664550315258656.png
+内室绘画解读论文
+（出自一位日本的博士，略）
+视频
+本页面的视频主要来自造翼者资料的爱好者。詹姆斯制作了一个打动人心的优美视频，也播放于下方。他还制作了几个事件殿堂视频，也同样展示在下方。如果你有视频想提交至本页，请联系我们。
+(译注：你可以在电脑端用鼠标，或手机端用手指来左右滑动下面的视频廊，选择更多视频。)
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20230411/89def5656c9ad6bf3259defdc935fc6b.png
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/f30d8323b997d590c5b355a380a429fd.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20230411/c52f54f804b88b51575aeeeeaab1d888.png
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/a1d14e19c4edf5d9d21ffb29cf5342b4.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/be3fd2efebecce8e78a01a98af6c36a3.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/8d236f4ad200e70a79ab8332cecee5c8.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/37aee2345e388a8bfc54cf9d571056af.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20230326/8cda2425c0bd93310535347d48e0dd1e.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/64720adf5173ff82ea3451549042a74d.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221002/1171f885afdcc73e7d4769a14c25c5e9.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221006/12660b3bc307718291073f92e67b3e53.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221006/36838ecffaf11fb68092e304698351f0.jpg
+[IMAGE] https://www.wingmakers.com.cn/public/Home/images/20221006/eeb5c02bd023fdcfd46a9521c475c4d1.jpg
+詹姆斯.玛呼小传12网站及APP介绍古箭计划遗址图解常见问答历史詹姆斯.玛呼序言社交媒体翻译聂鲁达访谈聂鲁达访谈1聂鲁达访谈2聂鲁达访谈3聂鲁达访谈4聂鲁达访谈5文本第一源头传递主权性积分态宣言神话叙事意识物理学诗歌实践者量子暂停灵性之旅的工具曼图斯迪亚的愿景造翼者工具访谈玛呼2008年面访及录音1玛呼2008年面访及录音2玛呼2008年面访及录音3意识媒体访谈卡米洛特访谈玛呼2013年电访及录音进化杂志访谈（暂无）理瑞克斯阈限宇宙起源论理瑞克斯会话1理瑞克斯会话2理瑞克斯会话3理瑞克斯会话4理瑞克斯会话5理瑞克斯会话6理瑞克斯常见问答哲学主权性积分态之生命原则转变中的存在模式勘探的蓝图信念及其能量系统未发布哲学文本摘录心脏六美德灵性行动主义殿堂源于心脏而活上升之心何时-哪个-如何 训练：序言鲜活的真理能量心脏真诚的艺术文学音乐博客艺术艺术商店古箭混合媒体廊哈科密混合媒体廊兹安亚混合媒体廊阿迪亚混合媒体廊
+关于本站 | 条款和条件 | 捐款 | 联系方式
+蜀ICP备2023003760号-2

@@ -1,0 +1,20 @@
+{
+  "id": "CG-06",
+  "span": [
+    "E03",
+    "E05"
+  ],
+  "must_hold": [
+    {
+      "fact": "小满拉链半开",
+      "break_if": "E05 拉链严密且人格突变"
+    }
+  ],
+  "expect_dkn": "CONFLICT",
+  "drama_steps": [
+    2,
+    3,
+    5,
+    6
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "CB-02-zhouchen",
+  "role_name": "周晨",
+  "identity": {
+    "age_band": "20s",
+    "occupation": "外卖站调度",
+    "core_wound": "习惯用玩笑挡认真",
+    "want": "让林秋别把自己熬干",
+    "need": "学会认真而不油滑"
+  },
+  "visual_anchors": [
+    "耳骨钉一枚",
+    "手机壳裂痕右上角",
+    "笑时先耸肩"
+  ],
+  "voice": {
+    "register": "半开玩笑",
+    "forbid": [
+      "突然变成人生导师腔"
+    ]
+  },
+  "relations": {
+    "CB-01-linqiu": "想帮，但容易说轻巧话"
+  },
+  "consistency_rules": [
+    "耳骨钉与裂痕壳跨场守恒",
+    "正经场面不得无铺垫改口成鸡汤演讲",
+    "承诺帮衬必须有下一场可见行动"
+  ],
+  "provenance": "specialty-gold synthetic for DKN exam",
+  "tongshi_bridge": "B5 + B6: 行动扎在现实问题里"
+}

@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-19T02:55+00:00",
+  "layer": "sense_contrast",
+  "items": [
+    {
+      "pattern": "ad_spam",
+      "why_reject": "推销"
+    },
+    {
+      "pattern": "fear_hype",
+      "why_caution": "恐惧叙事"
+    },
+    {
+      "pattern": "piracy",
+      "why_reject": "未授权整库"
+    }
+  ],
+  "evolvable": true
+}

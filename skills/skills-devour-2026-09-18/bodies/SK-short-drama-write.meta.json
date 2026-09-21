@@ -1,0 +1,15 @@
+{
+  "id": "SK-short-drama-write",
+  "title": "short-drama-write",
+  "rel": "drama-skills/skills/short-drama-write/SKILL.md",
+  "wave": "wave1",
+  "chars": 3977,
+  "sha16": "79f626c62731f09c",
+  "drama_steps": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "status": "DUAL_WRITTEN"
+}

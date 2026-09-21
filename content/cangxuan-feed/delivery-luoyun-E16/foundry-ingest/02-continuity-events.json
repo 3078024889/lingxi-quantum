@@ -1,0 +1,167 @@
+[
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "陆衡拾到线外飘入的半枚霜纹「谷」字；沈澈用符纸隔空夹住，不让棠碰。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E16.md",
+      "continuity_lock": "谷字霜纹=裂云谷信物；棠未碰；玉佩仍嵌内壁；今日借响0/2；白青袍见习",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "prop_guzi_frost": "半枚霜纹「谷」字到门",
+      "borrow_count": "0/2",
+      "heart_voice": "（棠）「又是谷……他们要我的佩。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "赵临川禁足内碎片骤热又冷，误判棠已倒猛写「可动手」——黑影回：「佩未离壁。再逼。」",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E16.md",
+      "continuity_lock": "赵仍禁足未叛明文；碎片在其手；执事级未露全脸；误判棠倒失败",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "zhao_status": "禁足误判·未获动手令",
+      "heart_voice": "（其）「我成看门的了？」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "黑影掷第二枚霜纹扩成「实物」；风里低语「缺角交谷。人可留。」陆衡剑出一寸拒外卖。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E16.md",
+      "continuity_lock": "裂云要缺角实物；承认佩=钥；未进峰；三护短未齐（寒砚稍后）",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "world_rule": "缺角玉佩=钥（敌方亦称）",
+      "heart_voice": "（棠，侧厅闻声）「钥……他们也这么叫。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "寒砚踏霜而至，袖风碎线外「实物」霜纹；当众点破「钥不是饵」。云小棠：「嵌着。不拔。」",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E16.md",
+      "continuity_lock": "寒砚公开偏帮；禁拔佩重申；棠口头禅；见习身份",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "world_rule": "钥不是饵",
+      "heart_voice": "「他替我说了。我跟上。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "SC",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "息影轮廓暴涨半寸学舌「棠——交——」；沈澈甩安神符贴缝；小棠膝软死盯壁上玉佩：「我不交。」",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E16.md",
+      "continuity_lock": "息影会复读外敌词；安神符库存-1（剩2）；玉佩未拔；借响仍0",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "anshen_talisman": 2,
+      "xiying_status": "学舌升级·复读裂云逼交",
+      "borrow_count": "0/2",
+      "heart_voice": "「影会学裂云的话了。恶心。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "细作再掷听息钉×3；小棠二次借响：先借陆衡剑息封两钉，再借寒砚霜息冻第三钉；指尖与耳根同时麻。今日满。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E16.md",
+      "continuity_lock": "今日借响2/2已满；代价=指尖+耳根麻；借陆衡+寒砚；三钉封；佩仍嵌",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "borrow_count": "2/2",
+      "borrow_cost": "指尖麻+耳根麻"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "外门嘲「杂灵根还逞能」；小棠抬手亮麻红指尖不躲；寒砚当众确认「她的佩，她的规矩。」",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E16.md",
+      "continuity_lock": "当众确认棠有护佩权；外门嘲讽被压；见习未升职",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "「被看见了。不是笑话。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "线外林深处 半张裂云面具一晃即隐；霜音通牒：「人佩同迁。三日。」赵临川禁足碎片剧震。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E16.md",
+      "continuity_lock": "执事级半面具初现未露全脸；通牒三日人佩同迁；赵惊；细作层仍听令",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "ultimatum": "三日人佩同迁",
+      "mask_steward": "半张裂云面具初现·未露全脸",
+      "heart_voice": "（赵，禁足，碎片剧震）「同迁？他们要人？」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "寒砚启旧玉简「锁芯看守令」：三日之内佩不离壁、人不出霜栖主脉；陆衡加风铃；沈澈分安神符一门一枕。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E16.md",
+      "continuity_lock": "锁芯看守令启动；借响已用尽待明日清零；安神符库存0+枕边1；通牒倒计时3日；下集钩=面具人逼迁+看守令细则",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "lock_core_watch_order": "active",
+      "anshen_talisman": "0门+1枕",
+      "borrow_count": "2/2待清零",
+      "ultimatum_days": 3
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 10,
+    "scriptEvent": "夜侧厅收束：息影淡回一线；云小棠抱袖抗麻半睡，口头禅收口「我跟上去……嵌着。」",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E16.md",
+      "continuity_lock": "玉佩仍嵌；息影暂退未灭；见习未升；三日通牒+看守令并行",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "xiying_status": "淡回一线·未灭",
+      "heart_voice": "（棠）「我跟上去……嵌着。」"
+    }
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "id": "CB-07",
+  "role_name": "沈可",
+  "identity": {
+    "occupation": "咖啡馆店主",
+    "core_wound": "对常客记得饮品不记得名字"
+  },
+  "visual_anchors": [
+    "右腕烫伤疤"
+  ],
+  "voice": {
+    "forbid": [
+      "导师腔"
+    ]
+  },
+  "consistency_rules": [
+    "视觉锚点守恒",
+    "关心须有行动"
+  ],
+  "drama_steps": [
+    2,
+    7
+  ],
+  "evolvable": true
+}

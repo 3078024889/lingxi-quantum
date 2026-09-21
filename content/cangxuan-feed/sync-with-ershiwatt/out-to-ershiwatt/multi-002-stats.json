@@ -1,0 +1,40 @@
+{
+  "batch": "multi-002",
+  "script": "wholesale-multi-002b.mjs",
+  "items": 287,
+  "counts": {
+    "ok": 287,
+    "raw": 287,
+    "skipped_prior": 0,
+    "fail": 1
+  },
+  "skipped_prior": 0,
+  "by_disc": {
+    "literature": 96,
+    "psychology": 13,
+    "economics": 23,
+    "chemistry": 13,
+    "engineering": 12,
+    "anthropology": 12,
+    "linguistics": 13,
+    "music": 13,
+    "ecology": 12,
+    "geology": 12,
+    "architecture": 12,
+    "cs": 24,
+    "math": 12,
+    "physics": 13,
+    "biology": 4,
+    "astronomy": 1,
+    "medicine": 1,
+    "art": 1
+  },
+  "errors": 1,
+  "error_details": [
+    {
+      "source": "restcountries",
+      "reason": "restcountries deprecated/blocked: This API version has been deprecated. Please visit https://restcountries.com/docs/countries/legacy-api-deprecation to migrate to our new version (v5)."
+    }
+  ],
+  "merge_note": "wikidata recovered +9 after cool-down"
+}

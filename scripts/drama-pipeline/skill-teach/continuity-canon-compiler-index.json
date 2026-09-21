@@ -1,0 +1,1089 @@
+{
+  "at": "2026-09-18T01:17+00:00",
+  "purpose": "三刀教具：identity_core稳 + look_state跟节拍 → 每镜编译动作/合法外形 → ContinuityGate对照核+当前look",
+  "pipeline_simple": [
+    "CharacterCanon(identity_core+look_state)",
+    "CompileActionOnly",
+    "ContinuityGate"
+  ],
+  "lock_fields": [
+    "face_identity",
+    "body_silhouette",
+    "voice_print",
+    "species_baseline"
+  ],
+  "forbid": [
+    "change_identity_core_without_beat",
+    "change_look_without_script_beat",
+    "ignore_transformation_or_disguise_beat",
+    "keep_stale_look_after_costume_change_beat"
+  ],
+  "n": 71,
+  "items": [
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-01-linqiu.json",
+      "title": "CB-01-linqiu",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-01.json",
+      "title": "CB-01",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-02-zhouchen.json",
+      "title": "CB-02-zhouchen",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-02.json",
+      "title": "CB-02",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-03.json",
+      "title": "CB-03",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-04.json",
+      "title": "CB-04",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-05.json",
+      "title": "CB-05",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-06.json",
+      "title": "CB-06",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-07.json",
+      "title": "CB-07",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-08.json",
+      "title": "CB-08",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-09.json",
+      "title": "CB-09",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-10.json",
+      "title": "CB-10",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-11.json",
+      "title": "CB-11",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-12.json",
+      "title": "CB-12",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-13.json",
+      "title": "CB-13",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-14.json",
+      "title": "CB-14",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-15.json",
+      "title": "CB-15",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-16.json",
+      "title": "CB-16",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-17.json",
+      "title": "CB-17",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "character_board",
+      "path": "specialty-consistency-2026-09-17/character-boards/CB-18.json",
+      "title": "CB-18",
+      "drama_steps": [
+        1,
+        2
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-01-ep1-ep2.json",
+      "title": "CG-01",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-01.json",
+      "title": "CG-01",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-02.json",
+      "title": "CG-02",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-03.json",
+      "title": "CG-03",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-04.json",
+      "title": "CG-04",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-05.json",
+      "title": "CG-05",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-06.json",
+      "title": "CG-06",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-07.json",
+      "title": "CG-07",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "continuity_gold",
+      "path": "specialty-consistency-2026-09-17/continuity-gold/CG-08.json",
+      "title": "CG-08",
+      "drama_steps": [
+        5,
+        6,
+        7
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "storyboard_gold",
+      "path": "specialty-consistency-2026-09-17/storyboard-gold/SB-01.json",
+      "title": "SB-01",
+      "drama_steps": [
+        5,
+        6
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "storyboard_gold",
+      "path": "specialty-consistency-2026-09-17/storyboard-gold/SB-02.json",
+      "title": "SB-02",
+      "drama_steps": [
+        5,
+        6
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "storyboard_gold",
+      "path": "specialty-consistency-2026-09-17/storyboard-gold/SB-03.json",
+      "title": "SB-03",
+      "drama_steps": [
+        5,
+        6
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "storyboard_gold",
+      "path": "specialty-consistency-2026-09-17/storyboard-gold/SB-04.json",
+      "title": "SB-04",
+      "drama_steps": [
+        5,
+        6
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "storyboard_gold",
+      "path": "specialty-consistency-2026-09-17/storyboard-gold/SB-05.json",
+      "title": "SB-05",
+      "drama_steps": [
+        5,
+        6
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "storyboard_gold",
+      "path": "specialty-consistency-2026-09-17/storyboard-gold/SB-06.json",
+      "title": "SB-06",
+      "drama_steps": [
+        5,
+        6
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-01.json",
+      "title": "FAIL-01",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-02.json",
+      "title": "FAIL-02",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-03.json",
+      "title": "FAIL-03",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-04.json",
+      "title": "FAIL-04",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-05.json",
+      "title": "FAIL-05",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-06.json",
+      "title": "FAIL-06",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-07.json",
+      "title": "FAIL-07",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-08.json",
+      "title": "FAIL-08",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-09.json",
+      "title": "FAIL-09",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "failure_case",
+      "path": "specialty-consistency-2026-09-17/failure-cases/FAIL-10.json",
+      "title": "FAIL-10",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-01.json",
+      "title": "PF-01",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-02.json",
+      "title": "PF-02",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-03.json",
+      "title": "PF-03",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-04.json",
+      "title": "PF-04",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-05.json",
+      "title": "PF-05",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-06.json",
+      "title": "PF-06",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-07.json",
+      "title": "PF-07",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-08.json",
+      "title": "PF-08",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-09.json",
+      "title": "PF-09",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-10.json",
+      "title": "PF-10",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-11.json",
+      "title": "PF-11",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "pipeline_fail",
+      "path": "specialty-consistency-2026-09-17/pipeline-fails/PF-12.json",
+      "title": "PF-12",
+      "drama_steps": [
+        7,
+        8
+      ],
+      "canon_role": "gate",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "gate_core_and_current_look"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "dkn",
+      "path": "specialty-consistency-2026-09-17/dkn-samples/DKN-character-consistency-v1.json",
+      "title": "DKN-CC-v1",
+      "drama_steps": [
+        2,
+        5,
+        6,
+        7
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "dkn",
+      "path": "specialty-consistency-2026-09-17/dkn-samples/DKN-character-consistency-v2.json",
+      "title": "DKN-CC-v2",
+      "drama_steps": [
+        2,
+        5,
+        6,
+        7
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "specialty-consistency-2026-09-17",
+      "kind": "beat_sheet",
+      "path": "specialty-consistency-2026-09-17/beat-sheets/BS-01-hallway.json",
+      "title": "BS-01",
+      "drama_steps": [
+        2,
+        4,
+        5
+      ],
+      "canon_role": "lock",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "identity_core+initial_look"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/pexo-skills/skills/videoagent-director/SKILL.md",
+      "title": "videoagent-director",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/pexo-skills/skills/image-to-video/SKILL.md",
+      "title": "image-to-video",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/pexo-skills/skills/seedance-2.0-prompter/SKILL.md",
+      "title": "seedance-2.0-prompter",
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/pexo-skills/skills/veo-3.2-prompter/SKILL.md",
+      "title": "veo-3.2-prompter",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/imagine-skill/skills/imagine-prompt/SKILL.md",
+      "title": "imagine-prompt",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/imagine-skill/skills/imagine/SKILL.md",
+      "title": "imagine",
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/imagine-skill/skills/imagine-create/SKILL.md",
+      "title": "imagine-create",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/imagine-skill/skills/imagine-models/SKILL.md",
+      "title": "imagine-models",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/imagine-skill/skills/imagine-tasks/SKILL.md",
+      "title": "imagine-tasks",
+      "drama_steps": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/shared/seedance/SKILL.md",
+      "title": "seedance",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "kind": "skill",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/claude-code/skills/seedance/SKILL.md",
+      "title": "seedance",
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "canon_role": "compile",
+      "status": "TEACH_INDEXED",
+      "rule": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+      "canon_layer": "inject_core_plus_look_state"
+    }
+  ],
+  "evolvable": true,
+  "identity_core_fields": [
+    "face_identity",
+    "body_silhouette",
+    "voice_print",
+    "species_baseline"
+  ],
+  "look_state_fields": [
+    "wardrobe",
+    "hair",
+    "makeup",
+    "jewelry",
+    "props_held",
+    "cultivation_form",
+    "disguise",
+    "invisibility",
+    "injury_marks"
+  ],
+  "rule_v2": "身份核(identity_core)默认不变；look_state(服/发/妆/饰/变身/易容/隐身)必须有剧本节拍依据——无依据不得改，有变身/易容节拍必须改到位；门禁对照 identity_core + 当前合法 look_state",
+  "note_celestial": "人会换衣服/发型/妆饰；短剧可有修仙变身、隐身、易容——外形可变，但必须有剧本依据；人脸等身份核一般不变"
+}

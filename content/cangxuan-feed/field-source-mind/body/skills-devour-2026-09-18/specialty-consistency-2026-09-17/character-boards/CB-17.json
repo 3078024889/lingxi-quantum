@@ -1,0 +1,21 @@
+{
+  "id": "CB-17",
+  "role_name": "青禾",
+  "identity": {
+    "occupation": "花店学徒",
+    "core_wound": "怕鲜花枯死被怪罪"
+  },
+  "visual_anchors": [
+    "浅绿围裙",
+    "拇指创可贴"
+  ],
+  "drama_steps": [
+    2,
+    5
+  ],
+  "evolvable": true,
+  "consistency_rules": [
+    "锚点守恒",
+    "关心须行动"
+  ]
+}

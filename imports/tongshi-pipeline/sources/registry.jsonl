@@ -1,0 +1,8 @@
+{"id": "wikidata-zh", "kind": "sparql", "license": "CC0", "domain": ["world-entity"], "priority": 1, "note": "实体/关系骨架"}
+{"id": "wikipedia-zh", "kind": "dump-or-api", "license": "CC BY-SA", "domain": ["tongshi"], "priority": 1, "note": "正文需剥壳+归属"}
+{"id": "gutenberg", "kind": "mirror", "license": "public-domain", "domain": ["literature", "tongshi"], "priority": 2}
+{"id": "stackexchange-dump", "kind": "dump", "license": "CC BY-SA", "domain": ["how-to", "causal"], "priority": 2}
+{"id": "arxiv-abstracts", "kind": "api", "license": "TOU", "domain": ["science"], "priority": 3, "note": "只摘要+元数据，遵守TOU"}
+{"id": "celestial-chatgpt-export", "kind": "user-export", "license": "user-owned", "domain": ["all"], "priority": 1}
+{"id": "codex-127", "kind": "user-pack", "license": "user-provided", "domain": ["ethics", "identity"], "priority": 1}
+{"id": "skills-devoured", "kind": "oss-skills", "license": "per-repo", "domain": ["skills", "drama"], "priority": 1}

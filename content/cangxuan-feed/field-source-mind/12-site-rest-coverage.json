@@ -1,0 +1,857 @@
+{
+  "generatedAt": "2026-09-10T11:11:54.379Z",
+  "zone": "Asia/Shanghai",
+  "summary": {
+    "total": 103,
+    "READ": 69,
+    "THIN": 33,
+    "MISS": 5,
+    "readChars": 3216893
+  },
+  "yale": {
+    "target": "耶鲁大访谈 / Yale Interview",
+    "status": "MISS",
+    "notes": "Not linked on allowlisted CN sites nav/download; wingmakerschina interviews = Camelot / Conscious Media / Evolver only. Keep MISS — no invention."
+  },
+  "results": [
+    {
+      "id": "wm_cn_literature",
+      "title": "文学",
+      "pageTitle": "文学",
+      "url": "https://www.wingmakers.com.cn/literature.html",
+      "chars": 524107,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_zsigp_14",
+      "title": "MOCI材料-ZSIGP-V1.4",
+      "pageTitle": "MOCI材料-ZSIGP-V1.4",
+      "url": "https://www.mocilife.cn/uploadfile/202308/a9c56c549ad0c66.pdf",
+      "kind": "pdf",
+      "chars": 508713,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_rose_v2",
+      "title": "MOCI材料-主权玫瑰V2",
+      "pageTitle": "MOCI材料-主权玫瑰V2",
+      "url": "https://www.mocilife.cn/uploadfile/202405/68560d327bb66b7.pdf",
+      "kind": "pdf",
+      "chars": 489479,
+      "status": "READ"
+    },
+    {
+      "id": "si_pdf_parallel",
+      "title": "主权性积分态-原文+3译文对照",
+      "pageTitle": "主权性积分态-原文+3译文对照",
+      "url": "http://www.sovereignintegral.cn/uploadfile/202402/281584657aba28c.pdf",
+      "kind": "pdf",
+      "chars": 309831,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_zsigp_144",
+      "title": "MOCI材料-ZSIGP-V1.44",
+      "pageTitle": "MOCI材料-ZSIGP-V1.44",
+      "url": "https://www.mocilife.cn/uploadfile/202408/0308adc90d4a613.pdf",
+      "kind": "pdf",
+      "chars": 268378,
+      "status": "READ"
+    },
+    {
+      "id": "jm_pdf_1",
+      "title": "jamesmahu-cn-pdf",
+      "pageTitle": "jamesmahu-cn-pdf",
+      "url": "https://www.jamesmahu.com.cn/uploadfile/202303/1cf5e821d460c7a.pdf",
+      "kind": "pdf",
+      "chars": 146535,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_wwh",
+      "title": "何时哪个如何实践指南",
+      "pageTitle": "何时-哪个-如何实践指南",
+      "url": "https://www.wingmakerschina.com/2017/12/10/wwh/",
+      "chars": 78328,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_questions",
+      "title": "读者问答",
+      "pageTitle": "读者问答",
+      "url": "https://www.wingmakerschina.com/2017/12/08/questions/",
+      "chars": 62726,
+      "status": "READ"
+    },
+    {
+      "id": "si_pdf_zsigp",
+      "title": "主权性积分态论文-ZSIGP",
+      "pageTitle": "主权性积分态论文-ZSIGP",
+      "url": "http://www.sovereignintegral.cn/uploadfile/202303/c2d4dba1937452d.pdf",
+      "kind": "pdf",
+      "chars": 61095,
+      "status": "READ"
+    },
+    {
+      "id": "si_cat_2",
+      "title": "SI在线阅读",
+      "pageTitle": "TSI Paper",
+      "url": "https://www.sovereignintegral.cn/index.php?c=category&id=2",
+      "chars": 60919,
+      "status": "READ"
+    },
+    {
+      "id": "si_pdf_psiage",
+      "title": "主权性积分态-Psiage",
+      "pageTitle": "主权性积分态-Psiage",
+      "url": "http://www.sovereignintegral.cn/0552/pdf/41.pdf",
+      "kind": "pdf",
+      "chars": 60024,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_questions",
+      "title": "常见问答",
+      "pageTitle": "常见问题",
+      "url": "https://www.wingmakers.com.cn/questions.html",
+      "chars": 55564,
+      "status": "READ"
+    },
+    {
+      "id": "si_pdf_rose",
+      "title": "主权性积分态论文-主权玫瑰",
+      "pageTitle": "主权性积分态论文-主权玫瑰",
+      "url": "http://www.sovereignintegral.cn/uploadfile/202408/ba2331d5cfd6324.pdf",
+      "kind": "pdf",
+      "chars": 51412,
+      "status": "READ"
+    },
+    {
+      "id": "si_pdf_zyanya",
+      "title": "主权性积分态-赞雅译",
+      "pageTitle": "主权性积分态-赞雅译",
+      "url": "http://www.sovereignintegral.cn/0552/pdf/40.pdf",
+      "kind": "pdf",
+      "chars": 46886,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_sicn",
+      "title": "主权整体一种新的存在模式",
+      "pageTitle": "主权整体- 一种新的存在模式",
+      "url": "https://www.wingmakerschina.com/2022/02/16/sicn/",
+      "chars": 45094,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_psi_80e9",
+      "title": "MOCI-Psiage-80e9",
+      "pageTitle": "MOCI-Psiage-80e9",
+      "url": "https://www.mocilife.cn/uploadfile/202402/80e9ddef5293553.pdf",
+      "kind": "pdf",
+      "chars": 41822,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_quantusum",
+      "title": "量子集合",
+      "pageTitle": "量子集合",
+      "url": "https://www.wingmakerschina.com/2017/12/09/quantusum/",
+      "chars": 26378,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_into_mystery",
+      "title": "走进神秘",
+      "pageTitle": "走进神秘",
+      "url": "https://www.mocilife.cn/uploadfile/202309/61f522633f7f7d1.pdf",
+      "kind": "pdf",
+      "chars": 21793,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_belief_energy_54",
+      "title": "信念及其能量系统-54",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=54",
+      "chars": 21410,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_mono",
+      "title": "走进神秘展览综述",
+      "pageTitle": "《走进神秘》展览专题综述",
+      "url": "https://www.wingmakerschina.com/2023/08/14/mono/",
+      "chars": 21156,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_146b",
+      "title": "MOCI-PDF-146b",
+      "pageTitle": "MOCI-PDF-146b",
+      "url": "https://www.mocilife.cn/uploadfile/202308/146b5159a48cc21.pdf",
+      "kind": "pdf",
+      "chars": 16008,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_67a4",
+      "title": "MOCI-PDF-67a4",
+      "pageTitle": "MOCI-PDF-67a4",
+      "url": "https://www.mocilife.cn/uploadfile/202308/67a46fd05a3390c.pdf",
+      "kind": "pdf",
+      "chars": 15239,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_glossary",
+      "title": "词汇表",
+      "pageTitle": "哲学词汇表",
+      "url": "https://www.wingmakerschina.com/2017/12/08/philosophyterm/",
+      "chars": 14272,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_lyricus_faq",
+      "title": "理瑞克斯常见问答",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=50",
+      "chars": 14241,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_lyricus_q",
+      "title": "理瑞克斯问答",
+      "pageTitle": "理律克斯问答",
+      "url": "https://www.wingmakerschina.com/2017/12/08/lyquestions/",
+      "chars": 13803,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_glossary",
+      "title": "词汇表",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=24",
+      "chars": 12976,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_art_of_authenticity",
+      "title": "真诚的艺术",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=5",
+      "chars": 12289,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_5ad4",
+      "title": "MOCI-PDF-5ad4",
+      "pageTitle": "MOCI-PDF-5ad4",
+      "url": "https://www.mocilife.cn/uploadfile/202308/5ad4632132b659a.pdf",
+      "kind": "pdf",
+      "chars": 11418,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_liminal_cosmogony",
+      "title": "阈限宇宙起源论",
+      "pageTitle": "阈限宇宙起源论",
+      "url": "https://www.wingmakers.com.cn/works.html?id=18",
+      "chars": 11120,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_genuine",
+      "title": "真实的艺术",
+      "pageTitle": "真实的艺术",
+      "url": "https://www.wingmakerschina.com/2017/12/10/genuinheart/",
+      "chars": 10668,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_8733",
+      "title": "MOCI-PDF-8733",
+      "pageTitle": "MOCI-PDF-8733",
+      "url": "https://www.mocilife.cn/uploadfile/202308/8733cddcf2ad6ad.pdf",
+      "kind": "pdf",
+      "chars": 9388,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_philosophy4",
+      "title": "哲学第四室-信念及其能量系统",
+      "pageTitle": "哲学第四室- 信念及其能量系统",
+      "url": "https://www.wingmakerschina.com/2017/12/09/philosophy4/",
+      "chars": 9136,
+      "status": "READ"
+    },
+    {
+      "id": "moci_pdf_5f8e",
+      "title": "MOCI-PDF-5f8e",
+      "pageTitle": "MOCI-PDF-5f8e",
+      "url": "https://www.mocilife.cn/uploadfile/202308/5f8ec8d64fbe93f.pdf",
+      "kind": "pdf",
+      "chars": 8299,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_preface",
+      "title": "序言",
+      "pageTitle": "造翼者中文站-介绍",
+      "url": "https://www.wingmakers.com.cn/about.html?id=1",
+      "chars": 7946,
+      "status": "READ"
+    },
+    {
+      "id": "moci_cat_3",
+      "title": "AIRE平台",
+      "pageTitle": "创始的洞见_MOCI",
+      "url": "https://www.mocilife.cn/index.php?c=category&id=3",
+      "chars": 7941,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_preface",
+      "title": "序言",
+      "pageTitle": "序言",
+      "url": "https://www.wingmakerschina.com/2017/10/23/preface/",
+      "chars": 7381,
+      "status": "READ"
+    },
+    {
+      "id": "moci_cat_1",
+      "title": "MOCI介绍",
+      "pageTitle": "故事背后的故事_MOCI",
+      "url": "https://www.mocilife.cn/index.php?c=category&id=1",
+      "chars": 7333,
+      "status": "READ"
+    },
+    {
+      "id": "moci_cat_2",
+      "title": "MOCI创始材料",
+      "pageTitle": "故事背后的故事_MOCI",
+      "url": "https://www.mocilife.cn/index.php?c=category&id=2",
+      "chars": 7333,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_moci_vision",
+      "title": "魔溪-创始理念",
+      "pageTitle": "魔溪-创始理念",
+      "url": "https://www.wingmakerschina.com/2023/04/15/moci-%e5%88%9b%e5%a7%8b%e8%a7%86%e8%a7%92/",
+      "chars": 6389,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_storybehind",
+      "title": "故事背后的故事",
+      "pageTitle": "魔溪生活：故事背后的故事",
+      "url": "https://www.wingmakerschina.com/2023/08/05/storybehind/",
+      "chars": 6354,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_spiritual_life",
+      "title": "什么是灵性生活",
+      "pageTitle": "灵性生活",
+      "url": "https://www.wingmakers.com.cn/bloginfo/2.html",
+      "chars": 5619,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_spiritual_life",
+      "title": "什么是灵性生活",
+      "pageTitle": "灵性生活",
+      "url": "https://www.wingmakerschina.com/2020/04/03/spirituallife/",
+      "chars": 5242,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_mythage",
+      "title": "遗失的历史白色灾星",
+      "pageTitle": "遗失的历史— 白色灾星，盎格鲁萨克逊美洲和拉丁美洲",
+      "url": "https://www.wingmakerschina.com/2023/11/22/mythage/",
+      "chars": 5145,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_physics_consciousness",
+      "title": "意识物理学",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=39",
+      "chars": 4760,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_first_source_transmission",
+      "title": "第一源头传递",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=41",
+      "chars": 4755,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_physics",
+      "title": "意识物理学",
+      "pageTitle": "意识物理学",
+      "url": "https://www.wingmakerschina.com/2020/08/16/physicsconscious/",
+      "chars": 4691,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_history",
+      "title": "历史",
+      "pageTitle": "造翼者中文站-介绍",
+      "url": "https://www.wingmakers.com.cn/about.html?id=13",
+      "chars": 4496,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_unpublished_philosophy",
+      "title": "未发布哲学文本摘录",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=25",
+      "chars": 4454,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_transmission",
+      "title": "最初源头传输",
+      "pageTitle": "最初源头传输",
+      "url": "https://www.wingmakerschina.com/2017/12/08/transmission/",
+      "chars": 4379,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_history",
+      "title": "历史",
+      "pageTitle": "历史",
+      "url": "https://www.wingmakerschina.com/2017/10/21/history/",
+      "chars": 4297,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_aotic",
+      "title": "个体意识之解剖",
+      "pageTitle": "个体意识之剖析",
+      "url": "https://www.wingmakerschina.com/2017/12/09/aotic/",
+      "chars": 3886,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_wmintro",
+      "title": "WingMakers简介",
+      "pageTitle": "造翼者简介",
+      "url": "https://www.wingmakerschina.com/2022/07/11/wmintro/",
+      "chars": 3655,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_mantustia",
+      "title": "曼图斯迪亚的愿景",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=40",
+      "chars": 3619,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_event_string",
+      "title": "事件弦弦理论万物理论",
+      "pageTitle": "事件弦，弦理论和万物理论",
+      "url": "https://www.wingmakerschina.com/2023/09/22/%e4%ba%8b%e4%bb%b6%e5%bc%a6%ef%bc%8c%e5%bc%a6%e7%90%86%e8%ae%ba%e5%92%8c%e4%b8%87%e7%89%a9%e7%90%86%e8%ae%ba/",
+      "chars": 3572,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_aboutwm",
+      "title": "关于造翼者",
+      "pageTitle": "关于造翼者",
+      "url": "https://www.wingmakerschina.com/2022/02/21/aboutwm/",
+      "chars": 3533,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_wwh_preface",
+      "title": "何时-哪个-如何训练序言",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=9",
+      "chars": 3399,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_evolver",
+      "title": "进化杂志访谈",
+      "pageTitle": "进化杂志访谈",
+      "url": "https://www.wingmakerschina.com/2014/10/14/newjourney/",
+      "chars": 3399,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_losthistory1",
+      "title": "哥白尼核心指令与遗失的历史",
+      "pageTitle": "哥白尼的核心指令与遗失的历史，红色照耀蓝星",
+      "url": "https://www.wingmakerschina.com/2023/11/01/losthistory1/",
+      "chars": 3374,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_cotec",
+      "title": "意识进化的一致性",
+      "pageTitle": "意识进化的一致性",
+      "url": "https://www.wingmakerschina.com/2017/12/09/cotec/",
+      "chars": 3368,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_mantustia",
+      "title": "曼塔斯蒂尔的愿景",
+      "pageTitle": "曼塔斯蒂尔的愿景",
+      "url": "https://www.wingmakerschina.com/2017/12/08/mantustia/",
+      "chars": 3195,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_wm_lit",
+      "title": "造翼者文学激活入口",
+      "pageTitle": "造翼者文学：激活入口，召集二十一世纪显圣者信息",
+      "url": "https://www.wingmakerschina.com/2023/09/22/%e9%80%a0%e7%bf%bc%e8%80%85%e6%96%87%e5%ad%a6%ef%bc%9a%e6%bf%80%e6%b4%bb%e5%85%a5%e5%8f%a3%ef%bc%8c%e5%8f%ac%e9%9b%86%e4%ba%8c%e5%8d%81%e4%b8%80%e4%b8%96%e7%ba%aa%e6%98%be%e5%9c%a3%e8%80%85%e4%bf%a1/",
+      "chars": 3052,
+      "status": "READ"
+    },
+    {
+      "id": "si_cat_16",
+      "title": "SI作者传",
+      "pageTitle": "作者传",
+      "url": "https://www.sovereignintegral.cn/index.php?c=category&id=16",
+      "chars": 2899,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_pexcerpts",
+      "title": "未发布哲学摘录",
+      "pageTitle": "未发布论文的哲学摘录",
+      "url": "https://www.wingmakerschina.com/2017/12/08/pexcerpts/",
+      "chars": 2876,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_aboutus",
+      "title": "关于本站/玛呼小传",
+      "pageTitle": "詹姆斯.玛呼小传",
+      "url": "https://www.wingmakers.com.cn/aboutus.html",
+      "chars": 2797,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_tooaak",
+      "title": "提升和业力的起源",
+      "pageTitle": "提升和业的起源",
+      "url": "https://www.wingmakerschina.com/2017/12/10/tooaak/",
+      "chars": 2361,
+      "status": "READ"
+    },
+    {
+      "id": "wm_cn_poetry_hakomi",
+      "title": "诗歌-哈科密",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works_poetry.html?id=44",
+      "chars": 2303,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_moci_nonvision",
+      "title": "魔溪的非愿景性",
+      "pageTitle": "魔溪（意识与互联运动）的非愿景性",
+      "url": "https://www.wingmakerschina.com/2023/04/15/moci-nonvision/",
+      "chars": 2289,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_knowthyself",
+      "title": "认识你自己",
+      "pageTitle": "认识你自己！",
+      "url": "https://www.wingmakerschina.com/2017/12/10/knowthyself/",
+      "chars": 2176,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_wmtools",
+      "title": "造翼者工具",
+      "pageTitle": "WingMakers工具",
+      "url": "https://www.wingmakerschina.com/2022/07/10/wmtools/",
+      "chars": 2118,
+      "status": "READ"
+    },
+    {
+      "id": "wmc_si_manifesto",
+      "title": "主权整体宣言",
+      "pageTitle": "主权整体宣言",
+      "url": "https://www.wingmakerschina.com/2017/12/08/simanifesto/",
+      "chars": 1941,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_spiritual_tools",
+      "title": "灵性之旅的工具",
+      "pageTitle": "灵性之旅的工具",
+      "url": "https://www.wingmakers.com.cn/works.html?id=2",
+      "chars": 1937,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_myth_narrative",
+      "title": "神话叙事",
+      "pageTitle": "神话叙事",
+      "url": "https://www.wingmakers.com.cn/works.html?id=31",
+      "chars": 1914,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_behavior",
+      "title": "行为智慧",
+      "pageTitle": "行为的智慧",
+      "url": "https://www.wingmakerschina.com/2017/12/10/behavior/",
+      "chars": 1860,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_poetry_ancient_arrow",
+      "title": "诗歌-古箭",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works_poetry.html?id=43",
+      "chars": 1836,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_mocihome",
+      "title": "魔溪生活首页",
+      "pageTitle": "魔溪·生活首页",
+      "url": "https://www.wingmakerschina.com/2023/04/13/mocihome/",
+      "chars": 1816,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_tools",
+      "title": "灵性之旅的工具",
+      "pageTitle": "灵性之旅的工具",
+      "url": "https://www.wingmakerschina.com/2020/08/16/spiritualtools/",
+      "chars": 1788,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_imagination",
+      "title": "想象力：意识的望远镜",
+      "pageTitle": "想象力：意识的望眼镜",
+      "url": "https://www.wingmakerschina.com/2017/12/10/imagination/",
+      "chars": 1776,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_phil_intro",
+      "title": "哲学介绍",
+      "pageTitle": "哲学",
+      "url": "https://www.wingmakerschina.com/2022/04/30/philosophyintro/",
+      "chars": 1429,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_myth",
+      "title": "神话叙述",
+      "pageTitle": "神话叙述",
+      "url": "https://www.wingmakerschina.com/2020/08/15/mythnarrative/",
+      "chars": 1398,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_philosophy_index",
+      "title": "哲学",
+      "pageTitle": "哲学",
+      "url": "https://www.wingmakers.com.cn/works.html?id=1",
+      "chars": 1393,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_weather",
+      "title": "天气作曲家",
+      "pageTitle": "天气作曲家",
+      "url": "https://www.wingmakerschina.com/2017/12/09/weathercomposer/",
+      "chars": 1079,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_poetry_index",
+      "title": "诗歌",
+      "pageTitle": "诗歌",
+      "url": "https://www.wingmakers.com.cn/works.html?id=42",
+      "chars": 1045,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_james_mahu",
+      "title": "詹姆斯.玛呼",
+      "pageTitle": "造翼者中文站-介绍",
+      "url": "https://www.wingmakers.com.cn/about.html?id=12",
+      "chars": 1028,
+      "status": "THIN"
+    },
+    {
+      "id": "si_cat_1",
+      "title": "SI介绍",
+      "pageTitle": "介绍",
+      "url": "https://www.sovereignintegral.cn/index.php?c=category&id=1",
+      "chars": 992,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_jamesmahu",
+      "title": "詹姆斯·马胡",
+      "pageTitle": "詹姆斯· 马胡",
+      "url": "https://www.wingmakerschina.com/2020/08/15/jamesmahu/",
+      "chars": 946,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_publish",
+      "title": "造翼者与出版",
+      "pageTitle": "网络时代，人们还看书吗？造翼者与出版",
+      "url": "https://www.wingmakerschina.com/2023/09/22/wmpublish/",
+      "chars": 876,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_sixvirtues_toc",
+      "title": "心之六美德目录",
+      "pageTitle": "心之六美德目录",
+      "url": "https://www.wingmakerschina.com/2021/08/08/%e5%bf%83%e4%b9%8b%e5%85%ad%e7%be%8e%e5%be%b7%e7%9b%ae%e5%bd%95/",
+      "chars": 803,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_neruda_index",
+      "title": "聂鲁达访谈索引",
+      "pageTitle": "造翼者中文站-文本",
+      "url": "https://www.wingmakers.com.cn/works.html?id=32",
+      "chars": 769,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_download",
+      "title": "下载页",
+      "pageTitle": "造翼者中文站-介绍",
+      "url": "https://www.wingmakers.com.cn/download.html",
+      "chars": 722,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_si_manifesto",
+      "title": "主权积分态宣言",
+      "pageTitle": "主权积分态宣言",
+      "url": "https://www.wingmakers.com.cn/works.html?id=38",
+      "chars": 708,
+      "status": "THIN"
+    },
+    {
+      "id": "jm_cat_1",
+      "title": "玛呼介绍",
+      "pageTitle": "介绍_詹姆斯玛呼中文站",
+      "url": "https://www.jamesmahu.com.cn/index.php?c=category&id=1",
+      "chars": 694,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_practitioner",
+      "title": "实践者",
+      "pageTitle": "实践者",
+      "url": "https://www.wingmakers.com.cn/works.html?id=45",
+      "chars": 593,
+      "status": "THIN"
+    },
+    {
+      "id": "jm_cat_4",
+      "title": "玛呼文章",
+      "pageTitle": "文章_詹姆斯玛呼中文站",
+      "url": "https://www.jamesmahu.com.cn/index.php?c=category&id=4",
+      "chars": 572,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_wm_tools",
+      "title": "造翼者工具",
+      "pageTitle": "造翼者工具",
+      "url": "https://www.wingmakers.com.cn/works.html?id=47",
+      "chars": 559,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_lyricus_index",
+      "title": "理瑞克斯",
+      "pageTitle": "理瑞克斯",
+      "url": "https://www.wingmakers.com.cn/works.html?id=3",
+      "chars": 549,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_lyricus",
+      "title": "理律克斯",
+      "pageTitle": "理律克斯专栏",
+      "url": "https://www.wingmakerschina.com/2022/07/13/lyricus/",
+      "chars": 520,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_practitioner",
+      "title": "实践者",
+      "pageTitle": "实践者",
+      "url": "https://www.wingmakerschina.com/2020/07/29/practitioner/",
+      "chars": 476,
+      "status": "THIN"
+    },
+    {
+      "id": "wmc_dohrman",
+      "title": "神谕石",
+      "pageTitle": "神谕石",
+      "url": "https://www.wingmakerschina.com/2017/12/09/dohrman/",
+      "chars": 459,
+      "status": "THIN"
+    },
+    {
+      "id": "wm_cn_diagram",
+      "title": "图解",
+      "pageTitle": "造翼者中文站-介绍",
+      "url": "https://www.wingmakers.com.cn/about.html?id=14",
+      "chars": 208,
+      "status": "THIN/MISS"
+    },
+    {
+      "id": "wmc_diagram",
+      "title": "图表",
+      "pageTitle": "图表",
+      "url": "https://www.wingmakerschina.com/2017/12/08/diagram/",
+      "chars": 45,
+      "status": "THIN/MISS"
+    },
+    {
+      "id": "moci_show_3",
+      "title": "联合创始人",
+      "pageTitle": "联合创始人",
+      "url": "https://www.mocilife.cn/index.php?c=show&id=3",
+      "chars": 0,
+      "status": "THIN/MISS"
+    },
+    {
+      "id": "wm_cn_belief_energy",
+      "title": "信念及其能量系统",
+      "pageTitle": "信念及其能量系统",
+      "url": "https://www.wingmakers.com.cn/works.html?id=26",
+      "chars": 0,
+      "status": "THIN/MISS"
+    },
+    {
+      "id": "yale_interview",
+      "title": "耶鲁大访谈 / Yale Interview",
+      "status": "MISS",
+      "chars": 0,
+      "notes": "Not linked on allowlisted CN sites nav/download; wingmakerschina interviews = Camelot / Conscious Media / Evolver only. Keep MISS — no invention."
+    }
+  ]
+}

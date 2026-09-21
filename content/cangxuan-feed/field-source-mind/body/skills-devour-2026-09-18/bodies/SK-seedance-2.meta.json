@@ -1,0 +1,15 @@
+{
+  "id": "SK-seedance-2",
+  "title": "seedance",
+  "rel": "wave2/ComfyUI-Agent-Kit/claude-code/skills/seedance/SKILL.md",
+  "wave": "wave1",
+  "chars": 8019,
+  "sha16": "13bd14e00c16fc4f",
+  "drama_steps": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

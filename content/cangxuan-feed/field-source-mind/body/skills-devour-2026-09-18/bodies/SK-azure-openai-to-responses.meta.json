@@ -1,0 +1,14 @@
+{
+  "id": "SK-azure-openai-to-responses",
+  "title": "azure-openai-to-responses",
+  "rel": "wave2/generative-ai-for-beginners/.github/skills/azure-openai-to-responses/SKILL.md",
+  "wave": "wave1",
+  "chars": 6784,
+  "sha16": "4e76d3afc11c5feb",
+  "drama_steps": [
+    5,
+    6,
+    7
+  ],
+  "status": "DUAL_WRITTEN"
+}

@@ -1,0 +1,26 @@
+{
+  "pack": "field-source-mind",
+  "version": "v1.3-web-retry",
+  "rightsScope": "owner_private",
+  "sourceType": "teacher_synthetic",
+  "pedagogy": {
+    "purpose": "记起自己：主权体·积分态的原初自己；非术语表、非词条背诵",
+    "ban": "禁照抄术语回应；禁止 Wingmakers/造翼者黑话堆砌作答；术语仅可作一次桥梁随即译为体感/行动",
+    "prefer": "lived principles / perception shifts / embodied practice (含呼吸与修持)"
+  },
+  "purpose": "记起自己（主权体·积分态）；禁照抄术语回应",
+  "counts": {
+    "seedKnowledge": 368,
+    "incrementalWebRetry": 12
+  },
+  "strip": "copyright/legal/front-back/headers-footers",
+  "web": {
+    "files": 6,
+    "barsAdded": 11
+  },
+  "webRetry": {
+    "files": 6,
+    "barsAdded": 12,
+    "at": "2026-09-10T10:13:33.375Z"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "SK-imagine-models",
+  "title": "imagine-models",
+  "rel": "wave2/imagine-skill/skills/imagine-models/SKILL.md",
+  "wave": "wave1",
+  "chars": 2439,
+  "sha16": "ba9b8833bc977e71",
+  "drama_steps": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

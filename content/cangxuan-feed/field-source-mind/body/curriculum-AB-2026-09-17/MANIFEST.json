@@ -1,0 +1,60 @@
+{
+  "at": "2026-09-17T05:46:25.793963+00:00",
+  "peel": "v3-essay-anchor",
+  "twentywatts_path": "/workspace/out-to-ershiwatt-sync/sasi-curriculum-feed/2026-09-17-AB",
+  "sasi_box_mirror": "/workspace/lingxi-quantum/content/cangxuan-feed/field-source-mind/body/curriculum-AB-2026-09-17",
+  "desktop_target": "D:\\lingxi-quantum\\content\\cangxuan-feed\\field-source-mind\\body\\curriculum-AB-2026-09-17",
+  "items": [
+    {
+      "id": "A1-quantum-pause",
+      "chars": 3906,
+      "sha16": "6eec4579f65ae7a5",
+      "nav_left": 0,
+      "ok": true
+    },
+    {
+      "id": "A2-living-from-heart",
+      "chars": 37000,
+      "sha16": "f261287ec8ea3f62",
+      "nav_left": 0,
+      "ok": true
+    },
+    {
+      "id": "A3-ascending-heart",
+      "chars": 7699,
+      "sha16": "beefca5d6b3d79f3",
+      "nav_left": 0,
+      "ok": true
+    },
+    {
+      "id": "A4-energetic-heart",
+      "chars": 11253,
+      "sha16": "a0ae8c505a271b0b",
+      "nav_left": 0,
+      "ok": true
+    },
+    {
+      "id": "B5-genuine-heart",
+      "chars": 10810,
+      "sha16": "677dcdf314516847",
+      "nav_left": 0,
+      "ok": true
+    },
+    {
+      "id": "B6-spiritual-activism",
+      "chars": 4612,
+      "sha16": "07c0e990ed9612e5",
+      "nav_left": 0,
+      "ok": true
+    },
+    {
+      "id": "B7-why-heart-matters",
+      "chars": 78673,
+      "sha16": "c9adfd08a589775e",
+      "nav_left": 0,
+      "ok": true
+    }
+  ],
+  "ok": 7,
+  "note": "A1-B7 same IDs overwritten; A2-A4 re-anchored to essay body"
+}

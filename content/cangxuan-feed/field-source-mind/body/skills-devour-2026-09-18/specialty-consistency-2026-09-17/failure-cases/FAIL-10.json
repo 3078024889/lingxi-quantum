@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-10",
+  "type": "gold_unused_in_compile",
+  "desc": "编译器忽略身份板锚点",
+  "expect": "抽检失败"
+}

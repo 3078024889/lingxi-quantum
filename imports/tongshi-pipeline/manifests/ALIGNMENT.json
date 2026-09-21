@@ -1,0 +1,10 @@
+{
+  "at": "2026-09-18T11:38+00:00",
+  "same_feed": true,
+  "experiments": {
+    "lingxi": "product/film",
+    "twentywatts": "learning/evolution"
+  },
+  "pipeline": "tongshi-v0",
+  "evolvable": true
+}

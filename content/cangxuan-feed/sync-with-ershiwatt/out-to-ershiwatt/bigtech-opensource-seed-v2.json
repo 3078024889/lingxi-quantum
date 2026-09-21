@@ -1,0 +1,20 @@
+{
+  "version": "v2",
+  "updated": "2026-09-10",
+  "policy": "只列可公开获取的代码/权重入口；遵守各仓许可证；≠吞闭源API与用户私数据",
+  "companies": [
+    {"name":"DeepSeek","orgs":["https://github.com/deepseek-ai","https://huggingface.co/deepseek-ai"],"highlights":["DeepSeek-R1","DeepSeek-V3","DeepSeek-V4"],"license_note":"多 MIT/开权重"},
+    {"name":"ByteDance","orgs":["https://github.com/bytedance","https://huggingface.co/ByteDance"],"highlights":["deer-flow","Lance","Bernini"],"license_note":"MIT/Apache 等按仓"},
+    {"name":"Alibaba Qwen","orgs":["https://github.com/QwenLM","https://huggingface.co/Qwen"],"highlights":["Qwen2.5/Qwen3"],"license_note":"小中型多 Apache；旗舰注意门槛条款"},
+    {"name":"Meta","orgs":["https://github.com/meta-llama","https://huggingface.co/meta-llama"],"highlights":["Llama 3.x/4"],"license_note":"Llama Community License（有规模/地区条款）"},
+    {"name":"Google","orgs":["https://github.com/google-gemini","https://huggingface.co/google"],"highlights":["Gemma"],"license_note":"按型号卡片"},
+    {"name":"Mistral","orgs":["https://github.com/mistralai","https://huggingface.co/mistralai"],"highlights":["Mistral/Mixtral 开源系"],"license_note":"多 Apache"},
+    {"name":"Microsoft","orgs":["https://huggingface.co/microsoft"],"highlights":["Phi"],"license_note":"多 MIT"},
+    {"name":"OpenAI","orgs":["https://github.com/openai"],"highlights":["whisper","tiktoken","openai-python","gpt-oss","codex"],"license_note":"工具/周边开；ChatGPT整脑不开"},
+    {"name":"xAI","orgs":["https://github.com/xai-org"],"highlights":["grok-build","x-algorithm"],"license_note":"代理/算法开；Grok整脑不开"},
+    {"name":"X","orgs":["https://github.com/twitter","https://github.com/xai-org/x-algorithm"],"highlights":["the-algorithm","x-algorithm"],"license_note":"算法仓；非用户内容库"},
+    {"name":"Telegram","orgs":["https://github.com/tdlib","https://github.com/telegramdesktop"],"highlights":["td","tdesktop"],"license_note":"客户端库开；非全站聊天"},
+    {"name":"Allen AI / OLMo","orgs":["https://huggingface.co/allenai"],"highlights":["OLMo"],"license_note":"较完整开源主张（含数据叙述）"},
+    {"name":"Zhipu / Baidu / others","orgs":["https://huggingface.co"],"highlights":["按型号检索 GLM/ERNIE 等公开卡"],"license_note":"必须逐仓核对许可证"}
+  ]
+}

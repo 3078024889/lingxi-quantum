@@ -1,8 +1,9 @@
+import { SASI_MAX_UPLOAD_BYTES } from "@/lib/sasi/upload-policy";
 import "server-only";
 import { createHash, randomUUID } from "node:crypto";
 
 export const SASI_ASSET_BUCKET = "sasi-quarantine";
-export const SASI_MAX_ASSET_BYTES = 100 * 1024 * 1024;
+export const SASI_MAX_ASSET_BYTES = SASI_MAX_UPLOAD_BYTES;
 export const SASI_TEXT_INDEX_LIMIT = 2 * 1024 * 1024;
 
 const MIME_BY_EXTENSION: Record<string, readonly string[]> = {

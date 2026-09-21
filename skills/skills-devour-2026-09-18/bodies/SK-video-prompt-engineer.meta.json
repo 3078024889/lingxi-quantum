@@ -1,0 +1,19 @@
+{
+  "id": "SK-video-prompt-engineer",
+  "title": "video-prompt-engineer",
+  "rel": "video-prompt-engineer/SKILL.md",
+  "wave": "wave1",
+  "chars": 9889,
+  "sha16": "5bae2a2e1bc07435",
+  "drama_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-06",
+  "type": "prompt_soup",
+  "desc": "提示词堆术语无画面锚点",
+  "expect": "编译拒收"
+}

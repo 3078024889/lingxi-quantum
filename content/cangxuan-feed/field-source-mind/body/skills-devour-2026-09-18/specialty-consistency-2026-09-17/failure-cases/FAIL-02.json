@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-02",
+  "type": "wardrobe_teleport",
+  "desc": "红绳/工号背心无场记消失",
+  "expect": "冲突"
+}

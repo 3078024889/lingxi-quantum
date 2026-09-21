@@ -1,0 +1,18 @@
+{
+  "id": "SK-hf-cloud-aws-context-discovery",
+  "title": "hf-cloud-aws-context-discovery",
+  "rel": "wave2/skills/skills/hf-cloud-aws-context-discovery/SKILL.md",
+  "wave": "wave1",
+  "chars": 3309,
+  "sha16": "827e26acfbc15473",
+  "drama_steps": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

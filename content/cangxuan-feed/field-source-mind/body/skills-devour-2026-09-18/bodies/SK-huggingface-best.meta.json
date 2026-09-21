@@ -1,0 +1,15 @@
+{
+  "id": "SK-huggingface-best",
+  "title": "huggingface-best",
+  "rel": "wave2/skills/skills/huggingface-best/SKILL.md",
+  "wave": "wave1",
+  "chars": 5122,
+  "sha16": "84d01711154512ec",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

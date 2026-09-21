@@ -1,0 +1,859 @@
+{
+  "generated": "2026-09-10T12:09:52Z",
+  "pages": [
+    {
+      "slug": "artup-essay",
+      "name": "造翼者的艺术（artup）",
+      "url": "https://www.wingmakers.com.cn/artup.html",
+      "status": "READ",
+      "body_chars": 15605,
+      "image_count": 112,
+      "file": "extracts/art-galleries/artup-essay.txt"
+    },
+    {
+      "slug": "artpage-store",
+      "name": "艺术商店/印刷品说明（artpage）",
+      "url": "https://www.wingmakers.com.cn/artpage.html",
+      "status": "READ",
+      "body_chars": 12910,
+      "image_count": 99,
+      "file": "extracts/art-galleries/artpage-store.txt"
+    },
+    {
+      "slug": "otherwebsite-jm-art",
+      "name": "詹姆斯玛呼艺术站导览（otherwebsite）",
+      "url": "https://www.wingmakers.com.cn/otherwebsite.html",
+      "status": "READ",
+      "body_chars": 6151,
+      "image_count": 18,
+      "file": "extracts/art-galleries/otherwebsite-jm-art.txt"
+    },
+    {
+      "fid": 4,
+      "slug": "ancient-arrow-gujian",
+      "name": "古箭混合媒体廊",
+      "url": "https://www.wingmakers.com.cn/art.html?fid=4",
+      "status": "READ",
+      "body_chars": 28742,
+      "image_count": 25,
+      "file": "extracts/art-galleries/ancient-arrow-gujian.txt"
+    },
+    {
+      "fid": 3,
+      "slug": "hakomi",
+      "name": "哈科密混合媒体廊",
+      "url": "https://www.wingmakers.com.cn/art.html?fid=3",
+      "status": "READ",
+      "body_chars": 36785,
+      "image_count": 25,
+      "file": "extracts/art-galleries/hakomi.txt"
+    },
+    {
+      "fid": 2,
+      "slug": "zyanya",
+      "name": "兹安亚混合媒体廊",
+      "url": "https://www.wingmakers.com.cn/art.html?fid=2",
+      "status": "READ",
+      "body_chars": 25836,
+      "image_count": 25,
+      "file": "extracts/art-galleries/zyanya.txt"
+    },
+    {
+      "fid": 1,
+      "slug": "aadhya",
+      "name": "阿迪亚混合媒体廊",
+      "url": "https://www.wingmakers.com.cn/art.html?fid=1",
+      "status": "READ",
+      "body_chars": 12760,
+      "image_count": 25,
+      "file": "extracts/art-galleries/aadhya.txt"
+    },
+    {
+      "fid": 5,
+      "slug": "new-works",
+      "name": "新作品画廊",
+      "url": "https://www.wingmakers.com.cn/art.html?fid=5",
+      "status": "READ",
+      "body_chars": 5561,
+      "image_count": 18,
+      "file": "extracts/art-galleries/new-works.txt"
+    },
+    {
+      "fid": 6,
+      "slug": "abstract-surrealism",
+      "name": "抽象超现实主义",
+      "url": "https://www.wingmakers.com.cn/art.html?fid=6",
+      "status": "READ",
+      "body_chars": 7029,
+      "image_count": 24,
+      "file": "extracts/art-galleries/abstract-surrealism.txt"
+    },
+    {
+      "fid": 7,
+      "slug": "multiple-portraits",
+      "name": "意识的多重肖像",
+      "url": "https://www.wingmakers.com.cn/art.html?fid=7",
+      "status": "READ",
+      "body_chars": 7584,
+      "image_count": 26,
+      "file": "extracts/art-galleries/multiple-portraits.txt"
+    },
+    {
+      "slug": "wmc-art-home",
+      "name": "翼造者中国站首页艺术摘要",
+      "url": "https://www.wingmakerschina.com/",
+      "status": "READ",
+      "body_chars": 5940,
+      "image_count": 26,
+      "file": "extracts/art-galleries/wmc-art-home.txt"
+    },
+    {
+      "slug": "wmc-2687f3d2",
+      "name": "https://www.wingmakerschina.com/2020/08/14/hakomi1/",
+      "url": "https://www.wingmakerschina.com/2020/08/14/hakomi1/",
+      "status": "READ",
+      "body_chars": 17846,
+      "image_count": 26,
+      "file": "extracts/art-galleries/wmc-2687f3d2.txt"
+    },
+    {
+      "slug": "wmc-fdd65d22",
+      "name": "https://www.wingmakerschina.com/2020/08/15/ancientarrowsite/",
+      "url": "https://www.wingmakerschina.com/2020/08/15/ancientarrowsite/",
+      "status": "READ",
+      "body_chars": 2381,
+      "image_count": 6,
+      "file": "extracts/art-galleries/wmc-fdd65d22.txt"
+    },
+    {
+      "slug": "wmc-2cd59a82",
+      "name": "https://www.wingmakerschina.com/2020/08/15/zyanya1/",
+      "url": "https://www.wingmakerschina.com/2020/08/15/zyanya1/",
+      "status": "READ",
+      "body_chars": 18046,
+      "image_count": 26,
+      "file": "extracts/art-galleries/wmc-2cd59a82.txt"
+    },
+    {
+      "slug": "wmc-97906e88",
+      "name": "https://www.wingmakerschina.com/2020/08/17/aadhya1/",
+      "url": "https://www.wingmakerschina.com/2020/08/17/aadhya1/",
+      "status": "READ",
+      "body_chars": 10854,
+      "image_count": 25,
+      "file": "extracts/art-galleries/wmc-97906e88.txt"
+    },
+    {
+      "slug": "wmc-e5f7b378",
+      "name": "https://www.wingmakerschina.com/artiststatement/",
+      "url": "https://www.wingmakerschina.com/artiststatement/",
+      "status": "READ",
+      "body_chars": 3700,
+      "image_count": 5,
+      "file": "extracts/art-galleries/wmc-e5f7b378.txt"
+    },
+    {
+      "slug": "wmc-562b69be",
+      "name": "https://www.wingmakerschina.com/category/ancientarrow/",
+      "url": "https://www.wingmakerschina.com/category/ancientarrow/",
+      "status": "READ",
+      "body_chars": 2294,
+      "image_count": 2,
+      "file": "extracts/art-galleries/wmc-562b69be.txt"
+    },
+    {
+      "slug": "wmc-mmg-ancient-arrow",
+      "url": "https://www.wingmakerschina.com/mixed-media-gallery-ancient-arrow/",
+      "status": "ERROR",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "slug": "wmc-mmg-hakomi",
+      "url": "https://www.wingmakerschina.com/mixed-media-gallery-hakomi/",
+      "status": "ERROR",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "slug": "wmc-mmg-zyanya",
+      "url": "https://www.wingmakerschina.com/mixed-media-gallery-zyanya/",
+      "status": "ERROR",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "slug": "wmc-mmg-aadhya",
+      "url": "https://www.wingmakerschina.com/mixed-media-gallery-aadhya/",
+      "status": "ERROR",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "slug": "wmc-art",
+      "name": "WMC艺术栏目",
+      "url": "https://www.wingmakerschina.com/art/",
+      "status": "READ",
+      "body_chars": 3826,
+      "file": "extracts/art-galleries/wmc-art.txt"
+    },
+    {
+      "slug": "wmc-gallery",
+      "url": "https://www.wingmakerschina.com/gallery/",
+      "status": "ERROR",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "slug": "wmc-visual-arts",
+      "url": "https://www.wingmakerschina.com/visual-arts/",
+      "status": "ERROR",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "images_downloaded": [
+    {
+      "file": "extracts/art-galleries/images/artup-essay_1_9f456476d7.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220926/483e9e631931612179c503639c5d51e7.jpg",
+      "bytes": 224938,
+      "caption": "1",
+      "gallery": "造翼者的艺术（artup）"
+    },
+    {
+      "file": "extracts/art-galleries/images/artup-essay_2_8cc196864d.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220926/8c6ff725e45f4e7ecb610c57df9fc8f9.jpg",
+      "bytes": 208162,
+      "caption": "2",
+      "gallery": "造翼者的艺术（artup）"
+    },
+    {
+      "file": "extracts/art-galleries/images/artup-essay_3_fec8f2ac1a.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/5bf0380021c8fc96bda95996bfdb5959.jpg",
+      "bytes": 254314,
+      "caption": "3",
+      "gallery": "造翼者的艺术（artup）"
+    },
+    {
+      "file": "extracts/art-galleries/images/artpage-store_img_9f456476d7.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220926/483e9e631931612179c503639c5d51e7.jpg",
+      "bytes": 224938,
+      "caption": "",
+      "gallery": "艺术商店/印刷品说明（artpage）"
+    },
+    {
+      "file": "extracts/art-galleries/images/artpage-store_img_8cc196864d.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220926/8c6ff725e45f4e7ecb610c57df9fc8f9.jpg",
+      "bytes": 208162,
+      "caption": "",
+      "gallery": "艺术商店/印刷品说明（artpage）"
+    },
+    {
+      "file": "extracts/art-galleries/images/artpage-store_img_fec8f2ac1a.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/5bf0380021c8fc96bda95996bfdb5959.jpg",
+      "bytes": 254314,
+      "caption": "",
+      "gallery": "艺术商店/印刷品说明（artpage）"
+    },
+    {
+      "file": "extracts/art-galleries/images/otherwebsite-jm-art_img_0b34627054.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/9bdbd0728b2a7a0d386f8936dcd65f83.jpg",
+      "bytes": 229033,
+      "caption": "",
+      "gallery": "詹姆斯玛呼艺术站导览（otherwebsite）"
+    },
+    {
+      "file": "extracts/art-galleries/images/otherwebsite-jm-art_img_3ecde6b158.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/upload/image/20240802/1722578942264747.jpg",
+      "bytes": 229033,
+      "caption": "",
+      "gallery": "詹姆斯玛呼艺术站导览（otherwebsite）"
+    },
+    {
+      "file": "extracts/art-galleries/images/otherwebsite-jm-art_img_b23bdf7c4b.png",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/upload/image/20240802/1722585575863617.png",
+      "bytes": 1290106,
+      "caption": "",
+      "gallery": "詹姆斯玛呼艺术站导览（otherwebsite）"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_1室_e976d9600c.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/fd9c6ae284b1108f87e13b7060673130.jpg",
+      "bytes": 224938,
+      "caption": "1室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_2室_618a078c28.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/4c3fe3a222e3d30d5bcdac50dbb6bc93.jpg",
+      "bytes": 208162,
+      "caption": "2室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_3室_46770a0a56.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/94d13ab7b4c0ddc7317bb9410999e1dc.jpg",
+      "bytes": 254314,
+      "caption": "3室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_4室_152dee8ba4.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/1733e91606d1c4053beb6377fed5e411.jpg",
+      "bytes": 233605,
+      "caption": "4室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_5室_3a70a0165e.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/deb2dde4e603a2738ec0b3acc7b3f7ff.jpg",
+      "bytes": 222402,
+      "caption": "5室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_6室_75921f6172.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/4ad1b76ee3f35b4f6796400f04b40443.jpg",
+      "bytes": 304641,
+      "caption": "6室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_7室_c6c0150fdb.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/aca53114e8fc7fc2d429613e310fedaf.jpg",
+      "bytes": 206255,
+      "caption": "7室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_8室_b1fd5256c5.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/88ae060cfe57939181d1771152316023.jpg",
+      "bytes": 237802,
+      "caption": "8室",
+      "gallery": "古箭混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_1室_7c45fdff7c.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/226d01f9e6d914abc89fd36e98d356a9.jpg",
+      "bytes": 220183,
+      "caption": "1室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_2室_2046877644.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/37425fcff86a028639e3905d8cd3fdd5.jpg",
+      "bytes": 284239,
+      "caption": "2室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_3室_3383480fdc.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/097fe694fafcfd38d1999bac71a8f4ea.jpg",
+      "bytes": 280809,
+      "caption": "3室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_4室_3d98632e57.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/5d1ee570dd062ecb988a2530ce9709be.jpg",
+      "bytes": 275777,
+      "caption": "4室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_5室_90eb322ddf.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/abb48760c4834799ab19e56a61ad5ca4.jpg",
+      "bytes": 304398,
+      "caption": "5室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_6室_fdbb2518fc.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/7cbe9038a53dd2b397359b0c9a8c6480.jpg",
+      "bytes": 299185,
+      "caption": "6室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_7室_7a72afce87.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/2b67d0d40ab79b79c6dd8213d1ce7aff.jpg",
+      "bytes": 280504,
+      "caption": "7室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_8室_4a9e317449.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/feca90ebe5aef91fe4517d7de6d33684.jpg",
+      "bytes": 282183,
+      "caption": "8室",
+      "gallery": "哈科密混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_1室_ccacafe088.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/ab533d5aa298d5846240b283a685eb19.jpg",
+      "bytes": 265212,
+      "caption": "1室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_2室_540e679fcc.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/1e52b8bfc512d40239ada42f3a5e484a.jpg",
+      "bytes": 243313,
+      "caption": "2室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_3室_a22b4304ac.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/791940c78b005bdb0744b5d76b3b5e65.jpg",
+      "bytes": 219438,
+      "caption": "3室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_4室_8165e4c9d1.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/4a56a7bb0be84920332b733a932d9c49.jpg",
+      "bytes": 231242,
+      "caption": "4室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_5室_95ef5868be.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/026903ee71dafb27e1c9220baa9f1543.jpg",
+      "bytes": 282103,
+      "caption": "5室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_6室_a611852349.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/ede08cdd89b0c89756ebeae122adb12d.jpg",
+      "bytes": 275992,
+      "caption": "6室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_7室_f56a0ecbf9.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/81130c7ac53b27825c7dc0124707a4dc.jpg",
+      "bytes": 258053,
+      "caption": "7室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_8室_3fdd4ce53e.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/5af742b83ebb11d0d03941363cbdb671.jpg",
+      "bytes": 304490,
+      "caption": "8室",
+      "gallery": "兹安亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_1室_4ff104d92e.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/29f85186e3872ae326c15bb113bdfa94.jpg",
+      "bytes": 286406,
+      "caption": "1室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_2室_719a14f614.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/c2f0fa656a7e7d265439f0a03e9ada08.jpg",
+      "bytes": 283863,
+      "caption": "2室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_3室_b354c34dfb.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/91b6cf553235080172d1fcb1bfb636e5.jpg",
+      "bytes": 269037,
+      "caption": "3室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_4室_bc9e44ea6e.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/5a6dc2fbd3410a27c02767bf3cd89890.jpg",
+      "bytes": 327961,
+      "caption": "4室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_5室_260b64ef25.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/9ec1b088bb44993274342aefe133bdb0.jpg",
+      "bytes": 309489,
+      "caption": "5室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_6室_2c0c7ce174.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/18d76464cff54fe58a3301986efb724f.jpg",
+      "bytes": 276330,
+      "caption": "6室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_7室_f314c970db.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/0ea60e191960d2dff0df1220b30c9739.jpg",
+      "bytes": 283487,
+      "caption": "7室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_8室_4a1a03e39e.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/f5addedc65007fbf6f9e0f94a1fcc3bc.jpg",
+      "bytes": 297197,
+      "caption": "8室",
+      "gallery": "阿迪亚混合媒体廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__守护者__05be383c79.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/17413a13ba988cfa8f2a015195f35b23.jpg",
+      "bytes": 619786,
+      "caption": "《守护者》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__我们探向的歌__fc7d43226b.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/34903386e6878f0837f025bf476c7cf7.jpg",
+      "bytes": 685519,
+      "caption": "《我们探向的歌》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__变易者鹿人__446eff3f55.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/e2ad707c75004b82fe73961419ff9d2b.jpg",
+      "bytes": 751194,
+      "caption": "《变易者鹿人》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__心脏与心智的融合__e051bda079.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/a188066fc5ddc90b7000ee124e124749.jpg",
+      "bytes": 1382813,
+      "caption": "《心脏与心智的融合》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__月之光华__b38a9f4976.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/3cd137410d484088e63d1f0a3ec82561.jpg",
+      "bytes": 683003,
+      "caption": "《月之光华》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__固有的互联__bec148ec2c.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/6c4835f907816fb89967907ca7f76c0f.jpg",
+      "bytes": 668580,
+      "caption": "《固有的互联》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__视象__7cc4aba86f.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/bed52e5aa96fc031913793c72440de48.jpg",
+      "bytes": 707455,
+      "caption": "《视象》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/new-works__更高维的存在体__944c59136e.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/d713130b92ababaefbeadedba765f804.jpg",
+      "bytes": 620960,
+      "caption": "《更高维的存在体》",
+      "gallery": "新作品画廊"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__创造的火花__0638a0e2a7.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/b15df3603940513a8ef70e792f4fec8f.jpg",
+      "bytes": 1347753,
+      "caption": "《创造的火花》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__连接性_的色谱__90eb3461f9.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/3ab71af63a251851786f292ea5bd875f.jpg",
+      "bytes": 1867910,
+      "caption": "《“连接性”的色谱》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__真理的根系__2f0d24c7b1.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/1d0f00293694d7c8b44f7b036094b98e.jpg",
+      "bytes": 1443114,
+      "caption": "《真理的根系》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__三位一体__a5646f19eb.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/8bcf6b7f5d73e85ddb802666e33fd31d.jpg",
+      "bytes": 1293308,
+      "caption": "《三位一体》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__古老的未来__a16813bd7b.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/024bdbe02b3cca39302546585fc45f01.jpg",
+      "bytes": 743221,
+      "caption": "《古老的未来》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__统一之线__a8221f6424.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/e0e36382735cae70b974636c22b44242.jpg",
+      "bytes": 1332422,
+      "caption": "《统一之线》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__转变__d81ef2c4b3.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/c5a1768cb6034b06f24325a60837eca3.jpg",
+      "bytes": 1174550,
+      "caption": "《转变》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/abstract-surrealism__真理的诠释者们__56d369adf1.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/e41f53d644fd4ade1829265ade49f8e1.jpg",
+      "bytes": 1220676,
+      "caption": "《真理的诠释者们》",
+      "gallery": "抽象超现实主义"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__来自你身后的唤醒__b8605e61f4.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/d4d2fc5e2505ba029326e1ed29bdda5e.jpg",
+      "bytes": 747630,
+      "caption": "《来自你身后的唤醒》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__无限的存在__1e34f0bd64.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/d5bce1afc8a738970435b921541e6cdd.jpg",
+      "bytes": 682549,
+      "caption": "《无限的存在》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__积分态的繁复性__9ab07f520f.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/e6dc372e67a26625cb8d2081b4381d68.jpg",
+      "bytes": 1287046,
+      "caption": "《积分态的繁复性》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__生命的种种连接__1c85d4c653.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/f2892954963982eb4cd9c336e6aa43b1.jpg",
+      "bytes": 1386618,
+      "caption": "《生命的种种连接》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__积分起全体的源头__d45c01841f.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/f69a0eda43c1be16682ce537445e92dd.jpg",
+      "bytes": 1228937,
+      "caption": "《积分起全体的源头》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__不可见的连接__3b5d2dc382.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/cafbb067b83d78da4edbc6d896fffc48.jpg",
+      "bytes": 1545020,
+      "caption": "《不可见的连接》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__存在体的韵律__14468dfffe.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/f5acf75042085d83c1bf4fb2c771042b.jpg",
+      "bytes": 1343198,
+      "caption": "《存在体的韵律》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/multiple-portraits__第三眼__c5bd73d835.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20240802/b528f3f8474df56566419b0c925984a3.jpg",
+      "bytes": 1219282,
+      "caption": "《第三眼》",
+      "gallery": "意识的多重肖像"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_9室_4c2974cc60.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/29ce0905fd66098ba832dd3882c801f3.jpg",
+      "bytes": 239426,
+      "gallery": "ancient-arrow-gujian"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_11室_1bb9ce9e4b.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/1ed06080cf929f5cc6a5aa94993ae3f3.jpg",
+      "bytes": 272170,
+      "gallery": "ancient-arrow-gujian"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_12室_94364737f1.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/ca4904cca8ec285558a6d4871fcc6cae.jpg",
+      "bytes": 247429,
+      "gallery": "ancient-arrow-gujian"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_13室_5d3c2612b1.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/d52163b41dde7075ca2f2fe197c6ee61.jpg",
+      "bytes": 330972,
+      "gallery": "ancient-arrow-gujian"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_14室_75ccee206e.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/12c5d0073106183a78aaaa88c6e8da02.jpg",
+      "bytes": 190153,
+      "gallery": "ancient-arrow-gujian"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_15室_ed74d21ad5.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/9e1ecd70ce1cf0024f5774eddb16ca96.jpg",
+      "bytes": 143940,
+      "gallery": "ancient-arrow-gujian"
+    },
+    {
+      "file": "extracts/art-galleries/images/ancient-arrow-gujian_16室_bdb66b94d3.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/098e2cc8aecd279cdc267ed81d643094.jpg",
+      "bytes": 171374,
+      "gallery": "ancient-arrow-gujian"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_9室_5be4043593.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/8c8583c2186c0e9fe8fddfb7dc4bf8d5.jpg",
+      "bytes": 250452,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_10室_34cb1116f8.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/c82f9c413734505db8a6e585ee2dfc73.jpg",
+      "bytes": 284851,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_11室_6db48c59fd.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/b41d93df5d7b271accd7927c62cd28b5.jpg",
+      "bytes": 268464,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_12室_edf8afc28f.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/386a8f31ace70799a5416add4529ec96.jpg",
+      "bytes": 289811,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_13室_f7a6d9df7c.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/3c8c708777bf387870564f7ed5431676.jpg",
+      "bytes": 298376,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_14室_518f8ac132.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/8c7796b7a09502a03cf87d17a5e5333c.jpg",
+      "bytes": 259421,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_15室_4e69be1908.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/ebe9611fc487ca9c4cf84fc3e2761672.jpg",
+      "bytes": 218401,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/hakomi_16室_a888825460.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20220927/03d73f977170127137d9dd42a68847bc.jpg",
+      "bytes": 267787,
+      "gallery": "hakomi"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_9室_0e22412693.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/66235df0a2adc2b35b56f5a5b963c593.jpg",
+      "bytes": 276725,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_10室_fe998f8a45.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/ac498da5fbb2fcb50ae7d1ba7d807a6d.jpg",
+      "bytes": 219624,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_11室_d351404f38.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/fdffb2bae068fbd9f89358c0b709cd41.jpg",
+      "bytes": 273828,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_12室_4ff14008aa.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/9f642f22b9239ca2b3f8ada79fb1bc3f.jpg",
+      "bytes": 256180,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_13室_5c436fdf8d.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/8800231bf5a182b51c5c8453cd1d857a.jpg",
+      "bytes": 288864,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_14室_a761df77dd.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/24042c268182d2a7df8800572a1661d8.jpg",
+      "bytes": 298468,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_15室_b6deeccb6a.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/ad31965020c571ed53ebd05d5e1fde31.jpg",
+      "bytes": 286793,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/zyanya_16室_7f960f630d.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/5113a01d11c63c7c9e6f61ca7b48ace7.jpg",
+      "bytes": 278099,
+      "gallery": "zyanya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_9室_ee91fe3f8d.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/58bc9dc420ba31877a08f94fd7f8898d.jpg",
+      "bytes": 284068,
+      "gallery": "aadhya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_10室_a85f1f9cfa.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/785eafb69288260ef167e01e1c19bb4b.jpg",
+      "bytes": 333114,
+      "gallery": "aadhya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_11室_9f9054c313.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/9e8ac0009fbfdfe3c4680d0fe7ee47e1.jpg",
+      "bytes": 248032,
+      "gallery": "aadhya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_12室_979107495b.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/bcab39437c3c13bf3720fd5d1fa6f8a4.jpg",
+      "bytes": 282795,
+      "gallery": "aadhya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_13室_29b4b5ec0f.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/5e84e09666081e3dd6bd79cb904d7a3e.jpg",
+      "bytes": 261795,
+      "gallery": "aadhya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_14室_95a015ffcb.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/cacc46025605680a497d78b6ff78a1e6.jpg",
+      "bytes": 265217,
+      "gallery": "aadhya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_15室_7534409894.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/dbd9f334d53e0d60b771764a4ff31c44.jpg",
+      "bytes": 272747,
+      "gallery": "aadhya"
+    },
+    {
+      "file": "extracts/art-galleries/images/aadhya_16室_60b4121cd9.jpg",
+      "url": "https://www.wingmakers.com.cn/public/Home/images/20221001/2392ab3975a8b1145a37ca9fe40d90fe.jpg",
+      "bytes": 315115,
+      "gallery": "aadhya"
+    }
+  ],
+  "incidental_moved": [
+    "wmc-66776e81",
+    "wmc-445ff567",
+    "wmc-b9de7ef9",
+    "wmc-7462f150",
+    "wmc-929bd72e"
+  ]
+}

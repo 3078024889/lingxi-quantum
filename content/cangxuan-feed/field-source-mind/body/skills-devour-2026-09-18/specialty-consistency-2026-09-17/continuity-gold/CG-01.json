@@ -1,0 +1,20 @@
+{
+  "id": "CG-01",
+  "span": [
+    "E01",
+    "E02"
+  ],
+  "must_hold": [
+    {
+      "fact": "林秋红绳",
+      "break_if": "E02 无故素腕"
+    }
+  ],
+  "expect_dkn": "CONFLICT",
+  "drama_steps": [
+    2,
+    3,
+    5,
+    6
+  ]
+}

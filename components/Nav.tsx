@@ -10,14 +10,11 @@ import RuneIcon, { RuneKind } from "./RuneIcon";
 type NavItem = { href: string; zh: string; en: string; rune: RuneKind; badge?: string };
 
 const creation: NavItem[] = [
-  { href: "/", zh: "SASI 首页", en: "SASI Home", rune: "crystal" },
-  { href: "/?view=director", zh: "苍玄 AI 导演", en: "CangXuan Director", rune: "eye" },
-  { href: "/?view=drama", zh: "AI 短剧工坊", en: "AI Drama Studio", rune: "crescent" },
-  { href: "/?view=build", zh: "编程构建部署", en: "Build & Deploy", rune: "mandala" },
+  { href: "/", zh: "新建创作", en: "New project", rune: "crystal" },
   { href: "/?view=skills", zh: "Skills", en: "Skills", rune: "crystal" },
   { href: "/?view=models", zh: "模型与 API", en: "Models & API", rune: "twin" },
-  { href: "/?view=billing", zh: "余额与用量", en: "Balance & Usage", rune: "flame" },
-  { href: "/?view=works", zh: "我的作品库", en: "My Works", rune: "compass" },
+  { href: "/?view=billing", zh: "充值与账单", en: "Balance & billing", rune: "flame" },
+  { href: "/?view=works", zh: "我的项目", en: "My projects", rune: "compass" },
   { href: "/?view=account", zh: "我的账户", en: "My Account", rune: "figure" },
 ];
 
@@ -93,10 +90,10 @@ export default function Nav() {
       <div className="lx-side-scroll">
         {[
           { title: "SASI · 创作工作台", items: creation },
-          { title: "灵犀场 · 探索与实践", items: field },
+          { title: "灵犀场 · 意识显化", items: field },
           { title: "灵犀场 · 小工具", items: toolsNav },
-          { title: "灵犀场 · AI知识库", items: [
-            { href: "/ai-knowledge", zh: "AI知识库", en: "AI Knowledge", rune: "crystal" as RuneKind },
+          { title: "灵犀场 · 书本智能体", items: [
+            { href: "/ai-knowledge", zh: "书本智能体", en: "AI Knowledge", rune: "crystal" as RuneKind },
             { href: "/ai-learning", zh: "AI学习助手", en: "AI Learning", rune: "eye" as RuneKind },
             { href: "/ai-research", zh: "AI科研助手", en: "AI Research", rune: "mandala" as RuneKind },
           ] },

@@ -1,0 +1,2066 @@
+[
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "云小棠按上手心，测灵石五色乱闪又熄，像坏掉的灯。外门弟子哄笑。小雾从她袖里探头。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E01.md",
+      "heart_voice": "「……我就说今天不该来。」",
+      "continuity_lock": "云小棠=试炼灰衣+缺角云纹玉佩；左颊雀斑可见；翘发一缕；小雾脖系浅蓝布条藏袖中；赵临川=朱红镶边袍+火纹护腕+左眉烫疤",
+      "prop_yupei": "缺角云纹玉佩"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "执事草草记「杂灵·待定」。小棠想缩回手，被后面孩童轻轻撞了一下。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E01.md",
+      "heart_voice": "「待定=不要。我听得懂。」",
+      "continuity_lock": "测灵石余光仍有细碎五色噪点；登记簿写「杂灵·待定」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "上方岩块松动。赵临川尚在嘲笑，陆衡从人群外抬眼。小棠先动——不是冲去逞强，是一把拽住孩童后领。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E01.md",
+      "heart_voice": "「腿在抖。手比腿诚实。」",
+      "continuity_lock": "危石阴影罩住孩童；陆衡深青听风袍入画边缘；软剑「听潮」仍背在身后"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "陆衡拔剑起风的同一息，小棠杂灵「借响」那缕风，在头顶凝出一瞬风障，落石偏出两尺，砸碎空地。她跪坐，指尖发麻。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E01.md",
+      "heart_voice": "「原来乱跳，不是笑话。」",
+      "continuity_lock": "借响代价=指尖发麻、眼前五彩一瞬；孩童无伤；落石碎在空地；陆衡右耳后风纹痣可见"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "起哄声卡住。赵临川想再嘲，被陆衡一眼钉住。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E01.md",
+      "heart_voice": "（小棠）「大师兄好帅。不对，先站起来。」",
+      "continuity_lock": "赵临川火纹护腕紧握；围观弟子后退半步让出通道"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "陆衡把她从碎石边拉开。小雾「呜咕」一声跳上肩头，像宣布主权。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E01.md",
+      "continuity_lock": "小雾归肩+浅蓝布条；小棠仍试炼灰衣；沈澈墨灰符袍+左袖三枚符纸在远处可见"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "云落舟在名册上点一点，没有当场宣扬，只丢下一句规矩。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E01.md",
+      "heart_voice": "「留！他只说了一个字：留！」",
+      "continuity_lock": "云落舟=青底银云宗主袍；名册「云小棠」侧注「杂灵·可观察」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "寒砚遥遥看过测灵台，呼出一口白雾，转身入霜。峰上无声。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E01.md",
+      "heart_voice": "（小棠忽抬头，说不清）「……谁在看我？」",
+      "continuity_lock": "寒砚=霜白宽袖袍+寒玉戒；银白发；峰顶薄霜息"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 1,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "小棠抱着小雾入睡，缺角玉佩贴在心口。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E01.md",
+      "heart_voice": "「配不配，明天再说。我先跟上。」",
+      "continuity_lock": "窗沿霜雾点未化；玉佩缺角朝内贴身"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "陆衡把外门牌塞她手里。弟子窃窃私语「落石那个杂灵」。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E02.md",
+      "heart_voice": "「尾巴发言差点暴露。」",
+      "continuity_lock": "云小棠改=外门浅蓝云纹袍（袖口补丁）+腰牌+缺角玉佩；小雾在肩；陆衡深青听风袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "有人起哄喊「小尾巴」。沈澈路过，一张空白符纸「啪」贴在起哄者额上，符纸自动写「大声」然后炸成墨烟。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E02.md",
+      "heart_voice": "（小棠）「外号就外号……好像还挺亲？」",
+      "continuity_lock": "沈澈=墨灰符袍+左袖符纸少一枚；起哄者额上墨渍未净"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "赵临川以「杂灵根适应劳作」为由，把最陡的云阶派给小棠。扫帚比人高。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E02.md",
+      "heart_voice": "「公平你个头。但我先把阶扫完。」",
+      "continuity_lock": "赵临川火纹护腕；扫帚旧；小棠袖口补丁更显眼；小雾炸毛"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "脏水扑来。小棠闭眼——阶面忽然一排防水符亮起，水分流两侧，她裤脚只湿一点。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E02.md",
+      "continuity_lock": "阶面符纹呈墨色云形；沈澈左袖符纸再少一枚；小棠裤脚微湿非湿透"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "小棠抱紧小雾鞠躬道歉，实则把赵临川的台阶让得更尴尬。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E02.md",
+      "heart_voice": "「大师兄救场好准。我要包小雾红包。」",
+      "continuity_lock": "小雾仍小型云貂；陆衡玄青披风（巡逻款）；赵临川靴尖布条齿印"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "陆衡递一碗云羹。小棠捧碗，小雾舔沿。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E02.md",
+      "heart_voice": "「这句话比云羹烫。」",
+      "continuity_lock": "碗青花云纹；小棠缺角玉佩放桌角；窗开一隙"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "小棠伸手，指尖触到一点凉。院外无人。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E02.md",
+      "heart_voice": "（说不清的熟悉感）「像有人把冬天放轻了。」",
+      "continuity_lock": "霜雾叶形残痕；寒砚未露面；小棠指尖无伤仅微凉"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 2,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "帖子拍在小棠门上。赵临川路过，弹一下门牌。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E02.md",
+      "heart_voice": "「……我可以申请平地吗？不行，尾巴不能怂出声。」",
+      "continuity_lock": "执事帖朱印齐全；门牌「云小棠」；赵临川烫疤在晨光下发亮"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "小棠提着检修铃走在队尾，补丁袖被风灌成口袋。赵临川领队故意加速。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E03.md",
+      "heart_voice": "「腿不是我的。风才是队长。」",
+      "continuity_lock": "小棠浅蓝外门袍+补丁；腰牌叮当；小雾贴颈；赵临川朱红袍领队"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "检修铃坠落，小棠下意识探身去抓——栈道木缘一滑。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E03.md",
+      "heart_voice": "「不是我手滑。绳上有焦味。」",
+      "continuity_lock": "铃绳断口焦黑；小棠重心出栈道；陆衡尚未入画"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "陆衡自上层跃下，剑风托住小棠，把她带回栈道。围观弟子齐齐噤声。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E03.md",
+      "continuity_lock": "陆衡软剑「听潮」出鞘；右耳后风纹痣；小棠腕被带红但无伤；小雾炸成球"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "沈澈不知何时已在，符光一照，火灵残痕指向赵临川护腕同频。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E03.md",
+      "heart_voice": "（小棠）「二师兄嘴比符还狠。」",
+      "continuity_lock": "火灵残痕可视化为淡红纹；赵临川左眉烫疤；沈澈左袖符纸"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "她把铃捡回，放回赵临川面前，不跪不哭。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E03.md",
+      "heart_voice": "「我好怂。但我站直了。」",
+      "continuity_lock": "检修铃归队；小棠缺角玉佩捏白指节；无下跪"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "风忽然极静。无人看见寒砚，只见霜丝在断绳焦口上凝了一下，焦味淡了。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E03.md",
+      "heart_voice": "（小棠）「好凉。但不讨厌。」",
+      "continuity_lock": "霜息一瞬即散；寒砚本体未露面；栈道无结冰危险"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "小雾钻进披风鼓成包。小棠笑出声。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E03.md",
+      "continuity_lock": "披风=陆衡玄青巡逻披风暂借；小棠原袍仍在内层；小雾鼓包"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 3,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "小棠展开：外门切磋，赵临川点名。末行小字：「借响也是邪技。」",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E03.md",
+      "heart_voice": "「跑吗？不跑。尾巴被点名更要到。」",
+      "continuity_lock": "战帖火纹烫印；落款赵临川；时间=次日午时擂台"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "小棠把战帖推到陆衡面前，又扭头看沈澈。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E04.md",
+      "heart_voice": "「他们答应得好快。我是不是该哭一下？」",
+      "continuity_lock": "战帖火纹朝上；三人同框：陆衡深青袍、沈澈墨灰袍、小棠浅蓝补丁袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "她借响成功，身形被风托起半尺，随即指尖发麻落地。小雾拍爪。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E04.md",
+      "continuity_lock": "借响代价=指尖发麻；未连续二放；玉佩晃"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "黑脸小棠愣住。沈澈第一次真笑出声。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E04.md",
+      "continuity_lock": "脸墨可洗；沈澈左袖符纸；小棠未受伤"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "陆衡按住她腕脉，沈澈塞一枚安神符贴腕内侧。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E04.md",
+      "heart_voice": "「跟规则=跟他们。懂了。」",
+      "continuity_lock": "腕内侧安神符墨色云纹；未戴霜丝镯（尚未获得）"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "无人认领。叶脉细如丝，无字。小棠抬眼望霜栖峰，峰上静。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E04.md",
+      "heart_voice": "（说不清的熟悉感）「凉的，像窗沿那次。」",
+      "continuity_lock": "霜叶无字；压在战帖上；寒砚未现身；呼气可见薄白"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "路过弟子小声「小尾巴特训诶」。这次语气不尖。沈澈哼一声当默许。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E04.md",
+      "continuity_lock": "霜叶收入小棠袖中夹层；小雾睡肩；安神符仍在腕"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "护腕纹路亮红。他盯着战帖抄本冷笑。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E04.md",
+      "continuity_lock": "火纹护腕满能；左眉烫疤；朱红袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 4,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "小棠把霜叶贴在缺角玉佩旁，深呼吸。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E04.md",
+      "heart_voice": "「腿抖可以。剑别抖。」",
+      "continuity_lock": "霜叶+玉佩同袋；浅蓝袍洗净补丁仍在；小雾清醒睁眼"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "外门切磋开锣。陆衡、沈澈分站台下两侧。赵临川先跳上台。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E05.md",
+      "heart_voice": "「跪你。不对，台词不能说出来。」",
+      "continuity_lock": "小棠浅蓝袍+霜叶藏袖+腕安神符；赵临川朱红袍满能护腕；双师兄在台下"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "第一次借响用陆衡提前埋下的「闲风」（台角风铃被剑意拨动），她偏身避开火弧，指尖麻。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E05.md",
+      "continuity_lock": "借响次数=1；指尖发麻；风铃仍晃"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "火掌阴影罩住。台下有人起哄「废根认输」。小雾在台边栏杆炸毛。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E05.md",
+      "heart_voice": "「还有一次。借什么？」",
+      "continuity_lock": "借响次数仍=1；小棠背贴台柱；赵临川烫疤反光"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "小棠第二次借响——借的是赵临川自己的火。火掌在她触面前炸成漫天无害焰火，像节庆。赵临川被反冲坐倒。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E05.md",
+      "continuity_lock": "借响次数=2（达上限）；焰火无灼伤围观；赵临川坐地护腕龟裂；小棠眼前五彩闪、短眩晕"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "剑未出鞘，只横在身前。小棠扶额，被他托住肩。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E05.md",
+      "continuity_lock": "陆衡深青袍上台；听潮未出刃；小棠短眩晕中"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "眩晕退一层。沈澈吹声口哨。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E05.md",
+      "heart_voice": "「老祖你在看吗？」",
+      "continuity_lock": "霜叶贴腕；安神符仍在；未获得霜丝镯"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "他甩开搀扶，指向小棠，又说不出「邪技」——因为焰火人人看见是他自己的火。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E05.md",
+      "continuity_lock": "护腕龟裂；烫疤；朱红袍沾灰"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "宗主语气平，内容炸。台下一片吸气。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E05.md",
+      "heart_voice": "「封山那种霜栖？？我是不是赢太大了？」",
+      "continuity_lock": "令签青底银云；云落舟眉心胎记；小棠脸白"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 5,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "陆衡把披风重新罩上她。沈澈塞一叠「保命符」。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E05.md",
+      "continuity_lock": "令签在腰；霜叶+玉佩；小雾缩成团但睁眼"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "小棠回头三次。小雾扒她脸颊。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E06.md",
+      "heart_voice": "「腿又不是我的了。」",
+      "continuity_lock": "令签举起；小棠外门浅蓝袍入霜栖；双师兄不过线；山门霜息扑面"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "敲门无应。庭中一棵霜树掉冰碴。她抱紧小雾往里走。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E06.md",
+      "heart_voice": "「老祖是不是出云游了？求了。」",
+      "continuity_lock": "庭雪未扫；靴印单人+小雾爪印；未见寒砚"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "寒砚静立，像本来就在。小棠差点跪——又强行改成鞠躬。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E06.md",
+      "heart_voice": "「高冷成语典范。我喜欢又害怕。」",
+      "continuity_lock": "寒砚=霜白宽袖袍+寒玉戒+银白发；额无纹；小棠鞠躬不跪"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "小棠呆住。寒砚连头都不回，抬一指。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E06.md",
+      "continuity_lock": "雪浪可视化；小屋木门未关；小雾钻领口"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "雪崩停。庭中只多了一层细粉雪。寒砚袖一拂，像赶灰。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E06.md",
+      "heart_voice": "「反差萌杀我。护短还不认账。」",
+      "continuity_lock": "雪停；小屋无损；寒砚表情仍省；戒未离指"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "纸上自行结霜成字：日出扫雪／勿近冰洞／借响一日一次。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E06.md",
+      "heart_voice": "「我立刻就想知道。」",
+      "continuity_lock": "霜字规则三条；令签插门楣；小棠未换装仍浅蓝袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "洞口冰壁隐约云纹，与玉佩缺角弧线相合。寒砚声音不知从哪传来。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E06.md",
+      "heart_voice": "（说不清的熟悉感）「像家里缺的那一块。」",
+      "continuity_lock": "冰壁云纹；玉佩缺角朝洞；未触禁制；霜叶仍在袖"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 6,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "小棠躺在小屋盯屋顶，小雾咬布条。她翻身，决定「明天只看一眼」。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E06.md",
+      "continuity_lock": "冰缝微光一次；小屋灯灭；规则纸仍在桌"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "她举玉佩比对云纹，缺角几乎严丝合缝。手比脑快，指尖触冰。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E07.md",
+      "continuity_lock": "指尖触冰壁云纹；令签仍在门楣；未戴镯；浅蓝袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "小棠被困霜圈。小雾乱抓。她想借响——周围无术法可借，杂灵空转，指尖剧麻。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E07.md",
+      "heart_voice": "「违规代价是丢人加疼。懂了。」",
+      "continuity_lock": "霜圈困人；借响失败=空转刺痛；小雾在圈内"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "霜圈卸力成细雪。他看她，像看一本翻开的错题集。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E07.md",
+      "continuity_lock": "霜圈解；寒砚霜白袍+寒玉戒；小棠指尖红未破皮"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "镯入腕，杂灵五色噪点被轻轻「梳顺」成可辨的细流。眩麻退。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E07.md",
+      "heart_voice": "「山风会编镯？？老祖你赢了。」",
+      "continuity_lock": "霜丝镯=无饰细白环，锁左腕；安神符可取下；霜叶可收"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "寒砚侧身，留给她半句。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E07.md",
+      "continuity_lock": "玉佩缺角仍在；镯在左腕；洞未开"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "小棠紧张等待「下山」。他只说扫雪加倍。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E07.md",
+      "heart_voice": "「护短！还是罚！都要！」",
+      "continuity_lock": "观察期延续；未收回令签"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "符上字：妖雾近外门。寒砚看一眼小棠。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E07.md",
+      "continuity_lock": "急符沈澈墨迹；寒砚夹符；镯在腕；借响规则提醒"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 7,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "小棠握拳，霜丝镯映一点白。黑屏落字：兽潮。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E07.md",
+      "heart_voice": "「怕。但这次不是一个人跟。」",
+      "continuity_lock": "妖雾可视化墨青；山门方向=主峰外门；小棠仍观察身份暂准下峰"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "小雾先扑陆衡肩再被扔回。形势一目了然：雾兽撞击护宗阵，阵膜裂出一线光。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E08.md",
+      "continuity_lock": "霜丝镯左腕；三人+老祖同框；阵膜裂隙可见"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "陆衡顶第一线，沈澈符阵补丁不够快。寒砚抬眼，未动。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E08.md",
+      "heart_voice": "「退后=安全。可裂隙旁边缺一只手。」",
+      "continuity_lock": "赵临川在远处外门队伍中脸色发白；未上前"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "她不是抢功，是把掌心贴上阵膜，准备借响——借沈澈正在补的墨符之力。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E08.md",
+      "continuity_lock": "借响次数即将=1；镯稳脉；陆衡余光护她侧"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "雾兽爪被挤出。十息后小棠跪坐，指麻，但裂隙暂时封合。沈澈连补三符固化。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E08.md",
+      "continuity_lock": "借响=1；短眩晕；阵膜暂稳；未借第二次"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "兽群乱。陆衡顺势斩开领头兽。战场一口气。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E08.md",
+      "continuity_lock": "雾退；领头兽倒；寒砚仍霜白袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "小棠玉佩同步发烫。四人神色同时一凝。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E08.md",
+      "heart_voice": "（说不清的熟悉感）「缺角在抖。」",
+      "continuity_lock": "兽核云纹；玉佩烫；核由陆衡收纳锦盒"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "他看见小棠被众人围住，眼神阴下去。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E08.md",
+      "continuity_lock": "赵临川护腕仍龟裂未修；烫疤；远离中心圈"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "小棠被塞水塞糕，小雾偷咬一口霜糕。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E08.md",
+      "continuity_lock": "霜糕方块；镯在腕；小棠仍外门袍沾雾灰"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 8,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "小棠回霜栖的路上回头，隐约听见「禁术」二字。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E08.md",
+      "heart_voice": "「谣言比雾兽跑得快。」",
+      "continuity_lock": "兽核在陆衡处；小棠随寒砚返峰；谣言种子已下"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "她本是来交观察日记（寒砚逼写的）。日记还没递，问题先砸来。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E09.md",
+      "heart_voice": "「安全你昨晚提醒雾兽了吗？」",
+      "continuity_lock": "小棠浅蓝袍+霜丝镯；观察日记青皮本；赵临川新换护腕仍朱红系"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "他不看赵临川，看众人。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E09.md",
+      "continuity_lock": "陆衡深青袍+听潮；右耳后痣；小棠在他肩后半步"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "回放显示借的是墨符纹，不是禁咒印。符面定格给所有人看。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E09.md",
+      "continuity_lock": "留影符沈澈手作；回放无禁咒纹；赵临川脸青"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "他接过观察日记翻两页，点头。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E09.md",
+      "continuity_lock": "云落舟宗主袍；禁足令当场写赵临川名"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "声音软，字清楚。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E09.md",
+      "heart_voice": "「讲完了。腿还在抖。赢。」",
+      "continuity_lock": "玉佩缺角；镯亮一瞬；未借响"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "寒砚未现身。沈澈望天吹哨。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E09.md",
+      "continuity_lock": "护腕薄霜；寒砚本体不在场；山风梗延续"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "无落款。纸边有淡墨香——像藏书阁旧墨。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E09.md",
+      "heart_voice": "（说不清的熟悉感）「像有人比我先知道我。」",
+      "continuity_lock": "纸条素纸淡墨；枕席=霜栖小屋；镯未离腕"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 9,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "陆衡门外轻敲：「明日我陪你去藏书阁。」沈澈在更远：「我开门。」",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E09.md",
+      "continuity_lock": "纸条收进玉佩夹层旁；双师兄在霜栖山门外候（不过线）"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "小棠把纸条展给沈澈看。他闻墨，眉一挑。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E10.md",
+      "continuity_lock": "纸条在手；镯；小棠外门袍；沈澈符钥"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "玉佩发热指引到底层尘匣。匣锁一碰即开——像等过她。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E10.md",
+      "heart_voice": "「可是好吉祥。」",
+      "continuity_lock": "尘匣云纹；玉佩烫；匣内一卷残页"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "三人同时沉默。缺页毛边新——有人刚撕。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E10.md",
+      "continuity_lock": "残卷半页；字古；毛边新墨；兽核云纹可与卷首云纹对照"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "残影手腕有裂云状暗记，非落云制式。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E10.md",
+      "continuity_lock": "裂云暗记可视化；朱红镶边仿外门"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "简册释义：裂云谷欲夺云纹血脉余种。小棠第一次听见完整敌名。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E10.md",
+      "heart_voice": "「……我只是小尾巴。」",
+      "continuity_lock": "简册「裂云谷」三字；寒砚暂未在场"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "沈澈：「老祖监视器真多。」小棠对着霜字鞠躬。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E10.md",
+      "continuity_lock": "霜字二字；窗缝来风；残卷收沈澈处封存"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "细作以为无人。树后陆衡眼神示意；沈澈符已埋伏。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E10.md",
+      "continuity_lock": "细作怀中有撕下的缺页；裂云暗记在腕"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 10,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "她把缺角玉佩贴额。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E10.md",
+      "heart_voice": "「怕被要。更怕连累他们。」",
+      "continuity_lock": "残卷半页在阁；缺页在细作手；行动=次日"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "沈澈主控，陆衡断后。小棠在安全区外举令——观察身份临时外勤。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E11.md",
+      "continuity_lock": "符网墨色；细作朱红仿袍；小棠镯亮；未上近身"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "缺页云纹与她玉佩同步亮。细作盯着她眼神贪婪。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E11.md",
+      "heart_voice": "「名字要自己说。不被叫锁芯。」",
+      "continuity_lock": "缺页归小棠临时持有；裂云暗记暴露给押送弟子看"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "赵临川禁足中被提审旁听，面如土色——他否认通敌，但「打听」坐实嘴碎。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E11.md",
+      "continuity_lock": "赵临川未升级为裂云谷死士；仍前期反派余波；禁足延长"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "句意未尽，但足够震场。云落舟在场亲见。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E11.md",
+      "continuity_lock": "完整卷暂封宗主密柜；小棠只知半真相"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "全场静音半拍。他看向小棠左腕霜丝镯，像验收。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E11.md",
+      "continuity_lock": "寒砚霜白袍+寒玉戒；殿内呼气白；镯验收合格"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "他字少，却把护短说成规矩。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E11.md",
+      "heart_voice": "「山风今天署名了。」",
+      "continuity_lock": "转峰令口头生效；书面令E12交接；赵临川闭嘴"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "小棠捧糕笑出声，又哭一下，又笑。小雾抹她泪。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E11.md",
+      "continuity_lock": "霜糕；见习身份将换袍；外门牌将摘",
+      "costume": "霜栖见习白青袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 11,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "寒砚独自望洞，低声只一句。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E11.md",
+      "continuity_lock": "洞未开；缝光二次；寒砚独处；明日报道"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "围观有人小声「小尾巴要飞了」。这次无嘲。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E12.md",
+      "heart_voice": "「清=不是被赶。是走上去。」",
+      "continuity_lock": "外门牌交出；缺角玉佩仍留；霜丝镯仍留"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "小棠穿上新袍，袖口干净得不习惯。小雾把旧布条仍系自己脖上。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E12.md",
+      "continuity_lock": "云小棠=霜栖见习白青袍（costume_variants 切换）；旧浅蓝袍收箱；小雾布条仍浅蓝",
+      "costume": "霜栖见习白青袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "二人不过线，把礼物吊在钩上让小棠来取——守霜栖规矩。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E12.md",
+      "continuity_lock": "风铃小佩挂腰；安神符入袖；双师兄不过山门线"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "仪式短，符合老祖性格。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E12.md",
+      "heart_voice": "「第三句才是重点。欢迎两个字好贵。」",
+      "continuity_lock": "见习名录入霜栖册；寒砚仍银白发浅冰青瞳",
+      "costume": "霜栖见习白青袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "他握拳又松开，火纹护腕未再亮。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E12.md",
+      "heart_voice": "（其）「未完。」",
+      "continuity_lock": "赵临川未洗白；禁足中；后续可被裂云谷利用（圣经30集）"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "只露一句，不露脸。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E12.md",
+      "continuity_lock": "裂云谷势力存活；与E10–E11线索连续；无终极露脸"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "她未用手碰。缺角与壁上凹槽咬合，缝开一线，内里白息吐出，像沉睡者的呼吸。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E12.md",
+      "continuity_lock": "玉佩暂嵌壁上缺位；缝宽仅一线；未完全开洞；镯颤"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "寒砚按住小棠肩，不让她再近。风铃小佩轻响——山下陆衡似有所感抬头。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E12.md",
+      "heart_voice": "「小尾巴的下一集，好大。」",
+      "continuity_lock": "缝保持一线；玉佩仍嵌；寒砚手在肩；未唤醒实体"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 12,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "字幕：落云宗的小尾巴 · 第一幕完（E01–E12）",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E12.md",
+      "continuity_lock": "身份=霜栖见习；冰缝一线待E13；裂云谷阴影在；赵临川禁足余波在；兽核/古脉密档在宗主处",
+      "costume": "霜栖见习白青袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "她扫得认真，袖口沾霜。小雾趴肩上打哈欠，卷云毛沾白点。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E13.md",
+      "heart_voice": "「规矩第一条好老实。像在告诉我：先跟上山，再跟上人。」",
+      "continuity_lock": "云小棠=霜栖见习白青袍+霜丝镯+风铃小佩；缺角玉佩仍嵌冰壁；小雾浅蓝布条；未碰冰洞",
+      "costume": "霜栖见习白青袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "「见习？杂灵根也配霜栖？」小棠帚尖一顿，又继续扫。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E13.md",
+      "heart_voice": "「你才不配评我扫雪。」",
+      "continuity_lock": "未反驳当众；扫雪未停；白青袍可见；赵临川仍禁足未出场"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "她停在寒砚划的霜线外，双手背后——证明自己没碰。缝内白息一缩一放，似回应她靠近。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E13.md",
+      "heart_voice": "「三，冰洞暂勿碰。我没碰。我只是……打招呼。」",
+      "continuity_lock": "未越霜线；玉佩仍嵌；缝宽仍一线；未开洞；镯微颤",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "不是碰洞——是借响缝内那一口「息」的属性。一息半，白雾成形又散。她晃了一下。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E13.md",
+      "heart_voice": "「说不清的熟悉感。像玉佩缺角在痒。」",
+      "continuity_lock": "借响计数今日第1次；未触冰壁/未入洞；指尖发麻；眼前五彩一瞬；玉佩仍嵌",
+      "borrow_echo_count": "1/2"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "短眩晕——灵海刺痛像细针。她咬牙按住缺角方向（空的，玉佩还在壁上），改捏霜丝镯。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E13.md",
+      "heart_voice": "「一日不过两次。还剩一次。别傻。」",
+      "continuity_lock": "借响代价=短眩晕+指尖麻；今日借响1/2；未连续二放；白青袍膝有霜印",
+      "injury_state": "短眩晕后余波"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "火球擦着扫雪处炸开热雾，欲逼她出丑。小棠还在缓眩晕，来不及躲。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E13.md",
+      "continuity_lock": "挑衅来自外门杂役级（非赵临川）；火球未伤人仅热雾；小棠仍眩晕未借第二次"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "他看都没看那弟子，只把竹帚用霜丝托回小棠手里。呼气白雾更重一层。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E13.md",
+      "heart_voice": "「『扫你的』三个字，比欢迎还贵。」",
+      "continuity_lock": "寒砚=银白发浅冰青瞳霜白宽袖；护短「看似顺便」；未惩罚重刑仅止火；三规矩重申；小棠未二次借响"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "二人不过线。陆衡只说「慢一点」；沈澈把新安神符吊上钩。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E13.md",
+      "continuity_lock": "风铃小佩仍挂腰；安神符续上；双师兄不过霜栖山门线；听潮未出鞘"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 13,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "赵临川盯碎片上的裂云纹，烫疤抽动。帐外黑影一闪即逝。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E13.md",
+      "heart_voice": "（棠，远）「明日……还敢不敢再跟息问声好。」",
+      "continuity_lock": "赵临川禁足未洗白；裂云令碎片入禁足处；裂云谷试探启动待E14；玉佩仍嵌；缝仍一线；今日借响已1次收工"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "赵临川来回踱步。窗外黑影只露半张下颌，不露全脸。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E14.md",
+      "heart_voice": "（其）「未完。但别被当枪。」",
+      "continuity_lock": "赵临川=朱红镶边袍+火纹护腕+左眉烫疤；禁足未解；未洗白；裂云谷执事级未露全脸"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "警铃三响。执事传令：外门协防，霜栖见习「可观摩不可擅出」。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E14.md",
+      "heart_voice": "「可观摩=让我看。我跟上去就行。」",
+      "continuity_lock": "冲突在外山非霜栖内；仿兽带淡云纹（呼应E08兽核）；小棠仍白青袍见习身份",
+      "costume": "霜栖见习白青袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "她捏风铃小佩。仿兽冲线，陆衡一剑削雾，沈澈符纸钉爪。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E14.md",
+      "continuity_lock": "双师兄在线外主防；小棠守线内；今日借响计数从0起；安神符在袖；玉佩仍嵌冰壁（本场不在洞前）"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "他抬火纹护腕喷焰，本欲立功，焰却被仿兽云纹一吸，反噬灼自己袖口。围观窃笑。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E14.md",
+      "continuity_lock": "赵临川短暂离禁足「协防」；未叛门明文；火纹护腕亮后熄；烫疤可见；裂云谷借刀意图暴露给观众"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "借响可视化：杂光→风属→霜线补合。仿兽撞个空，踉跄。她指尖又麻，却站直。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E14.md",
+      "heart_voice": "「跟上你们的风，就够把洞挡在后面。」",
+      "continuity_lock": "今日借响第1次；代价=指尖麻未眩晕（有安神符）；未碰冰洞；白青袍+霜丝镯在；小雾肩位",
+      "borrow_echo_count": "1/2"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "小棠咬牙第二次借响：借沈澈符火反溅，逼兽改道出界。事后眼前五彩+短眩晕，膝软。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E14.md",
+      "heart_voice": "「护短不是只有他们能。小尾巴也会挡一下。」",
+      "continuity_lock": "今日借响2/2满；代价=短眩晕+灵海刺痛；未第三次；救的是场面/赵临川未死；赵仍未洗白",
+      "borrow_echo_count": "2/2",
+      "injury_state": "短眩晕+灵海刺痛"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "围观弟子闭嘴。赵临川愣住，火纹护腕垂下，看自己被「小尾巴」救的袖口焦痕。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E14.md",
+      "continuity_lock": "三护短位同框（陆衡近、沈澈近、寒砚远）；公开偏帮；仿兽退；外山试探失败；小棠仍见习白青袍",
+      "costume": "霜栖见习白青袍"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "他握碎片，裂云纹烫出半行字：「古脉锁芯——缺角」。他抬头望霜栖一点白。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E14.md",
+      "heart_voice": "（其）「她救我？笑话。——可我没回话。」",
+      "continuity_lock": "赵临川回禁足；未正式投裂云谷；碎片灼字新情报；裂云谷执事级仍未露全脸；可被利用线保留"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 14,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "玉佩仍嵌。寒砚袖掩，像挡什么，又像护什么。风铃远响——陆衡巡山未归。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E14.md",
+      "heart_voice": "（棠，梦）「我跟上去就行。你们也别丢下我。」",
+      "continuity_lock": "缝仍一线未开洞；玉佩仍嵌；息中疑似人影轮廓待E15；今日借响已满收工；团宠兑现完成；裂云谷线索+赵临川棋子线并行",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "她伸手想摸嵌壁玉佩，指尖距佩一寸——寒砚袖风无声挡开。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E15.md",
+      "continuity_lock": "玉佩仍嵌冰壁未拔；白青袍见习；霜丝镯在；今日借响0/2；寒砚阻挡拔佩",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "（棠）「跟上你们的规矩，比跟上洞重要。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "小雾炸毛。陆衡推门而入，剑未出鞘只横在小棠身前。沈澈左袖抽空白符纸。",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E15.md",
+      "continuity_lock": "息影无五官；缝仍一线未开洞；双师兄到场",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "（棠）「影……会叫我名字吗？」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "回音只一声：「棠——」小棠膝一软，却被陆衡臂挡。寒砚指间寒玉戒亮一瞬。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E15.md",
+      "continuity_lock": "息影学舌点名；禁应全名；寒玉戒反应；未借响",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "「它会我的名字。可我不把玉佩给它。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "碎片又烫。他咬牙写下「缺角在霜栖」塞窗隙——黑影只接纸条不露脸。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E15.md",
+      "continuity_lock": "赵临川仍禁足未叛；碎片在手；裂云要缺角情报外泄",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "（其）「探就探。别再让我当枪。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "钉一触霜线，息影猛扩半寸。小棠借响借寒砚霜息一息，把钉霜封弹开。指尖麻。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E15.md",
+      "continuity_lock": "今日借响1/2；代价指尖麻；听息钉被封；玉佩未离壁",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "「听可以。拿走不行。」",
+      "borrow_count": "1/2"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "嵌壁缺角玉佩自亮一线云纹；与禁足碎片灼字遥相呼应。寒砚掌按壁点明锁芯认缺角。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E15.md",
+      "continuity_lock": "缺角玉佩≈古脉锁芯之钥；禁止拔佩；规则点明",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "world_rule": "缺角玉佩=古脉锁芯之钥"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "峰口执事探问外援；陆衡摇头、沈澈拒解释玉佩、寒砚一眼退人。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E15.md",
+      "continuity_lock": "对外保密玉佩锁芯；三护短位；见习身份不变",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "听息钉残霜落地；黑影拾霜凝成半枚「谷」字。赵临川只觉碎片骤冷。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E15.md",
+      "continuity_lock": "细作得谷字霜纹；裂云要实物；赵未获全情报",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "（其）「冷了？……她又没倒。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 15,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "寒砚加霜纹禁制；沈澈塞三张安神符；小棠半梦「嵌着」。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E15.md",
+      "continuity_lock": "息影暂退未灭；玉佩仍嵌；借响规则2/日；安神符+3；下集裂云逼实物",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "（棠）「我跟上去……嵌着。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "陆衡拾到线外飘入的半枚霜纹「谷」字；沈澈用符纸隔空夹住，不让棠碰。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E16.md",
+      "continuity_lock": "谷字霜纹=裂云谷信物；棠未碰；玉佩仍嵌内壁；今日借响0/2；白青袍见习",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "prop_guzi_frost": "半枚霜纹「谷」字到门",
+      "borrow_count": "0/2",
+      "heart_voice": "（棠）「又是谷……他们要我的佩。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 2,
+    "scriptEvent": "赵临川禁足内碎片骤热又冷，误判棠已倒猛写「可动手」——黑影回：「佩未离壁。再逼。」",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E16.md",
+      "continuity_lock": "赵仍禁足未叛明文；碎片在其手；执事级未露全脸；误判棠倒失败",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "zhao_status": "禁足误判·未获动手令",
+      "heart_voice": "（其）「我成看门的了？」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 3,
+    "scriptEvent": "黑影掷第二枚霜纹扩成「实物」；风里低语「缺角交谷。人可留。」陆衡剑出一寸拒外卖。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E16.md",
+      "continuity_lock": "裂云要缺角实物；承认佩=钥；未进峰；三护短未齐（寒砚稍后）",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "world_rule": "缺角玉佩=钥（敌方亦称）",
+      "heart_voice": "（棠，侧厅闻声）「钥……他们也这么叫。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 4,
+    "scriptEvent": "寒砚踏霜而至，袖风碎线外「实物」霜纹；当众点破「钥不是饵」。云小棠：「嵌着。不拔。」",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E16.md",
+      "continuity_lock": "寒砚公开偏帮；禁拔佩重申；棠口头禅；见习身份",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "world_rule": "钥不是饵",
+      "heart_voice": "「他替我说了。我跟上。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "SC",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 5,
+    "scriptEvent": "息影轮廓暴涨半寸学舌「棠——交——」；沈澈甩安神符贴缝；小棠膝软死盯壁上玉佩：「我不交。」",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E16.md",
+      "continuity_lock": "息影会复读外敌词；安神符库存-1（剩2）；玉佩未拔；借响仍0",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "anshen_talisman": 2,
+      "xiying_status": "学舌升级·复读裂云逼交",
+      "borrow_count": "0/2",
+      "heart_voice": "「影会学裂云的话了。恶心。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 6,
+    "scriptEvent": "细作再掷听息钉×3；小棠二次借响：先借陆衡剑息封两钉，再借寒砚霜息冻第三钉；指尖与耳根同时麻。今日满。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E16.md",
+      "continuity_lock": "今日借响2/2已满；代价=指尖+耳根麻；借陆衡+寒砚；三钉封；佩仍嵌",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "borrow_count": "2/2",
+      "borrow_cost": "指尖麻+耳根麻"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 7,
+    "scriptEvent": "外门嘲「杂灵根还逞能」；小棠抬手亮麻红指尖不躲；寒砚当众确认「她的佩，她的规矩。」",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E16.md",
+      "continuity_lock": "当众确认棠有护佩权；外门嘲讽被压；见习未升职",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "heart_voice": "「被看见了。不是笑话。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 8,
+    "scriptEvent": "线外林深处 半张裂云面具一晃即隐；霜音通牒：「人佩同迁。三日。」赵临川禁足碎片剧震。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E16.md",
+      "continuity_lock": "执事级半面具初现未露全脸；通牒三日人佩同迁；赵惊；细作层仍听令",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "ultimatum": "三日人佩同迁",
+      "mask_steward": "半张裂云面具初现·未露全脸",
+      "heart_voice": "（赵，禁足，碎片剧震）「同迁？他们要人？」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 9,
+    "scriptEvent": "寒砚启旧玉简「锁芯看守令」：三日之内佩不离壁、人不出霜栖主脉；陆衡加风铃；沈澈分安神符一门一枕。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E16.md",
+      "continuity_lock": "锁芯看守令启动；借响已用尽待明日清零；安神符库存0+枕边1；通牒倒计时3日；下集钩=面具人逼迁+看守令细则",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "lock_core_watch_order": "active",
+      "anshen_talisman": "0门+1枕",
+      "borrow_count": "2/2待清零",
+      "ultimatum_days": 3
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 16,
+    "scene": 1,
+    "sequence": 10,
+    "scriptEvent": "夜侧厅收束：息影淡回一线；云小棠抱袖抗麻半睡，口头禅收口「我跟上去……嵌着。」",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E16.md",
+      "continuity_lock": "玉佩仍嵌；息影暂退未灭；见习未升；三日通牒+看守令并行",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁",
+      "xiying_status": "淡回一线·未灭",
+      "heart_voice": "（棠）「我跟上去……嵌着。」"
+    }
+  },
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 17,
+    "scene": 1,
+    "sequence": 1,
+    "scriptEvent": "峰外半张裂云面具要「人佩同迁」；陆衡握剑、沈澈挡棠；面具未越霜栖界。",
+    "statePatch": {
+      "episode_beat": 1,
+      "source_file": "E17.md",
+      "continuity_lock": "面具=裂云执事级；未越界；玉佩仍嵌内壁；今日借响0/2；白青袍见习",
+      "heart_voice": "（棠）「同迁……是要我走。」",
+      "prop_mask": "半张裂云面具线外",
+      "borrow_count": "0/2"
+    },
+    "content_hash": "485144ccffd042141b6c4aa5ac9377fe29ee4549e41aa00ded63ebb034c2c709"
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 17,
+    "scene": 2,
+    "sequence": 2,
+    "scriptEvent": "赵临川禁足屋误判同迁即走；黑影纸条回「佩未离壁。你闭嘴。」",
+    "statePatch": {
+      "episode_beat": 2,
+      "source_file": "E17.md",
+      "continuity_lock": "赵禁足未破；碎片热冷交替；黑影线仍在",
+      "heart_voice": "（其）「我连纸条都不如。」",
+      "zhao_status": "禁足"
+    },
+    "content_hash": "9a8f68e32af8f2f6f6b1ee1ae48599fb2c77ebf864f66ea452beac4bf512b724"
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 17,
+    "scene": 3,
+    "sequence": 3,
+    "scriptEvent": "寒砚落血启霜栖旧禁「锁芯看守令」；霜光沿壁护嵌佩，不拔佩。",
+    "statePatch": {
+      "episode_beat": 3,
+      "source_file": "E17.md",
+      "continuity_lock": "锁芯看守令=启；佩仍嵌壁；借响仍2/日",
+      "heart_voice": "（澈）「她要把棠焊在壁上。」",
+      "lock_core_order": "enabled",
+      "prop_yupei": "缺角云纹玉佩嵌冰壁"
+    },
+    "content_hash": "d5cc4062f3c032542bf6e86a03699c23644dee725d9da938d1783463a8390981"
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 17,
+    "scene": 4,
+    "sequence": 4,
+    "scriptEvent": "小棠对嵌壁玉佩借响第一记护场，未拔佩；面具线外退半寸。",
+    "statePatch": {
+      "episode_beat": 4,
+      "source_file": "E17.md",
+      "continuity_lock": "今日借响1/2；佩未离壁；面具退半寸未消失",
+      "heart_voice": "（棠）「借响换安稳，不换离开。」",
+      "borrow_count": "1/2"
+    },
+    "content_hash": "8912d9d21474619fe0b35aa0610aab0bf15f7ab4364d52edfd73865c0791bf3d"
+  },
+  {
+    "action": "event",
+    "characterKey": "SC",
+    "episode": 17,
+    "scene": 5,
+    "sequence": 5,
+    "scriptEvent": "息影学舌叠声加压；沈澈甩安神符贴廊柱，叠声压回单音。",
+    "statePatch": {
+      "episode_beat": 5,
+      "source_file": "E17.md",
+      "continuity_lock": "安神符-1（剩+2）；息影未进内堂；学舌被压",
+      "heart_voice": "（影）「符……烦。」",
+      "anshen_talisman": "+2"
+    },
+    "content_hash": "c9b89c99fd7d965e69579d705982fbdef8abe8b281c648049ef6a8d4270853cc"
+  },
+  {
+    "action": "event",
+    "characterKey": "HY",
+    "episode": 17,
+    "scene": 6,
+    "sequence": 6,
+    "scriptEvent": "面具抛第二枚霜纹「迁」字，贴旧禁光膜外焦边进不来；丢出三日期限。",
+    "statePatch": {
+      "episode_beat": 6,
+      "source_file": "E17.md",
+      "continuity_lock": "「迁」字未入内；三日期限落地；锁芯令仍有效",
+      "heart_voice": "（砚）「他把期限扔过来，我接。」",
+      "deadline_days": 3,
+      "prop_qian_frost": "迁字线外"
+    },
+    "content_hash": "d5e9b87593857dd49d1f3d4015fd11d6c2eda9df5a7ae4fb36d3fd03da0fbca1"
+  },
+  {
+    "action": "event",
+    "characterKey": "ZLC",
+    "episode": 17,
+    "scene": 7,
+    "sequence": 7,
+    "scriptEvent": "赵临川偷听「三日」被黑影纸条拍脸辱为废物；仍禁足。",
+    "statePatch": {
+      "episode_beat": 7,
+      "source_file": "E17.md",
+      "continuity_lock": "赵仍禁足；碎片未给坐标；黑影控场",
+      "heart_voice": "（其）「……废物也想赢一次。」"
+    },
+    "content_hash": "d5c041b9482ae1305ff96ffa4fc3dd2ad0f5fed2254faf57b4f369a8c0dd9069"
+  },
+  {
+    "action": "event",
+    "characterKey": "LH",
+    "episode": 17,
+    "scene": 8,
+    "sequence": 8,
+    "scriptEvent": "寒砚护令、沈澈护符、陆衡护人三角同步半步；棠被护在嵌佩侧。",
+    "statePatch": {
+      "episode_beat": 8,
+      "source_file": "E17.md",
+      "continuity_lock": "三护短站位成立；棠未离壁；白青袍见习旁观",
+      "heart_voice": "（棠）「他们站我这边。」",
+      "guard_triangle": true
+    },
+    "content_hash": "bf9ede0441aad7fce2ffda3de9027956bc62c78c1214756a6a0ab0ef0b8ff27c"
+  },
+  {
+    "action": "event",
+    "characterKey": "YXT",
+    "episode": 17,
+    "scene": 9,
+    "sequence": 9,
+    "scriptEvent": "棠袖内缺角钩忽然温一下；峰外面具收声；闭关名册被人翻到「锁芯看守」页。",
+    "statePatch": {
+      "episode_beat": 9,
+      "source_file": "E17.md",
+      "continuity_lock": "缺角钩温=锁芯相关；佩仍嵌壁；借响1/2；安神符+2；三日期限；名册钩子",
+      "heart_voice": "（棠）「同迁是他们的词。我的词是守。」",
+      "prop_quejiao_gou": "warm",
+      "borrow_count": "1/2",
+      "anshen_talisman": "+2"
+    },
+    "content_hash": "ec128f203461b9de1f047013d6d3c9b7a6e7821dec654712fa393cb32deb2ca2"
+  }
+]

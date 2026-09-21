@@ -1,0 +1,13 @@
+{
+  "id": "C3a-lyricus-1",
+  "code": "C3a",
+  "title": "理瑞克斯会话1",
+  "sha16": "8214a6c9868c4122",
+  "chars": 3958,
+  "raw_chars": 4129,
+  "src": "/workspace/wm_priority_out/lyricus_1.txt",
+  "batch": "curriculum-CD-week2",
+  "peel": "v3",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:59:29.806490+00:00"
+}

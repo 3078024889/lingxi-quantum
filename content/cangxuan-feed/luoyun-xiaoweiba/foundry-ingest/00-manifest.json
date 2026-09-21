@@ -1,0 +1,147 @@
+{
+  "series": "落云宗的小尾巴",
+  "rights": "LingxiField original",
+  "rightsScope": "opted_in_training",
+  "sourceType": "sasi_native",
+  "digestLayers": [
+    "L1_source_import_full_episode_text",
+    "L2_character_identity_boards",
+    "L3_continuity_events_per_beat",
+    "L4_gold_rules_from_craft",
+    "L5_director_retrieval_at_generation_time"
+  ],
+  "counts": {
+    "characters": 6,
+    "episodeImports": 17,
+    "continuityEvents": 146,
+    "seedKnowledge": 15
+  },
+  "api": {
+    "endpoint": "/api/sasi/foundry",
+    "note": "Current V0: import extracts regex knowledge (max ~80/sentence). Series pack needs character+event actions + fuller SCRIPT ingest. boundary.trainingEnabled=false means no foundation-model fine-tune yet — wisdom is Foundry memory + retrieval."
+  },
+  "characters": [
+    {
+      "characterKey": "YXT",
+      "displayName": "云小棠",
+      "permanentIdentity": {
+        "role": "女主·小尾巴",
+        "face_lock": "圆杏眼、左颊浅雀斑、眉尾微翘、一缕翘发",
+        "costume_default": "外门浅蓝云纹袍袖口补丁、布靴、缺角云纹玉佩",
+        "voice_lock": "声线软、紧张吞音、倔时咬字清楚",
+        "ability": "杂灵根·借响（短眩晕/灵力乱为代价）",
+        "forbidden_drift": [
+          "禁冷艳御姐脸",
+          "禁丢缺角玉佩",
+          "禁开局全知全能",
+          "禁无师门羁绊孤傲"
+        ]
+      }
+    },
+    {
+      "characterKey": "LH",
+      "displayName": "陆衡",
+      "permanentIdentity": {
+        "role": "大师兄·听风峰",
+        "face_lock": "剑眉、右耳后风纹小痣",
+        "costume_default": "深青听风袍、软剑听潮",
+        "voice_lock": "稳、低、少废话",
+        "forbidden_drift": [
+          "禁油腻霸总",
+          "禁耳后痣消失",
+          "禁一见面失智告白"
+        ]
+      }
+    },
+    {
+      "characterKey": "SC",
+      "displayName": "沈澈",
+      "permanentIdentity": {
+        "role": "二师兄·墨符峰",
+        "face_lock": "薄唇、眼尾狭长、指尖淡墨",
+        "costume_default": "墨灰符袍、空白符纸、朱砂小瓶"
+      }
+    },
+    {
+      "characterKey": "HY",
+      "displayName": "寒砚",
+      "permanentIdentity": {
+        "role": "霜栖峰老祖",
+        "face_lock": "银白长发、高冷、目光霜雾感",
+        "note": "高冷护短反差"
+      }
+    },
+    {
+      "characterKey": "ZLC",
+      "displayName": "赵临川",
+      "permanentIdentity": {
+        "role": "对立外门弟子",
+        "face_lock": "左眉烫疤",
+        "costume_default": "朱红镶边袍+火纹护腕"
+      }
+    },
+    {
+      "characterKey": "XW",
+      "displayName": "小雾",
+      "permanentIdentity": {
+        "role": "灵宠",
+        "look": "脖系浅蓝布条，常藏袖中"
+      }
+    }
+  ],
+  "seedKnowledge": [
+    {
+      "category": "RULE",
+      "title": "快兑现总则",
+      "statement": "首分钟必须出事或亮规则；禁止磨半天不兑现。",
+      "evidence": "首分钟必须出事或亮规则；禁止磨半天不兑现。",
+      "tier": "gold",
+      "trainability": "trainable",
+      "review_status": "approved",
+      "content_hash": "32b377922af3a0304be56b8c4d2ca7eb38bbee553162aa643c99f2c0174faeb2"
+    },
+    {
+      "category": "RULE",
+      "title": "团宠跨季结构",
+      "statement": "团宠长线=新地图新敌人 + 固定护短群像（师兄/老祖）。",
+      "evidence": "团宠长线=新地图新敌人 + 固定护短群像（师兄/老祖）。",
+      "tier": "gold",
+      "trainability": "trainable",
+      "review_status": "approved",
+      "content_hash": "9987e14ab69fa7876a1ee1888ebce9a5cc1ef9819503ad381f8d58c87107a7cf"
+    },
+    {
+      "category": "CONTINUITY",
+      "title": "借响代价锁",
+      "statement": "借响须有代价：短眩晕或灵力乱，禁止无代价开挂。",
+      "evidence": "借响须有代价：短眩晕或灵力乱，禁止无代价开挂。",
+      "tier": "gold",
+      "trainability": "trainable",
+      "review_status": "approved",
+      "content_hash": "eb81acda89ca0b1305cf3339668a91276b5d0d2de9af22a33024ef1252f07861"
+    },
+    {
+      "category": "SHOT",
+      "title": "三轨加速",
+      "statement": "心声/表情字/Q版是漫剧加速器，关键节拍应三轨齐全。",
+      "evidence": "心声/表情字/Q版是漫剧加速器，关键节拍应三轨齐全。",
+      "tier": "gold",
+      "trainability": "trainable",
+      "review_status": "approved",
+      "content_hash": "c4778ceb799015bfcb168acd12bc894b8b047bfff9e05daa032dbbea1ddf464c"
+    },
+    {
+      "category": "CONTINUITY",
+      "title": "女主人设锁",
+      "statement": "云小棠核心是「跟上」与被护短，禁止改成无羁绊孤傲女主。",
+      "evidence": "云小棠核心是「跟上」与被护短，禁止改成无羁绊孤傲女主。",
+      "tier": "gold",
+      "trainability": "trainable",
+      "review_status": "approved",
+      "content_hash": "595d6a763115ba35a35a6de0d76e7835ca5d9815b49cdf2a4ccb023cda56e309"
+    }
+  ],
+  "latestEpisode": 17,
+  "latestEpisodeTitle": "霜栖旧禁·人佩同迁",
+  "updatedAt": "2026-09-10T12:59:26.495Z"
+}

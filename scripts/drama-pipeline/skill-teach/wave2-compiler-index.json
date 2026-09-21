@@ -1,0 +1,513 @@
+{
+  "at": "2026-09-18T08:42+08",
+  "purpose": "扩展八步编译器教具：优先 storyboard / prompts / video director / image-to-video，供 Twenty Watts compilePrompts 接线",
+  "n": 34,
+  "items": [
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/videoagent-director/SKILL.md",
+      "title": "videoagent-director",
+      "chars": 4755,
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/videoagent-video-studio/SKILL.md",
+      "title": "videoagent-video-studio",
+      "chars": 5785,
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/image-to-video/SKILL.md",
+      "title": "image-to-video",
+      "chars": 4595,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/seedance-2.0-prompter/SKILL.md",
+      "title": "seedance-2.0-prompter",
+      "chars": 2117,
+      "drama_steps": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/veo-3.2-prompter/SKILL.md",
+      "title": "veo-3.2-prompter",
+      "chars": 3499,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/text-to-video/SKILL.md",
+      "title": "text-to-video",
+      "chars": 4714,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/ai-video-generation/SKILL.md",
+      "title": "ai-video-generation",
+      "chars": 4612,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/video-ad/SKILL.md",
+      "title": "video-ad",
+      "chars": 4569,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/explainer-video/SKILL.md",
+      "title": "explainer-video",
+      "chars": 4570,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/product-video/SKILL.md",
+      "title": "product-video",
+      "chars": 4583,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/youtube-short-maker/SKILL.md",
+      "title": "youtube-short-maker",
+      "chars": 4591,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/tiktok-video-ad/SKILL.md",
+      "title": "tiktok-video-ad",
+      "chars": 4570,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/launch-video/SKILL.md",
+      "title": "launch-video",
+      "chars": 4667,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/make-a-video/SKILL.md",
+      "title": "make-a-video",
+      "chars": 4571,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/startup-video/SKILL.md",
+      "title": "startup-video",
+      "chars": 4646,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/founder-video/SKILL.md",
+      "title": "founder-video",
+      "chars": 4671,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/saas-video/SKILL.md",
+      "title": "saas-video",
+      "chars": 4621,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/videoagent-image-studio/SKILL.md",
+      "title": "videoagent-image-studio",
+      "chars": 6115,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/videoagent-audio-studio/SKILL.md",
+      "title": "videoagent-audio-studio",
+      "chars": 6131,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/pexo-skills/skills/pexo-agent/SKILL.md",
+      "title": "pexo-agent",
+      "chars": 19007,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/imagine-skill/skills/imagine-prompt/SKILL.md",
+      "title": "imagine-prompt",
+      "chars": 2396,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/imagine-skill/skills/imagine/SKILL.md",
+      "title": "imagine",
+      "chars": 2023,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/imagine-skill/skills/imagine-create/SKILL.md",
+      "title": "imagine-create",
+      "chars": 3892,
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/imagine-skill/skills/imagine-models/SKILL.md",
+      "title": "imagine-models",
+      "chars": 2439,
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/imagine-skill/skills/imagine-tasks/SKILL.md",
+      "title": "imagine-tasks",
+      "chars": 1855,
+      "drama_steps": [
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/comfyui-agent-skill/SKILL.md",
+      "title": "comfyui-agent-skill-mie",
+      "chars": 12915,
+      "drama_steps": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/shared/seedance/SKILL.md",
+      "title": "seedance",
+      "chars": 8019,
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/shared/comfyui/SKILL.md",
+      "title": "comfyui",
+      "chars": 48660,
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/shared/krea/SKILL.md",
+      "title": "krea",
+      "chars": 10879,
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/shared/minimax-h3/SKILL.md",
+      "title": "minimax-h3",
+      "chars": 9396,
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/claude-code/skills/seedance/SKILL.md",
+      "title": "seedance",
+      "chars": 8019,
+      "drama_steps": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/claude-code/skills/comfyui/SKILL.md",
+      "title": "comfyui",
+      "chars": 48660,
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/claude-code/skills/krea/SKILL.md",
+      "title": "krea",
+      "chars": 10879,
+      "drama_steps": [
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "wave2-media-slim",
+      "path": "wave2-slim/ComfyUI-Agent-Kit/claude-code/skills/minimax-h3/SKILL.md",
+      "title": "minimax-h3",
+      "chars": 9396,
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    }
+  ],
+  "compiler_hooks": {
+    "step5": "shot-to-clip production routes: image-to-video, text-to-video, product/ad/explainer templates",
+    "step6": "director/studio continuity and image/reference handling",
+    "step7": "provider prompt templates from Seedance 2.0, Veo 3.2, Pexo, Imagine, and ComfyUI",
+    "step8": "assemble-plan ready=false without keys; no external generation or billing"
+  }
+}

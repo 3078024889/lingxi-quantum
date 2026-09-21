@@ -1,0 +1,15 @@
+{
+  "id": "SK-hf-cloud-python-env-setup",
+  "title": "hf-cloud-python-env-setup",
+  "rel": "wave2/skills/skills/hf-cloud-python-env-setup/SKILL.md",
+  "wave": "wave1",
+  "chars": 6057,
+  "sha16": "a5d03a52fdd4eea0",
+  "drama_steps": [
+    1,
+    4,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

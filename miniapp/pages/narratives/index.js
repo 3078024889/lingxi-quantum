@@ -23,13 +23,13 @@ Page({
     return {
       title: '灵犀场 · 多维叙事',
       path: '/pages/narratives/index',
-      imageUrl: 'https://lingxifield.cn/og-sasi-20260908.png',
+      imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
     }
   },
   onShareTimeline() {
     return {
       title: '灵犀场 · 多维叙事',
-      imageUrl: 'https://lingxifield.cn/og-sasi-20260908.png',
+      imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
     }
   },
 })

@@ -1,0 +1,19 @@
+{
+  "id": "SK-short-drama-knowhow",
+  "title": "short-drama-knowhow",
+  "rel": "drama-skills/maintainers/skills/short-drama-knowhow/SKILL.md",
+  "wave": "wave1",
+  "chars": 3424,
+  "sha16": "dcbda81a7fc1df02",
+  "drama_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

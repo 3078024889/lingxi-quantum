@@ -3,7 +3,7 @@ import "./globals.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 
 const SITE = "https://lingxifield.cn";
-const SHARE_IMAGE = `${SITE}/og-sasi-20260908.png`;
+const SHARE_IMAGE = `${SITE}/og-sasi-20260920.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -30,12 +30,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "灵犀场 SASI · LINGXIFIELD",
-    title: "灵犀场 SASI｜AI短剧制作、视频生成、AI编程、网站构建部署与意识显化",
+    title: "灵犀场 SASI｜一念即达，让想象力成为生产力",
     description:
       "AI短剧、故事板、配音、视频生成、AI编程与网站部署汇入同一座双语数字空间，并连接意识显化与场域精测。",
     url: SITE,
     images: [
-      { url: SHARE_IMAGE, width: 1672, height: 941, alt: "灵犀场 SASI · 一念成片，一念显化" },
+      { url: SHARE_IMAGE, width: 1672, height: 941, alt: "灵犀场 SASI · 一念即达 · 让想象力成为生产力" },
     ],
   },
   twitter: {
@@ -104,20 +104,44 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500;600&family=Inter:wght@300;400;500&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap"
-          rel="stylesheet"
-        />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
-      </head>
-      <body className="font-body antialiased">
-        <MiniEmbedMode />
-        <div className="grain" aria-hidden="true" />
-        <div className="lx-site-content">{children}</div>
-      </body>
-    </html>
-  );
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossOrigin="anonymous"
+  />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500;600&family=Inter:wght@300;400;500&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065"
+    crossOrigin="anonymous"
+  />
+
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+      __html: JSON.stringify(orgJsonLd),
+    }}
+  />
+
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+      __html: JSON.stringify(siteJsonLd),
+    }}
+  />
+</head>
+
+<body className="font-body antialiased">
+  <MiniEmbedMode />
+  <div className="grain" aria-hidden="true" />
+  <div className="lx-site-content">{children}</div>
+</body>
+</html>
+);
 }

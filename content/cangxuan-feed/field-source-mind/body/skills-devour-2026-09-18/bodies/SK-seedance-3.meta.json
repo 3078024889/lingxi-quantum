@@ -1,0 +1,15 @@
+{
+  "id": "SK-seedance-3",
+  "title": "seedance",
+  "rel": "ComfyUI-Agent-Kit/shared/seedance/SKILL.md",
+  "wave": "wave2-slim",
+  "chars": 8019,
+  "sha16": "0f0a8b58386dd3c4",
+  "drama_steps": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

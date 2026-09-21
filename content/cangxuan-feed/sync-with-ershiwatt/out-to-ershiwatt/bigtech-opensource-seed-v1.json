@@ -1,0 +1,45 @@
+{
+  "version": "v1",
+  "updated": "2026-09-10",
+  "note": "可合法学习的公开代码仓；≠ 各家闭源大模型整脑；≠ 用户私信/全站内容",
+  "orgs": [
+    {
+      "name": "OpenAI",
+      "github_org": "https://github.com/openai",
+      "examples": [
+        "https://github.com/openai/whisper",
+        "https://github.com/openai/tiktoken",
+        "https://github.com/openai/openai-python",
+        "https://github.com/openai/openai-cookbook",
+        "https://github.com/openai/gpt-oss",
+        "https://github.com/openai/codex"
+      ],
+      "not_open": ["ChatGPT/GPT 闭源权重与完整训练数据"]
+    },
+    {
+      "name": "xAI / Grok",
+      "github_org": "https://github.com/xai-org",
+      "examples": [
+        "https://github.com/xai-org/grok-build",
+        "https://github.com/xai-org/x-algorithm"
+      ],
+      "not_open": ["Grok 对话大模型完整闭源权重（以当时公开事实为准）"]
+    },
+    {
+      "name": "X (Twitter)",
+      "examples": [
+        "https://github.com/xai-org/x-algorithm",
+        "https://github.com/twitter/the-algorithm"
+      ],
+      "not_open": ["用户帖文全库、私信、完整生产安全流水线未必全开"]
+    },
+    {
+      "name": "Telegram",
+      "examples": [
+        "https://github.com/tdlib/td",
+        "https://github.com/telegramdesktop/tdesktop"
+      ],
+      "not_open": ["全站聊天内容、云端用户数据"]
+    }
+  ]
+}

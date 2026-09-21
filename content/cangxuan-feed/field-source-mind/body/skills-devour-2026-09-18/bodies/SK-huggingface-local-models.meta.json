@@ -1,0 +1,14 @@
+{
+  "id": "SK-huggingface-local-models",
+  "title": "huggingface-local-models",
+  "rel": "wave2/skills/skills/huggingface-local-models/SKILL.md",
+  "wave": "wave1",
+  "chars": 3502,
+  "sha16": "3ca8dd3a68860362",
+  "drama_steps": [
+    5,
+    6,
+    7
+  ],
+  "status": "DUAL_WRITTEN"
+}

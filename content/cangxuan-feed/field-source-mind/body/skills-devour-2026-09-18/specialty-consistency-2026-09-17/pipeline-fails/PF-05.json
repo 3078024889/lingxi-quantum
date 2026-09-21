@@ -1,0 +1,7 @@
+{
+  "id": "PF-05",
+  "step": 3,
+  "type": "scene_board_teleport",
+  "desc": "场景板地点突变无场记",
+  "expect": "报场景冲突"
+}

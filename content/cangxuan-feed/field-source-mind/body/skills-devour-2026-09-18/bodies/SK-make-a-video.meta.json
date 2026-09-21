@@ -1,0 +1,17 @@
+{
+  "id": "SK-make-a-video",
+  "title": "make-a-video",
+  "rel": "wave2/pexo-skills/skills/make-a-video/SKILL.md",
+  "wave": "wave1",
+  "chars": 4571,
+  "sha16": "61216f1c6aaafab1",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

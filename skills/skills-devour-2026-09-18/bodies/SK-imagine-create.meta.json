@@ -1,0 +1,15 @@
+{
+  "id": "SK-imagine-create",
+  "title": "imagine-create",
+  "rel": "wave2/imagine-skill/skills/imagine-create/SKILL.md",
+  "wave": "wave1",
+  "chars": 3892,
+  "sha16": "9f020c3db568acd1",
+  "drama_steps": [
+    5,
+    6,
+    7,
+    8
+  ],
+  "status": "DUAL_WRITTEN"
+}

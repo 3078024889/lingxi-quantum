@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { SASI_MAX_UPLOAD_BYTES } from "@/lib/sasi/upload-policy";
+import { uploadSasiAsset } from "@/lib/sasi/upload-client";
 import Image from "next/image";
 import {
   type ChangeEvent,
@@ -18,6 +20,7 @@ import {
   SASI_SKILLS,
   type SasiQuality,
 } from "@/lib/sasi/catalog";
+import { SasiComposer } from "./SasiComposer";
 import { SasiProjectMemory } from "./SasiProjectMemory";
 import { SASI_UPDATES } from "@/lib/sasi/updates";
 import { SasiProductionAccount, SasiProjectProduction } from "@/app/sasi/SasiProductionPanels";
@@ -56,7 +59,7 @@ type SasiProjectDetail = {
   deliveries: { id: string; jobId: string; mimeType: string; byteSize: number; aiGenerated: boolean; createdAt: string }[];
 };
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024;
+
 const formatRmb = (fen: number) => `¥${(fen / 100).toFixed(2)}`;
 const ACCEPTED_EXTENSIONS = new Set([
   "txt", "md", "docx", "pdf", "csv", "json", "yaml", "yml",
@@ -66,15 +69,11 @@ const ACCEPTED_EXTENSIONS = new Set([
 ]);
 
 const studioNav: { id: View; zh: string; en: string; glyph: string }[] = [
-  { id: "home", zh: "SASI 首页", en: "SASI Home", glyph: "✦" },
-  { id: "director", zh: "苍玄 AI 导演", en: "CangXuan Director", glyph: "◈" },
-  { id: "drama", zh: "AI 短剧工坊", en: "AI Drama Studio", glyph: "▶" },
-  { id: "code", zh: "编程构建部署", en: "Build & Deploy", glyph: "</>" },
-  { id: "skills", zh: "Skills", en: "Skills", glyph: "◇" },
-  { id: "connections", zh: "模型与 API", en: "Models & API", glyph: "⌁" },
-  { id: "billing", zh: "余额与用量", en: "Balance & Usage", glyph: "◎" },
-  { id: "works", zh: "我的作品库", en: "My Works", glyph: "▣" },
-  { id: "account", zh: "我的账户", en: "My Account", glyph: "○" },
+  { id: "home", zh: "新建创作", en: "New project", glyph: "＋" },
+  { id: "works", zh: "我的项目", en: "My projects", glyph: "▣" },
+  { id: "skills", zh: "创作 Skills", en: "Skills", glyph: "◇" },
+  { id: "connections", zh: "连接与 API", en: "Connections", glyph: "⌁" },
+  { id: "billing", zh: "充值与账单", en: "Balance & billing", glyph: "◎" },
 ];
 
 const fieldNav = [
@@ -127,6 +126,7 @@ function UploadHub({
   onRemove,
   onNotice,
   onOpenConnections,
+  maxFileBytes,
 }: {
   lang: Lang;
   files: StagedFile[];
@@ -134,6 +134,7 @@ function UploadHub({
   onRemove: (id: string) => void;
   onNotice: (message: string) => void;
   onOpenConnections?: () => void;
+  maxFileBytes: number;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -168,9 +169,8 @@ function UploadHub({
       >
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" onClick={() => inputRef.current?.click()} className="rounded-full border border-current/15 px-3 py-2 text-xs font-medium">＋ {copy(lang, "添加附件", "Add files")}</button>
-          <button type="button" onClick={() => onNotice(copy(lang, "项目资产已进入私有隔离与索引体系；请先建立或打开项目查看归属资产。", "Project assets now use private quarantine and indexing; create or open a project to review its owned assets."))} className="rounded-full border border-current/15 px-3 py-2 text-xs opacity-70">{copy(lang, "我的资产", "My Assets")}</button>
           <button type="button" onClick={() => onOpenConnections ? onOpenConnections() : onNotice(copy(lang,"请从左侧能力中枢打开 GitHub 与部署连接指引。","Open Capability Center from the sidebar for GitHub and deployment setup."))} className="rounded-full border border-current/15 px-3 py-2 text-xs opacity-70">GitHub · {copy(lang,"连接指引","Setup")}</button>
-          <span className="text-xs opacity-45">{copy(lang, "拖拽、多文件或粘贴图片 · 单文件最大 100MB", "Drag, multi-select or paste images · 100MB per file")}</span>
+          <span className="text-xs opacity-45">{copy(lang, `拖拽或粘贴图片 · 当前单文件上限 ${formatBytes(maxFileBytes)}`, `Drag or paste images · Current file limit ${formatBytes(maxFileBytes)}`)}</span>
         </div>
         {files.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2">
@@ -183,12 +183,13 @@ function UploadHub({
           </div>
         )}
       </div>
-      <p className="mt-2 text-[11px] leading-5 opacity-45">{copy(lang, "文件会先在本次浏览器任务中暂存；建立项目后才进入私有隔离通道，完成归属校验与安全索引。任何代码都不会被自动执行。", "Files are staged in this browser task first. Only after project creation do they enter a private quarantine channel for ownership checks and safe indexing. Code is never auto-executed.")}</p>
+      <p className="mt-2 text-sm leading-6 opacity-60">{copy(lang, "文件会先在本次浏览器任务中暂存；建立项目后才进入私有隔离通道，完成归属校验与安全索引。任何代码都不会被自动执行。", "Files are staged in this browser task first. Only after project creation do they enter a private quarantine channel for ownership checks and safe indexing. Code is never auto-executed.")}</p>
     </div>
   );
 }
 
 function BuildDeployConsole({
+  maxFileBytes,
   lang,
   dark,
   accountEmail,
@@ -215,6 +216,7 @@ function BuildDeployConsole({
   removeFile: (id: string) => void;
   handlePaste: (event: ClipboardEvent<HTMLTextAreaElement>) => void;
   preparing: boolean;
+  maxFileBytes: number;
   prepareProject: () => void;
   projects: SasiProjectSummary[];
   openProject: (projectId: string) => void;
@@ -261,7 +263,7 @@ function BuildDeployConsole({
           <header><div><small>01 · BRIEF</small><h2>{copy(lang, "需求与任务", "Brief & tasks")}</h2></div><span>{hasInput ? copy(lang, "可以开始规划", "Ready to plan") : copy(lang, "先说清要解决什么", "Start with the problem")}</span></header>
           <textarea id="sasi-build-brief" value={brief} onChange={(event) => setBrief(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "例如：根据这张页面截图重做首页；保留已有登录和数据库；适配手机端；测试通过后提交，但部署前先让我确认。", "Example: Rebuild the homepage from this screenshot, preserve login and data, support mobile, test and commit, then ask before deployment.")} />
           <p className="sasi-build-guidance">{copy(lang, "写清用户、问题、必须保留的内容和完成标准，SASI 才能少走弯路。截图、报错、文档或代码可以直接附上。", "Name the user, problem, must-keep elements and acceptance criteria. Attach screenshots, errors, documents or code directly.")}</p>
-          <UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={removeFile} onNotice={setNotice} onOpenConnections={openConnections} />
+          <UploadHub maxFileBytes={maxFileBytes} lang={lang} files={files} onAdd={addFiles} onRemove={removeFile} onNotice={setNotice} onOpenConnections={openConnections} />
           <button type="button" disabled={preparing} onClick={prepareProject} className="sasi-build-primary">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并生成执行图谱", "Create project & execution graph")}</button>
           {!accountEmail && <p className="sasi-build-boundary">{copy(lang, "建立可持续保存的项目需要先登录；当前输入与附件只保留在本次浏览器任务中。", "Sign in to persist a project. The current brief and files remain in this browser task only.")}</p>}
           <div className="sasi-build-plan"><h3>{copy(lang, "交付路径", "Delivery path")}</h3>{deliverySteps.map(([number, title, note, status]) => <article key={number}><i>{number}</i><div><b>{title}</b><small>{note}</small></div><em>{status}</em></article>)}</div>
@@ -353,21 +355,28 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   const [theme, setTheme] = useState<Theme>("light");
   const [themeReady, setThemeReady] = useState(false);
   const [view, setViewState] = useState<View>("home");
+  const [creationKind, setCreationKind] = useState<"drama" | "code">("drama");
   function setView(next: View) {
+    if (next === "director" || next === "drama" || next === "code") { setCreationKind(next === "code" ? "code" : "drama"); next = "home"; }
     setViewState(next);
     const url = new URL(window.location.href);
     url.searchParams.set("view", next);
     if (next !== "project") url.searchParams.delete("projectId");
-    if (next !== "drama") url.searchParams.delete("room");
+    url.hash = next === "billing" ? "topup" : "";
+    setAccountMenuOpen(false);
+    url.searchParams.delete("room");
     if (url.href !== window.location.href) window.history.pushState({}, "", url);
   }
   const [mobileNav, setMobileNav] = useState(false);
   const [homeBrief, setHomeBrief] = useState("");
   const [headerSearch, setHeaderSearch] = useState("");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [brief, setBrief] = useState("");
   const [script, setScript] = useState("");
   const [files, setFiles] = useState<StagedFile[]>([]);
+  const [maxFileBytes, setMaxFileBytes] = useState(50 * 1024 * 1024);
+  useEffect(() => { const controller = new AbortController(); void fetch("/api/sasi/assets/limits", { signal: controller.signal, cache: "no-store" }).then(r => r.ok ? r.json() : null).then(data => { if (Number.isSafeInteger(data?.maxFileBytes) && data.maxFileBytes > 0) setMaxFileBytes(Math.min(data.maxFileBytes, SASI_MAX_UPLOAD_BYTES)); }).catch(() => {}); return () => controller.abort(); }, []);
   const [seconds, setSeconds] = useState(30);
   const [quality, setQuality] = useState<SasiQuality>("fast");
   const [budget, setBudget] = useState(30);
@@ -381,7 +390,8 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     const search = new URLSearchParams(window.location.search);
     const requestedView = search.get("view");
     const requestedRoom = search.get("room");
-    const routeView: Record<string, View> = { home: "home", director: "director", drama: "drama", build: "code", code: "code", connections: "connections", skills: "skills", capabilities: "connections", models: "connections", billing: "billing", works: "works", account: "account", project: "project" };
+    const routeView: Record<string, View> = { home: "home", director: "home", drama: "home", build: "home", code: "home", connections: "connections", skills: "skills", capabilities: "connections", models: "connections", billing: "billing", works: "works", account: "account", project: "project" };
+    if (requestedView === "build" || requestedView === "code") setCreationKind("code");
     if (requestedView && routeView[requestedView]) setViewState(routeView[requestedView]);
     if (requestedRoom === "overview" || requestedRoom === "continuity" || requestedRoom === "shots") setDramaTab(requestedRoom);
     const restoreView = () => {
@@ -470,14 +480,14 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     const rejected: string[] = [];
     for (const file of incoming) {
       const extension = extensionOf(file.name);
-      if (!ACCEPTED_EXTENSIONS.has(extension) || file.size > MAX_FILE_SIZE) {
+      if (!ACCEPTED_EXTENSIONS.has(extension) || file.size > maxFileBytes) {
         rejected.push(file.name);
         continue;
       }
       accepted.push({ id: `${file.name}-${file.size}-${file.lastModified}-${Math.random()}`, name: file.name, size: file.size, kind: classifyFile(file.name), source: file });
     }
     setFiles((current) => [...current, ...accepted].slice(0, 20));
-    if (rejected.length) setNotice(copy(lang, `未加入：${rejected.join("、")}。请检查格式或 100MB 限制。`, `Not added: ${rejected.join(", ")}. Check format or the 100MB limit.`));
+    if (rejected.length) setNotice(copy(lang, `未加入：${rejected.join("、")}。请检查格式或 ${formatBytes(maxFileBytes)} 限制。`, `Not added: ${rejected.join(", ")}. Check format or the ${formatBytes(maxFileBytes)} limit.`));
   }
 
   function handlePaste(event: ClipboardEvent<HTMLTextAreaElement>) {
@@ -500,8 +510,8 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     setNotice(copy(lang, route === "code" ? "已进入构建工作流，附件会随任务继续。" : "已进入短剧工作流，附件会随项目继续。", route === "code" ? "Build workflow selected; attachments stay with this task." : "Drama workflow selected; attachments stay with this project."));
   }
 
-  async function prepare(kind: "code" | "drama") {
-    const input = kind === "code" ? brief.trim() : script.trim();
+  async function prepare(kind: "code" | "drama", submittedBrief?: string) {
+    const input = submittedBrief?.trim() ?? (kind === "code" ? brief.trim() : script.trim());
     if (input.length < (kind === "code" ? 12 : 20) && files.length === 0) {
       setNotice(copy(lang, "请写下需求或添加附件。", "Add a brief or at least one attachment."));
       return;
@@ -541,17 +551,16 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
       setProjects((current) => [result.project, ...current.filter((project) => project.id !== result.project.id)].slice(0, 30));
       let uploadedAssets = 0;
       let reviewAssets = 0;
+      const failedAssets: string[] = [];
       if (files.length) {
-        const { createClient: createBrowserClient } = await import("@/lib/supabase/client");
-        const storage = createBrowserClient().storage;
+
         for (const file of files) {
           const ticketResponse = await fetch("/api/sasi/assets/prepare", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ projectId: result.project.id, name: file.name, size: file.size, mime: file.source.type || "application/octet-stream", kind: file.kind }) });
-          if (!ticketResponse.ok) continue;
+          if (!ticketResponse.ok) { failedAssets.push(file.name); continue; }
           const ticket = await ticketResponse.json();
-          const { error: uploadError } = await storage.from(ticket.bucket).uploadToSignedUrl(ticket.path, ticket.token, file.source, { contentType: ticket.contentType });
-          if (uploadError) continue;
+          try { await uploadSasiAsset(file.source, ticket, percent => setNotice(copy(lang, `正在上传 ${file.name} · ${percent}%`, `Uploading ${file.name} · ${percent}%`))); } catch { failedAssets.push(file.name); continue; }
           const inspectResponse = await fetch(`/api/sasi/assets/${ticket.assetId}/inspect`, { method: "POST" });
-          if (!inspectResponse.ok) continue;
+          if (!inspectResponse.ok) { failedAssets.push(file.name); continue; }
           const inspection = await inspectResponse.json();
           uploadedAssets += 1;
           if (inspection.status === "external_scan_required") reviewAssets += 1;
@@ -566,6 +575,9 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
       } else {
         setNotice(copy(lang, `项目 ${result.project.id.slice(0, 8)} 与 ${result.project.nodeCount} 个构建节点已保存。连接仓库后，代码写入和部署仍会分别请求授权。`, `Project ${result.project.id.slice(0, 8)} and ${result.project.nodeCount} build nodes are saved. Repository writes and deployment still require separate authorization.`));
       }
+      await openProject(result.project.id);
+      setFiles(current => current.filter(file => failedAssets.includes(file.name)));
+      setNotice(failedAssets.length ? copy(lang, `项目已保存，但这些附件未上传成功：${failedAssets.join("、")}。文件仍保留在当前页面。`, `Project saved. Upload failed: ${failedAssets.join(", ")}. Files are retained.`) : copy(lang, `项目已保存，已接收 ${uploadedAssets} 份附件${reviewAssets ? "，其中部分资料等待解析" : ""}。`, `Project saved with ${uploadedAssets} uploaded assets.`));
     } catch {
       setNotice(copy(lang, "项目建立失败，当前请求可安全重试。", "Project creation failed; this request can be retried safely."));
     } finally {
@@ -590,19 +602,19 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
         <nav className="space-y-1">
           {studioNav.map((item) => (
             <button key={item.id} onClick={() => { setView(item.id); setMobileNav(false); }} className={`flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left text-sm transition ${view === item.id ? (dark ? "border-[#668cff]/25 bg-[#27365d] text-white shadow-[inset_2px_0_#72d7ff]" : "border-[#6958d8]/15 bg-[#e7e9ff] text-[#171717] shadow-[inset_2px_0_#6958d8]") : "border-transparent hover:bg-current/5"}`}>
-              <span className="w-7 text-center font-mono text-xs">{item.glyph}</span><span><b className="block text-[15px] font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-1 block text-[11px] font-normal opacity-55">{item.en}</small></span>
+              <span className="w-7 text-center font-mono text-xs">{item.glyph}</span><span><b className="block text-[17px] font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-1 block text-[11px] font-normal opacity-55">{item.en}</small></span>
             </button>
           ))}
         </nav>
 
-        </details><details className="lx-nav-group"><summary>{copy(lang, "灵犀场 · 探索与实践", "Lingxi Field")}</summary>
+        </details><details className="lx-nav-group"><summary>{copy(lang, "灵犀场 · 意识显化", "Lingxi Field")}</summary>
         <nav className="space-y-1">
           {fieldNav.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm opacity-75 transition hover:bg-current/5 hover:opacity-100"><span className="w-7 text-center">{item.glyph}</span><span><b className="block text-[15px] font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-1 block text-[11px] font-normal opacity-55">{item.en}</small></span></Link>)}
         </nav>
 
         </details>
         <details className="lx-nav-group"><summary>灵犀场 · 小工具</summary><Link className="block rounded-xl px-3 py-3 text-sm" href="/tools">图片、文件与日常工具 →</Link></details>
-        <details className="lx-nav-group"><summary>灵犀场 · AI知识库</summary>{[["/ai-knowledge", "AI知识库"], ["/ai-learning", "AI学习助手"], ["/ai-research", "AI科研助手"]].map(([href, title]) => <Link key={href} className="block rounded-xl px-3 py-3 text-sm" href={href}>{title} →</Link>)}</details>
+        <details className="lx-nav-group"><summary>灵犀场 · 书本智能体</summary>{[["/ai-knowledge", "让书本活起来"], ["/ai-learning", "AI学习助手"], ["/ai-research", "AI科研助手"]].map(([href, title]) => <Link key={href} className="block rounded-xl px-3 py-3 text-sm" href={href}>{title} →</Link>)}</details>
         <div className="mt-auto space-y-3 border-t border-current/10 pt-4">
           <div className="flex gap-2"><button onClick={() => setLang(lang === "zh" ? "en" : "zh")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{lang === "zh" ? "EN" : "中文"}</button><button onClick={() => setTheme(dark ? "light" : "dark")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{dark ? "☀ Light" : "☾ Dark"}</button></div>
           <Link href={accountEmail ? "/account" : "/account?next=%2Fsasi"} className="block rounded-xl border border-current/15 px-3 py-3"><p className="truncate text-sm">{accountEmail ?? copy(lang, "连接场域账户", "Connect account")}</p><p className="mt-1 text-[11px] leading-5 opacity-55">{accountEmail ? copy(lang, "设置 · 切换 · 退出", "Settings · Switch · Sign out") : copy(lang, "登录后同步项目、作品与人民币余额", "Sign in to sync projects, works and RMB balance")}</p></Link>
@@ -611,40 +623,10 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
       <main className="min-h-screen px-4 pb-16 pt-20 lg:ml-[260px] lg:px-5 lg:pt-3">
         <a href="/?view=billing#topup" className="sasi-recharge-ribbon"><span aria-hidden="true">✦</span><span className="sasi-recharge-window"><span>{copy(lang,"让下一个想法开始生长 · 充值创作余额 →","Make room for your next idea · Top up →")}</span></span></a>
-        <header className="relative mx-auto flex max-w-[1600px] items-center gap-3 border-b border-current/10 pb-3"><label className="hidden min-w-0 flex-1 items-center rounded-full border border-current/15 px-5 py-2.5 md:flex"><span className="mr-3 opacity-45">⌕</span><input value={headerSearch} onChange={(event)=>setHeaderSearch(event.target.value)} onKeyDown={(event)=>{if(event.key==="Enter"&&headerSearch.trim()){setHomeBrief(headerSearch.trim());setView("home");}}} placeholder={copy(lang,"搜索作品、功能、教程或输入你的想法…","Search works, features, guides or enter an idea…")} className="w-full bg-transparent text-sm outline-none"/></label><button onClick={()=>setView("home")} className="rounded-full border border-[#7994ff]/60 px-5 py-2 text-sm font-semibold">＋ {copy(lang,"创作","Create")}</button><button aria-label={copy(lang,"查看通知","View notifications")} aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(value=>!value)} className="relative grid h-10 w-10 place-items-center rounded-full border border-current/10"><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><i className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#ff566d] ring-2 ring-[var(--sasi-notice-ring)]"/></button><button onClick={() => setView("account")} className="flex items-center gap-2 rounded-full px-2 py-1 text-sm"><span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-[#68d8ff] to-[#7657ff] text-white">◎</span><span className="hidden sm:block">{copy(lang,"探索更大的可能","Explore more")}</span></button>{notificationsOpen&&<aside className={`absolute right-12 top-12 z-30 w-[min(380px,calc(100vw-32px))] rounded-2xl border p-4 shadow-2xl ${panel}`}><div className="flex items-center justify-between"><h2 className="font-semibold">{copy(lang,"公告与更新","News & updates")}</h2><button aria-label={copy(lang,"关闭通知","Close notifications")} onClick={()=>setNotificationsOpen(false)} className="grid h-7 w-7 place-items-center rounded-full border border-current/10 opacity-55">×</button></div><div className="mt-3 space-y-2">{SASI_UPDATES.map(item=><a href={item.href} key={item.id} className="block rounded-xl border border-current/10 p-3"><p className="text-sm font-medium">{copy(lang,item.zh,item.en)}</p><p className="mt-1 text-xs opacity-60">{copy(lang,item.detailZh,item.detailEn)}</p><time className="mt-2 block text-xs text-[#6b75ff]">{item.date}</time></a>)}</div></aside>}</header>
+        <header className="relative mx-auto flex max-w-[1600px] items-center gap-3 border-b border-current/10 pb-3"><label className="hidden min-w-0 flex-1 items-center rounded-full border border-current/15 px-5 py-2.5 md:flex"><span className="mr-3 opacity-45">⌕</span><input value={headerSearch} onChange={(event)=>setHeaderSearch(event.target.value)} onKeyDown={(event)=>{if(event.key==="Enter"&&headerSearch.trim()){setHomeBrief(headerSearch.trim());setView("home");}}} placeholder={copy(lang,"搜索作品、功能、教程或输入你的想法…","Search works, features, guides or enter an idea…")} className="w-full bg-transparent text-sm outline-none"/></label><button onClick={()=>setView("home")} className="rounded-full border border-[#7994ff]/60 px-5 py-2 text-sm font-semibold">＋ {copy(lang,"创作","Create")}</button><button aria-label={copy(lang,"查看通知","View notifications")} aria-expanded={notificationsOpen} onClick={()=>setNotificationsOpen(value=>!value)} className="relative grid h-10 w-10 place-items-center rounded-full border border-current/10"><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><i className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#ff566d] ring-2 ring-[var(--sasi-notice-ring)]"/></button><button type="button" onClick={() => setView("billing")} className="sasi-header-topup">{copy(lang,"充值","Top up")}</button><div className="relative"><button type="button" aria-label={copy(lang,"账户菜单","Account menu")} aria-expanded={accountMenuOpen} onClick={() => setAccountMenuOpen(open => !open)} className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-[#68d8ff] to-[#7657ff] text-white">◎</button>{accountMenuOpen && <div className={`sasi-account-menu rounded-2xl border p-3 shadow-xl ${panel}`} onKeyDown={event => { if (event.key === "Escape") setAccountMenuOpen(false); }}><p>{accountEmail ?? copy(lang,"尚未登录","Not signed in")}</p><button type="button" onClick={() => setView("billing")}>{copy(lang,"充值创作余额","Top up creative balance")} ↗</button><button type="button" onClick={() => setView("account")}>{copy(lang,"我的账户","My account")}</button><button type="button" onClick={() => setAccountMenuOpen(false)}>{copy(lang,"关闭","Close")}</button></div>}</div>{notificationsOpen&&<aside className={`absolute right-12 top-12 z-30 w-[min(380px,calc(100vw-32px))] rounded-2xl border p-4 shadow-2xl ${panel}`}><div className="flex items-center justify-between"><h2 className="font-semibold">{copy(lang,"公告与更新","News & updates")}</h2><button aria-label={copy(lang,"关闭通知","Close notifications")} onClick={()=>setNotificationsOpen(false)} className="grid h-7 w-7 place-items-center rounded-full border border-current/10 opacity-55">×</button></div><div className="mt-3 space-y-2">{SASI_UPDATES.map(item=><a href={item.href} key={item.id} className="block rounded-xl border border-current/10 p-3"><p className="text-sm font-medium">{copy(lang,item.zh,item.en)}</p><p className="mt-1 text-xs opacity-60">{copy(lang,item.detailZh,item.detailEn)}</p><time className="mt-2 block text-xs text-[#6b75ff]">{item.date}</time></a>)}</div></aside>}</header>
 
         <div className="mx-auto mt-3 max-w-[1600px]">
-          {view === "home" && (
-            <section className="sasi-home-v4">
-              <div className="sasi-home-v4-hero">
-                <p className="sasi-home-v4-kicker">LINGXI FIELD · SASI</p>
-                <p className="sasi-home-v4-mark">SASI</p>
-                <h1>{copy(lang,"把想法，变成真实可用的作品","Turn ideas into work people can use")}</h1>
-                <p className="sasi-home-v4-lead">{copy(lang,"说出你要完成的作品。从故事、现有素材或产品需求开始，先形成方案，再确认本次预算。你的角色、资料和每次修改，留在同一个项目里继续。","One idea becomes a website, app, drama or film here. SASI carries it through understanding, direction, production, review and delivery while complexity stays behind the scenes.")}</p>
-                <div className="sasi-home-v4-features">{["理解你的目标","延续项目记忆","先报价再执行","按实际用量结算"].map(item=><span key={item}>◇ {item}</span>)}</div>
-                <div className="sasi-home-v4-command"><span>✦</span><input value={homeBrief} onChange={(event)=>setHomeBrief(event.target.value)} onKeyDown={(event)=>{if(event.key==="Enter")startFromHome();}} placeholder={copy(lang,"你想创造什么？例如：一个产品官网、一个 AI 应用、一部短剧、一支宣传视频……","What do you want to create—a product site, AI app, drama or campaign film?")}/><button onClick={()=>startFromHome()}>{copy(lang,"开始创作 →","Start creating →")}</button></div>
-                <div className="sasi-home-v4-chips">{[["制作短剧","drama"],["构建网站","code"],["生成视频","drama"],["导入剧本","drama"],["设计应用","code"],["创意策划","director"],["连接 API","connections"]].map(([label,target])=><button key={label} onClick={()=>target==="connections"?setView("connections"):target==="director"?setView("director"):startFromHome(target as "drama"|"code")}>{label}</button>)}</div>
-              </div>
-
-              <div className="sasi-start-paths" aria-label={copy(lang,"从你要完成的事开始","Start with your outcome")}>
-                {[
-                  {target:"director",number:"01",zh:"把故事变成拍摄方案",en:"Shape your story",note:"小说、剧本或一句灵感。先建立人物和世界，再拆成可修改的镜头。",noteEn:"Bring a script, novel or idea. Establish the cast and world, then shape editable shots.",action:"让苍玄理解故事",actionEn:"Shape my story"},
-                  {target:"drama",number:"02",zh:"制作一段影像",en:"Produce a video",note:"延续已有角色与素材，组织镜头任务。生成前确认预算，完成后回到作品库。",noteEn:"Continue with your cast and assets. Approve a budget before generation and keep results in your library.",action:"打开影像工作台",actionEn:"Open video workspace"},
-                  {target:"code",number:"03",zh:"构建一个网站或应用",en:"Build a digital product",note:"描述需求或带入现有代码，整理功能、实施步骤和交付标准。",noteEn:"Describe a product or bring existing code. Define features, implementation steps and acceptance criteria.",action:"展开我的需求",actionEn:"Explore my brief"}
-                ].map(item=><button key={item.target} className="sasi-start-path" onClick={()=>setView(item.target as View)}><span>{item.number}</span><h2>{copy(lang,item.zh,item.en)}</h2><p>{copy(lang,item.note,item.noteEn)}</p><strong>{copy(lang,item.action,item.actionEn)} →</strong></button>)}
-              </div>
-              <nav className="sasi-utility-links" aria-label="项目工具">
-                {[["works","继续我的作品","Continue my work"],["connections","连接模型与工具","Connect models & tools"],["skills","为项目添加 Skills","Add project Skills"],["billing","查看余额与任务账单","Balance & task history"]].map(([target,label,en])=><button key={target} onClick={()=>setView(target as View)}>{copy(lang,label,en)} <span>↗</span></button>)}
-              </nav>
-              <p className="sasi-task-contract">{copy(lang,"项目整理与规则方案可直接使用。云端付费任务先报价、确认后执行；自带 API 的模型费用由供应商向你结算。","Organize projects and rule-based plans without model charges. Paid cloud tasks require an approved quote; BYOK model charges are billed by your provider.")}</p>
-
-              <div className="sasi-home-v4-lower">
-                <section><header><h2>▣ {copy(lang,projects.length?"继续最近的项目":"从一个创作示例开始",projects.length?"Recent projects":"Start from an example")}</h2><button onClick={()=>setView("works")}>{copy(lang,"查看更多 →","View more →")}</button></header><div className="sasi-home-v4-recent">{(projects.length?projects.slice(0,4):[{id:"demo-1",kind:"drama" as const,title:"《她与星海》",currentVersion:1},{id:"demo-2",kind:"build" as const,title:"未来城市官网",currentVersion:1},{id:"demo-3",kind:"drama" as const,title:"品牌宣传片",currentVersion:1},{id:"demo-4",kind:"build" as const,title:"AI 旅行助手",currentVersion:1}]).map((project,index)=><button key={project.id} onClick={()=>project.id.startsWith("demo-")?setView(project.kind==="drama"?"drama":"code"):openProject(project.id)}><span className={`sasi-home-v4-recent-art recent-${index+1}`}/><b>{project.title}</b><small>{project.id.startsWith("demo-")?copy(lang,"示例模板 · 点击开始","Example · Start here"):project.kind==="drama"?copy(lang,"短剧 · 可继续创作","Drama · Continue"):copy(lang,"数字产品 · 可继续构建","Product · Continue")}</small></button>)}</div></section>
-                <section><header><h2>▣ {copy(lang,"创作流程","Creation flow")}</h2></header><ol className="sasi-home-v4-flow">{[["输入想法","描述你的需求"],["SASI 规划","生成方案与执行计划"],["AI 创作","逐步生成、随时调整"],["审校优化","检查质量与一致性"],["交付上线","导出作品与真实状态"]].map(([title,note],index)=><li key={title}><span>{index+1}</span><b>{title}</b><small>{note}</small></li>)}</ol></section>
-                <section><header><h2>▣ {copy(lang,"公告与更新","News & updates")}</h2></header><ul className="sasi-home-v4-news">{SASI_UPDATES.map(item=><li key={item.id}><a href={item.href}><b>{copy(lang,item.zh,item.en)}</b><small>{copy(lang,item.detailZh,item.detailEn)}</small></a><time dateTime={item.date}>{item.date.slice(5)}</time></li>)}</ul></section>
-              </div>
-            </section>
-          )}
+          {view === "home" && <SasiComposer kind={creationKind} setKind={setCreationKind} lang={lang} value={homeBrief} onChange={setHomeBrief} onPaste={handlePaste} busy={preparing} signedIn={Boolean(accountEmail)} onSubmit={kind => void prepare(kind, homeBrief)} onConnections={() => setView("connections")} onSkills={() => setView("skills")} projects={projects} onOpen={id => void openProject(id)} attachments={<UploadHub maxFileBytes={maxFileBytes} lang={lang} files={files} onAdd={addFiles} onRemove={id => setFiles(current => current.filter(file => file.id !== id))} onNotice={setNotice} onOpenConnections={() => setView("connections")} />} />}
 
           {view === "project" && projectDetail && (
             <section><button type="button" onClick={() => setView("home")} className="text-sm opacity-55 hover:opacity-100">← {copy(lang, "返回项目列表", "Back to projects")}</button><div className="mt-6 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[.2em] text-[#7657ff]">{projectDetail.project.kind === "drama" ? "SASI STORY GRAPH" : "SASI BUILD GRAPH"}</p><h1 className="mt-3 max-w-4xl text-4xl font-semibold">{projectDetail.project.title}</h1><p className="mt-3 font-mono text-xs opacity-35">{projectDetail.project.id}</p></div><span className="rounded-full border border-current/15 px-4 py-2 text-xs">{copy(lang, `版本 ${projectDetail.project.currentVersion}`, `Version ${projectDetail.project.currentVersion}`)}</span></div><div className="mt-8 grid gap-6 xl:grid-cols-[1fr_360px]"><div><h2 className="text-lg font-semibold">{copy(lang, "生产节点", "Production nodes")} <span className="ml-2 text-xs font-normal opacity-40">{projectDetail.dependencies.length} {copy(lang, "条依赖", "edges")}</span></h2><div className="mt-4 space-y-3">{projectDetail.nodes.map((node, index) => <article key={node.id} className={`flex items-center gap-4 rounded-2xl border p-4 ${panel}`}><span className="font-mono text-xs opacity-30">{String(index + 1).padStart(2, "0")}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{node.type.replaceAll("-", " ")}</p><p className="mt-1 text-[10px] uppercase tracking-[.15em] opacity-40">v{node.version}</p></div><span className={`rounded-full px-3 py-1 text-[10px] ${node.status === "ready" ? "bg-emerald-500/10 text-emerald-600" : "bg-current/5 opacity-55"}`}>{node.status}</span></article>)}</div></div><aside><h2 className="text-lg font-semibold">{copy(lang, "项目资产", "Project assets")}</h2><div className="mt-4 space-y-3">{projectDetail.assets.length === 0 ? <div className={`rounded-2xl border p-5 text-sm leading-6 opacity-50 ${panel}`}>{copy(lang, "尚无云端资产。下一次建立项目时添加文件，SASI 会将其写入隔离区并完成安全分流。", "No cloud assets yet. Add files when creating the next project; SASI will place them in quarantine and route them through inspection.")}</div> : projectDetail.assets.map((asset) => <article key={asset.id} className={`rounded-2xl border p-4 ${panel}`}><p className="truncate text-sm font-medium">{asset.name}</p><div className="mt-3 flex items-center justify-between text-[10px]"><span className="opacity-40">{formatBytes(asset.verifiedSize ?? asset.declaredSize)}</span><span className="uppercase tracking-[.12em] opacity-55">{asset.status.replaceAll("_", " ")}</span></div></article>)}</div></aside></div></section>
@@ -656,7 +638,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           {view === "director" && <CangXuanDirectorStudio lang={lang} dark={dark} accountEmail={accountEmail} onEnterProduction={(story) => { setScript(story); setView("drama"); }} />}
 
           {view === "code" && (
-            <BuildDeployConsole lang={lang} dark={dark} accountEmail={accountEmail} brief={brief} setBrief={setBrief} files={files} addFiles={addFiles} removeFile={(id) => setFiles((current) => current.filter((file) => file.id !== id))} handlePaste={handlePaste} preparing={preparing} prepareProject={() => prepare("code")} projects={projects} openProject={openProject} openConnections={() => setView("connections")} setNotice={setNotice} />
+            <BuildDeployConsole maxFileBytes={maxFileBytes} lang={lang} dark={dark} accountEmail={accountEmail} brief={brief} setBrief={setBrief} files={files} addFiles={addFiles} removeFile={(id) => setFiles((current) => current.filter((file) => file.id !== id))} handlePaste={handlePaste} preparing={preparing} prepareProject={() => prepare("code")} projects={projects} openProject={openProject} openConnections={() => setView("connections")} setNotice={setNotice} />
           )}
 
           {view === "drama" && (
@@ -674,7 +656,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
               {showDramaCreate && <>
               <div className="mt-6 flex flex-wrap gap-2">{[["我只有一个想法", "I have an idea"], ["我有完整剧本", "I have a script"], ["我有小说 / 故事", "I have a novel"], ["我已经有角色", "I have characters"], ["我已有故事板", "I have storyboards"], ["只生成一个镜头", "Generate one shot"]].map(([zh, en]) => <button key={zh} type="button" onClick={() => setScript(copy(lang, zh, en))} className="rounded-full border border-current/15 px-4 py-2 text-xs hover:border-[#e04d70]">{copy(lang, zh, en)}</button>)}</div>
               <div className="mt-6 grid gap-4 xl:grid-cols-[1fr_360px]">
-                <div className={`rounded-3xl border p-6 ${panel}`}><textarea value={script} onChange={(event) => setScript(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "写下创意，或导入剧本、小说、人物图、故事板、音频和已有视频……", "Write an idea or import a script, novel, character image, storyboard, audio or existing video…")} className="min-h-36 w-full resize-none bg-transparent text-base leading-7 outline-none"/><UploadHub lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} /><div className="mt-5 grid gap-3 sm:grid-cols-2"><label className="text-xs opacity-60">{copy(lang, "每集时长（5–600秒）", "Seconds per episode (5–600)")}<input type="number" min={5} max={600} value={seconds} onChange={(event) => setSeconds(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作集数", "Number of episodes")}<input type="number" min={1} max={200} value={episodes} onChange={(event) => setEpisodes(event.target.value)} placeholder={copy(lang, "填写本次制作集数", "Episodes for this project")} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "项目预算上限（人民币）", "Project budget cap (RMB)")}<input type="number" min={0} step="1" value={budget} onChange={(event) => setBudget(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作规格", "Production grade")}<select value={quality} onChange={(event) => setQuality(event.target.value as SasiQuality)} className={`mt-2 w-full rounded-xl border border-current/15 px-3 py-3 text-base outline-none ${dark ? "bg-[#11151b]" : "bg-white"}`}>{SASI_QUALITY_TIERS.map((item) => <option key={item.id} value={item.id}>{copy(lang, item.zh, item.en)}</option>)}</select></label></div><p className="mt-4 text-xs leading-5 opacity-50">{copy(lang, "SASI Auto 将按叙事价值调度制作能力；无需选择模型或管理技术账户。", "SASI Auto allocates production capability by narrative value; no model or technical account selection is required.")}</p><button disabled={preparing} onClick={() => prepare("drama")} className="mt-6 w-full rounded-xl bg-[#e04d70] py-3 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-50">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并形成提案", "Create project & proposal")}</button></div>
+                <div className={`rounded-3xl border p-6 ${panel}`}><textarea value={script} onChange={(event) => setScript(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "写下创意，或导入剧本、小说、人物图、故事板、音频和已有视频……", "Write an idea or import a script, novel, character image, storyboard, audio or existing video…")} className="min-h-36 w-full resize-none bg-transparent text-base leading-7 outline-none"/><UploadHub maxFileBytes={maxFileBytes} lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} /><div className="mt-5 grid gap-3 sm:grid-cols-2"><label className="text-xs opacity-60">{copy(lang, "每集时长（5–600秒）", "Seconds per episode (5–600)")}<input type="number" min={5} max={600} value={seconds} onChange={(event) => setSeconds(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作集数", "Number of episodes")}<input type="number" min={1} max={200} value={episodes} onChange={(event) => setEpisodes(event.target.value)} placeholder={copy(lang, "填写本次制作集数", "Episodes for this project")} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "项目预算上限（人民币）", "Project budget cap (RMB)")}<input type="number" min={0} step="1" value={budget} onChange={(event) => setBudget(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作规格", "Production grade")}<select value={quality} onChange={(event) => setQuality(event.target.value as SasiQuality)} className={`mt-2 w-full rounded-xl border border-current/15 px-3 py-3 text-base outline-none ${dark ? "bg-[#11151b]" : "bg-white"}`}>{SASI_QUALITY_TIERS.map((item) => <option key={item.id} value={item.id}>{copy(lang, item.zh, item.en)}</option>)}</select></label></div><p className="mt-4 text-xs leading-5 opacity-50">{copy(lang, "SASI Auto 将按叙事价值调度制作能力；无需选择模型或管理技术账户。", "SASI Auto allocates production capability by narrative value; no model or technical account selection is required.")}</p><button disabled={preparing} onClick={() => prepare("drama")} className="mt-6 w-full rounded-xl bg-[#e04d70] py-3 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-50">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并形成提案", "Create project & proposal")}</button></div>
                 <div className={`rounded-3xl border border-current/10 p-6 ${panel}`}><p className="text-xs uppercase tracking-[.2em] opacity-55">TASK BUDGET</p><h3 className="mt-5 text-2xl font-semibold">{copy(lang,"先把作品说清，再确认价格","Define the work before approving a price")}</h3><p className="mt-4 text-sm leading-7 opacity-65">{copy(lang,"你填写的是预算意向。项目建立后，SASI 按实际可用的模型与规格提供本次任务报价；确认前不预留余额。","This is your intended budget. After creating a project, SASI quotes available models and specifications before reserving any balance.")}</p><p className="mt-5">{copy(lang,"预算意向","Intended budget")} <b>{formatRmb(quote.budget)}</b></p><p className="mt-3 text-xs opacity-55">{Number(episodes) || 1} × {seconds}s = {(Number(episodes) || 1) * seconds}s · {copy(lang,"报价待确认 · 不代表已经生成","Quote pending · not generated")}</p></div>
               </div>
               <div className="mt-7"><div className="mb-3 flex items-center justify-between"><h2 className="text-lg font-semibold">{copy(lang, "可逐幕审阅的制作链", "A production chain reviewed scene by scene")}</h2><span className="text-xs opacity-45">{copy(lang, "每一步都保留创作主权", "Creative control at every stage")}</span></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">{(lang === "zh" ? workflowZh : workflowEn).map((item, index) => <div key={item} className="rounded-2xl border border-current/10 p-4"><p className="text-xs opacity-35">{String(index + 1).padStart(2, "0")}</p><p className="mt-3 text-sm font-medium">{item}</p><p className="mt-2 text-[11px] opacity-45">{index < 3 ? copy(lang, "分析后可修改", "Editable after analysis") : copy(lang, "生成、编辑或重做", "Generate, edit or redo")}</p></div>)}</div></div>

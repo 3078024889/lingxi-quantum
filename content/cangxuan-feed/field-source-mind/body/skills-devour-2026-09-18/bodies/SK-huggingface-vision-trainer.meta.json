@@ -1,0 +1,16 @@
+{
+  "id": "SK-huggingface-vision-trainer",
+  "title": "huggingface-vision-trainer",
+  "rel": "wave2/skills/skills/huggingface-vision-trainer/SKILL.md",
+  "wave": "wave1",
+  "chars": 29162,
+  "sha16": "c3c9ba6e051e0471",
+  "drama_steps": [
+    1,
+    4,
+    5,
+    6,
+    7
+  ],
+  "status": "DUAL_WRITTEN"
+}

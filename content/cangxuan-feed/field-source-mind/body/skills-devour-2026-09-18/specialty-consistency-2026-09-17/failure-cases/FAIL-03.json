@@ -1,0 +1,6 @@
+{
+  "id": "FAIL-03",
+  "type": "voice_break",
+  "desc": "玩笑角色突然导师腔",
+  "expect": "语气违约"
+}

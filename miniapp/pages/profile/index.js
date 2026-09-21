@@ -126,7 +126,7 @@ Page({
     return {
       title: '灵犀场 · 步入你的意识场域',
       path: '/pages/field/index',
-      imageUrl: 'https://lingxifield.cn/og-sasi-20260908.png',
+      imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
     }
   },
 })

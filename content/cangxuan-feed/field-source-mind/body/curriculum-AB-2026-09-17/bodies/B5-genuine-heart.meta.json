@@ -1,0 +1,14 @@
+{
+  "id": "B5-genuine-heart",
+  "title": "真诚之心",
+  "content_sha256_16": "677dcdf314516847",
+  "chars": 10810,
+  "raw_chars": 11013,
+  "peeled_ratio": 0.982,
+  "nav_lines_remaining": 0,
+  "picked_raw": "/workspace/run-1210/extracts/wmc_genuine_heart.txt",
+  "batch": "curriculum-AB-2026-09-17",
+  "peel": "v2-nav-strip",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:46:04.901748+00:00"
+}

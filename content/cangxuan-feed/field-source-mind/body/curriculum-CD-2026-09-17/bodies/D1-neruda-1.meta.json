@@ -1,0 +1,13 @@
+{
+  "id": "D1-neruda-1",
+  "code": "D1",
+  "title": "聂鲁达访谈1（分段先1）",
+  "sha16": "61369884299304eb",
+  "chars": 35704,
+  "raw_chars": 36140,
+  "src": "/workspace/wm_priority_out/neruda_1.txt",
+  "batch": "curriculum-CD-week2",
+  "peel": "v3",
+  "no_public_sasi": true,
+  "at": "2026-09-17T05:59:29.815101+00:00"
+}

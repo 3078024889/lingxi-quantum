@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-18T01:16+00:00",
+  "order": "Celestial：所有数据同步对齐，不得马虎",
+  "lingxi": {
+    "skills": "/workspace/lingxi-quantum/skills/devoured-2026-09-18",
+    "skill_md": 121,
+    "body": "/workspace/lingxi-quantum/content/cangxuan-feed/field-source-mind/body/skills-devour-2026-09-18",
+    "body_files": 242,
+    "teach": "/workspace/lingxi-quantum/scripts/drama-pipeline/skill-teach",
+    "teach_json": [
+      "continuity-canon-compiler-index.json",
+      "priority-compiler-index.json",
+      "wave2-compiler-index.json"
+    ]
+  },
+  "twenty_watts": {
+    "body": "/workspace/copernicus-twentywatts/body/skills-devour-2026-09-18",
+    "skills": "/workspace/copernicus-twentywatts/body/skills-devour-2026-09-18/skills",
+    "skill_md": 121,
+    "body_files": 242,
+    "teach": "/workspace/copernicus-twentywatts/body/skills-devour-2026-09-18/skill-teach",
+    "teach_json": [
+      "continuity-canon-compiler-index.json",
+      "priority-compiler-index.json",
+      "wave2-compiler-index.json"
+    ],
+    "specialty": "/workspace/copernicus-twentywatts/body/skills-devour-2026-09-18/specialty-consistency-2026-09-17",
+    "samples": "/workspace/copernicus-twentywatts/body/skills-devour-2026-09-18/drama-samples"
+  },
+  "sync_disk": {
+    "root": "/workspace/out-to-ershiwatt-sync/sasi-curriculum-feed/skills-devour-2026-09-18",
+    "skill_md": 121,
+    "body_files": 242,
+    "teach_json": [
+      "continuity-canon-compiler-index.json",
+      "priority-compiler-index.json",
+      "wave2-compiler-index.json"
+    ]
+  },
+  "continuity_index_n": 71,
+  "aligned": true
+}

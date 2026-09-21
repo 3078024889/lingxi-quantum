@@ -1,0 +1,210 @@
+{
+  "at": "2026-09-18T08:40+08",
+  "purpose": "焊进八步编译器教具：优先 drama-skills + seedance-director + video-prompt-engineer",
+  "n": 14,
+  "items": [
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-write/SKILL.md",
+      "title": "short-drama-write",
+      "chars": 4175,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-video-prompts/SKILL.md",
+      "title": "short-drama-video-prompts",
+      "chars": 6737,
+      "drama_steps": [
+        1,
+        2,
+        5,
+        6,
+        7
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-edit/SKILL.md",
+      "title": "short-drama-edit",
+      "chars": 4904,
+      "drama_steps": [
+        1,
+        3,
+        5,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-assets/SKILL.md",
+      "title": "short-drama-assets",
+      "chars": 2283,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-image-prompts/SKILL.md",
+      "title": "short-drama-image-prompts",
+      "chars": 2140,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-storyboard/SKILL.md",
+      "title": "short-drama-storyboard",
+      "chars": 7340,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        5,
+        6
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-produce/SKILL.md",
+      "title": "short-drama-produce",
+      "chars": 7280,
+      "drama_steps": [
+        1,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-review/SKILL.md",
+      "title": "short-drama-review",
+      "chars": 2617,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-develop/SKILL.md",
+      "title": "short-drama-develop",
+      "chars": 4973,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama-novel-analyze/SKILL.md",
+      "title": "short-drama-novel-analyze",
+      "chars": 7531,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/skills/short-drama/SKILL.md",
+      "title": "short-drama",
+      "chars": 5610,
+      "drama_steps": [
+        1,
+        2,
+        4,
+        5,
+        7,
+        8
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "drama-skills",
+      "path": "wave1/drama-skills/maintainers/skills/short-drama-knowhow/SKILL.md",
+      "title": "short-drama-knowhow",
+      "chars": 3653,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "seedance-director",
+      "path": "wave1/seedance-director/skills/seedance-director/SKILL.md",
+      "title": "seedance-director",
+      "chars": 13191,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        5,
+        7
+      ],
+      "status": "TEACH_INDEXED"
+    },
+    {
+      "pack": "video-prompt-engineer",
+      "path": "wave1/video-prompt-engineer/SKILL.md",
+      "title": "video-prompt-engineer",
+      "chars": 10407,
+      "drama_steps": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "status": "TEACH_INDEXED"
+    }
+  ],
+  "compiler_hooks": {
+    "step6": "anchors/forbid from character board + skill continuity rules",
+    "step7": "provider executable_prompt templates from seedance/video-prompt-engineer",
+    "step8": "assemble-plan ready=false without keys (no burn)"
+  }
+}

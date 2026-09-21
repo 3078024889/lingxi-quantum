@@ -1,0 +1,72 @@
+{
+  "at": "2026-09-18T00:40:59.984Z",
+  "title": "一镜→八步→executable_prompt 真片样例",
+  "pipeline": "drama-8step-offline-v0",
+  "skill_teach": {
+    "loaded": true,
+    "n": 14,
+    "path": "/workspace/lingxi-quantum/scripts/drama-pipeline/skill-teach/priority-compiler-index.json",
+    "packs": [
+      "drama-skills",
+      "seedance-director",
+      "video-prompt-engineer"
+    ],
+    "hooks": {
+      "step6": "anchors/forbid from character board + skill continuity rules",
+      "step7": "provider executable_prompt templates from seedance/video-prompt-engineer",
+      "step8": "assemble-plan ready=false without keys (no burn)"
+    }
+  },
+  "one_shot": {
+    "shot_id": "SH01",
+    "from_s6": {
+      "id": "SH01",
+      "episode": "E01",
+      "scene": "S1",
+      "intent": "林秋在图书馆夜班。门锁坏了。周晨答应替她值后半夜，并交接钥匙。",
+      "framing": "中景",
+      "character": "林秋",
+      "visual_anchors": [
+        "左手腕细红绳",
+        "旧军绿帆布包",
+        "短句"
+      ],
+      "forbid": [
+        "鸡汤口号",
+        "突然全知旁白"
+      ],
+      "camera": "过肩中景，缓慢推",
+      "continuity_check": "A身份板+B上一镜事实+C当前词 须无冲突"
+    },
+    "executable_prompt": "镜头SH01｜中景｜过肩中景，缓慢推\n角色：林秋（视觉锚点：左手腕细红绳，旧军绿帆布包，短句）\n场景：S1｜意图：林秋在图书馆夜班。门锁坏了。周晨答应替她值后半夜，并交接钥匙。\n禁止：鸡汤口号；突然全知旁白\n保持人物跨镜一致；不要换脸换衣无场记说明。\n教具：short-drama-video-prompts、seedance-director、video-prompt-engineer —— 单镜清晰动作、人物站位、跨镜锚点不丢。",
+    "skill_refs": [
+      "short-drama-video-prompts",
+      "seedance-director",
+      "video-prompt-engineer",
+      "short-drama-image-prompts",
+      "short-drama-storyboard",
+      "short-drama-produce",
+      "short-drama-review",
+      "short-drama-edit"
+    ],
+    "seedance_style": {
+      "prompt": "镜头SH01｜中景｜过肩中景，缓慢推\n角色：林秋（视觉锚点：左手腕细红绳，旧军绿帆布包，短句）\n场景：S1｜意图：林秋在图书馆夜班。门锁坏了。周晨答应替她值后半夜，并交接钥匙。\n禁止：鸡汤口号；突然全知旁白\n保持人物跨镜一致；不要换脸换衣无场记说明。\n教具：short-drama-video-prompts、seedance-director、video-prompt-engineer —— 单镜清晰动作、人物站位、跨镜锚点不丢。",
+      "negative": "face morph, wardrobe change, mentor speech, text watermark"
+    },
+    "jimeng_style": {
+      "prompt": "镜头SH01｜中景｜过肩中景，缓慢推\n角色：林秋（视觉锚点：左手腕细红绳，旧军绿帆布包，短句）\n场景：S1｜意图：林秋在图书馆夜班。门锁坏了。周晨答应替她值后半夜，并交接钥匙。\n禁止：鸡汤口号；突然全知旁白\n保持人物跨镜一致；不要换脸换衣无场记说明。\n教具：short-drama-video-prompts、short-drama-image-prompts、short-drama-storyboard —— 即梦友好单镜头，禁止换脸换衣无场记。",
+      "negative": "多脸混乱, 服装漂移, 鸡汤独白"
+    }
+  },
+  "steps_summary": {
+    "s1_beats": 2,
+    "s2_chars": [
+      "林秋",
+      "周晨"
+    ],
+    "s5_shots": 2,
+    "s6_refined": 2,
+    "compiled": 2
+  },
+  "honest": "demo/API 通到精分镜+编译 ≠ 网站已稳一键成片"
+}

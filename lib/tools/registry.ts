@@ -6,6 +6,13 @@ import type { ToolMeta } from "./types";
  * 状态 live = 本仓库已实现本地处理；planned = 仅目录占位，不假装可用。
  */
 export const TOOLS: ToolMeta[] = [
+  ...[
+    ["text-counter", "字数与字符统计", "Text Counter", "统计汉字、英文词、字符、行数与UTF-8字节。"],
+    ["remove-duplicate-lines", "文本去重行", "Remove Duplicate Lines", "删除完全相同的重复行，保留首次出现的顺序与原始空格。"],
+    ["remove-empty-lines", "删除空白行", "Remove Empty Lines", "去掉空行及只有空白的行，保留其他正文。"],
+    ["url-encode-decode", "URL 编码解码", "URL Encode & Decode", "对单个URL参数进行百分号编码或解码，支持中文。"],
+    ["base64-encode-decode", "Base64 编码解码", "Base64 Encode & Decode", "支持中文UTF-8文本的Base64转换；编码不等于加密。"],
+  ].map(([slug, titleZh, titleEn, oneLinerZh]): ToolMeta => ({ slug, titleZh, titleEn, oneLinerZh, oneLinerEn: "Process text locally in your browser. Nothing is uploaded.", category: "utility", status: "live", localOnly: true, related: ["json-formatter", "text-counter"].filter(item => item !== slug) })),
   // —— 已有场域工具 ——
   {
     slug: "number-energy",

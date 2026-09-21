@@ -1,0 +1,7 @@
+{
+  "id": "PF-02",
+  "step": 1,
+  "type": "script_no_character",
+  "desc": "剧本无具名角色",
+  "expect": "拒出身份板或生成待命名占位并告警"
+}

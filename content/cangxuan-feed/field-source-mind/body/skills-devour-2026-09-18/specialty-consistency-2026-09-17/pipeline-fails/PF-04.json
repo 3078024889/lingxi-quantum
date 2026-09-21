@@ -1,0 +1,7 @@
+{
+  "id": "PF-04",
+  "step": 2,
+  "type": "id_board_conflict",
+  "desc": "同角色两板锚点互斥",
+  "expect": "冲突检出，不静默覆盖"
+}

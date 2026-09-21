@@ -106,7 +106,7 @@ Page({
   },
   restart() { this.setData({ questionIndex: 0, responses: {}, customResponses: {}, selected: '', customAnswer: '', result: null, submissionId: '', unlocked: false, error: '' }) },
   onShareAppMessage() {
-    return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', path: `/pages/assessment/index?product=${encodeURIComponent(this.productId)}`, imageUrl: 'https://lingxifield.cn/og-sasi-20260908.png' }
+    return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', path: `/pages/assessment/index?product=${encodeURIComponent(this.productId)}`, imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png' }
   },
-  onShareTimeline() { return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', imageUrl: 'https://lingxifield.cn/og-sasi-20260908.png' } },
+  onShareTimeline() { return { title: this.data.item ? `${this.data.item.name} · 灵犀场` : '灵犀场 · 场域精测', imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png' } },
 })
