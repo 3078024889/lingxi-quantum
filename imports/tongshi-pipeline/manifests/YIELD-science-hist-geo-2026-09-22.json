@@ -1,5 +1,5 @@
 {
-    "at":  "2026-09-21T16:54:58.7362973+08:00",
+    "at":  "2026-09-22T10:51:44.0612610+08:00",
     "n_cards":  135,
     "by_kind":  {
                     "G":  19,
@@ -8,6 +8,6 @@
                 },
     "priority":  "hist-first",
     "anti_theater":  true,
-    "file":  "tongshi-science-hist-geo-2026-09-21.jsonl",
+    "file":  "tongshi-science-hist-geo-2026-09-22.jsonl",
     "kind_codes":  "H=hist S=science G=geo remap pending"
 }
