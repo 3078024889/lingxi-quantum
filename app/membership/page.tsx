@@ -114,8 +114,8 @@ const MANIFEST_BULLETS: Record<string, { items: { zh: string; en: string }[] }> 
 function PriceTag({ priceRmb, days, type }: { priceRmb: number; days?: number; type: string }) {
   return (
     <div className="mt-4 flex items-end gap-1">
-      <span className="font-display text-4xl text-lattice">¥{priceRmb}</span>
-      <span className="mb-1.5 text-sm text-bone-dim">
+      <span className="font-display text-4xl text-[var(--lx-ink)]">¥{priceRmb}</span>
+      <span className="mb-1.5 text-sm text-[var(--lx-muted)]">
         {type === "permanent" ? (
           <Bi zh="永久" en="forever" />
         ) : days === 1 ? (
@@ -136,19 +136,19 @@ function PracticeCard({ id }: { id: string; loggedIn: boolean }) {
   const shared = MEMBERSHIP_CONTENT[id];
   if (!p || !b || !shared) return null;
   return (
-    <div className="flex flex-col rounded-sm border border-white/10 bg-reading-glass p-8">
-      <h3 className="font-display text-2xl text-bone"><Bi zh={p.name} en={p.nameEn} /></h3>
-      <p className="mt-2 text-sm text-lattice"><Bi zh={shared.description} en={b.headerEn} /></p>
-      <p className="mt-5 font-display text-2xl text-lattice"><Bi zh="免费开放" en="Free Access" /></p>
-      <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice/60"><Bi zh="获得：" en="You receive:" /></p>
-      <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-bone-dim">
+    <div className="flex flex-col rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] p-8">
+      <h3 className="font-display text-2xl text-[var(--lx-ink)]"><Bi zh={p.name} en={p.nameEn} /></h3>
+      <p className="mt-2 text-sm text-[var(--lx-ink)]"><Bi zh={shared.description} en={b.headerEn} /></p>
+      <p className="mt-5 font-display text-2xl text-[var(--lx-ink)]"><Bi zh="免费开放" en="Free Access" /></p>
+      <p className="mt-4 text-xs uppercase tracking-widest2 text-[var(--lx-ink)]/60"><Bi zh="获得：" en="You receive:" /></p>
+      <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-[var(--lx-muted)]">
         {b.items.map((it, i) => (
           <li key={i}>· <Bi zh={shared.benefits[i]?.title ?? it.zh} en={it.en} /></li>
         ))}
       </ul>
-      <p className="mt-4 text-xs italic text-bone-soft"><Bi zh={shared.closing ?? b.closingZh} en={b.closingEn} /></p>
+      <p className="mt-4 text-xs italic text-[var(--lx-faint)]"><Bi zh={shared.closing ?? b.closingZh} en={b.closingEn} /></p>
       <div className="mt-6">
-        <Link href={`/practice/${p.id}`} className="block border border-lattice/45 px-5 py-3 text-center text-sm text-lattice"><Bi zh="免费进入" en="Open Free" /></Link>
+        <Link href={`/practice/${p.id}`} className="block border border-[var(--lx-line-strong)]/45 px-5 py-3 text-center text-sm text-[var(--lx-ink)]"><Bi zh="免费进入" en="Open Free" /></Link>
       </div>
     </div>
   );
@@ -160,17 +160,17 @@ function ManifestCard({ id, loggedIn, tierZh, tierEn }: { id: string; loggedIn: 
   const shared = MEMBERSHIP_CONTENT[id];
   if (!p || !b || !shared) return null;
   return (
-    <div id={"connection-"+id} className={`scroll-mt-24 flex flex-col rounded-sm border p-8 ${p.highlight ? "border-amber/50 bg-amber/5" : "border-white/10 bg-reading-glass"}`}>
+    <div id={"connection-"+id} className={`scroll-mt-24 flex flex-col rounded-sm border p-8 ${p.highlight ? "border-amber/50 bg-amber/5" : "border-[var(--lx-line)] bg-[var(--lx-panel)]"}`}>
       {p.highlight && (
-        <span className="mb-4 inline-block w-fit rounded-sm bg-amber/20 px-3 py-1 font-display text-xs tracking-widest2 text-amber">
+        <span className="mb-4 inline-block w-fit rounded-sm bg-amber/20 px-3 py-1 font-display text-xs tracking-widest2 text-[var(--lx-ink)]">
           <Bi zh="推荐" en="Recommended" />
         </span>
       )}
-      <h3 className="font-display text-xl text-bone"><Bi zh={p.name} en={tierEn} /></h3>
-      <p className="mt-2 text-sm text-lattice"><Bi zh={shared.description} en={shared.descriptionEn} /></p>
+      <h3 className="font-display text-xl text-[var(--lx-ink)]"><Bi zh={p.name} en={tierEn} /></h3>
+      <p className="mt-2 text-sm text-[var(--lx-ink)]"><Bi zh={shared.description} en={shared.descriptionEn} /></p>
       <PriceTag priceRmb={p.priceRmb} days={p.days} type={p.type} />
-      <p className="mt-4 text-xs uppercase tracking-widest2 text-lattice/60"><Bi zh="开启：" en="Unlocks:" /></p>
-      <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-bone-dim">
+      <p className="mt-4 text-xs uppercase tracking-widest2 text-[var(--lx-ink)]/60"><Bi zh="开启：" en="Unlocks:" /></p>
+      <ul className="mt-2 flex-1 space-y-1.5 text-sm leading-6 text-[var(--lx-muted)]">
         {b.items.map((it, i) => (
           <li key={i}>· <Bi zh={shared.benefits[i]?.title ?? it.zh} en={it.en} /></li>
         ))}
@@ -211,14 +211,14 @@ export default async function MembershipPage({
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-25">
             <EarthGrid className="h-[520px] w-[520px]" />
           </div>
-          <div className="bg-reading-glass relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+          <div className="bg-[var(--lx-panel)] relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-10">
+          <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
             <Bi zh="能量交换" en="Energy Exchange" />
           </p>
-          <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
+          <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)] sm:text-5xl">
             <Bi zh="进入什么场域，开启什么能力" en="What you enter, what you unlock" />
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
+          <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-[var(--lx-muted)]">
             <Bi zh="完成能量交换后，场域将自动为你开启，无需等待人工确认。" en="Once the energy exchange is complete, the Field opens for you automatically — no manual confirmation needed." />
           </p>
           {status && (
@@ -227,8 +227,8 @@ export default async function MembershipPage({
                 status.tone === "error"
                   ? "border-red-400/30 bg-red-400/10 text-red-200"
                   : status.tone === "pending"
-                  ? "border-amber/30 bg-amber/10 text-amber"
-                  : "border-white/15 bg-white/5 text-bone-dim"
+                  ? "border-amber/30 bg-amber/10 text-[var(--lx-ink)]"
+                  : "border-[var(--lx-line)] bg-white/5 text-[var(--lx-muted)]"
               }`}
             >
               <Bi zh={status.zh} en={status.en} />
@@ -241,7 +241,7 @@ export default async function MembershipPage({
         <section id="practices" className="scroll-mt-28 px-6 pb-16">
           <div className="mx-auto max-w-6xl">
             <div className="mb-10 text-center">
-              <h2 className="font-display text-3xl font-light text-bone">
+              <h2 className="font-display text-3xl font-light text-[var(--lx-ink)]">
                 <Bi zh="一 · 修炼技术 FREE" en="I · Practices FREE" />
               </h2>
             </div>
@@ -254,13 +254,13 @@ export default async function MembershipPage({
         </section>
 
         {/* 三、意识显化 */}
-        <section id="manifestation" className="scroll-mt-28 border-t border-white/5 px-6 py-16">
+        <section id="manifestation" className="scroll-mt-28 border-t border-[var(--lx-line)] px-6 py-16">
           <div className="mx-auto max-w-5xl">
             <div className="mb-10 text-center">
-              <h2 className="font-display text-3xl font-light text-bone">
+              <h2 className="font-display text-3xl font-light text-[var(--lx-ink)]">
                 <Bi zh="二 · 意识显化订阅" en="II · Manifestation Subscription" />
               </h2>
-              <p className="mt-3 text-sm text-bone-dim"><Bi zh="固定期限连接，不自动续费；与 SASI 积分相互独立" en="Fixed-term access with no automatic renewal; separate from SASI credits" /></p>
+              <p className="mt-3 text-sm text-[var(--lx-muted)]"><Bi zh="固定期限连接，不自动续费；与 SASI 积分相互独立" en="Fixed-term access with no automatic renewal; separate from SASI credits" /></p>
             </div>
             <div className="grid gap-6 sm:grid-cols-3">
               <ManifestCard id="day" loggedIn={!!user} tierZh="单日体验" tierEn="One-Day Pass" />

@@ -1,0 +1,1 @@
+export async function ocrImage(file:File,lang='eng+chi_sim'){const {createWorker}=await import('tesseract.js');const worker=await createWorker(lang);try{const r=await worker.recognize(file);return r.data.text;}finally{await worker.terminate();}}

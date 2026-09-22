@@ -1,6 +1,4 @@
 import Link from "next/link";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 
 export type Section = { hZh: string; hEn: string; pZh: string; pEn: string };
@@ -59,8 +57,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
 
   return (
     <>
-      <Nav />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <main className="px-6 pb-24 pt-28">
@@ -122,7 +119,6 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
           )}
         </article>
       </main>
-      <Footer />
-    </>
+</>
   );
 }

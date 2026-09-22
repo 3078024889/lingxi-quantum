@@ -614,7 +614,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
         </details>
         <details className="lx-nav-group"><summary>灵犀场 · 小工具</summary><Link className="block rounded-xl px-3 py-3 text-sm" href="/tools">图片、文件与日常工具 →</Link></details>
-        <details className="lx-nav-group"><summary>灵犀场 · 书本智能体</summary>{[["/ai-knowledge", "让书本活起来"], ["/ai-learning", "AI学习助手"], ["/ai-research", "AI科研助手"]].map(([href, title]) => <Link key={href} className="block rounded-xl px-3 py-3 text-sm" href={href}>{title} →</Link>)}</details>
+        <details className="lx-nav-group"><summary>灵犀场 · 书本 SASI</summary>{[["/ai-knowledge", "让书本活起来"], ["/ai-learning", "AI学习 SASI"], ["/ai-research", "AI科研 SASI"]].map(([href, title]) => <Link key={href} className="block rounded-xl px-3 py-3 text-sm" href={href}>{title} →</Link>)}</details>
         <div className="mt-auto space-y-3 border-t border-current/10 pt-4">
           <div className="flex gap-2"><button onClick={() => setLang(lang === "zh" ? "en" : "zh")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{lang === "zh" ? "EN" : "中文"}</button><button onClick={() => setTheme(dark ? "light" : "dark")} className="flex-1 rounded-lg border border-current/15 px-3 py-2 text-xs">{dark ? "☀ Light" : "☾ Dark"}</button></div>
           <Link href={accountEmail ? "/account" : "/account?next=%2Fsasi"} className="block rounded-xl border border-current/15 px-3 py-3"><p className="truncate text-sm">{accountEmail ?? copy(lang, "连接场域账户", "Connect account")}</p><p className="mt-1 text-[11px] leading-5 opacity-55">{accountEmail ? copy(lang, "设置 · 切换 · 退出", "Settings · Switch · Sign out") : copy(lang, "登录后同步项目、作品与人民币余额", "Sign in to sync projects, works and RMB balance")}</p></Link>

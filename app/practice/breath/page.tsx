@@ -76,14 +76,14 @@ export default async function BreathPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-20">
             <CosmicField className="h-full w-auto" />
           </div>
-          <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+          <div className="bg-[var(--lx-panel)] mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
+            <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
               <Bi zh="修炼技术 · 免费开放" en="Practice · Free Access" />
             </p>
-            <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
+            <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)] sm:text-5xl">
               <Bi zh="量子息法" en="The Quantum Breath Method" />
             </h1>
-            <div className="mx-auto mt-8 max-w-2xl space-y-6 text-base leading-9 text-bone-dim">
+            <div className="mx-auto mt-8 max-w-2xl space-y-6 text-base leading-9 text-[var(--lx-muted)]">
               <p>
                 <Bi
                   zh="量子息法，是意识本源整合进程中的核心练习工具。"
@@ -108,12 +108,12 @@ export default async function BreathPage() {
 
 
         {/* ── 呼吸与本源意识 ── */}
-        <section className="border-t border-white/5 px-6 py-24">
-          <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-            <h2 id="practice-chapter-1" className="font-display text-3xl font-light text-bone">
+        <section className="border-t border-[var(--lx-line)] px-6 py-24">
+          <div className="bg-[var(--lx-panel)] mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
+            <h2 id="practice-chapter-1" className="font-display text-3xl font-light text-[var(--lx-ink)]">
               <Bi zh="呼吸与本源意识" en="Breath and primordial consciousness" />
             </h2>
-            <div className="mt-10 space-y-8 text-base leading-9 text-bone-dim">
+            <div className="mt-10 space-y-8 text-base leading-9 text-[var(--lx-muted)]">
               <p>
                 <Bi
                   zh="每个人都拥有一个天然存在的支持系统——呼吸。呼吸连接生命最初的节律，也连接意识更深层的存在状态。它是一条回归路径，使意识从外部经验回到内在源点。无论处于何种环境、何种时间与空间，人类都可以通过呼吸重新接触这一基础状态。"
@@ -150,7 +150,7 @@ export default async function BreathPage() {
                   en="The Quantum Breath Method differs from traditional meditation. It does not depend on a fixed posture. It may be practised on waking in the morning, or before sleep. Lying down, seated, or standing. There is no single correct form for the body."
                 />
               </p>
-              <p className="font-display text-lg leading-9 text-lattice">
+              <p className="font-display text-lg leading-9 text-[var(--lx-ink)]">
                 <Bi
                   zh="量子息法不是为了进入某种状态，而是帮助意识重新认识自身存在。"
                   en="The Quantum Breath Method is not for entering a state — it helps consciousness recognise its own existence again."
@@ -163,19 +163,19 @@ export default async function BreathPage() {
         {unlocked ? (
           <>
             {/* ── 节律路径 · 呼吸引导 ── */}
-            <section className="border-t border-white/5 px-6 py-24">
-              <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-                <h2 id="practice-chapter-2" className="font-display text-3xl font-light text-bone">
+            <section className="border-t border-[var(--lx-line)] px-6 py-24">
+              <div className="bg-[var(--lx-panel)] mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
+                <h2 id="practice-chapter-2" className="font-display text-3xl font-light text-[var(--lx-ink)]">
                   <Bi zh="节律路径 · 呼吸引导" en="Rhythm path · breathing guidance" />
                 </h2>
-                <div className="mt-6 space-y-4 text-base leading-9 text-bone-dim">
+                <div className="mt-6 space-y-4 text-base leading-9 text-[var(--lx-muted)]">
                   <p>
                     <Bi
                       zh="这是一张完整的量子息法练习路径图，包含节律路径、五步流程与四段呼吸结构。"
                       en="This is the complete practice chart for the Quantum Breath Method — the rhythm path, the five-step flow, and the four-phase breath structure."
                     />
                   </p>
-                  <p className="text-sm text-bone-soft">
+                  <p className="text-sm text-[var(--lx-faint)]">
                     <Bi
                       zh="建议保存至手机，在练习过程中随时查看。手机端长按保存，电脑端右键保存。"
                       en="Save it to your phone and refer to it while practising. Press and hold on mobile, or right-click on desktop, to save."
@@ -186,7 +186,7 @@ export default async function BreathPage() {
                 <div className="mt-10">
 
                 </div>
-                <p className="mt-5 text-center font-display text-sm tracking-widest2 text-lattice/85">
+                <p className="mt-5 text-center font-display text-sm tracking-widest2 text-[var(--lx-ink)]/85">
                   <Bi
                     zh="吸气接引 · 呼气绽放 · 载波调频 · 节律合一"
                     en="Drawing in · Blossoming out · Tuning the carrier · Rhythm made one"
@@ -195,12 +195,12 @@ export default async function BreathPage() {
 
                 {/* ── 意识轴线坐标 ── */}
                 <div className="mt-16">
-                  <h3 id="practice-chapter-3" className="text-center font-display text-lg font-light text-bone">
+                  <h3 id="practice-chapter-3" className="text-center font-display text-lg font-light text-[var(--lx-ink)]">
                     <Bi zh="节律路径示意" en="The rhythm path" />
                   </h3>
                   <div className="mx-auto mt-6 flex max-w-md flex-wrap justify-center gap-x-5 gap-y-2">
                     {AXIS_POINTS.map((p) => (
-                      <span key={p.en} className="text-xs tracking-widest2 text-bone-soft">
+                      <span key={p.en} className="text-xs tracking-widest2 text-[var(--lx-faint)]">
                         <Bi zh={`${p.zh} · ${p.en}`} en={p.en} />
                       </span>
                     ))}
@@ -214,10 +214,10 @@ export default async function BreathPage() {
                     </span>
                   </div>
                   <figure className="mt-8">
-                    <div className="mx-auto max-w-md rounded-sm border border-white/10 bg-void">
+                    <div className="mx-auto max-w-md rounded-sm border border-[var(--lx-line)] bg-[var(--lx-bg)]">
                       <BreathDiagram className="w-full" />
                     </div>
-                    <figcaption className="mt-4 space-y-2 text-center text-sm leading-7 text-bone-soft">
+                    <figcaption className="mt-4 space-y-2 text-center text-sm leading-7 text-[var(--lx-faint)]">
                       <span className="block">
                         <Bi
                           zh="吸气时：意识轴线由地球核心升起，穿越身体中心，经由松果腺，向无限延展。"
@@ -236,14 +236,14 @@ export default async function BreathPage() {
 
                 {/* ── 五秒呼吸节律 ── */}
                 <div className="mt-16">
-                  <h3 id="practice-chapter-4" className="text-center font-display text-lg font-light text-bone">
+                  <h3 id="practice-chapter-4" className="text-center font-display text-lg font-light text-[var(--lx-ink)]">
                     <Bi zh="五秒呼吸节律" en="The five-second breath rhythm" />
                   </h3>
                   <figure className="mt-6">
-                    <div className="rounded-sm border border-white/10 bg-void p-4">
+                    <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-bg)] p-4">
                       <BreathStructure className="w-full" />
                     </div>
-                    <figcaption className="mt-4 text-center text-sm leading-7 text-bone-soft">
+                    <figcaption className="mt-4 text-center text-sm leading-7 text-[var(--lx-faint)]">
                       <Bi
                         zh="完整结构：吸气（鼻，「我是」） → 停留 → 呼气（嘴，「我们是」） → 静置"
                         en="Complete structure: inhale (nose, “I AM”) → pause → exhale (mouth, “WE ARE”) → stillness"
@@ -255,51 +255,51 @@ export default async function BreathPage() {
             </section>
 
             {/* ── 标准五步法 ── */}
-            <section className="border-t border-white/5 px-6 py-24">
-              <div className="bg-reading-glass mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
-                <h2 id="practice-chapter-5" className="font-display text-3xl font-light text-bone">
+            <section className="border-t border-[var(--lx-line)] px-6 py-24">
+              <div className="bg-[var(--lx-panel)] mx-auto max-w-3xl rounded-sm px-8 py-10 sm:px-12">
+                <h2 id="practice-chapter-5" className="font-display text-3xl font-light text-[var(--lx-ink)]">
                   <Bi zh="标准五步法" en="The standard five-step method" />
                 </h2>
                 <div className="mt-12 space-y-14">
                   {standardSteps.map((s, index) => (
-                    <div id={`practice-standard-${index}`} key={s.step} className="border-l border-lattice/30 pl-6">
-                      <p className="font-display text-sm uppercase tracking-widest2 text-amber">
+                    <div id={`practice-standard-${index}`} key={s.step} className="border-l border-[var(--lx-line)] pl-6">
+                      <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
                         <Bi zh={s.step} en={s.stepEn} />
                       </p>
-                      <h3 className="mt-2 font-display text-2xl text-bone">
+                      <h3 className="mt-2 font-display text-2xl text-[var(--lx-ink)]">
                         <Bi zh={s.title} en={s.titleEn} />
                       </h3>
-                      <p className="mt-4 whitespace-pre-line text-base leading-9 text-bone-dim">
+                      <p className="mt-4 whitespace-pre-line text-base leading-9 text-[var(--lx-muted)]">
                         <Bi zh={s.body} en={s.bodyEn} />
                       </p>
                     </div>
                   ))}
                 </div>
-                <p className="mt-14 text-center font-display text-lg tracking-widest2 text-lattice">
+                <p className="mt-14 text-center font-display text-lg tracking-widest2 text-[var(--lx-ink)]">
                   <Bi zh="量子息法完成。" en="The Quantum Breath Method is complete." />
                 </p>
               </div>
             </section>
 
             {/* ── 交互式呼吸引导 ── */}
-            <section className="border-t border-white/5 px-6 py-24">
+            <section className="border-t border-[var(--lx-line)] px-6 py-24">
               <div className="mx-auto max-w-2xl">
-                <h2 id="practice-chapter-6" className="mb-10 text-center font-display text-3xl font-light text-bone">
+                <h2 id="practice-chapter-6" className="mb-10 text-center font-display text-3xl font-light text-[var(--lx-ink)]">
                   <Bi zh="交互式呼吸引导" en="Interactive breath guide" />
                 </h2>
-                <div className="bg-reading-glass px-6 py-16">
+                <div className="bg-[var(--lx-panel)] px-6 py-16">
                   <BreathGuide />
                 </div>
               </div>
             </section>
           </>
         ) : (
-          <section className="border-t border-white/5 px-6 py-24">
-            <div className="mx-auto max-w-2xl rounded-sm border border-lattice/20 bg-lattice/5 p-10 text-center">
-              <p className="font-display text-2xl text-bone">
+          <section className="border-t border-[var(--lx-line)] px-6 py-24">
+            <div className="mx-auto max-w-2xl rounded-sm border border-[var(--lx-line)] bg-[var(--lx-soft)] p-10 text-center">
+              <p className="font-display text-2xl text-[var(--lx-ink)]">
                 <Bi zh="激活「量子息法」以解锁完整练习" en="Activate the Quantum Breath Method to unlock the full practice" />
               </p>
-              <p className="mx-auto mt-4 max-w-md text-base leading-8 text-bone-dim">
+              <p className="mx-auto mt-4 max-w-md text-base leading-8 text-[var(--lx-muted)]">
                 <Bi
                   zh="完整的节律路径图、标准五步法、五秒呼吸节律结构与交互式呼吸引导器，属于「量子息法」修炼技术。一次激活，永久有效；或开启「四项合集」，一并拥有全部四项技术。"
                   en="The complete rhythm-path chart, the standard five-step method, the five-second breath structure, and the interactive breath guide belong to the Quantum Breath Method. One activation, yours forever — or open the Four-in-One Set to hold all four practices."
@@ -307,7 +307,7 @@ export default async function BreathPage() {
               </p>
               <Link
                 href="/membership"
-                className="mt-8 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+                className="mt-8 inline-block bg-lattice px-10 py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
               >
                 {user ? <Bi zh="前往激活" en="Go to activate" /> : <Bi zh="登录并激活" en="Sign in & activate" />}
               </Link>

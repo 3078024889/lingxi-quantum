@@ -28,14 +28,14 @@ export default function AboutPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
-        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
-        <h1 className="font-display text-4xl font-light text-bone">
+        <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-8 py-10 sm:px-12 sm:py-14">
+        <h1 className="font-display text-4xl font-light text-[var(--lx-ink)]">
           <Bi zh="关于我们" en="About Us" />
         </h1>
 
-        <div className="mt-10 space-y-6 text-base leading-8 text-bone-dim">
+        <div className="mt-10 space-y-6 text-base leading-8 text-[var(--lx-muted)]">
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="灵犀场（Lingxi Field）是什么？" en="What is Lingxi Field?" />
             </h2>
             <p className="mt-3">
@@ -47,7 +47,7 @@ export default function AboutPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="平台提供" en="What We Offer" />
             </h2>
             <ul className="mt-3 space-y-2">
@@ -75,7 +75,7 @@ export default function AboutPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="联系我们" en="Contact Us" />
             </h2>
             <p className="mt-3">

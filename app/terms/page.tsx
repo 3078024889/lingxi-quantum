@@ -26,17 +26,17 @@ export default function TermsPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
-        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
-        <h1 className="font-display text-4xl font-light text-bone">
+        <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-8 py-10 sm:px-12 sm:py-14">
+        <h1 className="font-display text-4xl font-light text-[var(--lx-ink)]">
           <Bi zh="服务条款" en="Terms of Service" />
         </h1>
-        <p className="mt-2 text-sm text-bone-dim">
+        <p className="mt-2 text-sm text-[var(--lx-muted)]">
           <Bi zh="最后更新：2026年7月" en="Last updated: July 2026" />
         </p>
 
-        <div className="mt-10 space-y-8 text-base leading-8 text-bone-dim">
+        <div className="mt-10 space-y-8 text-base leading-8 text-[var(--lx-muted)]">
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="1. 关于灵犀场" en="1. About Lingxi Field" />
             </h2>
             <p className="mt-3">
@@ -48,7 +48,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="2. 服务性质说明" en="2. Nature of the Service" />
             </h2>
             <p className="mt-3">
@@ -60,7 +60,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="3. 用户账户" en="3. User Accounts" />
             </h2>
             <p className="mt-3">
@@ -72,7 +72,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="4. 数字体验内容" en="4. Digital Experience Content" />
             </h2>
             <p className="mt-3">
@@ -84,7 +84,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="5. 知识产权" en="5. Intellectual Property" />
             </h2>
             <p className="mt-3">
@@ -96,7 +96,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="6. 禁止行为" en="6. Prohibited Conduct" />
             </h2>
             <p className="mt-3">
@@ -108,7 +108,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="7. 责任限制" en="7. Limitation of Liability" />
             </h2>
             <p className="mt-3">
@@ -120,7 +120,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="8. 条款更新" en="8. Changes to These Terms" />
             </h2>
             <p className="mt-3">
@@ -132,7 +132,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="9. 联系我们" en="9. Contact Us" />
             </h2>
             <div className="mt-3 space-y-1 text-sm">

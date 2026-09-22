@@ -15,14 +15,14 @@ export default function NumberEnergyPage() {
       <Nav />
       <main className="pt-16">
         <section className="px-6 py-20 text-center">
-          <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+          <div className="bg-[var(--lx-panel)] mx-auto max-w-2xl rounded-sm px-8 py-10">
+            <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
               <Bi zh="数字能量学" en="Number Energy" />
             </p>
-            <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
+            <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)] sm:text-5xl">
               <Bi zh="手机号 / 车牌号测试" en="Phone & License Plate Numbers" />
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-base leading-9 text-bone-dim">
+            <p className="mx-auto mt-6 max-w-xl text-base leading-9 text-[var(--lx-muted)]">
               <Bi
                 zh="每天随身携带、天天使用的号码，也是一种数字能量场。用民俗数字能量学（81数灵动数体系）拆解你的号码，看看它带着怎样的组合含义。"
                 en="The numbers you carry every day are also a kind of numeric field. Break down your number using folk number-energy numerology (the 81-number system) and see what combinations it carries."

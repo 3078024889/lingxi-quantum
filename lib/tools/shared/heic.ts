@@ -1,0 +1,1 @@
+export async function heicToJpeg(file:File){const heic2any=(await import('heic2any')).default;const result=await heic2any({blob:file,toType:'image/jpeg',quality:.92});const blob=Array.isArray(result)?result[0]:result;return blob as Blob;}

@@ -206,15 +206,15 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
           {user ? (
             <>
               {miniLink && <MiniAccountLinkPanel ticket={miniLink} />}
-              <div className="bg-void-deep w-full rounded-sm px-8 py-10">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+              <div className="bg-[var(--lx-panel)] w-full rounded-sm px-8 py-10">
+              <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
                 <Bi zh="你已连接至场域" en="You are connected to the field" />
               </p>
-              <h1 className="mt-6 font-display text-4xl font-light text-bone">
+              <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)]">
                 <Bi zh="欢迎回来" en="Welcome back" />
               </h1>
-              <p className="mt-4 text-base text-bone-dim">{user.email}</p>
-              <p className="mt-6 max-w-sm text-base leading-9 text-bone-dim">
+              <p className="mt-4 text-base text-[var(--lx-muted)]">{user.email}</p>
+              <p className="mt-6 max-w-sm text-base leading-9 text-[var(--lx-muted)]">
                 <Bi zh="在这里回看自己的探索、练习与订单，让每一次理解都有可以继续的地方。" en="Return to your explorations, practices and orders, and continue from what you have learned." />
               </p>
               </div>
@@ -222,9 +222,9 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               <div className="field-account-stats"><Link href="/account/orders"><span>已支付订单</span><strong>{paidOrderCount ?? "—"}</strong><small>{paidOrderCount === null ? "暂未能读取，请刷新重试" : "查看订单与已保存报告 →"}</small></Link><Link href="/practice"><span>免费修炼技术</span><strong>4</strong><small>完整引导，随时进入 →</small></Link><Link href="/practice#practice-journal"><span>我的练习记录</span><strong>{journalCount ?? "—"}</strong><small>{journalCount === null ? "暂未能读取，请刷新重试" : "回看自己记录的真实体验 →"}</small></Link></div><nav className="field-account-links" aria-label="我的场域快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
               {/* 会员状态 */}
               <div className="mt-8 w-full space-y-3 text-left">
-                <div className="rounded-sm border border-white/10 bg-void-deep px-5 py-4">
-                  <p className="text-sm text-bone-dim"><Bi zh="意识显化" en="Manifestation" /></p>
-                  <p className="mt-1 font-display text-lg text-lattice">
+                <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4">
+                  <p className="text-sm text-[var(--lx-muted)]"><Bi zh="意识显化" en="Manifestation" /></p>
+                  <p className="mt-1 font-display text-lg text-[var(--lx-ink)]">
                     {manifestActive ? (
                       <>
                         <Bi zh="有效至 " en="Active until " />
@@ -235,9 +235,9 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                     )}
                   </p>
                 </div>
-                <div className="rounded-sm border border-white/10 bg-void-deep px-5 py-4">
-                  <p className="text-sm text-bone-dim"><Bi zh="修炼技术" en="Practice techniques" /></p>
-                  <p className="mt-1 font-display text-lg text-lattice">
+                <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4">
+                  <p className="text-sm text-[var(--lx-muted)]"><Bi zh="修炼技术" en="Practice techniques" /></p>
+                  <p className="mt-1 font-display text-lg text-[var(--lx-ink)]">
                     <Link href="/practice"><Bi zh="四项完整引导，免费开放 →" en="Four complete practices, freely available →" /></Link>
                   </p>
                 </div>
@@ -245,7 +245,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
 
               <Link
                 href="/account/orders"
-                className="mt-4 flex w-full items-center justify-center gap-2 border border-lattice bg-lattice/10 py-3 font-display text-sm uppercase tracking-widest2 text-lattice transition hover:bg-lattice hover:text-void-deep"
+                className="mt-4 flex w-full items-center justify-center gap-2 border border-[var(--lx-line-strong)] bg-[var(--lx-soft)] py-3 font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:bg-lattice hover:text-[var(--lx-bg)]"
               >
                 <Bi zh="查看场域订单（订单号 · 金额 · 状态 · 有效期）→" en="View Field Orders (No. · Amount · Status · Expiry) →" />
               </Link>
@@ -357,19 +357,19 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               <div className="mt-8 flex w-full flex-col gap-4">
                 <Link
                   href="/sasi"
-                  className="w-full bg-bone py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-lattice"
+                  className="w-full bg-bone py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-lattice"
                 >
                   <Bi zh="进入灵犀场 SASI 工作台" en="Enter Lingxi SASI Studio" />
                 </Link>
                 <Link
                   href="/live-as"
-                  className="w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+                  className="w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
                 >
                   <Bi zh="进入我的现实回路" en="Enter my Reality Loop" />
                 </Link>
                 <Link
                   href="/membership"
-                  className="w-full border border-amber/40 py-4 font-display text-sm uppercase tracking-widest2 text-amber transition hover:bg-amber/10"
+                  className="w-full border border-amber/40 py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:bg-amber/10"
                 >
                   <Bi zh="能量交换 / 续期" en="Energy Exchange / Renew" />
                 </Link>
@@ -382,14 +382,14 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
             </>
           ) : (
             <>
-              <div className="bg-void-deep w-full rounded-sm px-8 py-10">
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+              <div className="bg-[var(--lx-panel)] w-full rounded-sm px-8 py-10">
+              <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
                 <Bi zh="进入场域" en="Enter the field" />
               </p>
-              <h1 className="mt-6 font-display text-4xl font-light text-bone">
+              <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)]">
                 <Bi zh="连接到你的意识场" en="Connect to your field of consciousness" />
               </h1>
-              <p className="mt-6 max-w-sm text-base leading-9 text-bone-dim">
+              <p className="mt-6 max-w-sm text-base leading-9 text-[var(--lx-muted)]">
                 <Bi zh="用邮箱和密码登录或注册。验证后，你的现实回路、练习记录与显化轨迹，将在云端安全同步。" en="Sign in or register with email and password. Once verified, your Reality Loop, practice records, and manifestation trail sync securely to the cloud." />
               </p>
               <div className="mt-12 w-full">

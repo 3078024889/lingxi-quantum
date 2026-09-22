@@ -99,14 +99,14 @@ export default function GlossaryPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main className="px-6 pb-24 pt-28">
         <div className="mx-auto max-w-2xl">
-          <div className="bg-void-deep rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-amber">
+          <div className="bg-[var(--lx-panel)] rounded-sm px-8 py-10">
+          <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
             <Bi zh="术语表" en="Glossary" />
           </p>
-          <h1 className="mt-4 font-display text-4xl font-light leading-tight text-bone sm:text-5xl">
+          <h1 className="mt-4 font-display text-4xl font-light leading-tight text-[var(--lx-ink)] sm:text-5xl">
             <Bi zh="核心词汇" en="Core Terms" />
           </h1>
-          <p className="mt-6 text-lg leading-9 text-bone-dim">
+          <p className="mt-6 text-lg leading-9 text-[var(--lx-muted)]">
             <Bi
               zh="灵犀场里反复出现的核心概念。这些词条是理解显化、解梦与修炼的底层语言。"
               en="The core concepts that keep resurfacing across Lingxi Field. These terms are the underlying language behind manifestation, dream interpretation, and practice."
@@ -114,22 +114,22 @@ export default function GlossaryPage() {
           </p>
           </div>
 
-          <dl className="bg-reading-glass mt-12 divide-y divide-[color:var(--aurora-glass-border)] px-8 py-4 sm:px-10">
+          <dl className="bg-[var(--lx-panel)] mt-12 divide-y divide-[color:var(--aurora-glass-border)] px-8 py-4 sm:px-10">
             {terms.map((t) => (
               <div key={t.en} className="py-6">
                 <dt className="flex flex-wrap items-baseline gap-x-3">
-                  <span className="font-display text-2xl font-light text-bone"><Bi zh={t.zh} en={t.en} /></span>
+                  <span className="font-display text-2xl font-light text-[var(--lx-ink)]"><Bi zh={t.zh} en={t.en} /></span>
                 </dt>
-                <dd className="mt-3 leading-8 text-bone-dim"><Bi zh={t.def} en={t.defEn} /></dd>
+                <dd className="mt-3 leading-8 text-[var(--lx-muted)]"><Bi zh={t.def} en={t.defEn} /></dd>
               </div>
             ))}
           </dl>
 
-          <p className="mt-10 text-sm text-bone-soft">
+          <p className="mt-10 text-sm text-[var(--lx-faint)]">
             <Bi zh="延伸：" en="Related: " />
-            <Link href="/practice" className="text-lattice hover:text-amber"><Bi zh="从觉察到实践" en="From awareness to practice" /></Link>
+            <Link href="/practice" className="text-[var(--lx-ink)] hover:text-[var(--lx-ink)]"><Bi zh="从觉察到实践" en="From awareness to practice" /></Link>
             {" · "}
-            <Link href="/learn" className="text-lattice hover:text-amber"><Bi zh="探索中心" en="Explore Center" /></Link>
+            <Link href="/learn" className="text-[var(--lx-ink)] hover:text-[var(--lx-ink)]"><Bi zh="探索中心" en="Explore Center" /></Link>
           </p>
           <FaqSection items={GLOSSARY_FAQ} />
         </div>

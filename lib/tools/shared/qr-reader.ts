@@ -1,0 +1,2 @@
+import jsQR from 'jsqr';
+export async function readQr(file:File){const bmp=await createImageBitmap(file);const c=document.createElement('canvas');c.width=bmp.width;c.height=bmp.height;const ctx=c.getContext('2d');if(!ctx)throw new Error('NO_CANVAS');ctx.drawImage(bmp,0,0);const d=ctx.getImageData(0,0,c.width,c.height);const code=jsQR(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});bmp.close?.();return code?.data||null;}

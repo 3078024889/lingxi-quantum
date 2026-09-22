@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
 import ToolShell from "@/components/tools/ToolShell";
 import ToolWorkbench from "@/components/tools/ToolWorkbench";
 import { getTool, TOOLS } from "@/lib/tools/registry";
@@ -67,8 +65,7 @@ export default function ToolSlugPage({ params }: Props) {
 
   return (
     <>
-      <Nav />
-      <div className="lg:ml-[260px]">
+      <div className="">
         <ToolShell
           tool={tool}
           faq={faqFor(tool.slug)}
@@ -85,7 +82,6 @@ export default function ToolSlugPage({ params }: Props) {
         >
           <ToolWorkbench tool={tool} />
         </ToolShell>
-        <Footer />
       </div>
     </>
   );

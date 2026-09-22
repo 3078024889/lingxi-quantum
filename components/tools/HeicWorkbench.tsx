@@ -1,0 +1,7 @@
+"use client";
+import { useState } from "react";
+export default function HeicWorkbench(){
+ const [file,setFile]=useState<File|null>(null);const [busy,setBusy]=useState(false);const [url,setUrl]=useState("");const [error,setError]=useState("");
+ async function run(){if(!file)return;setBusy(true);setError("");try{const heic2any=(await import("heic2any")).default;const r=await heic2any({blob:file,toType:"image/jpeg",quality:.92});const b=(Array.isArray(r)?r[0]:r) as Blob;if(url)URL.revokeObjectURL(url);setUrl(URL.createObjectURL(b));}catch(e){setError(e instanceof Error?e.message:String(e));}finally{setBusy(false);}}
+ return <div className="space-y-4"><label className="block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-7 text-center"><input type="file" accept=".heic,.heif,image/heic,image/heif" className="hidden" onChange={e=>setFile(e.target.files?.[0]||null)}/><b>选择 HEIC / HEIF</b><p className="mt-1 text-sm text-slate-500">浏览器本地转换，不上传照片。</p></label><button onClick={run} disabled={!file||busy} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm text-white disabled:opacity-40">{busy?"转换中…":"转成 JPG"}</button>{url&&<div><img src={url} alt="" className="max-h-[480px] rounded-2xl"/><a href={url} download={(file?.name||"photo").replace(/\.(heic|heif)$/i,"")+".jpg"} className="mt-3 inline-flex rounded-full bg-emerald-600 px-5 py-2.5 text-sm text-white">下载 JPG</a></div>}{error&&<p className="text-sm text-rose-600">{error}</p>}</div>;
+}

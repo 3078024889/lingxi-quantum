@@ -24,21 +24,21 @@ export default function DeclarationPage() {
       <Nav />
       <main className="pt-16">
         <section className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-24">
-          <div className="bg-void-deep mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+          <div className="bg-[var(--lx-panel)] mx-auto max-w-2xl rounded-sm px-8 py-10">
+          <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
             <Bi zh="系统声明" en="System Declaration" />
           </p>
-          <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
+          <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)] sm:text-5xl">
             <Bi zh="关于灵犀场" en="About Lingxi Field" />
           </h1>
           </div>
         </section>
 
         <section className="px-6 pb-28">
-          <div className="bg-reading-glass mx-auto max-w-3xl space-y-14 px-8 py-12 sm:px-14">
+          <div className="bg-[var(--lx-panel)] mx-auto max-w-3xl space-y-14 px-8 py-12 sm:px-14">
             <div>
-              <h2 className="font-display text-2xl text-bone"><Bi zh="关于灵犀场" en="About Lingxi Field" /></h2>
-              <div className="mt-5 space-y-4 text-base leading-9 text-bone-dim">
+              <h2 className="font-display text-2xl text-[var(--lx-ink)]"><Bi zh="关于灵犀场" en="About Lingxi Field" /></h2>
+              <div className="mt-5 space-y-4 text-base leading-9 text-[var(--lx-muted)]">
                 <p><Bi
                   zh="Lingxi Field 灵犀场，是一个围绕意识探索、生命体验与个人成长构建的数字化探索空间。"
                   en="Lingxi Field is a digital space for exploration, built around the exploration of consciousness, life experience, and personal growth."
@@ -59,10 +59,10 @@ export default function DeclarationPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-2xl text-bone"><Bi zh="使用说明与免责声明" en="Usage Notes & Disclaimer" /></h2>
-              <div className="mt-5 space-y-4 text-base leading-9 text-bone-dim">
+              <h2 className="font-display text-2xl text-[var(--lx-ink)]"><Bi zh="使用说明与免责声明" en="Usage Notes & Disclaimer" /></h2>
+              <div className="mt-5 space-y-4 text-base leading-9 text-[var(--lx-muted)]">
                 <p><Bi zh="灵犀场中的所有内容，包括但不限于：" en="All content within Lingxi Field, including but not limited to:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="生命图谱探索" en="Life Map exploration" /></li>
                   <li><Bi zh="关系共振分析" en="Relationship Resonance analysis" /></li>
                   <li><Bi zh="生命灵签" en="the Life Oracle" /></li>
@@ -76,7 +76,7 @@ export default function DeclarationPage() {
                   zh="相关内容旨在帮助用户获得新的观察角度、启发个人思考，并不构成："
                   en="This content is intended to help you gain a new vantage point and spark personal reflection. It does not constitute:"
                 /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="医疗建议" en="medical advice" /></li>
                   <li><Bi zh="心理治疗" en="psychotherapy" /></li>
                   <li><Bi zh="精神健康诊断" en="a mental health diagnosis" /></li>
@@ -99,10 +99,10 @@ export default function DeclarationPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-2xl text-bone"><Bi zh="原创与知识产权声明" en="Originality & Intellectual Property" /></h2>
-              <div className="mt-5 space-y-4 text-base leading-9 text-bone-dim">
+              <h2 className="font-display text-2xl text-[var(--lx-ink)]"><Bi zh="原创与知识产权声明" en="Originality & Intellectual Property" /></h2>
+              <div className="mt-5 space-y-4 text-base leading-9 text-[var(--lx-muted)]">
                 <p><Bi zh="灵犀场中的：" en="Within Lingxi Field:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="生命图谱体系" en="the Life Map system" /></li>
                   <li><Bi zh="场域架构设计" en="the Field's architecture and design" /></li>
                   <li><Bi zh="内容结构" en="its content structure" /></li>
@@ -119,7 +119,7 @@ export default function DeclarationPage() {
                   en="Some of the consciousness-exploration concepts and symbolic systems come from long-term exploration and creative practice, reorganized and expressed through a modern digital language."
                 /></p>
                 <p><Bi zh="未经灵犀场授权，任何个人或组织不得：" en="Without authorization from Lingxi Field, no individual or organization may:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="复制" en="copy" /></li>
                   <li><Bi zh="批量提取" en="extract in bulk" /></li>
                   <li><Bi zh="商业转载" en="republish for commercial use" /></li>
@@ -130,11 +130,11 @@ export default function DeclarationPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-2xl text-bone"><Bi zh="隐私说明" en="Privacy" /></h2>
-              <div className="mt-5 space-y-4 text-base leading-9 text-bone-dim">
+              <h2 className="font-display text-2xl text-[var(--lx-ink)]"><Bi zh="隐私说明" en="Privacy" /></h2>
+              <div className="mt-5 space-y-4 text-base leading-9 text-[var(--lx-muted)]">
                 <p><Bi zh="灵犀场尊重每一位进入场域用户的数据隐私。" en="Lingxi Field respects the data privacy of every user who enters the field." /></p>
                 <p><Bi zh="为了提供完整体验，我们可能收集以下必要信息：" en="To provide a complete experience, we may collect the following necessary information:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="登录邮箱" en="your login email" /></li>
                   <li><Bi zh="用户主动填写的信息" en="information you actively enter" /></li>
                   <li><Bi zh="生命探索相关数据" en="life-exploration data" /></li>
@@ -143,7 +143,7 @@ export default function DeclarationPage() {
                   <li><Bi zh="个人体验内容" en="your personal experience content" /></li>
                 </ul>
                 <p><Bi zh="这些信息用于：" en="This information is used to:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="保存个人探索轨迹" en="save your personal exploration history" /></li>
                   <li><Bi zh="提供跨设备访问" en="provide cross-device access" /></li>
                   <li><Bi zh="生成个性化体验内容" en="generate personalized experience content" /></li>
@@ -152,7 +152,7 @@ export default function DeclarationPage() {
                 <p><Bi zh="灵犀场不会出售用户数据。" en="Lingxi Field does not sell user data." /></p>
                 <p><Bi zh="不会将用户个人信息用于与服务无关的商业用途。" en="We do not use your personal information for commercial purposes unrelated to the service." /></p>
                 <p><Bi zh="用户可以随时联系我们申请：" en="You may contact us at any time to request:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="数据查询" en="a data inquiry" /></li>
                   <li><Bi zh="数据删除" en="data deletion" /></li>
                   <li><Bi zh="账户注销" en="or account closure" /></li>
@@ -161,10 +161,10 @@ export default function DeclarationPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-2xl text-bone"><Bi zh="能量交换说明" en="On the Energy Exchange" /></h2>
-              <div className="mt-5 space-y-4 text-base leading-9 text-bone-dim">
+              <h2 className="font-display text-2xl text-[var(--lx-ink)]"><Bi zh="能量交换说明" en="On the Energy Exchange" /></h2>
+              <div className="mt-5 space-y-4 text-base leading-9 text-[var(--lx-muted)]">
                 <p><Bi zh="灵犀场部分探索模块采用数字体验开启机制，包括：" en="Some exploration modules in Lingxi Field use a digital-experience opening mechanism, including:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="生命图谱体验" en="the Life Map experience" /></li>
                   <li><Bi zh="关系探索体验" en="the relationship exploration experience" /></li>
                   <li><Bi zh="灵签体验" en="the Life Oracle experience" /></li>
@@ -177,7 +177,7 @@ export default function DeclarationPage() {
                   en="Because digital content is generated and opened instantly, access generally cannot be reversed once opened."
                 /></p>
                 <p><Bi zh="如遇：" en="If you encounter:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="支付异常" en="a payment error" /></li>
                   <li><Bi zh="重复扣款" en="a duplicate charge" /></li>
                   <li><Bi zh="内容未正常开启" en="content that failed to open correctly" /></li>
@@ -188,10 +188,10 @@ export default function DeclarationPage() {
             </div>
 
             <div>
-              <h2 className="font-display text-2xl text-bone"><Bi zh="联系灵犀场" en="Contact Lingxi Field" /></h2>
-              <div className="mt-5 space-y-4 text-base leading-9 text-bone-dim">
+              <h2 className="font-display text-2xl text-[var(--lx-ink)]"><Bi zh="联系灵犀场" en="Contact Lingxi Field" /></h2>
+              <div className="mt-5 space-y-4 text-base leading-9 text-[var(--lx-muted)]">
                 <p><Bi zh="如果你有：" en="If you have:" /></p>
-                <ul className="list-disc space-y-1 pl-6 marker:text-lattice/60">
+                <ul className="list-disc space-y-1 pl-6 marker:text-[var(--lx-ink)]/60">
                   <li><Bi zh="数据相关请求" en="a data-related request" /></li>
                   <li><Bi zh="使用反馈" en="usage feedback" /></li>
                   <li><Bi zh="技术问题" en="a technical issue" /></li>
@@ -212,7 +212,7 @@ export default function DeclarationPage() {
                     href="https://x.com/lingxifield?s=11"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block rounded-sm border border-lattice/40 px-6 py-3 font-display text-sm tracking-widest2 text-lattice transition hover:border-amber hover:text-amber"
+                    className="inline-block rounded-sm border border-[var(--lx-line-strong)] px-6 py-3 font-display text-sm tracking-widest2 text-[var(--lx-ink)] transition hover:border-amber hover:text-[var(--lx-ink)]"
                   >
                     X（Twitter）· @lingxifield
                   </a>
@@ -220,7 +220,7 @@ export default function DeclarationPage() {
               </div>
             </div>
 
-            <p className="border-t border-white/5 pt-10 text-center text-xs leading-6 text-bone-soft">
+            <p className="border-t border-[var(--lx-line)] pt-10 text-center text-xs leading-6 text-[var(--lx-faint)]">
               <Bi zh="愿每一次连接，都开启新的发现。" en="May every connection open a new discovery." />
             </p>
           </div>

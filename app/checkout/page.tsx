@@ -367,7 +367,7 @@ function CheckoutInner() {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (user) {
+      if (user && product.group !== "ai" && product.group !== "production") {
         const { data: unlocks, error: unlockError } = await supabase
           .from("unlocks")
           .select("product_id, expires_at")
@@ -401,8 +401,8 @@ function CheckoutInner() {
   if (!product) {
     return (
       <div className="mx-auto max-w-xl px-6 py-24 text-center">
-        <p className="text-bone-dim"><Bi zh="找不到这个产品，请返回重试。" en="Product not found — please go back and try again." /></p>
-        <Link href="/account/orders" className="mt-4 inline-block text-lattice hover:text-amber">
+        <p className="text-[var(--lx-muted)]"><Bi zh="找不到这个产品，请返回重试。" en="Product not found — please go back and try again." /></p>
+        <Link href="/account/orders" className="mt-4 inline-block text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
           <Bi zh="← 返回场域订单" en="← Back to Field Orders" />
         </Link>
       </div>
@@ -411,18 +411,18 @@ function CheckoutInner() {
 
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
-      <h1 className="font-display text-2xl font-light text-bone">
+      <h1 className="font-display text-2xl font-light text-[var(--lx-ink)]">
         <Bi zh="数字服务订单" en="Digital Service Order" />
       </h1>
-      <p className="mt-1 text-xs text-bone-mute">
+      <p className="mt-1 text-xs text-[var(--lx-faint)]">
         <Bi zh="请确认软件服务、交付内容与金额，无误后再提交支付" en="Confirm the software service, deliverable and amount before payment" />
       </p>
 
       {status === "loading" && (
         // v274：等待态也要有框。之前这里是一段裸文字浮在极光背景上，
         // 跟前后都有玻璃面板的页面割裂，看起来像页面坏了。
-        <div className="lx-glass mt-10 p-8 text-center">
-          <p className="text-sm text-bone-soft"><Bi zh="正在确认访问权限……" en="Confirming your access…" /></p>
+        <div className="lx11-legacy-panel mt-10 p-8 text-center">
+          <p className="text-sm text-[var(--lx-faint)]"><Bi zh="正在确认访问权限……" en="Confirming your access…" /></p>
         </div>
       )}
 
@@ -434,12 +434,12 @@ function CheckoutInner() {
               换成"连接账号"，"数量"这种电商概念直接去掉（这里从来不是
               "买几件"，是"开启一次"），玻璃面板视觉延续全站风格，
               不套用淘宝的白底样式。 */}
-          <div className="mt-6 overflow-hidden rounded-sm border border-white/10 bg-void-deep/80 backdrop-blur-sm">
-            <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-5 py-3">
-              <p className="text-[11px] uppercase tracking-widest2 text-bone-mute">
+          <div className="mt-6 overflow-hidden rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)]/80 backdrop-blur-sm">
+            <div className="flex items-center justify-between border-b border-[var(--lx-line)] bg-white/[0.03] px-5 py-3">
+              <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-faint)]">
                 <Bi zh="数字服务订单号" en="Digital Service Order No." /> {orderIdRef.current ?? t("提交支付后生成", "Created on payment")}
               </p>
-              <p className="text-[11px] uppercase tracking-widest2 text-lattice">
+              <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-ink)]">
                 <Bi zh="待支付" en="Pending" />
               </p>
             </div>
@@ -450,18 +450,18 @@ function CheckoutInner() {
                 <img
                   src={THUMB_BY_PRODUCT[productId]}
                   alt=""
-                  className="h-16 w-16 shrink-0 rounded-sm border border-white/10 object-cover"
+                  className="h-16 w-16 shrink-0 rounded-sm border border-[var(--lx-line)] object-cover"
                 />
               )}
               <div className="min-w-0 flex-1">
-                <p className="font-display text-lg text-bone"><Bi zh={product.name} en={product.nameEn} /></p>
+                <p className="font-display text-lg text-[var(--lx-ink)]"><Bi zh={product.name} en={product.nameEn} /></p>
                 {submissionId && (
-                  <p className="mt-1 truncate text-xs text-bone-dim">
+                  <p className="mt-1 truncate text-xs text-[var(--lx-muted)]">
                     <Bi zh="对应内容" en="Linked to" />：{contentName || `#${submissionId.slice(0, 8)}`}
                   </p>
                 )}
                 {product.type === "subscription" && product.days && (
-                  <p className="mt-1 text-xs text-amber/80">
+                  <p className="mt-1 text-xs text-[var(--lx-ink)]/80">
                     <Bi
                       zh={`有效期：${describeDuration(product.days, false)}（从支付成功那一刻开始计算）`}
                       en={`Valid for: ${describeDuration(product.days, true)} (starting from the moment payment is confirmed)`}
@@ -469,40 +469,40 @@ function CheckoutInner() {
                   </p>
                 )}
                 {product.type === "permanent" && (
-                  <p className="mt-1 text-xs text-lattice">
+                  <p className="mt-1 text-xs text-[var(--lx-ink)]">
                     <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
                   </p>
                 )}
               </div>
-              <p className="shrink-0 font-display text-2xl text-amber">¥{product.priceRmb}</p>
+              <p className="shrink-0 font-display text-2xl text-[var(--lx-ink)]">¥{product.priceRmb}</p>
             </div>
 
             {/* 权益说明——product.note本来就是"这次交换具体包含什么"的
                 描述，这里单独用一个小标题把它摆出来，让它在付款前就是
                 看得见的承诺，不是买完才知道。 */}
-            <div className="border-t border-white/10 px-5 py-3">
-              <p className="text-xs uppercase tracking-widest2 text-bone-mute">
+            <div className="border-t border-[var(--lx-line)] px-5 py-3">
+              <p className="text-xs uppercase tracking-widest2 text-[var(--lx-faint)]">
                 <Bi zh="本次数字服务包含" en="This Digital Service Includes" />
               </p>
-              <p className="mt-1.5 text-xs leading-6 text-bone-dim">
+              <p className="mt-1.5 text-xs leading-6 text-[var(--lx-muted)]">
                 <Bi zh={product.note} en={product.noteEn} />
               </p>
             </div>
 
             {buyerEmail && (
-              <div className="border-t border-white/10 px-5 py-3">
-                <p className="text-xs text-bone-dim">
+              <div className="border-t border-[var(--lx-line)] px-5 py-3">
+                <p className="text-xs text-[var(--lx-muted)]">
                   <Bi zh="连接账号" en="Connected Account" />：{buyerEmail}
                 </p>
               </div>
             )}
 
-            <div className="flex items-center justify-between border-t border-white/10 bg-white/[0.03] px-5 py-3">
-              <p className="text-xs text-bone-dim"><Bi zh="应付总额" en="Total Due" /></p>
-              <p className="font-display text-xl text-amber">¥{product.priceRmb}</p>
+            <div className="flex items-center justify-between border-t border-[var(--lx-line)] bg-white/[0.03] px-5 py-3">
+              <p className="text-xs text-[var(--lx-muted)]"><Bi zh="应付总额" en="Total Due" /></p>
+              <p className="font-display text-xl text-[var(--lx-ink)]">¥{product.priceRmb}</p>
             </div>
             {paymentMethod === "alipay" && (
-              <div className="mt-3 border border-[#1677ff]/25 bg-[#1677ff]/10 px-4 py-3 text-xs leading-6 text-bone-dim">
+              <div className="mt-3 border border-[#1677ff]/25 bg-[#1677ff]/10 px-4 py-3 text-xs leading-6 text-[var(--lx-muted)]">
                 <Bi zh="建议在手机浏览器打开本页并使用支付宝，跳转与回到报告的体验更顺畅；电脑端也可继续使用支付宝网页收银台。" en="For the smoothest redirect and return experience, open this page in a mobile browser and use Alipay. Desktop Alipay checkout remains available." />
               </div>
             )}
@@ -510,13 +510,13 @@ function CheckoutInner() {
 
           {/* 支付方式选择 */}
           <div className="mt-6">
-            <p className="text-xs uppercase tracking-widest2 text-bone-dim"><Bi zh="支付方式" en="Payment Method" /></p>
+            <p className="text-xs uppercase tracking-widest2 text-[var(--lx-muted)]"><Bi zh="支付方式" en="Payment Method" /></p>
             <div className="mt-3 grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setPaymentMethod("wechat")}
                 aria-pressed={paymentMethod === "wechat"}
-                className={`rounded-sm border p-4 text-center transition ${paymentMethod === "wechat" ? "border-lattice bg-lattice/10 text-lattice" : "border-white/10 text-bone-dim hover:border-white/25"}`}
+                className={`rounded-sm border p-4 text-center transition ${paymentMethod === "wechat" ? "border-[var(--lx-line-strong)] bg-[var(--lx-soft)] text-[var(--lx-ink)]" : "border-[var(--lx-line)] text-[var(--lx-muted)] hover:border-white/25"}`}
               >
                 <p className="font-display text-sm"><Bi zh={`${paymentMethod === "wechat" ? "✓ " : ""}微信支付`} en={`${paymentMethod === "wechat" ? "✓ " : ""}WeChat Pay`} /></p>
               </button>
@@ -525,7 +525,7 @@ function CheckoutInner() {
                 onClick={() => { if (alipayAvailable) setPaymentMethod("alipay"); }}
                 disabled={!alipayAvailable}
                 aria-pressed={paymentMethod === "alipay"}
-                className={`rounded-sm border p-4 text-center transition ${paymentMethod === "alipay" ? "border-[#1677ff] bg-[#1677ff]/10 text-[#6ca7ff]" : alipayAvailable ? "border-white/10 text-bone-dim hover:border-white/25" : "cursor-not-allowed border-white/10 text-bone-mute opacity-60"}`}
+                className={`rounded-sm border p-4 text-center transition ${paymentMethod === "alipay" ? "border-[#1677ff] bg-[#1677ff]/10 text-[#6ca7ff]" : alipayAvailable ? "border-[var(--lx-line)] text-[var(--lx-muted)] hover:border-white/25" : "cursor-not-allowed border-[var(--lx-line)] text-[var(--lx-faint)] opacity-60"}`}
               >
                 <p className="font-display text-sm"><Bi zh={`${paymentMethod === "alipay" ? "✓ " : ""}支付宝`} en={`${paymentMethod === "alipay" ? "✓ " : ""}Alipay`} /></p>
                 <p className="mt-1 text-[10px] uppercase tracking-widest2">
@@ -538,21 +538,21 @@ function CheckoutInner() {
           {status === "review" && (
             <button
               onClick={payNow}
-              className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+              className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
             >
               <Bi zh={`立即支付 · ¥${product.priceRmb}`} en={`Pay Now · ¥${product.priceRmb}`} />
             </button>
           )}
 
           {status === "waiting" && jsapiParamsRef.current && (
-            <div className="lx-glass mt-8 p-6 text-center">
-              <p className="text-sm leading-6 text-bone">
+            <div className="lx11-legacy-panel mt-8 p-6 text-center">
+              <p className="text-sm leading-6 text-[var(--lx-ink)]">
                 <Bi zh="正在唤起微信支付……如果没有自动弹出，请稍等或返回重试" en="Opening WeChat Pay… if nothing pops up, please wait or try again" />
               </p>
               <button
                 onClick={() => checkPaidOnce(true)}
                 disabled={checkingNow}
-                className="mt-4 w-full border border-lattice bg-void-deep py-3 text-xs uppercase tracking-widest2 text-lattice transition hover:bg-lattice hover:text-void-deep disabled:opacity-50"
+                className="mt-4 w-full border border-[var(--lx-line-strong)] bg-[var(--lx-panel)] py-3 text-xs uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:bg-lattice hover:text-[var(--lx-bg)] disabled:opacity-50"
               >
                 {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下 →" en="I've paid — check now →" />}
               </button>
@@ -564,8 +564,8 @@ function CheckoutInner() {
             <div className="mt-8 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={qrDataUrl} alt="微信支付二维码" className="mx-auto h-56 w-56 rounded-sm bg-white p-2" />
-              <div className="mx-auto mt-4 max-w-sm rounded-sm border border-lattice/30 bg-lattice/5 p-4">
-                <p className="text-sm leading-6 text-bone">
+              <div className="mx-auto mt-4 max-w-sm rounded-sm border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4">
+                <p className="text-sm leading-6 text-[var(--lx-ink)]">
                   <Bi zh="打开微信 · 扫一扫，完成支付后页面会自动跳转" en="Open WeChat and scan — the page will jump automatically once paid" />
                 </p>
                 {/* v261：之前这里写的"存到相册再扫"，微信支付官方文档
@@ -573,7 +573,7 @@ function CheckoutInner() {
                     钓鱼，微信统一关闭了"从相册识别二维码完成支付"这个
                     功能），照着做只会看到微信弹出报错，不是真的能走通
                     的办法。这里换成更准确的说明。 */}
-                <p className="mt-2 text-xs leading-6 text-bone-dim">
+                <p className="mt-2 text-xs leading-6 text-[var(--lx-muted)]">
                   <Bi
                     zh="出于支付安全考虑，微信不支持保存二维码到相册后再扫描付款——如果当前设备不方便直接扫码，可以换一台手机、用它的微信直接扫这张二维码"
                     en="For payment security, WeChat doesn't support scanning a saved QR code from your photo album — if this device isn't convenient for scanning directly, use a different phone's WeChat to scan this code instead"
@@ -583,7 +583,7 @@ function CheckoutInner() {
               <button
                 onClick={() => checkPaidOnce(true)}
                 disabled={checkingNow}
-                className="mt-4 w-full border border-lattice bg-void-deep py-3 text-xs uppercase tracking-widest2 text-lattice transition hover:bg-lattice hover:text-void-deep disabled:opacity-50"
+                className="mt-4 w-full border border-[var(--lx-line-strong)] bg-[var(--lx-panel)] py-3 text-xs uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:bg-lattice hover:text-[var(--lx-bg)] disabled:opacity-50"
               >
                 {checkingNow ? <Bi zh="正在查询…" en="Checking…" /> : <Bi zh="我已完成支付，帮我确认一下 →" en="I've paid — check now →" />}
               </button>
@@ -594,10 +594,10 @@ function CheckoutInner() {
       )}
 
       {status === "success" && (
-        <div className="lx-glass mt-10 p-8 text-center">
-          <p className="font-display text-2xl text-lattice">✓</p>
-          <p className="mt-3 text-sm text-bone"><Bi zh="能量交换完成" en="Exchange complete" /></p>
-          <p className="mt-3 text-xs leading-6 text-bone-dim">
+        <div className="lx11-legacy-panel mt-10 p-8 text-center">
+          <p className="font-display text-2xl text-[var(--lx-ink)]">✓</p>
+          <p className="mt-3 text-sm text-[var(--lx-ink)]"><Bi zh="能量交换完成" en="Exchange complete" /></p>
+          <p className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">
             <Bi zh="正在带你去场域订单……" en="Taking you to Field Orders…" />
           </p>
         </div>
@@ -609,14 +609,14 @@ function CheckoutInner() {
           {isWechatBrowser && !isWechatCanonicalDomain ? (
             <a
               href={cnSwitchUrl}
-              className="mt-4 inline-block bg-lattice px-6 py-2 text-xs uppercase tracking-widest2 text-void-deep transition hover:bg-amber"
+              className="mt-4 inline-block bg-lattice px-6 py-2 text-xs uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
             >
               <Bi zh="切换到 lingxifield.cn 继续 →" en="Switch to lingxifield.cn →" />
             </a>
           ) : (
             <button
               onClick={payNow}
-              className="mt-4 border border-lattice/40 px-6 py-2 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice"
+              className="mt-4 border border-[var(--lx-line-strong)] px-6 py-2 text-xs uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:border-[var(--lx-line-strong)]"
             >
               <Bi zh="重试" en="Try Again" />
             </button>
@@ -632,7 +632,7 @@ export default function CheckoutPage() {
     <>
       <Nav />
       <main className="pt-24">
-        <Suspense fallback={<div className="py-24 text-center text-bone-dim">…</div>}>
+        <Suspense fallback={<div className="py-24 text-center text-[var(--lx-muted)]">…</div>}>
           <CheckoutInner />
         </Suspense>
       </main>

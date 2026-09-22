@@ -154,34 +154,34 @@ function OrderCard({ o }: { o: OrderRow }) {
   const benefits = BENEFIT_DETAIL[o.product_id];
 
   return (
-    <div className="lx-glass p-5">
+    <div className="lx11-legacy-panel p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] uppercase tracking-widest2 text-bone-mute">
+          <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-faint)]">
             <Bi zh={o.archive_only ? "场域档案号" : "场域订单号"} en={o.archive_only ? "Field Archive No." : "Field Order No."} /> {o.id}
           </p>
           {dest ? (
-            <Link href={dest.href} className="mt-1 block font-display text-lg text-lattice hover:text-amber">
+            <Link href={dest.href} className="mt-1 block font-display text-lg text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
               {product?.name ?? o.product_id}
               {o.submission_name ? ` · ${o.submission_name}` : ""}
             </Link>
           ) : (
-            <p className="mt-1 font-display text-lg text-bone">
+            <p className="mt-1 font-display text-lg text-[var(--lx-ink)]">
               {product?.name ?? o.product_id}
               {o.submission_name ? ` · ${o.submission_name}` : ""}
             </p>
           )}
-          <p className="mt-1 text-xs text-bone-dim">
+          <p className="mt-1 text-xs text-[var(--lx-muted)]">
             <Bi zh={o.archive_only ? "记录时间" : "下单时间"} en={o.archive_only ? "Recorded" : "Ordered"} />：{new Date(o.created_at).toLocaleString()}
             {o.paid_at && <> · <Bi zh="支付时间" en="Paid" />：{new Date(o.paid_at).toLocaleString()}</>}
           </p>
           {expiryLabel && (
-            <p className="mt-1 text-xs text-amber/80">
+            <p className="mt-1 text-xs text-[var(--lx-ink)]/80">
               <Bi zh={expiryLabel} en={expiryLabelEn ?? expiryLabel} />
             </p>
           )}
           {isPaid && product?.type === "permanent" && (
-            <p className="mt-1 text-xs text-lattice">
+            <p className="mt-1 text-xs text-[var(--lx-ink)]">
               <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
             </p>
           )}
@@ -192,20 +192,20 @@ function OrderCard({ o }: { o: OrderRow }) {
               没有配清单的（场域精测这些一次性报告类），仍然用原来的
               note描述，够用，不用为了统一硬凑清单。 */}
           {isPaid && benefits ? (
-            <ul className="mt-2 space-y-1 text-xs leading-6 text-bone-soft">
+            <ul className="mt-2 space-y-1 text-xs leading-6 text-[var(--lx-faint)]">
               {(benefits.zh).map((line, i) => (
                 <li key={i}>· <Bi zh={line} en={benefits.en[i]} /></li>
               ))}
             </ul>
           ) : isPaid && product ? (
-            <p className="mt-1 text-xs leading-6 text-bone-soft">
+            <p className="mt-1 text-xs leading-6 text-[var(--lx-faint)]">
               <Bi zh="获得权益" en="Benefits" />：<Bi zh={product.note} en={product.noteEn} />
             </p>
           ) : null}
         </div>
         <div className="shrink-0 text-right">
-          <p className="font-display text-xl text-bone">{amountDisplay}</p>
-          <p className={`mt-2 inline-block rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-widest2 ${isPaid ? "border border-lattice/40 text-lattice" : "border border-amber/40 text-amber"}`}>
+          <p className="font-display text-xl text-[var(--lx-ink)]">{amountDisplay}</p>
+          <p className={`mt-2 inline-block rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-widest2 ${isPaid ? "border border-[var(--lx-line-strong)] text-[var(--lx-ink)]" : "border border-amber/40 text-[var(--lx-ink)]"}`}>
             {o.archive_only ? <Bi zh="已保存" en="Archived" /> : isPaid ? <Bi zh="已支付" en="Paid" /> : <Bi zh="待支付" en="Pending" />}
           </p>
         </div>
@@ -214,7 +214,7 @@ function OrderCard({ o }: { o: OrderRow }) {
       {dest && (
         <Link
           href={dest.href}
-          className="mt-4 inline-block border border-lattice/30 px-4 py-1.5 text-xs uppercase tracking-widest2 text-lattice transition hover:border-lattice"
+          className="mt-4 inline-block border border-[var(--lx-line)] px-4 py-1.5 text-xs uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:border-[var(--lx-line-strong)]"
         >
           <Bi zh={dest.labelZh} en={dest.labelEn} />
         </Link>
@@ -344,26 +344,26 @@ export default async function FieldOrdersPage({searchParams}: {searchParams?: {p
       <main className="pt-24">
         <div className="mx-auto max-w-3xl px-6 pb-24">
           <div className="mb-2 flex items-center justify-between">
-            <h1 className="font-display text-3xl font-light text-bone">
+            <h1 className="font-display text-3xl font-light text-[var(--lx-ink)]">
               <Bi zh="场域订单" en="Field Orders" />
             </h1>
-            <Link href="/account" className="text-xs uppercase tracking-widest2 text-lattice hover:text-amber">
+            <Link href="/account" className="text-xs uppercase tracking-widest2 text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
               <Bi zh="← 返回场域入口" en="← Back to Account" />
             </Link>
           </div>
-          <p className="mb-8 text-xs text-bone-mute">
+          <p className="mb-8 text-xs text-[var(--lx-faint)]">
             <Bi zh="按类别查看每一次能量交换的详情、有效期与具体权益。" en="Every exchange, grouped by kind, with its expiry and exact benefits." />
           </p>
 
           {!user && (
-            <p className="lx-glass p-8 text-center text-sm text-bone-soft">
+            <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
               <Bi zh="请先登录查看你的场域订单。" en="Please log in to view your field orders." />
             </p>
           )}
 
-          {loadFailed && <p role="alert" className="my-4 text-amber">部分记录暂时未能加载，请刷新重试。加载失败不会删除订单或报告。</p>}
+          {loadFailed && <p role="alert" className="my-4 text-[var(--lx-ink)]">部分记录暂时未能加载，请刷新重试。加载失败不会删除订单或报告。</p>}
           {user && !loadFailed && orders.length === 0 && (
-            <p className="lx-glass p-8 text-center text-sm text-bone-soft">
+            <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
               <Bi zh="还没有任何订单——完成一次能量交换后，会出现在这里。" en="No orders yet — they'll appear here once you complete an exchange." />
             </p>
           )}
@@ -373,10 +373,10 @@ export default async function FieldOrdersPage({searchParams}: {searchParams?: {p
             <div className="space-y-10">
               {SECTIONS.filter((s) => s.rows.length > 0).map((s) => (
                 <div key={s.key}>
-                  <h2 className="font-display text-lg text-lattice">
+                  <h2 className="font-display text-lg text-[var(--lx-ink)]">
                     <Bi zh={s.titleZh} en={s.titleEn} />
                   </h2>
-                  <p className="mt-1 text-xs leading-6 text-bone-mute">
+                  <p className="mt-1 text-xs leading-6 text-[var(--lx-faint)]">
                     <Bi zh={s.hintZh} en={s.hintEn} />
                   </p>
                   <div className="mt-4 space-y-3">

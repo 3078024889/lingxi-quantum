@@ -25,15 +25,15 @@ export default function TarotPage() {
       <Nav />
       <main className="pt-24">
         <div className="mx-auto max-w-md px-6 py-16 text-center">
-          <div className="lx-glass-tarot p-6 sm:p-8">
-            <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+          <div className="lx11-legacy-panel-tarot p-6 sm:p-8">
+            <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
               <Bi zh="灵犀量子生命镜像 · 今日一镜" en="Lingxi Quantum Life Mirror · Today's Mirror" />
             </p>
-            <h1 className="mt-4 font-display text-3xl font-light text-bone sm:text-4xl">
+            <h1 className="mt-4 font-display text-3xl font-light text-[var(--lx-ink)] sm:text-4xl">
               <Bi zh="七十八张里，今天只有一张，被整个场域同时看见" en="Of 78 cards, only one is being seen by the entire field today" />
             </h1>
-            <p className="mt-3 text-xs text-bone-soft">{todayLabel}</p>
-            <p className="mt-4 text-base leading-8 text-bone-dim">
+            <p className="mt-3 text-xs text-[var(--lx-faint)]">{todayLabel}</p>
+            <p className="mt-4 text-base leading-8 text-[var(--lx-muted)]">
               <Bi
                 zh="不是你抽到的，是场域今天正在显化的——此刻打开这个页面的每一个人，看见的都是同一个象征。它不会一直是这张。但今天，是。"
                 en="Not one you drew — it's the one the field is manifesting today. Everyone who opens this page right now sees the same symbol. It won't always be this one. But today, it is."

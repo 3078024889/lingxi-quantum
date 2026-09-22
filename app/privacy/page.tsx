@@ -26,17 +26,17 @@ export default function PrivacyPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
-        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
-        <h1 className="font-display text-4xl font-light text-bone">
+        <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-8 py-10 sm:px-12 sm:py-14">
+        <h1 className="font-display text-4xl font-light text-[var(--lx-ink)]">
           <Bi zh="隐私政策" en="Privacy Policy" />
         </h1>
-        <p className="mt-2 text-sm text-bone-dim">
+        <p className="mt-2 text-sm text-[var(--lx-muted)]">
           <Bi zh="最后更新：2026年7月" en="Last updated: July 2026" />
         </p>
 
-        <div className="mt-10 space-y-8 text-base leading-8 text-bone-dim">
+        <div className="mt-10 space-y-8 text-base leading-8 text-[var(--lx-muted)]">
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="1. 我们收集的信息" en="1. Information We Collect" />
             </h2>
             <p className="mt-3">
@@ -48,7 +48,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="2. 信息用途" en="2. How We Use This Information" />
             </h2>
             <p className="mt-3">
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="3. 内容生成方式" en="3. How Content Is Generated" />
             </h2>
             <p className="mt-3">
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="4. 数据存储与保护" en="4. Data Storage & Protection" />
             </h2>
             <p className="mt-3">
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="5. 用户的数据权利" en="5. Your Data Rights" />
             </h2>
             <p className="mt-3">
@@ -96,7 +96,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="6. 未成年人隐私" en="6. Children's Privacy" />
             </h2>
             <p className="mt-3">
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="7. 跨境数据处理" en="7. Cross-Border Data Processing" />
             </h2>
             <p className="mt-3">
@@ -120,7 +120,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="8. 联系我们" en="8. Contact Us" />
             </h2>
             <div className="mt-3 space-y-1 text-sm">

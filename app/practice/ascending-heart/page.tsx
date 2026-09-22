@@ -20,14 +20,14 @@ export default async function AscendingHeartPage() {
           <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-40">
             <GateDestiny className="h-[420px] w-[420px]" />
           </div>
-          <div className="bg-reading-glass mx-auto max-w-2xl rounded-sm px-8 py-10">
-          <p className="font-display text-sm uppercase tracking-widest2 text-lattice">
+          <div className="bg-[var(--lx-panel)] mx-auto max-w-2xl rounded-sm px-8 py-10">
+          <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
             <Bi zh="修炼技术" en="Practice" />
           </p>
-          <h1 className="mt-6 font-display text-4xl font-light text-bone sm:text-5xl">
+          <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)] sm:text-5xl">
             <Bi zh="上升心经" en="The Ascending Heart Sutra" />
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-bone-dim">
+          <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-[var(--lx-muted)]">
             <Bi
               zh="光体正从松果腺迁移向胸腺——心脏与喉咙之间——这里被称为「上升心经」，是行星轴与中枢太阳轴的交汇点。呼吸与想象力的整合，是活化这个交汇点最有效的工具。"
               en="The light-body is migrating from the pineal gland toward the thymus — between heart and throat — the site known as the Rising Heart, the meeting point of the planetary axis and the central-sun axis. The integration of breath and imagination is the most effective tool for activating this point."
@@ -38,10 +38,10 @@ export default async function AscendingHeartPage() {
 
 
         <section className="px-6 py-16">
-          <div className="bg-reading-glass mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-bone-dim sm:px-12">
+          <div className="bg-[var(--lx-panel)] mx-auto max-w-3xl space-y-10 rounded-sm px-8 py-10 text-base leading-9 text-[var(--lx-muted)] sm:px-12">
             <div>
-              <p className="font-display text-sm uppercase tracking-widest2 text-lattice"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
-              <h2 id="practice-chapter-1" className="mt-3 font-display text-3xl font-light text-bone"><Bi zh="背景与定位" en="Background and positioning" /></h2>
+              <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]"><Bi zh="一 · 理论基底" en="I · Theoretical Foundation" /></p>
+              <h2 id="practice-chapter-1" className="mt-3 font-display text-3xl font-light text-[var(--lx-ink)]"><Bi zh="背景与定位" en="Background and positioning" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="本文传递的内容，源自来自远古遥远星系的智慧传承，以古老又切合当下的声音呈现。"
@@ -57,7 +57,7 @@ export default async function AscendingHeartPage() {
             </div>
 
             <div>
-              <h2 id="practice-chapter-2" className="font-display text-3xl font-light text-bone"><Bi zh="光体的本质" en="The nature of the light-body" /></h2>
+              <h2 id="practice-chapter-2" className="font-display text-3xl font-light text-[var(--lx-ink)]"><Bi zh="光体的本质" en="The nature of the light-body" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="光体是神圣心智的一枚粒子，由中枢太阳投射，穿越第5、第4维度矩阵，最终在人类心脏内具体表现。它最初栖息于心脏，前七年内上移至松果腺，临终时返回第五维度。如今，在宏大觉醒时代，它正迁移回心脏方向，现核心栖息地位于胸腺（心脏与喉咙之间），被称为「上升心经」或「心脏之冠」。"
@@ -67,7 +67,7 @@ export default async function AscendingHeartPage() {
             </div>
 
             <div>
-              <h2 id="practice-chapter-3" className="font-display text-3xl font-light text-bone"><Bi zh="两条轴的交汇" en="Where the two axes meet" /></h2>
+              <h2 id="practice-chapter-3" className="font-display text-3xl font-light text-[var(--lx-ink)]"><Bi zh="两条轴的交汇" en="Where the two axes meet" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="行星轴（水平轴）：连接光体与地球物质存在，将光体接地锚定于行星。中枢太阳轴（垂直轴）：连接光体与中枢太阳源头，承载下降与上升的能量流。两条轴的交汇点——上升心经，正是个体的活化点。"
@@ -77,7 +77,7 @@ export default async function AscendingHeartPage() {
             </div>
 
             <div>
-              <h2 id="practice-chapter-4" className="font-display text-3xl font-light text-bone"><Bi zh="光体的迁移与意义" en="The light-body's migration, and its meaning" /></h2>
+              <h2 id="practice-chapter-4" className="font-display text-3xl font-light text-[var(--lx-ink)]"><Bi zh="光体的迁移与意义" en="The light-body's migration, and its meaning" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="光体曾是意识的核心，坐落于松果腺；但因心智长期僵化与扭曲，压制了光体的绽放。如今光体正移向上升心经，以便将能量充分绽放至行星栅格，实现其目的。"
@@ -93,7 +93,7 @@ export default async function AscendingHeartPage() {
             </div>
 
             <div>
-              <h2 id="practice-chapter-5" className="font-display text-3xl font-light text-bone"><Bi zh="建设者与光之承载者" en="Builders and Light-Bearers" /></h2>
+              <h2 id="practice-chapter-5" className="font-display text-3xl font-light text-[var(--lx-ink)]"><Bi zh="建设者与光之承载者" en="Builders and Light-Bearers" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="当下化身的人类中，有许多是「建设者」——设计新文化、金融、科技、灵性系统的设计师与工程师。"
@@ -109,7 +109,7 @@ export default async function AscendingHeartPage() {
             </div>
 
             <div>
-              <h2 id="practice-chapter-6" className="font-display text-3xl font-light text-bone"><Bi zh="呼吸与灵魂的关系" en="The relationship between breath and soul" /></h2>
+              <h2 id="practice-chapter-6" className="font-display text-3xl font-light text-[var(--lx-ink)]"><Bi zh="呼吸与灵魂的关系" en="The relationship between breath and soul" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="灵魂的呼吸由光体引导。光体智能的工作席位于上升心经。吸气时，中枢太阳的光能经顶轮流入，停驻于太阳神经丛，闪耀个人标识的金色光芒。呼气时，能量从太阳神经丛向上释放至上升心经，再向外绽放到行星轴，接地进第三维度所有存在的能量场。"
@@ -119,7 +119,7 @@ export default async function AscendingHeartPage() {
             </div>
 
             <div>
-              <h2 id="practice-chapter-7" className="font-display text-3xl font-light text-bone"><Bi zh="呼吸的终极目的" en="The ultimate purpose of the breath" /></h2>
+              <h2 id="practice-chapter-7" className="font-display text-3xl font-light text-[var(--lx-ink)]"><Bi zh="呼吸的终极目的" en="The ultimate purpose of the breath" /></h2>
               <p className="mt-6">
                 <Bi
                   zh="吸气吸入中枢太阳的光，带入灵魂的工作室，添加进带有你个人指纹的爱，再释放给兄弟姊妹和地球——这一简单行为便创造了更高的连接。借此重新激活呼吸与心跳的联合，校准于宏大觉醒，将假象场留在身后。"
@@ -133,13 +133,13 @@ export default async function AscendingHeartPage() {
 
               </div>
               <div className="space-y-10">
-                <p className="text-sm leading-8 text-bone-dim">
+                <p className="text-sm leading-8 text-[var(--lx-muted)]">
                   <Bi zh="预备：感知胸腺区（心脏与喉咙间）为「上升心经」能量交汇点，即两条轴的交汇处。" en="Preparation: sense the thymus region (between heart and throat) as the energy meeting point of the 'Rising Heart' — where the two axes intersect." />
                 </p>
 
-                <div className="border-l border-lattice/30 pl-6">
-                  <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第一式" en="First Form" /></p>
-                  <h3 id="practice-chapter-8" className="mt-2 font-display text-2xl text-bone"><Bi zh="吸气接引（源能灌入）" en="Inhale and Receive (Source Energy Infusion)" /></h3>
+                <div className="border-l border-[var(--lx-line)] pl-6">
+                  <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]"><Bi zh="第一式" en="First Form" /></p>
+                  <h3 id="practice-chapter-8" className="mt-2 font-display text-2xl text-[var(--lx-ink)]"><Bi zh="吸气接引（源能灌入）" en="Inhale and Receive (Source Energy Infusion)" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="吸气时，观想中枢太阳的金色光能自顶轮灌入，沿脊柱下行，沉入太阳神经丛（脐上）。光在此暂驻，闪耀你独有的个人基调与标识。此为「接收指令」阶段。"
@@ -148,9 +148,9 @@ export default async function AscendingHeartPage() {
                   </p>
                 </div>
 
-                <div className="border-l border-lattice/30 pl-6">
-                  <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第二式" en="Second Form" /></p>
-                  <h3 id="practice-chapter-9" className="mt-2 font-display text-2xl text-bone"><Bi zh="呼气绽出（接地赋力）" en="Exhale and Radiate (Grounded Empowerment)" /></h3>
+                <div className="border-l border-[var(--lx-line)] pl-6">
+                  <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]"><Bi zh="第二式" en="Second Form" /></p>
+                  <h3 id="practice-chapter-9" className="mt-2 font-display text-2xl text-[var(--lx-ink)]"><Bi zh="呼气绽出（接地赋力）" en="Exhale and Radiate (Grounded Empowerment)" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="呼气时，将此能量从太阳神经丛上提至胸腺（上升心经），再沿水平轴向外辐射，接地进行星栅格及众生能量场。每一次呼出，即将更高之光分享给集体之心。此为「投放服务」阶段。"
@@ -159,9 +159,9 @@ export default async function AscendingHeartPage() {
                   </p>
                 </div>
 
-                <div className="border-l border-lattice/30 pl-6">
-                  <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第三式" en="Third Form" /></p>
-                  <h3 id="practice-chapter-10" className="mt-2 font-display text-2xl text-bone"><Bi zh="载波调频（标识场锚定）" en="Carrier-Wave Modulation (Signature-Field Anchoring)" /></h3>
+                <div className="border-l border-[var(--lx-line)] pl-6">
+                  <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]"><Bi zh="第三式" en="Third Form" /></p>
+                  <h3 id="practice-chapter-10" className="mt-2 font-display text-2xl text-[var(--lx-ink)]"><Bi zh="载波调频（标识场锚定）" en="Carrier-Wave Modulation (Signature-Field Anchoring)" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="呼吸间，感知自身电磁场如「载波」，承载中枢太阳的原生信号。以内在聚合一致性（思想与情感校准于神圣意志）调制此波，使光能穿透行星的僵化与扭曲电磁场。你的标识场因之成为更高之光的穿透载体。"
@@ -170,9 +170,9 @@ export default async function AscendingHeartPage() {
                   </p>
                 </div>
 
-                <div className="border-l border-lattice/30 pl-6">
-                  <p className="font-display text-sm uppercase tracking-widest2 text-amber"><Bi zh="第四式" en="Fourth Form" /></p>
-                  <h3 id="practice-chapter-11" className="mt-2 font-display text-2xl text-bone"><Bi zh="节律合一（心跳与呼吸协同）" en="Rhythmic Unity (Heartbeat and Breath in Concert)" /></h3>
+                <div className="border-l border-[var(--lx-line)] pl-6">
+                  <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]"><Bi zh="第四式" en="Fourth Form" /></p>
+                  <h3 id="practice-chapter-11" className="mt-2 font-display text-2xl text-[var(--lx-ink)]"><Bi zh="节律合一（心跳与呼吸协同）" en="Rhythmic Unity (Heartbeat and Breath in Concert)" /></h3>
                   <p className="mt-3">
                     <Bi
                       zh="察觉呼吸与心跳的联合节律，视其为连接宇宙智能的活线，连接个体生命与中枢太阳的遍在智能。吸气为「接引」，呼气为「绽出」，在往复中平衡光与爱的流入流出。此种节律协同，能长久维系光体的活化状态，并复原人类仪具的平衡。"
@@ -181,8 +181,8 @@ export default async function AscendingHeartPage() {
                   </p>
                 </div>
 
-                <div className="bg-reading-glass p-8">
-                  <p className="font-display text-lg text-lattice"><Bi zh="练习要诀" en="Practice notes" /></p>
+                <div className="bg-[var(--lx-panel)] p-8">
+                  <p className="font-display text-lg text-[var(--lx-ink)]"><Bi zh="练习要诀" en="Practice notes" /></p>
                   <p className="mt-4">
                     <Bi
                       zh="反复阅读全文，避免轻率判定其是否有益。运用直觉诠释，精密细节由个体自行完成。每日练习，将此呼吸融入静止与行动。你的行为系统与美德之心的表达，才是界定你的真正标志。"

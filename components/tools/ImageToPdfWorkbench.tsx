@@ -1,0 +1,9 @@
+"use client";
+import { useState } from "react";
+import { PDFDocument } from "pdf-lib";
+function dl(bytes:Uint8Array){const c=new Uint8Array(bytes.length);c.set(bytes);const u=URL.createObjectURL(new Blob([c.buffer],{type:"application/pdf"}));const a=document.createElement("a");a.href=u;a.download="lingxifield-images.pdf";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
+export default function ImageToPdfWorkbench(){
+ const [files,setFiles]=useState<File[]>([]);const [busy,setBusy]=useState(false);const [error,setError]=useState("");
+ async function run(){setBusy(true);setError("");try{const out=await PDFDocument.create();for(const f of files){const ab=await f.arrayBuffer();const img=/png/i.test(f.type)||/\.png$/i.test(f.name)?await out.embedPng(ab):await out.embedJpg(ab);const p=out.addPage([img.width,img.height]);p.drawImage(img,{x:0,y:0,width:img.width,height:img.height});}dl(await out.save());}catch(e){setError("只支持 JPG / PNG："+(e instanceof Error?e.message:String(e)));}finally{setBusy(false);}}
+ return <div className="space-y-4"><label className="block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-7 text-center"><input type="file" multiple accept="image/jpeg,image/png" className="hidden" onChange={e=>setFiles([...(e.target.files||[])])}/><b>选择多张 JPG / PNG</b><p className="mt-1 text-sm text-slate-500">文件选择顺序就是 PDF 页顺序。</p></label>{files.length>0&&<div className="rounded-xl bg-slate-50 p-3 text-sm">{files.map((f,i)=><div key={f.name}>{i+1}. {f.name}</div>)}</div>}<button disabled={!files.length||busy} onClick={run} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm text-white disabled:opacity-40">{busy?"生成中…":"生成 PDF"}</button>{error&&<p className="text-sm text-rose-600">{error}</p>}</div>;
+}

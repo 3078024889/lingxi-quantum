@@ -26,17 +26,17 @@ export default function RefundsPage() {
     <>
       <Nav />
       <main className="mx-auto max-w-3xl px-6 py-24">
-        <div className="rounded-sm border border-white/10 bg-void-deep px-8 py-10 sm:px-12 sm:py-14">
-        <h1 className="font-display text-4xl font-light text-bone">
+        <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-8 py-10 sm:px-12 sm:py-14">
+        <h1 className="font-display text-4xl font-light text-[var(--lx-ink)]">
           <Bi zh="退款政策" en="Refund Policy" />
         </h1>
-        <p className="mt-2 text-sm text-bone-dim">
+        <p className="mt-2 text-sm text-[var(--lx-muted)]">
           <Bi zh="最后更新：2026年7月" en="Last updated: July 2026" />
         </p>
 
-        <div className="mt-10 space-y-8 text-base leading-8 text-bone-dim">
+        <div className="mt-10 space-y-8 text-base leading-8 text-[var(--lx-muted)]">
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="1. 数字体验说明" en="1. About Digital Experiences" />
             </h2>
             <p className="mt-3">
@@ -48,7 +48,7 @@ export default function RefundsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="2. 可以申请退款的情况" en="2. When a Refund Can Be Requested" />
             </h2>
             <p className="mt-3">
@@ -60,7 +60,7 @@ export default function RefundsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="3. 通常无法退款的情况" en="3. When a Refund Generally Isn't Available" />
             </h2>
             <p className="mt-3">
@@ -72,7 +72,7 @@ export default function RefundsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="4. 退款申请流程" en="4. How to Request a Refund" />
             </h2>
             <p className="mt-3">
@@ -84,7 +84,7 @@ export default function RefundsPage() {
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-bone">
+            <h2 className="font-display text-xl text-[var(--lx-ink)]">
               <Bi zh="联系我们" en="Contact Us" />
             </h2>
             <div className="mt-3 space-y-1 text-sm">
