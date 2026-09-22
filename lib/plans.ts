@@ -10,8 +10,9 @@ export type Product = {
   note: string;
   noteEn: string;
   highlight?: boolean;
-  group: "cultivation" | "manifestation" | "production";
+  group: "cultivation" | "manifestation" | "production" | "ai";
   sasiAmountFen?: number;
+  aiAmountFen?: number;
 };
 
 export const cultivationProducts: Product[] = [
@@ -85,7 +86,22 @@ export const sasiProductionProducts: Product[] = [
   })),
 ];
 
-export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts, ...sasiProductionProducts];
+export const aiBalanceProducts: Product[] = [
+  ...[
+    ["ai-balance-10","AI余额 ¥10","AI Balance ¥10",10,1.5],
+    ["ai-balance-30","AI余额 ¥30","AI Balance ¥30",30,4.5],
+    ["ai-balance-50","AI余额 ¥50","AI Balance ¥50",50,7.5],
+    ["ai-balance-100","AI余额 ¥100","AI Balance ¥100",100,15],
+    ["ai-balance-300","AI余额 ¥300","AI Balance ¥300",300,45],
+    ["ai-balance-500","AI余额 ¥500","AI Balance ¥500",500,75],
+  ].map(([id,name,nameEn,priceRmb,priceUsd])=>({
+    id:String(id),name:String(name),nameEn:String(nameEn),priceRmb:Number(priceRmb),priceUsd:Number(priceUsd),
+    type:"permanent" as const,note:"充值多少到账多少；按实际 AI 使用量扣费，未使用充值本金长期保留。",
+    noteEn:"RMB balance for hosted AI usage.",group:"ai" as const,aiAmountFen:Number(priceRmb)*100,
+  }))
+];
+
+export const allProducts = [...cultivationProducts, ...manifestationProducts, ...narrativeProducts, ...lifeMapProducts, ...relationshipProducts, ...qianProducts, ...tarotReadingProducts, ...resilienceProducts, ...romanceProducts, ...dailyTideProducts, ...wealthProducts, ...lifeArchetypeProducts, ...sasiProductionProducts, ...aiBalanceProducts];
 export function getProduct(id: string) {
   const configured = allProducts.find((p) => p.id === id);
   if (configured) return configured;
