@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Bi from "@/components/Bi";
 import { createClient } from "@/lib/supabase/client";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { reportUiLabel, lifeVectorLabel, relationshipPairLabel, humanDesignLabel, numberEnergyLabel } from "@/lib/report-ui-labels";
+import { localizeReportItems } from "@/lib/report-localize-client";
 import { stripMarkdownArtifacts, stripRepeatedHeading } from "@/lib/text-clean";
 import { DIM_LABEL, type LifeVector, type LifeVectorDim } from "@/lib/life-vector";
 import SpiralField from "@/components/SpiralField";
@@ -83,12 +86,15 @@ function parseReportSections(report: string): string[] {
 }
 
 export default function RelationshipReportView({ id }: { id: string }) {
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => (lang === "zh" ? zh : en);
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
   const [error, setError] = useState("");
   const [names, setNames] = useState<{ a: string; b: string } | null>(null);
   const [sections, setSections] = useState<string[]>([]);
+  const [localizedTitles, setLocalizedTitles] = useState<string[]>([]);
+  const [localizedPdfMeta, setLocalizedPdfMeta] = useState<{title:string;statement:string;archive:string}|null>(null);
   const [resonance, setResonance] = useState<{
     resonant: { labelZh: string; labelEn: string; a: number; b: number }[];
     complementary: { labelZh: string; labelEn: string }[];
@@ -118,12 +124,12 @@ export default function RelationshipReportView({ id }: { id: string }) {
         if (submission.relationship_type) setRelType(submission.relationship_type);
       }
 
-      const currentLangEn = document.documentElement.classList.contains("lang-en");
+      const sourceLang = lang === "zh" ? "zh" : "en";
       const fetchReport = (regenerate: boolean) =>
         fetch("/api/relationship/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate }),
+          body: JSON.stringify({ id, lang: sourceLang, regenerate }),
         });
       try {
         let res = await fetchReport(false);
@@ -158,7 +164,45 @@ export default function RelationshipReportView({ id }: { id: string }) {
             parts = parseReportSections(data.fullReport as string);
           }
         }
-        setSections(parts);
+        const effectiveRelType: "romantic" | "business" | "general" =
+
+          submission?.relationship_type === "business" ? "business" :
+
+          submission?.relationship_type === "general" ? "general" : "romantic";
+
+        const sourceTitles = CHAPTER_TITLES[effectiveRelType].map((item) => sourceLang === "zh" ? item.zh : item.en);
+
+        const sourcePdfMeta = sourceLang === "zh"
+
+          ? { title: effectiveRelType === "business" ? "你的灵犀合伙商业关系共振" : effectiveRelType === "general" ? "你的灵犀其他关系共振" : "你的灵犀深度关系共振",
+
+              statement: effectiveRelType === "business" ? "盟以利合，更须以责相守；观其同向，亦察其相争。" : effectiveRelType === "general" ? "缘有远近，情有分寸；明其所连，亦定其所止。" : "相遇非答案，照见方是；观其所亲，亦察其所惧。",
+
+              archive: effectiveRelType === "business" ? "灵犀场合伙商业关系共振档案" : effectiveRelType === "general" ? "灵犀场其他关系共振档案" : "灵犀场深度关系共振档案" }
+
+          : { title: effectiveRelType === "business" ? "Your Lingxi Business Partnership Resonance" : effectiveRelType === "general" ? "Your Lingxi Other Relationship Resonance" : "Your Lingxi Deep Relationship Resonance",
+
+              statement: effectiveRelType === "business" ? "Alliance begins in shared value and endures through explicit responsibility." : effectiveRelType === "general" ? "Every bond has a fitting distance; see what joins it and where it must stop." : "Meeting is not the answer; the bond reveals how each approaches and withdraws.",
+
+              archive: "LINGXI FIELD RELATIONSHIP RESONANCE ARCHIVE" };
+
+        const localized = await localizeReportItems({
+
+          reportKey: "relationship:" + id + ":v104f",
+
+          targetLang: lang,
+
+          items: [...sourceTitles, ...parts, sourcePdfMeta.title, sourcePdfMeta.statement, sourcePdfMeta.archive],
+
+        });
+
+        setLocalizedTitles(localized.items.slice(0, sourceTitles.length));
+
+        setSections(localized.items.slice(sourceTitles.length, sourceTitles.length + parts.length));
+
+        const metaOffset = sourceTitles.length + parts.length;
+
+        setLocalizedPdfMeta({title:localized.items[metaOffset]??sourcePdfMeta.title,statement:localized.items[metaOffset+1]??sourcePdfMeta.statement,archive:localized.items[metaOffset+2]??sourcePdfMeta.archive});
         if (data.resonance) setResonance(data.resonance);
         if (data.vectors) setVectors(data.vectors);
         setStatus("ready");
@@ -168,7 +212,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
       }
     };
     load();
-  }, [id, langEn]);
+  }, [id, lang]);
 
   // 跟生命图谱完整报告用的是同一套导出方式（见 app/life-map/full/
   // FullReportView.tsx 里 downloadPdf 的详细注释）：按"每个章节"单独
@@ -203,27 +247,28 @@ export default function RelationshipReportView({ id }: { id: string }) {
           : { zh: "深度关系共振", en: "Deep Relationship Resonance" };
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? titles[i]?.en : titles[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
+          title: (localizedTitles[i] ?? (langEn ? titles[i]?.en : titles[i]?.zh)) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body,
           // 第 1 章配双生命雷达图，第 2 章配共振分数条——把图放在
           // 它真正说明的那一章旁边，而不是全堆在封面后面。
           figure: i === 0 ? radarRef.current : i === 1 ? resonanceRef.current : null,
           figureCaption:
             i === 0
-              ? t("两份生命向量叠放在同一张图上——重合处是共鸣，错开处是互补。",
-                  "Two life vectors laid over one another — where they overlap is resonance; where they diverge is complement.")
+              ? reportUiLabel(lang, "radarFigure")
               : i === 1
-              ? t("共鸣点 · 互补点 · 摩擦点，按强度排列。",
-                  "Resonance, complement, and friction — ordered by intensity.")
+              ? reportUiLabel(lang, "scoreFigure")
               : undefined,
         })),
         fileName: langEn ? `Lingxi-${relLabel.en}-${reportTitle}.pdf` : `灵犀${relLabel.zh}档案-${reportTitle}.pdf`,
         titleZh: `你的灵犀${relLabel.zh}`,
         titleEn: `Your Lingxi ${relLabel.en}`,
         subjectName: reportTitle,
+        titleLocalized: localizedPdfMeta?.title,
         coverStatementZh: relType === "business" ? "盟以利合，更须以责相守；观其同向，亦察其相争。" : relType === "general" ? "缘有远近，情有分寸；明其所连，亦定其所止。" : "相遇非答案，照见方是；观其所亲，亦察其所惧。",
+        coverStatementLocalized: localizedPdfMeta?.statement,
         coverStatementEn: relType === "business" ? "Alliance begins in shared value and endures through explicit responsibility." : relType === "general" ? "Every bond has a fitting distance; see what joins it and where it must stop." : "Meeting is not the answer; the bond reveals how each approaches and withdraws.",
         archiveLabelZh: `灵犀场${relLabel.zh}档案`,
+        archiveLabelLocalized: localizedPdfMeta?.archive,
         language: langEn ? "en" : "zh",
         eyebrow: "RELATIONSHIP RESONANCE",
         theme: ARCHIVE_THEMES.relationship,
@@ -349,7 +394,7 @@ export default function RelationshipReportView({ id }: { id: string }) {
 
         {vectors && (
           <div className="mt-6" ref={radarRef}>
-            <ResonanceRadar vA={vectors.a} vB={vectors.b} nameA={names?.a || "A"} nameB={names?.b || "B"} langEn={langEn} />
+            <ResonanceRadar vA={vectors.a} vB={vectors.b} nameA={names?.a || "A"} nameB={names?.b || "B"} lang={lang} />
           </div>
         )}
 
@@ -357,11 +402,11 @@ export default function RelationshipReportView({ id }: { id: string }) {
           <div className="lx-report-glass mt-6 space-y-6 p-6" ref={resonanceRef}>
             {resonance.resonant.length > 0 && (
               <div>
-                <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh="共鸣点 · 共享的驱动力" en="Resonance · Shared Drives" /></p>
+                <p className="text-xs uppercase tracking-widest2 text-lattice">{reportUiLabel(lang, "resonance")}</p>
                 <div className="mt-3 space-y-2">
                   {resonance.resonant.map((r, i) => (
                     <div key={i} className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 text-[13px]">
-                      <span className="text-bone-dim">{t(r.labelZh, r.labelEn)}</span>
+                      <span className="text-bone-dim">{lifeVectorLabel(lang, r.labelEn, r.labelZh)}</span>
                       <span className="tabular-nums text-bone-soft">{r.a} / {r.b}</span>
                       <div className="col-span-2 flex h-[5px] overflow-hidden rounded-[2px] bg-[rgba(60,55,70,.06)]">
                         <div className="h-full bg-[#7789A5]" style={{ width: `${r.a}%` }} />
@@ -374,20 +419,20 @@ export default function RelationshipReportView({ id }: { id: string }) {
             )}
             {resonance.complementary.length > 0 && (
               <div>
-                <p className="text-xs uppercase tracking-widest2 text-amber"><Bi zh="互补点 · 天然分工" en="Complementary · Natural Division" /></p>
+                <p className="text-xs uppercase tracking-widest2 text-amber">{reportUiLabel(lang, "complementary")}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {resonance.complementary.map((c, i) => (
-                    <span key={i} className="rounded-full border border-amber/30 bg-amber/10 px-3 py-1 text-xs text-amber">{t(c.labelZh, c.labelEn)}</span>
+                    <span key={i} className="rounded-full border border-amber/30 bg-amber/10 px-3 py-1 text-xs text-amber">{relationshipPairLabel(lang, c.labelEn, c.labelZh)}</span>
                   ))}
                 </div>
               </div>
             )}
             {resonance.friction.length > 0 && (
               <div>
-                <p className="text-xs uppercase tracking-widest2 text-rose"><Bi zh="摩擦点 · 需要留意" en="Friction · Worth Watching" /></p>
+                <p className="text-xs uppercase tracking-widest2 text-rose">{reportUiLabel(lang, "friction")}</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {resonance.friction.map((c, i) => (
-                    <span key={i} className="rounded-full border border-rose/30 bg-rose/10 px-3 py-1 text-xs text-rose">{t(c.labelZh, c.labelEn)}</span>
+                    <span key={i} className="rounded-full border border-rose/30 bg-rose/10 px-3 py-1 text-xs text-rose">{relationshipPairLabel(lang, c.labelEn, c.labelZh)}</span>
                   ))}
                 </div>
               </div>
@@ -455,7 +500,7 @@ const RADAR_DIMS: LifeVectorDim[] = [
   "emotionalDepth", "introspection", "socialDrive", "ambition", "adaptability",
 ];
 
-function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: LifeVector; nameA: string; nameB: string; langEn: boolean }) {
+function ResonanceRadar({ vA, vB, nameA, nameB, lang }: { vA: LifeVector; vB: LifeVector; nameA: string; nameB: string; lang: import("@/lib/lingxi-i18n").LingxiLang }) {
   const SIZE = 500, CENTER = 250, MAX_R = 164;
   const angleFor = (i: number) => -Math.PI / 2 + (i * 2 * Math.PI) / RADAR_DIMS.length;
   const pointsFor = (v: LifeVector) =>
@@ -475,13 +520,13 @@ function ResonanceRadar({ vA, vB, nameA, nameB, langEn }: { vA: LifeVector; vB: 
     return {
       x: CENTER + (MAX_R + 52) * Math.cos(angle),
       y: CENTER + (MAX_R + 52) * Math.sin(angle),
-      label: langEn ? DIM_LABEL[dim].en : DIM_LABEL[dim].zh,
+      label: lifeVectorLabel(lang, DIM_LABEL[dim].en, DIM_LABEL[dim].zh),
     };
   });
 
   return (
     <div className="lx-report-chart lx-report-page--chart p-5">
-      <p className="lx-report-chart-title"><Bi zh="生命向量对比" en="Life Vector Comparison" /></p>
+      <p className="lx-report-chart-title">{reportUiLabel(lang, "vectorComparison")}</p>
       <div className="mt-4 flex flex-col items-center">
         <svg viewBox={`-42 -36 ${SIZE + 84} ${SIZE + 76}`} className="aspect-square h-auto w-full max-w-[500px] overflow-visible">
           {gridRings.map((pts, i) => (

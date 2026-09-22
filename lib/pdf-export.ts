@@ -316,10 +316,7 @@ export async function exportPublicationPagesPdf(params: {
  * PNG at 2x preserves the fine Chinese strokes, compass lines and translucent
  * evidence panels while each canvas is still released before the next page.
  */
-export async function exportStellarTracePdf(params: {
-  containerRef: HTMLElement;
-  fileName: string;
-}): Promise<void> {
+): Promise<void> {
   const { containerRef, fileName } = params;
   await document.fonts.ready;
   const pages = Array.from(containerRef.children).filter((node): node is HTMLElement =>
@@ -727,12 +724,16 @@ export async function exportArchivePdf(params: {
   fileName: string;
   titleZh: string;
   titleEn: string;
+  /** Fully localized cover text for JA/KO/FR/DE/ES/PT/AR. */
+  titleLocalized?: string;
   /** Cover identity and editorial line shared by every paid archive. */
   subjectName?: string;
   coverStatementZh?: string;
   coverStatementEn?: string;
+  coverStatementLocalized?: string;
   archiveLabelZh?: string;
   archiveLabelEn?: string;
+  archiveLabelLocalized?: string;
   /** 当前报告语言。英文档案必须单语输出，不能在封面残留中文标题。 */
   language?: "zh" | "en";
   coverImage: string;
@@ -756,8 +757,8 @@ export async function exportArchivePdf(params: {
 }): Promise<void> {
   const { chapters, fileName, titleZh, titleEn, coverImage, bodyImages, endImage } = params;
   const language = params.language ?? "zh";
-  const primaryTitle = language === "en" ? titleEn : titleZh;
-  const secondaryTitle = language === "en" ? "" : titleEn;
+  const primaryTitle = params.titleLocalized ?? (language === "en" ? titleEn : titleZh);
+  const secondaryTitle = params.titleLocalized ? "" : (language === "en" ? "" : titleEn);
   const eyebrow = params.eyebrow ?? "LINGXI FIELD";
   const theme = params.theme ?? ARCHIVE_THEMES.resilience;
   if (!coverImage || !endImage || bodyImages.length === 0) {
@@ -834,12 +835,8 @@ export async function exportArchivePdf(params: {
     return first && first === normalizedTitle(title) ? lines.slice(1).join("\n").trim() : body.trim();
   };
   const subjectName = params.subjectName?.trim() || (language === "en" ? "Personal Archive" : "个人场域档案");
-  const coverStatement = language === "en"
-    ? (params.coverStatementEn ?? "A field archive grounded in calculation, evidence, and lived verification.")
-    : (params.coverStatementZh ?? "取其时，参其证，照见此刻生命结构。");
-  const archiveLabel = language === "en"
-    ? (params.archiveLabelEn ?? "LINGXI FIELD ARCHIVE")
-    : (params.archiveLabelZh ?? "灵犀场生命档案");
+  const coverStatement = params.coverStatementLocalized ?? (language === "en" ? (params.coverStatementEn ?? "A field archive grounded in calculation, evidence, and lived verification.") : (params.coverStatementZh ?? "取其时，参其证，照见此刻生命结构。"));
+  const archiveLabel = params.archiveLabelLocalized ?? (language === "en" ? (params.archiveLabelEn ?? "LINGXI FIELD ARCHIVE") : (params.archiveLabelZh ?? "灵犀场生命档案"));
   const issuedDate = new Date().toISOString().slice(0,10).replace(/-/g,"/");
 
   // ── 封面 ──

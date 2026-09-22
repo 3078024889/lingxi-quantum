@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useLang } from "@/lib/useLang";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { localizeReportItems } from "@/lib/report-localize-client";
 import Bi from "@/components/Bi";
 import { LIFE_SIGNS, TIER_LABELS } from "@/lib/qian-data";
 import ShareButton from "@/components/ShareButton";
@@ -45,14 +46,18 @@ type AbilityItem = { key: string; zh: string; en: string; score: number };
 type LifeStage = { zh: string; en: string };
 
 export default function QianReport({ id }: { id: string }) {
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => (lang === "zh" ? zh : en);
   const [status, setStatus] = useState<"checking" | "locked" | "ready" | "error">("checking");
   const [error, setError] = useState("");
   const [retry, setRetry] = useState(0);
   const [name, setName] = useState("");
   const [signs, setSigns] = useState<typeof LIFE_SIGNS>([]);
   const [sections, setSections] = useState<string[]>([]);
+  const [localizedTitles, setLocalizedTitles] = useState<string[]>([]);
+  const [localizedPdfMeta, setLocalizedPdfMeta] = useState<{title:string;statement:string;archive:string}|null>(null);
+  const [localizedAux, setLocalizedAux] = useState<string[]>([]);
   const [abilityMap, setAbilityMap] = useState<AbilityItem[]>([]);
   const [lifeStage, setLifeStage] = useState<LifeStage | null>(null);
   const [unlocking, setUnlocking] = useState(false);
@@ -75,12 +80,12 @@ export default function QianReport({ id }: { id: string }) {
         setSigns((submission.sign_indexes as number[]).map((i) => LIFE_SIGNS[i]));
       }
 
-      const currentLangEn = document.documentElement.classList.contains("lang-en");
+      const sourceLang = lang === "zh" ? "zh" : "en";
       const fetchReport = (regenerate: boolean) =>
         fetch("/api/qian/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate }),
+          body: JSON.stringify({ id, lang: sourceLang, regenerate }),
         });
       try {
         let res = await fetchReport(false);
@@ -111,7 +116,27 @@ export default function QianReport({ id }: { id: string }) {
             parts = splitReport(data.fullReport as string);
           }
         }
-        setSections(parts);
+        const sourceTitles=LAYER_TITLES.map((item)=>sourceLang==="zh"?item.zh:item.en);
+
+        const sourcePdfMeta=sourceLang==="zh"?{title:"你的灵犀生命灵签",statement:"签不代决，惟照此心；观其所问，明其所守与所行。",archive:"灵犀场生命灵签档案"}:{title:"Your Lingxi Life Oracle",statement:"The oracle does not decide for you; it reveals the question, the guardrail, and the next act.",archive:"LINGXI FIELD LIFE ORACLE ARCHIVE"};
+
+        const localized=await localizeReportItems({
+
+          reportKey:"qian:"+id+":v104f",
+
+          targetLang:lang,
+
+          items:[...sourceTitles,...parts,sourcePdfMeta.title,sourcePdfMeta.statement,sourcePdfMeta.archive],
+
+        });
+
+        setLocalizedTitles(localized.items.slice(0,sourceTitles.length));
+
+        setSections(localized.items.slice(sourceTitles.length,sourceTitles.length+parts.length));
+
+        const metaOffset=sourceTitles.length+parts.length;
+
+        setLocalizedPdfMeta({title:localized.items[metaOffset]??sourcePdfMeta.title,statement:localized.items[metaOffset+1]??sourcePdfMeta.statement,archive:localized.items[metaOffset+2]??sourcePdfMeta.archive});
         if (Array.isArray(data.abilityMap)) setAbilityMap(data.abilityMap);
         if (data.lifeStage) setLifeStage(data.lifeStage);
         setStatus("ready");
@@ -122,7 +147,51 @@ export default function QianReport({ id }: { id: string }) {
     };
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, langEn, retry]);
+  }, [id, lang, retry]);
+
+
+  useEffect(() => {
+    let alive = true;
+    const run = async () => {
+      const base = [
+        ...signs.flatMap((sign) => [sign.nameEn, TIER_LABELS[sign.tier].en]),
+        ...(lifeStage ? [lifeStage.en] : []),
+        ...abilityMap.map((item) => item.en),
+      ];
+      if (!base.length) { if (alive) setLocalizedAux([]); return; }
+      if (lang === "en") { if (alive) setLocalizedAux(base); return; }
+      if (lang === "zh") {
+        const zh = [
+          ...signs.flatMap((sign) => [sign.nameZh, TIER_LABELS[sign.tier].zh]),
+          ...(lifeStage ? [lifeStage.zh] : []),
+          ...abilityMap.map((item) => item.zh),
+        ];
+        if (alive) setLocalizedAux(zh);
+        return;
+      }
+      const localized = await localizeReportItems({
+        reportKey: "qian-aux:" + id + ":v104g",
+        targetLang: lang,
+        items: base,
+      });
+      if (alive) setLocalizedAux(localized.items);
+    };
+    void run();
+    return () => { alive = false; };
+  }, [id, lang, signs, lifeStage, abilityMap]);
+
+  const qianSignName = (i: number) =>
+    localizedAux[i * 2] ?? (lang === "zh" ? signs[i]?.nameZh : signs[i]?.nameEn) ?? "";
+  const qianTierLabel = (i: number) =>
+    localizedAux[i * 2 + 1] ?? (signs[i] ? (lang === "zh" ? TIER_LABELS[signs[i].tier].zh : TIER_LABELS[signs[i].tier].en) : "");
+  const qianLifeStageLabel = () => {
+    const offset = signs.length * 2;
+    return lifeStage ? (localizedAux[offset] ?? (lang === "zh" ? lifeStage.zh : lifeStage.en)) : "";
+  };
+  const qianAbilityLabel = (i: number) => {
+    const offset = signs.length * 2 + (lifeStage ? 1 : 0);
+    return localizedAux[offset + i] ?? (lang === "zh" ? abilityMap[i]?.zh : abilityMap[i]?.en) ?? "";
+  };
 
   const unlock = () => {
     if (REVIEW_MODE) {
@@ -148,17 +217,20 @@ export default function QianReport({ id }: { id: string }) {
       await exportArchivePdf({
         chapters: sections
           .map((body, i) => ({
-            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
+            title: (localizedTitles[i] ?? (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh)) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
             body,
           }))
           .filter((c) => c.body && c.body.trim()),
         fileName: langEn ? `Lingxi-Life-Oracle-${name || "report"}.pdf` : `灵犀生命灵签-${name || "report"}.pdf`,
         titleZh: "你的灵犀生命灵签",
+        titleLocalized: localizedPdfMeta?.title,
         titleEn: "Your Lingxi Life Oracle",
         subjectName: name || "未署名",
         coverStatementZh: "签不代决，惟照此心；观其所问，明其所守与所行。",
+        coverStatementLocalized: localizedPdfMeta?.statement,
         coverStatementEn: "The oracle does not decide for you; it reveals the question, the guardrail, and the next act.",
         archiveLabelZh: "灵犀场生命灵签档案",
+        archiveLabelLocalized: localizedPdfMeta?.archive,
         language: langEn ? "en" : "zh",
         eyebrow: "LIFE ORACLE",
         theme: ARCHIVE_THEMES.qian,
@@ -167,8 +239,8 @@ export default function QianReport({ id }: { id: string }) {
         endImage: "/images/qian-full/page-11.png",
         featurePages: signs.map((sign, i) => ({
           image: `/images/qian/${String(sign.index).padStart(2, "0")}.jpg`,
-          title: langEn ? sign.nameEn : sign.nameZh,
-          subtitle: langEn ? TIER_LABELS[sign.tier].en : TIER_LABELS[sign.tier].zh,
+          title: qianSignName(i),
+          subtitle: qianTierLabel(i),
           eyebrow: `LIFE ORACLE · ${String(i + 1).padStart(2, "0")}`,
         })),
       });
@@ -259,10 +331,10 @@ export default function QianReport({ id }: { id: string }) {
           style={{ backgroundImage: `url(/images/qian-full/page-${(i % 3) + 1}.png)`, backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="lx-report-glass lx-report-glass-readable flex w-full flex-col items-center px-7 py-10 text-center sm:px-12">
-            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh={TIER_LABELS[sign.tier].zh} en={TIER_LABELS[sign.tier].en} /></p>
+            <p className="text-xs uppercase tracking-widest2 text-lattice">{qianTierLabel(i)}</p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/images/qian/${String(sign.index).padStart(2, "0")}.jpg`} alt={langEn ? sign.nameEn : sign.nameZh} className="lx-publication-card-art mt-6" />
-            <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl"><Bi zh={sign.nameZh} en={sign.nameEn} /></h2>
+              <img src={`/images/qian/${String(sign.index).padStart(2, "0")}.jpg`} alt={qianSignName(i)} className="lx-publication-card-art mt-6" />
+            <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl">{qianSignName(i)}</h2>
             <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh="这一签独占一页，让它在你的生命档案中完整显现。" en="This sign receives its own page, complete within your life archive." /></p>
           </div>
         </section>
@@ -283,7 +355,7 @@ export default function QianReport({ id }: { id: string }) {
                   <Bi zh="当前所处阶段" en="Current Life Stage" />
                 </p>
                 <p className="mt-1 font-display text-lg">
-                  <Bi zh={lifeStage.zh} en={lifeStage.en} />
+                  {qianLifeStageLabel()}
                 </p>
               </div>
             )}
@@ -292,10 +364,10 @@ export default function QianReport({ id }: { id: string }) {
                 <p className="text-xs uppercase tracking-widest2 text-lattice">
                   <Bi zh="天赋能力地图" en="Talent & Ability Map" />
                 </p>
-                {abilityMap.map((a) => (
+                {abilityMap.map((a, i) => (
                   <div key={a.key}>
                     <div className="flex items-center justify-between text-xs text-bone-dim">
-                      <span><Bi zh={a.zh} en={a.en} /></span>
+                      <span>{qianAbilityLabel(i)}</span>
                       <span className="text-amber">{a.score}</span>
                     </div>
                     <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[#3A2E52]/12">

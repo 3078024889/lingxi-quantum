@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useLang } from "@/lib/useLang";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { localizeReportItems } from "@/lib/report-localize-client";
 import Bi from "@/components/Bi";
 import { TAROT_MAJOR_ARCANA, type TarotCard } from "@/lib/tarot-data";
 import ShareButton from "@/components/ShareButton";
@@ -41,13 +42,16 @@ const TAROT_PAGE_GROUPS = [
 type FrequencyItem = { key: string; zh: string; en: string; score: number };
 
 export default function TarotReadingReport({ id }: { id: string }) {
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => (lang === "zh" ? zh : en);
   const [status, setStatus] = useState<"checking" | "locked" | "ready" | "error">("checking");
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [cards, setCards] = useState<TarotCard[]>([]);
   const [sections, setSections] = useState<string[]>([]);
+  const [localizedTitles, setLocalizedTitles] = useState<string[]>([]);
+  const [localizedPdfMeta, setLocalizedPdfMeta] = useState<{title:string;statement:string;archive:string}|null>(null);
   const [frequencyMap, setFrequencyMap] = useState<FrequencyItem[]>([]);
   const [unlocking, setUnlocking] = useState(false);
   const [showWechatPay, setShowWechatPay] = useState(false);
@@ -77,12 +81,12 @@ export default function TarotReadingReport({ id }: { id: string }) {
         ]);
       }
 
-      const currentLangEn = document.documentElement.classList.contains("lang-en");
+      const sourceLang = lang === "zh" ? "zh" : "en";
       const fetchReport = (regenerate: boolean) =>
         fetch("/api/tarot/reading/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate }),
+          body: JSON.stringify({ id, lang: sourceLang, regenerate }),
         });
       try {
         let res = await fetchReport(false);
@@ -106,7 +110,27 @@ export default function TarotReadingReport({ id }: { id: string }) {
           setError(t("报告章节不完整，请稍后重新打开。", "The report is incomplete. Please reopen it shortly."));
           return;
         }
-        setSections(parts);
+        const sourceTitles=LAYER_TITLES.map((item)=>sourceLang==="zh"?item.zh:item.en);
+
+        const sourcePdfMeta=sourceLang==="zh"?{title:"你的量子生命镜像档案",statement:"三张牌不是答案，而是你与自己深层意识的一次对话。",archive:"灵犀场 · 三重镜像档案"}:{title:"Your Quantum Life Mirror Archive",statement:"These three cards are not answers, but a conversation with your deeper consciousness.",archive:"LINGXI FIELD · THREE-MIRROR ARCHIVE"};
+
+        const localized=await localizeReportItems({
+
+          reportKey:"mirror:"+id+":v104f",
+
+          targetLang:lang,
+
+          items:[...sourceTitles,...parts,sourcePdfMeta.title,sourcePdfMeta.statement,sourcePdfMeta.archive],
+
+        });
+
+        setLocalizedTitles(localized.items.slice(0,sourceTitles.length));
+
+        setSections(localized.items.slice(sourceTitles.length,sourceTitles.length+parts.length));
+
+        const metaOffset=sourceTitles.length+parts.length;
+
+        setLocalizedPdfMeta({title:localized.items[metaOffset]??sourcePdfMeta.title,statement:localized.items[metaOffset+1]??sourcePdfMeta.statement,archive:localized.items[metaOffset+2]??sourcePdfMeta.archive});
         if (Array.isArray(data.frequencyMap)) setFrequencyMap(data.frequencyMap);
         setStatus("ready");
       } catch {
@@ -116,7 +140,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
     };
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, langEn]);
+  }, [id, lang]);
 
   const unlock = () => {
     if (REVIEW_MODE) {
@@ -140,7 +164,7 @@ export default function TarotReadingReport({ id }: { id: string }) {
       await exportArchivePdf({
         chapters: sections
           .map((body, i) => ({
-            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
+            title: (localizedTitles[i] ?? (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh)) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
             body,
           }))
           .filter((c) => c.body && c.body.trim()),

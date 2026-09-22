@@ -2,6 +2,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import LocalizedOrderExpiry from "@/components/LocalizedOrderExpiry";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
 import OrderActions from "../OrderActions";
@@ -140,17 +141,6 @@ function OrderCard({ o }: { o: OrderRow }) {
   const isPaid = o.status === "paid";
   const amount = o.amount_rmb ?? (o.amount_usd ? `$${o.amount_usd}` : "—");
   const amountDisplay = o.archive_only ? "已归档" : o.amount_rmb ? `¥${o.amount_rmb}` : amount;
-
-  // 有效期——只有已支付、且是有到期时间的订阅制产品才需要算。
-  let expiryLabel: string | null = null;
-  let expiryLabelEn: string | null = null;
-  if (isPaid && o.paid_at && product?.type === "subscription" && product.days) {
-    const expiry = new Date(new Date(o.paid_at).getTime() + product.days * 86400000);
-    const expired = expiry < new Date();
-    expiryLabel = `${expired ? "已于" : "有效至"} ${expiry.toLocaleDateString()}${expired ? "过期" : ""}`;
-    expiryLabelEn = `${expired ? "Expired" : "Valid until"} ${expiry.toLocaleDateString()}`;
-  }
-
   const benefits = BENEFIT_DETAIL[o.product_id];
 
   return (
@@ -162,12 +152,12 @@ function OrderCard({ o }: { o: OrderRow }) {
           </p>
           {dest ? (
             <Link href={dest.href} className="mt-1 block font-display text-lg text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
-              {product?.name ?? o.product_id}
+              {product ? <Bi zh={product.name} en={product.nameEn} /> : o.product_id}
               {o.submission_name ? ` · ${o.submission_name}` : ""}
             </Link>
           ) : (
             <p className="mt-1 font-display text-lg text-[var(--lx-ink)]">
-              {product?.name ?? o.product_id}
+              {product ? <Bi zh={product.name} en={product.nameEn} /> : o.product_id}
               {o.submission_name ? ` · ${o.submission_name}` : ""}
             </p>
           )}
@@ -175,9 +165,9 @@ function OrderCard({ o }: { o: OrderRow }) {
             <Bi zh={o.archive_only ? "记录时间" : "下单时间"} en={o.archive_only ? "Recorded" : "Ordered"} />：{new Date(o.created_at).toLocaleString()}
             {o.paid_at && <> · <Bi zh="支付时间" en="Paid" />：{new Date(o.paid_at).toLocaleString()}</>}
           </p>
-          {expiryLabel && (
+          {isPaid && o.paid_at && product?.type === "subscription" && product.days && (
             <p className="mt-1 text-xs text-[var(--lx-ink)]/80">
-              <Bi zh={expiryLabel} en={expiryLabelEn ?? expiryLabel} />
+              <LocalizedOrderExpiry iso={o.paid_at} days={product.days} />
             </p>
           )}
           {isPaid && product?.type === "permanent" && (
@@ -204,7 +194,7 @@ function OrderCard({ o }: { o: OrderRow }) {
           ) : null}
         </div>
         <div className="shrink-0 text-right">
-          <p className="font-display text-xl text-[var(--lx-ink)]">{amountDisplay}</p>
+          <p className="font-display text-xl text-[var(--lx-ink)]">{o.archive_only ? <Bi zh="已归档" en="Archived" /> : amountDisplay}</p>
           <p className={`mt-2 inline-block rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-widest2 ${isPaid ? "border border-[var(--lx-line-strong)] text-[var(--lx-ink)]" : "border border-amber/40 text-[var(--lx-ink)]"}`}>
             {o.archive_only ? <Bi zh="已保存" en="Archived" /> : isPaid ? <Bi zh="已支付" en="Paid" /> : <Bi zh="待支付" en="Pending" />}
           </p>
@@ -361,14 +351,14 @@ export default async function FieldOrdersPage({searchParams}: {searchParams?: {p
             </p>
           )}
 
-          {loadFailed && <p role="alert" className="my-4 text-[var(--lx-ink)]">部分记录暂时未能加载，请刷新重试。加载失败不会删除订单或报告。</p>}
+          {loadFailed && <p role="alert" className="my-4 text-[var(--lx-ink)]"><Bi zh="部分记录暂时未能加载，请刷新重试。加载失败不会删除订单或报告。" en="Some records could not be loaded. Refresh and try again. A load failure does not delete orders or reports." /></p>}
           {user && !loadFailed && orders.length === 0 && (
             <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
               <Bi zh="还没有任何订单——完成一次能量交换后，会出现在这里。" en="No orders yet — they'll appear here once you complete an exchange." />
             </p>
           )}
 
-          {user && <nav aria-label="订单与档案翻页" className="my-6 flex gap-6">{page>1&&<Link href={`/account/orders?page=${page-1}`}>← 上一页</Link>}<span>第 {page} 页</span>{hasMore&&<Link href={`/account/orders?page=${page+1}`}>更早的订单与档案 →</Link>}</nav>}
+          {user && <nav aria-label="订单与档案翻页" className="my-6 flex gap-6">{page>1&&<Link href={`/account/orders?page=${page-1}`}>← <Bi zh="上一页" en="Previous page" /></Link>}<span><Bi zh={`第 ${page} 页`} en={`Page ${page}`} /></span>{hasMore&&<Link href={`/account/orders?page=${page+1}`}><Bi zh="更早的订单与档案" en="Older orders & archives" /> →</Link>}</nav>}
           {user && orders.length > 0 && (
             <div className="space-y-10">
               {SECTIONS.filter((s) => s.rows.length > 0).map((s) => (

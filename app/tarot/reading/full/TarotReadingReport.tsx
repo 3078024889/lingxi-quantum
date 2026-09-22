@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useLang } from "@/lib/useLang";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { localizeReportItems } from "@/lib/report-localize-client";
 import Bi from "@/components/Bi";
 import { TAROT_MAJOR_ARCANA, type TarotCard } from "@/lib/tarot-data";
 import ShareButton from "@/components/ShareButton";
@@ -40,13 +41,17 @@ const TAROT_PAGE_GROUPS = [
 type FrequencyItem = { key: string; zh: string; en: string; score: number };
 
 export default function TarotReadingReport({ id }: { id: string }) {
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => (lang === "zh" ? zh : en);
   const [status, setStatus] = useState<"checking" | "locked" | "ready" | "error">("checking");
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [cards, setCards] = useState<TarotCard[]>([]);
   const [sections, setSections] = useState<string[]>([]);
+  const [localizedTitles, setLocalizedTitles] = useState<string[]>([]);
+  const [localizedPdfMeta, setLocalizedPdfMeta] = useState<{title:string;statement:string;archive:string}|null>(null);
+  const [localizedAux, setLocalizedAux] = useState<string[]>([]);
   const [frequencyMap, setFrequencyMap] = useState<FrequencyItem[]>([]);
   const [unlocking, setUnlocking] = useState(false);
   const [showWechatPay, setShowWechatPay] = useState(false);
@@ -76,12 +81,12 @@ export default function TarotReadingReport({ id }: { id: string }) {
         ]);
       }
 
-      const currentLangEn = document.documentElement.classList.contains("lang-en");
+      const sourceLang = lang === "zh" ? "zh" : "en";
       const fetchReport = (regenerate: boolean) =>
         fetch("/api/tarot/reading/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh", regenerate }),
+          body: JSON.stringify({ id, lang: sourceLang, regenerate }),
         });
       try {
         let res = await fetchReport(false);
@@ -105,7 +110,27 @@ export default function TarotReadingReport({ id }: { id: string }) {
           setError(t("报告章节不完整，请稍后重新打开。", "The report is incomplete. Please reopen it shortly."));
           return;
         }
-        setSections(parts);
+        const sourceTitles=LAYER_TITLES.map((item)=>sourceLang==="zh"?item.zh:item.en);
+
+        const sourcePdfMeta=sourceLang==="zh"?{title:"你的量子生命镜像档案",statement:"三张牌不是答案，而是你与自己深层意识的一次对话。",archive:"灵犀场 · 三重镜像档案"}:{title:"Your Quantum Life Mirror Archive",statement:"These three cards are not answers, but a conversation with your deeper consciousness.",archive:"LINGXI FIELD · THREE-MIRROR ARCHIVE"};
+
+        const localized=await localizeReportItems({
+
+          reportKey:"tarot:"+id+":v104f",
+
+          targetLang:lang,
+
+          items:[...sourceTitles,...parts,sourcePdfMeta.title,sourcePdfMeta.statement,sourcePdfMeta.archive],
+
+        });
+
+        setLocalizedTitles(localized.items.slice(0,sourceTitles.length));
+
+        setSections(localized.items.slice(sourceTitles.length,sourceTitles.length+parts.length));
+
+        const metaOffset=sourceTitles.length+parts.length;
+
+        setLocalizedPdfMeta({title:localized.items[metaOffset]??sourcePdfMeta.title,statement:localized.items[metaOffset+1]??sourcePdfMeta.statement,archive:localized.items[metaOffset+2]??sourcePdfMeta.archive});
         if (Array.isArray(data.frequencyMap)) setFrequencyMap(data.frequencyMap);
         setStatus("ready");
       } catch {
@@ -115,7 +140,45 @@ export default function TarotReadingReport({ id }: { id: string }) {
     };
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, langEn]);
+  }, [id, lang]);
+
+
+  useEffect(() => {
+    let alive = true;
+    const run = async () => {
+      const base = [
+        ...cards.flatMap((card, i) => [card.nameEn, positions[i]?.en ?? ""]),
+        ...frequencyMap.map((item) => item.en),
+      ];
+      if (!base.length) { if (alive) setLocalizedAux([]); return; }
+      if (lang === "en") { if (alive) setLocalizedAux(base); return; }
+      if (lang === "zh") {
+        const zh = [
+          ...cards.flatMap((card, i) => [card.nameZh, positions[i]?.zh ?? ""]),
+          ...frequencyMap.map((item) => item.zh),
+        ];
+        if (alive) setLocalizedAux(zh);
+        return;
+      }
+      const localized = await localizeReportItems({
+        reportKey: "tarot-aux:" + id + ":v104g",
+        targetLang: lang,
+        items: base,
+      });
+      if (alive) setLocalizedAux(localized.items);
+    };
+    void run();
+    return () => { alive = false; };
+  }, [id, lang, cards, frequencyMap]);
+
+  const tarotCardName = (i: number) =>
+    localizedAux[i * 2] ?? (lang === "zh" ? cards[i]?.nameZh : cards[i]?.nameEn) ?? "";
+  const tarotPositionLabel = (i: number) =>
+    localizedAux[i * 2 + 1] ?? (lang === "zh" ? positions[i]?.zh : positions[i]?.en) ?? "";
+  const tarotFrequencyLabel = (i: number) => {
+    const offset = cards.length * 2;
+    return localizedAux[offset + i] ?? (lang === "zh" ? frequencyMap[i]?.zh : frequencyMap[i]?.en) ?? "";
+  };
 
   const unlock = () => {
     if (REVIEW_MODE) {
@@ -139,13 +202,16 @@ export default function TarotReadingReport({ id }: { id: string }) {
       await exportArchivePdf({
         chapters: sections
           .map((body, i) => ({
-            title: (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
+            title: (localizedTitles[i] ?? (langEn ? LAYER_TITLES[i]?.en : LAYER_TITLES[i]?.zh)) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
             body,
           }))
           .filter((c) => c.body && c.body.trim()),
         fileName: langEn ? `Lingxi-Quantum-Life-Mirror-${name || "reading"}.pdf` : `灵犀量子生命镜像-${name || "reading"}.pdf`,
         titleZh: `${name || "你的"}量子生命镜像档案`,
+        titleLocalized: localizedPdfMeta?.title,
         titleEn: `${name || "Your"} Quantum Life Mirror Archive`,
+        coverStatementLocalized: localizedPdfMeta?.statement,
+        archiveLabelLocalized: localizedPdfMeta?.archive,
         language: langEn ? "en" : "zh",
         eyebrow: "QUANTUM LIFE MIRROR",
         theme: ARCHIVE_THEMES.tarot,
@@ -154,8 +220,8 @@ export default function TarotReadingReport({ id }: { id: string }) {
         endImage: "/images/tarot-full/page-11.png",
         featurePages: cards.map((card, i) => ({
           image: `/images/tarot/${String(card.index).padStart(2, "0")}.jpg`,
-          title: langEn ? card.nameEn : card.nameZh,
-          subtitle: langEn ? positions[i]?.en : positions[i]?.zh,
+          title: tarotCardName(i),
+          subtitle: tarotPositionLabel(i),
           eyebrow: `QUANTUM LIFE MIRROR · ${String(i + 1).padStart(2, "0")}`,
         })),
       });
@@ -246,10 +312,10 @@ export default function TarotReadingReport({ id }: { id: string }) {
           style={{ backgroundImage: `url(/images/tarot-full/page-${(i % 3) + 1}.png)`, backgroundSize: "cover", backgroundPosition: "center" }}
         >
           <div className="lx-report-glass lx-report-glass-readable flex w-full flex-col items-center px-7 py-10 text-center sm:px-12">
-            <p className="text-xs uppercase tracking-widest2 text-lattice"><Bi zh={positions[i].zh} en={positions[i].en} /></p>
+            <p className="text-xs uppercase tracking-widest2 text-lattice">{tarotPositionLabel(i)}</p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/images/tarot/${String(card.index).padStart(2, "0")}.jpg`} alt={langEn ? card.nameEn : card.nameZh} className="lx-publication-card-art mt-6" />
-            <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl"><Bi zh={card.nameZh} en={card.nameEn} /></h2>
+              <img src={`/images/tarot/${String(card.index).padStart(2, "0")}.jpg`} alt={tarotCardName(i)} className="lx-publication-card-art mt-6" />
+            <h2 className="mt-7 font-display text-3xl font-light sm:text-4xl">{tarotCardName(i)}</h2>
             <p className="mt-3 text-sm leading-7 text-bone-dim"><Bi zh="让这一张牌单独停驻，作为此刻与你对话的意识镜面。" en="Let this card stand alone as the consciousness mirror for this moment." /></p>
           </div>
         </section>
@@ -264,10 +330,10 @@ export default function TarotReadingReport({ id }: { id: string }) {
             <Bi zh="量子意识矩阵 · Quantum Consciousness Matrix" en="Quantum Consciousness Matrix" />
           </p>
           <div className="mt-4 space-y-3">
-            {frequencyMap.map((f) => (
+            {frequencyMap.map((f, i) => (
               <div key={f.key}>
                 <div className="flex items-center justify-between text-xs text-bone-dim">
-                  <span><Bi zh={f.zh} en={f.en} /></span>
+                  <span>{tarotFrequencyLabel(i)}</span>
                   <span className="text-amber">{f.score}%</span>
                 </div>
                 <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-white/10">

@@ -39,11 +39,7 @@ Page({
   },
   async onLoad(options) {
     initPage(this)
-    if (options.product === 'stellar-trace') {
-      wx.redirectTo({ url: `/pages/web/index?path=${encodeURIComponent('/stellar-trace')}` })
-      return
-    }
-    this.options = options
+this.options = options
     this.setData({ from: options.from === 'narratives' ? 'narratives' : 'explore' })
     await this.loadItem()
   },
@@ -52,7 +48,7 @@ Page({
     this.setData({ loading: true, loadError: '' })
     try {
       const data = await publicRequest('/api/wechat/mini/catalog')
-      const item = data.items.find(candidate => candidate.productId !== 'stellar-trace' && candidate.productId === this.options.product && candidate.skuId === this.options.sku)
+      const item = data.items.find(candidate => candidate.productId === this.options.product && candidate.skuId === this.options.sku)
       const me = await request('/api/wechat/mini/me').catch(() => null)
       const activeUnlockOwned = !!(me && item && (me.unlocks || []).some(unlock => unlock.product_id === item.productId || unlock.product_id === 'everything' || (item.category === 'narrative' && unlock.product_id === 'narrative-all')))
       const owned = !!(me && item && (

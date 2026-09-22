@@ -8,7 +8,10 @@ import NatalChartWheel from "../NatalChartWheel";
 import { stripMarkdownArtifacts, stripRepeatedHeading } from "@/lib/text-clean";
 import { lifemapTypeImage, lifemapTypeNameEn } from "@/lib/lifemap-type-images";
 import ShareButton from "@/components/ShareButton";
-import { useLang } from "@/lib/useLang";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { reportUiLabel, lifeVectorLabel, relationshipPairLabel, humanDesignLabel, numberEnergyLabel } from "@/lib/report-ui-labels";
+import { ziweiPalaceName, ziweiStarName, ziweiBranchName, ziweiBrightness } from "@/lib/ziwei-i18n";
+import { localizeReportItems } from "@/lib/report-localize-client";
 import UnifiedReportCover from "@/components/UnifiedReportCover";
 
 type GateActivation = { key: string; zh: string; en: string; gate: number; line: number; longitude: number };
@@ -46,8 +49,9 @@ const SECTION_TITLES = [
 
 export default function FullReportView({ id }: { id: string }) {
   // 同 LifeMapFlow：首次渲染固定为 false，避免 hydration 不匹配报错，挂载后再同步真实语言。
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => (lang === "zh" ? zh : en);
 
   const [status, setStatus] = useState<"checking" | "locked" | "generating" | "ready" | "error">("checking");
   const [downloading, setDownloading] = useState(false);
@@ -58,6 +62,8 @@ export default function FullReportView({ id }: { id: string }) {
   // 这里按章节序号存一份引用，导出时按 index 取。
   const figureRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const [sections, setSections] = useState<string[]>([]);
+  const [localizedTitles, setLocalizedTitles] = useState<string[]>([]);
+  const [localizedPdfMeta, setLocalizedPdfMeta] = useState<{title:string;statement:string;archive:string}|null>(null);
   const [name, setName] = useState("");
   const [coreTypeName, setCoreTypeName] = useState("");
   const [facts, setFacts] = useState<ChartFacts | null>(null);
@@ -170,11 +176,11 @@ export default function FullReportView({ id }: { id: string }) {
 
       setStatus("generating");
       try {
-        const currentLangEn = document.documentElement.classList.contains("lang-en");
+        const sourceLang = lang === "zh" ? "zh" : "en";
         const res = await fetch("/api/lifemap/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh" }),
+          body: JSON.stringify({ id, lang: sourceLang }),
         });
         const data = await res.json();
         if (res.status === 402) {
@@ -191,7 +197,37 @@ export default function FullReportView({ id }: { id: string }) {
           .split(/===\s*\d+\s*===/)
           .map((s) => s.trim())
           .filter(Boolean);
-        setSections(parts);
+        const sourceTitles = SECTION_TITLES.map((item) => sourceLang === "zh" ? item.zh : item.en);
+
+        const sourcePdfMeta = sourceLang === "zh"
+          ? { title: "你的灵犀生命图谱", statement: "命非一言可尽；循其生时与诸证，见所长、所蔽与可转之机。", archive: "灵犀场生命图谱档案" }
+          : { title: "Your Lingxi Life Blueprint", statement: "A life is not contained by one label; follow its time and evidence to see strength, shadow, and the next pivot.", archive: "LINGXI FIELD LIFE MAP ARCHIVE" };
+
+        const localized = await localizeReportItems({
+
+          reportKey: "life-map:" + id + ":v104f",
+
+          targetLang: lang,
+
+          items: [...sourceTitles, ...parts, sourcePdfMeta.title, sourcePdfMeta.statement, sourcePdfMeta.archive],
+
+        });
+
+        setLocalizedTitles(localized.items.slice(0, sourceTitles.length));
+
+        setSections(localized.items.slice(sourceTitles.length, sourceTitles.length + parts.length));
+
+        const metaOffset = sourceTitles.length + parts.length;
+
+        setLocalizedPdfMeta({
+
+          title: localized.items[metaOffset] ?? sourcePdfMeta.title,
+
+          statement: localized.items[metaOffset + 1] ?? sourcePdfMeta.statement,
+
+          archive: localized.items[metaOffset + 2] ?? sourcePdfMeta.archive,
+
+        });
         setStatus("ready");
       } catch {
         setError(t("连接场域时出错，请刷新重试。", "Error connecting to the field — please refresh and try again."));
@@ -199,7 +235,7 @@ export default function FullReportView({ id }: { id: string }) {
       }
     };
     run();
-  }, [id, langEn]);
+  }, [id, lang]);
 
   if (status === "checking" || status === "generating") {
     return (
@@ -263,7 +299,7 @@ export default function FullReportView({ id }: { id: string }) {
       };
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? SECTION_TITLES[i]?.en : SECTION_TITLES[i]?.zh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
+          title: (localizedTitles[i] ?? (localizedTitles[i] ?? (langEn ? SECTION_TITLES[i]?.en : SECTION_TITLES[i]?.zh))) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body: stripMarkdownArtifacts(body),
           figure: figureRefs.current[i] && figureRefs.current[i]!.offsetHeight > 8
             ? figureRefs.current[i]
@@ -272,11 +308,14 @@ export default function FullReportView({ id }: { id: string }) {
         })),
         fileName: langEn ? `Lingxi-Life-Map-${lifemapTypeNameEn(coreTypeName) || "report"}.pdf` : `灵犀生命图谱-${coreTypeName || "report"}.pdf`,
         titleZh: "你的灵犀生命图谱",
+        titleLocalized: localizedPdfMeta?.title,
         titleEn: "Your Lingxi Life Blueprint",
         subjectName: name || coreTypeName || "未署名",
         coverStatementZh: "命非一言可尽；循其生时与诸证，见所长、所蔽与可转之机。",
+        coverStatementLocalized: localizedPdfMeta?.statement,
         coverStatementEn: "A life is not contained by one label; follow its time and evidence to see strength, shadow, and the next pivot.",
         archiveLabelZh: "灵犀场生命图谱档案",
+        archiveLabelLocalized: localizedPdfMeta?.archive,
         language: langEn ? "en" : "zh",
         eyebrow: "LIFE MAP",
         theme: ARCHIVE_THEMES.lifemap,
@@ -510,7 +549,7 @@ export default function FullReportView({ id }: { id: string }) {
                   style={{ backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center" }}
                 >
                   <div className="lx-report-glass lx-report-glass-readable px-6 py-8 sm:px-10 sm:py-12" ref={(el) => { figureRefs.current[i] = el; }}>
-                    <p className="lx-report-chart-title">{langEn ? "DATA PORTRAIT" : "数据肖像"}</p>
+                    <p className="lx-report-chart-title">{reportUiLabel(lang, "dataPortrait")}</p>
                     {i === 1 && facts && <WuXingChart wx={facts.wuXingCount} />}
                     {i === 2 && facts?.ziwei && <ZiweiGrid palaces={facts.ziwei.palaces} />}
                     {i === 5 && facts && <DaYunTimeline startAge={facts.daYunStartAge} />}
@@ -571,7 +610,7 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
               </circle>
               <text x="36" y="41" textAnchor="middle" fontSize="17" fill="var(--report-chart-text)" fontFamily="serif">{it.total}</text>
             </svg>
-            <p className="mt-1 text-center text-xs text-lm2-text-dim">{it.label}</p>
+            <p className="mt-1 text-center text-xs text-lm2-text-dim">{numberEnergyLabel(lang, it.label)}</p>
           </div>
         );
       })}
@@ -584,6 +623,7 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
 // 这个人类图里权重最高的信息，不再是一串纯文字列表。
 function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
   const langEn = useLang();
+  const { lang } = useLingxiLang();
   const cx = 130, cy = 130, r = 96;
   const glyphs: Record<string, string> = {
     sun: "☉", earth: "⊕", moon: "☽", mercury: "☿", venus: "♀",
@@ -612,11 +652,11 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
         })}
         <circle cx={cx} cy={cy} r="34" fill="rgba(240,200,104,0.12)" stroke="#F0C868" strokeWidth="1" />
         <text x={cx} y={cy - 5} textAnchor="middle" fontSize="16" fontWeight="500" fill="#766A9C">{hd.sunConsciousGate}</text>
-        <text x={cx} y={cy + 15} textAnchor="middle" fontSize="12.5" fill="var(--report-chart-text)">{langEn ? "Gate" : "门"} {hd.sunUnconsciousGate}</text>
+        <text x={cx} y={cy + 15} textAnchor="middle" fontSize="12.5" fill="var(--report-chart-text)">{reportUiLabel(lang, "gate")} {hd.sunUnconsciousGate}</text>
       </svg>
       <div className="grid w-full grid-cols-2 gap-x-5 gap-y-2 text-[13px] text-lm2-text-dim sm:grid-cols-3">
         {hd.personality.map((g) => (
-          <span key={g.key}>{langEn ? g.en : g.zh} — {langEn ? "Gate" : "门"} {g.gate}.{g.line}</span>
+          <span key={g.key}>{humanDesignLabel(lang, g.en, g.zh)} — {reportUiLabel(lang, "gate")} {g.gate}.{g.line}</span>
         ))}
       </div>
     </div>
@@ -625,6 +665,7 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
 
 function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; metal: number; water: number } }) {
   const langEn = useLang();
+  const { lang } = useLingxiLang();
   const items = [
     { label: "木", en: "Wood", v: wx.wood, color: "#7FE7C4" },
     { label: "火", en: "Fire", v: wx.fire, color: "#FF8FD1" },
@@ -651,7 +692,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
   );
   return (
     <div className="lx-report-chart mt-5 p-5">
-      <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="命局五行分布" en="Element Balance" /></p>
+      <p className="text-xs uppercase tracking-widest2 text-lm2-violet">{reportUiLabel(lang, "elementBalance")}</p>
       <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
         <svg viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`} className="h-36 w-36 shrink-0">
           {gridRings.map((pts, i) => (
@@ -665,14 +706,14 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
           ))}
           {radarPoints.map((p, i) => (
             <text key={i} x={p.labelX} y={p.labelY} textAnchor="middle" dominantBaseline="middle" fontSize="9" fill="var(--report-chart-text)">
-              {langEn ? items[i].en : items[i].label}
+              {reportUiLabel(lang, items[i].key)}
             </text>
           ))}
         </svg>
         <div className="w-full flex-1 space-y-3">
         {items.map((it, idx) => (
           <div key={it.label} className="flex items-center gap-3">
-            <span className="w-10 shrink-0 font-display text-sm text-lm2-text">{langEn ? it.en : it.label}</span>
+            <span className="w-10 shrink-0 font-display text-sm text-lm2-text">{reportUiLabel(lang, it.key)}</span>
             <div className="h-3 flex-1 overflow-hidden rounded-full bg-lm2-text/10">
               <div
                 className="lm2-wx-bar h-full rounded-full"
@@ -701,6 +742,7 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
 // 频率自测图：三项分数用环形进度呈现，比纯数字更直观
 function FrequencyChart({ scores }: { scores: { energy: number; clarity: number; alignment: number } }) {
   const langEn = useLang();
+  const { lang } = useLingxiLang();
   const items = [
     { label: "能量水平", en: "Energy", v: scores.energy, color: "#FF8FD1" },
     { label: "头脑清晰度", en: "Clarity", v: scores.clarity, color: "#5FE8FF" },
@@ -727,7 +769,7 @@ function FrequencyChart({ scores }: { scores: { energy: number; clarity: number;
               </circle>
               <text x="32" y="37" textAnchor="middle" fontSize="16" fill="var(--report-chart-text)" fontFamily="serif">{it.v}</text>
             </svg>
-            <p className="mt-1 text-center text-xs text-lm2-text-dim">{langEn ? it.en : it.label}</p>
+            <p className="mt-1 text-center text-xs text-lm2-text-dim">{reportUiLabel(lang, it.key)}</p>
           </div>
         );
       })}
@@ -750,11 +792,12 @@ function ZiweiGrid({
   palaces: { name: string; earthlyBranch: string; majorStars: { name: string; brightness: string }[]; isSoulPalace: boolean; isBodyPalace: boolean }[];
 }) {
   const langEn = useLang();
+  const { lang } = useLingxiLang();
   const byBranch = new Map(palaces.map((p) => [p.earthlyBranch, p]));
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
   return (
     <div className="lx-report-chart mt-5 p-5">
-      <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="紫微十二宫" en="The Twelve Ziwei Palaces" /></p>
+      <p className="text-xs uppercase tracking-widest2 text-lm2-violet">{reportUiLabel(lang, "ziweiPalaces")}</p>
       <div className="mt-4 grid grid-cols-4 gap-1.5">
         {ZIWEI_GRID_BRANCHES.flat().map((branch, i) => {
           if (branch === null) {
@@ -762,7 +805,7 @@ function ZiweiGrid({
             if (i === 5) {
               return (
                 <div key="center" className="col-span-2 row-span-2 flex flex-col items-center justify-center rounded-sm border border-lm2-violet/20 bg-lm2-violet/5">
-                  <span className="lm2-ziwei-glow font-display text-lg text-lm2-violet">{langEn ? "Ziwei" : "紫微"}</span>
+                  <span className="lm2-ziwei-glow font-display text-lg text-lm2-violet">{reportUiLabel(lang, "ziwei")}</span>
                   <span className="mt-1 text-[9px] text-lm2-text-dim">Ziwei Doushu</span>
                 </div>
               );
@@ -781,16 +824,16 @@ function ZiweiGrid({
               }}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[9px] text-lm2-text-dim">{langEn ? `Palace ${i + 1}` : branch}</span>
+                <span className="text-[9px] text-lm2-text-dim">{`${ziweiBranchName(lang, branch)} · ${reportUiLabel(lang, "palace")} ${i + 1}`}</span>
                 {(p?.isSoulPalace || p?.isBodyPalace) && (
                   <span className="text-[8px]" style={{ color }}>
-                        {p?.isSoulPalace ? (langEn ? "Life" : "命") : ""}{p?.isBodyPalace ? (langEn ? "Body" : "身") : ""}
+                        {p?.isSoulPalace ? reportUiLabel(lang, "life") : ""}{p?.isBodyPalace ? reportUiLabel(lang, "body") : ""}
                   </span>
                 )}
               </div>
-              <p className="text-[11px] font-medium text-lm2-text">{langEn ? "Ziwei Palace" : p?.name ?? ""}</p>
+              <p className="text-[11px] font-medium text-lm2-text">{p?.name ? ziweiPalaceName(lang, p.name) : reportUiLabel(lang, "ziweiPalace")}</p>
               <p className="text-[8px] leading-tight text-lm2-text-dim">
-                {langEn ? "Astrological markers" : p?.majorStars.map((s) => s.name).join("·") || "—"}
+                {p?.majorStars?.length ? p.majorStars.map((star) => `${ziweiStarName(lang, star.name)}${star.brightness ? ` · ${ziweiBrightness(lang, star.brightness)}` : ""}`).join(" / ") : "—"}
               </p>
             </div>
           );
@@ -807,12 +850,13 @@ function ZiweiGrid({
 // 大运时间轴：从起运年龄开始，横向展开几个十年周期，比一段段文字更容易一眼看懂节奏
 function DaYunTimeline({ startAge }: { startAge: number | null }) {
   const langEn = useLang();
+  const { lang } = useLingxiLang();
   const start = startAge ?? 8;
   const periods = Array.from({ length: 5 }).map((_, i) => start + i * 10);
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
   return (
     <div className="lx-report-chart mt-5 p-5">
-      <p className="text-xs uppercase tracking-widest2 text-lm2-violet"><Bi zh="大运时间轴" en="Major Luck Cycle Timeline" /></p>
+      <p className="text-xs uppercase tracking-widest2 text-lm2-violet">{reportUiLabel(lang, "luckTimeline")}</p>
       <div className="relative mt-6 pb-2">
         <div className="absolute left-0 right-0 top-3 h-0.5 bg-gradient-to-r from-lm2-rose via-lm2-amber via-lm2-mint to-lm2-violet opacity-40" />
         <div className="flex justify-between">
@@ -822,7 +866,7 @@ function DaYunTimeline({ startAge }: { startAge: number | null }) {
                 className="lm2-dayun-dot h-3 w-3 rounded-full"
                 style={{ background: auroraColors[i % auroraColors.length], animationDelay: `${i * 0.4}s` }}
               />
-              <span className="mt-2 font-display text-xs text-lm2-text">{age}<Bi zh="岁" en="" /></span>
+              <span className="mt-2 font-display text-xs text-lm2-text">{age}{reportUiLabel(lang, "years")}</span>
             </div>
           ))}
         </div>

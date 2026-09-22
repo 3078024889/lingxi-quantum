@@ -298,3 +298,319 @@ html[data-theme="dark"] .lx11-legacy-panel{
   background:var(--lx-panel)!important;
   color:var(--lx-ink)!important;
 }
+
+/* =========================================================
+   V10.3.1 — Global readable typography
+   Goal: ChatGPT-like reading rhythm across the public site.
+   Keep hierarchy restrained; remove tiny 8–11px product copy.
+   ========================================================= */
+
+:root{
+  --lx-font-sans:"Inter","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  --lx-text:15px;
+  --lx-text-lg:16px;
+  --lx-small:13px;
+  --lx-caption:12px;
+  --lx-h1:clamp(34px,3.4vw,46px);
+  --lx-h2:clamp(22px,2.1vw,28px);
+  --lx-h3:18px;
+}
+
+html{font-size:16px}
+body,
+.lx-site-content,
+.lx-site-content button,
+.lx-site-content input,
+.lx-site-content textarea,
+.lx-site-content select{
+  font-family:var(--lx-font-sans)!important;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+.lx-site-content main{
+  font-size:var(--lx-text);
+  line-height:1.65;
+}
+
+/* Old display/serif titles caused mixed visual scales across legal/account pages. */
+.lx-site-content .font-display{
+  font-family:var(--lx-font-sans)!important;
+}
+
+/* General reading pages: one calm type hierarchy. */
+.lx-site-content main h1{
+  font-family:var(--lx-font-sans)!important;
+  font-size:var(--lx-h1);
+  line-height:1.16;
+  letter-spacing:-.035em;
+  font-weight:650;
+}
+.lx-site-content main h2{
+  font-family:var(--lx-font-sans)!important;
+  font-size:var(--lx-h2);
+  line-height:1.3;
+  letter-spacing:-.025em;
+  font-weight:620;
+}
+.lx-site-content main h3{
+  font-family:var(--lx-font-sans)!important;
+  font-size:var(--lx-h3);
+  line-height:1.4;
+  letter-spacing:-.015em;
+  font-weight:620;
+}
+.lx-site-content main p,
+.lx-site-content main li{
+  font-size:var(--lx-text);
+  line-height:1.75;
+}
+
+/* Tailwind-size compatibility: stop 10–11px legacy text leaking into public UI. */
+.lx-site-content .text-\[8px\],
+.lx-site-content .text-\[9px\],
+.lx-site-content .text-\[10px\],
+.lx-site-content .text-\[11px\],
+.lx-site-content .text-xs{
+  font-size:var(--lx-caption)!important;
+  line-height:1.55!important;
+}
+.lx-site-content .text-\[12px\],
+.lx-site-content .text-\[13px\],
+.lx-site-content .text-sm{
+  font-size:var(--lx-small)!important;
+  line-height:1.6!important;
+}
+.lx-site-content .text-base{
+  font-size:var(--lx-text-lg)!important;
+  line-height:1.72!important;
+}
+
+/* Sidebar/topbar: close to ChatGPT desktop proportions. */
+.lx11-brand b{font-size:15px!important}
+.lx11-brand small{font-size:11px!important}
+.lx11-new-task{font-size:14px!important;min-height:42px}
+.lx11-group-title{font-size:12px!important}
+.lx11-link{font-size:14px!important;min-height:40px}
+.lx11-theme-row button,
+.lx11-lang-select,
+.lx11-lang-label{font-size:12px!important}
+.lx11-search input{font-size:14px!important}
+.lx11-top-link,.lx11-primary,.lx11-icon-btn,.lx11-avatar{font-size:13px!important}
+.lx11-updates{font-size:14px!important;line-height:1.6}
+.lx11-updates p,.lx11-updates a,.lx11-updates button{font-size:13px!important;line-height:1.6}
+
+/* Shared page shell */
+.lx10-kicker,.lx11-kicker,
+.lx11-home-kicker,
+.lx11-tools-hero>div:first-child>span,
+.lx11-sasi-intro>span{
+  font-size:13px!important;
+}
+.lx10-title,.lx11-title,
+.lx11-home-hero h1,
+.lx11-tools-hero h1,
+.lx11-sasi-intro h1{
+  font-size:var(--lx-h1)!important;
+  line-height:1.16!important;
+  letter-spacing:-.035em!important;
+}
+.lx10-lead,.lx11-lead,
+.lx11-home-hero>p:not(.lx11-home-kicker),
+.lx11-tools-hero p,
+.lx11-sasi-intro p{
+  font-size:16px!important;
+  line-height:1.72!important;
+}
+
+/* Home/cards/tools: readable without turning into oversized marketing blocks. */
+.lx10-card h2,.lx10-card h3,
+.lx11-home-card h3,
+.lx11-secondary-card h3,
+.lx11-tool-title-row h3{
+  font-size:16px!important;
+}
+.lx10-card p,
+.lx11-home-card p,
+.lx11-secondary-card p,
+.lx11-tool-copy p{
+  font-size:14px!important;
+  line-height:1.65!important;
+}
+.lx10-card .meta,
+.lx11-home-card b,
+.lx11-secondary-card span,
+.lx11-tool-meta,
+.lx11-tool-meta b,
+.lx11-tools-count span,
+.lx11-tool-group-head p,
+.lx11-tool-group-head>span{
+  font-size:12px!important;
+}
+.lx11-tool-searchbox input{font-size:14px!important}
+
+/* SASI public desk */
+.lx11-sasi-compose textarea{font-size:16px!important;line-height:1.7!important}
+.lx11-sasi-compose-tools button,
+.lx11-sasi-compose-tools a,
+.lx11-sasi-send,
+.lx11-sasi-modes button{
+  font-size:13px!important;
+}
+.lx11-sasi-notice{font-size:13px!important;line-height:1.6!important}
+.lx11-sasi-section-head>div>span,
+.lx11-sasi-connect>span,
+.lx11-sasi-balance span{font-size:12px!important}
+.lx11-sasi-section-head h2,
+.lx11-sasi-connect h2,
+.lx11-sasi-balance h2{font-size:22px!important}
+.lx11-sasi-section-head>p,
+.lx11-sasi-connect p,
+.lx11-sasi-balance p{font-size:14px!important;line-height:1.65!important}
+.lx11-sasi-ability h3{font-size:17px!important}
+.lx11-sasi-ability p{font-size:13px!important;line-height:1.6!important}
+.lx11-sasi-ability b,
+.lx11-sasi-ability em,
+.lx11-sasi-skills>a,
+.lx11-sasi-connect>a,
+.lx11-sasi-balance>a{font-size:12px!important}
+
+/* AI wallet: fix the screenshot's huge-title / microscopic-caption mismatch. */
+.lx11-wallet-page{
+  width:min(900px,100%)!important;
+  max-width:900px!important;
+}
+.lx11-wallet-page .lx11-title{
+  max-width:760px;
+  font-size:40px!important;
+  line-height:1.18!important;
+}
+.lx11-wallet-page .lx11-lead{font-size:15px!important;line-height:1.7!important}
+.lx11-wallet-loading{font-size:14px!important}
+.lx11-wallet-balance>span,
+.lx11-wallet-heading span,
+.lx11-wallet-two>div>span,
+.lx11-wallet-breakdown span,
+.lx11-wallet-ring span,
+.lx11-topup-action span{
+  font-size:12px!important;
+}
+.lx11-wallet-balance strong{font-size:38px!important;letter-spacing:-.035em}
+.lx11-wallet-balance p,
+.lx11-wallet-heading>p,
+.lx11-wallet-fine,
+.lx11-wallet-two p,
+.lx11-mode-grid p{
+  font-size:13px!important;
+  line-height:1.65!important;
+}
+.lx11-wallet-heading h2,.lx11-wallet-two h2{font-size:22px!important}
+.lx11-wallet-breakdown b{font-size:15px!important}
+.lx11-topup-grid button>span{font-size:13px!important}
+.lx11-topup-grid button>b{font-size:22px!important}
+.lx11-topup-grid em{font-size:10px!important;padding:3px 6px!important}
+.lx11-topup-action b{font-size:18px!important}
+.lx11-topup-action>a,
+.lx11-wallet-two>div>button,
+.lx11-wallet-links a{font-size:13px!important}
+.lx11-mode-grid span{font-size:13px!important}
+.lx11-mode-grid b{font-size:20px!important}
+.lx11-invite-link span,
+.lx11-invite-link button{font-size:12px!important}
+
+/* Checkout */
+.lx11-checkout h1{font-size:32px!important;line-height:1.2!important}
+.lx11-checkout{font-size:15px!important}
+.lx11-checkout p,.lx11-checkout label,.lx11-checkout button,.lx11-checkout a{
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* Legal/system pages: prevent giant H1 beside tiny body copy. */
+.lx-site-content main.max-w-3xl h1,
+.lx-site-content main[class*="max-w-3xl"] h1{
+  font-size:36px!important;
+}
+.lx-site-content main.max-w-3xl h2,
+.lx-site-content main[class*="max-w-3xl"] h2{
+  font-size:20px!important;
+  line-height:1.4!important;
+}
+.lx-site-content main.max-w-3xl p,
+.lx-site-content main.max-w-3xl li,
+.lx-site-content main[class*="max-w-3xl"] p,
+.lx-site-content main[class*="max-w-3xl"] li{
+  font-size:15px!important;
+  line-height:1.8!important;
+}
+
+/* Footer remains secondary, but no unreadable 9–10px copy. */
+.lx11-footer-grid b{font-size:13px!important}
+.lx11-footer-grid nav a,.lx11-footer-social a,
+.lx11-footer-brand p{font-size:12px!important;line-height:1.65!important}
+.lx11-footer-brand>span,
+.lx11-footer-qrs span,
+.lx11-footer-legal{font-size:11px!important}
+
+/* Mobile reading scale */
+@media(max-width:720px){
+  :root{--lx-text:15px;--lx-text-lg:16px;--lx-small:13px;--lx-caption:12px}
+  .lx-site-content main h1,
+  .lx10-title,.lx11-title,
+  .lx11-home-hero h1,
+  .lx11-tools-hero h1,
+  .lx11-sasi-intro h1,
+  .lx11-wallet-page .lx11-title{
+    font-size:32px!important;
+  }
+  .lx-site-content main h2{font-size:22px!important}
+}
+
+/* =========================================================
+   V10.4-A — multilingual fallback bridge
+   Existing <Bi zh/en> content must never stay Chinese when
+   the user selects Japanese/Korean/French/German/Spanish/
+   Portuguese/Arabic. Until a page receives a native 9-lang
+   translation, it falls back to its existing English copy.
+   ========================================================= */
+
+html:not([data-lang="zh"]) [data-lang="zh"]{display:none!important}
+html:not([data-lang="zh"]) [data-lang="en"]{display:inline!important}
+html:not([data-lang="zh"]) [data-lang="en"].bi-block{display:block!important}
+html[data-lang="zh"] [data-lang="zh"]{display:inline!important}
+html[data-lang="zh"] [data-lang="en"]{display:none!important}
+
+/* =========================================================
+   V10.4-J — native multilingual Bi primitive
+   Existing non-Bi data-lang markup keeps the old EN fallback.
+   Only .lx-bi-part participates in exact 9-language switching.
+   ========================================================= */
+html[data-lang="zh"] .lx-bi-part,
+html[data-lang="en"] .lx-bi-part,
+html[data-lang="ja"] .lx-bi-part,
+html[data-lang="ko"] .lx-bi-part,
+html[data-lang="fr"] .lx-bi-part,
+html[data-lang="de"] .lx-bi-part,
+html[data-lang="es"] .lx-bi-part,
+html[data-lang="pt"] .lx-bi-part,
+html[data-lang="ar"] .lx-bi-part{display:none!important}
+
+html[data-lang="zh"] .lx-bi-part[data-lang="zh"],
+html[data-lang="en"] .lx-bi-part[data-lang="en"],
+html[data-lang="ja"] .lx-bi-part[data-lang="ja"],
+html[data-lang="ko"] .lx-bi-part[data-lang="ko"],
+html[data-lang="fr"] .lx-bi-part[data-lang="fr"],
+html[data-lang="de"] .lx-bi-part[data-lang="de"],
+html[data-lang="es"] .lx-bi-part[data-lang="es"],
+html[data-lang="pt"] .lx-bi-part[data-lang="pt"],
+html[data-lang="ar"] .lx-bi-part[data-lang="ar"]{display:inline!important}
+
+html[data-lang="zh"] .lx-bi-part.bi-block[data-lang="zh"],
+html[data-lang="en"] .lx-bi-part.bi-block[data-lang="en"],
+html[data-lang="ja"] .lx-bi-part.bi-block[data-lang="ja"],
+html[data-lang="ko"] .lx-bi-part.bi-block[data-lang="ko"],
+html[data-lang="fr"] .lx-bi-part.bi-block[data-lang="fr"],
+html[data-lang="de"] .lx-bi-part.bi-block[data-lang="de"],
+html[data-lang="es"] .lx-bi-part.bi-block[data-lang="es"],
+html[data-lang="pt"] .lx-bi-part.bi-block[data-lang="pt"],
+html[data-lang="ar"] .lx-bi-part.bi-block[data-lang="ar"]{display:block!important}

@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
 
   const body = (await req.json().catch(() => ({}))) as { productId?: unknown; submissionId?: unknown };
-  if (typeof body.productId !== "string" || (body.productId !== "stellar-trace" && !getProduct(body.productId) && !getNarrative(body.productId))) {
+  if (typeof body.productId !== "string" || (!getProduct(body.productId) && !getNarrative(body.productId))) {
     return NextResponse.json({ error: "内容参数无效" }, { status: 400 });
   }
   const destination = miniContentDestination(body.productId);

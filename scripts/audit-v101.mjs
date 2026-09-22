@@ -68,7 +68,7 @@ console.log("\nSource audit complete.");
 
 if(base){
   console.log("\n=== HTTP ROUTE AUDIT ===");
-  const routes=["/","/tools","/sasi","/sasi/chat","/sasi/assemble","/ai-wallet","/ai-knowledge","/ai-learning","/ai-research","/field-tests","/live-as","/subconscious","/practice","/learn","/stellar-trace","/terms","/privacy","/declaration","/refunds","/tools/image-watermark-remover","/tools/video-watermark-remover","/tools/food-calorie","/tools/video-transcription","/tools/pdf-compress","/tools/pdf-ocr"];
+  const routes=["/","/tools","/sasi","/sasi/chat","/sasi/assemble","/ai-wallet","/ai-knowledge","/ai-learning","/ai-research","/field-tests","/live-as","/subconscious","/practice","/learn","/terms","/privacy","/declaration","/refunds","/tools/image-watermark-remover","/tools/video-watermark-remover","/tools/food-calorie","/tools/video-transcription","/tools/pdf-compress","/tools/pdf-ocr"];
   for(const route of routes){
     try{
       const r=await fetch(base+route,{redirect:"manual"});

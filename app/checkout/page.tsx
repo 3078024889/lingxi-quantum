@@ -8,7 +8,8 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import { getProduct } from "@/lib/plans";
-import { useLang } from "@/lib/useLang";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { uiCopy, validForCopy } from "@/lib/ui-copy";
 import { createClient } from "@/lib/supabase/client";
 
 // v259：二维码中间加一个小色块+文字，区分"这是哪家的码"——不是去用
@@ -51,18 +52,7 @@ async function addCenterBadge(qrDataUrl: string, label: string, bg: string): Pro
 
 // v260：把天数换成人话——"365天"不如直接说"一年"，"30天"不如说
 // "一个月"，付款前一眼就能看懂到期是多久，不用自己心算。
-function describeDuration(days: number, langEn: boolean): string {
-  if (langEn) {
-    if (days === 1) return "1 day";
-    if (days === 30) return "1 month";
-    if (days === 365) return "1 year";
-    return `${days} days`;
-  }
-  if (days === 1) return "1 天";
-  if (days === 30) return "1 个月";
-  if (days === 365) return "1 年";
-  return `${days} 天`;
-}
+
 
 // 支付前先展示商品、金额、账号与支付方式；只有用户主动提交支付后才创建
 // 网关订单，避免用户只浏览确认页就留下无意义的 pending 订单。
@@ -106,8 +96,7 @@ function CheckoutInner() {
   const [buyerEmail, setBuyerEmail] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("wechat");
   const [alipayAvailable, setAlipayAvailable] = useState(false);
-  const stellarIntakeChecked = true;
-  const orderIdRef = useRef<string | null>(null);
+const orderIdRef = useRef<string | null>(null);
   const codeUrlRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const doneRef = useRef(false);
@@ -161,12 +150,11 @@ function CheckoutInner() {
   }
 
   useEffect(() => {
-    if (!stellarIntakeChecked) return;
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setBuyerEmail(data.user?.email ?? "");
     });
-  }, [stellarIntakeChecked]);
+  }, []);
 
   useEffect(() => {
     fetch("/api/pay/alipay/status", { cache: "no-store" })
@@ -358,7 +346,7 @@ function CheckoutInner() {
   };
 
   useEffect(() => {
-    if (!product || !stellarIntakeChecked || startedRef.current) return;
+    if (!product || startedRef.current) return;
     startedRef.current = true;
 
     const checkAccessBeforeOrdering = async () => {
@@ -392,7 +380,7 @@ function CheckoutInner() {
     void checkAccessBeforeOrdering();
     // Access is checked before any payment-provider order can be created.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product, productId, redirectTo, router, stellarIntakeChecked]);
+  }, [product, productId, redirectTo, router]);
 
   useEffect(() => {
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
@@ -437,7 +425,7 @@ function CheckoutInner() {
           <div className="mt-6 overflow-hidden rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)]/80 backdrop-blur-sm">
             <div className="flex items-center justify-between border-b border-[var(--lx-line)] bg-white/[0.03] px-5 py-3">
               <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-faint)]">
-                <Bi zh="数字服务订单号" en="Digital Service Order No." /> {orderIdRef.current ?? t("提交支付后生成", "Created on payment")}
+                <Bi zh="数字服务订单号" en="Digital Service Order No." /> {orderIdRef.current ?? uiCopy(lang, "提交支付后生成", "Created on payment")}
               </p>
               <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-ink)]">
                 <Bi zh="待支付" en="Pending" />
@@ -462,10 +450,7 @@ function CheckoutInner() {
                 )}
                 {product.type === "subscription" && product.days && (
                   <p className="mt-1 text-xs text-[var(--lx-ink)]/80">
-                    <Bi
-                      zh={`有效期：${describeDuration(product.days, false)}（从支付成功那一刻开始计算）`}
-                      en={`Valid for: ${describeDuration(product.days, true)} (starting from the moment payment is confirmed)`}
-                    />
+                    {validForCopy(lang, product.days)}
                   </p>
                 )}
                 {product.type === "permanent" && (
@@ -518,7 +503,7 @@ function CheckoutInner() {
                 aria-pressed={paymentMethod === "wechat"}
                 className={`rounded-sm border p-4 text-center transition ${paymentMethod === "wechat" ? "border-[var(--lx-line-strong)] bg-[var(--lx-soft)] text-[var(--lx-ink)]" : "border-[var(--lx-line)] text-[var(--lx-muted)] hover:border-white/25"}`}
               >
-                <p className="font-display text-sm"><Bi zh={`${paymentMethod === "wechat" ? "✓ " : ""}微信支付`} en={`${paymentMethod === "wechat" ? "✓ " : ""}WeChat Pay`} /></p>
+                <p className="font-display text-sm">{paymentMethod === "wechat" ? "✓ " : ""}{uiCopy(lang, "微信支付", "WeChat Pay")}</p>
               </button>
               <button
                 type="button"
@@ -527,9 +512,9 @@ function CheckoutInner() {
                 aria-pressed={paymentMethod === "alipay"}
                 className={`rounded-sm border p-4 text-center transition ${paymentMethod === "alipay" ? "border-[#1677ff] bg-[#1677ff]/10 text-[#6ca7ff]" : alipayAvailable ? "border-[var(--lx-line)] text-[var(--lx-muted)] hover:border-white/25" : "cursor-not-allowed border-[var(--lx-line)] text-[var(--lx-faint)] opacity-60"}`}
               >
-                <p className="font-display text-sm"><Bi zh={`${paymentMethod === "alipay" ? "✓ " : ""}支付宝`} en={`${paymentMethod === "alipay" ? "✓ " : ""}Alipay`} /></p>
+                <p className="font-display text-sm">{paymentMethod === "alipay" ? "✓ " : ""}{uiCopy(lang, "支付宝", "Alipay")}</p>
                 <p className="mt-1 text-[10px] uppercase tracking-widest2">
-                  <Bi zh={alipayAvailable ? "网页安全收银台" : "审核完成后开放"} en={alipayAvailable ? "Secure web checkout" : "Pending approval"} />
+                  {alipayAvailable ? uiCopy(lang, "网页安全收银台", "Secure web checkout") : uiCopy(lang, "审核完成后开放", "Pending approval")}
                 </p>
               </button>
             </div>
@@ -540,7 +525,7 @@ function CheckoutInner() {
               onClick={payNow}
               className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
             >
-              <Bi zh={`立即支付 · ¥${product.priceRmb}`} en={`Pay Now · ¥${product.priceRmb}`} />
+              {`${lang === "zh" ? "立即支付" : lang === "ja" ? "今すぐ支払う" : lang === "ko" ? "지금 결제" : lang === "fr" ? "Payer maintenant" : lang === "de" ? "Jetzt bezahlen" : lang === "es" ? "Pagar ahora" : lang === "pt" ? "Pagar agora" : lang === "ar" ? "ادفع الآن" : "Pay Now"} · ¥${product.priceRmb}`}
             </button>
           )}
 

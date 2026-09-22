@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Bi from "@/components/Bi";
 import { getProduct } from "@/lib/plans";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { uiCopy } from "@/lib/ui-copy";
 
 // v252：万一微信支付弹窗在等待确认的过程中意外被关掉（比如误触背景、
 // 或者中途换了设备），之前完全没有一个"事后还能找回来确认"的地方——
@@ -17,6 +19,7 @@ export default function PendingOrdersPanel({
   orders: { id: string; product_id: string; created_at: string; amount_usd: number }[];
 }) {
   const router = useRouter();
+  const { lang } = useLingxiLang();
   const [checking, setChecking] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [results, setResults] = useState<Record<string, "paid" | "not-paid" | "error">>({});
@@ -41,7 +44,7 @@ export default function PendingOrdersPanel({
   };
 
   const deleteOne = async (orderId: string) => {
-    if (!window.confirm("确定要删除这笔待确认订单吗？删除后无法恢复——如果你已经付过款，请先点「查询」确认，不要直接删除。")) return;
+    if (!window.confirm(uiCopy(lang, "确定要删除这笔待确认订单吗？删除后无法恢复——如果你已经付过款，请先点「查询」确认，不要直接删除。", "Delete this pending order? This cannot be undone. If you may already have paid, use Check first instead of deleting it."))) return;
     setDeleting(orderId);
     try {
       const res = await fetch("/api/pay/order/delete", {

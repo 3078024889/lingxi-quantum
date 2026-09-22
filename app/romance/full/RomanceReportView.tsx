@@ -2,7 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useLang } from "@/lib/useLang";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { localizeReportItems } from "@/lib/report-localize-client";
 import Bi from "@/components/Bi";
 import UnifiedReportCover from "@/components/UnifiedReportCover";
 import ShareButton from "@/components/ShareButton";
@@ -28,12 +29,14 @@ const SECTION_TITLES = [
 ];
 
 export default function RomanceReportView({ id }: { id: string }) {
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => (lang === "zh" ? zh : en);
   const [status, setStatus] = useState<"checking" | "locked" | "ready" | "error">("checking");
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [sections, setSections] = useState<string[]>([]);
+  const [localizedTitles, setLocalizedTitles] = useState<string[]>([]);
   const [showWechatPay, setShowWechatPay] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
@@ -48,12 +51,12 @@ export default function RomanceReportView({ id }: { id: string }) {
         .single();
       if (submission) setName(submission.name || "");
 
-      const currentLangEn = document.documentElement.classList.contains("lang-en");
+      const sourceLang = lang === "zh" ? "zh" : "en";
       try {
         const res = await fetch("/api/romance/generate-full", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, lang: currentLangEn ? "en" : "zh" }),
+          body: JSON.stringify({ id, lang: sourceLang }),
         });
         if (res.status === 402) {
           setStatus("locked");
@@ -65,7 +68,15 @@ export default function RomanceReportView({ id }: { id: string }) {
           setError(data.error || t("生成失败，请稍后再试。", "Generation failed — please try again."));
           return;
         }
-        setSections((data.fullReport as string).replace(/<!--\s*classical-editorial:[^>]+-->/g, "").split("===SECTION===").map((s) => s.trim()).filter(Boolean));
+        const parts = (data.fullReport as string).replace(/<!--\s*classical-editorial:[^>]+-->/g, "").split("===SECTION===").map((s) => s.trim()).filter(Boolean);
+        const sourceTitles = SECTION_TITLES.map((item) => sourceLang === "zh" ? item.titleZh : item.titleEn);
+        const localized = await localizeReportItems({
+          reportKey: "romance:" + id + ":v104e",
+          targetLang: lang,
+          items: [...sourceTitles, ...parts],
+        });
+        setLocalizedTitles(localized.items.slice(0, sourceTitles.length));
+        setSections(localized.items.slice(sourceTitles.length));
         setStatus("ready");
       } catch (e) {
         console.error("[report view] 请求失败:", e);
@@ -75,7 +86,7 @@ export default function RomanceReportView({ id }: { id: string }) {
     };
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, langEn]);
+  }, [id, lang]);
 
   const unlock = () => {
     if (REVIEW_MODE) {
@@ -97,7 +108,7 @@ export default function RomanceReportView({ id }: { id: string }) {
       const { exportArchivePdf, ARCHIVE_THEMES } = await import("@/lib/pdf-export");
       await exportArchivePdf({
         chapters: sections.map((body, i) => ({
-          title: (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
+          title: (localizedTitles[i] ?? (langEn ? SECTION_TITLES[i]?.titleEn : SECTION_TITLES[i]?.titleZh)) ?? (langEn ? `Chapter ${i + 1}` : `第 ${i + 1} 章`),
           body,
         })),
         fileName: langEn ? `Lingxi-Romance-Field-${name || "report"}.pdf` : `灵犀桃花磁场档案-${name || "report"}.pdf`,

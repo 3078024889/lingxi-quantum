@@ -219,7 +219,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               </p>
               </div>
 
-              <div className="field-account-stats"><Link href="/account/orders"><span>已支付订单</span><strong>{paidOrderCount ?? "—"}</strong><small>{paidOrderCount === null ? "暂未能读取，请刷新重试" : "查看订单与已保存报告 →"}</small></Link><Link href="/practice"><span>免费修炼技术</span><strong>4</strong><small>完整引导，随时进入 →</small></Link><Link href="/practice#practice-journal"><span>我的练习记录</span><strong>{journalCount ?? "—"}</strong><small>{journalCount === null ? "暂未能读取，请刷新重试" : "回看自己记录的真实体验 →"}</small></Link></div><nav className="field-account-links" aria-label="我的场域快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
+              <div className="field-account-stats"><Link href="/account/orders"><span><Bi zh="已支付订单" en="Paid orders" /></span><strong>{paidOrderCount ?? "—"}</strong><small>{paidOrderCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="查看订单与已保存报告 →" en="View orders & saved reports →" />}</small></Link><Link href="/practice"><span><Bi zh="免费修炼技术" en="Free practices" /></span><strong>4</strong><small><Bi zh="完整引导，随时进入 →" en="Complete guides, available anytime →" /></small></Link><Link href="/practice#practice-journal"><span><Bi zh="我的练习记录" en="My practice journal" /></span><strong>{journalCount ?? "—"}</strong><small>{journalCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="回看自己记录的真实体验 →" en="Review your recorded experiences →" />}</small></Link></div><nav className="field-account-links" aria-label="我的场域快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
               {/* 会员状态 */}
               <div className="mt-8 w-full space-y-3 text-left">
                 <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4">
@@ -354,7 +354,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
               )}
 
               </section>
-              <div className="mt-8 flex w-full flex-col gap-4">
+              <div id="account-actions" className="mt-8 flex w-full flex-col gap-4">
                 <Link
                   href="/sasi"
                   className="w-full bg-bone py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-lattice"

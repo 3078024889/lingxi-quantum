@@ -1,4 +1,179 @@
 "use client";
-import {ChangeEvent,FormEvent,useMemo,useRef,useState} from "react";import Link from "next/link";import {useLingxiLang} from "@/lib/lingxi-i18n";
-type F={id:string;name:string;size:number;file:File};type M="auto"|"drama"|"build"|"research";
-export default function SasiCommandCenter(){const{lang,t}=useLingxiLang();const[prompt,setPrompt]=useState(""),[mode,setMode]=useState<M>("auto"),[files,setFiles]=useState<F[]>([]),[notice,setNotice]=useState("");const ref=useRef<HTMLInputElement>(null);const route=useMemo(()=>{const q=prompt.toLowerCase();if(mode==="drama"||/短剧|剧本|视频|导演|分镜|story|script|drama|video/.test(q))return"/sasi?view=drama";if(mode==="build"||/网站|应用|代码|部署|github|vercel|website|code|deploy/.test(q))return"/sasi?view=code";if(mode==="research"||/论文|研究|资料|证据|paper|research/.test(q))return"/ai-research";return"/sasi/chat"},[prompt,mode]);function change(e:ChangeEvent<HTMLInputElement>){setFiles(Array.from(e.target.files||[]).slice(0,12).map(f=>({id:crypto.randomUUID(),name:f.name,size:f.size,file:f})));e.target.value=""}function submit(e:FormEvent){e.preventDefault();if(!prompt.trim()&&!files.length){setNotice(lang==="zh"?"先写下一个念头，或带来一份资料。":"Write one thought or bring an attachment first.");return}sessionStorage.setItem("sasi-intent",prompt.trim());location.href=route}return <main className="lx11-page lx11-sasi-page"><div className="lx11-sasi-wrap"><section className="lx11-sasi-intro"><span>{t("sasiKicker")}</span><h1>{t("sasiTitle")}</h1><p>{t("sasiLead")}</p></section><section className="lx11-sasi-compose"><form onSubmit={submit}><textarea value={prompt} onChange={e=>setPrompt(e.target.value)} placeholder={t("sasiPlaceholder")} rows={5}/>{files.length>0&&<div className="lx11-sasi-files">{files.map(f=><div key={f.id}><span>FILE</span><div><b>{f.name}</b><small>{Math.round(f.size/1024)} KB</small></div></div>)}</div>}<div className="lx11-sasi-compose-bottom"><div className="lx11-sasi-compose-tools"><input ref={ref} type="file" multiple className="hidden" onChange={change}/><button type="button" onClick={()=>ref.current?.click()}>＋ {t("attachment")}</button><Link href="/sasi?view=skills">◇ Skills</Link><Link href="/sasi?view=connections">⌁ {t("connections")}</Link></div><button className="lx11-sasi-send">{t("begin")}</button></div></form><div className="lx11-sasi-modes">{([["auto",t("auto")],["drama",t("visual")],["build",t("webapp")],["research",t("researchMode")]] as const).map(([v,l])=><button key={v} onClick={()=>setMode(v)} className={mode===v?"is-active":""}>{l}</button>)}</div>{notice&&<p className="lx11-sasi-notice">{notice}</p>}</section><section className="lx11-sasi-section"><div className="lx11-sasi-section-head"><div><span>{t("creationEntry")}</span><h2>{t("wantResult")}</h2></div><p>{t("oldExit")}</p></div><div className="lx11-sasi-ability-grid"><Link className="lx11-sasi-ability" href="/sasi?view=drama"><div><span>◌</span><em>{t("available")}</em></div><h3>AI Drama</h3><b>{t("open")}</b></Link><Link className="lx11-sasi-ability" href="/sasi?view=director"><div><span>◌</span><em>{t("available")}</em></div><h3>CangXuan</h3><b>{t("open")}</b></Link><Link className="lx11-sasi-ability" href="/sasi?view=code"><div><span>◌</span><em>{t("available")}</em></div><h3>{t("webapp")}</h3><b>{t("open")}</b></Link><div className="lx11-sasi-ability is-soon"><div><span>◌</span><em>{t("coming")}</em></div><h3>AI Video</h3><b>{t("connecting")}</b></div></div></section><section className="lx11-sasi-lower"><div className="lx11-sasi-skills"><div className="lx11-sasi-section-head compact"><div><span>Skills</span><h2>{t("skillsLead")}</h2></div></div><Link href="/sasi?view=skills">{t("open")}</Link></div><div className="lx11-sasi-connect"><span>{t("connections")}</span><h2>{t("connectTitle")}</h2><p>{t("connectLead")}</p><Link href="/sasi?view=connections">{t("openConnect")}</Link></div></section><section className="lx11-sasi-balance"><div><span>{t("wallet")}</span><h2>{t("balanceTitle")}</h2><p>{t("balanceLead")}</p></div><Link href="/ai-wallet">{t("viewBalance")}</Link></section></div></main>}
+
+import { type ChangeEvent, type FormEvent, useRef, useState } from "react";
+import Link from "next/link";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+
+type Mode = "auto" | "drama" | "build" | "research";
+type Picked = { id: string; file: File };
+
+const capabilityCards = [
+  { icon: "🎬", title: "AI Drama", noteZh: "漫剧、短剧与分镜创作", noteEn: "Drama, storyboards and visual production" },
+  { icon: "🎥", title: "CangXuan", noteZh: "AI 导演与镜头编排", noteEn: "AI directing and shot orchestration" },
+  { icon: "💻", title: "网站 / 应用", noteZh: "需求、代码与部署", noteEn: "Product, code and deployment" },
+  { icon: "✨", title: "AI Video", noteZh: "一键视频生成", noteEn: "One-click AI video" },
+] as const;
+
+export default function SasiCommandCenter() {
+  const { lang, t } = useLingxiLang();
+  const [prompt, setPrompt] = useState("");
+  const [mode, setMode] = useState<Mode>("auto");
+  const [files, setFiles] = useState<Picked[]>([]);
+  const [notice, setNotice] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const zh = lang === "zh";
+
+  function change(event: ChangeEvent<HTMLInputElement>) {
+    setFiles(
+      Array.from(event.target.files ?? [])
+        .slice(0, 12)
+        .map((file) => ({ id: crypto.randomUUID(), file }))
+    );
+    event.target.value = "";
+  }
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    const value = prompt.trim();
+
+    if (!value && !files.length) {
+      setNotice(zh ? "先写下一个念头，或带来一份资料。" : "Add a thought or an attachment first.");
+      return;
+    }
+
+    if (mode === "research") {
+      sessionStorage.setItem("sasi-intent", value);
+      window.location.href = "/ai-research";
+      return;
+    }
+
+    setNotice(
+      zh
+        ? "SASI 创作生产能力正在接入中，当前不会跳回旧版工作台。研究资料入口已经可用；模型/API 可从「连接」进入。"
+        : "SASI production is still being integrated. This entry will not send you back to the old workspace. Research is available now; model/API setup is under Connections."
+    );
+  }
+
+  return (
+    <main className="lx11-page lx11-sasi-page">
+      <div className="lx11-sasi-wrap">
+        <section className="lx11-sasi-intro">
+          <span>{t("sasiKicker")}</span>
+          <h1>{t("sasiTitle")}</h1>
+          <p>{t("sasiLead")}</p>
+          <div style={{ marginTop: 14 }}>
+            <span style={{
+              display:"inline-flex",alignItems:"center",gap:7,padding:"7px 12px",
+              borderRadius:999,background:"#fff4df",color:"#9a5b00",fontSize:12,fontWeight:700
+            }}>
+              🟡 {zh ? "SASI 创作能力 · 待上线" : "SASI creation · Coming soon"}
+            </span>
+          </div>
+        </section>
+
+        <section className="lx11-sasi-compose">
+          <form onSubmit={submit}>
+            <textarea
+              value={prompt}
+              onChange={(event) => setPrompt(event.target.value)}
+              placeholder={t("sasiPlaceholder")}
+              rows={5}
+            />
+
+            {files.length > 0 && (
+              <div className="lx11-sasi-files">
+                {files.map(({ id, file }) => (
+                  <div key={id}>
+                    <span>📎</span>
+                    <div>
+                      <b>{file.name}</b>
+                      <small>{Math.max(1, Math.round(file.size / 1024))} KB</small>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="lx11-sasi-compose-bottom">
+              <div className="lx11-sasi-compose-tools">
+                <input ref={inputRef} type="file" multiple className="hidden" onChange={change} />
+                <button type="button" onClick={() => inputRef.current?.click()}>📎 {t("attachment")}</button>
+                <Link href="/sasi/connections">🔌 {t("connections")}</Link>
+                <Link href="/ai-wallet">💎 {t("recharge")}</Link>
+              </div>
+              <button className="lx11-sasi-send">{t("begin")}</button>
+            </div>
+          </form>
+
+          <div className="lx11-sasi-modes">
+            {([
+              ["auto", t("auto")],
+              ["drama", t("visual")],
+              ["build", t("webapp")],
+              ["research", t("researchMode")],
+            ] as const).map(([value, label]) => (
+              <button key={value} onClick={() => setMode(value)} className={mode === value ? "is-active" : ""}>
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {notice && <p className="lx11-sasi-notice">{notice}</p>}
+        </section>
+
+        <section className="lx11-sasi-section">
+          <div className="lx11-sasi-section-head">
+            <div>
+              <span>{t("creationEntry")}</span>
+              <h2>{t("wantResult")}</h2>
+            </div>
+            <p>{zh ? "只保留一个公开创作台。未接好的生产能力全部收回后台。" : "One public creation desk only. Unfinished production flows stay backstage."}</p>
+          </div>
+
+          <div className="lx11-sasi-ability-grid">
+            {capabilityCards.map((card) => (
+              <div className="lx11-sasi-ability is-soon" key={card.title}>
+                <div>
+                  <span style={{fontSize:26}}>{card.icon}</span>
+                  <em>{t("coming")}</em>
+                </div>
+                <h3>{card.title}</h3>
+                <p style={{fontSize:13,opacity:.62,marginTop:8}}>{zh ? card.noteZh : card.noteEn}</p>
+                <b>{zh ? "待上线" : "Coming soon"}</b>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="lx11-sasi-lower">
+          <div className="lx11-sasi-skills">
+            <div className="lx11-sasi-section-head compact">
+              <div>
+                <span>🔬 {t("research")}</span>
+                <h2>{zh ? "科研资料已经可以直接进入。" : "Research workspace is available now."}</h2>
+              </div>
+            </div>
+            <Link href="/ai-research">{t("open")}</Link>
+          </div>
+
+          <div className="lx11-sasi-connect">
+            <span>🔌 {t("connections")}</span>
+            <h2>{t("connectTitle")}</h2>
+            <p>{zh ? "只有真正要接模型或外部服务时才打开连接页，不再把复杂配置塞进创作主界面。" : "Open setup only when you actually need an external model or service."}</p>
+            <Link href="/sasi/connections">{t("openConnect")}</Link>
+          </div>
+        </section>
+
+        <section className="lx11-sasi-balance">
+          <div>
+            <span>💎 {t("wallet")}</span>
+            <h2>{t("balanceTitle")}</h2>
+            <p>{t("balanceLead")}</p>
+          </div>
+          <Link href="/ai-wallet">{t("viewBalance")}</Link>
+        </section>
+      </div>
+    </main>
+  );
+}

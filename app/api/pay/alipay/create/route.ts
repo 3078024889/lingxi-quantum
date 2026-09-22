@@ -25,10 +25,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "支付宝正在完成上线审核，请暂时使用微信支付。" }, { status: 503 });
     }
     const { productId, submissionId, returnPath } = await req.json();
-    if (productId === "stellar-trace") {
-      return NextResponse.json({ error: "星迹已下架，不再接受新订单。" }, { status: 410 });
-    }
-    const product = getProduct(productId);
+const product = getProduct(productId);
     if (!product) return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     if (product.group === "production" && (!sasiPaidProductionEnabled() || !sasiTopupProductEnabled(product.id))) return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需创建支付订单。" }, { status: 400 });
