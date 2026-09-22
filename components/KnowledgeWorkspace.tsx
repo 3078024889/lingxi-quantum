@@ -265,7 +265,7 @@ export default function KnowledgeWorkspace({ mode = "book" }: { mode?: Mode }) {
         </section>
 
         <section className="rounded-3xl border border-slate-200 bg-white p-6">
-          <p className="text-xs font-semibold uppercase tracking-[.18em] text-blue-600">Ask your sources</p>
+          <p className="text-xs font-semibold uppercase tracking-[.18em] text-blue-600">询问资料</p>
           <h2 className="mt-2 text-2xl font-semibold text-slate-950">直接问这批资料</h2>
           <textarea
             value={question}

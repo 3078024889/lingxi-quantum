@@ -1,147 +1,27 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./unified-shell.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 
-const SITE = "https://lingxifield.cn";
-const SHARE_IMAGE = `${SITE}/og-sasi-20260920.png`;
+const SITE="https://lingxifield.cn";
+const SHARE_IMAGE=`${SITE}/og-sasi-20260920.png`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE),
-  title: {
-    default: "灵犀场 LINGXIFIELD｜AI短剧制作、视频生成、AI编程与意识显化平台",
-    template: "%s ｜ 灵犀场 LINGXIFIELD",
-  },
-  description:
-    "灵犀场（LINGXIFIELD）是融合 AI 短剧制作、视频生成、AI 编程、网站与应用构建部署、意识显化与场域精测的中英双语智能数字空间。",
-  keywords: [
-    "显化", "意识显化", "显化方法", "显化技巧", "现实回路", "吸引力法则",
-    "AI短剧", "故事板", "人物身份板", "网站构建", "编程部署", "潜意识", "潜意识改写",
-    "修炼", "冥想", "量子息法", "归零心诀", "直觉丹道", "上升心经", "重塑潜意识", "提升频率", "脉轮", "共时性", "觉醒", "更高的自己",
-    "场域", "共振", "临在", "校准", "相干", "忆起", "主权", "完整",
-    "manifestation", "how to manifest", "manifestation methods", "reality loop", "law of attraction",
-    "AI drama", "AI video", "AI coding", "website builder", "subconscious mind",
-    "consciousness", "meditation", "spiritual awakening", "higher self", "raise your vibration", "chakras", "synchronicity",
-    "the Field", "resonance", "presence", "unconditional love",
-  ],
-  alternates: {
-    canonical: "/",
-    languages: { "zh-CN": "/", "en": "/", "x-default": "/" },
-  },
-  openGraph: {
-    type: "website",
-    siteName: "灵犀场 SASI · LINGXIFIELD",
-    title: "灵犀场 SASI｜一念即达，让想象力成为生产力",
-    description:
-      "AI短剧、故事板、配音、视频生成、AI编程与网站部署汇入同一座双语数字空间，并连接意识显化与场域精测。",
-    url: SITE,
-    images: [
-      { url: SHARE_IMAGE, width: 1672, height: 941, alt: "灵犀场 SASI · 一念即达 · 让想象力成为生产力" },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "灵犀场 SASI｜AI创作、视频生成与编程构建",
-    description: "AI短剧 · 视频生成 · AI编程 · 网站部署 · 意识显化与场域精测。",
-    images: [SHARE_IMAGE],
-  },
-  robots: { index: true, follow: true },
-  manifest: "/manifest.webmanifest",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-  },
-  verification: {
-    google: [
-      "Q8hQ5NseO-vRkzeFaFHbjMWljGBYNZKlvclKWBghetk",
-      "p6pCOqQydWyeU9ubwvBSUUROUKG8Hac8xXucbtjy1mg",
-    ],
-    other: {
-      "baidu-site-verification": "codeva-QeLvo6OqH7",
-      "msvalidate.01": "0E5B44454CD5DC0433DDBFAFA31CDB67",
-    },
-  },
+  metadataBase:new URL(SITE),
+  title:{default:"灵犀场 LINGXIFIELD｜AI 工具、智能体与意识探索",template:"%s ｜ 灵犀场 LINGXIFIELD"},
+  description:"灵犀场把实用工具、书本智能体、AI 学习与科研、AI 创作、场域精测与意识探索放进同一座清晰、克制的数字工作台。",
+  alternates:{canonical:"/",languages:{"zh-CN":"/","en":"/","ja":"/","ko":"/","fr":"/","de":"/","es":"/","pt":"/","ar":"/","x-default":"/"}},
+  openGraph:{type:"website",siteName:"灵犀场 LINGXIFIELD",title:"灵犀场｜把问题直接变成结果",description:"实用工具、智能体、AI 创作与意识探索，统一在一个入口。",url:SITE,images:[{url:SHARE_IMAGE,width:1672,height:941,alt:"灵犀场 LINGXIFIELD"}]},
+  twitter:{card:"summary_large_image",title:"灵犀场 LINGXIFIELD",description:"别人给你一个工具。灵犀场给你一个结果。",images:[SHARE_IMAGE]},
+  robots:{index:true,follow:true},manifest:"/manifest.webmanifest",
+  icons:{icon:[{url:"/favicon.ico",sizes:"any"},{url:"/favicon-32x32.png",sizes:"32x32",type:"image/png"},{url:"/icon-192.png",sizes:"192x192",type:"image/png"},{url:"/icon-512.png",sizes:"512x512",type:"image/png"}],apple:[{url:"/apple-touch-icon.png",sizes:"180x180",type:"image/png"}]},
+  verification:{google:["Q8hQ5NseO-vRkzeFaFHbjMWljGBYNZKlvclKWBghetk","p6pCOqQydWyeU9ubwvBSUUROUKG8Hac8xXucbtjy1mg"],other:{"baidu-site-verification":"codeva-QeLvo6OqH7","msvalidate.01":"0E5B44454CD5DC0433DDBFAFA31CDB67"}},
 };
 
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "灵犀场 SASI · LINGXIFIELD",
-  alternateName: ["Lingxi", "LINGXI", "灵犀", "LingxiField", "灵犀场", "意识显化数字空间"],
-  url: SITE,
-  logo: `${SITE}/icon-512.png`,
-  description:
-    "灵犀场 SASI 是融合 AI 短剧、视频生成、编程构建、意识显化与个人数字报告的双语智能数字空间。LingxiField SASI is a bilingual space for AI creation, software delivery and conscious exploration.",
-  knowsAbout: [
-    "意识显化", "显化方法", "现实回路", "吸引力法则", "AI短剧", "网站构建", "编程部署",
-    "潜意识改写", "量子息法", "上升心经", "重塑潜意识", "提升频率", "共时性", "觉醒",
-    "场域", "共振", "临在", "校准", "主权", "完整",
-    "manifestation", "law of attraction", "AI drama", "AI video", "AI coding",
-    "subconscious mind", "meditation", "consciousness", "spiritual awakening", "higher self", "chakras",
-  ],
-};
-
-const siteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "灵犀场 SASI · LingxiField",
-  alternateName: "LINGXIFIELD SASI",
-  url: SITE,
-  inLanguage: ["zh-CN", "en"],
-  potentialAction: {
-    "@type": "SearchAction",
-    target: { "@type": "EntryPoint", urlTemplate: `${SITE}/learn?q={search_term_string}` },
-    "query-input": "required name=search_term_string",
-  },
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="zh-CN" suppressHydrationWarning>
-      <head>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossOrigin="anonymous"
-  />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500;600&family=Inter:wght@300;400;500&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap"
-    rel="stylesheet"
-  />
-
-  <script
-    async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065"
-    crossOrigin="anonymous"
-  />
-
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify(orgJsonLd),
-    }}
-  />
-
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{
-      __html: JSON.stringify(siteJsonLd),
-    }}
-  />
-</head>
-
-<body className="font-body antialiased">
-  <MiniEmbedMode />
-  <div className="grain" aria-hidden="true" />
-  <div className="lx-site-content">{children}</div>
-</body>
-</html>
-);
+export default function RootLayout({children}:{children:React.ReactNode}){
+ return <html lang="zh-CN" suppressHydrationWarning><head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065" crossOrigin="anonymous"/>
+ </head><body className="antialiased"><MiniEmbedMode/><div className="lx-site-content">{children}</div></body></html>;
 }

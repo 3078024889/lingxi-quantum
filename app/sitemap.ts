@@ -40,6 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/gate/origin", "/gate/relation", "/gate/wealth", "/gate/health", "/gate/mind", "/gate/destiny",
     "/membership",
     "/tools",
+    "/tools/pdf-editor", "/tools/pdf-merge-split", "/tools/pdf-compress", "/tools/pdf-ocr", "/tools/pdf-pages", "/tools/pdf-redact", "/tools/pdf-to-jpg", "/tools/image-to-pdf-pro", "/tools/avif-to-jpg", "/tools/svg-to-png", "/tools/long-image", "/tools/screenshot-redact", "/tools/video-transcription", "/tools/audio-transcription", "/tools/subtitle-tools", "/tools/subtitle-translate", "/tools/id-photo-ai", "/tools/video-dubbing", "/tools/privacy-cleaner", "/tools/qr-safe-reader",
     "/tools/text-counter", "/tools/remove-duplicate-lines", "/tools/remove-empty-lines", "/tools/url-encode-decode", "/tools/base64-encode-decode",
     "/tools/png-to-jpg", "/tools/jpg-to-png", "/tools/webp-to-jpg",
     "/tools/compress-image",

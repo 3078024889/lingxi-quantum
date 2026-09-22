@@ -1,94 +1,87 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import RuneIcon, { RuneKind } from "./RuneIcon";
 
-type Item = { href:string; title:string; sub?:string; rune:RuneKind; badge?:string };
+type Lang = "zh"|"en"|"ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
+type Item = { href:string; key:keyof typeof copy.zh.nav };
 
-const groups: Array<{ title:string; items:Item[] }> = [
-  {
-    title: "开始",
-    items: [
-      { href:"/", title:"今天想解决什么？", sub:"HOME", rune:"compass" },
-      { href:"/tools", title:"实用工具", sub:"TOOLS", rune:"mandala", badge:"NEW" },
-    ],
-  },
-  {
-    title: "灵犀场 · 书本智能体",
-    items: [
-      { href:"/ai-knowledge", title:"书本智能体", sub:"BOOK AGENT", rune:"crystal" },
-      { href:"/ai-learning", title:"AI学习助手", sub:"AI LEARNING", rune:"eye" },
-      { href:"/ai-research", title:"AI科研助手", sub:"AI RESEARCH", rune:"mandala" },
-    ],
-  },
-  {
-    title: "灵犀场",
-    items: [
-      { href:"/field-tests", title:"场域精测", sub:"FIELD INSIGHTS", rune:"mandala" },
-      { href:"/live-as", title:"意识显化", sub:"MANIFESTATION", rune:"eye" },
-      { href:"/subconscious", title:"潜意识重塑", sub:"SUBCONSCIOUS", rune:"spiral" },
-      { href:"/practice", title:"修炼技术", sub:"PRACTICE", rune:"flame" },
-      { href:"/account", title:"我的场域", sub:"ACCOUNT", rune:"figure" },
-    ],
-  },
+const copy = {
+  zh:{brand:"灵犀场",search:"搜索",new:"新任务",nav:{home:"首页",tools:"实用工具",books:"书本智能体",learning:"学习助手",research:"科研助手",studio:"AI 创作",field:"场域精测",manifest:"意识显化",practice:"修炼技术",wallet:"AI 余额",account:"我的场域"}, groups:["开始","智能体","灵犀场"]},
+  en:{brand:"LINGXIFIELD",search:"Search",new:"New task",nav:{home:"Home",tools:"Tools",books:"Book Agent",learning:"Learning",research:"Research",studio:"AI Studio",field:"Field Insights",manifest:"Manifestation",practice:"Practice",wallet:"AI Balance",account:"Account"},groups:["Start","Agents","LingxiField"]},
+  ja:{brand:"霊犀場",search:"検索",new:"新しいタスク",nav:{home:"ホーム",tools:"ツール",books:"ブックエージェント",learning:"学習アシスタント",research:"研究アシスタント",studio:"AI 制作",field:"フィールド分析",manifest:"意識の具現化",practice:"実践",wallet:"AI 残高",account:"アカウント"},groups:["開始","エージェント","霊犀場"]},
+  ko:{brand:"링시필드",search:"검색",new:"새 작업",nav:{home:"홈",tools:"도구",books:"북 에이전트",learning:"학습 도우미",research:"연구 도우미",studio:"AI 제작",field:"필드 분석",manifest:"의식 구현",practice:"수련",wallet:"AI 잔액",account:"계정"},groups:["시작","에이전트","링시필드"]},
+  fr:{brand:"LINGXIFIELD",search:"Rechercher",new:"Nouvelle tâche",nav:{home:"Accueil",tools:"Outils",books:"Agent Livre",learning:"Apprentissage",research:"Recherche",studio:"Studio IA",field:"Analyse du champ",manifest:"Manifestation",practice:"Pratique",wallet:"Solde IA",account:"Compte"},groups:["Départ","Agents","LingxiField"]},
+  de:{brand:"LINGXIFIELD",search:"Suchen",new:"Neue Aufgabe",nav:{home:"Start",tools:"Werkzeuge",books:"Buch-Agent",learning:"Lernen",research:"Forschung",studio:"KI Studio",field:"Feldanalyse",manifest:"Manifestation",practice:"Praxis",wallet:"KI-Guthaben",account:"Konto"},groups:["Start","Agenten","LingxiField"]},
+  es:{brand:"LINGXIFIELD",search:"Buscar",new:"Nueva tarea",nav:{home:"Inicio",tools:"Herramientas",books:"Agente de libros",learning:"Aprendizaje",research:"Investigación",studio:"Estudio IA",field:"Análisis de campo",manifest:"Manifestación",practice:"Práctica",wallet:"Saldo IA",account:"Cuenta"},groups:["Inicio","Agentes","LingxiField"]},
+  pt:{brand:"LINGXIFIELD",search:"Pesquisar",new:"Nova tarefa",nav:{home:"Início",tools:"Ferramentas",books:"Agente de livros",learning:"Aprendizagem",research:"Pesquisa",studio:"Estúdio IA",field:"Análise de campo",manifest:"Manifestação",practice:"Prática",wallet:"Saldo IA",account:"Conta"},groups:["Início","Agentes","LingxiField"]},
+  ar:{brand:"LINGXIFIELD",search:"بحث",new:"مهمة جديدة",nav:{home:"الرئيسية",tools:"الأدوات",books:"وكيل الكتب",learning:"التعلّم",research:"البحث",studio:"استوديو الذكاء",field:"تحليل المجال",manifest:"التجسيد",practice:"الممارسة",wallet:"رصيد الذكاء",account:"الحساب"},groups:["ابدأ","الوكلاء","LingxiField"]},
+} as const;
+
+const languageNames: Record<Lang,string> = {zh:"中文",en:"English",ja:"日本語",ko:"한국어",fr:"Français",de:"Deutsch",es:"Español",pt:"Português",ar:"العربية"};
+const itemGroups: Item[][] = [
+  [{href:"/",key:"home"},{href:"/tools",key:"tools"},{href:"/sasi",key:"studio"}],
+  [{href:"/ai-knowledge",key:"books"},{href:"/ai-learning",key:"learning"},{href:"/ai-research",key:"research"}],
+  [{href:"/field-tests",key:"field"},{href:"/live-as",key:"manifest"},{href:"/practice",key:"practice"},{href:"/ai-wallet",key:"wallet"},{href:"/account",key:"account"}],
 ];
 
-function isActive(pathname:string, href:string) {
-  if (href === "/") return pathname === "/";
-  if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/");
-  if (href === "/field-tests") {
-    return ["/field-tests","/life-map","/relationship","/resilience","/romance","/wealth","/daily","/mirror","/qian","/archetype"]
-      .some((x)=>pathname===x||pathname.startsWith(`${x}/`));
-  }
-  return pathname === href || pathname.startsWith(`${href}/`);
+function active(pathname:string, href:string){
+  if(href==="/") return pathname==="/";
+  if(href==="/tools") return pathname==="/tools"||pathname.startsWith("/tools/");
+  return pathname===href||pathname.startsWith(`${href}/`);
 }
 
-function NavLink({item, pathname, close}:{item:Item;pathname:string;close:()=>void}) {
-  const active=isActive(pathname,item.href);
-  return <Link href={item.href} onClick={close} className={`lx-v9-nav-link ${active?"is-active":""}`}>
-    <RuneIcon kind={item.rune} className="h-[17px] w-[17px] shrink-0" />
-    <span className="min-w-0 flex-1">
-      <span className="block truncate text-[15px] font-medium">{item.title}</span>
-      {item.sub&&<span className="mt-[2px] block truncate text-[10px] tracking-[.14em] text-slate-400">{item.sub}</span>}
-    </span>
-    {item.badge&&<span className="rounded-full bg-blue-50 px-2 py-1 text-[9px] font-semibold text-blue-600">{item.badge}</span>}
-  </Link>;
-}
-
-export default function Nav() {
+export default function Nav(){
   const pathname=usePathname()||"/";
   const [open,setOpen]=useState(false);
+  const [lang,setLang]=useState<Lang>("zh");
+  useEffect(()=>{
+    const saved=(localStorage.getItem("lx-lang")||"zh") as Lang;
+    if(copy[saved]) setLang(saved);
+  },[]);
   useEffect(()=>setOpen(false),[pathname]);
-  const content=<>
-    <Link href="/" className="lx-v9-brand" onClick={()=>setOpen(false)}>
-      <img src="/images/lingxifield-logo.png" alt="灵犀场 LINGXIFIELD" className="h-10 w-10 rounded-xl object-contain" />
-      <span><strong>灵犀场</strong><small>LINGXIFIELD</small></span>
-    </Link>
-    <div className="lx-v9-nav-scroll">
-      {groups.map((group)=><section key={group.title} className="mb-6">
-        <h2 className="px-3 pb-2 text-[12px] font-semibold tracking-[.08em] text-slate-500">{group.title}</h2>
-        <nav className="space-y-1" aria-label={group.title}>
-          {group.items.map(item=><NavLink key={item.href} item={item} pathname={pathname} close={()=>setOpen(false)} />)}
-        </nav>
+  useEffect(()=>{
+    localStorage.setItem("lx-lang",lang);
+    document.documentElement.lang=lang==="zh"?"zh-CN":lang;
+    document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+  },[lang]);
+  const t=copy[lang];
+  const nav=useMemo(()=>itemGroups,[ ]);
+
+  const body=<>
+    <div className="lx10-brand-row">
+      <Link href="/" className="lx10-brand" onClick={()=>setOpen(false)}>
+        <img src="/images/lingxifield-logo.png" alt="" />
+        <span>{t.brand}</span>
+      </Link>
+      <button className="lx10-close lg:hidden" onClick={()=>setOpen(false)} aria-label="关闭">×</button>
+    </div>
+    <div className="lx10-nav-scroll">
+      <Link className="lx10-new-task" href="/sasi" onClick={()=>setOpen(false)}>＋ {t.new}</Link>
+      {nav.map((group,gi)=><section key={gi} className="lx10-group">
+        <div className="lx10-group-title">{t.groups[gi]}</div>
+        {group.map(item=><Link key={item.href} href={item.href} onClick={()=>setOpen(false)} className={`lx10-link ${active(pathname,item.href)?"is-active":""}`}>
+          <span className="lx10-dot" />{t.nav[item.key]}
+        </Link>)}
       </section>)}
     </div>
-    <div className="border-t border-slate-100 p-4">
-      <p className="text-xs leading-5 text-slate-400">别人给你一个工具。<br/>灵犀场给你一个结果。</p>
+    <div className="lx10-sidebar-bottom">
+      <label className="lx10-lang-label" htmlFor="lx-lang">语言 / Language</label>
+      <select id="lx-lang" value={lang} onChange={e=>setLang(e.target.value as Lang)} className="lx10-lang-select">
+        {(Object.keys(languageNames) as Lang[]).map(k=><option key={k} value={k}>{languageNames[k]}</option>)}
+      </select>
+      <p>别人给你一个工具。灵犀场给你一个结果。</p>
     </div>
   </>;
 
   return <>
-    <aside className="lx-v9-side hidden lg:flex">{content}</aside>
-    <header className="lx-v9-mobile lg:hidden">
-      <Link href="/" className="flex items-center gap-2"><img src="/images/lingxifield-logo.png" alt="" className="h-8 w-8"/><b>灵犀场</b></Link>
-      <button onClick={()=>setOpen(true)} aria-label="打开导航" className="rounded-xl border border-slate-200 bg-white px-3 py-2">☰</button>
+    <aside className="lx10-sidebar hidden lg:flex">{body}</aside>
+    <header className="lx10-mobile lg:hidden">
+      <Link href="/" className="lx10-mobile-brand"><img src="/images/lingxifield-logo.png" alt=""/><b>{t.brand}</b></Link>
+      <button onClick={()=>setOpen(true)} className="lx10-menu" aria-label="菜单">☰</button>
     </header>
-    {open&&<div className="fixed inset-0 z-[90] bg-black/30 lg:hidden" onClick={()=>setOpen(false)}/>}
-    <aside className={`lx-v9-side lx-v9-mobile-drawer lg:hidden ${open?"is-open":""}`}>
-      <button onClick={()=>setOpen(false)} className="absolute right-4 top-4 text-xl text-slate-400" aria-label="关闭导航">×</button>
-      {content}
-    </aside>
+    {open&&<button className="lx10-backdrop lg:hidden" onClick={()=>setOpen(false)} aria-label="关闭菜单" />}
+    <aside className={`lx10-sidebar lx10-drawer lg:hidden ${open?"is-open":""}`}>{body}</aside>
   </>;
 }
