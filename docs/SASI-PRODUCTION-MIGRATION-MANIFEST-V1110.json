@@ -1,0 +1,22 @@
+{
+  "version": "11.10",
+  "purpose": "SASI completion bundle production migration manifest",
+  "known_order": [
+    "20260923174500_sasi_general_intelligence_seed_v01.sql",
+    "20260923190000_sasi_knowledge_ingestion_teacher_mesh_v01.sql",
+    "20260923203000_sasi_learning_runtime_stage2.sql",
+    "20260923220000_sasi_self_evolution_stage3.sql",
+    "20260923233000_sasi_model_authored_code_stage4.sql",
+    "20260924003000_sasi_user_triggered_intelligence_control.sql",
+    "20260924020000_sasi_measured_benchmark_stage7.sql",
+    "20260924033000_sasi_promotion_rollback_stage8.sql",
+    "20260924050000_sasi_completion_runtime_learning.sql"
+  ],
+  "rules": [
+    "Do not apply automatically from installer.",
+    "Verify dependency tables and migration history first.",
+    "Apply in timestamp order only.",
+    "Run schema acceptance after application.",
+    "Do not expose service_role credentials."
+  ]
+}

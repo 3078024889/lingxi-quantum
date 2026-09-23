@@ -1,2 +1,2 @@
 import AdvancedToolPage from '@/components/tools/AdvancedToolPage';import VideoWatermarkWorkbench from '@/components/tools/VideoWatermarkWorkbench';
-export default function Page(){return <AdvancedToolPage title="视频去水印" intro="固定位置水印可直接本地处理。选择水印所在区域，浏览器用 FFmpeg 重建该块画面并导出 MP4。" note="仅处理你拥有版权、已获授权或自己制作的内容。"><VideoWatermarkWorkbench/></AdvancedToolPage>}
+export default function Page(){return <AdvancedToolPage title="视频去水印 · 单个 / 批量 / 分享链接" intro="上传一个或多个你有权编辑的视频，或粘贴抖音、TikTok、小红书、快手公开分享链接；框选固定水印区域，付款后处理。" note="¥1.20 / 开始计费分钟，不足 1 分钟按 1 分钟计。分享页会尝试读取公开播放媒体；解析不到会明确提示，不做假成功。"><VideoWatermarkWorkbench/></AdvancedToolPage>}

@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { pollSasiVideo, providerAssetAccess, submitSasiVideo, type SasiVideoSelection } from "@/lib/sasi/provider";
 import { createSasiAigcMetadata, embedSasiAigcMetadata, readSasiAigcMetadata } from "@/lib/sasi/aigc-label";
+import { billableWholeSeconds, readMp4DurationSeconds } from "@/lib/sasi/mp4-duration";
 
 export type SasiJobRow = {
   id: string;
@@ -92,53 +93,165 @@ export async function refreshSasiJob(admin: SupabaseClient, job: SasiJobRow) {
     return (data ?? job) as SasiJobRow;
   }
 
-  const { data: existing } = await admin.from("sasi_deliveries").select("*").eq("job_id", job.id).maybeSingle();
-  if (!existing) {
+  const { data: existing } = await admin
+    .from("sasi_deliveries")
+    .select("*")
+    .eq("job_id", job.id)
+    .maybeSingle();
+
+  const previousUsage = job.output.verifiedUsage as {
+    source?: string;
+    reference?: string;
+    billableSeconds?: number;
+    measuredDurationSeconds?: number;
+  } | undefined;
+
+  let verifiedUsage =
+    previousUsage?.source === "delivery-mp4"
+      && typeof previousUsage.reference === "string"
+      && previousUsage.reference.length > 0
+      && Number.isSafeInteger(previousUsage.billableSeconds)
+      && Number(previousUsage.billableSeconds) > 0
+      ? previousUsage
+      : null;
+
+  let deliverySha =
+    existing && typeof existing.sha256 === "string" && existing.sha256.length > 0
+      ? existing.sha256
+      : null;
+
+  if (!verifiedUsage || !existing) {
     const downloaded = await downloadTrustedVideo(job.provider, provider.videoUrl);
+    const measuredDurationSeconds = readMp4DurationSeconds(downloaded.bytes);
+    const billableSeconds = billableWholeSeconds(measuredDurationSeconds);
+
     const aigcMetadata = createSasiAigcMetadata(job.id);
     const labeledBytes = embedSasiAigcMetadata(downloaded.bytes, aigcMetadata);
     const verifiedLabel = readSasiAigcMetadata(labeledBytes);
-    if (!verifiedLabel || verifiedLabel.AIGC.ProduceID !== job.id || verifiedLabel.AIGC.Label !== "1") throw new Error("AIGC_METADATA_VERIFICATION_FAILED");
-    const media = { ...downloaded, bytes: labeledBytes, sha256: createHash("sha256").update(labeledBytes).digest("hex") };
-    const objectPath = `${job.user_id}/${job.project_id}/AI-generated-${job.id}.${media.extension}`;
-    const uploaded = await admin.storage.from("sasi-deliveries").upload(objectPath, media.bytes, {
-      contentType: media.mimeType,
-      upsert: false,
-      cacheControl: "0",
-    });
-    if (uploaded.error && !String(uploaded.error.message).toLowerCase().includes("already exists")) throw new Error("DELIVERY_STORAGE_FAILED");
-    const inserted = await admin.from("sasi_deliveries").upsert({
-      user_id: job.user_id,
-      project_id: job.project_id,
-      job_id: job.id,
-      bucket_id: "sasi-deliveries",
-      object_path: objectPath,
-      media_kind: "video",
-      mime_type: media.mimeType,
-      byte_size: media.bytes.byteLength,
-      sha256: media.sha256,
-      ai_generated: true,
-      label_metadata: { ...aigcMetadata, visibleDisclosure: "delivery_interface", cleanVisualExportRequested: true },
-    }, { onConflict: "job_id" });
-    if (inserted.error) throw new Error("DELIVERY_RECORD_FAILED");
+
+    if (
+      !verifiedLabel
+      || verifiedLabel.AIGC.ProduceID !== job.id
+      || verifiedLabel.AIGC.Label !== "1"
+    ) {
+      throw new Error("AIGC_METADATA_VERIFICATION_FAILED");
+    }
+
+    const media = {
+      ...downloaded,
+      bytes: labeledBytes,
+      sha256: createHash("sha256").update(labeledBytes).digest("hex"),
+    };
+
+    deliverySha = media.sha256;
+
+    if (billableSeconds != null) {
+      verifiedUsage = {
+        source: "delivery-mp4",
+        reference: media.sha256,
+        billableSeconds,
+        measuredDurationSeconds: measuredDurationSeconds ?? undefined,
+      };
+    }
+
+    if (!existing) {
+      const objectPath = `${job.user_id}/${job.project_id}/AI-generated-${job.id}.${media.extension}`;
+      const uploaded = await admin.storage
+        .from("sasi-deliveries")
+        .upload(objectPath, media.bytes, {
+          contentType: media.mimeType,
+          upsert: false,
+          cacheControl: "0",
+        });
+
+      if (
+        uploaded.error
+        && !String(uploaded.error.message).toLowerCase().includes("already exists")
+      ) {
+        throw new Error("DELIVERY_STORAGE_FAILED");
+      }
+
+      const inserted = await admin.from("sasi_deliveries").upsert(
+        {
+          user_id: job.user_id,
+          project_id: job.project_id,
+          job_id: job.id,
+          bucket_id: "sasi-deliveries",
+          object_path: objectPath,
+          media_kind: "video",
+          mime_type: media.mimeType,
+          byte_size: media.bytes.byteLength,
+          sha256: media.sha256,
+          ai_generated: true,
+          label_metadata: {
+            ...aigcMetadata,
+            visibleDisclosure: "delivery_interface",
+            cleanVisualExportRequested: true,
+            verifiedUsage,
+          },
+        },
+        { onConflict: "job_id" },
+      );
+
+      if (inserted.error) throw new Error("DELIVERY_RECORD_FAILED");
+    }
   }
-  // Usage must be written by a trusted reconciliation adapter after checking
-  // provider billing evidence. Requested duration is not billing evidence.
-  const usage = job.output.verifiedUsage as {billableSeconds?:number;reference?:string;source?:string} | undefined;
+
   const approvedRate = Number(job.input.retailFenPerSecond);
-  const usageVerified = usage?.source === "provider-billing" && typeof usage.reference === "string" && usage.reference.length > 0 && Number.isSafeInteger(usage.billableSeconds) && Number.isSafeInteger(approvedRate) && approvedRate > 0;
-  const settlement = usageVerified ? settleVideoSeconds(usage!.billableSeconds!, {amountFen:job.quoted_points,retailFenPerSecond:approvedRate}) : null;
+  const usageVerified =
+    verifiedUsage != null
+    && verifiedUsage.source === "delivery-mp4"
+    && typeof verifiedUsage.reference === "string"
+    && verifiedUsage.reference.length > 0
+    && Number.isSafeInteger(verifiedUsage.billableSeconds)
+    && Number(verifiedUsage.billableSeconds) > 0
+    && Number.isSafeInteger(approvedRate)
+    && approvedRate > 0;
+
+  const settlement = usageVerified
+    ? settleVideoSeconds(Number(verifiedUsage!.billableSeconds), {
+        amountFen: job.quoted_points,
+        retailFenPerSecond: approvedRate,
+      })
+    : null;
+
   if (!settlement || settlement.requiresApproval) {
-    const errorCode = settlement?.requiresApproval ? "BUDGET_APPROVAL_REQUIRED" : "BILLING_USAGE_PENDING";
-    const output = {...job.output,deliveryReady:true,billingPending:true};
-    const pending = await admin.from("sasi_jobs").update({status:"running",error_code:errorCode,output,updated_at:new Date().toISOString()}).eq("id",job.id).in("status",["queued","running"]).select().single();
+    const errorCode = settlement?.requiresApproval
+      ? "BUDGET_APPROVAL_REQUIRED"
+      : "BILLING_USAGE_PENDING";
+
+    const output = {
+      ...job.output,
+      deliveryReady: true,
+      billingPending: true,
+      verifiedUsage,
+      deliverySha256: deliverySha,
+    };
+
+    const pending = await admin
+      .from("sasi_jobs")
+      .update({
+        status: "running",
+        error_code: errorCode,
+        output,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", job.id)
+      .in("status", ["queued", "running"])
+      .select()
+      .single();
+
     if (pending.error) throw new Error("BILLING_RECONCILIATION_STATE_FAILED");
     return (pending.data ?? job) as SasiJobRow;
   }
+
   const output = {
     ...job.output,
+    verifiedUsage,
+    deliverySha256: deliverySha,
     billingPending: false,
-    billableSeconds: usage!.billableSeconds,
+    billableSeconds: Number(verifiedUsage!.billableSeconds),
+    measuredDurationSeconds: verifiedUsage!.measuredDurationSeconds ?? null,
     releasedAmountFen: settlement.releasedAmountFen,
     deliveryReady: true,
     providerResultReceived: true,

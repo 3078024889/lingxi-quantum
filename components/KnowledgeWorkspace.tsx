@@ -13,6 +13,15 @@ import { useLingxiLang, type LingxiLang } from "@/lib/lingxi-i18n";
 type Mode = "book" | "learning" | "research";
 type Intelligence = "light" | "standard" | "high";
 
+type FeedbackSignal = "helpful" | "not-helpful" | "incorrect" | "insufficient-evidence";
+const FEEDBACK_COPY:Record<FeedbackSignal,Record<LingxiLang,string>>={
+ helpful:{zh:"有帮助",en:"Helpful",ja:"役に立った",ko:"도움됨",fr:"Utile",de:"Hilfreich",es:"Útil",pt:"Útil",ar:"مفيد"},
+ "not-helpful":{zh:"没帮助",en:"Not helpful",ja:"役に立たない",ko:"도움 안 됨",fr:"Peu utile",de:"Nicht hilfreich",es:"No fue útil",pt:"Não ajudou",ar:"غير مفيد"},
+ incorrect:{zh:"有错误",en:"Incorrect",ja:"誤りあり",ko:"오류 있음",fr:"Incorrect",de:"Fehlerhaft",es:"Incorrecto",pt:"Incorreto",ar:"غير صحيح"},
+ "insufficient-evidence":{zh:"证据不足",en:"Insufficient evidence",ja:"証拠不足",ko:"근거 부족",fr:"Preuves insuffisantes",de:"Unzureichende Belege",es:"Evidencia insuficiente",pt:"Evidência insuficiente",ar:"أدلة غير كافية"}
+};
+const feedbackText=(lang:LingxiLang,signal:FeedbackSignal)=>FEEDBACK_COPY[signal][lang]||FEEDBACK_COPY[signal].en;
+
 type Copy = Record<LingxiLang, string>;
 const c=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Copy=>({zh,en,ja,ko,fr,de,es,pt,ar});
 
@@ -117,6 +126,10 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   const [query,setQuery]=useState("");
   const [question,setQuestion]=useState("");
   const [answer,setAnswer]=useState("");
+  const [learningEventId,setLearningEventId]=useState("");
+  const [feedbackSignal,setFeedbackSignal]=useState<FeedbackSignal|null>(null);
+  const [feedbackBusy,setFeedbackBusy]=useState(false);
+  const [feedbackNotice,setFeedbackNotice]=useState("");
   const [notice,setNotice]=useState("");
   const [busy,setBusy]=useState(false);
   const [askBusy,setAskBusy]=useState(false);
@@ -166,7 +179,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   async function ask(){
     const q=question.trim();if(!q)return;
     if(!results.length){setNotice(tr(lang,"noEvidence"));return}
-    setAskBusy(true);setAnswer("");setNotice(tr(lang,"sending"));
+    setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setNotice(tr(lang,"sending"));
     try{
       const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         question:q,mode,intelligence,evidence:results.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
@@ -174,12 +187,31 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
+      setLearningEventId(String(data.learningEventId||""));
       const charged=Number(data.chargedRmb);
       setNotice(Number.isFinite(charged)
         ? `${tr(lang,"done")} · ¥${charged.toFixed(2)}`
         : tr(lang,"done"));
     }catch(e){setNotice(e instanceof Error?e.message:tr(lang,"aiFailed"))}
     finally{setAskBusy(false)}
+  }
+
+  async function sendFeedback(signal:FeedbackSignal){
+    if(!learningEventId||feedbackBusy)return;
+    setFeedbackBusy(true);setFeedbackNotice("");
+    try{
+      const response=await fetch("/api/sasi/learning/feedback",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({learningEventId,signal})
+      });
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.error||"Feedback failed");
+      setFeedbackSignal(signal);
+      setFeedbackNotice(lang==="zh"?"已记录。它会作为学习信号，不会直接变成全局事实。":"Recorded as a learning signal; it is not promoted directly to global truth.");
+    }catch(e){
+      setFeedbackNotice(e instanceof Error?e.message:(lang==="zh"?"反馈提交失败。":"Feedback failed."));
+    }finally{setFeedbackBusy(false)}
   }
 
   async function remove(source:KnowledgeSource){
@@ -210,7 +242,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     <div className="grid gap-5 xl:grid-cols-[.88fr_1.12fr]">
       <section className="rounded-3xl border border-slate-200 bg-white p-6">
         <h2 className="text-xl font-semibold text-slate-950">{tr(lang,"add")}{heading}</h2>
-        <label className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+        <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const file=e.dataTransfer.files?.[0];if(file&&!busy)void importFile(file)}} className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
           <input type="file" className="hidden" accept=".pdf,.txt,.md,image/*,application/pdf,text/plain,text/markdown" disabled={busy}
             onChange={e=>{const file=e.target.files?.[0];if(file)void importFile(file);e.currentTarget.value=""}}/>
           <span className="font-medium text-slate-900">{busy?tr(lang,"reading"):tr(lang,"upload")}</span>
@@ -256,6 +288,22 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
         <p className="mt-3 text-xs leading-5 text-slate-500">{tr(lang,"aiPrivacy")}</p>
 
         {answer&&<article className="mt-6 whitespace-pre-wrap rounded-2xl bg-blue-50 p-5 leading-8 text-slate-800">{answer}</article>}
+
+        {answer&&learningEventId&&<div className="mt-3 rounded-2xl border border-slate-200 bg-white p-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[.16em] text-slate-400">SASI LEARNING FEEDBACK</div>
+          <p className="mt-1 text-xs leading-5 text-slate-500">{lang==="zh"?"这条反馈只作为 SASI 的学习/失败信号，不会直接覆盖知识。":"Feedback is used as a SASI learning/failure signal and does not directly overwrite knowledge."}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {(["helpful","not-helpful","incorrect","insufficient-evidence"] as FeedbackSignal[]).map(signal=><button
+              key={signal}
+              type="button"
+              disabled={feedbackBusy}
+              onClick={()=>void sendFeedback(signal)}
+              className={`rounded-full border px-3 py-1.5 text-xs transition ${feedbackSignal===signal?"border-blue-500 bg-blue-50 text-blue-700":"border-slate-200 text-slate-600 hover:border-slate-300"} disabled:opacity-40`}>
+              {feedbackText(lang,signal)}
+            </button>)}
+          </div>
+          {feedbackNotice&&<p className="mt-2 text-xs leading-5 text-slate-500">{feedbackNotice}</p>}
+        </div>}
 
         <div className="mt-6">
           <h3 className="text-sm font-semibold text-slate-900">{tr(lang,"evidence")}</h3>

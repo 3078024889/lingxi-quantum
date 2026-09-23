@@ -1,0 +1,44 @@
+{
+  "version": "11.50",
+  "pricing": {
+    "food-calorie": "¥0.50 / image",
+    "id-photo-ai": "¥2.90 / image",
+    "image-watermark-remover": "¥1.90 / image",
+    "batch-image-watermark-remover": "¥1.90 base + ¥0.30 / image",
+    "audio-transcription": "¥0.80 / minute",
+    "video-transcription": "¥1.00 / minute",
+    "subtitle-translate": "¥1.90 / file",
+    "video-dubbing": "¥2.90 base + ¥1.20 / minute",
+    "video-watermark-remover": "¥1.20 / started minute; <1 minute = ¥1.20; cap ¥49",
+    "pdf-editor/e-sign/cross-page-stamp": "tiered per-page pricing already in production"
+  },
+  "batch_upgrades": [
+    "image conversion",
+    "HEIC conversion",
+    "image OCR",
+    "privacy metadata cleaner",
+    "QR reader",
+    "food calorie analysis",
+    "AI ID photo",
+    "transcription",
+    "subtitle translation",
+    "video toolkit",
+    "video watermark removal"
+  ],
+  "remote_media": {
+    "supported": "direct public HTTPS video/audio/image URLs and CORS/CDN/object-storage URLs",
+    "not_claimed": "generic platform share-page scraping or access-control bypass"
+  },
+  "account_orders": "all toolquote:* orders are categorized under Utility Tools",
+  "share_page_resolver": {
+    "supported_detection": [
+      "Douyin",
+      "TikTok",
+      "Xiaohongshu",
+      "Kuaishou"
+    ],
+    "batch_links": 20,
+    "behavior": "follow public redirects; inspect public page metadata/embedded JSON; import publicly exposed playback media when available",
+    "safety": "no login-cookie injection, no DRM/access-control bypass, no private-network fetches"
+  }
+}

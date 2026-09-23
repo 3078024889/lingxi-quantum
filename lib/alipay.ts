@@ -115,3 +115,45 @@ export function alipaySellerId(): string {
 export function alipaySiteUrl(): string {
   return env("ALIPAY_SITE_URL") || "https://lingxifield.cn";
 }
+
+
+function extractAlipayResponseNode(raw: string, key: string): string {
+  const marker = `"${key}":`;
+  const markerIndex=raw.indexOf(marker);
+  if(markerIndex<0)throw new Error("ALIPAY_QUERY_RESPONSE_NODE_MISSING");
+  let i=markerIndex+marker.length;
+  while(/\s/.test(raw[i]??""))i++;
+  if(raw[i]!=="{")throw new Error("ALIPAY_QUERY_RESPONSE_OBJECT_MISSING");
+  const start=i; let depth=0,inString=false,escaped=false;
+  for(;i<raw.length;i++){
+    const ch=raw[i];
+    if(inString){if(escaped)escaped=false;else if(ch==="\\")escaped=true;else if(ch==='"')inString=false;continue}
+    if(ch==='"'){inString=true;continue}
+    if(ch==="{")depth++;
+    if(ch==="}"){depth--;if(depth===0)return raw.slice(start,i+1)}
+  }
+  throw new Error("ALIPAY_QUERY_RESPONSE_TRUNCATED");
+}
+export async function queryAlipayTrade(input:{outTradeNo:string;expectedAmountRmb:number}):Promise<{paid:boolean;tradeStatus:string;tradeNo?:string}>{
+ if(!alipayConfigured())throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);
+ const params:Record<string,string>={app_id:env("ALIPAY_APP_ID"),method:"alipay.trade.query",format:"JSON",charset:"utf-8",sign_type:"RSA2",timestamp:timestamp(),version:"1.0",biz_content:JSON.stringify({out_trade_no:input.outTradeNo})};
+ const signer=createSign("RSA-SHA256");signer.update(canonical(params),"utf8");signer.end();
+ params.sign=signer.sign(asPem(env("ALIPAY_PRIVATE_KEY"),"PRIVATE KEY"),"base64");
+ const response=await fetch(env("ALIPAY_GATEWAY")||DEFAULT_GATEWAY,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=utf-8"},body:new URLSearchParams(params),cache:"no-store",signal:AbortSignal.timeout(20000)});
+ const raw=await response.text();if(!response.ok)throw new Error(`ALIPAY_QUERY_HTTP_${response.status}`);
+ const payload=JSON.parse(raw) as {alipay_trade_query_response?:Record<string,unknown>;sign?:string};
+ const nodeRaw=extractAlipayResponseNode(raw,"alipay_trade_query_response");
+ if(!payload.sign)throw new Error("ALIPAY_QUERY_SIGNATURE_MISSING");
+ const verifier=createVerify("RSA-SHA256");verifier.update(nodeRaw,"utf8");verifier.end();
+ if(!verifier.verify(asPem(env("ALIPAY_PUBLIC_KEY"),"PUBLIC KEY"),payload.sign,"base64"))throw new Error("ALIPAY_QUERY_SIGNATURE_INVALID");
+ const data=payload.alipay_trade_query_response??{};
+ if(String(data.code??"")!=="10000"){
+   const sub=String(data.sub_code??data.code??"UNKNOWN");
+   if(sub.includes("ACQ.TRADE_NOT_EXIST"))return{paid:false,tradeStatus:"NOT_EXIST"};
+   throw new Error(`ALIPAY_QUERY_${sub.slice(0,100)}`);
+ }
+ if(String(data.out_trade_no??"")!==input.outTradeNo)throw new Error("ALIPAY_QUERY_ORDER_MISMATCH");
+ const totalFen=Math.round(Number(data.total_amount)*100),expectedFen=Math.round(input.expectedAmountRmb*100),tradeStatus=String(data.trade_status??"");
+ if(new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus)&&totalFen!==expectedFen)throw new Error("ALIPAY_QUERY_AMOUNT_MISMATCH");
+ return{paid:new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus),tradeStatus,tradeNo:typeof data.trade_no==="string"?data.trade_no:undefined};
+}

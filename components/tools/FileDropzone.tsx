@@ -1,12 +1,165 @@
 "use client";
-import {useCallback,useRef,useState} from "react";
-import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {toolRuntimeText} from "@/lib/tool-runtime-i18n";
-type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;files:File[];onChange:(files:File[])=>void;disabled?:boolean};
-export default function FileDropzone({accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled}:Props){
- const{lang}=useLingxiLang();const t=(zh:string,en:string)=>toolRuntimeText(lang,zh,en);
- const inputRef=useRef<HTMLInputElement>(null);const[drag,setDrag]=useState(false);const[error,setError]=useState<string|null>(null);
- const apply=useCallback((list:FileList|File[])=>{const arr=Array.from(list);if(!arr.length)return;const maxBytes=maxSizeMB*1024*1024;const tooBig=arr.find(f=>f.size>maxBytes);if(tooBig){setError(t(`文件过大：${tooBig.name}（上限 ${maxSizeMB}MB）`,`File too large: ${tooBig.name} (limit ${maxSizeMB}MB)`));return;}const next=multiple?arr.slice(0,maxFiles):arr.slice(0,1);setError(null);onChange(next);},[maxFiles,maxSizeMB,multiple,onChange,lang]);
- const limitZh=`单文件上限 ${maxSizeMB}MB${multiple?` · 最多 ${maxFiles} 个`:""}`,limitEn=`Max ${maxSizeMB}MB per file${multiple?` · up to ${maxFiles} files`:""}`;
- return <div><div role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"||e.key===" ")inputRef.current?.click();}} onClick={()=>!disabled&&inputRef.current?.click()} onDragEnter={e=>{e.preventDefault();setDrag(true)}} onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);if(!disabled)apply(e.dataTransfer.files)}} className={`cursor-pointer rounded-sm border border-dashed px-6 py-10 text-center transition ${drag?"border-lattice bg-lattice/10":"border-white/20 bg-void-deep hover:border-lattice/40"} ${disabled?"pointer-events-none opacity-50":""}`}><p className="font-display text-lg text-bone">{t("拖拽文件到这里，或点击选择","Drop files here, or click to choose")}</p><p className="mt-2 text-xs text-bone-dim">{t(limitZh,limitEn)}</p><input ref={inputRef} type="file" className="hidden" accept={accept} multiple={multiple} disabled={disabled} onChange={e=>{if(e.target.files)apply(e.target.files);e.target.value=""}}/></div>{error&&<p className="mt-3 text-sm text-rose">{error}</p>}{files.length>0&&<ul className="mt-4 space-y-2">{files.map(f=><li key={`${f.name}-${f.size}-${f.lastModified}`} className="flex items-center justify-between gap-3 rounded-sm border border-white/10 bg-void px-4 py-2 text-sm text-bone-dim"><span className="truncate">{f.name} · {(f.size/1024).toFixed(1)} KB</span><button type="button" className="shrink-0 text-xs text-lattice hover:underline" onClick={e=>{e.stopPropagation();onChange(files.filter(x=>x!==f))}}>{t("移除","Remove")}</button></li>)}</ul>}</div>;
+
+import { useCallback, useRef, useState } from "react";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { uploadText } from "@/lib/upload-ui-i18n";
+
+type Props = {
+  accept?: string;
+  multiple?: boolean;
+  maxFiles?: number;
+  maxSizeMB?: number;
+  files: File[];
+  onChange: (files: File[]) => void;
+  disabled?: boolean;
+  kind?: "file" | "image" | "media" | "pdf" | "subtitle";
+  append?: boolean;
+};
+
+export default function FileDropzone({
+  accept = "*/*",
+  multiple = false,
+  maxFiles = 1,
+  maxSizeMB = 40,
+  files,
+  onChange,
+  disabled,
+  kind = "file",
+  append = false,
+}: Props) {
+  const { lang } = useLingxiLang();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [drag, setDrag] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const apply = useCallback(
+    (list: FileList | File[]) => {
+      const incoming = Array.from(list);
+      if (!incoming.length) return;
+
+      const maxBytes = maxSizeMB * 1024 * 1024;
+      const tooBig = incoming.find((file) => file.size > maxBytes);
+      if (tooBig) {
+        setError(
+          uploadText(lang, "tooLarge", {
+            name: tooBig.name,
+            size: maxSizeMB,
+          })
+        );
+        return;
+      }
+
+      const merged =
+        multiple && append
+          ? [...files, ...incoming]
+          : incoming;
+
+      const next = multiple
+        ? merged.slice(0, maxFiles)
+        : merged.slice(0, 1);
+
+      setError(null);
+      onChange(next);
+    },
+    [append, files, lang, maxFiles, maxSizeMB, multiple, onChange]
+  );
+
+  const promptKey =
+    kind === "image"
+      ? "dropImagesOrChoose"
+      : kind === "media"
+      ? "dropMediaOrChoose"
+      : kind === "pdf"
+      ? "dropPdfOrChoose"
+      : kind === "subtitle"
+      ? "dropSubtitleOrChoose"
+      : "dropOrChoose";
+
+  return (
+    <div>
+      <div
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            inputRef.current?.click();
+          }
+        }}
+        onClick={() => !disabled && inputRef.current?.click()}
+        onDragEnter={(event) => {
+          event.preventDefault();
+          if (!disabled) setDrag(true);
+        }}
+        onDragOver={(event) => {
+          event.preventDefault();
+          if (!disabled) setDrag(true);
+        }}
+        onDragLeave={(event) => {
+          if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+          setDrag(false);
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          setDrag(false);
+          if (!disabled) apply(event.dataTransfer.files);
+        }}
+        className={`cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition ${
+          drag
+            ? "border-blue-500 bg-blue-50 ring-4 ring-blue-100"
+            : "border-slate-300 bg-slate-50 hover:border-blue-300"
+        } ${disabled ? "pointer-events-none opacity-50" : ""}`}
+      >
+        <p className="text-base font-medium text-slate-800">
+          {drag
+            ? uploadText(lang, "dragActive")
+            : uploadText(lang, promptKey)}
+        </p>
+        <p className="mt-2 text-xs leading-5 text-slate-500">
+          {uploadText(lang, "maxFile", { size: maxSizeMB })}
+          {multiple
+            ? ` · ${uploadText(lang, "maxFiles", { count: maxFiles })}`
+            : ""}
+        </p>
+        <input
+          ref={inputRef}
+          type="file"
+          className="hidden"
+          accept={accept}
+          multiple={multiple}
+          disabled={disabled}
+          onChange={(event) => {
+            if (event.target.files) apply(event.target.files);
+            event.target.value = "";
+          }}
+        />
+      </div>
+
+      {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
+
+      {files.length > 0 && (
+        <ul className="mt-4 space-y-2">
+          {files.map((file) => (
+            <li
+              key={`${file.name}-${file.size}-${file.lastModified}`}
+              className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600"
+            >
+              <span className="truncate">
+                {file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB
+              </span>
+              <button
+                type="button"
+                className="shrink-0 text-xs text-blue-700 hover:underline"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onChange(files.filter((item) => item !== file));
+                }}
+              >
+                {uploadText(lang, "remove")}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }

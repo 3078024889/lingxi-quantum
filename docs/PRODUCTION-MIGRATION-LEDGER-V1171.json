@@ -1,0 +1,39 @@
+{
+  "version": "11.71",
+  "production_project_ref": "sxsgdpqojepgbbrxrzlq",
+  "status": "applied-and-postflight-verified",
+  "remote_migrations": {
+    "ai_refund_gross_topup_fix": "20260923015641",
+    "sasi_cognitive_kernel_v01": "20260923093820",
+    "sasi_self_evolution_control_v01": "20260923093824",
+    "sasi_general_intelligence_seed_v01": "20260923093857",
+    "sasi_knowledge_ingestion_teacher_mesh_v01": "20260923093901",
+    "sasi_learning_runtime_stage2": "20260923093931",
+    "sasi_self_evolution_stage3": "20260923093936",
+    "sasi_model_authored_code_stage4": "20260923093956",
+    "sasi_user_triggered_intelligence_control": "20260923094000",
+    "sasi_measured_benchmark_stage7": "20260923094028",
+    "sasi_promotion_rollback_stage8": "20260923094032",
+    "sasi_completion_runtime_learning": "20260923094036",
+    "tools_full_production_v1150": "20260923094053",
+    "sasi_cognitive_least_privilege_v1161": "20260923094108",
+    "sasi_cognitive_performance_v1170": "20260923094300",
+    "sasi_topup_rpc_drift_repair": "20260923094451"
+  },
+  "verified": {
+    "all_cognitive_tables_exist": true,
+    "rls_enabled": true,
+    "server_only_authenticated_direct_access": false,
+    "owner_read_authenticated_write": false,
+    "video_watermark_price_rmb_per_started_minute": 1.2,
+    "video_watermark_min_price_rmb": 1.2,
+    "video_watermark_cap_rmb": 49.0,
+    "repair_tool_paid_grant_authenticated_execute": false,
+    "repair_tool_paid_grant_service_role_execute": true
+  },
+  "remaining_security_advisories": [
+    "create_sasi_project is SECURITY DEFINER and authenticated-executable; repository main search found no direct call, but local dirty-worktree dependency must be checked before revocation.",
+    "Supabase leaked-password protection remains disabled.",
+    "RLS-enabled/no-policy INFO findings on server-only SASI tables are intentional because grants are revoked from anon/authenticated."
+  ]
+}

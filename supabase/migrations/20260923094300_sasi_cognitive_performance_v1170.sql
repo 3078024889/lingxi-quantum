@@ -1,0 +1,58 @@
+-- SASI cognitive production performance hardening — V11.70
+begin;
+
+create index if not exists sasi_memory_records_user_idx on public.sasi_memory_records(user_id);
+create index if not exists sasi_memory_records_project_idx on public.sasi_memory_records(project_id);
+create index if not exists sasi_memory_records_supersedes_idx on public.sasi_memory_records(supersedes);
+create index if not exists sasi_failure_events_user_idx on public.sasi_failure_events(user_id);
+create index if not exists sasi_failure_events_project_idx on public.sasi_failure_events(project_id);
+create index if not exists sasi_eval_runs_strategy_idx on public.sasi_eval_runs(strategy_id);
+create index if not exists sasi_code_proposals_strategy_idx on public.sasi_code_proposals(strategy_id);
+create index if not exists sasi_code_proposals_dev_eval_idx on public.sasi_code_proposals(development_eval_id);
+create index if not exists sasi_code_proposals_sealed_eval_idx on public.sasi_code_proposals(sealed_eval_id);
+create index if not exists sasi_code_proposals_approved_by_idx on public.sasi_code_proposals(human_approved_by);
+create index if not exists sasi_knowledge_units_supersedes_idx on public.sasi_knowledge_units(supersedes);
+create index if not exists sasi_knowledge_conflicts_incumbent_idx on public.sasi_knowledge_conflicts(incumbent_id);
+create index if not exists sasi_knowledge_conflicts_challenger_idx on public.sasi_knowledge_conflicts(challenger_id);
+create index if not exists sasi_ingestion_sources_owner_idx on public.sasi_ingestion_sources(owner_user_id);
+create index if not exists sasi_ingestion_sources_project_idx on public.sasi_ingestion_sources(project_id);
+create index if not exists sasi_knowledge_candidates_project_idx on public.sasi_knowledge_candidates(project_id);
+create index if not exists sasi_teacher_reviews_candidate_idx on public.sasi_teacher_reviews(candidate_id);
+create index if not exists sasi_teacher_reviews_profile_idx on public.sasi_teacher_reviews(teacher_profile_id);
+create index if not exists sasi_learning_runs_user_idx on public.sasi_learning_runs(user_id);
+create index if not exists sasi_learning_runs_project_idx on public.sasi_learning_runs(project_id);
+create index if not exists sasi_episodic_memory_user_idx on public.sasi_episodic_memory(user_id);
+create index if not exists sasi_episodic_memory_project_idx on public.sasi_episodic_memory(project_id);
+create index if not exists sasi_failure_attributions_run_idx on public.sasi_failure_attributions_v2(run_id);
+create index if not exists sasi_hypotheses_failure_idx on public.sasi_improvement_hypotheses(failure_attribution_id);
+create index if not exists sasi_evolution_cycles_episode_idx on public.sasi_evolution_cycles(episode_id);
+create index if not exists sasi_evolution_cycles_failure_idx on public.sasi_evolution_cycles(failure_attribution_id);
+create index if not exists sasi_evolution_cycles_hypothesis_idx on public.sasi_evolution_cycles(hypothesis_id);
+create index if not exists sasi_evolution_promotions_hypothesis_idx on public.sasi_evolution_promotion_records(hypothesis_id);
+create index if not exists sasi_code_authoring_cycle_idx on public.sasi_code_authoring_runs(evolution_cycle_id);
+create index if not exists sasi_candidate_competitions_cycle_idx on public.sasi_candidate_competitions(evolution_cycle_id);
+create index if not exists sasi_promotion_snapshots_cycle_idx on public.sasi_promotion_snapshots(evolution_cycle_id);
+create index if not exists sasi_promotion_snapshots_previous_idx on public.sasi_promotion_snapshots(previous_stable_snapshot_id);
+create index if not exists sasi_post_promotion_snapshot_idx on public.sasi_post_promotion_observations(snapshot_id);
+create index if not exists sasi_rollback_from_idx on public.sasi_rollback_plans(from_snapshot_id);
+create index if not exists sasi_rollback_to_idx on public.sasi_rollback_plans(to_snapshot_id);
+create index if not exists sasi_learning_feedback_event_idx on public.sasi_user_learning_feedback(learning_event_id);
+
+drop policy if exists "sasi_memory_owner_read" on public.sasi_memory_records;
+create policy "sasi_memory_owner_read" on public.sasi_memory_records for select to authenticated using (user_id = (select auth.uid()));
+drop policy if exists "sasi_failure_owner_read" on public.sasi_failure_events;
+create policy "sasi_failure_owner_read" on public.sasi_failure_events for select to authenticated using (user_id = (select auth.uid()));
+drop policy if exists "sasi_ingestion_owner_read" on public.sasi_ingestion_sources;
+create policy "sasi_ingestion_owner_read" on public.sasi_ingestion_sources for select to authenticated using (owner_user_id = (select auth.uid()));
+drop policy if exists "sasi_learning_run_owner_read" on public.sasi_learning_runs;
+create policy "sasi_learning_run_owner_read" on public.sasi_learning_runs for select to authenticated using (user_id = (select auth.uid()));
+drop policy if exists "sasi_episode_owner_read" on public.sasi_episodic_memory;
+create policy "sasi_episode_owner_read" on public.sasi_episodic_memory for select to authenticated using (user_id = (select auth.uid()));
+drop policy if exists "sasi_external_work_owner_read" on public.sasi_external_work_queue;
+create policy "sasi_external_work_owner_read" on public.sasi_external_work_queue for select to authenticated using (user_id = (select auth.uid()));
+drop policy if exists "sasi_runtime_events_owner_read" on public.sasi_runtime_learning_events;
+create policy "sasi_runtime_events_owner_read" on public.sasi_runtime_learning_events for select to authenticated using (user_id = (select auth.uid()));
+drop policy if exists "sasi_learning_feedback_owner_read" on public.sasi_user_learning_feedback;
+create policy "sasi_learning_feedback_owner_read" on public.sasi_user_learning_feedback for select to authenticated using (user_id = (select auth.uid()));
+
+commit;

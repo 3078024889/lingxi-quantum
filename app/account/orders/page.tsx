@@ -74,7 +74,8 @@ const BENEFIT_DETAIL: Record<string, { zh: string[]; en: string[] }> = {
   "ascending-heart": { zh: ["一次能量交换，永久开启，随时可练习"], en: ["One exchange, open forever — practice anytime"] },
 };
 
-function categoryOf(productId: string): "field-test" | "membership" | "narrative" {
+function categoryOf(productId: string): "field-test" | "membership" | "narrative" | "tool" {
+  if (productId.startsWith("toolquote:")) return "tool";
   if (FIELD_TEST_IDS.includes(productId)) return "field-test";
   if (MEMBERSHIP_IDS.includes(productId)) return "membership";
   return "narrative";
@@ -111,6 +112,16 @@ const REPORT_BASE: Record<string, string> = {
 };
 
 function resolveDestination(order: OrderRow): { href: string; labelZh: string; labelEn: string } | null {
+  if (order.product_id.startsWith("toolquote:")) {
+    const quoteId = order.product_id.slice("toolquote:".length);
+    return order.status === "paid"
+      ? { href: "/tools", labelZh: "再次使用工具", labelEn: "Use tool again" }
+      : {
+          href: `/tools/pay?quoteId=${encodeURIComponent(quoteId)}`,
+          labelZh: "继续付款 / 恢复确认",
+          labelEn: "Continue payment / recover",
+        };
+  }
   if (order.archive_href) return {href:order.archive_href,labelZh:"回看报告 / 下载 PDF",labelEn:"Read report / Download PDF"};
   if (order.archive_only && order.submission_id) return { href: `/mini-report?id=${order.submission_id}`, labelZh: "查看完整档案 / 下载PDF", labelEn: "View Full Archive / Download PDF" };
   if (REPORT_BASE[order.product_id]) {
@@ -307,8 +318,17 @@ export default async function FieldOrdersPage({searchParams}: {searchParams?: {p
   const membershipOrders = orders.filter((o) => categoryOf(o.product_id) === "membership");
   const narrativeOrders = orders.filter((o) => categoryOf(o.product_id) === "narrative");
 
-  const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string; hintEn: string; rows: OrderRow[] }[] = [
-    {
+    const toolOrders = orders.filter((o) => categoryOf(o.product_id) === "tool");
+const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string; hintEn: string; rows: OrderRow[] }[] = [
+        {
+      key: "tool",
+      titleZh: "实用工具",
+      titleEn: "Utility Tools",
+      hintZh: "按次付费的 AI / 云端工具订单。待确认订单可以继续付款或重新核验；已支付订单可返回工具再次使用。",
+      hintEn: "Per-use AI/cloud tool orders, including recovery for pending payments.",
+      rows: toolOrders,
+    },
+{
       key: "field-test", titleZh: "场域精测", titleEn: "Field Insight Tests",
       hintZh: "生命图谱、关系共振、生命韧性、桃花磁场、财富地图、今日潮汐、量子生命镜像、生命灵签——每项各自一次性解锁，永久保存。",
       hintEn: "Life Map, Relationship Resonance, Resilience, Romance, Wealth, Daily Tide, Tarot, Life Oracle — each unlocked once, permanently.",

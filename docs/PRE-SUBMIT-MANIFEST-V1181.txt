@@ -1,0 +1,114 @@
+LINGXIFIELD V11.81 PRE-SUBMIT MANIFEST
+Generated: 2026-09-23T18:10:19
+
+ M app/account/orders/page.tsx
+ M app/api/knowledge/ask/route.ts
+ M app/api/tools/pay/status/route.ts
+ M app/sasi/SasiProductionPanels.tsx
+ M app/sasi/page.tsx
+ M app/sasi/pricing/page.tsx
+ M app/tools/admin/page.tsx
+ M app/tools/food-calorie/page.tsx
+ M app/tools/number-energy/page.tsx
+ M app/tools/page.tsx
+ M app/tools/pay/page.tsx
+ M app/tools/video-watermark-remover/page.tsx
+ M components/KnowledgeWorkspace.tsx
+ M components/tools/AdvancedToolPage.tsx
+ M components/tools/BatchImageWorkbench.tsx
+ M components/tools/DocumentCopyLayoutWorkbench.tsx
+ M components/tools/FileDropzone.tsx
+ M components/tools/FoodCalorieWorkbench.tsx
+ M components/tools/HeicWorkbench.tsx
+ M components/tools/IdPhotoAiWorkbench.tsx
+ M components/tools/ImageConvertWorkbench.tsx
+ M components/tools/ImageToPdfWorkbench.tsx
+ M components/tools/ImageWatermarkWorkbench.tsx
+ M components/tools/LongImageWorkbench.tsx
+ M components/tools/OcrWorkbench.tsx
+ M components/tools/PaidActionButton.tsx
+ M components/tools/PaidExportButton.tsx
+ M components/tools/PdfBasicWorkbench.tsx
+ M components/tools/PdfCompressWorkbench.tsx
+ M components/tools/PdfEditorWorkbench.tsx
+ M components/tools/PdfOcrWorkbench.tsx
+ M components/tools/PdfPageManagerWorkbench.tsx
+ M components/tools/PdfRedactWorkbench.tsx
+ M components/tools/PdfToImageWorkbench.tsx
+ M components/tools/PrivacyCleanerWorkbench.tsx
+ M components/tools/QrSafeReader.tsx
+ M components/tools/ScreenshotRedactWorkbench.tsx
+ M components/tools/SubtitleTranslateWorkbench.tsx
+ M components/tools/SubtitleWorkbench.tsx
+ M components/tools/SvgToPngWorkbench.tsx
+ M components/tools/TranscriptionWorkbench.tsx
+ M components/tools/VideoDubbingWorkbench.tsx
+ M components/tools/VideoToolkitWorkbench.tsx
+ M components/tools/VideoWatermarkWorkbench.tsx
+ M lib/alipay.ts
+ M lib/paypal.ts
+ M lib/sasi/production.ts
+?? app/api/sasi/learning/
+?? app/api/sasi/operator/
+?? app/api/tools/local-paid/
+?? app/api/tools/media-import/
+?? app/api/tools/pay/recover/
+?? app/sasi/drama/
+?? app/sasi/operator/
+?? components/tools/RemoteMediaImporter.tsx
+?? docs/FINAL-PRODUCTION-CLOSEOUT-V1180.md
+?? docs/PRODUCTION-MIGRATION-HISTORY-SYNC-V1171.md
+?? docs/PRODUCTION-MIGRATION-LEDGER-V1171.json
+?? docs/SASI-COGNITIVE-KERNEL-V1020.md
+?? docs/SASI-COMPLETION-BUNDLE-V1110.md
+?? docs/SASI-GENERAL-INTELLIGENCE-SEED-V1023.md
+?? docs/SASI-KNOWLEDGE-INGESTION-RUNTIME-V1025.md
+?? docs/SASI-KNOWLEDGE-INGESTION-TEACHER-MESH-V1024.md
+?? docs/SASI-LEARNING-RUNTIME-STAGE2-V1040.md
+?? docs/SASI-MEASURED-BENCHMARK-STAGE7-V1090.md
+?? docs/SASI-MODEL-AUTHORED-CODE-STAGE4-V1060.md
+?? docs/SASI-PRODUCTION-ACCEPTANCE-CHECKLIST-V1110.md
+?? docs/SASI-PRODUCTION-MIGRATION-MANIFEST-V1110.json
+?? docs/SASI-PRODUCTION-READINESS-2026-09-23.md
+?? docs/SASI-PRODUCTION-RECONCILIATION-SNAPSHOT-V1130.json
+?? docs/SASI-PRODUCTION-RECONCILIATION-V1130.md
+?? docs/SASI-PROMOTION-ROLLBACK-STAGE8-V1100.md
+?? docs/SASI-REAL-CODE-AUTHOR-STAGE5-V1070.md
+?? docs/SASI-RUNTIME-CLOSURE-V1120.md
+?? docs/SASI-SELF-EVOLUTION-STAGE3-V1050.md
+?? docs/SASI-SOVEREIGN-SELF-EVOLUTION-V1021.md
+?? docs/SASI-USER-TRIGGERED-INTELLIGENCE-CONTROL-V1080.md
+?? docs/TOOLS-FULL-PRODUCTION-CATALOG-V1150.json
+?? docs/TOOLS-FULL-PRODUCTION-V1150.md
+?? docs/TOOLS-REALITY-AUDIT-2026-09-23.md
+?? lib/sasi/core/
+?? lib/sasi/evaluation/
+?? lib/sasi/execution/
+?? lib/sasi/integration/
+?? lib/sasi/knowledge/
+?? lib/sasi/learning/
+?? lib/sasi/memory/
+?? lib/sasi/models/
+?? lib/sasi/mp4-duration.ts
+?? lib/sasi/operator/
+?? lib/sasi/self/
+?? lib/sasi/teachers/
+?? lib/tools/payment-recovery.ts
+?? scripts/final/
+?? scripts/sasi-final/
+?? supabase/migrations/20260923015641_ai_refund_gross_topup_fix.sql
+?? supabase/migrations/20260923093820_sasi_cognitive_kernel_v01.sql
+?? supabase/migrations/20260923093824_sasi_self_evolution_control_v01.sql
+?? supabase/migrations/20260923093857_sasi_general_intelligence_seed_v01.sql
+?? supabase/migrations/20260923093901_sasi_knowledge_ingestion_teacher_mesh_v01.sql
+?? supabase/migrations/20260923093931_sasi_learning_runtime_stage2.sql
+?? supabase/migrations/20260923093936_sasi_self_evolution_stage3.sql
+?? supabase/migrations/20260923093956_sasi_model_authored_code_stage4.sql
+?? supabase/migrations/20260923094000_sasi_user_triggered_intelligence_control.sql
+?? supabase/migrations/20260923094028_sasi_measured_benchmark_stage7.sql
+?? supabase/migrations/20260923094032_sasi_promotion_rollback_stage8.sql
+?? supabase/migrations/20260923094036_sasi_completion_runtime_learning.sql
+?? supabase/migrations/20260923094053_tools_full_production_v1150.sql
+?? supabase/migrations/20260923094108_sasi_cognitive_least_privilege_v1161.sql
+?? supabase/migrations/20260923094300_sasi_cognitive_performance_v1170.sql
+?? supabase/migrations/20260923094451_sasi_topup_rpc_drift_repair.sql

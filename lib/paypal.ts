@@ -158,3 +158,14 @@ export async function verifyPaypalWebhook(
   const data = await res.json();
   return data.verification_status === "SUCCESS";
 }
+
+export async function queryPaypalOrder(paypalOrderId:string,expectedAmountUsd:number,expectedReferenceId?:string):Promise<{status:string;raw:any}>{
+ const token=await getPaypalAccessToken();
+ const res=await fetchWithTimeout(`${paypalBaseUrl()}/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}`,{method:"GET",headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json"},cache:"no-store"});
+ const data=await res.json();
+ if(!res.ok)throw new Error(`PayPal 查询订单失败：${JSON.stringify(data)}`);
+ const unit=data.purchase_units?.[0],amount=unit?.amount,cents=Math.round(Number(amount?.value)*100),expectedCents=Math.round(expectedAmountUsd*100);
+ if(!amount||amount.currency_code!=="USD"||cents!==expectedCents)throw new Error("PayPal query amount or currency did not match the local order.");
+ if(expectedReferenceId&&unit?.reference_id&&unit.reference_id!==expectedReferenceId)throw new Error("PayPal query reference did not match the local order.");
+ return{status:String(data.status??"UNKNOWN"),raw:data};
+}

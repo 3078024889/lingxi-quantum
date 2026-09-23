@@ -1,0 +1,69 @@
+{
+  "version": "11.30",
+  "observed_at": "2026-09-23T16:20:47+08:00",
+  "project_ref": "sxsgdpqojepgbbrxrzlq",
+  "confirmed_production_state": {
+    "cognitive_self_evolution_migrations_applied": false,
+    "sasi_projects_table_exists": true,
+    "sasi_jobs_table_exists": true,
+    "ai_wallets_table_exists": true,
+    "ai_requests_table_exists": true,
+    "reserve_ai_funds_authenticated_execute": false,
+    "settle_ai_funds_authenticated_execute": false,
+    "release_ai_funds_authenticated_execute": false,
+    "ai_wallet_snapshot_authenticated_execute": false,
+    "create_sasi_project_security_definer": true,
+    "create_sasi_project_authenticated_execute": true,
+    "leaked_password_protection_enabled": false
+  },
+  "important_columns": {
+    "sasi_projects": [
+      "id",
+      "user_id",
+      "request_id",
+      "kind",
+      "title",
+      "language",
+      "current_version",
+      "created_at",
+      "updated_at"
+    ],
+    "sasi_jobs": [
+      "id",
+      "user_id",
+      "project_id",
+      "node_id",
+      "provider",
+      "model",
+      "status",
+      "quoted_points",
+      "reserved_points",
+      "settled_points",
+      "provider_cost_minor",
+      "input",
+      "output",
+      "created_at",
+      "updated_at",
+      "request_id",
+      "provider_job_id",
+      "error_code",
+      "started_at",
+      "completed_at"
+    ],
+    "ai_wallets": [
+      "user_id",
+      "available_fen",
+      "reserved_fen",
+      "refundable_fen",
+      "refund_hold_fen",
+      "bonus_available_fen",
+      "bonus_reserved_fen",
+      "adjustment_debt_fen",
+      "balance_basis_fen",
+      "lifetime_topup_fen",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "action_boundary": "No production mutation is performed by this package."
+}

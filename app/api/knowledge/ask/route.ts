@@ -1,12 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { createClient } from "@/lib/supabase/server";
 import { runBilledText } from "@/lib/ai/billed-text";
 import type { Intelligence } from "@/lib/ai/provider-router";
+import { recordBookAnswerEvent } from "@/lib/sasi/integration/book-learning";
 export const runtime="nodejs";export const maxDuration=90;
 
 type Evidence={index:number;title:string;locator?:string;text:string};
 
-export async function POST(req:Request){
+export async function POST(req:NextRequest){
+ if(!isSameOriginMutation(req))return NextResponse.json({error:"Invalid request origin."},{status:403});
  const supabase=createClient();const {data:{user}}=await supabase.auth.getUser();
  if(!user)return NextResponse.json({error:"请先登录后使用书本 SASI。"},{status:401});
  const body=await req.json();
@@ -52,9 +55,26 @@ ${sources}`;
    intelligence,
    prompt
   });
+  let learningEventId:string|null=null;
+  try{
+   learningEventId=await recordBookAnswerEvent({
+    userId:user.id,
+    question,
+    mode,
+    intelligence,
+    evidence,
+    answer:r.text,
+    provider:r.provider,
+    model:r.model,
+    chargeFen:r.chargeFen,
+    usage:r.usage
+   });
+  }catch(eventError){
+   console.error("[SASI book learning event]",eventError instanceof Error?eventError.message:"unknown");
+  }
   return NextResponse.json({
    answer:r.text,provider:r.provider,model:r.model,intelligence,
-   chargedRmb:r.chargeFen/100,usage:r.usage,
+   chargedRmb:r.chargeFen/100,usage:r.usage,learningEventId,
    sources:evidence.map((e:Evidence)=>({index:e.index,title:e.title,locator:e.locator||""}))
   });
  }catch(e:any){

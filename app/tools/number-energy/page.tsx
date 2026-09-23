@@ -1,5 +1,3 @@
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
 import NumberEnergyTool from "./NumberEnergyTool";
 
@@ -12,7 +10,6 @@ export const metadata = {
 export default function NumberEnergyPage() {
   return (
     <>
-      <Nav />
       <main className="pt-16">
         <section className="px-6 py-20 text-center">
           <div className="bg-[var(--lx-panel)] mx-auto max-w-2xl rounded-sm px-8 py-10">
@@ -34,7 +31,6 @@ export default function NumberEnergyPage() {
           <NumberEnergyTool />
         </section>
       </main>
-      <Footer />
     </>
   );
 }

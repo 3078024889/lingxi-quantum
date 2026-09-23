@@ -44,7 +44,7 @@ export default function PdfToImageWorkbench(){
     finally{setBusy(false)}
   }
   return <div className="space-y-4">
-    <label className="block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-7 text-center"><input type="file" accept="application/pdf" className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)choose(f)}}/><b>Select PDF</b><p className="mt-1 text-sm text-slate-500">Local rendering. The PDF is not uploaded.</p></label>
+    <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)choose(f)}} className="block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-7 text-center"><input type="file" accept="application/pdf" className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)choose(f)}}/><b>Select PDF</b><p className="mt-1 text-sm text-slate-500">Local rendering. The PDF is not uploaded.</p></label>
     {file&&<div className="rounded-xl bg-blue-50 p-3 text-sm text-blue-900">{file.name} · {pages} pages</div>}
     <div className="grid gap-3 sm:grid-cols-4">
       <label className="text-sm">Pages<input value={range} onChange={e=>setRange(e.target.value)} className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2" placeholder="1-5,8"/></label>
