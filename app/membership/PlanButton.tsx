@@ -63,9 +63,9 @@ export default function PlanButton({
         {["day", "month", "year"].includes(productId) ? (
           <>{t(MEMBERSHIP_CONTENT[productId].cta, MEMBERSHIP_CONTENT[productId].ctaEn)} →</>
         ) : loggedIn ? (
-          <>{t("开始交换","Begin the exchange")}</>
+          <>{t("立即购买","Buy now")}</>
         ) : (
-          <>{t("登录后交换","Sign in to exchange")}</>
+          <>{t("登录后购买","Sign in to buy")}</>
         )}
       </button>
     </div>

@@ -13,3 +13,5 @@ html[data-theme] .field-account .bg-void-deep,html[data-theme] .field-account .l
 
 .field-membership>.field-connection-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:16px 0;border-bottom:1px solid #a1b5d633}.field-connection-map span{font-size:12px;color:#8291ac}.field-connection-map strong{font-size:15px;line-height:1.6;font-family:inherit;margin:6px 0;color:inherit}.field-membership-plans{align-items:start}.field-membership-why details{font-size:14px;line-height:1.9}.field-membership-why summary{cursor:pointer;color:#687fba}.field-membership-plans article{display:flex;flex-direction:column;min-height:360px}.field-membership-plans article>a{margin-top:auto}@media(max-width:700px){.field-membership>.field-connection-map{grid-template-columns:1fr 1fr}}
 .field-account>section.field-membership{padding:28px}.field-connection-map strong{color:#49617d}@media(max-width:700px){.field-account>section.field-membership{padding:20px}}
+
+.field-account .lx-account-profile{margin-bottom:6px}.field-account .lx-account-profile-copy{text-align:left}

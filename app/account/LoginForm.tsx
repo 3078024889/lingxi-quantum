@@ -13,6 +13,7 @@ export default function LoginForm({ afterAuthPath = "/live-as" }: { afterAuthPat
   const { lang } = useLingxiLang();
   const t = (zh:string,en?:string) => uiCopy(lang,zh,en);
   const [mode,setMode]=useState<Mode>("signin");
+  const [displayName,setDisplayName]=useState("");
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const [loading,setLoading]=useState(false);
@@ -20,6 +21,7 @@ export default function LoginForm({ afterAuthPath = "/live-as" }: { afterAuthPat
 
   const submit=async()=>{
     setError("");
+    if(mode==="signup"&&(displayName.trim().length<2||displayName.trim().length>24)){setError(t("用户名请输入 2–24 个字符。","Use 2–24 characters for your display name."));return}
     if(!/^\S+@\S+\.\S+$/.test(email)){setError(t("请输入有效的邮箱地址"));return}
     if(password.length<6){setError(t("密码至少 6 位"));return}
     setLoading(true);
@@ -28,7 +30,7 @@ export default function LoginForm({ afterAuthPath = "/live-as" }: { afterAuthPat
     catch{setLoading(false);setError(t("场域登录配置正在同步，请稍后再试"));return}
 
     if(mode==="signup"){
-      const{error}=await supabase.auth.signUp({email,password});
+      const{error}=await supabase.auth.signUp({email,password,options:{data:{display_name:displayName.trim()}}});
       setLoading(false);
       if(error){setError(t("注册失败：")+translateAuth(error.message,lang));return}
       const{error:signInErr}=await supabase.auth.signInWithPassword({email,password});
@@ -52,6 +54,7 @@ export default function LoginForm({ afterAuthPath = "/live-as" }: { afterAuthPat
       </button>
     </div>
 
+    {mode==="signup"&&<input type="text" value={displayName} maxLength={24} onChange={e=>setDisplayName(e.target.value)} placeholder={t("用户名","Display name")} autoComplete="nickname" className="w-full rounded-sm border border-white/15 bg-void px-5 py-4 text-base text-bone outline-none transition focus:border-lattice/50"/>}
     <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder={t("邮箱")} autoComplete="email"
       className="w-full rounded-sm border border-white/15 bg-void px-5 py-4 text-base text-bone outline-none transition focus:border-lattice/50"/>
     <input type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submit()}

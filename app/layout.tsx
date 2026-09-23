@@ -3,15 +3,15 @@ import "./globals.css";
 import "./unified-shell.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 
-const SITE="https://lingxifield.cn";
+const SITE="https://lingxifield.com";
 const SHARE_IMAGE=`${SITE}/og-sasi-20260920.png`;
 
 export const metadata: Metadata = {
   metadataBase:new URL(SITE),
-  title:{default:"灵犀场 LINGXIFIELD｜AI 工具、智能体与意识探索",template:"%s ｜ 灵犀场 LINGXIFIELD"},
-  description:"灵犀场把实用工具、书本 SASI、AI 学习与科研、AI 创作、场域精测与意识探索放进同一座清晰、克制的数字工作台。",
+  title:{default:"灵犀场 LINGXIFIELD｜免费实用工具、AI 创作与一念显化",template:"%s ｜ 灵犀场 LINGXIFIELD"},
+  description:"灵犀场是一个让想法被理解、让问题被处理、让结果真正发生的场智能数字空间。免费实用工具、AI 创作与构建、探索与显化，都从同一个入口开始。",
   alternates:{canonical:"/"},
-  openGraph:{type:"website",siteName:"灵犀场 LINGXIFIELD",title:"灵犀场｜把问题直接变成结果",description:"实用工具、智能体、AI 创作与意识探索，统一在一个入口。",url:SITE,images:[{url:SHARE_IMAGE,width:1672,height:941,alt:"灵犀场 LINGXIFIELD"}]},
+  openGraph:{type:"website",siteName:"灵犀场 LINGXIFIELD",title:"灵犀场｜一键即达，一念显化",description:"免费实用工具、AI 创作与构建、探索与显化，让想法被理解，让问题被处理，让结果真正发生。",url:SITE,images:[{url:SHARE_IMAGE,width:1672,height:941,alt:"灵犀场 LINGXIFIELD"}]},
   twitter:{card:"summary_large_image",title:"灵犀场 LINGXIFIELD",description:"一念即达 · 一念显化。把问题、资料与想法带进来，让下一步变得清晰。",images:[SHARE_IMAGE]},
   robots:{index:true,follow:true},manifest:"/manifest.webmanifest",
   icons:{icon:[{url:"/favicon.ico",sizes:"any"},{url:"/favicon-32x32.png",sizes:"32x32",type:"image/png"},{url:"/icon-192.png",sizes:"192x192",type:"image/png"},{url:"/icon-512.png",sizes:"512x512",type:"image/png"}],apple:[{url:"/apple-touch-icon.png",sizes:"180x180",type:"image/png"}]},

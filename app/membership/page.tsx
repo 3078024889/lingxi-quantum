@@ -213,13 +213,13 @@ export default async function MembershipPage({
           </div>
           <div className="bg-[var(--lx-panel)] relative z-10 mx-auto max-w-2xl rounded-sm px-8 py-10">
           <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
-            <Bi zh="能量交换" en="Energy Exchange" />
+            <Bi zh="数字服务与价格" en="Digital Services & Pricing" />
           </p>
           <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)] sm:text-5xl">
-            <Bi zh="进入什么场域，开启什么能力" en="What you enter, what you unlock" />
+            <Bi zh="选择需要的数字服务" en="Choose the digital service you need" />
           </h1>
           <p className="mx-auto mt-8 max-w-2xl text-base leading-9 text-[var(--lx-muted)]">
-            <Bi zh="完成能量交换后，场域将自动为你开启，无需等待人工确认。" en="Once the energy exchange is complete, the Field opens for you automatically — no manual confirmation needed." />
+            <Bi zh="支付成功后，数字服务会自动开通，无需等待人工确认。" en="After successful payment, the digital service is activated automatically — no manual confirmation needed." />
           </p>
           {status && (
             <p
@@ -258,7 +258,7 @@ export default async function MembershipPage({
           <div className="mx-auto max-w-5xl">
             <div className="mb-10 text-center">
               <h2 className="font-display text-3xl font-light text-[var(--lx-ink)]">
-                <Bi zh="二 · 意识显化订阅" en="II · Manifestation Subscription" />
+                <Bi zh="二 · 一念显化数字服务" en="II · Manifestation Digital Service" />
               </h2>
               <p className="mt-3 text-sm text-[var(--lx-muted)]"><Bi zh="固定期限连接，不自动续费；与 SASI 积分相互独立" en="Fixed-term access with no automatic renewal; separate from SASI credits" /></p>
             </div>

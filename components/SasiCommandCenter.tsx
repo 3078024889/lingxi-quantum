@@ -71,7 +71,7 @@ export default function SasiCommandCenter() {
         </section>
 
         <section className="lx11-sasi-compose">
-          <form onSubmit={submit}>
+          <form onSubmit={submit} onDragOver={event=>event.preventDefault()} onDrop={event=>{event.preventDefault();const incoming=Array.from(event.dataTransfer.files||[]).slice(0,12).map(file=>({id:crypto.randomUUID(),file}));if(incoming.length)setFiles(incoming)}}>
             <textarea
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
@@ -131,14 +131,14 @@ export default function SasiCommandCenter() {
 
           <div className="lx11-sasi-ability-grid">
             {capabilityCards.map((card) => (
-              <div className="lx11-sasi-ability is-soon" key={card.title}>
+              <div className={`lx11-sasi-ability ${card.title === "AI Drama" ? "" : "is-soon"}`} key={card.title}>
                 <div>
                   <span style={{fontSize:26}}>{card.icon}</span>
-                  <em>{t("coming")}</em>
+                  <em>{card.title === "AI Drama" ? native("工作台","Workspace") : t("coming")}</em>
                 </div>
                 <h3>{card.title}</h3>
                 <p style={{fontSize:13,opacity:.62,marginTop:8}}>{native(card.noteZh,card.noteEn)}</p>
-                <b>{native("待上线","Coming soon")}</b>
+                {card.title === "AI Drama" ? <Link href="/sasi/drama">{native("进入 AI短剧工作台 →","Open AI Drama workspace →")}</Link> : <b>{native("待上线","Coming soon")}</b>}
               </div>
             ))}
           </div>

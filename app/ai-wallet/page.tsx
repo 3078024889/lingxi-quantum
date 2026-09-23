@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import AiWalletPanel from "@/components/AiWalletPanel";
 import WalletHeroCopy from "@/components/WalletHeroCopy";
+import AiRefundRequestPanel from "@/components/AiRefundRequestPanel";
 
 export const metadata:Metadata={
   title:"AI Balance｜LINGXIFIELD",
@@ -19,6 +20,7 @@ export default function Page(){
         <WalletHeroCopy />
         <div className="lx11-wallet-body">
           <Suspense fallback={<div className="lx11-wallet-loading">Loading balance…</div>}><AiWalletPanel/></Suspense>
+          <AiRefundRequestPanel/>
         </div>
       </div>
     </main>

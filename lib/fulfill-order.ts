@@ -16,16 +16,32 @@ export async function fulfillPaidOrder(orderId:string):Promise<FulfillmentResult
     const rpc=await admin.rpc("fulfill_tool_order",{p_order_id:orderId})
     if(rpc.error){
       console.error("[fulfillPaidOrder] tool fulfillment failed",{orderId,code:rpc.error.code,message:rpc.error.message})
-      return {ok:false,error:"工具导出权限开通暂未完成，请稍后重试。"}
+      return {ok:false,error:"工具权限开通暂未完成，请稍后重试。"}
     }
     const result=rpc.data as FulfillmentResult|null
-    return result?.ok?result:{ok:false,error:result?.error??"工具导出权限开通暂未完成。"}
+    return result?.ok?result:{ok:false,error:result?.error??"工具权限开通暂未完成。"}
   }
 
   const product=getProduct(productId)
   if(!product){
     console.error("[fulfillPaidOrder] unknown product",{orderId,productId})
     return {ok:false,error:"订单产品配置无效。"}
+  }
+
+  // AI 余额：微信 / 支付宝 / PayPal 任一渠道确认到账后，
+  // 必须真正进入 ai_wallets，而不是只生成一个普通 unlock。
+  if(product.group==="ai"&&product.aiAmountFen){
+    const rpcResult=await admin.rpc("credit_ai_topup",{p_order_id:orderId})
+    if(rpcResult.error){
+      console.error("[fulfillPaidOrder] AI balance top-up failed",{
+        orderId,
+        code:rpcResult.error.code,
+        message:rpcResult.error.message
+      })
+      return {ok:false,error:"AI 余额入账暂未完成，请稍后重试。"}
+    }
+    const result=rpcResult.data as FulfillmentResult|null
+    return result?.ok?result:{ok:false,error:result?.error??"AI 余额入账暂未完成。"}
   }
 
   if(product.group==="production"&&product.sasiAmountFen){
@@ -35,7 +51,7 @@ export async function fulfillPaidOrder(orderId:string):Promise<FulfillmentResult
       return {ok:false,error:"制作账户入账暂未完成，请稍后重试。"}
     }
     const result=rpcResult.data as FulfillmentResult|null
-    return result?.ok?result:{ok:false,error:result?.error??"制作账户入账暂未完成，请稍后重试。"}
+    return result?.ok?result:{ok:false,error:result?.error??"制作账户入账暂未完成。"}
   }
 
   const rpcResult=await admin.rpc("fulfill_paid_order",{p_order_id:orderId,p_days:product.days==null?365:product.days})
