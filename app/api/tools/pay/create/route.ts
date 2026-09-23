@@ -22,6 +22,16 @@ export async function POST(req:Request){
 
     const p=String(provider);
     if(!["wechat","alipay","paypal"].includes(p))return NextResponse.json({error:"支付方式无效"},{status:400});
+    // Provider readiness must be checked BEFORE creating a local order.
+    // Otherwise a disabled provider can leave ghost pending orders behind.
+    if(p==="paypal"){
+      const paypalReady =
+        process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true" &&
+        Boolean(process.env.PAYPAL_CLIENT_ID?.trim() && process.env.PAYPAL_CLIENT_SECRET?.trim());
+      if(!paypalReady)return NextResponse.json({error:"PayPal 暂未开放"},{status:503});
+    }
+    if(p==="alipay"&&!alipayEnabled())return NextResponse.json({error:"支付宝当前不可用"},{status:503});
+    if(p==="wechat"&&!wechatPayConfigured())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
 
     const {data:order,error}=await admin.from("orders").insert({
       user_id:user.id, product_id:`toolquote:${q.id}`, product_type:"permanent",
@@ -45,7 +55,6 @@ export async function POST(req:Request){
     }
 
     if(p==="alipay"){
-      if(!alipayEnabled())return NextResponse.json({error:"支付宝当前不可用"},{status:503});
       const outTradeNo=`LX${order.id.replace(/-/g,"")}`.slice(0,64);
       const mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(req.headers.get("user-agent")||"");
       const paymentUrl=createAlipayPaymentUrl({
@@ -58,7 +67,6 @@ export async function POST(req:Request){
       return NextResponse.json({orderId:order.id,url:paymentUrl});
     }
 
-    if(!wechatPayConfigured())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
     const useJsapi=typeof code==="string"&&code.length>0;
     if(useJsapi){
       const expected=cookies().get("lingxi_wechat_oauth_state")?.value;

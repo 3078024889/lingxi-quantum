@@ -7,7 +7,11 @@ const OAUTH_STATE_COOKIE="lingxi_wechat_oauth_state";
 function allowedRedirect(raw:string,requestUrl:URL):URL|null{
  try{
   const redirect=new URL(raw);
-  const allowedOrigins=new Set(["https://lingxifield.cn"]);
+  const allowedOrigins=new Set(["https://lingxifield.com"]);
+  const configuredSite=process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if(configuredSite){
+    try{allowedOrigins.add(new URL(configuredSite).origin)}catch{}
+  }
   if(process.env.NODE_ENV!=="production")allowedOrigins.add(requestUrl.origin);
   if(!allowedOrigins.has(redirect.origin)||!new Set(["/checkout","/tools/pay"]).has(redirect.pathname))return null;
   return redirect;

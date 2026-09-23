@@ -16,6 +16,7 @@ import QianReportRow from "./QianReportRow";
 import TarotReadingReportRow from "./TarotReadingReportRow";
 import SimpleReportRow from "./SimpleReportRow";
 import DeletableReportRow from "./DeletableReportRow";
+import AccountProfileCard from "@/components/AccountProfileCard";
 import PendingOrdersPanel from "./PendingOrdersPanel";
 import CollapsibleSection from "./CollapsibleSection";
 import { NARRATIVES } from "@/lib/narratives";
@@ -24,7 +25,7 @@ import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/s
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 import { ensureAuditAccountAccess } from "@/lib/audit-access";
 
-export const metadata = { title: "进入场域 | 灵犀 · Enter the Field | Lingxi" };
+export const metadata = { title: "我的账户 | 灵犀场 · My Account | LINGXIFIELD" };
 
 export default async function AccountPage({ searchParams }: { searchParams?: { miniLink?: string; next?: string } }) {
   const miniLink = typeof searchParams?.miniLink === "string" && searchParams.miniLink.length <= 2048
@@ -206,20 +207,21 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
           {user ? (
             <>
               {miniLink && <MiniAccountLinkPanel ticket={miniLink} />}
+              <AccountProfileCard email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} />
               <div className="bg-[var(--lx-panel)] w-full rounded-sm px-8 py-10">
               <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
-                <Bi zh="你已连接至场域" en="You are connected to the field" />
+                <Bi zh="我的账户" en="My Account" />
               </p>
               <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)]">
                 <Bi zh="欢迎回来" en="Welcome back" />
               </h1>
               <p className="mt-4 text-base text-[var(--lx-muted)]">{user.email}</p>
               <p className="mt-6 max-w-sm text-base leading-9 text-[var(--lx-muted)]">
-                <Bi zh="在这里回看自己的探索、练习与订单，让每一次理解都有可以继续的地方。" en="Return to your explorations, practices and orders, and continue from what you have learned." />
+                <Bi zh="报告、练习、购买记录与账户设置都集中在这里。" en="Reports, practices, purchases, and account settings are all kept here." />
               </p>
               </div>
 
-              <div className="field-account-stats"><Link href="/account/orders"><span><Bi zh="已支付订单" en="Paid orders" /></span><strong>{paidOrderCount ?? "—"}</strong><small>{paidOrderCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="查看订单与已保存报告 →" en="View orders & saved reports →" />}</small></Link><Link href="/practice"><span><Bi zh="免费修炼技术" en="Free practices" /></span><strong>4</strong><small><Bi zh="完整引导，随时进入 →" en="Complete guides, available anytime →" /></small></Link><Link href="/practice#practice-journal"><span><Bi zh="我的练习记录" en="My practice journal" /></span><strong>{journalCount ?? "—"}</strong><small>{journalCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="回看自己记录的真实体验 →" en="Review your recorded experiences →" />}</small></Link></div><nav className="field-account-links" aria-label="我的场域快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
+              <div className="field-account-stats"><Link href="/account/orders"><span><Bi zh="已支付订单" en="Paid orders" /></span><strong>{paidOrderCount ?? "—"}</strong><small>{paidOrderCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="查看订单与已保存报告 →" en="View orders & saved reports →" />}</small></Link><Link href="/practice"><span><Bi zh="免费修炼技术" en="Free practices" /></span><strong>4</strong><small><Bi zh="完整引导，随时进入 →" en="Complete guides, available anytime →" /></small></Link><Link href="/practice#practice-journal"><span><Bi zh="我的练习记录" en="My practice journal" /></span><strong>{journalCount ?? "—"}</strong><small>{journalCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="回看自己记录的真实体验 →" en="Review your recorded experiences →" />}</small></Link></div><nav className="field-account-links" aria-label="我的账户快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
               {/* 会员状态 */}
               <div className="mt-8 w-full space-y-3 text-left">
                 <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4">
@@ -247,7 +249,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
                 href="/account/orders"
                 className="mt-4 flex w-full items-center justify-center gap-2 border border-[var(--lx-line-strong)] bg-[var(--lx-soft)] py-3 font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:bg-lattice hover:text-[var(--lx-bg)]"
               >
-                <Bi zh="查看场域订单（订单号 · 金额 · 状态 · 有效期）→" en="View Field Orders (No. · Amount · Status · Expiry) →" />
+                <Bi zh="查看账户订单（订单号 · 金额 · 状态 · 有效期）→" en="View Account Orders (No. · Amount · Status · Expiry) →" />
               </Link>
 
               <PendingOrdersPanel orders={pendingOrders} />

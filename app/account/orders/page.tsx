@@ -9,7 +9,7 @@ import OrderActions from "../OrderActions";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 
 export const metadata = {
-  title: "场域订单 | 灵犀场 Lingxi Field",
+  title: "我的订单 | 灵犀场 LINGXIFIELD",
   robots: { index: false, follow: false },
 };
 
@@ -159,7 +159,7 @@ function OrderCard({ o }: { o: OrderRow }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-faint)]">
-            <Bi zh={o.archive_only ? "场域档案号" : "场域订单号"} en={o.archive_only ? "Field Archive No." : "Field Order No."} /> {o.id}
+            <Bi zh={o.archive_only ? "档案号" : "订单号"} en={o.archive_only ? "Archive No." : "Order No."} /> {o.id}
           </p>
           {dest ? (
             <Link href={dest.href} className="mt-1 block font-display text-lg text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
@@ -355,10 +355,10 @@ const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string;
         <div className="mx-auto max-w-3xl px-6 pb-24">
           <div className="mb-2 flex items-center justify-between">
             <h1 className="font-display text-3xl font-light text-[var(--lx-ink)]">
-              <Bi zh="场域订单" en="Field Orders" />
+              <Bi zh="我的订单" en="My Orders" />
             </h1>
             <Link href="/account" className="text-xs uppercase tracking-widest2 text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
-              <Bi zh="← 返回场域入口" en="← Back to Account" />
+              <Bi zh="← 返回我的账户" en="← Back to My Account" />
             </Link>
           </div>
           <p className="mb-8 text-xs text-[var(--lx-faint)]">
@@ -367,7 +367,7 @@ const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string;
 
           {!user && (
             <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
-              <Bi zh="请先登录查看你的场域订单。" en="Please log in to view your field orders." />
+              <Bi zh="请先登录查看你的订单。" en="Please log in to view your orders." />
             </p>
           )}
 

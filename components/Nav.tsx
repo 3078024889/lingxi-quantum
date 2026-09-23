@@ -5,34 +5,39 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { LANG_NAMES, type LingxiLang, useLingxiLang } from "@/lib/lingxi-i18n";
 import { createClient } from "@/lib/supabase/client";
+import { productCatalogText } from "@/lib/product-catalog-i18n";
+import { brandText } from "@/lib/brand-system-i18n";
+import NotificationBell from "@/components/NotificationBell";
 
 type Theme = "light" | "dark";
 type K =
-  | "home" | "tools" | "studio"
+  | "home" | "tools" | "products" | "explore" | "studio"
   | "books" | "learning" | "research"
   | "field" | "manifest" | "subconscious" | "practice"
   | "wallet" | "myField";
 
 const groups: { href: string; key: K; icon: string }[][] = [
   [
-    { href: "/", key: "home", icon: "🏠" },
-    { href: "/tools", key: "tools", icon: "🧰" },
-    { href: "/sasi", key: "studio", icon: "✨" },
+    { href: "/", key: "home", icon: "HM" },
+    { href: "/products", key: "products", icon: "PD" },
+    { href: "/tools", key: "tools", icon: "TL" },
+    { href: "/explore", key: "explore", icon: "EX" },
+    { href: "/sasi", key: "studio", icon: "SA" },
   ],
   [
-    { href: "/ai-knowledge", key: "books", icon: "📚" },
-    { href: "/ai-learning", key: "learning", icon: "🎓" },
-    { href: "/ai-research", key: "research", icon: "🔬" },
+    { href: "/ai-knowledge", key: "books", icon: "BK" },
+    { href: "/ai-learning", key: "learning", icon: "ST" },
+    { href: "/ai-research", key: "research", icon: "RS" },
   ],
   [
-    { href: "/field-tests", key: "field", icon: "🧭" },
-    { href: "/live-as", key: "manifest", icon: "🌠" },
-    { href: "/subconscious", key: "subconscious", icon: "🫧" },
-    { href: "/practice", key: "practice", icon: "🪷" },
-    { href: "/ai-wallet", key: "wallet", icon: "💎" },
-    { href: "/account", key: "myField", icon: "👤" },
+    { href: "/field-tests", key: "field", icon: "FT" },
+    { href: "/live-as", key: "manifest", icon: "MF" },
+    { href: "/subconscious", key: "subconscious", icon: "SC" },
+    { href: "/practice", key: "practice", icon: "PR" },
+    { href: "/ai-wallet", key: "wallet", icon: "AI" },
+    { href: "/account", key: "myField", icon: "AC" },
   ],
-];
+]
 
 function active(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -40,10 +45,17 @@ function active(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-const menuText = {
-  zh: { account:"账户中心", password:"忘记 / 修改密码", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
-  en: { account:"Account", password:"Forgot / change password", switch:"Switch account", signout:"Sign out", delete:"Delete account", close:"Close menu" },
-} as const;
+const menuText: Record<LingxiLang, { account:string; orders:string; password:string; navigation:string; switch:string; signout:string; delete:string; close:string }> = {
+  zh: { account:"我的账户", orders:"我的订单", password:"修改密码", navigation:"网站导航", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
+  en: { account:"My Account", orders:"My Orders", password:"Change password", navigation:"Site navigation", switch:"Switch account", signout:"Sign out", delete:"Delete account", close:"Close menu" },
+  ja: { account:"マイアカウント", orders:"注文履歴", password:"パスワード変更", navigation:"サイトナビ", switch:"アカウント切替", signout:"ログアウト", delete:"アカウント削除", close:"閉じる" },
+  ko: { account:"내 계정", orders:"내 주문", password:"비밀번호 변경", navigation:"사이트 메뉴", switch:"계정 전환", signout:"로그아웃", delete:"계정 삭제", close:"닫기" },
+  fr: { account:"Mon compte", orders:"Mes commandes", password:"Modifier le mot de passe", navigation:"Navigation", switch:"Changer de compte", signout:"Se déconnecter", delete:"Supprimer le compte", close:"Fermer" },
+  de: { account:"Mein Konto", orders:"Meine Bestellungen", password:"Passwort ändern", navigation:"Navigation", switch:"Konto wechseln", signout:"Abmelden", delete:"Konto löschen", close:"Schließen" },
+  es: { account:"Mi cuenta", orders:"Mis pedidos", password:"Cambiar contraseña", navigation:"Navegación", switch:"Cambiar de cuenta", signout:"Cerrar sesión", delete:"Eliminar cuenta", close:"Cerrar" },
+  pt: { account:"Minha conta", orders:"Meus pedidos", password:"Alterar senha", navigation:"Navegação", switch:"Trocar de conta", signout:"Sair", delete:"Excluir conta", close:"Fechar" },
+  ar: { account:"حسابي", orders:"طلباتي", password:"تغيير كلمة المرور", navigation:"التنقل", switch:"تبديل الحساب", signout:"تسجيل الخروج", delete:"حذف الحساب", close:"إغلاق" },
+};
 
 export default function Nav() {
   const pathname = usePathname() || "/";
@@ -54,8 +66,9 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
   const [query, setQuery] = useState("");
-  const [updates, setUpdates] = useState(false);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [displayName, setDisplayName] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
 
   useEffect(() => {
     const stored = (localStorage.getItem("lx-theme") || "light") as Theme;
@@ -74,7 +87,12 @@ export default function Nav() {
     try {
       const supabase = createClient();
       supabase.auth.getUser()
-        .then(({ data }) => { if (alive) setSignedIn(Boolean(data.user)); })
+        .then(({ data }) => {
+          if (!alive) return;
+          setSignedIn(Boolean(data.user));
+          setDisplayName(String(data.user?.user_metadata?.display_name || data.user?.email?.split("@")[0] || ""));
+          setAvatarUrl(String(data.user?.user_metadata?.avatar_url || data.user?.user_metadata?.picture || ""));
+        })
         .catch(() => { if (alive) setSignedIn(false); });
     } catch {
       setSignedIn(false);
@@ -82,13 +100,23 @@ export default function Nav() {
     return () => { alive = false; };
   }, [pathname]);
 
+  useEffect(() => {
+    const h=(e:Event)=>{
+      const detail=(e as CustomEvent<{display_name?:string;avatar_url?:string}>).detail || {};
+      if (detail.display_name !== undefined) setDisplayName(String(detail.display_name || ""));
+      if (detail.avatar_url !== undefined) setAvatarUrl(String(detail.avatar_url || ""));
+    };
+    window.addEventListener("lingxi:profile",h);
+    return()=>window.removeEventListener("lingxi:profile",h);
+  }, []);
+
   const agent =
     pathname === "/sasi" ||
     pathname.startsWith("/sasi/") ||
     pathname.startsWith("/ai-");
 
   const titles = [t("start"), t("sasi"), t("fieldGroup")];
-  const mt = menuText[lang === "zh" ? "zh" : "en"];
+  const mt = menuText[lang];
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -126,7 +154,7 @@ export default function Nav() {
       </div>
 
       <div className="lx11-nav-scroll">
-        <Link className="lx11-new-task" href="/sasi">✨ ＋ {t("newTask")}</Link>
+        <Link className="lx11-new-task" href="/sasi">✦ ＋ {t("newTask")}</Link>
 
         {groups.map((group, index) => (
           <section key={index} className="lx11-group">
@@ -137,10 +165,8 @@ export default function Nav() {
                 href={item.href}
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
-                <span aria-hidden="true" style={{ width: 22, textAlign: "center", filter: "saturate(1.18)" }}>
-                  {item.icon}
-                </span>
-                <span>{t(item.key)}</span>
+                <span aria-hidden="true" className="lx11-nav-icon">{item.icon}</span>
+                <span>{item.key === "products" ? productCatalogText(lang,"title") : item.key === "explore" ? brandText(lang,"exploreNav") : t(item.key)}</span>
               </Link>
             ))}
           </section>
@@ -179,53 +205,46 @@ export default function Nav() {
         <div className="lx11-top-actions">
           <Link href="/sasi" className="lx11-top-link">✨ ＋ {t("create")}</Link>
 
-          <button
-            className="lx11-icon-btn"
-            aria-label={t("updates")}
-            aria-expanded={updates}
-            onClick={() => { setUpdates((value) => !value); setMenuOpen(false); }}
-          >
-            🔔
-          </button>
+          <NotificationBell />
 
           <Link href="/ai-wallet" className="lx11-primary">💎 {t("recharge")}</Link>
 
           <button
-            className="lx11-avatar"
-            aria-label={t("account")}
+            className="lx11-avatar lx11-account-trigger"
+            aria-label={mt.account}
             aria-expanded={menuOpen}
-            onClick={() => { setMenuOpen((value) => !value); setUpdates(false); }}
+            onClick={() => setMenuOpen((value) => !value)}
           >
-            👤
-          </button>
-
-          <button
-            className="lx11-icon-btn"
-            aria-label="Menu"
-            aria-expanded={open}
-            onClick={() => setOpen(true)}
-          >
-            ☰
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="" className="lx11-avatar-photo" />
+            ) : (
+              <span className="lx11-avatar-inner"><b>{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</b></span>
+            )}
           </button>
         </div>
 
-        {updates && (
-          <div className="lx11-updates">
-            <b>🔔 {t("updateTitle")}</b>
-            <p>✨ {t("update1")}</p>
-            <p>🧰 {t("update2")}</p>
-            <p>{lang === "zh" ? "创作能力未完成接入的入口，会明确显示「待上线」。" : "Creation entries that are not integrated are clearly marked Coming soon."}</p>
-          </div>
-        )}
 
         {menuOpen && (
-          <div className="lx11-updates" style={{ right: 18, top: 62 }}>
-            <b>👤 {mt.account}</b>
-            <Link href="/account" onClick={() => setMenuOpen(false)}>{mt.account} →</Link>
-            <Link href="/account#account-actions" onClick={() => setMenuOpen(false)}>{mt.password} →</Link>
-            {signedIn && <button type="button" onClick={switchAccount}>{mt.switch} →</button>}
-            {signedIn && <button type="button" onClick={signOut}>{mt.signout} →</button>}
-            <Link href="/account#account-actions" onClick={() => setMenuOpen(false)}>{mt.delete} →</Link>
+          <div className="lx11-account-menu" role="menu">
+            <div className="lx11-account-menu-head">
+              {avatarUrl ? <img src={avatarUrl} alt="" className="lx11-account-menu-photo" /> : <span className="lx11-account-menu-fallback">{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
+              <div>
+                <b>{displayName || mt.account}</b>
+                <small>{signedIn ? mt.account : t("account")}</small>
+              </div>
+            </div>
+            <div className="lx11-account-menu-links">
+              <Link href="/account" onClick={() => setMenuOpen(false)}><span>AC</span><b>{mt.account}</b></Link>
+              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><span>OR</span><b>{mt.orders}</b></Link>
+              <Link href="/account#account-actions" onClick={() => setMenuOpen(false)}><span>PW</span><b>{mt.password}</b></Link>
+              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span>NV</span><b>{mt.navigation}</b></button>
+            </div>
+            <div className="lx11-account-menu-divider" />
+            <div className="lx11-account-menu-links">
+              {signedIn && <button type="button" onClick={switchAccount}><span>SW</span><b>{mt.switch}</b></button>}
+              {signedIn && <button type="button" onClick={signOut}><span>EX</span><b>{mt.signout}</b></button>}
+              <Link className="is-danger" href="/account#account-actions" onClick={() => setMenuOpen(false)}><span>DL</span><b>{mt.delete}</b></Link>
+            </div>
           </div>
         )}
       </header>
@@ -237,8 +256,31 @@ export default function Nav() {
         </Link>
         <div className="lx11-mobile-actions">
           <Link href="/ai-wallet">💎 {t("recharge")}</Link>
-          <button onClick={() => setOpen(true)}>☰</button>
+          <button
+            className="lx11-mobile-account"
+            aria-label={mt.account}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((value) => !value)}
+          >
+            {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
+          </button>
         </div>
+        {menuOpen && (
+          <div className="lx11-account-menu lx11-account-menu-mobile" role="menu">
+            <div className="lx11-account-menu-head">
+              {avatarUrl ? <img src={avatarUrl} alt="" className="lx11-account-menu-photo" /> : <span className="lx11-account-menu-fallback">{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
+              <div><b>{displayName || mt.account}</b><small>{mt.account}</small></div>
+            </div>
+            <div className="lx11-account-menu-links">
+              <Link href="/account" onClick={() => setMenuOpen(false)}><span>AC</span><b>{mt.account}</b></Link>
+              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><span>OR</span><b>{mt.orders}</b></Link>
+              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span>NV</span><b>{mt.navigation}</b></button>
+              {signedIn && <button type="button" onClick={switchAccount}><span>SW</span><b>{mt.switch}</b></button>}
+              {signedIn && <button type="button" onClick={signOut}><span>EX</span><b>{mt.signout}</b></button>}
+              <Link className="is-danger" href="/account#account-actions" onClick={() => setMenuOpen(false)}><span>DL</span><b>{mt.delete}</b></Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {open && <button className="lx11-backdrop" onClick={() => setOpen(false)} />}

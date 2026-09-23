@@ -113,7 +113,8 @@ export function alipaySellerId(): string {
 }
 
 export function alipaySiteUrl(): string {
-  return env("ALIPAY_SITE_URL") || "https://lingxifield.cn";
+  const raw = env("ALIPAY_SITE_URL") || env("NEXT_PUBLIC_SITE_URL") || "https://lingxifield.com";
+  return raw.replace(/\/$/, "");
 }
 
 
