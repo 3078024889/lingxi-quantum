@@ -29,6 +29,50 @@ type OrderRow = {
   archive_href?: string;
 };
 
+type ToolTaskState = {
+  quoteId: string;
+  toolId: string;
+  quoteStatus: string;
+  quantity: number;
+  unitName: string;
+  grantQuantity: number;
+  consumedQuantity: number;
+  jobsTotal: number;
+  jobsCompleted: number;
+  jobsProcessing: number;
+  jobsFailed: number;
+  latestUpdatedAt: string | null;
+};
+
+const TOOL_NAMES:Record<string,{zh:string;en:string}>={
+  "audio-transcription":{zh:"音频转文字",en:"Audio Transcription"},
+  "batch-image-watermark-remover":{zh:"批量图片去水印",en:"Batch Image Watermark Removal"},
+  "cross-page-stamp":{zh:"PDF 骑缝章",en:"Cross-page Stamp"},
+  "e-sign-pdf":{zh:"PDF 电子签名",en:"E-sign PDF"},
+  "food-calorie":{zh:"图片卡路里分析",en:"Food Calorie Analysis"},
+  "id-photo-ai":{zh:"AI 证件照",en:"AI ID Photo"},
+  "image-watermark-remover":{zh:"图片去水印",en:"Image Watermark Removal"},
+  "pdf-editor":{zh:"PDF 编辑",en:"PDF Editor"},
+  "subtitle-translate":{zh:"字幕翻译",en:"Subtitle Translation"},
+  "video-dubbing":{zh:"视频配音",en:"Video Dubbing"},
+  "video-transcription":{zh:"视频转文字",en:"Video Transcription"},
+  "video-watermark-remover":{zh:"视频去水印",en:"Video Watermark Removal"},
+};
+
+function toolName(toolId:string){
+  return TOOL_NAMES[toolId]??{zh:toolId,en:toolId};
+}
+
+function toolTaskLabel(s:ToolTaskState|null|undefined){
+  if(!s)return {zh:"已付款 · 状态待恢复",en:"Paid · recovery pending"};
+  if(s.grantQuantity<=0)return {zh:"已付款 · 权益待恢复",en:"Paid · grant recovery pending"};
+  if(s.jobsProcessing>0)return {zh:"处理中",en:"Processing"};
+  if(s.jobsFailed>0&&s.jobsCompleted>0)return {zh:"部分完成 · 可恢复失败任务",en:"Partly complete · failed work can resume"};
+  if(s.jobsFailed>0)return {zh:"处理失败 · 可恢复",en:"Failed · resumable"};
+  if(s.jobsCompleted>0&&s.jobsProcessing===0)return {zh:"处理完成",en:"Completed"};
+  return {zh:"已付款 · 待开始处理",en:"Paid · ready to start"};
+}
+
 // v265：场域订单中心按你要的结构重做——不再是一条时间线糊到底的
 // 流水账，按产品性质分三类摆清楚：场域精测（8项，各自一次性解锁）、
 // 修炼技术与会员（9项，含4项修炼技术+3档显化订阅+2档合集/全构造，
@@ -147,13 +191,16 @@ function resolveDestination(order: OrderRow): { href: string; labelZh: string; l
   return { href: `/narrative/${order.product_id}`, labelZh: "阅读全文", labelEn: "Read Full Piece" };
 }
 
-function OrderCard({ o }: { o: OrderRow }) {
+function OrderCard({ o, toolTask }: { o: OrderRow; toolTask?: ToolTaskState | null }) {
   const product = getProduct(o.product_id);
   const dest = resolveDestination(o);
   const isPaid = o.status === "paid";
   const amount = o.amount_rmb ?? (o.amount_usd ? `$${o.amount_usd}` : "—");
   const amountDisplay = o.archive_only ? "已归档" : o.amount_rmb ? `¥${o.amount_rmb}` : amount;
   const benefits = BENEFIT_DETAIL[o.product_id];
+  const isToolOrder=o.product_id.startsWith("toolquote:");
+  const taskLabel=isToolOrder?toolTaskLabel(toolTask):null;
+  const taskToolName=toolTask?toolName(toolTask.toolId):null;
 
   return (
     <div className="lx11-legacy-panel p-5">
@@ -222,8 +269,32 @@ function OrderCard({ o }: { o: OrderRow }) {
         </Link>
       )}
 
-      {isPaid && o.product_id.startsWith("toolquote:") && (
-        <ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)} />
+      {isPaid && isToolOrder && (
+        <div className="mt-4 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <p className="text-xs font-medium text-[var(--lx-ink)]">
+                {taskToolName ? <Bi zh={taskToolName.zh} en={taskToolName.en} /> : <Bi zh="实用工具任务" en="Utility tool task" />}
+              </p>
+              <p className="mt-1 text-[11px] text-[var(--lx-muted)]">
+                <Bi zh={taskLabel?.zh??"已付款"} en={taskLabel?.en??"Paid"} />
+              </p>
+            </div>
+            {toolTask&&<div className="text-right text-[11px] leading-5 text-[var(--lx-muted)]">
+              <p><Bi zh="购买额度" en="Purchased" />：{toolTask.quantity} {toolTask.unitName}</p>
+              <p><Bi zh="已使用" en="Consumed" />：{toolTask.consumedQuantity} / {toolTask.grantQuantity||toolTask.quantity}</p>
+            </div>}
+          </div>
+          {toolTask&&toolTask.jobsTotal>0&&(
+            <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px]">
+              <div className="rounded-lg bg-[var(--lx-panel)] p-2"><b className="block text-sm text-[var(--lx-ink)]">{toolTask.jobsCompleted}</b><Bi zh="已完成" en="Completed" /></div>
+              <div className="rounded-lg bg-[var(--lx-panel)] p-2"><b className="block text-sm text-[var(--lx-ink)]">{toolTask.jobsProcessing}</b><Bi zh="处理中" en="Processing" /></div>
+              <div className="rounded-lg bg-[var(--lx-panel)] p-2"><b className="block text-sm text-[var(--lx-ink)]">{toolTask.jobsFailed}</b><Bi zh="可恢复失败" en="Failed / resumable" /></div>
+            </div>
+          )}
+          {toolTask?.latestUpdatedAt&&<p className="mt-2 text-[10px] text-[var(--lx-faint)]"><Bi zh="任务最近更新" en="Last task update" />：{new Date(toolTask.latestUpdatedAt).toLocaleString()}</p>}
+          <ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)} />
+        </div>
       )}
 
       {!isPaid && !o.archive_only && <OrderActions orderId={o.id} />}
@@ -290,6 +361,7 @@ export default async function FieldOrdersPage({searchParams}: {searchParams?: {p
   const user = supabase ? await getServerUser(supabase) : null;
 
   let orders: OrderRow[] = [];
+  let toolTaskByQuote:Record<string,ToolTaskState>={};
   if (user && supabase) {
     const [{ data, error: ordersError }, { data: miniArchives, error: archivesError }] = await Promise.all([
       supabase.from("orders").select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at").eq("user_id", user.id).order("created_at", { ascending: false }).range(offset,offset+50),
@@ -317,6 +389,48 @@ export default async function FieldOrdersPage({searchParams}: {searchParams?: {p
     }));
     orders=[...orders,...saved.flat()].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
 
+    // P10: paid-tool task center. Read only this authenticated user's quote/grant/job rows.
+    // Do not load result JSON here: some AI results can be large and should not inflate the orders page.
+    const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const toolQuoteIds=Array.from(new Set(
+      orders
+        .filter(o=>o.product_id.startsWith("toolquote:"))
+        .map(o=>o.product_id.slice("toolquote:".length))
+        .filter(id=>uuid.test(id))
+    ));
+    if(toolQuoteIds.length){
+      const [{data:quotes,error:quoteError},{data:grants,error:grantError},{data:jobs,error:jobError}]=await Promise.all([
+        supabase.from("tool_payment_quotes").select("id,tool_id,status,quantity,unit_name").eq("user_id",user.id).in("id",toolQuoteIds),
+        supabase.from("tool_export_grants").select("quote_id,quantity,consumed_quantity").eq("user_id",user.id).in("quote_id",toolQuoteIds),
+        supabase.from("tool_paid_jobs").select("quote_id,status,units,updated_at").eq("user_id",user.id).in("quote_id",toolQuoteIds).order("updated_at",{ascending:false}),
+      ]);
+      if(quoteError||grantError||jobError)loadFailed=true;
+      const grantMap=new Map((grants??[]).map(g=>[String(g.quote_id),g]));
+      const jobMap=new Map<string,Array<{status:string;units:number;updated_at:string}>>();
+      for(const j of jobs??[]){
+        const id=String(j.quote_id),arr=jobMap.get(id)??[];
+        arr.push({status:String(j.status),units:Number(j.units||0),updated_at:String(j.updated_at||"")});
+        jobMap.set(id,arr);
+      }
+      for(const q of quotes??[]){
+        const id=String(q.id),grant=grantMap.get(id),taskJobs=jobMap.get(id)??[];
+        toolTaskByQuote[id]={
+          quoteId:id,
+          toolId:String(q.tool_id),
+          quoteStatus:String(q.status),
+          quantity:Number(q.quantity||0),
+          unitName:String(q.unit_name||""),
+          grantQuantity:Number(grant?.quantity||0),
+          consumedQuantity:Number(grant?.consumed_quantity||0),
+          jobsTotal:taskJobs.length,
+          jobsCompleted:taskJobs.filter(j=>j.status==="completed").length,
+          jobsProcessing:taskJobs.filter(j=>j.status==="processing").length,
+          jobsFailed:taskJobs.filter(j=>j.status==="failed").length,
+          latestUpdatedAt:taskJobs[0]?.updated_at||null,
+        };
+      }
+    }
+
   }
 
   const fieldTestOrders = orders.filter((o) => categoryOf(o.product_id) === "field-test");
@@ -329,7 +443,7 @@ const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string;
       key: "tool",
       titleZh: "实用工具",
       titleEn: "Utility Tools",
-      hintZh: "按次付费的 AI / 云端工具订单。待确认订单可以继续付款或重新核验；已支付订单可返回工具再次使用。",
+      hintZh: "按次付费的 AI / 云端工具订单。这里会显示购买额度、使用进度、处理状态；已付款但中断的任务可直接恢复，不会重复收费。",
       hintEn: "Per-use AI/cloud tool orders, including recovery for pending payments.",
       rows: toolOrders,
     },
@@ -395,7 +509,7 @@ const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string;
                     <Bi zh={s.hintZh} en={s.hintEn} />
                   </p>
                   <div className="mt-4 space-y-3">
-                    {s.rows.map((o) => <OrderCard key={o.id} o={o} />)}
+                    {s.rows.map((o) => <OrderCard key={o.id} o={o} toolTask={o.product_id.startsWith("toolquote:") ? toolTaskByQuote[o.product_id.slice("toolquote:".length)] : null} />)}
                   </div>
                 </div>
               ))}
