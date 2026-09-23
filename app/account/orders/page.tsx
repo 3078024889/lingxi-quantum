@@ -7,6 +7,7 @@ import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/s
 import { getProduct } from "@/lib/plans";
 import OrderActions from "../OrderActions";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
+import ToolOrderRecoveryButton from "@/components/tools/ToolOrderRecoveryButton";
 
 export const metadata = {
   title: "我的订单 | 灵犀场 LINGXIFIELD",
@@ -219,6 +220,10 @@ function OrderCard({ o }: { o: OrderRow }) {
         >
           <Bi zh={dest.labelZh} en={dest.labelEn} />
         </Link>
+      )}
+
+      {isPaid && o.product_id.startsWith("toolquote:") && (
+        <ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)} />
       )}
 
       {!isPaid && !o.archive_only && <OrderActions orderId={o.id} />}

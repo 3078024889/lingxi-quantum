@@ -15,14 +15,26 @@ type RecoveryOrder = {
   amount_usd: number | null;
 };
 
+type RecoveryQuote = {
+  id:string;
+  user_id:string;
+  tool_id:string;
+  status:string;
+  expires_at:string;
+  quantity:number;
+  unit_name:string;
+  amount_rmb:number;
+};
+
+function quoteMeta(q:RecoveryQuote){
+  return {id:q.id,toolId:q.tool_id,status:q.status,expiresAt:q.expires_at,quantity:Number(q.quantity),unitName:q.unit_name,amountRmb:Number(q.amount_rmb)};
+}
+
 async function grantFor(userId: string, quoteId: string) {
   const admin = createAdminClient();
-  const { data } = await admin
-    .from("tool_export_grants")
+  const { data } = await admin.from("tool_export_grants")
     .select("id,tool_id,quantity,unit_name,amount_rmb,consumed_quantity,created_at")
-    .eq("quote_id", quoteId)
-    .eq("user_id", userId)
-    .maybeSingle();
+    .eq("quote_id", quoteId).eq("user_id", userId).maybeSingle();
   return data ?? null;
 }
 
@@ -39,28 +51,23 @@ async function repairAlreadyPaidOrder(orderId: string) {
 
 export async function recoverToolQuotePayment(input: { userId: string; quoteId: string }) {
   const admin = createAdminClient();
-  const { data: quote } = await admin
-    .from("tool_payment_quotes")
-    .select("id,user_id,tool_id,status,expires_at")
-    .eq("id", input.quoteId)
-    .eq("user_id", input.userId)
-    .maybeSingle();
+  const { data: quoteData } = await admin.from("tool_payment_quotes")
+    .select("id,user_id,tool_id,status,expires_at,quantity,unit_name,amount_rmb")
+    .eq("id", input.quoteId).eq("user_id", input.userId).maybeSingle();
 
+  const quote=quoteData as RecoveryQuote|null;
   if (!quote) return { ok: false as const, paid: false, error: "QUOTE_NOT_FOUND" };
+  const meta=quoteMeta(quote);
 
   const existingGrant = await grantFor(input.userId, input.quoteId);
-  if (existingGrant) return { ok: true as const, paid: true, grant: existingGrant, recovery: "grant-exists" };
+  if (existingGrant) return { ok: true as const, paid: true, grant: existingGrant, quote:meta, recovery: "grant-exists" };
 
-  const { data: orders, error: ordersError } = await admin
-    .from("orders")
+  const { data: orders, error: ordersError } = await admin.from("orders")
     .select("id,status,provider,provider_payment_id,amount_rmb,amount_usd,created_at")
-    .eq("user_id", input.userId)
-    .eq("product_id", `toolquote:${input.quoteId}`)
-    .order("created_at", { ascending: false })
-    .limit(12);
+    .eq("user_id", input.userId).eq("product_id", `toolquote:${input.quoteId}`)
+    .order("created_at", { ascending: false }).limit(12);
 
-  if (ordersError) return { ok: false as const, paid: false, error: "ORDER_LOOKUP_FAILED" };
-
+  if (ordersError) return { ok: false as const, paid: false, quote:meta, error: "ORDER_LOOKUP_FAILED" };
   const rows = (orders ?? []) as RecoveryOrder[];
 
   for (const order of rows) {
@@ -68,73 +75,44 @@ export async function recoverToolQuotePayment(input: { userId: string; quoteId: 
     const repaired = await repairAlreadyPaidOrder(order.id);
     if (repaired.ok) {
       const grant = await grantFor(input.userId, input.quoteId);
-      if (grant) return { ok: true as const, paid: true, grant, recovery: repaired.method, orderId: order.id };
+      if (grant) return { ok: true as const, paid: true, grant, quote:meta, recovery: repaired.method, orderId: order.id };
     }
   }
 
   for (const order of rows) {
     if (order.status === "paid" || !order.provider_payment_id) continue;
     try {
-      let confirmed = false;
-      let detail = "";
-
+      let confirmed = false, detail = "";
       if (order.provider === "wechat" && order.amount_rmb != null) {
         const q = await queryWechatOrder(order.provider_payment_id, Math.round(Number(order.amount_rmb) * 100));
-        confirmed = q.paid;
-        detail = q.paid ? "WECHAT_CONFIRMED" : "WECHAT_NOT_PAID";
+        confirmed = q.paid; detail = q.paid ? "WECHAT_CONFIRMED" : "WECHAT_NOT_PAID";
       } else if (order.provider === "alipay" && order.amount_rmb != null) {
-        const q = await queryAlipayTrade({
-          outTradeNo: order.provider_payment_id,
-          expectedAmountRmb: Number(order.amount_rmb),
-        });
-        confirmed = q.paid;
-        detail = q.paid ? "ALIPAY_CONFIRMED" : q.tradeStatus;
+        const q = await queryAlipayTrade({outTradeNo: order.provider_payment_id, expectedAmountRmb: Number(order.amount_rmb)});
+        confirmed = q.paid; detail = q.paid ? "ALIPAY_CONFIRMED" : q.tradeStatus;
       } else if (order.provider === "paypal" && order.amount_usd != null) {
         const q = await queryPaypalOrder(order.provider_payment_id, Number(order.amount_usd), order.id);
-        if (q.status === "COMPLETED") {
-          confirmed = true;
-          detail = "PAYPAL_ALREADY_CAPTURED";
-        } else if (q.status === "APPROVED") {
+        if (q.status === "COMPLETED") { confirmed = true; detail = "PAYPAL_ALREADY_CAPTURED"; }
+        else if (q.status === "APPROVED") {
           const captured = await capturePaypalOrder(order.provider_payment_id, Number(order.amount_usd));
           confirmed = captured.status === "COMPLETED" || captured.status === "ALREADY_CAPTURED";
           detail = `PAYPAL_${captured.status}`;
         }
       }
-
       if (!confirmed) continue;
-
       const fulfilled = await fulfillPaidOrder(order.id);
-      if (!fulfilled.ok) {
-        return {
-          ok: false as const,
-          paid: false,
-          error: "PAYMENT_CONFIRMED_FULFILLMENT_PENDING",
-          detail: fulfilled.error ?? detail,
-          orderId: order.id,
-        };
-      }
-
+      if (!fulfilled.ok) return {ok:false as const,paid:false,quote:meta,error:"PAYMENT_CONFIRMED_FULFILLMENT_PENDING",detail:fulfilled.error??detail,orderId:order.id};
       const grant = await grantFor(input.userId, input.quoteId);
-      if (grant) return { ok: true as const, paid: true, grant, recovery: detail, orderId: order.id };
+      if (grant) return { ok: true as const, paid: true, grant, quote:meta, recovery: detail, orderId: order.id };
     } catch (error) {
-      console.error("[tool payment recovery]", {
-        quoteId: input.quoteId,
-        orderId: order.id,
-        provider: order.provider,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      console.error("[tool payment recovery]", {quoteId:input.quoteId,orderId:order.id,provider:order.provider,error:error instanceof Error?error.message:String(error)});
     }
   }
 
   return {
     ok: true as const,
     paid: false,
+    quote:meta,
     quoteStatus: quote.status,
-    orders: rows.map((order) => ({
-      id: order.id,
-      status: order.status,
-      provider: order.provider,
-      providerPaymentCreated: Boolean(order.provider_payment_id),
-    })),
+    orders: rows.map((order) => ({id:order.id,status:order.status,provider:order.provider,providerPaymentCreated:Boolean(order.provider_payment_id)})),
   };
 }

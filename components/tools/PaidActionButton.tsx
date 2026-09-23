@@ -83,7 +83,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
      if(raw)saved=JSON.parse(raw) as StoredQuote;
    }catch{}
    if(!saved||saved.toolId!==toolId||Number(saved.quantity)!==Number(quantity))return;
-   if(!saved.id||!saved.expiresAt||new Date(saved.expiresAt).getTime()<Date.now()){
+   if(!saved.id){
      clearStoredQuote(toolId);
      return;
    }
@@ -100,6 +100,9 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
        if(d?.paid){
          setMsg(t(UI.recovered));
          await complete(q.id,true);
+       }else if(q.expires_at&&new Date(q.expires_at).getTime()<Date.now()){
+         clearStoredQuote(toolId);
+         setQuote(null);
        }else{
          setMsg(t(UI.recovered));
        }
