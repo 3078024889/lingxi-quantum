@@ -812,3 +812,54 @@ html[data-lang="ar"] .lx-bi-part.bi-block[data-lang="ar"]{display:block!importan
   .lx-about-v126-contact-links{text-align:left}
   .lx-products-page{padding:20px 14px 56px!important}
 }
+
+/* =========================================================
+   V12.70 P6 — legal/mobile/SEO closure
+   ========================================================= */
+
+/* Legal and policy pages use the same reading rhythm as the rest of the site. */
+.lx-legal-page{padding:34px 18px 72px}
+.lx-legal-wrap{width:min(860px,100%);margin:0 auto}
+.lx-legal-card{border:1px solid var(--lx-line);border-radius:18px;background:var(--lx-panel);padding:26px}
+.lx-legal-card h1{font-size:var(--lx-h1)!important}
+.lx-legal-card h2{font-size:20px!important}
+.lx-legal-card p,.lx-legal-card li{font-size:14px!important;line-height:1.75!important}
+.lx-legal-meta{margin-top:7px;font-size:12px!important;color:var(--lx-faint)}
+.lx-legal-faq{margin-top:26px}
+
+/* Mobile final guard: no page may keep a desktop sidebar offset or overflow the viewport. */
+@media(max-width:860px){
+  .lx-site-content,
+  .lx-site-content main,
+  .lx11-page,
+  .lx10-page{
+    max-width:100vw;
+    overflow-x:hidden;
+  }
+  .lx-site-content:has(.lx11-sidebar){
+    margin-left:0!important;
+  }
+  html[dir="rtl"] .lx-site-content:has(.lx11-sidebar){
+    margin-right:0!important;
+  }
+  .lx11-wrap,.lx11-narrow,.lx10-wrap{
+    width:100%;
+    max-width:100%;
+  }
+  .lx11-page,.lx10-page{
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+  .lx11-footer-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+@media(max-width:560px){
+  :root{
+    --lx-h1:clamp(28px,8.5vw,34px);
+    --lx-h2:22px;
+  }
+  .lx-legal-page{padding:20px 14px 54px}
+  .lx-legal-card{padding:20px}
+  .lx11-footer{padding-left:14px!important;padding-right:14px!important}
+}

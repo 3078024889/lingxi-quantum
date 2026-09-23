@@ -25,12 +25,12 @@ export default function RefundsPage() {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-3xl px-6 py-24">
-        <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-8 py-10 sm:px-12 sm:py-14">
+      <main className="lx11-page lx-legal-page"><div className="lx-legal-wrap">
+        <div className="lx-legal-card">
         <h1 className="font-display text-4xl font-light text-[var(--lx-ink)]">
           <Bi zh="退款政策" en="Refund Policy" />
         </h1>
-        <p className="mt-2 text-sm text-[var(--lx-muted)]">
+        <p className="lx-legal-meta">
           <Bi zh="最后更新：2026年7月" en="Last updated: July 2026" />
         </p>
 
@@ -94,10 +94,10 @@ export default function RefundsPage() {
             </div>
           </section>
         </div>
-        <div className="mt-16">
+        <div className="lx-legal-faq">
           <FaqSection items={REFUNDS_FAQ} />
         </div>
-        </div>
+        </div></div>
       </main>
       <Footer />
     </>
