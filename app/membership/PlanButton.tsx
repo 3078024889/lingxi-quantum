@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { REVIEW_MODE } from "@/lib/reviewMode";
 import { MEMBERSHIP_CONTENT } from "@/lib/membership-content";
 import { getProduct } from "@/lib/plans";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { v104sText } from "@/lib/v104s-i18n";
 
 // v258：这个按钮是修炼技术、显化订阅、多维叙事（单篇+年度解锁）
 // 这几类"直接购买"产品共用的同一个组件——之前改的8个"先填资料再解锁"
@@ -21,6 +23,8 @@ export default function PlanButton({
   nameEn: string;
 }) {
   const router = useRouter();
+  const { lang } = useLingxiLang();
+  const t = (zh:string,en:string) => v104sText(lang,zh,en);
   const product = getProduct(productId);
 
   const buy = () => {
@@ -40,7 +44,7 @@ export default function PlanButton({
           disabled
           className="w-full cursor-not-allowed py-4 font-display text-sm uppercase tracking-widest2 text-bone-soft opacity-60 border border-white/10"
         >
-          <span data-lang="zh">审核中 · 暂未开放</span><span data-lang="en">In review · not yet open</span>
+          {t("审核中 · 暂未开放","In review · not yet open")}
         </button>
       </div>
     );
@@ -57,11 +61,11 @@ export default function PlanButton({
         }`}
       >
         {["day", "month", "year"].includes(productId) ? (
-          <><span data-lang="zh">{MEMBERSHIP_CONTENT[productId].cta} →</span><span data-lang="en">{MEMBERSHIP_CONTENT[productId].ctaEn} →</span></>
+          <>{t(MEMBERSHIP_CONTENT[productId].cta, MEMBERSHIP_CONTENT[productId].ctaEn)} →</>
         ) : loggedIn ? (
-          <><span data-lang="zh">开始交换</span><span data-lang="en">Begin the exchange</span></>
+          <>{t("开始交换","Begin the exchange")}</>
         ) : (
-          <><span data-lang="zh">登录后交换</span><span data-lang="en">Sign in to exchange</span></>
+          <>{t("登录后交换","Sign in to exchange")}</>
         )}
       </button>
     </div>

@@ -26,8 +26,10 @@ function walk(dir){
         const t=line.trim();
         if(t.startsWith("//")||t.startsWith("*")||t.startsWith("/*")) return;
         // Already-localized bilingual/shared-i18n content is not a Chinese-only leak.
-        if(/<Bi[\s>]/.test(line)||/\bt\(/.test(line)||/\bcopy\(/.test(line)) return;
-        if(/qZh:|aZh:|zh=|zh:|titleZh:|introZh:|quoteZh:|pointsZh:|practiceZh:|bodyZh:|stepZh:|labelZh:|nameZh:|descZh:|descriptionZh:/.test(line)) return;
+        if(/<Bi[\s>]/.test(line)||/\bt\(/.test(line)||/\bcopy\(/.test(line)||
+           /\b(?:miniText|toolUiText|toolRuntimeText|toolShellText|publicHubText|v104sText|uiCopy|reportUiLabel)\s*\(/.test(line)) return;
+        if(/qZh:|aZh:|zh=|zh:|titleZh:|introZh:|quoteZh:|pointsZh:|practiceZh:|bodyZh:|stepZh:|labelZh:|nameZh:|descZh:|descriptionZh:|briefZh:|structureZh:|mechanismZh:|realityZh:|strengthZh:|costZh:|actionZh:|observationZh:|evidenceZh:|verificationZh:/.test(line)) return;
+        if(/\blang\s*===\s*["']zh["']\s*\?/.test(line)) return;
         hits.push(i+1);
       });
       if(hits.length) rows.push([unix.slice(1),hits.length,hits.slice(0,10).join(",")]);

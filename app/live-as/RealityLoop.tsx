@@ -3,14 +3,16 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import SpiralField from "@/components/SpiralField";
-import { useLang } from "@/lib/useLang";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { v104sText } from "@/lib/v104s-i18n";
 
 type Entry = { id?: string; entry_date?: string; today: string; feeling: string };
 
 export default function RealityLoop() {
   const supabase = createClient();
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => v104sText(lang, zh, en);
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [vision, setVision] = useState("");
   const [today, setToday] = useState("");
@@ -172,7 +174,7 @@ export default function RealityLoop() {
                 <summary>
                   <span>
                     {e.entry_date
-                      ? new Date(e.entry_date).toLocaleDateString(langEn ? "en-US" : "zh-CN")
+                      ? new Date(e.entry_date).toLocaleDateString(({zh:"zh-CN",en:"en-US",ja:"ja-JP",ko:"ko-KR",fr:"fr-FR",de:"de-DE",es:"es-ES",pt:"pt-BR",ar:"ar"} as const)[lang])
                       : ""}
                   </span>
                   <span>▾</span>

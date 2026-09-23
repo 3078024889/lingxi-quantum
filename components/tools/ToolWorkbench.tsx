@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Bi from "@/components/Bi";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { toolRuntimeText } from "@/lib/tool-runtime-i18n";
 import TextWorkbench from "./TextWorkbench";
 import type { ToolMeta } from "@/lib/tools/types";
 import type { ToolRunResult } from "@/lib/tools/types";
@@ -16,13 +17,12 @@ import { md5Hex, sha256Hex, buffersEqual } from "@/lib/tools/shared/hash";
 type Props = { tool: ToolMeta };
 
 export default function ToolWorkbench({ tool }: Props) {
+  const { lang } = useLingxiLang();
+  const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
   if (tool.status === "planned") {
     return (
       <div className="rounded-sm border border-white/15 bg-void-deep p-6 text-sm leading-7 text-bone-dim">
-        <Bi
-          zh="此工具已在产品路线图中，但尚未实现真实处理逻辑。我们不会用假按钮或演示数据冒充上线。请先使用已标记为可用的工具。"
-          en="This tool is on the roadmap but not implemented yet. We will not ship fake buttons or mock results. Please use tools marked as live."
-        />
+        {t("此工具已在产品路线图中，但尚未实现真实处理逻辑。我们不会用假按钮或演示数据冒充上线。请先使用已标记为可用的工具。","This tool is on the roadmap but not implemented yet. We will not ship fake buttons or mock results. Please use tools marked as live.")}
       </div>
     );
   }
@@ -36,6 +36,8 @@ export default function ToolWorkbench({ tool }: Props) {
 }
 
 function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
+  const { lang } = useLingxiLang();
+  const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ToolRunResult | null>(null);
@@ -111,7 +113,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       {tool.slug === "compress-image" && (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <label className="text-sm text-bone-dim">
-            <Bi zh="目标大小 (KB)" en="Target size (KB)" />
+            {t("目标大小 (KB)","Target size (KB)")}
             <input
               type="number"
               min={10}
@@ -122,7 +124,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
             />
           </label>
           <label className="text-sm text-bone-dim">
-            <Bi zh="质量起点 (0.4–0.95)" en="Quality seed (0.4–0.95)" />
+            {t("质量起点 (0.4–0.95)","Quality seed (0.4–0.95)")}
             <input
               type="number"
               step={0.05}
@@ -148,7 +150,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
           </label>
           <label className="mt-6 flex items-center gap-2 text-sm text-bone-dim">
             <input type="checkbox" checked={keepAspect} onChange={(e) => setKeepAspect(e.target.checked)} />
-            <Bi zh="保持比例" en="Keep aspect ratio" />
+            {t("保持比例","Keep aspect ratio")}
           </label>
         </div>
       )}
@@ -159,7 +161,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         onClick={run}
         className="mt-6 w-full rounded-sm bg-lattice px-6 py-3.5 text-sm font-medium uppercase tracking-widest2 text-void-deep transition hover:bg-amber disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
       >
-        {busy ? <Bi zh="处理中…" en="Working…" /> : <Bi zh="立即处理" en="Process now" />}
+        {busy ? t("处理中…","Working…") : t("立即处理","Process now")}
       </button>
 
       {result?.ok === true && (
@@ -347,6 +349,8 @@ async function runFileTool(
 }
 
 function JsonWorkbench() {
+  const { lang } = useLingxiLang();
+  const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
   const [text, setText] = useState('{\n  "hello": "lingxi"\n}');
   const [result, setResult] = useState<ToolRunResult | null>(null);
 
@@ -383,10 +387,10 @@ function JsonWorkbench() {
       />
       <div className="mt-4 flex flex-wrap gap-3">
         <button type="button" onClick={() => format(true)} className="rounded-sm bg-lattice px-5 py-2.5 text-sm text-void-deep">
-          <Bi zh="格式化" en="Pretty print" />
+          {t("格式化","Pretty print")}
         </button>
         <button type="button" onClick={() => format(false)} className="rounded-sm border border-white/20 px-5 py-2.5 text-sm text-bone">
-          <Bi zh="压缩" en="Minify" />
+          {t("压缩","Minify")}
         </button>
       </div>
       {result?.ok === true && <ResultPanel messageZh={result.messageZh} messageEn={result.messageEn} />}
@@ -396,6 +400,8 @@ function JsonWorkbench() {
 }
 
 function TimestampWorkbench() {
+  const { lang } = useLingxiLang();
+  const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
   const [input, setInput] = useState(() => String(Math.floor(Date.now() / 1000)));
   const [mode, setMode] = useState<"sec" | "ms">("sec");
 
@@ -413,11 +419,11 @@ function TimestampWorkbench() {
       <div className="flex flex-wrap gap-3 text-sm text-bone-dim">
         <label className="flex items-center gap-2">
           <input type="radio" checked={mode === "sec"} onChange={() => setMode("sec")} />
-          <Bi zh="秒" en="Seconds" />
+          {t("秒","Seconds")}
         </label>
         <label className="flex items-center gap-2">
           <input type="radio" checked={mode === "ms"} onChange={() => setMode("ms")} />
-          <Bi zh="毫秒" en="Milliseconds" />
+          {t("毫秒","Milliseconds")}
         </label>
       </div>
       <input
@@ -434,7 +440,7 @@ function TimestampWorkbench() {
             setInput(String(Math.floor(Date.now() / 1000)));
           }}
         >
-          <Bi zh="填入当前时间" en="Use now" />
+          {t("填入当前时间","Use now")}
         </button>
       </div>
       {parsed ? (
@@ -456,6 +462,8 @@ function TimestampWorkbench() {
 }
 
 function QrWorkbench() {
+  const { lang } = useLingxiLang();
+  const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
   const [text, setText] = useState("https://lingxifield.cn");
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -491,7 +499,7 @@ function QrWorkbench() {
         onClick={generate}
         className="mt-4 rounded-sm bg-lattice px-6 py-3 text-sm text-void-deep disabled:opacity-40"
       >
-        {busy ? <Bi zh="生成中…" en="Generating…" /> : <Bi zh="生成二维码" en="Generate QR" />}
+        {busy ? t("生成中…","Generating…") : t("生成二维码","Generate QR")}
       </button>
       {error && <ErrorExplain reasonZh={error} reasonEn={error} />}
       {dataUrl && (
@@ -499,7 +507,7 @@ function QrWorkbench() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={dataUrl} alt="QR code" className="mx-auto h-64 w-64 bg-white p-2" />
           <a href={dataUrl} download="qrcode.png" className="mt-4 inline-block rounded-sm bg-lattice px-5 py-2.5 text-sm text-void-deep">
-            <Bi zh="下载 PNG" en="Download PNG" />
+            {t("下载 PNG","Download PNG")}
           </a>
         </div>
       )}

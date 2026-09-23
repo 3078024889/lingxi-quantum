@@ -586,6 +586,7 @@ export default function FullReportView({ id }: { id: string }) {
 // 数字能量环形图——跟频率自测那组圆环用的是同一套视觉语言，总和灵动数
 // 换算成 0-81 的进度画一圈发光的环，不是干巴巴的一段文字。
 function NumberEnergyChart({ items }: { items: { label: string; total: number }[] }) {
+  const { lang } = useLingxiLang();
   const colors = ["#F0C868", "#8EDBD2"];
   return (
     <div className="lx-report-chart mt-5 grid grid-cols-2 gap-4 lx-report-glass p-5 backdrop-blur-xl">
@@ -622,7 +623,6 @@ function NumberEnergyChart({ items }: { items: { label: string; total: number }[
 // 真实的黄道经度，摆在圆周上对应的角度，中心显示太阳门（意识/潜意识）
 // 这个人类图里权重最高的信息，不再是一串纯文字列表。
 function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
-  const langEn = useLang();
   const { lang } = useLingxiLang();
   const cx = 130, cy = 130, r = 96;
   const glyphs: Record<string, string> = {
@@ -664,14 +664,13 @@ function HumanDesignChart({ hd }: { hd: HumanDesignResult }) {
 }
 
 function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; metal: number; water: number } }) {
-  const langEn = useLang();
   const { lang } = useLingxiLang();
   const items = [
-    { label: "木", en: "Wood", v: wx.wood, color: "#7FE7C4" },
-    { label: "火", en: "Fire", v: wx.fire, color: "#FF8FD1" },
-    { label: "土", en: "Earth", v: wx.earth, color: "#FFCB61" },
-    { label: "金", en: "Metal", v: wx.metal, color: "#D8CDFF" },
-    { label: "水", en: "Water", v: wx.water, color: "#5FE8FF" },
+    { key: "wood" as const, label: "木", en: "Wood", v: wx.wood, color: "#7FE7C4" },
+    { key: "fire" as const, label: "火", en: "Fire", v: wx.fire, color: "#FF8FD1" },
+    { key: "earth" as const, label: "土", en: "Earth", v: wx.earth, color: "#FFCB61" },
+    { key: "metal" as const, label: "金", en: "Metal", v: wx.metal, color: "#D8CDFF" },
+    { key: "water" as const, label: "水", en: "Water", v: wx.water, color: "#5FE8FF" },
   ];
   const max = Math.max(1, ...items.map((i) => i.v));
   // 五边雷达图——五行本来就是五个维度的平衡关系，用五边形的"形状"一眼
@@ -741,12 +740,11 @@ function WuXingChart({ wx }: { wx: { wood: number; fire: number; earth: number; 
 
 // 频率自测图：三项分数用环形进度呈现，比纯数字更直观
 function FrequencyChart({ scores }: { scores: { energy: number; clarity: number; alignment: number } }) {
-  const langEn = useLang();
   const { lang } = useLingxiLang();
   const items = [
-    { label: "能量水平", en: "Energy", v: scores.energy, color: "#FF8FD1" },
-    { label: "头脑清晰度", en: "Clarity", v: scores.clarity, color: "#5FE8FF" },
-    { label: "内外对齐感", en: "Alignment", v: scores.alignment, color: "#FFCB61" },
+    { key: "energy" as const, label: "能量水平", en: "Energy", v: scores.energy, color: "#FF8FD1" },
+    { key: "clarity" as const, label: "头脑清晰度", en: "Clarity", v: scores.clarity, color: "#5FE8FF" },
+    { key: "alignment" as const, label: "内外对齐感", en: "Alignment", v: scores.alignment, color: "#FFCB61" },
   ];
   return (
     <div className="lx-report-chart mt-5 grid grid-cols-3 gap-4 p-5">
@@ -791,7 +789,6 @@ function ZiweiGrid({
 }: {
   palaces: { name: string; earthlyBranch: string; majorStars: { name: string; brightness: string }[]; isSoulPalace: boolean; isBodyPalace: boolean }[];
 }) {
-  const langEn = useLang();
   const { lang } = useLingxiLang();
   const byBranch = new Map(palaces.map((p) => [p.earthlyBranch, p]));
   const auroraColors = ["#FF8FD1", "#FFCB61", "#7FE7C4", "#5FE8FF", "#C79CFF"];
@@ -849,7 +846,6 @@ function ZiweiGrid({
 
 // 大运时间轴：从起运年龄开始，横向展开几个十年周期，比一段段文字更容易一眼看懂节奏
 function DaYunTimeline({ startAge }: { startAge: number | null }) {
-  const langEn = useLang();
   const { lang } = useLingxiLang();
   const start = startAge ?? 8;
   const periods = Array.from({ length: 5 }).map((_, i) => start + i * 10);

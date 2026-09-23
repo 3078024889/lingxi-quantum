@@ -8,7 +8,7 @@ type Evidence={index:number;title:string;locator?:string;text:string};
 
 export async function POST(req:Request){
  const supabase=createClient();const {data:{user}}=await supabase.auth.getUser();
- if(!user)return NextResponse.json({error:"请先登录后使用书本智能体。"},{status:401});
+ if(!user)return NextResponse.json({error:"请先登录后使用书本 SASI。"},{status:401});
  const body=await req.json();
  const question=String(body.question||"").trim().slice(0,4000);
  const mode=body.mode==="research"?"research":body.mode==="learning"?"learning":"book";
@@ -22,7 +22,7 @@ export async function POST(req:Request){
   ?"你是严谨的科研资料助手。比较证据、指出冲突与不确定性，不把来源没有说过的内容当成事实。"
   :mode==="learning"
   ?"你是学习资料助手。先根据原文解释，再用清晰步骤帮助理解。"
-  :"你是书本智能体。回答必须建立在提供的原文上。";
+  :"你是书本 SASI。回答必须建立在提供的原文上。";
  const depth=intelligence==="light"
   ?"回答保持简洁，优先给直接结论。"
   :intelligence==="high"

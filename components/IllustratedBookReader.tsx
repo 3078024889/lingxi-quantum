@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Bi from "@/components/Bi";
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { v104sText } from "@/lib/v104s-i18n";
 import type { IllustratedEntry } from "@/lib/narrative-illustrated";
 
 export default function IllustratedBookReader({
@@ -13,6 +15,8 @@ export default function IllustratedBookReader({
   locked?: boolean;
   lockedPanel?: React.ReactNode;
 }) {
+  const { lang } = useLingxiLang();
+  const t = (zh:string,en:string) => v104sText(lang,zh,en);
   const total = entry.pages.length;
   const [idx, setIdx] = useState(-1); // -1 = 封面
   const [flip, setFlip] = useState(0);
@@ -104,7 +108,7 @@ export default function IllustratedBookReader({
 
         {!isCover && (
           <button
-            aria-label="上一页"
+            aria-label={t("上一页","Previous page")}
             onClick={() => go(-1)}
             className="group absolute inset-y-0 left-0 z-20 flex w-10 items-center justify-start pl-1 sm:w-14"
           >
@@ -113,7 +117,7 @@ export default function IllustratedBookReader({
         )}
         {!isPaywall && idx < total - 1 && (
           <button
-            aria-label="下一页"
+            aria-label={t("下一页","Next page")}
             onClick={() => go(1)}
             className="group absolute inset-y-0 right-0 z-20 flex w-10 items-center justify-end pr-1 sm:w-14"
           >

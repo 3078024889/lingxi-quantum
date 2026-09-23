@@ -80,8 +80,9 @@ const THUMB_BY_PRODUCT: Record<string, string> = {
 function CheckoutInner() {
   const params = useSearchParams() ?? new URLSearchParams();
   const router = useRouter();
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => uiCopy(lang, zh, en);
 
   const productId = params.get("productId") ?? "";
   const submissionId = params.get("submissionId") ?? undefined;

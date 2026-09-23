@@ -14,13 +14,13 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: Props): Metadata {
   const tool = getTool(params.slug);
-  if (!tool) return { title: "工具未找到" };
+  if (!tool) return { title: "Tool not found｜工具未找到" };
   return {
     title: `${tool.titleZh}｜${tool.titleEn}`,
     description: tool.oneLinerZh,
     alternates: { canonical: `/tools/${tool.slug}` },
     openGraph: {
-      images: [{ url: "/og-sasi-20260920.png", width: 1672, height: 941, alt: "灵犀场 SASI · 一念即达" }],
+      images: [{ url: "/og-sasi-20260920.png", width: 1672, height: 941, alt: "LINGXIFIELD SASI · 灵犀场" }],
       title: tool.titleZh,
       description: tool.oneLinerZh,
       url: `/tools/${tool.slug}`,

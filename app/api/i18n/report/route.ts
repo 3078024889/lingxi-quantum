@@ -9,6 +9,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const TARGETS = {
+  en: "natural English",
   ja: "natural Japanese",
   ko: "natural Korean",
   fr: "natural French",
@@ -20,7 +21,7 @@ const TARGETS = {
 
 const ALLOWED_REPORT_PREFIXES = new Set([
   "life-map","relationship","qian","tarot","mirror",
-  "resilience","romance","wealth","daily-tide",
+  "resilience","romance","wealth","daily-tide","mini-report",
 ]);
 
 type TargetLang = keyof typeof TARGETS;
@@ -84,6 +85,13 @@ export async function POST(req:Request){
 
   if(!ALLOWED_REPORT_PREFIXES.has(family)||!/^[a-z0-9:_./-]{1,180}$/i.test(reportKey)){
     return NextResponse.json({error:"INVALID_REPORT_KEY"},{status:400});
+  }
+  if(family==="mini-report"){
+    const parts=reportKey.split(":");
+    const reportId=parts[1];
+    if(!reportId||!/^[0-9a-f-]{16,64}$/i.test(reportId))return NextResponse.json({error:"INVALID_REPORT_KEY"},{status:400});
+    const{data:owned}=await supabase.from("mini_dendrite_assessments").select("id").eq("id",reportId).eq("user_id",user.id).maybeSingle();
+    if(!owned)return NextResponse.json({error:"MINI_REPORT_NOT_OWNED"},{status:403});
   }
   if(!(targetLang in TARGETS))return NextResponse.json({error:"UNSUPPORTED_TARGET_LANG"},{status:400});
   if(!items.length||items.length>40||items.some(x=>typeof x!=="string")){

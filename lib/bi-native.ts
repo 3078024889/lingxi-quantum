@@ -4,6 +4,7 @@ import { NATIVE_V104L } from "@/lib/bi-native-v104l";
 import { NATIVE_V104M } from "@/lib/bi-native-v104m";
 import { NATIVE_V104Q } from "@/lib/bi-native-v104q";
 import { NATIVE_V104R } from "@/lib/bi-native-v104r";
+import { NATIVE_V104T1 } from "@/lib/bi-native-v104t1";
 
 type NativeRow = Partial<Record<LingxiLang,string>>;
 
@@ -70,5 +71,5 @@ export function resolveBiNative(zh:string|null,en:string|null,lang:LingxiLang){
   if(lang==="zh") return zh ?? undefined;
   if(lang==="en") return en ?? zh ?? undefined;
   if(!zh) return en ?? undefined;
-  return NATIVE[zh]?.[lang] ?? NATIVE_V104K[zh]?.[lang] ?? NATIVE_V104L[zh]?.[lang] ?? NATIVE_V104M[zh]?.[lang] ?? NATIVE_V104Q[zh]?.[lang] ?? NATIVE_V104R[zh]?.[lang] ?? en ?? zh ?? undefined;
+  return NATIVE[zh]?.[lang] ?? NATIVE_V104K[zh]?.[lang] ?? NATIVE_V104L[zh]?.[lang] ?? NATIVE_V104M[zh]?.[lang] ?? NATIVE_V104Q[zh]?.[lang] ?? NATIVE_V104R[zh]?.[lang] ?? NATIVE_V104T1[zh]?.[lang] ?? en ?? zh ?? undefined;
 }

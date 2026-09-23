@@ -3,6 +3,7 @@
 import { type ChangeEvent, type FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { publicHubText } from "@/lib/public-hub-i18n";
 
 type Mode = "auto" | "drama" | "build" | "research";
 type Picked = { id: string; file: File };
@@ -23,6 +24,7 @@ export default function SasiCommandCenter() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const zh = lang === "zh";
+  const native = (zhText: string, enText: string) => publicHubText(lang, zhText, enText);
 
   function change(event: ChangeEvent<HTMLInputElement>) {
     setFiles(
@@ -38,7 +40,7 @@ export default function SasiCommandCenter() {
     const value = prompt.trim();
 
     if (!value && !files.length) {
-      setNotice(zh ? "先写下一个念头，或带来一份资料。" : "Add a thought or an attachment first.");
+      setNotice(native("先写下一个念头，或带来一份资料。","Add a thought or an attachment first."));
       return;
     }
 
@@ -48,11 +50,7 @@ export default function SasiCommandCenter() {
       return;
     }
 
-    setNotice(
-      zh
-        ? "SASI 创作生产能力正在接入中，当前不会跳回旧版工作台。研究资料入口已经可用；模型/API 可从「连接」进入。"
-        : "SASI production is still being integrated. This entry will not send you back to the old workspace. Research is available now; model/API setup is under Connections."
-    );
+    setNotice(native("SASI 创作生产能力正在接入中，当前不会跳回旧版工作台。研究资料入口已经可用；模型/API 可从「连接」进入。","SASI production is still being integrated. This entry will not send you back to the old workspace. Research is available now; model/API setup is under Connections."));
   }
 
   return (
@@ -67,7 +65,7 @@ export default function SasiCommandCenter() {
               display:"inline-flex",alignItems:"center",gap:7,padding:"7px 12px",
               borderRadius:999,background:"#fff4df",color:"#9a5b00",fontSize:12,fontWeight:700
             }}>
-              🟡 {zh ? "SASI 创作能力 · 待上线" : "SASI creation · Coming soon"}
+              🟡 {native("SASI 创作能力 · 待上线","SASI creation · Coming soon")}
             </span>
           </div>
         </section>
@@ -128,7 +126,7 @@ export default function SasiCommandCenter() {
               <span>{t("creationEntry")}</span>
               <h2>{t("wantResult")}</h2>
             </div>
-            <p>{zh ? "只保留一个公开创作台。未接好的生产能力全部收回后台。" : "One public creation desk only. Unfinished production flows stay backstage."}</p>
+            <p>{native("只保留一个公开创作台。未接好的生产能力全部收回后台。","One public creation desk only. Unfinished production flows stay backstage.")}</p>
           </div>
 
           <div className="lx11-sasi-ability-grid">
@@ -139,8 +137,8 @@ export default function SasiCommandCenter() {
                   <em>{t("coming")}</em>
                 </div>
                 <h3>{card.title}</h3>
-                <p style={{fontSize:13,opacity:.62,marginTop:8}}>{zh ? card.noteZh : card.noteEn}</p>
-                <b>{zh ? "待上线" : "Coming soon"}</b>
+                <p style={{fontSize:13,opacity:.62,marginTop:8}}>{native(card.noteZh,card.noteEn)}</p>
+                <b>{native("待上线","Coming soon")}</b>
               </div>
             ))}
           </div>
@@ -151,7 +149,7 @@ export default function SasiCommandCenter() {
             <div className="lx11-sasi-section-head compact">
               <div>
                 <span>🔬 {t("research")}</span>
-                <h2>{zh ? "科研资料已经可以直接进入。" : "Research workspace is available now."}</h2>
+                <h2>{native("科研资料已经可以直接进入。","Research workspace is available now.")}</h2>
               </div>
             </div>
             <Link href="/ai-research">{t("open")}</Link>
@@ -160,7 +158,7 @@ export default function SasiCommandCenter() {
           <div className="lx11-sasi-connect">
             <span>🔌 {t("connections")}</span>
             <h2>{t("connectTitle")}</h2>
-            <p>{zh ? "只有真正要接模型或外部服务时才打开连接页，不再把复杂配置塞进创作主界面。" : "Open setup only when you actually need an external model or service."}</p>
+            <p>{native("只有真正要接模型或外部服务时才打开连接页，不再把复杂配置塞进创作主界面。","Open setup only when you actually need an external model or service.")}</p>
             <Link href="/sasi/connections">{t("openConnect")}</Link>
           </div>
         </section>

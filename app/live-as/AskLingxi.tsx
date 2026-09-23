@@ -4,29 +4,17 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import SpiralField from "@/components/SpiralField";
-
-// 同一个语言切换不生效的bug，同一个修法——见 RelationshipFlow.tsx 里
-// 的详细注释。这个文件之前也是"每次要显示才读一次class"的老写法。
-function useLang() {
-  const [langEn, setLangEn] = useState(false);
-  useEffect(() => {
-    setLangEn(document.documentElement.classList.contains("lang-en"));
-    const observer = new MutationObserver(() => {
-      setLangEn(document.documentElement.classList.contains("lang-en"));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-  }, []);
-  return langEn;
-}
+import { useLingxiLang } from "@/lib/lingxi-i18n";
+import { v104sText } from "@/lib/v104s-i18n";
 
 type QA = { id?: string; created_at?: string; question: string; answer: string | null };
 
 export default function AskLingxi() {
   const supabase = createClient();
   const searchParams = useSearchParams();
-  const langEn = useLang();
-  const t = (zh: string, en: string) => (langEn ? en : zh);
+  const { lang } = useLingxiLang();
+  const langEn = lang !== "zh";
+  const t = (zh: string, en: string) => v104sText(lang, zh, en);
   const [question, setQuestion] = useState("");
   const [history, setHistory] = useState<QA[]>([]);
   const [sending, setSending] = useState(false);
@@ -81,7 +69,7 @@ export default function AskLingxi() {
       const res = await fetch("/api/lingxi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "ask", content: q, lang: langEn ? "en" : "zh" }),
+        body: JSON.stringify({ mode: "ask", content: q, lang: lang === "zh" ? "zh" : "en" }),
       });
       const payload = await res.json();
       if (res.ok && payload.text) {
