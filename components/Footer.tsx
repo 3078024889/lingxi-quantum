@@ -19,7 +19,7 @@ export default function Footer(){
     <p className="lx11-footer-closing">{b("closing")}</p>
     <span>lingxifield.com · lingxifield.cn</span>
    </section>
-   <nav><b>{t("start")}</b><Link href="/products">{productCatalogText(lang,"title")}</Link><Link href="/tools">{t("tools")}</Link><Link href="/learn">{b("exploreNav")}</Link><Link href="/sasi">{t("studio")}</Link><Link href="/ai-knowledge">{t("books")}</Link><Link href="/ai-learning">{t("learning")}</Link><Link href="/ai-research">{t("research")}</Link></nav>
+   <nav><b>{t("start")}</b><Link href="/products">{productCatalogText(lang,"title")}</Link><Link href="/tools">{t("tools")}</Link><Link href="/explore">{b("exploreNav")}</Link><Link href="/sasi">{t("studio")}</Link><Link href="/ai-knowledge">{t("books")}</Link><Link href="/ai-learning">{t("learning")}</Link><Link href="/ai-research">{t("research")}</Link></nav>
    <nav><b>{t("fieldGroup")}</b><Link href="/field-tests">{t("field")}</Link><Link href="/life-map">{lang==="zh"?"生命图谱":"Life Map"}</Link><Link href="/live-as">{t("manifest")}</Link><Link href="/subconscious">{t("subconscious")}</Link><Link href="/practice">{t("practice")}</Link><Link href="/ai-wallet">{t("wallet")}</Link></nav>
    <section><b>{t("follow")}</b><div className="lx11-footer-social">{channels.map(([l,h])=>h.startsWith("#")?<a key={l} href={h}>{l}</a>:<a key={l} href={h} target="_blank" rel="noreferrer">{l} ↗</a>)}</div></section>
    <section className="lx11-footer-qrs"><div><Image src="/images/lingxifield-wechat-service-qr.jpg" alt="" width={74} height={74}/><span>{t("service")}</span></div><div><Image src="/images/miniapp-qrcode.png" alt="" width={74} height={74}/><span>{t("miniapp")}</span></div></section>
