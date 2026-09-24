@@ -77,12 +77,11 @@ const studioNav: { id: View; zh: string; en: string; glyph: string }[] = [
 ];
 
 const fieldNav = [
-  { href: "/live-as", zh: "意识显化", en: "Manifestation", glyph: "◉" },
-  { href: "/field-tests", zh: "场域精测", en: "Field Insights", glyph: "⌁" },
-  { href: "/subconscious", zh: "重塑潜意识 · 开放体验", en: "Subconscious · Open", glyph: "◎" },
-  { href: "/practice", zh: "修炼技术 · 开放体验", en: "Practices · Open", glyph: "♢" },
-  { href: "/account", zh: "我的场域", en: "My Field", glyph: "○" },
-];
+  { href: "/ai-knowledge", zh: "书本 SASI", en: "Book SASI", glyph: "▣" },
+  { href: "/ai-learning", zh: "学习 SASI", en: "Learning SASI", glyph: "◫" },
+  { href: "/ai-research", zh: "科研 SASI", en: "Research SASI", glyph: "⌕" },
+  { href: "/account", zh: "我的账户", en: "My Account", glyph: "○" },
+]
 
 const workflowZh = ["项目理解", "剧本结构", "人物设定", "身份板", "场景身份板", "故事板", "精分镜与配音", "视频镜头", "Timeline", "字幕与成片"];
 const workflowEn = ["Project intake", "Story structure", "Characters", "Identity boards", "Scene bible", "Storyboard", "Shots & voice", "Video clips", "Timeline", "Subtitles & master"];
@@ -680,7 +679,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
           {view === "account" && <SasiAccountCenter lang={lang} dark={dark} accountEmail={accountEmail} projectCount={projects.length} onOpenWorks={()=>setView("works")} onOpenModels={()=>setView("connections")} />}
 
-          {view !== "home" && <footer className="mt-16 border-t border-current/10 py-8"><p className="text-xs uppercase tracking-[.2em] opacity-40">{copy(lang, "法律与规则", "Legal & Rules")}</p><div className="mt-4 flex flex-wrap gap-x-5 gap-y-3">{(lang === "zh" ? legalZh : legalEn).map((label) => <Link key={label} href="/legal/sasi" className="text-xs opacity-55 hover:opacity-100">{label}</Link>)}</div><p className="mt-6 max-w-4xl text-xs leading-6 opacity-40">{copy(lang, "SASI 专注于作品生产与交付，不运营内容发布社区。真实制作、制作账户、创作者能力与云端资产将在相应安全和结算体系就绪后分阶段开放。", "SASI focuses on production and delivery rather than operating a publishing community. Live production, production accounts, creator capabilities and cloud assets open in stages after their safety and settlement systems are ready.")}</p></footer>}
+          {view !== "home" && <footer className="mt-16 border-t border-current/10 py-8"><p className="text-xs uppercase tracking-[.2em] opacity-40">{copy(lang, "法律与规则", "Legal & Rules")}</p><div className="mt-4 flex flex-wrap gap-x-5 gap-y-3">{(lang === "zh" ? legalZh : legalEn).map((label) => <Link key={label} href="/legal/sasi" className="text-xs opacity-55 hover:opacity-100">{label}</Link>)}</div><p className="mt-6 max-w-4xl text-xs leading-6 opacity-40">{copy(lang, "SASI 工作台已经开放。连接自己的模型 API 后，可以继续推理、编剧、规划与生产；使用灵犀场托管能力时，系统会在执行前显示真实状态、费用与结算方式。", "The SASI workspace is open. Connect your own model APIs for reasoning, writing, planning and production; hosted LINGXIFIELD capabilities show live status, cost and settlement before execution.")}</p></footer>}
         </div>
       </main>
 

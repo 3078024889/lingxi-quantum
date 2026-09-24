@@ -6,7 +6,8 @@ import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
 
 function paypalConfigured() {
   return Boolean(
-    process.env.PAYPAL_CLIENT_ID?.trim()
+    process.env.PAYPAL_ENABLED?.trim().toLowerCase() === "true"
+    && process.env.PAYPAL_CLIENT_ID?.trim()
     && process.env.PAYPAL_CLIENT_SECRET?.trim()
     && process.env.PAYPAL_WEBHOOK_ID?.trim()
   );

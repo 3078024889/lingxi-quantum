@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { calculateToolQuote } from "@/lib/tools/pricing-server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 
+import { toolRuntimeState } from "@/lib/tools/service-readiness";
 export const runtime="nodejs";
 
 export async function POST(req:NextRequest){
@@ -18,6 +19,10 @@ export async function POST(req:NextRequest){
 
     const body=await req.json();
     const toolId=String(body.toolId||"").trim();
+    const runtimeState=toolRuntimeState(toolId);
+    if(!runtimeState.ready){
+      return NextResponse.json({error:"TOOL_SERVICE_UNAVAILABLE",toolId,reason:runtimeState.reason},{status:503});
+    }
     const quantity=Number(body.quantity);
     const metadata=(body.metadata&&typeof body.metadata==="object")?body.metadata:{};
     if(JSON.stringify(metadata).length>512*1024)return NextResponse.json({error:"QUOTE_METADATA_TOO_LARGE"},{status:413});

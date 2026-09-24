@@ -14,7 +14,8 @@ const UI={
  priced:c("价格已由服务器计算。确认后才开始付费处理。","Price calculated by the server. Paid processing starts only after confirmation.","価格はサーバーで計算済みです。","가격은 서버에서 계산되었습니다.","Prix calculé par le serveur.","Preis serverseitig berechnet.","Precio calculado por el servidor.","Preço calculado pelo servidor.","تم حساب السعر على الخادم."),
  waiting:c("等待支付确认…付款完成后这里会自动继续。","Waiting for payment confirmation. This page will continue automatically.","支払い確認待ち…","결제 확인 대기 중…","En attente du paiement…","Warten auf Zahlungsbestätigung…","Esperando confirmación…","Aguardando confirmação…","بانتظار تأكيد الدفع…"),
  blocked:c("浏览器阻止了付款窗口。请允许本站弹窗后再试。","The browser blocked the payment window. Allow pop-ups for this site and try again.","支払いウィンドウがブロックされました。","결제 창이 차단되었습니다.","La fenêtre de paiement a été bloquée.","Das Zahlungsfenster wurde blockiert.","La ventana de pago fue bloqueada.","A janela de pagamento foi bloqueada.","تم حظر نافذة الدفع."),
- pricing:c("正在计算价格…","Calculating price…","価格計算中…","가격 계산 중…","Calcul du prix…","Preis wird berechnet…","Calculando precio…","Calculando preço…","جارٍ حساب السعر…"),
+ serviceUnavailable:c("当前服务暂不可用，不会创建付费订单。","This service is currently unavailable. No paid order will be created.","現在このサービスは利用できません。","현재 서비스를 사용할 수 없습니다.","Service indisponible.","Dienst derzeit nicht verfügbar.","Servicio no disponible.","Serviço indisponível.","الخدمة غير متاحة حاليًا."),
+  pricing:c("正在计算价格…","Calculating price…","価格計算中…","가격 계산 중…","Calcul du prix…","Preis wird berechnet…","Calculando precio…","Calculando preço…","جارٍ حساب السعر…"),
  thisTime:c("本次","This time","今回","이번","Cette fois","Diesmal","Esta vez","Desta vez","هذه المرة"),
  confirm:c("确认并付款","Confirm & pay","確認して支払う","확인 후 결제","Confirmer et payer","Bestätigen & bezahlen","Confirmar y pagar","Confirmar e pagar","تأكيد ودفع"),
  recalc:c("重新计算","Recalculate","再計算","다시 계산","Recalculer","Neu berechnen","Recalcular","Recalcular","إعادة الحساب"),
@@ -121,7 +122,10 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
      const d=await r.json();
      if(!r.ok)throw new Error(d.error||t(UI.quoteFail));
      setQuote(d);saveStoredQuote(toolId,d);setMsg(t(UI.priced))
-   }catch(e){setMsg(e instanceof Error?e.message:String(e))}
+   }catch(e){
+     const m=e instanceof Error?e.message:String(e);
+     setMsg(m.includes("TOOL_SERVICE_UNAVAILABLE")?t(UI.serviceUnavailable):m);
+   }
    finally{setBusy(false)}
  }
 

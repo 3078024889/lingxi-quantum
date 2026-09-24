@@ -25,7 +25,7 @@ export async function runArkText(key: string, messages: TextMessage[], director 
   const response = await fetch("https://ark.cn-beijing.volces.com/api/v3/chat/completions", {
     method: "POST", cache: "no-store", signal: AbortSignal.timeout(45000),
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: TEXT_PROFILE.model, messages, max_tokens: TEXT_PROFILE.maxOutputTokens, thinking: { type: "disabled" }, ...(director ? { response_format: { type: "json_object" } } : {}) }),
+    body: JSON.stringify({ model: process.env.SASI_BYOK_TEXT_MODEL?.trim() || TEXT_PROFILE.model, messages, max_tokens: TEXT_PROFILE.maxOutputTokens, thinking: { type: process.env.SASI_BYOK_REASONING_ENABLED === "false" ? "disabled" : "enabled" }, ...(director ? { response_format: { type: "json_object" } } : {}) }),
   });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(body.error?.code === "ModelNotOpen" ? "MODEL_NOT_OPEN" : `ARK_HTTP_${response.status}`);

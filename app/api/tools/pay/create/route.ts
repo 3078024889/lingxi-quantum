@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -7,9 +7,12 @@ import { alipayEnabled, alipaySiteUrl, createAlipayPaymentUrl } from "@/lib/alip
 import { createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,wechatPayConfigured } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid,wechatOauthConfigured } from "@/lib/wechat-oauth";
 
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { toolRuntimeState } from "@/lib/tools/service-readiness";
 export const runtime="nodejs"; export const maxDuration=30;
 
-export async function POST(req:Request){
+export async function POST(req:NextRequest){
+  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   try{
     const supabase=createClient(); const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"请先登录"},{status:401});
@@ -18,6 +21,10 @@ export async function POST(req:Request){
     const {data:q}=await admin.from("tool_payment_quotes").select("*").eq("id",quoteId).eq("user_id",user.id).single();
     if(!q)return NextResponse.json({error:"报价不存在"},{status:404});
     if(q.status==="paid")return NextResponse.json({paid:true});
+    const runtimeState=toolRuntimeState(String(q.tool_id||""));
+    if(!runtimeState.ready){
+      return NextResponse.json({error:"TOOL_RUNTIME_UNAVAILABLE",toolId:q.tool_id},{status:503});
+    }
     if(new Date(q.expires_at).getTime()<Date.now())return NextResponse.json({error:"报价已过期，请重新计算"},{status:410});
 
     const p=String(provider);
@@ -27,7 +34,7 @@ export async function POST(req:Request){
     if(p==="paypal"){
       const paypalReady =
         process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true" &&
-        Boolean(process.env.PAYPAL_CLIENT_ID?.trim() && process.env.PAYPAL_CLIENT_SECRET?.trim());
+        Boolean(process.env.PAYPAL_CLIENT_ID?.trim() && process.env.PAYPAL_CLIENT_SECRET?.trim() && process.env.PAYPAL_WEBHOOK_ID?.trim());
       if(!paypalReady)return NextResponse.json({error:"PayPal 暂未开放"},{status:503});
     }
     if(p==="alipay"&&!alipayEnabled())return NextResponse.json({error:"支付宝当前不可用"},{status:503});

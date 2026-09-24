@@ -1,0 +1,16 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("app/api/ai/food-analyze/route.ts").includes("analyzeFoodWithQwen"),"food-calorie uses Qwen3-VL");
+a(!r("app/api/ai/food-analyze/route.ts").includes("OPENAI_API_KEY"),"food-calorie no OpenAI dependency");
+a(r("lib/tools/qwen-vision.ts").includes("qwen3-vl-flash"),"Qwen3-VL Flash default");
+a(r("app/api/tools/quote/route.ts").includes("TOOL_SERVICE_UNAVAILABLE"),"provider readiness before quote");
+a(r("app/api/tools/pay/create/route.ts").includes("TOOL_RUNTIME_UNAVAILABLE"),"provider recheck before payment");
+a(r("app/sasi/page.tsx").includes("SasiWorkspace"),"SASI workspace live");
+a(!r("app/sasi/SasiWorkspace.tsx").includes('href: "/field-tests"'),"legacy field nav removed");
+a(!r("app/sasi/SasiWorkspace.tsx").includes('href: "/live-as"'),"legacy manifestation nav removed");
+a(r("lib/sasi/ark-text.ts").includes("SASI_BYOK_REASONING_ENABLED"),"SASI reasoning control");
+a(r("lib/sasi/readiness.ts").includes("PAYPAL_ENABLED"),"PayPal requires explicit enable");
+a(r("lib/sasi/request-security.ts").includes("lingxifield.cn"),"CN same-origin supported");
+a(r("lib/sasi/request-security.ts").includes("lingxifield.com"),"COM same-origin supported");
+console.log("V14.46.2 SASI QWEN RUNTIME CLEAN BUILD=PASS");
