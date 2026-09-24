@@ -231,14 +231,12 @@ export default function Nav() {
             <div className="lx11-account-menu-links">
               <Link href="/account" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-account">●</span><b>{mt.account}</b></Link>
               <Link href="/account/orders" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-orders">▤</span><b>{mt.orders}</b></Link>
-              <Link href="/account#account-actions" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-password">✧</span><b>{mt.password}</b></Link>
               <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span className="lx11-menu-glyph tone-nav">⌁</span><b>{mt.navigation}</b></button>
             </div>
             <div className="lx11-account-menu-divider" />
             <div className="lx11-account-menu-links">
               {signedIn && <button type="button" onClick={switchAccount}><span>SW</span><b>{mt.switch}</b></button>}
               {signedIn && <button type="button" onClick={signOut}><span>EX</span><b>{mt.signout}</b></button>}
-              <Link className="is-danger" href="/account#account-actions" onClick={() => setMenuOpen(false)}><span>DL</span><b>{mt.delete}</b></Link>
             </div>
           </div>
         )}
@@ -250,6 +248,7 @@ export default function Nav() {
           <span><b>{t("brand")}</b><small>{agent ? "SASI" : "LINGXIFIELD"}</small></span>
         </Link>
         <div className="lx11-mobile-actions">
+          <NotificationBell />
           <Link href="/ai-wallet">💎 {t("recharge")}</Link>
           <button
             className="lx11-mobile-account"
@@ -272,7 +271,6 @@ export default function Nav() {
               <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span>NV</span><b>{mt.navigation}</b></button>
               {signedIn && <button type="button" onClick={switchAccount}><span>SW</span><b>{mt.switch}</b></button>}
               {signedIn && <button type="button" onClick={signOut}><span>EX</span><b>{mt.signout}</b></button>}
-              <Link className="is-danger" href="/account#account-actions" onClick={() => setMenuOpen(false)}><span>DL</span><b>{mt.delete}</b></Link>
             </div>
           </div>
         )}

@@ -32,7 +32,7 @@ const categoryLabels: Record<Exclude<Category, "all">, { zh: string; en: string 
 
 const privacyInfrastructureTools: ToolItem[] = [
   { href:"/tools/temp-mail", titleZh:"10分钟临时邮箱", titleEn:"10-Minute Temporary Email", descZh:"临时接收验证码与确认邮件，到期自动销毁。", descEn:"Receive verification and confirmation emails temporarily, then auto-destroy.", kind:"privacy", category:"privacy", localOnly:false },
-  { href:"/tools/burn-after-read", titleZh:"阅后即焚", titleEn:"Burn After Reading", descZh:"生成一次性私密链接，对方读取一次后自动销毁。", descEn:"Encrypt sensitive text into a one-time link that is destroyed after first reveal.", kind:"privacy", category:"privacy", localOnly:false },
+  { href:"/tools/burn-after-read", titleZh:"阅后即焚", titleEn:"Burn After Reading", descZh:"生成私密链接，自定义有效期、查看次数或极速销毁。", descEn:"Encrypt sensitive text into a one-time link that is destroyed after first reveal.", kind:"privacy", category:"privacy", localOnly:false },
 ];
 
 const dedicated: ToolItem[] = [
