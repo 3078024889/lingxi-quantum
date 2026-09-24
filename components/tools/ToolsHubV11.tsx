@@ -30,6 +30,11 @@ const categoryLabels: Record<Exclude<Category, "all">, { zh: string; en: string 
   field: { zh: "场域小工具", en: "Field tools" },
 };
 
+const privacyInfrastructureTools: ToolItem[] = [
+  { href:"/tools/temp-mail", titleZh:"10分钟临时邮箱", titleEn:"10-Minute Temporary Email", descZh:"临时收取验证码与确认邮件，倒计时结束后自动销毁。", descEn:"Receive verification and confirmation emails temporarily, then auto-destroy.", kind:"privacy", category:"privacy", localOnly:false },
+  { href:"/tools/burn-after-read", titleZh:"阅后即焚", titleEn:"Burn After Reading", descZh:"把敏感文本加密成一次性链接，首次读取后立即销毁。", descEn:"Encrypt sensitive text into a one-time link that is destroyed after first reveal.", kind:"privacy", category:"privacy", localOnly:false },
+];
+
 const dedicated: ToolItem[] = [
   { href:"/tools/batch-image", titleZh:"批量图片处理", titleEn:"Batch Image Tools", descZh:"批量压缩、转换和处理多张图片。", descEn:"Process, convert and compress multiple images.", kind:"image", category:"image", localOnly:true },
   { href:"/tools/avif-to-jpg", titleZh:"AVIF 转 JPG", titleEn:"AVIF to JPG", descZh:"把 AVIF 转成更通用的 JPG。", descEn:"Convert AVIF into a widely supported JPG.", kind:"image", category:"image", localOnly:true },
@@ -96,6 +101,9 @@ function allTools(): ToolItem[] {
   const map = new Map<string, ToolItem>();
   for (const item of registryItems) map.set(item.href, item);
   for (const item of dedicated) map.set(item.href, item);
+  if(process.env.NEXT_PUBLIC_PRIVACY_TOOLS_ENABLED==="true"){
+    for(const item of privacyInfrastructureTools) map.set(item.href,item);
+  }
   return [...map.values()];
 }
 

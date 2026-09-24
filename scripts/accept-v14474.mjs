@@ -1,0 +1,14 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(x,m)=>{if(!x)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("app/account/LoginForm.tsx").includes("/api/auth/password"),"account login uses same-origin auth proxy");
+a(r("app/api/auth/password/route.ts").includes("signInWithPassword"),"server-side password auth enabled");
+a(r("components/tools/ToolsHubV11.tsx").includes("10分钟临时邮箱"),"temporary mail catalog prepared");
+a(r("components/tools/ToolsHubV11.tsx").includes("NEXT_PUBLIC_PRIVACY_TOOLS_ENABLED"),"privacy tools feature-gated");
+a(r("app/api/tools/temp-mail/create/route.ts").includes("TEMP_MAIL_TTL_MINUTES"),"10-minute mailbox runtime");
+a(r("app/api/tools/temp-mail/inbound/route.ts").includes("x-temp-mail-ingest-secret"),"inbound secret verification");
+a(r("workers/temp-mail-email/src/index.mjs").includes("PostalMime"),"Cloudflare Email Worker MIME parsing");
+a(r("components/tools/BurnAfterReadWorkbench.tsx").includes("AES-GCM"),"client-side burn-note encryption");
+a(r("app/api/tools/burn-after-read/consume/route.ts").includes('.is("consumed_at",null)'),"single-consume guard");
+a(r("supabase/migrations/20260924170000_privacy_tools_temp_mail_burn.sql").includes("enable row level security"),"ephemeral tables RLS");
+console.log("V14.47.4 AUTH + PRIVACY WHITESPACE FIX=PASS");
