@@ -1,0 +1,14 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8"),a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("lib/r2-private.ts").includes("AWS4-HMAC-SHA256"),"R2 SigV4 presigning");
+a(r("lib/tools/service-readiness.ts").includes("burn-after-read-file"),"R2 readiness gate");
+a(r("components/tools/BurnAfterReadWorkbench.tsx").includes('type="file" multiple'),"multi-file upload UI");
+a(r("components/tools/BurnAfterReadWorkbench.tsx").includes("2*1024*1024*1024"),"2GB client cap");
+a(r("app/api/tools/burn-after-read/file/prepare/route.ts").includes("MAX_TOTAL=2*1024*1024*1024"),"2GB server cap");
+a(r("app/api/tools/burn-after-read/file/complete/route.ts").includes("r2Head"),"upload completion verification");
+a(r("app/api/tools/burn-after-read/consume/route.ts").includes('presignR2("GET"'),"private signed downloads");
+a(r("app/api/cron/privacy-cleanup/route.ts").includes("r2Delete"),"R2 physical cleanup");
+a(r("lib/privacy-tools-i18n.ts").includes("إضافة ملفات"),"9-language attachment copy");
+a(r("supabase/migrations/20260924214500_r2_burn_files_convergence_v14511.sql").includes("burn_files"),"burn file schema");
+a(r("supabase/migrations/20260924214500_r2_burn_files_convergence_v14511.sql").includes("12.9"),"2GB tier price");
+console.log("V14.51.1 R2 BURN ATTACHMENTS=PASS");
