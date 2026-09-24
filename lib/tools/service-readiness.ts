@@ -6,7 +6,10 @@ export type ToolRuntimeState={
   reason?:string;
 };
 
-const LOCAL=new Set(["video-watermark-remover","pdf-editor","e-sign-pdf","cross-page-stamp"]);
+const LOCAL=new Set([
+  "video-watermark-remover","pdf-editor","e-sign-pdf","cross-page-stamp",
+  "temp-mail-day-pass",
+]);
 const OPENAI=new Set(["id-photo-ai","image-watermark-remover","batch-image-watermark-remover","audio-transcription","video-transcription","subtitle-translate"]);
 
 function has(name:string){return Boolean(process.env[name]?.trim())}
@@ -41,6 +44,7 @@ export const PAID_TOOL_IDS=[
   "image-watermark-remover",
   "pdf-editor",
   "subtitle-translate",
+  "temp-mail-day-pass",
   "video-dubbing",
   "video-transcription",
   "video-watermark-remover",

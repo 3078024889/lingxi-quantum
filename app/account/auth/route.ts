@@ -13,12 +13,21 @@ function redirect(location:string){
   return new NextResponse(null,{status:303,headers:{Location:location,"Cache-Control":"no-store"}});
 }
 function errorLocation(code:string,mode:string,next:string){
-  const q=new URLSearchParams({auth_error:code,mode,next});
-  return `/account?${q.toString()}`;
+  return `/account?${new URLSearchParams({auth_error:code,mode,next}).toString()}`;
 }
 
 export async function POST(req:NextRequest){
-  if(!isSameOriginMutation(req))return redirect("/account?auth_error=origin");
+  if(!isSameOriginMutation(req)){
+    console.warn("[auth password] rejected request origin",{
+      origin:req.headers.get("origin"),
+      referer:req.headers.get("referer"),
+      site:req.headers.get("sec-fetch-site"),
+      host:req.headers.get("host"),
+      forwardedHost:req.headers.get("x-forwarded-host"),
+    });
+    return redirect("/account?auth_error=origin");
+  }
+
   const form=await req.formData().catch(()=>null);
   if(!form)return redirect("/account?auth_error=request");
 
@@ -37,21 +46,27 @@ export async function POST(req:NextRequest){
     if(mode==="signup"){
       const {error}=await supabase.auth.signUp({email,password,options:{data:{display_name:displayName}}});
       if(error){
+        console.warn("[auth signup]",error.code,error.message);
         const code=/already registered|User already registered/i.test(error.message)?"registered":"auth";
         return redirect(errorLocation(code,"signup",next));
       }
       const {error:signinError}=await supabase.auth.signInWithPassword({email,password});
-      if(signinError)return redirect(errorLocation("registered_signin","signin",next));
+      if(signinError){
+        console.warn("[auth signin after signup]",signinError.code,signinError.message);
+        return redirect(errorLocation("registered_signin","signin",next));
+      }
       return redirect(next);
     }
 
     const {error}=await supabase.auth.signInWithPassword({email,password});
     if(error){
+      console.warn("[auth signin]",error.code,error.message);
       const code=/Invalid login credentials/i.test(error.message)?"credentials":"auth";
       return redirect(errorLocation(code,"signin",next));
     }
     return redirect(next);
-  }catch{
+  }catch(e){
+    console.error("[auth password] service failure",e instanceof Error?e.message:"unknown");
     return redirect(errorLocation("service",mode,next));
   }
 }

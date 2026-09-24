@@ -899,3 +899,15 @@ html[data-theme="dark"] .lx11-account-menu{background:#161616!important}
 .lx11-notification-panel{background:#fff!important}
 html[data-theme="dark"] .lx11-notification-panel{background:#161616!important}
 @media(min-width:1024px){.lx11-mobile{display:none!important}}
+
+/* V14.50 privacy production closure */
+.lx11-top-actions{margin-left:auto}
+.lx11-notification-wrap{position:relative;display:inline-flex;align-items:center}
+.lx11-notification-panel{position:absolute;z-index:160;top:42px;right:0;width:min(380px,calc(100vw - 28px));max-height:min(560px,70vh);overflow:auto;border:1px solid var(--lx-line);border-radius:16px;background:var(--lx-panel)!important;box-shadow:0 20px 60px rgba(0,0,0,.14);padding:10px}
+.lx11-notification-panel header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:10px 10px 12px;background:var(--lx-panel);border-bottom:1px solid var(--lx-line)}
+.lx11-notification-list{display:flex;flex-direction:column;padding-top:6px}
+.lx11-notification-list>a,.lx11-notification-list>article{display:block;padding:11px 10px;border-radius:11px}
+.lx11-notification-list>a:hover{background:var(--lx-soft)}
+.lx11-notification-list strong{display:block;font-size:13px}.lx11-notification-list p{margin-top:4px;font-size:12px;line-height:1.55;color:var(--lx-muted)}.lx11-notification-list small{display:block;margin-top:5px;font-size:10px;color:var(--lx-faint)}
+.lx11-notification-count{position:absolute;right:-4px;top:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:#e34b4b;color:#fff;font-size:9px;line-height:16px;text-align:center}
+@media(max-width:720px){.lx11-notification-panel{position:fixed;top:64px;right:10px;left:10px;width:auto}}
