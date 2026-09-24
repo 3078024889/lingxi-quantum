@@ -293,6 +293,14 @@ function OrderCard({ o, toolTask }: { o: OrderRow; toolTask?: ToolTaskState | nu
             </div>
           )}
           {toolTask?.latestUpdatedAt&&<p className="mt-2 text-[10px] text-[var(--lx-faint)]"><Bi zh="任务最近更新" en="Last task update" />：{new Date(toolTask.latestUpdatedAt).toLocaleString()}</p>}
+          {toolTask&&toolTask.jobsTotal>0&&(
+            <Link
+              href={`/account/tool-jobs?quoteId=${encodeURIComponent(o.product_id.slice("toolquote:".length))}`}
+              className="mt-3 inline-flex rounded-lg border border-[var(--lx-line)] px-4 py-2 text-xs text-[var(--lx-ink)]"
+            >
+              <Bi zh="查看任务详情 / 已保存结果" en="Task details / saved results" />
+            </Link>
+          )}
           <ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)} />
         </div>
       )}
