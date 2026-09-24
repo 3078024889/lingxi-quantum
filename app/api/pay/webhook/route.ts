@@ -1,57 +1,21 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { verifyPaypalWebhook } from "@/lib/paypal";
+import { verifyPaypalWebhook,queryPaypalOrder } from "@/lib/paypal";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
-
-export const runtime = "nodejs";
-export const maxDuration = 30;
-
-// PayPal 异步 Webhook——用户付完款那一刻，PayPal 会独立推送一份通知过来，
-// 跟"用户跳转回 /api/pay/paypal/return"是两条互相独立的路径，谁先到都行，
-// 这里存在的意义是兜底：万一用户付完款之后没有真的跳转回网站（比如中途
-// 关掉了浏览器标签页），这条路径依然能保证订单被正确解锁，不会因为一次
-// 网络波动就白白收了钱却没给用户开通。
-export async function POST(req: Request) {
-  const raw = await req.text();
-
-  const verified = await verifyPaypalWebhook(req.headers, raw);
-  if (!verified) {
-    return NextResponse.json({ error: "签名校验失败或未配置 PAYPAL_WEBHOOK_ID" }, { status: 401 });
-  }
-
-  let event: any;
-  try {
-    event = JSON.parse(raw);
-  } catch {
-    return NextResponse.json({ error: "无效负载" }, { status: 400 });
-  }
-
-  if (event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
-    // PayPal 的订单号，在我们这边对应 orders.provider_payment_id，需要反查
-    // 出我们自己的订单 id 再去 fulfill（fulfillPaidOrder 认的是我们自己的
-    // orders.id，不是 PayPal 的订单号）。
-    const paypalOrderId =
-      event.resource?.supplementary_data?.related_ids?.order_id || event.resource?.id;
-    if (!paypalOrderId) return NextResponse.json({ ok: true });
-
-    const admin = createAdminClient();
-    const { data: order } = await admin
-      .from("orders")
-      .select("id, amount_usd, provider")
-      .eq("provider_payment_id", paypalOrderId)
-      .single();
-    if (order) {
-      const amount = event.resource && event.resource.amount
-      const receivedCents = amount ? Math.round(Number(amount.value) * 100) : -1
-      const expectedCents = Math.round(Number(order.amount_usd) * 100)
-      if (order.provider !== "paypal" || !amount || amount.currency_code !== "USD" || receivedCents !== expectedCents) {
-        console.error("[paypal webhook] payment did not match local order", { orderId: order.id })
-        return NextResponse.json({ error: "Payment mismatch" }, { status: 422 })
-      }
-      const result = await fulfillPaidOrder(order.id)
-      if (!result.ok) return NextResponse.json({ error: "Fulfillment pending" }, { status: 500 })
-    }
-  }
-
-  return NextResponse.json({ ok: true });
+export const runtime="nodejs";export const maxDuration=30;
+export async function POST(req:Request){
+ const raw=await req.text();if(!await verifyPaypalWebhook(req.headers,raw))return NextResponse.json({error:"INVALID_WEBHOOK_SIGNATURE"},{status:401});
+ let event:any;try{event=JSON.parse(raw)}catch{return NextResponse.json({error:"INVALID_PAYLOAD"},{status:400})}
+ const type=String(event.event_type||""),paypalOrderId=event.resource?.supplementary_data?.related_ids?.order_id||(type==="CHECKOUT.ORDER.APPROVED"?event.resource?.id:null);
+ if(!paypalOrderId)return NextResponse.json({ok:true});
+ const admin=createAdminClient(),{data:order}=await admin.from("orders").select("id,amount_usd,provider,status").eq("provider_payment_id",paypalOrderId).maybeSingle();
+ if(!order)return NextResponse.json({ok:true});
+ if(order.provider!=="paypal")return NextResponse.json({error:"PROVIDER_MISMATCH"},{status:422});
+ if(type==="PAYMENT.CAPTURE.DENIED"){await admin.from("orders").update({status:"failed"}).eq("id",order.id).neq("status","paid");return NextResponse.json({ok:true})}
+ if(type==="PAYMENT.CAPTURE.PENDING"||type==="CHECKOUT.ORDER.APPROVED")return NextResponse.json({ok:true});
+ if(type==="PAYMENT.CAPTURE.COMPLETED"){
+  try{const verified=await queryPaypalOrder(paypalOrderId,Number(order.amount_usd),order.id);if(!["APPROVED","COMPLETED"].includes(verified.status))return NextResponse.json({error:"PAYPAL_ORDER_NOT_APPROVED"},{status:409});const result=await fulfillPaidOrder(order.id);if(!result.ok)return NextResponse.json({error:"FULFILLMENT_PENDING"},{status:500})}
+  catch(e){console.error("[paypal webhook verify]",e instanceof Error?e.message:String(e));return NextResponse.json({error:"PAYPAL_ORDER_VERIFY_FAILED"},{status:422})}
+ }
+ return NextResponse.json({ok:true});
 }

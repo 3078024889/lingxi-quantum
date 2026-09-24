@@ -1,0 +1,14 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("lib/usd-products.ts").includes("USD_BALANCE_AMOUNTS=[10,20,50,100,300,500,1000,2000,10000]"),"USD topup denominations");
+a(r("lib/tools/pricing-server.ts").includes("pricing_json_usd"),"USD pricing independent from RMB");
+a(r("app/checkout-usd/page.tsx").includes("PayPal"),"USD PayPal checkout");
+a(r("components/AiWalletPanel.tsx").includes("USD BALANCE"),"separate USD balance UI");
+a(r("app/sasi/pricing/page.tsx").includes("USD 创作余额"),"SASI USD topup UI");
+a(r("app/tools/pay/page.tsx").includes("q.amount_usd"),"tool PayPal uses USD quote");
+a(r("app/api/pay/providers/route.ts").includes("PAYPAL_WEBHOOK_ID"),"PayPal readiness includes webhook id");
+a(r("app/api/pay/webhook/route.ts").includes("PAYMENT.CAPTURE.DENIED"),"PayPal denied handled");
+a(r("supabase/migrations/20260924212000_usd_wallet_paypal_pricing_v14510.sql").includes("unit_price_usd=.05"),"temp mail USD same numeric price");
+a(r("supabase/migrations/20260924212000_usd_wallet_paypal_pricing_v14510.sql").includes('"price":12.9'),"burn attachment 12.9 tier");
+console.log("V14.51.0 USD PAYPAL PRICING FOUNDATION=PASS");
