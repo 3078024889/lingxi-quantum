@@ -1,0 +1,15 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("app/account/LoginForm.tsx").includes('method="post" action="/account/auth"'),"account login uses native same-origin POST");
+a(!r("app/account/LoginForm.tsx").includes('fetch("/api/auth/password"'),"account login no JSON fetch dependency");
+a(r("app/account/auth/route.ts").includes("signInWithPassword"),"server-side auth route");
+a(r("app/account/auth/route.ts").includes("status:303"),"auth uses browser redirect");
+a(r("components/tools/BurnAfterReadWorkbench.tsx").includes('<option value={5}>'),"burn-after-read supports 5 minutes");
+a(r("components/tools/BurnAfterReadWorkbench.tsx").includes("分享给对方"),"burn-after-read has share action");
+a(r("components/tools/BurnAfterReadWorkbench.tsx").includes("用邮件发送"),"burn-after-read has email share action");
+a(r("components/tools/BurnAfterReadWorkbench.tsx").includes("对方无需登录"),"burn-after-read explains recipient flow");
+a(r("app/api/tools/burn-after-read/create/route.ts").includes("[5,10,60,1440]"),"burn API accepts 5 minute TTL");
+a(!r("components/tools/TempMailWorkbench.tsx").includes("第一版"),"temp mail removes engineering copy");
+a(r("components/tools/ToolsHubV11.tsx").includes("一次读取 · 自动销毁"),"privacy card uses consumer copy");
+console.log("V14.48.0 CONSUMER UX + AUTH CLOSURE=PASS");

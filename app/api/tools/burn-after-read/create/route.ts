@@ -2,7 +2,7 @@ import { NextRequest,NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 export const runtime="nodejs";
-const TTL=new Set([10,60,1440]);
+const TTL=new Set([5,10,60,1440]);
 export async function POST(req:NextRequest){
   if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const body=await req.json().catch(()=>null) as any;

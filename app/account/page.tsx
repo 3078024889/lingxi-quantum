@@ -14,7 +14,7 @@ import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/s
 
 export const metadata = { title: "我的账户 | 灵犀场 LINGXIFIELD" };
 
-export default async function AccountPage({ searchParams }: { searchParams?: { next?: string } }) {
+export default async function AccountPage({ searchParams }: { searchParams?: { next?: string; auth_error?: string; mode?: string } }) {
   const requestedNext = typeof searchParams?.next === "string" ? searchParams.next : null;
   const afterAuthPath = requestedNext
     && requestedNext.startsWith("/")
@@ -23,6 +23,9 @@ export default async function AccountPage({ searchParams }: { searchParams?: { n
     && requestedNext.length <= 512
       ? requestedNext
       : "/products";
+
+  const authError=typeof searchParams?.auth_error==="string"?searchParams.auth_error:"";
+  const initialMode=searchParams?.mode==="signup"?"signup":"signin";
 
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
   const user = supabase ? await getServerUser(supabase) : null;
@@ -62,7 +65,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { n
           <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]"><Bi zh="账户" en="Account"/></p>
           <h1 className="mt-4 font-display text-3xl text-[var(--lx-ink)]"><Bi zh="登录灵犀场" en="Sign in to LINGXIFIELD"/></h1>
           <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]"><Bi zh="登录后查看余额、任务、订单与创作记录。" en="Sign in to view balances, tasks, orders and creation records."/></p>
-          <div className="mt-8"><LoginForm afterAuthPath={afterAuthPath}/></div>
+          <div className="mt-8"><LoginForm afterAuthPath={afterAuthPath} initialMode={initialMode} serverError={authError}/></div>
         </div>}
       </section>
     </main>

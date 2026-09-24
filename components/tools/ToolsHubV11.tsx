@@ -31,8 +31,8 @@ const categoryLabels: Record<Exclude<Category, "all">, { zh: string; en: string 
 };
 
 const privacyInfrastructureTools: ToolItem[] = [
-  { href:"/tools/temp-mail", titleZh:"10分钟临时邮箱", titleEn:"10-Minute Temporary Email", descZh:"临时收取验证码与确认邮件，倒计时结束后自动销毁。", descEn:"Receive verification and confirmation emails temporarily, then auto-destroy.", kind:"privacy", category:"privacy", localOnly:false },
-  { href:"/tools/burn-after-read", titleZh:"阅后即焚", titleEn:"Burn After Reading", descZh:"把敏感文本加密成一次性链接，首次读取后立即销毁。", descEn:"Encrypt sensitive text into a one-time link that is destroyed after first reveal.", kind:"privacy", category:"privacy", localOnly:false },
+  { href:"/tools/temp-mail", titleZh:"10分钟临时邮箱", titleEn:"10-Minute Temporary Email", descZh:"临时接收验证码与确认邮件，到期自动销毁。", descEn:"Receive verification and confirmation emails temporarily, then auto-destroy.", kind:"privacy", category:"privacy", localOnly:false },
+  { href:"/tools/burn-after-read", titleZh:"阅后即焚", titleEn:"Burn After Reading", descZh:"生成一次性私密链接，对方读取一次后自动销毁。", descEn:"Encrypt sensitive text into a one-time link that is destroyed after first reveal.", kind:"privacy", category:"privacy", localOnly:false },
 ];
 
 const dedicated: ToolItem[] = [
@@ -178,9 +178,13 @@ export default function ToolsHubV11() {
                   <p className="lx-tools-v124-desc">{foreign ? item.descEn : item.descZh}</p>
                   <div className="lx11-tool-meta">
                     <span>
-                      {item.localOnly
-                        ? (foreign ? "Local · file stays in this browser" : "本地处理 · 文件不上传")
-                        : (foreign ? "Cloud · file/data is sent for processing" : "云端处理 · 文件/数据需发送处理")}
+                      {item.href==="/tools/temp-mail"
+                        ? (foreign ? "10-minute inbox · auto-destroy" : "10分钟收件 · 到期自动销毁")
+                        : item.href==="/tools/burn-after-read"
+                          ? (foreign ? "One-time link · auto-destroy" : "一次读取 · 自动销毁")
+                          : item.localOnly
+                            ? (foreign ? "Local · file stays in this browser" : "本地处理 · 文件不上传")
+                            : (foreign ? "Online processing" : "在线处理")}
                     </span>
                     <b>{t("open")}</b>
                   </div>
