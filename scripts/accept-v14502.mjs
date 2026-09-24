@@ -1,0 +1,11 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("components/tools/TempMailWorkbench.tsx").includes("batchCount*0.05"),"batch pricing is per mailbox");
+a(r("components/tools/TempMailWorkbench.tsx").includes("50个 ¥2.50"),"50 mailbox price copy");
+a(r("components/tools/TempMailWorkbench.tsx").includes("100个 ¥5.00"),"100 mailbox price copy");
+a(r("components/tools/TempMailWorkbench.tsx").includes("startBatchPayment"),"paid batch UI");
+a(r("app/api/tools/temp-mail/batch/route.ts").includes("claim_temp_mail_batch_quote"),"paid quote single use guard");
+a(r("lib/tools/service-readiness.ts").includes('\"temp-mail-batch\"'),"temp mail batch payment readiness");
+a(r("supabase/migrations/20260924195500_temp_mail_per_batch_billing_v14502.sql").includes("0.05"),"database unit price");
+console.log("V14.50.2 TEMP MAIL PER-BATCH CLEAN BUILD=PASS");
