@@ -17,20 +17,20 @@ type K =
 
 const groups: { href: string; key: K; icon: string }[][] = [
   [
-    { href: "/", key: "home", icon: "HM" },
-    { href: "/products", key: "products", icon: "PD" },
-    { href: "/tools", key: "tools", icon: "TL" },
-    { href: "/explore", key: "explore", icon: "EX" },
-    { href: "/sasi", key: "studio", icon: "SA" },
+    { href: "/", key: "home", icon: "⌂" },
+    { href: "/products", key: "products", icon: "◈" },
+    { href: "/tools", key: "tools", icon: "✦" },
+    { href: "/explore", key: "explore", icon: "⌁" },
+    { href: "/sasi", key: "studio", icon: "◆" },
   ],
   [
-    { href: "/ai-knowledge", key: "books", icon: "BK" },
-    { href: "/ai-learning", key: "learning", icon: "ST" },
-    { href: "/ai-research", key: "research", icon: "RS" },
+    { href: "/ai-knowledge", key: "books", icon: "▣" },
+    { href: "/ai-learning", key: "learning", icon: "◫" },
+    { href: "/ai-research", key: "research", icon: "⌕" },
   ],
   [
-    { href: "/ai-wallet", key: "wallet", icon: "AI" },
-    { href: "/account", key: "myField", icon: "AC" },
+    { href: "/ai-wallet", key: "wallet", icon: "◇" },
+    { href: "/account", key: "myField", icon: "●" },
   ],
 ]
 
@@ -160,7 +160,7 @@ export default function Nav() {
                 href={item.href}
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
-                <span aria-hidden="true" className="lx11-nav-icon">{item.icon}</span>
+                <span aria-hidden="true" className={`lx11-nav-icon lx11-nav-tone-${item.key}`}>{item.icon}</span>
                 <span>{item.key === "products" ? productCatalogText(lang,"title") : item.key === "explore" ? brandText(lang,"exploreNav") : t(item.key)}</span>
               </Link>
             ))}
@@ -229,10 +229,10 @@ export default function Nav() {
               </div>
             </div>
             <div className="lx11-account-menu-links">
-              <Link href="/account" onClick={() => setMenuOpen(false)}><span>AC</span><b>{mt.account}</b></Link>
-              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><span>OR</span><b>{mt.orders}</b></Link>
-              <Link href="/account#account-actions" onClick={() => setMenuOpen(false)}><span>PW</span><b>{mt.password}</b></Link>
-              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span>NV</span><b>{mt.navigation}</b></button>
+              <Link href="/account" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-account">●</span><b>{mt.account}</b></Link>
+              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-orders">▤</span><b>{mt.orders}</b></Link>
+              <Link href="/account#account-actions" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-password">✧</span><b>{mt.password}</b></Link>
+              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span className="lx11-menu-glyph tone-nav">⌁</span><b>{mt.navigation}</b></button>
             </div>
             <div className="lx11-account-menu-divider" />
             <div className="lx11-account-menu-links">

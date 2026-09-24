@@ -28,7 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/privacy",
     "/refunds",
     "/legal/sasi",
-    "/glossary",
   ];
   const now=new Date();
   return routes.map(route=>({

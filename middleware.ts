@@ -37,6 +37,7 @@ export async function middleware(request: NextRequest) {
   // V14.42: legacy personal-exploration / manifestation / practice products are retired.
   // Keep historical data in storage, but public routes no longer expose or sell them.
   const retiredLegacyExact = new Set([
+    "/learn","/glossary",
     "/live-as","/subconscious","/practice","/field-tests","/life-map","/relationship",
     "/qian","/mirror","/tarot","/resilience","/romance","/daily","/wealth",
     "/archetype","/mini-report","/membership","/origin"
@@ -45,15 +46,16 @@ export async function middleware(request: NextRequest) {
     "/practice/","/life-map/","/relationship/","/qian/","/mirror/","/tarot/",
     "/resilience/","/romance/","/daily/","/wealth/","/archetype/","/mini-report/",
     "/gate/",
-    "/learn/manifestation","/learn/subconscious-power","/learn/twin-flame",
+    "/learn/",
     "/learn/angel-numbers","/learn/higher-self","/learn/raise-frequency",
     "/learn/chakras","/learn/synchronicity","/learn/awakening",
     "/learn/moon-manifestation","/learn/law-of-attraction-vs",
     "/learn/letting-go","/learn/emptiness","/learn/energy-drain"
   ];
+  const legacyKnowledgeSurface = pathname === "/learn" || pathname === "/glossary" || pathname.startsWith("/learn/");
   if (retiredLegacyExact.has(pathname) || retiredLegacyPrefixes.some((prefix)=>pathname.startsWith(prefix))) {
     const target=request.nextUrl.clone();
-    target.pathname="/products";
+    target.pathname=legacyKnowledgeSurface?"/explore":"/products";
     target.search="";
     return NextResponse.redirect(target,308);
   }

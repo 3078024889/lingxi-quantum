@@ -17,7 +17,7 @@ function currentProductLabel(id:string){
   if(id.startsWith("toolquote:")) return {zh:"实用工具任务",en:"Utility tool task"};
   const p=getProduct(id);
   if(p) return {zh:p.name,en:p.nameEn};
-  return {zh:"历史服务（已下架）",en:"Legacy service (retired)"};
+  return {zh:"其他历史记录",en:"Other historical record"};
 }
 
 export default async function OrdersPage(){
@@ -44,7 +44,7 @@ export default async function OrdersPage(){
           <div><p className="lx11-kicker"><Bi zh="账户" en="Account"/></p><h1 className="mt-3 font-display text-3xl text-[var(--lx-ink)]"><Bi zh="付费任务中心" en="Paid Tasks"/></h1></div>
           <Link href="/account" className="text-sm">← <Bi zh="返回账户" en="Back"/></Link>
         </div>
-        <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]"><Bi zh="这里保留当前余额、工具任务与历史交易记录。已下架的旧服务不再提供新购买入口，但历史支付记录不会被删除。" en="Current balances, utility tasks and historical transactions stay here. Retired services no longer accept new purchases, while historical payment records remain intact."/></p>
+        <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]"><Bi zh="这里集中显示当前 AI / SASI 余额充值与实用工具任务。" en="Current AI/SASI balance top-ups and utility-tool tasks are kept here."/></p>
 
         {!user&&<p className="mt-8 rounded-2xl border p-6"><Bi zh="请先登录查看订单。" en="Please sign in to view orders."/></p>}
         {loadFailed&&<p role="alert" className="mt-8 text-rose"><Bi zh="订单暂时无法读取，请刷新重试。" en="Orders could not be loaded. Refresh and try again."/></p>}
