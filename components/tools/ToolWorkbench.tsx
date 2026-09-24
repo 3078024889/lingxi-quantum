@@ -13,6 +13,10 @@ import ErrorExplain from "./ErrorExplain";
 import { convertImage, compressImageToTarget, resizeImage, stripImageMetadata } from "@/lib/tools/shared/image-canvas";
 import { detectFileType, extensionMismatch } from "@/lib/tools/shared/magic-bytes";
 import { md5Hex, sha256Hex, buffersEqual } from "@/lib/tools/shared/hash";
+import { delimitedToXlsx, docxToText, xlsxToCsvFiles } from "@/lib/tools/shared/office-convert";
+import { heicToJpgFiles, imagesToPdf, mergePdfFiles, pdfToJpgFiles, readQrCode, splitPdfFile } from "@/lib/tools/shared/practical-doc-tools";
+import { rebuildCompressedPdf, type PdfCompressionPreset } from "@/lib/tools/shared/pdf-rebuild-compress";
+import { pptxToText } from "@/lib/tools/shared/pptx-text";
 
 type Props = { tool: ToolMeta };
 
@@ -47,6 +51,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const [height, setHeight] = useState(800);
   const [keepAspect, setKeepAspect] = useState(true);
   const [customKb, setCustomKb] = useState(100);
+  const [pdfCompression, setPdfCompression] = useState<PdfCompressionPreset>("balanced");
 
   const preciseTarget = useMemo(() => {
     const fromSlug = targetBytesForSlug(tool.slug);
@@ -54,6 +59,16 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
     if (tool.slug === "compress-image") return Math.round(customKb * 1024);
     return null;
   }, [tool.slug, customKb]);
+
+  function moveFile(index:number,direction:-1|1){
+    setFiles(current=>{
+      const next=[...current];
+      const target=index+direction;
+      if(target<0||target>=next.length)return current;
+      [next[index],next[target]]=[next[target],next[index]];
+      return next;
+    });
+  }
 
   async function run() {
     setBusy(true);
@@ -66,6 +81,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         height,
         keepAspect,
         targetBytes: preciseTarget,
+        pdfCompression,
       });
       setResult(out);
     } catch (e) {
@@ -87,6 +103,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       <FileDropzone
         accept={tool.accept || "*/*"}
         multiple={!!tool.multiple}
+        append={!!tool.multiple}
         maxFiles={tool.maxFiles || 1}
         maxSizeMB={tool.maxSizeMB || 40}
         files={files}
@@ -155,6 +172,27 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         </div>
       )}
 
+      {files.length>0&&<div className="mt-4 flex flex-wrap gap-2">
+        <button type="button" onClick={()=>setFiles([])} className="rounded-sm border border-white/15 px-3 py-2 text-xs text-bone-dim">{t("清空","Clear")}</button>
+        {(tool.slug==="merge-pdf"||tool.slug==="image-to-pdf")&&files.length>1&&files.map((file,index)=><span key={`${file.name}-${file.lastModified}`} className="inline-flex items-center gap-1 rounded-sm border border-white/10 px-2 py-1 text-xs text-bone-dim">
+          {index+1}. {file.name}
+          <button type="button" disabled={index===0} onClick={()=>moveFile(index,-1)} aria-label={t("上移","Move up")}>↑</button>
+          <button type="button" disabled={index===files.length-1} onClick={()=>moveFile(index,1)} aria-label={t("下移","Move down")}>↓</button>
+        </span>)}
+      </div>}
+
+      {tool.slug==="compress-pdf"&&<div className="mt-4 rounded-sm border border-white/10 p-4 text-sm text-bone-dim">
+        <label className="block">
+          {t("压缩强度","Compression preset")}
+          <select value={pdfCompression} onChange={e=>setPdfCompression(e.target.value as PdfCompressionPreset)} className="bg-void mt-2 w-full rounded-sm border border-white/15 px-3 py-2 text-bone">
+            <option value="high">{t("高清 · 文件较大","High quality · larger")}</option>
+            <option value="balanced">{t("均衡","Balanced")}</option>
+            <option value="small">{t("更小体积","Smaller file")}</option>
+          </select>
+        </label>
+        <p className="mt-2 text-xs leading-5">{t("适合扫描件和图片型 PDF。文字和矢量内容会被重新渲染成图像页。","Best for scanned/image PDFs. Text and vectors are rasterized into image pages.")}</p>
+      </div>}
+
       <button
         type="button"
         disabled={busy || files.length === 0}
@@ -184,6 +222,7 @@ async function runFileTool(
     height: number;
     keepAspect: boolean;
     targetBytes: number | null;
+    pdfCompression: PdfCompressionPreset;
   },
 ): Promise<ToolRunResult> {
   if (!files.length) {
@@ -197,6 +236,164 @@ async function runFileTool(
   }
 
   const file = files[0];
+
+  if (tool.slug === "compress-pdf") {
+    const out=await rebuildCompressedPdf(file,opts.pdfCompression);
+    const delta=out.originalBytes>0?((out.resultBytes/out.originalBytes)-1)*100:0;
+    return {
+      ok:true,
+      files:[{name:out.name,blob:out.blob,mime:"application/pdf",size:out.blob.size}],
+      messageZh:out.resultBytes<out.originalBytes
+        ? `重建完成，体积减少约 ${Math.abs(delta).toFixed(1)}%。`
+        : "重建完成，但这个 PDF 没有变小；原文件可能已经高度压缩。",
+      messageEn:out.resultBytes<out.originalBytes
+        ? `Rebuilt; size reduced by about ${Math.abs(delta).toFixed(1)}%.`
+        : "Rebuilt, but this PDF did not get smaller; the source may already be highly optimized.",
+      details:{pages:out.pages,originalKB:Number((out.originalBytes/1024).toFixed(1)),resultKB:Number((out.resultBytes/1024).toFixed(1)),preset:out.preset},
+    };
+  }
+
+  if (tool.slug === "pptx-to-txt") {
+    const outputs=[];
+    let totalSlides=0,totalCharacters=0;
+    for(const input of files){
+      const out=await pptxToText(input);
+      totalSlides+=out.slides;
+      totalCharacters+=out.characters;
+      outputs.push({name:out.name,blob:out.blob,mime:"text/plain",size:out.blob.size});
+    }
+    return {
+      ok:true,
+      files:outputs,
+      messageZh:`已提取 ${files.length} 个 PPTX，共 ${totalSlides} 页幻灯片。`,
+      messageEn:`Extracted ${files.length} PPTX file(s), ${totalSlides} slide(s) total.`,
+      details:{files:files.length,slides:totalSlides,characters:totalCharacters},
+    };
+  }
+
+  if (tool.slug === "heic-to-jpg") {
+    const outputs=await heicToJpgFiles(files);
+    return {
+      ok:true,
+      files:outputs,
+      messageZh:`已转换 ${files.length} 个 HEIC / HEIF 文件。`,
+      messageEn:`Converted ${files.length} HEIC / HEIF file(s).`,
+      details:{inputFiles:files.length,outputFiles:outputs.length},
+    };
+  }
+
+  if (tool.slug === "qr-code-reader") {
+    const decoded=await readQrCode(file);
+    return {
+      ok:true,
+      messageZh:"二维码已识别。",
+      messageEn:"QR code decoded.",
+      details:{content:decoded.text,width:decoded.width,height:decoded.height},
+    };
+  }
+
+  if (tool.slug === "merge-pdf") {
+    if(files.length<2){
+      return {ok:false,reasonZh:"请至少选择两个 PDF。",reasonEn:"Select at least two PDFs."};
+    }
+    const output=await mergePdfFiles(files);
+    return {
+      ok:true,
+      files:[output],
+      messageZh:`已按当前顺序合并 ${files.length} 个 PDF。`,
+      messageEn:`Merged ${files.length} PDFs in the current order.`,
+      details:{inputFiles:files.length,resultKB:Number((output.size/1024).toFixed(1))},
+    };
+  }
+
+  if (tool.slug === "split-pdf") {
+    const outputs=await splitPdfFile(file);
+    return {
+      ok:true,
+      files:outputs,
+      messageZh:`已拆成 ${outputs.length} 个独立页面 PDF。`,
+      messageEn:`Split into ${outputs.length} single-page PDFs.`,
+      details:{pages:outputs.length},
+    };
+  }
+
+  if (tool.slug === "image-to-pdf") {
+    const output=await imagesToPdf(files);
+    return {
+      ok:true,
+      files:[output],
+      messageZh:`已把 ${files.length} 张图片生成一个 PDF。`,
+      messageEn:`Created one PDF from ${files.length} image(s).`,
+      details:{images:files.length,resultKB:Number((output.size/1024).toFixed(1))},
+    };
+  }
+
+  if (tool.slug === "pdf-to-jpg") {
+    const outputs=await pdfToJpgFiles(file);
+    return {
+      ok:true,
+      files:outputs,
+      messageZh:`已导出 ${outputs.length} 张 JPG。`,
+      messageEn:`Exported ${outputs.length} JPG image(s).`,
+      details:{pages:outputs.length},
+    };
+  }
+
+  if (tool.slug === "xlsx-to-csv") {
+    const outputs=[];
+    for(const input of files){
+      const converted=await xlsxToCsvFiles(input);
+      for(const out of converted){
+        outputs.push({name:out.name,blob:out.blob,mime:"text/csv",size:out.blob.size});
+      }
+    }
+    return {
+      ok:true,
+      files:outputs,
+      messageZh:`已处理 ${files.length} 个 Excel 文件，共生成 ${outputs.length} 个 CSV。`,
+      messageEn:`Processed ${files.length} Excel file(s) and generated ${outputs.length} CSV file(s).`,
+      details:{inputFiles:files.length,outputFiles:outputs.length},
+    };
+  }
+
+  if (tool.slug === "csv-to-xlsx") {
+    const outputs=[];
+    let totalRows=0;
+    for(const input of files){
+      const out=await delimitedToXlsx(input);
+      totalRows+=out.rows;
+      outputs.push({
+        name:out.name,
+        blob:out.blob,
+        mime:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        size:out.blob.size,
+      });
+    }
+    return {
+      ok:true,
+      files:outputs,
+      messageZh:`已把 ${files.length} 个 CSV / TSV 转成 Excel。`,
+      messageEn:`Converted ${files.length} CSV / TSV file(s) to Excel.`,
+      details:{inputFiles:files.length,outputFiles:outputs.length,totalRows},
+    };
+  }
+
+  if (tool.slug === "docx-to-txt") {
+    const outputs=[];
+    let totalCharacters=0;
+    for(const input of files){
+      const out=await docxToText(input);
+      totalCharacters+=out.characters;
+      outputs.push({name:out.name,blob:out.blob,mime:"text/plain",size:out.blob.size});
+    }
+    return {
+      ok:true,
+      files:outputs,
+      messageZh:`已提取 ${files.length} 个 DOCX 的正文。`,
+      messageEn:`Extracted text from ${files.length} DOCX file(s).`,
+      details:{inputFiles:files.length,outputFiles:outputs.length,totalCharacters},
+    };
+  }
 
   if (tool.slug === "png-to-jpg") {
     const r = await convertImage(file, "image/jpeg", 0.92);

@@ -10,7 +10,16 @@ import {
 } from "@/lib/ai-knowledge/local-index";
 import { openPdf } from "@/lib/tools/pdf-render-client";
 import { useLingxiLang, type LingxiLang } from "@/lib/lingxi-i18n";
+import {
+  DOCUMENT_ACCEPT,
+  DOCUMENT_BATCH_MAX_FILES,
+  DOCUMENT_FILE_MAX_BYTES,
+  isLegacyOffice,
+  parseGenericDocument,
+} from "@/lib/files/document-intake";
 
+import { DOCUMENT_BATCH_MAX_BYTES } from "@/lib/files/document-intake";
+import { KNOWLEDGE_SOURCE_MAX } from "@/lib/ai-knowledge/local-index";
 type Mode = "book" | "learning" | "research";
 type Intelligence = "light" | "standard" | "high";
 
@@ -35,7 +44,7 @@ const COPY = {
   file30:c("单个文件暂时限制 30MB。","Files are currently limited to 30 MB each.","1ファイルは現在30MBまでです。","파일은 현재 개당 30MB로 제한됩니다.","Chaque fichier est actuellement limité à 30 Mo.","Dateien sind derzeit auf 30 MB begrenzt.","Cada archivo está limitado actualmente a 30 MB.","Cada arquivo está limitado a 30 MB.","الحد الحالي لكل ملف هو 30 ميجابايت."),
   scannedPdf:c("这个 PDF 几乎没有可提取文字，可能是扫描版。请先使用【PDF OCR】或上传页面图片。","This PDF has almost no extractable text and may be scanned. Use PDF OCR first or upload page images.","このPDFには抽出できる文字がほとんどありません。スキャン版の可能性があります。先に【PDF OCR】を使うか、ページ画像をアップロードしてください。","이 PDF에는 추출 가능한 텍스트가 거의 없습니다. 스캔본일 수 있으니 먼저 PDF OCR을 사용하거나 페이지 이미지를 업로드하세요.","Ce PDF contient très peu de texte extractible et peut être scanné. Utilisez d’abord PDF OCR ou importez des images de pages.","Diese PDF enthält kaum extrahierbaren Text und ist möglicherweise gescannt. Nutzen Sie zuerst PDF OCR oder laden Sie Seitenbilder hoch.","Este PDF casi no contiene texto extraíble y puede ser escaneado. Usa primero PDF OCR o sube imágenes de las páginas.","Este PDF quase não contém texto extraível e pode ser digitalizado. Use primeiro PDF OCR ou envie imagens das páginas.","لا يحتوي ملف PDF هذا تقريبًا على نص قابل للاستخراج وقد يكون ممسوحًا ضوئيًا. استخدم PDF OCR أولًا أو ارفع صور الصفحات."),
   imageNoText:c("没有从图片中识别出文字。","No text was recognized in the image.","画像から文字を認識できませんでした。","이미지에서 텍스트를 인식하지 못했습니다.","Aucun texte n’a été reconnu dans l’image.","Im Bild wurde kein Text erkannt.","No se reconoció texto en la imagen.","Nenhum texto foi reconhecido na imagem.","لم يتم التعرف على نص في الصورة."),
-  supported:c("目前支持 PDF、TXT、Markdown 和图片。","Supported formats: PDF, TXT, Markdown and images.","現在対応している形式はPDF、TXT、Markdown、画像です。","현재 PDF, TXT, Markdown, 이미지를 지원합니다.","Formats pris en charge : PDF, TXT, Markdown et images.","Unterstützte Formate: PDF, TXT, Markdown und Bilder.","Formatos compatibles: PDF, TXT, Markdown e imágenes.","Formatos compatíveis: PDF, TXT, Markdown e imagens.","الصيغ المدعومة: PDF وTXT وMarkdown والصور."),
+  supported:c("支持 PDF、EPUB、DOCX、PPTX、XLSX、CSV、TSV、ODS、RTF、TXT、Markdown、JSON / YAML / XML / HTML、常见代码文件和图片。旧版 DOC / XLS / PPT 可拖入识别，但需要先转为 DOCX / XLSX / PPTX 才能可靠提取正文。","Supports PDF, EPUB, DOCX, PPTX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown, JSON/YAML/XML/HTML, common code files and images. Legacy DOC/XLS/PPT should be converted to DOCX/XLSX/PPTX for reliable extraction.","PDF、DOCX、XLSX、CSV、TSV、ODS、RTF、TXT、Markdown、画像に対応します。旧DOC/XLSはDOCX/XLSXへの変換が必要です。","PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown, 이미지를 지원합니다. 구형 DOC/XLS는 DOCX/XLSX로 변환해 주세요.","PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown et images sont pris en charge. Convertissez les anciens DOC/XLS en DOCX/XLSX.","PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown und Bilder werden unterstützt. Alte DOC/XLS bitte in DOCX/XLSX umwandeln.","Se admiten PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown e imágenes. Convierte DOC/XLS antiguos a DOCX/XLSX.","Compatível com PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown e imagens. Converta DOC/XLS antigos para DOCX/XLSX.","يدعم PDF وDOCX وXLSX وCSV وTSV وODS وRTF وTXT وMarkdown والصور. حوّل DOC/XLS القديمة إلى DOCX/XLSX."),
   fileReadFailed:c("文件读取失败。","Could not read the file.","ファイルを読み取れませんでした。","파일을 읽지 못했습니다.","Impossible de lire le fichier.","Datei konnte nicht gelesen werden.","No se pudo leer el archivo.","Não foi possível ler o arquivo.","تعذر قراءة الملف."),
   draftTitle:c("当前粘贴资料","Current pasted source","現在貼り付け中の資料","현재 붙여넣은 자료","Source collée actuelle","Aktuell eingefügter Text","Fuente pegada actual","Fonte colada atual","المصدر الملصق الحالي"),
   draftReady:c("已把当前粘贴正文纳入本次检索；不保存也可以先提问。","The current pasted text is included in this search, so you can ask before saving it.","貼り付け中の本文も今回の検索対象です。保存前でも質問できます。","현재 붙여넣은 본문도 이번 검색에 포함됩니다. 저장하기 전에도 질문할 수 있습니다.","Le texte collé actuel est inclus dans la recherche ; vous pouvez poser une question avant de l’enregistrer.","Der aktuell eingefügte Text wird durchsucht; Sie können schon vor dem Speichern fragen.","El texto pegado actual se incluye en la búsqueda; puedes preguntar antes de guardarlo.","O texto colado atual entra na pesquisa; você pode perguntar antes de salvá-lo.","النص الملصق الحالي مشمول في البحث، ويمكنك السؤال قبل حفظه."),  copyAll:c("复制全部","Copy all","すべてコピー","전체 복사","Tout copier","Alles kopieren","Copiar todo","Copiar tudo","نسخ الكل"),
@@ -52,7 +61,7 @@ const COPY = {
   privacy:c("资料默认保存在本机浏览器；本地先检索原文。只有你点“基于原文回答”时，当前命中的证据片段才会发送给 AI。PDF、TXT、Markdown 与图片 OCR 已可直接加入。","Sources stay in this browser by default and are searched locally first. Only when you choose “Answer from source text” are matched evidence snippets sent to AI. PDF, TXT, Markdown and image OCR can be added directly.","資料は既定でこのブラウザに保存され、まずローカル検索されます。「原文から回答」を押したときだけ、一致した証拠断片がAIへ送信されます。PDF、TXT、Markdown、画像OCRを直接追加できます。","자료는 기본적으로 이 브라우저에 저장되고 먼저 로컬에서 검색됩니다. ‘원문 기반 답변’을 누를 때만 매칭된 증거 조각이 AI로 전송됩니다. PDF, TXT, Markdown, 이미지 OCR을 바로 추가할 수 있습니다.","Les sources restent par défaut dans ce navigateur et sont d’abord recherchées localement. Seuls les extraits correspondants sont envoyés à l’IA lorsque vous choisissez « Répondre à partir du texte source ». PDF, TXT, Markdown et OCR d’image peuvent être ajoutés directement.","Quellen bleiben standardmäßig in diesem Browser und werden zuerst lokal durchsucht. Nur wenn Sie „Aus Quelltext antworten“ wählen, werden passende Belegstellen an die KI gesendet. PDF, TXT, Markdown und Bild-OCR können direkt hinzugefügt werden.","Las fuentes se guardan por defecto en este navegador y se buscan primero de forma local. Solo cuando eliges «Responder desde el texto fuente» se envían a la IA los fragmentos encontrados. Puedes añadir PDF, TXT, Markdown e imágenes con OCR.","As fontes ficam por padrão neste navegador e são pesquisadas localmente primeiro. Apenas ao escolher “Responder com base no texto-fonte” os trechos encontrados são enviados à IA. PDF, TXT, Markdown e OCR de imagens podem ser adicionados diretamente.","تظل المصادر افتراضيًا في هذا المتصفح ويجري البحث فيها محليًا أولًا. لا تُرسل مقتطفات الأدلة إلى الذكاء الاصطناعي إلا عند اختيار «الإجابة من النص الأصلي». يمكن إضافة PDF وTXT وMarkdown وصور OCR مباشرة."),
   add:c("加入","Add ","追加：","추가: ","Ajouter ","Hinzufügen: ","Añadir ","Adicionar ","إضافة "),
   reading:c("正在读取…","Reading…","読み込み中…","읽는 중…","Lecture…","Wird gelesen…","Leyendo…","Lendo…","جارٍ القراءة…"),
-  upload:c("上传 PDF / TXT / Markdown / 图片","Upload PDF / TXT / Markdown / Image","PDF / TXT / Markdown / 画像をアップロード","PDF / TXT / Markdown / 이미지 업로드","Importer PDF / TXT / Markdown / Image","PDF / TXT / Markdown / Bild hochladen","Subir PDF / TXT / Markdown / Imagen","Enviar PDF / TXT / Markdown / Imagem","رفع PDF / TXT / Markdown / صورة"),
+  upload:c("批量拖入 PDF / EPUB / Word / PPTX / Excel / CSV / TXT / 代码 / 图片","Drop PDF / EPUB / Word / PPTX / Excel / CSV / TXT / code / images in batches","PDF / Word / Excel / CSV / TXT / 画像をまとめてドロップ","PDF / Word / Excel / CSV / TXT / 이미지를 일괄 드롭","Déposez plusieurs PDF / Word / Excel / CSV / TXT / images","PDF / Word / Excel / CSV / TXT / Bilder stapelweise ablegen","Suelta varios PDF / Word / Excel / CSV / TXT / imágenes","Solte vários PDF / Word / Excel / CSV / TXT / imagens","أسقط عدة ملفات PDF / Word / Excel / CSV / TXT / صور"),
   pdfNote:c("PDF 会保留页码定位；图片会先在浏览器 OCR。","PDF page references are preserved; images are OCRed in the browser first.","PDFはページ位置を保持し、画像はまずブラウザ内でOCRされます。","PDF는 페이지 위치를 유지하며 이미지는 브라우저에서 먼저 OCR합니다.","Les références de page PDF sont conservées ; les images passent d’abord par l’OCR dans le navigateur.","PDF-Seitenangaben bleiben erhalten; Bilder werden zuerst im Browser per OCR verarbeitet.","Se conservan las referencias de página del PDF; las imágenes pasan primero por OCR en el navegador.","As referências de página do PDF são preservadas; imagens passam primeiro por OCR no navegador.","يتم الاحتفاظ بمراجع صفحات PDF، وتُجرى OCR للصور أولًا داخل المتصفح."),
   paste:c("或粘贴正文","or paste text","または本文を貼り付け","또는 본문 붙여넣기","ou collez le texte","oder Text einfügen","o pega el texto","ou cole o texto","أو الصق النص"),
   sourceName:c("资料名称","Source title","資料名","자료 이름","Titre de la source","Quellentitel","Título de la fuente","Título da fonte","عنوان المصدر"),
@@ -195,30 +204,98 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     setBusy(true);
     try{
       const source:KnowledgeSource={id:crypto.randomUUID(),title:title.trim().slice(0,200),text:text.trim(),createdAt:new Date().toISOString(),kind:"text"};
+      if (sources.length >= KNOWLEDGE_SOURCE_MAX) {
+        setNotice(
+          lang === "zh"
+            ? `本地资料库最多 ${KNOWLEDGE_SOURCE_MAX} 份，请先删除不再需要的资料。`
+            : `The local library supports up to ${KNOWLEDGE_SOURCE_MAX} sources. Remove an old source first.`
+        );
+        return;
+      }
       await saveSource(source);
       setSources(previous=>[...previous,source]);setTitle("");setText("");setNotice(tr(lang,"saved"));
     }catch{setNotice(tr(lang,"saveFailed"))}
     finally{setBusy(false)}
   }
 
-  async function importFile(file:File){
-    setBusy(true);setNotice("");
-    try{
-      if(file.size>30*1024*1024)throw new Error(tr(lang,"file30"));
-      let parsedText="",locators:KnowledgeSource["locators"]|undefined,kind:KnowledgeSource["kind"]="text";
-      if(/\.pdf$/i.test(file.name)||file.type==="application/pdf"){
-        kind="pdf";const parsed=await pdfToSource(file,lang);parsedText=parsed.text;locators=parsed.locators;
-        if(parsedText.replace(/(?:第\s*\d+\s*页|Page\s+\d+|Seite\s+\d+|Página\s+\d+|\d+ページ|\d+페이지|الصفحة\s+\d+)/g,"").trim().length<80)throw new Error(tr(lang,"scannedPdf"));
-      }else if(file.type.startsWith("image/")){
-        kind="image";parsedText=await imageToText(file);if(!parsedText.trim())throw new Error(tr(lang,"imageNoText"));
-      }else if(/\.(txt|md)$/i.test(file.name)||/text\//.test(file.type)){parsedText=await file.text()}
-      else throw new Error(tr(lang,"supported"));
+  async function importOneFile(file:File){
+    if(file.size>DOCUMENT_FILE_MAX_BYTES)throw new Error(tr(lang,"file30"));
+    if(isLegacyOffice(file)){
+      throw new Error(lang==="zh"
+        ? `「${file.name}」是旧版 Office 二进制格式。可以拖到这里，但浏览器无法可靠解析正文；请先另存为 ${/\.doc$/i.test(file.name)?"DOCX":/\.xls$/i.test(file.name)?"XLSX":"PPTX"} 后再加入。`
+        : `${file.name} is a legacy Office binary file. Please save it as ${/\.doc$/i.test(file.name)?"DOCX":/\.xls$/i.test(file.name)?"XLSX":"PPTX"} first for reliable extraction.`);
+    }
 
-      const source:KnowledgeSource={id:crypto.randomUUID(),title:file.name.slice(0,200),text:parsedText.slice(0,1_500_000),createdAt:new Date().toISOString(),kind,locators};
-      await saveSource(source);setSources(previous=>[...previous,source]);
-      setNotice(lang==="zh"?`已加入「${source.title}」。${kind==="pdf"?"PDF 页码定位已保留。":""}`:`${source.title} · ${tr(lang,"saved")}`);
-    }catch(e){setNotice(e instanceof Error?e.message:tr(lang,"fileReadFailed"))}
-    finally{setBusy(false)}
+    let parsedText="",locators:KnowledgeSource["locators"]|undefined,kind:KnowledgeSource["kind"]="text";
+    if(/\.pdf$/i.test(file.name)||file.type==="application/pdf"){
+      kind="pdf";
+      const parsed=await pdfToSource(file,lang);
+      parsedText=parsed.text;
+      locators=parsed.locators;
+      if(parsedText.replace(/(?:第\s*\d+\s*页|Page\s+\d+|Seite\s+\d+|Página\s+\d+|\d+ページ|\d+페이지|الصفحة\s+\d+)/g,"").trim().length<80){
+        throw new Error(tr(lang,"scannedPdf"));
+      }
+    }else if(file.type.startsWith("image/")){
+      kind="image";
+      parsedText=await imageToText(file);
+      if(!parsedText.trim())throw new Error(tr(lang,"imageNoText"));
+    }else{
+      const parsed=await parseGenericDocument(file);
+      if(!parsed)throw new Error(tr(lang,"supported"));
+      parsedText=parsed.text;
+      kind=parsed.kind;
+    }
+
+    const source:KnowledgeSource={
+      id:crypto.randomUUID(),
+      title:file.name.slice(0,200),
+      text:parsedText.slice(0,1_500_000),
+      createdAt:new Date().toISOString(),
+      kind,
+      locators,
+    };
+    await saveSource(source);
+    setSources(previous=>[...previous,source]);
+    return source;
+  }
+
+  async function importFiles(list:FileList|File[]){
+    let __lingxiBatchBytes = 0;
+
+    const files=Array.from(list).slice(0,DOCUMENT_BATCH_MAX_FILES);
+    if(!files.length||busy)return;
+    setBusy(true);setNotice("");
+    const ok:string[]=[];const failed:string[]=[];
+    try{
+      for(const file of files){
+        try{
+          if (__lingxiBatchBytes + Number(file.size || 0) > DOCUMENT_BATCH_MAX_BYTES) {
+            const maxMb = Math.round(DOCUMENT_BATCH_MAX_BYTES / 1024 / 1024);
+            throw new Error(
+              lang === "zh"
+                ? `本次批量读取累计超过 ${maxMb}MB，为保护浏览器内存，请分批导入。`
+                : `This batch exceeds the ${maxMb} MB memory budget. Import it in smaller batches.`
+            );
+          }
+          __lingxiBatchBytes += Number(file.size || 0);
+          const source = await importOneFile(file);
+          ok.push(source.title);
+        }catch(error){
+          failed.push(error instanceof Error?error.message:`${file.name}: ${tr(lang,"fileReadFailed")}`);
+        }
+      }
+      if(ok.length&&failed.length){
+        setNotice(lang==="zh"
+          ? `已加入 ${ok.length} 份资料；${failed.length} 份未加入：${failed.slice(0,3).join("；")}`
+          : `Added ${ok.length} source(s); ${failed.length} failed: ${failed.slice(0,3).join("; ")}`);
+      }else if(ok.length){
+        setNotice(lang==="zh"?`已批量加入 ${ok.length} 份资料。`:`Added ${ok.length} source(s).`);
+      }else{
+        setNotice(failed[0]||tr(lang,"fileReadFailed"));
+      }
+    }finally{
+      setBusy(false);
+    }
   }
 
   async function ask(){
@@ -307,9 +384,9 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     <div className="grid gap-5 xl:grid-cols-[.88fr_1.12fr]">
       <section className="rounded-3xl border border-slate-200 bg-white p-6">
         <h2 className="text-xl font-semibold text-slate-950">{tr(lang,"add")}{heading}</h2>
-        <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const file=e.dataTransfer.files?.[0];if(file&&!busy)void importFile(file)}} className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
-          <input type="file" className="hidden" accept=".pdf,.txt,.md,image/*,application/pdf,text/plain,text/markdown" disabled={busy}
-            onChange={e=>{const file=e.target.files?.[0];if(file)void importFile(file);e.currentTarget.value=""}}/>
+        <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();if(!busy)void importFiles(e.dataTransfer.files)}} className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+          <input type="file" className="hidden" accept={DOCUMENT_ACCEPT} multiple disabled={busy}
+            onChange={e=>{if(e.target.files?.length)void importFiles(e.target.files);e.currentTarget.value=""}}/>
           <span className="font-medium text-slate-900">{busy?tr(lang,"reading"):tr(lang,"upload")}</span>
           <span className="mt-1 block text-sm text-slate-500">{tr(lang,"pdfNote")}</span>
         </label>

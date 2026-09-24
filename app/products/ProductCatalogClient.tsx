@@ -6,6 +6,16 @@ import { useLingxiLang, type LingxiLang } from "@/lib/lingxi-i18n";
 import { getProduct } from "@/lib/plans";
 
 type Localized=Record<LingxiLang,string>;
+
+type SasiReadinessSnapshot={
+  productionReady:boolean;
+  productionAccountReady:boolean;
+  executionReady:boolean;
+  refundFlowTested:boolean;
+  usageSettlementTested:boolean;
+  contentLabelingReady:boolean;
+  paymentChannels:{alipay:boolean;wechat:boolean;paypal:boolean};
+};
 const l=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Localized=>({zh,en,ja,ko,fr,de,es,pt,ar});
 const pick=(x:Localized,lang:LingxiLang)=>x[lang]||x.en;
 
@@ -59,15 +69,38 @@ export default function ProductCatalogClient(){
   const t=(k:keyof typeof COPY)=>pick(COPY[k],lang);
   const [wallet,setWallet]=useState<number|null>(null);
   const [walletState,setWalletState]=useState<"loading"|"ready"|"login">("loading");
+  const [sasiReadiness,setSasiReadiness]=useState<SasiReadinessSnapshot|null>(null);
+  const [sasiReadinessLoaded,setSasiReadinessLoaded]=useState(false);
+  const [sasiWallet,setSasiWallet]=useState<number|null>(null);
+  const [sasiWalletState,setSasiWalletState]=useState<"loading"|"ready"|"login">("loading");
 
   useEffect(()=>{
     let alive=true;
-    fetch("/api/ai/wallet",{cache:"no-store"}).then(async r=>{
+    Promise.all([
+      fetch("/api/ai/wallet",{cache:"no-store"}).then(async r=>({ok:r.ok,data:await r.json().catch(()=>({}))})),
+      fetch("/api/sasi/wallet",{cache:"no-store"}).then(async r=>({ok:r.ok,data:await r.json().catch(()=>({}))})),
+    ]).then(([ai,sasi])=>{
+      if(!alive)return;
+      if(ai.ok){setWallet(Number(ai.data.balanceRmb||0));setWalletState("ready")}
+      else setWalletState("login");
+      if(sasi.ok){setSasiWallet(Number(sasi.data.balanceRmb||0));setSasiWalletState("ready")}
+      else setSasiWalletState("login");
+    }).catch(()=>{
+      if(!alive)return;
+      setWalletState("login");
+      setSasiWalletState("login");
+    });
+    return()=>{alive=false};
+  },[]);
+
+  useEffect(()=>{
+    let alive=true;
+    fetch("/api/sasi/readiness",{cache:"no-store"}).then(async r=>{
       const d=await r.json().catch(()=>({}));
       if(!alive)return;
-      if(r.ok){setWallet(Number(d.balanceRmb||0));setWalletState("ready")}
-      else setWalletState("login");
-    }).catch(()=>{if(alive)setWalletState("login")});
+      setSasiReadiness(r.ok&&d?.readiness?d.readiness:null);
+      setSasiReadinessLoaded(true);
+    }).catch(()=>{if(alive){setSasiReadiness(null);setSasiReadinessLoaded(true)}});
     return()=>{alive=false};
   },[]);
 
@@ -108,11 +141,24 @@ export default function ProductCatalogClient(){
             <div className="lx-pc-card-head"><span>SASI PRODUCTION</span><b>{t("sasiBalance")}</b></div>
             <p>{t("sasiBalanceLead")}</p>
             <div className="lx-pc-current">
-              <span>{pick(l("按任务确认后使用","Used after task approval","タスク確認後に使用","작업 승인 후 사용","Utilisé après validation","Nach Aufgabenbestätigung","Se usa tras aprobación","Usado após aprovação","يُستخدم بعد الموافقة على المهمة"),lang)}</span>
-              <strong>SASI</strong>
+              <span>{t("current")}</span>
+              <strong>{sasiWalletState==="ready"&&sasiWallet!==null?`¥${sasiWallet.toFixed(2)}`:t("loginView")}</strong>
+            </div>
+            <div className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">
+              {!sasiReadinessLoaded
+                ? pick(l("正在确认生产与支付状态…","Checking production and payment readiness…","制作・決済状態を確認中…","제작·결제 상태 확인 중…","Vérification de la production et du paiement…","Produktions- und Zahlungsstatus wird geprüft…","Comprobando producción y pago…","Verificando produção e pagamento…","جارٍ التحقق من جاهزية الإنتاج والدفع…"),lang)
+                : sasiReadiness?.productionReady
+                  ? pick(l("创作生产已就绪；充值到账后，仅在你确认任务时预留与结算。","Creation production is ready. Balance is reserved and settled only after you approve a task.","制作環境は準備完了。タスク承認後にのみ残高を予約・精算します。","제작 환경이 준비되었습니다. 작업 승인 후에만 잔액을 예약·정산합니다.","La production est prête ; le solde n’est réservé et réglé qu’après validation de la tâche.","Produktion ist bereit; Guthaben wird erst nach Aufgabenfreigabe reserviert und abgerechnet.","La producción está lista; el saldo se reserva y liquida solo tras aprobar la tarea.","A produção está pronta; o saldo só é reservado e liquidado após sua aprovação.","الإنتاج جاهز؛ لا يُحجز الرصيد ولا يُسوّى إلا بعد موافقتك على المهمة."),lang)
+                  : pick(l("创作生产尚未满足全部上线条件，暂不开放充值，避免先收款后无法执行。","Creation production is not fully ready, so top-ups stay closed to avoid taking payment before execution is available.","制作環境の全条件が未達のため、実行不能な状態での先払いを避けるためチャージを停止しています。","제작 운영 조건이 모두 충족되지 않아 실행 전 선결제를 막기 위해 충전을 닫아 둡니다.","La production n’est pas totalement prête ; les recharges restent fermées pour éviter un paiement sans exécution possible.","Die Produktion ist noch nicht vollständig bereit; Aufladungen bleiben geschlossen, damit keine Zahlung vor möglicher Ausführung erfolgt.","La producción aún no está completamente lista; las recargas permanecen cerradas para evitar cobrar antes de poder ejecutar.","A produção ainda não está totalmente pronta; as recargas ficam fechadas para evitar cobrança sem execução disponível.","الإنتاج غير جاهز بالكامل بعد، لذا تبقى عمليات الشحن مغلقة لتجنب تحصيل الدفع قبل توفر التنفيذ."),lang)}
             </div>
             <div className="lx-pc-topups">
-              {[20,50,100,500].map(n=><Link key={n} href={`/checkout?productId=${n===20?"sasi-credit-entry":n===50?"sasi-balance-50":n===100?"sasi-credit-studio":"sasi-credit-reserve"}&redirect=/products`}>¥{n}</Link>)}
+              {[
+                [10,"sasi-balance-10"],[20,"sasi-credit-entry"],[50,"sasi-balance-50"],
+                [100,"sasi-credit-studio"],[200,"sasi-balance-200"],[500,"sasi-credit-reserve"],
+                [1000,"sasi-balance-1000"],[2000,"sasi-balance-2000"],[10000,"sasi-balance-10000"],
+              ].map(([n,id])=>sasiReadiness?.productionReady
+                ? <Link key={id} href={`/checkout?productId=${id}&redirect=/products`}>¥{n}</Link>
+                : <span key={id} aria-disabled="true" className="cursor-not-allowed opacity-40">¥{n}</span>)}
             </div>
             <Link className="lx-pc-text-link" href="/sasi">{pick(l("进入 SASI 创作","Open SASI creation","SASI制作へ","SASI 제작 열기","Ouvrir la création SASI","SASI-Erstellung öffnen","Abrir creación SASI","Abrir criação SASI","فتح إنشاء SASI"),lang)} →</Link>
           </article>

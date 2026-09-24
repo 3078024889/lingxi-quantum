@@ -454,11 +454,18 @@ const orderIdRef = useRef<string | null>(null);
                     {validForCopy(lang, product.days)}
                   </p>
                 )}
-                {product.type === "permanent" && (
+                {(product.group === "ai" || product.group === "production") ? (
+                  <p className="mt-1 text-xs text-[var(--lx-ink)]">
+                    <Bi
+                      zh="充值余额长期保留，仅在你主动使用对应服务时扣除"
+                      en="Top-up balance remains available and is deducted only when you use the corresponding service"
+                    />
+                  </p>
+                ) : product.type === "permanent" ? (
                   <p className="mt-1 text-xs text-[var(--lx-ink)]">
                     <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
                   </p>
-                )}
+                ) : null}
               </div>
               <p className="shrink-0 font-display text-2xl text-[var(--lx-ink)]">¥{product.priceRmb}</p>
             </div>

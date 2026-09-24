@@ -1,22 +1,36 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { calculateToolQuote } from "@/lib/tools/pricing-server";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 
 export const runtime="nodejs";
 
-export async function POST(req:Request){
+export async function POST(req:NextRequest){
   try{
+    if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
+    const contentLength=Number(req.headers.get("content-length")||0);
+    if(Number.isFinite(contentLength)&&contentLength>1024*1024)return NextResponse.json({error:"QUOTE_REQUEST_TOO_LARGE"},{status:413});
+
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"请先登录"},{status:401});
+
     const body=await req.json();
     const toolId=String(body.toolId||"").trim();
     const quantity=Number(body.quantity);
     const metadata=(body.metadata&&typeof body.metadata==="object")?body.metadata:{};
+    if(JSON.stringify(metadata).length>512*1024)return NextResponse.json({error:"QUOTE_METADATA_TOO_LARGE"},{status:413});
+
     const q=await calculateToolQuote(toolId,quantity);
     const admin=createAdminClient();
-    const {data,error}=await admin.from("tool_payment_quotes").insert({
+    const limited=await admin.rpc("rate_limit_check",{
+      p_key:`tool-quote:${user.id}`,
+      p_limit:1200,
+      p_window_seconds:3600,
+    });
+    if(limited.error)return NextResponse.json({error:"QUOTE_RATE_GUARD_UNAVAILABLE"},{status:503});
+    if(limited.data!==true)return NextResponse.json({error:"QUOTE_RATE_LIMITED"},{status:429});    const {data,error}=await admin.from("tool_payment_quotes").insert({
       user_id:user.id,tool_id:q.toolId,billing_type:q.billingType,quantity:q.quantity,
       unit_name:q.unitName,amount_rmb:q.amountRmb,amount_usd:q.amountUsd,metadata,status:"quoted"
     }).select("id,tool_id,billing_type,quantity,unit_name,amount_rmb,amount_usd,expires_at").single();

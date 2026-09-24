@@ -1,5 +1,5 @@
 import {loadProjectMemory,applyProjectMemory} from "@/lib/sasi/load-project-memory";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { type SasiQuality } from "@/lib/sasi/catalog";
@@ -9,6 +9,7 @@ import { dispatchSasiJob, publicSasiJob, type SasiJobRow } from "@/lib/sasi/prod
 import { reviewSasiProductionInput } from "@/lib/sasi/safety";
 import { selectSasiVideoProvider, type SasiVideoProviderId } from "@/lib/sasi/provider";
 import { hashSasiPrompt, verifySasiTaskQuote } from "@/lib/sasi/task-quote";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import {
   assertDirectorFoundryLoaded,
   composeDirectorProductionPrompt,
@@ -44,7 +45,8 @@ export async function GET() {
   return NextResponse.json({ jobs: ((data ?? []) as SasiJobRow[]).map(publicSasiJob) }, { headers: { "Cache-Control": "no-store" } });
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!isSameOriginMutation(request)) return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
   const readiness = sasiReadiness();
   if (!readiness.productionReady) {
     return NextResponse.json({ error: "PRODUCTION_NOT_READY", readiness: {

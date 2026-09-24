@@ -20,7 +20,15 @@ export async function runBilledText(input:{userId:string;taskKind:TaskKind;intel
    p_provider:result.provider,p_model:result.model,p_provider_cost_fen:pricing.providerCostFen,
    p_input_tokens:result.usage.inputTokens,p_output_tokens:result.usage.outputTokens,p_cached_tokens:result.usage.cachedTokens
   });
-  if(settled.error)console.error("[ai billing settle]",settled.error);
+  const settlement=(settled.data||null) as {ok?:boolean;error?:string}|null;
+  if(settled.error||!settlement?.ok){
+   console.error("[ai billing settle]",{
+    requestId,
+    rpcError:settled.error?.message||null,
+    resultError:settlement?.error||null,
+   });
+   throw new Error(settlement?.error||"AI_SETTLEMENT_FAILED");
+  }
   return {...result,chargeFen,providerCostFen:pricing.providerCostFen,requestId};
  }catch(error){
   await admin.rpc("release_ai_funds",{p_user_id:input.userId,p_request_id:requestId,p_error_code:error instanceof Error?error.message:"FAILED"});

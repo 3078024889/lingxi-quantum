@@ -10,7 +10,7 @@ import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 import ToolOrderRecoveryButton from "@/components/tools/ToolOrderRecoveryButton";
 
 export const metadata = {
-  title: "我的订单 | 灵犀场 LINGXIFIELD",
+  title: "付费任务中心 | 灵犀场 LINGXIFIELD",
   robots: { index: false, follow: false },
 };
 
@@ -91,7 +91,7 @@ const MEMBERSHIP_IDS = [
 
 // 订阅/合集类产品——按年月付的这几档，之前订单卡上只有product.note
 // 那一句概括，这次按你的要求把具体权益拆成清单列出来，买之前买之后
-// 都能一眼看清楚"这次交换到底换到了什么"，不是一句模糊的话带过去。
+// 都能一眼看清楚这次购买具体获得什么，而不是用一句模糊的话带过去。
 const BENEFIT_DETAIL: Record<string, { zh: string[]; en: string[] }> = {
   day: {
     zh: ["1天内不限次数使用「意识显化」功能", "愿景、观察与行动记录云端同步", "到期后自动锁定，不会继续扣费"],
@@ -119,8 +119,10 @@ const BENEFIT_DETAIL: Record<string, { zh: string[]; en: string[] }> = {
   "ascending-heart": { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
 };
 
-function categoryOf(productId: string): "field-test" | "membership" | "narrative" | "tool" {
+function categoryOf(productId: string): "field-test" | "membership" | "narrative" | "tool" | "balance" {
   if (productId.startsWith("toolquote:")) return "tool";
+  const product = getProduct(productId);
+  if (product?.group === "ai" || product?.group === "production") return "balance";
   if (FIELD_TEST_IDS.includes(productId)) return "field-test";
   if (MEMBERSHIP_IDS.includes(productId)) return "membership";
   return "narrative";
@@ -157,6 +159,13 @@ const REPORT_BASE: Record<string, string> = {
 };
 
 function resolveDestination(order: OrderRow): { href: string; labelZh: string; labelEn: string } | null {
+  const balanceProduct = getProduct(order.product_id);
+  if (balanceProduct?.group === "ai") {
+    return { href: "/ai-wallet", labelZh: "查看 AI 余额", labelEn: "View AI Balance" };
+  }
+  if (balanceProduct?.group === "production") {
+    return { href: "/sasi/pricing", labelZh: "进入 SASI 创作余额", labelEn: "Open SASI Creation Balance" };
+  }
   if (order.product_id.startsWith("toolquote:")) {
     const quoteId = order.product_id.slice("toolquote:".length);
     return order.status === "paid"
@@ -229,9 +238,17 @@ function OrderCard({ o, toolTask }: { o: OrderRow; toolTask?: ToolTaskState | nu
               <LocalizedOrderExpiry iso={o.paid_at} days={product.days} />
             </p>
           )}
-          {isPaid && product?.type === "permanent" && (
+          {isPaid && product?.type === "permanent" && product.group !== "ai" && product.group !== "production" && (
             <p className="mt-1 text-xs text-[var(--lx-ink)]">
               <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
+            </p>
+          )}
+          {isPaid && product && (product.group === "ai" || product.group === "production") && (
+            <p className="mt-1 text-xs text-[var(--lx-ink)]">
+              <Bi
+                zh="充值到账后按实际使用扣除；这不是会员期限，也不是一次性永久解锁。"
+                en="The credited balance is deducted by actual usage. It is not a membership term or a one-time permanent unlock."
+              />
             </p>
           )}
 
@@ -293,14 +310,6 @@ function OrderCard({ o, toolTask }: { o: OrderRow; toolTask?: ToolTaskState | nu
             </div>
           )}
           {toolTask?.latestUpdatedAt&&<p className="mt-2 text-[10px] text-[var(--lx-faint)]"><Bi zh="任务最近更新" en="Last task update" />：{new Date(toolTask.latestUpdatedAt).toLocaleString()}</p>}
-          {toolTask&&toolTask.jobsTotal>0&&(
-            <Link
-              href={`/account/tool-jobs?quoteId=${encodeURIComponent(o.product_id.slice("toolquote:".length))}`}
-              className="mt-3 inline-flex rounded-lg border border-[var(--lx-line)] px-4 py-2 text-xs text-[var(--lx-ink)]"
-            >
-              <Bi zh="查看任务详情 / 已保存结果" en="Task details / saved results" />
-            </Link>
-          )}
           {toolTask&&toolTask.jobsTotal>0&&(
             <Link
               href={`/account/tool-jobs?quoteId=${encodeURIComponent(o.product_id.slice("toolquote:".length))}`}
@@ -454,7 +463,16 @@ export default async function FieldOrdersPage({searchParams}: {searchParams?: {p
   const narrativeOrders = orders.filter((o) => categoryOf(o.product_id) === "narrative");
 
     const toolOrders = orders.filter((o) => categoryOf(o.product_id) === "tool");
+  const balanceOrders = orders.filter((o) => categoryOf(o.product_id) === "balance");
 const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string; hintEn: string; rows: OrderRow[] }[] = [
+        {
+      key: "balance",
+      titleZh: "余额与充值",
+      titleEn: "Balances & Top-ups",
+      hintZh: "AI 余额与 SASI 创作余额分别管理。充值到账后按实际使用扣除，不把余额充值混入报告或叙事订单。",
+      hintEn: "AI Balance and SASI Creation Balance are managed separately and deducted by actual usage.",
+      rows: balanceOrders,
+    },
         {
       key: "tool",
       titleZh: "实用工具",
@@ -490,19 +508,19 @@ const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string;
         <div className="mx-auto max-w-3xl px-6 pb-24">
           <div className="mb-2 flex items-center justify-between">
             <h1 className="font-display text-3xl font-light text-[var(--lx-ink)]">
-              <Bi zh="我的订单" en="My Orders" />
+              <Bi zh="付费任务中心" en="Paid Tasks" />
             </h1>
             <Link href="/account" className="text-xs uppercase tracking-widest2 text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
               <Bi zh="← 返回我的账户" en="← Back to My Account" />
             </Link>
           </div>
           <p className="mb-8 text-xs text-[var(--lx-faint)]">
-            <Bi zh="按类别查看每笔订单的详情、有效期与具体权益。" en="Every order, grouped by kind, with its expiry and exact benefits." />
+            <Bi zh="查看已购买服务、使用进度、处理中任务、失败恢复与已保存结果。已付款的任务会优先恢复，不会因为刷新或重新进入而再次收费。" en="See purchases, usage, processing tasks, recovery states and saved results. Paid work is resumed instead of charged again after refresh or re-entry." />
           </p>
 
           {!user && (
             <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
-              <Bi zh="请先登录查看你的订单。" en="Please log in to view your orders." />
+              <Bi zh="请先登录查看你的付费任务与订单。" en="Please sign in to view your paid tasks and orders." />
             </p>
           )}
 

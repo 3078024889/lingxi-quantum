@@ -1,18 +1,20 @@
 import {loadProjectMemory,applyProjectMemory} from "@/lib/sasi/load-project-memory";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { type SasiQuality } from "@/lib/sasi/catalog";
 import { selectSasiVideoProvider, type SasiVideoProviderId } from "@/lib/sasi/provider";
 import { quoteVideoTask } from "@/lib/sasi/video-pricing";
 import { reviewSasiProductionInput } from "@/lib/sasi/safety";
 import { hashSasiPrompt, signSasiTaskQuote } from "@/lib/sasi/task-quote";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!isSameOriginMutation(request)) return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });

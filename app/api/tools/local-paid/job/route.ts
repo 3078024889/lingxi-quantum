@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import {
   claimPaidToolJob,
   completePaidToolJob,
@@ -13,7 +14,11 @@ function resultTooLarge(result:unknown){
   try{return Buffer.byteLength(JSON.stringify(result??{}),"utf8")>64*1024}catch{return true}
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  if (!isSameOriginMutation(req)) {
+    return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
+  }
+
   const supabase = createClient();
   const {
     data: { user },

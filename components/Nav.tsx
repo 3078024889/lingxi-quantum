@@ -46,15 +46,15 @@ function active(pathname: string, href: string) {
 }
 
 const menuText: Record<LingxiLang, { account:string; orders:string; password:string; navigation:string; switch:string; signout:string; delete:string; close:string }> = {
-  zh: { account:"我的账户", orders:"我的订单", password:"修改密码", navigation:"网站导航", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
-  en: { account:"My Account", orders:"My Orders", password:"Change password", navigation:"Site navigation", switch:"Switch account", signout:"Sign out", delete:"Delete account", close:"Close menu" },
-  ja: { account:"マイアカウント", orders:"注文履歴", password:"パスワード変更", navigation:"サイトナビ", switch:"アカウント切替", signout:"ログアウト", delete:"アカウント削除", close:"閉じる" },
-  ko: { account:"내 계정", orders:"내 주문", password:"비밀번호 변경", navigation:"사이트 메뉴", switch:"계정 전환", signout:"로그아웃", delete:"계정 삭제", close:"닫기" },
-  fr: { account:"Mon compte", orders:"Mes commandes", password:"Modifier le mot de passe", navigation:"Navigation", switch:"Changer de compte", signout:"Se déconnecter", delete:"Supprimer le compte", close:"Fermer" },
-  de: { account:"Mein Konto", orders:"Meine Bestellungen", password:"Passwort ändern", navigation:"Navigation", switch:"Konto wechseln", signout:"Abmelden", delete:"Konto löschen", close:"Schließen" },
-  es: { account:"Mi cuenta", orders:"Mis pedidos", password:"Cambiar contraseña", navigation:"Navegación", switch:"Cambiar de cuenta", signout:"Cerrar sesión", delete:"Eliminar cuenta", close:"Cerrar" },
-  pt: { account:"Minha conta", orders:"Meus pedidos", password:"Alterar senha", navigation:"Navegação", switch:"Trocar de conta", signout:"Sair", delete:"Excluir conta", close:"Fechar" },
-  ar: { account:"حسابي", orders:"طلباتي", password:"تغيير كلمة المرور", navigation:"التنقل", switch:"تبديل الحساب", signout:"تسجيل الخروج", delete:"حذف الحساب", close:"إغلاق" },
+  zh: { account:"我的账户", orders:"付费任务", password:"修改密码", navigation:"网站导航", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
+  en: { account:"My Account", orders:"Paid Tasks", password:"Change password", navigation:"Site navigation", switch:"Switch account", signout:"Sign out", delete:"Delete account", close:"Close menu" },
+  ja: { account:"マイアカウント", orders:"有料タスク", password:"パスワード変更", navigation:"サイトナビ", switch:"アカウント切替", signout:"ログアウト", delete:"アカウント削除", close:"閉じる" },
+  ko: { account:"내 계정", orders:"유료 작업", password:"비밀번호 변경", navigation:"사이트 메뉴", switch:"계정 전환", signout:"로그아웃", delete:"계정 삭제", close:"닫기" },
+  fr: { account:"Mon compte", orders:"Tâches payantes", password:"Modifier le mot de passe", navigation:"Navigation", switch:"Changer de compte", signout:"Se déconnecter", delete:"Supprimer le compte", close:"Fermer" },
+  de: { account:"Mein Konto", orders:"Bezahlte Aufgaben", password:"Passwort ändern", navigation:"Navigation", switch:"Konto wechseln", signout:"Abmelden", delete:"Konto löschen", close:"Schließen" },
+  es: { account:"Mi cuenta", orders:"Tareas pagadas", password:"Cambiar contraseña", navigation:"Navegación", switch:"Cambiar de cuenta", signout:"Cerrar sesión", delete:"Eliminar cuenta", close:"Cerrar" },
+  pt: { account:"Minha conta", orders:"Tarefas pagas", password:"Alterar senha", navigation:"Navegação", switch:"Trocar de conta", signout:"Sair", delete:"Excluir conta", close:"Fechar" },
+  ar: { account:"حسابي", orders:"المهام المدفوعة", password:"تغيير كلمة المرور", navigation:"التنقل", switch:"تبديل الحساب", signout:"تسجيل الخروج", delete:"حذف الحساب", close:"إغلاق" },
 };
 
 export default function Nav() {

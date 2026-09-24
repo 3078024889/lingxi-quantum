@@ -169,7 +169,11 @@ export default function ToolsHubV11() {
                   <div className="lx11-tool-title-row"><h3>{foreign ? item.titleEn : item.titleZh}</h3></div>
                   <p className="lx-tools-v124-desc">{foreign ? item.descEn : item.descZh}</p>
                   <div className="lx11-tool-meta">
-                    <span>{item.localOnly ? t("local") : t("online")}</span>
+                    <span>
+                      {item.localOnly
+                        ? (foreign ? "Local · file stays in this browser" : "本地处理 · 文件不上传")
+                        : (foreign ? "Cloud · file/data is sent for processing" : "云端处理 · 文件/数据需发送处理")}
+                    </span>
                     <b>{t("open")}</b>
                   </div>
                 </div>

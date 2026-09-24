@@ -6,6 +6,21 @@ export type ProviderConfig={
  provider:string;model:string;baseUrl:string;apiKey:string;
  inputRmbPerM:number;outputRmbPerM:number;cachedRmbPerM:number;
 };
+export type ProviderCapabilities={
+ wire:"chat"|"responses";
+ reasoningEffort:boolean;
+ thinking:boolean;
+};
+
+export function reasoningEffortForTier(tier:Intelligence){
+ return tier==="light"?"low":tier==="high"?"max":"high";
+}
+
+export function providerCapabilities(p:ProviderConfig):ProviderCapabilities{
+ if(p.provider==="volcengine")return {wire:"responses",reasoningEffort:true,thinking:true};
+ if(p.provider==="zhipu")return {wire:"chat",reasoningEffort:true,thinking:true};
+ return {wire:"chat",reasoningEffort:false,thinking:false};
+}
 
 function envNumber(name:string,fallback:number){
  const raw=process.env[name];
@@ -145,10 +160,14 @@ function outputText(data:any){
 
 async function callProvider(p:ProviderConfig,input:string,tier:Intelligence,limit:number):Promise<ProviderResult>{
  if(p.provider==="volcengine"){
+  const capabilities=providerCapabilities(p);
+  const body:Record<string,unknown>={model:p.model,input,max_output_tokens:limit};
+  if(capabilities.thinking)body.thinking={type:"enabled"};
+  if(capabilities.reasoningEffort)body.reasoning={effort:reasoningEffortForTier(tier)};
   const r=await fetch(`${p.baseUrl}/responses`,{
    method:"POST",
    headers:{Authorization:`Bearer ${p.apiKey}`,"Content-Type":"application/json"},
-   body:JSON.stringify({model:p.model,input,max_output_tokens:limit})
+   body:JSON.stringify(body)
   });
   const data=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(`${p.provider.toUpperCase()}_${r.status}`);
@@ -161,9 +180,10 @@ async function callProvider(p:ProviderConfig,input:string,tier:Intelligence,limi
 
  const extra:any={};
  if(p.provider==="zhipu"){
+  const capabilities=providerCapabilities(p);
   extra.temperature=1;extra.top_p=.95;
-  extra.reasoning_effort=tier==="light"?"low":tier==="high"?"max":"high";
-  extra.thinking={type:"enabled",clear_thinking:false};
+  if(capabilities.reasoningEffort)extra.reasoning_effort=reasoningEffortForTier(tier);
+  if(capabilities.thinking)extra.thinking={type:"enabled",clear_thinking:false};
  }
  const r=await fetch(`${p.baseUrl}/chat/completions`,{
   method:"POST",

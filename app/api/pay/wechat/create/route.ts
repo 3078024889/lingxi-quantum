@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -11,6 +11,7 @@ import {
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
 import { sasiPaidProductionEnabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
@@ -30,8 +31,15 @@ const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
   "wealth-report": "wealth_submissions",
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    if (!isSameOriginMutation(req)) {
+      return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
+    }
+    const contentLength=Number(req.headers.get("content-length")||0);
+    if(Number.isFinite(contentLength)&&contentLength>512*1024){
+      return NextResponse.json({error:"PAYMENT_REQUEST_TOO_LARGE"},{status:413});
+    }
     if (!wechatPayConfigured()) {
       return NextResponse.json(
         { error: "微信支付暂不可用，请稍后再试。" },
@@ -72,9 +80,15 @@ export async function POST(req: Request) {
     }
 
     const admin = createAdminClient();
+    const limited=await admin.rpc("rate_limit_check",{
+      p_key:`payment-create:wechat:${user.id}`,
+      p_limit:120,
+      p_window_seconds:3600,
+    });
+    if(limited.error)return NextResponse.json({error:"PAYMENT_RATE_GUARD_UNAVAILABLE"},{status:503});
+    if(limited.data!==true)return NextResponse.json({error:"PAYMENT_CREATE_RATE_LIMITED"},{status:429});
 
-    let submissionName: string | null = null;
-    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
+    let submissionName: string | null = null;    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
     if (typeof submissionId === "string" && submissionTable) {
       const isRelationship = submissionTable === "relationship_submissions";
       // v225：同 pay/create 的修复，加上归属校验。

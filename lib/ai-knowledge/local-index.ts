@@ -1,9 +1,11 @@
+export const KNOWLEDGE_SOURCE_MAX = 60;
+
 export type KnowledgeSource = {
   id: string;
   title: string;
   text: string;
   createdAt: string;
-  kind?: "text" | "pdf" | "image";
+  kind?: "text" | "pdf" | "image" | "docx" | "sheet" | "rtf" | "epub" | "pptx" | "structured";
   locators?: Array<{ start: number; end: number; label: string }>;
 };
 
@@ -96,11 +98,45 @@ export async function saveSource(source: KnowledgeSource | string): Promise<void
     await new Promise<void>((resolve, reject) => {
       const transaction = db.transaction("sources", "readwrite");
       const store = transaction.objectStore("sources");
-      if (typeof source === "string") store.delete(source);
-      else store.put(source);
-      transaction.oncomplete = () => resolve();
-      transaction.onerror = () => reject(transaction.error);
-      transaction.onabort = () => reject(transaction.error);
+      let settled = false;
+
+      const rejectOnce = (error: unknown) => {
+        if (settled) return;
+        settled = true;
+        reject(error instanceof Error ? error : new Error(String(error)));
+      };
+
+      if (typeof source === "string") {
+        store.delete(source);
+      } else {
+        const existing = store.get(source.id);
+        existing.onerror = () => rejectOnce(existing.error ?? new Error("KNOWLEDGE_SOURCE_LOOKUP_FAILED"));
+        existing.onsuccess = () => {
+          if (existing.result) {
+            store.put(source);
+            return;
+          }
+
+          const count = store.count();
+          count.onerror = () => rejectOnce(count.error ?? new Error("KNOWLEDGE_SOURCE_COUNT_FAILED"));
+          count.onsuccess = () => {
+            if (count.result >= KNOWLEDGE_SOURCE_MAX) {
+              rejectOnce(new Error("KNOWLEDGE_SOURCE_LIMIT"));
+              transaction.abort();
+              return;
+            }
+            store.put(source);
+          };
+        };
+      }
+
+      transaction.oncomplete = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      transaction.onerror = () => rejectOnce(transaction.error ?? new Error("KNOWLEDGE_SOURCE_WRITE_FAILED"));
+      transaction.onabort = () => rejectOnce(transaction.error ?? new Error("KNOWLEDGE_SOURCE_WRITE_ABORTED"));
     });
   } finally {
     db.close();

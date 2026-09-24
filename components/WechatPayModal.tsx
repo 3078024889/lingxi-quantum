@@ -51,9 +51,9 @@ export default function WechatPayModal({
         doneRef.current = true;
         if (pollRef.current) clearInterval(pollRef.current);
         // v254：之前一确认支付成功，立刻跳转到报告页——用户完全没有
-        // 意识到"这个东西以后能在场域入口的我的订单里找到"，导致之后
+        // 意识到"这个东西以后能在场域入口的付费任务中心里找到"，导致之后
         // 想再看一次的时候，忘了在哪、也不知道有这么个地方能找。这里
-        // 先停留两秒，明确提示一句"以后可以在场域入口→我的订单里找到"，
+        // 先停留两秒，明确提示一句"以后可以在场域入口→付费任务中心里找到"，
         // 再跳转，把这个入口的存在，第一次成功支付的时候就告诉用户。
         setStatus("success");
         setTimeout(() => { onSuccess(); }, 1800);
@@ -205,12 +205,12 @@ export default function WechatPayModal({
           <div className="mt-8">
             <p className="font-display text-2xl text-lattice">✓</p>
             <p className="mt-3 text-sm text-bone">
-              <Bi zh="能量交换完成" en="Exchange complete" />
+              <Bi zh="支付完成" en="Payment complete" />
             </p>
             <p className="mt-3 text-xs leading-6 text-bone-dim">
               <Bi
-                zh="以后想再看这份内容，随时可以回到「场域入口 → 场域订单」找到它——正在带你过去……"
-                en="You can always find this again under Account → Field Orders — taking you there now…"
+                zh="以后想再看这份内容，随时可以回到「场域入口 → 付费任务中心」找到它——正在带你过去……"
+                en="You can always find this again under Account → Paid Tasks — taking you there now…"
               />
             </p>
           </div>

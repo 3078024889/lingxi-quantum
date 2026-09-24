@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
 import { alipayEnabled, alipaySiteUrl, createAlipayPaymentUrl } from "@/lib/alipay";
 import { safeLocalReturnPath, sasiPaidProductionEnabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -19,8 +20,15 @@ const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
   "wealth-report": "wealth_submissions",
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    if (!isSameOriginMutation(req)) {
+      return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
+    }
+    const contentLength=Number(req.headers.get("content-length")||0);
+    if(Number.isFinite(contentLength)&&contentLength>512*1024){
+      return NextResponse.json({error:"PAYMENT_REQUEST_TOO_LARGE"},{status:413});
+    }
     if (!alipayEnabled()) {
       return NextResponse.json({ error: "支付宝正在完成上线审核，请暂时使用微信支付。" }, { status: 503 });
     }
@@ -35,8 +43,15 @@ const product = getProduct(productId);
     if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
 
     const admin = createAdminClient();
-    let submissionName: string | null = null;
-    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
+    const limited=await admin.rpc("rate_limit_check",{
+      p_key:`payment-create:alipay:${user.id}`,
+      p_limit:120,
+      p_window_seconds:3600,
+    });
+    if(limited.error)return NextResponse.json({error:"PAYMENT_RATE_GUARD_UNAVAILABLE"},{status:503});
+    if(limited.data!==true)return NextResponse.json({error:"PAYMENT_CREATE_RATE_LIMITED"},{status:429});
+
+    let submissionName: string | null = null;    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
     if (typeof submissionId === "string" && submissionTable) {
       const isRelationship = submissionTable === "relationship_submissions";
       const { data: sub } = await admin
@@ -74,8 +89,12 @@ const product = getProduct(productId);
         outTradeNo,
         amountRmb: product.priceRmb,
         subject: product.group === "production"
-          ? `灵犀场SASI制作服务-${product.name}`
-          : product.group === "manifestation" ? "灵犀场意识练习软件服务" : "灵犀场个人数字报告服务",
+          ? `灵犀场SASI创作余额-${product.name}`
+          : product.group === "ai"
+            ? `灵犀场AI余额充值-${product.name}`
+            : product.group === "manifestation"
+              ? "灵犀场意识练习软件服务"
+              : "灵犀场个人数字报告服务",
         notifyUrl: `${baseUrl}/api/pay/alipay/notify`,
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,

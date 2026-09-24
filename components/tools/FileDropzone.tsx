@@ -3,6 +3,34 @@
 import { useCallback, useRef, useState } from "react";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { uploadText } from "@/lib/upload-ui-i18n";
+import { dedupeFiles } from "@/lib/tools/shared/batch-files";
+
+function normalizeExt(name: string) {
+  const i = name.lastIndexOf(".");
+  return i >= 0 ? name.slice(i).toLowerCase() : "";
+}
+
+function fileMatchesAccept(file: File, accept: string) {
+  const rules = accept
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (!rules.length || rules.includes("*/*")) return true;
+
+  const mime = (file.type || "").toLowerCase();
+  const ext = normalizeExt(file.name);
+
+  return rules.some((rule) => {
+    if (rule.startsWith(".")) return ext === rule;
+    if (rule.endsWith("/*")) return mime.startsWith(rule.slice(0, -1));
+    return mime === rule;
+  });
+}
+
+function fileIdentity(file: File) {
+  return `${file.name}\u0000${file.size}\u0000${file.lastModified}`;
+}
 
 type Props = {
   accept?: string;
@@ -49,19 +77,43 @@ export default function FileDropzone({
         return;
       }
 
-      const merged =
-        multiple && append
-          ? [...files, ...incoming]
-          : incoming;
+      const unsupported = incoming.find((file) => !fileMatchesAccept(file, accept));
+      if (unsupported) {
+        setError(
+          lang === "zh"
+            ? `${unsupported.name} 的文件格式不符合当前工具要求。`
+            : `${unsupported.name} is not a supported file type for this tool.`
+        );
+        return;
+      }
 
-      const next = multiple
-        ? merged.slice(0, maxFiles)
-        : merged.slice(0, 1);
+      const merged = multiple && append ? [...files, ...incoming] : incoming;
+      const unique = Array.from(
+        new Map(merged.map((file) => [fileIdentity(file), file])).values()
+      );
+
+      if (!multiple && unique.length > 1) {
+        setError(
+          lang === "zh"
+            ? "此工具一次只处理 1 个文件。"
+            : "This tool processes one file at a time."
+        );
+        return;
+      }
+
+      if (multiple && unique.length > maxFiles) {
+        setError(
+          lang === "zh"
+            ? `此工具一次最多处理 ${maxFiles} 个文件，请减少后重试。`
+            : `This tool accepts at most ${maxFiles} files per batch.`
+        );
+        return;
+      }
 
       setError(null);
-      onChange(next);
+      onChange(multiple ? unique : unique.slice(0, 1));
     },
-    [append, files, lang, maxFiles, maxSizeMB, multiple, onChange]
+    [accept, append, files, lang, maxFiles, maxSizeMB, multiple, onChange]
   );
 
   const promptKey =
@@ -79,9 +131,11 @@ export default function FileDropzone({
     <div>
       <div
         role="button"
-        tabIndex={0}
+        tabIndex={disabled ? -1 : 0}
+        aria-disabled={disabled || undefined}
         onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
+          if (!disabled && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
             inputRef.current?.click();
           }
         }}

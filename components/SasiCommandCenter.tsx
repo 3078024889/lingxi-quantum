@@ -4,6 +4,7 @@ import { type ChangeEvent, type FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { publicHubText } from "@/lib/public-hub-i18n";
+import { DOCUMENT_ACCEPT } from "@/lib/files/document-intake";
 
 type Mode = "auto" | "drama" | "build" | "research";
 type Picked = { id: string; file: File };
@@ -26,12 +27,24 @@ export default function SasiCommandCenter() {
   const zh = lang === "zh";
   const native = (zhText: string, enText: string) => publicHubText(lang, zhText, enText);
 
+  function addFiles(incoming:File[]) {
+    setFiles((current)=>{
+      const seen=new Set(current.map(({file})=>`${file.name}:${file.size}:${file.lastModified}`));
+      const merged=[...current];
+      for(const file of incoming){
+        const key=`${file.name}:${file.size}:${file.lastModified}`;
+        if(!seen.has(key)){
+          seen.add(key);
+          merged.push({id:crypto.randomUUID(),file});
+        }
+        if(merged.length>=50)break;
+      }
+      return merged;
+    });
+  }
+
   function change(event: ChangeEvent<HTMLInputElement>) {
-    setFiles(
-      Array.from(event.target.files ?? [])
-        .slice(0, 12)
-        .map((file) => ({ id: crypto.randomUUID(), file }))
-    );
+    addFiles(Array.from(event.target.files ?? []));
     event.target.value = "";
   }
 
@@ -71,7 +84,7 @@ export default function SasiCommandCenter() {
         </section>
 
         <section className="lx11-sasi-compose">
-          <form onSubmit={submit} onDragOver={event=>event.preventDefault()} onDrop={event=>{event.preventDefault();const incoming=Array.from(event.dataTransfer.files||[]).slice(0,12).map(file=>({id:crypto.randomUUID(),file}));if(incoming.length)setFiles(incoming)}}>
+          <form onSubmit={submit} onDragOver={event=>event.preventDefault()} onDrop={event=>{event.preventDefault();addFiles(Array.from(event.dataTransfer.files||[]))}}>
             <textarea
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
@@ -95,13 +108,19 @@ export default function SasiCommandCenter() {
 
             <div className="lx11-sasi-compose-bottom">
               <div className="lx11-sasi-compose-tools">
-                <input ref={inputRef} type="file" multiple className="hidden" onChange={change} />
+                <input ref={inputRef} type="file" multiple accept={`${DOCUMENT_ACCEPT},audio/*,video/*,.json,.jsonl,.yaml,.yml,.xml,.html,.css,.js,.jsx,.ts,.tsx,.py,.java,.c,.cpp,.h,.hpp,.go,.rs,.zip`} className="hidden" onChange={change} />
                 <button type="button" onClick={() => inputRef.current?.click()}>📎 {t("attachment")}</button>
                 <Link href="/sasi/connections">🔌 {t("connections")}</Link>
                 <Link href="/ai-wallet">💎 {t("recharge")}</Link>
               </div>
               <button className="lx11-sasi-send">{t("begin")}</button>
             </div>
+            <p className="mt-3 text-xs leading-5 text-slate-500">
+              {native(
+                "支持一次拖入最多 50 份资料：PDF、DOC/DOCX、XLS/XLSX、CSV/TSV、ODS、RTF、TXT/Markdown、图片、音视频、代码与压缩包。进入具体工作区后，会按该能力真正可解析的格式处理。",
+                "Drop up to 50 files at once: PDF, DOC/DOCX, XLS/XLSX, CSV/TSV, ODS, RTF, TXT/Markdown, images, media, code and archives. Each workspace processes only formats it can actually read."
+              )}
+            </p>
           </form>
 
           <div className="lx11-sasi-modes">

@@ -2,14 +2,30 @@ import "server-only";
 import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 
-const LEGACY_SASI_TOPUPS = new Set(["sasi-credit-entry", "sasi-credit-studio", "sasi-credit-reserve"]);
+const SASI_TOPUP_PRODUCTS = new Set([
+  "sasi-balance-10",
+  "sasi-credit-entry",
+  "sasi-balance-50",
+  "sasi-credit-studio",
+  "sasi-balance-200",
+  "sasi-credit-reserve",
+  "sasi-balance-1000",
+  "sasi-balance-2000",
+  "sasi-balance-10000",
+]);
+
+const SASI_CUSTOM_TOPUP = /^sasi-balance-custom-(\d{1,5})$/;
 
 export function sasiRmbBalanceV1Enabled() {
   return process.env.SASI_RMB_BALANCE_V1_ENABLED === "true";
 }
 
 export function sasiTopupProductEnabled(productId: string) {
-  return sasiRmbBalanceV1Enabled() || LEGACY_SASI_TOPUPS.has(productId);
+  if (SASI_TOPUP_PRODUCTS.has(productId)) return true;
+  const custom = SASI_CUSTOM_TOPUP.exec(productId);
+  if (!custom) return false;
+  const amountRmb = Number(custom[1]);
+  return Number.isInteger(amountRmb) && amountRmb >= 10 && amountRmb <= 10000;
 }
 
 export function sasiPaidProductionEnabled() {

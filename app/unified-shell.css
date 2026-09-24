@@ -311,7 +311,7 @@ html[data-theme="dark"] .lx11-legacy-panel{
   --lx-text-lg:16px;
   --lx-small:13px;
   --lx-caption:12px;
-  --lx-h1:clamp(34px,3.4vw,46px);
+  --lx-h1:clamp(30px,3vw,40px);
   --lx-h2:clamp(22px,2.1vw,28px);
   --lx-h3:18px;
 }
@@ -482,8 +482,8 @@ body,
 }
 .lx11-wallet-page .lx11-title{
   max-width:760px;
-  font-size:40px!important;
-  line-height:1.18!important;
+  font-size:36px!important;
+  line-height:1.2!important;
 }
 .lx11-wallet-page .lx11-lead{font-size:15px!important;line-height:1.7!important}
 .lx11-wallet-loading{font-size:14px!important}
@@ -856,7 +856,7 @@ html[data-lang="ar"] .lx-bi-part.bi-block[data-lang="ar"]{display:block!importan
 }
 @media(max-width:560px){
   :root{
-    --lx-h1:clamp(28px,8.5vw,34px);
+    --lx-h1:clamp(28px,8vw,32px);
     --lx-h2:22px;
   }
   .lx-legal-page{padding:20px 14px 54px}

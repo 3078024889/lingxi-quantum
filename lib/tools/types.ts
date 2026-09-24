@@ -2,6 +2,7 @@ export type ToolCategory =
   | "image"
   | "pdf"
   | "file"
+  | "spreadsheet"
   | "utility"
   | "qr"
   | "field";

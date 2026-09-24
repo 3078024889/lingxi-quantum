@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const securityHeaders = [
-  { key: "Content-Security-Policy-Report-Only", value: ["default-src 'self'", "base-uri 'self'", "object-src 'none'", "frame-ancestors 'self'", "form-action 'self'", "script-src 'self' 'unsafe-inline' 'unsafe-eval'", "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", "font-src 'self' data: https://fonts.gstatic.com", "img-src 'self' data: blob: https:", "media-src 'self' blob: https:", "connect-src 'self' https: wss:", "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com", "upgrade-insecure-requests"].join(String.fromCharCode(59) + " ") },
+  { key: "Content-Security-Policy-Report-Only", value: ["default-src 'self'", "base-uri 'self'", "object-src 'none'", "frame-ancestors 'self'", "form-action 'self'", "script-src 'self' 'unsafe-inline'", "script-src-attr 'none'", "worker-src 'self' blob:", "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", "font-src 'self' data: https://fonts.gstatic.com", "img-src 'self' data: blob: https:", "media-src 'self' blob: https:", "connect-src 'self' https: wss:", "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com", "upgrade-insecure-requests"].join(String.fromCharCode(59) + " ") },
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
   { key: "Origin-Agent-Cluster", value: "?1" },
   { key: "X-DNS-Prefetch-Control", value: "off" },
