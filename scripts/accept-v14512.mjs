@@ -1,0 +1,14 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r(".env.example").includes("PAYPAL_ENABLED=false"),"PayPal enable gate");
+a(r("lib/paypal.ts").includes("expectedReferenceId?: string"),"PayPal capture reference parameter");
+a(r("lib/paypal.ts").includes("unit?.reference_id !== expectedReferenceId"),"PayPal strict reference binding");
+a(r("app/api/pay/paypal/return/route.ts").includes("safeLocalReturnPath"),"PayPal safe return path");
+a(r("app/api/pay/paypal/return/route.ts").includes("queryPaypalOrder"),"PayPal already-captured verify");
+a(!r("app/api/pay/paypal/return/route.ts").includes('update({ status: "failed" }).eq("id", orderId)'),"ambiguous capture remains pending");
+a(r("app/api/cron/privacy-cleanup/route.ts").includes("cleanup.error"),"cleanup RPC observability");
+a(r("supabase/migrations/20260924195500_temp_mail_per_batch_billing_v14502.sql").includes("'per_email'::text"),"per_email constraint");
+a(r("supabase/migrations/20260924214500_r2_burn_files_convergence_v14511.sql").includes("drop function if exists public.consume_burn_note(uuid)"),"consume function convergence");
+a(r("supabase/migrations/20260924214500_r2_burn_files_convergence_v14511.sql").includes('"max":2048'),"R2 2GB tier in MB");
+console.log("V14.51.2.4 PAYLOAD HARDENING=PASS");

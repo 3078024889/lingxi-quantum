@@ -1,5 +1,12 @@
 begin;
 
+alter table public.tool_pricing drop constraint if exists tool_pricing_billing_type_check;
+alter table public.tool_pricing add constraint tool_pricing_billing_type_check
+check (billing_type = any (array[
+  'free'::text,'per_export'::text,'per_page'::text,'per_file'::text,
+  'per_minute'::text,'per_image'::text,'per_email'::text,'ai_credit'::text
+]));
+
 delete from public.tool_pricing where tool_id='temp-mail-day-pass';
 
 insert into public.tool_pricing(
@@ -42,21 +49,16 @@ security definer
 set search_path=public,pg_temp
 as $$
 begin
-  if p_count<11 or p_count>100 then
-    return false;
-  end if;
+  if p_count<11 or p_count>100 then return false; end if;
 
   if not exists(
-    select 1
-    from public.tool_payment_quotes q
+    select 1 from public.tool_payment_quotes q
     where q.id=p_quote_id
       and q.user_id=p_user_id
       and q.tool_id='temp-mail-batch'
       and q.status='paid'
       and q.quantity=p_count
-  ) then
-    return false;
-  end if;
+  ) then return false; end if;
 
   insert into public.temp_mail_batch_uses(quote_id,user_id,mailbox_count)
   values(p_quote_id,p_user_id,p_count)

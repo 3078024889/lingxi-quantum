@@ -59,9 +59,10 @@ create index if not exists burn_files_note_idx on public.burn_files(note_id);
 alter table public.burn_files enable row level security;
 revoke all on public.burn_files from public,anon,authenticated;
 
-create or replace function public.consume_burn_note(p_id uuid)
+drop function if exists public.consume_burn_note(uuid);
+create function public.consume_burn_note(p_id uuid)
 returns table(ciphertext text,iv text,expires_at timestamptz,view_duration_seconds integer,views_used integer,max_views integer,mode text,has_files boolean)
-language plpgsql security definer set search_path=public as $$
+language plpgsql security definer set search_path=public,pg_temp as $$
 declare n public.burn_notes%rowtype;
 begin
  select * into n from public.burn_notes where id=p_id for update;
@@ -84,10 +85,9 @@ values('temp-mail-batch','per_email','email',0,.05,.55,5,'{}'::jsonb,true,now())
 on conflict(tool_id) do update set billing_type='per_email',unit_name='email',base_price_rmb=0,unit_price_rmb=.05,min_price_rmb=.55,max_price_rmb=5,enabled=true,updated_at=now();
 
 insert into public.tool_pricing(tool_id,billing_type,unit_name,base_price_rmb,unit_price_rmb,min_price_rmb,max_price_rmb,pricing_json,enabled,updated_at)
-values('burn-after-read-file','per_file','mb',0,0,.9,12.9,'{"tiers":[{"max":10,"price":0.9},{"max":50,"price":1.9},{"max":200,"price":3.9},{"max":500,"price":6.9},{"max":2147483648,"price":12.9}]}'::jsonb,true,now())
-on conflict(tool_id) do update set billing_type='per_file',unit_name='mb',base_price_rmb=0,unit_price_rmb=0,min_price_rmb=.9,max_price_rmb=12.9,pricing_json='{"tiers":[{"max":10,"price":0.9},{"max":50,"price":1.9},{"max":200,"price":3.9},{"max":500,"price":6.9},{"max":2147483648,"price":12.9}]}'::jsonb,enabled=true,updated_at=now();
+values('burn-after-read-file','per_file','mb',0,0,.9,12.9,'{"tiers":[{"max":10,"price":0.9},{"max":50,"price":1.9},{"max":200,"price":3.9},{"max":500,"price":6.9},{"max":2048,"price":12.9}]}'::jsonb,true,now())
+on conflict(tool_id) do update set billing_type='per_file',unit_name='mb',base_price_rmb=0,unit_price_rmb=0,min_price_rmb=.9,max_price_rmb=12.9,pricing_json='{"tiers":[{"max":10,"price":0.9},{"max":50,"price":1.9},{"max":200,"price":3.9},{"max":500,"price":6.9},{"max":2048,"price":12.9}]}'::jsonb,enabled=true,updated_at=now();
 
--- USD columns may already exist from V14.51.0; keep this migration independently deployable.
 alter table public.tool_pricing add column if not exists base_price_usd numeric(10,2);
 alter table public.tool_pricing add column if not exists unit_price_usd numeric(10,4);
 alter table public.tool_pricing add column if not exists min_price_usd numeric(10,2);
@@ -100,7 +100,7 @@ where tool_id='temp-mail-batch';
 
 update public.tool_pricing set
  base_price_usd=0,unit_price_usd=0,min_price_usd=.9,max_price_usd=12.9,
- pricing_json_usd='{"tiers":[{"max":10,"price":0.9},{"max":50,"price":1.9},{"max":200,"price":3.9},{"max":500,"price":6.9},{"max":2147483648,"price":12.9}]}'::jsonb
+ pricing_json_usd='{"tiers":[{"max":10,"price":0.9},{"max":50,"price":1.9},{"max":200,"price":3.9},{"max":500,"price":6.9},{"max":2048,"price":12.9}]}'::jsonb
 where tool_id='burn-after-read-file';
 
 commit;
