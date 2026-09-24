@@ -4,9 +4,14 @@ import {
   claimPaidToolJob,
   completePaidToolJob,
   failPaidToolJob,
+  getOwnedPaidJobById,
 } from "@/lib/tools/paid-job-server";
 
 export const runtime = "nodejs";
+
+function resultTooLarge(result:unknown){
+  try{return Buffer.byteLength(JSON.stringify(result??{}),"utf8")>64*1024}catch{return true}
+}
 
 export async function POST(req: Request) {
   const supabase = createClient();
@@ -39,25 +44,32 @@ export async function POST(req: Request) {
     if (!claim.ok) {
       return NextResponse.json(
         { error: claim.error || "PAYMENT_REQUIRED" },
-        { status: 402 },
+        { status: claim.error === "JOB_ALREADY_PROCESSING" ? 409 : 402 },
       );
     }
 
     return NextResponse.json(claim);
   }
 
-  if (action === "complete") {
+  if (action === "complete" || action === "fail") {
     const jobId = String(body.jobId || "");
     if (!jobId) return NextResponse.json({ error: "JOB_REQUIRED" }, { status: 400 });
 
-    await completePaidToolJob(jobId, body.result || {});
-    return NextResponse.json({ ok: true });
-  }
+    // Critical IDOR boundary: complete/fail are executed with service-role RPCs, so the
+    // public route must prove the authenticated user owns this exact job first.
+    const owned = await getOwnedPaidJobById({ userId: user.id, jobId });
+    if (!owned) return NextResponse.json({ error: "JOB_NOT_OWNED" }, { status: 404 });
 
-  if (action === "fail") {
-    const jobId = String(body.jobId || "");
-    if (!jobId) return NextResponse.json({ error: "JOB_REQUIRED" }, { status: 400 });
+    if (action === "complete") {
+      if (owned.status === "completed") return NextResponse.json({ ok: true, existing: true });
+      if (resultTooLarge(body.result)) return NextResponse.json({ error: "RESULT_METADATA_TOO_LARGE" }, { status: 413 });
+      await completePaidToolJob(jobId, body.result || {});
+      return NextResponse.json({ ok: true });
+    }
 
+    if (owned.status === "completed") {
+      return NextResponse.json({ error: "COMPLETED_JOB_CANNOT_FAIL" }, { status: 409 });
+    }
     await failPaidToolJob(jobId, String(body.error || "LOCAL_PROCESSING_FAILED"));
     return NextResponse.json({ ok: true });
   }

@@ -429,7 +429,7 @@ const previewContent = (preview ? <>
         </div>
       <div className="lx-glass-relation mt-3 p-3 text-center">
         <p className="text-sm text-bone-dim">
-          <Bi zh="一次能量交换，为你和对方生成一份完整的关系共振图谱，保存在你的场域入口里，随时可以回看、下载。" en="One energy exchange generates a full Relationship Resonance Map for you and the other person, saved in your field entrance — revisit or download it anytime." />
+          <Bi zh="为你和对方生成一份完整的关系共振图谱，保存在你的场域入口里，随时可以回看、下载。" en="A full Relationship Resonance Map is generated for you and the other person, saved in your field entrance — revisit or download it anytime." />
         </p>
       </div>
 </> : <AssessmentEmpty product="relationship" />);

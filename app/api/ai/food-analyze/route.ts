@@ -14,7 +14,7 @@ export async function POST(req:Request){
  if(file.size>10*1024*1024)return NextResponse.json({error:"FILE_TOO_LARGE"},{status:413});
  if(!quoteId)return NextResponse.json({error:"PAYMENT_REQUIRED"},{status:402});
  const claim=await claimPaidToolJob({quoteId,userId:user.id,toolId:"food-calorie",itemKey,units:1});
- if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:402});
+ if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:claim.error==="JOB_ALREADY_PROCESSING"?409:402});
  if(claim.status==="completed"&&claim.result)return NextResponse.json(claim.result);
  const jobId=claim.jobId!;
 

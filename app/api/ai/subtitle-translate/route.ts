@@ -10,7 +10,7 @@ export async function POST(req:Request){
  if(typeof text!=="string"||!text.trim())return NextResponse.json({error:"TEXT_REQUIRED"},{status:400});
  if(text.length>150000)return NextResponse.json({error:"SUBTITLE_TOO_LARGE"},{status:413});
  const claim=await claimPaidToolJob({quoteId:String(quoteId||""),userId:user.id,toolId:"subtitle-translate",itemKey:String(itemKey),units:1});
- if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:402});
+ if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:claim.error==="JOB_ALREADY_PROCESSING"?409:402});
  if(claim.status==="completed"&&claim.result)return NextResponse.json(claim.result);
  const jobId=claim.jobId!;
  try{

@@ -113,10 +113,10 @@ const BENEFIT_DETAIL: Record<string, { zh: string[]; en: string[] }> = {
     zh: ["365天内解锁全部多维叙事（长篇+短篇，含日后新增）", "365天内解锁全部4项修炼技术：量子息法、直觉丹道、归零心诀、上升心经", "覆盖范围最广的一档，不含8项场域精测（精测按次单独购买）"],
     en: ["365 days of access to every narrative, including all future additions", "365 days of access to all 4 practice techniques: Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart", "The broadest tier — does not include the 8 Field Insight tests, which are purchased individually"],
   },
-  breath: { zh: ["一次能量交换，永久开启，随时可练习"], en: ["One exchange, open forever — practice anytime"] },
-  intuition: { zh: ["一次能量交换，永久开启，随时可练习"], en: ["One exchange, open forever — practice anytime"] },
-  "heart-reset": { zh: ["一次能量交换，永久开启，随时可练习"], en: ["One exchange, open forever — practice anytime"] },
-  "ascending-heart": { zh: ["一次能量交换，永久开启，随时可练习"], en: ["One exchange, open forever — practice anytime"] },
+  breath: { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
+  intuition: { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
+  "heart-reset": { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
+  "ascending-heart": { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
 };
 
 function categoryOf(productId: string): "field-test" | "membership" | "narrative" | "tool" {
@@ -293,6 +293,14 @@ function OrderCard({ o, toolTask }: { o: OrderRow; toolTask?: ToolTaskState | nu
             </div>
           )}
           {toolTask?.latestUpdatedAt&&<p className="mt-2 text-[10px] text-[var(--lx-faint)]"><Bi zh="任务最近更新" en="Last task update" />：{new Date(toolTask.latestUpdatedAt).toLocaleString()}</p>}
+          {toolTask&&toolTask.jobsTotal>0&&(
+            <Link
+              href={`/account/tool-jobs?quoteId=${encodeURIComponent(o.product_id.slice("toolquote:".length))}`}
+              className="mt-3 inline-flex rounded-lg border border-[var(--lx-line)] px-4 py-2 text-xs text-[var(--lx-ink)]"
+            >
+              <Bi zh="查看任务详情 / 已保存结果" en="Task details / saved results" />
+            </Link>
+          )}
           {toolTask&&toolTask.jobsTotal>0&&(
             <Link
               href={`/account/tool-jobs?quoteId=${encodeURIComponent(o.product_id.slice("toolquote:".length))}`}
@@ -489,7 +497,7 @@ const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string;
             </Link>
           </div>
           <p className="mb-8 text-xs text-[var(--lx-faint)]">
-            <Bi zh="按类别查看每一次能量交换的详情、有效期与具体权益。" en="Every exchange, grouped by kind, with its expiry and exact benefits." />
+            <Bi zh="按类别查看每笔订单的详情、有效期与具体权益。" en="Every order, grouped by kind, with its expiry and exact benefits." />
           </p>
 
           {!user && (
@@ -501,7 +509,7 @@ const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string;
           {loadFailed && <p role="alert" className="my-4 text-[var(--lx-ink)]"><Bi zh="部分记录暂时未能加载，请刷新重试。加载失败不会删除订单或报告。" en="Some records could not be loaded. Refresh and try again. A load failure does not delete orders or reports." /></p>}
           {user && !loadFailed && orders.length === 0 && (
             <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
-              <Bi zh="还没有任何订单——完成一次能量交换后，会出现在这里。" en="No orders yet — they'll appear here once you complete an exchange." />
+              <Bi zh="还没有任何订单——完成购买后，会出现在这里。" en="No orders yet — they'll appear here once you complete a purchase." />
             </p>
           )}
 

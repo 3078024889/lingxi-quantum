@@ -102,6 +102,10 @@ export function selectProvider(_task:TaskKind,tier:Intelligence):ProviderConfig{
 export function intelligenceFactor(tier:Intelligence){
  return tier==="light"?1:tier==="high"?5:2;
 }
+export function minimumChargeFenForTier(tier:Intelligence){
+ const base=Math.max(1,Number(process.env.AI_MINIMUM_CHARGE_FEN||10));
+ return base*intelligenceFactor(tier);
+}
 export function maxOutputForTier(tier:Intelligence){
  return tier==="light"?1536:tier==="high"?8192:4096;
 }
@@ -119,7 +123,7 @@ export function estimateMaxRetailFen(inputChars:number,task:TaskKind,tier:Intell
  const approxInput=Math.max(1,Math.ceil(inputChars/2));
  const maxOut=maxOutputForTier(tier);
  const retail=Math.max(1,Number(process.env.AI_RETAIL_MULTIPLIER||4))*intelligenceFactor(tier);
- const minimumFen=Math.max(1,Number(process.env.AI_MINIMUM_CHARGE_FEN||10));
+ const minimumFen=minimumChargeFenForTier(tier);
  // Reserve against the most expensive currently-configured fallback, not only the first provider.
  const worst=Math.max(...candidates.map(p =>
   approxInput/1_000_000*p.inputRmbPerM + maxOut/1_000_000*p.outputRmbPerM
@@ -130,7 +134,7 @@ export function estimateMaxRetailFen(inputChars:number,task:TaskKind,tier:Intell
 export function actualChargeFen(p:ProviderConfig,u:ProviderUsage,tier:Intelligence){
  const costRmb=providerCostRmb(p,u);
  const retail=Math.max(1,Number(process.env.AI_RETAIL_MULTIPLIER||4))*intelligenceFactor(tier);
- const minimumFen=Math.max(1,Number(process.env.AI_MINIMUM_CHARGE_FEN||10));
+ const minimumFen=minimumChargeFenForTier(tier);
  return {providerCostFen:costRmb*100,chargeFen:Math.max(minimumFen,Math.ceil(costRmb*retail*100))};
 }
 

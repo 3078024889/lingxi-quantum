@@ -11,7 +11,7 @@ export async function POST(req:Request){
  if(typeof sourceUrl==="string"&&sourceUrl.trim()){try{const u=new URL(sourceUrl.trim());if(u.protocol!=="https:")return NextResponse.json({error:"HTTPS_SOURCE_REQUIRED"},{status:400})}catch{return NextResponse.json({error:"BAD_SOURCE_URL"},{status:400})}}
  if(!(file instanceof File)&&!(typeof sourceUrl==="string"&&sourceUrl.trim()))return NextResponse.json({error:"SOURCE_REQUIRED"},{status:400});
  const claim=await claimPaidToolJob({quoteId,userId:user.id,toolId:"video-dubbing",itemKey,units:paidMinutes});
- if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:402});
+ if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:claim.error==="JOB_ALREADY_PROCESSING"?409:402});
  if(claim.status==="completed"&&claim.result)return NextResponse.json(claim.result);
  const jobId=claim.jobId!;
  try{

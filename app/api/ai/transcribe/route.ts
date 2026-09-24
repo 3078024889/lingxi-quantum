@@ -34,7 +34,7 @@ export async function POST(req:Request){
   if(file.size>25*1024*1024)return NextResponse.json({error:"FILE_TOO_LARGE_25MB"},{status:413});
 
   const claim=await claimPaidToolJob({quoteId,userId:user.id,toolId,itemKey,units:paidMinutes});
-  if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:402});
+  if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:claim.error==="JOB_ALREADY_PROCESSING"?409:402});
   if(claim.status==="completed"&&claim.result)return NextResponse.json(claim.result);
   const jobId=claim.jobId!;
 

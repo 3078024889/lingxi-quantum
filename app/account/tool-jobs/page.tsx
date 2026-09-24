@@ -10,13 +10,5 @@ export const metadata:Metadata={
 
 export default function Page({searchParams}:{searchParams?:{quoteId?:string}}){
   const quoteId=String(searchParams?.quoteId||"");
-  return <>
-    <Nav/>
-    <main className="pt-24">
-      <div className="mx-auto max-w-3xl px-6 pb-24">
-        <ToolJobResultsClient quoteId={quoteId}/>
-      </div>
-    </main>
-    <Footer/>
-  </>;
+  return <><Nav/><main className="pt-24"><div className="mx-auto max-w-3xl px-6 pb-24"><ToolJobResultsClient quoteId={quoteId}/></div></main><Footer/></>;
 }

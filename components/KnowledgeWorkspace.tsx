@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   KnowledgeSource,
   readSources,
@@ -37,7 +38,13 @@ const COPY = {
   supported:c("目前支持 PDF、TXT、Markdown 和图片。","Supported formats: PDF, TXT, Markdown and images.","現在対応している形式はPDF、TXT、Markdown、画像です。","현재 PDF, TXT, Markdown, 이미지를 지원합니다.","Formats pris en charge : PDF, TXT, Markdown et images.","Unterstützte Formate: PDF, TXT, Markdown und Bilder.","Formatos compatibles: PDF, TXT, Markdown e imágenes.","Formatos compatíveis: PDF, TXT, Markdown e imagens.","الصيغ المدعومة: PDF وTXT وMarkdown والصور."),
   fileReadFailed:c("文件读取失败。","Could not read the file.","ファイルを読み取れませんでした。","파일을 읽지 못했습니다.","Impossible de lire le fichier.","Datei konnte nicht gelesen werden.","No se pudo leer el archivo.","Não foi possível ler o arquivo.","تعذر قراءة الملف."),
   draftTitle:c("当前粘贴资料","Current pasted source","現在貼り付け中の資料","현재 붙여넣은 자료","Source collée actuelle","Aktuell eingefügter Text","Fuente pegada actual","Fonte colada atual","المصدر الملصق الحالي"),
-  draftReady:c("已把当前粘贴正文纳入本次检索；不保存也可以先提问。","The current pasted text is included in this search, so you can ask before saving it.","貼り付け中の本文も今回の検索対象です。保存前でも質問できます。","현재 붙여넣은 본문도 이번 검색에 포함됩니다. 저장하기 전에도 질문할 수 있습니다.","Le texte collé actuel est inclus dans la recherche ; vous pouvez poser une question avant de l’enregistrer.","Der aktuell eingefügte Text wird durchsucht; Sie können schon vor dem Speichern fragen.","El texto pegado actual se incluye en la búsqueda; puedes preguntar antes de guardarlo.","O texto colado atual entra na pesquisa; você pode perguntar antes de salvá-lo.","النص الملصق الحالي مشمول في البحث، ويمكنك السؤال قبل حفظه."),  noEvidence:c("本地没有找到足够相关的原文。换一个更接近资料原词的问题，或继续加入资料。","Not enough relevant source text was found locally. Try wording the question closer to the source, or add more material.","関連する原文が十分に見つかりませんでした。資料中の言葉に近い質問にするか、資料を追加してください。","관련 원문을 충분히 찾지 못했습니다. 자료의 실제 표현에 더 가까운 질문을 하거나 자료를 추가하세요.","Pas assez de texte source pertinent trouvé localement. Reformulez avec les termes de la source ou ajoutez des documents.","Lokal wurde nicht genug relevanter Quelltext gefunden. Formulieren Sie näher an der Quelle oder fügen Sie Material hinzu.","No se encontró suficiente texto fuente relevante. Formula la pregunta con términos más cercanos a la fuente o añade material.","Não foi encontrado texto-fonte relevante suficiente. Reformule com termos mais próximos da fonte ou adicione material.","لم يتم العثور محليًا على نص مصدر ذي صلة بما يكفي. قرّب صياغة السؤال من كلمات المصدر أو أضف مواد أخرى."),
+  draftReady:c("已把当前粘贴正文纳入本次检索；不保存也可以先提问。","The current pasted text is included in this search, so you can ask before saving it.","貼り付け中の本文も今回の検索対象です。保存前でも質問できます。","현재 붙여넣은 본문도 이번 검색에 포함됩니다. 저장하기 전에도 질문할 수 있습니다.","Le texte collé actuel est inclus dans la recherche ; vous pouvez poser une question avant de l’enregistrer.","Der aktuell eingefügte Text wird durchsucht; Sie können schon vor dem Speichern fragen.","El texto pegado actual se incluye en la búsqueda; puedes preguntar antes de guardarlo.","O texto colado atual entra na pesquisa; você pode perguntar antes de salvá-lo.","النص الملصق الحالي مشمول في البحث، ويمكنك السؤال قبل حفظه."),  copyAll:c("复制全部","Copy all","すべてコピー","전체 복사","Tout copier","Alles kopieren","Copiar todo","Copiar tudo","نسخ الكل"),
+  copied:c("已复制","Copied","コピー済み","복사됨","Copié","Kopiert","Copiado","Copiado","تم النسخ"),
+  balance:c("AI 余额","AI balance","AI 残高","AI 잔액","Solde IA","KI-Guthaben","Saldo IA","Saldo IA","رصيد الذكاء الاصطناعي"),
+  minCharge:c("最低扣费","Minimum charge","最低料金","최소 차감","Minimum facturé","Mindestbetrag","Cobro mínimo","Cobrança mínima","الحد الأدنى للخصم"),
+  lightHelp:c("快速摘要与简单问答；读取更少证据，输出更短。","Quick summaries and simple Q&A; fewer evidence snippets and shorter output.","短い要約と簡単なQ&A。証拠数と出力を抑えます。","빠른 요약과 간단한 Q&A. 근거와 출력이 더 짧습니다.","Résumés rapides et Q&R simples ; moins de preuves et réponse plus courte.","Schnelle Zusammenfassungen und einfache Fragen; weniger Belege, kürzere Antwort.","Resúmenes rápidos y preguntas simples; menos evidencia y respuesta más corta.","Resumos rápidos e perguntas simples; menos evidências e resposta mais curta.","ملخصات سريعة وأسئلة بسيطة مع أدلة أقل وإجابة أقصر."),
+  standardHelp:c("默认推荐；结构化回答，兼顾速度、证据与完整性。","Recommended default; structured answers balancing speed, evidence and completeness.","標準推奨。速度・証拠・完全性をバランスします。","기본 추천. 속도, 근거, 완성도를 균형 있게 제공합니다.","Recommandé ; réponse structurée équilibrant vitesse, preuves et exhaustivité.","Empfohlen; strukturierte Antwort mit ausgewogenem Tempo, Belegen und Vollständigkeit.","Recomendado; respuesta estructurada que equilibra velocidad, evidencia y completitud.","Recomendado; resposta estruturada equilibrando velocidade, evidências e completude.","الخيار الموصى به؛ إجابة منظمة توازن السرعة والأدلة والاكتمال."),
+  highHelp:c("复杂研究与多步骤推理；读取更多证据，允许更长、更深入的综合。","For complex research and multi-step reasoning; more evidence and deeper, longer synthesis.","複雑な研究と多段階推論。より多くの証拠を使い、長く深く統合します。","복잡한 연구와 다단계 추론. 더 많은 근거로 더 깊고 긴 종합을 제공합니다.","Recherche complexe et raisonnement multi-étapes ; davantage de preuves et synthèse plus profonde.","Komplexe Forschung und mehrstufiges Denken; mehr Belege und tiefere Synthese.","Investigación compleja y razonamiento en varios pasos; más evidencia y síntesis profunda.","Pesquisa complexa e raciocínio em várias etapas; mais evidências e síntese profunda.","للبحث المعقد والاستدلال متعدد الخطوات؛ أدلة أكثر وتركيب أعمق وأطول."),  noEvidence:c("本地没有找到足够相关的原文。换一个更接近资料原词的问题，或继续加入资料。","Not enough relevant source text was found locally. Try wording the question closer to the source, or add more material.","関連する原文が十分に見つかりませんでした。資料中の言葉に近い質問にするか、資料を追加してください。","관련 원문을 충분히 찾지 못했습니다. 자료의 실제 표현에 더 가까운 질문을 하거나 자료를 추가하세요.","Pas assez de texte source pertinent trouvé localement. Reformulez avec les termes de la source ou ajoutez des documents.","Lokal wurde nicht genug relevanter Quelltext gefunden. Formulieren Sie näher an der Quelle oder fügen Sie Material hinzu.","No se encontró suficiente texto fuente relevante. Formula la pregunta con términos más cercanos a la fuente o añade material.","Não foi encontrado texto-fonte relevante suficiente. Reformule com termos mais próximos da fonte ou adicione material.","لم يتم العثور محليًا على نص مصدر ذي صلة بما يكفي. قرّب صياغة السؤال من كلمات المصدر أو أضف مواد أخرى."),
   sending:c("正在基于原文回答；这一步会把当前命中的证据片段发送给 AI。","Answering from the source text. Only the evidence snippets matched for this question are sent to AI.","原文に基づいて回答しています。この質問で一致した証拠断片だけをAIへ送信します。","원문을 바탕으로 답변 중입니다. 이번 질문에 매칭된 증거 조각만 AI로 전송됩니다.","Réponse fondée sur le texte source. Seuls les extraits de preuve correspondant à cette question sont envoyés à l’IA.","Antwort auf Grundlage des Quelltexts. Nur die für diese Frage gefundenen Belegstellen werden an die KI gesendet.","Respondiendo desde el texto fuente. Solo se envían a la IA los fragmentos de evidencia encontrados para esta pregunta.","Respondendo com base no texto-fonte. Apenas os trechos de evidência encontrados para esta pergunta são enviados à IA.","جارٍ الإجابة اعتمادًا على النص الأصلي. تُرسل إلى الذكاء الاصطناعي فقط مقتطفات الأدلة المطابقة لهذا السؤال."),
   aiFailed:c("AI 回答失败。","AI answer failed.","AIの回答に失敗しました。","AI 답변에 실패했습니다.","La réponse de l’IA a échoué.","KI-Antwort fehlgeschlagen.","Falló la respuesta de la IA.","A resposta da IA falhou.","فشلت إجابة الذكاء الاصطناعي."),
   done:c("回答完成。编号 [1]、[2] 对应下方真实原文证据。","Answer complete. [1], [2], etc. refer to the real source evidence below.","回答が完了しました。[1]、[2]などは下の実際の原文証拠に対応します。","답변이 완료되었습니다. [1], [2] 등은 아래 실제 원문 증거와 연결됩니다.","Réponse terminée. [1], [2], etc. renvoient aux preuves réelles ci-dessous.","Antwort fertig. [1], [2] usw. verweisen auf die echten Belege unten.","Respuesta completada. [1], [2], etc. corresponden a la evidencia real de abajo.","Resposta concluída. [1], [2] etc. correspondem às evidências reais abaixo.","اكتملت الإجابة. تشير [1] و[2] وغيرها إلى أدلة المصدر الحقيقية أدناه."),
@@ -136,11 +143,29 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   const [askBusy,setAskBusy]=useState(false);
   const [intelligence,setIntelligence]=useState<Intelligence>("standard");
   const [ready,setReady]=useState(false);
+  const [copied,setCopied]=useState(false);
+  const [walletBalance,setWalletBalance]=useState<number|null>(null);
+  const [tierPricing,setTierPricing]=useState<Record<Intelligence,{factor:number;minimumRmb:number}>|null>(null);
+  const [lastCharge,setLastCharge]=useState<number|null>(null);
+  const [lastIntelligence,setLastIntelligence]=useState<Intelligence|null>(null);
+  const [needsRecharge,setNeedsRecharge]=useState(false);
 
   useEffect(()=>{
     readSources().then(rows=>{setSources(rows);setReady(true)})
       .catch(()=>setNotice(tr(lang,"browserUnavailable")));
   },[lang]);
+  useEffect(()=>{
+    let alive=true;
+    Promise.all([
+      fetch("/api/knowledge/pricing",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch("/api/ai/wallet",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+    ]).then(([pricing,wallet])=>{
+      if(!alive)return;
+      if(pricing?.tiers)setTierPricing(pricing.tiers);
+      if(Number.isFinite(Number(wallet?.balanceRmb)))setWalletBalance(Number(wallet.balanceRmb));
+    });
+    return()=>{alive=false};
+  },[]);
 
   const activeQuery=(query||question).trim();
   const draftSource=useMemo<KnowledgeSource|null>(()=>{
@@ -199,7 +224,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   async function ask(){
     const q=question.trim();if(!q)return;
     if(!results.length){setNotice(tr(lang,"noEvidence"));return}
-    setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setNotice(tr(lang,"sending"));
+    setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setNeedsRecharge(false);setLastCharge(null);setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
       const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         question:q,mode,intelligence,evidence:results.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
@@ -209,10 +234,16 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       setAnswer(data.answer||"");
       setLearningEventId(String(data.learningEventId||""));
       const charged=Number(data.chargedRmb);
+      if(Number.isFinite(charged)){setLastCharge(charged);setWalletBalance(v=>v===null?v:Math.max(0,v-charged))}
+      setLastIntelligence((data.intelligence||intelligence) as Intelligence);
       setNotice(Number.isFinite(charged)
         ? `${tr(lang,"done")} · ¥${charged.toFixed(2)}`
         : tr(lang,"done"));
-    }catch(e){setNotice(e instanceof Error?e.message:tr(lang,"aiFailed"))}
+    }catch(e:any){
+      const message=e instanceof Error?e.message:tr(lang,"aiFailed");
+      if(message.includes("余额不足"))setNeedsRecharge(true);
+      setNotice(message);
+    }
     finally{setAskBusy(false)}
   }
 
@@ -245,14 +276,28 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     const a=document.createElement("a");a.href=url;a.download="lingxifield-knowledge-backup.json";a.click();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
+  async function copyAnswer(){
+    if(!answer)return;
+    try{
+      await navigator.clipboard.writeText(answer);
+    }catch{
+      const area=document.createElement("textarea");
+      area.value=answer;area.style.position="fixed";area.style.opacity="0";
+      document.body.appendChild(area);area.focus();area.select();document.execCommand("copy");area.remove();
+    }
+    setCopied(true);setTimeout(()=>setCopied(false),1600);
+  }
 
   const heading=mode==="research"?tr(lang,"research"):mode==="learning"?tr(lang,"learning"):tr(lang,"book");
   const qPlaceholder=mode==="research"?tr(lang,"qResearch"):mode==="learning"?tr(lang,"qLearning"):tr(lang,"qBook");
-  const intelligenceLabels:{value:Intelligence;label:string;factor:string}[]=[
-    {value:"light",label:tr(lang,"light"),factor:"1×"},
-    {value:"standard",label:tr(lang,"standard"),factor:"2×"},
-    {value:"high",label:tr(lang,"high"),factor:"5×"},
+  const intelligenceLabels:{value:Intelligence;label:string;factor:string;help:string}[]=[
+    {value:"light",label:tr(lang,"light"),factor:"1×",help:tr(lang,"lightHelp")},
+    {value:"standard",label:tr(lang,"standard"),factor:"2×",help:tr(lang,"standardHelp")},
+    {value:"high",label:tr(lang,"high"),factor:"5×",help:tr(lang,"highHelp")},
   ];
+  const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
+  const selectedPrice=tierPricing?.[intelligence]?.minimumRmb;
+  const knownInsufficient=walletBalance!==null&&Number.isFinite(Number(selectedPrice))&&walletBalance<Number(selectedPrice);
 
   return <section className="mt-8 space-y-6">
     <div className="rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-7 text-slate-600">
@@ -292,24 +337,41 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
             <span className="text-sm font-medium text-slate-800">{tr(lang,"smart")}</span>
             <span className="text-xs text-slate-400">{tr(lang,"billed")}</span>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="lx-knowledge-modebar">
             {intelligenceLabels.map(({value,label,factor})=><button key={value} type="button" onClick={()=>setIntelligence(value)} disabled={askBusy}
               aria-pressed={intelligence===value}
-              className={`rounded-xl border px-3 py-3 text-left transition disabled:cursor-not-allowed disabled:opacity-55 ${intelligence===value?"border-slate-950 bg-slate-950 text-white shadow-sm":"border-slate-200 bg-white text-slate-700 hover:border-slate-400"}`}>
-              <span className="block text-sm font-semibold">{label}</span>
-              <span className="mt-1 block text-xs opacity-70">{factor} {tr(lang,"factor")}</span>
+              className={intelligence===value?"is-selected":""}>
+              <b>{label}</b>
+              <span>{factor} {tr(lang,"factor")}</span>
             </button>)}
           </div>
-          <p className="mt-2 text-xs leading-5 text-slate-500">{tr(lang,"modeHelp")}</p>
+          <div className="lx-knowledge-mode-detail">
+            <p>{selectedTier.help}</p>
+            <div className="lx-knowledge-mode-cost">
+              <b>{tr(lang,"minCharge")}：{Number.isFinite(Number(selectedPrice))?`¥${Number(selectedPrice).toFixed(2)}`:"—"}</b>
+              <span>{tr(lang,"balance")}：{walletBalance===null?"—":`¥${walletBalance.toFixed(2)}`}</span>
+            </div>
+          </div>
         </div>
 
-        <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources}
+        <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources||knownInsufficient}
           className="mt-3 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40">
           {askBusy?tr(lang,"readingSource"):tr(lang,"answer")}
         </button>
+        {(knownInsufficient||needsRecharge)&&<Link href="/ai-wallet" className="lx-knowledge-recharge">{lang==="zh"?"AI 余额不足 · 去充值":"AI balance low · Recharge"}</Link>}
         <p className="mt-3 text-xs leading-5 text-slate-500">{tr(lang,"aiPrivacy")}</p>
 
-        {answer&&<article className="mt-6 whitespace-pre-wrap rounded-2xl bg-blue-50 p-5 leading-8 text-slate-800">{answer}</article>}
+        {answer&&<div className="lx-knowledge-answer">
+          <div className="lx-knowledge-answer-head">
+            <div><b>{lang==="zh"?"整理结果":"Answer"}</b><span>{lastIntelligence?intelligenceLabels.find(x=>x.value===lastIntelligence)?.label:selectedTier.label}</span></div>
+            <button type="button" onClick={()=>void copyAnswer()} className="lx-knowledge-copy">{copied?tr(lang,"copied"):tr(lang,"copyAll")}</button>
+          </div>
+          <article className="lx-knowledge-answer-body">{answer}</article>
+          <div className="lx-knowledge-answer-foot">
+            {lastCharge!==null&&<span>{lang==="zh"?"本次 AI 消耗":"AI charge"}：¥{lastCharge.toFixed(2)}</span>}
+            <span>{lang==="zh"?`当前模式 ${selectedTier.factor}`:`Mode ${selectedTier.factor}`}</span>
+          </div>
+        </div>}
 
         {answer&&learningEventId&&<div className="mt-3 rounded-2xl border border-slate-200 bg-white p-4">
           <div className="text-[11px] font-semibold uppercase tracking-[.16em] text-slate-400">SASI LEARNING FEEDBACK</div>

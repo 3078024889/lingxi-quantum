@@ -9,7 +9,7 @@ export async function POST(req:Request){
  if(!(file instanceof File))return NextResponse.json({error:"FILE_REQUIRED"},{status:400});
  if(file.size>12*1024*1024)return NextResponse.json({error:"FILE_TOO_LARGE"},{status:413});
  const claim=await claimPaidToolJob({quoteId,userId:user.id,toolId:"id-photo-ai",itemKey,units:1});
- if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:402});
+ if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:claim.error==="JOB_ALREADY_PROCESSING"?409:402});
  if(claim.status==="completed"&&claim.result)return NextResponse.json(claim.result);
  const jobId=claim.jobId!;
  try{

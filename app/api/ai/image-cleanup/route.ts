@@ -12,7 +12,7 @@ export async function POST(req:Request){
  const toolId=(await (async()=>{const {createAdminClient}=await import("@/lib/supabase/admin");const a=createAdminClient();const {data}=await a.from("tool_payment_quotes").select("tool_id").eq("id",quoteId).eq("user_id",user.id).single();return data?.tool_id})()) as string|undefined;
  if(!toolId||!["image-watermark-remover","batch-image-watermark-remover"].includes(toolId))return NextResponse.json({error:"INVALID_PAID_TOOL"},{status:403});
  const claim=await claimPaidToolJob({quoteId,userId:user.id,toolId,itemKey,units:1});
- if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:402});
+ if(!claim.ok)return NextResponse.json({error:claim.error||"PAYMENT_REQUIRED"},{status:claim.error==="JOB_ALREADY_PROCESSING"?409:402});
  if(claim.status==="completed"&&claim.result)return NextResponse.json(claim.result);
  const jobId=claim.jobId!;
  try{

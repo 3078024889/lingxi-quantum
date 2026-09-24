@@ -877,6 +877,6 @@ export const VOICES: Voice[] = [
   { theme: "修炼·四项合集 邀请", zh: "呼吸、直觉、重置、上升——四把回家的钥匙。", en: "Breath, intuition, reset, ascent — four keys to coming home." },
   { theme: "修炼·四项合集 邀请", zh: "免费读原理，激活后才有完整的分步引导与练习器。", en: "Read the principles free; activation unlocks the full step-by-step guide and tools." },
   { theme: "修炼·四项合集 邀请", zh: "这些能力本就在你里面，修炼只是帮你忆起。", en: "These abilities are already in you; practice only helps you remember." },
-  { theme: "修炼·四项合集 邀请", zh: "一次能量交换，换一生可用的四项技术。", en: "One energy exchange, for four practices usable a lifetime." },
+  { theme: "修炼·四项合集 邀请", zh: "四项技术，永久开启，随时可练习。", en: "Four practices, available for lifelong use." },
   { theme: "修炼·四项合集 邀请", zh: "越呼吸越清明，唯有心通道打开，万法皆成。", en: "The more you breathe, the clearer; only when the heart opens do all ways complete." },
 ];

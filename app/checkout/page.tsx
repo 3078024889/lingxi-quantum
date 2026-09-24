@@ -582,7 +582,7 @@ const orderIdRef = useRef<string | null>(null);
       {status === "success" && (
         <div className="lx11-legacy-panel mt-10 p-8 text-center">
           <p className="font-display text-2xl text-[var(--lx-ink)]">✓</p>
-          <p className="mt-3 text-sm text-[var(--lx-ink)]"><Bi zh="能量交换完成" en="Exchange complete" /></p>
+          <p className="mt-3 text-sm text-[var(--lx-ink)]"><Bi zh="支付完成" en="Payment complete" /></p>
           <p className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">
             <Bi zh="正在带你去场域订单……" en="Taking you to Field Orders…" />
           </p>

@@ -1,4 +1,4 @@
-// 能量交换 · 定价结构（双语）
+// 数字服务 · 定价结构（双语）
 export type Product = {
   id: string;
   name: string;
@@ -28,40 +28,40 @@ export const manifestationProducts: Product[] = [
   { id: "year", name: "年度连接", nameEn: "Yearly", priceUsd: 139, priceRmb: 999, type: "subscription", days: 365, note: "让长期经历逐渐汇成你的场域轨迹", noteEn: "A year-long journey — best value.", group: "manifestation" },
 ];
 
-// 多维叙事：短篇 $1，长篇 $5，一次能量交换，终身可看
+// 多维叙事：短篇 $1，长篇 $5，终身可看
 // 旧叙事内容不再作为在售商品。保留空导出，避免历史订单读取路径崩溃。
 export const narrativeProducts: Product[] = [];
 
 export const lifeMapProducts: Product[] = [
-  { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你的完整生命坐标解读，永久保存、随时回看", noteEn: "One exchange unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
+  { id: "life-map-report", name: "生命图谱完整报告", nameEn: "Full Life Map Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁你的完整生命坐标解读，永久保存、随时回看", noteEn: "Unlocks your full chart interpretation — yours to keep, revisit anytime.", group: "cultivation" },
 ];
 
 export const relationshipProducts: Product[] = [
-  { id: "relationship-resonance", name: "关系共振图谱", nameEn: "Relationship Resonance Map", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁你与任意一人的共振分析——深度关系、合伙商业或其他重要连接皆可，永久保存、可测多次", noteEn: "One exchange unlocks resonance analysis between you and anyone — a deep relationship, business partnership, or other important connection. Yours to keep, test as many pairs as you like.", group: "cultivation" },
+  { id: "relationship-resonance", name: "关系共振图谱", nameEn: "Relationship Resonance Map", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁你与任意一人的共振分析——深度关系、合伙商业或其他重要连接皆可，永久保存、可测多次", noteEn: "Unlocks resonance analysis between you and anyone — a deep relationship, business partnership, or other important connection. Yours to keep, test as many pairs as you like.", group: "cultivation" },
 ];
 
 export const qianProducts: Product[] = [
-  { id: "qian-reading", name: "灵犀生命灵签 · 场域解读", nameEn: "Lingxi Life Oracle · Field Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁属于你的三重生命签的完整解读——由你的真实生命坐标四柱确定，不是随机摇出，永久保存、可再读", noteEn: "One exchange unlocks the full reading of your three life signs — determined by your real chart pillars, not a random shake. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "qian-reading", name: "灵犀生命灵签 · 场域解读", nameEn: "Lingxi Life Oracle · Field Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁属于你的三重生命签的完整解读——由你的真实生命坐标四柱确定，不是随机摇出，永久保存、可再读", noteEn: "Unlocks the full reading of your three life signs — determined by your real chart pillars, not a random shake. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const tarotReadingProducts: Product[] = [
-  { id: "tarot-reading", name: "灵犀量子生命镜像 · 三重镜像深度解读", nameEn: "Lingxi Quantum Life Mirror · Three-Mirror Deep Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁专属于你的三张牌阵——潜意识镜像、当下共振、未来展开，由你的真实生命坐标数据确定，不是随机抽取，永久保存、可再读", noteEn: "One exchange unlocks your own three-card spread — hidden pattern, present resonance, future possibility — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "tarot-reading", name: "灵犀量子生命镜像 · 三重镜像深度解读", nameEn: "Lingxi Quantum Life Mirror · Three-Mirror Deep Reading", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁专属于你的三张牌阵——潜意识镜像、当下共振、未来展开，由你的真实生命坐标数据确定，不是随机抽取，永久保存、可再读", noteEn: "Unlocks your own three-card spread — hidden pattern, present resonance, future possibility — determined by your real chart data, not a random draw. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const resilienceProducts: Product[] = [
-  { id: "resilience-report", name: "生命韧性指数 · 完整档案", nameEn: "Life Resilience Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的生命韧性档案——五项分数背后的具体结构、再生循环、隐藏力量，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Resilience Archive — the structure behind your five scores, your recovery cycle, your hidden strength — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "resilience-report", name: "生命韧性指数 · 完整档案", nameEn: "Life Resilience Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁完整的生命韧性档案——五项分数背后的具体结构、再生循环、隐藏力量，由你的真实出生信息确定，永久保存、可再读", noteEn: "Unlocks your full Resilience Archive — the structure behind your five scores, your recovery cycle, your hidden strength — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const romanceProducts: Product[] = [
-  { id: "romance-report", name: "桃花磁场指数 · 完整档案", nameEn: "Romance Resonance Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的桃花磁场档案——五个磁场维度、吸引力风格、命理桃花星，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Romance Resonance Archive — five field dimensions, attraction style, and traditional chart signals — determined by your real birth data. Yours to keep and revisit anytime.", group: "cultivation" },
+  { id: "romance-report", name: "桃花磁场指数 · 完整档案", nameEn: "Romance Resonance Index · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁完整的桃花磁场档案——五个磁场维度、吸引力风格、命理桃花星，由你的真实出生信息确定，永久保存、可再读", noteEn: "Unlocks your full Romance Resonance Archive — five field dimensions, attraction style, and traditional chart signals — determined by your real birth data. Yours to keep and revisit anytime.", group: "cultivation" },
 ];
 
 export const dailyTideProducts: Product[] = [
-  { id: "daily-tide-report", name: "今日潮汐 · 深度报告", nameEn: "Today’s Tide · Deep Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁从今天起的深度潮汐报告——今日六重潮汐 + 未来7/30/90天真实潮汐趋势，永久保存、可再读", noteEn: "One exchange unlocks a deep tide report starting today — six daily tides plus real 7/30/90-day tide trends. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "daily-tide-report", name: "今日潮汐 · 深度报告", nameEn: "Today’s Tide · Deep Report", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁从今天起的深度潮汐报告——今日六重潮汐 + 未来7/30/90天真实潮汐趋势，永久保存、可再读", noteEn: "Unlocks a deep tide report starting today — six daily tides plus real 7/30/90-day tide trends. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const wealthProducts: Product[] = [
-  { id: "wealth-report", name: "财富创造地图 · 完整档案", nameEn: "Wealth Creation Map · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "一次能量交换，解锁完整的财富创造地图——五个创造维度、创造类型、价值流动路径，由你的真实出生信息确定，永久保存、可再读", noteEn: "One exchange unlocks your full Wealth Creation Map — your five creative dimensions, creation type, and value flow path — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
+  { id: "wealth-report", name: "财富创造地图 · 完整档案", nameEn: "Wealth Creation Map · Full Archive", priceUsd: 9.9, priceRmb: 68, type: "permanent", note: "解锁完整的财富创造地图——五个创造维度、创造类型、价值流动路径，由你的真实出生信息确定，永久保存、可再读", noteEn: "Unlocks your full Wealth Creation Map — your five creative dimensions, creation type, and value flow path — determined by your real birth data. Yours to keep, read again anytime.", group: "cultivation" },
 ];
 
 export const lifeArchetypeProducts: Product[] = [
