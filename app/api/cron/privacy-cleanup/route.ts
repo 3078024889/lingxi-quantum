@@ -22,22 +22,64 @@ export async function GET(req:Request){
 
  let deletedObjects=0;
  let deletedNotes=0;
+ let deferredNotes=0;
+ let fileQueryErrors=0;
+ let objectDeleteErrors=0;
 
  for(const n of notes||[]){
-   const {data:files}=await admin.from("burn_files").select("object_key").eq("note_id",n.id);
-   let ok=true;
-   for(const f of files||[]){
-     if(await r2Delete(f.object_key))deletedObjects++;
-     else ok=false;
+   const fileQuery=await admin
+     .from("burn_files")
+     .select("object_key")
+     .eq("note_id",n.id);
+
+   if(fileQuery.error){
+     fileQueryErrors++;
+     deferredNotes++;
+     console.error("[privacy cleanup files]",n.id,fileQuery.error.message);
+     continue;
    }
-   if(ok){
-     const d=await admin.from("burn_notes").delete().eq("id",n.id);
-     if(!d.error)deletedNotes++;
+
+   let ok=true;
+   for(const f of fileQuery.data||[]){
+     try{
+       if(await r2Delete(f.object_key))deletedObjects++;
+       else{
+         objectDeleteErrors++;
+         ok=false;
+       }
+     }catch(e){
+       objectDeleteErrors++;
+       ok=false;
+       console.error("[privacy cleanup r2]",n.id,e instanceof Error?e.message:String(e));
+     }
+   }
+
+   if(!ok){
+     deferredNotes++;
+     continue;
+   }
+
+   const d=await admin.from("burn_notes").delete().eq("id",n.id);
+   if(d.error){
+     deferredNotes++;
+     console.error("[privacy cleanup note]",n.id,d.error.message);
+   }else{
+     deletedNotes++;
    }
  }
 
+ // DB cleanup intentionally excludes file-backed burn notes.
+ // Those notes must only be deleted after their R2 objects are removed above.
  const cleanup=await admin.rpc("cleanup_ephemeral_privacy_data");
  if(cleanup.error)console.error("[privacy cleanup rpc]",cleanup.error.message);
 
- return NextResponse.json({ok:true,deletedObjects,deletedNotes});
+ return NextResponse.json({
+   ok:true,
+   deletedObjects,
+   deletedNotes,
+   deferredNotes,
+   fileQueryErrors,
+   objectDeleteErrors,
+   dbCleanup:cleanup.error?null:cleanup.data
+ });
 }
