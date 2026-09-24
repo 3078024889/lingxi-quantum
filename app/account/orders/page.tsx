@@ -2,557 +2,78 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
-import LocalizedOrderExpiry from "@/components/LocalizedOrderExpiry";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
-import OrderActions from "../OrderActions";
-import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 import ToolOrderRecoveryButton from "@/components/tools/ToolOrderRecoveryButton";
 
-export const metadata = {
-  title: "付费任务中心 | 灵犀场 LINGXIFIELD",
-  robots: { index: false, follow: false },
+export const metadata = { title: "付费任务中心 | 灵犀场 LINGXIFIELD", robots:{index:false,follow:false} };
+
+type OrderRow={
+  id:string; product_id:string; amount_rmb:number|null; amount_usd:number|null;
+  status:string; provider:string|null; created_at:string; paid_at:string|null;
 };
 
-type OrderRow = {
-  id: string;
-  product_id: string;
-  product_type: string;
-  amount_rmb: number | null;
-  amount_usd: number;
-  status: string;
-  submission_id: string | null;
-  submission_name: string | null;
-  created_at: string;
-  paid_at: string | null;
-  archive_only?: boolean;
-  archive_href?: string;
-};
-
-type ToolTaskState = {
-  quoteId: string;
-  toolId: string;
-  quoteStatus: string;
-  quantity: number;
-  unitName: string;
-  grantQuantity: number;
-  consumedQuantity: number;
-  jobsTotal: number;
-  jobsCompleted: number;
-  jobsProcessing: number;
-  jobsFailed: number;
-  latestUpdatedAt: string | null;
-};
-
-const TOOL_NAMES:Record<string,{zh:string;en:string}>={
-  "audio-transcription":{zh:"音频转文字",en:"Audio Transcription"},
-  "batch-image-watermark-remover":{zh:"批量图片去水印",en:"Batch Image Watermark Removal"},
-  "cross-page-stamp":{zh:"PDF 骑缝章",en:"Cross-page Stamp"},
-  "e-sign-pdf":{zh:"PDF 电子签名",en:"E-sign PDF"},
-  "food-calorie":{zh:"图片卡路里分析",en:"Food Calorie Analysis"},
-  "id-photo-ai":{zh:"AI 证件照",en:"AI ID Photo"},
-  "image-watermark-remover":{zh:"图片去水印",en:"Image Watermark Removal"},
-  "pdf-editor":{zh:"PDF 编辑",en:"PDF Editor"},
-  "subtitle-translate":{zh:"字幕翻译",en:"Subtitle Translation"},
-  "video-dubbing":{zh:"视频配音",en:"Video Dubbing"},
-  "video-transcription":{zh:"视频转文字",en:"Video Transcription"},
-  "video-watermark-remover":{zh:"视频去水印",en:"Video Watermark Removal"},
-};
-
-function toolName(toolId:string){
-  return TOOL_NAMES[toolId]??{zh:toolId,en:toolId};
+function currentProductLabel(id:string){
+  if(id.startsWith("toolquote:")) return {zh:"实用工具任务",en:"Utility tool task"};
+  const p=getProduct(id);
+  if(p) return {zh:p.name,en:p.nameEn};
+  return {zh:"历史服务（已下架）",en:"Legacy service (retired)"};
 }
 
-function toolTaskLabel(s:ToolTaskState|null|undefined){
-  if(!s)return {zh:"已付款 · 状态待恢复",en:"Paid · recovery pending"};
-  if(s.grantQuantity<=0)return {zh:"已付款 · 权益待恢复",en:"Paid · grant recovery pending"};
-  if(s.jobsProcessing>0)return {zh:"处理中",en:"Processing"};
-  if(s.jobsFailed>0&&s.jobsCompleted>0)return {zh:"部分完成 · 可恢复失败任务",en:"Partly complete · failed work can resume"};
-  if(s.jobsFailed>0)return {zh:"处理失败 · 可恢复",en:"Failed · resumable"};
-  if(s.jobsCompleted>0&&s.jobsProcessing===0)return {zh:"处理完成",en:"Completed"};
-  return {zh:"已付款 · 待开始处理",en:"Paid · ready to start"};
-}
+export default async function OrdersPage(){
+  const supabase=isSupabasePublicConfigured()?createClient():null;
+  const user=supabase?await getServerUser(supabase):null;
+  let orders:OrderRow[]=[];
+  let loadFailed=false;
 
-// v265：场域订单中心按你要的结构重做——不再是一条时间线糊到底的
-// 流水账，按产品性质分三类摆清楚：场域精测（8项，各自一次性解锁）、
-// 修炼技术与会员（9项，含4项修炼技术+3档显化订阅+2档合集/全构造，
-// 订阅类要把到期时间和具体权益写清楚，不能只有一句笼统的话）、
-// 多维叙事（长短篇小说，每篇各自的slug就是product_id，数量不固定，
-// 单独分组显示）。
-const FIELD_TEST_IDS = [
-  "life-map-report", "relationship-resonance", "qian-reading", "tarot-reading",
-  "resilience-report", "romance-report", "daily-tide-report", "wealth-report",
-  "life-archetype",
-];
-const MEMBERSHIP_IDS = [
-  "breath", "intuition", "heart-reset", "ascending-heart",
-  "narrative-all", "everything", "day", "month", "year",
-];
-
-// 订阅/合集类产品——按年月付的这几档，之前订单卡上只有product.note
-// 那一句概括，这次按你的要求把具体权益拆成清单列出来，买之前买之后
-// 都能一眼看清楚这次购买具体获得什么，而不是用一句模糊的话带过去。
-const BENEFIT_DETAIL: Record<string, { zh: string[]; en: string[] }> = {
-  day: {
-    zh: ["1天内不限次数使用「意识显化」功能", "愿景、观察与行动记录云端同步", "到期后自动锁定，不会继续扣费"],
-    en: ["Unlimited use of Manifestation for 1 day", "Cloud sync for vision, observations and actions", "Locks automatically at expiry — no recurring charge"],
-  },
-  month: {
-    zh: ["30天内不限次数使用「意识显化」功能", "愿景、观察与行动记录云端同步", "到期后自动锁定，不会继续扣费，可随时重新购买续期"],
-    en: ["Unlimited use of Manifestation for 30 days", "Cloud sync for vision, observations and actions", "Locks automatically at expiry — no recurring charge, renew anytime"],
-  },
-  year: {
-    zh: ["365天内不限次数使用「意识显化」功能", "愿景、观察与行动记录云端同步", "到期后自动锁定，不会继续扣费", "单价比月度更划算"],
-    en: ["Unlimited use of Manifestation for 365 days", "Cloud sync for vision, observations and actions", "Locks automatically at expiry — no recurring charge", "Best per-day value of the three tiers"],
-  },
-  "narrative-all": {
-    zh: ["365天内解锁全部多维叙事长篇与短篇", "有效期内新增的篇目自动包含，不用额外付费", "到期后需续期才能继续阅读已发布的新篇目（到期前已读过的篇目仍可回看历史记录）"],
-    en: ["365 days of access to every narrative, short and long", "Newly published pieces during your access window are included automatically", "Renewal required after expiry to keep reading new pieces going forward"],
-  },
-  everything: {
-    zh: ["365天内解锁全部多维叙事（长篇+短篇，含日后新增）", "365天内解锁全部4项修炼技术：量子息法、直觉丹道、归零心诀、上升心经", "覆盖范围最广的一档，不含8项场域精测（精测按次单独购买）"],
-    en: ["365 days of access to every narrative, including all future additions", "365 days of access to all 4 practice techniques: Quantum Breath, The Intuitive Way, Heart Reset, Ascending Heart", "The broadest tier — does not include the 8 Field Insight tests, which are purchased individually"],
-  },
-  breath: { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
-  intuition: { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
-  "heart-reset": { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
-  "ascending-heart": { zh: ["永久开启，随时可练习"], en: ["Open forever — practice anytime"] },
-};
-
-function categoryOf(productId: string): "field-test" | "membership" | "narrative" | "tool" | "balance" {
-  if (productId.startsWith("toolquote:")) return "tool";
-  const product = getProduct(productId);
-  if (product?.group === "ai" || product?.group === "production") return "balance";
-  if (FIELD_TEST_IDS.includes(productId)) return "field-test";
-  if (MEMBERSHIP_IDS.includes(productId)) return "membership";
-  return "narrative";
-}
-
-// v255：这是这次新加的"场域订单"页——按你的要求，做成阿里云/域名
-// 注册那种订单列表的样子：商品名称、订单号、金额、状态、有效期，
-// 点商品名称能直接跳到对应内容。orders表里已经存了submission_id和
-// submission_name（之前几版加的），这次不用再去猜"这条订单具体对应
-// 哪一份报告"，直接读出来就有。
-//
-// 每个product_id对应的"点开去哪"，映射规则写在下面这个函数里——
-// 报告类产品要带上submission_id才能跳到具体那一份；叙事单篇要跳到
-// 对应文章；修炼技术、显化订阅、叙事年度解锁这些没有"某一份具体
-// 报告"的产品，跳到对应的功能入口页。
-//
-// v301：真实事故修复——之前 submission_id 缺失时直接 return null，
-// 导致这笔订单在场域入口里"查看报告/下载PDF"整个按钮都不渲染，
-// 用户会觉得"报告不见了"。现在两步兜底：
-//   1) 服务端按 user_id 在对应提交表里就近查一次（见下方
-//      backfillSubmissionIds），能找回大多数老订单的精确链接；
-//   2) 实在查不到，也不再返回 null——退化成跳到产品免费页，
-//      并用不同的文案告诉用户"这是笔老订单，请联系客服核对"，
-//      而不是让整张订单卡片看起来像坏掉了。
-const REPORT_BASE: Record<string, string> = {
-  "life-map-report": "/life-map/full",
-  "relationship-resonance": "/relationship/full",
-  "qian-reading": "/qian/full",
-  "tarot-reading": "/mirror/reading/full",
-  "resilience-report": "/resilience/full",
-  "romance-report": "/romance/full",
-  "daily-tide-report": "/daily/full",
-  "wealth-report": "/wealth/full",
-};
-
-function resolveDestination(order: OrderRow): { href: string; labelZh: string; labelEn: string } | null {
-  const balanceProduct = getProduct(order.product_id);
-  if (balanceProduct?.group === "ai") {
-    return { href: "/ai-wallet", labelZh: "查看 AI 余额", labelEn: "View AI Balance" };
+  if(user&&supabase){
+    const {data,error}=await supabase.from("orders")
+      .select("id,product_id,amount_rmb,amount_usd,status,provider,created_at,paid_at")
+      .eq("user_id",user.id)
+      .order("created_at",{ascending:false})
+      .limit(100);
+    loadFailed=!!error;
+    orders=(data as OrderRow[]|null)??[];
   }
-  if (balanceProduct?.group === "production") {
-    return { href: "/sasi/pricing", labelZh: "进入 SASI 创作余额", labelEn: "Open SASI Creation Balance" };
-  }
-  if (order.product_id.startsWith("toolquote:")) {
-    const quoteId = order.product_id.slice("toolquote:".length);
-    return order.status === "paid"
-      ? { href: "/tools", labelZh: "再次使用工具", labelEn: "Use tool again" }
-      : {
-          href: `/tools/pay?quoteId=${encodeURIComponent(quoteId)}`,
-          labelZh: "继续付款 / 恢复确认",
-          labelEn: "Continue payment / recover",
-        };
-  }
-  if (order.archive_href) return {href:order.archive_href,labelZh:"回看报告 / 下载 PDF",labelEn:"Read report / Download PDF"};
-  if (order.archive_only && order.submission_id) return { href: `/mini-report?id=${order.submission_id}`, labelZh: "查看完整档案 / 下载PDF", labelEn: "View Full Archive / Download PDF" };
-  if (REPORT_BASE[order.product_id]) {
-    if (order.submission_id) {
-      return { href: `${REPORT_BASE[order.product_id]}?id=${order.submission_id}`, labelZh: "查看报告 / 下载PDF", labelEn: "View Report / Download PDF" };
-    }
-    // 兜底也没查到——不返回 null，退化成跳产品页，按钮仍然可见可点。
-    return { href: REPORT_BASE[order.product_id], labelZh: "订单较早·点击核对", labelEn: "Older order · click to verify" };
-  }
-  const PRACTICE_BASE: Record<string, string> = {
-    breath: "/practice/breath", intuition: "/practice/intuition",
-    "heart-reset": "/practice/heart-reset", "ascending-heart": "/practice/ascending-heart",
-  };
-  if (PRACTICE_BASE[order.product_id]) {
-    return { href: PRACTICE_BASE[order.product_id], labelZh: "开始修炼", labelEn: "Begin Practice" };
-  }
-  if (order.product_id === "bundle") return { href: "/practice", labelZh: "查看全部修炼技术", labelEn: "View All Practices" };
-  if (["day", "month", "year"].includes(order.product_id)) return { href: "/live-as", labelZh: "进入意识显化", labelEn: "Enter Manifestation" };
-  if (order.product_id === "narrative-all") return { href: "/narrative", labelZh: "浏览全部多维叙事", labelEn: "Browse All Narratives" };
-  if (order.product_id === "everything") return { href: "/account", labelZh: "进入完整灵犀场", labelEn: "Enter the Full Lingxi Field" };
-  // 剩下的都是多维叙事单篇——product_id本身就是文章slug
-  return { href: `/narrative/${order.product_id}`, labelZh: "阅读全文", labelEn: "Read Full Piece" };
-}
 
-function OrderCard({ o, toolTask }: { o: OrderRow; toolTask?: ToolTaskState | null }) {
-  const product = getProduct(o.product_id);
-  const dest = resolveDestination(o);
-  const isPaid = o.status === "paid";
-  const amount = o.amount_rmb ?? (o.amount_usd ? `$${o.amount_usd}` : "—");
-  const amountDisplay = o.archive_only ? "已归档" : o.amount_rmb ? `¥${o.amount_rmb}` : amount;
-  const benefits = BENEFIT_DETAIL[o.product_id];
-  const isToolOrder=o.product_id.startsWith("toolquote:");
-  const taskLabel=isToolOrder?toolTaskLabel(toolTask):null;
-  const taskToolName=toolTask?toolName(toolTask.toolId):null;
-
-  return (
-    <div className="lx11-legacy-panel p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-faint)]">
-            <Bi zh={o.archive_only ? "档案号" : "订单号"} en={o.archive_only ? "Archive No." : "Order No."} /> {o.id}
-          </p>
-          {dest ? (
-            <Link href={dest.href} className="mt-1 block font-display text-lg text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
-              {product ? <Bi zh={product.name} en={product.nameEn} /> : o.product_id}
-              {o.submission_name ? ` · ${o.submission_name}` : ""}
-            </Link>
-          ) : (
-            <p className="mt-1 font-display text-lg text-[var(--lx-ink)]">
-              {product ? <Bi zh={product.name} en={product.nameEn} /> : o.product_id}
-              {o.submission_name ? ` · ${o.submission_name}` : ""}
-            </p>
-          )}
-          <p className="mt-1 text-xs text-[var(--lx-muted)]">
-            <Bi zh={o.archive_only ? "记录时间" : "下单时间"} en={o.archive_only ? "Recorded" : "Ordered"} />：{new Date(o.created_at).toLocaleString()}
-            {o.paid_at && <> · <Bi zh="支付时间" en="Paid" />：{new Date(o.paid_at).toLocaleString()}</>}
-          </p>
-          {isPaid && o.paid_at && product?.type === "subscription" && product.days && (
-            <p className="mt-1 text-xs text-[var(--lx-ink)]/80">
-              <LocalizedOrderExpiry iso={o.paid_at} days={product.days} />
-            </p>
-          )}
-          {isPaid && product?.type === "permanent" && product.group !== "ai" && product.group !== "production" && (
-            <p className="mt-1 text-xs text-[var(--lx-ink)]">
-              <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
-            </p>
-          )}
-          {isPaid && product && (product.group === "ai" || product.group === "production") && (
-            <p className="mt-1 text-xs text-[var(--lx-ink)]">
-              <Bi
-                zh="充值到账后按实际使用扣除；这不是会员期限，也不是一次性永久解锁。"
-                en="The credited balance is deducted by actual usage. It is not a membership term or a one-time permanent unlock."
-              />
-            </p>
-          )}
-
-          {/* v265：权益写清楚——订阅/合集类产品之前只有product.note这一句
-              概括，这次凡是有BENEFIT_DETAIL的（会员/订阅类），改成逐条
-              列出来，一次交换具体换到了什么，透明可查，不是一句模糊的话。
-              没有配清单的（场域精测这些一次性报告类），仍然用原来的
-              note描述，够用，不用为了统一硬凑清单。 */}
-          {isPaid && benefits ? (
-            <ul className="mt-2 space-y-1 text-xs leading-6 text-[var(--lx-faint)]">
-              {(benefits.zh).map((line, i) => (
-                <li key={i}>· <Bi zh={line} en={benefits.en[i]} /></li>
-              ))}
-            </ul>
-          ) : isPaid && product ? (
-            <p className="mt-1 text-xs leading-6 text-[var(--lx-faint)]">
-              <Bi zh="获得权益" en="Benefits" />：<Bi zh={product.note} en={product.noteEn} />
-            </p>
-          ) : null}
+  return <>
+    <Nav/>
+    <main className="lx11-page">
+      <div className="mx-auto max-w-3xl px-6 py-20">
+        <div className="flex items-start justify-between gap-4">
+          <div><p className="lx11-kicker"><Bi zh="账户" en="Account"/></p><h1 className="mt-3 font-display text-3xl text-[var(--lx-ink)]"><Bi zh="付费任务中心" en="Paid Tasks"/></h1></div>
+          <Link href="/account" className="text-sm">← <Bi zh="返回账户" en="Back"/></Link>
         </div>
-        <div className="shrink-0 text-right">
-          <p className="font-display text-xl text-[var(--lx-ink)]">{o.archive_only ? <Bi zh="已归档" en="Archived" /> : amountDisplay}</p>
-          <p className={`mt-2 inline-block rounded-sm px-2 py-0.5 text-[11px] uppercase tracking-widest2 ${isPaid ? "border border-[var(--lx-line-strong)] text-[var(--lx-ink)]" : "border border-amber/40 text-[var(--lx-ink)]"}`}>
-            {o.archive_only ? <Bi zh="已保存" en="Archived" /> : isPaid ? <Bi zh="已支付" en="Paid" /> : <Bi zh="待支付" en="Pending" />}
-          </p>
+        <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]"><Bi zh="这里保留当前余额、工具任务与历史交易记录。已下架的旧服务不再提供新购买入口，但历史支付记录不会被删除。" en="Current balances, utility tasks and historical transactions stay here. Retired services no longer accept new purchases, while historical payment records remain intact."/></p>
+
+        {!user&&<p className="mt-8 rounded-2xl border p-6"><Bi zh="请先登录查看订单。" en="Please sign in to view orders."/></p>}
+        {loadFailed&&<p role="alert" className="mt-8 text-rose"><Bi zh="订单暂时无法读取，请刷新重试。" en="Orders could not be loaded. Refresh and try again."/></p>}
+        {user&&!loadFailed&&orders.length===0&&<p className="mt-8 rounded-2xl border p-6"><Bi zh="还没有订单。" en="No orders yet."/></p>}
+
+        <div className="mt-8 space-y-3">
+          {orders.map(o=>{
+            const label=currentProductLabel(o.product_id);
+            const current=getProduct(o.product_id);
+            const amount=o.amount_rmb!=null?`¥${o.amount_rmb}`:(o.amount_usd?`$${o.amount_usd}`:"—");
+            const tool=o.product_id.startsWith("toolquote:");
+            return <article key={o.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-[11px] text-[var(--lx-faint)]">{o.id}</p>
+                  <h2 className="mt-2 font-display text-lg text-[var(--lx-ink)]"><Bi zh={label.zh} en={label.en}/></h2>
+                  <p className="mt-2 text-xs text-[var(--lx-muted)]">{new Date(o.created_at).toLocaleString()} · {o.provider||"—"}</p>
+                </div>
+                <div className="text-right"><b className="text-lg text-[var(--lx-ink)]">{amount}</b><p className="mt-1 text-xs text-[var(--lx-muted)]">{o.status}</p></div>
+              </div>
+
+              {current?.group==="ai"&&<Link href="/ai-wallet" className="mt-4 inline-block text-sm">AI Balance →</Link>}
+              {current?.group==="production"&&<Link href="/sasi/pricing" className="mt-4 inline-block text-sm">SASI Balance →</Link>}
+              {tool&&<div className="mt-4"><ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)}/></div>}
+            </article>;
+          })}
         </div>
       </div>
-
-      {dest && (
-        <Link
-          href={dest.href}
-          className="mt-4 inline-block border border-[var(--lx-line)] px-4 py-1.5 text-xs uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:border-[var(--lx-line-strong)]"
-        >
-          <Bi zh={dest.labelZh} en={dest.labelEn} />
-        </Link>
-      )}
-
-      {isPaid && isToolOrder && (
-        <div className="mt-4 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <p className="text-xs font-medium text-[var(--lx-ink)]">
-                {taskToolName ? <Bi zh={taskToolName.zh} en={taskToolName.en} /> : <Bi zh="实用工具任务" en="Utility tool task" />}
-              </p>
-              <p className="mt-1 text-[11px] text-[var(--lx-muted)]">
-                <Bi zh={taskLabel?.zh??"已付款"} en={taskLabel?.en??"Paid"} />
-              </p>
-            </div>
-            {toolTask&&<div className="text-right text-[11px] leading-5 text-[var(--lx-muted)]">
-              <p><Bi zh="购买额度" en="Purchased" />：{toolTask.quantity} {toolTask.unitName}</p>
-              <p><Bi zh="已使用" en="Consumed" />：{toolTask.consumedQuantity} / {toolTask.grantQuantity||toolTask.quantity}</p>
-            </div>}
-          </div>
-          {toolTask&&toolTask.jobsTotal>0&&(
-            <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px]">
-              <div className="rounded-lg bg-[var(--lx-panel)] p-2"><b className="block text-sm text-[var(--lx-ink)]">{toolTask.jobsCompleted}</b><Bi zh="已完成" en="Completed" /></div>
-              <div className="rounded-lg bg-[var(--lx-panel)] p-2"><b className="block text-sm text-[var(--lx-ink)]">{toolTask.jobsProcessing}</b><Bi zh="处理中" en="Processing" /></div>
-              <div className="rounded-lg bg-[var(--lx-panel)] p-2"><b className="block text-sm text-[var(--lx-ink)]">{toolTask.jobsFailed}</b><Bi zh="可恢复失败" en="Failed / resumable" /></div>
-            </div>
-          )}
-          {toolTask?.latestUpdatedAt&&<p className="mt-2 text-[10px] text-[var(--lx-faint)]"><Bi zh="任务最近更新" en="Last task update" />：{new Date(toolTask.latestUpdatedAt).toLocaleString()}</p>}
-          {toolTask&&toolTask.jobsTotal>0&&(
-            <Link
-              href={`/account/tool-jobs?quoteId=${encodeURIComponent(o.product_id.slice("toolquote:".length))}`}
-              className="mt-3 inline-flex rounded-lg border border-[var(--lx-line)] px-4 py-2 text-xs text-[var(--lx-ink)]"
-            >
-              <Bi zh="查看任务详情 / 已保存结果" en="Task details / saved results" />
-            </Link>
-          )}
-          <ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)} />
-        </div>
-      )}
-
-      {!isPaid && !o.archive_only && <OrderActions orderId={o.id} />}
-    </div>
-  );
-}
-
-// v301：submission_id 缺失订单的兜底——按 product_id 找到对应的提交表，
-// 在该表里查这个用户名下的所有提交记录，取"created_at 早于等于订单
-// 下单时间、且离下单时间最近"的那一条（正常流程是先提交测评数据、
-// 紧接着才去下单，两者时间点必然挨得很近，这个假设站得住）。
-// 找不到就保持 submission_id 为空，交给上面 resolveDestination 的
-// 第二层兜底处理，不强行拼一个可能是错的链接。
-const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
-  "life-map-report": "life_map_submissions",
-  "relationship-resonance": "relationship_submissions",
-  "qian-reading": "qian_submissions",
-  "tarot-reading": "tarot_reading_submissions",
-  "resilience-report": "resilience_submissions",
-  "romance-report": "romance_submissions",
-  "daily-tide-report": "daily_tide_submissions",
-  "wealth-report": "wealth_submissions",
-};
-
-async function backfillSubmissionIds(
-  supabase: ReturnType<typeof createClient>,
-  userId: string,
-  orders: OrderRow[]
-): Promise<OrderRow[]> {
-  const missing = orders.filter((o) => !o.submission_id && SUBMISSION_TABLE_BY_PRODUCT[o.product_id]);
-  if (missing.length === 0) return orders;
-
-  // 按表分组查一次，避免每笔订单单独查一次数据库。
-  const tablesNeeded = Array.from(new Set(missing.map((o) => SUBMISSION_TABLE_BY_PRODUCT[o.product_id])));
-  const subsByTable: Record<string, { id: string; created_at: string }[]> = {};
-  await Promise.all(
-    tablesNeeded.map(async (table) => {
-      const { data, error } = await supabase
-        .from(table)
-        .select("id, created_at")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
-        .limit(50);
-      if (!error) subsByTable[table] = (data as { id: string; created_at: string }[]) ?? [];
-    })
-  );
-
-  return orders.map((o) => {
-    if (o.submission_id || !SUBMISSION_TABLE_BY_PRODUCT[o.product_id]) return o;
-    const table = SUBMISSION_TABLE_BY_PRODUCT[o.product_id];
-    const candidates = (subsByTable[table] ?? []).filter((s) => new Date(s.created_at) <= new Date(o.created_at));
-    if (candidates.length === 0) return o;
-    // 已按 created_at 倒序取回，第一条就是"早于下单时间里最近的一条"。
-    return { ...o, submission_id: candidates[0].id };
-  });
-}
-
-export default async function FieldOrdersPage({searchParams}: {searchParams?: {page?: string}}) {
-  const page=Math.max(1,Math.min(10000,Math.floor(Number(searchParams?.page)||1)));
-  const offset=(page-1)*50;
-  let hasMore=false;
-  let loadFailed=false;
-  const supabase = isSupabasePublicConfigured() ? createClient() : null;
-  const user = supabase ? await getServerUser(supabase) : null;
-
-  let orders: OrderRow[] = [];
-  let toolTaskByQuote:Record<string,ToolTaskState>={};
-  if (user && supabase) {
-    const [{ data, error: ordersError }, { data: miniArchives, error: archivesError }] = await Promise.all([
-      supabase.from("orders").select("id, product_id, product_type, amount_rmb, amount_usd, status, submission_id, submission_name, created_at, paid_at").eq("user_id", user.id).order("created_at", { ascending: false }).range(offset,offset+50),
-      supabase.from("mini_dendrite_assessments").select("id, product_id, algorithm_version, created_at, input").eq("user_id", user.id).order("created_at", { ascending: false }).range(offset,offset+50),
-    ]);
-    hasMore=(data?.length??0)>50||(miniArchives?.length??0)>50;
-    loadFailed=!!ordersError||!!archivesError;
-    const visibleArchives = (miniArchives ?? []).filter((row, index, all) => {
-      if (row.product_id !== "life-archetype") return true;
-      const archiveInput=(row.input as { subjectId?: string; identityVerified?: boolean } | null);
-      const subjectId = archiveInput?.subjectId;
-      return row.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && archiveInput?.identityVerified === true && index === all.findIndex((item) => item.product_id === "life-archetype" && item.algorithm_version === MINI_LIFE_ARCHETYPE_ALGORITHM && (item.input as { subjectId?: string; identityVerified?: boolean } | null)?.identityVerified === true && (item.input as { subjectId?: string } | null)?.subjectId === subjectId);
-    });
-    orders = [
-      ...((data as OrderRow[]) ?? []).slice(0,50),
-      ...(visibleArchives.slice(0,50).map((row) => ({ id: `A-${row.id}`, product_id: row.product_id, product_type: "field-archive", amount_rmb: null, amount_usd: 0, status: "archived", submission_id: row.id, submission_name: "小程序场域档案", created_at: row.created_at, paid_at: null, archive_only: true })) as OrderRow[]),
-    ].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-    orders = await backfillSubmissionIds(supabase, user.id, orders);
-    const archiveSources=[['life_map_submissions','life-map-report','/life-map'],['relationship_submissions','relationship-resonance','/relationship'],['qian_submissions','qian-reading','/qian'],['tarot_reading_submissions','tarot-reading','/mirror'],['resilience_submissions','resilience-report','/resilience'],['romance_submissions','romance-report','/romance'],['daily_tide_submissions','daily-tide-report','/daily'],['wealth_submissions','wealth-report','/wealth']];
-    const saved=await Promise.all(archiveSources.map(async([table,productId,route])=>{
-      const {data:rows,error}=await supabase.from(table).select('id,created_at').eq('user_id',user.id).or('full_report.not.is.null,full_report_en.not.is.null').order('created_at',{ascending:false}).range(offset,offset+50);
-      if(error){loadFailed=true;return [];}
-      if((rows?.length??0)>50)hasMore=true;
-      return (rows??[]).slice(0,50).filter(row=>!orders.some(order=>order.submission_id===row.id&&order.product_id===productId)).map(row=>({id:'R-'+row.id,product_id:productId,product_type:'field-archive',amount_rmb:null,amount_usd:0,status:'archived',submission_id:row.id,submission_name:'已生成报告',created_at:row.created_at,paid_at:null,archive_only:true,archive_href:route+'?archive='+encodeURIComponent(row.id)} as OrderRow));
-    }));
-    orders=[...orders,...saved.flat()].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at));
-
-    // P10: paid-tool task center. Read only this authenticated user's quote/grant/job rows.
-    // Do not load result JSON here: some AI results can be large and should not inflate the orders page.
-    const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    const toolQuoteIds=Array.from(new Set(
-      orders
-        .filter(o=>o.product_id.startsWith("toolquote:"))
-        .map(o=>o.product_id.slice("toolquote:".length))
-        .filter(id=>uuid.test(id))
-    ));
-    if(toolQuoteIds.length){
-      const [{data:quotes,error:quoteError},{data:grants,error:grantError},{data:jobs,error:jobError}]=await Promise.all([
-        supabase.from("tool_payment_quotes").select("id,tool_id,status,quantity,unit_name").eq("user_id",user.id).in("id",toolQuoteIds),
-        supabase.from("tool_export_grants").select("quote_id,quantity,consumed_quantity").eq("user_id",user.id).in("quote_id",toolQuoteIds),
-        supabase.from("tool_paid_jobs").select("quote_id,status,units,updated_at").eq("user_id",user.id).in("quote_id",toolQuoteIds).order("updated_at",{ascending:false}),
-      ]);
-      if(quoteError||grantError||jobError)loadFailed=true;
-      const grantMap=new Map((grants??[]).map(g=>[String(g.quote_id),g]));
-      const jobMap=new Map<string,Array<{status:string;units:number;updated_at:string}>>();
-      for(const j of jobs??[]){
-        const id=String(j.quote_id),arr=jobMap.get(id)??[];
-        arr.push({status:String(j.status),units:Number(j.units||0),updated_at:String(j.updated_at||"")});
-        jobMap.set(id,arr);
-      }
-      for(const q of quotes??[]){
-        const id=String(q.id),grant=grantMap.get(id),taskJobs=jobMap.get(id)??[];
-        toolTaskByQuote[id]={
-          quoteId:id,
-          toolId:String(q.tool_id),
-          quoteStatus:String(q.status),
-          quantity:Number(q.quantity||0),
-          unitName:String(q.unit_name||""),
-          grantQuantity:Number(grant?.quantity||0),
-          consumedQuantity:Number(grant?.consumed_quantity||0),
-          jobsTotal:taskJobs.length,
-          jobsCompleted:taskJobs.filter(j=>j.status==="completed").length,
-          jobsProcessing:taskJobs.filter(j=>j.status==="processing").length,
-          jobsFailed:taskJobs.filter(j=>j.status==="failed").length,
-          latestUpdatedAt:taskJobs[0]?.updated_at||null,
-        };
-      }
-    }
-
-  }
-
-  const fieldTestOrders = orders.filter((o) => categoryOf(o.product_id) === "field-test");
-  const membershipOrders = orders.filter((o) => categoryOf(o.product_id) === "membership");
-  const narrativeOrders = orders.filter((o) => categoryOf(o.product_id) === "narrative");
-
-    const toolOrders = orders.filter((o) => categoryOf(o.product_id) === "tool");
-  const balanceOrders = orders.filter((o) => categoryOf(o.product_id) === "balance");
-const SECTIONS: { key: string; titleZh: string; titleEn: string; hintZh: string; hintEn: string; rows: OrderRow[] }[] = [
-        {
-      key: "balance",
-      titleZh: "余额与充值",
-      titleEn: "Balances & Top-ups",
-      hintZh: "AI 余额与 SASI 创作余额分别管理。充值到账后按实际使用扣除，不把余额充值混入报告或叙事订单。",
-      hintEn: "AI Balance and SASI Creation Balance are managed separately and deducted by actual usage.",
-      rows: balanceOrders,
-    },
-        {
-      key: "tool",
-      titleZh: "实用工具",
-      titleEn: "Utility Tools",
-      hintZh: "按次付费的 AI / 云端工具订单。这里会显示购买额度、使用进度、处理状态；已付款但中断的任务可直接恢复，不会重复收费。",
-      hintEn: "Per-use AI/cloud tool orders, including recovery for pending payments.",
-      rows: toolOrders,
-    },
-{
-      key: "field-test", titleZh: "场域精测", titleEn: "Field Insight Tests",
-      hintZh: "生命图谱、关系共振、生命韧性、桃花磁场、财富地图、今日潮汐、量子生命镜像、生命灵签——每项各自一次性解锁，永久保存。",
-      hintEn: "Life Map, Relationship Resonance, Resilience, Romance, Wealth, Daily Tide, Tarot, Life Oracle — each unlocked once, permanently.",
-      rows: fieldTestOrders,
-    },
-    {
-      key: "membership", titleZh: "修炼技术与会员", titleEn: "Practices & Membership",
-        hintZh: "4 项修炼技术（永久）+ 显化订阅（单日/月度/年度）+ 多维叙事年度解锁 + 神尊年度全域通行证。",
-      hintEn: "4 practice techniques (permanent) + Manifestation passes (day/month/year) + Narrative/Everything bundles (time-limited).",
-      rows: membershipOrders,
-    },
-    {
-      key: "narrative", titleZh: "多维叙事", titleEn: "Narratives",
-        hintZh: "按篇购买的长篇与短篇小说，每篇解锁一年；若已购「多维叙事年度解锁」或有效期内的「神尊·全域解锁」，覆盖范围内的篇目不用单独购买。",
-      hintEn: "Individually purchased short and long narrative pieces, each unlocked for one year; already covered if you hold the Narrative or Everything bundle.",
-      rows: narrativeOrders,
-    },
-  ];
-
-  return (
-    <>
-      <Nav />
-      <main className="pt-24">
-        <div className="mx-auto max-w-3xl px-6 pb-24">
-          <div className="mb-2 flex items-center justify-between">
-            <h1 className="font-display text-3xl font-light text-[var(--lx-ink)]">
-              <Bi zh="付费任务中心" en="Paid Tasks" />
-            </h1>
-            <Link href="/account" className="text-xs uppercase tracking-widest2 text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
-              <Bi zh="← 返回我的账户" en="← Back to My Account" />
-            </Link>
-          </div>
-          <p className="mb-8 text-xs text-[var(--lx-faint)]">
-            <Bi zh="查看已购买服务、使用进度、处理中任务、失败恢复与已保存结果。已付款的任务会优先恢复，不会因为刷新或重新进入而再次收费。" en="See purchases, usage, processing tasks, recovery states and saved results. Paid work is resumed instead of charged again after refresh or re-entry." />
-          </p>
-
-          {!user && (
-            <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
-              <Bi zh="请先登录查看你的付费任务与订单。" en="Please sign in to view your paid tasks and orders." />
-            </p>
-          )}
-
-          {loadFailed && <p role="alert" className="my-4 text-[var(--lx-ink)]"><Bi zh="部分记录暂时未能加载，请刷新重试。加载失败不会删除订单或报告。" en="Some records could not be loaded. Refresh and try again. A load failure does not delete orders or reports." /></p>}
-          {user && !loadFailed && orders.length === 0 && (
-            <p className="lx11-legacy-panel p-8 text-center text-sm text-[var(--lx-faint)]">
-              <Bi zh="还没有任何订单——完成购买后，会出现在这里。" en="No orders yet — they'll appear here once you complete a purchase." />
-            </p>
-          )}
-
-          {user && <nav aria-label="订单与档案翻页" className="my-6 flex gap-6">{page>1&&<Link href={`/account/orders?page=${page-1}`}>← <Bi zh="上一页" en="Previous page" /></Link>}<span><Bi zh={`第 ${page} 页`} en={`Page ${page}`} /></span>{hasMore&&<Link href={`/account/orders?page=${page+1}`}><Bi zh="更早的订单与档案" en="Older orders & archives" /> →</Link>}</nav>}
-          {user && orders.length > 0 && (
-            <div className="space-y-10">
-              {SECTIONS.filter((s) => s.rows.length > 0).map((s) => (
-                <div key={s.key}>
-                  <h2 className="font-display text-lg text-[var(--lx-ink)]">
-                    <Bi zh={s.titleZh} en={s.titleEn} />
-                  </h2>
-                  <p className="mt-1 text-xs leading-6 text-[var(--lx-faint)]">
-                    <Bi zh={s.hintZh} en={s.hintEn} />
-                  </p>
-                  <div className="mt-4 space-y-3">
-                    {s.rows.map((o) => <OrderCard key={o.id} o={o} toolTask={o.product_id.startsWith("toolquote:") ? toolTaskByQuote[o.product_id.slice("toolquote:".length)] : null} />)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </main>
-
-      <Footer />
-    </>
-  );
+    </main>
+    <Footer/>
+  </>;
 }

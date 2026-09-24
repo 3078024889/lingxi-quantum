@@ -34,6 +34,31 @@ export async function middleware(request: NextRequest) {
   // 查询参数——一次性解决这一类问题，不用每发现一个就手动加一条。
   const { pathname } = request.nextUrl;
 
+  // V14.42: legacy personal-exploration / manifestation / practice products are retired.
+  // Keep historical data in storage, but public routes no longer expose or sell them.
+  const retiredLegacyExact = new Set([
+    "/live-as","/subconscious","/practice","/field-tests","/life-map","/relationship",
+    "/qian","/mirror","/tarot","/resilience","/romance","/daily","/wealth",
+    "/archetype","/mini-report","/membership","/origin"
+  ]);
+  const retiredLegacyPrefixes = [
+    "/practice/","/life-map/","/relationship/","/qian/","/mirror/","/tarot/",
+    "/resilience/","/romance/","/daily/","/wealth/","/archetype/","/mini-report/",
+    "/gate/",
+    "/learn/manifestation","/learn/subconscious-power","/learn/twin-flame",
+    "/learn/angel-numbers","/learn/higher-self","/learn/raise-frequency",
+    "/learn/chakras","/learn/synchronicity","/learn/awakening",
+    "/learn/moon-manifestation","/learn/law-of-attraction-vs",
+    "/learn/letting-go","/learn/emptiness","/learn/energy-drain"
+  ];
+  if (retiredLegacyExact.has(pathname) || retiredLegacyPrefixes.some((prefix)=>pathname.startsWith(prefix))) {
+    const target=request.nextUrl.clone();
+    target.pathname="/products";
+    target.search="";
+    return NextResponse.redirect(target,308);
+  }
+
+
   // 梦境探索产品已经撤下。旧入口与曾经围绕该产品建立的专题页统一
   // 返回当前探索指南，避免搜索结果继续把用户带入已退休板块。
   const retiredDreamPaths = new Set([

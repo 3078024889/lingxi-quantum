@@ -1,6 +1,5 @@
-import FieldMembership from "./FieldMembership";
-import "./field-account.css";
 export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -9,28 +8,13 @@ import SignOutButton from "./SignOutButton";
 import SwitchAccountButton from "./SwitchAccountButton";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
-import MiniAccountLinkPanel from "./MiniAccountLinkPanel";
-import RelationshipReportRow from "./RelationshipReportRow";
-import ReportRow from "./ReportRow";
-import QianReportRow from "./QianReportRow";
-import TarotReadingReportRow from "./TarotReadingReportRow";
-import SimpleReportRow from "./SimpleReportRow";
-import DeletableReportRow from "./DeletableReportRow";
 import AccountProfileCard from "@/components/AccountProfileCard";
-import PendingOrdersPanel from "./PendingOrdersPanel";
-import CollapsibleSection from "./CollapsibleSection";
-import { NARRATIVES } from "@/lib/narratives";
 import Bi from "@/components/Bi";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
-import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
-import { ensureAuditAccountAccess } from "@/lib/audit-access";
 
-export const metadata = { title: "我的账户 | 灵犀场 · My Account | LINGXIFIELD" };
+export const metadata = { title: "我的账户 | 灵犀场 LINGXIFIELD" };
 
-export default async function AccountPage({ searchParams }: { searchParams?: { miniLink?: string; next?: string } }) {
-  const miniLink = typeof searchParams?.miniLink === "string" && searchParams.miniLink.length <= 2048
-    ? searchParams.miniLink
-    : null;
+export default async function AccountPage({ searchParams }: { searchParams?: { next?: string } }) {
   const requestedNext = typeof searchParams?.next === "string" ? searchParams.next : null;
   const afterAuthPath = requestedNext
     && requestedNext.startsWith("/")
@@ -38,371 +22,50 @@ export default async function AccountPage({ searchParams }: { searchParams?: { m
     && !requestedNext.includes("\\")
     && requestedNext.length <= 512
       ? requestedNext
-      : "/live-as";
+      : "/products";
+
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
   const user = supabase ? await getServerUser(supabase) : null;
 
-  let manifestUntil: string | null = null;
-  let unlocks: string[] = [];
-  if (user && supabase) {
-    // The owner's exact review account receives one idempotent all-content grant
-    // before this page reads entitlements, so /account itself is the recovery path.
-    await ensureAuditAccountAccess(user).catch((error) => console.error("[audit access]", error));
-    // Reading the account must not regenerate a deliberately deleted archetype.
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("manifest_until")
-      .eq("id", user.id)
-      .single();
-    manifestUntil = profile?.manifest_until ?? null;
-    const { data: u } = await supabase
-      .from("unlocks")
-      .select("product_id")
-      .eq("user_id", user.id);
-    unlocks = (u ?? []).map((r: { product_id: string }) => r.product_id);
-  }
-  const manifestActive = manifestUntil && new Date(manifestUntil) > new Date();
-
-  // 之前账户页只显示"生命图谱已解锁"这个笼统的状态，没有列出具体报告——
-  // 如果同一个人测过不止一次（不同的出生信息、或者重新测过一次），
-  // 付款完成后要是没跳转成功、或者关掉了标签页，就完全没有入口能再找
-  // 回那份报告，只能干着急。这里补上一份列表，直接链到每一份报告。
-  let lifeMapReports: { id: string; core_type_name: string | null; created_at: string }[] = [];
-  // 之前只查了 life_map_submissions 这一张表——关系共振图谱用的是另一张
-  // 独立的表（relationship_submissions），场域入口这边完全没去查过，
-  // 所以测完关系共振，账户页里理所当然什么都看不到，不是漏了什么
-  // 判断逻辑，是压根没写查这张表的代码。这里补上，跟生命图谱报告
-  // 用同一套列表样式展示。
-  let relationshipReports: { id: string; name_a: string; name_b: string; created_at: string }[] = [];
-  // 同样的道理，生命灵签和塔罗生命镜像各自也是独立的表，之前场域
-  // 入口完全没查过这两张——这次一起补上，跟前两个用同一套列表样式。
-  let qianReports: { id: string; name: string | null; created_at: string }[] = [];
-  let tarotReadingReports: { id: string; name: string | null; created_at: string }[] = [];
-  // 生命韧性、桃花磁场、今日潮汐、财富创造地图——同样的道理，之前
-  // 场域入口完全没查过这四张表，这次一起补上。
-  let resilienceReports: { id: string; name: string | null; created_at: string }[] = [];
-  let romanceReports: { id: string; name: string | null; created_at: string }[] = [];
-  let dailyTideReports: { id: string; name: string | null; generated_date: string; created_at: string }[] = [];
-  let wealthReports: { id: string; name: string | null; created_at: string }[] = [];
-  let lifeArchetypeReports: { id: string; created_at: string; input: { name?: string; identityVerified?: boolean } | null }[] = [];
-  // v252：生成过二维码、但还没被确认为已支付的订单——万一支付弹窗
-  // 中途意外关闭（误触背景、或者用户直接切走了），这里给一条"事后
-  // 还能回来确认"的路。只列最近的、状态还不是paid的订单，付过的和
-  // 从没生成过订单的都不会出现在这里。
-  let pendingOrders: { id: string; product_id: string; created_at: string; amount_usd: number }[] = [];
-  if (user && supabase) {
-    const [
-      { data: reports }, { data: relReports }, { data: qReports }, { data: trReports },
-      { data: resReports }, { data: romReports }, { data: dtReports }, { data: wReports },
-      { data: archetypeReports }, { data: poReports },
-    ] = await Promise.all([
-      supabase
-        .from("life_map_submissions")
-        .select("id, core_type_name, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("relationship_submissions")
-        .select("id, name_a, name_b, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("qian_submissions")
-        .select("id, name, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("tarot_reading_submissions")
-        .select("id, name, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("resilience_submissions")
-        .select("id, name, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("romance_submissions")
-        .select("id, name, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("daily_tide_submissions")
-        .select("id, name, generated_date, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("wealth_submissions")
-        .select("id, name, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10),
-      supabase
-        .from("mini_dendrite_assessments")
-        .select("id, created_at, input")
-        .eq("user_id", user.id)
-        .eq("product_id", "life-archetype")
-        .eq("algorithm_version", MINI_LIFE_ARCHETYPE_ALGORITHM)
-        .order("created_at", { ascending: false })
-        .limit(1),
-      supabase
-        .from("orders")
-        .select("id, product_id, created_at, amount_usd")
-        .eq("user_id", user.id)
-        .eq("provider", "wechat")
-        .neq("status", "paid")
-        .not("provider_payment_id", "is", null)
-        .order("created_at", { ascending: false })
-        .limit(10),
-    ]);
-    lifeMapReports = reports ?? [];
-    relationshipReports = relReports ?? [];
-    qianReports = qReports ?? [];
-    tarotReadingReports = trReports ?? [];
-    resilienceReports = resReports ?? [];
-    romanceReports = romReports ?? [];
-    dailyTideReports = dtReports ?? [];
-    wealthReports = wReports ?? [];
-    lifeArchetypeReports = ((archetypeReports ?? []) as typeof lifeArchetypeReports).filter((report)=>report.input?.identityVerified===true);
-    pendingOrders = poReports ?? [];
+  let paidOrderCount:number|null=null;
+  if(user&&supabase){
+    const paid=await supabase.from("orders").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("status","paid");
+    paidOrderCount=paid.error?null:paid.count;
   }
 
-  const nameMap: Record<string, string> = {
-    bundle: "四项合集",
-    breath: "量子息法",
-    intuition: "直觉丹道",
-    "heart-reset": "归零心诀",
-    "ascending-heart": "上升心经",
-  };
-  // v251：之前这里把"多维叙事"解锁也混进这份纯文字列表，只显示标题、
-  // 点不进去——用户付了钱买一篇文章的永久阅读权，却只能在这里看见
-  // 一串没有链接的文字，找不到真正的文章在哪。这里单独把叙事类的
-  // unlock挑出来，做成可以直接点进去的链接；另外这几个"XX-report"
-  // 类型的unlock，已经各自有自己的报告列表区块了，这里不用重复显示，
-  // 过滤掉，不然同一份东西会在页面上出现两次、显示成一串没意义的
-  // 原始ID字符串。
-  const narrativeMap = new Map(NARRATIVES.map((n) => [n.slug, n.title]));
-  const REPORT_PRODUCT_IDS = new Set([
-    "life-map-report", "relationship-resonance", "qian-reading", "tarot-reading",
-    "resilience-report", "romance-report", "wealth-report", "daily-tide-report", "life-archetype",
-  ]);
-  const narrativeUnlocks = unlocks.filter((id) => narrativeMap.has(id));
-  const plainUnlocks = unlocks.filter((id) => !narrativeMap.has(id) && !REPORT_PRODUCT_IDS.has(id));
+  return <>
+    <Nav/>
+    <main className="lx11-page">
+      <section className="mx-auto max-w-3xl px-6 py-20">
+        {user ? <>
+          <AccountProfileCard email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} />
+          <div className="mt-6 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7">
+            <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]"><Bi zh="我的账户" en="My Account"/></p>
+            <h1 className="mt-3 font-display text-3xl text-[var(--lx-ink)]"><Bi zh="欢迎回来" en="Welcome back"/></h1>
+            <p className="mt-3 text-sm text-[var(--lx-muted)]">{user.email}</p>
+          </div>
 
-  let paidOrderCount: number | null = null;
-  let journalCount: number | null = null;
-  if(user && supabase){const [paid,journal]=await Promise.all([supabase.from("orders").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("status","paid"),supabase.from("practice_journal_entries").select("id",{count:"exact",head:true}).eq("user_id",user.id)]);paidOrderCount=paid.error?null:paid.count;journalCount=journal.error?null:journal.count;}
-  return (
-    <>
-      <Nav />
-      <main className={user ? "field-account" : "pt-16"}>
-        <section className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center px-6 py-24 text-center">
-          {user ? (
-            <>
-              {miniLink && <MiniAccountLinkPanel ticket={miniLink} />}
-              <AccountProfileCard email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} />
-              <div className="bg-[var(--lx-panel)] w-full rounded-sm px-8 py-10">
-              <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
-                <Bi zh="我的账户" en="My Account" />
-              </p>
-              <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)]">
-                <Bi zh="欢迎回来" en="Welcome back" />
-              </h1>
-              <p className="mt-4 text-base text-[var(--lx-muted)]">{user.email}</p>
-              <p className="mt-6 max-w-sm text-base leading-9 text-[var(--lx-muted)]">
-                <Bi zh="报告、练习、购买记录与账户设置都集中在这里。" en="Reports, practices, purchases, and account settings are all kept here." />
-              </p>
-              </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <Link href="/products" className="rounded-2xl border border-[var(--lx-line)] p-5"><b><Bi zh="产品中心" en="Product Center"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="AI、SASI、工具与余额入口" en="AI, SASI, tools and balances"/></p></Link>
+            <Link href="/account/orders" className="rounded-2xl border border-[var(--lx-line)] p-5"><b><Bi zh="付费任务中心" en="Paid Tasks"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh={`已支付订单：${paidOrderCount ?? "—"}`} en={`Paid orders: ${paidOrderCount ?? "—"}`}/></p></Link>
+            <Link href="/ai-wallet" className="rounded-2xl border border-[var(--lx-line)] p-5"><b>AI Balance</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="查看余额与充值" en="View balance and top up"/></p></Link>
+            <Link href="/sasi" className="rounded-2xl border border-[var(--lx-line)] p-5"><b>SASI</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="进入创作工作台" en="Open creation workspace"/></p></Link>
+          </div>
 
-              <div className="field-account-stats"><Link href="/account/orders"><span><Bi zh="已支付订单" en="Paid orders" /></span><strong>{paidOrderCount ?? "—"}</strong><small>{paidOrderCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="查看订单与已保存报告 →" en="View orders & saved reports →" />}</small></Link><Link href="/practice"><span><Bi zh="免费修炼技术" en="Free practices" /></span><strong>4</strong><small><Bi zh="完整引导，随时进入 →" en="Complete guides, available anytime →" /></small></Link><Link href="/practice#practice-journal"><span><Bi zh="我的练习记录" en="My practice journal" /></span><strong>{journalCount ?? "—"}</strong><small>{journalCount === null ? <Bi zh="暂未能读取，请刷新重试" en="Unable to read right now. Refresh and try again." /> : <Bi zh="回看自己记录的真实体验 →" en="Review your recorded experiences →" />}</small></Link></div><nav className="field-account-links" aria-label="我的账户快捷入口"><Link href="/live-as"><Bi zh="我的现实回路" en="My Reality Loop" /><small><Bi zh="回到意图、行动与复盘" en="Return to intentions, actions and reflection" /></small></Link><a href="#field-archives"><Bi zh="我的完整档案" en="My complete archives" /><small><Bi zh="阅读报告，下载与回看" en="Read, download and revisit reports" /></small></a><Link href="/practice"><Bi zh="我的修炼记录" en="My practice journal" /><small><Bi zh="持续练习，记录真实感受" en="Keep practising and record what you felt" /></small></Link></nav>
-              {/* 会员状态 */}
-              <div className="mt-8 w-full space-y-3 text-left">
-                <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4">
-                  <p className="text-sm text-[var(--lx-muted)]"><Bi zh="意识显化" en="Manifestation" /></p>
-                  <p className="mt-1 font-display text-lg text-[var(--lx-ink)]">
-                    {manifestActive ? (
-                      <>
-                        <Bi zh="有效至 " en="Active until " />
-                        {new Date(manifestUntil!).toLocaleDateString()}
-                      </>
-                    ) : (
-                      <Bi zh="未订阅" en="Not subscribed" />
-                    )}
-                  </p>
-                </div>
-                <div className="rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4">
-                  <p className="text-sm text-[var(--lx-muted)]"><Bi zh="修炼技术" en="Practice techniques" /></p>
-                  <p className="mt-1 font-display text-lg text-[var(--lx-ink)]">
-                    <Link href="/practice"><Bi zh="四项完整引导，免费开放 →" en="Four complete practices, freely available →" /></Link>
-                  </p>
-                </div>
-              </div>
-
-              <Link
-                href="/account/orders"
-                className="mt-4 flex w-full items-center justify-center gap-2 border border-[var(--lx-line-strong)] bg-[var(--lx-soft)] py-3 font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:bg-lattice hover:text-[var(--lx-bg)]"
-              >
-                <Bi zh="查看账户订单（订单号 · 金额 · 状态 · 有效期）→" en="View Account Orders (No. · Amount · Status · Expiry) →" />
-              </Link>
-
-              <PendingOrdersPanel orders={pendingOrders} />
-
-              <FieldMembership /><section id="field-archives" className="field-account-archives">
-              {narrativeUnlocks.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 多维叙事" titleEn="Unlocked · Narrative" count={narrativeUnlocks.length}>
-                  {narrativeUnlocks.map((slug) => (
-                    <SimpleReportRow key={slug} href={`/narrative/${slug}`} title={narrativeMap.get(slug) ?? slug} date="" />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {lifeMapReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 生命图谱" titleEn="Unlocked · Life Map" count={lifeMapReports.length}>
-                  {lifeMapReports.map((r) => (
-                    <ReportRow
-                      key={r.id}
-                      id={r.id}
-                      title={r.core_type_name}
-                      date={new Date(r.created_at).toLocaleDateString()}
-                    />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {relationshipReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 关系共振" titleEn="Unlocked · Relationship Resonance" count={relationshipReports.length}>
-                  {relationshipReports.map((r) => (
-                    <RelationshipReportRow
-                      key={r.id}
-                      id={r.id}
-                      title={`${r.name_a} × ${r.name_b}`}
-                      date={new Date(r.created_at).toLocaleDateString()}
-                    />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {qianReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 生命灵签" titleEn="Unlocked · Life Oracle" count={qianReports.length}>
-                  {qianReports.map((r) => (
-                    <QianReportRow
-                      key={r.id}
-                      id={r.id}
-                      title={r.name}
-                      date={new Date(r.created_at).toLocaleDateString()}
-                    />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {tarotReadingReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 量子生命镜像" titleEn="Unlocked · Quantum Life Mirror" count={tarotReadingReports.length}>
-                  {tarotReadingReports.map((r) => (
-                    <TarotReadingReportRow
-                      key={r.id}
-                      id={r.id}
-                      title={r.name}
-                      date={new Date(r.created_at).toLocaleDateString()}
-                    />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {resilienceReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 生命韧性指数" titleEn="Unlocked · Life Resilience" count={resilienceReports.length}>
-                  {resilienceReports.map((r) => (
-                    <DeletableReportRow key={r.id} id={r.id} kind="resilience" href={`/resilience/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {romanceReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 桃花磁场指数" titleEn="Unlocked · Romance Resonance Index" count={romanceReports.length}>
-                  {romanceReports.map((r) => (
-                    <DeletableReportRow key={r.id} id={r.id} kind="romance" href={`/romance/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {dailyTideReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 今日潮汐" titleEn="Unlocked · Today’s Tide" count={dailyTideReports.length}>
-                  {dailyTideReports.map((r) => (
-                    <DeletableReportRow key={r.id} id={r.id} kind="daily" href={`/daily/full?id=${r.id}`} title={r.name || r.generated_date} date={new Date(r.created_at).toLocaleDateString()} />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {wealthReports.length > 0 && (
-                <CollapsibleSection titleZh="已解锁订单 · 财富创造地图" titleEn="Unlocked · Wealth Creation Map" count={wealthReports.length}>
-                  {wealthReports.map((r) => (
-                    <DeletableReportRow key={r.id} id={r.id} kind="wealth" href={`/wealth/full?id=${r.id}`} title={r.name} date={new Date(r.created_at).toLocaleDateString()} />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              {lifeArchetypeReports.length > 0 && (
-                <CollapsibleSection titleZh="生命原型 · 八流归一" titleEn="Life Archetype · Eight-stream Convergence" count={lifeArchetypeReports.length}>
-                  {lifeArchetypeReports.map((r) => (
-                    <DeletableReportRow key={r.id} id={r.id} kind="archetype" href={`/mini-report?id=${r.id}`} title={r.input?.name || "当前生命原型档案"} date={new Date(r.created_at).toLocaleDateString()} />
-                  ))}
-                </CollapsibleSection>
-              )}
-
-              </section>
-              <div id="account-actions" className="mt-8 flex w-full flex-col gap-4">
-                <Link
-                  href="/sasi"
-                  className="w-full bg-bone py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-lattice"
-                >
-                  <Bi zh="进入灵犀场 SASI 工作台" en="Enter Lingxi SASI Studio" />
-                </Link>
-                <Link
-                  href="/live-as"
-                  className="w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
-                >
-                  <Bi zh="进入我的现实回路" en="Enter my Reality Loop" />
-                </Link>
-                <Link
-                  href="/membership"
-                  className="w-full border border-amber/40 py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)] transition hover:bg-amber/10"
-                >
-                  <Bi zh="能量交换 / 续期" en="Energy Exchange / Renew" />
-                </Link>
-                <ChangePasswordForm />
-                <SwitchAccountButton />
-                <SignOutButton />
-                <DeleteAccountButton />
-              </div>
-
-            </>
-          ) : (
-            <>
-              <div className="bg-[var(--lx-panel)] w-full rounded-sm px-8 py-10">
-              <p className="font-display text-sm uppercase tracking-widest2 text-[var(--lx-ink)]">
-                <Bi zh="进入场域" en="Enter the field" />
-              </p>
-              <h1 className="mt-6 font-display text-4xl font-light text-[var(--lx-ink)]">
-                <Bi zh="连接到你的意识场" en="Connect to your field of consciousness" />
-              </h1>
-              <p className="mt-6 max-w-sm text-base leading-9 text-[var(--lx-muted)]">
-                <Bi zh="用邮箱和密码登录或注册。验证后，你的现实回路、练习记录与显化轨迹，将在云端安全同步。" en="Sign in or register with email and password. Once verified, your Reality Loop, practice records, and manifestation trail sync securely to the cloud." />
-              </p>
-              <div className="mt-12 w-full">
-                <LoginForm afterAuthPath={miniLink ? `/account?miniLink=${encodeURIComponent(miniLink)}` : afterAuthPath} />
-              </div>
-              </div>
-            </>
-          )}
-        </section>
-      </main>
-      <Footer />
-    </>
-  );
+          <div className="mt-8 space-y-3">
+            <ChangePasswordForm/>
+            <SwitchAccountButton/>
+            <SignOutButton/>
+            <DeleteAccountButton/>
+          </div>
+        </> : <div className="mx-auto max-w-md rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7 text-center">
+          <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]"><Bi zh="账户" en="Account"/></p>
+          <h1 className="mt-4 font-display text-3xl text-[var(--lx-ink)]"><Bi zh="登录灵犀场" en="Sign in to LINGXIFIELD"/></h1>
+          <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]"><Bi zh="登录后查看余额、任务、订单与创作记录。" en="Sign in to view balances, tasks, orders and creation records."/></p>
+          <div className="mt-8"><LoginForm afterAuthPath={afterAuthPath}/></div>
+        </div>}
+      </section>
+    </main>
+    <Footer/>
+  </>;
 }

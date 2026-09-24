@@ -13,7 +13,6 @@ type Theme = "light" | "dark";
 type K =
   | "home" | "tools" | "products" | "explore" | "studio"
   | "books" | "learning" | "research"
-  | "field" | "manifest" | "subconscious" | "practice"
   | "wallet" | "myField";
 
 const groups: { href: string; key: K; icon: string }[][] = [
@@ -30,10 +29,6 @@ const groups: { href: string; key: K; icon: string }[][] = [
     { href: "/ai-research", key: "research", icon: "RS" },
   ],
   [
-    { href: "/field-tests", key: "field", icon: "FT" },
-    { href: "/live-as", key: "manifest", icon: "MF" },
-    { href: "/subconscious", key: "subconscious", icon: "SC" },
-    { href: "/practice", key: "practice", icon: "PR" },
     { href: "/ai-wallet", key: "wallet", icon: "AI" },
     { href: "/account", key: "myField", icon: "AC" },
   ],
@@ -115,7 +110,7 @@ export default function Nav() {
     pathname.startsWith("/sasi/") ||
     pathname.startsWith("/ai-");
 
-  const titles = [t("start"), t("sasi"), t("fieldGroup")];
+  const titles = [t("start"), t("sasi"), t("account")];
   const mt = menuText[lang];
 
   function submit(event: FormEvent) {

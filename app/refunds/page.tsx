@@ -1,105 +1,15 @@
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
-import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
 
-const REFUNDS_FAQ: BilingualFaqItem[] = [
-  {
-    qZh: "买了体验内容后感觉不符合期待，可以退款吗？", qEn: "If a piece of content doesn't match my expectations, can I get a refund?",
-    aZh: "灵犀场提供的是个人探索体验。内容生成完成后，由于数字内容已经即时提供，单纯因个人理解、感受或期待差异，一般不属于退款范围。如果出现技术故障、内容无法访问、重复支付，可以联系我们处理。",
-    aEn: "Lingxi Field offers a personal exploration experience. Once content has been generated, because digital content is provided instantly, a difference in personal understanding, feeling, or expectation alone generally isn't grounds for a refund. If you experience a technical fault, inaccessible content, or a duplicate charge, please contact us.",
-  },
-  {
-    qZh: "退款多久可以到账？", qEn: "How long does a refund take to arrive?",
-    aZh: "我们通常会在收到申请后的5个工作日内完成审核。退款成功后，将按照原支付渠道规则返回，实际到账时间取决于支付服务商。",
-    aEn: "We typically complete our review within 5 business days of receiving your request. Once approved, the refund is returned via the original payment channel's rules — the actual arrival time depends on the payment provider.",
-  },
-];
+export const metadata={title:"退款与结算 | 灵犀场 LINGXIFIELD",alternates:{canonical:"/refunds"}};
 
-export const metadata = {
-  title: "退款政策 | 灵犀场 | Refund Policy | Lingxi Field",
-  alternates: { canonical: "/refunds" },
-};
-
-export default function RefundsPage() {
-  return (
-    <>
-      <Nav />
-      <main className="lx11-page lx-legal-page"><div className="lx-legal-wrap">
-        <div className="lx-legal-card">
-        <h1 className="font-display text-4xl font-light text-[var(--lx-ink)]">
-          <Bi zh="退款政策" en="Refund Policy" />
-        </h1>
-        <p className="lx-legal-meta">
-          <Bi zh="最后更新：2026年7月" en="Last updated: July 2026" />
-        </p>
-
-        <div className="mt-10 space-y-8 text-base leading-8 text-[var(--lx-muted)]">
-          <section>
-            <h2 className="font-display text-xl text-[var(--lx-ink)]">
-              <Bi zh="1. 数字体验说明" en="1. About Digital Experiences" />
-            </h2>
-            <p className="mt-3">
-              <Bi
-                zh="灵犀场提供的部分内容属于即时生成数字体验，例如生命图谱、关系探索、灵犀生命灵签、量子生命镜像、个性化探索报告。这些内容会根据用户提交的信息生成，并在完成后立即提供访问权限。"
-                en="Some content on Lingxi Field is an instantly generated digital experience — for example, the Life Map, relationship exploration, the Lingxi Life Oracle, Quantum Life Mirror, and personalized exploration reports. This content is generated from the information you submit and access is granted immediately once it's complete."
-              />
-            </p>
-          </section>
-
-          <section>
-            <h2 className="font-display text-xl text-[var(--lx-ink)]">
-              <Bi zh="2. 可以申请退款的情况" en="2. When a Refund Can Be Requested" />
-            </h2>
-            <p className="mt-3">
-              <Bi
-                zh="如果发生：支付成功但内容未开启；系统技术故障导致无法使用；重复支付；未授权支付，请联系我们处理。"
-                en="If any of the following occur — payment succeeded but content did not open; a system fault made the content unusable; a duplicate charge; or an unauthorized payment — please contact us."
-              />
-            </p>
-          </section>
-
-          <section>
-            <h2 className="font-display text-xl text-[var(--lx-ink)]">
-              <Bi zh="3. 通常无法退款的情况" en="3. When a Refund Generally Isn't Available" />
-            </h2>
-            <p className="mt-3">
-              <Bi
-                zh="由于数字内容具有即时生成属性，以下情况通常不属于退款范围：已生成并查看内容；因个人主观感受认为内容「不符合期待」；认为探索结果「不准确」；用户填写信息错误导致结果变化。灵犀场提供的是探索体验，而非保证性预测服务。"
-                en="Because digital content is generated instantly, the following generally aren't grounds for a refund: content that has already been generated and viewed; a personal, subjective sense that content 'didn't match expectations'; a belief that a result was 'inaccurate'; or a result that changed because of information you entered incorrectly. Lingxi Field offers an exploratory experience, not a guaranteed predictive service."
-              />
-            </p>
-          </section>
-
-          <section>
-            <h2 className="font-display text-xl text-[var(--lx-ink)]">
-              <Bi zh="4. 退款申请流程" en="4. How to Request a Refund" />
-            </h2>
-            <p className="mt-3">
-              <Bi
-                zh="请发送邮件至 support@lingxifield.com，提供注册邮箱、订单信息、问题描述。我们将在通常5个工作日内回复处理结果。退款到账时间取决于支付服务商处理周期。"
-                en="Please email support@lingxifield.com with your registered email, order information, and a description of the issue. We will typically respond with an outcome within 5 business days. The time for a refund to arrive depends on the payment provider's processing cycle."
-              />
-            </p>
-          </section>
-
-          <section>
-            <h2 className="font-display text-xl text-[var(--lx-ink)]">
-              <Bi zh="联系我们" en="Contact Us" />
-            </h2>
-            <div className="mt-3 space-y-1 text-sm">
-              <p>support@lingxifield.com</p>
-              <p>business@lingxifield.com</p>
-              <p>contact@lingxifield.com</p>
-            </div>
-          </section>
-        </div>
-        <div className="lx-legal-faq">
-          <FaqSection items={REFUNDS_FAQ} />
-        </div>
-        </div></div>
-      </main>
-      <Footer />
-    </>
-  );
-}
+export default function RefundsPage(){return <><Nav/><main className="lx11-page lx-legal-page"><div className="lx-legal-wrap"><div className="lx-legal-card">
+<h1 className="font-display text-4xl font-light text-[var(--lx-ink)]"><Bi zh="退款与结算" en="Refunds & Settlement"/></h1>
+<p className="lx-legal-meta"><Bi zh="最后更新：2026年9月" en="Last updated: September 2026"/></p>
+<div className="mt-10 space-y-8 text-base leading-8 text-[var(--lx-muted)]">
+<section><h2 className="font-display text-xl text-[var(--lx-ink)]"><Bi zh="1. 适用范围" en="1. Scope"/></h2><p className="mt-3"><Bi zh="本政策适用于当前提供的 AI 余额、SASI 创作余额、按次付费工具与其他明确标价的软件数字服务。" en="This policy applies to current AI Balance, SASI Creation Balance, per-use tools and other clearly priced digital software services."/></p></section>
+<section><h2 className="font-display text-xl text-[var(--lx-ink)]"><Bi zh="2. 可申请退款" en="2. Refundable Cases"/></h2><p className="mt-3"><Bi zh="重复扣款、未经授权支付、支付成功但余额或权益未到账、平台技术故障导致已购买服务无法提供时，可以联系我们核对并处理。" en="Contact us for duplicate charges, unauthorized payments, paid balances or entitlements not credited, or platform faults that prevent a purchased service from being delivered."/></p></section>
+<section><h2 className="font-display text-xl text-[var(--lx-ink)]"><Bi zh="3. 余额与已消耗服务" en="3. Balances & Consumed Services"/></h2><p className="mt-3"><Bi zh="AI/SASI 余额的退款以未消耗充值本金和实际结算记录为依据；已经实际使用的模型、生成或第三方处理成本通常不能按未使用部分计算。" en="AI/SASI balance refunds are based on unused refundable principal and actual settlement records. Model, generation or third-party processing already consumed is generally not treated as unused balance."/></p></section>
+<section><h2 className="font-display text-xl text-[var(--lx-ink)]"><Bi zh="4. 申请方式" en="4. How to Request"/></h2><p className="mt-3"><Bi zh="发送注册邮箱、订单号与问题说明至 support@lingxifield.com。我们会核对支付与实际交付记录后处理。" en="Send your registered email, order number and issue description to support@lingxifield.com. We review payment and actual delivery records before processing."/></p></section>
+</div></div></div></main><Footer/></>;}
