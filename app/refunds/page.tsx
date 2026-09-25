@@ -2,11 +2,12 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Bi from "@/components/Bi";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
 export const metadata={title:"退款与结算 | 灵犀场 LINGXIFIELD",alternates:{canonical:"/refunds"}};
 
 export default function RefundsPage(){return <><Nav/><main className="lx11-page lx-legal-page"><div className="lx-legal-wrap"><div className="lx-legal-card">
-<h1 className="font-display text-4xl font-light text-[var(--lx-ink)]"><Bi zh="退款与结算" en="Refunds & Settlement"/></h1>
+<div className="lx-page-title-line"><LingxiMiniIcon name="refund" size="title"/><h1 className="font-display text-4xl font-light text-[var(--lx-ink)]"><Bi zh="退款与结算" en="Refunds & Settlement"/></h1></div>
 <p className="lx-legal-meta"><Bi zh="最后更新：2026年9月" en="Last updated: September 2026"/></p>
 <div className="mt-10 space-y-8 text-base leading-8 text-[var(--lx-muted)]">
 <section><h2 className="font-display text-xl text-[var(--lx-ink)]"><Bi zh="1. 适用范围" en="1. Scope"/></h2><p className="mt-3"><Bi zh="本政策适用于当前提供的 AI 余额、SASI 创作余额、按次付费工具与其他明确标价的软件数字服务。" en="This policy applies to current AI Balance, SASI Creation Balance, per-use tools and other clearly priced digital software services."/></p></section>

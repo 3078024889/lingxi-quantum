@@ -1,0 +1,30 @@
+import fs from "node:fs";
+const fail=[]; const ok=(cond,name)=>{console.log(`${cond?"PASS":"FAIL"} ${name}`); if(!cond) fail.push(name)};
+const icon=fs.readFileSync("components/LingxiMiniIcon.tsx","utf8");
+const glyph=fs.readFileSync("components/tools/ToolGlyph.tsx","utf8");
+const shell=fs.readFileSync("components/tools/ToolShell.tsx","utf8");
+const prod=fs.readFileSync("app/products/ProductCatalogClient.tsx","utf8");
+const wallet=fs.readFileSync("components/WalletHeroCopy.tsx","utf8");
+const orders=fs.readFileSync("app/account/orders/page.tsx","utf8");
+const wd=fs.readFileSync("app/account/withdrawals/page.tsx","utf8");
+const refunds=fs.readFileSync("app/refunds/page.tsx","utf8");
+const temp=fs.readFileSync("components/tools/TempMailWorkbench.tsx","utf8");
+const burn=fs.readFileSync("components/tools/BurnAfterReadWorkbench.tsx","utf8");
+const css=fs.readFileSync("app/globals.css","utf8");
+const shellI18n=fs.readFileSync("lib/tool-shell-i18n.ts","utf8");
+
+ok(icon.includes('lx-mini-badge')&&icon.includes('|"idcard"|"compare"|"translate"|"text"|"web"|"excel"|"compress"|"hash"'),"LingxiMiniIcon vivid system installed");
+ok(glyph.includes('"temp-mail":"mail"')&&glyph.includes('"burn-after-read":"burn"')&&glyph.includes('"id-photo-ai":"idcard"'),"ToolGlyph slug mapping upgraded");
+ok(shell.includes('className="lx-tool-back"'),"ToolShell has back button");
+ok(shellI18n.includes('"返回实用工具"'),"tool shell back label i18n added");
+ok(prod.includes('LingxiMiniIcon name={item.icon}')&&prod.includes('name="products" size="title"'),"product center shared icons");
+ok(wallet.includes('name="wallet" size="title"'),"wallet title icon");
+ok(orders.includes('name="orders" size="title"'),"orders title icon");
+ok(wd.includes('href="/account"')&&wd.includes('name="refund" size="title"'),"withdrawals icon + return");
+ok(refunds.includes('name="refund" size="title"'),"refunds title icon");
+ok(temp.includes('href="/tools"')&&temp.includes('name="mail" size="title"'),"temp mail icon + return");
+ok(burn.includes('href="/tools"')&&burn.includes('name="burn" size="title"'),"burn icon + return");
+ok(css.includes('/* V14.77 full visual rebuild */')&&css.includes('.lx-tools-v124-card')&&css.includes('.lx-mini-badge'),"visual CSS layer installed");
+for(const p of [prod,wallet,orders,wd,refunds,temp,burn,shell]) ok(!p.includes('\\nimport '),"no literal newline import corruption");
+if(fail.length){console.error(`V14.77_AUDIT_FAILURES=${fail.length}`);fail.forEach((x,i)=>console.error(`${i+1}. ${x}`));process.exit(1)}
+console.log("V14.77_AUDIT=PASS");

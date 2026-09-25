@@ -5,6 +5,7 @@ import Bi from "@/components/Bi";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/plans";
 import ToolOrderRecoveryButton from "@/components/tools/ToolOrderRecoveryButton";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
 export const metadata = { title: "订单与使用记录 | 灵犀场 LINGXIFIELD", robots:{index:false,follow:false} };
 
@@ -61,7 +62,7 @@ export default async function OrdersPage({searchParams}:{searchParams?:{payment?
     <main className="lx11-page">
       <div className="mx-auto max-w-3xl px-6 py-20">
         <div className="flex items-start justify-between gap-4">
-          <div><p className="lx11-kicker"><Bi zh="账户" en="Account"/></p><h1 className="mt-3 font-display text-3xl text-[var(--lx-ink)]"><Bi zh="订单与使用记录" en="Paid Tasks"/></h1></div>
+          <div><div className="lx-page-title-line"><LingxiMiniIcon name="orders" size="title"/><p className="lx11-kicker"><Bi zh="账户" en="Account"/></p></div><h1 className="mt-3 font-display text-3xl text-[var(--lx-ink)]"><Bi zh="订单与使用记录" en="Paid Tasks"/></h1></div>
           <Link href="/account" className="text-sm">← <Bi zh="返回账户" en="Back"/></Link>
         </div>
         <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]"><Bi zh="充值、工具处理和已经完成的付款都留在这里，方便你随时回来核对。" en="Top-ups, paid tool runs and completed payments stay here so you can check them whenever needed."/></p>

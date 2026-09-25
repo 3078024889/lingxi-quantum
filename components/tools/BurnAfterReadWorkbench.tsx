@@ -2,6 +2,8 @@
 import {useMemo,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {privacyText} from "@/lib/privacy-tools-i18n";
+import Link from "next/link";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
 function b64url(bytes:Uint8Array){let s="";bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 type Mode="once"|"timed"|"limited"|"fast";
@@ -84,7 +86,8 @@ export default function BurnAfterReadWorkbench(){
 
  const modes:[Mode,string,string][]=[["once",t("once"),t("onceD")],["timed",t("timed"),t("timedD")],["limited",t("limited"),t("limitedD")],["fast",t("fast"),t("fastD")]];
  return <div className="mx-auto max-w-3xl space-y-5">
-  <section className="rounded-3xl border border-slate-200 bg-white p-6"><h1 className="text-3xl font-semibold text-slate-950">{t("burnTitle")}</h1><p className="mt-2 text-sm leading-6 text-slate-600">{t("burnLead")}</p></section>
+  <Link href="/tools" className="lx-tool-back">← {lang==="zh"?"返回实用工具":"Back to tools"}</Link>
+  <section className="rounded-3xl border border-slate-200 bg-white p-6 lx-tool-panel-shell"><div className="lx-special-tool-title"><LingxiMiniIcon name="burn" size="title"/><h1 className="text-3xl font-semibold text-slate-950">{t("burnTitle")}</h1></div><p className="mt-2 text-sm leading-6 text-slate-600">{t("burnLead")}</p></section>
   <section className="rounded-3xl border border-slate-200 bg-white p-6">
    <textarea value={text} onChange={e=>setText(e.target.value)} maxLength={120000} rows={7} placeholder={lang==="zh"?"输入要分享的私密内容，也可以只上传文件…":"Enter private content, or share files only…"} className="w-full rounded-2xl border border-slate-200 p-4 text-slate-900 outline-none"/>
    <div className="mt-4 rounded-2xl border border-dashed border-slate-300 p-4">

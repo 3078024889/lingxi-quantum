@@ -2,6 +2,8 @@
 import {useEffect,useMemo,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {privacyText} from "@/lib/privacy-tools-i18n";
+import Link from "next/link";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
 type Box={id:string;address:string;token:string;expiresAt:string};
 type Msg={id:string;sender:string;subject:string;text_body:string;received_at:string;size_bytes:number};
@@ -242,8 +244,9 @@ export default function TempMailWorkbench(){
  },[pendingQuote,batchCount]);
 
  return <div className="mx-auto max-w-3xl space-y-5">
-  <section className="rounded-3xl border border-slate-200 bg-white p-6">
-   <h1 className="text-3xl font-semibold text-slate-950">{t("tempTitle")}</h1>
+  <Link href="/tools" className="lx-tool-back">← {lang==="zh"?"返回实用工具":"Back to tools"}</Link>
+  <section className="rounded-3xl border border-slate-200 bg-white p-6 lx-tool-panel-shell">
+   <div className="lx-special-tool-title"><LingxiMiniIcon name="mail" size="title"/><h1 className="text-3xl font-semibold text-slate-950">{t("tempTitle")}</h1></div>
    <p className="mt-2 text-sm leading-6 text-slate-600">{t("tempLead")}</p>
   </section>
 
