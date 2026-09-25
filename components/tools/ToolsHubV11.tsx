@@ -7,7 +7,7 @@ import { liveTools } from "@/lib/tools/registry";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 
 type GlyphKind = "image" | "document" | "video" | "audio" | "privacy" | "utility" | "ai" | "qr";
-type Category = "all" | "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr" | "field";
+type Category = "all" | "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";
 type ToolItem = {
   href: string;
   titleZh: string;
@@ -27,7 +27,6 @@ const categoryLabels: Record<Exclude<Category, "all">, { zh: string; en: string 
   utility: { zh: "文件 / 通用", en: "Files / Utilities" },
   ai: { zh: "AI 能力", en: "AI" },
   qr: { zh: "二维码", en: "QR" },
-  field: { zh: "场域小工具", en: "Field tools" },
 };
 
 const privacyInfrastructureTools: ToolItem[] = [
@@ -76,7 +75,6 @@ function registryCategory(category: string): ToolItem["category"] {
   if (category === "image") return "image";
   if (category === "pdf") return "pdf";
   if (category === "qr") return "qr";
-  if (category === "field") return "field";
   return "utility";
 }
 
@@ -107,7 +105,7 @@ function allTools(): ToolItem[] {
   return [...map.values()];
 }
 
-const categories: Category[] = ["all", "image", "pdf", "media", "privacy", "utility", "ai", "qr", "field"];
+const categories: Category[] = ["all", "image", "pdf", "media", "privacy", "utility", "ai", "qr"];
 
 export default function ToolsHubV11() {
   const { lang, t } = useLingxiLang();

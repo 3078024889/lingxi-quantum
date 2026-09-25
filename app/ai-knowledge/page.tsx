@@ -9,7 +9,7 @@ import BookSasiBalanceBar from "@/components/BookSasiBalanceBar";
 export const metadata: Metadata = {
   title: "灵犀场书本 SASI｜把书本变成可持续对话的智能体",
   description:
-    "上传 PDF、TXT、Markdown 或图片，把书本、论文和私人资料变成可检索、可追溯、按真实 AI 用量结算的私人智能体。",
+    "上传 PDF、TXT、Markdown 或图片，把书本、论文和私人资料变成可检索、可追溯、能持续追问的私人智能体。",
   alternates: { canonical: "/ai-knowledge" },
 };
 
@@ -21,8 +21,8 @@ export default function Page() {
         <div className="lx10-wrap">
           <p className="lx10-kicker">
             <LxText
-              zh="书本 SASI · 已上线"
-              en="Book SASI · Live"
+              zh="书本 SASI"
+              en="Book SASI"
               ja="Book SASI · 公開中"
               ko="Book SASI · 사용 가능"
               fr="Book SASI · Disponible"

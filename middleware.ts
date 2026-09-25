@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
     "/learn","/glossary",
     "/live-as","/subconscious","/practice","/field-tests","/life-map","/relationship",
     "/qian","/mirror","/tarot","/resilience","/romance","/daily","/wealth",
-    "/archetype","/mini-report","/membership","/origin"
+    "/archetype","/mini-report","/membership","/origin","/tools/number-energy"
   ]);
 
   const retiredLegacyPrefixes = [

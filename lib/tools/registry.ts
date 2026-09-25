@@ -13,20 +13,6 @@ export const TOOLS: ToolMeta[] = [
     ["url-encode-decode", "URL 编码解码", "URL Encode & Decode", "对单个URL参数进行百分号编码或解码，支持中文。"],
     ["base64-encode-decode", "Base64 编码解码", "Base64 Encode & Decode", "支持中文UTF-8文本的Base64转换；编码不等于加密。"],
   ].map(([slug, titleZh, titleEn, oneLinerZh]): ToolMeta => ({ slug, titleZh, titleEn, oneLinerZh, oneLinerEn: "Process text locally in your browser. Nothing is uploaded.", category: "utility", status: "live", localOnly: true, related: ["json-formatter", "text-counter"].filter(item => item !== slug) })),
-  // —— 已有场域工具 ——
-  {
-    slug: "number-energy",
-    category: "field",
-    status: "live",
-    localOnly: true,
-    dedicatedRoute: true,
-    titleZh: "手机号 / 车牌号数字能量",
-    titleEn: "Phone & Plate Number Energy",
-    oneLinerZh: "用 81 数灵动数体系拆解随身号码的组合含义（民俗参考）。",
-    oneLinerEn: "Break down everyday numbers with the 81-number folk energy system (reference only).",
-    related: ["timestamp-converter", "json-formatter"],
-  },
-
   // —— 图片 · P0 ——
   {
     slug: "png-to-jpg",
