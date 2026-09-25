@@ -10,6 +10,7 @@ import { reviewSasiProductionInput } from "@/lib/sasi/safety";
 import { selectSasiVideoProvider, type SasiVideoProviderId } from "@/lib/sasi/provider";
 import { hashSasiPrompt, verifySasiTaskQuote } from "@/lib/sasi/task-quote";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import {applySasiSkill,normalizeSkillSelection,resolveSasiSkill} from "@/lib/sasi/skill-runtime";
 import {
   assertDirectorFoundryLoaded,
   composeDirectorProductionPrompt,
@@ -71,6 +72,8 @@ export async function POST(request: NextRequest) {
   const preferredProvider: SasiVideoProviderId | null = body.providerPreference === "seedance" || body.providerPreference === "xai" || body.providerPreference === "openai" || body.providerPreference === "wan"
     ? body.providerPreference
     : null;
+  const skillSelection=normalizeSkillSelection(body.skillSource??"platform",body.skillId??"story-rhythm");
+  if(!skillSelection)return NextResponse.json({error:"INVALID_SKILL_SELECTION"},{status:400});
   if (!UUID_V4.test(requestId)) return NextResponse.json({ error: "INVALID_IDEMPOTENCY_KEY" }, { status: 400 });
   if (!UUID.test(projectId) || (nodeId && !UUID.test(nodeId))) return NextResponse.json({ error: "INVALID_PROJECT_REFERENCE" }, { status: 400 });
   if (prompt.length < 8 || prompt.length > 4000) return NextResponse.json({ error: "INVALID_PROMPT" }, { status: 400 });
@@ -81,13 +84,16 @@ export async function POST(request: NextRequest) {
   const selection = selectSasiVideoProvider({ quality, duration, aspectRatio, preferredProvider });
   if (!selection) return NextResponse.json({ error: "NO_VERIFIED_PROVIDER_FOR_FORMAT" }, { status: 503 });
   let quote;
-  try { quote = quoteVideoTask(selection, duration); }
+  try { quote = quoteVideoTask(selection,duration,Date.now(),skillSelection.source); }
   catch (error) { return NextResponse.json({error:error instanceof Error?error.message:"TASK_PRICING_UNAVAILABLE"},{status:503}); }
   const approved = verifySasiTaskQuote(quoteToken);
   if (!approved || approved.expiresAt < Date.now()) return NextResponse.json({ error: "QUOTE_REQUIRED_OR_EXPIRED" }, { status: 409 });
   if (approved.userId !== user.id || approved.projectId !== projectId || approved.nodeId !== nodeId || approved.promptHash !== hashSasiPrompt(prompt)
     || approved.duration !== quote.duration || approved.quality !== quality || approved.aspectRatio !== aspectRatio
-    || approved.provider !== selection.provider || approved.model !== selection.model || approved.amountFen !== quote.amountFen || approved.rateVersion !== quote.rateVersion || approved.retailFenPerSecond !== quote.retailFenPerSecond) {
+    || approved.provider !== selection.provider || approved.model !== selection.model
+    || approved.amountFen !== quote.amountFen || approved.amountUsdCents !== quote.amountUsdCents
+    || approved.rateVersion !== quote.rateVersion || approved.retailFenPerSecond !== quote.retailFenPerSecond
+    || approved.skillSource !== skillSelection.source || approved.skillId !== skillSelection.id) {
     return NextResponse.json({ error: "QUOTE_CHANGED_REQUOTE_REQUIRED" }, { status: 409 });
   }
   const limited = await admin.rpc("rate_limit_check", { p_key: `sasi-job:${user.id}`, p_limit: 12, p_window_seconds: 3600 });
@@ -116,6 +122,9 @@ export async function POST(request: NextRequest) {
 
   try { productionPrompt=applyProjectMemory(productionPrompt,memory.active); }
   catch{return NextResponse.json({error:"PROJECT_CONTEXT_TOO_LARGE"},{status:422});}
+  const selectedSkill=await resolveSasiSkill(admin,user.id,skillSelection);
+  if(!selectedSkill)return NextResponse.json({error:"SKILL_NOT_FOUND"},{status:404});
+  productionPrompt=applySasiSkill(productionPrompt,selectedSkill,4000);
   const reserved = await admin.rpc("create_and_reserve_sasi_job", {
     p_user_id: user.id,
     p_request_id: requestId,
@@ -143,6 +152,10 @@ export async function POST(request: NextRequest) {
       foundryPack,
       foundryInjected: Boolean(foundryPack && !foundryPack.empty),
       approvedAmountFen: quote.amountFen,
+      approvedAmountUsdCents: quote.amountUsdCents,
+      skillSource:selectedSkill.source,
+      skillId:selectedSkill.id,
+      skillTitle:selectedSkill.titleZh,
       retailFenPerSecond: quote.retailFenPerSecond,
       rateVersion: quote.rateVersion,
       quoteExpiresAt: approved.expiresAt,

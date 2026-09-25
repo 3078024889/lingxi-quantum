@@ -17,10 +17,10 @@ import {
   budgetAssessment,
   routeForQuality,
   SASI_QUALITY_TIERS,
-  SASI_SKILLS,
-  type SasiQuality,
+type SasiQuality,
 } from "@/lib/sasi/catalog";
 import { SasiComposer } from "./SasiComposer";
+import SasiSkillsPanel from "@/components/SasiSkillsPanel";
 import { SasiProjectMemory } from "./SasiProjectMemory";
 import { SASI_UPDATES } from "@/lib/sasi/updates";
 import { SasiProductionAccount, SasiProjectProduction } from "@/app/sasi/SasiProductionPanels";
@@ -182,7 +182,7 @@ function UploadHub({
           </div>
         )}
       </div>
-      <p className="mt-2 text-sm leading-6 opacity-60">{copy(lang, "文件会先在本次浏览器任务中暂存；建立项目后才进入私有隔离通道，完成归属校验与安全索引。任何代码都不会被自动执行。", "Files are staged in this browser task first. Only after project creation do they enter a private quarantine channel for ownership checks and safe indexing. Code is never auto-executed.")}</p>
+      <p className="mt-2 text-sm leading-6 opacity-60">{copy(lang, "文件会先跟着这次创作留在浏览器里；建立项目后再保存到你的项目中。上传的代码不会自动运行。", "Files are staged in this browser task first. Only after project creation do they enter a private quarantine channel for ownership checks and safe indexing. Code is never auto-executed.")}</p>
     </div>
   );
 }
@@ -234,8 +234,8 @@ function BuildDeployConsole({
   const deliverySteps = [
     ["01", copy(lang, "理解需求", "Understand"), copy(lang, "目标、用户、边界与验收标准", "Goals, users, boundaries and acceptance"), hasInput ? copy(lang, "可规划", "Ready to plan") : copy(lang, "等待需求", "Awaiting brief")],
     ["02", copy(lang, "形成方案", "Plan"), copy(lang, "页面、功能、数据与实施顺序", "Pages, features, data and sequence"), latestProject ? copy(lang, "项目已保存", "Project saved") : copy(lang, "尚未执行", "Not run")],
-    ["03", copy(lang, "代码与审阅", "Code & review"), copy(lang, "变更、测试、风险与审阅结论", "Changes, tests, risks and review"), copy(lang, "等待执行", "Awaiting run")],
-    ["04", copy(lang, "提交与上线", "Commit & launch"), copy(lang, "Git、构建、域名与公网证据", "Git, build, domain and public evidence"), copy(lang, "等待授权", "Awaiting approval")],
+    ["03", copy(lang, "制作与检查", "Create & review"), copy(lang, "变更、测试、风险与审阅结论", "Changes, tests, risks and review"), copy(lang, "等待执行", "Awaiting run")],
+    ["04", copy(lang, "发布上线", "Publish"), copy(lang, "Git、构建、域名与公网证据", "Git, build, domain and public evidence"), copy(lang, "等待授权", "Awaiting approval")],
   ];
 
   return (
@@ -263,29 +263,29 @@ function BuildDeployConsole({
           <textarea id="sasi-build-brief" value={brief} onChange={(event) => setBrief(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "例如：根据这张页面截图重做首页；保留已有登录和数据库；适配手机端；测试通过后提交，但部署前先让我确认。", "Example: Rebuild the homepage from this screenshot, preserve login and data, support mobile, test and commit, then ask before deployment.")} />
           <p className="sasi-build-guidance">{copy(lang, "写清用户、问题、必须保留的内容和完成标准，SASI 才能少走弯路。截图、报错、文档或代码可以直接附上。", "Name the user, problem, must-keep elements and acceptance criteria. Attach screenshots, errors, documents or code directly.")}</p>
           <UploadHub maxFileBytes={maxFileBytes} lang={lang} files={files} onAdd={addFiles} onRemove={removeFile} onNotice={setNotice} onOpenConnections={openConnections} />
-          <button type="button" disabled={preparing} onClick={prepareProject} className="sasi-build-primary">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并生成执行图谱", "Create project & execution graph")}</button>
+          <button type="button" disabled={preparing} onClick={prepareProject} className="sasi-build-primary">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目", "Create project")}</button>
           {!accountEmail && <p className="sasi-build-boundary">{copy(lang, "建立可持续保存的项目需要先登录；当前输入与附件只保留在本次浏览器任务中。", "Sign in to persist a project. The current brief and files remain in this browser task only.")}</p>}
           <div className="sasi-build-plan"><h3>{copy(lang, "交付路径", "Delivery path")}</h3>{deliverySteps.map(([number, title, note, status]) => <article key={number}><i>{number}</i><div><b>{title}</b><small>{note}</small></div><em>{status}</em></article>)}</div>
         </section>
 
         <section className="sasi-build-panel sasi-build-files">
-          <header><div><small>02 · SOURCE</small><h2>{copy(lang, "代码与文件", "Code & files")}</h2></div><span>{files.length ? copy(lang, `${files.length} 项待归属`, `${files.length} staged`) : copy(lang, "尚无来源", "No source yet")}</span></header>
+          <header><div><small>02 · SOURCE</small><h2>{copy(lang, "已有材料", "Your materials")}</h2></div><span>{files.length ? copy(lang, `${files.length} 项待归属`, `${files.length} staged`) : copy(lang, "尚无来源", "No source yet")}</span></header>
           <div className="sasi-build-source-head"><b>{copy(lang, "项目来源", "Project source")}</b><span>{copy(lang, "连接后才读取真实内容", "Live content appears after connection")}</span></div>
           {files.length > 0 ? <div className="sasi-build-file-list">{files.map((file) => <article key={file.id}><span className="sasi-build-file-icon">{file.kind === "code" ? "</>" : "▧"}</span><div><b>{file.name}</b><small>{file.kind} · {formatBytes(file.size)}</small></div><button type="button" onClick={() => removeFile(file.id)} aria-label={copy(lang, "移除文件", "Remove file")}>×</button></article>)}</div> : <div className="sasi-build-empty"><span>⌘</span><h3>{copy(lang, "从真实材料开始", "Start from real material")}</h3><p>{copy(lang, "连接 GitHub 读取仓库，或在左侧上传现有代码、页面截图和报错日志。没有来源时，系统不会展示虚构的文件树。", "Connect GitHub to read a repository, or upload code, screenshots and error logs. No fictional file tree is shown without a source.")}</p><button type="button" onClick={openConnections}>{copy(lang, "连接 GitHub", "Connect GitHub")} →</button></div>}
           <div className="sasi-build-truth"><h3>{copy(lang, "完成标准", "Definition of done")}</h3><ul><li>{copy(lang, "修改内容与原需求逐项对应", "Changes map to the brief")}</li><li>{copy(lang, "类型、构建与关键流程通过检查", "Types, build and key flows verified")}</li><li>{copy(lang, "用户原有功能与数据不被破坏", "Existing features and data preserved")}</li><li>{copy(lang, "提交、部署与公网验证分别记录", "Commit, deployment and public checks recorded separately")}</li></ul></div>
         </section>
 
         <aside className="sasi-build-panel sasi-build-release">
-          <header><div><small>03 · RELEASE</small><h2>{copy(lang, "部署与域名", "Deploy & domain")}</h2></div><span>{copy(lang, "等待连接", "Awaiting connection")}</span></header>
+          <header><div><small>03 · RELEASE</small><h2>{copy(lang, "发布到你的网址", "Publish to your site")}</h2></div><span>{copy(lang, "等待连接", "Awaiting connection")}</span></header>
           <p className="sasi-build-release-lead">{copy(lang, "代码完成不等于已经上线。这里分别核对预览、生产、数据库和域名，避免“看似完成，却无法访问”。", "Code complete is not live. Preview, production, database and domain are verified separately so finished-looking work does not fail in public.")}</p>
           <div className="sasi-build-release-list">{[["Preview", copy(lang, "预览构建与页面验收", "Preview build and visual review")],["Production", copy(lang, "生产构建与版本证据", "Production build and version evidence")],["Database", copy(lang, "迁移、权限与服务健康", "Migrations, access and service health")],["DNS / SSL", copy(lang, "域名解析、证书与响应", "DNS, certificate and response")]].map(([title, note]) => <button type="button" key={title} onClick={openConnections}><span><b>{title}</b><small>{note}</small></span><em>{copy(lang, "待验证", "Verify")}</em></button>)}</div>
-          <div className="sasi-build-checks"><h3>{copy(lang, "上线检查", "Launch checks")}</h3>{[copy(lang, "环境变量完整且不暴露密钥", "Environment variables complete and secret"),copy(lang, "数据库迁移与权限已经核验", "Database migrations and access verified"),copy(lang, "生产构建无错误", "Production build succeeds"),copy(lang, "域名响应与版本一致", "Domain response matches the release")].map(item => <p key={item}><span>○</span>{item}</p>)}</div>
+          <div className="sasi-build-checks"><h3>{copy(lang, "发布前确认", "Before publishing")}</h3>{[copy(lang, "环境变量完整且不暴露密钥", "Environment variables complete and secret"),copy(lang, "数据库迁移与权限已经核验", "Database migrations and access verified"),copy(lang, "生产构建无错误", "Production build succeeds"),copy(lang, "域名响应与版本一致", "Domain response matches the release")].map(item => <p key={item}><span>○</span>{item}</p>)}</div>
           <button type="button" onClick={openConnections} className="sasi-build-secondary">{copy(lang, "配置连接与部署入口", "Configure connections & deployment")}</button>
           <p className="sasi-build-boundary">{copy(lang, "部署属于外部写入操作。连接完成后仍会在执行前请求确认。", "Deployment is an external write and still requires confirmation after connections are ready.")}</p>
         </aside>
       </div>
 
-      {buildProjects.length > 0 && <section className="sasi-build-recent"><header><div><small>RECENT PROJECTS</small><h2>{copy(lang, "继续已有构建", "Continue a build")}</h2></div></header><div>{buildProjects.slice(0,4).map((project) => <button type="button" key={project.id} onClick={() => openProject(project.id)}><span>◇</span><div><b>{project.title}</b><small>V{project.currentVersion} · {copy(lang, "已保存项目图谱", "Saved project graph")}</small></div><em>→</em></button>)}</div></section>}
+      {buildProjects.length > 0 && <section className="sasi-build-recent"><header><div><small>RECENT PROJECTS</small><h2>{copy(lang, "继续已有构建", "Continue a build")}</h2></div></header><div>{buildProjects.slice(0,4).map((project) => <button type="button" key={project.id} onClick={() => openProject(project.id)}><span>◇</span><div><b>{project.title}</b><small>V{project.currentVersion} · {copy(lang, "已保存项目", "Saved project graph")}</small></div><em>→</em></button>)}</div></section>}
     </section>
   );
 }
@@ -293,60 +293,13 @@ function BuildDeployConsole({
 function SkillsMarketplace({
   lang,
   dark,
-  activeTab,
-  setActiveTab,
-  openView,
   setNotice,
 }: {
   lang: Lang;
   dark: boolean;
-  activeTab: "discover" | "mine" | "create";
-  setActiveTab: (tab: "discover" | "mine" | "create") => void;
-  openView: (view: View) => void;
   setNotice: (message: string) => void;
 }) {
-  const [category, setCategory] = useState("all");
-  const categories = [
-    ["all", "全部", "All"], ["director", "导演", "Director"], ["drama", "短剧", "Drama"],
-    ["code", "编程", "Code"], ["prompt", "提示词", "Prompts"], ["review", "审校", "Review"],
-    ["deploy", "部署", "Deploy"], ["assets", "素材", "Assets"],
-  ] as const;
-  const visibleSkills = SASI_SKILLS.filter((skill) => activeTab === "mine" ? skill.status === "enabled" : category === "all" || skill.category === category);
-
-  function activateSkill(skill: (typeof SASI_SKILLS)[number]) {
-    if (skill.status !== "enabled") {
-      setNotice(copy(lang, `${skill.zh}仍在能力验证阶段，当前可查看规划，但不能作为已安装能力执行。`, `${skill.en} is still being validated. Its plan is visible, but it cannot run as an installed capability yet.`));
-      return;
-    }
-    if (skill.id === "deployment-guardian") openView("code");
-    else openView((skill.modes as readonly string[]).includes("code") ? "code" : "drama");
-    setNotice(copy(lang, `已带着“${skill.zh}”的工作方法进入对应工作流；外部写入与部署仍需单独确认。`, `Opened the matching workflow with ${skill.en}; external writes and deployment still require separate confirmation.`));
-  }
-
-  return (
-    <section className={`sasi-skills-market ${dark ? "is-dark" : "is-light"}`}>
-      <header className="sasi-skills-heading">
-        <div><p>LINGXI FIELD · SASI SKILLS</p><h1>Skills</h1><strong>{copy(lang, "把成熟方法，变成随时可调用的专业能力。", "Turn proven methods into professional capability on demand.")}</strong><span>{copy(lang, "不必每次从零摸索。为导演、短剧、网站构建与内容交付调用经过整理的方法，让复杂工作有步骤、有标准、有结果。", "Stop rebuilding the method from scratch. Bring structured expertise into directing, drama, product building and delivery—with steps, standards and outcomes.")}</span></div>
-        <div className="sasi-skills-heading-proof"><b>{SASI_SKILLS.filter((skill) => skill.status === "enabled").length}</b><span>{copy(lang, "项内置流程已可进入", "built-in flows available")}</span><small>{copy(lang, "其余能力明确标注为规划中", "Everything else is clearly marked as planned")}</small></div>
-      </header>
-
-      <nav className="sasi-skills-tabs" aria-label={copy(lang, "Skills 页面", "Skills sections")}>{([[
-        "discover", "探索能力", "Discover"], ["mine", "我的能力", "My capabilities"], ["create", "编制与发布", "Author & publish"]] as const).map(([id, zh, en]) => <button type="button" key={id} onClick={() => setActiveTab(id)} className={activeTab === id ? "active" : ""}>{copy(lang, zh, en)}{id === "mine" && <em>{SASI_SKILLS.filter((skill) => skill.status === "enabled").length}</em>}</button>)}</nav>
-
-      {activeTab !== "create" && <>
-        {activeTab === "discover" && <div className="sasi-skills-filters">{categories.map(([id, zh, en]) => <button type="button" key={id} onClick={() => setCategory(id)} className={category === id ? "active" : ""}>{copy(lang, zh, en)}</button>)}</div>}
-        <div className="sasi-skills-summary"><div><small>{activeTab === "mine" ? "MY CAPABILITIES" : "CAPABILITY LIBRARY"}</small><h2>{activeTab === "mine" ? copy(lang, "已经可以使用的能力", "Capabilities ready to use") : copy(lang, "按你要解决的问题选择能力", "Choose by the problem you need to solve")}</h2></div><p>{activeTab === "mine" ? copy(lang, "这些能力已经进入 SASI 内置工作流，不代表外部部署或付费调用已被自动授权。", "These capabilities are built into SASI workflows; external deployment and paid calls are not automatically authorized.") : copy(lang, "每张卡片说明它解决什么、适合哪里以及当前是否可用。", "Each card explains the problem, fit and real availability.")}</p></div>
-        <div className="sasi-skills-grid">{visibleSkills.map((skill) => <article key={skill.id} className={skill.status === "enabled" ? "is-enabled" : "is-planned"}>
-          <header><span>{skill.glyph}</span><em>{copy(lang, skill.category === "code" ? "编程" : skill.category === "deploy" ? "部署" : skill.category === "director" ? "导演" : skill.category === "drama" ? "短剧" : skill.category === "prompt" ? "提示词" : skill.category === "review" ? "审校" : "素材", skill.category)}</em></header>
-          <h3>{copy(lang, skill.zh, skill.en)}</h3><small>{skill.en}</small><p>{copy(lang, skill.noteZh, skill.noteEn)}</p><dl><dt>{copy(lang, "适用于", "Best for")}</dt><dd>{copy(lang, skill.fitZh, skill.fitEn)}</dd></dl>
-          <footer><span className={skill.status === "enabled" ? "ready" : "planned"}>{skill.status === "enabled" ? copy(lang, "内置流程 · 已启用", "Built in · Enabled") : copy(lang, "专业能力 · 即将开放", "Specialist · Coming soon")}</span><button type="button" onClick={() => activateSkill(skill)}>{skill.status === "enabled" ? copy(lang, "进入工作流", "Open workflow") : copy(lang, "查看规划", "View plan")} →</button></footer>
-        </article>)}</div>
-        <section className="sasi-skills-runtime"><div><small>HOW SASI SKILLS WORK</small><h2>{copy(lang, "能力被调用，但创作主权仍属于你", "Capability is invoked; creative control stays yours")}</h2><p>{copy(lang, "SASI 根据任务推荐合适的方法，你也可以手动指定。每项能力都说明输入、输出、权限和完成标准。", "SASI recommends a method by task, while you can still choose manually. Every capability declares its inputs, outputs, permissions and completion standard.")}</p></div><ol><li><b>01</b><span>{copy(lang, "理解任务后推荐", "Recommended after understanding")}</span></li><li><b>02</b><span>{copy(lang, "执行前展示权限", "Permissions shown before action")}</span></li><li><b>03</b><span>{copy(lang, "高风险操作再确认", "High-impact actions reconfirmed")}</span></li><li><b>04</b><span>{copy(lang, "结果与证据可核验", "Results and evidence verifiable")}</span></li></ol></section>
-      </>}
-
-      {activeTab === "create" && <section className="sasi-skills-author"><div><small>AUTHOR & PUBLISH</small><h2>{copy(lang, "把你的专业方法，编制成可复用能力", "Turn your professional method into reusable capability")}</h2><p>{copy(lang, "未来创作者可以定义适用场景、输入材料、执行步骤、交付标准与权限边界。发布前必须通过来源核验、隔离运行、安全审阅和版本管理。", "Creators will define fit, inputs, execution steps, delivery standards and permission boundaries. Publication requires provenance checks, isolated execution, security review and version control.")}</p><button type="button" onClick={() => setNotice(copy(lang, "能力编制器尚未开放提交。来源核验、隔离运行和专业审阅完成后，才会启用真实发布。", "Capability submission is not open yet. Real publishing starts only after provenance, isolation and professional review are ready."))}>{copy(lang, "查看开放条件", "View launch requirements")}</button></div><ol>{[["01","来源与版权","证明方法、资料与素材可以合法使用"],["02","权限说明","列明将读取、生成和写入什么"],["03","隔离验证","在安全环境中测试失败与异常路径"],["04","专业审阅","核对质量标准、适用范围与风险"],["05","版本发布","记录更新、兼容性与撤回机制"]].map(([number, title, note]) => <li key={number}><b>{number}</b><div><strong>{copy(lang, title, title)}</strong><span>{copy(lang, note, note)}</span></div><em>{copy(lang, "尚未开放", "Not open")}</em></li>)}</ol></section>}
-    </section>
-  );
+  return <SasiSkillsPanel lang={lang} dark={dark} setNotice={setNotice} />;
 }
 
 export default function SasiWorkspace({ accountEmail }: { accountEmail: string | null }) {
@@ -390,7 +343,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
     const requestedView = search.get("view");
     const requestedRoom = search.get("room");
     const routeView: Record<string, View> = { home: "home", director: "home", drama: "home", build: "home", code: "home", connections: "connections", skills: "skills", capabilities: "connections", models: "connections", billing: "billing", works: "works", account: "account", project: "project" };
-    if (requestedView === "build" || requestedView === "code") setCreationKind("code");
+    
     if (requestedView && routeView[requestedView]) setViewState(routeView[requestedView]);
     if (requestedRoom === "overview" || requestedRoom === "continuity" || requestedRoom === "shots") setDramaTab(requestedRoom);
     const restoreView = () => {
@@ -410,7 +363,6 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   const [projectsLoaded, setProjectsLoaded] = useState(false);
   const [projectDetail, setProjectDetail] = useState<SasiProjectDetail | null>(null);
   const projectRequestId = useRef<string | null>(null);
-  const [skillTab, setSkillTab] = useState<"discover" | "mine" | "create">("discover");
   const [dramaTab, setDramaTab] = useState<"overview" | "continuity" | "shots">("overview");
   const [showDramaCreate, setShowDramaCreate] = useState(false);
   const dark = theme === "dark";
@@ -437,10 +389,10 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
   }
 
   async function openProject(projectId: string) {
-    setNotice(copy(lang, "正在展开项目图谱…", "Opening project graph…"));
+    setNotice(copy(lang, "正在展开项目…", "Opening project graph…"));
     const response = await fetch(`/api/sasi/projects/${projectId}`, { cache: "no-store" });
     if (!response.ok) {
-      setNotice(copy(lang, "项目图谱暂时无法读取。", "The project graph is temporarily unavailable."));
+      setNotice(copy(lang, "项目暂时无法读取。", "The project graph is temporarily unavailable."));
       return;
     }
     setProjectDetail(await response.json());
@@ -628,7 +580,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           {view === "home" && <SasiComposer kind={creationKind} setKind={setCreationKind} lang={lang} value={homeBrief} onChange={setHomeBrief} onPaste={handlePaste} busy={preparing} signedIn={Boolean(accountEmail)} onSubmit={kind => void prepare(kind, homeBrief)} onConnections={() => setView("connections")} onSkills={() => setView("skills")} projects={projects} onOpen={id => void openProject(id)} attachments={<UploadHub maxFileBytes={maxFileBytes} lang={lang} files={files} onAdd={addFiles} onRemove={id => setFiles(current => current.filter(file => file.id !== id))} onNotice={setNotice} onOpenConnections={() => setView("connections")} />} />}
 
           {view === "project" && projectDetail && (
-            <section><button type="button" onClick={() => setView("home")} className="text-sm opacity-55 hover:opacity-100">← {copy(lang, "返回项目列表", "Back to projects")}</button><div className="mt-6 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[.2em] text-[#7657ff]">{projectDetail.project.kind === "drama" ? "SASI STORY GRAPH" : "SASI BUILD GRAPH"}</p><h1 className="mt-3 max-w-4xl text-4xl font-semibold">{projectDetail.project.title}</h1><p className="mt-3 font-mono text-xs opacity-35">{projectDetail.project.id}</p></div><span className="rounded-full border border-current/15 px-4 py-2 text-xs">{copy(lang, `版本 ${projectDetail.project.currentVersion}`, `Version ${projectDetail.project.currentVersion}`)}</span></div><div className="mt-8 grid gap-6 xl:grid-cols-[1fr_360px]"><div><h2 className="text-lg font-semibold">{copy(lang, "生产节点", "Production nodes")} <span className="ml-2 text-xs font-normal opacity-40">{projectDetail.dependencies.length} {copy(lang, "条依赖", "edges")}</span></h2><div className="mt-4 space-y-3">{projectDetail.nodes.map((node, index) => <article key={node.id} className={`flex items-center gap-4 rounded-2xl border p-4 ${panel}`}><span className="font-mono text-xs opacity-30">{String(index + 1).padStart(2, "0")}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{node.type.replaceAll("-", " ")}</p><p className="mt-1 text-[10px] uppercase tracking-[.15em] opacity-40">v{node.version}</p></div><span className={`rounded-full px-3 py-1 text-[10px] ${node.status === "ready" ? "bg-emerald-500/10 text-emerald-600" : "bg-current/5 opacity-55"}`}>{node.status}</span></article>)}</div></div><aside><h2 className="text-lg font-semibold">{copy(lang, "项目资产", "Project assets")}</h2><div className="mt-4 space-y-3">{projectDetail.assets.length === 0 ? <div className={`rounded-2xl border p-5 text-sm leading-6 opacity-50 ${panel}`}>{copy(lang, "尚无云端资产。下一次建立项目时添加文件，SASI 会将其写入隔离区并完成安全分流。", "No cloud assets yet. Add files when creating the next project; SASI will place them in quarantine and route them through inspection.")}</div> : projectDetail.assets.map((asset) => <article key={asset.id} className={`rounded-2xl border p-4 ${panel}`}><p className="truncate text-sm font-medium">{asset.name}</p><div className="mt-3 flex items-center justify-between text-[10px]"><span className="opacity-40">{formatBytes(asset.verifiedSize ?? asset.declaredSize)}</span><span className="uppercase tracking-[.12em] opacity-55">{asset.status.replaceAll("_", " ")}</span></div></article>)}</div></aside></div></section>
+            <section><button type="button" onClick={() => setView("home")} className="text-sm opacity-55 hover:opacity-100">← {copy(lang, "返回项目列表", "Back to projects")}</button><div className="mt-6 flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[.2em] text-[#7657ff]">{projectDetail.project.kind === "drama" ? "SASI STORY GRAPH" : "SASI BUILD GRAPH"}</p><h1 className="mt-3 max-w-4xl text-4xl font-semibold">{projectDetail.project.title}</h1><p className="mt-3 font-mono text-xs opacity-35">{projectDetail.project.id}</p></div><span className="rounded-full border border-current/15 px-4 py-2 text-xs">{copy(lang, `版本 ${projectDetail.project.currentVersion}`, `Version ${projectDetail.project.currentVersion}`)}</span></div><div className="mt-8 grid gap-6 xl:grid-cols-[1fr_360px]"><div><h2 className="text-lg font-semibold">{copy(lang, "制作步骤", "Production nodes")} <span className="ml-2 text-xs font-normal opacity-40">{projectDetail.dependencies.length} {copy(lang, "个前后关系", "edges")}</span></h2><div className="mt-4 space-y-3">{projectDetail.nodes.map((node, index) => <article key={node.id} className={`flex items-center gap-4 rounded-2xl border p-4 ${panel}`}><span className="font-mono text-xs opacity-30">{String(index + 1).padStart(2, "0")}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{node.type.replaceAll("-", " ")}</p><p className="mt-1 text-[10px] uppercase tracking-[.15em] opacity-40">v{node.version}</p></div><span className={`rounded-full px-3 py-1 text-[10px] ${node.status === "ready" ? "bg-emerald-500/10 text-emerald-600" : "bg-current/5 opacity-55"}`}>{node.status}</span></article>)}</div></div><aside><h2 className="text-lg font-semibold">{copy(lang, "项目资产", "Project assets")}</h2><div className="mt-4 space-y-3">{projectDetail.assets.length === 0 ? <div className={`rounded-2xl border p-5 text-sm leading-6 opacity-50 ${panel}`}>{copy(lang, "这里还没有素材。下次建立项目时直接添加文件，就可以和故事一起继续。", "No cloud assets yet. Add files when creating the next project; SASI will place them in quarantine and route them through inspection.")}</div> : projectDetail.assets.map((asset) => <article key={asset.id} className={`rounded-2xl border p-4 ${panel}`}><p className="truncate text-sm font-medium">{asset.name}</p><div className="mt-3 flex items-center justify-between text-[10px]"><span className="opacity-40">{formatBytes(asset.verifiedSize ?? asset.declaredSize)}</span><span className="uppercase tracking-[.12em] opacity-55">{asset.status.replaceAll("_", " ")}</span></div></article>)}</div></aside></div></section>
           )}
 
           {view === "project" && projectDetail && <section><h1 className="my-6 text-2xl">{projectDetail.project.title}</h1><SasiProjectMemory key={projectDetail.project.id} projectId={projectDetail.project.id} lang={lang}/><SasiProjectProduction detail={projectDetail} lang={lang} dark={dark} onReload={() => openProject(projectDetail.project.id)} onNotice={setNotice} /></section>}
@@ -656,7 +608,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
               <div className="mt-6 flex flex-wrap gap-2">{[["我只有一个想法", "I have an idea"], ["我有完整剧本", "I have a script"], ["我有小说 / 故事", "I have a novel"], ["我已经有角色", "I have characters"], ["我已有故事板", "I have storyboards"], ["只生成一个镜头", "Generate one shot"]].map(([zh, en]) => <button key={zh} type="button" onClick={() => setScript(copy(lang, zh, en))} className="rounded-full border border-current/15 px-4 py-2 text-xs hover:border-[#e04d70]">{copy(lang, zh, en)}</button>)}</div>
               <div className="mt-6 grid gap-4 xl:grid-cols-[1fr_360px]">
                 <div className={`rounded-3xl border p-6 ${panel}`}><textarea value={script} onChange={(event) => setScript(event.target.value)} onPaste={handlePaste} placeholder={copy(lang, "写下创意，或导入剧本、小说、人物图、故事板、音频和已有视频……", "Write an idea or import a script, novel, character image, storyboard, audio or existing video…")} className="min-h-36 w-full resize-none bg-transparent text-base leading-7 outline-none"/><UploadHub maxFileBytes={maxFileBytes} lang={lang} files={files} onAdd={addFiles} onRemove={(id) => setFiles((current) => current.filter((file) => file.id !== id))} onNotice={setNotice} /><div className="mt-5 grid gap-3 sm:grid-cols-2"><label className="text-xs opacity-60">{copy(lang, "每集时长（5–600秒）", "Seconds per episode (5–600)")}<input type="number" min={5} max={600} value={seconds} onChange={(event) => setSeconds(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作集数", "Number of episodes")}<input type="number" min={1} max={200} value={episodes} onChange={(event) => setEpisodes(event.target.value)} placeholder={copy(lang, "填写本次制作集数", "Episodes for this project")} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "项目预算上限（人民币）", "Project budget cap (RMB)")}<input type="number" min={0} step="1" value={budget} onChange={(event) => setBudget(Number(event.target.value))} className="mt-2 w-full rounded-xl border border-current/15 bg-transparent px-3 py-3 text-base outline-none"/></label><label className="text-xs opacity-60">{copy(lang, "制作规格", "Production grade")}<select value={quality} onChange={(event) => setQuality(event.target.value as SasiQuality)} className={`mt-2 w-full rounded-xl border border-current/15 px-3 py-3 text-base outline-none ${dark ? "bg-[#11151b]" : "bg-white"}`}>{SASI_QUALITY_TIERS.map((item) => <option key={item.id} value={item.id}>{copy(lang, item.zh, item.en)}</option>)}</select></label></div><p className="mt-4 text-xs leading-5 opacity-50">{copy(lang, "SASI Auto 将按叙事价值调度制作能力；无需选择模型或管理技术账户。", "SASI Auto allocates production capability by narrative value; no model or technical account selection is required.")}</p><button disabled={preparing} onClick={() => prepare("drama")} className="mt-6 w-full rounded-xl bg-[#e04d70] py-3 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-50">{preparing ? copy(lang, "正在建立项目…", "Creating project…") : copy(lang, "建立项目并形成提案", "Create project & proposal")}</button></div>
-                <div className={`rounded-3xl border border-current/10 p-6 ${panel}`}><p className="text-xs uppercase tracking-[.2em] opacity-55">TASK BUDGET</p><h3 className="mt-5 text-2xl font-semibold">{copy(lang,"先把作品说清，再确认价格","Define the work before approving a price")}</h3><p className="mt-4 text-sm leading-7 opacity-65">{copy(lang,"你填写的是预算意向。项目建立后，SASI 按实际可用的模型与规格提供本次任务报价；确认前不预留余额。","This is your intended budget. After creating a project, SASI quotes available models and specifications before reserving any balance.")}</p><p className="mt-5">{copy(lang,"预算意向","Intended budget")} <b>{formatRmb(quote.budget)}</b></p><p className="mt-3 text-xs opacity-55">{Number(episodes) || 1} × {seconds}s = {(Number(episodes) || 1) * seconds}s · {copy(lang,"报价待确认 · 不代表已经生成","Quote pending · not generated")}</p></div>
+                <div className={`rounded-3xl border border-current/10 p-6 ${panel}`}><p className="text-xs uppercase tracking-[.2em] opacity-55">本次预算</p><h3 className="mt-5 text-2xl font-semibold">{copy(lang,"先把作品说清，再确认价格","Define the work before approving a price")}</h3><p className="mt-4 text-sm leading-7 opacity-65">{copy(lang,"你填写的是预算意向。项目建立后，SASI 按实际可用的模型与规格提供本次任务报价；确认前不预留余额。","This is your intended budget. After creating a project, SASI quotes available models and specifications before reserving any balance.")}</p><p className="mt-5">{copy(lang,"预算意向","Intended budget")} <b>{formatRmb(quote.budget)}</b></p><p className="mt-3 text-xs opacity-55">{Number(episodes) || 1} × {seconds}s = {(Number(episodes) || 1) * seconds}s · {copy(lang,"报价待确认 · 不代表已经生成","Quote pending · not generated")}</p></div>
               </div>
               <div className="mt-7"><div className="mb-3 flex items-center justify-between"><h2 className="text-lg font-semibold">{copy(lang, "可逐幕审阅的制作链", "A production chain reviewed scene by scene")}</h2><span className="text-xs opacity-45">{copy(lang, "每一步都保留创作主权", "Creative control at every stage")}</span></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">{(lang === "zh" ? workflowZh : workflowEn).map((item, index) => <div key={item} className="rounded-2xl border border-current/10 p-4"><p className="text-xs opacity-35">{String(index + 1).padStart(2, "0")}</p><p className="mt-3 text-sm font-medium">{item}</p><p className="mt-2 text-[11px] opacity-45">{index < 3 ? copy(lang, "分析后可修改", "Editable after analysis") : copy(lang, "生成、编辑或重做", "Generate, edit or redo")}</p></div>)}</div></div>
               <div className="mt-7 rounded-3xl border border-current/10 p-6"><p className="text-xs uppercase tracking-[.2em] text-[#e04d70]">{copy(lang, "典藏级关键镜头", "Signature key shots")}</p><p className="mt-3 leading-7 opacity-65">{copy(lang, "SASI 会把最高制作规格集中于人物登场、高潮、战斗与情绪特写，并为承接叙事的镜头匹配恰当方案；每次调整都会先呈现作品表现与人民币预算的变化。", "SASI concentrates the highest production grade on entrances, climaxes, action and emotional close-ups, then assigns the right approach to supporting shots. Every revision reveals its impact on creative finish and RMB budget first.")}</p></div>
@@ -668,7 +620,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           )}
 
           {view === "skills" && (
-            <SkillsMarketplace lang={lang} dark={dark} activeTab={skillTab} setActiveTab={setSkillTab} openView={setView} setNotice={setNotice} />
+            <SkillsMarketplace lang={lang} dark={dark} setNotice={setNotice} />
           )}
 
           {view === "connections" && <ConnectionCenter lang={lang} dark={dark} accountEmail={accountEmail} />}
