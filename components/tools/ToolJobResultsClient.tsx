@@ -1,8 +1,8 @@
 "use client";
-
+import NextImage from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { useLingxiLang, type LingxiLang } from "@/lib/lingxi-i18n";
+import {useEffect,useMemo,useState} from "react";
+import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 type Copy=Record<LingxiLang,string>;
 const c=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Copy=>({zh,en,ja,ko,fr,de,es,pt,ar});
@@ -24,71 +24,20 @@ const C={
  copy:c("复制文字","Copy text","テキストをコピー","텍스트 복사","Copier le texte","Text kopieren","Copiar texto","Copiar texto","نسخ النص"),
 };
 type Job={id:string;tool_id:string;item_key:string;units:number;status:string;updated_at:string};
-type ResultState={loading?:boolean;loaded?:boolean;value?:any;error?:string};
-
+type ResultState={loading?:boolean;loaded?:boolean;value?:unknown;error?:string};
+type JsonRecord=Record<string,unknown>;
+function asRecord(v:unknown):JsonRecord|null{return v&&typeof v==="object"&&!Array.isArray(v)?v as JsonRecord:null}
 function safeName(s:string){return s.replace(/[^\w.-]+/g,"-").slice(0,80)||"result"}
-function downloadBlob(name:string,body:BlobPart,type:string){
-  const blob=new Blob([body],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
-}
-function imageHref(r:any){
-  if(r&&typeof r.b64==="string"&&r.b64.length>20)return `data:image/png;base64,${r.b64}`;
-  if(r&&typeof r.url==="string"&&(/^(https:\/\/|data:image\/)/i.test(r.url)))return r.url;
-  return "";
-}
-function textValue(r:any){return r&&typeof r.text==="string"?r.text:r&&typeof r.raw==="string"?r.raw:""}
-
+function downloadBlob(name:string,body:BlobPart,type:string){const blob=new Blob([body],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+function imageHref(v:unknown){const r=asRecord(v);if(!r)return "";if(typeof r.b64==="string"&&r.b64.length>20)return `data:image/png;base64,${r.b64}`;if(typeof r.url==="string"&&/^(https:\/\/|data:image\/)/i.test(r.url))return r.url;return ""}
+function textValue(v:unknown){const r=asRecord(v);if(!r)return "";return typeof r.text==="string"?r.text:typeof r.raw==="string"?r.raw:""}
+function isLocalOnly(v:unknown){const r=asRecord(v);return Boolean(r?.localProcessing===true&&!r.b64&&!r.url&&!r.text&&!r.raw)}
 export default function ToolJobResultsClient({quoteId}:{quoteId:string}){
-  const {lang}=useLingxiLang(),t=(x:Copy)=>x[lang]||x.en;
-  const [jobs,setJobs]=useState<Job[]>([]),[loading,setLoading]=useState(true),[loadError,setLoadError]=useState(false);
-  const [results,setResults]=useState<Record<string,ResultState>>({});
-  const valid=useMemo(()=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(quoteId),[quoteId]);
-
-  useEffect(()=>{
-    let alive=true;
-    if(!valid){setLoading(false);setLoadError(true);return}
-    void fetch(`/api/tools/jobs?quoteId=${encodeURIComponent(quoteId)}`,{cache:"no-store"})
-      .then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||"LOAD_FAILED");return d})
-      .then(d=>{if(alive)setJobs(d.jobs||[])})
-      .catch(()=>{if(alive)setLoadError(true)})
-      .finally(()=>{if(alive)setLoading(false)});
-    return()=>{alive=false};
-  },[quoteId,valid]);
-
-  async function toggle(job:Job){
-    if(results[job.id]?.loaded){setResults(v=>({...v,[job.id]:{}}));return}
-    setResults(v=>({...v,[job.id]:{loading:true}}));
-    try{
-      const r=await fetch(`/api/tools/jobs/result?quoteId=${encodeURIComponent(quoteId)}&jobId=${encodeURIComponent(job.id)}`,{cache:"no-store"});
-      const d=await r.json();if(!r.ok)throw new Error(d.error||"RESULT_FAILED");
-      setResults(v=>({...v,[job.id]:{loaded:true,value:d.result??null}}));
-    }catch(e){setResults(v=>({...v,[job.id]:{loaded:true,error:e instanceof Error?e.message:"RESULT_FAILED"}}))}
-  }
-
-  function render(job:Job,s:ResultState){
-    if(s.loading)return <p className="mt-3 text-xs text-[var(--lx-muted)]">{t(C.loading)}</p>;
-    if(!s.loaded)return null;
-    if(s.error)return <p className="mt-3 text-xs text-rose-600">{s.error}</p>;
-    const r=s.value;
-    if(!r)return <p className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">{t(C.noResult)}</p>;
-    if(r.localProcessing===true&&!r.b64&&!r.url&&!r.text&&!r.raw)return <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs leading-6 text-amber-900">{t(C.localOnly)}</p>;
-    const img=imageHref(r),txt=textValue(r);
-    if(img)return <div className="mt-4"><img src={img} alt="" className="max-h-[520px] max-w-full rounded-xl border border-[var(--lx-line)] object-contain"/><a href={img} download={`lingxifield-${safeName(job.tool_id)}-${safeName(job.item_key)}.png`} className="mt-3 inline-flex rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.download)}</a></div>;
-    if(txt)return <div className="mt-4"><pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-xs leading-6">{txt}</pre><div className="mt-3 flex gap-2"><button onClick={()=>navigator.clipboard?.writeText(txt)} className="rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.copy)}</button><button onClick={()=>downloadBlob(`lingxifield-${safeName(job.tool_id)}-${safeName(job.item_key)}.txt`,txt,"text/plain;charset=utf-8")} className="rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.download)}</button></div></div>;
-    const pretty=JSON.stringify(r,null,2);
-    return <div className="mt-4"><pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-xs leading-6">{pretty}</pre><button onClick={()=>downloadBlob(`lingxifield-${safeName(job.tool_id)}-${safeName(job.item_key)}.json`,pretty,"application/json;charset=utf-8")} className="mt-3 rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.download)}</button></div>;
-  }
-
-  return <section>
-    <Link href="/account/orders" className="text-xs text-[var(--lx-muted)] hover:text-[var(--lx-ink)]">{t(C.back)}</Link>
-    <h1 className="mt-4 font-display text-3xl font-light text-[var(--lx-ink)]">{t(C.title)}</h1>
-    <p className="mt-2 mb-7 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">{t(C.lead)}</p>
-    {loading&&<p className="lx11-legacy-panel p-6 text-sm text-[var(--lx-muted)]">{t(C.loading)}</p>}
-    {!loading&&loadError&&<p className="lx11-legacy-panel p-6 text-sm text-rose-600">{t(C.failedLoad)}</p>}
-    {!loading&&!loadError&&jobs.length===0&&<p className="lx11-legacy-panel p-6 text-sm text-[var(--lx-muted)]">{t(C.empty)}</p>}
-    <div className="space-y-3">{jobs.map(job=>{
-      const sc=job.status==="completed"?C.completed:job.status==="processing"?C.processing:C.failed,s=results[job.id]||{};
-      return <article key={job.id} className="lx11-legacy-panel p-5"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-medium text-[var(--lx-ink)]">{job.tool_id}</p><p className="mt-1 text-xs text-[var(--lx-muted)]">{job.item_key} · {job.units} unit(s)</p><p className="mt-1 text-[11px] text-[var(--lx-faint)]">{new Date(job.updated_at).toLocaleString()}</p></div><span className="rounded-full border border-[var(--lx-line)] px-3 py-1 text-[11px] text-[var(--lx-muted)]">{t(sc)}</span></div>{job.status==="completed"&&<button type="button" onClick={()=>void toggle(job)} className="mt-4 rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs text-[var(--lx-ink)]">{s.loaded?t(C.hide):t(C.view)}</button>}{job.status==="failed"&&<p className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">{t(C.noResult)}</p>}{render(job,s)}</article>;
-    })}</div>
-  </section>;
+ const{lang}=useLingxiLang(),t=(x:Copy)=>x[lang]||x.en;
+ const[jobs,setJobs]=useState<Job[]>([]),[loading,setLoading]=useState(true),[loadError,setLoadError]=useState(false),[results,setResults]=useState<Record<string,ResultState>>({});
+ const valid=useMemo(()=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(quoteId),[quoteId]);
+ useEffect(()=>{let alive=true;if(!valid){setLoading(false);setLoadError(true);return}void fetch(`/api/tools/jobs?quoteId=${encodeURIComponent(quoteId)}`,{cache:"no-store"}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||"LOAD_FAILED");return d as {jobs?:Job[]}}).then(d=>{if(alive)setJobs(Array.isArray(d.jobs)?d.jobs:[])}).catch(()=>{if(alive)setLoadError(true)}).finally(()=>{if(alive)setLoading(false)});return()=>{alive=false}},[quoteId,valid]);
+ async function toggle(job:Job){if(results[job.id]?.loaded){setResults(v=>({...v,[job.id]:{}}));return}setResults(v=>({...v,[job.id]:{loading:true}}));try{const r=await fetch(`/api/tools/jobs/result?quoteId=${encodeURIComponent(quoteId)}&jobId=${encodeURIComponent(job.id)}`,{cache:"no-store"}),d=await r.json().catch(()=>({})) as {result?:unknown;error?:string};if(!r.ok)throw new Error(d.error||"RESULT_FAILED");setResults(v=>({...v,[job.id]:{loaded:true,value:d.result??null}}))}catch(e){setResults(v=>({...v,[job.id]:{loaded:true,error:e instanceof Error?e.message:"RESULT_FAILED"}}))}}
+ function render(job:Job,s:ResultState){if(s.loading)return <p className="mt-3 text-xs text-[var(--lx-muted)]">{t(C.loading)}</p>;if(!s.loaded)return null;if(s.error)return <p className="mt-3 text-xs text-[var(--lx-danger)]">{s.error}</p>;const r=s.value;if(!r)return <p className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">{t(C.noResult)}</p>;if(isLocalOnly(r))return <p className="mt-3 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-6 text-[var(--lx-muted)]">{t(C.localOnly)}</p>;const img=imageHref(r),txt=textValue(r);if(img)return <div className="mt-4"><NextImage src={img} alt="" className="max-h-[520px] max-w-full rounded-xl border border-[var(--lx-line)] object-contain" width={1600} height={1200} unoptimized/><a href={img} download={`lingxifield-${safeName(job.tool_id)}-${safeName(job.item_key)}.png`} className="mt-3 inline-flex rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.download)}</a></div>;if(txt)return <div className="mt-4"><pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-xs leading-6">{txt}</pre><div className="mt-3 flex gap-2"><button onClick={()=>void navigator.clipboard?.writeText(txt)} className="rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.copy)}</button><button onClick={()=>downloadBlob(`lingxifield-${safeName(job.tool_id)}-${safeName(job.item_key)}.txt`,txt,"text/plain;charset=utf-8")} className="rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.download)}</button></div></div>;const pretty=JSON.stringify(r,null,2);return <div className="mt-4"><pre className="max-h-[520px] overflow-auto whitespace-pre-wrap rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-xs leading-6">{pretty}</pre><button onClick={()=>downloadBlob(`lingxifield-${safeName(job.tool_id)}-${safeName(job.item_key)}.json`,pretty,"application/json;charset=utf-8")} className="mt-3 rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs">{t(C.download)}</button></div>}
+ return <section><Link href="/account/orders" className="text-xs text-[var(--lx-muted)] hover:text-[var(--lx-ink)]">{t(C.back)}</Link><h1 className="mt-4 font-display text-3xl font-light text-[var(--lx-ink)]">{t(C.title)}</h1><p className="mt-2 mb-7 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">{t(C.lead)}</p>{loading&&<p className="lx11-legacy-panel p-6 text-sm text-[var(--lx-muted)]">{t(C.loading)}</p>}{!loading&&loadError&&<p className="lx11-legacy-panel p-6 text-sm text-[var(--lx-danger)]">{t(C.failedLoad)}</p>}{!loading&&!loadError&&jobs.length===0&&<p className="lx11-legacy-panel p-6 text-sm text-[var(--lx-muted)]">{t(C.empty)}</p>}<div className="space-y-3">{jobs.map(job=>{const sc=job.status==="completed"?C.completed:job.status==="processing"?C.processing:C.failed,s=results[job.id]||{};return <article key={job.id} className="lx11-legacy-panel p-5"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-medium text-[var(--lx-ink)]">{job.tool_id}</p><p className="mt-1 text-xs text-[var(--lx-muted)]">{job.item_key} · {job.units} unit(s)</p><p className="mt-1 text-[11px] text-[var(--lx-faint)]">{new Date(job.updated_at).toLocaleString()}</p></div><span className="rounded-full border border-[var(--lx-line)] px-3 py-1 text-[11px] text-[var(--lx-muted)]">{t(sc)}</span></div>{job.status==="completed"&&<button type="button" onClick={()=>void toggle(job)} className="mt-4 rounded-lg border border-[var(--lx-line-strong)] px-4 py-2 text-xs text-[var(--lx-ink)]">{s.loaded?t(C.hide):t(C.view)}</button>}{job.status==="failed"&&<p className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">{t(C.noResult)}</p>}{render(job,s)}</article>})}</div></section>
 }

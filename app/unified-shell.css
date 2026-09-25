@@ -911,3 +911,26 @@ html[data-theme="dark"] .lx11-notification-panel{background:#161616!important}
 .lx11-notification-list strong{display:block;font-size:13px}.lx11-notification-list p{margin-top:4px;font-size:12px;line-height:1.55;color:var(--lx-muted)}.lx11-notification-list small{display:block;margin-top:5px;font-size:10px;color:var(--lx-faint)}
 .lx11-notification-count{position:absolute;right:-4px;top:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:#e34b4b;color:#fff;font-size:9px;line-height:16px;text-align:center}
 @media(max-width:720px){.lx11-notification-panel{position:fixed;top:64px;right:10px;left:10px;width:auto}}
+
+/* V14.86 TOOL THEME BEGIN */
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .bg-white{background:var(--lx-panel)!important}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .bg-slate-50,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .bg-slate-100{background:var(--lx-soft)!important}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-slate-950,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-slate-900,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-slate-800{color:var(--lx-ink)!important}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-slate-700,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-slate-600,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-slate-500,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-slate-400{color:var(--lx-muted)!important}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .border-slate-100,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .border-slate-200,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .border-slate-300{border-color:var(--lx-line)!important}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) input:not([type="file"]),
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) textarea,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) select{background-color:var(--lx-panel);color:var(--lx-ink);border-color:var(--lx-line)}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) input::placeholder,
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) textarea::placeholder{color:var(--lx-faint)}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .bg-blue-50{background:rgba(37,99,235,.13)!important}
+html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-blue-900{color:#bfdbfe!important}
+/* V14.86 TOOL THEME END */

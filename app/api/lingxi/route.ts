@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { stripMarkdownArtifacts } from "@/lib/text-clean";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime = "nodejs";
 
@@ -138,23 +139,30 @@ const SYSTEM: Record<string, string> = {
     "第三段：格式为「关键词1,说明1|关键词2,说明2|关键词3,说明3」",
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  if (!isSameOriginMutation(req)) {
+    return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
+  }
   const key = process.env.ZHIPU_API_KEY;
   if (!key) {
     return NextResponse.json({ error: "尚未配置灵犀解析（缺少 ZHIPU_API_KEY）。" }, { status: 503 });
   }
 
-  // v225：限流——这个接口没有登录门槛，同一个 IP 每 60 秒最多 12 次。
-  // 一个真实用户正常使用（写一次梦境、问一次问题、刷一次今日邀请）
-  // 远远用不到这个上限，但能挡住脚本短时间内密集刷这个接口、把免费
-  // 档位本就有限的并发占满。
-  const ip = getClientIp(req);
-  const allowed = await checkRateLimit(`lingxi:${ip}`, 12, 60);
-  if (!allowed) {
+  const abuse = await enforceAbuseGuard(req, {
+    scope: "lingxi-public-ai",
+    ipLimit: 12,
+    windowSeconds: 60,
+  });
+  if (!abuse.ok) {
     return NextResponse.json(
-      { error: "请求太频繁了，请稍等一分钟再试。" },
-      { status: 429 }
+      { error: abuse.status === 429 ? "请求太频繁了，请稍等一分钟再试。" : "服务暂时繁忙，请稍后再试。" },
+      { status: abuse.status },
     );
+  }
+
+  const contentLength = Number(req.headers.get("content-length") || 0);
+  if (Number.isFinite(contentLength) && contentLength > 64 * 1024) {
+    return NextResponse.json({ error: "REQUEST_TOO_LARGE" }, { status: 413 });
   }
 
   let body: { mode?: string; content?: string; context?: string; mood?: string; lang?: string };

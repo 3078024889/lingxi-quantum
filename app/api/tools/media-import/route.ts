@@ -1,4 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 
@@ -23,13 +25,20 @@ function platformFor(host: string) {
 function isPrivateIp(ip: string) {
   if (isIP(ip) === 4) {
     const [a, b] = ip.split(".").map(Number);
+    const c = Number(ip.split(".")[2] || 0);
     return (
       a === 10 ||
       a === 127 ||
       a === 0 ||
+      (a === 100 && b >= 64 && b <= 127) ||
       (a === 169 && b === 254) ||
       (a === 172 && b >= 16 && b <= 31) ||
-      (a === 192 && b === 168)
+      (a === 192 && b === 168) ||
+      (a === 192 && b === 0 && (c === 0 || c === 2)) ||
+      (a === 198 && (b === 18 || b === 19)) ||
+      (a === 198 && b === 51 && c === 100) ||
+      (a === 203 && b === 0 && c === 113) ||
+      a >= 224
     );
   }
   const v = ip.toLowerCase();
@@ -38,12 +47,25 @@ function isPrivateIp(ip: string) {
     v === "::" ||
     v.startsWith("fc") ||
     v.startsWith("fd") ||
-    v.startsWith("fe80:")
+    /^fe[89ab]/.test(v) ||
+    v.startsWith("ff") ||
+    v.startsWith("2001:db8:")
   );
 }
 
 async function assertPublicHttps(raw: string) {
   const url = new URL(raw);
+  const host = url.hostname.toLowerCase().replace(/\.$/, "");
+  if (
+    host === "localhost" ||
+    host.endsWith(".localhost") ||
+    host.endsWith(".local") ||
+    host.endsWith(".internal") ||
+    host.endsWith(".home") ||
+    host.endsWith(".lan") ||
+    host === "metadata.google.internal" ||
+    host === "metadata.goog"
+  ) throw new Error("PRIVATE_NETWORK_FORBIDDEN");
   if (url.protocol !== "https:") throw new Error("HTTPS_REQUIRED");
   if (url.username || url.password) throw new Error("URL_CREDENTIALS_FORBIDDEN");
   if (url.port && url.port !== "443") throw new Error("NON_STANDARD_PORT_FORBIDDEN");
@@ -269,7 +291,22 @@ async function fetchMediaOrResolveShare(input: {
   };
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  if (!isSameOriginMutation(req)) {
+    return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
+  }
+  const abuse = await enforceAbuseGuard(req, {
+    scope: "media-import",
+    ipLimit: 30,
+    windowSeconds: 3600,
+  });
+  if (!abuse.ok) return NextResponse.json({ error: abuse.error }, { status: abuse.status });
+
+  const contentLength = Number(req.headers.get("content-length") || 0);
+  if (Number.isFinite(contentLength) && contentLength > 32 * 1024) {
+    return NextResponse.json({ error: "REQUEST_TOO_LARGE" }, { status: 413 });
+  }
+
   try {
     const body = await req.json();
     const raw = String(body.url || "").trim();

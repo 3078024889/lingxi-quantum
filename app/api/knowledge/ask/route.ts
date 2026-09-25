@@ -1,5 +1,6 @@
 import {NextRequest,NextResponse} from "next/server";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
+import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {createClient} from "@/lib/supabase/server";
 import {runBilledText} from "@/lib/ai/billed-text";
 import type {Intelligence} from "@/lib/ai/provider-router";
@@ -15,17 +16,21 @@ function tierSpec(intelligence:Intelligence){
 }
 
 export async function POST(req:NextRequest){
+ const contentLength=Number(req.headers.get("content-length")||0);
+ if(Number.isFinite(contentLength)&&contentLength>256*1024)return NextResponse.json({error:"KNOWLEDGE_REQUEST_TOO_LARGE"},{status:413});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"Invalid request origin."},{status:403});
  const supabase=createClient();const {data:{user}}=await supabase.auth.getUser();
  if(!user)return NextResponse.json({error:"请先登录后使用书本 SASI。",code:"LOGIN_REQUIRED"},{status:401});
+ const abuse=await enforceAbuseGuard(req,{scope:"knowledge-ask",userId:user.id,accountLimit:90,ipLimit:240});
+ if(!abuse.ok)return NextResponse.json({error:abuse.error,code:abuse.error},{status:abuse.status});
  const body=await req.json();
  const question=String(body.question||"").trim().slice(0,4000);
  const mode=body.mode==="research"?"research":body.mode==="learning"?"learning":"book";
  const intelligence:Intelligence=body.intelligence==="light"?"light":body.intelligence==="high"?"high":"standard";
  const spec=tierSpec(intelligence);
- const evidence=(Array.isArray(body.evidence)?body.evidence:[]).slice(0,spec.evidenceLimit).map((e:any,i:number)=>({
+ const evidence=(Array.isArray(body.evidence)?body.evidence:[]).slice(0,spec.evidenceLimit).map((raw:unknown,i:number)=>{const e=(raw&&typeof raw==="object"?raw:{}) as Record<string,unknown>;return ({
   index:i+1,title:String(e.title||"资料").slice(0,240),locator:String(e.locator||"").slice(0,240),text:String(e.text||"").slice(0,6000)
- })).filter((e:Evidence)=>e.text.trim());
+ })}).filter((e:Evidence)=>e.text.trim());
  if(!question||!evidence.length)return NextResponse.json({error:"请先输入问题并找到相关原文。"},{status:400});
 
  const role=mode==="research"
@@ -75,8 +80,8 @@ ${sources}`;
    evidenceCount:evidence.length,
    sources:evidence.map((e:Evidence)=>({index:e.index,title:e.title,locator:e.locator||""}))
   });
- }catch(e:any){
-  const code=String(e?.message||"");
+ }catch(e:unknown){
+  const code=e instanceof Error?e.message:"";
   if(code==="INSUFFICIENT_BALANCE")return NextResponse.json({error:"余额不足，请先充值后再继续。",code},{status:402});
   if(code==="NO_AI_PROVIDER_CONFIGURED")return NextResponse.json({error:"AI 服务暂时不可用，请稍后再试。",code},{status:503});
   return NextResponse.json({error:"AI 暂时无法回答，请稍后重试。",code},{status:502});

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { decryptProviderKey } from "@/lib/sasi/credential-vault";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { reviewSasiProductionInput } from "@/lib/sasi/safety";
 import { applyProjectMemory, loadProjectMemory } from "@/lib/sasi/load-project-memory";
 import { loadVideoReferences, type VideoReference } from "@/lib/sasi/video-references";
@@ -44,8 +45,13 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   if (!body || !["quote", "confirm", "refresh"].includes(body.action)) return reply({ error: "INVALID_ACTION" }, 400);
   const admin = createAdminClient();
-  const limited = await admin.rpc("rate_limit_check", { p_key: `byok-video:${user.id}`, p_limit: 120, p_window_seconds: 3600 });
-  if (limited.error || limited.data !== true) return reply({ error: "RATE_LIMITED_OR_UNAVAILABLE" }, limited.error ? 503 : 429);
+  const abuse = await enforceAbuseGuard(request, {
+    scope: "byok-video",
+    userId: user.id,
+    accountLimit: 120,
+    ipLimit: 300,
+  });
+  if (!abuse.ok) return reply({ error: abuse.error }, abuse.status);
   const connection = await admin.from("sasi_provider_connections").select("encrypted_credential,fingerprint,health_status").eq("user_id", user.id).eq("provider", "volcengine").maybeSingle();
   if (connection.error || !connection.data || connection.data.health_status !== "healthy") return reply({ error: "SEEDANCE_CONNECTION_REQUIRED" }, 409);
   const credential = connection.data;

@@ -1,0 +1,29 @@
+{
+  "version": "v10.60",
+  "proposalId": "73b4d364-89fb-4582-8c8c-a24faaf6ee5b",
+  "strategyId": "v1060-fixture-strategy",
+  "sandboxRoot": "D:\\lingxi-sasi-code-sandbox-20260923-140941",
+  "headSha": "6fde14d31e1482ea37b76320e657d50241e92948",
+  "applyEvidence": {
+    "proposalId": "73b4d364-89fb-4582-8c8c-a24faaf6ee5b",
+    "strategyId": "v1060-fixture-strategy",
+    "startedAt": "2026-09-23T06:10:17.676Z",
+    "sandboxRoot": "D:\\lingxi-sasi-code-sandbox-20260923-140941",
+    "files": [
+      {
+        "path": "lib/sasi/self/__v1060_model_authored_probe__.ts",
+        "zone": "evolvable",
+        "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "proposedSha256": "5d9e8f0c7c36d89f7f2eae91c2b1906612a665a14a7ad4742649bf926ae164a4",
+        "bytes": 188
+      }
+    ],
+    "passed": true,
+    "errors": [],
+    "appliedAt": "2026-09-23T06:10:17.678Z"
+  },
+  "gitStatus": "?? lib/sasi/core/\n?? lib/sasi/knowledge/\n?? lib/sasi/learning/\n?? lib/sasi/memory/\n?? lib/sasi/models/\n?? lib/sasi/self/\n?? scripts/sasi-evolution/\n",
+  "diff": "",
+  "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "collectedAt": "2026-09-23T06:10:23.172Z"
+}

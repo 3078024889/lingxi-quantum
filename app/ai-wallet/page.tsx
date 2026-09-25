@@ -19,7 +19,7 @@ export default function Page(){
       <div className="lx11-narrow lx11-wallet-page">
         <WalletHeroCopy />
         <div className="lx11-wallet-body">
-          <Suspense fallback={<div className="lx11-wallet-loading">Loading balance…</div>}><AiWalletPanel/></Suspense>
+          <Suspense fallback={<div className="lx11-wallet-loading" aria-busy="true">…</div>}><AiWalletPanel/></Suspense>
           <AiRefundRequestPanel/>
         </div>
       </div>

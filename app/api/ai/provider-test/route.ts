@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { providerCandidates, runText } from "@/lib/ai/provider-router";
 import type { Intelligence } from "@/lib/ai/provider-router";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 45;
@@ -45,14 +46,8 @@ export async function POST(req:NextRequest){
   }
   const tier=tierOf(body.tier);
 
-  const admin=createAdminClient();
-  const limit=await admin.rpc("rate_limit_check",{
-    p_key:`ai-provider-test:${user.id}`,
-    p_limit:12,
-    p_window_seconds:3600
-  });
-  if(limit.error)return NextResponse.json({error:"RATE_GUARD_UNAVAILABLE"},{status:503});
-  if(limit.data!==true)return NextResponse.json({error:"RATE_LIMITED"},{status:429});
+  const abuse=await enforceAbuseGuard(req,{scope:"ai-provider-test",userId:user.id,accountLimit:12,ipLimit:36});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
   try{
     const r=await runText("只回复 LINGXIFIELD_OK","simple_text",tier,64);

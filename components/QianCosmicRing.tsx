@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import dynamic from "next/dynamic";
 import { Suspense, useEffect, useState } from "react";
 
@@ -73,7 +74,7 @@ export default function QianCosmicRing({
         <Suspense fallback={<RingPlaceholder />}>
           <QianCosmicRingScene highlightIndexes={highlightIndexes} paused={paused} />
         </Suspense>
-      ) : mode === "still" ? <div className="grid h-full grid-cols-8 gap-1 overflow-auto p-3" aria-label="六十四枚原创生命签库">{Array.from({ length: 64 }, (_, i) => <img key={i} src={`/images/qian/${String(i).padStart(2, "0")}.jpg`} alt={`生命签 ${i + 1}`} loading="lazy" className="aspect-[2/3] w-full rounded-sm object-cover" />)}</div> : mode === "mini" ? <MiniRingFallback /> : <RingPlaceholder />}
+      ) : mode === "still" ? <div className="grid h-full grid-cols-8 gap-1 overflow-auto p-3" aria-label="六十四枚原创生命签库">{Array.from({ length: 64 }, (_, i) => <NextImage key={i} src={`/images/qian/${String(i).padStart(2, "0")}.jpg`} alt={`生命签 ${i + 1}`} loading="lazy" className="aspect-[2/3] w-full rounded-sm object-cover"  width={400} height={600}/>)}</div> : mode === "mini" ? <MiniRingFallback /> : <RingPlaceholder />}
     </div>
   );
 }

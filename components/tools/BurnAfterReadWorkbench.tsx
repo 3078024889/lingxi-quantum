@@ -31,7 +31,8 @@ export default function BurnAfterReadWorkbench(){
     const enc=await encryptedText();
     const r=await fetch("/api/tools/burn-after-read/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==="limited"?views:1,viewDurationSeconds:mode==="fast"?duration:null})});
     const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
-    setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${enc.key}`);setText("");
+    if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
+    setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${enc.key}&t=${encodeURIComponent(String(d.token))}`);setText("");
    }catch{setError(lang==="zh"?"暂时无法生成，请稍后再试。":"Unable to create the link right now.")}
    finally{setBusy(false)}
  }
@@ -54,7 +55,8 @@ export default function BurnAfterReadWorkbench(){
    await uploadPrepared(d.files||[]);
    const done=await fetch("/api/tools/burn-after-read/file/complete",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:d.id})});
    if(!done.ok)throw new Error("UPLOAD_INCOMPLETE");
-   setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${enc.key}`);setText("");setFiles([]);
+   if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
+   setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${enc.key}&t=${encodeURIComponent(String(d.token))}`);setText("");setFiles([]);
  }
 
  async function payAndUpload(){
@@ -81,15 +83,15 @@ export default function BurnAfterReadWorkbench(){
  }
 
  async function copy(){if(!link)return;await navigator.clipboard.writeText(link);setCopied(true);setTimeout(()=>setCopied(false),1500)}
- async function share(){if(!link)return;if(navigator.share)await navigator.share({title:t("burnTitle"),url:link}).catch(()=>{});else await copy()}
+ async function share(){if(!link)return;if(navigator.share)await navigator.share({title:t("burnTitle"),text:link}).catch(()=>{});else await copy()}
  function email(){if(link)location.href=`mailto:?subject=${encodeURIComponent(t("burnTitle"))}&body=${encodeURIComponent(link)}`}
 
  const modes:[Mode,string,string][]=[["once",t("once"),t("onceD")],["timed",t("timed"),t("timedD")],["limited",t("limited"),t("limitedD")],["fast",t("fast"),t("fastD")]];
  return <div className="mx-auto max-w-3xl space-y-5">
   <Link href="/tools" className="lx-tool-back">← {lang==="zh"?"返回实用工具":"Back to tools"}</Link>
-  <section className="rounded-3xl border border-slate-200 bg-white p-6 lx-tool-panel-shell"><div className="lx-special-tool-title"><LingxiMiniIcon name="burn" size="title"/><h1 className="text-3xl font-semibold text-slate-950">{t("burnTitle")}</h1></div><p className="mt-2 text-sm leading-6 text-slate-600">{t("burnLead")}</p></section>
-  <section className="rounded-3xl border border-slate-200 bg-white p-6">
-   <textarea value={text} onChange={e=>setText(e.target.value)} maxLength={120000} rows={7} placeholder={lang==="zh"?"输入要分享的私密内容，也可以只上传文件…":"Enter private content, or share files only…"} className="w-full rounded-2xl border border-slate-200 p-4 text-slate-900 outline-none"/>
+  <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 lx-tool-panel-shell"><div className="lx-special-tool-title"><LingxiMiniIcon name="burn" size="title"/><h1 className="text-3xl font-semibold text-[var(--lx-ink)]">{t("burnTitle")}</h1></div><p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{t("burnLead")}</p></section>
+  <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+   <textarea value={text} onChange={e=>setText(e.target.value)} maxLength={120000} rows={7} placeholder={lang==="zh"?"输入要分享的私密内容，也可以只上传文件…":"Enter private content, or share files only…"} className="w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
    <div className="mt-4 rounded-2xl border border-dashed border-slate-300 p-4">
     <label className="cursor-pointer font-medium text-slate-900">{t("addFiles")}<input className="hidden" type="file" multiple onChange={e=>{const x=Array.from(e.target.files||[]).slice(0,20);if(x.reduce((n,f)=>n+f.size,0)<=2*1024*1024*1024)setFiles(x);else setError(t("fileLimit"))}}/></label>
     <p className="mt-1 text-xs text-slate-500">{t("fileLimit")} {t("filePaid")}</p>
@@ -101,7 +103,7 @@ export default function BurnAfterReadWorkbench(){
     {mode==="limited"&&<label className="text-xs text-slate-500">{t("views")}<select value={views} onChange={e=>setViews(Number(e.target.value))} className="ml-2 rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-800"><option value={1}>{t("v1")}</option><option value={3}>{t("v3")}</option><option value={5}>{t("v5")}</option></select></label>}
     {mode==="fast"&&<label className="text-xs text-slate-500">{t("timer")}<select value={duration} onChange={e=>setDuration(Number(e.target.value))} className="ml-2 rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-800"><option value={5}>{t("s5")}</option><option value={10}>{t("s10")}</option><option value={30}>{t("s30")}</option><option value={60}>{t("s60")}</option></select></label>}
    </div>
-   <button onClick={files.length?payAndUpload:createText} disabled={busy||(!text.trim()&&!files.length)} style={{background:"#111827",color:"#fff"}} className="mt-4 rounded-full px-5 py-2.5 text-sm font-medium disabled:opacity-40">{busy?t("uploading"):(files.length?t("payUpload"):t("generate"))}</button>
+   <button onClick={files.length?payAndUpload:createText} disabled={busy||(!text.trim()&&!files.length)} className="mt-4 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("uploading"):(files.length?t("payUpload"):t("generate"))}</button>
    {files.length>0&&<p className="mt-2 text-xs text-slate-500">{lang==="zh"?`本次共 ${totalMb} MB，付款页会显示人民币与美元价格。`:`${totalMb} MB total. The payment page shows CNY and USD prices.`}</p>}
    {link&&<div className="mt-5 rounded-2xl bg-slate-50 p-4"><p className="text-sm font-semibold text-slate-900">{t("ready")}</p><div className="mt-2 break-all rounded-xl bg-white p-3 text-sm text-slate-700">{link}</div><div className="mt-3 flex flex-wrap gap-2"><button onClick={()=>void copy()} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{copied?t("copied"):t("copy")}</button><button onClick={()=>void share()} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{t("share")}</button><button onClick={email} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{t("email")}</button></div></div>}
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}

@@ -1,8 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { encryptMiniSecret } from "@/lib/mini/crypto";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime = "nodejs";
 const BUCKET = "report-pdfs";
@@ -22,10 +24,15 @@ async function ensureBucket() {
   return admin;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "请重新进入已开启的场域档案" }, { status: 401 });
+  const abuse=await enforceAbuseGuard(req,{scope:"pdf-transfer",userId:user.id,accountLimit:60,ipLimit:180});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
+  const contentLength=Number(req.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>64*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
   try {
     const body = await req.json() as { action?: unknown; fileName?: unknown; size?: unknown; path?: unknown };
     const fileName = cleanName(body.fileName);

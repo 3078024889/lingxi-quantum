@@ -28,13 +28,13 @@ export async function checkRateLimit(
       p_window_seconds: windowSeconds,
     });
     if (error) {
-      console.error("[rate-limit] 检查失败，本次放行:", error);
-      return true;
+      console.error("[rate-limit] 检查失败，本次拒绝:", error);
+      return false;
     }
     return data === true;
   } catch (e) {
-    console.error("[rate-limit] 异常，本次放行:", e);
-    return true;
+    console.error("[rate-limit] 异常，本次拒绝:", e);
+    return false;
   }
 }
 

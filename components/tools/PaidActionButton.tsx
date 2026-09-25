@@ -65,8 +65,10 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
  useEffect(()=>{
    const h=(e:MessageEvent)=>{
      if(e.origin!==window.location.origin)return;
-     const d=e.data as any;
-     if(d?.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&d.quoteId&&d.quoteId===quote?.id)void complete(d.quoteId);
+     const raw=e.data as unknown;
+     if(!raw||typeof raw!=="object")return;
+     const d=raw as {type?:unknown;quoteId?:unknown};
+     if(d.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&typeof d.quoteId==="string"&&d.quoteId===quote?.id)void complete(d.quoteId);
    };
    window.addEventListener("message",h);
    return()=>{stop();window.removeEventListener("message",h)}
@@ -142,12 +144,12 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
 
  return <div>
    {!quote||changed
-     ?<button onClick={makeQuote} disabled={disabled} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40">{busy||restoring?t(UI.pricing):(label||t(UI.defaultLabel))}</button>
+     ?<button onClick={makeQuote} disabled={disabled} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy||restoring?t(UI.pricing):(label||t(UI.defaultLabel))}</button>
      :<div className="flex flex-wrap items-center gap-3">
-       <div className="rounded-2xl bg-blue-50 px-4 py-2.5 text-sm text-blue-900">{t(UI.thisTime)} {quote.quantity} {quote.unit_name} · <b className="text-lg">¥{quote.amount_rmb}</b><span className="ml-2 text-slate-500">/ ${quote.amount_usd} USD</span></div>
-       <button onClick={pay} disabled={busy||restoring} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40">{t(UI.confirm)}</button>
-       <button onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-full border border-slate-200 px-4 py-2.5 text-sm text-slate-600">{t(UI.recalc)}</button>
+       <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm text-[var(--lx-ink)]">{t(UI.thisTime)} {quote.quantity} {quote.unit_name} · <b className="text-lg">¥{quote.amount_rmb}</b><span className="ml-2 text-[var(--lx-muted)]">/ ${quote.amount_usd} USD</span></div>
+       <button onClick={pay} disabled={busy||restoring} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{t(UI.confirm)}</button>
+       <button onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button>
      </div>}
-   {msg&&<p className="mt-2 text-xs leading-5 text-slate-500">{msg}</p>}
+   {msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}
  </div>
 }

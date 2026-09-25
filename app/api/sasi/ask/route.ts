@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { runSasiAsk, validateAskQuestion } from "@/lib/sasi/ask/run-ask";
 
 export const runtime = "nodejs";
@@ -34,6 +35,14 @@ export async function POST(request: NextRequest) {
 
   const user = await identity();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
+
+  const abuse = await enforceAbuseGuard(request, {
+    scope: "sasi-ask",
+    userId: user.id,
+    accountLimit: 60,
+    ipLimit: 180,
+  });
+  if (!abuse.ok) return NextResponse.json({ error: abuse.error }, { status: abuse.status });
 
   const body = (await request.json().catch(() => null)) as Record<string, unknown> | null;
   if (!body) return NextResponse.json({ error: "INVALID_REQUEST" }, { status: 400 });

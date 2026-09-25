@@ -1,77 +1,89 @@
 "use client";
 import {useEffect,useMemo,useRef,useState} from "react";
-import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {privacyText} from "@/lib/privacy-tools-i18n";
 import Link from "next/link";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {tempMailText} from "@/lib/temp-mail-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
-type Box={id:string;address:string;token:string;expiresAt:string};
+type Box={id:string;address:string;expiresAt:string};
 type Msg={id:string;sender:string;subject:string;text_body:string;received_at:string;size_bytes:number};
-type BatchBox=Box;
+type OwnedBox=Box&{sourceKind?:string;messageCount:number;latestSender:string;latestSubject:string;latestAt:string;latestCode:string};
+
+async function copyText(value:string){try{await navigator.clipboard.writeText(value);return}catch{const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.focus();area.select();document.execCommand("copy");area.remove();}}
 
 function extractCode(subject:string,body:string){
- const s=`${subject}\n${body}`;
- return [...s.matchAll(/(?:^|\D)(\d{4,8})(?!\d)/g)].map(x=>x[1])[0]||"";
-}
-
-function friendly(code:string,lang:string){
- const zh:Record<string,string>={
-  SERVICE_BUSY:"服务正在恢复，请稍后再试。",
-  TOO_MANY_REQUESTS:"操作有点频繁，请稍后再试。",
-  FREE_DAILY_LIMIT_REACHED:"今天的10个免费邮箱已经用完，可使用付费批量生成。",
-  SIGN_IN_REQUIRED:"批量生成需要先登录。",
-  PAID_BATCH_REQUIRED:"请先完成本次批量生成支付。",
-  BATCH_ALREADY_USED:"这次批量已经生成完成，请重新选择数量。",
-  BATCH_SIZE_INVALID:"每次批量可生成11–100个邮箱。",
-  BATCH_CREATE_FAILED:"生成没有完成，本次支付仍可重试。",
-  CREATE_FAILED:"暂时无法生成，请稍后再试。",
- };
- const en:Record<string,string>={
-  SERVICE_BUSY:"Service is recovering. Please try again shortly.",
-  TOO_MANY_REQUESTS:"Too many requests. Please try again shortly.",
-  FREE_DAILY_LIMIT_REACHED:"You have used today's 10 free inboxes. Paid batch generation is still available.",
-  SIGN_IN_REQUIRED:"Sign in to use batch generation.",
-  PAID_BATCH_REQUIRED:"Complete payment for this batch first.",
-  BATCH_ALREADY_USED:"This paid batch has already been generated. Choose a new quantity to continue.",
-  BATCH_SIZE_INVALID:"Generate 11–100 inboxes per batch.",
-  BATCH_CREATE_FAILED:"Generation did not complete. You can retry this paid batch.",
-  CREATE_FAILED:"Unable to create an inbox right now.",
- };
- return (lang==="zh"?zh:en)[code]||(lang==="zh"?"暂时无法完成，请稍后再试。":"Unable to complete this right now.");
+ return [...`${subject}\n${body}`.matchAll(/(?:^|\D)(\d{4,8})(?!\d)/g)].map(x=>x[1])[0]||"";
 }
 
 export default function TempMailWorkbench(){
  const{lang}=useLingxiLang();
- const t=(k:string)=>privacyText(lang,k);
+ const t=(key:Parameters<typeof tempMailText>[1],vars:Record<string,string|number>={})=>tempMailText(lang,key,vars);
  const[box,setBox]=useState<Box|null>(null);
  const[messages,setMessages]=useState<Msg[]>([]);
+ const[owned,setOwned]=useState<OwnedBox[]>([]);
  const[error,setError]=useState("");
  const[busy,setBusy]=useState(false);
+ const[restoring,setRestoring]=useState(true);
  const[now,setNow]=useState(Date.now());
- const[copied,setCopied]=useState(false);
- const[codeCopied,setCodeCopied]=useState("");
+ const[copied,setCopied]=useState("");
  const[freeRemaining,setFreeRemaining]=useState<number|null>(null);
  const[batchCount,setBatchCount]=useState(50);
- const[batch,setBatch]=useState<BatchBox[]>([]);
  const[batchBusy,setBatchBusy]=useState(false);
  const[pendingQuote,setPendingQuote]=useState("");
  const poll=useRef<ReturnType<typeof setInterval>|null>(null);
 
  const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now):0,[box,now]);
- const batchPrice=(batchCount*0.05).toFixed(2);
+ const price=(batchCount*0.05).toFixed(2);
  const mm=String(Math.floor(remaining/60000)).padStart(2,"0");
  const ss=String(Math.floor((remaining%60000)/1000)).padStart(2,"0");
 
+ function friendly(code:string){
+  const map:Record<string,Parameters<typeof tempMailText>[1]>={
+   SERVICE_BUSY:"serviceBusy",TOO_MANY_REQUESTS:"tooMany",FREE_DAILY_LIMIT_REACHED:"freeLimit",
+   SIGN_IN_REQUIRED:"signInRequired",PAID_BATCH_REQUIRED:"paidBatchRequired",BATCH_ALREADY_USED:"batchAlreadyUsed",
+   BATCH_SIZE_INVALID:"batchSizeInvalid",BATCH_CREATE_FAILED:"batchCreateFailed",CREATE_FAILED:"createFailed",
+  };
+  return t(map[code]||"serviceBusy");
+ }
+
  async function refresh(current=box){
   if(!current)return;
-  const r=await fetch(`/api/tools/temp-mail/inbox?id=${encodeURIComponent(current.id)}`,{
-   headers:{"x-mailbox-token":current.token},
-   cache:"no-store",
-  });
+  const r=await fetch(`/api/tools/temp-mail/inbox?id=${encodeURIComponent(current.id)}`,{cache:"no-store"});
   const d=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(d.error||"INBOX_READ_FAILED");
+  if(d.expired){setBox(null);setMessages([]);return}
   setMessages(d.messages||[]);
   if(d.expiresAt)setBox({...current,expiresAt:d.expiresAt});
+ }
+
+ async function loadOwned(){
+  const r=await fetch("/api/tools/temp-mail/mine",{cache:"no-store"});
+  if(r.status===401){setOwned([]);return}
+  const d=await r.json().catch(()=>({}));
+  if(r.ok)setOwned(d.mailboxes||[]);
+ }
+
+ async function recover(){
+  setRestoring(true);
+  try{
+   const r=await fetch("/api/tools/temp-mail/recover",{cache:"no-store"});
+   const d=await r.json().catch(()=>({}));
+   if(r.ok&&d.box){
+     setBox(d.box);
+     localStorage.setItem("lingxifield:temp-mail",JSON.stringify(d.box));
+     await refresh(d.box).catch(()=>{});
+   }else{
+     const raw=localStorage.getItem("lingxifield:temp-mail");
+     if(raw){
+       const saved=JSON.parse(raw) as Box;
+       if(saved?.id&&new Date(saved.expiresAt).getTime()>Date.now()){
+         setBox(saved);
+         await refresh(saved).catch(()=>{});
+       }else localStorage.removeItem("lingxifield:temp-mail");
+     }
+   }
+   await loadOwned();
+  }finally{setRestoring(false)}
  }
 
  async function create(){
@@ -80,271 +92,155 @@ export default function TempMailWorkbench(){
    const r=await fetch("/api/tools/temp-mail/create",{method:"POST"});
    const d=await r.json().catch(()=>({}));
    if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
-   const next={id:d.id,address:d.address,token:d.token,expiresAt:d.expiresAt};
-   setBox(next);
-   setMessages([]);
-   setFreeRemaining(Number(d.freeRemaining));
+   const next={id:d.id,address:d.address,expiresAt:d.expiresAt};
+   setBox(next);setMessages([]);setFreeRemaining(Number(d.freeRemaining));
    localStorage.setItem("lingxifield:temp-mail",JSON.stringify(next));
-  }catch(e){
-   setError(friendly(e instanceof Error?e.message:String(e),lang));
-  }finally{
-   setBusy(false);
-  }
+   await loadOwned();
+  }catch(e){setError(friendly(e instanceof Error?e.message:String(e)))}finally{setBusy(false)}
  }
 
  async function extend(){
-  if(!box)return;
-  setBusy(true);setError("");
+  if(!box)return;setBusy(true);setError("");
   try{
-   const r=await fetch("/api/tools/temp-mail/extend",{
-    method:"POST",
-    headers:{"content-type":"application/json"},
-    body:JSON.stringify({id:box.id,token:box.token}),
-   });
+   const r=await fetch("/api/tools/temp-mail/extend",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:box.id})});
    const d=await r.json().catch(()=>({}));
    if(!r.ok)throw new Error(d.error||"EXTEND_FAILED");
-   const next={...box,expiresAt:d.expiresAt};
-   setBox(next);
-   localStorage.setItem("lingxifield:temp-mail",JSON.stringify(next));
-  }catch{
-   setError(lang==="zh"?"暂时无法延长，请稍后再试。":"Unable to extend right now.");
-  }finally{
-   setBusy(false);
-  }
+   const next={...box,expiresAt:d.expiresAt};setBox(next);
+   localStorage.setItem("lingxifield:temp-mail",JSON.stringify(next));await loadOwned();
+  }catch{setError(t("extendFailed"))}finally{setBusy(false)}
  }
 
- async function destroy(){
-  if(box){
-   await fetch("/api/tools/temp-mail/destroy",{
-    method:"POST",
-    headers:{"content-type":"application/json"},
-    body:JSON.stringify({id:box.id,token:box.token}),
-   }).catch(()=>{});
-  }
-  localStorage.removeItem("lingxifield:temp-mail");
-  setBox(null);
-  setMessages([]);
-  setError("");
- }
-
- async function copyAddress(){
-  if(!box)return;
-  await navigator.clipboard.writeText(box.address);
-  setCopied(true);
-  setTimeout(()=>setCopied(false),1500);
- }
-
- async function copyCode(code:string){
-  await navigator.clipboard.writeText(code);
-  setCodeCopied(code);
-  setTimeout(()=>setCodeCopied(""),1500);
- }
-
- async function createPaidBatch(quoteId:string){
-  setBatchBusy(true);setError("");
+ async function destroy(target=box){
   try{
-   const r=await fetch("/api/tools/temp-mail/batch",{
-    method:"POST",
-    headers:{"content-type":"application/json"},
-    body:JSON.stringify({count:batchCount,quoteId}),
-   });
-   const d=await r.json().catch(()=>({}));
-   if(!r.ok)throw new Error(d.error||"BATCH_CREATE_FAILED");
-   setBatch(d.mailboxes||[]);
-   setPendingQuote("");
-   sessionStorage.removeItem("lingxifield:temp-mail-batch-quote");
-  }catch(e){
-   setError(friendly(e instanceof Error?e.message:String(e),lang));
-  }finally{
-   setBatchBusy(false);
-  }
+  if(!target)return;
+  const response=await fetch("/api/tools/temp-mail/destroy",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:target.id})});
+   if(!response.ok)throw new Error("TEMP_MAIL_DESTROY_FAILED");
+  if(box?.id===target.id){localStorage.removeItem("lingxifield:temp-mail");setBox(null);setMessages([])}
+  setOwned(v=>v.filter(x=>x.id!==target.id));setError("");
+
+  }catch{setError(lang==="zh"?"暂时无法销毁，请稍后再试。":"Unable to destroy this inbox right now.");}
+}
+
+ async function copy(value:string,key:string){await navigator.clipboard.writeText(value);setCopied(key);setTimeout(()=>setCopied(""),1400)}
+
+ async function openOwned(item:OwnedBox){
+  const next={id:item.id,address:item.address,expiresAt:item.expiresAt};
+  setBox(next);setMessages([]);localStorage.setItem("lingxifield:temp-mail",JSON.stringify(next));
+  await refresh(next).catch(()=>setError(t("refreshFailed")));
+  window.scrollTo({top:0,behavior:"smooth"});
  }
 
  async function startBatchPayment(){
   setBatchBusy(true);setError("");
   try{
-   const r=await fetch("/api/tools/quote",{
-    method:"POST",
-    headers:{"content-type":"application/json"},
-    body:JSON.stringify({
-     toolId:"temp-mail-batch",
-     quantity:batchCount,
-     metadata:{source:"temp-mail",count:batchCount},
-    }),
-   });
+   const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},
+     body:JSON.stringify({toolId:"temp-mail-batch",quantity:batchCount,metadata:{source:"temp-mail",count:batchCount}})});
    const d=await r.json().catch(()=>({}));
-   if(r.status===401){
-    location.href=`/account?next=${encodeURIComponent("/tools/temp-mail")}`;
-    return;
-   }
+   if(r.status===401){location.href=`/account?next=${encodeURIComponent("/tools/temp-mail")}`;return}
    if(!r.ok)throw new Error(d.error||"QUOTE_FAILED");
-   setPendingQuote(d.id);
-   sessionStorage.setItem("lingxifield:temp-mail-batch-quote",d.id);
+   setPendingQuote(d.id);sessionStorage.setItem("lingxifield:temp-mail-batch-quote",d.id);
    const payUrl=`/tools/pay?quoteId=${encodeURIComponent(d.id)}`;
-   const w=window.open(payUrl,"lingxi-pay","width=620,height=820");
-   if(!w)location.href=payUrl;
-  }catch{
-   setError(lang==="zh"?"暂时无法打开支付，请稍后再试。":"Unable to open payment right now.");
-  }finally{
-   setBatchBusy(false);
-  }
+   const w=window.open(payUrl,"lingxi-pay","width=620,height=820");if(!w)location.href=payUrl;
+  }catch{setError(t("paymentFailed"))}finally{setBatchBusy(false)}
  }
 
- function copyBatch(){
-  void navigator.clipboard.writeText(batch.map(x=>x.address).join("\n"));
- }
-
- function downloadBatch(){
-  const csv="email,expires_at\n"+batch.map(x=>`${x.address},${x.expiresAt}`).join("\n");
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  a.download="lingxifield-temp-mail.csv";
-  a.click();
-  URL.revokeObjectURL(a.href);
- }
-
- useEffect(()=>{
+ async function createPaidBatch(quoteId:string){
+  setBatchBusy(true);setError("");
   try{
-   const raw=localStorage.getItem("lingxifield:temp-mail");
-   if(raw){
-    const x=JSON.parse(raw) as Box;
-    if(new Date(x.expiresAt).getTime()>Date.now())setBox(x);
-    else localStorage.removeItem("lingxifield:temp-mail");
-   }
-   setPendingQuote(sessionStorage.getItem("lingxifield:temp-mail-batch-quote")||"");
-  }catch{}
- },[]);
+   const r=await fetch("/api/tools/temp-mail/batch",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({count:batchCount,quoteId})});
+   const d=await r.json().catch(()=>({}));
+   if(!r.ok)throw new Error(d.error||"BATCH_CREATE_FAILED");
+   setPendingQuote("");sessionStorage.removeItem("lingxifield:temp-mail-batch-quote");
+   await loadOwned();
+   const first=(d.mailboxes||[])[0] as Box|undefined;if(first)await openOwned({...first,messageCount:0,latestSender:"",latestSubject:"",latestAt:"",latestCode:""});
+  }catch(e){setError(friendly(e instanceof Error?e.message:String(e)))}finally{setBatchBusy(false)}
+ }
 
+ function exportCsv(){
+  const csv="email,expires_at,messages\n"+owned.map(x=>`${x.address},${x.expiresAt},${x.messageCount}`).join("\n");
+  const u=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");
+  a.href=u;a.download="lingxifield-temp-mail.csv";a.click();setTimeout(()=>URL.revokeObjectURL(u),500);
+ }
+
+ useEffect(()=>{void recover();setPendingQuote(sessionStorage.getItem("lingxifield:temp-mail-batch-quote")||"")},[]);
  useEffect(()=>{
   const tick=setInterval(()=>setNow(Date.now()),1000);
-  if(box){
-   void refresh(box).catch(()=>{});
-   poll.current=setInterval(()=>void refresh(box).catch(()=>{}),5000);
-  }
-  return()=>{
-   clearInterval(tick);
-   if(poll.current)clearInterval(poll.current);
-  };
+  if(box){void refresh(box).catch(()=>{});poll.current=setInterval(()=>void refresh(box).catch(()=>{}),5000)}
+  return()=>{clearInterval(tick);if(poll.current)clearInterval(poll.current)}
  },[box?.id]);
-
+ useEffect(()=>{if(box&&remaining===0){localStorage.removeItem("lingxifield:temp-mail");setBox(null);setMessages([]);void loadOwned()}},[remaining]);
  useEffect(()=>{
-  if(box&&remaining===0)void destroy();
- },[remaining]);
-
- useEffect(()=>{
-  const h=(e:MessageEvent)=>{
-   if(e.origin!==location.origin)return;
-   const d=e.data as any;
-   if(d?.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&d.quoteId&&d.quoteId===pendingQuote){
-    void createPaidBatch(d.quoteId);
-   }
-  };
-  window.addEventListener("message",h);
-  return()=>window.removeEventListener("message",h);
+  const h=(e:MessageEvent)=>{const d=e.data as {type?:string;quoteId?:string};if(e.origin===location.origin&&d?.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&d.quoteId===pendingQuote)void createPaidBatch(d.quoteId)};
+  window.addEventListener("message",h);return()=>window.removeEventListener("message",h);
  },[pendingQuote,batchCount]);
 
- return <div className="mx-auto max-w-3xl space-y-5">
+ return <div className="mx-auto max-w-5xl space-y-5">
   <Link href="/tools" className="lx-tool-back">← {lang==="zh"?"返回实用工具":"Back to tools"}</Link>
-  <section className="rounded-3xl border border-slate-200 bg-white p-6 lx-tool-panel-shell">
-   <div className="lx-special-tool-title"><LingxiMiniIcon name="mail" size="title"/><h1 className="text-3xl font-semibold text-slate-950">{t("tempTitle")}</h1></div>
-   <p className="mt-2 text-sm leading-6 text-slate-600">{t("tempLead")}</p>
+
+  <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+   <div className="lx-special-tool-title"><LingxiMiniIcon name="mail" size="title"/><h1 className="text-3xl font-semibold text-[var(--lx-ink)]">{t("title")}</h1></div>
+   <p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{t("lead")}</p>
+   <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{t("usageHint")}</p>
   </section>
 
-  {!box?
-   <section className="rounded-3xl border border-slate-200 bg-white p-6">
+  {restoring?
+   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-sm text-[var(--lx-muted)]">{t("restoring")}</section>
+  :!box?
+   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
     <div className="flex flex-wrap items-center justify-between gap-4">
-     <div>
-      <p className="text-sm text-slate-600">{t("tempStart")}</p>
-      <p className="mt-2 text-xs text-slate-400">{lang==="zh"?"每天免费生成10个。":"10 free inboxes per day."}</p>
-     </div>
-     <button onClick={create} disabled={busy} style={{background:"#111827",color:"#fff"}} className="rounded-full px-5 py-3 text-sm font-medium disabled:opacity-50">
-      {busy?t("tempGening"):t("tempGen")}
-     </button>
+     <div><p className="text-sm text-[var(--lx-muted)]">{t("start")}</p><p className="mt-2 text-xs text-[var(--lx-faint)]">{t("freeDaily")}</p></div>
+     <button onClick={create} disabled={busy} className="rounded-full bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{busy?t("generating"):t("generate")}</button>
     </div>
-    {freeRemaining!=null&&<p className="mt-3 text-xs text-slate-500">{lang==="zh"?`今日免费还可生成 ${freeRemaining} 个。`:`${freeRemaining} free inboxes left today.`}</p>}
+    {freeRemaining!=null&&<p className="mt-3 text-xs text-[var(--lx-muted)]">{t("freeLeft",{count:freeRemaining})}</p>}
     {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
    </section>
   :
    <>
-    <section className="rounded-3xl border border-slate-200 bg-white p-6">
+    <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
      <div className="flex flex-wrap items-start justify-between gap-4">
-      <div className="min-w-0 flex-1">
-       <div className="text-xs text-slate-500">{t("addr")}</div>
-       <div className="mt-1 break-all text-xl font-semibold text-slate-950">{box.address}</div>
-      </div>
-      <div className="text-right">
-       <div className="text-xs text-slate-500">{t("expires")}</div>
-       <div className="mt-1 rounded-full bg-slate-100 px-4 py-2 font-mono text-lg text-slate-900">{mm}:{ss}</div>
-      </div>
+      <div className="min-w-0 flex-1"><div className="text-xs text-[var(--lx-muted)]">{t("address")}</div><div className="mt-1 break-all text-xl font-semibold text-[var(--lx-ink)]">{box.address}</div></div>
+      <div className="text-right"><div className="text-xs text-[var(--lx-muted)]">{t("expires")}</div><div className="mt-1 rounded-full bg-[var(--lx-soft)] px-4 py-2 font-mono text-lg text-[var(--lx-ink)]">{mm}:{ss}</div></div>
      </div>
      <div className="mt-5 flex flex-wrap gap-2">
-      <button onClick={()=>void copyAddress()} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800">{copied?t("copied"):t("copyMail")}</button>
-      <button onClick={()=>void refresh().catch(()=>setError(lang==="zh"?"刷新失败，请稍后再试。":"Refresh failed."))} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800">{t("refresh")}</button>
-      <button onClick={extend} disabled={busy} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800">{t("extend")}</button>
-      <button onClick={destroy} className="rounded-full border border-rose-200 bg-white px-4 py-2 text-sm text-rose-600">{t("destroy")}</button>
+      <button onClick={()=>void copy(box.address,"address")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{copied==="address"?t("copied"):t("copyEmail")}</button>
+      <button onClick={()=>void refresh().catch(()=>setError(t("refreshFailed")))} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{t("refresh")}</button>
+      <button onClick={extend} disabled={busy} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{t("extend")}</button>
+      <button onClick={()=>void destroy()} className="rounded-full border border-rose-300 px-4 py-2 text-sm text-rose-600">{t("destroy")}</button>
      </div>
     </section>
 
-    <section className="rounded-3xl border border-slate-200 bg-white p-6">
-     <div className="flex items-center justify-between gap-3">
-      <h2 className="text-lg font-semibold text-slate-950">{t("inbox")}</h2>
-      <span className="text-xs text-slate-400">{messages.length} {t("messages")} · {t("auto")}</span>
-     </div>
-     {!messages.length?
-      <p className="mt-5 text-sm text-slate-500">{t("waiting")}</p>
-     :
-      <div className="mt-4 space-y-3">
-       {messages.map(m=>{
-        const code=extractCode(m.subject,m.text_body);
-        return <details key={m.id} className="rounded-2xl border border-slate-200 p-4">
-         <summary className="cursor-pointer list-none">
-          <div className="flex items-start justify-between gap-3">
-           <div className="min-w-0">
-            <b className="block truncate text-slate-900">{m.subject||"—"}</b>
-            <span className="mt-1 block truncate text-xs text-slate-400">{m.sender}</span>
-           </div>
-           <time className="shrink-0 text-xs text-slate-400">{new Date(m.received_at).toLocaleTimeString(lang==="zh"?"zh-CN":lang,{hour:"2-digit",minute:"2-digit"})}</time>
-          </div>
-         </summary>
-         {code&&<div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-4 py-3">
-          <div>
-           <span className="block text-xs text-slate-500">{t("code")}</span>
-           <b className="mt-1 block font-mono text-2xl tracking-[.15em] text-slate-950">{code}</b>
-          </div>
-          <button onClick={()=>void copyCode(code)} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{codeCopied===code?t("copied"):t("copyCode")}</button>
-         </div>}
-         <pre className="mt-4 whitespace-pre-wrap break-words text-sm leading-6 text-slate-700">{m.text_body||"—"}</pre>
-        </details>;
-       })}
-      </div>
-     }
+    <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+     <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("inbox")}</h2><span className="text-xs text-[var(--lx-faint)]">{messages.length} {t("messages")} · {t("autoRefresh")}</span></div>
+     {!messages.length?<p className="mt-5 text-sm text-[var(--lx-muted)]">{t("waiting")}</p>:
+      <div className="mt-4 space-y-3">{messages.map(m=>{const code=extractCode(m.subject,m.text_body);return <details key={m.id} className="rounded-2xl border border-[var(--lx-line)] p-4">
+       <summary className="cursor-pointer list-none"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><b className="block truncate text-[var(--lx-ink)]">{m.subject||"—"}</b><span className="mt-1 block truncate text-xs text-[var(--lx-faint)]">{m.sender}</span></div><time className="shrink-0 text-xs text-[var(--lx-faint)]">{new Date(m.received_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}</time></div></summary>
+       {code&&<div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3"><div><span className="block text-xs text-[var(--lx-muted)]">{t("code")}</span><b className="mt-1 block font-mono text-2xl tracking-[.15em] text-[var(--lx-ink)]">{code}</b></div><button onClick={()=>void copy(code,`code-${m.id}`)} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm">{copied===`code-${m.id}`?t("copied"):t("copyCode")}</button></div>}
+       <pre className="mt-4 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--lx-muted)]">{m.text_body||"—"}</pre>
+      </details>})}</div>}
     </section>
    </>
   }
 
-  <section className="rounded-3xl border border-slate-200 bg-white p-6">
+  <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
    <div className="flex flex-wrap items-end justify-between gap-4">
-    <div>
-     <h2 className="text-lg font-semibold text-slate-950">{lang==="zh"?"批量临时邮箱":"Batch temporary email"}</h2>
-     <p className="mt-2 text-sm text-slate-500">{lang==="zh"?"一次生成11–100个，按实际数量收费。":"Generate 11–100 at a time and pay only for the quantity you choose."}</p>
-    </div>
-    <div className="flex items-center gap-2">
-     <input type="number" min={11} max={100} value={batchCount} onChange={e=>setBatchCount(Math.max(11,Math.min(100,Number(e.target.value)||11)))} className="w-24 rounded-full border border-slate-200 px-4 py-2 text-sm"/>
-     <button onClick={startBatchPayment} disabled={batchBusy} style={{background:"#111827",color:"#fff"}} className="rounded-full px-5 py-2.5 text-sm font-medium disabled:opacity-50">
-      {batchBusy?(lang==="zh"?"处理中…":"Working…"):(lang==="zh"?`生成 ${batchCount} 个 · ¥${batchPrice}`:`Generate ${batchCount} · ¥${batchPrice}`)}
-     </button>
-    </div>
+    <div><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("myMailboxes")}</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--lx-muted)]">{t("myMailboxesLead")}</p></div>
+    <button onClick={()=>void loadOwned()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{t("refreshAll")}</button>
    </div>
-   <p className="mt-3 text-xs text-slate-400">{lang==="zh"?"¥0.05/个；50个 ¥2.50，100个 ¥5.00。每批单独计费。":"¥0.05 each; 50 = ¥2.50, 100 = ¥5.00. Each batch is billed separately."}</p>
-   {batch.length>0&&<div className="mt-5">
-    <div className="flex gap-2">
-     <button onClick={copyBatch} className="rounded-full border border-slate-200 px-4 py-2 text-sm">{lang==="zh"?"复制全部":"Copy all"}</button>
-     <button onClick={downloadBatch} className="rounded-full border border-slate-200 px-4 py-2 text-sm">{lang==="zh"?"导出 CSV":"Export CSV"}</button>
-    </div>
-    <div className="mt-3 max-h-72 overflow-auto rounded-2xl bg-slate-50 p-4 font-mono text-sm text-slate-700">
-     {batch.map(x=><div key={x.id}>{x.address}</div>)}
-    </div>
-   </div>}
+   {!owned.length?<p className="mt-4 text-sm text-[var(--lx-muted)]">{t("noActive")} <span className="block mt-1 text-xs">{t("signInForWorkspace")}</span></p>:
+    <div className="mt-4 grid gap-3 md:grid-cols-2">{owned.map(item=><article key={item.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4">
+     <div className="flex items-start justify-between gap-3"><div className="min-w-0"><b className="block truncate text-[var(--lx-ink)]">{item.address}</b><span className="mt-1 block text-xs text-[var(--lx-muted)]">{item.messageCount?t("hasMail",{count:item.messageCount}):t("waitingShort")}</span></div><span className="shrink-0 text-xs text-[var(--lx-faint)]">{Math.max(0,Math.ceil((new Date(item.expiresAt).getTime()-now)/60000))}m</span></div>
+     {item.latestSubject&&<div className="mt-3 border-t border-[var(--lx-line)] pt-3 text-xs text-[var(--lx-muted)]"><b className="block truncate text-[var(--lx-ink)]">{item.latestSubject}</b><span className="block truncate">{item.latestSender}</span>{item.latestCode&&<span className="mt-2 inline-block rounded-full bg-[var(--lx-panel)] px-3 py-1 font-mono">{item.latestCode}</span>}</div>}
+     <div className="mt-4 flex gap-2"><button onClick={()=>void openOwned(item)} className="rounded-full border border-[var(--lx-line)] px-3 py-2 text-xs">{t("openInbox")}</button><button onClick={()=>void destroy(item)} className="rounded-full border border-rose-300 px-3 py-2 text-xs text-rose-600">{t("destroy")}</button></div>
+    </article>)}</div>}
+  </section>
+
+  <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+   <div className="flex flex-wrap items-end justify-between gap-4">
+    <div><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("batchTitle")}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{t("batchLead")}</p><p className="mt-1 text-xs text-[var(--lx-faint)]">{t("paidAfterFree")}</p></div>
+    <div className="flex items-center gap-2"><input type="number" min={11} max={100} value={batchCount} onChange={e=>setBatchCount(Math.max(11,Math.min(100,Number(e.target.value)||11)))} className="w-24 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm"/>
+     <button onClick={startBatchPayment} disabled={batchBusy} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{batchBusy?t("working"):t("generateCount",{count:batchCount,price})}</button></div>
+   </div>
+   <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{t("unitPrice")}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><button onClick={exportCsv} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{t("exportCsv")}</button></>}</div>
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>
  </div>;

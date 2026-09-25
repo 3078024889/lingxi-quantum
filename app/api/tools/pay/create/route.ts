@@ -8,16 +8,35 @@ import { createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,w
 import { exchangeCodeForOpenid,wechatOauthConfigured } from "@/lib/wechat-oauth";
 
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeState } from "@/lib/tools/service-readiness";
 export const runtime="nodejs"; export const maxDuration=30;
 
 export async function POST(req:NextRequest){
   if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   try{
+    const contentLength=Number(req.headers.get("content-length")||0);
+    if(Number.isFinite(contentLength)&&contentLength>64*1024)return NextResponse.json({error:"PAYMENT_REQUEST_TOO_LARGE"},{status:413});
+
     const supabase=createClient(); const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"请先登录"},{status:401});
-    const {quoteId,provider,code,state}=await req.json();
+
+    const body=await req.json().catch(()=>({}));
+    const quoteId=String(body.quoteId||"").trim();
+    const provider=String(body.provider||"").trim();
+    const code=typeof body.code==="string"?body.code:undefined;
+    const state=typeof body.state==="string"?body.state:undefined;
+    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(quoteId))
+      return NextResponse.json({error:"INVALID_QUOTE_ID"},{status:400});
+    if(!["wechat","alipay","paypal"].includes(provider))
+      return NextResponse.json({error:"支付方式无效"},{status:400});
+
     const admin=createAdminClient();
+    const limited=await admin.rpc("rate_limit_check",{p_key:`tool-pay-create:${user.id}`,p_limit:120,p_window_seconds:3600});
+    if(limited.error)return NextResponse.json({error:"PAYMENT_RATE_GUARD_UNAVAILABLE"},{status:503});
+    if(limited.data!==true)return NextResponse.json({error:"PAYMENT_RATE_LIMITED"},{status:429});
+    const abuse=await enforceAbuseGuard(req,{scope:"tool-payment-create",userId:user.id,accountLimit:60,ipLimit:180});
+    if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
     const {data:q}=await admin.from("tool_payment_quotes").select("*").eq("id",quoteId).eq("user_id",user.id).single();
     if(!q)return NextResponse.json({error:"报价不存在"},{status:404});
     if(q.status==="paid")return NextResponse.json({paid:true});
@@ -27,8 +46,7 @@ export async function POST(req:NextRequest){
     }
     if(new Date(q.expires_at).getTime()<Date.now())return NextResponse.json({error:"报价已过期，请重新计算"},{status:410});
 
-    const p=String(provider);
-    if(!["wechat","alipay","paypal"].includes(p))return NextResponse.json({error:"支付方式无效"},{status:400});
+    const p=provider;
     // Provider readiness must be checked BEFORE creating a local order.
     // Otherwise a disabled provider can leave ghost pending orders behind.
     if(p==="paypal"){

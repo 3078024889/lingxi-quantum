@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { isDryRun, isOpendataIngestEnabled } from "@/lib/sasi/opendata/allowlist";
 import { runOpendataIngestOnce } from "@/lib/sasi/opendata/run-ingest";
 
@@ -38,6 +39,9 @@ export async function POST(request: NextRequest) {
   }
   const user = await identity();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
+
+  const abuse=await enforceAbuseGuard(request,{scope:"sasi-opendata-ingest",userId:user.id,accountLimit:6,ipLimit:18});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
   const report = await runOpendataIngestOnce({ userId: user.id });
   return NextResponse.json(report, {

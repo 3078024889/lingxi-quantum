@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sasiStorageUploadLimit } from "@/lib/sasi/storage-limits";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { mediaKindForExtension, safeAssetPath, SASI_ASSET_BUCKET, validateAsset } from "@/lib/sasi/assets";
@@ -13,6 +14,11 @@ export async function POST(request: NextRequest) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
+
+  const abuse = await enforceAbuseGuard(request,{scope:"sasi-asset-prepare",userId:user.id,accountLimit:120,ipLimit:300});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
+  const contentLength=Number(request.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>64*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
 
   let body: Record<string, unknown>;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "INVALID_JSON" }, { status: 400 }); }

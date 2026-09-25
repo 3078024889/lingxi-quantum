@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
+import { liveTools } from "@/lib/tools/registry";
 
 async function resolveSite(): Promise<string> {
   try {
@@ -29,11 +30,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/refunds",
     "/legal/sasi",
   ];
+  const toolRoutes=liveTools().map(tool=>`/tools/${tool.slug}`);
+  const uniqueRoutes=Array.from(new Set([...routes,...toolRoutes]));
   const now=new Date();
-  return routes.map(route=>({
+  return uniqueRoutes.map(route=>({
     url:`${site}${route}`,
     lastModified:now,
     changeFrequency:"weekly" as const,
-    priority:route===""?1:0.7,
+    priority:route===""?1:route.startsWith("/tools/")?0.8:0.7,
   }));
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { getCoreType, type WesternElement, type ChineseElement } from "@/lib/lifemap-calc";
 import FaqSection, { type BilingualFaqItem } from "@/components/FaqSection";
@@ -859,15 +860,15 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
               </div>
             ) : !report || !parsed ? (
               <div className="lm-preview-empty">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/images/lifemap/page-0.png" alt="生命图谱报告视觉预览" />
+
+                <NextImage src="/images/lifemap/page-0.png" alt="生命图谱报告视觉预览"  width={1600} height={1000}/>
                 <p><Bi zh="先完成左侧信息，你将免费看到核心生命原型、真实生命坐标节点、当前阶段与三个行动关键词。" en="Complete the form to see your core archetype, calculated chart points, current phase and three action keywords." /></p>
                 <small><Bi zh="出生时间不知道也可以生成；信息越完整，可计算的结构层次越丰富。" en="You can continue without an exact birth time. More complete information opens more calculable layers." /></small>
               </div>
             ) : (
               <div className="lm-generated-preview">
                 <div className="lm-generated-heading">
-                  {lifemapTypeImage(report.coreType.name) && <img src={lifemapTypeImage(report.coreType.name)!} alt={report.coreType.name} />}
+                  {lifemapTypeImage(report.coreType.name) && <NextImage src={lifemapTypeImage(report.coreType.name)!} alt={report.coreType.name}  width={1600} height={1000} unoptimized/>}
                   <div><small><Bi zh="你的生命频率报告" en="Your Life Frequency Report" /></small><h2>{isEn() ? report.coreType.nameEn : report.coreType.name}</h2><p>{t("太阳", "Sun")} {isEn() ? report.facts.sunSignEn : report.facts.sunSignZh} · {t("日主", "Day Master")} {report.facts.dayMasterGan}</p></div>
                 </div>
                 <blockquote>{parsed.echoText}</blockquote>
@@ -1106,8 +1107,8 @@ export default function LifeMapFlow({ initialArchiveId }: { initialArchiveId?: s
             ) : (
               <div className="lm-archive-locked">
                 <div className="lm-pdf-stack">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/lifemap/page-0.png" alt="生命图谱 PDF 封面预览" />
+
+                  <NextImage src="/images/lifemap/page-0.png" alt="生命图谱 PDF 封面预览"  width={1600} height={1000}/>
                   <span><Bi zh="待解锁" en="LOCKED" /></span>
                 </div>
                 <h3><Bi zh="完整档案将在这里展开" en="Your complete archive will unfold here" /></h3>

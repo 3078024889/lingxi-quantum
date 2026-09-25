@@ -10,6 +10,7 @@ import { reviewSasiProductionInput } from "@/lib/sasi/safety";
 import { selectSasiVideoProvider, type SasiVideoProviderId } from "@/lib/sasi/provider";
 import { hashSasiPrompt, verifySasiTaskQuote } from "@/lib/sasi/task-quote";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import {applySasiSkill,normalizeSkillSelection,resolveSasiSkill} from "@/lib/sasi/skill-runtime";
 import {
   assertDirectorFoundryLoaded,
@@ -96,9 +97,13 @@ export async function POST(request: NextRequest) {
     || approved.skillSource !== skillSelection.source || approved.skillId !== skillSelection.id) {
     return NextResponse.json({ error: "QUOTE_CHANGED_REQUOTE_REQUIRED" }, { status: 409 });
   }
-  const limited = await admin.rpc("rate_limit_check", { p_key: `sasi-job:${user.id}`, p_limit: 12, p_window_seconds: 3600 });
-  if (limited.error) return NextResponse.json({ error: "PRODUCTION_RATE_GUARD_UNAVAILABLE" }, { status: 503 });
-  if (limited.data !== true) return NextResponse.json({ error: "PRODUCTION_RATE_LIMITED" }, { status: 429 });
+  const abuse = await enforceAbuseGuard(request, {
+    scope: "sasi-production-job",
+    userId: user.id,
+    accountLimit: 12,
+    ipLimit: 36,
+  });
+  if (!abuse.ok) return NextResponse.json({ error: abuse.error }, { status: abuse.status });
 
   let memory;
   try {memory=await loadProjectMemory(admin,user.id,projectId);}catch{return NextResponse.json({error:"MEMORY_READ_FAILED"},{status:503});}

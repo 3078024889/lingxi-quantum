@@ -8,6 +8,7 @@ import {quoteVideoTask} from "@/lib/sasi/video-pricing";
 import {reviewSasiProductionInput} from "@/lib/sasi/safety";
 import {hashSasiPrompt,signSasiTaskQuote} from "@/lib/sasi/task-quote";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
+import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {normalizeSkillSelection,resolveSasiSkill} from "@/lib/sasi/skill-runtime";
 
 export const runtime="nodejs";export const dynamic="force-dynamic";
@@ -17,6 +18,10 @@ export async function POST(request:NextRequest){
   if(!isSameOriginMutation(request))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const supabase=createClient();const {data:{user}}=await supabase.auth.getUser();
   if(!user)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
+  const abuse=await enforceAbuseGuard(request,{scope:"sasi-quote",userId:user.id,accountLimit:120,ipLimit:300});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
+  const contentLength=Number(request.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>64*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
   let body:Record<string,unknown>;try{body=await request.json()}catch{return NextResponse.json({error:"INVALID_JSON"},{status:400})}
   const projectId=typeof body.projectId==="string"?body.projectId:"",nodeId=typeof body.nodeId==="string"?body.nodeId:null,prompt=typeof body.prompt==="string"?body.prompt.trim():"";
   const duration=Math.round(Number(body.duration));

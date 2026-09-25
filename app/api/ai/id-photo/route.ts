@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { claimPaidToolJob,completePaidToolJob,failPaidToolJob } from "@/lib/tools/paid-job-server";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 export const runtime="nodejs";export const maxDuration=120;
 export async function POST(req:Request){
  const key=process.env.OPENAI_API_KEY;if(!key)return NextResponse.json({error:"OPENAI_NOT_CONFIGURED"},{status:503});
  const supabase=createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:"请先登录"},{status:401});
+ const abuse=await enforceAbuseGuard(req,{scope:"ai-id-photo",userId:user.id,accountLimit:90,ipLimit:240});if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
  const form=await req.formData(),file=form.get("file"),quoteId=String(form.get("quote_id")||""),itemKey=String(form.get("item_key")||"id-photo-0"),background=String(form.get("background")||"white");
  if(!(file instanceof File))return NextResponse.json({error:"FILE_REQUIRED"},{status:400});
  if(file.size>12*1024*1024)return NextResponse.json({error:"FILE_TOO_LARGE"},{status:413});

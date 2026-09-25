@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 // 练习挂图：展示完整练习图（用户可长按/右键保存到手机），
 // 上方叠加动态光效层（流光、星闪），让静态图"动起来"养眼。
 export default function PracticeChart({
@@ -13,7 +14,7 @@ export default function PracticeChart({
     <figure className="mx-auto max-w-2xl">
       <div className="relative overflow-hidden rounded-sm border border-white/10">
         {/* 完整练习图 */}
-        <img src={src} alt={alt} className="block w-full" loading="lazy" />
+        <NextImage src={src} alt={alt} className="block w-full" loading="lazy"  width={1600} height={2200} unoptimized/>
 
         {/* 动态光效层（不挡住保存，pointer-events-none） */}
         <div className="pointer-events-none absolute inset-0">

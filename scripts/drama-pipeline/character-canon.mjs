@@ -6,6 +6,8 @@ import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { fetchFoundationCanon, foundationRefsForGate } from './continuity-foundation-bridge.mjs';
+
 const __dir = dirname(fileURLToPath(import.meta.url));
 
 /** @typedef {{ id: string, face: string, body: string, voice?: string }} IdentityCore */
@@ -120,12 +122,97 @@ export function continuityGate(prev, curr, refs = {}) {
       }
     }
   }
+  // Optional Foundation locked-facts check (only when bridge succeeded and refs.foundation set)
+  const fond = refs.foundation;
+  if (fond?.locked_facts && curr) {
+    const proposed = {
+      ...(curr.look_state?.hair != null ? { hair: curr.look_state.hair } : {}),
+      ...(curr.look_state?.wardrobe != null ? { wardrobe: curr.look_state.wardrobe } : {}),
+      ...(curr.identity_core?.face != null ? { face: curr.identity_core.face } : {}),
+      ...(refs.proposed || {}),
+    };
+    for (const [k, got] of Object.entries(proposed)) {
+      const cur = fond.locked_facts[k];
+      if (cur?.locked && cur.value != null && cur.value !== got) {
+        issues.push({
+          code: 'LOCKED_IDENTITY_DRIFT',
+          field: k,
+          expect: cur.value,
+          got,
+          fix: `locked identity_core.${k} must stay ${JSON.stringify(cur.value)}`,
+        });
+      }
+    }
+  }
   // fixture: injected error always fail
   if (curr?.look_state?._error_injected || refs.forceFail) {
     if (!issues.length) issues.push({ code: 'LOOK_MISS_BEAT', fix: refs.fix || '有易容节拍却未改 look_state' });
   }
   const ok = issues.length === 0;
-  return { ok, pass: ok, issues, fix: issues[0]?.fix, next_action: ok ? 'advance' : 'repair_this_shot_only' };
+  return {
+    ok,
+    pass: ok,
+    issues,
+    fix: issues[0]?.fix,
+    next_action: ok ? 'advance' : 'repair_this_shot_only',
+    foundation_used: Boolean(fond),
+    production_ready: false,
+  };
+}
+
+/**
+ * ContinuityGate + Python Foundation bridge (Day1-2 default for production pipeline).
+ * On bridge fail → fail-open to continuityGate(prev, curr, refs) fixture/fake-field path.
+ * Fixture contrast remains runCanonGateFixture() / opts.fixtureOnly=true.
+ */
+export function continuityGateWithFoundation(prev, curr, refs = {}) {
+  const character =
+    refs.character ||
+    curr?.identity_core?.id?.replace(/^C-/, '') ||
+    (curr?.cast && String(curr.cast[0] || '').replace(/^C-/, '')) ||
+    '望舒';
+  const project = refs.project || 'Galileo-望舒';
+  let bridge = null;
+  try {
+    bridge = fetchFoundationCanon({
+      character,
+      project,
+      proposed: refs.proposed,
+      weldScript: refs.weldScript,
+      timeoutMs: refs.timeoutMs,
+    });
+  } catch (e) {
+    bridge = { ok: false, fallback: true, error: String(e?.message || e) };
+  }
+  if (!bridge?.ok) {
+    const gate = continuityGate(prev, curr, refs);
+    return {
+      ...gate,
+      foundation_used: false,
+      foundation_fallback: true,
+      foundation_error: bridge?.error || 'bridge_unavailable',
+      production_ready: false,
+    };
+  }
+  const merged = foundationRefsForGate(bridge, refs);
+  const gate = continuityGate(prev, curr, merged);
+  return {
+    ...gate,
+    foundation_used: true,
+    foundation_fallback: false,
+    foundation: {
+      locked_facts: bridge.locked_facts,
+      look_states: bridge.look_states,
+      character: bridge.character,
+      project: bridge.project,
+    },
+    production_ready: false,
+  };
+}
+
+/** Convenience: fetch locked hair + wardrobe look_state for a character (smoke/helper). */
+export function loadFoundationLook(character = '望舒', project = 'Galileo-望舒', opts = {}) {
+  return fetchFoundationCanon({ character, project, ...opts });
 }
 
 /** Run Groot fixture: everyday → disguise → bad look must fail */
@@ -168,11 +255,13 @@ export function runCanonGateFixture(fixturePath) {
 }
 
 /** Bridge for eight-step refined shots */
-export function runCanonPipeline(refinedShots, boards, scenes, scriptText) {
+export function runCanonPipeline(refinedShots, boards, scenes, scriptText, opts = {}) {
   const nameToId = {};
   const boardsObj = boards || {};
   for (const name of Object.keys(boardsObj)) nameToId[name] = `C-${name}`;
   const canon = buildCanon({ boards: boardsObj, scenes, scriptText });
+  const useFoundation = opts.fixtureOnly !== true; // default: Foundation main path
+  const defaultProject = opts.project || null;
   // alias cores by character name for primaryCharacter
   for (const c of canon.cores) {
     const name = c.id.replace(/^C-/, '');
@@ -195,15 +284,57 @@ export function runCanonPipeline(refinedShots, boards, scenes, scriptText) {
     };
     const compiled = compileShot(shot, canon);
     const prev = prevByCast[castId];
-    const gate = continuityGate(prev, compiled, { legalLook: compiled.look_state });
-    items.push({ ...compiled, shot_id: sh.id, character: sh.character, gate });
+    const gateOpts = { legalLook: compiled.look_state, character: sh.character, project: defaultProject || `Galileo-${sh.character}` };
+    const gate = useFoundation
+      ? continuityGateWithFoundation(prev, compiled, gateOpts)
+      : continuityGate(prev, compiled, gateOpts);
+    items.push({ ...compiled, shot_id: sh.id, character: sh.character, gate, foundation_default: useFoundation });
     if (gate.ok) prevByCast[castId] = compiled;
   }
-  return { canon, items, all_pass: items.every((i) => i.gate?.ok) };
+  return { canon, items, all_pass: items.every((i) => i.gate?.ok), foundation_default: useFoundation, production_ready: false };
 }
 
 const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
 if (isMain) {
+  const mode = process.argv[2];
+  if (mode === 'bridge-smoke' || mode === '--bridge-smoke') {
+    const character = process.argv[3] || '望舒';
+    const project = process.argv[4] || 'Galileo-望舒';
+    const pack = loadFoundationLook(character, project);
+    const hair = pack.locked_facts?.hair;
+    const wardrobe = pack.look_states?.wardrobe;
+    const pass =
+      pack.ok === true &&
+      hair?.locked === true &&
+      hair?.value === '乌发如瀑' &&
+      wardrobe?.value === '银白月华纱衣';
+    const outDir = join(__dir, 'out');
+    mkdirSync(outDir, { recursive: true });
+    const report = {
+      id: 'continuity-bridge-smoke-望舒',
+      pass,
+      character,
+      project,
+      locked_hair: hair,
+      look_wardrobe: wardrobe,
+      production_ready: false,
+      foundation_fallback: Boolean(pack.fallback),
+      pack,
+    };
+    const outPath = join(outDir, 'continuity-bridge-smoke-2026-09-25.json');
+    writeFileSync(outPath, JSON.stringify(report, null, 2));
+    try {
+      writeFileSync('/workspace/uploads/continuity-bridge-smoke-2026-09-25.json', JSON.stringify(report, null, 2));
+    } catch { /* optional */ }
+    console.log(JSON.stringify(report, null, 2));
+    console.log(pass ? 'PASS' : 'FAIL', 'bridge-smoke', character, {
+      hair: hair?.value,
+      hair_locked: hair?.locked,
+      wardrobe: wardrobe?.value,
+    });
+    console.log('wrote', outPath);
+    process.exit(pass ? 0 : 1);
+  }
   const result = runCanonGateFixture();
   const outDir = join(__dir, 'out');
   mkdirSync(outDir, { recursive: true });

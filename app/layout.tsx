@@ -8,11 +8,11 @@ const SHARE_IMAGE=`${SITE}/og-sasi-20260920.png`;
 
 export const metadata: Metadata = {
   metadataBase:new URL(SITE),
-  title:{default:"灵犀场 LINGXIFIELD｜免费实用工具、AI 创作与一念显化",template:"%s ｜ 灵犀场 LINGXIFIELD"},
-  description:"灵犀场是一个让想法被理解、让问题被处理、让结果真正发生的场智能数字空间。免费实用工具、AI 创作与构建、探索与显化，都从同一个入口开始。",
+  title:{default:"灵犀场 LINGXIFIELD｜SASI AI 创作、资料智能体与实用工具",template:"%s ｜ 灵犀场 LINGXIFIELD"},
+  description:"灵犀场是一个把想法、资料和日常问题真正处理起来的场智能数字空间。支持 SASI AI 创作、AI 短剧、网站构建、资料智能体，以及 PDF、图片、视频、OCR、字幕与隐私工具。",
   alternates:{canonical:"/"},
-  openGraph:{type:"website",siteName:"灵犀场 LINGXIFIELD",title:"灵犀场｜一键即达，一念显化",description:"免费实用工具、AI 创作与构建、探索与显化，让想法被理解，让问题被处理，让结果真正发生。",url:SITE,images:[{url:SHARE_IMAGE,width:1672,height:941,alt:"灵犀场 LINGXIFIELD"}]},
-  twitter:{card:"summary_large_image",title:"灵犀场 LINGXIFIELD",description:"一念即达 · 一念显化。把问题、资料与想法带进来，让下一步变得清晰。",images:[SHARE_IMAGE]},
+  openGraph:{type:"website",siteName:"灵犀场 LINGXIFIELD",title:"灵犀场｜SASI AI 创作、资料智能体与实用工具",description:"从 AI 短剧、网站构建和资料智能体，到 PDF、图片、视频、OCR、字幕与隐私工具，把想法和文件直接推进到可使用的结果。",url:SITE,images:[{url:SHARE_IMAGE,width:1672,height:941,alt:"灵犀场 LINGXIFIELD"}]},
+  twitter:{card:"summary_large_image",title:"灵犀场 LINGXIFIELD",description:"把问题、资料与想法带进来，用 SASI 与实用工具继续推进到可使用的结果。",images:[SHARE_IMAGE]},
   robots:{index:true,follow:true},manifest:"/manifest.webmanifest",
   icons:{icon:[{url:"/favicon.ico",sizes:"any"},{url:"/favicon-32x32.png",sizes:"32x32",type:"image/png"},{url:"/icon-192.png",sizes:"192x192",type:"image/png"},{url:"/icon-512.png",sizes:"512x512",type:"image/png"}],apple:[{url:"/apple-touch-icon.png",sizes:"180x180",type:"image/png"}]},
   verification:{google:["Q8hQ5NseO-vRkzeFaFHbjMWljGBYNZKlvclKWBghetk","p6pCOqQydWyeU9ubwvBSUUROUKG8Hac8xXucbtjy1mg"],other:{"baidu-site-verification":"codeva-QeLvo6OqH7","msvalidate.01":"0E5B44454CD5DC0433DDBFAFA31CDB67"}},

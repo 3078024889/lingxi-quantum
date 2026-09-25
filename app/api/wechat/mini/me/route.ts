@@ -7,6 +7,8 @@ import { ensureLifeArchetype, listLifeArchetypeSubjects } from "@/lib/mini/life-
 import { hasUnlock } from "@/lib/access";
 import { MINI_LIFE_ARCHETYPE_ALGORITHM } from "@/lib/mini/dendrite-engine";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: Request) {
   try {
     if (!isSupabaseAdminConfigured()) {

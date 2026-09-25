@@ -12,6 +12,7 @@ import {
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
 import { sasiPaidProductionEnabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
@@ -80,13 +81,8 @@ export async function POST(req: NextRequest) {
     }
 
     const admin = createAdminClient();
-    const limited=await admin.rpc("rate_limit_check",{
-      p_key:`payment-create:wechat:${user.id}`,
-      p_limit:120,
-      p_window_seconds:3600,
-    });
-    if(limited.error)return NextResponse.json({error:"PAYMENT_RATE_GUARD_UNAVAILABLE"},{status:503});
-    if(limited.data!==true)return NextResponse.json({error:"PAYMENT_CREATE_RATE_LIMITED"},{status:429});
+    const abuse=await enforceAbuseGuard(req,{scope:"payment-create-wechat",userId:user.id,accountLimit:120,ipLimit:300});
+    if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
     let submissionName: string | null = null;    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
     if (typeof submissionId === "string" && submissionTable) {

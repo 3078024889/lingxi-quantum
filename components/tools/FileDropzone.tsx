@@ -79,11 +79,7 @@ export default function FileDropzone({
 
       const unsupported = incoming.find((file) => !fileMatchesAccept(file, accept));
       if (unsupported) {
-        setError(
-          lang === "zh"
-            ? `${unsupported.name} 的文件格式不符合当前工具要求。`
-            : `${unsupported.name} is not a supported file type for this tool.`
-        );
+        setError(`${unsupported.name} · ${uploadText(lang, "unsupported")}`);
         return;
       }
 
@@ -159,16 +155,16 @@ export default function FileDropzone({
         }}
         className={`cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition ${
           drag
-            ? "border-blue-500 bg-blue-50 ring-4 ring-blue-100"
-            : "border-slate-300 bg-slate-50 hover:border-blue-300"
+            ? "border-[var(--lx-line-strong)] bg-[var(--lx-soft)] ring-4 ring-[var(--lx-soft)]"
+            : "border-[var(--lx-line)] bg-[var(--lx-soft)] hover:border-[var(--lx-line-strong)]"
         } ${disabled ? "pointer-events-none opacity-50" : ""}`}
       >
-        <p className="text-base font-medium text-slate-800">
+        <p className="text-base font-medium text-[var(--lx-ink)]">
           {drag
             ? uploadText(lang, "dragActive")
             : uploadText(lang, promptKey)}
         </p>
-        <p className="mt-2 text-xs leading-5 text-slate-500">
+        <p className="mt-2 text-xs leading-5 text-[var(--lx-faint)]">
           {uploadText(lang, "maxFile", { size: maxSizeMB })}
           {multiple
             ? ` · ${uploadText(lang, "maxFiles", { count: maxFiles })}`
@@ -188,21 +184,21 @@ export default function FileDropzone({
         />
       </div>
 
-      {error && <p className="mt-3 text-sm text-rose-600">{error}</p>}
+      {error && <p role="alert" className="mt-3 text-sm text-[var(--lx-danger)]">{error}</p>}
 
       {files.length > 0 && (
         <ul className="mt-4 space-y-2">
           {files.map((file) => (
             <li
               key={`${file.name}-${file.size}-${file.lastModified}`}
-              className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600"
+              className="flex items-center justify-between gap-3 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm text-[var(--lx-muted)]"
             >
               <span className="truncate">
                 {file.name} · {(file.size / 1024 / 1024).toFixed(2)} MB
               </span>
               <button
                 type="button"
-                className="shrink-0 text-xs text-blue-700 hover:underline"
+                className="shrink-0 text-xs text-[var(--lx-ink)] hover:underline"
                 onClick={(event) => {
                   event.stopPropagation();
                   onChange(files.filter((item) => item !== file));

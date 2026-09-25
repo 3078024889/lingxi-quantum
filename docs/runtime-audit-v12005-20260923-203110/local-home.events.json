@@ -1,0 +1,958 @@
+[
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.",
+      "timestamp": 1790166675836.376,
+      "url": "http://127.0.0.1:4011/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "info",
+      "text": "Loading the script 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The policy is report-only, so the violation has been logged but no further action has been taken.",
+      "timestamp": 1790166675845.682,
+      "url": "http://127.0.0.1:4011/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "info",
+      "text": "Loading the script 'https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The policy is report-only, so the violation has been logged but no further action has been taken.",
+      "timestamp": 1790166676692.793,
+      "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+      "lineNumber": 89,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "Ye",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 89,
+            "columnNumber": 697
+          },
+          {
+            "functionName": "os",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 276,
+            "columnNumber": 191
+          },
+          {
+            "functionName": "uu",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 319,
+            "columnNumber": 472
+          },
+          {
+            "functionName": "",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 312,
+            "columnNumber": 52
+          },
+          {
+            "functionName": "q.ia",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 148,
+            "columnNumber": 875
+          },
+          {
+            "functionName": "Yl",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 149,
+            "columnNumber": 1120
+          },
+          {
+            "functionName": "pu",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 312,
+            "columnNumber": 34
+          },
+          {
+            "functionName": "ou",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 309,
+            "columnNumber": 141
+          },
+          {
+            "functionName": "",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 337,
+            "columnNumber": 73
+          },
+          {
+            "functionName": "q.ia",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 148,
+            "columnNumber": 875
+          },
+          {
+            "functionName": "Yl",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 149,
+            "columnNumber": 1120
+          },
+          {
+            "functionName": "",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 333,
+            "columnNumber": 895
+          },
+          {
+            "functionName": "",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 337,
+            "columnNumber": 134
+          },
+          {
+            "functionName": "",
+            "scriptId": "6",
+            "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065",
+            "lineNumber": 338,
+            "columnNumber": 3
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "networkFailed",
+    "detail": {
+      "requestId": "17036.380",
+      "timestamp": 46826.772989,
+      "type": "Fetch",
+      "errorText": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "info",
+      "text": "Loading the script 'https://pagead2.googlesyndication.com/pagead/js/r20260922/r20190131/rum.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The policy is report-only, so the violation has been logged but no further action has been taken.",
+      "timestamp": 1790166677209.43,
+      "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+      "lineNumber": 157,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "pl",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 157,
+            "columnNumber": 912
+          },
+          {
+            "functionName": "",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 1018,
+            "columnNumber": 536
+          },
+          {
+            "functionName": "t.Yb",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 282,
+            "columnNumber": 713
+          },
+          {
+            "functionName": "bB",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 283,
+            "columnNumber": 948
+          },
+          {
+            "functionName": "X.id",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 1018,
+            "columnNumber": 214
+          },
+          {
+            "functionName": "wW.O",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 610,
+            "columnNumber": 693
+          },
+          {
+            "functionName": "",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 609,
+            "columnNumber": 363
+          },
+          {
+            "functionName": "La",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 14,
+            "columnNumber": 217
+          },
+          {
+            "functionName": "Ma.next",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 15,
+            "columnNumber": 92
+          },
+          {
+            "functionName": "b",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 16,
+            "columnNumber": 119
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.",
+      "timestamp": 1790166677260.8,
+      "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+      "lineNumber": 691,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "X.id",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 691,
+            "columnNumber": 2292
+          },
+          {
+            "functionName": "wW.O",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 610,
+            "columnNumber": 693
+          },
+          {
+            "functionName": "",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 609,
+            "columnNumber": 363
+          },
+          {
+            "functionName": "La",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 14,
+            "columnNumber": 217
+          },
+          {
+            "functionName": "Ma.next",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 15,
+            "columnNumber": 92
+          },
+          {
+            "functionName": "b",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 16,
+            "columnNumber": 119
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.",
+      "timestamp": 1790166677279.185,
+      "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+      "lineNumber": 960,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "X.id",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 960,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "wW.O",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 610,
+            "columnNumber": 693
+          },
+          {
+            "functionName": "",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 609,
+            "columnNumber": 363
+          },
+          {
+            "functionName": "La",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 14,
+            "columnNumber": 217
+          },
+          {
+            "functionName": "Ma.next",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 15,
+            "columnNumber": 92
+          },
+          {
+            "functionName": "b",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 16,
+            "columnNumber": 119
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://googleads.g.doubleclick.net/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166677287.568,
+      "url": "https://pagead2.googlesyndication.com/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://googleads.g.doubleclick.net/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166677288.736,
+      "url": "https://pagead2.googlesyndication.com/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://googleads.g.doubleclick.net/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166677467.174,
+      "url": "https://pagead2.googlesyndication.com/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://googleads.g.doubleclick.net/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166677513.218,
+      "url": "https://pagead2.googlesyndication.com/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "info",
+      "text": "Loading the script 'https://ep2.adtrafficquality.google/sodar/sodar2.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The policy is report-only, so the violation has been logged but no further action has been taken.",
+      "timestamp": 1790166677752.658,
+      "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+      "lineNumber": 149,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 149,
+            "columnNumber": 624
+          },
+          {
+            "functionName": "fk",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 149,
+            "columnNumber": 255
+          },
+          {
+            "functionName": "",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 154,
+            "columnNumber": 215
+          },
+          {
+            "functionName": "La",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 14,
+            "columnNumber": 217
+          },
+          {
+            "functionName": "Ma.next",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 15,
+            "columnNumber": 92
+          },
+          {
+            "functionName": "b",
+            "scriptId": "30",
+            "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202609180101/show_ads_impl.js",
+            "lineNumber": 16,
+            "columnNumber": 119
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.",
+      "timestamp": 1790166678082.265,
+      "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+      "lineNumber": 30,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 30,
+            "columnNumber": 245
+          },
+          {
+            "functionName": "xa",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 30,
+            "columnNumber": 37
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 50,
+            "columnNumber": 191
+          },
+          {
+            "functionName": "I",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 12,
+            "columnNumber": 38
+          },
+          {
+            "functionName": "next",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 88
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "na",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 376
+          },
+          {
+            "functionName": "J",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 14,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "db",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 50,
+            "columnNumber": 32
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 45,
+            "columnNumber": 72
+          },
+          {
+            "functionName": "I",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 12,
+            "columnNumber": 38
+          },
+          {
+            "functionName": "next",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 88
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "na",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 376
+          },
+          {
+            "functionName": "J",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 14,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "cb",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 45,
+            "columnNumber": 22
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 48,
+            "columnNumber": 359
+          },
+          {
+            "functionName": "I",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 12,
+            "columnNumber": 38
+          },
+          {
+            "functionName": "next",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 88
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "na",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 376
+          },
+          {
+            "functionName": "J",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 14,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "hb",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 48,
+            "columnNumber": 292
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 51,
+            "columnNumber": 687
+          },
+          {
+            "functionName": "I",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 12,
+            "columnNumber": 38
+          },
+          {
+            "functionName": "next",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 88
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "na",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 376
+          },
+          {
+            "functionName": "J",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 14,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "jb.init",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 51,
+            "columnNumber": 662
+          },
+          {
+            "functionName": "lb",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 208
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 252
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 456
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 462
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "The Content Security Policy directive 'upgrade-insecure-requests' is ignored when delivered in a report-only policy.",
+      "timestamp": 1790166678084.881,
+      "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+      "lineNumber": 30,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 30,
+            "columnNumber": 245
+          },
+          {
+            "functionName": "xa",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 30,
+            "columnNumber": 37
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 48,
+            "columnNumber": 164
+          },
+          {
+            "functionName": "I",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 12,
+            "columnNumber": 38
+          },
+          {
+            "functionName": "next",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 88
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "na",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 376
+          },
+          {
+            "functionName": "J",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 14,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "gb",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 48,
+            "columnNumber": 57
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 48,
+            "columnNumber": 365
+          },
+          {
+            "functionName": "I",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 12,
+            "columnNumber": 38
+          },
+          {
+            "functionName": "next",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 88
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "na",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 376
+          },
+          {
+            "functionName": "J",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 14,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "hb",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 48,
+            "columnNumber": 292
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 51,
+            "columnNumber": 687
+          },
+          {
+            "functionName": "I",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 12,
+            "columnNumber": 38
+          },
+          {
+            "functionName": "next",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 88
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 487
+          },
+          {
+            "functionName": "na",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 13,
+            "columnNumber": 376
+          },
+          {
+            "functionName": "J",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 14,
+            "columnNumber": 21
+          },
+          {
+            "functionName": "jb.init",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 51,
+            "columnNumber": 662
+          },
+          {
+            "functionName": "lb",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 208
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 252
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 456
+          },
+          {
+            "functionName": "",
+            "scriptId": "33",
+            "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js",
+            "lineNumber": 52,
+            "columnNumber": 462
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://ep2.adtrafficquality.google/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166678089.013,
+      "url": "https://ep2.adtrafficquality.google/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://www.google.com/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166678096.593,
+      "url": "https://ep2.adtrafficquality.google/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://ep2.adtrafficquality.google/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166678294.98,
+      "url": "https://ep2.adtrafficquality.google/"
+    }
+  },
+  {
+    "type": "log",
+    "detail": {
+      "source": "security",
+      "level": "error",
+      "text": "Framing 'https://www.google.com/' violates the following report-only Content Security Policy directive: \"frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com\". The violation has been logged, but no further action has been taken.\n",
+      "timestamp": 1790166678390.051,
+      "url": "https://ep2.adtrafficquality.google/"
+    }
+  },
+  {
+    "type": "networkFailed",
+    "detail": {
+      "requestId": "17036.398",
+      "timestamp": 46828.48619,
+      "type": "Fetch",
+      "errorText": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  },
+  {
+    "type": "networkFailed",
+    "detail": {
+      "requestId": "17036.400",
+      "timestamp": 46829.743539,
+      "type": "Fetch",
+      "errorText": "net::ERR_ABORTED",
+      "canceled": true
+    }
+  }
+]

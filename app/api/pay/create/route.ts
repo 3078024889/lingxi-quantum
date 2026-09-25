@@ -4,6 +4,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {createPaypalOrder} from "@/lib/paypal";
 import {safeLocalReturnPath} from "@/lib/sasi/payment-gate";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
+import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {getUsdBalanceProduct} from "@/lib/usd-products";
 
 export const runtime="nodejs";
@@ -31,13 +32,8 @@ export async function POST(req:NextRequest){
     if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
 
     const admin=createAdminClient();
-    const limited=await admin.rpc("rate_limit_check",{
-      p_key:`payment-create:paypal:${user.id}`,
-      p_limit:60,
-      p_window_seconds:3600,
-    });
-    if(limited.error)return NextResponse.json({error:"PAYMENT_RATE_GUARD_UNAVAILABLE"},{status:503});
-    if(limited.data!==true)return NextResponse.json({error:"PAYMENT_CREATE_RATE_LIMITED"},{status:429});
+    const abuse=await enforceAbuseGuard(req,{scope:"payment-create-paypal",userId:user.id,accountLimit:60,ipLimit:180});
+    if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
     const {data:order,error}=await admin.from("orders").insert({
       user_id:user.id,

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { decryptProviderKey, validByokProvider, type ByokProvider } from "@/lib/sasi/credential-vault";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -22,6 +23,10 @@ export async function POST(request:NextRequest){
   let user=null;
   try{const supabase=createClient();({data:{user}}=await supabase.auth.getUser());}catch{user=null;}
   if(!user) return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
+  const byokTestGuard=await enforceAbuseGuard(request,{scope:"sasi-byok-test",userId:user.id,accountLimit:60,ipLimit:180});
+  if(!byokTestGuard.ok)return NextResponse.json({error:byokTestGuard.error},{status:byokTestGuard.status});
+  const abuse=await enforceAbuseGuard(request,{scope:"byok-connection-test",userId:user.id,accountLimit:30,ipLimit:90});
+  if(!abuse.ok) return NextResponse.json({error:abuse.error},{status:abuse.status});
   const body=await request.json().catch(()=>null) as {provider?:unknown}|null;
   if(!body||!validByokProvider(body.provider)) return NextResponse.json({error:"PROVIDER_UNSUPPORTED"},{status:400});
   try{

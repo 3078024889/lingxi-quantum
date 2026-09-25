@@ -65,7 +65,7 @@ export default function Page() {
           <BookSasiBalanceBar />
 
           <div className="mt-5 flex flex-wrap gap-3 text-sm">
-            <Link href="/ai-learning" className="rounded-full border border-slate-200 px-4 py-2">
+            <Link href="/ai-learning" className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-[var(--lx-muted)]">
               <LxText
                 zh="学习 SASI"
                 en="Learning SASI"
@@ -78,7 +78,7 @@ export default function Page() {
                 ar="SASI للتعلّم"
               />
             </Link>
-            <Link href="/ai-research" className="rounded-full border border-slate-200 px-4 py-2">
+            <Link href="/ai-research" className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-[var(--lx-muted)]">
               <LxText
                 zh="科研 SASI"
                 en="Research SASI"

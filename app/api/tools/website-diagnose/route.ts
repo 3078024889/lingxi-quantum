@@ -1,14 +1,79 @@
-import { NextResponse } from 'next/server';
-import dns from 'node:dns/promises';
-import tls from 'node:tls';
-export const runtime='nodejs'; export const dynamic='force-dynamic';
-function cert(host:string){ return new Promise<any>((resolve)=>{ const s=tls.connect(443,host,{servername:host,rejectUnauthorized:false},()=>{ const c=s.getPeerCertificate(); resolve({subject:c.subject,issuer:c.issuer,valid_from:c.valid_from,valid_to:c.valid_to,authorized:s.authorized,authorizationError:s.authorizationError}); s.end();}); s.on('error',e=>resolve({error:e.message})); s.setTimeout(8000,()=>{s.destroy();resolve({error:'TLS_TIMEOUT'})}); }); }
-export async function POST(req:Request){
-  const {url}=await req.json().catch(()=>({})); if(typeof url!=='string') return NextResponse.json({error:'INVALID_URL'},{status:400});
-  let u:URL; try{u=new URL(/^https?:\/\//i.test(url)?url:`https://${url}`)}catch{return NextResponse.json({error:'INVALID_URL'},{status:400})}
-  const host=u.hostname; const started=Date.now();
-  const [a,aaaa,mx,tlsInfo]=await Promise.all([dns.resolve4(host).catch(()=>[]),dns.resolve6(host).catch(()=>[]),dns.resolveMx(host).catch(()=>[]),cert(host)]);
-  let http:any={}; try{const r=await fetch(u.toString(),{redirect:'manual',signal:AbortSignal.timeout(10000)}); http={status:r.status,statusText:r.statusText,location:r.headers.get('location'),server:r.headers.get('server'),contentType:r.headers.get('content-type')};}catch(e){http={error:e instanceof Error?e.message:String(e)}}
-  const problems:string[]=[]; if(!a.length&&!aaaa.length)problems.push('DNS_NO_ADDRESS'); if(tlsInfo.error)problems.push('TLS_FAILED'); if(http.error)problems.push('HTTP_FAILED'); if(http.status>=400)problems.push(`HTTP_${http.status}`);
-  return NextResponse.json({ok:problems.length===0,host,dns:{a,aaaa,mx},tls:tlsInfo,http,problems,elapsedMs:Date.now()-started});
+import { NextRequest, NextResponse } from "next/server";
+import dns from "node:dns/promises";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
+import { parsePublicHttpsUrl, pinnedHttpsProbe, pinnedTlsCertificate } from "@/lib/security/public-endpoint";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const maxDuration = 20;
+
+export async function POST(req: NextRequest) {
+  if (!isSameOriginMutation(req)) {
+    return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });
+  }
+
+  const abuse = await enforceAbuseGuard(req, {
+    scope: "website-diagnose",
+    ipLimit: 40,
+    windowSeconds: 3600,
+  });
+  if (!abuse.ok) return NextResponse.json({ error: abuse.error }, { status: abuse.status });
+
+  const contentLength = Number(req.headers.get("content-length") || 0);
+  if (Number.isFinite(contentLength) && contentLength > 16 * 1024) {
+    return NextResponse.json({ error: "REQUEST_TOO_LARGE" }, { status: 413 });
+  }
+
+  const body = await req.json().catch(() => null) as { url?: unknown } | null;
+  const raw = typeof body?.url === "string" ? body.url.trim() : "";
+  if (!raw || raw.length > 2048) {
+    return NextResponse.json({ error: "INVALID_URL" }, { status: 400 });
+  }
+
+  let url: URL;
+  try {
+    const normalized = /^https:\/\//i.test(raw) ? raw : `https://${raw}`;
+    ({ url } = await parsePublicHttpsUrl(normalized));
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "INVALID_URL";
+    const status = [
+      "HTTPS_REQUIRED",
+      "URL_CREDENTIALS_FORBIDDEN",
+      "NON_STANDARD_PORT_FORBIDDEN",
+      "PRIVATE_NETWORK_FORBIDDEN",
+    ].includes(code) ? 422 : 400;
+    return NextResponse.json({ error: code }, { status });
+  }
+
+  const host = url.hostname.toLowerCase();
+  const started = Date.now();
+
+  const [a, aaaa, mx, tlsInfo, http] = await Promise.all([
+    dns.resolve4(host).catch(() => []),
+    dns.resolve6(host).catch(() => []),
+    dns.resolveMx(host).catch(() => []),
+    pinnedTlsCertificate(host),
+    pinnedHttpsProbe(url.toString()).catch((error) => ({
+      error: error instanceof Error ? error.message : "HTTP_FAILED",
+    })),
+  ]);
+
+  const problems: string[] = [];
+  if (!a.length && !aaaa.length) problems.push("DNS_NO_ADDRESS");
+  if ("error" in tlsInfo) problems.push("TLS_FAILED");
+  if ("error" in http) problems.push("HTTP_FAILED");
+  if ("status" in http && http.status >= 400) problems.push(`HTTP_${http.status}`);
+
+  return NextResponse.json({
+    ok: problems.length === 0,
+    host,
+    dns: { a, aaaa, mx },
+    tls: tlsInfo,
+    http,
+    problems,
+    elapsedMs: Date.now() - started,
+  }, {
+    headers: { "Cache-Control": "no-store" },
+  });
 }

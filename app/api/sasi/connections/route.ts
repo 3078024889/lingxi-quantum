@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { byokVaultConfigured, encryptProviderKey, providerKeyFingerprint, providerKeyHint, validateProviderKey, validByokProvider } from "@/lib/sasi/credential-vault";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,9 +36,13 @@ export async function GET() {
 }
 
 export async function POST(request:NextRequest) {
+  const contentLength=Number(request.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>16*1024)return NextResponse.json({error:"BYOK_REQUEST_TOO_LARGE"},{status:413});
   if(!isSameOriginMutation(request)) return NextResponse.json({error:"ORIGIN_REJECTED"},{status:403});
   const user = await identity();
   if (!user) return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
+  const abuse=await enforceAbuseGuard(request,{scope:"sasi-byok-save",userId:user.id,accountLimit:60,ipLimit:180});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
   if (!byokVaultConfigured()) return NextResponse.json({error:"BYOK_VAULT_NOT_CONFIGURED"},{status:503});
   const body=await request.json().catch(()=>null) as {provider?:unknown;apiKey?:unknown}|null;
   if(!body||!validByokProvider(body.provider)) return NextResponse.json({error:"PROVIDER_UNSUPPORTED"},{status:400});
@@ -62,6 +67,8 @@ export async function DELETE(request:NextRequest) {
   if(!isSameOriginMutation(request)) return NextResponse.json({error:"ORIGIN_REJECTED"},{status:403});
   const user=await identity();
   if(!user) return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
+  const abuse=await enforceAbuseGuard(request,{scope:"sasi-byok-delete",userId:user.id,accountLimit:60,ipLimit:180});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
   const provider=new URL(request.url).searchParams.get("provider");
   if(!validByokProvider(provider)) return NextResponse.json({error:"PROVIDER_UNSUPPORTED"},{status:400});
   try {

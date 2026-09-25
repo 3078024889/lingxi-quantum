@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { claimPaidToolJob,completePaidToolJob,failPaidToolJob } from "@/lib/tools/paid-job-server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeState } from "@/lib/tools/service-readiness";
 import { analyzeFoodWithQwen } from "@/lib/tools/qwen-vision";
 
@@ -16,6 +17,9 @@ export async function POST(req:NextRequest){
   const supabase=createClient();
   const {data:{user}}=await supabase.auth.getUser();
   if(!user)return NextResponse.json({error:"请先登录"},{status:401});
+
+  const abuse=await enforceAbuseGuard(req,{scope:"ai-food-analyze",userId:user.id,accountLimit:120,ipLimit:300});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
   const form=await req.formData();
   const file=form.get("file");

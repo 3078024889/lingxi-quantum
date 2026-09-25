@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { claimPaidToolJob,completePaidToolJob,failPaidToolJob } from "@/lib/tools/paid-job-server";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 export const runtime="nodejs";export const maxDuration=60;
 
 export async function POST(req:Request){
  const key=process.env.ELEVENLABS_API_KEY;if(!key)return NextResponse.json({error:"ELEVENLABS_NOT_CONFIGURED"},{status:503});
  const supabase=createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:"请先登录"},{status:401});
+ const abuse=await enforceAbuseGuard(req,{scope:"ai-video-dubbing",userId:user.id,accountLimit:60,ipLimit:180});
+ if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
  const input=await req.formData();const target=String(input.get("target_language")||"en"),sourceUrl=input.get("source_url"),file=input.get("file"),quoteId=String(input.get("quote_id")||""),itemKey=String(input.get("item_key")||"dub-0"),paidMinutes=Number(input.get("paid_minutes"));
  if(!quoteId||!Number.isFinite(paidMinutes)||paidMinutes<=0)return NextResponse.json({error:"PAYMENT_REQUIRED"},{status:402});
  if(typeof sourceUrl==="string"&&sourceUrl.trim()){try{const u=new URL(sourceUrl.trim());if(u.protocol!=="https:")return NextResponse.json({error:"HTTPS_SOURCE_REQUIRED"},{status:400})}catch{return NextResponse.json({error:"BAD_SOURCE_URL"},{status:400})}}

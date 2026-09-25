@@ -1,158 +1,523 @@
-# 灵犀场 LINGXIFIELD · SASI
+# LINGXIFIELD · 灵犀场
 
-> 一念成片，一念即达，一念显化。  
-> 官网：**[lingxifield.com](https://lingxifield.com)** · **[lingxifield.cn](https://lingxifield.cn)**  
-> 仓库：https://github.com/3078024889/lingxi-quantum
+> **Open-source AI platform for practical tools, source-grounded knowledge agents, and production-oriented creative workflows.**
 
-灵犀场（LingxiField）是融合 **SASI 智能创作平台**、**意识显化与场域精测**、**修炼技术**，以及 **在线小工具（本地优先）** 的中英双语数字空间。
+🌐 **Live:** [lingxifield.com](https://lingxifield.com) · [lingxifield.cn](https://lingxifield.cn)
+🧭 **Repository:** https://github.com/3078024889/lingxi-quantum
 
-技术栈：**Next.js 14 · TypeScript · Tailwind CSS · Supabase · Vercel**
+LINGXIFIELD is an actively maintained, production-deployed AI platform. It brings together practical digital tools, source-grounded knowledge agents, multi-model AI orchestration, and production workflows for creative applications.
 
----
-
-## 本地开发
-
-```bash
-# 建议 Node.js 18+
-cd lingxi-quantum
-npm install          # 或 pnpm install
-cp .env.example .env.local   # 填入 Supabase / 支付等密钥
-npm run dev
-```
-
-打开 http://localhost:3000
-
-> 不要把 `.pnpm-store/`、`node_modules/`、`.env.local` 提交进 Git。  
-> 仓库若曾误提交 package store，体积会膨胀到数百 MB——请确保 `.gitignore` 已忽略它们。
+This repository is not a static showcase. It is continuously maintained across product architecture, frontend, backend, database migrations, security hardening, payment flows, model integrations, deployment, debugging, and release validation.
 
 ---
 
-## 生产域名
+## Why LINGXIFIELD exists
 
-| 域名 | 用途 |
-|------|------|
-| https://lingxifield.com | 国际 / 主站 |
-| https://lingxifield.cn | 国内备案域；微信授权与支付优先 |
-| Vercel 预览 | `lingxi-quantum-*.vercel.app` |
+Most AI products either solve one narrow task or become a generic assistant.
 
-`middleware.ts` 会把 `www.lingxifield.com` / `www.lingxifield.cn` **308** 到裸域，并统一去掉多余尾斜杠。
+LINGXIFIELD takes a different approach:
 
-部署：推送 `main` 后 Vercel 自动构建。本地也可：
+> **Turn a concrete problem, file, idea, or knowledge source into a direct next action.**
 
-```bash
-git add .
-git commit -m "说明本次改动"
-git push origin main
-```
+A user may arrive with:
 
-Windows 工作副本路径示例：`D:\lingxi-quantum`
+- a PDF that needs editing
+- an image that needs repair or conversion
+- a video that needs transcription
+- a book that should become an interactive knowledge agent
+- an idea that should become a short drama
+- a concept that should become a website
+- a document that needs analysis
+- a practical digital task that should be solved in one step
 
----
-
-## 产品结构（现状）
-
-### 1. SASI（站点首页 `/`）
-
-面向结果的智能生产系统：理解目标 → 制作提案 → 能力编排 → 审校交付。  
-含苍玄 AI 导演、短剧工坊、编程构建部署、Skills、模型与制作账户等（见 `app/sasi/*`、`lib/sasi/*`）。
-
-旧路径 `/sasi` 永久重定向到 `/`。
-
-### 2. 第二层 · 灵犀场
-
-| 路径 | 说明 |
-|------|------|
-| `/live-as` | 意识显化 |
-| `/field-tests` | 场域精测入口 |
-| `/life-map` `/relationship` `/resilience` `/romance` `/wealth` `/daily` `/mirror` `/qian` `/archetype` | 各精测产品 |
-| `/practice` | 修炼技术（量子息法 等） |
-| `/subconscious` | 重塑潜意识 |
-| `/learn` `/glossary` `/narrative` | 探索与内容 |
-| `/account` | 我的场域 / 订单 |
-
-### 3. 在线工具 `/tools`（新增模块）
-
-定位：**遇到数字问题，丢进来就知道怎么回事，并尽量直接解决。**
-
-- 优先 **浏览器本地处理**，文件不上传服务器  
-- 统一 `ToolShell` + `registry`，禁止每个工具复制一套上传/SEO/错误组件  
-- 重型库仅在对应页面动态加载，避免首页 bundle 膨胀  
-
-**已上线（live）示例：**
-
-- 图片：PNG↔JPG、WebP 转换、压缩、精确压到 20/50/100/200/500KB、尺寸修改、清 EXIF  
-- 文件：真实格式检测（Magic Bytes）、MD5/SHA256、两文件一致性  
-- 通用：JSON 格式化、时间戳转换、二维码生成  
-- 场域：数字能量 `/tools/number-energy`
-
-**规划中（planned，诚实占位，无假按钮）：** HEIC、二维码读取、PDF 合并/拆分/压缩、图片↔PDF 等。
-
-架构说明见：`docs/TOOLS-MODULE-ARCHITECTURE.md`
+The project is built as a modular system so these workflows can share infrastructure instead of becoming isolated one-off products.
 
 ---
 
-## 目录速览
+## Current product areas
+
+### 1. Practical Tool Center
+
+LINGXIFIELD includes a growing set of tools for common digital tasks.
+
+**Live / actively maintained areas include:**
+
+- image compression and conversion
+- image resizing and metadata cleanup
+- file type detection and hash verification
+- PDF processing workbenches
+- OCR and transcription
+- subtitle workflows
+- privacy-oriented file handling
+- QR inspection
+- local-first browser processing where practical
+- drag-and-drop upload support across major workbenches
+
+**In active rollout:**
+
+- advanced PDF editing / stamping / comparison
+- broader table extraction
+- more image / video processing
+- temporary privacy tools
+- web extraction / reading workflows
+- additional export and recovery paths
+
+The principle is simple:
+
+> **Solve one annoying step as directly as possible.**
+
+---
+
+### 2. Book SASI / Knowledge-to-Agent
+
+LINGXIFIELD is building source-grounded workflows that turn books, papers, study materials, PDFs, text, Markdown, and page images into searchable private knowledge spaces.
+
+The goal is:
 
 ```text
-app/                 路由与 API（SASI 首页、场域产品、tools、支付回调…）
-components/          共享 UI（Nav / Footer / 报告 / tools/*）
-lib/                 业务逻辑（sasi / 报告引擎 / tools 处理器…）
-knowledge/           场域知识库（写作纪律见 docs/）
-supabase/            schema 与 migrations
-miniapp/             微信小程序
-docs/                产品与审计文档
-scripts/             审计与 ingest 脚本
-public/              静态资源、OG、备案校验文件
+book / document / source material
+→ structured retrieval
+→ source-grounded understanding
+→ persistent knowledge context
+→ interactive agent
+```
+
+Current implementation includes:
+
+- file ingestion
+- source retrieval
+- contextual Q&A
+- evidence-aware answers
+- multiple intelligence levels
+- private knowledge workflows
+- AI usage billing through a real balance ledger
+
+The design goal is not to treat documents as static uploads, but as reusable knowledge interfaces that can be queried and explored over time.
+
+---
+
+### 3. SASI AI Creative Production
+
+SASI is the production-oriented creative layer of LINGXIFIELD.
+
+The repository already contains foundations for:
+
+- project creation
+- asset handling
+- production memory
+- task quotation
+- balance reservation
+- job dispatch
+- provider routing
+- usage settlement
+- delivery tracking
+- failure release
+- AI-generated-content labeling
+- production readiness checks
+
+#### AI Short Drama
+
+The short-drama workflow is designed around:
+
+```text
+project intake
+→ story structure
+→ characters
+→ identity boards
+→ scene bible
+→ storyboard
+→ detailed shots & voice
+→ video clips
+→ timeline
+→ subtitles
+→ master
+```
+
+The public workspace is being connected to the existing production APIs and readiness checks. Paid execution is not presented as fully ready unless provider, billing, settlement, refund, labeling, and job-execution conditions have passed verification.
+
+#### CangXuan AI Director
+
+CangXuan is the directing layer for:
+
+- story continuity
+- character identity
+- shot orchestration
+- production context
+- project memory
+- director / foundry data
+
+This area is under active rollout.
+
+#### Website / Application Building
+
+LINGXIFIELD is also developing workflows for:
+
+```text
+idea
+→ product structure
+→ implementation plan
+→ code generation
+→ component creation
+→ deployment preparation
+→ iteration
+```
+
+This remains an active development area and is not represented as fully production-complete until the execution path is verified end to end.
+
+---
+
+## Product architecture
+
+LINGXIFIELD is designed around shared infrastructure rather than isolated tools.
+
+```text
+Tool Registry
+File Processing
+Image Processing
+PDF Processing
+Video / Audio Processing
+OCR
+Web Fetching
+AI Gateway
+Model Routing
+Authentication
+Billing
+Usage Ledger
+Task Queue
+Storage
+Analytics
+```
+
+This lets new tools and agent workflows reuse the same processing, security, billing, and recovery systems.
+
+---
+
+## Multi-model AI
+
+The platform is designed for multi-provider AI routing and user-supplied credentials where appropriate.
+
+Integration directions include:
+
+- OpenAI
+- xAI
+- Anthropic / Claude
+- Google Gemini
+- Alibaba / Qwen
+- Volcano Engine
+- Tencent
+- compatible external providers
+
+The repository also includes BYOK-oriented infrastructure for supported providers.
+
+---
+
+## Local-first processing
+
+Where practical, LINGXIFIELD prefers browser-local processing instead of unnecessary server uploads.
+
+Examples include:
+
+- image conversion
+- image compression
+- hashing
+- metadata cleanup
+- subtitle timing
+- file inspection
+- selected PDF operations
+
+Benefits:
+
+- stronger privacy
+- lower infrastructure cost
+- faster interaction
+- reduced unnecessary upload exposure
+
+Heavier AI and production workflows use server-side processing only when required.
+
+---
+
+## Payment, balance, and job correctness
+
+Paid features are treated as transaction systems, not just buttons.
+
+The intended lifecycle is:
+
+```text
+order
+→ provider confirmation
+→ fulfillment
+→ balance / entitlement / task
+→ execution
+→ result
+→ recovery path
+```
+
+The codebase includes flows for:
+
+- payment creation
+- callback / active-query recovery
+- account balance crediting
+- idempotent fulfillment
+- production balance reservation
+- actual usage settlement
+- failed-job release
+- refund-related state
+- persistent job records
+
+A successful payment must not depend only on frontend state.
+
+---
+
+## Security focus
+
+LINGXIFIELD has a broad and realistic attack surface:
+
+- authentication and authorization
+- file uploads
+- PDF / image / video parsing
+- server-side URL access
+- payment callbacks
+- database RPCs
+- BYOK secrets
+- external AI providers
+- task queues
+- downloadable outputs
+- user-owned assets
+
+Security work includes attention to:
+
+- SSRF
+- IDOR / cross-user access
+- unsafe file parsing
+- authorization flaws
+- secret leakage
+- dependency risk
+- injection paths
+- insecure URL fetching
+- metadata exposure
+- payment verification
+- billing consistency
+- storage lifecycle
+- production regressions
+
+Security auditing and regression prevention are active maintenance concerns.
+
+See [SECURITY.md](SECURITY.md).
+
+---
+
+## Tech stack
+
+- Next.js / React
+- TypeScript
+- Tailwind CSS
+- Supabase / PostgreSQL
+- Vercel
+- browser-local processing where practical
+- external AI / media providers where required
+
+---
+
+## Repository structure
+
+```text
+app/                 Next.js routes and APIs
+components/          shared UI and product components
+lib/                 business logic, tools, AI routing, SASI
+supabase/            schema and migrations
+knowledge/           structured knowledge assets
+miniapp/             WeChat mini-program work
+docs/                architecture, audits and release notes
+scripts/             maintenance and audit scripts
+public/              static assets
 ```
 
 ---
 
-## 常用脚本
+## Local development
+
+### Requirements
+
+```text
+Node.js 18+
+npm or pnpm
+```
+
+### Setup
 
 ```bash
-npm run dev
-npm run build
-npm run lint
-npm run audit:security
-npm run audit:sasi
-# 更多 audit:* 见 package.json
+git clone https://github.com/3078024889/lingxi-quantum.git
+cd lingxi-quantum
+
+pnpm install
+# or:
+# npm install
+
+cp .env.example .env.local
+
+pnpm dev
+# or:
+# npm run dev
 ```
 
----
+Open:
 
-## 环境变量
+```text
+http://localhost:3000
+```
 
-见 `.env.example`。至少需要：
-
-- `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`（服务端）
-- 支付相关：PayPal / 微信 / 支付宝（按已开通渠道）
-- SASI 制作开关与供应商密钥（未验收前保持 `false`）
-
-**切勿**把真实密钥提交进仓库。
+Never commit production secrets, `.env.local`, `node_modules`, or local package-store directories.
 
 ---
 
-## 内容与合规原则（摘要）
+## Common maintenance commands
 
-- 运行时报告以确定性知识库 / 计算为主；自由文本入口的 AI 仅作解析器，不替用户编造命运或医疗结论。  
-- 不提供伪造法定公章等能力。  
-- 工具页广告不得遮挡核心操作（假下载按钮禁止）。  
-- PayPal 合规：产品命名避免 fortune-teller 类表述；旧 `/tarot` → `/mirror` 308。
+Check `package.json` for the scripts available in the current branch.
 
----
+Common commands include:
 
-## 更新日志
+```bash
+pnpm dev
+pnpm build
+pnpm lint
+pnpm audit:security
+pnpm audit:sasi
+```
 
-大版本说明见 `CHANGELOG.md` 与 `docs/V*-RELEASE-NOTES.md`。
-
----
-
-## 联系与备案
-
-- 站点：lingxifield.com / lingxifield.cn  
-- 备案：湘ICP备2026031465号  
+The repository also contains validation and audit utilities under `scripts/` and `docs/`.
 
 ---
 
-*本 README 已替换「第一阶段：首页 + 六道之门」旧部署教程。若你本地 `D:\lingxi-quantum` 仍显示旧文档，请拉取 `main` 最新提交。*
+## Production
+
+| Domain | Role |
+|---|---|
+| [lingxifield.com](https://lingxifield.com) | primary / international site |
+| [lingxifield.cn](https://lingxifield.cn) | China-facing domain and WeChat-related flows |
+
+The main web application is deployed through Vercel, with additional infrastructure where required.
+
+---
+
+## Active development
+
+Current maintenance priorities include:
+
+- completing real capability coverage across the tools hub
+- consolidating upload and file-processing infrastructure
+- strengthening security and regression checks
+- expanding Book SASI / source-grounded workflows
+- completing SASI production readiness
+- strengthening task recovery and billing correctness
+- expanding multilingual product coverage
+- improving contributor documentation
+- improving release and validation automation
+
+---
+
+## Maintenance model
+
+LINGXIFIELD is actively maintained by its primary maintainer across:
+
+- architecture
+- frontend
+- backend
+- database migrations
+- AI integration
+- payment integration
+- deployment
+- security review
+- debugging
+- release validation
+- documentation
+
+The repository intentionally keeps operational and maintenance work visible so changes can be reviewed and reproduced.
+
+---
+
+## Contributing
+
+Contributions that improve real capability, reliability, security, testing, documentation, or maintainability are welcome.
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Good contributions should:
+
+- keep secrets out of the repository
+- preserve authorization boundaries
+- include failure-path handling
+- keep launch-state claims accurate
+- reuse shared infrastructure instead of duplicating entire stacks
+- explain how the change can be tested
+
+---
+
+## Third-party software, models, and datasets
+
+Before reusing third-party code, models, binaries, or datasets, verify:
+
+- software license
+- model license
+- dataset license
+- commercial-use terms
+- attribution requirements
+- redistribution requirements
+
+See [docs/THIRD_PARTY_LICENSES.md](docs/THIRD_PARTY_LICENSES.md).
+
+---
+
+## Open-source status
+
+This repository is intended to be maintained as an open-source project, but the root license file must accurately reflect the maintainer's chosen legal terms.
+
+**A root `LICENSE` file should be added before treating the repository as fully licensed for third-party reuse.**
+
+The project does not silently assume that dependencies, model weights, datasets, or external APIs share the same license as the application code.
+
+---
+
+## Maintainer
+
+Primary maintainer:
+
+**3078024889**
+
+GitHub: https://github.com/3078024889
+Repository: https://github.com/3078024889/lingxi-quantum
+
+---
+
+## Project philosophy
+
+> **Reduce the number of steps between an intention and a usable result.**
+
+From a file, image, video, book, research source, website idea, or creative concept, the goal is to move the task forward through a system that is understandable, inspectable, and recoverable.
+
+---
+
+## 中文简介
+
+灵犀场（LINGXIFIELD）是一个持续部署、持续维护的 AI 与数字工具平台。
+
+主要方向包括：
+
+- **实用工具**：PDF、图片、视频、OCR、转录、隐私处理、格式转换等
+- **书本 SASI**：把书籍、论文、教材与私人资料变成可检索、可追溯、基于原文回答的知识智能体
+- **SASI 创作生产**：AI 短剧、导演工作流、项目资产、任务报价、模型路由、制作结算与交付
+- **多模型接入**：按任务连接不同模型与外部能力
+
+项目强调：
+
+**真实能力、真实输入、真实结果、真实支付闭环、真实失败恢复。**
+
+公开页面不会把只有 UI 的功能冒充成已经完成的生产能力。
+
+---
+
+## Links
+
+- Website: https://lingxifield.com
+- China site: https://lingxifield.cn
+- Repository: https://github.com/3078024889/lingxi-quantum
+- Release notes: `CHANGELOG.md` and `docs/`

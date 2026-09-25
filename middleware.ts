@@ -1,10 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const SECURITY_HOLD_EXACT = new Set([
-  "/api/tools/website-diagnose",
-]);
-
 export async function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
   const requestHostname = (forwardedHost || request.headers.get("host") || request.nextUrl.hostname)
@@ -20,20 +16,6 @@ export async function middleware(request: NextRequest) {
   }
 
   const { pathname } = request.nextUrl;
-
-  if (SECURITY_HOLD_EXACT.has(pathname)) {
-    return NextResponse.json(
-      { error: "SECURITY_HOLD" },
-      {
-        status: 503,
-        headers: {
-          "Cache-Control": "no-store",
-          "Retry-After": "3600",
-          "X-Robots-Tag": "noindex, nofollow",
-        },
-      },
-    );
-  }
 
   const retiredLegacyExact = new Set([
     "/learn","/glossary",

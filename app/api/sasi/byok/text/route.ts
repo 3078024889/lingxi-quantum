@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { decryptProviderKey } from "@/lib/sasi/credential-vault";
 import { TEXT_PROFILE, TEXT_VERSION, SASI_SYSTEM, DIRECTOR_CONTRACT, estimatedTextFen, runArkText, type TextMessage } from "@/lib/sasi/ark-text";
 export const runtime = "nodejs";
@@ -24,8 +25,13 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   if (!body || !["quote", "confirm"].includes(body.action)) return reply({ error: "INVALID_ACTION" }, 400);
   const db = createAdminClient();
-  const limit = await db.rpc("rate_limit_check", { p_key: `byok-text:${user.id}`, p_limit: 60, p_window_seconds: 3600 });
-  if (limit.error || limit.data !== true) return reply({ error: "RATE_LIMITED_OR_UNAVAILABLE" }, 429);
+  const abuse = await enforceAbuseGuard(request, {
+    scope: "byok-text",
+    userId: user.id,
+    accountLimit: 60,
+    ipLimit: 180,
+  });
+  if (!abuse.ok) return reply({ error: abuse.error }, abuse.status);
   if (Date.now() >= Date.parse(TEXT_PROFILE.validUntil)) return reply({ error: "PRICE_REVIEW_REQUIRED" }, 503);
   const { data: connection } = await db.from("sasi_provider_connections").select("encrypted_credential,fingerprint,health_status").eq("user_id", user.id).eq("provider", "volcengine").maybeSingle();
   if (!connection || connection.health_status !== "healthy") return reply({ error: "CONNECTION_REQUIRED" }, 409);

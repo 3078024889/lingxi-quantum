@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { extractDirectorKnowledge, normalizeFoundryText, resolveContinuityTimeline, sha256, trainabilityFor, type RightsScope } from "@/lib/sasi/cangxuan-foundry";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -49,6 +50,10 @@ export async function POST(request:NextRequest) {
   if(!isSameOriginMutation(request)) return NextResponse.json({error:"ORIGIN_REJECTED"},{status:403});
   const user=await identity();
   if(!user) return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
+  const abuse=await enforceAbuseGuard(request,{scope:"sasi-foundry-write",userId:user.id,accountLimit:60,ipLimit:180});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
+  const contentLength=Number(request.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>256*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
   const body=await request.json().catch(()=>null) as Record<string,unknown>|null;
   if(!body||typeof body.action!=="string") return NextResponse.json({error:"INVALID_REQUEST"},{status:400});
   const admin=createAdminClient();

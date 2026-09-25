@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,19 +13,17 @@ import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 
 type Theme = "light" | "dark";
 type K =
-  | "home" | "tools" | "products" | "explore" | "studio"
+  | "home" | "tools" | "studio"
   | "books" | "learning" | "research"
   | "wallet" | "myField";
 
 const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   [
     { href: "/", key: "home", icon: "home" },
-    { href: "/products", key: "products", icon: "products" },
     { href: "/tools", key: "tools", icon: "tools" },
-    { href: "/explore", key: "explore", icon: "explore" },
-    { href: "/sasi", key: "studio", icon: "sasi" },
   ],
   [
+    { href: "/sasi", key: "studio", icon: "sasi" },
     { href: "/ai-knowledge", key: "books", icon: "book" },
     { href: "/ai-learning", key: "learning", icon: "learning" },
     { href: "/ai-research", key: "research", icon: "research" },
@@ -140,7 +139,7 @@ export default function Nav() {
     <>
       <div className="lx11-brand-row">
         <Link href="/" className="lx11-brand">
-          <img src="/images/lingxifield-logo.png" alt="" />
+          <NextImage src="/images/lingxifield-logo.png" alt=""  width={64} height={64}/>
           <span>
             <b>{t("brand")}</b>
             <small>{agent ? "SASI" : "LINGXIFIELD"}</small>
@@ -162,7 +161,7 @@ export default function Nav() {
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
                 <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{item.key === "products" ? productCatalogText(lang,"title") : item.key === "explore" ? brandText(lang,"exploreNav") : t(item.key)}</span>
+                <span>{t(item.key)}</span>
               </Link>
             ))}
           </section>
@@ -212,7 +211,7 @@ export default function Nav() {
             onClick={() => setMenuOpen((value) => !value)}
           >
             {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="lx11-avatar-photo" />
+              <NextImage src={avatarUrl} alt="" className="lx11-avatar-photo"  width={64} height={64} unoptimized/>
             ) : (
               <span className="lx11-avatar-inner"><b>{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</b></span>
             )}
@@ -223,7 +222,7 @@ export default function Nav() {
         {menuOpen && (
           <div className="lx11-account-menu" role="menu">
             <div className="lx11-account-menu-head">
-              {avatarUrl ? <img src={avatarUrl} alt="" className="lx11-account-menu-photo" /> : <span className="lx11-account-menu-fallback">{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
+              {avatarUrl ? <NextImage src={avatarUrl} alt="" className="lx11-account-menu-photo"  width={64} height={64} unoptimized/> : <span className="lx11-account-menu-fallback">{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
               <div>
                 <b>{displayName || mt.account}</b>
                 <small>{signedIn ? mt.account : t("account")}</small>
@@ -245,7 +244,7 @@ export default function Nav() {
 
       <header className="lx11-mobile lg:hidden">
         <Link href="/" className="lx11-mobile-brand">
-          <img src="/images/lingxifield-logo.png" alt="" />
+          <NextImage src="/images/lingxifield-logo.png" alt=""  width={64} height={64}/>
           <span><b>{t("brand")}</b><small>{agent ? "SASI" : "LINGXIFIELD"}</small></span>
         </Link>
         <div className="lx11-mobile-actions">
@@ -257,13 +256,13 @@ export default function Nav() {
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((value) => !value)}
           >
-            {avatarUrl ? <img src={avatarUrl} alt="" /> : <span>{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
+            {avatarUrl ? <NextImage src={avatarUrl} alt=""  width={64} height={64} unoptimized/> : <span>{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
           </button>
         </div>
         {menuOpen && (
           <div className="lx11-account-menu lx11-account-menu-mobile" role="menu">
             <div className="lx11-account-menu-head">
-              {avatarUrl ? <img src={avatarUrl} alt="" className="lx11-account-menu-photo" /> : <span className="lx11-account-menu-fallback">{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
+              {avatarUrl ? <NextImage src={avatarUrl} alt="" className="lx11-account-menu-photo"  width={64} height={64} unoptimized/> : <span className="lx11-account-menu-fallback">{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</span>}
               <div><b>{displayName || mt.account}</b><small>{mt.account}</small></div>
             </div>
             <div className="lx11-account-menu-links">

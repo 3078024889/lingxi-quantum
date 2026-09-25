@@ -19,7 +19,7 @@ export default function SasiConnectionsClient({ accountEmail }: { accountEmail: 
   return (
     <main className="lx11-page">
       <div className="lx11-wrap">
-        <ConnectionCenter lang={lang === "zh" ? "zh" : "en"} dark={dark} accountEmail={accountEmail} />
+        <ConnectionCenter lang={lang} dark={dark} accountEmail={accountEmail} />
       </div>
     </main>
   );

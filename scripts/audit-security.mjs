@@ -77,9 +77,26 @@ check("provider GET is no-spend",
 check("provider paid test is explicit POST",
   read("app/api/ai/provider-test/route.ts").includes("EXPLICIT_PROVIDER_CALL_CONFIRMATION_REQUIRED"));
 
-check("website diagnose SSRF surface is quarantined",
-  read("middleware.ts").includes('"/api/tools/website-diagnose"')
-  && read("middleware.ts").includes("SECURITY_HOLD"));
+{
+  const middleware=read("middleware.ts");
+  const diagnose=read("app/api/tools/website-diagnose/route.ts");
+  const endpoint=read("lib/security/public-endpoint.ts");
+  const quarantined=
+    middleware.includes('"/api/tools/website-diagnose"')
+    && middleware.includes("SECURITY_HOLD");
+  const hardened=
+    !middleware.includes('"/api/tools/website-diagnose"')
+    && !middleware.includes("SECURITY_HOLD_EXACT")
+    && diagnose.includes("isSameOriginMutation")
+    && diagnose.includes("enforceAbuseGuard")
+    && diagnose.includes("pinnedHttpsProbe")
+    && diagnose.includes("parsePublicHttpsUrl")
+    && endpoint.includes("resolvePublicHost")
+    && endpoint.includes("lookup: pinnedLookup")
+    && endpoint.includes("PRIVATE_NETWORK_FORBIDDEN")
+    && endpoint.includes("metadata.google.internal");
+  check("website diagnose SSRF surface is quarantined or hardened", quarantined || hardened);
+}
 
 check("withdrawal mutation has CSRF guard",
   read("app/api/account/withdrawals/route.ts").includes("isSameOriginMutation(req)"));

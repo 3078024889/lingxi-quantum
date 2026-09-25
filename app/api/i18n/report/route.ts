@@ -1,9 +1,10 @@
 import { createHash } from "crypto";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { runText } from "@/lib/ai/provider-router";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -64,16 +65,17 @@ async function translateBatch(items:string[],target:TargetLang){
   return{items:parsed as string[],provider:result.provider,model:result.model};
 }
 
-export async function POST(req:Request){
+export async function POST(req:NextRequest){
+  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const supabase=createClient();
   const{data:{user}}=await supabase.auth.getUser();
   if(!user)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
 
-  // Prevent this internal report-localization endpoint from becoming a free
-  // general-purpose translation API. One HTTP request may internally translate
-  // several chunks, so 20 requests/hour is ample for normal report switching.
-  const allowed=await checkRateLimit(`report-i18n:${user.id}`,20,3600);
-  if(!allowed)return NextResponse.json({error:"RATE_LIMITED"},{status:429});
+  const abuse=await enforceAbuseGuard(req,{scope:"report-i18n",userId:user.id,accountLimit:20,ipLimit:60});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
+
+  const contentLength=Number(req.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>96*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
 
   let body:{reportKey?:string;targetLang?:string;items?:unknown[]};
   try{body=await req.json()}catch{return NextResponse.json({error:"INVALID_BODY"},{status:400})}

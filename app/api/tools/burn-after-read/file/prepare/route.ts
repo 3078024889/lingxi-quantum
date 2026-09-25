@@ -2,7 +2,9 @@ import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
+import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {newBurnObjectKey,presignR2,r2Ready} from "@/lib/r2-private";
+import {createBurnRevealToken} from "@/lib/tools/burn-link-token";
 
 export const runtime="nodejs";
 const TTL=new Set([10,60,1440,4320,10080]);
@@ -23,6 +25,11 @@ export async function POST(req:NextRequest){
  const supabase=createClient();
  const {data:{user}}=await supabase.auth.getUser();
  if(!user)return NextResponse.json({error:"SIGN_IN_REQUIRED"},{status:401});
+
+ const abuse=await enforceAbuseGuard(req,{scope:"burn-file-prepare",userId:user.id,accountLimit:30,ipLimit:90});
+ if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
+ const contentLength=Number(req.headers.get("content-length")||0);
+ if(Number.isFinite(contentLength)&&contentLength>128*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
 
  const body=await req.json().catch(()=>null) as any;
  if(!body)return NextResponse.json({error:"INVALID_BODY"},{status:400});
@@ -60,6 +67,7 @@ export async function POST(req:NextRequest){
    const {data:rows}=await admin.from("burn_files").select("id,object_key,original_name,size_bytes,mime_type").eq("note_id",existing.data.id).order("created_at");
    return NextResponse.json({
      id:existing.data.id,expiresAt:existing.data.expires_at,alreadyPrepared:true,
+     token:createBurnRevealToken(String(existing.data.id),String(existing.data.expires_at)),
      files:(rows||[]).map((x:any)=>({id:x.id,name:x.original_name,size:x.size_bytes,type:x.mime_type,uploadUrl:presignR2("PUT",x.object_key,600)}))
    });
  }
@@ -79,6 +87,7 @@ export async function POST(req:NextRequest){
  }
  return NextResponse.json({
    id:note.id,expiresAt:note.expires_at,
+   token:createBurnRevealToken(String(note.id),String(note.expires_at)),
    files:(inserted.data||[]).map((x:any)=>({id:x.id,name:x.original_name,size:x.size_bytes,type:x.mime_type,uploadUrl:presignR2("PUT",x.object_key,600)}))
  });
 }

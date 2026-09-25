@@ -5,6 +5,7 @@ import { getProduct } from "@/lib/plans";
 import { alipayEnabled, alipaySiteUrl, createAlipayPaymentUrl } from "@/lib/alipay";
 import { safeLocalReturnPath, sasiPaidProductionEnabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -43,13 +44,8 @@ const product = getProduct(productId);
     if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
 
     const admin = createAdminClient();
-    const limited=await admin.rpc("rate_limit_check",{
-      p_key:`payment-create:alipay:${user.id}`,
-      p_limit:120,
-      p_window_seconds:3600,
-    });
-    if(limited.error)return NextResponse.json({error:"PAYMENT_RATE_GUARD_UNAVAILABLE"},{status:503});
-    if(limited.data!==true)return NextResponse.json({error:"PAYMENT_CREATE_RATE_LIMITED"},{status:429});
+    const abuse=await enforceAbuseGuard(req,{scope:"payment-create-alipay",userId:user.id,accountLimit:120,ipLimit:300});
+    if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
     let submissionName: string | null = null;    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
     if (typeof submissionId === "string" && submissionTable) {

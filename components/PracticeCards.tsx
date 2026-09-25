@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {v104sText} from "@/lib/v104s-i18n";
@@ -12,5 +13,5 @@ const cards=[
 
 export default function PracticeCards(){
  const{lang}=useLingxiLang();const t=(zh:string,en:string)=>v104sText(lang,zh,en);
- return <div className="practice-index-cards">{cards.map(card=><article key={card.key}><img src={'/images/practice/v2/'+card.key+'.webp'} alt="" loading="lazy" width={768} height={512}/><div><h3>{t(card.title,card.en)}</h3><small>{card.en}</small><p>{t(card.body,card.bodyEn)}</p><div className="practice-card-actions"><Link href={'/practice/'+card.key}>{t(card.action,card.actionEn)} →</Link></div><p className="practice-card-benefit">{t(card.benefit,card.benefitEn)}</p></div></article>)}</div>
+ return <div className="practice-index-cards">{cards.map(card=><article key={card.key}><NextImage src={'/images/practice/v2/'+card.key+'.webp'} alt="" loading="lazy" width={768} height={512}/><div><h3>{t(card.title,card.en)}</h3><small>{card.en}</small><p>{t(card.body,card.bodyEn)}</p><div className="practice-card-actions"><Link href={'/practice/'+card.key}>{t(card.action,card.actionEn)} →</Link></div><p className="practice-card-benefit">{t(card.benefit,card.benefitEn)}</p></div></article>)}</div>
 }

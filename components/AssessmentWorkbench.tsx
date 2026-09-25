@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import { useEffect, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import Bi from "./Bi";
@@ -43,7 +44,7 @@ export default function AssessmentWorkbench({ product, input, preview, faq, busy
         <fieldset id="assessment-input" disabled={busy} className="aw-form">{input}</fieldset>{faq}
       </section>
       <section className="aw-column aw-preview" aria-busy={busy}><div className="aw-column-title"><b>2</b><h2><Bi zh="免费预览" en="Free preview" /></h2><small>FREE</small></div>{preview}</section>
-      <section className="aw-column aw-archive"><div className="aw-column-title"><b>3</b><h2><Bi zh="完整档案与 PDF" en="Complete archive & PDF" /></h2></div>{archive ? <Report id={archive} /> : <div className="aw-locked"><div className="aw-cover"><img src={cover || `/images/${COVERS[product]}/page-0.png`} alt={`${item.zh} · 封面设计`} /><div><small>LINGXIFIELD</small><h3><Bi zh={product === "qian" ? "生命灵签" : item.zh} en={product === "qian" ? "Life Oracle" : item.en} /></h3><p><Bi zh="灵犀场 · 专属探索档案" en="Your personal exploration archive" /></p></div></div><small><Bi zh="档案封面 · 非个人结果" en="Cover artwork · not a personal result" /></small><h3><Bi zh="把此刻的理解，留成可回看的档案" en="Keep this understanding in an archive" /></h3><p><Bi zh="读完免费预览与章节介绍后，再决定是否解锁。完成支付后，你的完整报告将在这里展开，可阅读、下载 PDF，也可从账户中再次进入。" en="Read your free preview and chapter guide before deciding. After payment, your complete report opens here to read, download as PDF, and revisit from your account." /></p><a href="/account"><Bi zh="查看已有档案 →" en="Visit existing archives →" /></a></div>}</section>
+      <section className="aw-column aw-archive"><div className="aw-column-title"><b>3</b><h2><Bi zh="完整档案与 PDF" en="Complete archive & PDF" /></h2></div>{archive ? <Report id={archive} /> : <div className="aw-locked"><div className="aw-cover"><NextImage src={cover || `/images/${COVERS[product]}/page-0.png`} alt={`${item.zh} · 封面设计`}  width={900} height={1200}/><div><small>LINGXIFIELD</small><h3><Bi zh={product === "qian" ? "生命灵签" : item.zh} en={product === "qian" ? "Life Oracle" : item.en} /></h3><p><Bi zh="灵犀场 · 专属探索档案" en="Your personal exploration archive" /></p></div></div><small><Bi zh="档案封面 · 非个人结果" en="Cover artwork · not a personal result" /></small><h3><Bi zh="把此刻的理解，留成可回看的档案" en="Keep this understanding in an archive" /></h3><p><Bi zh="读完免费预览与章节介绍后，再决定是否解锁。完成支付后，你的完整报告将在这里展开，可阅读、下载 PDF，也可从账户中再次进入。" en="Read your free preview and chapter guide before deciding. After payment, your complete report opens here to read, download as PDF, and revisit from your account." /></p><a href="/account"><Bi zh="查看已有档案 →" en="Visit existing archives →" /></a></div>}</section>
     </div>
   </section>;
 }

@@ -1,0 +1,39 @@
+{
+  "observed_at": "2026-09-23T16:20:47+08:00",
+  "project_ref": "sxsgdpqojepgbbrxrzlq",
+  "production_migrations_seen": [
+    "20260904024348_create_copernicus_sense",
+    "20260908090000_sasi_foundation",
+    "20260908160000_sasi_production_kernel",
+    "20260919234449_sasi_large_asset_uploads",
+    "20260920044343_sasi_byok_video_tasks",
+    "20260920094932_sasi_byok_text_tasks",
+    "20260922042621_tool_payments_v5",
+    "20260922042640_secure_tool_fulfillment_v5",
+    "20260922043645_tool_paid_jobs_v6",
+    "20260922045211_tool_topups_analytics_v61",
+    "20260922061230_tool_transcription_idphoto_v8",
+    "20260922082751_ai_simple_balance_referrals_refunds_v94",
+    "20260922083219_security_hardening_ai_tools_v94",
+    "20260923015641_ai_refund_gross_topup_fix"
+  ],
+  "sasi_core_tables_seen": [
+    "sasi_wallets",
+    "sasi_credit_ledger",
+    "sasi_projects",
+    "sasi_nodes",
+    "sasi_node_dependencies",
+    "sasi_jobs",
+    "sasi_assets",
+    "sasi_deliveries",
+    "sasi_provider_connections",
+    "sasi_byok_video_tasks",
+    "sasi_byok_text_tasks"
+  ],
+  "cognitive_stage_tables_seen": false,
+  "security_observations": [
+    "create_sasi_project is SECURITY DEFINER and executable by authenticated according to current advisor; do not revoke blindly until intent/call sites are verified.",
+    "Leaked password protection is currently disabled according to current advisor."
+  ],
+  "scope_note": "Informational snapshot only; not proof of future state."
+}

@@ -1,0 +1,25 @@
+{
+  "version": "v10.22.1",
+  "paths": [
+    "lib/sasi/core/core-zero.ts",
+    "lib/sasi/core/identity.ts",
+    "lib/sasi/core/interaction-contract.ts",
+    "lib/sasi/models/model-mesh.ts",
+    "lib/sasi/memory/schema.ts",
+    "lib/sasi/learning/strategy-genome.ts",
+    "lib/sasi/learning/evolution-policy.ts",
+    "lib/sasi/learning/code-evolution-policy.ts",
+    "lib/sasi/learning/code-proposal.ts",
+    "lib/sasi/learning/code-promotion.ts",
+    "lib/sasi/self/self-model.ts",
+    "lib/sasi/knowledge/ontology.ts",
+    "lib/sasi/knowledge/knowledge-unit.ts",
+    "lib/sasi/knowledge/promotion.ts",
+    "lib/sasi/knowledge/conflict-resolution.ts",
+    "lib/sasi/knowledge/active-learning.ts",
+    "lib/sasi/knowledge/freshness.ts",
+    "scripts/sasi-evolution/validate-and-apply-proposal.mjs",
+    "scripts/sasi-evolution/create-self-test-proposal.mjs",
+    "scripts/sasi-evolution/collect-evidence.mjs"
+  ]
+}

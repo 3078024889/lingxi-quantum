@@ -1,0 +1,23 @@
+{
+  "requestedUrl": "https://lingxifield.com/ai-knowledge",
+  "href": "https://lingxifield.com/ai-knowledge",
+  "title": "灵犀场书本 SASI ｜ 灵犀场 LINGXIFIELD",
+  "readyState": "complete",
+  "bodyTextLength": 386,
+  "bodyHtmlLength": 36737,
+  "bodyDisplay": "block",
+  "bodyVisibility": "visible",
+  "bodyOpacity": "1",
+  "siteContentExists": true,
+  "siteContentTextLength": 386,
+  "nextScripts": [
+    "https://lingxifield.com/_next/static/chunks/2200cc46-936a16638df3100a.js",
+    "https://lingxifield.com/_next/static/chunks/2945-cd67fdcefa8c6f83.js",
+    "https://lingxifield.com/_next/static/chunks/main-app-ed71ba858e857286.js",
+    "https://lingxifield.com/_next/static/chunks/b8fee43c-57d010cf0e21e290.js",
+    "https://lingxifield.com/_next/static/chunks/9498-9d50ef31d22e691f.js",
+    "https://lingxifield.com/_next/static/chunks/6854-1f5ce445c09fb5c4.js",
+    "https://lingxifield.com/_next/static/chunks/polyfills-42372ed130431b0a.js",
+    "https://lingxifield.com/_next/static/chunks/webpack-aa8f99a6bc3aae23.js"
+  ]
+}

@@ -1,9 +1,12 @@
 "use client";
 
+import NextImage from "next/image";
 import { useEffect, useState } from "react";
 import { BUILD_CONNECTORS, SASI_INTEGRATIONS, TRAINING_SOURCES, type SasiIntegration } from "@/lib/sasi/integration-catalog";
+import type { LingxiLang } from "@/lib/lingxi-i18n";
+import { sasiConnectionText } from "@/lib/sasi/connection-i18n";
 
-type Props = { lang: "zh" | "en"; dark: boolean; accountEmail: string | null };
+type Props = { lang: LingxiLang; dark: boolean; accountEmail: string | null };
 type Tab = "models" | "media" | "orchestration" | "build" | "security" | "training";
 type Connection = { provider: string; keyHint: string; healthStatus: "stored" | "checking" | "healthy" | "unhealthy"; lastCheckedAt: string | null; lastErrorCode: string | null };
 
@@ -23,7 +26,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   const [vaultState, setVaultState] = useState<"loading" | "ready" | "login" | "unavailable">("loading");
   const [busy, setBusy] = useState<"save" | "test" | "delete" | null>(null);
   const [message, setMessage] = useState("");
-  const t = (zh: string, en: string) => lang === "zh" ? zh : en;
+  const t = (zh: string, en: string) => sasiConnectionText(lang, zh, en);
   const connection = connections.find((item) => item.provider === selected.id);
   const vaultSupported = selected.id !== "tencent";
   const visibleProviders = SASI_INTEGRATIONS.filter((item) => tab === "models" ? MODEL_IDS.has(item.id) : MEDIA_IDS.has(item.id));
@@ -101,7 +104,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
     const state = statusFor(item.id);
     return <article key={item.id} className={selected.id === item.id ? "selected" : ""}>
       <button type="button" className="sasi-connect-provider-main" onClick={() => selectProvider(item)}>
-        <span className="sasi-connect-provider-logo" style={{ background: item.color }}><img src={PROVIDER_LOGOS[item.id]} alt={`${item.name} logo`} /></span>
+        <span className="sasi-connect-provider-logo" style={{ background: item.color }}><NextImage src={PROVIDER_LOGOS[item.id]} alt={`${item.name} logo`}  width={48} height={48} unoptimized/></span>
         <span className="sasi-connect-provider-copy"><b>{item.name}</b><small>{item.product}</small></span>
         <em className={`status-${state.tone}`}>{state.label}</em>
       </button>
@@ -112,13 +115,13 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   })}</div>;
 
   const setupPanel = <aside className="sasi-connect-setup" data-testid="api-walkthrough">
-    <header><span className="sasi-connect-provider-logo" style={{ background: selected.color }}><img src={PROVIDER_LOGOS[selected.id]} alt={`${selected.name} logo`} /></span><div><small>{t("连接设置","Connection setup")}</small><h2>{selected.name}</h2><p>{selected.product}</p></div><em className={`status-${statusFor(selected.id).tone}`}>{statusFor(selected.id).label}</em></header>
+    <header><span className="sasi-connect-provider-logo" style={{ background: selected.color }}><NextImage src={PROVIDER_LOGOS[selected.id]} alt={`${selected.name} logo`}  width={48} height={48} unoptimized/></span><div><small>{t("连接设置","Connection setup")}</small><h2>{selected.name}</h2><p>{selected.product}</p></div><em className={`status-${statusFor(selected.id).tone}`}>{statusFor(selected.id).label}</em></header>
     <ol>{(lang === "zh" ? selected.stepsZh : selected.stepsEn).map((step, index) => <li key={step}><b>{String(index + 1).padStart(2, "0")}</b><span>{step}</span></li>)}</ol>
     <div className="sasi-connect-official"><a href={selected.keyUrl} target="_blank" rel="noreferrer">{t("打开官方创建页", "Open official setup")} ↗</a><a href={selected.docsUrl} target="_blank" rel="noreferrer">{t("阅读官方文档", "Read official docs")} ↗</a></div>
     <div className="sasi-connect-vault" data-testid="byok-vault">
       <div><h3>{t("当前连接", "Current connection")}</h3>{connection && <span>{connection.keyHint}</span>}</div>
       {!vaultSupported ? <p>{t("腾讯云需要 SecretId、SecretKey 与 TC3 签名。当前仅保留官方指引，双凭证适配完成前不能保存。", "Tencent Cloud requires SecretId, SecretKey and TC3 signing. Saving remains unavailable until dual-secret support is complete.")}</p> : vaultState === "ready" && !connection ? <><input type="password" autoComplete="off" spellCheck={false} value={apiKey} onChange={(event) => setApiKey(event.target.value)} placeholder={t("粘贴 API Key", "Paste API key")} /><button type="button" disabled={busy !== null || apiKey.trim().length < 12} onClick={saveConnection}>{busy === "save" ? t("正在保存…", "Saving…") : t("保存并连接", "Save & connect")}</button></> : connection ? <div className="sasi-connect-actions"><button type="button" disabled={busy !== null} onClick={testConnection}>{busy === "test" ? t("正在验证…", "Testing…") : t("验证连接", "Test connection")}</button><button type="button" disabled={busy !== null} onClick={deleteConnection}>{busy === "delete" ? t("正在删除…", "Deleting…") : t("撤销并删除", "Revoke & delete")}</button></div> : <p>{vaultState === "login" ? t("请先登录，再连接你的 AI 服务。", "Sign in before connecting your AI service.") : vaultState === "loading" ? t("正在读取连接状态…", "Loading connection status…") : t("连接服务暂时不可用，请稍后重试。", "The connection service is temporarily unavailable. Please try again later.")}</p>}
-      {connection?.lastCheckedAt && <small>{t("最近验证", "Last verified")}: {new Date(connection.lastCheckedAt).toLocaleString(lang === "zh" ? "zh-CN" : "en-US")}{connection.lastErrorCode ? ` · ${connection.lastErrorCode}` : ""}</small>}
+      {connection?.lastCheckedAt && <small>{t("最近验证", "Last verified")}: {new Date(connection.lastCheckedAt).toLocaleString(lang === "zh" ? "zh-CN" : lang)}{connection.lastErrorCode ? ` · ${connection.lastErrorCode}` : ""}</small>}
       {message && <p className="sasi-connect-message">{message}</p>}
     </div>
     <p className="sasi-connect-key-note">{t("连接凭证会被安全保护，只用于你主动授权的 AI 服务连接。", "Connection credentials are protected and used only for the AI services you choose to connect.")}</p>

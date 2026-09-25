@@ -1,0 +1,27 @@
+{
+  "version": "v10.22",
+  "finishedAt": "2026-09-23T05:47:29.213Z",
+  "sandboxRoot": "D:\\lingxi-sasi-sandbox-20260923-134646",
+  "headSha": "6fde14d31e1482ea37b76320e657d50241e92948",
+  "applyEvidence": {
+    "proposalId": "2ba54648-87ec-4971-b6cc-1684c9ba217e",
+    "strategyId": "v1022-sandbox-self-test",
+    "startedAt": "2026-09-23T05:47:23.668Z",
+    "sandboxRoot": "D:\\lingxi-sasi-sandbox-20260923-134646",
+    "files": [
+      {
+        "path": "lib/sasi/self/__sandbox_probe__.ts",
+        "zone": "evolvable",
+        "beforeSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "proposedSha256": "7567caf3613a344a07fb6a5b1c606817f8de820b686bc3c0c32a40bf3710262e",
+        "bytes": 184
+      }
+    ],
+    "passed": true,
+    "errors": [],
+    "appliedAt": "2026-09-23T05:47:23.670Z"
+  },
+  "diff": "",
+  "status": "?? lib/sasi/core/\n?? lib/sasi/knowledge/\n?? lib/sasi/learning/\n?? lib/sasi/memory/\n?? lib/sasi/models/\n?? lib/sasi/self/\n",
+  "pass": true
+}

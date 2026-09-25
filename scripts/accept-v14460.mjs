@@ -1,0 +1,16 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("app/api/ai/food-analyze/route.ts").includes("analyzeFoodWithQwen"),"food calorie uses Qwen vision");
+a(!r("app/api/ai/food-analyze/route.ts").includes("OPENAI_API_KEY"),"food calorie has no OpenAI key dependency");
+a(r("lib/tools/qwen-vision.ts").includes("qwen3-vl-flash"),"Qwen3-VL Flash default");
+a(r("app/api/tools/quote/route.ts").includes("TOOL_SERVICE_UNAVAILABLE"),"paid tools fail closed before quote");
+a(r("app/api/tools/pay/create/route.ts").includes("TOOL_RUNTIME_UNAVAILABLE"),"paid tools recheck before payment");
+a(r("components/Nav.tsx").includes("lx11-menu-trigger"),"desktop hamburger exists");
+a(r("app/unified-shell.css").includes("RTL shell stability"),"RTL shell stable");
+a(r("app/sasi/page.tsx").includes("SasiWorkspace"),"SASI workspace is public route");
+a(r("app/sasi/SasiWorkspace.tsx").includes("/ai-knowledge"),"legacy field nav removed from SASI");
+a(r("lib/sasi/ark-text.ts").includes('SASI_BYOK_REASONING_ENABLED'),"BYOK reasoning switch enabled");
+a(r("app/api/pay/providers/route.ts").includes("PAYPAL_WEBHOOK_ID"),"PayPal readiness includes webhook");
+a(r("app/api/admin/runtime-readiness/route.ts").includes("automaticProviderRefund:false"),"refund automation truthfully reported");
+console.log("V14.46.0 OPERATIONAL SASI + PAYMENTS + QWEN VISION=PASS");

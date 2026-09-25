@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { claimPaidToolJob,completePaidToolJob,failPaidToolJob } from "@/lib/tools/paid-job-server";
+import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
 export const runtime="nodejs";
 export const maxDuration=120;
@@ -19,6 +20,9 @@ export async function POST(req:Request){
   const supabase=createClient();
   const {data:{user}}=await supabase.auth.getUser();
   if(!user)return NextResponse.json({error:"请先登录"},{status:401});
+
+  const abuse=await enforceAbuseGuard(req,{scope:"ai-transcribe",userId:user.id,accountLimit:90,ipLimit:240});
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
   const form=await req.formData();
   const file=form.get("file");

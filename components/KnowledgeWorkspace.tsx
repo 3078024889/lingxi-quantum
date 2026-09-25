@@ -55,15 +55,15 @@ const COPY = {
   lightHelp:c("快速摘要与简单问答；读取更少证据，输出更短。","Quick summaries and simple Q&A; fewer evidence snippets and shorter output.","短い要約と簡単なQ&A。証拠数と出力を抑えます。","빠른 요약과 간단한 Q&A. 근거와 출력이 더 짧습니다.","Résumés rapides et Q&R simples ; moins de preuves et réponse plus courte.","Schnelle Zusammenfassungen und einfache Fragen; weniger Belege, kürzere Antwort.","Resúmenes rápidos y preguntas simples; menos evidencia y respuesta más corta.","Resumos rápidos e perguntas simples; menos evidências e resposta mais curta.","ملخصات سريعة وأسئلة بسيطة مع أدلة أقل وإجابة أقصر."),
   standardHelp:c("默认推荐；结构化回答，兼顾速度、证据与完整性。","Recommended default; structured answers balancing speed, evidence and completeness.","標準推奨。速度・証拠・完全性をバランスします。","기본 추천. 속도, 근거, 완성도를 균형 있게 제공합니다.","Recommandé ; réponse structurée équilibrant vitesse, preuves et exhaustivité.","Empfohlen; strukturierte Antwort mit ausgewogenem Tempo, Belegen und Vollständigkeit.","Recomendado; respuesta estructurada que equilibra velocidad, evidencia y completitud.","Recomendado; resposta estruturada equilibrando velocidade, evidências e completude.","الخيار الموصى به؛ إجابة منظمة توازن السرعة والأدلة والاكتمال."),
   highHelp:c("复杂研究与多步骤推理；读取更多证据，允许更长、更深入的综合。","For complex research and multi-step reasoning; more evidence and deeper, longer synthesis.","複雑な研究と多段階推論。より多くの証拠を使い、長く深く統合します。","복잡한 연구와 다단계 추론. 더 많은 근거로 더 깊고 긴 종합을 제공합니다.","Recherche complexe et raisonnement multi-étapes ; davantage de preuves et synthèse plus profonde.","Komplexe Forschung und mehrstufiges Denken; mehr Belege und tiefere Synthese.","Investigación compleja y razonamiento en varios pasos; más evidencia y síntesis profunda.","Pesquisa complexa e raciocínio em várias etapas; mais evidências e síntese profunda.","للبحث المعقد والاستدلال متعدد الخطوات؛ أدلة أكثر وتركيب أعمق وأطول."),  noEvidence:c("没有找到足够相关的原文。换一个更接近资料原词的问题，或继续加入资料。","Not enough relevant source text was found. Try wording the question closer to the source, or add more material.","関連する原文が十分に見つかりませんでした。資料中の言葉に近い質問にするか、資料を追加してください。","관련 원문을 충분히 찾지 못했습니다. 자료의 실제 표현에 더 가까운 질문을 하거나 자료를 추가하세요.","Pas assez de texte source pertinent trouvé localement. Reformulez avec les termes de la source ou ajoutez des documents.","Lokal wurde nicht genug relevanter Quelltext gefunden. Formulieren Sie näher an der Quelle oder fügen Sie Material hinzu.","No se encontró suficiente texto fuente relevante. Formula la pregunta con términos más cercanos a la fuente o añade material.","Não foi encontrado texto-fonte relevante suficiente. Reformule com termos mais próximos da fonte ou adicione material.","لم يتم العثور محليًا على نص مصدر ذي صلة بما يكفي. قرّب صياغة السؤال من كلمات المصدر أو أضف مواد أخرى."),
-  sending:c("正在基于原文回答；这一步会把当前命中的证据片段发送给 AI。","Answering from the source text. Only the evidence snippets matched for this question are sent to AI.","原文に基づいて回答しています。この質問で一致した証拠断片だけをAIへ送信します。","원문을 바탕으로 답변 중입니다. 이번 질문에 매칭된 증거 조각만 AI로 전송됩니다.","Réponse fondée sur le texte source. Seuls les extraits de preuve correspondant à cette question sont envoyés à l’IA.","Antwort auf Grundlage des Quelltexts. Nur die für diese Frage gefundenen Belegstellen werden an die KI gesendet.","Respondiendo desde el texto fuente. Solo se envían a la IA los fragmentos de evidencia encontrados para esta pregunta.","Respondendo com base no texto-fonte. Apenas os trechos de evidência encontrados para esta pergunta são enviados à IA.","جارٍ الإجابة اعتمادًا على النص الأصلي. تُرسل إلى الذكاء الاصطناعي فقط مقتطفات الأدلة المطابقة لهذا السؤال."),
+  sending:c("正在结合相关原文整理回答，并保留可核对的出处。","Working from the relevant source text and keeping the answer traceable to its evidence.","関連する原文をもとに回答を整理し、確認できる出典を残しています。","관련 원문을 바탕으로 답변을 정리하고 확인할 수 있는 출처를 남기고 있습니다.","Réponse en cours à partir des sources pertinentes, avec des références vérifiables.","Die Antwort wird aus den relevanten Quellen erstellt und bleibt anhand der Belege nachvollziehbar.","Preparando la respuesta a partir de las fuentes relevantes y conservando referencias verificables.","Preparando a resposta a partir das fontes relevantes e mantendo referências verificáveis.","جارٍ إعداد الإجابة من المصادر ذات الصلة مع إبقاء المراجع قابلة للتحقق."),
   aiFailed:c("AI 回答失败。","AI answer failed.","AIの回答に失敗しました。","AI 답변에 실패했습니다.","La réponse de l’IA a échoué.","KI-Antwort fehlgeschlagen.","Falló la respuesta de la IA.","A resposta da IA falhou.","فشلت إجابة الذكاء الاصطناعي."),
   done:c("回答完成。编号 [1]、[2] 对应下方真实原文证据。","Answer complete. [1], [2], etc. refer to the real source evidence below.","回答が完了しました。[1]、[2]などは下の実際の原文証拠に対応します。","답변이 완료되었습니다. [1], [2] 등은 아래 실제 원문 증거와 연결됩니다.","Réponse terminée. [1], [2], etc. renvoient aux preuves réelles ci-dessous.","Antwort fertig. [1], [2] usw. verweisen auf die echten Belege unten.","Respuesta completada. [1], [2], etc. corresponden a la evidencia real de abajo.","Resposta concluída. [1], [2] etc. correspondem às evidências reais abaixo.","اكتملت الإجابة. تشير [1] و[2] وغيرها إلى أدلة المصدر الحقيقية أدناه."),
   realApi:c("现在可以直接使用：","现在可以直接使用：","現在は実際のインターフェース：","현재 실제 인터페이스:","Interface réelle :","Echte Schnittstelle:","Interfaz real:","Interface real:","واجهة فعلية:"),
-  privacy:c("资料按原文建立可追溯的私人资料库。提问时只使用与当前问题相关的内容，并保留出处。","Your sources become a private, traceable library. Questions use only content relevant to the current request, with source references preserved.","資料は既定でこのブラウザに保存され、まずローカル検索されます。「原文から回答」を押したときだけ、一致した証拠断片がAIへ送信されます。PDF、TXT、Markdown、画像OCRを直接追加できます。","자료는 기본적으로 이 브라우저에 저장되고 먼저 로컬에서 검색됩니다. ‘원문 기반 답변’을 누를 때만 매칭된 증거 조각이 AI로 전송됩니다. PDF, TXT, Markdown, 이미지 OCR을 바로 추가할 수 있습니다.","Les sources restent par défaut dans ce navigateur et sont d’abord recherchées localement. Seuls les extraits correspondants sont envoyés à l’IA lorsque vous choisissez « Répondre à partir du texte source ». PDF, TXT, Markdown et OCR d’image peuvent être ajoutés directement.","Quellen bleiben standardmäßig in diesem Browser und werden zuerst lokal durchsucht. Nur wenn Sie „Aus Quelltext antworten“ wählen, werden passende Belegstellen an die KI gesendet. PDF, TXT, Markdown und Bild-OCR können direkt hinzugefügt werden.","Las fuentes se guardan por defecto en este navegador y se buscan primero de forma local. Solo cuando eliges «Responder desde el texto fuente» se envían a la IA los fragmentos encontrados. Puedes añadir PDF, TXT, Markdown e imágenes con OCR.","As fontes ficam por padrão neste navegador e são pesquisadas localmente primeiro. Apenas ao escolher “Responder com base no texto-fonte” os trechos encontrados são enviados à IA. PDF, TXT, Markdown e OCR de imagens podem ser adicionados diretamente.","تظل المصادر افتراضيًا في هذا المتصفح ويجري البحث فيها محليًا أولًا. لا تُرسل مقتطفات الأدلة إلى الذكاء الاصطناعي إلا عند اختيار «الإجابة من النص الأصلي». يمكن إضافة PDF وTXT وMarkdown وصور OCR مباشرة."),
+  privacy:c("资料按原文建立可追溯的私人资料库。提问、比较与复习时都能回到具体出处。","Build a private, traceable source library so every answer, comparison and review can return to the exact source.","原文に戻れるプライベートな資料庫を作り、質問・比較・復習を具体的な出典と結び付けます。","원문으로 돌아갈 수 있는 개인 자료함을 만들고 질문·비교·복습을 실제 출처와 연결합니다.","Créez une bibliothèque privée et traçable afin que chaque réponse, comparaison ou révision puisse revenir à la source précise.","Erstellen Sie eine private, nachvollziehbare Quellenbibliothek, damit Antworten, Vergleiche und Wiederholungen immer zur konkreten Quelle zurückführen.","Crea una biblioteca privada y trazable para que cada respuesta, comparación o repaso pueda volver a la fuente exacta.","Crie uma biblioteca privada e rastreável para que cada resposta, comparação ou revisão volte à fonte exata.","أنشئ مكتبة مصادر خاصة وقابلة للتتبع بحيث يمكن لكل إجابة أو مقارنة أو مراجعة الرجوع إلى المصدر المحدد."),
   add:c("加入","Add ","追加：","추가: ","Ajouter ","Hinzufügen: ","Añadir ","Adicionar ","إضافة "),
   reading:c("正在读取…","Reading…","読み込み中…","읽는 중…","Lecture…","Wird gelesen…","Leyendo…","Lendo…","جارٍ القراءة…"),
   upload:c("批量拖入 PDF / EPUB / Word / PPTX / Excel / CSV / TXT / 代码 / 图片","Drop PDF / EPUB / Word / PPTX / Excel / CSV / TXT / code / images in batches","PDF / Word / Excel / CSV / TXT / 画像をまとめてドロップ","PDF / Word / Excel / CSV / TXT / 이미지를 일괄 드롭","Déposez plusieurs PDF / Word / Excel / CSV / TXT / images","PDF / Word / Excel / CSV / TXT / Bilder stapelweise ablegen","Suelta varios PDF / Word / Excel / CSV / TXT / imágenes","Solte vários PDF / Word / Excel / CSV / TXT / imagens","أسقط عدة ملفات PDF / Word / Excel / CSV / TXT / صور"),
-  pdfNote:c("支持 PDF、EPUB、Word、PPTX、Excel、TXT、代码与图片；PDF 保留页码，图片可识别文字。","Supports PDF, EPUB, Word, PPTX, Excel, TXT, code and images; PDF page references are preserved and image text can be recognized.","PDFはページ位置を保持し、画像はまずブラウザ内でOCRされます。","PDF는 페이지 위치를 유지하며 이미지는 브라우저에서 먼저 OCR합니다.","Les références de page PDF sont conservées ; les images passent d’abord par l’OCR dans le navigateur.","PDF-Seitenangaben bleiben erhalten; Bilder werden zuerst im Browser per OCR verarbeitet.","Se conservan las referencias de página del PDF; las imágenes pasan primero por OCR en el navegador.","As referências de página do PDF são preservadas; imagens passam primeiro por OCR no navegador.","يتم الاحتفاظ بمراجع صفحات PDF، وتُجرى OCR للصور أولًا داخل المتصفح."),
+  pdfNote:c("支持 PDF、EPUB、Word、PPTX、Excel、TXT、代码与图片；页码与可识别文字会一起进入资料库。","Supports PDF, EPUB, Word, PPTX, Excel, TXT, code and images; page references and readable text stay attached to the source.","PDF、EPUB、Word、PPTX、Excel、TXT、コード、画像に対応し、ページ位置と読み取れる文字を資料と一緒に保持します。","PDF, EPUB, Word, PPTX, Excel, TXT, 코드와 이미지를 지원하며 페이지 위치와 읽을 수 있는 텍스트를 자료와 함께 보존합니다.","PDF, EPUB, Word, PPTX, Excel, TXT, code et images sont pris en charge ; les pages et le texte lisible restent liés à la source.","PDF, EPUB, Word, PPTX, Excel, TXT, Code und Bilder werden unterstützt; Seitenangaben und lesbarer Text bleiben mit der Quelle verknüpft.","Admite PDF, EPUB, Word, PPTX, Excel, TXT, código e imágenes; las páginas y el texto legible permanecen ligados a la fuente.","Compatível com PDF, EPUB, Word, PPTX, Excel, TXT, código e imagens; páginas e texto legível permanecem ligados à fonte.","يدعم PDF وEPUB وWord وPPTX وExcel وTXT والبرمجيات والصور، مع إبقاء مراجع الصفحات والنص المقروء مرتبطين بالمصدر."),
   paste:c("或粘贴正文","or paste text","または本文を貼り付け","또는 본문 붙여넣기","ou collez le texte","oder Text einfügen","o pega el texto","ou cole o texto","أو الصق النص"),
   sourceName:c("资料名称","Source title","資料名","자료 이름","Titre de la source","Quellentitel","Título de la fuente","Título da fonte","عنوان المصدر"),
   pastePlaceholder:c("粘贴书本、论文、笔记或资料正文…","Paste book, paper, notes or source text…","本・論文・ノート・資料本文を貼り付け…","책, 논문, 노트 또는 자료 본문 붙여넣기…","Collez le texte d’un livre, article, note ou document…","Buch-, Paper-, Notiz- oder Quelltext einfügen…","Pega texto de libro, artículo, notas o fuente…","Cole texto de livro, artigo, notas ou fonte…","الصق نص كتاب أو بحث أو ملاحظات أو مصدر…"),
@@ -79,7 +79,7 @@ const COPY = {
   modeHelp:c("轻量适合快速摘要与简单问答；标准为默认推荐；高智能适合复杂研究、多步骤推理和更长回答。","Light is for quick summaries and simple Q&A; Standard is the default; High intelligence suits complex research, multi-step reasoning and longer answers.","軽量は短い要約や簡単なQ&A、標準は既定、高知能は複雑な研究・多段階推論・長い回答向けです。","라이트는 빠른 요약과 간단한 Q&A, 표준은 기본 추천, 고지능은 복잡한 연구와 다단계 추론, 긴 답변에 적합합니다.","Léger convient aux résumés rapides et questions simples ; Standard est recommandé par défaut ; Haute intelligence convient aux recherches complexes, au raisonnement multi-étapes et aux réponses longues.","Leicht eignet sich für schnelle Zusammenfassungen und einfache Fragen; Standard ist die Voreinstellung; Hohe Intelligenz für komplexe Forschung, mehrstufiges Denken und längere Antworten.","Ligero sirve para resúmenes rápidos y preguntas simples; Estándar es la opción predeterminada; Alta inteligencia para investigación compleja, razonamiento de varios pasos y respuestas largas.","Leve serve para resumos rápidos e perguntas simples; Padrão é o recomendado; Alta inteligência para pesquisa complexa, raciocínio em várias etapas e respostas longas.","الخفيف للملخصات السريعة والأسئلة البسيطة، والقياسي هو الافتراضي، والذكاء العالي للبحث المعقد والاستدلال متعدد الخطوات والإجابات الأطول."),
   answer:c("基于原文回答","Answer from source text","原文から回答","원문 기반 답변","Répondre à partir du texte source","Aus Quelltext antworten","Responder desde el texto fuente","Responder com base no texto-fonte","الإجابة من النص الأصلي"),
   readingSource:c("正在阅读原文…","Reading source text…","原文を読んでいます…","원문 읽는 중…","Lecture du texte source…","Quelltext wird gelesen…","Leyendo el texto fuente…","Lendo o texto-fonte…","جارٍ قراءة النص الأصلي…"),
-  aiPrivacy:c("回答只使用与本次问题相关的资料内容，并保留原文证据。","Answers use only source content relevant to this question and preserve source evidence.","AIはブラウザ資料庫全体を読みません。この質問で一致した原文断片だけが送信されます。","AI는 브라우저 자료함 전체를 읽지 않습니다. 이번 질문에 매칭된 원문 조각만 전송됩니다.","L’IA ne lit pas toute votre bibliothèque ; seuls les extraits correspondant à cette question sont envoyés.","Die KI liest nicht Ihre gesamte Browser-Bibliothek; nur passende Quellstellen dieser Frage werden gesendet.","La IA no lee toda tu biblioteca; solo se envían los fragmentos encontrados para esta pregunta.","A IA não lê toda a biblioteca; apenas trechos encontrados para esta pergunta são enviados.","لا يقرأ الذكاء الاصطناعي مكتبتك كاملة؛ تُرسل فقط مقتطفات النص المطابقة لهذا السؤال."),
+  aiPrivacy:c("回答围绕本次问题所需的资料展开，并把可核对的原文证据留在结果下方。","The answer stays focused on the sources needed for this question, with checkable evidence shown below.","回答は今回の質問に必要な資料に沿って作成され、確認できる原文証拠を下に残します。","답변은 이번 질문에 필요한 자료를 중심으로 구성되며 확인 가능한 원문 근거가 아래에 남습니다.","La réponse reste centrée sur les sources nécessaires à cette question, avec les preuves vérifiables affichées ci-dessous.","Die Antwort bleibt auf die für diese Frage relevanten Quellen fokussiert; überprüfbare Belege erscheinen darunter.","La respuesta se centra en las fuentes necesarias para esta pregunta y deja evidencia verificable debajo.","A resposta se concentra nas fontes necessárias para esta pergunta e mantém evidências verificáveis abaixo.","تركّز الإجابة على المصادر اللازمة لهذا السؤال وتعرض أدلة قابلة للتحقق أسفلها."),
   evidence:c("本次原文证据","Source evidence for this answer","今回の原文証拠","이번 원문 증거","Preuves source de cette réponse","Quellbelege für diese Antwort","Evidencia fuente de esta respuesta","Evidências-fonte desta resposta","أدلة المصدر لهذه الإجابة"),
   none:c("没有找到相关原文。","No relevant source text found.","関連する原文が見つかりません。","관련 원문을 찾지 못했습니다.","Aucun texte source pertinent trouvé.","Kein relevanter Quelltext gefunden.","No se encontró texto fuente relevante.","Nenhum texto-fonte relevante encontrado.","لم يتم العثور على نص مصدر ذي صلة."),
   myLocal:c("我的资料","My sources","マイ資料","내 자료","Mes sources","Meine Quellen","Mis fuentes","Minhas fontes","مصادري"),
@@ -317,7 +317,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       setNotice(Number.isFinite(charged)
         ? `${tr(lang,"done")} · ¥${charged.toFixed(2)}`
         : tr(lang,"done"));
-    }catch(e:any){
+    }catch(e:unknown){
       const message=e instanceof Error?e.message:tr(lang,"aiFailed");
       if(message.includes("余额不足"))setNeedsRecharge(true);
       setNotice(message);
@@ -378,42 +378,42 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   const knownInsufficient=walletBalance!==null&&Number.isFinite(Number(selectedPrice))&&walletBalance<Number(selectedPrice);
 
   return <section className="mt-8 space-y-6 lx-knowledge-workspace">
-    <div className="lx-knowledge-privacy rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-7 text-slate-600">
+    <div className="lx-knowledge-privacy rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm leading-7 text-[var(--lx-muted)]">
       {tr(lang,"privacy")}
     </div>
 
     <div className="grid gap-5 xl:grid-cols-[.88fr_1.12fr]">
-      <section className="lx-knowledge-panel rounded-3xl border border-slate-200 bg-white p-6">
-        <div className="lx-knowledge-panel-title"><LingxiMiniIcon name={mode==="research"?"research":mode==="learning"?"learning":"book"} size="title"/><h2 className="text-xl font-semibold text-slate-950">{tr(lang,"add")}{heading}</h2></div>
-        <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();if(!busy)void importFiles(e.dataTransfer.files)}} className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+      <section className="lx-knowledge-panel rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+        <div className="lx-knowledge-panel-title"><LingxiMiniIcon name={mode==="research"?"research":mode==="learning"?"learning":"book"} size="title"/><h2 className="text-xl font-semibold text-[var(--lx-ink)]">{tr(lang,"add")}{heading}</h2></div>
+        <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();if(!busy)void importFiles(e.dataTransfer.files)}} className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line-strong)] bg-[var(--lx-soft)] p-6 text-center">
           <input type="file" className="hidden" accept={DOCUMENT_ACCEPT} multiple disabled={busy}
             onChange={e=>{if(e.target.files?.length)void importFiles(e.target.files);e.currentTarget.value=""}}/>
-          <span className="font-medium text-slate-900">{busy?tr(lang,"reading"):tr(lang,"upload")}</span>
-          <span className="mt-1 block text-sm text-slate-500">{tr(lang,"pdfNote")}</span>
+          <span className="font-medium text-[var(--lx-ink)]">{busy?tr(lang,"reading"):tr(lang,"upload")}</span>
+          <span className="mt-1 block text-sm text-[var(--lx-faint)]">{tr(lang,"pdfNote")}</span>
         </label>
-        <div className="my-5 flex items-center gap-3 text-xs text-slate-400">
-          <span className="h-px flex-1 bg-slate-200"/>{tr(lang,"paste")}<span className="h-px flex-1 bg-slate-200"/>
+        <div className="my-5 flex items-center gap-3 text-xs text-[var(--lx-faint)]">
+          <span className="h-px flex-1 bg-[var(--lx-line)]"/>{tr(lang,"paste")}<span className="h-px flex-1 bg-[var(--lx-line)]"/>
         </div>
-        <input className="w-full rounded-xl border border-slate-200 bg-white p-3 outline-none focus:border-blue-400" value={title} maxLength={200}
+        <input className="w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]" value={title} maxLength={200}
           onChange={e=>setTitle(e.target.value)} placeholder={tr(lang,"sourceName")}/>
-        <textarea className="mt-3 min-h-44 w-full rounded-xl border border-slate-200 bg-white p-3 outline-none focus:border-blue-400"
+        <textarea className="mt-3 min-h-44 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"
           value={text} maxLength={1_500_001} onChange={e=>setText(e.target.value)} placeholder={tr(lang,"pastePlaceholder")}/>
         {text.trim()&&<p className="mt-2 text-xs leading-5 text-emerald-700">{tr(lang,"draftReady")}</p>}
-        <button className="mt-3 rounded-full bg-slate-950 px-5 py-2.5 text-sm text-white disabled:opacity-40" disabled={!ready||busy} onClick={saveCurrent}>
+        <button className="mt-3 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40" disabled={!ready||busy} onClick={saveCurrent}>
           {tr(lang,"addLibrary")}
         </button>
       </section>
 
-      <section className="lx-knowledge-panel rounded-3xl border border-slate-200 bg-white p-6">
-        <div className="lx-knowledge-panel-title"><LingxiMiniIcon name="sparkles" size="title"/><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-blue-600">{tr(lang,"askSource")}</p>
-        <h2 className="mt-1 text-2xl font-semibold text-slate-950">{tr(lang,"askBatch")}</h2></div></div>
+      <section className="lx-knowledge-panel rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+        <div className="lx-knowledge-panel-title"><LingxiMiniIcon name="sparkles" size="title"/><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-[var(--lx-accent)]">{tr(lang,"askSource")}</p>
+        <h2 className="mt-1 text-2xl font-semibold text-[var(--lx-ink)]">{tr(lang,"askBatch")}</h2></div></div>
         <textarea value={question} onChange={e=>{setQuestion(e.target.value);setQuery(e.target.value)}} rows={3}
-          className="mt-5 w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-base outline-none focus:border-blue-400"
+          className="mt-5 w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-base text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"
           placeholder={qPlaceholder}/>
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between gap-3">
-            <span className="text-sm font-medium text-slate-800">{tr(lang,"smart")}</span>
-            <span className="text-xs text-slate-400">{tr(lang,"billed")}</span>
+            <span className="text-sm font-medium text-[var(--lx-ink)]">{tr(lang,"smart")}</span>
+            <span className="text-xs text-[var(--lx-faint)]">{tr(lang,"billed")}</span>
           </div>
           <div className="lx-knowledge-modebar">
             {intelligenceLabels.map(({value,label,factor})=><button key={value} type="button" onClick={()=>setIntelligence(value)} disabled={askBusy}
@@ -433,11 +433,11 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
         </div>
 
         <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources||knownInsufficient}
-          className="mt-3 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40">
+          className="mt-3 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
           {askBusy?tr(lang,"readingSource"):tr(lang,"answer")}
         </button>
         {(knownInsufficient||needsRecharge)&&<Link href="/ai-wallet" className="lx-knowledge-recharge">{lang==="zh"?"AI 余额不足 · 去充值":"AI balance low · Recharge"}</Link>}
-        <p className="mt-3 text-xs leading-5 text-slate-500">{tr(lang,"aiPrivacy")}</p>
+        <p className="mt-3 text-xs leading-5 text-[var(--lx-faint)]">{tr(lang,"aiPrivacy")}</p>
 
         {answer&&<div className="lx-knowledge-answer">
           <div className="lx-knowledge-answer-head">
@@ -451,46 +451,46 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
           </div>
         </div>}
 
-        {answer&&learningEventId&&<div className="mt-3 rounded-2xl border border-slate-200 bg-white p-4">
-          <div className="text-[11px] font-semibold uppercase tracking-[.16em] text-slate-400">让 SASI 更懂你</div>
-          <p className="mt-1 text-xs leading-5 text-slate-500">{lang==="zh"?"告诉 SASI 这次回答哪里有帮助、哪里需要改进。你的反馈不会改写资料原文。":"Tell SASI what helped and what needs improvement. Your feedback never rewrites the original source material."}</p>
+        {answer&&learningEventId&&<div className="mt-3 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[.16em] text-[var(--lx-faint)]">让 SASI 更懂你</div>
+          <p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">{lang==="zh"?"告诉 SASI 这次回答哪里有帮助、哪里需要改进。你的反馈不会改写资料原文。":"Tell SASI what helped and what needs improvement. Your feedback never rewrites the original source material."}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {(["helpful","not-helpful","incorrect","insufficient-evidence"] as FeedbackSignal[]).map(signal=><button
               key={signal}
               type="button"
               disabled={feedbackBusy}
               onClick={()=>void sendFeedback(signal)}
-              className={`rounded-full border px-3 py-1.5 text-xs transition ${feedbackSignal===signal?"border-blue-500 bg-blue-50 text-blue-700":"border-slate-200 text-slate-600 hover:border-slate-300"} disabled:opacity-40`}>
+              className={`rounded-full border px-3 py-1.5 text-xs transition ${feedbackSignal===signal?"border-blue-500 bg-blue-50 text-blue-700":"border-slate-200 text-[var(--lx-muted)] hover:border-slate-300"} disabled:opacity-40`}>
               {feedbackText(lang,signal)}
             </button>)}
           </div>
-          {feedbackNotice&&<p className="mt-2 text-xs leading-5 text-slate-500">{feedbackNotice}</p>}
+          {feedbackNotice&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{feedbackNotice}</p>}
         </div>}
 
         <div className="mt-6">
-          <h3 className="text-sm font-semibold text-slate-900">{tr(lang,"evidence")}</h3>
+          <h3 className="text-sm font-semibold text-[var(--lx-ink)]">{tr(lang,"evidence")}</h3>
           <div className="mt-3 max-h-[420px] space-y-3 overflow-auto">
-            {results.map((r,i)=><article key={`${r.sourceId}:${r.paragraph}:${i}`} className="rounded-xl border border-slate-200 p-4">
-              <h4 className="text-sm font-semibold text-slate-900">[{i+1}] {r.title} · {r.locator}</h4>
-              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600">{r.text}</p>
+            {results.map((r,i)=><article key={`${r.sourceId}:${r.paragraph}:${i}`} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4">
+              <h4 className="text-sm font-semibold text-[var(--lx-ink)]">[{i+1}] {r.title} · {r.locator}</h4>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--lx-muted)]">{r.text}</p>
             </article>)}
-            {activeQuery&&!results.length&&<p className="text-sm text-slate-500">{tr(lang,"none")}</p>}
+            {activeQuery&&!results.length&&<p className="text-sm text-[var(--lx-faint)]">{tr(lang,"none")}</p>}
           </div>
         </div>
       </section>
     </div>
 
-    <p role="status" className="text-sm text-slate-600">{notice}</p>
+    <p role="status" className="text-sm text-[var(--lx-muted)]">{notice}</p>
 
-    <section className="lx-knowledge-panel rounded-3xl border border-slate-200 bg-white p-6">
+    <section className="lx-knowledge-panel rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-slate-950">{tr(lang,"myLocal")} · {sources.length}</h2>
-        <button disabled={!sources.length} onClick={exportSources} className="text-sm text-blue-600 disabled:opacity-30">{tr(lang,"export")}</button>
+        <h2 className="text-xl font-semibold text-[var(--lx-ink)]">{tr(lang,"myLocal")} · {sources.length}</h2>
+        <button disabled={!sources.length} onClick={exportSources} className="text-sm text-[var(--lx-accent)] disabled:opacity-30">{tr(lang,"export")}</button>
       </div>
-      <ul className="mt-4 divide-y divide-slate-100">
+      <ul className="mt-4 divide-y divide-[var(--lx-line)]">
         {sources.map(source=><li className="flex items-center justify-between gap-4 py-3" key={source.id}>
-          <span className="min-w-0 truncate text-sm text-slate-700">{source.title}</span>
-          <button className="shrink-0 text-sm text-rose-600" onClick={()=>void remove(source)}>{tr(lang,"delete")}</button>
+          <span className="min-w-0 truncate text-sm text-[var(--lx-muted)]">{source.title}</span>
+          <button className="shrink-0 text-sm text-[var(--lx-danger)]" onClick={()=>void remove(source)}>{tr(lang,"delete")}</button>
         </li>)}
       </ul>
     </section>

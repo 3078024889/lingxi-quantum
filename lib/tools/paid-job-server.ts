@@ -110,7 +110,11 @@ export async function completePaidToolJob(jobId:string,result:unknown,providerRe
     p_result:result ?? {},
     p_provider_ref:providerRef ?? null,
   });
-  if(error) console.error("[paid job] complete rpc failed",{jobId,error});
+  if(error){
+    console.error("[paid job] complete rpc failed",{jobId,error});
+    return {ok:false as const,error:"PAID_JOB_COMPLETE_FAILED"};
+  }
+  return {ok:true as const};
 }
 
 export async function failPaidToolJob(jobId:string,errorMessage:string){
@@ -119,7 +123,11 @@ export async function failPaidToolJob(jobId:string,errorMessage:string){
     p_job_id:jobId,
     p_error:errorMessage,
   });
-  if(error) console.error("[paid job] fail rpc failed",{jobId,error});
+  if(error){
+    console.error("[paid job] fail rpc failed",{jobId,error});
+    return {ok:false as const,error:"PAID_JOB_FAIL_UPDATE_FAILED"};
+  }
+  return {ok:true as const};
 }
 
 export async function getOwnedPaidJob(input:{userId:string;quoteId:string;providerRef?:string}){

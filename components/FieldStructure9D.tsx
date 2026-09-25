@@ -1,5 +1,6 @@
 "use client";
 
+import NextImage from "next/image";
 import Link from "next/link";
 import { PointerEvent, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -46,7 +47,7 @@ function FloatingFieldNavigator() {
         <header className={styles.header} {...dragHandlers}><div><p className={styles.kicker}>9D FIELD NAVIGATION</p><h2>灵犀场 · 场域结构导航</h2><p>拖动窗口 · 点击场域节点进入</p></div><span className={styles.dragHint}>✦ 拖动</span></header>
         <div className={styles.navTools}><Link href="/learn">探索</Link><div className={styles.search}><SearchBox /></div><Link href="/membership">能量交换</Link><Link href="/account" className={styles.portal}>场域入口</Link></div>
         <div className={styles.map}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}<img src={MAP_SRC} alt="灵犀场 9D 可交互产品结构导航图" />
+          <NextImage src={MAP_SRC} alt="灵犀场 9D 可交互产品结构导航图"  width={1600} height={1000} unoptimized/>
           {FIELD_STRUCTURE_LINKS.map((item) => <Link key={item.href} href={item.href} className={styles.hotspot} style={{ left: `${item.x}%`, top: `${item.y}%` }} title={`${item.zh} · ${item.en}`} onClick={() => { setOpen(false); setExpanded(false); }}><span>{item.zh}</span></Link>)}
         </div>
         <div className={styles.actions}><button type="button" onClick={() => setExpanded((value) => !value)}>{expanded ? "缩小" : "展开导航"}</button><button type="button" onClick={() => { setExpanded(false); setOpen(false); }}>收起</button></div>
