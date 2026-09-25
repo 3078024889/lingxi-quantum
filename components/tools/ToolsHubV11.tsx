@@ -171,7 +171,7 @@ export default function ToolsHubV11() {
                 <div className="lx11-tool-copy">
                   <div className="lx11-tool-title-row"><h3>{title}</h3></div>
                   {summary?<p className="lx-tools-v124-desc">{summary}</p>:null}
-                  <div className="lx11-tool-meta"><b>{toolHubCopy(lang,"open")}</b></div>
+                  <span className="lx-tool-card-arrow" aria-hidden="true">→</span>
                 </div>
               </Link>;
             })}

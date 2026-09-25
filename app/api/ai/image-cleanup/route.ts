@@ -16,7 +16,7 @@ export async function POST(req:Request){
  if(claim.status==="completed"&&claim.result)return NextResponse.json(claim.result);
  const jobId=claim.jobId!;
  try{
-  const out=new FormData();out.set("model",process.env.OPENAI_IMAGE_EDIT_MODEL||"gpt-image-2.5-sunburst");out.set("image",image,image.name||"image.png");out.set("mask",mask,mask.name||"mask.png");
+  const out=new FormData();out.set("model",process.env.OPENAI_IMAGE_EDIT_MODEL||"gpt-image-2");out.set("image",image,image.name||"image.png");out.set("mask",mask,mask.name||"mask.png");
   out.set("prompt",String(form.get("prompt")||"Edit the masked region only. Remove the marked overlaid text, object, or user-owned watermark and reconstruct the underlying background naturally. Preserve everything outside the masked area. Do not add text, logos, marks, signatures, or new objects."));
   out.set("quality","high");
   const r=await fetch("https://api.openai.com/v1/images/edits",{method:"POST",headers:{Authorization:`Bearer ${key}`},body:out});

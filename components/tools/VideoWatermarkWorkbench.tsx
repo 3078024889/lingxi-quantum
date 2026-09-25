@@ -5,17 +5,17 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
 
-type MediaItem={file:File;duration:number;key:string};
+type MediaItem={file:File;duration:number;width:number;height:number;key:string};
 type Box={x:number;y:number;w:number;h:number};
 
-function durationOf(file:File){return new Promise<number>((resolve,reject)=>{const el=document.createElement("video"),u=URL.createObjectURL(file),timer=setTimeout(()=>{URL.revokeObjectURL(u);reject(new Error("无法读取视频时长"))},15000);el.preload="metadata";el.onloadedmetadata=()=>{clearTimeout(timer);const d=el.duration;URL.revokeObjectURL(u);Number.isFinite(d)&&d>0?resolve(d):reject(new Error("无法读取视频时长"))};el.onerror=()=>{clearTimeout(timer);URL.revokeObjectURL(u);reject(new Error("视频格式不受当前浏览器支持"))};el.src=u})}
+function mediaMetaOf(file:File){return new Promise<{duration:number;width:number;height:number}>((resolve,reject)=>{const el=document.createElement("video"),u=URL.createObjectURL(file),timer=setTimeout(()=>{URL.revokeObjectURL(u);reject(new Error("无法读取视频信息"))},15000);el.preload="metadata";el.onloadedmetadata=()=>{clearTimeout(timer);const duration=el.duration,width=el.videoWidth,height=el.videoHeight;URL.revokeObjectURL(u);Number.isFinite(duration)&&duration>0&&width>0&&height>0?resolve({duration,width,height}):reject(new Error("无法读取视频信息"))};el.onerror=()=>{clearTimeout(timer);URL.revokeObjectURL(u);reject(new Error("视频格式不受当前浏览器支持"))};el.src=u})}
 
 export default function VideoWatermarkWorkbench(){
  const[items,setItems]=useState<MediaItem[]>([]),[preview,setPreview]=useState(""),[meta,setMeta]=useState({w:0,h:0}),[box,setBox]=useState<Box>({x:72,y:78,w:24,h:14}),[busy,setBusy]=useState(false),[progress,setProgress]=useState(""),[results,setResults]=useState<Array<{name:string;url:string}>>([]),[error,setError]=useState("");
  const ff=useRef<any>(null);
  useEffect(()=>()=>{if(preview)URL.revokeObjectURL(preview);results.forEach(r=>URL.revokeObjectURL(r.url));try{ff.current?.terminate()}catch{}},[preview]);
 
- async function hydrate(files:File[]){setError("");const next:MediaItem[]=[];for(const file of files.slice(0,10)){try{next.push({file,duration:await durationOf(file),key:`${file.name}-${file.size}-${file.lastModified}`})}catch(e){setError(e instanceof Error?e.message:String(e))}}setItems(next);setResults([]);if(preview)URL.revokeObjectURL(preview);setPreview(next[0]?URL.createObjectURL(next[0].file):"")}
+ async function hydrate(files:File[]){setError("");const next:MediaItem[]=[];for(const file of files.slice(0,10)){try{const m=await mediaMetaOf(file);next.push({file,duration:m.duration,width:m.width,height:m.height,key:`${file.name}-${file.size}-${file.lastModified}`})}catch(e){setError(e instanceof Error?e.message:String(e))}}setItems(next);setResults([]);if(preview)URL.revokeObjectURL(preview);setPreview(next[0]?URL.createObjectURL(next[0].file):"")}
  async function addRemote(file:File){await hydrate([...items.map(x=>x.file),file])}
  const units=useMemo(()=>items.reduce((n,x)=>n+Math.max(1,Math.ceil(x.duration/60)),0),[items]);
 
@@ -31,7 +31,7 @@ export default function VideoWatermarkWorkbench(){
    await f.load({coreURL:await toBlobURL("/media/ffmpeg-0.12.10/ffmpeg-core.js","text/javascript"),wasmURL:await toBlobURL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm","application/wasm")});
    const ext=item.file.name.split(".").pop()||"mp4",input=`input-${index}.${ext}`,output=`output-${index}.mp4`;
    await f.writeFile(input,await fetchFile(item.file));
-   const w=meta.w||1920,h=meta.h||1080,px=Math.round(w*box.x/100),py=Math.round(h*box.y/100),pw=Math.max(8,Math.round(w*box.w/100)),ph=Math.max(8,Math.round(h*box.h/100));
+   const w=item.width,h=item.height,px=Math.round(w*box.x/100),py=Math.round(h*box.y/100),pw=Math.max(8,Math.round(w*box.w/100)),ph=Math.max(8,Math.round(h*box.h/100));
    await f.exec(["-i",input,"-vf",`delogo=x=${px}:y=${py}:w=${pw}:h=${ph}:show=0`,"-c:v","libx264","-preset","veryfast","-crf","20","-c:a","aac","-b:a","160k",output]);
    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);
    const url=URL.createObjectURL(new Blob([copy.buffer],{type:"video/mp4"}));

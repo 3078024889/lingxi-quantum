@@ -1519,3 +1519,77 @@ html[data-theme="light"] .text-lm2-violet { color:#69459b !important; text-shado
 .lx-v143-main-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}.lx-v143-main-card.violet{background:linear-gradient(145deg,var(--lx-panel),rgba(141,102,245,.08))}.lx-v143-main-card.cyan{background:linear-gradient(145deg,var(--lx-panel),rgba(52,190,215,.07))}.lx-v143-main-card small{display:block;margin-top:12px;color:var(--lx-faint)}
 .lx-v143-wallet-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.lx-v143-wallet-grid>a{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;border:1px solid var(--lx-line);border-radius:18px;padding:18px;background:var(--lx-panel)}.lx-v143-wallet-grid b{color:var(--lx-ink)}.lx-v143-wallet-grid p{margin-top:4px;color:var(--lx-muted);font-size:13px}.lx-v143-wallet-grid em{font-style:normal;color:var(--lx-faint)}
 @media(max-width:860px){.lx-v143-product-grid{grid-template-columns:1fr}.lx-v143-main-grid,.lx-v143-wallet-grid,.lx-v143-about-grid{grid-template-columns:1fr}.lx-v143-product-hero{grid-template-columns:1fr}.lx-v143-orbit{display:none}}
+
+
+/* V14.71.1 compact living tools */
+.lx-tools-v124 .lx11-wrap{max-width:1180px}
+.lx-tools-v124 .lx11-tools-hero{padding:20px 0 18px;min-height:0}
+.lx-tools-v124 .lx11-tools-hero h1{margin-top:4px;font-size:clamp(1.65rem,2.4vw,2.25rem);line-height:1.15}
+.lx-tools-v124 .lx11-tool-searchbar{margin-top:0}
+.lx-tools-v124-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.lx-tools-v124-card{
+  position:relative;
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  align-items:start;
+  gap:10px;
+  min-height:0!important;
+  height:auto!important;
+  padding:13px 14px!important;
+  border-radius:14px!important;
+  box-shadow:0 7px 22px rgba(36,55,82,.035)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.lx-tools-v124-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 28px rgba(36,55,82,.075)!important;
+}
+.lx-tools-v124-card .lx11-tool-cover{
+  height:auto!important;
+  min-height:0!important;
+  padding:0!important;
+  display:block!important;
+}
+.lx-tools-v124-card .lx11-tool-copy{
+  min-height:0!important;
+  padding:0!important;
+  display:block!important;
+}
+.lx-tools-v124-card .lx11-tool-title-row{padding-right:22px}
+.lx-tools-v124-card .lx11-tool-title-row h3{
+  margin:1px 0 0!important;
+  font-size:14px!important;
+  line-height:1.42!important;
+  font-weight:650!important;
+}
+.lx-tools-v124-card .lx-tools-v124-desc{
+  margin:5px 0 0!important;
+  display:-webkit-box;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  font-size:12px!important;
+  line-height:1.55!important;
+}
+.lx-tools-v124-card .lx-tool-card-arrow{
+  position:absolute;
+  right:12px;
+  top:13px;
+  color:rgba(54,74,104,.34);
+  font-size:14px;
+  transition:transform .18s ease,color .18s ease;
+}
+.lx-tools-v124-card:hover .lx-tool-card-arrow{
+  color:rgba(78,96,190,.72);
+  transform:translateX(2px);
+}
+@media (max-width:1180px){.lx-tools-v124-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:820px){.lx-tools-v124-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){
+  .lx-tools-v124-grid{grid-template-columns:1fr}
+  .lx-tools-v124-card{padding:12px!important}
+}
