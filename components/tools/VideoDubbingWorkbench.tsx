@@ -39,7 +39,7 @@ export default function VideoDubbingWorkbench(){
    const form=new FormData();form.set("target_language",target);form.set("quote_id",paidQuoteId);form.set("item_key","dub-0");form.set("paid_minutes",String(minutes));
    if(file)form.set("file",file,file.name);else form.set("source_url",url.trim());
    const res=await fetch("/api/ai/dub/create",{method:"POST",body:form});const data=await res.json();
-   if(!res.ok)throw new Error(data.error==="ELEVENLABS_NOT_CONFIGURED"?"还没有配置 ELEVENLABS_API_KEY。":(data.detail||data.error||"创建失败"));
+   if(!res.ok)throw new Error(data.error==="ELEVENLABS_NOT_CONFIGURED"?"视频配音服务暂不可用，请稍后再试。":(data.detail||data.error||"创建失败"));
    setProjectId(data.project_id||"");setLanguageId(data.language_id||"");setStatus(data.status||"queued");
   }catch(e){setError(e instanceof Error?e.message:String(e));setStatus("")}finally{setBusy(false)}
  }
@@ -53,7 +53,7 @@ export default function VideoDubbingWorkbench(){
      if(r.ok){setStatus(d.status||"");const candidate=d.outputs?.video||d.outputs?.dubbed_video||d.outputs?.lossless_audio||Object.values(d.outputs||{})[0];if(typeof candidate==="string")setOutput(candidate)}
     }else{
      const r=await fetch(`/api/ai/dub/status?project_id=${encodeURIComponent(projectId)}&quote_id=${encodeURIComponent(quoteId)}`,{cache:"no-store"});const d=await r.json();
-     if(r.ok){setStatus(d.status||"");if(d.language_id)setLanguageId(d.language_id);if(d.error==="TOPUP_REQUIRED"){setTopupRequired(Number(d.required_minutes)||0);setError(`供应商检测到实际时长需要按 ${d.required_minutes} 分钟计费，需要补差价。`)}else{setTopupRequired(0)}}
+     if(r.ok){setStatus(d.status||"");if(d.language_id)setLanguageId(d.language_id);if(d.error==="TOPUP_REQUIRED"){setTopupRequired(Number(d.required_minutes)||0);setError(`检测到实际时长需要按 ${d.required_minutes} 分钟计费，需要补足差额。`)}else{setTopupRequired(0)}}
     }
    }catch{}
   },5000);return()=>clearInterval(timer)
@@ -67,8 +67,8 @@ export default function VideoDubbingWorkbench(){
   {duration>0&&<div className="rounded-2xl bg-blue-50 p-4 text-sm text-blue-900">检测时长：{Math.floor(duration/60)}分 {Math.round(duration%60)}秒 · 本次按 <b>{minutes} 分钟</b>计费</div>}
   <div className="flex flex-wrap items-end gap-3"><label className="text-sm text-slate-600">翻译成<select value={target} onChange={e=>setTarget(e.target.value)} disabled={busy} className="ml-2 rounded-xl border border-slate-200 bg-white px-3 py-2">{LANGS.map(([v,n])=><option value={v} key={v}>{n}</option>)}</select></label></div>
   {busy?<button disabled className="rounded-full bg-blue-600 px-5 py-2.5 text-sm text-white opacity-50">正在创建项目…</button>:minutes>0?<PaidActionButton toolId="video-dubbing" quantity={minutes} metadata={{detectedDurationSeconds:Math.round(duration),targetLanguage:target}} onPaid={start} label="查看本次价格"/>:null}
-  <div className="rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-900">ElevenLabs 当前按源媒体分钟数、按目标语言收费。我们先检测时长并由服务器报价，付款后才创建项目。项目创建本身会产生供应商费用。</div>
-  {status&&<div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700">当前状态：<strong>{status}</strong>{projectId&&<span className="ml-2 text-slate-400">{projectId}</span>}</div>}
+  <div className="rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-900">按源媒体时长和目标语言计费。确认本次价格并付款后开始处理。</div>
+  {status&&<div className="rounded-2xl bg-slate-100 p-4 text-sm text-slate-700">当前状态：<strong>{status}</strong></div>}
   {output&&<a href={output} target="_blank" rel="noreferrer" className="inline-flex rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white">打开生成结果</a>}
   {topupRequired>0&&quoteId&&<div className="rounded-2xl border border-amber-200 bg-amber-50 p-4"><div className="text-sm font-medium text-amber-900">实际时长比预估更长，需要补到 {topupRequired} 分钟。</div><button onClick={async()=>{setBusy(true);try{const r=await fetch("/api/tools/quote/topup",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({parentQuoteId:quoteId,requiredQuantity:topupRequired})});const d=await r.json();if(!r.ok)throw new Error(d.error||"创建补差价报价失败");if(d.alreadyEnough){setTopupRequired(0);setError("");return;}setTopupQuoteId(d.id);window.open(`/tools/pay?quoteId=${encodeURIComponent(d.id)}`,"lingxi_tool_topup","width=720,height=820");setError(`补差价 ¥${d.amount_rmb}，付款后系统会自动继续。`);const t=setInterval(async()=>{const s=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(d.id)}`,{cache:"no-store"});if(s.ok){const j=await s.json();if(j.paid){clearInterval(t);setTopupRequired(0);setError("");}}},2200);}catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}}} className="mt-3 rounded-full bg-amber-600 px-4 py-2 text-sm text-white">补差价并继续</button>{topupQuoteId&&<div className="mt-2 text-xs text-amber-800">补差价报价：{topupQuoteId}</div>}</div>}
   {error&&<p className="text-sm text-rose-600">{error}</p>}

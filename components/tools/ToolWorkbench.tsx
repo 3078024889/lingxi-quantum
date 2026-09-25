@@ -26,7 +26,7 @@ export default function ToolWorkbench({ tool }: Props) {
   if (tool.status === "planned") {
     return (
       <div className="rounded-sm border border-white/15 bg-void-deep p-6 text-sm leading-7 text-bone-dim">
-        {t("此工具已在产品路线图中，但尚未实现真实处理逻辑。我们不会用假按钮或演示数据冒充上线。请先使用已标记为可用的工具。","This tool is on the roadmap but not implemented yet. We will not ship fake buttons or mock results. Please use tools marked as live.")}
+        {t("此功能暂未开放。","This feature is not available yet.")}
       </div>
     );
   }
@@ -468,8 +468,8 @@ async function runFileTool(
     return {
       ok: true,
       files: [{ name: r.name, blob: r.blob, mime: r.blob.type, size: r.blob.size }],
-      messageZh: "已通过画布重编码去除 EXIF / GPS 等元数据。",
-      messageEn: "Metadata (EXIF/GPS etc.) removed by re-encoding on canvas.",
+      messageZh: "图片中的 EXIF、GPS 等隐私信息已清除。",
+      messageEn: "EXIF, GPS and other image metadata have been removed.",
       details: { originalKB: Number((file.size / 1024).toFixed(1)), resultKB: Number((r.blob.size / 1024).toFixed(1)) },
     };
   }
@@ -502,8 +502,8 @@ async function runFileTool(
     const [md5, sha] = await Promise.all([md5Hex(buf), sha256Hex(buf)]);
     return {
       ok: true,
-      messageZh: "哈希已在本地计算完成。",
-      messageEn: "Hashes computed locally.",
+      messageZh: "文件校验值已生成。",
+      messageEn: "File verification hashes are ready.",
       details: { file: file.name, size: file.size, MD5: md5, SHA256: sha },
     };
   }

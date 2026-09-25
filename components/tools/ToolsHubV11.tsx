@@ -6,7 +6,7 @@ import ToolGlyph from "./ToolGlyph";
 import { liveTools } from "@/lib/tools/registry";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import {toolTitle} from "@/lib/tools/card-i18n";
-import {toolCategoryLabel,toolHubCopy,toolSummary,type ToolDisplayCategory} from "@/lib/tools/hub-copy-v1470";
+import {toolCategoryLabel,toolHubCopy,toolCardLine,type ToolDisplayCategory} from "@/lib/tools/hub-copy-v1470";
 
 type GlyphKind = "image" | "document" | "video" | "audio" | "privacy" | "utility" | "ai" | "qr";
 type SourceCategory = "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";
@@ -116,7 +116,6 @@ export default function ToolsHubV11() {
   const { lang, t } = useLingxiLang();
   const [q, setQ] = useState("");
   const [category, setCategory] = useState<Category>("all");
-  const foreign = lang !== "zh";
   const tools = useMemo(() => allTools(), []);
 
   const list = useMemo(() => {
@@ -134,7 +133,7 @@ export default function ToolsHubV11() {
     <main className="lx11-page lx11-tools-page lx-tools-v124">
       <div className="lx11-wrap">
         <section className="lx11-tools-hero">
-          <div><span>{toolHubCopy(lang,"kicker")}</span><h1>{toolHubCopy(lang,"title")}</h1></div>
+          <div><span>{toolHubCopy(lang,"kicker")}</span><h1>{toolHubCopy(lang,"title")}</h1><p>{toolHubCopy(lang,"subtitle")}</p></div>
         </section>
 
         <section className="lx11-tool-searchbar lx-tools-v124-search">
@@ -165,9 +164,9 @@ export default function ToolsHubV11() {
             {list.map((item) => {
               const slug=item.href.replace("/tools/","");
               const title=toolTitle(lang,slug,lang==="zh"?item.titleZh:item.titleEn);
-              const summary=toolSummary(lang,slug);
+              const summary=toolCardLine(lang,slug,item.kind,item.descZh,item.descEn);
               return <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card">
-                <div className="lx11-tool-cover"><ToolGlyph kind={item.kind} /></div>
+                <div className="lx11-tool-cover"><ToolGlyph kind={item.kind} slug={slug} /></div>
                 <div className="lx11-tool-copy">
                   <div className="lx11-tool-title-row"><h3>{title}</h3></div>
                   {summary?<p className="lx-tools-v124-desc">{summary}</p>:null}

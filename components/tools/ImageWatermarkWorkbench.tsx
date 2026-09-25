@@ -32,7 +32,7 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
     const f=files[i],prepared=await prepare(f,box),fd=new FormData();
     fd.set("image",prepared.image);fd.set("mask",prepared.mask);fd.set("quote_id",quoteId);fd.set("item_key",`image-${i}`);
     const r=await fetch("/api/ai/image-cleanup",{method:"POST",body:fd});const d=await r.json();
-    if(!r.ok)throw new Error(d.error==="OPENAI_NOT_CONFIGURED"?"还没有配置 OPENAI_API_KEY。":(d.detail?.error?.message||d.error||"处理失败"));
+    if(!r.ok)throw new Error(d.error==="OPENAI_NOT_CONFIGURED"?"图片处理服务暂不可用，请稍后再试。":(d.detail?.error?.message||d.error||"处理失败"));
     const url=d.b64?`data:image/png;base64,${d.b64}`:d.url;if(url)out.push({name:f.name,url});
    }
    setResults(out);
@@ -43,7 +43,7 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
   <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const arr=Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith("image/")).slice(0,batch?20:1);setFiles(arr);setResults([]);setError("")}} className="block cursor-pointer rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-7 text-center"><input type="file" accept="image/*" multiple={batch} disabled={busy} className="hidden" onChange={e=>{const arr=Array.from(e.target.files||[]).slice(0,batch?20:1);setFiles(arr);setResults([]);setError("")}}/><div className="font-medium">{batch?"上传多张图片":"上传图片"}</div><div className="mt-1 text-sm text-slate-500">{files.length?`${files.length} 张已选择`:(batch?"单次最多 20 张；相同位置最适合批量处理":"JPG / PNG / WebP")}</div></label>
   {files[0]&&<><p className="mt-4 text-sm text-slate-600">在第一张图上拖动框出要移除的区域。{batch?"这个区域会应用到全部图片。":""}</p><Selector file={files[0]} box={box} onChange={setBox}/></>}
   <div className="mt-5">{busy?<button disabled className="rounded-full bg-blue-600 px-5 py-2.5 text-sm text-white opacity-50">正在处理…</button>:files.length>0&&box.w>=.01&&box.h>=.01?<PaidActionButton toolId={toolId} quantity={files.length} onPaid={run} label="查看本次价格"/>:null}</div>
-  <p className="mt-3 text-xs leading-5 text-slate-500">付款确认后才调用图像编辑模型。仅处理你拥有版权、已获授权或自己制作的内容。</p>
+  <p className="mt-3 text-xs leading-5 text-slate-500">确认价格并付款后开始处理。仅处理拥有版权、已获授权或自行制作的内容。</p>
   {error&&<p className="mt-4 text-sm text-rose-600">{error}</p>}
   {results.length>0&&<div className="mt-6 grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border border-slate-200 p-3"><img src={r.url} alt="处理结果" className="w-full rounded-xl"/><div className="mt-3 flex items-center justify-between gap-2 text-sm"><span className="truncate text-slate-600">{r.name}</span><a href={r.url} download={`clean-${r.name.replace(/\.[^.]+$/,".png")}`} className="shrink-0 font-medium text-blue-600">下载</a></div></div>)}</div>}
  </div>;

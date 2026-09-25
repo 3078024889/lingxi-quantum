@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLingxiLang, type LingxiLang } from "@/lib/lingxi-i18n";
 
-type Quote={id:string;tool_id:string;quantity:number;unit_name:string;amount_rmb:number;expires_at:string;status?:string};
+type Quote={id:string;tool_id:string;quantity:number;unit_name:string;amount_rmb:number;amount_usd:number;expires_at:string;status?:string};
 type StoredQuote={id:string;toolId:string;quantity:number;expiresAt:string};
 type Copy=Record<LingxiLang,string>;
 const c=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Copy=>({zh,en,ja,ko,fr,de,es,pt,ar});
@@ -11,7 +11,7 @@ const UI={
  defaultLabel:c("继续","Continue","続ける","계속","Continuer","Weiter","Continuar","Continuar","متابعة"),
  paid:c("支付已确认，开始处理…","Payment confirmed. Processing…","支払いを確認しました。処理を開始します…","결제가 확인되었습니다. 처리를 시작합니다…","Paiement confirmé. Traitement…","Zahlung bestätigt. Verarbeitung…","Pago confirmado. Procesando…","Pagamento confirmado. Processando…","تم تأكيد الدفع. جارٍ المعالجة…"),
  quoteFail:c("创建报价失败","Could not create quote","見積を作成できませんでした","견적을 만들지 못했습니다","Impossible de créer le devis","Angebot konnte nicht erstellt werden","No se pudo crear el presupuesto","Não foi possível criar a cotação","تعذر إنشاء عرض السعر"),
- priced:c("价格已由服务器计算。确认后才开始付费处理。","Price calculated by the server. Paid processing starts only after confirmation.","価格はサーバーで計算済みです。","가격은 서버에서 계산되었습니다.","Prix calculé par le serveur.","Preis serverseitig berechnet.","Precio calculado por el servidor.","Preço calculado pelo servidor.","تم حساب السعر على الخادم."),
+ priced:c("价格已确认，选择支付方式后继续。","Price confirmed. Choose a payment method to continue.","価格を確認しました。支払い方法を選んで続けてください。","가격이 확인되었습니다. 결제 수단을 선택해 계속하세요.","Prix confirmé. Choisissez un moyen de paiement pour continuer.","Preis bestätigt. Zahlungsmethode wählen und fortfahren.","Precio confirmado. Elige un método de pago para continuar.","Preço confirmado. Escolha uma forma de pagamento para continuar.","تم تأكيد السعر. اختر طريقة الدفع للمتابعة."),
  waiting:c("等待支付确认…付款完成后这里会自动继续。","Waiting for payment confirmation. This page will continue automatically.","支払い確認待ち…","결제 확인 대기 중…","En attente du paiement…","Warten auf Zahlungsbestätigung…","Esperando confirmación…","Aguardando confirmação…","بانتظار تأكيد الدفع…"),
  blocked:c("浏览器阻止了付款窗口。请允许本站弹窗后再试。","The browser blocked the payment window. Allow pop-ups for this site and try again.","支払いウィンドウがブロックされました。","결제 창이 차단되었습니다.","La fenêtre de paiement a été bloquée.","Das Zahlungsfenster wurde blockiert.","La ventana de pago fue bloqueada.","A janela de pagamento foi bloqueada.","تم حظر نافذة الدفع."),
  serviceUnavailable:c("当前服务暂不可用，不会创建付费订单。","This service is currently unavailable. No paid order will be created.","現在このサービスは利用できません。","현재 서비스를 사용할 수 없습니다.","Service indisponible.","Dienst derzeit nicht verfügbar.","Servicio no disponible.","Serviço indisponível.","الخدمة غير متاحة حاليًا."),
@@ -144,7 +144,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
    {!quote||changed
      ?<button onClick={makeQuote} disabled={disabled} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40">{busy||restoring?t(UI.pricing):(label||t(UI.defaultLabel))}</button>
      :<div className="flex flex-wrap items-center gap-3">
-       <div className="rounded-2xl bg-blue-50 px-4 py-2.5 text-sm text-blue-900">{t(UI.thisTime)} {quote.quantity} {quote.unit_name} · <b className="text-lg">¥{quote.amount_rmb}</b></div>
+       <div className="rounded-2xl bg-blue-50 px-4 py-2.5 text-sm text-blue-900">{t(UI.thisTime)} {quote.quantity} {quote.unit_name} · <b className="text-lg">¥{quote.amount_rmb}</b><span className="ml-2 text-slate-500">/ ${quote.amount_usd} USD</span></div>
        <button onClick={pay} disabled={busy||restoring} className="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40">{t(UI.confirm)}</button>
        <button onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-full border border-slate-200 px-4 py-2.5 text-sm text-slate-600">{t(UI.recalc)}</button>
      </div>}
