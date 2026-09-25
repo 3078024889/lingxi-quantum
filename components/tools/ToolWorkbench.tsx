@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { toolRuntimeText } from "@/lib/tool-runtime-i18n";
+import {workbenchCopy} from "@/lib/tools/workbench-i18n-v1473";
 import TextWorkbench from "./TextWorkbench";
 import type { ToolMeta } from "@/lib/tools/types";
 import type { ToolRunResult } from "@/lib/tools/types";
@@ -90,8 +91,8 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         ok: false,
         reasonZh: `处理时出错：${msg}`,
         reasonEn: `Processing error: ${msg}`,
-        hintZh: "请换一张较小的图片，或换用 Chrome / Edge / Firefox 最新版本再试。",
-        hintEn: "Try a smaller file, or the latest Chrome / Edge / Firefox.",
+        hintZh: workbenchCopy(lang,"genericFileHint"),
+        hintEn: workbenchCopy("en","genericFileHint"),
       });
     } finally {
       setBusy(false);
@@ -158,11 +159,11 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       {tool.slug === "resize-image" && (
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           <label className="text-sm text-bone-dim">
-            Width
+            {workbenchCopy(lang,"width")}
             <input type="number" min={1} value={width} onChange={(e) => setWidth(Number(e.target.value) || 1)} className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone" />
           </label>
           <label className="text-sm text-bone-dim">
-            Height
+            {workbenchCopy(lang,"height")}
             <input type="number" min={1} value={height} onChange={(e) => setHeight(Number(e.target.value) || 1)} className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone" />
           </label>
           <label className="mt-6 flex items-center gap-2 text-sm text-bone-dim">
