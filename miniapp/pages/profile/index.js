@@ -1,5 +1,8 @@
 const { login, request, switchAccount } = require('../../utils/api')
 const { initPage } = require('../../utils/i18n')
+const { enableShareMenu, copyWebLink, appMessage, timeline } = require('../../utils/share')
+
+const SHARE_TITLE = '灵犀场 · 一键创造，一念即达'
 
 Page({
   data: {
@@ -11,11 +14,13 @@ Page({
 
   onLoad() {
     initPage(this)
+    enableShareMenu()
     this.refreshIdentity()
   },
 
   onShow() {
     initPage(this)
+    enableShareMenu()
   },
 
   async refreshIdentity() {
@@ -69,5 +74,19 @@ Page({
     } finally {
       wx.hideLoading()
     }
+  },
+
+  copyLink() {
+    // Never copy account/session URLs from the account surface.
+    copyWebLink('/')
+  },
+
+  onShareAppMessage() {
+    // Account state is private; share the public Mini Program home instead.
+    return appMessage(SHARE_TITLE, '/pages/create/index')
+  },
+
+  onShareTimeline() {
+    return timeline(SHARE_TITLE)
   },
 })

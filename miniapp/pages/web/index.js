@@ -1,4 +1,11 @@
 const { API_BASE } = require('../../utils/api')
+const {
+  enableShareMenu,
+  copyWebLink,
+  publicWebPath,
+  appMessage,
+  timeline,
+} = require('../../utils/share')
 
 const EXACT_ALLOWED = new Set([
   '/',
@@ -72,13 +79,10 @@ const SHARE_TITLES = {
   '/ai-knowledge': '灵犀场 · 资料变成活的 Agent',
   '/ai-learning': '灵犀场 · 学习 SASI',
   '/ai-research': '灵犀场 · 科研 SASI',
-  '/account': '灵犀场 · 我的',
-  '/account/orders': '灵犀场 · 订单与记录',
-  '/ai-wallet': '灵犀场 · AI 余额与额度',
 }
 
 function shareTitleFor(path) {
-  const pathname = path.split(/[?#]/)[0]
+  const pathname = publicWebPath(path)
   return SHARE_TITLES[pathname] || '灵犀场 LINGXIFIELD'
 }
 
@@ -91,6 +95,7 @@ Page({
   },
 
   onLoad(options) {
+    enableShareMenu()
     const decoded = safeDecode(options.path || '/')
     const path = normalizeMiniPath(decoded)
     if (!path) {
@@ -109,6 +114,10 @@ Page({
       loading: true,
       failed: false,
     })
+  },
+
+  onShow() {
+    enableShareMenu()
   },
 
   handleLoad() {
@@ -133,18 +142,23 @@ Page({
     setTimeout(() => this.setData({ src: next }), 50)
   },
 
+  copyCurrentLink() {
+    copyWebLink(this.data.path, '当前页面链接已复制')
+  },
+
   onShareAppMessage() {
-    return {
-      title: shareTitleFor(this.data.path),
-      path: `/pages/web/index?path=${encodeURIComponent(this.data.path)}`,
-      imageUrl: 'https://lingxifield.cn/og-lingxifield-20260925.jpg',
-    }
+    const sharePath = publicWebPath(this.data.path)
+    return appMessage(
+      shareTitleFor(sharePath),
+      `/pages/web/index?path=${encodeURIComponent(sharePath)}`
+    )
   },
 
   onShareTimeline() {
-    return {
-      title: shareTitleFor(this.data.path),
-      imageUrl: 'https://lingxifield.cn/og-lingxifield-20260925.jpg',
-    }
+    const sharePath = publicWebPath(this.data.path)
+    return timeline(
+      shareTitleFor(sharePath),
+      `path=${encodeURIComponent(sharePath)}`
+    )
   },
 })

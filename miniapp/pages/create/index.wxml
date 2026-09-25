@@ -31,5 +31,14 @@
       <view class="lx-feature-note">进入模型与 BYOK 连接中心。密钥只用于你主动发起的任务。</view>
       <button class="lx-button secondary" bindtap="openConnections">打开连接中心</button>
     </view>
+
+    <view class="lx-share-panel">
+      <view class="lx-share-title">把灵犀场分享出去</view>
+      <view class="lx-share-note">可以直接转发小程序，也可以复制网页链接。</view>
+      <view class="lx-share-actions">
+        <button class="lx-share-button" open-type="share">转发给好友</button>
+        <button class="lx-share-button secondary" bindtap="copyLink">复制链接</button>
+      </view>
+    </view>
   </view>
 </view>

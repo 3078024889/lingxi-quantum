@@ -1,0 +1,47 @@
+.lx-share-panel {
+  margin-top: 46rpx;
+  padding-top: 30rpx;
+  border-top: 1rpx solid var(--lx-line);
+}
+
+.lx-share-title {
+  font-size: 28rpx;
+  line-height: 1.45;
+  font-weight: 630;
+}
+
+.lx-share-note {
+  margin-top: 9rpx;
+  font-size: 22rpx;
+  line-height: 1.65;
+  color: var(--lx-text-soft);
+}
+
+.lx-share-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 22rpx;
+}
+
+.lx-share-button {
+  flex: 1;
+  height: 78rpx;
+  margin: 0;
+  padding: 0 18rpx;
+  border-radius: 16rpx;
+  background: var(--lx-button);
+  color: var(--lx-button-text);
+  font-size: 23rpx;
+  line-height: 78rpx;
+  font-weight: 610;
+}
+
+.lx-share-button.secondary {
+  background: var(--lx-bg-soft);
+  color: var(--lx-text);
+  border: 1rpx solid var(--lx-line);
+}
+
+.lx-share-button::after {
+  border: 0;
+}

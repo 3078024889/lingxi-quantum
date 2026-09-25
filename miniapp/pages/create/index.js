@@ -1,4 +1,5 @@
 const { initPage } = require('../../utils/i18n')
+const { enableShareMenu, copyWebLink, appMessage, timeline } = require('../../utils/share')
 
 const ENTRIES = [
   {
@@ -23,23 +24,40 @@ const ENTRIES = [
   },
 ]
 
+const SHARE_TITLE = '灵犀场 · 一键创造，一念即达'
+
 Page({
   data: { lang: 'zh', entries: ENTRIES },
-  onLoad() { initPage(this) },
-  onShow() { initPage(this) },
+
+  onLoad() {
+    initPage(this)
+    enableShareMenu()
+  },
+
+  onShow() {
+    initPage(this)
+    enableShareMenu()
+  },
+
   open(event) {
     const item = this.data.entries[event.currentTarget.dataset.index]
     if (!item) return
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(item.path)}` })
   },
+
   openConnections() {
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/sasi/connections')}` })
   },
+
+  copyLink() {
+    copyWebLink('/sasi')
+  },
+
   onShareAppMessage() {
-    return {
-      title: '灵犀场 · 把想法、资料和日常问题真正处理起来',
-      path: '/pages/create/index',
-      imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
-    }
+    return appMessage(SHARE_TITLE, '/pages/create/index')
+  },
+
+  onShareTimeline() {
+    return timeline(SHARE_TITLE)
   },
 })

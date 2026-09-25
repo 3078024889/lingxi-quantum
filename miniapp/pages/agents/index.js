@@ -1,4 +1,5 @@
 const { initPage } = require('../../utils/i18n')
+const { enableShareMenu, copyWebLink, appMessage, timeline } = require('../../utils/share')
 
 const AGENTS = [
   {
@@ -18,13 +19,36 @@ const AGENTS = [
   },
 ]
 
+const SHARE_TITLE = '灵犀场 · 把资料变成活的 Agent'
+
 Page({
   data: { lang: 'zh', agents: AGENTS },
-  onLoad() { initPage(this) },
-  onShow() { initPage(this) },
+
+  onLoad() {
+    initPage(this)
+    enableShareMenu()
+  },
+
+  onShow() {
+    initPage(this)
+    enableShareMenu()
+  },
+
   open(event) {
     const item = this.data.agents[event.currentTarget.dataset.index]
     if (!item) return
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(item.path)}` })
+  },
+
+  copyLink() {
+    copyWebLink('/ai-knowledge')
+  },
+
+  onShareAppMessage() {
+    return appMessage(SHARE_TITLE, '/pages/agents/index')
+  },
+
+  onShareTimeline() {
+    return timeline(SHARE_TITLE)
   },
 })

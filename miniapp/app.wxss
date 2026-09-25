@@ -1,3 +1,5 @@
+@import "./share.wxss";
+
 page {
   --lx-bg: #f4f3ef;
   --lx-bg-elevated: rgba(255, 255, 252, .72);

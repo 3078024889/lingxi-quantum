@@ -1,4 +1,5 @@
 const { initPage } = require('../../utils/i18n')
+const { enableShareMenu, copyWebLink, appMessage, timeline } = require('../../utils/share')
 
 const TOOLS = [
   { title: 'PDF 编辑', note: '编辑、签名、盖章与常用 PDF 处理。', path: '/tools/pdf-editor' },
@@ -11,16 +12,40 @@ const TOOLS = [
   { title: '阅后即焚', note: '生成限时内容链接，到期或阅读后按规则失效。', path: '/tools/burn-after-read' },
 ]
 
+const SHARE_TITLE = '灵犀场 · 免费实用工具'
+
 Page({
   data: { lang: 'zh', tools: TOOLS },
-  onLoad() { initPage(this) },
-  onShow() { initPage(this) },
+
+  onLoad() {
+    initPage(this)
+    enableShareMenu()
+  },
+
+  onShow() {
+    initPage(this)
+    enableShareMenu()
+  },
+
   open(event) {
     const item = this.data.tools[event.currentTarget.dataset.index]
     if (!item) return
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(item.path)}` })
   },
+
   allTools() {
     wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/tools')}` })
+  },
+
+  copyLink() {
+    copyWebLink('/tools')
+  },
+
+  onShareAppMessage() {
+    return appMessage(SHARE_TITLE, '/pages/tools/index')
+  },
+
+  onShareTimeline() {
+    return timeline(SHARE_TITLE)
   },
 })

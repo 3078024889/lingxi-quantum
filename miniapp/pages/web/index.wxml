@@ -15,3 +15,7 @@
   bindload="handleLoad"
   binderror="handleError"
 />
+
+<cover-view wx:if="{{src}}" class="lx-web-copy-link" bindtap="copyCurrentLink">
+  复制链接
+</cover-view>
