@@ -7,8 +7,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata:Metadata={
-  title:"灵犀场｜免费实用工具 · SASI创作 · AI工作区",
-  description:"一个让想法被理解、让问题被处理、让结果真正发生的场智能数字空间。免费实用工具、SASI创作与构建、书本SASI、学习SASI、科研SASI。",
+  title:"灵犀场｜AI创作 · 资料智能体 · 免费实用工具",
+  description:"灵犀场是一个会随着你的问题、资料与创作继续生长的场智能体。把一个念头、一份文件或一个现实问题交给它，继续推进到可使用的结果。",
   alternates:{canonical:"/"}
 };
 

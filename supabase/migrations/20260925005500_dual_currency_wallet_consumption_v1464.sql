@@ -1,0 +1,11 @@
+-- Production migration already applied as dual_currency_wallet_consumption_v1464.
+-- Source-of-truth behavior:
+-- 1. ai_usd_wallets gets reserved_cents.
+-- 2. ai_requests records billing_currency / reserved_usd_cents / charged_usd_cents.
+-- 3. reserve_ai_funds chooses CNY if it can fully cover the quote, otherwise USD if USD can cover it.
+-- 4. settle/release AI funds operate on the currency actually reserved.
+-- 5. sasi_jobs records billing_currency and USD reserve/settlement fields.
+-- 6. create_and_reserve_sasi_job, settle_sasi_job and release_sasi_job support USD wallets.
+-- 7. critical RPC EXECUTE remains service_role/postgres only.
+-- 8. Commercial USD task pricing uses the same fixed catalog relation already present in current product pricing:
+--    $1.50 per ¥10 equivalent, not a live foreign-exchange quote.

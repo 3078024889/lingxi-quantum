@@ -1,29 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
-import { isSameOriginMutation } from "@/lib/sasi/request-security";
-import { createClient } from "@/lib/supabase/server";
-import { runBilledText } from "@/lib/ai/billed-text";
-import type { Intelligence } from "@/lib/ai/provider-router";
-import { recordBookAnswerEvent } from "@/lib/sasi/integration/book-learning";
+import {NextRequest,NextResponse} from "next/server";
+import {isSameOriginMutation} from "@/lib/sasi/request-security";
+import {createClient} from "@/lib/supabase/server";
+import {runBilledText} from "@/lib/ai/billed-text";
+import type {Intelligence} from "@/lib/ai/provider-router";
+import {recordBookAnswerEvent} from "@/lib/sasi/integration/book-learning";
 export const runtime="nodejs";export const maxDuration=90;
 
 type Evidence={index:number;title:string;locator?:string;text:string};
 
 function tierSpec(intelligence:Intelligence){
- if(intelligence==="light")return {
-  evidenceLimit:4,
-  role:"轻量模式：用最少必要内容解决当前问题。不要扩写成研究报告。",
-  structure:"直接回答，然后给 3–5 个最重要的要点。除非用户明确要求，不写长篇背景；尽量控制在约 300–700 个中文字符或等量其他语言。",
- };
- if(intelligence==="high")return {
-  evidenceLimit:12,
-  role:"高智能模式：进行充分的跨证据综合、关系推理与边界分析。不能只是把标准模式写得更长。",
-  structure:"先给核心结论，再展开证据链、关键步骤/结构、来源间的一致与冲突、仍不确定之处；复杂问题允许长回答，并主动覆盖容易遗漏的关键条件。",
- };
- return {
-  evidenceLimit:8,
-  role:"标准模式：在速度与完整性之间取得平衡，输出应明显比轻量模式更完整。",
-  structure:"使用清晰小标题组织：结论、关键要点、原文依据、边界/注意事项。信息充分但避免无关扩写。",
- };
+ if(intelligence==="light")return{evidenceLimit:4,role:"轻量模式：用最少必要内容解决当前问题。不要扩写成研究报告。",structure:"直接回答，然后给 3–5 个最重要的要点。除非用户明确要求，不写长篇背景；尽量控制在约 300–700 个中文字符或等量其他语言。"};
+ if(intelligence==="high")return{evidenceLimit:12,role:"高智能模式：进行充分的跨证据综合、关系推理与边界分析。不能只是把标准模式写得更长。",structure:"先给核心结论，再展开证据链、关键步骤/结构、来源间的一致与冲突、仍不确定之处；复杂问题允许长回答，并主动覆盖容易遗漏的关键条件。"};
+ return{evidenceLimit:8,role:"标准模式：在速度与完整性之间取得平衡，输出应明显比轻量模式更完整。",structure:"使用清晰小标题组织：结论、关键要点、原文依据、边界/注意事项。信息充分但避免无关扩写。"};
 }
 
 export async function POST(req:NextRequest){
@@ -68,12 +56,7 @@ ${question}
 ${sources}`;
 
  try{
-  const r=await runBilledText({
-   userId:user.id,
-   taskKind:mode==="research"?"research":"knowledge",
-   intelligence,
-   prompt
-  });
+  const r=await runBilledText({userId:user.id,taskKind:mode==="research"?"research":"knowledge",intelligence,prompt});
   let learningEventId:string|null=null;
   try{
    learningEventId=await recordBookAnswerEvent({
@@ -85,14 +68,17 @@ ${sources}`;
   }
   return NextResponse.json({
    answer:r.text,provider:r.provider,model:r.model,intelligence,
-   chargedRmb:r.chargeFen/100,usage:r.usage,learningEventId,
+   chargedRmb:r.chargeCurrency==="CNY"?r.chargeAmount:null,
+   chargedUsd:r.chargeCurrency==="USD"?r.chargeAmount:null,
+   chargedCurrency:r.chargeCurrency,
+   usage:r.usage,learningEventId,
    evidenceCount:evidence.length,
    sources:evidence.map((e:Evidence)=>({index:e.index,title:e.title,locator:e.locator||""}))
   });
  }catch(e:any){
   const code=String(e?.message||"");
-  if(code==="INSUFFICIENT_BALANCE")return NextResponse.json({error:"AI 余额不足，请先充值后再继续。",code},{status:402});
-  if(code==="NO_AI_PROVIDER_CONFIGURED")return NextResponse.json({error:"AI 服务暂未配置，请稍后再试。",code},{status:503});
+  if(code==="INSUFFICIENT_BALANCE")return NextResponse.json({error:"余额不足，请先充值后再继续。",code},{status:402});
+  if(code==="NO_AI_PROVIDER_CONFIGURED")return NextResponse.json({error:"AI 服务暂时不可用，请稍后再试。",code},{status:503});
   return NextResponse.json({error:"AI 暂时无法回答，请稍后重试。",code},{status:502});
  }
 }

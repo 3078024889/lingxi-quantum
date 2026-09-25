@@ -4,7 +4,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {createPaypalOrder} from "@/lib/paypal";
 import {safeLocalReturnPath} from "@/lib/sasi/payment-gate";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
-import {getProduct} from "@/lib/plans";
+import {getUsdBalanceProduct} from "@/lib/usd-products";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -23,10 +23,8 @@ export async function POST(req:NextRequest){
 
   try{
     const body=await req.json().catch(()=>null) as {productId?:unknown;returnPath?:unknown}|null;
-    const product=getProduct(String(body?.productId||""));
-    if(!product||!["ai","production"].includes(product.group)||!Number.isFinite(product.priceUsd)||product.priceUsd<=0){
-      return NextResponse.json({error:"INVALID_PAYPAL_BALANCE_PRODUCT"},{status:400});
-    }
+    const product=getUsdBalanceProduct(String(body?.productId||""));
+    if(!product)return NextResponse.json({error:"INVALID_USD_BALANCE_PRODUCT"},{status:400});
 
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
@@ -44,9 +42,9 @@ export async function POST(req:NextRequest){
     const {data:order,error}=await admin.from("orders").insert({
       user_id:user.id,
       product_id:product.id,
-      product_type:product.type,
-      amount_usd:product.priceUsd,
-      amount_rmb:product.priceRmb,
+      product_type:"permanent",
+      amount_usd:product.amountUsd,
+      amount_rmb:null,
       status:"pending",
       provider:"paypal",
       channel:"web",
@@ -54,34 +52,30 @@ export async function POST(req:NextRequest){
     if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});
 
     const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
-    const fallback=product.group==="ai"?"/ai-wallet":"/sasi/pricing";
+    const fallback=product.wallet==="ai"?"/ai-wallet":"/sasi/pricing";
     const dest=safeLocalReturnPath(body?.returnPath,fallback);
 
     try{
       const out=await createPaypalOrder({
-        amountUsd:product.priceUsd,
-        description:`LINGXIFIELD ${product.nameEn} / CNY balance ¥${product.priceRmb}`,
+        amountUsd:product.amountUsd,
+        description:product.nameEn,
         referenceId:order.id,
         returnUrl:`${baseUrl}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(dest)}`,
         cancelUrl:`${baseUrl}/checkout-usd?productId=${encodeURIComponent(product.id)}&canceled=1`,
       });
-      const linked=await admin.from("orders")
-        .update({provider_payment_id:out.id})
-        .eq("id",order.id)
-        .eq("status","pending");
+      const linked=await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id).eq("status","pending");
       if(linked.error)throw linked.error;
 
       return NextResponse.json({
         url:out.approveUrl,
         orderId:order.id,
         currency:"USD",
-        amountUsd:product.priceUsd,
-        creditedCurrency:"CNY",
-        creditedAmountRmb:product.priceRmb,
+        amountUsd:product.amountUsd,
+        wallet:product.wallet,
       });
     }catch(error){
       await admin.from("orders").update({status:"failed"}).eq("id",order.id).eq("status","pending");
-      console.error("[paypal balance create]",error instanceof Error?error.message:String(error));
+      console.error("[paypal usd create]",error instanceof Error?error.message:String(error));
       return NextResponse.json({error:"PAYPAL_CREATE_FAILED"},{status:502});
     }
   }catch(error){

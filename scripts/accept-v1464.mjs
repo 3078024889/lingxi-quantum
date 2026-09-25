@@ -1,0 +1,13 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("app/api/pay/create/route.ts").includes("getUsdBalanceProduct"),"PayPal buys USD balance product");
+a(r("app/api/pay/create/route.ts").includes("amount_rmb:null"),"PayPal USD order does not write RMB amount");
+a(r("components/AiWalletPanel.tsx").includes("ai-usd-balance-"),"AI USD topup ids restored");
+a(r("app/checkout-usd/page.tsx").includes("到账 $"),"USD checkout credits USD at face value");
+a(r("lib/fulfill-order.ts").includes("credit_ai_usd_topup"),"AI USD fulfillment exists");
+a(r("lib/fulfill-order.ts").includes("credit_sasi_usd_topup"),"SASI USD fulfillment exists");
+a(r("lib/ai/billed-text.ts").includes("chargeCurrency"),"AI billing exposes actual settlement currency");
+a(r("app/api/knowledge/ask/route.ts").includes("chargedUsd"),"knowledge usage reports USD charge correctly");
+a(r("supabase/migrations/20260925005500_dual_currency_wallet_consumption_v1464.sql").includes("dual_currency"),"dual currency migration mirrored");
+console.log("V14.64 DUAL CURRENCY + COPY FIX=PASS");
