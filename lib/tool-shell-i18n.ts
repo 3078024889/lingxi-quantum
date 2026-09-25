@@ -1,6 +1,7 @@
 import type { LingxiLang } from "@/lib/lingxi-i18n";
 
 const COPY:Record<string,Record<LingxiLang,string>>={
+  "返回实用工具":{"zh":"返回实用工具","en":"Back to tools","ja":"ツール一覧へ戻る","ko":"도구로 돌아가기","fr":"Retour aux outils","de":"Zurück zu den Werkzeugen","es":"Volver a herramientas","pt":"Voltar às ferramentas","ar":"العودة إلى الأدوات"},
   "灵犀场 · 在线工具": {
     "zh": "灵犀场 · 在线工具",
     "en": "LINGXIFIELD · Tools",

@@ -83,7 +83,7 @@ const SIMPLE:Record<string,T>={
 export const toolCardLine=(lang:LingxiLang,slug:string,kind:keyof typeof GENERIC,fallbackZh:string,fallbackEn:string)=>{
  const special=SUMMARY[slug]?.[lang]||SIMPLE[slug]?.[lang];
  if(special)return special;
- if(lang==="zh"&&fallbackZh)return fallbackZh.replace(/浏览器本地|本地完成|本地处理|文件不上传服务器|不上传服务器|不上传灵犀场服务器|全部在浏览器本地处理|，本地完成|，本地处理|。本地处理/g,"").replace(/s{2,}/g," ").trim();
+ if(lang==="zh"&&fallbackZh)return fallbackZh.replace(/浏览器本地|本地完成|本地处理|文件不上传服务器|不上传服务器|不上传灵犀场服务器|全部在浏览器本地处理|，本地完成|，本地处理|。本地处理/g,"").replace(/\s{2,}/g," ").trim();
  if(lang==="en"&&fallbackEn)return fallbackEn.replace(/entirely in your browser|locally in your browser|locally|local only|nothing is uploaded|without uploading it/gi,"").replace(/s{2,}/g," ").trim();
  return GENERIC[kind]?.[lang]||GENERIC.utility[lang];
 };
