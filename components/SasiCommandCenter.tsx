@@ -1,196 +1,93 @@
 "use client";
 
-import { type ChangeEvent, type FormEvent, useRef, useState } from "react";
+import {type FormEvent,useState} from "react";
 import Link from "next/link";
-import { useLingxiLang } from "@/lib/lingxi-i18n";
-import { publicHubText } from "@/lib/public-hub-i18n";
-import { DOCUMENT_ACCEPT } from "@/lib/files/document-intake";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
 
-type Mode = "auto" | "drama" | "build" | "research";
-type Picked = { id: string; file: File };
+type Mode="drama"|"knowledge"|"research";
 
-const capabilityCards = [
-  { icon: "🎬", title: "AI Drama", noteZh: "漫剧、短剧与分镜创作", noteEn: "Drama, storyboards and visual production" },
-  { icon: "🎥", title: "CangXuan", noteZh: "AI 导演与镜头编排", noteEn: "AI directing and shot orchestration" },
-  { icon: "💻", title: "网站 / 应用", noteZh: "需求、代码与部署", noteEn: "Product, code and deployment" },
-  { icon: "✨", title: "AI Video", noteZh: "一键视频生成", noteEn: "One-click AI video" },
+const cards=[
+  {href:"/sasi/drama",zh:"AI短剧生成",en:"AI Drama",noteZh:"从创意、剧本、人物、分镜到成片制作。",noteEn:"From idea and script to characters, shots and delivery.",mark:"🎬"},
+  {href:"/ai-knowledge",zh:"书本 / 资料智能体",en:"Book & Document Agent",noteZh:"把书本、论文和资料变成可检索、可追溯的活智能体。",noteEn:"Turn books, papers and files into traceable agents.",mark:"▣"},
+  {href:"/ai-research",zh:"科研 SASI",en:"Research SASI",noteZh:"整理资料、追踪来源、形成研究任务与结果。",noteEn:"Organize sources into research tasks and outputs.",mark:"⌕"},
+  {href:"/sasi/connections",zh:"模型与 API",en:"Models & APIs",noteZh:"连接你自己的模型能力，密钥只在服务端加密保存。",noteEn:"Connect your own model providers with encrypted credentials.",mark:"⌁"},
+  {href:"/sasi/pricing",zh:"创作余额",en:"Creation Balance",noteZh:"查看人民币余额，并选择国内支付或 PayPal 美元支付。",noteEn:"View balance and choose domestic or PayPal USD payment.",mark:"◎"},
 ] as const;
 
-export default function SasiCommandCenter() {
-  const { lang, t } = useLingxiLang();
-  const [prompt, setPrompt] = useState("");
-  const [mode, setMode] = useState<Mode>("auto");
-  const [files, setFiles] = useState<Picked[]>([]);
-  const [notice, setNotice] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+export default function SasiCommandCenter(){
+  const{lang}=useLingxiLang();
+  const zh=lang==="zh";
+  const[mode,setMode]=useState<Mode>("drama");
+  const[prompt,setPrompt]=useState("");
 
-  const zh = lang === "zh";
-  const native = (zhText: string, enText: string) => publicHubText(lang, zhText, enText);
-
-  function addFiles(incoming:File[]) {
-    setFiles((current)=>{
-      const seen=new Set(current.map(({file})=>`${file.name}:${file.size}:${file.lastModified}`));
-      const merged=[...current];
-      for(const file of incoming){
-        const key=`${file.name}:${file.size}:${file.lastModified}`;
-        if(!seen.has(key)){
-          seen.add(key);
-          merged.push({id:crypto.randomUUID(),file});
-        }
-        if(merged.length>=50)break;
-      }
-      return merged;
-    });
+  function submit(e:FormEvent){
+    e.preventDefault();
+    const value=prompt.trim();
+    if(value)sessionStorage.setItem("sasi-intent",value);
+    const target=mode==="drama"?"/sasi/drama":mode==="knowledge"?"/ai-knowledge":"/ai-research";
+    window.location.assign(target);
   }
 
-  function change(event: ChangeEvent<HTMLInputElement>) {
-    addFiles(Array.from(event.target.files ?? []));
-    event.target.value = "";
-  }
+  return <main className="lx11-page">
+    <div className="mx-auto max-w-6xl px-6 py-14 sm:py-20">
+      <section className="max-w-3xl">
+        <p className="text-sm font-medium text-[var(--lx-faint)]">{zh?"SASI · AI 创作入口":"SASI · AI Creation"}</p>
+        <h1 className="mt-3 text-3xl font-semibold leading-tight text-[var(--lx-ink)] sm:text-4xl">
+          {zh?"把一个想法，直接推进成可以制作的任务。":"Turn one idea into work that can actually be produced."}
+        </h1>
+        <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">
+          {zh
+            ?"不把所有能力塞进一块旧式控制台。先告诉 SASI 你要做什么，再进入对应的短剧、资料智能体、科研或模型连接工作区。"
+            :"Start with what you want to make, then enter the matching drama, document-agent, research or model workspace."}
+        </p>
+      </section>
 
-  function submit(event: FormEvent) {
-    event.preventDefault();
-    const value = prompt.trim();
-
-    if (!value && !files.length) {
-      setNotice(native("先写下一个念头，或带来一份资料。","Add a thought or an attachment first."));
-      return;
-    }
-
-    if (mode === "research") {
-      sessionStorage.setItem("sasi-intent", value);
-      window.location.href = "/ai-research";
-      return;
-    }
-
-    setNotice(native("SASI 创作生产能力正在接入中，当前不会跳回旧版工作台。研究资料入口已经可用；模型/API 可从「连接」进入。","SASI production is still being integrated. This entry will not send you back to the old workspace. Research is available now; model/API setup is under Connections."));
-  }
-
-  return (
-    <main className="lx11-page lx11-sasi-page">
-      <div className="lx11-sasi-wrap">
-        <section className="lx11-sasi-intro">
-          <span>{t("sasiKicker")}</span>
-          <h1>{t("sasiTitle")}</h1>
-          <p>{t("sasiLead")}</p>
-          <div style={{ marginTop: 14 }}>
-            <span style={{
-              display:"inline-flex",alignItems:"center",gap:7,padding:"7px 12px",
-              borderRadius:999,background:"#fff4df",color:"#9a5b00",fontSize:12,fontWeight:700
-            }}>
-              🟡 {native("SASI 创作能力 · 待上线","SASI creation · Coming soon")}
-            </span>
-          </div>
-        </section>
-
-        <section className="lx11-sasi-compose">
-          <form onSubmit={submit} onDragOver={event=>event.preventDefault()} onDrop={event=>{event.preventDefault();addFiles(Array.from(event.dataTransfer.files||[]))}}>
-            <textarea
-              value={prompt}
-              onChange={(event) => setPrompt(event.target.value)}
-              placeholder={t("sasiPlaceholder")}
-              rows={5}
-            />
-
-            {files.length > 0 && (
-              <div className="lx11-sasi-files">
-                {files.map(({ id, file }) => (
-                  <div key={id}>
-                    <span>📎</span>
-                    <div>
-                      <b>{file.name}</b>
-                      <small>{Math.max(1, Math.round(file.size / 1024))} KB</small>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="lx11-sasi-compose-bottom">
-              <div className="lx11-sasi-compose-tools">
-                <input ref={inputRef} type="file" multiple accept={`${DOCUMENT_ACCEPT},audio/*,video/*,.json,.jsonl,.yaml,.yml,.xml,.html,.css,.js,.jsx,.ts,.tsx,.py,.java,.c,.cpp,.h,.hpp,.go,.rs,.zip`} className="hidden" onChange={change} />
-                <button type="button" onClick={() => inputRef.current?.click()}>📎 {t("attachment")}</button>
-                <Link href="/sasi/connections">🔌 {t("connections")}</Link>
-                <Link href="/ai-wallet">💎 {t("recharge")}</Link>
-              </div>
-              <button className="lx11-sasi-send">{t("begin")}</button>
+      <section className="mt-10 rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 sm:p-7">
+        <form onSubmit={submit}>
+          <textarea
+            value={prompt}
+            onChange={e=>setPrompt(e.target.value)}
+            rows={5}
+            placeholder={zh?"例如：把这份小说做成 20 集竖屏 AI 短剧；或把这篇论文变成可追问的研究智能体。":"Example: turn this novel into a 20-episode AI drama, or turn this paper into a research agent."}
+            className="w-full resize-none bg-transparent text-sm leading-7 text-[var(--lx-ink)] outline-none placeholder:text-[var(--lx-faint)]"
+          />
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--lx-line)] pt-5">
+            <div className="flex flex-wrap gap-2">
+              {([
+                ["drama",zh?"AI短剧":"AI Drama"],
+                ["knowledge",zh?"资料智能体":"Document Agent"],
+                ["research",zh?"科研":"Research"],
+              ] as const).map(([id,label])=><button
+                type="button"
+                key={id}
+                onClick={()=>setMode(id)}
+                className={`rounded-full border px-4 py-2 text-sm ${mode===id?"border-[var(--lx-line-strong)] bg-[var(--lx-soft)] text-[var(--lx-ink)]":"border-[var(--lx-line)] text-[var(--lx-muted)]"}`}
+              >{label}</button>)}
             </div>
-            <p className="mt-3 text-xs leading-5 text-slate-500">
-              {native(
-                "支持一次拖入最多 50 份资料：PDF、DOC/DOCX、XLS/XLSX、CSV/TSV、ODS、RTF、TXT/Markdown、图片、音视频、代码与压缩包。进入具体工作区后，会按该能力真正可解析的格式处理。",
-                "Drop up to 50 files at once: PDF, DOC/DOCX, XLS/XLSX, CSV/TSV, ODS, RTF, TXT/Markdown, images, media, code and archives. Each workspace processes only formats it can actually read."
-              )}
-            </p>
-          </form>
-
-          <div className="lx11-sasi-modes">
-            {([
-              ["auto", t("auto")],
-              ["drama", t("visual")],
-              ["build", t("webapp")],
-              ["research", t("researchMode")],
-            ] as const).map(([value, label]) => (
-              <button key={value} onClick={() => setMode(value)} className={mode === value ? "is-active" : ""}>
-                {label}
-              </button>
-            ))}
+            <button className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-semibold text-[var(--lx-bg)]">
+              {zh?"进入工作区 →":"Open workspace →"}
+            </button>
           </div>
+        </form>
+      </section>
 
-          {notice && <p className="lx11-sasi-notice">{notice}</p>}
-        </section>
-
-        <section className="lx11-sasi-section">
-          <div className="lx11-sasi-section-head">
-            <div>
-              <span>{t("creationEntry")}</span>
-              <h2>{t("wantResult")}</h2>
-            </div>
-            <p>{native("只保留一个公开创作台。未接好的生产能力全部收回后台。","One public creation desk only. Unfinished production flows stay backstage.")}</p>
+      <section className="mt-12">
+        <div className="flex items-end justify-between gap-4">
+          <div><p className="text-sm text-[var(--lx-faint)]">{zh?"当前入口":"Current workspaces"}</p><h2 className="mt-2 text-2xl font-semibold text-[var(--lx-ink)]">{zh?"按任务进入，不按功能堆页面。":"Enter by task, not by feature clutter."}</h2></div>
+        </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {cards.map(card=><Link key={card.href} href={card.href} className="group rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 transition hover:border-[var(--lx-line-strong)]">
+            <div className="flex items-center justify-between"><span className="text-xl">{card.mark}</span><span className="text-sm text-[var(--lx-faint)]">→</span></div>
+            <h3 className="mt-5 text-base font-semibold text-[var(--lx-ink)]">{zh?card.zh:card.en}</h3>
+            <p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{zh?card.noteZh:card.noteEn}</p>
+          </Link>)}
+          <div className="rounded-2xl border border-dashed border-[var(--lx-line)] p-5">
+            <div className="flex items-center justify-between"><span className="text-xl">⌘</span><span className="text-xs text-[var(--lx-faint)]">{zh?"继续构建":"In progress"}</span></div>
+            <h3 className="mt-5 text-base font-semibold text-[var(--lx-ink)]">{zh?"AI 网站构建":"AI Website Builder"}</h3>
+            <p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{zh?"当前正在拆出独立工作区；在没有完整代码、预览与部署闭环前，不把旧控制台继续冒充正式产品。":"A dedicated workspace is being separated from the legacy shell; it stays hidden until code, preview and deployment are real."}</p>
           </div>
-
-          <div className="lx11-sasi-ability-grid">
-            {capabilityCards.map((card) => (
-              <div className={`lx11-sasi-ability ${card.title === "AI Drama" ? "" : "is-soon"}`} key={card.title}>
-                <div>
-                  <span style={{fontSize:26}}>{card.icon}</span>
-                  <em>{card.title === "AI Drama" ? native("工作台","Workspace") : t("coming")}</em>
-                </div>
-                <h3>{card.title}</h3>
-                <p style={{fontSize:13,opacity:.62,marginTop:8}}>{native(card.noteZh,card.noteEn)}</p>
-                {card.title === "AI Drama" ? <Link href="/sasi/drama">{native("进入 AI短剧工作台 →","Open AI Drama workspace →")}</Link> : <b>{native("待上线","Coming soon")}</b>}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="lx11-sasi-lower">
-          <div className="lx11-sasi-skills">
-            <div className="lx11-sasi-section-head compact">
-              <div>
-                <span>🔬 {t("research")}</span>
-                <h2>{native("科研资料已经可以直接进入。","Research workspace is available now.")}</h2>
-              </div>
-            </div>
-            <Link href="/ai-research">{t("open")}</Link>
-          </div>
-
-          <div className="lx11-sasi-connect">
-            <span>🔌 {t("connections")}</span>
-            <h2>{t("connectTitle")}</h2>
-            <p>{native("只有真正要接模型或外部服务时才打开连接页，不再把复杂配置塞进创作主界面。","Open setup only when you actually need an external model or service.")}</p>
-            <Link href="/sasi/connections">{t("openConnect")}</Link>
-          </div>
-        </section>
-
-        <section className="lx11-sasi-balance">
-          <div>
-            <span>💎 {t("wallet")}</span>
-            <h2>{t("balanceTitle")}</h2>
-            <p>{t("balanceLead")}</p>
-          </div>
-          <Link href="/ai-wallet">{t("viewBalance")}</Link>
-        </section>
-      </div>
-    </main>
-  );
+        </div>
+      </section>
+    </div>
+  </main>;
 }

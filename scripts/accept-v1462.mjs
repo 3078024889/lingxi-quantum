@@ -1,0 +1,12 @@
+import fs from "node:fs";
+const read=p=>fs.readFileSync(p,"utf8");
+const assert=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+assert(read("app/sasi/page.tsx").includes("SasiCommandCenter"),"SASI default no longer old workspace");
+assert(read("app/sasi/page.tsx").includes('view==="billing"')&&read("app/sasi/page.tsx").includes('redirect("/sasi/pricing")'),"old billing deep link redirects to clean pricing");
+assert(read("components/AiWalletPanel.tsx").includes("PayPal · USD"),"AI balance exposes PayPal USD payment");
+assert(read("app/checkout-usd/page.tsx").includes("getProduct"),"USD checkout uses real catalog products");
+assert(read("app/api/pay/create/route.ts").includes("amount_rmb:product.priceRmb"),"PayPal credits standard CNY balance product");
+assert(!read("app/api/pay/create/route.ts").includes("USD_BALANCE_TOPUP_ENABLED"),"obsolete USD-wallet gate removed");
+assert(read("app/api/account/withdrawals/route.ts").includes("providerAmountMinor"),"withdrawal separates wallet amount from provider refund");
+assert(read("app/api/cron/withdrawal-reconcile/route.ts").includes("provider_amount_minor"),"withdrawal cron reconciles provider amount");
+console.log("V14.62 SASI SHELL + PAYPAL USD=PASS");
