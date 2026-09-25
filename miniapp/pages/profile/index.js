@@ -1,132 +1,73 @@
-const { request, switchAccount } = require('../../utils/api')
+const { login, request, switchAccount } = require('../../utils/api')
 const { initPage } = require('../../utils/i18n')
 
-function displayDate(value) {
-  if (!value) return ''
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-}
-
-function confirmOpenWebArchive() {
-  return new Promise((resolve) => {
-    wx.showModal({
-      title: '前往网页档案',
-      content: '这项历史档案保存在已连接的网页灵犀账户中。确认后将安全登录并带你前往，无需再次购买。',
-      confirmText: '打开网页',
-      cancelText: '暂不打开',
-      success: (result) => resolve(result.confirm),
-      fail: () => resolve(false),
-    })
-  })
-}
-
 Page({
-  data: { lang: 'zh', loading: true, opening: '', query: '', orders: [], unlocks: [], filteredOrders: [], filteredUnlocks: [], manifestUntil: null, archetype: { ready: false, completed: 0, missing: [] } },
-  onLoad() { initPage(this) },
-  onShow() { initPage(this); this.load() },
-  async load() {
-    this.setData({ loading: true })
+  data: {
+    lang: 'zh',
+    checking: true,
+    connected: false,
+    linking: false,
+  },
+
+  onLoad() {
+    initPage(this)
+    this.refreshIdentity()
+  },
+
+  onShow() {
+    initPage(this)
+  },
+
+  async refreshIdentity() {
+    this.setData({ checking: true })
     try {
-      const me = await request('/api/wechat/mini/me')
-      const allArchives = [...(me.archives || []), ...(me.orders || [])]
-      const seen = new Set()
-      const orders = allArchives.filter((item) => {
-        const key = `${item.product_id}:${item.submission_id || item.id}`
-        if (seen.has(key)) return false
-        seen.add(key); return true
-      }).map((item) => ({ ...item, paidLabel: displayDate(item.paid_at || item.created_at) }))
-      const orderedIds = new Set(orders.map((item) => item.product_id))
-      const unlocks = (me.unlocks || [])
-        .filter((item) => !orderedIds.has(item.product_id))
-        .map((item) => ({ ...item, expiryLabel: item.expires_at ? `有效至 ${displayDate(item.expires_at)}` : '长期有效' }))
-      this.setData({ orders, unlocks, manifestUntil: me.manifestUntil, archetype: me.archetype, query: '' })
-      this.applyFilter('')
+      await login()
+      this.setData({ connected: true })
     } catch (error) {
-      this.setData({ archetype: { ready: false, completed: 0, missing: [] } })
-      wx.showToast({ title: (error.data && error.data.error) || '登录状态未就绪', icon: 'none' })
+      this.setData({ connected: false })
+      console.warn('[mini identity unavailable]', { statusCode: error && error.statusCode })
     } finally {
-      this.setData({ loading: false })
+      this.setData({ checking: false })
     }
   },
-  applyFilter(query) {
-    const needle = (query || '').trim().toLowerCase()
-    const matches = (item) => !needle || `${item.productName || ''} ${item.submission_name || ''} ${item.product_id || ''}`.toLowerCase().includes(needle)
-    this.setData({ query, filteredOrders: this.data.orders.filter(matches), filteredUnlocks: this.data.unlocks.filter(matches) })
-  },
-  onSearch(event) { this.applyFilter(event.detail.value) },
-  clearSearch() { this.applyFilter('') },
-  manifestation() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/live-as')}` }) },
-  explore() { wx.switchTab({ url: '/pages/explore/index' }) },
-  free() { wx.switchTab({ url: '/pages/free/index' }) },
-  openArchetypeProgress() { wx.navigateTo({ url: '/pages/archetype-progress/index' }) },
-  website() { wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent('/')}` }) },
-  openPolicy(event) {
+
+  openWeb(event) {
     const path = event.currentTarget.dataset.path
-    if (path) wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(path)}` })
+    if (!path) return
+    wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(path)}` })
   },
+
   async connectExistingAccount() {
+    if (this.data.linking) return
+    this.setData({ linking: true })
+    wx.showLoading({ title: '正在准备连接' })
     try {
-      wx.showLoading({ title: '正在准备安全连接' })
       const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
       wx.hideLoading()
       wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
     } catch (error) {
       wx.hideLoading()
-      wx.showModal({ title: '暂时无法连接账户', content: (error.data && error.data.error) || '请稍后重试', showCancel: false })
-    }
-  },
-  switchAccount() {
-    wx.showModal({
-      title: this.data.lang === 'en' ? 'Switch account' : '切换账户',
-      content: this.data.lang === 'en' ? 'This clears the local session and signs in again with the WeChat identity currently active on this device. Existing reports will not be deleted.' : '这会清除本机登录会话，并使用当前设备正在使用的微信身份重新登录。既有报告不会被删除。',
-      confirmText: this.data.lang === 'en' ? 'Switch' : '确认切换',
-      success: async ({ confirm }) => {
-        if (!confirm) return
-        wx.showLoading({ title: this.data.lang === 'en' ? 'Switching' : '正在切换' })
-        try { await switchAccount(); await this.load(); wx.showToast({ title: this.data.lang === 'en' ? 'Switched' : '已重新登录', icon: 'success' }) }
-        catch (_) { wx.showModal({ title: this.data.lang === 'en' ? 'Unable to switch' : '切换失败', content: this.data.lang === 'en' ? 'Please switch the WeChat identity in Developer Tools or WeChat, then try again.' : '请先在开发者工具或微信中切换微信身份，再重试。', showCancel: false }) }
-        finally { wx.hideLoading() }
-      },
-    })
-  },
-  async openOrder(event) {
-    const order = event.currentTarget.dataset.order
-    if (!order) return
-    this.setData({ opening: order.id })
-    try {
-      if (order.webOnly && !(await confirmOpenWebArchive())) return
-      const result = order.assessment
-        ? await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: order.product_id, submissionId: order.submission_id } })
-        : order.submission_id
-        ? await request('/api/wechat/mini/report-link', { method: 'POST', data: { orderId: order.id } })
-        : await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: order.product_id } })
-      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
-    } catch (error) {
-      wx.showModal({ title: '内容暂未打开', content: (error.data && error.data.error) || '权益正在同步，请稍后再试', showCancel: false })
+      wx.showModal({
+        title: '暂时无法连接',
+        content: (error && error.data && error.data.error) || '请稍后再试',
+        showCancel: false,
+      })
     } finally {
-      this.setData({ opening: '' })
+      this.setData({ linking: false })
     }
   },
-  async openUnlock(event) {
-    const unlock = event.currentTarget.dataset.unlock
-    if (!unlock) return
-    this.setData({ opening: unlock.product_id })
+
+  async relogin() {
+    wx.showLoading({ title: '正在重新连接' })
     try {
-      if (unlock.webOnly && !(await confirmOpenWebArchive())) return
-      const result = await request('/api/wechat/mini/content-link', { method: 'POST', data: { productId: unlock.product_id } })
-      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+      await switchAccount()
+      this.setData({ connected: true })
+      wx.showToast({ title: '已重新连接', icon: 'success' })
     } catch (error) {
-      wx.showModal({ title: '内容暂未打开', content: (error.data && error.data.error) || '权益正在同步，请稍后再试', showCancel: false })
+      this.setData({ connected: false })
+      wx.showToast({ title: '暂未连接', icon: 'none' })
     } finally {
-      this.setData({ opening: '' })
-    }
-  },
-  onShareAppMessage() {
-    return {
-      title: '灵犀场 · 步入你的意识场域',
-      path: '/pages/field/index',
-      imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
+      wx.hideLoading()
     }
   },
 })

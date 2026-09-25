@@ -1,77 +1,65 @@
 <view class="lx-page">
-  <field-nav/>
-  <view class="lx-content">
-    <view class="lx-kicker">MY FIELD</view>
-    <view class="lx-title">我的场域</view>
-    <view class="lx-subtitle">你的探索记录，都将在这里延续。<br/>每一次观测、觉察与变化，<br/>都将沉淀为专属于你的生命档案。<text class="profile-en">Your observations, reflections and changes continue here as a living personal archive.</text></view>
+  <view class="lx-shell">
+    <view class="lx-brand">
+      <view class="lx-brand-name">灵犀场</view>
+      <view class="lx-brand-en">ACCOUNT</view>
+    </view>
 
-    <view wx:if="{{loading}}" class="lx-loading">正在同步权益…</view>
-    <block wx:else>
-      <view wx:if="{{archetype}}" class="archetype-progress lx-veil" bindtap="openArchetypeProgress">
-        <view class="lx-kicker">FIELD 09 · CONVERGENCE</view>
-        <view class="lx-card-title">生命原型 · 八流归一</view>
-        <view wx:if="{{archetype.ready}}" class="lx-card-note">八条生命支流已经汇聚。系统读取的不是八份结果的叠加，而是跨域增强、承接差与现实入口；完整报告已自动保存到下方生命档案。</view>
-        <view wx:else class="lx-card-note">已完成并解锁 {{archetype.completed}} / 8 条生命支流。自第一条完成之日起 365 天内让八流全部抵达，生命原型将自动生成，无需另行购买。</view>
-        <view class="arrow">查看八流详细进度 →</view>
+    <view class="lx-kicker">YOUR LINGXIFIELD</view>
+    <view class="lx-title">我的</view>
+    <view class="lx-subtitle">账户、订单、余额与正在进行的项目，都从这里继续。</view>
+
+    <view class="lx-feature">
+      <view class="lx-status">
+        <view class="lx-status-dot {{connected ? 'ready' : ''}}"></view>
+        <text wx:if="{{checking}}">正在确认微信身份…</text>
+        <text wx:elif="{{connected}}">微信身份已连接</text>
+        <text wx:else>微信身份暂未连接</text>
       </view>
-      <button class="manifest-entry lx-veil" bindtap="manifestation">
-        <view class="manifest-kicker">CORE FIELD · 意识显化</view>
-        <view class="manifest-title">进入意识显化</view>
-        <view class="manifest-note">让观测成为创造，让内在选择进入现实。</view>
-        <view class="manifest-action">进入核心场域 →</view>
-      </button>
+      <button wx:if="{{!connected && !checking}}" class="lx-button secondary" bindtap="relogin">重新连接</button>
+    </view>
 
-      <view class="archive-tools lx-veil">
-        <input value="{{query}}" placeholder="{{lang === 'en' ? 'Search reports and access' : '搜索报告与权益'}}" bindinput="onSearch"/>
-        <view wx:if="{{query}}" class="clear-search" bindtap="clearSearch">清除</view>
-      </view>
-
-      <view class="quick-links">
-        <button class="quick-link" bindtap="explore">探索场域精测</button>
-        <button class="quick-link" bindtap="free">{{lang === 'en' ? 'Practices FREE' : '修炼技术 FREE'}}</button>
-        <button class="quick-link" bindtap="website">进入灵犀场官网</button>
-      </view>
-
-      <view class="lx-section">
-        <view class="lx-section-title">生命档案与已开启内容<text class="section-en">LIFE ARCHIVES & OPEN FIELDS</text></view>
-        <view wx:if="{{!filteredOrders.length}}" class="lx-empty lx-veil">{{lang === 'en' ? 'No report found. Continue with Field Insights or free exploration.' : '尚未找到报告。可前往场域精测或免费探索继续。'}}</view>
-        <view wx:for="{{filteredOrders}}" wx:key="id" class="lx-card lx-veil order" data-order="{{item}}" bindtap="openOrder">
-          <view class="lx-card-title">{{item.submission_name || item.productName}}</view>
-          <view class="lx-card-note">{{item.webOnly ? '网页历史档案' : '权益已开启'}} · {{item.paidLabel}}</view>
-          <view class="arrow">{{opening === item.id ? '正在安全打开…' : item.webOnly ? '前往网页档案 →' : item.submission_id ? '打开完整档案 →' : '继续阅读 / 进入 →'}}</view>
+    <view class="lx-section">
+      <view class="lx-list">
+        <view class="lx-row" data-path="/account" bindtap="openWeb">
+          <view class="lx-row-main">
+            <view class="lx-row-title">工作区与账户</view>
+            <view class="lx-row-note">继续查看项目、账户信息与使用记录。</view>
+          </view>
+          <view class="lx-arrow">›</view>
+        </view>
+        <view class="lx-row" data-path="/account/orders" bindtap="openWeb">
+          <view class="lx-row-main">
+            <view class="lx-row-title">订单与记录</view>
+            <view class="lx-row-note">查看支付、服务交付与历史使用记录。</view>
+          </view>
+          <view class="lx-arrow">›</view>
+        </view>
+        <view class="lx-row" data-path="/ai-wallet" bindtap="openWeb">
+          <view class="lx-row-main">
+            <view class="lx-row-title">AI 余额与额度</view>
+            <view class="lx-row-note">查看余额、额度与 AI 使用情况。</view>
+          </view>
+          <view class="lx-arrow">›</view>
         </view>
       </view>
+    </view>
 
-      <view class="lx-section">
-        <view class="lx-section-title">长期与订阅权益<text class="section-en">LONG-TERM ACCESS</text></view>
-        <view wx:if="{{!filteredUnlocks.length}}" class="lx-card lx-veil"><view class="lx-card-note">目前没有单独的订阅权益。</view></view>
-        <view wx:for="{{filteredUnlocks}}" wx:key="product_id" class="benefit lx-veil" data-unlock="{{item}}" bindtap="openUnlock">
-          <view>{{item.productName || item.product_id}}</view>
-          <view class="benefit-date">{{opening === item.product_id ? '正在安全打开…' : item.webOnly ? item.expiryLabel + ' · 前往网页档案 →' : item.expiryLabel + ' · 打开 →'}}</view>
-        </view>
-      </view>
+    <view class="lx-feature">
+      <view class="lx-feature-title">已有网页灵犀场账户？</view>
+      <view class="lx-feature-note">由你主动确认后再连接，不自动猜测、合并或迁移身份。</view>
+      <button class="lx-button" loading="{{linking}}" bindtap="connectExistingAccount">连接已有账户</button>
+    </view>
 
-      <view class="lx-section">
-        <view class="lx-section-title">账号连接<text class="section-en">ACCOUNT CONNECTION</text></view>
-        <view class="lx-card lx-veil">
-          <view class="lx-card-note">已有网页灵犀账户或已购报告？登录后确认连接，即可迁入既有权益与报告；系统不会自动猜测或合并身份。</view>
-          <button class="lx-button compact" bindtap="connectExistingAccount">连接已有灵犀账户</button>
-          <button class="lx-button compact secondary" bindtap="switchAccount">{{lang === 'en' ? 'Switch account' : '切换账户'}}</button>
-        </view>
+    <view class="lx-section">
+      <view class="lx-list">
+        <view class="lx-row" data-path="/privacy" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">隐私政策</view></view><view class="lx-arrow">›</view></view>
+        <view class="lx-row" data-path="/terms" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">服务条款</view></view><view class="lx-arrow">›</view></view>
+        <view class="lx-row" data-path="/refunds" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">退款政策</view></view><view class="lx-arrow">›</view></view>
       </view>
+    </view>
 
-      <view class="lx-section">
-        <view class="lx-section-title">规则与支持<text class="section-en">POLICIES & SUPPORT</text></view>
-        <view class="support-list lx-veil">
-          <view class="support-link" data-path="/terms" bindtap="openPolicy"><text>服务条款</text><text class="support-arrow">›</text></view>
-          <view class="support-link" data-path="/refunds" bindtap="openPolicy"><text>退款政策</text><text class="support-arrow">›</text></view>
-          <view class="support-link" data-path="/privacy" bindtap="openPolicy"><text>隐私政策</text><text class="support-arrow">›</text></view>
-          <view class="support-link" data-path="/declaration" bindtap="openPolicy"><text>系统声明</text><text class="support-arrow">›</text></view>
-          <view class="support-link" data-path="/about" bindtap="openPolicy"><text>关于灵犀场</text><text class="support-arrow">›</text></view>
-        </view>
-        <button class="support-contact" open-type="contact">联系微信客服</button>
-        <view class="support-note">支付、权益同步或内容交付遇到问题，可直接联系微信客服。规则内容与灵犀场官网保持一致。</view>
-      </view>
-    </block>
+    <button class="lx-button secondary" open-type="contact">联系微信客服</button>
+    <view class="lx-support">支付、账户连接或内容交付遇到问题，可直接联系微信客服。</view>
   </view>
 </view>

@@ -5,9 +5,16 @@ function getLanguage() {
 }
 
 function applyTabBar(lang = getLanguage()) {
-  const labels = lang === 'en' ? ['Field', 'Insights', 'Free', 'My Field'] : ['灵犀场', '场域精测', '免费探索', '我的']
+  const labels = lang === 'en'
+    ? ['SASI', 'Tools', 'Agents', 'Me']
+    : ['SASI创作', '实用工具', '资料Agent', '我的']
+
   labels.forEach((text, index) => {
-    try { wx.setTabBarItem({ index, text }) } catch (_) {}
+    try {
+      wx.setTabBarItem({ index, text })
+    } catch (error) {
+      console.warn('[tab bar label unavailable]', { index, text, message: error && error.errMsg })
+    }
   })
 }
 

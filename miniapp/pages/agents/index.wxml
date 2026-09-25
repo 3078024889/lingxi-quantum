@@ -1,0 +1,24 @@
+<view class="lx-page">
+  <view class="lx-shell">
+    <view class="lx-brand">
+      <view class="lx-brand-name">灵犀场</view>
+      <view class="lx-brand-en">KNOWLEDGE AGENTS</view>
+    </view>
+
+    <view class="lx-kicker">SOURCE-GROUNDED</view>
+    <view class="lx-title">让资料不再只是静态文件。</view>
+    <view class="lx-subtitle">从原文出发建立可检索、可引用、能持续工作的知识 Agent。回答与任务都尽量回到来源。</view>
+
+    <view class="lx-section">
+      <view class="lx-list">
+        <view wx:for="{{agents}}" wx:key="path" class="lx-row" data-index="{{index}}" bindtap="open">
+          <view class="lx-row-main">
+            <view class="lx-row-title">{{item.title}}</view>
+            <view class="lx-row-note">{{item.note}}</view>
+          </view>
+          <view class="lx-arrow">›</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

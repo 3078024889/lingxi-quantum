@@ -1,0 +1,35 @@
+<view class="lx-page">
+  <view class="lx-shell">
+    <view class="lx-brand">
+      <view class="lx-brand-name">灵犀场</view>
+      <view class="lx-brand-en">LINGXIFIELD</view>
+    </view>
+
+    <view class="lx-kicker">CREATE WITH SASI</view>
+    <view class="lx-title">一键创造，一念即达。</view>
+    <view class="lx-subtitle">从一个还没理清的念头开始，让目标被理解，让制作继续发生，让结果真正落地。</view>
+
+    <view class="lx-section">
+      <view class="lx-section-head">
+        <view class="lx-section-title">现在开始</view>
+        <view class="lx-section-note">选择你要完成的事</view>
+      </view>
+      <view class="lx-list">
+        <view wx:for="{{entries}}" wx:key="title" class="lx-row" data-index="{{index}}" bindtap="open">
+          <view class="lx-row-main">
+            <view class="lx-row-title">{{item.title}}</view>
+            <view class="lx-row-note">{{item.note}}</view>
+          </view>
+          <view class="lx-arrow">›</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="lx-feature">
+      <view class="lx-kicker">MODELS & CONNECTIONS</view>
+      <view class="lx-feature-title">连接你要使用的模型</view>
+      <view class="lx-feature-note">进入模型与 BYOK 连接中心。密钥只用于你主动发起的任务。</view>
+      <button class="lx-button secondary" bindtap="openConnections">打开连接中心</button>
+    </view>
+  </view>
+</view>

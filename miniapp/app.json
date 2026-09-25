@@ -1,30 +1,38 @@
 {
   "pages": [
-    "pages/field/index",
-    "pages/explore/index",
-    "pages/free/index",
+    "pages/create/index",
+    "pages/tools/index",
+    "pages/agents/index",
     "pages/profile/index",
-    "pages/archetype-progress/index",
-    "pages/assessment/index",
-    "pages/product/index",
-    "pages/web/index",
-    "pages/pdf/index"
+    "pages/web/index"
   ],
   "window": {
     "navigationStyle": "custom",
-    "backgroundColor": "#111a3a",
-    "backgroundTextStyle": "light"
+    "backgroundColor": "#f4f3ef",
+    "backgroundTextStyle": "dark"
   },
   "tabBar": {
-    "color": "#8d91ae",
-    "selectedColor": "#76dfd2",
-    "backgroundColor": "#101936",
-    "borderStyle": "black",
+    "color": "#73736c",
+    "selectedColor": "#11110f",
+    "backgroundColor": "#fbfbf8",
+    "borderStyle": "white",
     "list": [
-      { "pagePath": "pages/field/index", "text": "灵犀场" },
-      { "pagePath": "pages/explore/index", "text": "场域精测" },
-      { "pagePath": "pages/free/index", "text": "修炼技术" },
-      { "pagePath": "pages/profile/index", "text": "我的" }
+      {
+        "pagePath": "pages/create/index",
+        "text": "SASI创作"
+      },
+      {
+        "pagePath": "pages/tools/index",
+        "text": "实用工具"
+      },
+      {
+        "pagePath": "pages/agents/index",
+        "text": "资料Agent"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的"
+      }
     ]
   },
   "sitemapLocation": "sitemap.json",

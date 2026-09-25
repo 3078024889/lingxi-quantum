@@ -14,9 +14,7 @@ export type MiniCatalogItem = {
   category: "report" | "practice" | "membership" | "narrative";
   note: string;
   noteEn: string;
-  /** Public web product route. Report entry pages stay the single source of truth across web and Mini Program. */
   webPath?: string;
-  /** Server-delivered intake hint. Native clients need no upload for copy/flow changes. */
   assessmentKind?: "life-map" | "relationship" | "daily-tide" | "birth" | "resilience" | "romance" | "wealth" | "archetype";
   assessmentIntro?: string;
   assessmentDescription?: string;
@@ -81,27 +79,65 @@ const REPORT_WEB_PATHS: Record<string, string> = {
   "wealth-report": "/wealth",
   "life-archetype": "/archetype",
 };
+
 const PRACTICE_IDS = new Set(["breath", "intuition", "heart-reset", "ascending-heart"]);
 const MEMBERSHIP_IDS = new Set(["day", "month", "year", "narrative-all", "everything"]);
 const UNAVAILABLE_NARRATIVE_IDS = new Set(
   NARRATIVES.filter((item) => item.status === "soon").map((item) => item.slug)
 );
 
+/**
+ * Native Mini Program commerce is intentionally fail-closed while the Mini Program
+ * is being moved from retired product lines to the current SASI / tools / Agent catalog.
+ *
+ * New current-product SKUs must be explicitly added here only after:
+ * 1) the WeChat product is created and published,
+ * 2) server pricing is configured,
+ * 3) callback fulfillment is verified,
+ * 4) Android/iOS payment acceptance is tested.
+ *
+ * Keeping this set empty prevents crafted requests from purchasing retired products
+ * that are no longer visible in the current Mini Program UI.
+ */
+const CURRENT_MINI_NATIVE_PURCHASE_IDS = new Set<string>([]);
+
 const ASSESSMENT_KIND: Record<string, NonNullable<MiniCatalogItem["assessmentKind"]>> = {
-  "life-map-report": "life-map", "relationship-resonance": "relationship", "daily-tide-report": "daily-tide",
-  "qian-reading": "birth", "tarot-reading": "birth", "resilience-report": "resilience",
-  "romance-report": "romance", "wealth-report": "wealth", "life-archetype": "archetype",
+  "life-map-report": "life-map",
+  "relationship-resonance": "relationship",
+  "daily-tide-report": "daily-tide",
+  "qian-reading": "birth",
+  "tarot-reading": "birth",
+  "resilience-report": "resilience",
+  "romance-report": "romance",
+  "wealth-report": "wealth",
+  "life-archetype": "archetype",
 };
 
-const REPORT_INTAKE = Object.fromEntries(Object.entries(FIELD_PRODUCT_COPY).map(([productId, copy]) => [productId, {
-  assessmentKind: ASSESSMENT_KIND[productId],
-  assessmentIntro: copy.overviewZh.join("\n\n"),
-  assessmentDescription: copy.cardDefinitionZh,
-  assessmentCta: copy.ctaZh,
-  knowledgeNodes: copy.keywordsZh,
-}])) as Record<string, Pick<MiniCatalogItem, "assessmentKind" | "assessmentIntro" | "assessmentDescription" | "assessmentCta" | "knowledgeNodes">>;
+const REPORT_INTAKE = Object.fromEntries(
+  Object.entries(FIELD_PRODUCT_COPY).map(([productId, copy]) => [
+    productId,
+    {
+      assessmentKind: ASSESSMENT_KIND[productId],
+      assessmentIntro: copy.overviewZh.join("\n\n"),
+      assessmentDescription: copy.cardDefinitionZh,
+      assessmentCta: copy.ctaZh,
+      knowledgeNodes: copy.keywordsZh,
+    },
+  ])
+) as Record<
+  string,
+  Pick<
+    MiniCatalogItem,
+    "assessmentKind" | "assessmentIntro" | "assessmentDescription" | "assessmentCta" | "knowledgeNodes"
+  >
+>;
 
-const REPORT_DISPLAY_NAMES = Object.fromEntries(Object.entries(FIELD_PRODUCT_COPY).map(([productId, copy]) => [productId, { zh: copy.nameZh, en: copy.nameEn }])) as Record<string, { zh: string; en: string }>;
+const REPORT_DISPLAY_NAMES = Object.fromEntries(
+  Object.entries(FIELD_PRODUCT_COPY).map(([productId, copy]) => [
+    productId,
+    { zh: copy.nameZh, en: copy.nameEn },
+  ])
+) as Record<string, { zh: string; en: string }>;
 
 function categoryFor(productId: string): MiniCatalogItem["category"] {
   if (REPORT_IDS.has(productId)) return "report";
@@ -110,10 +146,8 @@ function categoryFor(productId: string): MiniCatalogItem["category"] {
   return "narrative";
 }
 
-// 微信道具 ID 仅允许英文字母、数字、下划线且最长 20 位。
-// 叙事按价格共用道具；具体交付对象由已校验的 productId 与服务端订单绑定。
-// 这样新增文章无需为每篇内容重复创建微信道具，同时不会混淆用户权益。
 export function miniSkuForProduct(productId: string): string {
+  if (!CURRENT_MINI_NATIVE_PURCHASE_IDS.has(productId)) return "";
   if (productId === "life-archetype") return "";
   const fixed = FIXED_SKUS[productId];
   if (fixed) return fixed;
@@ -123,40 +157,51 @@ export function miniSkuForProduct(productId: string): string {
 }
 
 export function productForMiniPurchase(skuId: string, productId: string): Product | undefined {
+  if (!CURRENT_MINI_NATIVE_PURCHASE_IDS.has(productId)) return undefined;
   const product = getProduct(productId);
   if (!product || UNAVAILABLE_NARRATIVE_IDS.has(productId)) return undefined;
   return miniSkuForProduct(product.id) === skuId ? product : undefined;
 }
 
 export function getMiniCatalog(): MiniCatalogItem[] {
-  return allProducts.filter((product) => !UNAVAILABLE_NARRATIVE_IDS.has(product.id)).map((product) => {
-    const membershipContent = MEMBERSHIP_CONTENT[product.id];
-    return ({
-    skuId: miniSkuForProduct(product.id),
-    productId: product.id,
-    name: REPORT_DISPLAY_NAMES[product.id]?.zh ?? product.name,
-    nameEn: REPORT_DISPLAY_NAMES[product.id]?.en ?? product.nameEn,
-    priceFen: Math.round(product.priceRmb * 100),
-    accessType: product.type,
-    days: product.days ?? null,
-    category: categoryFor(product.id),
-    webPath: REPORT_WEB_PATHS[product.id],
-    note: membershipContent?.description ?? (categoryFor(product.id) === "narrative" ? getNarrative(product.id)?.teaser ?? product.note : product.note),
-    noteEn: membershipContent?.descriptionEn ?? product.noteEn,
-    detailDescription: membershipContent?.description,
-    detailDescriptionEn: membershipContent?.descriptionEn,
-    benefits: membershipContent?.benefits,
-    closing: membershipContent?.closing,
-    closingEn: membershipContent?.closingEn,
-    cta: membershipContent?.cta,
-    ctaEn: membershipContent?.ctaEn,
-    field: FIELD_PRODUCT_COPY[product.id]?.field,
-    fieldLayer: FIELD_PRODUCT_COPY[product.id]?.layer,
-    autoGenerated: product.id === "life-archetype",
-    assessmentDescriptionEn: FIELD_PRODUCT_COPY[product.id]?.cardDefinitionEn,
-    assessmentCtaEn: FIELD_PRODUCT_COPY[product.id]?.ctaEn,
-    knowledgeNodesEn: FIELD_PRODUCT_COPY[product.id]?.keywordsEn,
-    ...REPORT_INTAKE[product.id],
+  return allProducts
+    .filter(
+      (product) =>
+        CURRENT_MINI_NATIVE_PURCHASE_IDS.has(product.id) &&
+        !UNAVAILABLE_NARRATIVE_IDS.has(product.id)
+    )
+    .map((product) => {
+      const membershipContent = MEMBERSHIP_CONTENT[product.id];
+      return {
+        skuId: miniSkuForProduct(product.id),
+        productId: product.id,
+        name: REPORT_DISPLAY_NAMES[product.id]?.zh ?? product.name,
+        nameEn: REPORT_DISPLAY_NAMES[product.id]?.en ?? product.nameEn,
+        priceFen: Math.round(product.priceRmb * 100),
+        accessType: product.type,
+        days: product.days ?? null,
+        category: categoryFor(product.id),
+        webPath: REPORT_WEB_PATHS[product.id],
+        note:
+          membershipContent?.description ??
+          (categoryFor(product.id) === "narrative"
+            ? getNarrative(product.id)?.teaser ?? product.note
+            : product.note),
+        noteEn: membershipContent?.descriptionEn ?? product.noteEn,
+        detailDescription: membershipContent?.description,
+        detailDescriptionEn: membershipContent?.descriptionEn,
+        benefits: membershipContent?.benefits,
+        closing: membershipContent?.closing,
+        closingEn: membershipContent?.closingEn,
+        cta: membershipContent?.cta,
+        ctaEn: membershipContent?.ctaEn,
+        field: FIELD_PRODUCT_COPY[product.id]?.field,
+        fieldLayer: FIELD_PRODUCT_COPY[product.id]?.layer,
+        autoGenerated: product.id === "life-archetype",
+        assessmentDescriptionEn: FIELD_PRODUCT_COPY[product.id]?.cardDefinitionEn,
+        assessmentCtaEn: FIELD_PRODUCT_COPY[product.id]?.ctaEn,
+        knowledgeNodesEn: FIELD_PRODUCT_COPY[product.id]?.keywordsEn,
+        ...REPORT_INTAKE[product.id],
+      };
     });
-  });
 }

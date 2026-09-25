@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "保存 PDF",
-  "usingComponents": {
-    "field-nav": "/components/field-nav/index"
-  }
-}

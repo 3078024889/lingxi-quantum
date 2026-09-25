@@ -1,5 +1,44 @@
 const { API_BASE } = require('../../utils/api')
 
+const EXACT_ALLOWED = new Set([
+  '/',
+  '/sasi',
+  '/sasi/drama',
+  '/sasi/connections',
+  '/tools',
+  '/ai-knowledge',
+  '/ai-learning',
+  '/ai-research',
+  '/account',
+  '/account/orders',
+  '/ai-wallet',
+  '/privacy',
+  '/terms',
+  '/refunds',
+])
+
+const PREFIX_ALLOWED = [
+  '/tools/',
+  '/api/wechat/mini/account-link/',
+  '/api/wechat/mini/content-open',
+  '/api/wechat/mini/report-open',
+  '/api/wechat/mini/pdf-download',
+]
+
+function normalizeMiniPath(input) {
+  if (typeof input !== 'string' || !input.startsWith('/') || input.startsWith('//')) return ''
+  let parsed
+  try {
+    parsed = new URL(input, API_BASE)
+  } catch (_) {
+    return ''
+  }
+  if (parsed.origin !== API_BASE) return ''
+  const pathname = parsed.pathname
+  if (!EXACT_ALLOWED.has(pathname) && !PREFIX_ALLOWED.some((prefix) => pathname.startsWith(prefix))) return ''
+  return `${pathname}${parsed.search}${parsed.hash}`
+}
+
 function withMiniContext(path) {
   const hashAt = path.indexOf('#')
   const route = hashAt >= 0 ? path.slice(0, hashAt) : path
@@ -8,40 +47,33 @@ function withMiniContext(path) {
   return `${API_BASE}${route}${separator}mini=1${hash}`
 }
 
-// 常见入口的分享文案，命中就用更贴切的标题；其余路径兜底成通用文案。
-// —— 这里是修复"无法转发/无法分享/无法复制链接"的关键 ——
-// <web-view> 内嵌的网页自己决定不了分享内容，分享参数只能由承载它的
-// 这个原生页面提供。微信的规则是：只要一个页面含有 <web-view> 组件，
-// 就必须由该原生页面显式实现 onShareAppMessage（转发给好友/群）和
-// onShareTimeline（分享到朋友圈），否则微信会判定"这个页面不可分享"，
-// 转发、朋友圈、复制链接三个入口会被系统整体置灰——这正是截图里的现象，
-// 和页面里加载的具体网页内容无关，之前这个文件里完全没有这两个方法。
 const SHARE_TITLES = {
-  '/': '灵犀场 · 步入你的意识场域',
-  '/live-as': '灵犀场 · 意识显化',
-  '/sasi': '灵犀场 SASI · AI 创作工作台',
-  '/#gates': '灵犀场 · 重塑潜意识',
-  '/life-map': '生命图谱 · 照见你的生命结构',
-  '/relationship': '关系共振 · 照见两个生命的交汇',
-  '/resilience': '生命韧性指数 · 看见生命如何接住自己',
-  '/romance': '桃花磁场指数 · 连接真实的吸引频率',
-  '/wealth': '财富创造地图 · 照见你与丰盛对齐的方式',
-  '/daily': '灵犀场 · 今日潮汐',
-  '/mirror': '灵犀量子生命镜像 · 三重镜像',
-  '/qian': '灵犀生命灵签 · 意识坐标读取',
+  '/': '灵犀场 · 一键创造，一念即达',
+  '/sasi': '灵犀场 SASI · AI 创作',
+  '/sasi/drama': '灵犀场 · AI 短剧',
+  '/tools': '灵犀场 · 实用工具',
+  '/ai-knowledge': '灵犀场 · 资料变成活的 Agent',
+  '/ai-learning': '灵犀场 · 学习 SASI',
+  '/ai-research': '灵犀场 · 科研 SASI',
 }
 
 function shareTitleFor(path) {
-  return SHARE_TITLES[path] || '灵犀场 · 观测 · 觉察 · 连接'
+  return SHARE_TITLES[path] || '灵犀场 LINGXIFIELD'
 }
 
 Page({
   data: { src: '', path: '/' },
+
   onLoad(options) {
-    const path = decodeURIComponent(options.path || '/')
-    if (!path.startsWith('/') || path.startsWith('//')) return
+    const decoded = decodeURIComponent(options.path || '/')
+    const path = normalizeMiniPath(decoded)
+    if (!path) {
+      wx.showToast({ title: '这个入口暂不支持在小程序打开', icon: 'none' })
+      return
+    }
     this.setData({ src: withMiniContext(path), path })
   },
+
   onShareAppMessage() {
     return {
       title: shareTitleFor(this.data.path),
@@ -49,6 +81,7 @@ Page({
       imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
     }
   },
+
   onShareTimeline() {
     return {
       title: shareTitleFor(this.data.path),

@@ -1,4 +1,5 @@
 const API_BASE = 'https://lingxifield.cn'
+const REQUEST_TIMEOUT = 15000
 
 function wxLogin() {
   return new Promise((resolve, reject) => wx.login({ success: resolve, fail: reject }))
@@ -6,37 +7,55 @@ function wxLogin() {
 
 function rawRequest(options) {
   return new Promise((resolve, reject) => wx.request({
+    timeout: REQUEST_TIMEOUT,
     ...options,
     success(res) {
-      if (res.statusCode >= 200 && res.statusCode < 300) resolve(res.data)
-      else reject({ statusCode: res.statusCode, data: res.data })
+      if (res.statusCode >= 200 && res.statusCode < 300) return resolve(res.data)
+      reject({ statusCode: res.statusCode, data: res.data })
     },
     fail: reject,
   }))
+}
+
+function assertMiniApiPath(path) {
+  if (typeof path !== 'string' || !path.startsWith('/api/wechat/mini/')) {
+    throw new Error('Invalid Mini Program API path')
+  }
 }
 
 async function login(force = false) {
   const token = wx.getStorageSync('lx_mini_token')
   const expiresAt = wx.getStorageSync('lx_mini_expires')
   if (!force && token && expiresAt && Date.parse(expiresAt) > Date.now() + 60000) return token
+
   const { code } = await wxLogin()
-  const result = await rawRequest({ url: `${API_BASE}/api/wechat/mini/login`, method: 'POST', data: { code } })
+  const result = await rawRequest({
+    url: `${API_BASE}/api/wechat/mini/login`,
+    method: 'POST',
+    data: { code },
+    header: { 'content-type': 'application/json' },
+  })
+
   wx.setStorageSync('lx_mini_token', result.token)
   wx.setStorageSync('lx_mini_expires', result.expiresAt)
   return result.token
 }
 
 async function request(path, options = {}, retried = false) {
+  assertMiniApiPath(path)
   const token = await login()
   try {
     return await rawRequest({
       url: `${API_BASE}${path}`,
       method: options.method || 'GET',
       data: options.data,
-      header: { Authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+      header: {
+        Authorization: `Bearer ${token}`,
+        'content-type': 'application/json',
+      },
     })
   } catch (error) {
-    if (!retried && error.statusCode === 401) {
+    if (!retried && error && error.statusCode === 401) {
       await login(true)
       return request(path, options, true)
     }
@@ -45,17 +64,39 @@ async function request(path, options = {}, retried = false) {
 }
 
 async function publicRequest(path) {
+  assertMiniApiPath(path)
   return rawRequest({ url: `${API_BASE}${path}`, method: 'GET' })
 }
 
+async function revokeCurrentSession() {
+  const token = wx.getStorageSync('lx_mini_token')
+  if (!token) return
+  try {
+    await rawRequest({
+      url: `${API_BASE}/api/wechat/mini/logout`,
+      method: 'POST',
+      header: {
+        Authorization: `Bearer ${token}`,
+        'content-type': 'application/json',
+      },
+    })
+  } catch (error) {
+    console.warn('[mini logout unavailable]', { statusCode: error && error.statusCode })
+  }
+}
+
 async function switchAccount() {
-  wx.removeStorageSync('lx_mini_token')
-  wx.removeStorageSync('lx_mini_expires')
   const app = getApp({ allowDefault: true })
   if (app && app.globalData) app.globalData.ready = false
+  await revokeCurrentSession()
+  wx.removeStorageSync('lx_mini_token')
+  wx.removeStorageSync('lx_mini_expires')
   const token = await login(true)
-  if (app && app.globalData) app.globalData.ready = true
+  if (app && app.globalData) {
+    app.globalData.ready = true
+    app.globalData.loginError = ''
+  }
   return token
 }
 
-module.exports = { API_BASE, login, request, publicRequest, wxLogin, switchAccount }
+module.exports = { API_BASE, login, request, publicRequest, wxLogin, switchAccount, revokeCurrentSession }
