@@ -83,12 +83,12 @@ export default function HomeProblemHub(){
         </div>
         <div className="lx-v143-about-grid">
           <article>
-            <span className="lx-v143-icon tone-a">🧰</span>
+            <LingxiMiniIcon name="tools" size="card" className="lx-v143-icon"/>
             <h3>{zh?"先把眼前的小事处理掉":"Finish the thing in front of you"}</h3>
-            <p>{zh?"一个 PDF、一张图片、一段视频、一份表格，不应该为了处理它再装三个软件。能本地完成的尽量留在浏览器里，做完就拿结果。":"A PDF, image, video or spreadsheet should not require three extra apps. When possible, work stays in the browser and ends with a usable result."}</p>
+            <p>{zh?"一个 PDF、一张图片、一段视频、一份表格，不需要在多个软件之间来回切换。打开对应工具，处理完成后直接拿到结果。":"A PDF, image, video or spreadsheet should not require jumping between multiple apps. Open the right tool, finish the task and take the result."}</p>
           </article>
           <article>
-            <span className="lx-v143-icon tone-b">✦</span>
+            <LingxiMiniIcon name="sasi" size="card" className="lx-v143-icon"/>
             <h3>{zh?"再把真正重要的事继续推进":"Then move the important work forward"}</h3>
             <p>{zh?"当任务不再只是处理一个文件，而是写一部短剧、读懂一本书、研究一个问题、做出一个网站，SASI 会接住前面的上下文，让工作不是每次从零开始。":"When the task becomes a drama, a book, a research question or a website, SASI carries context forward instead of starting over every time."}</p>
           </article>
