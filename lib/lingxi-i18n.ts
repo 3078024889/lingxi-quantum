@@ -9,10 +9,10 @@ export const LANG_NAMES:Record<LingxiLang,string>={
 
 const ZH={
  brand:"灵犀场",brandFull:"灵犀场 LINGXIFIELD",sasiBrand:"灵犀场 SASI",
- newTask:"新任务",search:"搜索工具、功能或输入你的问题…",create:"创作",recharge:"充值",account:"账户",updates:"更新",
+ newTask:"新任务",search:"搜索工具、功能或输入问题…",create:"创作",recharge:"充值",account:"账户",updates:"更新",
  start:"开始",sasi:"SASI",fieldGroup:"灵犀场",
  home:"首页",tools:"实用工具",studio:"SASI 创作",books:"书本 SASI",learning:"学习 SASI",research:"科研 SASI",
- field:"场域精测",manifest:"意识显化",subconscious:"潜意识重塑",practice:"修炼技术",wallet:"AI 余额",myField:"我的账户",
+ field:"场域精测",manifest:"意识显化",subconscious:"潜意识重塑",practice:"修炼技术",wallet:"AI 余额",myField:"账户",
  light:"浅色",dark:"深色",language:"语言",
  footerLine:"易懂易做，一键即达。让一个念头找到路径，让想法从这里开始生长。",
  follow:"关注灵犀场",service:"服务号",miniapp:"小程序",terms:"用户服务协议",privacy:"隐私政策",declaration:"系统声明",refunds:"充值与退款",sasiRules:"SASI 创作规则",
@@ -24,8 +24,8 @@ const ZH={
  continueIn:"继续向内",changePath:"让变化有路径，也有回声",changePathLead:"有些问题需要被处理，有些问题需要被看见。灵犀场把两者放在同一座场里。",
  homeNoteA:"灵犀场不是一排按钮。",homeNoteB:"它更像一条从念头到结果的路。",homeNoteC:"工具负责把事情做完，SASI 负责把想法展开，场域系统负责帮助你看见自己正在走向哪里。",
  open:"进入 →",expand:"继续展开 →",
- toolsHero:"少绕一步，事情就更快一点。",toolsLead:"图片、PDF、视频、字幕、隐私与日常文件问题，都从这里开始。能留在浏览器里的，就尽量不上传。",
- toolCount:"个入口已摆上台面",toolSearch:"搜索：PDF 压缩、图片去水印、卡路里、视频转文字…",all:"全部",local:"本地处理",online:"在线能力",
+ toolsHero:"常用文件与媒体问题，直接处理。",toolsLead:"PDF、图片、视频、字幕、表格、网页、隐私文件与日常识别，打开即可处理并得到结果。",
+ toolCount:"项实用工具",toolSearch:"搜索：PDF 压缩、图片去水印、视频转文字、表格转换…",all:"全部",local:"本地处理",online:"在线能力",
  noTool:"没有找到完全匹配的工具。",noToolLead:"你也可以直接在顶部搜索框描述问题，灵犀场会继续帮你找到入口。",
  sasiKicker:"灵犀场 SASI",sasiTitle:"把一个念头放进来。",sasiLead:"你可以只说一句，也可以带上附件。SASI 先理解你想完成什么，再把任务送到合适的创作、研究或构建路径。",
  sasiPlaceholder:"例如：我有一个故事，想先做成 30 秒漫剧；或者，把这份产品需求直接拆成可以开发的网站。",

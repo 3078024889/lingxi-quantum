@@ -41,7 +41,7 @@ function active(pathname: string, href: string) {
 }
 
 const menuText: Record<LingxiLang, { account:string; orders:string; password:string; navigation:string; switch:string; signout:string; delete:string; close:string }> = {
-  zh: { account:"我的账户", orders:"付费任务", password:"修改密码", navigation:"网站导航", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
+  zh: { account:"账户", orders:"订单与使用记录", password:"修改密码", navigation:"网站导航", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
   en: { account:"My Account", orders:"Paid Tasks", password:"Change password", navigation:"Site navigation", switch:"Switch account", signout:"Sign out", delete:"Delete account", close:"Close menu" },
   ja: { account:"マイアカウント", orders:"有料タスク", password:"パスワード変更", navigation:"サイトナビ", switch:"アカウント切替", signout:"ログアウト", delete:"アカウント削除", close:"閉じる" },
   ko: { account:"내 계정", orders:"유료 작업", password:"비밀번호 변경", navigation:"사이트 메뉴", switch:"계정 전환", signout:"로그아웃", delete:"계정 삭제", close:"닫기" },

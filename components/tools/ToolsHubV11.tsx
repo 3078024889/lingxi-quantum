@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import ToolGlyph from "./ToolGlyph";
 import { liveTools } from "@/lib/tools/registry";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
+import {toolDescription,toolTitle,toolUi} from "@/lib/tools/card-i18n";
 
 type GlyphKind = "image" | "document" | "video" | "audio" | "privacy" | "utility" | "ai" | "qr";
 type Category = "all" | "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";
@@ -136,21 +137,17 @@ export default function ToolsHubV11() {
             <h1>{t("toolsHero")}</h1>
             <p>{t("toolsLead")}</p>
           </div>
-          <div className="lx-tools-v124-stats">
-            <div><b>{tools.length}</b><span>{t("toolCount")}</span></div>
-            <div><b>{localCount}</b><span>{t("local")}</span></div>
-            <div><b>{onlineCount}</b><span>{t("online")}</span></div>
-          </div>
+          <div className="lx-tools-v124-stats"><div><b>{tools.length}</b><span>{toolUi(lang,"count")}</span></div></div>
         </section>
 
         <section className="lx11-tool-searchbar lx-tools-v124-search">
           <div className="lx11-tool-searchbox">
             <span>⌕</span>
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("toolSearch")} />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={toolUi(lang,"search")} />
           </div>
           <div className="lx-tools-v124-categories">
             {categories.map((id) => {
-              const label = id === "all" ? t("all") : (foreign ? categoryLabels[id].en : categoryLabels[id].zh);
+              const label = toolUi(lang,id);
               return (
                 <button
                   type="button"
@@ -172,19 +169,11 @@ export default function ToolsHubV11() {
               <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card">
                 <div className="lx11-tool-cover"><ToolGlyph kind={item.kind} /></div>
                 <div className="lx11-tool-copy">
-                  <div className="lx11-tool-title-row"><h3>{foreign ? item.titleEn : item.titleZh}</h3></div>
-                  <p className="lx-tools-v124-desc">{foreign ? item.descEn : item.descZh}</p>
+                  <div className="lx11-tool-title-row"><h3>{toolTitle(lang,item.href.replace("/tools/",""),lang==="zh"?item.titleZh:item.titleEn)}</h3></div>
+                  <p className="lx-tools-v124-desc">{toolDescription(lang,toolTitle(lang,item.href.replace("/tools/",""),lang==="zh"?item.titleZh:item.titleEn))}</p>
                   <div className="lx11-tool-meta">
-                    <span>
-                      {item.href==="/tools/temp-mail"
-                        ? (foreign ? "10-minute inbox · auto-destroy" : "10分钟收件 · 到期自动销毁")
-                        : item.href==="/tools/burn-after-read"
-                          ? (foreign ? "One-time link · auto-destroy" : "一次读取 · 自动销毁")
-                          : item.localOnly
-                            ? (foreign ? "Local · file stays in this browser" : "本地处理 · 文件不上传")
-                            : (foreign ? "Online processing" : "在线处理")}
-                    </span>
-                    <b>{t("open")}</b>
+                    <span>{toolUi(lang,"privacyMark")}</span>
+                    <b>{toolUi(lang,"open")}</b>
                   </div>
                 </div>
               </Link>

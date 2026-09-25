@@ -3,11 +3,11 @@ import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 
 const areas=[
-  {href:"/sasi",icon:"✦",zh:"我有一个想法，想把它做出来",en:"I have an idea I want to make real",descZh:"进入 SASI，把想法继续推进到短剧、作品、资料智能体或下一步行动。",descEn:"Enter SASI and keep moving the idea toward a drama, creation, document agent or next action."},
-  {href:"/tools",icon:"🛠️",zh:"我现在只想把一个文件处理好",en:"I just need to fix a file",descZh:"PDF、图片、视频、字幕、表格、网页、隐私文件，直接处理并拿走结果。",descEn:"Handle PDFs, images, video, subtitles, tables, web content and private files."},
-  {href:"/ai-knowledge",icon:"📚",zh:"我想让一本书或一组资料活起来",en:"I want a book or source set to come alive",descZh:"让资料可以被持续追问，回答时还能回到原文。",descEn:"Keep questioning your sources while tracing answers back to the original text."},
-  {href:"/ai-learning",icon:"🧠",zh:"我想真正学懂，而不是看过就忘",en:"I want to truly learn, not just read once",descZh:"把教材、笔记和复习材料放在一起，持续追问、整理和回看。",descEn:"Keep textbooks, notes and revision material together for continued learning."},
-  {href:"/ai-research",icon:"🔬",zh:"我有一个问题，需要沿着证据往下研究",en:"I have a question that needs evidence",descZh:"把论文、笔记、证据与判断留在同一条研究脉络里。",descEn:"Keep papers, notes, evidence and judgments in one research thread."},
+  {href:"/sasi",icon:"✦",zh:"从一个想法到可用结果",en:"From idea to usable result",descZh:"短剧、网站、资料智能体与持续创作，从想法直接进入构建。",descEn:"Move ideas into drama, websites, document agents and continued creation."},
+  {href:"/tools",icon:"🛠️",zh:"处理一个文件，直接得到结果",en:"Process a file and get the result",descZh:"PDF、图片、视频、字幕、表格、网页与隐私文件，打开即可处理。",descEn:"Handle PDFs, images, video, subtitles, tables, web content and private files."},
+  {href:"/ai-knowledge",icon:"📚",zh:"让书本与资料持续可用",en:"Turn books and sources into active knowledge",descZh:"资料可持续追问，答案可回到原文与来源。",descEn:"Keep sources queryable with answers traceable to the original material."},
+  {href:"/ai-learning",icon:"🧠",zh:"从看过到真正学懂",en:"From reading to real understanding",descZh:"教材、笔记与复习材料集中整理、追问与回看。",descEn:"Keep study material together for review, questions and source recall."},
+  {href:"/ai-research",icon:"🔬",zh:"沿着证据继续研究",en:"Research along the evidence",descZh:"论文、笔记、证据与判断保持在同一条研究脉络中。",descEn:"Keep papers, notes, evidence and conclusions in one research thread."},
 ] as const;
 
 export default function ProductCatalogClient(){
@@ -18,8 +18,8 @@ export default function ProductCatalogClient(){
       <section className="lx-v143-product-hero">
         <div>
           <p className="lx11-kicker">{zh?"灵犀场 · 从问题进入":"LINGXIFIELD · Start with the problem"}</p>
-          <h1>{zh?"不用找功能，先说你想完成什么。":"Do not search for features. Start with what you want done."}</h1>
-          <p>{zh?"灵犀场把入口按真实任务重新整理。你只需要从当前最接近的问题开始。":"LINGXIFIELD is organized around real tasks. Start from the problem closest to yours."}</p>
+          <h1>{zh?"从需求出发，直接进入结果。":"Do not search for features. Start with what you want done."}</h1>
+          <p>{zh?"灵犀场按真实任务整理入口，文件处理、知识活化、研究与创作各自直达。":"LINGXIFIELD is organized around real tasks. Start from the problem closest to yours."}</p>
         </div>
         <span className="lx-v143-orbit">◌</span>
       </section>
@@ -39,7 +39,7 @@ export default function ProductCatalogClient(){
         <div className="lx-v143-section-title"><span>02</span><h2>{zh?"余额与记录":"Balance & records"}</h2></div>
         <div className="lx-v143-wallet-grid">
           <Link href="/ai-wallet"><span className="lx-v143-icon">💠</span><div><b>{zh?"AI 余额":"AI Balance"}</b><p>{zh?"充值后长期保留，只在真实使用时扣除。":"Top up once; balance remains until actually used."}</p></div><em>→</em></Link>
-          <Link href="/account/withdrawals"><span className="lx-v143-icon">↩</span><div><b>{zh?"余额提现":"Withdraw balance"}</b><p>{zh?"不再使用时，未消耗的真实充值本金可按原支付渠道退回。":"Unused paid principal can return to the original payment method."}</p></div><em>→</em></Link>
+          <Link href="/account/withdrawals"><span className="lx-v143-icon">↩</span><div><b>{zh?"余额退款":"Withdraw balance"}</b><p>{zh?"不再使用时，未消耗的真实充值本金可按原支付渠道退回。":"Unused paid principal can return to the original payment method."}</p></div><em>→</em></Link>
         </div>
       </section>
     </div>

@@ -13,10 +13,18 @@ export default function Footer(){
     <div className="lx11-footer-grid">
       <section className="lx11-footer-brand">
         <div className="lx11-footer-logo"><Image src="/images/lingxifield-logo.png" alt="" width={40} height={40}/><div><b>{t("brand")}</b><small>LINGXIFIELD</small></div></div>
-        <p className="lx11-footer-brand-lead">{zh?"一个会随着你的问题、资料与创作继续生长的场智能体。":"A living field intelligence that keeps growing with your questions, sources and creations."}</p>
-        <div className="lx11-footer-capability"><b>{zh?"处理眼前的问题":"Handle what is in front of you"}</b><p>{zh?"PDF、图片、视频、字幕、表格、网页和隐私文件，直接处理并拿到结果。":"Handle PDFs, images, video, subtitles, tables, web content and private files."}</p></div>
-        <div className="lx11-footer-capability"><b>{zh?"继续重要的创作":"Keep important work moving"}</b><p>{zh?"短剧、书本、资料、学习与科研，不必每次从零开始。":"Drama, books, sources, learning and research do not have to restart from zero."}</p></div>
-        <p className="lx11-footer-closing">{zh?"从一个文件、一个问题，到一个还没成形的念头，都可以从灵犀场开始。":"From one file or question to an unfinished idea, you can start with LINGXIFIELD."}</p>
+        {zh?<>
+          <p className="lx11-footer-brand-lead"><b>一键创造，一念即达。</b></p>
+          <p>一个让想法被理解、让问题被处理、让结果真正发生的场智能数字空间。</p>
+          <p>从一个文件、一张图片、一段视频、一餐饭，到一个还没理清的念头，都可以从灵犀场开始。</p>
+          <div className="lx11-footer-capability"><b>免费实用工具</b><p>面向 PDF、图片、视频、字幕、网页、表格、文件隐私与日常识别、AI证件等高频需求，提供一组打开就能用、处理完就能得到结果的实用工具。</p><p>包括 PDF 编辑、签名盖章、骑缝章、图片修复与高清放大、图片与视频去水印、图片压缩与格式转换、视频转文字、字幕翻译、网页内容提取、表格转 Excel、合同与 PDF 对比、卡路里识别、临时邮箱、阅后即焚等。创作无限，工具不上限。</p></div>
+          <div className="lx11-footer-capability"><b>SASI 创作与构建</b><p>从 AI 短剧生成、网站构建，到书本 SASI、学习 SASI、科研 SASI、资料整理让知识活化起来的智能创作，SASI 帮你把模糊的想法逐步理解、展开、组织并构建成真正可以使用的结果。可使用，可发布，也可继续迭代。</p></div>
+          <p className="lx11-footer-closing">从一个文件、一张图片、一段视频、一餐饭，到一个还没理清的念头，都可以从这里开始。</p>
+        </>:<>
+          <p className="lx11-footer-brand-lead">LINGXIFIELD turns files, media, knowledge and ideas into usable results.</p>
+          <div className="lx11-footer-capability"><b>Practical tools</b><p>PDF, images, video, subtitles, tables, privacy and everyday file tasks.</p></div>
+          <div className="lx11-footer-capability"><b>SASI creation & building</b><p>AI drama, website building, Book SASI, Learning SASI, Research SASI and knowledge activation.</p></div>
+        </>}
         <span>lingxifield.com · lingxifield.cn</span>
       </section>
 

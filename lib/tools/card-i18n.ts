@@ -1,0 +1,105 @@
+import type {LingxiLang} from "@/lib/lingxi-i18n";
+
+type T=Record<LingxiLang,string>;
+const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):T=>({zh,en,ja,ko,fr,de,es,pt,ar});
+
+export const TOOL_UI={
+  all:L("全部","All","すべて","전체","Tout","Alle","Todo","Tudo","الكل"),
+  image:L("图片","Images","画像","이미지","Images","Bilder","Imágenes","Imagens","الصور"),
+  pdf:L("PDF / 文档","PDF / Docs","PDF / 文書","PDF / 문서","PDF / Documents","PDF / Dokumente","PDF / Documentos","PDF / Documentos","PDF / المستندات"),
+  media:L("视频 / 音频","Video / Audio","動画 / 音声","영상 / 오디오","Vidéo / Audio","Video / Audio","Vídeo / Audio","Vídeo / Áudio","الفيديو / الصوت"),
+  privacy:L("隐私 / 安全","Privacy / Safety","プライバシー / 安全","개인정보 / 보안","Confidentialité / Sécurité","Datenschutz / Sicherheit","Privacidad / Seguridad","Privacidade / Segurança","الخصوصية / الأمان"),
+  utility:L("文件 / 通用","Files / Utilities","ファイル / 汎用","파일 / 일반","Fichiers / Utilitaires","Dateien / Werkzeuge","Archivos / Utilidades","Ficheiros / Utilitários","الملفات / الأدوات"),
+  ai:L("AI 能力","AI","AI","AI","IA","KI","IA","IA","الذكاء الاصطناعي"),
+  qr:L("二维码","QR","QRコード","QR 코드","QR","QR","QR","QR","QR"),
+  search:L("搜索：PDF 压缩、图片去水印、视频转文字、表格转换…","Search: PDF compression, watermark cleanup, transcription, spreadsheets…","検索：PDF圧縮、透かし除去、文字起こし、表変換…","검색: PDF 압축, 워터마크 제거, 음성 텍스트 변환, 표 변환…","Rechercher : compression PDF, filigranes, transcription, tableaux…","Suchen: PDF-Komprimierung, Wasserzeichen, Transkription, Tabellen…","Buscar: comprimir PDF, quitar marcas de agua, transcribir, convertir tablas…","Pesquisar: compressão PDF, remoção de marcas, transcrição, tabelas…","بحث: ضغط PDF، إزالة العلامات، التفريغ النصي، الجداول…"),
+  privacyMark:L("隐私保护 · 安全处理","Privacy protected · Secure processing","プライバシー保護 · 安全処理","개인정보 보호 · 안전 처리","Confidentialité protégée · Traitement sécurisé","Datenschutz · Sichere Verarbeitung","Privacidad protegida · Procesamiento seguro","Privacidade protegida · Processamento seguro","حماية الخصوصية · معالجة آمنة"),
+  open:L("进入","Open","開く","열기","Ouvrir","Öffnen","Abrir","Abrir","فتح"),
+  count:L("项实用工具","practical tools","実用ツール","실용 도구","outils pratiques","praktische Werkzeuge","herramientas prácticas","ferramentas práticas","أداة عملية"),
+};
+
+const TITLES:Record<string,Partial<T>>={
+"text-counter":L("字数与字符统计","Text Counter","文字数・文字統計","글자·문자 수","Compteur de texte","Textzähler","Contador de texto","Contador de texto","عداد النص"),
+"remove-duplicate-lines":L("文本去重行","Remove Duplicate Lines","重複行を削除","중복 줄 제거","Supprimer les lignes en double","Doppelte Zeilen entfernen","Eliminar líneas duplicadas","Remover linhas duplicadas","إزالة الأسطر المكررة"),
+"remove-empty-lines":L("删除空白行","Remove Empty Lines","空行を削除","빈 줄 제거","Supprimer les lignes vides","Leere Zeilen entfernen","Eliminar líneas vacías","Remover linhas vazias","إزالة الأسطر الفارغة"),
+"url-encode-decode":L("URL 编码解码","URL Encode & Decode","URLエンコード / デコード","URL 인코딩 / 디코딩","Encoder / décoder une URL","URL kodieren / dekodieren","Codificar / decodificar URL","Codificar / descodificar URL","ترميز / فك ترميز URL"),
+"base64-encode-decode":L("Base64 编码解码","Base64 Encode & Decode","Base64エンコード / デコード","Base64 인코딩 / 디코딩","Encoder / décoder Base64","Base64 kodieren / dekodieren","Codificar / decodificar Base64","Codificar / descodificar Base64","ترميز / فك ترميز Base64"),
+"png-to-jpg":L("PNG 转 JPG","PNG to JPG","PNG → JPG","PNG → JPG","PNG vers JPG","PNG zu JPG","PNG a JPG","PNG para JPG","PNG إلى JPG"),
+"jpg-to-png":L("JPG 转 PNG","JPG to PNG","JPG → PNG","JPG → PNG","JPG vers PNG","JPG zu PNG","JPG a PNG","JPG para PNG","JPG إلى PNG"),
+"webp-to-jpg":L("WebP 转 JPG / PNG","WebP to JPG / PNG","WebP → JPG / PNG","WebP → JPG / PNG","WebP vers JPG / PNG","WebP zu JPG / PNG","WebP a JPG / PNG","WebP para JPG / PNG","WebP إلى JPG / PNG"),
+"compress-image":L("图片压缩","Compress Image","画像圧縮","이미지 압축","Compresser une image","Bild komprimieren","Comprimir imagen","Comprimir imagem","ضغط الصورة"),
+"compress-image-to-20kb":L("图片压缩到 20KB","Compress Image to 20KB","画像を20KBに圧縮","이미지 20KB 압축","Compresser à 20 Ko","Bild auf 20 KB komprimieren","Comprimir a 20 KB","Comprimir para 20 KB","ضغط الصورة إلى 20KB"),
+"compress-image-to-50kb":L("图片压缩到 50KB","Compress Image to 50KB","画像を50KBに圧縮","이미지 50KB 압축","Compresser à 50 Ko","Bild auf 50 KB komprimieren","Comprimir a 50 KB","Comprimir para 50 KB","ضغط الصورة إلى 50KB"),
+"compress-image-to-100kb":L("图片压缩到 100KB","Compress Image to 100KB","画像を100KBに圧縮","이미지 100KB 압축","Compresser à 100 Ko","Bild auf 100 KB komprimieren","Comprimir a 100 KB","Comprimir para 100 KB","ضغط الصورة إلى 100KB"),
+"compress-image-to-200kb":L("图片压缩到 200KB","Compress Image to 200KB","画像を200KBに圧縮","이미지 200KB 압축","Compresser à 200 Ko","Bild auf 200 KB komprimieren","Comprimir a 200 KB","Comprimir para 200 KB","ضغط الصورة إلى 200KB"),
+"compress-image-to-500kb":L("图片压缩到 500KB","Compress Image to 500KB","画像を500KBに圧縮","이미지 500KB 압축","Compresser à 500 Ko","Bild auf 500 KB komprimieren","Comprimir a 500 KB","Comprimir para 500 KB","ضغط الصورة إلى 500KB"),
+"resize-image":L("图片尺寸修改","Resize Image","画像サイズ変更","이미지 크기 변경","Redimensionner une image","Bildgröße ändern","Redimensionar imagen","Redimensionar imagem","تغيير حجم الصورة"),
+"remove-exif":L("清除图片 EXIF / 元数据","Remove Image EXIF / Metadata","EXIF / メタデータ削除","EXIF / 메타데이터 제거","Supprimer EXIF / métadonnées","EXIF / Metadaten entfernen","Eliminar EXIF / metadatos","Remover EXIF / metadados","إزالة EXIF / البيانات الوصفية"),
+"file-type-detector":L("文件真实格式检测","Real File Type Detector","実ファイル形式を確認","실제 파일 형식 확인","Détecter le vrai format","Echtes Dateiformat erkennen","Detectar formato real","Detetar formato real","كشف نوع الملف الحقيقي"),
+"md5-sha256":L("MD5 / SHA256 校验","MD5 / SHA256 Hash","MD5 / SHA256 ハッシュ","MD5 / SHA256 해시","Hash MD5 / SHA256","MD5 / SHA256 Hash","Hash MD5 / SHA256","Hash MD5 / SHA256","تجزئة MD5 / SHA256"),
+"file-compare":L("文件一致性对比","Compare Two Files","2ファイル比較","두 파일 비교","Comparer deux fichiers","Zwei Dateien vergleichen","Comparar dos archivos","Comparar dois ficheiros","مقارنة ملفين"),
+"xlsx-to-csv":L("Excel 转 CSV","Excel to CSV","Excel → CSV","Excel → CSV","Excel vers CSV","Excel zu CSV","Excel a CSV","Excel para CSV","Excel إلى CSV"),
+"csv-to-xlsx":L("CSV / TSV 转 Excel","CSV / TSV to Excel","CSV / TSV → Excel","CSV / TSV → Excel","CSV / TSV vers Excel","CSV / TSV zu Excel","CSV / TSV a Excel","CSV / TSV para Excel","CSV / TSV إلى Excel"),
+"docx-to-txt":L("DOCX 转 TXT","DOCX to TXT","DOCX → TXT","DOCX → TXT","DOCX vers TXT","DOCX zu TXT","DOCX a TXT","DOCX para TXT","DOCX إلى TXT"),
+"pptx-to-txt":L("PPTX 转 TXT","PPTX to TXT","PPTX → TXT","PPTX → TXT","PPTX vers TXT","PPTX zu TXT","PPTX a TXT","PPTX para TXT","PPTX إلى TXT"),
+"json-formatter":L("JSON 格式化 / 修复","JSON Format / Repair","JSON整形 / 修復","JSON 형식 / 복구","Formater / réparer JSON","JSON formatieren / reparieren","Formatear / reparar JSON","Formatar / reparar JSON","تنسيق / إصلاح JSON"),
+"timestamp-converter":L("时间戳转换","Timestamp Converter","タイムスタンプ変換","타임스탬프 변환","Convertisseur d'horodatage","Zeitstempel-Konverter","Convertidor de timestamp","Conversor de timestamp","تحويل الطابع الزمني"),
+"qr-code-generator":L("二维码生成","QR Code Generator","QRコード生成","QR 코드 생성","Générateur QR","QR-Code-Generator","Generador QR","Gerador QR","إنشاء رمز QR"),
+"heic-to-jpg":L("HEIC 转 JPG","HEIC to JPG","HEIC → JPG","HEIC → JPG","HEIC vers JPG","HEIC zu JPG","HEIC a JPG","HEIC para JPG","HEIC إلى JPG"),
+"qr-code-reader":L("二维码读取","QR Code Reader","QRコード読取","QR 코드 읽기","Lecteur QR","QR-Code-Leser","Lector QR","Leitor QR","قارئ QR"),
+"merge-pdf":L("PDF 合并","Merge PDF","PDF結合","PDF 병합","Fusionner PDF","PDF zusammenführen","Unir PDF","Juntar PDF","دمج PDF"),
+"split-pdf":L("PDF 拆分","Split PDF","PDF分割","PDF 분할","Diviser PDF","PDF teilen","Dividir PDF","Dividir PDF","تقسيم PDF"),
+"compress-pdf":L("PDF 压缩","Compress PDF","PDF圧縮","PDF 압축","Compresser PDF","PDF komprimieren","Comprimir PDF","Comprimir PDF","ضغط PDF"),
+"image-to-pdf":L("图片转 PDF","Images to PDF","画像 → PDF","이미지 → PDF","Images vers PDF","Bilder zu PDF","Imágenes a PDF","Imagens para PDF","الصور إلى PDF"),
+"pdf-to-jpg":L("PDF 转 JPG","PDF to JPG","PDF → JPG","PDF → JPG","PDF vers JPG","PDF zu JPG","PDF a JPG","PDF para JPG","PDF إلى JPG"),
+"temp-mail":L("10分钟临时邮箱","10-Minute Temporary Email","10分間一時メール","10분 임시 이메일","E-mail temporaire 10 min","10-Minuten-E-Mail","Correo temporal 10 min","Email temporário 10 min","بريد مؤقت 10 دقائق"),
+"burn-after-read":L("阅后即焚","Burn After Reading","閲覧後に削除","열람 후 삭제","Lecture unique","Nach Lesen löschen","Destruir tras leer","Destruir após leitura","حذف بعد القراءة"),
+"batch-image":L("批量图片处理","Batch Image Tools","画像一括処理","이미지 일괄 처리","Traitement d'images par lot","Bilder stapelweise bearbeiten","Procesar imágenes por lotes","Processar imagens em lote","معالجة الصور دفعة واحدة"),
+"avif-to-jpg":L("AVIF 转 JPG","AVIF to JPG","AVIF → JPG","AVIF → JPG","AVIF vers JPG","AVIF zu JPG","AVIF a JPG","AVIF para JPG","AVIF إلى JPG"),
+"heic-local":L("HEIC 转换","HEIC Converter","HEIC変換","HEIC 변환","Convertisseur HEIC","HEIC-Konverter","Convertidor HEIC","Conversor HEIC","محول HEIC"),
+"svg-to-png":L("SVG 转 PNG","SVG to PNG","SVG → PNG","SVG → PNG","SVG vers PNG","SVG zu PNG","SVG a PNG","SVG para PNG","SVG إلى PNG"),
+"long-image":L("长图拼接","Long Image Stitcher","長画像結合","긴 이미지 이어붙이기","Assembler une image longue","Langes Bild zusammenfügen","Unir imagen larga","Montar imagem longa","دمج صورة طويلة"),
+"image-to-pdf-pro":L("图片转 PDF","Images to PDF","画像 → PDF","이미지 → PDF","Images vers PDF","Bilder zu PDF","Imágenes a PDF","Imagens para PDF","الصور إلى PDF"),
+"pdf-merge-split":L("PDF 合并 / 拆分","Merge / Split PDF","PDF結合 / 分割","PDF 병합 / 분할","Fusionner / diviser PDF","PDF zusammenführen / teilen","Unir / dividir PDF","Juntar / dividir PDF","دمج / تقسيم PDF"),
+"pdf-compress":L("PDF 压缩","Compress PDF","PDF圧縮","PDF 압축","Compresser PDF","PDF komprimieren","Comprimir PDF","Comprimir PDF","ضغط PDF"),
+"pdf-pages":L("PDF 页面整理","PDF Page Organizer","PDFページ整理","PDF 페이지 정리","Organiser les pages PDF","PDF-Seiten ordnen","Organizar páginas PDF","Organizar páginas PDF","تنظيم صفحات PDF"),
+"pdf-editor":L("PDF 编辑","PDF Editor","PDF編集","PDF 편집","Éditeur PDF","PDF-Editor","Editor PDF","Editor PDF","محرر PDF"),
+"e-sign-pdf":L("PDF 电子签名","E-sign PDF","PDF電子署名","PDF 전자서명","Signer un PDF","PDF elektronisch signieren","Firmar PDF","Assinar PDF","توقيع PDF"),
+"document-copy-layout":L("证件复印排版","Document Copy Layout","証明書コピー配置","문서 복사 배치","Mise en page de document","Dokument-Kopierlayout","Maquetar documento","Layout de cópia","تنسيق نسخة المستند"),
+"video-toolkit":L("视频压缩 / 裁剪 / 提取音频","Video Toolkit","動画圧縮 / 切り抜き / 音声抽出","영상 압축 / 자르기 / 오디오 추출","Outils vidéo","Video-Werkzeuge","Herramientas de vídeo","Ferramentas de vídeo","أدوات الفيديو"),
+"subtitle-tools":L("字幕 SRT / VTT 工具","Subtitle SRT / VTT Tools","字幕 SRT / VTT ツール","자막 SRT / VTT 도구","Outils SRT / VTT","SRT / VTT Werkzeuge","Herramientas SRT / VTT","Ferramentas SRT / VTT","أدوات SRT / VTT"),
+"video-transcription":L("视频转文字","Video Transcription","動画文字起こし","영상 음성 텍스트 변환","Transcription vidéo","Video-Transkription","Transcripción de vídeo","Transcrição de vídeo","تفريغ الفيديو"),
+"audio-transcription":L("音频转文字","Audio Transcription","音声文字起こし","오디오 텍스트 변환","Transcription audio","Audio-Transkription","Transcripción de audio","Transcrição de áudio","تفريغ الصوت"),
+"subtitle-translate":L("字幕翻译","Subtitle Translation","字幕翻訳","자막 번역","Traduction de sous-titres","Untertitel übersetzen","Traducir subtítulos","Traduzir legendas","ترجمة الترجمة النصية"),
+"video-dubbing":L("视频配音","Video Dubbing","動画吹き替え","영상 더빙","Doublage vidéo","Video-Synchronisation","Doblaje de vídeo","Dobragem de vídeo","دبلجة الفيديو"),
+"privacy-cleaner":L("文件隐私清理","Privacy Cleaner","ファイルプライバシー整理","파일 개인정보 정리","Nettoyage confidentialité","Datenschutz-Bereinigung","Limpieza de privacidad","Limpeza de privacidade","تنظيف الخصوصية"),
+"screenshot-redact":L("截图打码 / 脱敏","Screenshot Redaction","スクリーンショット秘匿","스크린샷 마스킹","Masquer une capture","Screenshot schwärzen","Ocultar datos en captura","Ocultar dados em captura","إخفاء بيانات لقطة الشاشة"),
+"pdf-redact":L("PDF 永久脱敏","PDF Redaction","PDF秘匿処理","PDF 영구 마스킹","Caviardage PDF","PDF schwärzen","Redactar PDF","Redigir PDF","تنقيح PDF"),
+"qr-safe-reader":L("二维码安全识别","Safe QR Reader","安全QR読取","안전 QR 읽기","Lecteur QR sécurisé","Sicherer QR-Leser","Lector QR seguro","Leitor QR seguro","قارئ QR آمن"),
+"image-watermark-remover":L("图片去水印","Image Watermark Cleanup","画像透かし除去","이미지 워터마크 제거","Retirer un filigrane","Wasserzeichen entfernen","Quitar marca de agua","Remover marca d'água","إزالة العلامة المائية"),
+"batch-image-watermark-remover":L("批量图片去水印","Batch Watermark Cleanup","画像一括透かし除去","이미지 일괄 워터마크 제거","Retirer des filigranes par lot","Wasserzeichen stapelweise entfernen","Quitar marcas por lotes","Remover marcas em lote","إزالة العلامات دفعة واحدة"),
+"video-watermark-remover":L("视频去水印","Video Watermark Cleanup","動画透かし除去","영상 워터마크 제거","Retirer un filigrane vidéo","Video-Wasserzeichen entfernen","Quitar marca de vídeo","Remover marca de vídeo","إزالة علامة الفيديو"),
+"id-photo-ai":L("AI 证件照","AI ID Photo","AI証明写真","AI 증명사진","Photo d'identité IA","KI-Passfoto","Foto de identificación IA","Foto de identificação IA","صورة هوية بالذكاء الاصطناعي"),
+"food-calorie":L("食物卡路里分析","Food Calorie Analysis","食事カロリー分析","음식 칼로리 분석","Analyse des calories","Kalorienanalyse","Análisis de calorías","Análise de calorias","تحليل السعرات"),
+"pdf-ocr":L("PDF OCR","PDF OCR","PDF OCR","PDF OCR","OCR PDF","PDF OCR","OCR PDF","OCR PDF","OCR PDF"),
+"ocr":L("图片 OCR","Image OCR","画像 OCR","이미지 OCR","OCR image","Bild-OCR","OCR de imagen","OCR de imagem","OCR للصور"),
+};
+
+export function toolTitle(lang:LingxiLang,slug:string,fallback:string){
+  return TITLES[slug]?.[lang]||fallback;
+}
+export function toolDescription(lang:LingxiLang,title:string){
+  const m:Record<LingxiLang,string>={
+    zh:`${title}，处理完成后可直接查看或导出结果。`,
+    en:`${title}. View or export the result when processing is complete.`,
+    ja:`${title}。処理後すぐに結果を確認・書き出しできます。`,
+    ko:`${title}. 처리 후 결과를 바로 확인하거나 내보낼 수 있습니다.`,
+    fr:`${title}. Consultez ou exportez le résultat une fois le traitement terminé.`,
+    de:`${title}. Ergebnis nach der Verarbeitung direkt ansehen oder exportieren.`,
+    es:`${title}. Consulta o exporta el resultado al terminar.`,
+    pt:`${title}. Veja ou exporte o resultado após o processamento.`,
+    ar:`${title}. يمكن عرض النتيجة أو تصديرها مباشرة بعد اكتمال المعالجة.`,
+  };
+  return m[lang];
+}
+export function toolUi(lang:LingxiLang,key:keyof typeof TOOL_UI){return TOOL_UI[key][lang]}
