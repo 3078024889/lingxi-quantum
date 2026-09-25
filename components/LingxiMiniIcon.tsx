@@ -5,9 +5,10 @@ export type LingxiIconName=
   |"orders"|"refund"|"mail"|"burn"|"image"|"video"
   |"audio"|"subtitle"|"table"|"privacy"|"recognition"
   |"document"|"pdf"|"ocr"|"food"|"qr"|"sparkles"
-  |"idcard"|"compare"|"translate"|"text"|"web"|"excel"|"compress"|"hash";
+  |"idcard"|"compare"|"translate"|"text"|"web"|"excel"|"compress"|"hash"
+  |"switch"|"signout";
 
-type Spec={glyph:string; tone:string; badge?:string; text?:boolean};
+type Spec={glyph:string;tone:string;badge?:string};
 
 const ICON:Record<LingxiIconName,Spec>={
   new:{glyph:"✨",tone:"gold",badge:"＋"},
@@ -20,7 +21,7 @@ const ICON:Record<LingxiIconName,Spec>={
   learning:{glyph:"🎓",tone:"violet"},
   research:{glyph:"🔬",tone:"research"},
   wallet:{glyph:"💎",tone:"cyan"},
-  account:{glyph:"👤",tone:"slate"},
+  account:{glyph:"👤",tone:"sky"},
   drama:{glyph:"🎬",tone:"rose"},
   website:{glyph:"🌐",tone:"sky"},
   folder:{glyph:"📁",tone:"amber"},
@@ -31,26 +32,28 @@ const ICON:Record<LingxiIconName,Spec>={
   mail:{glyph:"✉️",tone:"violet"},
   burn:{glyph:"🔥",tone:"fire"},
   image:{glyph:"🖼️",tone:"image"},
-  video:{glyph:"▶️",tone:"violet",badge:"🎞️"},
+  video:{glyph:"▶️",tone:"violet",badge:"▤"},
   audio:{glyph:"🎙️",tone:"indigo"},
-  subtitle:{glyph:"CC",tone:"blue",text:true},
-  table:{glyph:"XLS",tone:"green",text:true},
+  subtitle:{glyph:"💬",tone:"blue",badge:"CC"},
+  table:{glyph:"📊",tone:"green",badge:"XLS"},
   privacy:{glyph:"🔒",tone:"rose"},
   recognition:{glyph:"🔎",tone:"cyan"},
-  document:{glyph:"TXT",tone:"paper",text:true},
-  pdf:{glyph:"PDF",tone:"pdf",text:true},
-  ocr:{glyph:"OCR",tone:"ocr",text:true},
+  document:{glyph:"📝",tone:"paper",badge:"TXT"},
+  pdf:{glyph:"📄",tone:"pdf",badge:"PDF"},
+  ocr:{glyph:"🔎",tone:"ocr",badge:"OCR"},
   food:{glyph:"🥗",tone:"green"},
-  qr:{glyph:"QR",tone:"cyan",text:true},
+  qr:{glyph:"📷",tone:"cyan",badge:"QR"},
   sparkles:{glyph:"✨",tone:"gold"},
   idcard:{glyph:"🪪",tone:"sky"},
-  compare:{glyph:"🆚",tone:"indigo"},
+  compare:{glyph:"⚖️",tone:"indigo"},
   translate:{glyph:"🌍",tone:"blue"},
   text:{glyph:"🔤",tone:"paper"},
   web:{glyph:"🌐",tone:"sky"},
-  excel:{glyph:"📊",tone:"green"},
+  excel:{glyph:"📊",tone:"green",badge:"XLS"},
   compress:{glyph:"🗜️",tone:"amber"},
-  hash:{glyph:"#",tone:"slate",text:true}
+  hash:{glyph:"#️⃣",tone:"slate"},
+  switch:{glyph:"🔁",tone:"indigo"},
+  signout:{glyph:"↪️",tone:"slate"},
 };
 
 export default function LingxiMiniIcon({
@@ -64,7 +67,6 @@ export default function LingxiMiniIcon({
       "lx-mini-icon",
       `lx-mini-icon-${size}`,
       `lx-mini-tone-${spec.tone}`,
-      spec.text?"is-text":"is-emoji",
       className,
     ].filter(Boolean).join(" ")}
     aria-hidden="true"

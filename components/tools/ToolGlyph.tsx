@@ -14,11 +14,9 @@ const SLUG:Record<string,LingxiIconName>={
   "qr-code-generator":"qr","qr-code-reader":"qr","qr-safe-reader":"qr",
   "privacy-cleaner":"privacy","screenshot-redact":"privacy","temp-mail":"mail","burn-after-read":"burn"
 };
-
 const KIND:Record<Kind,LingxiIconName>={
   image:"image",document:"document",video:"video",audio:"audio",privacy:"privacy",utility:"tools",ai:"sparkles",qr:"qr"
 };
-
 export default function ToolGlyph({kind,slug=""}:{kind:Kind;slug?:string}){
   return <LingxiMiniIcon name={SLUG[slug]||KIND[kind]||"tools"} size="card"/>;
 }

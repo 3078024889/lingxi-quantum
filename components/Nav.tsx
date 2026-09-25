@@ -230,14 +230,14 @@ export default function Nav() {
               </div>
             </div>
             <div className="lx11-account-menu-links">
-              <Link href="/account" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-account">●</span><b>{mt.account}</b></Link>
-              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><span className="lx11-menu-glyph tone-orders">▤</span><b>{mt.orders}</b></Link>
-              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span className="lx11-menu-glyph tone-nav">⌁</span><b>{mt.navigation}</b></button>
+              <Link href="/account" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="account" size="tiny"/><b>{mt.account}</b></Link>
+              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="orders" size="tiny"/><b>{mt.orders}</b></Link>
+              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><LingxiMiniIcon name="products" size="tiny"/><b>{mt.navigation}</b></button>
             </div>
             <div className="lx11-account-menu-divider" />
             <div className="lx11-account-menu-links">
-              {signedIn && <button type="button" onClick={switchAccount}><span>SW</span><b>{mt.switch}</b></button>}
-              {signedIn && <button type="button" onClick={signOut}><span>EX</span><b>{mt.signout}</b></button>}
+              {signedIn && <button type="button" onClick={switchAccount}><LingxiMiniIcon name="switch" size="tiny"/><b>{mt.switch}</b></button>}
+              {signedIn && <button type="button" onClick={signOut}><LingxiMiniIcon name="signout" size="tiny"/><b>{mt.signout}</b></button>}
             </div>
           </div>
         )}
@@ -267,9 +267,9 @@ export default function Nav() {
               <div><b>{displayName || mt.account}</b><small>{mt.account}</small></div>
             </div>
             <div className="lx11-account-menu-links">
-              <Link href="/account" onClick={() => setMenuOpen(false)}><span>AC</span><b>{mt.account}</b></Link>
-              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><span>OR</span><b>{mt.orders}</b></Link>
-              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><span>NV</span><b>{mt.navigation}</b></button>
+              <Link href="/account" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="account" size="tiny"/><b>{mt.account}</b></Link>
+              <Link href="/account/orders" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="orders" size="tiny"/><b>{mt.orders}</b></Link>
+              <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><LingxiMiniIcon name="products" size="tiny"/><b>{mt.navigation}</b></button>
               {signedIn && <button type="button" onClick={switchAccount}><span>SW</span><b>{mt.switch}</b></button>}
               {signedIn && <button type="button" onClick={signOut}><span>EX</span><b>{mt.signout}</b></button>}
             </div>
