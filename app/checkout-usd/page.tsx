@@ -5,6 +5,7 @@ import {useSearchParams} from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PaypalHelp from "@/components/PaypalHelp";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {type LingxiLang,useLingxiLang} from "@/lib/lingxi-i18n";
 import {getUsdBalanceProduct} from "@/lib/usd-products";
 import {createClient} from "@/lib/supabase/client";
@@ -61,8 +62,8 @@ function Inner(){
 
   const amount=product.amountUsd.toFixed(2);
   return <><Nav/><main className="mx-auto max-w-xl px-6 py-16 pt-28" dir={lang==="ar"?"rtl":"ltr"}>
-    <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7">
-      <p className="text-sm text-[var(--lx-faint)]">PayPal · USD</p>
+    <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7 lx-checkout-usd-card">
+      <div className="lx-page-title-line"><LingxiMiniIcon name="wallet" size="title"/><p className="text-sm text-[var(--lx-faint)]">PayPal · USD</p></div>
       <h1 className="mt-3 text-3xl font-semibold text-[var(--lx-ink)]">{c.title}</h1>
       <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]">{c.lead}</p>
       <div className="mt-7 rounded-2xl border border-[var(--lx-line)] p-5">

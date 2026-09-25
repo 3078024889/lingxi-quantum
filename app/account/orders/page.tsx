@@ -86,18 +86,17 @@ export default async function OrdersPage({searchParams}:{searchParams?:{payment?
                   ?`$${Number(o.amount_usd).toFixed(2)}`
                   :"—";
             const tool=o.product_id.startsWith("toolquote:");
-            return <article key={o.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
+            return <article key={o.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 lx-order-card">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-[11px] text-[var(--lx-faint)]"><Bi zh={`订单号 ${o.id}`} en={`Order ${o.id}`}/></p>
+                <div className="min-w-0 lx-order-main"><LingxiMiniIcon name={tool?"tools":current?.group==="production"?"sasi":current?.group==="ai"?"wallet":"orders"} size="title"/><div><p className="text-[11px] text-[var(--lx-faint)]"><Bi zh={`订单号 ${o.id}`} en={`Order ${o.id}`}/></p>
                   <h2 className="mt-2 font-display text-lg text-[var(--lx-ink)]"><Bi zh={label.zh} en={label.en}/></h2>
-                  <p className="mt-2 text-xs text-[var(--lx-muted)]">{new Date(o.created_at).toLocaleString()} · <Bi zh={providerText(o.provider,"zh")} en={providerText(o.provider,"en")}/></p>
+                  <p className="mt-2 text-xs text-[var(--lx-muted)]">{new Date(o.created_at).toLocaleString()} · <Bi zh={providerText(o.provider,"zh")} en={providerText(o.provider,"en")}/></p></div>
                 </div>
-                <div className="text-right"><b className="text-lg text-[var(--lx-ink)]">{amount}</b><p className="mt-1 text-xs text-[var(--lx-muted)]"><Bi zh={statusText(o.status,"zh")} en={statusText(o.status,"en")}/></p></div>
+                <div className="text-right lx-order-side"><b className="text-lg text-[var(--lx-ink)]">{amount}</b><p className={`mt-1 text-xs lx-order-status status-${o.status}`}><Bi zh={statusText(o.status,"zh")} en={statusText(o.status,"en")}/></p></div>
               </div>
 
-              {current?.group==="ai"&&<Link href="/ai-wallet" className="mt-4 inline-block text-sm">AI Balance →</Link>}
-              {current?.group==="production"&&<Link href="/sasi/pricing" className="mt-4 inline-block text-sm">SASI Balance →</Link>}
+              {current?.group==="ai"&&<Link href="/ai-wallet" className="mt-4 inline-block text-sm"><Bi zh="查看 AI 余额 →" en="View AI balance →"/></Link>}
+              {current?.group==="production"&&<Link href="/sasi/pricing" className="mt-4 inline-block text-sm"><Bi zh="查看 SASI 余额 →" en="View SASI balance →"/></Link>}
               {o.product_id.startsWith("ai-usd-balance-")&&<Link href="/ai-wallet" className="mt-4 inline-block text-sm">AI Balance →</Link>}
               {o.product_id.startsWith("sasi-usd-balance-")&&<Link href="/sasi/pricing" className="mt-4 inline-block text-sm">SASI Balance →</Link>}
               {tool&&<div className="mt-4"><ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)}/></div>}

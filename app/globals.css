@@ -2066,3 +2066,56 @@ body{font-size:16px;font-weight:500}
   .lx-knowledge-workspace>.grid{grid-template-columns:1fr!important}
   .lx-wallet-currency-card{grid-template-columns:36px minmax(0,1fr)!important}
 }
+
+
+/* V14.81 payments/orders visual */
+.lx-checkout-page>h1{font-size:30px!important;font-weight:790!important;letter-spacing:-.025em!important}
+.lx-checkout-card{
+  border-radius:20px!important;
+  box-shadow:0 14px 34px rgba(45,62,88,.07)!important;
+}
+.lx-checkout-card>.flex.items-start.gap-4{align-items:center!important}
+.lx-checkout-card>.flex.items-start.gap-4>.lx-mini-icon{flex:0 0 auto!important}
+.lx-checkout-card .font-display.text-lg{font-size:17px!important;font-weight:760!important}
+.lx-checkout-card .text-xs{font-size:12.5px!important}
+.lx-checkout-usd-card{
+  border-radius:22px!important;
+  box-shadow:0 14px 34px rgba(45,62,88,.07)!important;
+}
+.lx-checkout-usd-card h1{font-size:30px!important;font-weight:790!important;letter-spacing:-.025em!important}
+.lx-checkout-usd-card>div.rounded-2xl{border-radius:17px!important;background:linear-gradient(135deg,var(--lx-panel),var(--lx-soft))!important}
+
+.lx-order-card{
+  border-radius:18px!important;
+  box-shadow:0 8px 24px rgba(47,64,90,.045)!important;
+}
+.lx-order-main{display:grid!important;grid-template-columns:38px minmax(0,1fr)!important;gap:13px!important;align-items:start!important}
+.lx-order-main>.lx-mini-icon{margin-top:1px!important}
+.lx-order-main h2{font-size:17px!important;font-weight:760!important}
+.lx-order-side{min-width:108px!important}
+.lx-order-status{display:inline-flex!important;border-radius:999px!important;padding:4px 8px!important;background:#f2f5f9!important;color:#64748b!important}
+.lx-order-status.status-paid{background:#eafaf3!important;color:#13865c!important}
+.lx-order-status.status-refunded{background:#edf6ff!important;color:#2472a4!important}
+.lx-order-status.status-pending{background:#fff7df!important;color:#a36c00!important}
+.lx-order-status.status-failed,.lx-order-status.status-cancelled{background:#fff0f2!important;color:#b44258!important}
+
+.lx-account-subpage>div:first-child{margin-bottom:6px!important}
+.lx-account-subpage h1{font-size:32px!important;font-weight:800!important;letter-spacing:-.03em!important}
+.lx-refund-policy-card{border-radius:22px!important;box-shadow:0 12px 34px rgba(47,64,90,.05)!important}
+.lx-refund-policy-card h1{font-weight:800!important;letter-spacing:-.03em!important}
+.lx-refund-policy-card section h2{font-weight:760!important}
+
+.lx-pricing-section>h2{font-size:21px!important;font-weight:790!important}
+.lx-pricing-card{
+  border-radius:18px!important;
+  box-shadow:0 8px 24px rgba(47,64,90,.045)!important;
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease!important;
+}
+.lx-pricing-card:hover{transform:translateY(-2px)!important;box-shadow:0 14px 30px rgba(47,64,90,.075)!important}
+.lx-pricing-card h3{letter-spacing:-.02em!important}
+
+@media(max-width:640px){
+  .lx-checkout-page{padding-inline:18px!important}
+  .lx-order-main{grid-template-columns:34px minmax(0,1fr)!important;gap:10px!important}
+  .lx-order-side{min-width:auto!important}
+}

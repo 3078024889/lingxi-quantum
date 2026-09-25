@@ -6,6 +6,7 @@ import QRCode from "qrcode";
 import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import Bi from "@/components/Bi";
 import { getProduct } from "@/lib/plans";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
@@ -58,24 +59,6 @@ async function addCenterBadge(qrDataUrl: string, label: string, bg: string): Pro
 // 网关订单，避免用户只浏览确认页就留下无意义的 pending 订单。
 type PayStatus = "loading" | "review" | "waiting" | "success" | "error";
 type PaymentMethod = "wechat" | "alipay";
-
-// 场域订单卡片用的缩略图——直接复用每个产品完整报告页已经在用的
-// 封面图（page-0.png），不用额外生成新素材。关系共振按关系类型分了
-// 三套图，这里统一用general这一套做订单卡缩略图（不影响报告本身
-// 用的是哪一套，报告页自己会按relationshipType选对应的那套）。
-const THUMB_BY_PRODUCT: Record<string, string> = {
-  "life-map-report": "/images/lifemap/compass-poster.jpg",
-  "relationship-resonance": "/images/relationship-full/general/page-0.png",
-  "qian-reading": "/images/qian-full/page-0.png",
-  "tarot-reading": "/images/tarot-full/page-0.png",
-  "resilience-report": "/images/resilience-full/page-0.png",
-  "romance-report": "/images/romance-full/page-0.png",
-  "daily-tide-report": "/images/daily-tide-full/page-0.png",
-  breath: "/images/practice/quantum-pause-chart.jpg",
-  intuition: "/images/practice/intuition-chart.jpg",
-  "heart-reset": "/images/practice/heart-reset-chart.jpg",
-  "ascending-heart": "/images/practice/ascending-heart-chart.jpg",
-};
 
 function CheckoutInner() {
   const params = useSearchParams() ?? new URLSearchParams();
@@ -176,7 +159,7 @@ const orderIdRef = useRef<string | null>(null);
         setStatus("success");
         setTimeout(() => { router.push(redirectTo); }, 1800);
       } else if (qData.unlockError) {
-        setError(`支付已确认到账，但解锁时出现问题：${qData.unlockError}。请稍后在「场域入口 → 场域订单」里重试，不用重新付款。`);
+        setError(`支付已确认到账，但结果处理时出现问题：${qData.unlockError}。请稍后在「账户 → 订单与使用记录」里重试，不用重新付款。`);
       } else if (manual) {
         setError("");
       }
@@ -392,16 +375,16 @@ const orderIdRef = useRef<string | null>(null);
       <div className="mx-auto max-w-xl px-6 py-24 text-center">
         <p className="text-[var(--lx-muted)]"><Bi zh="找不到这个产品，请返回重试。" en="Product not found — please go back and try again." /></p>
         <Link href="/account/orders" className="mt-4 inline-block text-[var(--lx-ink)] hover:text-[var(--lx-ink)]">
-          <Bi zh="← 返回场域订单" en="← Back to Field Orders" />
+          <Bi zh="← 返回订单与使用记录" en="← Back to orders" />
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-xl px-6 py-16">
+    <div className="mx-auto max-w-xl px-6 py-16 lx-checkout-page">
       <h1 className="font-display text-2xl font-light text-[var(--lx-ink)]">
-        <Bi zh="数字服务订单" en="Digital Service Order" />
+        <Bi zh="确认付款" en="Confirm payment" />
       </h1>
       <p className="mt-1 text-xs text-[var(--lx-faint)]">
         <Bi zh="请确认软件服务、交付内容与金额，无误后再提交支付" en="Confirm the software service, deliverable and amount before payment" />
@@ -423,10 +406,10 @@ const orderIdRef = useRef<string | null>(null);
               换成"连接账号"，"数量"这种电商概念直接去掉（这里从来不是
               "买几件"，是"开启一次"），玻璃面板视觉延续全站风格，
               不套用淘宝的白底样式。 */}
-          <div className="mt-6 overflow-hidden rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)]/80 backdrop-blur-sm">
+          <div className="mt-6 overflow-hidden rounded-sm border border-[var(--lx-line)] bg-[var(--lx-panel)]/80 backdrop-blur-sm lx-checkout-card">
             <div className="flex items-center justify-between border-b border-[var(--lx-line)] bg-white/[0.03] px-5 py-3">
               <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-faint)]">
-                <Bi zh="数字服务订单号" en="Digital Service Order No." /> {orderIdRef.current ?? uiCopy(lang, "提交支付后生成", "Created on payment")}
+                <Bi zh="订单" en="Order" /> {orderIdRef.current ?? uiCopy(lang, "提交支付后生成", "Created on payment")}
               </p>
               <p className="text-[11px] uppercase tracking-widest2 text-[var(--lx-ink)]">
                 <Bi zh="待支付" en="Pending" />
@@ -434,14 +417,7 @@ const orderIdRef = useRef<string | null>(null);
             </div>
 
             <div className="flex items-start gap-4 px-5 py-4">
-              {THUMB_BY_PRODUCT[productId] && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={THUMB_BY_PRODUCT[productId]}
-                  alt=""
-                  className="h-16 w-16 shrink-0 rounded-sm border border-[var(--lx-line)] object-cover"
-                />
-              )}
+              <LingxiMiniIcon name={(product.group==="ai"||product.group==="production")?"wallet":"orders"} size="card"/>
               <div className="min-w-0 flex-1">
                 <p className="font-display text-lg text-[var(--lx-ink)]"><Bi zh={product.name} en={product.nameEn} /></p>
                 {submissionId && (
@@ -485,7 +461,7 @@ const orderIdRef = useRef<string | null>(null);
             {buyerEmail && (
               <div className="border-t border-[var(--lx-line)] px-5 py-3">
                 <p className="text-xs text-[var(--lx-muted)]">
-                  <Bi zh="连接账号" en="Connected Account" />：{buyerEmail}
+                  <Bi zh="付款账户" en="Payment account" />：{buyerEmail}
                 </p>
               </div>
             )}
@@ -591,7 +567,7 @@ const orderIdRef = useRef<string | null>(null);
           <p className="font-display text-2xl text-[var(--lx-ink)]">✓</p>
           <p className="mt-3 text-sm text-[var(--lx-ink)]"><Bi zh="支付完成" en="Payment complete" /></p>
           <p className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">
-            <Bi zh="正在带你去场域订单……" en="Taking you to Field Orders…" />
+            <Bi zh="正在带你去订单与使用记录……" en="Taking you to your orders…" />
           </p>
         </div>
       )}

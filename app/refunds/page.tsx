@@ -6,7 +6,7 @@ import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
 export const metadata={title:"退款与结算 | 灵犀场 LINGXIFIELD",alternates:{canonical:"/refunds"}};
 
-export default function RefundsPage(){return <><Nav/><main className="lx11-page lx-legal-page"><div className="lx-legal-wrap"><div className="lx-legal-card">
+export default function RefundsPage(){return <><Nav/><main className="lx11-page lx-legal-page"><div className="lx-legal-wrap"><div className="lx-legal-card lx-refund-policy-card">
 <div className="lx-page-title-line"><LingxiMiniIcon name="refund" size="title"/><h1 className="font-display text-4xl font-light text-[var(--lx-ink)]"><Bi zh="退款与结算" en="Refunds & Settlement"/></h1></div>
 <p className="lx-legal-meta"><Bi zh="最后更新：2026年9月" en="Last updated: September 2026"/></p>
 <div className="mt-10 space-y-8 text-base leading-8 text-[var(--lx-muted)]">
