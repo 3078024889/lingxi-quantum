@@ -60,15 +60,15 @@ export default function BalanceWithdrawalPanel(){
     }finally{setBusy(null)}
   }
 
-  if(!data)return <div className="rounded-2xl border p-6">{msg||"正在读取可退款余额…"}</div>;
+  if(!data)return <div className="lx-state-card is-loading rounded-2xl border p-6"><span className="lx-state-dot"/> {msg||"正在读取可退款余额…"}</div>;
 
   return <div className="space-y-8">
-    {msg&&<p role="status" className="rounded-2xl border p-4 text-sm">{msg}</p>}
+    {msg&&<p role="status" className="lx-state-card rounded-2xl border p-4 text-sm">{msg}</p>}
     <section>
       <h2 className="text-xl font-semibold">可申请原路退款的充值订单</h2>
       <p className="mt-2 text-sm leading-7 opacity-70">只退未使用的真实充值本金。赠送额度、邀请奖励、已消耗金额和任务中冻结的金额不能提现。</p>
       <div className="mt-5 space-y-3">
-        {data.orders.length===0&&<p className="rounded-2xl border p-5 text-sm">当前没有可申请提现的已支付余额充值订单。</p>}
+        {data.orders.length===0&&<p className="lx-state-card is-empty rounded-2xl border p-5 text-sm"><span aria-hidden="true">📂</span> 当前没有可申请提现的已支付余额充值订单。</p>}
         {data.orders.map(o=>{
           const max=walletAmount(o),active=activeByOrder.has(o.id);
           return <article key={o.id} className="rounded-2xl border p-5">
@@ -91,7 +91,7 @@ export default function BalanceWithdrawalPanel(){
     <section>
       <h2 className="text-xl font-semibold">退款记录</h2>
       <div className="mt-5 space-y-3">
-        {data.withdrawals.length===0&&<p className="rounded-2xl border p-5 text-sm">还没有退款记录。</p>}
+        {data.withdrawals.length===0&&<p className="lx-state-card is-empty rounded-2xl border p-5 text-sm"><span aria-hidden="true">📂</span> 还没有退款记录。</p>}
         {data.withdrawals.map(w=><article key={w.id} className="rounded-2xl border p-5">
           <div className="flex flex-wrap justify-between gap-3"><b>{w.currency==="USD"?"$":"¥"}{(Number(w.amount_minor)/100).toFixed(2)}</b><span>{label(w.status)}</span></div>
           <p className="mt-2 text-xs opacity-60">{providerName(w.provider)}{w.provider_currency&&w.provider_currency!==w.currency?` · 原路退回 ${w.provider_currency} ${(Number(w.provider_amount_minor)/100).toFixed(2)}`:""} · {new Date(w.created_at).toLocaleString()}</p>

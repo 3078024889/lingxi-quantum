@@ -2007,3 +2007,62 @@ body{font-size:16px;font-weight:500}
   .sasi-connect-tabs{overflow-x:auto!important;flex-wrap:nowrap!important;padding-bottom:4px!important}
   .sasi-connect-tabs button{white-space:nowrap!important}
 }
+
+
+/* V14.80 knowledge wallet state visual */
+.lx-knowledge-workspace{font-size:15px}
+.lx-knowledge-privacy{
+  border-color:rgba(70,110,170,.10)!important;
+  background:linear-gradient(135deg,#fbfdff,#f8f8ff)!important;
+  color:#52647d!important;
+  box-shadow:0 8px 22px rgba(53,70,98,.035)!important;
+}
+.lx-knowledge-panel{
+  border-radius:22px!important;
+  border-color:rgba(67,84,112,.11)!important;
+  box-shadow:0 12px 30px rgba(45,63,92,.05)!important;
+}
+.lx-knowledge-panel-title{display:flex;align-items:center;gap:13px}
+.lx-knowledge-panel-title h2{margin:0!important;font-size:20px!important;font-weight:780!important;letter-spacing:-.015em!important}
+.lx-knowledge-panel label{border-radius:18px!important;background:linear-gradient(180deg,#fbfdff,#f7f9fc)!important}
+.lx-knowledge-panel textarea,.lx-knowledge-panel input{font-size:14.5px!important;line-height:1.65!important}
+.lx-knowledge-modebar{gap:8px!important}
+.lx-knowledge-modebar button{border-radius:14px!important;padding:10px 12px!important}
+.lx-knowledge-modebar button b{font-size:14px!important}
+.lx-knowledge-modebar button span{font-size:11.5px!important}
+.lx-knowledge-answer{border-radius:20px!important;box-shadow:0 10px 26px rgba(45,63,92,.045)!important}
+.lx-knowledge-answer-body{font-size:14.5px!important;line-height:1.8!important}
+.lx-knowledge-recharge{font-weight:750!important}
+
+.lx-wallet-currency-card{
+  display:grid!important;
+  grid-template-columns:40px minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:14px!important;
+}
+.lx-wallet-currency-card>.lx-mini-icon{align-self:start!important}
+.lx-wallet-topup-panel{box-shadow:0 12px 30px rgba(45,63,92,.05)!important}
+.lx11-wallet-heading h2{font-size:23px!important;font-weight:790!important;letter-spacing:-.02em!important}
+.lx11-wallet-heading p{font-size:13.5px!important;line-height:1.7!important}
+.lx11-topup-grid button{font-weight:700!important}
+.lx11-topup-action{border-radius:16px!important}
+.lx11-topup-action>a{font-weight:750!important}
+
+.lx11-notification-panel{border-radius:18px!important;box-shadow:0 18px 48px rgba(38,53,78,.14)!important}
+.lx11-notification-panel header{font-size:15px!important}
+.lx11-notification-list>a,.lx11-notification-list>article{padding:13px 14px!important}
+.lx11-notification-list strong{font-size:14px!important}
+.lx11-notification-list p{font-size:12.5px!important;line-height:1.55!important}
+.lx11-notification-empty{display:flex!important;align-items:center!important;gap:8px!important;font-size:13.5px!important}
+.lx11-notification-empty>span{display:grid;width:22px;height:22px;place-items:center;border-radius:50%;background:#e7fbf3;color:#13a46f;font-weight:800}
+
+.lx-state-card{display:flex;align-items:center;gap:9px;border-color:rgba(74,91,120,.12)!important;background:#fff!important}
+.lx-state-card.is-loading{color:#53647a!important}
+.lx-state-card.is-empty{color:#65758a!important}
+.lx-state-dot{width:10px;height:10px;border:2px solid #8ba4d0;border-top-color:#5a70d6;border-radius:50%;animation:lx-spin .8s linear infinite}
+@keyframes lx-spin{to{transform:rotate(360deg)}}
+
+@media(max-width:760px){
+  .lx-knowledge-workspace>.grid{grid-template-columns:1fr!important}
+  .lx-wallet-currency-card{grid-template-columns:36px minmax(0,1fr)!important}
+}

@@ -2,6 +2,7 @@
 import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
 const CNY=[10,30,50,100,300,500] as const;
 const USD=[10,20,50,100,300,500] as const;
@@ -26,11 +27,11 @@ export default function AiWalletPanel(){
 
   return <div className="lx11-wallet-stack">
     <section className="grid gap-4 md:grid-cols-2">
-      <div className="lx11-wallet-overview"><div className="lx11-wallet-balance"><span>{zh?"人民币余额":"CNY balance"}</span><strong>¥{data.balanceRmb.toFixed(2)}</strong><p>{zh?"微信、支付宝充值的余额。":"Balance funded through WeChat Pay or Alipay."}</p></div></div>
-      <div className="lx11-wallet-overview"><div className="lx11-wallet-balance"><span>{zh?"美元余额":"USD balance"}</span><strong>${data.balanceUsd.toFixed(2)}</strong><p>{zh?"PayPal 美元充值的余额。":"Balance funded through PayPal in USD."}</p></div></div>
+      <div className="lx11-wallet-overview lx-wallet-currency-card"><LingxiMiniIcon name="wallet" size="title"/><div className="lx11-wallet-balance"><span>{zh?"人民币余额":"CNY balance"}</span><strong>¥{data.balanceRmb.toFixed(2)}</strong><p>{zh?"微信、支付宝充值的余额。":"Balance funded through WeChat Pay or Alipay."}</p></div></div>
+      <div className="lx11-wallet-overview lx-wallet-currency-card"><LingxiMiniIcon name="wallet" size="title"/><div className="lx11-wallet-balance"><span>{zh?"美元余额":"USD balance"}</span><strong>${data.balanceUsd.toFixed(2)}</strong><p>{zh?"PayPal 美元充值的余额。":"Balance funded through PayPal in USD."}</p></div></div>
     </section>
 
-    <section className="lx11-wallet-section">
+    <section className="lx11-wallet-section lx-wallet-topup-panel">
       <div className="lx11-wallet-heading">
         <div><span>{zh?"补充余额":"Top up"}</span><h2>{zh?"需要多少，就充值多少。":"Choose the amount you need."}</h2></div>
         <p>{zh?"两种币种分别保留，不互相改写。实际使用时会从能够覆盖本次费用的余额中结算。":"CNY and USD remain separate. Usage is settled from the balance that can cover the task."}</p>
