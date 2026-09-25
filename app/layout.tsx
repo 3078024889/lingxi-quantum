@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./unified-shell.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
+import AdSenseLoader from "@/components/AdSenseLoader";
 
 const SITE="https://lingxifield.com";
 const SHARE_IMAGE=`${SITE}/og-lingxifield-20260925.jpg`;
@@ -22,6 +23,5 @@ export default function RootLayout({children}:{children:React.ReactNode}){
  return <html lang="zh-CN" suppressHydrationWarning><head>
   <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7627015374349065" crossOrigin="anonymous"/>
- </head><body className="antialiased"><MiniEmbedMode/><div className="lx-site-content">{children}</div></body></html>;
+ </head><body className="antialiased"><MiniEmbedMode/><AdSenseLoader/><div className="lx-site-content">{children}</div></body></html>;
 }
