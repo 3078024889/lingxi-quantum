@@ -53,6 +53,7 @@ export default async function AccountPage({ searchParams }: { searchParams?: { n
             <Link href="/account/orders" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">▤</span><b><Bi zh="付费任务中心" en="Paid Tasks"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh={`已支付订单：${paidOrderCount ?? "—"}`} en={`Paid orders: ${paidOrderCount ?? "—"}`}/></p></Link>
             <Link href="/ai-wallet" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">💠</span><b>AI Balance</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="查看余额与充值" en="View balance and top up"/></p></Link>
             <Link href="/sasi" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">✦</span><b>SASI</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="进入创作工作台" en="Open creation workspace"/></p></Link>
+            <Link href="/account/withdrawals" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">↩</span><b><Bi zh="余额提现" en="Withdraw balance"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="未使用充值本金原路退回" en="Refund unused principal to the original payment method"/></p></Link>
           </div>
 
           <div className="mt-8 space-y-3">

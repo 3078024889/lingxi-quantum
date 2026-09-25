@@ -1,10 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 
 export const runtime = "nodejs";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
@@ -14,7 +16,7 @@ export async function POST(req: Request) {
   const amountFen = Math.round(Number(body.amountRmb) * 100);
   const note = String(body.note || "").slice(0, 500);
 
-  if (!orderId) return NextResponse.json({ error: "请选择原充值订单" }, { status: 400 });
+  if (!/^[0-9a-f-]{36}$/i.test(orderId)) return NextResponse.json({ error: "请选择原充值订单" }, { status: 400 });
   if (!Number.isFinite(amountFen) || amountFen <= 0) {
     return NextResponse.json({ error: "退款金额无效" }, { status: 400 });
   }
@@ -28,7 +30,7 @@ export async function POST(req: Request) {
   });
 
   if (error) {
-    console.error("[request_ai_refund]", error);
+    console.error("[request_ai_refund]", error.code);
     return NextResponse.json({ error: "退款申请创建失败" }, { status: 500 });
   }
   const result = data as { ok?: boolean; error?: string; requestId?: string } | null;

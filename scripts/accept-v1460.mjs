@@ -1,0 +1,14 @@
+import fs from "node:fs";
+const r=p=>fs.readFileSync(p,"utf8");
+const a=(v,m)=>{if(!v)throw new Error("FAIL "+m);console.log("PASS "+m)};
+a(r("app/api/account/withdrawals/route.ts").includes("request_balance_withdrawal"),"withdrawal hold RPC");
+a(r("app/api/account/withdrawals/route.ts").includes("complete_balance_withdrawal"),"withdrawal complete RPC");
+a(r("app/api/cron/withdrawal-reconcile/route.ts").includes("executeProviderRefund"),"withdrawal reconciler");
+a(r("lib/payment-refunds.ts").includes("refundPaypal"),"PayPal refund");
+a(r("lib/payment-refunds.ts").includes("refundWechat"),"WeChat refund");
+a(r("lib/payment-refunds.ts").includes("refundAlipay"),"Alipay refund");
+a(r("app/api/pay/create/route.ts").includes("USD_BALANCE_TOPUP_ENABLED"),"USD wallet sales closed until spend path exists");
+a(r("app/api/tools/quote/topup/route.ts").includes("unit_price_usd"),"tool USD topup uses server USD price");
+a(r("middleware.ts").includes('"/api/tools/website-diagnose"'),"SSRF endpoint quarantined");
+a(r("app/account/withdrawals/page.tsx").includes("BalanceWithdrawalPanel"),"withdrawal UI");
+console.log("V14.60 WITHDRAWAL LEGACY PURGE=PASS");

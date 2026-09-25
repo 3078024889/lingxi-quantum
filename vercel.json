@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/privacy-cleanup",
       "schedule": "17 3 * * *"
+    },
+    {
+      "path": "/api/cron/withdrawal-reconcile",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

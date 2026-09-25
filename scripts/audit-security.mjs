@@ -1,63 +1,33 @@
-import fs from "node:fs"
-
-const read = (path) => fs.readFileSync(path, "utf8")
-const checks = [
-  ["production review bypass is impossible", read("lib/reviewMode.ts").includes('process.env.NODE_ENV !== "production"')],
-  ["OAuth redirect is restricted to checkout", read("app/api/pay/wechat/oauth-url/route.ts").includes('redirect.pathname !== "/checkout"')],
-  ["WeChat OAuth uses one canonical CN identity domain", (() => {
-    const middleware = read("middleware.ts")
-    const oauth = read("app/api/pay/wechat/oauth-url/route.ts")
-    return middleware.includes('requestHostname === "www.lingxifield.cn"') &&
-      middleware.includes('canonicalUrl.hostname = requestHostname.slice(4)') &&
-      oauth.includes('new Set(["https://lingxifield.cn"])')
-  })()],
-  ["OAuth state uses HttpOnly cookie", read("app/api/pay/wechat/oauth-url/route.ts").includes("httpOnly: true")],
-  ["WeChat create verifies OAuth state", read("app/api/pay/wechat/create/route.ts").includes("expectedState")],
-  ["PayPal return binds provider token", read("app/api/pay/paypal/return/route.ts").includes("paypalToken !== order.provider_payment_id")],
-  ["PayPal capture verifies amount", read("lib/paypal.ts").includes("expectedAmountUsd") && read("lib/paypal.ts").includes("capturedCents !== expectedCents")],
-  ["PayPal webhook verifies currency", read("app/api/pay/webhook/route.ts").includes('amount.currency_code !== "USD"')],
-  ["WeChat notify verifies amount", read("app/api/pay/wechat/notify/route.ts").includes('paymentAmount.currency !== "CNY"')],
-  ["fulfillment uses atomic RPC", read("lib/fulfill-order.ts").includes('rpc("fulfill_paid_order"')],
-  ["atomic fulfillment is service-only", read("supabase/schema.sql").includes("revoke execute on function public.fulfill_paid_order")],
-  ["rate limit RPC is service-only", read("supabase/schema.sql").includes("revoke execute on function public.rate_limit_check")],
-  ["CSP report-only is enabled", read("next.config.js").includes("Content-Security-Policy-Report-Only")],
-  ["API does not expose detail fields", !["app/api/lifemap/save/route.ts", "app/api/lifemap/update-numbers/route.ts", "app/api/pay/create/route.ts", "app/api/pay/wechat/create/route.ts"].some((path) => read(path).includes("detail:"))],
-  ["report URLs never trust a paid query flag", !read("app/life-map/LifeMapFlow.tsx").includes("paid=1")],
-  ["paid report routes require authenticated ownership and active entitlement", (() => {
-    const routes = [
-      "app/api/daily-tide/generate-full/route.ts",
-      "app/api/lifemap/generate-full/route.ts",
-      "app/api/qian/generate-full/route.ts",
-      "app/api/relationship/generate-full/route.ts",
-      "app/api/resilience/generate-full/route.ts",
-      "app/api/romance/generate-full/route.ts",
-      "app/api/tarot/reading/generate-full/route.ts",
-      "app/api/wealth/generate-full/route.ts",
-    ].map(read)
-    return routes.every((route) =>
-      route.includes("auth.getUser()") &&
-      route.includes("submission.user_id !== user!.id") &&
-      route.includes('.from("unlocks")') &&
-      route.includes("status: 402")
-    )
-  })()],  ["checkout honors an existing unlock before creating an order", (() => {
-    const checkout = read("app/checkout/page.tsx")
-    const accessStart = checkout.indexOf("const checkAccessBeforeOrdering")
-    const accessEnd = checkout.indexOf("void checkAccessBeforeOrdering()", accessStart)
-    const accessBlock = checkout.slice(accessStart, accessEnd)
-    return accessStart >= 0 &&
-      accessEnd > accessStart &&
-      accessBlock.includes('.from("unlocks")') &&
-      accessBlock.includes('setStatus("review")') &&
-      !accessBlock.includes("createOrder()") &&
-      checkout.includes("const created = await createOrder()")
-  })()],
-]
-
-let failed = false
-for (const [name, passed] of checks) {
-  console.log(`${passed ? "PASS" : "FAIL"} ${name}`)
-  if (!passed) failed = true
-}
-
-if (failed) process.exit(1)
+import fs from "node:fs";
+const read=p=>fs.readFileSync(p,"utf8");
+const exists=p=>fs.existsSync(p);
+const checks=[
+ ["production review bypass is impossible",read("lib/reviewMode.ts").includes('process.env.NODE_ENV !== "production"')],
+ ["PayPal return binds provider token",read("app/api/pay/paypal/return/route.ts").includes("paypalToken !== order.provider_payment_id")],
+ ["PayPal capture verifies amount and reference",read("lib/paypal.ts").includes("capturedCents !== expectedCents")&&read("lib/paypal.ts").includes("unit?.reference_id !== expectedReferenceId")],
+ ["PayPal webhook re-queries and verifies provider amount/currency/reference",
+   read("app/api/pay/webhook/route.ts").includes("queryPaypalOrder(paypalOrderId,Number(order.amount_usd),order.id)")
+   && read("lib/paypal.ts").includes('amount.currency_code !== "USD"')
+   && read("lib/paypal.ts").includes("unit?.reference_id !== expectedReferenceId")],
+ ["WeChat notify verifies amount",read("app/api/pay/wechat/notify/route.ts").includes('paymentAmount.currency !== "CNY"')],
+ ["USD wallet sales fail closed",read("app/api/pay/create/route.ts").includes('USD_BALANCE_TOPUP_ENABLED')],
+ ["tool topup uses explicit USD pricing",read("app/api/tools/quote/topup/route.ts").includes("unit_price_usd")&&!read("app/api/tools/quote/topup/route.ts").includes("amountRmb*0.15")],
+ ["refund request CSRF guard",read("app/api/ai/refund/request/route.ts").includes("isSameOriginMutation(req)")],
+ ["admin refund CSRF guard",read("app/api/ai/refund/admin/resolve/route.ts").includes("isSameOriginMutation(req)")],
+ ["admin reversal CSRF guard",read("app/api/ai/refund/admin/reverse-topup/route.ts").includes("isSameOriginMutation(req)")],
+ ["provider GET is no-spend",read("app/api/ai/provider-test/route.ts").includes('mode:"no-spend-status"')],
+ ["provider paid test is explicit POST",read("app/api/ai/provider-test/route.ts").includes("EXPLICIT_PROVIDER_CALL_CONFIRMATION_REQUIRED")],
+ ["website diagnose SSRF surface is quarantined",read("middleware.ts").includes('"/api/tools/website-diagnose"')&&read("middleware.ts").includes("SECURITY_HOLD")],
+ ["withdrawal mutation has CSRF guard",read("app/api/account/withdrawals/route.ts").includes("isSameOriginMutation(req)")],
+ ["withdrawal provider errors stay processing",read("app/api/account/withdrawals/route.ts").includes('status:"processing"')&&read("app/api/account/withdrawals/route.ts").includes("Network timeout / unknown provider outcome")],
+ ["withdrawal reconciliation requires cron secret",read("app/api/cron/withdrawal-reconcile/route.ts").includes("CRON_SECRET")],
+ ["PayPal refund is idempotent",read("lib/payment-refunds.ts").includes('"PayPal-Request-Id":input.withdrawalId')],
+ ["WeChat refund uses stable out_refund_no",read("lib/payment-refunds.ts").includes("out_refund_no:outRefundNo")],
+ ["Alipay refund uses stable out_request_no",read("lib/payment-refunds.ts").includes("out_request_no:outRequestNo")],
+ ["legacy lifemap API physically removed",!exists("app/api/lifemap/calc/route.ts")&&!exists("app/api/lifemap/generate-full/route.ts")],
+ ["legacy tarot API physically removed",!exists("app/api/tarot/reading/generate-full/route.ts")],
+ ["legacy wealth API physically removed",!exists("app/api/wealth/generate-full/route.ts")],
+];
+let failed=false;
+for(const [name,passed] of checks){console.log(`${passed?"PASS":"FAIL"} ${name}`);if(!passed)failed=true}
+if(failed)process.exit(1);

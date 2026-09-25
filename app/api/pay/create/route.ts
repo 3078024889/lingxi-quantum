@@ -17,8 +17,9 @@ function paypalReady(){
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  if(!paypalReady())return NextResponse.json({error:"PAYPAL_NOT_READY"},{status:503});
+ if(process.env.USD_BALANCE_TOPUP_ENABLED!=="true")return NextResponse.json({error:"USD_BALANCE_TOPUP_NOT_READY"},{status:503});
  try{
-  const body=await req.json().catch(()=>null) as any;
+  const body=await req.json().catch(()=>null) as {productId?:unknown;returnPath?:unknown}|null;
   const product=getUsdBalanceProduct(String(body?.productId||""));
   if(!product)return NextResponse.json({error:"INVALID_USD_PRODUCT"},{status:400});
   const supabase=createClient();
@@ -27,7 +28,7 @@ export async function POST(req:NextRequest){
   const admin=createAdminClient();
   const {data:order,error}=await admin.from("orders").insert({
    user_id:user.id,product_id:product.id,product_type:"permanent",
-   amount_usd:product.amountUsd,amount_rmb:product.amountUsd,status:"pending",provider:"paypal",channel:"web"
+   amount_usd:product.amountUsd,amount_rmb:null,status:"pending",provider:"paypal",channel:"web"
   }).select("id").single();
   if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});
   const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
@@ -40,15 +41,16 @@ export async function POST(req:NextRequest){
     returnUrl:`${baseUrl}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(dest)}`,
     cancelUrl:`${baseUrl}/checkout-usd?productId=${encodeURIComponent(product.id)}&canceled=1`
    });
-   await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id);
+   const linked=await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id).eq("status","pending");
+   if(linked.error)throw linked.error;
    return NextResponse.json({url:out.approveUrl,orderId:order.id,currency:"USD",amountUsd:product.amountUsd});
   }catch(e){
-   await admin.from("orders").update({status:"failed"}).eq("id",order.id);
+   await admin.from("orders").update({status:"failed"}).eq("id",order.id).eq("status","pending");
    console.error("[paypal usd create]",e instanceof Error?e.message:String(e));
    return NextResponse.json({error:"PAYPAL_CREATE_FAILED"},{status:502});
   }
  }catch(e){
-  console.error("[paypal create]",e);
+  console.error("[paypal create]",e instanceof Error?e.message:String(e));
   return NextResponse.json({error:"SERVER_ERROR"},{status:500});
  }
 }

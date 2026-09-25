@@ -1,17 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const RETIRED_API_PREFIXES = [
-  "/api/lifemap/",
-  "/api/relationship/",
-  "/api/qian/",
-  "/api/tarot/",
-  "/api/resilience/",
-  "/api/romance/",
-  "/api/daily-tide/",
-  "/api/wealth/",
-  "/api/archetype/",
-] as const;
+const SECURITY_HOLD_EXACT = new Set([
+  "/api/tools/website-diagnose",
+]);
 
 export async function middleware(request: NextRequest) {
   const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
@@ -29,13 +21,14 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (RETIRED_API_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
+  if (SECURITY_HOLD_EXACT.has(pathname)) {
     return NextResponse.json(
-      { error: "RETIRED_PRODUCT_API", status: "gone" },
+      { error: "SECURITY_HOLD" },
       {
-        status: 410,
+        status: 503,
         headers: {
           "Cache-Control": "no-store",
+          "Retry-After": "3600",
           "X-Robots-Tag": "noindex, nofollow",
         },
       },
@@ -91,17 +84,11 @@ export async function middleware(request: NextRequest) {
 
   const supabase = createServerClient(url, key, {
     cookies: {
-      getAll() {
-        return request.cookies.getAll();
-      },
+      getAll() { return request.cookies.getAll(); },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) =>
-          request.cookies.set(name, value)
-        );
+        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options)
-        );
+        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
       },
     },
   });
@@ -114,10 +101,7 @@ export async function middleware(request: NextRequest) {
       ),
     ]);
   } catch (e) {
-    console.error(
-      "[middleware] session refresh failed or timed out:",
-      e instanceof Error ? e.message : String(e),
-    );
+    console.error("[middleware] session refresh failed or timed out:", e instanceof Error ? e.message : String(e));
   }
 
   return response;

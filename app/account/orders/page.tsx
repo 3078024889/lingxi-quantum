@@ -17,14 +17,17 @@ function currentProductLabel(id:string){
   if(id.startsWith("toolquote:")) return {zh:"实用工具任务",en:"Utility tool task"};
   const p=getProduct(id);
   if(p) return {zh:p.name,en:p.nameEn};
+  if(id.startsWith("ai-usd-balance-"))return {zh:"AI USD 余额充值",en:"AI USD balance top-up"};
+  if(id.startsWith("sasi-usd-balance-"))return {zh:"SASI USD 创作余额充值",en:"SASI USD creation balance top-up"};
   return {zh:"其他历史记录",en:"Other historical record"};
 }
 
-export default async function OrdersPage(){
+export default async function OrdersPage({searchParams}:{searchParams?:{payment?:string}}){
   const supabase=isSupabasePublicConfigured()?createClient():null;
   const user=supabase?await getServerUser(supabase):null;
   let orders:OrderRow[]=[];
   let loadFailed=false;
+  const paymentState=searchParams?.payment==="pending"?"pending":searchParams?.payment==="error"?"error":null;
 
   if(user&&supabase){
     const {data,error}=await supabase.from("orders")
@@ -46,6 +49,9 @@ export default async function OrdersPage(){
         </div>
         <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]"><Bi zh="这里集中显示当前 AI / SASI 余额充值与实用工具任务。" en="Current AI/SASI balance top-ups and utility-tool tasks are kept here."/></p>
 
+        {paymentState==="pending"&&<p role="status" className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"><Bi zh="PayPal 已返回，但订单仍在确认或权益入账中。请在下方查看最新订单状态；不要重复付款。" en="PayPal returned, but the order is still being confirmed or credited. Check the latest order status below and do not pay again."/></p>}
+        {paymentState==="error"&&<p role="alert" className="mt-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900"><Bi zh="这次 PayPal 返回无法与本地订单安全匹配。没有确认到账前不会增加余额；请检查订单状态后再操作。" en="This PayPal return could not be safely matched to a local order. No balance is credited until payment is verified. Check the order status before trying again."/></p>}
+
         {!user&&<p className="mt-8 rounded-2xl border p-6"><Bi zh="请先登录查看订单。" en="Please sign in to view orders."/></p>}
         {loadFailed&&<p role="alert" className="mt-8 text-rose"><Bi zh="订单暂时无法读取，请刷新重试。" en="Orders could not be loaded. Refresh and try again."/></p>}
         {user&&!loadFailed&&orders.length===0&&<p className="mt-8 rounded-2xl border p-6"><Bi zh="还没有订单。" en="No orders yet."/></p>}
@@ -54,7 +60,13 @@ export default async function OrdersPage(){
           {orders.map(o=>{
             const label=currentProductLabel(o.product_id);
             const current=getProduct(o.product_id);
-            const amount=o.amount_rmb!=null?`¥${o.amount_rmb}`:(o.amount_usd?`$${o.amount_usd}`:"—");
+            const amount=o.provider==="paypal"&&o.amount_usd!=null
+              ?`$${Number(o.amount_usd).toFixed(2)}`
+              :o.amount_rmb!=null
+                ?`¥${Number(o.amount_rmb).toFixed(2)}`
+                :o.amount_usd!=null
+                  ?`$${Number(o.amount_usd).toFixed(2)}`
+                  :"—";
             const tool=o.product_id.startsWith("toolquote:");
             return <article key={o.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -68,6 +80,8 @@ export default async function OrdersPage(){
 
               {current?.group==="ai"&&<Link href="/ai-wallet" className="mt-4 inline-block text-sm">AI Balance →</Link>}
               {current?.group==="production"&&<Link href="/sasi/pricing" className="mt-4 inline-block text-sm">SASI Balance →</Link>}
+              {o.product_id.startsWith("ai-usd-balance-")&&<Link href="/ai-wallet" className="mt-4 inline-block text-sm">AI Balance →</Link>}
+              {o.product_id.startsWith("sasi-usd-balance-")&&<Link href="/sasi/pricing" className="mt-4 inline-block text-sm">SASI Balance →</Link>}
               {tool&&<div className="mt-4"><ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)}/></div>}
             </article>;
           })}

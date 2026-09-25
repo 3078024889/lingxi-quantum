@@ -1,21 +1,24 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { isSameOriginMutation } from "@/lib/sasi/request-security";
 
 export const runtime="nodejs";
 
 function money(n:number){return Number(Math.max(0,n).toFixed(2));}
 
-export async function POST(req:Request){
+export async function POST(req:NextRequest){
   try{
+    if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
+
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"请先登录"},{status:401});
 
-    const body=await req.json();
-    const parentQuoteId=String(body.parentQuoteId||"");
-    const requiredQuantity=Number(body.requiredQuantity);
-    if(!parentQuoteId||!Number.isFinite(requiredQuantity)||requiredQuantity<=0){
+    const body=await req.json().catch(()=>null) as {parentQuoteId?:unknown;requiredQuantity?:unknown}|null;
+    const parentQuoteId=String(body?.parentQuoteId||"");
+    const requiredQuantity=Number(body?.requiredQuantity);
+    if(!parentQuoteId||!Number.isFinite(requiredQuantity)||requiredQuantity<=0||requiredQuantity>10000){
       return NextResponse.json({error:"参数无效"},{status:400});
     }
 
@@ -38,14 +41,23 @@ export async function POST(req:Request){
     }
 
     const extra=requiredQuantity-paidQuantity;
-    const {data:pricing}=await admin.from("tool_pricing").select("*")
-      .eq("tool_id",parent.tool_id).eq("enabled",true).single();
+    const {data:pricing}=await admin.from("tool_pricing").select(
+      "tool_id,unit_price_rmb,unit_price_usd,enabled"
+    ).eq("tool_id",parent.tool_id).eq("enabled",true).single();
+
     if(!pricing)return NextResponse.json({error:"工具价格未配置"},{status:404});
 
-    // 补差价只收新增单位，不重复收基础价。
-    let amountRmb=money(extra*Number(pricing.unit_price_rmb||0));
-    if(amountRmb<=0)amountRmb=0.01;
-    const amountUsd=money(amountRmb*0.15);
+    const unitRmb=Number(pricing.unit_price_rmb);
+    const unitUsd=Number(pricing.unit_price_usd);
+    if(!Number.isFinite(unitRmb)||unitRmb<=0||!Number.isFinite(unitUsd)||unitUsd<=0){
+      return NextResponse.json({error:"工具补差价价格配置无效"},{status:503});
+    }
+
+    const amountRmb=money(extra*unitRmb);
+    const amountUsd=money(extra*unitUsd);
+    if(amountRmb<=0||amountUsd<=0){
+      return NextResponse.json({error:"补差价金额无效"},{status:503});
+    }
 
     const {data:q,error}=await admin.from("tool_payment_quotes").insert({
       user_id:user.id,
@@ -64,7 +76,7 @@ export async function POST(req:Request){
     if(error||!q)return NextResponse.json({error:"创建补差价报价失败"},{status:500});
     return NextResponse.json(q);
   }catch(e){
-    console.error("[tool topup quote]",e);
+    console.error("[tool topup quote]",e instanceof Error?e.message:String(e));
     return NextResponse.json({error:"补差价报价失败"},{status:500});
   }
 }
