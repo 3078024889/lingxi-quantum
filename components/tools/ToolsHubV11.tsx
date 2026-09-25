@@ -5,10 +5,12 @@ import { useMemo, useState } from "react";
 import ToolGlyph from "./ToolGlyph";
 import { liveTools } from "@/lib/tools/registry";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
-import {toolDescription,toolTitle,toolUi} from "@/lib/tools/card-i18n";
+import {toolTitle} from "@/lib/tools/card-i18n";
+import {toolCategoryLabel,toolHubCopy,toolSummary,type ToolDisplayCategory} from "@/lib/tools/hub-copy-v1470";
 
 type GlyphKind = "image" | "document" | "video" | "audio" | "privacy" | "utility" | "ai" | "qr";
-type Category = "all" | "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";
+type SourceCategory = "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";
+type Category = ToolDisplayCategory;
 type ToolItem = {
   href: string;
   titleZh: string;
@@ -16,18 +18,8 @@ type ToolItem = {
   descZh: string;
   descEn: string;
   kind: GlyphKind;
-  category: Exclude<Category, "all">;
+  category: SourceCategory;
   localOnly: boolean;
-};
-
-const categoryLabels: Record<Exclude<Category, "all">, { zh: string; en: string }> = {
-  image: { zh: "图片", en: "Images" },
-  pdf: { zh: "PDF / 文档", en: "PDF / Docs" },
-  media: { zh: "视频 / 音频", en: "Video / Audio" },
-  privacy: { zh: "隐私 / 安全", en: "Privacy / Safety" },
-  utility: { zh: "文件 / 通用", en: "Files / Utilities" },
-  ai: { zh: "AI 能力", en: "AI" },
-  qr: { zh: "二维码", en: "QR" },
 };
 
 const privacyInfrastructureTools: ToolItem[] = [
@@ -72,7 +64,19 @@ const dedicated: ToolItem[] = [
   { href:"/tools/ocr", titleZh:"图片 OCR", titleEn:"Image OCR", descZh:"从图片中提取可复制文字。", descEn:"Extract copyable text from images.", kind:"ai", category:"ai", localOnly:false },
 ];
 
-function registryCategory(category: string): ToolItem["category"] {
+const DISPLAY_CATEGORY_BY_SLUG:Record<string,Exclude<Category,"all">>={
+ "merge-pdf":"pdf","split-pdf":"pdf","compress-pdf":"pdf","image-to-pdf":"pdf","image-to-pdf-pro":"pdf","pdf-to-jpg":"pdf","pdf-merge-split":"pdf","pdf-compress":"pdf","pdf-pages":"pdf","pdf-editor":"pdf","e-sign-pdf":"pdf","document-copy-layout":"pdf","pdf-redact":"pdf","pdf-ocr":"pdf",
+ "png-to-jpg":"image","jpg-to-png":"image","webp-to-jpg":"image","compress-image":"image","compress-image-to-20kb":"image","compress-image-to-50kb":"image","compress-image-to-100kb":"image","compress-image-to-200kb":"image","compress-image-to-500kb":"image","resize-image":"image","heic-to-jpg":"image","batch-image":"image","avif-to-jpg":"image","heic-local":"image","svg-to-png":"image","long-image":"image","image-watermark-remover":"image","batch-image-watermark-remover":"image",
+ "video-toolkit":"media","video-transcription":"media","audio-transcription":"media","video-dubbing":"media","video-watermark-remover":"media",
+ "subtitle-tools":"subtitle","subtitle-translate":"subtitle",
+ "xlsx-to-csv":"table","csv-to-xlsx":"table","json-formatter":"table",
+ "temp-mail":"privacy","burn-after-read":"privacy","privacy-cleaner":"privacy","screenshot-redact":"privacy","remove-exif":"privacy",
+ "ocr":"recognition","food-calorie":"recognition","id-photo-ai":"recognition","qr-code-reader":"recognition","qr-safe-reader":"recognition","qr-code-generator":"recognition",
+ "text-counter":"file","remove-duplicate-lines":"file","remove-empty-lines":"file","url-encode-decode":"file","base64-encode-decode":"file","file-type-detector":"file","md5-sha256":"file","file-compare":"file","docx-to-txt":"file","pptx-to-txt":"file","timestamp-converter":"file"
+};
+function displayCategory(item:ToolItem):Exclude<Category,"all">{return DISPLAY_CATEGORY_BY_SLUG[item.href.replace("/tools/","")]||"file";}
+
+function registryCategory(category: string): SourceCategory {
   if (category === "image") return "image";
   if (category === "pdf") return "pdf";
   if (category === "qr") return "qr";
@@ -106,7 +110,7 @@ function allTools(): ToolItem[] {
   return [...map.values()];
 }
 
-const categories: Category[] = ["all", "image", "pdf", "media", "privacy", "utility", "ai", "qr"];
+const categories: Category[] = ["all","pdf","image","media","subtitle","table","privacy","recognition","file"];
 
 export default function ToolsHubV11() {
   const { lang, t } = useLingxiLang();
@@ -118,36 +122,29 @@ export default function ToolsHubV11() {
   const list = useMemo(() => {
     const needle = q.trim().toLowerCase();
     return tools.filter((item) => {
-      const categoryMatch = category === "all" || item.category === category;
+      const categoryMatch = category === "all" || displayCategory(item) === category;
       if (!categoryMatch) return false;
       if (!needle) return true;
       return `${item.titleZh} ${item.titleEn} ${item.descZh} ${item.descEn}`.toLowerCase().includes(needle);
     });
   }, [tools, q, category]);
 
-  const localCount = tools.filter((item) => item.localOnly).length;
-  const onlineCount = tools.length - localCount;
 
   return (
     <main className="lx11-page lx11-tools-page lx-tools-v124">
       <div className="lx11-wrap">
         <section className="lx11-tools-hero">
-          <div>
-            <span>{t("tools")}</span>
-            <h1>{t("toolsHero")}</h1>
-            <p>{t("toolsLead")}</p>
-          </div>
-          <div className="lx-tools-v124-stats"><div><b>{tools.length}</b><span>{toolUi(lang,"count")}</span></div></div>
+          <div><span>{toolHubCopy(lang,"kicker")}</span><h1>{toolHubCopy(lang,"title")}</h1></div>
         </section>
 
         <section className="lx11-tool-searchbar lx-tools-v124-search">
           <div className="lx11-tool-searchbox">
             <span>⌕</span>
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={toolUi(lang,"search")} />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")} />
           </div>
           <div className="lx-tools-v124-categories">
             {categories.map((id) => {
-              const label = toolUi(lang,id);
+              const label = toolCategoryLabel(lang,id);
               return (
                 <button
                   type="button"
@@ -165,19 +162,19 @@ export default function ToolsHubV11() {
 
         <section className="lx11-tool-group">
           <div className="lx11-tool-grid lx-tools-v124-grid">
-            {list.map((item) => (
-              <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card">
+            {list.map((item) => {
+              const slug=item.href.replace("/tools/","");
+              const title=toolTitle(lang,slug,lang==="zh"?item.titleZh:item.titleEn);
+              const summary=toolSummary(lang,slug);
+              return <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card">
                 <div className="lx11-tool-cover"><ToolGlyph kind={item.kind} /></div>
                 <div className="lx11-tool-copy">
-                  <div className="lx11-tool-title-row"><h3>{toolTitle(lang,item.href.replace("/tools/",""),lang==="zh"?item.titleZh:item.titleEn)}</h3></div>
-                  <p className="lx-tools-v124-desc">{toolDescription(lang,toolTitle(lang,item.href.replace("/tools/",""),lang==="zh"?item.titleZh:item.titleEn))}</p>
-                  <div className="lx11-tool-meta">
-                    <span>{toolUi(lang,"privacyMark")}</span>
-                    <b>{toolUi(lang,"open")}</b>
-                  </div>
+                  <div className="lx11-tool-title-row"><h3>{title}</h3></div>
+                  {summary?<p className="lx-tools-v124-desc">{summary}</p>:null}
+                  <div className="lx11-tool-meta"><b>{toolHubCopy(lang,"open")}</b></div>
                 </div>
-              </Link>
-            ))}
+              </Link>;
+            })}
           </div>
         </section>
 

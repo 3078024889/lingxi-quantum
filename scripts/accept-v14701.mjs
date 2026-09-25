@@ -1,0 +1,13 @@
+import fs from "node:fs";const r=p=>fs.readFileSync(p,"utf8"),f=[];const c=(ok,n)=>{console.log(`${ok?"PASS":"FAIL"} ${n}`);if(!ok)f.push(n)};
+const h=r("components/tools/ToolsHubV11.tsx"),x=r("lib/tools/hub-copy-v1470.ts"),p=r("lib/privacy-tools-i18n.ts");
+c(h.includes('type SourceCategory = "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";'),"source category preserved");
+c(h.includes("category: SourceCategory;"),"ToolItem source category");
+c(h.includes("registryCategory(category: string): SourceCategory"),"registry source return");
+c(h.includes('const { lang, t } = useLingxiLang();'),"t preserved for empty state");
+c(h.includes('["all","pdf","image","media","subtitle","table","privacy","recognition","file"]'),"display taxonomy");
+c(!h.includes("toolDescription("),"generic boilerplate removed");
+c(!h.includes("privacyMark"),"repeated privacy badge removed");
+c(h.includes("summary?<p"),"selective summary");
+c(x.includes("自动收信和识别验证码"),"temp mail card factual");
+c(p.includes("最长可延长至60分钟")&&p.includes("11–100个"),"temp mail details factual");
+if(f.length){console.error(`V14.70.1_ACCEPT_FAILURES=${f.length}`);process.exit(1)}console.log("V14.70.1_ACCEPT=PASS");
