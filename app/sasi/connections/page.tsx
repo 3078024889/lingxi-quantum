@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SasiConnectionsClient from "@/components/SasiConnectionsClient";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {createClient,getServerUser,isSupabasePublicConfigured} from "@/lib/supabase/server";
 
 export const dynamic="force-dynamic";
@@ -17,7 +18,7 @@ export default async function Page(){
   return <><Nav/><main className="lx11-page">
     <div className="lx11-wrap py-14">
       <section className="mb-8 max-w-3xl">
-        <p className="text-sm text-[var(--lx-faint)]">SASI · 你的 AI 能力</p>
+        <div className="lx-page-title-line"><LingxiMiniIcon name="connections" size="title"/><p className="text-sm text-[var(--lx-faint)]">SASI · 你的 AI 能力</p></div>
         <h1 className="mt-3 text-3xl font-semibold text-[var(--lx-ink)]">把你已经拥有的 AI，接进同一个创作入口。</h1>
         <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]">如果你已经在使用其他 AI 服务，可以把它们接入灵犀场。之后做短剧、研究或处理资料时，不必每次重新切换平台。</p>
       </section>

@@ -10,6 +10,7 @@ import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
 import AccountProfileCard from "@/components/AccountProfileCard";
 import Bi from "@/components/Bi";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 
 export const metadata = { title: "我的账户 | 灵犀场 LINGXIFIELD" };
@@ -49,11 +50,11 @@ export default async function AccountPage({ searchParams }: { searchParams?: { n
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <Link href="/products" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">◈</span><b><Bi zh="产品中心" en="Product Center"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="从正在做的事继续，不必重新找入口" en="Continue the work you already started without hunting for the right entry again."/></p></Link>
-            <Link href="/account/orders" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">▤</span><b><Bi zh="订单与使用记录" en="Paid Tasks"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh={`已支付订单：${paidOrderCount ?? "—"}`} en={`Paid orders: ${paidOrderCount ?? "—"}`}/></p></Link>
-            <Link href="/ai-wallet" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">💠</span><b>AI Balance</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="查看人民币 / 美元余额，需要时再充值" en="View CNY / USD balances and top up only when needed."/></p></Link>
-            <Link href="/sasi" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">✦</span><b>SASI</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="继续短剧、资料与创作任务" en="Continue drama, source and creation work."/></p></Link>
-            <Link href="/account/withdrawals" className="rounded-2xl border border-[var(--lx-line)] p-5"><span className="lx-v143-icon">↩</span><b><Bi zh="余额退款" en="Balance refund"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="没用完的真实充值本金可原路退回" en="Unused paid principal can return to the original payment method."/></p></Link>
+            <Link href="/products" className="rounded-2xl border border-[var(--lx-line)] p-5"><LingxiMiniIcon name="products" size="card"/><b><Bi zh="产品中心" en="Product Center"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="从正在做的事继续，不必重新找入口" en="Continue the work you already started without hunting for the right entry again."/></p></Link>
+            <Link href="/account/orders" className="rounded-2xl border border-[var(--lx-line)] p-5"><LingxiMiniIcon name="orders" size="card"/><b><Bi zh="订单与使用记录" en="Paid Tasks"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh={`已支付订单：${paidOrderCount ?? "—"}`} en={`Paid orders: ${paidOrderCount ?? "—"}`}/></p></Link>
+            <Link href="/ai-wallet" className="rounded-2xl border border-[var(--lx-line)] p-5"><LingxiMiniIcon name="wallet" size="card"/><b>AI Balance</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="查看人民币 / 美元余额，需要时再充值" en="View CNY / USD balances and top up only when needed."/></p></Link>
+            <Link href="/sasi" className="rounded-2xl border border-[var(--lx-line)] p-5"><LingxiMiniIcon name="sasi" size="card"/><b>SASI</b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="继续短剧、资料与创作任务" en="Continue drama, source and creation work."/></p></Link>
+            <Link href="/account/withdrawals" className="rounded-2xl border border-[var(--lx-line)] p-5"><LingxiMiniIcon name="refund" size="card"/><b><Bi zh="余额退款" en="Balance refund"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><Bi zh="没用完的真实充值本金可原路退回" en="Unused paid principal can return to the original payment method."/></p></Link>
           </div>
 
           <div className="mt-8 space-y-3">

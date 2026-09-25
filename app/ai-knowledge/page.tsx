@@ -3,6 +3,7 @@ import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LxText from "@/components/LxText";
+import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import KnowledgeWorkspace from "@/components/KnowledgeWorkspace";
 import BookSasiBalanceBar from "@/components/BookSasiBalanceBar";
 
@@ -19,7 +20,7 @@ export default function Page() {
       <Nav />
       <main className="lx10-page">
         <div className="lx10-wrap">
-          <p className="lx10-kicker">
+          <div className="lx-page-title-line"><LingxiMiniIcon name="book" size="title" className="lx-page-title-icon"/><p className="lx10-kicker">
             <LxText
               zh="书本 SASI"
               en="Book SASI"
@@ -31,7 +32,7 @@ export default function Page() {
               pt="Book SASI · Disponível"
               ar="Book SASI · متاح الآن"
             />
-          </p>
+          </p></div>
 
           <h1 className="lx10-title">
             <LxText

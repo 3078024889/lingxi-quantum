@@ -28,12 +28,12 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   const vaultSupported = selected.id !== "tencent";
   const visibleProviders = SASI_INTEGRATIONS.filter((item) => tab === "models" ? MODEL_IDS.has(item.id) : MEDIA_IDS.has(item.id));
   const tabs: Array<[Tab, string, string, string]> = [
-    ["models", "模型与 API", "Models & API", "文"],
-    ["media", "图像与视频", "Image & Video", "影"],
-    ["orchestration", "SASI 编排", "SASI Orchestration", "协"],
-    ["build", "开发与部署", "Build & Deploy", "构"],
-    ["security", "安全与密钥", "Security & Keys", "钥"],
-    ["training", "训练资料库", "Training Data", "数"],
+    ["models", "模型与 API", "Models & API", "🤖"],
+    ["media", "图像与视频", "Image & Video", "🎬"],
+    ["orchestration", "SASI 编排", "SASI Orchestration", "🪄"],
+    ["build", "开发与部署", "Build & Deploy", "🌐"],
+    ["security", "安全与密钥", "Security & Keys", "🔐"],
+    ["training", "训练资料库", "Training Data", "📚"],
   ];
 
   useEffect(() => {

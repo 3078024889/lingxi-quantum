@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { productCatalogText } from "@/lib/product-catalog-i18n";
 import { brandText } from "@/lib/brand-system-i18n";
 import NotificationBell from "@/components/NotificationBell";
+import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 
 type Theme = "light" | "dark";
 type K =
@@ -15,22 +16,22 @@ type K =
   | "books" | "learning" | "research"
   | "wallet" | "myField";
 
-const groups: { href: string; key: K; icon: string }[][] = [
+const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   [
-    { href: "/", key: "home", icon: "⌂" },
-    { href: "/products", key: "products", icon: "◈" },
-    { href: "/tools", key: "tools", icon: "✦" },
-    { href: "/explore", key: "explore", icon: "⌁" },
-    { href: "/sasi", key: "studio", icon: "◆" },
+    { href: "/", key: "home", icon: "home" },
+    { href: "/products", key: "products", icon: "products" },
+    { href: "/tools", key: "tools", icon: "tools" },
+    { href: "/explore", key: "explore", icon: "explore" },
+    { href: "/sasi", key: "studio", icon: "sasi" },
   ],
   [
-    { href: "/ai-knowledge", key: "books", icon: "▣" },
-    { href: "/ai-learning", key: "learning", icon: "◫" },
-    { href: "/ai-research", key: "research", icon: "⌕" },
+    { href: "/ai-knowledge", key: "books", icon: "book" },
+    { href: "/ai-learning", key: "learning", icon: "learning" },
+    { href: "/ai-research", key: "research", icon: "research" },
   ],
   [
-    { href: "/ai-wallet", key: "wallet", icon: "◇" },
-    { href: "/account", key: "myField", icon: "●" },
+    { href: "/ai-wallet", key: "wallet", icon: "wallet" },
+    { href: "/account", key: "myField", icon: "account" },
   ],
 ]
 
@@ -149,7 +150,7 @@ export default function Nav() {
       </div>
 
       <div className="lx11-nav-scroll">
-        <Link className="lx11-new-task" href="/sasi">✦ ＋ {t("newTask")}</Link>
+        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{t("newTask")}</span></Link>
 
         {groups.map((group, index) => (
           <section key={index} className="lx11-group">
@@ -160,7 +161,7 @@ export default function Nav() {
                 href={item.href}
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
-                <span aria-hidden="true" className={`lx11-nav-icon lx11-nav-tone-${item.key}`}>{item.icon}</span>
+                <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
                 <span>{item.key === "products" ? productCatalogText(lang,"title") : item.key === "explore" ? brandText(lang,"exploreNav") : t(item.key)}</span>
               </Link>
             ))}

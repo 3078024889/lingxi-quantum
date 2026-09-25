@@ -3,6 +3,7 @@
 import {FormEvent,useMemo,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
+import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 
 const intents=[
   {words:["pdf","合并","压缩","拆分","ocr","签名","盖章"],href:"/tools",label:"PDF"},
@@ -20,12 +21,12 @@ function best(q:string){
 }
 
 const cards=[
-  {href:"/tools",icon:"🛠️",titleZh:"实用工具",titleEn:"Practical Tools",descZh:"处理 PDF、图片、视频、字幕、表格、网页和隐私文件，打开就能做。",descEn:"Handle PDFs, images, video, subtitles, tables, web content and private files."},
-  {href:"/sasi",icon:"✦",titleZh:"SASI 创作",titleEn:"SASI Creation",descZh:"从一个想法进入短剧、资料智能体、科研与持续创作，把灵感继续推进。",descEn:"Move from one idea into drama, document agents, research and continued creation."},
-  {href:"/ai-knowledge",icon:"📚",titleZh:"书本 SASI",titleEn:"Book SASI",descZh:"让一本书、一篇论文或一组资料变成可以持续追问、引用和回看的智能体。",descEn:"Turn books, papers and sources into an intelligence you can keep questioning."},
-  {href:"/ai-learning",icon:"🧠",titleZh:"学习 SASI",titleEn:"Learning SASI",descZh:"把教材和笔记整理成真正能复习、能追问、能反复回到原文的学习空间。",descEn:"Turn study material into a space you can review, question and trace back to sources."},
-  {href:"/ai-research",icon:"🔬",titleZh:"科研 SASI",titleEn:"Research SASI",descZh:"让问题、证据、比较和结论留在同一条研究脉络里，不再散落在几十个窗口。",descEn:"Keep questions, evidence, comparison and conclusions in one research thread."},
-  {href:"/products",icon:"◈",titleZh:"全部入口",titleEn:"All Entrances",descZh:"不知道从哪里开始时，在这里看当前真正可以使用的能力。",descEn:"See what is actually available when you are not sure where to begin."},
+  {href:"/tools",icon:"tools" as LingxiIconName,titleZh:"实用工具",titleEn:"Practical Tools",descZh:"处理 PDF、图片、视频、字幕、表格、网页和隐私文件，打开就能做。",descEn:"Handle PDFs, images, video, subtitles, tables, web content and private files."},
+  {href:"/sasi",icon:"sasi" as LingxiIconName,titleZh:"SASI 创作",titleEn:"SASI Creation",descZh:"从一个想法进入短剧、资料智能体、科研与持续创作，把灵感继续推进。",descEn:"Move from one idea into drama, document agents, research and continued creation."},
+  {href:"/ai-knowledge",icon:"book" as LingxiIconName,titleZh:"书本 SASI",titleEn:"Book SASI",descZh:"让一本书、一篇论文或一组资料变成可以持续追问、引用和回看的智能体。",descEn:"Turn books, papers and sources into an intelligence you can keep questioning."},
+  {href:"/ai-learning",icon:"learning" as LingxiIconName,titleZh:"学习 SASI",titleEn:"Learning SASI",descZh:"把教材和笔记整理成真正能复习、能追问、能反复回到原文的学习空间。",descEn:"Turn study material into a space you can review, question and trace back to sources."},
+  {href:"/ai-research",icon:"research" as LingxiIconName,titleZh:"科研 SASI",titleEn:"Research SASI",descZh:"让问题、证据、比较和结论留在同一条研究脉络里，不再散落在几十个窗口。",descEn:"Keep questions, evidence, comparison and conclusions in one research thread."},
+  {href:"/products",icon:"products" as LingxiIconName,titleZh:"全部入口",titleEn:"All Entrances",descZh:"不知道从哪里开始时，在这里看当前真正可以使用的能力。",descEn:"See what is actually available when you are not sure where to begin."},
 ] as const;
 
 export default function HomeProblemHub(){
@@ -68,7 +69,7 @@ export default function HomeProblemHub(){
         </div>
         <div className="lx11-home-grid lx-home-v143-grid">
           {cards.map((item,i)=><Link href={item.href} key={item.href} className={`lx11-home-card lx-v143-card tone-${(i%6)+1}`}>
-            <span className="lx-v143-icon" aria-hidden="true">{item.icon}</span>
+            <LingxiMiniIcon name={item.icon} size="card" className="lx-v143-icon"/>
             <h3>{zh?item.titleZh:item.titleEn}</h3>
             <p>{zh?item.descZh:item.descEn}</p>
             <b>{zh?"开始":"Open"} →</b>

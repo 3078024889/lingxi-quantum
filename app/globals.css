@@ -1736,3 +1736,70 @@ body{font-size:16px;font-weight:500}
 @media(max-width:1180px){.lx-tools-v124-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 @media(max-width:840px){.lx-tools-v124-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.lx-tools-v124-card{min-height:154px!important}}
 @media(max-width:560px){.lx-tools-v124-grid{grid-template-columns:1fr!important}.lx-tools-v124-card{min-height:138px!important;padding:16px 42px 14px 16px!important}.lx-tools-v124-card .lx11-tool-title-row h3{font-size:16px!important}.lx-tools-v124-card .lx-tools-v124-desc{font-size:13.5px!important}}
+
+
+/* V14.75 Lingxi mini app icon system */
+.lx-mini-icon{
+  flex:0 0 auto;
+  display:inline-grid;
+  place-items:center;
+  border:1px solid rgba(50,64,100,.06);
+  color:#25324a;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",system-ui,sans-serif;
+  line-height:1;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.82),0 6px 16px rgba(52,67,102,.09);
+  overflow:hidden;
+  vertical-align:middle;
+}
+.lx-mini-icon>span{display:block;transform:translateY(.5px);filter:saturate(1.12)}
+.lx-mini-icon-nav{width:30px;height:30px;border-radius:10px;font-size:17px}
+.lx-mini-icon-title{width:38px;height:38px;border-radius:12px;font-size:22px}
+.lx-mini-icon-card{width:50px;height:50px;border-radius:14px;font-size:28px}
+.lx-mini-icon-tiny{width:24px;height:24px;border-radius:8px;font-size:14px}
+.lx-mini-tone-gold{background:linear-gradient(145deg,#fff8cf,#ffe8ad)}
+.lx-mini-tone-sky{background:linear-gradient(145deg,#eff8ff,#dceeff)}
+.lx-mini-tone-violet,.lx-mini-tone-sasi{background:linear-gradient(145deg,#f3eaff,#e2d3ff)}
+.lx-mini-tone-sasi{box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 20px rgba(119,85,220,.16)}
+.lx-mini-tone-amber{background:linear-gradient(145deg,#fff6dd,#ffe6b9)}
+.lx-mini-tone-indigo{background:linear-gradient(145deg,#eef0ff,#dfe4ff)}
+.lx-mini-tone-book{background:linear-gradient(145deg,#eef8ff,#ffe9bd)}
+.lx-mini-tone-research{background:linear-gradient(145deg,#e8f7ff,#e7ddff)}
+.lx-mini-tone-cyan{background:linear-gradient(145deg,#e8fbff,#d9f2ff)}
+.lx-mini-tone-slate{background:linear-gradient(145deg,#f2f6fa,#e7edf4)}
+.lx-mini-tone-rose,.lx-mini-tone-pdf{background:linear-gradient(145deg,#fff0f4,#ffdce5)}
+.lx-mini-tone-blue{background:linear-gradient(145deg,#edf5ff,#dceaff)}
+.lx-mini-tone-fire{background:linear-gradient(145deg,#fff0df,#ffd7dc)}
+.lx-mini-tone-image{background:linear-gradient(145deg,#fff0de,#e7f4ff)}
+.lx-mini-tone-green{background:linear-gradient(145deg,#efffe9,#dff8dd)}
+.lx-mini-tone-paper{background:linear-gradient(145deg,#f7f7fb,#ececfa)}
+
+.lx11-link{min-height:44px!important;font-size:15px!important;font-weight:600!important}
+.lx11-link .lx-mini-icon{margin-right:1px}
+.lx11-link.is-active .lx-mini-icon{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 18px rgba(72,92,142,.13)}
+.lx11-new-task{display:flex!important;align-items:center!important;gap:9px!important;font-size:15px!important;font-weight:700!important}
+.lx11-group-title{font-size:12.5px!important;font-weight:650!important}
+.lx11-search input{font-size:15px!important}
+
+.lx-v143-icon{display:inline-grid!important}
+.lx-home-v143-grid .lx-mini-icon-card{margin-bottom:14px}
+.lx-home-v143-grid h3{font-size:19px!important;font-weight:750!important}
+.lx-home-v143-grid p{font-size:14.5px!important;line-height:1.75!important}
+
+.lx-page-title-line{display:flex;align-items:center;gap:12px}
+.lx-page-title-line .lx10-kicker{margin:0!important}
+.lx10-title{font-size:clamp(2rem,3.1vw,2.75rem)!important;font-weight:700!important;line-height:1.22!important}
+.lx10-lead{font-size:15.5px!important;line-height:1.9!important}
+
+.sasi-connect-tabs{gap:8px!important}
+.sasi-connect-tabs button{min-height:44px!important;padding:9px 13px!important;border-radius:13px!important;font-size:14px!important;font-weight:650!important}
+.sasi-connect-tabs button>span{display:inline-grid!important;place-items:center!important;width:26px!important;height:26px!important;border-radius:8px!important;background:rgba(255,255,255,.72)!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:15px!important}
+.sasi-connect-provider-grid{gap:14px!important}
+.sasi-connect-provider-grid>article{border-radius:18px!important;padding:16px!important;box-shadow:0 6px 18px rgba(48,62,88,.035)!important}
+.sasi-connect-provider-copy b{font-size:15.5px!important}
+.sasi-connect-provider-copy small{font-size:12.5px!important}
+.sasi-connect-provider-grid>article>p{font-size:13.5px!important;line-height:1.65!important}
+.sasi-connect-setup{border-radius:20px!important}
+.sasi-connect-section-title h2{font-size:23px!important;line-height:1.35!important}
+
+.lx-tool-emoji{display:none!important}
+.lx-tools-v124-card .lx-mini-icon-card{width:50px!important;height:50px!important;font-size:28px!important}
