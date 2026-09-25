@@ -1,0 +1,37 @@
+.lx-web-state {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: calc(180rpx + env(safe-area-inset-top)) 52rpx 80rpx;
+  background: var(--lx-bg, #f4f3ef);
+  color: var(--lx-text, #171714);
+  text-align: center;
+}
+
+.lx-web-state-title {
+  font-size: 36rpx;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+.lx-web-state-note {
+  margin-top: 18rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: var(--lx-text-soft, #66635b);
+}
+
+.lx-web-retry {
+  width: 360rpx;
+  height: 84rpx;
+  margin: 36rpx auto 0;
+  border-radius: 18rpx;
+  background: var(--lx-button, #171714);
+  color: var(--lx-button-text, #fff);
+  font-size: 25rpx;
+  line-height: 84rpx;
+  font-weight: 620;
+}
+
+.lx-web-retry::after {
+  border: 0;
+}

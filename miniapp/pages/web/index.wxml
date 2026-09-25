@@ -1,1 +1,17 @@
-<web-view wx:if="{{src}}" src="{{src}}"></web-view>
+<view wx:if="{{loading && !src}}" class="lx-web-state">
+  <view class="lx-web-state-title">正在打开</view>
+  <view class="lx-web-state-note">正在连接到灵犀场。</view>
+</view>
+
+<view wx:if="{{failed && !src}}" class="lx-web-state">
+  <view class="lx-web-state-title">暂时没有打开</view>
+  <view class="lx-web-state-note">检查网络后可以重新尝试。</view>
+  <button class="lx-web-retry" bindtap="retry">重新打开</button>
+</view>
+
+<web-view
+  wx:if="{{src}}"
+  src="{{src}}"
+  bindload="handleLoad"
+  binderror="handleError"
+/>

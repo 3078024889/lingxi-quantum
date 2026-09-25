@@ -20,23 +20,39 @@ const EXACT_ALLOWED = new Set([
 const PREFIX_ALLOWED = [
   '/tools/',
   '/api/wechat/mini/account-link/',
-  '/api/wechat/mini/content-open',
-  '/api/wechat/mini/report-open',
-  '/api/wechat/mini/pdf-download',
 ]
 
-function normalizeMiniPath(input) {
-  if (typeof input !== 'string' || !input.startsWith('/') || input.startsWith('//')) return ''
-  let parsed
+const MAX_PATH_LENGTH = 2048
+
+function safeDecode(value) {
   try {
-    parsed = new URL(input, API_BASE)
+    return decodeURIComponent(value)
   } catch (_) {
     return ''
   }
-  if (parsed.origin !== API_BASE) return ''
-  const pathname = parsed.pathname
-  if (!EXACT_ALLOWED.has(pathname) && !PREFIX_ALLOWED.some((prefix) => pathname.startsWith(prefix))) return ''
-  return `${pathname}${parsed.search}${parsed.hash}`
+}
+
+function normalizeMiniPath(input) {
+  if (typeof input !== 'string') return ''
+  const value = input.trim()
+  if (!value || value.length > MAX_PATH_LENGTH) return ''
+  if (!value.startsWith('/') || value.startsWith('//')) return ''
+  if (value.includes('\\') || value.includes('\u0000') || /[\r\n]/.test(value)) return ''
+  if (value.includes('://')) return ''
+
+  const cut = value.search(/[?#]/)
+  const pathname = cut === -1 ? value : value.slice(0, cut)
+  if (!pathname || pathname.includes('//')) return ''
+
+  const segments = pathname.split('/')
+  if (segments.some((segment) => segment === '.' || segment === '..')) return ''
+
+  const allowed =
+    EXACT_ALLOWED.has(pathname) ||
+    PREFIX_ALLOWED.some((prefix) => pathname.startsWith(prefix))
+  if (!allowed) return ''
+
+  return value
 }
 
 function withMiniContext(path) {
@@ -51,41 +67,84 @@ const SHARE_TITLES = {
   '/': '灵犀场 · 一键创造，一念即达',
   '/sasi': '灵犀场 SASI · AI 创作',
   '/sasi/drama': '灵犀场 · AI 短剧',
+  '/sasi/connections': '灵犀场 · 模型连接',
   '/tools': '灵犀场 · 实用工具',
   '/ai-knowledge': '灵犀场 · 资料变成活的 Agent',
   '/ai-learning': '灵犀场 · 学习 SASI',
   '/ai-research': '灵犀场 · 科研 SASI',
+  '/account': '灵犀场 · 我的',
+  '/account/orders': '灵犀场 · 订单与记录',
+  '/ai-wallet': '灵犀场 · AI 余额与额度',
 }
 
 function shareTitleFor(path) {
-  return SHARE_TITLES[path] || '灵犀场 LINGXIFIELD'
+  const pathname = path.split(/[?#]/)[0]
+  return SHARE_TITLES[pathname] || '灵犀场 LINGXIFIELD'
 }
 
 Page({
-  data: { src: '', path: '/' },
+  data: {
+    src: '',
+    path: '/',
+    loading: true,
+    failed: false,
+  },
 
   onLoad(options) {
-    const decoded = decodeURIComponent(options.path || '/')
+    const decoded = safeDecode(options.path || '/')
     const path = normalizeMiniPath(decoded)
     if (!path) {
-      wx.showToast({ title: '这个入口暂不支持在小程序打开', icon: 'none' })
+      this.setData({ loading: false, failed: true })
+      wx.showModal({
+        title: '暂时无法打开',
+        content: '这个入口暂时没有连接到当前小程序。',
+        showCancel: false,
+      })
       return
     }
-    this.setData({ src: withMiniContext(path), path })
+
+    this.setData({
+      src: withMiniContext(path),
+      path,
+      loading: true,
+      failed: false,
+    })
+  },
+
+  handleLoad() {
+    this.setData({ loading: false, failed: false })
+  },
+
+  handleError(event) {
+    console.warn('[mini webview load failed]', event && event.detail)
+    this.setData({ loading: false, failed: true })
+    wx.showModal({
+      title: '页面没有打开',
+      content: '请确认网络正常后重试。',
+      showCancel: false,
+    })
+  },
+
+  retry() {
+    const path = normalizeMiniPath(this.data.path)
+    if (!path) return
+    const next = withMiniContext(path)
+    this.setData({ src: '', loading: true, failed: false })
+    setTimeout(() => this.setData({ src: next }), 50)
   },
 
   onShareAppMessage() {
     return {
       title: shareTitleFor(this.data.path),
       path: `/pages/web/index?path=${encodeURIComponent(this.data.path)}`,
-      imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
+      imageUrl: 'https://lingxifield.cn/og-lingxifield-20260925.jpg',
     }
   },
 
   onShareTimeline() {
     return {
       title: shareTitleFor(this.data.path),
-      imageUrl: 'https://lingxifield.cn/og-sasi-20260920.png',
+      imageUrl: 'https://lingxifield.cn/og-lingxifield-20260925.jpg',
     }
   },
 })
