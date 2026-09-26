@@ -13,6 +13,7 @@ export async function claimNativePaidExecution(input:{
   userId:string;
   quoteId:string;
   kind:NativePaidKind;
+  quantity?:number;
 }){
   if(!UUID.test(input.quoteId))return{ok:false as const,error:"PAYMENT_REQUIRED"};
   const expected=paidToolForNativeKind(input.kind);
@@ -20,6 +21,8 @@ export async function claimNativePaidExecution(input:{
   if(!payment.ok||!payment.paid||payment.quote?.toolId!==expected){
     return{ok:false as const,error:"PAYMENT_REQUIRED"};
   }
+
+  if(payment.quote.quantity < (input.quantity ?? 1)) return {ok:false as const,error:"PAID_QUANTITY_EXCEEDED"};
 
   const admin=createAdminClient();
   const {data:existing}=await admin.from("sasi_native_entitlements")

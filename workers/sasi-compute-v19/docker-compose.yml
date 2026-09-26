@@ -1,0 +1,22 @@
+services:
+  sasi-compute:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SASI_BIND_HOST: 0.0.0.0
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+    ports:
+      - "127.0.0.1:8787:8787"
+    volumes:
+      - ./state:/app/state
+      - ./artifacts:/app/artifacts
+      - ./models:/app/models:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

@@ -18,6 +18,7 @@ function workerBase() {
   const raw = env("SASI_NATIVE_COMPUTE_URL").replace(/\/+$/, "");
   if (!raw) throw new Error("SASI_NATIVE_COMPUTE_NOT_CONFIGURED");
   const url = new URL(raw);
+  if(url.username || url.password || url.search || url.hash || url.pathname !== "/") throw new Error("SASI_NATIVE_COMPUTE_URL_INVALID");
   const local = url.hostname === "127.0.0.1" || url.hostname === "localhost";
   const allowed = new Set(
     env("SASI_NATIVE_COMPUTE_ALLOWED_HOSTS")
@@ -37,7 +38,12 @@ function secret() {
   return value;
 }
 
-function modelFor(kind: NativeJobKind) {
+function modelFor(kind: NativeJobKind, vision = false) {
+  if (kind === "reason" && vision) {
+    const model = env("SASI_NATIVE_VISION_MODEL") || "Qwen/Qwen2.5-VL-7B-Instruct";
+    if(model !== "Qwen/Qwen2.5-VL-7B-Instruct") throw new Error("VISION_MODEL_NOT_APPROVED");
+    return model;
+  }
   const key = kind === "reason"
     ? "SASI_NATIVE_REASONING_MODEL"
     : kind === "image"
@@ -47,7 +53,7 @@ function modelFor(kind: NativeJobKind) {
     ? "Qwen/Qwen3-8B"
     : kind === "image"
       ? "black-forest-labs/FLUX.1-schnell"
-      : "Wan-AI/Wan2.1-T2V-1.3B";
+      : "Wan-AI/Wan2.1-T2V-1.3B-Diffusers";
   const model = env(key) || fallback;
   assertCommercialNativeModel(model, kind === "reason" ? "reasoning" : kind);
   return model;
@@ -73,6 +79,7 @@ async function signedJson<T>(method: "POST" | "GET" | "DELETE", pathname: string
       "x-lingxi-signature": signature(method, pathname, encoded, ts, nonce),
     },
     body: method === "GET" ? undefined : encoded,
+    redirect: "error",
     cache: "no-store",
     signal: AbortSignal.timeout(timeoutMs),
   });
@@ -86,6 +93,7 @@ async function signedJson<T>(method: "POST" | "GET" | "DELETE", pathname: string
 export async function nativeComputeReadiness() {
   const base = workerBase();
   const response = await fetch(`${base}/health`, {
+    redirect: "error",
     cache: "no-store",
     signal: AbortSignal.timeout(5_000),
   });
@@ -96,6 +104,7 @@ export async function nativeComputeReadiness() {
 
 export async function submitNativeJob(input: {
   taskId: string;
+  requestId?: string;
   ownerId: string;
   projectId?: string | null;
   kind: NativeJobKind;
@@ -103,16 +112,17 @@ export async function submitNativeJob(input: {
 }) {
   const request: NativeJobRequest = {
     protocolVersion: SASI_COMPUTE_PROTOCOL_VERSION,
-    requestId: randomUUID(),
+    requestId: input.requestId ?? randomUUID(),
     taskId: input.taskId,
     ownerId: input.ownerId,
     projectId: input.projectId ?? null,
     kind: input.kind,
-    model: modelFor(input.kind),
+    model: modelFor(input.kind, Array.isArray(input.input.images) && input.input.images.length > 0),
     input: input.input,
   };
   const payload = await signedJson<{ job: unknown }>("POST", "/v1/jobs", request);
   if (!isNativeJobPublic(payload.job)) throw new Error("SASI_NATIVE_JOB_RESPONSE_INVALID");
+  if(payload.job.ownerId!==input.ownerId || payload.job.taskId!==input.taskId || payload.job.requestId!==request.requestId) throw new Error("SASI_NATIVE_JOB_RESPONSE_MISMATCH");
   return payload.job;
 }
 
@@ -120,6 +130,7 @@ export async function getNativeJob(id: string, ownerId: string) {
   if (!/^[a-f0-9-]{16,64}$/i.test(id)) throw new Error("SASI_NATIVE_JOB_ID_INVALID");
   const payload = await signedJson<{ job: unknown }>("GET", `/v1/jobs/${encodeURIComponent(id)}?owner=${encodeURIComponent(ownerId)}`);
   if (!isNativeJobPublic(payload.job)) throw new Error("SASI_NATIVE_JOB_RESPONSE_INVALID");
+  if(payload.job.ownerId!==ownerId || payload.job.id!==id) throw new Error("SASI_NATIVE_JOB_RESPONSE_MISMATCH");
   return payload.job;
 }
 
@@ -131,7 +142,27 @@ export async function cancelNativeJob(id: string, ownerId: string) {
 export function configuredNativeModels() {
   return {
     reasoning: modelFor("reason"),
+    vision: modelFor("reason",true),
     image: modelFor("image"),
     video: modelFor("video"),
   };
+}
+
+export async function assertNativeReady(kind: NativeJobKind, vision = false) {
+  const health = await nativeComputeReadiness();
+  const key = vision ? "vision" : kind;
+  const capabilities = health.capabilities as Record<string,{ready?:boolean;id?:string}> | undefined;
+  if(health.service !== "lingxifield-sasi-native-compute" || health.inference !== "self-hosted-offline" ||
+      capabilities?.[key]?.ready !== true || capabilities[key].id !== modelFor(kind,vision)) {
+    throw new Error("SASI_NATIVE_MODEL_NOT_ACCEPTED");
+  }
+}
+
+export async function fetchNativeArtifact(jobId:string, artifactId:string, ownerId:string, range:string|null) {
+  if(!/^[a-f0-9-]{16,64}$/i.test(jobId) || !/^[a-f0-9-]{16,64}$/i.test(artifactId)) throw new Error("INVALID_ARTIFACT_ID");
+  const pathname = `/v1/jobs/${encodeURIComponent(jobId)}/artifacts/${encodeURIComponent(artifactId)}?owner=${encodeURIComponent(ownerId)}`;
+  const ts=String(Date.now()),nonce=randomUUID();
+  return fetch(`${workerBase()}${pathname}`,{method:"GET",redirect:"error",cache:"no-store",signal:AbortSignal.timeout(30_000),
+    headers:{"x-lingxi-timestamp":ts,"x-lingxi-nonce":nonce,"x-lingxi-signature":signature("GET",pathname,"",ts,nonce),
+      ...(range && /^bytes=\d*-\d*$/.test(range)?{Range:range}:{})}});
 }

@@ -15,6 +15,7 @@ export type SasiNativeModelProfile = {
 };
 
 export const SASI_NATIVE_MODELS: readonly SasiNativeModelProfile[] = [
+  {id:"Qwen/Qwen2.5-VL-7B-Instruct",kind:"reasoning",family:"Qwen2.5-VL",license:"Apache-2.0",licenseClass:"commercial-open",commercialAllowed:true,source:"huggingface",minVramGb:16,recommendedVramGb:24,notes:"Self-hosted image understanding; separate processor and vision model required."},
   {
     id: "Qwen/Qwen3-8B",
     kind: "reasoning",
@@ -40,7 +41,7 @@ export const SASI_NATIVE_MODELS: readonly SasiNativeModelProfile[] = [
     notes: "Commercial-open text-to-image baseline. Keep non-commercial FLUX dev variants disabled by default.",
   },
   {
-    id: "Wan-AI/Wan2.1-T2V-1.3B",
+    id: "Wan-AI/Wan2.1-T2V-1.3B-Diffusers",
     kind: "video",
     family: "Wan2.1",
     license: "Apache-2.0",

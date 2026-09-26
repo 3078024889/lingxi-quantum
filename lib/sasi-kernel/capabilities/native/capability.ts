@@ -52,6 +52,7 @@ export const nativeReasonCapability: SasiCapability = {
       input: {
         prompt: prompt.slice(0, 24000),
         mode: raw.mode === "deep" ? "deep" : "standard",
+        ...(Array.isArray(raw.images) ? { images: raw.images } : {}),
         responseFormat: raw.responseFormat === "json" ? "json" : "text",
         system: typeof raw.system === "string" ? raw.system.slice(0, 8000) : undefined,
       },

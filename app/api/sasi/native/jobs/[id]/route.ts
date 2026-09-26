@@ -17,6 +17,7 @@ function withUrls(userId:string,job:Awaited<ReturnType<typeof getNativeJob>>){
   return{
     ...job,
     artifacts:job.artifacts.map((artifact)=>{
+      if(artifact.storage==="local") return {...artifact,url:`/api/sasi/native/jobs/${encodeURIComponent(job.id)}/artifacts/${encodeURIComponent(artifact.id)}`};
       if(artifact.storage!=="r2"||!artifact.objectKey)return artifact;
       try{
         const key=assertOwnedSasiObjectKey(userId,artifact.objectKey);

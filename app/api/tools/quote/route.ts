@@ -6,6 +6,7 @@ import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeState } from "@/lib/tools/service-readiness";
 import { isPublicPaidToolId } from "@/lib/tools/paid-catalog";
+import { assertNativeReady } from "@/lib/sasi-kernel/compute/native-client";
 import {
   amountForCurrency,
   parseCurrency,
@@ -94,6 +95,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Region only recommends. A valid user choice always wins.
+    const nativeKind = toolId === "sasi-deep-reason" ? "reason" : toolId === "sasi-image-generate" ? "image" : toolId === "sasi-video-generate" ? "video" : null;
+    if (nativeKind) {
+      try { await assertNativeReady(nativeKind, nativeKind === "reason" && userMetadata.vision === true); }
+      catch { return NextResponse.json({ error: "SASI_NATIVE_MODEL_NOT_ACCEPTED" }, { status: 503 }); }
+    }
     const currency = parseCurrency(body.currency) || recommendedCurrency(req);
     const metadata = { ...userMetadata, pricing_currency: currency };
 
