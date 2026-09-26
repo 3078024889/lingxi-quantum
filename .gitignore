@@ -27,3 +27,11 @@ pnpm-debug.log*
 .pnpm-store/
 /public/media/ffmpeg-0.12.10/
 node_modules/
+.tmp-v1586-chrome-profile/
+.tmp-v1587-*/
+.lingxi-backup-*/
+\n/imports/\n.tmp-v1586-chrome-profile/\n.tmp-v1587-*/\n.tmp-v1588-*/\n.lingxi-backup-*/\n*.v1586_*.bak\n*.v1587_*.bak\n
+/imports/
+.tmp-v1588-*/
+*.v1586_*.bak
+*.v1587_*.bak

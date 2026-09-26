@@ -19,3 +19,4 @@
 <cover-view wx:if="{{src}}" class="lx-web-copy-link" bindtap="copyCurrentLink">
   复制链接
 </cover-view>
+<cover-view wx:if="{{src}}" class="lx-web-share-link" bindtap="openSharePage">分享</cover-view>

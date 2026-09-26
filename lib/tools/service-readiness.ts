@@ -3,33 +3,55 @@ import {r2Ready} from "@/lib/r2-private";
 
 export type ToolRuntimeState={
   ready:boolean;
-  mode:"local"|"qwen-vl"|"openai"|"elevenlabs"|"r2";
+  mode:"local"|"r2";
   reason?:string;
 };
 
-const LOCAL=new Set([
-  "video-watermark-remover","pdf-editor","e-sign-pdf","cross-page-stamp",
-  "temp-mail-batch","food-calorie","food-calorie",
+/**
+ * Paid-tool availability is independent from external AI-provider keys.
+ * These tools run through LINGXIFIELD local/browser/self-hosted engines.
+ */
+const LOCAL_PAID=new Set([
+  "audio-transcription",
+  "batch-image-watermark-remover",
+  "cross-page-stamp",
+  "e-sign-pdf",
+  "food-calorie",
+  "id-photo-ai",
+  "image-watermark-remover",
+  "pdf-editor",
+  "subtitle-translate",
+  "temp-mail-batch",
+  "video-dubbing",
+  "video-transcription",
+  "video-watermark-remover",
 ]);
-const OPENAI=new Set(["id-photo-ai","image-watermark-remover","batch-image-watermark-remover","audio-transcription","video-transcription","subtitle-translate"]);
-function has(name:string){return Boolean(process.env[name]?.trim())}
 
 export function toolRuntimeState(toolId:string):ToolRuntimeState{
-  if(LOCAL.has(toolId))return {ready:true,mode:"local"};
+  if(LOCAL_PAID.has(toolId))return {ready:true,mode:"local"};
+
   if(toolId==="burn-after-read-file"){
-    return r2Ready()?{ready:true,mode:"r2"}:{ready:false,mode:"r2",reason:"PRIVATE_STORAGE_NOT_READY"};
+    return r2Ready()
+      ? {ready:true,mode:"r2"}
+      : {ready:false,mode:"r2",reason:"PRIVATE_STORAGE_NOT_READY"};
   }
-  if(OPENAI.has(toolId)){
-    return has("OPENAI_API_KEY")?{ready:true,mode:"openai"}:{ready:false,mode:"openai",reason:"PROVIDER_NOT_CONFIGURED"};
-  }
-  if(toolId==="video-dubbing"){
-    return has("ELEVENLABS_API_KEY")?{ready:true,mode:"elevenlabs"}:{ready:false,mode:"elevenlabs",reason:"PROVIDER_NOT_CONFIGURED"};
-  }
+
   return {ready:false,mode:"local",reason:"TOOL_RUNTIME_NOT_CLASSIFIED"};
 }
 
 export const PAID_TOOL_IDS=[
-  "audio-transcription","batch-image-watermark-remover","burn-after-read-file","cross-page-stamp",
-  "e-sign-pdf","food-calorie","id-photo-ai","image-watermark-remover","pdf-editor","subtitle-translate",
-  "temp-mail-batch","video-dubbing","video-transcription","video-watermark-remover",
+  "audio-transcription",
+  "batch-image-watermark-remover",
+  "burn-after-read-file",
+  "cross-page-stamp",
+  "e-sign-pdf",
+  "food-calorie",
+  "id-photo-ai",
+  "image-watermark-remover",
+  "pdf-editor",
+  "subtitle-translate",
+  "temp-mail-batch",
+  "video-dubbing",
+  "video-transcription",
+  "video-watermark-remover",
 ] as const;

@@ -1,0 +1,13 @@
+import type { ScriptScene } from "./script";
+export type VideoRatio = "9:16" | "16:9" | "1:1";
+export type TimelineScene = ScriptScene & { startSec:number; endSec:number; transition:"cut"|"fade" };
+export function dimensions(ratio:VideoRatio){ if(ratio==="16:9")return{width:1280,height:720}; if(ratio==="1:1")return{width:1080,height:1080}; return{width:720,height:1280}; }
+export function buildTimeline(scenes:ScriptScene[],ratio:VideoRatio="9:16",fps=24){
+ let cursor=0;
+ const timeline:TimelineScene[]=scenes.map((scene,index)=>{const startSec=cursor;cursor+=scene.durationSec;return{...scene,startSec,endSec:cursor,transition:index===0?"cut":index%3===0?"fade":"cut"};});
+ return{ratio,fps,...dimensions(ratio),totalDurationSec:Number(cursor.toFixed(2)),scenes:timeline};
+}
+export function toSrt(scenes:TimelineScene[]){
+ const stamp=(seconds:number)=>{const ms=Math.round(seconds*1000),h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000),x=ms%1000;return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")},${String(x).padStart(3,"0")}`;};
+ return scenes.map((scene,i)=>`${i+1}\n${stamp(scene.startSec)} --> ${stamp(scene.endSec)}\n${scene.text}\n`).join("\n");
+}

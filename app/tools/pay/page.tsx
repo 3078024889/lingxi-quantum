@@ -11,11 +11,12 @@ type Providers={wechat:boolean;alipay:boolean;paypal:boolean};type Provider=keyo
 type CreatePaymentResponse={paid?:boolean;url?:string;codeUrl?:string;jsapi?:Record<string,unknown>;error?:string};
 type WeixinBridge={invoke:(name:string,payload:Record<string,unknown>,cb:(res:{err_msg?:string})=>void)=>void};
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const amount=(q:Quote)=>q.display_currency==="CNY"?`¥${Number(q.display_amount).toFixed(2)}`:`$${Number(q.display_amount).toFixed(2)} USD`;
+const amount=(q:Quote)=>q.display_currency==="CNY"?`¥${Number(q.display_amount).toFixed(2)}`:`${Number(q.display_amount).toFixed(2)} USD`;
+function safeReturn(value:string|null){if(!value||!value.startsWith("/")||value.startsWith("//"))return "/tools";return value}
 
 function Inner(){
  const{lang}=useLingxiLang(),t=(k:string)=>accountText(lang,k),zh=lang==="zh",sp=useSearchParams()??new URLSearchParams(),quoteId=sp.get("quoteId")||"";
- const[q,setQ]=useState<Quote|null>(null),[err,setErr]=useState(""),[busy,setBusy]=useState(false),[qr,setQr]=useState(""),[paid,setPaid]=useState(false),[providers,setProviders]=useState<Providers>({wechat:false,alipay:false,paypal:false});
+ const[q,setQ]=useState<Quote|null>(null),[err,setErr]=useState(""),[busy,setBusy]=useState(false),[qr,setQr]=useState(""),[paid,setPaid]=useState(false),[providers,setProviders]=useState<Providers>({wechat:false,alipay:false,paypal:false}),returnTo=safeReturn(sp.get("return"));
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),isWechat=typeof navigator!=="undefined"&&/MicroMessenger/i.test(navigator.userAgent),code=sp.get("code")||undefined,state=sp.get("state")||undefined,valid=UUID.test(quoteId);
 
  async function refresh(){if(!valid)return;const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(quoteId)}`,{cache:"no-store"});if(!r.ok)return;const d=await r.json() as{paid?:boolean};if(d.paid){setPaid(true);if(timer.current){clearInterval(timer.current);timer.current=null}}}
@@ -32,7 +33,7 @@ function Inner(){
   if(q.currency==="CNY"&&provider==="paypal")return;
   setBusy(true);setErr("");
   try{
-   if(provider==="wechat"&&isWechat&&!code){const u=new URL(window.location.href);u.protocol="https:";u.hostname="lingxifield.com";u.port="";const r=await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(u.toString())}`),d=await r.json().catch(()=>({})) as{url?:string;error?:string};if(!r.ok||!d.url)throw new Error(d.error||"WECHAT_OAUTH_FAILED");window.location.href=d.url;return}
+   if(provider==="wechat"&&isWechat&&!code){const u=new URL(window.location.href);u.protocol="https:";u.hostname="lingxifield.cn";u.port="";const r=await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(u.toString())}`),d=await r.json().catch(()=>({})) as{url?:string;error?:string};if(!r.ok||!d.url)throw new Error(d.error||"WECHAT_OAUTH_FAILED");window.location.href=d.url;return}
    const r=await fetch("/api/tools/pay/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteId,provider,code,state})});
    const d=await r.json().catch(()=>({})) as CreatePaymentResponse;
    if(!r.ok)throw new Error(d.error||"PAYMENT_INIT_FAILED");
@@ -46,7 +47,7 @@ function Inner(){
 
  useEffect(()=>{if(!paid||!quoteId)return;try{window.opener?.postMessage({type:"LINGXIFIELD_TOOL_PAYMENT_CONFIRMED",quoteId},window.location.origin)}catch{}},[paid,quoteId]);
 
- if(paid)return <div className="mx-auto max-w-xl px-6 py-24 text-center text-[var(--lx-ink)]"><div className="text-5xl">✓</div><h1 className="mt-5 text-2xl font-semibold">{t("payConfirmed")}</h1><p className="mt-3 text-[var(--lx-muted)]">{t("payConfirmedBody")}</p><button onClick={()=>window.close()} className="mt-7 rounded-xl bg-[var(--lx-ink)] px-6 py-3 text-[var(--lx-bg)]">{t("close")}</button></div>;
+ if(paid)return <div className="mx-auto max-w-xl px-6 py-24 text-center text-[var(--lx-ink)]"><div className="text-5xl">✓</div><h1 className="mt-5 text-2xl font-semibold">{t("payConfirmed")}</h1><p className="mt-3 text-[var(--lx-muted)]">{t("payConfirmedBody")}</p><button onClick={()=>{if(window.opener){window.close();return}window.location.replace(returnTo)}} className="mt-7 rounded-xl bg-[var(--lx-ink)] px-6 py-3 text-[var(--lx-bg)]">{zh?"返回继续处理":t("close")}</button></div>;
 
  return <div className="mx-auto max-w-xl px-6 py-20 text-[var(--lx-ink)]">
   <h1 className="text-3xl font-semibold">{t("payTitle")}</h1>

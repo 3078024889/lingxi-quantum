@@ -4,7 +4,7 @@ function miniLikeEnvironment() {
   try {
     if (new URLSearchParams(window.location.search).get("mini") === "1") return true;
   } catch {}
-  return /MicroMessenger|WeChat/i.test(navigator.userAgent || "");
+  return /MicroMessenger|WeChat|QQ\/|MQQBrowser|baiduboxapp|BaiduBoxApp|BytedanceWebview|Toutiao|Aweme|TikTok|XiaoHongShu|Weibo|; wv\)|Android.*\bwv\b/i.test(navigator.userAgent || "");
 }
 
 export function safeFilename(name: string, fallback = "result") {

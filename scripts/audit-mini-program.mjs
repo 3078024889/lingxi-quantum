@@ -22,6 +22,10 @@ const required = [
   "miniapp/pages/profile/index.wxml",
   "miniapp/pages/web/index.js",
   "miniapp/pages/web/index.wxml",
+  "miniapp/pages/share/index.js",
+  "miniapp/pages/share/index.json",
+  "miniapp/pages/share/index.wxml",
+  "miniapp/pages/share/index.wxss",
   "app/api/wechat/mini/login/route.ts",
   "app/api/wechat/mini/logout/route.ts",
   "app/api/wechat/mini/account-link/start/route.ts",
@@ -37,6 +41,7 @@ const expectedPages = [
   "pages/agents/index",
   "pages/profile/index",
   "pages/web/index",
+  "pages/share/index",
 ];
 must(Array.isArray(app.pages), "MINI_PAGES_INVALID");
 must(app.pages.length === expectedPages.length, `MINI_PAGE_COUNT_DRIFT:${app.pages.length}`);
@@ -117,6 +122,16 @@ for (const rel of [
   must(!/\b(RPC|Pipeline|Worker|Queue|Inference|Endpoint|Webhook|Object Storage|Runtime)\b/i.test(t),
        `MINI_ENGINEERING_COPY:${rel}`);
 }
+
+
+const shareJs = read("miniapp/pages/share/index.js");
+const shareWxml = read("miniapp/pages/share/index.wxml");
+must(shareWxml.includes('open-type="share"'), "MINI_SHARE_OPEN_TYPE_MISSING");
+must(shareJs.includes("onShareAppMessage"), "MINI_SHARE_APP_MESSAGE_MISSING");
+must(shareJs.includes("onShareTimeline"), "MINI_SHARE_TIMELINE_MISSING");
+must(!/\/account|\/ai-wallet|\/api\//.test(shareJs) || shareJs.includes("startsWith('/account')"),
+     "MINI_SHARE_PRIVATE_PATH_GUARD_MISSING");
+console.log("MINI_NATIVE_SHARE=PASS");
 
 // Account linking remains explicit, not automatic.
 const profileJs = read("miniapp/pages/profile/index.js");

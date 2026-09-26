@@ -4,7 +4,8 @@
     "pages/tools/index",
     "pages/agents/index",
     "pages/profile/index",
-    "pages/web/index"
+    "pages/web/index",
+    "pages/share/index"
   ],
   "window": {
     "navigationStyle": "custom",

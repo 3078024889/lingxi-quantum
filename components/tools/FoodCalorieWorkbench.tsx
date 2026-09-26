@@ -4,9 +4,9 @@ import {useState} from "react";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 
-type SearchItem={food_id:number;code:string;name_zh:string;name_en?:string|null;category?:string|null;kcal_per_100g:number;protein_g_per_100g:number;carbs_g_per_100g:number;fat_g_per_100g:number;score:number;};
+type SearchItem={food_id:number;code:string;name_zh:string;name_en?:string|null;category?:string|null;kcal_per_100g:number;protein_g_per_100g:number;carbs_g_per_100g:number;fat_g_per_100g:number;fiber_g_per_100g?:number;sugar_g_per_100g?:number;sodium_mg_per_100g?:number;score:number;};
 type Selected={food:SearchItem;grams:number};
-type CalcResult={items:Array<{food_id:number;code:string;name_zh:string;name_en?:string|null;grams:number;kcal:number;protein_g:number;carbs_g:number;fat_g:number}>;total:{grams:number;kcal:number;protein_g:number;carbs_g:number;fat_g:number};};
+type CalcResult={items:Array<{food_id:number;code:string;name_zh:string;name_en?:string|null;grams:number;kcal:number;protein_g:number;carbs_g:number;fat_g:number;fiber_g?:number;sugar_g?:number;sodium_mg?:number}>;total:{grams:number;kcal:number;protein_g:number;carbs_g:number;fat_g:number;fiber_g?:number;sugar_g?:number;sodium_mg?:number};};
 
 const QUICK=["米饭","鸡蛋","鸡胸肉","苹果","香蕉","橙子","牛奶","面包"];
 
@@ -61,7 +61,7 @@ export default function FoodCalorieWorkbench(){
    {hits.length>0&&<div className="mt-4 divide-y divide-[var(--lx-line)] rounded-xl border border-[var(--lx-line)]">
     {hits.map(x=><button key={x.food_id} onClick={()=>add(x)} className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left hover:bg-[var(--lx-soft)]">
      <span><b className="text-sm text-[var(--lx-ink)]">{zh?x.name_zh:(x.name_en||x.name_zh)}</b>{x.category&&<span className="ml-2 text-xs text-[var(--lx-faint)]">{x.category}</span>}</span>
-     <span className="shrink-0 text-xs text-[var(--lx-muted)]">{Number(x.kcal_per_100g).toFixed(0)} kcal / 100g</span>
+     <span className="shrink-0 text-right text-xs leading-5 text-[var(--lx-muted)]"><b>{Number(x.kcal_per_100g).toFixed(0)} kcal / 100g</b><br/>{zh?"蛋白质":"P"} {Number(x.protein_g_per_100g||0).toFixed(1)}g · {zh?"碳水":"C"} {Number(x.carbs_g_per_100g||0).toFixed(1)}g · {zh?"脂肪":"F"} {Number(x.fat_g_per_100g||0).toFixed(1)}g</span>
     </button>)}
    </div>}
   </section>
@@ -78,7 +78,7 @@ export default function FoodCalorieWorkbench(){
   {result&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
    <div className="text-sm text-[var(--lx-faint)]">{zh?"本餐合计":"Meal total"}</div>
    <div className="mt-1 text-3xl font-semibold text-[var(--lx-ink)]">{Number(result.total.kcal||0).toFixed(0)} kcal</div>
-   <div className="mt-2 text-sm text-[var(--lx-muted)]">{zh?"蛋白质":"Protein"} {Number(result.total.protein_g||0).toFixed(1)}g · {zh?"碳水":"Carbs"} {Number(result.total.carbs_g||0).toFixed(1)}g · {zh?"脂肪":"Fat"} {Number(result.total.fat_g||0).toFixed(1)}g</div>
+   <div className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{zh?"蛋白质":"Protein"} {Number(result.total.protein_g||0).toFixed(1)}g · {zh?"碳水":"Carbs"} {Number(result.total.carbs_g||0).toFixed(1)}g · {zh?"脂肪":"Fat"} {Number(result.total.fat_g||0).toFixed(1)}g{Number(result.total.fiber_g||0)>0?<> · {zh?"膳食纤维":"Fiber"} {Number(result.total.fiber_g||0).toFixed(1)}g</>:null}{Number(result.total.sodium_mg||0)>0?<> · {zh?"钠":"Sodium"} {Number(result.total.sodium_mg||0).toFixed(0)}mg</>:null}</div>
    <div className="mt-4 space-y-2">{result.items.map((x,i)=><div key={`${x.food_id}-${i}`} className="flex items-center justify-between gap-4 rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm"><span>{zh?x.name_zh:(x.name_en||x.name_zh)} · {x.grams}g</span><b>{Number(x.kcal).toFixed(0)} kcal</b></div>)}</div>
   </section>}
 

@@ -1,0 +1,12 @@
+import fs from "node:fs";import path from "node:path";
+const root=process.cwd(),files=[];function walk(d){if(!fs.existsSync(d))return;for(const e of fs.readdirSync(d,{withFileTypes:true})){if(["node_modules",".next",".git","reports"].includes(e.name)||e.name.startsWith(".lingxi-backup-"))continue;const p=path.join(d,e.name);if(e.isDirectory())walk(p);else if(/\.(ts|tsx|js|jsx)$/.test(e.name))files.push(p)}}walk(path.join(root,"app"));walk(path.join(root,"components"));walk(path.join(root,"lib"));
+const rel=p=>path.relative(root,p).replaceAll("\\","/"),read=p=>fs.readFileSync(p,"utf8"),hits=[];
+const critical=p=>p.startsWith("app/tools/")||p.startsWith("components/tools/")||p==="app/sasi/SasiChat.tsx"||p==="app/sasi/SeedanceStudio.tsx"||p.startsWith("app/api/knowledge/")||p.startsWith("app/api/sasi/autonomous/");
+for(const p of files){const r=rel(p),t=read(p);if(critical(r)&&/OPENAI_API_KEY|ANTHROPIC_API_KEY|GEMINI_API_KEY|XAI_API_KEY|DASHSCOPE_API_KEY|ARK_API_KEY|ELEVENLABS|api\.openai\.com|api\.anthropic\.com|api\.x\.ai|dashscope\.aliyuncs\.com|ark\.cn-beijing\.volces\.com|\/api\/sasi\/byok\/|\/api\/ai\//i.test(t))hits.push(`P0 DEFAULT_EXTERNAL_DEPENDENCY ${r}`)}
+for(const p of files.filter(p=>rel(p).startsWith("app/api/ai/"))){const t=read(p);if(/OPENAI_API_KEY|ELEVENLABS|api\.openai\.com|api\.elevenlabs\.io/i.test(t))hits.push(`P0 AI_ROUTE_PROVIDER_GATE ${rel(p)}`)}
+const uiTerms=["意识显化","生命图谱","场域精测","DIRECTOR PIPELINE","连接自己的模型 API","Connect your own model API","token 用量","Provider error","Object Storage","Task Executor","Job Failed"];
+for(const p of files.filter(p=>/\.(tsx|jsx)$/.test(p))){const r=rel(p);if(r.startsWith("app/sasi/connections/")||r.includes("ConnectionCenter")||r.startsWith("app/archive/"))continue;const t=read(p);for(const term of uiTerms)if(t.includes(term))hits.push(`P1 VISIBLE_OR_LEGACY_COPY ${r} :: ${term}`)}
+const required=["components/tools/IdPhotoAiWorkbench.tsx","components/tools/ImageWatermarkWorkbench.tsx","components/tools/SubtitleTranslateWorkbench.tsx","components/tools/TranscriptionWorkbench.tsx","components/tools/VideoDubbingWorkbench.tsx","app/sasi/SasiChat.tsx","app/sasi/SeedanceStudio.tsx"];
+for(const r of required){const p=path.join(root,r);if(!fs.existsSync(p))hits.push(`P0 REQUIRED_FILE_MISSING ${r}`)}
+const p0=hits.filter(x=>x.startsWith("P0")).length,p1=hits.filter(x=>x.startsWith("P1")).length;
+console.log(`PRE_RELEASE_P0=${p0}`);console.log(`PRE_RELEASE_P1=${p1}`);if(hits.length){console.error(hits.join("\n"));process.exit(2)}console.log("V15.85_PRE_RELEASE_GATE=PASS");

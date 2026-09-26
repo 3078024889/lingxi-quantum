@@ -17,7 +17,7 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug:"learn", href:"/learn", titles:c("探索","Learn","探索","탐색","Explorer","Entdecken","Explorar","Explorar","استكشاف") },
   { slug:"membership", href:"/membership", titles:c("能量交换场","Access","アクセス","이용 권한","Accès","Zugang","Acceso","Acesso","الوصول") },
   { slug:"number-energy", href:"/tools/number-energy", titles:c("手机号车牌号测试","Number Energy","番号エネルギー","번호 에너지","Énergie des nombres","Zahlenenergie","Energía numérica","Energia dos números","طاقة الأرقام") },
-  { slug:"life-map", href:"/life-map", titles:c("生命图谱","Life Map","生命マップ","생명 지도","Carte de vie","Lebenskarte","Mapa de vida","Mapa da vida","خريطة الحياة") },
+  { slug:"book-sasi", href:"/ai-knowledge", titles:c("书本 SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI") },
   { slug:"practice-breath", href:"/practice/breath", titles:c("量子息法","Quantum Breath Method","量子呼吸法","양자 호흡법","Méthode du souffle quantique","Quanten-Atemmethode","Método de respiración cuántica","Método da Respiração Quântica","طريقة التنفس الكمي") },
   { slug:"practice-intuition", href:"/practice/intuition", titles:c("直觉丹道","The Intuitive Way","直観の道","직관의 길","La voie intuitive","Der intuitive Weg","La vía intuitiva","O Caminho Intuitivo","طريق الحدس") },
   { slug:"practice-heart-reset", href:"/practice/heart-reset", titles:c("归零心诀","Heart Reset","ハートリセット","하트 리셋","Réinitialisation du cœur","Herz-Reset","Reinicio del corazón","Reset do coração","إعادة ضبط القلب") },
@@ -36,8 +36,8 @@ const STATIC_PAGES: StaticEntry[] = [
 const HINTS: Copy[] = [
   c("试试搜「AI短剧」",'Try "AI Drama"',"「AIドラマ」を検索","‘AI 드라마’를 검색해 보세요",'Essayez « Drama IA »','Suche nach „KI-Drama“','Prueba «Drama IA»','Tente “Drama IA”','جرّب البحث عن «دراما بالذكاء الاصطناعي»'),
   c("试试搜「量子息法」",'Try "Quantum Breath Method"',"「量子呼吸法」を検索","‘양자 호흡법’을 검색해 보세요",'Essayez « Souffle quantique »','Suche nach „Quanten-Atemmethode“','Prueba «Respiración cuántica»','Tente “Respiração Quântica”','جرّب «التنفس الكمي»'),
-  c("试试搜「生命图谱」",'Try "Life Map"',"「生命マップ」を検索","‘생명 지도’를 검색해 보세요",'Essayez « Carte de vie »','Suche nach „Lebenskarte“','Prueba «Mapa de vida»','Tente “Mapa da vida”','جرّب «خريطة الحياة»'),
-  c("试试搜「显化」",'Try "Manifestation"',"「具現化」を検索","‘의식 구현’을 검색해 보세요",'Essayez « Manifestation »','Suche nach „Manifestation“','Prueba «Manifestación»','Tente “Manifestação”','جرّب «التجسيد»'),
+  c("试试搜「书本 SASI」",'Try "Life Map"',"「生命マップ」を検索","‘생명 지도’를 검색해 보세요",'Essayez « Carte de vie »','Suche nach „Lebenskarte“','Prueba «Mapa de vida»','Tente “Mapa da vida”','جرّب «خريطة الحياة»'),
+  c("试试搜「PDF 工具」",'Try "Manifestation"',"「具現化」を検索","‘의식 구현’을 검색해 보세요",'Essayez « Manifestation »','Suche nach „Manifestation“','Prueba «Manifestación»','Tente “Manifestação”','جرّب «التجسيد»'),
 ];
 
 const UI = {

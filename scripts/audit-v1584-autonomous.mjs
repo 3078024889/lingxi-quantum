@@ -1,0 +1,10 @@
+import fs from "node:fs";
+const must=(value,message)=>{if(!value){console.error(`AUTONOMOUS_AUDIT_FAIL=${message}`);process.exit(1)}};
+const read=(p)=>fs.readFileSync(p,"utf8");
+for(const p of ["lib/sasi-autonomous/runtime.ts","lib/sasi-autonomous/router.ts","lib/sasi-autonomous/graph.ts","app/api/knowledge/ask/route.ts","app/api/sasi/autonomous/route.ts","components/SasiAutonomousVideoStudio.tsx","components/SasiAutonomousChat.tsx","app/sasi/drama/page.tsx","app/sasi/chat/page.tsx"])must(fs.existsSync(p),`MISSING:${p}`);
+const knowledge=read("app/api/knowledge/ask/route.ts");must(!/runBilledText|NO_AI_PROVIDER_CONFIGURED|OPENAI_API_KEY|DEEPSEEK_API_KEY|ZHIPU_API_KEY/.test(knowledge),"KNOWLEDGE_PROVIDER_GATE");must(/executeSasi/.test(knowledge),"KNOWLEDGE_RUNTIME_NOT_WIRED");
+const router=read("lib/sasi-autonomous/router.ts");for(const marker of ["knowledgeAnswerCapability","knowledgeSummaryCapability","videoPlanCapability","utilityOrganizeCapability","utilityStatsCapability"])must(router.includes(marker),`ROUTER_MISSING:${marker}`);
+const graph=read("lib/sasi-autonomous/graph.ts");must(/Promise\.all\(ready\.map/.test(graph),"GRAPH_PARALLEL_BATCH_MISSING");must(/maxRetries/.test(graph),"GRAPH_RETRY_MISSING");must(/history/.test(graph),"GRAPH_HISTORY_MISSING");
+const drama=read("components/SasiAutonomousVideoStudio.tsx");must(/renderMp4/.test(drama)&&/renderWebm/.test(drama),"VIDEO_DUAL_RENDERER_MISSING");must(/FFMPEG_ASSETS_UNAVAILABLE/.test(drama),"VIDEO_FFMPEG_FALLBACK_MISSING");must(!/OPENAI_API_KEY|XAI_API_KEY|ARK_API_KEY|DASHSCOPE_API_KEY/.test(drama),"VIDEO_PROVIDER_KEY_REFERENCE");
+const chat=read("components/SasiAutonomousChat.tsx");must(/\/api\/sasi\/autonomous/.test(chat),"CHAT_AUTONOMOUS_ROUTE_MISSING");must(!/\/api\/sasi\/byok\/text/.test(chat),"CHAT_BYOK_DEFAULT_REMAINS");
+console.log("CAPABILITY_GRAPH_RUNTIME=PASS");console.log("KNOWLEDGE_PROVIDER_GATE=PASS");console.log("KNOWLEDGE_MULTI_STAGE=PASS");console.log("VIDEO_ZERO_API_BASELINE=PASS");console.log("VIDEO_MP4_WEBM_FALLBACK=PASS");console.log("SASI_CHAT_AUTONOMOUS_DEFAULT=PASS");console.log("AUTONOMOUS_AUDIT=PASS");

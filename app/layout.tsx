@@ -14,7 +14,7 @@ export const metadata:Metadata={
  title:{default:"灵犀场 LINGXIFIELD｜SASI 创作、资料知识与免费实用工具",template:"%s ｜ 灵犀场 LINGXIFIELD"},
  description:"灵犀场是一个让想法被理解、让问题被处理、让结果真正发生的数字工作空间。提供 SASI 创作与构建、资料知识、学习研究，以及 PDF、图片、视频、字幕、临时邮箱、阅后即焚等实用工具。",
  applicationName:"灵犀场 LINGXIFIELD",
- keywords:["灵犀场","LINGXIFIELD","SASI","实用工具","PDF工具","图片工具","视频转文字","字幕工具","临时邮箱","阅后即焚","资料知识","学习工具","科研工具"],
+ keywords:["灵犀场","LINGXIFIELD","SASI","实用工具","PDF工具","图片工具","视频转文字","字幕工具","临时邮箱","阅后即焚","资料知识","学习工具","科研工具","电子签名","电子签章","PDF盖章","骑缝章"],
  alternates:{canonical:SITE},
  openGraph:{
   type:"website",siteName:"灵犀场 LINGXIFIELD",
@@ -32,8 +32,5 @@ export const metadata:Metadata={
 export default function RootLayout({children}:{children:React.ReactNode}){
  return <html lang="zh-CN" suppressHydrationWarning><head>
   <SiteStructuredData/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet"/>
- </head><body className="antialiased"><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider></body></html>;
+  </head><body className="antialiased"><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider></body></html>;
 }

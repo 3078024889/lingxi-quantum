@@ -1,0 +1,14 @@
+{
+  "source": "@huggingface/transformers/dist/transformers.web.js",
+  "generatedBy": "LINGXIFIELD V15.87.5 browser webpack bundle",
+  "assets": [
+    {
+      "name": "tf-wasm-666d0398a1e1.wasm",
+      "bytes": 21596019
+    },
+    {
+      "name": "transformers.web.js",
+      "bytes": 2326386
+    }
+  ]
+}

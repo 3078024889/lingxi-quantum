@@ -44,7 +44,7 @@ function randX(): number {
  * 埋点/统计接口）。以后要换真实数据，把这里的 base 换成接口读回来的
  * 数字即可，下面的下落/绽放逻辑不用动。 */
 const STATS = [
-  { glyph: "✦", base: 128742, suffix: "+", zh: "生命图谱已生成", en: "Life maps generated" },
+  { glyph: "✦", base: 128742, suffix: "+", zh: "书本 SASI已生成", en: "Life maps generated" },
   { glyph: "✦", base: 98315, suffix: "+", zh: "意识观察记录", en: "Awareness records" },
   { glyph: "♡", base: 68942, suffix: "+", zh: "修炼者在场域中成长", en: "Practitioners growing here" },
   { glyph: "◈", base: 36, suffix: "", zh: "多维系统融合", en: "Systems integrated" },

@@ -5,8 +5,6 @@ import Footer from "@/components/Footer";
 import LxText from "@/components/LxText";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import KnowledgeWorkspace from "@/components/KnowledgeWorkspace";
-import BookSasiBalanceBar from "@/components/BookSasiBalanceBar";
-
 export const metadata: Metadata = {
   title: "灵犀场书本 SASI｜把书本变成可持续对话的智能体",
   description:
@@ -62,7 +60,7 @@ export default function Page() {
             />
           </p>
 
-          <BookSasiBalanceBar />
+
 
           <div className="mt-5 flex flex-wrap gap-3 text-sm">
             <Link href="/ai-learning" className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-[var(--lx-muted)]">

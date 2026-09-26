@@ -1,1 +1,2 @@
 /* Shared visual system lives in app.wxss. */
+.lx-row-price{margin-top:8rpx;font-size:24rpx;font-weight:600;color:#20201d}

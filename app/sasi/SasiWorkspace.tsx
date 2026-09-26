@@ -72,7 +72,7 @@ const studioNav: { id: View; zh: string; en: string; glyph: string }[] = [
   { id: "home", zh: "新建创作", en: "New project", glyph: "＋" },
   { id: "works", zh: "我的项目", en: "My projects", glyph: "▣" },
   { id: "skills", zh: "创作 Skills", en: "Skills", glyph: "◇" },
-  { id: "connections", zh: "连接与 API", en: "Connections", glyph: "⌁" },
+  { id: "connections", zh: "可选增强", en: "Optional enhancement", glyph: "⌁" },
   { id: "billing", zh: "充值与账单", en: "Balance & billing", glyph: "◎" },
 ];
 
@@ -558,7 +558,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
           ))}
         </nav>
 
-        </details><details className="lx-nav-group"><summary>{copy(lang, "灵犀场 · 意识显化", "Lingxi Field")}</summary>
+        </details><details className="lx-nav-group"><summary>{copy(lang, "灵犀场 · 知识与研究", "Knowledge & Research")}</summary>
         <nav className="space-y-1">
           {fieldNav.map((item) => <Link key={item.href} href={item.href} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm opacity-75 transition hover:bg-current/5 hover:opacity-100"><span className="w-7 text-center">{item.glyph}</span><span><b className="block text-[15px] font-medium">{copy(lang, item.zh, item.en)}</b><small className="mt-1 block text-[11px] font-normal opacity-55">{item.en}</small></span></Link>)}
         </nav>
@@ -631,7 +631,7 @@ export default function SasiWorkspace({ accountEmail }: { accountEmail: string |
 
           {view === "account" && <SasiAccountCenter lang={lang} dark={dark} accountEmail={accountEmail} projectCount={projects.length} onOpenWorks={()=>setView("works")} onOpenModels={()=>setView("connections")} />}
 
-          {view !== "home" && <footer className="mt-16 border-t border-current/10 py-8"><p className="text-xs uppercase tracking-[.2em] opacity-40">{copy(lang, "法律与规则", "Legal & Rules")}</p><div className="mt-4 flex flex-wrap gap-x-5 gap-y-3">{(lang === "zh" ? legalZh : legalEn).map((label) => <Link key={label} href="/legal/sasi" className="text-xs opacity-55 hover:opacity-100">{label}</Link>)}</div><p className="mt-6 max-w-4xl text-xs leading-6 opacity-40">{copy(lang, "SASI 工作台已经开放。连接自己的模型 API 后，可以继续推理、编剧、规划与生产；使用灵犀场托管能力时，系统会在执行前显示真实状态、费用与结算方式。", "The SASI workspace is open. Connect your own model APIs for reasoning, writing, planning and production; hosted LINGXIFIELD capabilities show live status, cost and settlement before execution.")}</p></footer>}
+          {view !== "home" && <footer className="mt-16 border-t border-current/10 py-8"><p className="text-xs uppercase tracking-[.2em] opacity-40">{copy(lang, "法律与规则", "Legal & Rules")}</p><div className="mt-4 flex flex-wrap gap-x-5 gap-y-3">{(lang === "zh" ? legalZh : legalEn).map((label) => <Link key={label} href="/legal/sasi" className="text-xs opacity-55 hover:opacity-100">{label}</Link>)}</div><p className="mt-6 max-w-4xl text-xs leading-6 opacity-40">{copy(lang, "SASI 工作台默认由灵犀场自主能力直接处理。需要额外生成能力时，可以自行开启增强；所有收费项目都会在执行前显示本次价格与结算方式。", "SASI works with LINGXIFIELD autonomous capabilities by default. Optional enhancements can be enabled separately; paid work shows the price and settlement method before execution.")}</p></footer>}
         </div>
       </main>
 

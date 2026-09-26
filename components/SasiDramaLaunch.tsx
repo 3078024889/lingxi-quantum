@@ -4,17 +4,18 @@ import Link from "next/link";
 import LxText from "@/components/LxText";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import SasiWorkspace from "@/app/sasi/SasiWorkspace";
+import SasiAutonomousDrama from "@/components/SasiAutonomousDrama";
 
 const labels:Record<LingxiLang,{skills:string;balance:string;models:string;login:string}>={
- zh:{skills:"Skills",balance:"余额与价格",models:"模型与 API",login:"登录后可以保存项目、Skill 和创作进度，下次回来继续。"},
- en:{skills:"Skills",balance:"Balance & pricing",models:"Models & APIs",login:"Sign in to save projects, Skills and creation progress, then continue next time."},
- ja:{skills:"Skills",balance:"残高と料金",models:"モデルと API",login:"ログインするとプロジェクト、Skill、制作進捗を保存し、次回続きから再開できます。"},
- ko:{skills:"Skills",balance:"잔액 및 가격",models:"모델 및 API",login:"로그인하면 프로젝트, Skill, 창작 진행 상황을 저장하고 다음에 이어서 할 수 있습니다."},
- fr:{skills:"Skills",balance:"Solde et tarifs",models:"Modèles & API",login:"Connectez-vous pour enregistrer projets, Skills et progression, puis reprendre plus tard."},
- de:{skills:"Skills",balance:"Guthaben & Preise",models:"Modelle & APIs",login:"Melden Sie sich an, um Projekte, Skills und Fortschritt zu speichern und später fortzusetzen."},
- es:{skills:"Skills",balance:"Saldo y precios",models:"Modelos y API",login:"Inicia sesión para guardar proyectos, Skills y progreso y continuar más tarde."},
- pt:{skills:"Skills",balance:"Saldo e preços",models:"Modelos e APIs",login:"Entre para salvar projetos, Skills e progresso e continuar depois."},
- ar:{skills:"Skills",balance:"الرصيد والأسعار",models:"النماذج وAPI",login:"سجّل الدخول لحفظ المشاريع وSkills وتقدم الإنشاء والعودة إليه لاحقًا."}
+ zh:{skills:"Skills",balance:"余额与价格",models:"可选增强",login:"登录后可以保存项目、Skill 和创作进度，下次回来继续。"},
+ en:{skills:"Skills",balance:"Balance & pricing",models:"Optional enhancement",login:"Sign in to save projects, Skills and creation progress, then continue next time."},
+ ja:{skills:"Skills",balance:"残高と料金",models:"任意の強化",login:"ログインするとプロジェクト、Skill、制作進捗を保存し、次回続きから再開できます。"},
+ ko:{skills:"Skills",balance:"잔액 및 가격",models:"선택형 향상",login:"로그인하면 프로젝트, Skill, 창작 진행 상황을 저장하고 다음에 이어서 할 수 있습니다."},
+ fr:{skills:"Skills",balance:"Solde et tarifs",models:"Amélioration facultative",login:"Connectez-vous pour enregistrer projets, Skills et progression, puis reprendre plus tard."},
+ de:{skills:"Skills",balance:"Guthaben & Preise",models:"Optionale Erweiterung",login:"Melden Sie sich an, um Projekte, Skills und Fortschritt zu speichern und später fortzusetzen."},
+ es:{skills:"Skills",balance:"Saldo y precios",models:"Mejora opcional",login:"Inicia sesión para guardar proyectos, Skills y progreso y continuar más tarde."},
+ pt:{skills:"Skills",balance:"Saldo e preços",models:"Melhoria opcional",login:"Entre para salvar projetos, Skills e progresso e continuar depois."},
+ ar:{skills:"Skills",balance:"الرصيد والأسعار",models:"تحسين اختياري",login:"سجّل الدخول لحفظ المشاريع وSkills وتقدم الإنشاء والعودة إليه لاحقًا."}
 };
 
 export default function SasiDramaLaunch({accountEmail}:{accountEmail:string|null}){
@@ -32,7 +33,8 @@ export default function SasiDramaLaunch({accountEmail}:{accountEmail:string|null
     </div>
     {!accountEmail&&<p className="mt-5 rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{c.login}</p>}
    </section>
-   <div className="mt-8 overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)]"><SasiWorkspace accountEmail={accountEmail}/></div>
+   <div className="mt-8"><SasiAutonomousDrama/></div>
+<div className="mt-8 overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)]"><SasiWorkspace accountEmail={accountEmail}/></div>
   </div>
  </main>
 }

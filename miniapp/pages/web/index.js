@@ -67,7 +67,7 @@ function withMiniContext(path) {
   const route = hashAt >= 0 ? path.slice(0, hashAt) : path
   const hash = hashAt >= 0 ? path.slice(hashAt) : ''
   const separator = route.includes('?') ? '&' : '?'
-  return `${API_BASE}${route}${separator}mini=1${hash}`
+  return `${API_BASE}${route}${separator}mini=1&ads=0${hash}`
 }
 
 const SHARE_TITLES = {

@@ -39,7 +39,7 @@ const dedicated: ToolItem[] = [
   { href:"/tools/pdf-compress", titleZh:"PDF 压缩", titleEn:"Compress PDF", descZh:"降低 PDF 文件体积，并保留可用质量。", descEn:"Reduce PDF size while preserving useful quality.", kind:"document", category:"pdf", localOnly:true },
   { href:"/tools/pdf-pages", titleZh:"PDF 页面整理", titleEn:"PDF Page Organizer", descZh:"调整、提取、删除或重新排列 PDF 页面。", descEn:"Reorder, extract or remove PDF pages.", kind:"document", category:"pdf", localOnly:true },
   { href:"/tools/pdf-editor", titleZh:"PDF 编辑", titleEn:"PDF Editor", descZh:"直接处理 PDF 页面与常用编辑操作。", descEn:"Edit PDF pages and common document elements.", kind:"document", category:"pdf", localOnly:true },
-  { href:"/tools/e-sign-pdf", titleZh:"PDF 电子签名", titleEn:"E-sign PDF", descZh:"在 PDF 中加入签名并导出。", descEn:"Place a signature on a PDF and export it.", kind:"document", category:"pdf", localOnly:true },
+  { href:"/tools/e-sign-pdf", titleZh:"PDF电子签名 / 电子签章", titleEn:"E-sign & Stamp PDF", descZh:"在线签字、电子签章、PDF盖章、公章图片与骑缝章。", descEn:"Place a signature on a PDF and export it.", kind:"document", category:"pdf", localOnly:true },
   { href:"/tools/document-copy-layout", titleZh:"证件复印排版", titleEn:"Document Copy Layout", descZh:"把证件正反面排到 A4，并可叠加用途水印。", descEn:"Lay out document sides on A4 with purpose watermark.", kind:"document", category:"pdf", localOnly:true },
   { href:"/tools/pdf-to-jpg", titleZh:"PDF 转 JPG", titleEn:"PDF to JPG", descZh:"把 PDF 页面导出为图片。", descEn:"Export PDF pages as images.", kind:"document", category:"pdf", localOnly:true },
 

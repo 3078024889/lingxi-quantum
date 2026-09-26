@@ -311,7 +311,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
       setLearningEventId(String(data.learningEventId||""));
-      const charged=Number(data.chargedRmb);
+      const charged=typeof data.chargedRmb==="number"?data.chargedRmb:NaN;
       if(Number.isFinite(charged)){setLastCharge(charged);setWalletBalance(v=>v===null?v:Math.max(0,v-charged))}
       setLastIntelligence((data.intelligence||intelligence) as Intelligence);
       setNotice(Number.isFinite(charged)
@@ -375,7 +375,9 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   ];
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
   const selectedPrice=tierPricing?.[intelligence]?.minimumRmb;
-  const knownInsufficient=walletBalance!==null&&Number.isFinite(Number(selectedPrice))&&walletBalance<Number(selectedPrice);
+  void selectedPrice;
+  void walletBalance;
+  const knownInsufficient=false;
 
   return <section className="mt-8 space-y-6 lx-knowledge-workspace">
     <div className="lx-knowledge-privacy rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm leading-7 text-[var(--lx-muted)]">
@@ -413,7 +415,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between gap-3">
             <span className="text-sm font-medium text-[var(--lx-ink)]">{tr(lang,"smart")}</span>
-            <span className="text-xs text-[var(--lx-faint)]">{tr(lang,"billed")}</span>
+            <span className="text-xs text-[var(--lx-faint)]">{lang==="zh"?"默认由灵犀场直接整理，不需要连接外部模型":"Runs directly in LINGXIFIELD by default; no external model connection required"}</span>
           </div>
           <div className="lx-knowledge-modebar">
             {intelligenceLabels.map(({value,label,factor})=><button key={value} type="button" onClick={()=>setIntelligence(value)} disabled={askBusy}
@@ -425,18 +427,15 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
           </div>
           <div className="lx-knowledge-mode-detail">
             <p>{selectedTier.help}</p>
-            <div className="lx-knowledge-mode-cost">
-              <b>{tr(lang,"minCharge")}：{Number.isFinite(Number(selectedPrice))?`¥${Number(selectedPrice).toFixed(2)}`:"—"}</b>
-              <span>{tr(lang,"balance")}：{walletBalance===null?"—":`¥${walletBalance.toFixed(2)}`}</span>
-            </div>
+            <div className="lx-knowledge-mode-cost"><b>{lang==="zh"?"基础整理可直接使用":"Base synthesis works directly"}</b><span>{lang==="zh"?"答案始终回到你提供的原文":"Answers stay grounded in your source text"}</span></div>
           </div>
         </div>
 
-        <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources||knownInsufficient}
+        <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources}
           className="mt-3 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
           {askBusy?tr(lang,"readingSource"):tr(lang,"answer")}
         </button>
-        {(knownInsufficient||needsRecharge)&&<Link href="/ai-wallet" className="lx-knowledge-recharge">{lang==="zh"?"创作余额不足 · 去充值":"Creation balance low · Recharge"}</Link>}
+
         <p className="mt-3 text-xs leading-5 text-[var(--lx-faint)]">{tr(lang,"aiPrivacy")}</p>
 
         {answer&&<div className="lx-knowledge-answer">
