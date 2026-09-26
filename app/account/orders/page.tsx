@@ -8,6 +8,7 @@ export const metadata = { title: "订单与使用记录 | 灵犀场 LINGXIFIELD"
 
 type OrderRow={
   id:string; product_id:string; amount_rmb:number|null; amount_usd:number|null;
+  currency:"CNY"|"USD"|null;
   status:string; provider:string|null; created_at:string; paid_at:string|null;
 };
 
@@ -20,29 +21,16 @@ export default async function OrdersPage({searchParams}:{searchParams?:{payment?
 
   if(user&&supabase){
     const {data,error}=await supabase.from("orders")
-      .select("id,product_id,amount_rmb,amount_usd,status,provider,created_at,paid_at")
-      .eq("user_id",user.id)
-      .order("created_at",{ascending:false})
-      .limit(100);
+      .select("id,product_id,amount_rmb,amount_usd,currency,status,provider,created_at,paid_at")
+      .eq("user_id",user.id).order("created_at",{ascending:false}).limit(100);
     loadFailed=!!error;
     rows=(data as OrderRow[]|null)??[];
   }
 
   const orders:AccountOrderViewRow[]=rows.map(o=>{
     const product=getProduct(o.product_id);
-    return {
-      ...o,
-      group:product?.group??null,
-      nameZh:product?.name??null,
-      nameEn:product?.nameEn??null,
-    };
+    return {...o,group:product?.group??null,nameZh:product?.name??null,nameEn:product?.nameEn??null};
   });
 
-  return <>
-    <Nav/>
-    <main className="lx11-page">
-      <AccountOrdersHistory signedIn={!!user} loadFailed={loadFailed} paymentState={paymentState} orders={orders}/>
-    </main>
-    <Footer/>
-  </>;
+  return <><Nav/><main className="lx11-page"><AccountOrdersHistory signedIn={!!user} loadFailed={loadFailed} paymentState={paymentState} orders={orders}/></main><Footer/></>;
 }

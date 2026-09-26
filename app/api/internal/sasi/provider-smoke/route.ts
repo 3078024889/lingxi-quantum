@@ -118,11 +118,9 @@ export async function POST(request: Request) {
       selection: { provider: providerId, model, quality },
     });
   } catch (error) {
+    console.error("[provider smoke] submit failed", error instanceof Error ? error.message : "unknown");
     return NextResponse.json(
-      {
-        error: "PROVIDER_SUBMIT_FAILED",
-        detail: error instanceof Error ? error.message.slice(0, 120) : "unknown",
-      },
+      { error: "PROVIDER_SUBMIT_FAILED" },
       { status: 502 },
     );
   }
@@ -165,13 +163,13 @@ export async function POST(request: Request) {
         note: "Provider generation succeeded. This smoke endpoint does not write SASI wallet, jobs, deliveries, or production verification flags.",
       });
     } catch (error) {
+      console.error("[provider smoke] poll failed", error instanceof Error ? error.message : "unknown");
       return NextResponse.json(
         {
           error: "PROVIDER_POLL_FAILED",
           provider: providerId,
           model,
           providerJobId: submitted.providerJobId,
-          detail: error instanceof Error ? error.message.slice(0, 120) : "unknown",
         },
         { status: 502 },
       );

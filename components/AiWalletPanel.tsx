@@ -1,43 +1,42 @@
 "use client";
 import {useEffect,useState} from "react";
 import Link from "next/link";
-import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
+import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
+import CurrencySelector from "@/components/CurrencySelector";
 
 const CNY=[10,30,50,100,300,500] as const;
 const USD=[10,20,50,100,300,500] as const;
-type C={loading:string;cny:string;cnyDesc:string;usd:string;usdDesc:string;top:string;topTitle:string;topDesc:string;cnyMethod:string;thisTop:string;continuePay:string;continuePaypal:string;fine:string;records:string;recordsTitle:string;orders:string;withdraw:string;refund:string};
-const d:Record<LingxiLang,C>={
- zh:{loading:"正在读取余额…",cny:"人民币余额",cnyDesc:"微信、支付宝充值的余额。",usd:"美元余额",usdDesc:"PayPal 美元充值的余额。",top:"补充余额",topTitle:"需要多少，就充值多少。",topDesc:"两种币种分别保留，不互相改写。实际使用时会从能够覆盖本次费用的余额中结算。",cnyMethod:"微信 / 支付宝 · CNY",thisTop:"本次充值",continuePay:"继续支付 →",continuePaypal:"继续使用 PayPal →",fine:"未使用的真实充值本金可按原支付渠道申请退回。",records:"退款与记录",recordsTitle:"每一笔充值都留有自己的订单记录。",orders:"查看充值记录",withdraw:"余额提现",refund:"查看退款规则"},
- en:{loading:"Loading balance…",cny:"CNY balance",cnyDesc:"Balance funded through WeChat Pay or Alipay.",usd:"USD balance",usdDesc:"Balance funded through PayPal in USD.",top:"Top up",topTitle:"Choose the amount you need.",topDesc:"CNY and USD remain separate. Usage is settled from the balance that can cover the task.",cnyMethod:"WeChat / Alipay · CNY",thisTop:"This top-up",continuePay:"Continue →",continuePaypal:"Continue with PayPal →",fine:"Unused paid principal can be refunded to the original payment method.",records:"Refunds & records",recordsTitle:"Every top-up keeps its own order record.",orders:"Orders",withdraw:"Withdraw balance",refund:"Refund policy"},
- ja:{loading:"残高を読み込み中…",cny:"CNY 残高",cnyDesc:"WeChat Pay / Alipay で入金した残高。",usd:"USD 残高",usdDesc:"PayPal で入金した米ドル残高。",top:"残高を追加",topTitle:"必要な分だけチャージ。",topDesc:"CNY と USD は別々に保持され、利用時は今回の費用を支払える残高から精算されます。",cnyMethod:"WeChat / Alipay · CNY",thisTop:"今回のチャージ",continuePay:"支払いへ →",continuePaypal:"PayPal で続ける →",fine:"未使用の実入金元本は元の決済方法への返金申請ができます。",records:"返金と履歴",recordsTitle:"各チャージには個別の注文履歴が残ります。",orders:"注文履歴",withdraw:"残高を引き出す",refund:"返金ルール"},
- ko:{loading:"잔액 불러오는 중…",cny:"CNY 잔액",cnyDesc:"WeChat Pay 또는 Alipay로 충전한 잔액.",usd:"USD 잔액",usdDesc:"PayPal로 충전한 달러 잔액.",top:"잔액 충전",topTitle:"필요한 만큼만 충전하세요.",topDesc:"CNY와 USD는 서로 분리되어 유지되며 사용 시 해당 비용을 감당할 수 있는 잔액에서 결제됩니다.",cnyMethod:"WeChat / Alipay · CNY",thisTop:"이번 충전",continuePay:"결제 계속 →",continuePaypal:"PayPal로 계속 →",fine:"사용하지 않은 실제 충전 원금은 원 결제수단으로 환불 신청할 수 있습니다.",records:"환불 및 기록",recordsTitle:"모든 충전은 개별 주문 기록으로 남습니다.",orders:"충전 기록",withdraw:"잔액 출금",refund:"환불 정책"},
- fr:{loading:"Chargement du solde…",cny:"Solde CNY",cnyDesc:"Solde alimenté via WeChat Pay ou Alipay.",usd:"Solde USD",usdDesc:"Solde alimenté via PayPal en USD.",top:"Recharger",topTitle:"Ajoutez uniquement le montant nécessaire.",topDesc:"CNY et USD restent séparés. L’usage est prélevé sur le solde capable de couvrir la tâche.",cnyMethod:"WeChat / Alipay · CNY",thisTop:"Cette recharge",continuePay:"Continuer →",continuePaypal:"Continuer avec PayPal →",fine:"Le principal payé et non utilisé peut faire l’objet d’une demande de remboursement vers le moyen d’origine.",records:"Remboursements et historique",recordsTitle:"Chaque recharge conserve son propre enregistrement.",orders:"Historique",withdraw:"Retirer le solde",refund:"Règles de remboursement"},
- de:{loading:"Guthaben wird geladen…",cny:"CNY-Guthaben",cnyDesc:"Über WeChat Pay oder Alipay aufgeladen.",usd:"USD-Guthaben",usdDesc:"Über PayPal in USD aufgeladen.",top:"Aufladen",topTitle:"Laden Sie nur den benötigten Betrag auf.",topDesc:"CNY und USD bleiben getrennt. Nutzung wird aus dem Guthaben abgerechnet, das die Aufgabe decken kann.",cnyMethod:"WeChat / Alipay · CNY",thisTop:"Diese Aufladung",continuePay:"Weiter zur Zahlung →",continuePaypal:"Mit PayPal fortfahren →",fine:"Nicht genutztes eingezahltes Kapital kann über die ursprüngliche Zahlungsmethode zurückgefordert werden.",records:"Erstattungen & Verlauf",recordsTitle:"Jede Aufladung behält ihren eigenen Bestellnachweis.",orders:"Bestellungen",withdraw:"Guthaben auszahlen",refund:"Erstattungsregeln"},
- es:{loading:"Cargando saldo…",cny:"Saldo CNY",cnyDesc:"Saldo recargado mediante WeChat Pay o Alipay.",usd:"Saldo USD",usdDesc:"Saldo recargado mediante PayPal en USD.",top:"Recargar",topTitle:"Recarga solo lo que necesites.",topDesc:"CNY y USD se mantienen separados. El uso se cobra del saldo que pueda cubrir la tarea.",cnyMethod:"WeChat / Alipay · CNY",thisTop:"Esta recarga",continuePay:"Continuar →",continuePaypal:"Continuar con PayPal →",fine:"El principal real no utilizado puede solicitarse de vuelta al método de pago original.",records:"Reembolsos y registros",recordsTitle:"Cada recarga conserva su propio registro de pedido.",orders:"Pedidos",withdraw:"Retirar saldo",refund:"Política de reembolso"},
- pt:{loading:"Carregando saldo…",cny:"Saldo CNY",cnyDesc:"Saldo carregado via WeChat Pay ou Alipay.",usd:"Saldo USD",usdDesc:"Saldo carregado via PayPal em USD.",top:"Recarregar",topTitle:"Recarregue apenas o que precisar.",topDesc:"CNY e USD permanecem separados. O uso é debitado do saldo capaz de cobrir a tarefa.",cnyMethod:"WeChat / Alipay · CNY",thisTop:"Esta recarga",continuePay:"Continuar →",continuePaypal:"Continuar com PayPal →",fine:"O principal real não utilizado pode ser solicitado de volta ao método de pagamento original.",records:"Reembolsos e registros",recordsTitle:"Cada recarga mantém seu próprio registro de pedido.",orders:"Pedidos",withdraw:"Retirar saldo",refund:"Política de reembolso"},
- ar:{loading:"جارٍ تحميل الرصيد…",cny:"رصيد CNY",cnyDesc:"رصيد تم شحنه عبر WeChat Pay أو Alipay.",usd:"رصيد USD",usdDesc:"رصيد بالدولار تم شحنه عبر PayPal.",top:"شحن الرصيد",topTitle:"اشحن فقط ما تحتاجه.",topDesc:"يبقى CNY وUSD منفصلين، ويُخصم الاستخدام من الرصيد القادر على تغطية المهمة.",cnyMethod:"WeChat / Alipay · CNY",thisTop:"هذا الشحن",continuePay:"متابعة الدفع →",continuePaypal:"المتابعة عبر PayPal →",fine:"يمكن طلب رد أصل المبلغ المدفوع وغير المستخدم إلى وسيلة الدفع الأصلية.",records:"الاسترداد والسجلات",recordsTitle:"لكل عملية شحن سجل طلب مستقل.",orders:"سجل الطلبات",withdraw:"سحب الرصيد",refund:"سياسة الاسترداد"}
-};
 
 export default function AiWalletPanel(){
- const{lang}=useLingxiLang();const c=d[lang]??d.en;
+ const{lang}=useLingxiLang();const zh=lang==="zh";const{currency}=usePreferredCurrency();
  const[data,setData]=useState<{balanceRmb:number;balanceUsd:number}|null>(null),[msg,setMsg]=useState("");
- const[cny,setCny]=useState<number>(50),[usd,setUsd]=useState<number>(50),[method,setMethod]=useState<"cny"|"usd">("cny");
- useEffect(()=>{void fetch("/api/ai/wallet",{cache:"no-store"}).then(async r=>{const x=await r.json();if(r.ok)setData(x);else setMsg(x.error||c.loading)})},[c.loading]);
- if(!data)return <div className="lx11-wallet-loading">{msg||c.loading}</div>;
+ const[cny,setCny]=useState<number>(50),[usd,setUsd]=useState<number>(50);
+ useEffect(()=>{void fetch("/api/ai/wallet",{cache:"no-store"}).then(async r=>{const x=await r.json();if(r.ok)setData(x);else setMsg(x.error||(zh?"正在读取余额…":"Loading balance…"))})},[zh]);
+ if(!data)return <div className="lx11-wallet-loading">{msg||(zh?"正在读取余额…":"Loading balance…")}</div>;
+
  return <div className="lx11-wallet-stack">
   <section className="grid gap-4 md:grid-cols-2">
-   <div className="lx11-wallet-overview lx-wallet-currency-card"><LingxiMiniIcon name="wallet" size="title"/><div className="lx11-wallet-balance"><span>{c.cny}</span><strong>¥{data.balanceRmb.toFixed(2)}</strong><p>{c.cnyDesc}</p></div></div>
-   <div className="lx11-wallet-overview lx-wallet-currency-card"><LingxiMiniIcon name="wallet" size="title"/><div className="lx11-wallet-balance"><span>{c.usd}</span><strong>${data.balanceUsd.toFixed(2)}</strong><p>{c.usdDesc}</p></div></div>
+   <div className="lx11-wallet-overview lx-wallet-currency-card"><LingxiMiniIcon name="wallet" size="title"/><div className="lx11-wallet-balance"><span>{zh?"人民币余额":"CNY balance"}</span><strong>¥{data.balanceRmb.toFixed(2)}</strong><p>{zh?"微信、支付宝充值的余额。":"Balance funded through WeChat Pay or Alipay."}</p></div></div>
+   <div className="lx11-wallet-overview lx-wallet-currency-card"><LingxiMiniIcon name="wallet" size="title"/><div className="lx11-wallet-balance"><span>{zh?"美元余额":"USD balance"}</span><strong>${data.balanceUsd.toFixed(2)}</strong><p>{zh?"PayPal 美元充值的余额。":"Balance funded through PayPal in USD."}</p></div></div>
   </section>
-  <section className="lx11-wallet-section lx-wallet-topup-panel"><div className="lx11-wallet-heading"><div><span>{c.top}</span><h2>{c.topTitle}</h2></div><p>{c.topDesc}</p></div>
-   <div className="mb-5 flex flex-wrap gap-2">
-    <button type="button" onClick={()=>setMethod("cny")} className={`rounded-full border px-4 py-2 text-sm ${method==="cny"?"border-[var(--lx-line-strong)] bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-muted)]"}`}>{c.cnyMethod}</button>
-    <button type="button" onClick={()=>setMethod("usd")} className={`rounded-full border px-4 py-2 text-sm ${method==="usd"?"border-[var(--lx-line-strong)] bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-muted)]"}`}>PayPal · USD</button>
-   </div>
-   {method==="cny"?<><div className="lx11-topup-grid">{CNY.map(x=><button key={x} onClick={()=>setCny(x)} className={cny===x?"is-selected":""}><span>¥</span><b>{x}</b></button>)}</div><div className="lx11-topup-action"><div><span>{c.thisTop}</span><b>¥{cny}</b></div><Link href={`/checkout?productId=ai-balance-${cny}&redirect=/ai-wallet`}>{c.continuePay}</Link></div></>:<><div className="lx11-topup-grid">{USD.map(x=><button key={x} onClick={()=>setUsd(x)} className={usd===x?"is-selected":""}><span>$</span><b>{x}</b></button>)}</div><div className="lx11-topup-action"><div><span>{c.thisTop}</span><b>${usd.toFixed(2)} USD</b></div><Link href={`/checkout-usd?productId=ai-usd-balance-${usd}`}>{c.continuePaypal}</Link></div></>}
-   <p className="lx11-wallet-fine">{c.fine}</p>
+
+  <section className="lx11-wallet-section lx-wallet-topup-panel">
+   <div className="lx11-wallet-heading"><div><span>{zh?"补充余额":"Top up"}</span><h2>{zh?"按当前支付币种继续。":"Continue in your selected currency."}</h2></div><p>{zh?"语言与支付币种彼此独立。":"Language and payment currency are independent."}</p></div>
+   <div className="mb-5 max-w-xs"><CurrencySelector/></div>
+
+   {currency==="CNY"?<>
+    <div className="lx11-topup-grid">{CNY.map(x=><button key={x} onClick={()=>setCny(x)} className={cny===x?"is-selected":""}><span>¥</span><b>{x}</b></button>)}</div>
+    <div className="lx11-topup-action"><div><span>{zh?"本次充值":"This top-up"}</span><b>¥{cny}</b></div><Link href={`/checkout?productId=ai-balance-${cny}&redirect=/ai-wallet`}>{zh?"继续支付 →":"Continue →"}</Link></div>
+   </>:<>
+    <div className="lx11-topup-grid">{USD.map(x=><button key={x} onClick={()=>setUsd(x)} className={usd===x?"is-selected":""}><span>$</span><b>{x}</b></button>)}</div>
+    <div className="lx11-topup-action"><div><span>{zh?"本次充值":"This top-up"}</span><b>${usd.toFixed(2)} USD</b></div><Link href={`/checkout-usd?productId=ai-usd-balance-${usd}`}>{zh?"使用 PayPal →":"Continue with PayPal →"}</Link></div>
+   </>}
+
+   <p className="lx11-wallet-fine">{zh?"不同币种采用独立定价，不按实时汇率换算。":"Prices are set independently for each currency and are not based on live exchange rates."}</p>
   </section>
-  <section className="lx11-wallet-section lx11-wallet-two"><div><span>{c.records}</span><h2>{c.recordsTitle}</h2><div className="lx11-wallet-links"><Link href="/account/orders">{c.orders}</Link><Link href="/account/withdrawals">{c.withdraw}</Link><Link href="/refunds">{c.refund}</Link></div></div></section>
- </div>
+
+  <section className="lx11-wallet-section lx11-wallet-two"><div><span>{zh?"退款与记录":"Refunds & records"}</span><h2>{zh?"每一笔充值都保留购买时的币种与金额。":"Each top-up keeps the currency and amount used at purchase."}</h2><div className="lx11-wallet-links"><Link href="/account/orders">{zh?"查看充值记录":"Orders"}</Link><Link href="/account/withdrawals">{zh?"余额退款":"Balance refund"}</Link><Link href="/refunds">{zh?"退款规则":"Refund policy"}</Link></div></div></section>
+ </div>;
 }

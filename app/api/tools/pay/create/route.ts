@@ -10,6 +10,7 @@ import { exchangeCodeForOpenid,wechatOauthConfigured } from "@/lib/wechat-oauth"
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeState } from "@/lib/tools/service-readiness";
+import { parseCurrency, providerAllowedForCurrency } from "@/lib/payments/currency-book";
 export const runtime="nodejs"; export const maxDuration=30;
 
 export async function POST(req:NextRequest){
@@ -47,6 +48,12 @@ export async function POST(req:NextRequest){
     if(new Date(q.expires_at).getTime()<Date.now())return NextResponse.json({error:"报价已过期，请重新计算"},{status:410});
 
     const p=provider;
+    const quoteCurrency=parseCurrency(q.currency)||parseCurrency(q.metadata?.pricing_currency);
+    if(!quoteCurrency)return NextResponse.json({error:"QUOTE_CURRENCY_MISSING"},{status:409});
+    if(!providerAllowedForCurrency(p,quoteCurrency)){
+      return NextResponse.json({error:"PAYMENT_METHOD_NOT_AVAILABLE_FOR_REGION"},{status:403});
+    }
+
     // Provider readiness must be checked BEFORE creating a local order.
     // Otherwise a disabled provider can leave ghost pending orders behind.
     if(p==="paypal"){

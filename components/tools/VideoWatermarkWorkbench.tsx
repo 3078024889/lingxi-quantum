@@ -4,6 +4,7 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
+import {downloadUrl} from "@/lib/tools/shared/download";
 
 type MediaItem={file:File;duration:number;width:number;height:number;key:string};
 type Box={x:number;y:number;w:number;h:number};
@@ -66,7 +67,7 @@ export default function VideoWatermarkWorkbench(){
   {items.length>0&&<><div className="grid gap-3 sm:grid-cols-4">{([[c.x,"x"],[c.y,"y"],[c.w,"w"],[c.h,"h"]] as const).map(([name,key])=><label key={key} className="text-sm text-[var(--lx-muted)]">{name} %<input type="range" min={0} max={key==="w"||key==="h"?50:95} value={box[key]} onChange={e=>setBox(v=>({...v,[key]:Number(e.target.value)}))} className="mt-2 w-full"/><span className="text-xs text-[var(--lx-faint)]">{box[key]}%</span></label>)}</div><div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm text-[var(--lx-muted)]">{items.length} · {c.billing}: <b className="text-[var(--lx-ink)]">{units}</b></div></>}
   <div className="flex flex-wrap gap-3">{busy?<><button disabled className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] opacity-50">{c.working}</button><button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{c.cancel}</button></>:units>0?<PaidActionButton toolId="video-watermark-remover" quantity={units} metadata={{videos:items.length}} onPaid={run} label={c.price}/>:null}</div>
   {progress&&<p className="text-sm text-[var(--lx-muted)]">{progress}</p>}
-  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.url} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><video src={r.url} controls className="w-full rounded-xl"/><div className="mt-3 flex items-center justify-between gap-2"><span className="truncate text-sm text-[var(--lx-muted)]">{r.name}</span><a href={r.url} download={`clean-${r.name.replace(/\.[^.]+$/,".mp4")}`} className="shrink-0 rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">{c.download}</a></div></div>)}</div>}
+  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.url} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><video src={r.url} controls className="w-full rounded-xl"/><div className="mt-3 flex items-center justify-between gap-2"><span className="truncate text-sm text-[var(--lx-muted)]">{r.name}</span><button type="button" onClick={()=>void downloadUrl(r.url,`clean-${r.name.replace(/\.[^.]+$/,".mp4")}`)} className="shrink-0 rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">{c.download}</button></div></div>)}</div>}
   {failures.length>0&&<div className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-3 text-xs text-[var(--lx-danger)]">{failures.map(x=><div key={x.name}>{x.name} · {x.reason}</div>)}</div>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
   <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">{c.truth}</div>

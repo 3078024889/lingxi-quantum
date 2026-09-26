@@ -72,11 +72,11 @@ function withMiniContext(path) {
 
 const SHARE_TITLES = {
   '/': '灵犀场 · 一键创造，一念即达',
-  '/sasi': '灵犀场 SASI · AI 创作',
-  '/sasi/drama': '灵犀场 · AI 短剧',
-  '/sasi/connections': '灵犀场 · 模型连接',
+  '/sasi': '灵犀场 SASI · 创作',
+  '/sasi/drama': '灵犀场 · 短剧创作',
+  '/sasi/connections': '灵犀场 · 扩展能力',
   '/tools': '灵犀场 · 实用工具',
-  '/ai-knowledge': '灵犀场 · 资料变成活的 Agent',
+  '/ai-knowledge': '灵犀场 · 资料变成可用知识',
   '/ai-learning': '灵犀场 · 学习 SASI',
   '/ai-research': '灵犀场 · 科研 SASI',
 }

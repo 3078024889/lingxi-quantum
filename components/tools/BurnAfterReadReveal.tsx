@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {downloadUrl} from "@/lib/tools/shared/download";
 import {privacyText} from "@/lib/privacy-tools-i18n";
 function bytes(s:string){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s);return Uint8Array.from(b,c=>c.charCodeAt(0))}
 type Item={id:string;name:string;size:number;type:string;url:string};
@@ -54,7 +55,7 @@ export default function BurnAfterReadReveal({id}:{id:string}){
   {status==="shown"&&<div className="mt-5 space-y-4">
    {seconds!=null&&<div className="text-sm font-semibold text-[var(--lx-danger)]">{seconds}s · {t("left")}</div>}
    {value&&<div className="rounded-2xl bg-[var(--lx-soft)] p-5"><pre className="whitespace-pre-wrap break-words text-sm leading-6 text-[var(--lx-ink)]">{value}</pre></div>}
-   {!!files.length&&<div className="rounded-2xl border border-[var(--lx-line)] p-4"><b className="text-sm text-[var(--lx-ink)]">{t("files")}</b><div className="mt-3 space-y-2">{files.map(f=><a key={f.id} href={f.url} download={f.name} className="flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-ink)]"><span className="truncate">{f.name}</span><span className="shrink-0 text-[var(--lx-faint)]">{t("download")} · {(f.size/1024/1024).toFixed(1)} MB</span></a>)}</div></div>}
+   {!!files.length&&<div className="rounded-2xl border border-[var(--lx-line)] p-4"><b className="text-sm text-[var(--lx-ink)]">{t("files")}</b><div className="mt-3 space-y-2">{files.map(f=><button key={f.id} type="button" onClick={()=>void downloadUrl(f.url,f.name)} className="flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-ink)]"><span className="truncate">{f.name}</span><span className="shrink-0 text-[var(--lx-faint)]">{t("download")} · {(f.size/1024/1024).toFixed(1)} MB</span></button>)}</div></div>}
   </div>}
   {status==="gone"&&<p className="mt-5 text-sm text-[var(--lx-muted)]">{t("gone")}</p>}
   {status==="missing"&&<p className="mt-5 text-sm text-[var(--lx-danger)]">{t("openMissing")}</p>}

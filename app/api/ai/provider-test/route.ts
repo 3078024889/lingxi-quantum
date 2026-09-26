@@ -55,8 +55,9 @@ export async function POST(req:NextRequest){
       ok:true,tier,provider:r.provider,model:r.model,answer:r.text,usage:r.usage
     },{headers:{"Cache-Control":"no-store"}});
   }catch(error){
+    console.error("[provider test] failed", error instanceof Error ? error.message : String(error));
     return NextResponse.json({
-      ok:false,tier,error:error instanceof Error?error.message:String(error)
+      ok:false,tier,error:"PROVIDER_CHECK_FAILED"
     },{status:502,headers:{"Cache-Control":"no-store"}});
   }
 }

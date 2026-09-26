@@ -1,4 +1,5 @@
 "use client";
+import {downloadUrl} from "@/lib/tools/shared/download";
 
 import { useMemo, useState } from "react";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
@@ -704,9 +705,7 @@ function QrWorkbench() {
         <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-5 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={dataUrl} alt="QR code" className="mx-auto h-64 w-64 bg-white p-2" />
-          <a href={dataUrl} download="qrcode.png" className="mt-4 inline-block rounded-sm bg-lattice px-5 py-2.5 text-sm text-void-deep">
-            {t("下载 PNG","Download PNG")}
-          </a>
+          <button type="button" onClick={()=>void downloadUrl(dataUrl,"qrcode.png")} className="mt-4 inline-block rounded-sm bg-lattice px-5 py-2.5 text-sm text-void-deep">{t("下载 PNG","Download PNG")}</button>
         </div>
       )}
     </div>

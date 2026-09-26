@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { productCatalogText } from "@/lib/product-catalog-i18n";
 import { brandText } from "@/lib/brand-system-i18n";
 import NotificationBell from "@/components/NotificationBell";
+import CurrencySelector from "@/components/CurrencySelector";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 
 type Theme = "light" | "dark";
@@ -183,6 +184,7 @@ export default function Nav() {
             <option key={key} value={key}>{LANG_NAMES[key]}</option>
           ))}
         </select>
+        <CurrencySelector />
       </div>
     </>
   );
@@ -199,6 +201,8 @@ export default function Nav() {
 
         <div className="lx11-top-actions">
           <Link href="/sasi" className="lx11-top-link">✨ ＋ {t("create")}</Link>
+
+          <CurrencySelector compact />
 
           <NotificationBell />
 

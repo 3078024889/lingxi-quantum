@@ -3,6 +3,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { buildDeterministicAskAnswer } from "@/lib/sasi/ask/prompt";
 import { retrieveFoundryContext } from "@/lib/sasi/ask/retrieve";
+import { routeSasiTask } from "@/lib/sasi/autonomy/router";
 
 export type RunSasiAskInput = {
   userId: string;
@@ -45,6 +46,11 @@ export async function runSasiAsk(input: RunSasiAskInput): Promise<RunSasiAskResu
     const err = new Error(validated.error);
     err.name = "AskValidationError";
     throw err;
+  }
+
+  const autonomyRoute = routeSasiTask("knowledge-answer");
+  if (autonomyRoute.externalModelRequired || autonomyRoute.executionClass !== "deterministic") {
+    throw new Error("SASI_AUTONOMY_ROUTE_REGRESSION");
   }
 
   const retrieved = await retrieveFoundryContext(input.admin, input.userId, validated.question);

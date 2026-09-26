@@ -1,38 +1,191 @@
 const KEY = 'lx_language'
 
+const SUPPORTED = [
+  { id: 'zh-CN', label: '中文' },
+  { id: 'en', label: 'English' },
+  { id: 'ja', label: '日本語' },
+  { id: 'ko', label: '한국어' },
+  { id: 'fr', label: 'Français' },
+  { id: 'de', label: 'Deutsch' },
+  { id: 'es', label: 'Español' },
+  { id: 'pt', label: 'Português' },
+  { id: 'ar', label: 'العربية' },
+]
+
+const COPY = {
+  'zh-CN': {
+    tabs: ['SASI创作', '实用工具', '资料智库', '我的'],
+    create: {
+      kicker:'CREATE WITH SASI', title:'一键创造，一念即达。',
+      subtitle:'从一个还没理清的念头开始，让目标被理解，让制作继续发生，让结果真正落地。',
+      start:'现在开始', choose:'选择你要完成的事',
+      featureKicker:'EXTEND YOUR WORKSPACE', featureTitle:'按需扩展创作能力',
+      featureNote:'需要时，可连接你自己的外部服务。只有你主动发起任务时才会使用。',
+      featureButton:'打开扩展中心', shareTitle:'把灵犀场分享出去',
+      shareNote:'可以直接转发小程序，也可以复制网页链接。', shareFriend:'转发给好友', copyLink:'复制链接',
+      entries:[
+        ['SASI 创作','把想法变成可继续推进的项目，从理解目标到制作、校验与交付。','/sasi'],
+        ['短剧创作','从故事、人物、分镜到画面、声音、字幕与成片，进入完整制作流程。','/sasi/drama'],
+        ['网站构建','从一个想法开始，整理结构、形成实现并持续迭代。','/sasi'],
+        ['资料变成可用知识','把书本、论文与资料整理成可检索、可追溯、能继续工作的知识空间。','/ai-knowledge'],
+      ],
+    },
+    tools:{
+      kicker:'PRACTICAL TOOLS', title:'需要处理什么，直接开始。',
+      subtitle:'PDF、图片、视频、文字、字幕、隐私与文件处理。能在本地完成的优先在本地完成。',
+      all:'查看全部工具', shareTitle:'分享实用工具', shareNote:'转发小程序给朋友，或复制工具中心网页链接。',
+      shareFriend:'转发给好友', copyLink:'复制链接',
+      items:[
+        ['PDF 编辑','编辑、签名、盖章与常用 PDF 处理。','/tools/pdf-editor'],
+        ['PDF 合并 / 拆分','把多个 PDF 合并，或按页拆成新的文件。','/tools/pdf-merge-split'],
+        ['图片去水印','处理图片里的不需要区域，并导出新图片。','/tools/image-watermark-remover'],
+        ['文字识别','从图片或文件里提取可复制文字。','/tools/ocr'],
+        ['食物热量','上传食物照片，识别食物并估算热量与主要营养信息。','/tools/food-calorie'],
+        ['视频转文字','把视频中的语音整理成可继续编辑的文字。','/tools/video-transcription'],
+        ['字幕翻译','上传字幕，翻译并继续导出使用。','/tools/subtitle-translate'],
+        ['临时邮箱','创建短期邮箱，用于接收临时邮件。','/tools/temp-mail'],
+        ['阅后即焚','生成限时内容链接，到期或阅读后按规则失效。','/tools/burn-after-read'],
+      ],
+    },
+    agents:{
+      kicker:'SOURCE-GROUNDED', title:'让资料不再只是静态文件。',
+      subtitle:'从原文出发建立可检索、可引用、可持续使用的知识空间，让回答和任务尽量回到来源。',
+      shareTitle:'分享资料智库', shareNote:'转发小程序入口，或复制资料页面链接。', shareFriend:'转发给好友', copyLink:'复制链接',
+      items:[
+        ['资料 → 知识库','上传书本、论文、教材或私人资料，建立可检索、可追溯的知识空间。','/ai-knowledge'],
+        ['学习 SASI','围绕资料学习、理解、复习与任务推进，把知识变成可以继续使用的能力。','/ai-learning'],
+        ['科研 SASI','为论文、研究资料与问题链建立来源可追溯的研究工作区。','/ai-research'],
+      ],
+    },
+    profile:{
+      kicker:'YOUR LINGXIFIELD', title:'我的', subtitle:'账户、订单、创作余额与正在进行的项目，都从这里继续。',
+      checking:'正在确认微信身份…', connected:'微信身份已连接', disconnected:'微信身份暂未连接', reconnect:'重新连接',
+      workspace:'工作区与账户', workspaceNote:'继续查看项目、账户信息与使用记录。',
+      orders:'订单与记录', ordersNote:'查看支付、服务交付与历史使用记录。',
+      balance:'创作余额与额度', balanceNote:'查看创作余额、额度与使用情况。',
+      existing:'已有网页灵犀场账户？', existingNote:'由你主动确认后再连接，不自动猜测、合并或迁移身份。', connect:'连接已有账户',
+      privacy:'隐私政策', terms:'服务条款', refunds:'退款政策',
+      shareTitle:'分享灵犀场', shareNote:'账户和订单不会被分享，只分享公开入口。', shareFriend:'转发给好友', copyLink:'复制官网链接',
+      contact:'联系微信客服', support:'支付、账户连接或内容交付遇到问题，可直接联系微信客服。',
+      language:'界面语言', preparing:'正在准备连接', unavailable:'暂时无法连接', retry:'请稍后再试',
+      reconnecting:'正在重新连接', reconnected:'已重新连接', notConnected:'暂未连接',
+    },
+  },
+
+  en: {
+    tabs:['SASI','Tools','Knowledge','Me'],
+    create:{kicker:'CREATE WITH SASI',title:'Create in one move. Reach the result.',subtitle:'Start with an unfinished thought. Let the goal become clear, the work move forward, and the result take shape.',start:'Start now',choose:'Choose what you want to finish',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'Add capabilities when you need them',featureNote:'Connect your own external services only when needed. They are used only for tasks you explicitly start.',featureButton:'Open extensions',shareTitle:'Share LINGXIFIELD',shareNote:'Forward the Mini Program or copy the web link.',shareFriend:'Share',copyLink:'Copy link',entries:[['SASI Workspace','Turn an idea into a project that can move from intent to production, verification and delivery.','/sasi'],['Drama Creation','Move from story and characters to shots, sound, subtitles and a finished cut.','/sasi/drama'],['Website Builder','Start with an idea, shape the structure, build it and keep iterating.','/sasi'],['Turn Sources into Working Knowledge','Make books, papers and files searchable, traceable and reusable.','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'Choose the task. Start immediately.',subtitle:'PDF, images, video, text, subtitles, privacy and file processing. Work locally whenever possible.',all:'View all tools',shareTitle:'Share useful tools',shareNote:'Forward the Mini Program or copy the tools link.',shareFriend:'Share',copyLink:'Copy link',items:[['PDF Editor','Edit, sign, stamp and handle everyday PDF tasks.','/tools/pdf-editor'],['Merge / Split PDF','Combine PDFs or split selected pages into new files.','/tools/pdf-merge-split'],['Remove Image Watermarks','Remove unwanted image areas and export a new image.','/tools/image-watermark-remover'],['Text Recognition','Extract copyable text from images or files.','/tools/ocr'],['Food Nutrition','Upload a food photo to identify items and estimate calories and key nutrition.','/tools/food-calorie'],['Video to Text','Turn speech in a video into editable text.','/tools/video-transcription'],['Subtitle Translation','Translate subtitle files and export them for continued use.','/tools/subtitle-translate'],['Temporary Email','Create a short-lived mailbox for temporary messages.','/tools/temp-mail'],['Burn After Reading','Create a timed content link that expires after reading or on schedule.','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'Turn static files into working knowledge.',subtitle:'Build a searchable, citable knowledge space from original sources so answers and tasks can trace back to evidence.',shareTitle:'Share Knowledge',shareNote:'Forward the Mini Program or copy the knowledge link.',shareFriend:'Share',copyLink:'Copy link',items:[['Sources → Knowledge Base','Upload books, papers, course material or private files into a searchable, traceable workspace.','/ai-knowledge'],['Learning SASI','Study, understand, review and move tasks forward from your own materials.','/ai-learning'],['Research SASI','Build a source-traceable workspace for papers, research material and question chains.','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'Me',subtitle:'Continue with your account, orders, creation balance and active projects.',checking:'Checking WeChat identity…',connected:'WeChat identity connected',disconnected:'WeChat identity not connected',reconnect:'Reconnect',workspace:'Workspace & account',workspaceNote:'Continue with projects, account details and usage history.',orders:'Orders & history',ordersNote:'Review payments, delivery and previous use.',balance:'Creation balance',balanceNote:'Review balance, allowance and usage.',existing:'Already have a LINGXIFIELD web account?',existingNote:'Connect only after you confirm. We never guess, merge or migrate identities automatically.',connect:'Connect existing account',privacy:'Privacy Policy',terms:'Terms of Service',refunds:'Refund Policy',shareTitle:'Share LINGXIFIELD',shareNote:'Account and order data stay private. Only the public entry is shared.',shareFriend:'Share',copyLink:'Copy website link',contact:'Contact WeChat support',support:'For payment, account linking or delivery issues, contact WeChat support.',language:'Interface language',preparing:'Preparing connection',unavailable:'Unable to connect right now',retry:'Please try again later',reconnecting:'Reconnecting',reconnected:'Reconnected',notConnected:'Not connected'},
+  },
+
+  ja: {
+    tabs:['SASI制作','ツール','資料知識','マイ'],
+    create:{kicker:'CREATE WITH SASI',title:'ひとつの操作で、結果へ。',subtitle:'まだ整理できていない考えから始め、目的を明確にし、制作を前へ進め、結果までつなげます。',start:'今すぐ始める',choose:'完成させたいことを選択',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'必要なときだけ機能を追加',featureNote:'必要に応じて自分の外部サービスを接続できます。明示的に開始したタスクでのみ使用されます。',featureButton:'拡張を開く',shareTitle:'LINGXIFIELDを共有',shareNote:'ミニプログラムを転送するか、Webリンクをコピーできます。',shareFriend:'共有',copyLink:'リンクをコピー',entries:[['SASI制作','アイデアを、理解・制作・検証・納品まで進められるプロジェクトにします。','/sasi'],['ショートドラマ制作','物語、人物、絵コンテ、映像、音声、字幕から完成版まで。','/sasi/drama'],['Webサイト構築','アイデアから構成を整え、実装し、継続的に改善します。','/sasi'],['資料を使える知識へ','書籍・論文・資料を検索可能で追跡できる知識空間にします。','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'処理したいことを、そのまま開始。',subtitle:'PDF、画像、動画、文字、字幕、プライバシー、ファイル処理。可能なものは端末内で優先処理します。',all:'すべてのツール',shareTitle:'ツールを共有',shareNote:'ミニプログラムを転送するか、ツールページのリンクをコピーできます。',shareFriend:'共有',copyLink:'リンクをコピー',items:[['PDF編集','編集・署名・捺印など、日常のPDF処理。','/tools/pdf-editor'],['PDF結合 / 分割','複数PDFを結合、またはページ単位で分割。','/tools/pdf-merge-split'],['画像の不要部分を除去','不要な領域を処理して新しい画像を書き出します。','/tools/image-watermark-remover'],['文字認識','画像やファイルからコピー可能な文字を抽出。','/tools/ocr'],['食事の栄養','料理写真から食品を識別し、カロリーと主要栄養を推定。','/tools/food-calorie'],['動画を文字に','動画内の音声を編集可能な文字へ。','/tools/video-transcription'],['字幕翻訳','字幕ファイルを翻訳して書き出します。','/tools/subtitle-translate'],['一時メール','短期間使える受信用メールを作成。','/tools/temp-mail'],['閲覧後に失効','閲覧後または期限で失効する共有リンクを作成。','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'資料を、使える知識へ。',subtitle:'原文から検索・引用・継続利用できる知識空間を作り、回答を根拠へ戻せるようにします。',shareTitle:'資料知識を共有',shareNote:'ミニプログラムを転送するか、資料ページのリンクをコピーできます。',shareFriend:'共有',copyLink:'リンクをコピー',items:[['資料 → 知識ベース','書籍・論文・教材・私有資料を検索・追跡できる知識空間へ。','/ai-knowledge'],['学習SASI','資料を使って学習・理解・復習・タスク推進。','/ai-learning'],['研究SASI','論文や研究資料を根拠追跡できる作業空間へ。','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'マイ',subtitle:'アカウント、注文、制作残高、進行中のプロジェクトをここから続けます。',checking:'WeChat本人確認中…',connected:'WeChat連携済み',disconnected:'WeChat未連携',reconnect:'再接続',workspace:'ワークスペースとアカウント',workspaceNote:'プロジェクト、アカウント情報、利用履歴を確認。',orders:'注文と履歴',ordersNote:'支払い、提供内容、利用履歴を確認。',balance:'制作残高',balanceNote:'残高、利用枠、使用状況を確認。',existing:'Web版LINGXIFIELDのアカウントがありますか？',existingNote:'確認後にのみ接続します。自動で推測・統合・移行しません。',connect:'既存アカウントを接続',privacy:'プライバシー',terms:'利用規約',refunds:'返金ポリシー',shareTitle:'LINGXIFIELDを共有',shareNote:'アカウントと注文情報は共有されません。',shareFriend:'共有',copyLink:'公式サイトをコピー',contact:'WeChatサポート',support:'支払い・アカウント連携・納品の問題はWeChatサポートへ。',language:'表示言語',preparing:'接続を準備中',unavailable:'現在接続できません',retry:'後でもう一度お試しください',reconnecting:'再接続中',reconnected:'再接続しました',notConnected:'未接続'},
+  },
+
+  ko: {
+    tabs:['SASI 제작','도구','자료 지식','내 정보'],
+    create:{kicker:'CREATE WITH SASI',title:'한 번에 만들고, 결과까지.',subtitle:'아직 정리되지 않은 생각에서 시작해 목표를 이해하고 제작을 이어 결과로 완성합니다.',start:'지금 시작',choose:'완성할 작업을 선택하세요',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'필요할 때만 기능 확장',featureNote:'필요한 경우 본인의 외부 서비스를 연결할 수 있습니다. 직접 시작한 작업에서만 사용됩니다.',featureButton:'확장 열기',shareTitle:'LINGXIFIELD 공유',shareNote:'미니프로그램을 전달하거나 웹 링크를 복사할 수 있습니다.',shareFriend:'공유',copyLink:'링크 복사',entries:[['SASI 제작','아이디어를 이해, 제작, 검증, 전달까지 이어지는 프로젝트로 만듭니다.','/sasi'],['숏드라마 제작','스토리, 인물, 콘티, 영상, 음성, 자막에서 완성본까지.','/sasi/drama'],['웹사이트 구축','아이디어에서 구조를 정리하고 구현하며 계속 개선합니다.','/sasi'],['자료를 쓸 수 있는 지식으로','책, 논문, 자료를 검색 가능하고 추적 가능한 지식 공간으로 만듭니다.','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'처리할 일을 바로 시작하세요.',subtitle:'PDF, 이미지, 영상, 텍스트, 자막, 개인정보 및 파일 처리. 가능한 작업은 로컬에서 우선 처리합니다.',all:'모든 도구 보기',shareTitle:'도구 공유',shareNote:'미니프로그램을 전달하거나 도구 링크를 복사하세요.',shareFriend:'공유',copyLink:'링크 복사',items:[['PDF 편집','편집, 서명, 도장 등 일상적인 PDF 작업.','/tools/pdf-editor'],['PDF 합치기 / 나누기','여러 PDF를 합치거나 페이지별로 분리합니다.','/tools/pdf-merge-split'],['이미지 불필요 영역 제거','원하지 않는 영역을 처리하고 새 이미지를 내보냅니다.','/tools/image-watermark-remover'],['문자 인식','이미지나 파일에서 복사 가능한 문자를 추출합니다.','/tools/ocr'],['음식 영양','음식 사진에서 항목을 확인하고 칼로리와 주요 영양을 추정합니다.','/tools/food-calorie'],['영상→텍스트','영상의 음성을 편집 가능한 텍스트로 정리합니다.','/tools/video-transcription'],['자막 번역','자막 파일을 번역해 다시 내보냅니다.','/tools/subtitle-translate'],['임시 이메일','단기간 사용할 수 있는 수신용 이메일을 만듭니다.','/tools/temp-mail'],['열람 후 만료','열람 후 또는 지정 시간에 만료되는 링크를 만듭니다.','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'정적인 자료를 실제로 쓰는 지식으로.',subtitle:'원문에서 검색·인용·지속 활용 가능한 지식 공간을 만들고 답변을 근거로 되돌립니다.',shareTitle:'자료 지식 공유',shareNote:'미니프로그램을 전달하거나 자료 링크를 복사하세요.',shareFriend:'공유',copyLink:'링크 복사',items:[['자료 → 지식 베이스','책, 논문, 교재, 개인 자료를 검색·추적 가능한 공간으로 만듭니다.','/ai-knowledge'],['학습 SASI','자료를 기반으로 학습, 이해, 복습, 작업을 진행합니다.','/ai-learning'],['연구 SASI','논문과 연구 자료를 출처 추적 가능한 작업공간으로 만듭니다.','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'내 정보',subtitle:'계정, 주문, 제작 잔액, 진행 중인 프로젝트를 여기서 이어갑니다.',checking:'WeChat 신원 확인 중…',connected:'WeChat 연결됨',disconnected:'WeChat 연결 안 됨',reconnect:'다시 연결',workspace:'작업공간과 계정',workspaceNote:'프로젝트, 계정 정보, 사용 기록을 확인합니다.',orders:'주문과 기록',ordersNote:'결제, 서비스 제공, 사용 내역을 확인합니다.',balance:'제작 잔액',balanceNote:'잔액, 한도, 사용 현황을 확인합니다.',existing:'웹 LINGXIFIELD 계정이 있나요?',existingNote:'확인 후에만 연결합니다. 자동 추정·병합·이전하지 않습니다.',connect:'기존 계정 연결',privacy:'개인정보 처리방침',terms:'서비스 약관',refunds:'환불 정책',shareTitle:'LINGXIFIELD 공유',shareNote:'계정과 주문 정보는 공유되지 않습니다.',shareFriend:'공유',copyLink:'공식 사이트 링크 복사',contact:'WeChat 고객지원',support:'결제, 계정 연결, 전달 문제가 있으면 WeChat 고객지원으로 문의하세요.',language:'표시 언어',preparing:'연결 준비 중',unavailable:'지금은 연결할 수 없습니다',retry:'잠시 후 다시 시도하세요',reconnecting:'다시 연결 중',reconnected:'다시 연결됨',notConnected:'연결 안 됨'},
+  },
+
+  fr: {
+    tabs:['SASI','Outils','Connaissances','Moi'],
+    create:{kicker:'CREATE WITH SASI',title:'Créer en un geste. Aller jusqu’au résultat.',subtitle:'Partez d’une idée encore floue. Clarifiez l’objectif, avancez dans la réalisation et obtenez un résultat concret.',start:'Commencer',choose:'Choisissez ce que vous voulez accomplir',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'Ajoutez des capacités selon vos besoins',featureNote:'Connectez vos propres services externes uniquement lorsque cela vous est utile. Ils ne sont utilisés que pour les tâches que vous lancez vous-même.',featureButton:'Ouvrir les extensions',shareTitle:'Partager LINGXIFIELD',shareNote:'Transférez le mini-programme ou copiez le lien web.',shareFriend:'Partager',copyLink:'Copier le lien',entries:[['Espace SASI','Transformez une idée en projet capable d’avancer de l’intention à la production, la vérification et la livraison.','/sasi'],['Création de mini-séries','Passez de l’histoire et des personnages aux plans, au son, aux sous-titres et au montage final.','/sasi/drama'],['Création de site','Partez d’une idée, structurez-la, construisez-la puis améliorez-la.','/sasi'],['Transformer des sources en connaissances utiles','Rendez livres, articles et fichiers consultables, traçables et réutilisables.','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'Choisissez la tâche. Commencez immédiatement.',subtitle:'PDF, images, vidéo, texte, sous-titres, confidentialité et fichiers. Le traitement local est privilégié lorsqu’il est possible.',all:'Voir tous les outils',shareTitle:'Partager les outils',shareNote:'Transférez le mini-programme ou copiez le lien des outils.',shareFriend:'Partager',copyLink:'Copier le lien',items:[['Modifier un PDF','Modifiez, signez, tamponnez et traitez vos PDF courants.','/tools/pdf-editor'],['Fusionner / séparer un PDF','Regroupez plusieurs PDF ou séparez des pages dans de nouveaux fichiers.','/tools/pdf-merge-split'],['Retirer une zone d’une image','Supprimez les zones indésirables et exportez une nouvelle image.','/tools/image-watermark-remover'],['Reconnaissance de texte','Extrayez du texte copiable depuis une image ou un fichier.','/tools/ocr'],['Nutrition des aliments','Importez une photo de repas pour identifier les aliments et estimer calories et principaux nutriments.','/tools/food-calorie'],['Vidéo vers texte','Transformez la parole d’une vidéo en texte modifiable.','/tools/video-transcription'],['Traduire des sous-titres','Traduisez un fichier de sous-titres puis exportez-le.','/tools/subtitle-translate'],['E-mail temporaire','Créez une boîte de réception de courte durée.','/tools/temp-mail'],['Lecture éphémère','Créez un lien qui expire après lecture ou à l’heure prévue.','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'Transformez des fichiers statiques en connaissances utiles.',subtitle:'Construisez depuis les sources un espace consultable et citable afin que réponses et tâches puissent revenir à leurs preuves.',shareTitle:'Partager les connaissances',shareNote:'Transférez le mini-programme ou copiez le lien des connaissances.',shareFriend:'Partager',copyLink:'Copier le lien',items:[['Sources → base de connaissances','Importez livres, articles, cours ou fichiers privés dans un espace consultable et traçable.','/ai-knowledge'],['SASI Apprentissage','Apprenez, comprenez, révisez et avancez dans vos tâches à partir de vos propres documents.','/ai-learning'],['SASI Recherche','Créez un espace de recherche traçable pour articles, documents et chaînes de questions.','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'Moi',subtitle:'Retrouvez ici votre compte, vos commandes, votre solde de création et vos projets en cours.',checking:'Vérification de l’identité WeChat…',connected:'Identité WeChat connectée',disconnected:'Identité WeChat non connectée',reconnect:'Reconnecter',workspace:'Espace de travail et compte',workspaceNote:'Retrouvez vos projets, informations de compte et historique d’utilisation.',orders:'Commandes et historique',ordersNote:'Consultez paiements, livraisons et utilisations précédentes.',balance:'Solde de création',balanceNote:'Consultez le solde, les quotas et l’utilisation.',existing:'Vous avez déjà un compte LINGXIFIELD web ?',existingNote:'La connexion n’a lieu qu’après votre confirmation. Nous ne devinons, fusionnons ni migrons jamais les identités automatiquement.',connect:'Connecter un compte existant',privacy:'Politique de confidentialité',terms:'Conditions d’utilisation',refunds:'Politique de remboursement',shareTitle:'Partager LINGXIFIELD',shareNote:'Les données du compte et des commandes restent privées. Seul l’accès public est partagé.',shareFriend:'Partager',copyLink:'Copier le lien du site',contact:'Contacter le support WeChat',support:'Pour un problème de paiement, de connexion de compte ou de livraison, contactez le support WeChat.',language:'Langue de l’interface',preparing:'Préparation de la connexion',unavailable:'Connexion indisponible pour le moment',retry:'Réessayez plus tard',reconnecting:'Reconnexion en cours',reconnected:'Reconnecté',notConnected:'Non connecté'},
+  },
+  de: {
+    tabs:['SASI','Werkzeuge','Wissen','Mein Bereich'],
+    create:{kicker:'CREATE WITH SASI',title:'Mit einem Schritt erschaffen. Bis zum Ergebnis.',subtitle:'Beginnen Sie mit einem noch ungeordneten Gedanken. Klären Sie das Ziel, bringen Sie die Arbeit voran und machen Sie das Ergebnis greifbar.',start:'Jetzt starten',choose:'Wählen Sie, was Sie fertigstellen möchten',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'Funktionen nur bei Bedarf erweitern',featureNote:'Verbinden Sie eigene externe Dienste nur dann, wenn Sie sie benötigen. Sie werden ausschließlich für Aufgaben genutzt, die Sie selbst starten.',featureButton:'Erweiterungen öffnen',shareTitle:'LINGXIFIELD teilen',shareNote:'Mini-Programm weiterleiten oder Weblink kopieren.',shareFriend:'Teilen',copyLink:'Link kopieren',entries:[['SASI Arbeitsbereich','Machen Sie aus einer Idee ein Projekt, das von Zielverständnis über Umsetzung und Prüfung bis zur Übergabe weiterläuft.','/sasi'],['Kurzdrama erstellen','Von Geschichte und Figuren über Szenen, Ton und Untertitel bis zum fertigen Schnitt.','/sasi/drama'],['Website erstellen','Mit einer Idee beginnen, Struktur schaffen, umsetzen und weiterentwickeln.','/sasi'],['Quellen in nutzbares Wissen verwandeln','Bücher, Papers und Dateien durchsuchbar, nachvollziehbar und wiederverwendbar machen.','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'Aufgabe wählen. Sofort loslegen.',subtitle:'PDF, Bilder, Video, Text, Untertitel, Datenschutz und Dateien. Wenn möglich, erfolgt die Verarbeitung lokal.',all:'Alle Werkzeuge',shareTitle:'Werkzeuge teilen',shareNote:'Mini-Programm weiterleiten oder Werkzeug-Link kopieren.',shareFriend:'Teilen',copyLink:'Link kopieren',items:[['PDF bearbeiten','PDFs bearbeiten, unterschreiben, stempeln und alltägliche Aufgaben erledigen.','/tools/pdf-editor'],['PDF zusammenführen / teilen','Mehrere PDFs verbinden oder Seiten in neue Dateien aufteilen.','/tools/pdf-merge-split'],['Unerwünschte Bildbereiche entfernen','Störende Bereiche entfernen und ein neues Bild exportieren.','/tools/image-watermark-remover'],['Texterkennung','Kopierbaren Text aus Bildern oder Dateien extrahieren.','/tools/ocr'],['Lebensmittel & Nährwerte','Foto hochladen, Lebensmittel erkennen und Kalorien sowie wichtige Nährwerte schätzen.','/tools/food-calorie'],['Video zu Text','Gesprochene Inhalte eines Videos in bearbeitbaren Text umwandeln.','/tools/video-transcription'],['Untertitel übersetzen','Untertiteldateien übersetzen und wieder exportieren.','/tools/subtitle-translate'],['Temporäre E-Mail','Kurzzeitig nutzbares Postfach erstellen.','/tools/temp-mail'],['Nach dem Lesen verfallen','Link erstellen, der nach dem Lesen oder zu einem festgelegten Zeitpunkt verfällt.','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'Statische Dateien in nutzbares Wissen verwandeln.',subtitle:'Aus Originalquellen einen durchsuchbaren, zitierbaren Wissensraum aufbauen, damit Antworten und Aufgaben auf Belege zurückführen.',shareTitle:'Wissen teilen',shareNote:'Mini-Programm weiterleiten oder Wissens-Link kopieren.',shareFriend:'Teilen',copyLink:'Link kopieren',items:[['Quellen → Wissensbasis','Bücher, Papers, Kursmaterial oder private Dateien in einen durchsuchbaren und nachvollziehbaren Raum laden.','/ai-knowledge'],['Lern-SASI','Mit eigenen Materialien lernen, verstehen, wiederholen und Aufgaben weiterführen.','/ai-learning'],['Forschungs-SASI','Nachvollziehbaren Arbeitsbereich für Papers, Forschungsmaterial und Fragenketten aufbauen.','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'Mein Bereich',subtitle:'Konto, Bestellungen, Kreativguthaben und laufende Projekte hier fortsetzen.',checking:'WeChat-Identität wird geprüft…',connected:'WeChat-Identität verbunden',disconnected:'WeChat-Identität nicht verbunden',reconnect:'Erneut verbinden',workspace:'Arbeitsbereich & Konto',workspaceNote:'Projekte, Kontodaten und Nutzungsverlauf ansehen.',orders:'Bestellungen & Verlauf',ordersNote:'Zahlungen, Bereitstellungen und bisherige Nutzung prüfen.',balance:'Kreativguthaben',balanceNote:'Guthaben, Kontingent und Nutzung ansehen.',existing:'Sie haben bereits ein LINGXIFIELD-Webkonto?',existingNote:'Eine Verbindung erfolgt nur nach Ihrer Bestätigung. Identitäten werden niemals automatisch erraten, zusammengeführt oder migriert.',connect:'Bestehendes Konto verbinden',privacy:'Datenschutz',terms:'Nutzungsbedingungen',refunds:'Rückerstattungsrichtlinie',shareTitle:'LINGXIFIELD teilen',shareNote:'Konto- und Bestelldaten bleiben privat. Geteilt wird nur der öffentliche Einstieg.',shareFriend:'Teilen',copyLink:'Website-Link kopieren',contact:'WeChat-Support kontaktieren',support:'Bei Problemen mit Zahlung, Kontoverknüpfung oder Bereitstellung hilft der WeChat-Support.',language:'Sprache',preparing:'Verbindung wird vorbereitet',unavailable:'Verbindung derzeit nicht möglich',retry:'Bitte später erneut versuchen',reconnecting:'Verbindung wird wiederhergestellt',reconnected:'Wieder verbunden',notConnected:'Nicht verbunden'},
+  },
+  es: {
+    tabs:['SASI','Herramientas','Conocimiento','Mi espacio'],
+    create:{kicker:'CREATE WITH SASI',title:'Crea en un paso. Llega al resultado.',subtitle:'Empieza con una idea todavía sin ordenar. Aclara el objetivo, avanza con la producción y conviértelo en un resultado real.',start:'Empezar ahora',choose:'Elige qué quieres terminar',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'Amplía capacidades solo cuando las necesites',featureNote:'Conecta tus propios servicios externos únicamente cuando haga falta. Solo se usan en tareas que tú inicias.',featureButton:'Abrir extensiones',shareTitle:'Compartir LINGXIFIELD',shareNote:'Comparte el mini programa o copia el enlace web.',shareFriend:'Compartir',copyLink:'Copiar enlace',entries:[['Espacio SASI','Convierte una idea en un proyecto que avance desde la intención hasta la producción, verificación y entrega.','/sasi'],['Crear miniseries','Pasa de historia y personajes a planos, sonido, subtítulos y montaje final.','/sasi/drama'],['Crear sitio web','Empieza con una idea, organiza la estructura, constrúyela y sigue mejorándola.','/sasi'],['Convertir fuentes en conocimiento útil','Haz que libros, artículos y archivos sean buscables, trazables y reutilizables.','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'Elige la tarea. Empieza de inmediato.',subtitle:'PDF, imágenes, vídeo, texto, subtítulos, privacidad y archivos. Siempre que sea posible, el procesamiento se realiza localmente.',all:'Ver todas las herramientas',shareTitle:'Compartir herramientas',shareNote:'Comparte el mini programa o copia el enlace de herramientas.',shareFriend:'Compartir',copyLink:'Copiar enlace',items:[['Editar PDF','Edita, firma, sella y realiza tareas habituales con PDF.','/tools/pdf-editor'],['Unir / dividir PDF','Combina varios PDF o separa páginas en archivos nuevos.','/tools/pdf-merge-split'],['Quitar zonas no deseadas de una imagen','Elimina áreas no deseadas y exporta una imagen nueva.','/tools/image-watermark-remover'],['Reconocimiento de texto','Extrae texto copiable de imágenes o archivos.','/tools/ocr'],['Nutrición de alimentos','Sube una foto de comida para identificar alimentos y estimar calorías y nutrientes principales.','/tools/food-calorie'],['Vídeo a texto','Convierte el habla de un vídeo en texto editable.','/tools/video-transcription'],['Traducir subtítulos','Traduce archivos de subtítulos y expórtalos para seguir trabajando.','/tools/subtitle-translate'],['Correo temporal','Crea un buzón de corta duración para mensajes temporales.','/tools/temp-mail'],['Lectura efímera','Crea un enlace que caduque tras la lectura o en el momento programado.','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'Convierte archivos estáticos en conocimiento útil.',subtitle:'Construye desde las fuentes un espacio buscable y citable para que respuestas y tareas puedan volver a la evidencia.',shareTitle:'Compartir conocimiento',shareNote:'Comparte el mini programa o copia el enlace de conocimiento.',shareFriend:'Compartir',copyLink:'Copiar enlace',items:[['Fuentes → base de conocimiento','Sube libros, artículos, material de estudio o archivos privados a un espacio buscable y trazable.','/ai-knowledge'],['SASI de aprendizaje','Estudia, comprende, repasa y avanza tareas desde tus propios materiales.','/ai-learning'],['SASI de investigación','Crea un espacio trazable para artículos, material de investigación y cadenas de preguntas.','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'Mi espacio',subtitle:'Continúa aquí con tu cuenta, pedidos, saldo de creación y proyectos activos.',checking:'Comprobando identidad de WeChat…',connected:'Identidad de WeChat conectada',disconnected:'Identidad de WeChat no conectada',reconnect:'Reconectar',workspace:'Espacio de trabajo y cuenta',workspaceNote:'Consulta proyectos, datos de cuenta e historial de uso.',orders:'Pedidos e historial',ordersNote:'Revisa pagos, entregas y uso anterior.',balance:'Saldo de creación',balanceNote:'Consulta saldo, cupo y uso.',existing:'¿Ya tienes una cuenta web de LINGXIFIELD?',existingNote:'Solo se conecta después de tu confirmación. Nunca adivinamos, fusionamos ni migramos identidades automáticamente.',connect:'Conectar cuenta existente',privacy:'Política de privacidad',terms:'Condiciones del servicio',refunds:'Política de reembolso',shareTitle:'Compartir LINGXIFIELD',shareNote:'Los datos de cuenta y pedidos permanecen privados. Solo se comparte el acceso público.',shareFriend:'Compartir',copyLink:'Copiar enlace del sitio',contact:'Contactar soporte de WeChat',support:'Para problemas de pago, vinculación de cuenta o entrega, contacta con soporte de WeChat.',language:'Idioma de la interfaz',preparing:'Preparando conexión',unavailable:'No se puede conectar ahora',retry:'Inténtalo de nuevo más tarde',reconnecting:'Reconectando',reconnected:'Reconectado',notConnected:'No conectado'},
+  },
+  pt: {
+    tabs:['SASI','Ferramentas','Conhecimento','Minha área'],
+    create:{kicker:'CREATE WITH SASI',title:'Crie em um passo. Chegue ao resultado.',subtitle:'Comece com uma ideia ainda não organizada. Esclareça o objetivo, avance na produção e transforme em resultado real.',start:'Começar agora',choose:'Escolha o que você quer concluir',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'Amplie capacidades só quando precisar',featureNote:'Conecte seus próprios serviços externos apenas quando necessário. Eles só são usados em tarefas iniciadas por você.',featureButton:'Abrir extensões',shareTitle:'Compartilhar LINGXIFIELD',shareNote:'Encaminhe o mini programa ou copie o link da web.',shareFriend:'Compartilhar',copyLink:'Copiar link',entries:[['Espaço SASI','Transforme uma ideia em um projeto que avance da intenção à produção, verificação e entrega.','/sasi'],['Criar minisséries','Passe da história e personagens para cenas, som, legendas e montagem final.','/sasi/drama'],['Criar site','Comece por uma ideia, organize a estrutura, construa e continue aprimorando.','/sasi'],['Transformar fontes em conhecimento útil','Torne livros, artigos e arquivos pesquisáveis, rastreáveis e reutilizáveis.','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'Escolha a tarefa. Comece agora.',subtitle:'PDF, imagens, vídeo, texto, legendas, privacidade e arquivos. Sempre que possível, o processamento acontece localmente.',all:'Ver todas as ferramentas',shareTitle:'Compartilhar ferramentas',shareNote:'Encaminhe o mini programa ou copie o link das ferramentas.',shareFriend:'Compartilhar',copyLink:'Copiar link',items:[['Editar PDF','Edite, assine, carimbe e resolva tarefas comuns de PDF.','/tools/pdf-editor'],['Unir / dividir PDF','Combine vários PDFs ou separe páginas em novos arquivos.','/tools/pdf-merge-split'],['Remover áreas indesejadas da imagem','Remova áreas indesejadas e exporte uma nova imagem.','/tools/image-watermark-remover'],['Reconhecimento de texto','Extraia texto copiável de imagens ou arquivos.','/tools/ocr'],['Nutrição dos alimentos','Envie uma foto da refeição para identificar alimentos e estimar calorias e nutrientes principais.','/tools/food-calorie'],['Vídeo para texto','Transforme a fala de um vídeo em texto editável.','/tools/video-transcription'],['Traduzir legendas','Traduza arquivos de legenda e exporte novamente.','/tools/subtitle-translate'],['E-mail temporário','Crie uma caixa de entrada de curta duração.','/tools/temp-mail'],['Leitura efêmera','Crie um link que expire após a leitura ou no horário definido.','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'Transforme arquivos estáticos em conhecimento útil.',subtitle:'Construa a partir das fontes um espaço pesquisável e citável para que respostas e tarefas possam voltar às evidências.',shareTitle:'Compartilhar conhecimento',shareNote:'Encaminhe o mini programa ou copie o link do conhecimento.',shareFriend:'Compartilhar',copyLink:'Copiar link',items:[['Fontes → base de conhecimento','Envie livros, artigos, materiais de estudo ou arquivos privados para um espaço pesquisável e rastreável.','/ai-knowledge'],['SASI de aprendizagem','Estude, compreenda, revise e avance tarefas a partir dos seus próprios materiais.','/ai-learning'],['SASI de pesquisa','Crie um espaço rastreável para artigos, materiais de pesquisa e cadeias de perguntas.','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'Minha área',subtitle:'Continue aqui com sua conta, pedidos, saldo de criação e projetos em andamento.',checking:'Verificando identidade do WeChat…',connected:'Identidade do WeChat conectada',disconnected:'Identidade do WeChat não conectada',reconnect:'Reconectar',workspace:'Área de trabalho e conta',workspaceNote:'Acesse projetos, dados da conta e histórico de uso.',orders:'Pedidos e histórico',ordersNote:'Confira pagamentos, entregas e uso anterior.',balance:'Saldo de criação',balanceNote:'Consulte saldo, limite e uso.',existing:'Já tem uma conta web do LINGXIFIELD?',existingNote:'A conexão só acontece após sua confirmação. Nunca adivinhamos, mesclamos ou migramos identidades automaticamente.',connect:'Conectar conta existente',privacy:'Política de privacidade',terms:'Termos de serviço',refunds:'Política de reembolso',shareTitle:'Compartilhar LINGXIFIELD',shareNote:'Dados de conta e pedidos permanecem privados. Apenas a entrada pública é compartilhada.',shareFriend:'Compartilhar',copyLink:'Copiar link do site',contact:'Falar com suporte WeChat',support:'Para problemas de pagamento, vínculo de conta ou entrega, fale com o suporte WeChat.',language:'Idioma da interface',preparing:'Preparando conexão',unavailable:'Não foi possível conectar agora',retry:'Tente novamente mais tarde',reconnecting:'Reconectando',reconnected:'Reconectado',notConnected:'Não conectado'},
+  },
+  ar: {
+    tabs:['SASI','الأدوات','المعرفة','حسابي'],
+    create:{kicker:'CREATE WITH SASI',title:'أنشئ بخطوة واحدة. واصل حتى النتيجة.',subtitle:'ابدأ بفكرة لم تتضح بعد. حدّد الهدف، وحرّك العمل إلى الأمام، وحوّل الفكرة إلى نتيجة قابلة للاستخدام.',start:'ابدأ الآن',choose:'اختر ما تريد إنجازه',featureKicker:'EXTEND YOUR WORKSPACE',featureTitle:'وسّع القدرات عند الحاجة فقط',featureNote:'اربط خدماتك الخارجية الخاصة عندما تحتاج إليها. ولا تُستخدم إلا في المهام التي تبدأها بنفسك.',featureButton:'فتح الإضافات',shareTitle:'مشاركة LINGXIFIELD',shareNote:'شارك البرنامج المصغر أو انسخ رابط الويب.',shareFriend:'مشاركة',copyLink:'نسخ الرابط',entries:[['مساحة SASI','حوّل الفكرة إلى مشروع ينتقل من فهم الهدف إلى التنفيذ والتحقق والتسليم.','/sasi'],['إنشاء دراما قصيرة','انتقل من القصة والشخصيات إلى المشاهد والصوت والترجمة والنسخة النهائية.','/sasi/drama'],['إنشاء موقع','ابدأ بفكرة، نظّم البنية، ابنِها ثم واصل تحسينها.','/sasi'],['حوّل المصادر إلى معرفة قابلة للاستخدام','اجعل الكتب والأبحاث والملفات قابلة للبحث والتتبع وإعادة الاستخدام.','/ai-knowledge']]},
+    tools:{kicker:'PRACTICAL TOOLS',title:'اختر المهمة وابدأ مباشرة.',subtitle:'PDF والصور والفيديو والنصوص والترجمة والخصوصية والملفات. تتم المعالجة محليًا كلما كان ذلك ممكنًا.',all:'عرض كل الأدوات',shareTitle:'مشاركة الأدوات',shareNote:'شارك البرنامج المصغر أو انسخ رابط الأدوات.',shareFriend:'مشاركة',copyLink:'نسخ الرابط',items:[['تحرير PDF','حرّر ووقّع واختم ونفّذ مهام PDF اليومية.','/tools/pdf-editor'],['دمج / تقسيم PDF','ادمج عدة ملفات PDF أو افصل الصفحات إلى ملفات جديدة.','/tools/pdf-merge-split'],['إزالة أجزاء غير مرغوبة من الصورة','احذف المناطق غير المرغوبة وصدّر صورة جديدة.','/tools/image-watermark-remover'],['التعرّف على النص','استخرج نصًا قابلًا للنسخ من الصور أو الملفات.','/tools/ocr'],['تغذية الطعام','ارفع صورة للطعام للتعرّف على المكونات وتقدير السعرات والعناصر الغذائية الأساسية.','/tools/food-calorie'],['تحويل الفيديو إلى نص','حوّل الكلام في الفيديو إلى نص قابل للتحرير.','/tools/video-transcription'],['ترجمة الترجمة النصية','ترجم ملفات الترجمة النصية ثم صدّرها من جديد.','/tools/subtitle-translate'],['بريد مؤقت','أنشئ صندوق بريد قصير المدة للرسائل المؤقتة.','/tools/temp-mail'],['رابط يختفي بعد القراءة','أنشئ رابطًا ينتهي بعد القراءة أو في وقت محدد.','/tools/burn-after-read']]},
+    agents:{kicker:'SOURCE-GROUNDED',title:'حوّل الملفات الثابتة إلى معرفة قابلة للاستخدام.',subtitle:'ابنِ من المصادر مساحة قابلة للبحث والاستشهاد بحيث يمكن للإجابات والمهام الرجوع إلى الأدلة.',shareTitle:'مشاركة المعرفة',shareNote:'شارك البرنامج المصغر أو انسخ رابط المعرفة.',shareFriend:'مشاركة',copyLink:'نسخ الرابط',items:[['المصادر ← قاعدة معرفة','ارفع الكتب والأبحاث ومواد الدراسة أو الملفات الخاصة إلى مساحة قابلة للبحث والتتبع.','/ai-knowledge'],['SASI للتعلّم','تعلّم وافهم وراجع وتابع المهام انطلاقًا من موادك الخاصة.','/ai-learning'],['SASI للبحث','أنشئ مساحة بحث قابلة للتتبع للأبحاث والمواد وسلاسل الأسئلة.','/ai-research']]},
+    profile:{kicker:'YOUR LINGXIFIELD',title:'حسابي',subtitle:'تابع حسابك وطلباتك ورصيد الإنشاء ومشروعاتك الحالية من هنا.',checking:'جارٍ التحقق من هوية WeChat…',connected:'تم ربط هوية WeChat',disconnected:'هوية WeChat غير مرتبطة',reconnect:'إعادة الاتصال',workspace:'مساحة العمل والحساب',workspaceNote:'تابع المشروعات وبيانات الحساب وسجل الاستخدام.',orders:'الطلبات والسجل',ordersNote:'راجع المدفوعات والتسليم والاستخدام السابق.',balance:'رصيد الإنشاء',balanceNote:'راجع الرصيد والحصة والاستخدام.',existing:'لديك حساب LINGXIFIELD على الويب؟',existingNote:'يتم الربط فقط بعد تأكيدك. لا نخمن الهويات ولا ندمجها أو ننقلها تلقائيًا.',connect:'ربط حساب موجود',privacy:'سياسة الخصوصية',terms:'شروط الخدمة',refunds:'سياسة الاسترداد',shareTitle:'مشاركة LINGXIFIELD',shareNote:'تبقى بيانات الحساب والطلبات خاصة. تتم مشاركة المدخل العام فقط.',shareFriend:'مشاركة',copyLink:'نسخ رابط الموقع',contact:'التواصل مع دعم WeChat',support:'لأي مشكلة في الدفع أو ربط الحساب أو التسليم، تواصل مع دعم WeChat.',language:'لغة الواجهة',preparing:'جارٍ تجهيز الاتصال',unavailable:'لا يمكن الاتصال الآن',retry:'حاول مرة أخرى لاحقًا',reconnecting:'جارٍ إعادة الاتصال',reconnected:'تمت إعادة الاتصال',notConnected:'غير متصل'},
+  },
+}
+
+function normalizeLanguage(lang) {
+  return SUPPORTED.some((x) => x.id === lang) ? lang : 'zh-CN'
+}
+
 function getLanguage() {
-  return wx.getStorageSync(KEY) === 'en' ? 'en' : 'zh'
+  return normalizeLanguage(wx.getStorageSync(KEY))
+}
+
+function copyFor(scope, lang = getLanguage()) {
+  const table = COPY[normalizeLanguage(lang)] || COPY['zh-CN']
+  return table[scope] || {}
+}
+
+function listFor(scope, lang = getLanguage()) {
+  const copy = copyFor(scope, lang)
+  const rows = copy.entries || copy.items || []
+  return rows.map(([title,note,path]) => ({ title, note, path }))
 }
 
 function applyTabBar(lang = getLanguage()) {
-  const labels = lang === 'en'
-    ? ['SASI', 'Tools', 'Agents', 'Me']
-    : ['SASI创作', '实用工具', '资料Agent', '我的']
-
+  const labels = (COPY[normalizeLanguage(lang)] || COPY['zh-CN']).tabs
   labels.forEach((text, index) => {
-    try {
-      wx.setTabBarItem({ index, text })
-    } catch (error) {
-      console.warn('[tab bar label unavailable]', { index, text, message: error && error.errMsg })
-    }
+    try { wx.setTabBarItem({ index, text }) }
+    catch (error) { console.warn('[tab bar label unavailable]', { index, message: error && error.errMsg }) }
   })
 }
 
 function setLanguage(lang) {
-  const next = lang === 'en' ? 'en' : 'zh'
+  const next = normalizeLanguage(lang)
   wx.setStorageSync(KEY, next)
   const app = getApp({ allowDefault: true })
   if (app && app.globalData) app.globalData.lang = next
-  getCurrentPages().forEach((page) => page.setData({ lang: next }))
+  getCurrentPages().forEach((page) => {
+    if (typeof page.refreshLanguage === 'function') page.refreshLanguage(next)
+    else page.setData({ lang: next })
+  })
   applyTabBar(next)
   return next
 }
 
-function initPage(page) {
+function initPage(page, scope) {
   const lang = getLanguage()
-  page.setData({ lang })
+  page.setData({ lang, copy: copyFor(scope, lang) })
   applyTabBar(lang)
   return lang
 }
 
-module.exports = { getLanguage, setLanguage, initPage, applyTabBar }
+module.exports = {
+  SUPPORTED,
+  getLanguage,
+  setLanguage,
+  initPage,
+  applyTabBar,
+  copyFor,
+  listFor,
+}

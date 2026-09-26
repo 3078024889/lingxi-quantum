@@ -20,7 +20,7 @@ export function generateMetadata({ params }: Props): Metadata {
     description: tool.oneLinerZh,
     alternates: { canonical: `/tools/${tool.slug}` },
     openGraph: {
-      images: [{ url: "/og-sasi-20260920.png", width: 1672, height: 941, alt: "LINGXIFIELD SASI · 灵犀场" }],
+      images: [{ url: "/og-lingxifield-20260925.jpg", width: 1672, height: 941, alt: "LINGXIFIELD SASI · 灵犀场" }],
       title: tool.titleZh,
       description: tool.oneLinerZh,
       url: `/tools/${tool.slug}`,

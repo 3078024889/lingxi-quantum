@@ -1,35 +1,7 @@
-<view class="lx-page">
-  <view class="lx-shell">
-    <view class="lx-brand">
-      <view class="lx-brand-name">灵犀场</view>
-      <view class="lx-brand-en">TOOLS</view>
-    </view>
-
-    <view class="lx-kicker">PRACTICAL TOOLS</view>
-    <view class="lx-title">需要处理什么，直接开始。</view>
-    <view class="lx-subtitle">PDF、图片、视频、OCR、字幕、隐私与文件处理。优先在本地完成，确需服务器处理时再上传。</view>
-
-    <view class="lx-section">
-      <view class="lx-list">
-        <view wx:for="{{tools}}" wx:key="path" class="lx-row" data-index="{{index}}" bindtap="open">
-          <view class="lx-row-main">
-            <view class="lx-row-title">{{item.title}}</view>
-            <view class="lx-row-note">{{item.note}}</view>
-          </view>
-          <view class="lx-arrow">›</view>
-        </view>
-      </view>
-    </view>
-
-    <button class="lx-button" bindtap="allTools">查看全部工具</button>
-
-    <view class="lx-share-panel">
-      <view class="lx-share-title">分享实用工具</view>
-      <view class="lx-share-note">转发小程序给朋友，或复制工具中心网页链接。</view>
-      <view class="lx-share-actions">
-        <button class="lx-share-button" open-type="share">转发给好友</button>
-        <button class="lx-share-button secondary" bindtap="copyLink">复制链接</button>
-      </view>
-    </view>
-  </view>
-</view>
+<view class="lx-page"><view class="lx-shell">
+  <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">TOOLS</view></view>
+  <view class="lx-kicker">{{copy.kicker}}</view><view class="lx-title">{{copy.title}}</view><view class="lx-subtitle">{{copy.subtitle}}</view>
+  <view class="lx-section"><view class="lx-list"><view wx:for="{{tools}}" wx:key="path" class="lx-row" data-index="{{index}}" bindtap="open"><view class="lx-row-main"><view class="lx-row-title">{{item.title}}</view><view class="lx-row-note">{{item.note}}</view></view><view class="lx-arrow">›</view></view></view></view>
+  <button class="lx-button" bindtap="allTools">{{copy.all}}</button>
+  <view class="lx-share-panel"><view class="lx-share-title">{{copy.shareTitle}}</view><view class="lx-share-note">{{copy.shareNote}}</view><view class="lx-share-actions"><button class="lx-share-button" open-type="share">{{copy.shareFriend}}</button><button class="lx-share-button secondary" bindtap="copyLink">{{copy.copyLink}}</button></view></view>
+</view></view>

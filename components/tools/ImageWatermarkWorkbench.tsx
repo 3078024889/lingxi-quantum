@@ -4,6 +4,7 @@ import {PointerEvent,useEffect,useRef,useState} from "react";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import FileDropzone from "@/components/tools/FileDropzone";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
+import {downloadUrl} from "@/lib/tools/shared/download";
 
 type Box={x:number;y:number;w:number;h:number};
 const empty:Box={x:.65,y:.72,w:.28,h:.18};
@@ -68,6 +69,6 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
   <div>{busy?<button disabled className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] opacity-50">{c.working}</button>:files.length>0&&box.w>=.01&&box.h>=.01?<PaidActionButton toolId={toolId} quantity={files.length} onPaid={run} label={c.price}/>:null}</div>
   <p className="text-xs leading-5 text-[var(--lx-faint)]">{c.paidHint}</p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
-  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><NextImage src={r.url} alt={c.result} className="w-full rounded-xl" width={1600} height={1200} unoptimized/><div className="mt-3 flex items-center justify-between gap-2 text-sm"><span className="truncate text-[var(--lx-muted)]">{r.name}</span><a href={r.url} download={`clean-${r.name.replace(/\.[^.]+$/,".png")}`} className="shrink-0 font-medium text-[var(--lx-ink)]">{c.download}</a></div></div>)}</div>}
+  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><NextImage src={r.url} alt={c.result} className="w-full rounded-xl" width={1600} height={1200} unoptimized/><div className="mt-3 flex items-center justify-between gap-2 text-sm"><span className="truncate text-[var(--lx-muted)]">{r.name}</span><button type="button" onClick={()=>void downloadUrl(r.url,`clean-${r.name.replace(/\.[^.]+$/,".png")}`)} className="shrink-0 font-medium text-[var(--lx-ink)]">{c.download}</button></div></div>)}</div>}
  </div>
 }

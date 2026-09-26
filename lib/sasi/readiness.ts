@@ -3,6 +3,7 @@ import { alipayEnabled } from "@/lib/alipay";
 import { wechatPayConfigured } from "@/lib/wechatpay";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
+import { autonomousCoreReadiness } from "@/lib/sasi/autonomy/capability-graph";
 
 function paypalConfigured() {
   return Boolean(
@@ -14,6 +15,7 @@ function paypalConfigured() {
 }
 
 export function sasiReadiness() {
+  const autonomousCore = autonomousCoreReadiness();
   const video = sasiVideoProviderReadiness();
   const paymentChannels = {
     alipay: alipayEnabled(),
@@ -32,6 +34,7 @@ export function sasiReadiness() {
   const jobs = jobsFlag && video.anyVerified && usageSettlementTested;
   return {
     catalog: true,
+    autonomousCore,
     providers: video.providers,
     anyProviderConfigured: video.anyConfigured,
     anyProvider: video.anyVerified,
@@ -50,6 +53,9 @@ export function sasiPublicReadiness() {
   const readiness = sasiReadiness();
   return {
     catalog: readiness.catalog,
+    coreExecutionReady: readiness.autonomousCore.algorithmRouter
+      && readiness.autonomousCore.capabilityGraph
+      && readiness.autonomousCore.deterministicCount > 0,
     capabilitySupplyReady: readiness.anyProvider,
     videoRoutes: {
       seedance: readiness.providers.seedance.verified,

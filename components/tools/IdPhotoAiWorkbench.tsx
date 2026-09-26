@@ -4,6 +4,7 @@ import {useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
+import {downloadUrl} from "@/lib/tools/shared/download";
 
 type Result={name:string;url:string};
 type Failure={name:string;reason:string};
@@ -47,7 +48,7 @@ export default function IdPhotoAiWorkbench(){
   <div className="flex flex-wrap gap-2">{options.map(([v,n])=><button key={v} onClick={()=>setBg(v)} className={`rounded-full px-4 py-2 text-sm ${bg===v?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)] text-[var(--lx-ink)]"}`}>{n}</button>)}</div>
   {busy?<button disabled className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] opacity-50">{c.busy}</button>:files.length?<PaidActionButton toolId="id-photo-ai" quantity={files.length} metadata={{images:files.length}} onPaid={run} label={c.price}/>:null}
   <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">{c.warning}</div>
-  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.name} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><NextImage src={r.url} alt={c.result} className="w-full rounded-xl" width={1200} height={1600} unoptimized/><a href={r.url} download={`lingxifield-id-${r.name.replace(/\.[^.]+$/,".png")}`} className="mt-3 inline-flex rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">{c.download}</a></div>)}</div>}
+  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.name} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><NextImage src={r.url} alt={c.result} className="w-full rounded-xl" width={1200} height={1600} unoptimized/><button type="button" onClick={()=>void downloadUrl(r.url,`lingxifield-id-${r.name.replace(/\.[^.]+$/,".png")}`)} className="mt-3 inline-flex rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">{c.download}</button></div>)}</div>}
   {failures.length>0&&<div className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-3 text-xs text-[var(--lx-danger)]">{failures.map(x=><div key={x.name}>{x.name} · {x.reason}</div>)}</div>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>;

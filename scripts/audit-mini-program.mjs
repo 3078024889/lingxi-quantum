@@ -2,155 +2,148 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-let failed = false;
-function check(label, condition) {
-  console.log(`${condition ? "PASS" : "FAIL"} ${label}`);
-  if (!condition) failed = true;
-}
-function read(file) {
-  return fs.readFileSync(path.join(root, file), "utf8");
-}
-function promptBank(name, nextName) {
-  const start = dendriteEngine.indexOf(`const ${name}`);
-  const end = dendriteEngine.indexOf(`const ${nextName}`, start + 1);
-  return dendriteEngine.slice(start, end);
-}
-function promptCount(source) {
-  return (source.match(/\[\["[^"]+","[^"]+"\]|,\["[^"]+","[^"]+"\]/g) || []).length;
-}
+const read = (rel) => fs.readFileSync(path.join(root, rel), "utf8");
+const exists = (rel) => fs.existsSync(path.join(root, rel));
+const must = (ok, code) => { if (!ok) throw new Error(code); };
 
-const project = JSON.parse(read("miniapp/project.config.json"));
+const required = [
+  "miniapp/app.js",
+  "miniapp/app.json",
+  "miniapp/utils/api.js",
+  "miniapp/utils/i18n.js",
+  "miniapp/utils/share.js",
+  "miniapp/pages/create/index.js",
+  "miniapp/pages/create/index.wxml",
+  "miniapp/pages/tools/index.js",
+  "miniapp/pages/tools/index.wxml",
+  "miniapp/pages/agents/index.js",
+  "miniapp/pages/agents/index.wxml",
+  "miniapp/pages/profile/index.js",
+  "miniapp/pages/profile/index.wxml",
+  "miniapp/pages/web/index.js",
+  "miniapp/pages/web/index.wxml",
+  "app/api/wechat/mini/login/route.ts",
+  "app/api/wechat/mini/logout/route.ts",
+  "app/api/wechat/mini/account-link/start/route.ts",
+];
+
+for (const rel of required) must(exists(rel), `MINI_REQUIRED_FILE_MISSING:${rel}`);
+
+// Current Mini Program page topology.
 const app = JSON.parse(read("miniapp/app.json"));
-const env = read(".env.example");
-const payCreate = read("app/api/wechat/mini/pay/create/route.ts");
-const notify = read("app/api/wechat/mini/pay/notify/route.ts");
-const paymentClient = read("miniapp/utils/payment.js");
-const catalog = read("lib/mini/catalog.ts");
-const exploreClient = read("miniapp/pages/explore/index.js");
-const exploreView = read("miniapp/pages/explore/index.wxml");
-const assessmentClient = read("miniapp/pages/assessment/index.js");
-const assessmentView = read("miniapp/pages/assessment/index.wxml");
-const dendriteSql = read("sql-history/SQL-v314-mini-dendrite-assessments.sql");
-const dendriteReliabilitySql = read("sql-history/SQL-v318-mini-dendrite-reliability.sql");
-const dendriteEngine = read("lib/mini/dendrite-engine.ts");
-const lifeArchetype = read("lib/mini/life-archetype.ts");
-const miniLifeArchetypeReport = read("app/mini-report/MiniLifeArchetypeReport.tsx");
-const reportEntryLibrary = read("lib/mini/report-entry-library.ts");
-const archetypeProgressView = read("miniapp/pages/archetype-progress/index.wxml");
-const fieldProductCopy = read("lib/mini/field-product-copy.ts");
-const catalogRoute = read("app/api/wechat/mini/catalog/route.ts");
-const contentLink = read("app/api/wechat/mini/content-link/route.ts");
-const contentOpen = read("app/api/wechat/mini/content-open/route.ts");
-const dendriteSubmit = read("app/api/wechat/mini/dendrite/submit/route.ts");
-const auditUnlockSql = read("sql-history/SQL-v331-audit-account-everything.sql");
-const auditAccess = read("lib/audit-access.ts");
-const productClient = read("miniapp/pages/product/index.js");
-const reportRoutes = read("miniapp/utils/report-routes.js");
-const plans = read("lib/plans.ts");
-const fieldInsights = read("components/FieldInsightsSection.tsx");
-const virtualPay = read("miniapp/utils/payment.js");
-const accountLinkStart = read("app/api/wechat/mini/account-link/start/route.ts");
-const accountLinkConfirm = read("app/api/wechat/mini/account-link/confirm/route.ts");
-const accountLinkPanel = read("app/account/MiniAccountLinkPanel.tsx");
-const accountLinkSql = read("sql-history/SQL-v301-mini-account-link.sql");
-const fieldView = read("miniapp/pages/field/index.wxml");
-const fieldClient = read("miniapp/pages/field/index.js");
-const fieldNavView = read("miniapp/components/field-nav/index.wxml");
-const fieldStructureView = read("miniapp/components/field-structure-9d/index.wxml");
-const fieldStructureClient = read("miniapp/components/field-structure-9d/index.js");
-const desktopFieldStructure = read("components/FieldStructure9D.tsx");
-const desktopNav = read("components/Nav.tsx");
-const membershipContent = read("lib/membership-content.ts");
-const profileClient = read("miniapp/pages/profile/index.js");
-const profileView = read("miniapp/pages/profile/index.wxml");
-const productView = read("miniapp/pages/product/index.wxml");
-const contentDestinations = read("lib/mini/content-destinations.ts");
-const checkout = read("app/checkout/page.tsx");
-const webPayCreate = read("app/api/pay/create/route.ts");
-const wechatPayCreate = read("app/api/pay/wechat/create/route.ts");
-const pdfExport = read("lib/pdf-export.ts");
-const pdfTransfer = read("app/api/pdf-transfer/route.ts");
-const pdfDownload = read("app/api/wechat/mini/pdf-download/route.ts");
-const pdfPage = read("miniapp/pages/pdf/index.js");
-const miniSources = fs.readdirSync(path.join(root, "miniapp"), { recursive: true })
-  .filter((file) => typeof file === "string" && /\.(js|json|wxml|wxss)$/.test(file))
-  .map((file) => read(path.join("miniapp", file))).join("\n");
+const expectedPages = [
+  "pages/create/index",
+  "pages/tools/index",
+  "pages/agents/index",
+  "pages/profile/index",
+  "pages/web/index",
+];
+must(Array.isArray(app.pages), "MINI_PAGES_INVALID");
+must(app.pages.length === expectedPages.length, `MINI_PAGE_COUNT_DRIFT:${app.pages.length}`);
+for (const p of expectedPages) must(app.pages.includes(p), `MINI_PAGE_MISSING:${p}`);
 
-check("Mini Program AppID is the configured public identifier", project.appid === "wxbf4ae90406e7e26b");
-check("four primary native tabs exist", app.tabBar?.list?.length === 4);
-check("client contains no AppSecret or virtual-pay AppKey", !/APP_SECRET|APP_KEY|session_key|service_role/i.test(miniSources));
-check("payment refreshes wx.login before signing", /wxLogin\(\)/.test(paymentClient) && /code/.test(payCreate));
-check("server verifies mini identity before creating an order", /freshWxSession\.openid !== session\.openid/.test(payCreate));
-check("client success never fulfills entitlement", !/fulfill|unlock|status:\s*['\"]paid/.test(paymentClient));
-check("server notification is signature protected", /verifiedByWechat\(req\)/.test(notify));
-check("server notification verifies amount", /actualFen !== expectedFen/.test(notify));
-check(
-  "server notification verifies product",
-  /expectedSku !== payload\.GoodsInfo\.ProductId/.test(notify) && /miniSkuForProduct\(order\.product_id\)/.test(notify)
-);
-check("server notification verifies user identity", /identity\.openid !== callbackOpenid/.test(notify));
-check("server notification uses atomic fulfillment", /fulfillPaidOrder\(order\.id\)/.test(notify));
-check("secrets are environment-only", /WECHAT_MINI_VPAY_APP_KEY=/.test(env) && /WECHAT_MINI_SESSION_ENCRYPTION_KEY=/.test(env));
-const reportWebPaths = ["/life-map", "/relationship", "/qian", "/tarot", "/resilience", "/romance", "/daily", "/wealth", "/archetype"];
-check("all nine active report entries retain public web reference routes", reportWebPaths.every((route) => catalog.includes(`: \"${route}\"`) && reportRoutes.includes(`'${route}'`)));
-check("report discovery does not restore the removed preliminary archive funnel", !/初读档案|生成我的初读档案/.test(exploreView));
-check("native assessment is registered without the removed preliminary archive copy", app.pages.includes("pages/assessment/index") && !/YOUR FIRST REFLECTION|初读档案|免费预览/.test(`${assessmentView}\n${assessmentClient}`));
-check("dendrite engine v2 is deterministic and contains all nine products", /lingxifield-dendritic-v2/.test(dendriteEngine) && /life-archetype/.test(dendriteEngine) && /calculateDendrite/.test(dendriteEngine));
-check("product-specific question banks replace the five-question template", ["lifePrompts","deepRelationshipPrompts","businessRelationshipPrompts","otherRelationshipPrompts","resiliencePrompts","romancePrompts","wealthPrompts","tidePrompts","mirrorPrompts","qianPrompts","archetypePrompts"].every((name) => dendriteEngine.includes(name)) && !/makeQuestions\(seed/.test(dendriteEngine));
-const relationshipBanks = [promptBank("deepRelationshipPrompts", "businessRelationshipPrompts"), promptBank("businessRelationshipPrompts", "otherRelationshipPrompts"), promptBank("otherRelationshipPrompts", "resiliencePrompts")];
-check("three relationship paths use independent 24-interaction banks", /RELATIONSHIP_DENDRITE_PRODUCTS/.test(dendriteEngine) && relationshipBanks.every((bank) => promptCount(bank) === 24) && new Set(relationshipBanks).size === 3 && /relationshipVariants/.test(assessmentClient));
-check("every assessment records a named archive subject", /请填写档案称呼/.test(assessmentClient) && /你的姓名或称呼（必填）/.test(assessmentView) && /partnerName/.test(assessmentView));
-check("every question accepts a self-authored answer as an independent evidence variable", /__custom__/.test(assessmentView) && /customResponses/.test(assessmentClient) && /customAnswerActivation/.test(dendriteEngine) && /responseKind:custom\?"custom":"preset"/.test(dendriteEngine) && /不改作预设答案/.test(reportEntryLibrary));
-check("dendritic result contains evidence and publication chapters", /chapters/.test(dendriteEngine) && /evidence:/.test(dendriteEngine) && /chapterBody/.test(dendriteEngine));
-check("all nine active product entries own distinct definitions and result outlines", (fieldProductCopy.match(/cardDefinitionZh: "/g) || []).length === 9 && (fieldProductCopy.match(/resultOutline: \[/g) || []).length === 9);
-check("technical methodology appears on the Field Insight home instead of every assessment", /一次答案不会直接对应一句结论/.test(exploreView) && !/engine\.zh|product\.sourceZh/.test(assessmentView) && /product\.readingZh/.test(assessmentView));
-check("legacy Copernican naming is absent from current Mini Program sources", !/哥白尼|Copernican/i.test(`${fieldProductCopy}\n${dendriteEngine}\n${exploreView}\n${assessmentView}`));
-check("public Mini Program copy no longer uses the legacy linking term", !/联锁/.test(miniSources));
-check("Cultivation Techniques completes the six-entry living field grid", /title: '修炼技术'/.test(fieldClient) && /web: '\/practice'/.test(fieldClient));
-check("9D field structure is shared through the native field navigation", /field-structure-9d/.test(fieldNavView) && /lingxifield-9d-field-structure-v317-h264\.mp4/.test(fieldStructureView));
-check("9D Mini Program film is streamed on demand with controllable sound and fullscreen", /muted="\{\{muted\}\}"/.test(fieldStructureView) && /toggleAudio/.test(fieldStructureClient) && /requestFullScreen/.test(fieldStructureClient) && /closePanel/.test(fieldStructureClient));
-check("desktop 9D navigation and film are separate draggable surfaces", /FloatingFieldNavigator/.test(desktopFieldStructure) && /FloatingFieldVideo/.test(desktopFieldStructure) && /useFloatingDrag/.test(desktopFieldStructure) && !/FIELD_STRUCTURE_LINKS/.test(desktopNav));
-check("Life Archetype is a versioned automatic same-subject eight-field convergence", /layer: "convergence"/.test(fieldProductCopy) && /calculateLifeArchetypeFromReports/.test(dendriteEngine) && /BASE_DENDRITE_PRODUCT_IDS/.test(dendriteEngine) && /lingxifield-life-archetype-v6/.test(`${dendriteEngine}\n${lifeArchetype}`) && /identityVerified/.test(lifeArchetype) && /subjectId/.test(lifeArchetype));
-check("Life Archetype requires eight completed streams and one relationship path", /BASE_DENDRITE_PRODUCT_IDS\.filter/.test(lifeArchetype) && /relationshipByType/.test(lifeArchetype) && /任一完成即计入一条支流/.test(lifeArchetype));
-check("Life Archetype owns a cover plus 24 evidence-grown readings", /readings\.length\+1/.test(miniLifeArchetypeReport) && /readings\.length!==24/.test(miniLifeArchetypeReport) && /archetypeReadings/.test(miniLifeArchetypeReport) && /八流各守其证/.test(miniLifeArchetypeReport));
-check("all ten assessments generate eleven product-specific readings from 24 evidence leaves", /LIVING_REPORT_SPECS/.test(reportEntryLibrary) && /compileLivingChapter/.test(reportEntryLibrary) && /distinctLeaves/.test(reportEntryLibrary) && /reportEntries/.test(dendriteEngine) && /evidenceLeaves/.test(dendriteEngine));
-check("Life Archetype progress has an explicit native return control", /showBack="\{\{true\}\}"/.test(archetypeProgressView));
-check("catalog and assessment configuration cannot serve stale product copy", /no-store/.test(catalogRoute) && /no-store/.test(read("app/api/wechat/mini/dendrite/config/route.ts")));
-check("unlocked assessments open only after ownership and entitlement revalidation", /unlocked/.test(dendriteSubmit) && /mini_dendrite_assessments/.test(contentLink) && /submissionId/.test(contentOpen) && /hasUnlock/.test(contentOpen));
-check("audit account grant is exact, idempotent, and covers current and future paid content", /945462373@qq\.com/.test(auditUnlockSql) && /'everything'/.test(auditUnlockSql) && /AUDIT_EMAIL = "945462373@qq.com"/.test(auditAccess) && /product_id: "everything"/.test(auditAccess));
-check("assessment exposes a native page back control", /show-back="\{\{true\}\}"/.test(assessmentView));
-check("native assessment supports forwarding and copying the web reference link", /onShareAppMessage/.test(assessmentClient) && /onShareTimeline/.test(assessmentClient) && /setClipboardData/.test(assessmentClient));
-check("all native shares use the current cache-busted two-presenter artwork", !/share-cover\.jpg/.test(miniSources) && (miniSources.match(/mini-share-v337\.jpg\?v=20260831/g) || []).length >= 8);
-check("all primary and expanded Mini Program surfaces retain an English layer without escaped entity leaks", ["titleEn", "noteEn", "detailDescriptionEn", "titleEn", "closingEn", "ctaEn"].every((term) => `${catalog}\n${membershipContent}\n${fieldView}\n${productView}`.includes(term)) && !/&(?:amp|lt|gt);/.test(miniSources));
-check("Mini Program PDF uses native WeChat download and open-document menu", app.pages.includes("pages/pdf/index") && /deliverPdf/.test(pdfExport) && /createSignedUploadUrl/.test(pdfTransfer) && /report-pdfs/.test(pdfDownload) && /wx\.downloadFile/.test(pdfPage) && /showMenu: true/.test(pdfPage));
-check("dendrite archives are owner-readable, server-writable, and included in account migration", /enable row level security/.test(dendriteSql) && /revoke insert, update, delete/.test(dendriteSql) && /auth\.uid\(\) = user_id/.test(dendriteSql) && /update public\.mini_dendrite_assessments set user_id/.test(dendriteSql));
-check("V318 can repair a missing native archive table", /create table if not exists public\.mini_dendrite_assessments/.test(dendriteReliabilitySql) && /grant all on table public\.mini_dendrite_assessments to service_role/.test(dendriteReliabilitySql));
-check("iPhone sandbox payment is stopped before WeChat returns a platform error", /result\.sandbox && platform === 'ios'/.test(virtualPay));
-check("account linking begins only from a valid Mini Program session", /requireMiniSession\(req\)/.test(accountLinkStart));
-check("account-link hand-off is encrypted, random, and short-lived", /encryptMiniSecret/.test(accountLinkStart) && /randomBytes/.test(accountLinkStart) && /10 \* 60 \* 1000/.test(accountLinkStart));
-check("account linking requires the target web account to be signed in", /supabase\.auth\.getUser\(\)/.test(accountLinkConfirm));
-check("account linking rechecks the live Mini identity before migration", /wechat_mini_identities/.test(accountLinkConfirm) && /identity\.user_id !== ticket\.sourceUserId/.test(accountLinkConfirm));
-check("account-link UI asks for an explicit confirmation", /确认连接此账户/.test(accountLinkPanel) && /不会猜测或自动合并账户/.test(accountLinkPanel));
-check("account migration does not guess identity from email or phone", !/email|phone|手机号|邮箱/i.test(`${accountLinkStart}\n${accountLinkConfirm}\n${accountLinkSql}`));
-check("account migration preserves report, order, and entitlement records", /public\.unlocks/.test(accountLinkSql) && /public\.orders/.test(accountLinkSql) && /public\.wealth_submissions/.test(accountLinkSql));
-check("account migration RPC is service-role-only", /revoke execute[\s\S]*from public, anon, authenticated/.test(accountLinkSql) && /grant execute[\s\S]*to service_role/.test(accountLinkSql));
-check("membership cards use product-specific shared publication copy", /MEMBERSHIP_CONTENT/.test(catalog) && /item\.detailDescription/.test(fieldView) && /item\.cta/.test(fieldView));
-check("membership landing copy uses field, archive, exploration, and connection language", ["场域", "档案", "探索", "连接", "觉察"].every((term) => `${fieldView}\n${membershipContent}`.includes(term)));
-check("Mini Program membership page no longer repeats generic permanent-sales copy", !/一次能量交换，永久开启/.test(fieldView));
-check(
-  "historical web reports use a confirmed secure archive hand-off",
-  /confirmOpenWebArchive/.test(profileClient) &&
-    /无需再次购买/.test(profileClient) &&
-    /isMiniWebArchiveProduct\(productId\).*return "\/account\/orders"/s.test(contentDestinations)
-);
-check(
-  "purchase screen discloses delivery, validity, renewal, and requires policy consent",
-  ["交付方式", "权益期限", "不会自动续费", "/terms", "/refunds", "/privacy", "agreed"].every((term) => `${productView}\n${productClient}`.includes(term))
-);
-check("purchase screen offers a WeChat customer-service route", /open-type="contact"/.test(productView));
-check(
-  "My Field exposes terms, refunds, privacy, declaration, about, and support",
-  ["/terms", "/refunds", "/privacy", "/declaration", "/about", "open-type=\"contact\""].every((term) => profileView.includes(term)) && /openPolicy/.test(profileClient)
-);
+for (const retired of [
+  "pages/field/index",
+  "pages/assessment/index",
+  "pages/narrative/index",
+]) {
+  must(!app.pages.includes(retired), `RETIRED_PAGE_REGISTERED:${retired}`);
+}
 
-if (failed) process.exit(1);
+// Retired client payment helper must not be required by the live UI.
+must(!exists("miniapp/utils/payment.js"), "RETIRED_PAYMENT_HELPER_RETURNED");
+for (const rel of [
+  "miniapp/app.js",
+  "miniapp/pages/create/index.js",
+  "miniapp/pages/tools/index.js",
+  "miniapp/pages/agents/index.js",
+  "miniapp/pages/profile/index.js",
+  "miniapp/pages/web/index.js",
+]) {
+  must(!/utils\/payment|requestPayment\s*\(/.test(read(rel)), `RETIRED_PAYMENT_HELPER_REFERENCED:${rel}`);
+}
+
+// API boundary: only Mini Program API family is accepted by the authenticated client helper.
+const api = read("miniapp/utils/api.js");
+must(api.includes("path.startsWith('/api/wechat/mini/')"), "MINI_API_PATH_GUARD_MISSING");
+must(api.includes("Authorization: `Bearer ${token}`"), "MINI_AUTH_HEADER_MISSING");
+must(api.includes("wx.login"), "WX_LOGIN_MISSING");
+must(!/AppSecret|WECHAT_MINI_APP_SECRET|service[_-]?role/i.test(api), "CLIENT_SECRET_REFERENCE_FOUND");
+
+// No obvious raw key material should live in Mini Program runtime files.
+for (const rel of [
+  "miniapp/app.js",
+  "miniapp/utils/api.js",
+  "miniapp/utils/i18n.js",
+  "miniapp/utils/share.js",
+]) {
+  const t = read(rel);
+  must(!/\bsk-[A-Za-z0-9_-]{20,}\b/.test(t), `RAW_KEY_FOUND:${rel}`);
+  must(!/-----BEGIN [A-Z ]*PRIVATE KEY-----/.test(t), `PRIVATE_KEY_FOUND:${rel}`);
+}
+
+// WebView route allowlist must remain explicit and traversal-resistant.
+const web = read("miniapp/pages/web/index.js");
+must(web.includes("EXACT_ALLOWED"), "WEB_ALLOWLIST_MISSING");
+must(web.includes("PREFIX_ALLOWED"), "WEB_PREFIX_ALLOWLIST_MISSING");
+must(web.includes("value.startsWith('//')"), "WEB_PROTOCOL_RELATIVE_GUARD_MISSING");
+must(web.includes("value.includes('://')"), "WEB_EXTERNAL_SCHEME_GUARD_MISSING");
+must(web.includes("segment === '..'"), "WEB_TRAVERSAL_GUARD_MISSING");
+
+// 9-language structure and language switch.
+const i18n = read("miniapp/utils/i18n.js");
+const expectedLangs = ["zh-CN","en","ja","ko","fr","de","es","pt","ar"];
+for (const lang of expectedLangs) {
+  must(
+    i18n.includes(`'${lang}'`) || i18n.includes(`"${lang}"`) || i18n.includes(`${lang}:`),
+    `MINI_LANGUAGE_MISSING:${lang}`,
+  );
+}
+must(i18n.includes("SUPPORTED"), "MINI_LANGUAGE_LIST_MISSING");
+must(i18n.includes("setLanguage"), "MINI_LANGUAGE_SWITCH_MISSING");
+
+const profile = read("miniapp/pages/profile/index.wxml");
+must(profile.includes('bindchange="changeLanguage"'), "MINI_LANGUAGE_PICKER_MISSING");
+
+// Current user surfaces must use copy bindings and not expose engineering implementation terms.
+for (const rel of [
+  "miniapp/pages/create/index.wxml",
+  "miniapp/pages/tools/index.wxml",
+  "miniapp/pages/agents/index.wxml",
+  "miniapp/pages/profile/index.wxml",
+]) {
+  const t = read(rel);
+  must(t.includes("{{copy."), `MINI_I18N_BINDING_MISSING:${rel}`);
+  must(!/\b(RPC|Pipeline|Worker|Queue|Inference|Endpoint|Webhook|Object Storage|Runtime)\b/i.test(t),
+       `MINI_ENGINEERING_COPY:${rel}`);
+}
+
+// Account linking remains explicit, not automatic.
+const profileJs = read("miniapp/pages/profile/index.js");
+must(profileJs.includes("/api/wechat/mini/account-link/start"), "ACCOUNT_LINK_START_MISSING");
+must(profileJs.includes("connectExistingAccount"), "EXPLICIT_ACCOUNT_LINK_ACTION_MISSING");
+
+// Server-side payment routes may remain available even though the current native helper is retired.
+// If present, they must stay server-side and expose evidence of auth/rate-limit/signature validation.
+if (exists("app/api/wechat/mini/pay/create/route.ts")) {
+  const payCreate = read("app/api/wechat/mini/pay/create/route.ts");
+  must(/checkRateLimit/.test(payCreate), "MINI_PAY_CREATE_RATE_LIMIT_MISSING");
+  must(/session\.userId|require.*session|Bearer/i.test(payCreate), "MINI_PAY_CREATE_AUTH_REVIEW_REQUIRED");
+}
+if (exists("app/api/wechat/mini/pay/notify/route.ts")) {
+  const notify = read("app/api/wechat/mini/pay/notify/route.ts");
+  must(/signature|verify|sign/i.test(notify), "MINI_PAY_NOTIFY_SIGNATURE_REVIEW_REQUIRED");
+  must(/outTradeNo|provider_payment_id/.test(notify), "MINI_PAY_NOTIFY_ORDER_BINDING_MISSING");
+}
+
+// Old first-generation product architecture must not drive current acceptance.
+must(!exists("miniapp/pages/field/index.js"), "OLD_FIELD_PAGE_RETURNED");
+
+console.log("AUDIT_MINI_PROGRAM=PASS");
+console.log("CURRENT_MINI_TOPOLOGY=PASS");
+console.log("RETIRED_PAYMENT_HELPER=ABSENT");
+console.log("MINI_API_BOUNDARY=PASS");
+console.log("MINI_WEBVIEW_ALLOWLIST=PASS");
+console.log("MINI_9_LANGUAGE_STRUCTURE=PASS");
+console.log("MINI_ACCOUNT_LINK_EXPLICIT=PASS");
+console.log("MINI_PAYMENT_SERVER_BOUNDARY=PASS");

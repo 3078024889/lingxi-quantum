@@ -68,6 +68,7 @@ const product = getProduct(productId);
       product_type: product.type,
       amount_usd: product.priceUsd,
       amount_rmb: product.priceRmb,
+      currency: "CNY",
       status: "pending",
       provider: "alipay",
       ...(typeof submissionId === "string" ? { submission_id: submissionId } : {}),

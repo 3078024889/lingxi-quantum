@@ -1,26 +1,42 @@
 const { login, request, switchAccount } = require('../../utils/api')
-const { initPage } = require('../../utils/i18n')
+const { SUPPORTED, initPage, copyFor, getLanguage, setLanguage } = require('../../utils/i18n')
 const { enableShareMenu, copyWebLink, appMessage, timeline } = require('../../utils/share')
-
-const SHARE_TITLE = '灵犀场 · 一键创造，一念即达'
 
 Page({
   data: {
-    lang: 'zh',
+    lang: 'zh-CN',
+    copy: {},
+    languages: SUPPORTED,
+    languageIndex: 0,
     checking: true,
     connected: false,
     linking: false,
   },
 
+  refreshLanguage(lang) {
+    const index = Math.max(0, SUPPORTED.findIndex((item) => item.id === lang))
+    this.setData({ lang, copy: copyFor('profile', lang), languageIndex: index })
+  },
+
   onLoad() {
-    initPage(this)
+    const lang = initPage(this, 'profile')
+    this.refreshLanguage(lang)
     enableShareMenu()
     this.refreshIdentity()
   },
 
   onShow() {
-    initPage(this)
+    const lang = getLanguage()
+    this.refreshLanguage(lang)
     enableShareMenu()
+  },
+
+  changeLanguage(event) {
+    const index = Number(event.detail.value)
+    const item = SUPPORTED[index]
+    if (!item) return
+    setLanguage(item.id)
+    this.refreshLanguage(item.id)
   },
 
   async refreshIdentity() {
@@ -45,7 +61,7 @@ Page({
   async connectExistingAccount() {
     if (this.data.linking) return
     this.setData({ linking: true })
-    wx.showLoading({ title: '正在准备连接' })
+    wx.showLoading({ title: this.data.copy.preparing })
     try {
       const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
       wx.hideLoading()
@@ -53,8 +69,8 @@ Page({
     } catch (error) {
       wx.hideLoading()
       wx.showModal({
-        title: '暂时无法连接',
-        content: (error && error.data && error.data.error) || '请稍后再试',
+        title: this.data.copy.unavailable,
+        content: this.data.copy.retry,
         showCancel: false,
       })
     } finally {
@@ -63,30 +79,20 @@ Page({
   },
 
   async relogin() {
-    wx.showLoading({ title: '正在重新连接' })
+    wx.showLoading({ title: this.data.copy.reconnecting })
     try {
       await switchAccount()
       this.setData({ connected: true })
-      wx.showToast({ title: '已重新连接', icon: 'success' })
+      wx.showToast({ title: this.data.copy.reconnected, icon: 'success' })
     } catch (error) {
       this.setData({ connected: false })
-      wx.showToast({ title: '暂未连接', icon: 'none' })
+      wx.showToast({ title: this.data.copy.notConnected, icon: 'none' })
     } finally {
       wx.hideLoading()
     }
   },
 
-  copyLink() {
-    // Never copy account/session URLs from the account surface.
-    copyWebLink('/')
-  },
-
-  onShareAppMessage() {
-    // Account state is private; share the public Mini Program home instead.
-    return appMessage(SHARE_TITLE, '/pages/create/index')
-  },
-
-  onShareTimeline() {
-    return timeline(SHARE_TITLE)
-  },
+  copyLink() { copyWebLink('/') },
+  onShareAppMessage() { return appMessage('灵犀场 LINGXIFIELD', '/pages/create/index') },
+  onShareTimeline() { return timeline('灵犀场 LINGXIFIELD') },
 })
