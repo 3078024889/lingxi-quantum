@@ -24,15 +24,15 @@ const UI={
  defaultLabel:c("继续","Continue","続ける","계속","Continuer","Weiter","Continuar","Continuar","متابعة"),
  paid:c("支付已确认，开始处理…","Payment confirmed. Processing…","支払いを確認しました。処理を開始します…","결제가 확인되었습니다. 처리를 시작합니다…","Paiement confirmé. Traitement…","Zahlung bestätigt. Verarbeitung…","Pago confirmado. Procesando…","Pagamento confirmado. Processando…","تم تأكيد الدفع. جارٍ المعالجة…"),
  quoteFail:c("创建报价失败","Could not create quote","見積を作成できませんでした","견적을 만들지 못했습니다","Impossible de créer le devis","Angebot konnte nicht erstellt werden","No se pudo crear el presupuesto","Não foi possível criar a cotação","تعذر إنشاء عرض السعر"),
- priced:c("价格已锁定，继续选择支付方式。","Price locked. Continue to payment.","価格を確定しました。","가격이 확정되었습니다.","Prix verrouillé.","Preis festgelegt.","Precio fijado.","Preço fixado.","تم تثبيت السعر."),
+ priced:c("价格已确认，选择支付方式继续。","Price confirmed. Continue to payment.","価格を確定しました。","가격이 확정되었습니다.","Prix verrouillé.","Preis festgelegt.","Precio fijado.","Preço fixado.","تم تثبيت السعر."),
  waiting:c("等待支付确认…付款完成后这里会自动继续。","Waiting for payment confirmation. This page will continue automatically.","支払い確認待ち…","결제 확인 대기 중…","En attente du paiement…","Warten auf Zahlungsbestätigung…","Esperando confirmación…","Aguardando confirmação…","بانتظار تأكيد الدفع…"),
  blocked:c("浏览器阻止了付款窗口。请允许本站弹窗后再试。","The browser blocked the payment window. Allow pop-ups and try again.","支払いウィンドウがブロックされました。","결제 창이 차단되었습니다.","La fenêtre de paiement a été bloquée.","Das Zahlungsfenster wurde blockiert.","La ventana de pago fue bloqueada.","A janela de pagamento foi bloqueada.","تم حظر نافذة الدفع."),
- serviceUnavailable:c("当前服务暂不可用，不会创建付费订单。","This service is currently unavailable. No paid order will be created.","現在このサービスは利用できません。","현재 서비스를 사용할 수 없습니다.","Service indisponible.","Dienst derzeit nicht verfügbar.","Servicio no disponible.","Serviço indisponível.","الخدمة غير متاحة حاليًا."),
+ serviceUnavailable:c("暂时无法处理，不会产生费用。","This service is currently unavailable. You will not be charged.","現在このサービスは利用できません。","현재 서비스를 사용할 수 없습니다.","Service indisponible.","Dienst derzeit nicht verfügbar.","Servicio no disponible.","Serviço indisponível.","الخدمة غير متاحة حاليًا."),
  pricing:c("正在确认价格…","Confirming price…","価格確認中…","가격 확인 중…","Confirmation du prix…","Preis wird bestätigt…","Confirmando precio…","Confirmando preço…","جارٍ تأكيد السعر…"),
  thisTime:c("本次","This time","今回","이번","Cette fois","Diesmal","Esta vez","Desta vez","هذه المرة"),
  confirm:c("确认并付款","Confirm & pay","確認して支払う","확인 후 결제","Confirmer et payer","Bestätigen & bezahlen","Confirmar y pagar","Confirmar e pagar","تأكيد ودفع"),
  recalc:c("重新确认","Recalculate","再確認","다시 확인","Recalculer","Neu bestätigen","Recalcular","Recalcular","إعادة التأكيد"),
- recovered:c("已恢复这次工具的报价记录。","Previous quote restored.","以前の見積を復元しました。","이전 견적을 복구했습니다.","Devis précédent restauré.","Früheres Angebot wiederhergestellt.","Cotización anterior restaurada.","Cotação anterior restaurada.","تمت استعادة عرض السعر السابق."),
+ recovered:c("已找回本次价格。","Previous price restored.","以前の見積を復元しました。","이전 견적을 복구했습니다.","Devis précédent restauré.","Früheres Angebot wiederhergestellt.","Cotización anterior restaurada.","Cotação anterior restaurada.","تمت استعادة عرض السعر السابق."),
  resumePaid:c("之前的付款已经确认，不会重复收费，正在继续处理。","Previous payment confirmed. No duplicate charge; processing is resuming.","以前の支払いを確認しました。","이전 결제가 확인되었습니다.","Paiement précédent confirmé.","Frühere Zahlung bestätigt.","Pago anterior confirmado.","Pagamento anterior confirmado.","تم تأكيد الدفعة السابقة."),
 };
 

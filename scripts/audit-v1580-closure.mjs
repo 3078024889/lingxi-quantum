@@ -1,0 +1,18 @@
+import fs from "node:fs";
+const must=(v,m)=>{if(!v)throw new Error(m)};
+const read=p=>fs.readFileSync(p,"utf8");
+must(read("app/account/auth/route.ts").includes("verification_config"),"AUTH_FAIL_CLOSED_MISSING");
+must(!read("app/account/auth/route.ts").includes("signInWithPassword({email,password});\n      if(signinError"),"SIGNUP_AUTO_SIGNIN_RETURNED");
+must(read("app/account/SignOutButton.tsx").includes('scope:"global"'),"SIGNOUT_GLOBAL_MISSING");
+must(read("app/auth/confirm/route.ts").includes("verifyOtp"),"EMAIL_CONFIRM_ROUTE_MISSING");
+must(read("components/AiWalletPanel.tsx").includes("创作与服务"),"WALLET_COPY_NOT_UPDATED");
+must(read("app/account/withdrawals/page.tsx").includes("余额提现"),"WITHDRAWAL_COPY_NOT_UPDATED");
+must(!read("app/tools/food-calorie/page.tsx").includes("AI 会逐张识别"),"FOOD_FALSE_AI_COPY_RETURNED");
+must(read("app/api/tools/food/calculate/route.ts").includes("recoverToolQuotePayment"),"FOOD_PAYMENT_GATE_MISSING");
+must(read("components/tools/FoodCalorieWorkbench.tsx").includes("查看价格并计算"),"FOOD_FLOW_COPY_MISSING");
+must(read("lib/tools/service-readiness.ts").includes('"food-calorie"'),"FOOD_READINESS_MISSING");
+console.log("AUTH_FLOW_CHECK=PASS");
+console.log("SIGNOUT_FLOW_CHECK=PASS");
+console.log("WALLET_COPY_CHECK=PASS");
+console.log("WITHDRAWAL_COPY_CHECK=PASS");
+console.log("FOOD_FUNCTION_FLOW_CHECK=PASS");

@@ -8,7 +8,7 @@ function choices(file:File):Choice[]{const type=(file.type||"").toLowerCase(),na
  if(type==="application/pdf"||name.endsWith(".pdf"))return[
   {href:"/tools/pdf-editor",titleZh:"编辑 PDF",titleEn:"Edit PDF",descriptionZh:"改文字、加图片、签名、盖章、页面处理",descriptionEn:"Edit text, add images, authorized signatures or stamps, and manage pages"},
   {href:"/tools/e-sign-pdf",titleZh:"签名 / 盖章 / 骑缝章",titleEn:"Sign / stamp / page-edge seal",descriptionZh:"多页签章与骑缝章",descriptionEn:"Multi-page authorized signing and page-edge seals"},
-  {href:"/tools/pdf-merge-split",titleZh:"合并 / 拆分 / 旋转",titleEn:"Merge / split / rotate",descriptionZh:"浏览器本地处理页面",descriptionEn:"Process pages locally in the browser"},
+  {href:"/tools/pdf-merge-split",titleZh:"合并 / 拆分 / 旋转",titleEn:"Merge / split / rotate",descriptionZh:"直接处理页面",descriptionEn:"Process pages locally in the browser"},
   {href:"/tools/privacy-cleaner",titleZh:"清理隐私信息",titleEn:"Clean private metadata",descriptionZh:"移除 PDF 作者、标题等元数据",descriptionEn:"Remove PDF author, title and related metadata"}];
  if(type.startsWith("image/")||/\.(heic|heif|jpe?g|png|webp|avif)$/i.test(name))return[
   {href:"/tools/batch-image",titleZh:"压缩 / 改尺寸 / 转格式",titleEn:"Compress / resize / convert",descriptionZh:"单张或批量处理",descriptionEn:"Process one image or a batch"},
@@ -17,7 +17,7 @@ function choices(file:File):Choice[]{const type=(file.type||"").toLowerCase(),na
   {href:"/tools/privacy-cleaner",titleZh:"清除照片定位",titleEn:"Remove photo location data",descriptionZh:"去除 GPS / EXIF 元数据",descriptionEn:"Remove GPS / EXIF metadata"},
   {href:"/tools/image-to-pdf-pro",titleZh:"转成 PDF",titleEn:"Convert to PDF",descriptionZh:"多张图可合成一个 PDF",descriptionEn:"Combine multiple images into one PDF"}];
  if(type.startsWith("video/")||/\.(mp4|mov|mkv|webm|m4v)$/i.test(name))return[
-  {href:"/tools/video-toolkit",titleZh:"压缩 / 裁剪 / 提取音频",titleEn:"Compress / trim / extract audio",descriptionZh:"本地 FFmpeg 处理",descriptionEn:"Local FFmpeg processing"},
+  {href:"/tools/video-toolkit",titleZh:"压缩 / 裁剪 / 提取音频",titleEn:"Compress / trim / extract audio",descriptionZh:"视频处理 处理",descriptionEn:"Local FFmpeg processing"},
   {href:"/tools/video-dubbing",titleZh:"翻译 / 配音",titleEn:"Translate / dub",descriptionZh:"生成其他语言版本",descriptionEn:"Create another-language version"},
   {href:"/tools/video-watermark-remover",titleZh:"清理固定区域",titleEn:"Clean a fixed region",descriptionZh:"处理你有权编辑的视频",descriptionEn:"Process video you are authorized to edit"}];
  if(type.startsWith("audio/")||/\.(mp3|wav|m4a|aac|ogg)$/i.test(name))return[

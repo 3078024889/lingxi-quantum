@@ -5,6 +5,7 @@ import { calculateToolQuote } from "@/lib/tools/pricing-server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeState } from "@/lib/tools/service-readiness";
+import { isPublicPaidToolId } from "@/lib/tools/paid-catalog";
 import {
   amountForCurrency,
   parseCurrency,
@@ -71,6 +72,9 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const toolId = String(body.toolId || "").trim();
+    if (!isPublicPaidToolId(toolId)) {
+      return NextResponse.json({ error: "TOOL_NOT_AVAILABLE" }, { status: 404 });
+    }
     const runtimeState = toolRuntimeState(toolId);
     if (!runtimeState.ready) {
       return NextResponse.json(

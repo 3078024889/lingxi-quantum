@@ -4,11 +4,9 @@ import Footer from "@/components/Footer";
 import ProductCatalogClient from "./ProductCatalogClient";
 
 export const metadata:Metadata={
-  title:"从这里开始｜灵犀场 LINGXIFIELD",
-  description:"按你现在要解决的事情进入：AI短剧、书本与资料智能体、学习、科研、免费实用工具与余额。",
-  alternates:{canonical:"/products"},
+ title:"产品中心｜SASI、资料知识与实用工具｜灵犀场",
+ description:"按现在要完成的事情进入：SASI 创作与构建、资料知识、学习研究、免费实用工具、创作余额与账户服务。",
+ alternates:{canonical:"/products"},
 };
 
-export default function Page(){
-  return <><Nav/><ProductCatalogClient/><Footer/></>;
-}
+export default function Page(){return <><Nav/><ProductCatalogClient/><Footer/></>;}

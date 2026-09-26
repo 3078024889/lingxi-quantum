@@ -7,7 +7,7 @@ import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
 type C={lead:string;run:string;busy:string;cancel:string;done:string;copy:string;copied:string;ready:string;error:string;canceled:string;loading:string;page:string};
 const D:Record<LingxiLang,C>={
- zh:{lead:"PDF 页面会在浏览器本地渲染并进行 OCR，文件不上传。",run:"开始 OCR",busy:"正在识别…",cancel:"取消",done:"完成",copy:"复制文字",copied:"已复制",ready:"OCR 文字已经生成，可以编辑、复制或下载 TXT。",error:"PDF OCR 没有完成",canceled:"已取消",loading:"正在加载 OCR 引擎…",page:"识别页"},
+ zh:{lead:"PDF 页面会在当前页面渲染并进行 OCR，文件不上传。",run:"开始 OCR",busy:"正在识别…",cancel:"取消",done:"完成",copy:"复制文字",copied:"已复制",ready:"OCR 文字已经生成，可以编辑、复制或下载 TXT。",error:"PDF OCR 没有完成",canceled:"已取消",loading:"正在加载 OCR 引擎…",page:"识别页"},
  en:{lead:"PDF pages are rendered and OCR runs locally in your browser. The file is not uploaded.",run:"Run OCR",busy:"Recognizing…",cancel:"Cancel",done:"Done",copy:"Copy text",copied:"Copied",ready:"OCR text is ready. Edit, copy or download the TXT.",error:"PDF OCR did not finish",canceled:"Canceled",loading:"Loading OCR engine…",page:"OCR page"},
  ja:{lead:"PDF ページをブラウザ内でレンダリングし OCR します。ファイルはアップロードしません。",run:"OCR を開始",busy:"認識中…",cancel:"キャンセル",done:"完了",copy:"文字をコピー",copied:"コピー済み",ready:"OCR 文字を生成しました。編集・コピー・TXT ダウンロードができます。",error:"PDF OCR を完了できませんでした",canceled:"キャンセルしました",loading:"OCR エンジンを読み込み中…",page:"OCR ページ"},
  ko:{lead:"PDF 페이지를 브라우저에서 렌더링하고 OCR합니다. 파일은 업로드하지 않습니다.",run:"OCR 시작",busy:"인식 중…",cancel:"취소",done:"완료",copy:"텍스트 복사",copied:"복사됨",ready:"OCR 텍스트가 준비되었습니다. 편집, 복사 또는 TXT 다운로드가 가능합니다.",error:"PDF OCR을 완료하지 못했습니다",canceled:"취소됨",loading:"OCR 엔진 로드 중…",page:"OCR 페이지"},
@@ -17,16 +17,16 @@ const D:Record<LingxiLang,C>={
  pt:{lead:"As páginas PDF são renderizadas e reconhecidas localmente no navegador. O arquivo não é enviado.",run:"Iniciar OCR",busy:"Reconhecendo…",cancel:"Cancelar",done:"Concluído",copy:"Copiar texto",copied:"Copiado",ready:"O texto OCR está pronto. Edite, copie ou baixe o TXT.",error:"Não foi possível concluir o OCR",canceled:"Cancelado",loading:"Carregando motor OCR…",page:"Página OCR"},
  ar:{lead:"تُعرض صفحات PDF ويعمل OCR محليًا داخل المتصفح. لا يتم رفع الملف.",run:"بدء OCR",busy:"جارٍ التعرف…",cancel:"إلغاء",done:"تم",copy:"نسخ النص",copied:"تم النسخ",ready:"نص OCR جاهز. يمكنك تعديله أو نسخه أو تنزيل TXT.",error:"تعذر إكمال OCR",canceled:"تم الإلغاء",loading:"جارٍ تحميل محرك OCR…",page:"صفحة OCR"}
 };
-type OcrWorker={recognize:(input:Blob)=>Promise<{data:{text:string}}> ;terminate:()=>Promise<void>};
+type Ocr后台处理={recognize:(input:Blob)=>Promise<{data:{text:string}}> ;terminate:()=>Promise<void>};
 export default function PdfOcrWorkbench(){
  const{lang:uiLang}=useLingxiLang();const c=D[uiLang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[ocrLang,setOcrLang]=useState("chi_sim+eng"),[text,setText]=useState(""),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[copied,setCopied]=useState(false);
  const stop=useRef(false),file=files[0]||null;
  async function run(){
-  if(!file)return;setBusy(true);setText("");setError("");stop.current=false;let worker:OcrWorker|null=null,pdf:Awaited<ReturnType<typeof openPdf>>|null=null;
+  if(!file)return;setBusy(true);setText("");setError("");stop.current=false;let worker:Ocr后台处理|null=null,pdf:Awaited<ReturnType<typeof openPdf>>|null=null;
   try{
    const {createWorker}=await import("tesseract.js");setStage(c.loading);
-   worker=await createWorker(ocrLang,undefined,{logger:(m:{status?:string;progress?:number})=>{if(m.status&&typeof m.progress==="number")setStage(`${m.status} · ${Math.round(m.progress*100)}%`)}}) as unknown as OcrWorker;
+   worker=await createWorker(ocrLang,undefined,{logger:(m:{status?:string;progress?:number})=>{if(m.status&&typeof m.progress==="number")setStage(`${m.status} · ${Math.round(m.progress*100)}%`)}}) as unknown as Ocr后台处理;
    pdf=await openPdf(file);const chunks:string[]=[];
    for(let n=1;n<=pdf.numPages;n++){
     if(stop.current){setStage(c.canceled);return}

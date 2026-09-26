@@ -10,10 +10,10 @@ const c = (zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string
 
 type StaticEntry = { slug:string; href:string; titles:Copy };
 const STATIC_PAGES: StaticEntry[] = [
-  { slug:"live-as", href:"/live-as", titles:c("意识显化","Manifestation","意識の具現化","의식 구현","Manifestation","Manifestation","Manifestación","Manifestação","التجسيد") },
+  { slug:"live-as", href:"/live-as", titles:c("SASI 创作","Manifestation","意識の具現化","의식 구현","Manifestation","Manifestation","Manifestación","Manifestação","التجسيد") },
   { slug:"sasi", href:"/sasi", titles:c("灵犀场 SASI · AI 创作","LINGXIFIELD SASI · AI Creation","霊犀場 SASI · AI 制作","링시필드 SASI · AI 제작","LINGXIFIELD SASI · Création IA","LINGXIFIELD SASI · KI-Erstellung","LINGXIFIELD SASI · Creación IA","LINGXIFIELD SASI · Criação com IA","LINGXIFIELD SASI · إنشاء بالذكاء الاصطناعي") },
-  { slug:"practice", href:"/practice", titles:c("修炼技术","Practices","実践","수련","Pratiques","Praxis","Prácticas","Práticas","الممارسات") },
-  { slug:"gates", href:"/#gates", titles:c("潜意识重塑","Subconscious Reframing","潜在意識の再構築","잠재의식 재구성","Reconfiguration du subconscient","Unterbewusstsein neu ausrichten","Reconfiguración del subconsciente","Reconfiguração do subconsciente","إعادة تشكيل العقل الباطن") },
+  { slug:"practice", href:"/practice", titles:c("阅后即焚","Practices","実践","수련","Pratiques","Praxis","Prácticas","Práticas","الممارسات") },
+  { slug:"gates", href:"/#gates", titles:c("资料知识","Subconscious Reframing","潜在意識の再構築","잠재의식 재구성","Reconfiguration du subconscient","Unterbewusstsein neu ausrichten","Reconfiguración del subconsciente","Reconfiguração do subconsciente","إعادة تشكيل العقل الباطن") },
   { slug:"learn", href:"/learn", titles:c("探索","Learn","探索","탐색","Explorer","Entdecken","Explorar","Explorar","استكشاف") },
   { slug:"membership", href:"/membership", titles:c("能量交换场","Access","アクセス","이용 권한","Accès","Zugang","Acceso","Acesso","الوصول") },
   { slug:"number-energy", href:"/tools/number-energy", titles:c("手机号车牌号测试","Number Energy","番号エネルギー","번호 에너지","Énergie des nombres","Zahlenenergie","Energía numérica","Energia dos números","طاقة الأرقام") },
@@ -25,7 +25,7 @@ const STATIC_PAGES: StaticEntry[] = [
   { slug:"account", href:"/account", titles:c("场域入口","Account","アカウント","계정","Compte","Konto","Cuenta","Conta","الحساب") },
   { slug:"relationship", href:"/relationship", titles:c("关系共振图谱","Relationship Resonance Map","関係共鳴マップ","관계 공명 지도","Carte de résonance relationnelle","Beziehungsresonanz-Karte","Mapa de resonancia relacional","Mapa de ressonância relacional","خريطة رنين العلاقات") },
   { slug:"resilience", href:"/resilience", titles:c("生命韧性指数","Life Resilience Index","生命レジリエンス指数","생명 회복탄력성 지수","Indice de résilience de vie","Lebensresilienz-Index","Índice de resiliencia vital","Índice de resiliência da vida","مؤشر مرونة الحياة") },
-  { slug:"romance", href:"/romance", titles:c("桃花磁场指数","Romance Resonance Index","恋愛共鳴指数","로맨스 공명 지수","Indice de résonance amoureuse","Romanz-Resonanzindex","Índice de resonancia romántica","Índice de ressonância romântica","مؤشر الرنين العاطفي") },
+  { slug:"romance", href:"/romance", titles:c("临时邮箱指数","Romance Resonance Index","恋愛共鳴指数","로맨스 공명 지수","Indice de résonance amoureuse","Romanz-Resonanzindex","Índice de resonancia romántica","Índice de ressonância romântica","مؤشر الرنين العاطفي") },
   { slug:"daily", href:"/daily", titles:c("今日潮汐","Today’s Tide","今日の潮汐","오늘의 흐름","Marée du jour","Heutige Gezeiten","Marea de hoy","Maré de hoje","مدّ اليوم") },
   { slug:"tarot", href:"/mirror", titles:c("量子生命镜像","Quantum Life Mirror","量子生命ミラー","양자 생명 거울","Miroir quantique de vie","Quanten-Lebensspiegel","Espejo cuántico de vida","Espelho quântico da vida","مرآة الحياة الكمية") },
   { slug:"tarot-daily", href:"/mirror/daily", titles:c("今日生命镜像","Daily Life Mirror","今日の生命ミラー","오늘의 생명 거울","Miroir quotidien","Täglicher Lebensspiegel","Espejo diario","Espelho diário","مرآة اليوم") },

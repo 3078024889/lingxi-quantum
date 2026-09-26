@@ -123,17 +123,11 @@ export default function Nav() {
   }
 
   async function signOut() {
-    try { await createClient().auth.signOut(); } catch {}
-    setMenuOpen(false);
-    router.push("/");
-    router.refresh();
+    try { const {error}=await createClient().auth.signOut({scope:"global"}); if(error)throw error; window.location.replace("/account"); return; } catch { setMenuOpen(false); }
   }
 
   async function switchAccount() {
-    try { await createClient().auth.signOut(); } catch {}
-    setMenuOpen(false);
-    router.push("/account?switch=1");
-    router.refresh();
+    try { const {error}=await createClient().auth.signOut({scope:"global"}); if(error)throw error; window.location.replace("/account?mode=signin&switch=1"); return; } catch { setMenuOpen(false); }
   }
 
   const side = (

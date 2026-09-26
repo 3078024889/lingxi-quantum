@@ -1,36 +1,48 @@
 # 灵犀场 LINGXIFIELD
 
-> 灵犀场是一个面向具体问题的在线工具与知识工作空间。核心入口包括实用工具中心、书本 SASI、AI学习 SASI、AI科研 SASI与灵犀场个人数字产品。
+> 灵犀场是一个让想法被理解、让问题被处理、让结果真正发生的数字工作空间。当前核心产品是 SASI 创作与构建、资料知识、学习研究，以及打开即可使用的文件与日常工具。
 
-Canonical site: https://lingxifield.com/
+Canonical site: https://lingxifield.com
+Chinese access domain: https://lingxifield.cn
+Brand: 灵犀场 LINGXIFIELD
 
-## Primary products
+## Current primary surfaces
 
-- [实用工具中心](https://lingxifield.com/tools): PDF、图片、文件、视频、OCR、字幕、隐私清理、格式转换等工具。
-- [书本 SASI](https://lingxifield.com/ai-knowledge): 上传 PDF、TXT、Markdown 或图片，建立本机资料库，检索原文，并基于证据向 AI 提问。
-- [AI学习 SASI](https://lingxifield.com/ai-learning): 面向教材、笔记和错题的原文检索与学习问答。
-- [AI科研 SASI](https://lingxifield.com/ai-research): 面向论文、书籍、实验记录的证据检索、比较与研究问答。
-- [场域精测](https://lingxifield.com/field-tests): 灵犀场个人数字报告入口。
+- https://lingxifield.com/ — 首页
+- https://lingxifield.com/products — 当前产品中心
+- https://lingxifield.com/tools — 实用工具中心
+- https://lingxifield.com/sasi — SASI 创作与构建
+- https://lingxifield.com/sasi/drama — 短剧创作
+- https://lingxifield.com/ai-knowledge — 资料知识
+- https://lingxifield.com/ai-learning — 学习 SASI
+- https://lingxifield.com/ai-research — 科研 SASI
+- https://lingxifield.com/about — 关于灵犀场
 
-## High-value utility pages
+## Practical tools
 
-- [PDF编辑](https://lingxifield.com/tools/pdf-editor)
-- [PDF合并拆分](https://lingxifield.com/tools/pdf-merge-split)
-- [PDF压缩](https://lingxifield.com/tools/pdf-compress)
-- [PDF OCR](https://lingxifield.com/tools/pdf-ocr)
-- [PDF转JPG](https://lingxifield.com/tools/pdf-to-jpg)
-- [PDF脱敏](https://lingxifield.com/tools/pdf-redact)
-- [图片压到100KB](https://lingxifield.com/tools/compress-image-to-100kb)
-- [视频转文字](https://lingxifield.com/tools/video-transcription)
-- [字幕翻译](https://lingxifield.com/tools/subtitle-translate)
-- [AI证件照换背景](https://lingxifield.com/tools/id-photo-ai)
+Current tools include PDF editing and conversion, image conversion and privacy cleanup, OCR, video transcription, subtitle processing, temporary email, burn-after-reading links, food calorie estimation, and ID photo processing.
 
-## Data and privacy model
+Representative URLs:
 
-Many file transformations are browser-local when technically possible. AI-dependent actions explicitly tell the user when selected content is sent to an AI provider.
+- https://lingxifield.com/tools/temp-mail
+- https://lingxifield.com/tools/burn-after-read
+- https://lingxifield.com/tools/food-calorie
+- https://lingxifield.com/tools/id-photo-ai
+- https://lingxifield.com/tools/video-transcription
+- https://lingxifield.com/tools/subtitle-translate
+- https://lingxifield.com/tools/pdf-editor
+- https://lingxifield.com/tools/pdf-merge-split
+- https://lingxifield.com/tools/ocr
 
-## Brand
+## How the platform works
 
-Name: 灵犀场
-English: LINGXIFIELD
-Website: https://lingxifield.com/
+LINGXIFIELD is algorithm-first. Deterministic algorithms, browser-local processing, traditional ML/CV, procedural generation, FFmpeg, Canvas/SVG, WASM/ONNX, server computation and task workflows are preferred when they can solve the task reliably. External generative models are optional enhancement nodes for tasks that genuinely require open-ended semantic generation.
+
+## Retired material
+
+Older manifestation, divination, romance resonance, archetype, subconscious, spiritual-practice and similar product pages are retired and no longer represent the current platform. They should not be used to describe current LINGXIFIELD.
+
+## Contact
+
+support@lingxifield.com
+business@lingxifield.com

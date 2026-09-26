@@ -1,0 +1,240 @@
+[
+  {
+    "toolId": "audio-transcription",
+    "page": "app/tools/audio-transcription/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "audio-transcription"
+    ],
+    "execute": [
+      "/api/ai/transcribe"
+    ],
+    "result": [
+      "ResultPanel"
+    ],
+    "download": [
+      "download TXT",
+      "download"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "batch-image-watermark-remover",
+    "page": "app/tools/batch-image-watermark-remover/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "batch-image-watermark-remover"
+    ],
+    "execute": [
+      "/api/ai/image-cleanup"
+    ],
+    "result": [
+      "setResults",
+      "results"
+    ],
+    "download": [
+      "downloadUrl"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "burn-after-read-file",
+    "page": "app/tools/burn-after-read/page.tsx",
+    "entry": [
+      "/api/tools/quote",
+      "burn-after-read-file"
+    ],
+    "execute": [
+      "/api/tools/burn-after-read/file/prepare"
+    ],
+    "result": [
+      "setLink"
+    ],
+    "download": [
+      "share",
+      "copy"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "e-sign-pdf",
+    "page": "app/tools/e-sign-pdf/page.tsx",
+    "entry": [
+      "PaidExportButton",
+      "e-sign-pdf"
+    ],
+    "execute": [
+      "exportNow"
+    ],
+    "result": [
+      "preview"
+    ],
+    "download": [
+      "download"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "food-calorie",
+    "page": "app/tools/food-calorie/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "food-calorie"
+    ],
+    "execute": [
+      "/api/tools/food/calculate"
+    ],
+    "result": [
+      "setResult",
+      "本餐合计"
+    ],
+    "download": [],
+    "enabled": true
+  },
+  {
+    "toolId": "id-photo-ai",
+    "page": "app/tools/id-photo-ai/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "id-photo-ai"
+    ],
+    "execute": [
+      "/api/ai/id-photo"
+    ],
+    "result": [
+      "setResults"
+    ],
+    "download": [
+      "downloadUrl"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "image-watermark-remover",
+    "page": "app/tools/image-watermark-remover/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "image-watermark-remover"
+    ],
+    "execute": [
+      "/api/ai/image-cleanup"
+    ],
+    "result": [
+      "setResults"
+    ],
+    "download": [
+      "downloadUrl"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "pdf-editor",
+    "page": "app/tools/pdf-editor/page.tsx",
+    "entry": [
+      "PaidExportButton",
+      "pdf-editor"
+    ],
+    "execute": [
+      "exportNow"
+    ],
+    "result": [
+      "preview"
+    ],
+    "download": [
+      "download"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "subtitle-translate",
+    "page": "app/tools/subtitle-translate/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "subtitle-translate"
+    ],
+    "execute": [
+      "/api/ai/subtitle-translate"
+    ],
+    "result": [
+      "ResultPanel"
+    ],
+    "download": [
+      "ResultPanel"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "temp-mail-batch",
+    "page": "app/tools/temp-mail/page.tsx",
+    "entry": [
+      "/api/tools/quote",
+      "temp-mail-batch"
+    ],
+    "execute": [
+      "createPaidBatch"
+    ],
+    "result": [
+      "owned",
+      "batch"
+    ],
+    "download": [
+      "exportCsv",
+      "copyAll"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "video-dubbing",
+    "page": "app/tools/video-dubbing/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "video-dubbing"
+    ],
+    "execute": [
+      "/api/ai/dub/create"
+    ],
+    "result": [
+      "setOutput"
+    ],
+    "download": [
+      "output"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "video-transcription",
+    "page": "app/tools/video-transcription/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "video-transcription"
+    ],
+    "execute": [
+      "/api/ai/transcribe"
+    ],
+    "result": [
+      "ResultPanel"
+    ],
+    "download": [
+      "ResultPanel"
+    ],
+    "enabled": true
+  },
+  {
+    "toolId": "video-watermark-remover",
+    "page": "app/tools/video-watermark-remover/page.tsx",
+    "entry": [
+      "PaidActionButton",
+      "video-watermark-remover"
+    ],
+    "execute": [
+      "/api/tools/local-paid/job"
+    ],
+    "result": [
+      "setResults"
+    ],
+    "download": [
+      "downloadUrl"
+    ],
+    "enabled": true
+  }
+]

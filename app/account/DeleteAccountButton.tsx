@@ -39,7 +39,7 @@ export default function DeleteAccountButton() {
         onClick={() => setOpen(true)}
         className="w-full py-3 text-center text-xs text-bone-soft underline underline-offset-2 transition hover:text-rose"
       >
-        <Bi zh="注销并永远离开灵犀场" en="Deregister & Leave the Field" />
+        <Bi zh="注销账户" en="Delete account" />
       </button>
     );
   }
@@ -48,8 +48,8 @@ export default function DeleteAccountButton() {
     <div className="w-full rounded-sm border border-rose/30 bg-rose/5 p-5 text-left">
       <p className="text-sm text-rose">
         <Bi
-          zh="注销会永久删除你在灵犀场的登录身份和全部数据——包括已解锁的生命图谱报告、修炼技术、多维叙事。这个操作无法撤销，重新注册也找不回来。"
-          en="Deleting your account permanently removes your login and all your data — including unlocked Life Map reports, Practices, and Narratives. This cannot be undone, and re-registering will not recover it."
+          zh="注销会永久删除你在灵犀场的登录身份和全部数据——包括账户资料、购买记录和已保存内容。这个操作无法撤销，重新注册也找不回来。"
+          en="Deleting your account permanently removes your login and all your data — including account data, purchase history, and saved content. This cannot be undone, and re-registering will not recover it."
         />
       </p>
       {status === "error" && (

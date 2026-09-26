@@ -1,42 +1,70 @@
 import type { MetadataRoute } from "next";
-import { headers } from "next/headers";
 import { liveTools } from "@/lib/tools/registry";
 
-async function resolveSite(): Promise<string> {
-  try {
-    const h = await headers();
-    const host = h.get("host") || "";
-    if (host.includes("lingxifield.cn")) return "https://lingxifield.cn";
-  } catch {}
-  return "https://lingxifield.com";
-}
+const SITE="https://lingxifield.com";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const site=await resolveSite();
-  const routes=[
-    "",
-    "/products",
-    "/explore",
-    "/tools",
-    "/sasi",
-    "/sasi/pricing",
-    "/ai-wallet",
-    "/ai-knowledge",
-    "/ai-learning",
-    "/ai-research",
-    "/about",
-    "/terms",
-    "/privacy",
-    "/refunds",
-    "/legal/sasi",
-  ];
-  const toolRoutes=liveTools().map(tool=>`/tools/${tool.slug}`);
-  const uniqueRoutes=Array.from(new Set([...routes,...toolRoutes]));
-  const now=new Date();
-  return uniqueRoutes.map(route=>({
-    url:`${site}${route}`,
-    lastModified:now,
-    changeFrequency:"weekly" as const,
-    priority:route===""?1:route.startsWith("/tools/")?0.8:0.7,
-  }));
+const CORE=[
+ "",
+ "/products",
+ "/explore",
+ "/tools",
+ "/sasi",
+ "/sasi/drama",
+ "/sasi/pricing",
+ "/ai-knowledge",
+ "/ai-learning",
+ "/ai-research",
+ "/about",
+ "/terms",
+ "/privacy",
+ "/refunds",
+ "/legal/sasi",
+];
+
+const DEDICATED_TOOLS=[
+ "/tools/temp-mail",
+ "/tools/burn-after-read",
+ "/tools/food-calorie",
+ "/tools/id-photo-ai",
+ "/tools/video-transcription",
+ "/tools/audio-transcription",
+ "/tools/subtitle-tools",
+ "/tools/subtitle-translate",
+ "/tools/video-toolkit",
+ "/tools/video-dubbing",
+ "/tools/video-watermark-remover",
+ "/tools/ocr",
+ "/tools/pdf-editor",
+ "/tools/pdf-merge-split",
+ "/tools/pdf-compress",
+ "/tools/pdf-ocr",
+ "/tools/pdf-pages",
+ "/tools/pdf-redact",
+ "/tools/pdf-to-jpg",
+ "/tools/e-sign-pdf",
+ "/tools/image-watermark-remover",
+ "/tools/batch-image-watermark-remover",
+ "/tools/image-to-pdf-pro",
+ "/tools/heic-local",
+ "/tools/avif-to-jpg",
+ "/tools/jpg-to-png",
+ "/tools/png-to-jpg",
+ "/tools/webp-to-jpg",
+ "/tools/svg-to-png",
+ "/tools/qr-safe-reader",
+ "/tools/privacy-cleaner",
+ "/tools/screenshot-redact",
+ "/tools/long-image",
+ "/tools/document-copy-layout",
+ "/tools/batch-image",
+];
+
+export default function sitemap():MetadataRoute.Sitemap{
+ const generated=liveTools().map(tool=>`/tools/${tool.slug}`);
+ const routes=Array.from(new Set([...CORE,...DEDICATED_TOOLS,...generated]));
+ return routes.map(route=>({
+  url:`${SITE}${route}`,
+  changeFrequency:route===""?"daily":"weekly",
+  priority:route===""?1:route.startsWith("/tools/")?0.85:0.75,
+ }));
 }

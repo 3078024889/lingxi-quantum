@@ -4,8 +4,7 @@ export type ToolCategory =
   | "file"
   | "spreadsheet"
   | "utility"
-  | "qr"
-  | "field";
+  | "qr";
 
 export type ToolStatus = "live" | "beta" | "planned";
 

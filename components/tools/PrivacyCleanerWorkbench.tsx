@@ -20,7 +20,7 @@ async function cleanOne(file:File){
 }
 type C={lead:string;run:string;batch:string;busy:string;ready:string;error:string;unsupported:string};
 const D:Record<LingxiLang,C>={
- zh:{lead:"图片会重新编码以去除常见 EXIF / GPS；PDF 会清除标题、作者、主题、关键词等文档属性。处理在浏览器本地完成。",run:"清除隐私信息",batch:"批量清理",busy:"正在清理…",ready:"隐私信息清理完成，可以先核对结果再下载。",error:"清理没有完成",unsupported:"当前支持图片与 PDF。"},
+ zh:{lead:"图片会重新编码以去除常见 EXIF / GPS；PDF 会清除标题、作者、主题、关键词等文档属性。处理在当前页面完成。",run:"清除隐私信息",batch:"批量清理",busy:"正在清理…",ready:"隐私信息清理完成，可以先核对结果再下载。",error:"清理没有完成",unsupported:"当前支持图片与 PDF。"},
  en:{lead:"Images are re-encoded to remove common EXIF/GPS data. PDFs have title, author, subject and keyword metadata cleared. Processing stays in your browser.",run:"Remove private metadata",batch:"Clean batch",busy:"Cleaning…",ready:"Privacy cleanup finished. Review the results before downloading.",error:"Cleanup did not finish",unsupported:"Images and PDFs are supported."},
  ja:{lead:"画像は再エンコードして一般的な EXIF / GPS を除去し、PDF はタイトル・作者・件名・キーワード等を消去します。処理はブラウザ内で行われます。",run:"プライバシー情報を削除",batch:"一括クリーニング",busy:"クリーニング中…",ready:"クリーニングが完了しました。確認してからダウンロードできます。",error:"クリーニングを完了できませんでした",unsupported:"画像と PDF に対応しています。"},
  ko:{lead:"이미지는 다시 인코딩해 일반적인 EXIF/GPS를 제거하고 PDF는 제목, 작성자, 주제, 키워드 등의 속성을 지웁니다. 처리는 브라우저 안에서 진행됩니다.",run:"개인정보 제거",batch:"일괄 정리",busy:"정리 중…",ready:"개인정보 정리가 완료되었습니다. 확인 후 다운로드하세요.",error:"정리를 완료하지 못했습니다",unsupported:"이미지와 PDF를 지원합니다."},

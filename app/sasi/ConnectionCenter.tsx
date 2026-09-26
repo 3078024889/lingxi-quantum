@@ -8,7 +8,7 @@ import { sasiConnectionText } from "@/lib/sasi/connection-i18n";
 
 type Props = { lang: LingxiLang; dark: boolean; accountEmail: string | null };
 type Tab = "models" | "media" | "orchestration" | "build" | "security" | "training";
-type Connection = { provider: string; keyHint: string; healthStatus: "stored" | "checking" | "healthy" | "unhealthy"; lastCheckedAt: string | null; lastErrorCode: string | null };
+type Connection = { service: string; keyHint: string; healthStatus: "stored" | "checking" | "healthy" | "unhealthy"; lastCheckedAt: string | null; lastErrorCode: string | null };
 
 const MODEL_IDS = new Set(["openai", "xai", "anthropic", "gemini"]);
 const MEDIA_IDS = new Set(["openai", "xai", "luma", "volcengine", "aliyun", "tencent"]);
@@ -27,9 +27,9 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   const [busy, setBusy] = useState<"save" | "test" | "delete" | null>(null);
   const [message, setMessage] = useState("");
   const t = (zh: string, en: string) => sasiConnectionText(lang, zh, en);
-  const connection = connections.find((item) => item.provider === selected.id);
+  const connection = connections.find((item) => item.service === selected.id);
   const vaultSupported = selected.id !== "tencent";
-  const visibleProviders = SASI_INTEGRATIONS.filter((item) => tab === "models" ? MODEL_IDS.has(item.id) : MEDIA_IDS.has(item.id));
+  const visible服务s = SASI_INTEGRATIONS.filter((item) => tab === "models" ? MODEL_IDS.has(item.id) : MEDIA_IDS.has(item.id));
   const tabs: Array<[Tab, string, string, string]> = [
     ["models", "模型与 API", "Models & API", "🤖"],
     ["media", "图像与视频", "Image & Video", "🎬"],
@@ -53,8 +53,8 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
     return () => { alive = false; };
   }, [accountEmail]);
 
-  function statusFor(provider: string) {
-    const item = connections.find((entry) => entry.provider === provider);
+  function statusFor(service: string) {
+    const item = connections.find((entry) => entry.service === service);
     if (!item) return { label: t("未连接", "Not connected"), tone: "idle" };
     if (item.healthStatus === "healthy") return { label: t("验证成功", "Verified"), tone: "healthy" };
     if (item.healthStatus === "checking") return { label: t("正在验证", "Checking"), tone: "checking" };
@@ -62,7 +62,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
     return { label: t("已安全保存 · 待验证", "Stored · verify next"), tone: "stored" };
   }
 
-  function selectProvider(item: SasiIntegration, targetTab?: "models" | "media") {
+  function select服务(item: SasiIntegration, targetTab?: "models" | "media") {
     setSelected(item);
     setApiKey("");
     setMessage("");
@@ -72,10 +72,10 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   async function saveConnection() {
     if (!apiKey.trim() || busy) return;
     setBusy("save"); setMessage("");
-    const response = await fetch("/api/sasi/connections", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: selected.id, apiKey }) });
+    const response = await fetch("/api/sasi/connections", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service: selected.id, apiKey }) });
     const body = await response.json().catch(() => ({}));
     if (response.ok) {
-      setConnections((items) => [...items.filter((item) => item.provider !== selected.id), { provider: selected.id, keyHint: body.keyHint, healthStatus: "stored", lastCheckedAt: null, lastErrorCode: null }]);
+      setConnections((items) => [...items.filter((item) => item.service !== selected.id), { service: selected.id, keyHint: body.keyHint, healthStatus: "stored", lastCheckedAt: null, lastErrorCode: null }]);
       setApiKey(""); setMessage(t("已保存。验证连接后即可在可用任务中使用。", "Saved. Verify the connection before using it in supported tasks."));
     } else setMessage(`${t("保存失败", "Save failed")}: ${body.error ?? response.status}`);
     setBusy(null);
@@ -84,9 +84,9 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   async function testConnection() {
     if (!connection || busy) return;
     setBusy("test"); setMessage("");
-    const response = await fetch("/api/sasi/connections/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: selected.id }) });
+    const response = await fetch("/api/sasi/connections/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service: selected.id }) });
     const body = await response.json().catch(() => ({}));
-    setConnections((items) => items.map((item) => item.provider === selected.id ? { ...item, healthStatus: body.healthStatus ?? "unhealthy", lastCheckedAt: new Date().toISOString(), lastErrorCode: body.errorCode ?? body.error ?? null } : item));
+    setConnections((items) => items.map((item) => item.service === selected.id ? { ...item, healthStatus: body.healthStatus ?? "unhealthy", lastCheckedAt: new Date().toISOString(), lastErrorCode: body.errorCode ?? body.error ?? null } : item));
     setMessage(response.ok ? t("连接验证通过。实际可用范围以对应服务当前开放的模型与地区为准。", "Connection verified. Availability still depends on the models and regions currently supported by that service.") : `${t("验证未通过", "Verification failed")}: ${body.errorCode ?? body.error ?? response.status}`);
     setBusy(null);
   }
@@ -94,28 +94,28 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   async function deleteConnection() {
     if (!connection || busy || !window.confirm(t("确认撤销并永久删除这项加密凭证？", "Revoke and permanently delete this encrypted credential?"))) return;
     setBusy("delete"); setMessage("");
-    const response = await fetch(`/api/sasi/connections?provider=${encodeURIComponent(selected.id)}`, { method: "DELETE" });
-    if (response.ok) { setConnections((items) => items.filter((item) => item.provider !== selected.id)); setMessage(t("凭证已删除。", "Credential deleted.")); }
+    const response = await fetch(`/api/sasi/connections?service=${encodeURIComponent(selected.id)}`, { method: "DELETE" });
+    if (response.ok) { setConnections((items) => items.filter((item) => item.service !== selected.id)); setMessage(t("凭证已删除。", "Credential deleted.")); }
     else { const body = await response.json().catch(() => ({})); setMessage(`${t("删除失败", "Delete failed")}: ${body.error ?? response.status}`); }
     setBusy(null);
   }
 
-  const providerGrid = (items: SasiIntegration[]) => <div className="sasi-connect-provider-grid">{items.map((item) => {
+  const serviceGrid = (items: SasiIntegration[]) => <div className="sasi-connect-service-grid">{items.map((item) => {
     const state = statusFor(item.id);
     return <article key={item.id} className={selected.id === item.id ? "selected" : ""}>
-      <button type="button" className="sasi-connect-provider-main" onClick={() => selectProvider(item)}>
-        <span className="sasi-connect-provider-logo" style={{ background: item.color }}><NextImage src={PROVIDER_LOGOS[item.id]} alt={`${item.name} logo`}  width={48} height={48} unoptimized/></span>
-        <span className="sasi-connect-provider-copy"><b>{item.name}</b><small>{item.product}</small></span>
+      <button type="button" className="sasi-connect-service-main" onClick={() => select服务(item)}>
+        <span className="sasi-connect-service-logo" style={{ background: item.color }}><NextImage src={PROVIDER_LOGOS[item.id]} alt={`${item.name} logo`}  width={48} height={48} unoptimized/></span>
+        <span className="sasi-connect-service-copy"><b>{item.name}</b><small>{item.product}</small></span>
         <em className={`status-${state.tone}`}>{state.label}</em>
       </button>
       <p>{t(item.noteZh, item.noteEn)}</p>
       <div className="sasi-connect-tags">{item.supports.map((value) => <span key={value}>{value}</span>)}</div>
-      <footer><a href={item.keyUrl} target="_blank" rel="noreferrer">{t("官方入口", "Official setup")} ↗</a><a href={item.docsUrl} target="_blank" rel="noreferrer">{t("官方文档", "Official docs")} ↗</a><button type="button" onClick={() => selectProvider(item)}>{connection?.provider === item.id ? t("管理连接", "Manage") : t("接入指引", "Setup guide")} →</button></footer>
+      <footer><a href={item.keyUrl} target="_blank" rel="noreferrer">{t("官方入口", "Official setup")} ↗</a><a href={item.docsUrl} target="_blank" rel="noreferrer">{t("官方文档", "Official docs")} ↗</a><button type="button" onClick={() => select服务(item)}>{connection?.service === item.id ? t("管理连接", "Manage") : t("接入指引", "Setup guide")} →</button></footer>
     </article>;
   })}</div>;
 
   const setupPanel = <aside className="sasi-connect-setup" data-testid="api-walkthrough">
-    <header><span className="sasi-connect-provider-logo" style={{ background: selected.color }}><NextImage src={PROVIDER_LOGOS[selected.id]} alt={`${selected.name} logo`}  width={48} height={48} unoptimized/></span><div><small>{t("连接设置","Connection setup")}</small><h2>{selected.name}</h2><p>{selected.product}</p></div><em className={`status-${statusFor(selected.id).tone}`}>{statusFor(selected.id).label}</em></header>
+    <header><span className="sasi-connect-service-logo" style={{ background: selected.color }}><NextImage src={PROVIDER_LOGOS[selected.id]} alt={`${selected.name} logo`}  width={48} height={48} unoptimized/></span><div><small>{t("连接设置","Connection setup")}</small><h2>{selected.name}</h2><p>{selected.product}</p></div><em className={`status-${statusFor(selected.id).tone}`}>{statusFor(selected.id).label}</em></header>
     <ol>{(lang === "zh" ? selected.stepsZh : selected.stepsEn).map((step, index) => <li key={step}><b>{String(index + 1).padStart(2, "0")}</b><span>{step}</span></li>)}</ol>
     <div className="sasi-connect-official"><a href={selected.keyUrl} target="_blank" rel="noreferrer">{t("打开官方创建页", "Open official setup")} ↗</a><a href={selected.docsUrl} target="_blank" rel="noreferrer">{t("阅读官方文档", "Read official docs")} ↗</a></div>
     <div className="sasi-connect-vault" data-testid="byok-vault">
@@ -131,7 +131,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
     <header className="sasi-connect-hero"><div><p>SASI · CREATIVE ORCHESTRATION</p><h1>{t("模型与 API", "Models & API")}</h1><strong>{t("连接世界级能力，让它们共同完成一件作品。", "Connect world-class capabilities into one creative system.")}</strong><span>{t("模型负责生成，SASI 负责理解目标、拆解任务、选择能力、维持人物与世界连续性、审校结果并交付。你管理的是完整作品，不是散落在不同平台的一堆生成记录。", "Models generate. SASI understands the goal, plans the work, routes capabilities, protects continuity, reviews results and delivers a coherent work—not a pile of disconnected generations.")}</span></div><div className="sasi-connect-proof"><b>{connections.filter((item) => item.healthStatus === "healthy").length}</b><span>{t("项连接已验证", "verified connections")}</span><small>{t("未验证的连接暂不可使用", "Unverified connections cannot be used yet")}</small></div></header>
     <nav className="sasi-connect-tabs" aria-label={t("能力连接分类", "Connection categories")}>{tabs.map(([id, zh, en, glyph]) => <button type="button" key={id} onClick={() => setTab(id)} className={tab === id ? "active" : ""}><span>{glyph}</span>{t(zh, en)}</button>)}</nav>
 
-    {(tab === "models" || tab === "media") && <div className="sasi-connect-main"><main><div className="sasi-connect-section-title"><div><small>{tab === "models" ? t("文本与推理能力","Text & reasoning") : t("图像与视频能力","Image & video")}</small><h2>{tab === "models" ? t("选择理解、编剧与编程能力", "Choose reasoning, writing and coding capability") : t("选择图片与视频生产能力", "Choose image and video production capability")}</h2></div><p>{t("点击供应商后，右侧会切换为对应官方步骤与真实连接状态。", "Select a provider to show its official setup and real connection status.")}</p></div>{providerGrid(visibleProviders)}</main>{setupPanel}</div>}
+    {(tab === "models" || tab === "media") && <div className="sasi-connect-main"><main><div className="sasi-connect-section-title"><div><small>{tab === "models" ? t("文本与推理能力","Text & reasoning") : t("图像与视频能力","Image & video")}</small><h2>{tab === "models" ? t("选择理解、编剧与编程能力", "Choose reasoning, writing and coding capability") : t("选择图片与视频生产能力", "Choose image and video production capability")}</h2></div><p>{t("点击供应商后，右侧会切换为对应官方步骤与真实连接状态。", "Select a service to show its official setup and real connection status.")}</p></div>{serviceGrid(visible服务s)}</main>{setupPanel}</div>}
 
     {tab === "orchestration" && <div className="sasi-orchestration"><header><small>WHY SASI</small><h2>{t("从一个目标，到可以继续推进的完整作品", "From one goal to a coherent work you can keep building")}</h2><p>{t("SASI 不替代模型，而是解决多模型创作最难的部分：上下文断裂、人物漂移、版本混乱、结果不可追踪。", "SASI does not replace models. It solves the hard parts of multi-model creation: broken context, character drift, version chaos and untraceable results.")}</p></header><div>{[
       ["01", "理解创作目标", "把受众、成果、限制和验收标准整理成可执行 brief。", "Understand the goal", "Turn audience, outcome, constraints and acceptance criteria into an executable brief."],
@@ -142,7 +142,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
 
     {tab === "build" && <div><div className="sasi-connect-section-title"><div><small>DEVELOPMENT CONNECTIONS</small><h2>{t("从仓库到公网，每个连接各司其职", "A separate connection for every step from repository to public web")}</h2></div><p>{t("这里负责授权与状态读取，真正执行仍回到编程构建部署工作流。", "This area manages authorization and status; execution remains in Build & Deploy.")}</p></div><div className="sasi-connect-build-grid">{BUILD_CONNECTORS.map((item) => <article key={item.id}><header><span>{item.name.slice(0, 2)}</span><div><small>{t(item.roleZh, item.roleEn)}</small><h3>{item.name}</h3></div><em>{item.status === "oauth-required" ? t("OAuth 尚未接入", "OAuth pending") : t("需要人工配置", "Manual setup")}</em></header><ol>{(lang === "zh" ? item.stepsZh : item.stepsEn).map((step, index) => <li key={step}><b>0{index + 1}</b><span>{step}</span></li>)}</ol><footer><a href={item.url} target="_blank" rel="noreferrer">{t("打开官方入口", "Official entry")} ↗</a><a href={item.docs} target="_blank" rel="noreferrer">{t("权限说明", "Permissions")} ↗</a></footer></article>)}</div></div>}
 
-    {tab === "security" && <div className="sasi-connect-security"><section><small>CONNECTION LEDGER</small><h2>{t("所有密钥与连接状态，一处看清", "Every credential and connection status in one place")}</h2><p>{t("只有供应商真实响应通过后才显示“验证成功”。你可以随时验证、轮换或永久删除自己的凭证。", "A connection is verified only after the provider responds successfully. Test, rotate or permanently remove your credentials at any time.")}</p><div>{SASI_INTEGRATIONS.map((item) => { const state = statusFor(item.id); const saved = connections.find((entry) => entry.provider === item.id); return <button type="button" key={item.id} onClick={() => selectProvider(item, MODEL_IDS.has(item.id) ? "models" : "media")}><span style={{ background: item.color }}>{item.name.slice(0, 2)}</span><div><b>{item.name}</b><small>{saved?.keyHint ?? t("尚未保存凭证", "No credential stored")}</small></div><em className={`status-${state.tone}`}>{state.label}</em><i>→</i></button>; })}</div></section><aside><small>SECURITY BOUNDARY</small><h2>{t("密钥属于你，权限必须最小化", "Your keys, with least privilege")}</h2><ul><li><b>01</b><span>{t("浏览器不持久保存明文密钥", "No plaintext keys persisted in browser")}</span></li><li><b>02</b><span>{t("服务端按账户加密与隔离", "Server encryption scoped to each account")}</span></li><li><b>03</b><span>{t("测试连接受到频率限制", "Connection tests are rate limited")}</span></li><li><b>04</b><span>{t("日志、页面和 Git 不回显密钥", "Keys never appear in logs, UI or Git")}</span></li></ul><p>{t("当前自定义 OpenAI-Compatible API 和腾讯云双密钥签名尚未开放。完成 endpoint 白名单、SSRF 防护与双凭证签名后再启用。", "Custom OpenAI-compatible endpoints and Tencent dual-secret signing are not yet open. Endpoint allowlisting, SSRF protection and dual-secret signing come first.")}</p></aside></div>}
+    {tab === "security" && <div className="sasi-connect-security"><section><small>CONNECTION LEDGER</small><h2>{t("所有密钥与连接状态，一处看清", "Every credential and connection status in one place")}</h2><p>{t("只有供应商真实响应通过后才显示“验证成功”。你可以随时验证、轮换或永久删除自己的凭证。", "A connection is verified only after the service responds successfully. Test, rotate or permanently remove your credentials at any time.")}</p><div>{SASI_INTEGRATIONS.map((item) => { const state = statusFor(item.id); const saved = connections.find((entry) => entry.service === item.id); return <button type="button" key={item.id} onClick={() => select服务(item, MODEL_IDS.has(item.id) ? "models" : "media")}><span style={{ background: item.color }}>{item.name.slice(0, 2)}</span><div><b>{item.name}</b><small>{saved?.keyHint ?? t("尚未保存凭证", "No credential stored")}</small></div><em className={`status-${state.tone}`}>{state.label}</em><i>→</i></button>; })}</div></section><aside><small>SECURITY BOUNDARY</small><h2>{t("密钥属于你，权限必须最小化", "Your keys, with least privilege")}</h2><ul><li><b>01</b><span>{t("浏览器不持久保存明文密钥", "No plaintext keys persisted in browser")}</span></li><li><b>02</b><span>{t("服务端按账户加密与隔离", "Server encryption scoped to each account")}</span></li><li><b>03</b><span>{t("测试连接受到频率限制", "Connection tests are rate limited")}</span></li><li><b>04</b><span>{t("日志、页面和 Git 不回显密钥", "Keys never appear in logs, UI or Git")}</span></li></ul><p>{t("当前自定义 OpenAI-Compatible API 和腾讯云双密钥签名尚未开放。完成 endpoint 白名单、SSRF 防护与双凭证签名后再启用。", "Custom OpenAI-compatible endpoints and Tencent dual-secret signing are not yet open. 服务地址 allowlisting, SSRF protection and dual-secret signing come first.")}</p></aside></div>}
 
     {tab === "training" && <div><section className="sasi-connect-training-head"><small>CANGXUAN DATA PATH</small><h2>{t("只使用来源清楚、许可明确的数据", "Use only data with clear provenance and permission")}</h2><p>{t("不获取厂商私有训练集，不默认拿用户作品训练。先建立导演知识、许可样本和明确同意的反馈，再讨论专项微调。", "No vendor-private training sets and no default training on user work. Start with directing knowledge, licensed samples and explicit opt-in feedback before fine-tuning.")}</p></section><div className="sasi-connect-training-grid">{TRAINING_SOURCES.map((source) => <article key={source.name}><header><h3>{source.name}</h3><span>{source.state === "preferred" ? t("优先", "Preferred") : source.state === "research" ? t("研究限定", "Research only") : t("逐项核验", "Verify")}</span></header><small>{source.license}</small><p>{t(source.useZh, source.useEn)}</p><a href={source.url} target={source.url.startsWith("http") ? "_blank" : undefined} rel={source.url.startsWith("http") ? "noreferrer" : undefined}>{t("查看来源与许可", "Source & license")} ↗</a></article>)}</div><p className="sasi-connect-training-warning">{t("禁止：抓取或购买来源不明的厂商训练数据、默认把用户作品用于训练、把“可下载”等同于“可商用”。", "Prohibited: opaque vendor training data, default training on user work, or treating downloadable as commercially licensed.")}</p></div>}
   </section>;

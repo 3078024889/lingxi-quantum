@@ -9,7 +9,7 @@ export type ToolRuntimeState={
 
 const LOCAL=new Set([
   "video-watermark-remover","pdf-editor","e-sign-pdf","cross-page-stamp",
-  "temp-mail-batch",
+  "temp-mail-batch","food-calorie","food-calorie",
 ]);
 const OPENAI=new Set(["id-photo-ai","image-watermark-remover","batch-image-watermark-remover","audio-transcription","video-transcription","subtitle-translate"]);
 function has(name:string){return Boolean(process.env[name]?.trim())}
@@ -18,9 +18,6 @@ export function toolRuntimeState(toolId:string):ToolRuntimeState{
   if(LOCAL.has(toolId))return {ready:true,mode:"local"};
   if(toolId==="burn-after-read-file"){
     return r2Ready()?{ready:true,mode:"r2"}:{ready:false,mode:"r2",reason:"PRIVATE_STORAGE_NOT_READY"};
-  }
-  if(toolId==="food-calorie"){
-    return has("DASHSCOPE_API_KEY")?{ready:true,mode:"qwen-vl"}:{ready:false,mode:"qwen-vl",reason:"DASHSCOPE_API_KEY_MISSING"};
   }
   if(OPENAI.has(toolId)){
     return has("OPENAI_API_KEY")?{ready:true,mode:"openai"}:{ready:false,mode:"openai",reason:"PROVIDER_NOT_CONFIGURED"};

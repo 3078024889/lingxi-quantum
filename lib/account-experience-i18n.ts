@@ -212,7 +212,7 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "ar": "اكتملت ترقية موحدة للواجهة متعددة اللغات والتقارير ومساحات الأدوات."
   },
   "refundWithdraw": {
-    "zh": "提现 / 退款申请",
+    "zh": "余额提现",
     "en": "Withdraw / Refund",
     "ja": "出金 / 返金申請",
     "ko": "출금 / 환불 신청",
@@ -234,7 +234,7 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "ar": "المتاح للاسترداد هو أصل الرصيد المشحون غير المستخدم فقط. يرتبط الطلب بعملية الشحن الأصلية ويعاد بعد الموافقة عبر وسيلة الدفع الأصلية؛ وليس تحويلًا فوريًا إلى أي حساب مصرفي."
   },
   "refundableNow": {
-    "zh": "当前可申请退款本金",
+    "zh": "当前可提现余额",
     "en": "Refundable principal now",
     "ja": "現在返金申請可能な元本",
     "ko": "현재 환불 신청 가능 원금",
@@ -289,7 +289,7 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "ar": "إرسال الطلب"
   },
   "noEligible": {
-    "zh": "暂时没有可申请的 AI 余额充值订单。",
+    "zh": "当前没有可提现余额。",
     "en": "No eligible AI balance top-ups right now.",
     "ja": "現在、返金申請可能なAI残高チャージはありません。",
     "ko": "현재 환불 신청 가능한 AI 잔액 충전이 없습니다.",
@@ -311,7 +311,7 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "ar": "تم إرسال الطلب. ستظهر حالته في جرس الإشعارات."
   },
   "payTitle": {
-    "zh": "确认工具导出",
+    "zh": "确认本次使用",
     "en": "Confirm tool export",
     "ja": "ツール書き出しを確認",
     "ko": "도구 내보내기 확인",
@@ -399,7 +399,7 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "ar": "غير متاح"
   },
   "actualQty": {
-    "zh": "实际计费数量",
+    "zh": "本次数量",
     "en": "Billed quantity",
     "ja": "実際の課金数量",
     "ko": "실제 과금 수량",
