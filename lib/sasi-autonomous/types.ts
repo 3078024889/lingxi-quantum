@@ -1,11 +1,13 @@
 export type Intelligence = "light" | "standard" | "high";
-export type TaskKind = "knowledge" | "video" | "utility" | "file";
+export type TaskKind = "knowledge" | "image" | "video" | "utility" | "file";
 export type ExecutionMode = "autonomous" | "enhanced";
 
 export type CapabilityId =
   | "knowledge.answer"
   | "knowledge.summary"
+  | "image.render"
   | "video.plan"
+  | "video.storyboard"
   | "utility.text.organize"
   | "utility.text.stats";
 

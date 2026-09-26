@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
+import {drawProceduralSceneBackground} from "@/lib/sasi-autonomous/video/procedural-frame";
 
 type Ratio="9:16"|"16:9"|"1:1";
 type TimelineScene={id:string;text:string;durationSec:number;character:string;place:string;framing:string;camera:string;startSec:number;endSec:number;transition:string};
@@ -13,7 +14,7 @@ function wrapText(ctx:CanvasRenderingContext2D,text:string,maxWidth:number){cons
 async function imageBitmapFor(file:File|undefined){if(!file)return null;try{return await createImageBitmap(file);}catch{return null;}}
 function drawFrame(canvas:HTMLCanvasElement,scene:TimelineScene,progress:number,image:ImageBitmap|null){
  const ctx=canvas.getContext("2d");if(!ctx)throw new Error("当前浏览器无法建立画面。");const{width,height}=canvas;ctx.clearRect(0,0,width,height);ctx.fillStyle="#0b0b0f";ctx.fillRect(0,0,width,height);
- if(image){const zoom=1+progress*.08;const scale=Math.max(width/image.width,height/image.height)*zoom;const dw=image.width*scale,dh=image.height*scale;const drift=(progress-.5)*width*.035;ctx.globalAlpha=.78;ctx.drawImage(image,(width-dw)/2+drift,(height-dh)/2,dw,dh);ctx.globalAlpha=1;}else{const g=ctx.createLinearGradient(0,0,width,height);g.addColorStop(0,"#171724");g.addColorStop(1,"#09090d");ctx.fillStyle=g;ctx.fillRect(0,0,width,height);}
+ if(image){const zoom=1+progress*.08;const scale=Math.max(width/image.width,height/image.height)*zoom;const dw=image.width*scale,dh=image.height*scale;const drift=(progress-.5)*width*.035;ctx.globalAlpha=.78;ctx.drawImage(image,(width-dw)/2+drift,(height-dh)/2,dw,dh);ctx.globalAlpha=1;}else{drawProceduralSceneBackground(ctx,width,height,scene,progress);}
  const shade=ctx.createLinearGradient(0,height*.28,0,height);shade.addColorStop(0,"rgba(0,0,0,0)");shade.addColorStop(1,"rgba(0,0,0,.9)");ctx.fillStyle=shade;ctx.fillRect(0,0,width,height);
  const margin=Math.round(width*.08);ctx.fillStyle="#c7a45c";ctx.font=`600 ${Math.max(18,Math.round(width*.024))}px system-ui,sans-serif`;ctx.fillText(`LINGXIFIELD · SASI · ${scene.id}`,margin,margin+8);
  ctx.fillStyle="rgba(255,255,255,.72)";ctx.font=`500 ${Math.max(15,Math.round(width*.02))}px system-ui,sans-serif`;ctx.fillText(`${scene.place} · ${scene.framing} · ${scene.camera}`,margin,margin+48);
