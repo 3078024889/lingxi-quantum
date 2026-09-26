@@ -1,0 +1,3 @@
+export type RecoveryDecision={retry:boolean;delayMs:number;reason:string};
+const NON_RETRYABLE=/AUTH|FORBIDDEN|INVALID_|UNSUPPORTED|OWNER_MISMATCH|QUOTE_|SAFETY|CANCELLED|ABORTED/i;
+export function recoveryDecision(input:{attempt:number;maxRetries:number;error:unknown;deterministic:boolean}):RecoveryDecision{const message=input.error instanceof Error?input.error.message:String(input.error??"");if(input.attempt>input.maxRetries)return{retry:false,delayMs:0,reason:"retry-limit"};if(NON_RETRYABLE.test(message))return{retry:false,delayMs:0,reason:"non-retryable"};const base=input.deterministic?120:500,delayMs=Math.min(8000,base*Math.max(1,2**Math.max(0,input.attempt-1)));return{retry:true,delayMs,reason:"transient-or-unknown"}}

@@ -114,6 +114,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
           setResult(null);
         }}
         disabled={busy}
+        kind={tool.category === "image" ? "image" : tool.category === "pdf" ? "pdf" : "file"}
       />
 
       {tool.slug === "webp-to-jpg" && (

@@ -1,1 +1,1 @@
-/* Shared visual system lives in app.wxss. */
+.lx-mini-setting-gap{height:36rpx}

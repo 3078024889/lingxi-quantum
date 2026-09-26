@@ -27,6 +27,7 @@ function unitLabel(unit:string,zh:boolean){
     if(unit==="calculation")return "calculation";
     if(unit==="image")return "image";
     if(unit==="minute")return "minute";
+    if(unit==="second")return "second";
     if(unit==="page")return "page";
     if(unit==="file")return "file";
     if(unit==="email")return "email";
@@ -36,6 +37,7 @@ function unitLabel(unit:string,zh:boolean){
   if(unit==="calculation")return "次";
   if(unit==="image")return "张";
   if(unit==="minute")return "分钟";
+  if(unit==="second")return "秒";
   if(unit==="page")return "页";
   if(unit==="file")return "个文件";
   if(unit==="email")return "个邮箱";

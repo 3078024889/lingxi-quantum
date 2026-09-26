@@ -1,0 +1,5 @@
+import {createHash} from "node:crypto";import type {SasiArtifact} from "./types";
+export const SASI_INLINE_ARTIFACT_MAX_BYTES=512*1024;
+export function artifactByteSize(artifact:SasiArtifact){if(artifact.byteSize!=null)return artifact.byteSize;if(typeof artifact.value==="string")return Buffer.byteLength(artifact.value,"utf8");if(artifact.value!=null)return Buffer.byteLength(JSON.stringify(artifact.value),"utf8");return 0}
+export function artifactSha256(artifact:SasiArtifact){if(artifact.sha256)return artifact.sha256;const value=typeof artifact.value==="string"?artifact.value:artifact.value!=null?JSON.stringify(artifact.value):"";return value?createHash("sha256").update(value,"utf8").digest("hex"):null}
+export function validateArtifactForPersistence(artifact:SasiArtifact){const bytes=artifactByteSize(artifact);if(!artifact.type)throw new Error("ARTIFACT_TYPE_REQUIRED");if(artifact.value==null&&!artifact.path)throw new Error("ARTIFACT_CONTENT_REQUIRED");if(artifact.value!=null&&bytes>SASI_INLINE_ARTIFACT_MAX_BYTES&&!artifact.path)throw new Error("ARTIFACT_STORAGE_REQUIRED");return{byteSize:bytes,sha256:artifactSha256(artifact)}}

@@ -4,9 +4,11 @@
 
   <view class="lx-feature">
     <view class="lx-feature-title">{{copy.language}}</view>
-    <picker mode="selector" range="{{languages}}" range-key="label" value="{{languageIndex}}" bindchange="changeLanguage">
-      <view class="lx-button secondary">{{languages[languageIndex].label}}</view>
-    </picker>
+    <picker mode="selector" range="{{languages}}" range-key="label" value="{{languageIndex}}" bindchange="changeLanguage"><view class="lx-button secondary">{{languages[languageIndex].label}}</view></picker>
+    <view class="lx-mini-setting-gap"></view>
+    <view class="lx-feature-title">支付币种</view>
+    <view class="lx-feature-note">人民币与美元使用各自独立定价，不按实时汇率换算。进入网页工具后会同步这个选择。</view>
+    <picker mode="selector" range="{{currencies}}" range-key="label" value="{{currencyIndex}}" bindchange="changeCurrency"><view class="lx-button secondary">{{currencies[currencyIndex].label}}</view></picker>
   </view>
 
   <view class="lx-feature"><view class="lx-status"><view class="lx-status-dot {{connected ? 'ready' : ''}}"></view><text wx:if="{{checking}}">{{copy.checking}}</text><text wx:elif="{{connected}}">{{copy.connected}}</text><text wx:else>{{copy.disconnected}}</text></view><button wx:if="{{!connected && !checking}}" class="lx-button secondary" bindtap="relogin">{{copy.reconnect}}</button></view>
@@ -18,13 +20,11 @@
   </view></view>
 
   <view class="lx-feature"><view class="lx-feature-title">{{copy.existing}}</view><view class="lx-feature-note">{{copy.existingNote}}</view><button class="lx-button" loading="{{linking}}" bindtap="connectExistingAccount">{{copy.connect}}</button></view>
-
   <view class="lx-section"><view class="lx-list">
     <view class="lx-row" data-path="/privacy" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">{{copy.privacy}}</view></view><view class="lx-arrow">›</view></view>
     <view class="lx-row" data-path="/terms" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">{{copy.terms}}</view></view><view class="lx-arrow">›</view></view>
     <view class="lx-row" data-path="/refunds" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">{{copy.refunds}}</view></view><view class="lx-arrow">›</view></view>
   </view></view>
-
   <view class="lx-share-panel"><view class="lx-share-title">{{copy.shareTitle}}</view><view class="lx-share-note">{{copy.shareNote}}</view><view class="lx-share-actions"><button class="lx-share-button" open-type="share">{{copy.shareFriend}}</button><button class="lx-share-button secondary" bindtap="copyLink">{{copy.copyLink}}</button></view></view>
   <button class="lx-button secondary" open-type="contact">{{copy.contact}}</button><view class="lx-support">{{copy.support}}</view>
 </view></view>

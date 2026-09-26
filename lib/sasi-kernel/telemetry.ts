@@ -1,0 +1,3 @@
+import type {SasiExecutionEvent,SasiKernelResult} from "./types";
+export function summarizeExecution(result:SasiKernelResult){const history=result.history??[],failed=history.filter(x=>x.event.includes("failed")),started=history.find(x=>x.event.endsWith("start"))?.at??history[0]?.at??null,ended=history.at(-1)?.at??null;return{taskId:result.taskId,ok:result.ok,capability:result.capability,artifactCount:result.artifacts.length,eventCount:history.length,failedNodeCount:failed.length,startedAt:started,endedAt:ended}}
+export function appendEvent(history:SasiExecutionEvent[],event:SasiExecutionEvent,max=500){history.push(event);if(history.length>max)history.splice(0,history.length-max);return history}

@@ -1,8 +1,20 @@
 "use client";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 const C:Record<string,Record<LingxiLang,string>>={
- web:{zh:"网站已更新至 {version}。",en:"Website updated to {version}.",ja:"Webサイトを {version} に更新しました。",ko:"웹사이트가 {version}으로 업데이트되었습니다.",fr:"Le site est passé à {version}.",de:"Die Website wurde auf {version} aktualisiert.",es:"El sitio se actualizó a {version}.",pt:"O site foi atualizado para {version}.",ar:"تم تحديث الموقع إلى {version}."},
- privacy:{zh:"10分钟临时邮箱与阅后即焚已上线。",en:"10-Minute Temporary Email and Burn After Reading are now live.",ja:"10分間の一時メールと閲覧後消去が利用可能になりました。",ko:"10분 임시 이메일과 읽은 후 삭제 기능이 출시되었습니다.",fr:"L’e-mail temporaire 10 minutes et la lecture éphémère sont disponibles.",de:"10-Minuten-E-Mail und Nach-dem-Lesen-Löschen sind verfügbar.",es:"El correo temporal de 10 minutos y la autodestrucción ya están disponibles.",pt:"E-mail temporário de 10 minutos e apagar após leitura já estão disponíveis.",ar:"أصبح البريد المؤقت لمدة 10 دقائق والإتلاف بعد القراءة متاحين."},
- mini:{zh:"小程序新版正在准备中，将逐步同步网站当前产品与实用工具。",en:"The new mini-program is being prepared and will progressively mirror the website’s current products and tools.",ja:"新しいミニプログラムを準備中です。現在のWeb製品とツールを順次反映します。",ko:"새 미니프로그램을 준비 중이며 현재 웹 제품과 도구를 순차적으로 반영할 예정입니다.",fr:"La nouvelle mini-app est en préparation et reprendra progressivement les produits et outils actuels du site.",de:"Das neue Mini-Programm ist in Vorbereitung und übernimmt schrittweise die aktuellen Produkte und Tools.",es:"La nueva mini-app está en preparación e incorporará gradualmente los productos y herramientas actuales.",pt:"O novo miniaplicativo está em preparação e receberá gradualmente os produtos e ferramentas atuais.",ar:"يجري إعداد الإصدار الجديد من التطبيق المصغر وسيتم نقل المنتجات والأدوات الحالية إليه تدريجياً."}
+ mini46:{
+  zh:"灵犀场小程序 4.6 已上线。SASI 创作、资料智库、实用工具、订单与余额入口已经进入同一套小程序体验。",
+  en:"LINGXIFIELD Mini Program 4.6 is live, bringing SASI, knowledge, tools, orders and balance into one experience.",
+  ja:"LINGXIFIELD ミニプログラム 4.6 が公開されました。",ko:"LINGXIFIELD 미니프로그램 4.6이 출시되었습니다.",fr:"Le mini-programme LINGXIFIELD 4.6 est disponible.",de:"Das LINGXIFIELD Mini-Programm 4.6 ist verfügbar.",es:"El mini programa LINGXIFIELD 4.6 ya está disponible.",pt:"O mini programa LINGXIFIELD 4.6 já está disponível.",ar:"تم إطلاق الإصدار 4.6 من برنامج LINGXIFIELD المصغر."
+ },
+ sasi20:{
+  zh:"SASI 正在升级资料理解、深度推理、图片与视频生成能力。资料问答会更重视综合判断、冲突核对和原文依据。",
+  en:"SASI is upgrading source understanding, reasoning, image and video generation, with stronger synthesis and evidence checks.",
+  ja:"SASI は資料理解・推論・画像・動画生成を強化中です。",ko:"SASI의 자료 이해, 추론, 이미지·영상 생성 기능을 강화하고 있습니다.",fr:"SASI améliore la compréhension des sources, le raisonnement et la génération.",de:"SASI erweitert Quellenverständnis, Schlussfolgern sowie Bild- und Videogenerierung.",es:"SASI mejora la comprensión de fuentes, el razonamiento y la generación.",pt:"O SASI está melhorando compreensão, raciocínio e geração.",ar:"يجري تطوير SASI لفهم المصادر والاستدلال وتوليد الصور والفيديو."
+ },
+ toolsQuality:{
+  zh:"实用工具正在逐项做真实使用回归：上传、编辑、预览、支付、导出和移动端体验都会按完整链路检查。",
+  en:"Practical tools are being checked end to end: upload, edit, preview, payment, export and mobile use.",
+  ja:"実用ツールをアップロードから書き出しまで実利用で再検証しています。",ko:"실용 도구를 업로드부터 내보내기까지 실제 사용 흐름으로 재검증하고 있습니다.",fr:"Les outils sont revérifiés de bout en bout, de l’import à l’export.",de:"Die Werkzeuge werden vom Upload bis zum Export vollständig geprüft.",es:"Las herramientas se están verificando de extremo a extremo.",pt:"As ferramentas estão sendo verificadas de ponta a ponta.",ar:"تتم مراجعة الأدوات العملية من الرفع حتى التصدير بشكل كامل."
+ }
 };
 export function releaseText(lang:LingxiLang,key:string,vars?:Record<string,string|number>){let s=C[key]?.[lang]??C[key]?.en??key;for(const[k,v]of Object.entries(vars||{}))s=s.replaceAll(`{${k}}`,String(v));return s}

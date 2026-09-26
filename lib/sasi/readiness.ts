@@ -3,7 +3,7 @@ import { alipayEnabled } from "@/lib/alipay";
 import { wechatPayConfigured } from "@/lib/wechatpay";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
-import { autonomousCoreReadiness } from "@/lib/sasi/autonomy/capability-graph";
+import { autonomousCoreReadiness } from "@/lib/sasi-kernel/policy/capability-graph";
 
 function paypalConfigured() {
   return Boolean(

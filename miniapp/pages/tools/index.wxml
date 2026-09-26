@@ -1,7 +1,17 @@
 <view class="lx-page"><view class="lx-shell">
   <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">TOOLS</view></view>
-  <view class="lx-kicker">{{copy.kicker}}</view><view class="lx-title">{{copy.title}}</view><view class="lx-subtitle">{{copy.subtitle}}</view>
-  <view class="lx-section"><view class="lx-list"><view wx:for="{{tools}}" wx:key="path" class="lx-row" data-index="{{index}}" bindtap="open"><view class="lx-row-main"><view class="lx-row-title">{{item.title}}</view><view class="lx-row-note">{{item.note}}</view><view wx:if="{{item.price}}" class="lx-row-price">{{item.price}}</view></view><view class="lx-arrow">›</view></view></view></view>
+  <view class="lx-kicker">{{copy.kicker}}</view>
+  <view class="lx-title">{{copy.title}}</view>
+  <view class="lx-subtitle">{{copy.subtitle}}</view>
+  <view class="lx-feature lx-tools-payment-note">
+    <view class="lx-feature-title">先处理，再确认费用</view>
+    <view class="lx-feature-note">免费功能可直接免费使用；需要付费的操作只会在真正执行或导出前，按本次实际用量确认价格，确认后再进入微信支付。工具列表不提前展示价格。</view>
+  </view>
+  <view class="lx-section"><view class="lx-list">
+    <view wx:for="{{tools}}" wx:key="path" class="lx-row" data-index="{{index}}" bindtap="open">
+      <view class="lx-row-main"><view class="lx-row-title">{{item.title}}</view><view class="lx-row-note">{{item.note}}</view></view><view class="lx-arrow">›</view>
+    </view>
+  </view></view>
   <button class="lx-button" bindtap="allTools">{{copy.all}}</button>
   <view class="lx-share-panel"><view class="lx-share-title">{{copy.shareTitle}}</view><view class="lx-share-note">{{copy.shareNote}}</view><view class="lx-share-actions"><button class="lx-share-button" open-type="share">{{copy.shareFriend}}</button><button class="lx-share-button secondary" bindtap="copyLink">{{copy.copyLink}}</button></view></view>
 </view></view>

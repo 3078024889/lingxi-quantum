@@ -3,7 +3,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { buildDeterministicAskAnswer } from "@/lib/sasi/ask/prompt";
 import { retrieveFoundryContext } from "@/lib/sasi/ask/retrieve";
-import { routeSasiTask } from "@/lib/sasi/autonomy/router";
+import { routeSasiTask } from "@/lib/sasi-kernel/policy/router";
 
 export type RunSasiAskInput = {
   userId: string;

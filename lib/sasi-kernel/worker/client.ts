@@ -1,0 +1,6 @@
+import "server-only";
+import{workerBaseUrl,signedWorkerHeaders}from"./security";import{SASI_WORKER_PROTOCOL_VERSION,isWorkerTaskResponse,type SasiWorkerTaskRequest}from"./protocol";
+async function request(path:string,init:RequestInit){const base=workerBaseUrl();if(!base)throw new Error("SASI_WORKER_NOT_CONFIGURED");const response=await fetch(`${base}${path}`,{...init,cache:"no-store",signal:AbortSignal.timeout(30_000)});const text=await response.text();let data:unknown=null;try{data=text?JSON.parse(text):null}catch{}if(!response.ok)throw new Error(`SASI_WORKER_HTTP_${response.status}`);return data;}
+export async function workerHealth(){return request("/health",{method:"GET"});}
+export async function workerCapabilities(){return request("/capabilities",{method:"GET"});}
+export async function submitWorkerTask(input:Omit<SasiWorkerTaskRequest,"protocolVersion">){const payload:SasiWorkerTaskRequest={...input,protocolVersion:SASI_WORKER_PROTOCOL_VERSION},body=JSON.stringify(payload),data=await request("/v1/tasks",{method:"POST",headers:signedWorkerHeaders(body),body});if(!isWorkerTaskResponse(data))throw new Error("SASI_WORKER_INVALID_RESPONSE");if(data.requestId!==input.requestId||data.taskId!==input.taskId||data.nodeId!==input.nodeId)throw new Error("SASI_WORKER_RESPONSE_MISMATCH");return data;}

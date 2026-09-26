@@ -1,0 +1,9 @@
+.lx-notification-v201{width:min(420px,calc(100vw - 24px));max-height:min(72vh,620px);overflow:auto;padding:10px}
+.lx-notification-v201>header{padding:12px 12px 14px}
+.lx-notification-v201 .lx11-notification-list{display:grid;gap:10px}
+.lx-notification-v201 .lx11-notification-list>a,
+.lx-notification-v201 .lx11-notification-list>article{display:block;border:1px solid var(--lx-line);border-radius:14px;padding:14px 15px;background:var(--lx-panel)}
+.lx-notification-v201 .lx11-notification-list strong{display:block;margin:0 0 7px;font-size:13px;line-height:1.5}
+.lx-notification-v201 .lx11-notification-list p{margin:0;font-size:12px;line-height:1.75;color:var(--lx-muted)}
+.lx-notification-v201 .lx11-notification-list small{display:block;margin-top:10px;font-size:10px;color:var(--lx-faint)}
+.lx-notification-v201 .lx-notification-announcement{cursor:default}

@@ -1,3 +1,12 @@
+"use client";
 
-export function saveText(text:string,name:string,type="text/plain;charset=utf-8"){const b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1200)}
-export function saveBlob(blob:Blob,name:string){const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1200)}
+import {downloadBlob} from "@/lib/tools/shared/download";
+
+export function saveText(text:string,name:string,type="text/plain;charset=utf-8"){
+  const blob=new Blob([text],{type});
+  void downloadBlob(blob,name);
+}
+
+export function saveBlob(blob:Blob,name:string){
+  void downloadBlob(blob,name);
+}
