@@ -40,6 +40,19 @@ function storageKey(toolId:string){return`lingxifield:paid-tool:quote:${toolId}`
 function saveStoredQuote(toolId:string,q:Quote){try{const p:StoredQuote={id:q.id,toolId,quantity:Number(q.quantity),currency:q.currency,expiresAt:q.expires_at};localStorage.setItem(storageKey(toolId),JSON.stringify(p))}catch{}}
 function clearStoredQuote(toolId:string){try{localStorage.removeItem(storageKey(toolId))}catch{}}
 function price(q:Quote){return q.display_currency==="CNY"?`¥${Number(q.display_amount).toFixed(2)}`:`${Number(q.display_amount).toFixed(2)} USD`}
+
+function isMiniProgramWebView(){
+ try{return new URLSearchParams(window.location.search).get("mini")==="1"&&/MicroMessenger/i.test(navigator.userAgent||"")}catch{return false}
+}
+async function openMiniNativePay(quoteId:string){
+ return new Promise<boolean>((resolve)=>{
+  const go=()=>{const w=(window as any).wx;if(!w?.miniProgram?.navigateTo){resolve(false);return}w.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(quoteId)}`,success:()=>resolve(true),fail:()=>resolve(false)})};
+  if((window as any).wx?.miniProgram){go();return}
+  const id="lingxifield-wechat-jssdk",existing=document.getElementById(id) as HTMLScriptElement|null;
+  if(existing){existing.addEventListener("load",go,{once:true});setTimeout(()=>resolve(false),2500);return}
+  const s=document.createElement("script");s.id=id;s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>resolve(false);document.head.appendChild(s);setTimeout(()=>resolve(false),3000);
+ });
+}
 function preferSameTabPayment(){
  try{
   const ua=navigator.userAgent||"";
@@ -70,7 +83,12 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
  useEffect(()=>{if(quote&&quote.currency!==currency){stop();setQuote(null);setMsg("");clearStoredQuote(toolId)}},[currency,quote,toolId]);
 
  async function makeQuote(){setBusy(true);setMsg("");try{const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:metadata||{}})});const d=await r.json();if(!r.ok)throw new Error(d.error||t(UI.quoteFail));setQuote(d);saveStoredQuote(toolId,d);setMsg(t(UI.priced))}catch(e){const m=e instanceof Error?e.message:String(e);setMsg(m.includes("TOOL_SERVICE_UNAVAILABLE")?t(UI.serviceUnavailable):m)}finally{setBusy(false)}}
- function pay(){if(!quote)return;saveStoredQuote(toolId,quote);const returnTo=window.location.pathname+window.location.search;const payUrl=`/tools/pay?quoteId=${encodeURIComponent(quote.id)}&return=${encodeURIComponent(returnTo)}`;stop();if(preferSameTabPayment()){setMsg(t(UI.waiting));window.location.assign(payUrl);return}const w=window.open(payUrl,"lingxi_tool_pay","width=720,height=820");if(!w){setMsg(t(UI.waiting));window.location.assign(payUrl);return}timer.current=setInterval(()=>void check(quote.id),2200);setMsg(t(UI.waiting))}
+ async function pay(){if(!quote)return;saveStoredQuote(toolId,quote);
+  if(quote.currency==="CNY"&&isMiniProgramWebView()){
+    stop();setMsg(t(UI.waiting));
+    const opened=await openMiniNativePay(quote.id);
+    if(opened){timer.current=setInterval(()=>void check(quote.id),2200);return}
+  }const returnTo=window.location.pathname+window.location.search;const payUrl=`/tools/pay?quoteId=${encodeURIComponent(quote.id)}&return=${encodeURIComponent(returnTo)}`;stop();if(preferSameTabPayment()){setMsg(t(UI.waiting));window.location.assign(payUrl);return}const w=window.open(payUrl,"lingxi_tool_pay","width=720,height=820");if(!w){setMsg(t(UI.waiting));window.location.assign(payUrl);return}timer.current=setInterval(()=>void check(quote.id),2200);setMsg(t(UI.waiting))}
  const changed=quote&&(Number(quote.quantity)!==Number(quantity)||quote.currency!==currency),disabled=busy||restoring||quantity<=0;
  return <div>{!quote||changed?<button onClick={makeQuote} disabled={disabled} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy||restoring?t(UI.pricing):(label||t(UI.defaultLabel))}</button>:<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm text-[var(--lx-ink)]">{t(UI.thisTime)} {quote.quantity} {quote.unit_name} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||restoring} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{t(UI.confirm)}</button><button onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
 }

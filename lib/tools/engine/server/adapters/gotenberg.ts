@@ -1,0 +1,4 @@
+function base(){const value=process.env.LINGXI_GOTENBERG_URL?.replace(/\/$/,"");if(!value)throw new Error("LINGXI_GOTENBERG_URL_NOT_SET");return value;}
+async function post(path:string,form:FormData,timeoutMs=120_000){const c=new AbortController();const timer=setTimeout(()=>c.abort(),timeoutMs);try{const r=await fetch(base()+path,{method:"POST",body:form,signal:c.signal});if(!r.ok)throw new Error(`GOTENBERG_HTTP_${r.status}:${(await r.text()).slice(0,500)}`);return new Uint8Array(await r.arrayBuffer());}finally{clearTimeout(timer)}}
+export async function urlToPdf(url:string){const f=new FormData();f.set("url",url);return post("/forms/chromium/convert/url",f);}
+export async function htmlToPdf(html:Blob,fileName="index.html"){const f=new FormData();f.set("files",html,fileName);return post("/forms/chromium/convert/html",f);}

@@ -26,6 +26,14 @@ const required = [
   "miniapp/pages/share/index.json",
   "miniapp/pages/share/index.wxml",
   "miniapp/pages/share/index.wxss",
+  "miniapp/pages/orders/index.wxss",
+  "miniapp/pages/orders/index.wxml",
+  "miniapp/pages/orders/index.json",
+  "miniapp/pages/orders/index.js",
+  "miniapp/pages/pay/index.wxss",
+  "miniapp/pages/pay/index.wxml",
+  "miniapp/pages/pay/index.json",
+  "miniapp/pages/pay/index.js",
   "app/api/wechat/mini/login/route.ts",
   "app/api/wechat/mini/logout/route.ts",
   "app/api/wechat/mini/account-link/start/route.ts",
@@ -42,6 +50,9 @@ const expectedPages = [
   "pages/profile/index",
   "pages/web/index",
   "pages/share/index",
+  "pages/orders/index",
+  "pages/pay/index",
+  "pages/balance/index",
 ];
 must(Array.isArray(app.pages), "MINI_PAGES_INVALID");
 must(app.pages.length === expectedPages.length, `MINI_PAGE_COUNT_DRIFT:${app.pages.length}`);

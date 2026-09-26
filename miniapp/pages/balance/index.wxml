@@ -1,0 +1,17 @@
+<view class="lx-page"><view class="lx-shell">
+ <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">BALANCE</view></view>
+ <view class="lx-kicker">创作余额</view>
+ <view class="lx-title">选择充值金额</view>
+ <view class="lx-subtitle">充值多少到账多少。余额长期保留，仅在你主动使用对应服务时扣除。</view>
+
+ <view class="lx-section"><view class="lx-list">
+  <view wx:for="{{options}}" wx:key="id" data-index="{{index}}" bindtap="select" class="lx-row {{selected===index?'is-selected':''}}">
+   <view class="lx-row-main"><view class="lx-row-title">¥{{item.amount}}</view><view class="lx-row-note">人民币余额</view></view>
+   <view class="lx-arrow">{{selected===index?'✓':'›'}}</view>
+  </view>
+ </view></view>
+
+ <button class="lx-button" loading="{{busy}}" disabled="{{busy}}" bindtap="pay">微信支付 · ¥{{options[selected].amount}}</button>
+ <view wx:if="{{message}}" class="lx-feature"><view class="lx-feature-note">{{message}}</view></view>
+ <button class="lx-button secondary" bindtap="openOrders">查看订单</button>
+</view></view>

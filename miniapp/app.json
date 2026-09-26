@@ -5,7 +5,10 @@
     "pages/agents/index",
     "pages/profile/index",
     "pages/web/index",
-    "pages/share/index"
+    "pages/share/index",
+    "pages/pay/index",
+    "pages/orders/index",
+    "pages/balance/index"
   ],
   "window": {
     "navigationStyle": "custom",

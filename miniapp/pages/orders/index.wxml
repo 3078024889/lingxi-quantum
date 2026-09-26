@@ -1,0 +1,12 @@
+<view class="lx-page"><view class="lx-shell">
+ <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">ORDERS</view></view>
+ <view class="lx-kicker">订单中心</view><view class="lx-title">我的订单</view>
+ <view wx:if="{{loading}}" class="lx-feature-note">正在加载订单…</view>
+ <view wx:if="{{message}}" class="lx-feature-note">{{message}}</view>
+ <view wx:if="{{!loading && orders.length===0}}" class="lx-feature"><view class="lx-feature-note">还没有订单。</view></view>
+ <view class="lx-section"><view class="lx-list">
+  <view wx:for="{{orders}}" wx:key="id" class="lx-row">
+   <view class="lx-row-main"><view class="lx-row-title">{{item.product_id}}</view><view class="lx-row-note">{{item.currency==='USD'?'$':'¥'}}{{item.currency==='USD'?item.amount_usd:item.amount_rmb}} · {{item.status}}</view></view>
+  </view>
+ </view></view>
+</view></view>

@@ -1,0 +1,3 @@
+import path from "node:path";import {commandFor,runCommand} from "../command";
+const bin=()=>commandFor("LINGXI_WHISPER_BIN","whisper-cli");
+export async function whisperTranscribe(inputWav:string,outputBase:string,language?:string){const model=process.env.LINGXI_WHISPER_MODEL;if(!model)throw new Error("LINGXI_WHISPER_MODEL_NOT_SET");const args=["-m",model,"-f",inputWav,"-otxt","-osrt","-of",outputBase];if(language)args.push("-l",language);await runCommand(bin(),args,{timeoutMs:60*60_000,maxOutputBytes:2*1024*1024});return{txt:`${outputBase}.txt`,srt:`${outputBase}.srt`,base:path.basename(outputBase)}}

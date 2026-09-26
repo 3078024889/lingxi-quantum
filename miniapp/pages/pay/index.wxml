@@ -1,0 +1,13 @@
+<view class="lx-page"><view class="lx-shell">
+ <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">PAYMENT</view></view>
+ <view class="lx-kicker">确认本次使用</view>
+ <view class="lx-title">微信支付</view>
+ <view wx:if="{{quote}}" class="lx-feature">
+  <view class="lx-feature-title">{{quote.tool_id}}</view>
+  <view class="lx-feature-note">{{quote.quantity}} {{quote.unit_name}}</view>
+  <view class="lx-price">¥{{quote.amount_rmb}}</view>
+  <button class="lx-button" loading="{{busy}}" disabled="{{busy}}" bindtap="pay">确认并支付</button>
+ </view>
+ <view wx:if="{{message}}" class="lx-feature-note">{{message}}</view>
+ <button class="lx-button secondary" bindtap="back">返回</button>
+</view></view>

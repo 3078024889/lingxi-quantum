@@ -59,7 +59,7 @@ const dedicated: ToolItem[] = [
   { href:"/tools/batch-image-watermark-remover", titleZh:"批量图片去水印", titleEn:"Batch Watermark Cleanup", descZh:"一次处理多张图片的水印区域。", descEn:"Process watermark regions across multiple images.", kind:"privacy", category:"ai", localOnly:false },
   { href:"/tools/video-watermark-remover", titleZh:"视频去水印", titleEn:"Video Watermark Cleanup", descZh:"按视频时长处理固定区域水印。", descEn:"Clean a fixed watermark region across a video.", kind:"video", category:"ai", localOnly:false },
   { href:"/tools/id-photo-ai", titleZh:"AI 证件照", titleEn:"AI ID Photo", descZh:"生成适合证件用途的标准照片。", descEn:"Create a standardized ID-style photo.", kind:"ai", category:"ai", localOnly:false },
-  { href:"/tools/food-calorie", titleZh:"食物卡路里分析", titleEn:"Food Calorie Analysis", descZh:"从食物图片估算内容与热量信息。", descEn:"Estimate food contents and calories from an image.", kind:"ai", category:"ai", localOnly:false },
+  { href:"/tools/food-calorie", titleZh:"食物热量与营养", titleEn:"Food Nutrition Calculator", descZh:"按食物和实际份量计算热量、三大营养素与已测定的维生素和矿物质。", descEn:"Calculate calories, macros and available micronutrients from foods and actual portions.", kind:"utility", category:"utility", localOnly:false },
   { href:"/tools/pdf-ocr", titleZh:"PDF OCR", titleEn:"PDF OCR", descZh:"识别扫描 PDF 中的文字。", descEn:"Extract text from scanned PDF documents.", kind:"ai", category:"ai", localOnly:false },
   { href:"/tools/ocr", titleZh:"图片 OCR", titleEn:"Image OCR", descZh:"从图片中提取可复制文字。", descEn:"Extract copyable text from images.", kind:"ai", category:"ai", localOnly:false },
 ];

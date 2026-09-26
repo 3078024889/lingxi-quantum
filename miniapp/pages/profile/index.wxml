@@ -13,7 +13,7 @@
 
   <view class="lx-section"><view class="lx-list">
     <view class="lx-row" data-path="/account" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">{{copy.workspace}}</view><view class="lx-row-note">{{copy.workspaceNote}}</view></view><view class="lx-arrow">›</view></view>
-    <view class="lx-row" data-path="/account/orders" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">{{copy.orders}}</view><view class="lx-row-note">{{copy.ordersNote}}</view></view><view class="lx-arrow">›</view></view>
+    <view class="lx-row" bindtap="openOrders"><view class="lx-row-main"><view class="lx-row-title">{{copy.orders}}</view><view class="lx-row-note">{{copy.ordersNote}}</view></view><view class="lx-arrow">›</view></view>
     <view class="lx-row" data-path="/ai-wallet" bindtap="openWeb"><view class="lx-row-main"><view class="lx-row-title">{{copy.balance}}</view><view class="lx-row-note">{{copy.balanceNote}}</view></view><view class="lx-arrow">›</view></view>
   </view></view>
 

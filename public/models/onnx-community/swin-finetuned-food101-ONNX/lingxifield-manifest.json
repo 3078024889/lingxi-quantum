@@ -1,0 +1,9 @@
+﻿{
+    "file":  "onnx/model_q4f16.onnx",
+    "runtimeRemoteModels":  false,
+    "license":  "apache-2.0",
+    "sha256":  "10e79986b7a2c42ce421c9003ceaff966c1b9a0899abbb789952421d9a40c476",
+    "model":  "onnx-community/swin-finetuned-food101-ONNX",
+    "runtime":  "Transformers.js + ONNX Runtime Web",
+    "upstream":  "aspis/swin-finetuned-food101"
+}

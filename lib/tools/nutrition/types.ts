@@ -1,0 +1,46 @@
+export type NutrientGroup="energy"|"macro"|"carb"|"fat"|"mineral"|"vitamin"|"other";
+export type NutrientDef={code:string;labelZh:string;labelEn:string;unit:string;group:NutrientGroup;aliases:string[]};
+
+export const NUTRIENTS:NutrientDef[]=[
+ {code:"energy_kcal",labelZh:"热量",labelEn:"Energy",unit:"kcal",group:"energy",aliases:["energy","energy (atwater general factors)","energy (atwater specific factors)"]},
+ {code:"protein_g",labelZh:"蛋白质",labelEn:"Protein",unit:"g",group:"macro",aliases:["protein"]},
+ {code:"carbs_g",labelZh:"碳水化合物",labelEn:"Carbohydrate",unit:"g",group:"macro",aliases:["carbohydrate, by difference","carbohydrate"]},
+ {code:"fat_g",labelZh:"脂肪",labelEn:"Total fat",unit:"g",group:"macro",aliases:["total lipid (fat)","total fat"]},
+ {code:"fiber_g",labelZh:"膳食纤维",labelEn:"Dietary fiber",unit:"g",group:"carb",aliases:["fiber, total dietary","dietary fiber"]},
+ {code:"sugar_g",labelZh:"总糖",labelEn:"Total sugars",unit:"g",group:"carb",aliases:["sugars, total including nlea","sugars, total"]},
+ {code:"added_sugar_g",labelZh:"添加糖",labelEn:"Added sugars",unit:"g",group:"carb",aliases:["sugars, added"]},
+ {code:"starch_g",labelZh:"淀粉",labelEn:"Starch",unit:"g",group:"carb",aliases:["starch"]},
+ {code:"saturated_fat_g",labelZh:"饱和脂肪",labelEn:"Saturated fat",unit:"g",group:"fat",aliases:["fatty acids, total saturated"]},
+ {code:"monounsaturated_fat_g",labelZh:"单不饱和脂肪",labelEn:"Monounsaturated fat",unit:"g",group:"fat",aliases:["fatty acids, total monounsaturated"]},
+ {code:"polyunsaturated_fat_g",labelZh:"多不饱和脂肪",labelEn:"Polyunsaturated fat",unit:"g",group:"fat",aliases:["fatty acids, total polyunsaturated"]},
+ {code:"trans_fat_g",labelZh:"反式脂肪",labelEn:"Trans fat",unit:"g",group:"fat",aliases:["fatty acids, total trans"]},
+ {code:"cholesterol_mg",labelZh:"胆固醇",labelEn:"Cholesterol",unit:"mg",group:"fat",aliases:["cholesterol"]},
+ {code:"sodium_mg",labelZh:"钠",labelEn:"Sodium",unit:"mg",group:"mineral",aliases:["sodium, na"]},
+ {code:"potassium_mg",labelZh:"钾",labelEn:"Potassium",unit:"mg",group:"mineral",aliases:["potassium, k"]},
+ {code:"calcium_mg",labelZh:"钙",labelEn:"Calcium",unit:"mg",group:"mineral",aliases:["calcium, ca"]},
+ {code:"iron_mg",labelZh:"铁",labelEn:"Iron",unit:"mg",group:"mineral",aliases:["iron, fe"]},
+ {code:"magnesium_mg",labelZh:"镁",labelEn:"Magnesium",unit:"mg",group:"mineral",aliases:["magnesium, mg"]},
+ {code:"phosphorus_mg",labelZh:"磷",labelEn:"Phosphorus",unit:"mg",group:"mineral",aliases:["phosphorus, p"]},
+ {code:"zinc_mg",labelZh:"锌",labelEn:"Zinc",unit:"mg",group:"mineral",aliases:["zinc, zn"]},
+ {code:"copper_mg",labelZh:"铜",labelEn:"Copper",unit:"mg",group:"mineral",aliases:["copper, cu"]},
+ {code:"manganese_mg",labelZh:"锰",labelEn:"Manganese",unit:"mg",group:"mineral",aliases:["manganese, mn"]},
+ {code:"selenium_ug",labelZh:"硒",labelEn:"Selenium",unit:"µg",group:"mineral",aliases:["selenium, se"]},
+ {code:"vitamin_a_ug",labelZh:"维生素 A",labelEn:"Vitamin A",unit:"µg",group:"vitamin",aliases:["vitamin a, rae"]},
+ {code:"vitamin_c_mg",labelZh:"维生素 C",labelEn:"Vitamin C",unit:"mg",group:"vitamin",aliases:["vitamin c, total ascorbic acid"]},
+ {code:"vitamin_d_ug",labelZh:"维生素 D",labelEn:"Vitamin D",unit:"µg",group:"vitamin",aliases:["vitamin d (d2 + d3)","vitamin d"]},
+ {code:"vitamin_e_mg",labelZh:"维生素 E",labelEn:"Vitamin E",unit:"mg",group:"vitamin",aliases:["vitamin e (alpha-tocopherol)"]},
+ {code:"vitamin_k_ug",labelZh:"维生素 K",labelEn:"Vitamin K",unit:"µg",group:"vitamin",aliases:["vitamin k (phylloquinone)"]},
+ {code:"thiamin_mg",labelZh:"维生素 B1",labelEn:"Thiamin",unit:"mg",group:"vitamin",aliases:["thiamin"]},
+ {code:"riboflavin_mg",labelZh:"维生素 B2",labelEn:"Riboflavin",unit:"mg",group:"vitamin",aliases:["riboflavin"]},
+ {code:"niacin_mg",labelZh:"维生素 B3",labelEn:"Niacin",unit:"mg",group:"vitamin",aliases:["niacin"]},
+ {code:"pantothenic_acid_mg",labelZh:"维生素 B5",labelEn:"Pantothenic acid",unit:"mg",group:"vitamin",aliases:["pantothenic acid"]},
+ {code:"vitamin_b6_mg",labelZh:"维生素 B6",labelEn:"Vitamin B6",unit:"mg",group:"vitamin",aliases:["vitamin b-6"]},
+ {code:"folate_ug",labelZh:"叶酸",labelEn:"Folate",unit:"µg",group:"vitamin",aliases:["folate, total"]},
+ {code:"vitamin_b12_ug",labelZh:"维生素 B12",labelEn:"Vitamin B12",unit:"µg",group:"vitamin",aliases:["vitamin b-12"]},
+ {code:"water_g",labelZh:"水分",labelEn:"Water",unit:"g",group:"other",aliases:["water"]},
+ {code:"caffeine_mg",labelZh:"咖啡因",labelEn:"Caffeine",unit:"mg",group:"other",aliases:["caffeine"]},
+ {code:"alcohol_g",labelZh:"酒精",labelEn:"Alcohol",unit:"g",group:"other",aliases:["alcohol, ethyl"]},
+];
+
+export const NUTRIENT_BY_CODE=new Map(NUTRIENTS.map(x=>[x.code,x]));
+export function canonicalNutrientFromName(name:string){const n=name.trim().toLowerCase();return NUTRIENTS.find(x=>x.aliases.some(a=>n===a||n.includes(a)))||null}

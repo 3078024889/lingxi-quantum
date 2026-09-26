@@ -52,6 +52,8 @@ Page({
     }
   },
 
+  openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
+
   openWeb(event) {
     const path = event.currentTarget.dataset.path
     if (!path) return
