@@ -4,7 +4,7 @@ import Link from "next/link";
 import LxText from "@/components/LxText";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import SasiWorkspace from "@/app/sasi/SasiWorkspace";
-import SasiAutonomousDrama from "@/components/SasiAutonomousDrama";
+import SasiByokVideoStudio from "@/components/SasiByokVideoStudio";
 
 const labels:Record<LingxiLang,{skills:string;balance:string;models:string;login:string}>={
  zh:{skills:"Skills",balance:"余额与价格",models:"可选增强",login:"登录后可以保存项目、Skill 和创作进度，下次回来继续。"},
@@ -33,7 +33,7 @@ export default function SasiDramaLaunch({accountEmail}:{accountEmail:string|null
     </div>
     {!accountEmail&&<p className="mt-5 rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{c.login}</p>}
    </section>
-   <div className="mt-8"><SasiAutonomousDrama/></div>
+   <div className="mt-8"><SasiByokVideoStudio/></div>
 <div className="mt-8 overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)]"><SasiWorkspace accountEmail={accountEmail}/></div>
   </div>
  </main>

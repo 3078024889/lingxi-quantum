@@ -10,34 +10,26 @@ const c = (zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string
 
 type StaticEntry = { slug:string; href:string; titles:Copy };
 const STATIC_PAGES: StaticEntry[] = [
-  { slug:"live-as", href:"/live-as", titles:c("SASI 创作","Manifestation","意識の具現化","의식 구현","Manifestation","Manifestation","Manifestación","Manifestação","التجسيد") },
-  { slug:"sasi", href:"/sasi", titles:c("灵犀场 SASI · AI 创作","LINGXIFIELD SASI · AI Creation","霊犀場 SASI · AI 制作","링시필드 SASI · AI 제작","LINGXIFIELD SASI · Création IA","LINGXIFIELD SASI · KI-Erstellung","LINGXIFIELD SASI · Creación IA","LINGXIFIELD SASI · Criação com IA","LINGXIFIELD SASI · إنشاء بالذكاء الاصطناعي") },
-  { slug:"practice", href:"/practice", titles:c("阅后即焚","Practices","実践","수련","Pratiques","Praxis","Prácticas","Práticas","الممارسات") },
-  { slug:"gates", href:"/#gates", titles:c("资料知识","Subconscious Reframing","潜在意識の再構築","잠재의식 재구성","Reconfiguration du subconscient","Unterbewusstsein neu ausrichten","Reconfiguración del subconsciente","Reconfiguração do subconsciente","إعادة تشكيل العقل الباطن") },
-  { slug:"learn", href:"/learn", titles:c("探索","Learn","探索","탐색","Explorer","Entdecken","Explorar","Explorar","استكشاف") },
-  { slug:"membership", href:"/membership", titles:c("能量交换场","Access","アクセス","이용 권한","Accès","Zugang","Acceso","Acesso","الوصول") },
-  { slug:"number-energy", href:"/tools/number-energy", titles:c("手机号车牌号测试","Number Energy","番号エネルギー","번호 에너지","Énergie des nombres","Zahlenenergie","Energía numérica","Energia dos números","طاقة الأرقام") },
+  { slug:"sasi", href:"/sasi", titles:c("SASI 创作","SASI Creation","SASI 制作","SASI 제작","Création SASI","SASI-Erstellung","Creación SASI","Criação SASI","إنشاء SASI") },
+  { slug:"sasi-drama", href:"/sasi/drama", titles:c("AI 短剧生成","AI Short Drama","AIショートドラマ","AI 숏드라마","Mini-série IA","KI-Kurzdrama","Minidrama IA","Minidrama com IA","دراما قصيرة بالذكاء الاصطناعي") },
   { slug:"book-sasi", href:"/ai-knowledge", titles:c("书本 SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI","Book SASI") },
-  { slug:"practice-breath", href:"/practice/breath", titles:c("量子息法","Quantum Breath Method","量子呼吸法","양자 호흡법","Méthode du souffle quantique","Quanten-Atemmethode","Método de respiración cuántica","Método da Respiração Quântica","طريقة التنفس الكمي") },
-  { slug:"practice-intuition", href:"/practice/intuition", titles:c("直觉丹道","The Intuitive Way","直観の道","직관의 길","La voie intuitive","Der intuitive Weg","La vía intuitiva","O Caminho Intuitivo","طريق الحدس") },
-  { slug:"practice-heart-reset", href:"/practice/heart-reset", titles:c("归零心诀","Heart Reset","ハートリセット","하트 리셋","Réinitialisation du cœur","Herz-Reset","Reinicio del corazón","Reset do coração","إعادة ضبط القلب") },
-  { slug:"practice-ascending-heart", href:"/practice/ascending-heart", titles:c("上升心经","Ascending Heart","上昇する心","상승의 마음","Cœur ascendant","Aufsteigendes Herz","Corazón ascendente","Coração ascendente","القلب الصاعد") },
-  { slug:"account", href:"/account", titles:c("场域入口","Account","アカウント","계정","Compte","Konto","Cuenta","Conta","الحساب") },
-  { slug:"relationship", href:"/relationship", titles:c("关系共振图谱","Relationship Resonance Map","関係共鳴マップ","관계 공명 지도","Carte de résonance relationnelle","Beziehungsresonanz-Karte","Mapa de resonancia relacional","Mapa de ressonância relacional","خريطة رنين العلاقات") },
-  { slug:"resilience", href:"/resilience", titles:c("生命韧性指数","Life Resilience Index","生命レジリエンス指数","생명 회복탄력성 지수","Indice de résilience de vie","Lebensresilienz-Index","Índice de resiliencia vital","Índice de resiliência da vida","مؤشر مرونة الحياة") },
-  { slug:"romance", href:"/romance", titles:c("临时邮箱指数","Romance Resonance Index","恋愛共鳴指数","로맨스 공명 지수","Indice de résonance amoureuse","Romanz-Resonanzindex","Índice de resonancia romántica","Índice de ressonância romântica","مؤشر الرنين العاطفي") },
-  { slug:"daily", href:"/daily", titles:c("今日潮汐","Today’s Tide","今日の潮汐","오늘의 흐름","Marée du jour","Heutige Gezeiten","Marea de hoy","Maré de hoje","مدّ اليوم") },
-  { slug:"tarot", href:"/mirror", titles:c("量子生命镜像","Quantum Life Mirror","量子生命ミラー","양자 생명 거울","Miroir quantique de vie","Quanten-Lebensspiegel","Espejo cuántico de vida","Espelho quântico da vida","مرآة الحياة الكمية") },
-  { slug:"tarot-daily", href:"/mirror/daily", titles:c("今日生命镜像","Daily Life Mirror","今日の生命ミラー","오늘의 생명 거울","Miroir quotidien","Täglicher Lebensspiegel","Espejo diario","Espelho diário","مرآة اليوم") },
-  { slug:"qian", href:"/qian", titles:c("生命灵签","Life Oracle","生命オラクル","생명 오라클","Oracle de vie","Lebensorakel","Oráculo de vida","Oráculo da vida","وحي الحياة") },
-  { slug:"life-archetype", href:"/archetype", titles:c("生命原型","Life Archetype","生命アーキタイプ","생명 원형","Archétype de vie","Lebensarchetyp","Arquetipo de vida","Arquétipo da vida","النموذج الأصلي للحياة") },
+  { slug:"learning-sasi", href:"/ai-learning", titles:c("学习 SASI","Learning SASI","学習 SASI","학습 SASI","SASI d’apprentissage","Lern-SASI","SASI de aprendizaje","SASI de aprendizagem","SASI للتعلّم") },
+  { slug:"research-sasi", href:"/ai-research", titles:c("科研 SASI","Research SASI","研究 SASI","연구 SASI","SASI de recherche","Forschungs-SASI","SASI de investigación","SASI de pesquisa","SASI للبحث") },
+  { slug:"tools", href:"/tools", titles:c("实用工具","Online Tools","オンラインツール","온라인 도구","Outils en ligne","Online-Tools","Herramientas online","Ferramentas online","أدوات عبر الإنترنت") },
+  { slug:"pdf-editor", href:"/tools/pdf-editor", titles:c("PDF 编辑","PDF Editor","PDF 編集","PDF 편집","Éditeur PDF","PDF-Editor","Editor PDF","Editor de PDF","محرر PDF") },
+  { slug:"pdf-compress", href:"/tools/pdf-compress", titles:c("PDF 压缩","PDF Compressor","PDF 圧縮","PDF 압축","Compresser PDF","PDF komprimieren","Comprimir PDF","Comprimir PDF","ضغط PDF") },
+  { slug:"ocr", href:"/tools/ocr", titles:c("图片文字识别","Image OCR","画像OCR","이미지 OCR","OCR image","Bild-OCR","OCR de imagen","OCR de imagem","استخراج النص من الصور") },
+  { slug:"video-transcription", href:"/tools/video-transcription", titles:c("视频转文字","Video Transcription","動画文字起こし","영상 텍스트 변환","Transcription vidéo","Video-Transkription","Transcripción de vídeo","Transcrição de vídeo","تحويل الفيديو إلى نص") },
+  { slug:"temp-mail", href:"/tools/temp-mail", titles:c("临时邮箱","Temporary Email","一時メール","임시 이메일","E-mail temporaire","Temporäre E-Mail","Correo temporal","E-mail temporário","بريد مؤقت") },
+  { slug:"burn-after-read", href:"/tools/burn-after-read", titles:c("阅后即焚","Burn After Reading","閲覧後に消去","열람 후 삭제","Lecture éphémère","Nach Lesen löschen","Autodestrucción","Apagar após leitura","حذف بعد القراءة") },
+  { slug:"food-calorie", href:"/tools/food-calorie", titles:c("卡路里识别","Food Calorie","カロリー認識","칼로리 인식","Calories des aliments","Kalorien erkennen","Calorías de alimentos","Calorias dos alimentos","تقدير السعرات") },
 ];
 
 const HINTS: Copy[] = [
-  c("试试搜「AI短剧」",'Try "AI Drama"',"「AIドラマ」を検索","‘AI 드라마’를 검색해 보세요",'Essayez « Drama IA »','Suche nach „KI-Drama“','Prueba «Drama IA»','Tente “Drama IA”','جرّب البحث عن «دراما بالذكاء الاصطناعي»'),
-  c("试试搜「量子息法」",'Try "Quantum Breath Method"',"「量子呼吸法」を検索","‘양자 호흡법’을 검색해 보세요",'Essayez « Souffle quantique »','Suche nach „Quanten-Atemmethode“','Prueba «Respiración cuántica»','Tente “Respiração Quântica”','جرّب «التنفس الكمي»'),
-  c("试试搜「书本 SASI」",'Try "Life Map"',"「生命マップ」を検索","‘생명 지도’를 검색해 보세요",'Essayez « Carte de vie »','Suche nach „Lebenskarte“','Prueba «Mapa de vida»','Tente “Mapa da vida”','جرّب «خريطة الحياة»'),
-  c("试试搜「PDF 工具」",'Try "Manifestation"',"「具現化」を検索","‘의식 구현’을 검색해 보세요",'Essayez « Manifestation »','Suche nach „Manifestation“','Prueba «Manifestación»','Tente “Manifestação”','جرّب «التجسيد»'),
+  c("试试搜「AI 短剧生成」",'Try "AI Short Drama"',"「AIショートドラマ」を検索","‘AI 숏드라마’를 검색해 보세요",'Essayez « Mini-série IA »','Suche nach „KI-Kurzdrama“','Prueba «Minidrama IA»','Tente “Minidrama IA”','جرّب «دراما قصيرة بالذكاء الاصطناعي»'),
+  c("试试搜「PDF 编辑」",'Try "PDF Editor"',"「PDF 編集」を検索","‘PDF 편집’을 검색해 보세요",'Essayez « Éditeur PDF »','Suche nach „PDF-Editor“','Prueba «Editor PDF»','Tente “Editor de PDF”','جرّب «محرر PDF»'),
+  c("试试搜「书本 SASI」",'Try "Book SASI"',"「Book SASI」を検索","‘Book SASI’를 검색해 보세요",'Essayez « Book SASI »','Suche nach „Book SASI“','Prueba «Book SASI»','Tente “Book SASI”','جرّب «Book SASI»'),
+  c("试试搜「临时邮箱」",'Try "Temporary Email"',"「一時メール」を検索","‘임시 이메일’을 검색해 보세요",'Essayez « E-mail temporaire »','Suche nach „Temporäre E-Mail“','Prueba «Correo temporal»','Tente “E-mail temporário”','جرّب «بريد مؤقت»'),
 ];
 
 const UI = {

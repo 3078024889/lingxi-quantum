@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const toolId = String(body.toolId || "").trim();
+    if (toolId === "sasi-video-generate") return NextResponse.json({ error: "VIDEO_BYOK_REQUIRED", destination: "/sasi/drama" }, { status: 410 });
     if (!isPublicPaidToolId(toolId)) {
       return NextResponse.json({ error: "TOOL_NOT_AVAILABLE" }, { status: 404 });
     }

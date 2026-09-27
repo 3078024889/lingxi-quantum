@@ -93,7 +93,7 @@ function BookInstance({
           {isCover ? (
             <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
               <p className="font-display text-xs uppercase tracking-widest2 text-lattice">
-                灵犀 · 多维叙事
+                灵犀 ·
               </p>
               <h2 className="mt-6 font-display text-3xl font-light leading-snug text-bone sm:text-4xl">
                 {title}

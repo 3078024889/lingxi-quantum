@@ -79,7 +79,7 @@ export default function SasiNativeCreatePanel(){
   return <section className="mx-auto max-w-6xl px-6 pb-16">
     <div className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 md:p-8">
       <div className="flex flex-wrap gap-2">
-        {(["think","image","video"] as Mode[]).map(value=>
+        {(["think","image"] as Mode[]).map(value=>
           <button key={value} onClick={()=>{setMode(value);setJob(null);setMessage("")}}
             className={`rounded-full px-4 py-2 text-sm ${mode===value?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)] text-[var(--lx-ink)]"}`}>
             {COPY[value].title}
@@ -87,6 +87,7 @@ export default function SasiNativeCreatePanel(){
         )}
       </div>
 
+      <a href="/sasi/drama" className="mt-4 inline-block underline">视频生成：连接自己的 API →</a>
       <h2 className="mt-6 text-2xl font-semibold text-[var(--lx-ink)]">{COPY[mode].title}</h2>
       <textarea value={prompt} onChange={e=>setPrompt(e.target.value)} maxLength={24000}
         className="mt-4 min-h-44 w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 leading-7 text-[var(--lx-ink)] outline-none"

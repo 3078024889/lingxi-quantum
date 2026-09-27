@@ -10,17 +10,6 @@ import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
-  "life-map-report": "life_map_submissions",
-  "relationship-resonance": "relationship_submissions",
-  "qian-reading": "qian_submissions",
-  "tarot-reading": "tarot_reading_submissions",
-  "resilience-report": "resilience_submissions",
-  "romance-report": "romance_submissions",
-  "daily-tide-report": "daily_tide_submissions",
-  "wealth-report": "wealth_submissions",
-};
-
 export async function POST(req: NextRequest) {
   try {
     if (!isSameOriginMutation(req)) {
@@ -33,7 +22,7 @@ export async function POST(req: NextRequest) {
     if (!alipayEnabled()) {
       return NextResponse.json({ error: "支付宝正在完成上线审核，请暂时使用微信支付。" }, { status: 503 });
     }
-    const { productId, submissionId, returnPath } = await req.json();
+    const { productId, returnPath } = await req.json();
 const product = getProduct(productId);
     if (!product) return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     if (product.group === "production" && (!sasiPaidProductionEnabled() || !sasiTopupProductEnabled(product.id))) return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
@@ -47,21 +36,6 @@ const product = getProduct(productId);
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-alipay",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
-    let submissionName: string | null = null;    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
-    if (typeof submissionId === "string" && submissionTable) {
-      const isRelationship = submissionTable === "relationship_submissions";
-      const { data: sub } = await admin
-        .from(submissionTable)
-        .select(isRelationship ? "name_a, name_b" : "name")
-        .eq("id", submissionId)
-        .eq("user_id", user.id)
-        .single();
-      const data = sub as { name?: string; name_a?: string; name_b?: string } | null;
-      submissionName = isRelationship
-        ? data?.name_a && data?.name_b ? `${data.name_a} × ${data.name_b}` : null
-        : data?.name ?? null;
-    }
-
     const { data: order, error } = await admin.from("orders").insert({
       user_id: user.id,
       product_id: product.id,
@@ -71,8 +45,6 @@ const product = getProduct(productId);
       currency: "CNY",
       status: "pending",
       provider: "alipay",
-      ...(typeof submissionId === "string" ? { submission_id: submissionId } : {}),
-      ...(submissionName ? { submission_name: submissionName } : {}),
     }).select().single();
     if (error || !order) return NextResponse.json({ error: "创建订单失败" }, { status: 500 });
 
@@ -87,11 +59,7 @@ const product = getProduct(productId);
         amountRmb: product.priceRmb,
         subject: product.group === "production"
           ? `灵犀场SASI创作余额-${product.name}`
-          : product.group === "ai"
-            ? `灵犀场AI余额充值-${product.name}`
-            : product.group === "manifestation"
-              ? "灵犀场意识练习软件服务"
-              : "灵犀场个人数字报告服务",
+          : `灵犀场AI余额充值-${product.name}`,
         notifyUrl: `${baseUrl}/api/pay/alipay/notify`,
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,

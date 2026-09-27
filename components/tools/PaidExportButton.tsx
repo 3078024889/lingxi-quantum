@@ -1,7 +1,6 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {v104sText} from "@/lib/v104s-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 
 type Quote={id:string;quantity:number;amount_rmb:number;amount_usd:number;currency?:"CNY"|"USD";display_currency?:"CNY"|"USD";display_amount?:number;expires_at?:string};
@@ -16,7 +15,7 @@ async function openMiniPay(id:string){
  })
 }
 export default function PaidExportButton({toolId,quantity,onUnlocked,label}:{toolId:string;quantity:number;onUnlocked:()=>Promise<void>|void;label?:string}){
- const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();const t=(zh:string,en:string)=>v104sText(lang,zh,en);
+ const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();const t=(zh:string,en:string)=>lang==="zh"?zh:en;
  const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState("");
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),fails=useRef(0);
  const stop=()=>{if(timer.current){clearInterval(timer.current);timer.current=null}fails.current=0};

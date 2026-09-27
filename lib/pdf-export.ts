@@ -1,7 +1,6 @@
 // ────────────────────────────────────────────────────────────────────
 // 灵犀 · 共用PDF报告导出工具
 // ────────────────────────────────────────────────────────────────────
-// 之前四个产品（生命图谱、关系共振、生命灵签、塔罗生命镜像）各自维护
 // 一份几乎一模一样的PDF导出代码，这次抽成一份共用的，順便把"精美"这
 // 件事做扎实：加了目录页、每页统一的页眉页脚、页码——封面和正文内容
 // 还是用截图的方式（因为要保留极光玻璃背景这套视觉，直接截取真实
@@ -210,8 +209,6 @@ export async function exportSimplePdf(params: {
   }
 
   // v227：之前这个导出函数（今日运势/生命韧性指数/桃花磁场指数用的
-  // 这一份）完全没有盖网址，跟另一个导出函数（生命图谱/生命灵签/
-  // 关系共振/量子生命镜像用的那一份）不一致。统一在保存前，给这份PDF
   // 产生的每一页都盖上网址。
   const totalPages = pdf.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
@@ -226,7 +223,6 @@ export async function exportSimplePdf(params: {
 
 /**
  * Fixed-page publication exporter used by the Mini Program archives and the
- * eight-stream Life Archetype. Every direct child is already an A4 editorial
  * page, so this path never slices a long browser screenshot into arbitrary
  * fragments. Missing artwork is a hard failure instead of becoming a blank
  * PDF page.
@@ -623,11 +619,6 @@ export const ARCHIVE_THEMES: Record<string, ArchiveGlassTheme> = {
     gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
     border: "rgba(255,255,255,.28)", accent: "#66899C", secondary: "#81769A",
   },
-  // 生命灵签：檀色 + 紫，偏东方
-  qian: {
-    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
-    border: "rgba(255,255,255,.28)", accent: "#796B8B", secondary: "#A28A61",
-  },
   // 量子共振（原塔罗）：靛紫 + 星蓝
   tarot: {
     gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
@@ -638,11 +629,6 @@ export const ARCHIVE_THEMES: Record<string, ArchiveGlassTheme> = {
     gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
     border: "rgba(255,255,255,.28)", accent: "#A46F84", secondary: "#7789A5",
   },
-  // 生命图谱：宇宙紫
-  lifemap: {
-    gradient: "linear-gradient(135deg,rgba(252,250,247,.64),rgba(248,246,250,.48))",
-    border: "rgba(255,255,255,.28)", accent: "#766A9C", secondary: "#B79A63",
-  },
 };
 
 export async function exportArchivePdf(params: {
@@ -651,7 +637,6 @@ export async function exportArchivePdf(params: {
     body: string;
     /**
      * v300：章节可以挂一个真实 DOM 元素（图表、雷达图、分数条）。
-     * 生命图谱和关系共振的报告里有真实图表，如果只接受纯文本，
      * 迁到档案式排版就会把图表弄丢——所以这里允许章节带一个元素，
      * 导出时先把它单独截成图，再作为插图嵌进玻璃面板里。
      * 截图在正文之前进行，因为面板高度的测量必须把插图算进去。

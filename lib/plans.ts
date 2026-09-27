@@ -10,27 +10,12 @@ export type Product = {
   note: string;
   noteEn: string;
   highlight?: boolean;
-  group: "cultivation" | "manifestation" | "production" | "ai";
+  group: "production" | "ai";
   sasiAmountFen?: number;
   aiAmountFen?: number;
 };
 
-// 旧版场域精测 / 意识显化 / 修炼技术已整体下架。
-// 保留空导出仅用于兼容旧代码引用与历史订单读取；它们不再进入 allProducts，
-// 因此 checkout / 微信 / 支付宝都无法再创建这些旧产品的新订单。
-export const cultivationProducts: Product[] = [];
-export const manifestationProducts: Product[] = [];
-export const narrativeProducts: Product[] = [];
-export const lifeMapProducts: Product[] = [];
-export const relationshipProducts: Product[] = [];
-export const qianProducts: Product[] = [];
-export const tarotReadingProducts: Product[] = [];
-export const resilienceProducts: Product[] = [];
-export const romanceProducts: Product[] = [];
-export const dailyTideProducts: Product[] = [];
-export const wealthProducts: Product[] = [];
-export const lifeArchetypeProducts: Product[] = [];
-
+// 当前只保留 SASI 创作余额与 AI 余额两类在售项目。
 export const sasiProductionProducts: Product[] = [
   ...[
     ["sasi-balance-10", "轻量体验", "Starter", 10, 1.5],

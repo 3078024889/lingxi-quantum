@@ -14,3 +14,4 @@ export async function GET(){
  const list=(orders??[]).map(o=>({id:o.id,amountRmb:Number(o.amount_rmb||0),paidAt:o.paid_at,alreadyRequestedRmb:(used.get(o.id)||0)/100})).filter(o=>o.amountRmb-o.alreadyRequestedRmb>0.009);
  return NextResponse.json({refundableRmb:Number((snapshot as any)?.refundable_fen||0)/100,orders:list});
 }
+export const dynamic = "force-dynamic";

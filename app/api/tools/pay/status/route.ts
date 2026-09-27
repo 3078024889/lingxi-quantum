@@ -19,3 +19,4 @@ export async function GET(req: Request) {
   }
   return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
 }
+export const dynamic = "force-dynamic";

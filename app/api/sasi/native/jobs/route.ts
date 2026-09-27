@@ -20,6 +20,7 @@ export async function POST(request:NextRequest){
   const body=await request.json().catch(()=>null) as Record<string,unknown>|null;
   if(!body)return NextResponse.json({error:"INVALID_JSON"},{status:400});
   const kind:NativePaidKind|null=body.kind==="reason"||body.kind==="image"||body.kind==="video"?body.kind:null;
+  if(kind==="video")return NextResponse.json({error:"VIDEO_BYOK_REQUIRED",destination:"/sasi/drama"},{status:410});
   if(!kind)return NextResponse.json({error:"INVALID_JOB_KIND"},{status:400});
   const runtimeState=await toolRuntimeStateLive(kind==="reason"?"sasi-deep-reason":kind==="image"?"sasi-image-generate":"sasi-video-generate");
   if(!runtimeState.ready)return NextResponse.json({error:"SASI_NATIVE_COMPUTE_UNAVAILABLE",reason:runtimeState.reason},{status:503});

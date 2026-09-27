@@ -378,7 +378,7 @@ html[data-theme="light"] .lx-console-card-action { border-color:#b9dcf2; color:#
 /* Life Map workbench — three honest surfaces: input, calculated preview and paid PDF. */
 .lm-workbench-page { min-width:0; padding:24px clamp(18px,2.4vw,36px) 54px; background:#fff; color:#152844; }
 .lm-workbench-hero { position:relative; display:flex; min-height:150px; align-items:center; justify-content:space-between; gap:32px; overflow:hidden; border:1px solid #e2eaf4; border-radius:18px; padding:25px 34px; background:#fff; }
-.lm-workbench-hero::before { content:""; position:absolute; inset:0; background-image:linear-gradient(90deg,#fff 4%,rgba(255,255,255,.93) 42%,rgba(255,255,255,.46) 78%,rgba(255,255,255,.18)),url('/images/lifemap/page-0.png'); background-position:center,right 46%; background-size:cover,auto 330%; background-repeat:no-repeat; opacity:.76; }
+.lm-workbench-hero::before { content:""; position:absolute; inset:0; background-image:linear-gradient(90deg,#fff 4%,rgba(255,255,255,.93) 42%,rgba(255,255,255,.46) 78%,rgba(255,255,255,.18)); background-position:center,right 46%; background-size:cover,auto 330%; background-repeat:no-repeat; opacity:.76; }
 .lm-workbench-hero > * { position:relative; z-index:1; }
 .lm-workbench-hero > div > p { color:#33bce9; font-size:15px; font-weight:750; letter-spacing:.14em; }
 .lm-workbench-hero h1 { margin-top:3px; color:#142641; font:700 clamp(2.25rem,3.4vw,3.8rem)/1.08 var(--font-display); }
@@ -454,7 +454,7 @@ html[data-theme="light"] .lx-console-card-action { border-color:#b9dcf2; color:#
 .lm-pdf-boundary { margin-top:14px; border-top:1px solid #e7edf4; padding-top:13px; color:#6c7e93; font-size:15px; line-height:1.6; }
 @media(max-width:1320px){.lm-workbench-grid{grid-template-columns:minmax(320px,.9fr) minmax(380px,1.1fr)}.lm-pdf-preview{grid-column:1/-1;display:grid;grid-template-columns:minmax(260px,.7fr) minmax(0,1.3fr);gap:20px}.lm-pdf-preview .lm-column-title,.lm-pdf-preview .lm-pdf-boundary{grid-column:1/-1}.lm-pdf-stack{grid-column:1;grid-row:2/3}.lm-pdf-contents{grid-column:2;grid-row:2/3}}
 @media(max-width:900px){.lm-workbench-page{padding:16px}.lm-workbench-hero{align-items:flex-start;flex-direction:column;padding:22px}.lm-workbench-hero blockquote{text-align:left}.lm-workbench-grid{grid-template-columns:1fr}.lm-pdf-preview{grid-column:auto;display:block}.lm-pdf-stack{width:min(68%,260px)}.lm-workbench-form{padding:20px!important}}
-@media(max-width:520px){.lm-workbench-hero{min-height:360px;justify-content:flex-end}.lm-workbench-hero::before{background-image:linear-gradient(0deg,#fff 5%,rgba(255,255,255,.9) 48%,rgba(255,255,255,.12) 88%),url('/images/lifemap/page-0.png');background-position:center,center 20%;background-size:cover,100% auto}.lm-workbench-hero blockquote{max-width:100%}.lm-generated-heading{grid-template-columns:82px minmax(0,1fr)}.lm-generated-heading img{width:82px}.lm-keywords,.lm-pdf-contents ol{grid-template-columns:1fr}.lm-free-preview,.lm-pdf-preview{padding:18px}}
+@media(max-width:520px){.lm-workbench-hero{min-height:360px;justify-content:flex-end}.lm-workbench-hero::before{background-image:linear-gradient(0deg,#fff 5%,rgba(255,255,255,.9) 48%,rgba(255,255,255,.12) 88%);background-position:center,center 20%;background-size:cover,100% auto}.lm-workbench-hero blockquote{max-width:100%}.lm-generated-heading{grid-template-columns:82px minmax(0,1fr)}.lm-generated-heading img{width:82px}.lm-keywords,.lm-pdf-contents ol{grid-template-columns:1fr}.lm-free-preview,.lm-pdf-preview{padding:18px}}
 
 /* Life Map V2: three independent, resizable work areas sharing one record. */
 .lm-column-controls { display:flex; align-items:center; justify-content:flex-end; gap:7px; min-height:38px; margin-bottom:10px; }
@@ -1184,10 +1184,6 @@ html[data-theme="light"] .drama-field-grid input::placeholder,html[data-theme="l
   background-size: cover;
   background-position: center;
 }
-.lx-art-lifemap-1 { background-image: url('/images/lifemap/page-1.png') !important; }
-.lx-art-lifemap-2 { background-image: url('/images/lifemap/page-2.png') !important; }
-.lx-art-lifemap-3 { background-image: url('/images/lifemap/page-3.png') !important; }
-.lx-art-lifemap-4 { background-image: url('/images/lifemap/page-4.png') !important; }
 .lx-report-chart text { fill: var(--report-chart-text) !important; font-weight: 600; text-shadow: none; }
 .lx-report-chart .lx-chart-grid { stroke: var(--report-chart-grid) !important; }
 /* Typography and gradient system. */

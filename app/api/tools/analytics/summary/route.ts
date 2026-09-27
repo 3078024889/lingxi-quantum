@@ -70,3 +70,4 @@ export async function GET(req:Request){
     unmatchedSearches:Object.entries(missMap).map(([query,count])=>({query,count})).sort((a,b)=>b.count-a.count).slice(0,100),
   });
 }
+export const dynamic = "force-dynamic";

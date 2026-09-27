@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const RETIRED_EXACT=new Set([
- "/learn","/glossary","/live-as","/subconscious","/practice","/field-tests",
+ "/explore","/learn","/glossary","/live-as","/subconscious","/practice","/field-tests",
  "/life-map","/relationship","/qian","/mirror","/tarot","/resilience","/romance",
  "/daily","/wealth","/archetype","/mini-report","/membership","/origin","/dream",
  "/declaration","/narrative","/tools/number-energy","/gate","/field","/manifestation","/consciousness","/inner-sovereignty","/learn/inner-sovereignty","/gate","/field","/manifestation","/consciousness"
@@ -54,8 +54,8 @@ export async function middleware(request:NextRequest){
   response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
  }
 
- const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
- const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+ const url=process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+ const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
  if(!url||!key)return response;
 
  const supabase=createServerClient(url,key,{

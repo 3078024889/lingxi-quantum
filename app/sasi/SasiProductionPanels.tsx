@@ -3,7 +3,7 @@
 import NextImage from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CREDIT_PACKS, SASI_QUALITY_TIERS, type SasiQuality } from "@/lib/sasi/catalog";
-import SeedanceStudio from "./SeedanceStudio";
+import SasiByokVideoStudio from "@/components/SasiByokVideoStudio";
 
 type Lang = "zh" | "en";
 type Readiness = {
@@ -218,97 +218,6 @@ export function SasiProjectProduction({ detail, lang, dark, onReload, onNotice }
   onReload: () => Promise<void>;
   onNotice: (message: string) => void;
 }) {
-  const [prompt, setPrompt] = useState("");
-  const [duration, setDuration] = useState<5 | 10 | 15>(5);
-  const [quality, setQuality] = useState<SasiQuality>("fast");
-  const [aspectRatio, setAspectRatio] = useState<"16:9" | "9:16" | "1:1">("16:9");
-  const [routingMode, setRoutingMode] = useState<"auto" | "professional">("auto");
-  const [providerPreference, setProviderPreference] = useState<"seedance" | "xai" | "openai" | "wan">("seedance");
-  const [rightsConfirmed, setRightsConfirmed] = useState(false);
-  const [aiLabelAcknowledged, setAiLabelAcknowledged] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [readiness, setReadiness] = useState<Readiness | null>(null);
-  const [serverQuote, setServerQuote] = useState<ServerQuote | null>(null);
-  const pendingJob = useRef<{ token: string; id: string } | null>(null);
-  useEffect(() => { fetch("/api/sasi/status", { cache: "no-store" }).then((r) => r.json()).then(setReadiness).catch(() => setReadiness(null)); }, []);
-  useEffect(() => { setServerQuote(null); }, [prompt, duration, quality, aspectRatio, routingMode, providerPreference, rightsConfirmed, aiLabelAcknowledged]);
   if (detail.project.kind !== "drama") return null;
-  const shotNode = detail.nodes.find((node) => node.type === "shot-generation") ?? null;
-
-  const taskBody = () => ({ projectId:detail.project.id,nodeId:shotNode?.id,prompt,duration,quality,aspectRatio,providerPreference:routingMode==="professional"?providerPreference:null,rightsConfirmed,aiLabelAcknowledged,...selectedSkill() });
-
-  async function requestQuote() {
-    if (!readiness?.productionReady) { onNotice(t(lang, "这项制作暂时还不能开始，请稍后再试。", "This creation cannot start right now. Please try again later.")); return; }
-    if (prompt.trim().length < 8) { onNotice(t(lang, "请先写下这个镜头的画面、动作与镜头语言。", "Describe the shot, action and camera language first.")); return; }
-    setBusy(true);
-    try {
-      const response = await fetch("/api/sasi/quote", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(taskBody()) });
-      const result = await response.json();
-      if (!response.ok || !result.quote) {
-        const pricingError = String(result.error || "").startsWith("TASK_PRIC");
-        throw new Error(pricingError ? t(lang,"这个规格暂时没有可用价格，请换一个规格再试。","This specification has no available price right now. Try another one.") : result.error ?? "QUOTE_FAILED");
-      }
-      setServerQuote(result.quote);
-      onNotice(t(lang, "预算已经算好。确认开始前不会扣除余额。", "Your price is ready. Nothing is charged until you confirm."));
-    } catch (error) { onNotice(error instanceof Error ? error.message : "QUOTE_FAILED"); }
-    finally { setBusy(false); }
-  }
-
-  async function createJob() {
-    if (busy) return;
-    if (!serverQuote) { await requestQuote(); return; }
-    if (pendingJob.current?.token !== serverQuote.token) pendingJob.current = { token: serverQuote.token, id: crypto.randomUUID() };
-    setBusy(true);
-    try {
-      const response = await fetch("/api/sasi/jobs", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": pendingJob.current!.id }, body: JSON.stringify({ ...taskBody(), quoteToken: serverQuote.token }) });
-      const result = await response.json();
-      if (!response.ok) { if (new Set(["QUOTE_REQUIRED_OR_EXPIRED", "QUOTE_CHANGED_REQUOTE_REQUIRED"]).has(result.error)) setServerQuote(null); throw new Error(result.error ?? "PRODUCTION_START_FAILED"); }
-      onNotice(t(lang, "已经开始制作。本次费用会按实际使用结算。", "Creation has started. Your final charge follows actual usage."));
-      pendingJob.current = null;
-      setServerQuote(null);
-      await onReload();
-    } catch (error) { onNotice(error instanceof Error ? error.message : "PRODUCTION_START_FAILED"); }
-    finally { setBusy(false); }
-  }
-
-  async function refresh(jobId: string) {
-    setBusy(true);
-    try {
-      const response = await fetch(`/api/sasi/jobs/${jobId}/refresh`, { method: "POST" });
-      const result = await response.json();
-      if (!response.ok && result.error !== "JOB_REFRESH_PENDING") throw new Error(result.error ?? "JOB_REFRESH_FAILED");
-      await onReload();
-    } catch (error) { onNotice(error instanceof Error ? error.message : "JOB_REFRESH_FAILED"); }
-    finally { setBusy(false); }
-  }
-
-  async function cancel(jobId: string) {
-    setBusy(true);
-    try {
-      const response = await fetch(`/api/sasi/jobs/${jobId}/cancel`, { method: "POST" });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? "JOB_CANCEL_FAILED");
-      onNotice(t(lang, "任务已取消，尚未结算的预留余额已释放。", "The job was cancelled and unsettled reserved balance was released."));
-      await onReload();
-    } catch (error) { onNotice(error instanceof Error ? error.message : "JOB_CANCEL_FAILED"); }
-    finally { setBusy(false); }
-  }
-
-  async function download(deliveryId: string) {
-    const response = await fetch(`/api/sasi/deliveries/${deliveryId}`, { cache: "no-store" });
-    const result = await response.json();
-    if (!response.ok) { onNotice(result.error ?? "DELIVERY_LINK_FAILED"); return; }
-    window.location.assign(result.url);
-  }
-
-  return <><SeedanceStudio key={detail.project.id} projectId={detail.project.id} dark={dark} /><details className="mt-6"><summary className="cursor-pointer text-base">{t(lang, "其他视频通道与 SASI 余额制作", "Other video routes and SASI balance")}</summary><section className={`mt-8 rounded-3xl border p-6 ${tone(dark)}`}>
-    <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs uppercase tracking-[.18em] text-[#e04d70]">镜头制作</p><h2 className="mt-2 text-2xl font-semibold">{t(lang, "生成并交付一个真实镜头", "Produce and deliver a live shot")}</h2></div><span className={`rounded-full px-3 py-1 text-[10px] ${readiness?.productionReady ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500"}`}>{readiness?.productionReady ? t(lang, "可以开始", "Ready") : t(lang, "暂不可用", "Gated")}</span></div>
-    <textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder={t(lang, "描述人物、场景、动作、情绪、机位与光线……", "Describe character, setting, action, emotion, camera and light…")} className="mt-5 min-h-28 w-full rounded-2xl border border-current/15 bg-transparent p-4 text-sm leading-7 outline-none"/>
-    <div className="mt-4 grid gap-3 sm:grid-cols-3"><select value={duration} onChange={(e) => setDuration(Number(e.target.value) as 5 | 10 | 15)} className="rounded-xl border border-current/15 bg-transparent p-3 text-sm"><option value={5}>5 秒</option><option value={10}>10 秒</option><option value={15}>15 秒</option></select><select value={quality} onChange={(e) => setQuality(e.target.value as SasiQuality)} className="rounded-xl border border-current/15 bg-transparent p-3 text-sm">{SASI_QUALITY_TIERS.map((tier) => <option key={tier.id} value={tier.id}>{t(lang, tier.zh, tier.en)}</option>)}</select><select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value as typeof aspectRatio)} className="rounded-xl border border-current/15 bg-transparent p-3 text-sm"><option>16:9</option><option>9:16</option><option>1:1</option></select></div>
-    <div className="mt-4 rounded-2xl border border-current/10 p-3"><div className="flex flex-wrap gap-2"><button type="button" onClick={() => setRoutingMode("auto")} className={`rounded-full px-4 py-2 text-xs ${routingMode === "auto" ? "bg-[#7657ff] text-white" : "border border-current/15"}`}>{t(lang, "智能统筹", "SASI Auto")}</button><button type="button" onClick={() => setRoutingMode("professional")} className={`rounded-full px-4 py-2 text-xs ${routingMode === "professional" ? "bg-[#7657ff] text-white" : "border border-current/15"}`}>{t(lang, "专业指定", "Professional")}</button></div>{routingMode === "professional" && <div className="mt-3"><select value={providerPreference} onChange={(event) => setProviderPreference(event.target.value as typeof providerPreference)} className="w-full rounded-xl border border-current/15 bg-transparent p-3 text-sm"><option value="seedance">ByteDance Seedance</option><option value="wan">Alibaba Wan 2.7</option><option value="xai">Grok Imagine 1.5</option><option value="openai">OpenAI {quality === "cinema" ? "Sora 2 Pro" : "Sora 2"}</option></select><p className="mt-2 text-[11px] leading-5 opacity-45">{t(lang, "专业指定不会自动改用其他线路；当前线路与规格不兼容时，任务不会扣款或提交。", "Professional selection never switches providers silently. An incompatible route is rejected before reservation or submission.")}</p></div>}</div>
-    <div className="mt-4 space-y-2 text-xs leading-5 opacity-65"><label className="flex items-start gap-2"><input type="checkbox" checked={rightsConfirmed} onChange={(event) => setRightsConfirmed(event.target.checked)} className="mt-1"/><span>{t(lang, "我确认拥有素材、人物肖像与声音的必要使用授权。", "I confirm the necessary rights to all materials, likenesses and voices.")}</span></label><label className="flex items-start gap-2"><input type="checkbox" checked={aiLabelAcknowledged} onChange={(event) => setAiLabelAcknowledged(event.target.checked)} className="mt-1"/><span>{t(lang, "我申请洁净画面导出：作品不叠加持续可见水印，但文件保留 AIGC 元数据；对外发布时，我会主动使用发布平台的 AI 生成标识功能，不删除、篡改或伪造标识。", "I request a clean visual export: no persistent visible watermark, while AIGC file metadata remains. When publishing, I will use the platform's AI-content disclosure and will not delete, alter or falsify labels.")}</span></label></div>
-    <div className="mt-4 flex items-center justify-between gap-4"><p className="text-xs opacity-55">{serverQuote ? t(lang, `本次预算 ¥${serverQuote.amountRmb} / ${serverQuote.amountUsd} · ${serverQuote.skillTitle}`, `Price ¥${serverQuote.amountRmb} / ${serverQuote.amountUsd} · ${serverQuote.skillTitle}`) : t(lang, "选好镜头规格和 Skill，再看本次真实预算。", "Choose the shot specification and Skill to see the real price.")}</p><button disabled={busy || !readiness?.productionReady || !rightsConfirmed || !aiLabelAcknowledged} onClick={() => void (serverQuote ? createJob() : requestQuote())} className="rounded-xl bg-[#e04d70] px-6 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-35">{busy ? t(lang, "正在同步…", "Synchronizing…") : serverQuote ? t(lang, `确认开始 · ¥${serverQuote.amountRmb} / ${serverQuote.amountUsd}`, `Confirm · ¥${serverQuote.amountRmb} / ${serverQuote.amountUsd}`) : t(lang, "查看本次预算", "See price")}</button></div>
-    <div className="mt-7 space-y-3">{detail.jobs.length === 0 ? <p className="text-sm opacity-45">{t(lang, "尚无镜头任务。", "No shot jobs yet.")}</p> : detail.jobs.map((job) => <article key={job.id} className="rounded-2xl border border-current/10 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-medium">{String(job.input.userPrompt ?? job.input.prompt ?? t(lang, "影像镜头", "Video shot")).slice(0, 72)}</p><p className="mt-1 text-[10px] uppercase tracking-[.14em] opacity-40">{job.status} · {money(job.quotedAmountFen)}</p></div>{(new Set(["queued", "running"]).has(job.status) || job.canCancel) && <div className="flex gap-2">{new Set(["queued", "running"]).has(job.status) && <button disabled={busy} onClick={() => void refresh(job.id)} className="rounded-lg border border-current/15 px-3 py-2 text-xs">{t(lang, "同步进度", "Refresh")}</button>}{job.canCancel && <button disabled={busy} onClick={() => void cancel(job.id)} className="rounded-lg border border-current/15 px-3 py-2 text-xs opacity-65">{t(lang, "取消", "Cancel")}</button>}</div>}</div>{job.errorCode && <p className="mt-3 text-xs text-amber-500">{job.errorCode === "BILLING_USAGE_PENDING" ? t(lang,"交付文件已保存，正在核对实际计费用量，尚未结算。","Delivery saved; billing usage awaits reconciliation, not yet settled.") : job.errorCode === "BUDGET_APPROVAL_REQUIRED" ? t(lang,"实际用量超出批准预算，已暂停结算，等待再次确认。","Usage exceeds the approved budget; settlement paused pending approval.") : job.errorCode}</p>}</article>)}</div>
-    {detail.deliveries.length > 0 && <div className="mt-7"><div className="flex flex-wrap items-center justify-between gap-2"><h3 className="font-semibold">{t(lang, "交付作品", "Deliveries")}</h3><span className="rounded-full border border-current/15 px-3 py-1 text-[10px]">AI {t(lang,"生成合成","generated")}</span></div><p className="mt-2 text-xs leading-5 opacity-50">{t(lang,"交付页持续显示来源提示；下载文件含标准 AIGC 元数据，不叠加持续画面水印。","The delivery surface retains a clear disclosure. Downloads contain standard AIGC metadata without a persistent visual watermark.")}</p><div className="mt-3 grid gap-3 sm:grid-cols-2">{detail.deliveries.map((delivery) => <button key={delivery.id} onClick={() => void download(delivery.id)} className="rounded-2xl border border-current/10 p-4 text-left"><p className="text-sm font-medium">{t(lang, "AI 生成影像 · 洁净画面", "AI-generated video · clean visual")}</p><p className="mt-2 text-xs opacity-45">{(delivery.byteSize / 1024 / 1024).toFixed(1)} MB · {t(lang, "含 AIGC 元数据 · 限时安全下载", "AIGC metadata · secure timed download")}</p></button>)}</div></div>}
-  </section></details></>;
+  return <SasiByokVideoStudio key={detail.project.id} initialProjectId={detail.project.id}/>;
 }

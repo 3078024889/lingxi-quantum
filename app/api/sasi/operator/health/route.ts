@@ -20,3 +20,4 @@ export async function GET() {
     headers: { "Cache-Control": "no-store" },
   });
 }
+export const dynamic = "force-dynamic";

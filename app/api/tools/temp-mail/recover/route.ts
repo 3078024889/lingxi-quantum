@@ -29,3 +29,4 @@ export async function GET(req:NextRequest){
  response.cookies.set({name:TEMP_MAIL_ACCESS_COOKIE,value:"",httpOnly:true,path:"/api/tools/temp-mail",maxAge:0});
  return response;
 }
+export const dynamic = "force-dynamic";

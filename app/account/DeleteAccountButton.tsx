@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Bi from "@/components/Bi";
 
 // 注销是不可逆操作——删了就是删了，之前解锁过的报告、买过的修炼
-// 技术、多维叙事，全部一起清空，重新注册也找不回来。所以这里不是点一下
+// 技术、，全部一起清空，重新注册也找不回来。所以这里不是点一下
 // 就立刻执行，要先点一次，弹出一段说明和第二次确认按钮，逼自己
 // 慢下来看清楚再决定。
 export default function DeleteAccountButton() {

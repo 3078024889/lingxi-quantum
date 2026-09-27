@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
@@ -13,7 +13,7 @@ type CalcResult={items:ResultItem[];total:ResultItem&{grams:number};source?:stri
 type Price={amount_rmb:number;amount_usd:number};
 
 const QUICK=["米饭","鸡蛋","鸡胸肉","苹果","香蕉","橙子","牛奶","面包"];
-const show=(v:unknown,d=1)=>Number.isFinite(Number(v))?Number(v).toFixed(d):"暂无测定值";
+const show=(v:unknown,d=1)=>v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))?Number(v).toFixed(d):"暂无测定值";
 
 async function searchFood(q:string):Promise<SearchItem[]>{
  const r=await fetch(`/api/tools/food/search?q=${encodeURIComponent(q)}`,{cache:"no-store"});
@@ -44,7 +44,7 @@ export default function FoodCalorieWorkbench(){
  return <div className="space-y-5">
   <div className="grid gap-3 sm:grid-cols-2">
    <button onClick={()=>setMode("name")} className={`rounded-2xl border p-5 text-left ${mode==="name"?"border-[var(--lx-ink)] bg-[var(--lx-soft)]":"border-[var(--lx-line)] bg-[var(--lx-panel)]"}`}><div className="font-semibold">{zh?"输入食物名称 + 重量":"Food name + weight"}</div><div className="mt-1 text-sm text-[var(--lx-muted)]">{manualPrice} / {zh?"次":"calculation"}</div></button>
-   <button onClick={()=>setMode("image")} className={`rounded-2xl border p-5 text-left ${mode==="image"?"border-[var(--lx-ink)] bg-[var(--lx-soft)]":"border-[var(--lx-line)] bg-[var(--lx-panel)]"}`}><div className="font-semibold">{zh?"上传图片识别食物":"Recognize food from a photo"}</div><div className="mt-1 text-sm text-[var(--lx-muted)]">{imagePrice} / {zh?"张":"image"}</div></button>
+   <button onClick={()=>setMode("image")} className={`rounded-2xl border p-5 text-left ${mode==="image"?"border-[var(--lx-ink)] bg-[var(--lx-soft)]":"border-[var(--lx-line)] bg-[var(--lx-panel)]"}`}><div className="font-semibold">{zh?"上传图片识别食物":"Recognize food from a photo"}</div><div className="mt-1 text-sm text-[var(--lx-muted)]">{zh?"免费查看分类建议，确认食物后按名称计算价格结算":"Free classification suggestions; confirmed foods use name-mode pricing"}</div></button>
   </div>
   {mode==="name"?<NameMode zh={zh}/>:<ImageMode zh={zh}/>}
  </div>;
@@ -70,44 +70,27 @@ function NameMode({zh}:{zh:boolean}){
 }
 
 function ImageMode({zh}:{zh:boolean}){
- const[file,setFile]=useState<File|null>(null),[preview,setPreview]=useState(""),[grams,setGrams]=useState(100);
- const[preds,setPreds]=useState<FoodVisionPrediction[]>([]),[ready,setReady]=useState(false),[checking,setChecking]=useState(false),[paidQuote,setPaidQuote]=useState("");
- const[hits,setHits]=useState<SearchItem[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<CalcResult|null>(null);
+ const[preview,setPreview]=useState("");
+ const[preds,setPreds]=useState<FoodVisionPrediction[]>([]),[checking,setChecking]=useState(false),[error,setError]=useState("");
+ const attempt=useRef(0);
  useEffect(()=>()=>{if(preview)URL.revokeObjectURL(preview)},[preview]);
-
- async function inspect(f:File){
-  setChecking(true);setReady(false);setPreds([]);setHits([]);setResult(null);setError("");
-  try{const out=await recognizeFoodImage(f);if(!out.length||out[0].score<0.12)throw new Error();setPreds(out);setReady(true)}
-  catch{setError(zh?"这张图片暂时无法可靠识别，换一张更清楚、主体更单一的食物照片。":"This photo cannot be recognized reliably. Try a clearer food photo.")}
-  finally{setChecking(false)}
- }
- function chooseFile(f:File|null){if(!f)return;if(preview)URL.revokeObjectURL(preview);setFile(f);setPreview(URL.createObjectURL(f));void inspect(f)}
- async function reveal(quoteId:string){
-  setPaidQuote(quoteId);setBusy(true);setError("");
-  try{
-   let found:SearchItem[]=[];
-   for(const p of preds){found=await searchFood(p.label);if(found.length)break}
-   setHits(found);
-   if(!found.length)setError(zh?"已经完成图片识别，但营养库里没有自动匹配到对应条目。请选择下方识别候选，或切换到名称入口手动输入。":"The image was recognized, but no nutrition record matched automatically.")
-  }finally{setBusy(false)}
- }
- async function calculate(food:SearchItem){
-  if(!paidQuote)return;setBusy(true);setError("");
-  try{const r=await fetch("/api/tools/food/calculate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteId:paidQuote,items:[{food_id:food.food_id,grams:Math.max(1,grams)}]})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error();setResult(d)}
-  catch{setError(zh?"营养结果没有生成成功，请重试。":"Nutrition result did not finish.")}finally{setBusy(false)}
+ async function inspect(file:File){
+  const id=++attempt.current; setPreview(URL.createObjectURL(file)); setPreds([]);setError("");setChecking(true);
+  try{const out=await recognizeFoodImage(file);if(id!==attempt.current)return;setPreds(out);if(!out.length)setError(zh?"未获得分类建议，请手动填写食物。":"No suggestions. Please enter foods manually.");}
+  catch{if(id===attempt.current)setError(zh?"图片分类暂不可用，请手动填写食物。":"Image classification unavailable. Please enter foods manually.");}
+  finally{if(id===attempt.current)setChecking(false)}
  }
  return <>
   <section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-   <h2 className="text-lg font-semibold">{zh?"上传一张食物照片":"Upload a food photo"}</h2>
-   <p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{zh?"图片在你的设备上使用灵犀场自托管视觉模型识别，不需要外部识图 API。为了避免识别失败后仍收费，会先确认图片可识别，再进入支付。":"The photo is recognized on your device with LINGXIFIELD's self-hosted vision runtime. We check recognizability before payment."}</p>
-   <input type="file" accept="image/*" onChange={e=>chooseFile(e.target.files?.[0]||null)} className="mt-4 block w-full text-sm"/>
-   {preview&&<img src={preview} alt="" className="mt-4 max-h-72 rounded-xl object-contain"/>}
-   <label className="mt-4 block text-sm">{zh?"估计份量（克，可修改）":"Estimated portion (g)"}<input type="number" min={1} max={10000} value={grams} onChange={e=>setGrams(Number(e.target.value)||1)} className="mt-2 block w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-bg)] px-4 py-3"/></label>
-   {checking&&<p className="mt-4 text-sm text-[var(--lx-muted)]">{zh?"正在确认图片是否可以识别…":"Checking image recognizability…"}</p>}
-   {ready&&!paidQuote&&<div className="mt-5"><p className="mb-3 text-sm text-[var(--lx-muted)]">{zh?"图片可以识别。支付后显示识别结果并生成完整营养分析。":"Image is recognizable. Pay to reveal the result and generate full nutrition analysis."}</p><PaidActionButton toolId="food-calorie" quantity={2} metadata={{mode:"image-recognition",images:1}} onPaid={reveal} label={zh?"支付后识别并生成结果":"Pay, recognize & generate result"}/></div>}
+   <h2 className="text-lg font-semibold">{zh?"看图确认食物，再计算营养":"Confirm foods before calculating nutrition"}</h2>
+   <p className="mt-2 text-sm leading-6">{zh?"这是设备本地运行的 Food-101 食物分类模型，只能在有限类别中给出建议，不能可靠拆分水果拼盘、混合菜或判断重量。分数不代表识别正确率。":"Food-101 runs locally and suggests a limited set of classes. It cannot reliably separate platters or mixed dishes, or measure weight. Scores are not accuracy guarantees."}</p>
+   <input aria-label={zh?"选择食物照片":"Choose food photo"} type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f)void inspect(f)}} className="mt-4 block w-full text-sm"/>
+   {preview&&<img src={preview} alt={zh?"待确认的食物照片":"Food to confirm"} className="mt-4 max-h-72 rounded-xl object-contain"/>}
+   {checking&&<p role="status">{zh?"正在生成分类建议…":"Classifying…"}</p>}
+   {preds.length>0&&<div className="mt-4"><h3>{zh?"分类建议（请自行核对）":"Classification suggestions — please verify"}</h3><div className="mt-2 flex flex-wrap gap-2">{preds.map(p=><span key={p.label} className="rounded-full bg-[var(--lx-soft)] px-3 py-1.5 text-sm">{p.label} · {zh?"模型分数":"score"} {Math.round(p.score*100)}%</span>)}</div></div>}
+   <p className="mt-4 text-sm">{zh?"请在下方分别添加你确认的食物与实际重量。图片建议不会自动变成营养结果；例如水果拼盘应逐项添加水果。":"Add each confirmed food and its measured weight below. Suggestions never automatically become nutrition results."}</p>
+   {error&&<p role="alert">{error}</p>}
   </section>
-  {paidQuote&&preds.length>0&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><h3 className="font-semibold">{zh?"图片识别候选":"Recognition candidates"}</h3><div className="mt-3 flex flex-wrap gap-2">{preds.map(p=><span key={p.label} className="rounded-full bg-[var(--lx-soft)] px-3 py-1.5 text-sm">{p.label} · {Math.round(p.score*100)}%</span>)}</div>{busy&&<p className="mt-4 text-sm">{zh?"正在匹配营养数据库…":"Matching nutrition database…"}</p>}{hits.length>0&&<div className="mt-4 space-y-2">{hits.slice(0,5).map(x=><button key={x.food_id} onClick={()=>void calculate(x)} className="flex w-full justify-between rounded-xl border border-[var(--lx-line)] px-4 py-3 text-left"><span>{zh?x.name_zh:(x.name_en||x.name_zh)}</span><span>{zh?"生成营养结果":"Generate"} ›</span></button>)}</div>}</section>}
-  {result&&<Result result={result} zh={zh}/>}
-  {error&&<p className="rounded-xl border border-[var(--lx-line)] p-4 text-sm">{error}</p>}
+  <NameMode zh={zh}/>
  </>;
 }

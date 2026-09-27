@@ -21,17 +21,6 @@ import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const SUBMISSION_TABLE_BY_PRODUCT: Record<string, string> = {
-  "life-map-report": "life_map_submissions",
-  "relationship-resonance": "relationship_submissions",
-  "qian-reading": "qian_submissions",
-  "tarot-reading": "tarot_reading_submissions",
-  "resilience-report": "resilience_submissions",
-  "romance-report": "romance_submissions",
-  "daily-tide-report": "daily_tide_submissions",
-  "wealth-report": "wealth_submissions",
-};
-
 export async function POST(req: NextRequest) {
   try {
     if (!isSameOriginMutation(req)) {
@@ -48,11 +37,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { productId, submissionId, code, state } = await req.json();
+    const { productId, code, state } = await req.json();
 // code存在，说明前端是在微信内置浏览器里、已经走完静默授权拿到了
     // 微信的一次性code——这种场景走JSAPI（直接在微信里弹收银台），
     // 不再是Native扫码（微信自己的内置浏览器不允许自己弹二维码给自己
-    // 扫，这正是"塔罗按钮按不动"的根因）。code不存在就还是原来的
     // Native扫码流程，不影响桌面/外部浏览器场景。
     const useJsapi = typeof code === "string" && code.length > 0;
     if (useJsapi) {
@@ -84,22 +72,6 @@ export async function POST(req: NextRequest) {
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-wechat",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
-    let submissionName: string | null = null;    const submissionTable = SUBMISSION_TABLE_BY_PRODUCT[productId];
-    if (typeof submissionId === "string" && submissionTable) {
-      const isRelationship = submissionTable === "relationship_submissions";
-      // v225：同 pay/create 的修复，加上归属校验。
-      const { data: sub } = await admin
-        .from(submissionTable)
-        .select(isRelationship ? "name_a, name_b" : "name")
-        .eq("id", submissionId)
-        .eq("user_id", user.id)
-        .single();
-      const subData = sub as { name?: string; name_a?: string; name_b?: string } | null;
-      submissionName = isRelationship
-        ? subData?.name_a && subData?.name_b ? `${subData.name_a} × ${subData.name_b}` : null
-        : subData?.name ?? null;
-    }
-
     const { data: order, error: orderErr } = await admin
       .from("orders")
       .insert({
@@ -110,8 +82,6 @@ export async function POST(req: NextRequest) {
         amount_rmb: product.priceRmb,
         status: "pending",
         provider: "wechat",
-        ...(typeof submissionId === "string" ? { submission_id: submissionId } : {}),
-        ...(submissionName ? { submission_name: submissionName } : {}),
       })
       .select()
       .single();

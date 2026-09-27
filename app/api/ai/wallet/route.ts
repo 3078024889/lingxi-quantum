@@ -15,3 +15,4 @@ export async function GET(){
   balanceUsd:Number(usd?.available_cents||0)/100,refundableUsd:Number(usd?.refundable_cents||0)/100,lifetimeTopupUsd:Number(usd?.lifetime_topup_cents||0)/100
  });
 }
+export const dynamic = "force-dynamic";

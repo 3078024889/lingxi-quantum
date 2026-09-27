@@ -9,7 +9,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "audit:knowledge": "node scripts/lint-knowledge.mjs",
     "audit:security": "node scripts/audit-security.mjs",
     "audit:alipay": "node scripts/audit-alipay.mjs",
     "audit:sasi": "node scripts/audit-sasi.mjs",
@@ -18,14 +17,6 @@
     "test:sasi-ledger": "node scripts/test-sasi-production-ledger.mjs",
     "test:alipay-crypto": "node --experimental-strip-types scripts/test-alipay-crypto.mjs",
     "audit:mini-program": "node scripts/audit-mini-program.mjs",
-    "audit:dendrite-questions": "node scripts/audit-dendrite-question-banks.mjs",
-    "audit:stellar-trace": "node scripts/audit-stellar-trace.mjs",
-    "audit:report-language": "node scripts/audit-report-language.mjs",
-    "audit:report-slots": "node scripts/audit-report-reading-slots.mjs",
-    "audit:living-v340": "node scripts/audit-living-v340.mjs",
-    "audit:web-living-v340": "node scripts/audit-web-living-v340.mjs",
-    "audit:web-living-runtime-v340": "node scripts/audit-web-living-runtime-v340.cjs",
-    "audit:sovereign-access": "node scripts/audit-sovereign-access.mjs",
     "drama:eight-step": "node scripts/drama-pipeline/eight-step-automaton.mjs",
     "audit:seo-geo": "node scripts/audit-seo-geo-v1579.mjs",
     "indexnow:submit": "node scripts/indexnow-submit-v1579.mjs",
@@ -37,7 +28,8 @@
     "engine:license": "node scripts/local-engine/verify-license-registry.mjs",
     "engine:graphs": "node scripts/local-engine/verify-stage-graphs.mjs",
     "engine:ready": "node scripts/local-engine/production-readiness.mjs",
-    "nutrition:prepare:usda-copy": "node scripts/nutrition/prepare-usda-copy.mjs"
+    "nutrition:prepare:usda-copy": "node scripts/nutrition/prepare-usda-copy.mjs",
+    "test:retirement-byok": "node scripts/test-retirement-byok.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",

@@ -17,3 +17,4 @@ export async function GET(){
  if(!data)return NextResponse.json({error:"邀请码生成失败"},{status:500});
  return NextResponse.json({code:data.code,url:`https://lingxifield.com/ai-wallet?ref=${encodeURIComponent(data.code)}`});
 }
+export const dynamic = "force-dynamic";
