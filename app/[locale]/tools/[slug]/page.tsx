@@ -1,3 +1,4 @@
+import { SHARE_IMAGES, SHARE_IMAGE_URL } from "@/lib/share-image";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {notFound} from "next/navigation";
@@ -9,7 +10,7 @@ export function generateMetadata({params}:Props):Metadata{
  if(!isSeoLocale(params.locale)||params.locale==="zh")return {};
  const tool=getGlobalTool(params.slug);if(!tool)return {};
  const locale=params.locale,c=SEO_LOCALES[locale];
- return {title:`${toolTitle(locale,tool)} | LINGXIFIELD`,description:toolDescription(locale,tool),keywords:toolKeywords(locale,tool),alternates:{canonical:localePath(locale,`/tools/${tool.slug}`),languages:languageAlternates(`/tools/${tool.slug}`)},openGraph:{title:toolTitle(locale,tool),description:toolDescription(locale,tool),url:localePath(locale,`/tools/${tool.slug}`),siteName:"LINGXIFIELD",type:"website"}};
+ return {title:`${toolTitle(locale,tool)} | LINGXIFIELD`,description:toolDescription(locale,tool),keywords:toolKeywords(locale,tool),alternates:{canonical:localePath(locale,`/tools/${tool.slug}`),languages:languageAlternates(`/tools/${tool.slug}`)},twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL]},openGraph:{images:SHARE_IMAGES,title:toolTitle(locale,tool),description:toolDescription(locale,tool),url:localePath(locale,`/tools/${tool.slug}`),siteName:"LINGXIFIELD",type:"website"}};
 }
 export default function LocalizedTool({params}:Props){
  if(!isSeoLocale(params.locale)||params.locale==="zh")notFound();

@@ -1,3 +1,4 @@
+import { SHARE_IMAGES, SHARE_IMAGE_URL } from "@/lib/share-image";
 import type {Metadata} from "next";
 import Link from "next/link";
 import {notFound} from "next/navigation";
@@ -8,7 +9,7 @@ export function generateStaticParams(){return LOCALIZED_LOCALES.map(locale=>({lo
 export function generateMetadata({params}:Props):Metadata{
  if(!isSeoLocale(params.locale)||params.locale==="zh")return {};
  const locale=params.locale,c=SEO_LOCALES[locale];
- return {title:`${c.homeTitle} | LINGXIFIELD`,description:c.homeDesc,keywords:[...c.searchTerms],alternates:{canonical:localePath(locale,"/"),languages:languageAlternates("/")},openGraph:{title:c.homeTitle,description:c.homeDesc,url:localePath(locale,"/"),siteName:"LINGXIFIELD",type:"website"}};
+ return {title:`${c.homeTitle} | LINGXIFIELD`,description:c.homeDesc,keywords:[...c.searchTerms],alternates:{canonical:localePath(locale,"/"),languages:languageAlternates("/")},twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL]},openGraph:{images:SHARE_IMAGES,title:c.homeTitle,description:c.homeDesc,url:localePath(locale,"/"),siteName:"LINGXIFIELD",type:"website"}};
 }
 export default function LocalizedHome({params}:Props){
  if(!isSeoLocale(params.locale)||params.locale==="zh")notFound();

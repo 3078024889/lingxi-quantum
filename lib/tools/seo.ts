@@ -1,3 +1,4 @@
+import { SHARE_IMAGES, SHARE_IMAGE_URL } from "@/lib/share-image";
 import type { Metadata } from "next";
 import { getTool } from "@/lib/tools/registry";
 
@@ -69,8 +70,8 @@ export function buildToolMetadata(slug:string):Metadata{
   description:seo.description,
   keywords:seo.keywords,
   alternates:{canonical},
-  openGraph:{type:"website",url:`${SITE}${canonical}`,title:`${seo.title}｜灵犀场 LINGXIFIELD`,description:seo.description},
-  twitter:{card:"summary",title:`${seo.title}｜灵犀场 LINGXIFIELD`,description:seo.description},
+  openGraph:{images:SHARE_IMAGES,type:"website",url:`${SITE}${canonical}`,title:`${seo.title}｜灵犀场 LINGXIFIELD`,description:seo.description},
+  twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL],title:`${seo.title}｜灵犀场 LINGXIFIELD`,description:seo.description},
   robots:{index:true,follow:true,"max-snippet":-1,"max-image-preview":"large"},
  };
 }

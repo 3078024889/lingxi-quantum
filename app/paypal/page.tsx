@@ -1,3 +1,4 @@
+import { SHARE_IMAGES, SHARE_IMAGE_URL } from "@/lib/share-image";
 import type {Metadata} from "next";
 import Link from "next/link";
 import Nav from "@/components/Nav";
@@ -10,7 +11,7 @@ export const metadata:Metadata={
   title:"PayPal USD Payments | LINGXIFIELD 灵犀场",
   description:"Use PayPal to top up USD balances for LINGXIFIELD AI and SASI creation services. USD stays USD and is credited at face value after verified payment.",
   alternates:{canonical:"/paypal"},
-  openGraph:{title:"PayPal USD Payments | LINGXIFIELD",description:"Pay with PayPal for AI and SASI creation services on LINGXIFIELD.",url:"https://lingxifield.com/paypal",siteName:"LINGXIFIELD",type:"website"},
+  twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL]},openGraph:{images:SHARE_IMAGES,title:"PayPal USD Payments | LINGXIFIELD",description:"Pay with PayPal for AI and SASI creation services on LINGXIFIELD.",url:"https://lingxifield.com/paypal",siteName:"LINGXIFIELD",type:"website"},
   robots:{index:true,follow:true},
 };
 

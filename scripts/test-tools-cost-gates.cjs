@@ -1,0 +1,16 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const ts=require('typescript');
+const vm=require('node:vm');
+const source=fs.readFileSync('lib/tools/service-readiness.ts','utf8');
+const box={exports:{},process:{env:{}},require:()=>({r2Ready:()=>false})};
+vm.runInNewContext(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,box);
+assert.equal(box.exports.toolRuntimeState('video-dubbing').ready,false);
+assert.equal(box.exports.toolRuntimeState('sasi-video-generate').ready,false);
+assert.equal(box.exports.toolRuntimeState('pdf-editor').ready,true);
+assert.equal(box.exports.toolRuntimeState('sasi-image-generate').ready,false);
+const subtitle=fs.readFileSync('components/tools/SubtitleTranslateWorkbench.tsx','utf8');
+assert(!subtitle.includes('value="auto"'));
+assert(subtitle.includes('{out&&'));
+assert(!fs.readFileSync('components/tools/VideoDubbingWorkbench.tsx','utf8').includes('PaidActionButton'));
+console.log('UNFINISHED_MEDIA_COST_GATES_PASS');

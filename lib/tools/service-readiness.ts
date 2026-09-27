@@ -21,6 +21,8 @@ function nativeConfigured(){
 export function isSasiNativeTool(toolId:string){return SASI_NATIVE.has(toolId)}
 
 export function toolRuntimeState(toolId:string):ToolRuntimeState{
+  if(toolId==="video-dubbing")return{ready:false,mode:"local",reason:"DUBBED_VIDEO_EXPORT_NOT_IMPLEMENTED"};
+  if(toolId==="sasi-video-generate")return{ready:false,mode:"compute",reason:"VIDEO_BYOK_REQUIRED"};
   if(LOCAL_PAID.has(toolId))return{ready:true,mode:"local"};
   if(toolId==="burn-after-read-file")return r2Ready()?{ready:true,mode:"r2"}:{ready:false,mode:"r2",reason:"PRIVATE_STORAGE_NOT_READY"};
   if(SASI_NATIVE.has(toolId))return nativeConfigured()?{ready:true,mode:"compute"}:{ready:false,mode:"compute",reason:"SASI_NATIVE_COMPUTE_NOT_READY"};
