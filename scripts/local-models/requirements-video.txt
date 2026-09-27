@@ -1,0 +1,13 @@
+# Separate experimental environment. CUDA build must support the actual GPU.
+# Do not upgrade a working GPU environment automatically.
+torch>=2.6,<3
+transformers>=4.44,<5
+diffusers>=0.30.1,<0.36
+accelerate>=0.33,<2
+huggingface_hub>=0.30,<1
+safetensors>=0.5
+sentencepiece>=0.2
+imageio-ffmpeg>=0.5.1
+imageio>=2.37
+Pillow>=11
+psutil>=7
