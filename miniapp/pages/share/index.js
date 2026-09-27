@@ -12,6 +12,6 @@ Page({
  },
  copyLink(){wx.setClipboardData({data:this.data.webUrl})},
  back(){if(getCurrentPages().length>1)wx.navigateBack();else wx.switchTab({url:'/pages/tools/index'})},
- onShareAppMessage(){return{title:this.data.title,path:`/pages/web/index?path=${encodeURIComponent(this.data.webPath)}`,imageUrl:`${SITE}/og-lingxifield-20260925.jpg`}},
- onShareTimeline(){return{title:this.data.title,query:`path=${encodeURIComponent(this.data.webPath)}`,imageUrl:`${SITE}/og-lingxifield-20260925.jpg`}}
+ onShareAppMessage(){return{title:this.data.title,path:`/pages/web/index?path=${encodeURIComponent(this.data.webPath)}`,imageUrl:`${SITE}/assets/share-lingxifield-20260927.png`}},
+ onShareTimeline(){return{title:this.data.title,query:`path=${encodeURIComponent(this.data.webPath)}`,imageUrl:`${SITE}/assets/share-lingxifield-20260927.png`}}
 })

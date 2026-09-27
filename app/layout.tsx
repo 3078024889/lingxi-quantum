@@ -8,7 +8,7 @@ import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider"
 import SiteStructuredData from "@/components/SiteStructuredData";
 
 const SITE="https://lingxifield.com";
-const SHARE_IMAGE=`${SITE}/og-lingxifield-20260925.jpg`;
+const SHARE_IMAGE=`${SITE}/og-lingxifield-20260927.png`;
 
 export const metadata:Metadata={
  metadataBase:new URL(SITE),

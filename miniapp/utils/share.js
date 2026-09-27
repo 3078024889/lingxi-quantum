@@ -1,5 +1,5 @@
-const SITE = 'https://lingxifield.cn'
-const SHARE_IMAGE = `${SITE}/og-lingxifield-20260925.jpg`
+﻿const SITE = 'https://lingxifield.cn'
+const SHARE_IMAGE = "/assets/share-lingxifield-20260927.png"
 
 const PRIVATE_PREFIXES = [
   '/account',
@@ -70,3 +70,4 @@ module.exports = {
   appMessage,
   timeline,
 }
+

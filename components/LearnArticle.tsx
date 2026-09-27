@@ -27,7 +27,7 @@ export default function LearnArticle({ data }: { data: ArticleData }) {
     alternativeHeadline: data.titleEn,
     description: data.defZh,
     inLanguage: ["zh-CN", "en"],
-    image: "https://lingxifield.com/og.png",
+    image: "https://lingxifield.com/og-lingxifield-20260927.png",
     author: { "@type": "Organization", name: "灵犀场 LingxiField", url: "https://lingxifield.com" },
     publisher: {
       "@type": "Organization",
