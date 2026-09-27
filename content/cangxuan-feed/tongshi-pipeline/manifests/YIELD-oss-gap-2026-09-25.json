@@ -1,0 +1,47 @@
+{
+  "at": "2026-09-25T07:10+08:00",
+  "n_cards": 200,
+  "file": "tongshi-oss-gap-2026-09-25.jsonl",
+  "bytes": 106397,
+  "sha256": "abf984f0bb9309e39ae03800fff139531e9fbbf7bde0c96293837d1d28cbd828",
+  "sources": [
+    "Wikidata SPARQL labels/descriptions (CC0-1.0)",
+    "OT-02-wikidata on-box entities (CC0-1.0)",
+    "OpenStax CMS books API (CC BY 4.0)",
+    "Project Gutenberg classics via on-box cangxuan batches (Public Domain)"
+  ],
+  "licenses_allowed": [
+    "CC0-1.0",
+    "CC BY 4.0",
+    "CC BY-SA 4.0",
+    "Public Domain"
+  ],
+  "anti_theater": true,
+  "batch_cap": 200,
+  "focus": "competence gaps only: geo/math/philosophy/linguistics/economics/art_lit/cs_tech",
+  "by_gap_bucket": {
+    "world_geo": 44,
+    "china_geo": 7,
+    "earth_science": 7,
+    "math": 34,
+    "philosophy": 33,
+    "linguistics": 24,
+    "economics": 20,
+    "art_lit": 20,
+    "cs_tech": 11
+  },
+  "by_kind": {
+    "通识-地理": 58,
+    "通识-科学": 122,
+    "通识-历史": 20
+  },
+  "by_license": {
+    "CC0-1.0": 150,
+    "CC BY 4.0": 50
+  },
+  "hosts": {
+    "www.wikidata.org": 150,
+    "openstax.org": 47,
+    "cnx.org": 3
+  }
+}

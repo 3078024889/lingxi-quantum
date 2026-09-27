@@ -1,0 +1,33 @@
+{
+  "at": "2026-09-24T23:25+08:00",
+  "n_cards": 147,
+  "approx_a4_pages_text": 26.0,
+  "chars": 38979,
+  "by_kind": {
+    "通识-历史": 55,
+    "通识-科学": 73,
+    "通识-地理": 19
+  },
+  "log": [
+    "Category:中国历史:20",
+    "Category:中国朝代:4",
+    "Category:战争:35",
+    "Category:物理学:3",
+    "Category:化学:14",
+    "Category:生物学:46",
+    "Category:天文学:12",
+    "Category:中国地理:21",
+    "Category:世界地理:0"
+  ],
+  "file": "/workspace/uploads/tongshi-pipeline/compressed/cards/tongshi-science-hist-geo-2026-09-24.jsonl",
+  "origin": "box-offline",
+  "anti_theater": true,
+  "sync_pending": false,
+  "synced_to_D": true,
+  "curriculum_ingest_at": "2026-09-25T06:48+08:00",
+  "dest_paths": [
+    "/workspace/copernicus-twentywatts/body/imports/tongshi-pipeline/compressed/cards/tongshi-science-hist-geo-2026-09-24.jsonl",
+    "/workspace/out-to-ershiwatt-sync/sasi-curriculum-feed/tongshi-pipeline/compressed/cards/tongshi-science-hist-geo-2026-09-24.jsonl",
+    "D:\\copernicus-twentywatts\\body\\imports\\tongshi-pipeline\\compressed\\cards\\tongshi-science-hist-geo-2026-09-24.jsonl"
+  ]
+}

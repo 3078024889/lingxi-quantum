@@ -1,7 +1,7 @@
 {
-  "name": "灵犀场 LINGXIFIELD · 场智能数字空间",
+  "name": "灵犀场 LINGXIFIELD · SASI 与实用工具",
   "short_name": "灵犀场 LINGXIFIELD",
-  "description": "一个把想法、资料和日常问题真正处理起来的场智能数字空间。实用工具、SASI、知识工作区与场域体验，从同一个入口开始。",
+  "description": "SASI 创作与构建、资料整理、学习研究，以及 PDF、图片、视频、字幕、临时邮箱、阅后即焚等实用工具。",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

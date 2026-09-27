@@ -35,3 +35,11 @@ node_modules/
 .tmp-v1588-*/
 *.v1586_*.bak
 *.v1587_*.bak
+\nimports/**/Codex-Desktop-Backup*/\n**/chrome-cdp-profile/\n**/BrowserMetrics/\n**/Crashpad/\n
+/*.log
+/.*.log
+/*.tmp
+/.*.tmp
+/.v*-acceptance-server*
+/docs/runtime-audit-*/
+/reports/

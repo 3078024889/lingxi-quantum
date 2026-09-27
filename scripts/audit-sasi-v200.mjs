@@ -58,8 +58,27 @@ must(migration.includes("create table if not exists public.sasi_native_entitleme
 for(const id of ["sasi-deep-reason","sasi-image-generate","sasi-video-generate"])must(migration.includes(`'${id}'`),`SASI_PRICE_MISSING:${id}`);
 
 const mini=read("miniapp/pages/tools/index.wxml");
-must(mini.includes("微信支付"),"MINI_TOOL_PAYMENT_EXPLANATION_MISSING");
-must(mini.includes("免费使用"),"MINI_FREE_TOOL_LABEL_MISSING");
+
+// Legacy V20 copy explicitly named WeChat Pay.
+// V21 intentionally changed this because USD uses a different provider.
+// Require a truthful payment explanation, not a provider-specific phrase.
+const hasLegacyWechatExplanation=mini.includes("微信支付");
+const hasCurrencyAwareExplanation=
+ mini.includes("当前币种可用的付款方式")||
+ mini.includes("可用的付款方式")||
+ mini.includes("付款方式");
+must(hasLegacyWechatExplanation||hasCurrencyAwareExplanation,"MINI_TOOL_PAYMENT_EXPLANATION_MISSING");
+
+// Legacy copy said "免费使用"; V21 says "免费功能直接使用".
+// Both express the same product requirement: free tools must remain directly usable.
+const hasFreeExperience=
+ mini.includes("免费使用")||
+ mini.includes("免费功能直接使用")||
+ mini.includes("免费功能可直接");
+must(hasFreeExperience,"MINI_FREE_TOOL_LABEL_MISSING");
+
+// Do not allow list-price regression while modernizing wording.
+must(!mini.includes("item.price"),"MINI_TOOL_LIST_PRICE_RETURNED");
 
 console.log("SASI_COGNITIVE_GROUNDED_REASONING=PASS");
 console.log("SASI_NATIVE_REASONING_WIRED_TO_BOOKS=PASS");
@@ -69,6 +88,7 @@ console.log("SASI_NATIVE_PAYMENT_GATE=PASS");
 console.log("SASI_NATIVE_SINGLE_USE_ENTITLEMENT=PASS");
 console.log("MINI_NATIVE_WECHAT_PAYMENT_BRIDGE=PASS");
 console.log("MINI_PAYMENT_RETURN_RECOVERY=PASS");
+console.log("MINI_CURRENCY_AWARE_PAYMENT_COPY=PASS");
 console.log("PAID_TOOL_CATALOG_CONVERGENCE=PASS");
 console.log("FREE_TOOL_EXPERIENCE_PRESERVED=PASS");
 console.log("AUDIT_SASI_V200=PASS");

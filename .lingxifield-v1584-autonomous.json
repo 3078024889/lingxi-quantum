@@ -1,0 +1,107 @@
+{
+  "version": "V15.84",
+  "appliedAt": "2026-09-26T04:41:42.542Z",
+  "repo": "D:\\lingxi-quantum",
+  "overlayFiles": [
+    {
+      "path": "app/api/knowledge/ask/route.ts",
+      "sha256": "7baaf7645026f295a7d0b0856864735daee05f6ae418aed4a21d9dbca8bc3cbe"
+    },
+    {
+      "path": "app/api/sasi/autonomous/route.ts",
+      "sha256": "65584f663c24f9a802c2c8bdbf62cd1db4a8a2c3ab333cf29fe5ee6ed40eeb2a"
+    },
+    {
+      "path": "app/sasi/chat/page.tsx",
+      "sha256": "4179045d0ec6d9a3248279b4094f1f24fbf3681835fd0c4e12aa344d001140ff"
+    },
+    {
+      "path": "app/sasi/drama/page.tsx",
+      "sha256": "577e3ecd41360570dd95bb90a8323e8eac6fc17582fd527b994a41a7621fdade"
+    },
+    {
+      "path": "components/SasiAutonomousChat.tsx",
+      "sha256": "226b1ef30d0d0801142ad9531ac625005db95b752a71e729c05b560b2579fb88"
+    },
+    {
+      "path": "components/SasiAutonomousVideoStudio.tsx",
+      "sha256": "8623aa645c6deee97db390b3049370461e5911525e071e9295b4529947180480"
+    },
+    {
+      "path": "lib/sasi-autonomous/graph.ts",
+      "sha256": "55f915c68c280c58c6d2e665b8abd7ab63bd15f3711976453e5a44f45c1ebf9f"
+    },
+    {
+      "path": "lib/sasi-autonomous/knowledge/answer.ts",
+      "sha256": "e62010558d92f4b5d01648661a9adce43a7b409e313f3391370ca5b4d4a9d022"
+    },
+    {
+      "path": "lib/sasi-autonomous/knowledge/capability.ts",
+      "sha256": "e6a15934892420211dba97837f4f1af12397e75c9da30407f594e5cb36531864"
+    },
+    {
+      "path": "lib/sasi-autonomous/knowledge/hybrid-index.ts",
+      "sha256": "a492b6408dc3b8db7bc2c8df673eadc72d7604563da842a2c341c4f0aba02666"
+    },
+    {
+      "path": "lib/sasi-autonomous/knowledge/intent.ts",
+      "sha256": "cd01cae5e654abcf479cc3ba4bc76406c9b06bbb9d22b4796964cdb09e2758c8"
+    },
+    {
+      "path": "lib/sasi-autonomous/knowledge/tokenize.ts",
+      "sha256": "a087ae4fcdd999031ce074bc25fe3c9cf692ac8ecb6c0b9dfbb3d4ee906581a7"
+    },
+    {
+      "path": "lib/sasi-autonomous/optional-external.ts",
+      "sha256": "9bc5aef4f03ba45820341b713b3af9b22ded63566ba96e54bc91d2b17f8878a6"
+    },
+    {
+      "path": "lib/sasi-autonomous/router.ts",
+      "sha256": "d70227da5697e929ef0e534d873feaa24e3f97e1401aeba5abd818a2886f5adb"
+    },
+    {
+      "path": "lib/sasi-autonomous/runtime.ts",
+      "sha256": "51f625917eeedb447ee1be45da0be7c8e3930e8bc8126e9fcc5bcb1a54daa842"
+    },
+    {
+      "path": "lib/sasi-autonomous/types.ts",
+      "sha256": "9a4d7e478d5237e0b8f5cb3d7c05e5b1b52939413fe357bf0e77713cf675ca37"
+    },
+    {
+      "path": "lib/sasi-autonomous/utility/capability.ts",
+      "sha256": "19fa44372bf4885fce369fb956cd9c6a45e5548d901a3d9b8275729a1bf7015b"
+    },
+    {
+      "path": "lib/sasi-autonomous/validation.ts",
+      "sha256": "8e28dc8fe03563f5ab39839a79cfa4998f60646c01b09f7551122303efb55205"
+    },
+    {
+      "path": "lib/sasi-autonomous/video/capability.ts",
+      "sha256": "284ecf5124e8f256055d88e6ee78128166056245e4235fde65daac9eece27865"
+    },
+    {
+      "path": "lib/sasi-autonomous/video/script.ts",
+      "sha256": "7a4ecd029e74dc3553a243c3dd08783bb3ab8c970d5af421abdc86105108a86a"
+    },
+    {
+      "path": "lib/sasi-autonomous/video/timeline.ts",
+      "sha256": "a1216e615a25a3916e55e93d71ea73c940cd26d6b209588f94ceadf05ed5da5e"
+    },
+    {
+      "path": "scripts/audit-v1584-autonomous.mjs",
+      "sha256": "ec5917d7181b0b2547134e7304f5602fc86a18ca8aeea68758620902fb53f4aa"
+    },
+    {
+      "path": "scripts/audit-v1584-tools-runtime.mjs",
+      "sha256": "ccac5f2bdd245b9cb0c61d8e658a5dc454b2c5012f5c051a714549ca759d049a"
+    },
+    {
+      "path": "scripts/smoke-v1584-local.mjs",
+      "sha256": "76a9e7e76a556e7ff2e6f028e702ebb306681d2303f77e63c3bdd93957ecede3"
+    }
+  ],
+  "ffmpegAssets": [
+    "public/media/ffmpeg-0.12.10/ffmpeg-core.js",
+    "public/media/ffmpeg-0.12.10/ffmpeg-core.wasm"
+  ]
+}

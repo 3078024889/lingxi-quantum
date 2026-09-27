@@ -5,7 +5,7 @@ const RETIRED_EXACT=new Set([
  "/learn","/glossary","/live-as","/subconscious","/practice","/field-tests",
  "/life-map","/relationship","/qian","/mirror","/tarot","/resilience","/romance",
  "/daily","/wealth","/archetype","/mini-report","/membership","/origin","/dream",
- "/declaration","/narrative","/tools/number-energy"
+ "/declaration","/narrative","/tools/number-energy","/gate","/field","/manifestation","/consciousness","/inner-sovereignty","/learn/inner-sovereignty","/gate","/field","/manifestation","/consciousness"
 ]);
 
 const RETIRED_PREFIXES=[

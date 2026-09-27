@@ -71,7 +71,7 @@ const COPY = {
   askSource:c("询问资料","Ask sources","資料に質問","자료 질문","Interroger les sources","Quellen befragen","Preguntar a las fuentes","Perguntar às fontes","اسأل المصادر"),
   askBatch:c("直接问这批资料","Ask this collection directly","この資料群に直接質問","이 자료 묶음에 직접 질문","Interroger directement cette collection","Diese Sammlung direkt befragen","Preguntar directamente a esta colección","Perguntar diretamente a esta coleção","اسأل هذه المجموعة مباشرة"),
   smart:c("智能模式","Intelligence mode","知能モード","지능 모드","Mode d’intelligence","Intelligenzmodus","Modo de inteligencia","Modo de inteligência","وضع الذكاء"),
-  billed:c("实际按本次模型用量结算","Billed by actual model usage","今回の実際のモデル使用量で精算","이번 실제 모델 사용량으로 정산","Facturé selon l’usage réel du modèle","Abrechnung nach tatsächlicher Modellnutzung","Cobro según el uso real del modelo","Cobrado pelo uso real do modelo","تُحاسب حسب الاستخدام الفعلي للنموذج"),
+  billed:c("当前资料问答不扣创作余额","Source Q&A currently does not deduct creation balance","現在の資料Q&Aでは残高を消費しません","현재 자료 Q&A는 창작 잔액을 차감하지 않습니다","Les Q&R sur les sources ne déduisent actuellement pas le solde","Quellen-Q&A zieht derzeit kein Guthaben ab","Las preguntas sobre fuentes no descuentan saldo actualmente","Perguntas sobre fontes não descontam saldo atualmente","لا تخصم أسئلة المصادر من الرصيد حاليًا"),
   light:c("轻量","Light","軽量","라이트","Léger","Leicht","Ligero","Leve","خفيف"),
   standard:c("标准","Standard","標準","표준","Standard","Standard","Estándar","Padrão","قياسي"),
   high:c("高智能","High intelligence","高知能","고지능","Haute intelligence","Hohe Intelligenz","Alta inteligencia","Alta inteligência","ذكاء عالٍ"),
@@ -152,30 +152,14 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   const [busy,setBusy]=useState(false);
   const [askBusy,setAskBusy]=useState(false);
   const [intelligence,setIntelligence]=useState<Intelligence>("standard");
+  const [lastIntelligence,setLastIntelligence]=useState<Intelligence|null>(null);
   const [ready,setReady]=useState(false);
   const [copied,setCopied]=useState(false);
-  const [walletBalance,setWalletBalance]=useState<number|null>(null);
-  const [tierPricing,setTierPricing]=useState<Record<Intelligence,{factor:number;minimumRmb:number}>|null>(null);
-  const [lastCharge,setLastCharge]=useState<number|null>(null);
-  const [lastIntelligence,setLastIntelligence]=useState<Intelligence|null>(null);
-  const [needsRecharge,setNeedsRecharge]=useState(false);
 
   useEffect(()=>{
     readSources().then(rows=>{setSources(rows);setReady(true)})
       .catch(()=>setNotice(tr(lang,"browserUnavailable")));
   },[lang]);
-  useEffect(()=>{
-    let alive=true;
-    Promise.all([
-      fetch("/api/knowledge/pricing",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch("/api/ai/wallet",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-    ]).then(([pricing,wallet])=>{
-      if(!alive)return;
-      if(pricing?.tiers)setTierPricing(pricing.tiers);
-      if(Number.isFinite(Number(wallet?.balanceRmb)))setWalletBalance(Number(wallet.balanceRmb));
-    });
-    return()=>{alive=false};
-  },[]);
 
   const activeQuery=(query||question).trim();
   const draftSource=useMemo<KnowledgeSource|null>(()=>{
@@ -302,7 +286,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   async function ask(){
     const q=question.trim();if(!q)return;
     if(!results.length){setNotice(tr(lang,"noEvidence"));return}
-    setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setNeedsRecharge(false);setLastCharge(null);setLastIntelligence(null);setNotice(tr(lang,"sending"));
+    setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
       const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
         question:q,mode,intelligence,evidence:results.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
@@ -311,15 +295,10 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
       setLearningEventId(String(data.learningEventId||""));
-      const charged=typeof data.chargedRmb==="number"?data.chargedRmb:NaN;
-      if(Number.isFinite(charged)){setLastCharge(charged);setWalletBalance(v=>v===null?v:Math.max(0,v-charged))}
       setLastIntelligence((data.intelligence||intelligence) as Intelligence);
-      setNotice(Number.isFinite(charged)
-        ? `${tr(lang,"done")} · ¥${charged.toFixed(2)}`
-        : tr(lang,"done"));
+      setNotice(tr(lang,"done"));
     }catch(e:unknown){
       const message=e instanceof Error?e.message:tr(lang,"aiFailed");
-      if(message.includes("余额不足"))setNeedsRecharge(true);
       setNotice(message);
     }
     finally{setAskBusy(false)}
@@ -374,10 +353,6 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     {value:"high",label:tr(lang,"high"),factor:"5×",help:tr(lang,"highHelp")},
   ];
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
-  const selectedPrice=tierPricing?.[intelligence]?.minimumRmb;
-  void selectedPrice;
-  void walletBalance;
-  const knownInsufficient=false;
 
   return <section className="mt-8 space-y-6 lx-knowledge-workspace">
     <div className="lx-knowledge-privacy rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm leading-7 text-[var(--lx-muted)]">
@@ -445,7 +420,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
           </div>
           <article className="lx-knowledge-answer-body">{answer}</article>
           <div className="lx-knowledge-answer-foot">
-            {lastCharge!==null&&<span>{lang==="zh"?"本次使用费用":"Usage cost"}：¥{lastCharge.toFixed(2)}</span>}
+            <span>{lang==="zh"?"当前资料问答不扣创作余额":"Source Q&A currently does not deduct creation balance"}</span>
             <span>{lang==="zh"?`当前智能档位 ${selectedTier.factor}`:`Mode ${selectedTier.factor}`}</span>
           </div>
         </div>}

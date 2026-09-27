@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {requireMiniSession} from "@/lib/mini/session";
-import {toolRuntimeState} from "@/lib/tools/service-readiness";
+import {toolRuntimeStateLive} from "@/lib/tools/service-readiness";
 import {createMiniJsapiOrder,buildMiniRequestPayment,miniJsapiPayConfigured} from "@/lib/mini/tool-pay";
 
 export const runtime="nodejs";export const maxDuration=30;
@@ -18,7 +18,7 @@ export async function POST(req:Request){
  if(q.status==="paid")return NextResponse.json({paid:true});
  if(q.currency!=="CNY")return NextResponse.json({error:"小程序内使用人民币结算；美元支付请在浏览器打开 lingxifield.com。"},{status:409});
  if(new Date(q.expires_at).getTime()<Date.now())return NextResponse.json({error:"这次价格已经过期，请重新确认。"},{status:410});
- if(!toolRuntimeState(String(q.tool_id||"")).ready)return NextResponse.json({error:"这项服务暂时无法处理，不会产生费用。"},{status:503});
+ const liveRuntime=await toolRuntimeStateLive(String(q.tool_id||""));if(!liveRuntime.ready)return NextResponse.json({error:"这项服务暂时无法处理，不会产生费用。"},{status:503});
 
  const claimed=await admin.from("tool_payment_quotes").update({status:"ordered"}).eq("id",q.id).eq("status","quoted").select("id").maybeSingle();
  if(!claimed.data){

@@ -5,6 +5,7 @@ import {PDFDocument,rgb,degrees} from "pdf-lib";
 import {openPdf,renderPdfPage} from "@/lib/tools/pdf-render-client";
 import {pdfExportPrice} from "@/lib/tools/export-pricing";
 import PaidExportButton from "@/components/tools/PaidExportButton";
+import {downloadBlob} from "@/lib/tools/shared/download";
 
 type Overlay={
   id:number;kind:"text"|"cover"|"image";page:number;
@@ -46,20 +47,6 @@ async function textPng(text:string,size=28){
 function blobBytes(bytes:Uint8Array){
   const copy=new Uint8Array(bytes.length);copy.set(bytes);
   return new Blob([copy.buffer],{type:"application/pdf"});
-}
-function isMiniWebView(){
-  try{return new URLSearchParams(location.search).get("mini")==="1"&&/MicroMessenger/i.test(navigator.userAgent||"")}catch{return false}
-}
-function savePdf(blob:Blob,name:string){
-  const url=URL.createObjectURL(blob);
-  // WeChat WebView often ignores download=. Open the generated PDF so the user can use the native share/save menu.
-  if(isMiniWebView()){
-    window.open(url,"_blank");
-    setTimeout(()=>URL.revokeObjectURL(url),60_000);
-    return;
-  }
-  const a=document.createElement("a");a.href=url;a.download=name;a.rel="noopener";document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),4000);
 }
 
 export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boolean}){
@@ -197,7 +184,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
     setBusy(true);setError("");
     try{
       const bytes=await build();
-      savePdf(blobBytes(bytes),`lingxifield-${file?.name||"edited.pdf"}`);
+      await downloadBlob(blobBytes(bytes),`lingxifield-${file?.name||"edited.pdf"}`);
     }catch(e){setError(e instanceof Error?e.message:"文件没有生成成功")}
     finally{setBusy(false)}
   }

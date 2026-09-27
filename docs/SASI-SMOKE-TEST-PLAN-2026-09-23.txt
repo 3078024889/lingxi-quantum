@@ -1,0 +1,9 @@
+﻿SASI V10.18 PROVIDER SMOKE TEST PLAN
+Generated: 2026-09-23T12:40:39
+
+seedance | NOT_CONFIGURED |
+xai | NOT_CONFIGURED | grok-imagine-video-1.5
+openai | NOT_CONFIGURED | sora-2
+wan | NOT_CONFIGURED | wan2.7-t2v
+
+BEST_CANDIDATE=NONE

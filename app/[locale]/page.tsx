@@ -1,0 +1,24 @@
+import type {Metadata} from "next";
+import Link from "next/link";
+import {notFound} from "next/navigation";
+import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,languageAlternates,localePath,SEO_TOPICS,type SeoLocale} from "@/lib/seo/global-seo";
+
+type Props={params:{locale:string}};
+export function generateStaticParams(){return LOCALIZED_LOCALES.map(locale=>({locale}))}
+export function generateMetadata({params}:Props):Metadata{
+ if(!isSeoLocale(params.locale)||params.locale==="zh")return {};
+ const locale=params.locale,c=SEO_LOCALES[locale];
+ return {title:`${c.homeTitle} | LINGXIFIELD`,description:c.homeDesc,keywords:[...c.searchTerms],alternates:{canonical:localePath(locale,"/"),languages:languageAlternates("/")},openGraph:{title:c.homeTitle,description:c.homeDesc,url:localePath(locale,"/"),siteName:"LINGXIFIELD",type:"website"}};
+}
+export default function LocalizedHome({params}:Props){
+ if(!isSeoLocale(params.locale)||params.locale==="zh")notFound();
+ const locale=params.locale as SeoLocale,c=SEO_LOCALES[locale];
+ return <main dir={c.dir} style={{maxWidth:1040,margin:"0 auto",padding:"48px 24px",fontFamily:"system-ui"}}>
+  <header><Link href="/" style={{textDecoration:"none"}}><b>{c.brand}</b></Link></header>
+  <section style={{padding:"64px 0 36px"}}><h1 style={{fontSize:"clamp(34px,6vw,64px)",lineHeight:1.08,margin:0}}>{c.homeTitle}</h1><p style={{fontSize:19,lineHeight:1.8,maxWidth:820}}>{c.homeDesc}</p></section>
+  <section><h2>{c.toolsTitle}</h2><p>{c.toolsDesc}</p><Link href={localePath(locale,"/tools")}>{c.allTools} →</Link></section>
+  <section style={{marginTop:44}}><h2>SASI</h2><p>{c.topicIntro}</p><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:12}}>
+   {(Object.keys(SEO_TOPICS) as Array<keyof typeof SEO_TOPICS>).map(topic=><Link key={topic} href={localePath(locale,`/discover/${topic}`)} style={{padding:18,border:"1px solid currentColor",borderRadius:16,textDecoration:"none"}}>{SEO_TOPICS[topic][locale]} →</Link>)}
+  </div></section>
+ </main>
+}

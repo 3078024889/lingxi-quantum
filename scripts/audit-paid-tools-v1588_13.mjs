@@ -35,12 +35,33 @@ const legacyMiniPriceUi=
   miniJs.includes("/api/tools/pricing")
   && miniWxml.includes("item.price");
 
+// V21 policy: tools hub must not prefetch/show prices.
+// The explanation must say:
+// 1) prices appear only before real execution/export,
+// 2) the list does not show advance prices,
+// 3) the user then goes to an available payment method for the selected currency.
+// Do not force the old provider-specific "微信支付" string because USD does not use WeChat Pay.
+const hasDeferredMoment=
+  miniWxml.includes("真正执行或导出前") ||
+  miniWxml.includes("执行或导出前") ||
+  miniWxml.includes("实际使用时");
+
+const hasNoListPrice=
+  miniWxml.includes("工具列表不提前展示价格") ||
+  miniWxml.includes("列表不提前展示价格") ||
+  miniWxml.includes("工具列表不显示价格");
+
+const hasPaymentMethodExplanation=
+  miniWxml.includes("当前币种可用的付款方式") ||
+  miniWxml.includes("可用的付款方式") ||
+  miniWxml.includes("付款方式");
+
 const deferredPricingUi=
   !miniJs.includes("loadPrices")
   && !miniWxml.includes("item.price")
-  && miniWxml.includes("真正执行或导出前")
-  && miniWxml.includes("微信支付")
-  && miniWxml.includes("工具列表不提前展示价格");
+  && hasDeferredMoment
+  && hasNoListPrice
+  && hasPaymentMethodExplanation;
 
 must(legacyMiniPriceUi||deferredPricingUi,"MINI_PRICING_POLICY_MISSING");
 
@@ -51,6 +72,7 @@ console.log("WEB_PRICE_VISIBILITY=PASS");
 if(deferredPricingUi){
   console.log("MINI_PRICE_LIST=HIDDEN_BY_POLICY");
   console.log("MINI_DEFERRED_PRICING_EXPLANATION=PASS");
+  console.log("MINI_CURRENCY_AWARE_PAYMENT_EXPLANATION=PASS");
 }else{
   console.log("MINI_PRICE_VISIBILITY=PASS");
 }

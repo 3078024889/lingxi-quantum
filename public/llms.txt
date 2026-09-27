@@ -1,48 +1,33 @@
-# 灵犀场 LINGXIFIELD
+# LINGXIFIELD / 灵犀场
 
-> 灵犀场是一个让想法被理解、让问题被处理、让结果真正发生的数字工作空间。当前核心产品是 SASI 创作与构建、资料知识、学习研究，以及打开即可使用的文件与日常工具。
+> LINGXIFIELD is a multilingual productivity platform for SASI creation, AI-agent workspaces, and practical online tools.
 
 Canonical site: https://lingxifield.com
 Chinese access domain: https://lingxifield.cn
-Brand: 灵犀场 LINGXIFIELD
+Languages: Chinese, English, Japanese, Korean, French, German, Spanish, Portuguese, Arabic
 
-## Current primary surfaces
+## Current product areas
+- SASI creation and building
+- AI short drama workflow
+- Book and document to queryable SASI / AI agent
+- Learning SASI
+- Research SASI
+- Website and app building
+- PDF tools
+- Image tools
+- Video and subtitle tools
+- OCR and recognition tools
+- Spreadsheet and file conversion
+- Temporary email and burn-after-reading privacy tools
 
-- https://lingxifield.com/ — 首页
-- https://lingxifield.com/products — 当前产品中心
-- https://lingxifield.com/tools — 实用工具中心
-- https://lingxifield.com/sasi — SASI 创作与构建
-- https://lingxifield.com/sasi/drama — 短剧创作
-- https://lingxifield.com/ai-knowledge — 资料知识
-- https://lingxifield.com/ai-learning — 学习 SASI
-- https://lingxifield.com/ai-research — 科研 SASI
-- https://lingxifield.com/about — 关于灵犀场
+## Important
+Legacy consciousness-manifestation, divination, field-testing and spiritual-practice pages are retired and return HTTP 410. They are not current LINGXIFIELD products.
 
-## Practical tools
-
-Current tools include PDF editing and conversion, image conversion and privacy cleanup, OCR, video transcription, subtitle processing, temporary email, burn-after-reading links, food calorie estimation, and ID photo processing.
-
-Representative URLs:
-
-- https://lingxifield.com/tools/temp-mail
-- https://lingxifield.com/tools/burn-after-read
-- https://lingxifield.com/tools/food-calorie
-- https://lingxifield.com/tools/id-photo-ai
-- https://lingxifield.com/tools/video-transcription
-- https://lingxifield.com/tools/subtitle-translate
-- https://lingxifield.com/tools/pdf-editor
-- https://lingxifield.com/tools/pdf-merge-split
-- https://lingxifield.com/tools/ocr
-
-## How the platform works
-
-LINGXIFIELD is algorithm-first. Deterministic algorithms, browser-local processing, traditional ML/CV, procedural generation, FFmpeg, Canvas/SVG, WASM/ONNX, server computation and task workflows are preferred when they can solve the task reliably. External generative models are optional enhancement nodes for tasks that genuinely require open-ended semantic generation.
-
-## Retired material
-
-Older manifestation, divination, romance resonance, archetype, subconscious, spiritual-practice and similar product pages are retired and no longer represent the current platform. They should not be used to describe current LINGXIFIELD.
-
-## Contact
-
-support@lingxifield.com
-business@lingxifield.com
+## Discovery
+- https://lingxifield.com/tools
+- https://lingxifield.com/sasi
+- https://lingxifield.com/sasi/drama
+- https://lingxifield.com/ai-knowledge
+- https://lingxifield.com/ai-learning
+- https://lingxifield.com/ai-research
+- https://lingxifield.com/sitemap.xml

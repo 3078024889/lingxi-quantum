@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a reproducible problem in LINGXIFIELD
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the problem and the expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Give the smallest reproducible sequence.
+    validations:
+      required: true
+  - type: textarea
+    id: area
+    attributes:
+      label: Affected route / tool / API
+      placeholder: /tools/..., /api/..., SASI, Book SASI...
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, device, branch/commit if relevant.
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Security
+      options:
+        - label: This report does not contain secrets, private user data, or an undisclosed exploitable production vulnerability.
+          required: true

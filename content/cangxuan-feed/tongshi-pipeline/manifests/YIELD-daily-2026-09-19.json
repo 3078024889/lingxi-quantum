@@ -1,0 +1,8 @@
+{
+    "at":  "2026-09-19T20:07:32.8901882+08:00",
+    "n_cards":  135,
+    "file":  "tongshi-science-hist-geo-2026-09-19.jsonl",
+    "anti_theater":  true,
+    "status":  "ok",
+    "note":  "real crawl via fill-hist-first.ps1; ALIGNMENT-only heartbeat removed"
+}

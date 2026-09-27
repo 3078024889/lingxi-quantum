@@ -4,7 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { calculateToolQuote } from "@/lib/tools/pricing-server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
-import { toolRuntimeState } from "@/lib/tools/service-readiness";
+import { toolRuntimeStateLive } from "@/lib/tools/service-readiness";
 import { isPublicPaidToolId } from "@/lib/tools/paid-catalog";
 import {
   amountForCurrency,
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     if (!isPublicPaidToolId(toolId)) {
       return NextResponse.json({ error: "TOOL_NOT_AVAILABLE" }, { status: 404 });
     }
-    const runtimeState = toolRuntimeState(toolId);
+    const runtimeState = await toolRuntimeStateLive(toolId);
     if (!runtimeState.ready) {
       return NextResponse.json(
         { error: "TOOL_SERVICE_UNAVAILABLE", toolId, reason: runtimeState.reason },

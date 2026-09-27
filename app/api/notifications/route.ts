@@ -4,9 +4,9 @@ import {createAdminClient} from "@/lib/supabase/admin";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 export async function GET(){
  const items:any[]=[
-  {id:"announcement:mini-4.6-live",kind:"announcement",announcementKey:"mini46",version:"4.6",createdAt:"2026-09-26T11:30:00.000Z",href:null},
-  {id:"announcement:sasi-v20",kind:"announcement",announcementKey:"sasi20",version:"V20",createdAt:"2026-09-26T11:20:00.000Z",href:null},
-  {id:"announcement:tools-quality",kind:"announcement",announcementKey:"toolsQuality",createdAt:"2026-09-26T11:10:00.000Z",href:null},
+  {id:"announcement:mini-4.7-live",kind:"announcement",announcementKey:"mini47",version:"4.7",createdAt:"2026-09-26T13:30:00.000Z",href:null},
+  {id:"announcement:sasi-v21",kind:"announcement",announcementKey:"sasi21",version:"V21",createdAt:"2026-09-26T13:20:00.000Z",href:null},
+  {id:"announcement:tools-quality-v21",kind:"announcement",announcementKey:"toolsQuality",createdAt:"2026-09-26T13:10:00.000Z",href:null},
  ];
  let supabase;try{supabase=createClient()}catch{return NextResponse.json({items})}
  const{data:{user}}=await supabase.auth.getUser().catch(()=>({data:{user:null}} as any));if(!user)return NextResponse.json({items});

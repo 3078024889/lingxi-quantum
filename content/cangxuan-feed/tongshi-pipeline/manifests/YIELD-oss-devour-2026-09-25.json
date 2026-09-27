@@ -1,0 +1,61 @@
+{
+  "at": "2026-09-25T07:11+08:00",
+  "n_cards": 919,
+  "approx_a4_pages_text": 118.4,
+  "chars": 177618,
+  "by_kind": {
+    "通识-艺术": 148,
+    "通识-科学": 508,
+    "通识-历史": 108,
+    "通识-地理": 52,
+    "通识-哲学": 49,
+    "通识-经济": 54
+  },
+  "by_source": {
+    "gutendex": 224,
+    "openlibrary": 395,
+    "wikidata": 134,
+    "wikipedia": 166
+  },
+  "by_lang": {
+    "en": 794,
+    "zh": 125
+  },
+  "log_tail": [
+    "gutendex page=1 n=32",
+    "gutendex page=2 n=64",
+    "gutendex page=3 n=96",
+    "gutendex page=4 n=128",
+    "gutendex page=5 n=160",
+    "gutendex page=6 n=192",
+    "gutendex page=7 n=224",
+    "ol physics: n=264",
+    "ol chemistry: n=300",
+    "ol biology: n=337",
+    "ol astronomy: n=371",
+    "ol mathematics: n=405",
+    "ol history: n=445",
+    "ol world_history: n=484",
+    "ol geography: n=517",
+    "ol philosophy: n=551",
+    "ol economics: n=585",
+    "ol art: n=619",
+    "wd physics: n=631",
+    "wd chemistry: n=643",
+    "wd cell biology: n=660",
+    "wd ancient history: n=678",
+    "wd industrial revolution: n=689",
+    "wd continent: n=708",
+    "wd ethics: n=723",
+    "wd market: n=743",
+    "wd renaissance art: n=753",
+    "wiki zh:Category:医学:47",
+    "wiki zh:Category:计算机科学:32",
+    "wiki zh:Category:心理学:47",
+    "wiki en:Category:Medicine:45"
+  ],
+  "file": "/workspace/uploads/tongshi-pipeline/compressed/cards/tongshi-oss-devour-2026-09-25.jsonl",
+  "origin": "box-oss-devour",
+  "anti_theater": true,
+  "license_note": "CC-BY-SA / public-domain / Open Data TOU only"
+}
