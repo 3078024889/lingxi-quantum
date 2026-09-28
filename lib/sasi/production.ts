@@ -5,6 +5,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { pollSasiVideo, providerAssetAccess, submitSasiVideo, type SasiVideoSelection } from "@/lib/sasi/provider";
 import { createSasiAigcMetadata, embedSasiAigcMetadata, readSasiAigcMetadata } from "@/lib/sasi/aigc-label";
 import { billableWholeSeconds, readMp4DurationSeconds } from "@/lib/sasi/mp4-duration";
+import { validateVideoDelivery } from "@/lib/sasi-v5/visual/validate";
+import { recordVisualValidation } from "@/lib/sasi-v5/visual-repository";
 
 export type SasiJobRow = {
   id: string;
@@ -122,6 +124,27 @@ export async function refreshSasiJob(admin: SupabaseClient, job: SasiJobRow) {
 
   if (!verifiedUsage || !existing) {
     const downloaded = await downloadTrustedVideo(job.provider, provider.videoUrl);
+    const tier = job.input.quality === "cinema" ? "premium" : job.input.quality === "balanced" ? "standard" : "fast";
+    const v5Validation = await validateVideoDelivery(downloaded.bytes, {
+      instruction: String(job.input.prompt ?? ""),
+      tier,
+      identityCritical: Boolean(job.input.identityCritical),
+    });
+    void recordVisualValidation({
+      userId: job.user_id,
+      projectId: job.project_id,
+      taskId: null,
+      kind: "video",
+      tier,
+      passed: v5Validation.pass,
+      vector: v5Validation.quality,
+      reasons: v5Validation.reasons,
+      technical: v5Validation.technical,
+      semanticModel: v5Validation.semantic?.model ?? null,
+    });
+    if (!v5Validation.pass) {
+      throw new Error(`SASI_V5_VIDEO_QUALITY_REJECTED:${v5Validation.reasons.slice(0,3).join("|")}`);
+    }
     const measuredDurationSeconds = readMp4DurationSeconds(downloaded.bytes);
     const billableSeconds = billableWholeSeconds(measuredDurationSeconds);
 

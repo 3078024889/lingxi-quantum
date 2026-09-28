@@ -1,21 +1,4 @@
-import type { Metadata } from "next";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
-import SasiByokVideoStudio from "@/components/SasiByokVideoStudio";
-
-export const metadata:Metadata={
-  title:"SASI 短剧｜灵犀场",
-  description:"描述人物、动作、场景和镜头变化，调整时长与画幅，确认费用后生成视频。",
-  alternates:{canonical:"/sasi/drama"},
-};
-
-export default function SasiDramaPage(){
-  return <>
-    <Nav/>
-    <main className="min-h-screen bg-[var(--lx-bg)]">
-      <SasiByokVideoStudio/>
-
-    </main>
-    <Footer/>
-  </>;
-}
+import type {Metadata} from "next";
+import Nav from "@/components/Nav";import Footer from "@/components/Footer";import SasiManagedVideoCreate from "@/components/SasiManagedVideoCreate";import SasiByokVideoStudio from "@/components/SasiByokVideoStudio";
+export const metadata:Metadata={title:"SASI 视频创作｜灵犀场",description:"描述想完成的镜头，SASI 从已验证路线中选择能力，确认一次价格后完成生成。",alternates:{canonical:"/sasi/drama"}};
+export default function Page(){return <><Nav/><main className="min-h-screen bg-[var(--lx-bg)]"><SasiManagedVideoCreate/><section className="mx-auto max-w-5xl px-6 pb-16"><details className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><summary className="cursor-pointer text-sm text-[var(--lx-muted)]">专业连接：使用自己的 AI 服务</summary><div className="mt-5"><SasiByokVideoStudio/></div></details></section></main><Footer/></>}
