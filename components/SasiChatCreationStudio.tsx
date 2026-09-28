@@ -2,6 +2,7 @@
 
 import {useCallback,useEffect,useRef,useState} from "react";
 import Link from "next/link";
+import styles from "./SasiChatCreationStudio.module.css";
 import SasiFunctionMenu,{SasiSelectedFunctions} from "./SasiFunctionMenu";
 import DOMPurify from "dompurify";
 import JSZip from "jszip";
@@ -85,6 +86,8 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
  const operation=useRef(false);
  const mounted=useRef(true);
  const inputRef=useRef<HTMLInputElement|null>(null);
+ const textareaRef=useRef<HTMLTextAreaElement|null>(null);
+ useEffect(()=>{const field=textareaRef.current;if(field){field.style.height="44px";field.style.height=`${Math.min(216,Math.max(44,field.scrollHeight))}px`}},[prompt]);
  const pollRef=useRef<number|null>(null);
 
  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;if(pollRef.current!==null)window.clearTimeout(pollRef.current)}},[]);
@@ -298,7 +301,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
   const blob=await zip.generateAsync({type:"blob"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="lingxifield-website.zip";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  }
 
- return <main className="min-h-[calc(100vh-64px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]">
+ return <main className={`${styles.workspace} min-h-[calc(100vh-64px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
   <div className="mx-auto flex min-h-[calc(100vh-64px)] max-w-5xl flex-col px-4 sm:px-6">
    <header className="mx-auto w-full max-w-3xl pt-12 text-center sm:pt-20">
     <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
@@ -320,7 +323,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
      </div>)}</div>}
 
      {selectedFunctions.length>0&&<div className="mb-3 px-2"><SasiSelectedFunctions task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/></div>}
-     <textarea aria-label="创作需求" disabled={busy} rows={3} maxLength={12000} value={prompt} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} placeholder={mode==="drama"?"描述你想完成的短剧、镜头或故事…":"描述你想做的网站、品牌、页面或功能…"} className="max-h-56 min-h-24 w-full resize-none bg-transparent px-2 py-2 text-[15px] leading-7 outline-none placeholder:text-[var(--lx-muted)]"/>
+     <textarea ref={textareaRef} aria-label="创作需求" disabled={busy} rows={1} maxLength={12000} value={prompt} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} placeholder={mode==="drama"?"描述你想完成的短剧、镜头或故事…":"描述你想做的网站、品牌、页面或功能…"} className="max-h-56 min-h-24 w-full resize-none bg-transparent px-2 py-2 text-[15px] leading-7 outline-none placeholder:text-[var(--lx-muted)]"/>
 
      <div className="mt-2 flex flex-wrap items-center gap-2">
       <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={e=>{if(e.target.files)addFiles(e.target.files);e.currentTarget.value=""}}/>
