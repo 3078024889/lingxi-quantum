@@ -5,6 +5,8 @@ import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { decryptProviderKey } from "@/lib/sasi/credential-vault";
 import { TEXT_PROFILE, TEXT_VERSION, SASI_SYSTEM, DIRECTOR_CONTRACT, estimatedTextFen, runArkText, type TextMessage } from "@/lib/sasi/ark-text";
+import { WEBSITE_CONTRACT, validateWebsiteArtifact } from "@/lib/sasi/website-artifact";
+import { buildGroundedReasoningPrompt, validateGroundedAnswer, type GroundedEvidence } from "@/lib/sasi-kernel/cognition/grounded-answer";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -16,7 +18,7 @@ export async function GET() {
   const db = createAdminClient();
   const tasks = await db.from("sasi_byok_text_tasks").select(`${fields},request`).eq("user_id", user.id).order("created_at", { ascending: false }).limit(20);
   if (tasks.error) return reply({ error: "HISTORY_UNAVAILABLE" }, 503);
-  return reply({ profile: TEXT_PROFILE, tasks: tasks.data.map(row => ({ ...row, request: undefined, question: row.request.messages.at(-1)?.content ?? "" })) });
+  return reply({ profile: TEXT_PROFILE, ready: Date.now()<Date.parse(TEXT_PROFILE.validUntil), tasks: tasks.data.map(row => ({ ...row, request: undefined, question: row.request.messages.at(-1)?.content ?? "" })) });
 }
 export async function POST(request: NextRequest) {
   if (!isSameOriginMutation(request)) return reply({ error: "ORIGIN_REJECTED" }, 403);
@@ -37,19 +39,22 @@ export async function POST(request: NextRequest) {
   if (!connection || connection.health_status !== "healthy") return reply({ error: "CONNECTION_REQUIRED" }, 409);
   if (body.action === "quote") {
     if (typeof body.question !== "string" || !body.question.trim() || body.question.length > 12000) return reply({ error: "QUESTION_LENGTH" }, 400);
-    if (body.mode !== undefined && !["chat", "director"].includes(body.mode)) return reply({ error: "INVALID_MODE" }, 400);
+    if (body.mode !== undefined && !["chat", "director", "book", "website"].includes(body.mode)) return reply({ error: "INVALID_MODE" }, 400);
     const director = body.mode === "director";
-    const messages: TextMessage[] = [{ role: "system", content: SASI_SYSTEM + (director ? `\n${DIRECTOR_CONTRACT}` : "") }];
+    const mode=body.mode??"chat";
+    const evidence:GroundedEvidence[]=mode==="book"&&Array.isArray(body.evidence)?body.evidence.slice(0,9).map((e:Record<string,unknown>,i:number)=>({index:i+1,title:String(e?.title??"资料").slice(0,240),locator:String(e?.locator??"").slice(0,240),text:String(e?.text??"").slice(0,3000)})).filter((e:GroundedEvidence)=>e.text.trim()):[];
+    if(mode==="book"&&!evidence.length)return reply({error:"BOOK_EVIDENCE_REQUIRED"},422);
+    const messages: TextMessage[] = [{ role: "system", content: SASI_SYSTEM + (director ? `\n${DIRECTOR_CONTRACT}` : mode==="website"?`\n${WEBSITE_CONTRACT}`:"") }];
     // Only server-owned successful answers may become context. Never accept a
     // client-supplied system prompt or another user's conversation history.
-    if (body.previousId) {
+    if (body.previousId && mode === "chat") {
       const previous = await db.from("sasi_byok_text_tasks").select("request,output").eq("id", body.previousId).eq("user_id", user.id).eq("state", "succeeded").maybeSingle();
       if (previous.error || !previous.data) return reply({ error: "PREVIOUS_ANSWER_NOT_FOUND" }, 404);
       messages.push(...previous.data.request.messages.filter((m: TextMessage) => m.role !== "system"), { role: "assistant", content: previous.data.output.answer });
     }
-    messages.push({ role: "user", content: body.question.trim() });
+    messages.push({ role: "user", content: mode==="book"?buildGroundedReasoningPrompt({question:body.question.trim(),mode:"book",intelligence:"standard",evidence}):body.question.trim() });
     if (messages.reduce((n, m) => n + Buffer.byteLength(m.content), 0) > 60000) return reply({ error: "CONTEXT_LIMIT_START_NEW" }, 422);
-    const result = await db.from("sasi_byok_text_tasks").insert({ user_id: user.id, request: { messages, director }, profile_version: TEXT_VERSION,
+    const result = await db.from("sasi_byok_text_tasks").insert({ user_id: user.id, request: { messages, director, mode, evidence }, profile_version: TEXT_VERSION,
       key_fingerprint: connection.fingerprint, estimated_fen: estimatedTextFen(messages), expires_at: new Date(Math.min(Date.now() + 600000, Date.parse(TEXT_PROFILE.validUntil))).toISOString() }).select(fields).single();
     return result.error ? reply({ error: "QUOTE_SAVE_FAILED" }, 503) : reply({ task: result.data, profile: TEXT_PROFILE }, 201);
   }
@@ -64,6 +69,15 @@ export async function POST(request: NextRequest) {
   if (claimed.error || !claimed.data) return reply({ error: "ALREADY_STARTED_OR_UNAVAILABLE" }, 409);
   try {
     const output = await runArkText(key, task.request.messages, task.request.director === true);
+    if(task.request.mode==="website"){
+      try{const artifact=validateWebsiteArtifact(JSON.parse(output.answer.replace(/^```(?:json)?\s*|\s*```$/g,"")));Object.assign(output,{website:artifact});}
+      catch{Object.assign(output,{answer:"模型返回的网站未通过完整性检查。本次可能产生供应商费用，没有自动重试。",validationFailed:true});}
+    }
+    if(task.request.mode==="book"){
+      const checked=validateGroundedAnswer(output.answer,task.request.evidence??[]);
+      if(!checked.ok)Object.assign(output,{answer:"回答未通过引用编号检查，请核对资料后重新提问。本次可能产生供应商费用，没有自动重试。",validationFailed:true});
+      else Object.assign(output,{citations:checked.refs});
+    }
     const saved = await db.from("sasi_byok_text_tasks").update({ state: "succeeded", output, updated_at: new Date().toISOString() }).eq("id", task.id).eq("user_id", user.id);
     return reply({ task: { id: task.id, state: "succeeded", output }, historySaved: !saved.error });
   } catch (error) {

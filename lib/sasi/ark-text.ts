@@ -1,10 +1,11 @@
 import "server-only";
+import { parseTextProfile } from "./byok-text-profile";
 import { createHash } from "node:crypto";
 import { DIRECTOR_CONTRACT, validateDirectorPlan, renderDirectorPlan } from "./director-plan";
 
 // Reviewed against the official live tariff on 2026-09-20. Expiry prevents a
 // forgotten price from silently becoming a permanent billing promise.
-export const TEXT_PROFILE = {
+export const TEXT_PROFILE = parseTextProfile(process.env.SASI_BYOK_TEXT_PROFILE) ?? {
   model: "doubao-seed-evolving", inputYuanPerMillion: 6, outputYuanPerMillion: 30,
   maxOutputTokens: 2048, validUntil: "2026-09-27T00:00:00+08:00",
   priceSource: "https://docs.volcengine.com/docs/ark/model-pricing",
@@ -25,7 +26,7 @@ export async function runArkText(key: string, messages: TextMessage[], director 
   const response = await fetch("https://ark.cn-beijing.volces.com/api/v3/chat/completions", {
     method: "POST", cache: "no-store", signal: AbortSignal.timeout(45000),
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ model: process.env.SASI_BYOK_TEXT_MODEL?.trim() || TEXT_PROFILE.model, messages, max_tokens: TEXT_PROFILE.maxOutputTokens, thinking: { type: process.env.SASI_BYOK_REASONING_ENABLED === "false" ? "disabled" : "enabled" }, ...(director ? { response_format: { type: "json_object" } } : {}) }),
+    body: JSON.stringify({ model: TEXT_PROFILE.model, messages, max_tokens: TEXT_PROFILE.maxOutputTokens, thinking: { type: process.env.SASI_BYOK_REASONING_ENABLED === "false" ? "disabled" : "enabled" }, ...(director ? { response_format: { type: "json_object" } } : {}) }),
   });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(body.error?.code === "ModelNotOpen" ? "MODEL_NOT_OPEN" : `ARK_HTTP_${response.status}`);

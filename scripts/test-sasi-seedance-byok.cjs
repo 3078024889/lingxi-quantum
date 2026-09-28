@@ -38,6 +38,8 @@ const db = {
 };
 let shouldTimeout = false;
 const routes = load('app/api/sasi/byok/video/route.ts', {
+  '@/lib/security/abuse-guard': { enforceAbuseGuard: async () => ({ok:true}) },
+  '@/lib/sasi/series-plan': load('lib/sasi/series-plan.ts', {}),
   'next/server': { NextResponse: { json: (body, init) => ({ body, status: init.status }) } },
   '@/lib/supabase/server': { createClient: () => ({ auth: { getUser: async () => ({ data: { user: authenticated ? { id: userId } : null } }) } }) },
   '@/lib/supabase/admin': { createAdminClient: () => db },
@@ -46,7 +48,7 @@ const routes = load('app/api/sasi/byok/video/route.ts', {
   '@/lib/sasi/safety': { reviewSasiProductionInput: () => ({ ok: true }) },
   '@/lib/sasi/load-project-memory': { loadProjectMemory: async () => ({ version: 'memory-1', active: [] }) },
   '@/lib/sasi/video-references': { loadVideoReferences: async () => [] },
-  '@/lib/sasi/seedance-byok': { ...adapter, seedanceProfile: () => profile, submitSeedanceByok: async (key) => {
+  '@/lib/sasi/seedance-byok': { ...adapter, seedanceProfile: () => profile, seedanceProfiles: () => [profile], submitSeedanceByok: async (key) => {
     assert.equal(key, 'owner-key'); submitCount++; await new Promise(r => setTimeout(r, 5));
     if (shouldTimeout) throw new Error('timeout'); return 'task-fixture-123';
   } },

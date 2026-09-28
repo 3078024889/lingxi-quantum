@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+import { validateSeriesShots } from "@/lib/sasi/series-plan";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -7,7 +9,7 @@ import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { reviewSasiProductionInput } from "@/lib/sasi/safety";
 import { applyProjectMemory, loadProjectMemory } from "@/lib/sasi/load-project-memory";
 import { loadVideoReferences, type VideoReference } from "@/lib/sasi/video-references";
-import { seedanceProfile, seedanceProfileVersion, submitSeedanceByok, pollSeedanceByok, type SeedanceRequest } from "@/lib/sasi/seedance-byok";
+import { seedanceProfile, seedanceProfiles, seedanceProfileVersion, submitSeedanceByok, pollSeedanceByok, type SeedanceRequest } from "@/lib/sasi/seedance-byok";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,7 +19,8 @@ const PUBLIC_FIELDS = "id,project_id,state,request,estimated_fen,price_source,ex
 const reply = (data: unknown, status = 200) => NextResponse.json(data, { status, headers: { "Cache-Control": "no-store" } });
 
 export async function GET(request: NextRequest) {
-  const profile = seedanceProfile();
+  const profiles = seedanceProfiles();
+  const profile = profiles[0];
   const enabled = process.env.SASI_BYOK_VIDEO_ENABLED === "true" && !!profile;
   const { data: { user } } = await createClient().auth.getUser();
   if (!user) return reply({ error: "AUTH_REQUIRED", enabled }, 401);
@@ -27,13 +30,13 @@ export async function GET(request: NextRequest) {
   const { data: project } = await admin.from("sasi_projects").select("id").eq("id", projectId).eq("user_id", user.id).maybeSingle();
   if (!project) return reply({ error: "PROJECT_NOT_FOUND" }, 404);
   const [tasks, connection, assets] = await Promise.all([
-    admin.from("sasi_byok_video_tasks").select(PUBLIC_FIELDS).eq("user_id", user.id).eq("project_id", projectId).order("created_at", { ascending: false }).limit(30),
+    admin.from("sasi_byok_video_tasks").select(PUBLIC_FIELDS).eq("user_id", user.id).eq("project_id", projectId).order("created_at", { ascending: false }).limit(180),
     admin.from("sasi_provider_connections").select("health_status").eq("user_id", user.id).eq("provider", "volcengine").maybeSingle(),
     admin.from("sasi_assets").select("id,original_name,status,verified_size").eq("user_id", user.id).eq("project_id", projectId).in("status", ["ready", "external_scan_required"]).order("created_at", { ascending: false }).limit(100),
   ]);
   if (tasks.error || connection.error) return reply({ error: "BYOK_FOUNDATION_UNAVAILABLE" }, 503);
   if (assets.error) return reply({ error: "REFERENCE_LIST_UNAVAILABLE" }, 503);
-  return reply({ enabled, profile, connected: connection.data?.health_status === "healthy", tasks: tasks.data,
+  return reply({ enabled, profile, profiles: profiles.map(p => ({ ...p, id: seedanceProfileVersion(p) })), connected: connection.data?.health_status === "healthy", tasks: tasks.data,
     assets: (assets.data ?? []).filter(row => /\.(png|jpe?g|webp)$/i.test(row.original_name) && Number(row.verified_size) <= 10 * 1024 * 1024),
     billing: "supplier_direct", reason: !profile ? "CURRENT_PRICE_UNVERIFIED" : !enabled ? "ACCEPTANCE_PENDING" : null });
 }
@@ -43,7 +46,7 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await createClient().auth.getUser();
   if (!user) return reply({ error: "AUTH_REQUIRED" }, 401);
   const body = await request.json().catch(() => null);
-  if (!body || !["quote", "confirm", "refresh"].includes(body.action)) return reply({ error: "INVALID_ACTION" }, 400);
+  if (!body || !["quote", "quote-series", "confirm", "refresh"].includes(body.action)) return reply({ error: "INVALID_ACTION" }, 400);
   const admin = createAdminClient();
   const abuse = await enforceAbuseGuard(request, {
     scope: "byok-video",
@@ -55,7 +58,36 @@ export async function POST(request: NextRequest) {
   const connection = await admin.from("sasi_provider_connections").select("encrypted_credential,fingerprint,health_status").eq("user_id", user.id).eq("provider", "volcengine").maybeSingle();
   if (connection.error || !connection.data || connection.data.health_status !== "healthy") return reply({ error: "SEEDANCE_CONNECTION_REQUIRED" }, 409);
   const credential = connection.data;
-  const profile = seedanceProfile();
+  const profiles = seedanceProfiles();
+  const profile = body.profileId ? profiles.find(p => seedanceProfileVersion(p) === body.profileId) : profiles[0];
+
+  if (body.action === "quote-series") {
+    if (!profile || process.env.SASI_BYOK_VIDEO_ENABLED !== "true") return reply({error:"CURRENT_PRICE_UNVERIFIED"},503);
+    if (!UUID.test(String(body.projectId)) || !["16:9","9:16","1:1"].includes(body.ratio)) return reply({error:"INVALID_VIDEO_INPUT"},400);
+    const {data:project} = await admin.from("sasi_projects").select("id").eq("id",body.projectId).eq("user_id",user.id).eq("kind","drama").maybeSingle();
+    if (!project) return reply({error:"PROJECT_NOT_FOUND"},404);
+    try {
+      const shots=validateSeriesShots(body.shots,profile.maxDuration);
+      const memory=await loadProjectMemory(admin,user.id,body.projectId);
+      const batchId=randomUUID();
+      const rows=[];
+      const cache=new Map<string, VideoReference[]>();
+      for (const [index,shot] of shots.entries()) {
+        const safety=reviewSasiProductionInput({prompt:shot.prompt,rightsConfirmed:body.rightsConfirmed,aiLabelAcknowledged:body.aiLabelAcknowledged});
+        if(!safety.ok) return reply({error:safety.error},422);
+        const maxImages=profile.imageMode==="reference_image"?9:profile.imageMode==="first_frame"?1:0;
+        if(shot.assetIds.length>maxImages) return reply({error:"REFERENCE_MODE_NOT_SUPPORTED"},422);
+        const signature=JSON.stringify(shot.assetIds);
+        let references=cache.get(signature);
+        if(!references){references=(await loadVideoReferences(admin,user.id,body.projectId,shot.assetIds)).map(({assetId,name,sha256})=>({assetId,name,sha256}));cache.set(signature,references);}
+        rows.push({user_id:user.id,project_id:body.projectId,request:{model:profile.model,prompt:applyProjectMemory(shot.prompt,memory.active),duration:shot.duration,ratio:body.ratio,resolution:profile.resolution,generateAudio:profile.generateAudio,references,imageMode:profile.imageMode??"none",batchId,batchShotCount:shots.length,episode:shot.episode,shotIndex:index},profile_version:seedanceProfileVersion(profile),memory_version:memory.version,key_fingerprint:credential.fingerprint,estimated_fen:profile.estimatedFenPerSecond*shot.duration,price_source:profile.priceSource,expires_at:new Date(Math.min(Date.now()+600000,Date.parse(profile.validUntil))).toISOString()});
+      }
+      // One insert statement: a batch is quoted completely or not saved at all.
+      const saved=await admin.from("sasi_byok_video_tasks").insert(rows).select(PUBLIC_FIELDS);
+      if(saved.error) return reply({error:"QUOTE_SAVE_FAILED"},503);
+      return reply({batchId,tasks:saved.data},201);
+    } catch {return reply({error:"INVALID_SERIES_OR_REFERENCES"},422);}
+  }
 
   if (body.action === "quote") {
     if (!profile) return reply({ error: "CURRENT_PRICE_UNVERIFIED" }, 503);
@@ -95,8 +127,9 @@ export async function POST(request: NextRequest) {
   if (body.action === "confirm") {
     if (body.acceptSupplierBilling !== true) return reply({ error: "BUDGET_CONFIRMATION_REQUIRED" }, 422);
     if (task.state !== "quoted") return reply({ taskId: task.id, state: task.state });
-    if (!profile || process.env.SASI_BYOK_VIDEO_ENABLED !== "true") return reply({ error: "CURRENT_PRICE_OR_EXECUTION_UNAVAILABLE" }, 503);
-    if (Date.parse(task.expires_at) <= Date.now() || task.profile_version !== seedanceProfileVersion(profile)) return reply({ error: "REQUOTE_REQUIRED" }, 409);
+    const approvedProfile = profiles.find(p => seedanceProfileVersion(p) === task.profile_version);
+    if (!approvedProfile || process.env.SASI_BYOK_VIDEO_ENABLED !== "true") return reply({ error: "CURRENT_PRICE_OR_EXECUTION_UNAVAILABLE" }, 503);
+    if (Date.parse(task.expires_at) <= Date.now()) return reply({ error: "REQUOTE_REQUIRED" }, 409);
     let memory;
     try { memory = await loadProjectMemory(admin, user.id, task.project_id); }
     catch { return reply({ error: "PROJECT_CONTEXT_UNAVAILABLE" }, 503); }

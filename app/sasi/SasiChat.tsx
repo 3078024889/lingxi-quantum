@@ -1,4 +1,5 @@
 "use client";
+import SasiByokTextWorkbench from "@/components/SasiByokTextWorkbench";
 import {useState} from "react";
 
 type Reply={answer:string;intent:string;next?:{label:string;href:string}[]};
@@ -16,5 +17,6 @@ export default function SasiChat(){
   </div>
   {error&&<p className="mt-4 text-sm text-[var(--lx-danger)]">{error}</p>}
   {reply&&<article className="mt-6 rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6"><p className="text-xs text-[var(--lx-faint)]">已识别：{reply.intent}</p><p className="mt-3 whitespace-pre-wrap leading-7">{reply.answer}</p>{reply.next?.length?<div className="mt-5 flex flex-wrap gap-2">{reply.next.map(x=><a key={x.href} href={x.href} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{x.label} →</a>)}</div>:null}</article>}
+ <SasiByokTextWorkbench/>
  </section>
 }

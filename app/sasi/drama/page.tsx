@@ -5,7 +5,7 @@ import SasiByokVideoStudio from "@/components/SasiByokVideoStudio";
 
 export const metadata:Metadata={
   title:"SASI 短剧｜灵犀场",
-  description:"连接自己的视频 API，确认预算后生成视频，费用由供应商直接结算。",
+  description:"描述人物、动作、场景和镜头变化，调整时长与画幅，确认费用后生成视频。",
   alternates:{canonical:"/sasi/drama"},
 };
 

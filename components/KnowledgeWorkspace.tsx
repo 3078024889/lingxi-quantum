@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import SasiByokTextWorkbench from "./SasiByokTextWorkbench";
 import {
   KnowledgeSource,
   readSources,
@@ -406,6 +407,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
           </div>
         </div>
 
+        <SasiByokTextWorkbench key={question+results.map(r=>r.sourceId).join()} mode="book" question={question} evidence={results.map(r=>({title:r.title,locator:r.locator,text:r.text}))}/>
         <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources}
           className="mt-3 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
           {askBusy?tr(lang,"readingSource"):tr(lang,"answer")}
