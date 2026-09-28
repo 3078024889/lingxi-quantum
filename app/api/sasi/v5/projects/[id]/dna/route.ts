@@ -9,12 +9,14 @@ async function user(){
   const{data:{user}}=await createClient().auth.getUser();
   return user;
 }
-export async function GET(_:NextRequest,{params}:{params:{id:string}}){
+export async function GET(_:NextRequest, props:{params: Promise<{id:string}>}) {
+  const params = await props.params;
   const u=await user();if(!u)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
   try{return NextResponse.json({versions:await loadProjectDNA(u.id,params.id)},{headers:{"Cache-Control":"no-store"}})}
   catch(e){return NextResponse.json({error:e instanceof Error?e.message:"SASI_V5_DNA_UNAVAILABLE"},{status:404})}
 }
-export async function POST(request:NextRequest,{params}:{params:{id:string}}){
+export async function POST(request:NextRequest, props:{params: Promise<{id:string}>}) {
+  const params = await props.params;
   if(!isSameOriginMutation(request))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const u=await user();if(!u)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
   const body=await request.json().catch(()=>null) as Record<string,unknown>|null;

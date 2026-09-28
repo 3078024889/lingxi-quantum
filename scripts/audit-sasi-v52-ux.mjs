@@ -12,11 +12,18 @@ const required=[
 for(const f of required)if(!fs.existsSync(f))throw new Error(`SASI_V52_MISSING:${f}`);
 
 const studio=fs.readFileSync("components/SasiChatCreationStudio.tsx","utf8");
-for(const n of [
- '创作设置','VIDEO_RESOLUTIONS','VIDEO_RATIOS','uploadSasiAsset',
- '/api/sasi/v5/feedback','website.scaffold.local','/api/sasi/quote',
- '/api/sasi/byok/video','/api/sasi/byok/text'
-])if(!studio.includes(n))throw new Error(`SASI_V52_STUDIO_GUARD_MISSING:${n}`);
+const semanticGuards=[
+ "VIDEO_RESOLUTIONS","VIDEO_RATIOS","uploadSasiAsset",
+ "/api/sasi/v5/feedback","website.scaffold.local","/api/sasi/quote",
+ "/api/sasi/byok/video","/api/sasi/byok/text"
+];
+for(const n of semanticGuards)if(!studio.includes(n))throw new Error(`SASI_V52_STUDIO_GUARD_MISSING:${n}`);
+
+const hasLocalizedCreationControl=
+ studio.includes('ct("creationSettings")') ||
+ (studio.includes("composerText") && studio.includes("creationSettings")) ||
+ studio.includes("<SasiFunctionMenu");
+if(!hasLocalizedCreationControl)throw new Error("SASI_V52_CREATION_CONTROL_MISSING");
 
 if(!studio.includes('"720p","1080p","2K","4K"'))throw new Error("SASI_V52_RESOLUTION_SET_INVALID");
 for(const ratio of ["9:16","16:9","1:1","4:3","3:4","3:2","2:3","21:9"]){

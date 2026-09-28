@@ -78,7 +78,7 @@ export async function mergePdfFiles(files: File[]): Promise<LocalOutput> {
     useObjectStreams: true,
     addDefaultPage: false,
   });
-  const blob = new Blob([bytes], { type: "application/pdf" });
+  const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
 
   return {
     name: "lingxifield-merged.pdf",
@@ -101,7 +101,7 @@ export async function splitPdfFile(file: File): Promise<LocalOutput[]> {
     const [page] = await target.copyPages(source, [i]);
     target.addPage(page);
     const bytes = await target.save({ useObjectStreams: true });
-    const blob = new Blob([bytes], { type: "application/pdf" });
+    const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
     outputs.push({
       name: `${base}-page-${String(i + 1).padStart(3, "0")}.pdf`,
       blob,

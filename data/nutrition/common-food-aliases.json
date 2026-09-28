@@ -1,0 +1,895 @@
+[
+  {
+    "match": "dragon fruit",
+    "aliases": {
+      "zh": [
+        "火龙果",
+        "红心火龙果",
+        "白心火龙果"
+      ],
+      "ja": [
+        "ドラゴンフルーツ"
+      ],
+      "ko": [
+        "용과"
+      ],
+      "fr": [
+        "fruit du dragon"
+      ],
+      "de": [
+        "Drachenfrucht"
+      ],
+      "es": [
+        "pitahaya",
+        "fruta del dragón"
+      ],
+      "pt": [
+        "pitaya",
+        "fruta do dragão"
+      ],
+      "ar": [
+        "فاكهة التنين"
+      ]
+    }
+  },
+  {
+    "match": "apple",
+    "aliases": {
+      "zh": [
+        "苹果"
+      ],
+      "ja": [
+        "りんご"
+      ],
+      "ko": [
+        "사과"
+      ],
+      "fr": [
+        "pomme"
+      ],
+      "de": [
+        "Apfel"
+      ],
+      "es": [
+        "manzana"
+      ],
+      "pt": [
+        "maçã"
+      ],
+      "ar": [
+        "تفاح"
+      ]
+    }
+  },
+  {
+    "match": "banana",
+    "aliases": {
+      "zh": [
+        "香蕉"
+      ],
+      "ja": [
+        "バナナ"
+      ],
+      "ko": [
+        "바나나"
+      ],
+      "fr": [
+        "banane"
+      ],
+      "de": [
+        "Banane"
+      ],
+      "es": [
+        "plátano",
+        "banana"
+      ],
+      "pt": [
+        "banana"
+      ],
+      "ar": [
+        "موز"
+      ]
+    }
+  },
+  {
+    "match": "orange",
+    "aliases": {
+      "zh": [
+        "橙子",
+        "橙"
+      ],
+      "ja": [
+        "オレンジ"
+      ],
+      "ko": [
+        "오렌지"
+      ],
+      "fr": [
+        "orange"
+      ],
+      "de": [
+        "Orange"
+      ],
+      "es": [
+        "naranja"
+      ],
+      "pt": [
+        "laranja"
+      ],
+      "ar": [
+        "برتقال"
+      ]
+    }
+  },
+  {
+    "match": "strawberry",
+    "aliases": {
+      "zh": [
+        "草莓"
+      ],
+      "ja": [
+        "いちご"
+      ],
+      "ko": [
+        "딸기"
+      ],
+      "fr": [
+        "fraise"
+      ],
+      "de": [
+        "Erdbeere"
+      ],
+      "es": [
+        "fresa"
+      ],
+      "pt": [
+        "morango"
+      ],
+      "ar": [
+        "فراولة"
+      ]
+    }
+  },
+  {
+    "match": "blueberries",
+    "aliases": {
+      "zh": [
+        "蓝莓"
+      ],
+      "ja": [
+        "ブルーベリー"
+      ],
+      "ko": [
+        "블루베리"
+      ],
+      "fr": [
+        "myrtille"
+      ],
+      "de": [
+        "Blaubeere"
+      ],
+      "es": [
+        "arándano"
+      ],
+      "pt": [
+        "mirtilo"
+      ],
+      "ar": [
+        "توت أزرق"
+      ]
+    }
+  },
+  {
+    "match": "watermelon",
+    "aliases": {
+      "zh": [
+        "西瓜"
+      ],
+      "ja": [
+        "スイカ"
+      ],
+      "ko": [
+        "수박"
+      ],
+      "fr": [
+        "pastèque"
+      ],
+      "de": [
+        "Wassermelone"
+      ],
+      "es": [
+        "sandía"
+      ],
+      "pt": [
+        "melancia"
+      ],
+      "ar": [
+        "بطيخ"
+      ]
+    }
+  },
+  {
+    "match": "pineapple",
+    "aliases": {
+      "zh": [
+        "菠萝",
+        "凤梨"
+      ],
+      "ja": [
+        "パイナップル"
+      ],
+      "ko": [
+        "파인애플"
+      ],
+      "fr": [
+        "ananas"
+      ],
+      "de": [
+        "Ananas"
+      ],
+      "es": [
+        "piña"
+      ],
+      "pt": [
+        "abacaxi"
+      ],
+      "ar": [
+        "أناناس"
+      ]
+    }
+  },
+  {
+    "match": "mango",
+    "aliases": {
+      "zh": [
+        "芒果"
+      ],
+      "ja": [
+        "マンゴー"
+      ],
+      "ko": [
+        "망고"
+      ],
+      "fr": [
+        "mangue"
+      ],
+      "de": [
+        "Mango"
+      ],
+      "es": [
+        "mango"
+      ],
+      "pt": [
+        "manga"
+      ],
+      "ar": [
+        "مانجو"
+      ]
+    }
+  },
+  {
+    "match": "kiwifruit",
+    "aliases": {
+      "zh": [
+        "猕猴桃",
+        "奇异果"
+      ],
+      "ja": [
+        "キウイ"
+      ],
+      "ko": [
+        "키위"
+      ],
+      "fr": [
+        "kiwi"
+      ],
+      "de": [
+        "Kiwi"
+      ],
+      "es": [
+        "kiwi"
+      ],
+      "pt": [
+        "kiwi"
+      ],
+      "ar": [
+        "كيوي"
+      ]
+    }
+  },
+  {
+    "match": "grapes",
+    "aliases": {
+      "zh": [
+        "葡萄"
+      ],
+      "ja": [
+        "ぶどう"
+      ],
+      "ko": [
+        "포도"
+      ],
+      "fr": [
+        "raisin"
+      ],
+      "de": [
+        "Trauben"
+      ],
+      "es": [
+        "uvas"
+      ],
+      "pt": [
+        "uvas"
+      ],
+      "ar": [
+        "عنب"
+      ]
+    }
+  },
+  {
+    "match": "pear",
+    "aliases": {
+      "zh": [
+        "梨"
+      ],
+      "ja": [
+        "梨"
+      ],
+      "ko": [
+        "배"
+      ],
+      "fr": [
+        "poire"
+      ],
+      "de": [
+        "Birne"
+      ],
+      "es": [
+        "pera"
+      ],
+      "pt": [
+        "pera"
+      ],
+      "ar": [
+        "كمثرى"
+      ]
+    }
+  },
+  {
+    "match": "rice, white, cooked",
+    "aliases": {
+      "zh": [
+        "米饭",
+        "白米饭"
+      ],
+      "ja": [
+        "ご飯",
+        "白米"
+      ],
+      "ko": [
+        "쌀밥"
+      ],
+      "fr": [
+        "riz blanc cuit"
+      ],
+      "de": [
+        "gekochter Reis"
+      ],
+      "es": [
+        "arroz blanco cocido"
+      ],
+      "pt": [
+        "arroz branco cozido"
+      ],
+      "ar": [
+        "أرز أبيض مطبوخ"
+      ]
+    }
+  },
+  {
+    "match": "egg, whole",
+    "aliases": {
+      "zh": [
+        "鸡蛋"
+      ],
+      "ja": [
+        "卵"
+      ],
+      "ko": [
+        "계란"
+      ],
+      "fr": [
+        "œuf"
+      ],
+      "de": [
+        "Ei"
+      ],
+      "es": [
+        "huevo"
+      ],
+      "pt": [
+        "ovo"
+      ],
+      "ar": [
+        "بيض"
+      ]
+    }
+  },
+  {
+    "match": "chicken breast",
+    "aliases": {
+      "zh": [
+        "鸡胸肉",
+        "鸡胸"
+      ],
+      "ja": [
+        "鶏むね肉"
+      ],
+      "ko": [
+        "닭가슴살"
+      ],
+      "fr": [
+        "blanc de poulet"
+      ],
+      "de": [
+        "Hähnchenbrust"
+      ],
+      "es": [
+        "pechuga de pollo"
+      ],
+      "pt": [
+        "peito de frango"
+      ],
+      "ar": [
+        "صدر دجاج"
+      ]
+    }
+  },
+  {
+    "match": "beef",
+    "aliases": {
+      "zh": [
+        "牛肉"
+      ],
+      "ja": [
+        "牛肉"
+      ],
+      "ko": [
+        "소고기"
+      ],
+      "fr": [
+        "bœuf"
+      ],
+      "de": [
+        "Rindfleisch"
+      ],
+      "es": [
+        "carne de res"
+      ],
+      "pt": [
+        "carne bovina"
+      ],
+      "ar": [
+        "لحم بقري"
+      ]
+    }
+  },
+  {
+    "match": "pork",
+    "aliases": {
+      "zh": [
+        "猪肉"
+      ],
+      "ja": [
+        "豚肉"
+      ],
+      "ko": [
+        "돼지고기"
+      ],
+      "fr": [
+        "porc"
+      ],
+      "de": [
+        "Schweinefleisch"
+      ],
+      "es": [
+        "cerdo"
+      ],
+      "pt": [
+        "carne suína"
+      ],
+      "ar": [
+        "لحم خنزير"
+      ]
+    }
+  },
+  {
+    "match": "salmon",
+    "aliases": {
+      "zh": [
+        "三文鱼",
+        "鲑鱼"
+      ],
+      "ja": [
+        "サーモン"
+      ],
+      "ko": [
+        "연어"
+      ],
+      "fr": [
+        "saumon"
+      ],
+      "de": [
+        "Lachs"
+      ],
+      "es": [
+        "salmón"
+      ],
+      "pt": [
+        "salmão"
+      ],
+      "ar": [
+        "سلمون"
+      ]
+    }
+  },
+  {
+    "match": "shrimp",
+    "aliases": {
+      "zh": [
+        "虾",
+        "虾仁"
+      ],
+      "ja": [
+        "えび"
+      ],
+      "ko": [
+        "새우"
+      ],
+      "fr": [
+        "crevette"
+      ],
+      "de": [
+        "Garnele"
+      ],
+      "es": [
+        "camarón"
+      ],
+      "pt": [
+        "camarão"
+      ],
+      "ar": [
+        "روبيان"
+      ]
+    }
+  },
+  {
+    "match": "broccoli",
+    "aliases": {
+      "zh": [
+        "西兰花"
+      ],
+      "ja": [
+        "ブロッコリー"
+      ],
+      "ko": [
+        "브로콜리"
+      ],
+      "fr": [
+        "brocoli"
+      ],
+      "de": [
+        "Brokkoli"
+      ],
+      "es": [
+        "brócoli"
+      ],
+      "pt": [
+        "brócolis"
+      ],
+      "ar": [
+        "بروكلي"
+      ]
+    }
+  },
+  {
+    "match": "tomatoes",
+    "aliases": {
+      "zh": [
+        "番茄",
+        "西红柿"
+      ],
+      "ja": [
+        "トマト"
+      ],
+      "ko": [
+        "토마토"
+      ],
+      "fr": [
+        "tomate"
+      ],
+      "de": [
+        "Tomate"
+      ],
+      "es": [
+        "tomate"
+      ],
+      "pt": [
+        "tomate"
+      ],
+      "ar": [
+        "طماطم"
+      ]
+    }
+  },
+  {
+    "match": "potatoes",
+    "aliases": {
+      "zh": [
+        "土豆",
+        "马铃薯"
+      ],
+      "ja": [
+        "じゃがいも"
+      ],
+      "ko": [
+        "감자"
+      ],
+      "fr": [
+        "pomme de terre"
+      ],
+      "de": [
+        "Kartoffel"
+      ],
+      "es": [
+        "patata",
+        "papa"
+      ],
+      "pt": [
+        "batata"
+      ],
+      "ar": [
+        "بطاطس"
+      ]
+    }
+  },
+  {
+    "match": "sweet potato",
+    "aliases": {
+      "zh": [
+        "红薯",
+        "地瓜",
+        "番薯"
+      ],
+      "ja": [
+        "さつまいも"
+      ],
+      "ko": [
+        "고구마"
+      ],
+      "fr": [
+        "patate douce"
+      ],
+      "de": [
+        "Süßkartoffel"
+      ],
+      "es": [
+        "batata dulce"
+      ],
+      "pt": [
+        "batata-doce"
+      ],
+      "ar": [
+        "بطاطا حلوة"
+      ]
+    }
+  },
+  {
+    "match": "milk, whole",
+    "aliases": {
+      "zh": [
+        "牛奶",
+        "全脂牛奶"
+      ],
+      "ja": [
+        "牛乳"
+      ],
+      "ko": [
+        "우유"
+      ],
+      "fr": [
+        "lait entier"
+      ],
+      "de": [
+        "Vollmilch"
+      ],
+      "es": [
+        "leche entera"
+      ],
+      "pt": [
+        "leite integral"
+      ],
+      "ar": [
+        "حليب كامل الدسم"
+      ]
+    }
+  },
+  {
+    "match": "yogurt, plain",
+    "aliases": {
+      "zh": [
+        "酸奶",
+        "原味酸奶"
+      ],
+      "ja": [
+        "プレーンヨーグルト"
+      ],
+      "ko": [
+        "플레인 요거트"
+      ],
+      "fr": [
+        "yaourt nature"
+      ],
+      "de": [
+        "Naturjoghurt"
+      ],
+      "es": [
+        "yogur natural"
+      ],
+      "pt": [
+        "iogurte natural"
+      ],
+      "ar": [
+        "زبادي طبيعي"
+      ]
+    }
+  },
+  {
+    "match": "tofu",
+    "aliases": {
+      "zh": [
+        "豆腐"
+      ],
+      "ja": [
+        "豆腐"
+      ],
+      "ko": [
+        "두부"
+      ],
+      "fr": [
+        "tofu"
+      ],
+      "de": [
+        "Tofu"
+      ],
+      "es": [
+        "tofu"
+      ],
+      "pt": [
+        "tofu"
+      ],
+      "ar": [
+        "توفو"
+      ]
+    }
+  },
+  {
+    "match": "almonds",
+    "aliases": {
+      "zh": [
+        "杏仁",
+        "巴旦木"
+      ],
+      "ja": [
+        "アーモンド"
+      ],
+      "ko": [
+        "아몬드"
+      ],
+      "fr": [
+        "amandes"
+      ],
+      "de": [
+        "Mandeln"
+      ],
+      "es": [
+        "almendras"
+      ],
+      "pt": [
+        "amêndoas"
+      ],
+      "ar": [
+        "لوز"
+      ]
+    }
+  },
+  {
+    "match": "peanuts",
+    "aliases": {
+      "zh": [
+        "花生"
+      ],
+      "ja": [
+        "ピーナッツ"
+      ],
+      "ko": [
+        "땅콩"
+      ],
+      "fr": [
+        "cacahuètes"
+      ],
+      "de": [
+        "Erdnüsse"
+      ],
+      "es": [
+        "cacahuetes"
+      ],
+      "pt": [
+        "amendoim"
+      ],
+      "ar": [
+        "فول سوداني"
+      ]
+    }
+  },
+  {
+    "match": "oats",
+    "aliases": {
+      "zh": [
+        "燕麦",
+        "燕麦片"
+      ],
+      "ja": [
+        "オーツ麦"
+      ],
+      "ko": [
+        "귀리"
+      ],
+      "fr": [
+        "avoine"
+      ],
+      "de": [
+        "Hafer"
+      ],
+      "es": [
+        "avena"
+      ],
+      "pt": [
+        "aveia"
+      ],
+      "ar": [
+        "شوفان"
+      ]
+    }
+  },
+  {
+    "match": "bread, whole-wheat",
+    "aliases": {
+      "zh": [
+        "全麦面包",
+        "全麦吐司"
+      ],
+      "ja": [
+        "全粒粉パン"
+      ],
+      "ko": [
+        "통밀빵"
+      ],
+      "fr": [
+        "pain complet"
+      ],
+      "de": [
+        "Vollkornbrot"
+      ],
+      "es": [
+        "pan integral"
+      ],
+      "pt": [
+        "pão integral"
+      ],
+      "ar": [
+        "خبز القمح الكامل"
+      ]
+    }
+  }
+]

@@ -13,7 +13,8 @@ export const metadata:Metadata={
   alternates:{canonical:"/sasi"},
 };
 
-export default function SasiPage({searchParams}:{searchParams?:{view?:string}}){
+export default async function SasiPage(props:{searchParams?: Promise<{view?:string}>}) {
+  const searchParams = await props.searchParams;
   const view=typeof searchParams?.view==="string"?searchParams.view:"";
   if(view==="billing")redirect("/sasi/pricing");
   if(view==="drama"||view==="director")redirect("/sasi/drama");

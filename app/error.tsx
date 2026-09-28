@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function ErrorBoundary({
   error,
@@ -37,12 +38,12 @@ export default function ErrorBoundary({
           >
             重新加载
           </button>
-          <a
+          <Link
             href="/account"
             style={{ border: "1px solid #d8d8d4", borderRadius: 10, padding: "10px 16px", color: "#171717", textDecoration: "none" }}
           >
             我的账户
-          </a>
+          </Link>
         </div>
       </section>
     </main>

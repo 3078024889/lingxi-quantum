@@ -5,14 +5,15 @@ import ToolWorkbench from "@/components/tools/ToolWorkbench";
 import { getTool, TOOLS } from "@/lib/tools/registry";
 import type { BilingualFaqItem } from "@/components/FaqSection";
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
   // dedicatedRoute tools (e.g. number-energy) keep their own folder
   return TOOLS.filter((t) => !t.dedicatedRoute).map((t) => ({ slug: t.slug }));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const tool = getTool(params.slug);
   if (!tool) return { title: "Tool not found｜工具未找到" };
   return {
@@ -48,7 +49,8 @@ function faqFor(slug: string): BilingualFaqItem[] {
   return common;
 }
 
-export default function ToolSlugPage({ params }: Props) {
+export default async function ToolSlugPage(props: Props) {
+  const params = await props.params;
   const tool = getTool(params.slug);
   if (!tool) notFound();
 

@@ -12,7 +12,8 @@ type OrderRow={
   status:string; provider:string|null; created_at:string; paid_at:string|null;
 };
 
-export default async function OrdersPage({searchParams}:{searchParams?:{payment?:string}}){
+export default async function OrdersPage(props:{searchParams?: Promise<{payment?:string}>}) {
+  const searchParams = await props.searchParams;
   const supabase=isSupabasePublicConfigured()?createClient():null;
   const user=supabase?await getServerUser(supabase):null;
   let rows:OrderRow[]=[];

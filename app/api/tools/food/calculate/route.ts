@@ -7,9 +7,29 @@ import {calcLocalFood,isLocalFoodId} from "@/lib/tools/food/local-catalog";
 export const runtime="nodejs";
 type InputItem={food_id?:unknown;grams?:unknown};
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-function legacyNutrients(x:any){const n:Record<string,{value:number;unit:string}>={};const put=(code:string,value:unknown,unit:string)=>{const v=Number(value);if(Number.isFinite(v))n[code]={value:v,unit}};put("protein_g",x.protein_g,"g");put("carbs_g",x.carbs_g,"g");put("fat_g",x.fat_g,"g");put("fiber_g",x.fiber_g,"g");put("sugar_g",x.sugar_g,"g");put("sodium_mg",x.sodium_mg,"mg");return n}
+function legacyNutrients(x:any){
+ const n:Record<string,{value:number;unit:string}>={};
+ const put=(code:string,value:unknown,unit:string)=>{
+  if(value===null||value===undefined||value==="")return;
+  const v=Number(value);if(Number.isFinite(v))n[code]={value:v,unit}
+ };
+ put("protein_g",x.protein_g,"g");put("carbs_g",x.carbs_g,"g");put("fat_g",x.fat_g,"g");put("fiber_g",x.fiber_g,"g");put("sugar_g",x.sugar_g,"g");put("sodium_mg",x.sodium_mg,"mg");
+ return n
+}
 function normalizeItem(x:any){return x&&typeof x==="object"?{...x,nutrients:x.nutrients&&typeof x.nutrients==="object"?x.nutrients:legacyNutrients(x)}:x}
-function mergeTotals(items:any[]){const sums:any={grams:0,kcal:0,protein_g:0,carbs_g:0,fat_g:0,nutrients:{}};for(const x of items){for(const k of ["grams","kcal","protein_g","carbs_g","fat_g"])sums[k]+=Number(x?.[k]||0);const map=x?.nutrients&&typeof x.nutrients==="object"?x.nutrients:legacyNutrients(x);for(const[code,v]of Object.entries(map as Record<string,any>)){const value=Number(v?.value),unit=String(v?.unit||"");if(!Number.isFinite(value)||!unit)continue;const prev=sums.nutrients[code];sums.nutrients[code]={value:(prev?.value||0)+value,unit}}}return sums}
+function mergeTotals(items:any[]){
+ const sums:any={grams:0,kcal:0,protein_g:0,carbs_g:0,fat_g:0,nutrients:{}};
+ for(const x of items){
+  for(const k of ["grams","kcal","protein_g","carbs_g","fat_g"])sums[k]+=Number(x?.[k]||0);
+  const map=x?.nutrients&&typeof x.nutrients==="object"?x.nutrients:legacyNutrients(x);
+  for(const[code,v]of Object.entries(map as Record<string,any>)){
+   const value=Number(v?.value),unit=String(v?.unit||"");
+   if(!Number.isFinite(value)||!unit)continue;
+   const prev=sums.nutrients[code];sums.nutrients[code]={value:(prev?.value||0)+value,unit}
+  }
+ }
+ return sums
+}
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:"SIGN_IN_REQUIRED"},{status:401});

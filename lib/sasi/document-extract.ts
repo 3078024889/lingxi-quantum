@@ -50,7 +50,7 @@ export async function extractStructuredDocument(extension:string,bytes:ArrayBuff
   }
   if(extension==="xlsx"){
     const wb=new ExcelJS.Workbook();
-    await wb.xlsx.load(buffer);
+    await wb.xlsx.load(buffer as unknown as Parameters<typeof wb.xlsx.load>[0]);
     const rows:string[]=[];
     wb.eachSheet((sheet)=>{
       rows.push(`# ${sheet.name}`);

@@ -2,6 +2,7 @@ import { SASI_MAX_UPLOAD_BYTES } from "@/lib/sasi/upload-policy";
 import { budgetAssessment, routeForQuality, type SasiQuality } from "@/lib/sasi/catalog";
 
 export type SasiProjectKind = "build" | "drama";
+export type SasiProjectLanguage = "zh"|"en"|"ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
 export type SasiAttachmentDescriptor = {
   name: string;
   size: number;
@@ -10,6 +11,19 @@ export type SasiAttachmentDescriptor = {
 
 export const SASI_BUILD_STAGES = ["project-understanding", "product-plan", "architecture", "implementation", "verification", "security-review", "preview", "deployment"] as const;
 export const SASI_DRAMA_STAGES = ["project-understanding", "story-structure", "characters", "identity-boards", "scene-bible", "storyboard", "voice", "shot-generation", "timeline", "master-export"] as const;
+
+const LANGS = new Set<SasiProjectLanguage>(["zh","en","ja","ko","fr","de","es","pt","ar"]);
+const FALLBACK_TITLE:Record<SasiProjectLanguage,{build:string;drama:string}>={
+ zh:{build:"未命名产品项目",drama:"未命名影像作品"},
+ en:{build:"Untitled website project",drama:"Untitled video project"},
+ ja:{build:"無題のサイトプロジェクト",drama:"無題の映像プロジェクト"},
+ ko:{build:"제목 없는 웹사이트 프로젝트",drama:"제목 없는 영상 프로젝트"},
+ fr:{build:"Projet de site sans titre",drama:"Projet vidéo sans titre"},
+ de:{build:"Unbenanntes Website-Projekt",drama:"Unbenanntes Video-Projekt"},
+ es:{build:"Proyecto web sin título",drama:"Proyecto de vídeo sin título"},
+ pt:{build:"Projeto de site sem título",drama:"Projeto de vídeo sem título"},
+ ar:{build:"مشروع موقع بلا عنوان",drama:"مشروع فيديو بلا عنوان"}
+};
 
 function cleanAttachments(value: unknown): SasiAttachmentDescriptor[] {
   if (!Array.isArray(value)) return [];
@@ -27,9 +41,9 @@ function cleanAttachments(value: unknown): SasiAttachmentDescriptor[] {
   });
 }
 
-function titleFromBrief(brief: string, kind: SasiProjectKind) {
+function titleFromBrief(brief: string, kind: SasiProjectKind, language:SasiProjectLanguage) {
   const firstLine = brief.split(/\r?\n/).find((line) => line.trim())?.trim() ?? "";
-  const fallback = kind === "drama" ? "未命名影像作品" : "未命名产品项目";
+  const fallback = FALLBACK_TITLE[language][kind];
   return (firstLine || fallback).replace(/\s+/g, " ").slice(0, 72);
 }
 
@@ -44,15 +58,21 @@ export function createProjectProposal(body: Record<string, unknown>) {
     return { ok: false as const, error: "INVALID_PROJECT_BRIEF" };
   }
 
-  const language = body.language === "en" ? "en" : "zh";
+  const uiLanguage:SasiProjectLanguage = LANGS.has(body.language as SasiProjectLanguage) ? body.language as SasiProjectLanguage : "zh";
+  // Production DB remains zh/en-compatible until the explicit 9-language migration is applied.
+  // uiLanguage is always retained inside the project input, so no user language is lost.
+  const language:SasiProjectLanguage = process.env.SASI_PROJECT_9LANG_DB_ENABLED === "true"
+    ? uiLanguage
+    : (uiLanguage === "zh" ? "zh" : "en");
+
   if (kind === "build") {
     return {
       ok: true as const,
       kind,
-      title: titleFromBrief(brief, kind),
+      title: titleFromBrief(brief, kind, uiLanguage),
       language,
       stages: [...SASI_BUILD_STAGES],
-      input: { brief, attachments, requiresExternalWriteAuthorization: true },
+      input: { brief, attachments, uiLanguage, requiresExternalWriteAuthorization: true },
       proposal: { editableWorkflow: true, requiresProductionAuthorization: true },
     };
   }
@@ -61,7 +81,9 @@ export function createProjectProposal(body: Record<string, unknown>) {
   const hasEpisodeSpec = body.secondsPerEpisode !== undefined;
   const explicitEpisodes = Number.isInteger(requestedEpisodes) && requestedEpisodes > 0 && requestedEpisodes <= 200 ? requestedEpisodes : null;
   const perEpisode = Number(body.secondsPerEpisode);
-  if (hasEpisodeSpec && (!explicitEpisodes || !Number.isSafeInteger(perEpisode) || perEpisode < 5 || perEpisode > 600)) return {ok:false as const,error:"INVALID_EPISODE_SPEC"};
+  if (hasEpisodeSpec && (!explicitEpisodes || !Number.isSafeInteger(perEpisode) || perEpisode < 5 || perEpisode > 600)) {
+    return {ok:false as const,error:"INVALID_EPISODE_SPEC"};
+  }
   const legacyTotal = Math.max(5, Math.min(600, Math.round(Number(body.seconds) || 30)));
   const suggestedEpisodes = explicitEpisodes ?? (legacyTotal <= 90 ? 1 : Math.max(2, Math.ceil(legacyTotal / 90)));
   const secondsPerEpisode = hasEpisodeSpec ? perEpisode : Math.ceil(legacyTotal / suggestedEpisodes);
@@ -74,10 +96,10 @@ export function createProjectProposal(body: Record<string, unknown>) {
   return {
     ok: true as const,
     kind,
-    title: titleFromBrief(brief, kind),
+    title: titleFromBrief(brief, kind, uiLanguage),
     language,
     stages: [...SASI_DRAMA_STAGES],
-    input: { brief, attachments, seconds, secondsPerEpisode, episodes:suggestedEpisodes, budgetFen:allocation, quality, requestedEpisodes: explicitEpisodes },
+    input: { brief, attachments, uiLanguage, seconds, secondsPerEpisode, episodes:suggestedEpisodes, budgetFen:allocation, quality, requestedEpisodes: explicitEpisodes },
     proposal: {
       recommendation: { episodes: suggestedEpisodes, secondsPerEpisode, totalSeconds: seconds, inferred: explicitEpisodes === null },
       quote,

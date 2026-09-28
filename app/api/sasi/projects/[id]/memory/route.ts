@@ -15,12 +15,14 @@ async function owner(id:string) {
   if(!data)return {error:NextResponse.json({error:"PROJECT_NOT_FOUND"},{status:404})} as const;
   return {db,user} as const;
 }
-export async function GET(_:Request,{params}:{params:{id:string}}) {
+export async function GET(_:Request, props:{params: Promise<{id:string}>}) {
+  const params = await props.params;
   const access=await owner(params.id);if("error" in access)return access.error;
   try{return NextResponse.json(await loadProjectMemory(access.db,access.user.id,params.id),{headers:{"Cache-Control":"no-store"}});}
   catch{return NextResponse.json({error:"MEMORY_UNAVAILABLE"},{status:503});}
 }
-export async function POST(request:NextRequest,{params}:{params:{id:string}}) {
+export async function POST(request:NextRequest, props:{params: Promise<{id:string}>}) {
+  const params = await props.params;
   if(!isSameOriginMutation(request))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403});
   const access=await owner(params.id);if("error" in access)return access.error;
   const body=await request.json().catch(()=>null);const parsed=body&&parseMemory(body);
@@ -45,7 +47,8 @@ export async function POST(request:NextRequest,{params}:{params:{id:string}}) {
   if(error)return NextResponse.json({error:"MEMORY_SAVE_FAILED"},{status:503});
   return NextResponse.json({saved:true,id:body.id},{status:201});
 }
-export async function DELETE(request:NextRequest,{params}:{params:{id:string}}) {
+export async function DELETE(request:NextRequest, props:{params: Promise<{id:string}>}) {
+  const params = await props.params;
   if(!isSameOriginMutation(request))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403});
   const access=await owner(params.id);if("error" in access)return access.error;
   const id=request.nextUrl.searchParams.get("memoryId")??"";

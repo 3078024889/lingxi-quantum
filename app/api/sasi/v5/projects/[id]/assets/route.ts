@@ -5,11 +5,13 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {assertOwnedProject} from "@/lib/sasi-v5/project-dna-repository";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 async function user(){const{data:{user}}=await createClient().auth.getUser();return user}
-export async function GET(_:NextRequest,{params}:{params:{id:string}}){
+export async function GET(_:NextRequest, props:{params: Promise<{id:string}>}) {
+ const params = await props.params;
  const u=await user();if(!u)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
  try{await assertOwnedProject(u.id,params.id);const{data,error}=await createAdminClient().from("sasi_v5_approved_assets").select("id,asset_type,label,version,status,artifact_id,asset_id,external_ref,metadata,created_at,approved_at").eq("user_id",u.id).eq("project_id",params.id).order("created_at",{ascending:false});if(error)throw error;return NextResponse.json({assets:data??[]},{headers:{"Cache-Control":"no-store"}})}catch{return NextResponse.json({error:"ASSET_LIBRARY_UNAVAILABLE"},{status:404})}
 }
-export async function POST(request:NextRequest,{params}:{params:{id:string}}){
+export async function POST(request:NextRequest, props:{params: Promise<{id:string}>}) {
+ const params = await props.params;
  if(!isSameOriginMutation(request))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const u=await user();if(!u)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
  const body=await request.json().catch(()=>null) as Record<string,unknown>|null;if(!body)return NextResponse.json({error:"INVALID_JSON"},{status:400});

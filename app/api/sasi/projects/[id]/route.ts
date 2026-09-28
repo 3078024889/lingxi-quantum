@@ -23,7 +23,8 @@ async function authenticatedOwner(projectId: string) {
   return { user, supabase } as const;
 }
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(_: Request, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
@@ -57,7 +58,8 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   }, { headers: { "Cache-Control": "no-store" } });
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!isSameOriginMutation(request)) return NextResponse.json({ error: "INVALID_ORIGIN" }, { status: 403 });
   const owner = await authenticatedOwner(params.id);
   if ("error" in owner) return owner.error;
@@ -80,7 +82,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   return NextResponse.json({ project: { id: data.id, kind: data.kind, title: data.title, language: data.language, currentVersion: data.current_version, createdAt: data.created_at, updatedAt: data.updated_at } });
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   if (!isSameOriginMutation(request)) return NextResponse.json({ error: "INVALID_ORIGIN" }, { status: 403 });
   const owner = await authenticatedOwner(params.id);
   if ("error" in owner) return owner.error;

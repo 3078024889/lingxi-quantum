@@ -47,7 +47,7 @@ export async function POST(req:NextRequest){
   if(p==="alipay"&&!alipayEnabled())return NextResponse.json({error:"支付宝当前不可用"},{status:503});
   if(p==="wechat"&&!wechatPayConfigured())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
   if(useJsapi){
-   const expected=cookies().get("lingxi_wechat_oauth_state")?.value;
+   const expected=(await cookies()).get("lingxi_wechat_oauth_state")?.value;
    if(!expected||state!==expected)return NextResponse.json({error:"微信授权状态已失效，请重新打开支付页。",code:"WECHAT_OAUTH_STATE_EXPIRED"},{status:400});
    if(!wechatOauthConfigured())return NextResponse.json({error:"微信网页授权不可用"},{status:503});
   }
@@ -75,7 +75,7 @@ export async function POST(req:NextRequest){
    await admin.from("orders").update({provider_payment_id:outTradeNo}).eq("id",order.id);return NextResponse.json({orderId:order.id,url:paymentUrl});
   }
   if(useJsapi){
-   const{openid}=await exchangeCodeForOpenid(code!);cookies().delete("lingxi_wechat_oauth_state");
+   const{openid}=await exchangeCodeForOpenid(code!);(await cookies()).delete("lingxi_wechat_oauth_state");
    const outTradeNo=`LX${order.id.replace(/-/g,"")}`.slice(0,32),{prepayId}=await createWechatJsapiOrder({outTradeNo,description:`Lingxi Field - ${String(quote.tool_id).slice(0,36)}`,amountFen:Math.round(Number(quote.amount_rmb)*100),notifyUrl:`${base}/api/pay/wechat/notify`,openid});
    await admin.from("orders").update({provider_payment_id:outTradeNo}).eq("id",order.id);return NextResponse.json({orderId:order.id,jsapi:buildJsapiInvokeParams(prepayId)});
   }

@@ -2,14 +2,16 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import {GLOBAL_TOOL_CATALOG,LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,languageAlternates,localePath,type SeoLocale} from "@/lib/seo/global-seo";
-type Props={params:{locale:string}};
+type Props={params: Promise<{locale:string}>};
 export function generateStaticParams(){return LOCALIZED_LOCALES.map(locale=>({locale}))}
-export function generateMetadata({params}:Props):Metadata{
+export async function generateMetadata(props:Props):Promise<Metadata> {
+ const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh")return {};
  const locale=params.locale,c=SEO_LOCALES[locale];
  return {title:`${c.toolsTitle} | PDF · Image · Video · OCR | LINGXIFIELD`,description:c.toolsDesc,keywords:[...c.searchTerms],alternates:{canonical:localePath(locale,"/tools"),languages:languageAlternates("/tools")}};
 }
-export default function LocalizedTools({params}:Props){
+export default async function LocalizedTools(props:Props) {
+ const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh")notFound();
  const locale=params.locale as SeoLocale,c=SEO_LOCALES[locale];
  return <main dir={c.dir} style={{maxWidth:1120,margin:"0 auto",padding:"48px 24px",fontFamily:"system-ui"}}>

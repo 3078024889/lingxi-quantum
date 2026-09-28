@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 
 type Mode="think"|"image"|"video";
@@ -87,7 +88,7 @@ export default function SasiNativeCreatePanel(){
         )}
       </div>
 
-      <a href="/sasi/drama" className="mt-4 inline-block underline">视频生成：连接自己的 API →</a>
+      <Link href="/sasi/drama" className="mt-4 inline-block underline">视频生成：连接自己的 API →</Link>
       <h2 className="mt-6 text-2xl font-semibold text-[var(--lx-ink)]">{COPY[mode].title}</h2>
       <textarea value={prompt} onChange={e=>setPrompt(e.target.value)} maxLength={24000}
         className="mt-4 min-h-44 w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 leading-7 text-[var(--lx-ink)] outline-none"

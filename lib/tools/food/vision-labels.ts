@@ -1,3 +1,6 @@
+import type {LingxiLang} from "@/lib/lingxi-i18n";
+import {commonFoodLabel} from "@/lib/tools/food/common-food-vocabulary";
+
 /* Display names only; never map these directly to nutrient records. */
 export const FOOD_LABELS_ZH:Record<string,string>={
   "tacos": "墨西哥塔可",
@@ -102,4 +105,9 @@ export const FOOD_LABELS_ZH:Record<string,string>={
   "tuna tartare": "金枪鱼鞑靼",
   "waffles": "华夫饼"
 };
-export function foodLabel(label:string,zh:boolean){return zh?(FOOD_LABELS_ZH[label]??label):label}
+
+export function foodLabel(label:string,lang:LingxiLang){
+  const normalized=label.toLowerCase().trim();
+  if(lang==="zh")return FOOD_LABELS_ZH[normalized]??commonFoodLabel(normalized,lang);
+  return commonFoodLabel(normalized,lang);
+}

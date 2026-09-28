@@ -4,14 +4,16 @@ import Link from "next/link";
 import {notFound} from "next/navigation";
 import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,languageAlternates,localePath,SEO_TOPICS,type SeoLocale} from "@/lib/seo/global-seo";
 
-type Props={params:{locale:string}};
+type Props={params: Promise<{locale:string}>};
 export function generateStaticParams(){return LOCALIZED_LOCALES.map(locale=>({locale}))}
-export function generateMetadata({params}:Props):Metadata{
+export async function generateMetadata(props:Props):Promise<Metadata> {
+ const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh")return {};
  const locale=params.locale,c=SEO_LOCALES[locale];
  return {title:`${c.homeTitle} | LINGXIFIELD`,description:c.homeDesc,keywords:[...c.searchTerms],alternates:{canonical:localePath(locale,"/"),languages:languageAlternates("/")},twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL]},openGraph:{images:SHARE_IMAGES,title:c.homeTitle,description:c.homeDesc,url:localePath(locale,"/"),siteName:"LINGXIFIELD",type:"website"}};
 }
-export default function LocalizedHome({params}:Props){
+export default async function LocalizedHome(props:Props) {
+ const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh")notFound();
  const locale=params.locale as SeoLocale,c=SEO_LOCALES[locale];
  return <main dir={c.dir} style={{maxWidth:1040,margin:"0 auto",padding:"48px 24px",fontFamily:"system-ui"}}>

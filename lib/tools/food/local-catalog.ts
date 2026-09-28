@@ -1,12 +1,12 @@
 export type LocalFood = {
   food_id:number; code:string; name_zh:string; name_en:string; category:string; aliases:string[];
   kcal_per_100g:number; protein_g_per_100g:number; carbs_g_per_100g:number; fat_g_per_100g:number;
-  fiber_g_per_100g:number; sugar_g_per_100g:number; sodium_mg_per_100g:number;
+  fiber_g_per_100g:number|null; sugar_g_per_100g:number|null; sodium_mg_per_100g:number|null;
 };
 
 const BASE=910000000;
 const row=(n:number,code:string,name_zh:string,name_en:string,category:string,aliases:string[],
- kcal:number,protein:number,carbs:number,fat:number,fiber:number,sugar:number,sodium:number):LocalFood=>({
+ kcal:number,protein:number,carbs:number,fat:number,fiber:number|null,sugar:number|null,sodium:number|null):LocalFood=>({
  food_id:BASE+n,code,name_zh,name_en,category,aliases,kcal_per_100g:kcal,
  protein_g_per_100g:protein,carbs_g_per_100g:carbs,fat_g_per_100g:fat,
  fiber_g_per_100g:fiber,sugar_g_per_100g:sugar,sodium_mg_per_100g:sodium
@@ -42,7 +42,9 @@ export const LOCAL_FOODS:LocalFood[]=[
  row(27,"avocado","牛油果","Avocado","水果",["牛油果","鳄梨","avocado"],160,2.0,8.5,14.7,6.7,0.7,7),
  row(28,"noodles","面条","Cooked noodles","主食",["面条","白面","noodles"],138,4.5,25.0,2.1,1.2,0.6,5),
  row(29,"rice-porridge","白粥","Rice porridge","主食",["白粥","米粥","稀饭","rice porridge"],46,1.0,10.2,0.1,0.2,0,2),
- row(30,"egg-fried-rice","蛋炒饭","Egg fried rice","主食",["蛋炒饭","炒饭","egg fried rice"],174,5.4,27.2,4.8,1.1,1.2,350)
+ row(30,"egg-fried-rice","蛋炒饭","Egg fried rice","主食",["蛋炒饭","炒饭","egg fried rice"],174,5.4,27.2,4.8,1.1,1.2,350),
+ // TBCA BRC0225C: Pitaya, raw. Missing sugar/sodium remain null instead of being fabricated as zero.
+ row(31,"dragon-fruit-tbca","火龙果","Dragon fruit / pitaya","水果",["火龙果","红心火龙果","白心火龙果","dragon fruit","pitaya","pitaia"],58,1.4,13.2,0.4,1.8,null,null)
 ];
 
 const norm=(x:string)=>x.trim().toLowerCase().replace(/\s+/g,"");
@@ -62,6 +64,8 @@ export function calcLocalFood(id:number,grams:number){
  const f=localFoodById(id); if(!f)return null; const k=grams/100;
  return {food_id:f.food_id,code:f.code,name_zh:f.name_zh,name_en:f.name_en,grams,
   kcal:f.kcal_per_100g*k,protein_g:f.protein_g_per_100g*k,carbs_g:f.carbs_g_per_100g*k,
-  fat_g:f.fat_g_per_100g*k,fiber_g:f.fiber_g_per_100g*k,sugar_g:f.sugar_g_per_100g*k,
-  sodium_mg:f.sodium_mg_per_100g*k};
+  fat_g:f.fat_g_per_100g*k,
+  fiber_g:f.fiber_g_per_100g==null?null:f.fiber_g_per_100g*k,
+  sugar_g:f.sugar_g_per_100g==null?null:f.sugar_g_per_100g*k,
+  sodium_mg:f.sodium_mg_per_100g==null?null:f.sodium_mg_per_100g*k};
 }

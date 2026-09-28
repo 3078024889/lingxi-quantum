@@ -13,7 +13,8 @@ function withUrls(userId:string,job:Awaited<ReturnType<typeof getNativeJob>>){
   try{return{...artifact,url:presignSasiArtifact(assertOwnedSasiObjectKey(userId,artifact.objectKey),300)}}catch{return{...artifact,objectKey:null}}
  })};
 }
-export async function GET(_request:NextRequest,{params}:{params:{id:string}}){
+export async function GET(_request:NextRequest, props:{params: Promise<{id:string}>}) {
+ const params = await props.params;
  const user=await currentUser();if(!user)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
  try{
   const job=await getNativeJob(params.id,user.id);
@@ -24,7 +25,8 @@ export async function GET(_request:NextRequest,{params}:{params:{id:string}}){
   return NextResponse.json({error:"SASI_NATIVE_JOB_LOOKUP_FAILED"},{status:/OWNER|NOT_FOUND/.test(message)?404:503});
  }
 }
-export async function DELETE(request:NextRequest,{params}:{params:{id:string}}){
+export async function DELETE(request:NextRequest, props:{params: Promise<{id:string}>}) {
+ const params = await props.params;
  if(!isSameOriginMutation(request))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const user=await currentUser();if(!user)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});
  try{

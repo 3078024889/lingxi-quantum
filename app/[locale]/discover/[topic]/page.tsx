@@ -3,14 +3,16 @@ import Link from "next/link";
 import {notFound} from "next/navigation";
 import {TopicSeoJsonLd} from "@/components/seo/GlobalSeoJsonLd";
 import {LOCALIZED_LOCALES,SEO_LOCALES,SEO_TOPICS,isSeoLocale,isSeoTopic,languageAlternates,localePath,topicTitle,type SeoLocale,type SeoTopic} from "@/lib/seo/global-seo";
-type Props={params:{locale:string;topic:string}};
+type Props={params: Promise<{locale:string;topic:string}>};
 export function generateStaticParams(){return LOCALIZED_LOCALES.flatMap(locale=>Object.keys(SEO_TOPICS).map(topic=>({locale,topic})))}
-export function generateMetadata({params}:Props):Metadata{
+export async function generateMetadata(props:Props):Promise<Metadata> {
+ const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh"||!isSeoTopic(params.topic))return {};
  const locale=params.locale as SeoLocale,topic=params.topic as SeoTopic,c=SEO_LOCALES[locale],title=topicTitle(locale,topic);
  return {title:`${title} | SASI | LINGXIFIELD`,description:`${title}. ${c.topicIntro}`,keywords:[title,...c.searchTerms],alternates:{canonical:localePath(locale,`/discover/${topic}`),languages:languageAlternates(`/discover/${topic}`)}};
 }
-export default function LocalizedTopic({params}:Props){
+export default async function LocalizedTopic(props:Props) {
+ const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh"||!isSeoTopic(params.topic))notFound();
  const locale=params.locale as SeoLocale,topic=params.topic as SeoTopic,c=SEO_LOCALES[locale],title=topicTitle(locale,topic);
  const target=topic==="ai-short-drama-generator"?"/sasi/drama":topic==="book-to-ai-agent"?"/ai-knowledge":topic==="learning-ai-agent"?"/ai-learning":topic==="research-ai-agent"?"/ai-research":"/sasi";

@@ -19,7 +19,7 @@ async function extractVideoAudio(file:File){
  const ext=file.name.split(".").pop()||"bin";const input=`input.${ext}`;await ffmpeg.writeFile(input,await fetchFile(file));
  await ffmpeg.exec(["-i",input,"-vn","-ac","1","-ar","16000","-f","wav","audio.wav"]);
  const data=await ffmpeg.readFile("audio.wav");ffmpeg.terminate();
- const wav=new Blob([data as Uint8Array],{type:"audio/wav"});return await decodeWithAudioContext(new File([wav],"audio.wav",{type:"audio/wav"}));
+ const wav=new Blob([new Uint8Array(data as Uint8Array)],{type:"audio/wav"});return await decodeWithAudioContext(new File([wav],"audio.wav",{type:"audio/wav"}));
 }
 async function audio(file:File){
  try{return await decodeWithAudioContext(file)}catch(e){if(file.type.startsWith("video/"))return await extractVideoAudio(file);throw e}

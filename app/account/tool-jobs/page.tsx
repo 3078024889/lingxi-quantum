@@ -8,7 +8,8 @@ export const metadata:Metadata={
   robots:{index:false,follow:false},
 };
 
-export default function Page({searchParams}:{searchParams?:{quoteId?:string}}){
+export default async function Page(props:{searchParams?: Promise<{quoteId?:string}>}) {
+  const searchParams = await props.searchParams;
   const quoteId=String(searchParams?.quoteId||"");
   return <><Nav/><main className="pt-24"><div className="mx-auto max-w-3xl px-6 pb-24"><ToolJobResultsClient quoteId={quoteId}/></div></main><Footer/></>;
 }

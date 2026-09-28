@@ -3,14 +3,16 @@ import Link from "next/link";
 import {notFound} from "next/navigation";
 import {TopicSeoJsonLd} from "@/components/seo/GlobalSeoJsonLd";
 import {SEO_LOCALES,SEO_TOPICS,isSeoTopic,languageAlternates,topicTitle,type SeoTopic} from "@/lib/seo/global-seo";
-type Props={params:{topic:string}};
+type Props={params: Promise<{topic:string}>};
 export function generateStaticParams(){return Object.keys(SEO_TOPICS).map(topic=>({topic}))}
-export function generateMetadata({params}:Props):Metadata{
+export async function generateMetadata(props:Props):Promise<Metadata> {
+ const params = await props.params;
  if(!isSeoTopic(params.topic))return {};
  const topic=params.topic as SeoTopic,title=topicTitle("zh",topic),c=SEO_LOCALES.zh;
  return {title:`${title}｜灵犀场 SASI`,description:`${title}。${c.topicIntro}`,keywords:[title,...c.searchTerms],alternates:{canonical:`/discover/${topic}`,languages:languageAlternates(`/discover/${topic}`)}};
 }
-export default function TopicPage({params}:Props){
+export default async function TopicPage(props:Props) {
+ const params = await props.params;
  if(!isSeoTopic(params.topic))notFound();
  const topic=params.topic as SeoTopic,title=topicTitle("zh",topic),c=SEO_LOCALES.zh;
  const target=topic==="ai-short-drama-generator"?"/sasi/drama":topic==="book-to-ai-agent"?"/ai-knowledge":topic==="learning-ai-agent"?"/ai-learning":topic==="research-ai-agent"?"/ai-research":"/sasi";

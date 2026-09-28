@@ -7,7 +7,8 @@ import {extractStructuredDocument} from "@/lib/sasi/document-extract";
 export const runtime="nodejs";
 export const maxDuration=60;
 
-export async function POST(_:Request,{params}:{params:{id:string}}){
+export async function POST(_:Request, props:{params: Promise<{id:string}>}) {
+  const params = await props.params;
   const supabase=createClient();
   const{data:{user}}=await supabase.auth.getUser();
   if(!user)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401});

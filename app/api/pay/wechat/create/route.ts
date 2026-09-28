@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     // Native扫码流程，不影响桌面/外部浏览器场景。
     const useJsapi = typeof code === "string" && code.length > 0;
     if (useJsapi) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const expectedState = cookieStore.get("lingxi_wechat_oauth_state")?.value;
       if (!expectedState || typeof state !== "string" || state !== expectedState) {
         return NextResponse.json({ error: "微信授权状态已失效，请重新发起支付。" }, { status: 400 });

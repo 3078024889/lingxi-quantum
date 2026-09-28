@@ -32,7 +32,10 @@ const T={
  signDesc:<LxText zh="登录后查看余额、任务、订单与创作记录。" en="Sign in to view balances, tasks, orders and creation records." ja="ログインすると残高、タスク、注文、制作履歴を確認できます。" ko="로그인하면 잔액, 작업, 주문, 창작 기록을 확인할 수 있습니다." fr="Connectez-vous pour consulter soldes, tâches, commandes et historique de création." de="Anmelden, um Guthaben, Aufgaben, Bestellungen und Erstellungsverlauf zu sehen." es="Inicia sesión para ver saldos, tareas, pedidos e historial de creación." pt="Entre para ver saldos, tarefas, pedidos e histórico de criação." ar="سجّل الدخول لعرض الأرصدة والمهام والطلبات وسجل الإنشاء."/>
 };
 
-export default async function AccountPage({ searchParams }: { searchParams?: { next?: string; auth_error?: string; mode?: string } }) {
+export default async function AccountPage(
+  props: { searchParams?: Promise<{ next?: string; auth_error?: string; mode?: string }> }
+) {
+  const searchParams = await props.searchParams;
   const requestedNext = typeof searchParams?.next === "string" ? searchParams.next : null;
   const afterAuthPath = requestedNext
     && requestedNext.startsWith("/")
