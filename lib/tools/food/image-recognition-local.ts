@@ -21,7 +21,7 @@ async function getPipe(){
   m.env.localModelPath="/models/";
   if(m.env.backends?.onnx?.wasm)m.env.backends.onnx.wasm.wasmPaths="/onnxruntime/";
   return m.pipeline("image-classification","onnx-community/swin-finetuned-food101-ONNX",{dtype:"q4f16",device:"wasm"});
- })();
+ })().catch(error=>{pipePromise=null;throw error;});
  return pipePromise;
 }
 

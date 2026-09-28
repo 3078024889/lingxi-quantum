@@ -13,7 +13,7 @@ for(const f of required)if(!fs.existsSync(f))throw new Error(`SASI_V52_MISSING:$
 
 const studio=fs.readFileSync("components/SasiChatCreationStudio.tsx","utf8");
 for(const n of [
- '连接创作服务','VIDEO_RESOLUTIONS','VIDEO_RATIOS','uploadSasiAsset',
+ '创作设置','VIDEO_RESOLUTIONS','VIDEO_RATIOS','uploadSasiAsset',
  '/api/sasi/v5/feedback','website.scaffold.local','/api/sasi/quote',
  '/api/sasi/byok/video','/api/sasi/byok/text'
 ])if(!studio.includes(n))throw new Error(`SASI_V52_STUDIO_GUARD_MISSING:${n}`);

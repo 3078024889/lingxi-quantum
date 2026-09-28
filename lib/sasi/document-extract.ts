@@ -17,11 +17,32 @@ function xmlText(xml:string){
 }
 export async function extractStructuredDocument(extension:string,bytes:ArrayBuffer){
   const buffer=Buffer.from(bytes);
+  if(buffer.length>8*1024*1024)throw new Error("DOCUMENT_SIZE_LIMIT");
   if(extension==="pdf"){
     const mod=await import("pdf-parse");
     const fn=(mod.default??mod) as unknown as (input:Buffer)=>Promise<{text?:string}>;
     const out=await fn(buffer);
     return compact(out.text??"");
+  }
+  const zip=await JSZip.loadAsync(buffer);
+  const entries=Object.values(zip.files).filter(file=>!file.dir);
+  if(entries.length>2000)throw new Error("DOCUMENT_TOO_COMPLEX");
+  // Bound actual decompressed bytes before handing Office archives to parsers.
+  let expanded=0;
+  for(const file of entries){
+    await new Promise<void>((resolve,reject)=>{
+      const stream=file.nodeStream("nodebuffer");
+      let size=0,stopped=false;
+      stream.on("data",(chunk:Buffer)=>{
+        size+=chunk.length;expanded+=chunk.length;
+        if(!stopped&&(size>12*1024*1024||expanded>32*1024*1024)){
+          stopped=true;stream.pause();reject(new Error("DOCUMENT_EXPANSION_LIMIT"));
+        }
+      });
+      stream.on("error",reject);
+      stream.on("end",()=>{if(!stopped)resolve()});
+    });
+
   }
   if(extension==="docx"){
     const out=await mammoth.extractRawText({buffer});
@@ -48,7 +69,6 @@ export async function extractStructuredDocument(extension:string,bytes:ArrayBuff
     });
     return compact(rows.join("\n"));
   }
-  const zip=await JSZip.loadAsync(buffer);
   if(extension==="pptx"){
     const names=Object.keys(zip.files).filter(n=>/^ppt\/slides\/slide\d+\.xml$/i.test(n)).sort((a,b)=>{
       const an=Number(a.match(/slide(\d+)/i)?.[1]??0),bn=Number(b.match(/slide(\d+)/i)?.[1]??0);return an-bn;
@@ -61,10 +81,35 @@ export async function extractStructuredDocument(extension:string,bytes:ArrayBuff
     return compact(slides.join("\n\n"));
   }
   if(extension==="epub"){
-    const names=Object.keys(zip.files).filter(n=>/\.(xhtml|html|htm)$/i.test(n)).slice(0,300);
+    // EPUB reading order is defined by its package spine, not ZIP entry order.
+    const container=zip.file("META-INF/container.xml");
+    if(!container)throw new Error("EPUB_CONTAINER_MISSING");
+    const containerXml=await container.async("string");
+    const packagePath=containerXml.match(/full-path\s*=\s*["']([^"']+)["']/i)?.[1];
+    const packageFile=packagePath&&zip.file(packagePath);
+    if(!packageFile)throw new Error("EPUB_PACKAGE_MISSING");
+    const packageXml=await packageFile.async("string");
+    const manifest=new Map<string,string>();
+    const attribute=(tag:string,name:string)=>tag.match(new RegExp(`\\b${name}\\s*=\\s*["']([^"']+)["']`,"i"))?.[1];
+    for(const tag of packageXml.match(/<item\s[^>]*>/gi)??[]){
+      const id=attribute(tag,"id"),href=attribute(tag,"href");
+      if(id&&href)manifest.set(id,href);
+    }
+    const base=packagePath!.includes("/")?packagePath!.slice(0,packagePath!.lastIndexOf("/")+1):"";
+    const names=(packageXml.match(/<itemref\s[^>]*>/gi)??[]).flatMap(tag=>{
+      if(attribute(tag,"linear")==="no")return[];
+      const href=manifest.get(attribute(tag,"idref")??"");
+      if(!href)return[];
+      const path=new URL(href,`https://epub.invalid/${base}`);
+      if(path.origin!=="https://epub.invalid")throw new Error("EPUB_EXTERNAL_CHAPTER");
+      return[decodeURIComponent(path.pathname.slice(1))];
+    });
+    if(!names.length||names.length>300)throw new Error("EPUB_SPINE_INVALID");
     const parts:string[]=[];
     for(const name of names){
-      const html=await zip.file(name)!.async("string");
+      const chapter=zip.file(name);
+      if(!chapter)throw new Error("EPUB_CHAPTER_MISSING");
+      const html=await chapter.async("string");
       parts.push(xmlText(html));
       if(parts.join("\n").length>MAX_TEXT)break;
     }

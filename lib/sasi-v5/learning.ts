@@ -2,7 +2,7 @@ import type {SasiV5OutcomeRecord,SasiV5OutcomeSignal} from "./types";
 const SAFE=new Set<SasiV5OutcomeSignal>(["saved","downloaded","continued","regenerated","abandoned","refunded","explicit-positive","explicit-negative","delivered","failed","repaired","escalated"]);
 export function safeOutcomeRecord(i:SasiV5OutcomeRecord):SasiV5OutcomeRecord{
  if(!SAFE.has(i.signal))throw new Error("SASI_V5_SIGNAL_INVALID");const taskFamily=i.taskFamily.trim().slice(0,80);
- if(!/^[a-z0-9:_-]{2,80}$/i.test(taskFamily))throw new Error("SASI_V5_TASK_FAMILY_INVALID");
+ if(!/^[a-z0-9:._-]{2,80}$/i.test(taskFamily))throw new Error("SASI_V5_TASK_FAMILY_INVALID");
  const metadata:Record<string,unknown>={};for(const[k,v]of Object.entries(i.metadata??{})){if(!/^[a-zA-Z0-9_.-]{1,64}$/.test(k))continue;if(typeof v==="string")metadata[k]=v.slice(0,160);else if(typeof v==="number"&&Number.isFinite(v))metadata[k]=v;else if(typeof v==="boolean"||v==null)metadata[k]=v}
  return{...i,taskFamily,capability:i.capability?.slice(0,120)??null,provider:i.provider?.slice(0,80)??null,model:i.model?.slice(0,180)??null,routeId:i.routeId?.slice(0,120)??null,providerCostCurrency:i.providerCostCurrency?.slice(0,16)??null,failureCode:i.failureCode?.slice(0,120)??null,metadata};
 }
