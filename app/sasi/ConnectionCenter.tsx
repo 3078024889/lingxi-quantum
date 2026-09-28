@@ -72,7 +72,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   async function saveConnection() {
     if (!apiKey.trim() || busy) return;
     setBusy("save"); setMessage("");
-    const response = await fetch("/api/sasi/connections", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service: selected.id, apiKey }) });
+    const response = await fetch("/api/sasi/connections", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: selected.id, apiKey }) });
     const body = await response.json().catch(() => ({}));
     if (response.ok) {
       setConnections((items) => [...items.filter((item) => item.service !== selected.id), { service: selected.id, keyHint: body.keyHint, healthStatus: "stored", lastCheckedAt: null, lastErrorCode: null }]);
@@ -84,7 +84,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   async function testConnection() {
     if (!connection || busy) return;
     setBusy("test"); setMessage("");
-    const response = await fetch("/api/sasi/connections/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ service: selected.id }) });
+    const response = await fetch("/api/sasi/connections/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: selected.id }) });
     const body = await response.json().catch(() => ({}));
     setConnections((items) => items.map((item) => item.service === selected.id ? { ...item, healthStatus: body.healthStatus ?? "unhealthy", lastCheckedAt: new Date().toISOString(), lastErrorCode: body.errorCode ?? body.error ?? null } : item));
     setMessage(response.ok ? t("连接验证通过。实际可用范围以对应服务当前开放的模型与地区为准。", "Connection verified. Availability still depends on the models and regions currently supported by that service.") : `${t("验证未通过", "Verification failed")}: ${body.errorCode ?? body.error ?? response.status}`);
@@ -94,7 +94,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   async function deleteConnection() {
     if (!connection || busy || !window.confirm(t("确认撤销并永久删除这项加密凭证？", "Revoke and permanently delete this encrypted credential?"))) return;
     setBusy("delete"); setMessage("");
-    const response = await fetch(`/api/sasi/connections?service=${encodeURIComponent(selected.id)}`, { method: "DELETE" });
+    const response = await fetch(`/api/sasi/connections?provider=${encodeURIComponent(selected.id)}`, { method: "DELETE" });
     if (response.ok) { setConnections((items) => items.filter((item) => item.service !== selected.id)); setMessage(t("凭证已删除。", "Credential deleted.")); }
     else { const body = await response.json().catch(() => ({})); setMessage(`${t("删除失败", "Delete failed")}: ${body.error ?? response.status}`); }
     setBusy(null);
