@@ -6,7 +6,7 @@ const ts = require('typescript');
 function load(file, mocks = {}) {
   const m = new Module(path.resolve(file)); m.filename = path.resolve(file); m.paths = module.paths;
   const original = m.require.bind(m);
-  m.require = id => Object.hasOwn(mocks, id) ? mocks[id] : original(id);
+  m.require = id => id === './function-options' ? load('lib/sasi/function-options.ts') : Object.hasOwn(mocks, id) ? mocks[id] : original(id);
   m._compile(ts.transpileModule(fs.readFileSync(file, 'utf8'), {compilerOptions: {module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022}}).outputText, m.filename);
   return m.exports;
 }
@@ -16,6 +16,15 @@ for (const task of ['chat','director','book','website','image','video']) {
   assert.ok(m.ids.length); assert.match(m.instructions, /budget/);
 }
 assert.throws(() => methods.creationMethod('unknown'));
+assert.throws(() => methods.creationMethod('video',['evidence']), /INVALID_FUNCTION_SELECTION/);
+assert.throws(() => methods.creationMethod('video','shots'), /INVALID_FUNCTION_SELECTION/);
+assert.deepEqual(methods.creationMethod('video',['shots','dialogue','shots']).ids,['clarity','shots','dialogue']);
+assert.ok(methods.creationMethod('book',[]).ids.includes('evidence'));
+const {unitEconomics}=load('lib/sasi/unit-economics.ts');
+const videoCost=unitEconomics({priceFen:690,supplierFen:320,operationsFen:20,retryReserveFen:64,paymentFeeBps:60});
+assert.equal(videoCost.paymentFeeFen,5);assert.equal(videoCost.contributionFen,281);
+assert.equal(unitEconomics({priceFen:10,supplierFen:20,operationsFen:0,retryReserveFen:0,paymentFeeBps:0}).contributionFen,-10);
+assert.throws(()=>unitEconomics({priceFen:0,supplierFen:0,operationsFen:0,retryReserveFen:0,paymentFeeBps:0}));
 const brief = '完整用户描述'.repeat(600);
 assert.ok(methods.compileVisualBrief('image', brief).prompt.endsWith(brief));
 assert.throws(() => methods.compileVisualBrief('video', '  '));
@@ -54,6 +63,9 @@ const request = body => ({json:async()=>body});
     assert.equal(stored.request.messages.at(-1).content,'保留我的完整需求');
     assert.deepEqual(estimateMessages,stored.request.messages);
   }
+  assert.equal((await route.POST(request({action:'quote',mode:'director',question:'我的故事',functions:['dialogue','shots']}))).status,201);
+  assert.deepEqual(stored.request.method.ids,['clarity','dialogue','shots']);
+  assert.equal((await route.POST(request({action:'quote',mode:'director',question:'我的故事',functions:['mobile']}))).status,400);
   const quote = structuredClone(stored.request.messages);
   assert.equal((await route.POST(request({action:'confirm',taskId:'task'}))).status,422);
   assert.equal(executed,undefined);

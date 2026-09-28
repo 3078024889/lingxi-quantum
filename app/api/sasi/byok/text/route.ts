@@ -45,7 +45,8 @@ export async function POST(request: NextRequest) {
     const mode=body.mode??"chat";
     const evidence:GroundedEvidence[]=mode==="book"&&Array.isArray(body.evidence)?body.evidence.slice(0,9).map((e:Record<string,unknown>,i:number)=>({index:i+1,title:String(e?.title??"资料").slice(0,240),locator:String(e?.locator??"").slice(0,240),text:String(e?.text??"").slice(0,3000)})).filter((e:GroundedEvidence)=>e.text.trim()):[];
     if(mode==="book"&&!evidence.length)return reply({error:"BOOK_EVIDENCE_REQUIRED"},422);
-    const method = creationMethod(mode as CreationTask);
+    let method;
+    try{method=creationMethod(mode as CreationTask,body.functions)}catch{return reply({error:"INVALID_FUNCTION_SELECTION"},400)}
     const messages: TextMessage[] = [{ role: "system", content: SASI_SYSTEM + `\n${method.instructions}` + (director ? `\n${DIRECTOR_CONTRACT}` : mode==="website"?`\n${WEBSITE_CONTRACT}`:"") }];
     // Only server-owned successful answers may become context. Never accept a
     // client-supplied system prompt or another user's conversation history.

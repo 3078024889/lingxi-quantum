@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),ts=require('typescript'),assert=require('node:assert/strict');
-function load(file,imports={},extra={}){const m={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:m.exports,require:n=>n==='server-only'?{}:n in imports?imports[n]:require(n),URL,AbortSignal,Buffer,process:{env:{}},...extra});return m.exports;}
+function load(file,imports={},extra={}){const m={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:m.exports,require:n=>n==='server-only'?{}:n==='./function-options'?load('lib/sasi/function-options.ts',{}):n in imports?imports[n]:require(n),URL,AbortSignal,Buffer,process:{env:{}},...extra});return m.exports;}
 const series=load('lib/sasi/series-plan.ts');
 const shots=[{episode:1,duration:5,prompt:'camera follows a red paper boat',assetIds:[]},{episode:2,duration:8,prompt:'same red paper boat reaches shore',assetIds:[]}];
 assert.equal(series.validateSeriesShots(shots,12).length,2);

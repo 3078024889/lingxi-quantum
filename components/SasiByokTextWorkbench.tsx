@@ -2,15 +2,18 @@
 import {byokError,taskLabel} from "@/lib/sasi/byok-copy";
 import {useRef,useState} from "react";
 import Link from "next/link";
+import SasiFunctionMenu,{SasiSelectedFunctions} from "./SasiFunctionMenu";
 import DOMPurify from "dompurify";
 type Mode="chat"|"director"|"book"|"website";
 type Task={id:string;state:string;estimated_fen:number;expires_at:string;output?:{answer?:string;directorPlan?:unknown;website?:{title:string;html:string}}};
 export default function SasiByokTextWorkbench({mode="chat",question:provided,evidence=[]}:{mode?:Mode;question?:string;evidence?:{title:string;locator?:string;text:string}[]}){
  const [question,setQuestion]=useState("");const [task,setTask]=useState<Task|null>(null);const [busy,setBusy]=useState(false);const [error,setError]=useState("");const lock=useRef(false);
+ const [selectedFunctions,setSelectedFunctions]=useState<string[]>([]);
+ const changeFunctions=(ids:string[])=>{setSelectedFunctions(ids);setTask(null)};
  const input=provided??question;
  async function run(action:"quote"|"confirm"){
   if(lock.current)return;lock.current=true;setBusy(true);setError("");try{
-   const r=await fetch("/api/sasi/byok/text",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(action==="quote"?{action,mode,question:input,evidence}:{action,taskId:task?.id,acceptSupplierBilling:true})});const d=await r.json();
+   const r=await fetch("/api/sasi/byok/text",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(action==="quote"?{action,mode,question:input,evidence,functions:selectedFunctions}:{action,taskId:task?.id,acceptSupplierBilling:true})});const d=await r.json();
    if(!r.ok)throw new Error(d.error==="PRICE_REVIEW_REQUIRED"?"文本回答服务暂未开放，当前不会产生费用。":d.error==="CONNECTION_REQUIRED"?"请先连接你的生成服务。":byokError(d.error));setTask(action==="confirm"?{...task!,...d.task}:d.task);
   }catch(e){setError(e instanceof Error?e.message:"请求失败");}finally{lock.current=false;setBusy(false);}
  }
@@ -22,7 +25,7 @@ export default function SasiByokTextWorkbench({mode="chat",question:provided,evi
  return <section className="my-6 space-y-4 rounded-2xl border p-5">
   <h2 className="text-xl font-semibold">{{chat:"有想法，尽管说",director:"把故事变成可执行分镜",book:"带着问题，与这本书对话",website:"描述需求，生成可下载的网站"}[mode]}</h2>
   <p>写下你想完成的事，生成前会显示预计费用。{mode==="book"?"仅发送当前问题和选中的原文片段。":mode==="website"?"生成适合展示作品、品牌或活动的网站，预览满意后下载。":""}</p>
-  <Link href="/sasi/connections" className="underline">创作设置</Link>
+  <div className="flex flex-wrap items-center gap-2"><SasiFunctionMenu task={mode} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/><SasiSelectedFunctions task={mode} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/><Link href="/sasi/connections" className="ml-auto text-sm underline">生成方式</Link></div>
   {provided===undefined&&<textarea aria-label="创作需求" disabled={busy} className="w-full rounded-xl border bg-transparent p-3" rows={6} maxLength={12000} value={question} onChange={e=>{setQuestion(e.target.value);setTask(null);}}/>}
   <button className="rounded-xl border px-4 py-2 disabled:opacity-40" disabled={busy||!input.trim()||(mode==="book"&&!evidence.length)} onClick={()=>void run("quote")}>查看本次费用</button>
   {task?.state==="quoted"&&<div><p>本次预估 ¥{(task.estimated_fen/100).toFixed(2)}，实际以对应 AI 服务账单为准。这次将按你刚才提交的内容生成。</p><button disabled={busy||Date.parse(task.expires_at)<=Date.now()} className="my-2 rounded-xl border px-4 py-2" onClick={()=>void run("confirm")}>同意此预算并生成</button></div>}

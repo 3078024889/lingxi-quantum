@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         const signature=JSON.stringify(shot.assetIds);
         let references=cache.get(signature);
         if(!references){references=(await loadVideoReferences(admin,user.id,body.projectId,shot.assetIds)).map(({assetId,name,sha256})=>({assetId,name,sha256}));cache.set(signature,references);}
-        rows.push({user_id:user.id,project_id:body.projectId,request:{model:profile.model,...compileVisualBrief("video",applyProjectMemory(shot.prompt,memory.active)),originalPrompt:shot.prompt,duration:shot.duration,ratio:body.ratio,resolution:profile.resolution,generateAudio:profile.generateAudio,references,imageMode:profile.imageMode??"none",batchId,batchShotCount:shots.length,episode:shot.episode,shotIndex:index},profile_version:seedanceProfileVersion(profile),memory_version:memory.version,key_fingerprint:credential.fingerprint,estimated_fen:profile.estimatedFenPerSecond*shot.duration,price_source:profile.priceSource,expires_at:new Date(Math.min(Date.now()+600000,Date.parse(profile.validUntil))).toISOString()});
+        rows.push({user_id:user.id,project_id:body.projectId,request:{model:profile.model,...compileVisualBrief("video",applyProjectMemory(shot.prompt,memory.active),body.functions),originalPrompt:shot.prompt,duration:shot.duration,ratio:body.ratio,resolution:profile.resolution,generateAudio:profile.generateAudio,references,imageMode:profile.imageMode??"none",batchId,batchShotCount:shots.length,episode:shot.episode,shotIndex:index},profile_version:seedanceProfileVersion(profile),memory_version:memory.version,key_fingerprint:credential.fingerprint,estimated_fen:profile.estimatedFenPerSecond*shot.duration,price_source:profile.priceSource,expires_at:new Date(Math.min(Date.now()+600000,Date.parse(profile.validUntil))).toISOString()});
       }
       // One insert statement: a batch is quoted completely or not saved at all.
       const saved=await admin.from("sasi_byok_video_tasks").insert(rows).select(PUBLIC_FIELDS);
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
     try {
       const memory = await loadProjectMemory(admin, user.id, projectId);
       const references = await loadVideoReferences(admin, user.id, projectId, assetIds);
-      const input: SeedanceRequest & { references: VideoReference[]; imageMode: string; originalPrompt: string } = { model: profile.model, ...compileVisualBrief("video",applyProjectMemory(prompt, memory.active)), originalPrompt: prompt,
+      const input: SeedanceRequest & { references: VideoReference[]; imageMode: string; originalPrompt: string } = { model: profile.model, ...compileVisualBrief("video",applyProjectMemory(prompt, memory.active),body.functions), originalPrompt: prompt,
         duration: body.duration, ratio: body.ratio, resolution: profile.resolution, generateAudio: profile.generateAudio,
         references: references.map(({ assetId, name, sha256 }) => ({ assetId, name, sha256 })), imageMode: profile.imageMode ?? "none" };
       const { data, error } = await admin.from("sasi_byok_video_tasks").insert({ user_id: user.id, project_id: projectId,

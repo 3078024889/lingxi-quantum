@@ -2,7 +2,7 @@ const fs = require('fs'), vm = require('vm'), ts = require('typescript'), assert
 function load(path, imports, extra = {}) {
   const m = { exports: {} };
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText,
-    { exports: m.exports, require: n => n === 'server-only' ? {} : n in imports ? imports[n] : require(n), URL, AbortSignal, process: { env: {} }, ...extra });
+    { exports: m.exports, require: n => n === 'server-only' ? {} : n === './function-options' ? load('lib/sasi/function-options.ts',{}) : n in imports ? imports[n] : require(n), URL, AbortSignal, process: { env: {} }, ...extra });
   return m.exports;
 }
 const calls = [];
