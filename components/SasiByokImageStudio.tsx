@@ -2,7 +2,7 @@
 import {byokError,taskLabel} from "@/lib/sasi/byok-copy";
 import {useEffect,useRef,useState} from "react";
 import Link from "next/link";
-type Task={id:string;state:string;request?:{prompt:string};estimated_fen:number;expires_at:string;output?:{imageUrl?:string}};
+type Task={id:string;state:string;request?:{prompt:string;originalPrompt?:string};estimated_fen:number;expires_at:string;output?:{imageUrl?:string}};
 export default function SasiByokImageStudio(){
  const[prompt,setPrompt]=useState("");const[tasks,setTasks]=useState<Task[]>([]);const[profile,setProfile]=useState<{model:string;size:string}|null>(null);const[busy,setBusy]=useState(false);const[error,setError]=useState("");const[rights,setRights]=useState(false);const lock=useRef(false);
  async function load(){const r=await fetch("/api/sasi/byok/image",{cache:"no-store"});const d=await r.json();if(!r.ok)throw new Error(byokError(d.error));setTasks(d.tasks);setProfile(d.profile);}
@@ -14,6 +14,6 @@ export default function SasiByokImageStudio(){
  <label className="block"><input type="checkbox" disabled={busy} checked={rights} onChange={e=>setRights(e.target.checked)}/> 我拥有内容使用权，同意标记 AI 生成</label>
  <button className="rounded-xl border p-3 disabled:opacity-40" disabled={busy||!profile||!rights||prompt.trim().length<8} onClick={()=>void run({action:"quote",prompt,rightsConfirmed:true,aiLabelAcknowledged:true})}>查看单张预算</button>
  {error&&<p role="alert">{error}</p>}{busy&&<p role="status">正在处理，请保持页面打开…</p>}
- {tasks.map(t=><article className="space-y-3 rounded-xl border p-4" key={t.id}><p>{t.request?.prompt}</p><p>{taskLabel(t.state)} · 预估 ¥{(t.estimated_fen/100).toFixed(2)}</p>{t.state==="quoted"&&<button className="rounded-xl border p-3" disabled={busy||Date.parse(t.expires_at)<=Date.now()} onClick={()=>void run({action:"confirm",taskId:t.id,acceptSupplierBilling:true})}>同意预算并生成</button>}{t.output?.imageUrl&&<><img alt="AI 生成图片" className="max-h-[640px] max-w-full" src={t.output.imageUrl}/><a className="underline" href={t.output.imageUrl} target="_blank" rel="noreferrer">打开原图并保存</a><p>原图链接可能有有效期，请及时保存。</p></>}{["running","uncertain"].includes(t.state)&&<p>请先查看对应 AI 服务的使用记录，不要重复提交，以免再次产生费用。</p>}</article>)}
+ {tasks.map(t=><article className="space-y-3 rounded-xl border p-4" key={t.id}><p>{t.request?.originalPrompt ?? t.request?.prompt}</p><p>{taskLabel(t.state)} · 预估 ¥{(t.estimated_fen/100).toFixed(2)}</p>{t.state==="quoted"&&<button className="rounded-xl border p-3" disabled={busy||Date.parse(t.expires_at)<=Date.now()} onClick={()=>void run({action:"confirm",taskId:t.id,acceptSupplierBilling:true})}>同意预算并生成</button>}{t.output?.imageUrl&&<><img alt="AI 生成图片" className="max-h-[640px] max-w-full" src={t.output.imageUrl}/><a className="underline" href={t.output.imageUrl} target="_blank" rel="noreferrer">打开原图并保存</a><p>原图链接可能有有效期，请及时保存。</p></>}{["running","uncertain"].includes(t.state)&&<p>请先查看对应 AI 服务的使用记录，不要重复提交，以免再次产生费用。</p>}</article>)}
  </section>;
 }

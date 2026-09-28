@@ -6,6 +6,7 @@ import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {decryptProviderKey} from "@/lib/sasi/credential-vault";
 import {reviewSasiProductionInput} from "@/lib/sasi/safety";
 import {imageProfile,imageVersion,generateImage} from "@/lib/sasi/seedream-byok";
+import {compileVisualBrief} from "@/lib/sasi/creation-methods";
 export const runtime="nodejs";export const dynamic="force-dynamic";export const maxDuration=60;
 const fields="id,state,request,estimated_fen,expires_at,output,created_at";
 const reply=(body:unknown,status=200)=>NextResponse.json(body,{status,headers:{"Cache-Control":"no-store"}});
@@ -23,7 +24,7 @@ export async function POST(req:NextRequest){
  if(b.action==="quote"){
   if(typeof b.prompt!=="string"||b.prompt.trim().length<8||b.prompt.length>3000)return reply({error:"INVALID_IMAGE_PROMPT"},400);
   const safety=reviewSasiProductionInput({prompt:b.prompt,rightsConfirmed:b.rightsConfirmed,aiLabelAcknowledged:b.aiLabelAcknowledged});if(!safety.ok)return reply({error:safety.error},422);
-  const r=await db.from("sasi_byok_image_tasks").insert({user_id:user.id,request:{prompt:b.prompt.trim()},profile_version:imageVersion(p),key_fingerprint:c.fingerprint,estimated_fen:p.estimatedFen,expires_at:new Date(Math.min(Date.now()+600000,Date.parse(p.validUntil))).toISOString()}).select(fields).single();
+  const r=await db.from("sasi_byok_image_tasks").insert({user_id:user.id,request:{...compileVisualBrief("image",b.prompt.trim()),originalPrompt:b.prompt.trim()},profile_version:imageVersion(p),key_fingerprint:c.fingerprint,estimated_fen:p.estimatedFen,expires_at:new Date(Math.min(Date.now()+600000,Date.parse(p.validUntil))).toISOString()}).select(fields).single();
   return r.error?reply({error:"QUOTE_SAVE_FAILED"},503):reply({task:r.data,profile:p},201);
  }
  if(b.acceptSupplierBilling!==true)return reply({error:"BUDGET_CONFIRMATION_REQUIRED"},422);

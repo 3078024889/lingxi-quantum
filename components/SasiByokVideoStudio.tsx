@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import SasiSeriesStudio from "./SasiSeriesStudio";
 
-type Task = { id: string; state: string; estimated_fen: number; expires_at: string; request: { prompt: string; generateAudio: boolean; duration: number; batchId?: string; episode?: number; shotIndex?: number }; output?: { videoUrl?: string } };
+type Task = { id: string; state: string; estimated_fen: number; expires_at: string; request: { prompt: string; originalPrompt?: string; generateAudio: boolean; duration: number; batchId?: string; episode?: number; shotIndex?: number }; output?: { videoUrl?: string } };
 type Project = { id: string; title: string; kind: string };
 type Status = { enabled: boolean; connected: boolean; reason?: string; profile?: { model: string; maxDuration: number; generateAudio: boolean; resolution: string }; tasks: Task[]; profiles?: { id: string; model: string; resolution: string; maxDuration: number; imageMode?: string }[]; assets?: { id: string; original_name: string }[] };
 const errors: Record<string, string> = {
@@ -70,7 +70,7 @@ export default function SasiByokVideoStudio({ initialProjectId = "" }: { initial
     {error && <p role="alert" className="rounded-xl border border-red-300 p-4">{error}</p>}
     {status && <SasiSeriesStudio projectId={projectId} profiles={status.profiles??[]} tasks={status.tasks} assets={status.assets??[]} reload={reload}/> }
     {status?.tasks.filter(t=>!t.request.batchId).map(task => <article key={task.id} className="space-y-3 rounded-2xl border border-[var(--lx-line)] p-5">
-      <p className="whitespace-pre-wrap">{task.request.prompt}</p><p>{taskLabel(task.state)} · 预估生成费用 ¥{(task.estimated_fen / 100).toFixed(2)}（实际以对应 AI 服务账单为准）</p>
+      <p className="whitespace-pre-wrap">{task.request.originalPrompt ?? task.request.prompt}</p><p>{taskLabel(task.state)} · 预估生成费用 ¥{(task.estimated_fen / 100).toFixed(2)}（实际以对应 AI 服务账单为准）</p>
       {task.state === "quoted" && <p className="text-sm">费用由你已连接的 AI 服务账户支付，不扣 SASI 余额。</p>}
       {task.state === "quoted" && <button className={button} disabled={busy || Date.parse(task.expires_at) <= Date.now()} onClick={() => void run(async () => { await request("/api/sasi/byok/video", { action: "confirm", taskId: task.id, acceptSupplierBilling: true }); await reload(); })}>确认费用，开始生成</button>}
       {["queued", "running"].includes(task.state) && <button className={button} disabled={busy} onClick={() => void run(async () => { await request("/api/sasi/byok/video", { action: "refresh", taskId: task.id }); await reload(); })}>查询生成结果</button>}

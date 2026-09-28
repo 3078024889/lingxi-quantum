@@ -7,6 +7,7 @@ import { decryptProviderKey } from "@/lib/sasi/credential-vault";
 import { TEXT_PROFILE, TEXT_VERSION, SASI_SYSTEM, DIRECTOR_CONTRACT, estimatedTextFen, runArkText, type TextMessage } from "@/lib/sasi/ark-text";
 import { WEBSITE_CONTRACT, validateWebsiteArtifact } from "@/lib/sasi/website-artifact";
 import { buildGroundedReasoningPrompt, validateGroundedAnswer, type GroundedEvidence } from "@/lib/sasi-kernel/cognition/grounded-answer";
+import { creationMethod, type CreationTask } from "@/lib/sasi/creation-methods";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -44,7 +45,8 @@ export async function POST(request: NextRequest) {
     const mode=body.mode??"chat";
     const evidence:GroundedEvidence[]=mode==="book"&&Array.isArray(body.evidence)?body.evidence.slice(0,9).map((e:Record<string,unknown>,i:number)=>({index:i+1,title:String(e?.title??"资料").slice(0,240),locator:String(e?.locator??"").slice(0,240),text:String(e?.text??"").slice(0,3000)})).filter((e:GroundedEvidence)=>e.text.trim()):[];
     if(mode==="book"&&!evidence.length)return reply({error:"BOOK_EVIDENCE_REQUIRED"},422);
-    const messages: TextMessage[] = [{ role: "system", content: SASI_SYSTEM + (director ? `\n${DIRECTOR_CONTRACT}` : mode==="website"?`\n${WEBSITE_CONTRACT}`:"") }];
+    const method = creationMethod(mode as CreationTask);
+    const messages: TextMessage[] = [{ role: "system", content: SASI_SYSTEM + `\n${method.instructions}` + (director ? `\n${DIRECTOR_CONTRACT}` : mode==="website"?`\n${WEBSITE_CONTRACT}`:"") }];
     // Only server-owned successful answers may become context. Never accept a
     // client-supplied system prompt or another user's conversation history.
     if (body.previousId && mode === "chat") {
@@ -54,7 +56,7 @@ export async function POST(request: NextRequest) {
     }
     messages.push({ role: "user", content: mode==="book"?buildGroundedReasoningPrompt({question:body.question.trim(),mode:"book",intelligence:"standard",evidence}):body.question.trim() });
     if (messages.reduce((n, m) => n + Buffer.byteLength(m.content), 0) > 60000) return reply({ error: "CONTEXT_LIMIT_START_NEW" }, 422);
-    const result = await db.from("sasi_byok_text_tasks").insert({ user_id: user.id, request: { messages, director, mode, evidence }, profile_version: TEXT_VERSION,
+    const result = await db.from("sasi_byok_text_tasks").insert({ user_id: user.id, request: { messages, director, mode, evidence, method }, profile_version: TEXT_VERSION,
       key_fingerprint: connection.fingerprint, estimated_fen: estimatedTextFen(messages), expires_at: new Date(Math.min(Date.now() + 600000, Date.parse(TEXT_PROFILE.validUntil))).toISOString() }).select(fields).single();
     return result.error ? reply({ error: "QUOTE_SAVE_FAILED" }, 503) : reply({ task: result.data, profile: TEXT_PROFILE }, 201);
   }
