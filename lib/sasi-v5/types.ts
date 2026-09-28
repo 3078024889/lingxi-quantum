@@ -1,0 +1,8 @@
+export type SasiV5Stage = "stable" | "candidate" | "experimental" | "retired";
+export type SasiV5QualityTier = "fast" | "standard" | "premium";
+export type SasiV5QualityVector = { overall:number; instruction:number; reliability:number; continuity:number; identity?:number; typography?:number; motion?:number; physics?:number };
+export type SasiV5Economics = { expectedAttemptCostFen:number; acceptedRate:number; localComputeFen?:number; storageFen?:number; bandwidthFen?:number; paymentAllocationFen?:number; failureReserveFen?:number };
+export type SasiV5RouteCandidate = { id:string; capability:string; stage:SasiV5Stage; quality:SasiV5QualityVector; economics:SasiV5Economics; latencyMs:number; licenseAllowed:boolean; safetyPassed:boolean; priceValid:boolean; regionAvailable:boolean; metadata?:Record<string,unknown> };
+export type SasiV5RouteDecision = { selected:SasiV5RouteCandidate|null; rejected:Array<{id:string;reasons:string[]}>; qualityTier:SasiV5QualityTier; quotedPriceFen:number|null; expectedDeliveryCostFen:number|null; expectedMargin:number|null };
+export type SasiV5OutcomeSignal = "saved"|"downloaded"|"continued"|"regenerated"|"abandoned"|"refunded"|"explicit-positive"|"explicit-negative"|"delivered"|"failed"|"repaired"|"escalated";
+export type SasiV5OutcomeRecord = { userId:string; taskId?:string|null; projectId?:string|null; taskFamily:string; capability?:string|null; provider?:string|null; model?:string|null; routeId?:string|null; signal:SasiV5OutcomeSignal; latencyMs?:number|null; providerCostMinor?:number|null; providerCostCurrency?:string|null; attemptCount?:number|null; validatorScore?:number|null; failureCode?:string|null; metadata?:Record<string,unknown> };
