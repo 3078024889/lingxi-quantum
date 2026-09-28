@@ -23,7 +23,7 @@ function label(o:AccountOrderViewRow,lang:LingxiLang){
  const zh=lang==="zh";
  if(o.product_id.startsWith("toolquote:"))return zh?"实用工具任务":"Utility tool task";
  if(o.product_id.startsWith("ai-usd-balance-")||o.product_id.startsWith("ai-balance-"))return zh?"AI 余额充值":"AI balance top-up";
- if(o.product_id.startsWith("sasi-usd-balance-")||o.product_id.startsWith("sasi-balance-")||o.product_id.startsWith("sasi-credit-"))return zh?"SASI 创作余额充值":"SASI creation balance top-up";
+ if(o.product_id.startsWith("sasi-usd-balance-")||o.product_id.startsWith("sasi-balance-")||o.product_id.startsWith("sasi-credit-"))return zh?"SASI 余额充值":"SASI balance top-up";
  if(zh&&o.nameZh)return o.nameZh;
  return o.nameEn||(zh?"其他历史记录":"Other historical record");
 }

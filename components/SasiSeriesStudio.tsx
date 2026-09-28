@@ -39,7 +39,7 @@ export default function SasiSeriesStudio({projectId,profiles,tasks,assets,reload
       {Object.entries(budgets).map(([ep,b])=><p key={ep}>第 {ep} 集：{b.shots} 镜 · {b.seconds} 秒 · 预估 ¥{(b.fen/100).toFixed(2)}</p>)}
       <p>整项预估 ¥{(group.reduce((n,t)=>n+t.estimated_fen,0)/100).toFixed(2)}，实际以所用账户账单为准。</p>
       {quoted.length>0&&<button className={button} disabled={busy||unsafe||quoted.some(t=>Date.parse(t.expires_at)<=Date.now())} onClick={()=>void run(async()=>{for(const t of quoted){const d=await api({action:"confirm",taskId:t.id,acceptSupplierBilling:true});if(!["queued","running","succeeded"].includes(d.state))throw new Error("提交状态需要核对，已停止后续镜头。");}setMessage("本批镜头已提交，可以查询进度。");})}>同意剩余 {quoted.length} 镜预估 ¥{(quoted.reduce((n,t)=>n+t.estimated_fen,0)/100).toFixed(2)}，依次提交</button>}
-      {unsafe&&<p>存在待核对任务，已停止后续付费提交，请先核对供应商记录。</p>}
+      {unsafe&&<p>存在待核对任务，已停止后续付费提交，请先查看对应 AI 服务的使用记录。</p>}
       <button className={button} disabled={busy} onClick={()=>void run(async()=>{for(const t of group.filter(t=>["queued","running"].includes(t.state)))await api({action:"refresh",taskId:t.id});})}>查询本批进度</button>
       {group.map(t=><div key={t.id}>镜头 {(t.request.shotIndex??0)+1}：{taskLabel(t.state)}{t.state==="succeeded"&&t.output?.videoUrl&&<a className="ml-2 underline" href={t.output.videoUrl} target="_blank" rel="noreferrer">打开并保存视频</a>}</div>)}
       <Link className="inline-block underline" href="/sasi/assemble">保存镜头后，按集免费合成 MP4 →</Link>

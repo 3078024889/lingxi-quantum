@@ -12,7 +12,7 @@ export default function SasiPricingCurrencyClient(){
  const usd=usdBalanceProducts.filter(x=>x.wallet==="sasi");
  return <main className="lx11-page"><div className="lx11-wrap py-16 sm:py-20">
   <section className="max-w-3xl">
-   <p className="lx11-kicker">SASI · {zh?"创作余额":"Creation balance"}</p>
+   <p className="lx11-kicker">SASI · {zh?"余额":"Balance"}</p>
    <h1 className="mt-3 text-3xl font-semibold text-[var(--lx-ink)]">{zh?"按你选择的支付币种继续。":"Continue in the payment currency you prefer."}</h1>
    <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]">{zh?"人民币与美元使用各自独立的价格簿，不按实时汇率换算。你的币种选择会在全站保持一致。":"CNY and USD use independent price books, not live exchange-rate conversion. Your currency choice stays consistent across LINGXIFIELD."}</p>
    <div className="mt-5 max-w-xs"><CurrencySelector/></div>

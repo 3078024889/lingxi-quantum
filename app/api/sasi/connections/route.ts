@@ -26,7 +26,7 @@ export async function GET() {
       .eq("user_id",user.id).order("updated_at",{ascending:false});
     if(error) throw error;
     return NextResponse.json({ vaultReady:true, connections:(data??[]).map(row=>({
-      provider:row.provider,keyHint:row.key_hint,healthStatus:row.health_status,lastCheckedAt:row.last_checked_at,
+      service:row.provider,provider:row.provider,keyHint:row.key_hint,healthStatus:row.health_status,lastCheckedAt:row.last_checked_at,
       lastErrorCode:row.last_error_code,updatedAt:row.updated_at,
     })) },{headers:{"Cache-Control":"no-store"}});
   } catch(error) {
@@ -56,7 +56,7 @@ export async function POST(request:NextRequest) {
       last_checked_at:null,last_error_code:null,updated_at:new Date().toISOString(),
     },{onConflict:"user_id,provider"});
     if(error) throw error;
-    return NextResponse.json({ok:true,provider:body.provider,keyHint:providerKeyHint(apiKey),healthStatus:"stored"},{status:201});
+    return NextResponse.json({ok:true,service:body.provider,provider:body.provider,keyHint:providerKeyHint(apiKey),healthStatus:"stored"},{status:201});
   } catch(error) {
     console.error("[sasi byok] save unavailable",error instanceof Error?error.message:"unknown");
     return NextResponse.json({error:"BYOK_SAVE_FAILED"},{status:503});

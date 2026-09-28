@@ -25,9 +25,9 @@ export default function SasiByokTextWorkbench({mode="chat",question:provided,evi
   <Link href="/sasi/connections" className="underline">创作设置</Link>
   {provided===undefined&&<textarea aria-label="创作需求" disabled={busy} className="w-full rounded-xl border bg-transparent p-3" rows={6} maxLength={12000} value={question} onChange={e=>{setQuestion(e.target.value);setTask(null);}}/>}
   <button className="rounded-xl border px-4 py-2 disabled:opacity-40" disabled={busy||!input.trim()||(mode==="book"&&!evidence.length)} onClick={()=>void run("quote")}>查看本次费用</button>
-  {task?.state==="quoted"&&<div><p>本次预估 ¥{(task.estimated_fen/100).toFixed(2)}，实际以供应商账单为准。这次将按你刚才提交的内容生成。</p><button disabled={busy||Date.parse(task.expires_at)<=Date.now()} className="my-2 rounded-xl border px-4 py-2" onClick={()=>void run("confirm")}>同意此预算并生成</button></div>}
+  {task?.state==="quoted"&&<div><p>本次预估 ¥{(task.estimated_fen/100).toFixed(2)}，实际以对应 AI 服务账单为准。这次将按你刚才提交的内容生成。</p><button disabled={busy||Date.parse(task.expires_at)<=Date.now()} className="my-2 rounded-xl border px-4 py-2" onClick={()=>void run("confirm")}>同意此预算并生成</button></div>}
   {busy&&<p role="status">正在处理，请保持页面打开…</p>}{error&&<p role="alert">{error}</p>}
-  {task&&!["quoted","succeeded"].includes(task.state)&&<p>{taskLabel(task.state)}。结果不确定时不会自动重试，请先核对供应商记录。</p>}
+  {task&&!["quoted","succeeded"].includes(task.state)&&<p>{taskLabel(task.state)}。结果不确定时不会自动重试，请先查看对应 AI 服务的使用记录。</p>}
   {task?.output?.answer&&<p className="whitespace-pre-wrap">{website?"网站已生成，看看是否符合你的想法。":task.output.answer}</p>}
   {task?.output?.directorPlan!==undefined&&<><button className="rounded-xl border p-3" onClick={()=>save(new Blob([JSON.stringify(task.output!.directorPlan,null,2)],{type:"application/json"}),"sasi-storyboard.json")}>下载分镜文件</button><Link href="/sasi/drama" className="ml-3 underline">导入分镜并生成视频 →</Link></>}
   {website&&<><p className="text-sm">这是展示型网站，不含登录、收款或资料保存功能；下载后可发布到你的网站空间。</p><iframe title="网站预览" sandbox="" referrerPolicy="no-referrer" className="h-[600px] w-full rounded-xl border bg-white" srcDoc={`<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; form-action 'none'">${html}`}/><button className="rounded-xl border p-3" onClick={()=>void download()}>下载网站文件</button></>}

@@ -2,9 +2,9 @@ export function taskLabel(state:string){return ({quoted:"等待你确认费用",
 export function byokError(code:unknown){
  const c=String(code??"");
  if(c==="AUTH_REQUIRED")return "请先登录，再继续创作。";
- if(/PRICE|ACCEPTANCE|EXECUTION_UNAVAILABLE/.test(c))return "这个生成服务暂时不能使用，尚未产生模型费用。请稍后再试。";
- if(/CONNECTION|MODEL_NOT_OPEN/.test(c))return "请到「连接生成服务」检查账户连接，并确认已开通所选模型。";
- if(/UNCERTAIN|RECONCILIATION|ALREADY_STARTED/.test(c))return "这次请求可能已被接收。请先到生成服务的账户核对记录，不要重复生成，以免再次收费。";
+ if(/PRICE|ACCEPTANCE|EXECUTION_UNAVAILABLE/.test(c))return "当前生成方式暂时不可用，本次不会产生费用。请稍后再试。";
+ if(/CONNECTION|MODEL_NOT_OPEN/.test(c))return "请到「连接 AI 服务」检查连接，并确认对应能力已经开通。";
+ if(/UNCERTAIN|RECONCILIATION|ALREADY_STARTED/.test(c))return "这次请求可能已经开始。请先查看对应 AI 服务的使用记录，不要重复生成，以免再次收费。";
  if(/REQUOTE|CONTENT_CHANGED/.test(c))return "这份预算已失效，请重新查看费用后确认。";
  if(/REFERENCE/.test(c))return "参考图片暂不能使用，请检查图片格式、数量，或换一个支持参考图的模型。";
  if(/LIMIT|LENGTH|INVALID|SERIES/.test(c))return "请检查内容、镜头数量和时长，再试一次。";
