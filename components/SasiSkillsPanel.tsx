@@ -164,15 +164,6 @@ export default function SasiSkillsPanel({
       </div>
     </section>
 
-    <section className={`mt-10 rounded-2xl border p-5 ${panel}`}>
-      <h2 className="text-base font-semibold">{copy(lang,"预算怎么显示","How pricing appears")}</h2>
-      <p className="mt-2 text-sm leading-7 opacity-65">
-        {copy(
-          lang,
-          "选好 Skill，再选择时长、画质和画幅，SASI 会在真正开始前同时给出人民币和美元预算。美元数字固定为人民币数字的一半，例如 ¥9.90 / $4.95、¥30 / $15、¥50 / $25。使用你自己上传的 Skill，当前按同规格价格下调 10%，但不会低于实际制作成本。",
-          "After choosing a Skill, duration, quality and format, SASI shows CNY and USD prices before anything starts. The USD number is always half the CNY number, such as ¥9.90 / $4.95, ¥30 / $15 and ¥50 / $25. Your own Skill currently receives a 10% same-spec discount without pricing below actual production cost.",
-        )}
-      </p>
-    </section>
+
   </section>;
 }

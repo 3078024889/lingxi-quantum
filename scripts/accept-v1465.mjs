@@ -3,7 +3,7 @@ const r=p=>fs.readFileSync(p,"utf8");
 const failures=[];
 const a=(v,m)=>{console.log(`${v?"PASS":"FAIL"} ${m}`);if(!v)failures.push(m)};
 
-a(r("lib/sasi/video-pricing.ts").includes("Math.ceil(amountFen/2)"),"USD task price is half RMB numeric");
+a(r("lib/sasi/video-pricing.ts").includes("retailUsdCentsPerSecond")&&r("lib/sasi/video-pricing.ts").includes("supplierUsdCentsPerSecond")&&r("lib/sasi/video-pricing.ts").includes("assertMarginFloor"),"CNY and USD use independent price books with margin protection");
 a(r("app/api/sasi/quote/route.ts").includes("amountUsd"),"quote returns CNY and USD");
 a(r("app/api/sasi/quote/route.ts").includes("resolveSasiSkill"),"quote validates selected Skill");
 a(r("app/api/sasi/jobs/route.ts").includes("applySasiSkill"),"job applies selected Skill");

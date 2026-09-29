@@ -137,7 +137,7 @@ export function estimateMaxRetailFen(inputChars:number,task:TaskKind,tier:Intell
  if(!candidates.length)throw new Error("NO_AI_PROVIDER_CONFIGURED");
  const approxInput=Math.max(1,Math.ceil(inputChars/2));
  const maxOut=maxOutputForTier(tier);
- const retail=Math.max(1,Number(process.env.AI_RETAIL_MULTIPLIER||4))*intelligenceFactor(tier);
+ const retail=1/(1-0.45);
  const minimumFen=minimumChargeFenForTier(tier);
  // Reserve against the most expensive currently-configured fallback, not only the first provider.
  const worst=Math.max(...candidates.map(p =>
@@ -148,7 +148,7 @@ export function estimateMaxRetailFen(inputChars:number,task:TaskKind,tier:Intell
 
 export function actualChargeFen(p:ProviderConfig,u:ProviderUsage,tier:Intelligence){
  const costRmb=providerCostRmb(p,u);
- const retail=Math.max(1,Number(process.env.AI_RETAIL_MULTIPLIER||4))*intelligenceFactor(tier);
+ const retail=1/(1-0.45);
  const minimumFen=minimumChargeFenForTier(tier);
  return {providerCostFen:costRmb*100,chargeFen:Math.max(minimumFen,Math.ceil(costRmb*retail*100))};
 }
