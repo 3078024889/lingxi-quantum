@@ -1,17 +1,15 @@
 import {NextRequest,NextResponse} from "next/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {searchLocalFoods} from "@/lib/tools/food/local-catalog";
+import {canonicalFood} from "@/lib/tools/food/canonical";
 export const runtime="nodejs";
-function terms(input:string){return Array.from(new Set(input.split(/[\s,，、;；]+/).map(x=>x.trim()).filter(Boolean))).slice(0,8)}
-function publicCandidate(item:any){return{food_id:Number(item.food_id),code:String(item.code||""),name_zh:String(item.name_zh||""),name_en:item.name_en?String(item.name_en):null,category:item.category?String(item.category):null,score:Number(item.score||0)}}
+function publicItem(x:any,canonicalKey:string){return{food_id:Number(x.food_id),code:String(x.source_food_id||x.code||canonicalKey),name_zh:String(x.name_zh||x.name_en||""),name_en:String(x.name_en||x.description_en||x.name_zh||""),category:x.category?String(x.category):null,score:Number(x.score||1),canonical_key:canonicalKey,source:"USDA FoodData Central"}}
 export async function GET(req:NextRequest){
- const q=new URL(req.url).searchParams.get("q")?.trim()||"";if(!q||q.length>120)return NextResponse.json({items:[]});
- const admin=createAdminClient(),rows:any[]=[];const qs=terms(q);
- for(const term of qs)for(const item of searchLocalFoods(term,8))rows.push(item);
- const {data:v3,error:v3e}=await admin.rpc("search_food_nutrition_v3",{p_queries:qs,p_limit:24});
- if(!v3e)for(const item of v3||[])rows.push(item);
- else for(const term of qs){const{data}=await admin.rpc("search_food_nutrition_v2",{p_query:term,p_limit:8});for(const item of data||[])rows.push(item)}
- const seen=new Set<number>();
- const items=rows.filter(item=>{const id=Number(item.food_id);if(!Number.isInteger(id)||id<=0||seen.has(id))return false;seen.add(id);return true}).sort((a,b)=>Number(b.score||0)-Number(a.score||0)).slice(0,24).map(publicCandidate);
- return NextResponse.json({items},{headers:{"Cache-Control":"public, max-age=60, stale-while-revalidate=300"}});
+ const raw=new URL(req.url).searchParams.get("q")?.trim()||"";if(!raw||raw.length>120)return NextResponse.json({items:[]});
+ const c=canonicalFood(raw),admin=createAdminClient(),rows:any[]=[];
+ const {data,error}=await admin.rpc("search_food_compact_v1",{p_query:c.query,p_limit:24});
+ if(!error)for(const x of data||[])rows.push(publicItem(x,c.key));
+ if(!rows.length)for(const x of searchLocalFoods(c.query,8))rows.push({...x,canonical_key:c.key,source:"Lingxifield local"});
+ const seen=new Set<number>();const items=rows.filter(x=>Number.isInteger(Number(x.food_id))&&!seen.has(Number(x.food_id))&&seen.add(Number(x.food_id))).slice(0,24);
+ return NextResponse.json({canonical_key:c.key,items},{headers:{"Cache-Control":"public, max-age=60, stale-while-revalidate=300"}});
 }
