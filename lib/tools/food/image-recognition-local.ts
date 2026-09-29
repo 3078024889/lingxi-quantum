@@ -1,6 +1,7 @@
 "use client";
 
 import {COMMON_FOOD_CANDIDATES} from "./common-food-vocabulary";
+import {visualFoodHints} from "./image-visual-hints";
 
 export type FoodVisionPrediction={label:string;score:number;source:"food101"|"clip-zero-shot"};
 
@@ -78,6 +79,7 @@ export async function recognizeFoodImage(file:File):Promise<FoodVisionPrediction
  const input=await toDataUrl(file);
  const basePipe=await food101();
  const base=normalize(await basePipe(input,{top_k:5}),"food101");
+ const visual=(await visualFoodHints(file).catch(()=>[])).map(x=>({label:x.label,score:x.score,source:"clip-zero-shot" as const}));
 
  // Food-101 is intentionally narrow. When the optional local CLIP pack is installed,
  // run broad zero-shot candidates as a second independent signal. No remote model calls.
@@ -90,7 +92,7 @@ export async function recognizeFoodImage(file:File):Promise<FoodVisionPrediction
    broad=[];
   }
  }
- return merge(base,broad);
+ return merge(visual,merge(base,broad));
 }
 
 export async function foodVisionCapabilities(){

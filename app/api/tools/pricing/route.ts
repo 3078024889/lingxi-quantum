@@ -10,7 +10,7 @@ export const dynamic="force-dynamic";
 const PUBLIC_SET:ReadonlySet<string>=new Set(PUBLIC_PAID_TOOL_IDS);
 
 function presentationUnit(toolId:string,unitName:string){
-  if(toolId==="food-calorie")return "calculation";
+  if(toolId==="food-calorie")return "image";
   return unitName;
 }
 

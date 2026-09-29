@@ -37,7 +37,7 @@ export function recommendedCurrency(req: Request | NextRequest): PaymentCurrency
 
 export function providerAllowedForCurrency(provider: string, currency: PaymentCurrency) {
   return currency === "CNY"
-    ? provider === "wechat" || provider === "alipay"
+    ? provider === "wechat"
     : provider === "paypal";
 }
 

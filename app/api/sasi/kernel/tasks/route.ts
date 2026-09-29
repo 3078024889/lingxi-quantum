@@ -14,9 +14,11 @@ export async function POST(req:NextRequest){
  const size=Number(req.headers.get("content-length")||0);if(Number.isFinite(size)&&size>1024*1024)return NextResponse.json({error:"请求内容过大。"},{status:413});
  const body=(await req.json().catch(()=>null)) as Record<string,unknown>|null;if(!body)return NextResponse.json({error:"请求内容无法读取。"},{status:400});
  const kind=String(body.kind||"") as SasiTaskKind,action=String(body.action||"").trim();if(!KINDS.has(kind)||!action||action.length>80)return NextResponse.json({error:"任务类型无法识别。"},{status:400});
- const projectId=typeof body.projectId==="string"?body.projectId:null;const admin=createAdminClient();
+ const projectId=typeof body.projectId==="string"?body.projectId:null;
+ const skillSelection=body.skill&&typeof body.skill==="object"?body.skill:null;
+ const admin=createAdminClient();
  const taskId=crypto.randomUUID();
- const insert=await admin.from("sasi_tasks").insert({id:taskId,user_id:user.id,project_id:projectId,kind,action,input:body.input??{},constraints:body.constraints??{},state:"running",progress:0.05,started_at:new Date().toISOString()}).select("id").single();
+ const insert=await admin.from("sasi_tasks").insert({id:taskId,user_id:user.id,project_id:projectId,kind,action,input:body.input??{},constraints:{...((body.constraints&&typeof body.constraints==="object")?body.constraints:{}),skill:skillSelection},state:"running",progress:0.05,started_at:new Date().toISOString()}).select("id").single();
  if(insert.error)return NextResponse.json({error:"任务暂时无法开始。"},{status:503});
  const result=await executeSasiKernel({id:taskId,ownerId:user.id,projectId,kind,action,input:body.input,intelligence:body.intelligence==="light"?"light":body.intelligence==="high"?"high":"standard",mode:body.mode==="enhanced"?"enhanced":"autonomous"});
  const state=result.ok?"succeeded":"failed",completedAt=new Date().toISOString();

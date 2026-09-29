@@ -1,86 +1,62 @@
 "use client";
-import {useEffect,useRef,useState} from "react";
+import {useEffect,useMemo,useState} from "react";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
-import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {recognizeFoodImage,type FoodVisionPrediction} from "@/lib/tools/food/image-recognition-local";
 import {foodLabel} from "@/lib/tools/food/vision-labels";
 import {canonicalQuery} from "@/lib/tools/food/canonical";
-import FoodBatchWorkspace from "@/components/tools/FoodBatchWorkspace";
-
-type SearchItem={food_id:number;code:string;name_zh:string;name_en?:string|null;category?:string|null;score:number;source_key?:string|null};
+type SearchItem={food_id:number;name_zh:string;name_en?:string|null;category?:string|null};
 type Selected={food:SearchItem;grams:number};
-type ResultItem={food_id:number;code:string;name_zh:string;name_en?:string|null;grams:number;kcal:number;protein_g?:number|null;carbs_g?:number|null;fat_g?:number|null;fiber_g?:number|null;sugar_g?:number|null;sodium_mg?:number|null;source_key?:string|null};
-type Insight={tone:"good"|"watch"|"add";key:string;value?:number};
-type CalcResult={items:ResultItem[];total:ResultItem&{grams:number};insights?:Insight[];next_actions?:string[];sources?:string[]};
-type Price={amount_rmb:number;amount_usd:number};
-const COPY:any={
- zh:{title:"拍一顿饭，看懂这一餐。",lead:"认出食物，确认份量，看看这餐有多少热量、营养够不够、下一餐怎么搭。",photo:"上传这一餐",manual:"直接填写",single:"单张",batch:"10 张",find:"找到它",food:"食物名称",weight:"份量（克）",add:"加进这一餐",pay:"开始分析",result:"这一餐",how:"吃得怎么样？",next:"下一餐可以这样搭",inside:"这一餐里有什么",source:"这些数字从哪里来？",sourceLead:"每项结果按食物、份量和可用营养资料计算；没有可靠数据的项目不会编成 0。",no:"暂时没找到。试试更常见的名字或英文名。",choose:"选择照片",checking:"正在看看照片里有什么…",possible:"照片里可能有",confirm:"点一下候选，再确认份量。",protein_good:"蛋白质比较充足",protein_add:"蛋白质还可以再补一点",fiber_good:"膳食纤维不错",fiber_add:"蔬菜、水果或全谷物可以再多一点",sodium_high:"这餐的钠偏高",sugar_high:"这餐的糖偏高",energy_dense:"这一餐能量比较集中",recorded:"这一餐已经记录下来",add_plants:"下一餐多加一份蔬菜或水果",add_protein:"下一餐补一份优质蛋白质",less_salt:"下一餐少一点汤汁、蘸料和高盐食物",less_sugar:"下一餐少一点甜饮和高糖食物",lighter_next:"下一餐可以清淡一些",keep_variety:"继续保持食物多样化",trend:"看看最近吃得怎么样"},
- en:{title:"See what this meal really adds up to.",lead:"Recognize the food, confirm the portions, then see the calories, nutrition balance and what could fit better next.",photo:"Upload this meal",manual:"Enter foods",single:"1 photo",batch:"10 photos",find:"Find it",food:"Food",weight:"Portion (g)",add:"Add to this meal",pay:"Analyze meal",result:"This meal",how:"How does it look?",next:"A useful next meal",inside:"What's in this meal",source:"Where do these numbers come from?",sourceLead:"Results use the food, confirmed portion and available composition data. Missing measurements are never invented as zero.",no:"No match yet. Try a common name or English name.",choose:"Choose photo",checking:"Checking what's in the photo…",possible:"This might be",confirm:"Choose a suggestion, then confirm the portion.",protein_good:"A solid amount of protein",protein_add:"Protein could use a little more",fiber_good:"A good amount of fiber",fiber_add:"Add more vegetables, fruit or whole grains",sodium_high:"Sodium is on the high side",sugar_high:"Sugar is on the high side",energy_dense:"This is an energy-dense meal",recorded:"Meal recorded",add_plants:"Add a serving of vegetables or fruit next meal",add_protein:"Add a quality protein next meal",less_salt:"Go lighter on sauces, soups and salty foods next meal",less_sugar:"Go lighter on sweet drinks and sugary foods next meal",lighter_next:"A lighter next meal may balance the day",keep_variety:"Keep a varied plate",trend:"See recent meals"}
-};
-function tr(lang:LingxiLang,k:string){return (COPY[lang]||COPY.en)?.[k]||COPY.en[k]||k}
-const show=(v:unknown,d=1)=>v!==null&&v!==undefined&&Number.isFinite(Number(v))?Number(v).toFixed(d):"—";
-const display=(x:SearchItem|ResultItem,lang:LingxiLang)=>lang==="zh"?x.name_zh:(x.name_en||x.name_zh);
-async function searchFood(q:string):Promise<SearchItem[]>{const r=await fetch(`/api/tools/food/search?q=${encodeURIComponent(q)}`,{cache:"no-store"});const d=await r.json().catch(()=>({}));return r.ok&&Array.isArray(d.items)?d.items:[]}
-
+type Result={items:any[];total:any;sources?:string[]};
+const C:any={
+ zh:{upload:"上传图片",batch:"批量上传图片",custom:"自定义名称",drop:"选择或拖入食物图片",drop2:"支持常见图片格式 · 图片只用于本次识别",checking:"正在识别…",found:"识别到的内容",confirm:"确认食物",name:"输入食物名称",search:"搜索",portion:"份量",ready:"已确认",view:"查看分析结果",free:"今日首次识别免费",used:"确认后即可查看完整结果",pay:"查看分析结果",result:"识别结果",nutrition:"营养成分",source:"数据来源",retry:"识别不准确？可搜索并替换食物名称",empty:"没有找到合适结果，请换个名称试试。",batchTitle:"一次选择多张图片",batchLead:"每张图片单独识别，确认后统一查看结果。"},
+ en:{upload:"Upload image",batch:"Upload multiple images",custom:"Custom name",drop:"Choose or drop a food image",drop2:"Common image formats supported",checking:"Recognizing…",found:"Detected",confirm:"Confirm food",name:"Enter food name",search:"Search",portion:"Portion",ready:"Confirmed",view:"View analysis",free:"Your first scan today is free",used:"Confirm the food to continue",pay:"View analysis",result:"Result",nutrition:"Nutrition",source:"Sources",retry:"Not right? Search and replace the food name.",empty:"No close match. Try another name.",batchTitle:"Choose multiple images",batchLead:"Each image is recognized separately, then reviewed together."}
+};const t=(l:LingxiLang,k:string)=>(C[l]||C.en)[k]||C.en[k]||k;
+const name=(x:SearchItem,l:LingxiLang)=>l==="zh"?x.name_zh:(x.name_en||x.name_zh);
+async function search(q:string){const r=await fetch(`/api/tools/food/search?q=${encodeURIComponent(canonicalQuery(q))}`,{cache:"no-store"});const d=await r.json().catch(()=>({}));return r.ok&&Array.isArray(d.items)?d.items as SearchItem[]:[]}
+function N({v,u}:{v:any,u:string}){return <div className="rounded-2xl bg-[var(--lx-soft)] p-4"><b className="text-xl">{v==null?"—":Number(v).toFixed(u==="kcal"?0:1)}</b><span className="ml-1 text-xs text-[var(--lx-muted)]">{u}</span></div>}
 export default function FoodCalorieWorkbench(){
- const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();const[mode,setMode]=useState<"photo"|"manual"|"batch">("photo"),[price,setPrice]=useState<Price|null>(null);
- useEffect(()=>{void fetch(`/api/tools/pricing?toolId=food-calorie&currency=${currency}`,{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>d&&setPrice(d)).catch(()=>{})},[currency]);
- const one=currency==="CNY"?`¥${Number(price?.amount_rmb??3).toFixed(0)}`:`$${Number(price?.amount_usd??3).toFixed(0)}`;
- async function recognizeBatch(files:File[]){
-  const results:Array<{file:File;predictions:FoodVisionPrediction[]}>=[];
-  for(const file of files){
-   const predictions=(await recognizeFoodImage(file)).filter(x=>x.score>=.05).slice(0,6);
-   results.push({file,predictions});
-  }
-  return results;
- }
- return <div className="space-y-5" data-food-version="v14">
-  <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-   <h2 className="text-2xl font-semibold">{tr(lang,"title")}</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--lx-muted)]">{tr(lang,"lead")}</p>
-   <div className="mt-4 flex flex-wrap gap-2"><span className="rounded-full bg-[var(--lx-soft)] px-3 py-1.5 text-sm">{one} / {tr(lang,"single")}</span><span className="rounded-full bg-[var(--lx-soft)] px-3 py-1.5 text-sm">¥3 / 张 · $3 / 张</span></div>
+ const{lang}=useLingxiLang();const[mode,setMode]=useState<"single"|"batch"|"custom">("single"),[files,setFiles]=useState<File[]>([]);
+ return <div className="overflow-hidden rounded-[28px] bg-[var(--lx-panel)]" data-food-version="v15">
+  <section className="relative overflow-hidden rounded-[28px] border border-[var(--lx-line)] bg-[var(--lx-soft)] p-6 sm:p-8">
+   <div className="absolute -right-10 -top-12 h-44 w-44 rounded-full border-[26px] border-current opacity-[.035]"/><div className="absolute right-16 top-12 h-20 w-20 rounded-full border-[16px] border-current opacity-[.04]"/>
+   <div className="relative max-w-xl"><span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--lx-ink)] text-2xl text-[var(--lx-bg)]">◉</span><h2 className="mt-5 text-2xl font-semibold sm:text-3xl">{lang==="zh"?"卡路里识别":"Calorie Scan"}</h2><p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"上传食物图片，确认识别内容后查看热量与营养成分。":"Upload a food image, confirm what was detected, then view calories and nutrition."}</p></div>
   </section>
-  <div className="grid gap-3 sm:grid-cols-3">
-   <button onClick={()=>setMode("photo")} className={`rounded-2xl border p-4 text-left ${mode==="photo"?"border-[var(--lx-ink)] bg-[var(--lx-soft)]":"border-[var(--lx-line)]"}`}>{tr(lang,"photo")}</button>
-   <button onClick={()=>setMode("manual")} className={`rounded-2xl border p-4 text-left ${mode==="manual"?"border-[var(--lx-ink)] bg-[var(--lx-soft)]":"border-[var(--lx-line)]"}`}>{tr(lang,"manual")}</button>
-   <button onClick={()=>setMode("batch")} className={`rounded-2xl border p-4 text-left ${mode==="batch"?"border-[var(--lx-ink)] bg-[var(--lx-soft)]":"border-[var(--lx-line)]"}`}>多张一起看</button>
-  </div>
-  {mode==="photo"?<PhotoMode lang={lang}/>:mode==="batch"?<FoodBatchWorkspace onRecognize={recognizeBatch}/>:<MealEditor lang={lang}/>}
+  <nav className="mt-4 grid grid-cols-3 gap-2">{[["single","upload"],["batch","batch"],["custom","custom"]].map(([m,k])=><button key={m} onClick={()=>{setMode(m as any);setFiles([])}} className={`rounded-2xl px-3 py-3 text-sm font-medium transition ${mode===m?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)] hover:bg-[var(--lx-soft)]"}`}>{t(lang,k)}</button>)}</nav>
+  <div className="mt-4">{mode==="custom"?<FoodConfirm lang={lang} initial=""/>:<Uploader lang={lang} multiple={mode==="batch"} files={files} setFiles={setFiles}/>}</div>
  </div>
 }
-
-function PhotoMode({lang}:{lang:LingxiLang}){
- const[preview,setPreview]=useState(""),[preds,setPreds]=useState<FoodVisionPrediction[]>([]),[suggestion,setSuggestion]=useState<{query:string;id:number}>(),[busy,setBusy]=useState(false);const attempt=useRef(0);
- useEffect(()=>()=>{if(preview)URL.revokeObjectURL(preview)},[preview]);
- async function inspect(file:File){const id=++attempt.current;if(preview)URL.revokeObjectURL(preview);setPreview(URL.createObjectURL(file));setPreds([]);setBusy(true);try{const out=await recognizeFoodImage(file);if(id===attempt.current)setPreds(out.filter(x=>x.score>=.05).slice(0,6))}finally{if(id===attempt.current)setBusy(false)}}
- return <><section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-  <input type="file" accept="image/*" aria-label={tr(lang,"choose")} onChange={e=>{const f=e.target.files?.[0];if(f)void inspect(f)}}/>
-  {preview&&<img src={preview} alt="" className="mt-4 max-h-72 rounded-xl object-contain"/>}{busy&&<p className="mt-3 text-sm">{tr(lang,"checking")}</p>}
-  {preds.length>0&&<div className="mt-4"><b>{tr(lang,"possible")}</b><div className="mt-2 flex flex-wrap gap-2">{preds.map(p=><button key={`${p.source}-${p.label}`} onClick={()=>setSuggestion({query:p.label,id:Date.now()})} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-1.5 text-sm">{foodLabel(p.label,lang)} ＋</button>)}</div><p className="mt-3 text-xs text-[var(--lx-muted)]">{tr(lang,"confirm")}</p></div>}
- </section><MealEditor lang={lang} suggestion={suggestion}/></>
-}
-
-function MealEditor({lang,suggestion}:{lang:LingxiLang;suggestion?:{query:string;id:number}}){
- const[q,setQ]=useState(""),[grams,setGrams]=useState(100),[hits,setHits]=useState<SearchItem[]>([]),[selected,setSelected]=useState<Selected[]>([]),[error,setError]=useState(""),[result,setResult]=useState<CalcResult|null>(null),[busy,setBusy]=useState(false);
- async function search(q0=q){const x=q0.trim();if(!x)return;const rows=await searchFood(x).catch(()=>[]);setHits(rows);setError(rows.length?"":tr(lang,"no"))}
- useEffect(()=>{if(suggestion?.query){setQ(suggestion.query);void search(suggestion.query)}},[suggestion?.id]);
- function add(food:SearchItem){setSelected(v=>[...v,{food,grams:Math.max(1,Math.min(10000,grams||100))}]);setHits([]);setQ("");setResult(null)}
- async function calc(quoteId:string){setBusy(true);setError("");try{const r=await fetch("/api/tools/food/calculate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteId,photoCount:1,items:selected.map(x=>({food_id:x.food.food_id,grams:x.grams}))})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error();setResult(d)}catch{setError(lang==="zh"?"这次没有算完，请再试一次。":"This analysis did not finish. Please try again.")}finally{setBusy(false)}}
- return <div className="space-y-5">
-  <section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><div className="grid gap-3 sm:grid-cols-[1fr_140px_auto]"><input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==="Enter"&&void search()} placeholder={tr(lang,"food")} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-bg)] px-4 py-3"/><input type="number" min={1} max={10000} value={grams} onChange={e=>setGrams(Number(e.target.value)||1)} aria-label={tr(lang,"weight")} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-bg)] px-4 py-3"/><button onClick={()=>void search()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-[var(--lx-bg)]">{tr(lang,"find")}</button></div>
-  {hits.length>0&&<div className="mt-3 divide-y divide-[var(--lx-line)] rounded-xl border border-[var(--lx-line)]">{hits.map(x=><button key={x.food_id} onClick={()=>add(x)} className="flex w-full justify-between px-4 py-3 text-left"><span><b>{display(x,lang)}</b>{x.category&&<small className="ml-2 text-[var(--lx-muted)]">{x.category}</small>}</span><span>＋</span></button>)}</div>}{error&&<p className="mt-3 text-sm">{error}</p>}</section>
-  {selected.length>0&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><div className="space-y-2">{selected.map((x,i)=><div key={i} className="flex justify-between rounded-xl bg-[var(--lx-soft)] px-4 py-3"><span>{display(x.food,lang)} · {x.grams}g</span><button onClick={()=>setSelected(v=>v.filter((_,j)=>j!==i))}>×</button></div>)}</div><div className="mt-5">{busy?<span>…</span>:<PaidActionButton toolId="food-calorie" quantity={1} metadata={{mode:"meal-analysis",foods:selected.length}} onPaid={calc} label={tr(lang,"pay")}/>}</div></section>}
-  {result&&<Result result={result} lang={lang}/>}
- </div>
-}
-
-function Result({result,lang}:{result:CalcResult;lang:LingxiLang}){
- const t=result.total;return <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-  <div className="text-sm text-[var(--lx-muted)]">{tr(lang,"result")}</div><div className="mt-1 text-4xl font-semibold">{show(t.kcal,0)} kcal</div>
-  <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">{[["蛋白质 / Protein",t.protein_g,"g"],["碳水 / Carbs",t.carbs_g,"g"],["脂肪 / Fat",t.fat_g,"g"],["纤维 / Fiber",t.fiber_g,"g"],["糖 / Sugar",t.sugar_g,"g"],["钠 / Sodium",t.sodium_mg,"mg"]].map(([k,v,u])=><div key={String(k)} className="rounded-xl bg-[var(--lx-soft)] p-3"><small className="text-[var(--lx-muted)]">{k}</small><div className="mt-1 font-semibold">{show(v)} {u}</div></div>)}</div>
-  <h3 className="mt-6 text-lg font-semibold">{tr(lang,"how")}</h3><div className="mt-2 grid gap-2 sm:grid-cols-2">{(result.insights||[]).map((x,i)=><div key={i} className="rounded-xl bg-[var(--lx-soft)] p-3">{tr(lang,x.key)}</div>)}</div>
-  <h3 className="mt-6 text-lg font-semibold">{tr(lang,"next")}</h3><div className="mt-2 space-y-2">{(result.next_actions||[]).map((x,i)=><p key={i}>• {tr(lang,x)}</p>)}</div>
-  <h3 className="mt-6 text-lg font-semibold">{tr(lang,"inside")}</h3><div className="mt-2 space-y-2">{result.items.map((x,i)=><div key={`${x.food_id}-${i}`} className="flex justify-between rounded-xl bg-[var(--lx-soft)] px-4 py-3"><span>{display(x,lang)} · {x.grams}g</span><b>{show(x.kcal,0)} kcal</b></div>)}</div>
-  <details className="mt-6 rounded-xl border border-[var(--lx-line)] p-4"><summary className="cursor-pointer font-semibold">{tr(lang,"source")}</summary><p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{tr(lang,"sourceLead")}</p>{result.sources?.length?<p className="mt-2 text-xs">{result.sources.join(" · ")}</p>:null}</details>
+function Uploader({lang,multiple,files,setFiles}:{lang:LingxiLang;multiple:boolean;files:File[];setFiles:(x:File[])=>void}){
+ return <section className="rounded-[28px] border border-dashed border-[var(--lx-line)] p-5 sm:p-7">
+  <label className="flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-2xl bg-[var(--lx-soft)] p-6 text-center"><span className="text-4xl">＋</span><b className="mt-3">{multiple?t(lang,"batchTitle"):t(lang,"drop")}</b><span className="mt-2 text-xs text-[var(--lx-muted)]">{multiple?t(lang,"batchLead"):t(lang,"drop2")}</span><input className="hidden" type="file" accept="image/*" multiple={multiple} onChange={e=>setFiles(Array.from(e.target.files||[]).slice(0,multiple?20:1))}/></label>
+  {files.length>0&&(multiple?<Batch lang={lang} files={files}/>:<Single lang={lang} file={files[0]}/>)}
  </section>
 }
+function Single({lang,file}:{lang:LingxiLang;file:File}){
+ const[preview,setPreview]=useState(""),[preds,setPreds]=useState<FoodVisionPrediction[]>([]),[busy,setBusy]=useState(true),[pick,setPick]=useState("");
+ useEffect(()=>{const u=URL.createObjectURL(file);setPreview(u);setBusy(true);setPick("");void recognizeFoodImage(file).then(x=>{const a=x.filter(v=>v.score>=.12).slice(0,5);setPreds(a);if(a[0])setPick(a[0].label)}).finally(()=>setBusy(false));return()=>URL.revokeObjectURL(u)},[file]);
+ return <div className="mt-5 grid gap-5 lg:grid-cols-[.8fr_1.2fr]"><div className="overflow-hidden rounded-2xl bg-[var(--lx-soft)]"><img src={preview} alt="" className="aspect-square h-full w-full object-cover"/></div><div className="rounded-2xl border border-[var(--lx-line)] p-5">{busy?<p>{t(lang,"checking")}</p>:<><b>{t(lang,"found")}</b><div className="mt-3 flex flex-wrap gap-2">{preds.map(p=><button key={p.label} onClick={()=>setPick(p.label)} className={`rounded-full px-3 py-2 text-sm ${pick===p.label?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"bg-[var(--lx-soft)]"}`}>{foodLabel(p.label,lang)}</button>)}</div><p className="mt-4 text-xs text-[var(--lx-muted)]">{t(lang,"retry")}</p><FoodConfirm lang={lang} initial={pick}/></>}</div></div>
+}
+function FoodConfirm({lang,initial}:{lang:LingxiLang;initial:string}){
+ const[q,setQ]=useState(initial),[grams,setGrams]=useState(100),[hits,setHits]=useState<SearchItem[]>([]),[selected,setSelected]=useState<Selected[]>([]),[result,setResult]=useState<Result|null>(null),[free,setFree]=useState<boolean|null>(null),[msg,setMsg]=useState("");
+ useEffect(()=>{setQ(initial);if(initial)void doSearch(initial)},[initial]);
+ useEffect(()=>{void fetch("/api/tools/food/free-status",{cache:"no-store"}).then(r=>r.json()).then(d=>setFree(Boolean(d.available))).catch(()=>setFree(false))},[]);
+ async function doSearch(v=q){if(!v.trim())return;const x=await search(v);setHits(x);setMsg(x.length?"":t(lang,"empty"))}
+ function add(x:SearchItem){setSelected([{food:x,grams}]);setHits([]);setQ(name(x,lang));setResult(null)}
+ async function freeCalc(){setMsg("");const r=await fetch("/api/tools/food/free-calculate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({items:selected.map(x=>({food_id:x.food.food_id,grams:x.grams}))})});const d=await r.json().catch(()=>({}));if(r.ok){setResult(d);setFree(false)}else if(d.freeUsed){setFree(false);setMsg(lang==="zh"?"今日免费识别已使用，请继续完成本次分析。":"Today's free scan has been used.")}else setMsg(String(d.error||""))}
+ async function paid(id:string){const r=await fetch("/api/tools/food/calculate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteId:id,photoCount:1,items:selected.map(x=>({food_id:x.food.food_id,grams:x.grams}))})});const d=await r.json().catch(()=>({}));if(r.ok)setResult(d);else setMsg(lang==="zh"?"这次没有算完，请再试一次。":"Please try again.")}
+ return <div className="mt-4">
+  <div className="grid gap-2 sm:grid-cols-[1fr_110px_auto]"><input value={q} onChange={e=>setQ(e.target.value)} onKeyDown={e=>e.key==="Enter"&&void doSearch()} placeholder={t(lang,"name")} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-bg)] px-4 py-3"/><input type="number" min={1} max={10000} value={grams} onChange={e=>setGrams(Math.max(1,Number(e.target.value)||1))} aria-label={t(lang,"portion")} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-bg)] px-3 py-3"/><button onClick={()=>void doSearch()} className="rounded-xl border border-[var(--lx-line)] px-4 py-3">{t(lang,"search")}</button></div>
+  {hits.length>0&&<div className="mt-2 max-h-64 overflow-auto rounded-xl border border-[var(--lx-line)]">{hits.slice(0,10).map(x=><button key={x.food_id} onClick={()=>add(x)} className="flex w-full items-center justify-between border-b border-[var(--lx-line)] px-4 py-3 text-left last:border-0"><span>{name(x,lang)}</span><span>＋</span></button>)}</div>}
+  {selected.length>0&&!result&&<div className="mt-4 rounded-2xl bg-[var(--lx-soft)] p-4"><div className="flex justify-between"><b>{name(selected[0].food,lang)}</b><span>{selected[0].grams} g</span></div><div className="mt-4">{free===true?<button onClick={()=>void freeCalc()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)]">{t(lang,"view")} · {t(lang,"free")}</button>:free===false?<PaidActionButton toolId="food-calorie" quantity={1} metadata={{mode:"photo"}} onPaid={paid} label={t(lang,"pay")}/>:<span className="text-sm text-[var(--lx-muted)]">…</span>}</div></div>}
+  {msg&&<p className="mt-3 text-sm text-[var(--lx-muted)]">{msg}</p>}{result&&<ResultCard lang={lang} result={result}/>}
+ </div>
+}
+function Batch({lang,files}:{lang:LingxiLang;files:File[]}){
+ const[rows,setRows]=useState<Array<{file:File;preview:string;label:string;food?:SearchItem}>>([]),[busy,setBusy]=useState(true),[result,setResult]=useState<Result|null>(null),[msg,setMsg]=useState("");
+ useEffect(()=>{let live=true;const urls=files.map(f=>URL.createObjectURL(f));setBusy(true);void Promise.all(files.map(async(file,i)=>{const p=(await recognizeFoodImage(file)).filter(x=>x.score>=.12)[0];const label=p?.label||"";const hits=label?await search(label):[];return{file,preview:urls[i],label,food:hits[0]}})).then(x=>live&&setRows(x)).finally(()=>live&&setBusy(false));return()=>{live=false;urls.forEach(URL.revokeObjectURL)}},[files]);
+ const ready=rows.length===files.length&&rows.every(x=>x.food);
+ async function paid(id:string){const r=await fetch("/api/tools/food/calculate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteId:id,photoCount:files.length,items:rows.filter(x=>x.food).map(x=>({food_id:x.food!.food_id,grams:100}))})});const d=await r.json().catch(()=>({}));if(r.ok)setResult(d);else setMsg(lang==="zh"?"这次没有算完，请再试一次。":"Please try again.")}
+ return <div className="mt-5">{busy?<p>{t(lang,"checking")}</p>:<><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{rows.map((x,i)=><article key={i} className="overflow-hidden rounded-2xl border border-[var(--lx-line)]"><img src={x.preview} alt="" className="aspect-video w-full object-cover"/><div className="p-3 text-sm">{x.food?name(x.food,lang):(lang==="zh"?"请使用自定义名称确认":"Please confirm manually")}</div></article>)}</div>{ready&&!result&&<div className="mt-5"><PaidActionButton toolId="food-calorie" quantity={files.length} metadata={{mode:"batch"}} onPaid={paid} label={t(lang,"view")}/></div>}{!ready&&<p className="mt-4 text-sm text-[var(--lx-muted)]">{lang==="zh"?"有图片暂时无法可靠确认，请分开上传或使用自定义名称。":"Some images need manual confirmation."}</p>}</>}{msg&&<p className="mt-3 text-sm">{msg}</p>}{result&&<ResultCard lang={lang} result={result}/>}</div>
+}
+function ResultCard({lang,result}:{lang:LingxiLang;result:Result}){const x=result.total||{};return <section className="mt-5 rounded-[28px] border border-[var(--lx-line)] p-5 sm:p-6"><span className="text-sm text-[var(--lx-muted)]">{t(lang,"result")}</span><div className="mt-2 text-4xl font-semibold">{x.kcal==null?"—":Number(x.kcal).toFixed(0)} <small className="text-base font-normal">kcal</small></div><h3 className="mt-6 font-semibold">{t(lang,"nutrition")}</h3><div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3"><N v={x.protein_g} u="g"/><N v={x.carbs_g} u="g"/><N v={x.fat_g} u="g"/><N v={x.fiber_g} u="g"/><N v={x.sugar_g} u="g"/><N v={x.sodium_mg} u="mg"/></div><details className="mt-5 rounded-2xl bg-[var(--lx-soft)] p-4"><summary className="cursor-pointer text-sm font-medium">{t(lang,"source")}</summary><p className="mt-2 text-xs text-[var(--lx-muted)]">{(result.sources||["USDA FoodData Central"]).join(" · ")}</p></details></section>}

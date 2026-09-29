@@ -2,6 +2,7 @@ import type {LingxiLang} from "@/lib/lingxi-i18n";
 export type CanonicalFood={key:string;query:string;names:Partial<Record<LingxiLang,string>>;aliases:string[]};
 const F=(key:string,query:string,names:CanonicalFood["names"],aliases:string[]=[]):CanonicalFood=>({key,query,names,aliases});
 const FOODS=[
+F("fruit-salad","fruit salad",{zh:"水果拼盘",en:"Fruit platter",ja:"フルーツ盛り合わせ",ko:"과일 모둠",fr:"Assiette de fruits",de:"Obstteller",es:"Plato de frutas",pt:"Prato de frutas",ar:"طبق فواكه"},["fruit platter","mixed fruit","水果拼盘","水果盘"]),
 F("tacos","taco",{zh:"墨西哥塔可",en:"Tacos",ja:"タコス",ko:"타코",fr:"Tacos",de:"Tacos",es:"Tacos",pt:"Tacos",ar:"تاكو"},["tacos","塔可"]),
 F("pizza","pizza",{zh:"披萨",en:"Pizza",ja:"ピザ",ko:"피자",fr:"Pizza",de:"Pizza",es:"Pizza",pt:"Pizza",ar:"بيتزا"}),
 F("rice","rice",{zh:"米饭",en:"Rice",ja:"ご飯",ko:"밥",fr:"Riz",de:"Reis",es:"Arroz",pt:"Arroz",ar:"أرز"}),

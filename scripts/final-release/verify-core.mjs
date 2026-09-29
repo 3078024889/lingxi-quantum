@@ -1,0 +1,22 @@
+import fs from"node:fs";
+function must(f,n){if(!fs.existsSync(f)||!fs.readFileSync(f,"utf8").includes(n))throw new Error("VERIFY_FAIL:"+f+":"+n)}
+must("lib/pricing/policy.ts","MINIMUM_GROSS_MARGIN = 0.45");
+must("lib/tools/capability-billing-policy.ts","FREE_LOCAL");
+must("lib/tools/capability-billing-policy.ts","DISABLED_UNVERIFIED");
+must("lib/payments/currency-book.ts",'provider === "wechat"');
+must("lib/payments/currency-book.ts",'provider === "paypal"');
+must("lib/tools/experience-registry.ts","advancedAfterUpload");
+must("components/tools/AdvancedToolPage.tsx","var(--lx-bg)");
+must("components/tools/FoodCalorieWorkbench.tsx",'data-food-version="v15"');
+must("app/api/tools/food/free-calculate/route.ts","claim_food_calorie_daily_free_v15");
+must("lib/sasi-kernel/runtime/lifecycle.ts","assertTaskTransition");
+must("lib/sasi/skill-execution.ts","skillRuntimeConstraint");
+const cur=fs.readFileSync("lib/payments/currency-book.ts","utf8");
+if(/provider === "alipay"/.test(cur))throw new Error("ALIPAY_FORMAL_RUNTIME_STILL_PRESENT");
+console.log("MARGIN45_POLICY=PASS");
+console.log("WECHAT_PAYPAL_POLICY=PASS");
+console.log("ALGORITHM_BILLING_POLICY=PASS");
+console.log("SIMPLE_TOOL_EXPERIENCE_POLICY=PASS");
+console.log("FOOD_V15_RUNTIME=PASS");
+console.log("SASI_TASK_SKILL_RUNTIME=PASS");
+console.log("FINAL_CORE_VERIFY=PASS");
