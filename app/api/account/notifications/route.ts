@@ -15,6 +15,7 @@ export async function GET(req:NextRequest){
  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
  const admin=createAdminClient();
  const platform=req.nextUrl.searchParams.get("platform")==="miniapp"?"miniapp":"web";
+ const lang=req.nextUrl.searchParams.get("lang")==="en"?"en":"zh";
  const [orders,withdrawals,announcements,reads]=await Promise.all([
   admin.from("orders").select("id,product_id,amount_rmb,amount_usd,status,created_at").eq("user_id",user.id).eq("status","paid").order("created_at",{ascending:false}).limit(30),
   admin.from("balance_withdrawals").select("id,currency,amount_minor,status,provider_status,failure_code,created_at,completed_at,updated_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(50),
@@ -40,8 +41,9 @@ export async function GET(req:NextRequest){
   items.push({eventKey,kind:"withdrawal",title,body,createdAt:w.completed_at||w.updated_at||w.created_at,href:"/account/withdrawals",read:read.has(eventKey)});
  }
  for(const a of announcements.data||[]){
+  if(a.expires_at && Date.parse(a.expires_at)<=Date.now())continue;
   const eventKey=`announcement:${a.id}`;
-  items.push({eventKey,kind:"announcement",title:a.title_zh,body:a.body_zh,createdAt:a.published_at,href:"/account/notifications",read:read.has(eventKey)});
+  items.push({eventKey,kind:"announcement",title:lang==="en"?(a.title_en||a.title_zh):a.title_zh,body:lang==="en"?(a.body_en||a.body_zh):a.body_zh,createdAt:a.published_at,href:"/account/notifications",read:read.has(eventKey)});
  }
  items.sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt));
  return NextResponse.json({items,unread:items.filter(x=>!x.read).length},{headers:{"Cache-Control":"private, no-store, max-age=0"}});

@@ -348,10 +348,10 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
 
   const heading=mode==="research"?tr(lang,"research"):mode==="learning"?tr(lang,"learning"):tr(lang,"book");
   const qPlaceholder=mode==="research"?tr(lang,"qResearch"):mode==="learning"?tr(lang,"qLearning"):tr(lang,"qBook");
-  const intelligenceLabels:{value:Intelligence;label:string;factor:string;help:string}[]=[
-    {value:"light",label:tr(lang,"light"),factor:"1×",help:tr(lang,"lightHelp")},
-    {value:"standard",label:tr(lang,"standard"),factor:"2×",help:tr(lang,"standardHelp")},
-    {value:"high",label:tr(lang,"high"),factor:"5×",help:tr(lang,"highHelp")},
+  const intelligenceLabels:{value:Intelligence;label:string;help:string}[]=[
+    {value:"light",label:lang==="zh"?"快速理解":tr(lang,"light"),help:tr(lang,"lightHelp")},
+    {value:"standard",label:lang==="zh"?"深入理解":tr(lang,"standard"),help:tr(lang,"standardHelp")},
+    {value:"high",label:lang==="zh"?"深度研究":tr(lang,"high"),help:tr(lang,"highHelp")},
   ];
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
 
@@ -391,19 +391,19 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between gap-3">
             <span className="text-sm font-medium text-[var(--lx-ink)]">{tr(lang,"smart")}</span>
-            <span className="text-xs text-[var(--lx-faint)]">{lang==="zh"?"默认由灵犀场直接整理，不需要连接外部模型":"Runs directly in LINGXIFIELD by default; no external model connection required"}</span>
+            <span className="text-xs text-[var(--lx-faint)]">{lang==="zh"?"按问题复杂度选择理解深度":"Choose the depth that fits your question"}</span>
           </div>
           <div className="lx-knowledge-modebar">
-            {intelligenceLabels.map(({value,label,factor})=><button key={value} type="button" onClick={()=>setIntelligence(value)} disabled={askBusy}
+            {intelligenceLabels.map(({value,label})=><button key={value} type="button" onClick={()=>setIntelligence(value)} disabled={askBusy}
               aria-pressed={intelligence===value}
               className={intelligence===value?"is-selected":""}>
               <b>{label}</b>
-              <span>{factor} {tr(lang,"factor")}</span>
+              <span>{value==="light"?(lang==="zh"?"更快":"Faster"):value==="high"?(lang==="zh"?"更深入":"Deeper"):(lang==="zh"?"推荐":"Recommended")}</span>
             </button>)}
           </div>
           <div className="lx-knowledge-mode-detail">
             <p>{selectedTier.help}</p>
-            <div className="lx-knowledge-mode-cost"><b>{lang==="zh"?"基础整理可直接使用":"Base synthesis works directly"}</b><span>{lang==="zh"?"答案始终回到你提供的原文":"Answers stay grounded in your source text"}</span></div>
+            <div className="lx-knowledge-mode-cost"><b>{lang==="zh"?"资料检索与基础问答免费":"Source search and basic Q&A are free"}</b><span>{lang==="zh"?"答案始终回到你提供的原文":"Answers stay grounded in your source text"}</span></div>
           </div>
         </div>
 
@@ -423,7 +423,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
           <article className="lx-knowledge-answer-body">{answer}</article>
           <div className="lx-knowledge-answer-foot">
             <span>{lang==="zh"?"当前资料问答不扣创作余额":"Source Q&A currently does not deduct creation balance"}</span>
-            <span>{lang==="zh"?`当前智能档位 ${selectedTier.factor}`:`Mode ${selectedTier.factor}`}</span>
+            <span>{lastIntelligence?intelligenceLabels.find(x=>x.value===lastIntelligence)?.label:selectedTier.label}</span>
           </div>
         </div>}
 

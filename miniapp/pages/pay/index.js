@@ -26,8 +26,9 @@ Page({
       if(created&&created.orderId){
         try{await request('/api/wechat/mini/tool-pay/cancel',{method:'POST',data:{orderId:created.orderId,quoteId:this.data.quoteId}})}catch(_){}
       }
-      const msg=error&&error.data&&error.data.error?error.data.error:'支付没有完成，可以重新尝试。'
-      this.setData({message:msg})
+      const code=error&&error.data&&error.data.error?String(error.data.error):''
+      const safe=code==='INSUFFICIENT_BALANCE'?'余额不足，请先充值后再试。':code==='QUOTE_EXPIRED'?'这次价格已经失效，请返回工具重新确认。':'支付没有完成，可以重新尝试。'
+      this.setData({message:safe})
     }finally{this.setData({busy:false})}
   },
   back(){wx.navigateBack()}

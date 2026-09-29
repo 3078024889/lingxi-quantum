@@ -8,7 +8,8 @@
     "pages/share/index",
     "pages/pay/index",
     "pages/orders/index",
-    "pages/balance/index"
+    "pages/balance/index",
+    "pages/notifications/index"
   ],
   "window": {
     "navigationStyle": "custom",
