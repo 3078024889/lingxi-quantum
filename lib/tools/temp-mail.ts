@@ -6,12 +6,20 @@ export const TEMP_MAIL_MAX_LIFETIME_MINUTES=60;
 export const TEMP_MAIL_ACCESS_COOKIE="lx_tm_access";
 export const TEMP_MAIL_DEVICE_COOKIE="lx_tm_device";
 
-export function tempMailDomain(){
-  const raw=process.env.TEMP_MAIL_DOMAIN?.trim().toLowerCase()||"";
-  return /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(raw)?raw:"";
+export const TEMP_MAIL_DOMAIN="lingxifield.com";
+export const TEMP_MAIL_PREFIX="temp";
+
+export function tempMailDomain(){return TEMP_MAIL_DOMAIN}
+export function tempMailAddress(localPart:string){
+  return `${TEMP_MAIL_PREFIX}+${localPart}@${TEMP_MAIL_DOMAIN}`;
+}
+export function parseTempMailRecipient(value:string){
+  const to=String(value||"").trim().toLowerCase();
+  const match=to.match(/^temp\+([a-z0-9]{6,32})@lingxifield\.com$/);
+  return match?{localPart:match[1],address:to}:null;
 }
 export function tempMailConfigured(){
-  return Boolean(tempMailDomain()&&process.env.TEMP_MAIL_INGEST_SECRET?.trim());
+  return Boolean(process.env.TEMP_MAIL_INGEST_SECRET?.trim());
 }
 export function randomLocalPart(){
   return randomBytes(9).toString("base64url").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,12);

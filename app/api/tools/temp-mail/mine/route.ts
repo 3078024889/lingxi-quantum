@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { currentTempMailUserId } from "@/lib/tools/temp-mail-auth";
-import { tempMailDomain } from "@/lib/tools/temp-mail";
+import { tempMailAddress } from "@/lib/tools/temp-mail";
 
 export const runtime="nodejs";
 
@@ -33,7 +33,7 @@ export async function GET(){
    }
  }
  return NextResponse.json({mailboxes:(boxes||[]).map(b=>({
-   id:b.id,address:`${b.local_part}@${tempMailDomain()}`,expiresAt:b.expires_at,sourceKind:b.source_kind,
+   id:b.id,address:tempMailAddress(b.local_part),expiresAt:b.expires_at,sourceKind:b.source_kind,
    messageCount:summary[b.id]?.count||0,latestSender:summary[b.id]?.sender||"",latestSubject:summary[b.id]?.subject||"",
    latestAt:summary[b.id]?.receivedAt||"",latestCode:summary[b.id]?.code||"",
  }))});

@@ -1,7 +1,7 @@
 import { NextRequest,NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { currentTempMailUserId } from "@/lib/tools/temp-mail-auth";
-import { mailboxTokenHash,parseMailboxAccessCookie,tempMailDomain,TEMP_MAIL_ACCESS_COOKIE } from "@/lib/tools/temp-mail";
+import { mailboxTokenHash,parseMailboxAccessCookie,tempMailAddress,TEMP_MAIL_ACCESS_COOKIE } from "@/lib/tools/temp-mail";
 
 export const runtime="nodejs";
 
@@ -13,7 +13,7 @@ export async function GET(req:NextRequest){
      .select("id,local_part,expires_at,destroyed_at,token_hash")
      .eq("id",access.id).maybeSingle();
    if(box&&!box.destroyed_at&&new Date(box.expires_at).getTime()>Date.now()&&box.token_hash===mailboxTokenHash(access.token)){
-     return NextResponse.json({box:{id:box.id,address:`${box.local_part}@${tempMailDomain()}`,expiresAt:box.expires_at}});
+     return NextResponse.json({box:{id:box.id,address:tempMailAddress(box.local_part),expiresAt:box.expires_at}});
    }
  }
  const userId=await currentTempMailUserId();
@@ -23,7 +23,7 @@ export async function GET(req:NextRequest){
      .eq("owner_user_id",userId).is("destroyed_at",null)
      .gt("expires_at",new Date().toISOString())
      .order("created_at",{ascending:false}).limit(1).maybeSingle();
-   if(box)return NextResponse.json({box:{id:box.id,address:`${box.local_part}@${tempMailDomain()}`,expiresAt:box.expires_at}});
+   if(box)return NextResponse.json({box:{id:box.id,address:tempMailAddress(box.local_part),expiresAt:box.expires_at}});
  }
  const response=NextResponse.json({box:null});
  response.cookies.set({name:TEMP_MAIL_ACCESS_COOKIE,value:"",httpOnly:true,path:"/api/tools/temp-mail",maxAge:0});

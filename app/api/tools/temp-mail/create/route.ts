@@ -3,7 +3,7 @@ import { NextRequest,NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
-import { createMailboxAccessCookie,mailboxTokenHash,randomLocalPart,randomMailboxToken,tempMailConfigured,tempMailDomain,TEMP_MAIL_ACCESS_COOKIE,TEMP_MAIL_TTL_MINUTES } from "@/lib/tools/temp-mail";
+import { createMailboxAccessCookie,mailboxTokenHash,randomLocalPart,randomMailboxToken,tempMailConfigured,tempMailAddress,TEMP_MAIL_ACCESS_COOKIE,TEMP_MAIL_TTL_MINUTES } from "@/lib/tools/temp-mail";
 
 export const runtime="nodejs";
 const DEVICE_COOKIE="lx_tm_device",DEVICE_MAX_AGE=60*60*24*30;
@@ -63,7 +63,7 @@ export async function POST(req:NextRequest){
 
    if(!error&&data){
      const response=NextResponse.json({
-       id:data.id,address:`${data.local_part}@${tempMailDomain()}`,
+       id:data.id,address:tempMailAddress(data.local_part),
        expiresAt:data.expires_at,ttlMinutes:TEMP_MAIL_TTL_MINUTES,
        freeRemaining:Math.max(0,Number(q.remaining||0)),
      });

@@ -2,7 +2,7 @@ import { NextRequest,NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
-import { mailboxTokenHash,randomLocalPart,randomMailboxToken,tempMailConfigured,tempMailDomain,TEMP_MAIL_TTL_MINUTES } from "@/lib/tools/temp-mail";
+import { mailboxTokenHash,randomLocalPart,randomMailboxToken,tempMailConfigured,tempMailAddress,TEMP_MAIL_TTL_MINUTES } from "@/lib/tools/temp-mail";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -46,7 +46,7 @@ export async function POST(req:NextRequest){
          local_part:localPart,token_hash:mailboxTokenHash(token),expires_at:expiresAt,
          owner_user_id:user.id,source_kind:"batch",batch_quote_id:quoteId,
        }).select("id,local_part,expires_at").single();
-       if(!error&&data){output.push({id:data.id,address:`${data.local_part}@${tempMailDomain()}`,expiresAt:data.expires_at});created=true;break}
+       if(!error&&data){output.push({id:data.id,address:tempMailAddress(data.local_part),expiresAt:data.expires_at});created=true;break}
        if(error?.code!=="23505")throw new Error(error?.message||"BATCH_CREATE_FAILED");
      }
      if(!created)throw new Error("BATCH_CREATE_RETRY");
