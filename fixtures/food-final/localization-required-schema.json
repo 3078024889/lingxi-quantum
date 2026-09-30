@@ -1,0 +1,16 @@
+{
+  "required_languages": [
+    "en",
+    "zh",
+    "ja",
+    "ko",
+    "fr",
+    "de",
+    "es",
+    "pt",
+    "ar"
+  ],
+  "required_rows": 5901,
+  "rule": "Every production row must contain a non-empty human-meaningful localized display name for all 9 languages. Copying English into non-English fields does not pass.",
+  "provenance": "USDA English description remains source/provenance, not localized display text."
+}

@@ -21,9 +21,13 @@ function Inner(){
 
  async function refresh(){if(!valid)return;const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(quoteId)}`,{cache:"no-store"});if(!r.ok)return;const d=await r.json() as{paid?:boolean};if(d.paid){setPaid(true);if(timer.current){clearInterval(timer.current);timer.current=null}}}
 
- useEffect(()=>{if(!valid){setErr("INVALID_QUOTE_ID");return}let alive=true;void fetch(`/api/tools/quote?id=${encodeURIComponent(quoteId)}`,{cache:"no-store"}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||"QUOTE_LOAD_FAILED");return d as Quote}).then(d=>{if(alive)setQ(d)}).catch(e=>{if(alive)setErr(e instanceof Error?e.message:String(e))});void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then((d:{wechat?:unknown;alipay?:unknown;paypal?:unknown})=>{if(alive)setProviders({wechat:Boolean(d.wechat),alipay:Boolean(d.alipay),paypal:Boolean(d.paypal)})}).catch(()=>{});void refresh();timer.current=setInterval(()=>void refresh(),2500);return()=>{alive=false;if(timer.current){clearInterval(timer.current);timer.current=null}}},[quoteId,valid]);
+ const refreshRef=useRef(refresh);refreshRef.current=refresh;
+ const payRef=useRef<(provider:Provider)=>Promise<void>>(async()=>{}); 
+ useEffect(()=>{if(!valid){setErr("INVALID_QUOTE_ID");return}let alive=true;void fetch(`/api/tools/quote?id=${encodeURIComponent(quoteId)}`,{cache:"no-store"}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error||"QUOTE_LOAD_FAILED");return d as Quote}).then(d=>{if(alive)setQ(d)}).catch(e=>{if(alive)setErr(e instanceof Error?e.message:String(e))});void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then((d:{wechat?:unknown;alipay?:unknown;paypal?:unknown})=>{if(alive)setProviders({wechat:Boolean(d.wechat),alipay:Boolean(d.alipay),paypal:Boolean(d.paypal)})}).catch(()=>{});void refreshRef.current();timer.current=setInterval(()=>void refreshRef.current(),2500);return()=>{alive=false;if(timer.current){clearInterval(timer.current);timer.current=null}}},[quoteId,valid]);
 
- useEffect(()=>{if(code&&state&&q&&!paid&&q.currency==="CNY")void pay("wechat")},[code,state,Boolean(q),paid]);
+ useEffect(()=>{if(code&&state&&q&&!paid&&q.currency==="CNY")void payRef.current("wechat")},[code,state,q,paid]);
+
+ payRef.current=pay;
 
  function invoke(jsapi:Record<string,unknown>){const bridge=(window as Window&{WeixinJSBridge?:WeixinBridge}).WeixinJSBridge;const run=()=>{const current=(window as Window&{WeixinJSBridge?:WeixinBridge}).WeixinJSBridge;if(!current){setErr("WECHAT_BRIDGE_UNAVAILABLE");return}current.invoke("getBrandWCPayRequest",jsapi,res=>{if(res.err_msg==="get_brand_wcpay_request:ok")void refresh();else setErr(res.err_msg||"PAYMENT_NOT_COMPLETED")})};if(!bridge)document.addEventListener("WeixinJSBridgeReady",run,{once:true});else run()}
 

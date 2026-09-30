@@ -1,0 +1,12 @@
+import{NextRequest,NextResponse}from"next/server";import{createAdminClient}from"@/lib/supabase/admin";import{isSameOriginMutation}from"@/lib/sasi/request-security";import{enforceAbuseGuard}from"@/lib/security/abuse-guard";
+export const runtime="nodejs";type FoodInput={food_id:number;grams:number};const n=(x:any,k:string)=>{const v=x?.nutrients?.[k];return v==null?null:Number(v)};
+function legacyItem(x:any){return{food_id:Number(x.food_id),code:String(x.source_food_id||""),name_zh:String(x.name_zh||x.name_en||""),name_en:String(x.name_en||""),grams:Number(x.grams),kcal:n(x,"energy_kcal"),protein_g:n(x,"protein_g"),carbs_g:n(x,"carbs_g"),fat_g:n(x,"fat_g"),fiber_g:n(x,"fiber_g"),sugar_g:n(x,"sugar_g"),sodium_mg:n(x,"sodium_mg"),nutrients:x.nutrients||{},source:"USDA FoodData Central"}}
+export async function POST(req:NextRequest){
+ if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
+ const guard=await enforceAbuseGuard(req,{scope:"food-manual-calc",accountLimit:120,ipLimit:180,windowSeconds:3600});if(!guard.ok)return NextResponse.json({error:"TOO_MANY_REQUESTS"},{status:429});
+ const b=await req.json().catch(()=>null)as any;const raw:unknown[]=Array.isArray(b?.items)?b.items:[];if(!raw.length||raw.length>30)return NextResponse.json({error:"INVALID_FOOD_ITEMS"},{status:400});
+ const items:FoodInput[]=raw.map((x:any)=>({food_id:Number(x.food_id),grams:Number(x.grams)}));if(items.some((x:FoodInput)=>!Number.isInteger(x.food_id)||x.food_id<=0||!Number.isFinite(x.grams)||x.grams<=0||x.grams>10000))return NextResponse.json({error:"INVALID_FOOD_ITEMS"},{status:400});
+ const admin=createAdminClient();const{data,error}=await admin.rpc("calculate_food_compact_v1",{p_items:items});if(error)return NextResponse.json({error:"CALCULATION_UNAVAILABLE"},{status:503});
+ const out=(data?.items||[]).map(legacyItem),tn=data?.total?.nutrients||{},total={food_id:0,code:"meal",name_zh:"合计",name_en:"Total",grams:items.reduce((a,x)=>a+x.grams,0),kcal:n({nutrients:tn},"energy_kcal"),protein_g:n({nutrients:tn},"protein_g"),carbs_g:n({nutrients:tn},"carbs_g"),fat_g:n({nutrients:tn},"fat_g"),fiber_g:n({nutrients:tn},"fiber_g"),sugar_g:n({nutrients:tn},"sugar_g"),sodium_mg:n({nutrients:tn},"sodium_mg"),nutrients:tn};
+ return NextResponse.json({items:out,total,manual:true,sources:["USDA FoodData Central"]},{headers:{"Cache-Control":"private, no-store"}});
+}

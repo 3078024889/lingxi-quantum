@@ -27,7 +27,8 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,label}:{too
  }catch(e){setMsg(`${t("支付已确认，但文件生成没有完成。可从订单记录继续处理。","Payment is confirmed, but file generation did not finish.")}${e instanceof Error?` · ${e.message}`:""}`)}
  finally{processing.current=null}}
  async function check(id:string){try{const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});if(!r.ok)throw new Error();const d=await r.json();fails.current=0;if(d?.paid){await unlock(id);return true}return false}catch{fails.current++;if(fails.current>=MAX_POLL_FAILURES){stop();setMsg(t("暂时无法确认支付状态，可从订单记录继续确认。","Payment status is temporarily unavailable."))}return false}}
- useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id)void check(quote.id)};window.addEventListener("pageshow",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);document.removeEventListener("visibilitychange",wake);stop()}},[quote?.id]);
+ const checkRef=useRef(check);checkRef.current=check;
+ useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);document.removeEventListener("visibilitychange",wake);if(timer.current){clearInterval(timer.current);timer.current=null}}},[quote?.id]);
  async function start(){
   setBusy(true);setMsg("");
   try{

@@ -83,6 +83,7 @@ function localWebsite(prompt:string,lang:LingxiLang,heroImage=""){
 export default function SasiChatCreationStudio({mode}:{mode:Mode}){
  const{lang}=useLingxiLang();
  const ct=(key:Parameters<typeof composerText>[1],vars?:Record<string,string|number>)=>composerText(lang,key,vars);
+ const ctRef=useRef(ct);ctRef.current=ct;
  const[selectedFunctions,setSelectedFunctions]=useState<string[]>([]);
  const changeFunctions=(ids:string[])=>{setSelectedFunctions(ids);setQuote(null)};
  const[prompt,setPrompt]=useState("");
@@ -118,7 +119,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
     setProjectId(id);
     const originalBrief=body.nodes?.find((x:any)=>typeof x?.input?.brief==="string")?.input?.brief;
     if(typeof originalBrief==="string")setPrompt(current=>current.trim()?current:originalBrief.slice(0,12000));
-    setAssistantText(ct("projectRestored",{value:String(body.project.title||"")}));
+    setAssistantText(ctRef.current("projectRestored",{value:String(body.project.title||"")}));
    }).catch(()=>{});
   return()=>{active=false};
  },[mode,lang]);

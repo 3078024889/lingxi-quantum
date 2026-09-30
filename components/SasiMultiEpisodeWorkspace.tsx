@@ -25,7 +25,9 @@ export default function SasiMultiEpisodeWorkspace({projectId}:{projectId:string}
   if(!r.ok)throw new Error(d.error||"STATUS_UNAVAILABLE");
   setStatus({enabled:Boolean(d.enabled),connected:Boolean(d.connected),profiles:Array.isArray(d.profiles)?d.profiles:[],tasks:Array.isArray(d.tasks)?d.tasks:[],assets:Array.isArray(d.assets)?d.assets:[]});
  }
- useEffect(()=>{void reload().catch(()=>setMessage(t("failed")))},[projectId]);
+ const reloadRef=useRef(reload);reloadRef.current=reload;
+ const tRef=useRef(t);tRef.current=t;
+ useEffect(()=>{void reloadRef.current().catch(()=>setMessage(tRef.current("failed")))},[projectId]);
  function parse(){
   try{
    const rows=script.split(/\r?\n/).filter(x=>x.trim()).map(line=>{

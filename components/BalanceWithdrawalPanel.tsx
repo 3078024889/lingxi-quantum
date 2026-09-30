@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useMemo,useState,useRef} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 type Order={id:string;product_id:string;provider:string|null;amount_rmb:number|null;amount_usd:number|null;created_at:string};
@@ -43,7 +43,8 @@ export default function BalanceWithdrawalPanel(){
     const d=await r.json().catch(()=>({}));
     if(r.ok)setData(d);else setMsg(d.error||c.loadFail);
   }
-  useEffect(()=>{void load()},[c.loadFail]);
+  const loadRef=useRef(load);loadRef.current=load;
+ useEffect(()=>{void loadRef.current()},[c.loadFail]);
 
   const activeByOrder=useMemo(()=>{
     const out=new Set<string>();
@@ -63,7 +64,7 @@ export default function BalanceWithdrawalPanel(){
       const d=await r.json().catch(()=>({}));
       if(!r.ok){setMsg(d.error||c.loadFail);return}
       setMsg(d.status==="completed"?c.done:c.submitted);
-      await load();
+      await loadRef.current();
     }finally{setBusy(null)}
   }
 

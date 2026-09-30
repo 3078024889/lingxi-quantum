@@ -170,9 +170,10 @@ const orderIdRef = useRef<string | null>(null);
     }
   };
 
+  const checkPaidOnceRef=useRef(checkPaidOnce);checkPaidOnceRef.current=checkPaidOnce;
   useEffect(() => {
     const onVisible = () => {
-      if (document.visibilityState === "visible") checkPaidOnce();
+      if (document.visibilityState === "visible") checkPaidOnceRef.current();
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => document.removeEventListener("visibilitychange", onVisible);
@@ -363,7 +364,6 @@ const orderIdRef = useRef<string | null>(null);
 
     void checkAccessBeforeOrdering();
     // Access is checked before any payment-provider order can be created.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product, productId, redirectTo, router]);
 
   useEffect(() => {

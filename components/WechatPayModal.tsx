@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import QRCode from "qrcode";
 import Bi from "./Bi";
 
@@ -41,7 +41,7 @@ export default function WechatPayModal({
   // 被浏览器暂停了，没能及时发现支付成功。这里补一个"页面重新变为可见
   // 时，立刻主动查一次"的监听，不用等定时器自己恢复；另外加一个手动
   // 按钮兜底，万一自动检测两条路都没赶上，用户自己点一下也能确认。
-  const checkPaidOnce = async (manual = false) => {
+  const checkPaidOnce = useCallback(async (manual = false) => {
     if (!orderIdRef.current || doneRef.current) return;
     if (manual) setCheckingNow(true);
     try {
@@ -56,7 +56,9 @@ export default function WechatPayModal({
         // 先停留两秒，明确提示一句"以后可以在场域入口→付费任务中心里找到"，
         // 再跳转，把这个入口的存在，第一次成功支付的时候就告诉用户。
         setStatus("success");
-        setTimeout(() => { onSuccess(); }, 1800);
+        // Payment success comes only from the server query above. Navigate immediately;
+        // do not simulate a success delay in the UI.
+        onSuccess();
       } else if (qData.unlockError) {
         // v253：钱已经确认到账了，但解锁那一步写入失败——这种情况
         // 不该让用户一直干等，要如实告诉他们具体卡在哪，并且提示
@@ -70,7 +72,7 @@ export default function WechatPayModal({
     } finally {
       if (manual) setCheckingNow(false);
     }
-  };
+  }, [onSuccess]);
 
   useEffect(() => {
     const onVisible = () => {
@@ -78,7 +80,7 @@ export default function WechatPayModal({
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => document.removeEventListener("visibilitychange", onVisible);
-  }, []);
+  }, [checkPaidOnce]);
 
   useEffect(() => {
     const createOrder = async () => {
@@ -209,8 +211,8 @@ export default function WechatPayModal({
             </p>
             <p className="mt-3 text-xs leading-6 text-bone-dim">
               <Bi
-                zh="以后想再看这份内容，随时可以回到「场域入口 → 付费任务中心」找到它——正在带你过去……"
-                en="You can always find this again under Account → Paid Tasks — taking you there now…"
+                zh="支付已经确认，正在打开结果。"
+                en="Payment confirmed. Opening your result…"
               />
             </p>
           </div>

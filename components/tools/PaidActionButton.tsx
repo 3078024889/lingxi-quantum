@@ -49,15 +49,16 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
  async function status(id:string){const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});return r.ok?r.json():null}
  async function complete(id:string){if(processing.current===id)return;processing.current=id;stop();setMsg(t(UI.paid));try{await onPaid(id);clearStoredQuote(toolId)}finally{processing.current=null}}
  async function check(id:string){const d=await status(id);if(!d?.paid)return false;await complete(id);return true}
+ const checkRef=useRef(check);checkRef.current=check;
 
- useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id)void check(quote.id)};window.addEventListener("pageshow",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id]);
- useEffect(()=>()=>stop(),[]);
+ useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id]);
+ useEffect(()=>()=>{if(timer.current){clearInterval(timer.current);timer.current=null}},[]);
 
  useEffect(()=>{
   const fp=`${toolId}:${quantity}:${currency}`;if(quantity<=0||restoreKey.current===fp)return;restoreKey.current=fp;
   let saved:StoredQuote|null=null;try{const raw=localStorage.getItem(storageKey(toolId));if(raw)saved=JSON.parse(raw)}catch{}
   if(!saved||saved.toolId!==toolId||Number(saved.quantity)!==Number(quantity)||saved.currency!==currency)return;
-  void(async()=>{try{const r=await fetch(`/api/tools/quote?id=${encodeURIComponent(saved!.id)}`,{cache:"no-store"});if(!r.ok){clearStoredQuote(toolId);return}const q=await r.json() as Quote;if(q.tool_id!==toolId||Number(q.quantity)!==Number(quantity)||q.currency!==currency){clearStoredQuote(toolId);return}if(new Date(q.expires_at).getTime()<Date.now()){clearStoredQuote(toolId);return}setQuote(q);await check(q.id)}catch{}})();
+  void(async()=>{try{const r=await fetch(`/api/tools/quote?id=${encodeURIComponent(saved!.id)}`,{cache:"no-store"});if(!r.ok){clearStoredQuote(toolId);return}const q=await r.json() as Quote;if(q.tool_id!==toolId||Number(q.quantity)!==Number(quantity)||q.currency!==currency){clearStoredQuote(toolId);return}if(new Date(q.expires_at).getTime()<Date.now()){clearStoredQuote(toolId);return}setQuote(q);await checkRef.current(q.id)}catch{}})();
  },[toolId,quantity,currency]);
 
  async function makeQuote(){
@@ -77,7 +78,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
   if(quote.currency==="CNY"&&isMiniProgramWebView()){
    stop();setMsg(t(UI.waiting));
    const opened=await openMiniNativePay(quote.id);
-   if(opened){timer.current=setInterval(()=>void check(quote.id),1800);return}
+   if(opened){timer.current=setInterval(()=>void checkRef.current(quote.id),1800);return}
   }
   const returnTo=window.location.pathname+window.location.search;
   const payUrl=`/tools/pay?quoteId=${encodeURIComponent(quote.id)}&return=${encodeURIComponent(returnTo)}`;
@@ -85,7 +86,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label}
   if(preferSameTabPayment()){setMsg(t(UI.waiting));window.location.assign(payUrl);return}
   const w=window.open(payUrl,"lingxi_tool_pay","width=720,height=820");
   if(!w){window.location.assign(payUrl);return}
-  timer.current=setInterval(()=>void check(quote.id),1800);setMsg(t(UI.waiting));
+  timer.current=setInterval(()=>void checkRef.current(quote.id),1800);setMsg(t(UI.waiting));
  }
 
  const changed=quote&&(Number(quote.quantity)!==Number(quantity)||quote.currency!==currency);

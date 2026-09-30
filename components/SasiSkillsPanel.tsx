@@ -1,6 +1,6 @@
 "use client";
 
-import {type ChangeEvent,useEffect,useState} from "react";
+import {type ChangeEvent,useEffect,useState,useRef} from "react";
 
 type Lang="zh"|"en";
 type SkillItem={
@@ -41,8 +41,9 @@ export default function SasiSkillsPanel({
     }
   }
 
+  const loadRef=useRef(load);loadRef.current=load;
   useEffect(()=>{
-    void load();
+    void loadRef.current();
     try{
       const raw=sessionStorage.getItem("sasi-selected-skill-v1");
       if(raw)setSelected(JSON.parse(raw));

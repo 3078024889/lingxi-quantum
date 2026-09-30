@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useMemo,useRef,useState} from "react";
+import {useCallback,useEffect,useMemo,useRef,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {tempMailText} from "@/lib/temp-mail-i18n";
@@ -46,7 +46,7 @@ export default function TempMailWorkbench(){
   return t(map[code]||"serviceBusy");
  }
 
- async function refresh(current=box){
+ const refresh=useCallback(async (current:Box|null=box)=>{
   if(!current)return;
   const r=await fetch(`/api/tools/temp-mail/inbox?id=${encodeURIComponent(current.id)}`,{cache:"no-store"});
   const d=await r.json().catch(()=>({}));
@@ -54,16 +54,16 @@ export default function TempMailWorkbench(){
   if(d.expired){setBox(null);setMessages([]);return}
   setMessages(d.messages||[]);
   if(d.expiresAt)setBox({...current,expiresAt:d.expiresAt});
- }
+ },[box]);
 
- async function loadOwned(){
+ const loadOwned=useCallback(async ()=>{
   const r=await fetch("/api/tools/temp-mail/mine",{cache:"no-store"});
   if(r.status===401){setOwned([]);return}
   const d=await r.json().catch(()=>({}));
   if(r.ok)setOwned(d.mailboxes||[]);
- }
+ },[]);
 
- async function recover(){
+ const recover=useCallback(async ()=>{
   setRestoring(true);
   try{
    const r=await fetch("/api/tools/temp-mail/recover",{cache:"no-store"});
@@ -84,8 +84,7 @@ export default function TempMailWorkbench(){
    }
    await loadOwned();
   }finally{setRestoring(false)}
- }
-
+ },[loadOwned,refresh]);
  async function create(){
   setBusy(true);setError("");
   try{
@@ -162,17 +161,21 @@ export default function TempMailWorkbench(){
   a.href=u;a.download="lingxifield-temp-mail.csv";a.click();setTimeout(()=>URL.revokeObjectURL(u),500);
  }
 
- useEffect(()=>{void recover();setPendingQuote(sessionStorage.getItem("lingxifield:temp-mail-batch-quote")||"")},[]);
+ const recoverRef=useRef(recover);recoverRef.current=recover;
+ const refreshRef=useRef(refresh);refreshRef.current=refresh;
+ const loadOwnedRef=useRef(loadOwned);loadOwnedRef.current=loadOwned;
+ const createPaidBatchRef=useRef(createPaidBatch);createPaidBatchRef.current=createPaidBatch;
+ useEffect(()=>{void recoverRef.current();setPendingQuote(sessionStorage.getItem("lingxifield:temp-mail-batch-quote")||"")},[recover]);
  useEffect(()=>{
   const tick=setInterval(()=>setNow(Date.now()),1000);
-  if(box){void refresh(box).catch(()=>{});poll.current=setInterval(()=>void refresh(box).catch(()=>{}),5000)}
+  if(box){void refreshRef.current(box).catch(()=>{});poll.current=setInterval(()=>void refreshRef.current(box).catch(()=>{}),5000)}
   return()=>{clearInterval(tick);if(poll.current)clearInterval(poll.current)}
- },[box?.id]);
- useEffect(()=>{if(box&&remaining===0){localStorage.removeItem("lingxifield:temp-mail");setBox(null);setMessages([]);void loadOwned()}},[remaining]);
+ },[box,refresh]);
+ useEffect(()=>{if(box&&remaining===0){localStorage.removeItem("lingxifield:temp-mail");setBox(null);setMessages([]);void loadOwnedRef.current()}},[box,remaining,loadOwned]);
  useEffect(()=>{
-  const h=(e:MessageEvent)=>{const d=e.data as {type?:string;quoteId?:string};if(e.origin===location.origin&&d?.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&d.quoteId===pendingQuote)void createPaidBatch(d.quoteId)};
+  const h=(e:MessageEvent)=>{const d=e.data as {type?:string;quoteId?:string};if(e.origin===location.origin&&d?.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&d.quoteId===pendingQuote)void createPaidBatchRef.current(d.quoteId)};
   window.addEventListener("message",h);return()=>window.removeEventListener("message",h);
- },[pendingQuote,batchCount]);
+ },[pendingQuote]);
 
  return <div className="mx-auto max-w-5xl space-y-5">
   <Link href="/tools" className="lx-tool-back">← {lang==="zh"?"返回实用工具":"Back to tools"}</Link>
@@ -224,7 +227,7 @@ export default function TempMailWorkbench(){
   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
    <div className="flex flex-wrap items-end justify-between gap-4">
     <div><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("myMailboxes")}</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--lx-muted)]">{t("myMailboxesLead")}</p></div>
-    <button onClick={()=>void loadOwned()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{t("refreshAll")}</button>
+    <button onClick={()=>void loadOwnedRef.current()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{t("refreshAll")}</button>
    </div>
    {!owned.length?<p className="mt-4 text-sm text-[var(--lx-muted)]">{t("noActive")} <span className="block mt-1 text-xs">{t("signInForWorkspace")}</span></p>:
     <div className="mt-4 grid gap-3 md:grid-cols-2">{owned.map(item=><article key={item.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4">

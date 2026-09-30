@@ -1,6 +1,6 @@
 "use client";
 
-import {Suspense,useEffect,useMemo,useState} from "react";
+import {Suspense,useEffect,useState} from "react";
 import {useSearchParams} from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -31,7 +31,7 @@ function Inner(){
   const sp=useSearchParams()??new URLSearchParams();
   const{lang}=useLingxiLang();
   const c=COPY[lang];
-  const product=useMemo(()=>getUsdBalanceProduct(sp.get("productId")||""),[sp]);
+  const product=getUsdBalanceProduct(sp.get("productId")||"");
   const[buyer,setBuyer]=useState("");
   const[busy,setBusy]=useState(false);
   const[ready,setReady]=useState<boolean|null>(null);

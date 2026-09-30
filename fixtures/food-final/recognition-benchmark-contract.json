@@ -1,0 +1,37 @@
+{
+  "required_cases": [
+    {
+      "id": "fruit-platter-1",
+      "expected_any": [
+        "fruit salad",
+        "mixed fruit"
+      ],
+      "forbidden_primary": [
+        "soup"
+      ]
+    },
+    {
+      "id": "fruit-platter-2",
+      "expected_any": [
+        "fruit salad",
+        "mixed fruit"
+      ],
+      "forbidden_primary": [
+        "soup"
+      ]
+    },
+    {
+      "id": "taco",
+      "expected_any": [
+        "taco"
+      ],
+      "forbidden_primary": []
+    }
+  ],
+  "gate": {
+    "top3_recall_min": 0.9,
+    "dangerous_confident_wrong_primary_max": 0.02,
+    "low_confidence_requires_confirmation": true
+  },
+  "note": "Scores must be generated from actual labeled image fixtures. This file contains no invented benchmark result."
+}

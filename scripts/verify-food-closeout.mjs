@@ -1,0 +1,15 @@
+import fs from"node:fs";
+const R=p=>fs.readFileSync(p,"utf8"),ok=(n,v)=>{if(!v)throw new Error(n+"_FAILED");console.log(n+"=PASS")};
+const rec=R("lib/tools/food/image-recognition-local.ts"),ui=R("components/tools/FoodCalorieWorkbench.tsx"),paid=R("app/api/tools/food/calculate/route.ts"),free=R("app/api/tools/food/free-calculate/route.ts"),sess=R("app/api/tools/food/session/route.ts"),sql=R("supabase/migrations/20260930010000_food_production_closeout_v18.sql");
+ok("LOCAL_ONLY_VISION",rec.includes("allowRemoteModels=false")&&rec.includes("productionVisionReady"));
+ok("CALIBRATED_ENSEMBLE",rec.includes("evidence")&&rec.includes("requiresConfirmation")&&rec.includes("broadZeroShot"));
+ok("LOW_CONFIDENCE_NOT_AUTO_ACCEPTED",ui.includes("!a[0].requiresConfirmation"));
+ok("BATCH_MULTI_CANDIDATE",ui.includes("slice(0,3)")&&ui.includes("new Map"));
+ok("REAL_PRODUCTION_PK",sql.includes("nutrition_food_compact(id)"));
+ok("ANON_NULL_UNIQUE_REGRESSION_ABSENT",!(/nulls\\s+not\\s+distinct/i.test(sql)));
+ok("FREE_INDEX_DESTRUCTIVE_DDL_ABSENT",!(/drop\\s+index[^;]*(food_calorie_free_account_day|food_calorie_free_ip_day)/i.test(sql)));
+ok("FREE_ATOMIC_BOUND",free.includes("calculate_food_daily_free_bound_v18")&&sql.includes("calculate_food_daily_free_bound_v18"));
+ok("PAID_ATOMIC_BOUND",paid.includes("calculate_food_paid_bound_v18")&&sql.includes("calculate_food_paid_bound_v18"));
+ok("SESSION_V18",sess.includes("food_calorie_image_sessions_v18"));
+ok("SERVICE_ROLE_ONLY",sql.includes("revoke all on function")&&sql.includes("to service_role"));
+console.log("FOOD_CLOSEOUT_SOURCE_GATE=PASS");

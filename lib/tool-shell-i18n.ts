@@ -35,16 +35,16 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "pt": "Privacidade",
     "ar": "الخصوصية"
   },
-  "本工具默认在您的浏览器本地完成计算与转换。文件不会上传到灵犀场服务器，也不会写入我们的对象存储。刷新或关闭页面后，内存中的文件即被释放。": {
-    "zh": "本工具默认在您的浏览器本地完成计算与转换。文件不会上传到灵犀场服务器，也不会写入我们的对象存储。刷新或关闭页面后，内存中的文件即被释放。",
-    "en": "This tool processes data in your browser by default. Files are not uploaded to LINGXIFIELD servers or object storage. Closing or refreshing the page releases them from memory.",
-    "ja": "このツールは既定でブラウザ内処理を行います。ファイルはLINGXIFIELDのサーバーやオブジェクトストレージへ送信されません。更新またはページを閉じると、メモリ上のファイルは解放されます。",
-    "ko": "이 도구는 기본적으로 브라우저에서 로컬 처리됩니다. 파일은 LINGXIFIELD 서버나 객체 저장소로 업로드되지 않으며, 새로고침하거나 페이지를 닫으면 메모리에서 해제됩니다.",
-    "fr": "Cet outil traite par défaut les données dans votre navigateur. Les fichiers ne sont envoyés ni aux serveurs LINGXIFIELD ni au stockage d’objets. Ils sont libérés de la mémoire à l’actualisation ou à la fermeture de la page.",
-    "de": "Dieses Werkzeug verarbeitet Daten standardmäßig im Browser. Dateien werden weder auf LINGXIFIELD-Server noch in Objektspeicher hochgeladen. Beim Aktualisieren oder Schließen werden sie aus dem Speicher entfernt.",
-    "es": "Esta herramienta procesa los datos en el navegador por defecto. Los archivos no se suben a servidores de LINGXIFIELD ni al almacenamiento de objetos. Al actualizar o cerrar la página se liberan de la memoria.",
-    "pt": "Esta ferramenta processa os dados no navegador por padrão. Os arquivos não são enviados aos servidores da LINGXIFIELD nem ao armazenamento de objetos. Ao atualizar ou fechar a página, eles são liberados da memória.",
-    "ar": "تعالج هذه الأداة البيانات داخل المتصفح افتراضيًا. لا تُرفع الملفات إلى خوادم LINGXIFIELD أو التخزين الكائني، وتُزال من الذاكرة عند تحديث الصفحة أو إغلاقها."
+  "本工具默认在您的浏览器本地完成处理。文件不会上传到灵犀场；刷新或关闭页面后，当前文件会从本次页面中释放。": {
+    "zh": "本工具默认在您的浏览器本地完成处理。文件不会上传到灵犀场；刷新或关闭页面后，当前文件会从本次页面中释放。",
+    "en": "This tool processes files in your browser by default. Files are not uploaded to LINGXIFIELD and are released from the current page when you refresh or close it.",
+    "ja": "このツールは既定でブラウザ内で処理します。ファイルはLINGXIFIELDへ送信されず、更新またはページを閉じると現在のページから解放されます。",
+    "ko": "이 도구는 기본적으로 브라우저에서 처리됩니다. 파일은 LINGXIFIELD로 업로드되지 않으며 새로고침하거나 페이지를 닫으면 현재 페이지에서 해제됩니다.",
+    "fr": "Cet outil traite les fichiers dans votre navigateur par défaut. Ils ne sont pas envoyés à LINGXIFIELD et sont libérés de la page lorsque vous l’actualisez ou la fermez.",
+    "de": "Dieses Werkzeug verarbeitet Dateien standardmäßig im Browser. Sie werden nicht an LINGXIFIELD gesendet und beim Aktualisieren oder Schließen der Seite freigegeben.",
+    "es": "Esta herramienta procesa los archivos en tu navegador por defecto. No se envían a LINGXIFIELD y se liberan de la página al actualizarla o cerrarla.",
+    "pt": "Esta ferramenta processa os arquivos no navegador por padrão. Eles não são enviados à LINGXIFIELD e são liberados da página ao atualizar ou fechar.",
+    "ar": "تعالج هذه الأداة الملفات داخل المتصفح افتراضيًا. لا تُرسل الملفات إلى LINGXIFIELD وتُزال من الصفحة الحالية عند تحديثها أو إغلاقها."
   },
   "浏览器本地处理 · 文件不上传服务器": {
     "zh": "浏览器本地处理 · 文件不上传服务器",
@@ -156,16 +156,16 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "pt": "Imagens grandes ou detalhadas podem ultrapassar o alvo mesmo com baixa qualidade. A ferramenta se aproxima do limite e informa se ultrapassar.",
     "ar": "قد تتجاوز الصور الكبيرة أو كثيرة التفاصيل الحجم المستهدف حتى مع خفض الجودة. تقترب الأداة من الحد وتوضح بصدق إذا بقي الحجم أعلى."
   },
-  "核心逻辑运行在您的浏览器（Canvas / Web Crypto / 纯 JS）。重型库将按页面动态加载，避免拖慢全站首页。": {
-    "zh": "核心逻辑运行在您的浏览器（Canvas / Web Crypto / 纯 JS）。重型库将按页面动态加载，避免拖慢全站首页。",
-    "en": "Core logic runs in your browser (Canvas / Web Crypto / pure JS). Heavy libraries load only on the pages that need them so the site home stays light.",
-    "ja": "中核処理はブラウザ（Canvas / Web Crypto / 純JS）で動作します。重いライブラリは必要なページだけで読み込み、サイト全体を重くしません。",
-    "ko": "핵심 로직은 브라우저(Canvas / Web Crypto / 순수 JS)에서 실행됩니다. 무거운 라이브러리는 필요한 페이지에서만 불러와 전체 사이트 속도를 보호합니다.",
-    "fr": "La logique principale s’exécute dans votre navigateur (Canvas / Web Crypto / JS pur). Les bibliothèques lourdes ne se chargent que sur les pages nécessaires.",
-    "de": "Die Kernlogik läuft im Browser (Canvas / Web Crypto / reines JS). Schwere Bibliotheken werden nur auf den benötigten Seiten geladen.",
-    "es": "La lógica principal se ejecuta en tu navegador (Canvas / Web Crypto / JS puro). Las bibliotecas pesadas se cargan solo donde hacen falta.",
-    "pt": "A lógica principal roda no navegador (Canvas / Web Crypto / JS puro). Bibliotecas pesadas carregam apenas nas páginas necessárias.",
-    "ar": "يعمل المنطق الأساسي داخل المتصفح (Canvas / Web Crypto / JavaScript خالص). تُحمّل المكتبات الثقيلة فقط في الصفحات التي تحتاجها."
+  "处理会尽量在当前设备完成，只在需要时加载必要能力，不影响其他页面使用。": {
+    "zh": "处理会尽量在当前设备完成，只在需要时加载必要能力，不影响其他页面使用。",
+    "en": "Processing stays on your device whenever possible, and only the capabilities needed for this task are loaded.",
+    "ja": "処理は可能な限り端末内で行い、この作業に必要な機能だけを読み込みます。",
+    "ko": "가능한 처리는 현재 기기에서 진행하며 이 작업에 필요한 기능만 불러옵니다.",
+    "fr": "Le traitement reste sur votre appareil autant que possible et seules les fonctions nécessaires sont chargées.",
+    "de": "Die Verarbeitung bleibt nach Möglichkeit auf Ihrem Gerät; geladen wird nur, was für diese Aufgabe nötig ist.",
+    "es": "El procesamiento permanece en tu dispositivo siempre que sea posible y solo se carga lo necesario.",
+    "pt": "O processamento permanece no seu dispositivo sempre que possível e apenas o necessário é carregado.",
+    "ar": "تتم المعالجة على جهازك كلما أمكن، ولا يتم تحميل سوى ما تحتاجه هذه المهمة."
   }
 };
 

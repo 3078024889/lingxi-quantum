@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useMemo,useState,useRef} from "react";
 
 type Props={projectId:string};
 export default function SasiProjectDNAEditor({projectId}:Props){
@@ -7,13 +7,14 @@ export default function SasiProjectDNAEditor({projectId}:Props){
  const[style,setStyle]=useState('{"color":"","lighting":"","cameraLanguage":"","negativeConstraints":[]}');
  const[versions,setVersions]=useState<any[]>([]),[message,setMessage]=useState("");
  async function load(){if(!projectId)return;const r=await fetch(`/api/sasi/v5/projects/${encodeURIComponent(projectId)}/dna`,{cache:"no-store"});const b=await r.json().catch(()=>({}));if(r.ok)setVersions(b.versions??[])}
- useEffect(()=>{void load()},[projectId]);
+ const loadRef=useRef(load);loadRef.current=load;
+ useEffect(()=>{void loadRef.current()},[projectId]);
  const valid=useMemo(()=>{try{JSON.parse(characters);JSON.parse(style);return true}catch{return false}},[characters,style]);
  async function save(approve:boolean){
   if(!valid){setMessage("请先检查内容格式。");return}
   setMessage("正在保存…");
   const r=await fetch(`/api/sasi/v5/projects/${encodeURIComponent(projectId)}/dna`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({characters:JSON.parse(characters),style:JSON.parse(style),approve})});
-  const b=await r.json().catch(()=>({}));setMessage(r.ok?(approve?"已批准，后续创作会以这一版为准。":"已保存新版本。"):(b.error||"暂时无法保存。"));if(r.ok)void load();
+  const b=await r.json().catch(()=>({}));setMessage(r.ok?(approve?"已批准，后续创作会以这一版为准。":"已保存新版本。"):(b.error||"暂时无法保存。"));if(r.ok)void loadRef.current();
  }
  return <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
   <h2 className="text-2xl font-semibold text-[var(--lx-ink)]">人物与作品风格</h2>

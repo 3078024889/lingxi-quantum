@@ -44,3 +44,15 @@ node_modules/
 /.v*-acceptance-server*
 /docs/runtime-audit-*/
 /reports/
+
+docs/generated-fooddata-v2/
+
+.lingxi-usda-stage/
+
+lingxifield-food-stage/
+
+docs/generated-fooddata-v2/
+
+lingxifield-food-stage/
+
+lingxifield-food-upload/
