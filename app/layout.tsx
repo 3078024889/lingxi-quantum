@@ -14,10 +14,10 @@ const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
 export const metadata:Metadata={
  metadataBase:new URL(SITE),
  title:{
-  default:"灵犀场 LINGXIFIELD｜免费实用工具 · AI 短剧 · SASI 智能体",
+  default:"灵犀场 LINGXIFIELD｜全球智能工具与 SASI 创作生态平台",
   template:"%s ｜ 灵犀场 LINGXIFIELD"
  },
- description:"灵犀场提供 PDF、图片、视频、字幕、OCR 与文件处理工具，以及 AI 短剧生成、书本与文档 SASI、学习 SASI、科研 SASI、网站与应用构建。",
+ description:"灵犀场 LINGXIFIELD 是全球智能工具与 SASI 创作生态平台：处理 PDF、图片、视频、字幕、OCR 与文件，也可进行 AI 短剧、书本 SASI、学习 SASI、科研 SASI 与网站构建。",
  applicationName:"灵犀场 LINGXIFIELD",
  keywords:[
   "灵犀场","LINGXIFIELD","SASI","免费在线工具",
