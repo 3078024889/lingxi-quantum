@@ -1,0 +1,15 @@
+import fs from"node:fs";import{spawnSync}from"node:child_process";
+const read=p=>fs.readFileSync(p,"utf8"),exists=p=>fs.existsSync(p),ok=(n,v)=>{console.log(`${n}=${v?"PASS":"FAIL"}`);if(!v)process.exitCode=1};
+const run=p=>spawnSync(process.execPath,[p],{encoding:"utf8",windowsHide:true,timeout:180000});
+const release=read("lib/release/version.ts");
+ok("REAL_TOOL_RELEASE",release.includes('2026.09.30.11')&&release.includes('4.8.8'));
+for(const f of["scripts/test-tools-real-files.cjs","scripts/test-text-tools.cjs","scripts/audit/tools-real-acceptance-v1600.mjs","tests/final-closure/food-results.spec.ts","components/tools/IdPhotoAiWorkbench.tsx"])ok("REAL_TOOL_SOURCE_"+f.replace(/\W/g,"_"),exists(f));
+const pdf=run("scripts/test-tools-real-files.cjs");ok("REAL_TOOL_PDF_FIXTURE",pdf.status===0);
+const txt=run("scripts/test-text-tools.cjs");ok("REAL_TOOL_TEXT_FIXTURE",txt.status===0);
+const audit=run("scripts/audit/tools-real-acceptance-v1600.mjs");ok("REAL_TOOL_ACCEPTANCE_AUDIT",audit.status===0&&audit.stdout.includes("AUDITED_WITH_EXPLICIT_BLOCKERS"));
+const robots=read("app/robots.ts"),templates=read("app/templates/page.tsx"),creations=read("app/api/account/creations/route.ts");
+ok("SECURITY_PRIVATE_INDEX_BOUNDARY",["/account","/checkout","/sasi/chat"].every(x=>robots.includes(x)));
+ok("SECURITY_TEMPLATE_APPROVAL_BOUNDARY",templates.includes('"visibility","public"')&&templates.includes('"review_status","approved"'));
+ok("SECURITY_CREATION_AUTH_BOUNDARY",creations.includes("LOGIN_REQUIRED")&&creations.includes("owner_id"));
+ok("SECURITY_NO_LIVE_MONEY_AUTORUN",!read("INSTALL.ps1").includes("Invoke-WebRequest")&&!read("INSTALL.ps1").includes("supabase db push"));
+if(!process.exitCode)console.log("GRADUATION_REAL_TOOL_SECURITY_CLOSURE=PASS");

@@ -1,0 +1,10 @@
+import fs from"node:fs";const read=p=>fs.readFileSync(p,"utf8"),ok=(n,v)=>{console.log(`${n}=${v?"PASS":"FAIL"}`);if(!v)process.exitCode=1};
+const v=read("lib/release/version.ts"),f=read("components/Footer.tsx"),a=read("app/api/notifications/route.ts"),m=read("supabase/migrations/20260930003000_website_release_notice_clean.sql");
+ok("WEBSITE_RELEASE_2026_09_30_12",v.includes('website:"2026.09.30.12"'));
+ok("MINI_VERSION_NOT_BUMPED",v.includes('miniProgram:"4.8.6"')&&!v.includes("4.8.9"));
+ok("FOOTER_SINGLE_VERSION_LINE",(f.match(/网站 v\{LINGXIFIELD_RELEASE\.website\}/g)||[]).length===1);
+ok("FOOTER_NO_MINI_RELEASE_CLAIM",!f.includes("小程序 v{LINGXIFIELD_RELEASE.miniProgram}"));
+ok("BELL_ONE_WEBSITE_RELEASE",a.includes("websiteAnnouncement")&&!a.includes("lingxifield_announcements"));
+ok("MIGRATION_WEB_ONLY",m.includes("platform='web'")&&!m.includes("platform='miniapp'")&&!m.includes("'all'"));
+ok("PUBLIC_COPY_CONCISE",v.includes("灵犀场工具体验更新")&&v.split("highlightsZh:[")[1].split("]")[0].split(",").length<=5);
+if(!process.exitCode)console.log("GRADUATION_RELEASE_NOTICE_CLEAN=PASS");

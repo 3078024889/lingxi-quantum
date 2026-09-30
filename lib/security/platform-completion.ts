@@ -1,0 +1,4 @@
+export const PRIVATE_INDEX_PREFIXES=["/account","/checkout","/checkout-usd","/paypal","/sasi/chat","/sasi/operator","/sasi/connections"];
+export function safePublicUrl(value:unknown){if(typeof value!=="string")return null;try{const u=new URL(value,"https://lingxifield.com");if(!["https:","http:"].includes(u.protocol))return null;if(u.username||u.password)return null;return u.toString().slice(0,1200)}catch{return null}}
+export function canPublishTemplate(x:{consent?:boolean;visibility?:string;reviewStatus?:string}){return x.consent===true&&x.visibility==="public"&&x.reviewStatus==="approved"}
+export function safeCreationPayload(v:unknown){if(!v||typeof v!=="object"||Array.isArray(v))return{};const s=JSON.stringify(v);if(s.length>100000)throw new Error("CREATION_PAYLOAD_TOO_LARGE");return v as Record<string,unknown>}

@@ -1,26 +1,26 @@
 "use client";
-import{useEffect,useState}from"react";
-import{createClient}from"@/lib/supabase/client";
-export default function LingxifieldFeedback(){
- const[open,setOpen]=useState(false),[message,setMessage]=useState(""),[sent,setSent]=useState(false),[busy,setBusy]=useState(false);
- useEffect(()=>{const h=()=>setOpen(true);window.addEventListener("lingxifield:feedback",h);return()=>window.removeEventListener("lingxifield:feedback",h)},[]);
- async function submit(){
-  if(message.trim().length<3)return;setBusy(true);
-  try{
-   const supabase=createClient();const{data:{session}}=await supabase.auth.getSession();const token=session?.access_token||"";
-   const r=await fetch("/api/support/tickets",{method:"POST",headers:{"content-type":"application/json",...(token?{authorization:`Bearer ${token}`}:{})},body:JSON.stringify({message,pageUrl:location.href,route:location.pathname,viewport:{w:innerWidth,h:innerHeight}})});
-   if(r.ok){setSent(true);setMessage("")}else if(r.status===401){location.href="/account?next="+encodeURIComponent(location.pathname)+"&support=1"}
-  }finally{setBusy(false)}
- }
- return <><button aria-label="告诉我们遇到的问题" onClick={()=>setOpen(true)} style={{position:"fixed",right:18,bottom:18,zIndex:80,border:"1px solid rgba(150,125,70,.22)",borderRadius:999,padding:"10px 15px",background:"rgba(255,255,255,.92)",boxShadow:"0 12px 42px rgba(20,20,20,.12)",backdropFilter:"blur(14px)",fontWeight:650}}>✦ 告诉我们</button>
- {open&&<div role="dialog" aria-modal="true" style={{position:"fixed",inset:0,zIndex:100,background:"rgba(12,12,12,.24)",display:"grid",placeItems:"center",padding:18}} onMouseDown={e=>{if(e.currentTarget===e.target)setOpen(false)}}>
-  <section style={{width:"min(520px,100%)",borderRadius:28,background:"#fff",padding:"28px",boxShadow:"0 28px 90px rgba(0,0,0,.18)"}}>
-   <div style={{display:"flex",justifyContent:"space-between",gap:16}}><div><small style={{opacity:.5}}>LINGXIFIELD CARE</small><h2 style={{margin:"6px 0 8px",fontSize:25}}>哪里没有按你期待的工作？</h2></div><button onClick={()=>setOpen(false)} aria-label="关闭" style={{border:0,background:"transparent",fontSize:22}}>×</button></div>
-   {sent?<div style={{padding:"28px 0 10px",lineHeight:1.8}}><b>已收到 ✓</b><p style={{opacity:.66}}>这条留言已经保存，我们可以据此继续定位和修复。</p></div>:<>
-    <p style={{opacity:.62,lineHeight:1.7}}>直接告诉我们发生了什么。当前页面和版本会一起带上，不需要你重复解释。</p>
-    <textarea value={message} onChange={e=>setMessage(e.target.value)} placeholder="例如：上传 PDF 后没有出现预览；我点击下载没有反应……" style={{width:"100%",minHeight:140,resize:"vertical",border:"1px solid #ddd",borderRadius:18,padding:16,font:"inherit",boxSizing:"border-box"}}/>
-    <button disabled={busy||message.trim().length<3} onClick={submit} style={{marginTop:14,width:"100%",border:0,borderRadius:16,padding:"14px 18px",background:"#151515",color:"#fff",fontWeight:700}}>{busy?"正在发送…":"发送给灵犀场"}</button>
-   </>}
-  </section>
- </div>}</>
-}
+import{useEffect,useRef,useState}from"react";import{createClient}from"@/lib/supabase/client";
+const SUPPORT_EMAIL="support@lingxifield.com",MAX=4,MAX_BYTES=5*1024*1024;
+type Pic={file:File,url:string};
+export default function LingxifieldFeedback(){const[open,setOpen]=useState(false),[message,setMessage]=useState(""),[pics,setPics]=useState<Pic[]>([]),[busy,setBusy]=useState(false),[done,setDone]=useState<{id?:string}|null>(null),[error,setError]=useState("");const box=useRef<HTMLDivElement|null>(null),drag=useRef<{x:number;y:number;l:number;t:number}|null>(null);
+useEffect(()=>{const h=()=>{setOpen(true);setDone(null);setError("")};window.addEventListener("lingxifield:feedback",h);return()=>window.removeEventListener("lingxifield:feedback",h)},[]);
+useEffect(()=>()=>pics.forEach(p=>URL.revokeObjectURL(p.url)),[pics]);
+function add(files:File[]){setError("");const valid=files.filter(f=>f.type.startsWith("image/"));if(valid.some(f=>f.size>MAX_BYTES)){setError("单张图片不能超过 5MB。");return}setPics(old=>{const next=[...old,...valid].slice(0,MAX);return next.map(p=>"file"in p?p:{file:p as any,url:URL.createObjectURL(p as any)}) as any})}
+function choose(files:FileList|null){if(!files)return;const incoming=Array.from(files).slice(0,MAX-pics.length);setPics(old=>[...old,...incoming.filter(f=>f.type.startsWith("image/")).filter(f=>{if(f.size>MAX_BYTES){setError("单张图片不能超过 5MB。");return false}return true}).map(file=>({file,url:URL.createObjectURL(file)}))])}
+function remove(i:number){setPics(old=>old.filter((p,n)=>{if(n===i)URL.revokeObjectURL(p.url);return n!==i}))}
+function down(e:React.PointerEvent){if((e.target as HTMLElement).closest("button,input,textarea,label"))return;const el=box.current;if(!el)return;const r=el.getBoundingClientRect();drag.current={x:e.clientX,y:e.clientY,l:r.left,t:r.top};(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)}
+function move(e:React.PointerEvent){if(!drag.current||!box.current)return;const d=drag.current;const l=Math.max(8,Math.min(innerWidth-box.current.offsetWidth-8,d.l+e.clientX-d.x)),t=Math.max(8,Math.min(innerHeight-box.current.offsetHeight-8,d.t+e.clientY-d.y));Object.assign(box.current.style,{left:`${l}px`,top:`${t}px`,transform:"none"})}
+function up(){drag.current=null}
+async function submit(){if(message.trim().length<3){setError("请先写下发生了什么。");return}setBusy(true);setError("");try{const s=createClient();const{data:{session}}=await s.auth.getSession();if(!session){setError("请先登录后发送，这样你才能看到后续处理状态。也可以直接发送邮件给我们。");return}const fd=new FormData();fd.set("message",message.trim());fd.set("pageUrl",location.href);fd.set("route",location.pathname);fd.set("viewport",JSON.stringify({w:innerWidth,h:innerHeight}));pics.forEach(p=>fd.append("images",p.file,p.file.name));const r=await fetch("/api/support/tickets",{method:"POST",headers:{authorization:`Bearer ${session.access_token}`},body:fd});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data?.message||data?.error||"发送失败");setDone({id:data?.ticket?.id});setMessage("");pics.forEach(p=>URL.revokeObjectURL(p.url));setPics([])}catch(e:any){setError(e?.message||"发送失败，请稍后再试。")}finally{setBusy(false)}}
+if(!open)return null;return <div role="dialog" aria-modal="true" style={{position:"fixed",inset:0,zIndex:120,background:"rgba(12,12,12,.28)"}} onMouseDown={e=>{if(e.currentTarget===e.target)setOpen(false)}}>
+<div ref={box} style={{position:"fixed",left:"50%",top:"50%",transform:"translate(-50%,-50%)",width:"min(620px,calc(100vw - 24px))",maxHeight:"calc(100vh - 24px)",overflow:"auto",borderRadius:28,background:"var(--lx-surface,#fff)",padding:24,boxShadow:"0 28px 90px rgba(0,0,0,.2)"}}>
+<div onPointerDown={down} onPointerMove={move} onPointerUp={up} style={{cursor:"move",touchAction:"none",display:"flex",justifyContent:"space-between",gap:16,userSelect:"none"}}><div><small style={{opacity:.5}}>LINGXIFIELD CARE · 拖动这里移动</small><h2 style={{margin:"6px 0 6px",fontSize:25}}>告诉我们哪里没有按期待工作</h2></div><button onClick={()=>setOpen(false)} aria-label="关闭" style={{border:0,background:"transparent",fontSize:24,cursor:"pointer"}}>×</button></div>
+{done?<div style={{padding:"24px 0 8px",lineHeight:1.8}}><b>已发送 ✓</b><p style={{opacity:.68}}>我们已经收到这条问题。{done.id?` 编号：${done.id.slice(0,8)}`:""} 登录账户后可以继续查看处理状态。</p><button onClick={()=>{setDone(null);setMessage("")}} style={{border:"1px solid #ddd",borderRadius:14,padding:"10px 14px",background:"transparent"}}>再告诉我们一件事</button></div>:<>
+<p style={{opacity:.64,lineHeight:1.7}}>写下问题，也可以把截图拖进下面、粘贴进来或选择图片。当前页面、网站版本和设备信息会自动附上。</p>
+<textarea value={message} onChange={e=>setMessage(e.target.value)} onPaste={e=>{const fs=Array.from(e.clipboardData.files);if(fs.length)choose({length:fs.length,item:(i:number)=>fs[i],[Symbol.iterator]:function*(){yield*fs}} as any)}} placeholder="例如：上传 PDF 后没有出现预览；点击下载没有反应……" style={{width:"100%",minHeight:120,resize:"vertical",border:"1px solid rgba(120,120,120,.3)",borderRadius:18,padding:15,font:"inherit",boxSizing:"border-box"}}/>
+<label onDragOver={e=>{e.preventDefault();e.currentTarget.style.borderColor="#8f742e"}} onDragLeave={e=>e.currentTarget.style.borderColor="rgba(120,120,120,.3)"} onDrop={e=>{e.preventDefault();e.currentTarget.style.borderColor="rgba(120,120,120,.3)";choose(e.dataTransfer.files)}} style={{display:"block",marginTop:12,border:"1px dashed rgba(120,120,120,.3)",borderRadius:18,padding:16,textAlign:"center",cursor:"pointer"}}><b>＋ 添加截图</b><div style={{fontSize:12,opacity:.55,marginTop:5}}>拖放、粘贴或点击选择 · 最多 4 张 · 每张 5MB</div><input type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden onChange={e=>choose(e.target.files)}/></label>
+{pics.length>0&&<div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginTop:10}}>{pics.map((p,i)=><div key={p.url} style={{position:"relative",aspectRatio:"1",borderRadius:12,overflow:"hidden",background:"#eee"}}><img src={p.url} alt={`截图 ${i+1}`} style={{width:"100%",height:"100%",objectFit:"cover"}}/><button onClick={()=>remove(i)} aria-label="移除图片" style={{position:"absolute",right:5,top:5,border:0,borderRadius:99,width:24,height:24,background:"rgba(0,0,0,.65)",color:"#fff"}}>×</button></div>)}</div>}
+{error&&<div role="alert" style={{marginTop:12,padding:"10px 12px",borderRadius:12,background:"rgba(190,45,45,.08)",color:"#a12626",fontSize:13}}>{error}</div>}
+<button disabled={busy} onClick={submit} style={{marginTop:14,width:"100%",border:0,borderRadius:16,padding:"14px 18px",background:"#151515",color:"#fff",fontWeight:700,cursor:"pointer",opacity:busy?.7:1}}>{busy?"正在发送…":"发送给灵犀场"}</button>
+<p style={{fontSize:12,opacity:.55,textAlign:"center",margin:"12px 0 0"}}>发送遇到问题时，也可以邮件联系 <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p></>}
+</div></div>}

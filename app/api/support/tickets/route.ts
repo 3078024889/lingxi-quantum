@@ -1,30 +1,13 @@
-import{NextRequest,NextResponse}from"next/server";
-import{createAdminClient}from"@/lib/supabase/admin";
-import{isSameOriginMutation}from"@/lib/sasi/request-security";
-import{LINGXIFIELD_RELEASE}from"@/lib/release/version";
-export const runtime="nodejs";export const dynamic="force-dynamic";
-async function user(req:NextRequest){
- let admin;try{admin=createAdminClient()}catch{return null}const token=(req.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
- if(!token)return null;const{data}=await admin.auth.getUser(token);return data.user||null;
-}
-export async function POST(req:NextRequest){
- if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
- const u=await user(req);if(!u)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
- const b=await req.json().catch(()=>null)as any;const message=String(b?.message||"").trim(),title=String(b?.title||"遇到问题").trim().slice(0,120);
- if(message.length<3||message.length>5000)return NextResponse.json({error:"INVALID_MESSAGE"},{status:400});
- const pageUrl=String(b?.pageUrl||"").slice(0,1000),route=String(b?.route||"").slice(0,300);
- const admin=createAdminClient();const{data,error}=await admin.from("lingxifield_support_tickets").insert({
-  owner_id:u.id,contact:String(b?.contact||u.email||"").slice(0,300),kind:String(b?.kind||"problem").slice(0,40),title,message,
-  page_url:pageUrl,route,release_version:LINGXIFIELD_RELEASE.website,mini_version:LINGXIFIELD_RELEASE.miniProgram,
-  error_code:b?.errorCode?String(b.errorCode).slice(0,120):null,
-  screenshot_url:b?.screenshotUrl?String(b.screenshotUrl).slice(0,1000):null,
-  context:{userAgent:req.headers.get("user-agent"),viewport:b?.viewport||null,tool:b?.tool||null}
- }).select("id,status,created_at").single();
- if(error)return NextResponse.json({error:"SUBMIT_FAILED"},{status:500});
- return NextResponse.json({ok:true,ticket:data,message:"已收到。我们会从这里继续处理，你可以在账户中查看进度。"});
-}
-export async function GET(req:NextRequest){
- const u=await user(req);if(!u)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
- const admin=createAdminClient();const{data,error}=await admin.from("lingxifield_support_tickets").select("id,kind,title,message,status,created_at,updated_at,release_version").eq("owner_id",u.id).order("created_at",{ascending:false}).limit(50);
- if(error)return NextResponse.json({error:"UNAVAILABLE"},{status:500});return NextResponse.json({items:data||[]});
-}
+import{NextRequest,NextResponse}from"next/server";import{createAdminClient}from"@/lib/supabase/admin";import{isSameOriginMutation}from"@/lib/sasi/request-security";import{LINGXIFIELD_RELEASE}from"@/lib/release/version";
+export const runtime="nodejs";export const dynamic="force-dynamic";const MAX=5*1024*1024,ALLOWED=new Set(["image/png","image/jpeg","image/webp","image/gif"]);
+async function user(req:NextRequest){let a;try{a=createAdminClient()}catch{return null}const t=(req.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");if(!t)return null;const{data}=await a.auth.getUser(t);return data.user||null}
+export async function POST(req:NextRequest){if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN",message:"当前请求无法发送，请刷新页面后重试。"},{status:403});const u=await user(req);if(!u)return NextResponse.json({error:"LOGIN_REQUIRED",message:"请先登录后发送，这样可以继续查看处理状态。"},{status:401});
+let fd:FormData;try{fd=await req.formData()}catch{return NextResponse.json({error:"INVALID_FORM",message:"没有读到提交内容，请重试。"},{status:400})}
+const message=String(fd.get("message")||"").trim();if(message.length<3||message.length>5000)return NextResponse.json({error:"INVALID_MESSAGE",message:"问题描述需要 3–5000 个字符。"},{status:400});
+const files=fd.getAll("images").filter((x):x is File=>x instanceof File&&x.size>0);if(files.length>4)return NextResponse.json({error:"TOO_MANY_IMAGES",message:"最多上传 4 张图片。"},{status:400});for(const f of files)if(f.size>MAX||!ALLOWED.has(f.type))return NextResponse.json({error:"INVALID_IMAGE",message:"仅支持 PNG、JPG、WebP、GIF，单张不超过 5MB。"},{status:400});
+const admin=createAdminClient(),ticketId=crypto.randomUUID(),attachments:any[]=[];for(let i=0;i<files.length;i++){const f=files[i],ext=(f.name.split(".").pop()||"img").replace(/[^a-z0-9]/gi,"").slice(0,8)||"img",path=`${u.id}/${ticketId}/${i+1}.${ext}`;const buf=Buffer.from(await f.arrayBuffer());const up=await admin.storage.from("lingxifield-support").upload(path,buf,{contentType:f.type,upsert:false});if(up.error)return NextResponse.json({error:"IMAGE_UPLOAD_FAILED",message:"截图上传没有完成，请重试或先移除图片发送文字。"},{status:500});attachments.push({path,type:f.type,size:f.size,name:f.name.slice(0,120)})}
+let viewport:any=null;try{viewport=JSON.parse(String(fd.get("viewport")||"null"))}catch{}
+const{data,error}=await admin.from("lingxifield_support_tickets").insert({id:ticketId,owner_id:u.id,contact:String(u.email||"").slice(0,300),kind:"problem",title:"使用问题",message,page_url:String(fd.get("pageUrl")||"").slice(0,1000),route:String(fd.get("route")||"").slice(0,300),release_version:LINGXIFIELD_RELEASE.website,mini_version:LINGXIFIELD_RELEASE.miniProgram,screenshot_url:attachments[0]?.path||null,context:{userAgent:req.headers.get("user-agent"),viewport,attachments}}).select("id,status,created_at").single();
+if(error){for(const x of attachments)await admin.storage.from("lingxifield-support").remove([x.path]);return NextResponse.json({error:"SUBMIT_FAILED",message:"这次没有保存成功，请稍后重试或邮件联系 support@lingxifield.com。"},{status:500})}
+return NextResponse.json({ok:true,ticket:data,message:"已收到。你可以在账户中查看处理进度。"})}
+export async function GET(req:NextRequest){const u=await user(req);if(!u)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});const a=createAdminClient();const{data,error}=await a.from("lingxifield_support_tickets").select("id,kind,title,message,status,created_at,updated_at,release_version,screenshot_url,context").eq("owner_id",u.id).order("created_at",{ascending:false}).limit(50);if(error)return NextResponse.json({error:"UNAVAILABLE"},{status:500});return NextResponse.json({items:data||[]})}

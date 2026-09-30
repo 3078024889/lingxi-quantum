@@ -11,6 +11,7 @@ import { brandText } from "@/lib/brand-system-i18n";
 import NotificationBell from "@/components/NotificationBell";
 import CurrencySelector from "@/components/CurrencySelector";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
+import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
 
 type Theme = "light" | "dark";
 type K =
@@ -161,6 +162,11 @@ export default function Nav() {
             ))}
           </section>
         ))}
+      </div>
+
+      <div style={{padding:"10px 12px 4px"}}>
+        <button type="button" onClick={()=>window.dispatchEvent(new Event("lingxifield:feedback"))} style={{width:"100%",display:"flex",alignItems:"center",gap:10,border:"1px solid rgba(150,125,70,.20)",borderRadius:14,padding:"11px 12px",background:"rgba(255,255,255,.55)",fontWeight:650,cursor:"pointer"}}><span aria-hidden="true">✦</span><span>告诉我们</span></button>
+        <Link href="/account/support" style={{display:"block",padding:"7px 12px 0",fontSize:12,opacity:.55}}>查看处理进度</Link>
       </div>
 
       <div className="lx11-sidebar-bottom">
