@@ -1,24 +1,11 @@
 "use client";
-import {useState} from "react";
-import FileDropzone from "@/components/tools/FileDropzone";
-
-import {localIdPhoto} from "@/lib/tools/autonomous/image-local";
-import {saveBlob} from "@/lib/tools/autonomous/download-local";
-
-export default function IdPhotoAiWorkbench(){
- const[files,setFiles]=useState<File[]>([]),[bg,setBg]=useState("white"),[busy,setBusy]=useState(false),[results,setResults]=useState<Array<{name:string;blob:Blob;url:string}>>([]),[error,setError]=useState("");
- async function run(){setBusy(true);setError("");for(const r of results)URL.revokeObjectURL(r.url);setResults([]);try{
-  const out=[] as Array<{name:string;blob:Blob;url:string}>;
-  for(const f of files){const blob=await localIdPhoto(f,bg);out.push({name:f.name,blob,url:URL.createObjectURL(blob)})}
-  setResults(out);
- }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}}
- return <div className="space-y-4">
-  <FileDropzone accept="image/*" multiple maxFiles={20} maxSizeMB={12} files={files} onChange={setFiles} disabled={busy} kind="image"/>
-  <div className="flex flex-wrap gap-2">{[["white","白底"],["light blue","蓝底"],["red","红底"],["light gray","灰底"]].map(([v,n])=><button type="button" key={v} onClick={()=>setBg(v)} className={`rounded-full px-4 py-2 text-sm ${bg===v?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)]"}`}>{n}</button>)}</div>
-  {files.length>0&&!busy&&<button type="button" onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)]">开始处理</button>}
-  {busy&&<p className="text-sm text-[var(--lx-muted)]">正在处理照片…</p>}
-  <p className="text-xs leading-5 text-[var(--lx-faint)]">使用浏览器颜色换底算法，适合背景均匀的照片；不是 AI 人像分割模型，复杂背景和相近衣服颜色可能误处理。正式提交证件前，请核对对应机构的尺寸和头部比例要求。</p>
-  {error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}
-  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border border-[var(--lx-line)] p-3"><img src={r.url} alt="证件照结果" className="w-full rounded-xl"/><button type="button" onClick={()=>saveBlob(r.blob,`lingxifield-id-${r.name.replace(/\.[^.]+$/,".png")}`)} className="mt-3 rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">保存结果</button></div>)}</div>}
- </div>
-}
+import{useEffect,useState}from"react";import FileDropzone from"@/components/tools/FileDropzone";import{saveBlob}from"@/lib/tools/autonomous/download-local";import{ID_PHOTO_PRESETS,presetById}from"@/lib/tools/id-photo/presets";import{processIdPhoto}from"@/lib/tools/id-photo/browser-processor";
+type R={url:string;blob:Blob;width:number;height:number;faceDetected:boolean;quality:string};
+export default function IdPhotoAiWorkbench(){const[files,setFiles]=useState<File[]>([]),[preset,setPreset]=useState("cn-1inch"),[background,setBackground]=useState("white"),[zoom,setZoom]=useState(1.15),[busy,setBusy]=useState(false),[result,setResult]=useState<R|null>(null),[error,setError]=useState("");
+ useEffect(()=>()=>{if(result)URL.revokeObjectURL(result.url)},[result]);async function run(){if(!files[0])return;setBusy(true);setError("");try{if(result)URL.revokeObjectURL(result.url);const r=await processIdPhoto(files[0],{background,preset:presetById(preset),zoom,offsetX:0,offsetY:0});setResult({...r,url:URL.createObjectURL(r.blob)})}catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}}
+ return <div className="space-y-5"><FileDropzone accept="image/*" multiple={false} maxFiles={1} maxSizeMB={15} files={files} onChange={x=>{setFiles(x.slice(0,1));setResult(null)}} disabled={busy} kind="image"/>
+ <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1 text-sm">尺寸<select value={preset} onChange={e=>setPreset(e.target.value)} className="w-full rounded-xl border border-[var(--lx-line)] bg-transparent p-3">{ID_PHOTO_PRESETS.map(x=><option key={x.id} value={x.id}>{x.label}</option>)}</select></label><label className="space-y-1 text-sm">构图大小<input type="range" min="1" max="1.8" step="0.05" value={zoom} onChange={e=>setZoom(Number(e.target.value))} className="w-full"/></label></div>
+ <div className="flex flex-wrap gap-2">{[["white","白底"],["blue","蓝底"],["red","红底"],["gray","灰底"]].map(([v,n])=><button type="button" key={v} onClick={()=>setBackground(v)} className={`rounded-full px-4 py-2 text-sm ${background===v?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)]"}`}>{n}</button>)}</div>
+ {files[0]&&<button type="button" onClick={run} disabled={busy} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)]">{busy?"正在制作…":"生成证件照"}</button>}{error&&<p className="text-sm text-[var(--lx-danger)]">处理失败，请换一张正面清晰照片再试。</p>}
+ {result&&<div className="rounded-2xl border border-[var(--lx-line)] p-4"><img src={result.url} alt="证件照结果" className="mx-auto max-h-[520px] rounded-xl"/><div className="mt-3 text-sm">输出 {result.width} × {result.height}px · {result.faceDetected?"已辅助定位人脸":"请人工核对头部位置"}</div><button onClick={()=>saveBlob(result.blob,"lingxifield-id-photo.png")} className="mt-3 rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">保存 PNG</button></div>}
+ <p className="text-xs leading-5 text-[var(--lx-faint)]">复杂背景不会伪装成已完成人像分割；生成后请核对目标机构的尺寸、头部比例、眼睛位置和背景要求。</p></div>}

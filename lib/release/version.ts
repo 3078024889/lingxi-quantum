@@ -1,7 +1,7 @@
 export const LINGXIFIELD_RELEASE = Object.freeze({
-  release: "2026.09.30.8",
-  website: "2026.09.30.8",
-  miniProgram: "4.8.5",
+  release: "2026.09.30.9",
+  website: "2026.09.30.9",
+  miniProgram: "4.8.6",
   publishedAt: "2026-09-30",
   slogan: "一键创造，一念即达。",
   titleZh: "灵犀场体验全面升级",
@@ -16,7 +16,9 @@ export const LINGXIFIELD_RELEASE = Object.freeze({
     "PDF、图片、视频、临时邮箱、阅后即焚、卡路里识别等实用工具入口进一步统一",
     "网站与小程序版本信息统一纳入发布记录，每次正式更新必须递增版本号",
     "页面层级、间距、移动端可读性与结果反馈继续优化",
-    "生产构建、桌面端、移动端及双域名公开页面继续纳入毕业门禁"
+    "生产构建、桌面端、移动端及双域名公开页面继续纳入毕业门禁",
+    "卡路里复合食物候选与营养计算链路继续收口；水果沙拉等复合食物不再停在候选层",
+    "AI证件照新增常用尺寸、构图辅助、人脸可用时辅助定位、背景处理与精确像素导出"
   ]
 });
 export type LingxifieldRelease = typeof LINGXIFIELD_RELEASE;

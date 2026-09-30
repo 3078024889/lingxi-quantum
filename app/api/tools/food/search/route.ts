@@ -6,12 +6,14 @@ import{normalizeFoodQuery}from"@/lib/tools/food/multilingual";
 import{resolveFoodIdentity,foodSearchTerms}from"@/lib/tools/food/global-food-identity";
 import{foodRegionsForCountry}from"@/lib/tools/food/region-hierarchy";
 import{providersForRegions}from"@/lib/tools/food/data-provider-registry";
+import{searchCompositeFoods}from"@/lib/tools/food/composite-catalog";
 export const runtime="nodejs";
 function publicItem(x:any,canonicalKey:string){return{food_id:Number(x.food_id),code:String(x.source_food_id||x.code||canonicalKey),name_zh:String(x.name_zh||x.name_en||""),name_en:String(x.name_en||x.description_en||x.name_zh||""),category:x.category?String(x.category):null,score:Number(x.score||1),canonical_key:canonicalKey,source:String(x.source_label||x.source_key||"Nutrition database"),nutrition_available:true,provenance:{providerId:String(x.source_key||"nutrition-db"),licenseStatus:"cleared"}}}
 export async function GET(req:NextRequest){
  const u=new URL(req.url),raw=u.searchParams.get("q")?.trim()||"";if(!raw||raw.length>120)return NextResponse.json({items:[]});
  const country=(u.searchParams.get("country")||"").trim().toUpperCase(),regions=foodRegionsForCountry(country),identity=resolveFoodIdentity(raw,country);
  const normalized=normalizeFoodQuery(raw),canonical=canonicalFood(normalized),terms=foodSearchTerms(raw,country),rows:any[]=[];
+ rows.push(...searchCompositeFoods(raw),...searchCompositeFoods(normalized),...searchCompositeFoods(canonical.query));
  for(const term of Array.from(new Set([raw,normalized,canonical.query,...terms]))){
   for(const x of searchLocalFoods(term,12))rows.push({...x,canonical_key:identity?.food.key||canonical.key,source:"LINGXIFIELD Curated References",nutrition_available:true,provenance:{providerId:"local-curated",licenseStatus:"cleared"}});
  }
