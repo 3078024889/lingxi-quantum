@@ -1,0 +1,2 @@
+import {SiteDNA,normalizeSiteDNA} from './site-dna';
+export function planWebsite(intent:string,opts:{projectId?:string;name?:string;locales?:string[]}={}):SiteDNA{const name=opts.name||intent.slice(0,36)||'New Site';return normalizeSiteDNA({projectId:opts.projectId,name,goal:intent,locales:opts.locales,pages:[{path:'/',title:name,sections:[{type:'hero',heading:name,body:intent,cta:'开始'}]},{path:'/about',title:'关于',sections:[{type:'content',heading:'关于我们'}]}],features:['responsive','seo','accessibility']})}

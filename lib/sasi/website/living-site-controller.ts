@@ -1,0 +1,2 @@
+import type {LivingSiteProject} from "./living-project";import type {ReleaseEvidence} from "./release-gate";import {releaseGate} from "./release-gate";
+export function canPublishLivingSite(project:LivingSiteProject,evidence:ReleaseEvidence[]){const revisionValid=project.history.some(x=>x.revision===project.current.revision&&x.validation.pass);const gate=releaseGate(evidence,["build","functional","visual"]);return {pass:revisionValid&&gate.pass,missing:[...(revisionValid?[]:["revision-validation"]),...gate.missing]}}

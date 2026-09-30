@@ -1,0 +1,2 @@
+import {validateSiteRelease,type CheckEvidence} from "./site-release-validator";import type {SiteChange} from "./change-impact";export interface WebsiteClosureInput{changes:SiteChange[];evidence:CheckEvidence[];artifacts:string[];revisionId:string}
+export function closeWebsiteBuild(x:WebsiteClosureInput){const validation=validateSiteRelease(x.changes,x.evidence);return {pass:validation.pass&&x.artifacts.length>0,revisionId:x.revisionId,validation,artifacts:x.artifacts}}

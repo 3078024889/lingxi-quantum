@@ -1,0 +1,1 @@
+export interface Quota{limit:number;used:number;resetAt:number}export function quotaState(q:Quota,now=Date.now()){if(now>=q.resetAt)return {available:q.limit,exhausted:false};const available=Math.max(0,q.limit-q.used);return {available,exhausted:available<=0}}

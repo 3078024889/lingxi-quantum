@@ -1,0 +1,1 @@
+export interface NutritionResult{food:string;grams?:number;kcal?:number;protein?:number;carbs?:number;fat?:number;fiber?:number;sugar?:number;sodium?:number;confidence:number;provenance?:string};export function reliableNutrition(x:NutritionResult){return x.confidence>=.7?x:{food:x.food,confidence:x.confidence,provenance:x.provenance}}

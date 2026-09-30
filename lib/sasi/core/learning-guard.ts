@@ -1,0 +1,2 @@
+export interface LearningCandidate{key:string;samples:number;acceptance:number;quality:number;regressionRisk:number}
+export function promotableLearning(x:LearningCandidate){const reasons:string[]=[];if(x.samples<5)reasons.push("INSUFFICIENT_SAMPLES");if(x.acceptance<.7)reasons.push("LOW_ACCEPTANCE");if(x.quality<.75)reasons.push("LOW_QUALITY");if(x.regressionRisk>.15)reasons.push("REGRESSION_RISK");return {pass:reasons.length===0,reasons}}

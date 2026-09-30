@@ -1,0 +1,2 @@
+export interface SiteIntent{purpose:string;audience:string[];pages:string[];features:string[];style:string[];locale:string}
+export function normalizeSiteIntent(x:Partial<SiteIntent>):SiteIntent{return {purpose:(x.purpose??"").trim(),audience:x.audience??[],pages:x.pages?.length?x.pages:["home"],features:x.features??[],style:x.style??[],locale:x.locale??"zh"}}

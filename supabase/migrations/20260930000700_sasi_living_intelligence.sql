@@ -1,0 +1,10 @@
+begin;
+create table if not exists public.sasi_memory_items(memory_id uuid primary key default gen_random_uuid(),owner_id uuid not null,project_id uuid,key text not null,scope text not null check(scope in ('session','project','person')),value jsonb,confidence numeric not null default 1 check(confidence>=0 and confidence<=1),confirmed boolean not null default false,updated_at timestamptz not null default now());
+create unique index if not exists sasi_memory_items_identity_idx on public.sasi_memory_items(owner_id,coalesce(project_id,'00000000-0000-0000-0000-000000000000'::uuid),scope,key);
+create table if not exists public.sasi_control_events(control_id uuid primary key default gen_random_uuid(),owner_id uuid not null,task_id uuid not null,action text not null check(action in ('approve','reject','pause','resume','rollback')),reason text,created_at timestamptz not null default now());
+create table if not exists public.sasi_learning_candidates(candidate_id uuid primary key default gen_random_uuid(),owner_id uuid not null,key text not null,samples bigint not null default 0,acceptance numeric not null default 0,quality numeric not null default 0,regression_risk numeric not null default 0,promoted boolean not null default false,updated_at timestamptz not null default now());
+alter table public.sasi_memory_items enable row level security;alter table public.sasi_control_events enable row level security;alter table public.sasi_learning_candidates enable row level security;
+drop policy if exists sasi_memory_items_owner on public.sasi_memory_items;create policy sasi_memory_items_owner on public.sasi_memory_items for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+drop policy if exists sasi_control_events_owner on public.sasi_control_events;create policy sasi_control_events_owner on public.sasi_control_events for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+drop policy if exists sasi_learning_candidates_owner on public.sasi_learning_candidates;create policy sasi_learning_candidates_owner on public.sasi_learning_candidates for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+commit;

@@ -1,0 +1,3 @@
+export type EventKind="task.created"|"task.started"|"step.started"|"step.completed"|"step.failed"|"validation.completed"|"repair.applied"|"result.completed"|"action.requested"|"action.confirmed";
+export interface SASIEvent{eventId:string;projectId:string;taskId?:string;kind:EventKind;at:string;payload:Record<string,unknown>}
+export class EventLedger{private events:SASIEvent[]=[];append(input:Omit<SASIEvent,"eventId"|"at">){const e:SASIEvent={...input,eventId:crypto.randomUUID(),at:new Date().toISOString()};this.events.push(e);return e}forProject(projectId:string){return this.events.filter(e=>e.projectId===projectId)}forTask(taskId:string){return this.events.filter(e=>e.taskId===taskId)}snapshot(){return [...this.events]}}

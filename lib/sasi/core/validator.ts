@@ -1,0 +1,2 @@
+export type Validation={pass:boolean;score:number;issues:{code:string;message:string;repairable:boolean}[]};
+export async function validateResult(value:unknown):Promise<Validation>{const issues=[] as Validation['issues'];if(value==null)issues.push({code:'EMPTY_RESULT',message:'No result was produced.',repairable:true});if(typeof value==='string'&&!value.trim())issues.push({code:'BLANK_RESULT',message:'Result is blank.',repairable:true});return {pass:issues.length===0,score:issues.length?0:1,issues}}

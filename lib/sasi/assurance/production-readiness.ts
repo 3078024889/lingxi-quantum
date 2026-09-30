@@ -1,0 +1,1 @@
+export interface ReadinessInput{database:boolean;browser:boolean;mobile:boolean;domains:boolean}export function productionReadiness(x:ReadinessInput){const blockers=Object.entries(x).filter(([,v])=>!v).map(([k])=>k);return {pass:blockers.length===0,blockers}}

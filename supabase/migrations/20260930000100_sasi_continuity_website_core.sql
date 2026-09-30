@@ -1,0 +1,10 @@
+-- additive only: no DROP, no destructive migration
+create table if not exists public.sasi_person_dna(id uuid primary key default gen_random_uuid(),user_id uuid not null,preferences jsonb not null default '{}',confirmed_choices jsonb not null default '{}',updated_at timestamptz not null default now());
+create unique index if not exists sasi_person_dna_user_uidx on public.sasi_person_dna(user_id);
+create table if not exists public.sasi_project_dna(id uuid primary key default gen_random_uuid(),project_id uuid not null,kind text not null,goal text not null default '',decisions jsonb not null default '{}',state jsonb not null default '{}',assets jsonb not null default '[]',updated_at timestamptz not null default now());
+create unique index if not exists sasi_project_dna_project_uidx on public.sasi_project_dna(project_id);
+create table if not exists public.sasi_result_dna(id uuid primary key default gen_random_uuid(),project_id uuid not null,intent text not null,route jsonb not null default '[]',accepted boolean not null default false,repairs jsonb not null default '[]',metrics jsonb not null default '{}',created_at timestamptz not null default now());
+create table if not exists public.sasi_failure_atlas(id bigint generated always as identity primary key,project_id uuid,task text not null,node text not null,code text not null,locale text,device text,project_kind text,created_at timestamptz not null default now());
+create table if not exists public.sasi_site_dna(id uuid primary key default gen_random_uuid(),project_id uuid not null,dna jsonb not null,revision integer not null default 1,created_at timestamptz not null default now(),updated_at timestamptz not null default now());
+create unique index if not exists sasi_site_dna_project_uidx on public.sasi_site_dna(project_id);
+alter table public.sasi_person_dna enable row level security;alter table public.sasi_project_dna enable row level security;alter table public.sasi_result_dna enable row level security;alter table public.sasi_failure_atlas enable row level security;alter table public.sasi_site_dna enable row level security;

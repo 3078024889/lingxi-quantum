@@ -6,6 +6,7 @@ import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
 import SiteStructuredData from "@/components/SiteStructuredData";
+import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
 
 const SITE="https://lingxifield.com";
 const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
@@ -77,5 +78,5 @@ export const metadata:Metadata={
 export default function RootLayout({children}:{children:React.ReactNode}){
  return <html lang="zh-CN" suppressHydrationWarning><head>
   <SiteStructuredData/>
-  </head><body className="antialiased"><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider></body></html>;
+  </head><body className="antialiased"><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider><LingxifieldFeedback /></body></html>;
 }

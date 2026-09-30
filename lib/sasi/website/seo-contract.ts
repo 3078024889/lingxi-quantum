@@ -1,0 +1,2 @@
+export interface SEOContract{title:string;description:string;canonical?:string;locale:string;indexable:boolean}
+export function validateSEO(x:SEOContract){const issues:string[]=[];if(!x.title.trim())issues.push("TITLE_REQUIRED");if(x.title.length>70)issues.push("TITLE_TOO_LONG");if(!x.description.trim())issues.push("DESCRIPTION_REQUIRED");if(x.description.length>180)issues.push("DESCRIPTION_TOO_LONG");return {pass:issues.length===0,issues}}

@@ -1,0 +1,10 @@
+begin;
+create table if not exists public.sasi_outcome_signals(signal_id uuid primary key default gen_random_uuid(),owner_id uuid not null,project_id uuid,project_kind text not null,capability text not null,route text not null,accepted boolean not null default false,score numeric not null default 0 check(score>=0 and score<=1),cost numeric not null default 0 check(cost>=0),latency_ms numeric not null default 0 check(latency_ms>=0),created_at timestamptz not null default now());
+create index if not exists sasi_outcome_signals_learning_idx on public.sasi_outcome_signals(owner_id,project_kind,capability,created_at desc);
+create table if not exists public.sasi_acceptance_ledger(acceptance_id uuid primary key default gen_random_uuid(),owner_id uuid not null,project_id uuid not null,result_id uuid not null,accepted boolean not null,reason text,created_at timestamptz not null default now());
+create table if not exists public.sasi_runtime_metrics(metric_id uuid primary key default gen_random_uuid(),owner_id uuid not null,project_id uuid,task_id uuid,name text not null,value numeric not null,unit text not null,created_at timestamptz not null default now());
+alter table public.sasi_outcome_signals enable row level security;alter table public.sasi_acceptance_ledger enable row level security;alter table public.sasi_runtime_metrics enable row level security;
+drop policy if exists sasi_outcome_signals_owner on public.sasi_outcome_signals;create policy sasi_outcome_signals_owner on public.sasi_outcome_signals for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+drop policy if exists sasi_acceptance_ledger_owner on public.sasi_acceptance_ledger;create policy sasi_acceptance_ledger_owner on public.sasi_acceptance_ledger for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+drop policy if exists sasi_runtime_metrics_owner on public.sasi_runtime_metrics;create policy sasi_runtime_metrics_owner on public.sasi_runtime_metrics for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+commit;

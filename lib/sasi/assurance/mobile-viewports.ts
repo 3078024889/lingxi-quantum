@@ -1,0 +1,1 @@
+export const REQUIRED_MOBILE_VIEWPORTS=[{name:"iPhone-portrait",width:390,height:844},{name:"Android-portrait",width:412,height:915}] as const;export function viewportKey(x:{width:number;height:number}){return `${x.width}x${x.height}`}

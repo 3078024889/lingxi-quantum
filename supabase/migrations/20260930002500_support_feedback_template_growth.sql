@@ -1,0 +1,3 @@
+-- Production counterpart applied through the managed migration channel.
+-- Creates lingxifield_support_tickets, lingxifield_creator_templates, lingxifield_share_events.
+-- RLS: owner-only authenticated access; no anon grants. See production migration support_feedback_template_growth_20260930.

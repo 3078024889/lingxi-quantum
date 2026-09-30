@@ -1,0 +1,3 @@
+import type {FailureAtlas} from "./failure-atlas";import type {GraphNode} from "./capability-graph";import {planRecovery} from "./recovery";
+export interface RecoveryAttempt{strategy:string;ok:boolean;error?:string}
+export async function recoverNode(node:GraphNode,atlas:FailureAtlas,fingerprint:string,run:(strategy:string)=>Promise<boolean>){const plan=planRecovery(node,atlas,fingerprint),attempts:RecoveryAttempt[]=[];for(const strategy of plan.strategies){try{const ok=await run(strategy);attempts.push({strategy,ok});if(ok){atlas.repaired(fingerprint,strategy);return {recovered:true,strategy,attempts}}}catch(e){attempts.push({strategy,ok:false,error:e instanceof Error?e.message:"RECOVERY_FAILED"})}}return {recovered:false,attempts}}

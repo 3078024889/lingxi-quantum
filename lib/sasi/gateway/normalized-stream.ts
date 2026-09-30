@@ -1,0 +1,2 @@
+export type StreamEvent={type:"start";providerId:string}|{type:"text";delta:string}|{type:"tool";name:string;arguments:unknown}|{type:"usage";input?:number;output?:number}|{type:"finish";reason?:string}|{type:"error";code:string;message:string;retryable:boolean};
+export function normalizeError(e:unknown):Extract<StreamEvent,{type:"error"}>{const message=e instanceof Error?e.message:String(e);return {type:"error",code:"PROVIDER_ERROR",message,retryable:true}}

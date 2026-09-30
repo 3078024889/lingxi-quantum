@@ -1,0 +1,2 @@
+-- Current release mirror: website 2026.09.30.6 / mini-program 4.8.3.
+-- Local graduation no longer requires production Supabase admin secrets.

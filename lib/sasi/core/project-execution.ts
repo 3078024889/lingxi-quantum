@@ -1,0 +1,2 @@
+import type {SASIOrchestrator} from "./orchestrator";import type {EngineRegistry} from "../engines/registry";import {runTool} from "./tool-runtime";
+export class ProjectExecution{constructor(private orchestrator:SASIOrchestrator,private engines:EngineRegistry){}async tool<T,R>(projectId:string,tool:string,input:T,locale?:string){const result=await runTool<T,R>(this.engines,tool,input,locale);return {projectId,tool,result,events:this.orchestrator.events(projectId)}}}

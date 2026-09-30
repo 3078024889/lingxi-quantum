@@ -1,0 +1,2 @@
+-- Production announcement counterpart is applied through managed Supabase migration.
+-- Current public release: website 2026.09.30.5 / mini-program 4.8.2.

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {productCatalogText} from "@/lib/product-catalog-i18n";
+import {LINGXIFIELD_RELEASE} from "@/lib/release/version";
 
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]] as const;
 
@@ -25,7 +26,7 @@ export default function Footer(){
           <div className="lx11-footer-capability"><b>Practical tools</b><p>PDF, images, video, subtitles, tables, privacy and everyday file tasks.</p></div>
           <div className="lx11-footer-capability"><b>SASI creation & building</b><p>AI drama, website building, Book SASI, Learning SASI, Research SASI and knowledge activation.</p></div>
         </>}
-        <span>lingxifield.com · lingxifield.cn</span>
+        <span>lingxifield.com · lingxifield.cn</span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span><span style={{opacity:.58,fontSize:12}}>网站 v{LINGXIFIELD_RELEASE.website} · 小程序 v{LINGXIFIELD_RELEASE.miniProgram} · <Link href="/release">版本与更新</Link></span>
       </section>
 
       <nav><b>{t("start")}</b><Link href="/products">{productCatalogText(lang,"title")}</Link><Link href="/tools">{t("tools")}</Link><Link href="/sasi">{t("studio")}</Link><Link href="/ai-knowledge">{t("books")}</Link><Link href="/ai-learning">{t("learning")}</Link><Link href="/ai-research">{t("research")}</Link><Link href="/ai-wallet">{t("wallet")}</Link></nav>

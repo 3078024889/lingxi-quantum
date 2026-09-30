@@ -1,0 +1,1 @@
+export const WEB_OPERATIONS=["extract","toMarkdown","toPdf","toTxt","toEpub","summarize","keywords","translate","archive"] as const;export type WebOperation=typeof WEB_OPERATIONS[number];

@@ -1,0 +1,1 @@
+export interface Probe{name:string;run:()=>Promise<{pass:boolean;detail:string}>}export async function runProbes(probes:Probe[]){const results=[];for(const p of probes){try{results.push({name:p.name,...await p.run()})}catch(e){results.push({name:p.name,pass:false,detail:e instanceof Error?e.message:String(e)})}}return {pass:results.every(x=>x.pass),results}}

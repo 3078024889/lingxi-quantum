@@ -1,0 +1,1 @@
+export interface DomainEvidence{domain:string;https:boolean;status:number;canonical?:string}export function productionDomainGate(rows:DomainEvidence[]){const required=["lingxifield.com","lingxifield.cn"];const missing=required.filter(d=>!rows.some(x=>x.domain===d&&x.https&&x.status>=200&&x.status<400));return {pass:missing.length===0,missing}}

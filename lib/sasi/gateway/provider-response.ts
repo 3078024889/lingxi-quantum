@@ -1,0 +1,2 @@
+export function extractOpenAIText(data:any){const c=data?.choices?.[0];const text=c?.message?.content??c?.text;if(typeof text==="string")return text;if(Array.isArray(text))return text.map((x:any)=>x?.text??"").join("");return undefined}
+export function normalizedUsage(data:any){return {inputUnits:Number(data?.usage?.prompt_tokens??data?.usage?.input_tokens??0),outputUnits:Number(data?.usage?.completion_tokens??data?.usage?.output_tokens??0)}}

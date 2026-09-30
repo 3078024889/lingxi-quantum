@@ -1,0 +1,2 @@
+export interface ArtifactRecord{artifactId:string;projectId:string;taskId?:string;kind:string;uri:string;sha256?:string;metadata:Record<string,unknown>;createdAt:string}
+export class ArtifactRegistry{private rows:ArtifactRecord[]=[];add(input:Omit<ArtifactRecord,"artifactId"|"createdAt">){const row={...input,artifactId:crypto.randomUUID(),createdAt:new Date().toISOString()};this.rows.push(row);return row}forProject(projectId:string){return this.rows.filter(x=>x.projectId===projectId)}}

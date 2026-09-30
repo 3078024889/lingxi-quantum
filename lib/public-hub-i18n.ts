@@ -1,8 +1,8 @@
 import type { LingxiLang } from "@/lib/lingxi-i18n";
 
 const COPY:Record<string,Record<LingxiLang,string>>={
-  "灵犀场 · 一念即达 · 一念显化": {
-    "zh": "灵犀场 · 一念即达 · 一念显化",
+  "灵犀场 · 一键创造，一念即达。": {
+    "zh": "灵犀场 · 一键创造，一念即达。",
     "en": "LINGXIFIELD · One thought, one path",
     "ja": "LINGXIFIELD · 一念から到達へ",
     "ko": "LINGXIFIELD · 한 생각, 한 경로",

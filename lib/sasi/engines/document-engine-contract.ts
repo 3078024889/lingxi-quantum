@@ -1,0 +1,1 @@
+export const DOCUMENT_OPERATIONS=["merge","split","compress","sign","pageNumbers","extractPages","toImages","ocr","compare","redact"] as const;export type DocumentOperation=typeof DOCUMENT_OPERATIONS[number];

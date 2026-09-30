@@ -1,0 +1,2 @@
+export interface IntentSpec{goal:string;inputs:string[];outputs:string[];constraints:string[];success:string[];ambiguities:string[]}
+export function compileIntent(text:string,defaults:Partial<IntentSpec>={}):IntentSpec{const goal=text.trim();return {goal,inputs:defaults.inputs??[],outputs:defaults.outputs??[],constraints:defaults.constraints??[],success:defaults.success??[],ambiguities:goal?[]:["GOAL_REQUIRED"]}}

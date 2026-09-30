@@ -1,0 +1,2 @@
+import {SiteDNA} from './site-dna';
+export function validateSite(site:SiteDNA,files:{file:string;html:string}[]){const issues:string[]=[];if(!site.pages.some(p=>p.path==='/'))issues.push('MISSING_HOME');if(!site.seo.title.trim())issues.push('MISSING_SEO_TITLE');for(const f of files){if(!/viewport/.test(f.html))issues.push(`NO_VIEWPORT:${f.file}`);if(!/<title>[^<]+<\/title>/.test(f.html))issues.push(`NO_TITLE:${f.file}`)}return {pass:issues.length===0,issues}}

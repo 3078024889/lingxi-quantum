@@ -1,0 +1,2 @@
+import {validateProviderBaseUrl} from "./ssrf-guard";import type {OpenAICompatibleConfig,CompatibleRequest} from "./openai-compatible";import {toOpenAIRequest} from "./openai-compatible";
+export function prepareCompatibleExecution(config:OpenAICompatibleConfig,input:CompatibleRequest){const guard=validateProviderBaseUrl(config.baseUrl);if(!guard.pass)throw new Error("PROVIDER_URL_REJECTED:"+guard.reason);return toOpenAIRequest({...config,baseUrl:guard.normalized!},input)}

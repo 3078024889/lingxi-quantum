@@ -16,7 +16,7 @@ const ZH={
  light:"浅色",dark:"深色",language:"语言",
  footerLine:"易懂易做，一键即达。让一个念头找到路径，让想法从这里开始生长。",
  follow:"关注灵犀场",service:"服务号",miniapp:"小程序",terms:"用户服务协议",privacy:"隐私政策",declaration:"系统声明",refunds:"充值与退款",sasiRules:"SASI 创作规则",
- homeKicker:"一念即达 · 一念显化",homeTitle:"今天想让什么开始发生？",
+ homeKicker:"一键创造，一念即达。",homeTitle:"今天想让什么开始发生？",
  homeLead:"不必先知道该选哪个工具，也不用绕过复杂步骤。把问题、资料或一个还没成形的念头带进来，灵犀场帮你找到入口，再把下一步交到你手里。",
  homePlaceholder:"例如：把这份 PDF 压到 10MB；把一本书变成可以追问的资料；或者，从一个故事开始生成短剧……",
  begin:"开始 →",betterFrom:"更适合从",specificProblem:"先解决一个具体问题",growIdea:"让一个想法开始生长",

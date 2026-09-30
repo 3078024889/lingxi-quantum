@@ -1,0 +1,2 @@
+export interface IdempotencyRecord<T>{key:string;value:T;createdAt:number;expiresAt:number}
+export class IdempotencyStore<T>{private rows=new Map<string,IdempotencyRecord<T>>();constructor(private ttlMs=86400000){}get(key:string,now=Date.now()){const r=this.rows.get(key);if(!r)return undefined;if(r.expiresAt<=now){this.rows.delete(key);return undefined}return r.value}put(key:string,value:T,now=Date.now()){const existing=this.get(key,now);if(existing!==undefined)return existing;this.rows.set(key,{key,value,createdAt:now,expiresAt:now+this.ttlMs});return value}}

@@ -1,0 +1,1 @@
+import {unresolved,type RemoteGateStatus} from "../assurance/remaining-gates";export function remainingClosure(rows:RemoteGateStatus[]){const pending=unresolved(rows);return {pass:pending.length===0,pending,rows}}

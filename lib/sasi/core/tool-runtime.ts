@@ -1,0 +1,2 @@
+import type {EngineRegistry} from "../engines/registry";import {executeEngine} from "../engines/router";import {bindingFor} from "../engines/capability-map";
+export async function runTool<T,R>(registry:EngineRegistry,tool:string,input:T,locale?:string){const b=bindingFor(tool);if(!b)return {ok:false,artifacts:[],issues:["TOOL_NOT_BOUND"]};return executeEngine<T,R>(registry,{kind:b.engine,operation:b.operation,input,locale})}

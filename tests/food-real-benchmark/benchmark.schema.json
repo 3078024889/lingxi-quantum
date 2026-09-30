@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "image",
+      "country",
+      "expectedFoods"
+    ],
+    "properties": {
+      "image": {
+        "type": "string"
+      },
+      "country": {
+        "type": "string"
+      },
+      "expectedFoods": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "knownGrams": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "notes": {
+        "type": "string"
+      }
+    }
+  }
+}

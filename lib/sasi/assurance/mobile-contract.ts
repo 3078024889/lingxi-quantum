@@ -1,0 +1,1 @@
+export interface MobileEvidence{viewport:string;route:string;pass:boolean;issues:string[]}export function mobileGate(rows:MobileEvidence[]){const required=["390x844","412x915"];const missing=required.filter(v=>!rows.some(x=>x.viewport===v&&x.route==="/"&&x.pass));return {pass:missing.length===0,missing}}

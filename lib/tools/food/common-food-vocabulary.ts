@@ -24,7 +24,7 @@ export const COMMON_FOOD_VOCABULARY:CommonFoodVocabulary[]=[
  ["scallops","扇贝"],["oysters","牡蛎"],["mussels","贻贝"],["squid","鱿鱼"],["octopus","章鱼"],["sashimi","刺身"],
  ["almonds","杏仁"],["peanuts","花生"],["walnuts","核桃"],["cashews","腰果"],["pistachios","开心果"],["mixed nuts","混合坚果"],
  ["peanut butter","花生酱"],["hummus","鹰嘴豆泥"],["beans","豆类"],["chickpeas","鹰嘴豆"],["lentils","扁豆"],["kidney beans","红腰豆"],
- ["pizza","披萨"],["hamburger","汉堡"],["hot dog","热狗"],["sandwich","三明治"],["tacos","塔可"],["burrito","墨西哥卷饼"],
+ ["youtiao","油条"],["jianbing","煎饼果子"],["baozi","包子"],["mantou","馒头"],["congee","粥"],["cheung fun","肠粉"],["shaomai","烧卖"],["zongzi","粽子"],["malatang","麻辣烫"],["hainanese chicken rice","海南鸡饭"],["laksa","叻沙"],["nasi lemak","椰浆饭"],["char kway teow","炒粿条"],["pho","越南河粉"],["banh mi","越南法棍"],["sushi","寿司"],["ramen","拉面"],["bibimbap","韩式拌饭"],["tteokbokki","辣炒年糕"],["biryani","印度香饭"],["tacos","塔可"],["fruit salad","水果沙拉"],["mixed fruit platter","水果拼盘"],["pizza","披萨"],["hamburger","汉堡"],["hot dog","热狗"],["sandwich","三明治"],["tacos","塔可"],["burrito","墨西哥卷饼"],
  ["sushi","寿司"],["bibimbap","韩式拌饭"],["curry","咖喱"],["chicken curry","咖喱鸡"],["soup","汤"],["salad","沙拉"],
  ["caesar salad","凯撒沙拉"],["french fries","薯条"],["pancakes","松饼"],["waffles","华夫饼"],["cake","蛋糕"],["cheesecake","芝士蛋糕"],
  ["cookie","饼干"],["donut","甜甜圈"],["chocolate","巧克力"],["coffee","咖啡"],["tea","茶"],["orange juice","橙汁"],

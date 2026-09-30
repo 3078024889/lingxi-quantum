@@ -1,0 +1,12 @@
+begin;
+create table if not exists public.sasi_task_checkpoints(checkpoint_id uuid primary key default gen_random_uuid(),owner_id uuid not null,project_id uuid not null,task_id uuid not null,step_id text not null,state jsonb not null default '{}'::jsonb,created_at timestamptz not null default now());
+create index if not exists sasi_task_checkpoints_task_created_idx on public.sasi_task_checkpoints(owner_id,task_id,created_at desc);
+create table if not exists public.sasi_artifacts(artifact_id uuid primary key default gen_random_uuid(),owner_id uuid not null,project_id uuid not null,task_id uuid,kind text not null,uri text not null,sha256 text,metadata jsonb not null default '{}'::jsonb,created_at timestamptz not null default now());
+create table if not exists public.sasi_idempotency_keys(owner_id uuid not null,key text not null,response jsonb,expires_at timestamptz not null,created_at timestamptz not null default now(),primary key(owner_id,key));
+create table if not exists public.sasi_usage_ledger(usage_id uuid primary key default gen_random_uuid(),owner_id uuid not null,project_id uuid,task_id uuid,provider_id text,capability text not null,units numeric not null default 0,cost numeric not null default 0,latency_ms numeric not null default 0,created_at timestamptz not null default now());
+alter table public.sasi_task_checkpoints enable row level security;alter table public.sasi_artifacts enable row level security;alter table public.sasi_idempotency_keys enable row level security;alter table public.sasi_usage_ledger enable row level security;
+drop policy if exists sasi_task_checkpoints_owner on public.sasi_task_checkpoints;create policy sasi_task_checkpoints_owner on public.sasi_task_checkpoints for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+drop policy if exists sasi_artifacts_owner on public.sasi_artifacts;create policy sasi_artifacts_owner on public.sasi_artifacts for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+drop policy if exists sasi_idempotency_owner on public.sasi_idempotency_keys;create policy sasi_idempotency_owner on public.sasi_idempotency_keys for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+drop policy if exists sasi_usage_ledger_owner on public.sasi_usage_ledger;create policy sasi_usage_ledger_owner on public.sasi_usage_ledger for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+commit;

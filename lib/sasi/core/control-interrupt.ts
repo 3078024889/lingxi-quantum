@@ -1,0 +1,2 @@
+export type ControlState="running"|"paused"|"rejected"|"rollback";
+export class ControlInterrupt{private state=new Map<string,ControlState>();set(taskId:string,state:ControlState){this.state.set(taskId,state)}assertRunnable(taskId:string){const s=this.state.get(taskId)??"running";if(s!=="running")throw new Error("TASK_CONTROLLED:"+s);return s}get(taskId:string){return this.state.get(taskId)??"running"}}
