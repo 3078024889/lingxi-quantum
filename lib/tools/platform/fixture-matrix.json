@@ -1,0 +1,323 @@
+{
+  "version": 1,
+  "policy": {
+    "realFixtureRequired": true,
+    "syntheticFixturesAllowedForDeterministicParsers": true,
+    "externalCostPathsMustBeMockedInCI": true,
+    "protectedFoodInternalsMustNotBeModified": true
+  },
+  "fixtureGroups": [
+    {
+      "id": "text-unicode",
+      "file": "tests/fixtures/generated/unicode.txt",
+      "covers": [
+        "text-counter",
+        "remove-empty-lines",
+        "remove-duplicate-lines",
+        "base64-encode-decode",
+        "url-encode-decode"
+      ]
+    },
+    {
+      "id": "table-csv",
+      "file": "tests/fixtures/generated/table.csv",
+      "covers": [
+        "csv-to-xlsx"
+      ]
+    },
+    {
+      "id": "table-xlsx",
+      "file": "tests/fixtures/generated/table.xlsx",
+      "covers": [
+        "xlsx-to-csv"
+      ]
+    },
+    {
+      "id": "image-svg",
+      "file": "tests/fixtures/generated/vector.svg",
+      "covers": [
+        "svg-to-png"
+      ]
+    },
+    {
+      "id": "image-png",
+      "file": "tests/fixtures/generated/pixel.png",
+      "covers": [
+        "png-to-jpg",
+        "compress-image",
+        "resize-image",
+        "remove-exif",
+        "image-to-pdf",
+        "image-to-pdf-pro",
+        "screenshot-redact"
+      ]
+    },
+    {
+      "id": "pdf-basic",
+      "file": "tests/fixtures/generated/basic.pdf",
+      "covers": [
+        "merge-pdf",
+        "split-pdf",
+        "pdf-pages",
+        "pdf-editor",
+        "e-sign-pdf",
+        "pdf-redact",
+        "pdf-to-jpg",
+        "compress-pdf",
+        "pdf-compress",
+        "pdf-merge-split"
+      ]
+    },
+    {
+      "id": "json",
+      "file": "tests/fixtures/generated/sample.json",
+      "covers": [
+        "json-formatter"
+      ]
+    },
+    {
+      "id": "subtitle-srt",
+      "file": "tests/fixtures/generated/sample.srt",
+      "covers": [
+        "subtitle-tools"
+      ]
+    }
+  ],
+  "onlineContractOnly": [
+    "audio-transcription",
+    "batch-image-watermark-remover",
+    "burn-after-read",
+    "food-calorie",
+    "id-photo-ai",
+    "image-watermark-remover",
+    "ocr",
+    "pdf-ocr",
+    "subtitle-translate",
+    "temp-mail",
+    "video-dubbing",
+    "video-transcription",
+    "video-watermark-remover"
+  ],
+  "toolClassifications": {
+    "audio-transcription": {
+      "kind": "online-contract"
+    },
+    "avif-to-jpg": {
+      "kind": "local-contract"
+    },
+    "base64-encode-decode": {
+      "kind": "fixture",
+      "fixtureGroup": "text-unicode"
+    },
+    "batch-image": {
+      "kind": "local-contract"
+    },
+    "batch-image-watermark-remover": {
+      "kind": "online-contract"
+    },
+    "burn-after-read": {
+      "kind": "online-contract"
+    },
+    "compress-image": {
+      "kind": "fixture",
+      "fixtureGroup": "image-png"
+    },
+    "compress-image-to-100kb": {
+      "kind": "local-contract"
+    },
+    "compress-image-to-200kb": {
+      "kind": "local-contract"
+    },
+    "compress-image-to-20kb": {
+      "kind": "local-contract"
+    },
+    "compress-image-to-500kb": {
+      "kind": "local-contract"
+    },
+    "compress-image-to-50kb": {
+      "kind": "local-contract"
+    },
+    "compress-pdf": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "csv-to-xlsx": {
+      "kind": "fixture",
+      "fixtureGroup": "table-csv"
+    },
+    "document-copy-layout": {
+      "kind": "local-contract"
+    },
+    "docx-to-txt": {
+      "kind": "local-contract"
+    },
+    "e-sign-pdf": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "file-compare": {
+      "kind": "local-contract"
+    },
+    "file-type-detector": {
+      "kind": "local-contract"
+    },
+    "food-calorie": {
+      "kind": "online-contract"
+    },
+    "heic-local": {
+      "kind": "local-contract"
+    },
+    "heic-to-jpg": {
+      "kind": "local-contract"
+    },
+    "id-photo-ai": {
+      "kind": "online-contract"
+    },
+    "image-to-pdf": {
+      "kind": "fixture",
+      "fixtureGroup": "image-png"
+    },
+    "image-to-pdf-pro": {
+      "kind": "fixture",
+      "fixtureGroup": "image-png"
+    },
+    "image-watermark-remover": {
+      "kind": "online-contract"
+    },
+    "jpg-to-png": {
+      "kind": "local-contract"
+    },
+    "json-formatter": {
+      "kind": "fixture",
+      "fixtureGroup": "json"
+    },
+    "long-image": {
+      "kind": "local-contract"
+    },
+    "md5-sha256": {
+      "kind": "local-contract"
+    },
+    "merge-pdf": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "ocr": {
+      "kind": "online-contract"
+    },
+    "pdf-compress": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "pdf-editor": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "pdf-merge-split": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "pdf-ocr": {
+      "kind": "online-contract"
+    },
+    "pdf-pages": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "pdf-redact": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "pdf-to-jpg": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "png-to-jpg": {
+      "kind": "fixture",
+      "fixtureGroup": "image-png"
+    },
+    "pptx-to-txt": {
+      "kind": "local-contract"
+    },
+    "privacy-cleaner": {
+      "kind": "local-contract"
+    },
+    "qr-code-generator": {
+      "kind": "local-contract"
+    },
+    "qr-code-reader": {
+      "kind": "local-contract"
+    },
+    "qr-safe-reader": {
+      "kind": "local-contract"
+    },
+    "remove-duplicate-lines": {
+      "kind": "fixture",
+      "fixtureGroup": "text-unicode"
+    },
+    "remove-empty-lines": {
+      "kind": "fixture",
+      "fixtureGroup": "text-unicode"
+    },
+    "remove-exif": {
+      "kind": "fixture",
+      "fixtureGroup": "image-png"
+    },
+    "resize-image": {
+      "kind": "fixture",
+      "fixtureGroup": "image-png"
+    },
+    "screenshot-redact": {
+      "kind": "fixture",
+      "fixtureGroup": "image-png"
+    },
+    "split-pdf": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
+    },
+    "subtitle-tools": {
+      "kind": "fixture",
+      "fixtureGroup": "subtitle-srt"
+    },
+    "subtitle-translate": {
+      "kind": "online-contract"
+    },
+    "svg-to-png": {
+      "kind": "fixture",
+      "fixtureGroup": "image-svg"
+    },
+    "temp-mail": {
+      "kind": "online-contract"
+    },
+    "text-counter": {
+      "kind": "fixture",
+      "fixtureGroup": "text-unicode"
+    },
+    "timestamp-converter": {
+      "kind": "local-contract"
+    },
+    "url-encode-decode": {
+      "kind": "fixture",
+      "fixtureGroup": "text-unicode"
+    },
+    "video-dubbing": {
+      "kind": "online-contract"
+    },
+    "video-toolkit": {
+      "kind": "local-contract"
+    },
+    "video-transcription": {
+      "kind": "online-contract"
+    },
+    "video-watermark-remover": {
+      "kind": "online-contract"
+    },
+    "webp-to-jpg": {
+      "kind": "local-contract"
+    },
+    "xlsx-to-csv": {
+      "kind": "fixture",
+      "fixtureGroup": "table-xlsx"
+    }
+  },
+  "classificationCount": 64
+}

@@ -38,7 +38,11 @@
     "audit:graduation": "node scripts/final-closure/graduation.mjs",
     "audit:capability-genome": "node scripts/audit/capability-genome.mjs",
     "tool:factory": "node scripts/tool-factory/create-tool.mjs",
-    "audit:platform-stability": "node scripts/audit/platform-stability-v13.mjs"
+    "audit:platform-stability": "node scripts/audit/platform-stability.mjs",
+    "audit:tool-registry": "node scripts/audit/tool-registry.mjs",
+    "audit:retired-code": "node scripts/audit/retired-code-cleanup.mjs",
+    "tool:fixtures": "node scripts/tool-factory/generate-fixtures.mjs",
+    "audit:support-lifecycle": "node scripts/audit/support-lifecycle.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",

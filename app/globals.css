@@ -1324,7 +1324,11 @@ html.lx-mini-embed .bg-reading-glass .text-bone-dim { color: #d3dced !important;
 
 
 
-/* LINGXIFIELD language visibility V13 — scoped to body content only. */
+
+
+
+
+/* LINGXIFIELD canonical language visibility. */
 html[data-lang] { display: block !important; visibility: visible !important; }
 body [data-lang="en"] { display: none; }
 html[data-lang="en"] body [data-lang="zh"] { display: none; }

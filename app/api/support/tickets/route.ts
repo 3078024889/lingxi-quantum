@@ -1,10 +1,154 @@
-import{NextRequest,NextResponse}from"next/server";import{createAdminClient}from"@/lib/supabase/admin";import{isSameOriginMutation}from"@/lib/sasi/request-security";import{LINGXIFIELD_RELEASE}from"@/lib/release/version";import{imageSignatureOk}from"@/lib/platform/file-signatures";
-export const runtime="nodejs";export const dynamic="force-dynamic";const BUCKET="lingxifield-support",MAX=5*1024*1024,ALLOWED=new Set(["image/png","image/jpeg","image/webp","image/gif"]);
-async function user(req:NextRequest){try{const a=createAdminClient(),t=(req.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");if(!t)return null;return(await a.auth.getUser(t)).data.user||null}catch{return null}}
-async function ensureBucket(a:any){const g=await a.storage.getBucket(BUCKET);if(g.data&&!g.error)return;const c=await a.storage.createBucket(BUCKET,{public:false,fileSizeLimit:MAX,allowedMimeTypes:[...ALLOWED]});if(c.error&&!/already|exist|duplicate/i.test(String(c.error.message||"")))throw c.error}
-async function notify(id:string,msg:string,route:string,email:string,n:number){const key=process.env.RESEND_API_KEY;if(!key)return{state:"not_configured",messageId:null};try{const to=process.env.LINGXIFIELD_SUPPORT_NOTIFY_EMAIL||"3604744994@qq.com",from=process.env.LINGXIFIELD_SUPPORT_FROM_EMAIL||"灵犀场 <support@lingxifield.com>",esc=(s:string)=>s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));const r=await fetch("https://api.resend.com/emails",{method:"POST",headers:{authorization:`Bearer ${key}`,"content-type":"application/json","Idempotency-Key":`support-ticket/${id}`},body:JSON.stringify({from,to:[to],reply_to:email||undefined,subject:`[灵犀场问题] ${id.slice(0,8)} · ${route||"/"}`,html:`<h2>新的用户问题</h2><p>编号：${id}</p><p>页面：${esc(route||"/")}</p><p>截图：${n} 张</p><p>用户：${esc(email||"未提供")}</p><hr><p style="white-space:pre-wrap">${esc(msg)}</p>`})});const d=await r.json().catch(()=>null) as {id?:unknown}|null;const messageId=typeof d?.id==="string"&&d.id.trim()?d.id.trim():null;return{state:r.ok&&messageId?"sent":"failed",messageId}}catch{return{state:"failed",messageId:null}}}
-export async function POST(req:NextRequest){if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN",message:"当前请求无法发送，请刷新页面后重试。"},{status:403});const u=await user(req);if(!u)return NextResponse.json({error:"LOGIN_REQUIRED",message:"请先登录后发送，这样可以继续查看处理状态。"},{status:401});let fd:FormData;try{fd=await req.formData()}catch{return NextResponse.json({error:"INVALID_FORM",message:"没有读到提交内容，请重试。"},{status:400})}const message=String(fd.get("message")||"").trim();if(message.length<3||message.length>5000)return NextResponse.json({error:"INVALID_MESSAGE",message:"问题描述需要 3–5000 个字符。"},{status:400});const files=fd.getAll("images").filter((x):x is File=>x instanceof File&&x.size>0);if(files.length>4)return NextResponse.json({error:"TOO_MANY_IMAGES",message:"最多上传 4 张图片。"},{status:400});const prepared:{file:File;buf:Buffer}[]=[];for(const f of files){if(f.size>MAX||!ALLOWED.has(f.type))return NextResponse.json({error:"INVALID_IMAGE",message:"仅支持 PNG、JPG、WebP、GIF，单张不超过 5MB。"},{status:400});const buf=Buffer.from(await f.arrayBuffer());if(!imageSignatureOk(buf,f.type))return NextResponse.json({error:"INVALID_IMAGE_CONTENT",message:"图片内容与文件格式不一致，请重新选择原始截图。"},{status:400});prepared.push({file:f,buf})}
-const a=createAdminClient(),id=crypto.randomUUID(),attachments:any[]=[];if(prepared.length)try{await ensureBucket(a)}catch{return NextResponse.json({error:"IMAGE_STORAGE_UNAVAILABLE",message:"截图存储暂时没有准备好，请稍后重试。"},{status:503})}
-for(let i=0;i<prepared.length;i++){const{file:f,buf}=prepared[i],ext=f.type==="image/jpeg"?"jpg":f.type.split("/")[1],path=`${u.id}/${id}/${i+1}.${ext}`,up=await a.storage.from(BUCKET).upload(path,buf,{contentType:f.type,upsert:false,cacheControl:"3600"});if(up.error){for(const x of attachments)await a.storage.from(BUCKET).remove([x.path]);return NextResponse.json({error:"IMAGE_UPLOAD_FAILED",message:"截图上传没有完成，请稍后重试。"},{status:500})}attachments.push({path,type:f.type,size:f.size,name:f.name.slice(0,120)})}
-let viewport:any=null;try{viewport=JSON.parse(String(fd.get("viewport")||"null"))}catch{}const route=String(fd.get("route")||"").slice(0,300),pageUrl=String(fd.get("pageUrl")||"").slice(0,1000);const{data,error}=await a.from("lingxifield_support_tickets").insert({id,owner_id:u.id,contact:String(u.email||"").slice(0,300),kind:"problem",title:"使用问题",message,page_url:pageUrl,route,release_version:LINGXIFIELD_RELEASE.website,mini_version:LINGXIFIELD_RELEASE.miniProgram,screenshot_url:attachments[0]?.path||null,context:{userAgent:req.headers.get("user-agent"),viewport,attachments}}).select("id,status,created_at").single();if(error){for(const x of attachments)await a.storage.from(BUCKET).remove([x.path]);return NextResponse.json({error:"SUBMIT_FAILED",message:"这次没有保存成功，请稍后重试或邮件联系 support@lingxifield.com。"},{status:500})}const alert=await notify(id,message,route,String(u.email||""),attachments.length);return NextResponse.json({ok:true,ticket:data,emailAlert:alert.state,emailMessageId:alert.messageId})}
-export async function GET(req:NextRequest){const u=await user(req);if(!u)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});const a=createAdminClient(),{data,error}=await a.from("lingxifield_support_tickets").select("id,kind,title,message,status,contact,created_at,updated_at,release_version,screenshot_url,context").eq("owner_id",u.id).order("created_at",{ascending:false}).limit(50);if(error)return NextResponse.json({error:"UNAVAILABLE"},{status:500});const items=await Promise.all((data||[]).map(async(x:any)=>{const paths=(x.context?.attachments||[]).map((z:any)=>z.path).filter(Boolean).slice(0,4),urls:string[]=[];for(const p of paths){const s=await a.storage.from(BUCKET).createSignedUrl(p,600);if(s.data?.signedUrl)urls.push(s.data.signedUrl)}return{...x,attachmentUrls:urls}}));return NextResponse.json({items},{headers:{"Cache-Control":"private, no-store"}})}
+import{NextRequest,NextResponse}from"next/server";
+import{createAdminClient}from"@/lib/supabase/admin";
+import{isSameOriginMutation}from"@/lib/sasi/request-security";
+import{LINGXIFIELD_RELEASE}from"@/lib/release/version";
+import{imageSignatureOk}from"@/lib/platform/file-signatures";
+import{makeSupportActionToken,mergeSupportContext,supportInboundAddress}from"@/lib/support/lifecycle";
+
+export const runtime="nodejs";
+export const dynamic="force-dynamic";
+
+const BUCKET="lingxifield-support";
+const MAX=5*1024*1024;
+const ALLOWED=new Set(["image/png","image/jpeg","image/webp","image/gif"]);
+
+async function user(req:NextRequest){
+ try{
+  const a=createAdminClient();
+  const t=(req.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
+  if(!t)return null;
+  return(await a.auth.getUser(t)).data.user||null;
+ }catch{return null}
+}
+async function ensureBucket(a:any){
+ const g=await a.storage.getBucket(BUCKET);
+ if(g.data&&!g.error)return;
+ const c=await a.storage.createBucket(BUCKET,{public:false,fileSizeLimit:MAX,allowedMimeTypes:[...ALLOWED]});
+ if(c.error&&!/already|exist|duplicate/i.test(String(c.error.message||"")))throw c.error;
+}
+const esc=(s:string)=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
+
+function actionUrl(origin:string,id:string,action:string){
+ const token=makeSupportActionToken(id,action);
+ if(!token)return null;
+ const u=new URL("/api/support/action",origin);
+ u.searchParams.set("ticket",id);
+ u.searchParams.set("action",action);
+ u.searchParams.set("token",token);
+ return u.toString();
+}
+async function notify(id:string,msg:string,route:string,email:string,n:number,origin:string){
+ const key=process.env.RESEND_API_KEY;
+ if(!key)return{state:"not_configured",messageId:null};
+ try{
+  const to=process.env.LINGXIFIELD_SUPPORT_NOTIFY_EMAIL||"3604744994@qq.com";
+  const from=process.env.LINGXIFIELD_SUPPORT_FROM_EMAIL||"灵犀场 <support@lingxifield.com>";
+  const inbound=supportInboundAddress(id);
+  const links=[
+   ["已查看",actionUrl(origin,id,"viewed")],
+   ["处理中",actionUrl(origin,id,"processing")],
+   ["已完成",actionUrl(origin,id,"completed")]
+  ].filter((x):x is [string,string]=>Boolean(x[1]));
+  const actions=links.length?`<div style="margin:22px 0">${links.map(([label,url])=>`<a href="${esc(url)}" style="display:inline-block;margin:0 8px 8px 0;padding:10px 14px;border-radius:10px;background:#111;color:#fff;text-decoration:none">${label}</a>`).join("")}</div>`:"";
+  const subject=`[灵犀场问题] ${id.slice(0,8)} · ${route||"/"} [LX:${id}]`;
+  const r=await fetch("https://api.resend.com/emails",{
+   method:"POST",
+   headers:{authorization:`Bearer ${key}`,"content-type":"application/json","Idempotency-Key":`support-ticket/${id}`},
+   body:JSON.stringify({
+    from,to:[to],
+    reply_to:inbound||email||undefined,
+    subject,
+    headers:{"X-Lingxifield-Ticket":id},
+    html:`<h2>新的用户问题</h2><p>编号：${id}</p><p>页面：${esc(route||"/")}</p><p>截图：${n} 张</p><p>用户：${esc(email||"未提供")}</p>${inbound?`<p style="color:#666">直接回复此邮件，回复会自动同步到站内处理进度并转发给用户。</p>`:""}${actions}<hr><p style="white-space:pre-wrap">${esc(msg)}</p>`
+   })
+  });
+  const d=await r.json().catch(()=>null) as {id?:unknown}|null;
+  const messageId=typeof d?.id==="string"&&d.id.trim()?d.id.trim():null;
+  return{state:r.ok&&messageId?"sent":"failed",messageId};
+ }catch{return{state:"failed",messageId:null}}
+}
+
+export async function POST(req:NextRequest){
+ if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN",message:"当前请求无法发送，请刷新页面后重试。"},{status:403});
+ const u=await user(req);
+ if(!u)return NextResponse.json({error:"LOGIN_REQUIRED",message:"请先登录后发送，这样可以继续查看处理状态。"},{status:401});
+
+ let fd:FormData;
+ try{fd=await req.formData()}catch{return NextResponse.json({error:"INVALID_FORM",message:"没有读到提交内容，请重试。"},{status:400})}
+ const message=String(fd.get("message")||"").trim();
+ if(message.length<3||message.length>5000)return NextResponse.json({error:"INVALID_MESSAGE",message:"问题描述需要 3–5000 个字符。"},{status:400});
+
+ const files=fd.getAll("images").filter((x):x is File=>x instanceof File&&x.size>0);
+ if(files.length>4)return NextResponse.json({error:"TOO_MANY_IMAGES",message:"最多上传 4 张图片。"},{status:400});
+
+ const prepared:{file:File;buf:Buffer}[]=[];
+ for(const f of files){
+  if(f.size>MAX||!ALLOWED.has(f.type))return NextResponse.json({error:"INVALID_IMAGE",message:"仅支持 PNG、JPG、WebP、GIF，单张不超过 5MB。"},{status:400});
+  const buf=Buffer.from(await f.arrayBuffer());
+  if(!imageSignatureOk(buf,f.type))return NextResponse.json({error:"INVALID_IMAGE_CONTENT",message:"图片内容与文件格式不一致，请重新选择原始截图。"},{status:400});
+  prepared.push({file:f,buf});
+ }
+
+ const a=createAdminClient(),id=crypto.randomUUID(),attachments:any[]=[];
+ if(prepared.length)try{await ensureBucket(a)}catch{return NextResponse.json({error:"IMAGE_STORAGE_UNAVAILABLE",message:"截图存储暂时没有准备好，请稍后重试。"},{status:503})}
+
+ for(let i=0;i<prepared.length;i++){
+  const{file:f,buf}=prepared[i],ext=f.type==="image/jpeg"?"jpg":f.type.split("/")[1],path=`${u.id}/${id}/${i+1}.${ext}`;
+  const up=await a.storage.from(BUCKET).upload(path,buf,{contentType:f.type,upsert:false,cacheControl:"3600"});
+  if(up.error){
+   for(const x of attachments)await a.storage.from(BUCKET).remove([x.path]);
+   return NextResponse.json({error:"IMAGE_UPLOAD_FAILED",message:"截图上传没有完成，请稍后重试。"},{status:500});
+  }
+  attachments.push({path,type:f.type,size:f.size,name:f.name.slice(0,120)});
+ }
+
+ let viewport:any=null;
+ try{viewport=JSON.parse(String(fd.get("viewport")||"null"))}catch{}
+ const route=String(fd.get("route")||"").slice(0,300);
+ const pageUrl=String(fd.get("pageUrl")||"").slice(0,1000);
+ const now=new Date().toISOString();
+ let context:any={
+  userAgent:req.headers.get("user-agent"),
+  viewport,
+  attachments
+ };
+ context=mergeSupportContext(context,{receivedAt:now,processedInboundIds:[]});
+
+ const{data,error}=await a.from("lingxifield_support_tickets").insert({
+  id,owner_id:u.id,contact:String(u.email||"").slice(0,300),kind:"problem",title:"使用问题",message,
+  page_url:pageUrl,route,release_version:LINGXIFIELD_RELEASE.website,mini_version:LINGXIFIELD_RELEASE.miniProgram,
+  screenshot_url:attachments[0]?.path||null,context
+ }).select("id,status,created_at").single();
+
+ if(error){
+  for(const x of attachments)await a.storage.from(BUCKET).remove([x.path]);
+  return NextResponse.json({error:"SUBMIT_FAILED",message:"这次没有保存成功，请稍后重试或邮件联系 support@lingxifield.com。"},{status:500});
+ }
+
+ const alert=await notify(id,message,route,String(u.email||""),attachments.length,req.nextUrl.origin);
+ if(alert.messageId){
+  context=mergeSupportContext(context,{notifyEmailId:alert.messageId});
+  await a.from("lingxifield_support_tickets").update({context}).eq("id",id);
+ }
+ return NextResponse.json({ok:true,ticket:data,emailAlert:alert.state,emailMessageId:alert.messageId});
+}
+
+export async function GET(req:NextRequest){
+ const u=await user(req);
+ if(!u)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
+ const a=createAdminClient();
+ const{data,error}=await a.from("lingxifield_support_tickets")
+  .select("id,kind,title,message,status,contact,created_at,updated_at,release_version,screenshot_url,context")
+  .eq("owner_id",u.id).order("created_at",{ascending:false}).limit(50);
+ if(error)return NextResponse.json({error:"UNAVAILABLE"},{status:500});
+
+ const items=await Promise.all((data||[]).map(async(x:any)=>{
+  const paths=(x.context?.attachments||[]).map((z:any)=>z.path).filter(Boolean).slice(0,4),urls:string[]=[];
+  for(const p of paths){
+   const s=await a.storage.from(BUCKET).createSignedUrl(p,600);
+   if(s.data?.signedUrl)urls.push(s.data.signedUrl);
+  }
+  return{...x,attachmentUrls:urls};
+ }));
+ return NextResponse.json({items},{headers:{"Cache-Control":"private, no-store"}});
+}
