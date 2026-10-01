@@ -30,9 +30,7 @@ export default function TempMailWorkbench(){
  const[batchCount,setBatchCount]=useState(50);
  const[batchBusy,setBatchBusy]=useState(false);
  const[pendingQuote,setPendingQuote]=useState("");
- const poll=useRef<ReturnType<typeof setInterval>|null>(null);
-
- const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now):0,[box,now]);
+const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now):0,[box,now]);
  const price=(batchCount*0.05).toFixed(2);
  const mm=String(Math.floor(remaining/60000)).padStart(2,"0");
  const ss=String(Math.floor((remaining%60000)/1000)).padStart(2,"0");
@@ -120,7 +118,7 @@ export default function TempMailWorkbench(){
   }catch{setError(lang==="zh"?"暂时无法销毁，请稍后再试。":"Unable to destroy this inbox right now.");}
 }
 
- async function copy(value:string,key:string){await navigator.clipboard.writeText(value);setCopied(key);setTimeout(()=>setCopied(""),1400)}
+ async function copy(value:string,key:string){await copyText(value);setCopied(key);setTimeout(()=>setCopied(""),1400)}
 
  async function openOwned(item:OwnedBox){
   const next={id:item.id,address:item.address,expiresAt:item.expiresAt};
@@ -165,13 +163,36 @@ export default function TempMailWorkbench(){
  const refreshRef=useRef(refresh);refreshRef.current=refresh;
  const loadOwnedRef=useRef(loadOwned);loadOwnedRef.current=loadOwned;
  const createPaidBatchRef=useRef(createPaidBatch);createPaidBatchRef.current=createPaidBatch;
- useEffect(()=>{void recoverRef.current();setPendingQuote(sessionStorage.getItem("lingxifield:temp-mail-batch-quote")||"")},[recover]);
+ const boxRef=useRef<Box|null>(box);boxRef.current=box;
+
+ useEffect(()=>{
+  void recoverRef.current();
+  setPendingQuote(sessionStorage.getItem("lingxifield:temp-mail-batch-quote")||"");
+ },[]);
+
  useEffect(()=>{
   const tick=setInterval(()=>setNow(Date.now()),1000);
-  if(box){void refreshRef.current(box).catch(()=>{});poll.current=setInterval(()=>void refreshRef.current(box).catch(()=>{}),5000)}
-  return()=>{clearInterval(tick);if(poll.current)clearInterval(poll.current)}
- },[box,refresh]);
- useEffect(()=>{if(box&&remaining===0){localStorage.removeItem("lingxifield:temp-mail");setBox(null);setMessages([]);void loadOwnedRef.current()}},[box,remaining,loadOwned]);
+  return()=>clearInterval(tick);
+ },[]);
+
+ useEffect(()=>{
+  if(!box)return;
+  const current=box;
+  void refreshRef.current(current).catch(()=>{});
+  const inboxPoll=setInterval(()=>void refreshRef.current(current).catch(()=>{}),5000);
+  return()=>clearInterval(inboxPoll);
+ },[box]);
+
+ useEffect(()=>{
+  const current=boxRef.current;
+  if(current&&remaining===0){
+   localStorage.removeItem("lingxifield:temp-mail");
+   setBox(null);
+   setMessages([]);
+   void loadOwnedRef.current();
+  }
+ },[remaining]);
+
  useEffect(()=>{
   const h=(e:MessageEvent)=>{const d=e.data as {type?:string;quoteId?:string};if(e.origin===location.origin&&d?.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&d.quoteId===pendingQuote)void createPaidBatchRef.current(d.quoteId)};
   window.addEventListener("message",h);return()=>window.removeEventListener("message",h);
@@ -214,7 +235,7 @@ export default function TempMailWorkbench(){
 
     <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
      <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("inbox")}</h2><span className="text-xs text-[var(--lx-faint)]">{messages.length} {t("messages")} · {t("autoRefresh")}</span></div>
-     {!messages.length?<p className="mt-5 text-sm text-[var(--lx-muted)]">{t("waiting")}</p>:
+     {!messages.length?<div className="mt-5 rounded-2xl bg-[var(--lx-soft)] px-4 py-4"><b className="text-sm text-[var(--lx-ink)]">{lang==="zh"?"邮箱已就绪，正在等待新邮件":"Inbox ready — waiting for mail"}</b><p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">{lang==="zh"?"验证码或通知到达后会自动显示；无需刷新页面。":"Verification codes and notices appear automatically; no page refresh needed."}</p></div>:
       <div className="mt-4 space-y-3">{messages.map(m=>{const code=extractCode(m.subject,m.text_body);return <details key={m.id} className="rounded-2xl border border-[var(--lx-line)] p-4">
        <summary className="cursor-pointer list-none"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><b className="block truncate text-[var(--lx-ink)]">{m.subject||"—"}</b><span className="mt-1 block truncate text-xs text-[var(--lx-faint)]">{m.sender}</span></div><time className="shrink-0 text-xs text-[var(--lx-faint)]">{new Date(m.received_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}</time></div></summary>
        {code&&<div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3"><div><span className="block text-xs text-[var(--lx-muted)]">{t("code")}</span><b className="mt-1 block font-mono text-2xl tracking-[.15em] text-[var(--lx-ink)]">{code}</b></div><button onClick={()=>void copy(code,`code-${m.id}`)} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm">{copied===`code-${m.id}`?t("copied"):t("copyCode")}</button></div>}
