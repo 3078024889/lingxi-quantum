@@ -11,6 +11,8 @@ import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
 const SITE="https://lingxifield.com";
 const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
 
+const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const seg=location.pathname.split('/')[1]||'';const locales={en:'en',ja:'ja',ko:'ko',fr:'fr',de:'de',es:'es',pt:'pt',ar:'ar'};const locale=locales[seg]||'zh-CN';const root=document.documentElement;root.lang=locale;root.dir=seg==='ar'?'rtl':'ltr';}catch{}})();`;
+
 export const metadata:Metadata={
  metadataBase:new URL(SITE),
  title:{
@@ -76,7 +78,7 @@ export const metadata:Metadata={
 };
 
 export default function RootLayout({children}:{children:React.ReactNode}){
- return <html lang="zh-CN" suppressHydrationWarning><head>
+ return <html lang="zh-CN" dir="ltr" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:LINGXIFIELD_HTML_LOCALE_BOOTSTRAP}}/>
   <SiteStructuredData/>
   </head><body className="antialiased"><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider><LingxifieldFeedback /></body></html>;
 }

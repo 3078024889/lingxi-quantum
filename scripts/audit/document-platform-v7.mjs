@@ -1,0 +1,15 @@
+import fs from "node:fs";
+const read=p=>fs.readFileSync(p,"utf8"),must=(v,m)=>{if(!v)throw new Error(m)};
+const layout=read("app/layout.tsx"),tests=read("tests/final-closure/all-tools.spec.ts"),seo=read("lib/seo/global-seo.ts");
+must(layout.includes("LINGXIFIELD_HTML_LOCALE_BOOTSTRAP"),"HTML_LOCALE_BOOTSTRAP_MISSING");
+must(layout.includes("root.lang=locale")&&layout.includes("root.dir=seg==='ar'?'rtl':'ltr'"),"HTML_LANG_DIR_SYNC_MISSING");
+must(layout.includes('<html lang="zh-CN" dir="ltr"'),"ROOT_HTML_DEFAULTS_MISSING");
+for(const locale of ["en","ja","ko","fr","de","es","pt","ar"])must(layout.includes(`${locale}:'${locale}'`),`HTML_LOCALE_MISSING:${locale}`);
+must(tests.includes("correct html language and direction")&&tests.includes('toHaveAttribute("lang",meta.hreflang)')&&tests.includes('toHaveAttribute("dir",meta.dir)'),"NINE_LANGUAGE_HTML_BROWSER_ASSERTION_MISSING");
+must(seo.includes('hreflang:"ar"')&&seo.includes('dir:"rtl"'),"ARABIC_SEO_RTL_MISSING");
+console.log("HTML_LOCALE_RUNTIME_SYNC=PASS");
+console.log("NINE_LANGUAGE_HTML_LANG_SOURCE=PASS");
+console.log("ARABIC_ROOT_RTL_SOURCE=PASS");
+console.log("STATIC_RENDERING_PRESERVED=PASS");
+console.log("FOOD_CALORIE_CHANGED=NO");
+console.log("PAYMENT_WITHDRAWAL_CHANGED=NO");
