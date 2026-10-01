@@ -5,18 +5,18 @@ export type FoodVisionPrediction={label:string;score:number;source:"food101"|"cl
 let food101Promise:Promise<any>|null=null,clipPromise:Promise<any>|null=null,clipAvailable:Promise<boolean>|null=null;
 const alias=(s:string)=>s.toLowerCase().replaceAll("_"," ").trim().replace(/^tacos$/,"taco").replace(/^donuts$/,"donut");
 function toDataUrl(file:File){return new Promise<string>((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||""));r.onerror=()=>reject(new Error("IMAGE_READ_FAILED"));r.readAsDataURL(file)})}
-async function runtime(){const moduleUrl="/vendor/transformers/transformers.web.js";const m:any=await import(/* webpackIgnore: true */ moduleUrl);if(!m?.env||!m?.pipeline)throw new Error("VISION_RUNTIME_UNAVAILABLE");m.env.allowRemoteModels=false;m.env.allowLocalModels=true;m.env.localModelPath="/models/";if(m.env.backends?.onnx?.wasm){m.env.backends.onnx.wasm.wasmPaths="/vendor/transformers/";m.env.backends.onnx.wasm.numThreads=1;}return m}
-async function food101(){if(food101Promise)return food101Promise;food101Promise=(async()=>{const m=await runtime();return m.pipeline("image-classification","onnx-community/swin-finetuned-food101-ONNX",{dtype:"q4f16",device:"wasm"})})().catch(e=>{food101Promise=null;throw e});return food101Promise}
+async function runtime(){const m:any=await import('@huggingface/transformers');if(!m?.env||!m?.pipeline)throw new Error('VISION_RUNTIME_UNAVAILABLE');m.env.allowLocalModels=true;m.env.localModelPath='/models/';if(m.env.backends?.onnx?.wasm){m.env.backends.onnx.wasm.numThreads=1;m.env.backends.onnx.wasm.wasmPaths={mjs:'/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.mjs',wasm:'/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm'};}return m}
+async function food101(){if(food101Promise)return food101Promise;food101Promise=(async()=>{const m=await runtime();return m.pipeline("image-classification","onnx-community/swin-finetuned-food101-ONNX",{dtype:"q4f16",device:"wasm",local_files_only:true})})().catch(e=>{food101Promise=null;throw e});return food101Promise}
 async function hasClip(){if(clipAvailable)return clipAvailable;clipAvailable=fetch("/models/Xenova/clip-vit-base-patch32/lingxifield-manifest.json",{cache:"force-cache"}).then(async r=>{if(!r.ok)return false;const m:any=await r.json().catch(()=>null);return Boolean(m?.installed&&m?.variant==="q8-split"&&m?.remoteModels===false)}).catch(()=>false);return clipAvailable}
 async function clip(){
  if(clipPromise)return clipPromise;
  clipPromise=(async()=>{
   if(!await hasClip())throw new Error('CLIP_NOT_INSTALLED');
-  const m=await runtime(),model='Xenova/clip-vit-base-patch32',options={dtype:'q8',device:'wasm'};
+  const m=await runtime(),model='Xenova/clip-vit-base-patch32',options={dtype:'q8',device:'wasm',local_files_only:true};
   // This pinned distribution contains separate projected encoders, not the
   // combined model expected by the zero-shot pipeline's default loader.
-  const tokenizer=await m.AutoTokenizer.from_pretrained(model);
-  const processor=await m.AutoProcessor.from_pretrained(model);
+  const tokenizer=await m.AutoTokenizer.from_pretrained(model,{local_files_only:true});
+  const processor=await m.AutoProcessor.from_pretrained(model,{local_files_only:true});
   const textModel=await m.CLIPTextModelWithProjection.from_pretrained(model,options);
   const visionModel=await m.CLIPVisionModelWithProjection.from_pretrained(model,options);
   const vocab=[...new Set([...COMMON_FOOD_CANDIDATES,...GLOBAL_VISION_VOCABULARY])].filter(x=>/^[\x20-\x7E]+$/.test(x)).slice(0,300);

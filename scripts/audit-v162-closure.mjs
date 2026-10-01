@@ -9,7 +9,7 @@ const app=JSON.parse(read("miniapp/app.json"));
 must(app.pages.includes("pages/balance/index"),"MINI_BALANCE_ROUTE_MISSING");
 must(read("miniapp/pages/balance/index.js").includes("wx.requestPayment"),"MINI_BALANCE_REQUEST_PAYMENT_MISSING");
 must(read("app/api/wechat/mini/balance-pay/create/route.ts").includes("createMiniJsapiOrder"),"MINI_BALANCE_JSAPI_ORDER_MISSING");
-must(read("app/account/withdrawals/page.tsx").includes("LegacyRefundMigrationPanel"),"LEGACY_REFUND_UI_NOT_MOUNTED");
+must(read("components/BalanceWithdrawalPanel.tsx").includes("<LegacyRefundMigrationPanel"),"LEGACY_REFUND_UI_NOT_MOUNTED");
 console.log("V1593_WINDOWS_RUNNER_FIX=PASS");
 console.log("MINI_BALANCE_NATIVE_PAY=PASS");
 console.log("MINI_BALANCE_NO_WEB_CHECKOUT=PASS");

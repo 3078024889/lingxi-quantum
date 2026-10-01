@@ -3,7 +3,7 @@ import {createClient} from '@/lib/supabase/server';
 import {createAdminClient} from '@/lib/supabase/admin';
 import {isSameOriginMutation} from '@/lib/sasi/request-security';
 import {dispatchWithdrawal} from '@/lib/payments/withdrawal-processing';
-export const runtime='nodejs';export const maxDuration=30;
+export const runtime='nodejs';export const maxDuration=90;
 export async function GET(){
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:'LOGIN_REQUIRED'},{status:401});
  const admin=createAdminClient();const [legacy,migrated]=await Promise.all([admin.from('ai_refund_requests').select('id,order_id,amount_fen,status,created_at,updated_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(100),admin.from('balance_withdrawals').select('legacy_refund_id').eq('user_id',user.id).not('legacy_refund_id','is',null)]);

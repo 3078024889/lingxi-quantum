@@ -15,6 +15,11 @@ function env(name:string){
   return process.env[name]?.trim()??"";
 }
 
+export function refundProviderConfigured(provider:string){
+ const keys=provider==='paypal'?['PAYPAL_CLIENT_ID','PAYPAL_CLIENT_SECRET']:provider==='wechat'?['WECHAT_MCH_ID','WECHAT_CERT_SERIAL_NO','WECHAT_PRIVATE_KEY']:provider==='alipay'?['ALIPAY_APP_ID','ALIPAY_PRIVATE_KEY','ALIPAY_PUBLIC_KEY']:[];
+ return keys.length>0&&keys.every(key=>Boolean(env(key)));
+}
+
 export async function refundPaypal(input:{
   paypalOrderId:string;
   localOrderId:string;

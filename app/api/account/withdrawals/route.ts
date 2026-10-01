@@ -7,7 +7,7 @@ import {moneyMinor,walletKind} from "@/lib/payments/money-input";
 import {randomUUID} from "node:crypto";
 
 export const runtime="nodejs";
-export const maxDuration=30;
+export const maxDuration=90;
 
 function isBalanceProduct(id:string){
   return id.startsWith("ai-balance-")

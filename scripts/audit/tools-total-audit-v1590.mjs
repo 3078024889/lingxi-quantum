@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import {execFileSync} from "node:child_process";
 import path from "node:path";
 
 const repo=process.cwd();
@@ -15,7 +16,7 @@ const required=[
  "lib/tools/nutrition/types.ts",
  "lib/tools/nutrition/canonical.ts",
  "components/tools/FoodCalorieWorkbench.tsx",
- "lib/tools/food/ui-i18n.ts",
+ "lib/tools/food/workbench-copy.ts",
  "app/api/tools/food/search/route.ts",
  "app/api/tools/food/calculate/route.ts",
  "supabase/migrations/20260926153000_nutrition_engine_v2.sql",
@@ -34,67 +35,9 @@ if(exists("components/tools/ToolsHubV11.tsx")) {
   );
 }
 
-const food=read("components/tools/FoodCalorieWorkbench.tsx");
-const foodI18n=read("lib/tools/food/ui-i18n.ts");
-
-/*
- V15.90 previously checked literal Chinese UI strings:
-   完整成分
-   NUTRIENTS
-
- V16.00 moved presentation copy into 9-language dictionaries.
- Audit semantic nutrition capability instead of a specific language string.
-*/
-
-for(const token of [
-  "fiber_g",
-  "sugar_g",
-  "sodium_mg",
-  "nutrients"
-]) {
-  assert(food.includes(token),`food-ui:${token}`);
-}
-
-assert(
-  food.includes("foodUi(lang") || food.includes("foodUi("),
-  "food-ui:9-language-dictionary-wired"
-);
-
-for(const key of [
-  "fullResult",
-  "protein",
-  "carbs",
-  "fat",
-  "fiber",
-  "sugar",
-  "sodium",
-  "missing"
-]) {
-  assert(
-    foodI18n.includes(`${key}:`) || foodI18n.includes(`|"${key}"`),
-    `food-i18n:${key}`
-  );
-}
-
-assert(
-  food.includes('data-food-version="v1600"'),
-  "food-ui:v1600-marker"
-);
-
-assert(
-  food.includes("result.total.fiber_g"),
-  "food-ui:total-fiber"
-);
-
-assert(
-  food.includes("result.total.sugar_g"),
-  "food-ui:total-sugar"
-);
-
-assert(
-  food.includes("result.total.sodium_mg"),
-  "food-ui:total-sodium"
-);
+// Runtime behavior replaces obsolete UI-version/string-shape assertions.
+execFileSync(process.execPath,['scripts/food-final/test-reference.cjs'],{stdio:'inherit'});
+assert(read('components/tools/FoodCalorieWorkbench.tsx').includes('foodText'),'food-ui:9-language-dictionary-wired');
 
 const migration=read(
   "supabase/migrations/20260926153000_nutrition_engine_v2.sql"

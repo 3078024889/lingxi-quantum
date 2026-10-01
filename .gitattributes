@@ -1,2 +1,3 @@
 
 /imports/world-feed/*.jsonl text eol=lf
+/public/runtime/food-onnx/*.mjs text eol=lf

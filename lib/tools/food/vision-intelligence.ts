@@ -25,4 +25,6 @@ export function portionDecision(e:PortionEvidence){
  if(e.mode==="reference-scale"&&Number(e.referenceDiameterCm)>0)return{grams:null,confidence:"low",action:"RANGE_THEN_CONFIRM" as const};
  return{grams:null,confidence:"insufficient",action:"USER_CONFIRM_REQUIRED" as const};
 }
-export const GLOBAL_VISION_VOCABULARY=[...new Set(GLOBAL_FOOD_IDENTITIES.flatMap(f=>[f.names.en,f.names.zh,...f.aliases]))];
+// CLIP's English prompts use one canonical name, not multilingual synonyms
+// competing for probability. Translation belongs in the display/search layers.
+export const GLOBAL_VISION_VOCABULARY=[...new Set(GLOBAL_FOOD_IDENTITIES.map(f=>f.names.en))];

@@ -2,7 +2,7 @@ param([string]$RepoRoot="D:\lingxi-quantum")
 $ErrorActionPreference="Stop"
 $dest=Join-Path $RepoRoot "public\models\Xenova\clip-vit-base-patch32"
 New-Item -ItemType Directory -Force -Path (Join-Path $dest "onnx") | Out-Null
-$revision=(Invoke-RestMethod 'https://huggingface.co/api/models/Xenova/clip-vit-base-patch32').sha
+$revision='d15189d7028b43f1d3e65039190477f6af591c2a'
 $base="https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/$revision"
 $files=@("config.json","merges.txt","preprocessor_config.json","special_tokens_map.json","tokenizer.json","tokenizer_config.json","vocab.json")
 foreach($name in $files){ & curl.exe -f -L --retry 2 --max-time 120 "$base/$name" -o (Join-Path $dest $name); if($LASTEXITCODE -ne 0){throw "Download failed: $name"} }
