@@ -25,7 +25,9 @@ jobs:
       - name: Checkout exact source
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4

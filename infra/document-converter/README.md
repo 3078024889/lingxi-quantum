@@ -1,48 +1,91 @@
-# 灵犀场生产级文档转换
+# 灵犀场文档转换网关 — 生产部署
 
-## 为什么需要独立网关
+## 1. DNS
 
-Vercel Functions 当前请求体和响应体都有 4.5 MB 上限。Office 文件和转换后的 PDF 很容易超过这个限制。
+准备一个子域名，例如：
 
-因此生产环境采用：
+`document-gateway.example.com`
 
-浏览器 → 灵犀场签名票据 → 文档转换网关 → 私网 Gotenberg / LibreOffice → PDF 直接返回浏览器
+A/AAAA 指向这台 Linux 主机。开放 TCP 80 / 443。
 
-Gotenberg 不直接暴露公网。
+## 2. 生成密钥
 
-## 启动
+Windows 本机可先运行：
 
 ```powershell
-$env:GOTENBERG_BASIC_USER="lingxifield"
-$env:GOTENBERG_BASIC_PASSWORD="<strong-random-password>"
-$env:LINGXIFIELD_DOCUMENT_GATEWAY_SECRET="<another-long-random-secret>"
-docker compose -f infra/document-converter/compose.yaml up -d --build
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\GENERATE_ENV.ps1" -Domain "document-gateway.example.com"
 ```
 
-公网只开放 gateway 的 3100 端口，并由 HTTPS 反向代理保护。
+把生成的 `.env` 安全复制到服务器本目录。不要提交 `.env`。
 
-## Vercel 配置
+## 3. 启动
+
+Linux:
+
+```bash
+chmod +x deploy-linux.sh
+./deploy-linux.sh
+```
+
+架构：
+- Caddy：唯一公网入口，80/443
+- gateway：只暴露给 Docker edge 网络
+- Gotenberg：只在 `document_internal` 内网
+- Gotenberg Basic Auth 已开启
+
+Gotenberg 官方建议不要将服务直接暴露公网；V32 按私网服务处理。
+
+## 4. 配置 Vercel
+
+生产环境增加：
 
 ```text
 LINGXIFIELD_DOCUMENT_GATEWAY_PUBLIC_URL=https://document-gateway.example.com
-LINGXIFIELD_DOCUMENT_GATEWAY_SECRET=<与 gateway 相同的 secret>
+LINGXIFIELD_DOCUMENT_GATEWAY_SECRET=<.env 中同一个 LINGXIFIELD_DOCUMENT_GATEWAY_SECRET>
 ```
 
-票据 5 分钟有效，绑定文件名、文件大小、MIME 与随机 nonce。
+然后重新部署网站。
 
-## 内部转换
+## 5. 健康检查
 
-网关通过 Docker 私网访问：
+```bash
+curl -i https://document-gateway.example.com/health
+```
+
+正常：
+
+```json
+{"ok":true,"service":"document-gateway"}
+```
+
+该检查会进一步探测私网 Gotenberg `/health`。
+
+## 6. 全链路验收
+
+网站部署并配置环境变量后：
+
+```powershell
+node scripts/document-gateway/smoke.mjs https://lingxifield.com
+```
+
+通过标记：
 
 ```text
-http://gotenberg:3000/forms/libreoffice/convert
+DOCUMENT_GATEWAY_DIRECT_CONVERSION=PASS
+DOCUMENT_GATEWAY_PDF_MAGIC=PASS
+DOCUMENT_GATEWAY_REPLAY_GUARD=PASS
+DOCUMENT_GATEWAY_END_TO_END=PASS
 ```
 
-Gotenberg 启用官方 Basic Auth，不映射宿主公网端口。
+Smoke test 使用很小的 RTF 文档，真实走：
+网站签名票据 → HTTPS 网关 → Gotenberg/LibreOffice → PDF，并验证同一个票据不能再次使用。
 
-## 回退
+## 7. 生产格式
 
-没有网关时：
-- 非 Vercel / 本地环境仍可走 Next.js `/api/tools/document/normalize`
-- Vercel 环境只对约 3.5 MB 以下文件保留 best-effort 同源回退
-- 更大的 Office 文件会明确提示转换服务尚未准备，而不是上传后才触发 413
+Word：DOC / DOCX / DOCM / DOT / DOTM / DOTX / ODT / FODT / OTT / RTF / TXT
+
+Excel：XLS / XLSX / XLSM / XLT / XLTX / ODS / CSV / TSV
+
+PowerPoint：PPT / PPTX / PPTM / POT / POTX / ODP
+
+PDF 本身不需要进入转换网关。

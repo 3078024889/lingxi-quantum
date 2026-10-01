@@ -15,18 +15,38 @@ services:
     build:
       context: ./gateway
     restart: unless-stopped
-    ports:
-      - "3100:3100"
+    expose:
+      - "3100"
     environment:
       PORT: "3100"
       GOTENBERG_INTERNAL_URL: "http://gotenberg:3000"
       GOTENBERG_BASIC_USER: "${GOTENBERG_BASIC_USER}"
       GOTENBERG_BASIC_PASSWORD: "${GOTENBERG_BASIC_PASSWORD}"
       LINGXIFIELD_DOCUMENT_GATEWAY_SECRET: "${LINGXIFIELD_DOCUMENT_GATEWAY_SECRET}"
-      LINGXIFIELD_ALLOWED_ORIGINS: "https://lingxifield.com,https://lingxifield.cn"
+      LINGXIFIELD_ALLOWED_ORIGINS: "${LINGXIFIELD_ALLOWED_ORIGINS:-https://lingxifield.com,https://lingxifield.cn}"
     depends_on: [gotenberg]
-    networks: [document_internal]
+    networks: [document_internal,edge]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOCUMENT_GATEWAY_DOMAIN: "${DOCUMENT_GATEWAY_DOMAIN}"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [gateway]
+    networks: [edge]
 
 networks:
   document_internal:
-    driver: bridge
+    internal: true
+  edge:
+
+volumes:
+  caddy_data:
+  caddy_config:

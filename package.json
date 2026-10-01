@@ -66,7 +66,12 @@
     "audit:v31-document-intake": "node scripts/audit/v31-document-intake.mjs",
     "audit:v31r1-build-regression": "node scripts/audit/v31r1-build-regression.mjs",
     "audit:v31r2-production-architecture": "node scripts/audit/v31r2-production-architecture.mjs",
-    "audit:v31r3-toolchain": "node scripts/audit/v31r3-toolchain.mjs"
+    "audit:v31r3-toolchain": "node scripts/audit/v31r3-toolchain.mjs",
+    "audit:v32-document-gateway": "node scripts/audit/v32-document-gateway-closure.mjs",
+    "audit:v32r1-ci-regression": "node scripts/audit/v32r1-ci-regression.mjs",
+    "test:v32-document-gateway": "playwright test -c playwright.final.config.ts tests/final-closure/document-gateway-v32.spec.ts --workers=1",
+    "smoke:document-gateway": "node scripts/document-gateway/smoke.mjs",
+    "audit:v32r2-resume-promotion": "node scripts/audit/v32r2-resume-promotion.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",

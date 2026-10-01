@@ -2,39 +2,42 @@ import type{LingxiLang}from"@/lib/lingxi-i18n";
 
 export const DOCUMENT_INPUT_ACCEPT=[
  "application/pdf",".pdf",
- ".doc",".docx",".docm",".dot",".dotx",".odt",".rtf",".txt",
+ ".doc",".docx",".docm",".dot",".dotm",".dotx",".odt",".fodt",".ott",".rtf",".txt",
  ".xls",".xlsx",".xlsm",".xlt",".xltx",".ods",".csv",".tsv",
  ".ppt",".pptx",".pptm",".pot",".potx",".odp"
 ].join(",");
 
-const OFFICE_EXT=new Set(["doc","docx","docm","dot","dotx","odt","rtf","txt","xls","xlsx","xlsm","xlt","xltx","ods","csv","tsv","ppt","pptx","pptm","pot","potx","odp"]);
+const OFFICE_EXT=new Set(["doc","docx","docm","dot","dotm","dotx","odt","fodt","ott","rtf","txt","xls","xlsx","xlsm","xlt","xltx","ods","csv","tsv","ppt","pptx","pptm","pot","potx","odp"]);
 function extOf(name:string){return(name.split(".").pop()||"").toLowerCase()}
 export function isDocumentInputFile(file:File){const e=extOf(file.name);return e==="pdf"||file.type==="application/pdf"||OFFICE_EXT.has(e)}
 export function isOfficeDocument(file:File){return OFFICE_EXT.has(extOf(file.name))}
 
-type Ticket={mode:"direct"|"same-origin";url?:string;exp?:number;nonce?:string;token?:string;maxBytes:number};
-
+type Ticket={mode:"direct"|"same-origin";version?:"v1";url?:string;exp?:number;nonce?:string;token?:string;maxBytes:number};
 async function ticketFor(file:File):Promise<Ticket>{
- const r=await fetch("/api/tools/document/ticket",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:file.name,size:file.size,type:file.type||"application/octet-stream"})});
- if(!r.ok)throw new Error("DOCUMENT_CONVERSION_UNAVAILABLE");
+ const r=await fetch("/api/tools/document/ticket",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({name:file.name,size:file.size,type:file.type||"application/octet-stream"}),cache:"no-store"});
+ if(!r.ok)throw new Error(r.status===413?"DOCUMENT_SIZE_UNSUPPORTED":r.status===415?"DOCUMENT_TYPE_UNSUPPORTED":"DOCUMENT_CONVERSION_UNAVAILABLE");
  return await r.json() as Ticket;
 }
 async function viaDirectGateway(file:File,t:Ticket){
- if(!t.url||!t.exp||!t.nonce||!t.token)throw new Error("DOCUMENT_CONVERSION_UNAVAILABLE");
- const r=await fetch(t.url,{
-  method:"POST",
-  headers:{
-   "content-type":file.type||"application/octet-stream",
-   "x-lingxifield-filename":encodeURIComponent(file.name),
-   "x-lingxifield-size":String(file.size),
-   "x-lingxifield-exp":String(t.exp),
-   "x-lingxifield-nonce":t.nonce,
-   "x-lingxifield-token":t.token
-  },
-  body:file
- });
- if(!r.ok)throw new Error(r.status===413?"DOCUMENT_SIZE_UNSUPPORTED":"DOCUMENT_CONVERSION_FAILED");
- return await r.blob();
+ if(t.version!=="v1"||!t.url||!t.exp||!t.nonce||!t.token)throw new Error("DOCUMENT_CONVERSION_UNAVAILABLE");
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),90_000);
+ try{
+  const r=await fetch(t.url,{
+   method:"POST",credentials:"omit",referrerPolicy:"no-referrer",signal:controller.signal,
+   headers:{
+    "content-type":file.type||"application/octet-stream",
+    "x-lingxifield-ticket-version":"v1",
+    "x-lingxifield-filename":encodeURIComponent(file.name),
+    "x-lingxifield-size":String(file.size),
+    "x-lingxifield-exp":String(t.exp),
+    "x-lingxifield-nonce":t.nonce,
+    "x-lingxifield-token":t.token
+   },
+   body:file
+  });
+  if(!r.ok)throw new Error(r.status===413?"DOCUMENT_SIZE_UNSUPPORTED":r.status===415?"DOCUMENT_TYPE_UNSUPPORTED":r.status===408||r.status===504?"DOCUMENT_CONVERSION_TIMEOUT":"DOCUMENT_CONVERSION_FAILED");
+  return await r.blob();
+ }finally{clearTimeout(timer)}
 }
 async function viaSameOrigin(file:File){
  const fd=new FormData();fd.set("file",file,file.name);
@@ -51,15 +54,13 @@ export async function normalizeDocumentFile(file:File){
  const ticket=await ticketFor(file);
  if(file.size>ticket.maxBytes)throw new Error("DOCUMENT_DIRECT_GATEWAY_REQUIRED");
  const blob=ticket.mode==="direct"?await viaDirectGateway(file,ticket):await viaSameOrigin(file);
- if(blob.type&&blob.type!=="application/pdf")throw new Error("DOCUMENT_CONVERSION_INVALID");
+ const head=new Uint8Array(await blob.slice(0,5).arrayBuffer());
+ if(head.length<5||head[0]!==0x25||head[1]!==0x50||head[2]!==0x44||head[3]!==0x46||head[4]!==0x2d)throw new Error("DOCUMENT_CONVERSION_INVALID");
  const base=file.name.replace(/\.[^.]+$/,"")||"document";
  return new File([blob],`${base}.pdf`,{type:"application/pdf",lastModified:Date.now()});
 }
-
 export async function normalizeDocumentFiles(files:File[]){
- const out:File[]=[];
- for(const file of files)out.push(await normalizeDocumentFile(file));
- return out;
+ const out:File[]=[];for(const file of files)out.push(await normalizeDocumentFile(file));return out;
 }
 
 const copy:Record<LingxiLang,{hint:string;busy:string;unavailable:string;unsupported:string}>={
@@ -76,7 +77,6 @@ const copy:Record<LingxiLang,{hint:string;busy:string;unavailable:string;unsuppo
 export function documentIntakeText(lang:LingxiLang,key:keyof(typeof copy.zh)){return(copy[lang]||copy.en)[key]}
 export function documentIntakeError(lang:LingxiLang,error:unknown){
  const code=error instanceof Error?error.message:String(error);
- if(code.includes("UNAVAILABLE")||code.includes("CONVERTER_5")||code.includes("DIRECT_GATEWAY_REQUIRED"))return documentIntakeText(lang,"unavailable");
- if(code.includes("UNSUPPORTED")||code.includes("INPUT_INVALID"))return documentIntakeText(lang,"unsupported");
+ if(code.includes("UNSUPPORTED"))return documentIntakeText(lang,"unsupported");
  return documentIntakeText(lang,"unavailable");
 }
