@@ -23,7 +23,7 @@ export async function POST(req:NextRequest){
   const supabase=createClient();
   if(mode==="verify"){
    const token=String(f.get("token")||"").replace(/\D/g,"");
-   if(!/^\d{6,10}$/.test(token))return redirect(loc("code_invalid","verify",next,email));
+   if(!/^\d{4,10}$/.test(token))return redirect(loc("code_invalid","verify",next,email));
    const{error}=await supabase.auth.verifyOtp({email,token,type:"email"});
    if(error){const expired=(error as any)?.code==="otp_expired"||/expired/i.test(error.message);return redirect(loc(expired?"code_expired":"code_invalid","verify",next,email))}
    return redirect(next);
@@ -36,7 +36,7 @@ export async function POST(req:NextRequest){
    const{data,error}=await admin.auth.admin.generateLink({type:"signup",email,password,options:{data:{display_name:displayName}}});
    if(error){const c=/already|registered|exists/i.test(error.message)?"registered":"service";return redirect(loc(c,"signup",next,email))}
    const otp=String((data.properties as any)?.email_otp||"");
-   if(!/^\d{6,10}$/.test(otp))return redirect(loc("service","signup",next,email));
+   if(!/^\d{4,10}$/.test(otp))return redirect(loc("service","signup",next,email));
    const sent=await sendCode(email,otp,displayName);
    if(!sent.ok){console.error("LINGXIFIELD_AUTH_EMAIL_DELIVERY_FAILED",{provider:"resend",reason:sent.reason,emailDomain:email.split("@")[1]||""});return redirect(loc("email_delivery","signup",next,email))}
    return redirect(loc("code_sent","verify",next,email));

@@ -4,6 +4,7 @@ import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {tempMailText} from "@/lib/temp-mail-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
+import {normalizeStoredMail} from "@/lib/tools/temp-mail-message.client";
 
 type Box={id:string;address:string;expiresAt:string};
 type Msg={id:string;sender:string;subject:string;text_body:string;received_at:string;size_bytes:number};
@@ -236,10 +237,10 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
     <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
      <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("inbox")}</h2><span className="text-xs text-[var(--lx-faint)]">{messages.length} {t("messages")} · {t("autoRefresh")}</span></div>
      {!messages.length?<div className="mt-5 rounded-2xl bg-[var(--lx-soft)] px-4 py-4"><b className="text-sm text-[var(--lx-ink)]">{lang==="zh"?"邮箱已就绪，正在等待新邮件":"Inbox ready — waiting for mail"}</b><p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">{lang==="zh"?"验证码或通知到达后会自动显示；无需刷新页面。":"Verification codes and notices appear automatically; no page refresh needed."}</p></div>:
-      <div className="mt-4 space-y-3">{messages.map(m=>{const code=extractCode(m.subject,m.text_body);return <details key={m.id} className="rounded-2xl border border-[var(--lx-line)] p-4">
-       <summary className="cursor-pointer list-none"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><b className="block truncate text-[var(--lx-ink)]">{m.subject||"—"}</b><span className="mt-1 block truncate text-xs text-[var(--lx-faint)]">{m.sender}</span></div><time className="shrink-0 text-xs text-[var(--lx-faint)]">{new Date(m.received_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}</time></div></summary>
+      <div className="mt-4 space-y-3">{messages.map(m=>{const clean=normalizeStoredMail(m.subject,m.text_body),code=extractCode(clean.subject,clean.text);return <details key={m.id} className="rounded-2xl border border-[var(--lx-line)] p-4">
+       <summary className="cursor-pointer list-none"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><b className="block truncate text-[var(--lx-ink)]">{clean.subject||"—"}</b><span className="mt-1 block truncate text-xs text-[var(--lx-faint)]">{m.sender}</span></div><time className="shrink-0 text-xs text-[var(--lx-faint)]">{new Date(m.received_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}</time></div></summary>
        {code&&<div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3"><div><span className="block text-xs text-[var(--lx-muted)]">{t("code")}</span><b className="mt-1 block font-mono text-2xl tracking-[.15em] text-[var(--lx-ink)]">{code}</b></div><button onClick={()=>void copy(code,`code-${m.id}`)} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm">{copied===`code-${m.id}`?t("copied"):t("copyCode")}</button></div>}
-       <pre className="mt-4 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--lx-muted)]">{m.text_body||"—"}</pre>
+       <pre className="mt-4 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--lx-muted)]">{clean.text||"—"}</pre>
       </details>})}</div>}
     </section>
    </>
