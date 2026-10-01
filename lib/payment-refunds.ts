@@ -50,6 +50,7 @@ export async function refundPaypal(input:{
   if(!r.ok)throw new Error(`PAYPAL_REFUND_${r.status}:${String(data?.name||"ERROR")}`);
   const id=typeof data?.id==="string"?data.id:null;
   const status=String(data?.status||"UNKNOWN");
+  if(!id||data?.amount?.currency_code!=="USD"||Math.round(Number(data?.amount?.value)*100)!==Math.round(input.refundAmountUsd*100))throw new Error("PAYPAL_REFUND_AMOUNT_MISMATCH");
   if(status==="COMPLETED")return{state:"completed",refundId:id,providerStatus:status};
   if(status==="FAILED"||status==="CANCELLED")return{state:"failed",refundId:id,providerStatus:status};
   return{state:"pending",refundId:id,providerStatus:status};
@@ -76,17 +77,18 @@ function wechatSign(method:string,url:string,body:string){
   return `WECHATPAY2-SHA256-RSA2048 mchid="${mch}",nonce_str="${nonce}",timestamp="${timestamp}",serial_no="${serial}",signature="${signature}"`;
 }
 
-async function wechatRefundRequest(path:string,body:Record<string,unknown>){
+async function wechatRefundRequest(path:string,body?:Record<string,unknown>){
   const url=`https://api.mch.weixin.qq.com${path}`;
-  const raw=JSON.stringify(body);
+  const raw=body?JSON.stringify(body):"";
+  const method=body?"POST":"GET";
   const r=await fetch(url,{
-    method:"POST",
+    method,
     headers:{
-      Authorization:wechatSign("POST",url,raw),
+      Authorization:wechatSign(method,url,raw),
       "Content-Type":"application/json",
       Accept:"application/json",
     },
-    body:raw,
+    body:body?raw:undefined,
     cache:"no-store",
     signal:timeoutSignal(20000),
   });
@@ -111,6 +113,7 @@ export async function refundWechat(input:{
   const status=String(data?.status||"UNKNOWN");
   const id=typeof data?.refund_id==="string"?data.refund_id:outRefundNo;
   if(Number(data?.amount?.refund)!==input.refundAmountFen)throw new Error("WECHAT_REFUND_AMOUNT_MISMATCH");
+  if(data?.amount?.currency!=="CNY"||data?.out_refund_no!==outRefundNo)throw new Error("WECHAT_REFUND_REFERENCE_MISMATCH");
   if(status==="SUCCESS")return{state:"completed",refundId:id,providerStatus:status};
   if(status==="CLOSED")return{state:"failed",refundId:id,providerStatus:status};
   return{state:"pending",refundId:id,providerStatus:status};
@@ -206,6 +209,33 @@ export async function refundAlipay(input:{
   if(refundFee!==Math.round(input.refundAmountRmb*100))throw new Error("ALIPAY_REFUND_AMOUNT_MISMATCH");
   const id=typeof data.trade_no==="string"?String(data.trade_no):outRequestNo;
   return{state:"completed",refundId:id,providerStatus:String(data.fund_change||"Y")};
+}
+
+// Query only: never resubmit a refund after an uncertain provider response.
+export async function queryProviderRefund(input:{provider:string;providerPaymentId:string;withdrawalId:string;refundId:string|null;currency:string;refundAmountMinor:number}):Promise<RefundAttempt>{
+ const ref=`LXW${input.withdrawalId.replace(/-/g,"")}`;
+ if(input.provider==='paypal'&&input.currency==='USD'){
+  if(!input.refundId)return {state:'pending',refundId:null,providerStatus:'MANUAL_CONFIRMATION_REQUIRED'};
+  const token=await getPaypalAccessToken();
+  const base=process.env.PAYPAL_ENV==='sandbox'?'https://api-m.sandbox.paypal.com':'https://api-m.paypal.com';
+  const r=await fetch(`${base}/v2/payments/refunds/${encodeURIComponent(input.refundId)}`,{headers:{Authorization:`Bearer ${token}`},cache:'no-store',signal:timeoutSignal(12000)});
+  if(!r.ok)throw new Error('PAYPAL_REFUND_QUERY_FAILED');
+  const d=await r.json();
+  if(d.id!==input.refundId||d.amount?.currency_code!=='USD'||Math.round(Number(d.amount?.value)*100)!==input.refundAmountMinor)throw new Error('REFUND_REFERENCE_MISMATCH');
+  return {state:d.status==='COMPLETED'?'completed':['FAILED','CANCELLED'].includes(d.status)?'failed':'pending',refundId:d.id,providerStatus:String(d.status)};
+ }
+ if(input.provider==='wechat'&&input.currency==='CNY'){
+  const d=await wechatRefundRequest(`/v3/refund/domestic/refunds/${encodeURIComponent(ref)}`);
+  if(d.out_refund_no!==ref||d.out_trade_no!==input.providerPaymentId||d.amount?.currency!=='CNY'||Number(d.amount?.refund)!==input.refundAmountMinor)throw new Error('REFUND_REFERENCE_MISMATCH');
+  return {state:d.status==='SUCCESS'?'completed':d.status==='CLOSED'?'failed':'pending',refundId:String(d.refund_id),providerStatus:String(d.status)};
+ }
+ if(input.provider==='alipay'&&input.currency==='CNY'){
+  const d=await alipayCall('alipay.trade.fastpay.refund.query',{out_trade_no:input.providerPaymentId,out_request_no:ref});
+  if(d.code!=='10000')throw new Error('ALIPAY_REFUND_QUERY_FAILED');
+  if(d.out_request_no!==ref||d.out_trade_no!==input.providerPaymentId||Math.round(Number(d.refund_amount)*100)!==input.refundAmountMinor)throw new Error('REFUND_REFERENCE_MISMATCH');
+  return {state:d.refund_status==='REFUND_SUCCESS'?'completed':'pending',refundId:String(d.trade_no||ref),providerStatus:String(d.refund_status||'PENDING')};
+ }
+ return {state:'pending',refundId:input.refundId,providerStatus:'MANUAL_CONFIRMATION_REQUIRED'};
 }
 
 export async function executeProviderRefund(input:{

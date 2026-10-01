@@ -1,10 +1,15 @@
-import{NextResponse}from"next/server";import{createClient}from"@/lib/supabase/server";import{createAdminClient}from"@/lib/supabase/admin";import{LINGXIFIELD_RELEASE as R}from"@/lib/release/version";
-export const runtime="nodejs";export const dynamic="force-dynamic";
-const websiteAnnouncement={id:`website-release:${R.website}`,kind:"announcement",version:R.website,title:R.titleZh,body:R.highlightsZh.join("；"),createdAt:`${R.publishedAt}T00:00:00+08:00`,href:"/release"};
-export async function GET(){let admin;try{admin=createAdminClient()}catch{return NextResponse.json({items:[websiteAnnouncement],databaseAvailable:false})}const items:any[]=[websiteAnnouncement];
-let supabase;try{supabase=createClient()}catch{return NextResponse.json({items})}const{data:{user}}=await supabase.auth.getUser().catch(()=>({data:{user:null}}as any));if(!user)return NextResponse.json({items});
-const[{data:orders},{data:refunds},{data:withdrawals}]=await Promise.all([admin.from("orders").select("id,product_id,amount_rmb,paid_at,status").eq("user_id",user.id).eq("status","paid").not("paid_at","is",null).order("paid_at",{ascending:false}).limit(10),admin.from("ai_refund_requests").select("id,amount_fen,status,updated_at,created_at").eq("user_id",user.id).order("updated_at",{ascending:false}).limit(10),admin.from("balance_withdrawals").select("id,currency,amount_minor,status,provider_status,updated_at,created_at,completed_at").eq("user_id",user.id).order("updated_at",{ascending:false}).limit(10)]);
-for(const o of orders||[])items.push({id:`payment:${o.id}`,kind:"payment",title:o.product_id?.startsWith("ai-balance-")?"充值已到账":"支付成功",createdAt:o.paid_at,href:o.product_id?.startsWith("ai-balance-")?"/ai-wallet":"/account/orders",amountRmb:Number(o.amount_rmb||0)});
-for(const r of refunds||[]){const done=["completed","succeeded","refunded","success"].includes(String(r.status).toLowerCase());items.push({id:`refund:${r.id}:${r.status}`,kind:"refund",title:done?"退款处理完成":"退款进度已更新",createdAt:r.updated_at||r.created_at,href:"/ai-wallet",status:r.status,amountRmb:Number(r.amount_fen||0)/100})}
-for(const x of withdrawals||[]){const st=String(x.status||x.provider_status||"").toLowerCase(),done=["completed","succeeded","success","paid"].includes(st),failed=["failed","rejected","cancelled"].includes(st);items.push({id:`withdrawal:${x.id}:${st}`,kind:"withdrawal",title:done?"提现处理完成":failed?"提现未完成":"提现进度已更新",createdAt:x.completed_at||x.updated_at||x.created_at,href:"/withdraw",status:st})}
-items.sort((a,b)=>new Date(b.createdAt||0).getTime()-new Date(a.createdAt||0).getTime());return NextResponse.json({items:items.slice(0,30)},{headers:{"Cache-Control":"private, no-store"}})}
+import {NextRequest,NextResponse} from 'next/server';
+import {createClient} from '@/lib/supabase/server';
+import {LINGXIFIELD_RELEASE as R} from '@/lib/release/version';
+import {accountMoneyFeed} from '@/lib/notifications/money-feed';
+export const runtime='nodejs';export const dynamic='force-dynamic';
+export async function GET(req:NextRequest){
+ const lang=req.nextUrl.searchParams.get('lang')||'zh';
+ const release={id:`website-release:${R.website}`,eventKey:`website-release:${R.website}`,kind:'announcement',version:R.website,title:lang==='zh'?R.titleZh:R.titleEn,body:lang==='zh'?R.highlightsZh.join('；'):R.highlightsEn.join('; '),createdAt:`${R.publishedAt}T00:00:00+08:00`,href:'/release',read:undefined as boolean|undefined};
+ const headers={'Cache-Control':'private, no-store'};
+ try{const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({items:[release],authenticated:false},{headers});
+  const feed=await accountMoneyFeed(user.id,lang);
+  release.read=feed.seen.has(release.eventKey);
+  return NextResponse.json({partial:feed.partial,readAvailable:feed.readAvailable,authenticated:true,items:[...feed.items,release].sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt))},{headers});
+ }catch{return NextResponse.json({items:[release],partial:true},{headers});}
+}

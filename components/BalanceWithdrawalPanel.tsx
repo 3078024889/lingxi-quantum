@@ -2,13 +2,16 @@
 import {useEffect,useMemo,useState,useRef} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
-type Order={id:string;product_id:string;provider:string|null;amount_rmb:number|null;amount_usd:number|null;created_at:string};
+import LegacyRefundMigrationPanel from "./LegacyRefundMigrationPanel";
+import {moneyText,moneyError,moneyNotice} from "@/lib/notifications/money-copy";
+import {moneyMinor} from "@/lib/payments/money-input";
+type Order={refundable_minor:number;id:string;product_id:string;provider:string|null;amount_rmb:number|null;amount_usd:number|null;created_at:string};
 type Withdrawal={id:string;order_id:string;provider:string;currency:string;provider_currency:string;amount_minor:number;provider_amount_minor:number;status:string;provider_status:string|null;failure_code:string|null;created_at:string;completed_at:string|null};
 type Data={orders:Order[];withdrawals:Withdrawal[]};
 type C={loadFail:string;invalid:string;confirm:string;done:string;submitted:string;loading:string;eligibleTitle:string;eligibleDesc:string;emptyEligible:string;principal:string;topup:string;amountLabel:string;processing:string;submitting:string;return:string;history:string;emptyHistory:string;completed:string;requested:string;failed:string;wechat:string;alipay:string;other:string;original:string};
 
 const D:Record<LingxiLang,C>={
- zh:{loadFail:"读取失败",invalid:"请输入不超过该订单充值本金的有效金额。",confirm:"确认申请退回 {amount} 的未使用充值本金？退款会回到原支付渠道。",done:"已退回原支付方式。",submitted:"提现申请已提交，到账时间以原支付方式为准。",loading:"正在查询可提现余额…",eligibleTitle:"可提现余额",eligibleDesc:"只退未使用的真实充值本金。赠送额度、邀请奖励、已消耗金额和任务中冻结的金额不属于可退本金。",emptyEligible:"当前没有可提现余额。",principal:"可提现余额",topup:"余额充值",amountLabel:"提现金额",processing:"提现处理中",submitting:"正在提交…",return:"申请提现",history:"提现记录",emptyHistory:"还没有提现记录。",completed:"已申请提现",requested:"已提交",failed:"失败，余额已释放",wechat:"微信支付",alipay:"支付宝",other:"其他支付",original:"申请提现"},
+ zh:{loadFail:"读取失败",invalid:"请输入不超过该订单充值本金的有效金额。",confirm:"确认申请退回 {amount} 的未使用充值本金？退款会回到原支付渠道。",done:"已退回原支付方式。",submitted:"提现申请已提交，到账时间以原支付方式为准。",loading:"正在查询可提现余额…",eligibleTitle:"可提现余额",eligibleDesc:"只退未使用的真实充值本金。赠送额度、邀请奖励、已消耗金额和任务中冻结的金额不属于可退本金。",emptyEligible:"当前没有可提现余额。",principal:"可提现余额",topup:"余额充值",amountLabel:"提现金额",processing:"提现处理中",submitting:"正在提交…",return:"申请提现",history:"提现记录",emptyHistory:"还没有提现记录。",completed:"支付渠道已确认",requested:"已提交",failed:"失败，余额已释放",wechat:"微信支付",alipay:"支付宝",other:"其他支付",original:"申请提现"},
  en:{loadFail:"Could not load refund data.",invalid:"Enter a valid amount no greater than this top-up principal.",confirm:"Request a refund of {amount} from the unused paid principal? It will return to the original payment method.",done:"The original payment provider has confirmed the refund.",submitted:"Refund submitted. The requested amount is reserved while the payment provider confirms it.",loading:"Loading refundable balance…",eligibleTitle:"Top-ups eligible for refund",eligibleDesc:"Only unused paid principal can be refunded. Bonus credit, referral rewards, spent amounts and funds reserved by active tasks are excluded.",emptyEligible:"There are no paid balance top-ups eligible for refund right now.",principal:"paid principal",topup:"balance top-up",amountLabel:"Refund amount",processing:"Refund processing",submitting:"Submitting…",return:"Return to original method",history:"Refund history",emptyHistory:"No refund history yet.",completed:"Returned to original method",requested:"Submitted",failed:"Failed · balance released",wechat:"WeChat Pay",alipay:"Alipay",other:"Other payment",original:"Returned"},
  ja:{loadFail:"返金情報を読み込めませんでした。",invalid:"このチャージ元本を超えない有効な金額を入力してください。",confirm:"未使用の入金元本 {amount} の返金を申請しますか？元の支払い方法へ戻ります。",done:"元の決済サービスで返金完了が確認されました。",submitted:"返金申請を送信しました。申請額は決済サービスの確認中、確保されます。",loading:"返金可能残高を読み込み中…",eligibleTitle:"返金申請できるチャージ",eligibleDesc:"返金対象は未使用の実入金元本のみです。特典、紹介報酬、使用済み金額、処理中タスクの確保額は含まれません。",emptyEligible:"現在、返金申請可能な支払い済みチャージはありません。",principal:"入金元本",topup:"残高チャージ",amountLabel:"返金額",processing:"返金処理中",submitting:"送信中…",return:"元の支払い方法へ返金",history:"返金履歴",emptyHistory:"返金履歴はまだありません。",completed:"返金済み",requested:"申請済み",failed:"失敗・残高解放済み",wechat:"WeChat Pay",alipay:"Alipay",other:"その他の支払い",original:"返金"},
  ko:{loadFail:"환불 정보를 불러오지 못했습니다.",invalid:"해당 충전 원금을 넘지 않는 유효한 금액을 입력하세요.",confirm:"사용하지 않은 충전 원금 {amount}의 환불을 신청할까요? 원 결제수단으로 돌아갑니다.",done:"원 결제수단에서 환불 완료가 확인되었습니다.",submitted:"환불 신청이 제출되었습니다. 결제수단 확인 동안 신청 금액은 예약됩니다.",loading:"환불 가능 잔액 불러오는 중…",eligibleTitle:"환불 신청 가능한 충전",eligibleDesc:"사용하지 않은 실제 충전 원금만 환불됩니다. 보너스, 추천 보상, 사용 금액, 진행 중 작업에 예약된 금액은 제외됩니다.",emptyEligible:"현재 환불 신청 가능한 결제 완료 충전이 없습니다.",principal:"충전 원금",topup:"잔액 충전",amountLabel:"환불 금액",processing:"환불 처리 중",submitting:"제출 중…",return:"원 결제수단으로 환불",history:"환불 기록",emptyHistory:"아직 환불 기록이 없습니다.",completed:"원 결제수단 환불 완료",requested:"제출됨",failed:"실패 · 잔액 해제됨",wechat:"WeChat Pay",alipay:"Alipay",other:"기타 결제",original:"원 결제수단 환불"},
@@ -20,7 +23,7 @@ const D:Record<LingxiLang,C>={
 };
 
 function isUsdWallet(productId:string){return productId.includes("-usd-balance-")}
-function walletAmount(order:Order){return isUsdWallet(order.product_id)?Number(order.amount_usd||0):Number(order.amount_rmb||0)}
+function walletAmount(order:Order){return Number(order.refundable_minor||0)/100}
 function walletSymbol(order:Order){return isUsdWallet(order.product_id)?"$":"¥"}
 
 export default function BalanceWithdrawalPanel(){
@@ -28,6 +31,7 @@ export default function BalanceWithdrawalPanel(){
   const[data,setData]=useState<Data|null>(null);
   const[msg,setMsg]=useState("");
   const[busy,setBusy]=useState<string|null>(null);
+  const requestKeys=useRef<Record<string,string>>({});
   const[amounts,setAmounts]=useState<Record<string,string>>({});
 
   const providerText=(order:Order)=>{
@@ -36,15 +40,15 @@ export default function BalanceWithdrawalPanel(){
     return `${name} · ¥${Number(order.amount_rmb||0).toFixed(2)}`;
   };
   const providerName=(provider:string)=>provider==="paypal"?"PayPal":provider==="wechat"?c.wechat:provider==="alipay"?c.alipay:c.other;
-  const statusLabel=(status:string)=>status==="completed"?c.completed:status==="processing"?c.processing:status==="requested"?c.requested:status==="failed"?c.failed:status;
+  const statusLabel=(status:string)=>status==="completed"?c.completed:status==="processing"?c.processing:status==="requested"?c.requested:status==="failed"?c.failed:c.processing;
 
   async function load(){
-    const r=await fetch("/api/account/withdrawals",{cache:"no-store"});
+    try{const r=await fetch("/api/account/withdrawals",{cache:"no-store"});
     const d=await r.json().catch(()=>({}));
-    if(r.ok)setData(d);else setMsg(d.error||c.loadFail);
+    if(r.ok)setData(d);else setMsg(moneyError(lang,d.error||""));}catch{setMsg(moneyText(lang,"unavailable"))}
   }
   const loadRef=useRef(load);loadRef.current=load;
- useEffect(()=>{void loadRef.current()},[c.loadFail]);
+ useEffect(()=>{void loadRef.current();const refresh=()=>void loadRef.current();const timer=setInterval(refresh,30000);window.addEventListener("lingxi-money-updated",refresh);return()=>{clearInterval(timer);window.removeEventListener("lingxi-money-updated",refresh)}},[c.loadFail]);
 
   const activeByOrder=useMemo(()=>{
     const out=new Set<string>();
@@ -54,23 +58,28 @@ export default function BalanceWithdrawalPanel(){
 
   async function submit(order:Order){
     const max=walletAmount(order);
-    const amount=Number(amounts[order.id]||max);
+    const minor=moneyMinor(amounts[order.id]??String(max));
+    const amount=minor===null?NaN:minor/100;
     if(!Number.isFinite(amount)||amount<=0||amount>max){setMsg(c.invalid);return}
     const shown=`${walletSymbol(order)}${amount.toFixed(2)}`;
     if(!confirm(c.confirm.replace("{amount}",shown)))return;
     setBusy(order.id);setMsg("");
+    const key=`${order.id}:${amount}`;const requestId=requestKeys.current[key]??(requestKeys.current[key]=crypto.randomUUID());
     try{
-      const r=await fetch("/api/account/withdrawals",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({orderId:order.id,amount})});
+      const r=await fetch("/api/account/withdrawals",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({orderId:order.id,amount:String(amount),requestId})});
       const d=await r.json().catch(()=>({}));
-      if(!r.ok){setMsg(d.error||c.loadFail);return}
-      setMsg(d.status==="completed"?c.done:c.submitted);
+      if(!r.ok){setMsg(moneyError(lang,d.error||""));await loadRef.current();return}
+      setMsg(moneyText(lang,d.status==="completed"?"completed":d.status==="failed"?"failed":"processing"));
+      if(d.status==="failed"||d.status==="completed")delete requestKeys.current[key];
+      window.dispatchEvent(new Event("lingxi-money-updated"));
       await loadRef.current();
-    }finally{setBusy(null)}
+    }catch{setMsg(moneyText(lang,"unavailable"))}finally{setBusy(null)}
   }
 
   if(!data)return <div className="lx-state-card is-loading rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]"><span className="lx-state-dot"/> {msg||c.loading}</div>;
 
-  return <div className="space-y-8 text-[var(--lx-ink)]">
+  return <div dir={lang==="ar"?"rtl":"ltr"} className="space-y-8 text-[var(--lx-ink)]">
+    <button className="text-sm underline" onClick={()=>void loadRef.current()}>{moneyText(lang,"refresh")}</button>
     {msg&&<p role="status" className="lx-state-card rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-muted)]">{msg}</p>}
     <section>
       <h2 className="text-xl font-semibold">{c.eligibleTitle}</h2>
@@ -86,7 +95,7 @@ export default function BalanceWithdrawalPanel(){
             </div>
             <div className="mt-4 flex flex-wrap gap-3">
               <input aria-label={c.amountLabel} className="min-w-40 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]" inputMode="decimal" value={amounts[o.id]??String(max)} onChange={e=>setAmounts(x=>({...x,[o.id]:e.target.value}))}/>
-              <button disabled={active||busy===o.id} onClick={()=>void submit(o)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-2 text-[var(--lx-ink)] disabled:opacity-50">{active?c.processing:busy===o.id?c.submitting:c.return}</button>
+              <button disabled={active||busy!==null||max<=0} onClick={()=>void submit(o)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-2 text-[var(--lx-ink)] disabled:opacity-50">{active?c.processing:busy===o.id?c.submitting:c.return}</button>
             </div>
           </article>
         })}
@@ -96,11 +105,13 @@ export default function BalanceWithdrawalPanel(){
       <h2 className="text-xl font-semibold">{c.history}</h2>
       <div className="mt-5 space-y-3">
         {data.withdrawals.length===0&&<p className="lx-state-card is-empty rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm text-[var(--lx-muted)]">◇ {c.emptyHistory}</p>}
-        {data.withdrawals.map(w=><article key={w.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
+        {data.withdrawals.map(w=><article id={`withdrawal-${w.id}`} key={w.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
           <div className="flex flex-wrap justify-between gap-3"><b>{w.currency==="USD"?"$":"¥"}{(Number(w.amount_minor)/100).toFixed(2)}</b><span className="text-[var(--lx-muted)]">{statusLabel(w.status)}</span></div>
+          <p className="mt-2 text-sm leading-7">{moneyNotice(lang,"withdrawal",w.status,w.currency,Number(w.amount_minor)).body}</p><p className="mt-2 break-all text-xs text-[var(--lx-faint)]">{moneyText(lang,"reference")}: {w.id}</p>
           <p className="mt-2 text-xs text-[var(--lx-faint)]">{providerName(w.provider)}{w.provider_currency&&w.provider_currency!==w.currency?` · ${c.original} ${w.provider_currency} ${(Number(w.provider_amount_minor)/100).toFixed(2)}`:""} · {new Date(w.created_at).toLocaleString(lang)}</p>
         </article>)}
       </div>
     </section>
+    <LegacyRefundMigrationPanel/>
   </div>;
 }

@@ -8,7 +8,35 @@ function toDataUrl(file:File){return new Promise<string>((resolve,reject)=>{cons
 async function runtime(){const moduleUrl="/vendor/transformers/transformers.web.js";const m:any=await import(/* webpackIgnore: true */ moduleUrl);if(!m?.env||!m?.pipeline)throw new Error("VISION_RUNTIME_UNAVAILABLE");m.env.allowRemoteModels=false;m.env.allowLocalModels=true;m.env.localModelPath="/models/";if(m.env.backends?.onnx?.wasm){m.env.backends.onnx.wasm.wasmPaths="/vendor/transformers/";m.env.backends.onnx.wasm.numThreads=1;}return m}
 async function food101(){if(food101Promise)return food101Promise;food101Promise=(async()=>{const m=await runtime();return m.pipeline("image-classification","onnx-community/swin-finetuned-food101-ONNX",{dtype:"q4f16",device:"wasm"})})().catch(e=>{food101Promise=null;throw e});return food101Promise}
 async function hasClip(){if(clipAvailable)return clipAvailable;clipAvailable=fetch("/models/Xenova/clip-vit-base-patch32/lingxifield-manifest.json",{cache:"force-cache"}).then(async r=>{if(!r.ok)return false;const m:any=await r.json().catch(()=>null);return Boolean(m?.installed&&m?.variant==="q8-split"&&m?.remoteModels===false)}).catch(()=>false);return clipAvailable}
-async function clip(){if(clipPromise)return clipPromise;clipPromise=(async()=>{if(!await hasClip())throw new Error("CLIP_NOT_INSTALLED");const m=await runtime();return m.pipeline("zero-shot-image-classification","Xenova/clip-vit-base-patch32",{dtype:"q8",device:"wasm"})})().catch(e=>{clipPromise=null;throw e});return clipPromise}
+async function clip(){
+ if(clipPromise)return clipPromise;
+ clipPromise=(async()=>{
+  if(!await hasClip())throw new Error('CLIP_NOT_INSTALLED');
+  const m=await runtime(),model='Xenova/clip-vit-base-patch32',options={dtype:'q8',device:'wasm'};
+  // This pinned distribution contains separate projected encoders, not the
+  // combined model expected by the zero-shot pipeline's default loader.
+  const tokenizer=await m.AutoTokenizer.from_pretrained(model);
+  const processor=await m.AutoProcessor.from_pretrained(model);
+  const textModel=await m.CLIPTextModelWithProjection.from_pretrained(model,options);
+  const visionModel=await m.CLIPVisionModelWithProjection.from_pretrained(model,options);
+  const vocab=[...new Set([...COMMON_FOOD_CANDIDATES,...GLOBAL_VISION_VOCABULARY])].filter(x=>/^[\x20-\x7E]+$/.test(x)).slice(0,300);
+  const vectors:Float32Array[]=[];
+  const normalize=(values:ArrayLike<number>)=>{const a=Float32Array.from(values);const length=Math.sqrt(a.reduce((sum,x)=>sum+x*x,0))||1;return a.map(x=>x/length)};
+  for(let offset=0;offset<vocab.length;offset+=12){
+   const inputs=tokenizer(vocab.slice(offset,offset+12).map(x=>`a photo of ${x}`),{padding:true,truncation:true});
+   const output=await textModel(inputs),width=output.text_embeds.dims[1];
+   for(let row=0;row<output.text_embeds.dims[0];row++)vectors.push(normalize(output.text_embeds.data.slice(row*width,(row+1)*width)));
+  }
+  await textModel.dispose();
+  return async(input:string)=>{
+   const output=await visionModel(await processor(await m.RawImage.read(input)));
+   const image=normalize(output.image_embeds.data);
+   const logits=vectors.map(v=>100*v.reduce((sum,x,i)=>sum+x*image[i],0));
+   const peak=Math.max(...logits),exps=logits.map(x=>Math.exp(x-peak)),sum=exps.reduce((a,b)=>a+b,0);
+   return vocab.map((label,i)=>({label,score:exps[i]/sum})).sort((a,b)=>b.score-a.score);
+  };
+ })().catch(e=>{clipPromise=null;throw e});return clipPromise;
+}
 function norm(raw:any[],source:"food101"|"clip-zero-shot"){return(Array.isArray(raw)?raw:[]).map(x=>({label:alias(String(x.label||"")),score:Number(x.score||0),source})).filter(x=>x.label&&Number.isFinite(x.score)&&x.score>0)}
 async function imageViews(file:File){
  const full=await toDataUrl(file);try{
@@ -25,13 +53,14 @@ function mergeViews(viewRows:FoodVisionPrediction[][]){
 }
 async function classify(input:string,broadView=true){
  let base:FoodVisionPrediction[]=[];try{const basePipe=await food101();base=norm(await basePipe(input,{top_k:8}),"food101")}catch{base=[]}let broad:FoodVisionPrediction[]=[];
- if(broadView&&await hasClip())try{const cp=await clip();const vocab=[...new Set([...COMMON_FOOD_CANDIDATES,...GLOBAL_VISION_VOCABULARY])].filter(x=>/^[\x20-\x7E]+$/.test(x)).slice(0,300);broad=norm(await cp(input,vocab,{hypothesis_template:"a photo of {}"}),"clip-zero-shot").slice(0,18)}catch{broad=[]}
+ if(broadView&&await hasClip())try{const cp=await clip();broad=norm(await cp(input),"clip-zero-shot").slice(0,18)}catch(error){console.warn('Food broad recognition unavailable',error);broad=[]}
+ if(broad.length)base=base.map(x=>({...x,score:x.score*.35}));
  if(!base.length&&!broad.length)throw new Error('VISION_UNAVAILABLE');return[...base,...broad];
 }
 export async function recognizeFoodImage(file:File,country?:string|null):Promise<FoodVisionPrediction[]>{
  if(!file.type.startsWith("image/"))throw new Error("IMAGE_REQUIRED");if(file.size>15*1024*1024)throw new Error("IMAGE_TOO_LARGE");
- const views=await imageViews(file),classified:FoodVisionPrediction[][]=[];for(let i=0;i<views.length;i++)classified.push(await classify(views[i],i===0));
+ const views=await imageViews(file),classified:FoodVisionPrediction[][]=[];for(let i=0;i<views.length;i++)classified.push(await classify(views[i],true));
  const raw=mergeViews(classified),ranked=rerankFoodVision(raw,country);
  return ranked.map(x=>({label:x.label,score:x.score,source:"ensemble",evidence:raw.find(r=>alias(r.label)===alias(x.label))?.evidence||1,requiresConfirmation:true,regionHits:x.regionHits,viewCount:x.viewCount,relativeShare:null}));
 }
-export async function foodVisionCapabilities(){const broadZeroShot=await hasClip();return{food101:true,broadZeroShot,multiViewCrops:true,regionalReranking:true,mixedMealContract:true,portionEvidenceContract:true,calibratedEnsemble:true,remoteModels:false,productionVisionReady:broadZeroShot}}
+export async function foodVisionCapabilities(){const broadZeroShot=await hasClip();return{food101:true,broadZeroShot,multiViewCrops:true,regionalReranking:true,mixedMealContract:true,portionEvidenceContract:false,calibratedEnsemble:false,remoteModels:false,productionVisionReady:false,requiresConfirmation:true}}
