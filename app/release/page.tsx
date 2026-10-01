@@ -1,23 +1,7 @@
-import Link from "next/link";
-import {LINGXIFIELD_RELEASE as R} from "@/lib/release/version";
+import Link from"next/link";import{LINGXIFIELD_RELEASE as R}from"@/lib/release/version";
 export const metadata={title:"版本与更新｜灵犀场 LINGXIFIELD"};
 const card:React.CSSProperties={border:"1px solid rgba(160,132,72,.24)",borderRadius:24,padding:"22px 24px",background:"rgba(255,255,255,.72)",boxShadow:"0 18px 60px rgba(34,29,20,.06)",backdropFilter:"blur(16px)"};
-export default function ReleasePage(){
- return <main style={{minHeight:"70vh",padding:"clamp(36px,7vw,88px) 20px",background:"radial-gradient(circle at 50% 0%,rgba(217,190,119,.15),transparent 36%)"}}>
-  <div style={{maxWidth:920,margin:"0 auto"}}>
-   <p style={{letterSpacing:".18em",fontSize:12,opacity:.58}}>LINGXIFIELD · RELEASE</p>
-   <h1 style={{fontSize:"clamp(32px,6vw,64px)",lineHeight:1.06,margin:"12px 0 14px"}}>版本与更新</h1>
-   <p style={{fontSize:"clamp(17px,2vw,21px)",lineHeight:1.8,opacity:.72,maxWidth:720}}>每一次正式更新，都留下清晰的版本记录。{R.slogan}</p>
-   <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:14,margin:"34px 0"}}>
-    <section style={card}><small style={{opacity:.55}}>网站</small><div style={{fontSize:30,fontWeight:700,marginTop:8}}>v{R.website}</div><p style={{opacity:.62}}>lingxifield.com · lingxifield.cn</p></section>
-    <section style={card}><small style={{opacity:.55}}>微信小程序</small><div style={{fontSize:30,fontWeight:700,marginTop:8}}>v{R.miniProgram}</div><p style={{opacity:.62}}>与本次发布记录同步</p></section>
-   </div>
-   <section style={{...card,padding:"28px clamp(22px,4vw,38px)"}}>
-    <small style={{opacity:.55}}>{R.publishedAt} · {R.release}</small>
-    <h2 style={{fontSize:26,margin:"10px 0 18px"}}>{R.titleZh}</h2>
-    <div style={{display:"grid",gap:12}}>{R.highlightsZh.map((x,i)=><div key={x} style={{display:"flex",gap:12,lineHeight:1.75}}><span style={{opacity:.42}}>{String(i+1).padStart(2,"0")}</span><span>{x}</span></div>)}</div>
-   </section>
-   <div style={{marginTop:26}}><Link href="/" style={{textDecoration:"none",fontWeight:650}}>← 返回灵犀场</Link></div>
-  </div>
- </main>
-}
+export default function ReleasePage(){return <main style={{minHeight:"70vh",padding:"clamp(36px,7vw,88px) 20px",background:"radial-gradient(circle at 50% 0%,rgba(217,190,119,.15),transparent 36%)"}}><div style={{maxWidth:920,margin:"0 auto"}}>
+<p style={{letterSpacing:".18em",fontSize:12,opacity:.58}}>LINGXIFIELD · RELEASE</p><h1 style={{fontSize:"clamp(32px,6vw,64px)",lineHeight:1.06,margin:"12px 0 14px"}}>版本与更新</h1><p style={{fontSize:"clamp(17px,2vw,21px)",lineHeight:1.8,opacity:.72,maxWidth:720}}>每一次正式更新，都留下清晰的版本记录。{R.slogan}</p>
+<div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:14,margin:"34px 0"}}><section style={card}><small style={{opacity:.55}}>网站当前版本</small><div style={{fontSize:30,fontWeight:700,marginTop:8}}>v{R.website}</div><p style={{opacity:.62}}>lingxifield.com · lingxifield.cn</p></section><section style={card}><small style={{opacity:.55}}>微信小程序当前已发布版本</small><div style={{fontSize:30,fontWeight:700,marginTop:8}}>v{R.miniProgram}</div><p style={{opacity:.62}}>仅在小程序正式发布新版时更新</p></section></div>
+<section style={{...card,padding:"28px clamp(22px,4vw,38px)"}}><small style={{opacity:.55}}>{R.publishedAt} · 网站 {R.website}</small><h2 style={{fontSize:26,margin:"10px 0 18px"}}>{R.titleZh}</h2><div style={{display:"grid",gap:12}}>{R.highlightsZh.map((x,i)=><div key={x} style={{display:"flex",gap:12,lineHeight:1.75}}><span style={{opacity:.42}}>{String(i+1).padStart(2,"0")}</span><span>{x}</span></div>)}</div></section><div style={{marginTop:26}}><Link href="/" style={{textDecoration:"none",fontWeight:650}}>← 返回灵犀场</Link></div></div></main>}

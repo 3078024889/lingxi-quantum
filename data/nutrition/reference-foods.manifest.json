@@ -1,0 +1,10 @@
+{
+  "source": "USDA FoodData Central",
+  "license": "CC0-1.0",
+  "url": "https://fdc.nal.usda.gov/download-datasets/",
+  "archive": "FoodData_Central_csv_2026-04-30.zip",
+  "archive_sha256": "c33d91e5c44ddbcd71ed6038714fb648b26089b3f91fabfa3be63d96d5763a01",
+  "records": 13359,
+  "file_sha256": "3f16dc2a24f597239261727d98ca26845283b20b3ef7f5d65d44401231b032fc",
+  "basis": "nutrients per 100 g; original FDC IDs retained; missing measurements remain absent"
+}

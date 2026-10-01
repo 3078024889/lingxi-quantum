@@ -1,0 +1,11 @@
+{
+  "source": "Taiwan Food and Drug Administration",
+  "dataset": "https://data.gov.tw/dataset/8543",
+  "download": "https://data.fda.gov.tw/data/opendata/export/20/json",
+  "license": "Open Government Data License, version 1.0",
+  "license_url": "https://data.gov.tw/license",
+  "archive_sha256": "c1ef5502ceceead6d5ce3b7ee21fe544702b1e508be73b196fce2cf0e61985cb",
+  "records": 2127,
+  "file_sha256": "5165a8b6599aeb11b0beb6d4458c45ff1346285afda62a75559df44408d6cdcd",
+  "basis": "per 100 g; absent measurements omitted; original names preserved; simplified names derived with Windows LCMapStringEx"
+}

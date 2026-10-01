@@ -1,34 +1,18 @@
-﻿param([string]$RepoRoot="D:\lingxi-quantum")
+param([string]$RepoRoot="D:\lingxi-quantum")
 $ErrorActionPreference="Stop"
-function Fail([string]$m){Write-Host "FAIL=$m" -ForegroundColor Red;exit 1}
-Set-Location $RepoRoot
 $dest=Join-Path $RepoRoot "public\models\Xenova\clip-vit-base-patch32"
-$onnx=Join-Path $dest "onnx"
-New-Item -ItemType Directory -Force -Path $onnx|Out-Null
-$base="https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/main"
-$small=@("config.json","merges.txt","preprocessor_config.json","special_tokens_map.json","tokenizer.json","tokenizer_config.json","vocab.json")
-foreach($name in $small){
- $target=Join-Path $dest $name
- if(-not(Test-Path $target)){Invoke-WebRequest -Uri "$base/$name" -OutFile $target -UseBasicParsing}
+New-Item -ItemType Directory -Force -Path (Join-Path $dest "onnx") | Out-Null
+$revision=(Invoke-RestMethod 'https://huggingface.co/api/models/Xenova/clip-vit-base-patch32').sha
+$base="https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/$revision"
+$files=@("config.json","merges.txt","preprocessor_config.json","special_tokens_map.json","tokenizer.json","tokenizer_config.json","vocab.json")
+foreach($name in $files){ & curl.exe -f -L --retry 2 --max-time 120 "$base/$name" -o (Join-Path $dest $name); if($LASTEXITCODE -ne 0){throw "Download failed: $name"} }
+$hashes=@{"text_model_quantized.onnx"="73baab855d406190da9faa498cfedf65f15cf309f4cc7385b7b032e6d08e5c3a";"vision_model_quantized.onnx"="583fd1110a514667812fee7d684952aaf82a99b959760c8d7dca7e0ab9839299"}
+foreach($name in $hashes.Keys){
+ $target=Join-Path $dest "onnx\$name"
+ if(-not(Test-Path -LiteralPath $target)){ & curl.exe -f -L --retry 2 --max-time 300 "$base/onnx/$name" -o $target; if($LASTEXITCODE -ne 0){throw "Download failed: $name"} }
+ if((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hashes[$name]){throw "Hash mismatch: $name"}
 }
-$model=Join-Path $onnx "model_q4f16.onnx"
-if(-not(Test-Path $model)){
- Write-Host "DOWNLOADING_CLIP_Q4F16=~126MB"
- Invoke-WebRequest -Uri "$base/onnx/model_q4f16.onnx" -OutFile $model -UseBasicParsing
-}
-$hash=(Get-FileHash -Algorithm SHA256 -LiteralPath $model).Hash.ToLowerInvariant()
-$expected="0fa5651801a45889d15576d445b23172f706be5b5d17f6d96a61b486cf4a5252"
-if($hash -ne $expected){Remove-Item $model -Force;Fail "CLIP_SHA256_MISMATCH"}
-$manifest=@{
- installed=$true
- model="Xenova/clip-vit-base-patch32"
- task="zero-shot-image-classification"
- file="onnx/model_q4f16.onnx"
- sha256=$expected
- license="MIT model wrapper; upstream OpenAI CLIP weights. Verify redistribution terms before bundling in commercial release."
- source="https://huggingface.co/Xenova/clip-vit-base-patch32"
- installedAt=(Get-Date).ToUniversalTime().ToString("o")
-}|ConvertTo-Json -Depth 4
+$manifest=@{installed=$true;variant="q8-split";remoteModels=$false;revision=$revision;model="Xenova/clip-vit-base-patch32";sha256=$hashes;source="https://huggingface.co/Xenova/clip-vit-base-patch32";license="MIT (OpenAI CLIP)"}|ConvertTo-Json -Depth 4
 [System.IO.File]::WriteAllText((Join-Path $dest "lingxifield-manifest.json"),$manifest,(New-Object System.Text.UTF8Encoding($false)))
+& curl.exe -f -L 'https://raw.githubusercontent.com/openai/CLIP/main/LICENSE' -o (Join-Path $dest 'LICENSE')
 Write-Host "CLIP_FOOD_VISION_INSTALL=PASS"
-Write-Host "MODEL_PATH=$model"

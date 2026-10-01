@@ -1,0 +1,12 @@
+import fs from"node:fs";const r=p=>fs.readFileSync(p,"utf8"),ok=(n,v)=>{console.log(`${n}=${v?"PASS":"FAIL"}`);if(!v)process.exitCode=1};
+const nav=r("components/Nav.tsx"),acc=r("app/account/page.tsx"),portal=r("app/account/support/page.tsx"),manage=r("app/account/support/manage/page.tsx"),api=r("app/api/support/tickets/route.ts"),ort=r("lib/tools/id-photo/modnet-runtime.ts");
+ok("NAV_FEEDBACK_FONT_MATCH",nav.includes('fontSize:14')&&nav.includes('fontWeight:500'));
+ok("ACCOUNT_LITERAL_ESCAPE_REMOVED",!acc.includes("`r`n"));
+ok("ACCOUNT_MY_ISSUES_ENTRY",acc.includes('href="/account/support"'));
+ok("TICKET_VISIBLE_PROGRESS",portal.includes("STEPS")&&portal.includes("已完成")&&portal.includes("谢谢你"));
+ok("TICKET_CONTACT_VISIBLE",portal.includes("联系邮箱")&&api.includes("contact,created_at"));
+ok("SUPPORT_ADMIN_INBOX",manage.includes("问题处理台")&&manage.includes("x.contact"));
+ok("SUPPORT_SIGNED_SCREENSHOTS",api.includes("createSignedUrl"));
+ok("IDPHOTO_MATCHED_ORT_RUNTIME",ort.includes("cdn.jsdelivr.net/npm/onnxruntime-web@")&&ort.includes("proxy=false"));
+ok("FOOD_PROTECTED",process.env.LINGXIFIELD_FOOD_UNCHANGED==="1");
+if(!process.exitCode)console.log("PLATFORM_RECONSTRUCTION=PASS");

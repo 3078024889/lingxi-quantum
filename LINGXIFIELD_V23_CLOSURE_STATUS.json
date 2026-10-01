@@ -1,0 +1,13 @@
+﻿{
+    "generated_at":  "2026-09-30T11:36:22.2475053+08:00",
+    "source_exists":  true,
+    "source_build_pass":  true,
+    "unit_pass":  "NOT_PROVEN",
+    "integration_pass":  "NOT_PROVEN",
+    "database_pass":  "NOT_PROVEN",
+    "browser_e2e_pass":  "NOT_PROVEN",
+    "mobile_pass":  "NOT_PROVEN",
+    "production_pass":  "NOT_PROVEN",
+    "production_db_auto_applied":  false,
+    "git_push_auto":  false
+}

@@ -1,0 +1,194 @@
+[
+  {
+    "path": ".lingxi-backup-global-food-20260929-133655",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-global-food-final-20260929-134558",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v1601-20260929-094932",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v1602-20260929-100708",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v1602-final-20260929-101902",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v2-20260929-115634",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v2-consolidated-20260929-130242",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v2-consolidated-20260929-130318",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v2-consolidated-20260929-130343",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v2-stage2-20260929-122215",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v2-stage3-20260929-124727",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxi-backup-v2-third-master-20260929-131658",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v10-backup-20260930-103039",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v11-backup-20260930-103618",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v12-backup-20260930-103812",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v13-backup-20260930-104021",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v14-backup-20260930-104218",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v15-backup-20260930-104441",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v16-backup-20260930-104731",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v17-backup-20260930-105202",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v18-backup-20260930-105409",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v18-backup-20260930-105615",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v20-backup-20260930-105840",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v21-backup-20260930-110027",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v22-backup-20260930-110213",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v23-1-backup-20260930-111755",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v24-backup-20260930-111955",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v25-backup-20260930-112216",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v26-backup-20260930-112430",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v27-backup-20260930-113603",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v4-backup-20260930-101747",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v5-backup-20260930-102329",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v6-backup-20260930-102531",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v6-backup-20260930-102640",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": ".lingxifield-master-v9-backup-20260930-102900",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": "_local",
+    "reason": "generated, recovery evidence, backup, or link; retained locally",
+    "action": "RETAINED_LOCALLY_EXCLUDED_FROM_EXPORT"
+  },
+  {
+    "path": "imports/skills-devour-2026-09-18/* (six gitlinks)",
+    "reason": "Committed gitlink references remain, embedded repositories not recovered. Not part of verified application build."
+  },
+  {
+    "path": "uncommitted files / local secrets / downloaded models",
+    "reason": "Not all deleted non-Git data is recoverable from main. Do not assume completeness of production credentials or model datasets."
+  },
+  {
+    "path": "historical scripts and generated artifacts",
+    "reason": "Destructive cleanup deferred to preserve incident evidence; no obsolete source removed."
+  }
+]

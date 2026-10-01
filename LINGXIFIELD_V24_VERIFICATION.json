@@ -1,0 +1,16 @@
+﻿{
+    "generated_at":  "2026-09-30T11:36:22.2865443+08:00",
+    "checks":  {
+                   "SOURCE_EXISTS":  true,
+                   "SOURCE_BUILD_PASS":  true,
+                   "REAL_INVENTORY":  true,
+                   "RUNTIME_FILES":  true,
+                   "GATE_FILES":  true,
+                   "MIGRATION_FILES":  true
+               },
+    "local_verification_pass":  true,
+    "database_pass":  "NOT_PROVEN",
+    "browser_e2e_pass":  "NOT_PROVEN",
+    "mobile_pass":  "NOT_PROVEN",
+    "production_pass":  "NOT_PROVEN"
+}

@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-09-30T09:36:49.414Z",
+  "required": {
+    "app": "PASS",
+    "components": "PASS",
+    "lib": "PASS",
+    "supabase/migrations": "PASS",
+    "scripts/final-closure": "PASS",
+    "tests/final-closure/core.spec.ts": "PASS",
+    "tests/final-closure/production.spec.ts": "PASS"
+  },
+  "routes": {
+    "home": {
+      "url": "/",
+      "source": "PASS"
+    },
+    "tools": {
+      "url": "/tools",
+      "source": "PASS"
+    },
+    "sasi": {
+      "url": "/sasi",
+      "source": "PASS"
+    },
+    "products": {
+      "url": "/products",
+      "source": "PASS"
+    },
+    "temp-mail": {
+      "url": "/tools/temp-mail",
+      "source": "PASS"
+    },
+    "video-toolkit": {
+      "url": "/tools/video-toolkit",
+      "source": "PASS"
+    },
+    "video-watermark": {
+      "url": "/tools/video-watermark-remover",
+      "source": "PASS"
+    },
+    "video-transcription": {
+      "url": "/tools/video-transcription",
+      "source": "PASS"
+    }
+  },
+  "gates": {
+    "source": "PASS",
+    "build": "RUN_REQUIRED",
+    "browser": "RUN_REQUIRED",
+    "mobile": "RUN_REQUIRED",
+    "production_public": "RUN_REQUIRED",
+    "database": "PRODUCTION_RECONCILED_EXTERNALLY",
+    "live_payment": "NOT_PROVEN",
+    "live_withdrawal": "NOT_PROVEN"
+  }
+}

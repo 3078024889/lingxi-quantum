@@ -6,7 +6,7 @@ import{isLocalFoodId,calcLocalFood}from"@/lib/tools/food/local-catalog";
 import{isCompositeFoodId,calcCompositeFood}from"@/lib/tools/food/composite-catalog";
 export const runtime="nodejs";type FoodInput={food_id:number;grams:number};const n=(x:any,k:string)=>{const v=x?.nutrients?.[k];return v==null?null:Number(v)};
 function remoteItem(x:any){return{food_id:Number(x.food_id),code:String(x.source_food_id||""),name_zh:String(x.name_zh||x.name_en||""),name_en:String(x.name_en||""),grams:Number(x.grams),kcal:n(x,"energy_kcal"),protein_g:n(x,"protein_g"),carbs_g:n(x,"carbs_g"),fat_g:n(x,"fat_g"),fiber_g:n(x,"fiber_g"),sugar_g:n(x,"sugar_g"),sodium_mg:n(x,"sodium_mg"),nutrients:x.nutrients||{},source:String(x.source_label||x.source_key||"Nutrition database"),provenance:{providerId:String(x.source_key||"nutrition-db"),licenseStatus:"cleared"}}}
-const sum=(xs:any[],k:string)=>xs.some(x=>x[k]!=null)?xs.reduce((a,x)=>a+(x[k]==null?0:Number(x[k])),0):null;
+const sum=(xs:any[],k:string)=>xs.every(x=>x[k]!=null&&Number.isFinite(Number(x[k])))?xs.reduce((a,x)=>a+Number(x[k]),0):null;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const guard=await enforceAbuseGuard(req,{scope:"food-manual-calc",accountLimit:120,ipLimit:180,windowSeconds:3600});if(!guard.ok)return NextResponse.json({error:"TOO_MANY_REQUESTS"},{status:429});

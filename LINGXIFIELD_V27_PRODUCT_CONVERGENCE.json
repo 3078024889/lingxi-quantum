@@ -1,0 +1,21 @@
+﻿{
+    "generated_at":  "2026-09-30T11:36:27.5251039+08:00",
+    "foundation":  "PASS",
+    "product_areas":  {
+                          "PERSON_DNA":  "FOUNDATION_BUILT",
+                          "PROJECT_DNA":  "FOUNDATION_BUILT",
+                          "CREATION_DNA":  "PARTIAL_EXISTING_ENGINES",
+                          "RESULT_DNA":  "FOUNDATION_BUILT",
+                          "LEARNING_DNA":  "FOUNDATION_BUILT",
+                          "DATABASE":  "NOT_PROVEN",
+                          "BROWSER_E2E":  "NOT_PROVEN",
+                          "MOBILE_E2E":  "NOT_PROVEN",
+                          "DUAL_DOMAIN_PRODUCTION":  "PARTIAL_HTTP_ONLY",
+                          "TOOLS_REAL_E2E":  "NOT_PROVEN",
+                          "PAYMENTS":  "NOT_PROVEN",
+                          "WITHDRAWALS":  "NOT_PROVEN",
+                          "I18N_9":  "NOT_PROVEN",
+                          "ARABIC_RTL":  "NOT_PROVEN",
+                          "SECURITY":  "NOT_PROVEN"
+                      }
+}

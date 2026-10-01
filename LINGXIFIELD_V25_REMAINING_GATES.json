@@ -1,0 +1,24 @@
+﻿{
+    "generated_at":  "2026-09-30T11:36:27.4263998+08:00",
+    "remaining_gates":  {
+                            "DATABASE_PASS":  "NOT_PROVEN",
+                            "BROWSER_E2E_PASS":  "PARTIAL_HTTP_ONLY",
+                            "MOBILE_PASS":  "NOT_PROVEN",
+                            "PRODUCTION_PASS":  "PARTIAL_HTTP_ONLY"
+                        },
+    "domain_evidence":  [
+                            {
+                                "url":  "https://lingxifield.com",
+                                "status":  200,
+                                "pass":  true,
+                                "bytes":  56196
+                            },
+                            {
+                                "url":  "https://lingxifield.cn",
+                                "status":  200,
+                                "pass":  true,
+                                "bytes":  56196
+                            }
+                        ],
+    "note":  "HTTP reachability is not browser E2E, mobile E2E, database validation, or full production validation."
+}

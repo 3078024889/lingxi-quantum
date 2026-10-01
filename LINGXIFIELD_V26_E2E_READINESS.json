@@ -1,0 +1,13 @@
+﻿{
+    "generated_at":  "2026-09-30T11:36:27.4644042+08:00",
+    "required_migrations_installed":  true,
+    "missing_migrations":  [
+
+                           ],
+    "production_db_applied":  "NOT_PROVEN",
+    "playwright_available":  false,
+    "browser_e2e_pass":  "NOT_PROVEN",
+    "mobile_pass":  "NOT_PROVEN",
+    "dual_domain_http_pass":  true,
+    "production_pass":  "NOT_PROVEN"
+}

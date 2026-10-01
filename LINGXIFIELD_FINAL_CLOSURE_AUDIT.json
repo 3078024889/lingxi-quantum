@@ -1,0 +1,402 @@
+{
+  "generated_at": "2026-09-30T08:03:22.821Z",
+  "source_files_scanned": 999,
+  "app_pages": 79,
+  "api_routes": 159,
+  "legacy_public_copy_hits": [],
+  "engineering_term_hits": [
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\ConnectionCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\connections\\page.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\operator\\page.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\operator\\page.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\SasiComposer.tsx",
+      "text": "API"
+    },
+    {
+      "file": "app\\sasi\\SasiWorkspace.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\SasiCommandCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\SasiCommandCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\SasiCommandCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\SasiCommandCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\SasiCommandCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\SasiCommandCenter.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\SasiNativeCreatePanel.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\ShareButton.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\ShareButton.tsx",
+      "text": "API"
+    },
+    {
+      "file": "components\\WhyTrustLingxi.tsx",
+      "text": "Vector"
+    },
+    {
+      "file": "lib\\lingxi-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\lingxi-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\lingxi-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\lingxi-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\lingxi-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\public-hub-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\connection-i18n.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\drama-eight-step.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration\\runtime-learning-bridge.ts",
+      "text": "Runtime"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\integration-catalog.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\opendata\\allowlist.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\opendata\\run-ingest.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi\\teachers\\adapter.ts",
+      "text": "Runtime"
+    },
+    {
+      "file": "lib\\sasi\\website-artifact.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\sasi-autonomous\\runtime.ts",
+      "text": "Runtime"
+    },
+    {
+      "file": "lib\\supabase\\admin.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\tools\\qwen-vision.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\wechatpay.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\wechatpay.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\wechatpay.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\wechatpay.ts",
+      "text": "API"
+    },
+    {
+      "file": "lib\\wechatpay.ts",
+      "text": "API"
+    }
+  ],
+  "warning": "Engineering-term hits require UI-context review; backend/internal occurrences are not automatically defects."
+}

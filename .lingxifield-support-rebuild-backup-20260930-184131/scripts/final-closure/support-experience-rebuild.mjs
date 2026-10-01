@@ -1,0 +1,14 @@
+import fs from"node:fs";const r=p=>fs.readFileSync(p,"utf8"),ok=(n,v)=>{console.log(`${n}=${v?"PASS":"FAIL"}`);if(!v)process.exitCode=1};
+const ui=r("components/support/LingxifieldFeedback.tsx"),api=r("app/api/support/tickets/route.ts"),nav=r("components/Nav.tsx"),mig=r("supabase/migrations/20260930003100_support_image_private_storage.sql"),ver=r("lib/release/version.ts");
+ok("SUPPORT_DRAGGABLE_DIALOG",ui.includes("onPointerMove")&&ui.includes('cursor:"move"'));
+ok("SUPPORT_IMAGE_DROP",ui.includes("onDrop")&&ui.includes('type="file"'));
+ok("SUPPORT_IMAGE_PASTE",ui.includes("onPaste"));
+ok("SUPPORT_IMAGE_PREVIEW",ui.includes("<img")&&ui.includes("移除图片"));
+ok("SUPPORT_VISIBLE_FAILURE",ui.includes('role="alert"')&&api.includes("message:"));
+ok("SUPPORT_REAL_SUBMIT",api.includes("formData()")&&api.includes('from("lingxifield_support_tickets")'));
+ok("SUPPORT_PRIVATE_IMAGES",mig.includes("public,false")&&api.includes('storage.from("lingxifield-support")'));
+ok("SUPPORT_EMAIL",ui.includes("support@lingxifield.com")&&api.includes("support@lingxifield.com"));
+ok("SUPPORT_LEFT_NAV",nav.includes("查看处理进度")&&nav.includes("lingxifield:feedback"));
+ok("SUPPORT_NO_FLOATING_LAUNCHER",!ui.includes('position:"fixed",right:18,bottom:18'));
+ok("MINI_PRESERVED",ver.includes('miniProgram:"4.8.6"'));
+if(!process.exitCode)console.log("GRADUATION_SUPPORT_EXPERIENCE=PASS");

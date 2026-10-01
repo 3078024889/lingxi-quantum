@@ -1,0 +1,10 @@
+import fs from"node:fs";const r=p=>fs.readFileSync(p,"utf8"),ok=(n,v)=>{console.log(`${n}=${v?"PASS":"FAIL"}`);if(!v)process.exitCode=1};const api=r("app/api/support/tickets/route.ts"),sig=r("lib/platform/file-signatures.ts"),sp=r("app/account/support/page.tsx"),layout=r("app/layout.tsx"),robots=r("app/robots.ts"),site=r("components/SiteStructuredData.tsx"),foot=r("components/Footer.tsx");
+ok("UPLOAD_MAGIC_BYTES",sig.includes("imageSignatureOk")&&api.includes("INVALID_IMAGE_CONTENT"));
+ok("SUPPORT_PRIVATE_SIGNED_ATTACHMENTS",api.includes("createSignedUrl")&&api.includes('Cache-Control":"private, no-store'));
+ok("SUPPORT_ATTACHMENT_HISTORY",sp.includes("attachmentUrls")&&sp.includes('from"next/image"'));
+ok("SEO_NINE_LANGUAGES",layout.includes('"ar":SITE+"/ar"')&&layout.includes('"ja":SITE+"/ja"'));
+ok("SEO_SITEMAP_ROBOTS",robots.includes("sitemap"));
+ok("STRUCTURED_DATA",site.includes('"@type":"WebSite"')&&site.includes('"@type":"WebApplication"'));
+ok("FOOTER_SINGLE_VERSION",((foot.match(/网站 v/g)||[]).length===1));
+ok("FOOD_PROTECTED_BY_INSTALLER",process.env.LINGXIFIELD_FOOD_UNCHANGED==="1");
+if(!process.exitCode)console.log("NONFOOD_PLATFORM_CLOSURE=PASS");
