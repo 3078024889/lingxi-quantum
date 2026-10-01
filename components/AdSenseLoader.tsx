@@ -16,6 +16,10 @@ function adsDisabledForThisContext() {
       return true;
     }
 
+    if (navigator.webdriver) {
+      return true;
+    }
+
     const ua = navigator.userAgent || "";
     if (/MicroMessenger|miniProgram/i.test(ua)) {
       return true;

@@ -1,0 +1,860 @@
+[
+  {
+    "slug": "audio-transcription",
+    "capabilities": [
+      "media.transcribe"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "avif-to-jpg",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "base64-encode-decode",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "batch-image",
+    "capabilities": [
+      "image.decode",
+      "image.resize",
+      "image.compress",
+      "image.convert",
+      "archive.package"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "batch-image-watermark-remover",
+    "capabilities": [
+      "image.watermark.cleanup",
+      "archive.package"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "burn-after-read",
+    "capabilities": [
+      "privacy.burn-after-read"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "compress-image",
+    "capabilities": [
+      "image.decode",
+      "image.compress",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "compress-image-to-100kb",
+    "capabilities": [
+      "image.decode",
+      "image.compress",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "compress-image-to-200kb",
+    "capabilities": [
+      "image.decode",
+      "image.compress",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "compress-image-to-20kb",
+    "capabilities": [
+      "image.decode",
+      "image.compress",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "compress-image-to-500kb",
+    "capabilities": [
+      "image.decode",
+      "image.compress",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "compress-image-to-50kb",
+    "capabilities": [
+      "image.decode",
+      "image.compress",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "compress-pdf",
+    "capabilities": [
+      "document.compress",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "csv-to-xlsx",
+    "capabilities": [
+      "spreadsheet.csv-read",
+      "spreadsheet.xlsx-write",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "document-copy-layout",
+    "capabilities": [
+      "image.decode",
+      "image.copy-tone",
+      "document.overlay.image",
+      "document.preview",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "docx-to-txt",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "e-sign-pdf",
+    "capabilities": [
+      "document.normalize",
+      "document.page-model",
+      "image.background.prepare",
+      "document.signature.visual",
+      "document.stamp.seam",
+      "document.preview",
+      "export.quote",
+      "export.grant",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "file-compare",
+    "capabilities": [
+      "file.compare"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "file-type-detector",
+    "capabilities": [
+      "file.detect"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "food-calorie",
+    "capabilities": [
+      "ai.nutrition"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "heic-local",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "heic-to-jpg",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "id-photo-ai",
+    "capabilities": [
+      "image.id-photo"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "image-to-pdf",
+    "capabilities": [
+      "image.decode",
+      "document.overlay.image",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "image-to-pdf-pro",
+    "capabilities": [
+      "image.decode",
+      "document.overlay.image",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "image-watermark-remover",
+    "capabilities": [
+      "image.watermark.cleanup"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "jpg-to-png",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "json-formatter",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "long-image",
+    "capabilities": [
+      "image.stitch",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "md5-sha256",
+    "capabilities": [
+      "file.hash"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "merge-pdf",
+    "capabilities": [
+      "document.merge",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "ocr",
+    "capabilities": [
+      "ocr.image"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "pdf-compress",
+    "capabilities": [
+      "document.compress",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-editor",
+    "capabilities": [
+      "document.normalize",
+      "document.page-model",
+      "document.overlay.text",
+      "document.overlay.image",
+      "document.page-rotate",
+      "document.page-select",
+      "document.preview",
+      "export.quote",
+      "export.grant",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "pdf-merge-split",
+    "capabilities": [
+      "document.merge",
+      "document.split",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-ocr",
+    "capabilities": [
+      "ocr.pdf"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "pdf-pages",
+    "capabilities": [
+      "document.page-model",
+      "document.page-select",
+      "document.page-reorder",
+      "document.page-rotate",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-redact",
+    "capabilities": [
+      "privacy.redact.pdf",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-to-jpg",
+    "capabilities": [
+      "document.render-image",
+      "archive.package"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "png-to-jpg",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pptx-to-txt",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "privacy-cleaner",
+    "capabilities": [
+      "image.metadata.strip",
+      "privacy.redact.pdf"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "qr-code-generator",
+    "capabilities": [
+      "qr.generate"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "qr-code-reader",
+    "capabilities": [
+      "qr.read"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "qr-safe-reader",
+    "capabilities": [
+      "qr.safe-inspect"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "remove-duplicate-lines",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "remove-empty-lines",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "remove-exif",
+    "capabilities": [
+      "image.metadata.strip",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "resize-image",
+    "capabilities": [
+      "image.resize",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "screenshot-redact",
+    "capabilities": [
+      "privacy.redact.image",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "split-pdf",
+    "capabilities": [
+      "document.split",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "subtitle-tools",
+    "capabilities": [
+      "media.subtitle.convert"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "subtitle-translate",
+    "capabilities": [
+      "media.subtitle.translate"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "svg-to-png",
+    "capabilities": [
+      "image.svg-render",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "temp-mail",
+    "capabilities": [
+      "privacy.temp-mail"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "text-counter",
+    "capabilities": [
+      "text.count"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "timestamp-converter",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "url-encode-decode",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "video-dubbing",
+    "capabilities": [
+      "media.dub"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "video-toolkit",
+    "capabilities": [
+      "media.ffmpeg",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "video-transcription",
+    "capabilities": [
+      "media.transcribe"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "video-watermark-remover",
+    "capabilities": [
+      "media.watermark.cleanup"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
+    "slug": "webp-to-jpg",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "xlsx-to-csv",
+    "capabilities": [
+      "spreadsheet.xlsx-read",
+      "spreadsheet.csv-write",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  }
+]

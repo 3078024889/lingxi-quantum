@@ -35,7 +35,10 @@
     "test:final-browser": "playwright test -c playwright.final.config.ts",
     "test:final-mobile": "playwright test -c playwright.final.config.ts --project=mobile-chromium",
     "test:final-production": "playwright test -c playwright.production.config.ts",
-    "audit:graduation": "node scripts/final-closure/graduation.mjs"
+    "audit:graduation": "node scripts/final-closure/graduation.mjs",
+    "audit:capability-genome": "node scripts/audit/capability-genome.mjs",
+    "tool:factory": "node scripts/tool-factory/create-tool.mjs",
+    "audit:platform-stability": "node scripts/audit/platform-stability-v13.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",

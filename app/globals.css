@@ -1317,16 +1317,20 @@ html.lx-mini-embed .bg-reading-glass .text-bone-dim { color: #d3dced !important;
   64% { opacity: 0.55; filter: drop-shadow(0 0 1px currentColor); }
   100% { opacity: 0.55; filter: drop-shadow(0 0 1px currentColor); }
 }
-
-[data-lang="en"] { display: none; }
-html.lang-en [data-lang="zh"] { display: none; }
-html.lang-en [data-lang="en"] { display: inline; }
-html.lang-en [data-lang="en"].bi-block { display: block; }
-
 .page-flip {
   animation: pageFlip 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   transform-origin: left center;
 }
+
+
+
+/* LINGXIFIELD language visibility V13 — scoped to body content only. */
+html[data-lang] { display: block !important; visibility: visible !important; }
+body [data-lang="en"] { display: none; }
+html[data-lang="en"] body [data-lang="zh"] { display: none; }
+html[data-lang="en"] body [data-lang="en"] { display: inline; }
+html[data-lang="en"] body [data-lang="en"].bi-block { display: block; }
+
 @keyframes pageFlip {
   0% { opacity: 0; transform: rotateY(6deg) translateX(10px); }
   100% { opacity: 1; transform: rotateY(0deg) translateX(0); }

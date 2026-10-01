@@ -326,7 +326,14 @@ const AR:Partial<Record<Key,string>>={
 const dictionaries:Record<LingxiLang,Partial<Record<Key,string>>>={zh:ZH,en:EN,ja:JA,ko:KO,fr:FR,de:DE,es:ES,pt:PT,ar:AR};
 export function tr(lang:LingxiLang,key:Key){return dictionaries[lang][key]??EN[key]??ZH[key]}
 export function setLingxiLang(lang:LingxiLang){
- localStorage.setItem("lx-lang",lang);document.documentElement.lang=lang==="zh"?"zh-CN":lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";document.documentElement.dataset.lang=lang;document.documentElement.classList.toggle("lang-en",lang!=="zh");window.dispatchEvent(new CustomEvent("lingxi:lang",{detail:lang}));
+ const safe: LingxiLang = LANG_NAMES[lang] ? lang : "zh";
+ try{localStorage.setItem("lx-lang",safe)}catch{}
+ const root=document.documentElement;
+ root.lang=safe==="zh"?"zh-CN":safe;
+ root.dir=safe==="ar"?"rtl":"ltr";
+ root.dataset.lang=safe;
+ root.classList.remove("lang-en");
+ window.dispatchEvent(new CustomEvent("lingxi:lang",{detail:safe}));
 }
 export function useLingxiLang(){
  const[lang,setLangState]=useState<LingxiLang>("zh");
