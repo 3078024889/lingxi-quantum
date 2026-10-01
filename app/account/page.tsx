@@ -33,7 +33,7 @@ const T={
 };
 
 export default async function AccountPage(
-  props: { searchParams?: Promise<{ next?: string; auth_error?: string; mode?: string }> }
+  props: { searchParams?: Promise<{ next?: string; auth_error?: string; mode?: string; email?: string }> }
 ) {
   const searchParams = await props.searchParams;
   const requestedNext = typeof searchParams?.next === "string" ? searchParams.next : null;
@@ -46,7 +46,8 @@ export default async function AccountPage(
       : "/products";
 
   const authError=typeof searchParams?.auth_error==="string"?searchParams.auth_error:"";
-  const initialMode=searchParams?.mode==="signup"?"signup":"signin";
+  const initialMode=searchParams?.mode==="verify"?"verify":searchParams?.mode==="signup"?"signup":"signin";
+  const initialEmail=typeof searchParams?.email==="string"?searchParams.email.slice(0,320):"";
 
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
   const user = supabase ? await getServerUser(supabase) : null;
@@ -89,7 +90,7 @@ export default async function AccountPage(
           <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]">{T.signKicker}</p>
           <h1 className="mt-4 font-display text-3xl text-[var(--lx-ink)]">{T.signTitle}</h1>
           <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]">{T.signDesc}</p>
-          <div className="mt-8"><LoginForm afterAuthPath={afterAuthPath} initialMode={initialMode} serverError={authError}/></div>
+          <div className="mt-8"><LoginForm afterAuthPath={afterAuthPath} initialMode={initialMode} serverError={authError} initialEmail={initialEmail}/></div>
         </div>}
       </section>
     </main>

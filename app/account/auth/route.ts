@@ -1,99 +1,42 @@
-import { NextRequest,NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { isSameOriginMutation } from "@/lib/sasi/request-security";
-
-export const runtime="nodejs";
-export const dynamic="force-dynamic";
-
-function safeNext(value:FormDataEntryValue|null){
-  const v=String(value||"");
-  return v.startsWith("/")&&!v.startsWith("//")&&!v.includes("\\")&&v.length<=512?v:"/products";
+import{NextRequest,NextResponse}from"next/server";import{createClient}from"@/lib/supabase/server";import{createAdminClient}from"@/lib/supabase/admin";import{isSameOriginMutation}from"@/lib/sasi/request-security";
+export const runtime="nodejs";export const dynamic="force-dynamic";
+function safeNext(v:FormDataEntryValue|null){const s=String(v||"");return s.startsWith("/")&&!s.startsWith("//")&&!s.includes("\\")&&s.length<=512?s:"/products"}
+function redirect(location:string){return new NextResponse(null,{status:303,headers:{Location:location,"Cache-Control":"no-store"}})}
+function loc(code:string,mode:string,next:string,email=""){return`/account?${new URLSearchParams({auth_error:code,mode,next,...(email?{email}:{})}).toString()}`}
+function esc(s:string){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!))}
+async function sendCode(email:string,code:string,name:string){
+ const key=process.env.RESEND_API_KEY;if(!key)return{ok:false,reason:"RESEND_API_KEY_MISSING"};
+ const from=process.env.LINGXIFIELD_AUTH_FROM_EMAIL||"灵犀场 <account@lingxifield.com>";
+ try{const r=await fetch("https://api.resend.com/emails",{method:"POST",headers:{authorization:`Bearer ${key}`,"content-type":"application/json"},body:JSON.stringify({from,to:[email],subject:`${code} · 灵犀场邮箱验证码`,html:`<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:28px"><div style="font-size:12px;color:#888;letter-spacing:.12em">LINGXIFIELD</div><h2 style="margin:14px 0">验证你的邮箱</h2><p>${esc(name||"你好")}，欢迎来到灵犀场。</p><p>请回到注册页面输入下面的验证码：</p><div style="font-size:34px;font-weight:700;letter-spacing:.18em;padding:18px 0">${esc(code)}</div><p style="color:#777;font-size:13px">如果不是你本人发起注册，可以忽略这封邮件。</p></div>`})});return{ok:r.ok,reason:r.ok?"":`HTTP_${r.status}`}}catch{return{ok:false,reason:"SEND_FAILED"}}
 }
-function redirect(location:string){
-  return new NextResponse(null,{status:303,headers:{Location:location,"Cache-Control":"no-store"}});
-}
-function errorLocation(code:string,mode:string,next:string){
-  return `/account?${new URLSearchParams({auth_error:code,mode,next}).toString()}`;
-}
-function originOf(req:NextRequest){
-  const proto=(req.headers.get("x-forwarded-proto")||"https").split(",")[0].trim();
-  const host=(req.headers.get("x-forwarded-host")||req.headers.get("host")||"lingxifield.com").split(",")[0].trim();
-  return `${proto}://${host}`;
-}
-
 export async function POST(req:NextRequest){
-  if(!isSameOriginMutation(req)){
-    return redirect("/account?auth_error=origin");
+ if(!isSameOriginMutation(req))return redirect("/account?auth_error=origin");
+ const f=await req.formData().catch(()=>null);if(!f)return redirect("/account?auth_error=request");
+ const mode=String(f.get("mode")||"signin"),email=String(f.get("email")||"").trim().toLowerCase(),next=safeNext(f.get("next"));
+ if(!/^\S+@\S+\.\S+$/.test(email))return redirect(loc("email",mode,next,email));
+ try{
+  const supabase=createClient();
+  if(mode==="verify"){
+   const token=String(f.get("token")||"").replace(/\D/g,"");
+   if(!/^\d{6,8}$/.test(token))return redirect(loc("code_invalid","verify",next,email));
+   const{error}=await supabase.auth.verifyOtp({email,token,type:"email"});
+   return error?redirect(loc("code_invalid","verify",next,email)):redirect(next);
   }
-
-  const form=await req.formData().catch(()=>null);
-  if(!form)return redirect("/account?auth_error=request");
-
-  const mode=String(form.get("mode")||"signin")==="signup"?"signup":"signin";
-  const email=String(form.get("email")||"").trim().toLowerCase();
-  const password=String(form.get("password")||"");
-  const displayName=String(form.get("displayName")||"").trim();
-  const next=safeNext(form.get("next"));
-
-  if(!/^\S+@\S+\.\S+$/.test(email))return redirect(errorLocation("email",mode,next));
-  if(password.length<8)return redirect(errorLocation("password",mode,next));
-  if(mode==="signup"&&(displayName.length<2||displayName.length>24))return redirect(errorLocation("name",mode,next));
-
-  try{
-    const supabase=createClient();
-
-    if(mode==="signup"){
-      const confirmUrl=new URL("/auth/confirm",originOf(req));
-      confirmUrl.searchParams.set("next",next);
-
-      const {data,error}=await supabase.auth.signUp({
-        email,
-        password,
-        options:{
-          data:{display_name:displayName},
-          emailRedirectTo:confirmUrl.toString(),
-        },
-      });
-
-      if(error){
-        const code=/already registered|User already registered/i.test(error.message)?"registered":"service";
-        return redirect(errorLocation(code,"signup",next));
-      }
-
-      // Hosted Auth must require email confirmation. If signUp returns a live session,
-      // confirmation is disabled. Fail closed and remove this just-created account so
-      // an unverified email can never become a usable account by accident.
-      if(data.session){
-        try{
-          await supabase.auth.signOut({scope:"global"});
-          if(data.user?.id){
-            await createAdminClient().auth.admin.deleteUser(data.user.id);
-          }
-        }catch{}
-        return redirect(errorLocation("verification_config","signup",next));
-      }
-
-      return redirect(errorLocation("check_email","signin",next));
-    }
-
-    const {data,error}=await supabase.auth.signInWithPassword({email,password});
-    if(error){
-      const code=/Email not confirmed/i.test(error.message)
-        ?"email_unconfirmed"
-        :/Invalid login credentials/i.test(error.message)
-          ?"credentials"
-          :"service";
-      return redirect(errorLocation(code,"signin",next));
-    }
-
-    if(!data.user?.email_confirmed_at){
-      await supabase.auth.signOut({scope:"global"});
-      return redirect(errorLocation("email_unconfirmed","signin",next));
-    }
-
-    return redirect(next);
-  }catch{
-    return redirect(errorLocation("service",mode,next));
+  const password=String(f.get("password")||"");if(password.length<8)return redirect(loc("password",mode,next,email));
+  if(mode==="signup"){
+   const displayName=String(f.get("displayName")||"").trim();if(displayName.length<2||displayName.length>24)return redirect(loc("name","signup",next,email));
+   const admin=createAdminClient();
+   const{data,error}=await admin.auth.admin.generateLink({type:"signup",email,password,options:{data:{display_name:displayName}}});
+   if(error){const c=/already|registered|exists/i.test(error.message)?"registered":"service";return redirect(loc(c,"signup",next,email))}
+   const otp=String((data.properties as any)?.email_otp||"");
+   if(!/^\d{6,8}$/.test(otp)){if(data.user?.id)await admin.auth.admin.deleteUser(data.user.id).catch(()=>{});return redirect(loc("service","signup",next,email))}
+   const sent=await sendCode(email,otp,displayName);
+   if(!sent.ok){if(data.user?.id)await admin.auth.admin.deleteUser(data.user.id).catch(()=>{});return redirect(loc("email_delivery","signup",next,email))}
+   return redirect(loc("code_sent","verify",next,email));
   }
+  const{data,error}=await supabase.auth.signInWithPassword({email,password});
+  if(error){const c=/Email not confirmed/i.test(error.message)?"email_unconfirmed":/Invalid login credentials/i.test(error.message)?"credentials":"service";return redirect(loc(c,"signin",next,email))}
+  if(!data.user?.email_confirmed_at){await supabase.auth.signOut({scope:"global"});return redirect(loc("email_unconfirmed","signin",next,email))}
+  return redirect(next);
+ }catch{return redirect(loc("service",mode,next,email))}
 }
