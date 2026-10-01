@@ -24,7 +24,7 @@ export async function POST(req:NextRequest){
   const supabase=createClient();
   if(mode==="verify"){
    const token=String(f.get("token")||"").replace(/\D/g,"");
-   if(!/^\d{6,8}$/.test(token))return redirect(loc("code_invalid","verify",next,email));
+   if(!/^\d{4,8}$/.test(token))return redirect(loc("code_invalid","verify",next,email));
    const{error}=await supabase.auth.verifyOtp({email,token,type:"email"});
    return error?redirect(loc("code_invalid","verify",next,email)):redirect(next);
   }
