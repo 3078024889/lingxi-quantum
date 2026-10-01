@@ -56,7 +56,13 @@
     "audit:syntax": "node scripts/audit/audit-script-syntax.mjs",
     "audit:v27-old-cleanup": "node scripts/audit/v27-old-code-cleanup.mjs",
     "audit:v28-install": "node scripts/audit/v28-install-robustness.mjs",
-    "audit:v29-installer-contract": "node scripts/audit/v29-installer-contract.mjs"
+    "audit:v29-installer-contract": "node scripts/audit/v29-installer-contract.mjs",
+    "ci:baseline": "node scripts/ci/clean-baseline.mjs",
+    "ci:source": "node scripts/ci/production-gate.mjs",
+    "ci:desktop": "playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1",
+    "ci:mobile": "playwright test -c playwright.final.config.ts --project=mobile-chromium --workers=1",
+    "ci:playwright-contract": "node scripts/ci/playwright-contract.mjs",
+    "ci:production": "pnpm ci:baseline && pnpm ci:source && pnpm ci:playwright-contract && pnpm build && pnpm ci:desktop && pnpm ci:mobile"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",

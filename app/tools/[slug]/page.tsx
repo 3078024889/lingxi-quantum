@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import ToolShell from "@/components/tools/ToolShell";
 import ToolWorkbench from "@/components/tools/ToolWorkbench";
 import { getTool, TOOLS } from "@/lib/tools/registry";
+import {buildToolMetadata} from '@/lib/tools/seo';
+import ToolGuide from '@/components/seo/ToolGuide';
 import type { BilingualFaqItem } from "@/components/FaqSection";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -16,17 +18,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const tool = getTool(params.slug);
   if (!tool) return { title: "Tool not found｜工具未找到" };
-  return {
-    title: `${tool.titleZh}｜${tool.titleEn}`,
-    description: tool.oneLinerZh,
-    alternates: { canonical: `/tools/${tool.slug}` },
-    openGraph: {
-      images: [{ url: "/og-lingxifield-20260928.png", width: 1200, height: 630, alt: "LINGXIFIELD SASI · 灵犀场" }],
-      title: tool.titleZh,
-      description: tool.oneLinerZh,
-      url: `/tools/${tool.slug}`,
-    },
-  };
+  return buildToolMetadata(tool.slug);
 }
 
 function faqFor(slug: string): BilingualFaqItem[] {
@@ -69,6 +61,7 @@ export default async function ToolSlugPage(props: Props) {
           <ToolWorkbench tool={tool} />
         </ToolShell>
       </div>
+      <ToolGuide slug={tool.slug}/>
     </>
   );
 }

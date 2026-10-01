@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {privateSearchPath} from '@/lib/seo/indexing';
 
 const RETIRED_EXACT=new Set([
  "/explore","/learn","/glossary","/live-as","/subconscious","/practice","/field-tests",
@@ -50,6 +51,7 @@ export async function middleware(request:NextRequest){
  if(pathname.startsWith("/api/"))return NextResponse.next({request});
 
  let response=NextResponse.next({request});
+ if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
  if(requestHostname==="lingxifield.cn"){
   response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
  }
@@ -64,6 +66,7 @@ export async function middleware(request:NextRequest){
    setAll(cookiesToSet){
     cookiesToSet.forEach(({name,value})=>request.cookies.set(name,value));
     response=NextResponse.next({request});
+    if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
     if(requestHostname==="lingxifield.cn")response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
     cookiesToSet.forEach(({name,value,options})=>response.cookies.set(name,value,options));
    },

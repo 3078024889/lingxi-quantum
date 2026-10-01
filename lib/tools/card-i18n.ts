@@ -19,6 +19,7 @@ export const TOOL_UI={
 };
 
 const TITLES:Record<string,Partial<T>>={
+"image-translator":L("图片翻译","Image Translator","画像翻訳","이미지 번역","Traduction d’images","Bildübersetzung","Traductor de imágenes","Tradutor de imagens","ترجمة الصور"),
 "text-counter":L("字数与字符统计","Text Counter","文字数・文字統計","글자·문자 수","Compteur de texte","Textzähler","Contador de texto","Contador de texto","عداد النص"),
 "remove-duplicate-lines":L("文本去重行","Remove Duplicate Lines","重複行を削除","중복 줄 제거","Supprimer les lignes en double","Doppelte Zeilen entfernen","Eliminar líneas duplicadas","Remover linhas duplicadas","إزالة الأسطر المكررة"),
 "remove-empty-lines":L("删除空白行","Remove Empty Lines","空行を削除","빈 줄 제거","Supprimer les lignes vides","Leere Zeilen entfernen","Eliminar líneas vacías","Remover linhas vazias","إزالة الأسطر الفارغة"),

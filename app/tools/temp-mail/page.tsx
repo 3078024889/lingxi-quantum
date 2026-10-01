@@ -1,3 +1,4 @@
+import {languageAlternates} from "@/lib/seo/global-seo";
 import type { Metadata } from "next";
 import TempMailWorkbench from "@/components/tools/TempMailWorkbench";
 import ToolVisualStory from "@/components/tools/ToolVisualStory";
@@ -5,7 +6,7 @@ import ToolVisualStory from "@/components/tools/ToolVisualStory";
 export const metadata:Metadata={
  title:"临时邮箱｜即开即用、接收验证码与临时通知｜灵犀场",
  description:"灵犀场临时邮箱用于短期注册、验证码、下载链接和一次性通知。生成后直接收信，不必暴露常用邮箱；重要账号仍建议使用长期邮箱。",
- alternates:{canonical:"/tools/temp-mail"},
+ alternates:{canonical:"/tools/temp-mail",languages:languageAlternates("/tools/temp-mail")} ,
 };
 
 const images=Array.from({length:9},(_,i)=>({

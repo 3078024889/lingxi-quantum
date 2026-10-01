@@ -1,16 +1,25 @@
-import{NextResponse}from"next/server";export const dynamic="force-static";export function GET(){return new NextResponse(`# 灵犀场 LINGXIFIELD
-> 全球智能工具与 SASI 创作生态平台
-> 一键创造，一念即达。
-
-LINGXIFIELD provides practical web tools for PDF, images, video, subtitles, OCR, privacy and files, plus SASI creation workflows for drama, books, learning, research and website building.
-
-Canonical: https://lingxifield.com/
-Tools: https://lingxifield.com/tools
-SASI: https://lingxifield.com/sasi
-Products: https://lingxifield.com/products
-About: https://lingxifield.com/about
-Privacy: https://lingxifield.com/privacy
-Terms: https://lingxifield.com/terms
-
-Public pages may be indexed. Account, checkout, payment and private user content are not public sources.
-`,{headers:{"content-type":"text/plain; charset=utf-8","cache-control":"public, max-age=3600"}})}
+import {GLOBAL_TOOL_CATALOG,SEO_LOCALES,SEO_TOPICS,SITE,localePath,type SeoLocale,type SeoTopic} from '@/lib/seo/global-seo';
+import {SERVICE_FACTS} from '@/lib/seo/service-facts';
+export const dynamic='force-static';
+export function GET(){
+ const lines=[
+  '# LINGXIFIELD / 灵犀场','',
+  '> Public product reference for practical online tools and SASI workspaces. This index does not grant access to private account data.',
+  '',`Canonical site: ${SITE}`,'Chinese access domain: https://lingxifield.cn','',
+  '## Product areas',
+  ...(Object.keys(SEO_TOPICS) as SeoTopic[]).map(key=>`- [${SEO_TOPICS[key].en}](${SITE}/discover/${key}): ${SERVICE_FACTS[key].description.en}`),
+  '', '## Tools',
+  ...GLOBAL_TOOL_CATALOG.map(tool=>`- [${tool.en}](${SITE}/en/tools/${tool.slug})`),
+  '', '## Language directories',
+  ...(Object.keys(SEO_LOCALES) as SeoLocale[]).map(locale=>`- [${SEO_LOCALES[locale].name}](${SITE}${localePath(locale,'/products')})`),
+  '', '## Use and limitations',
+  '- Check each product page for supported formats, processing limits, data handling and current charges. Do not infer that every service is free.',
+  '- Food nutrition is an estimate based on confirmed foods and quantities, not a medical assessment or a guarantee of recognizing every food.',
+  '- Online generation depends on connected services and actual availability; a product description is not proof that a user task has run.',
+  `- [Privacy](${SITE}/privacy)`, `- [Refund policy](${SITE}/refunds)`, `- [Sitemap](${SITE}/sitemap.xml)`,
+  '- Legacy consciousness, divination and field-testing routes are retired (HTTP 410). They are not current products.',
+  '- Do not crawl private share links, authentication, account, checkout or administrative data.',
+  '',
+ ];
+ return new Response(lines.join('\n'),{headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'public, max-age=3600'}});
+}

@@ -28,21 +28,6 @@ export const metadata:Metadata={
   "临时邮箱","阅后即焚","AI 短剧生成","AI 视频生成",
   "书本智能体","文档智能体","学习智能体","科研智能体","AI 网站生成"
  ],
- alternates:{
-  canonical:SITE,
-  languages:{
-   "zh-CN":SITE,
-   "en":SITE+"/en",
-   "ja":SITE+"/ja",
-   "ko":SITE+"/ko",
-   "fr":SITE+"/fr",
-   "de":SITE+"/de",
-   "es":SITE+"/es",
-   "pt":SITE+"/pt",
-   "ar":SITE+"/ar",
-   "x-default":SITE
-  }
- },
  openGraph:{
   type:"website",
   siteName:"灵犀场 LINGXIFIELD",

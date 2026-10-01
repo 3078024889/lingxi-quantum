@@ -1,3 +1,4 @@
+import {languageAlternates} from "@/lib/seo/global-seo";
 import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import IdPhotoAiWorkbench from"@/components/tools/IdPhotoAiWorkbench";import ToolVisualStory from"@/components/tools/ToolVisualStory";
-export const metadata:Metadata={title:"AI证件照｜换底色、常用尺寸与高清保存｜灵犀场",description:"上传正面照片，选择白底、蓝底、红底或灰底，调整常用证件照尺寸和人物位置，并保存标准照片或高清照片。",alternates:{canonical:"/tools/id-photo-ai"}};
+export const metadata:Metadata={title:"AI证件照｜换底色、常用尺寸与高清保存｜灵犀场",description:"上传正面照片，选择白底、蓝底、红底或灰底，调整常用证件照尺寸和人物位置，并保存标准照片或高清照片。",alternates:{canonical:"/tools/id-photo-ai",languages:languageAlternates("/tools/id-photo-ai")} };
 export default function Page(){return <AdvancedToolPage title="AI证件照" intro="上传一张清晰正面照片，选择底色和尺寸，调整到满意的位置后直接保存。"><IdPhotoAiWorkbench/><ToolVisualStory eyebrow="LINGXIFIELD · ID PHOTO" title="一张照片，整理成更合适的证件照。" intro="白底、蓝底、红底与常用尺寸都可以直接选择；人物大小和位置也能继续微调。" images={[{src:"/images/tool-stories/id-photo/id-photo-01.webp",alt:"灵犀场 AI 证件照尺寸与底色说明"}]}/></AdvancedToolPage>}

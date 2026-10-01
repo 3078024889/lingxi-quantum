@@ -1,2 +1,13 @@
-import type{MetadataRoute}from"next";import{GLOBAL_TOOL_CATALOG,SEO_LOCALES,localePath}from"@/lib/seo/global-seo";const BASE="https://lingxifield.com";
-export default function sitemap():MetadataRoute.Sitemap{const now=new Date(),rows:MetadataRoute.Sitemap=[];for(const locale of Object.keys(SEO_LOCALES) as Array<keyof typeof SEO_LOCALES>){for(const p of["/","/tools","/sasi","/ai-knowledge","/ai-learning","/ai-research"]){rows.push({url:BASE+localePath(locale,p),lastModified:now,changeFrequency:p==="/"?"daily":"weekly",priority:p==="/"?1:.8})}for(const t of GLOBAL_TOOL_CATALOG){rows.push({url:BASE+localePath(locale,`/tools/${t.slug}`),lastModified:now,changeFrequency:"monthly",priority:.7})}}return rows}
+import type {MetadataRoute} from 'next';
+import {GLOBAL_TOOL_CATALOG,SEO_LOCALES,SEO_TOPICS,SITE,localePath,languageAlternates,type SeoLocale} from '@/lib/seo/global-seo';
+export default function sitemap():MetadataRoute.Sitemap{
+ const paths=['/','/products','/tools',...GLOBAL_TOOL_CATALOG.map(t=>`/tools/${t.slug}`),...Object.keys(SEO_TOPICS).map(topic=>`/discover/${topic}`)];
+ const rows:MetadataRoute.Sitemap=[];
+ for(const path of paths){
+  const languages=Object.fromEntries(Object.entries(languageAlternates(path)).map(([lang,url])=>[lang,SITE+url]));
+  for(const locale of Object.keys(SEO_LOCALES) as SeoLocale[]){rows.push({url:SITE+localePath(locale,path),alternates:{languages}})}
+ }
+ // Workspaces exist at these URLs, not at invented locale prefixes.
+ for(const path of ['/sasi','/sasi/drama','/sasi/build','/sasi/image','/sasi/pricing','/ai-knowledge','/ai-learning','/ai-research','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])rows.push({url:SITE+path});
+ return rows;
+}

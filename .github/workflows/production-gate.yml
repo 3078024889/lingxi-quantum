@@ -1,0 +1,80 @@
+name: LINGXIFIELD Production Gate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lingxifield-production-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  production-gate:
+    name: production-gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.28.0
+          run_install: false
+
+      - name: Use pinned Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Show toolchain
+        run: |
+          node --version
+          pnpm --version
+
+      - name: Frozen dependency install
+        run: pnpm install --frozen-lockfile
+
+      - name: Clean baseline audit
+        run: pnpm ci:baseline
+
+      - name: Source and product gates
+        run: pnpm ci:source
+
+      - name: Playwright import/dependency contract
+        run: pnpm ci:playwright-contract
+
+      - name: Production build
+        run: pnpm build
+
+      - name: Install Chromium runtime
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Desktop closure
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1
+
+      - name: Mobile closure
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=mobile-chromium --workers=1
+
+      - name: Upload Playwright evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: lingxifield-playwright-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore

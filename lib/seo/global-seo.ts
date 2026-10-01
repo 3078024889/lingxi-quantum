@@ -1,3 +1,5 @@
+import {toolTitle as translatedToolTitle} from '@/lib/tools/card-i18n';
+import {toolFacts} from './product-facts';
 export const SITE="https://lingxifield.com";
 export const SEO_LOCALES={  "zh":{
     hreflang:"zh-CN",name:"中文",dir:"ltr",
@@ -191,22 +193,18 @@ const HOT_TOOL_TERMS:Record<string,string[]>= {
 };
 
 export function toolKeywords(locale:SeoLocale,tool:GlobalTool){
-  const c=SEO_LOCALES[locale];
-  const base=[tool.zh,tool.en,tool.slug.replaceAll("-"," "),...c.searchTerms];
+  const base=[toolTitle(locale,tool),tool.en,tool.slug.replaceAll("-"," ")];
   return Array.from(new Set([...base,...(HOT_TOOL_TERMS[tool.slug]||[])]));
 }
 
 export function toolTitle(locale:SeoLocale,tool:GlobalTool){
-  if(locale==="zh")return tool.zh;
-  if(locale==="en")return tool.en;
-  return `${tool.en} · ${SEO_LOCALES[locale].toolsTitle}`;
+  return translatedToolTitle(locale,tool.slug,locale==='zh'?tool.zh:tool.en);
 }
 
 export function toolDescription(locale:SeoLocale,tool:GlobalTool){
   const c=SEO_LOCALES[locale];
   const name=toolTitle(locale,tool);
-  if(locale==="zh")return `${name}：在线完成所需处理，直接查看并保存结果。${tool.mode==="local"?c.local:c.online}`;
-  return `${name}. ${c.toolsDesc} ${tool.mode==="local"?c.local:c.online}`;
+  return `${name} — ${toolFacts(tool.slug,locale).summary}`;
 }
 
 export function topicTitle(locale:SeoLocale,topic:SeoTopic){
