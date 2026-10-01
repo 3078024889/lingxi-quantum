@@ -14,7 +14,7 @@ export const metadata:Metadata={
   "免费在线工具","PDF压缩","PDF合并","PDF拆分","图片压缩","视频转文字","OCR",
   "AI 短剧生成","书本智能体","文档智能体","学习智能体","科研智能体","AI 网站生成"
  ],
- alternates:{canonical:"/",languages:languageAlternates("/")} 
+ alternates:{canonical:"/",languages:languageAlternates("/")}
 };
 
 export default function Home(){return <><Nav/><HomeProblemHub/><Footer/></>;}
