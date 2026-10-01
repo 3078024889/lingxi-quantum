@@ -5,8 +5,9 @@ import {useSearchParams} from "next/navigation";
 import QRCode from "qrcode";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {accountText} from "@/lib/account-experience-i18n";
+import {foodBillingText} from '@/lib/tools/food/billing-copy';
 
-type Quote={id:string;quantity:number;unit_name:string;display_currency:"CNY"|"USD";display_amount:number;currency:"CNY"|"USD";expires_at?:string};
+type Quote={id:string;tool_id?:string;metadata?:{foodRequestId?:string};quantity:number;unit_name:string;display_currency:"CNY"|"USD";display_amount:number;currency:"CNY"|"USD";expires_at?:string};
 type Providers={wechat:boolean;alipay:boolean;paypal:boolean};type Provider=keyof Providers;
 type CreatePaymentResponse={paid?:boolean;url?:string;codeUrl?:string;jsapi?:Record<string,unknown>;error?:string};
 type WeixinBridge={invoke:(name:string,payload:Record<string,unknown>,cb:(res:{err_msg?:string})=>void)=>void};
@@ -16,7 +17,9 @@ function safeReturn(value:string|null){if(!value||!value.startsWith("/")||value.
 
 function Inner(){
  const{lang}=useLingxiLang(),t=(k:string)=>accountText(lang,k),zh=lang==="zh",sp=useSearchParams()??new URLSearchParams(),quoteId=sp.get("quoteId")||"";
- const[q,setQ]=useState<Quote|null>(null),[err,setErr]=useState(""),[busy,setBusy]=useState(false),[qr,setQr]=useState(""),[paid,setPaid]=useState(false),[providers,setProviders]=useState<Providers>({wechat:false,alipay:false,paypal:false}),returnTo=safeReturn(sp.get("return"));
+ const[q,setQ]=useState<Quote|null>(null),[err,setErr]=useState(""),[busy,setBusy]=useState(false),[qr,setQr]=useState(""),[paid,setPaid]=useState(false),[providers,setProviders]=useState<Providers>({wechat:false,alipay:false,paypal:false});
+ const foodReturn=q?.tool_id==='food-calorie'&&UUID.test(q.metadata?.foodRequestId||'')?`/tools/food-calorie?resumeDraft=${q.metadata!.foodRequestId}&resumeQuote=${quoteId}`:null;
+ const returnTo=safeReturn(sp.get('return')||foodReturn);
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),isWechat=typeof navigator!=="undefined"&&/MicroMessenger/i.test(navigator.userAgent),code=sp.get("code")||undefined,state=sp.get("state")||undefined,valid=UUID.test(quoteId);
 
  async function refresh(){if(!valid)return;const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(quoteId)}`,{cache:"no-store"});if(!r.ok)return;const d=await r.json() as{paid?:boolean};if(d.paid){setPaid(true);if(timer.current){clearInterval(timer.current);timer.current=null}}}
@@ -56,7 +59,7 @@ function Inner(){
  return <div className="mx-auto max-w-xl px-6 py-20 text-[var(--lx-ink)]">
   <h1 className="text-3xl font-semibold">{t("payTitle")}</h1>
   {q&&<div className="mt-6 rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-   <div className="text-sm text-[var(--lx-muted)]">{t("actualQty")}：{q.quantity} {q.unit_name}</div>
+   <div className="text-sm text-[var(--lx-muted)]">{t("actualQty")}：{q.quantity} {q.tool_id==='food-calorie'?foodBillingText(lang,q.unit_name==='food'?'foodUnit':'imageUnit'):q.unit_name}</div>
    <div className="mt-3 text-3xl font-semibold">{amount(q)}</div>
    <div className="mt-2 text-xs text-[var(--lx-faint)]">{zh?"支付币种":"Payment currency"} · {q.currency}</div>
    {q.currency==="CNY"?<div className="mt-6 grid gap-3 sm:grid-cols-2">

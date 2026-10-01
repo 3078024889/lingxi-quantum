@@ -17,6 +17,12 @@ terms.set('heidelbeere','blueberries');terms.set('heidelbeeren','blueberries');
 for(const f of COMMON_FOOD_VOCABULARY){terms.set(normalizeAlias(f.zh),f.label);}
 for(const f of GLOBAL_FOOD_IDENTITIES)for(const a of f.aliases)if(!terms.has(normalizeAlias(a)))terms.set(normalizeAlias(a),f.names.en.split('/')[0].trim());
 const index=(records as Reference[]).map(food=>({food,text:normalizeReferenceQuery(food.name)}));
+export function referenceFoodById(id:number):FoodChoice|null{
+ const regional=taiwan.find(f=>f.id===id);
+ if(regional)return {food_id:id,name_zh:regional.name_zh,name_en:regional.name_en||regional.name_zh,source:'Taiwan FDA · Open Government Data License 1.0',source_url:'https://data.gov.tw/dataset/8543',per100:regional.n};
+ const food=(records as Reference[]).find(f=>BASE+f.id===id);
+ return food?{food_id:id,name_zh:food.name,name_en:food.name,displayNames:referenceNames(food.name),source:'USDA FoodData Central · CC0',source_url:`https://fdc.nal.usda.gov/food-details/${food.id}/nutrients`,per100:food.n,portions:food.portions.slice(0,8)}:null;
+}
 export function referenceSearchTerm(raw:string){
  const exact=terms.get(normalizeAlias(raw));if(exact)return exact;
  const entity=resolveFoodEntity(raw);return entity.confidence===1?entity.canonical:raw;

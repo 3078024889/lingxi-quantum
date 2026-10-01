@@ -8,7 +8,8 @@ import {foodText} from "@/lib/tools/food/workbench-copy";
 import {extraText} from "@/lib/tools/food/workbench-extra-copy";
 import {mealInsight} from "@/lib/tools/food/meal-insights";
 import {createFoodImageSession} from "@/lib/tools/food/session-client";
-import {calculateReferences,portionValue,totalMeal,type FoodChoice,type MealResult} from "@/lib/tools/food/meal-calculation";
+import {portionValue,type FoodChoice,type MealResult} from "@/lib/tools/food/meal-calculation";
+import {foodBillingText} from '@/lib/tools/food/billing-copy';
 const t=(l:LingxiLang,k:string)=>extraText(l,k)||foodText(l,k);
 const field="min-w-0 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-bg)] px-3 py-3";
 const button="rounded-xl border border-[var(--lx-line)] px-4 py-3 text-sm disabled:opacity-40";
@@ -25,35 +26,56 @@ function queuedVision(file:File,active:()=>boolean){const work=visionQueue.then(
 export default function FoodCalorieWorkbench(){
  const {lang}=useLingxiLang();const[mode,setMode]=useState<'single'|'batch'|'custom'>('single');const[files,setFiles]=useState<File[]>([]);const[revision,setRevision]=useState(0);const[error,setError]=useState('');
  function load(input:File[]){if(input.length>20||input.some(f=>!f.type.startsWith('image/')||f.size>15*1024*1024)){setError(t(lang,'fileError'));return;}setError('');setFiles(input.slice(0,mode==='single'?1:20));setRevision(n=>n+1);}
- return <section dir={lang==='ar'?'rtl':'ltr'} className="space-y-5"><nav aria-label={t(lang,'custom')} className="grid grid-cols-3 gap-2">{(['single','batch','custom'] as const).map((m,i)=><button type="button" key={m} aria-pressed={mode===m} className={mode===m?primary:button} onClick={()=>{setMode(m);setFiles([]);setRevision(n=>n+1);setError('')}}>{t(lang,['upload','batch','custom'][i])}</button>)}</nav>
+ return <section dir={lang==='ar'?'rtl':'ltr'} className="space-y-5"><p className="text-sm leading-7 text-[var(--lx-muted)]">{foodBillingText(lang,'pricing')}</p><RecoveredFoodAnalysis lang={lang}/><nav aria-label={t(lang,'custom')} className="grid grid-cols-3 gap-2">{(['single','batch','custom'] as const).map((m,i)=><button type="button" key={m} aria-pressed={mode===m} className={mode===m?primary:button} onClick={()=>{setMode(m);setFiles([]);setRevision(n=>n+1);setError('')}}>{t(lang,['upload','batch','custom'][i])}</button>)}</nav>
  {mode!=='custom'&&<label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();load(Array.from(e.dataTransfer.files))}} className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-6 text-center"><span aria-hidden="true" className="text-3xl">＋</span><b>{t(lang,'drop')}</b><span className="text-sm text-[var(--lx-muted)]">{t(lang,'confirmed')}</span><input aria-label={t(lang,'upload')} type="file" accept="image/*" multiple={mode==='batch'} className="max-w-full text-sm" onChange={e=>{load(Array.from(e.target.files||[]));e.target.value=''}}/></label>}
  {error&&<p role="alert">{error}</p>}{(mode==='custom'||files.length>0)&&<MealWorkspace key={`${mode}-${revision}`} lang={lang} files={files} manual={mode==='custom'}/>}
  </section>;
 }
-function MealWorkspace({lang,files,manual:initialManual}:{lang:LingxiLang;files:File[];manual:boolean}){
- const[groups,setGroups]=useState<Selection[][]>(()=>Array.from({length:Math.max(1,files.length)},()=>[]));const[manual,setManual]=useState(initialManual);const[session,setSession]=useState('');const[free,setFree]=useState(false);const[result,setResult]=useState<MealResult|null>(null);const[busy,setBusy]=useState(false);const[msg,setMsg]=useState('');const generation=useRef(0);
- useEffect(()=>{if(initialManual)return;let live=true;void createFoodImageSession(files).then(s=>{if(live)setSession(s.sessionId)}).catch(()=>{});if(files.length===1)void fetch('/api/tools/food/free-status').then(r=>r.json()).then(d=>{if(live)setFree(d.available===true)}).catch(()=>{});return()=>{live=false}},[files,initialManual]);
- const all=groups.flat();const valid=all.length>0&&all.length<=30&&all.every(x=>portionValue(x.grams)!==null)&&groups.every(x=>x.length>0);const referenceOnly=all.some(x=>x.food.manualOnly);
- function change(i:number,next:Selection[]){generation.current++;setGroups(xs=>xs.map((x,j)=>j===i?next:x));setResult(null);setMsg('');}
- async function calculate(quoteId?:string,asManual=manual){
-  if(!valid){setMsg(t(lang,'amountError'));return;}const version=generation.current;setBusy(true);setMsg('');
+type Prepared={id:string;quantity:number;mode:'image'|'custom';freeEligible:boolean;completed?:boolean};
+const savedAnalysis='lingxifield:food-analysis:v19';
+function MealWorkspace({lang,files,manual}:{lang:LingxiLang;files:File[];manual:boolean}){
+ const[groups,setGroups]=useState<Selection[][]>(()=>Array.from({length:Math.max(1,files.length)},()=>[]));
+ const[prepared,setPrepared]=useState<Prepared|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState('');
+ const requestId=useRef('');
+ const all=groups.flat(),valid=all.length>0&&all.length<=30&&all.every(x=>portionValue(x.grams)!==null)&&groups.every(x=>x.length>0);
+ function change(i:number,next:Selection[]){requestId.current='';setGroups(xs=>xs.map((x,j)=>j===i?next:x));setMsg('');}
+ async function prepare(){
+  if(!valid||busy)return;setBusy(true);setMsg('');
   try{
-   let calculated:MealResult;
-   if(asManual){
-    const local=all.filter(x=>x.food.per100),remote=all.filter(x=>!x.food.per100);const a=local.length?calculateReferences(local):null;
-    let b:MealResult|null=null;if(remote.length){const r=await fetch('/api/tools/food/manual-calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:remote.map(x=>({food_id:x.food.food_id,grams:portionValue(x.grams)}))})});if(!r.ok)throw new Error('CALC_FAILED');b=await r.json();}
-    calculated=totalMeal([...(a?.items||[]),...(b?.items||[])]);
-   }else{
-    const r=await fetch(quoteId?'/api/tools/food/calculate':'/api/tools/food/free-calculate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({quoteId,sessionId:session,photoCount:files.length,items:all.map(x=>({food_id:x.food.food_id,grams:portionValue(x.grams)}))})});const d=await r.json();if(!r.ok){if(d.freeUsed)setFree(false);throw new Error('CALC_FAILED')}calculated=d;setFree(false);
-   }
-   if(version===generation.current)setResult(calculated);
+   const session=manual?null:await createFoodImageSession(files);
+   // Retrying the same immutable request is safe; image sessions are recreated only before preparation.
+   const id=crypto.randomUUID();requestId.current=id;
+   const r=await fetch('/api/tools/food/analysis',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({requestId:id,mode:manual?'custom':'image',sessionId:session?.sessionId,groups:groups.map(g=>g.map(x=>({food_id:x.food.food_id,grams:portionValue(x.grams),...(x.food.food_id===0?{label:x.food.name_zh,per100:x.food.per100}:{})})))})});
+   const d=await r.json();if(!r.ok)throw new Error(d.error);
+   try{localStorage.setItem(savedAnalysis,d.id)}catch{}
+   setPrepared(d);
   }catch{setMsg(t(lang,'failed'))}finally{setBusy(false)}
  }
- return <div className="space-y-5"><div className={files.length>1?'grid gap-4 xl:grid-cols-2':'space-y-4'}>{groups.map((selected,i)=><article key={i} className="min-w-0 rounded-3xl border border-[var(--lx-line)] p-4 sm:p-5"><FoodEntry lang={lang} file={files[i]} selected={selected} setSelected={next=>change(i,next)} disabled={busy}/></article>)}</div>
- {all.length>0&&<div className="rounded-2xl bg-[var(--lx-soft)] p-5">{(referenceOnly||!session)&&!manual&&<p className="mb-3 text-sm">{t(lang,'referenceNote')}</p>}
- {manual?<button className={primary} disabled={!valid||busy} onClick={()=>void calculate()}>{t(lang,busy?'working':'view')}</button>:referenceOnly||!session?<button className={primary} disabled={!valid||busy} onClick={()=>{setManual(true);void calculate(undefined,true)}}>{t(lang,'manualTransfer')}</button>:free&&files.length===1?<button className={primary} disabled={!valid||busy} onClick={()=>void calculate()}>{t(lang,busy?'working':'view')} · {t(lang,'free')}</button>:valid&&!busy?<PaidActionButton toolId="food-calorie" quantity={files.length} metadata={{mode:files.length>1?'batch':'meal',itemCount:all.length}} onPaid={id=>calculate(id)} label={t(lang,'view')}/>:<button className={primary} disabled>{t(lang,'view')}</button>}
- {!valid&&<p className="mt-3 text-sm">{t(lang,'confirmed')}</p>}</div>}
- <div aria-live="polite">{msg&&<p role="alert">{msg}</p>}{result&&<ResultCard lang={lang} result={result}/>}</div></div>;
+ return <div className="space-y-5"><div className={files.length>1?'grid gap-4 xl:grid-cols-2':'space-y-4'}>{groups.map((selected,i)=><article key={i} className="min-w-0 rounded-3xl border border-[var(--lx-line)] p-4 sm:p-5"><FoodEntry lang={lang} file={files[i]} selected={selected} setSelected={next=>change(i,next)} disabled={busy||!!prepared}/></article>)}</div>
+ {prepared?<><AnalysisCheckout key={prepared.id} lang={lang} prepared={prepared}/><button type="button" className={button} onClick={()=>setPrepared(null)}>{foodBillingText(lang,'edit')}</button></>:all.length>0&&<button type="button" className={primary} disabled={!valid||busy} onClick={()=>void prepare()}>{t(lang,busy?'working':'view')}</button>}
+ {msg&&<p role="alert">{msg}</p>}</div>;
+}
+function RecoveredFoodAnalysis({lang}:{lang:LingxiLang}){
+ const[prepared,setPrepared]=useState<Prepared|null>(null);
+ useEffect(()=>{let active=true;let id=new URLSearchParams(location.search).get('resumeDraft');try{id=id||localStorage.getItem(savedAnalysis)}catch{}if(!id)return;void fetch(`/api/tools/food/analysis/${encodeURIComponent(id)}`,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(active&&d)setPrepared(d)}).catch(()=>{});return()=>{active=false}},[]);
+ return prepared?<section className="space-y-3 rounded-2xl border border-[var(--lx-line)] p-4"><h3>{foodBillingText(lang,'saved')}</h3><AnalysisCheckout lang={lang} prepared={prepared}/></section>:null;
+}
+function AnalysisCheckout({lang,prepared}:{lang:LingxiLang;prepared:Prepared}){
+ const[free,setFree]=useState<boolean|null>(null),[result,setResult]=useState<MealResult|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState('');
+ const lastQuote=useRef<string|undefined>(undefined);
+ async function calculate(quoteId?:string){
+  setBusy(true);setMsg('');if(quoteId)lastQuote.current=quoteId;
+  try{
+   const r=await fetch(`/api/tools/food/analysis/${prepared.id}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({quoteId})});const d=await r.json();
+   if(!r.ok){if(d.freeUsed){setFree(false);setMsg(foodBillingText(lang,'used'))}else {if(d.error==='PAYMENT_REQUIRED')setFree(false);setMsg(foodBillingText(lang,d.error==='REQUEST_EXPIRED'?'expired':'unavailable'));}throw new Error('ANALYSIS_FAILED');}
+   setResult(d);setFree(false);
+  }catch(e){setMsg(current=>current||foodBillingText(lang,'unavailable'));throw e;}finally{setBusy(false)}
+ }
+ useEffect(()=>{let live=true;void fetch('/api/tools/food/free-status',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(live)setFree(d?.available===true)}).catch(()=>{if(live)setFree(false)});return()=>{live=false}},[]);
+ return <div className="space-y-4" aria-live="polite">{result?<ResultCard lang={lang} result={result}/>:<>
+ {prepared.completed?<button type="button" className={primary} disabled={busy} onClick={()=>void calculate().catch(()=>{})}>{foodBillingText(lang,'retry')}</button>:free===null?<p>{t(lang,'working')}</p>:free&&prepared.freeEligible?<button type="button" className={primary} disabled={busy} onClick={()=>void calculate().catch(()=>{})}>{t(lang,busy?'working':'view')} · {foodBillingText(lang,'freeNow')}</button>:<PaidActionButton toolId="food-calorie" quantity={prepared.quantity} metadata={{foodRequestId:prepared.id,mode:prepared.mode}} draftId={prepared.id} onPaid={calculate} label={foodBillingText(lang,'ready')}/>}
+ {msg&&<p role="alert">{msg}</p>}{lastQuote.current&&msg&&<button type="button" className={button} disabled={busy} onClick={()=>void calculate(lastQuote.current).catch(()=>{})}>{foodBillingText(lang,'retry')}</button>}
+ </>}</div>;
 }
 function FoodEntry({lang,file,selected,setSelected,disabled}:{lang:LingxiLang;file?:File;selected:Selection[];setSelected:(v:Selection[])=>void;disabled:boolean}){
  const[q,setQ]=useState(''),[grams,setGrams]=useState('100'),[hits,setHits]=useState<FoodChoice[]>([]),[message,setMessage]=useState(''),[searching,setSearching]=useState(false),[preview,setPreview]=useState(''),[predictions,setPredictions]=useState<string[]>([]),[recognizing,setRecognizing]=useState(Boolean(file));const request=useRef<AbortController|null>(null);

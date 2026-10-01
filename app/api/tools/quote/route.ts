@@ -6,6 +6,7 @@ import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeStateLive } from "@/lib/tools/service-readiness";
 import { isPublicPaidToolId } from "@/lib/tools/paid-catalog";
+import {foodRequestIpHash} from '@/lib/tools/food/request-identity';
 import {
   amountForCurrency,
   parseCurrency,
@@ -47,6 +48,7 @@ function publicQuote(
     expires_at: data.expires_at,
     status: data.status,
     currency,
+    ...(data.tool_id==='food-calorie'&&data.metadata&&typeof data.metadata==='object'?{metadata:{foodRequestId:(data.metadata as Record<string,unknown>).foodRequestId}}:{}),
     ...amountForCurrency({
       currency,
       amountRmb: Number(data.amount_rmb),
@@ -100,6 +102,25 @@ export async function POST(req: NextRequest) {
 
     const q = await calculateToolQuote(toolId, quantity);
     const admin = createAdminClient();
+    if(toolId==='food-calorie'){
+      const requestId=String(userMetadata.foodRequestId||'');
+      if(!/^[0-9a-f-]{36}$/i.test(requestId))return NextResponse.json({error:'FOOD_ANALYSIS_REQUIRED'},{status:400});
+      const {data:food,error:foodError}=await admin.from('food_analysis_requests_v19').select('account_id,ip_hash,quantity,mode,expires_at,consumed_at').eq('id',requestId).maybeSingle();
+      if(foodError||!food||(food.account_id?food.account_id!==user.id:food.ip_hash!==foodRequestIpHash(req)))return NextResponse.json({error:'FOOD_ANALYSIS_REQUIRED'},{status:403});
+      if(food.consumed_at||Date.parse(food.expires_at)<=Date.now()||quantity!==food.quantity)return NextResponse.json({error:'FOOD_ANALYSIS_EXPIRED'},{status:409});
+      if(!food.account_id){const claimed=await admin.from('food_analysis_requests_v19').update({account_id:user.id}).eq('id',requestId).is('account_id',null).select('id').maybeSingle();if(claimed.error||!claimed.data)return NextResponse.json({error:'FOOD_ANALYSIS_REQUIRED'},{status:409});}
+      Object.assign(metadata,{foodRequestId:requestId,draftId:requestId,mode:food.mode});
+      q.unitName=food.mode==='custom'?'food':'image';
+      if(q.amountRmb!==2*quantity||q.amountUsd!==2*quantity)return NextResponse.json({error:'PRICE_NOT_AVAILABLE'},{status:503});
+      const {data:existing,error:existingError}=await admin.from('tool_payment_quotes').select('*').eq('tool_id',toolId).eq('user_id',user.id).contains('metadata',{foodRequestId:requestId}).in('status',['quoted','ordered','paid']).order('created_at',{ascending:false}).limit(1).maybeSingle();
+      if(existingError)return NextResponse.json({error:'QUOTE_CREATE_FAILED'},{status:503});
+      if(existing){
+        if(existing.status==='quoted'&&(existing.currency!==currency||Date.parse(existing.expires_at)<=Date.now())){
+          const retired=await admin.from('tool_payment_quotes').update({status:'canceled'}).eq('id',existing.id).eq('status','quoted').select('id').maybeSingle();
+          if(retired.error||!retired.data)return NextResponse.json({error:'PAYMENT_ALREADY_STARTED'},{status:409});
+        }else return NextResponse.json(publicQuote(existing,parseCurrency(existing.currency)||currency));
+      }
+    }
 
     const limited = await admin.rpc("rate_limit_check", {
       p_key: `tool-quote:${user.id}`,

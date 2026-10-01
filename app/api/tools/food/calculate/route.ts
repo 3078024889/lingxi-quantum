@@ -9,6 +9,9 @@ export async function POST(req:NextRequest){
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:"SIGN_IN_REQUIRED"},{status:401});
  const b=await req.json().catch(()=>null)as any,quoteId=String(b?.quoteId||""),sessionId=String(b?.sessionId||""),photoCount=Number(b?.photoCount);
  if(!UUID.test(quoteId)||!UUID.test(sessionId)||!Number.isInteger(photoCount)||photoCount<1||photoCount>50)return NextResponse.json({error:"PAYMENT_REQUIRED"},{status:402});
+ const bound=await createAdminClient().from('tool_payment_quotes').select('metadata').eq('id',quoteId).eq('user_id',user.id).maybeSingle();
+ if(bound.error)return NextResponse.json({error:'CALCULATION_UNAVAILABLE'},{status:503});
+ if(bound.data?.metadata?.foodRequestId)return NextResponse.json({error:'FOOD_ANALYSIS_REQUIRED',reload:true},{status:410});
  const payment=await recoverToolQuotePayment({userId:user.id,quoteId});if(!payment.ok||!payment.paid||payment.quote?.toolId!=="food-calorie")return NextResponse.json({error:"PAYMENT_REQUIRED"},{status:402});
  type FoodInput={food_id:number;grams:number};const raw:unknown[]=Array.isArray(b?.items)?b.items:[];if(!raw.length||raw.length>100)return NextResponse.json({error:"INVALID_FOOD_ITEMS"},{status:400});
  const items:FoodInput[]=raw.map((x:any)=>({food_id:Number(x.food_id),grams:Number(x.grams)}));if(items.some((x:FoodInput)=>!Number.isInteger(x.food_id)||x.food_id<=0||!Number.isFinite(x.grams)||x.grams<=0||x.grams>10000))return NextResponse.json({error:"INVALID_FOOD_ITEMS"},{status:400});

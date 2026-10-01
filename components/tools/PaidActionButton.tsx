@@ -2,6 +2,7 @@
 import{useEffect,useRef,useState}from"react";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
+import{foodBillingText}from"@/lib/tools/food/billing-copy";
 
 type Quote={id:string;tool_id:string;quantity:number;unit_name:string;amount_rmb:number;amount_usd:number;display_currency:"CNY"|"USD";display_amount:number;currency:"CNY"|"USD";expires_at:string;status?:string;metadata?:Record<string,unknown>};
 type StoredQuote={id:string;toolId:string;quantity:number;currency:"CNY"|"USD";expiresAt:string;draftId?:string};
@@ -23,7 +24,7 @@ function storageKey(toolId:string){return`lingxifield:paid-tool:quote:${toolId}`
 function saveStoredQuote(toolId:string,q:Quote,draftId?:string){try{localStorage.setItem(storageKey(toolId),JSON.stringify({id:q.id,toolId,quantity:Number(q.quantity),currency:q.currency,expiresAt:q.expires_at,draftId} satisfies StoredQuote))}catch{}}
 function clearStoredQuote(toolId:string){try{localStorage.removeItem(storageKey(toolId))}catch{}}
 function price(q:Quote){return q.display_currency==="CNY"?`¥${Number(q.display_amount).toFixed(2)}`:`$${Number(q.display_amount).toFixed(2)} USD`}
-function unitLabel(unit:string,zh:boolean){if(!zh)return unit==="image"?"image":unit==="minute"?"minute":unit==="page"?"page":unit==="file"?"file":unit==="email"?"email":unit==="second"?"second":"use";if(unit==="image")return"张";if(unit==="minute")return"分钟";if(unit==="page")return"页";if(unit==="file")return"个文件";if(unit==="email")return"个邮箱";if(unit==="second")return"秒";return"次"}
+function unitLabel(unit:string,zh:boolean){if(unit==="food")return zh?"种食物":"foods";if(!zh)return unit==="image"?"image":unit==="minute"?"minute":unit==="page"?"page":unit==="file"?"file":unit==="email"?"email":unit==="second"?"second":"use";if(unit==="image")return"张";if(unit==="minute")return"分钟";if(unit==="page")return"页";if(unit==="file")return"个文件";if(unit==="email")return"个邮箱";if(unit==="second")return"秒";return"次"}
 function isMiniProgramWebView(){try{return new URLSearchParams(window.location.search).get("mini")==="1"&&/MicroMessenger/i.test(navigator.userAgent||"")}catch{return false}}
 async function openMiniNativePay(quoteId:string){return new Promise<boolean>(resolve=>{let settled=false;const done=(v:boolean)=>{if(settled)return;settled=true;resolve(v)},go=()=>{const w=(window as any).wx;if(!w?.miniProgram?.navigateTo){done(false);return}w.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(quoteId)}`,success:()=>done(true),fail:()=>done(false)})};if((window as any).wx?.miniProgram){go();return}const id="lingxifield-wechat-jssdk",existing=document.getElementById(id)as HTMLScriptElement|null;if(existing){existing.addEventListener("load",go,{once:true});setTimeout(()=>done(false),3000);return}const s=document.createElement("script");s.id=id;s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>done(false);document.head.appendChild(s);setTimeout(()=>done(false),3500)})}
 
@@ -33,7 +34,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),restoreKey=useRef("");
  const stop=()=>{if(timer.current){clearInterval(timer.current);timer.current=null}};
  async function status(id:string){const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});return r.ok?r.json():null}
- async function complete(id:string){if(!draftReady||processing.current===id)return;processing.current=id;stop();setMsg(t(UI.paid));try{await onPaid(id);clearStoredQuote(toolId)}finally{processing.current=null}}
+ async function complete(id:string){if(!draftReady||processing.current===id)return;processing.current=id;stop();setMsg(t(UI.paid));try{await onPaid(id);clearStoredQuote(toolId)}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null}}
  async function check(id:string){if(!draftReady)return false;const d=await status(id);if(!d?.paid)return false;await complete(id);return true}
  const checkRef=useRef(check);checkRef.current=check;
 
@@ -46,7 +47,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   let id=new URLSearchParams(location.search).get("resumeQuote")||"";
   if(!id){try{const raw=localStorage.getItem(storageKey(toolId));if(raw){const saved=JSON.parse(raw) as StoredQuote;if(saved.toolId===toolId&&Number(saved.quantity)===Number(quantity)&&saved.currency===currency&&(!saved.draftId||!draftId||saved.draftId===draftId))id=saved.id}}catch{}}
   if(!id)return;
-  void(async()=>{try{const r=await fetch(`/api/tools/quote?id=${encodeURIComponent(id)}`,{cache:"no-store"});if(!r.ok)return;const q=await r.json() as Quote;if(q.tool_id!==toolId||Number(q.quantity)!==Number(quantity)||q.currency!==currency)return;setQuote(q);saveStoredQuote(toolId,q,draftId);await checkRef.current(q.id)}catch{}})();
+  void(async()=>{try{const r=await fetch(`/api/tools/quote?id=${encodeURIComponent(id)}`,{cache:"no-store"});if(!r.ok)return;const q=await r.json() as Quote;if(q.tool_id!==toolId||Number(q.quantity)!==Number(quantity)||(toolId!=="food-calorie"&&q.currency!==currency)||(toolId==="food-calorie"&&q.metadata?.foodRequestId!==draftId))return;setQuote(q);saveStoredQuote(toolId,q,draftId);await checkRef.current(q.id)}catch{}})();
  },[toolId,quantity,currency,draftId,draftReady]);
 
  async function makeQuote(){
@@ -56,7 +57,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
    const d=await r.json().catch(()=>({}));
    if(!r.ok)throw new Error(String(d.error||"QUOTE_CREATE_FAILED"));
    setQuote(d);saveStoredQuote(toolId,d,draftId);setMsg(t(UI.priced));
-  }catch(e){const m=e instanceof Error?e.message:String(e);setMsg(/TOOL_SERVICE_UNAVAILABLE|PRICE_NOT_AVAILABLE|TOOL_PRICING_NOT_FOUND/.test(m)?t(UI.serviceUnavailable):m)}
+  }catch(e){const m=e instanceof Error?e.message:String(e);setMsg(toolId==="food-calorie"?foodBillingText(lang,/登录|SIGN_IN_REQUIRED/.test(m)?"login":/EXPIRED/.test(m)?"expired":"unavailable"):/TOOL_SERVICE_UNAVAILABLE|PRICE_NOT_AVAILABLE|TOOL_PRICING_NOT_FOUND/.test(m)?t(UI.serviceUnavailable):m)}
   finally{setBusy(false)}
  }
  async function pay(){
@@ -73,10 +74,11 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   if(draftId){location.assign(payUrl);return}
   setMsg(t(UI.popupBlocked));
  }
- const changed=quote&&(Number(quote.quantity)!==Number(quantity)||quote.currency!==currency);
+ const changed=quote&&(Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
  return <div>{!quote||changed
   ?<button onClick={makeQuote} disabled={busy||quantity<=0||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t(UI.pricing):(label||t(UI.defaultLabel))}</button>
-  :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {unitLabel(quote.unit_name,zh)} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{t(UI.confirm)}</button><button onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
+  :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {toolId==="food-calorie"?foodBillingText(lang,quote.unit_name==="food"?"foodUnit":"imageUnit"):unitLabel(quote.unit_name,zh)} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{t(UI.confirm)}</button><button onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
   {msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}
+  {toolId==='food-calorie'&&msg===foodBillingText(lang,'login')&&<a className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent('/tools/food-calorie?resumeDraft='+(draftId||''))}`}>{foodBillingText(lang,'login')}</a>}
  </div>;
 }
