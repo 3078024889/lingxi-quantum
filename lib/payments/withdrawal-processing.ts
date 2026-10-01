@@ -8,9 +8,15 @@ export async function dispatchWithdrawal(id:string,userId:string){
  const {data:w,error}=await admin.from('balance_withdrawals').select('*').eq('id',id).eq('user_id',userId).single();
  if(error||!w)return {ok:false,error:'WITHDRAWAL_NOT_FOUND'};
  if(w.status!=='requested')return {ok:true,status:w.status,withdrawalId:id};
- if(!refundProviderConfigured(w.provider))return {ok:true,status:'requested',withdrawalId:id,needsSupport:true};
+ if(!refundProviderConfigured(w.provider)){
+  await admin.from('balance_withdrawals').update({failure_code:'PROVIDER_CONFIGURATION_REQUIRED',updated_at:new Date().toISOString()}).eq('id',id).eq('status','requested');
+  return {ok:true,status:'requested',withdrawalId:id,needsSupport:true};
+ }
  const {data:order}=await admin.from('orders').select('id,provider_payment_id,amount_rmb,amount_usd').eq('id',w.order_id).eq('user_id',userId).single();
- if(!order?.provider_payment_id)return {ok:true,status:'requested',withdrawalId:id,needsSupport:true};
+ if(!order?.provider_payment_id){
+  await admin.from('balance_withdrawals').update({failure_code:'PAYMENT_REFERENCE_REQUIRED',updated_at:new Date().toISOString()}).eq('id',id).eq('status','requested');
+  return {ok:true,status:'requested',withdrawalId:id,needsSupport:true};
+ }
  const claim=await admin.from('balance_withdrawals').update({status:'processing',processing_started_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq('id',id).eq('status','requested').select('id').maybeSingle();
  if(claim.error||!claim.data)return {ok:true,status:'processing',withdrawalId:id};
  try{
@@ -40,7 +46,10 @@ export async function refreshWithdrawal(id:string,userId:string){
  if(w.status!=='processing')return {ok:true,status:w.status,withdrawalId:id};
  if(Date.now()-Date.parse(w.updated_at)<30000)return {ok:true,status:'processing',withdrawalId:id};
  const {data:order}=await admin.from('orders').select('provider_payment_id').eq('id',w.order_id).eq('user_id',userId).single();
- if(!order?.provider_payment_id)return {ok:true,status:'processing',withdrawalId:id,needsSupport:true};
+ if(!order?.provider_payment_id){
+  await admin.from('balance_withdrawals').update({failure_code:'PAYMENT_REFERENCE_REQUIRED',updated_at:new Date().toISOString()}).eq('id',id).eq('status','processing');
+  return {ok:true,status:'processing',withdrawalId:id,needsSupport:true};
+ }
  try{
   const a=await queryProviderRefund({provider:w.provider,providerPaymentId:order.provider_payment_id,withdrawalId:id,refundId:w.provider_refund_id,currency:w.provider_currency,refundAmountMinor:Number(w.provider_amount_minor)});
   const saved=await admin.from('balance_withdrawals').update({provider_refund_id:a.refundId,provider_status:a.providerStatus,updated_at:new Date().toISOString()}).eq('id',id).eq('status','processing');
