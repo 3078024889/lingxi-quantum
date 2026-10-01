@@ -1,0 +1,32 @@
+services:
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+    environment:
+      API_ENABLE_BASIC_AUTH: "true"
+      GOTENBERG_API_BASIC_AUTH_USERNAME: "${GOTENBERG_BASIC_USER}"
+      GOTENBERG_API_BASIC_AUTH_PASSWORD: "${GOTENBERG_BASIC_PASSWORD}"
+      OTEL_TRACES_EXPORTER: "none"
+      OTEL_METRICS_EXPORTER: "none"
+      OTEL_LOGS_EXPORTER: "none"
+    networks: [document_internal]
+
+  gateway:
+    build:
+      context: ./gateway
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    environment:
+      PORT: "3100"
+      GOTENBERG_INTERNAL_URL: "http://gotenberg:3000"
+      GOTENBERG_BASIC_USER: "${GOTENBERG_BASIC_USER}"
+      GOTENBERG_BASIC_PASSWORD: "${GOTENBERG_BASIC_PASSWORD}"
+      LINGXIFIELD_DOCUMENT_GATEWAY_SECRET: "${LINGXIFIELD_DOCUMENT_GATEWAY_SECRET}"
+      LINGXIFIELD_ALLOWED_ORIGINS: "https://lingxifield.com,https://lingxifield.cn"
+    depends_on: [gotenberg]
+    networks: [document_internal]
+
+networks:
+  document_internal:
+    driver: bridge

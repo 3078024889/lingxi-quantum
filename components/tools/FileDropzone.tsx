@@ -3,6 +3,7 @@
 import {useCallback,useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {uploadText} from "@/lib/upload-ui-i18n";
+import {DOCUMENT_INPUT_ACCEPT,documentIntakeError,documentIntakeText,normalizeDocumentFiles} from "@/lib/tools/document/intake-client";
 
 function normalizeExt(name:string){const i=name.lastIndexOf(".");return i>=0?name.slice(i).toLowerCase():""}
 function fileMatchesAccept(file:File,accept:string){
@@ -23,6 +24,9 @@ export default function FileDropzone({
   const[drag,setDrag]=useState(false);
   const[error,setError]=useState<string|null>(null);
   const[previews,setPreviews]=useState<Preview[]>([]);
+  const[normalizing,setNormalizing]=useState(false);
+  const pdfDocumentMode=accept.toLowerCase().includes(".pdf")||accept.toLowerCase().includes("application/pdf");
+  const effectiveAccept=pdfDocumentMode?DOCUMENT_INPUT_ACCEPT:accept;
 
   useEffect(()=>{
     if(kind!=="image"){setPreviews([]);return}
@@ -33,37 +37,39 @@ export default function FileDropzone({
     return()=>{for(const item of next)URL.revokeObjectURL(item.url)}
   },[files,kind]);
 
-  const apply=useCallback((list:FileList|File[])=>{
+  const apply=useCallback(async(list:FileList|File[])=>{
     const incoming=Array.from(list);if(!incoming.length)return;
     const maxBytes=maxSizeMB*1024*1024;
     const tooBig=incoming.find(file=>file.size>maxBytes);
     if(tooBig){setError(uploadText(lang,"tooLarge",{name:tooBig.name,size:maxSizeMB}));return}
-    const unsupported=incoming.find(file=>!fileMatchesAccept(file,accept));
+    const unsupported=incoming.find(file=>!fileMatchesAccept(file,effectiveAccept));
     if(unsupported){setError(`${unsupported.name} · ${uploadText(lang,"unsupported")}`);return}
-    const merged=multiple&&append?[...files,...incoming]:incoming;
+    let prepared=incoming;
+    if(pdfDocumentMode){setNormalizing(true);try{prepared=await normalizeDocumentFiles(incoming)}catch(e){setError(documentIntakeError(lang,e));setNormalizing(false);return}setNormalizing(false)}
+    const merged=multiple&&append?[...files,...prepared]:prepared;
     const unique=Array.from(new Map(merged.map(file=>[fileIdentity(file),file])).values());
     if(!multiple&&unique.length>1){setError(lang==="zh"?"此工具一次只处理 1 个文件。":"This tool processes one file at a time.");return}
     if(multiple&&unique.length>maxFiles){setError(lang==="zh"?`此工具一次最多处理 ${maxFiles} 个文件，请减少后重试。`:`This tool accepts at most ${maxFiles} files per batch.`);return}
     setError(null);onChange(multiple?unique:unique.slice(0,1));
-  },[accept,append,files,lang,maxFiles,maxSizeMB,multiple,onChange]);
+  },[append,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode]);
 
   const promptKey=kind==="image"?"dropImagesOrChoose":kind==="media"?"dropMediaOrChoose":kind==="pdf"?"dropPdfOrChoose":kind==="subtitle"?"dropSubtitleOrChoose":"dropOrChoose";
 
   return <div>
-    <div role="button" tabIndex={disabled?-1:0} aria-disabled={disabled||undefined}
+    <div role="button" tabIndex={disabled?-1:0} aria-disabled={(disabled||normalizing)||undefined}
       onKeyDown={e=>{if(!disabled&&(e.key==="Enter"||e.key===" ")){e.preventDefault();inputRef.current?.click()}}}
-      onClick={()=>!disabled&&inputRef.current?.click()}
+      onClick={()=>!disabled&&!normalizing&&inputRef.current?.click()}
       onDragEnter={e=>{e.preventDefault();if(!disabled)setDrag(true)}}
       onDragOver={e=>{e.preventDefault();if(!disabled)setDrag(true)}}
       onDragLeave={e=>{if(e.currentTarget.contains(e.relatedTarget as Node|null))return;setDrag(false)}}
-      onDrop={e=>{e.preventDefault();setDrag(false);if(!disabled)apply(e.dataTransfer.files)}}
+      onDrop={e=>{e.preventDefault();setDrag(false);if(!disabled&&!normalizing)void apply(e.dataTransfer.files)}}
       className={`cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition ${drag?"border-[var(--lx-line-strong)] bg-[var(--lx-soft)] ring-4 ring-[var(--lx-soft)]":"border-[var(--lx-line)] bg-[var(--lx-soft)] hover:border-[var(--lx-line-strong)]"} ${disabled?"pointer-events-none opacity-50":""}`}>
       <p className="text-base font-medium text-[var(--lx-ink)]">{drag?uploadText(lang,"dragActive"):uploadText(lang,promptKey)}</p>
       <p className="mt-2 text-xs leading-5 text-[var(--lx-faint)]">
-        {uploadText(lang,"maxFile",{size:maxSizeMB})}{multiple?` · ${uploadText(lang,"maxFiles",{count:maxFiles})}`:""}
+        {pdfDocumentMode?documentIntakeText(lang,"hint"):uploadText(lang,"maxFile",{size:maxSizeMB})}{multiple?` · ${uploadText(lang,"maxFiles",{count:maxFiles})}`:""}
       </p>
-      <input ref={inputRef} type="file" className="hidden" accept={accept} multiple={multiple} disabled={disabled}
-        onChange={e=>{if(e.target.files)apply(e.target.files);e.target.value=""}}/>
+      <input ref={inputRef} type="file" className="hidden" accept={effectiveAccept} multiple={multiple} disabled={disabled||normalizing}
+        onChange={e=>{if(e.target.files)void apply(e.target.files);e.target.value=""}}/>
     </div>
 
     {error&&<p role="alert" className="mt-3 text-sm text-[var(--lx-danger)]">{error}</p>}

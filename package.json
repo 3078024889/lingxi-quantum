@@ -62,7 +62,11 @@
     "ci:desktop": "playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1",
     "ci:mobile": "playwright test -c playwright.final.config.ts --project=mobile-chromium --workers=1",
     "ci:playwright-contract": "node scripts/ci/playwright-contract.mjs",
-    "ci:production": "pnpm ci:baseline && pnpm ci:source && pnpm ci:playwright-contract && pnpm build && pnpm ci:desktop && pnpm ci:mobile"
+    "ci:production": "pnpm ci:baseline && pnpm ci:source && pnpm ci:playwright-contract && pnpm build && pnpm ci:desktop && pnpm ci:mobile",
+    "audit:v31-document-intake": "node scripts/audit/v31-document-intake.mjs",
+    "audit:v31r1-build-regression": "node scripts/audit/v31r1-build-regression.mjs",
+    "audit:v31r2-production-architecture": "node scripts/audit/v31r2-production-architecture.mjs",
+    "audit:v31r3-toolchain": "node scripts/audit/v31r3-toolchain.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",
