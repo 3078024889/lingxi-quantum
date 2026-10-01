@@ -1,0 +1,42 @@
+"use client";
+import{useState}from"react";
+import{useRouter}from"next/navigation";
+import{useLingxiLang}from"@/lib/lingxi-i18n";
+import type{ToolResultFile}from"@/lib/tools/types";
+import{continueTargets}from"@/lib/tools/platform/continuation";
+import{createToolHandoff}from"@/lib/tools/workspace/handoff";
+
+export default function ContinueProcessing({sourceSlug,files}:{sourceSlug:string;files:ToolResultFile[]}){
+ const{lang}=useLingxiLang();
+ const router=useRouter();
+ const[busy,setBusy]=useState<string|null>(null);
+ const[error,setError]=useState<string|null>(null);
+ const targets=continueTargets(sourceSlug,files);
+ if(!targets.length)return null;
+
+ async function go(slug:string){
+  setBusy(slug);setError(null);
+  try{
+   const token=await createToolHandoff(sourceSlug,files);
+   router.push(`/tools/${slug}?handoff=${encodeURIComponent(token)}`);
+  }catch(e){
+   setError(lang==="zh"?"暂时无法继续传递这个结果，请先保存文件。":"Could not pass this result forward. Save the file first.");
+  }finally{setBusy(null)}
+ }
+
+ return <section className="mt-6 border-t border-[var(--lx-line)] pt-5" data-testid="continue-processing">
+  <div className="flex items-end justify-between gap-3">
+   <div>
+    <p className="text-sm font-medium text-[var(--lx-ink)]">{lang==="zh"?"继续处理":"Continue with this result"}</p>
+    <p className="mt-1 text-xs leading-5 text-[var(--lx-faint)]">{lang==="zh"?"结果会在这个浏览器里直接交给下一个工具，无需重新上传。":"The result stays in this browser and goes straight to the next tool."}</p>
+   </div>
+  </div>
+  <div className="mt-3 flex flex-wrap gap-2">
+   {targets.map(target=><button key={target.slug} type="button" disabled={busy!==null} onClick={()=>go(target.slug)}
+    className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm text-[var(--lx-ink)] transition hover:border-[var(--lx-line-strong)] disabled:opacity-50">
+    {busy===target.slug?(lang==="zh"?"正在接续…":"Passing result…"):(lang==="zh"?target.reasonZh:target.reasonEn)}
+   </button>)}
+  </div>
+  {error&&<p role="alert" className="mt-3 text-sm text-[var(--lx-danger)]">{error}</p>}
+ </section>;
+}

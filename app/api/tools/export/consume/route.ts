@@ -12,11 +12,15 @@ export async function POST(req:NextRequest){
  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
  const contentLength=Number(req.headers.get("content-length")||0);
  if(Number.isFinite(contentLength)&&contentLength>16*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
- const {quoteId}=await req.json().catch(()=>({})); const admin=createAdminClient();
+ const {quoteId,draftId}=await req.json().catch(()=>({})); const admin=createAdminClient();
  if(typeof quoteId!=="string"||!quoteId)return NextResponse.json({error:"QUOTE_REQUIRED"},{status:400});
  const {data:g}=await admin.from("tool_export_grants").select("id,consumed_at").eq("quote_id",quoteId).eq("user_id",user.id).maybeSingle();
+ const {data:q}=await admin.from("tool_payment_quotes").select("metadata").eq("id",quoteId).eq("user_id",user.id).maybeSingle();
+ const expected=String((q?.metadata as any)?.draftId||"");if(expected&&String(draftId||"")!==expected)return NextResponse.json({error:"TASK_DRAFT_MISMATCH"},{status:409});
+
+
  if(!g)return NextResponse.json({error:"没有可用的导出权限"},{status:403});
- if(g.consumed_at)return NextResponse.json({error:"本次导出权限已经使用"},{status:409});
+ if(g.consumed_at)return NextResponse.json({ok:true,alreadyCompleted:true});
  const claimed=await admin.from("tool_export_grants")
    .update({consumed_at:new Date().toISOString()})
    .eq("id",g.id).eq("user_id",user.id).is("consumed_at",null)

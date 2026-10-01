@@ -101,6 +101,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"id-photo-ai",zh:"AI 证件照",en:"AI ID Photo",mode:"online" as const},
   {slug:"image-to-pdf",zh:"图片转 PDF",en:"Images to PDF",mode:"local" as const},
   {slug:"image-to-pdf-pro",zh:"图片转 PDF",en:"Images to PDF Pro",mode:"local" as const},
+  {slug:"image-translator",zh:"图片翻译",en:"Image Translator",mode:"online" as const},
   {slug:"image-watermark-remover",zh:"图片去水印",en:"Image Watermark Cleanup",mode:"online" as const},
   {slug:"jpg-to-png",zh:"JPG 转 PNG",en:"JPG to PNG",mode:"local" as const},
   {slug:"json-formatter",zh:"JSON 格式化 / 修复",en:"JSON Format / Repair",mode:"local" as const},

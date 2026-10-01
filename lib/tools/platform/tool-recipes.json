@@ -351,6 +351,19 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "image-translator",
+    "capabilities": [
+      "ocr.image",
+      "image.translate"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
     "slug": "image-watermark-remover",
     "capabilities": [
       "image.watermark.cleanup"

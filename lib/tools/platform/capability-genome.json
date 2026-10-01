@@ -643,5 +643,16 @@
       "grant"
     ],
     "localPreferred": false
+  },
+  {
+    "id": "image.translate",
+    "domain": "image",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "image"
+    ],
+    "localPreferred": false
   }
 ]

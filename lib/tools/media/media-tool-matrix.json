@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "tools": [
+    {
+      "slug": "video-dubbing",
+      "kind": "video",
+      "single": true,
+      "batch": true,
+      "realOutput": "mp4+srt",
+      "runtime": "local-asr-with-paid-provider-fallback",
+      "test": "functional"
+    },
+    {
+      "slug": "video-transcription",
+      "kind": "video",
+      "single": true,
+      "batch": false,
+      "realOutput": "txt+srt+vtt",
+      "runtime": "local-asr-with-provider-fallback",
+      "test": "runtime"
+    },
+    {
+      "slug": "audio-transcription",
+      "kind": "audio",
+      "single": true,
+      "batch": false,
+      "realOutput": "txt+srt+vtt",
+      "runtime": "local-asr-with-provider-fallback",
+      "test": "runtime"
+    },
+    {
+      "slug": "video-toolkit",
+      "kind": "video",
+      "single": true,
+      "batch": true,
+      "realOutput": "mp4/mp3",
+      "runtime": "ffmpeg-wasm",
+      "test": "functional"
+    },
+    {
+      "slug": "video-watermark-remover",
+      "kind": "video",
+      "single": true,
+      "batch": true,
+      "realOutput": "mp4",
+      "runtime": "ffmpeg-wasm-delogo",
+      "test": "functional"
+    },
+    {
+      "slug": "subtitle-translate",
+      "kind": "subtitle",
+      "single": true,
+      "batch": false,
+      "realOutput": "srt/vtt",
+      "runtime": "paid-provider",
+      "test": "contract"
+    },
+    {
+      "slug": "image-translator",
+      "kind": "image",
+      "single": true,
+      "batch": true,
+      "realOutput": "png",
+      "runtime": "tesseract+paid-provider",
+      "test": "functional"
+    },
+    {
+      "slug": "image-watermark-remover",
+      "kind": "image",
+      "single": true,
+      "batch": false,
+      "realOutput": "png",
+      "runtime": "local-inpaint",
+      "test": "functional"
+    },
+    {
+      "slug": "batch-image-watermark-remover",
+      "kind": "image",
+      "single": false,
+      "batch": true,
+      "realOutput": "png[]",
+      "runtime": "local-inpaint",
+      "test": "functional"
+    },
+    {
+      "slug": "ocr",
+      "kind": "image",
+      "single": true,
+      "batch": true,
+      "realOutput": "txt[]",
+      "runtime": "tesseract",
+      "test": "functional"
+    },
+    {
+      "slug": "batch-image",
+      "kind": "image",
+      "single": true,
+      "batch": true,
+      "realOutput": "image[]",
+      "runtime": "local-canvas",
+      "test": "route+fixture"
+    },
+    {
+      "slug": "compress-image",
+      "kind": "image",
+      "single": true,
+      "batch": false,
+      "realOutput": "jpg",
+      "runtime": "local-canvas",
+      "test": "functional"
+    },
+    {
+      "slug": "resize-image",
+      "kind": "image",
+      "single": true,
+      "batch": false,
+      "realOutput": "jpg",
+      "runtime": "local-canvas",
+      "test": "functional"
+    },
+    {
+      "slug": "remove-exif",
+      "kind": "image",
+      "single": true,
+      "batch": false,
+      "realOutput": "image",
+      "runtime": "local-canvas",
+      "test": "functional"
+    },
+    {
+      "slug": "image-to-pdf",
+      "kind": "image",
+      "single": true,
+      "batch": true,
+      "realOutput": "pdf",
+      "runtime": "local-pdf",
+      "test": "functional"
+    }
+  ]
+}

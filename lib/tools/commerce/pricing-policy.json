@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "grossMarginFloor": 0.45,
+  "pricingRule": "minimum_price = total_platform_cost / (1 - gross_margin_floor)",
+  "currencyRule": "CNY and USD are independent price books; never FX-convert one into the other.",
+  "ownConnection": {
+    "modelCostPaidByUser": true,
+    "platformCostStillBillable": true,
+    "grossMarginFloor": 0.45,
+    "minimumServiceFees": {
+      "CNY": {
+        "textTask": 0.1,
+        "imageTask": 0.2,
+        "videoSecond": 0.05,
+        "websiteBuildIteration": 0.5
+      },
+      "USD": {
+        "textTask": 0.1,
+        "imageTask": 0.2,
+        "videoSecond": 0.05,
+        "websiteBuildIteration": 0.5
+      }
+    }
+  },
+  "tools": {
+    "image-watermark-remover": {
+      "mode": "freemium",
+      "free": {
+        "account": "1/day"
+      },
+      "CNY": {
+        "unit": 0.6
+      },
+      "USD": {
+        "unit": 0.6
+      }
+    },
+    "batch-image-watermark-remover": {
+      "mode": "paid",
+      "CNY": {
+        "unit": 0.5
+      },
+      "USD": {
+        "unit": 0.5
+      }
+    },
+    "video-watermark-remover": {
+      "mode": "freemium",
+      "free": {
+        "accountAndIp": "once",
+        "maxSeconds": 60
+      },
+      "CNY": {
+        "perMinute": 1.5
+      },
+      "USD": {
+        "perMinute": 1.5
+      }
+    },
+    "video-dubbing": {
+      "mode": "freemium",
+      "free": {
+        "account": "once",
+        "previewSeconds": 30,
+        "fullExport": false
+      },
+      "CNY": {
+        "perMinute": 3.0
+      },
+      "USD": {
+        "perMinute": 3.0
+      }
+    },
+    "subtitle-translate": {
+      "mode": "freemium",
+      "free": {
+        "previewLines": 10,
+        "fullExport": false
+      },
+      "CNY": {
+        "perMinute": 0.3,
+        "minimum": 0.6
+      },
+      "USD": {
+        "perMinute": 0.3,
+        "minimum": 0.6
+      }
+    },
+    "id-photo-ai": {
+      "mode": "freemium",
+      "free": {
+        "editAndPreview": true
+      },
+      "CNY": {
+        "export": 1.0
+      },
+      "USD": {
+        "export": 1.0
+      }
+    },
+    "website-builder": {
+      "mode": "freemium",
+      "free": {
+        "planAndHeroPreview": true
+      },
+      "CNY": {
+        "singlePage": 6.0,
+        "multiPage8": 15.0,
+        "webAppFrom": 30.0
+      },
+      "USD": {
+        "singlePage": 6.0,
+        "multiPage8": 15.0,
+        "webAppFrom": 30.0
+      }
+    },
+    "sasi-video-generate": {
+      "mode": "dynamic",
+      "supportedResolutions": [
+        "720p",
+        "1080p"
+      ],
+      "unsupportedResolutions": [
+        "480p"
+      ],
+      "CNY": {
+        "720pPublicPerSecond": 0.2,
+        "1080pPublicPerSecond": 0.4,
+        "720pProviderCostCeiling": 0.1,
+        "1080pProviderCostCeiling": 0.21
+      },
+      "USD": {
+        "720pPublicPerSecond": 0.2,
+        "1080pPublicPerSecond": 0.4,
+        "720pProviderCostCeiling": 0.1,
+        "1080pProviderCostCeiling": 0.21
+      },
+      "premiumRule": "max(resolution_public_floor, (provider_cost + platform_cost) / 0.55)"
+    }
+  }
+}

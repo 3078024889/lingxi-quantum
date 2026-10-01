@@ -42,7 +42,21 @@
     "audit:tool-registry": "node scripts/audit/tool-registry.mjs",
     "audit:retired-code": "node scripts/audit/retired-code-cleanup.mjs",
     "tool:fixtures": "node scripts/tool-factory/generate-fixtures.mjs",
-    "audit:support-lifecycle": "node scripts/audit/support-lifecycle.mjs"
+    "audit:support-lifecycle": "node scripts/audit/support-lifecycle.mjs",
+    "audit:continuous-tools": "node scripts/audit/continuous-tools.mjs",
+    "audit:media-production": "node scripts/audit/media-production.mjs",
+    "audit:global-commerce": "node scripts/audit/global-commerce.mjs",
+    "audit:v21-build": "node scripts/audit/v21-build-regression.mjs",
+    "audit:v22-document-payment": "node scripts/audit/v22-document-payment.mjs",
+    "audit:document-formats": "node scripts/audit/document-format-capability.mjs",
+    "audit:all-paid-recovery": "node scripts/audit/all-paid-task-recovery.mjs",
+    "audit:v24-idempotency": "node scripts/audit/v24-idempotency.mjs",
+    "audit:v25-pdf-canonical": "node scripts/audit/v25-pdf-canonical.mjs",
+    "audit:v26-cumulative": "node scripts/audit/v26-cumulative.mjs",
+    "audit:syntax": "node scripts/audit/audit-script-syntax.mjs",
+    "audit:v27-old-cleanup": "node scripts/audit/v27-old-code-cleanup.mjs",
+    "audit:v28-install": "node scripts/audit/v28-install-robustness.mjs",
+    "audit:v29-installer-contract": "node scripts/audit/v29-installer-contract.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",

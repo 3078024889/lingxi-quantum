@@ -56,6 +56,7 @@ const dedicated: ToolItem[] = [
   { href:"/tools/qr-safe-reader", titleZh:"二维码安全识别", titleEn:"Safe QR Reader", descZh:"先查看二维码内容，再决定是否访问。", descEn:"Inspect QR contents before opening a destination.", kind:"qr", category:"qr", localOnly:true },
 
   { href:"/tools/image-watermark-remover", titleZh:"图片去水印", titleEn:"Image Watermark Cleanup", descZh:"处理图片中的水印或覆盖内容。", descEn:"Clean up watermark or overlay regions in images.", kind:"privacy", category:"ai", localOnly:false },
+  { href:"/tools/image-translator", titleZh:"图片翻译", titleEn:"Image Translator", descZh:"识别图片文字并翻译回原图，支持单张和批量。", descEn:"Translate text inside images and place it back into the image, single or batch.", kind:"ai", category:"ai", localOnly:false },
   { href:"/tools/batch-image-watermark-remover", titleZh:"批量图片去水印", titleEn:"Batch Watermark Cleanup", descZh:"一次处理多张图片的水印区域。", descEn:"Process watermark regions across multiple images.", kind:"privacy", category:"ai", localOnly:false },
   { href:"/tools/video-watermark-remover", titleZh:"视频去水印", titleEn:"Video Watermark Cleanup", descZh:"按视频时长处理固定区域水印。", descEn:"Clean a fixed watermark region across a video.", kind:"video", category:"ai", localOnly:false },
   { href:"/tools/id-photo-ai", titleZh:"AI 证件照", titleEn:"AI ID Photo", descZh:"生成适合证件用途的标准照片。", descEn:"Create a standardized ID-style photo.", kind:"ai", category:"ai", localOnly:false },
@@ -66,7 +67,7 @@ const dedicated: ToolItem[] = [
 
 const DISPLAY_CATEGORY_BY_SLUG:Record<string,Exclude<Category,"all">>={
  "merge-pdf":"pdf","split-pdf":"pdf","compress-pdf":"pdf","image-to-pdf":"pdf","image-to-pdf-pro":"pdf","pdf-to-jpg":"pdf","pdf-merge-split":"pdf","pdf-compress":"pdf","pdf-pages":"pdf","pdf-editor":"pdf","e-sign-pdf":"pdf","document-copy-layout":"pdf","pdf-redact":"pdf","pdf-ocr":"pdf",
- "png-to-jpg":"image","jpg-to-png":"image","webp-to-jpg":"image","compress-image":"image","compress-image-to-20kb":"image","compress-image-to-50kb":"image","compress-image-to-100kb":"image","compress-image-to-200kb":"image","compress-image-to-500kb":"image","resize-image":"image","heic-to-jpg":"image","batch-image":"image","avif-to-jpg":"image","heic-local":"image","svg-to-png":"image","long-image":"image","image-watermark-remover":"image","batch-image-watermark-remover":"image",
+ "png-to-jpg":"image","jpg-to-png":"image","webp-to-jpg":"image","compress-image":"image","compress-image-to-20kb":"image","compress-image-to-50kb":"image","compress-image-to-100kb":"image","compress-image-to-200kb":"image","compress-image-to-500kb":"image","resize-image":"image","heic-to-jpg":"image","batch-image":"image","avif-to-jpg":"image","heic-local":"image","svg-to-png":"image","long-image":"image","image-watermark-remover":"image","batch-image-watermark-remover":"image","image-translator":"image",
  "video-toolkit":"media","video-transcription":"media","audio-transcription":"media","video-dubbing":"media","video-watermark-remover":"media",
  "subtitle-tools":"subtitle","subtitle-translate":"subtitle",
  "xlsx-to-csv":"table","csv-to-xlsx":"table","json-formatter":"table",

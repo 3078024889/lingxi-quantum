@@ -23,11 +23,11 @@ type RecoveryQuote = {
   expires_at:string;
   quantity:number;
   unit_name:string;
-  amount_rmb:number;
+  amount_rmb:number;metadata?:Record<string,unknown>|null;
 };
 
 function quoteMeta(q:RecoveryQuote){
-  return {id:q.id,toolId:q.tool_id,status:q.status,expiresAt:q.expires_at,quantity:Number(q.quantity),unitName:q.unit_name,amountRmb:Number(q.amount_rmb)};
+  return {id:q.id,toolId:q.tool_id,status:q.status,expiresAt:q.expires_at,quantity:Number(q.quantity),unitName:q.unit_name,amountRmb:Number(q.amount_rmb),metadata:q.metadata||{}};
 }
 
 async function grantFor(userId: string, quoteId: string) {
@@ -52,7 +52,7 @@ async function repairAlreadyPaidOrder(orderId: string) {
 export async function recoverToolQuotePayment(input: { userId: string; quoteId: string }) {
   const admin = createAdminClient();
   const { data: quoteData } = await admin.from("tool_payment_quotes")
-    .select("id,user_id,tool_id,status,expires_at,quantity,unit_name,amount_rmb")
+    .select("id,user_id,tool_id,status,expires_at,quantity,unit_name,amount_rmb,metadata")
     .eq("id", input.quoteId).eq("user_id", input.userId).maybeSingle();
 
   const quote=quoteData as RecoveryQuote|null;

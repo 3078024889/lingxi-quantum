@@ -1,4 +1,12 @@
 export const PUBLIC_PAID_TOOL_IDS = [
+  "id-photo-ai",
+  "video-watermark-remover",
+  "video-transcription",
+  "video-dubbing",
+  "image-watermark-remover",
+  "image-translator",
+  "batch-image-watermark-remover",
+  "audio-transcription",
   "burn-after-read-file",
   "food-calorie",
   "subtitle-translate",

@@ -1,27 +1,80 @@
 "use client";
-import {useEffect,useState} from "react";
-import FileDropzone from "@/components/tools/FileDropzone";
+import{useEffect,useMemo,useState}from"react";
+import FileDropzone from"@/components/tools/FileDropzone";
+import PaidActionButton from"@/components/tools/PaidActionButton";
+import ResultPanel from"@/components/tools/ResultPanel";
+import type{ToolResultFile}from"@/lib/tools/types";
+import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/transcribe-local";
+import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
+import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 
-import {localMediaDuration,toSrt,transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
-import {translateSubtitleLocal} from "@/lib/tools/autonomous/subtitle-local";
-import {saveText} from "@/lib/tools/autonomous/download-local";
+const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
+
+async function remoteTranslate(text:string,source:string,target:string,quoteId:string){
+ const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
+}
+async function remoteTts(text:string,target:string,quoteId:string){
+ const r=await fetch("/api/tools/media/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target,quoteId})});
+ if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"TTS_FAILED"))}return await r.blob();
+}
+async function remoteTranscribe(file:File,quoteId:string){
+ const compact=await extractCompactAudio(file);
+ const fd=new FormData();fd.set("file",compact);fd.set("quoteId",quoteId);
+ const r=await fetch("/api/tools/media/transcribe",{method:"POST",body:fd});const d=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(String(d.error||"TRANSCRIBE_FAILED"));return String(d.text||"");
+}
 
 export default function VideoDubbingWorkbench(){
- const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[minutes,setMinutes]=useState(1),[busy,setBusy]=useState(false),[progress,setProgress]=useState(""),[translated,setTranslated]=useState(""),[error,setError]=useState("");
- useEffect(()=>{const f=files[0];if(f)void localMediaDuration(f).then(d=>setMinutes(Math.max(1,Math.ceil(d/60)))).catch(()=>setMinutes(1))},[files]);
- async function run(){const f=files[0];if(!f)return;setBusy(true);setError("");try{
-  const t=await transcribeLocal(f,(p,m)=>setProgress(`${m} ${Math.round(p*100)}%`));const srt=toSrt(t.segments);
-  const out=await translateSubtitleLocal(srt,target,source);setTranslated(out);
- }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}}
- function preview(){if(!translated)return;const plain=translated.replace(/^\d+$/gm,"").replace(/\d\d:\d\d:\d\d[,.]\d+\s+-->\s+\d\d:\d\d:\d\d[,.]\d+/g,"").trim();speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(plain.slice(0,5000));u.lang=target;speechSynthesis.speak(u)}
+ const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[minutes,setMinutes]=useState(0),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
+ useEffect(()=>{let off=false;(async()=>{let total=0;for(const f of files){try{total+=Math.max(1,Math.ceil((await localMediaDuration(f))/60))}catch{total+=1}}if(!off)setMinutes(total)})();return()=>{off=true}},[files]);
+ useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setMinutes(Number(d.state?.minutes||0))}setDraftReady(true)})()},[]);
+ useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"video-dubbing",files,state:{source,target,minutes}}),150);return()=>clearTimeout(tm)},[files,source,target,minutes,draftId,draftReady]);
+ const quantity=Math.max(1,minutes);
+
+ async function run(quoteId:string){
+  setBusy(true);setError("");setOutputs([]);setSubtitles([]);
+  const videos:ToolResultFile[]=[],subs:ToolResultFile[]=[];
+  try{
+   for(let i=0;i<files.length;i++){
+    const f=files[i];setStage(`${i+1}/${files.length} · 正在识别语音…`);
+    let text="",srt="";
+    try{
+     const local=await transcribeLocal(f,(p,m)=>setStage(`${i+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
+     text=local.text;srt=toSrt(local.segments);
+    }catch{
+     setStage(`${i+1}/${files.length} · 正在使用兼容识别…`);
+     text=await remoteTranscribe(f,quoteId);
+     const duration=await localMediaDuration(f).catch(()=>60);
+     srt=`1\n00:00:00,000 --> ${new Date(Math.max(1000,duration*1000)).toISOString().slice(11,23).replace(".",",")}\n${text}`;
+    }
+    setStage(`${i+1}/${files.length} · 正在翻译…`);
+    const translated=source===target?text:await remoteTranslate(text,source,target,quoteId);
+    const translatedSrt=srt.replace(text,translated);
+    const sb=new Blob([translatedSrt],{type:"text/plain;charset=utf-8"});
+    subs.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
+    setStage(`${i+1}/${files.length} · 正在生成配音…`);
+    const voice=await remoteTts(translated,target,quoteId);
+    setStage(`${i+1}/${files.length} · 正在合成视频…`);
+    const dubbed=await muxDubbedVideo(f,voice,p=>setStage(`${i+1}/${files.length} · 正在合成 ${Math.round(p*100)}%`));
+    videos.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}-dubbed.mp4`,blob:dubbed,mime:"video/mp4",size:dubbed.size});
+   }
+   setOutputs(videos);setSubtitles(subs);setStage("处理完成");
+  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("")}
+  finally{setBusy(false)}
+ }
+
  return <div className="space-y-4">
-  <FileDropzone accept="video/*,audio/*" files={files} onChange={setFiles} disabled={busy} kind="media" maxSizeMB={250}/>
-  <label className="text-sm">配音语言<select value={target} onChange={e=>setTarget(e.target.value)} className="ml-2 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"><option value="zh">中文</option><option value="en">English</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="es">Español</option><option value="pt">Português</option><option value="ar">العربية</option></select></label>
-  <label className="block text-sm">原始语言<select value={source} onChange={e=>setSource(e.target.value)} className="ml-2 border p-2"><option value="zh">中文</option><option value="en">English</option><option value="ja">日本語</option><option value="ko">한국어</option></select></label>
-  {files.length>0&&!busy&&<button onClick={run} className="rounded-xl border px-4 py-2">免费尝试字幕翻译与语音试听</button>}
-  {busy&&<p className="text-sm text-[var(--lx-muted)]">{progress||"正在准备翻译配音…"}</p>}
-  <p className="text-xs leading-5 text-[var(--lx-faint)]">默认先在浏览器中完成语音识别、字幕翻译和配音预览，不需要连接外部服务。目前不能下载配音音轨或配音成片，暂不收费。浏览器不支持本地翻译时会停止并提示。</p>
-  {error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}
-  {translated&&<div className="space-y-3"><textarea value={translated} readOnly rows={12} className="w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4"/><div className="flex gap-2"><button onClick={preview} className="rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">试听配音</button><button onClick={()=>saveText(translated,"lingxifield-dub.srt")} className="rounded-xl border border-[var(--lx-line)] px-4 py-2 text-sm">保存翻译字幕</button></div></div>}
+  <FileDropzone accept="video/*,audio/*" multiple maxFiles={5} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setSubtitles([]);setError("")}} disabled={busy} kind="media"/>
+  <div className="grid gap-3 sm:grid-cols-2">
+   <label className="text-sm">原始语言<select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
+   <label className="text-sm">配音语言<select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
+  </div>
+  {files.length>0&&!busy&&<PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{minutes:quantity,files:files.length,source,target,export:"dubbed-mp4"}} onPaid={run} label="查看本次配音成片价格"/>}
+  {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage||"正在处理…"}</p>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">生成结果包含翻译字幕和可下载 MP4 配音成片。当前版本使用新的合成语音替换原视频音轨，不宣称口型同步或原声克隆。生成语音为 AI 合成语音。</p>
+  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
+  {outputs.length>0&&<ResultPanel sourceSlug="video-dubbing" files={outputs} messageZh="配音视频已生成，可以保存。" messageEn="Dubbed video is ready to save."/>}
+  {subtitles.length>0&&<ResultPanel sourceSlug="video-dubbing" files={subtitles} messageZh="翻译字幕也已生成。" messageEn="Translated subtitles are also ready."/>}
  </div>
 }

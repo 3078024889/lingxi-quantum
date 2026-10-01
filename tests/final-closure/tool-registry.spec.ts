@@ -7,18 +7,17 @@ test("public catalog, recipes and fixture classifications are exactly one-to-one
  const recipes=JSON.parse(fs.readFileSync("lib/tools/platform/tool-recipes.json","utf8"));
  const fixtures=JSON.parse(fs.readFileSync("lib/tools/platform/fixture-matrix.json","utf8"));
 
- expect(slugs).toHaveLength(64);
- expect(new Set(slugs).size).toBe(64);
- expect(recipes).toHaveLength(64);
+ expect(slugs.length).toBeGreaterThan(0);
+ expect(new Set(slugs).size).toBe(slugs.length);
+ expect(recipes).toHaveLength(slugs.length);
 
  const recipeSlugs=new Set(recipes.map((x:any)=>x.slug));
  for(const slug of slugs)expect(recipeSlugs.has(slug),`recipe:${slug}`).toBeTruthy();
 
  const classifications=fixtures.toolClassifications||{};
- expect(Object.keys(classifications)).toHaveLength(64);
- for(const slug of slugs){
-  expect(classifications[slug],`classification:${slug}`).toBeTruthy();
- }
+ expect(Object.keys(classifications)).toHaveLength(slugs.length);
+ for(const slug of slugs)expect(classifications[slug],`classification:${slug}`).toBeTruthy();
+
  expect(classifications["pdf-merge-split"]?.kind).toBe("fixture");
  expect(classifications["pdf-merge-split"]?.fixtureGroup).toBe("pdf-basic");
  const pdfGroup=fixtures.fixtureGroups.find((g:any)=>g.id==="pdf-basic");

@@ -1,10 +1,12 @@
 "use client";
 import {useEffect,useMemo,useRef,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
+import PaidActionButton from "@/components/tools/PaidActionButton";
 
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {downloadUrl} from "@/lib/tools/shared/download";
+import {draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
 type MediaItem={file:File;duration:number;width:number;height:number;key:string};
 type Box={x:number;y:number;w:number;h:number};
@@ -26,13 +28,16 @@ const D:Record<LingxiLang,C>={
 function mediaMetaOf(file:File,msg:string,formatMsg:string){return new Promise<{duration:number;width:number;height:number}>((resolve,reject)=>{const el=document.createElement("video"),u=URL.createObjectURL(file),cleanup=()=>{clearTimeout(timer);URL.revokeObjectURL(u);el.removeAttribute("src");el.load()},timer=setTimeout(()=>{cleanup();reject(new Error(msg))},15000);el.preload="metadata";el.onloadedmetadata=()=>{const duration=el.duration,width=el.videoWidth,height=el.videoHeight;cleanup();Number.isFinite(duration)&&duration>0&&width>0&&height>0?resolve({duration,width,height}):reject(new Error(msg))};el.onerror=()=>{cleanup();reject(new Error(formatMsg))};el.src=u})}
 export default function VideoWatermarkWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
- const[items,setItems]=useState<MediaItem[]>([]),[preview,setPreview]=useState(""),[box,setBox]=useState<Box>({x:72,y:78,w:24,h:14}),[busy,setBusy]=useState(false),[progress,setProgress]=useState(""),[results,setResults]=useState<Output[]>([]),[failures,setFailures]=useState<Failure[]>([]),[error,setError]=useState("");
+ const[items,setItems]=useState<MediaItem[]>([]),[preview,setPreview]=useState(""),[box,setBox]=useState<Box>({x:72,y:78,w:24,h:14}),[busy,setBusy]=useState(false),[progress,setProgress]=useState(""),[results,setResults]=useState<Output[]>([]),[failures,setFailures]=useState<Failure[]>([]),[error,setError]=useState(""),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  const ff=useRef<FfmpegHandle|null>(null),resultUrls=useRef<string[]>([]);
  useEffect(()=>()=>{if(preview)URL.revokeObjectURL(preview);for(const u of resultUrls.current)URL.revokeObjectURL(u);try{ff.current?.terminate()}catch{}},[preview]);
  function clearResults(){for(const u of resultUrls.current)URL.revokeObjectURL(u);resultUrls.current=[];setResults([]);setFailures([])}
  async function hydrate(files:File[]){setError("");const next:MediaItem[]=[];for(const file of files.slice(0,10)){try{const m=await mediaMetaOf(file,c.metaFail,c.formatFail);next.push({file,duration:m.duration,width:m.width,height:m.height,key:`${file.name}-${file.size}-${file.lastModified}`})}catch(e){setError(e instanceof Error?e.message:String(e))}}setItems(next);clearResults();if(preview)URL.revokeObjectURL(preview);setPreview(next[0]?URL.createObjectURL(next[0].file):"")}
  async function addRemote(file:File){await hydrate([...items.map(x=>x.file),file])}
  const units=useMemo(()=>items.reduce((n,x)=>n+Math.max(1,Math.ceil(x.duration/60)),0),[items]);
+ // VIDEO_WATERMARK_PAID_DRAFT_V23
+ useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),files=draftFiles(d);if(d?.toolId==="video-watermark-remover"&&files.length){setDraftId(id);if(d.state?.box)setBox(d.state.box);await hydrate(files)}setDraftReady(true)})()},[]);
+ useEffect(()=>{if(!draftReady||!items.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"video-watermark-remover",files:items.map(x=>x.file),state:{box}}),150);return()=>clearTimeout(tm)},[items,box,draftId,draftReady]);
  async function processOne(item:MediaItem,index:number){
   let f:InstanceType<(typeof import("@ffmpeg/ffmpeg"))["FFmpeg"]>|null=null;
   try{
@@ -62,7 +67,7 @@ export default function VideoWatermarkWorkbench(){
   <p className="text-xs leading-5 text-[var(--lx-muted)]">{c.rights}</p>
   {preview&&<div className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl bg-black"><video src={preview} controls className="w-full"/><div className="pointer-events-none absolute border-2 border-white/70 bg-white/10" style={{left:`${box.x}%`,top:`${box.y}%`,width:`${box.w}%`,height:`${box.h}%`}}/></div>}
   {items.length>0&&<><div className="grid gap-3 sm:grid-cols-4">{([[c.x,"x"],[c.y,"y"],[c.w,"w"],[c.h,"h"]] as const).map(([name,key])=><label key={key} className="text-sm text-[var(--lx-muted)]">{name} %<input type="range" min={0} max={key==="w"||key==="h"?50:95} value={box[key]} onChange={e=>setBox(v=>({...v,[key]:Number(e.target.value)}))} className="mt-2 w-full"/><span className="text-xs text-[var(--lx-faint)]">{box[key]}%</span></label>)}</div><div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm text-[var(--lx-muted)]">{items.length} · {c.billing}: <b className="text-[var(--lx-ink)]">{units}</b></div></>}
-  <div className="flex flex-wrap gap-3">{busy?<><button disabled className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] opacity-50">{c.working}</button><button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{c.cancel}</button></>:units>0?<button type="button" onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)]">开始处理</button>:null}</div>
+  <div className="flex flex-wrap gap-3">{busy?<><button disabled className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] opacity-50">{c.working}</button><button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{c.cancel}</button></>:units>0&&draftReady?<PaidActionButton toolId="video-watermark-remover" quantity={units} draftId={draftId} draftReady={draftReady} metadata={{minutes:units,files:items.length,box}} onPaid={async()=>{await run()}} label={c.price}/>:null}</div>
   {progress&&<p className="text-sm text-[var(--lx-muted)]">{progress}</p>}
   {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.url} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><video src={r.url} controls className="w-full rounded-xl"/><div className="mt-3 flex items-center justify-between gap-2"><span className="truncate text-sm text-[var(--lx-muted)]">{r.name}</span><button type="button" onClick={()=>void downloadUrl(r.url,`clean-${r.name.replace(/\.[^.]+$/,".mp4")}`)} className="shrink-0 rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">{c.download}</button></div></div>)}</div>}
   {failures.length>0&&<div className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-3 text-xs text-[var(--lx-danger)]">{failures.map(x=><div key={x.name}>{x.name} · {x.reason}</div>)}</div>}

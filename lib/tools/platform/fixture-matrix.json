@@ -96,7 +96,8 @@
     "temp-mail",
     "video-dubbing",
     "video-transcription",
-    "video-watermark-remover"
+    "video-watermark-remover",
+    "image-translator"
   ],
   "toolClassifications": {
     "audio-transcription": {
@@ -317,7 +318,10 @@
     "xlsx-to-csv": {
       "kind": "fixture",
       "fixtureGroup": "table-xlsx"
+    },
+    "image-translator": {
+      "kind": "online-contract"
     }
   },
-  "classificationCount": 64
+  "classificationCount": 65
 }

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "rule": "Every public paid tool must use persistent-draft, retain-tab, or server-job recovery.",
+  "strategies": {
+    "audio-transcription": "persistent-draft",
+    "batch-image-watermark-remover": "persistent-draft",
+    "burn-after-read-file": "server-job",
+    "cross-page-stamp": "persistent-draft",
+    "e-sign-pdf": "persistent-draft",
+    "food-calorie": "retain-tab",
+    "id-photo-ai": "persistent-draft",
+    "image-translator": "persistent-draft",
+    "image-watermark-remover": "persistent-draft",
+    "pdf-editor": "persistent-draft",
+    "sasi-deep-reason": "server-job",
+    "sasi-image-generate": "server-job",
+    "sasi-video-generate": "server-job",
+    "subtitle-translate": "persistent-draft",
+    "temp-mail-batch": "server-job",
+    "video-dubbing": "persistent-draft",
+    "video-transcription": "persistent-draft",
+    "video-watermark-remover": "persistent-draft"
+  }
+}

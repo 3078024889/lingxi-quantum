@@ -1,7 +1,7 @@
 "use client";
 import {downloadUrl} from "@/lib/tools/shared/download";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { toolRuntimeText } from "@/lib/tool-runtime-i18n";
 import {workbenchCopy} from "@/lib/tools/workbench-i18n-v1473";
@@ -19,6 +19,7 @@ import { delimitedToXlsx, docxToText, xlsxToCsvFiles } from "@/lib/tools/shared/
 import { heicToJpgFiles, imagesToPdf, mergePdfFiles, pdfToJpgFiles, readQrCode, splitPdfFile } from "@/lib/tools/shared/practical-doc-tools";
 import { rebuildCompressedPdf, type PdfCompressionPreset } from "@/lib/tools/shared/pdf-rebuild-compress";
 import { pptxToText } from "@/lib/tools/shared/pptx-text";
+import {consumeToolHandoff} from "@/lib/tools/workspace/handoff";
 
 type Props = { tool: ToolMeta };
 
@@ -54,6 +55,24 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const [keepAspect, setKeepAspect] = useState(true);
   const [customKb, setCustomKb] = useState(100);
   const [pdfCompression, setPdfCompression] = useState<PdfCompressionPreset>("balanced");
+
+  // HANDOFF_APPLIED: one-shot local browser handoff from a previous tool.
+  useEffect(()=>{
+    let cancelled=false;
+    const token=new URL(window.location.href).searchParams.get("handoff");
+    if(!token)return;
+    consumeToolHandoff(token).then(payload=>{
+      if(cancelled||!payload?.files?.length)return;
+      const maxFiles=tool.multiple?(tool.maxFiles||payload.files.length):1;
+      const accepted=payload.files.slice(0,maxFiles);
+      setFiles(tool.multiple?accepted:accepted.slice(0,1));
+      setResult(null);
+      const clean=new URL(window.location.href);
+      clean.searchParams.delete("handoff");
+      history.replaceState(history.state,"",clean.pathname+clean.search+clean.hash);
+    }).catch(()=>{});
+    return()=>{cancelled=true};
+  },[tool.slug,tool.multiple,tool.maxFiles]);
 
   const preciseTarget = useMemo(() => {
     const fromSlug = targetBytesForSlug(tool.slug);
@@ -206,7 +225,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       </button>
 
       {result?.ok === true && (
-        <ResultPanel files={result.files} messageZh={result.messageZh} messageEn={result.messageEn} details={result.details} />
+        <ResultPanel sourceSlug={tool.slug} files={result.files} messageZh={result.messageZh} messageEn={result.messageEn} details={result.details} />
       )}
       {result?.ok === false && (
         <ErrorExplain reasonZh={result.reasonZh} reasonEn={result.reasonEn} hintZh={result.hintZh} hintEn={result.hintEn} />
