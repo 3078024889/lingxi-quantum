@@ -1,0 +1,1 @@
+import{NextResponse}from"next/server";import{gatewayStatus}from"@/lib/lingxifield/gateway";export const dynamic="force-dynamic";export async function GET(){return NextResponse.json({connections:gatewayStatus().map(x=>({name:x.id,available:x.connected,capabilities:x.capabilities}))},{headers:{"Cache-Control":"private, no-store"}})}
