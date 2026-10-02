@@ -2,7 +2,7 @@ import ToolGuide from "@/components/seo/ToolGuide";
 import {languageAlternates} from "@/lib/seo/global-seo";
 import type { Metadata } from "next";
 import BurnAfterReadWorkbench from "@/components/tools/BurnAfterReadWorkbench";
-import ToolVisualStory from "@/components/tools/ToolVisualStory";
+import ToolPromoStrip from "@/components/tools/ToolPromoStrip";
 
 export const metadata:Metadata={
  title:"阅后即焚｜文字、文件与临时链接｜灵犀场",
@@ -17,9 +17,9 @@ const images=Array.from({length:9},(_,i)=>({
 
 export default function Page(){
  return <main className="lx11-page"><div className="lx11-wrap py-10">
-  <BurnAfterReadWorkbench/>
-  <ToolVisualStory eyebrow="LINGXIFIELD · PRIVATE SHARE" title="重要内容临时发，看完就让链接失效。"
-   intro="文字、文件和一次性资料都可以用临时链接分享。可按时间或查看次数控制有效期，适合短期沟通，不适合作为长期存档。"
+  <ToolPromoStrip eyebrow="LINGXIFIELD · PRIVATE SHARE" title="阅后即焚：9 个场景放在页面上方，一排浏览。"
+   intro="文字、文件与临时资料可生成短期链接；按时间或查看次数失效。视觉说明改为紧凑横向展示。"
    images={images}/>
+  <BurnAfterReadWorkbench/>
  </div><ToolGuide slug="burn-after-read"/></main>;
 }

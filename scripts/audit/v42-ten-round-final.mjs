@@ -158,12 +158,12 @@ console.log("=== ROUND 09 / Public language, mobile UX, 9 languages, RTL & Mini 
  if(exists("miniapp/app.json")){
   const app=JSON.parse(read("miniapp/app.json"));
   must(app.pages.length===12,`R09_MINI_PAGE_COUNT:${app.pages.length}`);
-  must(app.tabBar?.list?.length===5,`R09_MINI_TAB_COUNT:${app.tabBar?.list?.length}`);
+  must(app.tabBar?.list?.length===4,`R09_MINI_TAB_COUNT:${app.tabBar?.list?.length}`);
   must(exists("miniapp/pages/settings/index.js"),"R09_MINI_SETTINGS_MISSING");
  }
  pass(9,"PUBLIC_ENGINEERING_COPY_ZERO");
  pass(9,"MOBILE_NAV_SETTINGS");
- pass(9,"MINIPROGRAM_12_PAGES_5_TABS");
+ pass(9,"MINIPROGRAM_12_PAGES_4_TABS");
 }
 
 console.log("=== ROUND 10 / CI closure, build gates & final release readiness ===");

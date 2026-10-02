@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ToolGlyph from "./ToolGlyph";
 import { liveTools } from "@/lib/tools/registry";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
@@ -116,16 +116,51 @@ const categories: Category[] = ["all","pdf","image","media","subtitle","table","
 export default function ToolsHubV11() {
   const { lang, t } = useLingxiLang();
   const [q, setQ] = useState("");
+  // V43R1_GLOBAL_SEARCH_BRIDGE: make the global header search land on the same useful
+  // search experience as the tools page instead of merely changing the URL.
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const fromUrl = (params.get("q") || "").trim();
+      const fromGlobal = (sessionStorage.getItem("lx-global-search") || "").trim();
+      const incoming = fromUrl || fromGlobal;
+      if (incoming) setQ(incoming);
+      if (fromGlobal) sessionStorage.removeItem("lx-global-search");
+    } catch {}
+  }, []);
   const [category, setCategory] = useState<Category>("all");
   const tools = useMemo(() => allTools(), []);
 
+  // V43R1_SEARCH_INTENT_NORMALIZER
   const list = useMemo(() => {
-    const needle = q.trim().toLowerCase();
+    const raw=q.trim().toLowerCase();
+    const normalize=(value:string)=>value
+      .toLowerCase()
+      .replace(/[\s，。！？、,.!?;；:："'“”‘’()（）【】\[\]{}<>《》/_-]+/g,"")
+      .replace(/^(我要|我想|想要|请帮我|帮我|请|怎么|如何|需要|有没有|能不能|可以|给我)+/g,"")
+      .replace(/(一下|一个|工具|功能|处理|在线)$/g,"");
+    const needle=normalize(raw);
     return tools.filter((item) => {
       const categoryMatch = category === "all" || displayCategory(item) === category;
       if (!categoryMatch) return false;
       if (!needle) return true;
-      return `${item.titleZh} ${item.titleEn} ${item.descZh} ${item.descEn}`.toLowerCase().includes(needle);
+      const slug=item.href.replace("/tools/","");
+      const aliases:Record<string,string>={
+        "temp-mail":"临时邮箱一次性邮箱验证码注册邮件temporaryemailtempmail",
+        "burn-after-read":"阅后即焚私密链接临时链接销毁一次性链接burnafterread",
+        "food-calorie":"卡路里热量营养食物识别早餐午餐晚餐caloriefoodnutrition",
+        "pdf-compress":"pdf压缩文件变小减小pdf",
+        "pdf-merge-split":"pdf合并拆分合并pdf拆分pdf",
+        "image-watermark-remover":"图片去水印去水印水印清除",
+        "video-watermark-remover":"视频去水印去水印视频水印",
+        "ocr":"ocr图片文字识别提取文字",
+        "video-transcription":"视频转文字视频字幕语音文字",
+        "audio-transcription":"音频转文字录音转文字"
+      };
+      const hay=normalize([
+        slug,item.titleZh,item.titleEn,item.descZh,item.descEn,aliases[slug]||""
+      ].join(" "));
+      return hay.includes(needle) || needle.includes(normalize(item.titleZh)) || needle.includes(normalize(item.titleEn));
     });
   }, [tools, q, category]);
 

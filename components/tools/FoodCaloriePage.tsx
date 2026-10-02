@@ -2,6 +2,11 @@
 import Link from 'next/link';
 import {useLingxiLang} from '@/lib/lingxi-i18n';
 import FoodCalorieWorkbench from './FoodCalorieWorkbench';
+import ToolPromoStrip from './ToolPromoStrip';
+const FOOD_PROMO_IMAGES=Array.from({length:9},(_,i)=>({
+ src:`/images/tool-stories/food-calorie/food-calorie-${String(i+1).padStart(2,"0")}.webp`,
+ alt:`灵犀场卡路里与食物热量识别场景 ${i+1}`,
+}));
 const copy={
  zh:['卡路里识别','看懂这一餐，轻松安排下一餐。拍照或输入食物，确认份量后查看营养与搭配建议。','用于日常饮食记录参考，不作为医疗或营养诊断。','全部工具'],
  en:['Food & calories','Understand this meal and plan the next. Add photos or foods, confirm portions, then explore nutrition and meal ideas.','For everyday food records, not medical or nutritional diagnosis.','All tools'],
@@ -13,4 +18,4 @@ const copy={
  pt:['Alimentos e calorias','Entenda esta refeição e planeje a próxima. Adicione fotos ou alimentos, confirme as porções e veja nutrientes e ideias de refeições.','Para registros diários, não para diagnóstico médico ou nutricional.','Todas as ferramentas'],
  ar:['الطعام والسعرات','افهم وجبتك وخطط للتالية. أضف الصور أو الأطعمة وأكد الكميات ثم اطلع على العناصر الغذائية وأفكار الوجبات.','للتسجيل الغذائي اليومي وليس للتشخيص الطبي أو الغذائي.','كل الأدوات'],
 };
-export default function FoodCaloriePage(){const {lang}=useLingxiLang();const c=copy[lang];return <main dir={lang==='ar'?'rtl':'ltr'} className="min-h-screen bg-[var(--lx-bg)] pt-16 text-[var(--lx-ink)] lg:ml-[260px] lg:pt-0"><div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12"><Link href="/tools" className="text-sm text-[var(--lx-muted)]">← {c[3]}</Link><h1 className="mt-6 text-3xl font-semibold sm:text-4xl">{c[0]}</h1><p className="mt-3 max-w-3xl leading-7 text-[var(--lx-muted)]">{c[1]}</p><p className="mt-2 text-xs leading-6 text-[var(--lx-muted)]">{c[2]}</p><div className="mt-7 rounded-[28px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 sm:p-6"><FoodCalorieWorkbench/></div></div></main>}
+export default function FoodCaloriePage(){const {lang}=useLingxiLang();const c=copy[lang];return <main dir={lang==='ar'?'rtl':'ltr'} className="min-h-screen bg-[var(--lx-bg)] pt-16 text-[var(--lx-ink)] lg:ml-[260px] lg:pt-0"><div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12"><Link href="/tools" className="text-sm text-[var(--lx-muted)]">← {c[3]}</Link><h1 className="mt-6 text-3xl font-semibold sm:text-4xl">{c[0]}</h1><p className="mt-3 max-w-3xl leading-7 text-[var(--lx-muted)]">{c[1]}</p><p className="mt-2 text-xs leading-6 text-[var(--lx-muted)]">{c[2]}</p><ToolPromoStrip eyebrow="LINGXIFIELD · FOOD" title={lang==="zh"?"拍一餐之前，先看看真实场景。":"See real food-recognition scenarios"} intro={lang==="zh"?"9 张视觉图已压缩为轻量 WebP，并改成页面上方横向一排；需要时左右滑动查看。":"Nine lightweight visuals in a compact horizontal strip."} images={FOOD_PROMO_IMAGES}/><div className="mt-7 rounded-[28px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 sm:p-6"><FoodCalorieWorkbench/></div></div></main>}

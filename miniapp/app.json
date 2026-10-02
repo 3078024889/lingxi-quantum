@@ -37,10 +37,6 @@
         "text": "创作"
       },
       {
-        "pagePath": "pages/orders/index",
-        "text": "任务"
-      },
-      {
         "pagePath": "pages/profile/index",
         "text": "账户"
       }

@@ -1,7 +1,7 @@
 import {languageAlternates} from "@/lib/seo/global-seo";
 import type { Metadata } from "next";
 import TempMailWorkbench from "@/components/tools/TempMailWorkbench";
-import ToolVisualStory from "@/components/tools/ToolVisualStory";
+import ToolPromoStrip from "@/components/tools/ToolPromoStrip";
 
 export const metadata:Metadata={
  title:"临时邮箱｜即开即用、接收验证码与临时通知｜灵犀场",
@@ -16,9 +16,9 @@ const images=Array.from({length:9},(_,i)=>({
 
 export default function Page(){
  return <main className="lx11-page"><div className="lx11-wrap py-10">
-  <TempMailWorkbench/>
-  <ToolVisualStory eyebrow="LINGXIFIELD · TEMP MAIL" title="临时用途和常用邮箱分开，收完即走。"
-   intro="适合临时注册、验证码、下载链接、测试通知等短期场景。下面用真实场景说明什么时候适合用、怎么用，以及哪些重要账号不建议使用临时邮箱。"
+  <ToolPromoStrip eyebrow="LINGXIFIELD · TEMP MAIL" title="临时邮箱：9 个真实使用场景，一眼看懂怎么用。"
+   intro="临时注册、验证码、下载链接与测试通知分开处理。图片已采用紧凑横向浏览，不再把页面拉得很长。"
    images={images}/>
+  <TempMailWorkbench/>
  </div></main>;
 }

@@ -6,9 +6,7 @@
 
   <view class="lx-home-grid">
     <view class="lx-home-card primary" data-url="/pages/create/index" bindtap="goTab"><view class="lx-home-icon">✦</view><view class="lx-home-card-title">{{copy.create}}</view><view class="lx-home-card-note">{{copy.createNote}}</view><view class="lx-home-arrow">→</view></view>
-    <view class="lx-home-card" data-url="/pages/tools/index" bindtap="goTab"><view class="lx-home-icon">⌘</view><view class="lx-home-card-title">{{copy.tools}}</view><view class="lx-home-card-note">{{copy.toolsNote}}</view><view class="lx-home-arrow">→</view></view>
-    <view class="lx-home-card" data-url="/pages/orders/index" bindtap="goTab"><view class="lx-home-icon">✓</view><view class="lx-home-card-title">{{copy.tasks}}</view><view class="lx-home-card-note">{{copy.tasksNote}}</view><view class="lx-home-arrow">→</view></view>
-    <view class="lx-home-card" data-url="/pages/agents/index" bindtap="go"><view class="lx-home-icon">◎</view><view class="lx-home-card-title">{{copy.knowledge}}</view><view class="lx-home-card-note">{{copy.knowledgeNote}}</view><view class="lx-home-arrow">→</view></view>
+    <view class="lx-home-card" data-url="/pages/tools/index" bindtap="goTab"><view class="lx-home-icon">⌘</view><view class="lx-home-card-title">{{copy.tools}}</view><view class="lx-home-card-note">{{copy.toolsNote}}</view><view class="lx-home-arrow">→</view></view><view class="lx-home-card" data-url="/pages/agents/index" bindtap="go"><view class="lx-home-icon">◎</view><view class="lx-home-card-title">{{copy.knowledge}}</view><view class="lx-home-card-note">{{copy.knowledgeNote}}</view><view class="lx-home-arrow">→</view></view>
   </view>
 
   <view class="lx-home-links">

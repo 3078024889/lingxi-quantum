@@ -1,8 +1,8 @@
 import fs from"node:fs";
 const must=(v,m)=>{if(!v)throw new Error(m)};
 const app=JSON.parse(fs.readFileSync("miniapp/app.json","utf8"));
-const expected=["pages/home/index","pages/tools/index","pages/create/index","pages/orders/index","pages/profile/index"];
-must(app.tabBar.list.length===5,"V41_TAB_COUNT");
+const expected=["pages/home/index","pages/tools/index","pages/create/index","pages/profile/index"];
+must(app.tabBar.list.length===4,"V41_TAB_COUNT");
 must(JSON.stringify(app.tabBar.list.map(x=>x.pagePath))===JSON.stringify(expected),"V41_TAB_PATHS");
 for(const p of[
  "miniapp/pages/home/index.js","miniapp/pages/home/index.wxml","miniapp/pages/home/index.wxss",
@@ -18,7 +18,7 @@ must(settings.includes("SUPPORTED"),"V41_LANGUAGE_SETTING_MISSING");
 const i18n=fs.readFileSync("miniapp/utils/i18n.js","utf8");
 for(const label of["首页","Home","ホーム","홈","Accueil","Start","Inicio","Início","الرئيسية"])must(i18n.includes(label),`V41_TAB_LANG_MISSING:${label}`);
 console.log("MINI_HOME=PASS");
-console.log("MINI_TABBAR_5=PASS");
+console.log("MINI_TABBAR_4=PASS");
 console.log("MINI_SETTINGS=PASS");
 console.log("MINI_LANGUAGE_SWITCH=PASS");
 console.log("MINI_CURRENCY_SWITCH=PASS");
