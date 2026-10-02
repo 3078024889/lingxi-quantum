@@ -23,12 +23,14 @@ export async function POST(req:NextRequest,{params}:{params:Promise<{id:string}>
   const body=await req.json(),quoteId=body.quoteId||null;
   if(quoteId&&!UUID.test(quoteId))return NextResponse.json({error:'INVALID_QUOTE'},{status:400});
   const {data:{user}}=await createClient().auth.getUser();
+  let legacy=false;
   if(quoteId){
    if(!user)return NextResponse.json({error:'SIGN_IN_REQUIRED'},{status:401});
    const payment=await recoverToolQuotePayment({userId:user.id,quoteId});
    if(!payment.ok||!payment.paid||payment.quote?.toolId!=='food-calorie')return NextResponse.json({error:'PAYMENT_REQUIRED'},{status:402});
+   legacy=!payment.quote.metadata?.foodRequestId;
   }
-  const {data,error}=await createAdminClient().rpc('consume_food_analysis_v19',{p_id:id,p_account_id:user?.id||null,p_ip_hash:foodRequestIpHash(req),p_quote_id:quoteId});
+  const {data,error}=await createAdminClient().rpc(legacy?'consume_legacy_food_analysis_v19':'consume_food_analysis_v19',{p_id:id,p_account_id:user?.id||null,p_ip_hash:foodRequestIpHash(req),p_quote_id:quoteId});
   if(error){const code=['FREE_ALREADY_USED','PAYMENT_REQUIRED','REQUEST_EXPIRED','REQUEST_NOT_FOUND','QUOTE_BINDING_MISMATCH','IMAGE_SESSION_INVALID'].find(x=>error.message.includes(x))||'ANALYSIS_UNAVAILABLE';return NextResponse.json({error:code,freeUsed:code==='FREE_ALREADY_USED'},{status:code==='ANALYSIS_UNAVAILABLE'?503:409});}
   return NextResponse.json(data,{headers:{'Cache-Control':'private, no-store'}});
  }catch{return NextResponse.json({error:'ANALYSIS_UNAVAILABLE'},{status:503});}

@@ -1,6 +1,7 @@
 import type {LingxiLang} from '@/lib/lingxi-i18n';
 const languages=['zh','en','ja','ko','fr','de','es','pt','ar'];
 const rows:Record<string,string[]>={
+ legacy:['使用已付款的旧订单，无需再付','Use an already-paid order · no new payment','支払い済みの注文を使用・再払い不要','기존 결제 주문 사용 · 추가 결제 없음','Utiliser une commande payée · sans nouveau paiement','Bezahlte Bestellung nutzen · keine neue Zahlung','Usar pedido pagado · sin pagar de nuevo','Usar pedido pago · sem novo pagamento','استخدام طلب مدفوع سابقًا · دون دفع جديد'],
  foodUnit:['种食物','foods','種類','종류','aliments','Lebensmittel','alimentos','alimentos','أنواع طعام'],
  imageUnit:['张图片','photos','枚','장','photos','Fotos','fotos','fotos','صور'],
  login:['请先登录，已确认的食物会保留。','Sign in first. Your confirmed foods are saved.','ログインしてください。確認した食品は保存されています。','먼저 로그인하세요. 확인한 음식은 저장되었습니다.','Connectez-vous. Vos aliments sont enregistrés.','Bitte anmelden. Die Auswahl ist gespeichert.','Inicia sesión. Los alimentos están guardados.','Entre na sua conta. Os alimentos estão salvos.','سجل الدخول أولًا. تم حفظ الأطعمة المؤكدة.'],

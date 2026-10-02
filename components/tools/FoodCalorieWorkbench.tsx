@@ -61,6 +61,8 @@ function RecoveredFoodAnalysis({lang}:{lang:LingxiLang}){
  return prepared?<section className="space-y-3 rounded-2xl border border-[var(--lx-line)] p-4"><h3>{foodBillingText(lang,'saved')}</h3><AnalysisCheckout lang={lang} prepared={prepared}/></section>:null;
 }
 function AnalysisCheckout({lang,prepared}:{lang:LingxiLang;prepared:Prepared}){
+ const[legacy,setLegacy]=useState<{id:string;mode:string;maxQuantity:number;currency:string;amount:number}[]>([]);
+ useEffect(()=>{let live=true;void fetch('/api/tools/food/legacy-orders',{cache:'no-store'}).then(r=>r.ok?r.json():{items:[]}).then(d=>{if(live)setLegacy(d.items||[])}).catch(()=>{});return()=>{live=false}},[]);
  const[free,setFree]=useState<boolean|null>(null),[result,setResult]=useState<MealResult|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState('');
  const lastQuote=useRef<string|undefined>(undefined);
  async function calculate(quoteId?:string){
@@ -73,6 +75,7 @@ function AnalysisCheckout({lang,prepared}:{lang:LingxiLang;prepared:Prepared}){
  }
  useEffect(()=>{let live=true;void fetch('/api/tools/food/free-status',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(live)setFree(d?.available===true)}).catch(()=>{if(live)setFree(false)});return()=>{live=false}},[]);
  return <div className="space-y-4" aria-live="polite">{result?<ResultCard lang={lang} result={result}/>:<>
+ {legacy.filter(q=>q.mode===prepared.mode&&q.maxQuantity>=prepared.quantity).map(q=><button type="button" key={q.id} className={button} disabled={busy} onClick={()=>void calculate(q.id).catch(()=>{})}>{foodBillingText(lang,'legacy')} · {q.currency==='USD'?'$':'¥'}{q.amount.toFixed(2)}</button>)}
  {prepared.completed?<button type="button" className={primary} disabled={busy} onClick={()=>void calculate().catch(()=>{})}>{foodBillingText(lang,'retry')}</button>:free===null?<p>{t(lang,'working')}</p>:free&&prepared.freeEligible?<button type="button" className={primary} disabled={busy} onClick={()=>void calculate().catch(()=>{})}>{t(lang,busy?'working':'view')} · {foodBillingText(lang,'freeNow')}</button>:<PaidActionButton toolId="food-calorie" quantity={prepared.quantity} metadata={{foodRequestId:prepared.id,mode:prepared.mode}} draftId={prepared.id} onPaid={calculate} label={foodBillingText(lang,'ready')}/>}
  {msg&&<p role="alert">{msg}</p>}{lastQuote.current&&msg&&<button type="button" className={button} disabled={busy} onClick={()=>void calculate(lastQuote.current).catch(()=>{})}>{foodBillingText(lang,'retry')}</button>}
  </>}</div>;

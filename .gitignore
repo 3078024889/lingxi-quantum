@@ -56,3 +56,8 @@ docs/generated-fooddata-v2/
 lingxifield-food-stage/
 
 lingxifield-food-upload/
+
+# Local LINGXIFIELD recovery artifacts - never commit
+/.lingxifield-*-backup-*/
+/lingxifield-v*-backup-*/
+
