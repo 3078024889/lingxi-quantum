@@ -1,1 +1,10 @@
-<view class="page"><view class="shell"><view class="title">{{copy.title}}</view><view wx:if="{{loading}}" class="empty">…</view><view wx:elif="{{!items.length}}" class="empty">{{copy.empty}}</view><view wx:else class="list"><view wx:for="{{items}}" wx:key="eventKey" class="card"><view class="card-title">{{item.title}}</view><view class="card-body">{{item.body}}</view><view class="time">{{item.createdAt}}</view></view></view></view></view>
+<view class="lx-page"><view class="lx-shell lx-notify41">
+ <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">UPDATES</view></view>
+ <view class="lx-kicker">LINGXIFIELD</view><view class="lx-title">{{copy.title}}</view>
+ <view wx:if="{{loading}}" class="lx-notify-empty"><view class="lx-notify-mark">…</view></view>
+ <view wx:elif="{{!items.length}}" class="lx-notify-empty"><view class="lx-notify-mark">✓</view><text>{{copy.empty}}</text></view>
+ <view wx:else class="lx-notify-list"><view wx:for="{{items}}" wx:key="eventKey" class="lx-notify-card">
+   <view class="lx-notify-icon">{{item.kind==='announcement'?'✦':item.kind==='topup'?'✓':'↩'}}</view>
+   <view class="lx-notify-main"><view class="lx-notify-title">{{item.title}}</view><view class="lx-notify-body">{{item.body}}</view><view class="lx-notify-time">{{item.createdAt}}</view></view>
+ </view></view>
+</view></view>

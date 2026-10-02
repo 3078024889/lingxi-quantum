@@ -1,0 +1,18 @@
+<view class="lx-page"><view class="lx-shell lx-home41">
+  <view class="lx-brand"><view><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">LINGXIFIELD</view></view><view class="lx-home-orbit">✦</view></view>
+  <view class="lx-kicker">{{copy.kicker}}</view>
+  <view class="lx-title">{{copy.title}}</view>
+  <view class="lx-subtitle">{{copy.subtitle}}</view>
+
+  <view class="lx-home-grid">
+    <view class="lx-home-card primary" data-url="/pages/create/index" bindtap="goTab"><view class="lx-home-icon">✦</view><view class="lx-home-card-title">{{copy.create}}</view><view class="lx-home-card-note">{{copy.createNote}}</view><view class="lx-home-arrow">→</view></view>
+    <view class="lx-home-card" data-url="/pages/tools/index" bindtap="goTab"><view class="lx-home-icon">⌘</view><view class="lx-home-card-title">{{copy.tools}}</view><view class="lx-home-card-note">{{copy.toolsNote}}</view><view class="lx-home-arrow">→</view></view>
+    <view class="lx-home-card" data-url="/pages/orders/index" bindtap="goTab"><view class="lx-home-icon">✓</view><view class="lx-home-card-title">{{copy.tasks}}</view><view class="lx-home-card-note">{{copy.tasksNote}}</view><view class="lx-home-arrow">→</view></view>
+    <view class="lx-home-card" data-url="/pages/agents/index" bindtap="go"><view class="lx-home-icon">◎</view><view class="lx-home-card-title">{{copy.knowledge}}</view><view class="lx-home-card-note">{{copy.knowledgeNote}}</view><view class="lx-home-arrow">→</view></view>
+  </view>
+
+  <view class="lx-home-links">
+    <view class="lx-home-link" data-url="/pages/notifications/index" bindtap="go"><text>🔔</text><view><b>{{copy.notifications}}</b><small>{{copy.notificationsNote}}</small></view><text>›</text></view>
+    <view class="lx-home-link" data-url="/pages/settings/index" bindtap="go"><text>⚙</text><view><b>{{copy.settings}}</b><small>{{copy.settingsNote}}</small></view><text>›</text></view>
+  </view>
+</view></view>

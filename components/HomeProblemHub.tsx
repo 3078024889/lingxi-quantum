@@ -193,7 +193,7 @@ export default function HomeProblemHub(){
  ];
  function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(hit?.score>0)location.href=hit.href;else{sessionStorage.setItem("lx-home-intent",v);location.href=`/sasi?intent=${encodeURIComponent(v)}`}}
  return <main className="lx11-page"><div className="lx11-wrap">
-  <section className="lx11-home-hero lx-home-v143"><p className="lx11-home-kicker">{c.kicker}</p><p className="lx-v37-brand-title">{c.seoTitle}</p><p className="lx-v37-brand-desc">{c.seoDesc}</p><h1>{c.hero}</h1><p>{c.lead}</p>
+  <section className="lx11-home-hero lx-home-v143"><p className="lx-v37-brand-title">{c.seoTitle}</p><p className="lx-v37-brand-desc">{c.seoDesc}</p><h1>{c.hero}</h1><p>{c.lead}</p>
    <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} placeholder={c.placeholder}/><button>{c.begin}</button></form>
    {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
   </section>

@@ -1,9 +1,11 @@
 {
   "pages": [
+    "pages/home/index",
     "pages/create/index",
     "pages/tools/index",
     "pages/agents/index",
     "pages/profile/index",
+    "pages/settings/index",
     "pages/web/index",
     "pages/share/index",
     "pages/pay/index",
@@ -23,20 +25,24 @@
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/create/index",
-        "text": "SASI创作"
+        "pagePath": "pages/home/index",
+        "text": "首页"
       },
       {
         "pagePath": "pages/tools/index",
-        "text": "实用工具"
+        "text": "工具"
       },
       {
-        "pagePath": "pages/agents/index",
-        "text": "资料智库"
+        "pagePath": "pages/create/index",
+        "text": "创作"
+      },
+      {
+        "pagePath": "pages/orders/index",
+        "text": "任务"
       },
       {
         "pagePath": "pages/profile/index",
-        "text": "我的"
+        "text": "账户"
       }
     ]
   },

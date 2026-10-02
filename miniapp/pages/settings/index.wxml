@@ -1,0 +1,16 @@
+<view class="lx-page"><view class="lx-shell">
+ <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">SETTINGS</view></view>
+ <view class="lx-kicker">{{copy.kicker}}</view><view class="lx-title">{{copy.title}}</view><view class="lx-subtitle">{{copy.subtitle}}</view>
+ <view class="lx-setting-card">
+  <view class="lx-setting-row"><view><b>{{copy.language}}</b></view><picker mode="selector" range="{{languages}}" range-key="label" value="{{languageIndex}}" bindchange="changeLanguage"><view class="lx-setting-pill">{{languages[languageIndex].label}} ›</view></picker></view>
+  <view class="lx-setting-row"><view><b>{{copy.currency}}</b><small>{{copy.currencyNote}}</small></view><picker mode="selector" range="{{currencies}}" range-key="label" value="{{currencyIndex}}" bindchange="changeCurrency"><view class="lx-setting-pill">{{currencies[currencyIndex].id}} ›</view></picker></view>
+ </view>
+ <view class="lx-section"><view class="lx-section-title">{{copy.account}}</view><view class="lx-list">
+  <view class="lx-row" bindtap="goNotifications"><view class="lx-row-main"><view class="lx-row-title">{{copy.notifications}}</view></view><view class="lx-arrow">›</view></view>
+  <view class="lx-row" data-path="/ai-wallet" bindtap="go"><view class="lx-row-main"><view class="lx-row-title">{{copy.balance}}</view></view><view class="lx-arrow">›</view></view>
+  <view class="lx-row" data-path="/account/withdrawals" bindtap="go"><view class="lx-row-main"><view class="lx-row-title">{{copy.withdraw}}</view></view><view class="lx-arrow">›</view></view>
+  <view class="lx-row" data-path="/privacy" bindtap="go"><view class="lx-row-main"><view class="lx-row-title">{{copy.privacy}}</view></view><view class="lx-arrow">›</view></view>
+  <view class="lx-row" data-path="/terms" bindtap="go"><view class="lx-row-main"><view class="lx-row-title">{{copy.terms}}</view></view><view class="lx-arrow">›</view></view>
+  <view class="lx-row" data-path="/release" bindtap="go"><view class="lx-row-main"><view class="lx-row-title">{{copy.release}}</view></view><view class="lx-arrow">›</view></view>
+ </view></view>
+</view></view>
