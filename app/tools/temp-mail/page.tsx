@@ -16,8 +16,8 @@ const images=Array.from({length:9},(_,i)=>({
 
 export default function Page(){
  return <main className="lx11-page"><div className="lx11-wrap py-10">
-  <ToolPromoStrip eyebrow="LINGXIFIELD · TEMP MAIL" title="临时邮箱：9 个真实使用场景，一眼看懂怎么用。"
-   intro="临时注册、验证码、下载链接与测试通知分开处理。图片已采用紧凑横向浏览，不再把页面拉得很长。"
+  <ToolPromoStrip eyebrow="LINGXIFIELD · TEMP MAIL" title="临时邮箱：不用暴露常用邮箱，也能接收这次需要的邮件。"
+   intro="接收验证码、确认邮件、下载链接和短期通知。任务结束后，不必让这些邮件继续占用你的常用邮箱。"
    images={images}/>
   <TempMailWorkbench/>
  </div></main>;

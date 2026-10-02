@@ -17,8 +17,8 @@ const images=Array.from({length:9},(_,i)=>({
 
 export default function Page(){
  return <main className="lx11-page"><div className="lx11-wrap py-10">
-  <ToolPromoStrip eyebrow="LINGXIFIELD · PRIVATE SHARE" title="阅后即焚：9 个场景放在页面上方，一排浏览。"
-   intro="文字、文件与临时资料可生成短期链接；按时间或查看次数失效。视觉说明改为紧凑横向展示。"
+  <ToolPromoStrip eyebrow="LINGXIFIELD · PRIVATE SHARE" title="阅后即焚：敏感内容只在需要的时候被看到。"
+   intro="把文字、文件或临时资料生成短期链接，由你决定失效时间或查看次数；到期后不再继续开放。"
    images={images}/>
   <BurnAfterReadWorkbench/>
  </div><ToolGuide slug="burn-after-read"/></main>;

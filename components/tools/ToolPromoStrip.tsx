@@ -16,7 +16,6 @@ export default function ToolPromoStrip({
         <h2>{title}</h2>
         {intro?<span>{intro}</span>:null}
       </div>
-      <small>{images.length} / {images.length}</small>
     </div>
     <div className="lx-v43-promo-track">
       {images.map((item,index)=><figure key={item.src} className="lx-v43-promo-card">
