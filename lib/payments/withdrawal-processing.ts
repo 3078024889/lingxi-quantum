@@ -1,6 +1,10 @@
 import 'server-only';
 import {createAdminClient} from '@/lib/supabase/admin';
 import {executeProviderRefund,queryProviderRefund,refundProviderConfigured} from '@/lib/payment-refunds';
+function providerFailure(error:unknown){
+ const message=error instanceof Error?error.message:'';
+ return /^(?:WECHAT|ALIPAY|PAYPAL)_REFUND_[A-Z0-9_:.-]{1,100}$/.test(message)?message:'PROVIDER_CONFIRMATION_PENDING';
+}
 // Claim a saved request before sending it. A concurrent caller must never
 // release a hold that another caller is currently submitting.
 export async function dispatchWithdrawal(id:string,userId:string){
@@ -32,8 +36,9 @@ export async function dispatchWithdrawal(id:string,userId:string){
    const released=await admin.rpc('release_balance_withdrawal',{p_withdrawal_id:id,p_failure_code:'PROVIDER_REFUND_REJECTED',p_provider_status:attempt.providerStatus});
    return {ok:true,status:!released.error&&released.data?.ok?'failed':'processing',withdrawalId:id};
   }
- }catch{
-  await admin.from('balance_withdrawals').update({failure_code:'PROVIDER_CONFIRMATION_PENDING',updated_at:new Date().toISOString()}).eq('id',id).eq('status','processing');
+ }catch(error){
+  const code=providerFailure(error);console.error('[withdrawal provider]',{withdrawalId:id,code});
+  await admin.from('balance_withdrawals').update({failure_code:'PROVIDER_CONFIRMATION_PENDING',provider_status:code,updated_at:new Date().toISOString()}).eq('id',id).eq('status','processing');
  }
  return {ok:true,status:'processing',withdrawalId:id};
 }
@@ -45,19 +50,27 @@ export async function refreshWithdrawal(id:string,userId:string){
  if(w.status==='requested')return dispatchWithdrawal(id,userId);
  if(w.status!=='processing')return {ok:true,status:w.status,withdrawalId:id};
  if(Date.now()-Date.parse(w.updated_at)<30000)return {ok:true,status:'processing',withdrawalId:id};
- const {data:order}=await admin.from('orders').select('provider_payment_id').eq('id',w.order_id).eq('user_id',userId).single();
+ const {data:order}=await admin.from('orders').select('id,provider_payment_id,amount_rmb,amount_usd').eq('id',w.order_id).eq('user_id',userId).single();
  if(!order?.provider_payment_id){
   await admin.from('balance_withdrawals').update({failure_code:'PAYMENT_REFERENCE_REQUIRED',updated_at:new Date().toISOString()}).eq('id',id).eq('status','processing');
   return {ok:true,status:'processing',withdrawalId:id,needsSupport:true};
  }
  try{
-  const a=await queryProviderRefund({provider:w.provider,providerPaymentId:order.provider_payment_id,withdrawalId:id,refundId:w.provider_refund_id,currency:w.provider_currency,refundAmountMinor:Number(w.provider_amount_minor)});
+  let a;
+  try{a=await queryProviderRefund({provider:w.provider,providerPaymentId:order.provider_payment_id,withdrawalId:id,refundId:w.provider_refund_id,currency:w.provider_currency,refundAmountMinor:Number(w.provider_amount_minor)});}
+  catch(error){
+   // Only a definitive WeChat "refund does not exist" permits resubmission.
+   // Reuse the exact merchant refund number and amounts; timeouts and signature errors never enter this branch.
+   if(w.provider!=='wechat'||!(error instanceof Error)||error.message!=='WECHAT_REFUND_404:RESOURCE_NOT_EXISTS')throw error;
+   a=await executeProviderRefund({provider:w.provider,providerPaymentId:order.provider_payment_id,localOrderId:order.id,withdrawalId:id,currency:w.provider_currency,orderAmountMinor:Math.round(Number(w.provider_currency==='USD'?order.amount_usd:order.amount_rmb)*100),refundAmountMinor:Number(w.provider_amount_minor)});
+  }
   const saved=await admin.from('balance_withdrawals').update({provider_refund_id:a.refundId,provider_status:a.providerStatus,updated_at:new Date().toISOString()}).eq('id',id).eq('status','processing');
   if(saved.error||a.state==='pending')return {ok:true,status:'processing',withdrawalId:id};
   const result=a.state==='completed'?await admin.rpc('complete_balance_withdrawal',{p_withdrawal_id:id,p_provider_refund_id:a.refundId||'',p_provider_status:a.providerStatus}):await admin.rpc('release_balance_withdrawal',{p_withdrawal_id:id,p_failure_code:'PROVIDER_REFUND_REJECTED',p_provider_status:a.providerStatus});
   return {ok:true,status:!result.error&&result.data?.ok?a.state==='completed'?'completed':'failed':'processing',withdrawalId:id};
- }catch{
-  await admin.from('balance_withdrawals').update({updated_at:new Date().toISOString(),failure_code:'PROVIDER_CONFIRMATION_PENDING'}).eq('id',id).eq('status','processing');
+ }catch(error){
+  const code=providerFailure(error);console.error('[withdrawal reconciliation]',{withdrawalId:id,code});
+  await admin.from('balance_withdrawals').update({updated_at:new Date().toISOString(),failure_code:'PROVIDER_CONFIRMATION_PENDING',provider_status:code}).eq('id',id).eq('status','processing');
   return {ok:true,status:'processing',withdrawalId:id};
  }
 }

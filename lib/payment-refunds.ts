@@ -126,7 +126,7 @@ export async function refundWechat(input:{
 
 function alipayPem(value:string,label:"PRIVATE KEY"|"PUBLIC KEY"){
   if(value.includes("-----BEGIN"))return value.replace(/\\n/g,"\n");
-  const body=value.replace(/\\s+/g,"");
+  const body=value.replace(/\s+/g,"");
   const rows=body.match(/.{1,64}/g)?.join("\n")??body;
   return `-----BEGIN ${label}-----\n${rows}\n-----END ${label}-----`;
 }
