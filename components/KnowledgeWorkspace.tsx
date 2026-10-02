@@ -143,7 +143,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   const [title,setTitle]=useState("");
   const [text,setText]=useState("");
   const [query,setQuery]=useState("");
-  const [question,setQuestion]=useState("");
+  const [question,setQuestion]=useState("");const [useConnectedService,setUseConnectedService]=useState(true);
   const [answer,setAnswer]=useState("");
   const [learningEventId,setLearningEventId]=useState("");
   const [feedbackSignal,setFeedbackSignal]=useState<FeedbackSignal|null>(null);
@@ -290,7 +290,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
       const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
-        question:q,mode,intelligence,evidence:results.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
+        question:q,mode,intelligence,useConnectedService,evidence:results.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
       })});
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
@@ -354,10 +354,18 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     {value:"high",label:lang==="zh"?"深度研究":tr(lang,"high"),help:tr(lang,"highHelp")},
   ];
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
+  const connectedCopy:{[key:string]:[string,string]}={
+    zh:["使用我连接的智能服务","费用由对应服务商直接结算；关闭后只使用本地证据整理。"],en:["Use my connected intelligence service","Your provider bills you directly. Turn this off to use evidence-only local synthesis."],ja:["接続したインテリジェンスサービスを使用","料金は接続先から直接請求されます。オフでは証拠ベースのローカル整理のみを使用します。"],ko:["연결한 지능형 서비스 사용","요금은 연결한 서비스에서 직접 청구됩니다. 끄면 근거 기반 로컬 정리만 사용합니다."],fr:["Utiliser mon service d’intelligence connecté","La facturation vient directement du fournisseur. Désactivez pour une synthèse locale fondée sur les preuves."],de:["Meinen verbundenen intelligenten Dienst verwenden","Die Abrechnung erfolgt direkt durch den Anbieter. Deaktivieren für rein lokale, evidenzbasierte Zusammenfassung."],es:["Usar mi servicio inteligente conectado","El proveedor factura directamente. Desactívalo para usar solo síntesis local basada en evidencias."],pt:["Usar meu serviço inteligente conectado","A cobrança é feita diretamente pelo provedor. Desative para usar apenas síntese local baseada em evidências."],ar:["استخدام خدمتي الذكية المتصلة","تتم الفوترة مباشرة من مزود الخدمة. عطّل هذا الخيار لاستخدام التلخيص المحلي القائم على الأدلة فقط."]
+  };
+  const cc=connectedCopy[lang]||connectedCopy.en;
 
   return <section className="mt-8 space-y-6 lx-knowledge-workspace">
     <div className="lx-knowledge-privacy rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm leading-7 text-[var(--lx-muted)]">
       {tr(lang,"privacy")}
+    </div>
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 text-sm">
+      <label className="flex cursor-pointer items-start gap-3"><input type="checkbox" className="mt-1" checked={useConnectedService} onChange={e=>setUseConnectedService(e.target.checked)}/><span><b className="block text-[var(--lx-ink)]">{cc[0]}</b><span className="text-[var(--lx-muted)]">{cc[1]}</span></span></label>
+      <Link href="/sasi/connections" className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-[var(--lx-ink)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"}</Link>
     </div>
 
     <div className="grid gap-5 xl:grid-cols-[.88fr_1.12fr]">

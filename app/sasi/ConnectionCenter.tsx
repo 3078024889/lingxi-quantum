@@ -8,14 +8,15 @@ import { sasiConnectionText } from "@/lib/sasi/connection-i18n";
 
 type Props = { lang: LingxiLang; dark: boolean; accountEmail: string | null };
 type Tab = "models" | "media" | "orchestration" | "build" | "security" | "training";
-type Connection = { service: string; keyHint: string; healthStatus: "stored" | "checking" | "healthy" | "unhealthy"; lastCheckedAt: string | null; lastErrorCode: string | null };
+type Connection = { service: string; keyHint: string; healthStatus: "stored" | "checking" | "healthy" | "unhealthy"; lastCheckedAt: string | null; lastErrorCode: string | null; capabilities?: string[]; model?: string; baseUrl?: string };
 
-const MODEL_IDS = new Set(["volcengine", "aliyun", "openai", "xai", "anthropic", "gemini"]);
-const MEDIA_IDS = new Set(["openai", "xai", "luma", "volcengine", "aliyun", "tencent"]);
+const MODEL_IDS = new Set(["volcengine", "aliyun", "openai", "xai", "anthropic", "gemini", "deepseek", "openrouter"]);
+const MEDIA_IDS = new Set(["openai", "xai", "luma", "volcengine", "aliyun"]);
 const PROVIDER_LOGOS:Record<string,string> = {
   openai:"https://openai.com/favicon.ico", xai:"https://x.ai/favicon.ico", anthropic:"https://www.anthropic.com/favicon.ico",
   luma:"https://www.google.com/s2/favicons?domain=lumalabs.ai&sz=128", volcengine:"https://www.google.com/s2/favicons?domain=volcengine.com&sz=128", aliyun:"https://www.aliyun.com/favicon.ico",
   tencent:"https://cloud.tencent.com/favicon.ico", gemini:"https://www.google.com/favicon.ico",
+  deepseek:"https://www.google.com/s2/favicons?domain=deepseek.com&sz=128", openrouter:"https://www.google.com/s2/favicons?domain=openrouter.ai&sz=128",
 };
 
 export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
@@ -31,7 +32,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   const vaultSupported = selected.id !== "tencent";
   const visible服务s = SASI_INTEGRATIONS.filter((item) => tab === "models" ? MODEL_IDS.has(item.id) : MEDIA_IDS.has(item.id)).sort((a,b) => a.region === b.region ? 0 : a.region === "china" ? -1 : 1);
   const tabs: Array<[Tab, string, string, string]> = [
-    ["models", "创作服务", "Creative services", "🤖"],
+    ["models", "智能服务", "Intelligence services", "✨"],
     ["media", "图像与视频", "Image & Video", "🎬"],
     ["orchestration", "SASI 编排", "SASI Orchestration", "🪄"],
     ["build", "网站与发布", "Sites & publishing", "🌐"],
@@ -76,7 +77,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
     const body = await response.json().catch(() => ({}));
     if (response.ok) {
       setConnections((items) => [...items.filter((item) => item.service !== selected.id), { service: selected.id, keyHint: body.keyHint, healthStatus: "stored", lastCheckedAt: null, lastErrorCode: null }]);
-      setApiKey(""); setMessage(t("已保存。验证连接后即可在可用任务中使用。", "Saved. Verify the connection before using it in supported tasks."));
+      setApiKey(""); setMessage(t("已安全保存。验证后，灵犀场会自动识别可用于文字、图片、视频或语音的能力。", "Saved securely. After verification, LINGXIFIELD will identify which text, image, video or audio capabilities are available."));
     } else setMessage(`${t("保存失败", "Save failed")}: ${body.error ?? response.status}`);
     setBusy(null);
   }
@@ -86,8 +87,8 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
     setBusy("test"); setMessage("");
     const response = await fetch("/api/sasi/connections/test", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider: selected.id }) });
     const body = await response.json().catch(() => ({}));
-    setConnections((items) => items.map((item) => item.service === selected.id ? { ...item, healthStatus: body.healthStatus ?? "unhealthy", lastCheckedAt: new Date().toISOString(), lastErrorCode: body.errorCode ?? body.error ?? null } : item));
-    setMessage(response.ok ? t("连接验证通过。实际可用范围以对应服务当前开放的能力与地区为准。", "Connection verified. Availability still depends on the capabilities and regions currently supported by that service.") : `${t("验证未通过", "Verification failed")}: ${body.errorCode ?? body.error ?? response.status}`);
+    setConnections((items) => items.map((item) => item.service === selected.id ? { ...item, healthStatus: body.healthStatus ?? "unhealthy", lastCheckedAt: new Date().toISOString(), lastErrorCode: body.errorCode ?? body.error ?? null, capabilities: body.capabilities ?? item.capabilities, model: body.model ?? item.model } : item));
+    setMessage(response.ok ? t("连接成功。灵犀场会在适合的任务里自动使用它。", "Connected. LINGXIFIELD will use it automatically for compatible tasks.") : `${t("验证未通过", "Verification failed")}: ${body.errorCode ?? body.error ?? response.status}`);
     setBusy(null);
   }
 
@@ -115,11 +116,11 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   })}</div>;
 
   const setupPanel = <aside className="sasi-connect-setup" data-testid="api-walkthrough">
-    <header><span className="sasi-connect-service-logo" style={{ background: selected.color }}><NextImage src={PROVIDER_LOGOS[selected.id]} alt={`${selected.name} logo`}  width={48} height={48} unoptimized/></span><div><small>{t("连接设置","Connection setup")}</small><h2>{selected.name}</h2><p>{selected.product}</p></div><em className={`status-${statusFor(selected.id).tone}`}>{statusFor(selected.id).label}</em></header>
+    <header><span className="sasi-connect-service-logo" style={{ background: selected.color }}><NextImage src={PROVIDER_LOGOS[selected.id]} alt={`${selected.name} logo`}  width={48} height={48} unoptimized/></span><div><small>{t("连接我的智能服务","Connect my intelligence service")}</small><h2>{selected.name}</h2><p>{selected.product}</p></div><em className={`status-${statusFor(selected.id).tone}`}>{statusFor(selected.id).label}</em></header>
     <ol>{(lang === "zh" ? selected.stepsZh : selected.stepsEn).map((step, index) => <li key={step}><b>{String(index + 1).padStart(2, "0")}</b><span>{step}</span></li>)}</ol>
     <div className="sasi-connect-official"><a href={selected.keyUrl} target="_blank" rel="noreferrer">{t("打开官方创建页", "Open official setup")} ↗</a><a href={selected.docsUrl} target="_blank" rel="noreferrer">{t("阅读官方文档", "Read official docs")} ↗</a></div>
     <div className="sasi-connect-vault" data-testid="byok-vault">
-      <div><h3>{t("当前连接", "Current connection")}</h3>{connection && <span>{connection.keyHint}</span>}</div>
+      <div><h3>{t("当前连接", "Current connection")}</h3>{connection && <span>{connection.keyHint}{connection.model ? ` · ${connection.model}` : ""}</span>}</div>{connection?.capabilities?.length ? <div className="sasi-connect-tags">{connection.capabilities.map((cap) => <span key={cap}>{cap === "text" ? t("文字", "Text") : cap === "vision" ? t("看图", "Vision") : cap === "image" ? t("图片", "Image") : cap === "video" ? t("视频", "Video") : cap === "audio" ? t("语音", "Audio") : cap}</span>)}</div> : null}
       {!vaultSupported ? <p>{t("腾讯云暂不支持直接连接，你可以先查看官方使用说明。", "Tencent Cloud requires SecretId, SecretKey and TC3 signing. Saving remains unavailable until dual-secret support is complete.")}</p> : vaultState === "ready" && !connection ? <><input type="password" autoComplete="off" spellCheck={false} value={apiKey} onChange={(event) => setApiKey(event.target.value)} aria-label={t("连接凭证","Connection credential")} placeholder={t("粘贴连接凭证", "Paste connection credential")} /><button type="button" disabled={busy !== null || apiKey.trim().length < 12} onClick={saveConnection}>{busy === "save" ? t("正在保存…", "Saving…") : t("保存并连接", "Save & connect")}</button></> : connection ? <div className="sasi-connect-actions"><button type="button" disabled={busy !== null} onClick={testConnection}>{busy === "test" ? t("正在验证…", "Testing…") : t("验证连接", "Test connection")}</button><button type="button" disabled={busy !== null} onClick={deleteConnection}>{busy === "delete" ? t("正在删除…", "Deleting…") : t("撤销并删除", "Revoke & delete")}</button></div> : <p>{vaultState === "login" ? t("请先登录，再连接你的创作服务。", "Sign in before connecting your creative service.") : vaultState === "loading" ? t("正在读取连接状态…", "Loading connection status…") : t("连接服务暂时不可用，请稍后重试。", "The connection service is temporarily unavailable. Please try again later.")}</p>}
       {connection?.lastCheckedAt && <small>{t("最近验证", "Last verified")}: {new Date(connection.lastCheckedAt).toLocaleString(lang === "zh" ? "zh-CN" : lang)}{connection.lastErrorCode ? ` · ${connection.lastErrorCode}` : ""}</small>}
       {message && <p className="sasi-connect-message">{message}</p>}
@@ -128,7 +129,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
   </aside>;
 
   return <section className={`sasi-connection-center ${dark ? "is-dark" : "is-light"}`}>
-    <header className="sasi-connect-hero"><div><p>SASI · CONNECTIONS</p><h1>{t("连接我的服务", "Connect my services")}</h1><strong>{t("连接一次，之后直接在 SASI 中创作。", "Connect once, then create directly in SASI.")}</strong><span>{t("选择你已经开通的平台，按页面提示完成连接。国内用户可优先选择火山方舟、阿里云百炼等人民币结算服务；海外服务请确认所在地区和付款条件。", "Choose a service you already use and follow the guided connection steps. Mainland China users can prioritize locally billed services; check regional access and payment requirements for overseas services.")}</span></div><div className="sasi-connect-proof"><b>{connections.filter((item) => item.healthStatus === "healthy").length}</b><span>{t("项连接已验证", "verified connections")}</span><small>{t("未验证的连接暂不可使用", "Unverified connections cannot be used yet")}</small></div></header>
+    <header className="sasi-connect-hero"><div><p>SASI · CONNECTIONS</p><h1>{t("连接我的智能服务", "Connect my intelligence services")}</h1><strong>{t("连接一次，书本、学习、科研、短剧和网站构建都可以复用。", "Connect once and reuse it across books, learning, research, drama and website building.")}</strong><span>{t("选择你已经开通的平台，按页面提示完成连接。国内用户可优先选择火山方舟、阿里云百炼等人民币结算服务；海外服务请确认所在地区和付款条件。", "Choose a service you already use and follow the guided connection steps. Mainland China users can prioritize locally billed services; check regional access and payment requirements for overseas services.")}</span></div><div className="sasi-connect-proof"><b>{connections.filter((item) => item.healthStatus === "healthy").length}</b><span>{t("项连接已验证", "verified connections")}</span><small>{t("未验证的连接暂不可使用", "Unverified connections cannot be used yet")}</small></div></header>
     <nav className="sasi-connect-tabs" aria-label={t("能力连接分类", "Connection categories")}>{tabs.map(([id, zh, en, glyph]) => <button type="button" key={id} onClick={() => setTab(id)} className={tab === id ? "active" : ""}><span>{glyph}</span>{t(zh, en)}</button>)}</nav>
 
     {(tab === "models" || tab === "media") && <div className="sasi-connect-main"><main><div className="sasi-connect-section-title"><div><small>{tab === "models" ? t("文本与推理能力","Text & reasoning") : t("图像与视频能力","Image & video")}</small><h2>{tab === "models" ? t("选择理解、编剧与编程能力", "Choose reasoning, writing and coding capability") : t("选择图片与视频生产能力", "Choose image and video production capability")}</h2></div><p>{t("中国大陆常用服务优先显示。选择平台后，按右侧步骤完成连接。", "Common mainland-China services appear first. Choose a service, follow the official setup and connect it here.")}</p></div>{serviceGrid(visible服务s)}</main>{setupPanel}</div>}
@@ -138,7 +139,7 @@ export default function ConnectionCenter({ lang, dark, accountEmail }: Props) {
       ["02", "规划并选择能力", "按任务选择推理、编剧、图像、视频或代码能力，不让用户逐站重讲需求。", "Plan and route", "Choose reasoning, writing, image, video or coding capabilities without repeating the brief everywhere."],
       ["03", "守住连续性", "人物、场景、品牌和世界规则进入同一份项目记忆，变更有依据、有版本。", "Protect continuity", "Keep characters, scenes, brand and world rules in one versioned project memory."],
       ["04", "审校与交付", "把生成结果带回项目检查、筛选、修订、导出与继续生产，而不是停在一次生成。", "Review and deliver", "Bring outputs back for review, selection, revision, export and continued production."],
-    ].map(([number,zhTitle,zhNote,enTitle,enNote]) => <article key={number}><b>{number}</b><h3>{t(zhTitle,enTitle)}</h3><p>{t(zhNote,enNote)}</p></article>)}</div><footer><strong>{t("当前边界", "Current boundary")}</strong><span>{t("连接、加密保存与健康验证已接入；具体创作能力仍以各产品工作流显示的真实状态为准。", "Connection, encrypted storage and health checks are available. Creative capabilities remain governed by the verified state shown in each product workflow.")}</span></footer></div>}
+    ].map(([number,zhTitle,zhNote,enTitle,enNote]) => <article key={number}><b>{number}</b><h3>{t(zhTitle,enTitle)}</h3><p>{t(zhNote,enNote)}</p></article>)}</div><footer><strong>{t("当前边界", "Current boundary")}</strong><span>{t("连接、加密保存、能力识别与健康验证已接入。灵犀场会优先选择当前可用的已验证连接；任务开始后会锁定本次连接，不会偷偷切换到另一个付费服务。", "Connection, encrypted storage, capability discovery and health checks are available. LINGXIFIELD prefers a currently usable verified connection and locks it for each started task instead of silently switching to another paid service.")}</span></footer></div>}
 
     {tab === "build" && <div><div className="sasi-connect-section-title"><div><small>PUBLISHING CONNECTIONS</small><h2>{t("从仓库到公网，每个连接各司其职", "A separate connection for every step from repository to public web")}</h2></div><p>{t("这里负责授权与状态读取，真正执行仍回到编程构建部署工作流。", "This area manages authorization and status; execution remains in the website and publishing workspace.")}</p></div><div className="sasi-connect-build-grid">{BUILD_CONNECTORS.map((item) => <article key={item.id}><header><span>{item.name.slice(0, 2)}</span><div><small>{t(item.roleZh, item.roleEn)}</small><h3>{item.name}</h3></div><em>{item.status === "oauth-required" ? t("暂不支持直接连接", "OAuth pending") : t("需要人工配置", "Manual setup")}</em></header><ol>{(lang === "zh" ? item.stepsZh : item.stepsEn).map((step, index) => <li key={step}><b>0{index + 1}</b><span>{step}</span></li>)}</ol><footer><a href={item.url} target="_blank" rel="noreferrer">{t("打开官方入口", "Official entry")} ↗</a><a href={item.docs} target="_blank" rel="noreferrer">{t("权限说明", "Permissions")} ↗</a></footer></article>)}</div></div>}
 

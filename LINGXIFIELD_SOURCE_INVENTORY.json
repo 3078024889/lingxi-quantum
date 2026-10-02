@@ -195,10 +195,6 @@
       "bytes": 676
     },
     {
-      "path": "V1601_IMPLEMENTATION_CONTRACT.md",
-      "bytes": 4861
-    },
-    {
       "path": "V1601_RATE_FORMAT.example.json",
       "bytes": 279
     },
@@ -419,10 +415,6 @@
       "bytes": 302
     },
     {
-      "path": "app/api/ai/wallet/route.ts",
-      "bytes": 1345
-    },
-    {
       "path": "app/api/auth/password/route.ts",
       "bytes": 1740
     },
@@ -631,22 +623,6 @@
       "bytes": 2370
     },
     {
-      "path": "app/api/sasi/jobs/route.ts",
-      "bytes": 4054
-    },
-    {
-      "path": "app/api/sasi/jobs/[id]/cancel/route.ts",
-      "bytes": 1677
-    },
-    {
-      "path": "app/api/sasi/jobs/[id]/delivery/route.ts",
-      "bytes": 1174
-    },
-    {
-      "path": "app/api/sasi/jobs/[id]/refresh/route.ts",
-      "bytes": 1727
-    },
-    {
       "path": "app/api/sasi/kernel/readiness/route.ts",
       "bytes": 316
     },
@@ -709,10 +685,6 @@
     {
       "path": "app/api/sasi/projects/[id]/memory/route.ts",
       "bytes": 4820
-    },
-    {
-      "path": "app/api/sasi/quote/route.ts",
-      "bytes": 3866
     },
     {
       "path": "app/api/sasi/readiness/route.ts",
@@ -1439,10 +1411,6 @@
       "bytes": 940
     },
     {
-      "path": "components/AiWalletPanel.tsx",
-      "bytes": 6519
-    },
-    {
       "path": "components/assessment-workbench.css",
       "bytes": 6138
     },
@@ -1617,10 +1585,6 @@
     {
       "path": "components/SasiFunctionMenu.tsx",
       "bytes": 4320
-    },
-    {
-      "path": "components/SasiManagedVideoCreate.tsx",
-      "bytes": 5791
     },
     {
       "path": "components/SasiMultiEpisodeWorkspace.tsx",
@@ -10355,10 +10319,6 @@
       "bytes": 1407
     },
     {
-      "path": "docs/SASI-INVITATION-RESET-RULE.md",
-      "bytes": 1602
-    },
-    {
       "path": "docs/SASI-KNOWLEDGE-INGESTION-RUNTIME-V1025.md",
       "bytes": 1818
     },
@@ -10505,10 +10465,6 @@
     {
       "path": "docs/SASI-V5-PRODUCTION-FOUNDATION-2026-09-28.md",
       "bytes": 1385
-    },
-    {
-      "path": "docs/SASI-V51-COMPLETION-2026-09-28.md",
-      "bytes": 3095
     },
     {
       "path": "docs/SASI-V52-CREATION-UX-2026-09-28.md",
@@ -11321,10 +11277,6 @@
     {
       "path": "lib/files/knowledge-extra-formats.ts",
       "bytes": 3653
-    },
-    {
-      "path": "lib/lingxi/monetization.ts",
-      "bytes": 1616
     },
     {
       "path": "lib/mini/catalog.ts",
@@ -13999,16 +13951,8 @@
       "bytes": 1188
     },
     {
-      "path": "scripts/accept-v101.mjs",
-      "bytes": 4048
-    },
-    {
       "path": "scripts/accept-v14116.mjs",
       "bytes": 3036
-    },
-    {
-      "path": "scripts/accept-v14122.mjs",
-      "bytes": 2299
     },
     {
       "path": "scripts/accept-v14130.mjs",
@@ -14107,10 +14051,6 @@
       "bytes": 954
     },
     {
-      "path": "scripts/accept-v14510.mjs",
-      "bytes": 1258
-    },
-    {
       "path": "scripts/accept-v14511.mjs",
       "bytes": 1340
     },
@@ -14133,18 +14073,6 @@
     {
       "path": "scripts/accept-v14603.mjs",
       "bytes": 548
-    },
-    {
-      "path": "scripts/accept-v1462.mjs",
-      "bytes": 1247
-    },
-    {
-      "path": "scripts/accept-v1464.mjs",
-      "bytes": 1157
-    },
-    {
-      "path": "scripts/accept-v1465.mjs",
-      "bytes": 2624
     },
     {
       "path": "scripts/accept-v1466.mjs",
@@ -14199,10 +14127,6 @@
       "bytes": 4454
     },
     {
-      "path": "scripts/audit-currency-books-v1569.mjs",
-      "bytes": 2901
-    },
-    {
       "path": "scripts/audit-discovery-compat-v1587.mjs",
       "bytes": 2185
     },
@@ -14247,20 +14171,12 @@
       "bytes": 3376
     },
     {
-      "path": "scripts/audit-payment-v1600.mjs",
-      "bytes": 1534
-    },
-    {
       "path": "scripts/audit-pre-release-v1585.mjs",
       "bytes": 2617
     },
     {
       "path": "scripts/audit-pricing-market-v1567.mjs",
       "bytes": 44
-    },
-    {
-      "path": "scripts/audit-production.mjs",
-      "bytes": 2042
     },
     {
       "path": "scripts/audit-public-copy-5pass-v1465.mjs",
@@ -14287,20 +14203,8 @@
       "bytes": 5237
     },
     {
-      "path": "scripts/audit-sasi-v3.mjs",
-      "bytes": 13365
-    },
-    {
       "path": "scripts/audit-sasi-v5.mjs",
       "bytes": 1533
-    },
-    {
-      "path": "scripts/audit-sasi-v51.mjs",
-      "bytes": 2714
-    },
-    {
-      "path": "scripts/audit-sasi-v52-ux.mjs",
-      "bytes": 2199
     },
     {
       "path": "scripts/audit-sasi.mjs",
@@ -14351,10 +14255,6 @@
       "bytes": 1066
     },
     {
-      "path": "scripts/audit-ui-copy-v1464.mjs",
-      "bytes": 1312
-    },
-    {
       "path": "scripts/audit-ui-copy-v1580.mjs",
       "bytes": 1129
     },
@@ -14403,16 +14303,8 @@
       "bytes": 1738
     },
     {
-      "path": "scripts/audit-v1480.mjs",
-      "bytes": 1712
-    },
-    {
       "path": "scripts/audit-v14811.mjs",
       "bytes": 1772
-    },
-    {
-      "path": "scripts/audit-v1580-closure.mjs",
-      "bytes": 1411
     },
     {
       "path": "scripts/audit-v1584-autonomous.mjs",
@@ -14421,10 +14313,6 @@
     {
       "path": "scripts/audit-v1584-tools-runtime.mjs",
       "bytes": 1743
-    },
-    {
-      "path": "scripts/audit-v162-closure.mjs",
-      "bytes": 1405
     },
     {
       "path": "scripts/audit-v163-closure.mjs",
@@ -14495,10 +14383,6 @@
       "bytes": 10561
     },
     {
-      "path": "scripts/patch-sasi-jobs-v1465.mjs",
-      "bytes": 2904
-    },
-    {
       "path": "scripts/patch-sasi-production-v1465.mjs",
       "bytes": 7944
     },
@@ -14549,10 +14433,6 @@
     {
       "path": "scripts/patch-v1479.mjs",
       "bytes": 10662
-    },
-    {
-      "path": "scripts/patch-v1480.mjs",
-      "bytes": 14410
     },
     {
       "path": "scripts/patch-v14811.mjs",
@@ -14655,10 +14535,6 @@
       "bytes": 778
     },
     {
-      "path": "scripts/selftest-v1480.mjs",
-      "bytes": 910
-    },
-    {
       "path": "scripts/selftest-v14811.mjs",
       "bytes": 1185
     },
@@ -14679,10 +14555,6 @@
       "bytes": 2222
     },
     {
-      "path": "scripts/test-byok-browser.cjs",
-      "bytes": 3525
-    },
-    {
       "path": "scripts/test-byok-expansion-browser.cjs",
       "bytes": 4550
     },
@@ -14693,10 +14565,6 @@
     {
       "path": "scripts/test-compact-composer-browser.cjs",
       "bytes": 1966
-    },
-    {
-      "path": "scripts/test-creation-contract-browser.cjs",
-      "bytes": 4683
     },
     {
       "path": "scripts/test-creation-data.cjs",
@@ -14741,10 +14609,6 @@
     {
       "path": "scripts/test-sasi-seedance-byok.cjs",
       "bytes": 7113
-    },
-    {
-      "path": "scripts/test-sasi-v51-managed-and-byok.mjs",
-      "bytes": 667
     },
     {
       "path": "scripts/test-sasi-video-pricing.cjs",

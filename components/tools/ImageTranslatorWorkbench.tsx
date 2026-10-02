@@ -53,16 +53,16 @@ export default function ImageTranslatorWorkbench(){
     const blob=await blobOf(c);all.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.png`,blob,mime:"image/png",size:blob.size});
    }
    setOutputs(all);setStage("处理完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("")}
+  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
   finally{try{await worker?.terminate()}catch{}setBusy(false)}
  }
  return <div className="space-y-4">
-  <FileDropzone accept="image/*,.jpg,.jpeg,.png,.webp,.heic" multiple maxFiles={20} maxSizeMB={30} files={files} onChange={f=>{setFiles(f);setOutputs([]);setError("")}} disabled={busy} kind="image"/>
+  <FileDropzone accept="image/*,.jpg,.jpeg,.png,.webp,.heic" multiple maxFiles={20} maxSizeMB={30} files={files} onChange={f=>{setFiles(f);setOutputs([]);setError("");setDraftId("")}} disabled={busy} kind="image"/>
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm">图片原文<select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm">翻译为<select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&!busy&&<PaidActionButton toolId="image-translator" quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{files:files.length,source,target}} onPaid={run} label={files.length>1?`查看 ${files.length} 张图片翻译价格`:"查看本次图片翻译价格"}/>}
+  {files.length>0&&<PaidActionButton toolId="image-translator" quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{files:files.length,source,target}} onPaid={run} label={files.length>1?`查看 ${files.length} 张图片翻译价格`:"查看本次图片翻译价格"}/>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]">先识别图片里的文字，再翻译并尽量按原文字区域覆盖。复杂艺术字、弧形字或低清图片可能需要手动微调。</p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}

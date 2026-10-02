@@ -1,5 +1,8 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useEffect,useMemo,useRef,useState} from "react";
+import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
+import {deliveryText} from "@/lib/tools/commerce/delivery-copy";
+import {draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft,deletePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {privacyText} from "@/lib/privacy-tools-i18n";
 import Link from "next/link";
@@ -15,6 +18,13 @@ export default function BurnAfterReadWorkbench(){
  const[files,setFiles]=useState<File[]>([]),[link,setLink]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[copied,setCopied]=useState(false);
  const total=useMemo(()=>files.reduce((n,f)=>n+f.size,0),[files]);
  const totalMb=Math.max(1,Math.ceil(total/1024/1024));
+ const {currency}=usePreferredCurrency();
+ const [pendingQuote,setPendingQuote]=useState("");
+ const [draftId,setDraftId]=useState("");
+ const processing=useRef(false),finished=useRef(new Set<string>()),pollTimer=useRef<ReturnType<typeof setInterval>|null>(null);
+ const stopPoll=()=>{if(pollTimer.current){clearInterval(pollTimer.current);pollTimer.current=null}};
+ useEffect(()=>()=>stopPoll(),[]);
+ useEffect(()=>{const id=new URLSearchParams(location.search).get('resumeDraft');if(!id)return;void loadPaidTaskDraft<any>(id).then(d=>{if(d?.toolId!=='burn-after-read-file')return;setFiles(draftFiles(d));setDraftId(id);setText(d.state.text||'');setMode(d.state.mode||'once');setTtl(d.state.ttl||1440);setViews(d.state.views||1);setDuration(d.state.duration||30);setPendingQuote(d.state.quoteId||'')}).catch(()=>setError(deliveryText(lang,'failed')))},[]);
 
  async function encryptedText(){
    const key=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
@@ -46,7 +56,12 @@ export default function BurnAfterReadWorkbench(){
  }
 
  async function preparePaidShare(quoteId:string){
-   const enc=await encryptedText();
+   if(processing.current||finished.current.has(quoteId))return;
+   processing.current=true;setBusy(true);stopPoll();
+   try{
+   const saved=sessionStorage.getItem(`lingxifield:burn-encryption:${quoteId}`);
+   const enc=saved?JSON.parse(saved):await encryptedText();
+   sessionStorage.setItem(`lingxifield:burn-encryption:${quoteId}`,JSON.stringify(enc));
    const r=await fetch("/api/tools/burn-after-read/file/prepare",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
      quoteId,ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==="limited"?views:1,viewDurationSeconds:mode==="fast"?duration:null,
      files:files.map(f=>({name:f.name,size:f.size,type:f.type||"application/octet-stream"}))
@@ -56,27 +71,38 @@ export default function BurnAfterReadWorkbench(){
    const done=await fetch("/api/tools/burn-after-read/file/complete",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:d.id})});
    if(!done.ok)throw new Error("UPLOAD_INCOMPLETE");
    if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
+   finished.current.add(quoteId);setPendingQuote("");sessionStorage.removeItem("lingxifield:burn-file-quote");sessionStorage.removeItem("lingxifield:burn-file-state");
    setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${enc.key}&t=${encodeURIComponent(String(d.token))}`);setText("");setFiles([]);
+   if(draftId)await deletePaidTaskDraft(draftId);setDraftId("");
+   const clean=new URL(location.href);clean.searchParams.delete('resumeDraft');clean.searchParams.delete('resumeQuote');history.replaceState(null,'',clean.pathname+clean.search);
+   }finally{processing.current=false;setBusy(false)}
  }
 
  async function payAndUpload(){
    if(!files.length)return;
    setBusy(true);setError("");setLink("");
    try{
-     const q=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId:"burn-after-read-file",quantity:totalMb,metadata:{bytes:total,fileCount:files.length}})});
-     const d=await q.json().catch(()=>({}));
-     if(q.status===401){location.href=`/account?next=${encodeURIComponent("/tools/burn-after-read")}`;return}
-     if(!q.ok)throw new Error(d.error||"QUOTE_FAILED");
+     const taskId=draftId||newPaidTaskDraftId();
+     await savePaidTaskDraft({id:taskId,toolId:'burn-after-read-file',files,state:{text,mode,ttl,views,duration,quoteId:pendingQuote}});setDraftId(taskId);
+     let id=pendingQuote;
+     if(id){const status=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});const state=await status.json();if(!status.ok)throw new Error("PAYMENT_STATUS_UNAVAILABLE");if(state.paid){await preparePaidShare(id);return}}
+     else{
+      const q=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId:"burn-after-read-file",quantity:totalMb,currency,metadata:{bytes:total,fileCount:files.length,draftId:taskId}})});
+      const result=await q.json().catch(()=>({}));
+      if(!q.ok)throw new Error(result.error||"QUOTE_FAILED");
+      id=result.id;setPendingQuote(id);
+     }
+     const d={id};
+     await savePaidTaskDraft({id:taskId,toolId:'burn-after-read-file',files,state:{text,mode,ttl,views,duration,quoteId:id}});
      sessionStorage.setItem("lingxifield:burn-file-quote",d.id);
      sessionStorage.setItem("lingxifield:burn-file-state",JSON.stringify({text,mode,ttl,views,duration}));
-     const w=window.open(`/tools/pay?quoteId=${encodeURIComponent(d.id)}`,"lingxi-pay","width=620,height=820");
-     if(!w)throw new Error("POPUP_BLOCKED");
-     const handler=(e:MessageEvent)=>{
-       if(e.origin!==location.origin||e.data?.type!=="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"||e.data?.quoteId!==d.id)return;
-       window.removeEventListener("message",handler);
-       void preparePaidShare(d.id).catch(()=>setError(lang==="zh"?"上传没有完成，本次付款可继续重试。":"Upload did not complete. This payment can be retried.")).finally(()=>setBusy(false));
-     };
-     window.addEventListener("message",handler);
+     const returnPath=`/tools/burn-after-read?resumeDraft=${encodeURIComponent(taskId)}&resumeQuote=${encodeURIComponent(id)}`;
+     const payUrl=`/tools/pay?quoteId=${encodeURIComponent(d.id)}&return=${encodeURIComponent(returnPath)}`;
+     const w=window.open(payUrl,"lingxi-pay","width=620,height=820");
+     if(!w){location.assign(payUrl);return}
+     stopPoll();let checking=false;
+     pollTimer.current=setInterval(async()=>{if(checking)return;checking=true;try{const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(d.id)}`,{cache:"no-store"});const state=await r.json();if(r.ok&&state.paid)await preparePaidShare(d.id)}catch{setError(deliveryText(lang,'failed'))}finally{checking=false}},2000);
+     setBusy(false);
    }catch{
      setBusy(false);setError(lang==="zh"?"暂时无法开始上传，请稍后再试。":"Unable to start the upload right now.");
    }

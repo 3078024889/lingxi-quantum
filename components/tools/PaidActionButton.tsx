@@ -2,6 +2,8 @@
 import{useEffect,useRef,useState}from"react";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
+import {quoteDisplay} from '@/lib/tools/commerce/quote-display';
+import {deliveryText} from '@/lib/tools/commerce/delivery-copy';
 import{foodBillingText}from"@/lib/tools/food/billing-copy";
 
 type Quote={id:string;tool_id:string;quantity:number;unit_name:string;amount_rmb:number;amount_usd:number;display_currency:"CNY"|"USD";display_amount:number;currency:"CNY"|"USD";expires_at:string;status?:string;metadata?:Record<string,unknown>};
@@ -23,19 +25,22 @@ const UI={
 function storageKey(toolId:string){return`lingxifield:paid-tool:quote:${toolId}`}
 function saveStoredQuote(toolId:string,q:Quote,draftId?:string){try{localStorage.setItem(storageKey(toolId),JSON.stringify({id:q.id,toolId,quantity:Number(q.quantity),currency:q.currency,expiresAt:q.expires_at,draftId} satisfies StoredQuote))}catch{}}
 function clearStoredQuote(toolId:string){try{localStorage.removeItem(storageKey(toolId))}catch{}}
-function price(q:Quote){return q.display_currency==="CNY"?`¥${Number(q.display_amount).toFixed(2)}`:`$${Number(q.display_amount).toFixed(2)} USD`}
+function price(q:Quote){return quoteDisplay(q).text}
 function unitLabel(unit:string,zh:boolean){if(unit==="food")return zh?"种食物":"foods";if(!zh)return unit==="image"?"image":unit==="minute"?"minute":unit==="page"?"page":unit==="file"?"file":unit==="email"?"email":unit==="second"?"second":"use";if(unit==="image")return"张";if(unit==="minute")return"分钟";if(unit==="page")return"页";if(unit==="file")return"个文件";if(unit==="email")return"个邮箱";if(unit==="second")return"秒";return"次"}
 function isMiniProgramWebView(){try{return new URLSearchParams(window.location.search).get("mini")==="1"&&/MicroMessenger/i.test(navigator.userAgent||"")}catch{return false}}
 async function openMiniNativePay(quoteId:string){return new Promise<boolean>(resolve=>{let settled=false;const done=(v:boolean)=>{if(settled)return;settled=true;resolve(v)},go=()=>{const w=(window as any).wx;if(!w?.miniProgram?.navigateTo){done(false);return}w.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(quoteId)}`,success:()=>done(true),fail:()=>done(false)})};if((window as any).wx?.miniProgram){go();return}const id="lingxifield-wechat-jssdk",existing=document.getElementById(id)as HTMLScriptElement|null;if(existing){existing.addEventListener("load",go,{once:true});setTimeout(()=>done(false),3000);return}const s=document.createElement("script");s.id=id;s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>done(false);document.head.appendChild(s);setTimeout(()=>done(false),3500)})}
 
 export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,draftId,draftReady=true}:{toolId:string;quantity:number;metadata?:Record<string,unknown>;onPaid:(quoteId:string)=>Promise<void>|void;label?:string;draftId?:string;draftReady?:boolean}){
  const{lang}=useLingxiLang();const zh=lang==="zh";const t=(x:Copy)=>x[lang]||x.en;const{currency}=usePreferredCurrency();
- const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState("");
- const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),restoreKey=useRef("");
+ const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[completed,setCompleted]=useState(false);
+ const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),restoreKey=useRef(""),taskKey=useRef("");
+ const [running,setRunning]=useState(false);const completedIds=useRef(new Set<string>());const [paidId,setPaidId]=useState("");
+ const signature=`${toolId}:${quantity}:${currency}:${draftId||""}:${JSON.stringify(metadata||{})}`;
+ useEffect(()=>{if(taskKey.current&&taskKey.current!==signature){stop();setPaidId("");setCompleted(false);setQuote(null);setMsg("");restoreKey.current=""}taskKey.current=signature},[signature]);
  const stop=()=>{if(timer.current){clearInterval(timer.current);timer.current=null}};
  async function status(id:string){const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});return r.ok?r.json():null}
- async function complete(id:string){if(!draftReady||processing.current===id)return;processing.current=id;stop();setMsg(t(UI.paid));try{await onPaid(id);clearStoredQuote(toolId)}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null}}
- async function check(id:string){if(!draftReady)return false;const d=await status(id);if(!d?.paid)return false;await complete(id);return true}
+ async function complete(id:string){if(completedIds.current.has(id)||completed||!draftReady||processing.current===id)return;processing.current=id;setRunning(true);setPaidId(id);stop();setMsg(t(UI.paid));try{await onPaid(id);completedIds.current.add(id);clearStoredQuote(toolId);setQuote(null);setCompleted(true);try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch{}}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null;setRunning(false)}}
+ async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(q&&((q.tool_id||q.toolId)!==toolId||Number(q.quantity)!==quantity||(q.metadata?.draftId&&q.metadata.draftId!==draftId)))return false;await complete(id);return true}catch{return false}}
  const checkRef=useRef(check);checkRef.current=check;
 
  useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id&&draftReady)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id,draftReady]);
@@ -51,7 +56,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
  },[toolId,quantity,currency,draftId,draftReady]);
 
  async function makeQuote(){
-  setBusy(true);setMsg("");
+  if(completed)return;setBusy(true);setMsg("");
   try{
    const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
    const d=await r.json().catch(()=>({}));
@@ -61,7 +66,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   finally{setBusy(false)}
  }
  async function pay(){
-  if(!quote)return;saveStoredQuote(toolId,quote,draftId);
+  if(completed||running||!quote)return;if(paidId){await complete(paidId);return}saveStoredQuote(toolId,quote,draftId);
   if(quote.currency==="CNY"&&isMiniProgramWebView()){
    stop();setMsg(t(UI.waiting));const opened=await openMiniNativePay(quote.id);if(opened){timer.current=setInterval(()=>void checkRef.current(quote.id),1800);return}
   }
@@ -75,9 +80,10 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   setMsg(t(UI.popupBlocked));
  }
  const changed=quote&&(Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
+ if(completed)return <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{deliveryText(lang,"complete")}</b><p className="mt-1 text-xs text-[var(--lx-muted)]">{deliveryText(lang,"existing")}</p></div>;
  return <div>{!quote||changed
   ?<button onClick={makeQuote} disabled={busy||quantity<=0||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t(UI.pricing):(label||t(UI.defaultLabel))}</button>
-  :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {toolId==="food-calorie"?foodBillingText(lang,quote.unit_name==="food"?"foodUnit":"imageUnit"):unitLabel(quote.unit_name,zh)} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{t(UI.confirm)}</button><button onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
+  :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {toolId==="food-calorie"?foodBillingText(lang,quote.unit_name==="food"?"foodUnit":"imageUnit"):unitLabel(quote.unit_name,zh)} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||running||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{paidId?deliveryText(lang,"retry"):t(UI.confirm)}</button><button disabled={!!paidId||running} onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
   {msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}
   {toolId==='food-calorie'&&msg===foodBillingText(lang,'login')&&<a className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent('/tools/food-calorie?resumeDraft='+(draftId||''))}`}>{foodBillingText(lang,'login')}</a>}
  </div>;

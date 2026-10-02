@@ -10,7 +10,7 @@ import {
   wechatPayConfigured,
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
-import { sasiPaidProductionEnabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
+import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     }
-    if (product.group === "production" && (!sasiPaidProductionEnabled() || !sasiTopupProductEnabled(product.id))) {
+    if (product.group === "production" && !sasiTopupProductEnabled(product.id)) {
       return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });

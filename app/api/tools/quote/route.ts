@@ -48,6 +48,7 @@ function publicQuote(
     expires_at: data.expires_at,
     status: data.status,
     currency,
+    ...(data.metadata&&typeof data.metadata==='object'?{metadata:{draftId:(data.metadata as Record<string,unknown>).draftId}}:{}),
     ...(data.tool_id==='food-calorie'&&data.metadata&&typeof data.metadata==='object'?{metadata:{foodRequestId:(data.metadata as Record<string,unknown>).foodRequestId}}:{}),
     ...amountForCurrency({
       currency,

@@ -1,8 +1,8 @@
 import "server-only";
 
 export type PricingCurrency = "CNY" | "USD";
-export type ExecutionMode = "local" | "managed" | "byok";
-export type ChargingClass = "FREE_LOCAL" | "PAID_EXTERNAL" | "HYBRID" | "DISABLED_UNVERIFIED";
+export type ExecutionMode = "local" | "connected_service" | "server";
+export type BillingClass = "PAID_TOOL" | "SASI_BALANCE" | "SUPPLIER_DIRECT_ONLY" | "DISABLED";
 
 export const MINIMUM_GROSS_MARGIN = 0.45;
 
@@ -41,25 +41,26 @@ export function assertMarginFloor(retail:number,directCost:number,targetGrossMar
 
 export function quoteMinorUnits(input:{
   currency:PricingCurrency;
-  executionMode:ExecutionMode;
-  chargingClass:ChargingClass;
+  billingClass:BillingClass;
   directCostMinor:number;
   configuredRetailMinor?:number;
   targetGrossMargin?:number;
 }) {
-  const {currency,executionMode,chargingClass}=input;
+  const {currency,billingClass}=input;
   if (!Number.isSafeInteger(input.directCostMinor) || input.directCostMinor < 0) throw new Error("INVALID_DIRECT_COST");
-  if (chargingClass==="DISABLED_UNVERIFIED") throw new Error("PRICING_UNVERIFIED");
-  if (executionMode==="local" && chargingClass==="FREE_LOCAL") {
+  if (billingClass==="DISABLED") throw new Error("PRICING_DISABLED");
+  if (billingClass==="SUPPLIER_DIRECT_ONLY") {
     return {currency,amountMinor:0,directCostMinor:0,targetGrossMargin:null};
   }
-  if (executionMode==="byok") {
-    // Supplier billing belongs to the user's connected supplier account.
-    return {currency,amountMinor:0,directCostMinor:0,targetGrossMargin:null};
+  const configured=input.configuredRetailMinor??0;
+  if (!Number.isSafeInteger(configured) || configured < 0) throw new Error("INVALID_CONFIGURED_RETAIL");
+  if (billingClass==="SASI_BALANCE") {
+    if (configured<=0) throw new Error("SASI_PRICE_REQUIRED");
+    return {currency,amountMinor:configured,directCostMinor:input.directCostMinor,targetGrossMargin:null};
   }
   const margin=input.targetGrossMargin??MINIMUM_GROSS_MARGIN;
   const minimum=Math.ceil(minimumRetailForMargin(input.directCostMinor,margin));
-  const amount=Math.max(minimum,input.configuredRetailMinor??0);
+  const amount=Math.max(minimum,configured);
   if (amount<=0) throw new Error("PRICING_UNVERIFIED");
   assertMarginFloor(amount,input.directCostMinor,margin);
   return {currency,amountMinor:amount,directCostMinor:input.directCostMinor,targetGrossMargin:margin};

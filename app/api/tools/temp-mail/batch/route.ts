@@ -28,7 +28,11 @@ export async function POST(req:NextRequest){
 
  const claim=await admin.rpc("claim_temp_mail_batch_quote",{p_quote_id:quoteId,p_user_id:user.id,p_count:count});
  if(claim.error){console.error("[temp mail batch claim]",claim.error.code,claim.error.message);return NextResponse.json({error:"SERVICE_BUSY"},{status:503})}
- if(claim.data!==true)return NextResponse.json({error:"BATCH_ALREADY_USED"},{status:409});
+ if(claim.data!==true){
+   const {data:existing}=await admin.from("temp_mailboxes").select("id,local_part,expires_at").eq("batch_quote_id",quoteId).eq("owner_user_id",user.id);
+   if(existing?.length===count)return NextResponse.json({recovered:true,count,mailboxes:existing.map(x=>({id:x.id,address:tempMailAddress(x.local_part),expiresAt:x.expires_at}))});
+   return NextResponse.json({error:"BATCH_ALREADY_USED"},{status:409});
+ }
 
  const guard=await admin.rpc("privacy_rate_limit",{p_key:`temp-mail-batch:${user.id}`,p_limit:30,p_window_seconds:3600});
  if(guard.error||guard.data!==true){

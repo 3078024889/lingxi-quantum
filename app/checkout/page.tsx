@@ -333,38 +333,10 @@ const orderIdRef = useRef<string | null>(null);
   useEffect(() => {
     if (!product || startedRef.current) return;
     startedRef.current = true;
-
-    const checkAccessBeforeOrdering = async () => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user && product.group !== "ai" && product.group !== "production") {
-        const { data: unlocks, error: unlockError } = await supabase
-          .from("unlocks")
-          .select("product_id, expires_at")
-          .eq("user_id", user.id)
-          .in("product_id", [productId, "everything"]);
-
-        if (!unlockError && unlocks) {
-          const now = Date.now();
-          const hasAccess = unlocks.some((unlock: { expires_at: string | null }) =>
-            !unlock.expires_at || new Date(unlock.expires_at).getTime() > now
-          );
-          if (hasAccess) {
-            router.replace(redirectTo);
-            return;
-          }
-        }
-      }
-
-      setStatus("review");
-    };
-
-    void checkAccessBeforeOrdering();
-    // Access is checked before any payment-provider order can be created.
-  }, [product, productId, redirectTo, router]);
+    // V49R1: checkout now sells only SASI balance top-ups. The legacy
+    // membership/unlock pre-check is removed; balance is consumable credit.
+    setStatus("review");
+  }, [product]);
 
   useEffect(() => {
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
@@ -417,7 +389,7 @@ const orderIdRef = useRef<string | null>(null);
             </div>
 
             <div className="flex items-start gap-4 px-5 py-4">
-              <LingxiMiniIcon name={(product.group==="ai"||product.group==="production")?"wallet":"orders"} size="card"/>
+              <LingxiMiniIcon name="wallet" size="card"/>
               <div className="min-w-0 flex-1">
                 <p className="font-display text-lg text-[var(--lx-ink)]"><Bi zh={product.name} en={product.nameEn} /></p>
                 {submissionId && (
@@ -430,18 +402,12 @@ const orderIdRef = useRef<string | null>(null);
                     {validForCopy(lang, product.days)}
                   </p>
                 )}
-                {(product.group === "ai" || product.group === "production") ? (
-                  <p className="mt-1 text-xs text-[var(--lx-ink)]">
-                    <Bi
-                      zh="充值余额长期保留，仅在你主动使用对应服务时扣除"
-                      en="Top-up balance remains available and is deducted only when you use the corresponding service"
-                    />
-                  </p>
-                ) : product.type === "permanent" ? (
-                  <p className="mt-1 text-xs text-[var(--lx-ink)]">
-                    <Bi zh="永久有效，不设到期时间" en="Permanent access, no expiry" />
-                  </p>
-                ) : null}
+                <p className="mt-1 text-xs text-[var(--lx-ink)]">
+                  <Bi
+                    zh="充值余额长期保留，仅在你主动使用 SASI 时扣除"
+                    en="Top-up balance remains available and is deducted only when you use SASI"
+                  />
+                </p>
               </div>
               <p className="shrink-0 font-display text-2xl text-[var(--lx-ink)]">¥{product.priceRmb}</p>
             </div>

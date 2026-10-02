@@ -7,6 +7,7 @@ import { liveTools } from "@/lib/tools/registry";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import {toolTitle} from "@/lib/tools/card-i18n";
 import {toolCategoryLabel,toolHubCopy,toolCardLine,type ToolDisplayCategory} from "@/lib/tools/hub-copy-v1470";
+import {searchToolItems} from "@/lib/tools/search-intents-v44r2.mjs";
 
 type GlyphKind = "image" | "document" | "video" | "audio" | "privacy" | "utility" | "ai" | "qr";
 type SourceCategory = "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";
@@ -131,38 +132,21 @@ export default function ToolsHubV11() {
   const [category, setCategory] = useState<Category>("all");
   const tools = useMemo(() => allTools(), []);
 
-  // V43R1_SEARCH_INTENT_NORMALIZER
-  const list = useMemo(() => {
-    const raw=q.trim().toLowerCase();
-    const normalize=(value:string)=>value
-      .toLowerCase()
-      .replace(/[\s，。！？、,.!?;；:："'“”‘’()（）【】\[\]{}<>《》/_-]+/g,"")
-      .replace(/^(我要|我想|想要|请帮我|帮我|请|怎么|如何|需要|有没有|能不能|可以|给我)+/g,"")
-      .replace(/(一下|一个|工具|功能|处理|在线)$/g,"");
-    const needle=normalize(raw);
-    return tools.filter((item) => {
-      const categoryMatch = category === "all" || displayCategory(item) === category;
-      if (!categoryMatch) return false;
-      if (!needle) return true;
+  // V44R2_MULTILINGUAL_INTENT_SEARCH
+  const list = useMemo<ToolItem[]>(() => searchToolItems(
+    tools,
+    q,
+    category,
+    displayCategory,
+    (item:ToolItem) => {
       const slug=item.href.replace("/tools/","");
-      const aliases:Record<string,string>={
-        "temp-mail":"临时邮箱一次性邮箱验证码注册邮件temporaryemailtempmail",
-        "burn-after-read":"阅后即焚私密链接临时链接销毁一次性链接burnafterread",
-        "food-calorie":"卡路里热量营养食物识别早餐午餐晚餐caloriefoodnutrition",
-        "pdf-compress":"pdf压缩文件变小减小pdf",
-        "pdf-merge-split":"pdf合并拆分合并pdf拆分pdf",
-        "image-watermark-remover":"图片去水印去水印水印清除",
-        "video-watermark-remover":"视频去水印去水印视频水印",
-        "ocr":"ocr图片文字识别提取文字",
-        "video-transcription":"视频转文字视频字幕语音文字",
-        "audio-transcription":"音频转文字录音转文字"
-      };
-      const hay=normalize([
-        slug,item.titleZh,item.titleEn,item.descZh,item.descEn,aliases[slug]||""
-      ].join(" "));
-      return hay.includes(needle) || needle.includes(normalize(item.titleZh)) || needle.includes(normalize(item.titleEn));
-    });
-  }, [tools, q, category]);
+      return [
+        toolTitle(lang,slug,lang==="zh"?item.titleZh:item.titleEn),
+        toolCardLine(lang,slug,item.kind,item.descZh,item.descEn)
+      ].filter(Boolean).join(" ");
+    }
+  ), [tools, q, category, lang]);
+
 
 
   return (

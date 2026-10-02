@@ -39,7 +39,7 @@ export default function ProductCatalogClient(){
       <section className="mt-12">
         <div className="lx-v143-section-title"><span>02</span><h2>{zh?"余额与记录":"Balance & records"}</h2></div>
         <div className="lx-v143-wallet-grid">
-          <Link href="/ai-wallet"><LingxiMiniIcon name="wallet" size="card" className="lx-v143-icon"/><div><b>{zh?"创作余额":"Creation Balance"}</b><p>{zh?"按需充值，余额会一直保留在账户中。":"Top up once; balance remains until actually used."}</p></div><em>→</em></Link>
+          <Link href="/sasi/pricing"><LingxiMiniIcon name="wallet" size="card" className="lx-v143-icon"/><div><b>{zh?"余额":"Balance"}</b><p>{zh?"按需充值，余额会一直保留在账户中。":"Top up once; balance remains until actually used."}</p></div><em>→</em></Link>
           <Link href="/account/withdrawals"><LingxiMiniIcon name="refund" size="card" className="lx-v143-icon"/><div><b>{zh?"余额提现":"Balance withdrawal"}</b><p>{zh?"将未使用的可提现余额退回原支付方式。":"Unused paid principal can return to the original payment method."}</p></div><em>→</em></Link>
         </div>
       </section>

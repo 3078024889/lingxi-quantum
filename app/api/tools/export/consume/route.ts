@@ -26,6 +26,6 @@ export async function POST(req:NextRequest){
    .eq("id",g.id).eq("user_id",user.id).is("consumed_at",null)
    .select("id").maybeSingle();
  if(claimed.error)return NextResponse.json({error:"导出权限确认失败"},{status:500});
- if(!claimed.data)return NextResponse.json({error:"本次导出权限已经使用"},{status:409});
+ if(!claimed.data)return NextResponse.json({ok:true,alreadyCompleted:true});
  return NextResponse.json({ok:true});
 }

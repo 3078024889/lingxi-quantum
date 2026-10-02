@@ -337,6 +337,6 @@ export function setLingxiLang(lang:LingxiLang){
 }
 export function useLingxiLang(){
  const[lang,setLangState]=useState<LingxiLang>("zh");
- useEffect(()=>{const saved=(localStorage.getItem("lx-lang")||"zh") as LingxiLang;const next=LANG_NAMES[saved]?saved:"zh";setLangState(next);setLingxiLang(next);const h=(e:Event)=>setLangState((e as CustomEvent<LingxiLang>).detail);window.addEventListener("lingxi:lang",h);return()=>window.removeEventListener("lingxi:lang",h)},[]);
+ useEffect(()=>{const requested=new URLSearchParams(location.search).get("lang") as LingxiLang;const saved=(LANG_NAMES[requested]?requested:localStorage.getItem("lx-lang")||"zh") as LingxiLang;const next=LANG_NAMES[saved]?saved:"zh";setLangState(next);setLingxiLang(next);const h=(e:Event)=>setLangState((e as CustomEvent<LingxiLang>).detail);window.addEventListener("lingxi:lang",h);return()=>window.removeEventListener("lingxi:lang",h)},[]);
  return{lang,setLang:setLingxiLang,t:(key:Key)=>tr(lang,key)};
 }

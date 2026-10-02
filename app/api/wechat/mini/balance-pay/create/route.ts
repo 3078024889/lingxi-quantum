@@ -9,7 +9,7 @@ import {checkRateLimit,getClientIp} from "@/lib/rate-limit";
 export const runtime="nodejs";
 export const maxDuration=30;
 
-const ALLOWED=new Set(["ai-balance-10","ai-balance-30","ai-balance-50","ai-balance-100","ai-balance-300","ai-balance-500"]);
+const ALLOWED=new Set(["sasi-balance-10","sasi-balance-20","sasi-balance-50","sasi-balance-100","sasi-balance-200","sasi-balance-500","sasi-balance-1000","sasi-balance-2000","sasi-balance-10000"]);
 
 export async function POST(req:Request){
   const session=await requireMiniSession(req);
@@ -26,7 +26,7 @@ export async function POST(req:Request){
   if(!ALLOWED.has(productId)||!code)return NextResponse.json({error:"充值参数无效"},{status:400});
 
   const product=getProduct(productId);
-  if(!product||product.group!=="ai"||product.priceRmb<=0)return NextResponse.json({error:"充值项目不可用"},{status:404});
+  if(!product||product.group!=="production"||product.priceRmb<=0)return NextResponse.json({error:"充值项目不可用"},{status:404});
 
   const wxSession=await exchangeMiniCode(code);
   if(wxSession.openid!==session.openid)return NextResponse.json({error:"微信身份与登录状态不一致"},{status:403});

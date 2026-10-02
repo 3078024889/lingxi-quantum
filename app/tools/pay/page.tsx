@@ -1,4 +1,5 @@
 "use client";
+import {quoteDisplay} from "@/lib/tools/commerce/quote-display";
 import NextImage from "next/image";
 import {Suspense,useEffect,useRef,useState} from "react";
 import {useSearchParams} from "next/navigation";
@@ -12,8 +13,8 @@ type Providers={wechat:boolean;alipay:boolean;paypal:boolean};type Provider=keyo
 type CreatePaymentResponse={paid?:boolean;url?:string;codeUrl?:string;jsapi?:Record<string,unknown>;error?:string};
 type WeixinBridge={invoke:(name:string,payload:Record<string,unknown>,cb:(res:{err_msg?:string})=>void)=>void};
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const amount=(q:Quote)=>q.display_currency==="CNY"?`¥${Number(q.display_amount).toFixed(2)}`:`${Number(q.display_amount).toFixed(2)} USD`;
-function safeReturn(value:string|null){if(!value||!value.startsWith("/")||value.startsWith("//"))return "/tools";return value}
+const amount=(q:Quote)=>quoteDisplay(q).text;
+function safeReturn(value:string|null){if(!value||!value.startsWith("/")||value.startsWith("//")||value.includes("\\")||/[\x00-\x1f]/.test(value))return "/tools";return value}
 
 function Inner(){
  const{lang}=useLingxiLang(),t=(k:string)=>accountText(lang,k),zh=lang==="zh",sp=useSearchParams()??new URLSearchParams(),quoteId=sp.get("quoteId")||"";
@@ -52,7 +53,7 @@ function Inner(){
   }catch(e){setErr(e instanceof Error?e.message:String(e))}finally{setBusy(false)}
  }
 
- useEffect(()=>{if(!paid||!quoteId)return;try{window.opener?.postMessage({type:"LINGXIFIELD_TOOL_PAYMENT_CONFIRMED",quoteId},window.location.origin)}catch{}},[paid,quoteId]);
+ useEffect(()=>{if(!paid||!quoteId)return;try{window.opener?.postMessage({type:"LINGXIFIELD_TOOL_PAYMENT_CONFIRMED",quoteId},window.location.origin)}catch{}const back=setTimeout(()=>{if(window.opener&&!window.opener.closed){window.close()}else if(returnTo!=="/tools"){window.location.replace(returnTo)}},1800);return()=>clearTimeout(back)},[paid,quoteId,returnTo]);
 
  if(paid)return <div className="mx-auto max-w-xl px-6 py-24 text-center text-[var(--lx-ink)]"><div className="text-5xl">✓</div><h1 className="mt-5 text-2xl font-semibold">{t("payConfirmed")}</h1><p className="mt-3 text-[var(--lx-muted)]">{t("payConfirmedBody")}</p><button onClick={()=>{if(window.opener){window.close();return}window.location.replace(returnTo)}} className="mt-7 rounded-xl bg-[var(--lx-ink)] px-6 py-3 text-[var(--lx-bg)]">{zh?"返回继续处理":t("close")}</button></div>;
 

@@ -31,6 +31,8 @@ export default function TempMailWorkbench(){
  const[batchCount,setBatchCount]=useState(50);
  const[batchBusy,setBatchBusy]=useState(false);
  const[pendingQuote,setPendingQuote]=useState("");
+ const batchProcessing=useRef(false);
+ const completedBatches=useRef(new Set<string>());
 const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now):0,[box,now]);
  const price=(batchCount*0.05).toFixed(2);
  const mm=String(Math.floor(remaining/60000)).padStart(2,"0");
@@ -129,29 +131,43 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
  }
 
  async function startBatchPayment(){
+  if(batchBusy)return;
   setBatchBusy(true);setError("");
   try{
+   if(pendingQuote){
+    const status=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(pendingQuote)}`,{cache:"no-store"});
+    const current=await status.json();
+    if(!status.ok)throw new Error("PAYMENT_STATUS_UNAVAILABLE");
+    if(current.paid){await createPaidBatch(pendingQuote);return}
+    const payUrl=`/tools/pay?quoteId=${encodeURIComponent(pendingQuote)}&return=${encodeURIComponent('/tools/temp-mail')}`;
+    const popup=window.open(payUrl,"lingxi-pay","width=620,height=820");if(!popup)location.href=payUrl;return;
+   }
    const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},
      body:JSON.stringify({toolId:"temp-mail-batch",quantity:batchCount,metadata:{source:"temp-mail",count:batchCount}})});
    const d=await r.json().catch(()=>({}));
    if(r.status===401){location.href=`/account?next=${encodeURIComponent("/tools/temp-mail")}`;return}
    if(!r.ok)throw new Error(d.error||"QUOTE_FAILED");
    setPendingQuote(d.id);sessionStorage.setItem("lingxifield:temp-mail-batch-quote",d.id);
-   const payUrl=`/tools/pay?quoteId=${encodeURIComponent(d.id)}`;
+   sessionStorage.setItem("lingxifield:temp-mail-batch-count",String(batchCount));
+   const payUrl=`/tools/pay?quoteId=${encodeURIComponent(d.id)}&return=${encodeURIComponent('/tools/temp-mail')}`;
    const w=window.open(payUrl,"lingxi-pay","width=620,height=820");if(!w)location.href=payUrl;
   }catch{setError(t("paymentFailed"))}finally{setBatchBusy(false)}
  }
 
  async function createPaidBatch(quoteId:string){
+  if(batchProcessing.current||completedBatches.current.has(quoteId))return;
+  batchProcessing.current=true;
   setBatchBusy(true);setError("");
   try{
-   const r=await fetch("/api/tools/temp-mail/batch",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({count:batchCount,quoteId})});
+   const savedCount=Number(sessionStorage.getItem("lingxifield:temp-mail-batch-count"))||batchCount;
+   const r=await fetch("/api/tools/temp-mail/batch",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({count:savedCount,quoteId})});
    const d=await r.json().catch(()=>({}));
    if(!r.ok)throw new Error(d.error||"BATCH_CREATE_FAILED");
+   completedBatches.current.add(quoteId);
    setPendingQuote("");sessionStorage.removeItem("lingxifield:temp-mail-batch-quote");
    await loadOwned();
    const first=(d.mailboxes||[])[0] as Box|undefined;if(first)await openOwned({...first,messageCount:0,latestSender:"",latestSubject:"",latestAt:"",latestCode:""});
-  }catch(e){setError(friendly(e instanceof Error?e.message:String(e)))}finally{setBatchBusy(false)}
+  }catch(e){setError(friendly(e instanceof Error?e.message:String(e)))}finally{batchProcessing.current=false;setBatchBusy(false)}
  }
 
  function exportCsv(){
@@ -193,6 +209,14 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
    void loadOwnedRef.current();
   }
  },[remaining]);
+
+ useEffect(()=>{
+  if(!pendingQuote)return;
+  let alive=true;
+  const check=async()=>{try{const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(pendingQuote)}`,{cache:"no-store"});const d=await r.json();if(alive&&r.ok&&d.paid)await createPaidBatchRef.current(pendingQuote)}catch{}};
+  void check();const timer=setInterval(()=>void check(),2500);
+  return()=>{alive=false;clearInterval(timer)};
+ },[pendingQuote]);
 
  useEffect(()=>{
   const h=(e:MessageEvent)=>{const d=e.data as {type?:string;quoteId?:string};if(e.origin===location.origin&&d?.type==="LINGXIFIELD_TOOL_PAYMENT_CONFIRMED"&&d.quoteId===pendingQuote)void createPaidBatchRef.current(d.quoteId)};

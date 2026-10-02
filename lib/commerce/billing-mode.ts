@@ -1,8 +1,8 @@
-export type BillingMode="free-local"|"managed"|"byok"|"disabled";
-export function assertBillingMode(x:{mode:BillingMode;platformProviderCharge:boolean;userProviderKey:boolean}){
- if(x.mode==="free-local"&&x.platformProviderCharge)throw new Error("FREE_LOCAL_PROVIDER_CHARGE_FORBIDDEN");
- if(x.mode==="byok"&&(!x.userProviderKey||x.platformProviderCharge))throw new Error("BYOK_PROVIDER_BILLING_MIXED");
- if(x.mode==="managed"&&x.userProviderKey)throw new Error("MANAGED_BYOK_MIXED");
- if(x.mode==="disabled"&&(x.platformProviderCharge||x.userProviderKey))throw new Error("DISABLED_BILLING_FORBIDDEN");
- return true;
+export type BillingMode="paid-tool"|"sasi-balance"|"supplier-direct-only"|"disabled";
+
+export function assertBillingMode(x:{mode:BillingMode;platformCharge:boolean;userProviderKey:boolean}){
+  if(x.mode==="supplier-direct-only"&&(!x.userProviderKey||x.platformCharge))throw new Error("SUPPLIER_DIRECT_MODE_INVALID");
+  if(x.mode==="disabled"&&(x.platformCharge||x.userProviderKey))throw new Error("DISABLED_BILLING_FORBIDDEN");
+  if((x.mode==="paid-tool"||x.mode==="sasi-balance")&&!x.platformCharge)throw new Error("PLATFORM_CHARGE_REQUIRED");
+  return true;
 }

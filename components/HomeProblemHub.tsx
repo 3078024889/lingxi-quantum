@@ -4,6 +4,7 @@ import {FormEvent,useMemo,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
+import {isLikelyToolQuery} from "@/lib/tools/search-intents-v44r2.mjs";
 
 type Copy={
  kicker:string;seoTitle:string;seoDesc:string;hero:string;lead:string;placeholder:string;begin:string;startWith:string;
@@ -191,7 +192,7 @@ export default function HomeProblemHub(){
   {href:"/ai-research",icon:"research" as LingxiIconName,title:c.research,desc:c.researchDesc},
   {href:"/products",icon:"products" as LingxiIconName,title:c.all,desc:c.allDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(hit?.score>0)location.href=hit.href;else{sessionStorage.setItem("lx-home-intent",v);location.href=`/sasi?intent=${encodeURIComponent(v)}`}}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){sessionStorage.setItem("lx-global-search",v);location.href=`/tools?q=${encodeURIComponent(v)}`;return}if(hit?.score>0)location.href=hit.href;else{sessionStorage.setItem("lx-home-intent",v);location.href=`/sasi?intent=${encodeURIComponent(v)}`}}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143"><p className="lx-v37-brand-title">{c.seoTitle}</p><p className="lx-v37-brand-desc">{c.seoDesc}</p><h1>{c.hero}</h1><p>{c.lead}</p>
    <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} placeholder={c.placeholder}/><button>{c.begin}</button></form>

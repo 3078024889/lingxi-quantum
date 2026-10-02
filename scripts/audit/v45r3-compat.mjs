@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const s=fs.readFileSync('lib/tools/payment-recovery.ts','utf8');
+const must=(v,m)=>{if(!v)throw new Error(m)};
+for(const needle of ['toolId:q.tool_id','tool_id:q.tool_id','expiresAt:q.expires_at','expires_at:q.expires_at','amountRmb','amount_rmb:amountRmb','amountUsd','amount_usd:amountUsd','display_amount'])must(s.includes(needle),`V45R3_COMPAT_MISSING:${needle}`);
+const food=fs.readFileSync('app/api/tools/food/analysis/[id]/route.ts','utf8');
+must(food.includes("payment.quote?.toolId==='food-calorie'"),'V45R3_FOOD_CONSUMER_CONTRACT_DRIFT');
+console.log('V45R3_CAMEL_CASE_CONSUMERS=PASS');
+console.log('V45R3_SNAKE_CASE_PAYMENT_UI=PASS');
+console.log('V45R3_FOOD_PAYMENT_CONTRACT=PASS');
+console.log('LINGXIFIELD_V45R3_COMPAT_AUDIT=PASS');

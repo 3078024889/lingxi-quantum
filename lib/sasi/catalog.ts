@@ -41,15 +41,15 @@ export const SASI_SKILLS = [
 ] as const;
 
 export const CREDIT_PACKS = [
-  { id: "sasi-balance-10", amountFen: 1000, priceRmb: 10, priceUsd: 1.5, zh: "轻量体验", en: "Starter" },
-  { id: "sasi-credit-entry", amountFen: 2000, priceRmb: 20, priceUsd: 3, zh: "创作启程", en: "Creative Start" },
-  { id: "sasi-balance-50", amountFen: 5000, priceRmb: 50, priceUsd: 7.5, zh: "单次制作", en: "Single Production" },
-  { id: "sasi-credit-studio", amountFen: 10000, priceRmb: 100, priceUsd: 15, zh: "持续制作", en: "Studio Flow" },
-  { id: "sasi-balance-200", amountFen: 20000, priceRmb: 200, priceUsd: 30, zh: "系列起步", en: "Series Start" },
-  { id: "sasi-credit-reserve", amountFen: 50000, priceRmb: 500, priceUsd: 75, zh: "工作室储备", en: "Studio Reserve" },
-  { id: "sasi-balance-1000", amountFen: 100000, priceRmb: 1000, priceUsd: 150, zh: "系列制作", en: "Series Production" },
-  { id: "sasi-balance-2000", amountFen: 200000, priceRmb: 2000, priceUsd: 300, zh: "长期制作", en: "Long Production" },
-  { id: "sasi-balance-10000", amountFen: 1000000, priceRmb: 10000, priceUsd: 1500, zh: "大型项目", en: "Major Production" },
+  { id: "sasi-balance-10", amountFen: 1000, priceRmb: 10, priceUsd: 0, zh: "¥10 余额", en: "¥10 balance" },
+  { id: "sasi-balance-20", amountFen: 2000, priceRmb: 20, priceUsd: 0, zh: "¥20 余额", en: "¥20 balance" },
+  { id: "sasi-balance-50", amountFen: 5000, priceRmb: 50, priceUsd: 0, zh: "¥50 余额", en: "¥50 balance" },
+  { id: "sasi-balance-100", amountFen: 10000, priceRmb: 100, priceUsd: 0, zh: "¥100 余额", en: "¥100 balance" },
+  { id: "sasi-balance-200", amountFen: 20000, priceRmb: 200, priceUsd: 0, zh: "¥200 余额", en: "¥200 balance" },
+  { id: "sasi-balance-500", amountFen: 50000, priceRmb: 500, priceUsd: 0, zh: "¥500 余额", en: "¥500 balance" },
+  { id: "sasi-balance-1000", amountFen: 100000, priceRmb: 1000, priceUsd: 0, zh: "¥1000 余额", en: "¥1000 balance" },
+  { id: "sasi-balance-2000", amountFen: 200000, priceRmb: 2000, priceUsd: 0, zh: "¥2000 余额", en: "¥2000 balance" },
+  { id: "sasi-balance-10000", amountFen: 1000000, priceRmb: 10000, priceUsd: 0, zh: "¥10000 余额", en: "¥10000 balance" },
 ] as const;
 
 export function getSasiCreditPack(id: string) {
@@ -60,7 +60,7 @@ export function routeForQuality(quality: SasiQuality) {
   return SASI_QUALITY_TIERS.find((item) => item.id === quality)?.routeId ?? "motion-essential";
 }
 
-// Project planning is not a binding quote. Only /api/sasi/quote can price a task.
+// Project planning is informational. Binding charges are created only by the current unified SASI balance or one-time tool payment path.
 export function budgetAssessment(routeId: string, seconds: number, budgetFen: number) {
   return {routeId, duration:Math.max(5,Math.min(600,Math.round(seconds))), budget:Math.max(0,Math.round(budgetFen)||0), amountFen:null, gap:null, level:"awaiting-quote" as const, canConfirm:false};
 }

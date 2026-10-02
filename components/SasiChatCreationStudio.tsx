@@ -14,10 +14,9 @@ import {transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 type Mode="drama"|"website";
 type UploadState="queued"|"uploading"|"ready"|"needs-review"|"failed";
 type FileItem={id:string;file:File;state:UploadState;progress:number;assetId?:string;message?:string};
-type ManagedQuote={kind:"managed";quoteToken:string;amountFen:number;expiresAt:string};
 type ByokQuote={kind:"byok";task:any;profileId:string};
 type WebsiteQuote={kind:"website-byok";task:any};
-type Quote=ManagedQuote|ByokQuote|WebsiteQuote|null;
+type Quote=ByokQuote|WebsiteQuote|null;
 
 const VIDEO_RATIOS=["9:16","16:9","1:1","4:3","3:4","3:2","2:3","21:9"] as const;
 const VIDEO_RESOLUTIONS=["720p","1080p","2K","4K"] as const;
@@ -233,7 +232,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
   const b=await r.json().catch(()=>({}));
   if(r.ok&&b.task){
    setQuote({kind:"website-byok",task:b.task});
-   setMessage(ct("websiteReadyWithService",{price:`¥${(Number(b.task.estimated_fen||0)/100).toFixed(2)}`}));
+   setMessage(Number(b.task.estimated_fen||0)>0?ct("websiteReadyWithService",{price:`¥${(Number(b.task.estimated_fen||0)/100).toFixed(2)}`}):ct("websiteDraftReady"));
    return;
   }
   if(["CONNECTION_REQUIRED","PRICE_REVIEW_REQUIRED","BYOK_FOUNDATION_UNAVAILABLE"].includes(String(b.error))){
@@ -261,18 +260,6 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
    setAssistantText(ct("resolutionUnavailable",{value:resolution}));
    setMessage(ct("resolutionSaved"));
    await track("continued","drama.resolution.unavailable",pid);return;
-  }
-
-  const managed=(imageAssetIds.length||selectedFunctions.length)
-   ?new Response(JSON.stringify({error:"REFERENCE_ROUTE_REQUIRED"}),{status:422})
-   :await fetch("/api/sasi/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
-      projectId:pid,prompt:prompt.trim(),duration,quality:resolution==="720p"?"fast":"cinema",resolution,aspectRatio:ratio
-    })});
-  const mb=await managed.json().catch(()=>({}));
-  if(managed.ok){
-   setQuote({kind:"managed",quoteToken:mb.quoteToken,amountFen:mb.amountFen,expiresAt:mb.expiresAt});
-   setMessage(ct("managedReady",{price:`¥${(Number(mb.amountFen||0)/100).toFixed(2)}`}));
-   return;
   }
 
   const state=await fetch(`/api/sasi/byok/video?projectId=${encodeURIComponent(pid)}`,{cache:"no-store"});
@@ -312,11 +299,6 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
     if(website?.html){
      setWebsiteHtml(cleanHtml(website.html));setAssistantText(ct("websiteGenerated"));await track("delivered","website.generate.byok");
     }else setAssistantText(ct("taskSubmitted"));
-   }else if(quote.kind==="managed"){
-    const r=await fetch("/api/sasi/jobs",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteToken:quote.quoteToken,prompt:prompt.trim(),requestId:crypto.randomUUID()})});
-    const b=await r.json().catch(()=>({}));
-    if(!r.ok)throw new Error(r.status===402?ct("balanceLow"):ct("videoStartFailed"));
-    await pollManaged(b.job.id);
    }else{
     const r=await fetch("/api/sasi/byok/video",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"confirm",taskId:quote.task.id,acceptSupplierBilling:true})});
     if(!r.ok)throw new Error(ct("supplierStartFailed"));
@@ -324,23 +306,6 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
    }
   }catch(e){setMessage(e instanceof Error?e.message:ct("genericUnavailable"))}
   finally{operation.current=false;setBusy(false)}
- }
-
- async function pollManaged(id:string){
-  if(!mounted.current)return;
-  const r=await fetch(`/api/sasi/jobs/${encodeURIComponent(id)}/refresh`,{method:"POST"});
-  const b=await r.json().catch(()=>({}));
-  if(!r.ok){setMessage(ct("progressUnavailable"));return}
-  const state=b.job?.status;
-  if(state==="succeeded"){
-   const d=await fetch(`/api/sasi/jobs/${encodeURIComponent(id)}/delivery`,{cache:"no-store"});
-   const out=await d.json().catch(()=>({}));
-   if(!d.ok||!out.url){setMessage(ct("videoChecking"));return}
-   setResultUrl(out.url);setMessage(ct("videoDone"));await track("delivered","video.generate.managed");return;
-  }
-  if(state==="failed"||state==="cancelled"){setMessage(ct("videoFailed"));await track("failed","video.generate.managed");return}
-  setMessage(state==="running"?ct("generating"):ct("queued"));
-  pollRef.current=window.setTimeout(()=>void pollManaged(id).catch(()=>setMessage(ct("progressUnavailable"))),5000);
  }
 
  async function pollByok(id:string){
@@ -427,11 +392,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
       </>}
 
       <div className="ml-auto flex items-center gap-2">
-       {quote&&<button disabled={busy} onClick={()=>void confirm()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">
-        {quote.kind==="managed"
-          ?`${ct("confirm")} ¥${(quote.amountFen/100).toFixed(2)}`
-          :`${ct("confirm")} ¥${(Number(quote.task.estimated_fen||0)/100).toFixed(2)}`}
-       </button>}
+       {quote&&<button disabled={busy} onClick={()=>void confirm()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{`${ct("confirm")} ${(quote.task?.request?.billingCurrency==="USD"?"$":"¥")}${(Number(quote.task.estimated_fen||0)/100).toFixed(2)}`}</button>}
        <button aria-label={ct(mode==="drama"?"sendDrama":"sendWebsite")} disabled={busy||(!prompt.trim()&&!files.length)} onClick={()=>void prepare()} className="grid h-10 min-w-10 place-items-center rounded-full bg-[var(--lx-ink)] px-4 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-35">{busy?ct("processing"):"↑"}</button>
       </div>
      </div>

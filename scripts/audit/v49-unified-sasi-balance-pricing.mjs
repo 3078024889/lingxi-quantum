@@ -1,0 +1,24 @@
+import fs from "node:fs";import path from "node:path";
+const root=process.cwd(),r=p=>fs.readFileSync(path.join(root,p),"utf8"),exists=p=>fs.existsSync(path.join(root,p));
+function must(ok,msg){if(!ok){console.error(`V49_FAIL=${msg}`);process.exit(1)}}
+const checkout=r("app/checkout/page.tsx"),pricing=r("lib/sasi/pricing-v49.ts"),plans=r("lib/plans.ts"),usd=r("lib/usd-products.ts"),text=r("lib/sasi/intelligence/user-text.ts"),image=r("app/api/sasi/byok/image/route.ts"),video=r("app/api/sasi/byok/video/route.ts"),knowledge=r("app/api/knowledge/ask/route.ts"),studio=r("components/SasiChatCreationStudio.tsx"),ui=r("components/SasiPricingCurrencyClient.tsx"),migration=r("supabase/migrations/20261002234500_unified_sasi_balance_pricing_v49.sql");
+must(pricing.includes('textPerMillion:{CNY:0.50,USD:0.50}')&&pricing.includes('video720PerSecond:{CNY:0.20,USD:0.20}')&&pricing.includes('video1080PerSecond:{CNY:0.30,USD:0.30}')&&pricing.includes('websiteFirstPage:{CNY:6,USD:6}')&&pricing.includes('websiteAdditionalPage:{CNY:2,USD:2}'),"PRICING_CONSTITUTION");
+must(!plans.includes('aiBalanceProducts')&&!usd.includes('wallet:"ai"')&&!plans.includes('ai-balance-'),"ACTIVE_AI_BALANCE_REMOVED");
+must(!checkout.includes('product.group !== "ai"')&&!checkout.includes('product.group === "ai"')&&!checkout.includes('.from("unlocks")'),"LEGACY_CHECKOUT_ENTITLEMENT_REMOVED");
+must(text.includes('chargeCompletedSasiUsage')&&text.includes('textChargeMinor')&&text.includes('requireSasiBalance'),"TEXT_BALANCE_METERING");
+must(image.includes('imageChargeMinor')&&image.includes('chargeCompletedSasiUsage'),"IMAGE_BALANCE_METERING");
+must(video.includes('videoChargeMinor')&&video.includes('chargeCompletedSasiUsage')&&video.includes('result.state==="succeeded"'),"VIDEO_SUCCESS_ONLY_METERING");
+must(!knowledge.includes('SASI_PLATFORM_REASONING_ENABLED')&&!knowledge.includes('runNativeReasoningAndWait'),"PLATFORM_MODEL_PATH_REMOVED");
+must(!studio.includes('/api/sasi/quote')&&!studio.includes('quote.kind==="managed"'),"MANAGED_VIDEO_UI_REMOVED");
+must(!exists('app/api/sasi/quote/route.ts')&&!exists('app/api/sasi/jobs/route.ts')&&!exists('components/SasiManagedVideoCreate.tsx')&&!exists('components/AiWalletPanel.tsx'),"LEGACY_ACTIVE_RUNTIME_REMOVED");
+must(ui.includes('一个余额，全部 SASI 共用')&&ui.includes('¥0.50 / 100万 Token')&&ui.includes('¥0.20 / 成功生成秒')&&ui.includes('¥6'),"PUBLIC_PRICING_VISIBLE");
+must(migration.includes('charge_sasi_usage_v49')&&migration.includes("kind='usage_v49'")&&migration.includes('credit_sasi_topup'),"DATABASE_LEDGER_MIGRATION");
+console.log("V49_PRICING_CONSTITUTION=PASS");
+console.log("V49_ONE_SASI_BALANCE=PASS");
+console.log("V49R1_CHECKOUT_LEGACY_REMOVED=PASS");
+console.log("V49_TEXT_METERING=PASS");
+console.log("V49_IMAGE_METERING=PASS");
+console.log("V49_VIDEO_SUCCESS_METERING=PASS");
+console.log("V49_WEBSITE_PRICING=PASS");
+console.log("V49_PLATFORM_MODEL_BILLING_REMOVED=PASS");
+console.log("V49_LEGACY_ACTIVE_RUNTIME_REMOVED=PASS");

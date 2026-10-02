@@ -14,8 +14,9 @@ const stampSvg=Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="420" 
 
 async function uploadPdf(page:any,count=9){
   const input=page.locator('input[type="file"][accept*="pdf"]').first();
+  await expect(input).toBeEnabled();
   await input.setInputFiles({name:`${count}-pages.pdf`,mimeType:"application/pdf",buffer:await makePdf(count)});
-  await expect(page.getByText(new RegExp(`${count}\\s*页|${count}\\s*pages`,"i")).first()).toBeVisible();
+  await expect(page.getByTestId("pdf-source-page-count")).toContainText(new RegExp(`${count}\\s*(页|pages)`,"i"),{timeout:15000});
 }
 
 test.describe("document engine real browser inputs",()=>{

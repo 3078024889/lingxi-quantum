@@ -22,12 +22,12 @@ export async function GET() {
   if (!byokVaultConfigured()) return NextResponse.json({ error:"BYOK_VAULT_NOT_CONFIGURED", vaultReady:false }, { status:503 });
   try {
     const { data,error } = await createAdminClient().from("sasi_provider_connections")
-      .select("provider,key_hint,health_status,last_checked_at,last_error_code,updated_at")
+      .select("provider,key_hint,health_status,last_checked_at,last_error_code,capabilities,model_id,base_url,cooldown_until,last_success_at,last_latency_ms,updated_at")
       .eq("user_id",user.id).order("updated_at",{ascending:false});
     if(error) throw error;
     return NextResponse.json({ vaultReady:true, connections:(data??[]).map(row=>({
       service:row.provider,provider:row.provider,keyHint:row.key_hint,healthStatus:row.health_status,lastCheckedAt:row.last_checked_at,
-      lastErrorCode:row.last_error_code,updatedAt:row.updated_at,
+      lastErrorCode:row.last_error_code,capabilities:row.capabilities??[],model:row.model_id||"",baseUrl:row.base_url||"",cooldownUntil:row.cooldown_until||null,lastSuccessAt:row.last_success_at||null,lastLatencyMs:row.last_latency_ms??null,updatedAt:row.updated_at,
     })) },{headers:{"Cache-Control":"no-store"}});
   } catch(error) {
     console.error("[sasi byok] list unavailable",error instanceof Error?error.message:"unknown");

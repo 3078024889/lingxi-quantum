@@ -1,4 +1,5 @@
 import "server-only";
+import {quoteDisplay} from './commerce/quote-display';
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
@@ -23,17 +24,19 @@ type RecoveryQuote = {
   expires_at:string;
   quantity:number;
   unit_name:string;
-  amount_rmb:number;metadata?:Record<string,unknown>|null;
+  amount_rmb:number;amount_usd:number;currency?:string|null;metadata?:Record<string,unknown>|null;
 };
 
 function quoteMeta(q:RecoveryQuote){
-  return {id:q.id,toolId:q.tool_id,status:q.status,expiresAt:q.expires_at,quantity:Number(q.quantity),unitName:q.unit_name,amountRmb:Number(q.amount_rmb),metadata:q.metadata||{}};
+  const amountRmb=Number(q.amount_rmb),amountUsd=Number(q.amount_usd??0);
+  const display=quoteDisplay(q);
+  return {id:q.id,toolId:q.tool_id,tool_id:q.tool_id,status:q.status,expiresAt:q.expires_at,expires_at:q.expires_at,quantity:Number(q.quantity),unitName:q.unit_name,unit_name:q.unit_name,amountRmb,amount_rmb:amountRmb,amountUsd,amount_usd:amountUsd,currency:q.currency??null,display_currency:display.currency,display_amount:display.amount,metadata:q.metadata||{}};
 }
 
 async function grantFor(userId: string, quoteId: string) {
   const admin = createAdminClient();
   const { data } = await admin.from("tool_export_grants")
-    .select("id,tool_id,quantity,unit_name,amount_rmb,consumed_quantity,created_at")
+    .select("id,tool_id,quantity,unit_name,amount_rmb,consumed_quantity,consumed_at,created_at")
     .eq("quote_id", quoteId).eq("user_id", userId).maybeSingle();
   return data ?? null;
 }
@@ -52,7 +55,7 @@ async function repairAlreadyPaidOrder(orderId: string) {
 export async function recoverToolQuotePayment(input: { userId: string; quoteId: string }) {
   const admin = createAdminClient();
   const { data: quoteData } = await admin.from("tool_payment_quotes")
-    .select("id,user_id,tool_id,status,expires_at,quantity,unit_name,amount_rmb,metadata")
+    .select("id,user_id,tool_id,status,expires_at,quantity,unit_name,amount_rmb,amount_usd,currency,metadata")
     .eq("id", input.quoteId).eq("user_id", input.userId).maybeSingle();
 
   const quote=quoteData as RecoveryQuote|null;

@@ -3,15 +3,8 @@ import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 
 const SASI_TOPUP_PRODUCTS = new Set([
-  "sasi-balance-10",
-  "sasi-credit-entry",
-  "sasi-balance-50",
-  "sasi-credit-studio",
-  "sasi-balance-200",
-  "sasi-credit-reserve",
-  "sasi-balance-1000",
-  "sasi-balance-2000",
-  "sasi-balance-10000",
+  "sasi-balance-10","sasi-balance-20","sasi-balance-50","sasi-balance-100","sasi-balance-200",
+  "sasi-balance-500","sasi-balance-1000","sasi-balance-2000","sasi-balance-10000",
 ]);
 
 const SASI_CUSTOM_TOPUP = /^sasi-balance-custom-(\d{1,5})$/;
