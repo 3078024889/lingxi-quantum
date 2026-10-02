@@ -6,7 +6,7 @@ const RETIRED_EXACT=new Set([
  "/explore","/learn","/glossary","/live-as","/subconscious","/practice","/field-tests",
  "/life-map","/relationship","/qian","/mirror","/tarot","/resilience","/romance",
  "/daily","/wealth","/archetype","/mini-report","/membership","/origin","/dream",
- "/declaration","/narrative","/tools/number-energy","/gate","/field","/manifestation",
+ "/declaration","/narrative","/tools/number-energy","/number-energy","/gate","/field","/field-test","/manifestation",
  "/consciousness","/inner-sovereignty","/learn/inner-sovereignty",
  "/energy-exchange","/energy","/exchange","/inner-practice","/inner-practice-technique",
  "/relationship-index","/relationship-analysis","/romance-index","/romance-resonance-index",

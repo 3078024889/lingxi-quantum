@@ -6,7 +6,7 @@ import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 
 type Copy={
- kicker:string;hero:string;lead:string;placeholder:string;begin:string;startWith:string;
+ kicker:string;seoTitle:string;seoDesc:string;hero:string;lead:string;placeholder:string;begin:string;startWith:string;
  taskTitle:string;taskLead:string;start:string;why:string;
  finishNow:string;finishNowBody:string;important:string;importantBody:string;
  tools:string;toolsDesc:string;sasi:string;sasiDesc:string;book:string;bookDesc:string;
@@ -16,7 +16,9 @@ type Copy={
 
 const copy:Record<LingxiLang,Copy>={
  zh:{
-  kicker:"灵犀场 LINGXIFIELD｜SASI智能生态",hero:"把想法、资料和日常问题真正处理起来。",
+  kicker:"灵犀场 LINGXIFIELD｜SASI智能生态",
+  seoTitle:"灵犀场 LINGXIFIELD｜SASI智能生态与全球智能工具平台",
+  seoDesc:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",hero:"把想法、资料和日常问题真正处理起来。",
   lead:"从一个文件、一张图片、一段视频，到一本书、一项研究或一个还没理清的想法，都可以从这里直接开始。告诉灵犀场你要完成什么，它会把你带到最合适的入口。",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",
   taskTitle:"你现在要完成什么？",taskLead:"不需要先理解平台。先解决眼前这件事。",start:"开始",
@@ -31,7 +33,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"图片工具",video:"视频与音频"
  },
  en:{
-  kicker:"LINGXIFIELD",hero:"Turn ideas, sources and everyday tasks into finished work.",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD | SASI Intelligent Ecosystem & Global Intelligent Tools",
+  seoDesc:"AI short-drama creation, website building, Book SASI, Learning SASI, Research SASI, plus practical PDF, image, video, OCR, temporary email and burn-after-read tools.",hero:"Turn ideas, sources and everyday tasks into finished work.",
   lead:"Start with a file, image, video, book, research question or an idea that is not clear yet. Tell LINGXIFIELD what you need done and it will take you to the right place.",
   placeholder:"Tell LINGXIFIELD what you want to solve now.",begin:"Start",startWith:"Start with",
   taskTitle:"What do you want to finish?",taskLead:"You do not need to learn the platform first. Start with the task in front of you.",start:"Open",
@@ -46,7 +50,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"Image tools",video:"Video & audio"
  },
  ja:{
-  kicker:"LINGXIFIELD",hero:"アイデア、資料、日々の作業を、実際の結果まで進める。",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD｜SASI インテリジェント・エコシステムとグローバルツール",
+  seoDesc:"AI短編ドラマ、Webサイト構築、Book SASI、学習SASI、研究SASI、PDF・画像・動画・OCR・一時メール・閲覧後消去などの実用ツール。",hero:"アイデア、資料、日々の作業を、実際の結果まで進める。",
   lead:"ファイル、画像、動画、本、研究課題、まだ整理できていない考えまで、ここから直接始められます。やりたいことを伝えると、最適な入口へ案内します。",
   placeholder:"今いちばん解決したいことを入力してください。",begin:"始める",startWith:"おすすめ",
   taskTitle:"今、何を完成させたいですか？",taskLead:"先にプラットフォームを覚える必要はありません。目の前の作業から始めましょう。",start:"開く",
@@ -61,7 +67,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"画像ツール",video:"動画・音声"
  },
  ko:{
-  kicker:"LINGXIFIELD",hero:"아이디어, 자료, 일상 작업을 실제 결과까지 이어갑니다.",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD｜SASI 지능형 생태계와 글로벌 도구",
+  seoDesc:"AI 숏드라마 제작, 웹사이트 구축, Book SASI, 학습 SASI, 연구 SASI와 PDF·이미지·영상·OCR·임시 메일·열람 후 삭제 도구.",hero:"아이디어, 자료, 일상 작업을 실제 결과까지 이어갑니다.",
   lead:"파일, 이미지, 영상, 책, 연구 질문, 아직 정리되지 않은 생각까지 여기서 바로 시작할 수 있습니다. 해야 할 일을 말하면 알맞은 입구로 연결합니다.",
   placeholder:"지금 가장 해결하고 싶은 일을 입력하세요.",begin:"시작",startWith:"바로 시작",
   taskTitle:"지금 무엇을 완성하고 싶나요?",taskLead:"플랫폼부터 배울 필요 없습니다. 눈앞의 작업부터 시작하세요.",start:"열기",
@@ -76,7 +84,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"이미지 도구",video:"영상·오디오"
  },
  fr:{
-  kicker:"LINGXIFIELD",hero:"Transformez idées, sources et tâches quotidiennes en résultats concrets.",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD | Écosystème intelligent SASI et outils mondiaux",
+  seoDesc:"Création de mini-dramas IA, création de sites, Book SASI, SASI Études, SASI Recherche, ainsi que des outils PDF, image, vidéo, OCR, e-mail temporaire et lecture éphémère.",hero:"Transformez idées, sources et tâches quotidiennes en résultats concrets.",
   lead:"Commencez avec un fichier, une image, une vidéo, un livre, une question de recherche ou une idée encore floue. Dites ce que vous voulez accomplir et LINGXIFIELD vous conduit au bon point d’entrée.",
   placeholder:"Que voulez-vous résoudre maintenant ?",begin:"Commencer",startWith:"Commencer par",
   taskTitle:"Que voulez-vous terminer ?",taskLead:"Pas besoin d’apprendre la plateforme d’abord. Commencez par la tâche devant vous.",start:"Ouvrir",
@@ -91,7 +101,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"Outils image",video:"Vidéo et audio"
  },
  de:{
-  kicker:"LINGXIFIELD",hero:"Bringen Sie Ideen, Quellen und Alltagsaufgaben zu einem echten Ergebnis.",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD | SASI-Intelligenzökosystem & globale Werkzeuge",
+  seoDesc:"KI-Kurzdrama, Website-Erstellung, Book SASI, Lern-SASI, Forschungs-SASI sowie PDF-, Bild-, Video-, OCR-, temporäre E-Mail- und Einmalansicht-Werkzeuge.",hero:"Bringen Sie Ideen, Quellen und Alltagsaufgaben zu einem echten Ergebnis.",
   lead:"Starten Sie mit Datei, Bild, Video, Buch, Forschungsfrage oder einer noch ungeklärten Idee. Sagen Sie, was erledigt werden soll; LINGXIFIELD führt zum passenden Einstieg.",
   placeholder:"Was möchten Sie jetzt lösen?",begin:"Starten",startWith:"Direkt starten mit",
   taskTitle:"Was möchten Sie fertigstellen?",taskLead:"Sie müssen die Plattform nicht zuerst lernen. Beginnen Sie mit der aktuellen Aufgabe.",start:"Öffnen",
@@ -106,7 +118,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"Bildwerkzeuge",video:"Video & Audio"
  },
  es:{
-  kicker:"LINGXIFIELD",hero:"Convierte ideas, fuentes y tareas cotidianas en resultados reales.",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD | Ecosistema inteligente SASI y herramientas globales",
+  seoDesc:"Creación de microdramas con IA, creación de sitios web, Book SASI, SASI Aprendizaje, SASI Investigación y herramientas de PDF, imagen, vídeo, OCR, correo temporal y lectura efímera.",hero:"Convierte ideas, fuentes y tareas cotidianas en resultados reales.",
   lead:"Empieza con un archivo, imagen, vídeo, libro, pregunta de investigación o una idea aún sin ordenar. Dile a LINGXIFIELD qué necesitas terminar y te llevará al punto adecuado.",
   placeholder:"¿Qué quieres resolver ahora?",begin:"Empezar",startWith:"Empieza con",
   taskTitle:"¿Qué quieres terminar?",taskLead:"No necesitas aprender la plataforma primero. Empieza por la tarea que tienes delante.",start:"Abrir",
@@ -121,7 +135,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"Herramientas de imagen",video:"Vídeo y audio"
  },
  pt:{
-  kicker:"LINGXIFIELD",hero:"Transforme ideias, fontes e tarefas do dia a dia em resultados reais.",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD | Ecossistema inteligente SASI e ferramentas globais",
+  seoDesc:"Criação de minidramas com IA, criação de sites, Book SASI, SASI Aprendizagem, SASI Pesquisa e ferramentas de PDF, imagem, vídeo, OCR, e-mail temporário e leitura efêmera.",hero:"Transforme ideias, fontes e tarefas do dia a dia em resultados reais.",
   lead:"Comece com um arquivo, imagem, vídeo, livro, questão de pesquisa ou uma ideia ainda não organizada. Diga o que precisa concluir e a LINGXIFIELD leva você ao ponto certo.",
   placeholder:"O que você quer resolver agora?",begin:"Começar",startWith:"Comece por",
   taskTitle:"O que você quer concluir?",taskLead:"Você não precisa aprender a plataforma primeiro. Comece pela tarefa à sua frente.",start:"Abrir",
@@ -136,7 +152,9 @@ const copy:Record<LingxiLang,Copy>={
   img:"Ferramentas de imagem",video:"Vídeo e áudio"
  },
  ar:{
-  kicker:"LINGXIFIELD",hero:"حوّل الأفكار والمصادر والمهام اليومية إلى نتائج فعلية.",
+  kicker:"LINGXIFIELD",
+  seoTitle:"LINGXIFIELD | منظومة SASI الذكية والأدوات العالمية",
+  seoDesc:"إنشاء الدراما القصيرة بالذكاء الاصطناعي، وبناء المواقع، وBook SASI وSASI للتعلّم وSASI للبحث، مع أدوات PDF والصور والفيديو وOCR والبريد المؤقت والقراءة المؤقتة.",hero:"حوّل الأفكار والمصادر والمهام اليومية إلى نتائج فعلية.",
   lead:"ابدأ بملف أو صورة أو فيديو أو كتاب أو سؤال بحثي أو فكرة لم تتضح بعد. أخبر LINGXIFIELD بما تريد إنجازه وسيقودك إلى المدخل الأنسب.",
   placeholder:"ما الذي تريد حله الآن؟",begin:"ابدأ",startWith:"ابدأ من",
   taskTitle:"ما الذي تريد إنجازه الآن؟",taskLead:"لا تحتاج إلى تعلّم المنصة أولًا. ابدأ بالمهمة التي أمامك.",start:"فتح",
@@ -175,7 +193,7 @@ export default function HomeProblemHub(){
  ];
  function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(hit?.score>0)location.href=hit.href;else{sessionStorage.setItem("lx-home-intent",v);location.href=`/sasi?intent=${encodeURIComponent(v)}`}}
  return <main className="lx11-page"><div className="lx11-wrap">
-  <section className="lx11-home-hero lx-home-v143"><p className="lx11-home-kicker">{c.kicker}</p><h1>{c.hero}</h1><p>{c.lead}</p>
+  <section className="lx11-home-hero lx-home-v143"><p className="lx11-home-kicker">{c.kicker}</p><p className="lx-v37-brand-title">{c.seoTitle}</p><p className="lx-v37-brand-desc">{c.seoDesc}</p><h1>{c.hero}</h1><p>{c.lead}</p>
    <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} placeholder={c.placeholder}/><button>{c.begin}</button></form>
    {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
   </section>
