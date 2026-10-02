@@ -7,8 +7,8 @@ import WalletHeroCopy from "@/components/WalletHeroCopy";
 import AiRefundRequestPanel from "@/components/AiRefundRequestPanel";
 
 export const metadata:Metadata={
-  title:"AI Balance｜LINGXIFIELD",
-  description:"LINGXIFIELD prepaid AI balance. No membership lock-in or weekly/monthly reset; charged by actual use.",
+  title:"余额｜灵犀场 LINGXIFIELD",
+  description:"灵犀场余额支持人民币与美元独立充值与使用，可查看充值记录、余额提现与退款说明。",
   alternates:{canonical:"/ai-wallet"}
 };
 

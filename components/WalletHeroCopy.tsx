@@ -4,7 +4,7 @@ import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 
 export default function WalletHeroCopy(){
   return <>
-    <div className="lx-page-title-line"><LingxiMiniIcon name="wallet" size="title"/><p className="lx11-kicker"><LxText zh="AI 余额" en="AI Balance" ja="AI 残高" ko="AI 잔액" fr="Solde IA" de="KI-Guthaben" es="Saldo IA" pt="Saldo IA" ar="رصيد الذكاء الاصطناعي"/></p></div>
+    <div className="lx-page-title-line"><LingxiMiniIcon name="wallet" size="title"/><p className="lx11-kicker"><LxText zh="余额" en="Balance" ja="残高" ko="잔액" fr="Solde" de="Guthaben" es="Saldo" pt="Saldo" ar="الرصيد"/></p></div>
     <h1 className="lx11-title"><LxText
       zh="不用订阅。需要时充值，用多少扣多少。"
       en="No subscription. Top up when needed and pay only for what you use."

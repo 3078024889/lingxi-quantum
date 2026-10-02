@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./unified-shell.css";
 import "./v201-quality.css";
+import "./v40-mobile.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";

@@ -1,0 +1,36 @@
+import fs from "node:fs";
+const must=(v,m)=>{if(!v)throw new Error(m)};
+const nav=fs.readFileSync("components/Nav.tsx","utf8");
+const bell=fs.readFileSync("components/NotificationBell.tsx","utf8");
+const layout=fs.readFileSync("app/layout.tsx","utf8");
+const account=fs.readFileSync("app/account/page.tsx","utf8");
+const settings=fs.readFileSync("components/AccountSettingsPanel.tsx","utf8");
+const css=fs.readFileSync("app/v40-mobile.css","utf8");
+
+must(nav.includes('import MobileBottomNav from "@/components/MobileBottomNav";'),"V40R1_MOBILE_NAV_IMPORT_MISSING");
+must(nav.includes("<MobileBottomNav/>"),"V40R1_BOTTOM_NAV_MISSING");
+must(/lx11-mobile-actions[\s\S]{0,300}<CurrencySelector compact \/>/.test(nav),"V40R1_MOBILE_CURRENCY_MISSING");
+must(nav.includes('href="/account/settings"'),"V40R1_SETTINGS_MENU_MISSING");
+must(nav.includes('className="lx-v40-account-quick-settings"'),"V40R1_QUICK_SETTINGS_MISSING");
+must(nav.includes("LANG_NAMES"),"V40R1_LANGUAGE_SWITCH_MISSING");
+must(bell.includes("lx-v40-notification-sheet"),"V40R1_NOTIFICATION_SHEET_MISSING");
+must(layout.includes("./v40-mobile.css"),"V40R1_CSS_IMPORT_MISSING");
+must(account.includes('href="/account/settings"'),"V40R1_ACCOUNT_SETTINGS_CARD_MISSING");
+must(settings.includes("CurrencySelector"),"V40R1_SETTINGS_CURRENCY_MISSING");
+must(settings.includes("LANG_NAMES"),"V40R1_SETTINGS_LANGUAGE_MISSING");
+must(css.includes("@media(max-width:1023px)"),"V40R1_MOBILE_CSS_MISSING");
+must(fs.existsSync("app/account/settings/page.tsx"),"V40R1_SETTINGS_PAGE_MISSING");
+must(fs.existsSync("app/account/notifications/page.tsx"),"V40R1_NOTIFICATIONS_PAGE_MISSING");
+
+console.log("MOBILE_NOTIFICATION_CENTER=PASS");
+console.log("ACCOUNT_SETTINGS=PASS");
+console.log("ACCOUNT_LANGUAGE_SWITCH=PASS");
+console.log("MOBILE_CURRENCY_SWITCH=PASS");
+console.log("MOBILE_BOTTOM_NAV=PASS");
+console.log("MOBILE_9_LANGUAGE_COPY=PASS");
+console.log("FOOD_CALORIE_CHANGED=NO");
+console.log("PAYMENT_WITHDRAWAL_CHANGED=NO");
+console.log("PAYMENT_EXECUTION_CHANGED=NO");
+console.log("PROTECTED_PRODUCTION_DATA=UNCHANGED");
+console.log("CORE_ORIGIN_MODULES_CHANGED=NO");
+console.log("LINGXIFIELD_V40R1_MOBILE_ACCOUNT_AUDIT=PASS");

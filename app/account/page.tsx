@@ -78,6 +78,11 @@ export default async function AccountPage(
             <Link href="/account/withdrawals" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="refund" size="title"/><b>{T.refund}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.refundDesc}</p></Link>
             <Link href="/account/support" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="account" size="title"/><b>我的问题</b><p className="mt-2 text-sm text-[var(--lx-muted)]">查看已提交的问题、截图和处理进度</p></Link>
             <Link href="/account/notifications" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="orders" size="title"/><b><LxText zh="消息与公告" en="Notifications & updates" ja="通知と更新" ko="알림 및 업데이트" fr="Notifications et mises à jour" de="Mitteilungen & Updates" es="Notificaciones y novedades" pt="Notificações e novidades" ar="الإشعارات والتحديثات"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><LxText zh="查看充值到账、提现进度、退款结果和版本更新" en="See top-ups, withdrawal progress, refund results and product updates." ja="入金、返金進捗、結果、更新情報を確認" ko="충전, 환불 진행, 결과 및 업데이트 확인" fr="Suivez paiements, remboursements et mises à jour." de="Aufladungen, Erstattungen und Updates ansehen." es="Consulta recargas, reembolsos y novedades." pt="Veja recargas, reembolsos e novidades." ar="راجع الشحن والاسترداد والتحديثات."/></p></Link>
+            <Link href="/account/settings" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
+              <span className="text-2xl">⚙</span>
+              <b><LxText zh="设置" en="Settings" ja="設定" ko="설정" fr="Paramètres" de="Einstellungen" es="Ajustes" pt="Configurações" ar="الإعدادات"/></b>
+              <p className="mt-2 text-sm text-[var(--lx-muted)]"><LxText zh="语言、币种、显示与常用账户入口" en="Language, currency, appearance and account shortcuts." ja="言語、通貨、表示、アカウントの入口" ko="언어, 통화, 화면 및 계정 바로가기" fr="Langue, devise, apparence et raccourcis." de="Sprache, Währung, Darstellung und Kontozugänge." es="Idioma, moneda, apariencia y accesos." pt="Idioma, moeda, aparência e atalhos." ar="اللغة والعملة والمظهر وروابط الحساب."/></p>
+            </Link>
           </div>
 
           <div className="mt-8 space-y-3">

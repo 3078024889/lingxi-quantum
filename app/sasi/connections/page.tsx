@@ -6,8 +6,8 @@ import {createClient,getServerUser,isSupabasePublicConfigured} from "@/lib/supab
 
 export const dynamic="force-dynamic";
 export const metadata:Metadata={
-  title:"连接 AI 服务｜灵犀场 SASI",
-  description:"连接你已经开通的 AI 服务，安全保存 API Key，让 SASI 在需要时直接使用。",
+  title:"创作连接｜灵犀场 SASI",
+  description:"连接你已经开通的创作服务，按页面提示安全保存连接凭证，之后可在 SASI 的适用任务中直接使用。",
   alternates:{canonical:"/sasi/connections"},
 };
 

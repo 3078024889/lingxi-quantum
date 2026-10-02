@@ -22,7 +22,7 @@ const CORE:Record<string,Multi>={
  "验证连接":row("验证连接","Test connection","接続を検証","연결 확인","Tester la connexion","Verbindung testen","Probar conexión","Testar conexão","اختبار الاتصال"),
  "正在删除…":row("正在删除…","Deleting…","削除中…","삭제 중…","Suppression…","Löschen…","Eliminando…","Excluindo…","جارٍ الحذف…"),
  "撤销并删除":row("撤销并删除","Revoke & delete","取り消して削除","해제 후 삭제","Révoquer et supprimer","Widerrufen & löschen","Revocar y eliminar","Revogar e excluir","إلغاء وحذف"),
- "模型与 API":row("模型与 API","Models & API","モデルと API","모델 및 API","Modèles & API","Modelle & API","Modelos y API","Modelos e API","النماذج وواجهات API"),
+ "创作能力":row("创作能力","Creative capabilities","制作機能","창작 기능","Capacités de création","Kreative Funktionen","Capacidades de creación","Recursos de criação","قدرات الإبداع"),
  "项连接已验证":row("项连接已验证","verified connections","件の接続を検証済み","개 연결 확인됨","connexions vérifiées","verifizierte Verbindungen","conexiones verificadas","conexões verificadas","اتصالات تم التحقق منها"),
  "未验证的连接暂不可使用":row("未验证的连接暂不可使用","Unverified connections cannot be used yet","未検証の接続はまだ使用できません","확인되지 않은 연결은 아직 사용할 수 없습니다","Les connexions non vérifiées restent indisponibles","Nicht verifizierte Verbindungen sind noch nicht nutzbar","Las conexiones no verificadas aún no se pueden usar","Conexões não verificadas ainda não podem ser usadas","لا يمكن استخدام الاتصالات غير المتحقق منها بعد"),
  "能力连接分类":row("能力连接分类","Connection categories","接続カテゴリ","연결 카테고리","Catégories de connexion","Verbindungskategorien","Categorías de conexión","Categorias de conexão","فئات الاتصال"),

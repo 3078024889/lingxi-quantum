@@ -12,6 +12,7 @@ import NotificationBell from "@/components/NotificationBell";
 import CurrencySelector from "@/components/CurrencySelector";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 type Theme = "light" | "dark";
 type K =
@@ -42,16 +43,16 @@ function active(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-const menuText: Record<LingxiLang, { account:string; orders:string; password:string; navigation:string; switch:string; signout:string; delete:string; close:string }> = {
-  zh: { account:"账户", orders:"订单与使用记录", password:"修改密码", navigation:"网站导航", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
-  en: { account:"My Account", orders:"Paid Tasks", password:"Change password", navigation:"Site navigation", switch:"Switch account", signout:"Sign out", delete:"Delete account", close:"Close menu" },
-  ja: { account:"マイアカウント", orders:"有料タスク", password:"パスワード変更", navigation:"サイトナビ", switch:"アカウント切替", signout:"ログアウト", delete:"アカウント削除", close:"閉じる" },
-  ko: { account:"내 계정", orders:"유료 작업", password:"비밀번호 변경", navigation:"사이트 메뉴", switch:"계정 전환", signout:"로그아웃", delete:"계정 삭제", close:"닫기" },
-  fr: { account:"Mon compte", orders:"Tâches payantes", password:"Modifier le mot de passe", navigation:"Navigation", switch:"Changer de compte", signout:"Se déconnecter", delete:"Supprimer le compte", close:"Fermer" },
-  de: { account:"Mein Konto", orders:"Bezahlte Aufgaben", password:"Passwort ändern", navigation:"Navigation", switch:"Konto wechseln", signout:"Abmelden", delete:"Konto löschen", close:"Schließen" },
-  es: { account:"Mi cuenta", orders:"Tareas pagadas", password:"Cambiar contraseña", navigation:"Navegación", switch:"Cambiar de cuenta", signout:"Cerrar sesión", delete:"Eliminar cuenta", close:"Cerrar" },
-  pt: { account:"Minha conta", orders:"Tarefas pagas", password:"Alterar senha", navigation:"Navegação", switch:"Trocar de conta", signout:"Sair", delete:"Excluir conta", close:"Fechar" },
-  ar: { account:"حسابي", orders:"المهام المدفوعة", password:"تغيير كلمة المرور", navigation:"التنقل", switch:"تبديل الحساب", signout:"تسجيل الخروج", delete:"حذف الحساب", close:"إغلاق" },
+const menuText: Record<LingxiLang, { account:string; orders:string; password:string; navigation:string; settings:string; switch:string; signout:string; delete:string; close:string }> = {
+  zh: { account:"账户", orders:"订单与使用记录", password:"修改密码", navigation:"网站导航", settings:"设置", switch:"切换账户", signout:"退出登录", delete:"注销账户", close:"关闭菜单" },
+  en: { account:"My Account", orders:"Paid Tasks", password:"Change password", navigation:"Site navigation", settings:"Settings", switch:"Switch account", signout:"Sign out", delete:"Delete account", close:"Close menu" },
+  ja: { account:"マイアカウント", orders:"有料タスク", password:"パスワード変更", navigation:"サイトナビ", settings:"設定", switch:"アカウント切替", signout:"ログアウト", delete:"アカウント削除", close:"閉じる" },
+  ko: { account:"내 계정", orders:"유료 작업", password:"비밀번호 변경", navigation:"사이트 메뉴", settings:"설정", switch:"계정 전환", signout:"로그아웃", delete:"계정 삭제", close:"닫기" },
+  fr: { account:"Mon compte", orders:"Tâches payantes", password:"Modifier le mot de passe", navigation:"Navigation", settings:"Paramètres", switch:"Changer de compte", signout:"Se déconnecter", delete:"Supprimer le compte", close:"Fermer" },
+  de: { account:"Mein Konto", orders:"Bezahlte Aufgaben", password:"Passwort ändern", navigation:"Navigation", settings:"Einstellungen", switch:"Konto wechseln", signout:"Abmelden", delete:"Konto löschen", close:"Schließen" },
+  es: { account:"Mi cuenta", orders:"Tareas pagadas", password:"Cambiar contraseña", navigation:"Navegación", settings:"Ajustes", switch:"Cambiar de cuenta", signout:"Cerrar sesión", delete:"Eliminar cuenta", close:"Cerrar" },
+  pt: { account:"Minha conta", orders:"Tarefas pagas", password:"Alterar senha", navigation:"Navegação", settings:"Configurações", switch:"Trocar de conta", signout:"Sair", delete:"Excluir conta", close:"Fechar" },
+  ar: { account:"حسابي", orders:"المهام المدفوعة", password:"تغيير كلمة المرور", navigation:"التنقل", settings:"الإعدادات", switch:"تبديل الحساب", signout:"تسجيل الخروج", delete:"حذف الحساب", close:"إغلاق" },
 };
 
 export default function Nav() {
@@ -235,6 +236,7 @@ export default function Nav() {
             <div className="lx11-account-menu-links">
               <Link href="/account" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="account" size="tiny"/><b>{mt.account}</b></Link>
               <Link href="/account/orders" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="orders" size="tiny"/><b>{mt.orders}</b></Link>
+              <Link href="/account/settings" onClick={() => setMenuOpen(false)} className="lx-v40-account-settings-link"><span>⚙</span><b>{mt.settings}</b></Link>
               <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><LingxiMiniIcon name="products" size="tiny"/><b>{mt.navigation}</b></button>
             </div>
             <div className="lx11-account-menu-divider" />
@@ -252,6 +254,7 @@ export default function Nav() {
           <span><b>{t("brand")}</b><small>{agent ? "SASI" : "LINGXIFIELD"}</small></span>
         </Link>
         <div className="lx11-mobile-actions">
+          <CurrencySelector compact />
           <NotificationBell />
           <Link href="/ai-wallet">💎 {t("recharge")}</Link>
           <button
@@ -272,14 +275,28 @@ export default function Nav() {
             <div className="lx11-account-menu-links">
               <Link href="/account" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="account" size="tiny"/><b>{mt.account}</b></Link>
               <Link href="/account/orders" onClick={() => setMenuOpen(false)}><LingxiMiniIcon name="orders" size="tiny"/><b>{mt.orders}</b></Link>
+              <Link href="/account/settings" onClick={() => setMenuOpen(false)} className="lx-v40-account-settings-link"><span>⚙</span><b>{mt.settings}</b></Link>
               <button type="button" onClick={() => { setMenuOpen(false); setOpen(true); }}><LingxiMiniIcon name="products" size="tiny"/><b>{mt.navigation}</b></button>
               {signedIn && <button type="button" onClick={switchAccount}><span>SW</span><b>{mt.switch}</b></button>}
               {signedIn && <button type="button" onClick={signOut}><span>EX</span><b>{mt.signout}</b></button>}
+            </div>
+            <div className="lx-v40-account-quick-settings">
+              <div>
+                <label>{t("language")}</label>
+                <select value={lang} onChange={(event)=>setLang(event.target.value as LingxiLang)}>
+                  {(Object.keys(LANG_NAMES) as LingxiLang[]).map(key=><option key={key} value={key}>{LANG_NAMES[key]}</option>)}
+                </select>
+              </div>
+              <div>
+                <label>{lang==="zh"?"币种":"Currency"}</label>
+                <CurrencySelector/>
+              </div>
             </div>
           </div>
         )}
       </header>
 
+      <MobileBottomNav/>
       {open && <button className="lx11-backdrop" onClick={() => setOpen(false)} />}
       <aside className={`lx11-sidebar lx11-drawer ${open ? "is-open" : ""}`}>{side}</aside>
     </>
