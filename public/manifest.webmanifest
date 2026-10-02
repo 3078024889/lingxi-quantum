@@ -1,7 +1,7 @@
 {
-  "name": "灵犀场 LINGXIFIELD · SASI 与实用工具",
+  "name": "灵犀场 LINGXIFIELD｜SASI智能生态",
   "short_name": "灵犀场 LINGXIFIELD",
-  "description": "SASI 创作与构建、资料整理、学习研究，以及 PDF、图片、视频、字幕、临时邮箱、阅后即焚等实用工具。",
+  "description": "AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

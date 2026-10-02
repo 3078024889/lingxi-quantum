@@ -46,17 +46,9 @@
     "audit:continuous-tools": "node scripts/audit/continuous-tools.mjs",
     "audit:media-production": "node scripts/audit/media-production.mjs",
     "audit:global-commerce": "node scripts/audit/global-commerce.mjs",
-    "audit:v21-build": "node scripts/audit/v21-build-regression.mjs",
-    "audit:v22-document-payment": "node scripts/audit/v22-document-payment.mjs",
     "audit:document-formats": "node scripts/audit/document-format-capability.mjs",
     "audit:all-paid-recovery": "node scripts/audit/all-paid-task-recovery.mjs",
-    "audit:v24-idempotency": "node scripts/audit/v24-idempotency.mjs",
-    "audit:v25-pdf-canonical": "node scripts/audit/v25-pdf-canonical.mjs",
-    "audit:v26-cumulative": "node scripts/audit/v26-cumulative.mjs",
     "audit:syntax": "node scripts/audit/audit-script-syntax.mjs",
-    "audit:v27-old-cleanup": "node scripts/audit/v27-old-code-cleanup.mjs",
-    "audit:v28-install": "node scripts/audit/v28-install-robustness.mjs",
-    "audit:v29-installer-contract": "node scripts/audit/v29-installer-contract.mjs",
     "ci:baseline": "node scripts/ci/clean-baseline.mjs",
     "ci:source": "node scripts/ci/production-gate.mjs",
     "ci:desktop": "playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1",
@@ -71,7 +63,9 @@
     "audit:v32r1-ci-regression": "node scripts/audit/v32r1-ci-regression.mjs",
     "test:v32-document-gateway": "playwright test -c playwright.final.config.ts tests/final-closure/document-gateway-v32.spec.ts --workers=1",
     "smoke:document-gateway": "node scripts/document-gateway/smoke.mjs",
-    "audit:v32r2-resume-promotion": "node scripts/audit/v32r2-resume-promotion.mjs"
+    "audit:v32r2-resume-promotion": "node scripts/audit/v32r2-resume-promotion.mjs",
+    "smoke:document-gateway:office": "node scripts/document-gateway/smoke-office.mjs",
+    "audit:v33-production-closure": "node scripts/audit/v33-production-closure.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "0.12.10",

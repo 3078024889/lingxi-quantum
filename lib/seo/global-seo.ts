@@ -3,11 +3,11 @@ import {toolFacts} from './product-facts';
 export const SITE="https://lingxifield.com";
 export const SEO_LOCALES={  "zh":{
     hreflang:"zh-CN",name:"中文",dir:"ltr",
-    brand:"灵犀场 LINGXIFIELD",homeTitle:"免费实用工具、SASI 创作与活化智能体",homeDesc:"从 PDF、图片、视频、字幕、OCR 与文件处理，到 AI 短剧生成、书本 SASI、学习 SASI、科研 SASI 和网站构建，一站完成。",
+    brand:"灵犀场 LINGXIFIELD",homeTitle:"SASI智能生态与全球智能工具平台",homeDesc:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
     toolsTitle:"在线实用工具",toolsDesc:"PDF、图片、视频、字幕、表格、OCR、隐私与文件工具。需要什么，直接进入结果。",
     open:"打开工具",allTools:"查看全部工具",how:"怎么使用",what:"能做什么",privacy:"处理方式",
     local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"把目标交给 SASI，从资料、创作或构建直接进入可用结果。",
-    searchTerms:["免费在线工具","PDF压缩","PDF合并","PDF拆分","图片压缩","图片格式转换","视频转文字","音频转文字","字幕翻译","临时邮箱","阅后即焚","图片OCR","AI短剧生成","AI视频生成","书本智能体","科研智能体","学习智能体","AI网站生成"]
+    searchTerms:["灵犀场SASI","LINGXIFIELD SASI","灵犀场智能生态","SASI智能生态","免费在线工具","PDF压缩","PDF合并","PDF拆分","图片压缩","图片格式转换","视频转文字","音频转文字","字幕翻译","临时邮箱","阅后即焚","图片OCR","AI短剧生成","AI视频生成","书本智能体","科研智能体","学习智能体","AI网站生成"]
   },
   "en":{
     hreflang:"en",name:"English",dir:"ltr",

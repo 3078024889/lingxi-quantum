@@ -3,8 +3,8 @@ import {SERVICE_FACTS} from '@/lib/seo/service-facts';
 export const dynamic='force-static';
 export function GET(){
  const lines=[
-  '# LINGXIFIELD / 灵犀场','',
-  '> Public product reference for practical online tools and SASI workspaces. This index does not grant access to private account data.',
+  '# 灵犀场 LINGXIFIELD | SASI Intelligent Ecosystem','',
+  "> LINGXIFIELD is the SASI intelligent ecosystem and global intelligent tools platform for practical tools, creation, building, learning and research. This public index does not grant access to private account data.",
   '',`Canonical site: ${SITE}`,'Chinese access domain: https://lingxifield.cn','',
   '## Product areas',
   ...(Object.keys(SEO_TOPICS) as SeoTopic[]).map(key=>`- [${SEO_TOPICS[key].en}](${SITE}/discover/${key}): ${SERVICE_FACTS[key].description.en}`),

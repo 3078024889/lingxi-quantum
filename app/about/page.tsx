@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const metadata:Metadata={
  title:"关于灵犀场｜SASI、资料知识与实用工具",
- description:"灵犀场 LINGXIFIELD 是一个让想法被理解、让问题被处理、让结果真正发生的数字工作空间。核心能力优先采用直接处理、本地处理、程序生成与自有任务系统，外部生成模型只在确有需要时作为可选增强。",
+ description:"灵犀场 LINGXIFIELD｜SASI智能生态。一个让想法被理解、让问题被处理、让结果真正发生的场智能数字空间。",
  alternates:{canonical:"/about"}
 };
 
@@ -22,7 +22,7 @@ export default function AboutPage(){return <><Nav/><main className="lx11-page"><
 </section>
 <section className="mt-14 rounded-2xl border border-[var(--lx-line)] p-7">
  <h2 className="font-display text-2xl text-[var(--lx-ink)]">能直接完成的，就直接完成。</h2>
- <p className="mt-4 text-sm leading-8 text-[var(--lx-muted)]">不同任务会走最合适的处理方式。简单的文件和计算直接完成；复杂的创作与研究再进入更深的能力组合。你不需要理解后台，只需要拿到结果。</p>
+ <p className="mt-4 text-sm leading-8 text-[var(--lx-muted)]">从文件与日常处理，到创作、学习和研究，每一项能力都围绕你真正想得到的结果展开。你只需要带着问题或想法进来，再把可以继续使用的结果带走。</p>
 </section>
 <section className="mt-10 text-sm leading-7 text-[var(--lx-muted)]"><p>support@lingxifield.com · business@lingxifield.com · contact@lingxifield.com</p></section>
 </div></main><Footer/></>;}

@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import path from "node:path";
 const retired=[
  "scripts/audit/platform-stability-v9.mjs",
  "scripts/audit/platform-stability-v10.mjs",
@@ -14,7 +13,9 @@ const retired=[
  "tests/final-closure/language-stability-v10.spec.ts",
  "tests/final-closure/language-stability-v11.spec.ts",
  "tests/final-closure/language-stability-v12.spec.ts",
- "tests/final-closure/language-stability-v13.spec.ts"
+ "tests/final-closure/language-stability-v13.spec.ts",
+ "public/vendor/transformers",
+ "public/onnxruntime"
 ];
 const remains=retired.filter(p=>fs.existsSync(p));
 if(fs.existsSync("lib/tools/platform/platform"))throw new Error("NESTED_PLATFORM_DIRECTORY_REMAINS");
@@ -29,4 +30,6 @@ if(/classList\.toggle\(\s*["']lang-en["']/.test(i18n))throw new Error("OLD_LANG_
 console.log("RETIRED_VERSIONED_STABILITY_FILES=0");
 console.log("RETIRED_LANGUAGE_IMPLEMENTATION=0");
 console.log("OLD_PACKAGE_ARTIFACTS=0");
+console.log("OLD_MEDIA_RUNTIME_RESIDUALS=0");
 console.log("NESTED_PLATFORM_DIRECTORIES=0");
+console.log("RETIRED_CODE_CLEANUP=PASS");

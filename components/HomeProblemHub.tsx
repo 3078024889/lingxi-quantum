@@ -16,7 +16,7 @@ type Copy={
 
 const copy:Record<LingxiLang,Copy>={
  zh:{
-  kicker:"灵犀场 · LINGXIFIELD",hero:"把想法、资料和日常问题真正处理起来。",
+  kicker:"灵犀场 LINGXIFIELD｜SASI智能生态",hero:"把想法、资料和日常问题真正处理起来。",
   lead:"从一个文件、一张图片、一段视频，到一本书、一项研究或一个还没理清的想法，都可以从这里直接开始。告诉灵犀场你要完成什么，它会把你带到最合适的入口。",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",
   taskTitle:"你现在要完成什么？",taskLead:"不需要先理解平台。先解决眼前这件事。",start:"开始",

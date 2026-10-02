@@ -16,11 +16,11 @@ const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const seg=location.pathname.s
 export const metadata:Metadata={
  metadataBase:new URL(SITE),
  title:{
-  default:"灵犀场 LINGXIFIELD｜全球智能工具与 SASI 创作生态平台",
+  default:"灵犀场 LINGXIFIELD｜SASI智能生态与全球智能工具平台",
   template:"%s ｜ 灵犀场 LINGXIFIELD"
  },
- description:"灵犀场 LINGXIFIELD 是全球智能工具与 SASI 创作生态平台：处理 PDF、图片、视频、字幕、OCR 与文件，也可进行 AI 短剧、书本 SASI、学习 SASI、科研 SASI 与网站构建。",
- applicationName:"灵犀场 LINGXIFIELD",
+ description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
+ applicationName:"灵犀场 LINGXIFIELD｜SASI智能生态",
  keywords:[
   "灵犀场","LINGXIFIELD","SASI","免费在线工具",
   "PDF压缩","PDF合并","PDF拆分","PDF编辑","电子签名",
@@ -31,15 +31,15 @@ export const metadata:Metadata={
  openGraph:{
   type:"website",
   siteName:"灵犀场 LINGXIFIELD",
-  title:"灵犀场｜免费实用工具 · AI 短剧 · SASI 智能体",
-  description:"PDF、图片、视频与文件处理，以及 AI 短剧、书本/文档智能体、学习、科研和网站构建。",
+  title:"灵犀场 LINGXIFIELD｜SASI智能生态与全球智能工具平台",
+  description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
   url:SITE,
   images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
  },
  twitter:{
   card:"summary_large_image",
-  title:"灵犀场 LINGXIFIELD",
-  description:"免费实用工具、AI 短剧与 SASI 智能体工作区。",
+  title:"灵犀场 LINGXIFIELD｜SASI智能生态",
+  description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
   images:[SHARE_IMAGE]
  },
  robots:{index:true,follow:true,"max-snippet":-1,"max-image-preview":"large","max-video-preview":-1},

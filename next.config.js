@@ -48,11 +48,6 @@ const nextConfig = {
       { source: "/tools/electronic-signature", destination: "/tools/e-sign-pdf", permanent: true },
       { source: "/tools/electronic-seal", destination: "/tools/e-sign-pdf", permanent: true },
       { source: "/tools/pdf-stamp", destination: "/tools/e-sign-pdf", permanent: true },
-      {
-        source: "/learn/wingmakers",
-        destination: "/learn/inner-sovereignty",
-        permanent: true,
-      },
     ];
   },
 };

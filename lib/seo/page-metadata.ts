@@ -5,7 +5,7 @@ export function publicPageMetadata(locale:SeoLocale,path:string,title:string,des
  const url=localePath(locale,path);
  return {title:{absolute:`${title} | LINGXIFIELD`},description,
   alternates:{canonical:url,languages:languageAlternates(path)},
-  openGraph:{type:'website',url,title,description,siteName:'LINGXIFIELD',images:SHARE_IMAGES},
+  openGraph:{type:'website',url,title,description,siteName:'灵犀场 LINGXIFIELD',images:SHARE_IMAGES},
   twitter:{card:'summary_large_image',title,description,images:[SHARE_IMAGE_URL]},
   robots:{index:true,follow:true,'max-snippet':-1,'max-image-preview':'large','max-video-preview':-1},
  };
