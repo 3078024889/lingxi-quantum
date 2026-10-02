@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import {execFileSync} from "node:child_process";
 const must=(v,m)=>{if(!v)throw new Error(m)};
 
 const generated=[
@@ -9,7 +10,14 @@ const generated=[
  "build-review.log","build-sasi-review.log","build-sasi-memory-review.log",
  "build-membership-390.png","build-membership-1440.png"
 ];
-for(const p of generated)must(!fs.existsSync(p),`V38R2_GENERATED_WORKTREE_RESIDUAL:${p}`);
+// Check the Git index: ignored runtime output may exist after installs/tests,
+// while skip-worktree can hide a tracked cache from local filesystem checks.
+const tracked=execFileSync('git',['ls-files','-z','--','.pnpm-store','test-results','playwright-report','audit-output','build-*.log','build-*.png'],{encoding:'utf8'}).split('\0').filter(Boolean);
+must(tracked.length===0,`V38R2_GENERATED_TRACKED_RESIDUAL:${tracked.join(',')}`);
+for(const p of generated){
+ const ignored=execFileSync('git',['check-ignore','--no-index','--',p],{encoding:'utf8'}).trim();
+ must(ignored===p,`V38R2_GENERATED_NOT_IGNORED:${p}`);
+}
 
 const pkg=JSON.parse(fs.readFileSync("package.json","utf8"));
 must(pkg.packageManager==="pnpm@11.28.0","V38R2_PACKAGE_MANAGER_MISMATCH");
@@ -49,10 +57,8 @@ must(ci.includes("v38r2-repository-hardening.mjs")||ci.includes("v38r1-repositor
 
 console.log("CANONICAL_PACKAGE_MANAGER=pnpm@11.28.0");
 console.log("PACKAGE_LOCK_PRESERVED=YES");
-console.log("GENERATED_PACKAGE_STORE_WORKTREE=0");
-console.log("GENERATED_TEST_RESULTS_WORKTREE=0");
-console.log("GENERATED_AUDIT_OUTPUT_WORKTREE=0");
-console.log("GENERATED_BUILD_EVIDENCE_WORKTREE=0");
+console.log("GENERATED_ARTIFACTS_TRACKED=0");
+console.log("GENERATED_ARTIFACT_IGNORE_RULES=PASS");
 console.log("PROTECTED_RETIRED_ASSETS_PRESERVED=5");
 console.log("GITHUB_ACTIONS_FULL_SHA_PINNED=PASS");
 console.log("GITIGNORE_NORMALIZED=PASS");
