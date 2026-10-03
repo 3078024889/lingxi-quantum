@@ -33,7 +33,7 @@ async function recordObservation(admin:any,w:Row,o:ProviderRefundObservation){
  const attempts=Number(w.provider_attempt_count||0)+1;
  const failureCode=observationFailureCode(o,attempts);
  const delay=nextDelay(Number(o.retryAfterSeconds||300),attempts,String(w.id),failureCode);
- await admin.from("balance_withdrawals").update({
+ const {error}=await admin.from("balance_withdrawals").update({
   provider_status:o.providerStatus||null,
   provider_raw_status:String(o.rawStatus||"").slice(0,500),
   provider_refund_id:o.providerRefundId||w.provider_refund_id||null,
@@ -44,6 +44,7 @@ async function recordObservation(admin:any,w:Row,o:ProviderRefundObservation){
   next_reconcile_at:new Date(Date.now()+delay*1000).toISOString(),
   updated_at:new Date().toISOString(),
  }).eq("id",w.id);
+ if(error)throw new Error("WITHDRAWAL_OBSERVATION_SAVE_FAILED");
 }
 
 async function recordException(admin:any,w:Row,error:unknown){
@@ -55,7 +56,7 @@ async function recordException(admin:any,w:Row,error:unknown){
   :decision.failureCode;
  const delay=nextDelay(decision.retryAfterSeconds,attempts,String(w.id),failureCode);
 
- await admin.from("balance_withdrawals").update({
+ const {error:saveError}=await admin.from("balance_withdrawals").update({
   failure_code:failureCode,
   provider_status:decision.providerStatus,
   last_provider_error_code:safeProviderError(error),
@@ -64,6 +65,7 @@ async function recordException(admin:any,w:Row,error:unknown){
   next_reconcile_at:new Date(Date.now()+delay*1000).toISOString(),
   updated_at:new Date().toISOString(),
  }).eq("id",w.id);
+ if(saveError)throw new Error("WITHDRAWAL_OBSERVATION_SAVE_FAILED");
 
  return{
   ...decision,
@@ -115,7 +117,7 @@ export async function reconcileWithdrawal(withdrawalId:string){
     p_provider_refund_id:decision.providerRefundId,
     p_provider_status:decision.providerStatus,
    });
-   if(error)throw error;
+   if(error||data?.ok!==true)throw new Error("WITHDRAWAL_FINALIZATION_FAILED");
    return{ok:true,status:"completed",result:data};
   }
 
@@ -125,13 +127,16 @@ export async function reconcileWithdrawal(withdrawalId:string){
     p_failure_code:decision.failureCode,
     p_provider_status:decision.providerStatus,
    });
-   if(error)throw error;
+   if(error||data?.ok!==true)throw new Error("WITHDRAWAL_FINALIZATION_FAILED");
    return{ok:true,status:"failed",result:data};
   }
 
+  const failureCode=observationFailureCode(observation,Number(w.provider_attempt_count||0)+1);
   return{
    ok:true,
    status:"pending",
+   failureCode,
+   operatorActionRequired:failureCode==="PROVIDER_ACTION_REQUIRED"||failureCode==="OPERATOR_REVIEW_REQUIRED",
    retryAfterSeconds:nextDelay(decision.afterSeconds,Number(w.provider_attempt_count||0)+1,String(w.id),observationFailureCode(observation,Number(w.provider_attempt_count||0)+1)),
   };
  }catch(error){

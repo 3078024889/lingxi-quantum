@@ -1,9 +1,9 @@
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),ts=require('typescript');
 const pair=crypto.generateKeyPairSync('rsa',{modulusLength:2048,privateKeyEncoding:{type:'pkcs8',format:'pem'},publicKeyEncoding:{type:'spki',format:'pem'}});
-process.env.WECHAT_MCH_ID='fixture';process.env.WECHAT_CERT_SERIAL_NO='fixture';process.env.WECHAT_PRIVATE_KEY=pair.privateKey;
+process.env.WECHAT_APP_ID='fixture';process.env.WECHAT_API_V3_KEY='0'.repeat(32);process.env.WECHAT_MCH_ID='fixture';process.env.WECHAT_CERT_SERIAL_NO='fixture';process.env.WECHAT_PRIVATE_KEY=pair.privateKey;
 process.env.ALIPAY_APP_ID='fixture';process.env.ALIPAY_PRIVATE_KEY=pair.privateKey.replace(/-----[^\n]+-----/g,'');process.env.ALIPAY_PUBLIC_KEY=pair.publicKey.replace(/-----[^\n]+-----/g,'');
-const mod={exports:{}},code=ts.transpileModule(fs.readFileSync('lib/payment-refunds.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-new Function('require','module','exports',code)(name=>name==='@/lib/paypal'?{}:require(name),mod,mod.exports);
+function load(file){const mod={exports:{}},code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;new Function('require','module','exports',code)(name=>name==='@/lib/money/refund-identifiers'?{wechatRefundNotifyUrl:()=>null}:require(name),mod,mod.exports);return mod.exports;}
+const wx=load('lib/wechatpay.ts'),alipay=load('lib/alipay.ts');
 let calls=0;
 global.fetch=async(url,options)=>{
  calls++;
@@ -18,4 +18,4 @@ global.fetch=async(url,options)=>{
  const payload={code:'10000',refund_fee:'1.00',trade_no:'verified-ref',fund_change:'Y'},raw=JSON.stringify(payload),sign=crypto.sign('RSA-SHA256',Buffer.from(raw),pair.privateKey).toString('base64');
  return new Response(JSON.stringify({alipay_trade_refund_response:payload,sign}));
 };
-(async()=>{assert.equal((await mod.exports.refundWechat({outTradeNo:'LXoriginal',withdrawalId:'00000000-0000-4000-8000-000000000001',orderAmountFen:1000,refundAmountFen:100})).state,'completed');assert.equal((await mod.exports.refundAlipay({outTradeNo:'LXoriginal',withdrawalId:'00000000-0000-4000-8000-000000000001',refundAmountRmb:1})).state,'completed');assert.equal(calls,2);console.log('PASS: WeChat and Alipay refund signatures, original refund references, signed Alipay responses; generated keys and mock transport only.');})().catch(e=>{console.error(e);process.exitCode=1});
+(async()=>{assert.equal((await wx.createWechatRefund({outTradeNo:'LXoriginal',outRefundNo:'stable-refund',totalFen:1000,refundFen:100})).status,'SUCCESS');assert.equal((await alipay.createAlipayRefund({outTradeNo:'LXoriginal',outRequestNo:'stable-refund',refundFen:100})).status,'SUCCESS');assert.equal(calls,2);console.log('PASS: WeChat and Alipay refund signatures, original refund references, signed Alipay responses; generated keys and mock transport only.');})().catch(e=>{console.error(e);process.exitCode=1});

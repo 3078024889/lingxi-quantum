@@ -31,7 +31,7 @@ for(const [i,lang]of languages.entries()){
    await expect(page.locator("main")).not.toContainText("Example:");
   }
   await page.locator('input[type="file"][accept*="pdf"]').first().setInputFiles({name:"broken.pdf",mimeType:"application/pdf",buffer:Buffer.from("not a PDF")});
-  const alert=page.getByRole("alert");await expect(alert).toBeVisible();
+  const alert=page.locator("main").getByRole("alert");await expect(alert).toBeVisible();
   await expect(alert).not.toContainText(/PDFDocument|PDFParsing|No PDF header|DOCUMENT_OPEN_FAILED/);
   if(lang!=="en")await expect(alert).not.toContainText("This PDF could not be opened");
  });
@@ -40,7 +40,7 @@ test("PDF failed autosave never claims the draft is saved",async({page})=>{
  await page.goto("/tools/pdf-editor?lang=en");
  await page.evaluate(()=>{IDBObjectStore.prototype.put=function(){throw new DOMException("Quota full","QuotaExceededError")}});
  await upload(page);
- await expect(page.getByRole("alert")).toContainText("Your task could not be saved");
+ await expect(page.locator("main").getByRole("alert")).toContainText("Your task could not be saved");
  await expect(page.getByTestId("draft-saved")).toHaveCount(0);
 });
 function wav(){const data=Buffer.alloc(16000),header=Buffer.alloc(44);header.write("RIFF");header.writeUInt32LE(36+data.length,4);header.write("WAVEfmt ",8);header.writeUInt32LE(16,16);header.writeUInt16LE(1,20);header.writeUInt16LE(1,22);header.writeUInt32LE(8000,24);header.writeUInt32LE(16000,28);header.writeUInt16LE(2,32);header.writeUInt16LE(16,34);header.write("data",36);header.writeUInt32LE(data.length,40);return Buffer.concat([header,data])}
@@ -55,7 +55,7 @@ test("audio task only enables pricing after its draft is saved",async({page})=>{
  const price=page.getByRole("button",{name:"Voir le prix",exact:true});await expect(price).toBeEnabled();
  await page.evaluate(()=>{IDBObjectStore.prototype.put=function(){throw new DOMException("Quota full","QuotaExceededError")}});
  await price.click();
- await expect(page.getByRole("alert")).toContainText("La tâche n’a pas pu être enregistrée");
+ await expect(page.locator("main").getByRole("alert")).toContainText("La tâche n’a pas pu être enregistrée");
  await expect(page.getByTestId("draft-saved")).toHaveCount(0);
  expect(quotes).toBe(0);
  await expect(price).toBeDisabled();

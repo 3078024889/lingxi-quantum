@@ -38,7 +38,11 @@ export default function BalanceWithdrawalPanel(){
     return `${name} · ¥${Number(order.amount_rmb||0).toFixed(2)}`;
   };
   const providerName=(provider:string)=>provider==="paypal"?"PayPal":provider==="wechat"?c.wechat:provider==="alipay"?c.alipay:c.other;
-  const statusLabel=(w:Withdrawal)=>w.failure_code==="PROVIDER_FUNDS_REQUIRED"?moneyText(lang,"providerFunds"):w.status==="completed"?c.completed:w.status==="processing"?c.processing:w.status==="requested"?c.requested:w.status==="failed"?c.failed:c.processing;
+  const statusLabel=(w:Withdrawal)=>{
+    if(w.failure_code==="PROVIDER_FUNDS_REQUIRED")return moneyText(lang,"providerFunds");
+    if(["PROVIDER_ACTION_REQUIRED","OPERATOR_REVIEW_REQUIRED"].includes(w.failure_code||""))return moneyText(lang,"providerAction");
+    return w.status==="completed"?c.completed:w.status==="processing"?c.processing:w.status==="requested"?c.requested:w.status==="failed"?c.failed:c.processing;
+  };
 
   async function load(){
     try{const r=await fetch("/api/account/withdrawals",{cache:"no-store"});

@@ -22,20 +22,8 @@ async function main(){
   }
   assert(moneyText(lang,'details'));assert(!/WITHDRAWAL_REQUEST_FAILED/.test(moneyText(lang,'unavailable')));
  }
- const {queryProviderRefund,refundPaypal}=load('lib/payment-refunds.ts');
- let calls=0;global.fetch=async()=>{calls++;throw new Error('unexpected network')};
- const base={provider:'paypal',providerPaymentId:'order-test',withdrawalId:'12345678-1234-1234-1234-123456789abc',refundId:null,currency:'USD',refundAmountMinor:101};
- assert.equal((await queryProviderRefund(base)).state,'pending');assert.equal(calls,0);
- global.fetch=async(url,options)=>{calls++;assert(!options.method||options.method==='GET');return {ok:true,json:async()=>({id:'refund-test',status:'COMPLETED',amount:{currency_code:'USD',value:'1.01'}})}};
- assert.equal((await queryProviderRefund({...base,refundId:'refund-test'})).state,'completed');
- await assert.rejects(()=>queryProviderRefund({...base,refundId:'refund-test',refundAmountMinor:102}),/MISMATCH/);
- global.fetch=async()=>({ok:true,json:async()=>({id:'refund-test',status:'COMPLETED',amount:{currency_code:'CNY',value:'1.01'}})});
- await assert.rejects(()=>refundPaypal({paypalOrderId:'order',localOrderId:'local',withdrawalId:base.withdrawalId,orderAmountUsd:10,refundAmountUsd:1.01}),/MISMATCH/);
- const keys=crypto.generateKeyPairSync('rsa',{modulusLength:2048});
- process.env.WECHAT_MCH_ID='TEST';process.env.WECHAT_CERT_SERIAL_NO='TEST';process.env.WECHAT_PRIVATE_KEY=keys.privateKey.export({type:'pkcs8',format:'pem'});
- global.fetch=async(url,options)=>{assert.equal(options.method,'GET');return {ok:true,json:async()=>({out_refund_no:'LXW'+base.withdrawalId.replace(/-/g,''),out_trade_no:'order-test',refund_id:'wx-test',status:'SUCCESS',amount:{currency:'CNY',refund:101}})}};
- assert.equal((await queryProviderRefund({...base,provider:'wechat',currency:'CNY'})).state,'completed');
- await assert.rejects(()=>queryProviderRefund({...base,provider:'wechat',currency:'CNY',refundAmountMinor:102}),/MISMATCH/);
- console.log('PASS: exact minor units, four wallets, nine-language status distinction, query-only reconciliation, missing receipt guard, provider amount/currency/reference checks. No external payment calls.');
+ const {execFileSync}=require('node:child_process');
+ execFileSync(process.execPath,[path.join(root,'scripts/test-money-reconcile-results.cjs')],{stdio:'inherit'});
+ console.log('PASS: exact minor units, four wallets, nine-language status distinction and current reconciliation worker. No external payment calls.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1});
