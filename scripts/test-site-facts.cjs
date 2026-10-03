@@ -10,4 +10,5 @@ for(const locale of Object.keys(SEO_LOCALES)){
 }
 for(const slug of ['burn-after-read','temp-mail'])assert.equal(facts.toolGeoFact(slug,'en').kind,'paid-online');
 assert.equal(facts.toolGeoFact('nonexistent-tool','en'),null);
+const {buildToolMetadata}=load('lib/tools/seo.ts');for(const slug of facts.GEO_TOOL_SLUGS){const meta=buildToolMetadata(slug);assert.equal(typeof meta.title,'string');assert.equal(typeof meta.description,'string');assert(meta.description.length>0)}
 const response=load('app/llms.txt/route.ts').GET();response.text().then(s=>{assert(s.includes('CNY')&&s.includes('USD'));assert(s.includes('Paid processing'));assert(s.includes('Not open yet'));console.log('PASS: full tool catalog, six public pages, nine languages, paid/free/disabled distinctions, both hosts and actual llms.txt output.');}).catch(e=>{console.error(e);process.exitCode=1});
