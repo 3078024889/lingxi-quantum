@@ -47,6 +47,10 @@ const SEO:Record<string,SeoEntry>={
  "long-image":{title:"长图拼接｜多张图片拼成长图",description:"把多张图片按顺序拼接为一张长图。",keywords:["长图拼接","图片拼接","多图拼接"]},
  "document-copy-layout":{title:"证件复印排版｜正反面排到A4",description:"把证件正反面排版到 A4，并可添加用途水印后导出。",keywords:["身份证复印排版","证件A4排版","证件复印"]},
  "batch-image":{title:"批量图片处理｜批量压缩与格式转换",description:"一次处理多张图片，批量压缩、转换格式并保存结果。",keywords:["批量图片处理","批量图片压缩","批量图片转换"]},
+ "compress-image-to-100kb":{title:"图片压缩到100KB｜免费本地压缩，无需上传",description:"把图片压缩到100KB。浏览器本地处理，无需上传，免费使用。适合表单、证件照等体积限制场景。",keywords:["图片压缩到100KB","压缩到100KB","图片压缩","在线压缩图片","免费图片压缩"]},
+ "heic-to-jpg":{title:"HEIC转JPG｜iPhone照片免费本地转换",description:"把 HEIC/HEIF 照片转为 JPG。浏览器本地转换，无需上传，免费使用。",keywords:["HEIC转JPG","HEIC转JPEG","HEIF转JPG","苹果照片转JPG","iPhone照片转JPG"]},
+ "merge-pdf":{title:"PDF合并｜免费本地合并多个PDF",description:"合并多个 PDF 为一个文件。浏览器本地处理，无需上传，免费使用。",keywords:["PDF合并","合并PDF","在线合并PDF","PDF合成","免费PDF合并"]},
+ "remove-exif":{title:"删除图片EXIF｜清除GPS与元数据",description:"删除图片 EXIF、GPS 与常见元数据。浏览器本地处理，无需上传，免费使用。",keywords:["删除图片EXIF","EXIF删除","清除EXIF","图片GPS删除","图片元数据清理"]},
 };
 
 function fallbackTitle(slug:string){
