@@ -4,10 +4,9 @@ const bad=[];
 const read=p=>fs.readFileSync(p,"utf8");
 
 const k=read("components/KnowledgeWorkspace.tsx");
+const css=read("app/globals.css");
 
-// Result-oriented UX contract. TypeScript syntax is already checked by
-// patched-typescript-syntax.cjs, so this audit must validate runtime-facing
-// behavior instead of brittle source formatting such as COPY object spacing.
+// Result-oriented UX contract.
 if(/\bpasteOpen\b|\bsetPasteOpen\b/.test(k))bad.push("legacy paste-source UI state remains");
 if(/onClick=\{\(\)=>\{setAddOpen\(false\);setPasteOpen/.test(k))bad.push("legacy paste-source menu action remains");
 for(const key of["draftTitle","draftReady","pastePlaceholder","addLibrary"]){
@@ -28,11 +27,26 @@ if(!k.includes("onDrop={e=>"))bad.push("knowledge composer drag-drop missing");
 if(!k.includes("e.clipboardData.files"))bad.push("clipboard file paste missing");
 if(!k.includes("needsConnection"))bad.push("connection CTA state missing");
 if(!k.includes("media-capable intelligence service")&&!k.includes("支持相应媒体能力")&&!k.includes("支持相应能力的智能服务"))bad.push("media connection guidance missing");
-if(!k.includes("bg-blue-50/70")||!k.includes("text-blue-600"))bad.push("user message blue styling missing");
-if(!k.includes("shadow-[0_20px_70px_rgba(99,102,241,.12)]"))bad.push("large composer visual treatment missing");
 if(!k.includes("downloadSasiDocx"))bad.push("real DOCX export missing");
 
-// Connection copy: one shared explanation + minimal per-provider channel labels.
+// New stable visual contract: component classes + CSS are authoritative.
+// Do not depend on specific Tailwind literals that may be intentionally replaced.
+if(!k.includes("lx-sasi-user-bubble"))bad.push("knowledge user message visual contract missing");
+if(!k.includes("lx-sasi-reference-composer"))bad.push("knowledge composer visual contract missing");
+if(!k.includes("lx-sasi-reference-textarea"))bad.push("knowledge textarea visual contract missing");
+
+for(const x of[
+ ".lx-sasi-user-bubble",
+ "color:#2563eb!important",
+ ".lx-sasi-reference-composer",
+ "rgba(236,72,153,.20)",
+ ".lx-sasi-reference-textarea",
+ "caret-color:#2563eb!important"
+]){
+ if(!css.includes(x))bad.push(`global SASI visual CSS missing: ${x}`);
+}
+
+// Connection copy: one shared explanation + minimal per-provider labels.
 const c=read("app/sasi/ConnectionCenter.tsx");
 if(!c.includes("CHANNEL_COPY"))bad.push("connection channel copy missing");
 if(!c.includes('zh:{volcengine:"CNY 通道",openrouter:"USD 通道"}'))bad.push("provider channel labels are not minimal");
@@ -40,9 +54,11 @@ if(c.includes("使用火山方舟账号已开通")||c.includes("使用 OpenRoute
 const shared=(c.match(/\{SHARED_COPY\[lang\]\}/g)||[]).length;
 if(shared!==1)bad.push(`shared connection copy should render once, found ${shared}`);
 
-// User messages across creation modes stay visibly blue.
+// Same visual contract for drama/website.
 const f=read("components/SasiChatCreationStudio.tsx");
-if(!f.includes("bg-blue-50/70")||!f.includes("text-blue-600"))bad.push("drama/website user message blue styling missing");
+if(!f.includes("lx-sasi-user-bubble"))bad.push("drama/website user message visual contract missing");
+if(!f.includes("lx-sasi-reference-composer"))bad.push("drama/website composer visual contract missing");
+if(!f.includes("lx-sasi-reference-textarea"))bad.push("drama/website textarea visual contract missing");
 
 // Durable-inbox refund architecture supersedes direct wallet mutation in webhook handlers.
 const v52f=read("scripts/audit/v52f-refund-webhook-lifecycle.mjs");
@@ -65,7 +81,7 @@ if(bad.length){
  process.exit(1);
 }
 
-console.log("R13_UX_AUDIT_RESULT_CONTRACT=PASS");
+console.log("R15R3_UX_AUDIT_COHERENT=PASS");
 console.log("UX_DIRECT_PASTE_SINGLE_COMPOSER=PASS");
 console.log("UX_LIVE_SEARCH_REMOVED_FROM_TYPING=PASS");
 console.log("UX_DIRECT_LONG_TEXT_EPHEMERAL_EVIDENCE=PASS");
@@ -79,10 +95,6 @@ console.log("UX_VOLCENGINE_CNY_CHANNEL=PASS");
 console.log("UX_OPENROUTER_USD_CHANNEL=PASS");
 console.log("UX_CONNECTION_PROVIDER_COPY_MINIMAL=PASS");
 console.log("AUDIT_V52F_SUPERSEDED_FOR_DURABLE_INBOX=PASS");
-console.log("UX_RETIRED_PASTE_FEATURE_REMOVED=PASS");
-console.log("UX_BASELINE_REBUILD_SYNTAX_SAFE=PASS");
-console.log("UX_GLOBAL_DIRECT_PASTE_INPUT_MODEL=PASS");
-console.log("UX_GLOBAL_DRAG_DROP_FILE_MODEL=PASS");
 console.log("BRAND_NEW_PLATFORM_NAME_HOME=PASS");
 console.log("BRAND_NEW_PLATFORM_NAME_FOOTER=PASS");
 console.log("BRAND_NEW_PLATFORM_NAME_METADATA=PASS");

@@ -1,0 +1,6 @@
+-- LINGXIFIELD remote migration history mirror
+-- version: 20261001050143
+-- name: withdrawal_recovery_and_idempotency
+-- This version is already applied in production Supabase migration history.
+-- This marker restores Git/Supabase timestamp parity. It intentionally performs no DDL.
+-- Canonical production schema remains the source of truth for this historical entry.

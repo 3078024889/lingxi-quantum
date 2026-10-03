@@ -358,7 +358,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
   return <main data-sasi-composer-version="v5200" className={`${styles.workspace} min-h-[calc(100vh-152px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
    <div className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4">
     <section className="flex-1 pt-8 sm:pt-12">
-     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<div className="ml-auto mb-8 max-w-[78%] rounded-3xl border border-blue-100 bg-blue-50/70 px-5 py-3 text-sm font-medium leading-7 text-blue-600 shadow-sm">{prompt}</div>}
+     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<div className="lx-sasi-user-bubble ml-auto mb-8 max-w-[82%] rounded-[24px] border px-5 py-3.5 text-sm font-medium leading-7 shadow-sm">{prompt}</div>}
 
      {assistantText&&<article className="mb-8 max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">
        {assistantText}
@@ -386,7 +386,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
 
     <section className="sticky bottom-3 z-30 mt-auto w-full">
      <div onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={()=>setDragging(false)} onDrop={onDrop}
-       className={`rounded-[30px] border bg-[var(--lx-panel)] p-4 shadow-[0_20px_70px_rgba(99,102,241,.12)] transition sm:p-5 ${dragging?"border-[var(--lx-ink)] ring-2 ring-[var(--lx-line)]":"border-[var(--lx-line)]"}`}>
+       className={`lx-sasi-reference-composer rounded-[30px] border bg-[var(--lx-panel)] p-4 transition sm:p-5 ${dragging?"is-dragging":"border-[var(--lx-line)]"}`}>
       {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">{files.map(item=><div key={item.id} className="min-w-[170px] max-w-[240px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-2 text-xs">
        <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1"><b className="block truncate text-[var(--lx-ink)]">{item.file.name}</b><span className="text-[var(--lx-muted)]">{humanBytes(item.file.size)} · {item.state==="uploading"?`${item.progress}%`:item.message||ct("pendingAdd")}</span></div>
@@ -399,7 +399,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
 
       <textarea ref={textareaRef} aria-label={ct(mode==="drama"?"promptDrama":"promptWebsite")} disabled={busy} rows={1} maxLength={12000} value={prompt}
         onChange={e=>{setPrompt(e.target.value);setQuote(null)}} placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}
-        className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 text-blue-600 outline-none placeholder:text-[var(--lx-faint)]"/>
+        className="lx-sasi-reference-textarea max-h-64 min-h-[72px] w-full resize-none bg-transparent px-3 py-2 text-[15px] font-medium leading-7 outline-none placeholder:font-normal"/>
 
       <div className="mt-1 flex flex-wrap items-center gap-2">
        <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={e=>{if(e.target.files)addFiles(e.target.files);e.currentTarget.value=""}}/>

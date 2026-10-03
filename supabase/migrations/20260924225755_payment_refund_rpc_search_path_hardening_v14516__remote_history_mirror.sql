@@ -1,0 +1,6 @@
+-- LINGXIFIELD remote migration history mirror
+-- version: 20260924225755
+-- name: payment_refund_rpc_search_path_hardening_v14516
+-- This version is already applied in production Supabase migration history.
+-- This marker restores Git/Supabase timestamp parity. It intentionally performs no DDL.
+-- Canonical production schema remains the source of truth for this historical entry.

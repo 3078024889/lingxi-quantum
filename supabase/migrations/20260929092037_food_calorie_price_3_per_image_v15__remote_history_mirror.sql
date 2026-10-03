@@ -1,0 +1,6 @@
+-- LINGXIFIELD remote migration history mirror
+-- version: 20260929092037
+-- name: food_calorie_price_3_per_image_v15
+-- This version is already applied in production Supabase migration history.
+-- This marker restores Git/Supabase timestamp parity. It intentionally performs no DDL.
+-- Canonical production schema remains the source of truth for this historical entry.

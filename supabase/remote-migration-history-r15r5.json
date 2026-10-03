@@ -1,0 +1,266 @@
+{
+  "generatedAt": "2026-10-03",
+  "project": "sxsgdpqojepgbbrxrzlq",
+  "requiredRemoteOnly": [
+    {
+      "version": "20260904024348",
+      "name": "create_copernicus_sense"
+    },
+    {
+      "version": "20260919234449",
+      "name": "sasi_large_asset_uploads"
+    },
+    {
+      "version": "20260920044343",
+      "name": "sasi_byok_video_tasks"
+    },
+    {
+      "version": "20260920094932",
+      "name": "sasi_byok_text_tasks"
+    },
+    {
+      "version": "20260922042621",
+      "name": "tool_payments_v5"
+    },
+    {
+      "version": "20260922042640",
+      "name": "secure_tool_fulfillment_v5"
+    },
+    {
+      "version": "20260922043645",
+      "name": "tool_paid_jobs_v6"
+    },
+    {
+      "version": "20260922045211",
+      "name": "tool_topups_analytics_v61"
+    },
+    {
+      "version": "20260922061230",
+      "name": "tool_transcription_idphoto_v8"
+    },
+    {
+      "version": "20260924100039",
+      "name": "privacy_tools_temp_mail_burn"
+    },
+    {
+      "version": "20260924111843",
+      "name": "burn_modes_v1492"
+    },
+    {
+      "version": "20260924151848",
+      "name": "paypal_usd_order_currency_convergence_v14514"
+    },
+    {
+      "version": "20260924225755",
+      "name": "payment_refund_rpc_search_path_hardening_v14516"
+    },
+    {
+      "version": "20260925003440",
+      "name": "paypal_usd_funded_cny_withdrawal_v1462"
+    },
+    {
+      "version": "20260925005249",
+      "name": "dual_currency_wallet_consumption_v1464"
+    },
+    {
+      "version": "20260926125222",
+      "name": "sasi_platform_kernel_v180"
+    },
+    {
+      "version": "20260926125233",
+      "name": "sasi_native_compute_v190"
+    },
+    {
+      "version": "20260926125247",
+      "name": "sasi_cognitive_commerce_v200"
+    },
+    {
+      "version": "20260926131416",
+      "name": "nutrition_engine_v2"
+    },
+    {
+      "version": "20260926131421",
+      "name": "nutrition_private_runtime_v1591"
+    },
+    {
+      "version": "20260928084451",
+      "name": "sasi_v5_quality_learning_foundation"
+    },
+    {
+      "version": "20260928084516",
+      "name": "sasi_v51_completion"
+    },
+    {
+      "version": "20260929024435",
+      "name": "lingxifield_notifications_v1602"
+    },
+    {
+      "version": "20260929074802",
+      "name": "nutrition_resumable_import_v7"
+    },
+    {
+      "version": "20260929081211",
+      "name": "nutrition_compact_core_table_v8"
+    },
+    {
+      "version": "20260929081233",
+      "name": "nutrition_compact_functions_v8"
+    },
+    {
+      "version": "20260929081656",
+      "name": "global_food_production_master_v9_import"
+    },
+    {
+      "version": "20260929081900",
+      "name": "nutrition_import_session_v10"
+    },
+    {
+      "version": "20260929084559",
+      "name": "nutrition_history_trends_v11_1"
+    },
+    {
+      "version": "20260929092037",
+      "name": "food_calorie_price_3_per_image_v15"
+    },
+    {
+      "version": "20260929092045",
+      "name": "food_calorie_daily_free_v15"
+    },
+    {
+      "version": "20260929130911",
+      "name": "food_calorie_atomic_security_v16"
+    },
+    {
+      "version": "20260929131057",
+      "name": "food_production_atomic_session_v17"
+    },
+    {
+      "version": "20260929134547",
+      "name": "food_production_closeout_v18_safe"
+    },
+    {
+      "version": "20260930043221",
+      "name": "sasi_runtime_platform_20260930"
+    },
+    {
+      "version": "20260930043256",
+      "name": "sasi_autonomous_execution_reconciled_20260930"
+    },
+    {
+      "version": "20260930043302",
+      "name": "sasi_resilient_learning_20260930"
+    },
+    {
+      "version": "20260930043305",
+      "name": "sasi_living_intelligence_20260930"
+    },
+    {
+      "version": "20260930043308",
+      "name": "universal_provider_gateway_v2_20260930"
+    },
+    {
+      "version": "20260930043312",
+      "name": "platform_integration_clean_20260930"
+    },
+    {
+      "version": "20260930043336",
+      "name": "runtime_convergence_20260930"
+    },
+    {
+      "version": "20260930043340",
+      "name": "real_runtime_adapters_20260930"
+    },
+    {
+      "version": "20260930043343",
+      "name": "persistence_execution_20260930"
+    },
+    {
+      "version": "20260930043346",
+      "name": "execution_closure_20260930"
+    },
+    {
+      "version": "20260930043349",
+      "name": "production_closure_evidence_20260930"
+    },
+    {
+      "version": "20260930043352",
+      "name": "verification_evidence_20260930"
+    },
+    {
+      "version": "20260930043355",
+      "name": "remaining_gate_evidence_20260930"
+    },
+    {
+      "version": "20260930043358",
+      "name": "e2e_readiness_evidence_20260930"
+    },
+    {
+      "version": "20260930043401",
+      "name": "final_product_convergence_20260930"
+    },
+    {
+      "version": "20260930043404",
+      "name": "final_closure_evidence_20260930"
+    },
+    {
+      "version": "20260930052720",
+      "name": "move_pg_trgm_to_extensions_20260930"
+    },
+    {
+      "version": "20260930054834",
+      "name": "release_20260930_1_announcement"
+    },
+    {
+      "version": "20260930060103",
+      "name": "release_20260930_2_food_region_resolver_announcement"
+    },
+    {
+      "version": "20260930061007",
+      "name": "release_20260930_3_global_food_announcement"
+    },
+    {
+      "version": "20260930061921",
+      "name": "support_feedback_template_growth_20260930"
+    },
+    {
+      "version": "20260930062854",
+      "name": "release_20260930_5_converged_announcement"
+    },
+    {
+      "version": "20261001050049",
+      "name": "withdrawal_variable_collision_fix"
+    },
+    {
+      "version": "20261001050143",
+      "name": "withdrawal_recovery_and_idempotency"
+    },
+    {
+      "version": "20261001052329",
+      "name": "withdrawal_principal_hold_guard"
+    },
+    {
+      "version": "20261001232529",
+      "name": "food_analysis_billing_v19"
+    },
+    {
+      "version": "20261001234444",
+      "name": "food_legacy_paid_recovery_v19"
+    },
+    {
+      "version": "20261002231453",
+      "name": "connection_capabilities_unified"
+    },
+    {
+      "version": "20261002231505",
+      "name": "intelligence_runtime_health_observability"
+    },
+    {
+      "version": "20261002231527",
+      "name": "unified_sasi_balance_pricing_v49"
+    },
+    {
+      "version": "20261003095419",
+      "name": "production_runtime_heartbeats_r15"
+    }
+  ]
+}

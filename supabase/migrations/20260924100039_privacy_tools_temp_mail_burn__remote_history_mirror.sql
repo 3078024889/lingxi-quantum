@@ -1,0 +1,6 @@
+-- LINGXIFIELD remote migration history mirror
+-- version: 20260924100039
+-- name: privacy_tools_temp_mail_burn
+-- This version is already applied in production Supabase migration history.
+-- This marker restores Git/Supabase timestamp parity. It intentionally performs no DDL.
+-- Canonical production schema remains the source of truth for this historical entry.

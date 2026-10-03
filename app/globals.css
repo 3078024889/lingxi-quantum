@@ -2123,3 +2123,47 @@ body{font-size:16px;font-weight:500}
   .lx-order-main{grid-template-columns:34px minmax(0,1fr)!important;gap:10px!important}
   .lx-order-side{min-width:auto!important}
 }
+
+
+/* R15R2 SASI reference composer */
+.lx-sasi-user-bubble{
+  color:#2563eb!important;
+  background:linear-gradient(135deg,rgba(239,246,255,.96),rgba(244,247,255,.92))!important;
+  border-color:rgba(96,165,250,.24)!important;
+  box-shadow:0 8px 24px rgba(37,99,235,.06)!important;
+  white-space:pre-wrap!important;
+  overflow-wrap:anywhere!important;
+}
+.lx-sasi-reference-composer{
+  min-height:154px!important;
+  border-color:rgba(99,102,241,.16)!important;
+  background:
+    linear-gradient(var(--lx-panel),var(--lx-panel)) padding-box,
+    linear-gradient(115deg,rgba(99,102,241,.34),rgba(236,72,153,.20)) border-box!important;
+  box-shadow:
+    0 18px 56px rgba(79,70,229,.10),
+    0 0 0 1px rgba(255,255,255,.72) inset,
+    0 12px 34px rgba(236,72,153,.05)!important;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.lx-sasi-reference-composer.is-dragging{
+  border-color:rgba(99,102,241,.58)!important;
+  box-shadow:
+    0 20px 64px rgba(79,70,229,.18),
+    0 0 0 4px rgba(99,102,241,.10)!important;
+}
+.lx-sasi-reference-textarea{
+  color:#2563eb!important;
+  caret-color:#2563eb!important;
+}
+.lx-sasi-reference-textarea::placeholder{
+  color:#94a3b8!important;
+}
+.lx-sasi-composer-dock{
+  padding-bottom:4px;
+}
+@media(max-width:760px){
+  .lx-sasi-user-bubble{max-width:92%!important}
+  .lx-sasi-reference-composer{min-height:150px!important;border-radius:24px!important}
+}

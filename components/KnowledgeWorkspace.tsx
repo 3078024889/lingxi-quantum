@@ -380,7 +380,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4 lx-knowledge-workspace">
     <div className="flex-1 pt-8 sm:pt-12">
       {(thread.length?thread:(answer?[{question,answer}]:[])).map((row,index)=><div key={index} className="mb-10">
-        <div className="ml-auto mb-6 max-w-[78%] rounded-3xl border border-blue-100 bg-blue-50/70 px-5 py-3 text-sm font-medium leading-7 text-blue-600 shadow-sm">{row.question}</div>
+        <div className="lx-sasi-user-bubble ml-auto mb-6 max-w-[82%] rounded-[24px] border px-5 py-3.5 text-sm font-medium leading-7 shadow-sm">{row.question}</div>
         <article className="max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">{row.answer}</article>
       </div>)}
 
@@ -398,7 +398,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
       </div>}
     </div>
 
-    <div className="sticky bottom-3 z-30 mt-auto">
+    <div className="lx-sasi-composer-dock sticky bottom-3 z-30 mt-auto">
       {sources.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
         {sources.slice(-10).map(source=><span key={source.id} className="inline-flex max-w-[220px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
           <span className="truncate">{source.title}</span>{!source.text.trim()&&<span className="shrink-0 text-[10px] text-blue-600">{lang==="zh"?"待理解":"Needs intelligence"}</span>}
@@ -411,7 +411,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
         onDragOver={e=>{e.preventDefault();setDragging(true)}}
         onDragLeave={e=>{if(e.currentTarget===e.target)setDragging(false)}}
         onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files?.length)void importFiles(e.dataTransfer.files)}}
-        className={`relative rounded-[30px] border bg-[var(--lx-panel)] p-4 shadow-[0_20px_70px_rgba(99,102,241,.12)] transition sm:p-5 ${dragging?"border-blue-300 ring-4 ring-blue-100/70":"border-[var(--lx-line)]"}`}>
+        className={`lx-sasi-reference-composer relative rounded-[30px] border bg-[var(--lx-panel)] p-4 transition sm:p-5 ${dragging?"is-dragging":"border-[var(--lx-line)]"}`}>
         <textarea value={question}
           onChange={e=>setQuestion(e.target.value)}
           onPaste={e=>{
@@ -419,7 +419,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
             if(files.length){e.preventDefault();void importFiles(files)}
           }}
           rows={1}
-          className="max-h-72 min-h-20 w-full resize-none bg-transparent px-3 py-3 text-[15px] font-medium leading-7 text-blue-600 outline-none placeholder:font-normal placeholder:text-[var(--lx-faint)]"
+          className="lx-sasi-reference-textarea max-h-64 min-h-[72px] w-full resize-none bg-transparent px-3 py-2 text-[15px] font-medium leading-7 outline-none placeholder:font-normal"
           placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}/>
 
         <div className="mt-1 flex items-center gap-2">

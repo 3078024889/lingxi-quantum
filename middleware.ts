@@ -26,7 +26,7 @@ function retiredPath(pathname:string){
 }
 function gone(){
  return new NextResponse(
-  `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="robots" content="noindex,nofollow,noarchive"><title>此内容已下线｜灵犀场 LINGXIFIELD</title><body style="font-family:system-ui;padding:48px;max-width:720px;margin:auto"><h1>这个旧页面已经下线</h1><p>灵犀场 LINGXIFIELD 现专注 SASI 智能生态与实用工具。</p><p><a href="/products">查看当前产品</a> · <a href="/tools">打开实用工具</a></p></body></html>`,
+  `<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="robots" content="noindex,nofollow,noarchive"><title>此内容已下线｜灵犀场 LINGXIFIELD</title><body style="font-family:system-ui;padding:48px;max-width:720px;margin:auto"><h1>这个旧页面已经下线</h1><p>灵犀场 LINGXIFIELD｜SASI全球多模型智能创作生态平台。</p><p><a href="/products">查看当前产品</a> · <a href="/tools">打开实用工具</a></p></body></html>`,
   {status:410,headers:{"content-type":"text/html; charset=utf-8","x-robots-tag":"noindex, nofollow, noarchive","cache-control":"public, max-age=3600"}}
  );
 }
