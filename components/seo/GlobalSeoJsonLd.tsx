@@ -1,22 +1,21 @@
 import {SITE,SEO_LOCALES,type SeoLocale,type GlobalTool,type SeoTopic,topicTitle,localePath,toolTitle,toolDescription} from "@/lib/seo/global-seo";
 import {SERVICE_FACTS} from '@/lib/seo/service-facts';
-import {localFreeToolFact} from '@/lib/seo/local-free-tools';
+import {toolGeoFact} from '@/lib/seo/site-facts';
 
 export function ToolSeoJsonLd({locale,tool}:{locale:SeoLocale;tool:GlobalTool}){
  const c=SEO_LOCALES[locale];
  const url=`${SITE}${localePath(locale,`/tools/${tool.slug}`)}`;
  const actual=`${SITE}/tools/${tool.slug}`;
- const fact=localFreeToolFact(tool.slug,locale);
+ const fact=toolGeoFact(tool.slug,locale);
  const description=fact?.description??toolDescription(locale,tool);
  const application:Record<string,unknown>={
-  "@type":"WebApplication","@id":`${actual}#tool`,name:toolTitle(locale,tool),url:actual,applicationCategory:"UtilitiesApplication",operatingSystem:"Web",inLanguage:c.hreflang,publisher:{"@id":`${SITE}/#organization`}
+  "@type":"WebApplication","@id":`${actual}#tool`,name:toolTitle(locale,tool),url:actual,description,applicationCategory:"UtilitiesApplication",operatingSystem:"Web",inLanguage:c.hreflang,publisher:{"@id":`${SITE}/#organization`}
  };
- if(fact){
-  application.description=fact.description;
+ if(fact?.kind==='free-local'){
   application.isAccessibleForFree=true;
   application.offers={"@type":"Offer",price:"0",priceCurrency:"USD"};
-  application.availableLanguage=["zh-CN","en","ja","ko","fr","de","es","pt","ar"];
  }
+ if(fact&&(fact.kind==='paid-local'||fact.kind==='paid-online'))application.isAccessibleForFree=false;
  const graph:Record<string,unknown>[]=[
   {"@type":"WebPage","@id":`${url}#page`,url,name:toolTitle(locale,tool),description,inLanguage:c.hreflang,isPartOf:{"@id":`${SITE}/#website`},about:{"@id":`${actual}#tool`}},
   application,

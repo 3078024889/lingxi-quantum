@@ -5,7 +5,7 @@ import ToolWorkbench from "@/components/tools/ToolWorkbench";
 import { getTool, TOOLS } from "@/lib/tools/registry";
 import {buildToolMetadata} from '@/lib/tools/seo';
 import ToolGuide from '@/components/seo/ToolGuide';
-import {localFreeToolFact} from '@/lib/seo/local-free-tools';
+import {toolGeoFact} from '@/lib/seo/site-facts';
 import type { BilingualFaqItem } from "@/components/FaqSection";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -31,8 +31,8 @@ function faqFor(slug: string): BilingualFaqItem[] {
       aEn: "The page explains the reason and what to try next, such as file size, unsupported format, or an outdated browser.",
     },
   ];
-  const zh=localFreeToolFact(slug,"zh");
-  const en=localFreeToolFact(slug,"en");
+  const zh=toolGeoFact(slug,"zh");
+  const en=toolGeoFact(slug,"en");
   if(zh&&en){
     common.unshift({
       qZh: zh.question,

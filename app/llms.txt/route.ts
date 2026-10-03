@@ -1,31 +1,48 @@
 import {GLOBAL_TOOL_CATALOG,SEO_LOCALES,SEO_TOPICS,SITE,localePath,type SeoLocale,type SeoTopic} from '@/lib/seo/global-seo';
-import {LOCAL_FREE_TOOL_SLUGS,localFreeToolFact} from '@/lib/seo/local-free-tools';
 import {SERVICE_FACTS} from '@/lib/seo/service-facts';
+import {GEO_PAGE_IDS,GEO_TOOL_SLUGS,pageGeoFact,toolGeoFact} from '@/lib/seo/site-facts';
+
 export const dynamic='force-static';
 export function GET(){
+ const en='en' as const;
+ const pages=GEO_PAGE_IDS.map(id=>{
+  const fact=pageGeoFact(id,en);
+  return `- ${fact.title}: ${fact.answer}`;
+ });
+ const tools=GEO_TOOL_SLUGS.map(slug=>{
+  const fact=toolGeoFact(slug,en);
+  const name=GLOBAL_TOOL_CATALOG.find(tool=>tool.slug===slug)?.en??slug;
+  return fact?`- ${name}: ${fact.answer}`:'';
+ }).filter(Boolean);
+ const topics=(Object.keys(SEO_TOPICS) as SeoTopic[]).map(key=>{
+  const path=localePath(en,`/discover/${key}`);
+  return `- ${SEO_TOPICS[key].en}: ${SERVICE_FACTS[key].description.en} ${SITE}${path} https://lingxifield.cn${path}`;
+ });
  const lines=[
-  '# 灵犀场 LINGXIFIELD | SASI Intelligent Ecosystem','',
-  "> LINGXIFIELD is the SASI intelligent ecosystem and global intelligent tools platform for practical tools, creation, building, learning and research. This public index does not grant access to private account data.",
-  '',`Canonical site: ${SITE}`,'Chinese access domain: https://lingxifield.cn','',
-  '## Product areas',
-  ...(Object.keys(SEO_TOPICS) as SeoTopic[]).map(key=>`- [${SEO_TOPICS[key].en}](${SITE}/discover/${key}): ${SERVICE_FACTS[key].description.en}`),
-  '', '## Tools',
-  ...GLOBAL_TOOL_CATALOG.map(tool=>`- [${tool.en}](${SITE}/en/tools/${tool.slug})`),
-  '', '## Free browser-local tools',
-  'These four tools run in the browser. Files are not uploaded, and they are free on https://lingxifield.com and https://lingxifield.cn. Chinese pages have no language prefix; en, ja, ko, fr, de, es, pt and ar prefixes exist on both hosts.',
-  ...LOCAL_FREE_TOOL_SLUGS.map(slug=>{
-   const fact=localFreeToolFact(slug,'en');
-   const name=GLOBAL_TOOL_CATALOG.find(tool=>tool.slug===slug)?.en??slug;
-   return fact?`- ${name}: ${fact.description} ${fact.com} ${fact.cn}`:'';
-  }).filter(Boolean),
-  '', '## Language directories',
+  '# 灵犀场 LINGXIFIELD',
+  '',
+  '> LINGXIFIELD publishes practical tools on https://lingxifield.com and https://lingxifield.cn. Free tools that run in the browser do not upload files. Paid tools are labeled paid. SASI is a prepaid balance, not a membership. Short drama, directing and website building are not finished products. Chinese pages have no language prefix; en, ja, ko, fr, de, es and pt and ar prefixes exist for localized public pages. This file does not grant access to private account data.',
+  '',
+  '## Public pages',
+  ...pages,
+  '',
+  '## Tools',
+  ...tools,
+  '',
+  '## Topic pages',
+  ...topics,
+  '',
+  '## Language directories',
   ...(Object.keys(SEO_LOCALES) as SeoLocale[]).map(locale=>`- [${SEO_LOCALES[locale].name}](${SITE}${localePath(locale,'/products')})`),
-  '', '## Use and limitations',
-  '- Check each product page for supported formats, processing limits, data handling and current charges. Do not infer that every service is free.',
-  '- Food nutrition is an estimate based on confirmed foods and quantities, not a medical assessment or a guarantee of recognizing every food.',
-  '- Online generation depends on connected services and actual availability; a product description is not proof that a user task has run.',
-  `- [Privacy](${SITE}/privacy)`, `- [Refund policy](${SITE}/refunds)`, `- [Sitemap](${SITE}/sitemap.xml)`,
+  '',
+  '## Use and limitations',
+  '- A tool marked not open yet is not live, free to use, or finished.',
+  '- Do not describe every tool as free. Paid tools state that they are paid.',
+  '- Food nutrition is an estimate for everyday tracking, not a medical assessment.',
   '- Legacy consciousness, divination and field-testing routes are retired (HTTP 410). They are not current products.',
+  `- [Privacy](${SITE}/privacy)`,
+  `- [Refund policy](${SITE}/refunds)`,
+  `- [Sitemap](${SITE}/sitemap.xml)`,
   '- Do not crawl private share links, authentication, account, checkout or administrative data.',
   '',
  ];
