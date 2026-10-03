@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import JSZip from "jszip";
 import SasiByokTextWorkbench from "./SasiByokTextWorkbench";
 import {
   KnowledgeSource,
@@ -12,6 +13,7 @@ import {
 import { openPdf } from "@/lib/tools/pdf-render-client";
 import { useLingxiLang, type LingxiLang } from "@/lib/lingxi-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
+import {transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 import {
   DOCUMENT_ACCEPT,
   DOCUMENT_BATCH_MAX_FILES,
@@ -22,6 +24,25 @@ import {
 
 import { DOCUMENT_BATCH_MAX_BYTES } from "@/lib/files/document-intake";
 import { KNOWLEDGE_SOURCE_MAX } from "@/lib/ai-knowledge/local-index";
+const SASI_UNIFIED_ACCEPT=[
+ ".txt",".md",".json",".csv",".yaml",".yml",".pdf",".docx",".pptx",".xlsx",".epub",".odt",".rtf",
+ ".jpg",".jpeg",".png",".webp",".gif",".mp3",".wav",".m4a",".mp4",".mov",".webm",
+ ".js",".jsx",".ts",".tsx",".css",".html",".sql",".py",".zip"
+].join(",");
+
+async function zipText(file:File){
+ const zip=await JSZip.loadAsync(file);
+ const allowed=/\.(txt|md|json|csv|ya?ml|js|jsx|ts|tsx|css|html|sql|py)$/i;
+ const parts:string[]=[];
+ const entries=Object.values(zip.files).filter(x=>!x.dir&&allowed.test(x.name)).slice(0,60);
+ for(const item of entries){
+  const value=(await item.async("string")).slice(0,120000);
+  if(value.trim())parts.push(`[${item.name}]\n${value}`);
+ }
+ if(!parts.length)throw new Error("ZIP_TEXT_NOT_FOUND");
+ return parts.join("\n\n").slice(0,1_500_000);
+}
+
 type Mode = "book" | "learning" | "research";
 type Intelligence = "light" | "standard" | "high";
 
@@ -70,8 +91,8 @@ const COPY = {
   pastePlaceholder:c("粘贴书本、论文、笔记或资料正文…","Paste book, paper, notes or source text…","本・論文・ノート・資料本文を貼り付け…","책, 논문, 노트 또는 자료 본문 붙여넣기…","Collez le texte d’un livre, article, note ou document…","Buch-, Paper-, Notiz- oder Quelltext einfügen…","Pega texto de libro, artículo, notas o fuente…","Cole texto de livro, artigo, notas ou fonte…","الصق نص كتاب أو بحث أو ملاحظات أو مصدر…"),
   addLibrary:c("加入我的资料库","Add to my library","自分の資料庫に追加","내 자료함에 추가","Ajouter à ma bibliothèque","Zu meiner Bibliothek hinzufügen","Añadir a mi biblioteca","Adicionar à minha biblioteca","إضافة إلى مكتبتي"),
   askSource:c("询问资料","Ask sources","資料に質問","자료 질문","Interroger les sources","Quellen befragen","Preguntar a las fuentes","Perguntar às fontes","اسأل المصادر"),
-  askBatch:c("直接问这批资料","Ask this collection directly","この資料群に直接質問","이 자료 묶음에 직접 질문","Interroger directement cette collection","Diese Sammlung direkt befragen","Preguntar directamente a esta colección","Perguntar diretamente a esta coleção","اسأل هذه المجموعة مباشرة"),
-  smart:c("智能模式","Intelligence mode","知能モード","지능 모드","Mode d’intelligence","Intelligenzmodus","Modo de inteligencia","Modo de inteligência","وضع الذكاء"),
+  askBatch:c("问问 SASI","Ask SASI","SASI に質問","SASI에게 질문","Demander à SASI","SASI fragen","Preguntar a SASI","Perguntar ao SASI","اسأل SASI"),
+  smart:c("模式","Intelligence mode","知能モード","지능 모드","Mode d’intelligence","Intelligenzmodus","Modo de inteligencia","Modo de inteligência","وضع الذكاء"),
   billed:c("资料已准备好，可以继续提问","Your sources are ready for the next question","現在の資料Q&Aでは残高を消費しません","현재 자료 Q&A는 잔액을 차감하지 않습니다","Les Q&R sur les sources ne déduisent actuellement pas le solde","Quellen-Q&A zieht derzeit kein Guthaben ab","Las preguntas sobre fuentes no descuentan saldo actualmente","Perguntas sobre fontes não descontam saldo atualmente","لا تخصم أسئلة المصادر من الرصيد حاليًا"),
   light:c("轻量","Light","軽量","라이트","Léger","Leicht","Ligero","Leve","خفيف"),
   standard:c("标准","Standard","標準","표준","Standard","Standard","Estándar","Padrão","قياسي"),
@@ -156,6 +177,10 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   const [lastIntelligence,setLastIntelligence]=useState<Intelligence|null>(null);
   const [ready,setReady]=useState(false);
   const [copied,setCopied]=useState(false);
+  const [addOpen,setAddOpen]=useState(false);
+  const [pasteOpen,setPasteOpen]=useState(false);
+  const [thread,setThread]=useState<Array<{question:string;answer:string}>>([]);
+  const fileInputRef=useRef<HTMLInputElement|null>(null);
 
   useEffect(()=>{
     readSources().then(rows=>{setSources(rows);setReady(true)})
@@ -225,6 +250,14 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       kind="image";
       parsedText=await imageToText(file);
       if(!parsedText.trim())throw new Error(tr(lang,"imageNoText"));
+    }else if(/\.(mp3|wav|m4a|mp4|mov|webm)$/i.test(file.name)||file.type.startsWith("audio/")||file.type.startsWith("video/")){
+      const transcript=await transcribeLocal(file);
+      parsedText=transcript.text.trim();
+      kind="text";
+      if(!parsedText)throw new Error(lang==="zh"?"没有识别到可用的语音内容。":"No usable speech was detected.");
+    }else if(/\.zip$/i.test(file.name)||file.type==="application/zip"){
+      parsedText=await zipText(file);
+      kind="structured";
     }else{
       const parsed=await parseGenericDocument(file);
       if(!parsed)throw new Error(tr(lang,"supported"));
@@ -295,6 +328,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
+      setThread(rows=>[...rows,{question:q,answer:String(data.answer||"")}]);
       setLearningEventId(String(data.learningEventId||""));
       setLastIntelligence((data.intelligence||intelligence) as Intelligence);
       setNotice(tr(lang,"done"));
@@ -346,6 +380,26 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     setCopied(true);setTimeout(()=>setCopied(false),1600);
   }
 
+  function threadMarkdown(){
+    const rows=thread.length?thread:(answer?[{question,answer}]:[]);
+    return rows.map((row,i)=>`## ${i+1}. ${row.question}\n\n${row.answer}\n`).join("\n");
+  }
+  function downloadThreadDoc(){
+    const esc=(v:string)=>v.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    const rows=thread.length?thread:(answer?[{question,answer}]:[]);
+    const body=rows.map(row=>`<h2>${esc(row.question)}</h2><div style="white-space:pre-wrap">${esc(row.answer)}</div>`).join("");
+    const html=`<!doctype html><meta charset="utf-8"><title>SASI</title><body style="font-family:Arial,sans-serif;line-height:1.7;max-width:820px;margin:40px auto"><h1>SASI</h1>${body}</body>`;
+    const url=URL.createObjectURL(new Blob([html],{type:"application/msword;charset=utf-8"}));
+    const a=document.createElement("a");a.href=url;a.download="sasi-discussion.doc";a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);
+  }
+  async function downloadThreadZip(){
+    const zip=new JSZip();
+    zip.file("discussion.md",`# SASI\n\n${threadMarkdown()}`);
+    zip.file("sources.txt",sources.map(x=>x.title).join("\n"));
+    const blob=await zip.generateAsync({type:"blob"});
+    const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="sasi-discussion.zip";a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);
+  }
+
   const heading=mode==="research"?tr(lang,"research"):mode==="learning"?tr(lang,"learning"):tr(lang,"book");
   const qPlaceholder=mode==="research"?tr(lang,"qResearch"):mode==="learning"?tr(lang,"qLearning"):tr(lang,"qBook");
   const intelligenceLabels:{value:Intelligence;label:string;help:string}[]=[
@@ -354,131 +408,77 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     {value:"high",label:lang==="zh"?"深度研究":tr(lang,"high"),help:tr(lang,"highHelp")},
   ];
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
-  return <section className="mx-auto max-w-6xl space-y-5 pb-28 pt-10 lx-knowledge-workspace">
-    <header className="mx-auto max-w-3xl text-center">
-      <div className="mx-auto mb-4 flex w-fit items-center justify-center">
-        <LingxiMiniIcon name={mode==="research"?"research":mode==="learning"?"learning":"book"} size="title"/>
-      </div>
-      <h1 className="text-3xl font-semibold tracking-tight text-[var(--lx-ink)] sm:text-4xl">{heading}</h1>
-      <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">{mode==="research"
-        ? (lang==="zh"?"加入论文、数据与研究资料，然后直接追问、比较与核对。":"Add papers, data and research sources, then question and compare them directly.")
-        : mode==="learning"
-          ? (lang==="zh"?"加入教材与笔记，让 SASI 帮你理解、练习与复习。":"Add study material and notes, then learn, practise and review with SASI.")
-          : (lang==="zh"?"加入书本与资料，直接与内容对话。":"Add books and sources, then talk with the content directly.")}</p>
-      <div className="mt-4 flex justify-center">
-        <Link href="/sasi/connections" className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm text-[var(--lx-ink)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"} ↗</Link>
-      </div>
-    </header>
+  return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4 lx-knowledge-workspace">
+    <div className="flex-1 pt-8 sm:pt-12">
+      {(thread.length?thread:(answer?[{question,answer}]:[])).map((row,index)=><div key={index} className="mb-10">
+        <div className="ml-auto mb-6 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-[var(--lx-ink)]">{row.question}</div>
+        <article className="max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">{row.answer}</article>
+      </div>)}
 
-    <div className="grid gap-5 xl:grid-cols-2">
-      <section className="lx-knowledge-panel rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-        <div className="lx-knowledge-panel-title"><LingxiMiniIcon name={mode==="research"?"research":mode==="learning"?"learning":"book"} size="title"/><h2 className="text-xl font-semibold text-[var(--lx-ink)]">{tr(lang,"add")}{heading}</h2></div>
-        <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();if(!busy)void importFiles(e.dataTransfer.files)}} className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line-strong)] bg-[var(--lx-soft)] p-6 text-center">
-          <input type="file" className="hidden" accept={DOCUMENT_ACCEPT} multiple disabled={busy}
-            onChange={e=>{if(e.target.files?.length)void importFiles(e.target.files);e.currentTarget.value=""}}/>
-          <span className="font-medium text-[var(--lx-ink)]">{busy?tr(lang,"reading"):tr(lang,"upload")}</span>
-          <span className="mt-1 block text-sm text-[var(--lx-faint)]">{tr(lang,"pdfNote")}</span>
-        </label>
-        <div className="my-5 flex items-center gap-3 text-xs text-[var(--lx-faint)]">
-          <span className="h-px flex-1 bg-[var(--lx-line)]"/>{tr(lang,"paste")}<span className="h-px flex-1 bg-[var(--lx-line)]"/>
-        </div>
-        <input className="w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]" value={title} maxLength={200}
-          onChange={e=>setTitle(e.target.value)} placeholder={tr(lang,"sourceName")}/>
-        <textarea className="mt-3 min-h-44 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"
-          value={text} maxLength={1_500_001} onChange={e=>setText(e.target.value)} placeholder={tr(lang,"pastePlaceholder")}/>
-        {text.trim()&&<p className="mt-2 text-xs leading-5 text-emerald-700">{tr(lang,"draftReady")}</p>}
-        <button className="mt-3 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40" disabled={!ready||busy} onClick={saveCurrent}>
-          {tr(lang,"addLibrary")}
-        </button>
-      </section>
+      {(thread.length>0||answer)&&<div className="mb-10 flex flex-wrap gap-2 text-xs">
+        <button type="button" onClick={downloadThreadDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{lang==="zh"?"下载文档":"Download document"}</button>
+        <button type="button" onClick={()=>void downloadThreadZip()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">ZIP</button>
+        <button type="button" onClick={()=>void copyAnswer()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{copied?tr(lang,"copied"):tr(lang,"copyAll")}</button>
+      </div>}
 
-      <section className="lx-knowledge-panel rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-        <div className="lx-knowledge-panel-title"><LingxiMiniIcon name="sparkles" size="title"/><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-[var(--lx-accent)]">{tr(lang,"askSource")}</p>
-        <h2 className="mt-1 text-2xl font-semibold text-[var(--lx-ink)]">{tr(lang,"askBatch")}</h2></div></div>
-        <textarea value={question} onChange={e=>{setQuestion(e.target.value);setQuery(e.target.value)}} rows={3}
-          className="mt-5 w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-base text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"
-          placeholder={qPlaceholder}/>
-        <div className="mt-4">
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <span className="text-sm font-medium text-[var(--lx-ink)]">{tr(lang,"smart")}</span>
-            <span className="text-xs text-[var(--lx-faint)]">{lang==="zh"?"按问题复杂度选择理解深度":"Choose the depth that fits your question"}</span>
-          </div>
-          <div className="lx-knowledge-modebar">
-            {intelligenceLabels.map(({value,label})=><button key={value} type="button" onClick={()=>setIntelligence(value)} disabled={askBusy}
-              aria-pressed={intelligence===value}
-              className={intelligence===value?"is-selected":""}>
-              <b>{label}</b>
-              <span>{value==="light"?(lang==="zh"?"更快":"Faster"):value==="high"?(lang==="zh"?"更深入":"Deeper"):(lang==="zh"?"推荐":"Recommended")}</span>
-            </button>)}
-          </div>
-          <div className="lx-knowledge-mode-detail">
-            <p>{selectedTier.help}</p>
-            <div className="lx-knowledge-mode-cost"><b>{lang==="zh"?"围绕你的资料回答":"Grounded in your sources"}</b><span>{lang==="zh"?"重要结论可以回到原文核对":"Important conclusions can be checked against the original text"}</span></div>
-          </div>
-        </div>
-
-        <SasiByokTextWorkbench key={question+results.map(r=>r.sourceId).join()} mode="book" question={question} evidence={results.map(r=>({title:r.title,locator:r.locator,text:r.text}))}/>
-        <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources}
-          className="mt-3 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
-          {askBusy?tr(lang,"readingSource"):tr(lang,"answer")}
-        </button>
-
-        <p className="mt-3 text-xs leading-5 text-[var(--lx-faint)]">{tr(lang,"aiPrivacy")}</p>
-
-        {answer&&<div className="lx-knowledge-answer">
-          <div className="lx-knowledge-answer-head">
-            <div><b>{lang==="zh"?"整理结果":"Answer"}</b><span>{lastIntelligence?intelligenceLabels.find(x=>x.value===lastIntelligence)?.label:selectedTier.label}</span></div>
-            <button type="button" onClick={()=>void copyAnswer()} className="lx-knowledge-copy">{copied?tr(lang,"copied"):tr(lang,"copyAll")}</button>
-          </div>
-          <article className="lx-knowledge-answer-body">{answer}</article>
-          <div className="lx-knowledge-answer-foot">
-            <span>{lang==="zh"?"资料已准备好，可以继续提问":"Your sources are ready for the next question"}</span>
-            <span>{lastIntelligence?intelligenceLabels.find(x=>x.value===lastIntelligence)?.label:selectedTier.label}</span>
-          </div>
-        </div>}
-
-        {answer&&learningEventId&&<div className="mt-3 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4">
-          <div className="text-[11px] font-semibold uppercase tracking-[.16em] text-[var(--lx-faint)]">让 SASI 更懂你</div>
-          <p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">{lang==="zh"?"告诉 SASI 这次回答哪里有帮助、哪里需要改进。你的反馈不会改写资料原文。":"Tell SASI what helped and what needs improvement. Your feedback never rewrites the original source material."}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {(["helpful","not-helpful","incorrect","insufficient-evidence"] as FeedbackSignal[]).map(signal=><button
-              key={signal}
-              type="button"
-              disabled={feedbackBusy}
-              onClick={()=>void sendFeedback(signal)}
-              className={`rounded-full border px-3 py-1.5 text-xs transition ${feedbackSignal===signal?"border-blue-500 bg-blue-50 text-blue-700":"border-slate-200 text-[var(--lx-muted)] hover:border-slate-300"} disabled:opacity-40`}>
-              {feedbackText(lang,signal)}
-            </button>)}
-          </div>
-          {feedbackNotice&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{feedbackNotice}</p>}
-        </div>}
-
-        <div className="mt-6">
-          <h3 className="text-sm font-semibold text-[var(--lx-ink)]">{tr(lang,"evidence")}</h3>
-          <div className="mt-3 max-h-[420px] space-y-3 overflow-auto">
-            {results.map((r,i)=><article key={`${r.sourceId}:${r.paragraph}:${i}`} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4">
-              <h4 className="text-sm font-semibold text-[var(--lx-ink)]">[{i+1}] {r.title} · {r.locator}</h4>
-              <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-[var(--lx-muted)]">{r.text}</p>
-            </article>)}
-            {activeQuery&&!results.length&&<p className="text-sm text-[var(--lx-faint)]">{tr(lang,"none")}</p>}
-          </div>
-        </div>
-      </section>
+      {answer&&learningEventId&&<div className="mb-8 flex flex-wrap gap-2">
+        {(["helpful","not-helpful","incorrect","insufficient-evidence"] as FeedbackSignal[]).map(signal=><button key={signal} type="button" disabled={feedbackBusy} onClick={()=>void sendFeedback(signal)}
+          className={`rounded-full border px-3 py-1.5 text-xs transition ${feedbackSignal===signal?"border-blue-500 bg-blue-50 text-blue-700":"border-[var(--lx-line)] text-[var(--lx-muted)]"} disabled:opacity-40`}>
+          {feedbackText(lang,signal)}
+        </button>)}
+      </div>}
     </div>
 
-    <p role="status" className="text-sm text-[var(--lx-muted)]">{notice}</p>
+    <div className="sticky bottom-14 z-30 mt-auto">
+      {sources.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
+        {sources.slice(-10).map(source=><span key={source.id} className="inline-flex max-w-[220px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
+          <span className="truncate">{source.title}</span>
+          <button type="button" onClick={()=>void remove(source)} className="opacity-50 hover:opacity-100">×</button>
+        </span>)}
+      </div>}
 
-    <section className="lx-knowledge-panel rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold text-[var(--lx-ink)]">{tr(lang,"myLocal")} · {sources.length}</h2>
-        <button disabled={!sources.length} onClick={exportSources} className="text-sm text-[var(--lx-accent)] disabled:opacity-30">{tr(lang,"export")}</button>
+      {pasteOpen&&<div className="mb-2 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 shadow-sm">
+        <input className="w-full bg-transparent px-2 py-2 text-sm outline-none" value={title} maxLength={200} onChange={e=>setTitle(e.target.value)} placeholder={tr(lang,"sourceName")}/>
+        <textarea className="mt-1 max-h-40 min-h-24 w-full resize-none rounded-xl bg-[var(--lx-soft)] p-3 text-sm outline-none" value={text} maxLength={1_500_001} onChange={e=>setText(e.target.value)} placeholder={tr(lang,"pastePlaceholder")}/>
+        <div className="mt-2 flex justify-end"><button type="button" disabled={!ready||busy||!text.trim()} onClick={()=>void saveCurrent()} className="rounded-full bg-[var(--lx-ink)] px-4 py-2 text-xs text-[var(--lx-bg)] disabled:opacity-40">{tr(lang,"addLibrary")}</button></div>
+      </div>}
+
+      <div className="relative rounded-[28px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 shadow-[0_12px_44px_rgba(0,0,0,.10)]">
+        <textarea value={question} onChange={e=>{setQuestion(e.target.value);setQuery(e.target.value)}} rows={1}
+          className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 text-[var(--lx-ink)] outline-none placeholder:text-[var(--lx-faint)]"
+          placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}/>
+
+        <div className="mt-1 flex items-center gap-2">
+          <input ref={fileInputRef} type="file" className="hidden" accept={SASI_UNIFIED_ACCEPT} multiple disabled={busy}
+            onChange={e=>{if(e.target.files?.length)void importFiles(e.target.files);e.currentTarget.value=""}}/>
+
+          <div className="relative">
+            <button type="button" aria-label={lang==="zh"?"添加":"Add"} onClick={()=>setAddOpen(v=>!v)}
+              className="grid h-9 w-9 place-items-center rounded-full text-2xl hover:bg-[var(--lx-soft)]">＋</button>
+            {addOpen&&<div className="absolute bottom-11 left-0 z-50 w-[300px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2 shadow-[0_14px_48px_rgba(0,0,0,.16)]">
+              <button type="button" onClick={()=>{setAddOpen(false);fileInputRef.current?.click()}} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">
+                <b>{lang==="zh"?"添加照片和文件":"Add photos and files"}</b>
+                <span className="mt-1 block text-xs text-[var(--lx-faint)]">PDF · EPUB · Word · PPTX · Excel · CSV · TXT · 图片 · 音频 · 视频 · 代码 · ZIP</span>
+              </button>
+              <button type="button" onClick={()=>{setAddOpen(false);setPasteOpen(v=>!v)}} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"粘贴资料":"Paste source text"}</button>
+              <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"} <span className="float-right">↗</span></Link>
+              <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span className="float-right">↗</span></Link>
+            </div>}
+          </div>
+
+          <select value={intelligence} disabled={askBusy} onChange={e=>setIntelligence(e.target.value as Intelligence)}
+            className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)] outline-none">
+            {intelligenceLabels.map(x=><option key={x.value} value={x.value}>{x.label}</option>)}
+          </select>
+
+          <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources}
+            className="ml-auto grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">
+            {askBusy?"…":"↑"}
+          </button>
+        </div>
+
+        {notice&&<p role="status" className="px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">{notice}</p>}
       </div>
-      <ul className="mt-4 divide-y divide-[var(--lx-line)]">
-        {sources.map(source=><li className="flex items-center justify-between gap-4 py-3" key={source.id}>
-          <span className="min-w-0 truncate text-sm text-[var(--lx-muted)]">{source.title}</span>
-          <button className="shrink-0 text-sm text-[var(--lx-danger)]" onClick={()=>void remove(source)}>{tr(lang,"delete")}</button>
-        </li>)}
-      </ul>
-    </section>
+    </div>
   </section>;
 }

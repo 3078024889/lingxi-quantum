@@ -55,6 +55,16 @@ function cleanHtml(raw:string){
  const safe=DOMPurify.sanitize(raw,{WHOLE_DOCUMENT:true,FORBID_TAGS:["script","object","embed","base","iframe","form","link","meta"],FORBID_ATTR:["onerror","onload","onclick","srcset"]});
  return safe.replace(/<head>/i,`<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: blob:; form-action 'none'; base-uri 'none'">`);
 }
+function downloadBlob(name:string,type:string,body:BlobPart){
+ const url=URL.createObjectURL(new Blob([body],{type}));
+ const a=document.createElement("a");a.href=url;a.download=name;a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+function discussionDoc(prompt:string,answer:string){
+ const esc=(v:string)=>v.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+ return `<!doctype html><meta charset="utf-8"><title>SASI</title><body style="font-family:Arial,sans-serif;line-height:1.7;max-width:820px;margin:40px auto"><h1>SASI</h1><h2>Prompt</h2><p>${esc(prompt)}</p><h2>Result</h2><div style="white-space:pre-wrap">${esc(answer)}</div></body>`;
+}
+
 function localWebsite(prompt:string,lang:LingxiLang,heroImage=""){
  const first=prompt.split(/\r?\n/).map(x=>x.trim()).find(Boolean)??(lang==="zh"?"我的网站":"My website");
  const escape=(text:string)=>text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -122,10 +132,6 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
    }).catch(()=>{});
   return()=>{active=false};
  },[mode,lang]);
-
- const title=ct(mode==="drama"?"dramaTitle":"buildTitle");
- const subtitle=ct(mode==="drama"?"dramaSubtitle":"buildSubtitle");
-
  const track=useCallback(async(signal:string,capability:string,pid?:string)=>{
   await fetch("/api/sasi/v5/feedback",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
    taskFamily:mode==="drama"?"drama.compose":"website.compose",projectId:pid||projectId||null,signal,capability
@@ -325,6 +331,18 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
   pollRef.current=window.setTimeout(()=>void pollByok(id).catch(()=>setMessage(ct("progressUnavailable"))),5000);
  }
 
+ async function downloadDiscussionZip(){
+  const zip=new JSZip();
+  zip.file("conversation.md",`# SASI\n\n## Prompt\n\n${prompt}\n\n## Result\n\n${assistantText||""}\n`);
+  const blob=await zip.generateAsync({type:"blob"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download="sasi-conversation.zip";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1200);
+ }
+ function downloadDiscussionDoc(){
+  downloadBlob("sasi-conversation.doc","application/msword;charset=utf-8",discussionDoc(prompt,assistantText||""));
+ }
+
  async function downloadWebsite(){
   if(!websiteHtml)return;
   const zip=new JSZip();
@@ -336,74 +354,79 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
   a.href=url;a.download="lingxifield-website.zip";a.click();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
  }
+  return <main data-sasi-composer-version="v5200" className={`${styles.workspace} min-h-[calc(100vh-152px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
+   <div className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4">
+    <section className="flex-1 pt-8 sm:pt-12">
+     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<div className="ml-auto mb-8 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-[var(--lx-ink)]">{prompt}</div>}
 
- const idleSurface=!assistantText&&!resultUrl&&!websiteHtml&&!projectId;
+     {assistantText&&<article className="mb-8 max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">
+       {assistantText}
+       <div className="mt-4 flex flex-wrap gap-2 text-xs">
+        <button type="button" onClick={downloadDiscussionDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{ct("downloadWebsite").replace(/网站|Website/i,lang==="zh"?"文档":"Document")}</button>
+        <button type="button" onClick={()=>void downloadDiscussionZip()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">ZIP</button>
+       </div>
+     </article>}
 
+     {resultUrl&&<div className="mb-8">
+       <video src={resultUrl} controls playsInline className="max-h-[68vh] w-full rounded-3xl bg-black"/>
+       <a href={resultUrl} download className="mt-3 inline-block rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{lang==="zh"?"下载结果":"Download result"}</a>
+     </div>}
 
- return <main data-sasi-composer-version="v1600" className={`${styles.workspace} min-h-[calc(100vh-156px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
-  <div className={`mx-auto flex min-h-[calc(100vh-156px)] max-w-5xl flex-col px-4 pb-28 sm:px-6 ${idleSurface?"justify-center":"justify-start"}`}>
-   <header className={`mx-auto w-full max-w-3xl text-center ${idleSurface?"-translate-y-4 pt-0":"pt-10 sm:pt-14"}`}>
-    <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
-    <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[var(--lx-muted)] sm:text-base">{subtitle}</p>
-   </header>
+     {websiteHtml&&<div className="mb-8 space-y-3">
+       <iframe title={ct("websitePreview")} sandbox="" referrerPolicy="no-referrer" className="h-[620px] w-full rounded-3xl border border-[var(--lx-line)] bg-white" srcDoc={cleanHtml(websiteHtml)}/>
+       <button onClick={()=>void downloadWebsite()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("downloadWebsite")}</button>
+     </div>}
 
-   <section className="mx-auto mt-8 w-full max-w-3xl">
-    {assistantText&&<div className="mb-5 rounded-3xl bg-[var(--lx-soft)] px-5 py-4 text-sm leading-7">{assistantText}</div>}
-    {resultUrl&&<video src={resultUrl} controls playsInline className="mb-6 max-h-[68vh] w-full rounded-3xl bg-black"/>}
-    {websiteHtml&&<div className="mb-7 space-y-3">
-      <iframe title={ct("websitePreview")} sandbox="" referrerPolicy="no-referrer" className="h-[620px] w-full rounded-3xl border border-[var(--lx-line)] bg-white" srcDoc={cleanHtml(websiteHtml)}/>
-      <button onClick={()=>void downloadWebsite()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("downloadWebsite")}</button>
-    </div>}
-   </section>
+     {mode==="drama"&&projectId&&<div className="mb-8 flex flex-wrap gap-2">
+       <Link href={`/sasi/series?projectId=${encodeURIComponent(projectId)}`} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("continueSeries")}</Link>
+       <Link href="/sasi/assemble" className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("assembleClips")}</Link>
+     </div>}
+    </section>
 
-   {mode==="drama"&&projectId&&<div className="mx-auto mb-4 flex w-full max-w-3xl flex-wrap gap-2">
-    <Link href={`/sasi/series?projectId=${encodeURIComponent(projectId)}`} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("continueSeries")}</Link>
-    <Link href="/sasi/assemble" className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("assembleClips")}</Link>
-   </div>}
+    <section className="sticky bottom-14 z-30 mt-auto w-full">
+     <div onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={()=>setDragging(false)} onDrop={onDrop}
+       className={`rounded-[28px] border bg-[var(--lx-panel)] p-3 shadow-[0_12px_44px_rgba(0,0,0,.10)] transition ${dragging?"border-[var(--lx-ink)] ring-2 ring-[var(--lx-line)]":"border-[var(--lx-line)]"}`}>
+      {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">{files.map(item=><div key={item.id} className="min-w-[170px] max-w-[240px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-2 text-xs">
+       <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1"><b className="block truncate text-[var(--lx-ink)]">{item.file.name}</b><span className="text-[var(--lx-muted)]">{humanBytes(item.file.size)} · {item.state==="uploading"?`${item.progress}%`:item.message||ct("pendingAdd")}</span></div>
+        {item.assetId&&["audio","video"].includes(kindFor(item.file.name))&&<button disabled={busy} onClick={()=>void transcribeItem(item)} className="shrink-0 rounded-full border border-[var(--lx-line)] px-2 py-1 text-[10px]">{ct("transcribeMedia")}</button>}
+        <button disabled={busy} onClick={()=>removeFile(item.id)} className="text-[var(--lx-muted)]">×</button>
+       </div>
+      </div>)}</div>}
 
-   <section className={`relative z-20 mx-auto w-full max-w-3xl pb-5 pt-3 ${idleSurface?"mb-3 mt-6":"mb-14 mt-5"}`}>
-    <div onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={()=>setDragging(false)} onDrop={onDrop}
-      className={`rounded-[28px] border bg-[var(--lx-panel)] p-3 shadow-[0_18px_70px_rgba(0,0,0,.12)] transition ${dragging?"border-[var(--lx-ink)] ring-2 ring-[var(--lx-line)]":"border-[var(--lx-line)]"}`}>
-     {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">{files.map(item=><div key={item.id} className="min-w-[180px] max-w-[260px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-2 text-xs">
-      <div className="flex items-start justify-between gap-2">
-       <div className="min-w-0 flex-1"><b className="block truncate text-[var(--lx-ink)]">{item.file.name}</b><span className="text-[var(--lx-muted)]">{humanBytes(item.file.size)} · {item.state==="uploading"?`${item.progress}%`:item.message||ct("pendingAdd")}</span></div>
-       {item.assetId&&["audio","video"].includes(kindFor(item.file.name))&&<button disabled={busy} onClick={()=>void transcribeItem(item)} className="shrink-0 rounded-full border border-[var(--lx-line)] px-2 py-1 text-[10px]">{ct("transcribeMedia")}</button>}
-       <button disabled={busy} onClick={()=>removeFile(item.id)} className="text-[var(--lx-muted)]">×</button>
+      {selectedFunctions.length>0&&<div className="mb-2 px-2"><SasiSelectedFunctions task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/></div>}
+
+      <textarea ref={textareaRef} aria-label={ct(mode==="drama"?"promptDrama":"promptWebsite")} disabled={busy} rows={1} maxLength={12000} value={prompt}
+        onChange={e=>{setPrompt(e.target.value);setQuote(null)}} placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}
+        className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 outline-none placeholder:text-[var(--lx-faint)]"/>
+
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+       <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={e=>{if(e.target.files)addFiles(e.target.files);e.currentTarget.value=""}}/>
+       <SasiFunctionMenu task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} onUpload={()=>inputRef.current?.click()} disabled={busy}/>
+
+       {mode==="drama"&&<>
+        <select disabled={busy} aria-label={ct("resolution")} value={resolution} onChange={e=>{setResolution(e.target.value as (typeof VIDEO_RESOLUTIONS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
+         {VIDEO_RESOLUTIONS.map(x=><option key={x}>{x}</option>)}
+        </select>
+        <select disabled={busy} aria-label={ct("ratio")} value={ratio} onChange={e=>{setRatio(e.target.value as (typeof VIDEO_RATIOS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
+         {VIDEO_RATIOS.map(x=><option key={x}>{x}</option>)}
+        </select>
+        <select disabled={busy} aria-label={ct("duration")} value={duration} onChange={e=>{setDuration(Number(e.target.value) as (typeof VIDEO_DURATIONS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
+         {VIDEO_DURATIONS.map(x=><option key={x} value={x}>{x} {ct("seconds")}</option>)}
+        </select>
+       </>}
+
+       <div className="ml-auto flex items-center gap-2">
+        {quote&&<button disabled={busy} onClick={()=>void confirm()} className="rounded-full border border-[var(--lx-line)] px-3 py-2 text-xs">{`${ct("confirm")} ${(quote.task?.request?.billingCurrency==="USD"?"$":"¥")}${(Number(quote.task.estimated_fen||0)/100).toFixed(2)}`}</button>}
+        <button aria-label={ct(mode==="drama"?"sendDrama":"sendWebsite")} disabled={busy||(!prompt.trim()&&!files.length)} onClick={()=>void prepare()}
+          className="grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">{busy?"…":"↑"}</button>
+       </div>
       </div>
-      {item.state==="uploading"&&<div className="mt-2 h-1 overflow-hidden rounded bg-[var(--lx-line)]"><div className="h-full bg-[var(--lx-ink)]" style={{width:`${item.progress}%`}}/></div>}
-     </div>)}</div>}
 
-     {selectedFunctions.length>0&&<div className="mb-3 px-2"><SasiSelectedFunctions task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/></div>}
-     <textarea ref={textareaRef} aria-label={ct(mode==="drama"?"promptDrama":"promptWebsite")} disabled={busy} rows={1} maxLength={12000} value={prompt} onChange={e=>{setPrompt(e.target.value);setQuote(null)}}
-       placeholder={ct(mode==="drama"?"promptDrama":"promptWebsite")} className="max-h-56 min-h-24 w-full resize-none bg-transparent px-2 py-2 text-[15px] leading-7 outline-none placeholder:text-[var(--lx-muted)]"/>
-
-     <div className="mt-2 flex flex-wrap items-center gap-2">
-      <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={e=>{if(e.target.files)addFiles(e.target.files);e.currentTarget.value=""}}/>
-      <SasiFunctionMenu task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} onUpload={()=>inputRef.current?.click()} disabled={busy}/>
-      <Link href="/sasi/connections" className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("creationSettings")} ↗</Link>
-
-      {mode==="drama"&&<>
-       <select disabled={busy} aria-label={ct("resolution")} value={resolution} onChange={e=>{setResolution(e.target.value as (typeof VIDEO_RESOLUTIONS)[number]);setQuote(null)}} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-sm">
-        {VIDEO_RESOLUTIONS.map(x=><option key={x}>{x}</option>)}
-       </select>
-       <select disabled={busy} aria-label={ct("ratio")} value={ratio} onChange={e=>{setRatio(e.target.value as (typeof VIDEO_RATIOS)[number]);setQuote(null)}} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-sm">
-        {VIDEO_RATIOS.map(x=><option key={x}>{x}</option>)}
-       </select>
-       <select disabled={busy} aria-label={ct("duration")} value={duration} onChange={e=>{setDuration(Number(e.target.value) as (typeof VIDEO_DURATIONS)[number]);setQuote(null)}} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-sm">
-        {VIDEO_DURATIONS.map(x=><option key={x} value={x}>{x} {ct("seconds")}</option>)}
-       </select>
-      </>}
-
-      <div className="ml-auto flex items-center gap-2">
-       {quote&&<button disabled={busy} onClick={()=>void confirm()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{`${ct("confirm")} ${(quote.task?.request?.billingCurrency==="USD"?"$":"¥")}${(Number(quote.task.estimated_fen||0)/100).toFixed(2)}`}</button>}
-       <button aria-label={ct(mode==="drama"?"sendDrama":"sendWebsite")} disabled={busy||(!prompt.trim()&&!files.length)} onClick={()=>void prepare()} className="grid h-10 min-w-10 place-items-center rounded-full bg-[var(--lx-ink)] px-4 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-35">{busy?ct("processing"):"↑"}</button>
-      </div>
+      {mode==="drama"&&<label className="flex items-start gap-2 px-3 pt-2 text-[11px] text-[var(--lx-muted)]"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
+      {message&&<p className="px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">{message}</p>}
      </div>
-     {mode==="drama"&&<label className="flex items-start gap-2 px-2 pt-3 text-xs"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
-     {message&&<p className="px-2 pt-2 text-xs leading-5 text-[var(--lx-muted)]">{message}</p>}
-    </div>
-    <p className="mt-2 text-center text-[11px] text-[var(--lx-muted)]">{ct(mode==="drama"?"dramaFootnote":"buildFootnote")}</p>
-   </section>
-  </div>
- </main>;
+    </section>
+   </div>
+  </main>;
 }

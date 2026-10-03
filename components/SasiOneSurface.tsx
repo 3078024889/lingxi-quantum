@@ -2,19 +2,25 @@
 
 import {useEffect,useMemo,useState} from "react";
 import {useSearchParams} from "next/navigation";
-import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
+import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import SasiChatCreationStudio from "@/components/SasiChatCreationStudio";
 import KnowledgeWorkspace from "@/components/KnowledgeWorkspace";
 
 type Mode="drama"|"website"|"book"|"learning"|"research";
 
-const MODES:Array<{id:Mode;zh:string;en:string;icon:LingxiIconName}>=[
- {id:"drama",zh:"短剧",en:"Drama",icon:"drama"},
- {id:"website",zh:"网站",en:"Website",icon:"website"},
- {id:"book",zh:"书本",en:"Book",icon:"book"},
- {id:"learning",zh:"学习",en:"Learning",icon:"learning"},
- {id:"research",zh:"科研",en:"Research",icon:"research"},
-];
+const MODE_LABELS:Record<LingxiLang,Record<Mode,string>>={
+ zh:{drama:"短剧",website:"网站",book:"书本",learning:"学习",research:"科研"},
+ en:{drama:"Drama",website:"Website",book:"Book",learning:"Learning",research:"Research"},
+ ja:{drama:"短編",website:"サイト",book:"本",learning:"学習",research:"研究"},
+ ko:{drama:"드라마",website:"웹사이트",book:"책",learning:"학습",research:"연구"},
+ fr:{drama:"Série",website:"Site",book:"Livre",learning:"Apprentissage",research:"Recherche"},
+ de:{drama:"Drama",website:"Website",book:"Buch",learning:"Lernen",research:"Forschung"},
+ es:{drama:"Drama",website:"Web",book:"Libro",learning:"Aprendizaje",research:"Investigación"},
+ pt:{drama:"Drama",website:"Site",book:"Livro",learning:"Aprendizado",research:"Pesquisa"},
+ ar:{drama:"دراما",website:"موقع",book:"كتاب",learning:"تعلم",research:"بحث"},
+};
+
+const MODES:Mode[]=["drama","website","book","learning","research"];
 
 function normalize(value:string|null):Mode{
  return value==="website"||value==="book"||value==="learning"||value==="research"||value==="drama"?value:"drama";
@@ -22,7 +28,8 @@ function normalize(value:string|null):Mode{
 
 export default function SasiOneSurface(){
  const params=useSearchParams();
- const [mode,setMode]=useState<Mode>(()=>normalize(params.get("mode")));
+ const{lang}=useLingxiLang();
+ const[mode,setMode]=useState<Mode>(()=>normalize(params.get("mode")));
 
  useEffect(()=>{setMode(normalize(params.get("mode")))},[params]);
 
@@ -42,28 +49,22 @@ export default function SasiOneSurface(){
  },[mode]);
 
  return <main className="lx11-page min-h-[calc(100vh-64px)]">
-   <div className="mx-auto max-w-[1440px] px-4 pb-32 sm:px-6">
-     <section>{content}</section>
+   <div className="mx-auto max-w-[1440px] px-3 pb-20 sm:px-5">
+     {content}
    </div>
 
    <nav
-     className="fixed bottom-5 left-1/2 z-40 flex max-w-[calc(100vw-24px)] -translate-x-1/2 items-center gap-1 overflow-x-auto rounded-2xl border border-[var(--lx-line)] bg-[color:var(--lx-panel)/.96] p-2 shadow-[0_14px_50px_rgba(0,0,0,.14)] backdrop-blur-xl lg:left-[calc(50%+108px)]"
+     className="fixed bottom-2 left-1/2 z-40 flex max-w-[calc(100vw-24px)] -translate-x-1/2 items-center justify-center gap-1 rounded-full bg-[color:var(--lx-bg)/.88] px-2 py-1.5 text-xs backdrop-blur-xl lg:left-[calc(50%+108px)]"
      aria-label="SASI modes"
    >
      {MODES.map(item=><button
-       key={item.id}
+       key={item}
        type="button"
-       onClick={()=>switchMode(item.id)}
-       className={[
-         "flex min-w-[70px] flex-col items-center gap-1 rounded-xl px-3 py-2 text-xs transition",
-         mode===item.id
-           ?"bg-[var(--lx-ink)] text-[var(--lx-bg)] shadow-sm"
-           :"text-[var(--lx-muted)] hover:bg-[var(--lx-soft)] hover:text-[var(--lx-ink)]"
-       ].join(" ")}
-       aria-pressed={mode===item.id}
+       onClick={()=>switchMode(item)}
+       className={`rounded-full px-3 py-1.5 transition ${mode===item?"font-semibold text-[var(--lx-ink)]":"text-[var(--lx-faint)] hover:text-[var(--lx-ink)]"}`}
+       aria-pressed={mode===item}
      >
-       <LingxiMiniIcon name={item.icon} size="tiny"/>
-       <span className="font-medium">{item.zh}</span>
+       {MODE_LABELS[lang]?.[item]??MODE_LABELS.en[item]}
      </button>)}
    </nav>
  </main>;
