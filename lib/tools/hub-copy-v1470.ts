@@ -1,3 +1,4 @@
+import {toolIntro} from "@/lib/tools/product-copy";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 type T=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):T=>({zh,en,ja,ko,fr,de,es,pt,ar});
@@ -81,7 +82,7 @@ const SIMPLE:Record<string,T>={
  "pdf-to-jpg":L("把 PDF 每一页导出为 JPG。","Export every PDF page as JPG.","PDF各ページをJPGへ書き出し。","PDF 각 페이지를 JPG로 내보냅니다.","Exporter chaque page PDF en JPG.","Jede PDF-Seite als JPG exportieren.","Exporta cada página PDF como JPG.","Exporte cada página PDF como JPG.","تصدير كل صفحة PDF بصيغة JPG.")
 };
 export const toolCardLine=(lang:LingxiLang,slug:string,kind:keyof typeof GENERIC,fallbackZh:string,fallbackEn:string)=>{
- const special=SUMMARY[slug]?.[lang]||SIMPLE[slug]?.[lang];
+ const special=toolIntro(lang,slug)||SUMMARY[slug]?.[lang]||SIMPLE[slug]?.[lang];
  if(special)return special;
  if(lang==="zh"&&fallbackZh)return fallbackZh.replace(/浏览器本地|本地完成|本地处理|文件不上传服务器|不上传服务器|不上传灵犀场服务器|全部在浏览器本地处理|，本地完成|，本地处理|。本地处理/g,"").replace(/\s{2,}/g," ").trim();
  if(lang==="en"&&fallbackEn)return fallbackEn.replace(/entirely in your browser|locally in your browser|locally|local only|nothing is uploaded|without uploading it/gi,"").replace(/s{2,}/g," ").trim();

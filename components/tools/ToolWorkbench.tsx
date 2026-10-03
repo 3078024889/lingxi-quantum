@@ -1,4 +1,5 @@
 "use client";
+import {plainText} from "@/lib/tools/plain-copy";
 import {downloadUrl} from "@/lib/tools/shared/download";
 
 import { useEffect, useMemo, useState } from "react";
@@ -225,10 +226,10 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       </button>
 
       {result?.ok === true && (
-        <ResultPanel sourceSlug={tool.slug} files={result.files} messageZh={result.messageZh} messageEn={result.messageEn} details={result.details} />
+        <ResultPanel sourceSlug={tool.slug} files={result.files} messageZh={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageZh} messageEn={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageEn} details={tool.slug==="heic-to-jpg"?{files:result.files?.length||0}:result.details} />
       )}
       {result?.ok === false && (
-        <ErrorExplain reasonZh={result.reasonZh} reasonEn={result.reasonEn} hintZh={result.hintZh} hintEn={result.hintEn} />
+        <ErrorExplain reasonZh={tool.slug==="heic-to-jpg"?plainText(lang,"fileError"):result.reasonZh} reasonEn={tool.slug==="heic-to-jpg"?plainText(lang,"fileError"):result.reasonEn} hintZh={tool.slug==="heic-to-jpg"?"":result.hintZh} hintEn={tool.slug==="heic-to-jpg"?"":result.hintEn} />
       )}
     </div>
   );

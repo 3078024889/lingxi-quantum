@@ -1,4 +1,6 @@
 "use client";
+import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+
 import{useEffect,useRef,useState}from"react";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
@@ -24,7 +26,7 @@ function clearResume(){try{const u=new URL(location.href);u.searchParams.delete(
 async function openMiniPay(id:string){return new Promise<boolean>(resolve=>{let done=false;const finish=(v:boolean)=>{if(done)return;done=true;resolve(v)},go=()=>{const wx=(window as any).wx;if(!wx?.miniProgram?.navigateTo){finish(false);return}wx.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(id)}`,success:()=>finish(true),fail:()=>finish(false)})};if((window as any).wx?.miniProgram){go();return}const s=document.createElement("script");s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>finish(false);document.head.appendChild(s);setTimeout(()=>finish(false),3500)})}
 
 export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted,label,draftId,metadata,beforePayment}:{toolId:string;quantity:number;onUnlocked:()=>Promise<void>|void;onCompleted?:()=>Promise<void>|void;label?:string;draftId?:string;metadata?:Record<string,unknown>;beforePayment?:()=>Promise<void>}){
- const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();const t=(zh:string,en:string)=>lang==="zh"?zh:en;
+ const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();
  const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[phase,setPhase]=useState<PaidTaskPhase>("idle");
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),fails=useRef(0),completedQuote=useRef<string|null>(null),generated=useRef(new Set<string>()),checking=useRef(false);
  const [paidId,setPaidId]=useState('');
@@ -70,7 +72,7 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
    if(q&&((q.tool_id||q.toolId)!==toolId||Number(q.quantity)!==quantity||(q.metadata?.draftId&&q.metadata.draftId!==draftId))){stop();setPhase('error');setMsg(tx('failed'));return false;}
    if(isConsumed(d.grant as Grant|undefined)){await finishExisting(id);return true}
    setPhase("paid");await unlock(id);return true;
-  }catch{fails.current++;if(fails.current>=MAX_POLL_FAILURES){stop();setMsg(t("暂时无法确认支付状态。请到「账户 → 订单与使用记录」继续，不要重复付款。","Payment status is temporarily unavailable. Resume from Account → Orders & usage; do not pay again."))}return false}
+  }catch{fails.current++;if(fails.current>=MAX_POLL_FAILURES){stop();setMsg(plainText(lang,"paymentStatus"))}return false}
  }
  const checkRef=useRef(check);checkRef.current=check;
 
@@ -83,24 +85,24 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
   if(phase==="completed"||phase==="generating")return;
   setBusy(true);setMsg("");setPhase("pricing");
   try{
-   await beforePayment?.();
+   try{await beforePayment?.()}catch{setPhase("error");setMsg(tx("draftSaveFailed"));return}
    let q=quote;const expires=q?.expires_at||q?.expiresAt;
    if(!q||Number(q.quantity)!==quantity||(expires&&new Date(expires).getTime()<=Date.now())){
     const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
-    const d=await r.json().catch(()=>({})) as Quote&{error?:string};if(!r.ok||!d.id)throw new Error(d.error||t("无法确认本次价格","Could not confirm this price"));q=d;setQuote(q);
+    const d=await r.json().catch(()=>({})) as Quote&{error?:string};if(!r.ok||!d.id)throw new Error(d.error||plainText(lang,"paymentError"));q=d;setQuote(q);
    }
    setPhase("quoted");save(toolId,q,draftId);setPhase("waitingPayment");
-   if(isMini()&&currency==="CNY"){setMsg(t("正在打开微信支付…","Opening WeChat payment…"));if(await openMiniPay(q.id)){stop();timer.current=setInterval(()=>void check(q!.id),POLL_MS);return}}
+   if(isMini()&&currency==="CNY"){setMsg(plainText(lang,"openingPayment"));if(await openMiniPay(q.id)){stop();timer.current=setInterval(()=>void check(q!.id),POLL_MS);return}}
    const u=new URL(location.href);if(draftId)u.searchParams.set("resumeDraft",draftId);u.searchParams.set("resumeQuote",q.id);
    const payUrl=`/tools/pay?quoteId=${encodeURIComponent(q.id)}&return=${encodeURIComponent(u.pathname+u.search)}`;
    const w=window.open(payUrl,"lingxi_tool_pay","width=720,height=820");
    if(w){stop();timer.current=setInterval(()=>void check(q!.id),POLL_MS);setMsg(tx('waiting'));return}
    if(draftId){location.assign(payUrl);return}
    setPhase("quoted");setMsg(tx('popup'));
-  }catch(e){setPhase("error");setMsg(e instanceof Error?e.message:String(e))}finally{setBusy(false)}
+  }catch(e){setPhase("error");setMsg(plainText(lang,"paymentError"))}finally{setBusy(false)}
  }
 
  const amount=quote?quoteDisplay(quote,currency).text:'';
  if(phase==="completed")return <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm"><b>{tx('complete')}</b><p className="mt-1 text-[var(--lx-muted)]">{msg}</p></div>;
- return <div><button onClick={start} disabled={busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label||tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
+ return <div><button data-testid="paid-export-start" onClick={start} disabled={busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label||tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
 }

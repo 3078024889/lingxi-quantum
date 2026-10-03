@@ -21,6 +21,10 @@ export function classifyProviderException(error:unknown):ProviderExceptionDecisi
     };
   }
 
+  if(/^WECHAT_ABNORMAL$/.test(code)){
+    return{failureCode:"PROVIDER_ACTION_REQUIRED",retryAfterSeconds:12*60*60,providerStatus:code,operatorActionRequired:true};
+  }
+
   if(/^WECHAT_REFUND_(429:FREQUENCY_LIMITED|500:SYSTEM_ERROR)$/.test(code)){
     return{failureCode:"PROVIDER_RETRY_PENDING",retryAfterSeconds:120,providerStatus:code,operatorActionRequired:false};
   }

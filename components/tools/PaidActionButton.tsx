@@ -1,4 +1,6 @@
 "use client";
+import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+
 import{useEffect,useRef,useState}from"react";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
@@ -30,7 +32,7 @@ function unitLabel(unit:string,zh:boolean){if(unit==="food")return zh?"种食物
 function isMiniProgramWebView(){try{return new URLSearchParams(window.location.search).get("mini")==="1"&&/MicroMessenger/i.test(navigator.userAgent||"")}catch{return false}}
 async function openMiniNativePay(quoteId:string){return new Promise<boolean>(resolve=>{let settled=false;const done=(v:boolean)=>{if(settled)return;settled=true;resolve(v)},go=()=>{const w=(window as any).wx;if(!w?.miniProgram?.navigateTo){done(false);return}w.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(quoteId)}`,success:()=>done(true),fail:()=>done(false)})};if((window as any).wx?.miniProgram){go();return}const id="lingxifield-wechat-jssdk",existing=document.getElementById(id)as HTMLScriptElement|null;if(existing){existing.addEventListener("load",go,{once:true});setTimeout(()=>done(false),3000);return}const s=document.createElement("script");s.id=id;s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>done(false);document.head.appendChild(s);setTimeout(()=>done(false),3500)})}
 
-export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,draftId,draftReady=true}:{toolId:string;quantity:number;metadata?:Record<string,unknown>;onPaid:(quoteId:string)=>Promise<void>|void;label?:string;draftId?:string;draftReady?:boolean}){
+export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,draftId,draftReady=true,beforePayment}:{toolId:string;quantity:number;metadata?:Record<string,unknown>;onPaid:(quoteId:string)=>Promise<void>|void;label?:string;draftId?:string;draftReady?:boolean;beforePayment?:()=>Promise<void>}){
  const{lang}=useLingxiLang();const zh=lang==="zh";const t=(x:Copy)=>x[lang]||x.en;const{currency}=usePreferredCurrency();
  const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[completed,setCompleted]=useState(false);
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),restoreKey=useRef(""),taskKey=useRef("");
@@ -55,18 +57,21 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   void(async()=>{try{const r=await fetch(`/api/tools/quote?id=${encodeURIComponent(id)}`,{cache:"no-store"});if(!r.ok)return;const q=await r.json() as Quote;if(q.tool_id!==toolId||Number(q.quantity)!==Number(quantity)||(toolId!=="food-calorie"&&q.currency!==currency)||(toolId==="food-calorie"&&q.metadata?.foodRequestId!==draftId))return;setQuote(q);saveStoredQuote(toolId,q,draftId);await checkRef.current(q.id)}catch{}})();
  },[toolId,quantity,currency,draftId,draftReady]);
 
+ async function preparePayment(){try{await beforePayment?.();return true}catch{setMsg(deliveryText(lang,"draftSaveFailed"));return false}}
  async function makeQuote(){
   if(completed)return;setBusy(true);setMsg("");
   try{
+   if(!await preparePayment())return;
    const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
    const d=await r.json().catch(()=>({}));
    if(!r.ok)throw new Error(String(d.error||"QUOTE_CREATE_FAILED"));
    setQuote(d);saveStoredQuote(toolId,d,draftId);setMsg(t(UI.priced));
-  }catch(e){const m=e instanceof Error?e.message:String(e);setMsg(toolId==="food-calorie"?foodBillingText(lang,/登录|SIGN_IN_REQUIRED/.test(m)?"login":/EXPIRED/.test(m)?"expired":"unavailable"):/TOOL_SERVICE_UNAVAILABLE|PRICE_NOT_AVAILABLE|TOOL_PRICING_NOT_FOUND/.test(m)?t(UI.serviceUnavailable):m)}
+  }catch(e){const m=e instanceof Error?e.message:String(e);setMsg(toolId==="food-calorie"?foodBillingText(lang,/登录|SIGN_IN_REQUIRED/.test(m)?"login":/EXPIRED/.test(m)?"expired":"unavailable"):/TOOL_SERVICE_UNAVAILABLE|PRICE_NOT_AVAILABLE|TOOL_PRICING_NOT_FOUND/.test(m)?t(UI.serviceUnavailable):plainText(lang,"paymentError"))}
   finally{setBusy(false)}
  }
  async function pay(){
-  if(completed||running||!quote)return;if(paidId){await complete(paidId);return}saveStoredQuote(toolId,quote,draftId);
+  if(completed||running||busy||!quote)return;if(paidId){await complete(paidId);return}setBusy(true);try{if(!await preparePayment())return;
+  saveStoredQuote(toolId,quote,draftId);
   if(quote.currency==="CNY"&&isMiniProgramWebView()){
    stop();setMsg(t(UI.waiting));const opened=await openMiniNativePay(quote.id);if(opened){timer.current=setInterval(()=>void checkRef.current(quote.id),1800);return}
   }
@@ -78,12 +83,13 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   // Never destroy a stateful unpaid task in the same tab unless a persistent draft exists.
   if(draftId){location.assign(payUrl);return}
   setMsg(t(UI.popupBlocked));
+  }finally{setBusy(false)}
  }
  const changed=quote&&(Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
  if(completed)return <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{deliveryText(lang,"complete")}</b><p className="mt-1 text-xs text-[var(--lx-muted)]">{deliveryText(lang,"existing")}</p></div>;
  return <div>{!quote||changed
   ?<button onClick={makeQuote} disabled={busy||quantity<=0||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t(UI.pricing):(label||t(UI.defaultLabel))}</button>
-  :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {toolId==="food-calorie"?foodBillingText(lang,quote.unit_name==="food"?"foodUnit":"imageUnit"):unitLabel(quote.unit_name,zh)} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||running||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{paidId?deliveryText(lang,"retry"):t(UI.confirm)}</button><button disabled={!!paidId||running} onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
+  :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {toolId==="food-calorie"?foodBillingText(lang,quote.unit_name==="food"?"foodUnit":"imageUnit"):plainText(lang,(["minute","second","file","email","image","food"].includes(quote.unit_name)?quote.unit_name:quote.unit_name==="page"?"pages":"use") as "minute"|"second"|"file"|"email"|"image"|"food"|"pages"|"use")} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||running||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{paidId?deliveryText(lang,"retry"):t(UI.confirm)}</button><button disabled={!!paidId||running} onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
   {msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}
   {toolId==='food-calorie'&&msg===foodBillingText(lang,'login')&&<a className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent('/tools/food-calorie?resumeDraft='+(draftId||''))}`}>{foodBillingText(lang,'login')}</a>}
  </div>;

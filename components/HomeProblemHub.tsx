@@ -17,8 +17,8 @@ type Copy={
 
 const copy:Record<LingxiLang,Copy>={
  zh:{
-  kicker:"灵犀场 LINGXIFIELD｜SASI智能生态",
-  seoTitle:"灵犀场 LINGXIFIELD｜SASI智能生态与全球智能工具平台",
+  kicker:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作生态平台",
+  seoTitle:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作生态平台",
   seoDesc:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",hero:"把想法、资料和日常问题真正处理起来。",
   lead:"从一个文件、一张图片、一段视频，到一本书、一项研究或一个还没理清的想法，都可以从这里直接开始。告诉灵犀场你要完成什么，它会把你带到最合适的入口。",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",

@@ -27,6 +27,18 @@ const SHARED_COPY:Record<LingxiLang,string>={
  ar:"اربط مفتاح API واحدًا لاستخدام نماذج الذكاء الاصطناعي العالمية المفعّلة في حساب الـ API هذا.",
 };
 
+const CHANNEL_COPY:Record<LingxiLang,Record<"volcengine"|"openrouter",string>>={
+ zh:{volcengine:"CNY 通道",openrouter:"USD 通道"},
+ en:{volcengine:"CNY channel",openrouter:"USD channel"},
+ ja:{volcengine:"CNY チャネル",openrouter:"USD チャネル"},
+ ko:{volcengine:"CNY 채널",openrouter:"USD 채널"},
+ fr:{volcengine:"Canal CNY",openrouter:"Canal USD"},
+ de:{volcengine:"CNY-Kanal",openrouter:"USD-Kanal"},
+ es:{volcengine:"Canal CNY",openrouter:"Canal USD"},
+ pt:{volcengine:"Canal CNY",openrouter:"Canal USD"},
+ ar:{volcengine:"قناة CNY",openrouter:"قناة USD"},
+};
+
 const TITLE:Record<LingxiLang,string>={
  zh:"连接我的智能服务",en:"Connect my intelligence service",ja:"インテリジェンスサービスを接続",ko:"지능형 서비스 연결",
  fr:"Connecter mon service d’IA",de:"Meinen KI-Dienst verbinden",es:"Conectar mi servicio de IA",pt:"Conectar meu serviço de IA",ar:"ربط خدمة الذكاء الخاصة بي",
@@ -112,7 +124,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
       </span>
       <span className="min-w-0 flex-1">
        <b className="block text-[15px] text-[var(--lx-ink)]">{item.name}</b>
-       <small className="mt-1 block leading-5 text-[var(--lx-muted)]">{SHARED_COPY[lang]}</small>
+       <small className="mt-1 block leading-5 text-[var(--lx-muted)]">{CHANNEL_COPY[lang][item.id as "volcengine"|"openrouter"]}</small>
       </span>
       <span className="shrink-0 text-xs text-[var(--lx-faint)]">{status(item.id)}</span>
      </button>

@@ -1,4 +1,6 @@
 "use client";
+import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+
 
 import {useCallback,useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
@@ -26,7 +28,7 @@ export default function FileDropzone({
   const[previews,setPreviews]=useState<Preview[]>([]);
   const[normalizing,setNormalizing]=useState(false);
   const pdfDocumentMode=accept.toLowerCase().includes(".pdf")||accept.toLowerCase().includes("application/pdf");
-  const effectiveAccept=pdfDocumentMode?DOCUMENT_INPUT_ACCEPT:accept;
+  const effectiveAccept=pdfDocumentMode?Array.from(new Set([...accept.split(","),...DOCUMENT_INPUT_ACCEPT.split(",")])).join(","):accept;
 
   useEffect(()=>{
     if(kind!=="image"){setPreviews([]);return}
@@ -45,11 +47,11 @@ export default function FileDropzone({
     const unsupported=incoming.find(file=>!fileMatchesAccept(file,effectiveAccept));
     if(unsupported){setError(`${unsupported.name} · ${uploadText(lang,"unsupported")}`);return}
     let prepared=incoming;
-    if(pdfDocumentMode){setNormalizing(true);try{prepared=await normalizeDocumentFiles(incoming)}catch(e){setError(documentIntakeError(lang,e));setNormalizing(false);return}setNormalizing(false)}
+    if(pdfDocumentMode){setNormalizing(true);try{prepared=await Promise.all(incoming.map(async file=>file.type.startsWith("image/")?file:(await normalizeDocumentFiles([file]))[0]))}catch(e){setError(documentIntakeError(lang,e));setNormalizing(false);return}setNormalizing(false)}
     const merged=multiple&&append?[...files,...prepared]:prepared;
     const unique=Array.from(new Map(merged.map(file=>[fileIdentity(file),file])).values());
-    if(!multiple&&unique.length>1){setError(lang==="zh"?"此工具一次只处理 1 个文件。":"This tool processes one file at a time.");return}
-    if(multiple&&unique.length>maxFiles){setError(lang==="zh"?`此工具一次最多处理 ${maxFiles} 个文件，请减少后重试。`:`This tool accepts at most ${maxFiles} files per batch.`);return}
+    if(!multiple&&unique.length>1){setError(plainText(lang,"oneFile"));return}
+    if(multiple&&unique.length>maxFiles){setError(plainText(lang,"fileLimit",{count:maxFiles}));return}
     setError(null);onChange(multiple?unique:unique.slice(0,1));
   },[append,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode]);
 
@@ -57,16 +59,16 @@ export default function FileDropzone({
 
   return <div>
     <div role="button" tabIndex={disabled?-1:0} aria-disabled={(disabled||normalizing)||undefined}
-      onKeyDown={e=>{if(!disabled&&(e.key==="Enter"||e.key===" ")){e.preventDefault();inputRef.current?.click()}}}
+      onKeyDown={e=>{if(!disabled&&!normalizing&&(e.key==="Enter"||e.key===" ")){e.preventDefault();inputRef.current?.click()}}}
       onClick={()=>!disabled&&!normalizing&&inputRef.current?.click()}
       onDragEnter={e=>{e.preventDefault();if(!disabled)setDrag(true)}}
       onDragOver={e=>{e.preventDefault();if(!disabled)setDrag(true)}}
       onDragLeave={e=>{if(e.currentTarget.contains(e.relatedTarget as Node|null))return;setDrag(false)}}
       onDrop={e=>{e.preventDefault();setDrag(false);if(!disabled&&!normalizing)void apply(e.dataTransfer.files)}}
       className={`cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition ${drag?"border-[var(--lx-line-strong)] bg-[var(--lx-soft)] ring-4 ring-[var(--lx-soft)]":"border-[var(--lx-line)] bg-[var(--lx-soft)] hover:border-[var(--lx-line-strong)]"} ${disabled?"pointer-events-none opacity-50":""}`}>
-      <p className="text-base font-medium text-[var(--lx-ink)]">{drag?uploadText(lang,"dragActive"):uploadText(lang,promptKey)}</p>
+      <p className="text-base font-medium text-[var(--lx-ink)]">{drag?uploadText(lang,"dragActive"):plainText(lang,"choose")}</p>
       <p className="mt-2 text-xs leading-5 text-[var(--lx-faint)]">
-        {pdfDocumentMode?documentIntakeText(lang,"hint"):uploadText(lang,"maxFile",{size:maxSizeMB})}{multiple?` · ${uploadText(lang,"maxFiles",{count:maxFiles})}`:""}
+        {normalizing?documentIntakeText(lang,"busy"):uploadText(lang,"maxFile",{size:maxSizeMB})}{multiple?` · ${uploadText(lang,"maxFiles",{count:maxFiles})}`:""}
       </p>
       <input ref={inputRef} type="file" className="hidden" accept={effectiveAccept} multiple={multiple} disabled={disabled||normalizing}
         onChange={e=>{if(e.target.files)void apply(e.target.files);e.target.value=""}}/>

@@ -40,8 +40,8 @@ test.describe("document engine real browser inputs",()=>{
     const range=page.getByTestId("pdf-export-range-input");
     await expect(range).toBeVisible();
     await range.fill("1-a");
-    await expect(page.getByText(/页码范围无效|Invalid page range/i)).toBeVisible();
-    const exportButton=page.getByRole("button",{name:/确认价格并导出|Confirm price/i});
+    await expect(page.getByText(/请填写有效页码|Enter valid pages/i)).toBeVisible();
+    const exportButton=page.getByTestId("paid-export-start");
     await expect(exportButton).toBeDisabled();
     expect(quoteCalls).toBe(0);
   });
@@ -57,8 +57,8 @@ test.describe("document engine real browser inputs",()=>{
     const range=page.getByTestId("pdf-export-range-input");
     await expect(range).toBeVisible();
     await range.fill("1-3");
-    await expect(page.getByTestId("pdf-export-plan-summary")).toHaveText(/本次导出\s*3\s*页|export\s*3\s*pages/i);
-    const exportButton=page.getByRole("button",{name:/确认价格并导出|Confirm price/i});
+    await expect(page.getByTestId("pdf-export-plan-summary")).toHaveText(/已选择\s*3\s*页|3\s*pages selected/i);
+    const exportButton=page.getByTestId("paid-export-start");
     await exportButton.click();
     await page.waitForTimeout(150);
     expect(quantities).toEqual([3]);
@@ -70,7 +70,7 @@ test.describe("document engine real browser inputs",()=>{
     const imageInputs=page.locator('input[type="file"][accept="image/*"]');
     await imageInputs.nth(1).setInputFiles({name:"stamp.svg",mimeType:"image/svg+xml",buffer:stampSvg});
     await page.getByRole("button",{name:/按选择页切分盖章|Slice across selected pages/i}).click();
-    await expect(page.getByText(/已应用到\s*9|Applied to\s*9/i)).toBeVisible();
+    await expect(page.getByText(/已添加到\s*9|Added to\s*9/i)).toBeVisible();
   });
 
   test("document copy exposes three tones and optional purpose text",async({page})=>{

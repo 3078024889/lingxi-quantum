@@ -1,4 +1,7 @@
 "use client";
+import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+import {toolIntro} from "@/lib/tools/product-copy";
+
 import {useMemo,useState} from "react";
 import {PDFDocument} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -43,15 +46,15 @@ export default function PrivacyCleanerWorkbench(){
     out.push({name:"clean-"+f.name,blob,mime:blob.type||"application/octet-stream",size:blob.size});
    }
    setResults(out);
-  }catch(e){setError(e instanceof Error?e.message:String(e))}
+  }catch(e){setError(plainText(lang,"fileError"))}
   finally{setBusy(false)}
  }
  const total=useMemo(()=>results.reduce((n,x)=>n+x.size,0),[results]);
  return <div className="space-y-4">
   <FileDropzone accept="image/*,application/pdf,.pdf" multiple maxFiles={50} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy}/>
-  <p className="text-sm leading-6 text-[var(--lx-muted)]">{c.lead}</p>
+  <p className="text-sm leading-6 text-[var(--lx-muted)]">{toolIntro(lang,"privacy-cleaner")}</p>
   <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:files.length>1?`${c.batch} · ${files.length}`:c.run}</button>
   {!!results.length&&<ResultPanel files={results} messageZh={c.ready} messageEn={c.ready} details={{files:results.length,resultKB:Number((total/1024).toFixed(1))}}/>}
-  {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
+  {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{plainMessage(lang,error)}</p>}
  </div>;
 }

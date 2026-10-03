@@ -1,3 +1,4 @@
+import {toolIntro} from "@/lib/tools/product-copy";
 import type { LingxiLang } from "@/lib/lingxi-i18n";
 import type { AdvancedToolCard, AdvancedToolCategory } from "@/lib/tools/advanced-catalog";
 
@@ -49,6 +50,6 @@ const CATEGORY_COPY:Record<AdvancedToolCategory,Record<LingxiLang,string>>={
   developer:{"zh": "开发者工具", "en": "Developer Tools", "ja": "開発者ツール", "ko": "개발자 도구", "fr": "Outils développeur", "de": "Entwicklerwerkzeuge", "es": "Herramientas para desarrolladores", "pt": "Ferramentas de desenvolvedor", "ar": "أدوات المطور"},
 };
 
-export function advancedToolCopy(card:AdvancedToolCard,lang:LingxiLang){const row=CARD_COPY[card.href];return{...card,title:row?.title[lang]??card.title,description:row?.description[lang]??card.description};}
+export function advancedToolCopy(card:AdvancedToolCard,lang:LingxiLang){const row=CARD_COPY[card.href];return{...card,title:row?.title[lang]??card.title,description:toolIntro(lang,card.href.split('/').pop()==='heic-local'?'heic-to-jpg':card.href.split('/').pop()||'')??row?.description[lang]??card.description};}
 export function advancedCategoryLabel(category:AdvancedToolCategory,lang:LingxiLang){return CATEGORY_COPY[category]?.[lang]??category;}
 export const ADVANCED_NATIVE_COVERAGE=Object.keys(CARD_COPY);

@@ -217,6 +217,12 @@ export function buildJsapiInvokeParams(prepayId: string): {
 // Wechatpay-Signature 这个签名是否吻合。验证不通过，说明这条通知
 // 不是微信官方发的（或者被篡改过），必须拒绝处理，不能只看到
 // "收到了一条通知"就当成真的。
+export function isWechatNotifyTimestampFresh(timestamp:string,toleranceSeconds=300){
+  const value=Number(timestamp);
+  if(!Number.isFinite(value)||value<=0)return false;
+  return Math.abs(Math.floor(Date.now()/1000)-value)<=Math.max(1,toleranceSeconds);
+}
+
 export function verifyWechatNotifySignature(params: {
   timestamp: string;
   nonce: string;

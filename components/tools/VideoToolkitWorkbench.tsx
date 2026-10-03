@@ -1,4 +1,6 @@
 "use client";
+import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+
 import {useRef,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
@@ -40,16 +42,16 @@ export default function VideoToolkitWorkbench(){
     try{await f.deleteFile(input);await f.deleteFile(output)}catch{}
     f.terminate();ff.current=null;
    }
-   setOutputs(out);setStage(t("全部处理完成","All files processed"));
+   setOutputs(out);setStage(plainText(lang,"ready"));
   }catch(e){
    try{ff.current?.terminate()}catch{}
-   ff.current=null;setStage("");setError(e instanceof Error?e.message:String(e));
+   ff.current=null;setStage("");setError(plainText(lang,"fileError"));
   }finally{setBusy(false)}
  }
 
- function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消当前处理","Current processing cancelled"))}
+ function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
  async function addRemote(file:File){setFiles(v=>[...v,file].slice(0,10))}
- const modes=[["compress",t("批量压缩视频","Batch compress")],["audio",t("批量提取 MP3","Batch extract MP3")],["trim",t("批量截取同一时间段","Batch trim same segment")]] as const;
+ const modes=[["compress",t("压缩视频","Compress video")],["audio",t("提取 MP3","Extract MP3")],["trim",t("截取片段","Trim clip")]] as const;
 
  return <div className="space-y-4">
   <FileDropzone accept="video/*,audio/*" multiple maxFiles={10} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setError("")}} disabled={busy} kind="media"/>
@@ -60,11 +62,11 @@ export default function VideoToolkitWorkbench(){
    <label className="text-sm text-[var(--lx-muted)]">{t("截取时长（秒）","Duration (seconds)")}<input type="number" min={1} value={duration} onChange={e=>setDuration(Math.max(1,Number(e.target.value)||1))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
   </div>}
   <div className="flex gap-3">
-   <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("处理中…","Working…"):t("开始批量处理","Start batch")}</button>
+   <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?plainText(lang,"working"):t("开始处理","Start processing")}</button>
    {busy&&<button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{t("取消","Cancel")}</button>}
   </div>
   {stage&&<p className="text-sm text-[var(--lx-faint)]">{stage}</p>}
-  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{t("这次没有处理完成。","This run did not finish.")} {error}</p>}
-  {outputs.length>0&&<ResultPanel files={outputs} messageZh="视频处理已完成，可以保存结果。" messageEn="Video processing is complete. Save the result below."/>}
+  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{plainMessage(lang,error)}</p>}
+  {outputs.length>0&&<ResultPanel files={outputs} messageZh={plainText(lang,"ready")} messageEn={plainText(lang,"ready")}/>}
  </div>;
 }

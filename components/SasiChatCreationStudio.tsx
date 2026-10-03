@@ -10,6 +10,8 @@ import {uploadSasiAsset,type SasiUploadTicket} from "@/lib/sasi/upload-client";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {composerText} from "@/lib/sasi/composer-i18n";
 import {transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
+import{SASI_UNIFIED_ACCEPT}from"@/lib/sasi/composer-core";
+import{downloadSasiDocx}from"@/lib/sasi/export-docx";
 
 type Mode="drama"|"website";
 type UploadState="queued"|"uploading"|"ready"|"needs-review"|"failed";
@@ -21,11 +23,7 @@ type Quote=ByokQuote|WebsiteQuote|null;
 const VIDEO_RATIOS=["9:16","16:9","1:1","4:3","3:4","3:2","2:3","21:9"] as const;
 const VIDEO_RESOLUTIONS=["720p","1080p","4k"] as const;
 const VIDEO_DURATIONS=[5,8,10,12] as const;
-const ACCEPT=[
- ".txt",".md",".json",".csv",".yaml",".yml",".pdf",".docx",".pptx",".xlsx",".epub",".odt",
- ".jpg",".jpeg",".png",".webp",".gif",".mp3",".wav",".m4a",".mp4",".mov",".webm",
- ".js",".jsx",".ts",".tsx",".css",".html",".sql",".py",".zip"
-].join(",");
+const ACCEPT=SASI_UNIFIED_ACCEPT;
 
 function kindFor(name:string){
  const ext=name.toLowerCase().split(".").pop()??"";
@@ -55,16 +53,6 @@ function cleanHtml(raw:string){
  const safe=DOMPurify.sanitize(raw,{WHOLE_DOCUMENT:true,FORBID_TAGS:["script","object","embed","base","iframe","form","link","meta"],FORBID_ATTR:["onerror","onload","onclick","srcset"]});
  return safe.replace(/<head>/i,`<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: blob:; form-action 'none'; base-uri 'none'">`);
 }
-function downloadBlob(name:string,type:string,body:BlobPart){
- const url=URL.createObjectURL(new Blob([body],{type}));
- const a=document.createElement("a");a.href=url;a.download=name;a.click();
- setTimeout(()=>URL.revokeObjectURL(url),1200);
-}
-function discussionDoc(prompt:string,answer:string){
- const esc=(v:string)=>v.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
- return `<!doctype html><meta charset="utf-8"><title>SASI</title><body style="font-family:Arial,sans-serif;line-height:1.7;max-width:820px;margin:40px auto"><h1>SASI</h1><h2>Prompt</h2><p>${esc(prompt)}</p><h2>Result</h2><div style="white-space:pre-wrap">${esc(answer)}</div></body>`;
-}
-
 function localWebsite(prompt:string,lang:LingxiLang,heroImage=""){
  const first=prompt.split(/\r?\n/).map(x=>x.trim()).find(Boolean)??(lang==="zh"?"我的网站":"My website");
  const escape=(text:string)=>text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -352,8 +340,8 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
   const a=document.createElement("a");a.href=url;a.download="sasi-conversation.zip";a.click();
   setTimeout(()=>URL.revokeObjectURL(url),1200);
  }
- function downloadDiscussionDoc(){
-  downloadBlob("sasi-conversation.doc","application/msword;charset=utf-8",discussionDoc(prompt,assistantText||""));
+ async function downloadDiscussionDoc(){
+  await downloadSasiDocx([{question:prompt,answer:assistantText||""}],"sasi-conversation.docx");
  }
 
  async function downloadWebsite(){
@@ -370,7 +358,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
   return <main data-sasi-composer-version="v5200" className={`${styles.workspace} min-h-[calc(100vh-152px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
    <div className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4">
     <section className="flex-1 pt-8 sm:pt-12">
-     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<div className="ml-auto mb-8 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-blue-600">{prompt}</div>}
+     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<div className="ml-auto mb-8 max-w-[78%] rounded-3xl border border-blue-100 bg-blue-50/70 px-5 py-3 text-sm font-medium leading-7 text-blue-600 shadow-sm">{prompt}</div>}
 
      {assistantText&&<article className="mb-8 max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">
        {assistantText}
@@ -398,7 +386,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
 
     <section className="sticky bottom-3 z-30 mt-auto w-full">
      <div onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={()=>setDragging(false)} onDrop={onDrop}
-       className={`rounded-[28px] border bg-[var(--lx-panel)] p-3 shadow-[0_12px_44px_rgba(0,0,0,.10)] transition ${dragging?"border-[var(--lx-ink)] ring-2 ring-[var(--lx-line)]":"border-[var(--lx-line)]"}`}>
+       className={`rounded-[30px] border bg-[var(--lx-panel)] p-4 shadow-[0_20px_70px_rgba(99,102,241,.12)] transition sm:p-5 ${dragging?"border-[var(--lx-ink)] ring-2 ring-[var(--lx-line)]":"border-[var(--lx-line)]"}`}>
       {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">{files.map(item=><div key={item.id} className="min-w-[170px] max-w-[240px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-2 text-xs">
        <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1"><b className="block truncate text-[var(--lx-ink)]">{item.file.name}</b><span className="text-[var(--lx-muted)]">{humanBytes(item.file.size)} · {item.state==="uploading"?`${item.progress}%`:item.message||ct("pendingAdd")}</span></div>

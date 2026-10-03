@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import JSZip from "jszip";
 import SasiByokTextWorkbench from "./SasiByokTextWorkbench";
@@ -13,7 +13,6 @@ import {
 import { openPdf } from "@/lib/tools/pdf-render-client";
 import { useLingxiLang, type LingxiLang } from "@/lib/lingxi-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
-import {transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 import {
   DOCUMENT_ACCEPT,
   DOCUMENT_BATCH_MAX_FILES,
@@ -24,12 +23,8 @@ import {
 
 import { DOCUMENT_BATCH_MAX_BYTES } from "@/lib/files/document-intake";
 import { KNOWLEDGE_SOURCE_MAX } from "@/lib/ai-knowledge/local-index";
-const SASI_UNIFIED_ACCEPT=[
- ".txt",".md",".json",".csv",".yaml",".yml",".pdf",".docx",".pptx",".xlsx",".epub",".odt",".rtf",
- ".jpg",".jpeg",".png",".webp",".gif",".mp3",".wav",".m4a",".mp4",".mov",".webm",
- ".js",".jsx",".ts",".tsx",".css",".html",".sql",".py",".zip"
-].join(",");
-
+import{SASI_UNIFIED_ACCEPT}from"@/lib/sasi/composer-core";
+import{downloadSasiDocx}from"@/lib/sasi/export-docx";
 async function zipText(file:File){
  const zip=await JSZip.loadAsync(file);
  const allowed=/\.(txt|md|json|csv|ya?ml|js|jsx|ts|tsx|css|html|sql|py)$/i;
@@ -60,17 +55,14 @@ const c=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,p
 
 const COPY = {
   browserUnavailable:c("浏览器资料库暂时无法打开，请检查浏览器存储权限。","The browser library cannot be opened right now. Check browser storage permission.","ブラウザ資料庫を開けません。ブラウザの保存権限を確認してください。","브라우저 자료 보관함을 열 수 없습니다. 브라우저 저장 권한을 확인하세요.","La bibliothèque du navigateur est indisponible. Vérifiez l’autorisation de stockage.","Die Browser-Bibliothek kann derzeit nicht geöffnet werden. Prüfen Sie die Speicherberechtigung.","La biblioteca del navegador no está disponible. Revisa el permiso de almacenamiento.","A biblioteca do navegador não pode ser aberta agora. Verifique a permissão de armazenamento.","تعذر فتح مكتبة المتصفح الآن. تحقق من إذن التخزين."),
-  needTitle:c("请先提供资料名称与正文。","Add a source title and text first.","資料名と本文を先に入力してください。","자료 이름과 본문을 먼저 입력하세요.","Ajoutez d’abord un titre et le texte de la source.","Geben Sie zuerst Titel und Text der Quelle ein.","Añade primero un título y el texto de la fuente.","Adicione primeiro um título e o texto da fonte.","أدخل اسم المصدر والنص أولًا."),
-  capacity:c("一次最多可加入 60 份资料；较大的书建议按章节加入。","The local library currently supports up to 60 sources, about 1.5 million characters each. Split large books by chapter.","ローカル資料庫は最大60件、1件あたり約150万文字です。大きな本は章ごとに分けてください。","로컬 자료함은 최대 60개, 각 약 150만 자까지 지원합니다. 큰 책은 장별로 나눠 주세요.","La bibliothèque locale accepte jusqu’à 60 sources, environ 1,5 million de caractères chacune. Divisez les gros livres par chapitre.","Die lokale Bibliothek unterstützt bis zu 60 Quellen mit jeweils etwa 1,5 Mio. Zeichen. Große Bücher bitte nach Kapiteln aufteilen.","La biblioteca local admite hasta 60 fuentes de unos 1,5 millones de caracteres cada una. Divide los libros grandes por capítulos.","A biblioteca local aceita até 60 fontes, com cerca de 1,5 milhão de caracteres cada. Divida livros grandes por capítulos.","تدعم المكتبة المحلية حتى 60 مصدرًا، بنحو 1.5 مليون حرف لكل مصدر. قسّم الكتب الكبيرة حسب الفصول."),
-  saved:c("资料已加入。现在可以直接提问。","Source added. You can ask questions now.","このブラウザに保存しました。すぐに質問できます。","이 브라우저에 저장했습니다. 이제 바로 질문할 수 있습니다.","Enregistré dans ce navigateur. Vous pouvez poser vos questions.","In diesem Browser gespeichert. Sie können jetzt Fragen stellen.","Guardado en este navegador. Ya puedes hacer preguntas.","Salvo neste navegador. Agora você já pode perguntar.","تم الحفظ في هذا المتصفح. يمكنك طرح الأسئلة الآن."),
-  saveFailed:c("保存失败，可能是浏览器存储空间不足。","Could not save. Browser storage may be full.","保存できませんでした。ブラウザの保存容量が不足している可能性があります。","저장에 실패했습니다. 브라우저 저장 공간이 부족할 수 있습니다.","Échec de l’enregistrement. Le stockage du navigateur est peut-être plein.","Speichern fehlgeschlagen. Der Browserspeicher ist möglicherweise voll.","No se pudo guardar. Puede que el almacenamiento del navegador esté lleno.","Falha ao salvar. O armazenamento do navegador pode estar cheio.","تعذر الحفظ. قد تكون مساحة تخزين المتصفح ممتلئة."),
+capacity:c("一次最多可加入 60 份资料；较大的书建议按章节加入。","The local library currently supports up to 60 sources, about 1.5 million characters each. Split large books by chapter.","ローカル資料庫は最大60件、1件あたり約150万文字です。大きな本は章ごとに分けてください。","로컬 자료함은 최대 60개, 각 약 150만 자까지 지원합니다. 큰 책은 장별로 나눠 주세요.","La bibliothèque locale accepte jusqu’à 60 sources, environ 1,5 million de caractères chacune. Divisez les gros livres par chapitre.","Die lokale Bibliothek unterstützt bis zu 60 Quellen mit jeweils etwa 1,5 Mio. Zeichen. Große Bücher bitte nach Kapiteln aufteilen.","La biblioteca local admite hasta 60 fuentes de unos 1,5 millones de caracteres cada una. Divide los libros grandes por capítulos.","A biblioteca local aceita até 60 fontes, com cerca de 1,5 milhão de caracteres cada. Divida livros grandes por capítulos.","تدعم المكتبة المحلية حتى 60 مصدرًا، بنحو 1.5 مليون حرف لكل مصدر. قسّم الكتب الكبيرة حسب الفصول."),
+saveFailed:c("保存失败，可能是浏览器存储空间不足。","Could not save. Browser storage may be full.","保存できませんでした。ブラウザの保存容量が不足している可能性があります。","저장에 실패했습니다. 브라우저 저장 공간이 부족할 수 있습니다.","Échec de l’enregistrement. Le stockage du navigateur est peut-être plein.","Speichern fehlgeschlagen. Der Browserspeicher ist möglicherweise voll.","No se pudo guardar. Puede que el almacenamiento del navegador esté lleno.","Falha ao salvar. O armazenamento do navegador pode estar cheio.","تعذر الحفظ. قد تكون مساحة تخزين المتصفح ممتلئة."),
   file30:c("单个文件暂时限制 30MB。","Files are currently limited to 30 MB each.","1ファイルは現在30MBまでです。","파일은 현재 개당 30MB로 제한됩니다.","Chaque fichier est actuellement limité à 30 Mo.","Dateien sind derzeit auf 30 MB begrenzt.","Cada archivo está limitado actualmente a 30 MB.","Cada arquivo está limitado a 30 MB.","الحد الحالي لكل ملف هو 30 ميجابايت."),
   scannedPdf:c("这个 PDF 几乎没有可提取文字，可能是扫描版。请先使用【PDF OCR】或上传页面图片。","This PDF has almost no extractable text and may be scanned. Use PDF OCR first or upload page images.","このPDFには抽出できる文字がほとんどありません。スキャン版の可能性があります。先に【PDF OCR】を使うか、ページ画像をアップロードしてください。","이 PDF에는 추출 가능한 텍스트가 거의 없습니다. 스캔본일 수 있으니 먼저 PDF OCR을 사용하거나 페이지 이미지를 업로드하세요.","Ce PDF contient très peu de texte extractible et peut être scanné. Utilisez d’abord PDF OCR ou importez des images de pages.","Diese PDF enthält kaum extrahierbaren Text und ist möglicherweise gescannt. Nutzen Sie zuerst PDF OCR oder laden Sie Seitenbilder hoch.","Este PDF casi no contiene texto extraíble y puede ser escaneado. Usa primero PDF OCR o sube imágenes de las páginas.","Este PDF quase não contém texto extraível e pode ser digitalizado. Use primeiro PDF OCR ou envie imagens das páginas.","لا يحتوي ملف PDF هذا تقريبًا على نص قابل للاستخراج وقد يكون ممسوحًا ضوئيًا. استخدم PDF OCR أولًا أو ارفع صور الصفحات."),
   imageNoText:c("没有从图片中识别出文字。","No text was recognized in the image.","画像から文字を認識できませんでした。","이미지에서 텍스트를 인식하지 못했습니다.","Aucun texte n’a été reconnu dans l’image.","Im Bild wurde kein Text erkannt.","No se reconoció texto en la imagen.","Nenhum texto foi reconhecido na imagem.","لم يتم التعرف على نص في الصورة."),
   supported:c("支持 PDF、EPUB、DOCX、PPTX、XLSX、CSV、TSV、ODS、RTF、TXT、Markdown、JSON / YAML / XML / HTML、常见代码文件和图片。旧版 DOC / XLS / PPT 可拖入识别，但需要先转为 DOCX / XLSX / PPTX 才能可靠提取正文。","Supports PDF, EPUB, DOCX, PPTX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown, JSON/YAML/XML/HTML, common code files and images. Legacy DOC/XLS/PPT should be converted to DOCX/XLSX/PPTX for reliable extraction.","PDF、DOCX、XLSX、CSV、TSV、ODS、RTF、TXT、Markdown、画像に対応します。旧DOC/XLSはDOCX/XLSXへの変換が必要です。","PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown, 이미지를 지원합니다. 구형 DOC/XLS는 DOCX/XLSX로 변환해 주세요.","PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown et images sont pris en charge. Convertissez les anciens DOC/XLS en DOCX/XLSX.","PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown und Bilder werden unterstützt. Alte DOC/XLS bitte in DOCX/XLSX umwandeln.","Se admiten PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown e imágenes. Convierte DOC/XLS antiguos a DOCX/XLSX.","Compatível com PDF, DOCX, XLSX, CSV, TSV, ODS, RTF, TXT, Markdown e imagens. Converta DOC/XLS antigos para DOCX/XLSX.","يدعم PDF وDOCX وXLSX وCSV وTSV وODS وRTF وTXT وMarkdown والصور. حوّل DOC/XLS القديمة إلى DOCX/XLSX."),
   fileReadFailed:c("文件读取失败。","Could not read the file.","ファイルを読み取れませんでした。","파일을 읽지 못했습니다.","Impossible de lire le fichier.","Datei konnte nicht gelesen werden.","No se pudo leer el archivo.","Não foi possível ler o arquivo.","تعذر قراءة الملف."),
-  draftTitle:c("当前粘贴资料","Current pasted source","現在貼り付け中の資料","현재 붙여넣은 자료","Source collée actuelle","Aktuell eingefügter Text","Fuente pegada actual","Fonte colada atual","المصدر الملصق الحالي"),
-  draftReady:c("已把当前粘贴正文纳入本次检索；不保存也可以先提问。","The current pasted text is included in this search, so you can ask before saving it.","貼り付け中の本文も今回の検索対象です。保存前でも質問できます。","현재 붙여넣은 본문도 이번 검색에 포함됩니다. 저장하기 전에도 질문할 수 있습니다.","Le texte collé actuel est inclus dans la recherche ; vous pouvez poser une question avant de l’enregistrer.","Der aktuell eingefügte Text wird durchsucht; Sie können schon vor dem Speichern fragen.","El texto pegado actual se incluye en la búsqueda; puedes preguntar antes de guardarlo.","O texto colado atual entra na pesquisa; você pode perguntar antes de salvá-lo.","النص الملصق الحالي مشمول في البحث، ويمكنك السؤال قبل حفظه."),  copyAll:c("复制全部","Copy all","すべてコピー","전체 복사","Tout copier","Alles kopieren","Copiar todo","Copiar tudo","نسخ الكل"),
+copyAll:c("复制全部","Copy all","すべてコピー","전체 복사","Tout copier","Alles kopieren","Copiar todo","Copiar tudo","نسخ الكل"),
   copied:c("已复制","Copied","コピー済み","복사됨","Copié","Kopiert","Copiado","Copiado","تم النسخ"),
   balance:c("余额","Balance","AI 残高","AI 잔액","Solde","Guthaben","Saldo","Saldo","الرصيد"),
   minCharge:c("最低扣费","Minimum charge","最低料金","최소 차감","Minimum facturé","Mindestbetrag","Cobro mínimo","Cobrança mínima","الحد الأدنى للخصم"),
@@ -86,11 +78,7 @@ const COPY = {
   reading:c("正在读取…","Reading…","読み込み中…","읽는 중…","Lecture…","Wird gelesen…","Leyendo…","Lendo…","جارٍ القراءة…"),
   upload:c("批量拖入 PDF / EPUB / Word / PPTX / Excel / CSV / TXT / 代码 / 图片","Drop PDF / EPUB / Word / PPTX / Excel / CSV / TXT / code / images in batches","PDF / Word / Excel / CSV / TXT / 画像をまとめてドロップ","PDF / Word / Excel / CSV / TXT / 이미지를 일괄 드롭","Déposez plusieurs PDF / Word / Excel / CSV / TXT / images","PDF / Word / Excel / CSV / TXT / Bilder stapelweise ablegen","Suelta varios PDF / Word / Excel / CSV / TXT / imágenes","Solte vários PDF / Word / Excel / CSV / TXT / imagens","أسقط عدة ملفات PDF / Word / Excel / CSV / TXT / صور"),
   pdfNote:c("支持 PDF、EPUB、Word、PPTX、Excel、TXT、代码与图片；页码与可识别文字会一起进入资料库。","Supports PDF, EPUB, Word, PPTX, Excel, TXT, code and images; page references and readable text stay attached to the source.","PDF、EPUB、Word、PPTX、Excel、TXT、コード、画像に対応し、ページ位置と読み取れる文字を資料と一緒に保持します。","PDF, EPUB, Word, PPTX, Excel, TXT, 코드와 이미지를 지원하며 페이지 위치와 읽을 수 있는 텍스트를 자료와 함께 보존합니다.","PDF, EPUB, Word, PPTX, Excel, TXT, code et images sont pris en charge ; les pages et le texte lisible restent liés à la source.","PDF, EPUB, Word, PPTX, Excel, TXT, Code und Bilder werden unterstützt; Seitenangaben und lesbarer Text bleiben mit der Quelle verknüpft.","Admite PDF, EPUB, Word, PPTX, Excel, TXT, código e imágenes; las páginas y el texto legible permanecen ligados a la fuente.","Compatível com PDF, EPUB, Word, PPTX, Excel, TXT, código e imagens; páginas e texto legível permanecem ligados à fonte.","يدعم PDF وEPUB وWord وPPTX وExcel وTXT والبرمجيات والصور، مع إبقاء مراجع الصفحات والنص المقروء مرتبطين بالمصدر."),
-  paste:c("或粘贴正文","or paste text","または本文を貼り付け","또는 본문 붙여넣기","ou collez le texte","oder Text einfügen","o pega el texto","ou cole o texto","أو الصق النص"),
-  sourceName:c("资料名称","Source title","資料名","자료 이름","Titre de la source","Quellentitel","Título de la fuente","Título da fonte","عنوان المصدر"),
-  pastePlaceholder:c("粘贴书本、论文、笔记或资料正文…","Paste book, paper, notes or source text…","本・論文・ノート・資料本文を貼り付け…","책, 논문, 노트 또는 자료 본문 붙여넣기…","Collez le texte d’un livre, article, note ou document…","Buch-, Paper-, Notiz- oder Quelltext einfügen…","Pega texto de libro, artículo, notas o fuente…","Cole texto de livro, artigo, notas ou fonte…","الصق نص كتاب أو بحث أو ملاحظات أو مصدر…"),
-  addLibrary:c("加入我的资料库","Add to my library","自分の資料庫に追加","내 자료함에 추가","Ajouter à ma bibliothèque","Zu meiner Bibliothek hinzufügen","Añadir a mi biblioteca","Adicionar à minha biblioteca","إضافة إلى مكتبتي"),
-  askSource:c("询问资料","Ask sources","資料に質問","자료 질문","Interroger les sources","Quellen befragen","Preguntar a las fuentes","Perguntar às fontes","اسأل المصادر"),
+askSource:c("询问资料","Ask sources","資料に質問","자료 질문","Interroger les sources","Quellen befragen","Preguntar a las fuentes","Perguntar às fontes","اسأل المصادر"),
   askBatch:c("问问 SASI","Ask SASI","SASI に質問","SASI에게 질문","Demander à SASI","SASI fragen","Preguntar a SASI","Perguntar ao SASI","اسأل SASI"),
   smart:c("模式","Intelligence mode","知能モード","지능 모드","Mode d’intelligence","Intelligenzmodus","Modo de inteligencia","Modo de inteligência","وضع الذكاء"),
   billed:c("资料已准备好，可以继续提问","Your sources are ready for the next question","現在の資料Q&Aでは残高を消費しません","현재 자료 Q&A는 잔액을 차감하지 않습니다","Les Q&R sur les sources ne déduisent actuellement pas le solde","Quellen-Q&A zieht derzeit kein Guthaben ab","Las preguntas sobre fuentes no descuentan saldo actualmente","Perguntas sobre fontes não descontam saldo atualmente","لا تخصم أسئلة المصادر من الرصيد حاليًا"),
@@ -149,21 +137,9 @@ async function pdfToSource(file: File, lang:LingxiLang): Promise<Pick<KnowledgeS
   return{text:pieces.join("\n\n"),locators};
 }
 
-async function imageToText(file:File):Promise<string>{
-  const {createWorker}=await import("tesseract.js");
-  const worker=await createWorker("chi_sim+eng");
-  try{
-    const result=await worker.recognize(file);
-    return result.data.text.trim();
-  }finally{await worker.terminate()}
-}
-
 export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;modeBar?:ReactNode}){
   const {lang}=useLingxiLang();
   const [sources,setSources]=useState<KnowledgeSource[]>([]);
-  const [title,setTitle]=useState("");
-  const [text,setText]=useState("");
-  const [query,setQuery]=useState("");
   const [question,setQuestion]=useState("");const [useConnectedService,setUseConnectedService]=useState(true);
   const [answer,setAnswer]=useState("");
   const [learningEventId,setLearningEventId]=useState("");
@@ -178,7 +154,8 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   const [ready,setReady]=useState(false);
   const [copied,setCopied]=useState(false);
   const [addOpen,setAddOpen]=useState(false);
-  const [pasteOpen,setPasteOpen]=useState(false);
+  const [dragging,setDragging]=useState(false);
+  const [needsConnection,setNeedsConnection]=useState(false);
   const [thread,setThread]=useState<Array<{question:string;answer:string}>>([]);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
 
@@ -186,48 +163,6 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
     readSources().then(rows=>{setSources(rows);setReady(true)})
       .catch(()=>setNotice(tr(lang,"browserUnavailable")));
   },[lang]);
-
-  const activeQuery=(query||question).trim();
-  const draftSource=useMemo<KnowledgeSource|null>(()=>{
-    const body=text.trim();
-    if(!body)return null;
-    return {
-      id:"__draft__",
-      title:title.trim()||tr(lang,"draftTitle"),
-      text:body.slice(0,1_500_000),
-      createdAt:new Date(0).toISOString(),
-      kind:"text",
-    };
-  },[text,title,lang]);
-  const searchableSources=useMemo(
-    ()=>draftSource?[...sources,draftSource]:sources,
-    [sources,draftSource]
-  );
-  const results=useMemo(
-    ()=>searchKnowledge(searchableSources,activeQuery),
-    [searchableSources,activeQuery]
-  );
-  const hasQueryableSources=searchableSources.length>0;
-
-  async function saveCurrent(){
-    if(!title.trim()||!text.trim()){setNotice(tr(lang,"needTitle"));return}
-    if(text.length>1_500_000||sources.length>=60){setNotice(tr(lang,"capacity"));return}
-    setBusy(true);
-    try{
-      const source:KnowledgeSource={id:crypto.randomUUID(),title:title.trim().slice(0,200),text:text.trim(),createdAt:new Date().toISOString(),kind:"text"};
-      if (sources.length >= KNOWLEDGE_SOURCE_MAX) {
-        setNotice(
-          lang === "zh"
-            ? `本地资料库最多 ${KNOWLEDGE_SOURCE_MAX} 份，请先删除不再需要的资料。`
-            : `The local library supports up to ${KNOWLEDGE_SOURCE_MAX} sources. Remove an old source first.`
-        );
-        return;
-      }
-      await saveSource(source);
-      setSources(previous=>[...previous,source]);setTitle("");setText("");setNotice(tr(lang,"saved"));
-    }catch{setNotice(tr(lang,"saveFailed"))}
-    finally{setBusy(false)}
-  }
 
   async function importOneFile(file:File){
     if(file.size>DOCUMENT_FILE_MAX_BYTES)throw new Error(tr(lang,"file30"));
@@ -248,13 +183,10 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
       }
     }else if(file.type.startsWith("image/")){
       kind="image";
-      parsedText=await imageToText(file);
-      if(!parsedText.trim())throw new Error(tr(lang,"imageNoText"));
+      parsedText="";
     }else if(/\.(mp3|wav|m4a|mp4|mov|webm)$/i.test(file.name)||file.type.startsWith("audio/")||file.type.startsWith("video/")){
-      const transcript=await transcribeLocal(file);
-      parsedText=transcript.text.trim();
+      parsedText="";
       kind="text";
-      if(!parsedText)throw new Error(lang==="zh"?"没有识别到可用的语音内容。":"No usable speech was detected.");
     }else if(/\.zip$/i.test(file.name)||file.type==="application/zip"){
       parsedText=await zipText(file);
       kind="structured";
@@ -284,7 +216,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
     const files=Array.from(list).slice(0,DOCUMENT_BATCH_MAX_FILES);
     if(!files.length||busy)return;
     setBusy(true);setNotice("");
-    const ok:string[]=[];const failed:string[]=[];
+    const ok:string[]=[];const failed:string[]=[];let mediaWithoutText=0;
     try{
       for(const file of files){
         try{
@@ -299,6 +231,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
           __lingxiBatchBytes += Number(file.size || 0);
           const source = await importOneFile(file);
           ok.push(source.title);
+          if(!source.text.trim())mediaWithoutText++;
         }catch(error){
           failed.push(error instanceof Error?error.message:`${file.name}: ${tr(lang,"fileReadFailed")}`);
         }
@@ -315,28 +248,68 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
     }finally{
       setBusy(false);
     }
+    if(mediaWithoutText>0){
+      setNeedsConnection(true);
+      setNotice(lang==="zh"
+        ?"媒体已加入。需要理解图片、音频或视频内容时，请连接支持相应能力的智能服务。"
+        :"Media added. Connect an intelligence service with the required image/audio/video capability to understand it.");
+    }
   }
 
   async function ask(){
-    const q=question.trim();if(!q)return;
-    if(!results.length){setNotice(tr(lang,"noEvidence"));return}
+    const raw=question.trim();if(!raw)return;
+    setNeedsConnection(false);
+
+    const textSources=sources.filter(source=>source.text.trim().length>0);
+    const largeDirectPaste=raw.length>=800||(raw.length>=300&&(raw.includes("\n")||raw.includes("\r")));
+    let evidence=largeDirectPaste?[]:searchKnowledge(textSources,raw.length>4000?raw.slice(-4000):raw);
+    let apiQuestion=raw.slice(0,4000);
+
+    if(largeDirectPaste){
+      const chunks=Array.from({length:Math.min(9,Math.ceil(raw.length/8000))},(_,index)=>raw.slice(index*8000,(index+1)*8000));
+      evidence=chunks.map((chunk,index)=>({
+        sourceId:"__direct_paste__",
+        title:lang==="zh"?"当前粘贴内容":"Current pasted content",
+        paragraph:index+1,
+        locator:lang==="zh"?`粘贴内容 ${index+1}`:`Pasted content ${index+1}`,
+        text:chunk,
+        score:100-index,
+      }));
+      apiQuestion=lang==="zh"
+        ?"请根据我刚刚直接粘贴的内容进行理解、提炼，并优先完成其中明确提出的要求。"
+        :"Use the content I just pasted as the source. Understand it, extract the key information, and prioritize any explicit request contained in it.";
+    }
+
+    if(!evidence.length){
+      setNeedsConnection(true);
+      const hasMedia=sources.some(source=>!source.text.trim());
+      setNotice(lang==="zh"
+        ?(hasMedia
+          ?"媒体已加入，但当前没有可检索文字。请连接支持相应媒体能力的智能服务，或继续加入文字资料。"
+          :"当前没有找到相关原文。可直接粘贴较长资料，或连接我的智能服务。")
+        :(hasMedia
+          ?"Media is attached but has no searchable text. Connect a media-capable intelligence service or add text-based material."
+          :"No relevant source text was found. Paste source text directly or connect your intelligence service."));
+      return;
+    }
+
     setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
       const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
-        question:q,mode,intelligence,useConnectedService,evidence:results.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
+        question:apiQuestion,mode,intelligence,useConnectedService,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
       })});
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
-      setThread(rows=>[...rows,{question:q,answer:String(data.answer||"")}]);
+      setThread(rows=>[...rows,{question:raw,answer:String(data.answer||"")}]);
       setLearningEventId(String(data.learningEventId||""));
       setLastIntelligence((data.intelligence||intelligence) as Intelligence);
       setNotice(tr(lang,"done"));
+      setQuestion("");
     }catch(e:unknown){
       const message=e instanceof Error?e.message:tr(lang,"aiFailed");
       setNotice(message);
-    }
-    finally{setAskBusy(false)}
+    }finally{setAskBusy(false)}
   }
 
   async function sendFeedback(signal:FeedbackSignal){
@@ -384,13 +357,9 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
     const rows=thread.length?thread:(answer?[{question,answer}]:[]);
     return rows.map((row,i)=>`## ${i+1}. ${row.question}\n\n${row.answer}\n`).join("\n");
   }
-  function downloadThreadDoc(){
-    const esc=(v:string)=>v.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  async function downloadThreadDoc(){
     const rows=thread.length?thread:(answer?[{question,answer}]:[]);
-    const body=rows.map(row=>`<h2>${esc(row.question)}</h2><div style="white-space:pre-wrap">${esc(row.answer)}</div>`).join("");
-    const html=`<!doctype html><meta charset="utf-8"><title>SASI</title><body style="font-family:Arial,sans-serif;line-height:1.7;max-width:820px;margin:40px auto"><h1>SASI</h1>${body}</body>`;
-    const url=URL.createObjectURL(new Blob([html],{type:"application/msword;charset=utf-8"}));
-    const a=document.createElement("a");a.href=url;a.download="sasi-discussion.doc";a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);
+    await downloadSasiDocx(rows,"sasi-discussion.docx");
   }
   async function downloadThreadZip(){
     const zip=new JSZip();
@@ -411,7 +380,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4 lx-knowledge-workspace">
     <div className="flex-1 pt-8 sm:pt-12">
       {(thread.length?thread:(answer?[{question,answer}]:[])).map((row,index)=><div key={index} className="mb-10">
-        <div className="ml-auto mb-6 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-blue-600">{row.question}</div>
+        <div className="ml-auto mb-6 max-w-[78%] rounded-3xl border border-blue-100 bg-blue-50/70 px-5 py-3 text-sm font-medium leading-7 text-blue-600 shadow-sm">{row.question}</div>
         <article className="max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">{row.answer}</article>
       </div>)}
 
@@ -432,20 +401,25 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
     <div className="sticky bottom-3 z-30 mt-auto">
       {sources.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
         {sources.slice(-10).map(source=><span key={source.id} className="inline-flex max-w-[220px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
-          <span className="truncate">{source.title}</span>
+          <span className="truncate">{source.title}</span>{!source.text.trim()&&<span className="shrink-0 text-[10px] text-blue-600">{lang==="zh"?"待理解":"Needs intelligence"}</span>}
           <button type="button" onClick={()=>void remove(source)} className="opacity-50 hover:opacity-100">×</button>
         </span>)}
       </div>}
 
-      {pasteOpen&&<div className="mb-2 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 shadow-sm">
-        <input className="w-full bg-transparent px-2 py-2 text-sm outline-none" value={title} maxLength={200} onChange={e=>setTitle(e.target.value)} placeholder={tr(lang,"sourceName")}/>
-        <textarea className="mt-1 max-h-40 min-h-24 w-full resize-none rounded-xl bg-[var(--lx-soft)] p-3 text-sm outline-none" value={text} maxLength={1_500_001} onChange={e=>setText(e.target.value)} placeholder={tr(lang,"pastePlaceholder")}/>
-        <div className="mt-2 flex justify-end"><button type="button" disabled={!ready||busy||!text.trim()} onClick={()=>void saveCurrent()} className="rounded-full bg-[var(--lx-ink)] px-4 py-2 text-xs text-[var(--lx-bg)] disabled:opacity-40">{tr(lang,"addLibrary")}</button></div>
-      </div>}
-
-      <div className="relative rounded-[28px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 shadow-[0_12px_44px_rgba(0,0,0,.10)]">
-        <textarea value={question} onChange={e=>{setQuestion(e.target.value);setQuery(e.target.value)}} rows={1}
-          className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 text-blue-600 outline-none placeholder:text-[var(--lx-faint)]"
+      <div
+        onDragEnter={e=>{e.preventDefault();setDragging(true)}}
+        onDragOver={e=>{e.preventDefault();setDragging(true)}}
+        onDragLeave={e=>{if(e.currentTarget===e.target)setDragging(false)}}
+        onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files?.length)void importFiles(e.dataTransfer.files)}}
+        className={`relative rounded-[30px] border bg-[var(--lx-panel)] p-4 shadow-[0_20px_70px_rgba(99,102,241,.12)] transition sm:p-5 ${dragging?"border-blue-300 ring-4 ring-blue-100/70":"border-[var(--lx-line)]"}`}>
+        <textarea value={question}
+          onChange={e=>setQuestion(e.target.value)}
+          onPaste={e=>{
+            const files=Array.from(e.clipboardData.files||[]);
+            if(files.length){e.preventDefault();void importFiles(files)}
+          }}
+          rows={1}
+          className="max-h-72 min-h-20 w-full resize-none bg-transparent px-3 py-3 text-[15px] font-medium leading-7 text-blue-600 outline-none placeholder:font-normal placeholder:text-[var(--lx-faint)]"
           placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}/>
 
         <div className="mt-1 flex items-center gap-2">
@@ -460,7 +434,6 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
                 <b>{lang==="zh"?"添加照片和文件":"Add photos and files"}</b>
                 <span className="mt-1 block text-xs text-[var(--lx-faint)]">PDF · EPUB · Word · PPTX · Excel · CSV · TXT · 图片 · 音频 · 视频 · 代码 · ZIP</span>
               </button>
-              <button type="button" onClick={()=>{setAddOpen(false);setPasteOpen(v=>!v)}} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"粘贴资料":"Paste source text"}</button>
               <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"} <span className="float-right">↗</span></Link>
               <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span className="float-right">↗</span></Link>
             </div>}
@@ -471,13 +444,16 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
             {intelligenceLabels.map(x=><option key={x.value} value={x.value}>{x.label}</option>)}
           </select>
 
-          <button onClick={ask} disabled={askBusy||!question.trim()||!hasQueryableSources}
+          <button onClick={ask} disabled={askBusy||!question.trim()}
             className="ml-auto grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">
             {askBusy?"…":"↑"}
           </button>
         </div>
 
-        {notice&&<p role="status" className="px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">{notice}</p>}
+        {notice&&<div className="flex flex-wrap items-center gap-2 px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">
+          <p role="status">{notice}</p>
+          {needsConnection&&<Link href="/sasi/connections" className="font-medium text-blue-600 hover:underline">{lang==="zh"?"连接我的智能服务 →":"Connect my intelligence service →"}</Link>}
+        </div>}
       </div>
       {modeBar}
     </div>

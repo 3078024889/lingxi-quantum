@@ -12,8 +12,8 @@ function platformOf(raw:string){
   if(host.includes("tiktok.com"))return "TikTok";
   if(host.includes("xiaohongshu.com")||host.includes("xhslink.com"))return "小红书";
   if(host.includes("kuaishou.com")||host.includes("v.kuaishou.com"))return "快手";
-  return "Media";
- }catch{return "Link"}
+  return "";
+ }catch{return ""}
 }
 export default function RemoteMediaImporter({acceptKind,onImported,disabled}:{acceptKind:"video"|"audio"|"image";onImported:(file:File)=>void|Promise<void>;disabled?:boolean}){
  const{lang}=useLingxiLang();const t=(key:Parameters<typeof workbenchCopy>[1])=>workbenchCopy(lang,key);
@@ -26,7 +26,7 @@ export default function RemoteMediaImporter({acceptKind,onImported,disabled}:{ac
   try{
    const res=await fetch("/api/tools/media-import",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({url:parsed.toString(),kind:acceptKind,allowSharePageResolve:true})});
    const type=res.headers.get("content-type")||"",platform=res.headers.get("x-lingxi-source-platform")||platformOf(input);
-   if(!res.ok){const data=type.includes("application/json")?await res.json().catch(()=>({})):{};return{input,ok:false,platform,error:data.error||t("remoteFallback")}}
+   if(!res.ok){const data=type.includes("application/json")?await res.json().catch(()=>({})):{};return{input,ok:false,platform,error:t("remoteFallback")}}
    const blob=await res.blob();
    if(blob.size===0)return{input,ok:false,platform,error:t("remoteFallback")};
    const disposition=res.headers.get("content-disposition")||"",match=disposition.match(/filename="?([^"]+)"?/i),filename=match?.[1]||`remote-${acceptKind}.${acceptKind==="video"?"mp4":acceptKind==="audio"?"mp3":"jpg"}`;
@@ -45,7 +45,7 @@ export default function RemoteMediaImporter({acceptKind,onImported,disabled}:{ac
   <p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">{t("remoteLead")}</p>
   <textarea value={raw} onChange={e=>setRaw(e.target.value)} disabled={disabled||busy} rows={5} placeholder={"https://v.douyin.com/...\nhttps://www.tiktok.com/...\nhttps://xhslink.com/...\nhttps://v.kuaishou.com/..."} className="mt-3 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-sm text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
   <div className="mt-3 flex flex-wrap items-center gap-3"><button type="button" onClick={run} disabled={disabled||busy||!links.length} className="rounded-xl bg-[var(--lx-ink)] px-4 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?`${t("remoteRunning")} ${Math.min(results.length+1,links.length)}/${links.length}…`:`${t("remoteRun")} ${links.length||0}`}</button>{results.length>0&&<span className="text-xs text-[var(--lx-faint)]">✓ {ok}{failed?` · × ${failed}`:""}</span>}</div>
-  {results.length>0&&<div className="mt-4 space-y-2">{results.map((r,i)=><div key={`${r.input}-${i}`} className={`rounded-xl border px-3 py-2 text-xs ${r.ok?"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-ink)]":"border-[var(--lx-danger)] bg-[var(--lx-panel)] text-[var(--lx-danger)]"}`}><div className="font-medium">{r.ok?"✓":"×"} {r.platform||"Link"} · {r.ok?t("remoteLoaded"):t("remoteFailed")}</div><div className="mt-1 break-all opacity-80">{r.input}</div>{r.filename&&<div className="mt-1">{r.filename}</div>}{r.error&&<div className="mt-1">{r.error}</div>}</div>)}</div>}
+  {results.length>0&&<div className="mt-4 space-y-2">{results.map((r,i)=><div key={`${r.input}-${i}`} className={`rounded-xl border px-3 py-2 text-xs ${r.ok?"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-ink)]":"border-[var(--lx-danger)] bg-[var(--lx-panel)] text-[var(--lx-danger)]"}`}><div className="font-medium">{r.ok?"✓":"×"} {r.platform} · {r.ok?t("remoteLoaded"):t("remoteFailed")}</div><div className="mt-1 break-all opacity-80">{r.input}</div>{r.filename&&<div className="mt-1">{r.filename}</div>}{r.error&&<div className="mt-1">{r.error}</div>}</div>)}</div>}
   <p className="mt-3 text-[11px] leading-5 text-[var(--lx-faint)]">{t("remoteRights")}</p>
  </div>;
 }

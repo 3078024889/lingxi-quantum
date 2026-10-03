@@ -1,4 +1,6 @@
 "use client";
+import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+
 import {useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -31,7 +33,7 @@ export default function OcrWorkbench(){
   setBusy(true);setResults([]);setError("");setCopied("");let worker:any=null;
   try{
    const{createWorker}=await import("tesseract.js");
-   worker=await createWorker(ocrLang,undefined,{logger:m=>{if(m.status)setStage(`${m.status}${typeof m.progress==="number"?` · ${Math.round(m.progress*100)}%`:""}`)}});
+   worker=await createWorker(ocrLang,undefined,{logger:m=>{if(m.status)setStage(`${c.working}${typeof m.progress==="number"?` · ${Math.round(m.progress*100)}%`:""}`)}});
    const out:Array<{name:string;text:string}>=[];
    for(let i=0;i<files.length;i++){
      setStage(`${i+1}/${files.length} · ${files[i].name}`);
@@ -39,7 +41,7 @@ export default function OcrWorkbench(){
      out.push({name:files[i].name,text:r.data.text});
    }
    setResults(out);setStage(c.done);
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("")}
+  }catch(e){setError(plainText(lang,"fileError"));setStage("")}
   finally{try{await worker?.terminate()}catch{}setBusy(false)}
  }
 
@@ -68,6 +70,6 @@ export default function OcrWorkbench(){
   </section>)}
 
   {!!exports.length&&<ResultPanel files={exports} messageZh={c.done} messageEn={c.done}/>}
-  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
+  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{plainMessage(lang,error)}</p>}
  </div>;
 }

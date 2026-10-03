@@ -43,7 +43,7 @@ test("paid PDF return restores the real task, downloads once, consumes once, the
 
  // Completed task must be cleared from the active workbench.
  await expect(page.getByTestId("pdf-source-page-count")).toHaveCount(0,{timeout:10000});
- await expect(page.getByRole("button",{name:/Confirm price/i})).toHaveCount(0);
+ await expect(page.getByTestId("paid-export-start")).toHaveCount(0);
  const url=new URL(page.url());
  expect(url.searchParams.has("resumeQuote")).toBeFalsy();
  expect(url.searchParams.has("resumeDraft")).toBeFalsy();
@@ -53,7 +53,7 @@ test("paid PDF return restores the real task, downloads once, consumes once, the
  expect(consumeCalls).toBe(1);
  await expect(page.getByTestId('paid-export-result')).toBeVisible();
  const redownload=page.waitForEvent('download');
- await page.getByTestId('paid-export-result').getByRole('button',{name:/再次下载|Download again/}).click();
+ await page.getByTestId('paid-export-result').getByRole('button',{name:/保存文件|Save file/}).click();
  await redownload;expect(downloads).toBe(2);expect(consumeCalls).toBe(1);
  await page.reload();
  await expect(page.getByTestId('paid-export-result')).toBeVisible();

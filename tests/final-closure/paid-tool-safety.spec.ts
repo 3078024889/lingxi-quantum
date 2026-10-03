@@ -19,13 +19,13 @@ test("PDF saves the latest edit before creating a payment quote",async({page})=>
   await route.fulfill({status:503,json:{error:"TEST_QUOTE_UNAVAILABLE"}});
  });
  await uploadPdf(page);await page.getByTestId("pdf-export-range-input").fill("2-4");
- await page.getByRole("button",{name:/Confirm price/i}).click();await expect.poll(()=>savedRange).toBe("2-4");
+ await page.getByTestId("paid-export-start").click();await expect.poll(()=>savedRange).toBe("2-4");
 });
 test("PDF storage failure prevents payment and preserves the editable file",async({page})=>{
  let quotes=0;await page.route("**/api/tools/quote",async route=>{quotes++;await route.fulfill({status:503,json:{error:"UNEXPECTED_QUOTE"}})});
  await uploadPdf(page);
  await page.evaluate(()=>{IDBObjectStore.prototype.put=function(){throw new DOMException("Storage unavailable","QuotaExceededError")}});
- await page.getByRole("button",{name:/Confirm price/i}).click();
+ await page.getByTestId("paid-export-start").click();
  await expect(page.getByText("Your file and edits could not be saved.",{exact:false}).first()).toBeVisible();
  expect(quotes).toBe(0);await expect(page.getByTestId("pdf-source-page-count")).toContainText(/\b5\b/);
 });
