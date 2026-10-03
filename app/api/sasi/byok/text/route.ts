@@ -11,6 +11,7 @@ import {creationMethod,type CreationTask} from "@/lib/sasi/creation-methods";
 import {runUserText,selectUserTextConnection} from "@/lib/sasi/intelligence/user-text";
 import {textChargeMinor,websiteChargeMinor} from "@/lib/sasi/pricing-v49";
 import {chargeCompletedSasiUsage,requireSasiBalance,userSasiCurrency} from "@/lib/sasi/unified-balance";
+import{compileSasiSkillGuidance,validateSasiSkillIds}from"@/lib/sasi/skills/router";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -42,10 +43,11 @@ export async function POST(request:NextRequest){
   if(typeof body.question!=="string"||!body.question.trim()||body.question.length>12000)return reply({error:"QUESTION_LENGTH"},400);
   if(body.mode!==undefined&&!["chat","director","book","website"].includes(body.mode))return reply({error:"INVALID_MODE"},400);
   const director=body.mode==="director",mode=body.mode??"chat";
+  const skillMode=mode==="website"?"website":mode==="book"?"book":"website";const skillIds=validateSasiSkillIds(body.skillIds,skillMode);const skillGuidance=compileSasiSkillGuidance(skillIds);
   const evidence:GroundedEvidence[]=mode==="book"&&Array.isArray(body.evidence)?body.evidence.slice(0,9).map((e:Record<string,unknown>,i:number)=>({index:i+1,title:String(e?.title??"资料").slice(0,240),locator:String(e?.locator??"").slice(0,240),text:String(e?.text??"").slice(0,3000)})).filter((e:GroundedEvidence)=>e.text.trim()):[];
   if(mode==="book"&&!evidence.length)return reply({error:"BOOK_EVIDENCE_REQUIRED"},422);
   let method;try{method=creationMethod(mode as CreationTask,body.functions)}catch{return reply({error:"INVALID_FUNCTION_SELECTION"},400)}
-  const messages:TextMessage[]=[{role:"system",content:SASI_SYSTEM+`\n${method.instructions}`+(director?`\n${DIRECTOR_CONTRACT}`:mode==="website"?`\n${WEBSITE_CONTRACT}`:"")}];
+  const messages:TextMessage[]=[{role:"system",content:SASI_SYSTEM+`\n${method.instructions}`+(director?`\n${DIRECTOR_CONTRACT}`:mode==="website"?`\n${WEBSITE_CONTRACT}`:"")+`\n${skillGuidance}`}];
   if(body.previousId&&mode==="chat"){
    const previous=await db.from("sasi_byok_text_tasks").select("request,output").eq("id",body.previousId).eq("user_id",user.id).eq("state","succeeded").maybeSingle();
    if(previous.error||!previous.data)return reply({error:"PREVIOUS_ANSWER_NOT_FOUND"},404);
@@ -54,7 +56,7 @@ export async function POST(request:NextRequest){
   messages.push({role:"user",content:mode==="book"?buildGroundedReasoningPrompt({question:body.question.trim(),mode:"book",intelligence:"standard",evidence}):body.question.trim()});
   if(messages.reduce((n,m)=>n+Buffer.byteLength(m.content),0)>60000)return reply({error:"CONTEXT_LIMIT_START_NEW"},422);
   const expiresAt=new Date(Date.now()+10*60_000).toISOString();const billingCurrency=await userSasiCurrency(user.id);const estimatedTokens=Math.max(1,Math.ceil(messages.reduce((n,m)=>n+m.content.length,0)/3)+2048);const estimatedTextMinor=textChargeMinor(estimatedTokens,billingCurrency);const estimatedPlatformMinor=estimatedTextMinor+(mode==="website"?websiteChargeMinor(1,billingCurrency):0);
-  const result=await db.from("sasi_byok_text_tasks").insert({user_id:user.id,request:{messages,director,mode,evidence,method,provider:connection.provider,model:connection.model_id,billingCurrency},profile_version:version,key_fingerprint:connection.fingerprint,estimated_fen:estimatedPlatformMinor,expires_at:expiresAt}).select(fields).single();
+  const result=await db.from("sasi_byok_text_tasks").insert({user_id:user.id,request:{messages,director,mode,evidence,method,skillIds,provider:connection.provider,model:connection.model_id,billingCurrency},profile_version:version,key_fingerprint:connection.fingerprint,estimated_fen:estimatedPlatformMinor,expires_at:expiresAt}).select(fields).single();
   return result.error?reply({error:"QUOTE_SAVE_FAILED"},503):reply({task:result.data,billing:"supplier_direct",connection:{provider:connection.provider,model:connection.model_id}},201);
  }
  if(body.acceptSupplierBilling!==true)return reply({error:"BUDGET_CONFIRMATION_REQUIRED"},422);

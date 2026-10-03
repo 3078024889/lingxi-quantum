@@ -16,15 +16,17 @@ import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {
   DOCUMENT_ACCEPT,
   DOCUMENT_BATCH_MAX_FILES,
+  DOCUMENT_BATCH_MAX_BYTES,
   DOCUMENT_FILE_MAX_BYTES,
   isLegacyOffice,
   parseGenericDocument,
 } from "@/lib/files/document-intake";
 
-import { DOCUMENT_BATCH_MAX_BYTES } from "@/lib/files/document-intake";
 import { KNOWLEDGE_SOURCE_MAX } from "@/lib/ai-knowledge/local-index";
 import{SASI_UNIFIED_ACCEPT}from"@/lib/sasi/composer-core";
 import{downloadSasiDocx}from"@/lib/sasi/export-docx";
+import{SasiComposerSurface,SasiComposerTextarea,SasiUserMessage}from"@/components/SasiComposerCore";
+import{selectSasiSkills}from"@/lib/sasi/skills/router";
 async function zipText(file:File){
  const zip=await JSZip.loadAsync(file);
  const allowed=/\.(txt|md|json|csv|ya?ml|js|jsx|ts|tsx|css|html|sql|py)$/i;
@@ -295,8 +297,9 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
 
     setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
+      const skillPlan=selectSasiSkills({mode,prompt:raw,files:sources.map(source=>source.title),hasEvidence:evidence.length>0});
       const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
-        question:apiQuestion,mode,intelligence,useConnectedService,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
+        question:apiQuestion,mode,intelligence,useConnectedService,skillIds:skillPlan.ids,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
       })});
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
@@ -380,7 +383,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4 lx-knowledge-workspace">
     <div className="flex-1 pt-8 sm:pt-12">
       {(thread.length?thread:(answer?[{question,answer}]:[])).map((row,index)=><div key={index} className="mb-10">
-        <div className="lx-sasi-user-bubble ml-auto mb-6 max-w-[82%] rounded-[24px] border px-5 py-3.5 text-sm font-medium leading-7 shadow-sm">{row.question}</div>
+        <SasiUserMessage className="mb-6">{row.question}</SasiUserMessage>
         <article className="max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">{row.answer}</article>
       </div>)}
 
@@ -406,20 +409,20 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
         </span>)}
       </div>}
 
-      <div
+      <SasiComposerSurface
+        dragging={dragging}
         onDragEnter={e=>{e.preventDefault();setDragging(true)}}
         onDragOver={e=>{e.preventDefault();setDragging(true)}}
         onDragLeave={e=>{if(e.currentTarget===e.target)setDragging(false)}}
         onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files?.length)void importFiles(e.dataTransfer.files)}}
-        className={`lx-sasi-reference-composer relative rounded-[30px] border bg-[var(--lx-panel)] p-4 transition sm:p-5 ${dragging?"is-dragging":"border-[var(--lx-line)]"}`}>
-        <textarea value={question}
+        className="relative">
+        <SasiComposerTextarea value={question}
           onChange={e=>setQuestion(e.target.value)}
           onPaste={e=>{
             const files=Array.from(e.clipboardData.files||[]);
             if(files.length){e.preventDefault();void importFiles(files)}
           }}
           rows={1}
-          className="lx-sasi-reference-textarea max-h-64 min-h-[72px] w-full resize-none bg-transparent px-3 py-2 text-[15px] font-medium leading-7 outline-none placeholder:font-normal"
           placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}/>
 
         <div className="mt-1 flex items-center gap-2">
@@ -454,7 +457,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
           <p role="status">{notice}</p>
           {needsConnection&&<Link href="/sasi/connections" className="font-medium text-blue-600 hover:underline">{lang==="zh"?"连接我的智能服务 →":"Connect my intelligence service →"}</Link>}
         </div>}
-      </div>
+      </SasiComposerSurface>
       {modeBar}
     </div>
   </section>;
