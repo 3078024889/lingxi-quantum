@@ -5,8 +5,10 @@ import {spawnSync} from "node:child_process";
 const root=process.cwd();
 
 const commands=[
+ ["node",["scripts/test-site-facts.cjs"]],
  ["node",["scripts/test-money-lifecycle.cjs"]],
  ["node",["scripts/test-money-operations.cjs"]],
+ ["node",["scripts/test-money-admin-feed.cjs"]],
  ["node",["scripts/test-withdrawal-recovery.cjs"]],
  ["node",["scripts/test-refund-provider-signatures.cjs"]],
  ["node",["scripts/ci/test-repository-hardening.mjs"]],

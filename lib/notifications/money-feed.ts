@@ -1,6 +1,7 @@
 import 'server-only';
 import {createAdminClient} from '@/lib/supabase/admin';
-import {moneyNotice} from './money-copy';
+import {moneyOperatorSettings} from '@/lib/money/operator-settings';
+import {moneyNotice,moneyText} from './money-copy';
 export async function accountMoneyFeed(userId:string,lang:string,platform='web'){
  const admin=createAdminClient();
  const [orders,refunds,withdrawals,reads,announcements]=await Promise.all([
@@ -16,6 +17,23 @@ export async function accountMoneyFeed(userId:string,lang:string,platform='web')
  for(const r of refunds.data||[]){if(migrated.has(r.id))continue;const id=`refund:${r.id}:${r.status}`;items.push({id,eventKey:id,kind:'refund',currency:'CNY',amountMinor:Number(r.amount_fen),status:r.status,...moneyNotice(lang,'refund',r.status,'CNY',Number(r.amount_fen),true),createdAt:r.updated_at||r.created_at,href:`/account/withdrawals#legacy-${r.id}`,read:seen.has(id)});}
  for(const w of withdrawals.data||[]){const id=`withdrawal:${w.id}:${w.status}`;items.push({id,eventKey:id,kind:'withdrawal',currency:w.currency,amountMinor:Number(w.amount_minor),status:w.status,...moneyNotice(lang,'withdrawal',w.status,w.currency,Number(w.amount_minor)),createdAt:w.completed_at||w.updated_at||w.created_at,href:`/account/withdrawals#withdrawal-${w.id}`,read:seen.has(id)});}
  for(const a of announcements.data||[]){if(Date.parse(a.published_at)>Date.now()||(a.expires_at&&Date.parse(a.expires_at)<=Date.now()))continue;const id=`announcement:${a.id}`;items.push({id,eventKey:id,kind:'announcement',title:lang==='zh'?a.title_zh:(a.title_en||a.title_zh),body:lang==='zh'?a.body_zh:(a.body_en||a.body_zh),createdAt:a.published_at,href:'/account/notifications',read:seen.has(id)});}
+ // Operator events are private to the server-side email allowlist.
+ try{
+  const [{data:{user}},settings]=await Promise.all([admin.auth.admin.getUserById(userId),moneyOperatorSettings()]);
+  if(user?.email&&settings.admin_emails.some(email=>email.toLowerCase()===user.email!.toLowerCase())){
+   const {data:events,error}=await admin.from('money_notification_outbox').select('id,event_type,created_at,withdrawal_id').order('created_at',{ascending:false}).limit(30);
+   if(error)throw error;
+   const ids=[...new Set((events||[]).map(e=>e.withdrawal_id).filter(Boolean))];
+   if(ids.length){
+    const {data:requests,error}=await admin.from('balance_withdrawals').select('id,provider_currency,provider_amount_minor,status').in('id',ids);
+    if(error)throw error;
+    for(const event of events||[]){const w=requests?.find(w=>w.id===event.withdrawal_id);if(!w)continue;
+     const id='operator:'+event.id,notice=moneyNotice(lang,'withdrawal',event.event_type,w.provider_currency,Number(w.provider_amount_minor));
+     items.push({id,eventKey:id,kind:'withdrawal',title:moneyText(lang,'moneyAdmin')+' · '+notice.title,body:event.event_type==='PROVIDER_FUNDS_REQUIRED'?moneyText(lang,'providerFunds'):notice.body,createdAt:event.created_at,href:'/account/money-admin',read:seen.has(id)});
+    }
+   }
+  }
+ }catch{ /* Preserve the user's personal feed when operator settings are unavailable. */ }
  items.sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt));
  return {items,partial:Boolean(orders.error||refunds.error||withdrawals.error||announcements.error),readAvailable:!reads.error,seen};
 }

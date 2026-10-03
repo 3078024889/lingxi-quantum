@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),ts=require('typescript');
+function compile(file,imports){const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(p=>p==='server-only'?{}:imports[p]||require(p),m,m.exports);return m.exports}
+(async()=>{
+ let email='ordinary@example.invalid',operatorReads=0;
+ const admin={auth:{admin:{getUserById:async()=>({data:{user:{email,user_metadata:{email:'business@lingxifield.com'}}}})}},from(table){let filtered=false;const q={select(){return q},eq(){filtered=true;return q},in(){return q},order(){return q},limit(){return q},then(resolve){let data=[];if(table==='money_notification_outbox'){operatorReads++;data=[{id:'event',withdrawal_id:'other-user-request',event_type:'requested',created_at:'2026-10-03T10:00:00Z'}]};if(table==='balance_withdrawals'&&!filtered)data=[{id:'other-user-request',provider_currency:'USD',provider_amount_minor:400,status:'requested'}];return Promise.resolve({data,error:null}).then(resolve)}};return q}};
+ const copy=compile('lib/notifications/money-copy.ts',{}),feed=compile('lib/notifications/money-feed.ts',{'@/lib/supabase/admin':{createAdminClient:()=>admin},'@/lib/money/operator-settings':{moneyOperatorSettings:async()=>({admin_emails:['business@lingxifield.com']})},'./money-copy':copy});
+ assert.equal((await feed.accountMoneyFeed('ordinary','zh')).items.length,0);assert.equal(operatorReads,0);
+ email='business@lingxifield.com';const result=await feed.accountMoneyFeed('operator','zh');assert.equal(result.items.length,1);assert.equal(result.items[0].href,'/account/money-admin');assert(result.items[0].title.includes('资金看板'));assert.equal(result.items[0].read,false);
+ console.log('PASS: operator receives other-user money events; ordinary users and spoofed metadata cannot query operator events.');
+})().catch(e=>{console.error(e);process.exitCode=1});

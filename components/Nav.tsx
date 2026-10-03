@@ -8,6 +8,7 @@ import { LANG_NAMES, type LingxiLang, useLingxiLang } from "@/lib/lingxi-i18n";
 import { createClient } from "@/lib/supabase/client";
 import { productCatalogText } from "@/lib/product-catalog-i18n";
 import { brandText } from "@/lib/brand-system-i18n";
+import {moneyText} from "@/lib/notifications/money-copy";
 import NotificationBell from "@/components/NotificationBell";
 import CurrencySelector from "@/components/CurrencySelector";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
@@ -61,6 +62,7 @@ export default function Nav() {
   const [theme, setTheme] = useState<Theme>("light");
   const [query, setQuery] = useState("");
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
+  const [isMoneyAdmin,setIsMoneyAdmin]=useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
 
@@ -84,6 +86,8 @@ export default function Nav() {
         .then(({ data }) => {
           if (!alive) return;
           setSignedIn(Boolean(data.user));
+          setIsMoneyAdmin(false);
+          if(data.user)void fetch("/api/account/money-admin/access",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{if(alive)setIsMoneyAdmin(d?.isAdmin===true)}).catch(()=>{});
           setDisplayName(String(data.user?.user_metadata?.display_name || data.user?.email?.split("@")[0] || ""));
           setAvatarUrl(String(data.user?.user_metadata?.avatar_url || data.user?.user_metadata?.picture || ""));
         })
@@ -117,7 +121,7 @@ export default function Nav() {
     const q = query.trim();
     if (!q) return;
     sessionStorage.setItem("lx-global-search", q);
-    router.push(`/tools?q=${encodeURIComponent(q)}`);
+    router.push(isMoneyAdmin&&/资金看板|退款管理|提现管理|money admin|funds dashboard/i.test(q)?"/account/money-admin":`/tools?q=${encodeURIComponent(q)}`);
   }
 
   async function signOut() {
@@ -159,6 +163,7 @@ export default function Nav() {
             ))}
           </section>
         ))}
+        {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
       </div>
 
       <div style={{padding:"10px 12px 4px"}}>

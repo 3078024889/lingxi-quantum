@@ -100,7 +100,11 @@ export async function POST(req:NextRequest){
     ok?:boolean;error?:string;withdrawalId?:string;
     providerCurrency?:string;providerAmountMinor?:number;
   }|null;
-  if(requested.error||!d?.ok||!d.withdrawalId||!d.providerCurrency||!d.providerAmountMinor){
+  if(requested.error){
+    console.error('[withdrawal create] database rejected request',requested.error.code);
+    return NextResponse.json({error:'WITHDRAWAL_SAVE_FAILED'},{status:503});
+  }
+  if(!d?.ok||!d.withdrawalId||!d.providerCurrency||!d.providerAmountMinor){
     return NextResponse.json({error:d?.error||"WITHDRAWAL_REQUEST_FAILED"},{status:409});
   }
 

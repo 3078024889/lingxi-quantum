@@ -65,7 +65,7 @@ export default function SasiPricingCurrencyClient(){
  const[loading,setLoading]=useState(true);
  const[chosenId,setChosenId]=useState<string|null>(null);
  const[isAdmin,setIsAdmin]=useState(false);
- useEffect(()=>{void fetch("/api/account/money-admin",{cache:"no-store"}).then(r=>setIsAdmin(r.ok)).catch(()=>{})},[]);
+ useEffect(()=>{void fetch("/api/account/money-admin/access",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>setIsAdmin(d?.isAdmin===true)).catch(()=>{})},[]);
 
  useEffect(()=>setSelected(currency),[currency]);
 
