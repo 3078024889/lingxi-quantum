@@ -1,22 +1,33 @@
 import {SITE,SEO_LOCALES,type SeoLocale,type GlobalTool,type SeoTopic,topicTitle,localePath,toolTitle,toolDescription} from "@/lib/seo/global-seo";
 import {SERVICE_FACTS} from '@/lib/seo/service-facts';
+import {localFreeToolFact} from '@/lib/seo/local-free-tools';
 
 export function ToolSeoJsonLd({locale,tool}:{locale:SeoLocale;tool:GlobalTool}){
  const c=SEO_LOCALES[locale];
  const url=`${SITE}${localePath(locale,`/tools/${tool.slug}`)}`;
  const actual=`${SITE}/tools/${tool.slug}`;
- const data={
-  "@context":"https://schema.org",
-  "@graph":[
-   {"@type":"WebPage","@id":`${url}#page`,url,name:toolTitle(locale,tool),description:toolDescription(locale,tool),inLanguage:c.hreflang,isPartOf:{"@id":`${SITE}/#website`},about:{"@id":`${actual}#tool`}},
-   {"@type":"WebApplication","@id":`${actual}#tool`,name:toolTitle(locale,tool),url:actual,applicationCategory:"UtilitiesApplication",operatingSystem:"Web",inLanguage:c.hreflang,publisher:{"@id":`${SITE}/#organization`}},
-   {"@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":c.brand,"item":`${SITE}${localePath(locale,"/")}`},
-    {"@type":"ListItem","position":2,"name":c.toolsTitle,"item":`${SITE}${localePath(locale,"/tools")}`},
-    {"@type":"ListItem","position":3,"name":toolTitle(locale,tool),"item":url}
-   ]}
-  ]
+ const fact=localFreeToolFact(tool.slug,locale);
+ const description=fact?.description??toolDescription(locale,tool);
+ const application:Record<string,unknown>={
+  "@type":"WebApplication","@id":`${actual}#tool`,name:toolTitle(locale,tool),url:actual,applicationCategory:"UtilitiesApplication",operatingSystem:"Web",inLanguage:c.hreflang,publisher:{"@id":`${SITE}/#organization`}
  };
+ if(fact){
+  application.description=fact.description;
+  application.isAccessibleForFree=true;
+  application.offers={"@type":"Offer",price:"0",priceCurrency:"USD"};
+  application.availableLanguage=["zh-CN","en","ja","ko","fr","de","es","pt","ar"];
+ }
+ const graph:Record<string,unknown>[]=[
+  {"@type":"WebPage","@id":`${url}#page`,url,name:toolTitle(locale,tool),description,inLanguage:c.hreflang,isPartOf:{"@id":`${SITE}/#website`},about:{"@id":`${actual}#tool`}},
+  application,
+  {"@type":"BreadcrumbList","itemListElement":[
+   {"@type":"ListItem","position":1,"name":c.brand,"item":`${SITE}${localePath(locale,"/")}`},
+   {"@type":"ListItem","position":2,"name":c.toolsTitle,"item":`${SITE}${localePath(locale,"/tools")}`},
+   {"@type":"ListItem","position":3,"name":toolTitle(locale,tool),"item":url}
+  ]}
+ ];
+ if(fact)graph.push({"@type":"FAQPage","@id":`${url}#faq`,url,inLanguage:c.hreflang,mainEntity:[{"@type":"Question",name:fact.question,acceptedAnswer:{"@type":"Answer",text:fact.answer}}]});
+ const data={"@context":"https://schema.org","@graph":graph};
  return <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(data)}}/>;
 }
 
