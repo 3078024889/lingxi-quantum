@@ -337,10 +337,13 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
  }
 
- return <main data-sasi-composer-version="v1600" className={`${styles.workspace} min-h-[calc(100vh-64px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
-  <div className="mx-auto flex min-h-[calc(100vh-64px)] max-w-5xl flex-col px-4 sm:px-6">
-   <header className="mx-auto w-full max-w-3xl pt-12 text-center sm:pt-20">
-    <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">{title}</h1>
+ const idleSurface=!assistantText&&!resultUrl&&!websiteHtml&&!projectId;
+
+
+ return <main data-sasi-composer-version="v1600" className={`${styles.workspace} min-h-[calc(100vh-156px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
+  <div className={`mx-auto flex min-h-[calc(100vh-156px)] max-w-5xl flex-col px-4 pb-28 sm:px-6 ${idleSurface?"justify-center":"justify-start"}`}>
+   <header className={`mx-auto w-full max-w-3xl text-center ${idleSurface?"-translate-y-4 pt-0":"pt-10 sm:pt-14"}`}>
+    <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
     <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[var(--lx-muted)] sm:text-base">{subtitle}</p>
    </header>
 
@@ -358,7 +361,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
     <Link href="/sasi/assemble" className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("assembleClips")}</Link>
    </div>}
 
-   <section className="relative z-20 mx-auto mb-14 mt-5 w-full max-w-3xl pb-5 pt-3">
+   <section className={`relative z-20 mx-auto w-full max-w-3xl pb-5 pt-3 ${idleSurface?"mb-3 mt-6":"mb-14 mt-5"}`}>
     <div onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={()=>setDragging(false)} onDrop={onDrop}
       className={`rounded-[28px] border bg-[var(--lx-panel)] p-3 shadow-[0_18px_70px_rgba(0,0,0,.12)] transition ${dragging?"border-[var(--lx-ink)] ring-2 ring-[var(--lx-line)]":"border-[var(--lx-line)]"}`}>
      {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">{files.map(item=><div key={item.id} className="min-w-[180px] max-w-[260px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-2 text-xs">

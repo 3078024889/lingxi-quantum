@@ -51,7 +51,7 @@ const COPY = {
   draftTitle:c("当前粘贴资料","Current pasted source","現在貼り付け中の資料","현재 붙여넣은 자료","Source collée actuelle","Aktuell eingefügter Text","Fuente pegada actual","Fonte colada atual","المصدر الملصق الحالي"),
   draftReady:c("已把当前粘贴正文纳入本次检索；不保存也可以先提问。","The current pasted text is included in this search, so you can ask before saving it.","貼り付け中の本文も今回の検索対象です。保存前でも質問できます。","현재 붙여넣은 본문도 이번 검색에 포함됩니다. 저장하기 전에도 질문할 수 있습니다.","Le texte collé actuel est inclus dans la recherche ; vous pouvez poser une question avant de l’enregistrer.","Der aktuell eingefügte Text wird durchsucht; Sie können schon vor dem Speichern fragen.","El texto pegado actual se incluye en la búsqueda; puedes preguntar antes de guardarlo.","O texto colado atual entra na pesquisa; você pode perguntar antes de salvá-lo.","النص الملصق الحالي مشمول في البحث، ويمكنك السؤال قبل حفظه."),  copyAll:c("复制全部","Copy all","すべてコピー","전체 복사","Tout copier","Alles kopieren","Copiar todo","Copiar tudo","نسخ الكل"),
   copied:c("已复制","Copied","コピー済み","복사됨","Copié","Kopiert","Copiado","Copiado","تم النسخ"),
-  balance:c("余额","Creation balance","AI 残高","AI 잔액","Solde","Guthaben","Saldo","Saldo","الرصيد"),
+  balance:c("余额","Balance","AI 残高","AI 잔액","Solde","Guthaben","Saldo","Saldo","الرصيد"),
   minCharge:c("最低扣费","Minimum charge","最低料金","최소 차감","Minimum facturé","Mindestbetrag","Cobro mínimo","Cobrança mínima","الحد الأدنى للخصم"),
   lightHelp:c("快速摘要与简单问答；读取更少证据，输出更短。","Quick summaries and simple Q&A; fewer evidence snippets and shorter output.","短い要約と簡単なQ&A。証拠数と出力を抑えます。","빠른 요약과 간단한 Q&A. 근거와 출력이 더 짧습니다.","Résumés rapides et Q&R simples ; moins de preuves et réponse plus courte.","Schnelle Zusammenfassungen und einfache Fragen; weniger Belege, kürzere Antwort.","Resúmenes rápidos y preguntas simples; menos evidencia y respuesta más corta.","Resumos rápidos e perguntas simples; menos evidências e resposta mais curta.","ملخصات سريعة وأسئلة بسيطة مع أدلة أقل وإجابة أقصر."),
   standardHelp:c("默认推荐；结构化回答，兼顾速度、证据与完整性。","Recommended default; structured answers balancing speed, evidence and completeness.","標準推奨。速度・証拠・完全性をバランスします。","기본 추천. 속도, 근거, 완성도를 균형 있게 제공합니다.","Recommandé ; réponse structurée équilibrant vitesse, preuves et exhaustivité.","Empfohlen; strukturierte Antwort mit ausgewogenem Tempo, Belegen und Vollständigkeit.","Recomendado; respuesta estructurada que equilibra velocidad, evidencia y completitud.","Recomendado; resposta estruturada equilibrando velocidade, evidências e completude.","الخيار الموصى به؛ إجابة منظمة توازن السرعة والأدلة والاكتمال."),
@@ -72,7 +72,7 @@ const COPY = {
   askSource:c("询问资料","Ask sources","資料に質問","자료 질문","Interroger les sources","Quellen befragen","Preguntar a las fuentes","Perguntar às fontes","اسأل المصادر"),
   askBatch:c("直接问这批资料","Ask this collection directly","この資料群に直接質問","이 자료 묶음에 직접 질문","Interroger directement cette collection","Diese Sammlung direkt befragen","Preguntar directamente a esta colección","Perguntar diretamente a esta coleção","اسأل هذه المجموعة مباشرة"),
   smart:c("智能模式","Intelligence mode","知能モード","지능 모드","Mode d’intelligence","Intelligenzmodus","Modo de inteligencia","Modo de inteligência","وضع الذكاء"),
-  billed:c("资料已准备好，可以继续提问","Source Q&A currently does not deduct creation balance","現在の資料Q&Aでは残高を消費しません","현재 자료 Q&A는 잔액을 차감하지 않습니다","Les Q&R sur les sources ne déduisent actuellement pas le solde","Quellen-Q&A zieht derzeit kein Guthaben ab","Las preguntas sobre fuentes no descuentan saldo actualmente","Perguntas sobre fontes não descontam saldo atualmente","لا تخصم أسئلة المصادر من الرصيد حاليًا"),
+  billed:c("资料已准备好，可以继续提问","Your sources are ready for the next question","現在の資料Q&Aでは残高を消費しません","현재 자료 Q&A는 잔액을 차감하지 않습니다","Les Q&R sur les sources ne déduisent actuellement pas le solde","Quellen-Q&A zieht derzeit kein Guthaben ab","Las preguntas sobre fuentes no descuentan saldo actualmente","Perguntas sobre fontes não descontam saldo atualmente","لا تخصم أسئلة المصادر من الرصيد حاليًا"),
   light:c("轻量","Light","軽量","라이트","Léger","Leicht","Ligero","Leve","خفيف"),
   standard:c("标准","Standard","標準","표준","Standard","Standard","Estándar","Padrão","قياسي"),
   high:c("高智能","High intelligence","高知能","고지능","Haute intelligence","Hohe Intelligenz","Alta inteligencia","Alta inteligência","ذكاء عالٍ"),
@@ -354,21 +354,23 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
     {value:"high",label:lang==="zh"?"深度研究":tr(lang,"high"),help:tr(lang,"highHelp")},
   ];
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
-  const connectedCopy:{[key:string]:[string,string]}={
-    zh:["使用我连接的智能服务","需要时使用已连接的智能服务，让回答更完整。"],en:["Use my connected intelligence service","Use your connected intelligence service when you want a richer answer."],ja:["接続したインテリジェンスサービスを使用","料金は接続先から直接請求されます。オフでは証拠ベースのローカル整理のみを使用します。"],ko:["연결한 지능형 서비스 사용","요금은 연결한 서비스에서 직접 청구됩니다. 끄면 근거 기반 로컬 정리만 사용합니다."],fr:["Utiliser mon service d’intelligence connecté","La facturation vient directement du fournisseur. Désactivez pour une synthèse locale fondée sur les preuves."],de:["Meinen verbundenen intelligenten Dienst verwenden","Die Abrechnung erfolgt direkt durch den Anbieter. Deaktivieren für rein lokale, evidenzbasierte Zusammenfassung."],es:["Usar mi servicio inteligente conectado","El proveedor factura directamente. Desactívalo para usar solo síntesis local basada en evidencias."],pt:["Usar meu serviço inteligente conectado","A cobrança é feita diretamente pelo provedor. Desative para usar apenas síntese local baseada em evidências."],ar:["استخدام خدمتي الذكية المتصلة","تتم الفوترة مباشرة من مزود الخدمة. عطّل هذا الخيار لاستخدام التلخيص المحلي القائم على الأدلة فقط."]
-  };
-  const cc=connectedCopy[lang]||connectedCopy.en;
+  return <section className="mx-auto max-w-6xl space-y-5 pb-28 pt-10 lx-knowledge-workspace">
+    <header className="mx-auto max-w-3xl text-center">
+      <div className="mx-auto mb-4 flex w-fit items-center justify-center">
+        <LingxiMiniIcon name={mode==="research"?"research":mode==="learning"?"learning":"book"} size="title"/>
+      </div>
+      <h1 className="text-3xl font-semibold tracking-tight text-[var(--lx-ink)] sm:text-4xl">{heading}</h1>
+      <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">{mode==="research"
+        ? (lang==="zh"?"加入论文、数据与研究资料，然后直接追问、比较与核对。":"Add papers, data and research sources, then question and compare them directly.")
+        : mode==="learning"
+          ? (lang==="zh"?"加入教材与笔记，让 SASI 帮你理解、练习与复习。":"Add study material and notes, then learn, practise and review with SASI.")
+          : (lang==="zh"?"加入书本与资料，直接与内容对话。":"Add books and sources, then talk with the content directly.")}</p>
+      <div className="mt-4 flex justify-center">
+        <Link href="/sasi/connections" className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm text-[var(--lx-ink)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"} ↗</Link>
+      </div>
+    </header>
 
-  return <section className="mt-8 space-y-6 lx-knowledge-workspace">
-    <div className="lx-knowledge-privacy rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm leading-7 text-[var(--lx-muted)]">
-      {tr(lang,"privacy")}
-    </div>
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 text-sm">
-      <label className="flex cursor-pointer items-start gap-3"><input type="checkbox" className="mt-1" checked={useConnectedService} onChange={e=>setUseConnectedService(e.target.checked)}/><span><b className="block text-[var(--lx-ink)]">{cc[0]}</b><span className="text-[var(--lx-muted)]">{cc[1]}</span></span></label>
-      <Link href="/sasi/connections" className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-[var(--lx-ink)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"}</Link>
-    </div>
-
-    <div className="grid gap-5 xl:grid-cols-[.88fr_1.12fr]">
+    <div className="grid gap-5 xl:grid-cols-2">
       <section className="lx-knowledge-panel rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
         <div className="lx-knowledge-panel-title"><LingxiMiniIcon name={mode==="research"?"research":mode==="learning"?"learning":"book"} size="title"/><h2 className="text-xl font-semibold text-[var(--lx-ink)]">{tr(lang,"add")}{heading}</h2></div>
         <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();if(!busy)void importFiles(e.dataTransfer.files)}} className="mt-5 block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line-strong)] bg-[var(--lx-soft)] p-6 text-center">
@@ -411,7 +413,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
           </div>
           <div className="lx-knowledge-mode-detail">
             <p>{selectedTier.help}</p>
-            <div className="lx-knowledge-mode-cost"><b>{lang==="zh"?"资料检索与基础问答免费":"Source search and basic Q&A are free"}</b><span>{lang==="zh"?"答案始终回到你提供的原文":"Answers stay grounded in your source text"}</span></div>
+            <div className="lx-knowledge-mode-cost"><b>{lang==="zh"?"围绕你的资料回答":"Grounded in your sources"}</b><span>{lang==="zh"?"重要结论可以回到原文核对":"Important conclusions can be checked against the original text"}</span></div>
           </div>
         </div>
 
@@ -430,7 +432,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
           </div>
           <article className="lx-knowledge-answer-body">{answer}</article>
           <div className="lx-knowledge-answer-foot">
-            <span>{lang==="zh"?"资料已准备好，可以继续提问":"Source Q&A currently does not deduct creation balance"}</span>
+            <span>{lang==="zh"?"资料已准备好，可以继续提问":"Your sources are ready for the next question"}</span>
             <span>{lastIntelligence?intelligenceLabels.find(x=>x.value===lastIntelligence)?.label:selectedTier.label}</span>
           </div>
         </div>}

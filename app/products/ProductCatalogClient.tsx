@@ -6,9 +6,9 @@ import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 const areas=[
   {href:"/sasi",icon:"sasi" as LingxiIconName,zh:"从一个想法到可用结果",en:"From idea to usable result",descZh:"短剧、网站、资料智能体与持续创作，从想法直接进入构建。",descEn:"Move ideas into drama, websites, document agents and continued creation."},
   {href:"/tools",icon:"tools" as LingxiIconName,zh:"处理一个文件，直接得到结果",en:"Process a file and get the result",descZh:"PDF、图片、视频、字幕、表格、网页与隐私文件，打开即可处理。",descEn:"Handle PDFs, images, video, subtitles, tables, web content and private files."},
-  {href:"/ai-knowledge",icon:"book" as LingxiIconName,zh:"让书本与资料持续可用",en:"Turn books and sources into active knowledge",descZh:"资料可持续追问，答案可回到原文与来源。",descEn:"Keep sources queryable with answers traceable to the original material."},
-  {href:"/ai-learning",icon:"learning" as LingxiIconName,zh:"从看过到真正学懂",en:"From reading to real understanding",descZh:"教材、笔记与复习材料集中整理、追问与回看。",descEn:"Keep study material together for review, questions and source recall."},
-  {href:"/ai-research",icon:"research" as LingxiIconName,zh:"沿着证据继续研究",en:"Research along the evidence",descZh:"论文、笔记、证据与判断保持在同一条研究脉络中。",descEn:"Keep papers, notes, evidence and conclusions in one research thread."},
+  {href:"/sasi?mode=book",icon:"book" as LingxiIconName,zh:"让书本与资料持续可用",en:"Turn books and sources into active knowledge",descZh:"资料可持续追问，答案可回到原文与来源。",descEn:"Keep sources queryable with answers traceable to the original material."},
+  {href:"/sasi?mode=learning",icon:"learning" as LingxiIconName,zh:"从看过到真正学懂",en:"From reading to real understanding",descZh:"教材、笔记与复习材料集中整理、追问与回看。",descEn:"Keep study material together for review, questions and source recall."},
+  {href:"/sasi?mode=research",icon:"research" as LingxiIconName,zh:"沿着证据继续研究",en:"Research along the evidence",descZh:"论文、笔记、证据与判断保持在同一条研究脉络中。",descEn:"Keep papers, notes, evidence and conclusions in one research thread."},
 ] as const;
 
 export default function ProductCatalogClient(){

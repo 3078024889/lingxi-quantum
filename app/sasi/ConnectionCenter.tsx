@@ -2,7 +2,7 @@
 
 import NextImage from "next/image";
 import {useEffect,useMemo,useState} from "react";
-import {SASI_INTEGRATIONS,type SasiIntegration} from "@/lib/sasi/integration-catalog";
+import {BUILD_CONNECTORS,SASI_INTEGRATIONS,type SasiIntegration} from "@/lib/sasi/integration-catalog";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 import {sasiConnectionText} from "@/lib/sasi/connection-i18n";
 
@@ -132,5 +132,19 @@ export default function ConnectionCenter({lang,dark,accountEmail}:Props){
        </div>
      </aside>
    </div>
+
+   <section id="tools" className="mx-auto mt-10 max-w-5xl border-t border-[var(--lx-line)] pt-8">
+     <div className="mb-5">
+       <p className="text-xs font-semibold uppercase tracking-[.18em] text-[var(--lx-faint)]">TOOLS</p>
+       <h2 className="mt-2 text-2xl font-semibold text-[var(--lx-ink)]">{t("连接工具","Connect tools")}</h2>
+       <p className="mt-2 text-sm text-[var(--lx-muted)]">{t("网站模式需要时再连接，不必提前配置。","Connect these only when your website work needs them.")}</p>
+     </div>
+     <div className="grid gap-3 sm:grid-cols-2">
+       {BUILD_CONNECTORS.map(item=><a key={item.id} href={item.url} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4 transition hover:border-[var(--lx-line-strong)]">
+         <span><b className="block text-[var(--lx-ink)]">{item.name}</b><small className="mt-1 block text-[var(--lx-muted)]">{lang==="zh"?item.roleZh:item.roleEn}</small></span>
+         <span aria-hidden>↗</span>
+       </a>)}
+     </div>
+   </section>
  </section>;
 }

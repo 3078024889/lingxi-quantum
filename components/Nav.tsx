@@ -17,7 +17,6 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 type Theme = "light" | "dark";
 type K =
   | "home" | "tools" | "studio"
-  | "books" | "learning" | "research"
   | "wallet" | "myField";
 
 const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
@@ -27,9 +26,6 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   ],
   [
     { href: "/sasi", key: "studio", icon: "sasi" },
-    { href: "/ai-knowledge", key: "books", icon: "book" },
-    { href: "/ai-learning", key: "learning", icon: "learning" },
-    { href: "/ai-research", key: "research", icon: "research" },
   ],
   [
     { href: "/ai-wallet", key: "wallet", icon: "wallet" },
