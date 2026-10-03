@@ -1,9 +1,9 @@
 import fs from"node:fs";
 const read=p=>fs.readFileSync(p,"utf8");const must=(v,m)=>{if(!v)throw new Error(m)};
 const exp=read("components/tools/PaidExportButton.tsx");
-must(exp.includes("d.grant?.consumed_at"),"V45_CONSUMED_GRANT_GUARD_MISSING");
-must(exp.includes("setCompleted(true)"),"V45_EXPORT_TERMINAL_STATE_MISSING");
-must(exp.includes("cleanResumeUrl()"),"V45_RESUME_URL_CLEANUP_MISSING");
+must(exp.includes("isConsumed(d.grant"),"V45_CONSUMED_GRANT_GUARD_MISSING");
+must(exp.includes('setPhase("completed")'),"V45_EXPORT_TERMINAL_STATE_MISSING");
+must(exp.includes("clearResume()"),"V45_RESUME_URL_CLEANUP_MISSING");
 must(!exp.includes("¥NaN"),"V45_NAN_LITERAL");
 const rec=read("lib/tools/payment-recovery.ts");
 must(rec.includes("consumed_at"),"V45_RECOVERY_CONSUMED_STATE_MISSING");

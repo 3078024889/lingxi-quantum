@@ -126,6 +126,8 @@ export async function wechatRequest(method: "GET" | "POST", path: string, body?:
   }
   const data = await res.json();
   if (!res.ok) {
+    const providerCode=String(data?.code||"ERROR").slice(0,80);
+    if(path.startsWith("/v3/refund/"))throw new Error(`WECHAT_REFUND_${res.status}:${providerCode}`);
     throw new Error(`微信支付接口返回错误 ${res.status}: ${JSON.stringify(data)}`);
   }
   return data;

@@ -2,6 +2,7 @@ import{createAdminClient}from"@/lib/supabase/admin";
 import{moneyProviderAdapters,safeProviderError}from"./provider-adapters";
 import{requireProviderAdapter}from"./provider-adapter";
 import{planReconciliation}from"./reconciliation";
+import{classifyProviderException}from"./refund-error-policy";
 import type{ProviderRefundRequest}from"./types";
 
 type Row=Record<string,any>;
@@ -17,6 +18,7 @@ async function recordObservation(admin:any,w:Row,o:any){
   provider_raw_status:String(o.rawStatus||"").slice(0,500),
   provider_refund_id:o.providerRefundId||w.provider_refund_id||null,
   last_provider_error_code:o.errorCode||null,
+  failure_code:o.errorCode?"PROVIDER_CONFIRMATION_PENDING":null,
   provider_attempt_count:attempts,
   last_provider_checked_at:new Date().toISOString(),
   next_reconcile_at:new Date(Date.now()+Math.max(30,Number(o.retryAfterSeconds||300))*1000).toISOString(),
@@ -25,13 +27,17 @@ async function recordObservation(admin:any,w:Row,o:any){
 }
 
 async function recordException(admin:any,w:Row,error:unknown){
+ const decision=classifyProviderException(error);
  await admin.from("balance_withdrawals").update({
+  failure_code:decision.failureCode,
+  provider_status:decision.providerStatus,
   last_provider_error_code:safeProviderError(error),
   provider_attempt_count:Number(w.provider_attempt_count||0)+1,
   last_provider_checked_at:new Date().toISOString(),
-  next_reconcile_at:new Date(Date.now()+5*60*1000).toISOString(),
+  next_reconcile_at:new Date(Date.now()+decision.retryAfterSeconds*1000).toISOString(),
   updated_at:new Date().toISOString(),
  }).eq("id",w.id);
+ return decision;
 }
 
 export async function reconcileWithdrawal(withdrawalId:string){
@@ -89,8 +95,15 @@ export async function reconcileWithdrawal(withdrawalId:string){
   }
   return{ok:true,status:"pending",retryAfterSeconds:decision.afterSeconds};
  }catch(error){
-  await recordException(admin,w,error);
-  return{ok:false,status:"pending",error:safeProviderError(error)};
+  const decision=await recordException(admin,w,error);
+  return{
+   ok:false,
+   status:"pending",
+   error:safeProviderError(error),
+   failureCode:decision.failureCode,
+   operatorActionRequired:decision.operatorActionRequired,
+   retryAfterSeconds:decision.retryAfterSeconds,
+  };
  }
 }
 

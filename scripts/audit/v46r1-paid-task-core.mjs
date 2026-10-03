@@ -8,7 +8,7 @@ const machine=read("lib/tools/commerce/paid-task-state.ts");
 must(machine.includes('completed:{RESET:"idle"}'),"V46R1_STATE_MACHINE_TERMINAL_MISSING");
 must(paid.includes("alreadyCompleted"),"V46R1_ALREADY_COMPLETED_GUARD_MISSING");
 must(paid.includes("isConsumed"),"V46R1_CONSUMED_GRANT_GUARD_MISSING");
-must(paid.includes("Number.isFinite"),"V46R1_NAN_GUARD_MISSING");
+must(paid.includes("quoteDisplay")&&read("lib/tools/commerce/quote-display.ts").includes("Number.isFinite"),"V46R1_NAN_GUARD_MISSING");
 must(paid.includes("onCompleted"),"V46R1_COMPLETION_CALLBACK_MISSING");
 must(!paid.includes('const paid=`'),"V46R1_EMBEDDED_SOURCE_REGRESSION");
 must(pdf.includes('data-testid="pdf-source-page-count"'),"V46R1_PDF_PAGECOUNT_TESTID_MISSING");

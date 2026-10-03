@@ -2,6 +2,7 @@
 import{useEffect,useMemo,useState,useRef}from"react";
 import{usePathname}from"next/navigation";
 import {deliveryText} from "@/lib/tools/commerce/delivery-copy";
+import{privateSearchPath}from"@/lib/seo/indexing";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 
 const COPY:any={
@@ -19,15 +20,16 @@ export default function ToolShareRail(){
  const pathname=usePathname();const{lang}=useLingxiLang();const c=COPY[lang]||COPY.en;
  const[open,setOpen]=useState(false),[url,setUrl]=useState(""),[qr,setQr]=useState(""),[copied,setCopied]=useState(false),[error,setError]=useState("");
  const dialog=useRef<HTMLDialogElement>(null);
- const eligible=useMemo(()=>/^\/(?:zh|en|ja|ko|fr|de|es|pt|ar)\/tools\/|^\/tools\//.test(pathname)&&!pathname.includes('/tools/pay'),[pathname]);
- useEffect(()=>{setOpen(false);setCopied(false);setError("");setUrl(location.origin+pathname+'?lang='+lang)},[pathname,lang]);
+ const eligible=useMemo(()=>{const publicPath=pathname.replace(/^\/(?:zh|en|ja|ko|fr|de|es|pt|ar)(?=\/|$)/,"")||"/";return publicPath.startsWith("/tools/")&&!privateSearchPath(publicPath)},[pathname]);
+ useEffect(()=>{setOpen(false)},[pathname]);
+ useEffect(()=>{setCopied(false);setError("");setUrl(location.origin+pathname+'?lang='+lang)},[pathname,lang]);
  useEffect(()=>{if(!open)return;let active=true;setQr("");void import('qrcode').then(m=>m.default.toDataURL(url,{width:320,margin:1,errorCorrectionLevel:"M"})).then(v=>{if(active)setQr(v)}).catch(()=>{});return()=>{active=false}},[open,url]);
  useEffect(()=>{if(open)dialog.current?.showModal();else dialog.current?.close()},[open]);
  async function copy(){try{await navigator.clipboard.writeText(url);setCopied(true);setError("")}catch{setError(deliveryText(lang,'manualCopy'))}}
  async function share(){const title=document.querySelector('h1')?.textContent?.trim()||'LINGXIFIELD';if(navigator.share){try{await navigator.share({title,url});return}catch(e){if(e instanceof Error&&e.name==='AbortError')return}}await copy()}
  if(!eligible)return null;
  return <>
- <button disabled={!url} onClick={()=>setOpen(true)} className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[70] rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-3 text-sm font-medium shadow-lg backdrop-blur md:bottom-5">↗ {c.open}</button>
+ <button type="button" data-testid="tool-share-open" aria-haspopup="dialog" aria-expanded={open} disabled={!url} onClick={()=>setOpen(true)} className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[70] rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-3 text-sm font-medium shadow-lg backdrop-blur md:bottom-5">↗ {c.open}</button>
  <dialog ref={dialog} onCancel={()=>setOpen(false)} onClose={()=>setOpen(false)} aria-labelledby="tool-share-title" className="m-auto w-[calc(100%-2rem)] max-w-lg max-h-[85dvh] overflow-y-auto rounded-[28px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-0 text-[var(--lx-ink)] shadow-2xl backdrop:bg-black/40">
  <section dir={lang==='ar'?'rtl':'ltr'} className="p-5 sm:p-7">
  <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-semibold tracking-[.16em] text-[var(--lx-muted)]">LINGXIFIELD</p><h2 id="tool-share-title" className="mt-2 text-xl font-semibold">{c.title}</h2><p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{c.lead}</p></div><button aria-label={c.close} onClick={()=>setOpen(false)} className="min-h-11 min-w-11 rounded-full border">×</button></div>

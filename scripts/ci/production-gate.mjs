@@ -19,6 +19,9 @@ const commands=[
  ["node",["scripts/audit/global-commerce.mjs"]],
  ["node",["scripts/audit/document-format-capability.mjs"]],
  ["node",["scripts/audit/all-paid-task-recovery.mjs"]],
+ ["node",["scripts/audit/v45-paid-flow.mjs"]],
+ ["node",["scripts/audit/v45r4-compat.mjs"]],
+ ["node",["scripts/audit/v46-paid-task-core.mjs"]],
  ["node",["scripts/final-closure/audit.mjs"]],
  ["node",["scripts/final-closure/graduation.mjs"]],
 ];

@@ -38,7 +38,7 @@ export default function BalanceWithdrawalPanel(){
     return `${name} · ¥${Number(order.amount_rmb||0).toFixed(2)}`;
   };
   const providerName=(provider:string)=>provider==="paypal"?"PayPal":provider==="wechat"?c.wechat:provider==="alipay"?c.alipay:c.other;
-  const statusLabel=(status:string)=>status==="completed"?c.completed:status==="processing"?c.processing:status==="requested"?c.requested:status==="failed"?c.failed:c.processing;
+  const statusLabel=(w:Withdrawal)=>w.failure_code==="PROVIDER_FUNDS_REQUIRED"?moneyText(lang,"providerFunds"):w.status==="completed"?c.completed:w.status==="processing"?c.processing:w.status==="requested"?c.requested:w.status==="failed"?c.failed:c.processing;
 
   async function load(){
     try{const r=await fetch("/api/account/withdrawals",{cache:"no-store"});
@@ -112,7 +112,7 @@ export default function BalanceWithdrawalPanel(){
       <div className="mt-5 space-y-3">
         {data.withdrawals.length===0&&<p className="lx-state-card is-empty rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm text-[var(--lx-muted)]">◇ {c.emptyHistory}</p>}
         {data.withdrawals.map(w=><article id={`withdrawal-${w.id}`} key={w.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-          <div className="flex flex-wrap justify-between gap-3"><b>{w.currency==="USD"?"$":"¥"}{(Number(w.amount_minor)/100).toFixed(2)}</b><span className="text-[var(--lx-muted)]">{statusLabel(w.status)}</span></div>
+          <div className="flex flex-wrap justify-between gap-3"><b>{w.currency==="USD"?"$":"¥"}{(Number(w.amount_minor)/100).toFixed(2)}</b><span className="text-[var(--lx-muted)]">{statusLabel(w)}</span></div>
           {['requested','processing'].includes(w.status)&&<button disabled={busy!==null} onClick={()=>void refreshRequest(w.id)} className="mt-3 underline disabled:opacity-40">{moneyText(lang,w.status==='requested'?'migrate':'refresh')}</button>}
           <p className="mt-2 text-sm leading-7">{moneyNotice(lang,"withdrawal",w.status,w.currency,Number(w.amount_minor)).body}</p><p className="mt-2 break-all text-xs text-[var(--lx-faint)]">{moneyText(lang,"reference")}: {w.id}</p>
           <p className="mt-2 text-xs text-[var(--lx-faint)]">{providerName(w.provider)}{w.provider_currency&&w.provider_currency!==w.currency?` · ${c.original} ${w.provider_currency} ${(Number(w.provider_amount_minor)/100).toFixed(2)}`:""} · {new Date(w.created_at).toLocaleString(lang)}</p>

@@ -23,7 +23,7 @@ function isMini(){try{return new URLSearchParams(location.search).get("mini")===
 function clearResume(){try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+(u.search?u.search:"")+u.hash)}catch{}}
 async function openMiniPay(id:string){return new Promise<boolean>(resolve=>{let done=false;const finish=(v:boolean)=>{if(done)return;done=true;resolve(v)},go=()=>{const wx=(window as any).wx;if(!wx?.miniProgram?.navigateTo){finish(false);return}wx.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(id)}`,success:()=>finish(true),fail:()=>finish(false)})};if((window as any).wx?.miniProgram){go();return}const s=document.createElement("script");s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>finish(false);document.head.appendChild(s);setTimeout(()=>finish(false),3500)})}
 
-export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted,label,draftId,metadata}:{toolId:string;quantity:number;onUnlocked:()=>Promise<void>|void;onCompleted?:()=>Promise<void>|void;label?:string;draftId?:string;metadata?:Record<string,unknown>}){
+export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted,label,draftId,metadata,beforePayment}:{toolId:string;quantity:number;onUnlocked:()=>Promise<void>|void;onCompleted?:()=>Promise<void>|void;label?:string;draftId?:string;metadata?:Record<string,unknown>;beforePayment?:()=>Promise<void>}){
  const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();const t=(zh:string,en:string)=>lang==="zh"?zh:en;
  const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[phase,setPhase]=useState<PaidTaskPhase>("idle");
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),fails=useRef(0),completedQuote=useRef<string|null>(null),generated=useRef(new Set<string>()),checking=useRef(false);
@@ -83,6 +83,7 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
   if(phase==="completed"||phase==="generating")return;
   setBusy(true);setMsg("");setPhase("pricing");
   try{
+   await beforePayment?.();
    let q=quote;const expires=q?.expires_at||q?.expiresAt;
    if(!q||Number(q.quantity)!==quantity||(expires&&new Date(expires).getTime()<=Date.now())){
     const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
@@ -101,5 +102,5 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
 
  const amount=quote?quoteDisplay(quote,currency).text:'';
  if(phase==="completed")return <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm"><b>{tx('complete')}</b><p className="mt-1 text-[var(--lx-muted)]">{msg}</p></div>;
- return <div><button onClick={start} disabled={busy||quantity<=0||phase==="generating"||false} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label||tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
+ return <div><button onClick={start} disabled={busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label||tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
 }
