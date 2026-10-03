@@ -24,7 +24,7 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/batch-image", title:"批量图片处理", description:"批量压缩、改尺寸、转 JPG/PNG/WebP，打包 ZIP 下载。", keywords:["批量压缩","批量改尺寸","批量转换","ZIP","图片批处理"], category:"image", popular:true, localOnly:true },
   { href:"/tools/heic-local", title:"HEIC 转 JPG", description:"iPhone HEIC 照片直接在浏览器转 JPG。", keywords:["HEIC","JPG","iPhone照片","苹果照片"], category:"image", localOnly:true },
 
-  { href:"/tools/video-dubbing", title:"视频翻译配音", description:"上传视频/音频或合法公开链接，生成目标语言版本。", keywords:["视频翻译","英文视频中文","配音","多语言","字幕翻译"], category:"video", badge:"AI", popular:true },
+  { href:"/tools/video-dubbing", title:"视频翻译配音", description:"尚未开放，现在不能当作已上线、可免费使用或已完成的工具。", keywords:["视频翻译","英文视频中文","配音","多语言","字幕翻译"], category:"video", badge:"未开放" },
   { href:"/tools/video-toolkit", title:"视频压缩 / 裁剪 / 提取音频", description:"常用视频处理用 FFmpeg 在浏览器本地完成。", keywords:["视频压缩","裁剪视频","提取音频","MP3","视频转音频"], category:"video", popular:true, localOnly:true },
   { href:"/tools/video-watermark-remover", title:"视频固定区域清理", description:"清理你有权编辑的视频中的固定遮挡或固定水印区域。", keywords:["视频去水印","固定水印","视频遮挡","logo"], category:"video", localOnly:true },
 
@@ -51,7 +51,7 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/audio-transcription", title:"音频转文字", description:"按分钟转写，导出 TXT / SRT / VTT。", keywords:["音频转文字","录音转文字","语音转文字","SRT"], category:"audio", badge:"AI", popular:true },
   { href:"/tools/video-transcription", title:"视频转文字 / 自动字幕", description:"视频转写并生成字幕文件。", keywords:["视频转文字","自动字幕","视频字幕","SRT"], category:"video", badge:"AI", popular:true },
   { href:"/tools/subtitle-translate", title:"字幕翻译", description:"保留时间轴，只翻译 SRT / VTT 字幕文字。", keywords:["字幕翻译","SRT翻译","VTT翻译","双语字幕"], category:"video", badge:"AI" },
-  { href:"/tools/id-photo-ai", title:"AI 证件照换背景", description:"白/蓝/红/灰背景，保持人物身份。", keywords:["证件照","换背景","蓝底照片","白底照片","红底照片"], category:"image", badge:"AI", popular:true },
+  { href:"/tools/id-photo-ai", title:"AI 证件照换背景", description:"尚未开放，现在不能当作已上线、可免费使用或已完成的工具。", keywords:["证件照","换背景","蓝底照片","白底照片","红底照片"], category:"image", badge:"未开放" },
 ];
 
 export const ADVANCED_CATEGORY_LABELS: Record<AdvancedToolCategory,string> = {
