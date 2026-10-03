@@ -109,16 +109,19 @@ export async function reconcileWithdrawal(withdrawalId:string){
 
 export async function reconcileDueWithdrawals(limit=20){
  const admin=createAdminClient();
- const now=new Date().toISOString();
- const {data,error}=await admin.from("balance_withdrawals")
-  .select("id")
-  .in("status",["requested","processing"])
-  .is("completed_at",null)
-  .lte("next_reconcile_at",now)
-  .order("created_at",{ascending:true})
-  .limit(Math.max(1,Math.min(limit,100)));
+ const bounded=Math.max(1,Math.min(Number(limit)||20,100));
+ const {data,error}=await admin.rpc("money_claim_reconciliation_v52e",{
+  p_limit:bounded,
+  p_lease_seconds:300,
+ });
  if(error)throw error;
+
+ const rows=Array.isArray(data)?data:[];
  const results=[];
- for(const row of data??[])results.push(await reconcileWithdrawal(row.id));
+ for(const row of rows){
+  const id=typeof row==="string"?row:String((row as any)?.id||"");
+  if(!id)continue;
+  results.push(await reconcileWithdrawal(id));
+ }
  return results;
 }

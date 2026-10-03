@@ -1,17 +1,31 @@
-import {NextResponse} from 'next/server';
-import {createAdminClient} from '@/lib/supabase/admin';
-import {refreshWithdrawal} from '@/lib/payments/withdrawal-processing';
-export const runtime='nodejs';
+import{NextResponse}from"next/server";
+import{reconcileDueWithdrawals}from"@/lib/money/reconcile-worker";
+
+export const runtime="nodejs";
+export const dynamic="force-dynamic";
 export const maxDuration=90;
-export async function GET(req:Request){
+
+function authorized(req:Request){
  const secret=process.env.CRON_SECRET?.trim();
- if(!secret||req.headers.get('authorization')!==`Bearer ${secret}`)return NextResponse.json({error:'UNAUTHORIZED'},{status:401});
- const admin=createAdminClient();
- const {data:rows,error}=await admin.from('balance_withdrawals').select('*').in('status',['requested','processing']).lt('updated_at',new Date(Date.now()-60000).toISOString()).order('updated_at',{ascending:true}).limit(3);
- if(error)return NextResponse.json({error:'QUERY_FAILED'},{status:503});
- const states=await Promise.all((rows||[]).map(async w=>{
-  const result=await refreshWithdrawal(w.id,w.user_id);
-  return result.ok&&result.status==='completed'?'completed':result.ok&&result.status==='failed'?'failed':'pending';
- }));
- return NextResponse.json({ok:true,checked:states.length,completed:states.filter(x=>x==='completed').length,failed:states.filter(x=>x==='failed').length,pending:states.filter(x=>x==='pending').length},{headers:{'Cache-Control':'no-store'}});
+ return Boolean(secret&&req.headers.get("authorization")===`Bearer ${secret}`);
+}
+
+export async function GET(req:Request){
+ if(!authorized(req))return NextResponse.json({error:"UNAUTHORIZED"},{status:401});
+ try{
+  const result=await reconcileDueWithdrawals(20);
+  const completed=result.filter((x:any)=>x?.status==="completed").length;
+  const failed=result.filter((x:any)=>x?.status==="failed").length;
+  const pending=result.length-completed-failed;
+  return NextResponse.json({
+   ok:true,
+   checked:result.length,
+   completed,
+   failed,
+   pending,
+  },{headers:{"Cache-Control":"no-store"}});
+ }catch(error){
+  console.error("[withdrawal reconcile cron]",error instanceof Error?error.message:"unknown");
+  return NextResponse.json({ok:false,error:"RECONCILIATION_FAILED"},{status:500});
+ }
 }
