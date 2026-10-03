@@ -1,78 +1,79 @@
 import {toolIntro} from "@/lib/tools/product-copy";
 import {toolTitle as translatedToolTitle} from '@/lib/tools/card-i18n';
 import {toolFacts} from './product-facts';
+import {toolGeoFact} from './site-facts';
 export const SITE="https://lingxifield.com";
 export const SEO_LOCALES={  "zh":{
     hreflang:"zh-CN",name:"中文",dir:"ltr",
-    brand:"灵犀场 LINGXIFIELD",homeTitle:"SASI智能生态与全球智能工具平台",homeDesc:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
-    toolsTitle:"在线实用工具",toolsDesc:"PDF、图片、视频、字幕、表格、OCR、隐私与文件工具。需要什么，直接进入结果。",
+    brand:"灵犀场 LINGXIFIELD",homeTitle:"灵犀场｜实用工具与 SASI 预充值余额",homeDesc:"灵犀场在 lingxifield.com 与 lingxifield.cn 提供浏览器本地的免费工具和单独标明的付费工具；SASI 使用预充值余额而不是会员，短剧、导演和网站构建还不是已完成的产品。",
+    toolsTitle:"在线实用工具｜PDF、图片、视频与文件",toolsDesc:"灵犀场工具目录里，免费工具在浏览器本地处理且不上传文件，付费工具会标明收费，尚未开放的项目不会写成已经可用。",
     open:"打开工具",allTools:"查看全部工具",how:"怎么使用",what:"能做什么",privacy:"处理方式",
-    local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"把目标交给 SASI，从资料、创作或构建直接进入可用结果。",
-    searchTerms:["灵犀场SASI","LINGXIFIELD SASI","灵犀场智能生态","SASI智能生态","免费在线工具","PDF压缩","PDF合并","PDF拆分","图片压缩","图片格式转换","视频转文字","音频转文字","字幕翻译","临时邮箱","阅后即焚","图片OCR","AI短剧生成","AI视频生成","书本智能体","科研智能体","学习智能体","AI网站生成"]
+    local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"SASI 按预充值余额计费，不是会员；短剧、导演和网站构建还不是已完成的产品。",
+    searchTerms:["灵犀场SASI","LINGXIFIELD SASI","灵犀场智能生态","SASI智能生态","PDF压缩","PDF合并","PDF拆分","图片压缩","图片格式转换","视频转文字","音频转文字","字幕翻译","临时邮箱","阅后即焚","图片OCR","书本智能体","科研智能体","学习智能体"]
   },
   "en":{
     hreflang:"en",name:"English",dir:"ltr",
-    brand:"LINGXIFIELD",homeTitle:"Free Online Tools, SASI Creation & AI Agents",homeDesc:"PDF, image, video, subtitle, OCR and file tools, plus AI short drama creation, book agents, learning agents, research agents and website building.",
-    toolsTitle:"Online Tools",toolsDesc:"PDF, image, video, subtitle, spreadsheet, OCR, privacy and file tools. Start from the result you need.",
+    brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD tools and SASI prepaid balance",homeDesc:"LINGXIFIELD on lingxifield.com and lingxifield.cn offers free browser-local tools and separately labeled paid tools; SASI uses a prepaid balance, not a membership, and short drama, directing and website building are not finished products.",
+    toolsTitle:"Online tools for PDF, images, video and files",toolsDesc:"In the LINGXIFIELD tool list, free tools run in the browser and do not upload files, paid tools are labeled paid, and tools that are not open yet are not described as available.",
     open:"Open tool",allTools:"Browse all tools",how:"How to use it",what:"What it does",privacy:"Processing",
-    local:"This tool is designed to run on your device whenever possible.",online:"This tool uses online processing. Any charge is shown before paid execution.",topicIntro:"Give SASI the result you want and move from material, idea or task to a usable outcome.",
-    searchTerms:["free online tools","PDF compressor","merge PDF","split PDF","image compressor","image converter","video transcription","audio to text","subtitle translator","temporary email","burn after reading","image OCR","AI short drama generator","AI video generator","book to AI agent","AI research assistant","AI study assistant","AI website builder"]
+    local:"This tool is designed to run on your device whenever possible.",online:"This tool uses online processing. Any charge is shown before paid execution.",topicIntro:"SASI is billed from a prepaid balance, not a membership; short drama, directing and website building are not finished products.",
+    searchTerms:["PDF compressor","merge PDF","split PDF","image compressor","image converter","video transcription","audio to text","subtitle translator","temporary email","burn after reading","image OCR","book to AI agent","AI research assistant","AI study assistant"]
   },
   "ja":{
     hreflang:"ja",name:"日本語",dir:"ltr",
-    brand:"LINGXIFIELD",homeTitle:"無料オンラインツール・SASI制作・AIエージェント",homeDesc:"PDF、画像、動画、字幕、OCR、ファイル処理から、AIショートドラマ、書籍AI、学習AI、研究AI、Webサイト構築まで。",
-    toolsTitle:"オンライン実用ツール",toolsDesc:"PDF、画像、動画、字幕、表計算、OCR、プライバシー、ファイル処理をすぐに開始できます。",
+    brand:"LINGXIFIELD",homeTitle:"LINGXIFIELDの実用ツールとSASI前払い残高",homeDesc:"LINGXIFIELDは lingxifield.com と lingxifield.cn で、ブラウザ内の無料ツールと別に明示する有料ツールを提供します。SASIは会員ではなく前払い残高で、短編ドラマ、演出、サイト構築は完成した製品ではありません。",
+    toolsTitle:"PDF・画像・動画・ファイルの実用ツール",toolsDesc:"LINGXIFIELDのツール一覧では、無料ツールはブラウザ内で処理してファイルをアップロードせず、有料は有料と書き、未公開のものは利用可能とは書きません。",
     open:"ツールを開く",allTools:"すべてのツール",how:"使い方",what:"できること",privacy:"処理方法",
-    local:"可能な処理は端末内で実行します。",online:"オンライン処理を使います。有料の場合は実行前に料金を表示します。",topicIntro:"SASIに目的を伝え、資料やアイデアから使える結果まで進めます。",
-    searchTerms:["無料オンラインツール","PDF 圧縮","PDF 結合","PDF 分割","画像 圧縮","画像 変換","動画 文字起こし","音声 文字起こし","字幕 翻訳","捨てメアド","OCR","AI 動画生成","AI ショートドラマ","書籍 AI","研究 AI","学習 AI","AI Webサイト作成"]
+    local:"可能な処理は端末内で実行します。",online:"オンライン処理を使います。有料の場合は実行前に料金を表示します。",topicIntro:"SASIは会員ではなく前払い残高です。短編ドラマ、演出、サイト構築は完成した製品ではありません。",
+    searchTerms:["PDF 圧縮","PDF 結合","PDF 分割","画像 圧縮","画像 変換","動画 文字起こし","音声 文字起こし","字幕 翻訳","捨てメアド","OCR","書籍 AI","研究 AI","学習 AI"]
   },
   "ko":{
     hreflang:"ko",name:"한국어",dir:"ltr",
-    brand:"LINGXIFIELD",homeTitle:"무료 온라인 도구 · SASI 제작 · AI 에이전트",homeDesc:"PDF, 이미지, 영상, 자막, OCR, 파일 처리부터 AI 숏폼 드라마, 책 에이전트, 학습·연구 에이전트, 웹사이트 제작까지.",
-    toolsTitle:"온라인 실용 도구",toolsDesc:"PDF, 이미지, 영상, 자막, 스프레드시트, OCR, 개인정보 및 파일 작업을 바로 처리하세요.",
+    brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD 도구와 SASI 선불 잔액",homeDesc:"LINGXIFIELD는 lingxifield.com 과 lingxifield.cn 에서 브라우저 로컬 무료 도구와 따로 표시된 유료 도구를 제공합니다. SASI는 멤버십이 아닌 선불 잔액이며, 숏폼 드라마와 연출, 웹사이트 구축은 완성된 제품이 아닙니다.",
+    toolsTitle:"PDF, 이미지, 영상, 파일 실용 도구",toolsDesc:"LINGXIFIELD 도구 목록에서 무료 도구는 브라우저에서 처리하고 파일을 올리지 않으며, 유료 도구는 유료라고 적고, 아직 열리지 않은 항목은 사용 가능한 것처럼 쓰지 않습니다.",
     open:"도구 열기",allTools:"모든 도구 보기",how:"사용 방법",what:"할 수 있는 일",privacy:"처리 방식",
-    local:"가능한 작업은 기기에서 직접 처리합니다.",online:"온라인 처리를 사용합니다. 유료 작업은 실행 전에 비용을 표시합니다.",topicIntro:"원하는 결과를 SASI에 전달하고 자료나 아이디어에서 실제 결과까지 진행하세요.",
-    searchTerms:["무료 온라인 도구","PDF 압축","PDF 합치기","PDF 분할","이미지 압축","이미지 변환","영상 텍스트 변환","음성 텍스트 변환","자막 번역","임시 이메일","OCR","AI 영상 생성","AI 숏폼 드라마","책 AI 에이전트","AI 연구 도우미","AI 학습 도우미","AI 웹사이트 만들기"]
+    local:"가능한 작업은 기기에서 직접 처리합니다.",online:"온라인 처리를 사용합니다. 유료 작업은 실행 전에 비용을 표시합니다.",topicIntro:"SASI는 멤버십이 아닌 선불 잔액입니다. 숏폼 드라마와 연출, 웹사이트 구축은 완성된 제품이 아닙니다.",
+    searchTerms:["PDF 압축","PDF 합치기","PDF 분할","이미지 압축","이미지 변환","영상 텍스트 변환","음성 텍스트 변환","자막 번역","임시 이메일","OCR","책 AI 에이전트","AI 연구 도우미","AI 학습 도우미"]
   },
   "fr":{
     hreflang:"fr",name:"Français",dir:"ltr",
-    brand:"LINGXIFIELD",homeTitle:"Outils en ligne, création SASI et agents IA",homeDesc:"PDF, images, vidéo, sous-titres, OCR et fichiers, plus création de mini-séries IA, agents de livres, d'étude, de recherche et création de sites.",
-    toolsTitle:"Outils en ligne",toolsDesc:"Outils PDF, image, vidéo, sous-titres, tableurs, OCR, confidentialité et fichiers.",
+    brand:"LINGXIFIELD",homeTitle:"Outils LINGXIFIELD et solde prépayé SASI",homeDesc:"LINGXIFIELD sur lingxifield.com et lingxifield.cn propose des outils gratuits dans le navigateur et des outils payants indiqués comme tels ; SASI est un solde prépayé, pas un abonnement, et la mini-série, la réalisation et la création de site ne sont pas des produits terminés.",
+    toolsTitle:"Outils en ligne pour PDF, images, vidéo et fichiers",toolsDesc:"Dans la liste d’outils LINGXIFIELD, les outils gratuits restent dans le navigateur sans téléversement, les outils payants sont indiqués comme payants, et ceux qui ne sont pas ouverts ne sont pas présentés comme disponibles.",
     open:"Ouvrir l’outil",allTools:"Voir tous les outils",how:"Comment l’utiliser",what:"Ce que l’outil fait",privacy:"Traitement",
-    local:"Lorsque c’est possible, le traitement reste sur votre appareil.",online:"Cet outil utilise un traitement en ligne. Tout coût est indiqué avant l’exécution payante.",topicIntro:"Confiez le résultat voulu à SASI et passez de vos contenus ou idées à un résultat exploitable.",
-    searchTerms:["outils en ligne gratuits","compresser PDF","fusionner PDF","diviser PDF","compresser image","convertir image","transcription vidéo","audio en texte","traduction sous-titres","email temporaire","OCR","générateur vidéo IA","mini-série IA","livre agent IA","assistant recherche IA","assistant étude IA","créateur site IA"]
+    local:"Lorsque c’est possible, le traitement reste sur votre appareil.",online:"Cet outil utilise un traitement en ligne. Tout coût est indiqué avant l’exécution payante.",topicIntro:"SASI est facturé sur un solde prépayé, pas sur un abonnement ; la mini-série, la réalisation et la création de site ne sont pas des produits terminés.",
+    searchTerms:["compresser PDF","fusionner PDF","diviser PDF","compresser image","convertir image","transcription vidéo","audio en texte","traduction sous-titres","email temporaire","OCR","livre agent IA","assistant recherche IA","assistant étude IA"]
   },
   "de":{
     hreflang:"de",name:"Deutsch",dir:"ltr",
-    brand:"LINGXIFIELD",homeTitle:"Kostenlose Online-Tools, SASI & KI-Agenten",homeDesc:"PDF-, Bild-, Video-, Untertitel-, OCR- und Dateitools plus KI-Kurzdramen, Buch-Agenten, Lern- und Forschungsagenten sowie Website-Erstellung.",
-    toolsTitle:"Online-Tools",toolsDesc:"PDF, Bilder, Video, Untertitel, Tabellen, OCR, Datenschutz und Dateiverarbeitung.",
+    brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD-Tools und SASI-Guthaben",homeDesc:"LINGXIFIELD auf lingxifield.com und lingxifield.cn bietet kostenlose Browser-Tools und getrennt gekennzeichnete kostenpflichtige Tools; SASI ist ein vorausbezahltes Guthaben, keine Mitgliedschaft, und Kurzdrama, Regie und Website-Erstellung sind keine fertigen Produkte.",
+    toolsTitle:"Online-Tools für PDF, Bilder, Video und Dateien",toolsDesc:"In der Tool-Liste von LINGXIFIELD laufen kostenlose Tools im Browser ohne Upload, kostenpflichtige Tools sind als kostenpflichtig gekennzeichnet, und noch nicht geöffnete Tools werden nicht als verfügbar beschrieben.",
     open:"Tool öffnen",allTools:"Alle Tools",how:"So funktioniert es",what:"Was das Tool macht",privacy:"Verarbeitung",
-    local:"Wo möglich, wird die Verarbeitung direkt auf deinem Gerät ausgeführt.",online:"Dieses Tool nutzt Online-Verarbeitung. Kosten werden vor einer kostenpflichtigen Ausführung angezeigt.",topicIntro:"Gib SASI dein Ziel und gehe von Material oder Idee direkt zu einem nutzbaren Ergebnis.",
-    searchTerms:["kostenlose Online-Tools","PDF komprimieren","PDF zusammenfügen","PDF teilen","Bild komprimieren","Bild konvertieren","Video transkribieren","Audio in Text","Untertitel übersetzen","temporäre E-Mail","OCR","KI Video Generator","KI Kurzdrama","Buch KI Agent","KI Forschungsassistent","KI Lernassistent","KI Website erstellen"]
+    local:"Wo möglich, wird die Verarbeitung direkt auf deinem Gerät ausgeführt.",online:"Dieses Tool nutzt Online-Verarbeitung. Kosten werden vor einer kostenpflichtigen Ausführung angezeigt.",topicIntro:"SASI wird über ein vorausbezahltes Guthaben abgerechnet, nicht über eine Mitgliedschaft; Kurzdrama, Regie und Website-Erstellung sind keine fertigen Produkte.",
+    searchTerms:["PDF komprimieren","PDF zusammenfügen","PDF teilen","Bild komprimieren","Bild konvertieren","Video transkribieren","Audio in Text","Untertitel übersetzen","temporäre E-Mail","OCR","Buch KI Agent","KI Forschungsassistent","KI Lernassistent"]
   },
   "es":{
     hreflang:"es",name:"Español",dir:"ltr",
-    brand:"LINGXIFIELD",homeTitle:"Herramientas online, creación SASI y agentes de IA",homeDesc:"PDF, imágenes, vídeo, subtítulos, OCR y archivos, además de minidramas con IA, agentes para libros, estudio, investigación y creación de sitios web.",
-    toolsTitle:"Herramientas online",toolsDesc:"Herramientas para PDF, imágenes, vídeo, subtítulos, hojas de cálculo, OCR, privacidad y archivos.",
+    brand:"LINGXIFIELD",homeTitle:"Herramientas LINGXIFIELD y saldo prepago SASI",homeDesc:"LINGXIFIELD en lingxifield.com y lingxifield.cn ofrece herramientas gratuitas en el navegador y herramientas de pago indicadas aparte; SASI es un saldo prepago, no una membresía, y el minidrama, la dirección y la creación de sitios no son productos terminados.",
+    toolsTitle:"Herramientas online para PDF, imágenes, vídeo y archivos",toolsDesc:"En la lista de herramientas de LINGXIFIELD, las gratuitas se ejecutan en el navegador y no suben archivos, las de pago se indican como de pago, y las que aún no están abiertas no se describen como disponibles.",
     open:"Abrir herramienta",allTools:"Ver todas las herramientas",how:"Cómo usarla",what:"Qué hace",privacy:"Procesamiento",
-    local:"Siempre que sea posible, el procesamiento se realiza en tu dispositivo.",online:"Esta herramienta usa procesamiento online. Cualquier coste se muestra antes de ejecutar una acción de pago.",topicIntro:"Dile a SASI el resultado que necesitas y avanza desde tus materiales o ideas hasta un resultado utilizable.",
-    searchTerms:["herramientas online gratis","comprimir PDF","unir PDF","dividir PDF","comprimir imagen","convertir imagen","transcribir video","audio a texto","traducir subtítulos","correo temporal","OCR","generador de videos IA","minidrama IA","libro a agente IA","asistente investigación IA","asistente estudio IA","crear sitio web con IA"]
+    local:"Siempre que sea posible, el procesamiento se realiza en tu dispositivo.",online:"Esta herramienta usa procesamiento online. Cualquier coste se muestra antes de ejecutar una acción de pago.",topicIntro:"SASI se cobra con un saldo prepago, no con una membresía; el minidrama, la dirección y la creación de sitios no son productos terminados.",
+    searchTerms:["comprimir PDF","unir PDF","dividir PDF","comprimir imagen","convertir imagen","transcribir video","audio a texto","traducir subtítulos","correo temporal","OCR","libro a agente IA","asistente investigación IA","asistente estudio IA"]
   },
   "pt":{
     hreflang:"pt",name:"Português",dir:"ltr",
-    brand:"LINGXIFIELD",homeTitle:"Ferramentas online, criação SASI e agentes de IA",homeDesc:"PDF, imagens, vídeo, legendas, OCR e arquivos, além de minidramas com IA, agentes de livros, estudo, pesquisa e criação de sites.",
-    toolsTitle:"Ferramentas online",toolsDesc:"Ferramentas para PDF, imagens, vídeo, legendas, planilhas, OCR, privacidade e arquivos.",
+    brand:"LINGXIFIELD",homeTitle:"Ferramentas LINGXIFIELD e saldo pré-pago SASI",homeDesc:"LINGXIFIELD em lingxifield.com e lingxifield.cn oferece ferramentas gratuitas no navegador e ferramentas pagas indicadas à parte; o SASI é um saldo pré-pago, não uma assinatura, e o minidrama, a direção e a criação de sites não são produtos concluídos.",
+    toolsTitle:"Ferramentas online para PDF, imagens, vídeo e arquivos",toolsDesc:"Na lista de ferramentas da LINGXIFIELD, as gratuitas funcionam no navegador e não enviam arquivos, as pagas são indicadas como pagas, e as que ainda não estão abertas não são descritas como disponíveis.",
     open:"Abrir ferramenta",allTools:"Ver todas as ferramentas",how:"Como usar",what:"O que faz",privacy:"Processamento",
-    local:"Sempre que possível, o processamento acontece no seu dispositivo.",online:"Esta ferramenta usa processamento online. Qualquer custo é mostrado antes de uma execução paga.",topicIntro:"Diga ao SASI o resultado desejado e avance de materiais ou ideias para algo pronto para usar.",
-    searchTerms:["ferramentas online grátis","comprimir PDF","juntar PDF","dividir PDF","comprimir imagem","converter imagem","transcrever vídeo","áudio para texto","traduzir legendas","email temporário","OCR","gerador de vídeo IA","minidrama IA","livro para agente IA","assistente pesquisa IA","assistente estudo IA","criar site com IA"]
+    local:"Sempre que possível, o processamento acontece no seu dispositivo.",online:"Esta ferramenta usa processamento online. Qualquer custo é mostrado antes de uma execução paga.",topicIntro:"O SASI é cobrado de um saldo pré-pago, não de uma assinatura; o minidrama, a direção e a criação de sites não são produtos concluídos.",
+    searchTerms:["comprimir PDF","juntar PDF","dividir PDF","comprimir imagem","converter imagem","transcrever vídeo","áudio para texto","traduzir legendas","email temporário","OCR","livro para agente IA","assistente pesquisa IA","assistente estudo IA"]
   },
   "ar":{
     hreflang:"ar",name:"العربية",dir:"rtl",
-    brand:"LINGXIFIELD",homeTitle:"أدوات أونلاين وSASI ووكلاء ذكاء اصطناعي",homeDesc:"أدوات PDF والصور والفيديو والترجمة النصية وOCR والملفات، إضافة إلى إنشاء الدراما القصيرة بالذكاء الاصطناعي ووكلاء الكتب والتعلم والبحث وبناء المواقع.",
-    toolsTitle:"أدوات أونلاين",toolsDesc:"أدوات PDF والصور والفيديو والترجمة النصية والجداول وOCR والخصوصية والملفات.",
+    brand:"LINGXIFIELD",homeTitle:"أدوات LINGXIFIELD ورصيد SASI المدفوع مقدمًا",homeDesc:"يوفر LINGXIFIELD على lingxifield.com و lingxifield.cn أدوات مجانية داخل المتصفح وأدوات مدفوعة مذكورة على حدة؛ وSASI رصيد مدفوع مقدمًا وليس عضوية، والدراما القصيرة والإخراج وبناء المواقع ليست منتجات مكتملة.",
+    toolsTitle:"أدوات أونلاين لملفات PDF والصور والفيديو",toolsDesc:"في قائمة أدوات LINGXIFIELD تعمل الأدوات المجانية في المتصفح دون رفع الملفات، وتُذكر الأدوات المدفوعة على أنها مدفوعة، ولا تُعرض الأدوات غير المفتوحة كأنها متاحة.",
     open:"فتح الأداة",allTools:"عرض كل الأدوات",how:"طريقة الاستخدام",what:"ما الذي تفعله",privacy:"طريقة المعالجة",
-    local:"تتم المعالجة على جهازك كلما كان ذلك ممكناً.",online:"تستخدم هذه الأداة معالجة عبر الإنترنت. تظهر أي تكلفة قبل التنفيذ المدفوع.",topicIntro:"أعطِ SASI النتيجة التي تريدها وانتقل من المادة أو الفكرة إلى نتيجة قابلة للاستخدام.",
-    searchTerms:["أدوات مجانية اون لاين","ضغط PDF","دمج PDF","تقسيم PDF","ضغط الصور","تحويل الصور","تحويل الفيديو إلى نص","تحويل الصوت إلى نص","ترجمة الترجمة النصية","بريد مؤقت","OCR","مولد فيديو بالذكاء الاصطناعي","دراما قصيرة بالذكاء الاصطناعي","كتاب إلى وكيل ذكاء اصطناعي","مساعد بحث بالذكاء الاصطناعي","مساعد دراسة بالذكاء الاصطناعي","إنشاء موقع بالذكاء الاصطناعي"]
+    local:"تتم المعالجة على جهازك كلما كان ذلك ممكناً.",online:"تستخدم هذه الأداة معالجة عبر الإنترنت. تظهر أي تكلفة قبل التنفيذ المدفوع.",topicIntro:"يُحاسب SASI من رصيد مدفوع مقدمًا وليس من عضوية؛ والدراما القصيرة والإخراج وبناء المواقع ليست منتجات مكتملة.",
+    searchTerms:["ضغط PDF","دمج PDF","تقسيم PDF","ضغط الصور","تحويل الصور","تحويل الفيديو إلى نص","تحويل الصوت إلى نص","ترجمة الترجمة النصية","بريد مؤقت","OCR","كتاب إلى وكيل ذكاء اصطناعي","مساعد بحث بالذكاء الاصطناعي","مساعد دراسة بالذكاء الاصطناعي"]
   }} as const;
 export type SeoLocale=keyof typeof SEO_LOCALES;
 export const LOCALIZED_LOCALES=(Object.keys(SEO_LOCALES) as SeoLocale[]).filter(x=>x!=="zh");
@@ -190,7 +191,6 @@ const HOT_TOOL_TERMS:Record<string,string[]>= {
   "ocr":["image OCR","image to text"],
   "pdf-ocr":["PDF OCR","scanned PDF to text"],
   "food-calorie":["calorie calculator","food nutrition calculator"],
-  "id-photo-ai":["AI ID photo","passport photo maker"]
 };
 
 export function toolKeywords(locale:SeoLocale,tool:GlobalTool){
@@ -203,8 +203,9 @@ export function toolTitle(locale:SeoLocale,tool:GlobalTool){
 }
 
 export function toolDescription(locale:SeoLocale,tool:GlobalTool){
+  const fact=toolGeoFact(tool.slug,locale);
+  if(fact)return fact.description;
   const intro=toolIntro(locale,tool.slug==="heic-local"?"heic-to-jpg":tool.slug);if(intro)return intro;
-  const c=SEO_LOCALES[locale];
   const name=toolTitle(locale,tool);
   return `${name} — ${toolFacts(tool.slug,locale).summary}`;
 }
