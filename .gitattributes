@@ -1,3 +1,12 @@
 
 /imports/world-feed/*.jsonl text eol=lf
 /public/runtime/food-onnx/*.mjs text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf

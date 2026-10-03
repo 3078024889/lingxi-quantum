@@ -13,6 +13,7 @@ import {transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 import{SASI_UNIFIED_ACCEPT}from"@/lib/sasi/composer-core";
 import{downloadSasiDocx}from"@/lib/sasi/export-docx";
 import{SasiComposerSurface,SasiComposerTextarea,SasiUserMessage}from"@/components/SasiComposerCore";
+import{SasiAssistantText,SasiStatusLine,SasiVideoResult,SasiWebsiteResult}from"@/components/SasiResultCore";
 import{selectSasiSkills}from"@/lib/sasi/skills/router";
 
 type Mode="drama"|"website";
@@ -362,23 +363,17 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
     <section className="flex-1 pt-8 sm:pt-12">
      {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<SasiUserMessage className="mb-8">{prompt}</SasiUserMessage>}
 
-     {assistantText&&<article className="mb-8 max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">
+     {assistantText&&<SasiAssistantText className="mb-8">
        {assistantText}
        <div className="mt-4 flex flex-wrap gap-2 text-xs">
         <button type="button" onClick={downloadDiscussionDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{ct("downloadWebsite").replace(/网站|Website/i,lang==="zh"?"文档":"Document")}</button>
         <button type="button" onClick={()=>void downloadDiscussionZip()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">ZIP</button>
        </div>
-     </article>}
+     </SasiAssistantText>}
 
-     {resultUrl&&<div className="mb-8">
-       <video src={resultUrl} controls playsInline className="max-h-[68vh] w-full rounded-3xl bg-black"/>
-       <a href={resultUrl} download className="mt-3 inline-block rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{lang==="zh"?"下载结果":"Download result"}</a>
-     </div>}
+     {resultUrl&&<SasiVideoResult url={resultUrl} downloadLabel={lang==="zh"?"下载结果":"Download result"}/>}
 
-     {websiteHtml&&<div className="mb-8 space-y-3">
-       <iframe title={ct("websitePreview")} sandbox="" referrerPolicy="no-referrer" className="h-[620px] w-full rounded-3xl border border-[var(--lx-line)] bg-white" srcDoc={cleanHtml(websiteHtml)}/>
-       <button onClick={()=>void downloadWebsite()} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("downloadWebsite")}</button>
-     </div>}
+     {websiteHtml&&<SasiWebsiteResult html={cleanHtml(websiteHtml)} title={ct("websitePreview")} downloadLabel={ct("downloadWebsite")} onDownload={()=>void downloadWebsite()}/>}
 
      {mode==="drama"&&projectId&&<div className="mb-8 flex flex-wrap gap-2">
        <Link href={`/sasi/series?projectId=${encodeURIComponent(projectId)}`} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("continueSeries")}</Link>
@@ -425,7 +420,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
       </div>
 
       {mode==="drama"&&<label className="flex items-start gap-2 px-3 pt-2 text-[11px] text-[var(--lx-muted)]"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
-      {message&&<p className="px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">{message}</p>}
+      <SasiStatusLine>{message}</SasiStatusLine>
      </SasiComposerSurface>
      {modeBar}
     </section>

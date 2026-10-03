@@ -4,8 +4,7 @@ import {useEffect,useState,type ReactNode} from "react";
 import {useSearchParams} from "next/navigation";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
-import SasiChatCreationStudio from "@/components/SasiChatCreationStudio";
-import KnowledgeWorkspace from "@/components/KnowledgeWorkspace";
+import SasiModeHost from "@/components/SasiModeHost";
 
 type Mode="drama"|"website"|"book"|"learning"|"research";
 
@@ -48,7 +47,7 @@ export default function SasiOneSurface(){
  }
 
  const modeBar:ReactNode=<nav
-   className="mx-auto mt-2 flex max-w-full items-center justify-center gap-1 overflow-x-auto px-1 pb-1 text-xs"
+   className="lx-sasi-modebar-reference mt-4 flex w-full max-w-full items-center justify-start gap-5 overflow-x-auto px-0 pb-1 text-[13px] sm:gap-6"
    aria-label="SASI modes"
   >
    {MODES.map(item=><button
@@ -57,24 +56,20 @@ export default function SasiOneSurface(){
     onClick={()=>switchMode(item.id)}
     aria-pressed={mode===item.id}
     className={[
-      "flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 transition",
+      "flex shrink-0 items-center gap-2 rounded-xl px-0 py-1.5 transition",
       mode===item.id
-        ?"bg-[var(--lx-soft)] font-semibold text-[var(--lx-ink)]"
-        :"text-[var(--lx-faint)] hover:bg-[var(--lx-soft)] hover:text-[var(--lx-ink)]"
+        ?"font-semibold text-[var(--lx-ink)]"
+        :"text-[var(--lx-faint)] hover:text-[var(--lx-ink)]"
     ].join(" ")}
    >
-    <LingxiMiniIcon name={item.icon} size="tiny"/>
+    <LingxiMiniIcon name={item.icon} size="nav"/>
     <span>{MODE_LABELS[lang]?.[item.id]??MODE_LABELS.en[item.id]}</span>
    </button>)}
   </nav>;
 
  return <main className="lx11-page min-h-[calc(100vh-64px)]">
   <div className="mx-auto max-w-[1440px] px-3 sm:px-5">
-   {mode==="drama"?<SasiChatCreationStudio mode="drama" modeBar={modeBar}/>
-    :mode==="website"?<SasiChatCreationStudio mode="website" modeBar={modeBar}/>
-    :mode==="book"?<KnowledgeWorkspace mode="book" modeBar={modeBar}/>
-    :mode==="learning"?<KnowledgeWorkspace mode="learning" modeBar={modeBar}/>
-    :<KnowledgeWorkspace mode="research" modeBar={modeBar}/>}
+   <SasiModeHost mode={mode} modeBar={modeBar}/>
   </div>
  </main>;
 }

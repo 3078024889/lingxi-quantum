@@ -25,7 +25,9 @@ import {
 import { KNOWLEDGE_SOURCE_MAX } from "@/lib/ai-knowledge/local-index";
 import{SASI_UNIFIED_ACCEPT}from"@/lib/sasi/composer-core";
 import{downloadSasiDocx}from"@/lib/sasi/export-docx";
-import{SasiComposerSurface,SasiComposerTextarea,SasiUserMessage}from"@/components/SasiComposerCore";
+import{SasiComposerSurface,SasiComposerTextarea}from"@/components/SasiComposerCore";
+import{SasiConversationTurns,SasiStatusLine}from"@/components/SasiResultCore";
+import{createSasiTurn,type SasiConversationTurn}from"@/lib/sasi/core/session-contract";
 import{selectSasiSkills}from"@/lib/sasi/skills/router";
 async function zipText(file:File){
  const zip=await JSZip.loadAsync(file);
@@ -158,7 +160,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   const [addOpen,setAddOpen]=useState(false);
   const [dragging,setDragging]=useState(false);
   const [needsConnection,setNeedsConnection]=useState(false);
-  const [thread,setThread]=useState<Array<{question:string;answer:string}>>([]);
+  const [thread,setThread]=useState<SasiConversationTurn[]>([]);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
 
   useEffect(()=>{
@@ -304,7 +306,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
-      setThread(rows=>[...rows,{question:raw,answer:String(data.answer||"")}]);
+      setThread(rows=>[...rows,createSasiTurn(raw,String(data.answer||""))]);
       setLearningEventId(String(data.learningEventId||""));
       setLastIntelligence((data.intelligence||intelligence) as Intelligence);
       setNotice(tr(lang,"done"));
@@ -357,12 +359,12 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   }
 
   function threadMarkdown(){
-    const rows=thread.length?thread:(answer?[{question,answer}]:[]);
-    return rows.map((row,i)=>`## ${i+1}. ${row.question}\n\n${row.answer}\n`).join("\n");
+    const rows=thread.length?thread:(answer?[{id:"current",user:question,assistant:answer,createdAt:""}]:[]);
+    return rows.map((row,i)=>`## ${i+1}. ${row.user}\n\n${row.assistant}\n`).join("\n");
   }
   async function downloadThreadDoc(){
-    const rows=thread.length?thread:(answer?[{question,answer}]:[]);
-    await downloadSasiDocx(rows,"sasi-discussion.docx");
+    const rows=thread.length?thread:(answer?[{id:"current",user:question,assistant:answer,createdAt:""}]:[]);
+    await downloadSasiDocx(rows.map(row=>({question:row.user,answer:row.assistant})),"sasi-discussion.docx");
   }
   async function downloadThreadZip(){
     const zip=new JSZip();
@@ -382,10 +384,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
   return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4 lx-knowledge-workspace">
     <div className="flex-1 pt-8 sm:pt-12">
-      {(thread.length?thread:(answer?[{question,answer}]:[])).map((row,index)=><div key={index} className="mb-10">
-        <SasiUserMessage className="mb-6">{row.question}</SasiUserMessage>
-        <article className="max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">{row.answer}</article>
-      </div>)}
+      <SasiConversationTurns turns={thread.length?thread:(answer?[{id:"current",user:question,assistant:answer,createdAt:""}]:[])}/>
 
       {(thread.length>0||answer)&&<div className="mb-10 flex flex-wrap gap-2 text-xs">
         <button type="button" onClick={downloadThreadDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{lang==="zh"?"下载文档":"Download document"}</button>
@@ -454,7 +453,7 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
         </div>
 
         {notice&&<div className="flex flex-wrap items-center gap-2 px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">
-          <p role="status">{notice}</p>
+          <SasiStatusLine>{notice}</SasiStatusLine>
           {needsConnection&&<Link href="/sasi/connections" className="font-medium text-blue-600 hover:underline">{lang==="zh"?"连接我的智能服务 →":"Connect my intelligence service →"}</Link>}
         </div>}
       </SasiComposerSurface>
