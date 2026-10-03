@@ -1,5 +1,6 @@
 "use client";
 
+import {useMoneyAutoRefresh} from "@/lib/money/use-money-auto-refresh";
 import Link from "next/link";
 import {moneyText} from "@/lib/notifications/money-copy";
 import {useEffect,useMemo,useState} from "react";
@@ -69,8 +70,8 @@ export default function SasiPricingCurrencyClient(){
 
  useEffect(()=>setSelected(currency),[currency]);
 
- async function load(){
-  setLoading(true);setError("");
+ async function load(showLoading=true){
+  if(showLoading)setLoading(true);setError("");
   try{
    const r=await fetch("/api/money/summary",{cache:"no-store"});
    const b=await r.json().catch(()=>({}));
@@ -81,6 +82,7 @@ export default function SasiPricingCurrencyClient(){
  }
 
  useEffect(()=>{void load()},[lang]);
+ useMoneyAutoRefresh(()=>load(false),Boolean(data?.withdrawals.some(w=>["requested","processing"].includes(w.status))));
 
  const snapshot=data?.balances?.[selected];
  const recent=useMemo(()=>data?.withdrawals?.filter(x=>x.currency===selected).slice(0,5)??[],[data,selected]);

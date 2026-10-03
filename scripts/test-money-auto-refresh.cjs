@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),ts=require('typescript');
+(async()=>{const refs=[],effects=[],events=new Map();let tick,queries=0,reads=0,operator=false,cleared=0;
+const target={addEventListener:(n,f)=>events.set(n,f),removeEventListener:n=>events.delete(n)};global.window=target;global.document={...target,visibilityState:'visible'};Object.defineProperty(global,'navigator',{value:{onLine:true},configurable:true});global.setInterval=f=>(tick=f,1);global.clearInterval=()=>cleared++;global.fetch=async(url,init)=>{assert.equal(url,'/api/account/withdrawals/progress');assert.equal(init.method,'POST');operator=JSON.parse(init.body).operator;queries++;return{ok:true}};
+const mod={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync('lib/money/use-money-auto-refresh.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(()=>({useRef:v=>{const r={current:v};refs.push(r);return r},useEffect:f=>effects.push(f())}),mod,mod.exports);
+const hook=mod.exports.useMoneyAutoRefresh,flush=()=>new Promise(setImmediate);hook(async()=>reads++,true);hook(async()=>reads++,true);
+tick();tick();await flush();assert.equal(queries,1);assert.equal(reads,2);assert.equal(operator,false);
+events.get('lingxi-money-updated')();await flush();assert.equal(queries,1);assert.equal(reads,4);
+document.visibilityState='hidden';tick();await flush();assert.equal(queries,1);document.visibilityState='visible';navigator.onLine=false;tick();await flush();assert.equal(queries,1);navigator.onLine=true;
+hook(async()=>reads++,true,true);events.get('focus')();await flush();assert.equal(queries,2);assert.equal(operator,true);
+refs.forEach(r=>r.current.active=false);tick();await flush();assert.equal(queries,2);effects.forEach(cleanup=>cleanup());assert.equal(events.size,0);assert.equal(cleared,1);
+console.log('PASS: one shared polling request, refreshes all subscribers, event refresh without provider query, hidden/offline pause, focus resume, operator scope, stop after completion and listener cleanup.');})().catch(e=>{console.error(e);process.exitCode=1});

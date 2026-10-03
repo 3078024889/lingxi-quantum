@@ -31,8 +31,8 @@ function nextDelay(base:number,attempt:number,key:string,failureCode:string|null
  return retryWithJitter(Math.max(30,base),attempt,key,6*60*60);
 }
 
-async function recordObservation(admin:any,w:Row,o:ProviderRefundObservation){
- const attempts=Number(w.provider_attempt_count||0)+1;
+async function recordObservation(admin:any,w:Row,o:ProviderRefundObservation,countAttempt=true){
+ const attempts=Number(w.provider_attempt_count||0)+(countAttempt?1:0);
  const failureCode=observationFailureCode(o,attempts);
  const delay=nextDelay(Number(o.retryAfterSeconds||300),attempts,String(w.id),failureCode);
  const {error}=await admin.from("balance_withdrawals").update({
@@ -79,12 +79,14 @@ async function recordException(admin:any,w:Row,error:unknown){
  };
 }
 
-export async function reconcileWithdrawal(withdrawalId:string){
+export async function reconcileWithdrawal(withdrawalId:string,options:{queryOnly?:boolean}={}){
  const admin=createAdminClient();
  const{data:w,error:we}=await admin.from("balance_withdrawals").select("*").eq("id",withdrawalId).single();
  if(we||!w)throw new Error("WITHDRAWAL_NOT_FOUND");
  if(!["requested","processing"].includes(String(w.status)))return{ok:true,closed:true,status:w.status};
 
+ // Automatic polling may query an existing receipt, but cannot submit a refund.
+ if(options.queryOnly&&(!w.provider_refund_id||!w.submission_confirmed_at||Date.now()-Date.parse(w.last_provider_checked_at||'')<30000))return{ok:true,status:w.status};
  const{data:lease,error:leaseError}=await admin.rpc("money_begin_provider_call",{p_withdrawal_id:w.id});
  if(leaseError)throw new Error("PROVIDER_CALL_CLAIM_FAILED");
  if(!lease?.ok)return{ok:true,status:lease?.status||"processing"};
@@ -115,7 +117,7 @@ export async function reconcileWithdrawal(withdrawalId:string){
    ?await adapter.queryRefund(request)
    :await adapter.createRefund(request);
 
-  await recordObservation(admin,w,observation);
+  await recordObservation(admin,w,observation,!options.queryOnly);
   const decision=planReconciliation(observation);
 
   if(decision.kind==="complete"){
@@ -138,7 +140,7 @@ export async function reconcileWithdrawal(withdrawalId:string){
    return{ok:true,status:"failed",result:data};
   }
 
-  const failureCode=observationFailureCode(observation,Number(w.provider_attempt_count||0)+1);
+  const failureCode=observationFailureCode(observation,Number(w.provider_attempt_count||0)+(options.queryOnly?0:1));
   return{
    ok:true,
    status:"pending",

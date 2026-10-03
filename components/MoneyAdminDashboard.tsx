@@ -1,4 +1,5 @@
 "use client";
+import {useMoneyAutoRefresh} from "@/lib/money/use-money-auto-refresh";
 import {useCallback,useEffect,useState} from "react";
 type Row={id:string;provider:string;currency:string;amount_minor:number;provider_currency:string;provider_amount_minor:number;status:string;failure_code:string|null;submission_confirmed_at:string|null;provider_refund_id:string|null;created_at:string};
 type Channel={provider:string;provider_currency:string;active_count:number;pending_minor:number;funds_required_minor:number;awaiting_confirmation:number};
@@ -7,7 +8,8 @@ const provider=(s:string)=>s==='wechat'?'微信支付':s==='alipay'?'支付宝':
 function status(w:Row){if(w.status==='cancelled')return '已取消 · 余额已恢复';if(w.status==='completed')return '渠道已确认完成';if(w.failure_code==='PROVIDER_FUNDS_REQUIRED')return '需要补足商户资金';if(['PROVIDER_ACTION_REQUIRED','OPERATOR_REVIEW_REQUIRED'].includes(w.failure_code||''))return '需要人工处理';if(w.status==='requested'&&!w.submission_confirmed_at)return '待用户确认';if(['failed','rejected'].includes(w.status))return '未完成 · 余额已释放';return '正在确认退款结果';}
 export default function MoneyAdminDashboard(){const[data,setData]=useState<Data|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[filter,setFilter]=useState('all');
  const load=useCallback(async()=>{try{const r=await fetch('/api/account/money-admin',{cache:'no-store'});if(!r.ok){setData(null);setError(r.status===403?'请使用管理员邮箱登录后查看。':'暂时无法读取资金数据，请稍后刷新。');return}setData(await r.json());setError('')}catch{setError('暂时无法读取，请稍后刷新。')}},[]);
- useEffect(()=>{void load();const t=setInterval(()=>void load(),30000);return()=>clearInterval(t)},[load]);
+ useEffect(()=>{void load()},[load]);
+ useMoneyAutoRefresh(load,Boolean(data?.withdrawals.some(w=>["requested","processing"].includes(w.status))),true);
  async function operate(action:string,id?:string){setBusy(true);setMessage('');try{const r=await fetch('/api/account/money-admin',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,id})});const b=await r.json();setMessage(!r.ok?'本次操作未完成，请刷新后核对。':action==='send-notices'?(b.configured?'邮件发送请求已处理，请查看下方发送记录。':'邮件服务尚未配置，申请仍保留在通知队列中。'):'已查询原渠道，请查看最新状态。');await load()}catch{setMessage('本次操作未完成，请刷新后核对。')}finally{setBusy(false)}}
  return <main className="mx-auto max-w-6xl px-4 py-12 sm:px-8"><header className="flex flex-wrap items-center justify-between gap-4"><div><p className="text-sm text-[var(--lx-muted)]">商户运营</p><h1 className="mt-2 text-3xl font-semibold">资金管理</h1><p className="mt-3 text-sm text-[var(--lx-muted)]">统一查看提现、原路退款和需要你处理的申请。</p></div><button onClick={()=>void load()} className="rounded-xl border border-[var(--lx-line)] px-4 py-2">刷新数据</button></header>
  {error&&<p role="alert" className="mt-6 rounded-2xl border border-[var(--lx-line)] p-5">{error}</p>}

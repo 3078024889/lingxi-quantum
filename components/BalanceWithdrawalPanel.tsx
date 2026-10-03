@@ -1,4 +1,5 @@
 "use client";
+import {useMoneyAutoRefresh} from "@/lib/money/use-money-auto-refresh";
 import {useEffect,useMemo,useState,useRef} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {moneyText,moneyError,moneyNotice} from "@/lib/notifications/money-copy";
@@ -52,7 +53,8 @@ export default function BalanceWithdrawalPanel(){
     if(r.ok)setData(d);else setMsg(moneyError(lang,d.error||""));}catch{setMsg(moneyText(lang,"unavailable"))}
   }
   const loadRef=useRef(load);loadRef.current=load;
- useEffect(()=>{void loadRef.current();const refresh=()=>void loadRef.current();const timer=setInterval(refresh,30000);window.addEventListener("lingxi-money-updated",refresh);return()=>{clearInterval(timer);window.removeEventListener("lingxi-money-updated",refresh)}},[c.loadFail]);
+ useEffect(()=>{void loadRef.current()},[c.loadFail]);
+ useMoneyAutoRefresh(load,Boolean(data?.withdrawals.some(w=>["requested","processing"].includes(w.status))));
 
   const activeByOrder=useMemo(()=>{
     const out=new Set<string>();

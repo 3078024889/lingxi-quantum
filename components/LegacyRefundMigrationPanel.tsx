@@ -1,4 +1,5 @@
 "use client";
+import {useMoneyAutoRefresh} from '@/lib/money/use-money-auto-refresh';
 import {useCallback,useEffect,useState} from 'react';
 import {useLingxiLang} from '@/lib/lingxi-i18n';
 import {moneyText,moneyError,moneyNotice} from '@/lib/notifications/money-copy';
@@ -7,6 +8,7 @@ export default function LegacyRefundMigrationPanel(){
  const{lang}=useLingxiLang();const[items,setItems]=useState<Legacy[]>([]),[busy,setBusy]=useState<string|null>(null),[msg,setMsg]=useState('');
  const load=useCallback(async()=>{try{const r=await fetch('/api/account/withdrawals/legacy',{cache:'no-store'});if(!r.ok)throw new Error();const d=await r.json();setItems(d.items||[])}catch{setMsg(moneyText(lang,'unavailable'))}},[lang]);
  useEffect(()=>{void load()},[load]);
+ useMoneyAutoRefresh(load,items.some(x=>["requested","approved"].includes(x.status)));
  async function migrate(x:Legacy){if(!confirm(moneyText(lang,'confirm')))return;setBusy(x.id);setMsg('');try{const r=await fetch('/api/account/withdrawals/legacy',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({requestId:x.id})});const d=await r.json();if(!r.ok){setMsg(moneyError(lang,d.error||''));return}setMsg(moneyText(lang,d.status==='completed'?'completed':d.status==='failed'?'failed':d.status==='requested'?'requested':'processing'));window.dispatchEvent(new Event('lingxi-money-updated'));await load()}catch{setMsg(moneyText(lang,'unavailable'))}finally{setBusy(null)}}
  async function cancel(x:Legacy){if(!confirm(moneyText(lang,'cancelConfirm')))return;setBusy(x.id);try{const r=await fetch('/api/account/withdrawals/cancel',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({requestId:x.id,kind:'legacy'})}),b=await r.json();setMsg(r.ok?moneyText(lang,'cancelled'):moneyError(lang,b.error||''));window.dispatchEvent(new Event('lingxi-money-updated'));await load()}catch{setMsg(moneyText(lang,'unavailable'))}finally{setBusy(null)}}
  if(!items.length&&!msg)return null;
