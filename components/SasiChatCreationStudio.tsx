@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback,useEffect,useRef,useState} from "react";
+import {useCallback,useEffect,useRef,useState,type ReactNode} from "react";
 import Link from "next/link";
 import styles from "./SasiChatCreationStudio.module.css";
 import SasiFunctionMenu,{SasiSelectedFunctions} from "./SasiFunctionMenu";
@@ -19,7 +19,7 @@ type WebsiteQuote={kind:"website-byok";task:any};
 type Quote=ByokQuote|WebsiteQuote|null;
 
 const VIDEO_RATIOS=["9:16","16:9","1:1","4:3","3:4","3:2","2:3","21:9"] as const;
-const VIDEO_RESOLUTIONS=["720p","1080p","2K","4K"] as const;
+const VIDEO_RESOLUTIONS=["720p","1080p","4k"] as const;
 const VIDEO_DURATIONS=[5,8,10,12] as const;
 const ACCEPT=[
  ".txt",".md",".json",".csv",".yaml",".yml",".pdf",".docx",".pptx",".xlsx",".epub",".odt",
@@ -89,7 +89,7 @@ function localWebsite(prompt:string,lang:LingxiLang,heroImage=""){
  <section id="start" class="cta"><h2>${site("siteContinue")}</h2><p>${site("siteDraftNote")}</p></section></main></body></html>`;
 }
 
-export default function SasiChatCreationStudio({mode}:{mode:Mode}){
+export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar?:ReactNode}){
  const{lang}=useLingxiLang();
  const ct=(key:Parameters<typeof composerText>[1],vars?:Record<string,string|number>)=>composerText(lang,key,vars);
  const ctRef=useRef(ct);ctRef.current=ct;
@@ -100,6 +100,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
  const[projectId,setProjectId]=useState("");
  const[ratio,setRatio]=useState<(typeof VIDEO_RATIOS)[number]>("9:16");
  const[resolution,setResolution]=useState<(typeof VIDEO_RESOLUTIONS)[number]>("1080p");
+ const[availableResolutions,setAvailableResolutions]=useState<Array<(typeof VIDEO_RESOLUTIONS)[number]>>(["720p","1080p"]);
  const[duration,setDuration]=useState<(typeof VIDEO_DURATIONS)[number]>(8);
  const[quote,setQuote]=useState<Quote>(null);
  const[busy,setBusy]=useState(false);
@@ -132,6 +133,23 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
    }).catch(()=>{});
   return()=>{active=false};
  },[mode,lang]);
+ useEffect(()=>{
+  if(mode!=="drama"||!projectId){setAvailableResolutions(["720p","1080p"]);return}
+  let active=true;
+  void fetch(`/api/sasi/byok/video?projectId=${encodeURIComponent(projectId)}`,{cache:"no-store"})
+   .then(async r=>({ok:r.ok,body:await r.json().catch(()=>({}))}))
+   .then(({ok,body})=>{
+    if(!active||!ok||!Array.isArray(body.profiles))return;
+    const found=[...new Set(body.profiles.map((x:any)=>String(x.resolution||"").toLowerCase()))]
+      .filter((x):x is "720p"|"1080p"|"4k"=>x==="720p"||x==="1080p"||x==="4k");
+    const next:Array<"720p"|"1080p"|"4k">=found.length?found:["720p","1080p"];
+    setAvailableResolutions(next);
+    setResolution(current=>next.includes(current)?current:(next[0]??"720p"));
+    void track("continued","video.resolutions.discovered",projectId);
+   }).catch(()=>{});
+  return()=>{active=false};
+ },[mode,projectId]);
+
  const track=useCallback(async(signal:string,capability:string,pid?:string)=>{
   await fetch("/api/sasi/v5/feedback",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
    taskFamily:mode==="drama"?"drama.compose":"website.compose",projectId:pid||projectId||null,signal,capability
@@ -262,11 +280,6 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
    setMessage(ct("ratioSaved"));
    await track("continued","drama.route.unavailable",pid);return;
   }
-  if(resolution==="2K"||resolution==="4K"){
-   setAssistantText(ct("resolutionUnavailable",{value:resolution}));
-   setMessage(ct("resolutionSaved"));
-   await track("continued","drama.resolution.unavailable",pid);return;
-  }
 
   const state=await fetch(`/api/sasi/byok/video?projectId=${encodeURIComponent(pid)}`,{cache:"no-store"});
   const sb=await state.json().catch(()=>({}));
@@ -357,7 +370,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
   return <main data-sasi-composer-version="v5200" className={`${styles.workspace} min-h-[calc(100vh-152px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
    <div className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4">
     <section className="flex-1 pt-8 sm:pt-12">
-     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<div className="ml-auto mb-8 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-[var(--lx-ink)]">{prompt}</div>}
+     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<div className="ml-auto mb-8 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-blue-600">{prompt}</div>}
 
      {assistantText&&<article className="mb-8 max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">
        {assistantText}
@@ -383,7 +396,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
      </div>}
     </section>
 
-    <section className="sticky bottom-14 z-30 mt-auto w-full">
+    <section className="sticky bottom-3 z-30 mt-auto w-full">
      <div onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={()=>setDragging(false)} onDrop={onDrop}
        className={`rounded-[28px] border bg-[var(--lx-panel)] p-3 shadow-[0_12px_44px_rgba(0,0,0,.10)] transition ${dragging?"border-[var(--lx-ink)] ring-2 ring-[var(--lx-line)]":"border-[var(--lx-line)]"}`}>
       {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">{files.map(item=><div key={item.id} className="min-w-[170px] max-w-[240px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-2 text-xs">
@@ -398,7 +411,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
 
       <textarea ref={textareaRef} aria-label={ct(mode==="drama"?"promptDrama":"promptWebsite")} disabled={busy} rows={1} maxLength={12000} value={prompt}
         onChange={e=>{setPrompt(e.target.value);setQuote(null)}} placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}
-        className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 outline-none placeholder:text-[var(--lx-faint)]"/>
+        className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 text-blue-600 outline-none placeholder:text-[var(--lx-faint)]"/>
 
       <div className="mt-1 flex flex-wrap items-center gap-2">
        <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={e=>{if(e.target.files)addFiles(e.target.files);e.currentTarget.value=""}}/>
@@ -406,7 +419,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
 
        {mode==="drama"&&<>
         <select disabled={busy} aria-label={ct("resolution")} value={resolution} onChange={e=>{setResolution(e.target.value as (typeof VIDEO_RESOLUTIONS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
-         {VIDEO_RESOLUTIONS.map(x=><option key={x}>{x}</option>)}
+         {availableResolutions.map(x=><option key={x} value={x}>{x==="4k"?"4K":x}</option>)}
         </select>
         <select disabled={busy} aria-label={ct("ratio")} value={ratio} onChange={e=>{setRatio(e.target.value as (typeof VIDEO_RATIOS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
          {VIDEO_RATIOS.map(x=><option key={x}>{x}</option>)}
@@ -426,6 +439,7 @@ export default function SasiChatCreationStudio({mode}:{mode:Mode}){
       {mode==="drama"&&<label className="flex items-start gap-2 px-3 pt-2 text-[11px] text-[var(--lx-muted)]"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
       {message&&<p className="px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">{message}</p>}
      </div>
+     {modeBar}
     </section>
    </div>
   </main>;

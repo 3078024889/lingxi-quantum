@@ -1,8 +1,9 @@
 "use client";
 
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useState,type ReactNode} from "react";
 import {useSearchParams} from "next/navigation";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
+import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import SasiChatCreationStudio from "@/components/SasiChatCreationStudio";
 import KnowledgeWorkspace from "@/components/KnowledgeWorkspace";
 
@@ -20,7 +21,13 @@ const MODE_LABELS:Record<LingxiLang,Record<Mode,string>>={
  ar:{drama:"دراما",website:"موقع",book:"كتاب",learning:"تعلم",research:"بحث"},
 };
 
-const MODES:Mode[]=["drama","website","book","learning","research"];
+const MODES:Array<{id:Mode;icon:LingxiIconName}>=[
+ {id:"drama",icon:"drama"},
+ {id:"website",icon:"website"},
+ {id:"book",icon:"book"},
+ {id:"learning",icon:"learning"},
+ {id:"research",icon:"research"},
+];
 
 function normalize(value:string|null):Mode{
  return value==="website"||value==="book"||value==="learning"||value==="research"||value==="drama"?value:"drama";
@@ -34,38 +41,40 @@ export default function SasiOneSurface(){
  useEffect(()=>{setMode(normalize(params.get("mode")))},[params]);
 
  function switchMode(next:Mode){
-   setMode(next);
-   const url=new URL(window.location.href);
-   url.searchParams.set("mode",next);
-   window.history.replaceState({},"",`${url.pathname}?${url.searchParams.toString()}`);
+  setMode(next);
+  const url=new URL(window.location.href);
+  url.searchParams.set("mode",next);
+  window.history.replaceState({},"",`${url.pathname}?${url.searchParams.toString()}`);
  }
 
- const content=useMemo(()=>{
-   if(mode==="drama")return <SasiChatCreationStudio mode="drama"/>;
-   if(mode==="website")return <SasiChatCreationStudio mode="website"/>;
-   if(mode==="book")return <KnowledgeWorkspace mode="book"/>;
-   if(mode==="learning")return <KnowledgeWorkspace mode="learning"/>;
-   return <KnowledgeWorkspace mode="research"/>;
- },[mode]);
+ const modeBar:ReactNode=<nav
+   className="mx-auto mt-2 flex max-w-full items-center justify-center gap-1 overflow-x-auto px-1 pb-1 text-xs"
+   aria-label="SASI modes"
+  >
+   {MODES.map(item=><button
+    key={item.id}
+    type="button"
+    onClick={()=>switchMode(item.id)}
+    aria-pressed={mode===item.id}
+    className={[
+      "flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 transition",
+      mode===item.id
+        ?"bg-[var(--lx-soft)] font-semibold text-[var(--lx-ink)]"
+        :"text-[var(--lx-faint)] hover:bg-[var(--lx-soft)] hover:text-[var(--lx-ink)]"
+    ].join(" ")}
+   >
+    <LingxiMiniIcon name={item.icon} size="tiny"/>
+    <span>{MODE_LABELS[lang]?.[item.id]??MODE_LABELS.en[item.id]}</span>
+   </button>)}
+  </nav>;
 
  return <main className="lx11-page min-h-[calc(100vh-64px)]">
-   <div className="mx-auto max-w-[1440px] px-3 pb-20 sm:px-5">
-     {content}
-   </div>
-
-   <nav
-     className="fixed bottom-2 left-1/2 z-40 flex max-w-[calc(100vw-24px)] -translate-x-1/2 items-center justify-center gap-1 rounded-full bg-[color:var(--lx-bg)/.88] px-2 py-1.5 text-xs backdrop-blur-xl lg:left-[calc(50%+108px)]"
-     aria-label="SASI modes"
-   >
-     {MODES.map(item=><button
-       key={item}
-       type="button"
-       onClick={()=>switchMode(item)}
-       className={`rounded-full px-3 py-1.5 transition ${mode===item?"font-semibold text-[var(--lx-ink)]":"text-[var(--lx-faint)] hover:text-[var(--lx-ink)]"}`}
-       aria-pressed={mode===item}
-     >
-       {MODE_LABELS[lang]?.[item]??MODE_LABELS.en[item]}
-     </button>)}
-   </nav>
+  <div className="mx-auto max-w-[1440px] px-3 sm:px-5">
+   {mode==="drama"?<SasiChatCreationStudio mode="drama" modeBar={modeBar}/>
+    :mode==="website"?<SasiChatCreationStudio mode="website" modeBar={modeBar}/>
+    :mode==="book"?<KnowledgeWorkspace mode="book" modeBar={modeBar}/>
+    :mode==="learning"?<KnowledgeWorkspace mode="learning" modeBar={modeBar}/>
+    :<KnowledgeWorkspace mode="research" modeBar={modeBar}/>}
+  </div>
  </main>;
 }

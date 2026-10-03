@@ -1,8 +1,6 @@
 "use client";
 import {useEffect,useMemo,useState,useRef} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
-
-import LegacyRefundMigrationPanel from "./LegacyRefundMigrationPanel";
 import {moneyText,moneyError,moneyNotice} from "@/lib/notifications/money-copy";
 import {moneyMinor} from "@/lib/payments/money-input";
 type Order={refundable_minor:number;id:string;product_id:string;provider:string|null;amount_rmb:number|null;amount_usd:number|null;created_at:string};
@@ -121,6 +119,5 @@ export default function BalanceWithdrawalPanel(){
         </article>)}
       </div>
     </section>
-    <LegacyRefundMigrationPanel/>
-  </div>;
+</div>;
 }

@@ -8,6 +8,8 @@ export const SASI_PRICING_V49={
   imageHigh:{CNY:0.30,USD:0.30},
   video720PerSecond:{CNY:0.20,USD:0.20},
   video1080PerSecond:{CNY:0.30,USD:0.30},
+  video2KPerSecond:{CNY:0.50,USD:0.50},
+  video4KPerSecond:{CNY:0.70,USD:0.70},
   websiteFirstPage:{CNY:6,USD:6},
   websiteAdditionalPage:{CNY:2,USD:2},
   minimumCharge:{CNY:0.01,USD:0.01},
@@ -22,9 +24,9 @@ export function textChargeMinor(totalTokens:number,currency:SasiBillingCurrency)
 export function imageChargeMinor(quality:"standard"|"high",currency:SasiBillingCurrency){
   return minor((quality==="high"?SASI_PRICING_V49.imageHigh:SASI_PRICING_V49.imageStandard)[currency]);
 }
-export function videoChargeMinor(durationSeconds:number,resolution:"720p"|"1080p",currency:SasiBillingCurrency){
+export function videoChargeMinor(durationSeconds:number,resolution:"720p"|"1080p"|"2k"|"4k",currency:SasiBillingCurrency){
   const seconds=Math.max(1,Math.ceil(Number(durationSeconds)||0));
-  const rate=resolution==="1080p"?SASI_PRICING_V49.video1080PerSecond:SASI_PRICING_V49.video720PerSecond;
+  const rate=resolution==="4k"?SASI_PRICING_V49.video4KPerSecond:resolution==="2k"?SASI_PRICING_V49.video2KPerSecond:resolution==="1080p"?SASI_PRICING_V49.video1080PerSecond:SASI_PRICING_V49.video720PerSecond;
   return minor(seconds*rate[currency]);
 }
 export function websiteChargeMinor(pageCount:number,currency:SasiBillingCurrency){

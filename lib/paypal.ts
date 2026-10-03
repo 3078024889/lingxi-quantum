@@ -1,4 +1,4 @@
-function paypalBaseUrl() {
+export function paypalBaseUrl() {
   return process.env.PAYPAL_ENV === "sandbox"
     ? "https://api-m.sandbox.paypal.com"
     : "https://api-m.paypal.com";
@@ -170,4 +170,36 @@ export async function verifyPaypalWebhook(headers: Headers, rawBody: string): Pr
   });
   const data = await res.json();
   return data.verification_status === "SUCCESS";
+}
+
+export async function createPaypalRefund(input:{
+  captureId:string;
+  requestId:string;
+  amountCents:number;
+}):Promise<{refundId:string;status:string;raw:any}>{
+  if(!Number.isSafeInteger(input.amountCents)||input.amountCents<=0)throw new Error("PAYPAL_REFUND_AMOUNT_INVALID");
+  const token=await getPaypalAccessToken();
+  const res=await fetchWithTimeout(paypalBaseUrl()+"/v2/payments/captures/"+encodeURIComponent(input.captureId)+"/refund",{
+    method:"POST",
+    headers:{
+      Authorization:"Bearer "+token,
+      "Content-Type":"application/json",
+      "PayPal-Request-Id":input.requestId,
+      Prefer:"return=representation"
+    },
+    body:JSON.stringify({amount:{currency_code:"USD",value:(input.amountCents/100).toFixed(2)}})
+  });
+  const data=await res.json();
+  if(!res.ok)throw new Error("PAYPAL_REFUND_HTTP_"+res.status+":"+String(data?.name||data?.message||"UNKNOWN").slice(0,120));
+  return{refundId:String(data.id||""),status:String(data.status||"PENDING"),raw:data};
+}
+
+export async function queryPaypalRefund(refundId:string):Promise<{refundId:string;status:string;raw:any}>{
+  const token=await getPaypalAccessToken();
+  const res=await fetchWithTimeout(paypalBaseUrl()+"/v2/payments/refunds/"+encodeURIComponent(refundId),{
+    method:"GET",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},cache:"no-store"
+  });
+  const data=await res.json();
+  if(!res.ok)throw new Error("PAYPAL_REFUND_QUERY_HTTP_"+res.status);
+  return{refundId:String(data.id||refundId),status:String(data.status||"PENDING"),raw:data};
 }

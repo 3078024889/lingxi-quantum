@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import JSZip from "jszip";
 import SasiByokTextWorkbench from "./SasiByokTextWorkbench";
@@ -158,7 +158,7 @@ async function imageToText(file:File):Promise<string>{
   }finally{await worker.terminate()}
 }
 
-export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
+export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;modeBar?:ReactNode}){
   const {lang}=useLingxiLang();
   const [sources,setSources]=useState<KnowledgeSource[]>([]);
   const [title,setTitle]=useState("");
@@ -411,7 +411,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
   return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4 lx-knowledge-workspace">
     <div className="flex-1 pt-8 sm:pt-12">
       {(thread.length?thread:(answer?[{question,answer}]:[])).map((row,index)=><div key={index} className="mb-10">
-        <div className="ml-auto mb-6 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-[var(--lx-ink)]">{row.question}</div>
+        <div className="ml-auto mb-6 max-w-[78%] rounded-3xl bg-[var(--lx-soft)] px-5 py-3 text-sm leading-7 text-blue-600">{row.question}</div>
         <article className="max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)]">{row.answer}</article>
       </div>)}
 
@@ -429,7 +429,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
       </div>}
     </div>
 
-    <div className="sticky bottom-14 z-30 mt-auto">
+    <div className="sticky bottom-3 z-30 mt-auto">
       {sources.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
         {sources.slice(-10).map(source=><span key={source.id} className="inline-flex max-w-[220px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
           <span className="truncate">{source.title}</span>
@@ -445,7 +445,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
 
       <div className="relative rounded-[28px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 shadow-[0_12px_44px_rgba(0,0,0,.10)]">
         <textarea value={question} onChange={e=>{setQuestion(e.target.value);setQuery(e.target.value)}} rows={1}
-          className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 text-[var(--lx-ink)] outline-none placeholder:text-[var(--lx-faint)]"
+          className="max-h-56 min-h-14 w-full resize-none bg-transparent px-3 py-2 text-[15px] leading-7 text-blue-600 outline-none placeholder:text-[var(--lx-faint)]"
           placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}/>
 
         <div className="mt-1 flex items-center gap-2">
@@ -479,6 +479,7 @@ export default function KnowledgeWorkspace({mode="book"}:{mode?:Mode}){
 
         {notice&&<p role="status" className="px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">{notice}</p>}
       </div>
+      {modeBar}
     </div>
   </section>;
 }

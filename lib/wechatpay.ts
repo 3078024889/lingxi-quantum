@@ -90,7 +90,7 @@ function buildAuthHeader(method: string, url: string, body: string): string {
   return `WECHATPAY2-SHA256-RSA2048 mchid="${MCH_ID}",nonce_str="${nonce}",timestamp="${timestamp}",serial_no="${CERT_SERIAL_NO}",signature="${signature}"`;
 }
 
-async function wechatRequest(method: "GET" | "POST", path: string, body?: object) {
+export async function wechatRequest(method: "GET" | "POST", path: string, body?: object) {
   const url = `https://api.mch.weixin.qq.com${path}`;
   const bodyStr = body ? JSON.stringify(body) : "";
   const authHeader = buildAuthHeader(method, url, bodyStr);
@@ -273,4 +273,30 @@ export function decryptWechatNotifyResource(resource: {
   decipher.setAAD(aad);
   const decrypted = Buffer.concat([decipher.update(data), decipher.final()]);
   return JSON.parse(decrypted.toString("utf8"));
+}
+
+export async function createWechatRefund(input:{
+  outTradeNo:string;
+  outRefundNo:string;
+  refundFen:number;
+  totalFen:number;
+  reason?:string;
+}):Promise<{refundId:string;status:string;raw:any}>{
+  if(!wechatPayConfigured())throw new Error("WECHAT_REFUND_NOT_CONFIGURED");
+  if(!/^[A-Za-z0-9_\-|*@]{1,64}$/.test(input.outRefundNo))throw new Error("WECHAT_REFUND_ID_INVALID");
+  if(!Number.isSafeInteger(input.refundFen)||!Number.isSafeInteger(input.totalFen)||input.refundFen<=0||input.totalFen<=0||input.refundFen>input.totalFen)throw new Error("WECHAT_REFUND_AMOUNT_INVALID");
+  const data=await wechatRequest("POST","/v3/refund/domestic/refunds",{
+    out_trade_no:input.outTradeNo,
+    out_refund_no:input.outRefundNo,
+    reason:(input.reason||"Balance refund").slice(0,80),
+    amount:{refund:input.refundFen,total:input.totalFen,currency:"CNY"}
+  });
+  return{refundId:String(data.refund_id||""),status:String(data.status||"PROCESSING"),raw:data};
+}
+
+export async function queryWechatRefund(outRefundNo:string):Promise<{refundId:string;status:string;raw:any}>{
+  if(!wechatPayConfigured())throw new Error("WECHAT_REFUND_NOT_CONFIGURED");
+  const path="/v3/refund/domestic/refunds/"+encodeURIComponent(outRefundNo);
+  const data=await wechatRequest("GET",path);
+  return{refundId:String(data.refund_id||""),status:String(data.status||"UNKNOWN"),raw:data};
 }

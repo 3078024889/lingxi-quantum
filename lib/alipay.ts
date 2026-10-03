@@ -158,3 +158,60 @@ export async function queryAlipayTrade(input:{outTradeNo:string;expectedAmountRm
  if(new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus)&&totalFen!==expectedFen)throw new Error("ALIPAY_QUERY_AMOUNT_MISMATCH");
  return{paid:new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus),tradeStatus,tradeNo:typeof data.trade_no==="string"?data.trade_no:undefined};
 }
+
+async function callAlipayJson(method:string,biz:Record<string,unknown>,responseKey:string){
+  if(!alipayConfigured())throw new Error("Missing Alipay configuration: "+alipayMissingVars().join(", "));
+  const params:Record<string,string>={
+    app_id:env("ALIPAY_APP_ID"),method,format:"JSON",charset:"utf-8",sign_type:"RSA2",
+    timestamp:timestamp(),version:"1.0",biz_content:JSON.stringify(biz)
+  };
+  const signer=createSign("RSA-SHA256");signer.update(canonical(params),"utf8");signer.end();
+  params.sign=signer.sign(asPem(env("ALIPAY_PRIVATE_KEY"),"PRIVATE KEY"),"base64");
+  const response=await fetch(env("ALIPAY_GATEWAY")||DEFAULT_GATEWAY,{
+    method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=utf-8"},
+    body:new URLSearchParams(params),cache:"no-store",signal:AbortSignal.timeout(20000)
+  });
+  const raw=await response.text();
+  if(!response.ok)throw new Error("ALIPAY_HTTP_"+response.status);
+  const payload=JSON.parse(raw) as Record<string,any>;
+  const nodeRaw=extractAlipayResponseNode(raw,responseKey);
+  if(!payload.sign)throw new Error("ALIPAY_RESPONSE_SIGNATURE_MISSING");
+  const verifier=createVerify("RSA-SHA256");verifier.update(nodeRaw,"utf8");verifier.end();
+  if(!verifier.verify(asPem(env("ALIPAY_PUBLIC_KEY"),"PUBLIC KEY"),payload.sign,"base64"))throw new Error("ALIPAY_RESPONSE_SIGNATURE_INVALID");
+  return payload[responseKey] as Record<string,any>;
+}
+
+export async function createAlipayRefund(input:{
+  outTradeNo:string;
+  outRequestNo:string;
+  refundFen:number;
+}):Promise<{refundId:string;status:string;raw:any}>{
+  if(!Number.isSafeInteger(input.refundFen)||input.refundFen<=0)throw new Error("ALIPAY_REFUND_AMOUNT_INVALID");
+  const data=await callAlipayJson("alipay.trade.refund",{
+    out_trade_no:input.outTradeNo,
+    refund_amount:(input.refundFen/100).toFixed(2),
+    out_request_no:input.outRequestNo
+  },"alipay_trade_refund_response");
+  if(String(data.code||"")!=="10000"){
+    const code=String(data.sub_code||data.code||"UNKNOWN");
+    return{refundId:input.outRequestNo,status:"FAILED:"+code,raw:data};
+  }
+  return{refundId:String(data.trade_no||input.outRequestNo),status:String(data.fund_change)==="Y"?"SUCCESS":"PROCESSING",raw:data};
+}
+
+export async function queryAlipayRefund(input:{
+  outTradeNo:string;
+  outRequestNo:string;
+}):Promise<{refundId:string;status:string;raw:any}>{
+  const data=await callAlipayJson("alipay.trade.fastpay.refund.query",{
+    out_trade_no:input.outTradeNo,
+    out_request_no:input.outRequestNo
+  },"alipay_trade_fastpay_refund_query_response");
+  if(String(data.code||"")!=="10000"){
+    const code=String(data.sub_code||data.code||"UNKNOWN");
+    if(code.includes("NOT_EXIST"))return{refundId:input.outRequestNo,status:"NOT_EXIST",raw:data};
+    return{refundId:input.outRequestNo,status:"FAILED:"+code,raw:data};
+  }
+  const amount=Number(data.refund_amount||0);
+  return{refundId:String(data.trade_no||input.outRequestNo),status:amount>0?"SUCCESS":"PROCESSING",raw:data};
+}

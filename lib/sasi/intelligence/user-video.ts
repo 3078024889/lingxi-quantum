@@ -25,7 +25,7 @@ function authKey(userId:string,c:UserVideoConnection){return decryptProviderKey(
 function safeBase(c:UserVideoConnection){const raw=String(c.base_url||"").trim()||defaultBaseUrl(c.provider as ByokProvider);const g=validateProviderBaseUrl(raw);if(!g.pass||!g.normalized)throw new Error("SERVICE_ADDRESS_INVALID");return g.normalized.replace(/\/$/,"")}
 async function requestJson(url:string,init:RequestInit){const r=await fetch(url,{...init,cache:"no-store",redirect:"error",signal:AbortSignal.timeout(30_000)});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(`VIDEO_PROVIDER_HTTP_${r.status}`);return b as any}
 function httpsUrl(value:unknown){if(typeof value!=="string")return"";try{const u=new URL(value);return u.protocol==="https:"&&!u.username&&!u.password?u.toString():""}catch{return""}}
-export async function submitUserVideo(input:{userId:string;connection:Awaited<ReturnType<typeof selectUserVideoConnection>>;prompt:string;duration:number;ratio:"16:9"|"9:16"|"1:1";resolution:"720p"|"1080p";taskId?:string|null}){
+export async function submitUserVideo(input:{userId:string;connection:Awaited<ReturnType<typeof selectUserVideoConnection>>;prompt:string;duration:number;ratio:"16:9"|"9:16"|"1:1";resolution:"720p"|"1080p"|"4k";taskId?:string|null}){
  const c=input.connection;if(!c)throw new Error("VIDEO_CONNECTION_REQUIRED");const started=Date.now(),key=authKey(input.userId,c),model=c.videoModel,base=safeBase(c);
  try{
   let jobId="";

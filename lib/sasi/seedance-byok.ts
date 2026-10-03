@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 // price: model access and current supplier tariffs must be verified first.
 export type SeedanceProfile = {
   model: string;
-  resolution: "480p" | "720p" | "1080p";
+  resolution: "480p" | "720p" | "1080p" | "4k";
   generateAudio: boolean;
   maxDuration: number;
   estimatedFenPerSecond: number;
@@ -18,7 +18,7 @@ export function seedanceProfile(raw = process.env.SASI_BYOK_SEEDANCE_PROFILE, no
   try {
     const p = JSON.parse(raw ?? "null");
     if (!p || typeof p.model !== "string" || !/^[a-z0-9][a-z0-9._-]{2,180}$/i.test(p.model)
-      || !["480p", "720p", "1080p"].includes(p.resolution) || typeof p.generateAudio !== "boolean"
+      || !["480p", "720p", "1080p", "4k"].includes(p.resolution) || typeof p.generateAudio !== "boolean"
       || !Number.isInteger(p.maxDuration) || p.maxDuration < 4 || p.maxDuration > 12
       || !Number.isSafeInteger(p.estimatedFenPerSecond) || p.estimatedFenPerSecond <= 0 || p.estimatedFenPerSecond > 100000
       || !Number.isFinite(Date.parse(p.validUntil)) || Date.parse(p.validUntil) <= now) return null;
@@ -35,7 +35,7 @@ export function seedanceProfileVersion(profile: SeedanceProfile) {
 }
 
 export type SeedanceRequest = { model: string; prompt: string; duration: number; ratio: "16:9" | "9:16" | "1:1";
-  resolution: "480p" | "720p" | "1080p"; generateAudio: boolean };
+  resolution: "480p" | "720p" | "1080p" | "4k"; generateAudio: boolean };
 
 const TASKS = "https://ark.cn-beijing.volces.com/api/v3/contents/generations/tasks";
 

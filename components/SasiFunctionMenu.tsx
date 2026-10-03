@@ -42,7 +42,8 @@ export default function SasiFunctionMenu({task,selected,onChange,onUpload,disabl
     <span className="text-sm">{option.label}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{option.description}</span></span>
    </label>)}
    <div className="mt-2 border-t border-[var(--lx-line)] pt-1">
-    <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{mt("connect")} <span aria-hidden className="float-right">↗</span></Link>\n    <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span aria-hidden className="float-right">↗</span></Link>
+    <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{mt("connect")} <span aria-hidden className="float-right">↗</span></Link>
+    <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span aria-hidden className="float-right">↗</span></Link>
    </div>
   </div>}
  </div>;
