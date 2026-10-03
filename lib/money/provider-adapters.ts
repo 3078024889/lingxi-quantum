@@ -3,6 +3,7 @@ import type{ProviderRefundObservation,ProviderRefundRequest}from"./types";
 import{createWechatRefund,queryWechatRefund}from"@/lib/wechatpay";
 import{createAlipayRefund,queryAlipayRefund}from"@/lib/alipay";
 import{createPaypalRefund,queryPaypalRefund,verifyPaypalCompletedOrder}from"@/lib/paypal";
+import{wechatRefundNoFromRequestKey}from"./refund-identifiers";
 
 function compactStatus(value:unknown){return String(value??"").slice(0,120)}
 
@@ -31,14 +32,14 @@ export class WechatRefundAdapter implements MoneyRefundProviderAdapter{
   if(r.currency!=="CNY"||r.providerCurrency!=="CNY")throw new Error("WECHAT_CURRENCY_MISMATCH");
   return mapWechat(await createWechatRefund({
     outTradeNo:r.providerPaymentId,
-    outRefundNo:r.idempotencyKey.replace(/^lf-refund-/,"LFR").replace(/[^A-Za-z0-9_\-|*@]/g,"").slice(0,64),
+    outRefundNo:wechatRefundNoFromRequestKey(r.idempotencyKey),
     refundFen:r.providerAmountMinor,
     totalFen:(r as ProviderRefundRequest&{orderTotalMinor?:number}).orderTotalMinor||r.providerAmountMinor,
     reason:"LINGXIFIELD balance refund"
   }));
  }
  async queryRefund(r:ProviderRefundRequest&{providerRefundId?:string|null}){
-  const outRefundNo=r.idempotencyKey.replace(/^lf-refund-/,"LFR").replace(/[^A-Za-z0-9_\-|*@]/g,"").slice(0,64);
+  const outRefundNo=wechatRefundNoFromRequestKey(r.idempotencyKey);
   return mapWechat(await queryWechatRefund(outRefundNo));
  }
 }

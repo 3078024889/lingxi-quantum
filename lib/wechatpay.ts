@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import{wechatRefundNotifyUrl}from"@/lib/money/refund-identifiers";
 
 // ────────────────────────────────────────────────────────────────────
 // 微信支付 APIv3 · Native扫码支付
@@ -287,10 +288,12 @@ export async function createWechatRefund(input:{
   if(!wechatPayConfigured())throw new Error("WECHAT_REFUND_NOT_CONFIGURED");
   if(!/^[A-Za-z0-9_\-|*@]{1,64}$/.test(input.outRefundNo))throw new Error("WECHAT_REFUND_ID_INVALID");
   if(!Number.isSafeInteger(input.refundFen)||!Number.isSafeInteger(input.totalFen)||input.refundFen<=0||input.totalFen<=0||input.refundFen>input.totalFen)throw new Error("WECHAT_REFUND_AMOUNT_INVALID");
+  const notifyUrl=wechatRefundNotifyUrl();
   const data=await wechatRequest("POST","/v3/refund/domestic/refunds",{
     out_trade_no:input.outTradeNo,
     out_refund_no:input.outRefundNo,
     reason:(input.reason||"Balance refund").slice(0,80),
+    ...(notifyUrl?{notify_url:notifyUrl}:{}),
     amount:{refund:input.refundFen,total:input.totalFen,currency:"CNY"}
   });
   return{refundId:String(data.refund_id||""),status:String(data.status||"PROCESSING"),raw:data};

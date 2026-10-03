@@ -187,7 +187,7 @@ export async function createPaypalRefund(input:{
       "PayPal-Request-Id":input.requestId,
       Prefer:"return=representation"
     },
-    body:JSON.stringify({amount:{currency_code:"USD",value:(input.amountCents/100).toFixed(2)}})
+    body:JSON.stringify({amount:{currency_code:"USD",value:(input.amountCents/100).toFixed(2)},custom_id:input.requestId,note_to_payer:"LINGXIFIELD balance refund"})
   });
   const data=await res.json();
   if(!res.ok)throw new Error("PAYPAL_REFUND_HTTP_"+res.status+":"+String(data?.name||data?.message||"UNKNOWN").slice(0,120));
