@@ -1,7 +1,6 @@
 import {toolIntro} from "@/lib/tools/product-copy";
 import {toolTitle as translatedToolTitle} from '@/lib/tools/card-i18n';
 import {toolFacts} from './product-facts';
-import {toolGeoFact} from './site-facts';
 export const SITE="https://lingxifield.com";
 export const SEO_LOCALES={  "zh":{
     hreflang:"zh-CN",name:"中文",dir:"ltr",
@@ -203,8 +202,6 @@ export function toolTitle(locale:SeoLocale,tool:GlobalTool){
 }
 
 export function toolDescription(locale:SeoLocale,tool:GlobalTool){
-  const fact=toolGeoFact(tool.slug,locale);
-  if(fact)return fact.description;
   const intro=toolIntro(locale,tool.slug==="heic-local"?"heic-to-jpg":tool.slug);if(intro)return intro;
   const name=toolTitle(locale,tool);
   return `${name} — ${toolFacts(tool.slug,locale).summary}`;

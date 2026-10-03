@@ -46,3 +46,5 @@ export function pageGeoFact(id:PageId,locale:SeoLocale):GeoFact{
  const paths:Record<PageId,string>={home:'/',tools:'/tools',products:'/products',about:'/about',sasi:'/sasi','sasi-pricing':'/sasi/pricing'};
  return fact(titles[id],text(id==='sasi'?SASI:id==='sasi-pricing'?BALANCE:DIRECTORY,locale),paths[id],locale);
 }
+
+export function toolZhSeoTitle(slug:string){const tool=GLOBAL_TOOL_CATALOG.find(tool=>tool.slug===slug);return tool?toolTitle("zh",tool):null;}
