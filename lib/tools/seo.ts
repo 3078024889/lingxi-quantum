@@ -2,6 +2,7 @@ import { SHARE_IMAGES, SHARE_IMAGE_URL } from "@/lib/share-image";
 import type { Metadata } from "next";
 import { getTool } from "@/lib/tools/registry";
 import {getGlobalTool,languageAlternates} from '@/lib/seo/global-seo';
+import {toolGeoFact,toolZhSeoTitle} from '@/lib/seo/site-facts';
 
 const SITE="https://lingxifield.com";
 
@@ -27,13 +28,13 @@ const SEO:Record<string,SeoEntry>={
  "subtitle-translate":{title:"字幕翻译｜保留时间轴翻译SRT/VTT",description:"翻译 SRT、VTT 字幕内容并保留原有时间轴结构。",keywords:["字幕翻译","SRT翻译","VTT翻译","视频字幕翻译"]},
  "subtitle-tools":{title:"字幕工具｜SRT/VTT转换与时间轴调整",description:"调整字幕时间、转换 SRT/VTT/TXT，整理字幕文件。",keywords:["SRT工具","VTT工具","字幕时间轴"]},
  "video-toolkit":{title:"在线视频工具｜压缩、裁剪、提取音频",description:"处理常见视频任务：压缩、裁剪、提取音频并保存结果。",keywords:["视频压缩","视频裁剪","视频提取音频"]},
- "video-dubbing":{title:"视频翻译配音｜字幕翻译与配音预览",description:"从视频提取语音，生成翻译字幕并试听目标语言配音。",keywords:["视频配音","视频翻译","翻译配音"]},
+ "video-dubbing":{title:"视频翻译配音｜尚未开放",description:"尚未开放，现在不能当作已上线、可免费使用或已完成的工具。",keywords:["视频配音","视频翻译","翻译配音"]},
  "image-watermark-remover":{title:"图片去水印｜修复选中区域",description:"框选图片中需要移除的水印或覆盖区域并修复背景。仅处理有权使用的内容。",keywords:["图片去水印","去水印","图片修复"]},
  "batch-image-watermark-remover":{title:"批量图片去水印｜多图同位置处理",description:"批量处理多张图片相同位置的水印或覆盖区域。",keywords:["批量去水印","图片批量去水印"]},
  "video-watermark-remover":{title:"视频去水印｜处理固定区域",description:"处理视频中的固定水印区域并导出结果。仅处理有权使用的内容。",keywords:["视频去水印","去视频水印"]},
  "temp-mail":{title:"临时邮箱｜接收验证码与一次性邮件",description:"创建临时邮箱，用于接收验证码、确认链接和一次性通知。",keywords:["临时邮箱","一次性邮箱","验证码邮箱"]},
  "burn-after-read":{title:"阅后即焚｜一次性私密链接",description:"发送文字和附件，设置有效期与查看次数，访问后按规则失效。",keywords:["阅后即焚","一次性链接","私密分享"]},
- "id-photo-ai":{title:"证件照换底｜白底、蓝底、红底证件照",description:"上传照片后生成常用背景色的证件照结果，提交前请核对目标机构尺寸要求。",keywords:["证件照换底","白底证件照","蓝底证件照","红底证件照"]},
+ "id-photo-ai":{title:"证件照换底｜尚未开放",description:"尚未开放，现在不能当作已上线、可免费使用或已完成的工具。",keywords:["证件照换底","白底证件照","蓝底证件照","红底证件照"]},
  "food-calorie":{title:"食物热量估算｜记录一餐的食物与卡路里",description:"记录食物和份量，估算一餐的热量与营养信息。",keywords:["卡路里计算","食物热量","热量估算"]},
  "heic-local":{title:"HEIC转JPG｜iPhone照片转JPG",description:"把 iPhone 常见 HEIC/HEIF 照片转换为 JPG。",keywords:["HEIC转JPG","HEIF转JPG","苹果照片转JPG"]},
  "avif-to-jpg":{title:"AVIF转JPG｜在线图片格式转换",description:"把 AVIF 图片转换为更通用的 JPG。",keywords:["AVIF转JPG","AVIF转换"]},
@@ -70,13 +71,16 @@ export function toolSeo(slug:string):SeoEntry{
 
 export function buildToolMetadata(slug:string):Metadata{
  const seo=toolSeo(slug),canonical=`/tools/${slug}`;
+ const fact=toolGeoFact(slug,'zh');
+ const title=toolZhSeoTitle(slug)??seo.title;
+ const description=fact?.description??seo.description;
  return{
-  title:seo.title,
-  description:seo.description,
+  title,
+  description,
   keywords:seo.keywords,
   alternates:{canonical,...(getGlobalTool(slug)?{languages:languageAlternates(canonical)}:{})},
-  openGraph:{images:SHARE_IMAGES,type:"website",url:`${SITE}${canonical}`,title:`${seo.title}｜灵犀场 LINGXIFIELD`,description:seo.description},
-  twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL],title:`${seo.title}｜灵犀场 LINGXIFIELD`,description:seo.description},
+  openGraph:{images:SHARE_IMAGES,type:"website",url:`${SITE}${canonical}`,title:`${title}｜灵犀场 LINGXIFIELD`,description},
+  twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL],title:`${title}｜灵犀场 LINGXIFIELD`,description},
   robots:{index:true,follow:true,"max-snippet":-1,"max-image-preview":"large"},
  };
 }

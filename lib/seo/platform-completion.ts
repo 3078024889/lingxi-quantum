@@ -5,7 +5,7 @@ export const BRAND={
   categoryZh:"SASI智能生态与全球智能工具平台",
   categoryEn:"Global Intelligent Tools & SASI Creative Ecosystem",
   slogan:"一键创造，一念即达。",
-  descriptionZh:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
+  descriptionZh:"浏览器本地的免费工具和单独标明的付费工具，以及书本、学习与科研资料空间。SASI 是预充值余额，不是会员。短剧、导演和网站构建还不是已完成的产品。",
   release:LINGXIFIELD_RELEASE.website
 } as const;
 export const LOCALES=["zh","en","ja","ko","fr","de","es","pt","ar"] as const;
