@@ -87,6 +87,39 @@ export const TOOL_INTROS = {
     "es": "Convierte fotos a JPG para verlas y compartirlas fácilmente.",
     "pt": "Converta fotos para JPG para visualizar e compartilhar com facilidade.",
     "ar": "حوّل الصور إلى JPG لعرضها ومشاركتها بسهولة."
+  },
+  "compress-image-to-100kb": {
+    "zh": "把图片压缩到约 100KB，本地处理，方便上传与分享。",
+    "en": "Compress images to about 100KB locally for easier uploads and sharing.",
+    "ja": "画像を約100KBに圧縮。ローカル処理でアップロードや共有が手軽に。",
+    "ko": "이미지를 약 100KB로 로컬에서 압축해 업로드와 공유를 쉽게 하세요.",
+    "fr": "Compressez vos images à environ 100 Ko en local pour les envoyer et les partager plus facilement.",
+    "de": "Bilder lokal auf etwa 100 KB komprimieren, einfacher hochladen und teilen.",
+    "es": "Comprime imágenes a unos 100 KB en local para subirlas y compartirlas con facilidad.",
+    "pt": "Comprima imagens para cerca de 100 KB localmente para enviar e partilhar com facilidade.",
+    "ar": "اضغط الصور إلى حوالي 100 كيلوبايت محليًا لتسهيل الرفع والمشاركة."
+  },
+  "merge-pdf": {
+    "zh": "把多个 PDF 合并成一个文件，本地处理并直接保存。",
+    "en": "Merge multiple PDFs into one file locally, then save the result.",
+    "ja": "複数のPDFを一つに結合。ローカル処理してそのまま保存。",
+    "ko": "여러 PDF를 로컬에서 하나로 합친 뒤 바로 저장하세요.",
+    "fr": "Fusionnez plusieurs PDF en un seul fichier en local, puis enregistrez le résultat.",
+    "de": "Mehrere PDFs lokal zu einer Datei zusammenführen und speichern.",
+    "es": "Une varios PDF en un solo archivo en local y guarda el resultado.",
+    "pt": "Junte vários PDFs num único ficheiro localmente e guarde o resultado.",
+    "ar": "ادمج عدة ملفات PDF في ملف واحد محليًا ثم احفظ النتيجة."
+  },
+  "remove-exif": {
+    "zh": "删除图片中的 EXIF、GPS 等元数据，保护隐私。",
+    "en": "Remove EXIF, GPS, and other metadata from images to protect privacy.",
+    "ja": "画像のEXIFやGPSなどのメタデータを削除し、プライバシーを守る。",
+    "ko": "이미지의 EXIF, GPS 등 메타데이터를 지워 개인정보를 보호하세요.",
+    "fr": "Supprimez les métadonnées EXIF, GPS et autres des images pour protéger votre vie privée.",
+    "de": "EXIF-, GPS- und andere Metadaten aus Bildern entfernen und die Privatsphäre schützen.",
+    "es": "Elimina EXIF, GPS y otros metadatos de las imágenes para proteger la privacidad.",
+    "pt": "Remova EXIF, GPS e outros metadados das imagens para proteger a privacidade.",
+    "ar": "أزل بيانات EXIF وGPS والبيانات الوصفية الأخرى من الصور لحماية الخصوصية."
   }
 } satisfies Record<string,Record<LingxiLang,string>>;
 export function toolIntro(lang:LingxiLang,slug:string){return TOOL_INTROS[slug as keyof typeof TOOL_INTROS]?.[lang];}
