@@ -1,3 +1,4 @@
+import{scheduleMoneyNotices,flushMoneyNotifications}from"./operator-notifications";
 import{createAdminClient}from"@/lib/supabase/admin";
 import{moneyProviderAdapters,safeProviderError}from"./provider-adapters";
 import{requireProviderAdapter}from"./provider-adapter";
@@ -18,6 +19,7 @@ function providerOrderTotalMinor(order:Row,providerCurrency:"CNY"|"USD"){
 
 function observationFailureCode(o:ProviderRefundObservation,attempts:number){
  const error=String(o.errorCode||"");
+ if(error==="ALIPAY_ACQ.SELLER_BALANCE_NOT_ENOUGH")return"PROVIDER_FUNDS_REQUIRED";
  if(error==="WECHAT_ABNORMAL"||error.startsWith("ALIPAY_"))return"PROVIDER_ACTION_REQUIRED";
  if(attempts>=OPERATOR_ATTEMPT_THRESHOLD&&o.status!=="succeeded")return"OPERATOR_REVIEW_REQUIRED";
  return error?"PROVIDER_CONFIRMATION_PENDING":null;
@@ -42,6 +44,7 @@ async function recordObservation(admin:any,w:Row,o:ProviderRefundObservation){
   provider_attempt_count:attempts,
   last_provider_checked_at:new Date().toISOString(),
   next_reconcile_at:new Date(Date.now()+delay*1000).toISOString(),
+  provider_call_locked_until:null,
   updated_at:new Date().toISOString(),
  }).eq("id",w.id);
  if(error)throw new Error("WITHDRAWAL_OBSERVATION_SAVE_FAILED");
@@ -63,6 +66,7 @@ async function recordException(admin:any,w:Row,error:unknown){
   provider_attempt_count:attempts,
   last_provider_checked_at:new Date().toISOString(),
   next_reconcile_at:new Date(Date.now()+delay*1000).toISOString(),
+  provider_call_locked_until:null,
   updated_at:new Date().toISOString(),
  }).eq("id",w.id);
  if(saveError)throw new Error("WITHDRAWAL_OBSERVATION_SAVE_FAILED");
@@ -81,6 +85,9 @@ export async function reconcileWithdrawal(withdrawalId:string){
  if(we||!w)throw new Error("WITHDRAWAL_NOT_FOUND");
  if(!["requested","processing"].includes(String(w.status)))return{ok:true,closed:true,status:w.status};
 
+ const{data:lease,error:leaseError}=await admin.rpc("money_begin_provider_call",{p_withdrawal_id:w.id});
+ if(leaseError)throw new Error("PROVIDER_CALL_CLAIM_FAILED");
+ if(!lease?.ok)return{ok:true,status:lease?.status||"processing"};
  const{data:order,error:oe}=await admin.from("orders").select("*").eq("id",w.order_id).single();
  if(oe||!order)throw new Error("ORDER_NOT_FOUND");
  if(String(order.provider)!==String(w.provider))throw new Error("ORDER_PROVIDER_MISMATCH");
@@ -136,7 +143,7 @@ export async function reconcileWithdrawal(withdrawalId:string){
    ok:true,
    status:"pending",
    failureCode,
-   operatorActionRequired:failureCode==="PROVIDER_ACTION_REQUIRED"||failureCode==="OPERATOR_REVIEW_REQUIRED",
+   operatorActionRequired:failureCode==="PROVIDER_FUNDS_REQUIRED"||failureCode==="PROVIDER_ACTION_REQUIRED"||failureCode==="OPERATOR_REVIEW_REQUIRED",
    retryAfterSeconds:nextDelay(decision.afterSeconds,Number(w.provider_attempt_count||0)+1,String(w.id),observationFailureCode(observation,Number(w.provider_attempt_count||0)+1)),
   };
  }catch(error){
@@ -149,11 +156,12 @@ export async function reconcileWithdrawal(withdrawalId:string){
    operatorActionRequired:decision.operatorActionRequired,
    retryAfterSeconds:decision.retryAfterSeconds,
   };
- }
+ }finally{scheduleMoneyNotices();}
 }
 
 export async function reconcileDueWithdrawals(limit=20){
  const admin=createAdminClient();
+ await flushMoneyNotifications().catch(()=>null);
  const bounded=Math.max(1,Math.min(Number(limit)||20,100));
  const{data,error}=await admin.rpc("money_claim_reconciliation_v52e",{
   p_limit:bounded,

@@ -190,7 +190,7 @@ export async function createPaypalRefund(input:{
     body:JSON.stringify({amount:{currency_code:"USD",value:(input.amountCents/100).toFixed(2)},custom_id:input.requestId,note_to_payer:"LINGXIFIELD balance refund"})
   });
   const data=await res.json();
-  if(!res.ok)throw new Error("PAYPAL_REFUND_HTTP_"+res.status+":"+String(data?.name||data?.message||"UNKNOWN").slice(0,120));
+  if(!res.ok)throw new Error("PAYPAL_REFUND_HTTP_"+res.status+":"+String(data?.details?.[0]?.issue||data?.name||"UNKNOWN").replace(/[^A-Z0-9_]/g,"_").slice(0,120));
   return{refundId:String(data.id||""),status:String(data.status||"PENDING"),raw:data};
 }
 

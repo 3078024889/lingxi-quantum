@@ -2,9 +2,9 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),ts=require('typ
 function compile(file,imports){const mod={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;new Function('require','module','exports','console',code)(name=>name==='server-only'?{}:imports[name]||require(name),mod,mod.exports,{error(){}});return mod.exports;}
 async function scenario(status,workerResult){
  const updates=[],calls=[];
- const admin={from(){const q={select(){return q},eq(){return q},single:async()=>({data:{id:'w',status}}),update(value){updates.push(value);return q},then(resolve){return Promise.resolve({error:null}).then(resolve)}};return q}};
- const service=compile('lib/payments/withdrawal-processing.ts',{'@/lib/supabase/admin':{createAdminClient:()=>admin},'@/lib/money/reconcile-worker':{reconcileWithdrawal:async id=>{calls.push(id);return workerResult}}});
- const result=await service.refreshWithdrawal('w','u');
+ const admin={rpc:async()=>({data:{ok:true},error:null}),from(){const q={select(){return q},eq(){return q},single:async()=>({data:{id:'w',status}}),update(value){updates.push(value);return q},then(resolve){return Promise.resolve({error:null}).then(resolve)}};return q}};
+ const service=compile('lib/payments/withdrawal-processing.ts',{'@/lib/supabase/admin':{createAdminClient:()=>admin},'@/lib/money/operator-notifications':{scheduleMoneyNotices(){}},'@/lib/money/reconcile-worker':{reconcileWithdrawal:async id=>{calls.push(id);return workerResult}}});
+ const result=await service.refreshWithdrawal('w','u',true);
  if(['completed','failed'].includes(status)){assert.equal(calls.length,0);assert.equal(result.status,status)}
  else{assert.deepEqual(calls,['w']);assert.equal(result.status,workerResult.status==='completed'?'completed':'processing');assert.equal(result.needsSupport,Boolean(workerResult.operatorActionRequired));assert.equal(result.failureCode,workerResult.failureCode||null)}
 }

@@ -12,7 +12,7 @@ function codeOf(error:unknown){
 export function classifyProviderException(error:unknown):ProviderExceptionDecision{
   const code=codeOf(error).slice(0,160);
 
-  if(/^WECHAT_REFUND_403:NOT_ENOUGH$/.test(code)){
+  if(/^WECHAT_REFUND_403:NOT_ENOUGH$/.test(code)||/^ALIPAY_.*SELLER_BALANCE_NOT_ENOUGH$/.test(code)||/^PAYPAL_REFUND_HTTP_422:INSUFFICIENT_FUNDS$/.test(code)){
     return{
       failureCode:"PROVIDER_FUNDS_REQUIRED",
       retryAfterSeconds:6*60*60,

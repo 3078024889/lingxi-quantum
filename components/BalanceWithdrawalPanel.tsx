@@ -4,7 +4,7 @@ import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {moneyText,moneyError,moneyNotice} from "@/lib/notifications/money-copy";
 import {moneyMinor} from "@/lib/payments/money-input";
 type Order={refundable_minor:number;id:string;product_id:string;provider:string|null;amount_rmb:number|null;amount_usd:number|null;created_at:string};
-type Withdrawal={id:string;order_id:string;provider:string;currency:string;provider_currency:string;amount_minor:number;provider_amount_minor:number;status:string;provider_status:string|null;failure_code:string|null;created_at:string;completed_at:string|null};
+type Withdrawal={id:string;order_id:string;provider:string;currency:string;provider_currency:string;amount_minor:number;provider_amount_minor:number;status:string;provider_status:string|null;failure_code:string|null;created_at:string;completed_at:string|null;submission_confirmed_at:string|null};
 type Data={orders:Order[];withdrawals:Withdrawal[]};
 type C={loadFail:string;invalid:string;confirm:string;done:string;submitted:string;loading:string;eligibleTitle:string;eligibleDesc:string;emptyEligible:string;principal:string;topup:string;amountLabel:string;processing:string;submitting:string;return:string;history:string;emptyHistory:string;completed:string;requested:string;failed:string;wechat:string;alipay:string;other:string;original:string};
 
@@ -39,6 +39,8 @@ export default function BalanceWithdrawalPanel(){
   };
   const providerName=(provider:string)=>provider==="paypal"?"PayPal":provider==="wechat"?c.wechat:provider==="alipay"?c.alipay:c.other;
   const statusLabel=(w:Withdrawal)=>{
+    if(w.status==="requested"&&!w.submission_confirmed_at)return moneyText(lang,"waitingConfirm");
+    if(w.status==="cancelled")return moneyText(lang,"cancelled");
     if(w.failure_code==="PROVIDER_FUNDS_REQUIRED")return moneyText(lang,"providerFunds");
     if(["PROVIDER_ACTION_REQUIRED","OPERATOR_REVIEW_REQUIRED"].includes(w.failure_code||""))return moneyText(lang,"providerAction");
     return w.status==="completed"?c.completed:w.status==="processing"?c.processing:w.status==="requested"?c.requested:w.status==="failed"?c.failed:c.processing;
@@ -64,7 +66,7 @@ export default function BalanceWithdrawalPanel(){
     const amount=minor===null?NaN:minor/100;
     if(!Number.isFinite(amount)||amount<=0||amount>max){setMsg(c.invalid);return}
     const shown=`${walletSymbol(order)}${amount.toFixed(2)}`;
-    if(!confirm(c.confirm.replace("{amount}",shown)))return;
+
     setBusy(order.id);setMsg("");
     const key=`${order.id}:${amount}`;const requestId=requestKeys.current[key]??(requestKeys.current[key]=crypto.randomUUID());
     try{
@@ -72,18 +74,24 @@ export default function BalanceWithdrawalPanel(){
       const d=await r.json().catch(()=>({}));
       if(!r.ok){setMsg(moneyError(lang,d.error||""));await loadRef.current();return}
       setMsg(moneyText(lang,d.status==="completed"?"completed":d.status==="failed"?"failed":d.status==="requested"?"requested":"processing"));
-      if(d.status==="failed"||d.status==="completed")delete requestKeys.current[key];
+      if(d.status==="failed"||d.status==="completed"||d.status==="cancelled")delete requestKeys.current[key];
       window.dispatchEvent(new Event("lingxi-money-updated"));
       await loadRef.current();
     }catch{setMsg(moneyText(lang,"unavailable"))}finally{setBusy(null)}
   }
 
-  async function refreshRequest(id:string){
+  async function refreshRequest(id:string,confirmSubmission=false){
+    if(confirmSubmission){const w=data?.withdrawals.find(x=>x.id===id);if(!w||!confirm(c.confirm.replace("{amount}",`${w.currency==="USD"?"$":"¥"}${(w.amount_minor/100).toFixed(2)}`)))return;}
     setBusy(id);setMsg('');
-    try{const r=await fetch('/api/account/withdrawals/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({withdrawalId:id})});const d=await r.json();
+    try{const r=await fetch('/api/account/withdrawals/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({withdrawalId:id,confirmSubmission})});const d=await r.json();
       if(!r.ok)throw new Error();setMsg(moneyText(lang,d.status==='completed'?'completed':d.status==='failed'?'failed':d.status==='requested'?'requested':'processing'));
       window.dispatchEvent(new Event('lingxi-money-updated'));await loadRef.current();
     }catch{setMsg(moneyText(lang,'unavailable'))}finally{setBusy(null)}
+  }
+
+  async function cancelRequest(id:string){
+    if(!confirm(moneyText(lang,"cancelConfirm")))return;setBusy(id);setMsg("");
+    try{const r=await fetch("/api/account/withdrawals/cancel",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({requestId:id})});const b=await r.json();setMsg(r.ok?moneyText(lang,"cancelled"):moneyError(lang,b.error||""));if(r.ok)requestKeys.current={};window.dispatchEvent(new Event("lingxi-money-updated"));await loadRef.current();}catch{setMsg(moneyText(lang,"unavailable"))}finally{setBusy(null)}
   }
 
   if(!data)return <div className="lx-state-card is-loading rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]"><span className="lx-state-dot"/> {msg||c.loading}</div>;
@@ -117,7 +125,8 @@ export default function BalanceWithdrawalPanel(){
         {data.withdrawals.length===0&&<p className="lx-state-card is-empty rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm text-[var(--lx-muted)]">◇ {c.emptyHistory}</p>}
         {data.withdrawals.map(w=><article id={`withdrawal-${w.id}`} key={w.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
           <div className="flex flex-wrap justify-between gap-3"><b>{w.currency==="USD"?"$":"¥"}{(Number(w.amount_minor)/100).toFixed(2)}</b><span className="text-[var(--lx-muted)]">{statusLabel(w)}</span></div>
-          {['requested','processing'].includes(w.status)&&<button disabled={busy!==null} onClick={()=>void refreshRequest(w.id)} className="mt-3 underline disabled:opacity-40">{moneyText(lang,w.status==='requested'?'migrate':'refresh')}</button>}
+          {['requested','processing'].includes(w.status)&&<button disabled={busy!==null} onClick={()=>void refreshRequest(w.id,w.status==="requested"&&!w.submission_confirmed_at)} className="mt-3 underline disabled:opacity-40">{moneyText(lang,w.status==="requested"&&!w.submission_confirmed_at?"confirmSubmit":"refresh")}</button>}
+          {w.status==="requested"&&!w.submission_confirmed_at&&<button disabled={busy!==null} onClick={()=>void cancelRequest(w.id)} className="ms-4 mt-3 rounded-xl border border-[var(--lx-line)] px-4 py-2 disabled:opacity-40">{moneyText(lang,"cancelWithdrawal")}</button>}
           <p className="mt-2 text-sm leading-7">{moneyNotice(lang,"withdrawal",w.status,w.currency,Number(w.amount_minor)).body}</p><p className="mt-2 break-all text-xs text-[var(--lx-faint)]">{moneyText(lang,"reference")}: {w.id}</p>
           <p className="mt-2 text-xs text-[var(--lx-faint)]">{providerName(w.provider)}{w.provider_currency&&w.provider_currency!==w.currency?` · ${c.original} ${w.provider_currency} ${(Number(w.provider_amount_minor)/100).toFixed(2)}`:""} · {new Date(w.created_at).toLocaleString(lang)}</p>
         </article>)}

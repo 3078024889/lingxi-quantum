@@ -32,7 +32,7 @@ export async function GET(){
       .eq("user_id",user.id).eq("status","paid")
       .order("created_at",{ascending:false}).limit(100),
     admin.from("balance_withdrawals")
-      .select("id,order_id,wallet_kind,provider,currency,provider_currency,amount_minor,provider_amount_minor,status,provider_status,failure_code,created_at,completed_at,updated_at,provider_refund_id,legacy_refund_id")
+      .select("id,order_id,wallet_kind,provider,currency,provider_currency,amount_minor,provider_amount_minor,status,provider_status,failure_code,created_at,completed_at,updated_at,provider_refund_id,legacy_refund_id,submission_confirmed_at")
       .eq("user_id",user.id).order("created_at",{ascending:false}).limit(100),
     admin.from("ai_refund_requests").select("id,order_id,amount_fen,status,created_at,updated_at").eq("user_id",user.id).order("created_at",{ascending:false}).limit(100),
     admin.from("ai_wallets").select("available_fen,refundable_fen,refund_hold_fen").eq("user_id",user.id).maybeSingle(),

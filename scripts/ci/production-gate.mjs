@@ -6,6 +6,7 @@ const root=process.cwd();
 
 const commands=[
  ["node",["scripts/test-money-lifecycle.cjs"]],
+ ["node",["scripts/test-money-operations.cjs"]],
  ["node",["scripts/test-withdrawal-recovery.cjs"]],
  ["node",["scripts/test-refund-provider-signatures.cjs"]],
  ["node",["scripts/ci/test-repository-hardening.mjs"]],

@@ -4,7 +4,8 @@ export type MoneyWithdrawalStatus=
   |"processing"
   |"provider_pending"
   |"succeeded"
-  |"failed";
+  |"failed"
+  |"cancelled";
 
 export type MoneyBalanceSnapshot={
   currency:MoneyCurrency;

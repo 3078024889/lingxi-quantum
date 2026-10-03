@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import {moneyText} from "@/lib/notifications/money-copy";
 import {useEffect,useMemo,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import CurrencySelector from "@/components/CurrencySelector";
+import LegacyRefundMigrationPanel from "@/components/LegacyRefundMigrationPanel";
 import BalanceWithdrawalPanel from "@/components/BalanceWithdrawalPanel";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {CREDIT_PACKS} from "@/lib/sasi/catalog";
@@ -61,6 +63,9 @@ export default function SasiPricingCurrencyClient(){
  const[data,setData]=useState<Summary|null>(null);
  const[error,setError]=useState("");
  const[loading,setLoading]=useState(true);
+ const[chosenId,setChosenId]=useState<string|null>(null);
+ const[isAdmin,setIsAdmin]=useState(false);
+ useEffect(()=>{void fetch("/api/account/money-admin",{cache:"no-store"}).then(r=>setIsAdmin(r.ok)).catch(()=>{})},[]);
 
  useEffect(()=>setSelected(currency),[currency]);
 
@@ -81,8 +86,11 @@ export default function SasiPricingCurrencyClient(){
  const recent=useMemo(()=>data?.withdrawals?.filter(x=>x.currency===selected).slice(0,5)??[],[data,selected]);
  const cnyPacks=CREDIT_PACKS;
  const usdPacks=usdBalanceProducts;
+ const packs=selected==="CNY"?cnyPacks.map(p=>({id:p.id,amount:p.priceRmb})):usdPacks.map(p=>({id:p.id,amount:p.amountUsd}));
+ const chosen=packs.find(p=>p.id===chosenId)||packs[0];
 
  function statusText(value:string){
+  if(value==="cancelled")return moneyText(lang,"cancelled");
   if(value==="succeeded")return c.statusSuccess;
   if(value==="failed")return c.statusFailed;
   return c.statusPending;
@@ -122,21 +130,21 @@ export default function SasiPricingCurrencyClient(){
     <button type="button" onClick={()=>void load()} className="text-xs text-[var(--lx-muted)] underline">{c.refresh}</button>
    </div>
 
-   <section className="mt-10">
-    <div className="flex items-center gap-2"><LingxiMiniIcon name="wallet" size="tiny"/><h2 className="text-xl font-semibold">{c.topup}</h2></div>
-    <p className="mt-2 text-sm text-[var(--lx-muted)]">{c.topupHint}</p>
-    <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-     {selected==="CNY"
-      ?cnyPacks.map(pack=><article key={pack.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-        <b className="text-2xl">¥{pack.priceRmb.toLocaleString("zh-CN")}</b>
-        <Link href={`/checkout?productId=${encodeURIComponent(pack.id)}&redirect=/sasi/pricing`} className="mt-4 block rounded-xl bg-[var(--lx-ink)] px-4 py-2.5 text-center text-sm font-medium text-[var(--lx-bg)]">{c.topup}</Link>
-       </article>)
-      :usdPacks.map(pack=><article key={pack.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-        <b className="text-2xl">${pack.amountUsd.toLocaleString("en-US",{minimumFractionDigits:2})}</b>
-        <Link href={`/checkout-usd?productId=${encodeURIComponent(pack.id)}`} className="mt-4 block rounded-xl bg-[var(--lx-ink)] px-4 py-2.5 text-center text-sm font-medium text-[var(--lx-bg)]">{c.topup}</Link>
-       </article>)}
+   <section className="mt-8 overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)]" data-testid="balance-topup">
+    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--lx-line)] px-6 py-5">
+     <div><h2 className="text-xl font-semibold">{c.topup}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{c.topupHint}</p></div>
+     <span className="rounded-full bg-[var(--lx-soft)] px-3 py-1.5 text-xs font-medium">{selected} · {selected==="CNY"?(lang==="zh"?"微信支付 / 支付宝":"WeChat Pay / Alipay"):"PayPal"}</span>
+    </div>
+    <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_260px]">
+     <fieldset><legend className="sr-only">{c.topupHint}</legend><div className="grid grid-cols-3 gap-2 sm:gap-3">{packs.map(pack=><label key={pack.id} className={"relative cursor-pointer rounded-2xl border px-2 py-4 text-center transition focus-within:ring-2 focus-within:ring-sky-500 "+(chosen.id===pack.id?"border-sky-500 bg-sky-500/10 text-[var(--lx-ink)]":"border-[var(--lx-line)] hover:bg-[var(--lx-soft)]")}>
+      <input className="sr-only" type="radio" name="topup-amount" value={pack.id} checked={chosen.id===pack.id} onChange={()=>setChosenId(pack.id)}/><span className="text-base font-semibold sm:text-lg">{new Intl.NumberFormat(lang,{style:"currency",currency:selected,maximumFractionDigits:0}).format(pack.amount)}</span>
+     </label>)}</div></fieldset>
+     <div className="flex flex-col justify-between rounded-2xl bg-gradient-to-br from-sky-500/10 to-indigo-500/10 p-5"><div><p className="text-sm text-[var(--lx-muted)]">{c.topup}</p><strong className="mt-3 block text-3xl font-semibold">{money(selected,chosen.amount*100)}</strong><p className="mt-2 text-xs text-[var(--lx-muted)]">{selected}</p></div>
+      <Link data-testid="topup-checkout" href={selected==="CNY"?`/checkout?productId=${encodeURIComponent(chosen.id)}&redirect=/sasi/pricing&lang=${lang}`:`/checkout-usd?productId=${encodeURIComponent(chosen.id)}&lang=${lang}`} className="mt-6 block rounded-xl bg-[var(--lx-ink)] px-4 py-3 text-center text-sm font-semibold text-[var(--lx-bg)] transition hover:opacity-85">{c.topup} {money(selected,chosen.amount*100)} <span aria-hidden="true">→</span></Link>
+     </div>
     </div>
    </section>
+   {isAdmin&&<Link href="/account/money-admin" className="mt-4 inline-block text-sm underline">{moneyText(lang,"moneyAdmin")}</Link>}
 
    <section className="mt-12">
     <div className="flex items-center gap-2"><LingxiMiniIcon name="refund" size="tiny"/><h2 className="text-xl font-semibold">{c.history}</h2></div>
@@ -152,7 +160,7 @@ export default function SasiPricingCurrencyClient(){
    <section id="withdrawals" className="mt-12 scroll-mt-24 border-t border-[var(--lx-line)] pt-10">
     <div className="flex items-center gap-2"><LingxiMiniIcon name="refund" size="tiny"/><h2 className="text-xl font-semibold">{c.returnTitle}</h2></div>
     <p className="mt-2 text-sm leading-7 text-[var(--lx-muted)]">{c.returnHint}</p>
-    <div className="mt-6"><BalanceWithdrawalPanel/></div>
+    <div className="mt-6"><BalanceWithdrawalPanel/><LegacyRefundMigrationPanel/></div>
    </section>
   </div>
  </main>;
