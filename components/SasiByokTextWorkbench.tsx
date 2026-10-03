@@ -24,11 +24,11 @@ export default function SasiByokTextWorkbench({mode="chat",question:provided,evi
  function save(blob:Blob,name:string){const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
  return <section className="my-6 space-y-4 rounded-2xl border p-5">
   <h2 className="text-xl font-semibold">{{chat:"有想法，尽管说",director:"把故事变成可执行分镜",book:"带着问题，与这本书对话",website:"描述需求，生成可下载的网站"}[mode]}</h2>
-  <p>写下你想完成的事。使用你连接的智能服务时，费用由对应服务商直接结算。{mode==="book"?"仅发送当前问题和选中的原文片段。":mode==="website"?"生成适合展示作品、品牌或活动的网站，预览满意后下载。":""}</p>
+  <p>写下你想完成的事。{mode==="book"?"仅发送当前问题和选中的原文片段。":mode==="website"?"生成适合展示作品、品牌或活动的网站，预览满意后下载。":""}</p>
   <div className="flex flex-wrap items-center gap-2"><SasiFunctionMenu task={mode} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/><SasiSelectedFunctions task={mode} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/><Link href="/sasi/connections" className="ml-auto text-sm underline">连接我的智能服务</Link></div>
   {provided===undefined&&<textarea aria-label="创作需求" disabled={busy} className="w-full rounded-xl border bg-transparent p-3" rows={6} maxLength={12000} value={question} onChange={e=>{setQuestion(e.target.value);setTask(null);}}/>}
   <button className="rounded-xl border px-4 py-2 disabled:opacity-40" disabled={busy||!input.trim()||(mode==="book"&&!evidence.length)} onClick={()=>void run("quote")}>准备生成</button>
-  {task?.state==="quoted"&&<div><p>{task.estimated_fen>0?`本次预估 ¥${(task.estimated_fen/100).toFixed(2)}，实际以对应服务账单为准。`:"将使用你已经连接的智能服务，费用由对应服务商直接结算。"} 这次将按你刚才提交的内容生成。</p><button disabled={busy||Date.parse(task.expires_at)<=Date.now()} className="my-2 rounded-xl border px-4 py-2" onClick={()=>void run("confirm")}>确认并生成</button></div>}
+  {task?.state==="quoted"&&<div><p>{task.estimated_fen>0?`本次预估 ¥${(task.estimated_fen/100).toFixed(2)}。`:"已经准备好，可以继续。"} 这次将按你刚才提交的内容生成。</p><button disabled={busy||Date.parse(task.expires_at)<=Date.now()} className="my-2 rounded-xl border px-4 py-2" onClick={()=>void run("confirm")}>确认并生成</button></div>}
   {busy&&<p role="status">正在处理，请保持页面打开…</p>}{error&&<p role="alert">{error}</p>}
   {task&&!["quoted","succeeded"].includes(task.state)&&<p>{taskLabel(task.state)}。结果不确定时不会自动重试，请先查看对应 AI 服务的使用记录。</p>}
   {task?.output?.answer&&<p className="whitespace-pre-wrap">{website?"网站已生成，看看是否符合你的想法。":task.output.answer}</p>}

@@ -178,18 +178,18 @@ export default function HomeProblemHub(){
   {words:["pdf","合并","压缩","拆分","ocr","签名","盖章"],href:"/tools",label:"PDF"},
   {words:["图片","照片","jpg","png","webp","水印","放大"],href:"/tools",label:c.img},
   {words:["视频","字幕","音频","配音","转文字"],href:"/tools",label:c.video},
-  {words:["书","教材","论文","笔记","资料"],href:"/ai-knowledge",label:c.book},
-  {words:["学习","复习","知识"],href:"/ai-learning",label:c.learning},
-  {words:["科研","研究","证据"],href:"/ai-research",label:c.research},
+  {words:["书","教材","论文","笔记","资料"],href:"/sasi?mode=book",label:c.book},
+  {words:["学习","复习","知识"],href:"/sasi?mode=learning",label:c.learning},
+  {words:["科研","研究","证据"],href:"/sasi?mode=research",label:c.research},
   {words:["短剧","剧本","广告","mv","cg","创作"],href:"/sasi",label:c.sasi},
  ],[c]);
  const hit=useMemo(()=>{const s=q.toLowerCase();return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
-  {href:"/ai-knowledge",icon:"book" as LingxiIconName,title:c.book,desc:c.bookDesc},
-  {href:"/ai-learning",icon:"learning" as LingxiIconName,title:c.learning,desc:c.learningDesc},
-  {href:"/ai-research",icon:"research" as LingxiIconName,title:c.research,desc:c.researchDesc},
+  {href:"/sasi?mode=book",icon:"book" as LingxiIconName,title:c.book,desc:c.bookDesc},
+  {href:"/sasi?mode=learning",icon:"learning" as LingxiIconName,title:c.learning,desc:c.learningDesc},
+  {href:"/sasi?mode=research",icon:"research" as LingxiIconName,title:c.research,desc:c.researchDesc},
   {href:"/products",icon:"products" as LingxiIconName,title:c.all,desc:c.allDesc},
  ];
  function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){sessionStorage.setItem("lx-global-search",v);location.href=`/tools?q=${encodeURIComponent(v)}`;return}if(hit?.score>0)location.href=hit.href;else{sessionStorage.setItem("lx-home-intent",v);location.href=`/sasi?intent=${encodeURIComponent(v)}`}}

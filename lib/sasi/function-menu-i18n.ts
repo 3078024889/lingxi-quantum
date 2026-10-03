@@ -26,15 +26,15 @@ const ar:Record<string,Copy>={...en,continuity:{label:"اتساق الشخصيا
 const D:Record<LingxiLang,Record<string,Copy>>={zh,en,ja,ko,fr,de,es,pt,ar};
 
 const shell={
- zh:{add:"添加资料与功能",upload:"添加照片和文件",uploadLead:"剧本、参考图、文档与其他资料",choose:"选择功能 · 可以多选",connect:"连接创作服务",selected:"已选功能",remove:"移除"},
- en:{add:"Add files & tools",upload:"Add photos and files",uploadLead:"Scripts, references, documents and other materials",choose:"Choose tools · multiple allowed",connect:"Connect creation service",selected:"Selected tools",remove:"Remove"},
- ja:{add:"資料と機能を追加",upload:"写真とファイルを追加",uploadLead:"脚本、参考画像、文書など",choose:"機能を選択 · 複数可",connect:"制作サービスを接続",selected:"選択中の機能",remove:"削除"},
- ko:{add:"자료와 기능 추가",upload:"사진과 파일 추가",uploadLead:"대본, 참고 이미지, 문서 등",choose:"기능 선택 · 복수 선택 가능",connect:"제작 서비스 연결",selected:"선택한 기능",remove:"삭제"},
- fr:{add:"Ajouter fichiers et fonctions",upload:"Ajouter photos et fichiers",uploadLead:"Scripts, références, documents et autres éléments",choose:"Choisir des fonctions · sélection multiple",connect:"Connecter un service de création",selected:"Fonctions choisies",remove:"Retirer"},
- de:{add:"Dateien & Funktionen hinzufügen",upload:"Fotos und Dateien hinzufügen",uploadLead:"Skripte, Referenzen, Dokumente und weitere Materialien",choose:"Funktionen wählen · Mehrfachauswahl",connect:"Erstellungsdienst verbinden",selected:"Gewählte Funktionen",remove:"Entfernen"},
- es:{add:"Añadir archivos y funciones",upload:"Añadir fotos y archivos",uploadLead:"Guiones, referencias, documentos y otros materiales",choose:"Elegir funciones · selección múltiple",connect:"Conectar servicio de creación",selected:"Funciones elegidas",remove:"Quitar"},
- pt:{add:"Adicionar arquivos e funções",upload:"Adicionar fotos e arquivos",uploadLead:"Roteiros, referências, documentos e outros materiais",choose:"Escolher funções · seleção múltipla",connect:"Conectar serviço de criação",selected:"Funções escolhidas",remove:"Remover"},
- ar:{add:"إضافة ملفات ووظائف",upload:"إضافة صور وملفات",uploadLead:"نصوص وصور مرجعية ومستندات ومواد أخرى",choose:"اختيار الوظائف · يمكن اختيار عدة وظائف",connect:"ربط خدمة إنشاء",selected:"الوظائف المختارة",remove:"إزالة"}
+ zh:{add:"添加资料与功能",upload:"添加照片和文件",uploadLead:"剧本、参考图、文档与其他资料",choose:"选择功能 · 可以多选",connect:"连接我的智能服务",selected:"已选功能",remove:"移除"},
+ en:{add:"Add files & tools",upload:"Add photos and files",uploadLead:"Scripts, references, documents and other materials",choose:"Choose tools · multiple allowed",connect:"Connect my intelligence service",selected:"Selected tools",remove:"Remove"},
+ ja:{add:"資料と機能を追加",upload:"写真とファイルを追加",uploadLead:"脚本、参考画像、文書など",choose:"機能を選択 · 複数可",connect:"自分のスマートサービスを接続",selected:"選択中の機能",remove:"削除"},
+ ko:{add:"자료와 기능 추가",upload:"사진과 파일 추가",uploadLead:"대본, 참고 이미지, 문서 등",choose:"기능 선택 · 복수 선택 가능",connect:"내 지능형 서비스 연결",selected:"선택한 기능",remove:"삭제"},
+ fr:{add:"Ajouter fichiers et fonctions",upload:"Ajouter photos et fichiers",uploadLead:"Scripts, références, documents et autres éléments",choose:"Choisir des fonctions · sélection multiple",connect:"Connecter mon service intelligent",selected:"Fonctions choisies",remove:"Retirer"},
+ de:{add:"Dateien & Funktionen hinzufügen",upload:"Fotos und Dateien hinzufügen",uploadLead:"Skripte, Referenzen, Dokumente und weitere Materialien",choose:"Funktionen wählen · Mehrfachauswahl",connect:"Meinen intelligenten Dienst verbinden",selected:"Gewählte Funktionen",remove:"Entfernen"},
+ es:{add:"Añadir archivos y funciones",upload:"Añadir fotos y archivos",uploadLead:"Guiones, referencias, documentos y otros materiales",choose:"Elegir funciones · selección múltiple",connect:"Conectar mi servicio inteligente",selected:"Funciones elegidas",remove:"Quitar"},
+ pt:{add:"Adicionar arquivos e funções",upload:"Adicionar fotos e arquivos",uploadLead:"Roteiros, referências, documentos e outros materiais",choose:"Escolher funções · seleção múltipla",connect:"Conectar meu serviço inteligente",selected:"Funções escolhidas",remove:"Remover"},
+ ar:{add:"إضافة ملفات ووظائف",upload:"إضافة صور وملفات",uploadLead:"نصوص وصور مرجعية ومستندات ومواد أخرى",choose:"اختيار الوظائف · يمكن اختيار عدة وظائف",connect:"ربط خدمتي الذكية",selected:"الوظائف المختارة",remove:"إزالة"}
 } as const;
 
 export function localizedFunctionOptions(task:FunctionTask,lang:LingxiLang,base:readonly {id:string;label:string;description:string;tasks:readonly string[]}[]){

@@ -12,7 +12,7 @@ const ZH={
  newTask:"新任务",search:"搜索工具、功能或输入问题…",create:"创作",recharge:"充值",account:"账户",updates:"更新",
  start:"开始",sasi:"SASI",fieldGroup:"灵犀场",
  home:"首页",tools:"实用工具",studio:"SASI 创作",books:"书本 SASI",learning:"学习 SASI",research:"科研 SASI",
- wallet:"创作余额",myField:"账户",
+ wallet:"余额",myField:"账户",
  light:"浅色",dark:"深色",language:"语言",
  footerLine:"易懂易做，一键即达。让一个念头找到路径，让想法从这里开始生长。",
  follow:"关注灵犀场",service:"服务号",miniapp:"小程序",terms:"用户服务协议",privacy:"隐私政策",declaration:"系统声明",refunds:"充值与退款",sasiRules:"SASI 创作规则",
@@ -35,7 +35,7 @@ const ZH={
  skillsLead:"按任务调用，不必先学会所有能力。",connectTitle:"需要外部能力时，再把它接进来。",
  connectLead:"GitHub、Vercel、Supabase、模型 API 与其他服务不再散落在多个页面。连接入口统一放在这里。",
  openConnect:"打开连接中心 →",balanceTitle:"创作、研究与工具，共用同一个余额入口。",balanceLead:"按实际使用量结算。未使用余额长期保留，不按周清零。",viewBalance:"查看余额与充值 →",
- walletTitle:"让创作余额留在这里，等你真正需要时再使用。",walletLead:"不绑定会员，不制造“快过期”的压力。创作、研究与需要额外算力的工具，共用同一个余额入口。",
+ walletTitle:"让余额留在这里，等你真正需要时再使用。",walletLead:"不绑定会员，不制造“快过期”的压力。创作、研究与需要额外算力的工具，共用同一个余额入口。",
  current:"当前可用",principal:"充值本金",bonus:"赠送额度",refundable:"未使用可退款本金",balanceState:"余额状态",
  topupKicker:"补充余额",topupTitle:"需要多少，就放进来多少。",topupLead:"不是会员，也没有周期清零。充值后的余额长期保留，真正产生额外计算消耗时才按实际用量结算。",
  common:"常用",thisTopup:"这次补充",continueTopup:"继续充值 →",topupFine:"支付成功后会回到这里。余额到账后无需再次开通任何会员或套餐。",
@@ -48,7 +48,7 @@ type Key=keyof typeof ZH;
 
 const EN:Partial<Record<Key,string>>={
  brand:"LINGXIFIELD",brandFull:"LINGXIFIELD",sasiBrand:"LINGXIFIELD SASI",newTask:"New task",search:"Search tools, features, or describe your problem…",create:"Create",recharge:"Top up",account:"Account",updates:"Updates",
- start:"Start",fieldGroup:"LingxiField",home:"Home",tools:"Tools",studio:"SASI Studio",books:"Book SASI",learning:"Learning SASI",research:"Research SASI",wallet:"Creation Balance",myField:"My Account",light:"Light",dark:"Dark",language:"Language",
+ start:"Start",fieldGroup:"LingxiField",home:"Home",tools:"Tools",studio:"SASI Studio",books:"Book SASI",learning:"Learning SASI",research:"Research SASI",wallet:"Balance",myField:"My Account",light:"Light",dark:"Dark",language:"Language",
  footerLine:"Easy to understand, easy to do, one step closer. Give an idea a path and let it begin to grow.",follow:"Follow LingxiField",service:"WeChat",miniapp:"Mini Program",terms:"Terms",privacy:"Privacy",declaration:"System Notice",refunds:"Top-ups & Refunds",sasiRules:"SASI Rules",
  homeKicker:"One thought · One path",homeTitle:"What would you like to set in motion today?",homeLead:"You do not need to know the right tool first. Bring a problem, a document, or an unfinished idea. LingxiField finds the entry point and hands you the next step.",homePlaceholder:"For example: compress this PDF to 10MB; turn this book into something I can ask; or start a short drama from one story…",begin:"Start →",betterFrom:"Best place to start",specificProblem:"Solve one concrete problem",growIdea:"Let an idea begin to grow",fromHere:"Start here",easyReach:"Clear, simple, within reach",homeSectionLead:"We do not dump features on you. We arrange the entrances so you can step directly into what you need.",continueIn:"Go deeper",changePath:"Give change a path and an echo",changePathLead:"Some problems need action; others need to be seen. LingxiField keeps both in the same space.",homeNoteA:"LingxiField is not a wall of buttons.",homeNoteB:"It is a path from thought to result.",homeNoteC:"Tools finish tasks, SASI expands ideas, and the field system helps you see where you are going.",open:"Open →",expand:"Explore →",
  toolsHero:"One less detour makes everything faster.",toolsLead:"Images, PDFs, video, subtitles, privacy and everyday file problems all start here. If it can stay in your browser, we keep it there.",toolCount:"entries on the surface",toolSearch:"Search: PDF compression, watermark cleanup, calories, video transcription…",all:"All",local:"Local",online:"Online",noTool:"No exact tool match found.",noToolLead:"Describe the problem in the top search box and LingxiField will keep looking for the right entrance.",
@@ -62,7 +62,7 @@ const JA:Partial<Record<Key,string>>={
  newTask:"新しいタスク",search:"ツールや機能を検索、または質問を入力…",create:"制作",recharge:"チャージ",account:"アカウント",updates:"更新",
  start:"開始",sasi:"SASI",fieldGroup:"霊犀場",
  home:"ホーム",tools:"実用ツール",studio:"SASI 制作",books:"ブック SASI",learning:"学習 SASI",research:"研究 SASI",
- wallet:"AI 残高",myField:"マイアカウント",
+ wallet:"残高",myField:"マイアカウント",
  light:"ライト",dark:"ダーク",language:"言語",
  footerLine:"わかりやすく、すぐに実行へ。ひとつの思いに道筋を与え、ここから形にしていきます。",
  follow:"霊犀場をフォロー",service:"公式アカウント",miniapp:"ミニアプリ",terms:"利用規約",privacy:"プライバシーポリシー",declaration:"システム声明",refunds:"チャージと返金",sasiRules:"SASI 制作ルール",
@@ -100,7 +100,7 @@ const KO:Partial<Record<Key,string>>={
  newTask:"새 작업",search:"도구와 기능을 검색하거나 질문을 입력하세요…",create:"제작",recharge:"충전",account:"계정",updates:"업데이트",
  start:"시작",sasi:"SASI",fieldGroup:"링시필드",
  home:"홈",tools:"실용 도구",studio:"SASI 제작",books:"북 SASI",learning:"학습 SASI",research:"연구 SASI",
- wallet:"AI 잔액",myField:"내 계정",
+ wallet:"잔액",myField:"내 계정",
  light:"라이트",dark:"다크",language:"언어",
  footerLine:"쉽게 이해하고 바로 실행하세요. 하나의 생각에 길을 만들고 여기서부터 자라게 합니다.",
  follow:"링시필드 팔로우",service:"공식 계정",miniapp:"미니앱",terms:"이용약관",privacy:"개인정보 처리방침",declaration:"시스템 안내",refunds:"충전 및 환불",sasiRules:"SASI 제작 규칙",
@@ -138,7 +138,7 @@ const FR:Partial<Record<Key,string>>={
  newTask:"Nouvelle tâche",search:"Recherchez un outil, une fonction ou décrivez votre besoin…",create:"Créer",recharge:"Recharger",account:"Compte",updates:"Nouveautés",
  start:"Départ",sasi:"SASI",fieldGroup:"LingxiField",
  home:"Accueil",tools:"Outils",studio:"Studio SASI",books:"Livre SASI",learning:"Apprentissage SASI",research:"Recherche SASI",
- wallet:"Solde IA",myField:"Mon compte",
+ wallet:"Solde",myField:"Mon compte",
  light:"Clair",dark:"Sombre",language:"Langue",
  footerLine:"Simple à comprendre, simple à faire. Donnez un chemin à une idée et laissez-la commencer à grandir ici.",
  follow:"Suivre LingxiField",service:"Compte officiel",miniapp:"Mini-programme",terms:"Conditions d’utilisation",privacy:"Confidentialité",declaration:"Avis système",refunds:"Recharges et remboursements",sasiRules:"Règles SASI",
@@ -176,7 +176,7 @@ const DE:Partial<Record<Key,string>>={
  newTask:"Neue Aufgabe",search:"Werkzeuge und Funktionen suchen oder Frage eingeben…",create:"Erstellen",recharge:"Aufladen",account:"Konto",updates:"Neuigkeiten",
  start:"Start",sasi:"SASI",fieldGroup:"LingxiField",
  home:"Startseite",tools:"Werkzeuge",studio:"SASI Studio",books:"Buch SASI",learning:"Lernen SASI",research:"Forschung SASI",
- wallet:"KI-Guthaben",myField:"Mein Konto",
+ wallet:"Guthaben",myField:"Mein Konto",
  light:"Hell",dark:"Dunkel",language:"Sprache",
  footerLine:"Leicht zu verstehen, leicht umzusetzen. Gib einer Idee einen Weg und lass sie hier wachsen.",
  follow:"LingxiField folgen",service:"Offizielles Konto",miniapp:"Mini-App",terms:"Nutzungsbedingungen",privacy:"Datenschutz",declaration:"Systemhinweis",refunds:"Aufladungen & Erstattungen",sasiRules:"SASI-Regeln",
@@ -206,7 +206,7 @@ const DE:Partial<Record<Key,string>>={
  intelligence:"Intelligenzmodi",intTitle:"Jede Aufgabe bekommt die passende Stärke.",intLead:"Sie müssen keine Modellanbieter kennen. Leicht, Standard und Hoch stehen für unterschiedliche Verarbeitungsstärke und Verbrauchsfaktoren.",
  lite:"Leicht",standard:"Standard",high:"Hoch",invite:"Einladen",inviteTitle:"Teilen Sie den Einstieg mit Menschen, die ihn wirklich nutzen.",records:"Erstattungen & Verlauf",recordsTitle:"Nicht genutzter Betrag wird anhand der ursprünglichen Aufladung geprüft.",
  generateInvite:"Einladungslink erstellen",copy:"Kopieren",orders:"Aufladungen ansehen →",refundRules:"Erstattungsregeln ansehen →",
- updateTitle:"LingxiField Updates",update1:"Der einheitliche Workspace wird schrittweise ausgerollt.",update2:"SASI, Werkzeuge und KI-Guthaben nutzen jetzt denselben Einstieg."
+ updateTitle:"LingxiField Updates",update1:"Der einheitliche Workspace wird schrittweise ausgerollt.",update2:"SASI, Werkzeuge und Guthaben nutzen jetzt denselben Einstieg."
 };
 
 const ES:Partial<Record<Key,string>>={
@@ -214,7 +214,7 @@ const ES:Partial<Record<Key,string>>={
  newTask:"Nueva tarea",search:"Busca herramientas y funciones o escribe tu pregunta…",create:"Crear",recharge:"Recargar",account:"Cuenta",updates:"Novedades",
  start:"Inicio",sasi:"SASI",fieldGroup:"LingxiField",
  home:"Inicio",tools:"Herramientas",studio:"SASI Studio",books:"Libro SASI",learning:"Aprendizaje SASI",research:"Investigación SASI",
- wallet:"Saldo IA",myField:"Mi cuenta",
+ wallet:"Saldo",myField:"Mi cuenta",
  light:"Claro",dark:"Oscuro",language:"Idioma",
  footerLine:"Fácil de entender, fácil de hacer. Dale un camino a una idea y deja que empiece a crecer aquí.",
  follow:"Seguir LingxiField",service:"Cuenta oficial",miniapp:"Mini programa",terms:"Términos de uso",privacy:"Privacidad",declaration:"Aviso del sistema",refunds:"Recargas y reembolsos",sasiRules:"Reglas SASI",
@@ -252,7 +252,7 @@ const PT:Partial<Record<Key,string>>={
  newTask:"Nova tarefa",search:"Pesquise ferramentas e funções ou escreva sua pergunta…",create:"Criar",recharge:"Recarregar",account:"Conta",updates:"Novidades",
  start:"Início",sasi:"SASI",fieldGroup:"LingxiField",
  home:"Início",tools:"Ferramentas",studio:"SASI Studio",books:"Livro SASI",learning:"Aprendizagem SASI",research:"Pesquisa SASI",
- wallet:"Saldo IA",myField:"Minha conta",
+ wallet:"Saldo",myField:"Minha conta",
  light:"Claro",dark:"Escuro",language:"Idioma",
  footerLine:"Fácil de entender, fácil de fazer. Dê um caminho a uma ideia e deixe-a começar a crescer aqui.",
  follow:"Seguir LingxiField",service:"Conta oficial",miniapp:"Mini programa",terms:"Termos de uso",privacy:"Privacidade",declaration:"Aviso do sistema",refunds:"Recargas e reembolsos",sasiRules:"Regras SASI",
@@ -290,7 +290,7 @@ const AR:Partial<Record<Key,string>>={
  newTask:"مهمة جديدة",search:"ابحث عن أداة أو ميزة أو اكتب سؤالك…",create:"إنشاء",recharge:"شحن",account:"الحساب",updates:"التحديثات",
  start:"ابدأ",sasi:"SASI",fieldGroup:"LingxiField",
  home:"الرئيسية",tools:"الأدوات",studio:"استوديو SASI",books:"كتاب SASI",learning:"تعلم SASI",research:"بحث SASI",
- wallet:"رصيد الذكاء الاصطناعي",myField:"حسابي",
+ wallet:"الرصيد",myField:"حسابي",
  light:"فاتح",dark:"داكن",language:"اللغة",
  footerLine:"سهل الفهم وسهل التنفيذ. امنح الفكرة مسارًا ودعها تبدأ بالنمو من هنا.",
  follow:"تابع LingxiField",service:"الحساب الرسمي",miniapp:"التطبيق المصغر",terms:"شروط الاستخدام",privacy:"الخصوصية",declaration:"إشعار النظام",refunds:"الشحن والاسترداد",sasiRules:"قواعد SASI",
@@ -320,7 +320,7 @@ const AR:Partial<Record<Key,string>>={
  intelligence:"أوضاع الذكاء",intTitle:"دع كل مهمة تستخدم المستوى المناسب.",intLead:"لا تحتاج إلى معرفة مزودي النماذج. خفيف وقياسي وعالٍ تمثل مستويات معالجة ومعاملات استهلاك مختلفة.",
  lite:"خفيف",standard:"قياسي",high:"عالٍ",invite:"دعوة",inviteTitle:"شارك المدخل مع من سيستخدمه فعلًا.",records:"الاسترداد والسجل",recordsTitle:"يتم التحقق من الأصل غير المستخدم مقابل سجل الشحن الأصلي.",
  generateInvite:"إنشاء رابط دعوة",copy:"نسخ",orders:"عرض سجلات الشحن →",refundRules:"عرض قواعد الاسترداد →",
- updateTitle:"تحديثات LingxiField",update1:"يتم إطلاق مساحة العمل الموحدة تدريجيًا.",update2:"أصبح SASI والأدوات ورصيد الذكاء الاصطناعي يستخدمون المدخل نفسه."
+ updateTitle:"تحديثات LingxiField",update1:"يتم إطلاق مساحة العمل الموحدة تدريجيًا.",update2:"أصبح SASI والأدوات والرصيد يستخدمون المدخل نفسه."
 };
 
 const dictionaries:Record<LingxiLang,Partial<Record<Key,string>>>={zh:ZH,en:EN,ja:JA,ko:KO,fr:FR,de:DE,es:ES,pt:PT,ar:AR};
