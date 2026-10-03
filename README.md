@@ -399,6 +399,25 @@ The main web application is deployed through Vercel, with additional infrastruct
 
 ---
 
+## Featured public tools
+
+Browser-local tools (no upload required). Available on both hosts:
+
+- Compress image to 100KB
+  - https://lingxifield.cn/tools/compress-image-to-100kb
+  - https://lingxifield.com/tools/compress-image-to-100kb
+- HEIC to JPG
+  - https://lingxifield.cn/tools/heic-to-jpg
+  - https://lingxifield.com/tools/heic-to-jpg
+- Merge PDF
+  - https://lingxifield.cn/tools/merge-pdf
+  - https://lingxifield.com/tools/merge-pdf
+- Remove EXIF
+  - https://lingxifield.cn/tools/remove-exif
+  - https://lingxifield.com/tools/remove-exif
+
+---
+
 ## Active development
 
 Current maintenance priorities include:
