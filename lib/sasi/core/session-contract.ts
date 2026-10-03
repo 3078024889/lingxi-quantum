@@ -1,5 +1,6 @@
+import{deriveExecutionPhase,type SasiExecutionPhase}from"./execution-lifecycle";
+export type{SasiExecutionPhase}from"./execution-lifecycle";
 export type SasiMode="drama"|"website"|"book"|"learning"|"research";
-export type SasiExecutionPhase="idle"|"preparing"|"quoted"|"running"|"succeeded"|"failed"|"uncertain";
 
 export type SasiConversationTurn={
  id:string;
@@ -36,11 +37,4 @@ export function resultFromValues(input:{text?:string;videoUrl?:string;websiteHtm
  return{kind:"none"};
 }
 
-export function deriveSasiPhase(input:{busy:boolean;quoteReady?:boolean;hasResult?:boolean;uncertain?:boolean;failed?:boolean}):SasiExecutionPhase{
- if(input.uncertain)return"uncertain";
- if(input.failed)return"failed";
- if(input.busy)return"running";
- if(input.quoteReady)return"quoted";
- if(input.hasResult)return"succeeded";
- return"idle";
-}
+export const deriveSasiPhase=deriveExecutionPhase;

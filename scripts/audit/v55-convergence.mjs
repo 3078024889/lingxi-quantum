@@ -1,0 +1,19 @@
+import fs from"node:fs";
+const read=p=>fs.readFileSync(p,"utf8"),bad=[];
+const composer=read("lib/sasi/composer-core.ts");
+if(!composer.includes('SASI_INTAKE_EXTENSIONS')||!composer.includes('SASI_INTAKE_ACCEPT'))bad.push("composer does not use unified intake contract");
+if((composer.match(/SASI_UNIFIED_EXTENSIONS=\[/g)||[]).length)bad.push("duplicate composer extension array remains");
+const docs=read("lib/files/document-intake.ts");
+if(!docs.includes("SASI_INTAKE_LIMITS.maxFiles")||!docs.includes("SASI_INTAKE_LIMITS.maxFileBytes")||!docs.includes("SASI_INTAKE_LIMITS.maxBatchBytes"))bad.push("document intake limits are not unified");
+const surface=read("components/SasiOneSurface.tsx");
+if(surface.includes("const MODE_LABELS"))bad.push("component-local mode translation table remains");
+if(!surface.includes("sasiModeLabel(lang,item.id)"))bad.push("SASI mode glossary is not active");
+const session=read("lib/sasi/core/session-contract.ts");
+if(!session.includes("deriveExecutionPhase")||session.includes('type SasiExecutionPhase="idle"'))bad.push("session lifecycle remains duplicated");
+const governor=read("lib/tools/engine/resource-governor.ts");
+for(const token of['import "server-only"','reserveMemoryMB','usableMemoryMB','Math.max(0','ENGINE_LOW_MEMORY'])if(!governor.includes(token))bad.push(`resource governor missing ${token}`);
+if(governor.includes("Math.max(1,Math.min(4"))bad.push("old forced-heavy-concurrency policy remains");
+const intake=read("lib/sasi/core/intake-contract.ts");
+for(const token of["maxFiles:30","maxFileBytes:30*1024*1024","maxBatchBytes:300*1024*1024","validateSasiIntakeBatch"])if(!intake.includes(token))bad.push(`intake contract missing ${token}`);
+if(bad.length){console.error(bad.join("\n"));process.exit(1)}
+console.log("V55_UNIFIED_FLOW_CONVERGENCE=PASS");

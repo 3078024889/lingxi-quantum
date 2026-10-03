@@ -1,11 +1,7 @@
+import{SASI_INTAKE_ACCEPT,SASI_INTAKE_EXTENSIONS}from"@/lib/sasi/core/intake-contract";
 export type SasiMode="drama"|"website"|"book"|"learning"|"research";
 
-export const SASI_UNIFIED_EXTENSIONS=[
- ".txt",".md",".json",".csv",".yaml",".yml",".pdf",".docx",".pptx",".xlsx",".epub",".odt",".rtf",
- ".jpg",".jpeg",".png",".webp",".gif",".mp3",".wav",".m4a",".mp4",".mov",".webm",
- ".js",".jsx",".ts",".tsx",".css",".html",".sql",".py",".zip"
-] as const;
-
-export const SASI_UNIFIED_ACCEPT=SASI_UNIFIED_EXTENSIONS.join(",");
+export const SASI_UNIFIED_EXTENSIONS=SASI_INTAKE_EXTENSIONS;
+export const SASI_UNIFIED_ACCEPT=SASI_INTAKE_ACCEPT;
 
 export type SasiConversationRow={question:string;answer:string};

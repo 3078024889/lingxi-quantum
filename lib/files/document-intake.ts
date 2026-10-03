@@ -2,6 +2,7 @@
 
 import JSZip from "jszip";
 import { epubToText, pptxToKnowledgeText, structuredTextFile } from "@/lib/files/knowledge-extra-formats";
+import { SASI_INTAKE_LIMITS } from "@/lib/sasi/core/intake-contract";
 
 export const DOCUMENT_ACCEPT = [
   ".pdf",".txt",".md",".markdown",".rtf",
@@ -24,9 +25,9 @@ export const DOCUMENT_ACCEPT = [
   "image/*",
 ].join(",");
 
-export const DOCUMENT_BATCH_MAX_FILES = 30;
-export const DOCUMENT_FILE_MAX_BYTES = 30 * 1024 * 1024;
-export const DOCUMENT_BATCH_MAX_BYTES = 300 * 1024 * 1024;
+export const DOCUMENT_BATCH_MAX_FILES = SASI_INTAKE_LIMITS.maxFiles;
+export const DOCUMENT_FILE_MAX_BYTES = SASI_INTAKE_LIMITS.maxFileBytes;
+export const DOCUMENT_BATCH_MAX_BYTES = SASI_INTAKE_LIMITS.maxBatchBytes;
 
 export type ParsedDocument = {
   text:string;
