@@ -9,9 +9,10 @@ export function moneyNoticeEmail(event:string,w:{id:string;provider:string;curre
  const instruction=event==="PROVIDER_FUNDS_REQUIRED"?"请检查并补足该商户账户的退款资金，再从管理员看板继续原单退款。":event==="requested"?"用户尚未确认提交，可以取消申请；此时无需补资金。":event==="processing"?"正在联系原支付渠道，请查看看板确认受理结果；请勿另外新建退款。":event==="completed"?"渠道已确认完成，请核对渠道资金记录。":event==="cancelled"?"申请已取消，冻结金额已恢复到用户余额。":"请在管理员看板查看最新状态和处理原因。";
  return{subject:"[灵犀场资金] "+(labels[event]||"退款进度")+" · "+channel+" "+amount,text:[labels[event]||event,"支付渠道："+channel,"渠道退款金额："+amount,"用户余额币种："+w.currency,"申请编号："+w.id,instruction,"资金看板：https://lingxifield.com/account/money-admin"].join("\n")};
 }
-export async function flushMoneyNotifications(limit=5){
+export async function flushMoneyNotifications(limit=5,forceRetry=false){
  const key=process.env.RESEND_API_KEY;if(!key)return{sent:0,configured:false};
  const admin=createAdminClient(),settings=await moneyOperatorSettings();
+ if(forceRetry){const reset=await admin.from("money_notification_outbox").update({available_at:new Date().toISOString(),attempt_count:0}).eq("status","failed").is("locked_until",null);if(reset.error)throw new Error("MONEY_NOTICE_RETRY_FAILED");}
  const {data:rows,error}=await admin.rpc("money_claim_notifications",{p_limit:limit});if(error)throw new Error("MONEY_NOTICE_CLAIM_FAILED");
  let sent=0;
  for(const row of rows||[]){

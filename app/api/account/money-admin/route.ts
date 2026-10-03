@@ -15,7 +15,7 @@ export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const user=await moneyAdministrator();if(!user)return NextResponse.json({error:"FORBIDDEN"},{status:403});
  const b=await req.json().catch(()=>null),admin=createAdminClient();const rate=await admin.rpc("rate_limit_check",{p_key:"money-admin:"+user.id,p_limit:30,p_window_seconds:3600});if(rate.error||rate.data!==true)return NextResponse.json({error:"RATE_LIMITED"},{status:429});
- try{if(b?.action==="send-notices")return NextResponse.json(await flushMoneyNotifications());
+ try{if(b?.action==="send-notices")return NextResponse.json(await flushMoneyNotifications(5,true));
  if(b?.action!=="retry"||!/^[0-9a-f-]{36}$/i.test(b?.id||""))return NextResponse.json({error:"INVALID_REQUEST"},{status:400});
  const {data:w}=await admin.from("balance_withdrawals").select("status,submission_confirmed_at").eq("id",b.id).single();if(!w?.submission_confirmed_at||!['requested','processing'].includes(w.status))return NextResponse.json({error:"REQUEST_NOT_RETRYABLE"},{status:409});
  return NextResponse.json({result:await reconcileWithdrawal(b.id)});

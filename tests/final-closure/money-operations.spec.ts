@@ -1,7 +1,7 @@
-import {test,expect} from 'playwright/test';
+import {test,expect,type Page} from 'playwright/test';
 const id='00000000-0000-4000-8000-000000000001';
 const draft={id,order_id:'o',provider:'wechat',currency:'CNY',provider_currency:'CNY',amount_minor:100,provider_amount_minor:100,status:'requested',submission_confirmed_at:null,provider_status:null,failure_code:null,created_at:'2026-10-03T08:00:00Z',completed_at:null};
-async function base(page:any){
+async function base(page:Page){
  await page.route('**/api/preferences/currency',r=>r.fulfill({json:{recommendedCurrency:'CNY'}}));
  await page.route('**/api/account/money-admin',r=>r.fulfill({status:403,json:{error:'FORBIDDEN'}}));
  await page.route('**/api/money/summary',r=>r.fulfill({json:{balances:{CNY:{availableMinor:900,refundableMinor:900,refundHoldMinor:100},USD:{availableMinor:1000,refundableMinor:1000,refundHoldMinor:0}},withdrawals:[]}}));
