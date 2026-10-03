@@ -5,6 +5,7 @@ import ToolWorkbench from "@/components/tools/ToolWorkbench";
 import { getTool, TOOLS } from "@/lib/tools/registry";
 import {buildToolMetadata} from '@/lib/tools/seo';
 import ToolGuide from '@/components/seo/ToolGuide';
+import {localFreeToolFact} from '@/lib/seo/local-free-tools';
 import type { BilingualFaqItem } from "@/components/FaqSection";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -30,6 +31,16 @@ function faqFor(slug: string): BilingualFaqItem[] {
       aEn: "The page explains the reason and what to try next, such as file size, unsupported format, or an outdated browser.",
     },
   ];
+  const zh=localFreeToolFact(slug,"zh");
+  const en=localFreeToolFact(slug,"en");
+  if(zh&&en){
+    common.unshift({
+      qZh: zh.question,
+      qEn: en.question,
+      aZh: zh.answer,
+      aEn: en.answer,
+    });
+  }
   if (slug.startsWith("compress-image")) {
     common.unshift({
       qZh: "为什么压不到目标大小？",
