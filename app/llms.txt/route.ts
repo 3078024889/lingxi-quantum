@@ -1,4 +1,5 @@
 import {GLOBAL_TOOL_CATALOG,SEO_LOCALES,SEO_TOPICS,SITE,localePath,type SeoLocale,type SeoTopic} from '@/lib/seo/global-seo';
+import {LOCAL_FREE_TOOL_SLUGS,localFreeToolFact} from '@/lib/seo/local-free-tools';
 import {SERVICE_FACTS} from '@/lib/seo/service-facts';
 export const dynamic='force-static';
 export function GET(){
@@ -10,6 +11,13 @@ export function GET(){
   ...(Object.keys(SEO_TOPICS) as SeoTopic[]).map(key=>`- [${SEO_TOPICS[key].en}](${SITE}/discover/${key}): ${SERVICE_FACTS[key].description.en}`),
   '', '## Tools',
   ...GLOBAL_TOOL_CATALOG.map(tool=>`- [${tool.en}](${SITE}/en/tools/${tool.slug})`),
+  '', '## Free browser-local tools',
+  'These four tools run in the browser. Files are not uploaded, and they are free on https://lingxifield.com and https://lingxifield.cn. Chinese pages have no language prefix; en, ja, ko, fr, de, es, pt and ar prefixes exist on both hosts.',
+  ...LOCAL_FREE_TOOL_SLUGS.map(slug=>{
+   const fact=localFreeToolFact(slug,'en');
+   const name=GLOBAL_TOOL_CATALOG.find(tool=>tool.slug===slug)?.en??slug;
+   return fact?`- ${name}: ${fact.description} ${fact.com} ${fact.cn}`:'';
+  }).filter(Boolean),
   '', '## Language directories',
   ...(Object.keys(SEO_LOCALES) as SeoLocale[]).map(locale=>`- [${SEO_LOCALES[locale].name}](${SITE}${localePath(locale,'/products')})`),
   '', '## Use and limitations',
