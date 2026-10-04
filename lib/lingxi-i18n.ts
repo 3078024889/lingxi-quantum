@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {usePathname} from "next/navigation";
 
 export type LingxiLang="zh"|"en"|"ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
 export const LANG_NAMES:Record<LingxiLang,string>={
@@ -325,8 +326,9 @@ const AR:Partial<Record<Key,string>>={
 
 const dictionaries:Record<LingxiLang,Partial<Record<Key,string>>>={zh:ZH,en:EN,ja:JA,ko:KO,fr:FR,de:DE,es:ES,pt:PT,ar:AR};
 export function tr(lang:LingxiLang,key:Key){return dictionaries[lang][key]??EN[key]??ZH[key]}
+function isLingxiLang(value:unknown):value is LingxiLang{return typeof value==="string"&&Object.prototype.hasOwnProperty.call(LANG_NAMES,value)}
 export function setLingxiLang(lang:LingxiLang){
- const safe: LingxiLang = LANG_NAMES[lang] ? lang : "zh";
+ const safe: LingxiLang = isLingxiLang(lang) ? lang : "zh";
  try{localStorage.setItem("lx-lang",safe)}catch{}
  const root=document.documentElement;
  root.lang=safe==="zh"?"zh-CN":safe;
@@ -336,7 +338,16 @@ export function setLingxiLang(lang:LingxiLang){
  window.dispatchEvent(new CustomEvent("lingxi:lang",{detail:safe}));
 }
 export function useLingxiLang(){
+ const pathname=usePathname();
  const[lang,setLangState]=useState<LingxiLang>("zh");
- useEffect(()=>{const requested=new URLSearchParams(location.search).get("lang") as LingxiLang;const saved=(LANG_NAMES[requested]?requested:localStorage.getItem("lx-lang")||"zh") as LingxiLang;const next=LANG_NAMES[saved]?saved:"zh";setLangState(next);setLingxiLang(next);const h=(e:Event)=>setLangState((e as CustomEvent<LingxiLang>).detail);window.addEventListener("lingxi:lang",h);return()=>window.removeEventListener("lingxi:lang",h)},[]);
+ useEffect(()=>{
+  const routeLang=pathname?.split("/")[1] as LingxiLang;
+  const requested=new URLSearchParams(location.search).get("lang") as LingxiLang;
+  let stored:LingxiLang="zh";try{stored=(localStorage.getItem("lx-lang")||"zh") as LingxiLang}catch{}
+  const next=isLingxiLang(routeLang)?routeLang:isLingxiLang(requested)?requested:isLingxiLang(stored)?stored:"zh";
+  const h=(e:Event)=>setLangState((e as CustomEvent<LingxiLang>).detail);
+  window.addEventListener("lingxi:lang",h);setLangState(next);setLingxiLang(next);
+  return()=>window.removeEventListener("lingxi:lang",h);
+ },[pathname]);
  return{lang,setLang:setLingxiLang,t:(key:Key)=>tr(lang,key)};
 }

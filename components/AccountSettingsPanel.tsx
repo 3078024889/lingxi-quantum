@@ -20,8 +20,8 @@ const COPY={
 export default function AccountSettingsPanel(){
  const{lang,setLang}=useLingxiLang();const c=COPY[lang]??COPY.en;
  const[theme,setTheme]=useState<"light"|"dark">("light");
- useEffect(()=>{const x=(localStorage.getItem("lx-theme")||document.documentElement.dataset.theme||"light")==="dark"?"dark":"light";setTheme(x)},[]);
- function chooseTheme(next:"light"|"dark"){setTheme(next);localStorage.setItem("lx-theme",next);document.documentElement.dataset.theme=next}
+ useEffect(()=>{let saved=document.documentElement.dataset.theme||"light";try{saved=localStorage.getItem("lx-theme")||saved}catch{}setTheme(saved==="dark"?"dark":"light")},[]);
+ function chooseTheme(next:"light"|"dark"){setTheme(next);try{localStorage.setItem("lx-theme",next)}catch{};document.documentElement.dataset.theme=next}
  const links=[
   ["/account/notifications",c.notifications,"🔔"],["/ai-wallet",c.balance,"💎"],["/account/withdrawals",c.withdraw,"↩"],
   ["/sasi/connections",c.connections,"✦"],["/account/support",c.support,"💬"],["/privacy",c.privacy,"🔒"],["/terms",c.terms,"📄"],["/release",c.release,"↗"],

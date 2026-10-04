@@ -69,14 +69,14 @@ export default function Nav() {
   const [avatarUrl, setAvatarUrl] = useState("");
 
   useEffect(() => {
-    const stored = (localStorage.getItem("lx-theme") || "light") as Theme;
+    let stored:Theme="light";try{stored=(localStorage.getItem("lx-theme")||"light") as Theme}catch{}
     setTheme(stored === "dark" ? "dark" : "light");
   }, []);
 
   useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
-    localStorage.setItem("lx-theme", theme);
+    try{localStorage.setItem("lx-theme", theme)}catch{}
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 

@@ -51,3 +51,12 @@ test('anonymous feedback failure preserves text and never reports success',async
  const dialog=page.getByRole('dialog',{name:'Tell us what went wrong',exact:true});await dialog.locator('textarea').fill('PDF preview did not appear.');await dialog.getByRole('button',{name:'Send to LINGXIFIELD',exact:true}).click();
  await expect(dialog.getByRole('alert')).toBeVisible();await expect(dialog.getByRole('alert')).not.toContainText(/SUPABASE|API key|createBrowserClient|SUPPORT_/);await expect(dialog).not.toContainText('Received ✓');await expect(dialog.locator('textarea')).toHaveValue('PDF preview did not appear.');
 });
+
+test('language URL overrides saved preference and blocked storage does not break rendering',async({page})=>{
+ const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
+ await page.goto('/?lang=zh');await page.evaluate(()=>localStorage.setItem('lx-lang','zh'));await page.goto('/en/tools');await expect(page.locator('html')).toHaveAttribute('lang','en');
+ await page.goto('/ar/tools');await expect(page.locator('html')).toHaveAttribute('lang','ar');await expect(page.locator('html')).toHaveAttribute('dir','rtl');
+ await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{configurable:true,get(){throw new DOMException('Storage disabled','SecurityError')}}));
+ await page.goto('/sasi?mode=drama&lang=fr');await expect(page.locator('html')).toHaveAttribute('lang','fr');await expect(page.locator('.lx11-lang-label').first()).toHaveText('Langue');await expect(page.locator('body')).not.toContainText('Application error');expect(errors).toEqual([]);
+ await page.goto('/sasi?mode=drama&lang=__proto__');await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');await expect(page.getByPlaceholder('问问 SASI',{exact:true})).toBeVisible();expect(errors).toEqual([]);
+});
