@@ -1,5 +1,6 @@
 import "server-only";
 import os from"node:os";
+import{rankExecutionLanes}from"@/lib/tasks/smart-execution";
 
 export type HeavyWorkKind="ocr"|"media"|"vision"|"pdf";
 export type RuntimeBudget={
@@ -37,9 +38,12 @@ export function acquireHeavySlot(kind:HeavyWorkKind="media"){
  activeHeavy++;let released=false;return()=>{if(!released){released=true;activeHeavy=Math.max(0,activeHeavy-1)}};
 }
 export function chooseLane(inputBytes:number,kind:"light"|HeavyWorkKind){
- const b=currentBudget();if(kind==="light")return{lane:"local" as const,budget:b};
- if(inputBytes>512*1024*1024)return{lane:"reject" as const,budget:b,reason:"INPUT_TOO_LARGE"};
- const needed=worksetFor(kind);
- if(b.usableMemoryMB<needed||b.maxConcurrentHeavy<1)return{lane:"defer" as const,budget:b,reason:"LOW_MEMORY"};
- return{lane:"self-hosted" as const,budget:b};
+ const b=currentBudget();
+ const needed=kind==="light"?0:worksetFor(kind);
+ const ranked=rankExecutionLanes({browserEligible:kind==="light",deterministic:true,needsNetwork:false,serverAvailable:kind==="light"||(b.usableMemoryMB>=needed&&b.maxConcurrentHeavy>0),externalAllowed:false,inputBytes,maxInputBytes:kind==="light"?Number.MAX_SAFE_INTEGER:512*1024*1024});
+ const first=ranked[0];
+ if(first==="reject")return{lane:"reject" as const,budget:b,reason:"INPUT_TOO_LARGE"};
+ if(first==="browser")return{lane:"local" as const,budget:b};
+ if(first==="self-hosted")return{lane:"self-hosted" as const,budget:b};
+ return{lane:"defer" as const,budget:b,reason:"LOW_MEMORY"};
 }
