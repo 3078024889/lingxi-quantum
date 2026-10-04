@@ -5,7 +5,7 @@ const chinese=/[\u3400-\u9fff]/;
 const skipParts=[
  "/app/api/","/scripts/","/supabase/","/node_modules/","/.next/",
  "/app/sasi/SasiWorkspace.tsx","/app/sasi/SasiV3Panels.tsx",
- "/app/sasi/SeedanceStudio.tsx","/app/sasi/VideoAssembler.tsx"
+ "/app/sasi/VideoAssembler.tsx"
 ];
 const uiRoots=["app","components"];
 let rows=[],scanned=0;

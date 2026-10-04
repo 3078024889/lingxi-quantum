@@ -1,0 +1,3581 @@
+{
+  "date": "2026-10-04",
+  "scope": "D:/lingxi-quantum",
+  "deletedFiles": 61835,
+  "deletedLogicalBytes": 6979487737,
+  "bytesNote": "Sum of file lengths measured before removal; not a claim about NTFS allocation, compressed files or hard-link savings.",
+  "deletedSourceFiles": [
+    {
+      "path": "components/AuroraVideoBand.tsx",
+      "bytes": 6099,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/BookReader.tsx",
+      "bytes": 7543,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/ClickRipple.tsx",
+      "bytes": 2832,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/CosmicField.tsx",
+      "bytes": 5353,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/DownloadResultPdfButton.tsx",
+      "bytes": 1616,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/ErrorWithLoginPrompt.tsx",
+      "bytes": 1234,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/FarewellBanner.tsx",
+      "bytes": 1084,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/GateVisual.tsx",
+      "bytes": 1006,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/LangToggle.tsx",
+      "bytes": 1013,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/LearnArticle.tsx",
+      "bytes": 5612,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/LocalizedOrderExpiry.tsx",
+      "bytes": 1528,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/OpeningAtrium.tsx",
+      "bytes": 9174,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/PortalSpinner.tsx",
+      "bytes": 2664,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/SasiAutonomousImageStudio.tsx",
+      "bytes": 4537,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/SearchBox.tsx",
+      "bytes": 12039,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/ShareButton.tsx",
+      "bytes": 2055,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/WhyTrustLingxi.tsx",
+      "bytes": 1998,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/ads/LingxiAdSlot.tsx",
+      "bytes": 1289,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/diagrams/BreathDiagram.tsx",
+      "bytes": 7148,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/tools/PremiumGate.tsx",
+      "bytes": 520,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "components/tools/ToolsConversationHub.tsx",
+      "bytes": 9491,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "app/sasi/SasiChat.tsx",
+      "bytes": 2432,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "app/sasi/SeedanceStudio.tsx",
+      "bytes": 1986,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "lib/seo/platform-completion.ts",
+      "bytes": 1059,
+      "reason": "No runtime imports or route entry; superseded interface/fact layer"
+    },
+    {
+      "path": "scripts/audit-pre-release-v1585.mjs",
+      "bytes": 2617,
+      "reason": "Obsolete, uninvoked release-specific audit"
+    },
+    {
+      "path": "scripts/final-closure/platform-completion.mjs",
+      "bytes": 1327,
+      "reason": "Obsolete, uninvoked release-specific audit"
+    }
+  ],
+  "deletedArtifacts": [
+    {
+      "path": "_local/build-cache-before-clean-20260929",
+      "bytes": 732149969,
+      "files": 136,
+      "dirs": 57,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/npm-cache",
+      "bytes": 243902414,
+      "files": 801,
+      "dirs": 164,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/v322-pdf-pages",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 12,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/v323-pdf-pages",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 5,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/v324-pdf-pages",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 5,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/v325-pdf-pages",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 5,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/v326-pdf-pages",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 12,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/balance-preview",
+      "bytes": 2592803,
+      "files": 14,
+      "dirs": 1,
+      "removedLinks": 0
+    },
+    {
+      "path": "test-results",
+      "bytes": 2049199,
+      "files": 9,
+      "dirs": 7,
+      "removedLinks": 0
+    },
+    {
+      "path": "output",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 4,
+      "removedLinks": 0
+    },
+    {
+      "path": "2026-10-02",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 4,
+      "removedLinks": 0
+    },
+    {
+      "path": "payload",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 5,
+      "removedLinks": 0
+    },
+    {
+      "path": "reports",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 1,
+      "removedLinks": 0
+    },
+    {
+      "path": "release",
+      "bytes": 0,
+      "files": 0,
+      "dirs": 1,
+      "removedLinks": 0
+    },
+    {
+      "path": "tmp/money-audit-worktree",
+      "bytes": 1998510886,
+      "files": 8567,
+      "dirs": 1990,
+      "removedLinks": 1
+    },
+    {
+      "path": "tmp/seo-build-repair",
+      "bytes": 2025134572,
+      "files": 8662,
+      "dirs": 1980,
+      "removedLinks": 1
+    },
+    {
+      "path": "_local/recovery-20260930/node_modules",
+      "bytes": 903923670,
+      "files": 40449,
+      "dirs": 9991,
+      "removedLinks": 1872
+    },
+    {
+      "path": "_local/recovery-20260930/.next",
+      "bytes": 29950265,
+      "files": 75,
+      "dirs": 24,
+      "removedLinks": 0
+    },
+    {
+      "path": "_local/worktrees/sasi-planet-review-target-20260926/.next",
+      "bytes": 497046138,
+      "files": 1226,
+      "dirs": 596,
+      "removedLinks": 0
+    },
+    {
+      "path": "_local/worktrees/sasi-self-hosted-20260926/.next",
+      "bytes": 536175565,
+      "files": 1243,
+      "dirs": 603,
+      "removedLinks": 0
+    }
+  ],
+  "deletedBackupDuplicates": [
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/app/tools/burn-after-read/page.tsx",
+      "bytes": 1389,
+      "gitBlob": "73f74ce031ce1ce1b81c310ed0f94074533e509d"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/app/tools/temp-mail/page.tsx",
+      "bytes": 1279,
+      "gitBlob": "747c882183145d3bc844370a26a1adc4157c8d88"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/components/HomeProblemHub.tsx",
+      "bytes": 23266,
+      "gitBlob": "c003112bc03d4c24dc5cad089fc39c7b1295bafb"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/components/tools/FoodCaloriePage.tsx",
+      "bytes": 3995,
+      "gitBlob": "3891501bea9e9098de52a09a213cf7317e598713"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/components/tools/ToolPromoStrip.tsx",
+      "bytes": 1025,
+      "gitBlob": "3f7062d6a62a0ed958d44b193e541fe183b6c458"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/components/tools/ToolsHubV11.tsx",
+      "bytes": 17738,
+      "gitBlob": "57d239b30d4d700a0215baf900a992d6695bc3ba"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/lib/tools/search-intents-v44.js",
+      "bytes": 10641,
+      "gitBlob": "77e53fe5aadb2f31320aed01037ad4284a77aa59"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/scripts/audit/v44-p0-closure.mjs",
+      "bytes": 3992,
+      "gitBlob": "69f811a997a4760e3cacfdd1ddc49d3998b01b01"
+    },
+    {
+      "path": ".lingxifield-backups/v44r1-20261002-161216/tests/final-closure/search-intent-v44.spec.ts",
+      "bytes": 1302,
+      "gitBlob": "b7f243c287b3be2566acc5295c27e559e2ddef6a"
+    },
+    {
+      "path": ".lingxifield-backups/v45-1790930795831/components/tools/PaidExportButton.tsx",
+      "bytes": 7417,
+      "gitBlob": "31c695b2c0409ad31c187e16e25e47b758916326"
+    },
+    {
+      "path": ".lingxifield-backups/v45-1790930795846/lib/tools/payment-recovery.ts",
+      "bytes": 5639,
+      "gitBlob": "0f29380cb7b62daafcd0732947ebb4914fe64743"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/app/tools/layout.tsx",
+      "bytes": 226,
+      "gitBlob": "be846f848aff6edad1d6145bb48b19c9659ee30f"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/IdPhotoAiWorkbench.tsx",
+      "bytes": 5770,
+      "gitBlob": "e79eadb812e1edaa5d5dae40a2584329e9e19374"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/ImageTranslatorWorkbench.tsx",
+      "bytes": 6594,
+      "gitBlob": "aebd32f6a0cbcf78fd67b614a85f96b6f69f51eb"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/ImageWatermarkWorkbench.tsx",
+      "bytes": 4415,
+      "gitBlob": "6e7be9068b6a43a1aafc640c3973f6a061bdeff3"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/PaidActionButton.tsx",
+      "bytes": 13250,
+      "gitBlob": "6daddc0fc285e33204c4a7fea6d9c46dd898aaff"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/PaidExportButton.tsx",
+      "bytes": 9534,
+      "gitBlob": "77830dba6fcf5576bb74f22650f1fb0ba4154c48"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/PdfEditorWorkbench.tsx",
+      "bytes": 27117,
+      "gitBlob": "6082bc392f6ffe52092cd04dabbc315d2978a7c7"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/SubtitleTranslateWorkbench.tsx",
+      "bytes": 3534,
+      "gitBlob": "682313d031dbf69c9504bba0cf43b620509f28f9"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/TranscriptionWorkbench.tsx",
+      "bytes": 3473,
+      "gitBlob": "ed5ca7829d98d48449445fb0fe9aebf85452da10"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/components/tools/VideoDubbingWorkbench.tsx",
+      "bytes": 7096,
+      "gitBlob": "171118953c8fcfa51ffcf7360931b8638ffbe84c"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/lib/tools/payment-recovery.ts",
+      "bytes": 5639,
+      "gitBlob": "0f29380cb7b62daafcd0732947ebb4914fe64743"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931344699/tests/final-closure/document-engine.spec.ts",
+      "bytes": 4483,
+      "gitBlob": "5d1bc304c11978f170531d9a82aed6ee642acc91"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931349180/app/tools/layout.tsx",
+      "bytes": 299,
+      "gitBlob": "1e7ba54ced99f9b792d228d5bfcf361a1b5804a6"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931349180/components/tools/IdPhotoAiWorkbench.tsx",
+      "bytes": 6029,
+      "gitBlob": "d44b0df240725770f64a2fab1545133611c2e93d"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931349180/components/tools/PaidActionButton.tsx",
+      "bytes": 14226,
+      "gitBlob": "d2f0c97184db1046d6cd56765112d5cf93748bab"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931349180/components/tools/PaidExportButton.tsx",
+      "bytes": 9534,
+      "gitBlob": "77830dba6fcf5576bb74f22650f1fb0ba4154c48"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931349180/components/tools/PdfEditorWorkbench.tsx",
+      "bytes": 27856,
+      "gitBlob": "1d9b7760a48c0a9b59a3212eaf374cf95283ab5f"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931349180/lib/tools/payment-recovery.ts",
+      "bytes": 5820,
+      "gitBlob": "c96af06f364181a324d046488668d55fc50b230b"
+    },
+    {
+      "path": ".lingxifield-backups/v45r2-1790931349180/tests/final-closure/document-engine.spec.ts",
+      "bytes": 4508,
+      "gitBlob": "da9d35625a95d68319959c6d12df3ad5b5979a35"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-163811/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1088,
+      "gitBlob": "4192d272686eb16516dfe1c12bce51661b29d019"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-163811/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 3534,
+      "gitBlob": "66a6466608400dcc9f3119a629dd3b7b66026d85"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-163811/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 4632,
+      "gitBlob": "9cde7cd33ccdd3183002f921415fbcf16554e66b"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-163811/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-163811/lib/wechatpay.ts",
+      "bytes": 16470,
+      "gitBlob": "b4b8a34cde39188003c0f1538636738ec4560864"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170022/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170901/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-170907/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-171113/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172018/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172253/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-172924/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173205/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173506/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-173745/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174024/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174241/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/app/api/internal/money/operations/route.ts",
+      "bytes": 2273,
+      "gitBlob": "bed83b90d371a5733d24a06015c1923d9ba37b6c"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/app/api/internal/money/reconcile/route.ts",
+      "bytes": 2167,
+      "gitBlob": "ad6e90204f47e3043081e6c196d16f1ed58515de"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 2891,
+      "gitBlob": "caa6afd539528a4fddf56c313f8cb4635cd67d9e"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/app/api/pay/wechat/refund-notify/route.ts",
+      "bytes": 2750,
+      "gitBlob": "04a8458cb66d24bec5265e873d729144a44d2158"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/components/SasiChatCreationStudio.tsx",
+      "bytes": 28217,
+      "gitBlob": "d7af11e856251ae31286a285c2e13fc9f7aa4d19"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/lib/money/provider-adapters.ts",
+      "bytes": 6056,
+      "gitBlob": "49af905fd83d3b845ebe74f3679317e66f74fc29"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/lib/money/reconcile-worker.ts",
+      "bytes": 6591,
+      "gitBlob": "8c4c4514c17f06f71121f39ac8d62f4835678176"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/lib/money/refund-error-policy.ts",
+      "bytes": 1777,
+      "gitBlob": "153d51712057824447a0ede90ce3bbbe992ea846"
+    },
+    {
+      "path": "_local/archives/global-benchmark-production-core-20261003-174741/lib/wechatpay.ts",
+      "bytes": 16728,
+      "gitBlob": "2a3f25060b196245f322db58b77f3cae72fca186"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2176-generated-artifacts-2026-09-27T05-23-38-131Z/docs/runtime-audit-v12005-20260923-203110/chrome-cdp-profile/Default/WebStorage/QuotaManager-journal",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2176-generated-artifacts-2026-09-27T05-23-38-131Z/docs/runtime-audit-v12005-20260923-203110/chrome-cdp-profile/GPUPersistentCache/DawnGraphiteCache/TLVJWQT6NJWKNBUVMWJ4BCR6DK7MJALX/cache.db",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2176-generated-artifacts-2026-09-27T05-23-38-131Z/docs/runtime-audit-v12005-20260923-203110/chrome-cdp-profile/GPUPersistentCache/DawnGraphiteCache/TLVJWQT6NJWKNBUVMWJ4BCR6DK7MJALX/cache.db-wal",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2176-generated-artifacts-2026-09-27T05-23-38-131Z/docs/runtime-audit-v12005-20260923-203110/chrome-cdp-profile/GPUPersistentCache/DawnGraphiteCache/TLVJWQT6NJWKNBUVMWJ4BCR6DK7MJALX/cache.journal",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2176-generated-artifacts-2026-09-27T05-23-38-131Z/docs/runtime-audit-v12005-20260923-203110/chrome-cdp-profile/segmentation_platform/ukm_db-wal",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2180-legacy-product-surface-2026-09-27T06-05-47-520Z/.lingxi-v1578_2-verified.json",
+      "bytes": 1567,
+      "gitBlob": "2c809702096d1ed56f4529487fe62dd14c0ca2fe"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2180-legacy-product-surface-2026-09-27T06-05-47-520Z/.lingxi-v1578_2-worktree-status.txt",
+      "bytes": 448231,
+      "gitBlob": "bda17a53d67f077bd000b9739ec828e0b0d73b6b"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2180-legacy-product-surface-2026-09-27T06-05-47-520Z/.lingxi-v1578_3-verified.json",
+      "bytes": 1567,
+      "gitBlob": "e00ae500d2ba533caf463eb682fa145019f2ed73"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2180-legacy-product-surface-2026-09-27T06-05-47-520Z/.lingxi-v1578_3-worktree-status.txt",
+      "bytes": 448303,
+      "gitBlob": "54e10686f59e2086e0f2bcda7ad1f497033d005e"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2180-legacy-product-surface-2026-09-27T06-05-47-520Z/.lingxi-v1582-verified.json",
+      "bytes": 423046,
+      "gitBlob": "3c9d3355cb5c84af757015b78fa58ff53948e6fc"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2180-legacy-product-surface-2026-09-27T06-05-47-520Z/.lingxi-v1582_2-verified.json",
+      "bytes": 423316,
+      "gitBlob": "6062d4dcd42bcdf6b9028889278a011bf6d6118e"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2180-legacy-product-surface-2026-09-27T06-05-47-520Z/.lingxi-v1582_4-verified.json",
+      "bytes": 423284,
+      "gitBlob": "d1f5e2971d128e4fdff2552bc6023311189b5c37"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2181-4-prior-cleanup-baseline-2026-09-27T16-08-43-202/files/components/SearchBox.tsx",
+      "bytes": 12020,
+      "gitBlob": "cc07617c1cec5a1a8de21441bea324844cb9328c"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2181-4-prior-cleanup-baseline-2026-09-27T16-08-43-202/files/lib/plans.ts",
+      "bytes": 3321,
+      "gitBlob": "e79662f1537c6d9e5706611cb0cde1fcc95c68a1"
+    },
+    {
+      "path": "_local/archives/lingxi-backups/v2181-9-standalone-legacy-purge-2026-09-27T08-28-26-240Z/app/globals.css",
+      "bytes": 233012,
+      "gitBlob": "d17dbc912095dda782ac84f9067d58d52452a29d"
+    },
+    {
+      "path": "_local/archives/next15-compat-20260928-220217/app__api__pay__wechat__create__route.ts",
+      "bytes": 6526,
+      "gitBlob": "88284aa6c20f30726ecb129bcb67765253692076"
+    },
+    {
+      "path": "_local/archives/next15-compat-20260928-220217/app__api__tools__pay__create__route.ts",
+      "bytes": 8349,
+      "gitBlob": "50496e2813666f76b24865b65b4d302ac9447c4e"
+    },
+    {
+      "path": "_local/archives/next15-compat-20260928-220217/components__tools__PdfPageManagerWorkbench.tsx",
+      "bytes": 4057,
+      "gitBlob": "3e739ea83707316f0a2730d5475affbc5029dba0"
+    },
+    {
+      "path": "_local/archives/next15-compat-20260928-220217/lib__sasi__document-extract.ts",
+      "bytes": 5225,
+      "gitBlob": "ca6fd30f1e908ba48b3020396e5022895a35159a"
+    },
+    {
+      "path": "_local/archives/next15-compat-20260928-220217/lib__supabase__server.ts",
+      "bytes": 1731,
+      "gitBlob": "e2811aaa108a6e326d4bd148f1760d8d16e8ec95"
+    },
+    {
+      "path": "_local/archives/next15-compat-20260928-220217/lib__tools__autonomous__transcribe-local.ts",
+      "bytes": 4025,
+      "gitBlob": "a8312b9ca4622f7737dd8fcb76aae939b7a44a6b"
+    },
+    {
+      "path": "_local/archives/next15-compat-20260928-220217/lib__tools__shared__practical-doc-tools.ts",
+      "bytes": 4950,
+      "gitBlob": "053f22c01bafe49663f91d14fd92e323e7b774b1"
+    },
+    {
+      "path": "_local/archives/production-core-closure-20261003-161137/app/api/internal/money/reconcile/route.ts",
+      "bytes": 1112,
+      "gitBlob": "2735fb17394b673e4baad2b4aef4fc3ac1286efa"
+    },
+    {
+      "path": "_local/archives/production-core-closure-20261003-161137/components/KnowledgeWorkspace.tsx",
+      "bytes": 52538,
+      "gitBlob": "e00489cdf3c843d85d2f8b2e7601be1d7beff721"
+    },
+    {
+      "path": "_local/archives/production-core-closure-20261003-161137/components/SasiChatCreationStudio.tsx",
+      "bytes": 28970,
+      "gitBlob": "1c70fae2474197246ea3ff6b72cd16fa1e987df9"
+    },
+    {
+      "path": "_local/archives/production-core-closure-20261003-161137/lib/money/provider-adapters.ts",
+      "bytes": 4786,
+      "gitBlob": "0b6d88312659c434c37dbedd21d844e7c689490e"
+    },
+    {
+      "path": "_local/archives/production-core-closure-20261003-161137/lib/money/reconcile-worker.ts",
+      "bytes": 5008,
+      "gitBlob": "83012539559bfc5104fa4c4f33211317198be453"
+    },
+    {
+      "path": "_local/archives/production-core-closure-20261003-161137/lib/money/refund-error-policy.ts",
+      "bytes": 1607,
+      "gitBlob": "53170d9a33f5ce7bb50bda0340ba77d350c8a7a0"
+    },
+    {
+      "path": "_local/archives/r15-production-ops-20261003-181610/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1496,
+      "gitBlob": "650773bf7a659d295966b667eee542c9f64f0084"
+    },
+    {
+      "path": "_local/archives/r15-production-ops-20261003-181610/middleware.ts",
+      "bytes": 4331,
+      "gitBlob": "2f762c449a975350e0d911652ec35326d3edf06d"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/.github/workflows/production-gate.yml",
+      "bytes": 2169,
+      "gitBlob": "9ac763f1b5dcf098dc93250789f56877dfa6d766"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 2219,
+      "gitBlob": "98c5502f10a75386a124d15044a144bc8e96fd2f"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/middleware.ts",
+      "bytes": 4334,
+      "gitBlob": "548474a23fe391b681a70b6009737026f4b446f2"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/preserved/components/BalanceWithdrawalPanel.tsx",
+      "bytes": 20632,
+      "gitBlob": "f11b13ff1e43420b5196b9352c4d8e1601dbfd43"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/preserved/lib/money/reconcile-worker.ts",
+      "bytes": 7094,
+      "gitBlob": "abea34e98662e70b0f121dcafe81ea9831206c76"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/preserved/lib/notifications/money-copy.ts",
+      "bytes": 13605,
+      "gitBlob": "4f93c27f1c857226fcea41cdfc038bb4a6e66f89"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/preserved/scripts/test-money-lifecycle.cjs",
+      "bytes": 2258,
+      "gitBlob": "85c367dcbdb244e0aff81501a0e7c0467bf263a9"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/preserved/scripts/test-money-reconcile-results.cjs",
+      "bytes": 5673,
+      "gitBlob": "4548addae0987b6e143c38ee47dc458234c9e17e"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/preserved/scripts/test-refund-provider-signatures.cjs",
+      "bytes": 3021,
+      "gitBlob": "92fb30e9c272d4e9f4bdc454e2d02d29090fff21"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/preserved/scripts/test-withdrawal-recovery.cjs",
+      "bytes": 2794,
+      "gitBlob": "56f9b6783cef7a82cec135c47a6e2c45342debd1"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-183540/tests/final-closure/tool-plain-language.spec.ts",
+      "bytes": 5558,
+      "gitBlob": "cfec6e2225ae75d77ba5dd1c930fdf457a862945"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-193523/.github/workflows/production-gate.yml",
+      "bytes": 2169,
+      "gitBlob": "9ac763f1b5dcf098dc93250789f56877dfa6d766"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-193523/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 2219,
+      "gitBlob": "98c5502f10a75386a124d15044a144bc8e96fd2f"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-193523/middleware.ts",
+      "bytes": 4334,
+      "gitBlob": "548474a23fe391b681a70b6009737026f4b446f2"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-193523/preserved/scripts/audit/r15-r6-dirty-preservation.mjs",
+      "bytes": 1247,
+      "gitBlob": "ed5ccc95e09bc7857c35582526bd67945d60b4cc"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-193523/tests/final-closure/production.spec.ts",
+      "bytes": 746,
+      "gitBlob": "e9ec39deec8b68d1ee20acb377f9ee5ac6cdaaa6"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-193523/tests/final-closure/tool-plain-language.spec.ts",
+      "bytes": 5558,
+      "gitBlob": "cfec6e2225ae75d77ba5dd1c930fdf457a862945"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/.github/workflows/production-gate.yml",
+      "bytes": 2169,
+      "gitBlob": "9ac763f1b5dcf098dc93250789f56877dfa6d766"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 2219,
+      "gitBlob": "98c5502f10a75386a124d15044a144bc8e96fd2f"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/middleware.ts",
+      "bytes": 4334,
+      "gitBlob": "548474a23fe391b681a70b6009737026f4b446f2"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/preserved/app/api/account/withdrawals/refresh/route.ts",
+      "bytes": 1316,
+      "gitBlob": "b6a63dea69b1f3f4007138b3ab0ce0c754244a12"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/preserved/lib/money/operator-settings.ts",
+      "bytes": 701,
+      "gitBlob": "81ba517203ee83e92ff250807b14e1d672498945"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/preserved/lib/money/refund-state.ts",
+      "bytes": 911,
+      "gitBlob": "b4c10a574730ed699068b0803041959b2039153b"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/preserved/lib/money/types.ts",
+      "bytes": 911,
+      "gitBlob": "480352ccfecf9b97a8f7ae7fc6157a548e8e007e"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/preserved/lib/payments/withdrawal-processing.ts",
+      "bytes": 2101,
+      "gitBlob": "0d17e89710a3bc341bf2d82ad2035a52f1302cce"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/preserved/scripts/audit/r15-r6-dirty-preservation.mjs",
+      "bytes": 1247,
+      "gitBlob": "ed5ccc95e09bc7857c35582526bd67945d60b4cc"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/tests/final-closure/production.spec.ts",
+      "bytes": 746,
+      "gitBlob": "e9ec39deec8b68d1ee20acb377f9ee5ac6cdaaa6"
+    },
+    {
+      "path": "_local/archives/r15r6-production-ops-20261003-194701/tests/final-closure/tool-plain-language.spec.ts",
+      "bytes": 5558,
+      "gitBlob": "cfec6e2225ae75d77ba5dd1c930fdf457a862945"
+    },
+    {
+      "path": "_local/archives/v1600-resume11-20260928-212417/partial-v16-staged.patch",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/v1600-resume11-20260928-212720/partial-v16-staged.patch",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/v1600-resume11-20260928-213335/partial-v16-staged.patch",
+      "bytes": 0,
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "_local/archives/v1600-security-remediation-20260928-215016/package-lock.json",
+      "bytes": 493961,
+      "gitBlob": "c9cbec1bab20227db2bcbc140caaa5e56cea6c10"
+    },
+    {
+      "path": "_local/archives/v1600-security-remediation-20260928-215016/package.json",
+      "bytes": 3655,
+      "gitBlob": "ee90b2827c2b0327cd55b2d3070caba2ecd08e1e"
+    },
+    {
+      "path": "_local/archives/v1600-security-remediation-20260928-215016/pnpm-lock.yaml",
+      "bytes": 230226,
+      "gitBlob": "03a5633c341b31d50cda6a880722a599b25d527e"
+    },
+    {
+      "path": "_local/archives/v1600-tools-food-i18n-20260928-204136/app/api/sasi/projects/[id]/context/route.ts",
+      "bytes": 1552,
+      "gitBlob": "c1502eea6660e15c676952f8473607946e99517a"
+    },
+    {
+      "path": "_local/archives/v1600-tools-food-i18n-20260928-204136/app/sasi/assemble/page.tsx",
+      "bytes": 545,
+      "gitBlob": "10c0903fa444ed96b6b7fb15bf9f960413b53e8d"
+    },
+    {
+      "path": "_local/archives/v1600-tools-food-i18n-20260928-204136/app/sasi/VideoAssembler.tsx",
+      "bytes": 7612,
+      "gitBlob": "5d2af9846dc88e69e2dbb0555d4ab584aa32d17f"
+    },
+    {
+      "path": "_local/archives/v1600-tools-food-i18n-20260928-204136/components/tools/FoodCalorieWorkbench.tsx",
+      "bytes": 12218,
+      "gitBlob": "c90f4a1f3728a1a37c58381cecbfbfe778590068"
+    },
+    {
+      "path": "_local/archives/v1600-tools-food-i18n-20260928-204136/lib/tools/food/image-recognition-local.ts",
+      "bytes": 1602,
+      "gitBlob": "5e3f6d1f63d73b99e8f94ebe75fdf3d5457cba40"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/account/connections/page.tsx",
+      "bytes": 3243,
+      "gitBlob": "b5b71c8f4e38865c875046c2b3399d8cddeb3140"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/api/lingxifield/connections/route.ts",
+      "bytes": 3336,
+      "gitBlob": "d3638aa6e3227a8f408b7cc9128df4f05275eee5"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/api/sasi/byok/text/route.ts",
+      "bytes": 8419,
+      "gitBlob": "9cf1a88f908126a3db0729bb26b2a057e1c4484e"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/api/sasi/byok/video/route.ts",
+      "bytes": 14696,
+      "gitBlob": "f05c193578a9517c7d7c8b7a59ddc07b3431864d"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/api/sasi/connections/route.ts",
+      "bytes": 4995,
+      "gitBlob": "6e9953b9b555ada786fa9ae31a2dfba6a7c29b95"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/api/sasi/connections/test/route.ts",
+      "bytes": 4902,
+      "gitBlob": "71a1b8975f8c3498ffaddeb18b9836d7701d6388"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/sasi/build/page.tsx",
+      "bytes": 508,
+      "gitBlob": "84ad0c7f44b306d586f73446781fe6a1844f9173"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/sasi/ConnectionCenter.tsx",
+      "bytes": 20492,
+      "gitBlob": "3bb1fb7572c55fc789f7796b786c82577d4a8c50"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/app/sasi/connections/page.tsx",
+      "bytes": 959,
+      "gitBlob": "783ef2cbff48f0cbff36530b8419256ce987018b"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/components/SasiByokTextWorkbench.tsx",
+      "bytes": 5947,
+      "gitBlob": "797ba8e363ad416a7ada814913ee96ebec8dec8d"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/components/SasiChatCreationStudio.tsx",
+      "bytes": 29393,
+      "gitBlob": "7419e898335e31a73cae0fb918cfed63fcbfdf26"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/components/SasiCommandCenter.tsx",
+      "bytes": 15232,
+      "gitBlob": "70c3e4fca2ddb9fa0b16fece1355b0c16c475a94"
+    },
+    {
+      "path": "_local/archives/v47-universal-intelligence-20261002-205213/lib/sasi/integration-catalog.ts",
+      "bytes": 11773,
+      "gitBlob": "4604ac6d6517666692e2e51f61113008c8592140"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/app/account/connections/page.tsx",
+      "bytes": 110,
+      "gitBlob": "17d791ba78f78b0888ad7f3f5708312065e660d8"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/app/api/lingxifield/connections/route.ts",
+      "bytes": 3447,
+      "gitBlob": "1bee964ae9aa55dae8bfcd7cb9a6f89e5af1d41e"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/app/sasi/build/page.tsx",
+      "bytes": 544,
+      "gitBlob": "4c97858e64a5a173f90c6ff36cb384c8e93604c1"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/app/sasi/connections/page.tsx",
+      "bytes": 959,
+      "gitBlob": "9cc4ecb71833bb603a88a47449de54b551a254a9"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/components/SasiByokTextWorkbench.tsx",
+      "bytes": 6055,
+      "gitBlob": "a5700efae139dd670ddb375928aeffa83702cca1"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/components/SasiCommandCenter.tsx",
+      "bytes": 15389,
+      "gitBlob": "c7eb939fd83e0ceff2e06a61c20bbda0d2e8e336"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/lib/sasi/integration-catalog.ts",
+      "bytes": 13266,
+      "gitBlob": "d55a3c48de0da82e758b47d1ffec1c1c12b8e3cc"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/lib/sasi/intelligence/provider-defaults.ts",
+      "bytes": 2497,
+      "gitBlob": "15c67cb0dcaa1fcb8e569ac734405959cf96915f"
+    },
+    {
+      "path": "_local/archives/v47r1-universal-intelligence-20261002-205918/supabase/migrations/20261002193000_connection_capabilities_unified.sql",
+      "bytes": 1215,
+      "gitBlob": "f6626b43638c28bb2719db2df3adc3ff962324ee"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/account/page.tsx",
+      "bytes": 12938,
+      "gitBlob": "8f350b64c455a2df0e1bc7dccfc912972b90d618"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/ai-wallet/page.tsx",
+      "bytes": 1047,
+      "gitBlob": "2770fddcb1358e8bcc6ad985073b43d6e0b47146"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/ai/wallet/route.ts",
+      "bytes": 1345,
+      "gitBlob": "765b42fa2f5609c9c7ad27c3826e36aae7bc18ed"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/knowledge/ask/route.ts",
+      "bytes": 4648,
+      "gitBlob": "112bd7c2f85271fe0626673826d5cb742781c2f4"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/pay/alipay/create/route.ts",
+      "bytes": 4075,
+      "gitBlob": "cf9c2dd85dcae5292472edb137e5e3a5881eacc0"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/pay/create/route.ts",
+      "bytes": 3580,
+      "gitBlob": "138389b041bfc7351f9645eb513633a3cc9789f2"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/pay/wechat/create/route.ts",
+      "bytes": 6532,
+      "gitBlob": "88ea9141cf124af75682763b03165e105e41e8d8"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/sasi/byok/image/route.ts",
+      "bytes": 4609,
+      "gitBlob": "294aa784030d4887d4bc26eb57ccd649e8d470bd"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/sasi/jobs/route.ts",
+      "bytes": 4054,
+      "gitBlob": "32e47d6c8b55cec98d392a1b8aa98eb14592fd82"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/sasi/jobs/[id]/cancel/route.ts",
+      "bytes": 1677,
+      "gitBlob": "e51f6f96c9768c13ba54705cfbd40cd863bd3837"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/sasi/jobs/[id]/delivery/route.ts",
+      "bytes": 1174,
+      "gitBlob": "4716effec6c556c77b78b944f72330e44cbe80ab"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/sasi/jobs/[id]/refresh/route.ts",
+      "bytes": 1727,
+      "gitBlob": "b3a0889abe89db2ea3521db400e876de2b5c578c"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/sasi/quote/route.ts",
+      "bytes": 3866,
+      "gitBlob": "016fda492c7b33e61e0bda103e30722a7c171c2f"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/api/wechat/mini/balance-pay/create/route.ts",
+      "bytes": 3328,
+      "gitBlob": "3df2a5ac3ab020e4c93a0c0e1c9209ed97562b6e"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/checkout/page.tsx",
+      "bytes": 30750,
+      "gitBlob": "e6745af8e1448bdbdeeca98fd75948460e83ec56"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/checkout-usd/page.tsx",
+      "bytes": 10338,
+      "gitBlob": "7d611de0d8566f1d0469a5336fff54a77e70ce72"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/paypal/page.tsx",
+      "bytes": 6573,
+      "gitBlob": "81a5ea94c84ac293ea6d3355abc78e5f6b14a367"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/products/ProductCatalogClient.tsx",
+      "bytes": 3907,
+      "gitBlob": "a4f520f02905f40c4e97e0863539e680da166866"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/refunds/page.tsx",
+      "bytes": 3779,
+      "gitBlob": "ac6a689d8293eb44eee28b5f30b6ba9ecd6e44dd"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/app/terms/page.tsx",
+      "bytes": 3791,
+      "gitBlob": "dead24539a10e8f2e72f83fffdc0d2e34e053e26"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/components/AiWalletPanel.tsx",
+      "bytes": 6519,
+      "gitBlob": "7095d4f72beaa6425421e22b4adddfc695e3445b"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/components/KnowledgeWorkspace.tsx",
+      "bytes": 52793,
+      "gitBlob": "42c75a725913168468591aeb7a14d8fcbb35b7bd"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/components/SasiManagedVideoCreate.tsx",
+      "bytes": 5791,
+      "gitBlob": "4eae14a4f2a8d7b33205e43a5c7ecc2fc5c38ef2"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 2806,
+      "gitBlob": "57b2989670a26fdcbf8bf01b8dbed0a77a3c0833"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/lib/fulfill-order.ts",
+      "bytes": 2574,
+      "gitBlob": "30cabb55a883d47f381ac14a9c22ace33917a45e"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/lib/payments/money-input.ts",
+      "bytes": 564,
+      "gitBlob": "f62e5d0aa7358c29a1a56b4b533d3084964662cc"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/lib/plans.ts",
+      "bytes": 3409,
+      "gitBlob": "e79662f1537c6d9e5706611cb0cde1fcc95c68a1"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/lib/sasi/catalog.ts",
+      "bytes": 9792,
+      "gitBlob": "c61fa9378a732fa3c782f36c89556764fc7bb67a"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/lib/sasi/payment-gate.ts",
+      "bytes": 1711,
+      "gitBlob": "f1b86379fcc10df6a3ad5351ba856422e12b5f57"
+    },
+    {
+      "path": "_local/archives/v49-unified-sasi-balance-20261003-064940/lib/usd-products.ts",
+      "bytes": 720,
+      "gitBlob": "5b809f39796f184a0edce22235f47bd44947bc90"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/account/page.tsx",
+      "bytes": 12845,
+      "gitBlob": "7083844c55b8560ae58c5ade543286a61235e076"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/ai-wallet/page.tsx",
+      "bytes": 100,
+      "gitBlob": "4eb83065d5300b985a2deeb4c31994659e9e1f98"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/knowledge/ask/route.ts",
+      "bytes": 4093,
+      "gitBlob": "592c7fd5f732dd09cd677b81a3690eacd07096b4"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/pay/alipay/create/route.ts",
+      "bytes": 3829,
+      "gitBlob": "dbfb013cc7539fefa6d2cc292cd834776ac6bb36"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/pay/create/route.ts",
+      "bytes": 3464,
+      "gitBlob": "c75b55f7356ebab582565913f96e50f7f849b125"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/pay/wechat/create/route.ts",
+      "bytes": 6321,
+      "gitBlob": "ebd867ee4a8b7e3c20d6c33eab6536037cf72560"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/sasi/byok/image/route.ts",
+      "bytes": 5351,
+      "gitBlob": "63a6d2c52d08bfaf24770613815c8a4599485611"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/sasi/byok/text/route.ts",
+      "bytes": 9306,
+      "gitBlob": "618e7eb936166db5e6b87a8930bca60843306a4d"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/sasi/byok/video/route.ts",
+      "bytes": 14633,
+      "gitBlob": "f66f6cae0b83dfe965b603a76c7d61789d151ee3"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/sasi/connections/route.ts",
+      "bytes": 5192,
+      "gitBlob": "25d1f0888ce213dbbc687f675292ffeb8592e98a"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/sasi/connections/test/route.ts",
+      "bytes": 5444,
+      "gitBlob": "2ba013d4d82bbab8902893bd1ee979fa068dd08a"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/api/wechat/mini/balance-pay/create/route.ts",
+      "bytes": 3343,
+      "gitBlob": "6663d04ea8646a8514a3d54fcadad7a7aef6b46a"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/checkout-usd/page.tsx",
+      "bytes": 9983,
+      "gitBlob": "2fcfaeddfeb16359e87597c178089ca0ff6726b1"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/paypal/page.tsx",
+      "bytes": 3266,
+      "gitBlob": "9376d045879f83f2889e4288cfd8cf0b3e28fccc"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/products/ProductCatalogClient.tsx",
+      "bytes": 3847,
+      "gitBlob": "3a25bce52ef1ac628a1cfff03db7f04fa0f7a235"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/refunds/page.tsx",
+      "bytes": 3722,
+      "gitBlob": "65d1d2874338542648be535166479281d4cc4767"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/sasi/ConnectionCenter.tsx",
+      "bytes": 21389,
+      "gitBlob": "0216d881119d8deb49cfee60fa65e35791d5c608"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/app/terms/page.tsx",
+      "bytes": 3731,
+      "gitBlob": "d19476c88869d91dff68bd872a089e3db29af8b2"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/components/KnowledgeWorkspace.tsx",
+      "bytes": 54704,
+      "gitBlob": "e922430108b73bf9b02c25236ea362eecd84f00a"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/components/SasiChatCreationStudio.tsx",
+      "bytes": 26817,
+      "gitBlob": "c27b4bf8e28280b78d04abf299f6b8be77e135ab"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 4278,
+      "gitBlob": "b217d10978a609dbc4eacd3438f81a2180fb90cd"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/fulfill-order.ts",
+      "bytes": 1681,
+      "gitBlob": "ac0e459c81f370961fe25045dd132e20ce560a6d"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/payments/money-input.ts",
+      "bytes": 744,
+      "gitBlob": "9921fb12fd88bcf21e5c10457f15668dcb156bac"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/plans.ts",
+      "bytes": 1569,
+      "gitBlob": "863163a60aafa7f11da5c48c3053e9e35b275368"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/sasi/intelligence/runtime-health.ts",
+      "bytes": 2055,
+      "gitBlob": "f34f0b45a63ea5232e8c845ca7a95c57fca1d49a"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/sasi/intelligence/telemetry.ts",
+      "bytes": 1140,
+      "gitBlob": "d4f1cefca7a33918d6b6e8a3f6544ca586d91123"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/sasi/intelligence/user-text.ts",
+      "bytes": 8673,
+      "gitBlob": "8b22d05072d648583a9cd586d2e9cbb1be546a95"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/sasi/intelligence/user-video.ts",
+      "bytes": 8747,
+      "gitBlob": "4fc6fae4206e313259facb5eba2b769ca8414af8"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/sasi/payment-gate.ts",
+      "bytes": 1635,
+      "gitBlob": "27ed618a79b269bfb43dd169bfc73f36923c1afc"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/sasi/pricing-v49.ts",
+      "bytes": 1837,
+      "gitBlob": "b44c18fa8a8e3d20acd8be7f246681788ac02fe1"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/sasi/unified-balance.ts",
+      "bytes": 2267,
+      "gitBlob": "32ef685e93a42c8d2a79d2c0eea19e68b0bf3ec9"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/lib/usd-products.ts",
+      "bytes": 499,
+      "gitBlob": "4daa230af95b85dca116c3a00b4932267055c8ea"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/scripts/audit/v48-durable-intelligence-runtime.mjs",
+      "bytes": 2098,
+      "gitBlob": "1f8122efa344c41bd0b37a64e18fa195dbe5dd8a"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/supabase/migrations/20261002223000_intelligence_runtime_health_observability.sql",
+      "bytes": 1336,
+      "gitBlob": "0bacb393e39c50561ce76411b71c82da5509c423"
+    },
+    {
+      "path": "_local/archives/v49r1-unified-sasi-balance-20261003-070644/supabase/migrations/20261002234500_unified_sasi_balance_pricing_v49.sql",
+      "bytes": 6680,
+      "gitBlob": "732d6ea36aa5ecdeffedb84fda0ce8bcc7aeade1"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/account/page.tsx",
+      "bytes": 12845,
+      "gitBlob": "7083844c55b8560ae58c5ade543286a61235e076"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/ai-wallet/page.tsx",
+      "bytes": 100,
+      "gitBlob": "4eb83065d5300b985a2deeb4c31994659e9e1f98"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/knowledge/ask/route.ts",
+      "bytes": 4093,
+      "gitBlob": "592c7fd5f732dd09cd677b81a3690eacd07096b4"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/pay/alipay/create/route.ts",
+      "bytes": 3829,
+      "gitBlob": "dbfb013cc7539fefa6d2cc292cd834776ac6bb36"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/pay/create/route.ts",
+      "bytes": 3464,
+      "gitBlob": "c75b55f7356ebab582565913f96e50f7f849b125"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/pay/wechat/create/route.ts",
+      "bytes": 6321,
+      "gitBlob": "ebd867ee4a8b7e3c20d6c33eab6536037cf72560"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/sasi/byok/image/route.ts",
+      "bytes": 5351,
+      "gitBlob": "63a6d2c52d08bfaf24770613815c8a4599485611"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/sasi/byok/text/route.ts",
+      "bytes": 9306,
+      "gitBlob": "618e7eb936166db5e6b87a8930bca60843306a4d"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/sasi/byok/video/route.ts",
+      "bytes": 14633,
+      "gitBlob": "f66f6cae0b83dfe965b603a76c7d61789d151ee3"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/sasi/connections/route.ts",
+      "bytes": 5192,
+      "gitBlob": "25d1f0888ce213dbbc687f675292ffeb8592e98a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/sasi/connections/test/route.ts",
+      "bytes": 5444,
+      "gitBlob": "2ba013d4d82bbab8902893bd1ee979fa068dd08a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/api/wechat/mini/balance-pay/create/route.ts",
+      "bytes": 3343,
+      "gitBlob": "6663d04ea8646a8514a3d54fcadad7a7aef6b46a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/checkout/page.tsx",
+      "bytes": 28834,
+      "gitBlob": "a307216f605407eb788c238ca3b25a7635dccee3"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/checkout-usd/page.tsx",
+      "bytes": 9983,
+      "gitBlob": "2fcfaeddfeb16359e87597c178089ca0ff6726b1"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/paypal/page.tsx",
+      "bytes": 3266,
+      "gitBlob": "9376d045879f83f2889e4288cfd8cf0b3e28fccc"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/products/ProductCatalogClient.tsx",
+      "bytes": 3847,
+      "gitBlob": "3a25bce52ef1ac628a1cfff03db7f04fa0f7a235"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/refunds/page.tsx",
+      "bytes": 3722,
+      "gitBlob": "65d1d2874338542648be535166479281d4cc4767"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/sasi/ConnectionCenter.tsx",
+      "bytes": 21389,
+      "gitBlob": "0216d881119d8deb49cfee60fa65e35791d5c608"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/app/terms/page.tsx",
+      "bytes": 3731,
+      "gitBlob": "d19476c88869d91dff68bd872a089e3db29af8b2"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/components/KnowledgeWorkspace.tsx",
+      "bytes": 54704,
+      "gitBlob": "e922430108b73bf9b02c25236ea362eecd84f00a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/components/SasiChatCreationStudio.tsx",
+      "bytes": 26817,
+      "gitBlob": "c27b4bf8e28280b78d04abf299f6b8be77e135ab"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 4278,
+      "gitBlob": "b217d10978a609dbc4eacd3438f81a2180fb90cd"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/docs/SASI-INVITATION-RESET-RULE.md",
+      "bytes": 1602,
+      "gitBlob": "13596d1e512eff68fa9830076a409e67302cc66d"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/docs/SASI-V51-COMPLETION-2026-09-28.md",
+      "bytes": 3095,
+      "gitBlob": "e3b75b7ee591daa2ea92e49d771b3668c7952df0"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/commerce/billing-mode.ts",
+      "bytes": 626,
+      "gitBlob": "6b8399e3616190a16de8c82242f2e13fd08228fd"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/fulfill-order.ts",
+      "bytes": 1681,
+      "gitBlob": "ac0e459c81f370961fe25045dd132e20ce560a6d"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/lingxi/monetization.ts",
+      "bytes": 1616,
+      "gitBlob": "300bad51d248b3495c0c1039ec4db5eea2db0f61"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/payments/money-input.ts",
+      "bytes": 744,
+      "gitBlob": "9921fb12fd88bcf21e5c10457f15668dcb156bac"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/plans.ts",
+      "bytes": 1569,
+      "gitBlob": "863163a60aafa7f11da5c48c3053e9e35b275368"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/pricing/policy.ts",
+      "bytes": 2997,
+      "gitBlob": "4e2d0657c673f7625c22dfdfadac5b8d45dc7efa"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/pricing/tool-policy.ts",
+      "bytes": 3313,
+      "gitBlob": "4f1981b4b2e1dc8d5ae0f2f6fc8ed45d7ecff15e"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/sasi/intelligence/runtime-health.ts",
+      "bytes": 2055,
+      "gitBlob": "f34f0b45a63ea5232e8c845ca7a95c57fca1d49a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/sasi/intelligence/telemetry.ts",
+      "bytes": 1140,
+      "gitBlob": "d4f1cefca7a33918d6b6e8a3f6544ca586d91123"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/sasi/intelligence/user-text.ts",
+      "bytes": 8673,
+      "gitBlob": "8b22d05072d648583a9cd586d2e9cbb1be546a95"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/sasi/intelligence/user-video.ts",
+      "bytes": 8747,
+      "gitBlob": "4fc6fae4206e313259facb5eba2b769ca8414af8"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/sasi/payment-gate.ts",
+      "bytes": 1635,
+      "gitBlob": "27ed618a79b269bfb43dd169bfc73f36923c1afc"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/sasi/pricing-v49.ts",
+      "bytes": 1837,
+      "gitBlob": "b44c18fa8a8e3d20acd8be7f246681788ac02fe1"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/sasi/unified-balance.ts",
+      "bytes": 2267,
+      "gitBlob": "32ef685e93a42c8d2a79d2c0eea19e68b0bf3ec9"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/tools/capability-billing-policy.ts",
+      "bytes": 2805,
+      "gitBlob": "7b6c9f81f817b0b5bec76324e1c76f15b5979134"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/lib/usd-products.ts",
+      "bytes": 499,
+      "gitBlob": "4daa230af95b85dca116c3a00b4932267055c8ea"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/accept-v101.mjs",
+      "bytes": 4048,
+      "gitBlob": "bff7e30ac184b717a20ea1b3bbdd3c952b6c6679"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/accept-v14122.mjs",
+      "bytes": 2299,
+      "gitBlob": "69ea8d6974db6864670b1d78b4882ccf51c69942"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/accept-v14510.mjs",
+      "bytes": 1258,
+      "gitBlob": "d9a3508d66d8f79116928c398e06f5e1cf4b7445"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/accept-v1462.mjs",
+      "bytes": 1247,
+      "gitBlob": "a77cd86f36ece566eade481a4bdba9351869b9bf"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/accept-v1464.mjs",
+      "bytes": 1157,
+      "gitBlob": "0ea87b49c23dcfeb62e7ea82074973b0ee25d9cd"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/accept-v1465.mjs",
+      "bytes": 2624,
+      "gitBlob": "3cdf12f16f7bbff8871fb9e02e0ef010c753da4b"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit/v47-universal-intelligence-core.mjs",
+      "bytes": 3395,
+      "gitBlob": "142b911d0c83e5c5a7c240da3a54b0e66803f771"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit/v48-durable-intelligence-runtime.mjs",
+      "bytes": 2098,
+      "gitBlob": "1f8122efa344c41bd0b37a64e18fa195dbe5dd8a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit/v49-unified-sasi-balance-pricing.mjs",
+      "bytes": 3012,
+      "gitBlob": "4a05ca2ab6bed1570a50375f6a13a9bd41969b20"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-currency-books-v1569.mjs",
+      "bytes": 2901,
+      "gitBlob": "2576d192eb8259ce07e3d61bbebddefe45712a7c"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-payment-v1600.mjs",
+      "bytes": 1534,
+      "gitBlob": "cfcd271cf9bc2554aca825e18f8dd6fc30407804"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-production.mjs",
+      "bytes": 2042,
+      "gitBlob": "849c5f35fbc8cfa84af4b48b801489efce826e68"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-sasi-v3.mjs",
+      "bytes": 13365,
+      "gitBlob": "82c4cc5abb7fe0db9a9d7d92709c9c47d2c21de6"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-sasi-v51.mjs",
+      "bytes": 2714,
+      "gitBlob": "6f490d27d971d8aa31f40f466a61b64cabe58551"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-sasi-v52-ux.mjs",
+      "bytes": 2199,
+      "gitBlob": "c9f00d1fd2f0a13351a4d71b77c779819d75e41e"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-ui-copy-v1464.mjs",
+      "bytes": 1312,
+      "gitBlob": "3dbc5e4abaa6d7a5545df28ceeb762a64fb2d3e4"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-v1480.mjs",
+      "bytes": 1712,
+      "gitBlob": "864cdb0f645fb282219495fb9f8808f13920f493"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-v1580-closure.mjs",
+      "bytes": 1411,
+      "gitBlob": "02739d8e2051b9c90fb10fd8fe41179e2925ac79"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/audit-v162-closure.mjs",
+      "bytes": 1410,
+      "gitBlob": "bdbba54e0e45abdf07f9d44e095015b9e8366aa3"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/patch-sasi-jobs-v1465.mjs",
+      "bytes": 2904,
+      "gitBlob": "3c89bc253d21f9df4eb39199c0570550a0fa15f7"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/patch-v1480.mjs",
+      "bytes": 14410,
+      "gitBlob": "92356a483dd92a2ae16f6cf95c93636387e646af"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/selftest-v1480.mjs",
+      "bytes": 910,
+      "gitBlob": "ebf7c155a9d5ff121ffdaf63f8c816de603aad9a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/test-byok-browser.cjs",
+      "bytes": 3525,
+      "gitBlob": "596b66e5dfc82658b5679be55c94b5b58955158a"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/test-creation-contract-browser.cjs",
+      "bytes": 4683,
+      "gitBlob": "2b46d4855c091e4dc056476dd7eb7c555fb5104e"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/scripts/test-sasi-v51-managed-and-byok.mjs",
+      "bytes": 667,
+      "gitBlob": "df7cdbaa9e5e734960e262edcba0063419984e0f"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/supabase/migrations/20261002223000_intelligence_runtime_health_observability.sql",
+      "bytes": 1336,
+      "gitBlob": "0bacb393e39c50561ce76411b71c82da5509c423"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/supabase/migrations/20261002234500_unified_sasi_balance_pricing_v49.sql",
+      "bytes": 6680,
+      "gitBlob": "732d6ea36aa5ecdeffedb84fda0ce8bcc7aeade1"
+    },
+    {
+      "path": "_local/archives/v49r2-legacy-pricing-eradication-20261003-073044/V1601_IMPLEMENTATION_CONTRACT.md",
+      "bytes": 4861,
+      "gitBlob": "be977fed8380cd282ef772aea60bf83b0ddd1dcf"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/app/account/page.tsx",
+      "bytes": 12845,
+      "gitBlob": "7083844c55b8560ae58c5ade543286a61235e076"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/app/sasi/ConnectionCenter.tsx",
+      "bytes": 21389,
+      "gitBlob": "0216d881119d8deb49cfee60fa65e35791d5c608"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/app/sasi/connections/page.tsx",
+      "bytes": 959,
+      "gitBlob": "9cc4ecb71833bb603a88a47449de54b551a254a9"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/app/sasi/pricing/page.tsx",
+      "bytes": 592,
+      "gitBlob": "f1ac14fdcbfbe15882226cb2129b73e558932922"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/components/KnowledgeWorkspace.tsx",
+      "bytes": 54704,
+      "gitBlob": "e922430108b73bf9b02c25236ea362eecd84f00a"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/components/SasiByokTextWorkbench.tsx",
+      "bytes": 6055,
+      "gitBlob": "a5700efae139dd670ddb375928aeffa83702cca1"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/components/SasiCommandCenter.tsx",
+      "bytes": 15389,
+      "gitBlob": "c7eb939fd83e0ceff2e06a61c20bbda0d2e8e336"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 4278,
+      "gitBlob": "b217d10978a609dbc4eacd3438f81a2180fb90cd"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/lib/lingxi-i18n.ts",
+      "bytes": 55374,
+      "gitBlob": "70bba8507fe836c0a834e7715c437d1e0772344b"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/lib/sasi/byok-copy.ts",
+      "bytes": 1479,
+      "gitBlob": "9d5ec7b4de975e2b2992f687f7e0051667500b3e"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/lib/sasi/composer-i18n.ts",
+      "bytes": 27505,
+      "gitBlob": "072154938762d44daa3aeaacf2b808f2e8e97b36"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083708/lib/sasi/function-menu-i18n.ts",
+      "bytes": 9081,
+      "gitBlob": "54a40671d66ee77983bd6f3794aabaf50223de6e"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083713/app/sasi/pricing/page.tsx",
+      "bytes": 478,
+      "gitBlob": "0b0f4c1349669fac993164cc499aeb6f153a8671"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083713/components/SasiByokTextWorkbench.tsx",
+      "bytes": 5896,
+      "gitBlob": "aa62c8bebb1b899dd75965be719cb5bb2f2793e8"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083713/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 2323,
+      "gitBlob": "09aa2174493219f140a33ab06e9585b9bfd8e951"
+    },
+    {
+      "path": "_local/archives/v49r3-customer-experience-20261003-083713/lib/sasi/function-menu-i18n.ts",
+      "bytes": 9135,
+      "gitBlob": "a06abc88d269eec3deb3cb9386f7d619b673357b"
+    },
+    {
+      "path": "_local/archives/v50-sasi-one-surface-20261003-090811/app/ai-knowledge/page.tsx",
+      "bytes": 5571,
+      "gitBlob": "90657eecd800bfb5e8b785d96bdfb6f4d67a97a2"
+    },
+    {
+      "path": "_local/archives/v50-sasi-one-surface-20261003-090811/app/ai-learning/page.tsx",
+      "bytes": 3107,
+      "gitBlob": "9d7542f4ccc4216f0b34babcaf05ede8d69d6dd8"
+    },
+    {
+      "path": "_local/archives/v50-sasi-one-surface-20261003-090811/app/ai-research/page.tsx",
+      "bytes": 3347,
+      "gitBlob": "99b39fc51f07bf1beae015bb7bb2f7238debe03c"
+    },
+    {
+      "path": "_local/archives/v50-sasi-one-surface-20261003-090811/app/sasi/build/page.tsx",
+      "bytes": 544,
+      "gitBlob": "4c97858e64a5a173f90c6ff36cb384c8e93604c1"
+    },
+    {
+      "path": "_local/archives/v50-sasi-one-surface-20261003-090811/app/sasi/drama/page.tsx",
+      "bytes": 497,
+      "gitBlob": "bc4a00c80d4222c820ca25766eb9079df6b953b8"
+    },
+    {
+      "path": "_local/archives/v50-sasi-one-surface-20261003-090811/app/sasi/page.tsx",
+      "bytes": 1260,
+      "gitBlob": "2f96663c8476513ec987ecc1c57f7edc48533ded"
+    },
+    {
+      "path": "_local/archives/v50r2-public-copy-20261003-092502/app/products/page.tsx",
+      "bytes": 766,
+      "gitBlob": "1c544a4f5c782e1c5d3ce7fb26396089442b9872"
+    },
+    {
+      "path": "_local/archives/v50r2-public-copy-20261003-092502/components/BookSasiBalanceBar.tsx",
+      "bytes": 857,
+      "gitBlob": "49ba2bf1241bbac3ebe7ffb3ac5ae0beb26d8a22"
+    },
+    {
+      "path": "_local/archives/v51-single-workspace-20261003-100204/app/sasi/ConnectionCenter.tsx",
+      "bytes": 7866,
+      "gitBlob": "4d147558ab135c572b3154374ef2c7ae2fc3bb7d"
+    },
+    {
+      "path": "_local/archives/v51-single-workspace-20261003-100204/components/KnowledgeWorkspace.tsx",
+      "bytes": 54610,
+      "gitBlob": "e6cb0ff11ba665eeb6d9631beb22656c68b2fcbc"
+    },
+    {
+      "path": "_local/archives/v51-single-workspace-20261003-100204/components/Nav.tsx",
+      "bytes": 15910,
+      "gitBlob": "edc4979d6d3e90b522a12b192af1360b67e3c163"
+    },
+    {
+      "path": "_local/archives/v51-single-workspace-20261003-100204/components/SasiChatCreationStudio.tsx",
+      "bytes": 26817,
+      "gitBlob": "c27b4bf8e28280b78d04abf299f6b8be77e135ab"
+    },
+    {
+      "path": "_local/archives/v51-single-workspace-20261003-100204/components/SasiFunctionMenu.tsx",
+      "bytes": 4320,
+      "gitBlob": "6c473a862b74d93c85b7c593a65a1449cd350ce4"
+    },
+    {
+      "path": "_local/archives/v51-single-workspace-20261003-100204/components/SasiOneSurface.tsx",
+      "bytes": 2746,
+      "gitBlob": "1b8a3bce9a3ce8c2c16b6603493e857d9e962b60"
+    },
+    {
+      "path": "_local/archives/v51r1-audit-repair-20261003-100405/components/Nav.tsx",
+      "bytes": 15910,
+      "gitBlob": "edc4979d6d3e90b522a12b192af1360b67e3c163"
+    },
+    {
+      "path": "_local/archives/v51r2-composer-first-20261003-101420/components/HomeProblemHub.tsx",
+      "bytes": 23496,
+      "gitBlob": "de46f20e7305041007836560778dae6da9841258"
+    },
+    {
+      "path": "_local/archives/v51r2-composer-first-20261003-101420/components/KnowledgeWorkspace.tsx",
+      "bytes": 53448,
+      "gitBlob": "2eb03ce5d8c37942fe50b6516c178a455515e4e9"
+    },
+    {
+      "path": "_local/archives/v51r2-composer-first-20261003-101420/components/MobileBottomNav.tsx",
+      "bytes": 2228,
+      "gitBlob": "f0fa89b80db5fa79b4344b1538fbcd0eaf968658"
+    },
+    {
+      "path": "_local/archives/v51r2-composer-first-20261003-101420/components/Nav.tsx",
+      "bytes": 15679,
+      "gitBlob": "403425b334e0e848a2953c004d43a564fddd22f8"
+    },
+    {
+      "path": "_local/archives/v51r2-composer-first-20261003-101420/components/SasiCommandCenter.tsx",
+      "bytes": 15429,
+      "gitBlob": "21b557a9de5e4b11b8d1e72b94f6909894544d20"
+    },
+    {
+      "path": "_local/archives/v51r2-composer-first-20261003-101420/components/SasiFunctionMenu.tsx",
+      "bytes": 4540,
+      "gitBlob": "13ac8a25d82dc70477acca22403ffee19a721135"
+    },
+    {
+      "path": "_local/archives/v51r2-composer-first-20261003-101420/components/SasiOneSurface.tsx",
+      "bytes": 2828,
+      "gitBlob": "81b1df2a1fc72db845736a61434ca57c554ada2d"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/app/api/money/summary/route.ts",
+      "bytes": 2348,
+      "gitBlob": "bec2d6a37e338f0f3f1c4f40bfab7910fe48edf7"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/components/KnowledgeWorkspace.tsx",
+      "bytes": 53448,
+      "gitBlob": "2eb03ce5d8c37942fe50b6516c178a455515e4e9"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/components/SasiChatCreationStudio.tsx",
+      "bytes": 27022,
+      "gitBlob": "14aa78a834cd3e7549323e5363ab35464dc775fc"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/components/SasiOneSurface.tsx",
+      "bytes": 2828,
+      "gitBlob": "81b1df2a1fc72db845736a61434ca57c554ada2d"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/lib/money/invariants.ts",
+      "bytes": 982,
+      "gitBlob": "16fd7405f6b7fa9e6148a9fc0f1518db9492cd5f"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/lib/money/provider-adapter.ts",
+      "bytes": 857,
+      "gitBlob": "734620ddd802f9c6c5d1da0e441ce4a93d06fe67"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/lib/money/reconciliation.ts",
+      "bytes": 1213,
+      "gitBlob": "cc032ff43c29ce2dfd6d81bf0d5f5f9fd0eea63a"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/lib/money/refund-state.ts",
+      "bytes": 1048,
+      "gitBlob": "21186bc0ea4b43329d0aefa8875106bcbce5da91"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/lib/money/types.ts",
+      "bytes": 896,
+      "gitBlob": "889618e7d80267cb9fdbd49f5ddef6cc5f8f8c3e"
+    },
+    {
+      "path": "_local/archives/v52a-final-money-ui-20261003-105717/supabase/migrations/20261003105500_v52a_money_integrity_master.sql",
+      "bytes": 6777,
+      "gitBlob": "60c848acc50d30cf56bf1bb1af97d4648c8e4eaa"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/app/api/money/summary/route.ts",
+      "bytes": 2348,
+      "gitBlob": "bec2d6a37e338f0f3f1c4f40bfab7910fe48edf7"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/components/KnowledgeWorkspace.tsx",
+      "bytes": 53448,
+      "gitBlob": "2eb03ce5d8c37942fe50b6516c178a455515e4e9"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/components/SasiChatCreationStudio.tsx",
+      "bytes": 27022,
+      "gitBlob": "14aa78a834cd3e7549323e5363ab35464dc775fc"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/components/SasiOneSurface.tsx",
+      "bytes": 3174,
+      "gitBlob": "464c8a51b874f1fcb740432db24e70bd5b13e4f9"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/lib/money/invariants.ts",
+      "bytes": 982,
+      "gitBlob": "16fd7405f6b7fa9e6148a9fc0f1518db9492cd5f"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/lib/money/provider-adapter.ts",
+      "bytes": 857,
+      "gitBlob": "734620ddd802f9c6c5d1da0e441ce4a93d06fe67"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/lib/money/reconciliation.ts",
+      "bytes": 1213,
+      "gitBlob": "cc032ff43c29ce2dfd6d81bf0d5f5f9fd0eea63a"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/lib/money/refund-state.ts",
+      "bytes": 1048,
+      "gitBlob": "21186bc0ea4b43329d0aefa8875106bcbce5da91"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/lib/money/types.ts",
+      "bytes": 896,
+      "gitBlob": "889618e7d80267cb9fdbd49f5ddef6cc5f8f8c3e"
+    },
+    {
+      "path": "_local/archives/v52a-final-r1-money-ui-20261003-105933/supabase/migrations/20261003105500_v52a_money_integrity_master.sql",
+      "bytes": 6777,
+      "gitBlob": "60c848acc50d30cf56bf1bb1af97d4648c8e4eaa"
+    },
+    {
+      "path": "_local/archives/v52a-final-r2-money-ui-20261003-110119/components/SasiChatCreationStudio.tsx",
+      "bytes": 28108,
+      "gitBlob": "125fc4f6a941f294aac55b55813571e8278b3f9b"
+    },
+    {
+      "path": "_local/archives/v52a-final-r2-money-ui-20261003-110119/components/SasiOneSurface.tsx",
+      "bytes": 3174,
+      "gitBlob": "464c8a51b874f1fcb740432db24e70bd5b13e4f9"
+    },
+    {
+      "path": "_local/archives/v52a-final-r3-release-closure-20261003-111251/scripts/audit/v50r2-public-copy-final.mjs",
+      "bytes": 1801,
+      "gitBlob": "9693cc875a4c667ff7981d5a6fbdb683ae6b1878"
+    },
+    {
+      "path": "_local/archives/v52b-provider-refund-20261003-112405/lib/alipay.ts",
+      "bytes": 7537,
+      "gitBlob": "22d05c35a8b95b0ab6466ecdb69dcffdf291d5ef"
+    },
+    {
+      "path": "_local/archives/v52b-provider-refund-20261003-112405/lib/paypal.ts",
+      "bytes": 7384,
+      "gitBlob": "54c781ffa0ec689a7c9cb074c05380c5de304fe6"
+    },
+    {
+      "path": "_local/archives/v52b-provider-refund-20261003-112405/lib/wechatpay.ts",
+      "bytes": 14773,
+      "gitBlob": "0e572db3b46ac4ca2006d02f9b141f6c56be96c5"
+    },
+    {
+      "path": "_local/archives/v52b-r1-provider-refund-20261003-112650/lib/alipay.ts",
+      "bytes": 7537,
+      "gitBlob": "22d05c35a8b95b0ab6466ecdb69dcffdf291d5ef"
+    },
+    {
+      "path": "_local/archives/v52b-r1-provider-refund-20261003-112650/lib/paypal.ts",
+      "bytes": 7384,
+      "gitBlob": "54c781ffa0ec689a7c9cb074c05380c5de304fe6"
+    },
+    {
+      "path": "_local/archives/v52b-r1-provider-refund-20261003-112650/lib/wechatpay.ts",
+      "bytes": 14773,
+      "gitBlob": "0e572db3b46ac4ca2006d02f9b141f6c56be96c5"
+    },
+    {
+      "path": "_local/archives/v52b-r1-provider-refund-20261003-113418/lib/alipay.ts",
+      "bytes": 10539,
+      "gitBlob": "8d12debc94a50ae9a662b610dcbec9152cc74d65"
+    },
+    {
+      "path": "_local/archives/v52b-r1-provider-refund-20261003-113418/lib/paypal.ts",
+      "bytes": 8955,
+      "gitBlob": "c434b5412a1ebf84ea726a08c24a04a052477f1a"
+    },
+    {
+      "path": "_local/archives/v52b-r1-provider-refund-20261003-113418/lib/wechatpay.ts",
+      "bytes": 16150,
+      "gitBlob": "9af7d1af28f3f8e7767b56a1d3e907bac9c835a9"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/app/api/sasi/byok/video/route.ts",
+      "bytes": 14633,
+      "gitBlob": "f66f6cae0b83dfe965b603a76c7d61789d151ee3"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/app/sasi/ConnectionCenter.tsx",
+      "bytes": 8994,
+      "gitBlob": "9894fa4ee580ff0ff1673315f1ed7a106c0c9a1f"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/components/KnowledgeWorkspace.tsx",
+      "bytes": 52494,
+      "gitBlob": "b906523d2f7db0f79db469023d6c736fc4e1b654"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/components/SasiChatCreationStudio.tsx",
+      "bytes": 28108,
+      "gitBlob": "125fc4f6a941f294aac55b55813571e8278b3f9b"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/components/SasiFunctionMenu.tsx",
+      "bytes": 4540,
+      "gitBlob": "13ac8a25d82dc70477acca22403ffee19a721135"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/components/SasiOneSurface.tsx",
+      "bytes": 3174,
+      "gitBlob": "464c8a51b874f1fcb740432db24e70bd5b13e4f9"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/lib/alipay.ts",
+      "bytes": 10539,
+      "gitBlob": "8d12debc94a50ae9a662b610dcbec9152cc74d65"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/lib/sasi/intelligence/user-video.ts",
+      "bytes": 8747,
+      "gitBlob": "4fc6fae4206e313259facb5eba2b769ca8414af8"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/lib/sasi/pricing-v49.ts",
+      "bytes": 1837,
+      "gitBlob": "b44c18fa8a8e3d20acd8be7f246681788ac02fe1"
+    },
+    {
+      "path": "_local/archives/v52b-r2-ui-provider-resolution-20261003-114434/lib/sasi/seedance-byok.ts",
+      "bytes": 5237,
+      "gitBlob": "0516aa3e55bc98d99de49f49976a85284329d78b"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/app/api/sasi/byok/video/route.ts",
+      "bytes": 15023,
+      "gitBlob": "f0bb18e791eb785810dd4ea7274d87d0ee84e615"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/app/sasi/ConnectionCenter.tsx",
+      "bytes": 10143,
+      "gitBlob": "5a6ca1606e1733239a7e0a7acdb347d7c138dad5"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/components/KnowledgeWorkspace.tsx",
+      "bytes": 52538,
+      "gitBlob": "e00489cdf3c843d85d2f8b2e7601be1d7beff721"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/components/SasiFunctionMenu.tsx",
+      "bytes": 4539,
+      "gitBlob": "3db37958f627ae3579cf4778b940c4b1fb7a6509"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/components/SasiOneSurface.tsx",
+      "bytes": 3466,
+      "gitBlob": "03b1de53e964030c8c4308c178cbae94f69a8af3"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/lib/alipay.ts",
+      "bytes": 10539,
+      "gitBlob": "8d12debc94a50ae9a662b610dcbec9152cc74d65"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/lib/sasi/intelligence/user-video.ts",
+      "bytes": 8752,
+      "gitBlob": "0bf5d3383d2de8b618d38446e6ffbfb3d6734c3a"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/lib/sasi/pricing-v49.ts",
+      "bytes": 2031,
+      "gitBlob": "67b4ac6085c57d66e63209e1416990cddb567e32"
+    },
+    {
+      "path": "_local/archives/v52b-r3-idempotent-provider-repair-20261003-120258/lib/sasi/seedance-byok.ts",
+      "bytes": 5257,
+      "gitBlob": "39c1531a769b398e21704a37623a2ceed5bd733d"
+    },
+    {
+      "path": "_local/archives/v52c-r1-legacy-ui-closure-20261003-133503/app/account/page.tsx",
+      "bytes": 12781,
+      "gitBlob": "a41288b05bd0a1d892e4ed525653a5656d582b10"
+    },
+    {
+      "path": "_local/archives/v52c-r1-legacy-ui-closure-20261003-133503/app/account/withdrawals/page.tsx",
+      "bytes": 167,
+      "gitBlob": "6e7ece9979a6ff9b86b379c7b9d154655907878e"
+    },
+    {
+      "path": "_local/archives/v52c-r1-legacy-ui-closure-20261003-133503/components/BalanceWithdrawalPanel.tsx",
+      "bytes": 20503,
+      "gitBlob": "e8938e64db667a90c309858adb482321f7813d6f"
+    },
+    {
+      "path": "_local/archives/v52c-r1-legacy-ui-closure-20261003-133503/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 12864,
+      "gitBlob": "ce619b62435887189c2c8f12af06db3b64fdf630"
+    },
+    {
+      "path": "_local/archives/v52c-r2-windows-safe-20261003-133728/app/account/page.tsx",
+      "bytes": 12781,
+      "gitBlob": "a41288b05bd0a1d892e4ed525653a5656d582b10"
+    },
+    {
+      "path": "_local/archives/v52c-r2-windows-safe-20261003-133728/app/account/withdrawals/page.tsx",
+      "bytes": 167,
+      "gitBlob": "6e7ece9979a6ff9b86b379c7b9d154655907878e"
+    },
+    {
+      "path": "_local/archives/v52c-r2-windows-safe-20261003-133728/components/BalanceWithdrawalPanel.tsx",
+      "bytes": 20503,
+      "gitBlob": "e8938e64db667a90c309858adb482321f7813d6f"
+    },
+    {
+      "path": "_local/archives/v52c-r2-windows-safe-20261003-133728/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 12864,
+      "gitBlob": "ce619b62435887189c2c8f12af06db3b64fdf630"
+    },
+    {
+      "path": "_local/archives/v52c-unified-money-center-20261003-133049/app/account/page.tsx",
+      "bytes": 12776,
+      "gitBlob": "3b72d8e30afa88b7be85879f01b4177b1264970a"
+    },
+    {
+      "path": "_local/archives/v52c-unified-money-center-20261003-133049/app/account/withdrawals/page.tsx",
+      "bytes": 2621,
+      "gitBlob": "0ce01c3091709483c1ff3032503f97b6f180369d"
+    },
+    {
+      "path": "_local/archives/v52c-unified-money-center-20261003-133049/components/BalanceWithdrawalPanel.tsx",
+      "bytes": 20503,
+      "gitBlob": "e8938e64db667a90c309858adb482321f7813d6f"
+    },
+    {
+      "path": "_local/archives/v52c-unified-money-center-20261003-133049/components/SasiPricingCurrencyClient.tsx",
+      "bytes": 2323,
+      "gitBlob": "09aa2174493219f140a33ab06e9585b9bfd8e951"
+    },
+    {
+      "path": "_local/archives/v52d-r1-robust-refund-recovery-20261003-135139/components/BalanceWithdrawalPanel.tsx",
+      "bytes": 20392,
+      "gitBlob": "26b63212812fe6afd35e1f8a8e79992853bbed6a"
+    },
+    {
+      "path": "_local/archives/v52d-r1-robust-refund-recovery-20261003-135139/lib/money/reconcile-worker.ts",
+      "bytes": 5000,
+      "gitBlob": "892e907f503a4332a37f40e64d7eacb4062c8950"
+    },
+    {
+      "path": "_local/archives/v52d-r1-robust-refund-recovery-20261003-135139/lib/money/refund-error-policy.ts",
+      "bytes": 1607,
+      "gitBlob": "53170d9a33f5ce7bb50bda0340ba77d350c8a7a0"
+    },
+    {
+      "path": "_local/archives/v52d-r1-robust-refund-recovery-20261003-135139/lib/notifications/money-copy.ts",
+      "bytes": 10383,
+      "gitBlob": "0d68a517793b50e0988dcc17dcf2f1ae6e3f0cc5"
+    },
+    {
+      "path": "_local/archives/v52d-r1-robust-refund-recovery-20261003-135139/lib/payment-refunds.ts",
+      "bytes": 13528,
+      "gitBlob": "76b70585ed03f3c943cb7887830027014116f360"
+    },
+    {
+      "path": "_local/archives/v52d-r1-robust-refund-recovery-20261003-135139/lib/payments/withdrawal-processing.ts",
+      "bytes": 1785,
+      "gitBlob": "dd63ad381b0f040befd7155c4ae36436a86754f2"
+    },
+    {
+      "path": "_local/archives/v52d-r1-robust-refund-recovery-20261003-135139/lib/wechatpay.ts",
+      "bytes": 16150,
+      "gitBlob": "9af7d1af28f3f8e7767b56a1d3e907bac9c835a9"
+    },
+    {
+      "path": "_local/archives/v52d-refund-recovery-20261003-134754/components/BalanceWithdrawalPanel.tsx",
+      "bytes": 20392,
+      "gitBlob": "26b63212812fe6afd35e1f8a8e79992853bbed6a"
+    },
+    {
+      "path": "_local/archives/v52d-refund-recovery-20261003-134754/lib/money/reconcile-worker.ts",
+      "bytes": 4527,
+      "gitBlob": "7a45fd3b90f30be518ede8d8c3af3c3884d10b7b"
+    },
+    {
+      "path": "_local/archives/v52d-refund-recovery-20261003-134754/lib/notifications/money-copy.ts",
+      "bytes": 10383,
+      "gitBlob": "0d68a517793b50e0988dcc17dcf2f1ae6e3f0cc5"
+    },
+    {
+      "path": "_local/archives/v52d-refund-recovery-20261003-134754/lib/payment-refunds.ts",
+      "bytes": 13528,
+      "gitBlob": "76b70585ed03f3c943cb7887830027014116f360"
+    },
+    {
+      "path": "_local/archives/v52d-refund-recovery-20261003-134754/lib/payments/withdrawal-processing.ts",
+      "bytes": 6593,
+      "gitBlob": "49f4b89740e2ec489bb087a5963696c7ab1f1fc1"
+    },
+    {
+      "path": "_local/archives/v52d-refund-recovery-20261003-134754/lib/wechatpay.ts",
+      "bytes": 16150,
+      "gitBlob": "9af7d1af28f3f8e7767b56a1d3e907bac9c835a9"
+    },
+    {
+      "path": "_local/archives/v52e-db-reconciliation-20261003-141520/app/api/cron/withdrawal-reconcile/route.ts",
+      "bytes": 1273,
+      "gitBlob": "ac16e01d5b3f82e689779446ddd80f99dcd22938"
+    },
+    {
+      "path": "_local/archives/v52e-db-reconciliation-20261003-141520/lib/money/reconcile-worker.ts",
+      "bytes": 5000,
+      "gitBlob": "892e907f503a4332a37f40e64d7eacb4062c8950"
+    },
+    {
+      "path": "_local/archives/v52f-refund-webhook-20261003-142914/app/api/pay/paypal/webhook/route.ts",
+      "bytes": 1874,
+      "gitBlob": "49b0110b06520b46c6d8cfc6027a9c522723cded"
+    },
+    {
+      "path": "_local/archives/v52f-refund-webhook-20261003-142914/lib/money/provider-adapters.ts",
+      "bytes": 4812,
+      "gitBlob": "977e9eb5e699b8b05a99f1bd99cc18ae9b5d403c"
+    },
+    {
+      "path": "_local/archives/v52f-refund-webhook-20261003-142914/lib/paypal.ts",
+      "bytes": 8955,
+      "gitBlob": "c434b5412a1ebf84ea726a08c24a04a052477f1a"
+    },
+    {
+      "path": "_local/archives/v52f-refund-webhook-20261003-142914/lib/wechatpay.ts",
+      "bytes": 16314,
+      "gitBlob": "8457d269741f533d02fc4e64b511baa637ecf9dc"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-202635/app/api/knowledge/ask/route.ts",
+      "bytes": 4093,
+      "gitBlob": "592c7fd5f732dd09cd677b81a3690eacd07096b4"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-202635/app/api/sasi/byok/text/route.ts",
+      "bytes": 9306,
+      "gitBlob": "618e7eb936166db5e6b87a8930bca60843306a4d"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-202635/components/KnowledgeWorkspace.tsx",
+      "bytes": 48185,
+      "gitBlob": "a2d0a74c8883cb66e217702cc1770d4dd38ea916"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-202635/components/SasiChatCreationStudio.tsx",
+      "bytes": 28161,
+      "gitBlob": "53713747c9f5af96825f7994d09aeab6d41a0a1b"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-202635/components/SasiOneSurface.tsx",
+      "bytes": 3466,
+      "gitBlob": "03b1de53e964030c8c4308c178cbae94f69a8af3"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-203123/app/api/knowledge/ask/route.ts",
+      "bytes": 4312,
+      "gitBlob": "49ff1aa508447b4356aedaf81083a5419122e80f"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-203123/app/api/sasi/byok/text/route.ts",
+      "bytes": 9614,
+      "gitBlob": "222050dea85d386ae064447679c612dd974f66df"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-203123/components/SasiChatCreationStudio.tsx",
+      "bytes": 28062,
+      "gitBlob": "ed5e2ffc3167160692d6b80af0568ac0f916e0a7"
+    },
+    {
+      "path": "_local/archives/v53-sasi-skill-kernel-20261003-203123/components/SasiOneSurface.tsx",
+      "bytes": 3466,
+      "gitBlob": "03b1de53e964030c8c4308c178cbae94f69a8af3"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204410/components/KnowledgeWorkspace.tsx",
+      "bytes": 48100,
+      "gitBlob": "6aecb13d6fae91e4d08fc0d9d2ff90e9b853fda4"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204410/components/SasiChatCreationStudio.tsx",
+      "bytes": 28062,
+      "gitBlob": "ed5e2ffc3167160692d6b80af0568ac0f916e0a7"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204410/components/SasiOneSurface.tsx",
+      "bytes": 3466,
+      "gitBlob": "03b1de53e964030c8c4308c178cbae94f69a8af3"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204410/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204807/components/KnowledgeWorkspace.tsx",
+      "bytes": 48100,
+      "gitBlob": "6aecb13d6fae91e4d08fc0d9d2ff90e9b853fda4"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204807/components/SasiChatCreationStudio.tsx",
+      "bytes": 28062,
+      "gitBlob": "ed5e2ffc3167160692d6b80af0568ac0f916e0a7"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204807/components/SasiOneSurface.tsx",
+      "bytes": 3466,
+      "gitBlob": "03b1de53e964030c8c4308c178cbae94f69a8af3"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-204807/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-205642/components/KnowledgeWorkspace.tsx",
+      "bytes": 48182,
+      "gitBlob": "762cf8e056f555a64ab9b82a01dd2f50aac9a44e"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-205642/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-205653/components/KnowledgeWorkspace.tsx",
+      "bytes": 48182,
+      "gitBlob": "762cf8e056f555a64ab9b82a01dd2f50aac9a44e"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-205653/components/SasiOneSurface.tsx",
+      "bytes": 3044,
+      "gitBlob": "047ff648c247cccda3ec2b06687e9fa261b7908c"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-205653/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-210116/components/KnowledgeWorkspace.tsx",
+      "bytes": 48182,
+      "gitBlob": "762cf8e056f555a64ab9b82a01dd2f50aac9a44e"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-210116/components/SasiOneSurface.tsx",
+      "bytes": 3044,
+      "gitBlob": "047ff648c247cccda3ec2b06687e9fa261b7908c"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-210116/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-210804/components/KnowledgeWorkspace.tsx",
+      "bytes": 48182,
+      "gitBlob": "762cf8e056f555a64ab9b82a01dd2f50aac9a44e"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-210804/components/SasiChatCreationStudio.tsx",
+      "bytes": 27597,
+      "gitBlob": "e6cf2866bf23fa701c8e54fba0cb71db4d017003"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-210804/components/SasiOneSurface.tsx",
+      "bytes": 3044,
+      "gitBlob": "047ff648c247cccda3ec2b06687e9fa261b7908c"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-210804/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211047/components/KnowledgeWorkspace.tsx",
+      "bytes": 48182,
+      "gitBlob": "762cf8e056f555a64ab9b82a01dd2f50aac9a44e"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211047/components/SasiChatCreationStudio.tsx",
+      "bytes": 27597,
+      "gitBlob": "e6cf2866bf23fa701c8e54fba0cb71db4d017003"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211047/components/SasiOneSurface.tsx",
+      "bytes": 3044,
+      "gitBlob": "047ff648c247cccda3ec2b06687e9fa261b7908c"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211047/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211335/components/KnowledgeWorkspace.tsx",
+      "bytes": 48182,
+      "gitBlob": "762cf8e056f555a64ab9b82a01dd2f50aac9a44e"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211335/components/SasiChatCreationStudio.tsx",
+      "bytes": 27597,
+      "gitBlob": "e6cf2866bf23fa701c8e54fba0cb71db4d017003"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211335/components/SasiOneSurface.tsx",
+      "bytes": 3044,
+      "gitBlob": "047ff648c247cccda3ec2b06687e9fa261b7908c"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211335/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211655/components/KnowledgeWorkspace.tsx",
+      "bytes": 48182,
+      "gitBlob": "762cf8e056f555a64ab9b82a01dd2f50aac9a44e"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211655/components/SasiChatCreationStudio.tsx",
+      "bytes": 27597,
+      "gitBlob": "e6cf2866bf23fa701c8e54fba0cb71db4d017003"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211655/components/SasiOneSurface.tsx",
+      "bytes": 3044,
+      "gitBlob": "047ff648c247cccda3ec2b06687e9fa261b7908c"
+    },
+    {
+      "path": "_local/archives/v54-sasi-session-result-20261003-211655/lib/sasi/skills/mode-adapters.ts",
+      "bytes": 989,
+      "gitBlob": "7268b5eb28ad69173e4b90a21ee40440d4bd3314"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/components/SasiOneSurface.tsx",
+      "bytes": 3044,
+      "gitBlob": "047ff648c247cccda3ec2b06687e9fa261b7908c"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/files/document-intake.ts",
+      "bytes": 8379,
+      "gitBlob": "e1819aa4e9c2b90bf67dd13ab782680f5dc55c5e"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/sasi/composer-core.ts",
+      "bytes": 498,
+      "gitBlob": "5504808a865d12bf57ee816be8c039308600c3c2"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/sasi/core/index.ts",
+      "bytes": 2042,
+      "gitBlob": "e0636193663fdb4e2ffbec517392d62f927b1a4a"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/sasi/core/runtime-session.ts",
+      "bytes": 1296,
+      "gitBlob": "54cebbfb3f17b306beb74b7841998e3e353c1e81"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/sasi/core/runtime.ts",
+      "bytes": 1426,
+      "gitBlob": "c37ae2ec2839a7db5be60c66dc25f5da9f7a1de3"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/sasi/core/session-contract.ts",
+      "bytes": 1478,
+      "gitBlob": "be1f140d3072368729379ed969493cb2011fa695"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/sasi/core/unified-execution-loop.ts",
+      "bytes": 1083,
+      "gitBlob": "7a5a126c9fb8db13712e09beaeb654788a26a2de"
+    },
+    {
+      "path": "_local/archives/v55-unified-flow-20261003-214511/lib/tools/engine/resource-governor.ts",
+      "bytes": 1281,
+      "gitBlob": "773633f85244b05802b2bf57b6db59a74e527782"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-074610/components/tools/ContinueProcessing.tsx",
+      "bytes": 2202,
+      "gitBlob": "9f660e1b103989036e40da01f3fdca61a52b9697"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-074610/components/tools/ResultPanel.tsx",
+      "bytes": 2532,
+      "gitBlob": "a7199e91028021bf82d6d2489c60649bde2b3098"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-074610/components/tools/ToolShell.tsx",
+      "bytes": 1678,
+      "gitBlob": "8f9b481dd55c8316a9bb8d716244f82193c190c2"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-074610/components/tools/ToolsHubV11.tsx",
+      "bytes": 16431,
+      "gitBlob": "110ce197ec456dfac909f5ec81be672988dc9101"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-074610/lib/tool-shell-i18n.ts",
+      "bytes": 13715,
+      "gitBlob": "c50ba3b865ba57800c45a293a2e29dde99d3a401"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-074610/lib/tools/platform/continuation.ts",
+      "bytes": 2018,
+      "gitBlob": "153fd3dbc9ed0eb00adf0ade1fabb95cc83c4099"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-075700/components/tools/ContinueProcessing.tsx",
+      "bytes": 1836,
+      "gitBlob": "ac367e03d225d007ee13bb4c335c49db4d2a8ace"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-075700/components/tools/ResultPanel.tsx",
+      "bytes": 2532,
+      "gitBlob": "a7199e91028021bf82d6d2489c60649bde2b3098"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-075700/components/tools/ToolShell.tsx",
+      "bytes": 1678,
+      "gitBlob": "8f9b481dd55c8316a9bb8d716244f82193c190c2"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-075700/components/tools/ToolsHubV11.tsx",
+      "bytes": 16431,
+      "gitBlob": "110ce197ec456dfac909f5ec81be672988dc9101"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-075700/lib/tool-shell-i18n.ts",
+      "bytes": 13715,
+      "gitBlob": "c50ba3b865ba57800c45a293a2e29dde99d3a401"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-075700/lib/tools/platform/continuation.ts",
+      "bytes": 1611,
+      "gitBlob": "930078f86e104bf2ff8bda93fd54409518c2e8ce"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/components/tools/ContinueProcessing.tsx",
+      "bytes": 1836,
+      "gitBlob": "ac367e03d225d007ee13bb4c335c49db4d2a8ace"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/components/tools/RecentTools.tsx",
+      "bytes": 3311,
+      "gitBlob": "6d0029d7cac26c44da1b340b6662dbc00b8d423c"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/components/tools/ResultPanel.tsx",
+      "bytes": 2711,
+      "gitBlob": "0578996bf194db2ba283edcf51ce98c618f66616"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/components/tools/ToolShell.tsx",
+      "bytes": 1688,
+      "gitBlob": "6962334195918598c22514994501573c664c90e8"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/components/tools/ToolsHubV11.tsx",
+      "bytes": 16512,
+      "gitBlob": "7b5a4a29a0d8fd4ebc19a931d46d9b0103be6785"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/lib/tool-shell-i18n.ts",
+      "bytes": 14167,
+      "gitBlob": "c13d41de6a9c90e1a6450a50e96470734af7fa40"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/lib/tools/platform/continuation-i18n.ts",
+      "bytes": 4984,
+      "gitBlob": "f49afaf147f109fe9658001fb95114fc0577e493"
+    },
+    {
+      "path": "_local/archives/v56-tool-continuity-20261004-081255/lib/tools/platform/continuation.ts",
+      "bytes": 1611,
+      "gitBlob": "930078f86e104bf2ff8bda93fd54409518c2e8ce"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-084811/components/tools/RecentTools.tsx",
+      "bytes": 3311,
+      "gitBlob": "6d0029d7cac26c44da1b340b6662dbc00b8d423c"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-084811/lib/sasi/core/execution-lifecycle.ts",
+      "bytes": 1204,
+      "gitBlob": "b825cff5be69b1d5079e16de2efd47c18e2740d5"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-084811/lib/sasi-kernel/runtime/lifecycle.ts",
+      "bytes": 1488,
+      "gitBlob": "f37b95f65849e2dbb9b25434b4c88ade81b21a16"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-084811/lib/tools/engine/resource-governor.ts",
+      "bytes": 2544,
+      "gitBlob": "e8c5e60f112a32c177ef56401735c49226d52a69"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-084811/lib/tools/workspace/handoff.ts",
+      "bytes": 3518,
+      "gitBlob": "ed4c3425c0d91c2306742d1d57456d082ff06083"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-084811/lib/tools/workspace/recent-tools.ts",
+      "bytes": 1735,
+      "gitBlob": "a18126af3597d7501a8d96fd4580ebc56ace4230"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-084811/scripts/ci/production-gate.mjs",
+      "bytes": 2123,
+      "gitBlob": "c634857d12c604120ff9d2c4bc705dd97cc97624"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/components/tools/RecentTools.tsx",
+      "bytes": 5948,
+      "gitBlob": "30ab2535c5bf7885c0f626b97ad3cd888aab140f"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/sasi/core/execution-lifecycle.ts",
+      "bytes": 1037,
+      "gitBlob": "d84c397f14605126f6dd9c6ac130b5075437e35f"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/sasi-kernel/runtime/lifecycle.ts",
+      "bytes": 1522,
+      "gitBlob": "0d8486795b00b7d1bb877e48550dff03615f7ed8"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/tasks/smart-execution.ts",
+      "bytes": 735,
+      "gitBlob": "30bf0548404efa11bed0371eac0b4bb233f1201c"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/tasks/task-contract.ts",
+      "bytes": 1214,
+      "gitBlob": "04224252e61eb15af3306e9dbaf4a9f84e5ec707"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/tools/engine/resource-governor.ts",
+      "bytes": 2906,
+      "gitBlob": "49ef092766630a7c25552b3618ed19b1d554a5c8"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/tools/workspace/db.ts",
+      "bytes": 734,
+      "gitBlob": "df721e966542fa9431d652a6b388e0eeaecced8e"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/tools/workspace/handoff.ts",
+      "bytes": 2947,
+      "gitBlob": "530cccb05fefea318c125cc5b52e6bd3f9c70d53"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/tools/workspace/recent-tools.ts",
+      "bytes": 2615,
+      "gitBlob": "0ccf77f2011218d904512f18a2f497008c176829"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/lib/tools/workspace/recoverable-results.ts",
+      "bytes": 3349,
+      "gitBlob": "92860faacecec5aac756e87bd9029e86f2303b45"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/scripts/audit/v56-tool-continuity.mjs",
+      "bytes": 2369,
+      "gitBlob": "5c5e27353abc4bde4efcc0db5207d1e5e7bdef5c"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/scripts/audit/v57-task-workspace-truth.mjs",
+      "bytes": 2963,
+      "gitBlob": "f37ad7e42e0a3506a41de2023061950f11e680d9"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/scripts/ci/audit-manifest.mjs",
+      "bytes": 786,
+      "gitBlob": "55f5a49d6269d6ba630d5382dd3bea8092a0acb4"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085258/scripts/ci/production-gate.mjs",
+      "bytes": 2168,
+      "gitBlob": "ea8b13e3fecd268faeffbf15bdae1e5426248373"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/components/tools/RecentTools.tsx",
+      "bytes": 5948,
+      "gitBlob": "30ab2535c5bf7885c0f626b97ad3cd888aab140f"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/sasi/core/execution-lifecycle.ts",
+      "bytes": 1037,
+      "gitBlob": "d84c397f14605126f6dd9c6ac130b5075437e35f"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/sasi-kernel/runtime/lifecycle.ts",
+      "bytes": 1522,
+      "gitBlob": "0d8486795b00b7d1bb877e48550dff03615f7ed8"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/tasks/smart-execution.ts",
+      "bytes": 735,
+      "gitBlob": "30bf0548404efa11bed0371eac0b4bb233f1201c"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/tasks/task-contract.ts",
+      "bytes": 1214,
+      "gitBlob": "04224252e61eb15af3306e9dbaf4a9f84e5ec707"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/tools/engine/resource-governor.ts",
+      "bytes": 2906,
+      "gitBlob": "49ef092766630a7c25552b3618ed19b1d554a5c8"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/tools/workspace/db.ts",
+      "bytes": 734,
+      "gitBlob": "df721e966542fa9431d652a6b388e0eeaecced8e"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/tools/workspace/handoff.ts",
+      "bytes": 2947,
+      "gitBlob": "530cccb05fefea318c125cc5b52e6bd3f9c70d53"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/tools/workspace/recent-tools.ts",
+      "bytes": 2615,
+      "gitBlob": "0ccf77f2011218d904512f18a2f497008c176829"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/lib/tools/workspace/recoverable-results.ts",
+      "bytes": 3349,
+      "gitBlob": "92860faacecec5aac756e87bd9029e86f2303b45"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/scripts/audit/v56-tool-continuity.mjs",
+      "bytes": 2369,
+      "gitBlob": "5c5e27353abc4bde4efcc0db5207d1e5e7bdef5c"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/scripts/audit/v57-task-workspace-truth.mjs",
+      "bytes": 2963,
+      "gitBlob": "f37ad7e42e0a3506a41de2023061950f11e680d9"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/scripts/ci/audit-manifest.mjs",
+      "bytes": 786,
+      "gitBlob": "55f5a49d6269d6ba630d5382dd3bea8092a0acb4"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085442/scripts/ci/production-gate.mjs",
+      "bytes": 2168,
+      "gitBlob": "ea8b13e3fecd268faeffbf15bdae1e5426248373"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/components/tools/RecentTools.tsx",
+      "bytes": 5948,
+      "gitBlob": "30ab2535c5bf7885c0f626b97ad3cd888aab140f"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/sasi/core/execution-lifecycle.ts",
+      "bytes": 1037,
+      "gitBlob": "d84c397f14605126f6dd9c6ac130b5075437e35f"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/sasi-kernel/runtime/lifecycle.ts",
+      "bytes": 1522,
+      "gitBlob": "0d8486795b00b7d1bb877e48550dff03615f7ed8"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/tasks/smart-execution.ts",
+      "bytes": 735,
+      "gitBlob": "30bf0548404efa11bed0371eac0b4bb233f1201c"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/tasks/task-contract.ts",
+      "bytes": 1214,
+      "gitBlob": "04224252e61eb15af3306e9dbaf4a9f84e5ec707"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/tools/engine/resource-governor.ts",
+      "bytes": 2906,
+      "gitBlob": "49ef092766630a7c25552b3618ed19b1d554a5c8"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/tools/workspace/db.ts",
+      "bytes": 734,
+      "gitBlob": "df721e966542fa9431d652a6b388e0eeaecced8e"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/tools/workspace/handoff.ts",
+      "bytes": 2947,
+      "gitBlob": "530cccb05fefea318c125cc5b52e6bd3f9c70d53"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/tools/workspace/recent-tools.ts",
+      "bytes": 2615,
+      "gitBlob": "0ccf77f2011218d904512f18a2f497008c176829"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/lib/tools/workspace/recoverable-results.ts",
+      "bytes": 3349,
+      "gitBlob": "92860faacecec5aac756e87bd9029e86f2303b45"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/scripts/audit/v56-tool-continuity.mjs",
+      "bytes": 2415,
+      "gitBlob": "427074eb3d65555dc59375822af311f1a4933828"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/scripts/audit/v57-task-workspace-truth.mjs",
+      "bytes": 3214,
+      "gitBlob": "bd65283b1642239dce72477a01a84443ef3a2658"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/scripts/ci/audit-manifest.mjs",
+      "bytes": 786,
+      "gitBlob": "55f5a49d6269d6ba630d5382dd3bea8092a0acb4"
+    },
+    {
+      "path": "_local/archives/v57-platform-truth-20261004-085757/scripts/ci/production-gate.mjs",
+      "bytes": 2168,
+      "gitBlob": "ea8b13e3fecd268faeffbf15bdae1e5426248373"
+    }
+  ],
+  "preservedUniqueWorktreeChanges": [
+    {
+      "worktree": "tmp/money-audit-worktree",
+      "files": [
+        {
+          "file": "components/MoneyAdminDashboard.tsx",
+          "bytes": 7027,
+          "sha256": "47bd4c4fac85e59bdeff85a01de0080509f1a91a6dfcfc3397966246b7f9f91e",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/components/MoneyAdminDashboard.tsx"
+        },
+        {
+          "file": "playwright.money.config.ts",
+          "bytes": 492,
+          "sha256": "6d3b4cdb518d6da2c33a6a22bccd4dea2160f16de29bbb2c128cbf61829cfb25",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/playwright.money.config.ts"
+        },
+        {
+          "file": "scripts/test-money-reconcile-results.cjs",
+          "bytes": 5843,
+          "sha256": "a81e326341b92d8165fad8752fc7f3453c6a864d19f92fbf037565dd345eb318",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/scripts/test-money-reconcile-results.cjs"
+        },
+        {
+          "file": "tests/final-closure/money-operations.spec.ts",
+          "bytes": 6488,
+          "sha256": "053abf5ddfe02d9d210d4962e601cdca159c880285d602ce885b451274e061cc",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/tests/final-closure/money-operations.spec.ts"
+        },
+        {
+          "file": "tmp-production.config.ts",
+          "bytes": 175,
+          "sha256": "8fb999fcaba7f1e2368b87dab9fcc268913c4a12f686a588ed7bdd38b6230988",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/tmp-production.config.ts"
+        },
+        {
+          "file": "app/api/account/withdrawals/route.ts",
+          "bytes": 7227,
+          "sha256": "e68a30679d80837d334a6c84bc06361187c2bf82daa56380b0a908276e61aa69",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/app/api/account/withdrawals/route.ts"
+        },
+        {
+          "file": "components/BalanceWithdrawalPanel.tsx",
+          "bytes": 21951,
+          "sha256": "14b5c2eb542f9e3574494732fbe0eb9d8d9300cc41dec9c5156d12bf0d7a71ed",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/components/BalanceWithdrawalPanel.tsx"
+        },
+        {
+          "file": "components/LegacyRefundMigrationPanel.tsx",
+          "bytes": 2995,
+          "sha256": "3e3a736db386da18030b4163c29f0374d60cea91c2cc524e734324341a4e796f",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/components/LegacyRefundMigrationPanel.tsx"
+        },
+        {
+          "file": "components/SasiPricingCurrencyClient.tsx",
+          "bytes": 14631,
+          "sha256": "8d030f6d623e995f84d89bbd46a130ea8e79a63697df8f6b3103be0fa40118b9",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/components/SasiPricingCurrencyClient.tsx"
+        },
+        {
+          "file": "lib/money/reconcile-worker.ts",
+          "bytes": 7689,
+          "sha256": "658638470a6545a685079d5b9993b85855f8e9d1966c7c5d2e31af3cace7d18f",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/lib/money/reconcile-worker.ts"
+        },
+        {
+          "file": "lib/notifications/money-copy.ts",
+          "bytes": 17090,
+          "sha256": "422f1e2556a3ca6fa0049eebed4b8a901094d091ab5d11d66406ef9bd5345f64",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/lib/notifications/money-copy.ts"
+        },
+        {
+          "file": "playwright.final.config.ts",
+          "bytes": 593,
+          "sha256": "01582e20cae3372dd0fda163753d7005958916a1983b4ee5b5be41107403f864",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/playwright.final.config.ts"
+        },
+        {
+          "file": "playwright.production.config.ts",
+          "bytes": 274,
+          "sha256": "7783c71a0e7e417eb95fb0c38a853f33085fb301eb117d7c48dfe0eef4140d03",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/playwright.production.config.ts"
+        },
+        {
+          "file": "scripts/ci/production-gate.mjs",
+          "bytes": 1929,
+          "sha256": "842222fb5ba9114c40ccf069b51a7e3aa9d23a92d5e160322ef57c630776d5ee",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/scripts/ci/production-gate.mjs"
+        },
+        {
+          "file": "scripts/test-withdrawal-recovery.cjs",
+          "bytes": 2906,
+          "sha256": "bb499b53f2481ec5aeb385d5e16a41b1acd15781eda4a57e2e0474bf6d8da3bf",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-money-audit-worktree/scripts/test-withdrawal-recovery.cjs"
+        }
+      ]
+    },
+    {
+      "worktree": "tmp/seo-build-repair",
+      "files": [
+        {
+          "file": "lib/sasi/core/execution-lifecycle.ts",
+          "bytes": 1204,
+          "sha256": "b17659601ec258710d1c0d85daaa22516bc7098e7379db27c011423f1d464983",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/lib/sasi/core/execution-lifecycle.ts"
+        },
+        {
+          "file": "LINGXIFIELD_FINAL_CLOSURE_AUDIT.json",
+          "bytes": 113,
+          "sha256": "9f1902b553400c7717f2d3ed95d74fd8a341fdbaed90cba5d06e58ad001dade5",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/LINGXIFIELD_FINAL_CLOSURE_AUDIT.json"
+        },
+        {
+          "file": "LINGXIFIELD_GRADUATION_MATRIX.json",
+          "bytes": 1263,
+          "sha256": "0398d66d5849ef125d267d66fc4aac5458bcdd9fdd171a8844e13a9dd15a4981",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/LINGXIFIELD_GRADUATION_MATRIX.json"
+        },
+        {
+          "file": "components/BalanceWithdrawalPanel.tsx",
+          "bytes": 21905,
+          "sha256": "e33e750f690ef6f0ad967b4fb428bacc50518fc8e67bf29a2e0b52c1761a6831",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/components/BalanceWithdrawalPanel.tsx"
+        },
+        {
+          "file": "components/Nav.tsx",
+          "bytes": 16361,
+          "sha256": "0898c8ef042522560232b27306a4e4194039585d1dfff31d2f780c0ac9616952",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/components/Nav.tsx"
+        },
+        {
+          "file": "components/SasiPricingCurrencyClient.tsx",
+          "bytes": 14903,
+          "sha256": "c803e8ec8f73d7fb6c03fa5aff34dc98b70a21f37feb5888976441d870ec1131",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/components/SasiPricingCurrencyClient.tsx"
+        },
+        {
+          "file": "lib/tools/engine/resource-governor.ts",
+          "bytes": 2544,
+          "sha256": "7ab52a46f118bdd2c0a486f4edb44b2fab5970a957a20142108305c6b812eb6a",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/lib/tools/engine/resource-governor.ts"
+        },
+        {
+          "file": "scripts/ci/production-gate.mjs",
+          "bytes": 2123,
+          "sha256": "2bb536b9d738b5edcb0d74e16722954d3c388d07604f116cff0977b91958f1b4",
+          "preserved": "_local/cleanup-preserved-20261004/tmp-seo-build-repair/scripts/ci/production-gate.mjs"
+        }
+      ]
+    }
+  ],
+  "preserved": [
+    "Current node_modules, .git and current production source",
+    "Current build cache and working build snapshot",
+    "Other task worktrees and preexisting uncommitted changes",
+    "Original content, knowledge, research material and database migrations",
+    "Local model runtime and backups whose content is not in verified Git history"
+  ],
+  "validation": {
+    "sourceGate": "PASS",
+    "productionBuild": "PASS: Next.js production build, 803 generated pages",
+    "currencyLabels": "Nine languages; explanations removed; no currency accounting changes",
+    "browser": "PASS: 18 desktop/mobile settings checks across nine languages, currency change, accessible labels, no page errors"
+  }
+}
