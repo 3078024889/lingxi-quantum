@@ -41,6 +41,9 @@ for(const currency of ['CNY','USD'])test(currency+' balance page keeps eligible 
  await page.goto('/sasi/pricing?currency='+currency+'&lang=zh');
  await expect(page.locator('#withdrawal-'+(currency==='CNY'?id:'usd-request'))).toBeVisible();
  await expect(page.locator('#withdrawal-'+(currency==='CNY'?'usd-request':id))).toHaveCount(0);
+ await expect(page.locator('.lx11-link[href="/ai-wallet"]').first()).toHaveClass(/is-active/);
+ await expect(page.locator('.lx11-link[href="/sasi"]').first()).not.toHaveClass(/is-active/);
+ await expect(page.locator('.lx-v40-mobile-bottom a[href="/account"]')).toHaveClass(/is-active/);
  await expect(page.getByRole('textbox',{name:'提现金额',exact:true})).toHaveCount(1);
  await expect(page.getByRole('textbox',{name:'提现金额',exact:true})).toHaveValue(currency==='CNY'?'5':'8');
 });

@@ -36,6 +36,7 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
 
 function active(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
+  if (pathname === "/sasi/pricing") return href === "/ai-wallet";
   if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/");
   return pathname === href || pathname.startsWith(`${href}/`);
 }

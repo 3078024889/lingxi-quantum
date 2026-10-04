@@ -25,9 +25,9 @@ export default function MobileBottomNav(){
  const items=[
   {href:"/",label:c.home,icon:"home" as const,active:pathname==="/"},
   {href:"/tools",label:c.tools,icon:"tools" as const,active:pathname==="/tools"||pathname.startsWith("/tools/")},
-  {href:"/sasi",label:c.create,icon:"sasi" as const,active:pathname==="/sasi"||pathname.startsWith("/sasi/")||pathname.startsWith("/sasi?mode=book")||pathname.startsWith("/sasi?mode=learning")||pathname.startsWith("/sasi?mode=research")},
+  {href:"/sasi",label:c.create,icon:"sasi" as const,active:pathname==="/sasi"||(pathname.startsWith("/sasi/")&&pathname!=="/sasi/pricing")||pathname.startsWith("/sasi?mode=book")||pathname.startsWith("/sasi?mode=learning")||pathname.startsWith("/sasi?mode=research")},
   {href:"/account/orders",label:c.tasks,icon:"orders" as const,active:pathname.startsWith("/account/orders")||pathname.startsWith("/account/tool-jobs")},
-  {href:"/account",label:c.account,icon:"account" as const,active:pathname==="/account"||pathname.startsWith("/account/")},
+  {href:"/account",label:c.account,icon:"account" as const,active:pathname==="/sasi/pricing"||pathname==="/ai-wallet"||pathname==="/account"||pathname.startsWith("/account/")},
  ];
  return <nav className="lx-v40-mobile-bottom" aria-label={c.home}>
   {items.map(item=><Link key={item.href} href={item.href} className={item.active?"is-active":""}>
