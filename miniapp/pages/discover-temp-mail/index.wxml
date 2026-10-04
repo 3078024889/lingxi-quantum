@@ -1,0 +1,15 @@
+<view class="lx-page"><view class="lx-shell">
+  <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">LINGXIFIELD</view></view>
+  <view class="lx-kicker">TEMP MAIL · 临时邮箱</view>
+  <view class="lx-title">临时邮箱</view>
+  <view class="lx-subtitle">创建短期邮箱，用于接收验证码、确认链接和一次性通知。</view>
+  <view class="lx-feature">
+    <view class="lx-feature-title">临时邮箱</view>
+    <view class="lx-feature-note">适合临时注册、验证码接收和一次性邮件场景。需要长期保存的重要邮件，请使用长期邮箱。</view>
+    <button class="lx-button" bindtap="openTool">打开临时邮箱</button>
+  </view>
+  <view class="lx-section">
+    <view class="lx-section-head"><view class="lx-section-title">相关用途</view></view>
+    <view class="lx-feature-note">临时邮箱 · 一次性邮箱 · 验证码邮箱 · 临时邮件</view>
+  </view>
+</view></view>

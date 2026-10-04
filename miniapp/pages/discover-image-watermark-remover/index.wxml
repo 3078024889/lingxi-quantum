@@ -1,0 +1,15 @@
+<view class="lx-page"><view class="lx-shell">
+  <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">LINGXIFIELD</view></view>
+  <view class="lx-kicker">IMAGE CLEANUP · 图片去水印</view>
+  <view class="lx-title">图片去水印</view>
+  <view class="lx-subtitle">框选图片中需要移除的水印或覆盖区域，并修复背景。</view>
+  <view class="lx-feature">
+    <view class="lx-feature-title">图片去水印</view>
+    <view class="lx-feature-note">用于你有权处理的图片内容，也可用于去除不需要的文字、标记或遮挡区域。</view>
+    <button class="lx-button" bindtap="openTool">打开图片去水印</button>
+  </view>
+  <view class="lx-section">
+    <view class="lx-section-head"><view class="lx-section-title">相关用途</view></view>
+    <view class="lx-feature-note">图片去水印 · 去水印 · 图片修复 · 移除图片文字</view>
+  </view>
+</view></view>

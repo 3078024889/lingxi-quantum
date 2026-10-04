@@ -11,7 +11,11 @@
     "pages/pay/index",
     "pages/orders/index",
     "pages/balance/index",
-    "pages/notifications/index"
+    "pages/notifications/index",
+    "pages/discover-temp-mail/index",
+    "pages/discover-burn-after-read/index",
+    "pages/discover-image-watermark-remover/index",
+    "pages/discover-e-sign-pdf/index"
   ],
   "window": {
     "navigationStyle": "custom",

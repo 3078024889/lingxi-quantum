@@ -1,0 +1,15 @@
+<view class="lx-page"><view class="lx-shell">
+  <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">LINGXIFIELD</view></view>
+  <view class="lx-kicker">BURN AFTER READING · 阅后即焚</view>
+  <view class="lx-title">阅后即焚</view>
+  <view class="lx-subtitle">发送文字或附件，按有效期和查看规则生成一次性私密分享入口。</view>
+  <view class="lx-feature">
+    <view class="lx-feature-title">阅后即焚</view>
+    <view class="lx-feature-note">适合需要限时查看、减少长期暴露的临时内容分享。请不要用于规避法律、平台规则或保存非法内容。</view>
+    <button class="lx-button" bindtap="openTool">打开阅后即焚</button>
+  </view>
+  <view class="lx-section">
+    <view class="lx-section-head"><view class="lx-section-title">相关用途</view></view>
+    <view class="lx-feature-note">阅后即焚 · 一次性链接 · 私密分享 · 限时链接</view>
+  </view>
+</view></view>

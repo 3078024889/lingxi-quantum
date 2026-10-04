@@ -18,11 +18,11 @@ const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const seg=location.pathname.s
 export const metadata:Metadata={
  metadataBase:new URL(SITE),
  title:{
-  default:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作生态平台",
+  default:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
   template:"%s ｜ 灵犀场 LINGXIFIELD"
  },
  description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
- applicationName:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作生态平台",
+ applicationName:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
  keywords:[
   "灵犀场","LINGXIFIELD","SASI","免费在线工具",
   "PDF压缩","PDF合并","PDF拆分","PDF编辑","电子签名",
@@ -33,14 +33,14 @@ export const metadata:Metadata={
  openGraph:{
   type:"website",
   siteName:"灵犀场 LINGXIFIELD",
-  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作生态平台",
+  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
   description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
   url:SITE,
   images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
  },
  twitter:{
   card:"summary_large_image",
-  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作生态平台",
+  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
   description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
   images:[SHARE_IMAGE]
  },

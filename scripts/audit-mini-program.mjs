@@ -24,6 +24,10 @@ const required=[
  "miniapp/pages/pay/index.js",
  "miniapp/pages/balance/index.js",
  "miniapp/pages/notifications/index.js",
+ "miniapp/pages/discover-e-sign-pdf/index.js",
+ "miniapp/pages/discover-image-watermark-remover/index.js",
+ "miniapp/pages/discover-burn-after-read/index.js",
+ "miniapp/pages/discover-temp-mail/index.js",
  "app/api/wechat/mini/login/route.ts",
  "app/api/wechat/mini/logout/route.ts",
  "app/api/wechat/mini/account-link/start/route.ts"
@@ -43,7 +47,11 @@ const expected=[
  "pages/pay/index",
  "pages/orders/index",
  "pages/balance/index",
- "pages/notifications/index"
+ "pages/notifications/index",
+ "pages/discover-e-sign-pdf/index",
+ "pages/discover-image-watermark-remover/index",
+ "pages/discover-burn-after-read/index",
+ "pages/discover-temp-mail/index"
 ];
 
 must(Array.isArray(app.pages),"MINI_PAGES_INVALID");
@@ -71,7 +79,7 @@ must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALL
 must(web.includes("currency=${preferredCurrency()}"),"MINI_CURRENCY_WEB_SYNC_MISSING");
 
 console.log("AUDIT_MINI_PROGRAM=PASS");
-console.log("CURRENT_MINI_TOPOLOGY=12_PAGES_PASS");
+console.log("CURRENT_MINI_TOPOLOGY=16_PAGES_PASS");
 console.log("MINI_TABBAR_4=PASS");
 console.log("MINI_9_LANGUAGE_STRUCTURE=PASS");
 console.log("MINI_API_BOUNDARY=PASS");

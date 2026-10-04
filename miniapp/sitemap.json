@@ -1,9 +1,41 @@
 {
-  "desc": "灵犀场小程序页面索引规则",
+  "desc": "灵犀场小程序公开搜索索引规则：只允许公开入口与重点工具发现页",
   "rules": [
     {
       "action": "allow",
-      "page": "pages/field/index"
+      "page": "pages/home/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/tools/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/create/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/agents/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/discover-temp-mail/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/discover-burn-after-read/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/discover-image-watermark-remover/index"
+    },
+    {
+      "action": "allow",
+      "page": "pages/discover-e-sign-pdf/index"
+    },
+    {
+      "action": "disallow",
+      "page": "*"
     }
   ]
 }

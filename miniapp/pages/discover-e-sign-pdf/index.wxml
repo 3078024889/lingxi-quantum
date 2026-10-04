@@ -1,0 +1,15 @@
+<view class="lx-page"><view class="lx-shell">
+  <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">LINGXIFIELD</view></view>
+  <view class="lx-kicker">PDF E-SIGN · 电子签名</view>
+  <view class="lx-title">PDF电子签名与电子签章</view>
+  <view class="lx-subtitle">给 PDF 添加手写签名、电子签章、公章图片或骑缝章，并导出处理后的文件。</view>
+  <view class="lx-feature">
+    <view class="lx-feature-title">PDF电子签名与电子签章</view>
+    <view class="lx-feature-note">适合合同签字、PDF盖章、电子签章和骑缝章等常见文档处理场景。</view>
+    <button class="lx-button" bindtap="openTool">打开PDF电子签名</button>
+  </view>
+  <view class="lx-section">
+    <view class="lx-section-head"><view class="lx-section-title">相关用途</view></view>
+    <view class="lx-feature-note">PDF电子签名 · 电子签名 · 电子签章 · PDF盖章 · 骑缝章</view>
+  </view>
+</view></view>
