@@ -3,7 +3,7 @@
 import {useMoneyAutoRefresh} from "@/lib/money/use-money-auto-refresh";
 import Link from "next/link";
 import {moneyText} from "@/lib/notifications/money-copy";
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useMemo,useState,useCallback} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import CurrencySelector from "@/components/CurrencySelector";
@@ -67,12 +67,20 @@ export default function SasiPricingCurrencyClient(){
  const[error,setError]=useState("");
  const[loading,setLoading]=useState(true);
  const[chosenId,setChosenId]=useState<string|null>(null);
+ const[tab,setTab]=useState<"overview"|"topup"|"withdrawals"|"records">("overview");
  const[isAdmin,setIsAdmin]=useState(false);
  useEffect(()=>{void fetch("/api/account/money-admin/access",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>setIsAdmin(d?.isAdmin===true)).catch(()=>{})},[]);
 
  useEffect(()=>setSelected(currency),[currency]);
+ useEffect(()=>{
+  const readHash=()=>{const h=location.hash;setTab(h==="#topup"?"topup":h==="#withdrawals"?"withdrawals":h==="#withdrawal-records"||h.startsWith("#withdrawal-")||h.startsWith("#legacy-")?"records":"overview")};
+  readHash();window.addEventListener("hashchange",readHash);return()=>window.removeEventListener("hashchange",readHash);
+ },[]);
+ function chooseTab(next:typeof tab){setTab(next);const id=next==="records"?"withdrawal-records":next==="overview"?"balance-overview":next;history.replaceState(null,"",location.pathname+location.search+"#"+id);}
+ const tabs=[{key:"overview",id:"balance-overview",label:ui.overview},{key:"topup",id:"topup",label:c.topup},{key:"withdrawals",id:"withdrawals",label:ui.withdraw},{key:"records",id:"withdrawal-records",label:ui.records}] as const;
 
- async function load(showLoading=true){
+
+ const load=useCallback(async(showLoading=true)=>{
   if(showLoading)setLoading(true);setError("");
   try{
    const r=await fetch("/api/money/summary",{cache:"no-store"});
@@ -81,9 +89,9 @@ export default function SasiPricingCurrencyClient(){
    setData(b);
   }catch{setError(c.unavailable)}
   finally{setLoading(false)}
- }
+ },[c.unavailable]);
 
- useEffect(()=>{void load()},[lang]);
+ useEffect(()=>{void load()},[load]);
  useMoneyAutoRefresh(()=>load(false),Boolean(data?.withdrawals.some(w=>["requested","processing"].includes(w.status))));
 
  const snapshot=data?.balances?.[selected];
@@ -103,7 +111,7 @@ export default function SasiPricingCurrencyClient(){
  return <main className="lx11-page" dir={lang==="ar"?"rtl":"ltr"}>
   <div className={styles.page}>
    <header className={styles.header}>
-    <div><p>LINGXIFIELD · SASI</p><h1>{ui.overview}</h1><p>{c.subtitle}</p></div>
+    <div><h1>{c.title}</h1><p>{c.subtitle}</p></div>
     <div className="w-44 max-w-full"><CurrencySelector/></div>
    </header>
    <section className={styles.hero} aria-label={c.title}>
@@ -112,18 +120,20 @@ export default function SasiPricingCurrencyClient(){
      <article><p>{c.refundable}</p><strong>{snapshot?money(selected,snapshot.refundableMinor):"—"}</strong></article>
      <article><p>{c.processing}</p><strong>{snapshot?money(selected,snapshot.refundHoldMinor):"—"}</strong></article>
     </div>
-    <nav className={styles.actions} aria-label={c.title}>
-     <a className={styles.action+" "+styles.primary} href="#topup">{c.topup}</a>
-     <a className={styles.action} href="#withdrawals">{ui.withdraw}</a>
-     <a className={styles.action} href="#withdrawal-records">{ui.records}</a>
-     {isAdmin&&<Link href="/account/money-admin" className={styles.action}>{moneyText(lang,"moneyAdmin")}</Link>}
-    </nav>
+    <div className={styles.actions} role="tablist" aria-label={c.title}>
+     {tabs.map((item,index)=><button key={item.key} type="button" role="tab" id={"balance-tab-"+item.key} aria-controls={item.id} aria-selected={tab===item.key} tabIndex={tab===item.key?0:-1} className={styles.action+(tab===item.key?" "+styles.primary:"")} onClick={()=>chooseTab(item.key)} onKeyDown={e=>{
+      const direction=lang==="ar"?-1:1;let next:number|undefined;
+      if(e.key==="ArrowRight")next=(index+direction+4)%4;else if(e.key==="ArrowLeft")next=(index-direction+4)%4;else if(e.key==="Home")next=0;else if(e.key==="End")next=3;
+      if(next!==undefined){e.preventDefault();chooseTab(tabs[next].key);document.getElementById("balance-tab-"+tabs[next].key)?.focus();}
+     }}>{item.label}</button>)}
+    </div>
    </section>
    <div className={styles.sync}>
     <p role={error?"alert":undefined}>{loading?c.loading:error||ui.auto}</p>
+    {isAdmin&&<Link className={styles.link} href="/account/money-admin">{moneyText(lang,"moneyAdmin")}</Link>}
     <button type="button" disabled={loading} onClick={()=>void load()} className={styles.link}>{c.refresh}</button>
    </div>
-   <section id="topup" className={styles.panel+" "+styles.section} data-testid="balance-topup">
+   <section id="topup" role="tabpanel" aria-labelledby="balance-tab-topup" hidden={tab!=="topup"} className={styles.panel+" "+styles.section} data-testid="balance-topup">
     <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--lx-line)] px-6 py-5">
      <div><h2 className="text-lg font-semibold">{c.topup}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{c.topupHint}</p></div>
      <span className="rounded-full bg-[var(--lx-soft)] px-3 py-1.5 text-xs font-medium">{selected} · {selected==="CNY"?(lang==="zh"?"微信支付 / 支付宝":"WeChat Pay / Alipay"):"PayPal"}</span>
@@ -138,8 +148,8 @@ export default function SasiPricingCurrencyClient(){
     </div>
    </section>
 
-   <section className={styles.section}>
-    <div className={styles.sectionTitle}><h2>{c.history}</h2><a href="#withdrawal-records" className={styles.link}>{ui.records} <span aria-hidden="true">→</span></a></div>
+   <section id="balance-overview" role="tabpanel" aria-labelledby="balance-tab-overview" hidden={tab!=="overview"} className={styles.section}>
+    <div className={styles.sectionTitle}><h2>{c.history}</h2><button type="button" onClick={()=>chooseTab("records")} className={styles.link}>{ui.records} <span aria-hidden="true">→</span></button></div>
     <div className={styles.panel}>
      {recent.length===0?<p className={styles.empty}>{c.noHistory}</p>:<div className={styles.tableWrap}><table className={styles.table+" "+styles.recent}>
       <caption className="sr-only">{c.history}</caption>
@@ -152,11 +162,7 @@ export default function SasiPricingCurrencyClient(){
      </table></div>}
     </div>
    </section>
-   <section id="withdrawals" className={styles.section}>
-    <div className={styles.sectionTitle}><h2>{c.returnTitle}</h2></div>
-    <p className={styles.notice}>{c.returnHint}</p>
-    <BalanceWithdrawalPanel currency={selected}/><LegacyRefundMigrationPanel/>
-   </section>
+   <BalanceWithdrawalPanel currency={selected} view={tab==="withdrawals"?"eligible":tab==="records"?"history":"hidden"} historyExtra={<LegacyRefundMigrationPanel/>}/>
   </div>
  </main>;
 }

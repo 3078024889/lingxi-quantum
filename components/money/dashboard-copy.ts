@@ -4,7 +4,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "zh": {
     "overview": "账户总览",
     "withdraw": "提现",
-    "records": "查看记录",
+    "records": "退款记录",
     "amount": "金额",
     "date": "申请时间",
     "channel": "原支付渠道",
@@ -15,7 +15,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "en": {
     "overview": "Account overview",
     "withdraw": "Withdraw",
-    "records": "View records",
+    "records": "Refund history",
     "amount": "Amount",
     "date": "Requested",
     "channel": "Original payment method",
@@ -26,7 +26,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "ja": {
     "overview": "アカウント概要",
     "withdraw": "返金申請",
-    "records": "履歴を見る",
+    "records": "返金履歴",
     "amount": "金額",
     "date": "申請日時",
     "channel": "元の支払い方法",
@@ -37,7 +37,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "ko": {
     "overview": "계정 개요",
     "withdraw": "환불 신청",
-    "records": "기록 보기",
+    "records": "환불 기록",
     "amount": "금액",
     "date": "신청일",
     "channel": "원 결제수단",
@@ -48,7 +48,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "fr": {
     "overview": "Aperçu du compte",
     "withdraw": "Demander un remboursement",
-    "records": "Voir l’historique",
+    "records": "Historique des remboursements",
     "amount": "Montant",
     "date": "Date de demande",
     "channel": "Moyen de paiement d’origine",
@@ -59,7 +59,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "de": {
     "overview": "Kontoübersicht",
     "withdraw": "Erstattung beantragen",
-    "records": "Verlauf ansehen",
+    "records": "Erstattungsverlauf",
     "amount": "Betrag",
     "date": "Antragsdatum",
     "channel": "Ursprüngliche Zahlungsart",
@@ -70,7 +70,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "es": {
     "overview": "Resumen de la cuenta",
     "withdraw": "Solicitar reembolso",
-    "records": "Ver historial",
+    "records": "Historial de reembolsos",
     "amount": "Importe",
     "date": "Fecha de solicitud",
     "channel": "Método de pago original",
@@ -81,7 +81,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "pt": {
     "overview": "Visão geral da conta",
     "withdraw": "Solicitar reembolso",
-    "records": "Ver histórico",
+    "records": "Histórico de reembolsos",
     "amount": "Valor",
     "date": "Data da solicitação",
     "channel": "Método de pagamento original",
@@ -92,7 +92,7 @@ export const dashboardCopy:Record<LingxiLang,Copy>={
   "ar": {
     "overview": "نظرة عامة على الحساب",
     "withdraw": "طلب استرداد",
-    "records": "عرض السجل",
+    "records": "سجل الاسترداد",
     "amount": "المبلغ",
     "date": "تاريخ الطلب",
     "channel": "وسيلة الدفع الأصلية",

@@ -1,6 +1,6 @@
 "use client";
 import {useMoneyAutoRefresh} from "@/lib/money/use-money-auto-refresh";
-import {useEffect,useMemo,useState,useRef} from "react";
+import {useEffect,useMemo,useState,useRef,type ReactNode} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {moneyText,moneyError,moneyNotice} from "@/lib/notifications/money-copy";
 import styles from "@/components/money/BalanceDashboard.module.css";
@@ -27,7 +27,7 @@ function isUsdWallet(productId:string){return productId.includes("-usd-balance-"
 function walletAmount(order:Order){return Number(order.refundable_minor||0)/100}
 function walletSymbol(order:Order){return isUsdWallet(order.product_id)?"$":"¥"}
 
-export default function BalanceWithdrawalPanel({currency}:{currency?:"CNY"|"USD"}={}){
+export default function BalanceWithdrawalPanel({currency,view="all",historyExtra}:{currency?:"CNY"|"USD";view?:"all"|"eligible"|"history"|"hidden";historyExtra?:ReactNode}={}){
   const{lang}=useLingxiLang();const c=D[lang]??D.en;
   const ui=dashboardCopy[lang];
   const[data,setData]=useState<Data|null>(null);
@@ -99,15 +99,15 @@ export default function BalanceWithdrawalPanel({currency}:{currency?:"CNY"|"USD"
     try{const r=await fetch("/api/account/withdrawals/cancel",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({requestId:id})});const b=await r.json();setMsg(r.ok?moneyText(lang,"cancelled"):moneyError(lang,b.error||""));if(r.ok)requestKeys.current={};window.dispatchEvent(new Event("lingxi-money-updated"));await loadRef.current();}catch{setMsg(moneyText(lang,"unavailable"))}finally{setBusy(null)}
   }
 
-  if(!data)return <div className="lx-state-card is-loading rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]"><span className="lx-state-dot"/> {msg||c.loading}</div>;
+  if(!data)return <div hidden={view==="hidden"} role={view==="all"?undefined:"tabpanel"} id={view==="history"?"withdrawal-records":"withdrawals"} aria-labelledby={view==="all"?undefined:view==="history"?"balance-tab-records":"balance-tab-withdrawals"} className="lx-state-card is-loading rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]"><span className="lx-state-dot"/> {msg||c.loading}</div>;
 
   const orders=data.orders.filter(o=>!currency||(isUsdWallet(o.product_id)?"USD":"CNY")===currency);
   const withdrawals=data.withdrawals.filter(w=>!currency||w.currency===currency);
-  return <div dir={lang==="ar"?"rtl":"ltr"} className="space-y-6 text-[var(--lx-ink)]">
+  return <div hidden={view==="hidden"} dir={lang==="ar"?"rtl":"ltr"} className="space-y-6 text-[var(--lx-ink)]">
     {msg&&<p role="status" className={styles.notice}>{msg}</p>}
-    <section>
+    <section id="withdrawals" role={view==="all"?undefined:"tabpanel"} aria-labelledby={view==="all"?undefined:"balance-tab-withdrawals"} hidden={view!=="all"&&view!=="eligible"} className={styles.section}>
       <div className={styles.sectionTitle}><h2>{c.eligibleTitle}</h2><button type="button" className={styles.link} onClick={()=>void loadRef.current()}>{moneyText(lang,"refresh")}</button></div>
-      <p className="text-xs leading-6 text-[var(--lx-muted)]">{c.eligibleDesc}</p>
+      <p className={styles.notice}>{c.eligibleDesc}</p>
       <div className={styles.eligibleList}>
         {orders.length===0&&<p className={styles.panel+" "+styles.empty}>{c.emptyEligible}</p>}
         {orders.map(o=>{
@@ -122,7 +122,7 @@ export default function BalanceWithdrawalPanel({currency}:{currency?:"CNY"|"USD"
         })}
       </div>
     </section>
-    <section id="withdrawal-records" className={styles.section}>
+    <section id="withdrawal-records" role={view==="all"?undefined:"tabpanel"} aria-labelledby={view==="all"?undefined:"balance-tab-records"} hidden={view!=="all"&&view!=="history"} className={styles.section}>
       <div className={styles.sectionTitle}><h2>{c.history}</h2><span className="text-xs text-[var(--lx-faint)]">{withdrawals.length}</span></div>
       <div className={styles.panel}>
         {withdrawals.length===0?<p className={styles.empty}>{c.emptyHistory}</p>:<div className={styles.tableWrap}><table className={styles.table}>
@@ -145,6 +145,7 @@ export default function BalanceWithdrawalPanel({currency}:{currency?:"CNY"|"USD"
           </tr>)}</tbody>
         </table></div>}
       </div>
+      {historyExtra}
     </section>
   </div>;
 }
