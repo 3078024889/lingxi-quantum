@@ -4,6 +4,18 @@ const { enableShareMenu, copyWebLink, appMessage, timeline } = require('../../ut
 const CURRENCIES=[{id:'CNY',label:'CNY ¥ 人民币'},{id:'USD',label:'USD $ 美元'}]
 const CURRENCY_KEY='lx_currency'
 
+const PROFILE_UI={
+  'zh-CN':{notifications:'消息与公告',notificationsNote:'查看充值到账、退款进度和产品更新。',settings:'设置',settingsNote:'语言、币种与账户常用入口。'},
+  en:{notifications:'Notifications',notificationsNote:'See top-ups, refund progress and product updates.',settings:'Settings',settingsNote:'Language, currency and account shortcuts.'},
+  ja:{notifications:'通知',notificationsNote:'入金、返金進捗、更新を確認。',settings:'設定',settingsNote:'言語、通貨、アカウント入口。'},
+  ko:{notifications:'알림',notificationsNote:'충전, 환불 진행, 업데이트 확인.',settings:'설정',settingsNote:'언어, 통화, 계정 바로가기.'},
+  fr:{notifications:'Notifications',notificationsNote:'Recharges, remboursements et mises à jour.',settings:'Paramètres',settingsNote:'Langue, devise et accès du compte.'},
+  de:{notifications:'Mitteilungen',notificationsNote:'Aufladungen, Erstattungen und Updates.',settings:'Einstellungen',settingsNote:'Sprache, Währung und Kontozugänge.'},
+  es:{notifications:'Notificaciones',notificationsNote:'Recargas, reembolsos y novedades.',settings:'Ajustes',settingsNote:'Idioma, moneda y accesos de cuenta.'},
+  pt:{notifications:'Notificações',notificationsNote:'Recargas, reembolsos e novidades.',settings:'Configurações',settingsNote:'Idioma, moeda e atalhos da conta.'},
+  ar:{notifications:'الإشعارات',notificationsNote:'الشحن والاسترداد والتحديثات.',settings:'الإعدادات',settingsNote:'اللغة والعملة وروابط الحساب.'},
+};
+
 Page({
   data:{lang:'zh-CN',copy:{},ui:PROFILE_UI['zh-CN'],languages:SUPPORTED,languageIndex:0,currencies:CURRENCIES,currencyIndex:0,checking:true,connected:false,linking:false},
   refreshLanguage(lang){const index=Math.max(0,SUPPORTED.findIndex(item=>item.id===lang));this.setData({lang,copy:copyFor('profile',lang),ui:PROFILE_UI[lang]||PROFILE_UI['zh-CN'],languageIndex:index})},
