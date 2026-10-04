@@ -6,6 +6,6 @@ import SasiPricingCurrencyClient from "@/components/SasiPricingCurrencyClient";
 
 export const dynamic="force-dynamic";
 const pricingFact=pageGeoFact("sasi-pricing","zh");
-export const metadata:Metadata={title:pricingFact.title,description:pricingFact.description,alternates:{canonical:"/sasi/pricing"}};
+export const metadata:Metadata={robots:{index:false,follow:false},title:pricingFact.title,description:pricingFact.description,alternates:{canonical:"/sasi/pricing"}};
 
 export default function Page(){return <><Nav/><SasiPricingCurrencyClient/><Footer/></>}

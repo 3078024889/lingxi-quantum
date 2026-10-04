@@ -63,20 +63,21 @@ export async function normalizeDocumentFiles(files:File[]){
  const out:File[]=[];for(const file of files)out.push(await normalizeDocumentFile(file));return out;
 }
 
-const copy:Record<LingxiLang,{hint:string;busy:string;unavailable:string;unsupported:string}>={
- zh:{hint:"支持 PDF、Word、PPT、Excel 等文档；非 PDF 会先转换后继续处理。",busy:"正在准备文档…",unavailable:"文档转换暂时不可用，请稍后重试或先上传 PDF。",unsupported:"暂不支持这个文档格式。"},
- en:{hint:"PDF, Word, PowerPoint and Excel are supported. Non-PDF files are converted before processing.",busy:"Preparing document…",unavailable:"Document conversion is temporarily unavailable. Try again later or upload a PDF.",unsupported:"This document format is not supported."},
- ja:{hint:"PDF、Word、PowerPoint、Excel に対応。PDF 以外は変換してから処理します。",busy:"文書を準備中…",unavailable:"文書変換は一時的に利用できません。後でもう一度試すか、PDF をアップロードしてください。",unsupported:"この文書形式には対応していません。"},
- ko:{hint:"PDF, Word, PowerPoint, Excel을 지원합니다. PDF가 아닌 파일은 변환 후 처리합니다.",busy:"문서를 준비하는 중…",unavailable:"문서 변환을 일시적으로 사용할 수 없습니다. 나중에 다시 시도하거나 PDF를 업로드하세요.",unsupported:"지원하지 않는 문서 형식입니다."},
- fr:{hint:"PDF, Word, PowerPoint et Excel sont pris en charge. Les autres documents sont convertis en PDF avant traitement.",busy:"Préparation du document…",unavailable:"La conversion de document est temporairement indisponible. Réessayez plus tard ou importez un PDF.",unsupported:"Ce format de document n’est pas pris en charge."},
- de:{hint:"PDF, Word, PowerPoint und Excel werden unterstützt. Andere Dokumente werden vor der Verarbeitung in PDF umgewandelt.",busy:"Dokument wird vorbereitet…",unavailable:"Die Dokumentkonvertierung ist vorübergehend nicht verfügbar. Versuche es später erneut oder lade eine PDF hoch.",unsupported:"Dieses Dokumentformat wird nicht unterstützt."},
- es:{hint:"Se admiten PDF, Word, PowerPoint y Excel. Los archivos que no sean PDF se convierten antes de procesarse.",busy:"Preparando documento…",unavailable:"La conversión de documentos no está disponible temporalmente. Inténtalo más tarde o sube un PDF.",unsupported:"Este formato de documento no es compatible."},
- pt:{hint:"PDF, Word, PowerPoint e Excel são compatíveis. Arquivos que não sejam PDF são convertidos antes do processamento.",busy:"Preparando documento…",unavailable:"A conversão de documentos está temporariamente indisponível. Tente novamente mais tarde ou envie um PDF.",unsupported:"Este formato de documento não é compatível."},
- ar:{hint:"يدعم PDF وWord وPowerPoint وExcel. يتم تحويل الملفات غير PDF قبل المعالجة.",busy:"جارٍ تجهيز المستند…",unavailable:"تحويل المستندات غير متاح مؤقتًا. حاول لاحقًا أو ارفع ملف PDF.",unsupported:"تنسيق المستند هذا غير مدعوم."}
+const copy:Record<LingxiLang,{hint:string;busy:string;unavailable:string;unsupported:string;size:string}>={
+ zh:{hint:"支持 PDF、Word、PPT、Excel 等文档；非 PDF 会先转换后继续处理。",busy:"正在准备文档…",unavailable:"文档转换暂时不可用，请稍后重试或先上传 PDF。",unsupported:"暂不支持这个文档格式。",size:"文件过大，请选择较小文件，或减少文档中的图片。"},
+ en:{hint:"PDF, Word, PowerPoint and Excel are supported. Non-PDF files are converted before processing.",busy:"Preparing document…",unavailable:"Document conversion is temporarily unavailable. Try again later or upload a PDF.",unsupported:"This document format is not supported.",size:"The file is too large. Choose a smaller file or reduce images in the document."},
+ ja:{hint:"PDF、Word、PowerPoint、Excel に対応。PDF 以外は変換してから処理します。",busy:"文書を準備中…",unavailable:"文書変換は一時的に利用できません。後でもう一度試すか、PDF をアップロードしてください。",unsupported:"この文書形式には対応していません。",size:"ファイルが大きすぎます。小さいファイルを選ぶか、文書内の画像を減らしてください。"},
+ ko:{hint:"PDF, Word, PowerPoint, Excel을 지원합니다. PDF가 아닌 파일은 변환 후 처리합니다.",busy:"문서를 준비하는 중…",unavailable:"문서 변환을 일시적으로 사용할 수 없습니다. 나중에 다시 시도하거나 PDF를 업로드하세요.",unsupported:"지원하지 않는 문서 형식입니다.",size:"파일이 너무 큽니다. 더 작은 파일을 선택하거나 문서의 이미지를 줄이세요."},
+ fr:{hint:"PDF, Word, PowerPoint et Excel sont pris en charge. Les autres documents sont convertis en PDF avant traitement.",busy:"Préparation du document…",unavailable:"La conversion de document est temporairement indisponible. Réessayez plus tard ou importez un PDF.",unsupported:"Ce format de document n’est pas pris en charge.",size:"Le fichier est trop volumineux. Choisissez un fichier plus petit ou réduisez les images du document."},
+ de:{hint:"PDF, Word, PowerPoint und Excel werden unterstützt. Andere Dokumente werden vor der Verarbeitung in PDF umgewandelt.",busy:"Dokument wird vorbereitet…",unavailable:"Die Dokumentkonvertierung ist vorübergehend nicht verfügbar. Versuche es später erneut oder lade eine PDF hoch.",unsupported:"Dieses Dokumentformat wird nicht unterstützt.",size:"Die Datei ist zu groß. Wähle eine kleinere Datei oder reduziere die Bilder im Dokument."},
+ es:{hint:"Se admiten PDF, Word, PowerPoint y Excel. Los archivos que no sean PDF se convierten antes de procesarse.",busy:"Preparando documento…",unavailable:"La conversión de documentos no está disponible temporalmente. Inténtalo más tarde o sube un PDF.",unsupported:"Este formato de documento no es compatible.",size:"El archivo es demasiado grande. Elige uno más pequeño o reduce las imágenes del documento."},
+ pt:{hint:"PDF, Word, PowerPoint e Excel são compatíveis. Arquivos que não sejam PDF são convertidos antes do processamento.",busy:"Preparando documento…",unavailable:"A conversão de documentos está temporariamente indisponível. Tente novamente mais tarde ou envie um PDF.",unsupported:"Este formato de documento não é compatível.",size:"O arquivo é muito grande. Escolha um menor ou reduza as imagens do documento."},
+ ar:{hint:"يدعم PDF وWord وPowerPoint وExcel. يتم تحويل الملفات غير PDF قبل المعالجة.",busy:"جارٍ تجهيز المستند…",unavailable:"تحويل المستندات غير متاح مؤقتًا. حاول لاحقًا أو ارفع ملف PDF.",unsupported:"تنسيق المستند هذا غير مدعوم.",size:"الملف كبير جداً. اختر ملفاً أصغر أو قلّل الصور في المستند."}
 };
 export function documentIntakeText(lang:LingxiLang,key:keyof(typeof copy.zh)){return(copy[lang]||copy.en)[key]}
 export function documentIntakeError(lang:LingxiLang,error:unknown){
  const code=error instanceof Error?error.message:String(error);
+ if(code.includes("SIZE_UNSUPPORTED"))return documentIntakeText(lang,"size");
  if(code.includes("UNSUPPORTED"))return documentIntakeText(lang,"unsupported");
  return documentIntakeText(lang,"unavailable");
 }

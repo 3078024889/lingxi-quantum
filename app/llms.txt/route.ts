@@ -21,7 +21,7 @@ export function GET(){
  const lines=[
   '# 灵犀场 LINGXIFIELD',
   '',
-  '> LINGXIFIELD publishes practical tools on https://lingxifield.com and https://lingxifield.cn. Free tools that run in the browser do not upload files. Paid tools are labeled paid. SASI is a prepaid balance, not a membership. Short drama, directing and website building are not finished products. Chinese pages have no language prefix; en, ja, ko, fr, de, es and pt and ar prefixes exist for localized public pages. This file does not grant access to private account data.',
+  '> LINGXIFIELD publishes practical tools on https://lingxifield.com and https://lingxifield.cn. Free tools that run in the browser do not upload files. Paid tools are labeled paid. SASI charges by usage after price confirmation. Short drama and website generation are not available yet. Chinese pages have no language prefix; en, ja, ko, fr, de, es and pt and ar prefixes exist for localized public pages. This file does not grant access to private account data.',
   '',
   '## Public pages',
   ...pages,

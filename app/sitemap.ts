@@ -8,6 +8,6 @@ export default function sitemap():MetadataRoute.Sitemap{
   for(const locale of Object.keys(SEO_LOCALES) as SeoLocale[]){rows.push({url:SITE+localePath(locale,path),alternates:{languages}})}
  }
  // Workspaces exist at these URLs, not at invented locale prefixes.
- for(const path of ['/sasi','/sasi/drama','/sasi/build','/sasi/image','/sasi/pricing','/ai-knowledge','/ai-learning','/ai-research','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])rows.push({url:SITE+path});
+ for(const path of ['/sasi','/sasi/drama','/sasi/build','/sasi/image','/ai-knowledge','/ai-learning','/ai-research','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])rows.push({url:SITE+path});
  return rows;
 }

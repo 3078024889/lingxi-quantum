@@ -1,9 +1,16 @@
 services:
   gotenberg:
     image: gotenberg/gotenberg:8
+    mem_limit: 1g
+    cpus: 1.0
     restart: unless-stopped
     environment:
       API_ENABLE_BASIC_AUTH: "true"
+      API_BODY_LIMIT: "51MB"
+      API_TIMEOUT: "65s"
+      LIBREOFFICE_MAX_QUEUE_SIZE: "1"
+      CHROMIUM_MAX_CONCURRENCY: "1"
+      CHROMIUM_MAX_QUEUE_SIZE: "1"
       GOTENBERG_API_BASIC_AUTH_USERNAME: "${GOTENBERG_BASIC_USER}"
       GOTENBERG_API_BASIC_AUTH_PASSWORD: "${GOTENBERG_BASIC_PASSWORD}"
       OTEL_TRACES_EXPORTER: "none"
@@ -12,6 +19,8 @@ services:
     networks: [document_internal]
 
   gateway:
+    mem_limit: 512m
+    cpus: 0.5
     build:
       context: ./gateway
     restart: unless-stopped
@@ -29,6 +38,8 @@ services:
 
   caddy:
     image: caddy:2-alpine
+    mem_limit: 128m
+    cpus: 0.25
     restart: unless-stopped
     ports:
       - "80:80"

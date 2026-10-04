@@ -30,7 +30,7 @@ export async function POST(req:Request){
  const type=String(body?.type||"application/octet-stream").slice(0,160);
  const ext=extOf(name);
  if(!name||!OFFICE_EXTENSIONS.has(ext))return NextResponse.json({error:"DOCUMENT_TYPE_UNSUPPORTED"},{status:415});
- if(!Number.isFinite(size)||size<1||size>MAX_DIRECT_BYTES)return NextResponse.json({error:"DOCUMENT_SIZE_UNSUPPORTED"},{status:413});
+ if(!Number.isSafeInteger(size)||size<1||size>MAX_DIRECT_BYTES)return NextResponse.json({error:"DOCUMENT_SIZE_UNSUPPORTED"},{status:413});
 
  const gateway=safeGateway(str(process.env.LINGXIFIELD_DOCUMENT_GATEWAY_PUBLIC_URL));
  const secret=str(process.env.LINGXIFIELD_DOCUMENT_GATEWAY_SECRET);

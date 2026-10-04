@@ -49,7 +49,7 @@ check("PayPal USD topup uses dedicated USD catalog",
   && read("app/api/pay/create/route.ts").includes("amount_rmb:null"));
 
 check("PayPal USD fulfillment credits USD wallet",
-  read("lib/fulfill-order.ts").includes("credit_ai_usd_topup")
+  read("lib/fulfill-order.ts").includes("getUsdBalanceProduct")
   && read("lib/fulfill-order.ts").includes("credit_sasi_usd_topup"));
 
 check("dual currency consumption migration present",
@@ -105,7 +105,8 @@ check("withdrawal reconciliation requires cron secret",
   read("app/api/cron/withdrawal-reconcile/route.ts").includes("CRON_SECRET"));
 
 check("PayPal refund is idempotent",
-  read("lib/payment-refunds.ts").includes('"PayPal-Request-Id":input.withdrawalId'));
+  paypal.includes('"PayPal-Request-Id":input.requestId')
+  && read("lib/money/provider-adapters.ts").includes("requestId:r.idempotencyKey"));
 
 check("legacy lifemap API physically removed",
   !exists("app/api/lifemap/calc/route.ts")

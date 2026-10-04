@@ -89,3 +89,11 @@ Excel：XLS / XLSX / XLSM / XLT / XLTX / ODS / CSV / TSV
 PowerPoint：PPT / PPTX / PPTM / POT / POTX / ODP
 
 PDF 本身不需要进入转换网关。
+
+## 8. Small-host resource budget
+
+For a dedicated 2 GB host, Compose caps Gotenberg at 1 GiB, the Node gateway at 512 MiB, and Caddy at 128 MiB. The remaining 384 MiB is reserved for the OS and Docker; other workloads require separate capacity planning. These are limits, not proof that every 50 MiB document will fit. Run representative Office-file tests and watch `docker stats` and restart/OOM events before increasing limits.
+
+The gateway admits one conversion at a time. A busy request receives HTTP 503 and Retry-After: 5 before its ticket is consumed; retry the same ticket while it remains valid. PDF responses are checked as they stream (100 MiB maximum), and the 70-second upstream deadline covers both headers and body. The same-origin fallback shares a 45-second deadline across providers to remain within its 60-second function budget.
+
+After updating these files on the actual host, run `docker compose config`, rebuild the gateway, restart the stack and run the existing tiny-RTF smoke test. A website deployment alone does not update this server. The GPU worker compose file is a separate deployment and is unsuitable for this small CPU host.

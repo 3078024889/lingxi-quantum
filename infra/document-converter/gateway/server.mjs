@@ -8,6 +8,8 @@ const ALLOWED=(process.env.LINGXIFIELD_ALLOWED_ORIGINS||"https://lingxifield.com
 const MAX_INPUT=50*1024*1024;
 const MAX_OUTPUT=100*1024*1024;
 const ALLOWED_EXTENSIONS=new Set(["doc","docx","docm","dot","dotm","dotx","odt","fodt","ott","rtf","txt","xls","xlsx","xlsm","xlt","xltx","ods","csv","tsv","ppt","pptx","pptm","pot","potx","odp"]);
+// One conversion at a time on the small host; no in-memory waiting queue.
+let activeConversions=0;
 const usedNonces=new Map();
 const requestCounts=new Map();
 
@@ -51,11 +53,26 @@ async function readBody(req,expected){
  const chunks=[];let total=0;
  for await(const chunk of req){
   total+=chunk.length;
-  if(total>MAX_INPUT)throw Object.assign(new Error("too large"),{status:413});
+  if(total>MAX_INPUT||total>expected)throw Object.assign(new Error("too large"),{status:413});
   chunks.push(chunk);
  }
  if(expected&&total!==expected)throw Object.assign(new Error("size mismatch"),{status:400});
  return Buffer.concat(chunks);
+}
+async function readConversion(response){
+ const declared=Number(response.headers.get("content-length"));
+ if(declared>MAX_OUTPUT){await response.body?.cancel();throw Object.assign(new Error("output too large"),{status:413})}
+ if(!response.body)throw new Error("empty output");
+ const reader=response.body.getReader(),chunks=[];let total=0;
+ try{
+  while(true){
+   const {done,value}=await reader.read();if(done)break;
+   total+=value.byteLength;
+   if(total>MAX_OUTPUT){await reader.cancel();throw Object.assign(new Error("output too large"),{status:413})}
+   chunks.push(Buffer.from(value));
+  }
+  return Buffer.concat(chunks,total);
+ }finally{reader.releaseLock()}
 }
 function gotenbergHeaders(){
  const h=new Headers();
@@ -105,10 +122,13 @@ const server=http.createServer(async(req,res)=>{
  const t=now();
 
  if(version!=="v1"||!filename||!ALLOWED_EXTENSIONS.has(ext)){res.statusCode=415;return res.end("unsupported document")}
- if(!nonce||!token||!size||size>MAX_INPUT||exp<t||exp>t+360){res.statusCode=401;return res.end("invalid ticket")}
+ if(!nonce||!token||!Number.isSafeInteger(size)||size<=0||size>MAX_INPUT||!Number.isSafeInteger(exp)||exp<t||exp>t+360){res.statusCode=401;return res.end("invalid ticket")}
  if(usedNonces.has(nonce)){res.statusCode=409;return res.end("ticket already used")}
  const payload=[version,exp,nonce,size,filename,type].join("\n");
  if(!secureEqual(token,sign(payload))){res.statusCode=401;return res.end("bad signature")}
+ // A busy response must not consume the signed ticket: the user can retry it.
+ if(activeConversions>=1){res.statusCode=503;res.setHeader("retry-after","5");return res.end("conversion busy")}
+ activeConversions++;
  usedNonces.set(nonce,exp);
 
  try{
@@ -118,21 +138,22 @@ const server=http.createServer(async(req,res)=>{
   fd.set("exportFormFields","false");
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),70_000);
   let gr;
-  try{gr=await fetch(`${GOTENBERG}/forms/libreoffice/convert`,{method:"POST",headers:gotenbergHeaders(),body:fd,signal:controller.signal})}
-  finally{clearTimeout(timer)}
+  try{
+  gr=await fetch(`${GOTENBERG}/forms/libreoffice/convert`,{method:"POST",headers:gotenbergHeaders(),body:fd,signal:controller.signal});
   if(!gr.ok){res.statusCode=gr.status===400?400:502;return res.end("conversion failed")}
-  const body=Buffer.from(await gr.arrayBuffer());
+  const body=await readConversion(gr);
   if(body.length>MAX_OUTPUT){res.statusCode=413;return res.end("converted file too large")}
   if(!pdfMagic(body)){res.statusCode=502;return res.end("invalid conversion result")}
   res.statusCode=200;
   res.setHeader("content-type","application/pdf");
   res.setHeader("content-length",String(body.length));
   return res.end(body);
+  }finally{clearTimeout(timer)}
  }catch(e){
   const aborted=e?.name==="AbortError";
   res.statusCode=aborted?504:(e?.status||502);
   return res.end(aborted?"conversion timeout":"conversion failed");
- }
+ }finally{activeConversions--}
 });
 
 server.requestTimeout=90_000;

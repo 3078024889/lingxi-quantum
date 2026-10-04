@@ -4,5 +4,6 @@ export function privateSearchPath(path:string){
   || /^\/tools\/(?:admin|pay)(?:\/|$)/.test(path)
   || /^\/tools\/burn-after-read\/.+/.test(path)
   || /^\/sasi\/(?:connections|chat|operator|project-dna)(?:\/|$)/.test(path)
+  || /^\/(?:ai-wallet|sasi\/pricing)(?:\/|$)/.test(path)
   || /^\/paypal\/(?:return|cancel)(?:\/|$)/.test(path);
 }

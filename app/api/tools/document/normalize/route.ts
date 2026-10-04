@@ -19,7 +19,7 @@ export async function POST(request:Request){
   }});
  }catch(e){
   const code=e instanceof Error?e.message:"DOCUMENT_CONVERSION_FAILED";
-  const status=code.includes("UNAVAILABLE")?503:code.includes("UNSUPPORTED")||code.includes("INPUT_INVALID")?415:502;
+  const status=code.includes("SIZE_UNSUPPORTED")?413:code.includes("TIMEOUT")?504:code.includes("UNAVAILABLE")?503:code.includes("UNSUPPORTED")||code.includes("INPUT_INVALID")?415:502;
   console.error("[document normalize]",code);
   return NextResponse.json({error:code.split(":")[0]},{status});
  }

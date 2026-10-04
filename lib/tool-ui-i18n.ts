@@ -211,15 +211,15 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "ar": "يوفر هذا الإصدار تنسيق A4 وعلامة مائية للغرض. لن يُعد القص التلقائي وتصحيح المنظور مكتملين إلا بعد دمج اكتشاف حقيقي للحواف."
   },
   "正在加载本地媒体引擎…": {
-    "zh": "正在加载本地媒体引擎…",
-    "en": "Loading local media engine…",
-    "ja": "ローカルメディアエンジンを読み込み中…",
-    "ko": "로컬 미디어 엔진 로딩 중…",
-    "fr": "Chargement du moteur média local…",
-    "de": "Lokale Medien-Engine wird geladen…",
-    "es": "Cargando motor multimedia local…",
-    "pt": "Carregando mecanismo de mídia local…",
-    "ar": "جارٍ تحميل محرك الوسائط المحلي…"
+    "zh": "正在准备视频处理…",
+    "en": "Preparing video processing…",
+    "ja": "動画処理を準備中…",
+    "ko": "영상 처리 준비 중…",
+    "fr": "Préparation du traitement vidéo…",
+    "de": "Videobearbeitung wird vorbereitet…",
+    "es": "Preparando el procesamiento de vídeo…",
+    "pt": "Preparando o processamento de vídeo…",
+    "ar": "جارٍ التحضير لمعالجة الفيديو…"
   },
   "处理完成": {
     "zh": "处理完成",

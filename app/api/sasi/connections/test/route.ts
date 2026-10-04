@@ -4,6 +4,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {decryptProviderKey,validByokProvider,type ByokProvider} from "@/lib/sasi/credential-vault";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
+import {providerJsonProbe} from "@/lib/security/provider-json-probe";
 import {validateProviderBaseUrl} from "@/lib/sasi/gateway/ssrf-guard";
 import {chooseTextModel,defaultBaseUrl,providerPublicCapabilities} from "@/lib/sasi/intelligence/provider-defaults";
 
@@ -46,11 +47,11 @@ export async function POST(request:NextRequest){
   let status:"healthy"|"unhealthy"="unhealthy",code="PROVIDER_REJECTED",models:string[]=[],started=Date.now();
   try{
     const key=decryptProviderKey(user.id,body.provider,data.encrypted_credential);const probe=probeFor(body.provider,key,String(data.base_url||""));started=Date.now();
-    const response=await fetch(probe.url,{headers:probe.headers,cache:"no-store",redirect:"error",signal:AbortSignal.timeout(12_000)});
-    const payload=await response.json().catch(()=>({}));
+    const response=await providerJsonProbe(probe.url,probe.headers);
+    const payload=response.payload;
     status=response.ok?"healthy":"unhealthy";code=response.ok?"":response.status===401||response.status===403?"CREDENTIAL_REJECTED":`PROVIDER_HTTP_${response.status}`;
     if(response.ok)models=modelsFrom(body.provider,payload);
-  }catch(error){code=error instanceof DOMException&&error.name==="TimeoutError"?"PROVIDER_TIMEOUT":error instanceof Error&&error.message==="PROVIDER_URL_REJECTED"?"SERVICE_ADDRESS_INVALID":"PROVIDER_UNREACHABLE"}
+  }catch(error){code=error instanceof Error&&error.message==="PROVIDER_TIMEOUT"?"PROVIDER_TIMEOUT":error instanceof Error&&error.message==="PROVIDER_URL_REJECTED"?"SERVICE_ADDRESS_INVALID":"PROVIDER_UNREACHABLE"}
   const capabilities=status==="healthy"?providerPublicCapabilities(body.provider):[];
   const modelId=status==="healthy"?chooseTextModel(body.provider,models,String(data.model_id||"")):String(data.model_id||"");
   const now=new Date().toISOString();

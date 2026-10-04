@@ -1,4 +1,5 @@
 "use client";
+import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 
 import {useCallback,useEffect,useRef,useState,type ReactNode} from "react";
 import Link from "next/link";
@@ -57,7 +58,7 @@ function cleanHtml(raw:string){
  return safe.replace(/<head>/i,`<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: blob:; form-action 'none'; base-uri 'none'">`);
 }
 function localWebsite(prompt:string,lang:LingxiLang,heroImage=""){
- const first=prompt.split(/\r?\n/).map(x=>x.trim()).find(Boolean)??(lang==="zh"?"我的网站":"My website");
+ const first=prompt.split(/\r?\n/).map(x=>x.trim()).find(Boolean)??sasiCommonText(lang,"websiteDefault");
  const escape=(text:string)=>text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
  const site=(key:Parameters<typeof composerText>[1])=>escape(composerText(lang,key));
  const title=escape(first.slice(0,64));
@@ -366,12 +367,12 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
      {assistantText&&<SasiAssistantText className="mb-8">
        {assistantText}
        <div className="mt-4 flex flex-wrap gap-2 text-xs">
-        <button type="button" onClick={downloadDiscussionDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{ct("downloadWebsite").replace(/网站|Website/i,lang==="zh"?"文档":"Document")}</button>
+        <button type="button" onClick={downloadDiscussionDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{sasiCommonText(lang,"downloadDocument")}</button>
         <button type="button" onClick={()=>void downloadDiscussionZip()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">ZIP</button>
        </div>
      </SasiAssistantText>}
 
-     {resultUrl&&<SasiVideoResult url={resultUrl} downloadLabel={lang==="zh"?"下载结果":"Download result"}/>}
+     {resultUrl&&<SasiVideoResult url={resultUrl} downloadLabel={sasiCommonText(lang,"downloadResult")}/>}
 
      {websiteHtml&&<SasiWebsiteResult html={cleanHtml(websiteHtml)} title={ct("websitePreview")} downloadLabel={ct("downloadWebsite")} onDownload={()=>void downloadWebsite()}/>}
 
@@ -394,7 +395,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
       {selectedFunctions.length>0&&<div className="mb-2 px-2"><SasiSelectedFunctions task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} disabled={busy}/></div>}
 
       <SasiComposerTextarea ref={textareaRef} aria-label={ct(mode==="drama"?"promptDrama":"promptWebsite")} disabled={busy} maxLength={12000} value={prompt}
-        onChange={e=>{setPrompt(e.target.value);setQuote(null)}} placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}/>
+        onChange={e=>{setPrompt(e.target.value);setQuote(null)}} placeholder={sasiCommonText(lang,"ask")}/>
 
       <div className="mt-1 flex flex-wrap items-center gap-2">
        <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={e=>{if(e.target.files)addFiles(e.target.files);e.currentTarget.value=""}}/>

@@ -18,30 +18,30 @@ const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const seg=location.pathname.s
 export const metadata:Metadata={
  metadataBase:new URL(SITE),
  title:{
-  default:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
+  default:"灵犀场｜PDF、图片与实用工具",
   template:"%s ｜ 灵犀场 LINGXIFIELD"
  },
- description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
- applicationName:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
+ description:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
+ applicationName:"灵犀场｜PDF、图片与实用工具",
  keywords:[
   "灵犀场","LINGXIFIELD","SASI","免费在线工具",
   "PDF压缩","PDF合并","PDF拆分","PDF编辑","电子签名",
   "图片压缩","图片格式转换","图片OCR","视频转文字","音频转文字","字幕翻译",
-  "临时邮箱","阅后即焚","AI 短剧生成","AI 视频生成",
-  "书本智能体","文档智能体","学习智能体","科研智能体","AI 网站生成"
+  "临时邮箱","阅后即焚",
+  "书本智能体","文档智能体","学习智能体","科研智能体"
  ],
  openGraph:{
   type:"website",
   siteName:"灵犀场 LINGXIFIELD",
-  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-  description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
+  title:"灵犀场｜PDF、图片与实用工具",
+  description:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
   url:SITE,
   images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
  },
  twitter:{
   card:"summary_large_image",
-  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-  description:"AI短剧生成、网站构建、书本SASI、学习SASI、科研SASI，以及PDF、图片、视频、OCR、临时邮箱、阅后即焚等实用工具。",
+  title:"灵犀场｜PDF、图片与实用工具",
+  description:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
   images:[SHARE_IMAGE]
  },
  robots:{index:true,follow:true,"max-snippet":-1,"max-image-preview":"large","max-video-preview":-1},

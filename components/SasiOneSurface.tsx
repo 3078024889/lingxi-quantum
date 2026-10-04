@@ -1,4 +1,5 @@
 "use client";
+import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 
 import {useEffect,useState,type ReactNode} from "react";
 import {useSearchParams} from "next/navigation";
@@ -38,7 +39,7 @@ export default function SasiOneSurface(){
 
  const modeBar:ReactNode=<nav
    className="lx-sasi-modebar-reference mt-4 flex w-full max-w-full items-center justify-start gap-5 overflow-x-auto px-0 pb-1 text-[13px] sm:gap-6"
-   aria-label="SASI modes"
+   aria-label={sasiCommonText(lang,"modes")}
   >
    {MODES.map(item=><button
     key={item.id}
