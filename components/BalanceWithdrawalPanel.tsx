@@ -3,6 +3,8 @@ import {useMoneyAutoRefresh} from "@/lib/money/use-money-auto-refresh";
 import {useEffect,useMemo,useState,useRef} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {moneyText,moneyError,moneyNotice} from "@/lib/notifications/money-copy";
+import styles from "@/components/money/BalanceDashboard.module.css";
+import {dashboardCopy} from "@/components/money/dashboard-copy";
 import {moneyMinor} from "@/lib/payments/money-input";
 type Order={refundable_minor:number;id:string;product_id:string;provider:string|null;amount_rmb:number|null;amount_usd:number|null;created_at:string};
 type Withdrawal={id:string;order_id:string;provider:string;currency:string;provider_currency:string;amount_minor:number;provider_amount_minor:number;status:string;provider_status:string|null;failure_code:string|null;created_at:string;completed_at:string|null;submission_confirmed_at:string|null};
@@ -25,8 +27,9 @@ function isUsdWallet(productId:string){return productId.includes("-usd-balance-"
 function walletAmount(order:Order){return Number(order.refundable_minor||0)/100}
 function walletSymbol(order:Order){return isUsdWallet(order.product_id)?"$":"¥"}
 
-export default function BalanceWithdrawalPanel(){
+export default function BalanceWithdrawalPanel({currency}:{currency?:"CNY"|"USD"}={}){
   const{lang}=useLingxiLang();const c=D[lang]??D.en;
+  const ui=dashboardCopy[lang];
   const[data,setData]=useState<Data|null>(null);
   const[msg,setMsg]=useState("");
   const[busy,setBusy]=useState<string|null>(null);
@@ -98,41 +101,50 @@ export default function BalanceWithdrawalPanel(){
 
   if(!data)return <div className="lx-state-card is-loading rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]"><span className="lx-state-dot"/> {msg||c.loading}</div>;
 
-  return <div dir={lang==="ar"?"rtl":"ltr"} className="space-y-8 text-[var(--lx-ink)]">
-    <button className="text-sm underline" onClick={()=>void loadRef.current()}>{moneyText(lang,"refresh")}</button>
-    {msg&&<p role="status" className="lx-state-card rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-muted)]">{msg}</p>}
+  const orders=data.orders.filter(o=>!currency||(isUsdWallet(o.product_id)?"USD":"CNY")===currency);
+  const withdrawals=data.withdrawals.filter(w=>!currency||w.currency===currency);
+  return <div dir={lang==="ar"?"rtl":"ltr"} className="space-y-6 text-[var(--lx-ink)]">
+    {msg&&<p role="status" className={styles.notice}>{msg}</p>}
     <section>
-      <h2 className="text-xl font-semibold">{c.eligibleTitle}</h2>
-      <p className="mt-2 text-sm leading-7 text-[var(--lx-muted)]">{c.eligibleDesc}</p>
-      <div className="mt-5 space-y-3">
-        {data.orders.length===0&&<p className="lx-state-card is-empty rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm text-[var(--lx-muted)]">◇ {c.emptyEligible}</p>}
-        {data.orders.map(o=>{
+      <div className={styles.sectionTitle}><h2>{c.eligibleTitle}</h2><button type="button" className={styles.link} onClick={()=>void loadRef.current()}>{moneyText(lang,"refresh")}</button></div>
+      <p className="text-xs leading-6 text-[var(--lx-muted)]">{c.eligibleDesc}</p>
+      <div className={styles.eligibleList}>
+        {orders.length===0&&<p className={styles.panel+" "+styles.empty}>{c.emptyEligible}</p>}
+        {orders.map(o=>{
           const max=walletAmount(o),active=activeByOrder.has(o.id);
-          return <article key={o.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div><b>{walletSymbol(o)}{max.toFixed(2)} {c.principal}</b><p className="mt-1 text-xs text-[var(--lx-faint)]">{providerText(o)} · {new Date(o.created_at).toLocaleString(lang)}</p></div>
-              <span className="text-sm text-[var(--lx-faint)]">{c.topup}</span>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <input aria-label={c.amountLabel} className="min-w-40 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]" inputMode="decimal" value={amounts[o.id]??String(max)} onChange={e=>setAmounts(x=>({...x,[o.id]:e.target.value}))}/>
-              <button disabled={active||busy!==null||max<=0} onClick={()=>void submit(o)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-2 text-[var(--lx-ink)] disabled:opacity-50">{active?c.processing:busy===o.id?c.submitting:c.return}</button>
+          return <article key={o.id} className={styles.eligible}>
+            <div className={styles.eligibleInfo}><b>{walletSymbol(o)}{max.toFixed(2)} <span className="text-xs font-normal">{c.principal}</span></b><p>{providerText(o)} · {new Date(o.created_at).toLocaleString(lang)}</p></div>
+            <div className={styles.form}>
+              <input aria-label={c.amountLabel} inputMode="decimal" value={amounts[o.id]??String(max)} onChange={e=>setAmounts(x=>({...x,[o.id]:e.target.value}))}/>
+              <button disabled={active||busy!==null||max<=0} onClick={()=>void submit(o)}>{active?c.processing:busy===o.id?c.submitting:c.return}</button>
             </div>
           </article>
         })}
       </div>
     </section>
-    <section>
-      <h2 className="text-xl font-semibold">{c.history}</h2>
-      <div className="mt-5 space-y-3">
-        {data.withdrawals.length===0&&<p className="lx-state-card is-empty rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm text-[var(--lx-muted)]">◇ {c.emptyHistory}</p>}
-        {data.withdrawals.map(w=><article id={`withdrawal-${w.id}`} key={w.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-          <div className="flex flex-wrap justify-between gap-3"><b>{w.currency==="USD"?"$":"¥"}{(Number(w.amount_minor)/100).toFixed(2)}</b><span className="text-[var(--lx-muted)]">{statusLabel(w)}</span></div>
-          {['requested','processing'].includes(w.status)&&<button disabled={busy!==null} onClick={()=>void refreshRequest(w.id,w.status==="requested"&&!w.submission_confirmed_at)} className="mt-3 underline disabled:opacity-40">{moneyText(lang,w.status==="requested"&&!w.submission_confirmed_at?"confirmSubmit":"refresh")}</button>}
-          {w.status==="requested"&&!w.submission_confirmed_at&&<button disabled={busy!==null} onClick={()=>void cancelRequest(w.id)} className="ms-4 mt-3 rounded-xl border border-[var(--lx-line)] px-4 py-2 disabled:opacity-40">{moneyText(lang,"cancelWithdrawal")}</button>}
-          <p className="mt-2 text-sm leading-7">{moneyNotice(lang,"withdrawal",w.status,w.currency,Number(w.amount_minor)).body}</p><p className="mt-2 break-all text-xs text-[var(--lx-faint)]">{moneyText(lang,"reference")}: {w.id}</p>
-          <p className="mt-2 text-xs text-[var(--lx-faint)]">{providerName(w.provider)}{w.provider_currency&&w.provider_currency!==w.currency?` · ${c.original} ${w.provider_currency} ${(Number(w.provider_amount_minor)/100).toFixed(2)}`:""} · {new Date(w.created_at).toLocaleString(lang)}</p>
-        </article>)}
+    <section id="withdrawal-records" className={styles.section}>
+      <div className={styles.sectionTitle}><h2>{c.history}</h2><span className="text-xs text-[var(--lx-faint)]">{withdrawals.length}</span></div>
+      <div className={styles.panel}>
+        {withdrawals.length===0?<p className={styles.empty}>{c.emptyHistory}</p>:<div className={styles.tableWrap}><table className={styles.table}>
+          <caption className="sr-only">{c.history}</caption>
+          <thead><tr><th scope="col">{ui.amount}</th><th scope="col">{ui.date}</th><th scope="col">{ui.channel}</th><th scope="col">{ui.status}</th><th scope="col">{ui.details}</th></tr></thead>
+          <tbody>{withdrawals.map(w=><tr id={"withdrawal-"+w.id} key={w.id}>
+            <td data-label={ui.amount}><b>{w.currency==="USD"?"$":"¥"}{(Number(w.amount_minor)/100).toFixed(2)}</b></td>
+            <td data-label={ui.date} className={styles.date}>{new Date(w.created_at).toLocaleString(lang)}</td>
+            <td data-label={ui.channel}>{providerName(w.provider)}</td>
+            <td data-label={ui.status}><span className={styles.badge} data-state={w.status}>{statusLabel(w)}</span></td>
+            <td><details className={styles.details}><summary>{ui.details}</summary>
+              <p>{moneyNotice(lang,"withdrawal",w.status,w.currency,Number(w.amount_minor)).body}</p>
+              <p>{moneyText(lang,"reference")}: {w.id}</p>
+              {w.provider_currency&&w.provider_currency!==w.currency&&<p>{c.original} {w.provider_currency} {(Number(w.provider_amount_minor)/100).toFixed(2)}</p>}
+            </details>
+            <div className={styles.rowActions}>
+              {["requested","processing"].includes(w.status)&&<button disabled={busy!==null} onClick={()=>void refreshRequest(w.id,w.status==="requested"&&!w.submission_confirmed_at)}>{moneyText(lang,w.status==="requested"&&!w.submission_confirmed_at?"confirmSubmit":"refresh")}</button>}
+              {w.status==="requested"&&!w.submission_confirmed_at&&<button disabled={busy!==null} onClick={()=>void cancelRequest(w.id)}>{moneyText(lang,"cancelWithdrawal")}</button>}
+            </div></td>
+          </tr>)}</tbody>
+        </table></div>}
       </div>
     </section>
-</div>;
+  </div>;
 }

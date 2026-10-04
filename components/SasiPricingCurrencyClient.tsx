@@ -9,7 +9,8 @@ import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import CurrencySelector from "@/components/CurrencySelector";
 import LegacyRefundMigrationPanel from "@/components/LegacyRefundMigrationPanel";
 import BalanceWithdrawalPanel from "@/components/BalanceWithdrawalPanel";
-import LingxiMiniIcon from "@/components/LingxiMiniIcon";
+import styles from "@/components/money/BalanceDashboard.module.css";
+import {dashboardCopy} from "@/components/money/dashboard-copy";
 import {CREDIT_PACKS} from "@/lib/sasi/catalog";
 import {usdBalanceProducts} from "@/lib/usd-products";
 
@@ -60,6 +61,7 @@ export default function SasiPricingCurrencyClient(){
  const{lang}=useLingxiLang();
  const{currency}=usePreferredCurrency();
  const c=C[lang]??C.en;
+ const ui=dashboardCopy[lang];
  const[selected,setSelected]=useState<Currency>(currency);
  const[data,setData]=useState<Summary|null>(null);
  const[error,setError]=useState("");
@@ -98,71 +100,62 @@ export default function SasiPricingCurrencyClient(){
   return c.statusPending;
  }
 
- return <main className="lx11-page">
-  <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-   <header className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-    <div>
-     <div className="flex items-center gap-2">
-      <LingxiMiniIcon name="wallet" size="title"/>
-      <p className="text-xs font-semibold tracking-[.18em] text-[var(--lx-faint)]">LINGXIFIELD · SASI</p>
-     </div>
-     <h1 className="mt-3 text-3xl font-semibold text-[var(--lx-ink)]">{c.title}</h1>
-     <p className="mt-3 text-sm leading-7 text-[var(--lx-muted)]">{c.subtitle}</p>
-    </div>
-    <div className="w-full sm:w-48"><CurrencySelector/></div>
+ return <main className="lx11-page" dir={lang==="ar"?"rtl":"ltr"}>
+  <div className={styles.page}>
+   <header className={styles.header}>
+    <div><p>LINGXIFIELD · SASI</p><h1>{ui.overview}</h1><p>{c.subtitle}</p></div>
+    <div className="w-44 max-w-full"><CurrencySelector/></div>
    </header>
-
-   <section className="mt-8 grid gap-3 sm:grid-cols-3">
-    <article className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-     <p className="text-xs text-[var(--lx-faint)]">{c.available}</p>
-     <strong className="mt-2 block text-3xl font-semibold">{snapshot?money(selected,snapshot.availableMinor):"—"}</strong>
-    </article>
-    <article className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-     <p className="text-xs text-[var(--lx-faint)]">{c.refundable}</p>
-     <strong className="mt-2 block text-3xl font-semibold">{snapshot?money(selected,snapshot.refundableMinor):"—"}</strong>
-    </article>
-    <article className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-     <p className="text-xs text-[var(--lx-faint)]">{c.processing}</p>
-     <strong className="mt-2 block text-3xl font-semibold">{snapshot?money(selected,snapshot.refundHoldMinor):"—"}</strong>
-    </article>
+   <section className={styles.hero} aria-label={c.title}>
+    <div className={styles.metrics}>
+     <article><p>{c.available} · {selected}</p><strong>{snapshot?money(selected,snapshot.availableMinor):"—"}</strong></article>
+     <article><p>{c.refundable}</p><strong>{snapshot?money(selected,snapshot.refundableMinor):"—"}</strong></article>
+     <article><p>{c.processing}</p><strong>{snapshot?money(selected,snapshot.refundHoldMinor):"—"}</strong></article>
+    </div>
+    <nav className={styles.actions} aria-label={c.title}>
+     <a className={styles.action+" "+styles.primary} href="#topup">{c.topup}</a>
+     <a className={styles.action} href="#withdrawals">{ui.withdraw}</a>
+     <a className={styles.action} href="#withdrawal-records">{ui.records}</a>
+     {isAdmin&&<Link href="/account/money-admin" className={styles.action}>{moneyText(lang,"moneyAdmin")}</Link>}
+    </nav>
    </section>
-
-   <div className="mt-3 flex items-center justify-between">
-    <p className="text-xs text-[var(--lx-faint)]">{loading?c.loading:error}</p>
-    <button type="button" onClick={()=>void load()} className="text-xs text-[var(--lx-muted)] underline">{c.refresh}</button>
+   <div className={styles.sync}>
+    <p role={error?"alert":undefined}>{loading?c.loading:error||ui.auto}</p>
+    <button type="button" disabled={loading} onClick={()=>void load()} className={styles.link}>{c.refresh}</button>
    </div>
-
-   <section className="mt-8 overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)]" data-testid="balance-topup">
+   <section id="topup" className={styles.panel+" "+styles.section} data-testid="balance-topup">
     <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--lx-line)] px-6 py-5">
-     <div><h2 className="text-xl font-semibold">{c.topup}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{c.topupHint}</p></div>
+     <div><h2 className="text-lg font-semibold">{c.topup}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{c.topupHint}</p></div>
      <span className="rounded-full bg-[var(--lx-soft)] px-3 py-1.5 text-xs font-medium">{selected} · {selected==="CNY"?(lang==="zh"?"微信支付 / 支付宝":"WeChat Pay / Alipay"):"PayPal"}</span>
     </div>
     <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_260px]">
-     <fieldset><legend className="sr-only">{c.topupHint}</legend><div className="grid grid-cols-3 gap-2 sm:gap-3">{packs.map(pack=><label key={pack.id} className={"relative cursor-pointer rounded-2xl border px-2 py-4 text-center transition focus-within:ring-2 focus-within:ring-sky-500 "+(chosen.id===pack.id?"border-sky-500 bg-sky-500/10 text-[var(--lx-ink)]":"border-[var(--lx-line)] hover:bg-[var(--lx-soft)]")}>
+     <fieldset><legend className="sr-only">{c.topupHint}</legend><div className="grid grid-cols-3 gap-2 sm:gap-3">{packs.map(pack=><label key={pack.id} className={"relative cursor-pointer rounded-xl border px-2 py-3 text-center transition focus-within:ring-2 focus-within:ring-sky-500 "+(chosen.id===pack.id?"border-sky-500 bg-sky-500/10 text-[var(--lx-ink)]":"border-[var(--lx-line)] hover:bg-[var(--lx-soft)]")}>
       <input className="sr-only" type="radio" name="topup-amount" value={pack.id} checked={chosen.id===pack.id} onChange={()=>setChosenId(pack.id)}/><span className="text-base font-semibold sm:text-lg">{new Intl.NumberFormat(lang,{style:"currency",currency:selected,maximumFractionDigits:0}).format(pack.amount)}</span>
      </label>)}</div></fieldset>
-     <div className="flex flex-col justify-between rounded-2xl bg-gradient-to-br from-sky-500/10 to-indigo-500/10 p-5"><div><p className="text-sm text-[var(--lx-muted)]">{c.topup}</p><strong className="mt-3 block text-3xl font-semibold">{money(selected,chosen.amount*100)}</strong><p className="mt-2 text-xs text-[var(--lx-muted)]">{selected}</p></div>
+     <div className="flex flex-col justify-between rounded-2xl bg-[var(--lx-soft)] p-5"><div><p className="text-sm text-[var(--lx-muted)]">{c.topup}</p><strong className="mt-3 block text-3xl font-semibold">{money(selected,chosen.amount*100)}</strong><p className="mt-2 text-xs text-[var(--lx-muted)]">{selected}</p></div>
       <Link data-testid="topup-checkout" href={selected==="CNY"?`/checkout?productId=${encodeURIComponent(chosen.id)}&redirect=/sasi/pricing&lang=${lang}`:`/checkout-usd?productId=${encodeURIComponent(chosen.id)}&lang=${lang}`} className="mt-6 block rounded-xl bg-[var(--lx-ink)] px-4 py-3 text-center text-sm font-semibold text-[var(--lx-bg)] transition hover:opacity-85">{c.topup} {money(selected,chosen.amount*100)} <span aria-hidden="true">→</span></Link>
      </div>
     </div>
    </section>
-   {isAdmin&&<Link href="/account/money-admin" className="mt-4 inline-block text-sm underline">{moneyText(lang,"moneyAdmin")}</Link>}
 
-   <section className="mt-12">
-    <div className="flex items-center gap-2"><LingxiMiniIcon name="refund" size="tiny"/><h2 className="text-xl font-semibold">{c.history}</h2></div>
-    <div className="mt-4 space-y-2">
-     {recent.length===0?<p className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 text-sm text-[var(--lx-muted)]">{c.noHistory}</p>
-      :recent.map(item=><article key={item.id} className="flex items-center justify-between gap-4 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-4">
-       <div><b>{money(item.currency,item.amount_minor)}</b><p className="mt-1 text-xs text-[var(--lx-faint)]">{new Date(item.created_at).toLocaleString(lang)}</p></div>
-       <span className="text-sm text-[var(--lx-muted)]">{statusText(item.normalized_status)}</span>
-      </article>)}
+   <section className={styles.section}>
+    <div className={styles.sectionTitle}><h2>{c.history}</h2><a href="#withdrawal-records" className={styles.link}>{ui.records} <span aria-hidden="true">→</span></a></div>
+    <div className={styles.panel}>
+     {recent.length===0?<p className={styles.empty}>{c.noHistory}</p>:<div className={styles.tableWrap}><table className={styles.table+" "+styles.recent}>
+      <caption className="sr-only">{c.history}</caption>
+      <thead><tr><th scope="col">{ui.amount}</th><th scope="col">{ui.date}</th><th scope="col">{ui.status}</th></tr></thead>
+      <tbody>{recent.map(item=><tr key={item.id}>
+       <td data-label={ui.amount}><b>{money(item.currency,item.amount_minor)}</b></td>
+       <td data-label={ui.date} className={styles.date}>{new Date(item.created_at).toLocaleString(lang)}</td>
+       <td data-label={ui.status}><span className={styles.badge} data-state={item.normalized_status}>{statusText(item.normalized_status)}</span></td>
+      </tr>)}</tbody>
+     </table></div>}
     </div>
    </section>
-
-   <section id="withdrawals" className="mt-12 scroll-mt-24 border-t border-[var(--lx-line)] pt-10">
-    <div className="flex items-center gap-2"><LingxiMiniIcon name="refund" size="tiny"/><h2 className="text-xl font-semibold">{c.returnTitle}</h2></div>
-    <p className="mt-2 text-sm leading-7 text-[var(--lx-muted)]">{c.returnHint}</p>
-    <div className="mt-6"><BalanceWithdrawalPanel/><LegacyRefundMigrationPanel/></div>
+   <section id="withdrawals" className={styles.section}>
+    <div className={styles.sectionTitle}><h2>{c.returnTitle}</h2></div>
+    <p className={styles.notice}>{c.returnHint}</p>
+    <BalanceWithdrawalPanel currency={selected}/><LegacyRefundMigrationPanel/>
    </section>
   </div>
  </main>;

@@ -33,3 +33,14 @@ test('admin shows channel funds, queued notices and mail retry',async({page})=>{
 test('non-admin receives login instruction and no financial records',async({page})=>{await base(page);await page.goto('/account/money-admin?lang=zh');await expect(page.getByRole('alert').filter({hasText:'管理员邮箱'})).toContainText('管理员邮箱');await expect(page.getByText('需要补资金的退款金额')).toHaveCount(0)});
 
 test('earlier refund can be cancelled with legacy request kind',async({page})=>{await base(page);let body:any,done=false;await page.route('**/api/account/withdrawals/legacy',r=>r.fulfill({json:{items:done?[]:[{id,order_id:'o',amount_fen:100,status:'requested',created_at:'2026-10-03'}]}}));await page.route('**/api/account/withdrawals/cancel',r=>{body=r.request().postDataJSON();done=true;return r.fulfill({json:{ok:true,status:'cancelled'}})});await page.goto('/sasi/pricing?currency=CNY&lang=zh');page.on('dialog',d=>d.accept());await page.getByRole('button',{name:'取消退款',exact:true}).click();expect(body).toEqual({requestId:id,kind:'legacy'});await expect(page.getByRole('button',{name:'取消退款',exact:true})).toHaveCount(0)});
+
+for(const currency of ['CNY','USD'])test(currency+' balance page keeps eligible orders and history in the selected wallet',async({page})=>{
+ await base(page);
+ const usd={...draft,id:'usd-request',order_id:'usd-order',currency:'USD',provider:'paypal',provider_currency:'USD'};
+ await page.route('**/api/account/withdrawals',r=>r.fulfill({json:{orders:[{id:'cny-order',product_id:'sasi-balance-10',provider:'wechat',amount_rmb:10,refundable_minor:500,created_at:draft.created_at},{id:'usd-order',product_id:'sasi-usd-balance-10',provider:'paypal',amount_usd:10,refundable_minor:800,created_at:draft.created_at}],withdrawals:[draft,usd]}}));
+ await page.goto('/sasi/pricing?currency='+currency+'&lang=zh');
+ await expect(page.locator('#withdrawal-'+(currency==='CNY'?id:'usd-request'))).toBeVisible();
+ await expect(page.locator('#withdrawal-'+(currency==='CNY'?'usd-request':id))).toHaveCount(0);
+ await expect(page.getByRole('textbox',{name:'提现金额',exact:true})).toHaveCount(1);
+ await expect(page.getByRole('textbox',{name:'提现金额',exact:true})).toHaveValue(currency==='CNY'?'5':'8');
+});
