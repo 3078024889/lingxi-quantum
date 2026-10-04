@@ -8,6 +8,9 @@ for(const [i,locale]of locales.entries())test('public copy and controls '+locale
  await expect(footer.locator('a[href="/release"]')).toHaveText(release[i]);
  await expect(footer).not.toContainText(/生态|Intelligent Ecosystem|Ecossistema inteligente|Ecosistema inteligente|AI短剧|short drama|minidrama|Mini-séries IA|Kurzdramen/);
  await expect(page.locator('main textarea')).toHaveAttribute('aria-label',/./);
+ await expect(page.locator('.lx11-lang-label').first()).not.toContainText('/ Language');
+ const cards=await page.locator('.lx11-home-card').evaluateAll(elements=>elements.map(card=>{const desc=card.querySelector('p')!.getBoundingClientRect(),action=card.querySelector('b')!.getBoundingClientRect(),bounds=card.getBoundingClientRect();return{descriptionBottom:desc.bottom,actionTop:action.top,actionBottom:action.bottom,cardBottom:bounds.bottom}}));
+ expect(cards).toHaveLength(6);for(const card of cards){expect(card.actionTop).toBeGreaterThanOrEqual(card.descriptionBottom);expect(card.actionBottom).toBeLessThanOrEqual(card.cardBottom);}
  await expect(page.locator('html')).toHaveAttribute('dir',locale==='ar'?'rtl':'ltr');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  if(locale!=='zh'){
@@ -30,4 +33,21 @@ for(const [i,locale]of locales.entries())test('SASI input uses '+locale,async({p
  await expect(page.getByPlaceholder(ask[i],{exact:true})).toBeVisible();
  await expect(page.locator('nav.lx-sasi-modebar-reference')).not.toHaveAttribute('aria-label','SASI modes');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+const feedbackTitles=['告诉我们哪里没有按期待工作','Tell us what went wrong','困ったことを教えてください','어떤 문제가 있었나요?','Décrivez le problème rencontré','Was hat nicht funktioniert?','Cuéntanos qué ocurrió','Conte o que aconteceu','أخبرنا بما حدث'];
+for(const [i,locale]of locales.entries())test('feedback dialog uses '+locale,async({page})=>{
+ await page.goto('/?lang='+locale);await expect(page.locator('html')).toHaveAttribute('lang',locale==='zh'?'zh-CN':locale);
+ await page.evaluate(()=>window.dispatchEvent(new Event('lingxifield:feedback')));
+ const dialog=page.getByRole('dialog',{name:feedbackTitles[i],exact:true});await expect(dialog).toBeVisible();
+ await expect(dialog.locator('textarea')).toBeFocused();if(locale!=='zh')await expect(dialog).not.toContainText(/问题|截图|发送|关闭|拖动/);
+ await dialog.locator('button').last().click();await expect(dialog.getByRole('alert')).toBeVisible();
+ if(locale==='en'){await dialog.locator('button').first().focus();await page.keyboard.press('Shift+Tab');await expect(dialog.locator('a[href^="mailto:"]')).toBeFocused();await page.keyboard.press('Tab');await expect(dialog.locator('button').first()).toBeFocused();}
+ await page.keyboard.press('Escape');await expect(dialog).not.toBeVisible();
+});
+
+test('anonymous feedback failure preserves text and never reports success',async({page})=>{
+ await page.goto('/?lang=en');await expect(page.locator('html')).toHaveAttribute('lang','en');await page.evaluate(()=>window.dispatchEvent(new Event('lingxifield:feedback')));
+ const dialog=page.getByRole('dialog',{name:'Tell us what went wrong',exact:true});await dialog.locator('textarea').fill('PDF preview did not appear.');await dialog.getByRole('button',{name:'Send to LINGXIFIELD',exact:true}).click();
+ await expect(dialog.getByRole('alert')).toBeVisible();await expect(dialog.getByRole('alert')).not.toContainText(/SUPABASE|API key|createBrowserClient|SUPPORT_/);await expect(dialog).not.toContainText('Received ✓');await expect(dialog.locator('textarea')).toHaveValue('PDF preview did not appear.');
 });

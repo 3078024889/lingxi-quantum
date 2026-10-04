@@ -12,6 +12,7 @@ import {moneyText} from "@/lib/notifications/money-copy";
 import NotificationBell from "@/components/NotificationBell";
 import CurrencySelector from "@/components/CurrencySelector";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
+import {supportCopy} from "@/lib/support-ui-copy";
 import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
 import MobileBottomNav from "@/components/MobileBottomNav";
 
@@ -168,8 +169,8 @@ export default function Nav() {
       </div>
 
       <div style={{padding:"10px 12px 4px"}}>
-        <button type="button" onClick={()=>window.dispatchEvent(new Event("lingxifield:feedback"))} style={{width:"100%",display:"flex",alignItems:"center",gap:8,border:"1px solid rgba(150,125,70,.20)",borderRadius:12,padding:"9px 12px",background:"rgba(255,255,255,.55)",fontSize:14,fontWeight:500,lineHeight:"20px",cursor:"pointer"}}><span aria-hidden="true" style={{fontSize:12}}>✦</span><span>告诉我们</span></button>
-        <Link href="/account/support" style={{display:"block",padding:"7px 12px 0",fontSize:12,opacity:.55}}>我的问题</Link>
+        <button type="button" onClick={()=>window.dispatchEvent(new Event("lingxifield:feedback"))} style={{width:"100%",display:"flex",alignItems:"center",gap:8,border:"1px solid rgba(150,125,70,.20)",borderRadius:12,padding:"9px 12px",background:"rgba(255,255,255,.55)",fontSize:14,fontWeight:500,lineHeight:"20px",cursor:"pointer"}}><span aria-hidden="true" style={{fontSize:12}}>✦</span><span>{supportCopy(lang).tell}</span></button>
+        <Link href="/account/support" style={{display:"block",padding:"7px 12px 0",fontSize:12,opacity:.55}}>{supportCopy(lang).mine}</Link>
       </div>
 
       <div className="lx11-sidebar-bottom">
@@ -177,7 +178,7 @@ export default function Nav() {
           <button onClick={() => setTheme("light")} className={theme === "light" ? "is-active" : ""}>☀ {t("light")}</button>
           <button onClick={() => setTheme("dark")} className={theme === "dark" ? "is-active" : ""}>🌙 {t("dark")}</button>
         </div>
-        <label className="lx11-lang-label">{t("language")} / Language</label>
+        <label className="lx11-lang-label">{t("language")}</label>
         <select
           value={lang}
           onChange={(event) => setLang(event.target.value as LingxiLang)}
@@ -290,7 +291,6 @@ export default function Nav() {
                 </select>
               </div>
               <div>
-                <label>{lang==="zh"?"币种":"Currency"}</label>
                 <CurrencySelector/>
               </div>
             </div>
