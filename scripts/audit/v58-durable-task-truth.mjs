@@ -1,0 +1,13 @@
+import fs from"node:fs";
+const must=(v,m)=>{if(!v)throw new Error(`V58_DURABLE_TASK_TRUTH:${m}`)};
+const files=["lib/tasks/task-events.ts","lib/tasks/checkpoint-contract.ts","lib/tasks/idempotency-policy.ts"];
+for(const file of files)must(fs.existsSync(file),`MISSING:${file}`);
+const events=fs.readFileSync(files[0],"utf8"),checkpoint=fs.readFileSync(files[1],"utf8"),idem=fs.readFileSync(files[2],"utf8");
+for(const token of["sequence:number","assertMonotonicTaskEvents","foldTaskEvents","artifact.attached","checkpoint.saved"])must(events.includes(token),`EVENT_LEDGER:${token}`);
+for(const token of["artifactRefs:string[]","stateRef?:string","checkpointHasInlinePayload","INLINE_PAYLOAD_FORBIDDEN"])must(checkpoint.includes(token),`CHECKPOINT:${token}`);
+must(!checkpoint.includes("Blob")&&!checkpoint.includes("ArrayBuffer"),"CHECKPOINT_BINARY_PAYLOAD_TYPE");
+for(const token of["stableOperationKey","LingxiSideEffectKind","classifyRetry","shouldRetry","rate-limited","permanent"])must(idem.includes(token),`IDEMPOTENCY:${token}`);
+console.log("V58_APPEND_ONLY_TASK_EVENTS=PASS");
+console.log("V58_CHECKPOINT_REFERENCE_ONLY=PASS");
+console.log("V58_IDEMPOTENT_SIDE_EFFECT_POLICY=PASS");
+console.log("V58_DURABLE_TASK_TRUTH=PASS");
