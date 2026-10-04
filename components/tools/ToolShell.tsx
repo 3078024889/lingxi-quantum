@@ -12,7 +12,7 @@ export default function ToolShell({tool,children,faq}:{tool:ToolMeta;children:Re
  const{lang}=useLingxiLang();const t=(zh:string,en:string)=>toolShellText(lang,zh,en);const title=toolTitle(lang,tool.slug,lang==="zh"?tool.titleZh:tool.titleEn);const summary=toolCardLine(lang,tool.slug,tool.category==="pdf"?"document":tool.category==="image"?"image":tool.category==="qr"?"qr":"utility",tool.oneLinerZh,tool.oneLinerEn);
  return <main className="pt-16 lg:pt-8"><section className="px-6 py-12 sm:py-16"><div className="mx-auto max-w-3xl">
   <Link href="/tools" className="lx-tool-back">← {t("返回实用工具","Back to tools")}</Link>
-  <p className="mt-6 font-display text-sm uppercase tracking-widest2 text-lattice">{t("灵犀场 · 在线工具","LINGXIFIELD · Tools")}</p>
+  <p className="mt-6 font-display text-sm uppercase tracking-widest2 text-lattice">{t("灵犀场 · 实用工具","LINGXIFIELD · Practical tools")}</p>
   <h1 className="mt-4 font-display text-3xl font-light text-[var(--lx-ink)] sm:text-4xl">{title}</h1>
   <p className="mt-4 max-w-2xl text-base leading-8 text-[var(--lx-muted)]">{summary}</p>
   <div className="mt-8">{children}</div>

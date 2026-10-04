@@ -1,7 +1,8 @@
 "use client";
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 
-import {useState} from "react";
+import {useEffect,useState} from "react";
+import{recordRecentToolResult}from"@/lib/tools/workspace/recent-tools";
 import {downloadBlob} from "@/lib/tools/shared/download";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
@@ -11,6 +12,7 @@ export default function ResultPanel({files,messageZh,messageEn,details,sourceSlu
  const{lang}=useLingxiLang();const t=(zh:string,en:string)=>toolRuntimeText(lang,zh,en);
  const[busy,setBusy]=useState<string|null>(null);
  const[error,setError]=useState(false);
+ useEffect(()=>{if(sourceSlug)recordRecentToolResult(sourceSlug,files||[])},[sourceSlug,files]);
  async function save(file:ToolResultFile){setBusy(file.name);setError(false);try{await downloadBlob(file.blob,file.name)}catch{setError(true)}finally{setBusy(null)}}
  return <div className="mt-6 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 sm:p-6">
   <p className="text-sm font-medium text-[var(--lx-faint)]">{plainText(lang,"ready")}</p>

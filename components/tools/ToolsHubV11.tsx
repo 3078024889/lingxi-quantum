@@ -8,6 +8,7 @@ import { useLingxiLang } from "@/lib/lingxi-i18n";
 import {toolTitle} from "@/lib/tools/card-i18n";
 import {toolCategoryLabel,toolHubCopy,toolCardLine,type ToolDisplayCategory} from "@/lib/tools/hub-copy-v1470";
 import {searchToolItems} from "@/lib/tools/search-intents-v44r2.mjs";
+import RecentTools from"@/components/tools/RecentTools";
 
 type GlyphKind = "image" | "document" | "video" | "audio" | "privacy" | "utility" | "ai" | "qr";
 type SourceCategory = "image" | "pdf" | "media" | "privacy" | "utility" | "ai" | "qr";
@@ -178,6 +179,8 @@ export default function ToolsHubV11() {
             })}
           </div>
         </section>
+
+        <RecentTools/>
 
         <section className="lx11-tool-group">
           <div className="lx11-tool-grid lx-tools-v124-grid">
