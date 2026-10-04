@@ -19,6 +19,7 @@
     "temp-mail-batch": "server-job",
     "video-dubbing": "persistent-draft",
     "video-transcription": "persistent-draft",
-    "video-watermark-remover": "persistent-draft"
+    "video-watermark-remover": "persistent-draft",
+    "video-translate": "persistent-draft"
   }
 }

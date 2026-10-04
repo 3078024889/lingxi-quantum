@@ -1,52 +1,41 @@
 "use client";
-import {useMemo,useState} from "react";
-import FileDropzone from "@/components/tools/FileDropzone";
-import ResultPanel from "@/components/tools/ResultPanel";
-import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
-import type {ToolResultFile} from "@/lib/tools/types";
-
-type C={gap:string;background:string;run:string;busy:string;ready:string;tooLarge:string;error:string};
+import{useMemo,useState}from"react";
+import FileDropzone from"@/components/tools/FileDropzone";
+import ResultPanel from"@/components/tools/ResultPanel";
+import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
+import type{ToolResultFile}from"@/lib/tools/types";
+type Orientation="vertical"|"horizontal";type Align="start"|"center"|"end";type Format="image/jpeg"|"image/png"|"image/webp";
+type C={gap:string;background:string;run:string;busy:string;ready:string;tooLarge:string;error:string;direction:string;align:string;format:string;quality:string;vertical:string;horizontal:string};
 const D:Record<LingxiLang,C>={
- zh:{gap:"图片间距 px",background:"背景颜色",run:"生成长图",busy:"正在拼接…",ready:"长图已经生成，可以先核对尺寸和体积再下载。",tooLarge:"生成结果太大，浏览器无法安全处理。请减少图片数量或降低分辨率。",error:"长图生成没有完成"},
- en:{gap:"Gap px",background:"Background",run:"Create long image",busy:"Stitching…",ready:"The long image is ready. Review its size before downloading.",tooLarge:"The result is too large for the browser. Reduce image count or resolution.",error:"Long-image creation did not finish"},
- ja:{gap:"画像間隔 px",background:"背景色",run:"長画像を生成",busy:"結合中…",ready:"長画像を生成しました。サイズを確認してからダウンロードできます。",tooLarge:"結果が大きすぎます。画像数または解像度を下げてください。",error:"長画像を生成できませんでした"},
- ko:{gap:"이미지 간격 px",background:"배경색",run:"긴 이미지 만들기",busy:"이어 붙이는 중…",ready:"긴 이미지가 완성되었습니다. 크기를 확인한 뒤 다운로드하세요.",tooLarge:"결과가 너무 큽니다. 이미지 수나 해상도를 줄여 주세요.",error:"긴 이미지 생성을 완료하지 못했습니다"},
- fr:{gap:"Espacement px",background:"Arrière-plan",run:"Créer l’image longue",busy:"Assemblage…",ready:"L’image longue est prête. Vérifiez sa taille avant de télécharger.",tooLarge:"Le résultat est trop grand pour le navigateur. Réduisez le nombre d’images ou leur résolution.",error:"La création n’a pas abouti"},
- de:{gap:"Abstand px",background:"Hintergrund",run:"Langes Bild erstellen",busy:"Zusammenfügen…",ready:"Das lange Bild ist fertig. Größe prüfen und herunterladen.",tooLarge:"Das Ergebnis ist für den Browser zu groß. Weniger Bilder oder geringere Auflösung verwenden.",error:"Das lange Bild konnte nicht erstellt werden"},
- es:{gap:"Separación px",background:"Fondo",run:"Crear imagen larga",busy:"Uniendo…",ready:"La imagen larga está lista. Revisa el tamaño antes de descargar.",tooLarge:"El resultado es demasiado grande para el navegador. Reduce el número de imágenes o su resolución.",error:"No se pudo crear la imagen larga"},
- pt:{gap:"Espaçamento px",background:"Fundo",run:"Criar imagem longa",busy:"Juntando…",ready:"A imagem longa está pronta. Confira o tamanho antes de baixar.",tooLarge:"O resultado é grande demais para o navegador. Reduza a quantidade de imagens ou a resolução.",error:"Não foi possível criar a imagem longa"},
- ar:{gap:"المسافة px",background:"الخلفية",run:"إنشاء صورة طويلة",busy:"جارٍ الدمج…",ready:"الصورة الطويلة جاهزة. راجع الحجم قبل التنزيل.",tooLarge:"النتيجة كبيرة جدًا على المتصفح. قلّل عدد الصور أو الدقة.",error:"تعذر إنشاء الصورة الطويلة"}
+ zh:{gap:"图片间距 px",background:"背景颜色",run:"生成长图",busy:"正在拼接…",ready:"长图已经生成，可以核对尺寸和体积再下载。",tooLarge:"生成结果太大，浏览器无法安全处理。请减少图片数量或降低输出尺寸。",error:"长图生成没有完成",direction:"拼接方向",align:"图片对齐",format:"输出格式",quality:"输出质量",vertical:"从上到下",horizontal:"从左到右"},
+ en:{gap:"Gap px",background:"Background",run:"Create long image",busy:"Stitching…",ready:"Long image ready. Review size before downloading.",tooLarge:"Result is too large for the browser. Reduce images or output size.",error:"Long-image creation failed",direction:"Direction",align:"Alignment",format:"Output format",quality:"Output quality",vertical:"Top to bottom",horizontal:"Left to right"},
+ ja:{gap:"画像間隔 px",background:"背景色",run:"長画像を生成",busy:"結合中…",ready:"長画像を生成しました。",tooLarge:"結果が大きすぎます。",error:"長画像を生成できませんでした",direction:"結合方向",align:"配置",format:"出力形式",quality:"出力品質",vertical:"上から下",horizontal:"左から右"},
+ ko:{gap:"이미지 간격 px",background:"배경색",run:"긴 이미지 만들기",busy:"이어 붙이는 중…",ready:"긴 이미지가 완성되었습니다.",tooLarge:"결과가 너무 큽니다.",error:"긴 이미지 생성 실패",direction:"방향",align:"정렬",format:"출력 형식",quality:"품질",vertical:"위에서 아래",horizontal:"왼쪽에서 오른쪽"},
+ fr:{gap:"Espacement px",background:"Arrière-plan",run:"Créer l’image longue",busy:"Assemblage…",ready:"Image longue prête.",tooLarge:"Résultat trop grand.",error:"Échec de création",direction:"Direction",align:"Alignement",format:"Format",quality:"Qualité",vertical:"Haut vers bas",horizontal:"Gauche vers droite"},
+ de:{gap:"Abstand px",background:"Hintergrund",run:"Langes Bild erstellen",busy:"Zusammenfügen…",ready:"Langes Bild fertig.",tooLarge:"Ergebnis zu groß.",error:"Erstellung fehlgeschlagen",direction:"Richtung",align:"Ausrichtung",format:"Format",quality:"Qualität",vertical:"Oben nach unten",horizontal:"Links nach rechts"},
+ es:{gap:"Separación px",background:"Fondo",run:"Crear imagen larga",busy:"Uniendo…",ready:"Imagen larga lista.",tooLarge:"Resultado demasiado grande.",error:"Error al crear",direction:"Dirección",align:"Alineación",format:"Formato",quality:"Calidad",vertical:"Arriba a abajo",horizontal:"Izquierda a derecha"},
+ pt:{gap:"Espaçamento px",background:"Fundo",run:"Criar imagem longa",busy:"Juntando…",ready:"Imagem longa pronta.",tooLarge:"Resultado grande demais.",error:"Falha ao criar",direction:"Direção",align:"Alinhamento",format:"Formato",quality:"Qualidade",vertical:"Cima para baixo",horizontal:"Esquerda para direita"},
+ ar:{gap:"المسافة px",background:"الخلفية",run:"إنشاء صورة طويلة",busy:"جارٍ الدمج…",ready:"الصورة الطويلة جاهزة.",tooLarge:"النتيجة كبيرة جدًا.",error:"تعذر الإنشاء",direction:"الاتجاه",align:"المحاذاة",format:"الصيغة",quality:"الجودة",vertical:"من أعلى لأسفل",horizontal:"من اليسار لليمين"}
 };
-
 export default function LongImageWorkbench(){
- const{lang}=useLingxiLang();const c=D[lang]??D.en;
- const[files,setFiles]=useState<File[]>([]),[gap,setGap]=useState(0),[bg,setBg]=useState("#ffffff"),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]),[dims,setDims]=useState<{w:number;h:number}|null>(null);
-
- async function run(){
-  if(!files.length)return;setBusy(true);setError("");setResult([]);setDims(null);
-  let bitmaps:ImageBitmap[]=[];
-  try{
-   const imgs=await Promise.all(files.map(async f=>{const b=await createImageBitmap(f);bitmaps.push(b);return{f,b}}));
-   const width=Math.max(...imgs.map(x=>x.b.width)),heights=imgs.map(x=>Math.round(x.b.height*width/x.b.width)),height=heights.reduce((a,b)=>a+b,0)+gap*(imgs.length-1);
-   if(width*height>120_000_000)throw new Error(c.tooLarge);
-   const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;const ctx=canvas.getContext("2d")!;
-   ctx.fillStyle=bg;ctx.fillRect(0,0,width,height);let y=0;
-   imgs.forEach((it,i)=>{ctx.drawImage(it.b,0,y,width,heights[i]);y+=heights[i]+gap});
-   const out=await new Promise<Blob>((res,rej)=>canvas.toBlob(b=>b?res(b):rej(new Error("EXPORT_FAILED")),"image/jpeg",.92));
-   setDims({w:width,h:height});setResult([{name:"lingxifield-long-image.jpg",blob:out,mime:"image/jpeg",size:out.size}]);
-   canvas.width=1;canvas.height=1;
-  }catch(e){setError(e instanceof Error?e.message:String(e))}
-  finally{for(const b of bitmaps)b.close?.();setBusy(false)}
- }
- const details=useMemo(()=>dims?{width:dims.w,height:dims.h}:undefined,[dims]);
- return <div className="space-y-4">
-  <FileDropzone accept="image/*" multiple maxFiles={50} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy} kind="image"/>
-  <div className="flex flex-wrap gap-4">
-   <label className="text-sm text-[var(--lx-muted)]">{c.gap}<input type="number" min={0} max={100} value={gap} onChange={e=>setGap(Math.min(100,Math.max(0,Number(e.target.value)||0)))} className="ml-2 w-24 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-2 py-1 text-[var(--lx-ink)]"/></label>
-   <label className="text-sm text-[var(--lx-muted)]">{c.background}<input type="color" value={bg} onChange={e=>setBg(e.target.value)} className="ml-2 align-middle"/></label>
-  </div>
-  <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.run}</button>
-  {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready} details={details}/>}
-  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
- </div>;
+ const{lang}=useLingxiLang(),c=D[lang]??D.en;const[files,setFiles]=useState<File[]>([]),[gap,setGap]=useState(0),[bg,setBg]=useState("#ffffff"),[orientation,setOrientation]=useState<Orientation>("vertical"),[align,setAlign]=useState<Align>("center"),[format,setFormat]=useState<Format>("image/jpeg"),[quality,setQuality]=useState(.92),[maxSide,setMaxSide]=useState(2400),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]),[dims,setDims]=useState<{w:number;h:number}|null>(null);
+ function move(i:number,d:-1|1){setFiles(cur=>{const t=i+d;if(t<0||t>=cur.length)return cur;const n=[...cur];[n[i],n[t]]=[n[t],n[i]];return n})}
+ async function run(){if(!files.length)return;setBusy(true);setError("");setResult([]);setDims(null);const bs:ImageBitmap[]=[];try{
+  for(const f of files)bs.push(await createImageBitmap(f));
+  const scaleFor=(b:ImageBitmap)=>Math.min(1,maxSide/Math.max(b.width,b.height));
+  const sizes=bs.map(b=>({w:Math.max(1,Math.round(b.width*scaleFor(b))),h:Math.max(1,Math.round(b.height*scaleFor(b)))}));
+  let W:number,H:number;
+  if(orientation==="vertical"){W=Math.max(...sizes.map(s=>s.w));H=sizes.reduce((n,s)=>n+s.h,0)+gap*(sizes.length-1)}
+  else{W=sizes.reduce((n,s)=>n+s.w,0)+gap*(sizes.length-1);H=Math.max(...sizes.map(s=>s.h))}
+  if(W*H>100_000_000||W>16384||H>16384)throw new Error(c.tooLarge);
+  const cv=document.createElement("canvas");cv.width=W;cv.height=H;const x=cv.getContext("2d")!;x.fillStyle=bg;x.fillRect(0,0,W,H);
+  let cursor=0;bs.forEach((b,i)=>{const s=sizes[i];if(orientation==="vertical"){const dx=align==="start"?0:align==="end"?W-s.w:(W-s.w)/2;x.drawImage(b,Math.round(dx),cursor,s.w,s.h);cursor+=s.h+gap}else{const dy=align==="start"?0:align==="end"?H-s.h:(H-s.h)/2;x.drawImage(b,cursor,Math.round(dy),s.w,s.h);cursor+=s.w+gap}});
+  const out=await new Promise<Blob>((res,rej)=>cv.toBlob(v=>v?res(v):rej(new Error("EXPORT_FAILED")),format,format==="image/png"?undefined:quality));const ext=format==="image/png"?"png":format==="image/webp"?"webp":"jpg";
+  setDims({w:W,h:H});setResult([{name:`lingxifield-long-image.${ext}`,blob:out,mime:format,size:out.size}]);cv.width=cv.height=1;
+ }catch(e){setError(e instanceof Error?e.message:String(e))}finally{for(const b of bs)b.close?.();setBusy(false)}}
+ const details=useMemo(()=>dims?{width:dims.w,height:dims.h,images:files.length,orientation}:undefined,[dims,files.length,orientation]);
+ return <div className="space-y-4"><FileDropzone accept="image/*" multiple append maxFiles={50} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy} kind="image"/>
+ {files.length>1&&<div className="flex flex-wrap gap-2">{files.map((f,i)=><span key={`${f.name}-${i}`} className="inline-flex items-center gap-1 rounded-lg border border-[var(--lx-line)] px-2 py-1 text-xs"><span>{i+1}. {f.name}</span><button disabled={i===0} onClick={()=>move(i,-1)}>↑</button><button disabled={i===files.length-1} onClick={()=>move(i,1)}>↓</button></span>)}</div>}
+ <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"><label className="text-sm text-[var(--lx-muted)]">{c.direction}<select value={orientation} onChange={e=>setOrientation(e.target.value as Orientation)} className="mt-1 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"><option value="vertical">{c.vertical}</option><option value="horizontal">{c.horizontal}</option></select></label><label className="text-sm text-[var(--lx-muted)]">{c.align}<select value={align} onChange={e=>setAlign(e.target.value as Align)} className="mt-1 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"><option value="start">Start</option><option value="center">Center</option><option value="end">End</option></select></label><label className="text-sm text-[var(--lx-muted)]">{c.gap}<input type="number" min={0} max={300} value={gap} onChange={e=>setGap(Math.min(300,Math.max(0,Number(e.target.value)||0)))} className="mt-1 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"/></label><label className="text-sm text-[var(--lx-muted)]">单图最大边 px<input type="number" min={320} max={8000} value={maxSide} onChange={e=>setMaxSide(Math.min(8000,Math.max(320,Number(e.target.value)||2400)))} className="mt-1 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"/></label><label className="text-sm text-[var(--lx-muted)]">{c.background}<input type="color" value={bg} onChange={e=>setBg(e.target.value)} className="ml-2 align-middle"/></label><label className="text-sm text-[var(--lx-muted)]">{c.format}<select value={format} onChange={e=>setFormat(e.target.value as Format)} className="mt-1 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></label>{format!=="image/png"&&<label className="text-sm text-[var(--lx-muted)]">{c.quality} {Math.round(quality*100)}%<input className="mt-3 w-full" type="range" min={.4} max={1} step={.01} value={quality} onChange={e=>setQuality(Number(e.target.value))}/></label>}</div>
+ <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.run}</button>{!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready} details={details}/>} {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}</div>
 }

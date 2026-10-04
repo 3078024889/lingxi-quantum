@@ -1,0 +1,15 @@
+import fs from"node:fs";
+const must=(c,m)=>{if(!c)throw new Error(m)};
+const R=fs.readFileSync("components/tools/ResizeImageWorkbench.tsx","utf8");
+const E=fs.readFileSync("lib/tools/shared/image-resize-pro.ts","utf8");
+const S=fs.readFileSync("lib/tools/shared/image-smart-crop.ts","utf8");
+const P=fs.readFileSync("lib/tools/shared/image-presets.ts","utf8");
+const L=fs.readFileSync("components/tools/LongImageWorkbench.tsx","utf8");
+const W=fs.readFileSync("components/tools/ToolWorkbench.tsx","utf8");
+for(const t of ["智能裁切","批量时每张图单独计算","image/webp","IMAGE_SIZE_PRESETS"])must(R.includes(t),`V61_RESIZE_UI_MISSING:${t}`);
+for(const t of ['"smart"',"smartCrop","progressive"])must(E.includes(t),`V61_RESIZE_ENGINE_MISSING:${t}`);
+for(const t of ["FaceDetector","pixelScore","attention"])must(S.includes(t),`V61_SMART_CROP_MISSING:${t}`);
+for(const t of ["4:3","16:9","9:16","1200×630"])must(P.includes(t),`V61_PRESET_MISSING:${t}`);
+for(const t of ["horizontal","vertical","image/webp","move(i:number"])must(L.includes(t),`V61_LONG_IMAGE_MISSING:${t}`);
+must(W.includes('ResizeImageWorkbench')&&W.includes('tool.slug === "resize-image"'),"V61_RESIZE_ROUTE_MISSING");
+console.log("V61_IMAGE_PRO_WORKFLOW=PASS");

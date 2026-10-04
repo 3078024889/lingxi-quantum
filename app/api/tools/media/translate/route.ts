@@ -8,7 +8,7 @@ export async function POST(req:NextRequest){
   if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const b=await req.json(),quoteId=String(b.quoteId||""),text=String(b.text||"");
   if(!text||text.length>30000)return NextResponse.json({error:"INVALID_TEXT"},{status:400});
-  await requirePaidMediaQuote(quoteId,["video-dubbing","image-translator","subtitle-translate"]);
+  await requirePaidMediaQuote(quoteId,["video-dubbing","video-translate","image-translator","subtitle-translate"]);
   const translated=await translateTextRemote({text,source:String(b.source||"auto"),target:String(b.target||"en")});
   return NextResponse.json({translated});
  }catch(e){

@@ -3,6 +3,7 @@ export const PUBLIC_PAID_TOOL_IDS = [
   "video-watermark-remover",
   "video-transcription",
   "video-dubbing",
+  "video-translate",
   "image-watermark-remover",
   "image-translator",
   "batch-image-watermark-remover",

@@ -818,6 +818,22 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "video-translate",
+    "capabilities": [
+      "media.transcribe",
+      "media.subtitle.translate",
+      "media.dub",
+      "media.ffmpeg",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "declared-online"
+  },
+  {
     "slug": "video-transcription",
     "capabilities": [
       "media.transcribe"

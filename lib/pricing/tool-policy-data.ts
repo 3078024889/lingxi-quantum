@@ -15,6 +15,7 @@ const POLICY:Record<string,ToolBillingPolicy>={
   "subtitle-translate":{toolId:"subtitle-translate",billingClass:"PAID_TOOL",executionMode:"connected_service",reason:"practical tools remain one-time purchases"},
   "temp-mail-batch":{toolId:"temp-mail-batch",billingClass:"PAID_TOOL",executionMode:"server",reason:"infrastructure use is an operating cost"},
   "video-dubbing":{toolId:"video-dubbing",billingClass:"DISABLED",executionMode:"connected_service",reason:"full output chain must be production verified before enabling"},
+  "video-translate":{toolId:"video-translate",billingClass:"PAID_TOOL",executionMode:"connected_service",reason:"batch video translation uses paid transcription/translation/TTS media services"},
   "video-transcription":{toolId:"video-transcription",billingClass:"PAID_TOOL",executionMode:"local",reason:"practical tools use one-time payment"},
   "video-watermark-remover":{toolId:"video-watermark-remover",billingClass:"PAID_TOOL",executionMode:"local",reason:"local processing still has operating cost"},
   "sasi-deep-reason":{toolId:"sasi-deep-reason",billingClass:"SASI_BALANCE",executionMode:"connected_service",reason:"all SASI capabilities share the unified SASI balance"},

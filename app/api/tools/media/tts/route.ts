@@ -8,7 +8,7 @@ export async function POST(req:NextRequest){
   if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const b=await req.json(),quoteId=String(b.quoteId||""),text=String(b.text||"");
   if(!text||text.length>12000)return NextResponse.json({error:"INVALID_TEXT"},{status:400});
-  await requirePaidMediaQuote(quoteId,["video-dubbing"]);
+  await requirePaidMediaQuote(quoteId,["video-dubbing","video-translate"]);
   const audio=await synthesizeRemote(text,String(b.language||"en"));
   return new NextResponse(new Uint8Array(audio),{headers:{"content-type":"audio/mpeg","cache-control":"private, no-store"}});
  }catch(e){

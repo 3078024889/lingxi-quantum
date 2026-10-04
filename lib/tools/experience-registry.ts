@@ -33,6 +33,7 @@ export const TOOL_EXPERIENCE:Record<string,ToolExperience>={
 "temp-mail":{kind:"privacy",primary:"创建临时邮箱",working:"正在准备邮箱…",result:"查看收到的邮件",advancedAfterUpload:false,localFirst:false},
 "video-dubbing":{kind:"video",primary:"上传视频",working:"正在处理视频…",result:"下载配音视频",advancedAfterUpload:true,localFirst:false},
 "video-toolkit":{kind:"video",primary:"上传视频",working:"正在处理视频…",result:"下载视频",advancedAfterUpload:true,localFirst:true},
+"video-translate":{kind:"video",primary:"上传视频或添加公开链接",working:"正在翻译视频…",result:"下载翻译视频与字幕",advancedAfterUpload:true,localFirst:false},
 "video-transcription":{kind:"video",primary:"上传视频",working:"正在整理文字…",result:"查看文字与字幕",advancedAfterUpload:true,localFirst:true},
 "video-watermark-remover":{kind:"video",primary:"上传视频",working:"正在处理视频…",result:"下载视频",advancedAfterUpload:true,localFirst:true},
 "webp-to-jpg":{kind:"image",primary:"上传图片",working:"正在转换…",result:"下载 JPG",advancedAfterUpload:false,localFirst:true},

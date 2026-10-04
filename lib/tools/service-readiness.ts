@@ -8,7 +8,7 @@ export type ToolRuntimeState={ready:boolean;mode:"local"|"r2"|"compute";reason?:
 const LOCAL_PAID=new Set([
   "audio-transcription","batch-image-watermark-remover","cross-page-stamp","e-sign-pdf",
   "food-calorie","id-photo-ai","image-watermark-remover","pdf-editor","subtitle-translate",
-  "temp-mail-batch","video-dubbing","video-transcription","video-watermark-remover",
+  "temp-mail-batch","video-dubbing","video-translate","video-transcription","video-watermark-remover",
 ]);
 
 const SASI_NATIVE=new Set(["sasi-deep-reason","sasi-image-generate","sasi-video-generate"]);
@@ -22,7 +22,7 @@ function nativeConfigured(){
 export function isSasiNativeTool(toolId:string){return SASI_NATIVE.has(toolId)}
 
 export function toolRuntimeState(toolId:string):ToolRuntimeState{
-  if(toolId==="video-dubbing"||toolId==="image-translator")return mediaProviderReady()?{ready:true,mode:"compute"}:{ready:false,mode:"compute",reason:"MEDIA_PROVIDER_NOT_CONFIGURED"};
+  if(toolId==="video-dubbing"||toolId==="video-translate"||toolId==="image-translator")return mediaProviderReady()?{ready:true,mode:"compute"}:{ready:false,mode:"compute",reason:"MEDIA_PROVIDER_NOT_CONFIGURED"};
   if(toolId==="sasi-video-generate")return{ready:false,mode:"compute",reason:"VIDEO_BYOK_REQUIRED"};
   if(LOCAL_PAID.has(toolId))return{ready:true,mode:"local"};
   if(toolId==="burn-after-read-file")return r2Ready()?{ready:true,mode:"r2"}:{ready:false,mode:"r2",reason:"PRIVATE_STORAGE_NOT_READY"};
