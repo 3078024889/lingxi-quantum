@@ -22,6 +22,15 @@ export const TOOL_EXPERIENCE:Record<string,ToolExperience>={
 "pdf-ocr":{kind:"document",primary:"上传 PDF",working:"正在识别文字…",result:"下载文字",advancedAfterUpload:true,localFirst:true},
 "pdf-pages":{kind:"document",primary:"上传 PDF",working:"正在读取页面…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
 "pdf-redact":{kind:"document",primary:"上传 PDF",working:"正在处理文件…",result:"下载处理后的 PDF",advancedAfterUpload:true,localFirst:true},
+"handwriting-ocr":{kind:"image",primary:"上传手写图片",working:"正在识别手写文字…",result:"复制或下载文字",advancedAfterUpload:true,localFirst:true},
+"pdf-to-word":{kind:"document",primary:"上传 PDF",working:"正在转换 Word…",result:"下载 DOCX",advancedAfterUpload:true,localFirst:true},
+"pdf-watermark":{kind:"document",primary:"上传 PDF",working:"正在添加水印…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-page-numbers":{kind:"document",primary:"上传 PDF",working:"正在添加页码…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-crop":{kind:"document",primary:"上传 PDF",working:"正在裁边…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-flatten":{kind:"document",primary:"上传 PDF",working:"正在扁平化…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-compare":{kind:"document",primary:"上传两个 PDF",working:"正在比较…",result:"下载差异",advancedAfterUpload:true,localFirst:true},
+"pdf-to-text":{kind:"document",primary:"上传 PDF",working:"正在提取文字…",result:"下载 TXT",advancedAfterUpload:false,localFirst:true},
+"pdf-to-markdown":{kind:"document",primary:"上传 PDF",working:"正在生成 Markdown…",result:"下载 Markdown",advancedAfterUpload:false,localFirst:true},
 "pdf-to-jpg":{kind:"image",primary:"上传 PDF",working:"正在转换页面…",result:"下载图片",advancedAfterUpload:true,localFirst:true},
 "png-to-jpg":{kind:"image",primary:"上传图片",working:"正在转换…",result:"下载 JPG",advancedAfterUpload:false,localFirst:true},
 "privacy-cleaner":{kind:"privacy",primary:"上传文件",working:"正在清理信息…",result:"下载清理后的文件",advancedAfterUpload:true,localFirst:true},
@@ -37,5 +46,24 @@ export const TOOL_EXPERIENCE:Record<string,ToolExperience>={
 "video-transcription":{kind:"video",primary:"上传视频",working:"正在整理文字…",result:"查看文字与字幕",advancedAfterUpload:true,localFirst:true},
 "video-watermark-remover":{kind:"video",primary:"上传视频",working:"正在处理视频…",result:"下载视频",advancedAfterUpload:true,localFirst:true},
 "webp-to-jpg":{kind:"image",primary:"上传图片",working:"正在转换…",result:"下载 JPG",advancedAfterUpload:false,localFirst:true},
+
+"pdf-overlay":{kind:"document",primary:"上传 PDF",working:"正在叠加页面…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-header-footer":{kind:"document",primary:"上传 PDF",working:"正在添加页眉页脚…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-bates-numbering":{kind:"document",primary:"上传 PDF",working:"正在添加编号…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-viewer-preferences":{kind:"document",primary:"上传 PDF",working:"正在保存打开方式…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+
+"pdf-remove-annotations":{kind:"document",primary:"上传 PDF",working:"正在清除批注…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-grayscale":{kind:"document",primary:"上传 PDF",working:"正在转成黑白灰…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-page-size":{kind:"document",primary:"上传 PDF",working:"正在调整页面…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-metadata-editor":{kind:"document",primary:"上传 PDF",working:"正在保存文件信息…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+
+"pdf-protect":{kind:"document",primary:"上传 PDF",working:"正在加密码…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-unlock":{kind:"document",primary:"上传 PDF",working:"正在解除保护…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-permissions":{kind:"document",primary:"上传 PDF",working:"正在保存权限…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-web-optimize":{kind:"document",primary:"上传 PDF",working:"正在优化打开速度…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+
+"pdf-inspect":{kind:"document",primary:"上传 PDF",working:"正在检查…",result:"查看结果",advancedAfterUpload:true,localFirst:true},
+"pdf-attachments":{kind:"document",primary:"上传 PDF",working:"正在读取附件…",result:"下载 PDF",advancedAfterUpload:true,localFirst:true},
+"pdf-bookmarks":{kind:"document",primary:"上传 PDF",working:"正在读取书签…",result:"查看书签",advancedAfterUpload:true,localFirst:true},
 };
 export function toolExperience(id:string){return TOOL_EXPERIENCE[id]??null}

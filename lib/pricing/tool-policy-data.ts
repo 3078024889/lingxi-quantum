@@ -3,6 +3,12 @@ import type {BillingClass,ExecutionMode} from "./policy";
 export type ToolBillingPolicy={toolId:string;billingClass:BillingClass;executionMode:ExecutionMode;reason:string};
 
 const POLICY:Record<string,ToolBillingPolicy>={
+  "batch-pdf":{toolId:"batch-pdf",billingClass:"PAID_TOOL",executionMode:"local",reason:"unified multi-file PDF workflow billed once per batch"},
+  "pdf-ocr":{toolId:"pdf-ocr",billingClass:"PAID_TOOL",executionMode:"local",reason:"free first page preview; full OCR bills additional pages"},
+  "handwriting-ocr":{toolId:"handwriting-ocr",billingClass:"PAID_TOOL",executionMode:"local",reason:"billed per page/image"},
+  "pdf-to-word":{toolId:"pdf-to-word",billingClass:"PAID_TOOL",executionMode:"local",reason:"billed by source page count"},
+  "pdf-redact":{toolId:"pdf-redact",billingClass:"PAID_TOOL",executionMode:"local",reason:"true redaction export"},
+  "audio-cleanup":{toolId:"audio-cleanup",billingClass:"PAID_TOOL",executionMode:"local",reason:"full cleanup after free 30-second preview"},
   "audio-transcription":{toolId:"audio-transcription",billingClass:"PAID_TOOL",executionMode:"local",reason:"practical tools use one-time payment regardless of execution location"},
   "batch-image-watermark-remover":{toolId:"batch-image-watermark-remover",billingClass:"PAID_TOOL",executionMode:"local",reason:"practical tools use one-time payment"},
   "burn-after-read-file":{toolId:"burn-after-read-file",billingClass:"PAID_TOOL",executionMode:"server",reason:"storage and delivery are operating costs"},

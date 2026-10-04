@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import LongtailDocumentWorkbench from"@/components/tools/LongtailDocumentWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"ICS 日历转 CSV｜灵犀场",description:"把 iCalendar 事件转换为表格 CSV，提取标题、时间、地点、说明和 UID。",alternates:{canonical:"/tools/ics-to-csv",languages:languageAlternates("/tools/ics-to-csv")}};
+export default function Page(){return <AdvancedToolPage title="ICS 日历转 CSV" intro="把 iCalendar 事件转换为表格 CSV，提取标题、时间、地点、说明和 UID。"><LongtailDocumentWorkbench mode="ics-csv"/></AdvancedToolPage>}

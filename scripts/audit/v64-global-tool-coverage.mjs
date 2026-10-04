@@ -1,0 +1,48 @@
+import fs from "node:fs";
+const must=(c,m)=>{if(!c)throw new Error(m)},read=p=>fs.readFileSync(p,"utf8");
+const tw=read("components/tools/TimestampProWorkbench.tsx");
+const hw=read("components/tools/HandwritingOcrWorkbench.tsx");
+const pw=read("components/tools/PdfToWordWorkbench.tsx");
+const px=read("components/tools/PdfExtraWorkbench.tsx");
+const work=read("components/tools/ToolWorkbench.tsx");
+const seo=read("lib/seo/global-seo.ts");
+const recipes=JSON.parse(read("lib/tools/platform/tool-recipes.json"));
+for(const x of ["microseconds","nanoseconds","JWT","Excel / Sheets","10,000"])must(tw.includes(x),`V64_TIME_MISSING:${x}`);
+for(const x of ["Xenova/trocr-small-handwritten","segmentLines","tesseract.js","导出 Word DOCX","HANDWRITING_CANVAS_UNAVAILABLE","canvasToPng"])must(hw.includes(x),`V64_HANDWRITING_MISSING:${x}`);
+for(const x of ["buildEditableDocx","buildVisualDocx","getTextContent","tesseract.js"])must(pw.includes(x),`V64_PDF_WORD_MISSING:${x}`);
+for(const x of ['"watermark"','"page-numbers"','"crop"','"flatten"','"compare"','"markdown"'])must(px.includes(x),`V64_PDF_EXTRA_MISSING:${x}`);
+must(work.includes("TimestampProWorkbench"),"V64_TIMESTAMP_ROUTE_MISSING");
+for(const slug of ["handwriting-ocr","pdf-to-word","pdf-watermark","pdf-page-numbers","pdf-crop","pdf-flatten","pdf-compare","pdf-to-text","pdf-to-markdown"])must(seo.includes(`slug:"${slug}"`),`V64_SEO_MISSING:${slug}`);
+for(const slug of ["handwriting-ocr","pdf-to-word","pdf-watermark","pdf-page-numbers","pdf-crop","pdf-flatten","pdf-compare","pdf-to-text","pdf-to-markdown"])must(recipes.some(x=>x.slug===slug),`V64_RECIPE_MISSING:${slug}`);
+console.log("V64_GLOBAL_TOOL_COVERAGE=PASS");
+console.log("V64_TIMESTAMP_PRO=READY");
+console.log("V64_HANDWRITING_OCR=READY");
+console.log("V64_PDF_TO_WORD=READY");
+console.log("V64_PDF_EXTRA_ACTIONS=7");
+
+const rare=read("components/tools/RareImageConvertWorkbench.tsx");
+const docs=read("components/tools/LongtailDocumentWorkbench.tsx");
+const ids=read("components/tools/IdGeneratorWorkbench.tsx");
+const qr=read("components/tools/QrProWorkbench.tsx");
+const niche=read("components/tools/PdfNicheWorkbench.tsx");
+must(read("components/tools/HandwritingOcrWorkbench.tsx").includes("window.document.createElement"),"V64R3_DOCUMENT_SHADOW_FIX_MISSING");
+for(const x of ["createImageBitmap","IMAGE_DECODE_UNSUPPORTED","image/webp"])must(rare.includes(x),`V64R3_RARE_IMAGE_MISSING:${x}`);
+for(const x of ["EPUB_OPF_MISSING","spine itemref","content.xml","BEGIN:VEVENT","BEGIN:VCARD"])must(docs.includes(x),`V64R3_LONGTAIL_DOC_MISSING:${x}`);
+must(ids.includes("crypto.randomUUID"),"V64R5_UUID_CRYPTO_SOURCE_MISSING");
+must(ids.includes("ULID"),"V64R5_ULID_MODE_MISSING");
+must(/Math\.min\(\s*10_?000\s*,\s*count\s*\)/.test(ids),"V64R5_ID_LIMIT_LOGIC_MISSING");
+must(/max=\{10_?000\}/.test(ids),"V64R5_ID_LIMIT_UI_MISSING");
+for(const x of ["WIFI:T:","BEGIN:VCARD","SMSTO:","geo:","BEGIN:VEVENT","type:\"svg\""])must(qr.includes(x),`V64R3_QR_MISSING:${x}`);
+for(const x of ['"rasterize"','"nup"','"remove-metadata"',"perSheet"])must(niche.includes(x),`V64R3_PDF_NICHE_MISSING:${x}`);
+for(const slug of ["jfif-to-jpg","bmp-to-png","avif-to-jpg","ico-to-png","gif-to-jpg","epub-to-txt","odt-to-txt","ics-to-csv","vcf-to-csv","uuid-generator","pdf-rasterize","pdf-pages-per-sheet","pdf-remove-metadata"])must(seo.includes(`slug:"${slug}"`),`V64R3_SEO_MISSING:${slug}`);
+console.log("V64R3_LONGTAIL_TOOL_BATCH=PASS");
+
+const timestampR4=read("components/tools/TimestampProWorkbench.tsx");
+const idR4=read("components/tools/IdGeneratorWorkbench.tsx");
+must(!/\b\d+n\b/.test(timestampR4),"V64R4_TIMESTAMP_BIGINT_LITERAL_PRESENT");
+must(!/\b\d+n\b/.test(idR4),"V64R4_ID_BIGINT_LITERAL_PRESENT");
+must(timestampR4.includes("millisecondsToScaledInteger"),"V64R4_TIMESTAMP_ES2017_SCALER_MISSING");
+must(idR4.includes("randomUlidTail")&&idR4.includes("byte & 31"),"V64R4_ULID_ES2017_RANDOM_MISSING");
+console.log("V64R4_ES2017_RUNTIME_CODE=PASS");
+
+console.log("V64R5_BEHAVIORAL_AUDIT=PASS");

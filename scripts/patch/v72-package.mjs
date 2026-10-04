@@ -1,0 +1,2 @@
+import fs from 'node:fs';import path from 'node:path';
+const root=path.resolve(process.argv[2]||'.');const file=path.join(root,'package.json');const pkg=JSON.parse(fs.readFileSync(file,'utf8'));pkg.dependencies=pkg.dependencies||{};delete pkg.dependencies.pdfstudio;pkg.dependencies['qpdf-run']='0.2.1';fs.writeFileSync(file,JSON.stringify(pkg,null,2)+'\n');console.log('V72R1_QPDF_RUN_DEPENDENCY=0.2.1');

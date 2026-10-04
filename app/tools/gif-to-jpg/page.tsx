@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import RareImageConvertWorkbench from"@/components/tools/RareImageConvertWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"GIF 转 JPG｜灵犀场",description:"浏览器按当前解码帧转换；动画 GIF 不保证保留动画，适合提取静态画面。",alternates:{canonical:"/tools/gif-to-jpg",languages:languageAlternates("/tools/gif-to-jpg")}};
+export default function Page(){return <AdvancedToolPage title="GIF 转 JPG" intro="浏览器按当前解码帧转换；动画 GIF 不保证保留动画，适合提取静态画面。"><RareImageConvertWorkbench sourceLabel="GIF" target="image/jpeg" note="浏览器按当前解码帧转换；动画 GIF 不保证保留动画，适合提取静态画面。"/></AdvancedToolPage>}

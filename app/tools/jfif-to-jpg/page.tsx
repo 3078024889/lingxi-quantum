@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import RareImageConvertWorkbench from"@/components/tools/RareImageConvertWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"JFIF 转 JPG｜灵犀场",description:"JFIF 是 JPEG 系列的长尾格式，常见于旧相机、下载图片和部分 Windows 工作流。",alternates:{canonical:"/tools/jfif-to-jpg",languages:languageAlternates("/tools/jfif-to-jpg")}};
+export default function Page(){return <AdvancedToolPage title="JFIF 转 JPG" intro="JFIF 是 JPEG 系列的长尾格式，常见于旧相机、下载图片和部分 Windows 工作流。"><RareImageConvertWorkbench sourceLabel="JFIF / JPEG File Interchange Format" target="image/jpeg" note="JFIF 是 JPEG 系列的长尾格式，常见于旧相机、下载图片和部分 Windows 工作流。"/></AdvancedToolPage>}

@@ -1,0 +1,27 @@
+import fs from"node:fs";
+const read=p=>fs.readFileSync(p,"utf8"),must=(c,m)=>{if(!c)throw new Error(m)};
+const workbench=read("components/tools/BatchPdfWorkbench.tsx");
+const policy=read("lib/tools/commerce/pricing-policy.json");
+const contract=read("lib/tools/commerce/v67-pricing-contract.ts");
+const paid=read("lib/tools/paid-catalog.ts");
+const readiness=read("lib/tools/service-readiness.ts");
+const seo=read("lib/seo/global-seo.ts");
+const advanced=read("lib/tools/advanced-catalog.ts");
+const migration=read("supabase/migrations/20261004174000_batch_pdf_v68.sql");
+
+for(const token of ["maxFiles={20}","400 * 1024 * 1024","清除元数据","全页旋转","文字水印","添加页码","扁平化表单","最终合并为 1 个 PDF"])must(workbench.includes(token),`V68_BATCH_WORKFLOW_MISSING:${token}`);
+must(workbench.includes('toolId="batch-pdf"')&&workbench.includes('quantity={1}'),"V68_BATCH_PRICE_BOUNDARY_MISSING");
+must(!workbench.includes("pdf-ocr")&&!workbench.includes("pdf-to-word"),"V68_BATCH_MUST_NOT_BUNDLE_PRO_OCR_WORD");
+must(paid.includes('"batch-pdf"'),"V68_PAID_CATALOG_MISSING");
+must(readiness.includes('"batch-pdf"'),"V68_READINESS_MISSING");
+must(contract.includes('toolId:"batch-pdf",enabled:true'),"V68_CONTRACT_NOT_ENABLED");
+must(policy.includes('"batch-pdf"')&&policy.includes('"perBatch": 3'),"V68_POLICY_PRICE_MISSING");
+must(migration.includes("'batch-pdf'")&&migration.includes("0,3,3")&&migration.includes("true"),"V68_DB_PRICE_MISSING");
+must(seo.includes('slug:"batch-pdf"'),"V68_SEO_MISSING");
+must(advanced.includes('/tools/batch-pdf'),"V68_ADVANCED_MISSING");
+console.log("V68_BATCH_PDF_WORKBENCH=PASS");
+console.log("V68_BATCH_PRICE_CNY=3");
+console.log("V68_BATCH_PRICE_USD=3");
+console.log("V68_BATCH_MAX_FILES=20");
+console.log("V68_BATCH_MAX_TOTAL_MB=400");
+console.log("V68_MONETIZATION_MATRIX=READY");

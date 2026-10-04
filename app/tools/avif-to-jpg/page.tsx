@@ -1,3 +1,3 @@
-import AdvancedToolPage from "@/components/tools/AdvancedToolPage";
-import ImageConvertWorkbench from "@/components/tools/ImageConvertWorkbench";
-export default function Page(){return <AdvancedToolPage title="AVIF 转 JPG" intro="选择 AVIF，浏览器可解码时直接转成 JPG。"><ImageConvertWorkbench output="jpeg" accept="image/avif,.avif" title="AVIF 转 JPG" /></AdvancedToolPage>}
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import RareImageConvertWorkbench from"@/components/tools/RareImageConvertWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"AVIF 转 JPG｜灵犀场",description:"适合把浏览器/网站下载的 AVIF 转成办公和社交平台更常见的 JPG。",alternates:{canonical:"/tools/avif-to-jpg",languages:languageAlternates("/tools/avif-to-jpg")}};
+export default function Page(){return <AdvancedToolPage title="AVIF 转 JPG" intro="适合把浏览器/网站下载的 AVIF 转成办公和社交平台更常见的 JPG。"><RareImageConvertWorkbench sourceLabel="AVIF" target="image/jpeg" note="适合把浏览器/网站下载的 AVIF 转成办公和社交平台更常见的 JPG。"/></AdvancedToolPage>}

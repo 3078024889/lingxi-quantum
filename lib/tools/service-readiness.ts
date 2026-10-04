@@ -6,7 +6,7 @@ import {mediaProviderReady} from "@/lib/tools/media/provider";
 export type ToolRuntimeState={ready:boolean;mode:"local"|"r2"|"compute";reason?:string};
 
 const LOCAL_PAID=new Set([
-  "audio-transcription","batch-image-watermark-remover","cross-page-stamp","e-sign-pdf",
+  "batch-pdf",  "pdf-ocr",  "handwriting-ocr",  "pdf-to-word",  "pdf-redact",  "reverse-video",  "loop-video",  "stop-motion-video",  "audio-cleanup",  "audio-transcription","batch-image-watermark-remover","cross-page-stamp","e-sign-pdf",
   "food-calorie","id-photo-ai","image-watermark-remover","pdf-editor","subtitle-translate",
   "temp-mail-batch","video-dubbing","video-translate","video-transcription","video-watermark-remover",
 ]);

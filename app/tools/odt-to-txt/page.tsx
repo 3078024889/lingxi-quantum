@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import LongtailDocumentWorkbench from"@/components/tools/LongtailDocumentWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"ODT 转 TXT｜灵犀场",description:"提取 LibreOffice / OpenDocument 文本文档中的段落与标题。",alternates:{canonical:"/tools/odt-to-txt",languages:languageAlternates("/tools/odt-to-txt")}};
+export default function Page(){return <AdvancedToolPage title="ODT 转 TXT" intro="提取 LibreOffice / OpenDocument 文本文档中的段落与标题。"><LongtailDocumentWorkbench mode="odt-txt"/></AdvancedToolPage>}

@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import RareImageConvertWorkbench from"@/components/tools/RareImageConvertWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"ICO 转 PNG｜灵犀场",description:"用于提取 Windows 图标或 favicon 为普通 PNG；浏览器不支持的 ICO 编码会明确失败。",alternates:{canonical:"/tools/ico-to-png",languages:languageAlternates("/tools/ico-to-png")}};
+export default function Page(){return <AdvancedToolPage title="ICO 转 PNG" intro="用于提取 Windows 图标或 favicon 为普通 PNG；浏览器不支持的 ICO 编码会明确失败。"><RareImageConvertWorkbench sourceLabel="ICO / Windows Icon" target="image/png" note="用于提取 Windows 图标或 favicon 为普通 PNG；浏览器不支持的 ICO 编码会明确失败。"/></AdvancedToolPage>}

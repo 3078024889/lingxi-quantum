@@ -1,7 +1,8 @@
 import {toolIntro} from "@/lib/tools/product-copy";
 import {toolTitle as translatedToolTitle} from '@/lib/tools/card-i18n';
 import {toolFacts} from './product-facts';
-export const SITE="https://lingxifield.com";
+import {PRIMARY_SITE} from "./site-domains";
+export const SITE=PRIMARY_SITE;
 export const SEO_LOCALES={  "zh":{
     hreflang:"zh-CN",name:"中文",dir:"ltr",
     brand:"灵犀场 LINGXIFIELD",homeTitle:"灵犀场｜PDF、图片与实用工具",homeDesc:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
@@ -118,6 +119,43 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"pdf-ocr",zh:"PDF OCR",en:"PDF OCR",mode:"online" as const},
   {slug:"pdf-pages",zh:"PDF 页面整理",en:"PDF Page Organizer",mode:"local" as const},
   {slug:"pdf-redact",zh:"PDF 永久脱敏",en:"PDF Redaction",mode:"local" as const},
+  {slug:"handwriting-ocr",zh:"手写文字识别",en:"Handwriting OCR",mode:"online" as const},
+  {slug:"pdf-to-word",zh:"PDF 转 Word",en:"PDF to Word",mode:"local" as const},
+  {slug:"pdf-watermark",zh:"PDF 加水印",en:"Watermark PDF",mode:"local" as const},
+  {slug:"pdf-page-numbers",zh:"PDF 加页码",en:"Add PDF Page Numbers",mode:"local" as const},
+  {slug:"pdf-crop",zh:"PDF 裁边",en:"Crop PDF",mode:"local" as const},
+  {slug:"pdf-flatten",zh:"PDF 扁平化",en:"Flatten PDF",mode:"local" as const},
+  {slug:"pdf-compare",zh:"PDF 比较",en:"Compare PDFs",mode:"local" as const},
+  {slug:"pdf-to-text",zh:"PDF 转 TXT",en:"PDF to Text",mode:"local" as const},
+  {slug:"pdf-to-markdown",zh:"PDF 转 Markdown",en:"PDF to Markdown",mode:"local" as const},
+  {slug:"jfif-to-jpg",zh:"JFIF 转 JPG",en:"JFIF to JPG",mode:"local" as const},
+  {slug:"bmp-to-png",zh:"BMP 转 PNG",en:"BMP to PNG",mode:"local" as const},
+  {slug:"ico-to-png",zh:"ICO 转 PNG",en:"ICO to PNG",mode:"local" as const},
+  {slug:"gif-to-jpg",zh:"GIF 转 JPG",en:"GIF to JPG",mode:"local" as const},
+  {slug:"epub-to-txt",zh:"EPUB 转 TXT",en:"EPUB to TXT",mode:"local" as const},
+  {slug:"odt-to-txt",zh:"ODT 转 TXT",en:"ODT to TXT",mode:"local" as const},
+  {slug:"ics-to-csv",zh:"ICS 转 CSV",en:"ICS to CSV",mode:"local" as const},
+  {slug:"vcf-to-csv",zh:"VCF 转 CSV",en:"VCF to CSV",mode:"local" as const},
+  {slug:"uuid-generator",zh:"UUID / ULID 生成器",en:"UUID / ULID Generator",mode:"local" as const},
+  {slug:"pdf-rasterize",zh:"PDF 栅格化",en:"Rasterize PDF",mode:"local" as const},
+  {slug:"pdf-pages-per-sheet",zh:"PDF 多页合一",en:"PDF Pages per Sheet",mode:"local" as const},
+  {slug:"pdf-remove-metadata",zh:"删除 PDF 元数据",en:"Remove PDF Metadata",mode:"local" as const},
+  {slug:"pdf-halve-pages",zh:"PDF 页面拆半",en:"Halve PDF Pages",mode:"local" as const},
+  {slug:"pdf-search",zh:"PDF 全文搜索",en:"Search PDFs",mode:"local" as const},
+  {slug:"reverse-video",zh:"视频倒放",en:"Reverse Video",mode:"local" as const},
+  {slug:"loop-video",zh:"视频循环",en:"Loop Video",mode:"local" as const},
+  {slug:"stop-motion-video",zh:"视频定格",en:"Stop Motion Video",mode:"local" as const},
+  {slug:"regex-tester",zh:"正则表达式测试",en:"Regex Tester",mode:"local" as const},
+  {slug:"text-diff",zh:"文本对比",en:"Text Diff",mode:"local" as const},
+  {slug:"csv-json",zh:"CSV 转 JSON",en:"CSV to JSON",mode:"local" as const},
+  {slug:"xml-formatter",zh:"XML 格式化",en:"XML Formatter",mode:"local" as const},
+  {slug:"jwt-decoder",zh:"JWT 解码",en:"JWT Decoder",mode:"local" as const},
+  {slug:"url-parser",zh:"URL 解析",en:"URL Parser",mode:"local" as const},
+  {slug:"case-converter",zh:"大小写转换",en:"Case Converter",mode:"local" as const},
+  {slug:"number-base-converter",zh:"进制转换",en:"Number Base Converter",mode:"local" as const},
+  {slug:"audio-cleanup",zh:"音频降噪 / 人声增强",en:"Audio Cleanup",mode:"local" as const},
+  {slug:"cron-parser",zh:"Cron 表达式解析器",en:"Cron Parser",mode:"local" as const},
+  {slug:"batch-pdf",zh:"批量处理 PDF",en:"Batch PDF",mode:"local" as const},
   {slug:"pdf-to-jpg",zh:"PDF 转 JPG",en:"PDF to JPG",mode:"local" as const},
   {slug:"png-to-jpg",zh:"PNG 转 JPG",en:"PNG to JPG",mode:"local" as const},
   {slug:"pptx-to-txt",zh:"PPTX 转 TXT",en:"PPTX to TXT",mode:"local" as const},
@@ -145,6 +183,25 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"video-watermark-remover",zh:"视频去水印",en:"Video Watermark Cleanup",mode:"online" as const},
   {slug:"webp-to-jpg",zh:"WebP 转 JPG / PNG",en:"WebP to JPG / PNG",mode:"local" as const},
   {slug:"xlsx-to-csv",zh:"Excel 转 CSV",en:"Excel to CSV",mode:"local" as const}
+,
+  {slug:"pdf-overlay",zh:"PDF 叠加",en:"Overlay PDF",mode:"local" as const},
+  {slug:"pdf-header-footer",zh:"PDF 页眉页脚",en:"PDF Header & Footer",mode:"local" as const},
+  {slug:"pdf-bates-numbering",zh:"PDF Bates 编号",en:"PDF Bates Numbering",mode:"local" as const},
+  {slug:"pdf-viewer-preferences",zh:"PDF 打开方式",en:"PDF Viewer Preferences",mode:"local" as const},
+
+  {slug:"pdf-remove-annotations",zh:"删除 PDF 批注",en:"Remove PDF Annotations",mode:"local" as const},
+  {slug:"pdf-grayscale",zh:"PDF 转灰度",en:"Grayscale PDF",mode:"local" as const},
+  {slug:"pdf-page-size",zh:"调整 PDF 页面尺寸",en:"Resize PDF Pages",mode:"local" as const},
+  {slug:"pdf-metadata-editor",zh:"编辑 PDF 文件信息",en:"Edit PDF Metadata",mode:"local" as const},
+
+  {slug:"pdf-protect",zh:"PDF 加密码",en:"Protect PDF",mode:"local" as const},
+  {slug:"pdf-unlock",zh:"解除 PDF 密码",en:"Unlock PDF",mode:"local" as const},
+  {slug:"pdf-permissions",zh:"PDF 权限设置",en:"PDF Permissions",mode:"local" as const},
+  {slug:"pdf-web-optimize",zh:"PDF 网页快速打开",en:"Optimize PDF for Web",mode:"local" as const},
+
+  {slug:"pdf-inspect",zh:"PDF 结构检查",en:"Inspect PDF",mode:"local" as const},
+  {slug:"pdf-attachments",zh:"PDF 附件管理",en:"PDF Attachments",mode:"local" as const},
+  {slug:"pdf-bookmarks",zh:"PDF 书签查看",en:"View PDF Bookmarks",mode:"local" as const},
 ] as const;
 
 export type GlobalTool=(typeof GLOBAL_TOOL_CATALOG)[number];

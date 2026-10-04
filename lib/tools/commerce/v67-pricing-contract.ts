@@ -1,0 +1,21 @@
+export type PricingSpec={toolId:string;enabled:boolean;billing:"per_page"|"per_file"|"per_batch"|"per_minute"|"per_character";unitName:"page"|"file"|"batch"|"minute"|"character";cny:string;usd:string;note:string};
+export const V67_TOOL_PRICING:PricingSpec[]=[
+{toolId:"pdf-ocr",enabled:true,billing:"per_page",unitName:"page",cny:"first page free; +1.00 each additional page",usd:"first page free; +1.00 each additional page",note:"full OCR; first page preview is free"},
+{toolId:"handwriting-ocr",enabled:true,billing:"per_page",unitName:"page",cny:"1.00/page",usd:"1.00/page",note:"multilingual and English TrOCR use the same rate"},
+{toolId:"pdf-to-word",enabled:true,billing:"per_page",unitName:"page",cny:"1.00 first page; +0.30/additional page",usd:"1.00 first page; +0.30/additional page",note:"page count is authoritative quantity"},
+{toolId:"pdf-editor",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"page count is metadata only"},
+{toolId:"pdf-redact",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"true rasterized redaction export"},
+{toolId:"e-sign-pdf",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"visual signature/seal export"},
+{toolId:"cross-page-stamp",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"cross-page stamp/seal"},
+{toolId:"batch-pdf",enabled:true,billing:"per_batch",unitName:"batch",cny:"3.00/batch",usd:"3.00/batch",note:"reserved until unified batch PDF workbench exists"},
+{toolId:"reverse-video",enabled:false,billing:"per_minute",unitName:"minute",cny:"free",usd:"free",note:"V69: browser-local effect is free; no payment step"},
+{toolId:"loop-video",enabled:false,billing:"per_minute",unitName:"minute",cny:"free",usd:"free",note:"V69: browser-local effect is free; no payment step"},
+{toolId:"stop-motion-video",enabled:false,billing:"per_minute",unitName:"minute",cny:"free",usd:"free",note:"V69: browser-local Stop Motion/Boomerang is free; no payment step"},
+{toolId:"audio-cleanup",enabled:true,billing:"per_minute",unitName:"minute",cny:"0.50/started minute; min 1.00",usd:"0.50/started minute; min 1.00",note:"first 30 seconds preview free"},
+{toolId:"video-transcription",enabled:true,billing:"per_minute",unitName:"minute",cny:"0.50/started minute",usd:"0.50/started minute",note:"same rate as audio transcription"},
+{toolId:"audio-transcription",enabled:true,billing:"per_minute",unitName:"minute",cny:"0.50/started minute",usd:"0.50/started minute",note:"same rate as video transcription"},
+{toolId:"subtitle-translate",enabled:true,billing:"per_character",unitName:"character",cny:"1.00/5000 characters",usd:"1.00/5000 characters",note:"source subtitle character count"},
+{toolId:"video-dubbing",enabled:false,billing:"per_minute",unitName:"minute",cny:"1.00/started minute",usd:"1.00/started minute",note:"enable only after production-quality gate"},
+{toolId:"video-dubbing-premium",enabled:false,billing:"per_minute",unitName:"minute",cny:"3.00/minute",usd:"3.00/minute",note:"reserved for real voice cloning + character consistency + lip sync"},
+{toolId:"video-translate",enabled:true,billing:"per_minute",unitName:"minute",cny:"1.50/started minute/target language",usd:"1.50/started minute/target language",note:"existing target-language multiplier preserved"},
+];

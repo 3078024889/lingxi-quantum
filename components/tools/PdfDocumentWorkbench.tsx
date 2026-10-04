@@ -1,0 +1,56 @@
+"use client";
+
+import {useEffect,useMemo,useState} from "react";
+import {PDFDocument,PDFName} from "pdf-lib";
+import FileDropzone from "@/components/tools/FileDropzone";
+import ResultPanel from "@/components/tools/ResultPanel";
+import {openPdf,renderPdfPage,canvasToBlob} from "@/lib/tools/pdf-render-client";
+import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
+import type {ToolResultFile} from "@/lib/tools/types";
+
+export type PdfDocumentMode="remove-annotations"|"grayscale"|"page-size"|"metadata";
+type Copy={local:string;run:string;working:string;done:string;invalid:string;removed:string;grayscaleNote:string;size:string;fit:string;title:string;author:string;subject:string;keywords:string;loadInfo:string;};
+const C:Record<LingxiLang,Copy>={
+zh:{local:"免费 · 文件只在浏览器里处理。",run:"开始处理",working:"正在处理…",done:"处理完成",invalid:"这个 PDF 暂时无法处理，请换一个文件再试。",removed:"会移除页面上的高亮、便签、图章和其他批注。",grayscaleNote:"灰度转换会重新生成页面，因此可选文字、表单和批注不会保留。",size:"页面尺寸",fit:"完整放入页面并自动居中",title:"标题",author:"作者",subject:"主题",keywords:"关键词",loadInfo:"读取文件信息…"},
+en:{local:"Free · Files stay in your browser.",run:"Process",working:"Processing…",done:"Done",invalid:"This PDF could not be processed. Try another file.",removed:"Removes highlights, notes, stamps and other page annotations.",grayscaleNote:"Grayscale rebuilds each page, so selectable text, forms and annotations are not preserved.",size:"Page size",fit:"Fit the full page and center it",title:"Title",author:"Author",subject:"Subject",keywords:"Keywords",loadInfo:"Reading document info…"},
+ja:{local:"無料 · ファイルはブラウザ内だけで処理されます。",run:"処理する",working:"処理中…",done:"完了",invalid:"このPDFは処理できませんでした。別のファイルをお試しください。",removed:"ハイライト、付箋、スタンプなどの注釈を削除します。",grayscaleNote:"グレースケール化では各ページを再生成するため、選択可能な文字、フォーム、注釈は保持されません。",size:"ページサイズ",fit:"ページ全体を収めて中央配置",title:"タイトル",author:"作成者",subject:"件名",keywords:"キーワード",loadInfo:"文書情報を読み込み中…"},
+ko:{local:"무료 · 파일은 브라우저 안에서만 처리됩니다.",run:"처리",working:"처리 중…",done:"완료",invalid:"이 PDF를 처리할 수 없습니다. 다른 파일을 사용해 보세요.",removed:"형광펜, 메모, 도장 등 페이지 주석을 제거합니다.",grayscaleNote:"회색조 변환은 페이지를 다시 만들기 때문에 선택 가능한 텍스트, 양식과 주석은 유지되지 않습니다.",size:"페이지 크기",fit:"내용 전체를 맞추고 가운데 정렬",title:"제목",author:"작성자",subject:"주제",keywords:"키워드",loadInfo:"문서 정보 읽는 중…"},
+fr:{local:"Gratuit · Les fichiers restent dans votre navigateur.",run:"Traiter",working:"Traitement…",done:"Terminé",invalid:"Ce PDF n’a pas pu être traité. Essayez un autre fichier.",removed:"Supprime surlignages, notes, tampons et autres annotations.",grayscaleNote:"Le passage en niveaux de gris reconstruit chaque page : le texte sélectionnable, les formulaires et annotations ne sont pas conservés.",size:"Taille de page",fit:"Ajuster toute la page et la centrer",title:"Titre",author:"Auteur",subject:"Sujet",keywords:"Mots-clés",loadInfo:"Lecture des informations…"},
+de:{local:"Kostenlos · Dateien bleiben im Browser.",run:"Verarbeiten",working:"Wird verarbeitet…",done:"Fertig",invalid:"Dieses PDF konnte nicht verarbeitet werden. Bitte eine andere Datei versuchen.",removed:"Entfernt Markierungen, Notizen, Stempel und andere Anmerkungen.",grayscaleNote:"Für Graustufen werden die Seiten neu erzeugt; auswählbarer Text, Formulare und Anmerkungen bleiben nicht erhalten.",size:"Seitengröße",fit:"Gesamte Seite einpassen und zentrieren",title:"Titel",author:"Autor",subject:"Betreff",keywords:"Schlüsselwörter",loadInfo:"Dokumentinfos werden gelesen…"},
+es:{local:"Gratis · Los archivos permanecen en tu navegador.",run:"Procesar",working:"Procesando…",done:"Listo",invalid:"No se pudo procesar este PDF. Prueba con otro archivo.",removed:"Elimina resaltados, notas, sellos y otras anotaciones.",grayscaleNote:"La conversión a escala de grises vuelve a crear cada página, por lo que no conserva texto seleccionable, formularios ni anotaciones.",size:"Tamaño de página",fit:"Ajustar toda la página y centrarla",title:"Título",author:"Autor",subject:"Asunto",keywords:"Palabras clave",loadInfo:"Leyendo información…"},
+pt:{local:"Grátis · Os ficheiros ficam no navegador.",run:"Processar",working:"A processar…",done:"Concluído",invalid:"Não foi possível processar este PDF. Tente outro ficheiro.",removed:"Remove destaques, notas, carimbos e outras anotações.",grayscaleNote:"A conversão para tons de cinzento recria cada página; texto selecionável, formulários e anotações não são preservados.",size:"Tamanho da página",fit:"Ajustar a página inteira e centrar",title:"Título",author:"Autor",subject:"Assunto",keywords:"Palavras-chave",loadInfo:"A ler informações…"},
+ar:{local:"مجاني · تبقى الملفات داخل المتصفح.",run:"ابدأ المعالجة",working:"جارٍ المعالجة…",done:"اكتمل",invalid:"تعذر معالجة ملف PDF هذا. جرّب ملفاً آخر.",removed:"يزيل التظليل والملاحظات والأختام والتعليقات الأخرى.",grayscaleNote:"تحويل التدرج الرمادي يعيد إنشاء الصفحات، لذلك لا يحتفظ بالنص القابل للتحديد أو النماذج أو التعليقات.",size:"حجم الصفحة",fit:"ملاءمة الصفحة كاملة وتوسيطها",title:"العنوان",author:"المؤلف",subject:"الموضوع",keywords:"الكلمات المفتاحية",loadInfo:"جارٍ قراءة معلومات الملف…"}
+};
+
+const SIZES={A4:[595.28,841.89],A3:[841.89,1190.55],Letter:[612,792],Legal:[612,1008]} as const;
+function outFile(name:string,bytes:Uint8Array):ToolResultFile{const copy=new Uint8Array(bytes.byteLength);copy.set(bytes);const blob=new Blob([copy.buffer],{type:"application/pdf"});return{name,blob,mime:"application/pdf",size:blob.size};}
+function tagged(name:string,tag:string){return `${name.replace(/\.pdf$/i,"")}-${tag}.pdf`;}
+
+export default function PdfDocumentWorkbench({mode}:{mode:PdfDocumentMode}){
+  const {lang}=useLingxiLang();const t=C[lang];
+  const [files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]);
+  const [size,setSize]=useState<keyof typeof SIZES>("A4"),[loadingInfo,setLoadingInfo]=useState(false);
+  const [title,setTitle]=useState(""),[author,setAuthor]=useState(""),[subject,setSubject]=useState(""),[keywords,setKeywords]=useState("");
+  const file=files[0]||null;const ready=useMemo(()=>Boolean(file)&&!busy,[file,busy]);
+
+  useEffect(()=>{let live=true;if(mode!=="metadata"||!file)return;setLoadingInfo(true);void (async()=>{try{const d=await PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});if(!live)return;setTitle(d.getTitle()||"");setAuthor(d.getAuthor()||"");setSubject(d.getSubject()||"");setKeywords((d.getKeywords()||"").replace(/^\s+|\s+$/g,""));}catch{}finally{if(live)setLoadingInfo(false)}})();return()=>{live=false};},[file,mode]);
+
+  async function run(){if(!file||busy)return;setBusy(true);setError("");setResult([]);try{
+    if(mode==="remove-annotations"){
+      const d=await PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});for(const p of d.getPages())p.node.delete(PDFName.of("Annots"));const bytes=await d.save();setResult([outFile(tagged(file.name,"no-annotations"),bytes)]);
+    }else if(mode==="metadata"){
+      const d=await PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});d.setTitle(title.trim());d.setAuthor(author.trim());d.setSubject(subject.trim());d.setKeywords(keywords.split(/[,，;；\n]/).map(x=>x.trim()).filter(Boolean));const bytes=await d.save();setResult([outFile(tagged(file.name,"metadata"),bytes)]);
+    }else if(mode==="page-size"){
+      const src=await PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});const out=await PDFDocument.create();const [tw,th]=SIZES[size];for(const p of src.getPages()){const {width,height}=p.getSize();const embedded=await out.embedPage(p);const scale=Math.min(tw/width,th/height),w=width*scale,h=height*scale;const np=out.addPage([tw,th]);np.drawPage(embedded,{x:(tw-w)/2,y:(th-h)/2,width:w,height:h});}const bytes=await out.save();setResult([outFile(tagged(file.name,size.toLowerCase()),bytes)]);
+    }else{
+      const pdf=await openPdf(file);const out=await PDFDocument.create();try{for(let n=1;n<=pdf.numPages;n++){const srcPage=await pdf.getPage(n),vp=srcPage.getViewport({scale:1}),r=await renderPdfPage(pdf,n,1.55);const ctx=r.canvas.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");const img=ctx.getImageData(0,0,r.canvas.width,r.canvas.height),data=img.data;for(let i=0;i<data.length;i+=4){const g=Math.round(data[i]*0.299+data[i+1]*0.587+data[i+2]*0.114);data[i]=g;data[i+1]=g;data[i+2]=g;}ctx.putImageData(img,0,0);const jpg=await canvasToBlob(r.canvas,"image/jpeg",.92),embedded=await out.embedJpg(await jpg.arrayBuffer()),p=out.addPage([vp.width,vp.height]);p.drawImage(embedded,{x:0,y:0,width:vp.width,height:vp.height});r.canvas.width=r.canvas.height=1;}const bytes=await out.save();setResult([outFile(tagged(file.name,"grayscale"),bytes)]);}finally{pdf.destroy?.();}
+    }
+  }catch(e){setError(t.invalid);console.error(e)}finally{setBusy(false)}}
+
+  return <div className="space-y-4"><p className="text-sm text-[var(--lx-muted)]">{t.local}</p><FileDropzone accept="application/pdf,.pdf" maxFiles={1} files={files} onChange={n=>{setFiles(n.slice(0,1));setResult([]);setError("")}} disabled={busy} kind="pdf"/>
+    {mode==="remove-annotations"&&<p className="rounded-xl border border-[var(--lx-line)] p-4 text-sm text-[var(--lx-muted)]">{t.removed}</p>}
+    {mode==="grayscale"&&<p className="rounded-xl border border-[var(--lx-line)] p-4 text-sm text-[var(--lx-muted)]">{t.grayscaleNote}</p>}
+    {mode==="page-size"&&<div className="grid gap-3 md:grid-cols-2"><label className="text-sm">{t.size}<select value={size} onChange={e=>setSize(e.target.value as keyof typeof SIZES)} className="mt-2 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><option value="A4">A4</option><option value="A3">A3</option><option value="Letter">Letter</option><option value="Legal">Legal</option></select></label><div className="flex items-end text-sm text-[var(--lx-muted)]">{t.fit}</div></div>}
+    {mode==="metadata"&&<div className="grid gap-3 md:grid-cols-2">{loadingInfo&&<p className="md:col-span-2 text-sm text-[var(--lx-muted)]">{t.loadInfo}</p>}<label className="text-sm">{t.title}<input value={title} onChange={e=>setTitle(e.target.value)} className="mt-2 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"/></label><label className="text-sm">{t.author}<input value={author} onChange={e=>setAuthor(e.target.value)} className="mt-2 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"/></label><label className="text-sm">{t.subject}<input value={subject} onChange={e=>setSubject(e.target.value)} className="mt-2 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"/></label><label className="text-sm">{t.keywords}<input value={keywords} onChange={e=>setKeywords(e.target.value)} placeholder="PDF, contract, archive" className="mt-2 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"/></label></div>}
+    {ready&&<button type="button" onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)]">{busy?t.working:t.run}</button>}{busy&&<p className="text-sm text-[var(--lx-muted)]">{t.working}</p>}{error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}{result.length>0&&<ResultPanel sourceSlug={`pdf-${mode}`} files={result} messageZh="处理完成，可直接下载。" messageEn="Done. Your PDF is ready to download."/>}</div>;
+}

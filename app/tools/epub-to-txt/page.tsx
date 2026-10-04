@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import LongtailDocumentWorkbench from"@/components/tools/LongtailDocumentWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"EPUB 转 TXT｜灵犀场",description:"按 EPUB 目录与阅读顺序提取电子书正文，批量导出纯文本。",alternates:{canonical:"/tools/epub-to-txt",languages:languageAlternates("/tools/epub-to-txt")}};
+export default function Page(){return <AdvancedToolPage title="EPUB 转 TXT" intro="按 EPUB 目录与阅读顺序提取电子书正文，批量导出纯文本。"><LongtailDocumentWorkbench mode="epub-txt"/></AdvancedToolPage>}

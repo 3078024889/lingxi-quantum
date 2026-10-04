@@ -1,8 +1,8 @@
 {
-  "version": 1,
+  "version": 2,
   "grossMarginFloor": 0.45,
   "pricingRule": "minimum_price = total_platform_cost / (1 - gross_margin_floor)",
-  "currencyRule": "CNY and USD are independent price books; never FX-convert one into the other.",
+  "currencyRule": "For every paid LingxiField practical tool, CNY and USD must use the same numeric amount (for example ¥1 = $1). Free tools stay free in both currencies.",
   "ownConnection": {
     "modelCostPaidByUser": true,
     "platformCostStillBillable": true,
@@ -58,32 +58,24 @@
       }
     },
     "video-dubbing": {
-      "mode": "freemium",
-      "free": {
-        "account": "once",
-        "previewSeconds": 30,
-        "fullExport": false
-      },
+      "mode": "disabled-quality-gate",
       "CNY": {
-        "perMinute": 3.0
+        "perStartedMinute": 1
       },
       "USD": {
-        "perMinute": 3.0
+        "perStartedMinute": 1
       }
     },
     "subtitle-translate": {
       "mode": "freemium",
       "free": {
-        "previewLines": 10,
-        "fullExport": false
+        "preview": true
       },
       "CNY": {
-        "perMinute": 0.3,
-        "minimum": 0.6
+        "per5000Characters": 1
       },
       "USD": {
-        "perMinute": 0.3,
-        "minimum": 0.6
+        "per5000Characters": 1
       }
     },
     "id-photo-ai": {
@@ -92,10 +84,10 @@
         "editAndPreview": true
       },
       "CNY": {
-        "export": 1.0
+        "export": 1
       },
       "USD": {
-        "export": 1.0
+        "export": 1
       }
     },
     "website-builder": {
@@ -104,14 +96,14 @@
         "planAndHeroPreview": true
       },
       "CNY": {
-        "singlePage": 6.0,
-        "multiPage8": 15.0,
-        "webAppFrom": 30.0
+        "singlePage": 6,
+        "multiPage8": 15,
+        "webAppFrom": 30
       },
       "USD": {
-        "singlePage": 6.0,
-        "multiPage8": 15.0,
-        "webAppFrom": 30.0
+        "singlePage": 6,
+        "multiPage8": 15,
+        "webAppFrom": 30
       }
     },
     "sasi-video-generate": {
@@ -136,6 +128,171 @@
         "1080pProviderCostCeiling": 0.21
       },
       "premiumRule": "max(resolution_public_floor, (provider_cost + platform_cost) / 0.55)"
+    },
+    "pdf-ocr": {
+      "mode": "freemium",
+      "free": {
+        "previewPages": 1
+      },
+      "CNY": {
+        "additionalPage": 1
+      },
+      "USD": {
+        "additionalPage": 1
+      }
+    },
+    "handwriting-ocr": {
+      "mode": "paid",
+      "CNY": {
+        "perPage": 1
+      },
+      "USD": {
+        "perPage": 1
+      }
+    },
+    "pdf-to-word": {
+      "mode": "paid",
+      "CNY": {
+        "firstPage": 1,
+        "additionalPage": 0.3
+      },
+      "USD": {
+        "firstPage": 1,
+        "additionalPage": 0.3
+      }
+    },
+    "pdf-editor": {
+      "mode": "paid",
+      "CNY": {
+        "perFile": 2
+      },
+      "USD": {
+        "perFile": 2
+      }
+    },
+    "pdf-redact": {
+      "mode": "paid",
+      "CNY": {
+        "perFile": 2
+      },
+      "USD": {
+        "perFile": 2
+      }
+    },
+    "e-sign-pdf": {
+      "mode": "paid",
+      "CNY": {
+        "perFile": 2
+      },
+      "USD": {
+        "perFile": 2
+      }
+    },
+    "cross-page-stamp": {
+      "mode": "paid",
+      "CNY": {
+        "perFile": 2
+      },
+      "USD": {
+        "perFile": 2
+      }
+    },
+    "batch-pdf": {
+      "mode": "paid",
+      "CNY": {
+        "perBatch": 3
+      },
+      "USD": {
+        "perBatch": 3
+      },
+      "batchLimits": {
+        "maxFiles": 20,
+        "maxTotalBytes": 419430400
+      },
+      "included": [
+        "remove_metadata",
+        "rotate",
+        "watermark",
+        "page_numbers",
+        "flatten_forms",
+        "merge"
+      ],
+      "excluded": [
+        "ocr",
+        "pdf_to_word",
+        "redact",
+        "e_sign"
+      ]
+    },
+    "reverse-video": {
+      "mode": "free",
+      "execution": "browser-local",
+      "costRule": "no server or model charge"
+    },
+    "loop-video": {
+      "mode": "free",
+      "execution": "browser-local",
+      "costRule": "no server or model charge"
+    },
+    "stop-motion-video": {
+      "mode": "free",
+      "execution": "browser-local",
+      "costRule": "no server or model charge"
+    },
+    "audio-cleanup": {
+      "mode": "freemium",
+      "free": {
+        "previewSeconds": 30
+      },
+      "CNY": {
+        "perStartedMinute": 0.5,
+        "minimum": 1
+      },
+      "USD": {
+        "perStartedMinute": 0.5,
+        "minimum": 1
+      }
+    },
+    "video-transcription": {
+      "mode": "paid",
+      "CNY": {
+        "perStartedMinute": 0.5
+      },
+      "USD": {
+        "perStartedMinute": 0.5
+      }
+    },
+    "audio-transcription": {
+      "mode": "paid",
+      "CNY": {
+        "perStartedMinute": 0.5
+      },
+      "USD": {
+        "perStartedMinute": 0.5
+      }
+    },
+    "video-dubbing-premium": {
+      "mode": "reserved-disabled",
+      "requires": [
+        "voice_clone",
+        "character_consistency",
+        "lip_sync"
+      ],
+      "CNY": {
+        "perMinute": 3
+      },
+      "USD": {
+        "perMinute": 3
+      }
+    },
+    "video-translate": {
+      "mode": "paid",
+      "CNY": {
+        "perStartedMinutePerTargetLanguage": 1.5
+      },
+      "USD": {
+        "perStartedMinutePerTargetLanguage": 1.5
+      }
     }
   }
 }

@@ -4,6 +4,7 @@ import {PointerEvent,useEffect,useMemo,useRef,useState} from "react";
 import {PDFDocument} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
+import PaidActionButton from "@/components/tools/PaidActionButton";
 import {openPdf,renderPdfPage,canvasToBlob} from "@/lib/tools/pdf-render-client";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
@@ -61,7 +62,7 @@ export default function PdfRedactWorkbench(){
   {preview&&<><div className="flex flex-wrap items-center gap-3 text-sm text-[var(--lx-muted)]"><label>{c.page} <input type="number" min={1} max={pages} value={page} onChange={e=>void changePage(Math.max(1,Math.min(pages,Number(e.target.value)||1)))} className="w-16 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-2 py-1 text-[var(--lx-ink)]"/></label><select value={scope} onChange={e=>setScope(e.target.value as "one"|"all")} className="rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="one">{c.one}</option><option value="all">{c.all}</option></select></div>
   <div ref={wrap} className="relative mx-auto w-fit max-w-full touch-none overflow-hidden rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)]" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);const p=point(e);start.current=p;setBox({x:p.x,y:p.y,w:0,h:0})}} onPointerMove={e=>{if(!start.current)return;const p=point(e),s=start.current;setBox({x:Math.min(s.x,p.x),y:Math.min(s.y,p.y),w:Math.abs(p.x-s.x),h:Math.abs(p.y-s.y)})}} onPointerUp={()=>start.current=null}><NextImage src={preview} alt="" className="block max-h-[680px] max-w-full select-none" width={1600} height={1200} unoptimized/><div className="pointer-events-none absolute bg-black/75" style={{left:`${box.x*100}%`,top:`${box.y*100}%`,width:`${box.w*100}%`,height:`${box.h*100}%`}}/></div></>}
   <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">{c.warning}</div>
-  <button disabled={!file||busy||box.w<.005||box.h<.005} onClick={exportRedacted} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.export}</button>
+  {file&&box.w>=.005&&box.h>=.005&&!busy&&<PaidActionButton toolId="pdf-redact" quantity={1} metadata={{pages,scope}} onPaid={exportRedacted} label={c.export}/>}
   {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
  </div>;

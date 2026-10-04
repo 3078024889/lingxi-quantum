@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import RareImageConvertWorkbench from"@/components/tools/RareImageConvertWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"BMP 转 PNG｜灵犀场",description:"适合把体积较大的 Windows 位图转成更通用的 PNG。",alternates:{canonical:"/tools/bmp-to-png",languages:languageAlternates("/tools/bmp-to-png")}};
+export default function Page(){return <AdvancedToolPage title="BMP 转 PNG" intro="适合把体积较大的 Windows 位图转成更通用的 PNG。"><RareImageConvertWorkbench sourceLabel="BMP / Windows Bitmap" target="image/png" note="适合把体积较大的 Windows 位图转成更通用的 PNG。"/></AdvancedToolPage>}

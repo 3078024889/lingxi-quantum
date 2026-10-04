@@ -1,0 +1,3 @@
+import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import LongtailDocumentWorkbench from"@/components/tools/LongtailDocumentWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";
+export const metadata:Metadata={title:"VCF/vCard 转 CSV｜灵犀场",description:"把通讯录 vCard 批量转换为 CSV，提取姓名、机构、职位、电话和邮箱。",alternates:{canonical:"/tools/vcf-to-csv",languages:languageAlternates("/tools/vcf-to-csv")}};
+export default function Page(){return <AdvancedToolPage title="VCF/vCard 转 CSV" intro="把通讯录 vCard 批量转换为 CSV，提取姓名、机构、职位、电话和邮箱。"><LongtailDocumentWorkbench mode="vcf-csv"/></AdvancedToolPage>}

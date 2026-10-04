@@ -9,8 +9,9 @@ import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
 import SiteStructuredData from "@/components/SiteStructuredData";
 import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
+import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 
-const SITE="https://lingxifield.com";
+const SITE=PRIMARY_SITE;
 const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
 
 const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const seg=location.pathname.split('/')[1]||'';const locales={en:'en',ja:'ja',ko:'ko',fr:'fr',de:'de',es:'es',pt:'pt',ar:'ar'};const locale=locales[seg]||'zh-CN';const root=document.documentElement;root.lang=locale;root.dir=seg==='ar'?'rtl':'ltr';}catch{}})();`;
@@ -23,6 +24,7 @@ export const metadata:Metadata={
  },
  description:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
  applicationName:"灵犀场｜PDF、图片与实用工具",
+ alternates:{canonical:SITE},
  keywords:[
   "灵犀场","LINGXIFIELD","SASI","免费在线工具",
   "PDF压缩","PDF合并","PDF拆分","PDF编辑","电子签名",

@@ -84,6 +84,25 @@ const TITLES:Record<string,Partial<T>>={
 "food-calorie":L("食物卡路里分析","Food Calorie Analysis","食事カロリー分析","음식 칼로리 분석","Analyse des calories","Kalorienanalyse","Análisis de calorías","Análise de calorias","تحليل السعرات"),
 "pdf-ocr":L("PDF OCR","PDF OCR","PDF OCR","PDF OCR","OCR PDF","PDF OCR","OCR PDF","OCR PDF","OCR PDF"),
 "ocr":L("图片 OCR","Image OCR","画像 OCR","이미지 OCR","OCR image","Bild-OCR","OCR de imagen","OCR de imagem","OCR للصور"),
+
+"pdf-overlay":L("PDF 叠加","Overlay PDF","PDF重ね合わせ","PDF 겹치기","Superposer PDF","PDF überlagern","Superponer PDF","Sobrepor PDF","تراكب PDF"),
+"pdf-header-footer":L("PDF 页眉页脚","PDF Header & Footer","PDFヘッダー・フッター","PDF 머리글·바닥글","En-tête et pied de page PDF","PDF Kopf- & Fußzeile","Encabezado y pie PDF","Cabeçalho e rodapé PDF","رأس وتذييل PDF"),
+"pdf-bates-numbering":L("PDF Bates 编号","PDF Bates Numbering","PDF Bates番号","PDF Bates 번호","Numérotation Bates PDF","PDF Bates-Nummerierung","Numeración Bates PDF","Numeração Bates PDF","ترقيم Bates PDF"),
+"pdf-viewer-preferences":L("PDF 打开方式","PDF Viewer Preferences","PDF表示設定","PDF 보기 설정","Préférences d’affichage PDF","PDF Anzeigeoptionen","Preferencias de vista PDF","Preferências de visualização PDF","إعدادات عرض PDF"),
+
+"pdf-remove-annotations":L("删除 PDF 批注","Remove PDF Annotations","PDF注釈を削除","PDF 주석 제거","Supprimer les annotations PDF","PDF-Anmerkungen entfernen","Eliminar anotaciones PDF","Remover anotações PDF","إزالة تعليقات PDF"),
+"pdf-grayscale":L("PDF 转灰度","Grayscale PDF","PDFをグレースケール化","PDF 회색조 변환","PDF en niveaux de gris","PDF in Graustufen","PDF en escala de grises","PDF em tons de cinzento","تحويل PDF إلى تدرج رمادي"),
+"pdf-page-size":L("调整 PDF 页面尺寸","Resize PDF Pages","PDFページサイズ変更","PDF 페이지 크기 변경","Redimensionner les pages PDF","PDF-Seitengröße ändern","Cambiar tamaño de páginas PDF","Redimensionar páginas PDF","تغيير حجم صفحات PDF"),
+"pdf-metadata-editor":L("编辑 PDF 文件信息","Edit PDF Metadata","PDF文書情報を編集","PDF 문서 정보 편집","Modifier les métadonnées PDF","PDF-Metadaten bearbeiten","Editar metadatos PDF","Editar metadados PDF","تحرير بيانات PDF"),
+
+"pdf-protect":L("PDF 加密码","Protect PDF","PDFをパスワード保護","PDF 비밀번호 보호","Protéger un PDF","PDF schützen","Proteger PDF","Proteger PDF","حماية PDF بكلمة مرور"),
+"pdf-unlock":L("解除 PDF 密码","Unlock PDF","PDFのパスワード解除","PDF 잠금 해제","Déverrouiller un PDF","PDF entsperren","Desbloquear PDF","Desbloquear PDF","إلغاء قفل PDF"),
+"pdf-permissions":L("PDF 权限设置","PDF Permissions","PDF権限設定","PDF 권한 설정","Autorisations PDF","PDF-Berechtigungen","Permisos PDF","Permissões PDF","صلاحيات PDF"),
+"pdf-web-optimize":L("PDF 网页快速打开","Optimize PDF for Web","PDFをWeb表示向けに最適化","PDF 웹 최적화","Optimiser PDF pour le Web","PDF fürs Web optimieren","Optimizar PDF para web","Otimizar PDF para Web","تحسين PDF للويب"),
+
+"pdf-inspect":L("PDF 结构检查","Inspect PDF","PDF構造を確認","PDF 구조 검사","Inspecter un PDF","PDF prüfen","Inspeccionar PDF","Verificar PDF","فحص بنية PDF"),
+"pdf-attachments":L("PDF 附件管理","PDF Attachments","PDF添付ファイル","PDF 첨부 파일","Pièces jointes PDF","PDF-Anhänge","Adjuntos PDF","Anexos PDF","مرفقات PDF"),
+"pdf-bookmarks":L("PDF 书签查看","View PDF Bookmarks","PDFしおりを表示","PDF 북마크 보기","Voir les signets PDF","PDF-Lesezeichen anzeigen","Ver marcadores PDF","Ver marcadores PDF","عرض إشارات PDF المرجعية"),
 };
 
 export function toolTitle(lang:LingxiLang,slug:string,fallback:string){

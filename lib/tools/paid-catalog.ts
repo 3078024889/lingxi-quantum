@@ -1,4 +1,10 @@
 export const PUBLIC_PAID_TOOL_IDS = [
+  "batch-pdf",
+  "pdf-ocr",
+  "handwriting-ocr",
+  "pdf-to-word",
+  "pdf-redact",
+  "audio-cleanup",
   "id-photo-ai",
   "video-watermark-remover",
   "video-transcription",

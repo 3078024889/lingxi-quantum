@@ -14,6 +14,8 @@ import FileDropzone from "./FileDropzone";
 import ResultPanel from "./ResultPanel";
 import ErrorExplain from "./ErrorExplain";
 import ResizeImageWorkbench from "./ResizeImageWorkbench";
+import TimestampProWorkbench from "./TimestampProWorkbench";
+import QrProWorkbench from "./QrProWorkbench";
 import { convertImage, compressImageToTarget, resizeImage, stripImageMetadata } from "@/lib/tools/shared/image-canvas";
 import { detectFileType, extensionMismatch } from "@/lib/tools/shared/magic-bytes";
 import { md5Hex, sha256Hex, buffersEqual } from "@/lib/tools/shared/hash";
@@ -38,8 +40,8 @@ export default function ToolWorkbench({ tool }: Props) {
 
   if (tool.slug === "json-formatter") return <JsonWorkbench />;
   if (["text-counter", "remove-duplicate-lines", "remove-empty-lines", "url-encode-decode", "base64-encode-decode"].includes(tool.slug)) return <TextWorkbench slug={tool.slug} />;
-  if (tool.slug === "timestamp-converter") return <TimestampWorkbench />;
-  if (tool.slug === "qr-code-generator") return <QrWorkbench />;
+  if (tool.slug === "timestamp-converter") return <TimestampProWorkbench />;
+  if (tool.slug === "qr-code-generator") return <QrProWorkbench />;
   if (tool.slug === "resize-image") return <ResizeImageWorkbench tool={tool} />;
 
   return <FileToolWorkbench tool={tool} />;
