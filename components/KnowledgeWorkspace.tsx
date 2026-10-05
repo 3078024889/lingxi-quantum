@@ -29,6 +29,8 @@ import{SasiComposerSurface,SasiComposerTextarea}from"@/components/SasiComposerCo
 import{SasiConversationTurns,SasiStatusLine}from"@/components/SasiResultCore";
 import{createSasiTurn,type SasiConversationTurn}from"@/lib/sasi/core/session-contract";
 import{selectSasiSkills}from"@/lib/sasi/skills/router";
+import SasiSkillPicker from"@/components/SasiSkillPicker";
+import type{SasiSkillId}from"@/lib/sasi/skills/types";
 async function zipText(file:File){
  const zip=await JSZip.loadAsync(file);
  const allowed=/\.(txt|md|json|csv|ya?ml|js|jsx|ts|tsx|css|html|sql|py)$/i;
@@ -141,10 +143,11 @@ async function pdfToSource(file: File, lang:LingxiLang): Promise<Pick<KnowledgeS
   return{text:pieces.join("\n\n"),locators};
 }
 
-export default function KnowledgeWorkspace({mode="book",initialPrompt="",initialFiles=[]}:{mode?:Mode;initialPrompt?:string;initialFiles?:File[]}){
+export default function KnowledgeWorkspace({mode="book",initialPrompt="",initialFiles=[],initialSkillIds=[]}:{mode?:Mode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[]}){
   const {lang}=useLingxiLang();
   const [sources,setSources]=useState<KnowledgeSource[]>([]);
   const [question,setQuestion]=useState(initialPrompt);const [useConnectedService,setUseConnectedService]=useState(false);
+  const [selectedSkillIds,setSelectedSkillIds]=useState<SasiSkillId[]>(initialSkillIds);
   const [answer,setAnswer]=useState("");
   const [learningEventId,setLearningEventId]=useState("");
   const [feedbackSignal,setFeedbackSignal]=useState<FeedbackSignal|null>(null);
@@ -316,8 +319,9 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
       const skillPlan=selectSasiSkills({mode,prompt:raw,files:sources.map(source=>source.title),hasEvidence:evidence.length>0});
+      const skillIds=[...new Set([...selectedSkillIds,...skillPlan.ids])].slice(0,8);
       const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json","Idempotency-Key":pendingTurn.id},body:JSON.stringify({clientTurnId:pendingTurn.id,acceptConnectedBilling:useConnectedService,
-        question:apiQuestion,mode,intelligence,useConnectedService,skillIds:skillPlan.ids,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
+        question:apiQuestion,mode,intelligence,useConnectedService,skillIds,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
       })});
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
@@ -457,6 +461,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
                 <span>{x.label}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{x.help}</span></span>
                 {intelligence===x.value?<span className="text-xs text-[var(--lx-muted)]">✓</span>:null}
               </button>)}
+              <SasiSkillPicker mode={mode} selected={selectedSkillIds} onChange={setSelectedSkillIds}/>
               <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"} <span className="float-right">↗</span></Link>
               <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span className="float-right">↗</span></Link>
             </div>}

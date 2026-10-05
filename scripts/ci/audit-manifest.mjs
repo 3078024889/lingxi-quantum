@@ -11,6 +11,8 @@ export const PRODUCTION_CRITICAL_AUDITS=[
  "scripts/audit/v57-task-workspace-truth.mjs",
  "scripts/audit/v58-durable-task-truth.mjs",
  "scripts/audit/v59-global-discoverability.mjs",
+ "scripts/audit/r18r7-module-asset-integrity.mjs",
+ "scripts/audit/r18r8-skill-selection.mjs",
 ];
 
 for(const audit of PRODUCTION_CRITICAL_AUDITS){
