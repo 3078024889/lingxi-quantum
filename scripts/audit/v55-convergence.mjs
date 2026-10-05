@@ -6,8 +6,10 @@ if((composer.match(/SASI_UNIFIED_EXTENSIONS=\[/g)||[]).length)bad.push("duplicat
 const docs=read("lib/files/document-intake.ts");
 if(!docs.includes("SASI_INTAKE_LIMITS.maxFiles")||!docs.includes("SASI_INTAKE_LIMITS.maxFileBytes")||!docs.includes("SASI_INTAKE_LIMITS.maxBatchBytes"))bad.push("document intake limits are not unified");
 const surface=read("components/SasiOneSurface.tsx");
-if(surface.includes("const MODE_LABELS"))bad.push("component-local mode translation table remains");
-if(!surface.includes("sasiModeLabel(lang,item.id)"))bad.push("SASI mode glossary is not active");
+if(!surface.includes("SasiUnifiedLauncher"))bad.push("unified SASI launcher is not active");
+if(surface.includes("MODES.map(")||surface.includes("lx-sasi-modebar-reference"))bad.push("retired visible five-mode selector remains");
+const launcher=read("components/SasiUnifiedLauncher.tsx");
+if(!launcher.includes("SASI_UNIFIED_ACCEPT"))bad.push("unified launcher does not use shared intake contract");
 const session=read("lib/sasi/core/session-contract.ts");
 if(!session.includes("deriveExecutionPhase")||session.includes('type SasiExecutionPhase="idle"'))bad.push("session lifecycle remains duplicated");
 const governor=read("lib/tools/engine/resource-governor.ts");

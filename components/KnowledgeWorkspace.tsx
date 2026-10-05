@@ -141,10 +141,10 @@ async function pdfToSource(file: File, lang:LingxiLang): Promise<Pick<KnowledgeS
   return{text:pieces.join("\n\n"),locators};
 }
 
-export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;modeBar?:ReactNode}){
+export default function KnowledgeWorkspace({mode="book",initialPrompt="",initialFiles=[]}:{mode?:Mode;initialPrompt?:string;initialFiles?:File[]}){
   const {lang}=useLingxiLang();
   const [sources,setSources]=useState<KnowledgeSource[]>([]);
-  const [question,setQuestion]=useState("");const [useConnectedService,setUseConnectedService]=useState(false);
+  const [question,setQuestion]=useState(initialPrompt);const [useConnectedService,setUseConnectedService]=useState(false);
   const [answer,setAnswer]=useState("");
   const [learningEventId,setLearningEventId]=useState("");
   const [feedbackSignal,setFeedbackSignal]=useState<FeedbackSignal|null>(null);
@@ -163,9 +163,16 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
   const [thread,setThread]=useState<SasiConversationTurn[]>([]);
   const fileInputRef=useRef<HTMLInputElement|null>(null);
 
+  const initialFilesRef=useRef(initialFiles);
+  const initialFilesImportedRef=useRef(false);
   useEffect(()=>{
-    readSources().then(rows=>{setSources(rows);setReady(true)})
-      .catch(()=>setNotice(tr(lang,"browserUnavailable")));
+    readSources().then(async rows=>{
+      setSources(rows);setReady(true);
+      if(!initialFilesImportedRef.current&&initialFilesRef.current.length){
+        initialFilesImportedRef.current=true;
+        await importFiles(initialFilesRef.current);
+      }
+    }).catch(()=>setNotice(tr(lang,"browserUnavailable")));
   },[lang]);
 
   async function importOneFile(file:File){
@@ -444,15 +451,16 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
                 <b>{lang==="zh"?"添加照片和文件":"Add photos and files"}</b>
                 <span className="mt-1 block text-xs text-[var(--lx-faint)]">PDF · EPUB · Word · PPTX · Excel · CSV · TXT · 图片 · 音频 · 视频 · 代码 · ZIP</span>
               </button>
+              <div className="mt-1 border-t border-[var(--lx-line)] px-3 pb-1 pt-3 text-xs text-[var(--lx-muted)]">{lang==="zh"?"回答方式":"Response depth"}</div>
+              {intelligenceLabels.map(x=><button key={x.value} type="button" onClick={()=>{setIntelligence(x.value);setAddOpen(false)}}
+                className="flex w-full items-start justify-between rounded-xl px-3 py-2.5 text-left text-sm hover:bg-[var(--lx-soft)]">
+                <span>{x.label}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{x.help}</span></span>
+                {intelligence===x.value?<span className="text-xs text-[var(--lx-muted)]">✓</span>:null}
+              </button>)}
               <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"} <span className="float-right">↗</span></Link>
               <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span className="float-right">↗</span></Link>
             </div>}
           </div>
-
-          <select value={intelligence} disabled={askBusy} onChange={e=>setIntelligence(e.target.value as Intelligence)}
-            className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)] outline-none">
-            {intelligenceLabels.map(x=><option key={x.value} value={x.value}>{x.label}</option>)}
-          </select>
 
           <button onClick={ask} disabled={askBusy||!question.trim()}
             className="ml-auto grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">
@@ -465,7 +473,6 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
           {needsConnection&&<Link href="/sasi/connections" className="font-medium text-blue-600 hover:underline">{lang==="zh"?"连接我的智能服务 →":"Connect my intelligence service →"}</Link>}
         </div>}
       </SasiComposerSurface>
-      {modeBar}
     </div>
   </section>;
 }

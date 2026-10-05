@@ -1,12 +1,14 @@
 "use client";
 
-import {useEffect,useId,useRef,useState} from "react";
+import {useEffect,useId,useRef,useState,type ReactNode} from "react";
 import Link from "next/link";
 import {FUNCTION_OPTIONS,type FunctionTask} from "@/lib/sasi/function-options";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {localizedFunctionOptions,functionMenuText} from "@/lib/sasi/function-menu-i18n";
 
-export default function SasiFunctionMenu({task,selected,onChange,onUpload,disabled=false}:{task:FunctionTask;selected:string[];onChange:(ids:string[])=>void;onUpload?:()=>void;disabled?:boolean}){
+export default function SasiFunctionMenu({
+ task,selected,onChange,onUpload,disabled=false,extraContent
+}:{task:FunctionTask;selected:string[];onChange:(ids:string[])=>void;onUpload?:()=>void;disabled?:boolean;extraContent?:ReactNode}){
  const{lang}=useLingxiLang();
  const mt=(key:Parameters<typeof functionMenuText>[1])=>functionMenuText(lang,key);
  const[open,setOpen]=useState(false);
@@ -28,7 +30,7 @@ export default function SasiFunctionMenu({task,selected,onChange,onUpload,disabl
 
  return <div ref={root} className="relative">
   <button ref={trigger} type="button" disabled={disabled} aria-label={mt("add")} aria-expanded={open} aria-controls={id}
-   onClick={()=>{setMaxHeight(Math.max(120,Math.min(420,(trigger.current?.getBoundingClientRect().top??400)-88)));setOpen(v=>!v)}}
+   onClick={()=>{setMaxHeight(Math.max(120,Math.min(460,(trigger.current?.getBoundingClientRect().top??400)-88)));setOpen(v=>!v)}}
    className="grid h-10 w-10 place-items-center rounded-full text-2xl transition hover:bg-[var(--lx-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">＋</button>
   {open&&<div id={id} role="region" aria-label={mt("add")} style={{maxHeight}} className="absolute bottom-12 left-0 z-50 w-[min(340px,calc(100vw-64px))] overflow-y-auto rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2 shadow-[0_12px_48px_rgba(0,0,0,.16)]">
    {onUpload&&<button type="button" className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]"
@@ -41,6 +43,7 @@ export default function SasiFunctionMenu({task,selected,onChange,onUpload,disabl
       onChange={()=>onChange(selected.includes(option.id)?selected.filter(x=>x!==option.id):[...selected,option.id])}/>
     <span className="text-sm">{option.label}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{option.description}</span></span>
    </label>)}
+   {extraContent&&<div className="mt-2 border-t border-[var(--lx-line)] px-2 py-2">{extraContent}</div>}
    <div className="mt-2 border-t border-[var(--lx-line)] pt-1">
     <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{mt("connect")} <span aria-hidden className="float-right">↗</span></Link>
     <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span aria-hidden className="float-right">↗</span></Link>

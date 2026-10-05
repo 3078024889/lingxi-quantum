@@ -12,6 +12,7 @@ import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {composerText} from "@/lib/sasi/composer-i18n";
 import {transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 import{SASI_UNIFIED_ACCEPT}from"@/lib/sasi/composer-core";
+import{SASI_INTAKE_LIMITS,validateSasiIntakeBatch}from"@/lib/sasi/core/intake-contract";
 import{downloadSasiDocx}from"@/lib/sasi/export-docx";
 import{SasiComposerSurface,SasiComposerTextarea,SasiUserMessage}from"@/components/SasiComposerCore";
 import{SasiAssistantText,SasiStatusLine,SasiVideoResult,SasiWebsiteResult}from"@/components/SasiResultCore";
@@ -81,14 +82,14 @@ function localWebsite(prompt:string,lang:LingxiLang,heroImage=""){
  <section id="start" class="cta"><h2>${site("siteContinue")}</h2><p>${site("siteDraftNote")}</p></section></main></body></html>`;
 }
 
-export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar?:ReactNode}){
+export default function SasiChatCreationStudio({mode,initialPrompt="",initialFiles=[]}:{mode:Mode;initialPrompt?:string;initialFiles?:File[]}){
  const{lang}=useLingxiLang();
  const ct=(key:Parameters<typeof composerText>[1],vars?:Record<string,string|number>)=>composerText(lang,key,vars);
  const ctRef=useRef(ct);ctRef.current=ct;
  const[selectedFunctions,setSelectedFunctions]=useState<string[]>([]);
  const changeFunctions=(ids:string[])=>{setSelectedFunctions(ids);setQuote(null)};
- const[prompt,setPrompt]=useState("");
- const[files,setFiles]=useState<FileItem[]>([]);
+ const[prompt,setPrompt]=useState(initialPrompt);
+ const[files,setFiles]=useState<FileItem[]>(()=>initialFiles.slice(0,SASI_INTAKE_LIMITS.maxFiles).map(file=>({id:crypto.randomUUID(),file,state:"queued" as UploadState,progress:0})));
  const[projectId,setProjectId]=useState("");
  const[ratio,setRatio]=useState<(typeof VIDEO_RATIOS)[number]>("9:16");
  const[resolution,setResolution]=useState<(typeof VIDEO_RESOLUTIONS)[number]>("1080p");
@@ -151,10 +152,25 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
  function addFiles(list:FileList|File[]){
   if(operation.current)return;
   setQuote(null);
-  const incoming=[...Array.from(list)].slice(0,20-files.length).map(file=>({
+  const incoming=Array.from(list);
+  const nextFiles=[...files.map(item=>item.file),...incoming];
+  const intake=validateSasiIntakeBatch(nextFiles);
+  if(!intake.ok){
+   const first=intake.issues[0]||"";
+   const message=first==="TOO_MANY_FILES"
+    ?(lang==="zh"?`一次最多添加 ${SASI_INTAKE_LIMITS.maxFiles} 个文件。`:`Add up to ${SASI_INTAKE_LIMITS.maxFiles} files at a time.`)
+    :first==="BATCH_TOO_LARGE"
+      ?(lang==="zh"?"这批文件太大了，请分几次添加。":"This batch is too large. Add the files in smaller groups.")
+      :first.startsWith("FILE_TOO_LARGE:")
+        ?(lang==="zh"?"有文件超过 30MB，请分开处理。":"A file is over 30 MB. Please use a smaller file.")
+        :(lang==="zh"?"其中有暂不支持的文件格式。":"One of these file types is not supported yet.");
+   setMessage(message);
+   return;
+  }
+  const rows=incoming.map(file=>({
    id:crypto.randomUUID(),file,state:"queued" as UploadState,progress:0
   }));
-  setFiles(items=>[...items,...incoming]);
+  setFiles(items=>[...items,...rows]);
  }
  function removeFile(id:string){if(operation.current)return;setQuote(null);setFiles(items=>items.filter(x=>x.id!==id))}
  function onDrop(e:React.DragEvent){e.preventDefault();setDragging(false);if(e.dataTransfer.files?.length)addFiles(e.dataTransfer.files)}
@@ -410,19 +426,23 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
 
       <div className="mt-1 flex flex-wrap items-center gap-2">
        <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={e=>{if(e.target.files)addFiles(e.target.files);e.currentTarget.value=""}}/>
-       <SasiFunctionMenu task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} onUpload={()=>inputRef.current?.click()} disabled={busy}/>
+       <SasiFunctionMenu task={mode==="drama"?"video":"website"} selected={selectedFunctions} onChange={changeFunctions} onUpload={()=>inputRef.current?.click()} disabled={busy}
+        extraContent={mode==="drama"?<div className="space-y-2">
+         <div className="text-xs font-medium text-[var(--lx-muted)]">{ct("creationSettings")}</div>
+         <div className="grid grid-cols-3 gap-2">
+          <select disabled={busy} aria-label={ct("resolution")} value={resolution} onChange={e=>{setResolution(e.target.value as (typeof VIDEO_RESOLUTIONS)[number]);setQuote(null)}} className="min-w-0 rounded-lg border border-[var(--lx-line)] bg-transparent px-2 py-2 text-xs">
+           {availableResolutions.map(x=><option key={x} value={x}>{x==="4k"?"4K":x}</option>)}
+          </select>
+          <select disabled={busy} aria-label={ct("ratio")} value={ratio} onChange={e=>{setRatio(e.target.value as (typeof VIDEO_RATIOS)[number]);setQuote(null)}} className="min-w-0 rounded-lg border border-[var(--lx-line)] bg-transparent px-2 py-2 text-xs">
+           {VIDEO_RATIOS.map(x=><option key={x}>{x}</option>)}
+          </select>
+          <select disabled={busy} aria-label={ct("duration")} value={duration} onChange={e=>{setDuration(Number(e.target.value) as (typeof VIDEO_DURATIONS)[number]);setQuote(null)}} className="min-w-0 rounded-lg border border-[var(--lx-line)] bg-transparent px-2 py-2 text-xs">
+           {VIDEO_DURATIONS.map(x=><option key={x} value={x}>{x} {ct("seconds")}</option>)}
+          </select>
+         </div>
+        </div>:null}/>
 
-       {mode==="drama"&&<>
-        <select disabled={busy} aria-label={ct("resolution")} value={resolution} onChange={e=>{setResolution(e.target.value as (typeof VIDEO_RESOLUTIONS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
-         {availableResolutions.map(x=><option key={x} value={x}>{x==="4k"?"4K":x}</option>)}
-        </select>
-        <select disabled={busy} aria-label={ct("ratio")} value={ratio} onChange={e=>{setRatio(e.target.value as (typeof VIDEO_RATIOS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
-         {VIDEO_RATIOS.map(x=><option key={x}>{x}</option>)}
-        </select>
-        <select disabled={busy} aria-label={ct("duration")} value={duration} onChange={e=>{setDuration(Number(e.target.value) as (typeof VIDEO_DURATIONS)[number]);setQuote(null)}} className="rounded-full border-0 bg-transparent px-2 py-2 text-xs text-[var(--lx-muted)]">
-         {VIDEO_DURATIONS.map(x=><option key={x} value={x}>{x} {ct("seconds")}</option>)}
-        </select>
-       </>}
+
 
        <div className="ml-auto flex items-center gap-2">
         {quote&&<button disabled={busy} onClick={()=>void confirm()} className="rounded-full border border-[var(--lx-line)] px-3 py-2 text-xs">{`${ct("confirm")} ${(quote.task?.request?.billingCurrency==="USD"?"$":"¥")}${(Number(quote.task.estimated_fen||0)/100).toFixed(2)}`}</button>}
@@ -434,7 +454,6 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
       {mode==="drama"&&<label className="flex items-start gap-2 px-3 pt-2 text-[11px] text-[var(--lx-muted)]"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
       <SasiStatusLine>{message}</SasiStatusLine>
      </SasiComposerSurface>
-     {modeBar}
     </section>
    </div>
   </main>;

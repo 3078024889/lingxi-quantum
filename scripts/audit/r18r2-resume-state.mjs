@@ -1,0 +1,12 @@
+import fs from"node:fs";
+const must=(v,m)=>{if(!v)throw new Error(m)};
+must(fs.existsSync("components/SasiUnifiedLauncher.tsx"),"R18R2_LAUNCHER_MISSING");
+must(fs.existsSync("lib/sasi/core/intent-router.ts"),"R18R2_INTENT_ROUTER_MISSING");
+must(!fs.existsSync("components/SasiStartGuide.tsx"),"R18R2_START_GUIDE_NOT_REMOVED");
+const one=fs.readFileSync("components/SasiOneSurface.tsx","utf8");
+const creation=fs.readFileSync("components/SasiChatCreationStudio.tsx","utf8");
+const knowledge=fs.readFileSync("components/KnowledgeWorkspace.tsx","utf8");
+must(one.includes("SasiUnifiedLauncher"),"R18R2_UNIFIED_FRONT_DOOR_NOT_APPLIED");
+must(creation.includes("initialFiles?:File[]"),"R18R2_CREATION_PARTIAL_STATE_MISSING");
+must(knowledge.includes("initialFiles?:File[]"),"R18R2_KNOWLEDGE_PARTIAL_STATE_MISSING");
+console.log("R18R2_PARTIAL_INSTALL_STATE_VALID=PASS");

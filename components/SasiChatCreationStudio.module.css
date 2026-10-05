@@ -14,7 +14,6 @@
   line-height: 28px; font-weight: 400; color: var(--lx-ink); overflow-y: auto;
 }
 .workspace textarea + div { margin-top: 4px; gap: 6px; }
-/* Connection remains accessible in the + menu; avoid repeating it in the toolbar. */
 .workspace textarea + div > a[href="/sasi/connections"] { display: none; }
 .workspace textarea + div select { border-color: transparent; padding: 6px 8px; font-size: 12px; }
 .workspace textarea + div select:hover { background: var(--lx-soft); }
