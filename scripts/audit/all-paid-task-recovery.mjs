@@ -3,10 +3,15 @@ function must(v,m){if(!v)throw new Error(m)}
 const paid=fs.readFileSync("lib/tools/paid-catalog.ts","utf8");
 const ids=[...paid.matchAll(/"([a-z0-9-]+)"/g)].map(m=>m[1]);
 const strategy=JSON.parse(fs.readFileSync("lib/tools/commerce/paid-recovery-strategy.json","utf8")).strategies;
-for(const id of ids)must(strategy[id],`PAID_RECOVERY_STRATEGY_MISSING:${id}`);
-for(const id of Object.keys(strategy))must(ids.includes(id),`PAID_RECOVERY_STRATEGY_ORPHAN:${id}`);
+
+const missing=ids.filter(id=>!strategy[id]);
+const orphan=Object.keys(strategy).filter(id=>!ids.includes(id));
+if(missing.length)throw new Error("PAID_RECOVERY_STRATEGY_MISSING_ALL:"+missing.join(","));
+if(orphan.length)throw new Error("PAID_RECOVERY_STRATEGY_ORPHAN_ALL:"+orphan.join(","));
+
 const allowed=new Set(["persistent-draft","retain-tab","server-job"]);
-for(const[id,kind]of Object.entries(strategy))must(allowed.has(kind),`INVALID_RECOVERY_STRATEGY:${id}:${kind}`);
+const invalid=Object.entries(strategy).filter(([,kind])=>!allowed.has(kind));
+if(invalid.length)throw new Error("INVALID_RECOVERY_STRATEGIES:"+invalid.map(([id,kind])=>`${id}:${kind}`).join(","));
 
 const action=fs.readFileSync("components/tools/PaidActionButton.tsx","utf8");
 must(action.includes('window.open(payUrl'),"PAID_ACTION_POPUP_FIRST_MISSING");

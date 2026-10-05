@@ -1,59 +1,15 @@
 [
   {
-    "id": "file.detect",
-    "domain": "file",
+    "id": "ai.nutrition",
+    "domain": "ai",
     "input": [
-      "file"
-    ],
-    "output": [
-      "file.descriptor"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "file.hash",
-    "domain": "file",
-    "input": [
-      "file"
-    ],
-    "output": [
-      "hash"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "file.compare",
-    "domain": "file",
-    "input": [
-      "file",
-      "file"
-    ],
-    "output": [
-      "comparison"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "text.transform",
-    "domain": "text",
-    "input": [
+      "image",
       "text"
     ],
     "output": [
-      "text"
+      "nutrition-report"
     ],
-    "localPreferred": true
-  },
-  {
-    "id": "text.count",
-    "domain": "text",
-    "input": [
-      "text"
-    ],
-    "output": [
-      "metrics"
-    ],
-    "localPreferred": true
+    "localPreferred": false
   },
   {
     "id": "archive.package",
@@ -63,6 +19,39 @@
     ],
     "output": [
       "archive"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "document.compress",
+    "domain": "document",
+    "input": [
+      "pdf"
+    ],
+    "output": [
+      "pdf"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "document.form.visual",
+    "domain": "document",
+    "input": [
+      "pdf"
+    ],
+    "output": [
+      "pdf"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "document.merge",
+    "domain": "document",
+    "input": [
+      "pdf[]"
+    ],
+    "output": [
+      "pdf"
     ],
     "localPreferred": true
   },
@@ -81,21 +70,34 @@
     "implementation": "libreoffice-or-native-pdf"
   },
   {
-    "id": "document.page-model",
+    "id": "document.overlay.image",
     "domain": "document",
     "input": [
-      "pdf"
+      "pdf",
+      "image"
     ],
     "output": [
-      "page-model"
+      "pdf"
     ],
     "localPreferred": true
   },
   {
-    "id": "document.page-select",
+    "id": "document.overlay.text",
     "domain": "document",
     "input": [
-      "page-model"
+      "pdf",
+      "text"
+    ],
+    "output": [
+      "pdf"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "document.page-model",
+    "domain": "document",
+    "input": [
+      "pdf"
     ],
     "output": [
       "page-model"
@@ -125,29 +127,18 @@
     "localPreferred": true
   },
   {
-    "id": "document.merge",
+    "id": "document.page-select",
     "domain": "document",
     "input": [
-      "pdf[]"
+      "page-model"
     ],
     "output": [
-      "pdf"
+      "page-model"
     ],
     "localPreferred": true
   },
   {
-    "id": "document.split",
-    "domain": "document",
-    "input": [
-      "pdf"
-    ],
-    "output": [
-      "pdf[]"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "document.compress",
+    "id": "document.pdf-structural",
     "domain": "document",
     "input": [
       "pdf"
@@ -158,7 +149,18 @@
     "localPreferred": true
   },
   {
-    "id": "document.render-image",
+    "id": "document.pdf-structural-inspection",
+    "domain": "document",
+    "input": [
+      "pdf"
+    ],
+    "output": [
+      "pdf-structure"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "document.preview",
     "domain": "document",
     "input": [
       "pdf"
@@ -180,26 +182,13 @@
     "localPreferred": true
   },
   {
-    "id": "document.overlay.text",
+    "id": "document.render-image",
     "domain": "document",
     "input": [
-      "pdf",
-      "text"
-    ],
-    "output": [
       "pdf"
     ],
-    "localPreferred": true
-  },
-  {
-    "id": "document.overlay.image",
-    "domain": "document",
-    "input": [
-      "pdf",
-      "image"
-    ],
     "output": [
-      "pdf"
+      "image[]"
     ],
     "localPreferred": true
   },
@@ -216,6 +205,17 @@
     "localPreferred": true
   },
   {
+    "id": "document.split",
+    "domain": "document",
+    "input": [
+      "pdf"
+    ],
+    "output": [
+      "pdf[]"
+    ],
+    "localPreferred": true
+  },
+  {
     "id": "document.stamp.seam",
     "domain": "document",
     "input": [
@@ -228,51 +228,74 @@
     "localPreferred": true
   },
   {
-    "id": "document.form.visual",
-    "domain": "document",
+    "id": "download.local",
+    "domain": "delivery",
     "input": [
-      "pdf"
+      "blob"
     ],
     "output": [
-      "pdf"
+      "download"
     ],
     "localPreferred": true
   },
   {
-    "id": "document.preview",
-    "domain": "document",
+    "id": "export.grant",
+    "domain": "commerce",
     "input": [
-      "pdf"
+      "quote"
     ],
     "output": [
-      "image[]"
+      "grant"
+    ],
+    "localPreferred": false
+  },
+  {
+    "id": "export.quote",
+    "domain": "commerce",
+    "input": [
+      "export-plan"
+    ],
+    "output": [
+      "quote"
+    ],
+    "localPreferred": false
+  },
+  {
+    "id": "file.compare",
+    "domain": "file",
+    "input": [
+      "file",
+      "file"
+    ],
+    "output": [
+      "comparison"
     ],
     "localPreferred": true
   },
   {
-    "id": "image.decode",
-    "domain": "image",
+    "id": "file.detect",
+    "domain": "file",
     "input": [
-      "image"
+      "file"
     ],
     "output": [
-      "bitmap"
+      "file.descriptor"
     ],
     "localPreferred": true
   },
   {
-    "id": "image.encode",
-    "domain": "image",
+    "id": "file.hash",
+    "domain": "file",
     "input": [
-      "bitmap"
+      "file"
     ],
     "output": [
-      "image"
+      "hash"
     ],
     "localPreferred": true
   },
   {
-    "id": "image.resize",
+    "id": "image.background.prepare",
     "domain": "image",
     "input": [
       "image"
@@ -305,7 +328,62 @@
     "localPreferred": true
   },
   {
+    "id": "image.copy-tone",
+    "domain": "image",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "image"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "image.decode",
+    "domain": "image",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "bitmap"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "image.encode",
+    "domain": "image",
+    "input": [
+      "bitmap"
+    ],
+    "output": [
+      "image"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "image.id-photo",
+    "domain": "image",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "image"
+    ],
+    "localPreferred": false
+  },
+  {
     "id": "image.metadata.strip",
+    "domain": "image",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "image"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "image.resize",
     "domain": "image",
     "input": [
       "image"
@@ -338,7 +416,7 @@
     "localPreferred": true
   },
   {
-    "id": "image.background.prepare",
+    "id": "image.translate",
     "domain": "image",
     "input": [
       "image"
@@ -346,7 +424,7 @@
     "output": [
       "image"
     ],
-    "localPreferred": true
+    "localPreferred": false
   },
   {
     "id": "image.watermark.cleanup",
@@ -360,94 +438,17 @@
     "localPreferred": false
   },
   {
-    "id": "image.id-photo",
-    "domain": "image",
+    "id": "media.dub",
+    "domain": "media",
     "input": [
-      "image"
-    ],
-    "output": [
-      "image"
-    ],
-    "localPreferred": false
-  },
-  {
-    "id": "image.copy-tone",
-    "domain": "image",
-    "input": [
-      "image"
-    ],
-    "output": [
-      "image"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "ocr.image",
-    "domain": "ocr",
-    "input": [
-      "image"
-    ],
-    "output": [
+      "video",
       "text"
     ],
-    "localPreferred": false
-  },
-  {
-    "id": "ocr.pdf",
-    "domain": "ocr",
-    "input": [
-      "pdf"
-    ],
     "output": [
-      "text",
-      "pdf"
+      "video",
+      "audio"
     ],
     "localPreferred": false
-  },
-  {
-    "id": "spreadsheet.csv-read",
-    "domain": "spreadsheet",
-    "input": [
-      "csv",
-      "tsv"
-    ],
-    "output": [
-      "table"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "spreadsheet.xlsx-read",
-    "domain": "spreadsheet",
-    "input": [
-      "xlsx"
-    ],
-    "output": [
-      "table"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "spreadsheet.xlsx-write",
-    "domain": "spreadsheet",
-    "input": [
-      "table"
-    ],
-    "output": [
-      "xlsx"
-    ],
-    "localPreferred": true
-  },
-  {
-    "id": "spreadsheet.csv-write",
-    "domain": "spreadsheet",
-    "input": [
-      "table"
-    ],
-    "output": [
-      "csv"
-    ],
-    "localPreferred": true
   },
   {
     "id": "media.ffmpeg",
@@ -462,19 +463,6 @@
     ],
     "localPreferred": true,
     "licenseGuard": "ffmpeg-build-flags"
-  },
-  {
-    "id": "media.transcribe",
-    "domain": "media",
-    "input": [
-      "audio",
-      "video"
-    ],
-    "output": [
-      "text",
-      "subtitle"
-    ],
-    "localPreferred": false
   },
   {
     "id": "media.subtitle.convert",
@@ -500,15 +488,15 @@
     "localPreferred": false
   },
   {
-    "id": "media.dub",
+    "id": "media.transcribe",
     "domain": "media",
     "input": [
-      "video",
-      "text"
+      "audio",
+      "video"
     ],
     "output": [
-      "video",
-      "audio"
+      "text",
+      "subtitle"
     ],
     "localPreferred": false
   },
@@ -520,6 +508,72 @@
     ],
     "output": [
       "video"
+    ],
+    "localPreferred": false
+  },
+  {
+    "id": "ocr.image",
+    "domain": "ocr",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "text"
+    ],
+    "localPreferred": false
+  },
+  {
+    "id": "ocr.pdf",
+    "domain": "ocr",
+    "input": [
+      "pdf"
+    ],
+    "output": [
+      "text",
+      "pdf"
+    ],
+    "localPreferred": false
+  },
+  {
+    "id": "privacy.burn-after-read",
+    "domain": "privacy",
+    "input": [
+      "text",
+      "file"
+    ],
+    "output": [
+      "private-link"
+    ],
+    "localPreferred": false
+  },
+  {
+    "id": "privacy.redact.image",
+    "domain": "privacy",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "image"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "privacy.redact.pdf",
+    "domain": "privacy",
+    "input": [
+      "pdf"
+    ],
+    "output": [
+      "pdf"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "privacy.temp-mail",
+    "domain": "privacy",
+    "input": [],
+    "output": [
+      "mailbox"
     ],
     "localPreferred": false
   },
@@ -557,102 +611,70 @@
     "localPreferred": true
   },
   {
-    "id": "privacy.redact.image",
-    "domain": "privacy",
+    "id": "spreadsheet.csv-read",
+    "domain": "spreadsheet",
     "input": [
-      "image"
+      "csv",
+      "tsv"
     ],
     "output": [
-      "image"
+      "table"
     ],
     "localPreferred": true
   },
   {
-    "id": "privacy.redact.pdf",
-    "domain": "privacy",
+    "id": "spreadsheet.csv-write",
+    "domain": "spreadsheet",
     "input": [
-      "pdf"
+      "table"
     ],
     "output": [
-      "pdf"
+      "csv"
     ],
     "localPreferred": true
   },
   {
-    "id": "privacy.burn-after-read",
-    "domain": "privacy",
+    "id": "spreadsheet.xlsx-read",
+    "domain": "spreadsheet",
     "input": [
-      "text",
-      "file"
+      "xlsx"
     ],
     "output": [
-      "private-link"
+      "table"
     ],
-    "localPreferred": false
+    "localPreferred": true
   },
   {
-    "id": "privacy.temp-mail",
-    "domain": "privacy",
-    "input": [],
-    "output": [
-      "mailbox"
-    ],
-    "localPreferred": false
-  },
-  {
-    "id": "ai.nutrition",
-    "domain": "ai",
+    "id": "spreadsheet.xlsx-write",
+    "domain": "spreadsheet",
     "input": [
-      "image",
+      "table"
+    ],
+    "output": [
+      "xlsx"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "text.count",
+    "domain": "text",
+    "input": [
       "text"
     ],
     "output": [
-      "nutrition-report"
-    ],
-    "localPreferred": false
-  },
-  {
-    "id": "download.local",
-    "domain": "delivery",
-    "input": [
-      "blob"
-    ],
-    "output": [
-      "download"
+      "metrics"
     ],
     "localPreferred": true
   },
   {
-    "id": "export.quote",
-    "domain": "commerce",
+    "id": "text.transform",
+    "domain": "text",
     "input": [
-      "export-plan"
+      "text"
     ],
     "output": [
-      "quote"
+      "text"
     ],
-    "localPreferred": false
-  },
-  {
-    "id": "export.grant",
-    "domain": "commerce",
-    "input": [
-      "quote"
-    ],
-    "output": [
-      "grant"
-    ],
-    "localPreferred": false
-  },
-  {
-    "id": "image.translate",
-    "domain": "image",
-    "input": [
-      "image"
-    ],
-    "output": [
-      "image"
-    ],
-    "localPreferred": false
+    "localPreferred": true
   }
 ]

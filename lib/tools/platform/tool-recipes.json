@@ -1,5 +1,18 @@
 [
   {
+    "slug": "audio-cleanup",
+    "capabilities": [
+      "media.ffmpeg",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "audio-transcription",
     "capabilities": [
       "media.transcribe"
@@ -68,6 +81,35 @@
     "privacyMode": "declared-online"
   },
   {
+    "slug": "batch-pdf",
+    "capabilities": [
+      "document.page-model",
+      "document.overlay.text",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "bmp-to-png",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "burn-after-read",
     "capabilities": [
       "privacy.burn-after-read"
@@ -78,6 +120,18 @@
     "requiresMobile": true,
     "requiresRealFixture": true,
     "privacyMode": "declared-online"
+  },
+  {
+    "slug": "case-converter",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
   },
   {
     "slug": "compress-image",
@@ -183,6 +237,30 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "cron-parser",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "csv-json",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "csv-to-xlsx",
     "capabilities": [
       "spreadsheet.csv-read",
@@ -245,6 +323,19 @@
     "privacyMode": "declared-online"
   },
   {
+    "slug": "epub-to-txt",
+    "capabilities": [
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "file-compare",
     "capabilities": [
       "file.compare"
@@ -281,6 +372,35 @@
     "privacyMode": "declared-online"
   },
   {
+    "slug": "gif-to-jpg",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "handwriting-ocr",
+    "capabilities": [
+      "ocr.image",
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "heic-local",
     "capabilities": [
       "image.decode",
@@ -301,6 +421,34 @@
       "image.decode",
       "image.convert",
       "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "ico-to-png",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "ics-to-csv",
+    "capabilities": [
+      "text.transform",
       "download.local"
     ],
     "contractVersion": 1,
@@ -376,6 +524,21 @@
     "privacyMode": "declared-online"
   },
   {
+    "slug": "jfif-to-jpg",
+    "capabilities": [
+      "image.decode",
+      "image.convert",
+      "image.encode",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "jpg-to-png",
     "capabilities": [
       "image.decode",
@@ -403,9 +566,34 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "jwt-decoder",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "long-image",
     "capabilities": [
       "image.stitch",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "loop-video",
+    "capabilities": [
+      "media.ffmpeg",
       "download.local"
     ],
     "contractVersion": 1,
@@ -441,6 +629,18 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "number-base-converter",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "ocr",
     "capabilities": [
       "ocr.image"
@@ -453,9 +653,89 @@
     "privacyMode": "declared-online"
   },
   {
+    "slug": "odt-to-txt",
+    "capabilities": [
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-attachments",
+    "capabilities": [
+      "document.pdf-structural-inspection",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-bates-numbering",
+    "capabilities": [
+      "document.page-model",
+      "document.overlay.text",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-bookmarks",
+    "capabilities": [
+      "document.pdf-structural-inspection",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-compare",
+    "capabilities": [
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "pdf-compress",
     "capabilities": [
       "document.compress",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-crop",
+    "capabilities": [
+      "document.page-model",
+      "document.page-select",
       "download.local"
     ],
     "contractVersion": 1,
@@ -487,10 +767,89 @@
     "privacyMode": "declared-online"
   },
   {
+    "slug": "pdf-flatten",
+    "capabilities": [
+      "document.page-model",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-grayscale",
+    "capabilities": [
+      "document.page-model",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-halve-pages",
+    "capabilities": [
+      "document.page-model",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-header-footer",
+    "capabilities": [
+      "document.page-model",
+      "document.overlay.text",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-inspect",
+    "capabilities": [
+      "document.pdf-structural-inspection",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "pdf-merge-split",
     "capabilities": [
       "document.merge",
       "document.split",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-metadata-editor",
+    "capabilities": [
+      "document.page-model",
       "download.local"
     ],
     "contractVersion": 1,
@@ -513,12 +872,107 @@
     "privacyMode": "declared-online"
   },
   {
+    "slug": "pdf-overlay",
+    "capabilities": [
+      "document.page-model",
+      "document.overlay.text",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-page-numbers",
+    "capabilities": [
+      "document.overlay.text",
+      "document.page-model",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-page-size",
+    "capabilities": [
+      "document.page-model",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "pdf-pages",
     "capabilities": [
       "document.page-model",
       "document.page-select",
       "document.page-reorder",
       "document.page-rotate",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-pages-per-sheet",
+    "capabilities": [
+      "document.page-model",
+      "document.overlay.image",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-permissions",
+    "capabilities": [
+      "document.pdf-structural",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-protect",
+    "capabilities": [
+      "document.pdf-structural",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-rasterize",
+    "capabilities": [
+      "document.render-image",
+      "document.page-model",
       "download.local"
     ],
     "contractVersion": 1,
@@ -542,10 +996,142 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "pdf-remove-annotations",
+    "capabilities": [
+      "document.page-model",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-remove-metadata",
+    "capabilities": [
+      "privacy.redact.pdf",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-search",
+    "capabilities": [
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "pdf-to-jpg",
     "capabilities": [
       "document.render-image",
       "archive.package"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-to-markdown",
+    "capabilities": [
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-to-text",
+    "capabilities": [
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-to-word",
+    "capabilities": [
+      "ocr.pdf",
+      "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-unlock",
+    "capabilities": [
+      "document.pdf-structural",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-viewer-preferences",
+    "capabilities": [
+      "document.page-model",
+      "document.overlay.text",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-watermark",
+    "capabilities": [
+      "document.overlay.text",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-web-optimize",
+    "capabilities": [
+      "document.pdf-structural",
+      "download.local"
     ],
     "contractVersion": 1,
     "requiresNineLanguage": true,
@@ -631,6 +1217,18 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "regex-tester",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "remove-duplicate-lines",
     "capabilities": [
       "text.transform"
@@ -681,6 +1279,19 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "reverse-video",
+    "capabilities": [
+      "media.ffmpeg",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "screenshot-redact",
     "capabilities": [
       "privacy.redact.image",
@@ -697,6 +1308,19 @@
     "slug": "split-pdf",
     "capabilities": [
       "document.split",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "stop-motion-video",
+    "capabilities": [
+      "media.ffmpeg",
       "download.local"
     ],
     "contractVersion": 1,
@@ -769,6 +1393,18 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "text-diff",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "timestamp-converter",
     "capabilities": [
       "text.transform"
@@ -784,6 +1420,43 @@
     "slug": "url-encode-decode",
     "capabilities": [
       "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "url-parser",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "uuid-generator",
+    "capabilities": [
+      "text.transform"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "vcf-to-csv",
+    "capabilities": [
+      "text.transform",
+      "download.local"
     ],
     "contractVersion": 1,
     "requiresNineLanguage": true,
@@ -818,13 +1491,9 @@
     "privacyMode": "local-first"
   },
   {
-    "slug": "video-translate",
+    "slug": "video-transcription",
     "capabilities": [
-      "media.transcribe",
-      "media.subtitle.translate",
-      "media.dub",
-      "media.ffmpeg",
-      "download.local"
+      "media.transcribe"
     ],
     "contractVersion": 1,
     "requiresNineLanguage": true,
@@ -834,9 +1503,13 @@
     "privacyMode": "declared-online"
   },
   {
-    "slug": "video-transcription",
+    "slug": "video-translate",
     "capabilities": [
-      "media.transcribe"
+      "media.transcribe",
+      "media.subtitle.translate",
+      "media.dub",
+      "media.ffmpeg",
+      "download.local"
     ],
     "contractVersion": 1,
     "requiresNineLanguage": true,
@@ -887,586 +1560,9 @@
     "privacyMode": "local-first"
   },
   {
-    "slug": "handwriting-ocr",
-    "capabilities": [
-      "ocr.image",
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-to-word",
-    "capabilities": [
-      "ocr.pdf",
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-watermark",
-    "capabilities": [
-      "document.overlay.text",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-page-numbers",
-    "capabilities": [
-      "document.overlay.text",
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-crop",
-    "capabilities": [
-      "document.page-model",
-      "document.page-select",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-flatten",
-    "capabilities": [
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-compare",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-to-text",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-to-markdown",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "jfif-to-jpg",
-    "capabilities": [
-      "image.decode",
-      "image.convert",
-      "image.encode",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "bmp-to-png",
-    "capabilities": [
-      "image.decode",
-      "image.convert",
-      "image.encode",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "ico-to-png",
-    "capabilities": [
-      "image.decode",
-      "image.convert",
-      "image.encode",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "gif-to-jpg",
-    "capabilities": [
-      "image.decode",
-      "image.convert",
-      "image.encode",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "epub-to-txt",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "odt-to-txt",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "ics-to-csv",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "vcf-to-csv",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "uuid-generator",
+    "slug": "xml-formatter",
     "capabilities": [
       "text.transform"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-rasterize",
-    "capabilities": [
-      "document.render-image",
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-pages-per-sheet",
-    "capabilities": [
-      "document.page-model",
-      "document.overlay.image",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-remove-metadata",
-    "capabilities": [
-      "privacy.redact.pdf",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-halve-pages",
-    "capabilities": [
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-search",
-    "capabilities": [
-      "text.transform",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "reverse-video",
-    "capabilities": [
-      "media.ffmpeg",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "loop-video",
-    "capabilities": [
-      "media.ffmpeg",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "stop-motion-video",
-    "capabilities": [
-      "media.ffmpeg",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "audio-cleanup",
-    "capabilities": [
-      "media.ffmpeg",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "cron-parser",
-    "capabilities": [
-      "text.transform"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "batch-pdf",
-    "capabilities": [
-      "document.page-model",
-      "document.overlay.text",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-overlay",
-    "capabilities": [
-      "document.page-model",
-      "document.overlay.text",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-header-footer",
-    "capabilities": [
-      "document.page-model",
-      "document.overlay.text",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-bates-numbering",
-    "capabilities": [
-      "document.page-model",
-      "document.overlay.text",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-viewer-preferences",
-    "capabilities": [
-      "document.page-model",
-      "document.overlay.text",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-remove-annotations",
-    "capabilities": [
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-grayscale",
-    "capabilities": [
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-page-size",
-    "capabilities": [
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-metadata-editor",
-    "capabilities": [
-      "document.page-model",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-protect",
-    "capabilities": [
-      "document.pdf-structural",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-unlock",
-    "capabilities": [
-      "document.pdf-structural",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-permissions",
-    "capabilities": [
-      "document.pdf-structural",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-web-optimize",
-    "capabilities": [
-      "document.pdf-structural",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-inspect",
-    "capabilities": [
-      "document.pdf-structural-inspection",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-attachments",
-    "capabilities": [
-      "document.pdf-structural-inspection",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "pdf-bookmarks",
-    "capabilities": [
-      "document.pdf-structural-inspection",
-      "download.local"
     ],
     "contractVersion": 1,
     "requiresNineLanguage": true,

@@ -1,0 +1,13 @@
+import fs from"node:fs";
+const recipes=JSON.parse(fs.readFileSync("lib/tools/platform/tool-recipes.json","utf8"));
+const seo=fs.readFileSync("lib/seo/global-seo.ts","utf8");
+const publicSlugs=[...seo.matchAll(/\{slug:"([^"]+)",zh:/g)].map(x=>x[1]);
+const rs=new Set(recipes.map(x=>x.slug));
+const missing=publicSlugs.filter(x=>!rs.has(x));
+const extra=recipes.map(x=>x.slug).filter(x=>!new Set(publicSlugs).has(x));
+if(missing.length)throw new Error("R16_PUBLIC_RECIPE_MISSING:"+missing.join(","));
+if(extra.length)throw new Error("R16_PUBLIC_RECIPE_EXTRA:"+extra.join(","));
+if(recipes.length!==publicSlugs.length)throw new Error("R16_PUBLIC_RECIPE_COUNT_MISMATCH");
+console.log("R16_PUBLIC_TOOL_RECIPES="+recipes.length);
+console.log("R16_PUBLIC_TOOL_CATALOG="+publicSlugs.length);
+console.log("R16_CAPABILITY_GENOME_PUBLIC_PARITY=PASS");

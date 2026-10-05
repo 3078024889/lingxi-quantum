@@ -89,6 +89,7 @@
     "burn-after-read",
     "food-calorie",
     "id-photo-ai",
+    "image-translator",
     "image-watermark-remover",
     "ocr",
     "pdf-ocr",
@@ -96,8 +97,8 @@
     "temp-mail",
     "video-dubbing",
     "video-transcription",
-    "video-watermark-remover",
-    "image-translator"
+    "video-translate",
+    "video-watermark-remover"
   ],
   "toolClassifications": {
     "audio-transcription": {
@@ -321,7 +322,166 @@
     },
     "image-translator": {
       "kind": "online-contract"
+    },
+    "handwriting-ocr": {
+      "kind": "local-contract"
+    },
+    "pdf-to-word": {
+      "kind": "local-contract"
+    },
+    "pdf-watermark": {
+      "kind": "local-contract"
+    },
+    "pdf-page-numbers": {
+      "kind": "local-contract"
+    },
+    "pdf-crop": {
+      "kind": "local-contract"
+    },
+    "pdf-flatten": {
+      "kind": "local-contract"
+    },
+    "pdf-compare": {
+      "kind": "local-contract"
+    },
+    "pdf-to-text": {
+      "kind": "local-contract"
+    },
+    "pdf-to-markdown": {
+      "kind": "local-contract"
+    },
+    "jfif-to-jpg": {
+      "kind": "local-contract"
+    },
+    "bmp-to-png": {
+      "kind": "local-contract"
+    },
+    "ico-to-png": {
+      "kind": "local-contract"
+    },
+    "gif-to-jpg": {
+      "kind": "local-contract"
+    },
+    "epub-to-txt": {
+      "kind": "local-contract"
+    },
+    "odt-to-txt": {
+      "kind": "local-contract"
+    },
+    "ics-to-csv": {
+      "kind": "local-contract"
+    },
+    "vcf-to-csv": {
+      "kind": "local-contract"
+    },
+    "uuid-generator": {
+      "kind": "local-contract"
+    },
+    "pdf-rasterize": {
+      "kind": "local-contract"
+    },
+    "pdf-pages-per-sheet": {
+      "kind": "local-contract"
+    },
+    "pdf-remove-metadata": {
+      "kind": "local-contract"
+    },
+    "pdf-halve-pages": {
+      "kind": "local-contract"
+    },
+    "pdf-search": {
+      "kind": "local-contract"
+    },
+    "reverse-video": {
+      "kind": "local-contract"
+    },
+    "loop-video": {
+      "kind": "local-contract"
+    },
+    "stop-motion-video": {
+      "kind": "local-contract"
+    },
+    "regex-tester": {
+      "kind": "local-contract"
+    },
+    "text-diff": {
+      "kind": "local-contract"
+    },
+    "csv-json": {
+      "kind": "local-contract"
+    },
+    "xml-formatter": {
+      "kind": "local-contract"
+    },
+    "jwt-decoder": {
+      "kind": "local-contract"
+    },
+    "url-parser": {
+      "kind": "local-contract"
+    },
+    "case-converter": {
+      "kind": "local-contract"
+    },
+    "number-base-converter": {
+      "kind": "local-contract"
+    },
+    "audio-cleanup": {
+      "kind": "local-contract"
+    },
+    "cron-parser": {
+      "kind": "local-contract"
+    },
+    "batch-pdf": {
+      "kind": "local-contract"
+    },
+    "video-translate": {
+      "kind": "online-contract"
+    },
+    "pdf-overlay": {
+      "kind": "local-contract"
+    },
+    "pdf-header-footer": {
+      "kind": "local-contract"
+    },
+    "pdf-bates-numbering": {
+      "kind": "local-contract"
+    },
+    "pdf-viewer-preferences": {
+      "kind": "local-contract"
+    },
+    "pdf-remove-annotations": {
+      "kind": "local-contract"
+    },
+    "pdf-grayscale": {
+      "kind": "local-contract"
+    },
+    "pdf-page-size": {
+      "kind": "local-contract"
+    },
+    "pdf-metadata-editor": {
+      "kind": "local-contract"
+    },
+    "pdf-protect": {
+      "kind": "local-contract"
+    },
+    "pdf-unlock": {
+      "kind": "local-contract"
+    },
+    "pdf-permissions": {
+      "kind": "local-contract"
+    },
+    "pdf-web-optimize": {
+      "kind": "local-contract"
+    },
+    "pdf-inspect": {
+      "kind": "local-contract"
+    },
+    "pdf-attachments": {
+      "kind": "local-contract"
+    },
+    "pdf-bookmarks": {
+      "kind": "local-contract"
     }
   },
-  "classificationCount": 65
+  "classificationCount": 118
 }

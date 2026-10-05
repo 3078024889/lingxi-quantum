@@ -1,17 +1,23 @@
 {
-  "version": 1,
-  "rule": "Every public paid tool must use persistent-draft, retain-tab, or server-job recovery.",
+  "version": 2,
+  "rule": "Every public paid tool must declare a recovery strategy. retain-tab is allowed only for local/browser work that remains intact while payment opens in a separate window; stateful same-tab navigation still requires a persistent draft.",
   "strategies": {
+    "audio-cleanup": "retain-tab",
     "audio-transcription": "persistent-draft",
     "batch-image-watermark-remover": "persistent-draft",
+    "batch-pdf": "retain-tab",
     "burn-after-read-file": "server-job",
     "cross-page-stamp": "persistent-draft",
     "e-sign-pdf": "persistent-draft",
     "food-calorie": "retain-tab",
+    "handwriting-ocr": "retain-tab",
     "id-photo-ai": "persistent-draft",
     "image-translator": "persistent-draft",
     "image-watermark-remover": "persistent-draft",
     "pdf-editor": "persistent-draft",
+    "pdf-ocr": "retain-tab",
+    "pdf-redact": "retain-tab",
+    "pdf-to-word": "retain-tab",
     "sasi-deep-reason": "server-job",
     "sasi-image-generate": "server-job",
     "sasi-video-generate": "server-job",
@@ -19,7 +25,7 @@
     "temp-mail-batch": "server-job",
     "video-dubbing": "persistent-draft",
     "video-transcription": "persistent-draft",
-    "video-watermark-remover": "persistent-draft",
-    "video-translate": "persistent-draft"
+    "video-translate": "persistent-draft",
+    "video-watermark-remover": "persistent-draft"
   }
 }

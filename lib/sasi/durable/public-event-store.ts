@@ -26,10 +26,24 @@ export async function listPublicRunEvents(input:{
  return data.map(row=>toPublicRunEvent(row as Record<string,unknown>)).filter((x):x is PublicRunEvent=>Boolean(x));
 }
 
+async function latestPublicRunEvents(runId:string,limit=40):Promise<PublicRunEvent[]>{
+ const admin=createAdminClient();
+ const bounded=Math.max(1,Math.min(100,Number(limit||40)));
+ const{data,error}=await admin.from("sasi_durable_run_events")
+  .select("id,run_id,kind,step,metadata,created_at")
+  .eq("run_id",runId).order("id",{ascending:false}).limit(bounded);
+ if(error||!Array.isArray(data))return [];
+ return data
+  .map(row=>toPublicRunEvent(row as Record<string,unknown>))
+  .filter((x):x is PublicRunEvent=>Boolean(x))
+  .reverse();
+}
+
 export async function runSnapshot(userId:string,runId:string){
  const run=await assertRunOwner(userId,runId);
  if(!run)return null;
- const events=await listPublicRunEvents({userId,runId,afterId:0,limit:40});
+ const events=await latestPublicRunEvents(runId,40);
+ const lastEventId=events.length?Math.max(...events.map(e=>e.id)):0;
  return {
   runId:String(run.id),
   state:String(run.state||"created"),
@@ -37,6 +51,7 @@ export async function runSnapshot(userId:string,runId:string){
   attempt:Number(run.attempt||0),
   updatedAt:String(run.updated_at||""),
   hasOutput:run.output_json!=null,
+  lastEventId,
   events
  };
 }

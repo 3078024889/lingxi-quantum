@@ -3,7 +3,7 @@ import type {LingxiLang} from "@/lib/lingxi-i18n";
 type T=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):T=>({zh,en,ja,ko,fr,de,es,pt,ar});
 
-export type ToolDisplayCategory="all"|"pdf"|"image"|"media"|"subtitle"|"table"|"privacy"|"recognition"|"file";
+export type ToolDisplayCategory="all"|"pdf"|"image"|"media"|"subtitle"|"table"|"privacy"|"recognition"|"text"|"file"|"other";
 
 const CATEGORIES:Record<ToolDisplayCategory,T>={
  all:L("全部","All","すべて","전체","Tout","Alle","Todo","Tudo","الكل"),
@@ -14,7 +14,9 @@ const CATEGORIES:Record<ToolDisplayCategory,T>={
  table:L("表格 / 数据","Tables / Data","表 / データ","표 / 데이터","Tableaux / Données","Tabellen / Daten","Tablas / Datos","Tabelas / Dados","الجداول / البيانات"),
  privacy:L("隐私","Privacy","プライバシー","개인정보","Confidentialité","Datenschutz","Privacidad","Privacidade","الخصوصية"),
  recognition:L("识别 / 二维码","Recognition / QR","認識 / QR","인식 / QR","Reconnaissance / QR","Erkennung / QR","Reconocimiento / QR","Reconhecimento / QR","التعرّف / QR"),
- file:L("文本 / 文件","Text / Files","テキスト / ファイル","텍스트 / 파일","Texte / Fichiers","Text / Dateien","Texto / Archivos","Texto / Ficheiros","النصوص / الملفات"),
+ text:L("文本 / 常用","Text / Everyday","テキスト / よく使う","텍스트 / 자주 쓰는","Texte / Pratique","Text / Alltag","Texto / Uso diario","Texto / Uso diário","النصوص / الاستخدام اليومي"),
+ file:L("文件 / 转换","Files / Convert","ファイル / 変換","파일 / 변환","Fichiers / Conversion","Dateien / Konvertieren","Archivos / Conversión","Ficheiros / Conversão","الملفات / التحويل"),
+ other:L("其他","Other","その他","기타","Autres","Andere","Otros","Outros","أخرى"),
 };
 const HUB={
  kicker:L("实用工具","Practical tools","実用ツール","실용 도구","Outils pratiques","Praktische Werkzeuge","Herramientas prácticas","Ferramentas práticas","أدوات عملية"),

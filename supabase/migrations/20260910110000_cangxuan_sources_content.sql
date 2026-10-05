@@ -1,4 +1,4 @@
-﻿-- Store fulltext body on Foundry sources (owner/private reference materials).
+-- Store fulltext body on Foundry sources (owner/private reference materials).
 -- character_count remains the authoritative size signal; content is optional for readers.
 begin;
 
