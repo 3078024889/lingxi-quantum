@@ -73,7 +73,6 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/png-to-jpg", title:"PNG 转 JPG", description:"浏览器本地转换，适合上传兼容和减小体积。", keywords:["PNG转JPG","PNG转JPEG"], category:"image", localOnly:true },
   { href:"/tools/jpg-to-png", title:"JPG 转 PNG", description:"JPG/JPEG 直接转 PNG。", keywords:["JPG转PNG","JPEG转PNG"], category:"image", localOnly:true },
   { href:"/tools/webp-to-jpg", title:"WebP 转 JPG", description:"把 WebP 转成兼容性更高的 JPG。", keywords:["WebP转JPG","WebP转JPEG"], category:"image", localOnly:true },
-  { href:"/tools/avif-to-jpg", title:"AVIF 转 JPG", description:"浏览器支持 AVIF 时直接本地转换。", keywords:["AVIF转JPG","AVIF转JPEG"], category:"image", localOnly:true },
   { href:"/tools/svg-to-png", title:"SVG 转 PNG", description:"SVG 本地渲染为高清 PNG。", keywords:["SVG转PNG","矢量图转PNG"], category:"image", localOnly:true },
   { href:"/tools/long-image", title:"截图长图拼接", description:"多张截图按顺序拼成一张长图。", keywords:["长图拼接","截图拼接","图片拼接"], category:"daily", popular:true, localOnly:true },
   { href:"/tools/screenshot-redact", title:"截图隐私打码", description:"框选敏感内容，模糊或黑块后本地导出。", keywords:["截图打码","隐私打码","身份证打码","聊天截图"], category:"privacy", popular:true, localOnly:true },

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import ToolGlyph from "./ToolGlyph";
-import { liveTools } from "@/lib/tools/registry";
+import {publicToolSurface} from "@/lib/tools/public-surface";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import {toolTitle} from "@/lib/tools/card-i18n";
 import {toolCategoryLabel,toolHubCopy,toolCardLine,type ToolDisplayCategory} from "@/lib/tools/hub-copy-v1470";
@@ -94,22 +94,35 @@ function registryKind(category: string): GlyphKind {
 }
 
 function allTools(): ToolItem[] {
-  const registryItems: ToolItem[] = liveTools().map((tool) => ({
-    href: `/tools/${tool.slug}`,
-    titleZh: tool.titleZh,
-    titleEn: tool.titleEn,
-    descZh: tool.oneLinerZh,
-    descEn: tool.oneLinerEn,
-    kind: registryKind(tool.category),
-    category: registryCategory(tool.category),
-    localOnly: Boolean(tool.localOnly),
-  }));
   const map = new Map<string, ToolItem>();
-  for (const item of registryItems) map.set(item.href, item);
-  for (const item of dedicated) map.set(item.href, item);
-  if(process.env.NEXT_PUBLIC_PRIVACY_TOOLS_ENABLED==="true"){
-    for(const item of privacyInfrastructureTools) map.set(item.href,item);
+
+  for (const tool of publicToolSurface()) {
+    map.set(tool.href, {
+      href: tool.href,
+      titleZh: tool.titleZh,
+      titleEn: tool.titleEn,
+      descZh: tool.descZh,
+      descEn: tool.descEn,
+      kind: tool.kind,
+      category:
+        tool.category === "pdf" ? "pdf" :
+        tool.category === "image" ? "image" :
+        tool.category === "media" || tool.category === "subtitle" ? "media" :
+        tool.category === "privacy" ? "privacy" :
+        tool.category === "recognition" ? "qr" :
+        "utility",
+      localOnly: tool.localOnly,
+    });
   }
+
+  for (const item of dedicated) {
+    if (!map.has(item.href)) map.set(item.href, item);
+  }
+
+  if (process.env.NEXT_PUBLIC_PRIVACY_TOOLS_ENABLED === "true") {
+    for (const item of privacyInfrastructureTools) map.set(item.href, item);
+  }
+
   return [...map.values()];
 }
 
