@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "grossMarginFloor": 0.45,
   "pricingRule": "minimum_price = total_platform_cost / (1 - gross_margin_floor)",
   "currencyRule": "For every paid LingxiField practical tool, CNY and USD must use the same numeric amount (for example ¥1 = $1). Free tools stay free in both currencies.",
@@ -117,13 +117,13 @@
       ],
       "CNY": {
         "720pPublicPerSecond": 0.2,
-        "1080pPublicPerSecond": 0.4,
+        "1080pPublicPerSecond": 0.3,
         "720pProviderCostCeiling": 0.1,
         "1080pProviderCostCeiling": 0.21
       },
       "USD": {
         "720pPublicPerSecond": 0.2,
-        "1080pPublicPerSecond": 0.4,
+        "1080pPublicPerSecond": 0.3,
         "720pProviderCostCeiling": 0.1,
         "1080pProviderCostCeiling": 0.21
       },

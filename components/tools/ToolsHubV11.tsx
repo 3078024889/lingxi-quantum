@@ -77,7 +77,21 @@ const DISPLAY_CATEGORY_BY_SLUG:Record<string,Exclude<Category,"all">>={
  "ocr":"recognition","food-calorie":"recognition","id-photo-ai":"recognition","qr-code-reader":"recognition","qr-safe-reader":"recognition","qr-code-generator":"recognition",
  "text-counter":"file","remove-duplicate-lines":"file","remove-empty-lines":"file","url-encode-decode":"file","base64-encode-decode":"file","file-type-detector":"file","md5-sha256":"file","file-compare":"file","docx-to-txt":"file","pptx-to-txt":"file","timestamp-converter":"file"
 };
-function displayCategory(item:ToolItem):Exclude<Category,"all">{return DISPLAY_CATEGORY_BY_SLUG[item.href.replace("/tools/","")]||"file";}
+const PUBLIC_DISPLAY_CATEGORY_BY_HREF = new Map<string,Exclude<Category,"all">>(
+  publicToolSurface().map((tool)=>[tool.href,tool.category])
+);
+function displayCategory(item:ToolItem):Exclude<Category,"all">{
+  const fromSurface=PUBLIC_DISPLAY_CATEGORY_BY_HREF.get(item.href);
+  if(fromSurface)return fromSurface;
+  const legacy=DISPLAY_CATEGORY_BY_SLUG[item.href.replace("/tools/","")];
+  if(legacy)return legacy;
+  if(item.category==="pdf")return"pdf";
+  if(item.category==="image")return"image";
+  if(item.category==="media")return"media";
+  if(item.category==="privacy")return"privacy";
+  if(item.category==="qr")return"recognition";
+  return"file";
+}
 
 function registryCategory(category: string): SourceCategory {
   if (category === "image") return "image";

@@ -230,7 +230,18 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
    if(uploaded.length!==files.length)throw new Error(ct("partialUploadFailed"));
    await track("continued",mode==="drama"?"drama.prepare":"website.prepare",pid);
    if(mode==="website")await prepareWebsite(pid,uploaded); else await prepareDrama(pid,uploaded);
-  }catch(e){setMessage(e instanceof Error?e.message:ct("genericUnavailable"))}
+  }catch(e){
+   // LOCAL_WEBSITE_FALLBACK_V8: the first website aha-moment must not depend on
+   // model subsidy or a successful server project creation.
+   if(mode==="website"&&prompt.trim()){
+    const html=localWebsite(prompt.trim(),lang,"");
+    setWebsiteHtml(html);
+    setAssistantText(ct("websiteDraftReady"));
+    setMessage(ct("websiteDraftDone"));
+    return;
+   }
+   setMessage(e instanceof Error?e.message:ct("genericUnavailable"))
+  }
   finally{operation.current=false;setBusy(false)}
  }
 
@@ -362,7 +373,7 @@ export default function SasiChatCreationStudio({mode,modeBar}:{mode:Mode;modeBar
   return <main data-sasi-composer-version="v5200" className={`${styles.workspace} min-h-[calc(100vh-152px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
    <div className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4">
     <section className="flex-1 pt-8 sm:pt-12">
-     {prompt.trim()&&(assistantText||resultUrl||websiteHtml)&&<SasiUserMessage className="mb-8">{prompt}</SasiUserMessage>}
+     {prompt.trim()&&(busy||message||assistantText||resultUrl||websiteHtml)&&<SasiUserMessage className="mb-8">{prompt}</SasiUserMessage>}
 
      {assistantText&&<SasiAssistantText className="mb-8">
        {assistantText}

@@ -8,7 +8,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"灵犀场 LINGXIFIELD",homeTitle:"灵犀场｜PDF、图片与实用工具",homeDesc:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
     toolsTitle:"在线实用工具｜PDF、图片、视频与文件",toolsDesc:"选择 PDF、图片、视频或文字工具，按步骤处理并保存文件。处理方式和费用请查看工具页面。",
     open:"打开工具",allTools:"查看全部工具",how:"怎么使用",what:"能做什么",privacy:"处理方式",
-    local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"SASI 按使用收费，确认费用后再开始。短剧和网站生成暂未开放。",
+    local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"SASI 可以用于短剧、网站、书本、学习和科研创作。需要付费的步骤会在真正执行前显示费用；需要智能生成时可连接自己的智能服务。",
     searchTerms:["灵犀场SASI","LINGXIFIELD SASI","灵犀场实用工具","SASI资料问答","PDF压缩","PDF合并","PDF拆分","图片压缩","图片格式转换","视频转文字","音频转文字","字幕翻译","临时邮箱","阅后即焚","图片OCR","书本智能体","科研智能体","学习智能体"]
   },
   "en":{
@@ -16,7 +16,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD | PDF, images and practical tools",homeDesc:"Work with PDFs, images, video and text. Organize sources and ask questions about them. Processing details and prices are shown before use.",
     toolsTitle:"Online tools for PDF, images, video and files",toolsDesc:"Choose a PDF, image, video or text tool, follow the steps and save your file. See each tool for processing details and prices.",
     open:"Open tool",allTools:"Browse all tools",how:"How to use it",what:"What it does",privacy:"Processing",
-    local:"This tool is designed to run on your device whenever possible.",online:"This tool uses online processing. Any charge is shown before paid execution.",topicIntro:"SASI charges by usage after you confirm the price. Short drama and website generation are not available yet.",
+    local:"This tool is designed to run on your device whenever possible.",online:"This tool uses online processing. Any charge is shown before paid execution.",topicIntro:"SASI supports drama, website, book, learning and research workflows. Paid steps show the price before execution; connect your own intelligence service when intelligent generation is needed.",
     searchTerms:["PDF compressor","merge PDF","split PDF","image compressor","image converter","video transcription","audio to text","subtitle translator","temporary email","burn after reading","image OCR","book to AI agent","AI research assistant","AI study assistant"]
   },
   "ja":{
@@ -24,7 +24,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD｜PDF・画像・実用ツール",homeDesc:"PDF・画像・動画・テキストを扱い、資料を整理して原文について質問できます。処理方法と料金は利用前に確認できます。",
     toolsTitle:"PDF・画像・動画・ファイルの実用ツール",toolsDesc:"PDF・画像・動画・テキストのツールを選び、手順に沿って処理して保存します。処理方法と料金は各ツールで確認できます。",
     open:"ツールを開く",allTools:"すべてのツール",how:"使い方",what:"できること",privacy:"処理方法",
-    local:"可能な処理は端末内で実行します。",online:"オンライン処理を使います。有料の場合は実行前に料金を表示します。",topicIntro:"SASIは料金の確認後、利用分に応じて課金されます。短編ドラマとサイトの生成は現在利用できません。",
+    local:"可能な処理は端末内で実行します。",online:"オンライン処理を使います。有料の場合は実行前に料金を表示します。",topicIntro:"SASIは短編ドラマ、Webサイト、本、学習、研究に利用できます。有料の工程は実行前に料金を表示し、智能生成が必要な場合は自分のAIサービスを接続できます。",
     searchTerms:["PDF 圧縮","PDF 結合","PDF 分割","画像 圧縮","画像 変換","動画 文字起こし","音声 文字起こし","字幕 翻訳","捨てメアド","OCR","書籍 AI","研究 AI","学習 AI"]
   },
   "ko":{
@@ -32,7 +32,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD | PDF·이미지·실용 도구",homeDesc:"PDF·이미지·영상·텍스트를 처리하고 자료를 정리해 원문에 대해 질문하세요. 처리 방식과 요금은 사용 전에 확인할 수 있습니다.",
     toolsTitle:"PDF, 이미지, 영상, 파일 실용 도구",toolsDesc:"PDF·이미지·영상·텍스트 도구를 선택하고 안내에 따라 처리한 뒤 저장하세요. 처리 방식과 요금은 각 도구에서 확인하세요.",
     open:"도구 열기",allTools:"모든 도구 보기",how:"사용 방법",what:"할 수 있는 일",privacy:"처리 방식",
-    local:"가능한 작업은 기기에서 직접 처리합니다.",online:"온라인 처리를 사용합니다. 유료 작업은 실행 전에 비용을 표시합니다.",topicIntro:"SASI는 요금을 확인한 뒤 사용량에 따라 청구됩니다. 숏폼 드라마와 웹사이트 생성은 아직 이용할 수 없습니다.",
+    local:"가능한 작업은 기기에서 직접 처리합니다.",online:"온라인 처리를 사용합니다. 유료 작업은 실행 전에 비용을 표시합니다.",topicIntro:"SASI는 숏드라마, 웹사이트, 책, 학습, 연구 작업에 사용할 수 있습니다. 유료 단계는 실행 전에 요금을 표시하며 지능형 생성이 필요할 때 자신의 서비스를 연결할 수 있습니다.",
     searchTerms:["PDF 압축","PDF 합치기","PDF 분할","이미지 압축","이미지 변환","영상 텍스트 변환","음성 텍스트 변환","자막 번역","임시 이메일","OCR","책 AI 에이전트","AI 연구 도우미","AI 학습 도우미"]
   },
   "fr":{
@@ -40,7 +40,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD | PDF, images et outils pratiques",homeDesc:"Traitez PDF, images, vidéos et textes. Organisez vos sources et posez des questions à leur sujet. Les modalités et tarifs sont indiqués avant utilisation.",
     toolsTitle:"Outils en ligne pour PDF, images, vidéo et fichiers",toolsDesc:"Choisissez un outil PDF, image, vidéo ou texte, suivez les étapes et enregistrez votre fichier. Consultez les modalités et tarifs sur sa page.",
     open:"Ouvrir l’outil",allTools:"Voir tous les outils",how:"Comment l’utiliser",what:"Ce que l’outil fait",privacy:"Traitement",
-    local:"Lorsque c’est possible, le traitement reste sur votre appareil.",online:"Cet outil utilise un traitement en ligne. Tout coût est indiqué avant l’exécution payante.",topicIntro:"SASI facture selon l’utilisation après confirmation du prix. La génération de mini-séries et de sites n’est pas encore disponible.",
+    local:"Lorsque c’est possible, le traitement reste sur votre appareil.",online:"Cet outil utilise un traitement en ligne. Tout coût est indiqué avant l’exécution payante.",topicIntro:"SASI prend en charge les flux de mini-séries, sites, livres, apprentissage et recherche. Les étapes payantes affichent le tarif avant exécution ; connectez votre service d’IA lorsque la génération intelligente est nécessaire.",
     searchTerms:["compresser PDF","fusionner PDF","diviser PDF","compresser image","convertir image","transcription vidéo","audio en texte","traduction sous-titres","email temporaire","OCR","livre agent IA","assistant recherche IA","assistant étude IA"]
   },
   "de":{
@@ -48,7 +48,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD | PDF, Bilder und praktische Tools",homeDesc:"Bearbeite PDFs, Bilder, Videos und Texte. Ordne Quellen und stelle Fragen dazu. Verarbeitung und Preise werden vor der Nutzung angezeigt.",
     toolsTitle:"Online-Tools für PDF, Bilder, Video und Dateien",toolsDesc:"Wähle ein Tool für PDF, Bilder, Video oder Text, folge den Schritten und speichere die Datei. Verarbeitung und Preise stehen auf der Tool-Seite.",
     open:"Tool öffnen",allTools:"Alle Tools",how:"So funktioniert es",what:"Was das Tool macht",privacy:"Verarbeitung",
-    local:"Wo möglich, wird die Verarbeitung direkt auf deinem Gerät ausgeführt.",online:"Dieses Tool nutzt Online-Verarbeitung. Kosten werden vor einer kostenpflichtigen Ausführung angezeigt.",topicIntro:"SASI wird nach Nutzung abgerechnet, nachdem du den Preis bestätigt hast. Kurzdrama- und Website-Generierung sind noch nicht verfügbar.",
+    local:"Wo möglich, wird die Verarbeitung direkt auf deinem Gerät ausgeführt.",online:"Dieses Tool nutzt Online-Verarbeitung. Kosten werden vor einer kostenpflichtigen Ausführung angezeigt.",topicIntro:"SASI unterstützt Kurzdrama-, Website-, Buch-, Lern- und Forschungsabläufe. Kostenpflichtige Schritte zeigen den Preis vor der Ausführung; bei Bedarf kannst du deinen eigenen KI-Dienst verbinden.",
     searchTerms:["PDF komprimieren","PDF zusammenfügen","PDF teilen","Bild komprimieren","Bild konvertieren","Video transkribieren","Audio in Text","Untertitel übersetzen","temporäre E-Mail","OCR","Buch KI Agent","KI Forschungsassistent","KI Lernassistent"]
   },
   "es":{
@@ -56,7 +56,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD | PDF, imágenes y herramientas",homeDesc:"Trabaja con PDF, imágenes, vídeos y textos. Organiza fuentes y haz preguntas sobre ellas. El tratamiento y los precios se indican antes del uso.",
     toolsTitle:"Herramientas online para PDF, imágenes, vídeo y archivos",toolsDesc:"Elige una herramienta para PDF, imágenes, vídeo o texto, sigue los pasos y guarda el archivo. Consulta los detalles y precios en cada herramienta.",
     open:"Abrir herramienta",allTools:"Ver todas las herramientas",how:"Cómo usarla",what:"Qué hace",privacy:"Procesamiento",
-    local:"Siempre que sea posible, el procesamiento se realiza en tu dispositivo.",online:"Esta herramienta usa procesamiento online. Cualquier coste se muestra antes de ejecutar una acción de pago.",topicIntro:"SASI cobra por uso tras confirmar el precio. La generación de minidramas y sitios aún no está disponible.",
+    local:"Siempre que sea posible, el procesamiento se realiza en tu dispositivo.",online:"Esta herramienta usa procesamiento online. Cualquier coste se muestra antes de ejecutar una acción de pago.",topicIntro:"SASI admite flujos de minidramas, sitios web, libros, aprendizaje e investigación. Los pasos de pago muestran el precio antes de ejecutarse; conecta tu propio servicio de IA cuando haga falta generación inteligente.",
     searchTerms:["comprimir PDF","unir PDF","dividir PDF","comprimir imagen","convertir imagen","transcribir video","audio a texto","traducir subtítulos","correo temporal","OCR","libro a agente IA","asistente investigación IA","asistente estudio IA"]
   },
   "pt":{
@@ -64,7 +64,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD | PDF, imagens e ferramentas",homeDesc:"Trabalhe com PDF, imagens, vídeos e textos. Organize fontes e faça perguntas sobre elas. O processamento e os preços são informados antes do uso.",
     toolsTitle:"Ferramentas online para PDF, imagens, vídeo e arquivos",toolsDesc:"Escolha uma ferramenta para PDF, imagens, vídeo ou texto, siga as etapas e salve o arquivo. Consulte os detalhes e preços na página da ferramenta.",
     open:"Abrir ferramenta",allTools:"Ver todas as ferramentas",how:"Como usar",what:"O que faz",privacy:"Processamento",
-    local:"Sempre que possível, o processamento acontece no seu dispositivo.",online:"Esta ferramenta usa processamento online. Qualquer custo é mostrado antes de uma execução paga.",topicIntro:"O SASI cobra pelo uso após a confirmação do preço. A geração de minidramas e sites ainda não está disponível.",
+    local:"Sempre que possível, o processamento acontece no seu dispositivo.",online:"Esta ferramenta usa processamento online. Qualquer custo é mostrado antes de uma execução paga.",topicIntro:"O SASI oferece fluxos de minidramas, sites, livros, estudo e pesquisa. Etapas pagas mostram o preço antes da execução; conecte seu próprio serviço de IA quando a geração inteligente for necessária.",
     searchTerms:["comprimir PDF","juntar PDF","dividir PDF","comprimir imagem","converter imagem","transcrever vídeo","áudio para texto","traduzir legendas","email temporário","OCR","livro para agente IA","assistente pesquisa IA","assistente estudo IA"]
   },
   "ar":{
@@ -72,7 +72,7 @@ export const SEO_LOCALES={  "zh":{
     brand:"LINGXIFIELD",homeTitle:"LINGXIFIELD | أدوات PDF والصور",homeDesc:"عالج ملفات PDF والصور والفيديو والنصوص، ونظّم المصادر واطرح أسئلة عنها. تُعرض طريقة المعالجة والأسعار قبل الاستخدام.",
     toolsTitle:"أدوات أونلاين لملفات PDF والصور والفيديو",toolsDesc:"اختر أداة لملفات PDF أو الصور أو الفيديو أو النصوص، واتبع الخطوات واحفظ الملف. راجع طريقة المعالجة والأسعار في صفحة الأداة.",
     open:"فتح الأداة",allTools:"عرض كل الأدوات",how:"طريقة الاستخدام",what:"ما الذي تفعله",privacy:"طريقة المعالجة",
-    local:"تتم المعالجة على جهازك كلما كان ذلك ممكناً.",online:"تستخدم هذه الأداة معالجة عبر الإنترنت. تظهر أي تكلفة قبل التنفيذ المدفوع.",topicIntro:"يحاسب SASI حسب الاستخدام بعد تأكيد السعر. إنشاء الدراما القصيرة والمواقع غير متاح حالياً.",
+    local:"تتم المعالجة على جهازك كلما كان ذلك ممكناً.",online:"تستخدم هذه الأداة معالجة عبر الإنترنت. تظهر أي تكلفة قبل التنفيذ المدفوع.",topicIntro:"يدعم SASI مسارات الدراما القصيرة والمواقع والكتب والتعلم والبحث. تعرض الخطوات المدفوعة السعر قبل التنفيذ، ويمكن ربط خدمة الذكاء الخاصة بك عند الحاجة إلى التوليد الذكي.",
     searchTerms:["ضغط PDF","دمج PDF","تقسيم PDF","ضغط الصور","تحويل الصور","تحويل الفيديو إلى نص","تحويل الصوت إلى نص","ترجمة الترجمة النصية","بريد مؤقت","OCR","كتاب إلى وكيل ذكاء اصطناعي","مساعد بحث بالذكاء الاصطناعي","مساعد دراسة بالذكاء الاصطناعي"]
   }} as const;
 export type SeoLocale=keyof typeof SEO_LOCALES;

@@ -2166,4 +2166,13 @@ body{font-size:16px;font-weight:500}
 @media(max-width:760px){
   .lx-sasi-user-bubble{max-width:92%!important}
   .lx-sasi-reference-composer{min-height:150px!important;border-radius:24px!important}
+}\n\n
+/* R12R3 SASI conversation identity */
+.lx-sasi-user-bubble[data-sasi-user-color="blue"]{
+  color:#2563eb!important;
+  -webkit-text-fill-color:#2563eb!important;
+}
+.lx-sasi-reference-textarea{
+  color:#2563eb!important;
+  caret-color:#2563eb!important;
 }

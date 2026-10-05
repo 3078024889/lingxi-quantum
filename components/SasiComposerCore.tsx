@@ -3,7 +3,7 @@
 import{forwardRef,type DragEventHandler,type ReactNode,type TextareaHTMLAttributes}from"react";
 
 export function SasiUserMessage({children,className=""}:{children:ReactNode;className?:string}){
- return <div className={`lx-sasi-user-bubble ml-auto max-w-[82%] rounded-[24px] border px-5 py-3.5 text-sm font-medium leading-7 shadow-sm ${className}`}>{children}</div>;
+ return <div data-sasi-role="user" data-sasi-user-color="blue" className={`lx-sasi-user-bubble ml-auto max-w-[82%] rounded-[24px] border px-5 py-3.5 text-sm font-medium leading-7 shadow-sm ${className}`}>{children}</div>;
 }
 
 export const SasiComposerTextarea=forwardRef<HTMLTextAreaElement,TextareaHTMLAttributes<HTMLTextAreaElement>>(

@@ -144,7 +144,7 @@ async function pdfToSource(file: File, lang:LingxiLang): Promise<Pick<KnowledgeS
 export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;modeBar?:ReactNode}){
   const {lang}=useLingxiLang();
   const [sources,setSources]=useState<KnowledgeSource[]>([]);
-  const [question,setQuestion]=useState("");const [useConnectedService,setUseConnectedService]=useState(true);
+  const [question,setQuestion]=useState("");const [useConnectedService,setUseConnectedService]=useState(false);
   const [answer,setAnswer]=useState("");
   const [learningEventId,setLearningEventId]=useState("");
   const [feedbackSignal,setFeedbackSignal]=useState<FeedbackSignal|null>(null);
@@ -297,20 +297,28 @@ export default function KnowledgeWorkspace({mode="book",modeBar}:{mode?:Mode;mod
       return;
     }
 
+    const pendingTurn=createSasiTurn(raw,"");
+
+
+    setThread(rows=>[...rows,pendingTurn]);
+
+
+    setQuestion("");
+
+
     setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
       const skillPlan=selectSasiSkills({mode,prompt:raw,files:sources.map(source=>source.title),hasEvidence:evidence.length>0});
-      const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+      const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json","Idempotency-Key":pendingTurn.id},body:JSON.stringify({clientTurnId:pendingTurn.id,acceptConnectedBilling:useConnectedService,
         question:apiQuestion,mode,intelligence,useConnectedService,skillIds:skillPlan.ids,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
       })});
       const data=await response.json();
       if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
-      setThread(rows=>[...rows,createSasiTurn(raw,String(data.answer||""))]);
+      setThread(rows=>rows.map(row=>row.id===pendingTurn.id?{...row,assistant:String(data.answer||"")}:row));
       setLearningEventId(String(data.learningEventId||""));
       setLastIntelligence((data.intelligence||intelligence) as Intelligence);
       setNotice(tr(lang,"done"));
-      setQuestion("");
     }catch(e:unknown){
       const message=e instanceof Error?e.message:tr(lang,"aiFailed");
       setNotice(message);

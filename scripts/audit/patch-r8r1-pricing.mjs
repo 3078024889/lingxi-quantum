@@ -1,0 +1,17 @@
+import fs from "node:fs";
+const file="lib/tools/commerce/pricing-policy.json";
+const p=JSON.parse(fs.readFileSync(file,"utf8"));
+if(!p?.tools?.["video-dubbing"]||!p?.tools?.["video-dubbing-premium"]||!p?.tools?.["sasi-video-generate"])throw new Error("PRICING_POLICY_SHAPE_DRIFT");
+p.version=Math.max(Number(p.version||0),3);
+p.tools["video-dubbing"].mode="disabled-quality-gate";
+p.tools["video-dubbing"].CNY={perStartedMinute:1};
+p.tools["video-dubbing"].USD={perStartedMinute:1};
+p.tools["video-dubbing-premium"].mode="reserved-disabled";
+p.tools["video-dubbing-premium"].CNY={perMinute:3};
+p.tools["video-dubbing-premium"].USD={perMinute:3};
+p.tools["sasi-video-generate"].CNY["720pPublicPerSecond"]=0.2;
+p.tools["sasi-video-generate"].USD["720pPublicPerSecond"]=0.2;
+p.tools["sasi-video-generate"].CNY["1080pPublicPerSecond"]=0.3;
+p.tools["sasi-video-generate"].USD["1080pPublicPerSecond"]=0.3;
+fs.writeFileSync(file,JSON.stringify(p,null,2)+"\n");
+console.log("PRICING_POLICY_R8R1_PATCH=PASS");

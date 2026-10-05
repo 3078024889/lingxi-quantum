@@ -7,6 +7,7 @@ import {useLingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import{sasiModeLabel}from"@/lib/platform/brand-glossary";
 import SasiModeHost from "@/components/SasiModeHost";
+import{SasiUnifiedConversationProvider}from"@/components/SasiUnifiedConversationProvider";
 
 type Mode="drama"|"website"|"book"|"learning"|"research";
 
@@ -60,7 +61,7 @@ export default function SasiOneSurface(){
 
  return <main className="lx11-page min-h-[calc(100vh-64px)]">
   <div className="mx-auto max-w-[1440px] px-3 sm:px-5">
-   <SasiModeHost mode={mode} modeBar={modeBar}/>
+   <SasiUnifiedConversationProvider><SasiModeHost mode={mode} modeBar={modeBar}/></SasiUnifiedConversationProvider>
   </div>
  </main>;
 }

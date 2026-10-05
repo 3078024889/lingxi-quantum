@@ -1,0 +1,45 @@
+import type {LingxiLang} from "@/lib/lingxi-i18n";
+type T=Record<LingxiLang,string>;
+const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):T=>({zh,en,ja,ko,fr,de,es,pt,ar});
+
+export const EXTRA_TOOL_TITLES:Record<string,T>={
+"video-translate":L("视频翻译","Video Translation","動画翻訳","영상 번역","Traduction vidéo","Videoübersetzung","Traducción de vídeo","Tradução de vídeo","ترجمة الفيديو"),
+"batch-pdf":L("批量 PDF 工作台","Batch PDF Workspace","PDF一括処理","PDF 일괄 작업","Traitement PDF par lot","PDF-Stapelverarbeitung","Procesamiento PDF por lotes","Processamento PDF em lote","معالجة PDF دفعة واحدة"),
+"pdf-halve-pages":L("PDF 页面拆半","Halve PDF Pages","PDFページを半分に分割","PDF 페이지 반으로 나누기","Couper les pages PDF en deux","PDF-Seiten halbieren","Dividir páginas PDF por la mitad","Dividir páginas PDF ao meio","تقسيم صفحات PDF إلى نصفين"),
+"pdf-search":L("PDF 全文搜索","Search PDFs","PDF全文検索","PDF 전체 검색","Rechercher dans les PDF","PDF durchsuchen","Buscar en PDF","Pesquisar em PDF","البحث داخل PDF"),
+"reverse-video":L("视频倒放","Reverse Video","動画を逆再生","영상 역재생","Inverser une vidéo","Video rückwärts","Invertir vídeo","Inverter vídeo","عكس الفيديو"),
+"loop-video":L("视频循环","Loop Video","動画ループ","영상 반복","Boucler une vidéo","Video wiederholen","Repetir vídeo","Repetir vídeo","تكرار الفيديو"),
+"stop-motion-video":L("视频定格","Stop Motion Video","ストップモーション動画","스톱모션 영상","Vidéo stop motion","Stop-Motion-Video","Vídeo stop motion","Vídeo stop motion","فيديو إيقاف الحركة"),
+"audio-cleanup":L("音频降噪 / 人声增强","Audio Cleanup","音声ノイズ除去・声の強調","오디오 노이즈 제거 / 음성 강화","Nettoyage audio","Audio bereinigen","Limpieza de audio","Limpeza de áudio","تنقية الصوت"),
+"cron-parser":L("Cron 表达式解析器","Cron Expression Parser","Cron式解析","Cron 표현식 파서","Analyseur Cron","Cron-Ausdruck prüfen","Analizador de Cron","Analisador Cron","محلل تعبيرات Cron"),
+"jfif-to-jpg":L("JFIF 转 JPG","JFIF to JPG","JFIF → JPG","JFIF → JPG","JFIF vers JPG","JFIF zu JPG","JFIF a JPG","JFIF para JPG","JFIF إلى JPG"),
+"bmp-to-png":L("BMP 转 PNG","BMP to PNG","BMP → PNG","BMP → PNG","BMP vers PNG","BMP zu PNG","BMP a PNG","BMP para PNG","BMP إلى PNG"),
+"ico-to-png":L("ICO 转 PNG","ICO to PNG","ICO → PNG","ICO → PNG","ICO vers PNG","ICO zu PNG","ICO a PNG","ICO para PNG","ICO إلى PNG"),
+"gif-to-jpg":L("GIF 转 JPG","GIF to JPG","GIF → JPG","GIF → JPG","GIF vers JPG","GIF zu JPG","GIF a JPG","GIF para JPG","GIF إلى JPG"),
+"epub-to-txt":L("EPUB 转 TXT","EPUB to TXT","EPUB → TXT","EPUB → TXT","EPUB vers TXT","EPUB zu TXT","EPUB a TXT","EPUB para TXT","EPUB إلى TXT"),
+"odt-to-txt":L("ODT 转 TXT","ODT to TXT","ODT → TXT","ODT → TXT","ODT vers TXT","ODT zu TXT","ODT a TXT","ODT para TXT","ODT إلى TXT"),
+"ics-to-csv":L("ICS 转 CSV","ICS to CSV","ICS → CSV","ICS → CSV","ICS vers CSV","ICS zu CSV","ICS a CSV","ICS para CSV","ICS إلى CSV"),
+"vcf-to-csv":L("VCF 转 CSV","VCF to CSV","VCF → CSV","VCF → CSV","VCF vers CSV","VCF zu CSV","VCF a CSV","VCF para CSV","VCF إلى CSV"),
+"uuid-generator":L("UUID / ULID 生成器","UUID / ULID Generator","UUID / ULID 生成","UUID / ULID 생성기","Générateur UUID / ULID","UUID / ULID Generator","Generador UUID / ULID","Gerador UUID / ULID","مولد UUID / ULID"),
+"pdf-rasterize":L("PDF 栅格化","Rasterize PDF","PDFをラスタライズ","PDF 래스터화","Pixelliser un PDF","PDF rastern","Rasterizar PDF","Rasterizar PDF","تحويل PDF إلى صورة نقطية"),
+"pdf-pages-per-sheet":L("PDF 多页合一","PDF Pages per Sheet","PDF複数ページを1枚に","PDF 여러 페이지 한 장에","Plusieurs pages PDF par feuille","Mehrere PDF-Seiten pro Blatt","Varias páginas PDF por hoja","Várias páginas PDF por folha","عدة صفحات PDF في ورقة واحدة"),
+"pdf-remove-metadata":L("删除 PDF 元数据","Remove PDF Metadata","PDFメタデータ削除","PDF 메타데이터 제거","Supprimer les métadonnées PDF","PDF-Metadaten entfernen","Eliminar metadatos PDF","Remover metadados PDF","إزالة بيانات PDF الوصفية"),
+"pdf-to-word":L("PDF 转 Word","PDF to Word","PDF → Word","PDF → Word","PDF vers Word","PDF zu Word","PDF a Word","PDF para Word","PDF إلى Word"),
+"pdf-watermark":L("PDF 加水印","Add Watermark to PDF","PDFに透かしを追加","PDF 워터마크 추가","Ajouter un filigrane au PDF","Wasserzeichen zu PDF","Añadir marca de agua al PDF","Adicionar marca d'água ao PDF","إضافة علامة مائية إلى PDF"),
+"pdf-page-numbers":L("PDF 加页码","Add Page Numbers to PDF","PDFにページ番号を追加","PDF 페이지 번호 추가","Ajouter des numéros de page","Seitenzahlen zu PDF","Añadir números de página","Adicionar números de página","إضافة أرقام الصفحات إلى PDF"),
+"pdf-crop":L("PDF 裁边","Crop PDF","PDFをトリミング","PDF 자르기","Rogner un PDF","PDF zuschneiden","Recortar PDF","Cortar PDF","قص PDF"),
+"pdf-flatten":L("PDF 扁平化","Flatten PDF","PDFをフラット化","PDF 평면화","Aplatir un PDF","PDF reduzieren","Aplanar PDF","Achatar PDF","تسطيح PDF"),
+"pdf-compare":L("PDF 比较","Compare PDFs","PDF比較","PDF 비교","Comparer des PDF","PDFs vergleichen","Comparar PDF","Comparar PDF","مقارنة ملفات PDF"),
+"pdf-to-text":L("PDF 转 TXT","PDF to Text","PDF → テキスト","PDF → 텍스트","PDF vers texte","PDF zu Text","PDF a texto","PDF para texto","PDF إلى نص"),
+"pdf-to-markdown":L("PDF 转 Markdown","PDF to Markdown","PDF → Markdown","PDF → Markdown","PDF vers Markdown","PDF zu Markdown","PDF a Markdown","PDF para Markdown","PDF إلى Markdown"),
+"handwriting-ocr":L("手写文字识别","Handwriting OCR","手書き文字OCR","필기 OCR","OCR manuscrit","Handschrift-OCR","OCR de escritura manuscrita","OCR de escrita manual","OCR للكتابة اليدوية"),
+"regex-tester":L("正则表达式测试","Regex Tester","正規表現テスター","정규식 테스트","Testeur d’expressions régulières","Regex-Tester","Probador de expresiones regulares","Testador de expressões regulares","اختبار التعبيرات النمطية"),
+"text-diff":L("文本对比","Text Diff","テキスト差分","텍스트 비교","Comparaison de texte","Textvergleich","Comparar texto","Comparar texto","مقارنة النص"),
+"csv-json":L("CSV 转 JSON","CSV to JSON","CSV → JSON","CSV → JSON","CSV vers JSON","CSV zu JSON","CSV a JSON","CSV para JSON","CSV إلى JSON"),
+"xml-formatter":L("XML 格式化","XML Formatter","XML整形","XML 포맷터","Formateur XML","XML-Formatierer","Formateador XML","Formatador XML","منسق XML"),
+"jwt-decoder":L("JWT 解码","JWT Decoder","JWTデコーダー","JWT 디코더","Décodeur JWT","JWT-Decoder","Decodificador JWT","Descodificador JWT","فك ترميز JWT"),
+"url-parser":L("URL 解析","URL Parser","URL解析","URL 파서","Analyseur d’URL","URL-Parser","Analizador de URL","Analisador de URL","محلل URL"),
+"case-converter":L("大小写转换","Case Converter","大文字・小文字変換","대소문자 변환","Convertisseur de casse","Groß-/Kleinschreibung","Conversor de mayúsculas/minúsculas","Conversor de maiúsculas/minúsculas","محول حالة الأحرف"),
+"number-base-converter":L("进制转换","Number Base Converter","基数変換","진법 변환","Convertisseur de base numérique","Zahlensystem-Konverter","Conversor de bases numéricas","Conversor de bases numéricas","محول أنظمة العد")
+};
+export function extraToolTitle(lang:LingxiLang,slug:string){return EXTRA_TOOL_TITLES[slug]?.[lang]||"";}

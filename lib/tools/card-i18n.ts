@@ -1,4 +1,5 @@
 import type {LingxiLang} from "@/lib/lingxi-i18n";
+import {extraToolTitle} from "@/lib/tools/tool-title-extra";
 
 type T=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):T=>({zh,en,ja,ko,fr,de,es,pt,ar});
@@ -106,7 +107,7 @@ const TITLES:Record<string,Partial<T>>={
 };
 
 export function toolTitle(lang:LingxiLang,slug:string,fallback:string){
-  return TITLES[slug]?.[lang]||fallback;
+  return TITLES[slug]?.[lang]||extraToolTitle(lang,slug)||fallback;
 }
 export function toolDescription(lang:LingxiLang,title:string){
   const m:Record<LingxiLang,string>={

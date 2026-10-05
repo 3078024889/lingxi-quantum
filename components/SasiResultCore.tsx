@@ -5,7 +5,7 @@ import{SasiUserMessage}from"@/components/SasiComposerCore";
 import type{SasiConversationTurn}from"@/lib/sasi/core/session-contract";
 
 export function SasiAssistantText({children,className=""}:{children:ReactNode;className?:string}){
- return <article data-sasi-result-kind="text" className={`max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)] ${className}`}>{children}</article>;
+ return <article data-sasi-role="assistant" data-sasi-result-kind="text" className={`max-w-3xl whitespace-pre-wrap text-[15px] leading-8 text-[var(--lx-ink)] ${className}`}>{children}</article>;
 }
 
 export function SasiConversationTurns({turns}:{turns:SasiConversationTurn[]}){
