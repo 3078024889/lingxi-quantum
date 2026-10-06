@@ -188,6 +188,11 @@
     {
       "migration": "tool_sasi_balance_checkout",
       "source": "supabase/migrations/20261006180000_tool_sasi_balance_checkout.sql"
+    },
+    {
+      "version": "20261006092902",
+      "name": "unified_existing_balance_usage",
+      "source": "supabase/migrations/20261006210000_unified_existing_balance_usage.sql"
     }
   ],
   "quotaTest": {
@@ -218,5 +223,9 @@
   "toolBalanceCheckout": {
     "passed": true,
     "method": "Actual CNY/USD checkout RPC in a rolled-back transaction: ownership, replay, insufficient funds, expired quote, active external checkout and matching tool grants; anon/authenticated EXECUTE denied."
+  },
+  "unifiedExistingBalance": {
+    "passed": true,
+    "method": "Actual existing-only and mixed-source CNY/USD charges and tool grant fulfillment, replay, changed reference rejection, insufficient, reserved and withdrawal holds excluded, source ledger accounting; all test fixtures rolled back. User screenshot account readback remains CNY 500 minor units."
   }
 }

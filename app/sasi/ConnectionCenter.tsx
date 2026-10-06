@@ -1,45 +1,15 @@
 "use client";
 
-import NextImage from "next/image";
 import {useEffect,useMemo,useState} from "react";
 import {BUILD_CONNECTORS,SASI_INTEGRATIONS,type SasiIntegration} from "@/lib/sasi/integration-catalog";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 import {sasiConnectionText} from "@/lib/sasi/connection-i18n";
+import {connectionPageCopy,connectionServiceCopy,CONNECTION_GROUPS} from "@/lib/sasi/connection-page-copy";
 
 type Props={lang:LingxiLang;dark:boolean;accountEmail:string|null};
 type Connection={service:string;keyHint:string;healthStatus:"stored"|"checking"|"healthy"|"unhealthy";lastCheckedAt:string|null;lastErrorCode:string|null;baseUrl?:string;model?:string};
 
 const PRIMARY_IDS=["volcengine","openrouter","compatible","openai","xai","anthropic","gemini","deepseek","luma","aliyun"] as const;
-const LOGOS:Record<string,string>={
- compatible:"/images/lingxifield-logo.png",
- volcengine:"https://www.google.com/s2/favicons?domain=volcengine.com&sz=128",
- openrouter:"https://www.google.com/s2/favicons?domain=openrouter.ai&sz=128",
-};
-
-const SHARED_COPY:Record<LingxiLang,string>={
- zh:"只需连接一个 API Key，即可使用该 API 账号下已开通的全球多智能生态模型。",
- en:"Connect one API key to use the global multi-model intelligence services enabled for that API account.",
- ja:"API Key を1つ接続するだけで、その API アカウントで有効になっている世界中のマルチモデル AI を利用できます。",
- ko:"API Key 하나만 연결하면 해당 API 계정에서 활성화된 글로벌 멀티모델 AI를 사용할 수 있습니다.",
- fr:"Connectez une seule clé API pour utiliser les modèles d’IA mondiaux activés sur ce compte API.",
- de:"Verbinde einen API-Schlüssel und nutze die weltweit verfügbaren KI-Modelle, die für dieses API-Konto freigeschaltet sind.",
- es:"Conecta una sola clave API para usar los modelos de IA globales habilitados en esa cuenta API.",
- pt:"Conecte uma única chave API para usar os modelos globais de IA habilitados nessa conta API.",
- ar:"اربط مفتاح API واحدًا لاستخدام نماذج الذكاء الاصطناعي العالمية المفعّلة في حساب الـ API هذا.",
-};
-
-const CHANNEL_COPY:Record<LingxiLang,Record<"volcengine"|"openrouter",string>>={
- zh:{volcengine:"CNY 通道",openrouter:"USD 通道"},
- en:{volcengine:"CNY channel",openrouter:"USD channel"},
- ja:{volcengine:"CNY チャネル",openrouter:"USD チャネル"},
- ko:{volcengine:"CNY 채널",openrouter:"USD 채널"},
- fr:{volcengine:"Canal CNY",openrouter:"Canal USD"},
- de:{volcengine:"CNY-Kanal",openrouter:"USD-Kanal"},
- es:{volcengine:"Canal CNY",openrouter:"Canal USD"},
- pt:{volcengine:"Canal CNY",openrouter:"Canal USD"},
- ar:{volcengine:"قناة CNY",openrouter:"قناة USD"},
-};
-
 const TITLE:Record<LingxiLang,string>={
  zh:"连接我的智能服务",en:"Connect my intelligence service",ja:"インテリジェンスサービスを接続",ko:"지능형 서비스 연결",
  fr:"Connecter mon service d’IA",de:"Meinen KI-Dienst verbinden",es:"Conectar mi servicio de IA",pt:"Conectar meu serviço de IA",ar:"ربط خدمة الذكاء الخاصة بي",
@@ -51,6 +21,7 @@ const TOOL_TITLE:Record<LingxiLang,string>={
 
 export default function ConnectionCenter({lang,accountEmail}:Props){
  const t=(zh:string,en:string)=>sasiConnectionText(lang,zh,en);
+ const copy=connectionPageCopy(lang);
  const services=useMemo(()=>PRIMARY_IDS.map(id=>SASI_INTEGRATIONS.find(x=>x.id===id)).filter(Boolean) as SasiIntegration[],[]);
  const[selected,setSelected]=useState<SasiIntegration>(services[0]);
  const[credential,setCredential]=useState("");
@@ -96,7 +67,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
   const r=await fetch("/api/sasi/connections/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
   const b=await r.json().catch(()=>({}));
   const healthy=r.ok&&b.healthStatus==="healthy";
-  setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED"}:x));
+  setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED",model:healthy&&b.model?b.model:x.model}:x));
   setMessage(healthy?t("连接正常，可以开始使用。","Connection is ready to use."):t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
  }
 
@@ -115,37 +86,49 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
   }catch{setMessage(t("暂时无法删除，请稍后再试。","Unable to remove it right now. Please try again later."))}finally{setBusy(null)}
  }
 
- return <section className="mx-auto max-w-4xl px-4 py-10 sm:py-14">
+ return <section dir={lang==="ar"?"rtl":"ltr"} className="mx-auto max-w-6xl py-4 sm:py-6">
   <header className="mb-8">
    <p className="text-xs font-semibold tracking-[.18em] text-[var(--lx-faint)]">SASI</p>
    <h1 className="mt-2 text-3xl font-semibold text-[var(--lx-ink)]">{TITLE[lang]}</h1>
-   <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">{SHARED_COPY[lang]}</p>
+   <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">{copy.intro}</p>
   </header>
 
-  <div className="space-y-3">
-   {services.map(item=>{
-    const active=selected.id===item.id;
-    return <article key={item.id} className={["rounded-2xl border bg-[var(--lx-panel)] transition",active?"border-[var(--lx-line-strong)]":"border-[var(--lx-line)]"].join(" ")}>
-     <button type="button" disabled={Boolean(busy)} onClick={()=>{setSelected(item);setCredential("");setMessage("")}} className="flex w-full items-center gap-4 px-5 py-4 text-left">
-      <span className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-xl bg-[var(--lx-soft)]">
-       <NextImage src={LOGOS[item.id]||"/images/lingxifield-logo.png"} alt="" width={32} height={32} unoptimized/>
-      </span>
-      <span className="min-w-0 flex-1">
-       <b className="block text-[15px] text-[var(--lx-ink)]">{item.id==="compatible"?t("通用智能服务","Compatible AI service"):item.name}</b>
-       <small className="mt-1 block leading-5 text-[var(--lx-muted)]">{item.id==="compatible"?t("通用智能服务","Compatible AI service"):item.product}</small>
-      </span>
-      <span className="shrink-0 text-xs text-[var(--lx-faint)]">{status(item.id)}</span>
-     </button>
-
-     {active&&<div className="border-t border-[var(--lx-line)] px-5 py-4">
+  <div data-connection-layout className="grid items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+   <nav aria-label={copy.choose} data-connection-services className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3">
+    {CONNECTION_GROUPS.map(group=><div key={group.id} className="mb-4 last:mb-0">
+     <h2 className="px-3 pb-2 pt-2 text-xs font-semibold text-[var(--lx-muted)]">{copy[group.id]}</h2>
+     <div className="grid grid-cols-2 gap-1 lg:grid-cols-1">{group.services.map(id=>{
+      const item=services.find(x=>x.id===id)!;const active=selected.id===id;
+      return <button key={id} type="button" aria-pressed={active} disabled={Boolean(busy)} onClick={()=>{setSelected(item);setCredential("");setMessage("")}} className={[
+       "flex min-w-0 items-center gap-3 rounded-xl border px-3 py-3 text-start transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500",
+       active?"border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/40":"border-transparent hover:bg-[var(--lx-soft)]"
+      ].join(" ")}>
+       <span aria-hidden className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[var(--lx-soft)] text-xs font-bold" style={{color:item.color}}>{connectionServiceCopy(id,lang).symbol}</span>
+       <span className="min-w-0"><b className="block text-sm text-[var(--lx-ink)]">{id==="compatible"?copy.otherName:item.name}</b><span className="mt-1 block text-xs text-[var(--lx-muted)]">{status(id)}</span></span>
+      </button>
+     })}</div>
+    </div>)}
+   </nav>
+   <article data-connection-details className="min-w-0 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 sm:p-8 lg:sticky lg:top-24">
+    <p className="text-xs font-medium text-[var(--lx-muted)]">{copy[CONNECTION_GROUPS.find(g=>g.services.includes(selected.id))!.id]}</p>
+    <h2 className="mt-2 text-2xl font-semibold text-[var(--lx-ink)]">{selected.id==="compatible"?copy.otherName:selected.name}</h2>
+    <p className="mt-2 text-sm text-[var(--lx-muted)]">{connectionServiceCopy(selected.id,lang).products}</p>
+    <p className="mt-5 text-sm leading-7 text-[var(--lx-muted)]">{connectionServiceCopy(selected.id,lang).description}</p>
+    <div className="my-6 rounded-xl bg-[var(--lx-soft)] p-4">
+     <h3 className="text-sm font-medium">{copy.available}</h3>
+     <p className="mt-2 text-sm leading-7 text-[var(--lx-muted)]">{connectionServiceCopy(selected.id,lang).available}</p>
+    </div>
       <div className="flex flex-wrap items-center gap-2">
-       <a href={selected.keyUrl} target="_blank" rel="noreferrer" className="rounded-full border border-[var(--lx-line)] px-3 py-2 text-xs">{t("打开服务","Open service")} ↗</a>
+       <a href={selected.keyUrl} target="_blank" rel="noreferrer" className="rounded-full border border-[var(--lx-line)] px-3 py-2 text-xs">{copy.open} ↗</a>
        {connection&&<span className="rounded-full bg-[var(--lx-soft)] px-3 py-2 text-xs text-[var(--lx-muted)]">{connection.keyHint}</span>}
       </div>
-      {state==="ready"&&(!connection||editing)&&<div className="mt-3 grid gap-3 sm:grid-cols-2">
-       <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder="https://example.com/v1" autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
+      {state==="ready"&&(!connection||editing)&&(selected.id==="compatible"?<div className="mt-6 grid gap-3 sm:grid-cols-2">
+       <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder={selected.id==="compatible"?"https://example.com/v1":copy.automatic} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
+       <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" placeholder={selected.id==="compatible"?"":copy.automatic} maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
+      </div>:<details className="mt-6 rounded-xl border border-[var(--lx-line)] p-4"><summary className="cursor-pointer text-sm text-[var(--lx-muted)]">{copy.settings}</summary><p className="mt-2 text-xs leading-6 text-[var(--lx-muted)]">{copy.defaults}</p><div className="mt-3 grid gap-3 sm:grid-cols-2">
+       <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder={copy.automatic} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
        <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
-      </div>}
+      </div></details>)}
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
        {state==="ready"&&(!connection||editing)?<><input type="password" autoComplete="off" spellCheck={false} value={credential} onChange={e=>setCredential(e.target.value)}
         aria-label={t("连接凭证","Connection credential")} placeholder={t("粘贴 API Key","Paste API key")}
@@ -160,10 +143,9 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
        </div>
        :<p className="text-sm text-[var(--lx-muted)]">{state==="login"?t("请先登录。","Please sign in first."):state==="loading"?t("正在读取…","Loading…"):t("暂时无法连接，请稍后再试。","Unable to connect right now. Please try again later.")}</p>}
       </div>
-      {message&&<p className="mt-3 text-xs text-[var(--lx-muted)]">{message}</p>}
-     </div>}
-    </article>
-   })}
+      {message&&<p role="status" className="mt-4 rounded-xl bg-[var(--lx-soft)] p-3 text-sm text-[var(--lx-muted)]">{message}</p>}
+    <p className="mt-6 border-t border-[var(--lx-line)] pt-4 text-xs leading-6 text-[var(--lx-muted)]">{copy.billing}</p>
+   </article>
   </div>
 
   <section id="tools" className="mt-10 border-t border-[var(--lx-line)] pt-8">

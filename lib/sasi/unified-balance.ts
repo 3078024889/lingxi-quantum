@@ -10,14 +10,9 @@ export async function userSasiCurrency(userId:string):Promise<SasiBillingCurrenc
 
 export async function sasiBalanceMinor(userId:string,currency:SasiBillingCurrency){
   const admin=createAdminClient();
-  if(currency==="USD"){
-    const {data,error}=await admin.from("sasi_usd_wallets").select("available_cents").eq("user_id",userId).maybeSingle();
-    if(error)throw new Error("SASI_BALANCE_UNAVAILABLE");
-    return Math.max(0,Number(data?.available_cents||0));
-  }
-  const {data,error}=await admin.from("sasi_wallets").select("available_points").eq("user_id",userId).maybeSingle();
+  const {data,error}=await admin.rpc("money_balance_snapshot_v52",{p_user_id:userId});
   if(error)throw new Error("SASI_BALANCE_UNAVAILABLE");
-  return Math.max(0,Number(data?.available_points||0));
+  return Math.max(0,Number(currency==="USD"?data?.usd_available_minor:data?.cny_available_minor)||0);
 }
 
 export async function requireSasiBalance(userId:string,currency:SasiBillingCurrency,amountMinor:number){
