@@ -1,4 +1,6 @@
 "use client";
+import SasiTaskToolbar from "./SasiTaskToolbar";
+import {EXPERIENCE_USED} from "@/lib/sasi/experience-status-copy";
 import {knowledgeActionText as actionText} from "@/lib/sasi/knowledge-action-copy";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -327,7 +329,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
       setThread(rows=>rows.map(row=>row.id===pendingTurn.id?{...row,assistant:String(data.answer||"")}:row));
       setLearningEventId(String(data.learningEventId||""));
       setLastIntelligence((data.intelligence||intelligence) as Intelligence);
-      setNotice(tr(lang,"done"));
+      setNeedsConnection(data.needsConnection===true);setNotice(data.experienceExhausted?EXPERIENCE_USED[lang]:tr(lang,"done"));
     }catch(e:unknown){
       const message=e instanceof Error?e.message:tr(lang,"aiFailed");
       setNotice(message);setQuestion(current=>current||raw);
@@ -460,7 +462,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
                 <span>{x.label}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{x.help}</span></span>
                 {intelligence===x.value?<span className="text-xs text-[var(--lx-muted)]">✓</span>:null}
               </button>)}
-              <SasiSkillPicker mode={mode} selected={selectedSkillIds} onChange={setSelectedSkillIds}/>
+
               <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{actionText(lang,"connect")} <span className="float-right">↗</span></Link>
               <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{actionText(lang,"tools")} <span className="float-right">↗</span></Link>
             </div>}
@@ -472,6 +474,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
           </button>
         </div>
 
+        <SasiTaskToolbar disabled={askBusy||busy}/>
         {notice&&<div className="flex flex-wrap items-center gap-2 px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">
           <SasiStatusLine>{notice}</SasiStatusLine>
           {needsConnection&&<Link href="/sasi/connections" className="font-medium text-blue-600 hover:underline">{`${actionText(lang,"connect")} →`}</Link>}

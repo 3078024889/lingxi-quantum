@@ -34,7 +34,7 @@ test('wallet stays out of search and sitemap',async({page})=>{
 for(const [i,locale]of locales.entries())test('SASI input uses '+locale,async({page})=>{
  await page.goto('/sasi?mode=drama&lang='+locale);
  await expect(page.getByPlaceholder(ask[i],{exact:true})).toBeVisible();
- const switcher=page.locator('button[aria-expanded]').filter({hasText:/⌄/});await expect(switcher).toBeVisible();await expect(switcher).toHaveAttribute('aria-expanded','false');if(locale!=='zh')await expect(switcher).not.toContainText('切换任务');
+ const toolbar=page.locator('[data-sasi-task-toolbar]');await expect(toolbar).toBeVisible();await expect(toolbar.getByRole('button')).toHaveCount(7);await expect(toolbar.locator('button[aria-pressed="true"]')).toHaveCount(1);await expect(toolbar.getByRole('link')).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 

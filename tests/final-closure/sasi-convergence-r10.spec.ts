@@ -2,10 +2,10 @@ import {test,expect} from 'playwright/test';
 test('switch tasks preserves each draft',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/sasi?mode=website&lang=en');const website=page.locator('[data-sasi-task="website"] textarea');await website.fill('A bakery website draft');
- await page.getByRole('button',{name:/Switch task/}).click();await page.getByRole('button',{name:'Study',exact:true}).click();
+ await page.locator('[data-sasi-task="website"] [data-sasi-task-toolbar]').getByRole('button',{name:'Study',exact:true}).click();
  const study=page.locator('[data-sasi-task="learning"] textarea');await study.fill('Explain this chapter');
- await page.getByRole('button',{name:/Switch task/}).click();await page.getByRole('button',{name:'Build a website',exact:true}).click();await expect(website).toHaveValue('A bakery website draft');
- await page.getByRole('button',{name:/Switch task/}).click();await page.getByRole('button',{name:'Study',exact:true}).click();await expect(study).toHaveValue('Explain this chapter');expect(errors).toEqual([]);
+ await page.locator('[data-sasi-task="learning"] [data-sasi-task-toolbar]').getByRole('button',{name:'Build a website',exact:true}).click();await expect(website).toHaveValue('A bakery website draft');
+ await page.locator('[data-sasi-task="website"] [data-sasi-task-toolbar]').getByRole('button',{name:'Study',exact:true}).click();await expect(study).toHaveValue('Explain this chapter');expect(errors).toEqual([]);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 test('homepage carries website intent into SASI without submitting a paid request',async({page})=>{
@@ -46,7 +46,7 @@ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])test('brand and
  expect((await page.title()).match(/LINGXIFIELD/g)).toHaveLength(1);
  if(lang==='zh')await expect(page).toHaveTitle('AI短剧生成、网站构建、100+免费在线实用工具｜灵犀场 LINGXIFIELD');
  const footer=page.locator('footer');await expect(footer).toContainText('SASI');await expect(footer.locator('details')).toHaveCount(0);await expect(footer.locator('[data-footer-category]')).toHaveCount(5);for(const row of await footer.locator('[data-footer-category]').all())await expect(row).toBeVisible();
- await expect(page.locator('[data-home-tool-directory] a')).toHaveCount(116);
+ await expect(page.locator('[data-home-tool-directory] a')).toHaveCount(0);
  if(lang==='zh'){await expect(page.locator('.lx-v37-brand-desc')).toContainText('AI短剧生成、网站构建');await expect(page.locator('.lx-v37-brand-desc')).toContainText('100+免费在线实用工具');await expect(page.getByText('100+ 在线实用工具，一处处理文件；SASI 多模型创作，一处继续真正重要的工作。',{exact:true})).toHaveCount(0);}
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });

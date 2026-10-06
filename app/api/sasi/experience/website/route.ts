@@ -18,7 +18,7 @@ export async function POST(req:NextRequest){
  if(!abuse.ok)return reply({state:"busy"},429);
  try{
   const out=await resilientText({userId:user.id,region:experienceRegionFromHost(req.headers.get("host")),task:"website",allowConnected:false,validateAnswer:answer=>{validateWebsiteArtifact(JSON.parse(answer.replace(/^```(?:json)?\s*|\s*```$/g,"")))},sessionKey:String(body.projectId||"website").slice(0,160),maxOutputTokens:4096,messages:[{role:"system",content:WEBSITE_CONTRACT+"\n"+compileSasiSkillGuidance(validateSasiSkillIds(body.skillIds,"website"))},{role:"user",content:body.text.slice(0,24000)}]});
-  if(out.kind!=="answer")return reply({state:"needs-connection",needsConnection:true});
+  if(out.kind!=="answer")return reply({state:"needs-connection",needsConnection:true,experienceExhausted:out.experienceExhausted});
   const website=validateWebsiteArtifact(JSON.parse(out.answer.replace(/^```(?:json)?\s*|\s*```$/g,"")));
   return reply({state:"answer",website,source:"experience"});
  }catch{return reply({state:"unavailable"},503)}

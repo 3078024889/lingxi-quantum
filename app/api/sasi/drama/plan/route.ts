@@ -15,6 +15,6 @@ export async function POST(req:NextRequest){
  const {data:{user}}=await createClient().auth.getUser();if(!user)return reply({error:'AUTH_REQUIRED'},401);
  const abuse=await enforceAbuseGuard(req,{scope:'sasi-video-plan',userId:user.id,accountLimit:30,ipLimit:90});if(!abuse.ok)return reply({error:'RATE_LIMITED'},429);
  const result=await resilientText({userId:user.id,region:experienceRegionFromHost(req.headers.get('host')),task:'drama',allowConnected:false,maxOutputTokens:4096,sessionKey:String(body.projectId||'video').slice(0,160),messages:[{role:'system',content:AUTOMATIC_VIDEO_CONTRACT},{role:'user',content:body.text}],validateAnswer:answer=>{parseAutomaticVideoPlan(answer,body.text)}});
- if(result.kind!=='answer')return reply({state:'needs-connection'});
+ if(result.kind!=='answer')return reply({state:'needs-connection',experienceExhausted:result.experienceExhausted});
  return reply({state:'answer',plan:parseAutomaticVideoPlan(result.answer,body.text)});
 }

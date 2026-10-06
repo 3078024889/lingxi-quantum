@@ -40,7 +40,8 @@ must(!layout.includes("SASI全球多模型智能创作生态平台"),"V59_OLD_BR
 const page=read("app/page.tsx")+read('lib/public-feature-copy.ts')+read('lib/brand-public-copy.ts');
 for(const term of["PDF","图片","SASI全球多模型智能创作平台"])must(page.includes(term),`V59_HOME_DISCOVERY_TERM_MISSING:${term}`);
 must(read('lib/public-feature-copy.ts').includes('付费功能会在使用前显示费用'),"V59_PAID_FEATURES_NOT_DISCLOSED");
-must(read('app/page.tsx').includes('HomeToolDirectory'),"V59_SERVER_TOOL_LINKS_MISSING");
+must(read('components/Footer.tsx').includes('/tools'),"V59_TOOL_HUB_LINK_MISSING");
+must(!read('app/page.tsx').includes('HomeToolDirectory'),"R13_REMOVED_HOME_DIRECTORY_RESTORED");
 
 const robots=read("app/robots.ts");
 must(robots.includes("allow:'/'")||robots.includes('allow:"/"'),"V59_ROBOTS_PUBLIC_ALLOW_MISSING");

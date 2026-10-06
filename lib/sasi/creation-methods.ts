@@ -18,7 +18,7 @@ const METHODS = {
 
 const TASK_METHODS: Record<CreationTask, readonly (keyof typeof METHODS)[]> = {
   chat: ["clarity"], director: ["clarity", "continuity", "shots"],
-  book: ["clarity", "evidence"], website: ["clarity", "website"],
+  book: ["clarity", "evidence"], website: ["clarity", "website", "mobile"],
   image: ["continuity", "image"], video: ["continuity", "shots"],
 };
 
@@ -26,7 +26,7 @@ export function creationMethod(task: CreationTask, selection?:unknown) {
   if (!TASK_METHODS[task]) throw new Error("UNKNOWN_CREATION_TASK");
   const chosen=validateFunctionSelection(task,selection);
   // Safety and grounding remain mandatory; selected methods add task-specific guidance.
-  const ids = [...new Set(["clarity",...(task==="book"?["evidence"]:[]),...(chosen??TASK_METHODS[task])])] as (keyof typeof METHODS)[];
+  const ids = [...new Set(["clarity",...(task==="book"?["evidence"]:[]),...TASK_METHODS[task],...(chosen??[])])] as (keyof typeof METHODS)[];
   return {
     version: CREATION_METHOD_VERSION, task, ids: [...ids],
     instructions: [

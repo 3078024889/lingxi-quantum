@@ -37,12 +37,7 @@ export default function SasiFunctionMenu({
     onClick={()=>{setOpen(false);onUpload()}}>
     <span aria-hidden>↥</span><span>{mt("upload")}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{mt("uploadLead")}</span></span>
    </button>}
-   <div className="min-h-0 overflow-y-auto"><div className="px-3 pb-2 pt-3 text-xs text-[var(--lx-muted)]">{mt("choose")}</div>
-   {options.map(option=><label key={option.id} className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-[var(--lx-soft)]">
-    <input type="checkbox" className="h-4 w-4 accent-violet-600" checked={selected.includes(option.id)}
-      onChange={()=>onChange(selected.includes(option.id)?selected.filter(x=>x!==option.id):[...selected,option.id])}/>
-    <span className="text-sm">{option.label}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{option.description}</span></span>
-   </label>)}
+   <div className="min-h-0 overflow-y-auto">
    {extraContent&&<div className="mt-2 border-t border-[var(--lx-line)] px-2 py-2">{extraContent}</div>}</div>
    <div className="mt-2 border-t border-[var(--lx-line)] pt-1">
     <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{mt("connect")} <span aria-hidden className="float-right">↗</span></Link>

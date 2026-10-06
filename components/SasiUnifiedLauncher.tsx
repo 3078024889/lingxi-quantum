@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import SasiTaskToolbar,{SasiWelcomeHeading} from "./SasiTaskToolbar";
 import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 import {useRef,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -63,8 +64,8 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
   onStart(mode,text,files,selectedSkills);
  }
 
- return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col justify-end px-2 pb-14 sm:px-4">
-  <div className="mb-[12vh]">
+ return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col justify-center px-2 pb-14 sm:px-4">
+  <div><SasiWelcomeHeading/>
    <SasiComposerSurface dragging={dragging} className="relative" onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setDragging(false)}} onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files.length)addFiles(e.dataTransfer.files)}}>
     {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">
       {files.map((file,index)=><span key={`${file.name}-${file.size}-${index}`} className="inline-flex max-w-[240px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-1.5 text-xs">
@@ -89,13 +90,6 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
        className="grid h-9 w-9 place-items-center rounded-full text-2xl hover:bg-[var(--lx-soft)]">＋</button>
       {open&&<div className="absolute bottom-11 start-0 z-50 flex max-h-[min(72vh,620px)] w-[min(300px,calc(100vw-64px))] flex-col rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2 shadow-[0_14px_48px_rgba(0,0,0,.16)]">
        <button type="button" onClick={()=>inputRef.current?.click()} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">{t("files")}</button>
-       <div className="min-h-0 overflow-y-auto"><div className="px-3 pb-2 pt-3 text-xs text-[var(--lx-muted)]">{t("choose")}</div>
-       {TASKS.map(item=><button key={item.id} type="button"
-        onClick={()=>{setSelected(item.id);setSelectedSkills([]);setNotice("")}}
-        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm hover:bg-[var(--lx-soft)]">
-        <span>{t(item.key)}</span>{selected===item.id?<span className="text-xs text-[var(--lx-muted)]">{t("selected")}</span>:null}
-       </button>)}
-       {selected&&selected!=="chat"&&selected!=="image"&&<SasiSkillPicker mode={selected} selected={selectedSkills} onChange={setSelectedSkills}/>}</div>
        <div className="mt-1 border-t border-[var(--lx-line)] pt-1">
         <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{t("connect")} <span className="float-right">↗</span></Link>
        </div>
@@ -108,6 +102,7 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
      <button type="button" onClick={submit} aria-label={sasiCommonText(lang,"ask")} disabled={!prompt.trim()&&!files.length}
       className="ml-auto grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">↑</button>
     </div>
+    <SasiTaskToolbar current={selected} onSelect={mode=>{setSelected(mode);setSelectedSkills([]);setNotice("")}}/>
     {notice&&<p className="px-3 pt-2 text-xs leading-5 text-[var(--lx-muted)]">{notice}</p>}
    </SasiComposerSurface>
   </div>

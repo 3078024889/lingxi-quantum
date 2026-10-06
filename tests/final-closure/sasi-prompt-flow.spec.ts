@@ -24,6 +24,7 @@ for(const merge of [false,true])test('short drama automatic '+(merge?'real MP4 c
  const tasks=ids.map((id,i)=>({id,state:'quoted',estimated_fen:20,request:{episode:merge?1:i+1,shotIndex:i,batchId:'batch',batchShotCount:2,billingCurrency:'USD'},output:{videoUrl:'https://video.example/'+id+'.mp4'}}));
  if(merge){const source=Buffer.from(fs.readFileSync('tests/fixtures/sasi-video-4s.mp4.base64','utf8').trim(),'base64');await page.route('**/api/sasi/video-file?*',route=>{const start=Number(new URL(route.request().url()).searchParams.get('start')||0),end=Math.min(start+3*1024*1024,source.length);return route.fulfill({status:206,headers:{'content-range':`bytes ${start}-${end-1}/${source.length}`,'content-type':'application/octet-stream'},body:source.subarray(start,end)})});}
  await page.route('**/api/sasi/projects',route=>route.fulfill({json:{project:{id:pid}}}));
+ await page.route('**/api/sasi/projects/*/context*',route=>route.fulfill({json:{documents:[{name:'source.docx',text:'A traveler meets the same village characters.'}]}}));
  await page.route('**/api/sasi/drama/plan',route=>route.fulfill({json:{state:'answer',plan:{title:'Two episodes',shots}}}));
  await page.route('**/api/sasi/byok/video*',async route=>{
   if(route.request().method()==='GET')return route.fulfill({json:{connected:true,profiles:[{id:'profile',resolution:'1080p'}],tasks:confirms?tasks.map(t=>({...t,state:'succeeded'})):[]}});
