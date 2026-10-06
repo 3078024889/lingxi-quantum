@@ -1,5 +1,6 @@
 "use client";
 import {BRAND_PUBLIC_COPY} from "@/lib/brand-public-copy";
+import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 
 import {FormEvent,useMemo,useState} from "react";
 import Link from "next/link";
@@ -20,8 +21,8 @@ const copy:Record<LingxiLang,Copy>={
  zh:{
   kicker:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
   seoTitle:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-  seoDesc:"100+在线实用工具＋SASI创作。处理 PDF、图片、视频音频、文件表格与隐私任务，也可以继续做短剧、网站、书本、学习和科研创作。",hero:"让复杂的工作，变得简单高效",
-  lead:"100+ 在线实用工具，一处处理文件；SASI 多模型创作，一处继续真正重要的工作。",
+  seoDesc:"AI短剧生成、网站构建、书本问答、学习与科研。100+在线实用工具，97项免费：PDF合并、拆分、压缩，图片转换、文字识别，视频裁剪、音频提取、表格转换与隐私清理。",hero:"今天你要完成什么？",
+  lead:"",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",
   taskTitle:"你现在要完成什么？",taskLead:"不需要先理解平台。先解决眼前这件事。",start:"开始",
   why:"为什么从这里开始",finishNow:"先把眼前的小事处理掉",finishNowBody:"PDF、图片、视频、字幕、表格和隐私文件，不需要在多个软件之间来回切换。打开对应工具，处理完成后直接拿到结果。",
@@ -193,18 +194,16 @@ export default function HomeProblemHub(){
   {href:"/sasi?mode=research",icon:"research" as LingxiIconName,title:c.research,desc:c.researchDesc},
   {href:"/products",icon:"products" as LingxiIconName,title:c.all,desc:c.allDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){try{sessionStorage.setItem("lx-global-search",v)}catch{};location.href=`/tools?q=${encodeURIComponent(v)}`;return}if(hit?.score>0)location.href=hit.href;else{try{sessionStorage.setItem("lx-home-intent",v)}catch{};location.href=`/sasi?intent=${encodeURIComponent(v)}`}}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
    <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_.85fr]">
     <div>
      <p className="lx-v37-brand-title">{BRAND_PUBLIC_COPY[lang].title}</p>
      <h1>{c.hero}</h1>
-     <p className="lx-v37-brand-desc">{c.seoDesc}</p>
-     <p>{c.lead}</p>
+     <p className="lx-v37-brand-desc">{PUBLIC_FEATURE_COPY[lang].description}</p>
      <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
      {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
-     {lang==="zh"&&<div className="mt-4 flex flex-wrap gap-2 text-xs text-[var(--lx-muted)]"><span className="rounded-full border border-[var(--lx-line)] px-3 py-2">⚡ 100+ 在线工具</span><span className="rounded-full border border-[var(--lx-line)] px-3 py-2">✦ SASI 多模型创作</span><span className="rounded-full border border-[var(--lx-line)] px-3 py-2">🛡 隐私与安全</span><span className="rounded-full border border-[var(--lx-line)] px-3 py-2">🌍 9 国语言</span></div>}
     </div>
     <div className="relative hidden min-h-[330px] lg:block" aria-hidden="true">
      <div className="absolute inset-8 rounded-[42px] border border-violet-200/70 bg-gradient-to-br from-blue-50 via-white to-violet-100 shadow-[0_28px_80px_rgba(90,95,180,.16)]"/>

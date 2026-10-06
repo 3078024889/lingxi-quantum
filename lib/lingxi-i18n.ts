@@ -339,7 +339,10 @@ export function setLingxiLang(lang:LingxiLang){
 }
 export function useLingxiLang(){
  const pathname=usePathname();
- const[lang,setLangState]=useState<LingxiLang>("zh");
+ const[lang,setLangState]=useState<LingxiLang>(()=>{
+  const routeLang=pathname?.split("/")[1] as LingxiLang;
+  return isLingxiLang(routeLang)?routeLang:"zh";
+ });
  useEffect(()=>{
   const routeLang=pathname?.split("/")[1] as LingxiLang;
   const requested=new URLSearchParams(location.search).get("lang") as LingxiLang;

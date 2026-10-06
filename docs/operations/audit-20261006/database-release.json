@@ -138,6 +138,10 @@
     {
       "name": "sasi_worker_expired_lease_review_release_20261006",
       "version": "20261006022332"
+    },
+    {
+      "version": "20261006024831",
+      "name": "sasi_project_9lang_release_20261006"
     }
   ],
   "sourceMapping": [
@@ -176,6 +180,10 @@
     {
       "migration": "sasi_worker_expired_lease_review_release_20261006",
       "source": "supabase/migrations/20261005150000_sasi_detached_jobs_v150.sql"
+    },
+    {
+      "migration": "sasi_project_9lang_release_20261006",
+      "source": "supabase/migrations/20260928195500_sasi_project_9lang.sql"
     }
   ],
   "quotaTest": {
@@ -194,5 +202,13 @@
     "leakedPasswordProtection": "Still disabled. No Auth management configuration tool is connected; enable in Supabase Auth settings if the account plan supports it.",
     "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
   },
-  "historyNotice": "Remote versions are the actual MCP-recorded deployment versions. Original preparation SQL filenames are preserved and mapped; do not blindly re-run historical migrations against production."
+  "historyNotice": "Remote versions are the actual MCP-recorded deployment versions. Original preparation SQL filenames are preserved and mapped; do not blindly re-run historical migrations against production.",
+  "projectCreationTest": {
+    "passed": true,
+    "method": "Actual Japanese create RPC and repeated idempotency request in a rolled-back transaction; no persistent user test projects or provider requests."
+  },
+  "connectionReadback": {
+    "healthyConnections": 1,
+    "scope": "Status metadata only; no API keys or user addresses read."
+  }
 }

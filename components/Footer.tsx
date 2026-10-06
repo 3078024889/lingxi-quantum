@@ -1,6 +1,7 @@
 "use client";
 import {FOOTER_CATALOG} from "@/lib/footer-catalog-copy";
 import {BRAND_PUBLIC_COPY} from "@/lib/brand-public-copy";
+import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import Image from"next/image";
 import Link from"next/link";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
@@ -26,9 +27,10 @@ export default function Footer(){
  const{t,lang}=useLingxiLang();const c=copy[lang]??copy.en;
  return <footer className="lx11-footer" id="wechat"><div className="lx11-footer-grid">
  <section className="lx11-footer-brand"><div className="lx11-footer-logo"><Image src="/images/lingxifield-logo.png" alt="" width={40} height={40}/><div><b>{BRAND_PUBLIC_COPY[lang].title}</b></div></div>
- <p className="lx11-footer-brand-lead"><b>{BRAND_PUBLIC_COPY[lang].tagline}</b></p><p>{c.lead}</p>
+ <p className="lx11-footer-brand-lead"><b>{PUBLIC_FEATURE_COPY[lang].headline}</b></p>
+ <p>{PUBLIC_FEATURE_COPY[lang].freeTools}</p>
  <div className="lx-footer-catalog">{FOOTER_CATALOG[lang].map(category=><details key={category.title}><summary>{category.title}</summary><p>{category.body}</p></details>)}</div>
- <div className="lx11-footer-capability"><b>SASI</b><p>{c.sasiBody}</p></div>
+ <div className="lx11-footer-capability"><p>{c.sasiBody}</p></div>
  <span>lingxifield.com · lingxifield.cn</span><span style={{opacity:.58,fontSize:12}}>v{LINGXIFIELD_RELEASE.website} · <Link href="/release">{c.release}</Link></span></section>
  <nav><b>{t("start")}</b><Link href="/products">{productCatalogText(lang,"title")}</Link><Link href="/tools">{t("tools")}</Link><Link href="/sasi">{t("studio")}</Link><Link href="/ai-knowledge">{t("books")}</Link><Link href="/ai-learning">{t("learning")}</Link><Link href="/ai-research">{t("research")}</Link><Link href="/ai-wallet">{t("wallet")}</Link></nav>
  <nav><b>{c.useful}</b><Link href="/account">{c.account}</Link><Link href="/account/orders">{c.orders}</Link><Link href="/account/withdrawals">{c.withdraw}</Link><Link href="/refunds">{c.refunds}</Link><Link href="/sasi/connections">{c.connect}</Link></nav>

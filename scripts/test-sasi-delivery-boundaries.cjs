@@ -2,6 +2,14 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const cache=new Map();
 function load(file){file=path.resolve(file);if(cache.has(file))return cache.get(file).exports;const m={exports:{}};cache.set(file,m);const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;new Function('require','module','exports',js)(name=>name==='server-only'?{}:name.startsWith('.')?load(path.resolve(path.dirname(file),name+'.ts')):name.startsWith('@/')?load(name.slice(2)+'.ts'):require(name),m,m.exports);return m.exports}
 async function main(){
+ const {createProjectProposal}=load('lib/sasi/project-proposal.ts');
+ for(const kind of ['build','drama'])assert.equal(createProjectProposal({kind,brief:'帮我做一个酒店的网站'}).ok,true);
+ assert.equal(createProjectProposal({kind:'build',brief:' '}).ok,false);
+ assert.equal(createProjectProposal({kind:'build',brief:'a'.repeat(100001)}).ok,false);
+ const previousLanguageFlag=process.env.SASI_PROJECT_9LANG_DB_ENABLED;
+ delete process.env.SASI_PROJECT_9LANG_DB_ENABLED;
+ assert.equal(createProjectProposal({kind:'build',brief:'ホテルのサイト',language:'ja'}).language,'ja');
+ if(previousLanguageFlag!==undefined)process.env.SASI_PROJECT_9LANG_DB_ENABLED=previousLanguageFlag;
  const {validateWebsiteArtifact:validate}=load('lib/sasi/website-artifact.ts');
  const html=(name,links='')=>`<!doctype html><html><head><title>${name}</title><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${name}"></head><body><h1>${name}</h1>${links}</body></html>`;
  const valid={title:'My business',files:[{path:'index.html',content:html('Home','<a href="about.html">About us</a>')},{path:'about.html',content:html('About us','<a href="index.html">Home</a>')}]};

@@ -1,4 +1,5 @@
 import {test,expect} from 'playwright/test';
+import {PUBLIC_FEATURE_COPY} from '../../lib/public-feature-copy';
 const locales=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
 const ask=["问问 SASI","Ask SASI","SASIに質問","SASI에 질문","Demandez à SASI","SASI fragen","Pregunta a SASI","Pergunte ao SASI","اسأل SASI"];
 const release=['版本与更新','Release notes','更新情報','업데이트','Mises à jour','Aktualisierungen','Actualizaciones','Atualizações','التحديثات'];
@@ -6,7 +7,9 @@ for(const [i,locale]of locales.entries())test('public copy and controls '+locale
  await page.goto('/?lang='+locale);
  const footer=page.locator('footer');
  await expect(footer.locator('a[href="/release"]')).toHaveText(release[i]);
- await expect(footer).not.toContainText(/生态|Intelligent Ecosystem|Ecossistema inteligente|Ecosistema inteligente|AI短剧|short drama|minidrama|Mini-séries IA|Kurzdramen/);
+ await expect(footer).not.toContainText(/生态|Intelligent Ecosystem|Ecossistema inteligente|Ecosistema inteligente/);
+ await expect(footer).toContainText(PUBLIC_FEATURE_COPY[locale].headline);
+ await expect(footer).toContainText(PUBLIC_FEATURE_COPY[locale].freeTools);
  await expect(page.locator('main textarea')).toHaveAttribute('aria-label',/./);
  await expect(page.locator('.lx11-lang-label').first()).not.toContainText('/ Language');
  const cards=await page.locator('.lx11-home-card').evaluateAll(elements=>elements.map(card=>{const desc=card.querySelector('p')!.getBoundingClientRect(),action=card.querySelector('b')!.getBoundingClientRect(),bounds=card.getBoundingClientRect();return{descriptionBottom:desc.bottom,actionTop:action.top,actionBottom:action.bottom,cardBottom:bounds.bottom}}));

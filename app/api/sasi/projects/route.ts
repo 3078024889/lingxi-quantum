@@ -3,6 +3,7 @@ import { createProjectProposal } from "@/lib/sasi/project-proposal";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import {boundedRequestJson} from '@/lib/security/bounded-request-json';
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -56,9 +57,11 @@ export async function POST(request: NextRequest) {
 
   let body: Record<string, unknown>;
   try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "INVALID_JSON" }, { status: 400 });
+    body = await boundedRequestJson(request,256*1024) as Record<string,unknown>;
+    if(!body||typeof body!=='object'||Array.isArray(body))return NextResponse.json({error:'INVALID_JSON'},{status:400});
+  } catch(error) {
+    const tooLarge=error instanceof Error&&error.message==='REQUEST_TOO_LARGE';
+    return NextResponse.json({ error: tooLarge?'PROJECT_REQUEST_TOO_LARGE':"INVALID_JSON" }, { status: tooLarge?413:400 });
   }
 
   const proposal = createProjectProposal(body);

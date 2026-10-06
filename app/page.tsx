@@ -4,11 +4,13 @@ import type { Metadata } from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import HomeProblemHub from "@/components/HomeProblemHub";
+import HomeToolDirectory from "@/components/seo/HomeToolDirectory";
+import {PUBLIC_FEATURE_COPY,PUBLIC_SEARCH_TITLES} from "@/lib/public-feature-copy";
 
 export const dynamic="force-dynamic";
 export const revalidate=0;
 
 const homeFact=pageGeoFact("home","zh");
-export const metadata:Metadata=publicPageMetadata("zh","/","灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台","100+在线实用工具＋SASI创作。PDF、图片、视频音频、文件表格与隐私工具，以及短剧视频生成、网站构建、书本、学习与科研多模型创作。");
+export const metadata:Metadata=publicPageMetadata("zh","/",PUBLIC_SEARCH_TITLES.zh,PUBLIC_FEATURE_COPY.zh.description);
 
-export default function Home(){return <><Nav/><HomeProblemHub/><Footer/></>;}
+export default function Home(){return <><Nav/><HomeProblemHub/><HomeToolDirectory locale="zh"/><Footer/></>;}

@@ -1,4 +1,5 @@
 "use client";
+import {projectErrorCopy} from '@/lib/sasi/project-error-copy';
 import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 
 import {useCallback,useEffect,useRef,useState,type ReactNode} from "react";
@@ -78,6 +79,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  const[dragging,setDragging]=useState(false);
  const[rightsConfirmed,setRightsConfirmed]=useState(false);
  const operation=useRef(false);
+ const projectAttempt=useRef<{body:string;key:string}|null>(null);
  const mounted=useRef(true);
  const inputRef=useRef<HTMLInputElement|null>(null);
  const textareaRef=useRef<HTMLTextAreaElement|null>(null);
@@ -136,14 +138,15 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
 
  async function ensureProject(){
   if(projectId)return projectId;
-  const requestId=crypto.randomUUID();
   const attachments=files.map(x=>({name:x.file.name,size:x.file.size,kind:kindFor(x.file.name)}));
   const body=mode==="drama"
    ?{kind:"drama",brief:prompt.trim(),attachments,seconds:duration,quality:resolution==="720p"?"fast":resolution==="1080p"?"balanced":"cinema",budgetFen:0,language:lang}
    :{kind:"build",brief:prompt.trim(),attachments,language:lang};
-  const r=await fetch("/api/sasi/projects",{method:"POST",headers:{"content-type":"application/json","Idempotency-Key":requestId},body:JSON.stringify(body)});
+  const serialized=JSON.stringify(body);
+  if(projectAttempt.current?.body!==serialized)projectAttempt.current={body:serialized,key:crypto.randomUUID()};
+  const r=await fetch("/api/sasi/projects",{method:"POST",headers:{"content-type":"application/json","Idempotency-Key":projectAttempt.current.key},body:serialized}).catch(()=>{throw new Error(ct('projectFailed'))});
   const b=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(b.error==="AUTH_REQUIRED"?ct("loginRequired"):ct("projectFailed"));
+  if(!r.ok)throw new Error(b.error==="AUTH_REQUIRED"?ct("loginRequired"):projectErrorCopy(lang,b.error,r.status)||ct("projectFailed"));
   const id=b.project?.projectId||b.project?.id||b.project?.project_id||b.project?.projectID;
   if(typeof id!=="string")throw new Error(ct("projectIdMissing"));
   setProjectId(id);
@@ -205,7 +208,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
    await track("continued",mode==="drama"?"drama.prepare":"website.prepare",pid);
    if(mode==="website")await prepareWebsite(pid,uploaded); else await prepareDrama(pid,uploaded);
   }catch(e){
-   setMessage(e instanceof Error?e.message:ct("genericUnavailable"))
+   setMessage(e instanceof Error&&!(e instanceof TypeError)&&e.name!=='AbortError'?e.message:ct("genericUnavailable"))
   }
   finally{operation.current=false;setBusy(false)}
  }
@@ -292,7 +295,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
     if(!r.ok)throw new Error(ct("supplierStartFailed"));
     await pollByok(quote.task.id);
    }
-  }catch(e){setMessage(e instanceof Error?e.message:ct("genericUnavailable"))}
+  }catch(e){setMessage(e instanceof Error&&!(e instanceof TypeError)&&e.name!=='AbortError'?e.message:ct("genericUnavailable"))}
   finally{operation.current=false;setBusy(false)}
  }
 

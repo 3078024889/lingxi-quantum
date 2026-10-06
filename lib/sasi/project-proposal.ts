@@ -53,15 +53,16 @@ export function createProjectProposal(body: Record<string, unknown>) {
     : body.kind === "drama" ? "drama" : null;
   const brief = typeof body.brief === "string" ? body.brief.trim() : "";
   const attachments = cleanAttachments(body.attachments);
-  const minimumLength = kind === "build" ? 12 : 20;
+  // Briefs in CJK languages are useful with fewer characters than English.
+  const minimumLength = 2;
   if (!kind || (brief.length < minimumLength && attachments.length === 0) || brief.length > 100_000) {
     return { ok: false as const, error: "INVALID_PROJECT_BRIEF" };
   }
 
   const uiLanguage:SasiProjectLanguage = LANGS.has(body.language as SasiProjectLanguage) ? body.language as SasiProjectLanguage : "zh";
-  // Production DB remains zh/en-compatible until the explicit 9-language migration is applied.
-  // uiLanguage is always retained inside the project input, so no user language is lost.
-  const language:SasiProjectLanguage = process.env.SASI_PROJECT_9LANG_DB_ENABLED === "true"
+  // The production nine-language migration is applied. Explicit false remains
+  // an operator escape hatch for installations on the older schema.
+  const language:SasiProjectLanguage = process.env.SASI_PROJECT_9LANG_DB_ENABLED !== "false"
     ? uiLanguage
     : (uiLanguage === "zh" ? "zh" : "en");
 

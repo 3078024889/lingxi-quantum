@@ -4,6 +4,8 @@
 
 ## 本次新增
 
+生产九语言项目数据库已迁移。`SASI_PROJECT_9LANG_DB_ENABLED` 不填写时默认支持九语言；若以前为旧数据库明确设为 `false`，本次迁移后应删除该旧值或设为 `true`。
+
 | 功能 | 变量 | 操作 |
 | --- | --- | --- |
 | 带来源的网络研究 | `SASI_RESEARCH_TAVILY_ENABLED`、`SASI_RESEARCH_TAVILY_API_KEY` | 开通 Tavily 后填密钥、启用；不开通时页面会提示无法联网检索，不编造搜索结果。 |
@@ -71,6 +73,12 @@ Vercel → 项目 → Settings → Environment Variables → 选择 Production�
 音视频 AI 的 `LINGXIFIELD_MEDIA_AI_BASE_URL/KEY` 与 TRANSCRIBE/TRANSLATE/TTS 模型要来自真正支持相应 API 的服务；只支持聊天的地址不能冒充语音生成。OCR、本地文件处理、轻量 WebAssembly 功能按工具能力表使用；外部 GPU 生成保持任务状态查询、失败可恢复和明确价格确认。对象存储、队列、worker 的独立进程还需实际部署，添加环境变量本身不会创建服务器服务。
 
 ## 验收顺序
+
+### 搜索结果更新
+
+进入 [Google Search Console](https://search.google.com/search-console)，选择你拥有的 `lingxifield.com` 站点，提交 `https://lingxifield.com/sitemap.xml`。用“网址检查”检查首页和重要功能页，选择“请求编入索引”。`.cn` 保留服务访问，现有 canonical 将相同内容归到 `.com`；不要为了多域名把同一页面重复宣传为不同产品。无需为普通工具页添加 Google Indexing API 密钥。
+
+更新网站不等于 Google 立即更新标题或摘要。抓取可能需要几天到几周，重复点击提交也不会加速；见 [Google 官方重新抓取说明](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl)。具体工具名称、问题描述和链接应在真实功能页维护，不能仅靠页脚堆词。
 
 本次已经补齐生产连接字段、体验额度及持续任务相关数据库迁移，并回读权限。实际远程版本与源码文件映射见相邻审计目录的 `database-release.json`；不要盲目重新推送旧迁移。后续在已注入服务器配置的环境运行 `node scripts/release/check-sasi-production-foundation.mjs` 检查表/字段与服务端权限；脚本使用 limit=0，不返回用户记录。没有配置时会明确失败，不输出假通过。
 

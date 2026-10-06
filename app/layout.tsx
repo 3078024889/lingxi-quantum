@@ -10,6 +10,7 @@ import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider"
 import SiteStructuredData from "@/components/SiteStructuredData";
 import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
+import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 
 const SITE=PRIMARY_SITE;
 const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
@@ -22,7 +23,7 @@ export const metadata:Metadata={
   default:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
   template:"%s ｜ 灵犀场 LINGXIFIELD"
  },
- description:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
+ description:PUBLIC_FEATURE_COPY.zh.description,
  applicationName:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
  alternates:{canonical:SITE},
  keywords:[
@@ -36,14 +37,14 @@ export const metadata:Metadata={
   type:"website",
   siteName:"灵犀场 LINGXIFIELD",
   title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-  description:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
+  description:PUBLIC_FEATURE_COPY.zh.description,
   url:SITE,
   images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
  },
  twitter:{
   card:"summary_large_image",
   title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-  description:"处理 PDF、图片、视频和文字，整理资料并围绕原文提问。各项功能的处理方式和费用在使用前说明。",
+  description:PUBLIC_FEATURE_COPY.zh.description,
   images:[SHARE_IMAGE]
  },
  robots:{index:true,follow:true,"max-snippet":-1,"max-image-preview":"large","max-video-preview":-1},

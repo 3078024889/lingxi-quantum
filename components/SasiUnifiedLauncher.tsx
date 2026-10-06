@@ -36,10 +36,10 @@ const TASKS:Array<{id:SasiMode;key:"website"|"drama"|"book"|"learning"|"research
  {id:"research",key:"research"}
 ];
 
-export default function SasiUnifiedLauncher({onStart}:{onStart:(mode:SasiMode,prompt:string,files:File[],skillIds:SasiSkillId[])=>void}){
+export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:(mode:SasiMode,prompt:string,files:File[],skillIds:SasiSkillId[])=>void;initialPrompt?:string}){
  const{lang}=useLingxiLang();
  const t=(key:keyof typeof COPY)=>COPY[key][lang]||COPY[key].en;
- const[prompt,setPrompt]=useState("");
+ const[prompt,setPrompt]=useState(initialPrompt);
  const[selected,setSelected]=useState<SasiMode|null>(null);
  const[files,setFiles]=useState<File[]>([]);
  const[selectedSkills,setSelectedSkills]=useState<SasiSkillId[]>([]);

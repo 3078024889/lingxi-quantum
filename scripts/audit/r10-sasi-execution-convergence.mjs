@@ -9,7 +9,7 @@ const center=r('app/sasi/ConnectionCenter.tsx'),conn=r('app/api/sasi/connections
 const exp=r('lib/sasi/experience/free-provider-config.ts'),env=r('.env.example');
 
 must(home.includes('灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台'),'R10_HOME_BRAND_MISSING');
-must(home.includes('让复杂的工作，变得简单高效'),'R10_HOME_HERO_MISSING');
+must(home.includes('今天你要完成什么？'),'R10_HOME_HERO_MISSING');
 must(footer.includes('100+在线实用工具＋SASI创作'),'R10_FOOTER_BRAND_MISSING');
 must(footer.includes('骑缝章')&&footer.includes('视频配音')&&footer.includes('CSV/TSV转Excel'),'R10_FOOTER_CATALOG_INCOMPLETE');
 must(nav.includes('SASI全球多模型智能创作平台'),'R10_NAV_BRAND_MISSING');
