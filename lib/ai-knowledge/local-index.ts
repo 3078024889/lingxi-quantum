@@ -42,7 +42,7 @@ function occurrences(text:string, term:string){
   return n;
 }
 
-export function searchKnowledge(sources: KnowledgeSource[], query: string): Evidence[] {
+export function searchKnowledge(sources: KnowledgeSource[], query: string,options?:{limit?:number;perSource?:number}): Evidence[] {
   const parsed = termsFor(query);
   if (!parsed.terms.length) return [];
   const candidates = sources.flatMap((source) => {
@@ -76,10 +76,10 @@ export function searchKnowledge(sources: KnowledgeSource[], query: string): Evid
   const picked:Evidence[]=[]; const perSource=new Map<string,number>();
   for(const item of scored){
     const used=perSource.get(item.sourceId)||0;
-    if(used>=4) continue;
+    if(used>=(options?.perSource??4)) continue;
     if(picked.some(x=>x.sourceId===item.sourceId && x.text===item.text)) continue;
     picked.push(item); perSource.set(item.sourceId,used+1);
-    if(picked.length>=18) break;
+    if(picked.length>=(options?.limit??18)) break;
   }
   return picked;
 }

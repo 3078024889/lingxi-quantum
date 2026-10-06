@@ -5,6 +5,7 @@ import {defaultBaseUrl} from "./provider-defaults";
 import {validateProviderBaseUrl} from "@/lib/sasi/gateway/ssrf-guard";
 import {errorCode,recordConnectionFailure,recordConnectionSuccess} from "./runtime-health";
 import {recordIntelligenceRun} from "./telemetry";
+import {providerJsonProbe} from "@/lib/security/provider-json-probe";
 
 export type VideoProvider="volcengine"|"xai"|"openai"|"aliyun";
 export type UserVideoConnection={id:string;provider:VideoProvider;encrypted_credential:string;fingerprint:string;model_id:string;discovered_models:unknown;health_status:string;enabled:boolean;base_url?:string|null;cooldown_until?:string|null;last_success_at?:string|null;last_latency_ms?:number|null;updated_at?:string|null};
@@ -23,7 +24,12 @@ export async function selectUserVideoConnection(userId:string,preferred?:string|
 }
 function authKey(userId:string,c:UserVideoConnection){return decryptProviderKey(userId,c.provider as ByokProvider,c.encrypted_credential)}
 function safeBase(c:UserVideoConnection){const raw=String(c.base_url||"").trim()||defaultBaseUrl(c.provider as ByokProvider);const g=validateProviderBaseUrl(raw);if(!g.pass||!g.normalized)throw new Error("SERVICE_ADDRESS_INVALID");return g.normalized.replace(/\/$/,"")}
-async function requestJson(url:string,init:RequestInit){const r=await fetch(url,{...init,cache:"no-store",redirect:"error",signal:AbortSignal.timeout(30_000)});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(`VIDEO_PROVIDER_HTTP_${r.status}`);return b as any}
+async function requestJson(url:string,init:RequestInit){
+ const headers=new Headers(init.headers);let body:string|Uint8Array|undefined;
+ if(typeof init.body==="string")body=init.body;
+ else if(init.body instanceof FormData){const encoded=new Response(init.body);headers.set("content-type",encoded.headers.get("content-type")!);body=new Uint8Array(await encoded.arrayBuffer())}
+ const r=await providerJsonProbe(url,Object.fromEntries(headers.entries()),30_000,2*1024*1024,{method:init.method==="POST"?"POST":"GET",body});if(!r.ok)throw new Error(`VIDEO_PROVIDER_HTTP_${r.status}`);return r.payload as any;
+}
 function httpsUrl(value:unknown){if(typeof value!=="string")return"";try{const u=new URL(value);return u.protocol==="https:"&&!u.username&&!u.password?u.toString():""}catch{return""}}
 export async function submitUserVideo(input:{userId:string;connection:Awaited<ReturnType<typeof selectUserVideoConnection>>;prompt:string;duration:number;ratio:"16:9"|"9:16"|"1:1";resolution:"720p"|"1080p"|"4k";taskId?:string|null}){
  const c=input.connection;if(!c)throw new Error("VIDEO_CONNECTION_REQUIRED");const started=Date.now(),key=authKey(input.userId,c),model=c.videoModel,base=safeBase(c);

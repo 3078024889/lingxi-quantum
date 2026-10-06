@@ -1,0 +1,198 @@
+{
+  "project": "sxsgdpqojepgbbrxrzlq",
+  "verifiedAt": "2026-10-06",
+  "lease_recovery": true,
+  "private_tables": [
+    {
+      "rls": true,
+      "name": "sasi_durable_runs",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_durable_run_events",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_ai_trace_spans",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_run_controls",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_experience_daily",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_experience_reservations",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_experience_provider_daily",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_experience_session_affinity",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_durable_step_results",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_durable_jobs",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_versioned_artifacts",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_conversation_threads",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_artifact_versions",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "name": "sasi_conversation_messages",
+      "anon_select": false,
+      "service_select": true,
+      "authenticated_select": false
+    }
+  ],
+  "migration_history": [
+    {
+      "name": "sasi_connection_fields_release_20261006",
+      "version": "20261006021714"
+    },
+    {
+      "name": "sasi_experience_trust_router_v90_release_20261006",
+      "version": "20261006021730"
+    },
+    {
+      "name": "sasi_experience_continuity_v100_release_20261006",
+      "version": "20261006021737"
+    },
+    {
+      "name": "sasi_durable_intelligence_v110_release_20261006",
+      "version": "20261006021744"
+    },
+    {
+      "name": "sasi_durable_steps_v140_release_20261006",
+      "version": "20261006021751"
+    },
+    {
+      "name": "sasi_detached_jobs_v150_release_20261006",
+      "version": "20261006021758"
+    },
+    {
+      "name": "sasi_unified_conversation_v120_release_20261006",
+      "version": "20261006022026"
+    },
+    {
+      "name": "sasi_artifact_control_v121_release_20261006",
+      "version": "20261006022032"
+    },
+    {
+      "name": "sasi_worker_expired_lease_review_release_20261006",
+      "version": "20261006022332"
+    }
+  ],
+  "sourceMapping": [
+    {
+      "migration": "sasi_connection_fields_release_20261006",
+      "source": "supabase/migrations/20261001030000_final_nonfood_connection_closure.sql"
+    },
+    {
+      "migration": "sasi_experience_trust_router_v90_release_20261006",
+      "source": "supabase/migrations/20261005114500_sasi_experience_trust_router_v90.sql"
+    },
+    {
+      "migration": "sasi_experience_continuity_v100_release_20261006",
+      "source": "supabase/migrations/20261005120500_sasi_experience_continuity_v100.sql"
+    },
+    {
+      "migration": "sasi_durable_intelligence_v110_release_20261006",
+      "source": "supabase/migrations/20261005124000_sasi_durable_intelligence_v110.sql"
+    },
+    {
+      "migration": "sasi_durable_steps_v140_release_20261006",
+      "source": "supabase/migrations/20261005141500_sasi_durable_steps_v140.sql"
+    },
+    {
+      "migration": "sasi_detached_jobs_v150_release_20261006",
+      "source": "supabase/migrations/20261005150000_sasi_detached_jobs_v150.sql"
+    },
+    {
+      "migration": "sasi_unified_conversation_v120_release_20261006",
+      "source": "supabase/migrations/20261005131500_sasi_unified_conversation_v120.sql"
+    },
+    {
+      "migration": "sasi_artifact_control_v121_release_20261006",
+      "source": "supabase/migrations/20261005134500_sasi_artifact_control_v121.sql"
+    },
+    {
+      "migration": "sasi_worker_expired_lease_review_release_20261006",
+      "source": "supabase/migrations/20261005150000_sasi_detached_jobs_v150.sql"
+    }
+  ],
+  "quotaTest": {
+    "passed": true,
+    "method": "Actual RPC reserve, exhausted, replay, failed release, successful settle and repeated settle inside a rolled-back transaction with generated IDs."
+  },
+  "leaseTest": {
+    "passed": true,
+    "method": "Exact claim-function body against temporary copies of production table definitions, transaction rolled back. Expired submission fails for review, its public run stops running, next queued task is claimed, no second worker claims the live task.",
+    "sql": "begin;create temp table audit_runs(like public.sasi_durable_runs including all);create temp table audit_jobs(like public.sasi_durable_jobs including all);create or replace function pg_temp.audit_claim(\n p_worker_id text,p_lease_seconds integer default 75\n) returns jsonb\nlanguage plpgsql security definer set search_path=public as $$\ndeclare r pg_temp.audit_jobs%rowtype;\nbegin\n -- A crashed worker must not leave the task running forever. Do not repeat\n -- a provider submission whose outcome is unknown after losing the lease.\n with abandoned as (\n  update pg_temp.audit_jobs set\n   state='failed',error_code='WORKER_LEASE_EXPIRED_REVIEW_REQUIRED',\n   lease_owner=null,lease_until=null,updated_at=now()\n  where state='running' and lease_until is not null and lease_until<=now()\n  returning run_id\n )\n update pg_temp.audit_runs set\n  state='failed',error_code='WORKER_LEASE_EXPIRED_REVIEW_REQUIRED',updated_at=now()\n where id in(select run_id from abandoned) and state not in('succeeded','cancelled');\n\n update pg_temp.audit_jobs set\n  state='failed',error_code='DEADLINE_EXPIRED',lease_owner=null,lease_until=null,updated_at=now()\n where state in('queued','waiting')\n   and deadline_at is not null and deadline_at <= now();\n\n select * into r from pg_temp.audit_jobs\n where state in('queued','waiting')\n   and available_at<=now()\n   and (deadline_at is null or deadline_at>now())\n   and (lease_until is null or lease_until<=now())\n order by\n   (priority + least(9,floor(extract(epoch from(now()-created_at))/300)::int)) desc,\n   available_at asc,created_at asc\n for update skip locked\n limit 1;\n\n if not found then return jsonb_build_object('ok',true,'claimed',false); end if;\n\n update pg_temp.audit_jobs set\n  state='running',\n  attempt=attempt+1,\n  lease_owner=left(coalesce(p_worker_id,'worker'),160),\n  lease_until=now()+make_interval(secs=>greatest(30,least(180,p_lease_seconds))),\n  updated_at=now()\n where id=r.id returning * into r;\n\n return jsonb_build_object(\n  'ok',true,'claimed',true,'id',r.id,'run_id',r.run_id,'user_id',r.user_id,\n  'job_kind',r.job_kind,'workflow_version',r.workflow_version,'payload_json',r.payload_json,\n  'attempt',r.attempt,'max_attempts',r.max_attempts,'lease_until',r.lease_until\n );\nend $$;\ndo $test$ declare u uuid:=gen_random_uuid(); old_run uuid:=gen_random_uuid(); next_run uuid:=gen_random_uuid(); old_job uuid:=gen_random_uuid(); next_job uuid:=gen_random_uuid(); x jsonb; s text; attempts integer; begin\ninsert into audit_runs(id,user_id,session_key,task,idempotency_key,input_hash,state) values(old_run,u,'audit','text','old-key','hash','running'),(next_run,u,'audit','text','next-key','hash','created');\ninsert into audit_jobs(id,run_id,user_id,job_kind,workflow_version,payload_json,state,attempt,lease_owner,lease_until) values(old_job,old_run,u,'text','audit','{}','running',1,'crashed',now()-interval '1 minute'),(next_job,next_run,u,'text','audit','{}','queued',0,null,null);\nx:=pg_temp.audit_claim('healthy-worker',75); if not (x->>'claimed')::boolean or (x->>'id')::uuid<>next_job then raise exception 'ready job not claimed';end if;\nselect state,attempt into s,attempts from audit_jobs where id=old_job;if s<>'failed' or attempts<>1 then raise exception 'abandoned submission retried or remains running';end if;\nselect state into s from audit_runs where id=old_run;if s<>'failed' then raise exception 'public run remains running';end if;\nx:=pg_temp.audit_claim('second-worker',75);if (x->>'claimed')::boolean then raise exception 'duplicate live job claimed';end if;\nend $test$;rollback;"
+  },
+  "advisors": {
+    "newPrivilegedRpcAccess": "anon=false, authenticated=false, service_role=true",
+    "noPolicyInfo": 82,
+    "balanceSnapshotWarning": "Expected authenticated access; owner enforcement was preserved.",
+    "leakedPasswordProtection": "Still disabled. No Auth management configuration tool is connected; enable in Supabase Auth settings if the account plan supports it.",
+    "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+  },
+  "historyNotice": "Remote versions are the actual MCP-recorded deployment versions. Original preparation SQL filenames are preserved and mapped; do not blindly re-run historical migrations against production."
+}

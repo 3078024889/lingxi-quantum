@@ -12,7 +12,13 @@ export type SasiSkillId=
  |"workflow-orchestration"
  |"observability"
  |"multimodal-continuity"
- |"website-production";
+ |"website-production"
+ |"drama-script"
+ |"drama-storyboard"
+ |"drama-visual"
+ |"drama-sound"
+ |"teaching-practice"
+ |"source-comparison";
 
 export type SasiSkillDefinition={
  id:SasiSkillId;

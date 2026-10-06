@@ -7,6 +7,9 @@ const need=[
 "supabase/migrations/20261005134500_sasi_artifact_control_v121.sql"
 ];
 for(const f of need)if(!fs.existsSync(f))throw new Error("R12R1_FILE_MISSING:"+f);
+const artifactSchema=fs.readFileSync("supabase/migrations/20261005134500_sasi_artifact_control_v121.sql","utf8");
+if(artifactSchema.includes("create table if not exists public.sasi_artifacts("))throw new Error("R12R1_VERSIONED_SCHEMA_COLLIDES_WITH_TASK_ARTIFACTS");
+if(!artifactSchema.includes("references public.sasi_versioned_artifacts(id)"))throw new Error("R12R1_VERSIONED_ARTIFACT_PARENT_MISSING");
 const composer=fs.readFileSync("components/SasiComposerCore.tsx","utf8");
 if(!composer.includes('data-sasi-user-color="blue"'))throw new Error("R12R1_BLUE_SENT_MESSAGE_MARKER_MISSING");
 const css=fs.readFileSync("app/globals.css","utf8");

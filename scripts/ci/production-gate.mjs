@@ -7,6 +7,7 @@ const root=process.cwd();
 const commands=[
  ["node",["scripts/audit-security.mjs"]],
  ["node",["scripts/test-provider-json-probe.cjs"]],
+ ["node",["scripts/test-sasi-delivery-boundaries.cjs"]],
  ["node",["scripts/test-document-converter-limits.cjs"]],
  ["node",["scripts/test-document-gateway-limits.mjs"]],
  ["node",["scripts/test-site-facts.cjs"]],

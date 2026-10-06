@@ -1,7 +1,10 @@
 "use client";
+import {knowledgeActionText as actionText} from "@/lib/sasi/knowledge-action-copy";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
+import {WEB_RESEARCH_UNAVAILABLE} from "@/lib/sasi/research-ui-copy";
 import JSZip from "jszip";
 import SasiByokTextWorkbench from "./SasiByokTextWorkbench";
 import {
@@ -181,9 +184,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
   async function importOneFile(file:File){
     if(file.size>DOCUMENT_FILE_MAX_BYTES)throw new Error(tr(lang,"file30"));
     if(isLegacyOffice(file)){
-      throw new Error(lang==="zh"
-        ? `「${file.name}」是旧版 Office 二进制格式。可以拖到这里，但浏览器无法可靠解析正文；请先另存为 ${/\.doc$/i.test(file.name)?"DOCX":/\.xls$/i.test(file.name)?"XLSX":"PPTX"} 后再加入。`
-        : `${file.name} is a legacy Office binary file. Please save it as ${/\.doc$/i.test(file.name)?"DOCX":/\.xls$/i.test(file.name)?"XLSX":"PPTX"} first for reliable extraction.`);
+      throw new Error(actionText(lang,"legacy",{format:/\.doc$/i.test(file.name)?"DOCX":/\.xls$/i.test(file.name)?"XLSX":"PPTX"}));
     }
 
     let parsedText="",locators:KnowledgeSource["locators"]|undefined,kind:KnowledgeSource["kind"]="text";
@@ -236,11 +237,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
         try{
           if (__lingxiBatchBytes + Number(file.size || 0) > DOCUMENT_BATCH_MAX_BYTES) {
             const maxMb = Math.round(DOCUMENT_BATCH_MAX_BYTES / 1024 / 1024);
-            throw new Error(
-              lang === "zh"
-                ? `本次批量读取累计超过 ${maxMb}MB，为保护浏览器内存，请分批导入。`
-                : `This batch exceeds the ${maxMb} MB memory budget. Import it in smaller batches.`
-            );
+            throw new Error(actionText(lang,"batch",{n:maxMb}));
           }
           __lingxiBatchBytes += Number(file.size || 0);
           const source = await importOneFile(file);
@@ -251,11 +248,9 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
         }
       }
       if(ok.length&&failed.length){
-        setNotice(lang==="zh"
-          ? `已加入 ${ok.length} 份资料；${failed.length} 份未加入：${failed.slice(0,3).join("；")}`
-          : `Added ${ok.length} source(s); ${failed.length} failed: ${failed.slice(0,3).join("; ")}`);
+        setNotice(`${actionText(lang,"added",{n:ok.length})} ${failed.slice(0,3).join("; ")}`);
       }else if(ok.length){
-        setNotice(lang==="zh"?`已批量加入 ${ok.length} 份资料。`:`Added ${ok.length} source(s).`);
+        setNotice(actionText(lang,"added",{n:ok.length}));
       }else{
         setNotice(failed[0]||tr(lang,"fileReadFailed"));
       }
@@ -264,46 +259,49 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     }
     if(mediaWithoutText>0){
       setNeedsConnection(true);
-      setNotice(lang==="zh"
-        ?"媒体已加入。需要理解图片、音频或视频内容时，请连接支持相应能力的智能服务。"
-        :"Media added. Connect an intelligence service with the required image/audio/video capability to understand it.");
+      setNotice(actionText(lang,"media"));
     }
   }
 
+  const asking=useRef(false);
   async function ask(){
+    if(asking.current||askBusy||busy)return;
     const raw=question.trim();if(!raw)return;
     setNeedsConnection(false);
 
-    const textSources=sources.filter(source=>source.text.trim().length>0);
+    let onlineSources:KnowledgeSource[]=[];
+    if(mode==="research"&&selectedSkillIds.includes("web-research")){
+      asking.current=true;setAskBusy(true);
+      try{
+        const response=await fetch("/api/sasi/research/search",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:raw.slice(0,1200)})});
+        const data=await response.json().catch(()=>({}));
+        if(!response.ok||!Array.isArray(data.sources)||!data.sources.length)throw new Error("WEB_SEARCH_UNAVAILABLE");
+        onlineSources=data.sources.map((item:{title:string;url:string;text:string})=>({id:item.url,title:`${item.title} — ${item.url}`,text:item.text,createdAt:new Date().toISOString(),locators:[{start:0,end:item.text.length,label:item.url}]}));
+      }catch{setNotice(WEB_RESEARCH_UNAVAILABLE[lang]);return}finally{asking.current=false;setAskBusy(false)}
+    }
+    const textSources=[...sources,...onlineSources].filter(source=>source.text.trim().length>0);
     const largeDirectPaste=raw.length>=800||(raw.length>=300&&(raw.includes("\n")||raw.includes("\r")));
-    let evidence=largeDirectPaste?[]:searchKnowledge(textSources,raw.length>4000?raw.slice(-4000):raw);
+    let evidence=largeDirectPaste?[]:searchKnowledge(textSources,raw.length>4000?raw.slice(-4000):raw,{limit:selectedSkillIds.includes("semantic-retrieval")?9:18,perSource:selectedSkillIds.includes("semantic-retrieval")?2:4});
+    if(onlineSources.length&&!evidence.length)evidence=onlineSources.map(source=>({sourceId:source.id,title:source.title,paragraph:1,locator:source.id,text:source.text,score:1}));
     let apiQuestion=raw.slice(0,4000);
 
     if(largeDirectPaste){
       const chunks=Array.from({length:Math.min(9,Math.ceil(raw.length/8000))},(_,index)=>raw.slice(index*8000,(index+1)*8000));
       evidence=chunks.map((chunk,index)=>({
         sourceId:"__direct_paste__",
-        title:lang==="zh"?"当前粘贴内容":"Current pasted content",
+        title:actionText(lang,"pasted"),
         paragraph:index+1,
-        locator:lang==="zh"?`粘贴内容 ${index+1}`:`Pasted content ${index+1}`,
+        locator:`${actionText(lang,"pasted")} ${index+1}`,
         text:chunk,
         score:100-index,
       }));
-      apiQuestion=lang==="zh"
-        ?"请根据我刚刚直接粘贴的内容进行理解、提炼，并优先完成其中明确提出的要求。"
-        :"Use the content I just pasted as the source. Understand it, extract the key information, and prioritize any explicit request contained in it.";
+      apiQuestion="Use this pasted content as source material. Respond in the language of the user’s text, summarize it, and complete any explicit request in it.";
     }
 
     if(!evidence.length){
       setNeedsConnection(true);
       const hasMedia=sources.some(source=>!source.text.trim());
-      setNotice(lang==="zh"
-        ?(hasMedia
-          ?"媒体已加入，但当前没有可检索文字。请连接支持相应媒体能力的智能服务，或继续加入文字资料。"
-          :"当前没有找到相关原文。可直接粘贴较长资料，或连接我的智能服务。")
-        :(hasMedia
-          ?"Media is attached but has no searchable text. Connect a media-capable intelligence service or add text-based material."
-          :"No relevant source text was found. Paste source text directly or connect your intelligence service."));
+      setNotice(actionText(lang,hasMedia?"media":"noEvidence"));
       return;
     }
 
@@ -316,7 +314,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     setQuestion("");
 
 
-    setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
+    asking.current=true;setAskBusy(true);setAnswer("");setLearningEventId("");setFeedbackSignal(null);setFeedbackNotice("");setLastIntelligence(null);setNotice(tr(lang,"sending"));
     try{
       const skillPlan=selectSasiSkills({mode,prompt:raw,files:sources.map(source=>source.title),hasEvidence:evidence.length>0});
       const skillIds=[...new Set([...selectedSkillIds,...skillPlan.ids])].slice(0,8);
@@ -324,7 +322,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
         question:apiQuestion,mode,intelligence,useConnectedService,skillIds,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
       })});
       const data=await response.json();
-      if(!response.ok)throw new Error(data.error||tr(lang,"aiFailed"));
+      if(!response.ok)throw new Error(tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
       setThread(rows=>rows.map(row=>row.id===pendingTurn.id?{...row,assistant:String(data.answer||"")}:row));
       setLearningEventId(String(data.learningEventId||""));
@@ -332,8 +330,8 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
       setNotice(tr(lang,"done"));
     }catch(e:unknown){
       const message=e instanceof Error?e.message:tr(lang,"aiFailed");
-      setNotice(message);
-    }finally{setAskBusy(false)}
+      setNotice(message);setQuestion(current=>current||raw);
+    }finally{asking.current=false;setAskBusy(false)}
   }
 
   async function sendFeedback(signal:FeedbackSignal){
@@ -346,16 +344,16 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
         body:JSON.stringify({learningEventId,signal})
       });
       const data=await response.json().catch(()=>({}));
-      if(!response.ok)throw new Error(data.error||"Feedback failed");
+      if(!response.ok)throw new Error(actionText(lang,"feedbackFailed"));
       setFeedbackSignal(signal);
-      setFeedbackNotice(lang==="zh"?"已记录。它会作为学习信号，不会直接变成全局事实。":"Recorded as a learning signal; it is not promoted directly to global truth.");
+      setFeedbackNotice(actionText(lang,"feedbackSaved"));
     }catch(e){
-      setFeedbackNotice(e instanceof Error?e.message:(lang==="zh"?"反馈提交失败。":"Feedback failed."));
+      setFeedbackNotice(actionText(lang,"feedbackFailed"));
     }finally{setFeedbackBusy(false)}
   }
 
   async function remove(source:KnowledgeSource){
-    const prompt=lang==="zh"?`删除本机资料「${source.title}」？原文件不会受影响。`:`Delete local source “${source.title}”? The original file is not affected.`;
+    const prompt=`${actionText(lang,"remove")} ${source.title}`;
     if(!window.confirm(prompt))return;
     await saveSource(source.id);setSources(rows=>rows.filter(row=>row.id!==source.id));
   }
@@ -406,7 +404,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
       <SasiConversationTurns turns={thread.length?thread:(answer?[{id:"current",user:question,assistant:answer,createdAt:""}]:[])}/>
 
       {(thread.length>0||answer)&&<div className="mb-10 flex flex-wrap gap-2 text-xs">
-        <button type="button" onClick={downloadThreadDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{lang==="zh"?"下载文档":"Download document"}</button>
+        <button type="button" onClick={downloadThreadDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{sasiCommonText(lang,"downloadDocument")}</button>
         <button type="button" onClick={()=>void downloadThreadZip()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">ZIP</button>
         <button type="button" onClick={()=>void copyAnswer()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{copied?tr(lang,"copied"):tr(lang,"copyAll")}</button>
       </div>}
@@ -422,7 +420,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     <div className="lx-sasi-composer-dock sticky bottom-3 z-30 mt-auto">
       {sources.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto px-1 pb-1">
         {sources.slice(-10).map(source=><span key={source.id} className="inline-flex max-w-[220px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
-          <span className="truncate">{source.title}</span>{!source.text.trim()&&<span className="shrink-0 text-[10px] text-blue-600">{lang==="zh"?"待理解":"Needs intelligence"}</span>}
+          <span className="truncate">{source.title}</span>{!source.text.trim()&&<span className="shrink-0 text-[10px] text-blue-600">{actionText(lang,"pending")}</span>}
           <button type="button" onClick={()=>void remove(source)} className="opacity-50 hover:opacity-100">×</button>
         </span>)}
       </div>}
@@ -435,35 +433,36 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
         onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files?.length)void importFiles(e.dataTransfer.files)}}
         className="relative">
         <SasiComposerTextarea value={question}
-          onChange={e=>setQuestion(e.target.value)}
+          onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void ask()}}}
+          aria-label={sasiCommonText(lang,"ask")} onChange={e=>setQuestion(e.target.value)}
           onPaste={e=>{
             const files=Array.from(e.clipboardData.files||[]);
             if(files.length){e.preventDefault();void importFiles(files)}
           }}
           rows={1}
-          placeholder={lang==="zh"?"问问 SASI":"Ask SASI"}/>
+          placeholder={sasiCommonText(lang,"ask")}/>
 
         <div className="mt-1 flex items-center gap-2">
           <input ref={fileInputRef} type="file" className="hidden" accept={SASI_UNIFIED_ACCEPT} multiple disabled={busy}
             onChange={e=>{if(e.target.files?.length)void importFiles(e.target.files);e.currentTarget.value=""}}/>
 
           <div className="relative">
-            <button type="button" aria-label={lang==="zh"?"添加":"Add"} onClick={()=>setAddOpen(v=>!v)}
+            <button type="button" aria-label={actionText(lang,"add")} onClick={()=>setAddOpen(v=>!v)}
               className="grid h-9 w-9 place-items-center rounded-full text-2xl hover:bg-[var(--lx-soft)]">＋</button>
             {addOpen&&<div className="absolute bottom-11 left-0 z-50 w-[300px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2 shadow-[0_14px_48px_rgba(0,0,0,.16)]">
               <button type="button" onClick={()=>{setAddOpen(false);fileInputRef.current?.click()}} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">
-                <b>{lang==="zh"?"添加照片和文件":"Add photos and files"}</b>
+                <b>{actionText(lang,"files")}</b>
                 <span className="mt-1 block text-xs text-[var(--lx-faint)]">PDF · EPUB · Word · PPTX · Excel · CSV · TXT · 图片 · 音频 · 视频 · 代码 · ZIP</span>
               </button>
-              <div className="mt-1 border-t border-[var(--lx-line)] px-3 pb-1 pt-3 text-xs text-[var(--lx-muted)]">{lang==="zh"?"回答方式":"Response depth"}</div>
+              <div className="mt-1 border-t border-[var(--lx-line)] px-3 pb-1 pt-3 text-xs text-[var(--lx-muted)]">{actionText(lang,"depth")}</div>
               {intelligenceLabels.map(x=><button key={x.value} type="button" onClick={()=>{setIntelligence(x.value);setAddOpen(false)}}
                 className="flex w-full items-start justify-between rounded-xl px-3 py-2.5 text-left text-sm hover:bg-[var(--lx-soft)]">
                 <span>{x.label}<span className="mt-0.5 block text-xs text-[var(--lx-muted)]">{x.help}</span></span>
                 {intelligence===x.value?<span className="text-xs text-[var(--lx-muted)]">✓</span>:null}
               </button>)}
               <SasiSkillPicker mode={mode} selected={selectedSkillIds} onChange={setSelectedSkillIds}/>
-              <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接我的智能服务":"Connect my intelligence service"} <span className="float-right">↗</span></Link>
-              <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{lang==="zh"?"连接工具":"Connect tools"} <span className="float-right">↗</span></Link>
+              <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{actionText(lang,"connect")} <span className="float-right">↗</span></Link>
+              <Link href="/sasi/connections#tools" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{actionText(lang,"tools")} <span className="float-right">↗</span></Link>
             </div>}
           </div>
 
@@ -475,7 +474,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
 
         {notice&&<div className="flex flex-wrap items-center gap-2 px-3 pt-2 text-[11px] leading-5 text-[var(--lx-muted)]">
           <SasiStatusLine>{notice}</SasiStatusLine>
-          {needsConnection&&<Link href="/sasi/connections" className="font-medium text-blue-600 hover:underline">{lang==="zh"?"连接我的智能服务 →":"Connect my intelligence service →"}</Link>}
+          {needsConnection&&<Link href="/sasi/connections" className="font-medium text-blue-600 hover:underline">{`${actionText(lang,"connect")} →`}</Link>}
         </div>}
       </SasiComposerSurface>
     </div>

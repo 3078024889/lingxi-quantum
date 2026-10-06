@@ -34,11 +34,11 @@ for(const [dir,[term,target]] of Object.entries(routeMap)){
 }
 
 const layout=read("app/layout.tsx");
-must(layout.includes("灵犀场｜PDF、图片与实用工具"),"V59_CURRENT_BRAND_TITLE_MISSING");
+must(layout.includes("灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台"),"V59_CURRENT_BRAND_TITLE_MISSING");
 must(!layout.includes("SASI全球多模型智能创作生态平台"),"V59_OLD_BRAND_TITLE_REMAINS");
 
 const page=read("app/page.tsx");
-for(const term of["PDF","图片","原文提问"])must(page.includes(term),`V59_HOME_DISCOVERY_TERM_MISSING:${term}`);
+for(const term of["PDF","图片","SASI全球多模型智能创作平台"])must(page.includes(term),`V59_HOME_DISCOVERY_TERM_MISSING:${term}`);
 must(!layout.includes("AI短剧生成、网站构建"),"V59_UNAVAILABLE_PRODUCTS_IN_METADATA");
 
 const robots=read("app/robots.ts");

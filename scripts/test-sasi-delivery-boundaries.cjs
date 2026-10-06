@@ -1,0 +1,56 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),ts=require('typescript');
+const cache=new Map();
+function load(file){file=path.resolve(file);if(cache.has(file))return cache.get(file).exports;const m={exports:{}};cache.set(file,m);const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;new Function('require','module','exports',js)(name=>name==='server-only'?{}:name.startsWith('.')?load(path.resolve(path.dirname(file),name+'.ts')):name.startsWith('@/')?load(name.slice(2)+'.ts'):require(name),m,m.exports);return m.exports}
+async function main(){
+ const {validateWebsiteArtifact:validate}=load('lib/sasi/website-artifact.ts');
+ const html=(name,links='')=>`<!doctype html><html><head><title>${name}</title><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="${name}"></head><body><h1>${name}</h1>${links}</body></html>`;
+ const valid={title:'My business',files:[{path:'index.html',content:html('Home','<a href="about.html">About us</a>')},{path:'about.html',content:html('About us','<a href="index.html">Home</a>')}]};
+ assert.equal(validate(valid).pageCount,2);assert.equal(validate(valid).spec.pages.length,2);
+ const one=content=>({title:'Test',html:content});
+ for(const injection of ['<script>alert(1)</script>','<form action="/fake"></form>','<img src="//tracker.example/a">','<meta http-equiv="refresh" content="0;url=https://evil.example">','<a href="javascript:alert(1)">Open</a>','<a href="#">Learn more</a>','<a href="missing.html">About</a>','<a href="#missing">More</a>'])assert.throws(()=>validate(one(html('Test',injection))),/WEBSITE_/);
+ assert.throws(()=>validate({...valid,files:[valid.files[0],valid.files[0]]}),/WEBSITE_FILE_INVALID/);
+ assert.throws(()=>validate({...valid,files:[{path:'../index.html',content:html('Test')}]}),/WEBSITE_/);
+ assert.throws(()=>validate(one('<html><body>Incomplete</body></html>')),/WEBSITE_PAGE_INCOMPLETE/);
+ assert.equal(validate(one(html('Sections','<h2 id="help">Help</h2><a href="#help">Help</a>'))).pageCount,1);
+ const {boundedRequestJson}=load('lib/security/bounded-request-json.ts');
+ assert.deepEqual(await boundedRequestJson(new Request('https://test.example',{method:'POST',body:'{"ok":true}'}),20),{ok:true});
+ await assert.rejects(boundedRequestJson(new Request('https://test.example',{method:'POST',body:'{"ok":true}',headers:{'content-length':'200'}}),20),/REQUEST_TOO_LARGE/);
+ let canceled=false;const body=new ReadableStream({start(controller){controller.enqueue(new Uint8Array(21))},cancel(){canceled=true}});
+ await assert.rejects(boundedRequestJson(new Request('https://test.example',{method:'POST',body,duplex:'half'}),20),/REQUEST_TOO_LARGE/);assert.equal(canceled,true);
+ const {coalesce}=load('lib/sasi/experience/request-coalescer.ts');let count=0;
+ const work=async()=>{count++;await new Promise(r=>setTimeout(r,5));return 'result'};
+ assert.deepEqual(await Promise.all([coalesce('same',work),coalesce('same',work)]),['result','result']);await coalesce('same',work);assert.equal(count,1);
+ await assert.rejects(coalesce('failure',async()=>{throw new Error('failed')}),/failed/);assert.equal(await coalesce('failure',async()=> 'recovered'),'recovered');
+ for(let i=0;i<130;i++)await coalesce('key'+i,async()=>i);await coalesce('same',work);assert.equal(count,2,'old cached entries are evicted at the memory bound');
+ const {validateSasiSkillIds}=load('lib/sasi/skills/router.ts');const ids=validateSasiSkillIds(['__proto__','constructor','toString'],'website');assert(ids.every(id=>!['__proto__','constructor','toString'].includes(id)));assert.deepEqual(ids,validateSasiSkillIds([],'website'));
+ const {composerText}=load('lib/sasi/composer-i18n.ts');for(const lang of ['ja','ko','fr','de','es','pt','ar'])for(const key of ['websiteReadyWithService','websiteRouteUnavailable','websiteGenerated','noVideoRoute','contextReadFailed','videoFailed','downloadWebsite'])assert.notEqual(composerText(lang,key),composerText('en',key),`${lang}:${key} must not fall back to English`);
+ const module={exports:{}};let paid=0;const settlements=[];
+ const resilientCode=ts.transpileModule(fs.readFileSync('lib/sasi/experience/resilient-text.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+ new Function('require','module','exports',resilientCode)(name=>name==='server-only'?{}:name==='./free-text-router'?{runExperienceText:async()=>({text:'invalid website'})}:name==='./daily-budget'?{reserveExperience:async()=>({ok:true,units:36,soft:false}),settleExperience:async(...args)=>settlements.push(args)}:name==='@/lib/sasi/intelligence/user-text'?{selectUserTextConnection:async()=>({id:'test'}),runUserText:async()=>{paid++;return{answer:'paid'}}}:name==='./request-coalescer'?{coalesceKey:()=> 'free-failure',coalesce:async(_key,work)=>work()}:require(name),module,module.exports);
+ const outcome=await module.exports.resilientText({userId:'test',region:'global',task:'website',messages:[],allowConnected:false,validateAnswer(){throw new Error('WEBSITE_INVALID')}});assert.equal(outcome.kind,'needs-connection');assert.equal(paid,0);assert.equal(settlements.at(-1)[3],false,'invalid free output must release experience allowance');
+ const paidModule={exports:{}},charges=[],balanceChecks=[];let connectionLookups=0,currencyLookups=0,available=Infinity,providerCalls=0;
+ const approved={id:'approved',provider:'openai',model_id:'approved-model',fingerprint:'approved-key',encrypted_credential:'encrypted',base_url:'https://approved.example/v1'};
+ const paidCode=ts.transpileModule(fs.readFileSync('lib/sasi/intelligence/user-text.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+ new Function('require','module','exports',paidCode)(name=>{
+  if(name==='server-only')return{};
+  if(name==='@/lib/supabase/admin')return{createAdminClient(){connectionLookups++;throw new Error('must use confirmed connection')}};
+  if(name==='@/lib/sasi/credential-vault')return{decryptProviderKey:()=> 'test-key',validByokProvider:()=>true};
+  if(name==='./provider-defaults')return{providerDefaults:()=>({textWire:'openai'}),defaultBaseUrl:()=>''};
+  if(name==='@/lib/sasi/gateway/ssrf-guard')return{validateProviderBaseUrl:raw=>({pass:true,normalized:raw})};
+  if(name==='./runtime-health')return{errorCode:e=>e.message,recordConnectionSuccess:async()=>{},recordConnectionFailure:async()=>{}};
+  if(name==='./telemetry')return{recordIntelligenceRun:async()=>{}};
+  if(name==='@/lib/sasi/pricing-v49')return{textChargeMinor:()=>1};
+  if(name==='@/lib/sasi/unified-balance')return{userSasiCurrency:async()=>{currencyLookups++;return'CNY'},requireSasiBalance:async(_user,_currency,amount)=>{balanceChecks.push(amount);if(amount>available)throw new Error('SASI_BALANCE_INSUFFICIENT')},chargeCompletedSasiUsage:async args=>{charges.push(args);return{}}};
+  if(name==='@/lib/security/provider-json-probe')return{providerJsonProbe:async(url,headers,_time,_size,options)=>{providerCalls++;assert.equal(url,'https://approved.example/v1/chat/completions');assert.equal(JSON.parse(options.body).model,'approved-model');return{ok:true,payload:{choices:[{message:{content:'Real answer'}}]}}}};
+  return require(name);
+ },paidModule,paidModule.exports);
+ const result=await paidModule.exports.runUserText({userId:'user',messages:[{role:'user',content:'Question'}],connection:approved,billingCurrency:'USD',taskId:'confirmed-task'});
+ assert.equal(result.billing.currency,'USD');assert.equal(charges[0].currency,'USD');assert.equal(connectionLookups,0);assert.equal(currencyLookups,0);
+ await assert.rejects(paidModule.exports.runUserText({userId:'user',messages:[],connection:approved,billingCurrency:'USD',validateAnswer(){throw new Error('WEBSITE_INVALID')}}),/WEBSITE_INVALID/);
+ assert.equal(charges.length,1,'invalid provider output must not charge the platform');
+ const combined={userId:'user',messages:[],connection:approved,billingCurrency:'USD',taskId:'website-task',additionalCharge:{maximumMinor:1000,actualMinor:()=>600,kind:'website'}};
+ const websiteResult=await paidModule.exports.runUserText(combined);assert.equal(balanceChecks.at(-1),1001);assert.equal(websiteResult.billing.chargedMinor,601);assert.equal(charges.length,2);assert.equal(charges.at(-1).amountMinor,601);assert.equal(charges.at(-1).kind,'website');
+ available=1000;const calls=providerCalls;await assert.rejects(paidModule.exports.runUserText(combined),/SASI_BALANCE_INSUFFICIENT/);assert.equal(providerCalls,calls,'insufficient combined balance must reject before contacting provider');assert.equal(charges.length,2);
+ console.log('PASS: multi-page delivery, request/cache boundaries, free failure allowance, frozen paid connection/currency; invalid output is not charged; website fees combine atomically with preflight balance.');
+}
+main().catch(e=>{console.error(e);process.exitCode=1});

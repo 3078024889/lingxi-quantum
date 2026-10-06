@@ -2,6 +2,7 @@ import fs from"node:fs";
 import{spawnSync}from"node:child_process";
 
 export const PRODUCTION_CRITICAL_AUDITS=[
+ "scripts/audit/r10-sasi-execution-convergence.mjs",
  "scripts/audit/v54-sasi-session-result-core.mjs",
  "scripts/audit/v54-r5-server-boundary.mjs",
  "scripts/audit/v54-r7-server-boundary-graph.mjs",

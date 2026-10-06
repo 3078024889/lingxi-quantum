@@ -16,14 +16,16 @@ const units:Record<ExperienceTask,number>={chat:8,knowledge:18,research:28,websi
 export async function resilientText(input:{
  userId:string;region:ExperienceRegion;task:ExperienceTask;messages:TextMessage[];
  maxOutputTokens?:number;allowConnected?:boolean;sessionKey?:string;
+ validateAnswer?:(answer:string)=>void;
 }):Promise<ResilientTextOutcome>{
  const sessionKey=String(input.sessionKey||"default").slice(0,160);
- const dedupe=coalesceKey([input.userId,input.region,input.task,sessionKey,input.messages,input.maxOutputTokens]);
+ const dedupe=coalesceKey([input.userId,input.region,input.task,sessionKey,input.messages,input.maxOutputTokens,Boolean(input.validateAnswer),input.allowConnected]);
  return coalesce(dedupe,async()=>{
  const referenceId=randomUUID(),claim=await reserveExperience(input.userId,referenceId,units[input.task]);
  if(claim.ok){
   try{
    const out=await runExperienceText({region:input.region,task:input.task,messages:input.messages,maxOutputTokens:input.maxOutputTokens,userId:input.userId,sessionKey});
+   input.validateAnswer?.(out.text);
    await settleExperience(input.userId,referenceId,claim.units,true,claim.soft);
    return {kind:"answer",answer:out.text,source:"experience",experienceExhausted:false};
   }catch{

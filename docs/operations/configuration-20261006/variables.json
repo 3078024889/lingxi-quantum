@@ -1,0 +1,2872 @@
+{
+  "generatedAt": "2026-10-06T02:25:37.506Z",
+  "scope": [
+    "app",
+    "lib",
+    "workers",
+    "infra"
+  ],
+  "notice": "按当前源码命名引用汇总；别名和可选项不等于全部必填。不包含任何真实环境变量值。动态名称家族以 .env.example 为准。",
+  "variables": [
+    {
+      "name": "CRON_SECRET",
+      "group": "基础配置",
+      "visibility": "仅服务端",
+      "requirement": "基础功能需要",
+      "example": "",
+      "references": [
+        ".env.example",
+        "app/api/cron/privacy-cleanup/route.ts",
+        "app/api/cron/sasi-v5-radar/route.ts",
+        "app/api/cron/withdrawal-reconcile/route.ts",
+        "app/api/internal/sasi/provider-smoke/route.ts",
+        "app/api/internal/sasi/reconcile/route.ts",
+        "app/api/sasi/v5/readiness/route.ts"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_SITE_URL",
+      "group": "基础配置",
+      "visibility": "公开配置",
+      "requirement": "基础功能需要",
+      "example": "https://lingxifield.com",
+      "references": [
+        ".env.example",
+        "app/api/pay/create/route.ts",
+        "app/api/pay/paypal/return/route.ts",
+        "app/api/pay/wechat/create/route.ts",
+        "app/api/pay/wechat/oauth-url/route.ts",
+        "app/api/tools/pay/create/route.ts",
+        "lib/money/refund-identifiers.ts"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "group": "基础配置",
+      "visibility": "公开配置",
+      "requirement": "基础功能需要",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/supabase/client.ts",
+        "lib/supabase/server.ts"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_SUPABASE_URL",
+      "group": "基础配置",
+      "visibility": "公开配置",
+      "requirement": "基础功能需要",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/nutrition/server.ts",
+        "lib/sasi/upload-client.ts",
+        "lib/supabase/admin.ts",
+        "lib/supabase/client.ts",
+        "lib/supabase/server.ts"
+      ]
+    },
+    {
+      "name": "SASI_BYOK_ENCRYPTION_KEY",
+      "group": "基础配置",
+      "visibility": "仅服务端",
+      "requirement": "基础功能需要",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/credential-vault.ts"
+      ]
+    },
+    {
+      "name": "SUPABASE_SERVICE_ROLE_KEY",
+      "group": "基础配置",
+      "visibility": "仅服务端",
+      "requirement": "基础功能需要",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/nutrition/server.ts",
+        "lib/sasi/task-quote.ts",
+        "lib/supabase/admin.ts",
+        "lib/tools/burn-link-token.ts",
+        "lib/tools/commerce/free-entitlement.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_MEDIA_AI_BASE_URL",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_MEDIA_AI_KEY",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_MEDIA_TRANSCRIBE_MODEL",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_MEDIA_TRANSLATE_MODEL",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_MEDIA_TTS_MODEL",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_MEDIA_TTS_VOICE",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "QWEN_VISION_MODEL",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/qwen-vision.ts"
+      ]
+    },
+    {
+      "name": "SASI_BYOK_IMAGE_PROFILE",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/seedream-byok.ts"
+      ]
+    },
+    {
+      "name": "SASI_VIDEO_RATES_JSON",
+      "group": "媒体与在线工具",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/video-pricing.ts"
+      ]
+    },
+    {
+      "name": "NODE_ENV",
+      "group": "平台自动提供",
+      "visibility": "仅服务端",
+      "requirement": "不要手动添加",
+      "example": "",
+      "references": [
+        "app/api/internal/ops/readiness/route.ts",
+        "app/api/pay/wechat/oauth-url/route.ts",
+        "app/api/tools/food/search/route.ts",
+        "app/api/tools/temp-mail/create/route.ts",
+        "app/api/tools/temp-mail/extend/route.ts",
+        "lib/reviewMode.ts"
+      ]
+    },
+    {
+      "name": "PORT",
+      "group": "平台自动提供",
+      "visibility": "仅服务端",
+      "requirement": "不要手动添加",
+      "example": "",
+      "references": [
+        "infra/document-converter/gateway/server.mjs",
+        "workers/sasi-compute/server.mjs"
+      ]
+    },
+    {
+      "name": "VERCEL",
+      "group": "平台自动提供",
+      "visibility": "仅服务端",
+      "requirement": "不要手动添加",
+      "example": "",
+      "references": [
+        "app/api/tools/document/normalize/route.ts",
+        "app/api/tools/document/ticket/route.ts"
+      ]
+    },
+    {
+      "name": "VERCEL_ENV",
+      "group": "平台自动提供",
+      "visibility": "仅服务端",
+      "requirement": "不要手动添加",
+      "example": "",
+      "references": [
+        "app/api/internal/ops/readiness/route.ts"
+      ]
+    },
+    {
+      "name": "VERCEL_GIT_COMMIT_SHA",
+      "group": "平台自动提供",
+      "visibility": "仅服务端",
+      "requirement": "不要手动添加",
+      "example": "",
+      "references": [
+        "app/api/internal/ops/readiness/route.ts",
+        "lib/sasi/durable/worker-version.ts"
+      ]
+    },
+    {
+      "name": "VERCEL_REGION",
+      "group": "平台自动提供",
+      "visibility": "仅服务端",
+      "requirement": "不要手动添加",
+      "example": "",
+      "references": [
+        "lib/sasi/durable/job-queue.ts"
+      ]
+    },
+    {
+      "name": "AI_DEFAULT_MODEL",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts",
+        "lib/sasi/execution/model-config.ts"
+      ]
+    },
+    {
+      "name": "AI_HIGH_MODEL",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/execution/model-config.ts"
+      ]
+    },
+    {
+      "name": "AI_HIGH_PROVIDER",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "AI_LIGHT_PROVIDER",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "AI_MINIMUM_CHARGE_FEN",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "AI_STANDARD_PROVIDER",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "BURN_LINK_TOKEN_SECRET",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/burn-link-token.ts"
+      ]
+    },
+    {
+      "name": "INGEST_SECRET",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "workers/temp-mail-email/src/index.mjs"
+      ]
+    },
+    {
+      "name": "INGEST_URL",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "workers/temp-mail-email/src/index.mjs"
+      ]
+    },
+    {
+      "name": "LINGXI_ENGINE_GPU",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/engine/resource-governor.ts"
+      ]
+    },
+    {
+      "name": "LINGXI_ENGINE_WORK_ROOT",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/engine/server/safe-path.ts"
+      ]
+    },
+    {
+      "name": "LINGXI_PYTHON_BIN",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/engine/server/adapters/fasterwhisper.ts",
+        "lib/tools/engine/server/adapters/python.ts",
+        "lib/tools/engine/server/probe.ts"
+      ]
+    },
+    {
+      "name": "LINGXI_WHISPER_MODEL",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/engine/server/adapters/whispercpp.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_ALLOWED_ORIGINS",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "infra/document-converter/compose.yaml",
+        "infra/document-converter/gateway/server.mjs"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_DEBUG",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/tools/food/search/route.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_PRIVACY_HASH_SECRET",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/commerce/free-entitlement.ts"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_CN_SITE_URL",
+      "group": "其他可选配置",
+      "visibility": "公开配置",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/tools/pay/create/route.ts"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_REVIEW_MODE",
+      "group": "其他可选配置",
+      "visibility": "公开配置",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/reviewMode.ts"
+      ]
+    },
+    {
+      "name": "VOLCENGINE_CACHED_RMB_PER_M",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "VOLCENGINE_INPUT_RMB_PER_M",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "VOLCENGINE_OUTPUT_RMB_PER_M",
+      "group": "其他可选配置",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "30",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ALIYUN_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CANARY_PERCENT",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "100",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://api.cerebras.ai/v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "30",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CEREBRAS_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_ACCOUNT_ID",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_API_TOKEN",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "60",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_CLOUDFLARE_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_DAILY_SECONDS_EQUIVALENT",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "180",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/daily-budget.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://api.fireworks.ai/inference/v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "0.25",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "90",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_FIREWORKS_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://generativelanguage.googleapis.com/v1beta",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "50",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GEMINI_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://api.groq.com/openai/v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "20",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_GROQ_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://api.mistral.ai/v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "mistral-small-latest",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "70",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_MISTRAL_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://integrate.api.nvidia.com/v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "40",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_NVIDIA_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://openrouter.ai/api/v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "openrouter/free",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "10",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_OPENROUTER_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_REGION_MODE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "auto",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://ark.cn-beijing.volces.com/api/v3",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "20",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_VOLCENGINE_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_API_KEY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_BASE_URL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://open.bigmodel.cn/api/paas/v4",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_DAILY_SHARE",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "1",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_ENABLED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_MODEL",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_PRIORITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "10",
+      "references": [
+        ".env.example",
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_QUALITY",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_SPEED",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_EXPERIENCE_ZHIPU_TASKS",
+      "group": "体验模型池",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/experience/free-provider-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_RESEARCH_TAVILY_API_KEY",
+      "group": "网络研究",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "app/api/sasi/research/search/route.ts"
+      ]
+    },
+    {
+      "name": "SASI_RESEARCH_TAVILY_ENABLED",
+      "group": "网络研究",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "app/api/sasi/research/search/route.ts"
+      ]
+    },
+    {
+      "name": "CONVERTAPI_SECRET",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "DOCUMENT_GATEWAY_DOMAIN",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "infra/document-converter/compose.yaml"
+      ]
+    },
+    {
+      "name": "GOTENBERG_BASIC_PASSWORD",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "infra/document-converter/compose.yaml",
+        "infra/document-converter/gateway/server.mjs"
+      ]
+    },
+    {
+      "name": "GOTENBERG_BASIC_USER",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "infra/document-converter/compose.yaml",
+        "infra/document-converter/gateway/server.mjs"
+      ]
+    },
+    {
+      "name": "GOTENBERG_INTERNAL_URL",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "infra/document-converter/gateway/server.mjs"
+      ]
+    },
+    {
+      "name": "LINGXI_GOTENBERG_URL",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/engine/server/adapters/gotenberg.ts",
+        "lib/tools/engine/server/probe.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_CONVERTAPI_TOKEN",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_DOCUMENT_CONVERTER_SECRET",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_DOCUMENT_CONVERTER_URL",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_DOCUMENT_GATEWAY_PUBLIC_URL",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/tools/document/capabilities/route.ts",
+        "app/api/tools/document/ticket/route.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_DOCUMENT_GATEWAY_SECRET",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/tools/document/capabilities/route.ts",
+        "app/api/tools/document/ticket/route.ts",
+        "infra/document-converter/compose.yaml",
+        "infra/document-converter/gateway/server.mjs"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_GOTENBERG_BASIC_PASSWORD",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_GOTENBERG_BASIC_USER",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_GOTENBERG_BEARER_TOKEN",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_GOTENBERG_URL",
+      "group": "文档转换",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/document/converter.ts"
+      ]
+    },
+    {
+      "name": "R2_ACCESS_KEY_ID",
+      "group": "文件存储",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/r2-private.ts",
+        "lib/sasi-kernel/artifact-store/r2.ts"
+      ]
+    },
+    {
+      "name": "R2_ACCOUNT_ID",
+      "group": "文件存储",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/r2-private.ts"
+      ]
+    },
+    {
+      "name": "R2_BUCKET_PRIVATE_BURN",
+      "group": "文件存储",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/r2-private.ts"
+      ]
+    },
+    {
+      "name": "R2_BUCKET_SASI_ARTIFACTS",
+      "group": "文件存储",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi-kernel/artifact-store/r2.ts"
+      ]
+    },
+    {
+      "name": "R2_ENDPOINT",
+      "group": "文件存储",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/r2-private.ts",
+        "lib/sasi-kernel/artifact-store/r2.ts"
+      ]
+    },
+    {
+      "name": "R2_SECRET_ACCESS_KEY",
+      "group": "文件存储",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/r2-private.ts",
+        "lib/sasi-kernel/artifact-store/r2.ts"
+      ]
+    },
+    {
+      "name": "SASI_STORAGE_MAX_FILE_BYTES",
+      "group": "文件存储",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/storage-limits.ts"
+      ]
+    },
+    {
+      "name": "AI_PROVIDER_TEST_EMAILS",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/ai/provider-test/route.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_AUTH_FROM_EMAIL",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/account/auth/route.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_SUPPORT_ACTION_SECRET",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/support/lifecycle.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_SUPPORT_ADMIN_EMAILS",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/support/inbound/route.ts",
+        "app/api/support/manage/route.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_SUPPORT_FROM_EMAIL",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/support/inbound/route.ts",
+        "app/api/support/tickets/route.ts",
+        "lib/money/operator-notifications.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_SUPPORT_INBOUND_DOMAIN",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/support/inbound/route.ts",
+        "lib/support/lifecycle.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_SUPPORT_NOTIFY_EMAIL",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/support/inbound/route.ts",
+        "app/api/support/tickets/route.ts"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_SUPPORT_WEBHOOK_SECRET",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/support/lifecycle.ts"
+      ]
+    },
+    {
+      "name": "RESEND_API_KEY",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/account/auth/route.ts",
+        "app/api/account/money-admin/route.ts",
+        "app/api/support/inbound/route.ts",
+        "app/api/support/tickets/route.ts",
+        "lib/money/operator-notifications.ts"
+      ]
+    },
+    {
+      "name": "RESEND_WEBHOOK_SECRET",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/support/lifecycle.ts"
+      ]
+    },
+    {
+      "name": "SASI_OPERATOR_EMAILS",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/operator/access.ts"
+      ]
+    },
+    {
+      "name": "TEMP_MAIL_INGEST_SECRET",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/tools/temp-mail/create/route.ts",
+        "lib/tools/burn-link-token.ts",
+        "lib/tools/temp-mail.ts"
+      ]
+    },
+    {
+      "name": "TEMP_MAIL_SESSION_SECRET",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/temp-mail.ts"
+      ]
+    },
+    {
+      "name": "TOOL_ADMIN_EMAILS",
+      "group": "邮件与临时邮箱",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/ai/provider-test/route.ts",
+        "app/api/ai/refund/admin/reverse-topup/route.ts",
+        "app/api/tools/analytics/summary/route.ts"
+      ]
+    },
+    {
+      "name": "AI_REFUND_ADMIN_EMAILS",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/ai/refund/admin/reverse-topup/route.ts"
+      ]
+    },
+    {
+      "name": "ALIPAY_APP_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "ALIPAY_ENABLED",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/alipay.ts"
+      ]
+    },
+    {
+      "name": "ALIPAY_GATEWAY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://openapi.alipay.com/gateway.do",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "ALIPAY_PRIVATE_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "ALIPAY_PUBLIC_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "ALIPAY_SELLER_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "ALIPAY_SITE_URL",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "https://lingxifield.cn",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "LINGXIFIELD_MONEY_FROM_EMAIL",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/money/operator-notifications.ts"
+      ]
+    },
+    {
+      "name": "MONEY_RECONCILE_SECRET",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/internal/money/operations/route.ts",
+        "app/api/internal/money/reconcile/route.ts",
+        "app/api/internal/ops/readiness/route.ts"
+      ]
+    },
+    {
+      "name": "PAYPAL_CLIENT_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "app/api/pay/create/route.ts",
+        "app/api/pay/providers/route.ts",
+        "app/api/tools/pay/create/route.ts",
+        "lib/paypal.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "PAYPAL_CLIENT_SECRET",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "app/api/pay/create/route.ts",
+        "app/api/pay/providers/route.ts",
+        "app/api/tools/pay/create/route.ts",
+        "lib/paypal.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "PAYPAL_ENABLED",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "app/api/pay/create/route.ts",
+        "app/api/pay/providers/route.ts",
+        "app/api/tools/pay/create/route.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "PAYPAL_ENV",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "live",
+      "references": [
+        ".env.example",
+        "lib/paypal.ts"
+      ]
+    },
+    {
+      "name": "PAYPAL_WEBHOOK_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "app/api/pay/create/route.ts",
+        "app/api/pay/providers/route.ts",
+        "app/api/tools/pay/create/route.ts",
+        "lib/paypal.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_REFUND_FLOW_TESTED",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/sasi/payment-gate.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "USD_BALANCE_TOPUP_ENABLED",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "WECHAT_API_V3_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechatpay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_APP_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechat-oauth.ts",
+        "lib/wechatpay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_APP_SECRET",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechat-oauth.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_CERT_SERIAL_NO",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechatpay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MCH_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechatpay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_APP_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/mini/wechat.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_APP_SECRET",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/mini/wechat.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_MESSAGE_TOKEN",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/wechat/mini/pay/notify/route.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_SESSION_ENCRYPTION_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/mini/crypto.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_VPAY_APP_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/mini/virtual-pay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_VPAY_ENV",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/wechat/mini/pay/create/route.ts",
+        "lib/mini/virtual-pay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_VPAY_OFFER_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/mini/virtual-pay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_MINI_VPAY_SANDBOX_APP_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/mini/virtual-pay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_PLATFORM_PUBLIC_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechatpay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_PLATFORM_PUBLIC_KEY_ID",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechatpay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_PRIVATE_KEY",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/wechatpay.ts"
+      ]
+    },
+    {
+      "name": "WECHAT_REFUND_NOTIFY_URL",
+      "group": "支付退款",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/money/refund-identifiers.ts"
+      ]
+    },
+    {
+      "name": "ARK_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/execution/model-config.ts"
+      ]
+    },
+    {
+      "name": "DASHSCOPE_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/tools/qwen-vision.ts"
+      ]
+    },
+    {
+      "name": "DASHSCOPE_COMPATIBLE_BASE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/qwen-vision.ts"
+      ]
+    },
+    {
+      "name": "DASHSCOPE_REGION",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/qwen-vision.ts"
+      ]
+    },
+    {
+      "name": "DEEPSEEK_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "DEEPSEEK_BASE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "DEEPSEEK_CACHED_RMB_PER_M",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "DEEPSEEK_INPUT_RMB_PER_M",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "DEEPSEEK_MODEL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "DEEPSEEK_OUTPUT_RMB_PER_M",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "OPENAI_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "OPENAI_BASE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/media/provider.ts"
+      ]
+    },
+    {
+      "name": "SASI_ARK_TEACHER_MODEL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/execution/model-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_BILLING_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/sasi/payment-gate.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_BYOK_REASONING_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/ark-text.ts"
+      ]
+    },
+    {
+      "name": "SASI_BYOK_SEEDANCE_PROFILE",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/seedance-byok.ts"
+      ]
+    },
+    {
+      "name": "SASI_BYOK_SEEDANCE_PROFILES",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/seedance-byok.ts"
+      ]
+    },
+    {
+      "name": "SASI_BYOK_TEXT_PROFILE",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/ark-text.ts"
+      ]
+    },
+    {
+      "name": "SASI_COMPUTE_HOST",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "workers/sasi-compute/server.mjs"
+      ]
+    },
+    {
+      "name": "SASI_COMPUTE_PORT",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "workers/sasi-compute/server.mjs"
+      ]
+    },
+    {
+      "name": "SASI_COMPUTE_WORKER_SECRET",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "workers/sasi-compute/server.mjs"
+      ]
+    },
+    {
+      "name": "SASI_CONTENT_LABELING_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/sasi/payment-gate.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_CONTENT_LABELING_MODE",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "sasi_aigc_v1",
+      "references": [
+        ".env.example",
+        "lib/sasi/payment-gate.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_CONTENT_PRODUCER_CODE",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "LINGXIFIELD",
+      "references": [
+        ".env.example",
+        "lib/sasi/aigc-label.ts",
+        "lib/sasi/payment-gate.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_JOBS_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/sasi/payment-gate.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_NATIVE_COMPUTE_SECRET",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/service-readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_NATIVE_COMPUTE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/service-readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_OPENDATA_INGEST_DRY_RUN",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/opendata/allowlist.ts"
+      ]
+    },
+    {
+      "name": "SASI_OPENDATA_INGEST_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/opendata/allowlist.ts"
+      ]
+    },
+    {
+      "name": "SASI_PROJECT_9LANG_DB_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/project-proposal.ts"
+      ]
+    },
+    {
+      "name": "SASI_QUOTE_SECRET",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/task-quote.ts"
+      ]
+    },
+    {
+      "name": "SASI_RADAR_CRON_SECRET",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/cron/sasi-v5-radar/route.ts",
+        "app/api/sasi/v5/readiness/route.ts"
+      ]
+    },
+    {
+      "name": "SASI_REASONER_PRIMARY_MODEL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/execution/model-config.ts"
+      ]
+    },
+    {
+      "name": "SASI_RMB_BALANCE_V1_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "false",
+      "references": [
+        ".env.example",
+        "lib/sasi/payment-gate.ts"
+      ]
+    },
+    {
+      "name": "SASI_USAGE_SETTLEMENT_TESTED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi/payment-gate.ts",
+        "lib/sasi/readiness.ts"
+      ]
+    },
+    {
+      "name": "SASI_V5_LEARNING_ENABLED",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "app/api/sasi/v5/readiness/route.ts",
+        "lib/sasi-v5/repository.ts",
+        "lib/sasi-v5/visual-repository.ts"
+      ]
+    },
+    {
+      "name": "SASI_VISUAL_JUDGE_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi-v5/visual/semantic-judge.ts"
+      ]
+    },
+    {
+      "name": "SASI_VISUAL_JUDGE_BASE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi-v5/visual/semantic-judge.ts"
+      ]
+    },
+    {
+      "name": "SASI_VISUAL_JUDGE_MODEL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/sasi-v5/visual/semantic-judge.ts"
+      ]
+    },
+    {
+      "name": "SASI_WAN_BASE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/tools/qwen-vision.ts"
+      ]
+    },
+    {
+      "name": "SASI_WORKER_BUILD",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/sasi/durable/worker-version.ts"
+      ]
+    },
+    {
+      "name": "SASI_WORKER_ID",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "workers/sasi-compute/server.mjs"
+      ]
+    },
+    {
+      "name": "SASI_WORKER_SECRET",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "app/api/internal/sasi/worker/tick/route.ts"
+      ]
+    },
+    {
+      "name": "VOLCENGINE_ARK_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts",
+        "lib/sasi/execution/model-config.ts"
+      ]
+    },
+    {
+      "name": "VOLCENGINE_ARK_BASE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "XAI_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example"
+      ]
+    },
+    {
+      "name": "ZHIPU_API_KEY",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        ".env.example",
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "ZHIPU_BASE_URL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "ZHIPU_CACHED_RMB_PER_M",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "ZHIPU_INPUT_RMB_PER_M",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "ZHIPU_MODEL",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    },
+    {
+      "name": "ZHIPU_OUTPUT_RMB_PER_M",
+      "group": "SASI与连接",
+      "visibility": "仅服务端",
+      "requirement": "仅启用对应功能时配置",
+      "example": "",
+      "references": [
+        "lib/ai/provider-router.ts"
+      ]
+    }
+  ]
+}

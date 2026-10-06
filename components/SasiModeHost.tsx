@@ -1,15 +1,16 @@
 "use client";
-
+import {useState} from "react";
 import SasiChatCreationStudio from "@/components/SasiChatCreationStudio";
 import KnowledgeWorkspace from "@/components/KnowledgeWorkspace";
+import SasiTaskSwitcher from "@/components/SasiTaskSwitcher";
 import {SASI_MODE_ADAPTERS} from "@/lib/sasi/skills/mode-adapters";
 import type {SasiMode} from "@/lib/sasi/core/session-contract";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
-
-export default function SasiModeHost({mode,initialPrompt="",initialFiles=[],initialSkillIds=[]}:{mode:SasiMode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[]}){
- const adapter=SASI_MODE_ADAPTERS[mode];
- if(adapter.input==="creation"){
-  return <SasiChatCreationStudio mode={mode as "drama"|"website"} initialPrompt={initialPrompt} initialFiles={initialFiles} initialSkillIds={initialSkillIds}/>;
- }
- return <KnowledgeWorkspace mode={mode as "book"|"learning"|"research"} initialPrompt={initialPrompt} initialFiles={initialFiles} initialSkillIds={initialSkillIds}/>;
+export default function SasiModeHost({mode,initialPrompt="",initialFiles=[],initialSkillIds=[],onSwitch}:{mode:SasiMode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[];onSwitch:(mode:SasiMode)=>void}){
+ const [drafts,setDrafts]=useState(()=>({[mode]:{initialPrompt,initialFiles,initialSkillIds}}));
+ if(!drafts[mode])setDrafts(previous=>({...previous,[mode]:{initialPrompt,initialFiles,initialSkillIds}}));
+ return <><SasiTaskSwitcher mode={mode} onSelect={onSwitch}/>{(Object.keys(drafts) as SasiMode[]).map(id=>{
+  const draft=drafts[id],adapter=SASI_MODE_ADAPTERS[id];
+  return <div key={id} hidden={id!==mode} data-sasi-task={id}>{adapter.input==="creation"?<SasiChatCreationStudio mode={id as "drama"|"website"} {...draft}/>:<KnowledgeWorkspace mode={id as "book"|"learning"|"research"} {...draft}/>}</div>;
+ })}</>;
 }

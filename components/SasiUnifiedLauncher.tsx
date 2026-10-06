@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 import {useRef,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {SasiComposerSurface,SasiComposerTextarea} from "@/components/SasiComposerCore";
@@ -44,22 +45,23 @@ export default function SasiUnifiedLauncher({onStart}:{onStart:(mode:SasiMode,pr
  const[selectedSkills,setSelectedSkills]=useState<SasiSkillId[]>([]);
  const[open,setOpen]=useState(false);
  const[notice,setNotice]=useState("");
+ const[dragging,setDragging]=useState(false);
  const inputRef=useRef<HTMLInputElement|null>(null);
 
  function addFiles(list:FileList|File[]){
-  const next=[...files,...Array.from(list)].slice(0,20);
-  setFiles(next);setNotice("");setOpen(false);
+  const added=Array.from(list);
+  setFiles(current=>[...current,...added].slice(0,20));setNotice("");setOpen(false);
  }
  function submit(){
   const text=prompt.trim();
   const mode=selected||inferSasiMode(text);
-  if(!text||!mode){setNotice(t("unclear"));return}
+  if((!text&&!files.length)||!mode){setNotice(t("unclear"));return}
   onStart(mode,text,files,selectedSkills);
  }
 
  return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col justify-end px-2 pb-14 sm:px-4">
   <div className="mb-[12vh]">
-   <SasiComposerSurface dragging={false} className="relative">
+   <SasiComposerSurface dragging={dragging} className="relative" onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setDragging(false)}} onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files.length)addFiles(e.dataTransfer.files)}}>
     {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">
       {files.map((file,index)=><span key={`${file.name}-${file.size}-${index}`} className="inline-flex max-w-[240px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-1.5 text-xs">
        <span className="truncate">{file.name}</span>
@@ -70,7 +72,8 @@ export default function SasiUnifiedLauncher({onStart}:{onStart:(mode:SasiMode,pr
      value={prompt}
      onChange={e=>{setPrompt(e.target.value);setNotice("")}}
      onPaste={e=>{const pasted=Array.from(e.clipboardData.files||[]);if(pasted.length){e.preventDefault();addFiles(pasted)}}}
-     onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();submit()}}}
+     onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();submit()}}}
+     aria-label={t("placeholder")}
      placeholder={t("placeholder")}
      autoFocus
     />
@@ -80,15 +83,15 @@ export default function SasiUnifiedLauncher({onStart}:{onStart:(mode:SasiMode,pr
      <div className="relative">
       <button type="button" aria-label={t("add")} aria-expanded={open} onClick={()=>setOpen(v=>!v)}
        className="grid h-9 w-9 place-items-center rounded-full text-2xl hover:bg-[var(--lx-soft)]">＋</button>
-      {open&&<div className="absolute bottom-11 left-0 z-50 w-[300px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2 shadow-[0_14px_48px_rgba(0,0,0,.16)]">
+      {open&&<div className="absolute bottom-11 start-0 z-50 flex max-h-[min(72vh,620px)] w-[min(300px,calc(100vw-64px))] flex-col rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2 shadow-[0_14px_48px_rgba(0,0,0,.16)]">
        <button type="button" onClick={()=>inputRef.current?.click()} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">{t("files")}</button>
-       <div className="px-3 pb-2 pt-3 text-xs text-[var(--lx-muted)]">{t("choose")}</div>
+       <div className="min-h-0 overflow-y-auto"><div className="px-3 pb-2 pt-3 text-xs text-[var(--lx-muted)]">{t("choose")}</div>
        {TASKS.map(item=><button key={item.id} type="button"
         onClick={()=>{setSelected(item.id);setSelectedSkills([]);setNotice("")}}
         className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm hover:bg-[var(--lx-soft)]">
         <span>{t(item.key)}</span>{selected===item.id?<span className="text-xs text-[var(--lx-muted)]">{t("selected")}</span>:null}
        </button>)}
-       {selected&&<SasiSkillPicker mode={selected} selected={selectedSkills} onChange={setSelectedSkills}/>}
+       {selected&&<SasiSkillPicker mode={selected} selected={selectedSkills} onChange={setSelectedSkills}/>}</div>
        <div className="mt-1 border-t border-[var(--lx-line)] pt-1">
         <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{t("connect")} <span className="float-right">↗</span></Link>
        </div>
@@ -98,7 +101,7 @@ export default function SasiUnifiedLauncher({onStart}:{onStart:(mode:SasiMode,pr
       className="rounded-full border border-[var(--lx-line)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
       {t(TASKS.find(x=>x.id===selected)?.key||"research")} ×
      </button>}
-     <button type="button" onClick={submit} disabled={!prompt.trim()}
+     <button type="button" onClick={submit} aria-label={sasiCommonText(lang,"ask")} disabled={!prompt.trim()&&!files.length}
       className="ml-auto grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">↑</button>
     </div>
     {notice&&<p className="px-3 pt-2 text-xs leading-5 text-[var(--lx-muted)]">{notice}</p>}

@@ -31,7 +31,7 @@ test('wallet stays out of search and sitemap',async({page})=>{
 for(const [i,locale]of locales.entries())test('SASI input uses '+locale,async({page})=>{
  await page.goto('/sasi?mode=drama&lang='+locale);
  await expect(page.getByPlaceholder(ask[i],{exact:true})).toBeVisible();
- await expect(page.locator('nav.lx-sasi-modebar-reference')).not.toHaveAttribute('aria-label','SASI modes');
+ const switcher=page.locator('button[aria-expanded]').filter({hasText:/⌄/});await expect(switcher).toBeVisible();await expect(switcher).toHaveAttribute('aria-expanded','false');if(locale!=='zh')await expect(switcher).not.toContainText('切换任务');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 

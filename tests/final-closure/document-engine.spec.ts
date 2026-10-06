@@ -46,10 +46,10 @@ test.describe("document engine real browser inputs",()=>{
     expect(quoteCalls).toBe(0);
   });
 
-  test("quote quantity follows export plan exactly",async({page})=>{
-    const quantities:number[]=[];
+  test("one-time quote retains the selected export page count",async({page})=>{
+    const quantities:number[]=[];const selectedPages:number[]=[];
     await page.route("**/api/tools/quote",async route=>{
-      const body=route.request().postDataJSON();quantities.push(Number(body.quantity));
+      const body=route.request().postDataJSON();quantities.push(Number(body.quantity));selectedPages.push(Number(body.metadata?.pages));
       await route.fulfill({status:200,json:{id:"11111111-1111-4111-8111-111111111111",quantity:Number(body.quantity),amount_rmb:1.9,amount_usd:0.49,currency:"CNY",display_currency:"CNY",display_amount:1.9,expires_at:new Date(Date.now()+600000).toISOString()}});
     });
     await page.goto("/tools/pdf-editor",{waitUntil:"domcontentloaded"});
@@ -60,8 +60,7 @@ test.describe("document engine real browser inputs",()=>{
     await expect(page.getByTestId("pdf-export-plan-summary")).toHaveText(/已选择\s*3\s*页|3\s*pages selected/i);
     const exportButton=page.getByTestId("paid-export-start");
     await exportButton.click();
-    await page.waitForTimeout(150);
-    expect(quantities).toEqual([3]);
+    await expect.poll(()=>quantities).toEqual([1]);expect(selectedPages).toEqual([3]);
   });
 
   test("nine-page seam stamp creates nine page assignments",async({page})=>{

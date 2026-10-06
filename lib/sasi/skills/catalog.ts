@@ -4,6 +4,12 @@ const all:SasiMode[]=["drama","website","book","learning","research"];
 const knowledge:SasiMode[]=["book","learning","research"];
 
 export const SASI_SKILLS:Record<SasiSkillId,SasiSkillDefinition>={
+"drama-script":{"id":"drama-script","title":"Script and pacing","description":"Create a specific short-drama script with a clear opening, conflict, turning point and ending. Fit spoken dialogue and actions to the requested duration.","modes":["drama"],"triggers":[],"priority":91,"guidance":"Create a specific short-drama script with a clear opening, conflict, turning point and ending. Fit spoken dialogue and actions to the requested duration.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
+"drama-storyboard":{"id":"drama-storyboard","title":"Shot planning","description":"Break the script into shot descriptions with framing, subject movement, motivated camera motion, transitions and continuity. Do not claim rendered footage exists.","modes":["drama"],"triggers":[],"priority":91,"guidance":"Break the script into shot descriptions with framing, subject movement, motivated camera motion, transitions and continuity. Do not claim rendered footage exists.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
+"drama-visual":{"id":"drama-visual","title":"Characters and keyframes","description":"Describe reusable character appearance, wardrobe, scene palette, and keyframes. Bind uploaded reference images when available; never promise identity preservation without verifying the rendered result.","modes":["drama"],"triggers":[],"priority":91,"guidance":"Describe reusable character appearance, wardrobe, scene palette, and keyframes. Bind uploaded reference images when available; never promise identity preservation without verifying the rendered result.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
+"drama-sound":{"id":"drama-sound","title":"Voice and sound planning","description":"Plan dialogue, timing, voice direction, atmosphere and music cues. Distinguish a written sound plan from synthesized audio. Only request audio generation when the selected video service supports it.","modes":["drama"],"triggers":[],"priority":91,"guidance":"Plan dialogue, timing, voice direction, atmosphere and music cues. Distinguish a written sound plan from synthesized audio. Only request audio generation when the selected video service supports it.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
+"teaching-practice":{"id":"teaching-practice","title":"Examples and practice","description":"Explain supplied concepts with labeled examples, practice questions and a separate answer key. Adapt to the learner and distinguish examples from cited source claims.","modes":["book","learning","research"],"triggers":[],"priority":91,"guidance":"Explain supplied concepts with labeled examples, practice questions and a separate answer key. Adapt to the learner and distinguish examples from cited source claims.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
+"source-comparison":{"id":"source-comparison","title":"Compare viewpoints","description":"Compare supplied sources by claims, evidence, assumptions and disagreements. Cite source identifiers and state what additional evidence would resolve uncertainty. Do not invent papers or citations.","modes":["book","learning","research"],"triggers":[],"priority":91,"guidance":"Compare supplied sources by claims, evidence, assumptions and disagreements. Cite source identifiers and state what additional evidence would resolve uncertainty. Do not invent papers or citations.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
  "agent-skill-discovery":{
   id:"agent-skill-discovery",title:"Progressive skill discovery",
   description:"Keep many capabilities available while loading only the skills relevant to the current task.",
@@ -43,14 +49,14 @@ export const SASI_SKILLS:Record<SasiSkillId,SasiSkillDefinition>={
   id:"web-research",title:"Web research",
   description:"Collect fresh public web evidence with explicit provenance when the task permits external research.",
   modes:["research","website"],triggers:["最新","网页","互联网","web","research","搜","新闻","资料"],priority:75,
-  guidance:"For external research, separate fetched evidence from model inference, record source provenance, and do not treat inaccessible pages as verified.",
+  guidance:"For external research, separate fetched evidence from model inference, record source provenance, and do not treat inaccessible pages as verified. Only claim web search when actual retrieved sources are provided; this instruction alone does not execute browsing.",
   inspiration:["Crawl4AI","MCP Fetch"],licensePattern:"open-source patterns"
  },
  "browser-execution":{
   id:"browser-execution",title:"Browser execution",
   description:"Use browser automation only when an action truly requires a graphical or authenticated web flow.",
   modes:["website","research"],triggers:["浏览器","网页操作","登录","点击","browser","dashboard","表单"],priority:65,
-  guidance:"Prefer APIs and deterministic tools. Use browser execution only when necessary; verify the final page state after actions.",
+  guidance:"No browser executor is attached to this skill. Do not claim to click, sign in, publish, or verify a remote page. Explain any required user action instead.",
   inspiration:["Browser Use","Playwright","MCP reference servers"],licensePattern:"open-source patterns"
  },
  "multi-model-routing":{

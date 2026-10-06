@@ -3,7 +3,7 @@ import https from "node:https";
 import {parsePublicHttpsUrl} from "./public-endpoint";
 
 /** Model-list probes use validated DNS exactly once, never follow redirects. */
-export async function providerJsonProbe(raw:string,headers:Record<string,string>,timeoutMs=12_000,maxBytes=2*1024*1024){
+export async function providerJsonProbe(raw:string,headers:Record<string,string>,timeoutMs=12_000,maxBytes=2*1024*1024,options?:{method?:"GET"|"POST";body?:string|Uint8Array}){
  const deadline=Date.now()+timeoutMs;
  let dnsTimer:ReturnType<typeof setTimeout>|undefined;
  const {url,addresses}=await Promise.race([
@@ -17,7 +17,7 @@ export async function providerJsonProbe(raw:string,headers:Record<string,string>
   let timer:ReturnType<typeof setTimeout>|undefined;
   const fail=(error:Error)=>{if(settled)return;settled=true;clearTimeout(timer);reject(error)};
   const request=https.request({
-   hostname:url.hostname,port:443,path:url.pathname+url.search,method:"GET",headers,
+   hostname:url.hostname,port:443,path:url.pathname+url.search,method:options?.method||"GET",headers,
    servername:url.hostname,rejectUnauthorized:true,
    // Disable address-family racing: this request must use the validated address.
    family:address.family,
@@ -42,6 +42,6 @@ export async function providerJsonProbe(raw:string,headers:Record<string,string>
    });
   });
   timer=setTimeout(()=>request.destroy(new Error("PROVIDER_TIMEOUT")),remaining);
-  request.on("error",fail);request.end();
+  request.on("error",fail);if(options?.body)request.end(options.body);else request.end();
  });
 }

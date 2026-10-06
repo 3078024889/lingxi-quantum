@@ -140,8 +140,8 @@ export default function Nav() {
         <Link href="/" className="lx11-brand">
           <NextImage src="/images/lingxifield-logo.png" alt=""  width={64} height={64}/>
           <span>
-            <b>{t("brand")}</b>
-            <small>{agent ? "SASI" : "LINGXIFIELD"}</small>
+            <b>{lang==="zh"?"灵犀场 LINGXIFIELD":t("brand")}</b>
+            <small>{agent ? "SASI" : (lang==="zh"?"SASI全球多模型智能创作平台":"LINGXIFIELD")}</small>
           </span>
         </Link>
         <button className="lx11-close lg:hidden" onClick={() => setOpen(false)}>×</button>

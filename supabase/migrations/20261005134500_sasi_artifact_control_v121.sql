@@ -1,5 +1,6 @@
+-- Versioned roots are separate from task artifacts; preserve the legacy task/file constraints.
 begin;
-create table if not exists public.sasi_artifacts(
+create table if not exists public.sasi_versioned_artifacts(
  id uuid primary key default gen_random_uuid(),
  user_id uuid not null,
  project_id uuid,
@@ -8,12 +9,12 @@ create table if not exists public.sasi_artifacts(
  created_at timestamptz not null default now(),
  updated_at timestamptz not null default now()
 );
-alter table public.sasi_artifacts enable row level security;
-revoke all on public.sasi_artifacts from anon,authenticated;
+alter table public.sasi_versioned_artifacts enable row level security;
+revoke all on public.sasi_versioned_artifacts from anon,authenticated;
 
 create table if not exists public.sasi_artifact_versions(
  id uuid primary key default gen_random_uuid(),
- artifact_id uuid not null references public.sasi_artifacts(id) on delete cascade,
+ artifact_id uuid not null references public.sasi_versioned_artifacts(id) on delete cascade,
  parent_version_id uuid references public.sasi_artifact_versions(id) on delete set null,
  run_id uuid,
  turn_id uuid,

@@ -39,7 +39,7 @@ export function validateSasiSkillIds(input:unknown,mode:SasiSkillRequest["mode"]
  if(!Array.isArray(input))return DEFAULT_MODE_SKILLS[mode].slice(0,8);
  const result:SasiSkillId[]=[];
  for(const raw of input){
-  if(typeof raw!=="string"||!(raw in SASI_SKILLS))continue;
+  if(typeof raw!=="string"||!Object.prototype.hasOwnProperty.call(SASI_SKILLS,raw))continue;
   const id=raw as SasiSkillId;
   if(!SASI_SKILLS[id].modes.includes(mode)||result.includes(id))continue;
   result.push(id);

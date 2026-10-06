@@ -25,7 +25,7 @@ test("paid PDF return restores the real task, downloads once, consumes once, the
 
  await page.route("**/api/tools/pay/status?quoteId=**",async r=>{
   statusCalls++;
-  await r.fulfill({status:200,json:{ok:true,paid:true,quote:{id:Q,tool_id:"e-sign-pdf",quantity:5,unit_name:"page",amount_rmb:1.9,amount_usd:1.49,currency:"CNY",display_currency:"CNY",display_amount:1.9},grant:{id:"g",consumed_at:null}}});
+  await r.fulfill({status:200,json:{ok:true,paid:true,quote:{id:Q,tool_id:"e-sign-pdf",quantity:1,unit_name:"use",amount_rmb:1.9,amount_usd:1.49,currency:"CNY",display_currency:"CNY",display_amount:1.9},grant:{id:"g",consumed_at:null}}});
  });
  await page.route("**/api/tools/export/consume",async r=>{
   consumeCalls++;
@@ -90,7 +90,7 @@ test("already consumed paid grant restores then clears the old task without anot
 test('failed acknowledgement retries the paid task without a second automatic download',async({page})=>{
  let downloads=0,consumes=0;
  page.on('download',()=>downloads++);
- await page.route('**/api/tools/pay/status?quoteId=**',r=>r.fulfill({json:{paid:true,quote:{id:Q,tool_id:'e-sign-pdf',quantity:5,currency:'CNY',amountRmb:1.9},grant:{consumed_at:null}}}));
+ await page.route('**/api/tools/pay/status?quoteId=**',r=>r.fulfill({json:{paid:true,quote:{id:Q,tool_id:'e-sign-pdf',quantity:5,unit_name:'page',currency:'CNY',amountRmb:1.9},grant:{consumed_at:null}}}));
  await page.route('**/api/tools/export/consume',r=>{consumes++;return r.fulfill({status:consumes===1?500:200,json:consumes===1?{error:'temporary'}:{ok:true}})});
  const draft=await createRecoverableDraft(page);
  await page.goto(`/tools/e-sign-pdf?resumeDraft=${draft}&resumeQuote=${Q}`);
@@ -101,4 +101,18 @@ test('failed acknowledgement retries the paid task without a second automatic do
  await retry.click();
  await expect(page.getByTestId('pdf-source-page-count')).toHaveCount(0);
  expect(consumes).toBe(2);await expect.poll(()=>downloads).toBe(1);
+});
+
+test('mismatched legacy payment cannot export or create a second charge',async({page})=>{
+ let downloads=0,quotes=0,consumes=0;
+ page.on('download',()=>downloads++);
+ await page.route('**/api/tools/pay/status?quoteId=**',r=>r.fulfill({json:{paid:true,quote:{id:Q,tool_id:'e-sign-pdf',quantity:4,unit_name:'page',currency:'CNY',amountRmb:1.9},grant:{consumed_at:null}}}));
+ await page.route('**/api/tools/quote',r=>{quotes++;return r.fulfill({status:500,json:{error:'unexpected'}})});
+ await page.route('**/api/tools/export/consume',r=>{consumes++;return r.fulfill({json:{ok:true}})});
+ const draft=await createRecoverableDraft(page,5);
+ await page.goto(`/tools/e-sign-pdf?resumeDraft=${draft}&resumeQuote=${Q}`);
+ const retry=page.getByRole('button',{name:/继续已付款任务|Resume paid task/});
+ await expect(retry).toBeVisible();await retry.click();
+ await expect(page.getByTestId('pdf-source-page-count')).toContainText('5');
+ expect(downloads).toBe(0);expect(consumes).toBe(0);expect(quotes).toBe(0);
 });

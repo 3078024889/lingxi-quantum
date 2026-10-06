@@ -61,6 +61,19 @@ create or replace function public.claim_sasi_durable_job_v150(
 language plpgsql security definer set search_path=public as $$
 declare r public.sasi_durable_jobs%rowtype;
 begin
+ -- A crashed worker must not leave the task running forever. Do not repeat
+ -- a provider submission whose outcome is unknown after losing the lease.
+ with abandoned as (
+  update public.sasi_durable_jobs set
+   state='failed',error_code='WORKER_LEASE_EXPIRED_REVIEW_REQUIRED',
+   lease_owner=null,lease_until=null,updated_at=now()
+  where state='running' and lease_until is not null and lease_until<=now()
+  returning run_id
+ )
+ update public.sasi_durable_runs set
+  state='failed',error_code='WORKER_LEASE_EXPIRED_REVIEW_REQUIRED',updated_at=now()
+ where id in(select run_id from abandoned) and state not in('succeeded','cancelled');
+
  update public.sasi_durable_jobs set
   state='failed',error_code='DEADLINE_EXPIRED',lease_owner=null,lease_until=null,updated_at=now()
  where state in('queued','waiting')
