@@ -1,10 +1,13 @@
 "use client";
 
 import {useEffect,useMemo,useState} from "react";
+import Link from "next/link";
 import {BUILD_CONNECTORS,SASI_INTEGRATIONS,type SasiIntegration} from "@/lib/sasi/integration-catalog";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 import {sasiConnectionText} from "@/lib/sasi/connection-i18n";
 import {connectionPageCopy,connectionServiceCopy,CONNECTION_GROUPS} from "@/lib/sasi/connection-page-copy";
+import {defaultBaseUrl} from "@/lib/sasi/intelligence/provider-defaults";
+import type {ByokProvider} from "@/lib/sasi/credential-vault";
 
 type Props={lang:LingxiLang;dark:boolean;accountEmail:string|null};
 type Connection={service:string;keyHint:string;healthStatus:"stored"|"checking"|"healthy"|"unhealthy";lastCheckedAt:string|null;lastErrorCode:string|null;baseUrl?:string;model?:string};
@@ -31,10 +34,9 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
  const[busy,setBusy]=useState<"save"|"test"|"delete"|null>(null);
  const[message,setMessage]=useState("");
  const connection=connections.find(x=>x.service===selected.id);
- useEffect(()=>{setBaseUrl(connection?.baseUrl||"");setModel(connection?.model||"");setEditing(false);setCredential("")},[selected.id,connection?.baseUrl,connection?.model]);
+ useEffect(()=>{setBaseUrl(connection?.baseUrl||defaultBaseUrl(selected.id as ByokProvider));setModel(connection?.model||"");setEditing(false);setCredential("")},[selected.id,connection?.baseUrl,connection?.model]);
 
  useEffect(()=>{
-  if(!accountEmail){setState("login");return}
   let alive=true;
   fetch("/api/sasi/connections",{cache:"no-store"})
    .then(async r=>({r,b:await r.json().catch(()=>({}))}))
@@ -129,11 +131,12 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
        <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder={copy.automatic} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
        <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
       </div></details>)}
+      {(!connection||editing)&&<p className="mt-6 text-sm font-medium">{selected.id==="compatible"?copy.otherDescription:copy.keyOnly}</p>}
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-       {state==="ready"&&(!connection||editing)?<><input type="password" autoComplete="off" spellCheck={false} value={credential} onChange={e=>setCredential(e.target.value)}
+       {(!connection||editing)?<><input type="password" disabled={state!=="ready"} autoComplete="off" spellCheck={false} value={credential} onChange={e=>setCredential(e.target.value)}
         aria-label={t("连接凭证","Connection credential")} placeholder={t("粘贴 API Key","Paste API key")}
         className="min-w-0 flex-1 rounded-xl border border-[var(--lx-line)] bg-transparent px-4 py-3 text-sm outline-none"/>
-        <button type="button" disabled={busy!==null||credential.trim().length<8||(selected.id==="compatible"&&(!baseUrl.trim()||!model.trim()))} onClick={save} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
+        <button type="button" disabled={state!=="ready"||busy!==null||credential.trim().length<8||(selected.id==="compatible"&&(!baseUrl.trim()||!model.trim()))} onClick={save} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
          {busy==="save"?t("连接中…","Connecting…"):t("保存并检查","Save and check")}
         </button></>
        :connection?<div className="flex flex-wrap gap-2">
@@ -143,6 +146,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
        </div>
        :<p className="text-sm text-[var(--lx-muted)]">{state==="login"?t("请先登录。","Please sign in first."):state==="loading"?t("正在读取…","Loading…"):t("暂时无法连接，请稍后再试。","Unable to connect right now. Please try again later.")}</p>}
       </div>
+      {state!=="ready"&&<p role="status" className="mt-3 text-sm text-[var(--lx-muted)]">{state==="login"?<Link href="/account?mode=signin" className="text-blue-600 underline underline-offset-4">{t("请先登录。","Please sign in first.")}</Link>:state==="loading"?t("正在读取…","Loading…"):t("暂时无法连接，请稍后再试。","Unable to connect right now. Please try again later.")}</p>}
       {message&&<p role="status" className="mt-4 rounded-xl bg-[var(--lx-soft)] p-3 text-sm text-[var(--lx-muted)]">{message}</p>}
     <p className="mt-6 border-t border-[var(--lx-line)] pt-4 text-xs leading-6 text-[var(--lx-muted)]">{copy.billing}</p>
    </article>

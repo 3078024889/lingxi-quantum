@@ -29,9 +29,25 @@ test('connection defaults, save and check, switch clears key, and delete (mock s
  await page.route('**/api/sasi/connections/test',route=>route.fulfill({json:{healthStatus:'healthy',model:'openai/test-model'}}));
  await key.fill('mock-openrouter-key-123');await page.getByRole('button',{name:'保存并检查',exact:true}).click();
  await expect(page.locator('[data-connection-services]').getByRole('button',{name:/OpenRouter/})).toContainText('已连接');
- expect(payloads).toEqual([{provider:'openrouter',apiKey:'mock-openrouter-key-123'}]);await expect(key).toHaveCount(0);
+ expect(payloads).toEqual([{provider:'openrouter',apiKey:'mock-openrouter-key-123',baseUrl:'https://openrouter.ai/api/v1'}]);await expect(key).toHaveCount(0);
  await expect(page.locator('[data-connection-details]')).not.toContainText('mock-openrouter-key-123');
  page.once('dialog',dialog=>dialog.accept());await page.route('**/api/sasi/connections?provider=openrouter',route=>route.fulfill({json:{ok:true}}));await page.getByRole('button',{name:'删除连接',exact:true}).click();await expect(key).toHaveValue('');
+});
+test('API session shows the key field even when the server email prop is missing',async({page})=>{
+ await page.route('**/api/sasi/connections',route=>route.fulfill({json:{connections:[]}}));
+ await page.goto('/sasi/connections?lang=zh');
+ const key=page.getByRole('textbox',{name:'连接密钥'});await expect(key).toBeVisible();await expect(key).toBeEnabled();
+ await page.locator('[data-connection-services]').getByRole('button',{name:/OpenRouter/}).click();
+ await expect(page.locator('[data-connection-details]')).toContainText('在下面粘贴 API Key 即可');
+ await page.getByText('指定模型与服务地址（选填）',{exact:true}).click();
+ await expect(page.getByLabel('服务地址',{exact:true})).toHaveValue('https://openrouter.ai/api/v1');
+});
+test('signed out users can see where to paste their key and the sign-in requirement',async({page})=>{
+ await page.route('**/api/sasi/connections',route=>route.fulfill({status:401,json:{error:'AUTH_REQUIRED'}}));
+ await page.goto('/sasi/connections?lang=zh');
+ await expect(page.getByRole('textbox',{name:'连接密钥'})).toBeVisible();
+ await expect(page.getByRole('textbox',{name:'连接密钥'})).toBeDisabled();
+ await expect(page.locator('[data-connection-details]')).toContainText('请先登录');
 });
 test('other service requires an address and model before saving',async({page})=>{
  await signedInFixture(page);await page.locator('[data-connection-services]').getByRole('button',{name:/添加其他服务/}).click();
