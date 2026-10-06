@@ -1,4 +1,7 @@
 "use client";
+import {SUPPLIER_BILLING_COPY} from "@/lib/sasi/prompt-flow-copy";
+import {AUTOMATIC_VIDEO_CONTRACT,parseAutomaticVideoPlan} from '@/lib/sasi/automatic-video-plan';
+import type {SeriesShot} from '@/lib/sasi/series-plan';
 import {projectErrorCopy} from '@/lib/sasi/project-error-copy';
 import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 
@@ -27,7 +30,7 @@ type UploadState="queued"|"uploading"|"ready"|"needs-review"|"failed";
 type FileItem={id:string;file:File;state:UploadState;progress:number;assetId?:string;message?:string};
 type ByokQuote={kind:"byok";task:any;profileId:string;currency:"CNY"|"USD"};
 type WebsiteQuote={kind:"website-byok";task:any;currency:"CNY"|"USD"};
-type Quote=ByokQuote|WebsiteQuote|null;
+type Quote=ByokQuote|WebsiteQuote|{kind:"video-plan"|"video-series";task:any;currency:"CNY"|"USD";profileId:string;tasks?:any[]}|null;
 
 const VIDEO_RATIOS=["9:16","16:9","1:1","4:3","3:4","3:2","2:3","21:9"] as const;
 const VIDEO_RESOLUTIONS=["720p","1080p","4k"] as const;
@@ -55,7 +58,7 @@ function cleanHtml(raw:string){
  const safe=DOMPurify.sanitize(raw,{WHOLE_DOCUMENT:true,FORBID_TAGS:["script","object","embed","base","iframe","form","link","meta"],FORBID_ATTR:["onerror","onload","onclick","srcset"]});
  return safe.replace(/<head>/i,`<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${escapedDescription?`<meta name="description" content="${escapedDescription}">`:""}<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: blob:; form-action 'none'; base-uri 'none'">`);
 }
-export default function SasiChatCreationStudio({mode,initialPrompt="",initialFiles=[],initialSkillIds=[]}:{mode:Mode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[]}){
+export default function SasiChatCreationStudio({mode,initialPrompt="",initialFiles=[],initialSkillIds=[],autoStart=false}:{mode:Mode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[];autoStart?:boolean}){
  const{lang}=useLingxiLang();
  const ct=(key:Parameters<typeof composerText>[1],vars?:Record<string,string|number>)=>composerText(lang,key,vars);
  const ctRef=useRef(ct);ctRef.current=ct;
@@ -74,11 +77,15 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  const[message,setMessage]=useState("");
  const[assistantText,setAssistantText]=useState("");
  const[resultUrl,setResultUrl]=useState("");
+ const[films,setFilms]=useState<Array<{episode:number;url:string}>>([]);
+ const[clips,setClips]=useState<Array<{id:string;url:string}>>([]);
+ const pipeline=useRef<AbortController|null>(null);
+ const ownedUrls=useRef<string[]>([]);
  const[websiteHtml,setWebsiteHtml]=useState("");
  const[websiteFiles,setWebsiteFiles]=useState<WebsiteFile[]>([]);
  const[dragging,setDragging]=useState(false);
  const[rightsConfirmed,setRightsConfirmed]=useState(false);
- const operation=useRef(false);
+ const operation=useRef(false);const began=useRef(false);
  const projectAttempt=useRef<{body:string;key:string}|null>(null);
  const mounted=useRef(true);
  const inputRef=useRef<HTMLInputElement|null>(null);
@@ -86,7 +93,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  useEffect(()=>{const field=textareaRef.current;if(field){field.style.height="44px";field.style.height=`${Math.min(216,Math.max(44,field.scrollHeight))}px`}},[prompt]);
  const pollRef=useRef<number|null>(null);
 
- useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;if(pollRef.current!==null)window.clearTimeout(pollRef.current)}},[]);
+ useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;pipeline.current?.abort();ownedUrls.current.forEach(url=>URL.revokeObjectURL(url));if(pollRef.current!==null)window.clearTimeout(pollRef.current)}},[]);
  useEffect(()=>{
   const id=new URLSearchParams(window.location.search).get("projectId")||"";
   if(!/^[0-9a-f-]{36}$/i.test(id))return;
@@ -98,7 +105,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
     setProjectId(id);
     const originalBrief=body.nodes?.find((x:any)=>typeof x?.input?.brief==="string")?.input?.brief;
     if(typeof originalBrief==="string")setPrompt(current=>current.trim()?current:originalBrief.slice(0,12000));
-    setAssistantText(ctRef.current("projectRestored",{value:String(body.project.title||"")}));
+    if(mode!=="drama")setAssistantText(ctRef.current("projectRestored",{value:String(body.project.title||"")}));
    }).catch(()=>{});
   return()=>{active=false};
  },[mode,lang]);
@@ -112,6 +119,9 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
     const found=[...new Set(body.profiles.map((x:any)=>String(x.resolution||"").toLowerCase()))]
       .filter((x):x is "720p"|"1080p"|"4k"=>x==="720p"||x==="1080p"||x==="4k");
     const next:Array<"720p"|"1080p"|"4k">=found.length?found:["720p","1080p"];
+    const batch=body.tasks.find((task:any)=>task.request?.batchId)?.request?.batchId;
+    const group=batch?body.tasks.filter((task:any)=>task.request?.batchId===batch).sort((a:any,b:any)=>a.request.shotIndex-b.request.shotIndex):[];
+    if(group.length&&group.length===group[0].request.batchShotCount&&!group.some((task:any)=>task.state==="quoted")){void followFilm(projectId,group.map((task:any)=>task.id));}
     setAvailableResolutions(next);
     setResolution(current=>next.includes(current)?current:(next[0]??"720p"));
     void track("continued","video.resolutions.discovered",projectId);
@@ -197,10 +207,11 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
   }
  }
 
+ useEffect(()=>{if(autoStart&&!began.current){began.current=true;void prepare()}},[autoStart]);
  async function prepare(){
   if(operation.current||(!prompt.trim()&&!files.length))return;
   operation.current=true;
-  setBusy(true);setQuote(null);setAssistantText("");setResultUrl("");setWebsiteHtml("");setWebsiteFiles([]);setMessage(ct("organizing"));
+  setBusy(true);setQuote(null);setAssistantText("");setFilms([]);setClips([]);setResultUrl("");setWebsiteHtml("");setWebsiteFiles([]);setMessage(ct("organizing"));
   try{
    const pid=await ensureProject();
    const uploaded=await uploadPending(pid);
@@ -243,46 +254,60 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  }
 
  async function prepareDrama(pid:string,uploaded:FileItem[]){
-  const planning=await fetch("/api/sasi/experience/text",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text:prompt.trim(),task:"drama",projectId:pid,skillIds:selectedSkillIds,allowConnected:false})});
-  const planned=await planning.json().catch(()=>({}));if(planning.ok&&planned.state==="answer")setAssistantText(String(planned.answer||""));
-  const imageAssetIds=uploaded.filter(x=>kindFor(x.file.name)==="image").map(x=>x.assetId!).filter(Boolean);
+  const response=await fetch('/api/sasi/byok/video?projectId='+encodeURIComponent(pid),{cache:'no-store'});
+  const state=await response.json().catch(()=>({}));
+  if(!response.ok||!state.connected||!state.profiles?.length){setMessage(SERVICE_REQUIRED[lang]);return}
   if(!rightsConfirmed){setMessage(ct("rightsRequired"));return}
-  if(!["9:16","16:9","1:1"].includes(ratio)){
-   setAssistantText(ct("ratioUnavailable",{value:ratio}));
-   setMessage(ct("ratioSaved"));
-   await track("continued","drama.route.unavailable",pid);return;
-  }
-
-  const state=await fetch(`/api/sasi/byok/video?projectId=${encodeURIComponent(pid)}`,{cache:"no-store"});
-  const sb=await state.json().catch(()=>({}));
-  if(state.ok&&sb.enabled&&sb.connected&&Array.isArray(sb.profiles)&&sb.profiles.length){
-   const wanted=resolution.toLowerCase();
-   const profile=sb.profiles.find((p:any)=>String(p.resolution||"").toLowerCase()===wanted)||sb.profiles[0];
-   if(String(profile.resolution||"").toLowerCase()!==wanted){
-    setAssistantText(ct("providerResolutionMismatch",{value:String(profile.resolution)}));
-    setMessage(ct("specMismatch"));
-    return;
+  const profile=state.profiles.find((p:any)=>p.resolution===resolution)||state.profiles[0];
+  const planning=await fetch('/api/sasi/drama/plan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:prompt.trim(),projectId:pid})});
+  const planned=await planning.json().catch(()=>({}));
+  if(planning.ok&&planned.state==='answer'){await quoteFilm(pid,profile.id,planned.plan.shots,uploaded);return}
+  if(!planning.ok)throw new Error(ct('genericUnavailable'));
+  const responseQuote=await fetch('/api/sasi/byok/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'quote',mode:'video-plan',question:prompt.trim(),skillIds:selectedSkillIds})});
+  const planQuote=await responseQuote.json().catch(()=>({}));
+  if(!responseQuote.ok||!planQuote.task){setMessage(SERVICE_REQUIRED[lang]);return}
+  setQuote({kind:'video-plan',task:planQuote.task,profileId:profile.id,currency:planQuote.billingCurrency==='USD'?'USD':'CNY'});setMessage(ct('byokReady',{price:(planQuote.billingCurrency==='USD'?'$':'¥')+(Number(planQuote.task.estimated_fen)/100).toFixed(2)}));
+ }
+ async function quoteFilm(pid:string,profileId:string,shots:SeriesShot[],uploaded=files){
+  const assetIds=uploaded.filter(x=>kindFor(x.file.name)==='image').map(x=>x.assetId!).filter(Boolean);
+  const response=await fetch('/api/sasi/byok/video',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'quote-series',projectId:pid,profileId,ratio,shots:shots.map(shot=>({...shot,assetIds})),functions:selectedFunctions,rightsConfirmed,aiLabelAcknowledged:rightsConfirmed})});
+  const data=await response.json().catch(()=>({}));if(!response.ok||!data.tasks?.length)throw new Error(ct('supplierStartFailed'));
+  const total=data.tasks.reduce((sum:number,task:any)=>sum+Number(task.estimated_fen||0),0);const currency=data.tasks[0].request?.billingCurrency==='USD'?'USD':'CNY';
+  setQuote({kind:'video-series',task:{estimated_fen:total},tasks:data.tasks,profileId,currency});setMessage(ct('byokReady',{price:(currency==='USD'?'$':'¥')+(total/100).toFixed(2)}));
+ }
+ async function followFilm(pid:string,ids:string[]){
+  if(!mounted.current)return;operation.current=true;setBusy(true);
+  try{
+   const history=await fetch('/api/sasi/byok/video?projectId='+encodeURIComponent(pid),{cache:'no-store'});const data=await history.json();if(!history.ok)throw new Error('PROGRESS_UNAVAILABLE');
+   const tasks=ids.map(id=>data.tasks?.find((t:any)=>t.id===id));if(tasks.some(t=>!t))throw new Error('PROGRESS_UNAVAILABLE');
+   if(tasks.some(t=>['failed','uncertain','submitting'].includes(t.state))){operation.current=false;setBusy(false);setMessage(ct('supplierNeedsCheck'));return}
+   if(tasks.some(t=>t.state!=='succeeded')){
+    for(const task of tasks.filter(t=>['queued','running'].includes(t.state))){if(!mounted.current)return;await fetch('/api/sasi/byok/video',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'refresh',taskId:task.id})})}
+    setMessage(ct('generating'));pollRef.current=window.setTimeout(()=>void followFilm(pid,ids),15000);return;
    }
-   const q=await fetch("/api/sasi/byok/video",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
-    action:"quote",skillIds:selectedSkillIds,functions:selectedFunctions,projectId:pid,profileId:profile.id,prompt:prompt.trim(),duration,ratio,
-    assetIds:imageAssetIds,rightsConfirmed,aiLabelAcknowledged:rightsConfirmed
-   })});
-   const qb=await q.json().catch(()=>({}));
-   if(q.ok&&qb.task){
-    setQuote({kind:"byok",task:qb.task,profileId:profile.id,currency:qb.billing?.platform?.currency==="USD"?"USD":"CNY"});
-    setMessage(ct("byokReady",{price:`${qb.billing?.platform?.currency==="USD"?"$":"¥"}${(Number(qb.task.estimated_fen||0)/100).toFixed(2)}`}));
-    return;
+   const ready=tasks.map(t=>({id:t.id,url:t.output?.videoUrl,episode:t.request?.episode||1}));if(ready.some(t=>typeof t.url!=='string'||!t.url.startsWith('https://')))throw new Error('DELIVERY_UNAVAILABLE');
+   setClips(ready);setMessage(ct('generating'));pipeline.current=new AbortController();
+   const {assembleGeneratedVideo}=await import('@/lib/sasi/assemble-generated-video');const completed:Array<{episode:number;url:string}>=[];
+   for(const episode of [...new Set<number>(ready.map(t=>t.episode))]){
+    if(!mounted.current)return;const urls=ready.filter(t=>t.episode===episode).map(t=>t.url);
+    const url=urls.length===1?urls[0]:URL.createObjectURL(await assembleGeneratedVideo(ready.filter(t=>t.episode===episode).map(t=>'/api/sasi/video-file?taskId='+t.id),ratio,pipeline.current.signal));
+    if(url.startsWith('blob:'))ownedUrls.current.push(url);completed.push({episode,url});setFilms([...completed]);
    }
-  }
-  setAssistantText(ct("noVideoRoute"));
-  setMessage(ct("noVideoRoute"));
+   setMessage(ct('videoDone'));operation.current=false;setBusy(false);await track('delivered','video.series.automatic',pid);
+  }catch{if(mounted.current){operation.current=false;setBusy(false);setMessage(ct('deliveryUnavailable'))}}
  }
 
  async function confirm(){
   if(!quote||operation.current)return;
   operation.current=true;setBusy(true);setQuote(null);setMessage(ct("starting"));
   try{
-   if(quote.kind==="website-byok"){
+   if(quote.kind==="video-plan"){
+    const r=await fetch("/api/sasi/byok/text",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"confirm",taskId:quote.task.id,acceptSupplierBilling:true})});const b=await r.json().catch(()=>({}));if(!r.ok||b.task?.state!=="succeeded")throw new Error(ct("supplierNeedsCheck"));
+    const plan=b.task.output.videoPlan||parseAutomaticVideoPlan(b.task.output.answer);await quoteFilm(projectId,quote.profileId,plan.shots);
+   }else if(quote.kind==="video-series"){
+    for(const task of quote.tasks||[]){const r=await fetch("/api/sasi/byok/video",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"confirm",taskId:task.id,acceptSupplierBilling:true})});const b=await r.json().catch(()=>({}));if(!r.ok||!["queued","running","succeeded"].includes(b.state))throw new Error(ct("supplierNeedsCheck"));}
+    void followFilm(projectId,(quote.tasks||[]).map(task=>task.id));
+   }else if(quote.kind==="website-byok"){
     const r=await fetch("/api/sasi/byok/text",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"confirm",taskId:quote.task.id,acceptSupplierBilling:true})});
     const b=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(ct("websiteStartFailed"));
@@ -295,8 +320,8 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
     if(!r.ok)throw new Error(ct("supplierStartFailed"));
     await pollByok(quote.task.id);
    }
-  }catch(e){setMessage(e instanceof Error&&!(e instanceof TypeError)&&e.name!=='AbortError'?e.message:ct("genericUnavailable"))}
-  finally{operation.current=false;setBusy(false)}
+  }catch(e){operation.current=false;setBusy(false);setMessage(e instanceof Error&&!(e instanceof TypeError)&&e.name!=='AbortError'?e.message:ct("genericUnavailable"))}
+  finally{if(quote.kind!=="video-series"){operation.current=false;setBusy(false)}}
  }
 
  async function pollByok(id:string){
@@ -352,15 +377,14 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
        </div>
      </SasiAssistantText>}
 
+     {films.map(film=><SasiVideoResult key={film.episode} url={film.url} downloadLabel={`${film.episode} · ${sasiCommonText(lang,"downloadResult")}`}/>)}
+     {clips.length>0&&!films.length&&<div className="flex flex-wrap gap-3">{clips.map((clip,index)=><a key={clip.id} href={clip.url} target="_blank" rel="noreferrer">{index+1} · {sasiCommonText(lang,"downloadResult")}</a>)}</div>}
      {resultUrl&&<SasiVideoResult url={resultUrl} downloadLabel={sasiCommonText(lang,"downloadResult")}/>}
 
      {websiteFiles.length>1&&<div className="mb-3 flex flex-wrap gap-2">{websiteFiles.map((file,index)=><button type="button" key={file.path} onClick={()=>setWebsiteHtml(file.content)} aria-pressed={websiteHtml===file.content} className="rounded-full border border-[var(--lx-line)] px-3 py-2 text-sm">{file.content.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]||String(index+1)}</button>)}</div>}
      {websiteHtml&&<SasiWebsiteResult html={cleanHtml(websiteHtml)} title={ct("websitePreview")} downloadLabel={ct("downloadWebsite")} onDownload={()=>void downloadWebsite()}/>}
 
-     {mode==="drama"&&projectId&&<div className="mb-8 flex flex-wrap gap-2">
-       <Link href={`/sasi/series?projectId=${encodeURIComponent(projectId)}`} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("continueSeries")}</Link>
-       <Link href="/sasi/assemble" className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{ct("assembleClips")}</Link>
-     </div>}
+
     </section>
 
     <section className="sticky bottom-3 z-30 mt-auto w-full">
@@ -406,7 +430,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
       </div>
 
       {mode==="drama"&&<label className="flex items-start gap-2 px-3 pt-2 text-[11px] text-[var(--lx-muted)]"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
-      <SasiStatusLine>{message}</SasiStatusLine>
+      {quote&&<p className="px-3 pt-2 text-xs text-[var(--lx-muted)]">{SUPPLIER_BILLING_COPY[lang]}</p>}<SasiStatusLine>{message}</SasiStatusLine>
      </SasiComposerSurface>
     </section>
    </div>

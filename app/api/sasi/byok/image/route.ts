@@ -21,20 +21,22 @@ export async function POST(req:NextRequest){
  const guard=await enforceAbuseGuard(req,{scope:"byok-image",userId:user.id,accountLimit:40,ipLimit:120});if(!guard.ok)return reply({error:guard.error},guard.status);
  const b=await req.json().catch(()=>null);if(!b||!["quote","confirm"].includes(b.action))return reply({error:"INVALID_ACTION"},400);
  const db=createAdminClient();const p=imageProfile();if(!p)return reply({error:"IMAGE_PRICE_REVIEW_REQUIRED"},503);
- const currency=await userSasiCurrency(user.id);const imageQuality=p.size==="4K"?"high":"standard";const platformChargeMinor=imageChargeMinor(imageQuality,currency);
+ let currency=await userSasiCurrency(user.id);const imageQuality=p.size==="4K"?"high":"standard";let platformChargeMinor=imageChargeMinor(imageQuality,currency);
  const{data:c,error:ce}=await db.from("sasi_provider_connections").select("encrypted_credential,fingerprint,health_status").eq("user_id",user.id).eq("provider","volcengine").maybeSingle();
  if(ce||!c||c.health_status!=="healthy")return reply({error:"CONNECTION_REQUIRED"},409);
  if(b.action==="quote"){
-  if(typeof b.prompt!=="string"||b.prompt.trim().length<8||b.prompt.length>3000)return reply({error:"INVALID_IMAGE_PROMPT"},400);
+  if(typeof b.prompt!=="string"||b.prompt.trim().length<2||b.prompt.length>3000)return reply({error:"INVALID_IMAGE_PROMPT"},400);
   const safety=reviewSasiProductionInput({prompt:b.prompt,rightsConfirmed:b.rightsConfirmed,aiLabelAcknowledged:b.aiLabelAcknowledged});if(!safety.ok)return reply({error:safety.error},422);
   let compiled;try{compiled=compileVisualBrief("image",b.prompt.trim(),b.functions)}catch{return reply({error:"INVALID_FUNCTION_SELECTION"},400)}
-  const r=await db.from("sasi_byok_image_tasks").insert({user_id:user.id,request:{...compiled,originalPrompt:b.prompt.trim()},profile_version:imageVersion(p),key_fingerprint:c.fingerprint,estimated_fen:platformChargeMinor,expires_at:new Date(Math.min(Date.now()+600000,Date.parse(p.validUntil))).toISOString()}).select(fields).single();
-  return r.error?reply({error:"QUOTE_SAVE_FAILED"},503):reply({task:r.data,profile:p},201);
+  const r=await db.from("sasi_byok_image_tasks").insert({user_id:user.id,request:{...compiled,originalPrompt:b.prompt.trim(),billingCurrency:currency},profile_version:imageVersion(p),key_fingerprint:c.fingerprint,estimated_fen:platformChargeMinor,expires_at:new Date(Math.min(Date.now()+600000,Date.parse(p.validUntil))).toISOString()}).select(fields).single();
+  return r.error?reply({error:"QUOTE_SAVE_FAILED"},503):reply({task:r.data,profile:p,billingCurrency:currency},201);
  }
  if(b.acceptSupplierBilling!==true)return reply({error:"BUDGET_CONFIRMATION_REQUIRED"},422);
- await requireSasiBalance(user.id,currency,platformChargeMinor);
+
  const{data:t}=await db.from("sasi_byok_image_tasks").select("*").eq("id",String(b.taskId??"")).eq("user_id",user.id).maybeSingle();if(!t)return reply({error:"TASK_NOT_FOUND"},404);
+ currency=t.request?.billingCurrency==="USD"?"USD":t.request?.billingCurrency==="CNY"?"CNY":currency;platformChargeMinor=Number(t.estimated_fen);if(!Number.isSafeInteger(platformChargeMinor)||platformChargeMinor<0)return reply({error:"QUOTE_INVALID"},409);
  if(t.state!=="quoted")return reply({task:{id:t.id,state:t.state,output:t.output}});
+ try{await requireSasiBalance(user.id,currency,platformChargeMinor)}catch{return reply({error:"SASI_BALANCE_INSUFFICIENT",currency},402)}
  if(t.key_fingerprint!==c.fingerprint||t.profile_version!==imageVersion(p)||Date.parse(t.expires_at)<=Date.now())return reply({error:"REQUOTE_REQUIRED"},409);
  let key:string;try{key=decryptProviderKey(user.id,"volcengine",c.encrypted_credential);}catch{return reply({error:"CONNECTION_UNAVAILABLE"},503);}
  const claimed=await db.from("sasi_byok_image_tasks").update({state:"running",updated_at:new Date().toISOString()}).eq("id",t.id).eq("user_id",user.id).eq("state","quoted").select("id").maybeSingle();

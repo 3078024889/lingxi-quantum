@@ -1,3 +1,4 @@
+import {boundedRequestJson} from "@/lib/security/bounded-request-json";
 import {createHash,randomUUID} from "node:crypto";
 import {compileVisualBrief} from "@/lib/sasi/creation-methods";
 import {validateSeriesShots} from "@/lib/sasi/series-plan";
@@ -36,8 +37,8 @@ export async function GET(request:NextRequest){
 
 export async function POST(request:NextRequest){
  if(!isSameOriginMutation(request))return reply({error:"ORIGIN_REJECTED"},403);const{data:{user}}=await createClient().auth.getUser();if(!user)return reply({error:"AUTH_REQUIRED"},401);
- const body=await request.json().catch(()=>null) as any;if(!body||!["quote","quote-series","confirm","refresh"].includes(body.action))return reply({error:"INVALID_ACTION"},400);
- const admin=createAdminClient();const abuse=await enforceAbuseGuard(request,{scope:"byok-video",userId:user.id,accountLimit:120,ipLimit:300});if(!abuse.ok)return reply({error:abuse.error},abuse.status);
+ const body=await boundedRequestJson(request,256*1024).catch(()=>null) as any;if(!body||!["quote","quote-series","confirm","refresh"].includes(body.action))return reply({error:"INVALID_ACTION"},400);
+ const admin=createAdminClient();const abuse=await enforceAbuseGuard(request,{scope:body.action==="refresh"?"byok-video-refresh":"byok-video",userId:user.id,accountLimit:body.action==="refresh"?3600:120,ipLimit:body.action==="refresh"?9000:300});if(!abuse.ok)return reply({error:abuse.error},abuse.status);
  const currency=await userSasiCurrency(user.id);
  const selected=await selectUserVideoConnection(user.id,typeof body.provider==="string"?body.provider:null).catch(()=>null);if(!selected)return reply({error:"VIDEO_CONNECTION_REQUIRED"},409);
  const profiles=profilesFor(selected),profile=body.profileId?profiles.find(p=>p.id===body.profileId):profiles[0];if(!profile)return reply({error:"VIDEO_PROFILE_UNAVAILABLE"},409);
@@ -73,7 +74,9 @@ export async function POST(request:NextRequest){
  if(body.action==="confirm"){
   if(body.acceptSupplierBilling!==true)return reply({error:"BUDGET_CONFIRMATION_REQUIRED"},422);if(task.state!=="quoted")return reply({taskId:task.id,state:task.state});if(Date.parse(task.expires_at)<=Date.now())return reply({error:"REQUOTE_REQUIRED"},409);
   const billingCurrency=(task.request?.billingCurrency==="USD"?"USD":"CNY") as "CNY"|"USD";const platformChargeMinor=Number(task.request?.platformChargeMinor||videoChargeMinor(task.request.duration,task.request.resolution,billingCurrency));
-  try{await requireSasiBalance(user.id,billingCurrency,platformChargeMinor)}catch{return reply({error:"SASI_BALANCE_INSUFFICIENT",requiredMinor:platformChargeMinor,currency:billingCurrency},402)}
+  let requiredMinor=platformChargeMinor;
+  if(task.request?.batchId){const batch=await admin.from("sasi_byok_video_tasks").select("state,estimated_fen,request").eq("user_id",user.id).eq("project_id",task.project_id).contains("request",{batchId:task.request.batchId});if(batch.error||!batch.data?.length)return reply({error:"BATCH_UNAVAILABLE"},503);const pending=batch.data.filter(row=>["quoted","submitting","queued","running","uncertain"].includes(row.state));if(pending.some(row=>row.request?.billingCurrency!==billingCurrency||!Number.isSafeInteger(Number(row.estimated_fen))||Number(row.estimated_fen)<0))return reply({error:"QUOTE_INVALID"},409);requiredMinor=pending.reduce((sum,row)=>sum+Number(row.estimated_fen),0)}
+  try{await requireSasiBalance(user.id,billingCurrency,requiredMinor)}catch{return reply({error:"SASI_BALANCE_INSUFFICIENT",requiredMinor,currency:billingCurrency},402)}
   let memory;try{memory=await loadProjectMemory(admin,user.id,task.project_id)}catch{return reply({error:"PROJECT_CONTEXT_UNAVAILABLE"},503)}if(memory.version!==task.memory_version)return reply({error:"REQUOTE_REQUIRED"},409);
   const claimed=await admin.from("sasi_byok_video_tasks").update({state:"submitting",approved_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq("id",task.id).eq("user_id",user.id).eq("state","quoted").select("id").maybeSingle();if(claimed.error)return reply({error:"TASK_CLAIM_FAILED"},503);if(!claimed.data)return reply({taskId:task.id,state:"submitting"},202);
   try{let supplierId="";

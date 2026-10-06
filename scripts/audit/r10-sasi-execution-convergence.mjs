@@ -21,7 +21,7 @@ must(studio.includes('e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&
 must(knowledge.includes('e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229'),'R10_KNOWLEDGE_ENTER_MISSING');
 must(skills.includes('drama-script')&&skills.includes('drama-storyboard')&&skills.includes('drama-visual')&&skills.includes('drama-sound'),'R10_DRAMA_SKILLS_MISSING');
 must(video.includes('compileSasiSkillGuidance')&&video.includes('skillIds'),'R10_DRAMA_SKILLS_NOT_SERVER_WIRED');
-must(studio.includes('/api/sasi/experience/text')&&studio.includes('website.generate.experience'),'R10_WEBSITE_EXPERIENCE_NOT_WIRED');
+must(studio.includes('/api/sasi/experience/website')&&studio.includes('website.generate.experience'),'R10_WEBSITE_EXPERIENCE_NOT_WIRED');
 must(!studio.includes('LOCAL_WEBSITE_FALLBACK_V8'),'R10_FAKE_WEBSITE_FALLBACK_STILL_PRESENT');
 must(center.includes('compatible')&&center.includes('Service URL')&&center.includes('Model ID'),'R10_COMPATIBLE_UI_MISSING');
 must(conn.includes('validateProviderBaseUrl')&&conn.includes('base_url:baseUrl')&&conn.includes('model_id:modelId'),'R10_COMPATIBLE_SAVE_MISSING');
@@ -31,6 +31,8 @@ for(const secret of ['SASI_QUOTE_SECRET=','SASI_BYOK_ENCRYPTION_KEY=','SASI_WORK
 must(host.includes('hidden={id!==mode}')&&host.includes('key={id}'),'R10_SWITCH_LOSES_DRAFT');
 must(studio.includes('/api/sasi/experience/website'),'R10_FREE_WEBSITE_ROUTER_MISSING');
 must(knowledge.includes('/api/sasi/research/search'),'R10_REAL_RESEARCH_MISSING');
+must(!r('components/Footer.tsx').includes('<details')&&!r('components/seo/HomeToolDirectory.tsx').includes('<details'),'R12_PUBLIC_TEXT_HIDDEN');
+must(studio.includes('/api/sasi/drama/plan')&&studio.includes('quote-series')&&studio.includes('assembleGeneratedVideo'),'R12_AUTOMATIC_FILM_NOT_WIRED');
 console.log('R10_BRAND_SURFACE=PASS');
 console.log('R10_ONE_SURFACE_SWITCHING=PASS');
 console.log('R10_ENTER_AND_FILE_INTAKE=PASS');

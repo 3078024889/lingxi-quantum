@@ -1,3 +1,4 @@
+import {AUTOMATIC_VIDEO_CONTRACT,parseAutomaticVideoPlan} from '@/lib/sasi/automatic-video-plan';
 import {createHash} from "node:crypto";
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
@@ -42,13 +43,13 @@ export async function POST(request:NextRequest){
  const version=connectionVersion(connection);
  if(body.action==="quote"){
   if(typeof body.question!=="string"||!body.question.trim()||body.question.length>24000)return reply({error:"QUESTION_LENGTH"},400);
-  if(body.mode!==undefined&&!["chat","director","book","website"].includes(body.mode))return reply({error:"INVALID_MODE"},400);
+  if(body.mode!==undefined&&!["chat","director","book","website","video-plan"].includes(body.mode))return reply({error:"INVALID_MODE"},400);
   const director=body.mode==="director",mode=body.mode??"chat";
-  const skillMode=mode==="website"?"website":mode==="book"?"book":"website";const skillIds=validateSasiSkillIds(body.skillIds,skillMode);const skillGuidance=compileSasiSkillGuidance(skillIds);
+  const skillMode=mode==="website"?"website":mode==="book"?"book":mode==="video-plan"||mode==="director"?"drama":"website";const skillIds=validateSasiSkillIds(body.skillIds,skillMode);const skillGuidance=compileSasiSkillGuidance(skillIds);
   const evidence:GroundedEvidence[]=mode==="book"&&Array.isArray(body.evidence)?body.evidence.slice(0,9).map((e:Record<string,unknown>,i:number)=>({index:i+1,title:String(e?.title??"资料").slice(0,240),locator:String(e?.locator??"").slice(0,240),text:String(e?.text??"").slice(0,3000)})).filter((e:GroundedEvidence)=>e.text.trim()):[];
   if(mode==="book"&&!evidence.length)return reply({error:"BOOK_EVIDENCE_REQUIRED"},422);
-  let method;try{method=creationMethod(mode as CreationTask,body.functions)}catch{return reply({error:"INVALID_FUNCTION_SELECTION"},400)}
-  const messages:TextMessage[]=[{role:"system",content:SASI_SYSTEM+`\n${method.instructions}`+(director?`\n${DIRECTOR_CONTRACT}`:mode==="website"?`\n${WEBSITE_CONTRACT}`:"")+`\n${skillGuidance}`}];
+  let method;try{method=creationMethod((mode==="video-plan"?"director":mode) as CreationTask,body.functions)}catch{return reply({error:"INVALID_FUNCTION_SELECTION"},400)}
+  const messages:TextMessage[]=[{role:"system",content:SASI_SYSTEM+`\n${method.instructions}`+(mode==="video-plan"?`\n${AUTOMATIC_VIDEO_CONTRACT}`:director?`\n${DIRECTOR_CONTRACT}`:mode==="website"?`\n${WEBSITE_CONTRACT}`:"")+`\n${skillGuidance}`}];
   if(body.previousId&&mode==="chat"){
    const previous=await db.from("sasi_byok_text_tasks").select("request,output").eq("id",body.previousId).eq("user_id",user.id).eq("state","succeeded").maybeSingle();
    if(previous.error||!previous.data)return reply({error:"PREVIOUS_ANSWER_NOT_FOUND"},404);
@@ -56,7 +57,7 @@ export async function POST(request:NextRequest){
   }
   messages.push({role:"user",content:mode==="book"?buildGroundedReasoningPrompt({question:body.question.trim(),mode:"book",intelligence:"standard",evidence}):body.question.trim()});
   if(messages.reduce((n,m)=>n+Buffer.byteLength(m.content),0)>60000)return reply({error:"CONTEXT_LIMIT_START_NEW"},422);
-  const expiresAt=new Date(Date.now()+10*60_000).toISOString();const billingCurrency=await userSasiCurrency(user.id);const estimatedTokens=Math.max(1,Math.ceil(messages.reduce((n,m)=>n+m.content.length,0)/3)+(mode==="website"?4096:2048));const estimatedTextMinor=textChargeMinor(estimatedTokens,billingCurrency);const estimatedPlatformMinor=estimatedTextMinor+(mode==="website"?websiteChargeMinor(3,billingCurrency):0);
+  const expiresAt=new Date(Date.now()+10*60_000).toISOString();const billingCurrency=await userSasiCurrency(user.id);const estimatedTokens=Math.max(1,Math.ceil(messages.reduce((n,m)=>n+m.content.length,0)/3)+(mode==="website"||mode==="video-plan"?4096:2048));const estimatedTextMinor=textChargeMinor(estimatedTokens,billingCurrency);const estimatedPlatformMinor=estimatedTextMinor+(mode==="website"?websiteChargeMinor(3,billingCurrency):0);
   const result=await db.from("sasi_byok_text_tasks").insert({user_id:user.id,request:{messages,director,mode,evidence,method,skillIds,provider:connection.provider,model:connection.model_id,billingCurrency,maxPages:mode==="website"?3:undefined},profile_version:version,key_fingerprint:connection.fingerprint,estimated_fen:estimatedPlatformMinor,expires_at:expiresAt}).select(fields).single();
   return result.error?reply({error:"QUOTE_SAVE_FAILED"},503):reply({task:result.data,billing:"supplier_direct",billingCurrency,connection:{provider:connection.provider,model:connection.model_id}},201);
  }
@@ -74,7 +75,8 @@ export async function POST(request:NextRequest){
  const claimed=await db.from("sasi_byok_text_tasks").update({state:"running",updated_at:new Date().toISOString()}).eq("id",task.id).eq("user_id",user.id).eq("state","quoted").select("id").maybeSingle();
  if(claimed.error||!claimed.data)return reply({error:"ALREADY_STARTED_OR_UNAVAILABLE"},409);
  try{
-  const output=await runUserText({userId:user.id,messages:task.request.messages,preferredProvider:taskProvider,connection:taskConnection,billingCurrency:quotedCurrency,maxOutputTokens:task.request.mode==="website"?4096:2048,taskId:task.id,additionalCharge:task.request.mode==="website"?{maximumMinor:websiteChargeMinor(maxPages,quotedCurrency),actualMinor:answer=>websiteChargeMinor(validateWebsiteArtifact(JSON.parse(answer.replace(/^```(?:json)?\s*|\s*```$/g,""))).pageCount,quotedCurrency),kind:"website"}:undefined,validateAnswer:task.request.mode==="website"?answer=>{const artifact=validateWebsiteArtifact(JSON.parse(answer.replace(/^```(?:json)?\s*|\s*```$/g,"")));if(artifact.pageCount>maxPages)throw new Error("WEBSITE_QUOTED_PAGE_LIMIT")}:undefined});
+  const output=await runUserText({userId:user.id,messages:task.request.messages,preferredProvider:taskProvider,connection:taskConnection,billingCurrency:quotedCurrency,maxOutputTokens:task.request.mode==="website"||task.request.mode==="video-plan"?4096:2048,taskId:task.id,additionalCharge:task.request.mode==="website"?{maximumMinor:websiteChargeMinor(maxPages,quotedCurrency),actualMinor:answer=>websiteChargeMinor(validateWebsiteArtifact(JSON.parse(answer.replace(/^```(?:json)?\s*|\s*```$/g,""))).pageCount,quotedCurrency),kind:"website"}:undefined,validateAnswer:task.request.mode==="video-plan"?answer=>{parseAutomaticVideoPlan(answer,String(task.request.messages.at(-1)?.content||""))}:task.request.mode==="website"?answer=>{const artifact=validateWebsiteArtifact(JSON.parse(answer.replace(/^```(?:json)?\s*|\s*```$/g,"")));if(artifact.pageCount>maxPages)throw new Error("WEBSITE_QUOTED_PAGE_LIMIT")}:undefined});
+  if(task.request.mode==="video-plan")Object.assign(output,{videoPlan:parseAutomaticVideoPlan(output.answer,String(task.request.messages.at(-1)?.content||""))});
   if(task.request.mode==="website"){
    try{const artifact=validateWebsiteArtifact(JSON.parse(output.answer.replace(/^```(?:json)?\s*|\s*```$/g,"")));const currency=quotedCurrency;const chargedMinor=websiteChargeMinor(artifact.pageCount,currency);Object.assign(output,{website:artifact,websiteBilling:{currency,chargedMinor,pricingVersion:"2026-10-02-v49",alreadyCharged:output.billing.alreadyCharged}});}
    catch(error){if(error instanceof Error&&/^SASI_/.test(error.message))throw error;Object.assign(output,{answer:"生成结果未通过网站完整性检查。请调整需求后重新生成；系统不会自动重试。",validationFailed:true});}

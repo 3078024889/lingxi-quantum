@@ -11,9 +11,12 @@ import type {SasiMode} from "@/lib/sasi/core/session-contract";
 import SasiSkillPicker from "@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
 
+export type SasiEntryMode=SasiMode|"chat"|"image";
 type Row=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Row=>({zh,en,ja,ko,fr,de,es,pt,ar});
 const COPY={
+ image:L("生成图片","Create an image","画像を作る","이미지 만들기","Créer une image","Bild erstellen","Crear una imagen","Criar uma imagem","إنشاء صورة"),
+ chat:L("对话与写作","Chat & writing","対話・文章作成","대화 및 글쓰기","Discussion et rédaction","Chat und Schreiben","Conversar y escribir","Conversar e escrever","المحادثة والكتابة"),
  placeholder:L("告诉 SASI 你想做什么…","Tell SASI what you want to do…","SASIにやりたいことを伝えてください…","SASI에게 원하는 일을 말해 주세요…","Dites à SASI ce que vous voulez faire…","Sag SASI, was du machen möchtest…","Dile a SASI qué quieres hacer…","Diga ao SASI o que quer fazer…","أخبر SASI بما تريد إنجازه…"),
  add:L("添加","Add","追加","추가","Ajouter","Hinzufügen","Añadir","Adicionar","إضافة"),
  files:L("添加照片和文件","Add photos and files","写真やファイルを追加","사진 및 파일 추가","Ajouter des photos et fichiers","Fotos und Dateien hinzufügen","Añadir fotos y archivos","Adicionar fotos e ficheiros","إضافة صور وملفات"),
@@ -28,7 +31,8 @@ const COPY={
  selected:L("已选择","Selected","選択中","선택됨","Sélectionné","Ausgewählt","Seleccionado","Selecionado","تم الاختيار")
 } as const;
 
-const TASKS:Array<{id:SasiMode;key:"website"|"drama"|"book"|"learning"|"research"}>=[
+const TASKS:Array<{id:SasiEntryMode;key:"website"|"drama"|"book"|"learning"|"research"|"chat"|"image"}>=[
+ {id:"chat",key:"chat"},{id:"image",key:"image"},
  {id:"website",key:"website"},
  {id:"drama",key:"drama"},
  {id:"book",key:"book"},
@@ -36,11 +40,11 @@ const TASKS:Array<{id:SasiMode;key:"website"|"drama"|"book"|"learning"|"research
  {id:"research",key:"research"}
 ];
 
-export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:(mode:SasiMode,prompt:string,files:File[],skillIds:SasiSkillId[])=>void;initialPrompt?:string}){
+export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:(mode:SasiEntryMode,prompt:string,files:File[],skillIds:SasiSkillId[])=>void;initialPrompt?:string}){
  const{lang}=useLingxiLang();
  const t=(key:keyof typeof COPY)=>COPY[key][lang]||COPY[key].en;
  const[prompt,setPrompt]=useState(initialPrompt);
- const[selected,setSelected]=useState<SasiMode|null>(null);
+ const[selected,setSelected]=useState<SasiEntryMode|null>(null);
  const[files,setFiles]=useState<File[]>([]);
  const[selectedSkills,setSelectedSkills]=useState<SasiSkillId[]>([]);
  const[open,setOpen]=useState(false);
@@ -54,7 +58,7 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
  }
  function submit(){
   const text=prompt.trim();
-  const mode=selected||inferSasiMode(text);
+  const mode=selected||(/生成.*图|画一|draw|create.*image|generate.*image/i.test(text)?"image":inferSasiMode(text))||(files.length?"book":"chat");
   if((!text&&!files.length)||!mode){setNotice(t("unclear"));return}
   onStart(mode,text,files,selectedSkills);
  }
@@ -91,7 +95,7 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
         className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm hover:bg-[var(--lx-soft)]">
         <span>{t(item.key)}</span>{selected===item.id?<span className="text-xs text-[var(--lx-muted)]">{t("selected")}</span>:null}
        </button>)}
-       {selected&&<SasiSkillPicker mode={selected} selected={selectedSkills} onChange={setSelectedSkills}/>}</div>
+       {selected&&selected!=="chat"&&selected!=="image"&&<SasiSkillPicker mode={selected} selected={selectedSkills} onChange={setSelectedSkills}/>}</div>
        <div className="mt-1 border-t border-[var(--lx-line)] pt-1">
         <Link href="/sasi/connections" className="block rounded-xl px-3 py-3 text-sm hover:bg-[var(--lx-soft)]">{t("connect")} <span className="float-right">↗</span></Link>
        </div>

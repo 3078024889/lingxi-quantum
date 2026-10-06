@@ -21,7 +21,7 @@ const copy:Record<LingxiLang,Copy>={
  zh:{
   kicker:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
   seoTitle:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-  seoDesc:"AI短剧生成、网站构建、书本问答、学习与科研。100+在线实用工具，97项免费：PDF合并、拆分、压缩，图片转换、文字识别，视频裁剪、音频提取、表格转换与隐私清理。",hero:"今天你要完成什么？",
+  seoDesc:"AI短剧生成、网站构建、书本问答、学习与科研。100+免费在线实用工具：PDF合并、拆分、压缩，图片转换、文字识别，视频裁剪、音频提取、表格转换与隐私清理。",hero:"今天你要完成什么？",
   lead:"",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",
   taskTitle:"你现在要完成什么？",taskLead:"不需要先理解平台。先解决眼前这件事。",start:"开始",
@@ -197,22 +197,13 @@ export default function HomeProblemHub(){
  function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
-   <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_.85fr]">
+   <div className="grid items-center gap-8 ">
     <div>
      <p className="lx-v37-brand-title">{BRAND_PUBLIC_COPY[lang].title}</p>
      <h1>{c.hero}</h1>
      <p className="lx-v37-brand-desc">{PUBLIC_FEATURE_COPY[lang].description}</p>
      <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
      {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
-    </div>
-    <div className="relative hidden min-h-[330px] lg:block" aria-hidden="true">
-     <div className="absolute inset-8 rounded-[42px] border border-violet-200/70 bg-gradient-to-br from-blue-50 via-white to-violet-100 shadow-[0_28px_80px_rgba(90,95,180,.16)]"/>
-     <div className="absolute left-[18%] top-[17%] rotate-[-7deg] rounded-2xl bg-rose-500 px-5 py-6 text-2xl font-bold text-white shadow-xl">PDF</div>
-     <div className="absolute right-[20%] top-[9%] rotate-[4deg] rounded-2xl bg-blue-500 px-5 py-6 text-2xl font-bold text-white shadow-xl">W</div>
-     <div className="absolute right-[9%] top-[43%] rotate-[8deg] rounded-2xl bg-emerald-500 px-5 py-6 text-2xl font-bold text-white shadow-xl">表</div>
-     <div className="absolute left-[12%] bottom-[18%] rotate-[5deg] rounded-2xl bg-indigo-500 px-5 py-5 text-xl font-bold text-white shadow-xl">▶</div>
-     <div className="absolute right-[28%] bottom-[11%] rotate-[-4deg] rounded-2xl bg-violet-500 px-5 py-5 text-xl font-bold text-white shadow-xl">AI</div>
-     <div className="absolute left-[36%] top-[40%] w-[38%] rounded-3xl border border-white/80 bg-white/85 p-5 shadow-xl backdrop-blur"><div className="mb-3 h-3 w-16 rounded bg-violet-200"/><div className="mb-2 h-2 rounded bg-slate-200"/><div className="h-2 w-2/3 rounded bg-slate-200"/></div>
     </div>
    </div>
   </section>

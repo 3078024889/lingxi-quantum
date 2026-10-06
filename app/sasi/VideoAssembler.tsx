@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
+import {probeVideo} from '@/lib/sasi/probe-video';
 import type {FFmpeg} from "@ffmpeg/ffmpeg";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {assemblerText} from "@/lib/sasi/assembler-i18n";
@@ -21,18 +22,14 @@ export default function VideoAssembler(){
   try{
    setMessage(t("loading"));
    const{FFmpeg}=await import("@ffmpeg/ffmpeg");if(cancel.current)throw new Error("CANCELLED");
-   const ffmpeg=new FFmpeg();engine.current=ffmpeg;let lastMediaLog="";
-   ffmpeg.on("log",({message})=>{lastMediaLog=message});
+   const ffmpeg=new FFmpeg();engine.current=ffmpeg;
    await ffmpeg.load({coreURL:"/media/ffmpeg-0.12.10/ffmpeg-core.js",wasmURL:"/media/ffmpeg-0.12.10/ffmpeg-core.wasm"});
    const[width,height]=ratio==="9:16"?[720,1280]:ratio==="1:1"?[720,720]:[1280,720];let totalDuration=0;
    for(let i=0;i<files.length;i++){
     if(cancel.current)throw new Error("CANCELLED");setMessage(t("processing",{i:i+1,n:files.length}));
     const source=`source-${i}`;await ffmpeg.writeFile(source,new Uint8Array(await files[i].arrayBuffer()));
-    const probeExit=await ffmpeg.ffprobe(["-v","error","-show_entries","stream=codec_type:format=duration","-of","json",source,"-o","probe.json"]);
-    if(probeExit!==0)throw new Error(lastMediaLog||t("invalidVideo"));
-    const probe=JSON.parse(String(await ffmpeg.readFile("probe.json","utf8")));const duration=Number(probe.format?.duration);
-    if(!probe.streams?.some((stream:{codec_type:string})=>stream.codec_type==="video")||!Number.isFinite(duration)||duration<=0||(totalDuration+=duration)>600)throw new Error(t("invalidVideo"));
-    const audio=probe.streams.some((stream:{codec_type:string})=>stream.codec_type==="audio");
+    let duration:number,audio:boolean;try{({duration,audio}=await probeVideo(ffmpeg,source))}catch{throw new Error(t("invalidVideo"))}
+    if((totalDuration+=duration)>600)throw new Error(t("invalidVideo"));
     const args=["-protocol_whitelist","file,pipe","-i",source,...(!audio?["-f","lavfi","-i","anullsrc=r=48000:cl=stereo"]:[]),"-map","0:v:0","-map",audio?"0:a:0":"1:a:0","-vf",`scale=${width}:${height}:force_original_aspect_ratio=decrease,pad=${width}:${height}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=24`,"-c:v","libx264","-preset","ultrafast","-crf","22","-pix_fmt","yuv420p","-c:a","aac","-ar","48000","-ac","2","-t",String(duration),"-shortest",`clip-${i}.mp4`];
     if(await ffmpeg.exec(args,180000)!==0)throw new Error(t("clipFailed"));await ffmpeg.deleteFile(source);
    }
