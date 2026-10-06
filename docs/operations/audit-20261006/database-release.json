@@ -184,6 +184,10 @@
     {
       "migration": "sasi_project_9lang_release_20261006",
       "source": "supabase/migrations/20260928195500_sasi_project_9lang.sql"
+    },
+    {
+      "migration": "tool_sasi_balance_checkout",
+      "source": "supabase/migrations/20261006180000_tool_sasi_balance_checkout.sql"
     }
   ],
   "quotaTest": {
@@ -210,5 +214,9 @@
   "connectionReadback": {
     "healthyConnections": 1,
     "scope": "Status metadata only; no API keys or user addresses read."
+  },
+  "toolBalanceCheckout": {
+    "passed": true,
+    "method": "Actual CNY/USD checkout RPC in a rolled-back transaction: ownership, replay, insufficient funds, expired quote, active external checkout and matching tool grants; anon/authenticated EXECUTE denied."
   }
 }

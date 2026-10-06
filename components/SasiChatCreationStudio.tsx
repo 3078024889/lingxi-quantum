@@ -370,7 +370,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
   setTimeout(()=>URL.revokeObjectURL(url),1000);
  }
   return <main data-sasi-composer-version="v5200" className={`${styles.workspace} min-h-[calc(100vh-152px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
-   <div className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4">
+   <div className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
     <section className="flex-1 pt-8 sm:pt-12">
      {prompt.trim()&&(busy||message||assistantText||resultUrl||websiteHtml)&&<SasiUserMessage className="mb-8">{prompt}</SasiUserMessage>}
 

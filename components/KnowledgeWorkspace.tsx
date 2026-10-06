@@ -401,7 +401,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     {value:"high",label:lang==="zh"?"深度研究":tr(lang,"high"),help:tr(lang,"highHelp")},
   ];
   const selectedTier=intelligenceLabels.find(row=>row.value===intelligence)!;
-  return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col px-2 pb-14 sm:px-4 lx-knowledge-workspace">
+  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14 lx-knowledge-workspace">
     <div className="flex-1 pt-8 sm:pt-12">
       <SasiConversationTurns turns={thread.length?thread:(answer?[{id:"current",user:question,assistant:answer,createdAt:""}]:[])}/>
 

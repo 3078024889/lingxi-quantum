@@ -2176,3 +2176,7 @@ body{font-size:16px;font-weight:500}
   color:#2563eb!important;
   caret-color:#2563eb!important;
 }
+
+/* Shared geometry for every SASI task. */
+.lx-sasi-layout{width:100%;max-width:1036px;margin-inline:auto;padding-inline:28px;min-width:0}
+@media(max-width:640px){.lx-sasi-layout{padding-inline:12px}}

@@ -64,7 +64,7 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
   onStart(mode,text,files,selectedSkills);
  }
 
- return <section className="mx-auto flex min-h-[calc(100vh-152px)] w-full max-w-4xl flex-col justify-center px-2 pb-14 sm:px-4">
+ return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col justify-center pb-14">
   <div><SasiWelcomeHeading/>
    <SasiComposerSurface dragging={dragging} className="relative" onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setDragging(false)}} onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files.length)addFiles(e.dataTransfer.files)}}>
     {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">

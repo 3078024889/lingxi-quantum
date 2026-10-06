@@ -1,0 +1,4 @@
+import type {LingxiLang} from '@/lib/lingxi-i18n';
+const label:Record<LingxiLang,string>={zh:'余额支付',en:'Pay with balance',ja:'残高で支払う',ko:'잔액으로 결제',fr:'Payer avec le solde',de:'Mit Guthaben bezahlen',es:'Pagar con saldo',pt:'Pagar com saldo',ar:'الدفع بالرصيد'};
+const insufficient:Record<LingxiLang,string>={zh:'余额不足，请充值或选择其他支付方式。',en:'Insufficient balance. Top up or choose another payment method.',ja:'残高が不足しています。チャージするか、別の支払い方法を選んでください。',ko:'잔액이 부족합니다. 충전하거나 다른 결제 방법을 선택하세요.',fr:'Solde insuffisant. Rechargez ou choisissez un autre moyen de paiement.',de:'Guthaben reicht nicht aus. Lade auf oder wähle eine andere Zahlungsmethode.',es:'Saldo insuficiente. Recarga o elige otro método de pago.',pt:'Saldo insuficiente. Recarregue ou escolha outra forma de pagamento.',ar:'الرصيد غير كافٍ. اشحنه أو اختر وسيلة دفع أخرى.'};
+export function toolBalanceText(lang:LingxiLang,key:'label'|'insufficient'){return (key==='label'?label:insufficient)[lang]}

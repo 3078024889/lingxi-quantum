@@ -61,8 +61,8 @@ jobs:
       - name: Production build
         run: pnpm build
 
-      - name: Install Chromium runtime
-        run: pnpm exec playwright install --with-deps chromium
+      - name: Install Chrome media runtime
+        run: pnpm exec playwright install --with-deps chrome
 
       - name: Desktop closure
         run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1

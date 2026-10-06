@@ -1,4 +1,5 @@
 "use client";
+import {toolBalanceText} from '@/lib/tools/commerce/balance-copy';
 import {quoteDisplay} from "@/lib/tools/commerce/quote-display";
 import NextImage from "next/image";
 import {Suspense,useEffect,useRef,useState} from "react";
@@ -9,7 +10,7 @@ import {accountText} from "@/lib/account-experience-i18n";
 import {foodBillingText} from '@/lib/tools/food/billing-copy';
 
 type Quote={id:string;tool_id?:string;metadata?:{foodRequestId?:string};quantity:number;unit_name:string;display_currency:"CNY"|"USD";display_amount:number;currency:"CNY"|"USD";expires_at?:string};
-type Providers={wechat:boolean;alipay:boolean;paypal:boolean};type Provider=keyof Providers;
+type Providers={wechat:boolean;alipay:boolean;paypal:boolean};type Provider=keyof Providers|"balance";
 type CreatePaymentResponse={paid?:boolean;url?:string;codeUrl?:string;jsapi?:Record<string,unknown>;error?:string};
 type WeixinBridge={invoke:(name:string,payload:Record<string,unknown>,cb:(res:{err_msg?:string})=>void)=>void};
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -36,15 +37,15 @@ function Inner(){
  function invoke(jsapi:Record<string,unknown>){const bridge=(window as Window&{WeixinJSBridge?:WeixinBridge}).WeixinJSBridge;const run=()=>{const current=(window as Window&{WeixinJSBridge?:WeixinBridge}).WeixinJSBridge;if(!current){setErr("WECHAT_BRIDGE_UNAVAILABLE");return}current.invoke("getBrandWCPayRequest",jsapi,res=>{if(res.err_msg==="get_brand_wcpay_request:ok")void refresh();else setErr(res.err_msg||"PAYMENT_NOT_COMPLETED")})};if(!bridge)document.addEventListener("WeixinJSBridgeReady",run,{once:true});else run()}
 
  async function pay(provider:Provider){
-  if(!valid||!q||!providers[provider]||busy)return;
-  if(q.currency==="USD"&&provider!=="paypal")return;
+  if(!valid||!q||(provider!=="balance"&&!providers[provider])||busy)return;
+  if(q.currency==="USD"&&provider!=="paypal"&&provider!=="balance")return;
   if(q.currency==="CNY"&&provider==="paypal")return;
   setBusy(true);setErr("");
   try{
    if(provider==="wechat"&&isWechat&&!code){const u=new URL(window.location.href);u.protocol="https:";u.hostname="lingxifield.cn";u.port="";const r=await fetch(`/api/pay/wechat/oauth-url?redirectUri=${encodeURIComponent(u.toString())}`),d=await r.json().catch(()=>({})) as{url?:string;error?:string};if(!r.ok||!d.url)throw new Error(d.error||"WECHAT_OAUTH_FAILED");window.location.href=d.url;return}
    const r=await fetch("/api/tools/pay/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteId,provider,code,state})});
    const d=await r.json().catch(()=>({})) as CreatePaymentResponse;
-   if(!r.ok)throw new Error(d.error||"PAYMENT_INIT_FAILED");
+   if(!r.ok)throw new Error(d.error==="SASI_BALANCE_INSUFFICIENT"?toolBalanceText(lang,"insufficient"):d.error||"PAYMENT_INIT_FAILED");
    if(d.paid){setPaid(true);return}
    if(d.url){window.location.href=d.url;return}
    if(d.codeUrl){setQr(await QRCode.toDataURL(d.codeUrl,{width:256,margin:1,errorCorrectionLevel:"M"}));return}
@@ -63,6 +64,7 @@ function Inner(){
    <div className="text-sm text-[var(--lx-muted)]">{t("actualQty")}：{q.quantity} {q.tool_id==='food-calorie'?foodBillingText(lang,q.unit_name==='food'?'foodUnit':'imageUnit'):q.unit_name}</div>
    <div className="mt-3 text-3xl font-semibold">{amount(q)}</div>
    <div className="mt-2 text-xs text-[var(--lx-faint)]">{zh?"支付币种":"Payment currency"} · {q.currency}</div>
+   <button disabled={busy} onClick={()=>void pay("balance")} className="mt-6 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{toolBalanceText(lang,"label")}</b></button>
    {q.currency==="CNY"?<div className="mt-6 grid gap-3 sm:grid-cols-2">
     <button disabled={busy||!providers.wechat} onClick={()=>void pay("wechat")} className="rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{t("wechat")}</b></button>
     <button disabled={busy||!providers.alipay} onClick={()=>void pay("alipay")} className="rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{t("alipay")}</b></button>

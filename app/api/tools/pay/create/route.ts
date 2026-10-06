@@ -23,7 +23,7 @@ export async function POST(req:NextRequest){
   if(!user)return NextResponse.json({error:"请先登录"},{status:401});
   const body=await req.json().catch(()=>({}));const quoteId=String(body.quoteId||""),p=String(body.provider||""),code=typeof body.code==="string"?body.code:undefined,state=typeof body.state==="string"?body.state:undefined;
   if(!UUID.test(quoteId))return NextResponse.json({error:"INVALID_QUOTE_ID"},{status:400});
-  if(!["wechat","alipay","paypal"].includes(p))return NextResponse.json({error:"支付方式无效"},{status:400});
+  if(!["wechat","alipay","paypal","balance"].includes(p))return NextResponse.json({error:"支付方式无效"},{status:400});
   admin=createAdminClient();
   const limited=await admin.rpc("rate_limit_check",{p_key:`tool-pay-create:${user.id}`,p_limit:120,p_window_seconds:3600});
   if(limited.error)return NextResponse.json({error:"PAYMENT_RATE_GUARD_UNAVAILABLE"},{status:503});
@@ -36,6 +36,13 @@ export async function POST(req:NextRequest){
   if(!toolRuntimeState(String(quote.tool_id||"")).ready)return NextResponse.json({error:"TOOL_RUNTIME_UNAVAILABLE"},{status:503});
   const currency=parseCurrency(quote.currency)||parseCurrency(quote.metadata?.pricing_currency);
   if(!currency)return NextResponse.json({error:"QUOTE_CURRENCY_MISSING"},{status:409});
+  if(p==="balance"){
+   const result=await admin.rpc("pay_tool_quote_with_sasi_balance",{p_user_id:user.id,p_quote_id:quote.id});
+   if(result.error){console.error("[tool balance checkout]",result.error.code);return NextResponse.json({error:"BALANCE_PAYMENT_UNAVAILABLE"},{status:503});}
+   const paid=result.data as {ok?:boolean;error?:string};
+   if(!paid?.ok)return NextResponse.json(paid||{error:"BALANCE_PAYMENT_UNAVAILABLE"},{status:paid?.error==="SASI_BALANCE_INSUFFICIENT"?402:409});
+   return NextResponse.json(paid,{headers:{"Cache-Control":"private, no-store"}});
+  }
   if(!providerAllowedForCurrency(p,currency))return NextResponse.json({error:"PAYMENT_METHOD_NOT_AVAILABLE_FOR_REGION"},{status:403});
 
   // Complete every provider/OAuth precondition before creating a local order.
