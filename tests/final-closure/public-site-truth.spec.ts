@@ -67,7 +67,7 @@ test('language URL overrides saved preference and blocked storage does not break
 
 test('homepage exposes structured site and application identity',async({page})=>{
  await page.goto('/');
- const json=await page.locator('script[type="application/ld+json"]').first().textContent();
+ const json=(await page.locator('script[type="application/ld+json"]').allTextContents()).join('\n');
  expect(json).toContain('灵犀场 LINGXIFIELD');
  expect(json).toContain('SoftwareApplication');
  expect(json).toContain('100+免费在线实用工具');
