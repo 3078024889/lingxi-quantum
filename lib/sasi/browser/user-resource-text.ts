@@ -3,7 +3,7 @@
 type PuterResponse={message?:{content?:unknown};toString?:()=>string};
 type PuterGlobal={
  auth:{isSignedIn:()=>boolean;signIn:()=>Promise<unknown>;signOut?:()=>void};
- ai:{chat:(prompt:string,options?:{model?:string})=>Promise<PuterResponse|unknown>};
+ ai:{chat:(prompt:string,options?:{model?:string;stream?:boolean})=>Promise<PuterResponse|AsyncIterable<unknown>|unknown>};
 };
 
 declare global{interface Window{puter?:PuterGlobal}}
@@ -60,6 +60,27 @@ export async function connectUserResource():Promise<UserResourceState>{
 export function disconnectUserResource(){
  setEnabled(false);
  try{current()?.auth.signOut?.()}catch{}
+}
+
+export async function streamUserResourceText(input:{prompt:string;context?:string;onDelta:(delta:string)=>void}):Promise<{kind:"answer";answer:string}|{kind:"skip"}>{
+ if(!enabled())return{kind:"skip"};
+ try{
+  const p=await loadScript();if(!p.auth.isSignedIn())return{kind:"skip"};
+  const prompt=[input.context?.trim(),input.prompt.trim()].filter(Boolean).join("\n\n");
+  if(!prompt)return{kind:"skip"};
+  const response=await p.ai.chat(prompt,{model:"openai/gpt-5.4-nano",stream:true});
+  if(response&&typeof (response as AsyncIterable<unknown>)[Symbol.asyncIterator]==="function"){
+   let answer="";
+   for await(const part of response as AsyncIterable<any>){
+    const delta=typeof part?.text==="string"?part.text:typeof part?.delta==="string"?part.delta:"";
+    if(delta){answer+=delta;input.onDelta(delta)}
+   }
+   return answer.trim()?{kind:"answer",answer:answer.trim()}:{kind:"skip"};
+  }
+  const answer=textFromResponse(response);
+  if(answer){input.onDelta(answer);return{kind:"answer",answer}}
+  return{kind:"skip"};
+ }catch{return{kind:"skip"}}
 }
 
 export async function tryUserResourceText(input:{prompt:string;context?:string}):Promise<{kind:"answer";answer:string}|{kind:"skip"}>{
