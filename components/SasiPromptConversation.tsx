@@ -40,10 +40,10 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
     ]});
     if(local.kind==='answer'){setTurns(rows=>[...rows,{question,answer:local.answer}]);setPrompt('');return}
     const context=turns.length?turns.slice(-4).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-8000):'';
-    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:context?context+'\nUser: '+question:question,task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
-    if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setPrompt('');return}
     const userResource=await tryUserResourceText({prompt:question,context});
     if(userResource.kind==='answer'){setTurns(rows=>[...rows,{question,answer:userResource.answer}]);setPrompt('');return}
+    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:context?context+'\nUser: '+question:question,task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
+    if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setPrompt('');return}
    }
    if(task==='image'&&!rights){setNotice(ct('rightsRequired'));return}
    const response=await fetch('/api/sasi/byok/'+(task==='image'?'image':'text'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(confirm?{action:'confirm',taskId:quote?.id,acceptSupplierBilling:true}:task==='image'?{action:'quote',prompt:question,functions,rightsConfirmed:rights,aiLabelAcknowledged:rights}:{action:'quote',question,mode:'chat',functions,previousId:previous.current})});
