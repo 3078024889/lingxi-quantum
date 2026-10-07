@@ -31,11 +31,19 @@ test('wallet stays out of search and sitemap',async({page})=>{
  const sitemap=await page.request.get('/sitemap.xml');expect(sitemap.ok()).toBe(true);expect(await sitemap.text()).not.toContain('/sasi/pricing');
 });
 
-for(const [i,locale]of locales.entries())test('SASI input uses '+locale,async({page})=>{
- await page.goto('/sasi?mode=drama&lang='+locale);
- await expect(page.getByPlaceholder(ask[i],{exact:true})).toBeVisible();
- const toolbar=page.locator('[data-sasi-task-toolbar]');await expect(toolbar).toBeVisible();await expect(toolbar.getByRole('button')).toHaveCount(7);await expect(toolbar.locator('button[aria-pressed="true"]')).toHaveCount(1);await expect(toolbar.getByRole('link')).toBeVisible();
+for(const [i,locale]of locales.entries())test('SASI keeps one universal input '+locale,async({page})=>{
+ await page.goto('/sasi?lang='+locale);
+ const textarea=page.locator('main textarea').first();await expect(textarea).toBeVisible();
+ await expect(page.locator('[data-sasi-task-toolbar]')).toHaveCount(0);
+ await expect(page.locator('main')).not.toContainText(locale==='zh'?'生成视频':'__never__');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+test('legacy SASI task links remain compatible without restoring task tabs',async({page})=>{
+ await page.goto('/sasi?mode=drama&lang=zh');
+ await expect(page.locator('[data-sasi-task="drama"]')).toBeVisible();
+ await expect(page.locator('[data-sasi-task-toolbar]')).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'生成视频',exact:true})).toBeVisible();
 });
 
 const feedbackTitles=['告诉我们哪里没有按期待工作','Tell us what went wrong','困ったことを教えてください','어떤 문제가 있었나요?','Décrivez le problème rencontré','Was hat nicht funktioniert?','Cuéntanos qué ocurrió','Conte o que aconteceu','أخبرنا بما حدث'];
@@ -62,4 +70,14 @@ test('language URL overrides saved preference and blocked storage does not break
  await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{configurable:true,get(){throw new DOMException('Storage disabled','SecurityError')}}));
  await page.goto('/sasi?mode=drama&lang=fr');await expect(page.locator('html')).toHaveAttribute('lang','fr');await expect(page.locator('.lx11-lang-label').first()).toHaveText('Langue');await expect(page.locator('body')).not.toContainText('Application error');expect(errors).toEqual([]);
  await page.goto('/sasi?mode=drama&lang=__proto__');await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');await expect(page.getByPlaceholder('问问 SASI',{exact:true})).toBeVisible();expect(errors).toEqual([]);
+});
+
+
+test('homepage exposes structured site and application identity',async({page})=>{
+ await page.goto('/');
+ const json=(await page.locator('script[type="application/ld+json"]').allTextContents()).join('\n');
+ expect(json).toContain('灵犀场 LINGXIFIELD');
+ expect(json).toContain('SoftwareApplication');
+ expect(json).toContain('100+免费在线实用工具');
+ expect(json).toContain('https://lingxifield.com/');
 });

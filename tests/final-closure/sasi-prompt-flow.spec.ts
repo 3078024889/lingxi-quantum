@@ -10,6 +10,46 @@ test('automatic planning rejects invalid duration and oversized episodes',()=>{
  expect(parseAutomaticVideoPlan(JSON.stringify({title:'20 episodes',shots:Array.from({length:20},(_,i)=>({...shot,episode:i+1}))})).shots).toHaveLength(20);
 });
 
+test('user can explicitly prepare on-device intelligence from the add menu',async({page})=>{
+ await page.addInitScript(()=>{
+  let ready=false;
+  Object.defineProperty(globalThis,'LanguageModel',{configurable:true,value:{
+   availability:async()=>ready?'available':'downloadable',
+   create:async(options:any)=>{
+    const listener={addEventListener:(name:string,cb:(event:{loaded:number})=>void)=>{if(name==='downloadprogress'){cb({loaded:.4});cb({loaded:1})}}};
+    options?.monitor?.(listener);ready=true;
+    return{prompt:async(input:string)=>'Local reply: '+input,destroy(){}};
+   }
+  }});
+ });
+ await page.route('**/api/sasi/experience/text',route=>route.fulfill({json:{state:'answer',answer:'Seed reply'}}));
+ await page.goto('/sasi?lang=en');
+ await page.getByPlaceholder('Tell SASI what you want to do…').fill('Hello SASI');
+ await page.getByPlaceholder('Tell SASI what you want to do…').press('Enter');
+ await expect(page.locator('[data-sasi-role="assistant"]')).toContainText('Seed reply');
+ await page.locator('button[aria-controls],button[aria-expanded]').filter({hasText:'＋'}).click();
+ await expect(page.getByText('Use on this device',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Enable',exact:true}).click();
+ await expect(page.getByText('Ready on this device',{exact:true})).toBeVisible();
+});
+
+test('ready browser intelligence answers ordinary chat before cloud pool',async({page})=>{
+ let requests=0;
+ await page.addInitScript(()=>{
+  localStorage.setItem('lx-sasi-local-text-enabled','1');
+  Object.defineProperty(globalThis,'LanguageModel',{configurable:true,value:{
+   availability:async()=> 'available',
+   create:async()=>({prompt:async(input:string)=>'Local reply: '+input,destroy(){}})
+  }});
+ });
+ await page.route('**/api/sasi/experience/text',route=>{requests++;return route.fulfill({json:{state:'answer',answer:'Cloud fallback'}})});
+ await page.goto('/sasi?mode=chat&lang=en');
+ await page.locator('textarea').fill('Hello SASI');
+ await page.locator('textarea').press('Enter');
+ await expect(page.locator('[data-sasi-role="assistant"]')).toContainText('Local reply: Hello SASI');
+ expect(requests).toBe(0);
+});
+
 test('one send from unified entry receives a configured response (mock service)',async({page})=>{
  let requests=0;
  await page.route('**/api/sasi/experience/text',route=>{requests++;expect(route.request().postDataJSON().allowConnected).toBe(false);return route.fulfill({json:{state:'answer',answer:'A response from the configured service.'}})});
@@ -32,7 +72,7 @@ for(const merge of [false,true])test('short drama automatic '+(merge?'real MP4 c
   if(body.action==='confirm'){confirms++;finished=confirms===2;return route.fulfill({json:{state:'queued'}})}
   return route.fulfill({json:{state:finished?'succeeded':'running'}});
  });
- await page.goto('/sasi?mode=drama&lang=en');await page.locator('[data-sasi-task="drama"] input[type="checkbox"]').last().check();await page.locator('[data-sasi-task="drama"] textarea').fill('Make a two episode drama about a time traveler.');await page.locator('[data-sasi-task="drama"] textarea').press('Enter');
+ await page.goto('/sasi?lang=en');await page.getByPlaceholder('Tell SASI what you want to do…').fill('Make a two episode drama about a time traveler.');await page.getByPlaceholder('Tell SASI what you want to do…').press('Enter');await expect(page.locator('[data-sasi-task="drama"]')).toBeVisible();await page.locator('[data-sasi-task="drama"] input[type="checkbox"]').last().check();await page.locator('[data-sasi-task="drama"] textarea').press('Enter');
  await expect(page.getByRole('button',{name:/Confirm \$0.40/})).toBeVisible();expect(confirms).toBe(0);
  await expect(page.locator('a[href^="/sasi/series"]')).toHaveCount(0);await expect(page.locator('a[href="/sasi/assemble"]')).toHaveCount(0);
  await page.getByRole('button',{name:/Confirm \$0.40/}).click();await expect(page.locator('[data-sasi-result-kind="video"]')).toHaveCount(merge?1:2,{timeout:150000});if(merge){const video=page.locator('video');await expect(video).toHaveAttribute('src',/^blob:/);await expect.poll(()=>video.evaluate((el:HTMLVideoElement)=>el.duration),{timeout:10000}).toBeGreaterThan(0);}expect(confirms).toBe(2);

@@ -1,6 +1,7 @@
 "use client";
 import {BRAND_PUBLIC_COPY} from "@/lib/brand-public-copy";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
+import {FOOTER_CATALOG} from "@/lib/footer-catalog-copy";
 
 import {FormEvent,useMemo,useState} from "react";
 import Link from "next/link";
@@ -201,7 +202,13 @@ export default function HomeProblemHub(){
     <div>
      <p className="lx-v37-brand-title">{BRAND_PUBLIC_COPY[lang].title}</p>
      <h1>{c.hero}</h1>
-     <p className="lx-v37-brand-desc">{PUBLIC_FEATURE_COPY[lang].description}</p>
+     <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].headline}</strong></p>
+     <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].freeTools}</strong></p>
+     <div className="mt-3 grid gap-1 text-sm leading-6 text-[var(--lx-muted)]" data-home-tool-catalog>
+      {FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong className="text-[var(--lx-ink)]">{category.title}：</strong>{category.body}</p>)}
+     </div>
+     <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"短剧视频生成、网站构建、书本、学习、科研多模型创作；9国语言，支持 CNY/USD 与微信支付、支付宝、PayPal。":"SASI supports short-video creation, websites, books, study and research across nine languages, with CNY/USD payments."}</p>
+     <p className="mt-1 text-xs text-[var(--lx-muted)]">lingxifield.com · lingxifield.cn</p>
      <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
      {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
     </div>
