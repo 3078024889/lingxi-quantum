@@ -17,9 +17,16 @@ type LanguageModelApi={
  create:(options?:unknown)=>Promise<LanguageModelSession>;
 };
 
+const LOCAL_ENABLED_KEY="lx-sasi-local-text-enabled";
+
 const LANGUAGE:Record<LingxiLang,string>={
  zh:"zh",en:"en",ja:"ja",ko:"ko",fr:"fr",de:"de",es:"es",pt:"pt",ar:"ar"
 };
+
+function localEnabled(){
+ if(typeof window==="undefined")return false;
+ try{return localStorage.getItem(LOCAL_ENABLED_KEY)==="1"}catch{return false}
+}
 
 function api():LanguageModelApi|null{
  if(typeof window==="undefined")return null;
@@ -45,6 +52,7 @@ export async function tryBrowserLocalText(input:{
  signal?:AbortSignal;
 }):Promise<LocalOutcome>{
  const lm=api();
+ if(!localEnabled())return{kind:"skip",reason:"not-ready"};
  const last=[...input.messages].reverse().find(x=>x.role==="user");
  if(!lm?.availability||!lm?.create||!last||!browserLocalTextSuitable(last.content))return{kind:"skip",reason:"not-suitable"};
  const language=LANGUAGE[input.lang]||"en";
