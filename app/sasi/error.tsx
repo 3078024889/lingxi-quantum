@@ -1,6 +1,7 @@
 "use client";
 
 import {useEffect} from "react";
+import Link from "next/link";
 
 export default function SasiError({error,reset}:{error:Error&{digest?:string};reset:()=>void}){
  useEffect(()=>{console.error("SASI_CLIENT_RECOVERY",error)},[error]);
@@ -11,7 +12,7 @@ export default function SasiError({error,reset}:{error:Error&{digest?:string};re
     <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">你可以直接重新开始，当前页面不会执行任何付费操作。</p>
     <div className="mt-5 flex justify-center gap-3">
      <button type="button" onClick={reset} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">重试</button>
-     <a href="/sasi" className="rounded-full bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">重新开始</a>
+     <Link href="/sasi" className="rounded-full bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">重新开始</Link>
     </div>
    </div>
   </div>
