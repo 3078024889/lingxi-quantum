@@ -1,6 +1,6 @@
 import type {LingxiLang} from './lingxi-i18n';
 export const PUBLIC_SEARCH_TITLES:Record<LingxiLang,string>={
- zh:'AI短剧生成、网站构建、100+免费在线实用工具｜灵犀场 LINGXIFIELD',
+ zh:'灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台｜100+免费在线实用工具',
  en:'AI Short Dramas, Website Builder & 100+ Free Online Tools | LINGXIFIELD',
  ja:'AI短編ドラマ・サイト作成・100以上の無料オンラインツール｜LINGXIFIELD',
  ko:'AI 숏드라마·웹사이트 제작·100개 이상의 무료 온라인 도구 | LINGXIFIELD',
