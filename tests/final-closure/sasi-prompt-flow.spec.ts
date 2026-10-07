@@ -10,6 +10,22 @@ test('automatic planning rejects invalid duration and oversized episodes',()=>{
  expect(parseAutomaticVideoPlan(JSON.stringify({title:'20 episodes',shots:Array.from({length:20},(_,i)=>({...shot,episode:i+1}))})).shots).toHaveLength(20);
 });
 
+test('ready browser intelligence answers ordinary chat before cloud pool',async({page})=>{
+ let requests=0;
+ await page.addInitScript(()=>{
+  Object.defineProperty(globalThis,'LanguageModel',{configurable:true,value:{
+   availability:async()=> 'available',
+   create:async()=>({prompt:async(input:string)=>'Local reply: '+input,destroy(){}})
+  }});
+ });
+ await page.route('**/api/sasi/experience/text',route=>{requests++;return route.fulfill({json:{state:'answer',answer:'Cloud fallback'}})});
+ await page.goto('/sasi?mode=chat&lang=en');
+ await page.locator('textarea').fill('Hello SASI');
+ await page.locator('textarea').press('Enter');
+ await expect(page.locator('[data-sasi-role="assistant"]')).toContainText('Local reply: Hello SASI');
+ expect(requests).toBe(0);
+});
+
 test('one send from unified entry receives a configured response (mock service)',async({page})=>{
  let requests=0;
  await page.route('**/api/sasi/experience/text',route=>{requests++;expect(route.request().postDataJSON().allowConnected).toBe(false);return route.fulfill({json:{state:'answer',answer:'A response from the configured service.'}})});

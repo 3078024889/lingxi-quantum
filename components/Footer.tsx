@@ -1,5 +1,4 @@
 "use client";
-import {FOOTER_CATALOG} from "@/lib/footer-catalog-copy";
 import {BRAND_PUBLIC_COPY} from "@/lib/brand-public-copy";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import Image from"next/image";
@@ -29,7 +28,6 @@ export default function Footer(){
  <section className="lx11-footer-brand"><div className="lx11-footer-logo"><Image src="/images/lingxifield-logo.png" alt="" width={40} height={40}/><div><b>{BRAND_PUBLIC_COPY[lang].title}</b></div></div>
  <p className="lx11-footer-brand-lead"><b>{PUBLIC_FEATURE_COPY[lang].headline}</b></p>
  <p>{PUBLIC_FEATURE_COPY[lang].freeTools}</p>
- <div className="lx-footer-catalog">{FOOTER_CATALOG[lang].map(category=><p key={category.title} data-footer-category><strong>{category.title}：</strong>{category.body}</p>)}</div>
  <div className="lx11-footer-capability"><p>{c.sasiBody}</p></div>
  <span>lingxifield.com · lingxifield.cn</span><span style={{opacity:.58,fontSize:12}}>v{LINGXIFIELD_RELEASE.website} · <Link href="/release">{c.release}</Link></span></section>
  <nav><b>{t("start")}</b><Link href="/products">{productCatalogText(lang,"title")}</Link><Link href="/tools">{t("tools")}</Link><Link href="/sasi">{t("studio")}</Link><Link href="/ai-knowledge">{t("books")}</Link><Link href="/ai-learning">{t("learning")}</Link><Link href="/ai-research">{t("research")}</Link><Link href="/ai-wallet">{t("wallet")}</Link></nav>

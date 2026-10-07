@@ -14,6 +14,7 @@ import {SERVICE_REQUIRED} from '@/lib/sasi/research-ui-copy';
 import {SasiComposerSurface,SasiComposerTextarea,SasiUserMessage} from './SasiComposerCore';
 import {SasiAssistantText,SasiStatusLine} from './SasiResultCore';
 import SasiFunctionMenu from './SasiFunctionMenu';
+import {tryBrowserLocalText} from '@/lib/sasi/browser/local-text';
 
 export default function SasiPromptConversation({task,initialPrompt='',autoStart=false,onFiles,onTask}:{task:'chat'|'image';initialPrompt?:string;autoStart?:boolean;onFiles:(files:File[],prompt:string)=>void;onTask:(task:SasiEntryMode,prompt:string)=>void}){
  const {lang}=useLingxiLang(),ct=(key:Parameters<typeof composerText>[1])=>composerText(lang,key);
@@ -30,6 +31,11 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   const question=confirm?quote?.question||'':prompt.trim();
   try{
    if(task==='chat'&&!confirm){
+    const local=await tryBrowserLocalText({lang,messages:[
+     ...turns.slice(-4).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
+     {role:'user',content:question}
+    ]});
+    if(local.kind==='answer'){setTurns(rows=>[...rows,{question,answer:local.answer}]);setPrompt('');return}
     const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:turns.length?turns.slice(-4).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-8000)+'\nUser: '+question:question,task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
     if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setPrompt('');return}
    }
