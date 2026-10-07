@@ -1,9 +1,8 @@
 "use client";
-import {inferSasiMode} from '@/lib/sasi/core/intent-router';
+import {inferUnifiedSasiIntent} from '@/lib/sasi/core/unified-intent';
 import type {SasiEntryMode} from './SasiUnifiedLauncher';
 import Link from 'next/link';
 import {functionMenuText} from '@/lib/sasi/function-menu-i18n';
-import SasiTaskToolbar from './SasiTaskToolbar';
 import {EXPERIENCE_USED} from '@/lib/sasi/experience-status-copy';
 import {SUPPLIER_BILLING_COPY} from "@/lib/sasi/prompt-flow-copy";
 import {useEffect,useRef,useState} from 'react';
@@ -29,7 +28,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const lock=useRef(false),input=useRef<HTMLInputElement>(null),previous=useRef<string|undefined>(undefined);
  async function send(confirm=false){
   if(lock.current||(!confirm&&!prompt.trim()))return;
-  if(task==='chat'&&!confirm){const text=prompt.trim(),intent=/生成.*图|画一|draw|create.*image|generate.*image/i.test(text)?'image':inferSasiMode(text);if(intent==='website'||intent==='drama'||intent==='image'){onTask(intent,text);return}}
+  if(!confirm){const text=prompt.trim(),intent=inferUnifiedSasiIntent(text,false);if(intent!==task&&intent!=='chat'){onTask(intent,text);return}if(task==='image'&&intent==='chat'){onTask('chat',text);return}}
   lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
   try{
@@ -60,7 +59,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<div className="grid gap-3"><SasiLocalIntelligenceAction/><SasiUserResourceAction/></div>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}
    <button aria-label={sasiCommonText(lang,'ask')} disabled={busy||!prompt.trim()} onClick={()=>void send()} className="ml-auto grid h-9 w-9 place-items-center rounded-full bg-[var(--lx-ink)] text-[var(--lx-bg)] disabled:opacity-30">{busy?'…':'↑'}</button></div>
-   <SasiTaskToolbar disabled={busy}/>
+
    {task==='image'&&<label className="flex gap-2 px-3 pt-2 text-xs text-[var(--lx-muted)]"><input type="checkbox" checked={rights} disabled={busy} onChange={e=>{setRights(e.target.checked);setQuote(null)}}/>{ct('rightsConsent')}</label>}{quote&&<p className="px-3 pt-2 text-xs text-[var(--lx-muted)]">{SUPPLIER_BILLING_COPY[lang]}</p>}<SasiStatusLine>{notice}</SasiStatusLine>{needsConnection&&<Link href="/sasi/connections" className="inline-block px-3 py-2 text-sm text-blue-600">{functionMenuText(lang,"connect")} →</Link>}
   </SasiComposerSurface>
  </section>;
