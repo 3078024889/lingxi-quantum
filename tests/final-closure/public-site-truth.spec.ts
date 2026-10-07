@@ -63,3 +63,13 @@ test('language URL overrides saved preference and blocked storage does not break
  await page.goto('/sasi?mode=drama&lang=fr');await expect(page.locator('html')).toHaveAttribute('lang','fr');await expect(page.locator('.lx11-lang-label').first()).toHaveText('Langue');await expect(page.locator('body')).not.toContainText('Application error');expect(errors).toEqual([]);
  await page.goto('/sasi?mode=drama&lang=__proto__');await expect(page.locator('html')).toHaveAttribute('lang','zh-CN');await expect(page.getByPlaceholder('问问 SASI',{exact:true})).toBeVisible();expect(errors).toEqual([]);
 });
+
+
+test('homepage exposes structured site and application identity',async({page})=>{
+ await page.goto('/');
+ const json=await page.locator('script[type="application/ld+json"]').first().textContent();
+ expect(json).toContain('灵犀场 LINGXIFIELD');
+ expect(json).toContain('SoftwareApplication');
+ expect(json).toContain('100+免费在线实用工具');
+ expect(json).toContain('https://lingxifield.com/');
+});
