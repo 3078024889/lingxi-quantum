@@ -24,7 +24,7 @@ import{SasiAssistantText,SasiStatusLine,SasiVideoResult,SasiWebsiteResult}from"@
 import{selectSasiSkills}from"@/lib/sasi/skills/router";
 import SasiSkillPicker from"@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
-import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
+import {inferExplicitUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
 import type {SasiEntryMode} from "@/components/SasiUnifiedLauncher";
 import type {WebsiteFile} from "@/lib/sasi/website-engine/artifact-bundle";
 import {SERVICE_REQUIRED} from "@/lib/sasi/research-ui-copy";
@@ -215,9 +215,8 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  useEffect(()=>{if(autoStart&&!began.current){began.current=true;void prepare()}},[autoStart]);
  async function prepare(){
   if(operation.current||(!prompt.trim()&&!files.length))return;
-  const nextIntent=inferUnifiedSasiIntent(prompt,files.length>0);
-  if(onRedirect&&nextIntent!==mode&&nextIntent!=='chat'){onRedirect(nextIntent,prompt);return}
-  if(onRedirect&&nextIntent==='chat'){onRedirect('chat',prompt);return}
+  const nextIntent=inferExplicitUnifiedSasiIntent(prompt);
+  if(onRedirect&&nextIntent&&nextIntent!==mode){onRedirect(nextIntent,prompt);return}
   operation.current=true;
   setBusy(true);setQuote(null);setAssistantText("");setFilms([]);setClips([]);setResultUrl("");setWebsiteHtml("");setWebsiteFiles([]);setMessage(ct("organizing"));
   try{
