@@ -15,6 +15,7 @@ import {SasiComposerSurface,SasiComposerTextarea,SasiUserMessage} from './SasiCo
 import {SasiAssistantText,SasiStatusLine} from './SasiResultCore';
 import SasiFunctionMenu from './SasiFunctionMenu';
 import {tryBrowserLocalText} from '@/lib/sasi/browser/local-text';
+import SasiLocalIntelligenceAction from './SasiLocalIntelligenceAction';
 
 export default function SasiPromptConversation({task,initialPrompt='',autoStart=false,onFiles,onTask}:{task:'chat'|'image';initialPrompt?:string;autoStart?:boolean;onFiles:(files:File[],prompt:string)=>void;onTask:(task:SasiEntryMode,prompt:string)=>void}){
  const {lang}=useLingxiLang(),ct=(key:Parameters<typeof composerText>[1])=>composerText(lang,key);
@@ -51,7 +52,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
   <div className="flex-1 pt-10">{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}</div>
   <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={busy} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
-   <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy}/>
+   <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<SasiLocalIntelligenceAction/>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}
    <button aria-label={sasiCommonText(lang,'ask')} disabled={busy||!prompt.trim()} onClick={()=>void send()} className="ml-auto grid h-9 w-9 place-items-center rounded-full bg-[var(--lx-ink)] text-[var(--lx-bg)] disabled:opacity-30">{busy?'…':'↑'}</button></div>
    <SasiTaskToolbar disabled={busy}/>
