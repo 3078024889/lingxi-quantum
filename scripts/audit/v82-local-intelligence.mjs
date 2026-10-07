@@ -33,6 +33,7 @@ must(userResource.includes("https://js.puter.com/v2/"),"V82_USER_RESOURCE_SCRIPT
 must(userResource.includes("localStorage.setItem"),"V82_USER_RESOURCE_OPTIN_PERSISTENCE_MISSING");
 must(userAction.includes("connectUserResource"),"V82_USER_RESOURCE_ACTION_MISSING");
 must(prompt.includes("tryUserResourceText"),"V82_USER_RESOURCE_FALLBACK_NOT_WIRED");
+must(prompt.indexOf("tryUserResourceText")<prompt.indexOf("fetch('/api/sasi/experience/text'"),"V82_USER_RESOURCE_MUST_PRECEDE_SHARED_POOL");
 
 console.log("V82_LOCAL_INTELLIGENCE_EXPLICIT_OPTIN=PASS");
 console.log("V82_LOCAL_INTELLIGENCE_NO_AUTO_DOWNLOAD=PASS");
