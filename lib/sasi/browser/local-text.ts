@@ -25,9 +25,20 @@ type LanguageModelApi={
  create:(options?:LanguageModelCreateOptions)=>Promise<LanguageModelSession>;
 };
 
+const LOCAL_ENABLED_KEY="lx-sasi-local-text-enabled";
+
 const LANGUAGE:Record<LingxiLang,string>={
  zh:"zh",en:"en",ja:"ja",ko:"ko",fr:"fr",de:"de",es:"es",pt:"pt",ar:"ar"
 };
+
+function localEnabled(){
+ if(typeof window==="undefined")return false;
+ try{return localStorage.getItem(LOCAL_ENABLED_KEY)==="1"}catch{return false}
+}
+function setLocalEnabled(value:boolean){
+ if(typeof window==="undefined")return;
+ try{value?localStorage.setItem(LOCAL_ENABLED_KEY,"1"):localStorage.removeItem(LOCAL_ENABLED_KEY)}catch{}
+}
 
 function api():LanguageModelApi|null{
  if(typeof window==="undefined")return null;
@@ -67,6 +78,7 @@ export async function prepareBrowserLocalText(lang:LingxiLang,onProgress?:(value
    monitor(m){m.addEventListener("downloadprogress",event=>onProgress?.(Math.max(0,Math.min(1,Number(event.loaded)||0))))}
   });
   session.destroy?.();
+  setLocalEnabled(true);
   return"ready";
  }catch{return"unsupported"}
 }
@@ -77,6 +89,7 @@ export async function tryBrowserLocalText(input:{
  signal?:AbortSignal;
 }):Promise<LocalOutcome>{
  const lm=api();
+ if(!localEnabled())return{kind:"skip",reason:"not-ready"};
  const last=[...input.messages].reverse().find(x=>x.role==="user");
  if(!lm?.availability||!lm?.create||!last||!browserLocalTextSuitable(last.content))return{kind:"skip",reason:"not-suitable"};
  const options=io(input.lang);
