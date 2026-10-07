@@ -5,10 +5,12 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {flushMoneyNotifications} from "@/lib/money/operator-notifications";
 import {reconcileWithdrawal} from "@/lib/money/reconcile-worker";
 export const dynamic="force-dynamic";export const maxDuration=90;
-export async function GET(){
+export async function GET(req:NextRequest){
  try{if(!await moneyAdministrator())return NextResponse.json({error:"FORBIDDEN"},{status:403});
- const admin=createAdminClient();const [stats,withdrawals,notices,settings]=await Promise.all([admin.rpc("money_operator_snapshot"),admin.from("balance_withdrawals").select("id,provider,currency,amount_minor,provider_currency,provider_amount_minor,status,failure_code,provider_refund_id,submission_confirmed_at,created_at,updated_at").order("updated_at",{ascending:false}).limit(100),admin.from("money_notification_outbox").select("id,event_type,status,attempt_count,last_error,created_at,sent_at").order("created_at",{ascending:false}).limit(30),moneyOperatorSettings()]);
- if(stats.error||withdrawals.error||notices.error)throw new Error();return NextResponse.json({stats:stats.data,withdrawals:withdrawals.data,notices:notices.data,notifyEmail:settings.notify_email,emailConfigured:Boolean(process.env.RESEND_API_KEY)},{headers:{"Cache-Control":"private, no-store"}});
+ const q=req.nextUrl.searchParams;
+ const page=(key:string)=>Math.max(0,Math.min(100000,Math.floor(Number(q.get(key))||0)));
+ const admin=createAdminClient();const [stats,withdrawals,notices,settings,dashboard]=await Promise.all([admin.rpc("money_operator_snapshot"),admin.from("balance_withdrawals").select("id,provider,currency,amount_minor,provider_currency,provider_amount_minor,status,failure_code,provider_refund_id,submission_confirmed_at,created_at,updated_at").order("updated_at",{ascending:false}).limit(100),admin.from("money_notification_outbox").select("id,event_type,status,attempt_count,last_error,created_at,sent_at").order("created_at",{ascending:false}).limit(30),moneyOperatorSettings(),admin.rpc("operator_dashboard_snapshot",{p_days:Math.max(1,Math.min(90,Math.floor(Number(q.get("days"))||30))),p_order_page:page("orderPage"),p_user_page:page("userPage"),p_search:(q.get("search")||"").slice(0,120),p_provider:["wechat","wechat_mini_virtual","alipay","paypal","sasi-balance"].includes(q.get("provider")||"")?q.get("provider"):"all",p_status:["paid","pending","refunded","failed","cancelled"].includes(q.get("status")||"")?q.get("status"):"all"})]);
+ if(stats.error||withdrawals.error||notices.error||dashboard.error)throw new Error();return NextResponse.json({stats:stats.data,withdrawals:withdrawals.data,notices:notices.data,dashboard:dashboard.data,notifyEmail:settings.notify_email,emailConfigured:Boolean(process.env.RESEND_API_KEY)},{headers:{"Cache-Control":"private, no-store"}});
  }catch{return NextResponse.json({error:"MONEY_ADMIN_UNAVAILABLE"},{status:503});}
 }
 export async function POST(req:NextRequest){

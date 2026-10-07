@@ -5,7 +5,8 @@ function compile(file,imports){const m={exports:{}};new Function('require','modu
  const admin={rpc:async()=>{claims++;return{data:[{id:'notice',withdrawal_id:'w',event_type:'PROVIDER_FUNDS_REQUIRED',attempt_count:1}]}},from(table){const q={select(){return q},eq(){return q},is(){return q},single:async()=>({data:table==='money_operator_settings'?{admin_emails:['business@lingxifield.com'],notify_email:'business@lingxifield.com'}:{id:'w',provider:'paypal',currency:'CNY',amount_minor:700,provider_currency:'USD',provider_amount_minor:100}}),update(x){updates.push(x);return q},then(r){return Promise.resolve({error:null}).then(r)}};return q}};
  const settings=compile('lib/money/operator-settings.ts',{'@/lib/supabase/admin':{createAdminClient:()=>admin},'@/lib/supabase/server':{createClient:()=>({auth:{getUser:async()=>({data:{user}})}})}});
  user={email:'outsider@example.invalid',user_metadata:{email:'business@lingxifield.com',role:'admin'}};assert.equal(await settings.moneyAdministrator(),null);
- user={email:'business@lingxifield.com'};assert.equal((await settings.moneyAdministrator()).email,user.email);
+ user={email:'business@lingxifield.com'};assert.equal(await settings.moneyAdministrator(),null);
+ user={email:'business@lingxifield.com',email_confirmed_at:'2026-10-01T00:00:00Z'};assert.equal((await settings.moneyAdministrator()).email,user.email);
  const notifications=compile('lib/money/operator-notifications.ts',{'next/server':{after(){}},'@/lib/supabase/admin':{createAdminClient:()=>admin},'./operator-settings':settings});
  const originalKey=process.env.RESEND_API_KEY,originalFetch=global.fetch;delete process.env.RESEND_API_KEY;
  try{

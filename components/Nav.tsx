@@ -123,7 +123,7 @@ export default function Nav() {
     const q = query.trim();
     if (!q) return;
     sessionStorage.setItem("lx-global-search", q);
-    router.push(isMoneyAdmin&&/资金看板|退款管理|提现管理|money admin|funds dashboard/i.test(q)?"/account/money-admin":`/tools?q=${encodeURIComponent(q)}`);
+    router.push(isMoneyAdmin&&/管理后台|资金看板|退款管理|提现管理|money admin|funds dashboard|admin dashboard/i.test(q)?"/account/money-admin":`/tools?q=${encodeURIComponent(q)}`);
   }
 
   async function signOut() {

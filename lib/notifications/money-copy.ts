@@ -1,7 +1,7 @@
 import type {LingxiLang} from '@/lib/lingxi-i18n';
 const langs=['zh','en','ja','ko','fr','de','es','pt','ar'];
 const rows:Record<string,string[]>={
-moneyAdmin:["资金看板","Funds management","資金管理","자금 관리","Gestion des fonds","Finanzverwaltung","Gestión de fondos","Gestão de fundos","إدارة الأموال"],
+moneyAdmin:["管理后台","Admin dashboard","管理画面","관리자 대시보드","Tableau de bord admin","Admin-Dashboard","Panel de administración","Painel administrativo","لوحة الإدارة"],
 waitingConfirm:["待确认退款","Awaiting confirmation","返金の確認待ち","환불 확인 대기","En attente de confirmation","Bestätigung ausstehend","Pendiente de confirmación","Aguardando confirmação","بانتظار التأكيد"],
 cancelWithdrawal:["取消提现","Cancel withdrawal","払い戻しを取り消す","인출 취소","Annuler le retrait","Auszahlung stornieren","Cancelar retiro","Cancelar saque","إلغاء السحب"],
 cancelRefund:["取消退款","Cancel refund","返金を取り消す","환불 취소","Annuler le remboursement","Erstattung stornieren","Cancelar reembolso","Cancelar reembolso","إلغاء الاسترداد"],
