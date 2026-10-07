@@ -31,10 +31,11 @@ test('wallet stays out of search and sitemap',async({page})=>{
  const sitemap=await page.request.get('/sitemap.xml');expect(sitemap.ok()).toBe(true);expect(await sitemap.text()).not.toContain('/sasi/pricing');
 });
 
-for(const [i,locale]of locales.entries())test('SASI input uses '+locale,async({page})=>{
+for(const [i,locale]of locales.entries())test('SASI keeps one universal input '+locale,async({page})=>{
  await page.goto('/sasi?mode=drama&lang='+locale);
- await expect(page.getByPlaceholder(ask[i],{exact:true})).toBeVisible();
- const toolbar=page.locator('[data-sasi-task-toolbar]');await expect(toolbar).toBeVisible();await expect(toolbar.getByRole('button')).toHaveCount(7);await expect(toolbar.locator('button[aria-pressed="true"]')).toHaveCount(1);await expect(toolbar.getByRole('link')).toHaveCount(0);
+ const textarea=page.locator('main textarea').first();await expect(textarea).toBeVisible();
+ await expect(page.locator('[data-sasi-task-toolbar]')).toHaveCount(0);
+ await expect(page.locator('main')).not.toContainText(locale==='zh'?'生成视频':'__never__');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
