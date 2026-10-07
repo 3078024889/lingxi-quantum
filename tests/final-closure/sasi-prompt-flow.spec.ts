@@ -10,6 +10,25 @@ test('automatic planning rejects invalid duration and oversized episodes',()=>{
  expect(parseAutomaticVideoPlan(JSON.stringify({title:'20 episodes',shots:Array.from({length:20},(_,i)=>({...shot,episode:i+1}))})).shots).toHaveLength(20);
 });
 
+test('user can explicitly prepare on-device intelligence from the add menu',async({page})=>{
+ await page.addInitScript(()=>{
+  let ready=false;
+  Object.defineProperty(globalThis,'LanguageModel',{configurable:true,value:{
+   availability:async()=>ready?'available':'downloadable',
+   create:async(options:any)=>{
+    const listener={addEventListener:(name:string,cb:(event:{loaded:number})=>void)=>{if(name==='downloadprogress'){cb({loaded:.4});cb({loaded:1})}}};
+    options?.monitor?.(listener);ready=true;
+    return{prompt:async(input:string)=>'Local reply: '+input,destroy(){}};
+   }
+  }});
+ });
+ await page.goto('/sasi?mode=chat&lang=en');
+ await page.locator('button[aria-controls],button[aria-expanded]').filter({hasText:'＋'}).click();
+ await expect(page.getByText('Use on this device',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Enable',exact:true}).click();
+ await expect(page.getByText('Ready on this device',{exact:true})).toBeVisible();
+});
+
 test('ready browser intelligence answers ordinary chat before cloud pool',async({page})=>{
  let requests=0;
  await page.addInitScript(()=>{
