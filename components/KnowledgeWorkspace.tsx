@@ -35,7 +35,7 @@ import{createSasiTurn,type SasiConversationTurn}from"@/lib/sasi/core/session-con
 import{selectSasiSkills}from"@/lib/sasi/skills/router";
 import SasiSkillPicker from"@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
-import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
+import {inferExplicitUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
 import type {SasiEntryMode} from "@/components/SasiUnifiedLauncher";
 async function zipText(file:File){
  const zip=await JSZip.loadAsync(file);
@@ -270,9 +270,8 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
   async function ask(){
     if(asking.current||askBusy||busy)return;
     const raw=question.trim();if(!raw)return;
-    const nextIntent=inferUnifiedSasiIntent(raw,sources.length>0);
-    if(onRedirect&&nextIntent!==mode&&nextIntent!=='chat'){onRedirect(nextIntent,raw);return}
-    if(onRedirect&&nextIntent==='chat'&&mode!=='book'){onRedirect('chat',raw);return}
+    const nextIntent=inferExplicitUnifiedSasiIntent(raw);
+    if(onRedirect&&nextIntent&&nextIntent!==mode){onRedirect(nextIntent,raw);return}
     setNeedsConnection(false);
 
     let onlineSources:KnowledgeSource[]=[];
