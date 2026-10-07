@@ -8,7 +8,12 @@ import {createAdminClient} from "@/lib/supabase/admin";
 export const runtime="nodejs";
 export async function POST(req:NextRequest){
  const host=req.nextUrl.hostname;
- if(!["lingxifield.com","lingxifield.cn"].includes(host)||!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403});
+ // Visit events must come from the exact receiving site, not merely another trusted brand domain.
+ // Browser requests carry Origin; cross-domain writes should never pollute per-host analytics.
+ const origin=req.headers.get("origin");
+ let originHost="";
+ try{if(origin){const parsed=new URL(origin);if(parsed.protocol==="https:"&&parsed.port==="")originHost=parsed.hostname.toLowerCase()}}catch{}
+ if(!["lingxifield.com","lingxifield.cn"].includes(host)||originHost!==host||!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403});
  if(req.headers.get("dnt")==="1"||req.headers.get("sec-gpc")==="1")return new NextResponse(null,{status:204});
  if(/bot|crawler|spider|headless/i.test(req.headers.get("user-agent")||""))return new NextResponse(null,{status:204});
  try{

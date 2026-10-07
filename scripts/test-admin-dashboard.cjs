@@ -10,6 +10,9 @@ function compile(file,imports){const m={exports:{}};new Function('require','modu
  assert.equal((await track.POST(req())).status,204);assert.equal(inserts.length,1);assert.equal(inserts[0].path,base.path);assert.match(inserts[0].session_hash,/^[0-9a-f]{64}$/);assert(!JSON.stringify(inserts[0]).includes(base.session));assert.deepEqual(Object.keys(inserts[0]).sort(),['device','host','id','path','referrer_host','session_hash']);
  for(const path of ['/account/money-admin','/sasi/connections','/sasi?prompt=secret','/tools/pay'])assert.equal((await track.POST(req({...base,path}))).status,400);
  assert.equal((await track.POST(req(base,{origin:'https://evil.example'}))).status,403);
+ assert.equal((await track.POST(req(base,{origin:'https://lingxifield.cn'}))).status,403);
+ assert.equal((await track.POST(req(base,{origin:'https://www.lingxifield.com'}))).status,403);
+ assert.equal((await track.POST(req(base,{origin:''}))).status,403);
  const before=guardCalls;for(const headers of [{dnt:'1'},{'sec-gpc':'1'},{'user-agent':'Googlebot'}])assert.equal((await track.POST(req(base,headers))).status,204);assert.equal(guardCalls,before);assert.equal(inserts.length,1);
  assert.equal((await track.POST(req({...base,extra:'x'.repeat(3000)}))).status,400);
  guardOk=false;assert.equal((await track.POST(req())).status,429);assert.equal(inserts.length,1);
