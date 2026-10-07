@@ -48,6 +48,6 @@ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])test('brand and
  const footer=page.locator('footer');await expect(footer).toContainText('SASI');await expect(footer.locator('details')).toHaveCount(0);await expect(footer.locator('[data-footer-category]')).toHaveCount(0);
  const catalog=page.locator('[data-home-tool-catalog]');await expect(catalog).toHaveCount(1);await expect(catalog).toBeVisible();await expect(catalog.locator('p')).toHaveCount(5);
  await expect(page.locator('[data-home-tool-directory] a')).toHaveCount(0);
- if(lang==='zh'){await expect(page.locator('.lx-v37-brand-desc')).toContainText('AI短剧生成、网站构建');await expect(page.locator('.lx-v37-brand-desc')).toContainText('100+免费在线实用工具');await expect(page.getByText('100+ 在线实用工具，一处处理文件；SASI 多模型创作，一处继续真正重要的工作。',{exact:true})).toHaveCount(0);}
+ if(lang==='zh'){const heroCopy=page.locator('.lx-v37-brand-desc');await expect(heroCopy).toHaveCount(2);await expect(heroCopy.first()).toContainText('AI短剧生成');await expect(heroCopy.first()).toContainText('网站构建');await expect(heroCopy.last()).toContainText('100+免费在线实用工具');await expect(page.getByText('100+ 在线实用工具，一处处理文件；SASI 多模型创作，一处继续真正重要的工作。',{exact:true})).toHaveCount(0);}
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
