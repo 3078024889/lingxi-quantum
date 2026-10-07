@@ -1,0 +1,13 @@
+import type {LingxiLang} from "@/lib/lingxi-i18n";
+type Copy={title:string;lead:string;connect:string;connected:string;disconnect:string;unavailable:string};
+export const SASI_USER_RESOURCE_COPY:Record<LingxiLang,Copy>={
+ zh:{title:"使用我的智能资源",lead:"连接后，需要更强能力时可以继续使用。资源由你的外部账户直接提供，不会从灵犀余额代扣。",connect:"连接并启用",connected:"已连接",disconnect:"断开",unavailable:"暂时无法连接"},
+ en:{title:"Use my intelligence resources",lead:"Connect once to continue when stronger intelligence is needed. Usage is provided by your external account and is not deducted from your LINGXIFIELD balance.",connect:"Connect and enable",connected:"Connected",disconnect:"Disconnect",unavailable:"Connection unavailable"},
+ ja:{title:"自分のスマートリソースを使う",lead:"接続すると、より強い処理が必要なときも続けられます。利用分は外部アカウントから直接提供され、LINGXIFIELD残高から差し引かれません。",connect:"接続して有効化",connected:"接続済み",disconnect:"切断",unavailable:"現在接続できません"},
+ ko:{title:"내 지능형 리소스 사용",lead:"연결하면 더 강한 처리가 필요할 때 계속 사용할 수 있습니다. 사용량은 외부 계정에서 직접 제공되며 LINGXIFIELD 잔액에서 차감되지 않습니다.",connect:"연결하고 사용",connected:"연결됨",disconnect:"연결 해제",unavailable:"현재 연결할 수 없음"},
+ fr:{title:"Utiliser mes ressources intelligentes",lead:"Après connexion, vous pouvez continuer lorsque davantage de puissance est nécessaire. L'utilisation provient directement de votre compte externe et n'est pas déduite de votre solde LINGXIFIELD.",connect:"Connecter et activer",connected:"Connecté",disconnect:"Déconnecter",unavailable:"Connexion indisponible"},
+ de:{title:"Meine intelligenten Ressourcen nutzen",lead:"Nach der Verbindung kannst du bei anspruchsvolleren Aufgaben weiterarbeiten. Die Nutzung läuft direkt über dein externes Konto und wird nicht vom LINGXIFIELD-Guthaben abgezogen.",connect:"Verbinden und aktivieren",connected:"Verbunden",disconnect:"Trennen",unavailable:"Verbindung nicht verfügbar"},
+ es:{title:"Usar mis recursos inteligentes",lead:"Después de conectar, puedes continuar cuando haga falta más capacidad. El uso lo proporciona directamente tu cuenta externa y no se descuenta del saldo de LINGXIFIELD.",connect:"Conectar y activar",connected:"Conectado",disconnect:"Desconectar",unavailable:"Conexión no disponible"},
+ pt:{title:"Usar meus recursos inteligentes",lead:"Depois de conectar, você pode continuar quando precisar de mais capacidade. O uso é fornecido diretamente pela sua conta externa e não é descontado do saldo LINGXIFIELD.",connect:"Conectar e ativar",connected:"Conectado",disconnect:"Desconectar",unavailable:"Conexão indisponível"},
+ ar:{title:"استخدام مواردي الذكية",lead:"بعد الاتصال يمكنك المتابعة عند الحاجة إلى قدرة أكبر. يأتي الاستخدام مباشرة من حسابك الخارجي ولا يُخصم من رصيد LINGXIFIELD.",connect:"اتصال وتفعيل",connected:"متصل",disconnect:"قطع الاتصال",unavailable:"الاتصال غير متاح"}
+};

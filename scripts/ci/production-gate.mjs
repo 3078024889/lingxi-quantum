@@ -35,6 +35,7 @@ const commands=[
  ["node",["scripts/audit/v45-paid-flow.mjs"]],
  ["node",["scripts/audit/v45r4-compat.mjs"]],
  ["node",["scripts/audit/v46-paid-task-core.mjs"]],
+ ["node",["scripts/audit/v83-sasi-durable-convergence.mjs"]],
  ["node",["scripts/ci/audit-manifest.mjs"]],
  ["node",["scripts/final-closure/audit.mjs"]],
  ["node",["scripts/final-closure/graduation.mjs"]],

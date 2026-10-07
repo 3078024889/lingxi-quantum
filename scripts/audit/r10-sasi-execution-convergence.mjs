@@ -13,7 +13,7 @@ must(home.includes('今天你要完成什么？'),'R10_HOME_HERO_MISSING');
 must(footer.includes('100+在线实用工具＋SASI创作'),'R10_FOOTER_BRAND_MISSING');
 must(footer.includes('骑缝章')&&footer.includes('视频配音')&&footer.includes('CSV/TSV转Excel'),'R10_FOOTER_CATALOG_INCOMPLETE');
 must(nav.includes('SASI全球多模型智能创作平台'),'R10_NAV_BRAND_MISSING');
-must(one.includes('SasiTaskNavigation')&&studio.includes('<SasiTaskToolbar')&&knowledge.includes('<SasiTaskToolbar'),'R13_TASK_NAVIGATION_MISSING');
+must(!one.includes('SasiTaskNavigation')&&!studio.includes('<SasiTaskToolbar')&&!knowledge.includes('<SasiTaskToolbar'),'R83_ONE_FRONT_DOOR_VIOLATION');
 must(one.includes('onSwitch={switchMode}'),'R10_MODE_SWITCH_NOT_WIRED');
 must(launcher.includes('onDrop=')&&launcher.includes('max-h-[min(72vh,620px)]'),'R10_LAUNCHER_FILE_DROP_OR_SCROLL_MISSING');
 must(launcher.includes('!e.nativeEvent.isComposing'),'R10_LAUNCHER_IME_GUARD_MISSING');
@@ -33,7 +33,7 @@ must(studio.includes('/api/sasi/experience/website'),'R10_FREE_WEBSITE_ROUTER_MI
 must(knowledge.includes('/api/sasi/research/search'),'R10_REAL_RESEARCH_MISSING');
 must(!r('components/Footer.tsx').includes('<details'),'R12_PUBLIC_TEXT_HIDDEN');
 must(studio.includes('/api/sasi/drama/plan')&&studio.includes('quote-series')&&studio.includes('assembleGeneratedVideo'),'R12_AUTOMATIC_FILM_NOT_WIRED');
-must(!r('app/page.tsx').includes('HomeToolDirectory')&&r('components/SasiTaskToolbar.tsx').includes('data-sasi-task-toolbar'),'R13_VISIBLE_ACTIONS_MISSING');
+must(!r('app/page.tsx').includes('HomeToolDirectory')&&!r('components/SasiTaskToolbar.tsx').includes('data-sasi-task-toolbar'),'R83_SINGLE_FRONT_DOOR_VISIBLE_ACTIONS');
 console.log('R10_BRAND_SURFACE=PASS');
 console.log('R10_ONE_SURFACE_SWITCHING=PASS');
 console.log('R10_ENTER_AND_FILE_INTAKE=PASS');
