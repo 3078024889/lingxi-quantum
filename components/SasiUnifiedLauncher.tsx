@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import SasiTaskToolbar,{SasiWelcomeHeading} from "./SasiTaskToolbar";
+import {SasiWelcomeHeading} from "./SasiTaskToolbar";
 import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 import {useRef,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {SasiComposerSurface,SasiComposerTextarea} from "@/components/SasiComposerCore";
 import {SASI_UNIFIED_ACCEPT} from "@/lib/sasi/composer-core";
-import {inferSasiMode} from "@/lib/sasi/core/intent-router";
+import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
 import type {SasiMode} from "@/lib/sasi/core/session-contract";
 import SasiSkillPicker from "@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
@@ -32,20 +32,11 @@ const COPY={
  selected:L("已选择","Selected","選択中","선택됨","Sélectionné","Ausgewählt","Seleccionado","Selecionado","تم الاختيار")
 } as const;
 
-const TASKS:Array<{id:SasiEntryMode;key:"website"|"drama"|"book"|"learning"|"research"|"chat"|"image"}>=[
- {id:"chat",key:"chat"},{id:"image",key:"image"},
- {id:"website",key:"website"},
- {id:"drama",key:"drama"},
- {id:"book",key:"book"},
- {id:"learning",key:"learning"},
- {id:"research",key:"research"}
-];
 
 export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:(mode:SasiEntryMode,prompt:string,files:File[],skillIds:SasiSkillId[])=>void;initialPrompt?:string}){
  const{lang}=useLingxiLang();
  const t=(key:keyof typeof COPY)=>COPY[key][lang]||COPY[key].en;
  const[prompt,setPrompt]=useState(initialPrompt);
- const[selected,setSelected]=useState<SasiEntryMode|null>(null);
  const[files,setFiles]=useState<File[]>([]);
  const[selectedSkills,setSelectedSkills]=useState<SasiSkillId[]>([]);
  const[open,setOpen]=useState(false);
@@ -59,8 +50,8 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
  }
  function submit(){
   const text=prompt.trim();
-  const mode=selected||(/生成.*图|画一|draw|create.*image|generate.*image/i.test(text)?"image":inferSasiMode(text))||(files.length?"book":"chat");
-  if((!text&&!files.length)||!mode){setNotice(t("unclear"));return}
+  if(!text&&!files.length){setNotice(t("unclear"));return}
+  const mode=inferUnifiedSasiIntent(text,files.length>0);
   onStart(mode,text,files,selectedSkills);
  }
 
@@ -79,7 +70,7 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
      onPaste={e=>{const pasted=Array.from(e.clipboardData.files||[]);if(pasted.length){e.preventDefault();addFiles(pasted)}}}
      onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();submit()}}}
      aria-label={t("placeholder")}
-     placeholder={t("placeholder")}
+     placeholder={lang==="zh"?"直接说你要的结果：构建网站、生成短剧/视频/图片、书本活化、研究资料、学习章节…":t("placeholder")}
      autoFocus
     />
     <div className="mt-1 flex items-center gap-2">
@@ -95,14 +86,10 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
        </div>
       </div>}
      </div>
-     {selected&&<button type="button" onClick={()=>setSelected(null)}
-      className="rounded-full border border-[var(--lx-line)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
-      {t(TASKS.find(x=>x.id===selected)?.key||"research")} ×
-     </button>}
      <button type="button" onClick={submit} aria-label={sasiCommonText(lang,"ask")} disabled={!prompt.trim()&&!files.length}
       className="ml-auto grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">↑</button>
     </div>
-    <SasiTaskToolbar current={selected} onSelect={mode=>{setSelected(mode);setSelectedSkills([]);setNotice("")}}/>
+
     {notice&&<p className="px-3 pt-2 text-xs leading-5 text-[var(--lx-muted)]">{notice}</p>}
    </SasiComposerSurface>
   </div>
