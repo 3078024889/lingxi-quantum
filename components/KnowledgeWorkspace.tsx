@@ -1,5 +1,4 @@
 "use client";
-import SasiTaskToolbar from "./SasiTaskToolbar";
 import {EXPERIENCE_USED} from "@/lib/sasi/experience-status-copy";
 import {knowledgeActionText as actionText} from "@/lib/sasi/knowledge-action-copy";
 
@@ -36,6 +35,8 @@ import{createSasiTurn,type SasiConversationTurn}from"@/lib/sasi/core/session-con
 import{selectSasiSkills}from"@/lib/sasi/skills/router";
 import SasiSkillPicker from"@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
+import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
+import type {SasiEntryMode} from "@/components/SasiUnifiedLauncher";
 async function zipText(file:File){
  const zip=await JSZip.loadAsync(file);
  const allowed=/\.(txt|md|json|csv|ya?ml|js|jsx|ts|tsx|css|html|sql|py)$/i;
@@ -148,7 +149,7 @@ async function pdfToSource(file: File, lang:LingxiLang): Promise<Pick<KnowledgeS
   return{text:pieces.join("\n\n"),locators};
 }
 
-export default function KnowledgeWorkspace({mode="book",initialPrompt="",initialFiles=[],initialSkillIds=[]}:{mode?:Mode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[]}){
+export default function KnowledgeWorkspace({mode="book",initialPrompt="",initialFiles=[],initialSkillIds=[],onRedirect}:{mode?:Mode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[];onRedirect?:(mode:SasiEntryMode,prompt:string)=>void}){
   const {lang}=useLingxiLang();
   const [sources,setSources]=useState<KnowledgeSource[]>([]);
   const [question,setQuestion]=useState(initialPrompt);const [useConnectedService,setUseConnectedService]=useState(false);
@@ -269,6 +270,9 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
   async function ask(){
     if(asking.current||askBusy||busy)return;
     const raw=question.trim();if(!raw)return;
+    const nextIntent=inferUnifiedSasiIntent(raw,sources.length>0);
+    if(onRedirect&&nextIntent!==mode&&nextIntent!=='chat'){onRedirect(nextIntent,raw);return}
+    if(onRedirect&&nextIntent==='chat'&&mode!=='book'){onRedirect('chat',raw);return}
     setNeedsConnection(false);
 
     let onlineSources:KnowledgeSource[]=[];
