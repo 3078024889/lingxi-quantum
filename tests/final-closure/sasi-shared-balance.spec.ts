@@ -1,12 +1,16 @@
 import {test,expect} from 'playwright/test';
 
-test('every SASI task keeps the video composer width',async({page})=>{
- await page.goto('/sasi?mode=drama&lang=zh');
+test('every SASI task keeps one stable composer width without task tabs',async({page})=>{
  const core=()=>page.locator('[data-sasi-composer-core]:visible');
- const initial=await core().boundingBox();expect(initial).not.toBeNull();
- for(const label of ['对话','生成图片','做网站','深度研究','读书与资料','学习','生成视频']){
-  await page.locator('[data-sasi-task-toolbar]:visible').getByRole('button',{name:label,exact:true}).click();
-  await expect(core()).toBeVisible();const size=await core().boundingBox();expect(Math.abs(size!.width-initial!.width)).toBeLessThan(2);
+ const routes=['drama','website','research','book','learning','chat','image'];
+ let baseline:number|null=null;
+ for(const mode of routes){
+  await page.goto('/sasi?mode='+mode+'&lang=zh');
+  await expect(page.locator('[data-sasi-task-toolbar]')).toHaveCount(0);
+  await expect(core()).toBeVisible();
+  const size=await core().boundingBox();expect(size).not.toBeNull();
+  if(baseline===null)baseline=size!.width;
+  else expect(Math.abs(size!.width-baseline)).toBeLessThan(2);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
  }
 });
