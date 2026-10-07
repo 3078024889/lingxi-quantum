@@ -12,11 +12,16 @@ const IMAGE_RULES=[
 
 function hasAny(value:string,rules:string[]){return rules.some(rule=>value.includes(rule.toLowerCase()))}
 
-export function inferUnifiedSasiIntent(text:string,hasFiles=false):UnifiedSasiIntent{
+export function inferExplicitUnifiedSasiIntent(text:string):UnifiedSasiIntent|null{
  const value=String(text||"").trim().toLowerCase();
+ if(!value)return null;
  if(hasAny(value,IMAGE_RULES))return"image";
- const routed=inferSasiMode(value);
- if(routed)return routed;
+ return inferSasiMode(value);
+}
+
+export function inferUnifiedSasiIntent(text:string,hasFiles=false):UnifiedSasiIntent{
+ const explicit=inferExplicitUnifiedSasiIntent(text);
+ if(explicit)return explicit;
  if(hasFiles)return"book";
  return"chat";
 }
