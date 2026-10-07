@@ -10,7 +10,7 @@ test('automatic planning rejects invalid duration and oversized episodes',()=>{
  expect(parseAutomaticVideoPlan(JSON.stringify({title:'20 episodes',shots:Array.from({length:20},(_,i)=>({...shot,episode:i+1}))})).shots).toHaveLength(20);
 });
 
-test('ready browser intelligence answers ordinary chat before cloud pool',async({page})=>{
+test('browser intelligence does not auto-answer without explicit opt-in',async({page})=>{
  let requests=0;
  await page.addInitScript(()=>{
   Object.defineProperty(globalThis,'LanguageModel',{configurable:true,value:{
@@ -22,8 +22,18 @@ test('ready browser intelligence answers ordinary chat before cloud pool',async(
  await page.goto('/sasi?mode=chat&lang=en');
  await page.locator('textarea').fill('Hello SASI');
  await page.locator('textarea').press('Enter');
- await expect(page.locator('[data-sasi-role="assistant"]')).toContainText('Local reply: Hello SASI');
- expect(requests).toBe(0);
+ await expect(page.locator('[data-sasi-role="assistant"]')).toContainText('Cloud fallback');
+ expect(requests).toBe(1);
+});
+
+test('natural-language drama request can enter creation flow without client crash',async({page})=>{
+ await page.route('**/api/sasi/projects',route=>route.fulfill({json:{project:{id:'99999999-9999-4999-8999-999999999999'}}}));
+ await page.route('**/api/sasi/byok/video*',route=>route.fulfill({json:{connected:false,profiles:[],tasks:[]}}));
+ await page.goto('/sasi?mode=chat&lang=zh');
+ await page.locator('textarea').fill('生成一部100集短剧');
+ await page.locator('textarea').press('Enter');
+ await expect(page.locator('[data-sasi-task="drama"]')).toBeVisible();
+ await expect(page.locator('body')).not.toContainText('Application error');
 });
 
 test('one send from unified entry receives a configured response (mock service)',async({page})=>{
