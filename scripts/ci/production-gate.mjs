@@ -20,6 +20,7 @@ const commands=[
  ["node",["scripts/test-refund-provider-signatures.cjs"]],
  ["node",["scripts/ci/test-repository-hardening.mjs"]],
  ["node",["scripts/audit/v39-security-public-copy.mjs"]],
+ ["node",["scripts/audit/v82-local-intelligence.mjs"]],
  ["node",["scripts/audit/v38r2-repository-hardening.mjs"]],
  ["node",["scripts/audit/audit-script-syntax.mjs"]],
  ["node",["scripts/audit/retired-code-cleanup.mjs"]],

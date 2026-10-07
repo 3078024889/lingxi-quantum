@@ -1,21 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import SasiTaskToolbar,{SasiWelcomeHeading} from "./SasiTaskToolbar";
 import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 import {useRef,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {SasiComposerSurface,SasiComposerTextarea} from "@/components/SasiComposerCore";
 import {SASI_UNIFIED_ACCEPT} from "@/lib/sasi/composer-core";
-import {inferSasiMode} from "@/lib/sasi/core/intent-router";
+import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
 import type {SasiMode} from "@/lib/sasi/core/session-contract";
-import SasiSkillPicker from "@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
 
 export type SasiEntryMode=SasiMode|"chat"|"image";
 type Row=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Row=>({zh,en,ja,ko,fr,de,es,pt,ar});
 const COPY={
+ heading:L("直接告诉 SASI 你要完成什么","Tell SASI what you want to accomplish","SASIにやりたいことをそのまま伝えてください","SASI에게 원하는 결과를 바로 말해 주세요","Dites directement à SASI ce que vous voulez accomplir","Sag SASI direkt, was du erreichen möchtest","Dile directamente a SASI qué quieres conseguir","Diga diretamente ao SASI o que quer realizar","أخبر SASI مباشرة بما تريد إنجازه"),
  image:L("生成图片","Create an image","画像を作る","이미지 만들기","Créer une image","Bild erstellen","Crear una imagen","Criar uma imagem","إنشاء صورة"),
  chat:L("对话与写作","Chat & writing","対話・文章作成","대화 및 글쓰기","Discussion et rédaction","Chat und Schreiben","Conversar y escribir","Conversar e escrever","المحادثة والكتابة"),
  placeholder:L("告诉 SASI 你想做什么…","Tell SASI what you want to do…","SASIにやりたいことを伝えてください…","SASI에게 원하는 일을 말해 주세요…","Dites à SASI ce que vous voulez faire…","Sag SASI, was du machen möchtest…","Dile a SASI qué quieres hacer…","Diga ao SASI o que quer fazer…","أخبر SASI بما تريد إنجازه…"),
@@ -32,22 +31,12 @@ const COPY={
  selected:L("已选择","Selected","選択中","선택됨","Sélectionné","Ausgewählt","Seleccionado","Selecionado","تم الاختيار")
 } as const;
 
-const TASKS:Array<{id:SasiEntryMode;key:"website"|"drama"|"book"|"learning"|"research"|"chat"|"image"}>=[
- {id:"chat",key:"chat"},{id:"image",key:"image"},
- {id:"website",key:"website"},
- {id:"drama",key:"drama"},
- {id:"book",key:"book"},
- {id:"learning",key:"learning"},
- {id:"research",key:"research"}
-];
 
 export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:(mode:SasiEntryMode,prompt:string,files:File[],skillIds:SasiSkillId[])=>void;initialPrompt?:string}){
  const{lang}=useLingxiLang();
  const t=(key:keyof typeof COPY)=>COPY[key][lang]||COPY[key].en;
  const[prompt,setPrompt]=useState(initialPrompt);
- const[selected,setSelected]=useState<SasiEntryMode|null>(null);
  const[files,setFiles]=useState<File[]>([]);
- const[selectedSkills,setSelectedSkills]=useState<SasiSkillId[]>([]);
  const[open,setOpen]=useState(false);
  const[notice,setNotice]=useState("");
  const[dragging,setDragging]=useState(false);
@@ -59,13 +48,13 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
  }
  function submit(){
   const text=prompt.trim();
-  const mode=selected||(/生成.*图|画一|draw|create.*image|generate.*image/i.test(text)?"image":inferSasiMode(text))||(files.length?"book":"chat");
-  if((!text&&!files.length)||!mode){setNotice(t("unclear"));return}
-  onStart(mode,text,files,selectedSkills);
+  if(!text&&!files.length){setNotice(t("unclear"));return}
+  const mode=inferUnifiedSasiIntent(text,files.length>0);
+  onStart(mode,text,files,[]);
  }
 
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col justify-center pb-14">
-  <div><SasiWelcomeHeading/>
+  <div><h1 className="mb-7 text-center text-2xl font-semibold sm:text-3xl">{t("heading")}</h1>
    <SasiComposerSurface dragging={dragging} className="relative" onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={e=>{if(!e.currentTarget.contains(e.relatedTarget as Node|null))setDragging(false)}} onDrop={e=>{e.preventDefault();setDragging(false);if(e.dataTransfer.files.length)addFiles(e.dataTransfer.files)}}>
     {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">
       {files.map((file,index)=><span key={`${file.name}-${file.size}-${index}`} className="inline-flex max-w-[240px] shrink-0 items-center gap-2 rounded-full border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-1.5 text-xs">
@@ -79,7 +68,7 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
      onPaste={e=>{const pasted=Array.from(e.clipboardData.files||[]);if(pasted.length){e.preventDefault();addFiles(pasted)}}}
      onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();submit()}}}
      aria-label={t("placeholder")}
-     placeholder={t("placeholder")}
+     placeholder={lang==="zh"?"直接说你要的结果：构建网站、生成短剧/视频/图片、书本活化、研究资料、学习章节…":t("placeholder")}
      autoFocus
     />
     <div className="mt-1 flex items-center gap-2">
@@ -95,14 +84,10 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
        </div>
       </div>}
      </div>
-     {selected&&<button type="button" onClick={()=>setSelected(null)}
-      className="rounded-full border border-[var(--lx-line)] px-3 py-1.5 text-xs text-[var(--lx-muted)]">
-      {t(TASKS.find(x=>x.id===selected)?.key||"research")} ×
-     </button>}
      <button type="button" onClick={submit} aria-label={sasiCommonText(lang,"ask")} disabled={!prompt.trim()&&!files.length}
       className="ml-auto grid h-9 min-w-9 place-items-center rounded-full bg-[var(--lx-ink)] px-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-30">↑</button>
     </div>
-    <SasiTaskToolbar current={selected} onSelect={mode=>{setSelected(mode);setSelectedSkills([]);setNotice("")}}/>
+
     {notice&&<p className="px-3 pt-2 text-xs leading-5 text-[var(--lx-muted)]">{notice}</p>}
    </SasiComposerSurface>
   </div>
