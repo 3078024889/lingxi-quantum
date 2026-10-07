@@ -1,6 +1,5 @@
 "use client";
 import {functionMenuText} from '@/lib/sasi/function-menu-i18n';
-import SasiTaskToolbar from "./SasiTaskToolbar";
 import {EXPERIENCE_USED,VIDEO_SERVICE_REQUIRED} from "@/lib/sasi/experience-status-copy";
 import {SUPPLIER_BILLING_COPY} from "@/lib/sasi/prompt-flow-copy";
 import {AUTOMATIC_VIDEO_CONTRACT,parseAutomaticVideoPlan} from '@/lib/sasi/automatic-video-plan';
@@ -25,6 +24,8 @@ import{SasiAssistantText,SasiStatusLine,SasiVideoResult,SasiWebsiteResult}from"@
 import{selectSasiSkills}from"@/lib/sasi/skills/router";
 import SasiSkillPicker from"@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
+import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
+import type {SasiEntryMode} from "@/components/SasiUnifiedLauncher";
 import type {WebsiteFile} from "@/lib/sasi/website-engine/artifact-bundle";
 import {SERVICE_REQUIRED} from "@/lib/sasi/research-ui-copy";
 
@@ -61,7 +62,7 @@ function cleanHtml(raw:string){
  const safe=DOMPurify.sanitize(raw,{WHOLE_DOCUMENT:true,FORBID_TAGS:["script","object","embed","base","iframe","form","link","meta"],FORBID_ATTR:["onerror","onload","onclick","srcset"]});
  return safe.replace(/<head>/i,`<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${escapedDescription?`<meta name="description" content="${escapedDescription}">`:""}<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data: blob:; form-action 'none'; base-uri 'none'">`);
 }
-export default function SasiChatCreationStudio({mode,initialPrompt="",initialFiles=[],initialSkillIds=[],autoStart=false}:{mode:Mode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[];autoStart?:boolean}){
+export default function SasiChatCreationStudio({mode,initialPrompt="",initialFiles=[],initialSkillIds=[],autoStart=false,onRedirect}:{mode:Mode;initialPrompt?:string;initialFiles?:File[];initialSkillIds?:SasiSkillId[];autoStart?:boolean;onRedirect?:(mode:SasiEntryMode,prompt:string)=>void}){
  const{lang}=useLingxiLang();
  const ct=(key:Parameters<typeof composerText>[1],vars?:Record<string,string|number>)=>composerText(lang,key,vars);
  const ctRef=useRef(ct);ctRef.current=ct;
@@ -214,6 +215,9 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  useEffect(()=>{if(autoStart&&!began.current){began.current=true;void prepare()}},[autoStart]);
  async function prepare(){
   if(operation.current||(!prompt.trim()&&!files.length))return;
+  const nextIntent=inferUnifiedSasiIntent(prompt,files.length>0);
+  if(onRedirect&&nextIntent!==mode&&nextIntent!=='chat'){onRedirect(nextIntent,prompt);return}
+  if(onRedirect&&nextIntent==='chat'){onRedirect('chat',prompt);return}
   operation.current=true;
   setBusy(true);setQuote(null);setAssistantText("");setFilms([]);setClips([]);setResultUrl("");setWebsiteHtml("");setWebsiteFiles([]);setMessage(ct("organizing"));
   try{
@@ -434,7 +438,6 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
        </div>
       </div>
 
-      <SasiTaskToolbar disabled={busy}/>
       {mode==="drama"&&<label className="flex items-start gap-2 px-3 pt-2 text-[11px] text-[var(--lx-muted)]"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
       {quote&&<p className="px-3 pt-2 text-xs text-[var(--lx-muted)]">{SUPPLIER_BILLING_COPY[lang]}</p>}<SasiStatusLine>{message}</SasiStatusLine>{needsConnection&&<Link href="/sasi/connections" className="inline-block px-3 py-2 text-sm text-blue-600">{functionMenuText(lang,"connect")} →</Link>}
      </SasiComposerSurface>
