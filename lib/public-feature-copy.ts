@@ -11,7 +11,7 @@ export const PUBLIC_SEARCH_TITLES:Record<LingxiLang,string>={
  ar:'دراما قصيرة ومواقع بالذكاء الاصطناعي وأكثر من 100 أداة مجانية عبر الإنترنت | LINGXIFIELD'
 };
 export const PUBLIC_FEATURE_COPY:Record<LingxiLang,{headline:string;freeTools:string;description:string;directory:string;free:string;paid:string}>={
- zh:{headline:'AI短剧生成 · 网站构建 · 书本问答 · 学习 · 科研',freeTools:'100+免费在线实用工具',description:'AI短剧生成、网站构建、书本问答、学习与科研。100+免费在线实用工具：PDF合并、拆分、压缩，图片转换、文字识别，视频裁剪、音频提取、表格转换与隐私清理。付费功能会在使用前显示费用。',directory:'按功能找工具',free:'免费',paid:'有收费功能'},
+ zh:{headline:'AI短剧生成 · 网站构建 · 书本问答 · 学习 · 科研',freeTools:'100+免费在线实用工具',description:'灵犀场 LINGXIFIELD 提供 AI短剧生成、网站构建、书本问答、学习与科研，以及100+免费在线实用工具，覆盖PDF编辑合并拆分压缩与OCR、图片处理与格式转换、视频音频处理、文件表格转换、开发者与隐私工具。付费功能会在使用前显示费用。',directory:'按功能找工具',free:'免费',paid:'有收费功能'},
  en:{headline:'AI short dramas · Website builder · Book Q&A · Study · Research',freeTools:'100+ free online tools',description:'Create AI short dramas and websites. Ask questions about books, study and research. Explore 100+ free online tools for PDFs, images, OCR, video, audio, spreadsheets and privacy. Paid features show their price before use.',directory:'Find a tool by function',free:'Free',paid:'Includes paid features'},
  ja:{headline:'AI短編ドラマ · サイト作成 · 本への質問 · 学習 · 研究',freeTools:'100以上の無料オンラインツール',description:'AI短編ドラマやWebサイトを作成し、本への質問、学習、研究に活用。PDF、画像、文字認識、動画、音声、表計算、プライバシーの100以上の無料オンラインツールがあります。有料機能は利用前に料金を表示します。',directory:'機能からツールを探す',free:'無料',paid:'有料機能あり'},
  ko:{headline:'AI 숏드라마 · 웹사이트 제작 · 책 질문 · 학습 · 연구',freeTools:'100개 이상의 무료 온라인 도구',description:'AI 숏드라마와 웹사이트를 만들고 책에 질문하며 학습과 연구를 진행하세요. PDF, 이미지, 문자 인식, 영상, 오디오, 스프레드시트, 개인정보 보호 무료 온라인 도구 100개 이상을 이용하세요. 유료 기능은 사용 전에 요금을 표시합니다.',directory:'기능별 도구 찾기',free:'무료',paid:'유료 기능 포함'},
