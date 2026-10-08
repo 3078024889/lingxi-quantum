@@ -65,6 +65,10 @@ async function main(){
   const failures=(syntax.diagnostics||[]).filter(d=>d.category===ts.DiagnosticCategory.Error);
   assert.deepEqual(failures.map(d=>ts.flattenDiagnosticMessageText(d.messageText,' ')),[],rel+': JSX syntax preflight failed');
  }
+ const {releaseCandidateAllowed}=load('lib/sasi/durable/release-invariants.ts');
+ const evidence={parsePass:true,buildPass:true,regressionPass:true,offlineEvalPass:true,chaosPass:true};
+ assert.equal(releaseCandidateAllowed(evidence),true,'all five evidence gates pass');
+ for(const key of Object.keys(evidence))assert.equal(releaseCandidateAllowed({...evidence,[key]:false}),false, 'release gate must reject missing '+key);
  const stepCode=fs.readFileSync('lib/sasi/durable/step-store.ts','utf8');
  assert(stepCode.includes('renewed.error||row(renewed.data).ok!==true'),'lease renewal must inspect database response');
  assert(stepCode.includes('executionController.abort()'),'lost lease must cancel cooperative work');
