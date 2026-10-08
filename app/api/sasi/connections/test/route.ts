@@ -54,6 +54,8 @@ export async function POST(request:NextRequest){
   }catch(error){code=error instanceof Error&&error.message==="PROVIDER_TIMEOUT"?"PROVIDER_TIMEOUT":error instanceof Error&&error.message==="PROVIDER_URL_REJECTED"?"SERVICE_ADDRESS_INVALID":"PROVIDER_UNREACHABLE"}
   const capabilities=status==="healthy"?providerPublicCapabilities(body.provider):[];
   const modelId=status==="healthy"?chooseTextModel(body.provider,models,String(data.model_id||"")):String(data.model_id||"");
+  // A successful /models or account probe does not prove a runnable text model exists.
+  if(status==="healthy"&&body.provider!=="luma"&&!modelId){status="unhealthy";code="MODEL_SELECTION_REQUIRED";}
   const now=new Date().toISOString();
   const saved=await admin.from("sasi_provider_connections").update({health_status:status,last_checked_at:now,last_error_code:code||null,capabilities,capability_checked_at:status==="healthy"?now:null,discovered_models:models,model_id:modelId,cooldown_until:null,last_success_at:status==="healthy"?now:null,last_latency_ms:typeof started==="number"?Math.max(0,Date.now()-started):null,updated_at:now}).eq("user_id",user.id).eq("provider",body.provider);
   if(saved.error)return NextResponse.json({error:"CONNECTION_CHECK_UNAVAILABLE"},{status:503});
