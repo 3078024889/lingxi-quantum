@@ -138,7 +138,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
        <p>{t("模型名称请填写服务商的英文模型 ID，不是中文显示名。示例：","Enter the provider's exact model ID, not its translated display name. Example:")} <code dir="ltr" className="select-all rounded bg-[var(--lx-soft)] px-1.5 py-0.5">{modelExample}</code></p>
        <p>{discoveredModels.length?t("已检测到可选模型；点击模型输入框从列表中选择。","Models discovered. Choose one from the model field."):t("保存密钥并检查连接后，将尝试列出账户可用模型；个别服务需要在官网查看接入点 ID。","After saving and checking the connection, available model IDs will be listed when the provider supports discovery.")}</p>
        <datalist id="sasi-known-models">{discoveredModels.map(id=><option key={id} value={id}/>)}</datalist>
-      </div>
+      </div>}
       {(!connection||editing)&&<p className="mt-6 text-sm font-medium">{selected.id==="compatible"?copy.otherDescription:copy.keyOnly}</p>}
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
        {(!connection||editing)?<><input type="password" disabled={state!=="ready"} autoComplete="off" spellCheck={false} value={credential} onChange={e=>setCredential(e.target.value)}
