@@ -35,6 +35,6 @@ export default function SasiOneSurface(){
   setAutoStart(Boolean(prompt));setInitialPrompt(prompt);setInitialFiles([]);setInitialSkillIds([]);setMode(next);cleanRoute(next!==mode);
  }
  return <main className="lx11-page min-h-[calc(100vh-64px)]"><div className="mx-auto max-w-[1440px] px-3 sm:px-5"><SasiUnifiedConversationProvider>
- {mode==="chat"||mode==="image"?<SasiPromptConversation key={mode} onTask={(task,prompt)=>enter(task,prompt)} autoStart={autoStart} task={mode} initialPrompt={initialPrompt} onFiles={(files,prompt)=>enter("book",prompt,files)}/>:mode?<SasiModeHost autoStart={autoStart} mode={mode} initialPrompt={initialPrompt} initialFiles={initialFiles} initialSkillIds={initialSkillIds} onSwitch={switchMode}/>:<SasiUnifiedLauncher initialPrompt={intent} onStart={enter}/>}
+ {mode==="chat"||mode==="image"?<SasiPromptConversation key={mode} onTask={(task,prompt)=>switchMode(task,prompt)} autoStart={autoStart} task={mode} initialPrompt={initialPrompt} onFiles={(files,prompt)=>enter("book",prompt,files)}/>:mode?<SasiModeHost autoStart={autoStart} mode={mode} initialPrompt={initialPrompt} initialFiles={initialFiles} initialSkillIds={initialSkillIds} onSwitch={switchMode}/>:<SasiUnifiedLauncher initialPrompt={intent} onStart={enter}/>}
  </SasiUnifiedConversationProvider></div></main>;
 }
