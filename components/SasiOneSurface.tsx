@@ -27,7 +27,7 @@ export default function SasiOneSurface(){
  }
  function enter(next:SasiEntryMode,prompt="",files:File[]=[],skillIds:SasiSkillId[]=[]){
   // Keep natural-language requests in one dialogue. A workspace opens only by explicit user choice.
-  if(next!=="chat"&&next!=="image"&&!files.length&&prompt.trim()){next="chat"}
+  if(next!=="chat"&&next!=="image"&&!files.length&&!skillIds.length&&prompt.trim()){next="chat"}
   setAutoStart(Boolean(prompt)||files.length>0);setInitialPrompt(prompt);setInitialFiles(files);setInitialSkillIds(skillIds);setMode(next);cleanRoute(next!==mode);
  }
  function switchMode(next:SasiEntryMode,prompt=""){
