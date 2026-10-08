@@ -16,15 +16,27 @@ function inlineText(source:string){
 }
 function assistantMarkdown(value:string){
  const lines=value.replace(/\r\n?/g,"\n").split("\n");
- return lines.map((line,i)=>{
+ const blocks:ReactNode[]=[];
+ for(let i=0;i<lines.length;i++){
+  const line=lines[i];
+  if(/^\s*```/.test(line)){
+   const language=line.trim().slice(3).replace(/[^a-zA-Z0-9+#-]/g,"").slice(0,24);
+   const code:string[]=[];
+   while(i+1<lines.length&&!/^\s*```/.test(lines[i+1]))code.push(lines[++i]);
+   if(i+1<lines.length)i++;
+   blocks.push(<pre key={i} className="my-3 overflow-x-auto rounded-xl bg-[var(--lx-soft)] p-3 text-sm leading-6"><code data-language={language}>{code.join("\n")}</code></pre>);
+   continue;
+  }
+  if(/^\s*(---|\*\*\*)\s*$/.test(line)){blocks.push(<hr key={i} className="my-4 border-[var(--lx-line)]"/>);continue}
   const heading=/^(#{1,3})\s+(.+)$/.exec(line);
-  if(heading)return <p key={i} className="mt-4 mb-1 font-semibold">{inlineText(heading[2])}</p>;
+  if(heading){blocks.push(<p key={i} className="mt-4 mb-1 font-semibold">{inlineText(heading[2])}</p>);continue}
   const bullet=/^\s*[-*]\s+(.+)$/.exec(line);
-  if(bullet)return <p key={i} className="pl-4 before:content-['•'] before:mr-2">{inlineText(bullet[1])}</p>;
+  if(bullet){blocks.push(<p key={i} className="pl-4 before:content-['•'] before:mr-2">{inlineText(bullet[1])}</p>);continue}
   const ordered=/^\s*(\d+)\.\s+(.+)$/.exec(line);
-  if(ordered)return <p key={i} className="pl-4">{ordered[1]}. {inlineText(ordered[2])}</p>;
-  return <p key={i} className={line?"":"h-4"}>{inlineText(line)}</p>;
- });
+  if(ordered){blocks.push(<p key={i} className="pl-4">{ordered[1]}. {inlineText(ordered[2])}</p>);continue}
+  blocks.push(<p key={i} className={line?"":"h-4"}>{inlineText(line)}</p>);
+ }
+ return blocks;
 }
 
 export function SasiAssistantText({children,className=""}:{children:ReactNode;className?:string}){
