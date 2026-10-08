@@ -21,7 +21,7 @@ export async function resilientText(input:{
 }):Promise<ResilientTextOutcome>{
  const sessionKey=String(input.sessionKey||"default").slice(0,160);
  const dedupe=coalesceKey([input.userId,input.region,input.task,sessionKey,input.messages,input.maxOutputTokens,Boolean(input.validateAnswer),input.allowConnected]);
- const work=async()=>{
+ const work=async():Promise<ResilientTextOutcome>=>{
  const referenceId=randomUUID(),claim=await reserveExperience(input.userId,referenceId,units[input.task]);
  if(claim.ok){
   try{
