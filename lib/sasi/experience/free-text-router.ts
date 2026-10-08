@@ -79,7 +79,8 @@ async function readChatEventStream(response:Response,onDelta:(text:string)=>void
   return whole.trim();
  }finally{reader.releaseLock()}
 }
-\nasync function openai(p:ExperienceProvider,messages:Message[],maxTokens:number,signal:AbortSignal,onDelta?:(text:string)=>void){
+
+async function openai(p:ExperienceProvider,messages:Message[],maxTokens:number,signal:AbortSignal,onDelta?:(text:string)=>void){
  const r=await fetch(`${p.baseUrl.replace(/\/$/,"")}/chat/completions`,{method:"POST",cache:"no-store",redirect:"error",signal,
   headers:{"content-type":"application/json",authorization:`Bearer ${p.apiKey}`,...(p.id==="openrouter-free"?{"HTTP-Referer":"https://lingxifield.com","X-Title":"LINGXIFIELD SASI"}:{})},
   body:JSON.stringify({model:p.model,messages,max_tokens:maxTokens,stream:Boolean(onDelta)})});
