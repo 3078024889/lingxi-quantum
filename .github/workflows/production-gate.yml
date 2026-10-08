@@ -59,7 +59,9 @@ jobs:
         run: pnpm ci:playwright-contract
 
       - name: AI tools search regression
-        run: node scripts/ci/verify-ai-tool-search.mjs
+        run: |
+          node scripts/ci/verify-ai-tool-search.mjs
+          node scripts/ci/verify-ai-media-pricing-policy.mjs
 
       - name: Production build
         run: pnpm build
