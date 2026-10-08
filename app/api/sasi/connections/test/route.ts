@@ -57,6 +57,6 @@ export async function POST(request:NextRequest){
   const now=new Date().toISOString();
   const saved=await admin.from("sasi_provider_connections").update({health_status:status,last_checked_at:now,last_error_code:code||null,capabilities,capability_checked_at:status==="healthy"?now:null,discovered_models:models,model_id:modelId,cooldown_until:null,last_success_at:status==="healthy"?now:null,last_latency_ms:typeof started==="number"?Math.max(0,Date.now()-started):null,updated_at:now}).eq("user_id",user.id).eq("provider",body.provider);
   if(saved.error)return NextResponse.json({error:"CONNECTION_CHECK_UNAVAILABLE"},{status:503});
-  return NextResponse.json({ok:status==="healthy",provider:body.provider,healthStatus:status,errorCode:code||null,capabilities,model:modelId||null,modelCount:models.length},{status:status==="healthy"?200:422});
+  return NextResponse.json({ok:status==="healthy",provider:body.provider,healthStatus:status,errorCode:code||null,capabilities,model:modelId||null,modelCount:models.length,discoveredModels:models},{status:status==="healthy"?200:422});
  }catch(error){console.error("[sasi connection] health check unavailable",error instanceof Error?error.message:"unknown");return NextResponse.json({error:"CONNECTION_CHECK_UNAVAILABLE"},{status:503})}
 }
