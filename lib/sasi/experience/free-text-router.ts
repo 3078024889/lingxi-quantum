@@ -131,7 +131,8 @@ export async function runExperienceText(input:{region:ExperienceRegion;task:Expe
  for(const {p} of list.slice(0,5)){
   const remaining=deadline-Date.now();
   if(remaining<5_000)break;
-  if(hadPartial){input.onReset?.();hadPartial=false}\n  attempts++;const started=Date.now();
+  if(hadPartial){input.onReset?.();hadPartial=false}
+  attempts++;const started=Date.now();
   try{
    const text=await call(p,input.messages,maxTokens,Math.min(12_000,Math.max(5_000,remaining-1_000)),input.onDelta?chunk=>{hadPartial=true;input.onDelta?.(chunk)}:undefined);const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
    await recordProviderRun({providerId:p.id,ok:true,tokens,latencyMs:latency});
@@ -146,5 +147,6 @@ export async function runExperienceText(input:{region:ExperienceRegion;task:Expe
    continue;
   }
  }
- if(hadPartial)input.onReset?.();\n throw last instanceof Error?last:new Error("EXPERIENCE_POOL_FAILED");
+ if(hadPartial)input.onReset?.();
+ throw last instanceof Error?last:new Error("EXPERIENCE_POOL_FAILED");
 }
