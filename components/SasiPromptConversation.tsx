@@ -1,5 +1,4 @@
 "use client";
-import {inferUnifiedSasiIntent} from '@/lib/sasi/core/unified-intent';
 import type {SasiEntryMode} from './SasiUnifiedLauncher';
 import Link from 'next/link';
 import {functionMenuText} from '@/lib/sasi/function-menu-i18n';
@@ -29,17 +28,17 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const lock=useRef(false),input=useRef<HTMLInputElement>(null),previous=useRef<string|undefined>(undefined);
  async function send(confirm=false){
   if(lock.current||(!confirm&&!prompt.trim()))return;
-  if(!confirm){const text=prompt.trim(),intent=inferUnifiedSasiIntent(text,false);if(intent!==task&&intent!=='chat'){onTask(intent,text);return}if(task==='image'&&intent==='chat'){onTask('chat',text);return}}
+  // Switching workspaces must be a user decision, never an automatic keyword redirect.
   lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
   try{
    if(task==='chat'&&!confirm){
     const local=await tryBrowserLocalText({lang,messages:[
-     ...turns.slice(-4).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
+     ...turns.slice(-12).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
      {role:'user',content:question}
     ]});
     if(local.kind==='answer'){setTurns(rows=>[...rows,{question,answer:local.answer}]);setPrompt('');return}
-    const context=turns.length?turns.slice(-4).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-8000):'';
+    const context=turns.length?turns.slice(-12).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-16000):'';
     let streamed="";
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
     if(userResource.kind==='answer'){setTurns(rows=>[...rows,{question,answer:userResource.answer}]);setStreaming(null);setPrompt('');return}
