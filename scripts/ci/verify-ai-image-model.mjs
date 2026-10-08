@@ -12,5 +12,5 @@ const result=await detector(new RawImage(pixels,224,224,3));
 const items=Array.isArray(result)?result:[result];
 assert(items.length>0,"Model returned no classes");
 for(const item of items){assert(typeof item.label==="string");assert(Number.isFinite(item.score));assert(item.score>=0&&item.score<=1);}
-assert(items.some(({label})=>["Real","Fake"].includes(label)),"Unexpected model classes");
+assert(items.some(({label})=>["REAL","FAKE"].includes(label.toUpperCase())),"Unexpected model classes");
 console.log("AI_IMAGE_MODEL_RUNTIME=PASS",JSON.stringify({model:id,dtype:"q8",labels:items,elapsedMs:Date.now()-start}));
