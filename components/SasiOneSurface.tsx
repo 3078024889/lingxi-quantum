@@ -6,6 +6,7 @@ import SasiPromptConversation from "@/components/SasiPromptConversation";
 import SasiUnifiedLauncher,{type SasiEntryMode} from "@/components/SasiUnifiedLauncher";
 import {SasiUnifiedConversationProvider} from "@/components/SasiUnifiedConversationProvider";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
+import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
 
 function legacyMode(value:string|null):SasiEntryMode|null{
  return value==="chat"||value==="image"||value==="website"||value==="book"||value==="learning"||value==="research"||value==="drama"?value:null;
@@ -14,7 +15,7 @@ export default function SasiOneSurface(){
  const params=useSearchParams();
  const intent=(params.get("intent")||"").slice(0,16000);
  const legacy=legacyMode(params.get("mode"));
- const [mode,setMode]=useState<SasiEntryMode|null>(()=>intent?"chat":legacy);
+ const [mode,setMode]=useState<SasiEntryMode|null>(()=>intent?(inferUnifiedSasiIntent(intent,false)==="image"?"image":"chat"):legacy);
  const [initialPrompt,setInitialPrompt]=useState(intent);
  const [autoStart,setAutoStart]=useState(Boolean(intent));
  const [initialFiles,setInitialFiles]=useState<File[]>([]);
