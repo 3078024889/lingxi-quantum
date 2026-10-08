@@ -36,5 +36,8 @@ export function publicToolSurface():PublicToolSurfaceItem[]{
   map.set(href,{href,slug:tool.slug,titleZh:toolTitle("zh",tool.slug,tool.zh),titleEn:toolTitle("en",tool.slug,tool.en),
    descZh:"",descEn:"",kind:toolDisplayKind(category),category,localOnly:tool.mode==="local",source:"catalog"});
  }
- return GLOBAL_TOOL_CATALOG.map(tool=>map.get(`/tools/${tool.slug}`)).filter((tool):tool is PublicToolSurfaceItem=>Boolean(tool));
+ // Preserve SEO catalog ordering while making every registered live tool discoverable.
+ const catalogFirst=GLOBAL_TOOL_CATALOG.map(tool=>map.get(`/tools/${tool.slug}`)).filter((tool):tool is PublicToolSurfaceItem=>Boolean(tool));
+ const ordered=new Set(catalogFirst.map(item=>item.href));
+ return [...catalogFirst,...Array.from(map.values()).filter(item=>!ordered.has(item.href))];
 }
