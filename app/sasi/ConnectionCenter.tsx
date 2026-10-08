@@ -72,8 +72,8 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
   const r=await fetch("/api/sasi/connections/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
   const b=await r.json().catch(()=>({}));
   const healthy=r.ok&&b.healthStatus==="healthy";
-  setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED",model:healthy&&b.model?b.model:x.model,discoveredModels:healthy&&Array.isArray(b.discoveredModels)?b.discoveredModels:x.discoveredModels}:x));
-  setMessage(healthy?t("连接正常，可以开始使用。","Connection is ready to use."):t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
+  setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED",model:healthy&&b.model?b.model:x.model,discoveredModels:Array.isArray(b.discoveredModels)?b.discoveredModels:x.discoveredModels}:x));
+  setMessage(healthy?t("连接正常，可以开始使用。","Connection is ready to use."):b.errorCode==="MODEL_SELECTION_REQUIRED"?t("密钥已响应，但尚未找到可执行的文本模型。请填写控制台提供的模型 ID 或接入点 ID，再保存检查。","The key responded, but no runnable text model was found. Enter the model or endpoint ID from your provider console, save and check again."):t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
  }
 
  async function test(){
