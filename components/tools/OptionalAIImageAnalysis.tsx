@@ -46,7 +46,7 @@ export default function OptionalAIImageAnalysis({file,lang}:{file:File;lang:Ling
     <button type="button" onClick={()=>void analyze()} disabled={state==="loading"} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-60">{state==="loading"?(zh?"正在加载并分析…":"Loading and analyzing…"):(zh?"启动图片模型分析":"Run image-model analysis")}</button>
     {state==="error"&&<p role="alert" className="text-sm">{zh?"模型不可用或分析失败：":"Model unavailable or analysis failed: "}{error}</p>}
     {state==="done"&&<div className="space-y-1 text-sm" aria-live="polite">
-      {result.map((p,i)=><p key={i}>{p.label==="Fake"?(zh?"模型倾向：AI 生成":"Model label: AI-generated"):p.label==="Real"?(zh?"模型倾向：真实图片":"Model label: real image"):p.label} — {(p.score*100).toFixed(1)}% {zh?"模型分类分数":"model classification score"}</p>)}
+      {result.map((p,i)=><p key={i}>{p.label.toUpperCase()==="FAKE"?(zh?"模型倾向：AI 生成":"Model label: AI-generated"):p.label.toUpperCase()==="REAL"?(zh?"模型倾向：真实图片":"Model label: real image"):p.label} — {(p.score*100).toFixed(1)}% {zh?"模型分类分数":"model classification score"}</p>)}
       <p className="opacity-75">{zh?"仅是模型分类分数，不是客观真实概率；不能用于证明 AI 生成或来源可信。没有进行 C2PA 签名验证。":"A model classification score, not calibrated real-world probability or proof. No C2PA signature verification was performed."}</p>
       <a href="https://huggingface.co/onnx-community/ai-image-detection-ONNX" target="_blank" rel="noopener noreferrer" className="underline">{MODEL_ID}</a>
     </div>}
