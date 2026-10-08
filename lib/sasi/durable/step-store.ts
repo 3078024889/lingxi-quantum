@@ -22,7 +22,7 @@ function rpcMissing(error:unknown){
 }
 
 export async function durableStep<T>(input:{
- runId:string;stepId:string;input:unknown;execute:()=>Promise<T>;leaseSeconds?:number;
+ runId:string;stepId:string;input:unknown;execute:(signal?:AbortSignal)=>Promise<T>;leaseSeconds?:number;
 }):Promise<{value:T;replayed:boolean;attempt:number}>{
  const admin=createAdminClient();
  const inputHash=hash(input.input);
@@ -73,22 +73,25 @@ export async function durableStep<T>(input:{
  const fenceToken=Number(claim.fence_token);
  if(!Number.isSafeInteger(fenceToken)||fenceToken<1)throw new Error("DURABLE_STEP_FENCE_INVALID");
 
- let stopped=false;
+ let stopped=false,leaseLost=false;
+ const executionController=new AbortController();
  const heartbeat=setInterval(()=>{
   if(stopped)return;
   void (async()=>{
    try{
-    await admin.rpc("renew_sasi_durable_step_lease_v160",{
+    const renewed=await admin.rpc("renew_sasi_durable_step_lease_v160",{
      p_run_id:input.runId,p_step_id:input.stepId,p_input_hash:inputHash,
      p_worker_id:owner,p_fence_token:fenceToken,p_lease_seconds:leaseSeconds
     });
-   }catch{}
+    if(renewed.error||row(renewed.data).ok!==true){leaseLost=true;executionController.abort();}
+   }catch{leaseLost=true;executionController.abort();}
   })();
  },Math.max(5_000,Math.floor(leaseSeconds*1000/3)));
  heartbeat.unref?.();
 
  try{
-  const value=await input.execute();
+  const value=await input.execute(executionController.signal);
+  if(leaseLost||executionController.signal.aborted)throw new DurableStepFenceLostError(input.runId,input.stepId);
   const complete=await admin.rpc("complete_sasi_durable_step_v160",{
    p_run_id:input.runId,p_step_id:input.stepId,p_input_hash:inputHash,
    p_worker_id:owner,p_fence_token:fenceToken,p_output:value??null
