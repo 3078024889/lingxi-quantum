@@ -60,6 +60,11 @@ async function main(){
  const websiteResult=await paidModule.exports.runUserText(combined);assert.equal(balanceChecks.at(-1),1001);assert.equal(websiteResult.billing.chargedMinor,601);assert.equal(charges.length,2);assert.equal(charges.at(-1).amountMinor,601);assert.equal(charges.at(-1).kind,'website');
  available=1000;const calls=providerCalls;await assert.rejects(paidModule.exports.runUserText(combined),/SASI_BALANCE_INSUFFICIENT/);assert.equal(providerCalls,calls,'insufficient combined balance must reject before contacting provider');assert.equal(charges.length,2);
 
+ const stepCode=fs.readFileSync('lib/sasi/durable/step-store.ts','utf8');
+ assert(stepCode.includes('renewed.error||row(renewed.data).ok!==true'),'lease renewal must inspect database response');
+ assert(stepCode.includes('executionController.abort()'),'lost lease must cancel cooperative work');
+ assert(stepCode.includes('input.execute(executionController.signal)'),'step callback must receive cancellation');
+ assert(stepCode.includes('if(leaseLost||executionController.signal.aborted)'),'lost lease must stop before step completion');
  const routerSource=fs.readFileSync('lib/sasi/experience/free-text-router.ts','utf8');
  const routerModule={exports:{}};
  const experienceProviders=()=>Array.from({length:5},(_,i)=>({id:'mock-'+i,region:'global',wire:'openai',baseUrl:'https://example.invalid/v1',apiKey:'not-real',model:'mock',priority:10+i,dailyShare:1,quality:.9,speed:.8,tasks:['chat'],canaryPercent:100}));
