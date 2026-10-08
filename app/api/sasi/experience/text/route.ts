@@ -45,7 +45,7 @@ export async function POST(req:NextRequest){
   const stream=new ReadableStream<Uint8Array>({
    start(controller){
     const encode=new TextEncoder();
-    const emit=(event:string,data:unknown)=>{try{controller.enqueue(encode.encode("event: "+event+"\\n"+"data: "+JSON.stringify(data)+"\\n\\n"))}catch{}};
+    const emit=(event:string,data:unknown)=>{try{controller.enqueue(encode.encode("event: "+event+"\n"+"data: "+JSON.stringify(data)+"\n\n"))}catch{}};
     emit("start",{state:"working"});
     void resilientText({
      userId:user.id,region,task,messages,
