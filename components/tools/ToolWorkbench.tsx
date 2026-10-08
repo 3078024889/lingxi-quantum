@@ -504,23 +504,19 @@ async function runFileTool(
   if (tool.slug === "file-type-detector") {
     const detected = await detectFileType(file);
     const mismatch = extensionMismatch(file, detected);
+    const unknown = detected.confidence === "unknown" || !detected.ext;
     return {
       ok: true,
-      messageZh: mismatch
-        ? `检测到真实类型更像 ${detected.label}（${detected.mime}），但扩展名是 .${file.name.split(".").pop()}——这常导致上传失败。`
-        : `检测到：${detected.label}（${detected.mime}），与扩展名一致。`,
-      messageEn: mismatch
-        ? `Real type looks like ${detected.label} (${detected.mime}), but extension is .${file.name.split(".").pop()} — a common upload failure cause.`
-        : `Detected: ${detected.label} (${detected.mime}), consistent with the extension.`,
-      details: {
-        label: detected.label,
-        mime: detected.mime,
-        ext: detected.ext,
-        confidence: detected.confidence,
-        claimedType: file.type || "(empty)",
-        size: file.size,
-        mismatch,
-      },
+      messageZh: unknown
+        ? "暂时无法识别该文件的格式。请确认文件是否完整。"
+        : mismatch
+          ? `检测结果：${detected.label}。文件名与实际格式不一致，建议核对后再使用。`
+          : `检测结果：${detected.label}。文件名与格式一致。`,
+      messageEn: unknown
+        ? "File format could not be identified. Please check that the file is complete."
+        : mismatch
+          ? `Detected: ${detected.label}. The filename does not match the file type.`
+          : `Detected: ${detected.label}. The filename matches the file type.`,
     };
   }
 

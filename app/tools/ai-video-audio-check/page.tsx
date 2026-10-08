@@ -1,4 +1,4 @@
 import type {Metadata} from "next";
 import MediaOriginStarter from "@/components/tools/MediaOriginStarter";
-export const metadata:Metadata={title:"AI 视频音频检测｜灵犀场",description:"免费检查视频音频文件格式与来源验证途径，不把格式线索冒充 AI 鉴定。"};
+export const metadata:Metadata={title:"AI 视频音频检测｜灵犀场",description:"选择视频或音频文件，查看检测结果和文件格式。"};
 export default function Page(){return <MediaOriginStarter mode="media"/>;}

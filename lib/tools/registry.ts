@@ -6,8 +6,8 @@ import type { ToolMeta } from "./types";
  * 状态 live = 本仓库已实现直接处理；planned = 仅目录占位，不假装可用。
  */
 export const TOOLS: ToolMeta[] = [
-  { slug: "ai-image-check", category: "image", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 图片检测", titleEn: "AI Image Detection", oneLinerZh: "免费检查文件格式和来源验证途径；不将文件头检测冒充 AI 真伪识别。", oneLinerEn: "Free format inspection and official provenance verification guidance; no invented AI verdict.", keywords: ["AI图片真假检测", "AI图片来源", "C2PA图片验证"], related: ["file-type-detector", "remove-exif"] },
-  { slug: "ai-video-audio-check", category: "file", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 视频音频检测", titleEn: "AI Video and Audio Detection", oneLinerZh: "免费检查媒体文件格式，了解 C2PA 与官方验证入口；不生成虚假鉴定结果。", oneLinerEn: "Free media format checks and official provenance verification guidance.", keywords: ["AI视频真假检测", "AI音频真假检测", "C2PA视频验证"], related: ["file-type-detector", "ai-image-check"] },
+  { slug: "ai-image-check", category: "image", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 图片检测", titleEn: "AI Image Detection", oneLinerZh: "选择图片，查看文件格式与检测结果。", oneLinerEn: "Check image format and view your detection result.", keywords: ["AI图片真假检测", "AI图片来源", "C2PA图片验证"], related: ["file-type-detector", "remove-exif"] },
+  { slug: "ai-video-audio-check", category: "file", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 视频音频检测", titleEn: "AI Video and Audio Detection", oneLinerZh: "选择视频或音频，查看文件格式与检测结果。", oneLinerEn: "Check video or audio format and view your detection result.", keywords: ["AI视频真假检测", "AI音频真假检测", "C2PA视频验证"], related: ["file-type-detector", "ai-image-check"] },
 
   ...[
     ["text-counter", "字数与字符统计", "Text Counter", "统计汉字、英文词、字符、行数与UTF-8字节。"],
@@ -161,8 +161,8 @@ export const TOOLS: ToolMeta[] = [
     localOnly: true,
     titleZh: "文件真实格式检测",
     titleEn: "Real File Type Detector",
-    oneLinerZh: "检查文件内容判断真实格式，不只看扩展名。",
-    oneLinerEn: "Check the file content to identify its real format.",
+    oneLinerZh: "选择文件，检测格式是否与文件名一致。",
+    oneLinerEn: "Check the file type and whether it matches its name.",
     accept: "*/*",
     related: ["file-compare", "md5-sha256"],
   },
