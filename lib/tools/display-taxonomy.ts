@@ -27,7 +27,7 @@ const TEXT=new Set([
  "url-parser","case-converter","number-base-converter","cron-parser"
 ]);
 const FILES=new Set([
- "file-type-detector","md5-sha256","file-compare","docx-to-txt","pptx-to-txt","epub-to-txt","odt-to-txt"
+ "file-type-detector","md5-sha256","file-compare","docx-to-txt","pptx-to-txt","epub-to-txt","odt-to-txt","ai-video-audio-check"
 ]);
 const PDF_EXACT=new Set([
  "merge-pdf","split-pdf","compress-pdf","image-to-pdf","image-to-pdf-pro","e-sign-pdf",
@@ -35,6 +35,7 @@ const PDF_EXACT=new Set([
 ]);
 
 export function toolDisplayCategory(slug:string):Exclude<ToolDisplayCategory,"all">{
+ if(slug==="ai-image-check")return"image";
  if(PRIVACY.has(slug))return"privacy";
  if(RECOGNITION.has(slug))return"recognition";
  if(SUBTITLE.has(slug))return"subtitle";
