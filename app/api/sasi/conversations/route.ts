@@ -23,7 +23,7 @@ export async function GET(){
  const latest=threads?.[0];
  if(!latest)return NextResponse.json({threadId:null,threads:[],messages:[]},{headers:noCache});
  const {data:messages,error:messagesError}=await db.from("sasi_conversation_messages")
-  .select("id,role,content,created_at").eq("user_id",user).eq("thread_id",latest.id)
+  .select("id,parent_id,role,content,created_at").eq("user_id",user).eq("thread_id",latest.id)
   .in("role",["user","assistant"]).order("created_at",{ascending:false}).limit(80);
  if(messagesError)return NextResponse.json({error:"HISTORY_UNAVAILABLE"},{status:503,headers:noCache});
  return NextResponse.json({threadId:latest.id,threads:threads||[],messages:(messages||[]).reverse()},{headers:noCache});
