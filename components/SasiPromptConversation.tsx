@@ -32,20 +32,20 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   if(!confirm){const text=prompt.trim(),intent=inferUnifiedSasiIntent(text,false);if(intent!==task&&intent!=='chat'){onTask(intent,text);return}if(task==='image'&&intent==='chat'){onTask('chat',text);return}}
   lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
+  if(task==='chat'&&!confirm)setStreaming({question,answer:''});
   try{
    if(task==='chat'&&!confirm){
     const local=await tryBrowserLocalText({lang,messages:[
      ...turns.slice(-4).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
      {role:'user',content:question}
     ]});
-    if(local.kind==='answer'){setTurns(rows=>[...rows,{question,answer:local.answer}]);setPrompt('');return}
+    if(local.kind==='answer'){setTurns(rows=>[...rows,{question,answer:local.answer}]);setStreaming(null);setPrompt('');return}
     const context=turns.length?turns.slice(-4).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-8000):'';
     let streamed="";
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
     if(userResource.kind==='answer'){setTurns(rows=>[...rows,{question,answer:userResource.answer}]);setStreaming(null);setPrompt('');return}
-    setStreaming(null);
     const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:context?context+'\nUser: '+question:question,task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
-    if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setPrompt('');return}
+    if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setStreaming(null);setPrompt('');return}
    }
    if(task==='image'&&!rights){setNotice(ct('rightsRequired'));return}
    const response=await fetch('/api/sasi/byok/'+(task==='image'?'image':'text'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(confirm?{action:'confirm',taskId:quote?.id,acceptSupplierBilling:true}:task==='image'?{action:'quote',prompt:question,functions,rightsConfirmed:rights,aiLabelAcknowledged:rights}:{action:'quote',question,mode:'chat',functions,previousId:previous.current})});
@@ -54,7 +54,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    if(data.task?.state!=='succeeded'){setQuote(null);setNotice(ct('supplierNeedsCheck'));return}
    const output=data.task.output;if(task==='image'&&!output?.imageUrl||task==='chat'&&!output?.answer)throw Error('RESULT_MISSING');
    setTurns(rows=>[...rows,{question,answer:task==='chat'?output.answer:undefined,image:task==='image'?output.imageUrl:undefined}]);if(task==='chat')previous.current=data.task.id;setPrompt('');setQuote(null);
-  }catch{setNotice(ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false)}
+  }catch{setNotice(ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false);setStreaming(null)}
  }
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
   <div className="flex-1 pt-10">{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
