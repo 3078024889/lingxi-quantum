@@ -21,8 +21,14 @@ export async function POST(req:NextRequest){
  const skillMode=task==="drama"?"drama":task==="website"?"website":task==="research"?"research":"book";
  const instructions=compileSasiSkillGuidance(validateSasiSkillIds(body.skillIds,skillMode));
  const system=task==="drama"?"Prepare a short-video production plan in the user's language: story, characters, shot sequence, visual references, dialogue, audio and continuity checks. Do not claim to have generated or saved a video.\n"+instructions:instructions;
+ // Preserve role boundaries. Never accept browser-supplied system instructions.
+ const history=Array.isArray(body.history)?body.history.slice(-24).filter((item:unknown)=>{
+  if(!item||typeof item!=="object")return false;
+  const row=item as Record<string,unknown>;
+  return (row.role==="user"||row.role==="assistant")&&typeof row.content==="string"&&row.content.length<=8000;
+ }).map((item:{role:"user"|"assistant";content:string})=>({role:item.role,content:item.content})):[]; 
  const tokens=Number(body.maxOutputTokens||1536);
- const out=await resilientText({userId:user.id,region,task,messages:[{role:"system",content:system},{role:"user",content:text}],maxOutputTokens:Number.isFinite(tokens)?Math.max(256,Math.min(4096,tokens)):1536,allowConnected:body.allowConnected===true&&body.acceptConnectedBilling===true,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160)});
+ const out=await resilientText({userId:user.id,region,task,messages:[{role:"system",content:system},...history,{role:"user",content:text}],maxOutputTokens:Number.isFinite(tokens)?Math.max(256,Math.min(4096,tokens)):1536,allowConnected:body.allowConnected===true&&body.acceptConnectedBilling===true,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160)});
  if(out.kind==="answer")return NextResponse.json({state:"answer",answer:out.answer,source:out.source,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
  return NextResponse.json({state:"needs-connection",needsConnection:true,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
 }
