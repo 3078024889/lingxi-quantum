@@ -43,7 +43,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
     if(userResource.kind==='answer'){setTurns(rows=>[...rows,{question,answer:userResource.answer}]);setStreaming(null);setPrompt('');return}
     setStreaming(null);
-    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:context?context+'\nUser: '+question:question,task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
+    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:question,history:turns.slice(-12).flatMap(t=>[{role:'user',content:t.question},...(t.answer?[{role:'assistant',content:t.answer}]:[])]),task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
     if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setPrompt('');return}
    }
    if(task==='image'&&!rights){setNotice(ct('rightsRequired'));return}
