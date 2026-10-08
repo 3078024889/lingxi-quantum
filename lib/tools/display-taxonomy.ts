@@ -19,7 +19,7 @@ const TABLE=new Set([
  "xlsx-to-csv","csv-to-xlsx","csv-json","ics-to-csv","vcf-to-csv","json-formatter"
 ]);
 const MEDIA=new Set([
- "video-toolkit","video-watermark-remover","reverse-video","loop-video","stop-motion-video","audio-cleanup"
+ "video-toolkit","video-watermark-remover","reverse-video","loop-video","stop-motion-video","audio-cleanup","ai-video-audio-check"
 ]);
 const TEXT=new Set([
  "text-counter","remove-duplicate-lines","remove-empty-lines","url-encode-decode","base64-encode-decode",
@@ -35,6 +35,7 @@ const PDF_EXACT=new Set([
 ]);
 
 export function toolDisplayCategory(slug:string):Exclude<ToolDisplayCategory,"all">{
+ if(slug==="ai-image-check")return"image";
  if(PRIVACY.has(slug))return"privacy";
  if(RECOGNITION.has(slug))return"recognition";
  if(SUBTITLE.has(slug))return"subtitle";
