@@ -74,6 +74,31 @@ async function main(){
  assert(stepCode.includes('executionController.abort()'),'lost lease must cancel cooperative work');
  assert(stepCode.includes('input.execute(executionController.signal)'),'step callback must receive cancellation');
  assert(stepCode.includes('if(leaseLost||executionController.signal.aborted)'),'lost lease must stop before step completion');
+ // Simulate lease fencing loss without touching production jobs or an external model.
+ const stepModule={exports:{}};let tick,finishExecution,observedSignal,stepCompleteCalls=0;
+ const stepAdmin={rpc:async(name)=>{
+  if(name==='claim_sasi_durable_step_v160')return {data:{claimed:true,attempt:1,fence_token:3}};
+  if(name==='renew_sasi_durable_step_lease_v160')return {data:{ok:false,error:'STEP_FENCE_LOST'}};
+  if(name==='complete_sasi_durable_step_v160'){stepCompleteCalls++;return {data:{ok:true}}}
+  return {data:{ok:false}};
+ }};
+ new Function('require','module','exports','setInterval','clearInterval',ts.transpileModule(stepCode,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(
+  name=>name==='server-only'?{}:name==='@/lib/supabase/admin'?{createAdminClient:()=>stepAdmin}:require(name),
+  stepModule,stepModule.exports,
+  callback=>{tick=callback;return {unref(){}}},
+  ()=>{}
+ );
+ const runningStep=stepModule.exports.durableStep({runId:'run',stepId:'step',input:{v:1},execute:signal=>{
+  observedSignal=signal;
+  return new Promise(resolve=>{finishExecution=resolve});
+ }});
+ for(let i=0;i<6&&!tick;i++)await Promise.resolve();
+ assert.equal(typeof tick,'function','lease heartbeat must be installed');
+ tick();for(let i=0;i<6;i++)await Promise.resolve();
+ assert.equal(observedSignal.aborted,true,'lease loss must abort worker signal');
+ finishExecution('stale output');
+ await assert.rejects(runningStep,/DURABLE_STEP_FENCE_LOST/);
+ assert.equal(stepCompleteCalls,0,'stale worker must not finalize output');
  const routerSource=fs.readFileSync('lib/sasi/experience/free-text-router.ts','utf8');
  const routerModule={exports:{}};
  const experienceProviders=()=>Array.from({length:5},(_,i)=>({id:'mock-'+i,region:'global',wire:'openai',baseUrl:'https://example.invalid/v1',apiKey:'not-real',model:'mock',priority:10+i,dailyShare:1,quality:.9,speed:.8,tasks:['chat'],canaryPercent:100}));
