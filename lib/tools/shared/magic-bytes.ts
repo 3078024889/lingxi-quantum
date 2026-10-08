@@ -96,6 +96,7 @@ export function extensionMismatch(file: File, detected: DetectedFileType): boole
     jpg: ["jpg", "jpeg"],
     jpeg: ["jpg", "jpeg"],
     heic: ["heic", "heif"],
+    mp4: ["mp4", "m4v", "mov", "m4a"],
     tif: ["tif", "tiff"],
   };
   const ok = aliases[detected.ext] || [detected.ext];
