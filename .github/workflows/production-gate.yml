@@ -58,6 +58,9 @@ jobs:
       - name: Playwright import/dependency contract
         run: pnpm ci:playwright-contract
 
+      - name: AI tools search regression
+        run: node scripts/ci/verify-ai-tool-search.mjs
+
       - name: Production build
         run: pnpm build
 
