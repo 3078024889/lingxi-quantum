@@ -32,9 +32,18 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    if(cancelled||sentRef.current||!data)return;
    if(typeof data.threadId==="string")threadRef.current=data.threadId;
    const rows:Array<{question:string;answer?:string}>=[];
+   const userMessages=new Map<string,{question:string;answer?:string}>();
    for(const message of Array.isArray(data.messages)?data.messages:[]){
-    if(message.role==="user"&&typeof message.content==="string")rows.push({question:message.content});
-    else if(message.role==="assistant"&&typeof message.content==="string"&&rows.length&&!rows[rows.length-1].answer)rows[rows.length-1].answer=message.content;
+    if(message.role==="user"&&typeof message.content==="string"&&typeof message.id==="string"){
+     const row={question:message.content} as {question:string;answer?:string};
+     rows.push(row);userMessages.set(message.id,row);
+    }
+   }
+   for(const message of Array.isArray(data.messages)?data.messages:[]){
+    if(message.role==="assistant"&&typeof message.content==="string"&&typeof message.parent_id==="string"){
+     const row=userMessages.get(message.parent_id);
+     if(row&&!row.answer)row.answer=message.content;
+    }
    }
    if(rows.length)setTurns(rows.slice(-40));
   }).catch(()=>{});
