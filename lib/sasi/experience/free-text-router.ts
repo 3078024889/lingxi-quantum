@@ -67,7 +67,7 @@ async function readChatEventStream(response:Response,onDelta:(text:string)=>void
   while(true){
    const {done,value}=await reader.read();
    if(done)break;
-   buffer+=decoder.decode(value,{stream:true}).replace(/\\r\n/g,"\n");
+   buffer+=decoder.decode(value,{stream:true}).replace(/\r\n/g,"\n");
    let pos;
    while((pos=buffer.indexOf("\n\n"))!==-1){
     consume(buffer.slice(0,pos));buffer=buffer.slice(pos+2);
