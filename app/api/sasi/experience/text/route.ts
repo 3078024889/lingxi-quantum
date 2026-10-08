@@ -39,6 +39,27 @@ export async function POST(req:NextRequest){
   return (row.role==="user"||row.role==="assistant")&&typeof row.content==="string"&&row.content.length<=8000;
  }).map((item:{role:"user"|"assistant";content:string})=>({role:item.role,content:item.content})):[]; 
  const tokens=Number(body.maxOutputTokens||1536);
+ const wantsStream=task==="chat"&&req.headers.get("accept")?.includes("text/event-stream")&&body.allowConnected!==true;
+ if(wantsStream){
+  const messages=[{role:"system" as const,content:system},...history,{role:"user" as const,content:text}];
+  const stream=new ReadableStream<Uint8Array>({
+   start(controller){
+    const encode=new TextEncoder();
+    const emit=(event:string,data:unknown)=>{try{controller.enqueue(encode.encode("event: "+event+"\\n"+"data: "+JSON.stringify(data)+"\\n\\n"))}catch{}};
+    emit("start",{state:"working"});
+    void resilientText({
+     userId:user.id,region,task,messages,
+     maxOutputTokens:Number.isFinite(tokens)?Math.max(256,Math.min(4096,tokens)):1536,
+     allowConnected:false,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160),
+     onDelta:delta=>emit("delta",{text:delta}),onReset:()=>emit("reset",{})
+    }).then(out=>{
+     if(out.kind==="answer")emit("done",{state:"answer",answer:out.answer,experienceExhausted:out.experienceExhausted});
+     else emit("done",{state:"needs-connection",experienceExhausted:out.experienceExhausted});
+    }).catch(()=>emit("done",{state:"needs-connection",experienceExhausted:false})).finally(()=>{try{controller.close()}catch{}});
+   }
+  });
+  return new Response(stream,{headers:{"Content-Type":"text/event-stream; charset=utf-8","Cache-Control":"private, no-store, no-transform","X-Accel-Buffering":"no"}});
+ }
  const out=await resilientText({userId:user.id,region,task,messages:[{role:"system",content:system},...history,{role:"user",content:text}],maxOutputTokens:Number.isFinite(tokens)?Math.max(256,Math.min(4096,tokens)):1536,allowConnected:body.allowConnected===true&&body.acceptConnectedBilling===true,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160)});
  if(out.kind==="answer")return NextResponse.json({state:"answer",answer:out.answer,source:out.source,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
  return NextResponse.json({state:"needs-connection",needsConnection:true,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
