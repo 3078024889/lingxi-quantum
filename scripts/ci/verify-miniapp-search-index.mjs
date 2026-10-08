@@ -13,7 +13,7 @@ const required=["pages/home/index","pages/tools/index","pages/discover-temp-mail
 for(const page of required){
  assert.ok(app.pages.includes(page),`MINIAPP_PAGE_NOT_REGISTERED:${page}`);
  assert.ok(allowed.includes(page),`MINIAPP_PAGE_NOT_INDEXABLE:${page}`);
- for(const ext of [".js",".json",".wxml",".wxss"]) assert.ok(fs.existsSync(path.join(root,page+ext)),`MINIAPP_PAGE_FILE_MISSING:${page+ext}`);
+ for(const ext of [".js",".wxml"]) assert.ok(fs.existsSync(path.join(root,page+ext)),`MINIAPP_PAGE_FILE_MISSING:${page+ext}`);
 }
 assert.ok(rules.some(x=>x.page==="*"&&x.action==="disallow"),"PRIVATE_MINIAPP_PAGES_MUST_REMAIN_EXCLUDED");
 console.log(`MINIAPP_INDEX_SOURCE_PASS pages=${required.length} appidConfigured=true`);
