@@ -6,8 +6,8 @@ import type { ToolMeta } from "./types";
  * 状态 live = 本仓库已实现直接处理；planned = 仅目录占位，不假装可用。
  */
 export const TOOLS: ToolMeta[] = [
-  { slug: "ai-image-check", category: "image", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 图片来源检查（基础版）", titleEn: "AI Image Provenance Check (Basic)", oneLinerZh: "当前仅检查图片实际格式，暂不支持 AI 真伪判定和来源签名验证。", oneLinerEn: "File format only; AI authenticity and signed provenance not yet available.", keywords: ["AI图片真假检测", "AI图片来源", "C2PA图片验证"], related: ["file-type-detector", "remove-exif"] },
-  { slug: "ai-video-audio-check", category: "file", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 视频音频来源检查（基础版）", titleEn: "AI Video and Audio Provenance Check (Basic)", oneLinerZh: "当前仅检查视频音频格式，暂不支持 AI 真伪判定和来源签名验证。", oneLinerEn: "File format only; AI authenticity and signed provenance not yet available.", keywords: ["AI视频真假检测", "AI音频真假检测", "C2PA视频验证"], related: ["file-type-detector", "ai-image-check"] },
+  { slug: "ai-image-check", category: "image", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 图片检测", titleEn: "AI Image Analysis", oneLinerZh: "查看图片是否存在 AI 生成特征，并了解检测依据与适用范围。", oneLinerEn: "Review possible AI-generation indicators in an image, with clear limitations.", keywords: ["AI图片真假检测", "AI图片来源", "C2PA图片验证"], related: ["file-type-detector", "remove-exif"] },
+  { slug: "ai-video-audio-check", category: "file", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 视频与音频检测", titleEn: "AI Video and Audio Analysis", oneLinerZh: "分析视频中的代表性画面或音频中的人声，查看可能的 AI 合成痕迹。", oneLinerEn: "Analyze selected video frames or speech for possible AI-generation indicators.", keywords: ["AI视频真假检测", "AI音频真假检测", "C2PA视频验证"], related: ["file-type-detector", "ai-image-check"] },
 
   ...[
     ["text-counter", "字数与字符统计", "Text Counter", "统计汉字、英文词、字符、行数与UTF-8字节。"],

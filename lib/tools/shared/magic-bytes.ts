@@ -32,12 +32,23 @@ export async function detectFileType(file: File): Promise<DetectedFileType> {
   if (match(head, [0x25, 0x50, 0x44, 0x46])) {
     return { ext: "pdf", mime: "application/pdf", label: "PDF document", confidence: "high" };
   }
-  // ZIP-based (docx/xlsx/pptx/apk…)
+  // Inspect ZIP member paths; extension alone is never evidence of Office type.
   if (match(head, [0x50, 0x4b, 0x03, 0x04]) || match(head, [0x50, 0x4b, 0x05, 0x06])) {
-    if (name.endsWith(".docx")) return { ext: "docx", mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", label: "Word (DOCX / ZIP)", confidence: "medium" };
-    if (name.endsWith(".xlsx")) return { ext: "xlsx", mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", label: "Excel (XLSX / ZIP)", confidence: "medium" };
-    if (name.endsWith(".pptx")) return { ext: "pptx", mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation", label: "PowerPoint (PPTX / ZIP)", confidence: "medium" };
-    return { ext: "zip", mime: "application/zip", label: "ZIP archive (or Office Open XML)", confidence: "high" };
+    const generic: DetectedFileType = { ext: "zip", mime: "application/zip", label: "ZIP archive", confidence: "high" };
+    try {
+      const JSZip = (await import("jszip")).default;
+      const archive = await JSZip.loadAsync(file, { checkCRC32: false, createFolders: false });
+      const has = (key: string) => Boolean(archive.file(key));
+      if (has("[Content_Types].xml")) {
+        if (has("word/document.xml")) return { ext: "docx", mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", label: "Word document (DOCX)", confidence: "high" };
+        if (has("xl/workbook.xml")) return { ext: "xlsx", mime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", label: "Excel workbook (XLSX)", confidence: "high" };
+        if (has("ppt/presentation.xml")) return { ext: "pptx", mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation", label: "PowerPoint presentation (PPTX)", confidence: "high" };
+      }
+      return generic;
+    } catch {
+      // Corrupt, encrypted or unsupported archives cannot safely claim an Office subtype.
+      return { ext: "zip", mime: "application/zip", label: "ZIP signature found; archive contents could not be verified", confidence: "low" };
+    }
   }
   // HEIC/HEIF (ftyp....heic/heif/mif1)
   if (match(head, [0x66, 0x74, 0x79, 0x70], 4)) {
@@ -85,6 +96,7 @@ export function extensionMismatch(file: File, detected: DetectedFileType): boole
     jpg: ["jpg", "jpeg"],
     jpeg: ["jpg", "jpeg"],
     heic: ["heic", "heif"],
+    mp4: ["mp4", "m4v", "mov", "m4a"],
     tif: ["tif", "tiff"],
   };
   const ok = aliases[detected.ext] || [detected.ext];

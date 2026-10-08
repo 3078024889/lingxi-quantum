@@ -504,14 +504,14 @@ async function runFileTool(
   if (tool.slug === "file-type-detector") {
     const detected = await detectFileType(file);
     const mismatch = extensionMismatch(file, detected);
-    const unknown = detected.confidence === "low" && /^(Claimed type:|Unknown binary)/.test(detected.label);
+    const unknown = detected.confidence === "low";
     return {
       ok: true,
       messageZh: unknown
         ? "暂时无法识别该文件的格式。请确认文件是否完整。"
         : mismatch
           ? `检测结果：${detected.label}。文件名与实际格式不一致，建议核对后再使用。`
-          : `检测结果：${detected.label}。文件名与格式一致。`,
+          : `检测结果：${detected.label}。文件名与识别格式一致。`,
       messageEn: unknown
         ? "File format could not be identified. Please check that the file is complete."
         : mismatch

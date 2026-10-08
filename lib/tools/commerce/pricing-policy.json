@@ -293,6 +293,46 @@
       "USD": {
         "perStartedMinutePerTargetLanguage": 1.5
       }
+    },
+    "ai-image-check": {
+      "mode": "disabled-quality-gate",
+      "free": {
+        "perAccountPerDay": 3,
+        "localFormatCheck": "free"
+      },
+      "CNY": {
+        "perImage": 1
+      },
+      "USD": {
+        "perImage": 1
+      },
+      "requires": [
+        "validated_deep_analysis",
+        "server_authoritative_daily_quota",
+        "idempotent_billing",
+        "verified_results"
+      ]
+    },
+    "ai-video-audio-check": {
+      "mode": "disabled-quality-gate",
+      "free": {
+        "sharedVideoAudioPerAccountPerDay": 3,
+        "localFormatCheck": "free"
+      },
+      "rounding": "ceil(durationSeconds / 60) per file; sum per-file charges",
+      "CNY": {
+        "perStartedMinute": 1
+      },
+      "USD": {
+        "perStartedMinute": 1
+      },
+      "requires": [
+        "validated_full_media_analysis",
+        "server_authoritative_daily_quota",
+        "ip_rate_limit",
+        "idempotent_billing",
+        "verified_results"
+      ]
     }
   }
 }
