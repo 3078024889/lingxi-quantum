@@ -48,8 +48,10 @@ export async function POST(req:NextRequest){
  if(existing&&existing.user_id!==user)return NextResponse.json({error:"HISTORY_NOT_FOUND"},{status:404,headers:noCache});
  if(!existing){
   const {error}=await db.from("sasi_conversation_threads").insert({id:threadId,user_id:user,title:question.slice(0,120),active_mode:"chat"});
-  if(error?.code==="23505")return NextResponse.json({error:"HISTORY_CONFLICT"},{status:409,headers:noCache});
-  if(error)return NextResponse.json({error:"HISTORY_UNAVAILABLE"},{status:503,headers:noCache});
+  if(error?.code==="23505"){
+   const {data:owner,error:checkError}=await db.from("sasi_conversation_threads").select("user_id").eq("id",threadId).maybeSingle();
+   if(checkError||owner?.user_id!==user)return NextResponse.json({error:"HISTORY_CONFLICT"},{status:409,headers:noCache});
+  }else if(error)return NextResponse.json({error:"HISTORY_UNAVAILABLE"},{status:503,headers:noCache});
  }
  const {data:duplicate,error:dupeError}=await db.from("sasi_conversation_messages")
   .select("id,content").eq("id",requestId).eq("user_id",user).eq("thread_id",threadId).maybeSingle();
