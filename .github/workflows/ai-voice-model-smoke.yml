@@ -1,0 +1,34 @@
+name: LINGXIFIELD Real AI Voice Model Smoke
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'components/tools/OptionalAIVoiceAnalysis.tsx'
+      - 'components/tools/OptionalAIVideoFrameAnalysis.tsx'
+      - 'scripts/ci/verify-ai-voice-model.mjs'
+      - '.github/workflows/ai-voice-model-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  voice-model-runtime:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Load quantized voice model and run real 16kHz inference
+        run: node --max-old-space-size=4096 scripts/ci/verify-ai-voice-model.mjs

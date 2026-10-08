@@ -7,7 +7,7 @@ const MODEL_ID="onnx-community/ai-image-detection-ONNX";
 type Prediction={label:string;score:number};
 type Classifier=(input:Blob)=>Promise<Prediction[]|Prediction>;
 let classifierPromise:Promise<Classifier>|null=null;
-async function loadClassifier():Promise<Classifier>{
+export async function loadClassifier():Promise<Classifier>{
   if(!classifierPromise){
     classifierPromise=import("@huggingface/transformers").then(async ({pipeline})=>{
       // Explicitly opt-in: downloading ONNX weights can consume considerable bandwidth.
