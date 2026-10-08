@@ -49,12 +49,43 @@ async function candidates(region:ExperienceRegion,task:ExperienceTask,userId:str
  }).filter(x=>!x.breakerOpen&&!cooled(x.s.cooldownUntil)).sort((a,b)=>b.score-a.score);
 }
 
-async function openai(p:ExperienceProvider,messages:Message[],maxTokens:number,signal:AbortSignal){
+async function readChatEventStream(response:Response,onDelta:(text:string)=>void):Promise<string>{
+ if(!response.body)throw new Error("EXPERIENCE_STREAM_MISSING");
+ const reader=response.body.getReader(),decoder=new TextDecoder();
+ let buffer="",whole="",finished=false;
+ function consume(frame:string){
+  const rows=frame.split("\n").filter(row=>row.startsWith("data:")).map(row=>row.slice(5).trim());
+  if(!rows.length)return;
+  const raw=rows.join("\n");if(raw==="[DONE]"){finished=true;return}
+  let payload:any;try{payload=JSON.parse(raw)}catch{return}
+  if(payload.error)throw new Error("EXPERIENCE_STREAM_ERROR");
+  const delta=payload?.choices?.[0]?.delta?.content;
+  const text=typeof delta==="string"?delta:"";
+  if(text){whole+=text;onDelta(text)}
+ }
+ try{
+  while(true){
+   const {done,value}=await reader.read();
+   if(done)break;
+   buffer+=decoder.decode(value,{stream:true}).replace(/\\r\n/g,"\n");
+   let pos;
+   while((pos=buffer.indexOf("\n\n"))!==-1){
+    consume(buffer.slice(0,pos));buffer=buffer.slice(pos+2);
+   }
+   if(buffer.length>1024*1024)throw new Error("EXPERIENCE_STREAM_TOO_LARGE");
+  }
+  if(buffer.trim())consume(buffer);
+  if(!whole.trim()||!finished)throw new Error("EXPERIENCE_STREAM_INCOMPLETE");
+  return whole.trim();
+ }finally{reader.releaseLock()}
+}
+\nasync function openai(p:ExperienceProvider,messages:Message[],maxTokens:number,signal:AbortSignal,onDelta?:(text:string)=>void){
  const r=await fetch(`${p.baseUrl.replace(/\/$/,"")}/chat/completions`,{method:"POST",cache:"no-store",redirect:"error",signal,
   headers:{"content-type":"application/json",authorization:`Bearer ${p.apiKey}`,...(p.id==="openrouter-free"?{"HTTP-Referer":"https://lingxifield.com","X-Title":"LINGXIFIELD SASI"}:{})},
-  body:JSON.stringify({model:p.model,messages,max_tokens:maxTokens,stream:false})});
- const data=await r.json().catch(()=>({}));
+  body:JSON.stringify({model:p.model,messages,max_tokens:maxTokens,stream:Boolean(onDelta)})});
  if(!r.ok){const e:any=new Error(`EXPERIENCE_PROVIDER_HTTP_${r.status}`);e.status=r.status;e.retryAfterSeconds=retryAfterSeconds(r.headers);throw e}
+ if(onDelta)return readChatEventStream(r,onDelta);
+ const data=await r.json().catch(()=>({}));
  const text=String(data?.choices?.[0]?.message?.content||"").trim();if(!text)throw new Error("EXPERIENCE_PROVIDER_EMPTY");return text;
 }
 async function gemini(p:ExperienceProvider,messages:Message[],maxTokens:number,signal:AbortSignal){
@@ -73,12 +104,12 @@ async function cloudflare(p:ExperienceProvider,messages:Message[],maxTokens:numb
  const data=await r.json().catch(()=>({}));if(!r.ok){const e:any=new Error(`EXPERIENCE_PROVIDER_HTTP_${r.status}`);e.status=r.status;e.retryAfterSeconds=retryAfterSeconds(r.headers);throw e}
  const text=String(data?.result?.response??data?.result?.text??"").trim();if(!text)throw new Error("EXPERIENCE_PROVIDER_EMPTY");return text;
 }
-async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,timeoutMs:number){
+async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,timeoutMs:number,onDelta?:(text:string)=>void){
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);
  try{
-  if(p.wire==="gemini")return await gemini(p,messages,maxTokens,controller.signal);
-  if(p.wire==="cloudflare")return await cloudflare(p,messages,maxTokens,controller.signal);
-  return await openai(p,messages,maxTokens,controller.signal);
+  if(p.wire==="gemini"){const answer=await gemini(p,messages,maxTokens,controller.signal);onDelta?.(answer);return answer}
+  if(p.wire==="cloudflare"){const answer=await cloudflare(p,messages,maxTokens,controller.signal);onDelta?.(answer);return answer}
+  return await openai(p,messages,maxTokens,controller.signal,onDelta);
  }finally{clearTimeout(timer)}
 }
 
@@ -90,19 +121,19 @@ async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,tim
  * 4) 429/5xx/timeout -> provider cooldown + immediate next source
  * 5) bounded attempts; no provider failure is returned directly to the UI
  */
-export async function runExperienceText(input:{region:ExperienceRegion;task:ExperienceTask;messages:Message[];maxOutputTokens?:number;userId:string;sessionKey:string}):Promise<ExperienceResult>{
+export async function runExperienceText(input:{region:ExperienceRegion;task:ExperienceTask;messages:Message[];maxOutputTokens?:number;userId:string;sessionKey:string;onDelta?:(text:string)=>void;onReset?:()=>void}):Promise<ExperienceResult>{
  const list=await candidates(input.region,input.task,input.userId,input.sessionKey);
  if(!list.length)throw new Error("EXPERIENCE_POOL_UNAVAILABLE");
  const maxTokens=Math.max(256,Math.min(4096,Number(input.maxOutputTokens||1536)));
- let attempts=0,last:unknown;
+ let attempts=0,last:unknown,hadPartial=false;
  // Keep total fallback latency below the 60s route limit, including DB settlement overhead.
  const deadline=Date.now()+42_000;
  for(const {p} of list.slice(0,5)){
   const remaining=deadline-Date.now();
   if(remaining<5_000)break;
-  attempts++;const started=Date.now();
+  if(hadPartial){input.onReset?.();hadPartial=false}\n  attempts++;const started=Date.now();
   try{
-   const text=await call(p,input.messages,maxTokens,Math.min(12_000,Math.max(5_000,remaining-1_000)));const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
+   const text=await call(p,input.messages,maxTokens,Math.min(12_000,Math.max(5_000,remaining-1_000)),input.onDelta?chunk=>{hadPartial=true;input.onDelta?.(chunk)}:undefined);const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
    await recordProviderRun({providerId:p.id,ok:true,tokens,latencyMs:latency});
    await setSessionAffinity(input.userId,input.sessionKey,p.id);
    return {text,providerId:p.id,model:p.model,attempts,estimatedTokens:tokens};
@@ -115,5 +146,5 @@ export async function runExperienceText(input:{region:ExperienceRegion;task:Expe
    continue;
   }
  }
- throw last instanceof Error?last:new Error("EXPERIENCE_POOL_FAILED");
+ if(hadPartial)input.onReset?.();\n throw last instanceof Error?last:new Error("EXPERIENCE_POOL_FAILED");
 }
