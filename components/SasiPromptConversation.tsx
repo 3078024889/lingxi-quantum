@@ -23,13 +23,40 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const [turns,setTurns]=useState<Array<{question:string;answer?:string;image?:string}>>([]),[quote,setQuote]=useState<{id:string;estimated_fen:number;question:string;currency:string}|null>(null);
  const [streaming,setStreaming]=useState<{question:string;answer:string}|null>(null);
  const [needsConnection,setNeedsConnection]=useState(false);const exhausted=useRef(false);
+ const threadRef=useRef("");
+ const sentRef=useRef(false);
+ useEffect(()=>{
+  if(task!=="chat")return;
+  let cancelled=false;
+  void fetch("/api/sasi/conversations",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(data=>{
+   if(cancelled||sentRef.current||!data)return;
+   if(typeof data.threadId==="string")threadRef.current=data.threadId;
+   const rows:Array<{question:string;answer?:string}>=[];
+   for(const message of Array.isArray(data.messages)?data.messages:[]){
+    if(message.role==="user"&&typeof message.content==="string")rows.push({question:message.content});
+    else if(message.role==="assistant"&&typeof message.content==="string"&&rows.length&&!rows[rows.length-1].answer)rows[rows.length-1].answer=message.content;
+   }
+   if(rows.length)setTurns(rows.slice(-40));
+  }).catch(()=>{});
+  return()=>{cancelled=true};
+ },[task]);
+ function commitText(question:string,answer:string){
+  setTurns(rows=>[...rows,{question,answer}]);setPrompt("");
+  if(task!=="chat")return;
+  const threadId=threadRef.current||crypto.randomUUID();
+  threadRef.current=threadId;
+  void fetch("/api/sasi/conversations",{
+   method:"POST",headers:{"content-type":"application/json"},
+   body:JSON.stringify({threadId,requestId:crypto.randomUUID(),question,answer})
+  }).catch(()=>{});
+ }
  const began=useRef(false);
  useEffect(()=>{if(autoStart&&!began.current){began.current=true;void send()}},[autoStart]);
  const lock=useRef(false),input=useRef<HTMLInputElement>(null),previous=useRef<string|undefined>(undefined);
  async function send(confirm=false){
   if(lock.current||(!confirm&&!prompt.trim()))return;
   // Switching workspaces must be a user decision, never an automatic keyword redirect.
-  lock.current=true;setBusy(true);setNotice('');
+  sentRef.current=true;lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
   try{
    if(task==='chat'&&!confirm){
@@ -37,14 +64,14 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
      ...turns.slice(-12).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
      {role:'user',content:question}
     ]});
-    if(local.kind==='answer'){setTurns(rows=>[...rows,{question,answer:local.answer}]);setPrompt('');return}
+    if(local.kind==='answer'){commitText(question,local.answer);return}
     const context=turns.length?turns.slice(-12).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-16000):'';
     let streamed="";
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
-    if(userResource.kind==='answer'){setTurns(rows=>[...rows,{question,answer:userResource.answer}]);setStreaming(null);setPrompt('');return}
+    if(userResource.kind==='answer'){commitText(question,userResource.answer);setStreaming(null);return}
     setStreaming(null);
     const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:question,history:turns.slice(-12).flatMap(t=>[{role:'user',content:t.question},...(t.answer?[{role:'assistant',content:t.answer}]:[])]),task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
-    if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setPrompt('');return}
+    if(response.ok&&data.state==='answer'){commitText(question,data.answer);return}
    }
    if(task==='image'&&!rights){setNotice(ct('rightsRequired'));return}
    const response=await fetch('/api/sasi/byok/'+(task==='image'?'image':'text'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(confirm?{action:'confirm',taskId:quote?.id,acceptSupplierBilling:true}:task==='image'?{action:'quote',prompt:question,functions,rightsConfirmed:rights,aiLabelAcknowledged:rights}:{action:'quote',question,mode:'chat',functions,previousId:previous.current})});
@@ -52,7 +79,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    if(!confirm){if(!data.task?.id)throw Error('QUOTE_MISSING');setQuote({...data.task,question,currency:data.billingCurrency||data.currency||'CNY'});setNotice(ct('confirm'));return}
    if(data.task?.state!=='succeeded'){setQuote(null);setNotice(ct('supplierNeedsCheck'));return}
    const output=data.task.output;if(task==='image'&&!output?.imageUrl||task==='chat'&&!output?.answer)throw Error('RESULT_MISSING');
-   setTurns(rows=>[...rows,{question,answer:task==='chat'?output.answer:undefined,image:task==='image'?output.imageUrl:undefined}]);if(task==='chat')previous.current=data.task.id;setPrompt('');setQuote(null);
+   if(task==='chat'){commitText(question,output.answer);previous.current=data.task.id}else{setTurns(rows=>[...rows,{question,image:output.imageUrl}]);setPrompt('')}setQuote(null);
   }catch{setNotice(ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false)}
  }
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
