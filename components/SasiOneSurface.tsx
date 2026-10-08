@@ -15,7 +15,7 @@ export default function SasiOneSurface(){
  const params=useSearchParams();
  const intent=(params.get("intent")||"").slice(0,16000);
  const legacy=legacyMode(params.get("mode"));
- const [mode,setMode]=useState<SasiEntryMode|null>(()=>intent?inferUnifiedSasiIntent(intent,false):legacy);
+ const [mode,setMode]=useState<SasiEntryMode|null>(()=>intent?(inferUnifiedSasiIntent(intent,false)==="image"?"image":"chat"):legacy);
  const [initialPrompt,setInitialPrompt]=useState(intent);
  const [autoStart,setAutoStart]=useState(Boolean(intent));
  const [initialFiles,setInitialFiles]=useState<File[]>([]);
@@ -27,12 +27,14 @@ export default function SasiOneSurface(){
   window.history.replaceState({},"",url.pathname+(url.searchParams.toString()?"?"+url.searchParams.toString():""));
  }
  function enter(next:SasiEntryMode,prompt="",files:File[]=[],skillIds:SasiSkillId[]=[]){
+  // Keep natural-language requests in one dialogue. A workspace opens only by explicit user choice.
+  if(next!=="chat"&&next!=="image"&&!files.length&&!skillIds.length&&prompt.trim()){next="chat"}
   setAutoStart(Boolean(prompt)||files.length>0);setInitialPrompt(prompt);setInitialFiles(files);setInitialSkillIds(skillIds);setMode(next);cleanRoute(next!==mode);
  }
  function switchMode(next:SasiEntryMode,prompt=""){
   setAutoStart(Boolean(prompt));setInitialPrompt(prompt);setInitialFiles([]);setInitialSkillIds([]);setMode(next);cleanRoute(next!==mode);
  }
  return <main className="lx11-page min-h-[calc(100vh-64px)]"><div className="mx-auto max-w-[1440px] px-3 sm:px-5"><SasiUnifiedConversationProvider>
- {mode==="chat"||mode==="image"?<SasiPromptConversation key={mode} onTask={(task,prompt)=>enter(task,prompt)} autoStart={autoStart} task={mode} initialPrompt={initialPrompt} onFiles={(files,prompt)=>enter("book",prompt,files)}/>:mode?<SasiModeHost autoStart={autoStart} mode={mode} initialPrompt={initialPrompt} initialFiles={initialFiles} initialSkillIds={initialSkillIds} onSwitch={switchMode}/>:<SasiUnifiedLauncher initialPrompt={intent} onStart={enter}/>}
+ {mode==="chat"||mode==="image"?<SasiPromptConversation key={mode} onTask={(task,prompt)=>switchMode(task,prompt)} autoStart={autoStart} task={mode} initialPrompt={initialPrompt} onFiles={(files,prompt)=>enter("book",prompt,files)}/>:mode?<SasiModeHost autoStart={autoStart} mode={mode} initialPrompt={initialPrompt} initialFiles={initialFiles} initialSkillIds={initialSkillIds} onSwitch={switchMode}/>:<SasiUnifiedLauncher initialPrompt={intent} onStart={enter}/>}
  </SasiUnifiedConversationProvider></div></main>;
 }

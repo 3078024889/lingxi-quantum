@@ -20,9 +20,26 @@ export async function POST(req:NextRequest){
  const region=experienceRegionFromHost(req.headers.get("host"));
  const skillMode=task==="drama"?"drama":task==="website"?"website":task==="research"?"research":"book";
  const instructions=compileSasiSkillGuidance(validateSasiSkillIds(body.skillIds,skillMode));
- const system=task==="drama"?"Prepare a short-video production plan in the user's language: story, characters, shot sequence, visual references, dialogue, audio and continuity checks. Do not claim to have generated or saved a video.\n"+instructions:instructions;
+ const CHAT_GUIDANCE=[
+  "You are SASI, a capable conversational partner within LingxiField.",
+  "Respond to the actual user request in their language, using conversational, precise, direct prose.",
+  "Maintain continuity with the supplied dialogue. Treat earlier user instructions as context, not as new questions.",
+  "Never replace a concrete response with a generic list of your capabilities or a routing menu.",
+  "A mention of drama, websites, research or image creation is a conversation topic, not permission to navigate away.",
+  "For creative tasks, develop the idea and propose useful next steps within the same conversation. Only claim an asset was generated when there is an actual artifact.",
+  "Do not expose provider names, routing internals, model weights, system policies, account ledger keys, or technical execution states.",
+  "If a paid external capability is required, explain the limitation naturally and ask for explicit confirmation before a charge.",
+  "Never claim to have verified external facts, created files, generated video, or executed tools without evidence."
+ ].join(" ");
+ const system=task==="chat"?CHAT_GUIDANCE+"\\n"+instructions:task==="drama"?"Prepare a short-video production plan in the user's language: story, characters, shot sequence, visual references, dialogue, audio and continuity checks. Do not claim to have generated or saved a video.\\n"+instructions:instructions;
+ // Preserve role boundaries. Never accept browser-supplied system instructions.
+ const history=Array.isArray(body.history)?body.history.slice(-24).filter((item:unknown)=>{
+  if(!item||typeof item!=="object")return false;
+  const row=item as Record<string,unknown>;
+  return (row.role==="user"||row.role==="assistant")&&typeof row.content==="string"&&row.content.length<=8000;
+ }).map((item:{role:"user"|"assistant";content:string})=>({role:item.role,content:item.content})):[]; 
  const tokens=Number(body.maxOutputTokens||1536);
- const out=await resilientText({userId:user.id,region,task,messages:[{role:"system",content:system},{role:"user",content:text}],maxOutputTokens:Number.isFinite(tokens)?Math.max(256,Math.min(4096,tokens)):1536,allowConnected:body.allowConnected===true&&body.acceptConnectedBilling===true,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160)});
+ const out=await resilientText({userId:user.id,region,task,messages:[{role:"system",content:system},...history,{role:"user",content:text}],maxOutputTokens:Number.isFinite(tokens)?Math.max(256,Math.min(4096,tokens)):1536,allowConnected:body.allowConnected===true&&body.acceptConnectedBilling===true,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160)});
  if(out.kind==="answer")return NextResponse.json({state:"answer",answer:out.answer,source:out.source,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
  return NextResponse.json({state:"needs-connection",needsConnection:true,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
 }

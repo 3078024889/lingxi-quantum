@@ -1,5 +1,5 @@
 "use client";
-import {inferUnifiedSasiIntent} from '@/lib/sasi/core/unified-intent';
+import {inferUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
 import type {SasiEntryMode} from './SasiUnifiedLauncher';
 import Link from 'next/link';
 import {functionMenuText} from '@/lib/sasi/function-menu-i18n';
@@ -24,28 +24,64 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const [turns,setTurns]=useState<Array<{question:string;answer?:string;image?:string}>>([]),[quote,setQuote]=useState<{id:string;estimated_fen:number;question:string;currency:string}|null>(null);
  const [streaming,setStreaming]=useState<{question:string;answer:string}|null>(null);
  const [needsConnection,setNeedsConnection]=useState(false);const exhausted=useRef(false);
+ const threadRef=useRef("");
+ const sentRef=useRef(false);
+ useEffect(()=>{
+  if(task!=="chat")return;
+  let cancelled=false;
+  void fetch("/api/sasi/conversations",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(data=>{
+   if(cancelled||sentRef.current||!data)return;
+   if(typeof data.threadId==="string")threadRef.current=data.threadId;
+   const rows:Array<{question:string;answer?:string}>=[];
+   const userMessages=new Map<string,{question:string;answer?:string}>();
+   for(const message of Array.isArray(data.messages)?data.messages:[]){
+    if(message.role==="user"&&typeof message.content==="string"&&typeof message.id==="string"){
+     const row={question:message.content} as {question:string;answer?:string};
+     rows.push(row);userMessages.set(message.id,row);
+    }
+   }
+   for(const message of Array.isArray(data.messages)?data.messages:[]){
+    if(message.role==="assistant"&&typeof message.content==="string"&&typeof message.parent_id==="string"){
+     const row=userMessages.get(message.parent_id);
+     if(row&&!row.answer)row.answer=message.content;
+    }
+   }
+   if(rows.length)setTurns(rows.slice(-40));
+  }).catch(()=>{});
+  return()=>{cancelled=true};
+ },[task]);
+ function commitText(question:string,answer:string){
+  setTurns(rows=>[...rows,{question,answer}]);setPrompt("");
+  if(task!=="chat")return;
+  const threadId=threadRef.current||crypto.randomUUID();
+  threadRef.current=threadId;
+  void fetch("/api/sasi/conversations",{
+   method:"POST",headers:{"content-type":"application/json"},
+   body:JSON.stringify({threadId,requestId:crypto.randomUUID(),question,answer})
+  }).catch(()=>{});
+ }
  const began=useRef(false);
  useEffect(()=>{if(autoStart&&!began.current){began.current=true;void send()}},[autoStart]);
  const lock=useRef(false),input=useRef<HTMLInputElement>(null),previous=useRef<string|undefined>(undefined);
  async function send(confirm=false){
   if(lock.current||(!confirm&&!prompt.trim()))return;
-  if(!confirm){const text=prompt.trim(),intent=inferUnifiedSasiIntent(text,false);if(intent!==task&&intent!=='chat'){onTask(intent,text);return}if(task==='image'&&intent==='chat'){onTask('chat',text);return}}
-  lock.current=true;setBusy(true);setNotice('');
+  // Switching workspaces must be a user decision, never an automatic keyword redirect.
+  sentRef.current=true;lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
   try{
    if(task==='chat'&&!confirm){
     const local=await tryBrowserLocalText({lang,messages:[
-     ...turns.slice(-4).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
+     ...turns.slice(-12).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
      {role:'user',content:question}
     ]});
-    if(local.kind==='answer'){setTurns(rows=>[...rows,{question,answer:local.answer}]);setPrompt('');return}
-    const context=turns.length?turns.slice(-4).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-8000):'';
+    if(local.kind==='answer'){commitText(question,local.answer);return}
+    const context=turns.length?turns.slice(-12).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-16000):'';
     let streamed="";
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
-    if(userResource.kind==='answer'){setTurns(rows=>[...rows,{question,answer:userResource.answer}]);setStreaming(null);setPrompt('');return}
+    if(userResource.kind==='answer'){commitText(question,userResource.answer);setStreaming(null);return}
     setStreaming(null);
-    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:context?context+'\nUser: '+question:question,task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
-    if(response.ok&&data.state==='answer'){setTurns(rows=>[...rows,{question,answer:data.answer}]);setPrompt('');return}
+    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:question,history:turns.slice(-12).flatMap(t=>[{role:'user',content:t.question},...(t.answer?[{role:'assistant',content:t.answer}]:[])]),task:'chat',allowConnected:false})});const data=await response.json();exhausted.current=data.experienceExhausted===true;
+    if(response.ok&&data.state==='answer'){commitText(question,data.answer);return}
    }
    if(task==='image'&&!rights){setNotice(ct('rightsRequired'));return}
    const response=await fetch('/api/sasi/byok/'+(task==='image'?'image':'text'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(confirm?{action:'confirm',taskId:quote?.id,acceptSupplierBilling:true}:task==='image'?{action:'quote',prompt:question,functions,rightsConfirmed:rights,aiLabelAcknowledged:rights}:{action:'quote',question,mode:'chat',functions,previousId:previous.current})});
@@ -53,11 +89,11 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    if(!confirm){if(!data.task?.id)throw Error('QUOTE_MISSING');setQuote({...data.task,question,currency:data.billingCurrency||data.currency||'CNY'});setNotice(ct('confirm'));return}
    if(data.task?.state!=='succeeded'){setQuote(null);setNotice(ct('supplierNeedsCheck'));return}
    const output=data.task.output;if(task==='image'&&!output?.imageUrl||task==='chat'&&!output?.answer)throw Error('RESULT_MISSING');
-   setTurns(rows=>[...rows,{question,answer:task==='chat'?output.answer:undefined,image:task==='image'?output.imageUrl:undefined}]);if(task==='chat')previous.current=data.task.id;setPrompt('');setQuote(null);
+   if(task==='chat'){commitText(question,output.answer);previous.current=data.task.id}else{setTurns(rows=>[...rows,{question,image:output.imageUrl}]);setPrompt('')}setQuote(null);
   }catch{setNotice(ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false)}
  }
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
-  <div className="flex-1 pt-10">{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
+  <div className="flex-1 pt-10">{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>onTask(destination,turn.question)} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
   <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={busy} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
    <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<div className="grid gap-3"><SasiLocalIntelligenceAction/><SasiUserResourceAction/></div>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}

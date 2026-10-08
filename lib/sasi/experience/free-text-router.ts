@@ -73,8 +73,8 @@ async function cloudflare(p:ExperienceProvider,messages:Message[],maxTokens:numb
  const data=await r.json().catch(()=>({}));if(!r.ok){const e:any=new Error(`EXPERIENCE_PROVIDER_HTTP_${r.status}`);e.status=r.status;e.retryAfterSeconds=retryAfterSeconds(r.headers);throw e}
  const text=String(data?.result?.response??data?.result?.text??"").trim();if(!text)throw new Error("EXPERIENCE_PROVIDER_EMPTY");return text;
 }
-async function call(p:ExperienceProvider,messages:Message[],maxTokens:number){
- const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),18_000);
+async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,timeoutMs:number){
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);
  try{
   if(p.wire==="gemini")return await gemini(p,messages,maxTokens,controller.signal);
   if(p.wire==="cloudflare")return await cloudflare(p,messages,maxTokens,controller.signal);
@@ -95,10 +95,14 @@ export async function runExperienceText(input:{region:ExperienceRegion;task:Expe
  if(!list.length)throw new Error("EXPERIENCE_POOL_UNAVAILABLE");
  const maxTokens=Math.max(256,Math.min(4096,Number(input.maxOutputTokens||1536)));
  let attempts=0,last:unknown;
+ // Keep total fallback latency below the 60s route limit, including DB settlement overhead.
+ const deadline=Date.now()+42_000;
  for(const {p} of list.slice(0,5)){
+  const remaining=deadline-Date.now();
+  if(remaining<5_000)break;
   attempts++;const started=Date.now();
   try{
-   const text=await call(p,input.messages,maxTokens);const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
+   const text=await call(p,input.messages,maxTokens,Math.min(12_000,Math.max(5_000,remaining-1_000)));const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
    await recordProviderRun({providerId:p.id,ok:true,tokens,latencyMs:latency});
    await setSessionAffinity(input.userId,input.sessionKey,p.id);
    return {text,providerId:p.id,model:p.model,attempts,estimatedTokens:tokens};
