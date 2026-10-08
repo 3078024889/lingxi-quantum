@@ -54,13 +54,13 @@ export default function OptionalAIVideoFrameAnalysis({file,lang}:{file:File;lang
   finally{video.pause();video.removeAttribute("src");video.load();if(url)URL.revokeObjectURL(url)}
  }
  return <div className="mt-3 space-y-2 border-t pt-3 text-sm">
-  <p className="font-semibold">{zh?"可选视频画面抽帧分析（实验性）":"Optional video-frame image analysis (experimental)"}</p>
-  <p className="opacity-80">{zh?"仅抽取3帧进行 AI 图片模型分析，不能检测全片的换脸动作、音轨或证明视频真假。需要下载约87MB模型。":"Analyzes three sampled frames with the image model only. Cannot authenticate video motion, faces or audio. Requires an ~87 MB model download."}</p>
-  <button type="button" className="rounded-lg border px-3 py-2 disabled:opacity-60" disabled={state==="loading"} onClick={()=>void analyze()}>{state==="loading"?(zh?"抽帧与模型分析中…":"Sampling and analyzing…"):(zh?"启动视频抽帧分析":"Analyze sampled video frames")}</button>
+  <p className="font-semibold">{zh?"视频 AI 生成痕迹分析":"Video AI-generation indicator analysis"}</p>
+  <p className="opacity-80">{zh?"检查视频中三个不同时间点的画面，寻找可能的 AI 生成痕迹。检测范围不包括整段视频的动作和声音。":"Checks three points in the video for possible AI-generated imagery. Motion and audio are not assessed."}</p>
+  <button type="button" className="rounded-lg border px-3 py-2 disabled:opacity-60" disabled={state==="loading"} onClick={()=>void analyze()}>{state==="loading"?(zh?"抽帧与模型分析中…":"Sampling and analyzing…"):(zh?"分析视频画面":"Analyze video images")}</button>
   {state==="error"&&<p role="alert">{zh?"无法完成抽帧分析：":"Frame analysis failed: "}{error}</p>}
   {state==="done"&&<div aria-live="polite" className="space-y-1">
-   {rows.map((r,i)=><p key={i}>{r.second.toFixed(1)}s — {r.label.toUpperCase()==="FAKE"?(zh?"模型倾向：合成画面":"Model suggests synthetic frame"):r.label.toUpperCase()==="REAL"?(zh?"模型倾向：真实画面":"Model suggests real frame"):r.label} — {(100*r.score).toFixed(1)}% {zh?"模型分类分数":"model score"}</p>)}
-   <p className="opacity-75">{zh?"仅是三帧的实验性视觉线索，不代表整段视频，更不是真伪证明。":"Experimental visual clues from three frames, not a verdict on the video."}</p>
+   {rows.map((r,i)=><p key={i}>{r.second.toFixed(1)}s — {r.label.toUpperCase()==="FAKE"?(zh?"发现 AI 生成画面特征":"Model suggests synthetic frame"):r.label.toUpperCase()==="REAL"?(zh?"未发现明显 AI 生成画面特征":"Model suggests real frame"):r.label} — {(100*r.score).toFixed(1)}% {zh?"参考分数":"indicator score"}</p>)}
+   <p className="opacity-75">{zh?"只检查了三个画面，不能据此认定整段视频的真伪。":"Only three frames were analyzed; this is not a verdict on the full video."}</p>
   </div>}
  </div>;
 }
