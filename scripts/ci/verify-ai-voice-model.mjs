@@ -5,7 +5,7 @@ import {pipeline} from "@huggingface/transformers";
 // waveform. Runtime test only; not an accuracy benchmark or human-voice verification.
 const id="ai8shiro/deepfake-audio-wav2vec2-ONNX";
 const start=Date.now();
-const model=await pipeline("audio-classification",id,{dtype:"q8"});
+const model=await pipeline("audio-classification",id,{dtype:"q4"});
 const wave=new Float32Array(16000*2);
 for(let i=0;i<wave.length;i++)wave[i]=0.12*Math.sin(2*Math.PI*220*i/16000);
 const output=await model(wave);
