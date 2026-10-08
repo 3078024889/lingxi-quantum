@@ -504,7 +504,7 @@ async function runFileTool(
   if (tool.slug === "file-type-detector") {
     const detected = await detectFileType(file);
     const mismatch = extensionMismatch(file, detected);
-    const unknown = detected.confidence === "unknown" || !detected.ext;
+    const unknown = detected.confidence === "low" && /^(Claimed type:|Unknown binary)/.test(detected.label);
     return {
       ok: true,
       messageZh: unknown
