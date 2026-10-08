@@ -60,6 +60,11 @@ async function main(){
  const websiteResult=await paidModule.exports.runUserText(combined);assert.equal(balanceChecks.at(-1),1001);assert.equal(websiteResult.billing.chargedMinor,601);assert.equal(charges.length,2);assert.equal(charges.at(-1).amountMinor,601);assert.equal(charges.at(-1).kind,'website');
  available=1000;const calls=providerCalls;await assert.rejects(paidModule.exports.runUserText(combined),/SASI_BALANCE_INSUFFICIENT/);assert.equal(providerCalls,calls,'insufficient combined balance must reject before contacting provider');assert.equal(charges.length,2);
 
+ for(const rel of ['app/sasi/ConnectionCenter.tsx','components/SasiPromptConversation.tsx','components/SasiResultCore.tsx']){
+  const syntax=ts.transpileModule(fs.readFileSync(rel,'utf8'),{fileName:rel,reportDiagnostics:true,compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}});
+  const failures=(syntax.diagnostics||[]).filter(d=>d.category===ts.DiagnosticCategory.Error);
+  assert.deepEqual(failures.map(d=>ts.flattenDiagnosticMessageText(d.messageText,' ')),[],rel+': JSX syntax preflight failed');
+ }
  const stepCode=fs.readFileSync('lib/sasi/durable/step-store.ts','utf8');
  assert(stepCode.includes('renewed.error||row(renewed.data).ok!==true'),'lease renewal must inspect database response');
  assert(stepCode.includes('executionController.abort()'),'lost lease must cancel cooperative work');
