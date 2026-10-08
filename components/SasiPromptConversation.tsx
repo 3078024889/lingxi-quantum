@@ -55,10 +55,18 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   if(task!=="chat")return;
   const threadId=threadRef.current||crypto.randomUUID();
   threadRef.current=threadId;
-  void fetch("/api/sasi/conversations",{
-   method:"POST",headers:{"content-type":"application/json"},
-   body:JSON.stringify({threadId,requestId:crypto.randomUUID(),question,answer})
-  }).catch(()=>{});
+  const payload=JSON.stringify({threadId,requestId:crypto.randomUUID(),question,answer});
+  void (async()=>{
+   for(let attempt=0;attempt<3;attempt++){
+    try{
+     const response=await fetch("/api/sasi/conversations",{method:"POST",headers:{"content-type":"application/json"},body:payload,cache:"no-store"});
+     if(response.ok||response.status===401)return; // Guests keep their in-page conversation.
+     if(response.status!==429&&response.status<500){setNotice(lang==="zh"?"这条对话暂未保存，当前页面仍可继续查看。":"This conversation has not been saved yet.");return}
+    }catch{}
+    if(attempt<2)await new Promise(resolve=>setTimeout(resolve,500*(attempt+1)));
+   }
+   setNotice(lang==="zh"?"这条对话暂未保存，当前页面仍可继续查看。":"This conversation has not been saved yet.");
+  })();
  }
  const began=useRef(false);
  useEffect(()=>{if(autoStart&&!began.current){began.current=true;void send()}},[autoStart]);
