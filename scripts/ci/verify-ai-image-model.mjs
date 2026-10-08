@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import {pipeline, RawImage} from "@huggingface/transformers";
 
-// Network-backed smoke test: this MUST download actual model weights and execute WASM.
+// Network-backed smoke test: this MUST download actual model weights and execute inference.
 // It verifies runtime wiring, not accuracy or suitability as forensic evidence.
 const id="onnx-community/ai-image-detection-ONNX";
 const start=Date.now();
-const detector=await pipeline("image-classification",id,{device:"wasm",dtype:"q8"});
+const detector=await pipeline("image-classification",id,{dtype:"q8"});
 const pixels=new Uint8Array(224*224*3);
 for(let i=0;i<pixels.length;i+=3){pixels[i]=96;pixels[i+1]=144;pixels[i+2]=176;}
 const result=await detector(new RawImage(pixels,224,224,3));
