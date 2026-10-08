@@ -7,7 +7,7 @@ import type{SasiConversationTurn}from"@/lib/sasi/core/session-contract";
 
 /** Render common Markdown without interpreting untrusted HTML. */
 function inlineText(source:string){
- const parts=source.split(/(\\*\\*[^*\\n]+\\*\\*|`[^`\\n]+`)/g);
+ const parts=source.split(/(\*\*[^*\n]+\*\*|`[^`\n]+`)/g);
  return parts.map((part,i)=>part.startsWith("**")&&part.endsWith("**")
    ? <strong key={i}>{part.slice(2,-2)}</strong>
    : part.startsWith("`")&&part.endsWith("`")
@@ -15,17 +15,18 @@ function inlineText(source:string){
    : <Fragment key={i}>{part}</Fragment>);
 }
 function assistantMarkdown(value:string){
- const lines=value.replace(/\\r\\n?/g,"\\n").split("\\n");
+ const lines=value.replace(/\r\n?/g,"\n").split("\n");
  return lines.map((line,i)=>{
-  const heading=/^(#{1,3})\\s+(.+)$/.exec(line);
+  const heading=/^(#{1,3})\s+(.+)$/.exec(line);
   if(heading)return <p key={i} className="mt-4 mb-1 font-semibold">{inlineText(heading[2])}</p>;
-  const bullet=/^\\s*[-*]\\s+(.+)$/.exec(line);
+  const bullet=/^\s*[-*]\s+(.+)$/.exec(line);
   if(bullet)return <p key={i} className="pl-4 before:content-['•'] before:mr-2">{inlineText(bullet[1])}</p>;
-  const ordered=/^\\s*(\\d+)\\.\\s+(.+)$/.exec(line);
+  const ordered=/^\s*(\d+)\.\s+(.+)$/.exec(line);
   if(ordered)return <p key={i} className="pl-4">{ordered[1]}. {inlineText(ordered[2])}</p>;
   return <p key={i} className={line?"":"h-4"}>{inlineText(line)}</p>;
  });
 }
+
 export function SasiAssistantText({children,className=""}:{children:ReactNode;className?:string}){
  return <article data-sasi-role="assistant" data-sasi-result-kind="text" className={`max-w-3xl text-[15px] leading-8 text-[var(--lx-ink)] ${className}`}>
   {typeof children==="string"?assistantMarkdown(children):children}
