@@ -11,7 +11,7 @@ async function loadClassifier():Promise<Classifier>{
   if(!classifierPromise){
     classifierPromise=import("@huggingface/transformers").then(async ({pipeline})=>{
       // Explicitly opt-in: downloading ONNX weights can consume considerable bandwidth.
-      const classifier=await pipeline("image-classification",MODEL_ID,{device:"wasm",dtype:"q8"});
+      const classifier=await pipeline("image-classification",MODEL_ID,{dtype:"q8"});
       return classifier as unknown as Classifier;
     }).catch(error=>{classifierPromise=null;throw error});
   }
