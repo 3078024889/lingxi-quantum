@@ -59,7 +59,7 @@ jobs:
           npm init -y >/dev/null
           npm install --no-audit --no-fund --save-exact @contentauth/c2pa-node
           curl -fsSL --max-time 50 --retry 2 \
-            https://raw.githubusercontent.com/contentauth/c2pa-rs/551e611e5a4434355d62ce6952d65162fc991dfc/sdk/tests/fixtures/CA.jpg \
+            https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/CA.jpg \
             -o signed.jpg
           cat > real-c2pa.mjs <<'C2PA_REAL_EOF'
           import {readFile} from 'node:fs/promises';
