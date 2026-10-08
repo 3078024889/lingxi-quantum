@@ -13,4 +13,4 @@ const predictions=Array.isArray(output)?output:[output];
 assert(predictions.length>0,"Model produced no output");
 for(const row of predictions){assert(typeof row.label==="string");assert(Number.isFinite(row.score));assert(row.score>=0&&row.score<=1);}
 assert(predictions.some(p=>["REAL","FAKE","BONAFIDE","SPOOF"].includes(p.label.toUpperCase())),"Unexpected audio class names: "+JSON.stringify(predictions));
-console.log("AI_VOICE_MODEL_RUNTIME=PASS",JSON.stringify({model:id,dtype:"q8",predictions,elapsedMs:Date.now()-start}));
+console.log("AI_VOICE_MODEL_RUNTIME=PASS",JSON.stringify({model:id,dtype:"q4",predictions,elapsedMs:Date.now()-start}));
