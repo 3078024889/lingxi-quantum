@@ -10,8 +10,9 @@ import {defaultBaseUrl} from "@/lib/sasi/intelligence/provider-defaults";
 import type {ByokProvider} from "@/lib/sasi/credential-vault";
 
 type Props={lang:LingxiLang;dark:boolean;accountEmail:string|null};
-type Connection={service:string;keyHint:string;healthStatus:"stored"|"checking"|"healthy"|"unhealthy";lastCheckedAt:string|null;lastErrorCode:string|null;baseUrl?:string;model?:string};
+type Connection={service:string;keyHint:string;healthStatus:"stored"|"checking"|"healthy"|"unhealthy";lastCheckedAt:string|null;lastErrorCode:string|null;baseUrl?:string;model?:string;discoveredModels?:string[]};
 
+const MODEL_EXAMPLE:Record<string,string>={volcengine:"ep-xxxxxxxxxxxx (控制台接入点 ID)",openrouter:"openai/gpt-4o-mini",aliyun:"qwen-plus",openai:"gpt-4o-mini",xai:"grok-3-mini",anthropic:"claude-sonnet-4-5",gemini:"gemini-2.5-flash",deepseek:"deepseek-chat",compatible:"provider/model-id"};
 const PRIMARY_IDS=["volcengine","openrouter","compatible","openai","xai","anthropic","gemini","deepseek","luma","aliyun"] as const;
 const TITLE:Record<LingxiLang,string>={
  zh:"连接我的智能服务",en:"Connect my intelligence service",ja:"インテリジェンスサービスを接続",ko:"지능형 서비스 연결",
@@ -34,6 +35,8 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
  const[busy,setBusy]=useState<"save"|"test"|"delete"|null>(null);
  const[message,setMessage]=useState("");
  const connection=connections.find(x=>x.service===selected.id);
+ const discoveredModels=connection?.discoveredModels||[];
+ const modelExample=MODEL_EXAMPLE[selected.id]||"provider/model-id";
  useEffect(()=>{setBaseUrl(connection?.baseUrl||defaultBaseUrl(selected.id as ByokProvider));setModel(connection?.model||"");setEditing(false);setCredential("")},[selected.id,connection?.baseUrl,connection?.model]);
 
  useEffect(()=>{
@@ -58,7 +61,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
   try{const r=await fetch("/api/sasi/connections",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider:selected.id,apiKey:credential,...(baseUrl.trim()?{baseUrl:baseUrl.trim()}:{}),...(model.trim()?{model:model.trim()}:{} )})});
   const b=await r.json().catch(()=>({}));
   if(r.ok){
-   setConnections(xs=>[...xs.filter(x=>x.service!==selected.id),{service:selected.id,keyHint:b.keyHint,healthStatus:"stored",lastCheckedAt:null,lastErrorCode:null,baseUrl,model}]);
+   setConnections(xs=>[...xs.filter(x=>x.service!==selected.id),{service:selected.id,keyHint:b.keyHint,healthStatus:"stored",lastCheckedAt:null,lastErrorCode:null,baseUrl,model,discoveredModels:[]}]);
    setCredential("");setEditing(false);setMessage(t("已保存，请检查连接。","Saved. Check the connection next."));
    await checkConnection(selected.id);
   }else setMessage(t("暂时无法连接，请稍后再试。","Unable to connect right now. Please try again later."));
@@ -69,8 +72,8 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
   const r=await fetch("/api/sasi/connections/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
   const b=await r.json().catch(()=>({}));
   const healthy=r.ok&&b.healthStatus==="healthy";
-  setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED",model:healthy&&b.model?b.model:x.model}:x));
-  setMessage(healthy?t("连接正常，可以开始使用。","Connection is ready to use."):t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
+  setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED",model:healthy&&b.model?b.model:x.model,discoveredModels:Array.isArray(b.discoveredModels)?b.discoveredModels:x.discoveredModels}:x));
+  setMessage(healthy?t("连接正常，可以开始使用。","Connection is ready to use."):b.errorCode==="MODEL_SELECTION_REQUIRED"?t("密钥已响应，但尚未找到可执行的文本模型。请填写控制台提供的模型 ID 或接入点 ID，再保存检查。","The key responded, but no runnable text model was found. Enter the model or endpoint ID from your provider console, save and check again."):t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
  }
 
  async function test(){
@@ -126,11 +129,16 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
       </div>
       {state==="ready"&&(!connection||editing)&&(selected.id==="compatible"?<div className="mt-6 grid gap-3 sm:grid-cols-2">
        <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder={selected.id==="compatible"?"https://example.com/v1":copy.automatic} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
-       <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" placeholder={selected.id==="compatible"?"":copy.automatic} maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
+       <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} list="sasi-known-models" autoComplete="off" placeholder={modelExample} maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
       </div>:<details className="mt-6 rounded-xl border border-[var(--lx-line)] p-4"><summary className="cursor-pointer text-sm text-[var(--lx-muted)]">{copy.settings}</summary><p className="mt-2 text-xs leading-6 text-[var(--lx-muted)]">{copy.defaults}</p><div className="mt-3 grid gap-3 sm:grid-cols-2">
        <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder={copy.automatic} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
-       <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
+       <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} list="sasi-known-models" placeholder={modelExample} autoComplete="off" maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
       </div></details>)}
+      {state==="ready"&&(!connection||editing)&&<div className="mt-3 text-xs leading-6 text-[var(--lx-muted)]">
+       <p>{t("模型名称请填写服务商的英文模型 ID，不是中文显示名。示例：","Enter the provider's exact model ID, not its translated display name. Example:")} <code dir="ltr" className="select-all rounded bg-[var(--lx-soft)] px-1.5 py-0.5">{modelExample}</code></p>
+       <p>{discoveredModels.length?t("已检测到可选模型；点击模型输入框从列表中选择。","Models discovered. Choose one from the model field."):t("保存密钥并检查连接后，将尝试列出账户可用模型；个别服务需要在官网查看接入点 ID。","After saving and checking the connection, available model IDs will be listed when the provider supports discovery.")}</p>
+       <datalist id="sasi-known-models">{discoveredModels.map(id=><option key={id} value={id}/>)}</datalist>
+      </div>}
       {(!connection||editing)&&<p className="mt-6 text-sm font-medium">{selected.id==="compatible"?copy.otherDescription:copy.keyOnly}</p>}
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
        {(!connection||editing)?<><input type="password" disabled={state!=="ready"} autoComplete="off" spellCheck={false} value={credential} onChange={e=>setCredential(e.target.value)}

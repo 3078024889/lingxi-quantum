@@ -51,5 +51,5 @@ export type SasiReleaseEvidence={
 };
 
 export function releaseCandidateAllowed(e:SasiReleaseEvidence){
- return e.parsePass&&e.buildPass&&e.regressionPass;
+ return e.parsePass&&e.buildPass&&e.regressionPass&&e.offlineEvalPass&&e.chaosPass;
 }

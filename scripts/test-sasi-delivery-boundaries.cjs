@@ -59,6 +59,69 @@ async function main(){
  const combined={userId:'user',messages:[],connection:approved,billingCurrency:'USD',taskId:'website-task',additionalCharge:{maximumMinor:1000,actualMinor:()=>600,kind:'website'}};
  const websiteResult=await paidModule.exports.runUserText(combined);assert.equal(balanceChecks.at(-1),1001);assert.equal(websiteResult.billing.chargedMinor,601);assert.equal(charges.length,2);assert.equal(charges.at(-1).amountMinor,601);assert.equal(charges.at(-1).kind,'website');
  available=1000;const calls=providerCalls;await assert.rejects(paidModule.exports.runUserText(combined),/SASI_BALANCE_INSUFFICIENT/);assert.equal(providerCalls,calls,'insufficient combined balance must reject before contacting provider');assert.equal(charges.length,2);
+
+ for(const rel of ['app/sasi/ConnectionCenter.tsx','components/SasiPromptConversation.tsx','components/SasiResultCore.tsx']){
+  const syntax=ts.transpileModule(fs.readFileSync(rel,'utf8'),{fileName:rel,reportDiagnostics:true,compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}});
+  const failures=(syntax.diagnostics||[]).filter(d=>d.category===ts.DiagnosticCategory.Error);
+  assert.deepEqual(failures.map(d=>ts.flattenDiagnosticMessageText(d.messageText,' ')),[],rel+': JSX syntax preflight failed');
+ }
+ const {releaseCandidateAllowed}=load('lib/sasi/durable/release-invariants.ts');
+ const evidence={parsePass:true,buildPass:true,regressionPass:true,offlineEvalPass:true,chaosPass:true};
+ assert.equal(releaseCandidateAllowed(evidence),true,'all five evidence gates pass');
+ for(const key of Object.keys(evidence))assert.equal(releaseCandidateAllowed({...evidence,[key]:false}),false, 'release gate must reject missing '+key);
+ const stepCode=fs.readFileSync('lib/sasi/durable/step-store.ts','utf8');
+ assert(stepCode.includes('renewed.error||row(renewed.data).ok!==true'),'lease renewal must inspect database response');
+ assert(stepCode.includes('executionController.abort()'),'lost lease must cancel cooperative work');
+ assert(stepCode.includes('input.execute(executionController.signal)'),'step callback must receive cancellation');
+ assert(stepCode.includes('if(leaseLost||executionController.signal.aborted)'),'lost lease must stop before step completion');
+ // Simulate lease fencing loss without touching production jobs or an external model.
+ const stepModule={exports:{}};let tick,finishExecution,observedSignal,stepCompleteCalls=0;
+ const stepAdmin={rpc:async(name)=>{
+  if(name==='claim_sasi_durable_step_v160')return {data:{claimed:true,attempt:1,fence_token:3}};
+  if(name==='renew_sasi_durable_step_lease_v160')return {data:{ok:false,error:'STEP_FENCE_LOST'}};
+  if(name==='complete_sasi_durable_step_v160'){stepCompleteCalls++;return {data:{ok:true}}}
+  return {data:{ok:false}};
+ }};
+ new Function('require','module','exports','setInterval','clearInterval',ts.transpileModule(stepCode,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(
+  name=>name==='server-only'?{}:name==='@/lib/supabase/admin'?{createAdminClient:()=>stepAdmin}:require(name),
+  stepModule,stepModule.exports,
+  callback=>{tick=callback;return {unref(){}}},
+  ()=>{}
+ );
+ const runningStep=stepModule.exports.durableStep({runId:'run',stepId:'step',input:{v:1},execute:signal=>{
+  observedSignal=signal;
+  return new Promise(resolve=>{finishExecution=resolve});
+ }});
+ for(let i=0;i<6&&!tick;i++)await Promise.resolve();
+ assert.equal(typeof tick,'function','lease heartbeat must be installed');
+ tick();for(let i=0;i<6;i++)await Promise.resolve();
+ assert.equal(observedSignal.aborted,true,'lease loss must abort worker signal');
+ finishExecution('stale output');
+ await assert.rejects(runningStep,/DURABLE_STEP_FENCE_LOST/);
+ assert.equal(stepCompleteCalls,0,'stale worker must not finalize output');
+ const routerSource=fs.readFileSync('lib/sasi/experience/free-text-router.ts','utf8');
+ const routerModule={exports:{}};
+ const experienceProviders=()=>Array.from({length:5},(_,i)=>({id:'mock-'+i,region:'global',wire:'openai',baseUrl:'https://example.invalid/v1',apiKey:'not-real',model:'mock',priority:10+i,dailyShare:1,quality:.9,speed:.8,tasks:['chat'],canaryPercent:100}));
+ new Function('require','module','exports',ts.transpileModule(routerSource,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(name=>{
+  if(name==='server-only')return{};
+  if(name==='./free-provider-config')return{experienceProviders};
+  if(name==='./provider-state')return{providerStates:async()=>({}),recordProviderRun:async()=>{}};
+  if(name==='./session-affinity')return{getSessionAffinity:async()=>null,setSessionAffinity:async()=>{}};
+  if(name==='./canary')return{canaryAllowed:()=>true};
+  return require(name);
+ },routerModule,routerModule.exports);
+ const originalFetch=global.fetch;let attempts=0;
+ try{
+  global.fetch=async()=>{attempts++;return {ok:false,status:500,headers:new Headers(),json:async()=>({})}};
+  await assert.rejects(routerModule.exports.runExperienceText({region:'global',task:'chat',messages:[{role:'user',content:'hello'}],userId:'u',sessionKey:'s'}),/EXPERIENCE_PROVIDER_HTTP_500/);
+  assert.equal(attempts,3,'provider failover must be capped at 3 attempts');
+ }finally{global.fetch=originalFetch}
+ const connectionCode=fs.readFileSync('app/api/sasi/connections/route.ts','utf8');
+ const healthCode=fs.readFileSync('app/api/sasi/connections/test/route.ts','utf8');
+ const uiCode=fs.readFileSync('app/sasi/ConnectionCenter.tsx','utf8');
+ assert(connectionCode.includes('discoveredModels:'),'list endpoint must expose discovered models to owning user');
+ assert(healthCode.includes('MODEL_SELECTION_REQUIRED'),'model-less text connections must not be marked healthy');
+ assert(uiCode.includes('list="sasi-known-models"')&&uiCode.includes('MODEL_EXAMPLE'),'model selector must provide discovered IDs and examples');
  console.log('PASS: multi-page delivery, request/cache boundaries, free failure allowance, frozen paid connection/currency; invalid output is not charged; website fees combine atomically with preflight balance.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1});

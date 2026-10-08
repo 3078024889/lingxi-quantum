@@ -36,10 +36,10 @@ async function candidates(region:ExperienceRegion,task:ExperienceTask,userId:str
   const s=states[p.id]||{providerId:p.id,requestCount:0,successCount:0,failureCount:0,estimatedTokens:0,latencyEwmaMs:null,cooldownUntil:null};
   const normalizedUse=s.requestCount/Math.max(.1,p.dailyShare);
   // Water-filling first: favor the least-used share. Then quality, health, speed and observed latency.
-  const fairness=120/(1+normalizedUse);
-  const health=45*successRate(s);
+  const fairness=24/(1+normalizedUse);
+  const health=65*successRate(s);
   const latency=s.latencyEwmaMs==null?12:Math.max(-20,20-s.latencyEwmaMs/250);
-  const quality=32*p.quality;
+  const quality=100*p.quality;
   const speed=18*p.speed;
   const priorityPenalty=Math.min(20,p.priority/10);
   const total=s.successCount+s.failureCount;
@@ -73,8 +73,8 @@ async function cloudflare(p:ExperienceProvider,messages:Message[],maxTokens:numb
  const data=await r.json().catch(()=>({}));if(!r.ok){const e:any=new Error(`EXPERIENCE_PROVIDER_HTTP_${r.status}`);e.status=r.status;e.retryAfterSeconds=retryAfterSeconds(r.headers);throw e}
  const text=String(data?.result?.response??data?.result?.text??"").trim();if(!text)throw new Error("EXPERIENCE_PROVIDER_EMPTY");return text;
 }
-async function call(p:ExperienceProvider,messages:Message[],maxTokens:number){
- const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),18_000);
+async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,timeoutMs=8_000){
+ const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),Math.max(1000,timeoutMs));
  try{
   if(p.wire==="gemini")return await gemini(p,messages,maxTokens,controller.signal);
   if(p.wire==="cloudflare")return await cloudflare(p,messages,maxTokens,controller.signal);
@@ -95,10 +95,13 @@ export async function runExperienceText(input:{region:ExperienceRegion;task:Expe
  if(!list.length)throw new Error("EXPERIENCE_POOL_UNAVAILABLE");
  const maxTokens=Math.max(256,Math.min(4096,Number(input.maxOutputTokens||1536)));
  let attempts=0,last:unknown;
- for(const {p} of list.slice(0,5)){
+ const deadline=Date.now()+24_000;
+ for(const {p} of list.slice(0,3)){
+  const remaining=deadline-Date.now();
+  if(remaining<1500)break;
   attempts++;const started=Date.now();
   try{
-   const text=await call(p,input.messages,maxTokens);const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
+   const text=await call(p,input.messages,maxTokens,Math.min(8_000,remaining));const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
    await recordProviderRun({providerId:p.id,ok:true,tokens,latencyMs:latency});
    await setSessionAffinity(input.userId,input.sessionKey,p.id);
    return {text,providerId:p.id,model:p.model,attempts,estimatedTokens:tokens};

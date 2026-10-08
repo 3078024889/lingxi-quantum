@@ -49,6 +49,56 @@ jobs:
       - name: Frozen dependency install
         run: pnpm install --frozen-lockfile
 
+      - name: Real C2PA cryptographic validation
+        shell: bash
+        timeout-minutes: 10
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          cd "$work"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact @contentauth/c2pa-node
+          curl -fsSL --max-time 50 --retry 2 \
+            https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/CA.jpg \
+            -o signed.jpg
+          cat > real-c2pa.mjs <<'C2PA_REAL_EOF'
+          import {readFile} from 'node:fs/promises';
+          import assert from 'node:assert/strict';
+          import {Reader} from '@contentauth/c2pa-node';
+          const source=await readFile('signed.jpg');
+          assert(source.length>2048,'OFFICIAL_SIGNED_FIXTURE_MISSING');
+          async function inspect(bytes,mime='image/jpeg'){
+            const reader=await Reader.fromAsset({buffer:bytes,mimeType:mime},{
+              verify:{verifyAfterReading:true,verifyTrust:false}
+            });
+            return reader?.json?.()??null;
+          }
+          const signed=await inspect(source);
+          const active=signed?.active_manifest;
+          assert(typeof active==='string'&&active.length>0,'SIGNED_MANIFEST_NOT_FOUND');
+          const manifests=signed?.manifests;
+          assert(manifests&&Object.prototype.hasOwnProperty.call(manifests,active),'SIGNED_ACTIVE_MANIFEST_NOT_MAPPED');
+          const status=(value)=>Array.isArray(value?.validation_status)?value.validation_status:
+            Array.isArray(value?.validationStatus)?value.validationStatus:[];
+          const bad=(value)=>status(value).filter(item=>item?.success===false||
+            /(?:mismatch|invalid|failure|tamper)/i.test(String(item?.code||'')));
+          assert.equal(bad(signed).length,0,'SIGNED_ASSET_CRYPTOGRAPHIC_VALIDATION_FAILED');
+          console.log('REAL_C2PA_SIGNED=PASS',{bytes:source.length,activeManifest:active,validation:status(signed)});
+          // Mutate JPEG content without re-signing. A malformed file is also rejected.
+          const altered=Buffer.from(source);
+          altered[Math.floor(altered.length*.72)]^=0x01;
+          let alteredRejected=false;
+          try{
+            const changed=await inspect(altered);
+            alteredRejected=bad(changed).length>0||
+              !changed?.active_manifest||!changed?.manifests;
+            console.log('REAL_C2PA_TAMPER_DIAGNOSTIC',{validation:status(changed)});
+          }catch(error){alteredRejected=true;console.log('REAL_C2PA_TAMPER_EXCEPTION',String(error).slice(0,160));}
+          assert(alteredRejected,'TAMPERED_ASSET_INCORRECTLY_ACCEPTED');
+          console.log('REAL_C2PA_TAMPER=PASS');
+          C2PA_REAL_EOF
+          node real-c2pa.mjs
+
       - name: Clean baseline audit
         run: pnpm ci:baseline
 
