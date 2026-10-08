@@ -59,6 +59,5 @@ export default function OptionalAIVoiceAnalysis({file,lang}:{file:File;lang:Ling
    {results.map((p,i)=><p key={i}>{p.label.toLowerCase()==="fake"?(zh?"发现 AI 合成人声特征":"Model label: synthetic speech"):p.label.toLowerCase()==="real"?(zh?"未发现明显 AI 合成人声特征":"Model label: natural speech"):p.label} — {(p.score*100).toFixed(1)}% {zh?"参考分数":"indicator score"}</p>)}
    <p className="opacity-75">{zh?"检测结果仅作参考。语音克隆、背景噪声和音频编辑可能影响判断。":"These indicators can be mistaken, especially with cloned voices, noise or edited audio."}</p>
   </div>}
-  <a className="underline" href="https://huggingface.co/ai8shiro/deepfake-audio-wav2vec2-ONNX" target="_blank" rel="noopener noreferrer">{MODEL}</a>
  </div>;
 }
