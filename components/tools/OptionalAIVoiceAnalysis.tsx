@@ -8,7 +8,7 @@ type Classifier=(wave:Float32Array)=>Promise<Prediction[]|Prediction>;
 let loading:Promise<Classifier>|null=null;
 function getModel():Promise<Classifier>{
  if(!loading)loading=import("@huggingface/transformers").then(async ({pipeline})=>
-   await pipeline("audio-classification",MODEL,{dtype:"q8"}) as unknown as Classifier
+   await pipeline("audio-classification",MODEL,{dtype:"q4"}) as unknown as Classifier
  ).catch(e=>{loading=null;throw e});
  return loading;
 }
