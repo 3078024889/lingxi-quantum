@@ -114,7 +114,9 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
     try{
      const response=await fetch("/api/sasi/conversations",{method:"POST",headers:{"content-type":"application/json"},body:payload,cache:"no-store"});
      if(response.ok){
-      setActiveThread(threadId);
+      // A save from a prior thread may finish after the user switches conversations.
+      // Keep the saved entry, but never replace the currently selected conversation.
+      if(threadRef.current===threadId)setActiveThread(threadId);
       setThreadList(list=>list.some(t=>t.id===threadId)?list:[{id:threadId,title:question.slice(0,120)},...list].slice(0,20));
       return;
      }
