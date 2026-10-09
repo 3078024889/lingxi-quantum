@@ -13,20 +13,30 @@ async function userId(){
  const {data:{user}}=await createClient().auth.getUser();
  return user?.id||null;
 }
-export async function GET(){
+export async function GET(req:NextRequest){
  const user=await userId();
  if(!user)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401,headers:noCache});
  const db=createAdminClient();
  const {data:threads,error}=await db.from("sasi_conversation_threads")
   .select("id,title,updated_at").eq("user_id",user).order("updated_at",{ascending:false}).limit(20);
  if(error)return NextResponse.json({error:"HISTORY_UNAVAILABLE"},{status:503,headers:noCache});
+ const selected=req.nextUrl.searchParams.get("threadId");
+ if(selected&&!UUID.test(selected))return NextResponse.json({error:"INVALID_THREAD"},{status:400,headers:noCache});
  const latest=threads?.[0];
- if(!latest)return NextResponse.json({threadId:null,threads:[],messages:[]},{headers:noCache});
+ if(!latest&&!selected)return NextResponse.json({threadId:null,threads:[],messages:[]},{headers:noCache});
+ const threadId=selected||latest?.id;
+ // Explicitly verify ownership even for older threads not present in the latest 20.
+ if(selected){
+  const {data:owned,error:ownershipError}=await db.from("sasi_conversation_threads")
+   .select("id").eq("user_id",user).eq("id",selected).maybeSingle();
+  if(ownershipError)return NextResponse.json({error:"HISTORY_UNAVAILABLE"},{status:503,headers:noCache});
+  if(!owned)return NextResponse.json({error:"HISTORY_NOT_FOUND"},{status:404,headers:noCache});
+ }
  const {data:messages,error:messagesError}=await db.from("sasi_conversation_messages")
-  .select("id,parent_id,role,content,created_at").eq("user_id",user).eq("thread_id",latest.id)
+  .select("id,parent_id,role,content,created_at").eq("user_id",user).eq("thread_id",threadId)
   .in("role",["user","assistant"]).order("created_at",{ascending:false}).limit(80);
  if(messagesError)return NextResponse.json({error:"HISTORY_UNAVAILABLE"},{status:503,headers:noCache});
- return NextResponse.json({threadId:latest.id,threads:threads||[],messages:(messages||[]).reverse()},{headers:noCache});
+ return NextResponse.json({threadId,threads:threads||[],messages:(messages||[]).reverse()},{headers:noCache});
 }
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:noCache});
