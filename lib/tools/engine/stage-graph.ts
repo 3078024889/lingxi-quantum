@@ -82,6 +82,11 @@ export const TOOL_GRAPHS:ToolEngineGraph[]=[
  g("compress-image-to-500kb",[s("compress","Compress to target",[req("compress",["browser-canvas"],["sharp-libvips"])])],["target-reported"]),
  g("remove-exif",[s("clean","Remove metadata",[req("metadata-strip",["browser-canvas"],["sharp-libvips"])]),s("verify","Verify metadata",[req("metadata-inspect",["exiftool"],[],[],true)])],["privacy-metadata-removed"]),
  g("avif-to-jpg",[s("convert","Convert AVIF",[req("image-encode",["browser-canvas"],["sharp-libvips"])])],["dimensions-preserved"]),
+ g("bmp-to-png",[s("decode","Decode BMP",[req("bmp-decode",["browser-canvas"])]),s("encode","Encode PNG",[req("image-encode",["browser-canvas"],["sharp-libvips"])])],["output-decodes"]),
+ g("gif-to-jpg",[s("decode","Decode GIF frame",[req("gif-static-decode",["browser-canvas"])]),s("encode","Encode JPEG",[req("image-encode",["browser-canvas"],["sharp-libvips"])])],["output-decodes","animation-not-promised"]),
+ g("ico-to-png",[s("decode","Decode ICO",[req("ico-decode",["browser-canvas"])]),s("encode","Encode PNG",[req("image-encode",["browser-canvas"],["sharp-libvips"])])],["output-decodes"]),
+ g("jfif-to-jpg",[s("decode","Decode JFIF",[req("jpeg-decode",["browser-canvas"],["sharp-libvips"])]),s("encode","Encode JPEG",[req("image-encode",["browser-canvas"],["sharp-libvips"])])],["output-decodes"]),
+
  g("heic-local",[s("decode","Decode HEIC",[req("heic-decode",["heic2any"],["libheif"])]),s("encode","Encode JPG",[req("image-encode",["browser-canvas"],["sharp-libvips"])])],["orientation-correct"]),
  g("svg-to-png",[s("render","Render SVG",[req("svg-render",["browser-canvas"])])],["dimensions-preserved"]),
  g("long-image",[s("stitch","Stitch images",[req("stitch",["browser-canvas"])] )],["all-inputs-accounted-for"]),
@@ -92,6 +97,11 @@ export const TOOL_GRAPHS:ToolEngineGraph[]=[
  g("e-sign-pdf",[s("preview","Preview PDF",[req("pdf-render",["pdfjs"])]),s("sign","Place signature or seal",[req("sign",["pdflib"]),req("stamp",["pdflib"],[],[],true)]),s("validate","Validate",[req("pdf-parse",["pdfjs"],["qpdf"])])],["page-count-preserved","output-opens"]),
  g("document-copy-layout",[s("detect","Detect document",[req("document-detect",["opencv"],["browser-canvas"],[],true)]),s("compose","Compose A4",[req("crop",["browser-canvas"],["opencv"]),req("pdf-build",["pdflib"])])],["output-opens"]),
  g("video-toolkit",[s("process","Process media",[req("transcode",["ffmpeg"])] )],["duration-within-tolerance"]),
+ g("reverse-video",[s("reverse","Reverse video/audio",[req("reverse",["ffmpeg-wasm"],["ffmpeg"])])],["output-playable","duration-verified"]),
+ g("loop-video",[s("loop","Loop media",[req("loop",["ffmpeg-wasm"],["ffmpeg"])])],["output-playable","duration-verified"]),
+ g("stop-motion-video",[s("frames","Create stop-motion sequence",[req("stop-motion",["ffmpeg-wasm"],["ffmpeg"])])],["output-playable","duration-verified"]),
+ g("audio-cleanup",[s("filter","Denoise and normalize",[req("audio-filter",["ffmpeg-wasm"],["ffmpeg"])])],["output-playable","duration-verified"]),
+
  g("subtitle-tools",[s("parse","Parse subtitle",[req("subtitle-parse",["native-js"])]),s("transform","Shift/convert",[req("subtitle-shift",["native-js"])])],["timestamps-monotonic"]),
  g("screenshot-redact",[s("recognize","Find text",[req("ocr",["tesseractjs"],["paddleocr"],[],true)]),s("redact","Redact regions",[req("redact",["browser-canvas"],["opencv"])])],["dimensions-preserved"]),
  g("text-counter",[s("analyze","Count text",[req("text",["native-js"])])],["result-editable"]),
