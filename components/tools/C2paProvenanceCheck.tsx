@@ -48,7 +48,7 @@ export async function verifyC2paFile(file:File):Promise<ProvenanceResult>{
  try{
   const {Reader,Context}=await import("@contentauth/c2pa-web");
   const sdk=await getSdk();
-  const found=await Reader.fromBlob(sdk,file.type||undefined,file,new Context({verify:{verifyTrust:true}}));
+  const found=await Reader.fromBlob(sdk,file.type||undefined,file,new Context({verify:{verifyTrust:true,verifyAfterReading:true},trust:{trustAnchors:"https://raw.githubusercontent.com/c2pa-org/conformance-public/refs/heads/main/trust-list/C2PA-TRUST-LIST.pem"}}));
   if(!found)return {status:"absent"};
   reader=found;
   return describe(await found.manifestStore());
