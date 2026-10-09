@@ -1,0 +1,29 @@
+name: R33 Tool Outcome Quality Audit
+on:
+  push:
+    branches:
+      - feat/r33-total-tools-signature-quality-20261009
+    paths:
+      - scripts/audit/tool-outcome-contracts.mjs
+      - .github/workflows/r33-tool-quality.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  outcome-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Generate verifiable review matrix for all catalog tools
+        run: node scripts/audit/tool-outcome-contracts.mjs
+      - name: Preserve review matrix
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r33-tool-outcome-matrix
+          path: audit-results/R33_*
+          if-no-files-found: error
