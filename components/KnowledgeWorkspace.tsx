@@ -275,13 +275,14 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     setNeedsConnection(false);
 
     let onlineSources:KnowledgeSource[]=[];
-    if(mode==="research"&&selectedSkillIds.includes("web-research")){
+    if(mode==="research"&&(selectedSkillIds.includes("web-research")||selectedSkillIds.includes("research-tracking"))){
       asking.current=true;setAskBusy(true);
       try{
-        const response=await fetch("/api/sasi/research/search",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:raw.slice(0,1200)})});
+        const scholarly=selectedSkillIds.includes("research-tracking");
+        const response=await fetch("/api/sasi/research/search",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(scholarly?{query:raw.slice(0,240),source:"scholarly",days:60}:{query:raw.slice(0,1200)})});
         const data=await response.json().catch(()=>({}));
         if(!response.ok||!Array.isArray(data.sources)||!data.sources.length)throw new Error("WEB_SEARCH_UNAVAILABLE");
-        onlineSources=data.sources.map((item:{title:string;url:string;text:string})=>({id:item.url,title:`${item.title} — ${item.url}`,text:item.text,createdAt:new Date().toISOString(),locators:[{start:0,end:item.text.length,label:item.url}]}));
+        onlineSources=data.sources.map((item:{title:string;url:string;text:string})=>({id:item.url,title:`${item.title} — ${item.url}`,text:data.sourceType==="verified-metadata-only"?`Bibliographic metadata ONLY, not full-paper text. Do not claim to have read the paper. ${item.text}`:item.text,createdAt:new Date().toISOString(),locators:[{start:0,end:item.text.length,label:item.url}]}));
       }catch{setNotice(WEB_RESEARCH_UNAVAILABLE[lang]);return}finally{asking.current=false;setAskBusy(false)}
     }
     const textSources=[...sources,...onlineSources].filter(source=>source.text.trim().length>0);
