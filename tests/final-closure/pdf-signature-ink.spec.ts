@@ -42,3 +42,17 @@ test("input size and alpha invariants reject bogus images",()=>{
  const result=extractHandwritingPixels(data,width,height,75);
  expect(result.pixels.length).toBe(result.width*result.height*4);
 });
+
+test("photo border shadows are discarded while central handwriting is kept",()=>{
+ const w=320,h=160;
+ const source=paper(w,h,d=>{
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+   if(x<8||x>311){const i=(y*w+x)*4;d[i]=d[i+1]=d[i+2]=60}
+  }
+  for(let x=95;x<218;x++)for(let y=77;y<82;y++){const i=(y*w+x)*4;d[i]=15;d[i+1]=18;d[i+2]=42}
+ });
+ const result=extractHandwritingPixels(source,w,h,60);
+ expect(result.width).toBeLessThan(190);
+ expect(result.height).toBeLessThan(70);
+ expect(Array.from(result.pixels).filter((_,i)=>i%4===3&&result.pixels[i]>160).length).toBeGreaterThan(50);
+});
