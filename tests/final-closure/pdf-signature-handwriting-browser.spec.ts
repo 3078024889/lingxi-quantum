@@ -29,7 +29,8 @@ test("paper signature becomes transparent ink inside PDF editor without charging
  expect(sample.clear).toBeGreaterThan(sample.solid);
  expect(sample.solid).toBeGreaterThan(30);
  expect(sample.width).toBeLessThan(280);
- await page.getByRole("slider",{name:"Ink sensitivity"}).fill("75");
+ await page.getByRole("slider",{name:"Ink sensitivity"}).focus();
+ await page.getByRole("slider",{name:"Ink sensitivity"}).press("ArrowRight");
  await page.getByRole("button",{name:"Extract again"}).click();
  await expect(preview).toBeVisible();
 });
