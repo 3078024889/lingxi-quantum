@@ -43,13 +43,22 @@ export function extractHandwritingPixels(source:Uint8ClampedArray,width:number,h
  for(let i=0;i<n;i++){
   if(mask[i]<18||seen[i])continue;
   let head=0,tail=1;queue[0]=i;seen[i]=1;
+  let componentMinX=width,componentMinY=height,componentMaxX=-1,componentMaxY=-1;
   while(head<tail){
    const q=queue[head++],x=q%width,y=(q-x)/width;
+   componentMinX=Math.min(componentMinX,x);componentMaxX=Math.max(componentMaxX,x);
+   componentMinY=Math.min(componentMinY,y);componentMaxY=Math.max(componentMaxY,y);
    for(const next of [x>0?q-1:-1,x+1<width?q+1:-1,y>0?q-width:-1,y+1<height?q+width:-1]){
     if(next>=0&&!seen[next]&&mask[next]>=18){seen[next]=1;queue[tail++]=next}
    }
   }
-  if(tail<minComponent)for(let j=0;j<tail;j++)mask[queue[j]]=0;
+  // Mobile photos often include a long dark strip along a paper edge.
+  // Exclude components that touch an image border and are substantially elongated.
+  const margin=Math.max(2,Math.round(Math.min(width,height)*.035));
+  const touchesBorder=componentMinX<=margin||componentMaxX>=width-1-margin||componentMinY<=margin||componentMaxY>=height-1-margin;
+  const bw=componentMaxX-componentMinX+1,bh=componentMaxY-componentMinY+1;
+  const elongated=bw>=width*.33||bh>=height*.33;
+  if(tail<minComponent||(touchesBorder&&elongated))for(let j=0;j<tail;j++)mask[queue[j]]=0;
  }
  minX=width;minY=height;maxX=-1;maxY=-1;counted=0;
  for(let i=0;i<n;i++)if(mask[i]){
