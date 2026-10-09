@@ -1,5 +1,5 @@
 import{graphForTool}from"./stage-graph";
-import{publicToolBySlug}from"@/lib/tools/platform/tool-registry";
+import{LINGXIFIELD_PUBLIC_TOOL_REGISTRY,publicToolBySlug}from"@/lib/tools/platform/tool-registry";
 import{recipeBySlug}from"@/lib/tools/platform";
 
 export type UnifiedToolExecutionPlan=
@@ -28,14 +28,12 @@ export function unifiedToolExecutionPlan(toolId:string):UnifiedToolExecutionPlan
  }
  // A missing generic engine graph is not automatically a defect: several tools use
  // dedicated browser/API flows. Keep that explicit until a real executor graph is proven.
- const actionable=recipe.capabilities.filter(id=>!NON_ENGINE_CAPABILITIES.has(id));
  return{kind:"dedicated",toolId,capabilities:[...recipe.capabilities],resultChecks:recipeChecks(toolId,recipe.capabilities),privacyMode:recipe.privacyMode,reason:"DEDICATED_TOOL_FLOW"};
 }
 
 export function assertAllPublicToolsHaveExecutionPlans(){
  const missing:string[]=[];
- // Public registry is authoritative; dynamic import is avoided to keep this module browser-safe.
- const slugs=(require("@/lib/tools/platform/tool-registry") as typeof import("@/lib/tools/platform/tool-registry")).LINGXIFIELD_PUBLIC_TOOL_REGISTRY.map(x=>x.slug);
+ const slugs=LINGXIFIELD_PUBLIC_TOOL_REGISTRY.map(x=>x.slug);
  for(const slug of slugs)if(!unifiedToolExecutionPlan(slug))missing.push(slug);
  if(missing.length)throw new Error("TOOL_EXECUTION_PLAN_MISSING:"+missing.join(","));
  return{count:slugs.length};
