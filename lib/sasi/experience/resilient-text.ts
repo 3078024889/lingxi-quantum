@@ -31,7 +31,7 @@ export async function resilientText(input:{
    return {kind:"answer",answer:out.text,source:"experience",experienceExhausted:false};
   }catch{
    // Provider failure never consumes the user's daily experience allowance.
-   await settleExperience(input.userId,referenceId,claim.units,false,claim.soft);
+   await settleExperience(input.userId,referenceId,claim.units,false);
   }
  }
 
@@ -41,13 +41,13 @@ export async function resilientText(input:{
    if(connection){
     const out=await runUserText({userId:input.userId,taskId:randomUUID(),messages:input.messages,maxOutputTokens:input.maxOutputTokens});
     input.onDelta?.(out.answer);
-    return {kind:"answer",answer:out.answer,source:"connected",experienceExhausted:!claim.ok};
+    return {kind:"answer",answer:out.answer,source:"connected",experienceExhausted:claim.state==="exhausted",experienceState:claim.state,experienceRemaining:claim.remaining};
    }
   }catch{
    // Connected-service failure is converted into a calm recovery state; no raw provider error leaks to UI.
   }
  }
- return {kind:"needs-connection",experienceExhausted:!claim.ok};
+ return {kind:"needs-connection",experienceExhausted:claim.state==="exhausted",experienceState:claim.state,experienceRemaining:claim.remaining};
  };
  return input.onDelta?work():coalesce(dedupe,work);
 }
