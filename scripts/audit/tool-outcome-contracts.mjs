@@ -85,7 +85,7 @@ const payload={date:"2026-10-09",version:"R33",purpose:"Feature-completeness aud
 await fs.writeFile("audit-results/R33_TOOL_OUTCOME_CONTRACTS.json",JSON.stringify(payload,null,2));
 const summary=Object.groupBy(rows,r=>r.group);
 await fs.writeFile("audit-results/R33_PRODUCT_AUDIT.md",
- "# LINGXIFIELD — 118 tool outcome and feature review\n\n"+
+ `# LINGXIFIELD — ${rows.length} tool outcome and feature review\n\n`+
  "This file is a **release checklist**. It does NOT claim every feature is implemented.\n\n"+
  Object.entries(summary).map(([name,list])=>"## "+name+" ("+list.length+")\n\n"+
  list.map(x=>"- `"+x.slug+"`: "+x.goal+" — **TO AUDIT**; evidence: "+(x.evidence.fixtureFiles.join(", ")||"no file fixture")+".").join("\n")).join("\n\n")+"\n");
