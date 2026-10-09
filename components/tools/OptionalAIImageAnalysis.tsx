@@ -1,6 +1,7 @@
 "use client";
 import {useState} from "react";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
+import {syntheticScore,indicatorText,indicatorPercent} from "@/lib/media/ai-indicator-bands";
 
 /** Experimental on-device classification, separate from C2PA provenance or authenticity claims. */
 const MODEL_ID="onnx-community/ai-image-detection-ONNX";
@@ -46,8 +47,8 @@ export default function OptionalAIImageAnalysis({file,lang}:{file:File;lang:Ling
     <button type="button" onClick={()=>void analyze()} disabled={state==="loading"} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-60">{state==="loading"?(zh?"正在加载并分析…":"Loading and analyzing…"):(zh?"分析图片":"Analyze image")}</button>
     {state==="error"&&<p role="alert" className="text-sm">{zh?"模型不可用或分析失败：":"Model unavailable or analysis failed: "}{error}</p>}
     {state==="done"&&<div className="space-y-1 text-sm" aria-live="polite">
-      {result.map((p,i)=><p key={i}>{p.label.toUpperCase()==="FAKE"?(zh?"检测到较明显的 AI 生成特征":"Model label: AI-generated"):p.label.toUpperCase()==="REAL"?(zh?"未发现明显的 AI 生成特征":"Model label: real image"):p.label} — {(p.score*100).toFixed(1)}% {zh?"参考分数":"indicator score"}</p>)}
-      <p className="opacity-75">{zh?"这里的数字只用于辅助观察，不能单独判断图片是否由 AI 制作。文件的来源信息请查看上方“文件来源与签名”。":"These scores are only clues, not proof of how the image was created. Check “File origin and signature” above for available source details."}</p>
+      {syntheticScore(result)!==null?<p data-ai-indicator-band="image" className="font-medium">{indicatorText(syntheticScore(result)!,lang)} — {indicatorPercent(syntheticScore(result)!)} {zh?"AI 特征参考分数":"AI indicator score"}</p>:<p>{zh?"暂时无法得到明确的分析结果。":"No clear analysis result available."}</p>}
+      <p className="opacity-75">{zh?"分档只代表当前检测方式对画面特征的参考判断，并非图片由 AI 生成的真实概率。来源签名请查看上方。":"These bands reflect the current detector’s signals, not a real-world probability of AI creation. Check the origin signature above."}</p>
     </div>}
   </div>;
 }
