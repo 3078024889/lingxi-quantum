@@ -105,7 +105,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   // Switching workspaces must be a user decision, never an automatic keyword redirect.
   sentRef.current=true;lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
-  if(!confirm){setPendingQuestion(question);setPrompt("");setStreaming(null)}
+  if(!confirm){setPendingQuestion(question);setStreaming(null)}
   try{
    if(task==='chat'&&!confirm){
     const local=await tryBrowserLocalText({lang,messages:[
