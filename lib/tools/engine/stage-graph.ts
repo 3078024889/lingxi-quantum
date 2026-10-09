@@ -104,6 +104,21 @@ export const TOOL_GRAPHS:ToolEngineGraph[]=[
  g("file-compare",[s("compare","Compare files",[req("file-compare",["native-js"]),req("sha256",["webcrypto"],[],[],true)])],["payload-present"]),
  g("pptx-to-txt",[s("parse","Read PPTX archive",[req("pptx-text",["jszip"],["native-js"])])],["nonempty-or-explicit-empty"]),
  g("json-formatter",[s("format","Format JSON",[req("json",["native-js"])])],["result-editable"]),
+ g("regex-tester",[s("run","Test regular expression",[req("regex",["native-js"])])],["result-editable"]),
+ g("text-diff",[s("compare","Compare text",[req("text-diff",["native-js"])])],["result-editable"]),
+ g("csv-json",[s("convert","Convert CSV to JSON",[req("csv-json",["native-js"])])],["result-editable"]),
+ g("xml-formatter",[s("format","Format XML",[req("xml-format",["native-js"])])],["result-editable"]),
+ g("jwt-decoder",[s("decode","Decode JWT payload",[req("jwt-decode",["native-js"])])],["result-editable"]),
+ g("url-parser",[s("parse","Parse URL",[req("url-parse",["native-js"])])],["result-editable"]),
+ g("case-converter",[s("convert","Convert text case",[req("case-convert",["native-js"])])],["result-editable"]),
+ g("number-base-converter",[s("convert","Convert number base",[req("number-base",["native-js"])])],["result-editable"]),
+ g("uuid-generator",[s("generate","Generate UUID",[req("uuid-generate",["native-js"])])],["result-copyable"]),
+ g("cron-parser",[s("parse","Parse cron expression",[req("cron-parse",["native-js"])])],["result-editable"]),
+ g("ics-to-csv",[s("convert","Convert iCalendar events",[req("ics-csv",["native-js"])])],["download-reopens"]),
+ g("vcf-to-csv",[s("convert","Convert vCard contacts",[req("vcf-csv",["native-js"])])],["download-reopens"]),
+ g("epub-to-txt",[s("extract","Extract EPUB reading order",[req("epub-text",["native-js"])])],["download-reopens"]),
+ g("odt-to-txt",[s("extract","Extract OpenDocument text",[req("odt-text",["native-js"])])],["download-reopens"]),
+
  g("timestamp-converter",[s("convert","Convert timestamps",[req("time",["native-js"])])],["result-editable"]),
 ];
 
