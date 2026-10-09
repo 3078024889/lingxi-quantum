@@ -6,7 +6,7 @@ const png=fs.readFileSync("tests/fixtures/generated/pixel.png");
 const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
 async function saveBytes(page:any){
  const downloadPromise=page.waitForEvent("download");
- await page.getByRole("button",{name:"Save",exact:true}).last().click();
+ await page.getByRole("button",{name:"Save file",exact:true}).last().click();
  const download=await downloadPromise;
  const file=await download.path();if(!file)throw new Error("DOWNLOAD_MISSING");
  return {name:download.suggestedFilename(),bytes:fs.readFileSync(file)};
