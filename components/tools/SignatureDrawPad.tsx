@@ -15,18 +15,27 @@ const labels:Record<string,{title:string,clear:string,undo:string,apply:string,e
 export default function SignatureDrawPad({onApply}:{onApply:(image:string,ratio:number)=>void}){
  const {lang}=useLingxiLang(),t=labels[lang]||labels.en;
  const canvas=useRef<HTMLCanvasElement>(null),active=useRef(false),last=useRef<{x:number;y:number}|null>(null),history=useRef<ImageData[]>([]);
+ const mid=useRef<{x:number;y:number}|null>(null);
+ const pointer=useRef<number|null>(null);
  const [strokes,setStrokes]=useState(0),[error,setError]=useState("");
  const draw=(event:React.PointerEvent<HTMLCanvasElement>)=>{
   if(!active.current||!canvas.current)return;
   const c=canvas.current,ctx=c.getContext("2d");if(!ctx)return;
   const rect=c.getBoundingClientRect(),x=(event.clientX-rect.left)*c.width/rect.width,y=(event.clientY-rect.top)*c.height/rect.height;
-  ctx.strokeStyle="#142b59";ctx.lineWidth=3.4;ctx.lineCap="round";ctx.lineJoin="round";
-  ctx.beginPath();ctx.moveTo(last.current?.x??x,last.current?.y??y);ctx.lineTo(x,y);ctx.stroke();
-  // A single pointer tap is a legitimate pen dot; don't silently drop it.
-  if(!last.current){ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.arc(x,y,ctx.lineWidth/2,0,Math.PI*2);ctx.fill()}
-  last.current={x,y};
+  ctx.strokeStyle="#142b59";ctx.lineCap="round";ctx.lineJoin="round";
+  // Smooth consecutive sample points with quadratic interpolation instead of jagged segments.
+  // Pressure is used only for pen input; mouse and touch have a reliable fixed width.
+  ctx.lineWidth=event.pointerType==="pen"?Math.max(1.4,Math.min(4.6,1.6+(event.pressure||.5)*2.8)):3.4;
+  if(!last.current){
+   ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.arc(x,y,ctx.lineWidth/2,0,Math.PI*2);ctx.fill();
+   last.current={x,y};mid.current={x,y};return;
+  }
+  const nextMid={x:(last.current.x+x)/2,y:(last.current.y+y)/2};
+  ctx.beginPath();ctx.moveTo(mid.current?.x??last.current.x,mid.current?.y??last.current.y);
+  ctx.quadraticCurveTo(last.current.x,last.current.y,nextMid.x,nextMid.y);ctx.stroke();
+  last.current={x,y};mid.current=nextMid;
  };
- const clear=()=>{const c=canvas.current;c?.getContext("2d")?.clearRect(0,0,c.width,c.height);history.current=[];setStrokes(0);setError("")};
+ const clear=()=>{const c=canvas.current;c?.getContext("2d")?.clearRect(0,0,c.width,c.height);history.current=[];active.current=false;pointer.current=null;last.current=null;mid.current=null;setStrokes(0);setError("")};
  const undo=()=>{const ctx=canvas.current?.getContext("2d"),prior=history.current.pop();if(!ctx||!canvas.current||!prior)return;ctx.putImageData(prior,0,0);setStrokes(history.current.length);setError("")};
  const apply=()=>{
   const c=canvas.current;if(!c||!strokes){setError(t.empty);return}
@@ -43,10 +52,18 @@ export default function SignatureDrawPad({onApply}:{onApply:(image:string,ratio:
  return <section className="space-y-3 rounded-xl border p-4" data-testid="signature-draw-pad">
   <b>{t.title}</b><p className="text-xs opacity-70">{t.hint}</p>
   <canvas ref={canvas} width={560} height={180} role="img" aria-label={t.title} className="block w-full max-w-2xl rounded-lg border bg-white touch-none cursor-crosshair" onPointerDown={e=>{
+   if(active.current)return;
    const ctx=e.currentTarget.getContext("2d");if(!ctx)return;
-   history.current.push(ctx.getImageData(0,0,e.currentTarget.width,e.currentTarget.height));active.current=true;last.current=null;
+   history.current.push(ctx.getImageData(0,0,e.currentTarget.width,e.currentTarget.height));
+   active.current=true;pointer.current=e.pointerId;last.current=null;mid.current=null;
    e.currentTarget.setPointerCapture(e.pointerId);draw(e);
-  }} onPointerMove={draw} onPointerUp={e=>{draw(e);active.current=false;last.current=null;setStrokes(history.current.length)}} onPointerCancel={()=>{active.current=false;last.current=null;setStrokes(history.current.length)}}/>
+  }} onPointerMove={e=>{if(e.pointerId===pointer.current)draw(e)}} onPointerUp={e=>{
+   if(e.pointerId!==pointer.current)return;
+   draw(e);
+   const ctx=e.currentTarget.getContext("2d"),m=mid.current,l=last.current;
+   if(ctx&&m&&l){ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(l.x,l.y);ctx.stroke()}
+   active.current=false;pointer.current=null;last.current=null;mid.current=null;setStrokes(history.current.length);
+  }} onPointerCancel={e=>{if(e.pointerId!==pointer.current)return;active.current=false;pointer.current=null;last.current=null;mid.current=null;setStrokes(history.current.length)}}/>
   <div className="flex flex-wrap gap-2"><button type="button" onClick={undo} disabled={!strokes} className="rounded-lg border px-3 py-2 text-sm">{t.undo}</button><button type="button" onClick={clear} className="rounded-lg border px-3 py-2 text-sm">{t.clear}</button><button type="button" onClick={apply} className="rounded-lg border px-3 py-2 text-sm">{t.apply}</button></div>
   {error&&<p role="alert" className="text-sm text-rose-600">{error}</p>}
  </section>;
