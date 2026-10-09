@@ -1,4 +1,5 @@
 import{TOOLS}from"@/lib/tools/registry";
+import{LINGXIFIELD_PUBLIC_TOOL_REGISTRY}from"@/lib/tools/platform/tool-registry";
 import{SASI_SKILLS}from"@/lib/sasi/skills/catalog";
 import type{SasiMode,SasiSkillId}from"@/lib/sasi/skills/types";
 
@@ -14,10 +15,19 @@ export type LingxiCapability={
  metadata?:Record<string,unknown>;
 };
 
-export const TOOL_CAPABILITIES:readonly LingxiCapability[]=TOOLS.map(tool=>({
- id:`tool:${tool.slug}`,kind:"tool",status:tool.status,localOnly:tool.localOnly,title:tool.titleZh,route:`/tools/${tool.slug}`,
- metadata:{slug:tool.slug,category:tool.category,accept:tool.accept??null,multiple:Boolean(tool.multiple),maxFiles:tool.maxFiles??null,maxSizeMB:tool.maxSizeMB??null}
-}));
+const legacyToolMeta=new Map(TOOLS.map(tool=>[tool.slug,tool] as const));
+
+export const TOOL_CAPABILITIES:readonly LingxiCapability[]=LINGXIFIELD_PUBLIC_TOOL_REGISTRY.map(tool=>{
+ const meta=legacyToolMeta.get(tool.slug);
+ return{
+  id:`tool:${tool.slug}`,kind:"tool",status:meta?.status??"beta",localOnly:tool.mode==="local",title:tool.zh,route:`/tools/${tool.slug}`,
+  metadata:{
+   slug:tool.slug,mode:tool.mode,capabilities:tool.capabilities,contractVersion:tool.contractVersion,privacyMode:tool.privacyMode,
+   requiresNineLanguage:tool.requiresNineLanguage,requiresDesktop:tool.requiresDesktop,requiresMobile:tool.requiresMobile,requiresRealFixture:tool.requiresRealFixture,
+   accept:meta?.accept??null,multiple:Boolean(meta?.multiple),maxFiles:meta?.maxFiles??null,maxSizeMB:meta?.maxSizeMB??null
+  }
+ };
+});
 
 export const SASI_CAPABILITIES:readonly LingxiCapability[]=Object.values(SASI_SKILLS).map(skill=>({
  id:`sasi:${skill.id}`,kind:"sasi-skill",status:"live",localOnly:false,title:skill.title,modes:skill.modes,
@@ -27,6 +37,7 @@ export const SASI_CAPABILITIES:readonly LingxiCapability[]=Object.values(SASI_SK
 const ALL=[...TOOL_CAPABILITIES,...SASI_CAPABILITIES];
 const INDEX=new Map(ALL.map(row=>[row.id,row]));
 if(INDEX.size!==ALL.length)throw new Error("CAPABILITY_ID_COLLISION");
+if(TOOL_CAPABILITIES.length!==LINGXIFIELD_PUBLIC_TOOL_REGISTRY.length)throw new Error("PUBLIC_TOOL_CAPABILITY_DRIFT");
 
 export function listLingxiCapabilities(kind?:LingxiCapabilityKind){return kind?ALL.filter(row=>row.kind===kind):ALL.slice()}
 export function getLingxiCapability(id:string){return INDEX.get(id)??null}
