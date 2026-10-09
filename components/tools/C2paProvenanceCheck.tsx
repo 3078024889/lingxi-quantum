@@ -17,7 +17,7 @@ function describe(store:unknown):ProvenanceResult{
  const manifests=isObj(store.manifests)?store.manifests:{};
  const active=typeof store.active_manifest==="string"?store.active_manifest:"";
  // A manifest-free result is not evidence that the source is human or AI.
- if(!active||!isObj(manifests[active]))return {status:"absent"};
+ if(!active||!isObj(manifests[active]))return {status:"unavailable",reason:"MISSING_ACTIVE_MANIFEST"};
  const value=store.validation_state;
  const rawState=typeof value==="string"?value.toLowerCase():"";
  const details=manifests[active] as Record<string,unknown>;

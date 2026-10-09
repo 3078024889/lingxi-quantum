@@ -12,9 +12,10 @@ test("official signed C2PA JPEG receives an actual SDK verification state",async
  await page.getByRole("button",{name:/开始检查|Start checking/}).click();
  const section=page.locator("[data-c2pa-verification]");
  await expect(section).toBeVisible();
- await expect(section).toHaveAttribute("data-c2pa-verification",/^(trusted|valid|untrusted|invalid)$/,{timeout:60000});
- // The official test-PKI signing cert may be untrusted by production trust lists; signature detection must still be distinct from no manifest.
+ await expect(section).toHaveAttribute("data-c2pa-verification",/^(trusted|valid|untrusted)$/,{timeout:60000});
+ // A valid signed fixture may be untrusted by production trust lists, but it must never be accepted as cryptographically invalid.
  await expect(section).not.toHaveAttribute("data-c2pa-verification","absent");
+ await expect(section).not.toHaveAttribute("data-c2pa-verification","unavailable");
 });
 
 test("unsigned local PNG never reports a verified C2PA signature",async({page})=>{
@@ -39,7 +40,7 @@ for(const [filename,expected] of [["video1.mp4","signed"],["video1_no_manifest.m
   await page.locator('input[type="file"]').setInputFiles({name:filename,mimeType:"video/mp4",buffer:await response.body()});
   await page.getByRole("button",{name:/开始检查|Start checking/}).click();
   const section=page.locator("[data-c2pa-verification]");
-  await expect(section).toHaveAttribute("data-c2pa-verification",expected==="signed"?/^(trusted|valid|untrusted|invalid)$/:"absent",{timeout:60000});
+  await expect(section).toHaveAttribute("data-c2pa-verification",expected==="signed"?/^(trusted|valid|untrusted)$/:"absent",{timeout:60000});
  });
 }
 
