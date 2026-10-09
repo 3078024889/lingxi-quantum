@@ -25,8 +25,9 @@ export async function GET() {
     admin.from("sasi_deliveries").select("id,project_id,job_id,media_kind,mime_type,byte_size,ai_generated,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
   ]);
   const firstError = balancesResult.error ?? wallet.error ?? ledger.error ?? jobs.error ?? deliveries.error;
-  if (firstError && !new Set(["PGRST116"]).has(firstError.code)) {
-    console.error("[sasi account] read failed", firstError.code);
+  const errorCode = firstError && "code" in firstError && typeof firstError.code === "string" ? firstError.code : "UNKNOWN";
+  if (firstError && errorCode !== "PGRST116") {
+    console.error("[sasi account] read failed", errorCode);
     return NextResponse.json({ error: "PRODUCTION_ACCOUNT_UNAVAILABLE" }, { status: 503 });
   }
   return NextResponse.json({
