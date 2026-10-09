@@ -51,6 +51,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const [prompt,setPrompt]=useState(initialPrompt),[functions,setFunctions]=useState<string[]>([]),[rights,setRights]=useState(false),[busy,setBusy]=useState(false),[notice,setNotice]=useState('');
  const [turns,setTurns]=useState<Array<{question:string;answer?:string;image?:string}>>([]),[quote,setQuote]=useState<{id:string;estimated_fen:number;question:string;currency:string}|null>(null);
  const [streaming,setStreaming]=useState<{question:string;answer:string}|null>(null);
+ const [pendingQuestion,setPendingQuestion]=useState<string|null>(null);
  const [needsConnection,setNeedsConnection]=useState(false);const exhausted=useRef(false);
  const threadRef=useRef("");
  const sentRef=useRef(false);
@@ -79,7 +80,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   return()=>{cancelled=true};
  },[task]);
  function commitText(question:string,answer:string){
-  setTurns(rows=>[...rows,{question,answer}]);setPrompt("");
+  setPendingQuestion(null);setStreaming(null);setTurns(rows=>[...rows,{question,answer}]);setPrompt("");
   if(task!=="chat")return;
   const threadId=threadRef.current||crypto.randomUUID();
   threadRef.current=threadId;
@@ -104,6 +105,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   // Switching workspaces must be a user decision, never an automatic keyword redirect.
   sentRef.current=true;lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
+  if(!confirm){setPendingQuestion(question);setPrompt("");setStreaming(null)}
   try{
    if(task==='chat'&&!confirm){
     const local=await tryBrowserLocalText({lang,messages:[
@@ -129,10 +131,10 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    if(data.task?.state!=='succeeded'){setQuote(null);setNotice(ct('supplierNeedsCheck'));return}
    const output=data.task.output;if(task==='image'&&!output?.imageUrl||task==='chat'&&!output?.answer)throw Error('RESULT_MISSING');
    if(task==='chat'){commitText(question,output.answer);previous.current=data.task.id}else{setTurns(rows=>[...rows,{question,image:output.imageUrl}]);setPrompt('')}setQuote(null);
-  }catch{setNotice(ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false)}
+  }catch{setNotice(ct('supplierNeedsCheck'))}finally{setPendingQuestion(null);setStreaming(null);lock.current=false;setBusy(false)}
  }
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
-  <div className="flex-1 pt-10">{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>onTask(destination,turn.question)} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
+  <div className="flex-1 pt-10">{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>onTask(destination,turn.question)} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{pendingQuestion&&<div className="mb-8" data-sasi-pending-turn="true"><SasiUserMessage className="mb-6">{pendingQuestion}</SasiUserMessage><div role="status" aria-live="polite" className="text-sm text-[var(--lx-muted)]">{streaming?.answer?<SasiAssistantText>{streaming.answer}</SasiAssistantText>:(lang==="zh"?"正在思考…":lang==="ja"?"考えています…":lang==="ko"?"생각하고 있어요…":lang==="fr"?"Je réfléchis…":lang==="de"?"Ich denke nach…":lang==="es"?"Pensando…":lang==="pt"?"A pensar…":lang==="ar"?"جارٍ التفكير…":"Thinking…")}</div></div>}</div>
   <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={busy} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
    <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<div className="grid gap-3"><SasiLocalIntelligenceAction/><SasiUserResourceAction/></div>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}
