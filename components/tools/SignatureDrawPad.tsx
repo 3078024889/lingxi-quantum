@@ -22,6 +22,8 @@ export default function SignatureDrawPad({onApply}:{onApply:(image:string,ratio:
   const rect=c.getBoundingClientRect(),x=(event.clientX-rect.left)*c.width/rect.width,y=(event.clientY-rect.top)*c.height/rect.height;
   ctx.strokeStyle="#142b59";ctx.lineWidth=3.4;ctx.lineCap="round";ctx.lineJoin="round";
   ctx.beginPath();ctx.moveTo(last.current?.x??x,last.current?.y??y);ctx.lineTo(x,y);ctx.stroke();
+  // A single pointer tap is a legitimate pen dot; don't silently drop it.
+  if(!last.current){ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.arc(x,y,ctx.lineWidth/2,0,Math.PI*2);ctx.fill()}
   last.current={x,y};
  };
  const clear=()=>{const c=canvas.current;c?.getContext("2d")?.clearRect(0,0,c.width,c.height);history.current=[];setStrokes(0);setError("")};
@@ -44,7 +46,7 @@ export default function SignatureDrawPad({onApply}:{onApply:(image:string,ratio:
    const ctx=e.currentTarget.getContext("2d");if(!ctx)return;
    history.current.push(ctx.getImageData(0,0,e.currentTarget.width,e.currentTarget.height));active.current=true;last.current=null;
    e.currentTarget.setPointerCapture(e.pointerId);draw(e);
-  }} onPointerMove={draw} onPointerUp={e=>{draw(e);active.current=false;last.current=null;setStrokes(history.current.length)}} onPointerCancel={()=>{active.current=false;last.current=null}}/>
+  }} onPointerMove={draw} onPointerUp={e=>{draw(e);active.current=false;last.current=null;setStrokes(history.current.length)}} onPointerCancel={()=>{active.current=false;last.current=null;setStrokes(history.current.length)}}/>
   <div className="flex flex-wrap gap-2"><button type="button" onClick={undo} disabled={!strokes} className="rounded-lg border px-3 py-2 text-sm">{t.undo}</button><button type="button" onClick={clear} className="rounded-lg border px-3 py-2 text-sm">{t.clear}</button><button type="button" onClick={apply} className="rounded-lg border px-3 py-2 text-sm">{t.apply}</button></div>
   {error&&<p role="alert" className="text-sm text-rose-600">{error}</p>}
  </section>;
