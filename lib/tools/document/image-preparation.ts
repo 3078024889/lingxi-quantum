@@ -6,7 +6,7 @@ function loadImage(src:string){return new Promise<HTMLImageElement>((resolve,rej
 function fileData(file:File){return new Promise<string>((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result));r.onerror=()=>reject(new Error("IMAGE_READ_FAILED"));r.readAsDataURL(file);});}
 
 export async function prepareSignatureOrStamp(file:File,mode:"signature"|"stamp"="stamp",sensitivity=60):Promise<PreparedImage>{
- const src=await fileData(file),im=await loadImage(src);const c=document.createElement("canvas");c.width=im.naturalWidth;c.height=im.naturalHeight;const ctx=c.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");ctx.drawImage(im,0,0);
+ const src=await fileData(file),im=await loadImage(src);const c=document.createElement("canvas");const scale=mode==="signature"?Math.min(1,2048/Math.max(im.naturalWidth,im.naturalHeight),Math.sqrt(4_000_000/(im.naturalWidth*im.naturalHeight))):1;c.width=Math.max(1,Math.round(im.naturalWidth*scale));c.height=Math.max(1,Math.round(im.naturalHeight*scale));const ctx=c.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");ctx.drawImage(im,0,0);
  if(mode==="signature"){
   const image=ctx.getImageData(0,0,c.width,c.height);
   const out=extractHandwritingPixels(image.data,c.width,c.height,sensitivity);
