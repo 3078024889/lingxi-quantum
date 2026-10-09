@@ -12,7 +12,7 @@ test("official signed C2PA JPEG receives an actual SDK verification state",async
  await page.getByRole("button",{name:/开始检查|Start checking/}).click();
  const section=page.locator("[data-c2pa-verification]");
  await expect(section).toBeVisible();
- await expect(section).toHaveAttribute("data-c2pa-verification",/^(trusted|valid|invalid)$/,{timeout:60000});
+ await expect(section).toHaveAttribute("data-c2pa-verification",/^(trusted|valid)$/,{timeout:60000});
  // The verifier must reach a cryptographic result, not silently treat signed content as unsigned.
  await expect(section).not.toHaveAttribute("data-c2pa-verification","absent");
 });
