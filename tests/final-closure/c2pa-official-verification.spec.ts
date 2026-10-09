@@ -42,3 +42,17 @@ for(const [filename,expected] of [["video1.mp4","signed"],["video1_no_manifest.m
   await expect(section).toHaveAttribute("data-c2pa-verification",expected==="signed"?/^(trusted|valid|untrusted|invalid)$/:"absent",{timeout:60000});
  });
 }
+
+test("altered signed image does not retain a valid or trusted provenance verdict",async({page,request})=>{
+ test.setTimeout(90000);
+ const response=await request.get(FIXTURE,{timeout:30000,maxRetries:2});
+ expect(response.ok()).toBeTruthy();
+ const original=await response.body();
+ const modified=Buffer.from(original);
+ modified[modified.length-40]^=0x01;
+ await page.goto("/tools/ai-image-check");
+ await page.locator('input[type="file"]').setInputFiles({name:"tampered-signed.jpg",mimeType:"image/jpeg",buffer:modified});
+ await page.getByRole("button",{name:/开始检查|Start checking/}).click();
+ const section=page.locator("[data-c2pa-verification]");
+ await expect(section).toHaveAttribute("data-c2pa-verification","invalid",{timeout:60000});
+});
