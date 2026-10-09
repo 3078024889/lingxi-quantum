@@ -33,6 +33,16 @@ test("handwriting cleanup can erase remaining photo marks, undo and update PDF p
  const x=rect!.x+(spot.x+.5)*rect!.width/spot.w,y=rect!.y+(spot.y+.5)*rect!.height/spot.h;
  await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+4,y+3,{steps:4});await page.mouse.up();
  await expect.poll(alpha).toBeLessThan(before);
+ const preview=page.getByTestId("signature-ink-preview").locator("img");
+ const edited=await preview.getAttribute("src");
+ expect(edited).toMatch(/^data:image\/png;base64,/);
+ const downloadPromise=page.waitForEvent("download");
+ await page.getByRole("button",{name:"Save transparent signature"}).click();
+ const download=await downloadPromise;
+ expect(download.suggestedFilename()).toMatch(/\.png$/);
+ const path=await download.path();expect(path).not.toBeNull();
+ const bytes=fs.readFileSync(path!);
+ expect(bytes.subarray(0,8)).toEqual(Buffer.from([137,80,78,71,13,10,26,10]));
  const placement=page.locator('img[src^="data:image/png"]').last();
  await expect(placement).toBeVisible();
  await editor.getByRole("button",{name:"Undo erasing"}).click();
