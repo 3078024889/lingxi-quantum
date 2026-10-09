@@ -1,4 +1,5 @@
 "use client";
+import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
 
 import {Suspense,useEffect,useState} from "react";
 import {useSearchParams} from "next/navigation";
@@ -81,4 +82,4 @@ function Inner(){
   </main><Footer/></>;
 }
 
-export default function Page(){return <Suspense fallback={<div className="p-20 text-center">…</div>}><Inner/></Suspense>}
+export default function Page(){return <MiniPaymentBoundary><Suspense fallback={<div className="p-20 text-center">…</div>}><Inner/></Suspense></MiniPaymentBoundary>}

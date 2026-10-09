@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
 import { miniSkuForProduct } from "@/lib/mini/catalog";
 import { safeEqualHex } from "@/lib/mini/crypto";
+import { reconcileVirtualToolOrder } from "@/lib/mini/virtual-fulfillment";
 
 export const runtime = "nodejs";
 export const maxDuration = 20;
@@ -22,6 +23,7 @@ type DeliverPayload = {
   GoodsInfo?: GoodsInfo;
   WeChatPayInfo?: { TransactionId?: string; MchOrderNo?: string };
   MiniGame?: { Payload?: string };
+  Env?: number;
 };
 
 function success() {
@@ -38,6 +40,7 @@ function verifiedByWechat(req: Request): boolean {
   const nonce = url.searchParams.get("nonce") ?? "";
   const token = process.env.WECHAT_MINI_MESSAGE_TOKEN ?? "";
   if (!signature || !timestamp || !nonce || !token) return false;
+  if (!/^\d{10}$/.test(timestamp) || nonce.length > 256 || Math.abs(Date.now() / 1000 - Number(timestamp)) > 600) return false;
   const expected = createHash("sha1").update([token, timestamp, nonce].sort().join("")).digest("hex");
   return safeEqualHex(signature, expected);
 }
@@ -60,6 +63,7 @@ export async function POST(req: Request) {
   // 第一版只允许微信消息推送的明文 JSON + URL token 签名模式。
   // 若后台选择“安全模式”，需先增加 AES 消息解密，不能在未验签时临时放行。
   if (!verifiedByWechat(req)) return failure("invalid signature", 401);
+  if (Number(req.headers.get("content-length")) > 65536) return failure("payload too large", 413);
   try {
     const payload = normalizePayload((await req.json()) as DeliverPayload);
     const event = payload.Event ?? "unknown";
@@ -74,7 +78,7 @@ export async function POST(req: Request) {
       );
       return success();
     }
-    if (!outTradeNo || !payload.GoodsInfo?.ProductId || !transactionId) {
+    if (!outTradeNo || !payload.GoodsInfo?.ProductId) {
       return failure("missing payment fields", 400);
     }
 
@@ -85,6 +89,17 @@ export async function POST(req: Request) {
       .eq("provider_payment_id", outTradeNo)
       .maybeSingle();
     if (!order) return failure("order not found", 404);
+
+    if (order.product_id.startsWith("toolquote:")) {
+      const result = await reconcileVirtualToolOrder(order.id);
+      if (!result.paid) return failure("payment not verified", 422);
+      const saved = await admin.from("wechat_mini_payment_events").upsert({
+        event_type: event, out_trade_no: outTradeNo, order_id: order.id,
+        transaction_id: transactionId ?? outTradeNo, payload, handled: true,
+      }, { onConflict: "event_type,out_trade_no,transaction_id" });
+      if (saved.error) return failure("event persistence failed");
+      return success();
+    }
 
     const callbackOpenid = payload.OpenId ?? payload.openid;
     const { data: identity } = await admin

@@ -36,6 +36,6 @@ export function hmacSha256Hex(key: string, value: string): string {
 }
 
 export function safeEqualHex(left: string, right: string): boolean {
-  if (!/^[a-f0-9]+$/i.test(left) || !/^[a-f0-9]+$/i.test(right) || left.length !== right.length) return false;
+  if (!/^[a-f0-9]+$/i.test(left) || !/^[a-f0-9]+$/i.test(right) || left.length !== right.length || left.length % 2 !== 0) return false;
   return timingSafeEqual(Buffer.from(left, "hex"), Buffer.from(right, "hex"));
 }

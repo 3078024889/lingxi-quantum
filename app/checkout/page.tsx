@@ -1,4 +1,5 @@
 "use client";
+import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
 
 import { useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -564,7 +565,7 @@ const orderIdRef = useRef<string | null>(null);
 
 export default function CheckoutPage() {
   return (
-    <>
+    <MiniPaymentBoundary>
       <Nav />
       <main className="pt-24">
         <Suspense fallback={<div className="py-24 text-center text-[var(--lx-muted)]">…</div>}>
@@ -572,6 +573,6 @@ export default function CheckoutPage() {
         </Suspense>
       </main>
       <Footer />
-    </>
+    </MiniPaymentBoundary>
   );
 }

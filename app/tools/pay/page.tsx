@@ -1,4 +1,5 @@
 "use client";
+import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
 import {toolBalanceText} from '@/lib/tools/commerce/balance-copy';
 import {quoteDisplay} from "@/lib/tools/commerce/quote-display";
 import NextImage from "next/image";
@@ -76,4 +77,4 @@ function Inner(){
  </div>
 }
 
-export default function Page(){return <main className="min-h-screen bg-[var(--lx-bg)]"><Suspense fallback={<div className="p-20 text-center text-[var(--lx-muted)]">…</div>}><Inner/></Suspense></main>}
+export default function Page(){return <MiniPaymentBoundary><main className="min-h-screen bg-[var(--lx-bg)]"><Suspense fallback={<div className="p-20 text-center text-[var(--lx-muted)]">…</div>}><Inner/></Suspense></main></MiniPaymentBoundary>}

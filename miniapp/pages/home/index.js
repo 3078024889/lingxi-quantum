@@ -2,7 +2,7 @@ const { enableShareMenu, appMessage, timeline } = require('../../utils/share')
 const { getLanguage } = require('../../utils/i18n')
 
 const TEXT={
- 'zh-CN':{kicker:'LINGXIFIELD',title:'一键创造，一念即达。',subtitle:'从工具、创作到账户，把常用入口放在一个清楚的首页。',tools:'实用工具',toolsNote:'PDF、图片、视频、OCR、临时邮箱与更多工具。',create:'SASI 创作',createNote:'从一个想法开始，继续短剧、网站、学习与科研创作。',tasks:'任务与订单',tasksNote:'查看支付、使用记录与任务进度。',knowledge:'资料智库',knowledgeNote:'把书本、论文与资料变成可继续使用的知识空间。',settings:'设置',settingsNote:'语言、币种与账户常用入口。',notifications:'消息与公告',notificationsNote:'查看充值到账、退款进度和产品更新。'},
+ 'zh-CN':{kicker:'LINGXIFIELD',title:'一键创造，一念即达。',subtitle:'灵犀场实用工具：处理 PDF、图片、视频与文件，也可继续 SASI 创作、学习与科研。',tools:'实用工具',toolsNote:'PDF、图片、视频、OCR、临时邮箱与更多工具。',create:'SASI 创作',createNote:'从一个想法开始，继续短剧、网站、学习与科研创作。',tasks:'任务与订单',tasksNote:'查看支付、使用记录与任务进度。',knowledge:'资料智库',knowledgeNote:'把书本、论文与资料变成可继续使用的知识空间。',settings:'设置',settingsNote:'语言、币种与账户常用入口。',notifications:'消息与公告',notificationsNote:'查看充值到账、退款进度和产品更新。'},
  en:{kicker:'LINGXIFIELD',title:'Create in one step. Reach the result.',subtitle:'Tools, creation and account shortcuts are now organized on one clear home screen.',tools:'Practical tools',toolsNote:'PDF, image, video, OCR, temporary email and more.',create:'SASI creation',createNote:'Start from one idea and continue drama, web, learning and research work.',tasks:'Tasks & orders',tasksNote:'Review payments, usage records and task progress.',knowledge:'Knowledge workspace',knowledgeNote:'Turn books, papers and files into reusable knowledge.',settings:'Settings',settingsNote:'Language, currency and account shortcuts.',notifications:'Notifications',notificationsNote:'See top-ups, refund progress and product updates.'},
  ja:{kicker:'LINGXIFIELD',title:'一歩で作り、結果へ。',subtitle:'ツール、制作、アカウントの入口をひとつのホームに整理しました。',tools:'実用ツール',toolsNote:'PDF、画像、動画、OCR、一時メールなど。',create:'SASI 制作',createNote:'ひとつのアイデアから短編ドラマ、Web、学習、研究を続けます。',tasks:'タスクと注文',tasksNote:'支払い、利用履歴、進捗を確認。',knowledge:'資料知識庫',knowledgeNote:'本、論文、資料を再利用できる知識に。',settings:'設定',settingsNote:'言語、通貨、アカウント入口。',notifications:'通知',notificationsNote:'入金、返金進捗、更新を確認。'},
  ko:{kicker:'LINGXIFIELD',title:'한 번에 만들고 결과까지.',subtitle:'도구, 창작, 계정 입구를 하나의 홈 화면에 정리했습니다.',tools:'실용 도구',toolsNote:'PDF, 이미지, 영상, OCR, 임시 메일 등.',create:'SASI 창작',createNote:'하나의 아이디어에서 드라마, 웹, 학습, 연구까지 이어갑니다.',tasks:'작업 및 주문',tasksNote:'결제, 사용 기록, 진행 상황 확인.',knowledge:'자료 지식 공간',knowledgeNote:'책, 논문, 자료를 재사용 가능한 지식으로.',settings:'설정',settingsNote:'언어, 통화, 계정 바로가기.',notifications:'알림',notificationsNote:'충전, 환불 진행, 업데이트 확인.'},
@@ -20,6 +20,6 @@ Page({
  refreshLanguage(lang){this.setData({copy:TEXT[lang]||TEXT['zh-CN']})},
  goTab(e){const url=e.currentTarget.dataset.url;if(url)wx.switchTab({url})},
  go(e){const url=e.currentTarget.dataset.url;if(url)wx.navigateTo({url})},
- onShareAppMessage(){return appMessage('灵犀场 LINGXIFIELD','/pages/home/index')},
- onShareTimeline(){return timeline('灵犀场 LINGXIFIELD')}
+ onShareAppMessage(){return appMessage('灵犀场 LINGXIFIELD · 实用工具与 SASI 创作','/pages/home/index')},
+ onShareTimeline(){return timeline('灵犀场 LINGXIFIELD · 实用工具与 SASI 创作')}
 })

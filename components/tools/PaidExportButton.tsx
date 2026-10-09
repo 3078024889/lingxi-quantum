@@ -1,5 +1,6 @@
 "use client";
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+import {isMiniProgramContext,miniVirtualPaymentAvailable} from "@/lib/mini/payment-client";
 
 import{useEffect,useRef,useState}from"react";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
@@ -21,7 +22,7 @@ function key(toolId:string){return`lingxifield:paid-export:quote:${toolId}`}
 function save(toolId:string,q:Quote,draftId?:string){try{localStorage.setItem(key(toolId),JSON.stringify({id:q.id,toolId,quantity:q.quantity,currency:q.currency,expiresAt:q.expires_at||q.expiresAt,draftId:draftId||""}))}catch{}}
 function clear(toolId:string){try{localStorage.removeItem(key(toolId))}catch{}}
 function isConsumed(g:Grant|undefined){return Boolean(g?.consumed_at||g?.consumedAt)}
-function isMini(){try{return new URLSearchParams(location.search).get("mini")==="1"&&/MicroMessenger/i.test(navigator.userAgent||"")}catch{return false}}
+function isMini(){return isMiniProgramContext()}
 function clearResume(){try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+(u.search?u.search:"")+u.hash)}catch{}}
 async function openMiniPay(id:string){return new Promise<boolean>(resolve=>{let done=false;const finish=(v:boolean)=>{if(done)return;done=true;resolve(v)},go=()=>{const wx=(window as any).wx;if(!wx?.miniProgram?.navigateTo){finish(false);return}wx.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(id)}`,success:()=>finish(true),fail:()=>finish(false)})};if((window as any).wx?.miniProgram){go();return}const s=document.createElement("script");s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>finish(false);document.head.appendChild(s);setTimeout(()=>finish(false),3500)})}
 
@@ -85,6 +86,7 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
   if(disabled||busy||!Number.isSafeInteger(quantity)||quantity<=0)return;
   if(paidId){await check(paidId);return}
   if(phase==="completed"||phase==="generating")return;
+  if(isMini()&&(currency!=="CNY"||!await miniVirtualPaymentAvailable())){setMsg(lang==="zh"?"小程序内付费暂未开放，已有订单仍可查看。":"Payments in the mini program are temporarily unavailable. Existing orders remain available.");return}
   setBusy(true);setMsg("");setPhase("pricing");
   try{
    try{await beforePayment?.()}catch{setPhase("error");setMsg(tx("draftSaveFailed"));return}
@@ -94,7 +96,7 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
     const d=await r.json().catch(()=>({})) as Quote&{error?:string};if(!r.ok||!d.id)throw new Error(d.error||plainText(lang,"paymentError"));q=d;setQuote(q);
    }
    setPhase("quoted");save(toolId,q,draftId);setPhase("waitingPayment");
-   if(isMini()&&currency==="CNY"){setMsg(plainText(lang,"openingPayment"));if(await openMiniPay(q.id)){stop();timer.current=setInterval(()=>void check(q!.id),POLL_MS);return}}
+   if(isMini()&&currency==="CNY"){setMsg(plainText(lang,"openingPayment"));if(await openMiniPay(q.id)){stop();timer.current=setInterval(()=>void check(q!.id),POLL_MS)}else{setMsg(lang==="zh"?"请返回小程序重试，未发起付款。":"Return to the mini program and try again. No payment was started.")}return}
    const u=new URL(location.href);if(draftId)u.searchParams.set("resumeDraft",draftId);u.searchParams.set("resumeQuote",q.id);
    const payUrl=`/tools/pay?quoteId=${encodeURIComponent(q.id)}&return=${encodeURIComponent(u.pathname+u.search)}`;
    const w=window.open(payUrl,"lingxi_tool_pay","width=720,height=820");

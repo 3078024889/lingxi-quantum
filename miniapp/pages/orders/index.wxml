@@ -7,6 +7,7 @@
  <view class="lx-section"><view class="lx-list">
   <view wx:for="{{orders}}" wx:key="id" class="lx-row">
    <view class="lx-row-main"><view class="lx-row-title">{{item.product_id}}</view><view class="lx-row-note">{{item.currency==='USD'?'$':'¥'}}{{item.currency==='USD'?item.amount_usd:item.amount_rmb}} · {{item.status}}</view></view>
+   <button wx:if="{{item.provider==='wechat_mini_virtual' && item.status==='pending'}}" class="lx-button secondary" data-id="{{item.id}}" bindtap="confirmVirtual">确认付款结果</button>
   </view>
  </view></view>
 </view></view>
