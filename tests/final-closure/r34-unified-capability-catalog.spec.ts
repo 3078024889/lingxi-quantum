@@ -24,3 +24,10 @@ test("mode filtering does not leak incompatible SASI skills",()=>{
  const rows=findUnifiedCapabilities("短剧分镜",{mode:"research",limit:20,kinds:["skill"]});
  expect(rows.some(x=>x.id==="drama-storyboard")).toBeFalsy();
 });
+
+test("compact Chinese tool intent resolves without requiring spaces",()=>{
+ const excel=findUnifiedCapabilities("帮我把这个PDF转Excel",{limit:12});
+ expect(excel.some(x=>x.kind==="tool"&&x.id==="pdf-to-xlsx"&&x.score>=5)).toBeTruthy();
+ const watermark=findUnifiedCapabilities("给这张图片去水印",{limit:12});
+ expect(watermark.some(x=>x.kind==="tool"&&x.id==="image-watermark-remover")).toBeTruthy();
+});
