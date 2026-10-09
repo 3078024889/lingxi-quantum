@@ -39,10 +39,21 @@ function groupPageRows(tokens:Token[]){
  }).filter(row=>row.length);
 }
 
-function inferColumns(rows:RowToken[][]){
+function modeColumnCount(rows:RowToken[][]){
+ const frequency=new Map<number,number>();
+ for(const row of rows)if(row.length>=2&&row.length<=24)frequency.set(row.length,(frequency.get(row.length)||0)+1);
+ let columns=0,count=0;
+ for(const [value,hits]of frequency)if(hits>count||(hits===count&&value>columns)){columns=value;count=hits}
+ return{columns,count};
+}
+
+function inferColumns(rows:RowToken[][],expected:number){
+ // Stream-style extraction: infer anchors primarily from rows that agree on the
+ // dominant column count, then cluster nearby X positions.
+ const basis=rows.filter(row=>row.length===expected);
  const anchors:number[]=[];
- const tolerance=14;
- for(const row of rows){
+ const tolerance=16;
+ for(const row of basis){
   for(const cell of row){
    let best=-1,bestDist=Number.POSITIVE_INFINITY;
    for(let i=0;i<anchors.length;i++){const d=Math.abs(anchors[i]-cell.x);if(d<bestDist){bestDist=d;best=i}}
@@ -50,22 +61,37 @@ function inferColumns(rows:RowToken[][]){
    else anchors.push(cell.x);
   }
  }
- return anchors.sort((a,b)=>a-b);
+ const sorted=anchors.sort((a,b)=>a-b);
+ // If minor jitter created excess anchors, keep the anchors with broadest row support.
+ if(sorted.length<=expected)return sorted;
+ const scored=sorted.map(x=>({x,hits:rows.reduce((n,row)=>n+(row.some(cell=>Math.abs(cell.x-x)<=tolerance)?1:0),0)}))
+  .sort((a,b)=>b.hits-a.hits||a.x-b.x).slice(0,expected).sort((a,b)=>a.x-b.x);
+ return scored.map(x=>x.x);
 }
 
 function alignRows(rows:RowToken[][]){
- const columns=inferColumns(rows);
- if(!columns.length)return [] as string[][];
- return rows.map(row=>{
+ const mode=modeColumnCount(rows);
+ if(mode.columns<2||mode.count<2)return{rows:[] as string[][],columns:0,confidence:0};
+ const columns=inferColumns(rows,mode.columns);
+ if(columns.length<2)return{rows:[] as string[][],columns:0,confidence:0};
+ const tolerance=20;
+ const aligned=rows.map(row=>{
   const out=Array(columns.length).fill("") as string[];
+  let matched=0;
   for(const cell of row){
    let index=0,best=Number.POSITIVE_INFINITY;
    for(let i=0;i<columns.length;i++){const d=Math.abs(columns[i]-cell.x);if(d<best){best=d;index=i}}
+   if(best>tolerance*2.5)continue;
+   matched++;
    out[index]=out[index]?clean(out[index]+" "+cell.text):cell.text;
   }
   while(out.length&&out[out.length-1]==="")out.pop();
-  return out;
- });
+  return{values:out,matched};
+ }).filter(row=>row.matched>=2);
+ const structuralRows=aligned.filter(row=>row.values.filter(Boolean).length>=2);
+ const confidence=Math.min(1,structuralRows.length/Math.max(3,rows.length)*Math.min(1,mode.count/3));
+ if(structuralRows.length<2||confidence<.34)return{rows:[] as string[][],columns:columns.length,confidence};
+ return{rows:structuralRows.map(row=>row.values),columns:columns.length,confidence};
 }
 
 export async function pdfToXlsx(file:File){
@@ -73,7 +99,7 @@ export async function pdfToXlsx(file:File){
  if(!pdfjs.GlobalWorkerOptions.workerSrc)pdfjs.GlobalWorkerOptions.workerSrc="/pdfjs/pdf.worker.min.mjs";
  const loading=pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer())});
  const pdf=await loading.promise;
- const pages:Array<{name:string;rows:string[][]}>=[];
+ const pages:Array<{name:string;rows:string[][];confidence:number}>=[];
  let totalTokens=0,totalRows=0,maxColumns=0;
 
  for(let pageNo=1;pageNo<=pdf.numPages;pageNo++){
@@ -86,10 +112,10 @@ export async function pdfToXlsx(file:File){
    tokens.push({text,x:Number(m[4])||0,y:Number(m[5])||0,width:Math.max(0,Number(raw.width)||0),height});
   }
   totalTokens+=tokens.length;
-  const rows=alignRows(groupPageRows(tokens));
-  if(rows.length){
-   totalRows+=rows.length;maxColumns=Math.max(maxColumns,...rows.map(r=>r.length));
-   pages.push({name:`Page ${pageNo}`,rows});
+  const table=alignRows(groupPageRows(tokens));
+  if(table.rows.length){
+   totalRows+=table.rows.length;maxColumns=Math.max(maxColumns,table.columns);
+   pages.push({name:`Page ${pageNo}`,rows:table.rows,confidence:table.confidence});
   }
  }
  try{await pdf.destroy()}catch{}
@@ -114,5 +140,5 @@ export async function pdfToXlsx(file:File){
  }
  const bytes=await workbook.xlsx.writeBuffer();
  const blob=new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
- return{name:`${baseName(file.name)}.xlsx`,blob,pages:pages.length,rows:totalRows,columns:maxColumns,tokens:totalTokens};
+ const confidence=pages.reduce((n,p)=>n+p.confidence,0)/pages.length;\n return{name:`${baseName(file.name)}.xlsx`,blob,pages:pages.length,rows:totalRows,columns:maxColumns,tokens:totalTokens,confidence};
 }
