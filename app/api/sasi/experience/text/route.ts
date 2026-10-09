@@ -53,14 +53,14 @@ export async function POST(req:NextRequest){
      allowConnected:false,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160),
      onDelta:delta=>emit("delta",{text:delta}),onReset:()=>emit("reset",{})
     }).then(out=>{
-     if(out.kind==="answer")emit("done",{state:"answer",answer:out.answer,experienceExhausted:out.experienceExhausted});
-     else emit("done",{state:"needs-connection",experienceExhausted:out.experienceExhausted});
+     if(out.kind==="answer")emit("done",{state:"answer",answer:out.answer,experienceExhausted:out.experienceExhausted,experienceState:out.experienceState,experienceRemaining:out.experienceRemaining});
+     else emit("done",{state:"needs-connection",experienceExhausted:out.experienceExhausted,experienceState:out.experienceState,experienceRemaining:out.experienceRemaining});
     }).catch(()=>emit("done",{state:"needs-connection",experienceExhausted:false})).finally(()=>{try{controller.close()}catch{}});
    }
   });
   return new Response(stream,{headers:{"Content-Type":"text/event-stream; charset=utf-8","Cache-Control":"private, no-store, no-transform","X-Accel-Buffering":"no"}});
  }
  const out=await resilientText({userId:user.id,region,task,messages:[{role:"system",content:system},...history,{role:"user",content:text}],maxOutputTokens:Number.isFinite(tokens)?Math.max(256,Math.min(4096,tokens)):1536,allowConnected:body.allowConnected===true&&body.acceptConnectedBilling===true,sessionKey:String(body.sessionKey||body.projectId||"chat").slice(0,160)});
- if(out.kind==="answer")return NextResponse.json({state:"answer",answer:out.answer,source:out.source,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
- return NextResponse.json({state:"needs-connection",needsConnection:true,experienceExhausted:out.experienceExhausted},{headers:{"Cache-Control":"no-store"}});
+ if(out.kind==="answer")return NextResponse.json({state:"answer",answer:out.answer,source:out.source,experienceExhausted:out.experienceExhausted,experienceState:out.experienceState,experienceRemaining:out.experienceRemaining},{headers:{"Cache-Control":"no-store"}});
+ return NextResponse.json({state:"needs-connection",needsConnection:true,experienceExhausted:out.experienceExhausted,experienceState:out.experienceState,experienceRemaining:out.experienceRemaining},{headers:{"Cache-Control":"no-store"}});
 }
