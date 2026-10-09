@@ -1088,6 +1088,20 @@
     "privacyMode": "local-first"
   },
   {
+    "slug": "pdf-to-xlsx",
+    "capabilities": [
+      "document.page-model",
+      "spreadsheet.xlsx-write",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "pdf-unlock",
     "capabilities": [
       "document.pdf-structural",
