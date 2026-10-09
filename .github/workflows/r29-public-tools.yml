@@ -1,0 +1,29 @@
+name: R29 Public Tool Route Audit
+on:
+  push:
+    branches:
+      - audit/r29-live-tool-route-matrix-20261009
+    paths:
+      - scripts/audit/live-tool-routes.mjs
+      - .github/workflows/r29-public-tools.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-route-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check both public sites and all 118 tool routes
+        run: node scripts/audit/live-tool-routes.mjs
+      - name: Save per-tool evidence even if some routes fail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r29-tool-audit
+          path: audit-results/
+          if-no-files-found: warn
