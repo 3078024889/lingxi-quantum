@@ -15,7 +15,8 @@ req("lib/tools/workspace/recoverable-results.ts",[["INDEXEDDB_RESULTS",s=>s.incl
 req("lib/tools/workspace/recent-tools.ts",[["METADATA_INDEX",s=>s.includes("localStorage")&&s.includes("workspaceId")],["PERSIST_RESULT_ASYNC",s=>s.includes("saveRecoverableResult")],["NO_BLOB_SERIALIZATION",s=>!s.includes("JSON.stringify(files)")]]);
 req("components/tools/RecentTools.tsx",[["RECOVERY_LOAD",s=>s.includes("loadRecoverableResult")],["CONTINUATION",s=>s.includes("continueTargets")&&s.includes("createToolHandoff")],["NINE_LANGUAGE_TIME",s=>s.includes("Intl.RelativeTimeFormat")]]);
 req("lib/tasks/smart-execution.ts",[["LOCAL_FIRST_POLICY",s=>s.includes("browserEligible")&&s.includes('lanes.push("browser")')],["NO_DEPENDENCY",s=>!s.includes("from\"")&&!s.includes("from \"")]]);
-req("lib/tools/engine/resource-governor.ts",[["UNIFIED_POLICY_CONNECTED",s=>s.includes("chooseUnifiedExecution")]]);\nreq("lib/tasks/unified-execution-policy.ts",[["SMART_POLICY_DELEGATED",s=>s.includes("rankExecutionLanes")&&s.includes("chooseUnifiedExecution")],["EXTERNAL_CONSENT_GUARD",s=>s.includes("EXTERNAL_CONSENT_REQUIRED")&&s.includes("userAllowsExternal")]]);
+req("lib/tools/engine/resource-governor.ts",[["UNIFIED_POLICY_CONNECTED",s=>s.includes("chooseUnifiedExecution")]]);
+req("lib/tasks/unified-execution-policy.ts",[["SMART_POLICY_DELEGATED",s=>s.includes("rankExecutionLanes")&&s.includes("chooseUnifiedExecution")],["EXTERNAL_CONSENT_GUARD",s=>s.includes("EXTERNAL_CONSENT_REQUIRED")&&s.includes("userAllowsExternal")]]);
 if(bad.length){console.error(bad.join("\n"));process.exit(1)}
 console.log("V57_AUDIT_TRUTH=PASS");
 console.log("V57_UNIFIED_TASK_CONTRACT=PASS");
