@@ -27,7 +27,7 @@ test("unsigned local PNG never reports a verified C2PA signature",async({page})=
  await page.getByRole("button",{name:/开始检查|Start checking/}).click();
  const section=page.locator("[data-c2pa-verification]");
  await expect(section).toHaveAttribute("data-c2pa-verification","absent",{timeout:60000});
- await expect(section).toContainText(/当前文件未检测到内嵌 C2PA 凭证|No embedded C2PA credentials/);
+ await expect(section).toContainText(/这份文件没有可读取的来源签名|No readable origin signature/);
 });
 
 const MP4_BASE="https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/";
