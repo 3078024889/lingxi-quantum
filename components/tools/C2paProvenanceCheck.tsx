@@ -36,9 +36,9 @@ export async function verifyC2paFile(file:File):Promise<ProvenanceResult>{
  if(!file.size)return {status:"unavailable",reason:"EMPTY_FILE"};
  let reader:null|{manifestStore:()=>Promise<unknown>;free:()=>Promise<unknown>}=null;
  try{
-  const {Reader}=await import("@contentauth/c2pa-web");
+  const {Reader,Context}=await import("@contentauth/c2pa-web");
   const sdk=await getSdk();
-  const found=await Reader.fromBlob(sdk,file.type||undefined,file);
+  const found=await Reader.fromBlob(sdk,file.type||undefined,file,new Context({verify:{verifyTrust:true}}));
   if(!found)return {status:"absent"};
   reader=found;
   return describe(await found.manifestStore());
