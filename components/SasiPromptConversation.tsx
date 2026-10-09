@@ -56,7 +56,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const sentRef=useRef(false);
  const [threadList,setThreadList]=useState<Array<{id:string;title:string}>>([]);
  const [activeThread,setActiveThread]=useState("");
- const [loadingThread,setLoadingThread]=useState(false);
+ const [loadingThread,setLoadingThread]=useState(task==="chat");
  const historyRequest=useRef(0);
  function unpackHistory(messages:any[]){
   const rows:Array<{question:string;answer?:string}>=[];
@@ -112,7 +112,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   })();
  }
  const began=useRef(false);
- useEffect(()=>{if(autoStart&&!began.current){began.current=true;void send()}},[autoStart]);
+ useEffect(()=>{if(autoStart&&!began.current&&!loadingThread){began.current=true;void send()}},[autoStart,loadingThread]);
  const lock=useRef(false),input=useRef<HTMLInputElement>(null),previous=useRef<string|undefined>(undefined);
  async function send(confirm=false){
   if(lock.current||loadingThread||(!confirm&&!prompt.trim()))return;
