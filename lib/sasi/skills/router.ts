@@ -27,9 +27,15 @@ export function selectSasiSkills(request:SasiSkillRequest):SasiSkillPlan{
  if(files.some(file=>/\.(pdf|docx?|pptx?|xlsx?|epub|rtf|csv|tsv|ods)$/i.test(file)))note("document-understanding","document-file");
  if(files.some(file=>/\.(png|jpe?g|webp|gif|mp3|wav|m4a|mp4|mov|webm)$/i.test(file)))note("multi-model-routing","media-file");
 
+ // Explicit task matches outrank generic mode defaults; otherwise an eight-skill
+ // cap can silently drop the very skill that the user requested.
  const ids=[...selected]
   .filter(id=>SASI_SKILLS[id].modes.includes(request.mode))
-  .sort((a,b)=>SASI_SKILLS[b].priority-SASI_SKILLS[a].priority)
+  .sort((a,b)=>{
+   const aReasons=reason[a]??[],bReasons=reason[b]??[];
+   const matchWeight=(reasons:string[])=>reasons.some(x=>x.startsWith("trigger:"))?3:reasons.some(x=>x==="evidence-present"||x==="document-file"||x==="media-file")?2:0;
+   return matchWeight(bReasons)-matchWeight(aReasons)||SASI_SKILLS[b].priority-SASI_SKILLS[a].priority;
+  })
   .slice(0,8);
 
  return{ids,reason};
