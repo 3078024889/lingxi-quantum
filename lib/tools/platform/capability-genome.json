@@ -372,6 +372,18 @@
     "localPreferred": false
   },
   {
+    "id": "image.mask.edit",
+    "domain": "image",
+    "input": [
+      "image",
+      "mask"
+    ],
+    "output": [
+      "mask"
+    ],
+    "localPreferred": true
+  },
+  {
     "id": "image.metadata.strip",
     "domain": "image",
     "input": [
@@ -435,7 +447,7 @@
     "output": [
       "image"
     ],
-    "localPreferred": false
+    "localPreferred": true
   },
   {
     "id": "media.dub",
