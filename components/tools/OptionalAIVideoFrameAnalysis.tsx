@@ -2,8 +2,9 @@
 import {useState} from "react";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 import {loadClassifier} from "@/components/tools/OptionalAIImageAnalysis";
+import {syntheticScore,indicatorText,indicatorPercent} from "@/lib/media/ai-indicator-bands";
 
-type Row={second:number;label:string;score:number};
+type Row={second:number;fakeScore:number|null};
 const MAX_BYTES=80*1024*1024;
 function waitForMedia(video:HTMLVideoElement, eventName:"loadedmetadata"|"seeked",timeoutMs:number):Promise<void>{
  return new Promise((resolve,reject)=>{
@@ -47,7 +48,7 @@ export default function OptionalAIVideoFrameAnalysis({file,lang}:{file:File;lang
     const classes=(Array.isArray(output)?output:[output]).filter(p=>p&&typeof p.label==="string"&&Number.isFinite(p.score));
     const top=classes.sort((a,b)=>b.score-a.score)[0];
     if(!top)throw Error("Model returned no valid prediction");
-    result.push({second,label:top.label,score:top.score});
+    result.push({second,fakeScore:syntheticScore(classes)});
    }
    setRows(result);setState("done");
   }catch(e){setError(e instanceof Error?e.message:String(e));setState("error")}
@@ -59,8 +60,8 @@ export default function OptionalAIVideoFrameAnalysis({file,lang}:{file:File;lang
   <button type="button" className="rounded-lg border px-3 py-2 disabled:opacity-60" disabled={state==="loading"} onClick={()=>void analyze()}>{state==="loading"?(zh?"抽帧与模型分析中…":"Sampling and analyzing…"):(zh?"分析视频画面":"Analyze video images")}</button>
   {state==="error"&&<p role="alert">{zh?"无法完成抽帧分析：":"Frame analysis failed: "}{error}</p>}
   {state==="done"&&<div aria-live="polite" className="space-y-1">
-   {rows.map((r,i)=><p key={i}>{r.second.toFixed(1)}s — {r.label.toUpperCase()==="FAKE"?(zh?"发现 AI 生成画面特征":"Model suggests synthetic frame"):r.label.toUpperCase()==="REAL"?(zh?"未发现明显 AI 生成画面特征":"Model suggests real frame"):r.label} — {(100*r.score).toFixed(1)}% {zh?"参考分数":"indicator score"}</p>)}
-   <p className="opacity-75">{zh?"只检查了三个画面，不能据此认定整段视频的真伪。":"Only three frames were analyzed; this is not a verdict on the full video."}</p>
+   {rows.map((r,i)=><p key={i} data-ai-indicator-band="video">{r.second.toFixed(1)}s — {r.fakeScore===null?(zh?"暂时无法明确判断":"No clear conclusion"):`${indicatorText(r.fakeScore,lang)} — ${indicatorPercent(r.fakeScore)} ${zh?"AI 特征参考分数":"AI indicator score"}`}</p>)}
+   <p className="opacity-75">{zh?"只分析了三个画面。分档只是参考，不能判断整段视频的真实性，也没有检测声音。":"Only three frames were checked. These bands do not establish the authenticity of the full video; audio was not analyzed."}</p>
   </div>}
  </div>;
 }
