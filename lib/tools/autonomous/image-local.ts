@@ -119,7 +119,7 @@ export async function localInpaintMask(file:File,strokes:NormalizedStroke[]){
    for(const [dx,dy]of neighbors){
     const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=w||ny>=h)continue;
     const ni=ny*w+nx;if(!known[ni])continue;
-    const k=ni*4,wt=dx&&dy?.72:1;weight+=wt;r+=d[k]*wt;g+=d[k+1]*wt;b+=d[k+2]*wt;a+=d[k+3]*wt;
+    const k=ni*4,wt=(dx!==0&&dy!==0)?0.72:1;weight+=wt;r+=d[k]*wt;g+=d[k+1]*wt;b+=d[k+2]*wt;a+=d[k+3]*wt;
    }
    if(weight>0)ready.push({i,r:r/weight,g:g/weight,b:b/weight,a:a/weight});
   }
