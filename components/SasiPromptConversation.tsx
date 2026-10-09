@@ -54,35 +54,46 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const [needsConnection,setNeedsConnection]=useState(false);const exhausted=useRef(false);
  const threadRef=useRef("");
  const sentRef=useRef(false);
- useEffect(()=>{
-  if(task!=="chat")return;
-  let cancelled=false;
-  void fetch("/api/sasi/conversations",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(data=>{
-   if(cancelled||sentRef.current||!data)return;
-   if(typeof data.threadId==="string")threadRef.current=data.threadId;
-   const rows:Array<{question:string;answer?:string}>=[];
-   const userMessages=new Map<string,{question:string;answer?:string}>();
-   for(const message of Array.isArray(data.messages)?data.messages:[]){
-    if(message.role==="user"&&typeof message.content==="string"&&typeof message.id==="string"){
-     const row={question:message.content} as {question:string;answer?:string};
-     rows.push(row);userMessages.set(message.id,row);
-    }
-   }
-   for(const message of Array.isArray(data.messages)?data.messages:[]){
-    if(message.role==="assistant"&&typeof message.content==="string"&&typeof message.parent_id==="string"){
-     const row=userMessages.get(message.parent_id);
-     if(row&&!row.answer)row.answer=message.content;
-    }
-   }
-   if(rows.length)setTurns(rows.slice(-40));
-  }).catch(()=>{});
-  return()=>{cancelled=true};
- },[task]);
+ const [threadList,setThreadList]=useState<Array<{id:string;title:string}>>([]);
+ const [activeThread,setActiveThread]=useState("");
+ const historyRequest=useRef(0);
+ function unpackHistory(messages:any[]){
+  const rows:Array<{question:string;answer?:string}>=[];
+  const users=new Map<string,{question:string;answer?:string}>();
+  for(const item of messages){if(item.role==="user"&&typeof item.content==="string"&&typeof item.id==="string"){const row:{question:string;answer?:string}={question:item.content};rows.push(row);users.set(item.id,row)}}
+  for(const item of messages){if(item.role==="assistant"&&typeof item.parent_id==="string"){const row=users.get(item.parent_id);if(row&&typeof item.content==="string")row.answer=item.content}}
+  return rows.slice(-40);
+ }
+ async function loadThread(threadId:string){
+  const token=++historyRequest.current;
+  try{
+   const response=await fetch("/api/sasi/conversations"+(threadId?"?threadId="+encodeURIComponent(threadId):""),{cache:"no-store"});
+   if(!response.ok)throw Error("HISTORY_UNAVAILABLE");
+   const data=await response.json();
+   if(token!==historyRequest.current||sentRef.current)return;
+   threadRef.current=typeof data.threadId==="string"?data.threadId:"";
+   setActiveThread(threadRef.current);
+   setThreadList(Array.isArray(data.threads)?data.threads.filter((v:any)=>typeof v.id==="string"&&typeof v.title==="string"):[]);
+   setTurns(unpackHistory(Array.isArray(data.messages)?data.messages:[]));
+  }catch{if(token===historyRequest.current)setNotice(lang==="zh"?"暂时无法打开这段对话，请稍后重试。":"Could not open this conversation. Please try again.")}
+ }
+ function switchThread(id:string){
+  if(busy)return;
+  sentRef.current=false;
+  setStreaming(null);setNotice("");setNeedsConnection(false);
+  if(!id){historyRequest.current++;threadRef.current="";setActiveThread("");setTurns([]);setPrompt("");return}
+  void loadThread(id);
+ }
+
+ useEffect(()=>{if(task==="chat")void loadThread("");return()=>{historyRequest.current++}},[task]);
+
  function commitText(question:string,answer:string){
   setTurns(rows=>[...rows,{question,answer}]);setPrompt("");
   if(task!=="chat")return;
   const threadId=threadRef.current||crypto.randomUUID();
   threadRef.current=threadId;
+  setActiveThread(threadId);
+  setThreadList(list=>list.some(t=>t.id===threadId)?list:[{id:threadId,title:question.slice(0,120)},...list].slice(0,20));
   const payload=JSON.stringify({threadId,requestId:crypto.randomUUID(),question,answer});
   void (async()=>{
    for(let attempt=0;attempt<3;attempt++){
@@ -132,7 +143,14 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   }catch{setNotice(ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false)}
  }
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
-  <div className="flex-1 pt-10">{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>onTask(destination,turn.question)} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
+  <div className="flex-1 pt-10">{task==="chat"&&<div className="mb-5 flex flex-wrap items-center gap-2">
+   <label htmlFor="sasi-chat-thread" className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"继续之前的对话":"Your conversations"}</label>
+   <select id="sasi-chat-thread" aria-label={lang==="zh"?"选择对话":"Choose conversation"} value={activeThread} disabled={busy} onChange={e=>switchThread(e.target.value)} className="max-w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-bg)] px-3 py-2 text-sm text-[var(--lx-ink)]">
+    <option value="">{lang==="zh"?"开始新对话":"New conversation"}</option>
+    {threadList.map(t=><option key={t.id} value={t.id}>{t.title}</option>)}
+   </select>
+   <button type="button" disabled={busy} onClick={()=>switchThread("")} className="rounded-lg border border-[var(--lx-line)] px-3 py-2 text-sm">{lang==="zh"?"新对话":"New chat"}</button>
+  </div>}{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>onTask(destination,turn.question)} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
   <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={busy} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
    <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<div className="grid gap-3"><SasiLocalIntelligenceAction/><SasiUserResourceAction/></div>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}
