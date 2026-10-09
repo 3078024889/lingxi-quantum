@@ -55,10 +55,14 @@ test("pen pressure and overlapping second touch keep a single valid ink stroke",
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
  await page.getByRole("button",{name:"Draw signature"}).click();
  const c=page.getByTestId("signature-draw-pad").locator("canvas");
- await c.dispatchEvent("pointerdown",{pointerId:8,pointerType:"pen",pressure:.4,clientX:180,clientY:140});
- await c.dispatchEvent("pointermove",{pointerId:8,pointerType:"pen",pressure:.8,clientX:245,clientY:135});
- await c.dispatchEvent("pointermove",{pointerId:9,pointerType:"touch",pressure:.5,clientX:400,clientY:160});
- await c.dispatchEvent("pointerup",{pointerId:8,pointerType:"pen",pressure:.6,clientX:295,clientY:140});
+ const bounds=await c.boundingBox();expect(bounds).not.toBeNull();
+ await page.mouse.move(bounds!.x+bounds!.width*.22,bounds!.y+bounds!.height*.5);
+ await page.mouse.down();
+ await page.mouse.move(bounds!.x+bounds!.width*.45,bounds!.y+bounds!.height*.35,{steps:8});
+ // An unrelated pointer must not hijack the live stroke.
+ await c.dispatchEvent("pointermove",{pointerId:999,pointerType:"touch",pressure:.5,clientX:400,clientY:160});
+ await page.mouse.move(bounds!.x+bounds!.width*.68,bounds!.y+bounds!.height*.48,{steps:8});
+ await page.mouse.up();
  const ink=await c.evaluate((canvas:HTMLCanvasElement)=>{
   const bytes=canvas.getContext("2d")!.getImageData(0,0,canvas.width,canvas.height).data;
   let count=0;for(let i=3;i<bytes.length;i+=4)if(bytes[i]>20)count++;return count;
