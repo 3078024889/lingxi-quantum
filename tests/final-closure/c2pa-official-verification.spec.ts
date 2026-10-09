@@ -28,3 +28,17 @@ test("unsigned local PNG never reports a verified C2PA signature",async({page})=
  await expect(section).toHaveAttribute("data-c2pa-verification","absent",{timeout:60000});
  await expect(section).toContainText(/未找到 C2PA|No C2PA/);
 });
+
+const MP4_BASE="https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/";
+for(const [filename,expected] of [["video1.mp4","signed"],["video1_no_manifest.mp4","unsigned"]] as const){
+ test(`C2PA MP4 ${expected} specimen is verified via media tool`,async({page,request})=>{
+  test.setTimeout(90000);
+  const response=await request.get(MP4_BASE+filename,{timeout:30000,maxRetries:2});
+  expect(response.ok(),`Official C2PA MP4 specimen unavailable: HTTP ${response.status()}`).toBeTruthy();
+  await page.goto("/tools/ai-video-audio-check");
+  await page.locator('input[type="file"]').setInputFiles({name:filename,mimeType:"video/mp4",buffer:await response.body()});
+  await page.getByRole("button",{name:/开始检查|Start checking/}).click();
+  const section=page.locator("[data-c2pa-verification]");
+  await expect(section).toHaveAttribute("data-c2pa-verification",expected==="signed"?/^(trusted|valid|untrusted|invalid)$/:"absent",{timeout:60000});
+ });
+}
