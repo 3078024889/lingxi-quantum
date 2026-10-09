@@ -5,11 +5,12 @@ import type{PublicRunEvent}from"@/lib/sasi/durable/public-event-codec";
 export function useSasiRunStream(runId:string|null|undefined){
  const[events,setEvents]=useState<PublicRunEvent[]>([]);
  const[state,setState]=useState<string>("idle");
+ const[task,setTask]=useState<any>(null);
  const[lastEventId,setLastEventId]=useState(0);
  const seen=useRef(new Set<number>());
 
  useEffect(()=>{
-  if(!runId){setEvents([]);setState("idle");setLastEventId(0);seen.current.clear();return}
+  if(!runId){setEvents([]);setState("idle");setTask(null);setLastEventId(0);seen.current.clear();return}
   let active=true,source:EventSource|null=null;
 
   const add=(event:PublicRunEvent)=>{
@@ -36,7 +37,8 @@ export function useSasiRunStream(runId:string|null|undefined){
    .then(async r=>r.ok?r.json():null)
    .then(body=>{
     if(!active||!body){openSource(0);return}
-    setState(String(body.state||"running"));
+    setState(String(body.task?.state||body.state||"running"));
+    setTask(body.task??null);
     for(const event of Array.isArray(body.events)?body.events:[])add(event as PublicRunEvent);
     const after=Number(body.lastEventId||0);
     openSource(Number.isFinite(after)&&after>0?Math.floor(after):0);
@@ -45,5 +47,5 @@ export function useSasiRunStream(runId:string|null|undefined){
   return()=>{active=false;source?.close()};
  },[runId]);
 
- return{events,state,lastEventId};
+ return{events,state,lastEventId,task};
 }
