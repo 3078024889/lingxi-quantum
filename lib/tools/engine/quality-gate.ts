@@ -1,3 +1,4 @@
+import{outcomeCompressionImproved,verifyUnifiedOutcome}from"@/lib/tasks/outcome-contract";
 export type QualityEvidence={nonEmpty:boolean;outputBytes?:number;inputBytes?:number;confidence?:number;pages?:number;duration?:number};
 export type QualityVerdict={ok:boolean;reason?:string};
 export function validateArtifact(e:QualityEvidence):QualityVerdict{
