@@ -274,11 +274,13 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     if(onRedirect&&nextIntent&&nextIntent!==mode){onRedirect(nextIntent,raw);return}
     setNeedsConnection(false);
 
+    const intentSkills=selectSasiSkills({mode,prompt:raw,files:sources.map(source=>source.title),hasEvidence:sources.length>0});
+    const wantsScholarly=selectedSkillIds.includes("research-tracking")||intentSkills.ids.includes("research-tracking");
     let onlineSources:KnowledgeSource[]=[];
-    if(mode==="research"&&(selectedSkillIds.includes("web-research")||selectedSkillIds.includes("research-tracking"))){
+    if(mode==="research"&&(selectedSkillIds.includes("web-research")||wantsScholarly)){
       asking.current=true;setAskBusy(true);
       try{
-        const scholarly=selectedSkillIds.includes("research-tracking");
+        const scholarly=wantsScholarly;
         const response=await fetch("/api/sasi/research/search",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(scholarly?{query:raw.slice(0,240),source:"scholarly",days:60}:{query:raw.slice(0,1200)})});
         const data=await response.json().catch(()=>({}));
         if(!response.ok||!Array.isArray(data.sources)||!data.sources.length)throw new Error("WEB_SEARCH_UNAVAILABLE");
