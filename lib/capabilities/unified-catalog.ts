@@ -45,7 +45,9 @@ function terms(value:string){
 function phraseScore(query:string,value:string){
  const q=normalize(query),v=normalize(value);if(!q||!v)return 0;
  if(q===v)return 12;
- if(q.includes(v)||v.includes(q))return Math.min(10,3+Math.floor(Math.min(q.length,v.length)/4));
+ const qc=q.replace(/\s+/g,""),vc=v.replace(/\s+/g,"");
+ if(qc===vc)return 12;
+ if(q.includes(v)||v.includes(q)||qc.includes(vc)||vc.includes(qc))return Math.min(10,3+Math.floor(Math.min(qc.length,vc.length)/4));
  const qTerms=new Set(terms(q)),vTerms=terms(v);
  let score=0;for(const token of vTerms)if(qTerms.has(token))score+=2;
  return score;
