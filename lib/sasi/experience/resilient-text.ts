@@ -8,8 +8,8 @@ import type{TextMessage}from"@/lib/sasi/ark-text";
 import{coalesce,coalesceKey}from"./request-coalescer";
 
 export type ResilientTextOutcome=
- |{kind:"answer";answer:string;source:"experience"|"connected";experienceExhausted:boolean}
- |{kind:"needs-connection";experienceExhausted:boolean};
+ |{kind:"answer";answer:string;source:"experience"|"connected";experienceExhausted:boolean;experienceState:"available"|"exhausted"|"unavailable";experienceRemaining:number|null}
+ |{kind:"needs-connection";experienceExhausted:boolean;experienceState:"available"|"exhausted"|"unavailable";experienceRemaining:number|null};
 
 const units:Record<ExperienceTask,number>={chat:8,knowledge:18,research:28,website:36,drama:32};
 
@@ -22,32 +22,32 @@ export async function resilientText(input:{
  const sessionKey=String(input.sessionKey||"default").slice(0,160);
  const dedupe=coalesceKey([input.userId,input.region,input.task,sessionKey,input.messages,input.maxOutputTokens,Boolean(input.validateAnswer),input.allowConnected]);
  const work=async():Promise<ResilientTextOutcome>=>{
- const referenceId=randomUUID(),claim=await reserveExperience(input.userId,referenceId,units[input.task]);
- if(claim.ok){
-  try{
-   const out=await runExperienceText({region:input.region,task:input.task,messages:input.messages,maxOutputTokens:input.maxOutputTokens,userId:input.userId,sessionKey,onDelta:input.onDelta,onReset:input.onReset});
-   input.validateAnswer?.(out.text);
-   await settleExperience(input.userId,referenceId,claim.units,true,claim.soft);
-   return {kind:"answer",answer:out.text,source:"experience",experienceExhausted:false};
-  }catch{
-   // Provider failure never consumes the user's daily experience allowance.
-   await settleExperience(input.userId,referenceId,claim.units,false);
-  }
- }
-
- if(input.allowConnected!==false){
-  try{
-   const connection=await selectUserTextConnection(input.userId);
-   if(connection){
-    const out=await runUserText({userId:input.userId,taskId:randomUUID(),messages:input.messages,maxOutputTokens:input.maxOutputTokens});
-    input.onDelta?.(out.answer);
-    return {kind:"answer",answer:out.answer,source:"connected",experienceExhausted:claim.state==="exhausted",experienceState:claim.state,experienceRemaining:claim.remaining};
+  const referenceId=randomUUID(),claim=await reserveExperience(input.userId,referenceId,units[input.task]);
+  if(claim.ok){
+   try{
+    const out=await runExperienceText({region:input.region,task:input.task,messages:input.messages,maxOutputTokens:input.maxOutputTokens,userId:input.userId,sessionKey,onDelta:input.onDelta,onReset:input.onReset});
+    input.validateAnswer?.(out.text);
+    await settleExperience(input.userId,referenceId,claim.units,true);
+    return {kind:"answer",answer:out.text,source:"experience",experienceExhausted:false,experienceState:claim.state,experienceRemaining:claim.remaining};
+   }catch{
+    // Provider failure never consumes the user's included experience allowance.
+    await settleExperience(input.userId,referenceId,claim.units,false);
    }
-  }catch{
-   // Connected-service failure is converted into a calm recovery state; no raw provider error leaks to UI.
   }
- }
- return {kind:"needs-connection",experienceExhausted:claim.state==="exhausted",experienceState:claim.state,experienceRemaining:claim.remaining};
+
+  if(input.allowConnected!==false){
+   try{
+    const connection=await selectUserTextConnection(input.userId);
+    if(connection){
+     const out=await runUserText({userId:input.userId,taskId:randomUUID(),messages:input.messages,maxOutputTokens:input.maxOutputTokens});
+     input.onDelta?.(out.answer);
+     return {kind:"answer",answer:out.answer,source:"connected",experienceExhausted:claim.state==="exhausted",experienceState:claim.state,experienceRemaining:claim.remaining};
+    }
+   }catch{
+    // Connected-service failure is converted into a calm recovery state; no raw provider error leaks to UI.
+   }
+  }
+  return {kind:"needs-connection",experienceExhausted:claim.state==="exhausted",experienceState:claim.state,experienceRemaining:claim.remaining};
  };
  return input.onDelta?work():coalesce(dedupe,work);
 }
