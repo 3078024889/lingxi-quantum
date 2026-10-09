@@ -17,9 +17,16 @@ test("handwriting cleanup can erase remaining photo marks, undo and update PDF p
  await expect(editor).toBeVisible();
  const alpha=()=>editor.locator("canvas").evaluate((c:HTMLCanvasElement)=>{const ctx=c.getContext("2d")!;const d=ctx.getImageData(0,0,c.width,c.height).data;let count=0;for(let i=3;i<d.length;i+=4)if(d[i]>0)count++;return count});
  const before=await alpha();
+ const spot=await editor.locator("canvas").evaluate((c:HTMLCanvasElement)=>{
+  const ctx=c.getContext("2d")!,d=ctx.getImageData(0,0,c.width,c.height).data;
+  for(let y=Math.floor(c.height*.3);y<Math.floor(c.height*.7);y++)
+   for(let x=Math.floor(c.width*.3);x<Math.floor(c.width*.7);x++)
+    if(d[(y*c.width+x)*4+3]>160)return {x,y,w:c.width,h:c.height};
+  throw new Error("NO_INK_TO_ERASE");
+ });
  const rect=await editor.locator("canvas").boundingBox();expect(rect).not.toBeNull();
- await page.mouse.move(rect!.x+rect!.width*.85,rect!.y+rect!.height*.5);
- await page.mouse.down();await page.mouse.move(rect!.x+rect!.width*.80,rect!.y+rect!.height*.54,{steps:4});await page.mouse.up();
+ const x=rect!.x+(spot.x+.5)*rect!.width/spot.w,y=rect!.y+(spot.y+.5)*rect!.height/spot.h;
+ await page.mouse.move(x,y);await page.mouse.down();await page.mouse.up();
  await expect.poll(alpha).toBeLessThan(before);
  const placement=page.locator('img[src^="data:image/png"]').last();
  await expect(placement).toBeVisible();
