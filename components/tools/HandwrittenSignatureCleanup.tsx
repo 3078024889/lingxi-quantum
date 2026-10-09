@@ -30,11 +30,11 @@ export default function HandwrittenSignatureCleanup({source,onChange}:{source:st
   };
   image.src=source;return()=>{alive=false};
  },[source]);
- function erase(event:React.PointerEvent<HTMLCanvasElement>){
-  if(!active.current)return;
+ function eraseAt(clientX:number,clientY:number,force=false){
+  if(!active.current&&!force)return;
   const target=canvas.current,ctx=target?.getContext("2d",{willReadFrequently:true});if(!target||!ctx)return;
   const rect=target.getBoundingClientRect();if(!rect.width||!rect.height)return;
-  const point={x:(event.clientX-rect.left)*target.width/rect.width,y:(event.clientY-rect.top)*target.height/rect.height};
+  const point={x:(clientX-rect.left)*target.width/rect.width,y:(clientY-rect.top)*target.height/rect.height};
   const begin=previous.current||point;
   const radius=Math.max(2,Math.min(target.width,target.height)*width/300);
   // Erase actual alpha samples rather than depend on a canvas blend mode.
@@ -55,6 +55,7 @@ export default function HandwrittenSignatureCleanup({source,onChange}:{source:st
   }
   ctx.putImageData(pixels,minX,minY);previous.current=point;
  }
+ function erase(event:React.PointerEvent<HTMLCanvasElement>){eraseAt(event.clientX,event.clientY)}
  function finish(event:React.PointerEvent<HTMLCanvasElement>){
   if(!active.current)return;
   erase(event);active.current=false;previous.current=null;
@@ -64,7 +65,7 @@ export default function HandwrittenSignatureCleanup({source,onChange}:{source:st
  return <div className="space-y-2" data-testid="signature-manual-cleanup">
   <b className="text-sm">{t.erase}</b>
   <p className="text-xs opacity-75">{t.hint}</p>
-  <canvas ref={canvas} aria-label={t.erase} role="img" onPointerDown={e=>{active.current=true;previous.current=null;e.currentTarget.setPointerCapture(e.pointerId);erase(e)}} onPointerMove={erase} onPointerUp={finish} onPointerCancel={()=>{active.current=false;previous.current=null}} className="mx-auto block max-h-56 w-full max-w-lg rounded-lg border touch-none cursor-crosshair" style={{backgroundColor:"#f7f7f7",backgroundImage:"linear-gradient(45deg,#ddd 25%,transparent 25%),linear-gradient(-45deg,#ddd 25%,transparent 25%)",backgroundSize:"16px 16px"}}/>
+  <canvas ref={canvas} aria-label={t.erase} role="img" onPointerDown={e=>{active.current=true;previous.current=null;e.currentTarget.setPointerCapture(e.pointerId);erase(e)}} onPointerMove={erase} onPointerUp={finish} onPointerCancel={()=>{active.current=false;previous.current=null}} onClick={e=>{if(active.current)return;previous.current=null;eraseAt(e.clientX,e.clientY,true);previous.current=null;try{if(canvas.current)onChange(canvas.current.toDataURL("image/png"))}catch{}} className="mx-auto block max-h-56 w-full max-w-lg rounded-lg border touch-none cursor-crosshair" style={{backgroundColor:"#f7f7f7",backgroundImage:"linear-gradient(45deg,#ddd 25%,transparent 25%),linear-gradient(-45deg,#ddd 25%,transparent 25%)",backgroundSize:"16px 16px"}}/>
   <div className="flex flex-wrap items-center gap-3"><label className="text-sm">{t.size} <input aria-label={t.size} type="range" min="4" max="35" value={width} onChange={e=>setWidth(Number(e.target.value))}/></label>
   <button type="button" className="rounded-lg border px-3 py-2 text-sm" onClick={reset}>{t.reset}</button></div>
  </div>;
