@@ -2,7 +2,6 @@ import fs from "node:fs";
 import {test,expect} from "playwright/test";
 import {PDFDocument} from "pdf-lib";
 
-const png=fs.readFileSync("tests/fixtures/generated/pixel.png");
 const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
 async function saveBytes(page:any){
  const downloadPromise=page.waitForEvent("download");
@@ -13,7 +12,8 @@ async function saveBytes(page:any){
 }
 test("actual PNG to JPEG export is a readable JPEG, not a file renamed jpg",async({page})=>{
  await page.goto("/tools/png-to-jpg?lang=en");
- await page.locator('input[type="file"]').first().setInputFiles({name:"sample.png",mimeType:"image/png",buffer:png});
+ const pngData=await page.evaluate(()=>{const c=document.createElement("canvas");c.width=24;c.height=24;const ctx=c.getContext("2d")!;ctx.fillStyle="#267aca";ctx.fillRect(0,0,24,24);return c.toDataURL("image/png").split(",")[1]});
+ await page.locator('input[type="file"]').first().setInputFiles({name:"sample.png",mimeType:"image/png",buffer:Buffer.from(pngData,"base64")});
  await page.getByRole("button",{name:/^Convert/}).click();
  await expect(page.getByText("sample.jpg")).toBeVisible();
  const output=await saveBytes(page);
