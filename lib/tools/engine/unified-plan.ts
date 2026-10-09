@@ -6,8 +6,6 @@ export type UnifiedToolExecutionPlan=
  |{kind:"engine-graph";toolId:string;capabilities:string[];resultChecks:string[];stageCount:number;privacyMode:string}
  |{kind:"dedicated";toolId:string;capabilities:string[];resultChecks:string[];privacyMode:string;reason:"DEDICATED_TOOL_FLOW"};
 
-const NON_ENGINE_CAPABILITIES=new Set(["download.local","share.link","privacy.temp-mail","privacy.burn-after-read","storage.private","commerce.quote","commerce.pay"]);
-
 function recipeChecks(slug:string,capabilities:string[]){
  const checks:string[]=[];
  if(capabilities.some(x=>x.startsWith("document.")||x==="pdf"))checks.push("output-opens");
