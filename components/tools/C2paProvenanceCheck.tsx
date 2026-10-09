@@ -2,7 +2,7 @@
 import {useEffect,useState} from "react";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 
-export type ProvenanceStatus="checking"|"trusted"|"valid"|"invalid"|"absent"|"unavailable";
+export type ProvenanceStatus="checking"|"trusted"|"valid"|"untrusted"|"invalid"|"absent"|"unavailable";
 export type ProvenanceResult={status:ProvenanceStatus;issuer?:string;claim?:string;reason?:string};
 
 let sdkPromise:Promise<Awaited<ReturnType<typeof import("@contentauth/c2pa-web/inline")["createC2pa"]>>>|null=null;
@@ -26,7 +26,17 @@ function describe(store:unknown):ProvenanceResult{
  const claim=typeof details.title==="string"?details.title.slice(0,160):undefined;
  if(rawState==="trusted")return {status:"trusted",issuer,claim};
  if(rawState==="valid")return {status:"valid",issuer,claim};
- if(rawState==="invalid")return {status:"invalid",issuer,claim};
+ if(rawState==="invalid"){
+  const validation=isObj(store.validation_results)?store.validation_results:{};
+  const activeResults=isObj(validation.activeManifest)?validation.activeManifest:{};
+  const failures=Array.isArray(activeResults.failure)?activeResults.failure.filter(isObj):[];
+  const successes=Array.isArray(activeResults.success)?activeResults.success.filter(isObj):[];
+  const signatureValidated=successes.some(item=>item.code==="claimSignature.validated");
+  const trustOnly=failures.length>0&&failures.every(item=>typeof item.code==="string"&&
+    (item.code==="signingCredential.untrusted"||item.code==="timeStamp.untrusted"));
+  if(signatureValidated&&trustOnly)return {status:"untrusted",issuer,claim};
+  return {status:"invalid",issuer,claim};
+ }
  // An unrecognized or missing validation_state must never be marked valid.
  return {status:"unavailable",issuer,claim,reason:"VERIFICATION_STATE_UNAVAILABLE"};
 }
@@ -51,8 +61,9 @@ export async function verifyC2paFile(file:File):Promise<ProvenanceResult>{
 const copy:Record<ProvenanceStatus,Record<"zh"|"en",string>>={
  checking:{zh:"正在验证 C2PA 来源凭证…",en:"Verifying C2PA Content Credentials…"},
  trusted:{zh:"C2PA 签名有效，签发者受到信任",en:"C2PA signature valid; signer trusted"},
- valid:{zh:"C2PA 签名有效，签发者信任尚未确认",en:"C2PA signature valid; signer trust not established"},
- invalid:{zh:"C2PA 验证失败：凭证可能已损坏或内容被改动",en:"C2PA validation failed; credentials or media may have changed"},
+ valid:{zh:"C2PA 签名验证通过，仍需核对来源声明",en:"C2PA signature validated; provenance claims still require scrutiny"},
+ untrusted:{zh:"检测到 C2PA 签名，但签发证书不在可信名单中",en:"C2PA signature found; signer certificate is not trusted"},
+ invalid:{zh:"C2PA 完整性或签名验证失败",en:"C2PA signature or integrity verification failed"},
  absent:{zh:"未找到 C2PA 来源凭证",en:"No C2PA Content Credentials found"},
  unavailable:{zh:"暂时无法完成 C2PA 验证",en:"C2PA verification could not be completed"}
 };
