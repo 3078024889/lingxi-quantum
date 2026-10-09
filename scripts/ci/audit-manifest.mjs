@@ -14,6 +14,7 @@ export const PRODUCTION_CRITICAL_AUDITS=[
  "scripts/audit/v59-global-discoverability.mjs",
  "scripts/audit/r18r7-module-asset-integrity.mjs",
  "scripts/audit/r18r8-skill-selection.mjs",
+ "scripts/audit/r34-unified-backend.mjs",
 ];
 
 for(const audit of PRODUCTION_CRITICAL_AUDITS){
