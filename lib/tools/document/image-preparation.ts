@@ -11,10 +11,10 @@ export async function prepareSignatureOrStamp(file:File,mode:"signature"|"stamp"
   const image=ctx.getImageData(0,0,c.width,c.height);
   // Keep the ink and its original alpha when a signature is already transparent.
   // Re-extraction against a white-paper model damages premade transparent PNGs.
-  const pixels=image.data,total=c.width*c.height;
+  const imagePixels=image.data,total=c.width*c.height;
   let clear=0,visible=0,minX=c.width,minY=c.height,maxX=-1,maxY=-1;
   for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++){
-   const k=(y*c.width+x)*4,a=pixels[k+3];
+   const k=(y*c.width+x)*4,a=imagePixels[k+3];
    if(a<=12){clear++;continue}
    if(a>=24){visible++;minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y)}
   }
