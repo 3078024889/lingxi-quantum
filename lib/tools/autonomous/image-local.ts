@@ -97,16 +97,12 @@ function normalizedStrokeMask(strokes:NormalizedStroke[],w:number,h:number){
  return expanded;
 }
 
-export async function localInpaintMask(file:File,strokes:NormalizedStroke[]){
- if(!strokes.some(s=>s.points.length))throw new Error("SELECT_AREA_FIRST");
- const img=await bitmap(file),c=document.createElement("canvas");c.width=img.width;c.height=img.height;
- const ctx=c.getContext("2d",{willReadFrequently:true})!;ctx.drawImage(img,0,0);img.close?.();
- const image=ctx.getImageData(0,0,c.width,c.height),d=image.data,w=c.width,h=c.height;
- const mask=normalizedStrokeMask(strokes,w,h),known=new Uint8Array(mask.length);
+export function diffuseMaskedPixels(input:Uint8ClampedArray,w:number,h:number,mask:Uint8Array){
+ if(w<1||h<1||input.length!==w*h*4||mask.length!==w*h)throw new Error("INPAINT_INPUT_INVALID");
+ const d=new Uint8ClampedArray(input),known=new Uint8Array(mask.length);
  let remaining=0,minX=w,minY=h,maxX=-1,maxY=-1;
  for(let i=0;i<mask.length;i++){known[i]=mask[i]?0:1;if(mask[i]){remaining++;const x=i%w,y=(i-x)/w;minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y)}}
  if(!remaining)throw new Error("SELECT_AREA_FIRST");
- // Refuse an accidental giant mask before expensive diffusion.
  if(remaining>w*h*.55)throw new Error("SELECTION_TOO_LARGE");
  const neighbors=[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]] as const;
  const maxRounds=Math.max(8,Math.min(2048,Math.max(maxX-minX+1,maxY-minY+1)+8));
@@ -127,6 +123,15 @@ export async function localInpaintMask(file:File,strokes:NormalizedStroke[]){
   for(const v of ready){const k=v.i*4;d[k]=Math.round(v.r);d[k+1]=Math.round(v.g);d[k+2]=Math.round(v.b);d[k+3]=Math.round(v.a);known[v.i]=1;remaining--}
  }
  if(remaining)throw new Error("INPAINT_INCOMPLETE");
+ return d;
+}
+
+export async function localInpaintMask(file:File,strokes:NormalizedStroke[]){
+ if(!strokes.some(s=>s.points.length))throw new Error("SELECT_AREA_FIRST");
+ const img=await bitmap(file),c=document.createElement("canvas");c.width=img.width;c.height=img.height;
+ const ctx=c.getContext("2d",{willReadFrequently:true})!;ctx.drawImage(img,0,0);img.close?.();
+ const image=ctx.getImageData(0,0,c.width,c.height),mask=normalizedStrokeMask(strokes,c.width,c.height);
+ image.data.set(diffuseMaskedPixels(image.data,c.width,c.height,mask));
  ctx.putImageData(image,0,0);
  return await blobOf(c,"image/png");
 }
