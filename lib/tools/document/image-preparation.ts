@@ -9,6 +9,23 @@ export async function prepareSignatureOrStamp(file:File,mode:"signature"|"stamp"
  const src=await fileData(file),im=await loadImage(src);const c=document.createElement("canvas");const scale=mode==="signature"?Math.min(1,2048/Math.max(im.naturalWidth,im.naturalHeight),Math.sqrt(4_000_000/(im.naturalWidth*im.naturalHeight))):1;c.width=Math.max(1,Math.round(im.naturalWidth*scale));c.height=Math.max(1,Math.round(im.naturalHeight*scale));const ctx=c.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");ctx.drawImage(im,0,0);
  if(mode==="signature"){
   const image=ctx.getImageData(0,0,c.width,c.height);
+  // Keep the ink and its original alpha when a signature is already transparent.
+  // Re-extraction against a white-paper model damages premade transparent PNGs.
+  const pixels=image.data,total=c.width*c.height;
+  let clear=0,visible=0,minX=c.width,minY=c.height,maxX=-1,maxY=-1;
+  for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++){
+   const k=(y*c.width+x)*4,a=pixels[k+3];
+   if(a<=12){clear++;continue}
+   if(a>=24){visible++;minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y)}
+  }
+  if(clear>total*.015&&visible>0&&visible<total*.92&&maxX>=minX){
+   const pad=Math.max(3,Math.round(Math.max(maxX-minX+1,maxY-minY+1)*.05));
+   const sx=Math.max(0,minX-pad),sy=Math.max(0,minY-pad),ex=Math.min(c.width,maxX+pad+1),ey=Math.min(c.height,maxY+pad+1);
+   const cropped=document.createElement("canvas");cropped.width=ex-sx;cropped.height=ey-sy;
+   const cropCtx=cropped.getContext("2d");if(!cropCtx)throw new Error("CANVAS_UNAVAILABLE");
+   cropCtx.drawImage(c,sx,sy,cropped.width,cropped.height,0,0,cropped.width,cropped.height);
+   return {dataUrl:cropped.toDataURL("image/png"),width:cropped.width,height:cropped.height};
+  }
   const out=extractHandwritingPixels(image.data,c.width,c.height,sensitivity);
   const cut=document.createElement("canvas");cut.width=out.width;cut.height=out.height;
   const cutCtx=cut.getContext("2d");if(!cutCtx)throw new Error("CANVAS_UNAVAILABLE");
