@@ -10,6 +10,55 @@ export const SASI_SKILLS:Record<SasiSkillId,SasiSkillDefinition>={
 "drama-sound":{"id":"drama-sound","title":"Voice and sound planning","description":"Plan dialogue, timing, voice direction, atmosphere and music cues. Distinguish a written sound plan from synthesized audio. Only request audio generation when the selected video service supports it.","modes":["drama"],"triggers":[],"priority":91,"guidance":"Plan dialogue, timing, voice direction, atmosphere and music cues. Distinguish a written sound plan from synthesized audio. Only request audio generation when the selected video service supports it.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
 "teaching-practice":{"id":"teaching-practice","title":"Examples and practice","description":"Explain supplied concepts with labeled examples, practice questions and a separate answer key. Adapt to the learner and distinguish examples from cited source claims.","modes":["book","learning","research"],"triggers":[],"priority":91,"guidance":"Explain supplied concepts with labeled examples, practice questions and a separate answer key. Adapt to the learner and distinguish examples from cited source claims.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
 "source-comparison":{"id":"source-comparison","title":"Compare viewpoints","description":"Compare supplied sources by claims, evidence, assumptions and disagreements. Cite source identifiers and state what additional evidence would resolve uncertainty. Do not invent papers or citations.","modes":["book","learning","research"],"triggers":[],"priority":91,"guidance":"Compare supplied sources by claims, evidence, assumptions and disagreements. Cite source identifiers and state what additional evidence would resolve uncertainty. Do not invent papers or citations.","inspiration":["First-party SASI production methods"],"licensePattern":"native"},
+
+ "research-tracking":{
+  id:"research-tracking",title:"Research direction tracking",
+  description:"Organize the newest papers on a research topic into a verifiable reading queue with dates, DOI, methods and gaps.",
+  modes:["research"],triggers:["最新论文","论文追踪","文献追踪","研究方向","近60天","最新研究","arxiv","openalex","recent papers","literature tracking"],
+  priority:97,
+  guidance:"For research tracking, verify each work with retrieved metadata including title, author, publication/submission date, DOI or arXiv ID and URL. Separate date of publication from recent index updates. Cluster by research question, method, results and limitations. Mark retrieval not available instead of fabricating a recent list; do not rank by citations alone. Offer a reproducible search and user-selected time window. A guidance skill does not perform scheduled monitoring.",
+  inspiration:["OpenAlex works API","arXiv API","research reproducibility principles"],licensePattern:"original / open APIs"
+ },
+ "academic-deep-reading":{
+  id:"academic-deep-reading",title:"Deep paper reading",
+  description:"Extract a paper's question, methodology, experiments, evidence, core contribution, limitations and next readings.",
+  modes:["research","book","learning"],triggers:["精读","深读","解读论文","论文分析","研究方法","贡献","假设","academic reading","paper review","critical appraisal"],
+  priority:96,
+  guidance:"Read the actual supplied full text or verified accessible source. Output research question; key hypotheses; baselines and methodology; dataset provenance and sample size; experimental design; results with tables/figure references; limitations and unanswered questions. Explicitly distinguish authors' claims from demonstrated evidence. Highlight three reproducible sections worth close rereading, but never invent section numbers or quotations.",
+  inspiration:["academic critical appraisal","source-grounded RAG"],licensePattern:"original"
+ },
+ "editable-presentation":{
+  id:"editable-presentation",title:"Editable presentation design",
+  description:"Plan an editable native-slide presentation with a coherent argument, traceable figures and source-consistent tables.",
+  modes:["research","book","learning","website"],triggers:["ppt","pptx","幻灯片","演示文稿","汇报ppt","可编辑ppt","演讲稿","presentation","slides","keynote"],
+  priority:95,
+  guidance:"For a presentation, build one judgment per slide, an audience-appropriate narrative, speaker notes and accessible data labels. Maintain a traceability table: every metric references the original verified data. Prefer editable native shapes, text boxes and charts to screenshots. If no real PPTX exporter is attached, supply a structured slide plan and NEVER claim a downloadable editable PPTX was generated.",
+  inspiration:["PptxGenJS","PresentationML OOXML"],licensePattern:"original / MIT-inspired patterns"
+ },
+ "data-visualization":{
+  id:"data-visualization",title:"Data charts and dashboards",
+  description:"Design interactive charts and export-ready dashboards from verified structured datasets.",
+  modes:["research","book","learning","website"],triggers:["图表","数据可视化","dashboard","看板","折线","柱状","趋势图","统计图","可交互","chart","visualization","excel数据"],
+  priority:94,
+  guidance:"Validate field units, data types, missing values, chronology and aggregation against the uploaded source. Choose a chart to answer an explicit question; show axes, units, tooltips, filters and accessibility text. Provide chart specifications or actual downloadable HTML/PNG only if corresponding renderer and export succeed. Never invent spreadsheet numbers or describe a non-existent dashboard as already built.",
+  inspiration:["Apache ECharts","Vega-Lite","Observable Plot"],licensePattern:"original / Apache-2.0 design reference"
+ },
+ "work-report":{
+  id:"work-report",title:"Work progress report",
+  description:"Turn actual notes and evidence into a grounded daily, weekly or monthly progress report.",
+  modes:["research","book","learning","website"],triggers:["周报","月报","日报","工作汇报","项目汇报","工作总结","工作进度","weekly report","status report","meeting recap"],
+  priority:94,
+  guidance:"Synthesize only material the user actually supplied or authorized. Separate completed work, in-progress items, obstacles, risks and next milestones. Cite the source note for important figures; label uncertain or pending items. Produce concise executive summary and an editable draft; do not invent accomplishments or claim a report was emailed.",
+  inspiration:["structured reporting workflow","evidence-first memo style"],licensePattern:"original"
+ },
+ "content-refinement":{
+  id:"content-refinement",title:"Natural-language refinement",
+  description:"Polish existing writing to remove templated phrasing while preserving the author's facts, style and uncertainty.",
+  modes:["research","book","learning","website"],triggers:["润色","优化表达","人味","去ai味","自然语言","改写","精简","措辞","语气","humanize","polish","rewrite"],
+  priority:93,
+  guidance:"Edit the user's actual draft without inventing events, statistics or personal anecdotes. Preserve quotations, factual qualifiers, source citations and original voice; remove stiff repeated transitions and canned rhetorical patterns. If requested, provide a short before/after change rationale. Do not claim that text can evade AI detectors or guarantee human authorship.",
+  inspiration:["editorial revision checklists"],licensePattern:"original"
+ },
  "agent-skill-discovery":{
   id:"agent-skill-discovery",title:"Progressive skill discovery",
   description:"Keep many capabilities available while loading only the skills relevant to the current task.",
