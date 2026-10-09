@@ -56,6 +56,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const sentRef=useRef(false);
  const [threadList,setThreadList]=useState<Array<{id:string;title:string}>>([]);
  const [activeThread,setActiveThread]=useState("");
+ const [loadingThread,setLoadingThread]=useState(false);
  const historyRequest=useRef(0);
  function unpackHistory(messages:any[]){
   const rows:Array<{question:string;answer?:string}>=[];
@@ -66,6 +67,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  }
  async function loadThread(threadId:string){
   const token=++historyRequest.current;
+  setLoadingThread(true);
   try{
    const response=await fetch("/api/sasi/conversations"+(threadId?"?threadId="+encodeURIComponent(threadId):""),{cache:"no-store"});
    if(!response.ok)throw Error("HISTORY_UNAVAILABLE");
@@ -76,12 +78,14 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    setThreadList(Array.isArray(data.threads)?data.threads.filter((v:any)=>typeof v.id==="string"&&typeof v.title==="string"):[]);
    setTurns(unpackHistory(Array.isArray(data.messages)?data.messages:[]));
   }catch{if(token===historyRequest.current)setNotice(lang==="zh"?"暂时无法打开这段对话，请稍后重试。":"Could not open this conversation. Please try again.")}
+  finally{if(token===historyRequest.current)setLoadingThread(false)}
  }
  function switchThread(id:string){
   if(busy)return;
   sentRef.current=false;
   setStreaming(null);setNotice("");setNeedsConnection(false);
-  if(!id){historyRequest.current++;threadRef.current="";setActiveThread("");setTurns([]);setPrompt("");return}
+  if(!id){historyRequest.current++;setLoadingThread(false);threadRef.current="";setActiveThread("");setTurns([]);setPrompt("");return}
+  setTurns([]);
   void loadThread(id);
  }
 
@@ -111,7 +115,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  useEffect(()=>{if(autoStart&&!began.current){began.current=true;void send()}},[autoStart]);
  const lock=useRef(false),input=useRef<HTMLInputElement>(null),previous=useRef<string|undefined>(undefined);
  async function send(confirm=false){
-  if(lock.current||(!confirm&&!prompt.trim()))return;
+  if(lock.current||loadingThread||(!confirm&&!prompt.trim()))return;
   // Switching workspaces must be a user decision, never an automatic keyword redirect.
   sentRef.current=true;lock.current=true;setBusy(true);setNotice('');
   const question=confirm?quote?.question||'':prompt.trim();
@@ -145,16 +149,16 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  return <section className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
   <div className="flex-1 pt-10">{task==="chat"&&<div className="mb-5 flex flex-wrap items-center gap-2">
    <label htmlFor="sasi-chat-thread" className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"继续之前的对话":"Your conversations"}</label>
-   <select id="sasi-chat-thread" aria-label={lang==="zh"?"选择对话":"Choose conversation"} value={activeThread} disabled={busy} onChange={e=>switchThread(e.target.value)} className="max-w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-bg)] px-3 py-2 text-sm text-[var(--lx-ink)]">
+   <select id="sasi-chat-thread" aria-label={lang==="zh"?"选择对话":"Choose conversation"} value={activeThread} disabled={busy||loadingThread} onChange={e=>switchThread(e.target.value)} className="max-w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-bg)] px-3 py-2 text-sm text-[var(--lx-ink)]">
     <option value="">{lang==="zh"?"开始新对话":"New conversation"}</option>
     {threadList.map(t=><option key={t.id} value={t.id}>{t.title}</option>)}
    </select>
-   <button type="button" disabled={busy} onClick={()=>switchThread("")} className="rounded-lg border border-[var(--lx-line)] px-3 py-2 text-sm">{lang==="zh"?"新对话":"New chat"}</button>
+   <button type="button" disabled={busy||loadingThread} onClick={()=>switchThread("")} className="rounded-lg border border-[var(--lx-line)] px-3 py-2 text-sm">{lang==="zh"?"新对话":"New chat"}</button>
   </div>}{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>onTask(destination,turn.question)} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
-  <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={busy} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
+  <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={busy||loadingThread} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
    <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<div className="grid gap-3"><SasiLocalIntelligenceAction/><SasiUserResourceAction/></div>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}
-   <button aria-label={sasiCommonText(lang,'ask')} disabled={busy||!prompt.trim()} onClick={()=>void send()} className="ml-auto grid h-9 w-9 place-items-center rounded-full bg-[var(--lx-ink)] text-[var(--lx-bg)] disabled:opacity-30">{busy?'…':'↑'}</button></div>
+   <button aria-label={sasiCommonText(lang,'ask')} disabled={busy||loadingThread||!prompt.trim()} onClick={()=>void send()} className="ml-auto grid h-9 w-9 place-items-center rounded-full bg-[var(--lx-ink)] text-[var(--lx-bg)] disabled:opacity-30">{busy?'…':'↑'}</button></div>
 
    {task==='image'&&<label className="flex gap-2 px-3 pt-2 text-xs text-[var(--lx-muted)]"><input type="checkbox" checked={rights} disabled={busy} onChange={e=>{setRights(e.target.checked);setQuote(null)}}/>{ct('rightsConsent')}</label>}{quote&&<p className="px-3 pt-2 text-xs text-[var(--lx-muted)]">{SUPPLIER_BILLING_COPY[lang]}</p>}<SasiStatusLine>{notice}</SasiStatusLine>{needsConnection&&<Link href="/sasi/connections" className="inline-block px-3 py-2 text-sm text-blue-600">{functionMenuText(lang,"connect")} →</Link>}
   </SasiComposerSurface>
