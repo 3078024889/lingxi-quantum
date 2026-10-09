@@ -14,6 +14,12 @@ async function imageOnlyPdf(){
  page.drawRectangle({x:40,y:500,width:420,height:120,color:rgb(.9,.9,.9)});
  return Buffer.from(await pdf.save());
 }
+async function paragraphPdf(){
+ const pdf=await PDFDocument.create(),page=pdf.addPage([500,700]),font=await pdf.embedFont(StandardFonts.Helvetica);
+ const lines=["This is a normal paragraph, not a table.","It has several lines of prose with no repeated columns.","The converter should not invent spreadsheet structure."];
+ let y=620;for(const line of lines){page.drawText(line,{x:55,y,size:12,font});y-=26}
+ return Buffer.from(await pdf.save());
+}
 
 test("PDF to Excel exports a real editable XLSX from positioned table text",async({page})=>{
  await page.goto("/tools/pdf-to-xlsx?lang=en");
@@ -36,4 +42,15 @@ test("image-only PDF is routed to OCR instead of pretending table extraction suc
  await page.getByRole("button",{name:"Process now"}).click();
  await expect(page.getByText("This PDF has no extractable text table. It may be a scanned or image-based PDF.")).toBeVisible({timeout:30000});
  await expect(page.getByText("Run PDF OCR first, then export the recognized table to Excel.")).toBeVisible();
+ await page.getByRole("button",{name:"Continue with PDF OCR"}).click();
+ await expect(page).toHaveURL(/\/tools\/pdf-ocr/);
+ await expect(page.getByText("This scanned PDF was continued from PDF to Excel.",{exact:false})).toBeVisible({timeout:10000});
+});
+
+test("normal paragraph PDF is not falsely exported as a spreadsheet",async({page})=>{
+ await page.goto("/tools/pdf-to-xlsx?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"article.pdf",mimeType:"application/pdf",buffer:await paragraphPdf()});
+ await page.getByRole("button",{name:"Process now"}).click();
+ await expect(page.getByText("article.xlsx")).toHaveCount(0);
+ await expect(page.getByText("This PDF has no extractable text table. It may be a scanned or image-based PDF.")).toBeVisible({timeout:30000});
 });
