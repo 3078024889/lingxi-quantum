@@ -7,8 +7,21 @@ test("unsigned image explains that no credential is not proof of AI origin",asyn
  await page.getByRole("button",{name:"开始检查"}).click();
  const result=page.locator('[data-c2pa-verification="absent"]');
  await expect(result).toBeVisible({timeout:60000});
- await expect(result).toContainText("当前文件未检测到内嵌 C2PA 凭证");
- await expect(result).toContainText("原文件可能从未签名");
- await expect(result).toContainText("AI 模型分数是另一项独立分析");
- await expect(page.getByText("AI 模型生成特征：请查看下方参考分析")).toBeVisible();
+ await expect(result).toContainText("这份文件没有可读取的来源签名");
+ await expect(result).toContainText("原文件可能没有签名");
+ await expect(result).toContainText("不能单独判断是否由 AI 生成");
+ await expect(page.getByText("内容特征分析（仅供参考）")).toBeVisible();
+});
+
+test("media origin displays human-readable result without internal verification terminology",async({page})=>{
+ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/rfoAAAAASUVORK5CYII=","base64");
+ await page.goto("/tools/ai-image-check");
+ await page.locator('input[type="file"]').setInputFiles({name:"unsigned.png",mimeType:"image/png",buffer:png});
+ await page.getByRole("button",{name:"开始检查"}).click();
+ const result=page.locator('[data-c2pa-verification="absent"]');
+ await expect(result).toBeVisible({timeout:60000});
+ await expect(result).toContainText("文件来源与签名");
+ await expect(result).not.toContainText("Manifest");
+ await expect(result).not.toContainText("validation_state");
+ await expect(page.getByText("内容特征分析（仅供参考）")).toBeVisible();
 });
