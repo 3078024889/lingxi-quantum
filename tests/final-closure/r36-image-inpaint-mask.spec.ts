@@ -10,7 +10,8 @@ test("mask inpainting changes only selected pixels and fills from surrounding im
  for(let y=4;y<=7;y++)for(let x=7;x<=12;x++){
   mask[y*w+x]=1;const i=(y*w+x)*4;data[i]=245;data[i+1]=20;data[i+2]=40;
  }
- const beforeCall=new Uint8ClampedArray(data);\n const out=diffuseMaskedPixels(data,w,h,mask);
+ const beforeCall=new Uint8ClampedArray(data);
+ const out=diffuseMaskedPixels(data,w,h,mask);
  let changedInside=0,changedOutside=0;
  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
   const i=(y*w+x)*4,isMask=Boolean(mask[y*w+x]);
@@ -24,8 +25,9 @@ test("mask inpainting changes only selected pixels and fills from surrounding im
  expect(out[center]).toBeLessThan(200);
  expect(out[center+1]).toBeGreaterThan(50);
  expect(out[center+3]).toBe(255);
- // Source buffer is never mutated by the pure quality kernel.
- expect(Array.from(original.slice(0,16))).not.toEqual(Array.from(data.slice(0,16)).map((v,i)=>i));
+ // The quality kernel must be pure: callers can safely keep the original for undo/comparison.
+ expect(Array.from(data)).toEqual(Array.from(beforeCall));
+ expect(out).not.toBe(data);
 });
 
 test("mask inpainting rejects an unsafe giant selection",()=>{

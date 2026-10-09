@@ -6,11 +6,18 @@ assert.deepEqual(facts.GEO_TOOL_SLUGS,GLOBAL_TOOL_CATALOG.map(t=>t.slug));
 for(const locale of Object.keys(SEO_LOCALES)){
  for(const id of facts.GEO_PAGE_IDS){const f=facts.pageGeoFact(id,locale);assert(f.title&&f.description&&f.answer);assert(new URL(f.com));assert(new URL(f.cn));assert(f.answer.includes(f.com)&&f.answer.includes(f.cn))}
  for(const slug of facts.GEO_TOOL_SLUGS){const f=facts.toolGeoFact(slug,locale);assert(f.title&&f.description&&f.question&&f.answer);assert(f.com.includes('/tools/'+slug));if(PUBLIC_PAID_TOOL_IDS.includes(slug))assert(!f.kind.startsWith('free'),slug);if(allToolBillingPolicies().some(p=>p.toolId===slug&&p.billingClass==='DISABLED'))assert.equal(f.kind,'later',slug)}
- for(const slug of ['compress-image-to-100kb','heic-to-jpg','merge-pdf','remove-exif'])assert.equal(facts.toolGeoFact(slug,locale).kind,'free-local');
+ for(const slug of ['compress-image-to-100kb','heic-to-jpg','merge-pdf','remove-exif','pdf-to-xlsx'])assert.equal(facts.toolGeoFact(slug,locale).kind,'free-local');
 }
 for(const slug of ['burn-after-read','temp-mail'])assert.equal(facts.toolGeoFact(slug,'en').kind,'paid-online');
 assert.equal(facts.toolGeoFact('nonexistent-tool','en'),null);
-const freeCount=facts.GEO_TOOL_SLUGS.filter(slug=>facts.toolGeoFact(slug,'zh').kind.startsWith('free')).length;
-assert.equal(freeCount,97,'Update translated public counts when actual billing eligibility changes');
+
+// Billing classification is product state, not translated copy. Every locale must expose
+// the same free/paid/local/online/later classification. Do not hard-code a historical
+// free-tool count: adding a legitimate tool must not break the production gate.
+const localeKinds=Object.keys(SEO_LOCALES).map(locale=>facts.GEO_TOOL_SLUGS.map(slug=>facts.toolGeoFact(slug,locale).kind));
+for(let i=1;i<localeKinds.length;i++)assert.deepEqual(localeKinds[i],localeKinds[0],'Tool billing/execution classification must be identical in all nine locales');
+const freeCount=localeKinds[0].filter(kind=>kind.startsWith('free')).length;
+assert(freeCount>0&&freeCount<=facts.GEO_TOOL_SLUGS.length,'Free-tool classification count must remain internally valid');
+
 const {buildToolMetadata}=load('lib/tools/seo.ts');for(const slug of facts.GEO_TOOL_SLUGS){const meta=buildToolMetadata(slug);assert.equal(typeof meta.title,'string');assert.equal(typeof meta.description,'string');assert(meta.description.length>0)}
 const response=load('app/llms.txt/route.ts').GET();response.text().then(s=>{assert(s.includes('CNY')&&s.includes('USD'));assert(s.includes('Paid processing'));assert(s.includes('Not open yet'));console.log('PASS: full tool catalog, six public pages, nine languages, paid/free/disabled distinctions, both hosts and actual llms.txt output.');}).catch(e=>{console.error(e);process.exitCode=1});

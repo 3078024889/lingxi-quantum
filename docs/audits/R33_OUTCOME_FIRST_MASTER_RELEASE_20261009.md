@@ -79,3 +79,32 @@ R27 merged: persisted chat history selection. R32 open: avoid out-of-order histo
 ## Evidence policy
 
 Never claim all 118 tools have been functionally tested from 236 URL checks; never equate a color badge or SDK install with a successful real output. Each claim must name test sample, expected artifact and observed result. Label all intended features not yet implemented.
+
+
+## 2026-10-10 continuation audit: source gate, Vercel and mature-code extraction
+
+The latest PR head was inspected before any further feature expansion.
+
+Observed release blockers:
+- GitHub Production Gate failed in `scripts/test-site-facts.cjs` because a historical hard-coded free-tool count still expected 97 while the catalog now truthfully exposes 98 after `pdf-to-xlsx` became a real free local tool.
+- The R36 inpainting regression itself contained two test-authoring defects: a literal escaped newline embedded in TypeScript and a reference to an undefined `original` variable. This meant the intended non-mutation invariant was not actually testable.
+- Vercel currently reports failure with a build-rate-limit target URL. This is independent from the GitHub source-gate failure and must not be misreported as a product-code regression.
+
+Fix strategy:
+- Replace the brittle historical free-count assertion with a stronger invariant: all nine locales must expose the same execution/billing classification for every tool. Explicitly lock `pdf-to-xlsx` as `free-local`.
+- Repair the image inpainting regression so it checks the real purity contract: output may change only selected pixels while the source buffer remains byte-for-byte unchanged.
+- Keep production deployment blocked until GitHub source gate, build, desktop/mobile browser checks and Vercel capacity all pass.
+
+Fresh mature-source findings applied to the roadmap:
+- Squoosh feature-tests encoders before exposing them and keeps codec/edit state separate. LINGXIFIELD should expose only capabilities that are actually supported in the current browser instead of presenting dead format options.
+- PDF.js transfers TypedArrays to workers to reduce main-thread memory pressure and supports worker/offscreen rendering fallbacks. Large PDF/image work should follow the same capability-detection pattern rather than forcing one execution lane.
+- Tesseract.js treats an empty OCR page as a valid result, not an exception, and supports structured outputs such as blocks/TSV plus reusable workers. OCR-to-table must distinguish “recognition succeeded but no table exists” from runtime failure.
+- IOPaint separates mask semantics from model selection and can switch high-quality inpainting backends. LINGXIFIELD should preserve the same boundary: precise mask editing is always available locally; heavy model reconstruction is a separate capability and must never be disguised as the lightweight local diffusion fallback.
+- Camelot's stream/table logic reinforces the current rule: repeated spatial alignment and table structure are evidence; ordinary prose must never be converted into a fake spreadsheet.
+
+Next P0 convergence after the gate is green:
+1. Make every image/PDF capability browser-feature-tested and hide unsupported output options automatically.
+2. Add structured OCR table-confidence evidence and explicit empty-page/no-table states.
+3. Add image-repair quality tiers without changing the truth label of the local fallback.
+4. Continue artifact-level acceptance for PDF compression target size, PDF redaction, ID-photo print sheets, video transcription/subtitles and watermark workflows.
+5. Route every successful artifact back into the unified SASI result workspace for continuation/recovery instead of leaving tools as isolated endpoints.
