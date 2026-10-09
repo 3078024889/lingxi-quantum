@@ -68,6 +68,7 @@
     "audit:v33-production-closure": "node scripts/audit/v33-production-closure.mjs"
   },
   "dependencies": {
+    "@contentauth/c2pa-web": "0.15.3",
     "@ffmpeg/core": "0.12.10",
     "@ffmpeg/ffmpeg": "0.12.15",
     "@ffmpeg/util": "0.12.2",
