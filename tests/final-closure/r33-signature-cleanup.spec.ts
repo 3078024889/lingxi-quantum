@@ -48,3 +48,37 @@ test("handwriting cleanup can erase remaining photo marks, undo and update PDF p
  await editor.getByRole("button",{name:"Undo erasing"}).click();
  await expect.poll(alpha).toBeGreaterThanOrEqual(before-4);
 });
+
+
+test("already-transparent signature keeps its ink alpha and does not acquire a paper rectangle",async({page})=>{
+ await page.goto("/tools/e-sign-pdf?lang=en");
+ const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"document.pdf",mimeType:"application/pdf",buffer:pdf});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
+ const png=await page.evaluate(()=>{
+  const c=document.createElement("canvas");c.width=360;c.height=180;
+  const x=c.getContext("2d")!;
+  x.strokeStyle="#233d93";x.lineWidth=8;x.lineCap="round";
+  x.beginPath();x.moveTo(70,98);x.bezierCurveTo(140,15,185,145,290,65);x.stroke();
+  return c.toDataURL("image/png").split(",")[1];
+ });
+ await page.locator("label").filter({hasText:"Extract handwritten signature"}).locator('input[type="file"]').setInputFiles({name:"signature.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
+ const preview=page.getByTestId("signature-ink-preview").locator("img");
+ await expect(preview).toBeVisible();
+ const output=await preview.evaluate(async(img:HTMLImageElement)=>{
+  await img.decode();
+  const c=document.createElement("canvas");c.width=img.naturalWidth;c.height=img.naturalHeight;
+  const ctx=c.getContext("2d")!;ctx.drawImage(img,0,0);
+  const p=ctx.getImageData(0,0,c.width,c.height).data;
+  let clear=0,ink=0,blue=0;
+  for(let i=0;i<p.length;i+=4){
+   if(p[i+3]===0)clear++;
+   if(p[i+3]>80){ink++;if(p[i+2]>p[i])blue++}
+  }
+  return {width:c.width,height:c.height,clear,ink,blue};
+ });
+ expect(output.width).toBeLessThan(360);
+ expect(output.height).toBeLessThan(180);
+ expect(output.clear).toBeGreaterThan(output.ink);
+ expect(output.blue).toBeGreaterThan(25);
+});
