@@ -64,7 +64,7 @@ const copy:Record<ProvenanceStatus,Record<"zh"|"en",string>>={
  valid:{zh:"C2PA 签名验证通过，仍需核对来源声明",en:"C2PA signature validated; provenance claims still require scrutiny"},
  untrusted:{zh:"检测到 C2PA 签名，但签发证书不在可信名单中",en:"C2PA signature found; signer certificate is not trusted"},
  invalid:{zh:"C2PA 完整性或签名验证失败",en:"C2PA signature or integrity verification failed"},
- absent:{zh:"未找到 C2PA 来源凭证",en:"No C2PA Content Credentials found"},
+ absent:{zh:"当前文件未检测到内嵌 C2PA 凭证",en:"No embedded C2PA credentials detected in this file"},
  unavailable:{zh:"暂时无法完成 C2PA 验证",en:"C2PA verification could not be completed"}
 };
 export default function C2paProvenanceCheck({file,lang}:{file:File;lang:LingxiLang}){
@@ -80,7 +80,8 @@ export default function C2paProvenanceCheck({file,lang}:{file:File;lang:LingxiLa
   <p role="status" aria-live="polite">{copy[result.status][zh?"zh":"en"]}</p>
   {result.issuer&&<p>{zh?"签发信息":"Signer"}：{result.issuer}</p>}
   {result.claim&&<p>{zh?"内容标识":"Content title"}：{result.claim}</p>}
+  {result.status==="absent"&&<p className="opacity-80">{zh?"这只说明当前上传的文件副本没有可读取的内嵌凭证。原文件可能从未签名，也可能在编辑、转存或平台处理后丢失凭证；无法仅凭这个结果判断。":"This means this uploaded copy has no readable embedded credentials. The original may never have been signed, or credentials may have been lost during editing or sharing; this result cannot distinguish those cases."}</p>}
   {result.status==="unavailable"&&<p className="opacity-70">{zh?"此文件没有得到有效的验证结论，可稍后重试或使用 Content Credentials 官方验证服务。":"No valid verification outcome was established; retry or consult the official Content Credentials verifier."}</p>}
-  <p className="opacity-70">{zh?"C2PA 仅验证来源声明及相关签名，不保证内容真实；没有凭证也不意味着是 AI 生成。":"C2PA verifies signed provenance claims, not factual truth. Missing credentials do not imply AI generation."}</p>
+  <p className="opacity-70">{zh?"C2PA 只用于核验可读取的来源凭证与签名，不判断这张图片或视频是不是 AI 制作；下方 AI 模型分数是另一项独立分析。":"C2PA checks available signed provenance, not whether media was AI-generated. The model scores below are a separate assessment."}</p>
  </section>;
 }
