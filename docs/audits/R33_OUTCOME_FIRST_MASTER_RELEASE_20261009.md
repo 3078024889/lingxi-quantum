@@ -36,7 +36,7 @@ Remaining acceptance before claiming 'beautiful signature extraction':
 - Confirm touch drag, high DPI display, undo, upload errors, same-page and multi-page editing; validate signed PDF in a second viewer.
 - Visual signature is NOT a PKI digital signature; do not claim certificate trust or legal enforceability.
 
-## 118 tools product-review standard
+## Current catalog tool-review standard
 
 The generator `scripts/audit/tool-outcome-contracts.mjs` emits an individually identified outcome contract for every current public slug based on actual registry and fixture mappings. It intentionally marks product-quality and untested capabilities as `TO_AUDIT`, and distinguishes reusable reference implementation patterns from confirmed LINGXIFIELD functionality.
 
@@ -78,7 +78,7 @@ R27 merged: persisted chat history selection. R32 open: avoid out-of-order histo
 
 ## Evidence policy
 
-Never claim all 118 tools have been functionally tested from 236 URL checks; never equate a color badge or SDK install with a successful real output. Each claim must name test sample, expected artifact and observed result. Label all intended features not yet implemented.
+Never claim all catalog tools have been functionally tested from route checks alone; never equate a color badge or SDK install with a successful real output. Each claim must name test sample, expected artifact and observed result. Label all intended features not yet implemented.
 
 
 ## 2026-10-10 continuation audit: source gate, Vercel and mature-code extraction
@@ -108,3 +108,15 @@ Next P0 convergence after the gate is green:
 3. Add image-repair quality tiers without changing the truth label of the local fallback.
 4. Continue artifact-level acceptance for PDF compression target size, PDF redaction, ID-photo print sheets, video transcription/subtitles and watermark workflows.
 5. Route every successful artifact back into the unified SASI result workspace for continuation/recovery instead of leaving tools as isolated endpoints.
+
+
+## Catalog cardinality rule
+
+The public tool catalog is now intentionally treated as dynamic. The registry is the source of truth; tests and generated audit headings must derive cardinality from the registry instead of freezing historical values such as 118. This prevents every legitimate new tool from creating a false release failure while still requiring:
+- one execution plan per public slug,
+- one capability/recipe mapping per public slug,
+- no orphan recipes,
+- no missing result checks,
+- at least 100 public tools as the broad product invariant.
+
+At this continuation point, `pdf-to-xlsx` is part of the public catalog, so historical 118-count assertions are stale. Historical audit statements that explicitly describe an earlier R29 118-route run remain historical evidence and are not rewritten as if they happened against the current catalog.
