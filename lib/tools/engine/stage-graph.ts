@@ -31,6 +31,9 @@ export const TOOL_GRAPHS:ToolEngineGraph[]=[
  g("compress-pdf",[],[]),
  g("pdf-editor",[s("parse","Preview",[req("pdf-render",["pdfjs"])]),s("edit","Edit",[req("pdf-build",["pdflib"])]),s("validate","Validate",[req("pdf-parse",["pdfjs"],["pdfcpu"])])],["output-opens"]),
  g("pdf-redact",[s("render","Render",[req("pdf-render",["pdfjs"])]),s("redact","Permanent redact",[req("pdf-build",["pdflib"],["pdfcpu"])]),s("validate","Validate",[req("pdf-text",["pdfjs"])] )],["redacted-text-not-recoverable"]),
+ g("pdf-web-optimize",[s("inspect","Inspect",[req("pdf-check",["qpdf"],["pdfjs"])]),s("linearize","Web optimize",[req("linearize",["qpdf"])]),s("validate","Validate",[req("pdf-check",["qpdf"],["pdfjs"])])],["output-opens","linearization-valid"]),
+ g("pdf-inspect",[s("inspect","Inspect structure",[req("pdf-check",["qpdf"],["pdfjs"])])],["inspection-reported"]),
+
  g("merge-pdf",[s("merge","Merge",[req("merge",["pdflib"],["pdfcpu"])]),s("validate","Validate",[req("pdf-parse",["pdfjs"],["qpdf"])])],["page-count-sum"]),
  g("split-pdf",[s("split","Split",[req("split",["pdflib"],["pdfcpu"])]),s("validate","Validate",[req("pdf-parse",["pdfjs"])])],["all-pages-accounted-for"]),
  g("image-to-pdf",[s("encode","Prepare images",[req("image-encode",["browser-canvas"],["sharp-libvips"])]),s("build","Build PDF",[req("pdf-build",["pdflib"])] )],["image-count-preserved"]),
