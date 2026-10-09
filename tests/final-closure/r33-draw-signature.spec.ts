@@ -48,3 +48,21 @@ test("a single touch point remains a visible transparent signing mark",async({pa
  await pad.getByRole("button",{name:"Undo stroke"}).click();
  await expect(pad.getByRole("button",{name:"Undo stroke"})).toBeDisabled();
 });
+
+test("pen pressure and overlapping second touch keep a single valid ink stroke",async({page})=>{
+ await page.goto("/tools/e-sign-pdf?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"contract.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
+ await page.getByRole("button",{name:"Draw signature"}).click();
+ const c=page.getByTestId("signature-draw-pad").locator("canvas");
+ await c.dispatchEvent("pointerdown",{pointerId:8,pointerType:"pen",pressure:.4,clientX:180,clientY:140});
+ await c.dispatchEvent("pointermove",{pointerId:8,pointerType:"pen",pressure:.8,clientX:245,clientY:135});
+ await c.dispatchEvent("pointermove",{pointerId:9,pointerType:"touch",pressure:.5,clientX:400,clientY:160});
+ await c.dispatchEvent("pointerup",{pointerId:8,pointerType:"pen",pressure:.6,clientX:295,clientY:140});
+ const ink=await c.evaluate((canvas:HTMLCanvasElement)=>{
+  const bytes=canvas.getContext("2d")!.getImageData(0,0,canvas.width,canvas.height).data;
+  let count=0;for(let i=3;i<bytes.length;i+=4)if(bytes[i]>20)count++;return count;
+ });
+ expect(ink).toBeGreaterThan(5);
+ await expect(page.getByTestId("signature-draw-pad").getByRole("button",{name:"Undo stroke"})).toBeEnabled();
+});
