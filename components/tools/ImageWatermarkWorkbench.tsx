@@ -1,5 +1,5 @@
 "use client";
-import{PointerEvent,useEffect,useRef,useState}from"react";
+import{PointerEvent,useEffect,useRef,useState,type Dispatch,type SetStateAction}from"react";
 import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import{localInpaint,localInpaintMask,type NormalizedBox,type NormalizedPoint,type NormalizedStroke}from"@/lib/tools/autonomous/image-local";
@@ -20,13 +20,13 @@ function BoxSelector({file,box,onChange}:{file:File;box:NormalizedBox;onChange:(
  </div>
 }
 
-function BrushSelector({file,strokes,onChange}:{file:File;strokes:NormalizedStroke[];onChange:(rows:NormalizedStroke[])=>void}){
+function BrushSelector({file,strokes,onChange}:{file:File;strokes:NormalizedStroke[];onChange:Dispatch<SetStateAction<NormalizedStroke[]>>}){
  const ref=useRef<HTMLDivElement>(null),active=useRef<number|null>(null),[src,setSrc]=useState(""),[brush,setBrush]=useState(22);
  useEffect(()=>{const u=URL.createObjectURL(file);setSrc(u);return()=>URL.revokeObjectURL(u)},[file]);
  const point=(e:PointerEvent):NormalizedPoint=>{const r=ref.current!.getBoundingClientRect();return{x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))}};
- function addPoint(e:PointerEvent){if(active.current!==e.pointerId)return;const p=point(e);onChange(strokes.map((s,i)=>i===strokes.length-1?{...s,points:[...s.points,p]}:s))}
+ function addPoint(e:PointerEvent){if(active.current!==e.pointerId)return;const p=point(e);onChange(current=>current.map((stroke,i)=>i===current.length-1?{...stroke,points:[...stroke.points,p]}:stroke))}
  return <div className="space-y-3">
-  <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl border" onPointerDown={e=>{if(active.current!==null)return;active.current=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);onChange([...strokes,{radius:brush/1000,points:[point(e)]}])}} onPointerMove={addPoint} onPointerUp={e=>{addPoint(e);active.current=null}} onPointerCancel={()=>{active.current=null}}>
+  <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl border" onPointerDown={e=>{if(active.current!==null)return;active.current=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);onChange(current=>[...current,{radius:brush/1000,points:[point(e)]}])}} onPointerMove={addPoint} onPointerUp={e=>{addPoint(e);active.current=null}} onPointerCancel={()=>{active.current=null}}>
    {src&&<img src={src} alt="" className="block max-h-[560px] max-w-full select-none"/>}
    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
     {strokes.map((stroke,i)=><polyline key={i} points={stroke.points.map(p=>`${p.x*1000},${p.y*1000}`).join(" ")} fill="none" stroke="rgba(244,63,94,.55)" strokeLinecap="round" strokeLinejoin="round" strokeWidth={Math.max(4,stroke.radius*2000)}/>)}
@@ -34,7 +34,7 @@ function BrushSelector({file,strokes,onChange}:{file:File;strokes:NormalizedStro
   </div>
   <div className="flex flex-wrap items-center gap-3">
    <label className="text-sm">画笔大小 <input aria-label="Brush size" type="range" min="6" max="60" value={brush} onChange={e=>setBrush(Number(e.target.value))}/></label>
-   <button type="button" disabled={!strokes.length} onClick={()=>onChange(strokes.slice(0,-1))} className="rounded-xl border px-3 py-2 text-sm">撤销一笔</button>
+   <button type="button" disabled={!strokes.length} onClick={()=>onChange(current=>current.slice(0,-1))} className="rounded-xl border px-3 py-2 text-sm">撤销一笔</button>
    <button type="button" disabled={!strokes.length} onClick={()=>onChange([])} className="rounded-xl border px-3 py-2 text-sm">清空选区</button>
   </div>
  </div>
