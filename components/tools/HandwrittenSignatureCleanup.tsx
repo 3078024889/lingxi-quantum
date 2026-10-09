@@ -32,17 +32,28 @@ export default function HandwrittenSignatureCleanup({source,onChange}:{source:st
  },[source]);
  function erase(event:React.PointerEvent<HTMLCanvasElement>){
   if(!active.current)return;
-  const target=canvas.current,ctx=target?.getContext("2d");if(!target||!ctx)return;
-  const rect=target.getBoundingClientRect();
-  if(rect.width<=0||rect.height<=0)return;
-  const x=(event.clientX-rect.left)*target.width/rect.width,y=(event.clientY-rect.top)*target.height/rect.height;
-  ctx.save();ctx.globalCompositeOperation="destination-out";ctx.strokeStyle="#000";ctx.lineCap="round";ctx.lineJoin="round";
+  const target=canvas.current,ctx=target?.getContext("2d",{willReadFrequently:true});if(!target||!ctx)return;
+  const rect=target.getBoundingClientRect();if(!rect.width||!rect.height)return;
+  const point={x:(event.clientX-rect.left)*target.width/rect.width,y:(event.clientY-rect.top)*target.height/rect.height};
+  const begin=previous.current||point;
   const radius=Math.max(2,Math.min(target.width,target.height)*width/300);
-  ctx.lineWidth=radius*2;
-  ctx.beginPath();ctx.moveTo(previous.current?.x??x,previous.current?.y??y);ctx.lineTo(x,y);ctx.stroke();
-  // A stationary pointer tap must still erase ink.
-  ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fill();
-  ctx.restore();previous.current={x,y};
+  // Erase actual alpha samples rather than depend on a canvas blend mode.
+  // This is reproducible on Safari/iOS and transparent PNGs as well as Chrome.
+  const minX=Math.max(0,Math.floor(Math.min(begin.x,point.x)-radius-1)),maxX=Math.min(target.width,Math.ceil(Math.max(begin.x,point.x)+radius+1));
+  const minY=Math.max(0,Math.floor(Math.min(begin.y,point.y)-radius-1)),maxY=Math.min(target.height,Math.ceil(Math.max(begin.y,point.y)+radius+1));
+  if(maxX<=minX||maxY<=minY)return;
+  const pixels=ctx.getImageData(minX,minY,maxX-minX,maxY-minY);
+  const vx=point.x-begin.x,vy=point.y-begin.y,lengthSq=vx*vx+vy*vy;
+  for(let y=0;y<pixels.height;y++)for(let x=0;x<pixels.width;x++){
+   const px=minX+x+.5,py=minY+y+.5;
+   const t=lengthSq?Math.max(0,Math.min(1,((px-begin.x)*vx+(py-begin.y)*vy)/lengthSq)):0;
+   const dx=px-(begin.x+t*vx),dy=py-(begin.y+t*vy);
+   if(dx*dx+dy*dy<=radius*radius){
+    const offset=(y*pixels.width+x)*4;
+    pixels.data[offset]=0;pixels.data[offset+1]=0;pixels.data[offset+2]=0;pixels.data[offset+3]=0;
+   }
+  }
+  ctx.putImageData(pixels,minX,minY);previous.current=point;
  }
  function finish(event:React.PointerEvent<HTMLCanvasElement>){
   if(!active.current)return;
