@@ -29,3 +29,22 @@ test("direct pen signature produces tightly cropped transparent ink and a page o
  expect(outcome.transparent).toBeGreaterThan(outcome.opaque);
  expect(outcome.width).toBeLessThan(500);
 });
+
+test("a single touch point remains a visible transparent signing mark",async({page})=>{
+ await page.goto("/tools/e-sign-pdf?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"contract.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
+ await page.getByRole("button",{name:"Draw signature"}).click();
+ const pad=page.getByTestId("signature-draw-pad"),canvas=pad.locator("canvas"),rect=await canvas.boundingBox();
+ expect(rect).not.toBeNull();
+ await page.mouse.click(rect!.x+rect!.width/2,rect!.y+rect!.height/2);
+ await expect(pad.getByRole("button",{name:"Undo stroke"})).toBeEnabled();
+ const ink=await canvas.evaluate((c:HTMLCanvasElement)=>{
+  const data=c.getContext("2d")!.getImageData(0,0,c.width,c.height).data;
+  let pixels=0;for(let i=3;i<data.length;i+=4)if(data[i]>0)pixels++;
+  return pixels;
+ });
+ expect(ink).toBeGreaterThan(0);
+ await pad.getByRole("button",{name:"Undo stroke"}).click();
+ await expect(pad.getByRole("button",{name:"Undo stroke"})).toBeDisabled();
+});
