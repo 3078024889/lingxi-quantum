@@ -122,6 +122,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"pdf-pages",zh:"PDF 页面整理",en:"PDF Page Organizer",mode:"local" as const},
   {slug:"pdf-redact",zh:"PDF 永久脱敏",en:"PDF Redaction",mode:"local" as const},
   {slug:"handwriting-ocr",zh:"手写文字识别",en:"Handwriting OCR",mode:"online" as const},
+  {slug:"pdf-to-xlsx",zh:"PDF 转 Excel",en:"PDF to Excel",mode:"local" as const},
   {slug:"pdf-to-word",zh:"PDF 转 Word",en:"PDF to Word",mode:"local" as const},
   {slug:"pdf-watermark",zh:"PDF 加水印",en:"Watermark PDF",mode:"local" as const},
   {slug:"pdf-page-numbers",zh:"PDF 加页码",en:"Add PDF Page Numbers",mode:"local" as const},
@@ -250,6 +251,7 @@ const HOT_TOOL_TERMS:Record<string,string[]>= {
   "temp-mail":["temporary email","10 minute mail","disposable email"],
   "ocr":["image OCR","image to text"],
   "pdf-ocr":["PDF OCR","scanned PDF to text"],
+  "pdf-to-xlsx":["PDF to Excel","PDF table to Excel","convert PDF to XLSX"],
   "food-calorie":["calorie calculator","food nutrition calculator"],
 };
 
