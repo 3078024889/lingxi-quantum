@@ -42,7 +42,7 @@ async function latestPublicRunEvents(runId:string,limit=40):Promise<PublicRunEve
 
 export async function runSnapshot(userId:string,runId:string){
  const run=await assertRunOwner(userId,runId);
- if(!run)return null;
+ if(!run||typeof run.id!=="string"||!run.id.trim())return null;
  const events=await latestPublicRunEvents(runId,40);
  const lastEventId=events.length?Math.max(...events.map(e=>e.id)):0;
  return {
@@ -54,6 +54,6 @@ export async function runSnapshot(userId:string,runId:string){
   hasOutput:run.output_json!=null,
   lastEventId,
   events,
-  task:publicDurableRunTask(run)
+  task:publicDurableRunTask({...run,id:run.id})
  };
 }
