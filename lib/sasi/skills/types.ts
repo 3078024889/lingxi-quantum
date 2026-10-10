@@ -18,7 +18,13 @@ export type SasiSkillId=
  |"drama-visual"
  |"drama-sound"
  |"teaching-practice"
- |"source-comparison";
+ |"source-comparison"
+ |"research-tracking"
+ |"academic-deep-reading"
+ |"editable-presentation"
+ |"data-visualization"
+ |"work-report"
+ |"content-refinement";
 
 export type SasiSkillDefinition={
  id:SasiSkillId;
