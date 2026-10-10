@@ -25,4 +25,4 @@ export const MINI_TOOL_GOODS = [
 
 export const MINI_TOPUP_GOODS = [10, 88, 666, 888].map(amount => ({
   skuId: `lx_balance_${amount}`, name: `余额充值${amount}元`, unitPriceFen: amount * 100,
-})).concat([{ skuId: "lx_balance_custom", name: "自定义余额充值", unitPriceFen: 100 }]);
+})).concat([{ skuId: "lx_balance_custom", name: "自定义余额充值", unitPriceFen: 100 }, { skuId: "lx_balance_cent", name: "自定义金额余额充值", unitPriceFen: 1 }]);

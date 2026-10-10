@@ -52,7 +52,7 @@ export default function MiniGoodsAdmin() {
       {busy && <button onClick={() => { stop.current = true; }} className="rounded-xl border px-4 py-3">停止</button>}
     </div>
     <p role="status" className="my-6 rounded-xl bg-[var(--lx-soft)] p-4">{message}</p>
-    <p className="mb-5 text-sm text-[var(--lx-muted)]">下表金额为微信道具的计费单位，实际交易按数量和确认报价结算。自定义充值按 1 元 × 所选整数金额计算。商品已发布不表示用户现在可以付款。</p>
+    <p className="mb-5 text-sm text-[var(--lx-muted)]">下表金额为微信道具的计费单位，实际交易按确认金额结算。自定义充值支持整数或两位小数金额；小数金额使用按分计价的商品。商品发布状态与收款开放状态分别核验。</p>
     <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b"><th scope="col" className="p-3">商品</th><th scope="col" className="p-3">道具编号</th><th scope="col" className="p-3">计费单位</th><th scope="col" className="p-3">创建状态</th><th scope="col" className="p-3">微信发布核验</th></tr></thead>
       <tbody>{goods.map(item => <tr key={item.skuId} className="border-b border-[var(--lx-line)]"><td className="p-3">{item.name}</td><td className="p-3">{item.skuId}</td><td className="p-3">¥{(item.unitPriceFen / 100).toFixed(2)}</td><td className="p-3">{completed.includes(item.skuId) ? "已创建" : "待创建"}</td><td className="p-3">{published.includes(item.skuId) ? "已核验发布" : "尚未核验"}</td></tr>)}</tbody>
     </table></div>

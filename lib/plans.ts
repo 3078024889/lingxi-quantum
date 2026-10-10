@@ -6,7 +6,7 @@ export type Product = {
   group:"production";sasiAmountFen?:number;
 };
 
-import { BALANCE_TOPUP_AMOUNTS } from "@/lib/balance-topups";
+import { BALANCE_TOPUP_AMOUNTS, customTopupAmount, customTopupMinor } from "@/lib/balance-topups";
 const RMB_TOPUPS=BALANCE_TOPUP_AMOUNTS;
 export const sasiProductionProducts:Product[]=RMB_TOPUPS.map(amount=>({
   id:`sasi-balance-${amount}`,name:`余额充值 ¥${amount}`,nameEn:`Balance top-up ¥${amount}`,
@@ -21,7 +21,7 @@ export function getProduct(id:string){
   // Preserve fulfillment of orders created before the displayed packs changed.
   const legacy=/^sasi-balance-(20|50|100|200|500|1000|2000|10000)$/.exec(id);
   if(legacy){const amount=Number(legacy[1]);return {...sasiProductionProducts[0],id,priceRmb:amount,sasiAmountFen:amount*100,name:`余额充值 ¥${amount}`,nameEn:`Balance top-up ¥${amount}`};}
-  const custom=/^sasi-balance-custom-(\d{1,5})$/.exec(id);const amountRmb=custom?Number(custom[1]):0;
-  if(!Number.isInteger(amountRmb)||amountRmb<10||amountRmb>10000)return undefined;
-  return{id,name:`余额充值 ¥${amountRmb}`,nameEn:`Balance top-up ¥${amountRmb}`,priceUsd:0,priceRmb:amountRmb,type:"permanent" as const,note:"自定义人民币余额充值。",noteEn:"Custom CNY balance top-up.",group:"production" as const,sasiAmountFen:amountRmb*100};
+  const custom=/^sasi-balance-custom-(.+)$/.exec(id);const amountRmb=custom?customTopupAmount(custom[1]):null;
+  if(amountRmb===null)return undefined;
+  return{id,name:`余额充值 ¥${amountRmb}`,nameEn:`Balance top-up ¥${amountRmb}`,priceUsd:0,priceRmb:amountRmb,type:"permanent" as const,note:"自定义人民币余额充值。",noteEn:"Custom CNY balance top-up.",group:"production" as const,sasiAmountFen:customTopupMinor(custom![1])!};
 }

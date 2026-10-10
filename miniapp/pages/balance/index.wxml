@@ -1,9 +1,10 @@
 <view class="lx-page"><view class="lx-shell">
  <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">BALANCE</view></view>
- <view class="lx-title">{{enabled ? '余额充值' : '充值暂未开放'}}</view>
+ <view class="lx-title">{{loading ? '正在连接' : enabled ? '余额充值' : '充值服务'}}</view>
  <view class="topup-options"><button wx:for="{{amounts}}" wx:key="*this" data-amount="{{item}}" bindtap="choose" disabled="{{busy || orderId}}" class="topup-option {{selected == item ? 'selected' : ''}}">¥{{item}}</button><button data-amount="custom" bindtap="choose" disabled="{{busy || orderId}}" class="topup-option {{selected == 'custom' ? 'selected' : ''}}">自定义</button></view>
- <view wx:if="{{selected == 'custom'}}" class="lx-feature"><input type="number" value="{{custom}}" bindinput="input" disabled="{{busy || orderId}}" placeholder="输入10至10000的整数金额" maxlength="5"/></view>
+ <view wx:if="{{selected == 'custom'}}" class="lx-feature"><input type="digit" value="{{custom}}" bindinput="input" disabled="{{busy || orderId}}" placeholder="输入金额，例如12.34" maxlength="8"/></view>
  <view class="lx-feature"><view class="lx-feature-note">{{message}}</view></view>
+ <button wx:if="{{!enabled}}" class="lx-button" bindtap="refreshAvailability" loading="{{loading}}" disabled="{{loading}}">重新检查充值服务</button>
  <button wx:if="{{enabled}}" class="lx-button" bindtap="pay" loading="{{busy}}" disabled="{{busy}}">{{orderId ? '确认充值结果' : '确认金额并充值'}}</button>
  <button class="lx-button secondary" bindtap="openAccount">查看账户</button>
  <button class="lx-button secondary" bindtap="openOrders">查看已有订单</button>

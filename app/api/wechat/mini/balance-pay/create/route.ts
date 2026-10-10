@@ -38,6 +38,12 @@ export async function POST(req: Request) {
       if (existing.user_id !== session.userId || existing.product_id !== body.productId) return NextResponse.json({ error: "请重新确认充值" }, { status: 409 });
       return NextResponse.json({ orderId: existing.id, paid: existing.status === "paid", pending: true });
     }
+    if (goods.skuId === "lx_balance_cent") {
+      const publication = await admin.from("wechat_mini_payment_events").select("id")
+        .eq("event_type", "virtual_goods_publication_verified").eq("out_trade_no", goods.skuId)
+        .eq("transaction_id", "production").eq("handled", true).maybeSingle();
+      if (publication.error || !publication.data) return NextResponse.json({ error: "小数金额充值商品正在等待微信审核发布，请稍后重试。" }, { status: 503 });
+    }
     const orderId = randomUUID();
     const snapshot: VirtualOrderSnapshot = { kind: "topup", productId: body.productId, orderId, quoteId: "", toolId: "balance-topup", openid: session.openid, ...goods, env: 0 };
     const insert = await admin.from("orders").insert({ id: orderId, user_id: session.userId, product_id: body.productId,

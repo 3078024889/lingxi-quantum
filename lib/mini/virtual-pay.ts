@@ -28,7 +28,7 @@ export function buildMiniVirtualPayment(input: {
   const quantity = input.quantity ?? 1;
   if (!/^[A-Za-z0-9_]{1,20}$/.test(input.skuId) || !Number.isSafeInteger(input.priceFen) ||
       input.priceFen <= 0 || input.priceFen > 1000000 || !Number.isSafeInteger(quantity) ||
-      quantity < 1 || quantity > 10000 || !/^[A-Za-z0-9][A-Za-z0-9_|*@-]{7,31}$/.test(input.outTradeNo)) {
+      quantity < 1 || quantity > 1000000 || input.priceFen * quantity > 1000000 || !/^[A-Za-z0-9][A-Za-z0-9_|*@-]{7,31}$/.test(input.outTradeNo)) {
     throw new Error("Invalid virtual payment parameters");
   }
 

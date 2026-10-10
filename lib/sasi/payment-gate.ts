@@ -1,4 +1,5 @@
 import "server-only";
+import { customTopupAmount } from "@/lib/balance-topups";
 import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 
@@ -7,7 +8,7 @@ const SASI_TOPUP_PRODUCTS = new Set([
   "sasi-balance-500","sasi-balance-1000","sasi-balance-2000","sasi-balance-10000",
 ]);
 
-const SASI_CUSTOM_TOPUP = /^sasi-balance-custom-(\d{1,5})$/;
+const SASI_CUSTOM_TOPUP = /^sasi-balance-custom-(.+)$/;
 
 export function sasiRmbBalanceV1Enabled() {
   return process.env.SASI_RMB_BALANCE_V1_ENABLED === "true";
@@ -17,8 +18,7 @@ export function sasiTopupProductEnabled(productId: string) {
   if (SASI_TOPUP_PRODUCTS.has(productId)) return true;
   const custom = SASI_CUSTOM_TOPUP.exec(productId);
   if (!custom) return false;
-  const amountRmb = Number(custom[1]);
-  return Number.isInteger(amountRmb) && amountRmb >= 10 && amountRmb <= 10000;
+  return customTopupAmount(custom[1]) !== null;
 }
 
 export function sasiPaidProductionEnabled() {

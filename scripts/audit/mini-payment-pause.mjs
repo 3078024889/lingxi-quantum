@@ -102,6 +102,7 @@ for (const [context, environment, search, userAgent, expected] of [
     require(name) {
       if (name === 'react') return { useState: () => [context, () => {}], useEffect() {} };
       if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx };
+      if (name === '@/lib/mini/payment-client') return { detectMiniPaymentContext: async () => expected, openMiniRecharge: async () => true };
       throw new Error(`Unexpected checkout boundary dependency: ${name}`);
     },
   });

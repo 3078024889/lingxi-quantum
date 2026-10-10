@@ -13,6 +13,7 @@ import styles from "@/components/money/BalanceDashboard.module.css";
 import {dashboardCopy} from "@/components/money/dashboard-copy";
 import {CREDIT_PACKS} from "@/lib/sasi/catalog";
 import {customTopupAmount} from "@/lib/balance-topups";
+import {detectMiniPaymentContext, openMiniRecharge} from "@/lib/mini/payment-client";
 import {usdBalanceProducts} from "@/lib/usd-products";
 
 type Currency="CNY"|"USD";
@@ -69,6 +70,14 @@ export default function SasiPricingCurrencyClient(){
  const[loading,setLoading]=useState(true);
  const[chosenId,setChosenId]=useState<string|null>(null);
  const[customAmount,setCustomAmount]=useState("");
+ const[miniRecharge,setMiniRecharge]=useState(false);
+ useEffect(()=>{let alive=true;void detectMiniPaymentContext().then(value=>{if(alive)setMiniRecharge(value)});return()=>{alive=false}},[]);
+ function rechargeClick(event:React.MouseEvent<HTMLAnchorElement>){
+  if(!miniRecharge)return;
+  event.preventDefault();
+  if(selected!=="CNY"){setError("小程序充值使用人民币，请先选择CNY。");return}
+  void openMiniRecharge().then(opened=>{if(!opened)setError("当前小程序版本没有充值页，请使用最新体验版或等待审核发布。")});
+ }
  const[tab,setTab]=useState<"overview"|"topup"|"withdrawals"|"records">("overview");
  const[isAdmin,setIsAdmin]=useState(false);
  useEffect(()=>{void fetch("/api/account/money-admin/access",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>setIsAdmin(d?.isAdmin===true)).catch(()=>{})},[]);
@@ -146,9 +155,9 @@ export default function SasiPricingCurrencyClient(){
     <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_260px]">
      <fieldset><legend className="sr-only">{c.topupHint}</legend><div className="grid grid-cols-3 gap-2 sm:gap-3">{packs.map(pack=><label key={pack.id} className={"relative cursor-pointer rounded-xl border px-2 py-3 text-center transition focus-within:ring-2 focus-within:ring-sky-500 "+(chosen.id===pack.id?"border-sky-500 bg-sky-500/10 text-[var(--lx-ink)]":"border-[var(--lx-line)] hover:bg-[var(--lx-soft)]")}>
       <input className="sr-only" type="radio" name="topup-amount" value={pack.id} checked={chosen.id===pack.id} onChange={()=>setChosenId(pack.id)}/><span className="text-base font-semibold sm:text-lg">{new Intl.NumberFormat(lang,{style:"currency",currency:selected,maximumFractionDigits:0}).format(pack.amount)}</span>
-     </label>)}<label className={"relative cursor-pointer rounded-xl border px-2 py-3 text-center focus-within:ring-2 focus-within:ring-sky-500 "+(isCustom?"border-sky-500 bg-sky-500/10":"border-[var(--lx-line)]")}><input className="sr-only" type="radio" name="topup-amount" value="custom" checked={isCustom} onChange={()=>setChosenId("custom")}/><span className="text-base font-semibold">{customLabel}</span></label></div>{isCustom&&<div className="mt-4"><label htmlFor="custom-topup-amount" className="mb-2 block text-sm">{customLabel} · {selected}</label><input id="custom-topup-amount" type="text" inputMode="numeric" autoComplete="off" value={customAmount} onChange={e=>setCustomAmount(e.target.value)} aria-describedby="custom-topup-range" aria-invalid={Boolean(customAmount)&&customValue===null} placeholder="10–10000" className="w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-4 py-3"/><p id="custom-topup-range" className="mt-2 text-xs text-[var(--lx-muted)]">{selected} 10–10000 · {lang==="zh"?"请输入整数金额":"Whole amounts only"}</p></div>}</fieldset>
+     </label>)}<label className={"relative cursor-pointer rounded-xl border px-2 py-3 text-center focus-within:ring-2 focus-within:ring-sky-500 "+(isCustom?"border-sky-500 bg-sky-500/10":"border-[var(--lx-line)]")}><input className="sr-only" type="radio" name="topup-amount" value="custom" checked={isCustom} onChange={()=>setChosenId("custom")}/><span className="text-base font-semibold">{customLabel}</span></label></div>{isCustom&&<div className="mt-4"><label htmlFor="custom-topup-amount" className="mb-2 block text-sm">{customLabel} · {selected}</label><input id="custom-topup-amount" type="text" inputMode="decimal" autoComplete="off" value={customAmount} onChange={e=>setCustomAmount(e.target.value)} aria-describedby="custom-topup-range" aria-invalid={Boolean(customAmount)&&customValue===null} placeholder="12.34" className="w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-4 py-3"/><p id="custom-topup-range" className="mt-2 text-xs text-[var(--lx-muted)]">{selected} · {lang==="zh"?"可填写小数，精确到分；单笔最高10000":"Up to two decimal places; maximum 10000 per payment"}</p></div>}</fieldset>
      <div className="flex flex-col justify-between rounded-2xl bg-[var(--lx-soft)] p-5"><div><p className="text-sm text-[var(--lx-muted)]">{c.topup}</p><strong className="mt-3 block text-3xl font-semibold">{money(selected,chosen.amount*100)}</strong><p className="mt-2 text-xs text-[var(--lx-muted)]">{selected}</p></div>
-      {isCustom&&customValue===null?<button disabled type="button" className="mt-6 rounded-xl bg-[var(--lx-ink)] px-4 py-3 text-sm text-[var(--lx-bg)] opacity-40">{customLabel}</button>:<Link data-testid="topup-checkout" href={selected==="CNY"?`/checkout?productId=${encodeURIComponent(chosen.id)}&redirect=/sasi/pricing&lang=${lang}`:`/checkout-usd?productId=${encodeURIComponent(chosen.id)}&lang=${lang}`} className="mt-6 block rounded-xl bg-[var(--lx-ink)] px-4 py-3 text-center text-sm font-semibold text-[var(--lx-bg)] transition hover:opacity-85">{c.topup} {money(selected,chosen.amount*100)} <span aria-hidden="true">→</span></Link>}
+      {isCustom&&customValue===null?<button disabled type="button" className="mt-6 rounded-xl bg-[var(--lx-ink)] px-4 py-3 text-sm text-[var(--lx-bg)] opacity-40">{customLabel}</button>:<Link data-testid="topup-checkout" onClick={rechargeClick} href={selected==="CNY"?`/checkout?productId=${encodeURIComponent(chosen.id)}&redirect=/sasi/pricing&lang=${lang}`:`/checkout-usd?productId=${encodeURIComponent(chosen.id)}&lang=${lang}`} className="mt-6 block rounded-xl bg-[var(--lx-ink)] px-4 py-3 text-center text-sm font-semibold text-[var(--lx-bg)] transition hover:opacity-85">{c.topup} {money(selected,chosen.amount*100)} <span aria-hidden="true">→</span></Link>}
      </div>
     </div>
    </section>

@@ -15,6 +15,7 @@ import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import {supportCopy} from "@/lib/support-ui-copy";
 import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import { detectMiniPaymentContext, openMiniRecharge } from "@/lib/mini/payment-client";
 
 type Theme = "light" | "dark";
 type K =
@@ -67,6 +68,13 @@ export default function Nav() {
   const [isMoneyAdmin,setIsMoneyAdmin]=useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [miniRecharge, setMiniRecharge] = useState(false);
+  useEffect(() => { let alive = true; void detectMiniPaymentContext().then(value => { if (alive) setMiniRecharge(value); }); return () => { alive = false; }; }, []);
+  function rechargeClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (!miniRecharge) return;
+    event.preventDefault();
+    void openMiniRecharge().then(opened => { if (!opened) window.alert("请使用最新小程序体验版，或等待新版本审核发布后再充值。"); });
+  }
 
   useEffect(() => {
     let stored:Theme="light";try{stored=(localStorage.getItem("lx-theme")||"light") as Theme}catch{}
@@ -210,7 +218,7 @@ export default function Nav() {
 
           <NotificationBell />
 
-          <Link href="/ai-wallet" className="lx11-primary">💎 {t("recharge")}</Link>
+          <Link href="/ai-wallet" onClick={rechargeClick} className="lx11-primary">💎 {t("recharge")}</Link>
 
           <button
             className="lx11-avatar lx11-account-trigger"
@@ -259,7 +267,7 @@ export default function Nav() {
         <div className="lx11-mobile-actions">
           <CurrencySelector compact />
           <NotificationBell />
-          <Link href="/ai-wallet">💎 {t("recharge")}</Link>
+          <Link href="/ai-wallet" onClick={rechargeClick}>💎 {t("recharge")}</Link>
           <button
             className="lx11-mobile-account"
             aria-label={mt.account}
