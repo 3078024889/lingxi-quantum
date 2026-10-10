@@ -1,11 +1,12 @@
 import "server-only";
 import{createAdminClient}from"@/lib/supabase/admin";
 import{toPublicRunEvent,type PublicRunEvent}from"./public-event-codec";
+import{publicDurableRunTask}from"./unified-task-view";
 
 export async function assertRunOwner(userId:string,runId:string){
  const admin=createAdminClient();
  const{data,error}=await admin.from("sasi_durable_runs")
-  .select("id,user_id,state,current_step,attempt,updated_at,output_json,error_code")
+  .select("id,user_id,task,state,current_step,attempt,created_at,updated_at,output_json,error_code")
   .eq("id",runId).eq("user_id",userId).maybeSingle();
  if(error||!data)return null;
  return data as Record<string,unknown>;
@@ -41,7 +42,7 @@ async function latestPublicRunEvents(runId:string,limit=40):Promise<PublicRunEve
 
 export async function runSnapshot(userId:string,runId:string){
  const run=await assertRunOwner(userId,runId);
- if(!run)return null;
+ if(!run||typeof run.id!=="string"||!run.id.trim())return null;
  const events=await latestPublicRunEvents(runId,40);
  const lastEventId=events.length?Math.max(...events.map(e=>e.id)):0;
  return {
@@ -52,6 +53,7 @@ export async function runSnapshot(userId:string,runId:string){
   updatedAt:String(run.updated_at||""),
   hasOutput:run.output_json!=null,
   lastEventId,
-  events
+  events,
+  task:publicDurableRunTask({...run,id:run.id})
  };
 }

@@ -14,7 +14,11 @@ export async function GET() {
   const result = await createAdminClient().from("wechat_mini_payment_events").select("out_trade_no,payload")
     .eq("event_type", "virtual_goods_upload_result").eq("handled", true);
   if (result.error) return NextResponse.json({ error: "道具状态暂不可用" }, { status: 503 });
-  return NextResponse.json({ goods, completed: (result.data ?? []).map(row => row.out_trade_no) }, { headers: { "Cache-Control": "private, no-store" } });
+  const publications = await createAdminClient().from("wechat_mini_payment_events").select("out_trade_no,payload")
+    .eq("event_type", "virtual_goods_publication_verified").eq("handled", true);
+  if (publications.error) return NextResponse.json({ error: "发布状态暂不可用" }, { status: 503 });
+  return NextResponse.json({ goods, completed: (result.data ?? []).map(row => row.out_trade_no),
+    published: (publications.data ?? []).map(row => row.out_trade_no) }, { headers: { "Cache-Control": "private, no-store" } });
 }
 export async function POST(req: NextRequest) {
   if (!isSameOriginMutation(req)) return NextResponse.json({ error: "INVALID_REQUEST_ORIGIN" }, { status: 403 });

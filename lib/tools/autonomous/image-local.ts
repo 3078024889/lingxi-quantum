@@ -1,5 +1,7 @@
 
 export type NormalizedBox={x:number;y:number;w:number;h:number};
+export type NormalizedPoint={x:number;y:number};
+export type NormalizedStroke={points:NormalizedPoint[];radius:number};
 
 async function bitmap(file:File){return await createImageBitmap(file)}
 function blobOf(c:HTMLCanvasElement,type="image/png",quality=.94){
@@ -63,5 +65,87 @@ export async function localInpaint(file:File,box:NormalizedBox){
    d[i+3]=255;
  }
  ctx.putImageData(im,0,0);
+ return await blobOf(c,"image/png");
+}
+
+
+function paintMaskCircle(mask:Uint8Array,w:number,h:number,cx:number,cy:number,radius:number){
+ const x0=Math.max(0,Math.floor(cx-radius)),x1=Math.min(w-1,Math.ceil(cx+radius));
+ const y0=Math.max(0,Math.floor(cy-radius)),y1=Math.min(h-1,Math.ceil(cy+radius)),r2=radius*radius;
+ for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if((x-cx)*(x-cx)+(y-cy)*(y-cy)<=r2)mask[y*w+x]=1;
+}
+function normalizedStrokeMask(strokes:NormalizedStroke[],w:number,h:number){
+ const mask=new Uint8Array(w*h),scale=Math.min(w,h);
+ for(const stroke of strokes){
+  if(!stroke.points.length)continue;
+  const radius=Math.max(1,stroke.radius*scale);
+  for(let i=0;i<stroke.points.length;i++){
+   const p=stroke.points[i],x=p.x*w,y=p.y*h;
+   paintMaskCircle(mask,w,h,x,y,radius);
+   if(i){
+    const q=stroke.points[i-1],qx=q.x*w,qy=q.y*h,dx=x-qx,dy=y-qy;
+    const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/(Math.max(1,radius*.6))));
+    for(let n=1;n<steps;n++){const t=n/steps;paintMaskCircle(mask,w,h,qx+dx*t,qy+dy*t,radius)}
+   }
+  }
+ }
+ // Expand one pixel so anti-aliased watermark edges are not left as a halo.
+ const expanded=mask.slice();
+ for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++)if(mask[y*w+x]){
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)expanded[(y+dy)*w+x+dx]=1;
+ }
+ return expanded;
+}
+
+export function diffuseMaskedPixels(input:Uint8ClampedArray,w:number,h:number,mask:Uint8Array){
+ if(w<1||h<1||input.length!==w*h*4||mask.length!==w*h)throw new Error("INPAINT_INPUT_INVALID");
+ const d=new Uint8ClampedArray(input),known=new Uint8Array(mask.length),queued=new Uint8Array(mask.length);
+ let remaining=0;
+ for(let i=0;i<mask.length;i++){known[i]=mask[i]?0:1;if(mask[i])remaining++}
+ if(!remaining)throw new Error("SELECT_AREA_FIRST");
+ if(remaining>w*h*.55)throw new Error("SELECTION_TOO_LARGE");
+ const neighbors=[[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]] as const;
+ const hasKnownNeighbor=(i:number)=>{
+  const x=i%w,y=(i-x)/w;
+  for(const [dx,dy]of neighbors){const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<w&&ny<h&&known[ny*w+nx])return true}
+  return false;
+ };
+ let frontier:number[]=[];
+ for(let i=0;i<mask.length;i++)if(mask[i]&&hasKnownNeighbor(i)){frontier.push(i);queued[i]=1}
+ while(frontier.length&&remaining>0){
+  const ready:Array<{i:number;r:number;g:number;b:number;a:number}>=[];
+  for(const i of frontier){
+   if(known[i])continue;
+   const x=i%w,y=(i-x)/w;let weight=0,r=0,g=0,b=0,a=0;
+   for(const [dx,dy]of neighbors){
+    const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=w||ny>=h)continue;
+    const ni=ny*w+nx;if(!known[ni])continue;
+    const k=ni*4,wt=(dx!==0&&dy!==0)?0.72:1;weight+=wt;r+=d[k]*wt;g+=d[k+1]*wt;b+=d[k+2]*wt;a+=d[k+3]*wt;
+   }
+   if(weight)ready.push({i,r:r/weight,g:g/weight,b:b/weight,a:a/weight});
+  }
+  if(!ready.length)break;
+  const next:number[]=[];
+  for(const v of ready){const k=v.i*4;d[k]=Math.round(v.r);d[k+1]=Math.round(v.g);d[k+2]=Math.round(v.b);d[k+3]=Math.round(v.a);known[v.i]=1;remaining--}
+  for(const v of ready){
+   const x=v.i%w,y=(v.i-x)/w;
+   for(const [dx,dy]of neighbors){
+    const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=w||ny>=h)continue;
+    const ni=ny*w+nx;if(mask[ni]&&!known[ni]&&!queued[ni]){queued[ni]=1;next.push(ni)}
+   }
+  }
+  frontier=next;
+ }
+ if(remaining)throw new Error("INPAINT_INCOMPLETE");
+ return d;
+}
+
+export async function localInpaintMask(file:File,strokes:NormalizedStroke[]){
+ if(!strokes.some(s=>s.points.length))throw new Error("SELECT_AREA_FIRST");
+ const img=await bitmap(file),c=document.createElement("canvas");c.width=img.width;c.height=img.height;
+ const ctx=c.getContext("2d",{willReadFrequently:true})!;ctx.drawImage(img,0,0);img.close?.();
+ const image=ctx.getImageData(0,0,c.width,c.height),mask=normalizedStrokeMask(strokes,c.width,c.height);
+ image.data.set(diffuseMaskedPixels(image.data,c.width,c.height,mask));
+ ctx.putImageData(image,0,0);
  return await blobOf(c,"image/png");
 }

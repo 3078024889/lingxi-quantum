@@ -56,3 +56,19 @@ test("photo border shadows are discarded while central handwriting is kept",()=>
  expect(result.height).toBeLessThan(70);
  expect(Array.from(result.pixels).filter((_,i)=>i%4===3&&result.pixels[i]>160).length).toBeGreaterThan(50);
 });
+
+test("solid thick ink retains an opaque center instead of hollow outlines",()=>{
+ const w=360,h=180;
+ const source=paper(w,h,d=>{
+  for(let y=74;y<106;y++)for(let x=85;x<275;x++){
+   const k=(y*w+x)*4;d[k]=19;d[k+1]=23;d[k+2]=41;
+  }
+ });
+ const ink=extractHandwritingPixels(source,w,h,65);
+ let center=0;
+ for(let y=0;y<ink.height;y++)for(let x=0;x<ink.width;x++){
+  if(ink.pixels[(y*ink.width+x)*4+3]>220)center++;
+ }
+ expect(center).toBeGreaterThan(1500);
+ expect(ink.width).toBeLessThan(w);
+});

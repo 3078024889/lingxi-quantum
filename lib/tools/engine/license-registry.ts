@@ -5,6 +5,7 @@ export const LICENSE_REGISTRY:Record<string,LicenseProfile>={
  "browser-native":{...trace,codeLicense:"Web Platform",commercialUse:"allowed",approvedRuntime:["browser"]},
  "mit":{...trace,codeLicense:"MIT",spdx:["MIT"],commercialUse:"allowed",approvedRuntime:["browser","server"]},
  "apache2":{...trace,codeLicense:"Apache-2.0",spdx:["Apache-2.0"],commercialUse:"allowed",approvedRuntime:["browser","server"]},
+ "qpdf-run-bundle":{...trace,codeLicense:"MIT wrapper + Apache-2.0 qpdf",spdx:["MIT","Apache-2.0"],commercialUse:"allowed",attributionRequired:true,redistributionNotes:"Keep qpdf and bundled runtime notices with the browser WASM distribution.",approvedRuntime:["browser"]},
  "apache2-or-mpl2":{...trace,codeLicense:"Apache-2.0 OR MPL-2.0",spdx:["Apache-2.0","MPL-2.0"],commercialUse:"allowed",approvedRuntime:["browser","server"]},
  "realesrgan-review":{...trace,codeLicense:"BSD-3-Clause",modelLicense:"REVIEW_PER_MODEL_ARTIFACT",datasetLicense:"REVIEW_TRAINING_DATA_PROVENANCE",commercialUse:"review",approvedRuntime:["server-reviewed"]},
  "kokoro-review":{...trace,codeLicense:"Apache-2.0",modelLicense:"Apache-2.0",commercialUse:"review",redistributionNotes:"Kokoro code/weights are permissive, but production speech frontend/phonemizer dependencies such as espeak-ng must be reviewed separately.",approvedRuntime:["server-reviewed"]},

@@ -1,6 +1,6 @@
 import "server-only";
 import os from"node:os";
-import{rankExecutionLanes}from"@/lib/tasks/smart-execution";
+import{chooseUnifiedExecution}from"@/lib/tasks/unified-execution-policy";
 
 export type HeavyWorkKind="ocr"|"media"|"vision"|"pdf";
 export type RuntimeBudget={
@@ -40,8 +40,8 @@ export function acquireHeavySlot(kind:HeavyWorkKind="media"){
 export function chooseLane(inputBytes:number,kind:"light"|HeavyWorkKind){
  const b=currentBudget();
  const needed=kind==="light"?0:worksetFor(kind);
- const ranked=rankExecutionLanes({browserEligible:kind==="light",deterministic:true,needsNetwork:false,serverAvailable:kind==="light"||(b.usableMemoryMB>=needed&&b.maxConcurrentHeavy>0),externalAllowed:false,inputBytes,maxInputBytes:kind==="light"?Number.MAX_SAFE_INTEGER:512*1024*1024});
- const first=ranked[0];
+ const placement=chooseUnifiedExecution({browserEligible:kind==="light",deterministic:true,needsNetwork:false,serverAvailable:kind==="light"||(b.usableMemoryMB>=needed&&b.maxConcurrentHeavy>0),externalAllowed:false,inputBytes,maxInputBytes:kind==="light"?Number.MAX_SAFE_INTEGER:512*1024*1024});
+ const first=placement.primary;
  if(first==="reject")return{lane:"reject" as const,budget:b,reason:"INPUT_TOO_LARGE"};
  if(first==="browser")return{lane:"local" as const,budget:b};
  if(first==="self-hosted")return{lane:"self-hosted" as const,budget:b};

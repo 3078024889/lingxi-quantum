@@ -1,7 +1,8 @@
 import { miniVirtualPayConfigured } from "@/lib/mini/virtual-pay";
 import { customTopupAmount } from "@/lib/balance-topups";
 
-// Enable only after platform restrictions are resolved and real-device acceptance passes.
+// Enable after virtual-payment goods publication and real-device acceptance.
+// An ordinary Android payment restriction is not proof that virtual payment is blocked.
 export function miniVirtualToolsEnabled() {
   return process.env.WECHAT_MINI_VPAY_TOOLS_ENABLED === "true" && miniVirtualPayConfigured();
 }

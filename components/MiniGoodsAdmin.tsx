@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 type Good = { skuId: string; name: string; unitPriceFen: number };
 export default function MiniGoodsAdmin() {
   const [goods, setGoods] = useState<Good[]>([]), [completed, setCompleted] = useState<string[]>([]);
+  const [published, setPublished] = useState<string[]>([]);
   const [busy, setBusy] = useState(false), [message, setMessage] = useState("正在读取道具清单…");
   const stop = useRef(false);
   useEffect(() => {
@@ -10,7 +11,7 @@ export default function MiniGoodsAdmin() {
     void fetch("/api/account/mini-goods", { cache: "no-store" }).then(async r => {
       if (!r.ok) throw new Error("请用管理员账户登录后查看。");
       const result = await r.json();
-      if (active) { setGoods(result.goods); setCompleted(result.completed); setMessage("道具创建后仍需单独审核、验收和发布。"); }
+      if (active) { setGoods(result.goods); setCompleted(result.completed); setPublished(result.published ?? []); setMessage("发布状态来自管理员在微信后台的核验记录。商品发布后仍需完成真机支付、到账和退款验收，再开放收款。"); }
     }).catch(e => { if (active) setMessage(e.message); });
     return () => { active = false; stop.current = true; };
   }, []);
@@ -39,9 +40,21 @@ export default function MiniGoodsAdmin() {
         if (!result.done) throw new Error("微信仍在处理，请稍后继续。");
         setCompleted(current => [...new Set([...current, item.skuId])]);
       }
-      setMessage(stop.current ? "已停止，已创建道具会保留。" : "清单中的道具已创建。尚未发布，实际收款仍关闭。");
+      setMessage(stop.current ? "已停止，已创建道具会保留。" : "清单中的道具已创建。发布状态另行核验，创建不会自动开放收款。");
     } catch (e) { setMessage(e instanceof Error ? e.message : "配置未完成。"); }
     finally { setBusy(false); }
   }
-  return <main className="mx-auto max-w-6xl px-6 py-24"><div className="flex flex-wrap items-center justify-between gap-4"><div><h1 className="text-3xl font-semibold">小程序商品道具</h1><p className="mt-3 text-sm text-[var(--lx-muted)]">充值：10、88、666、888 和自定义。按既有工具价格计费，创建不会自动开启收款。</p></div><button disabled={busy || !goods.length} onClick={() => void createAll()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-[var(--lx-bg)] disabled:opacity-40">{busy ? "正在配置" : "创建剩余道具"}</button>{busy && <button onClick={() => { stop.current = true; }} className="rounded-xl border px-4 py-3">停止</button>}</div><p role="status" className="my-6 rounded-xl bg-[var(--lx-soft)] p-4">{message}</p><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b"><th className="p-3">商品</th><th className="p-3">道具编号</th><th className="p-3">计费单价</th><th className="p-3">创建状态</th></tr></thead><tbody>{goods.map(item => <tr key={item.skuId} className="border-b border-[var(--lx-line)]"><td className="p-3">{item.name}</td><td className="p-3">{item.skuId}</td><td className="p-3">¥{(item.unitPriceFen / 100).toFixed(2)}</td><td className="p-3">{completed.includes(item.skuId) ? "已创建，待发布" : "待创建"}</td></tr>)}</tbody></table></div></main>;
+  const remaining = goods.filter(item => !completed.includes(item.skuId)).length;
+  return <main className="mx-auto max-w-6xl px-6 py-24">
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div><h1 className="text-3xl font-semibold">小程序商品道具</h1><p className="mt-3 text-sm text-[var(--lx-muted)]">充值：10、88、666、888 和自定义。创建、发布与开放收款分别核验。</p></div>
+      <button disabled={busy || !remaining} onClick={() => void createAll()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-[var(--lx-bg)] disabled:opacity-40">{busy ? "正在配置" : goods.length && !remaining ? "道具已全部创建" : "创建剩余道具"}</button>
+      {busy && <button onClick={() => { stop.current = true; }} className="rounded-xl border px-4 py-3">停止</button>}
+    </div>
+    <p role="status" className="my-6 rounded-xl bg-[var(--lx-soft)] p-4">{message}</p>
+    <p className="mb-5 text-sm text-[var(--lx-muted)]">下表金额为微信道具的计费单位，实际交易按数量和确认报价结算。自定义充值按 1 元 × 所选整数金额计算。商品已发布不表示用户现在可以付款。</p>
+    <div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b"><th scope="col" className="p-3">商品</th><th scope="col" className="p-3">道具编号</th><th scope="col" className="p-3">计费单位</th><th scope="col" className="p-3">创建状态</th><th scope="col" className="p-3">微信发布核验</th></tr></thead>
+      <tbody>{goods.map(item => <tr key={item.skuId} className="border-b border-[var(--lx-line)]"><td className="p-3">{item.name}</td><td className="p-3">{item.skuId}</td><td className="p-3">¥{(item.unitPriceFen / 100).toFixed(2)}</td><td className="p-3">{completed.includes(item.skuId) ? "已创建" : "待创建"}</td><td className="p-3">{published.includes(item.skuId) ? "已核验发布" : "尚未核验"}</td></tr>)}</tbody>
+    </table></div>
+  </main>;
 }

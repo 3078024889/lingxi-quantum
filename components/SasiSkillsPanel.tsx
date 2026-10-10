@@ -28,6 +28,10 @@ export default function SasiSkillsPanel({
   const[mine,setMine]=useState<SkillItem[]>([]);
   const[selected,setSelected]=useState<{source:"platform"|"user";id:string;title:string}|null>(null);
   const[uploading,setUploading]=useState(false);
+  const[creating,setCreating]=useState(false);
+  const[newName,setNewName]=useState("");
+  const[newDescription,setNewDescription]=useState("");
+  const[newInstructions,setNewInstructions]=useState("");
 
   async function load(){
     try{
@@ -83,6 +87,21 @@ export default function SasiSkillsPanel({
     }finally{
       setUploading(false);
     }
+  }
+
+  async function createSkill(){
+    const name=newName.trim(),instructions=newInstructions.trim();
+    if(!name||!instructions){setNotice(copy(lang,"先写上方法名称和具体步骤。","Add a name and the working steps first."));return}
+    setCreating(true);
+    try{
+      const response=await fetch("/api/sasi/skills",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,description:newDescription.trim(),instructions})});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||"CREATE_FAILED");
+      setNewName("");setNewDescription("");setNewInstructions("");
+      await load();choose("user",String(data.skill.id),String(data.skill.name));
+      setNotice(copy(lang,"这个方法已经保存，下次可以直接复用。","This method is saved and ready to reuse."));
+    }catch{setNotice(copy(lang,"这个方法暂时没有保存下来，请稍后再试。","Could not save this method. Please try again."))}
+    finally{setCreating(false)}
   }
 
   async function remove(id:string){
@@ -143,8 +162,18 @@ export default function SasiSkillsPanel({
     <section className="mt-10">
       <h2 className="text-xl font-semibold">{copy(lang,"我的创作方法","My Skills")}</h2>
       <p className="mt-2 text-sm opacity-60">{copy(lang,"把你自己的创作方法带进来。上传后只属于你的账户。","Bring in your own creative method. Uploaded Skills stay with your account.")}</p>
-      <label className="mt-5 inline-flex cursor-pointer items-center rounded-xl border border-current/15 px-5 py-3 text-sm">
-        {uploading?copy(lang,"正在保存…","Saving…"):copy(lang,"＋ 上传自己的创作方法","＋ Upload my Skill")}
+      <div className={`mt-5 rounded-2xl border p-5 ${panel}`}>
+        <b>{copy(lang,"把一个好用的方法保存下来","Save a reusable method")}</b>
+        <p className="mt-2 text-sm opacity-60">{copy(lang,"写清楚什么时候用、怎么做、什么结果才算完成。以后可以直接选它。","Describe when to use it, how to do it, and what a finished result looks like.")}</p>
+        <div className="mt-4 grid gap-3">
+          <input value={newName} onChange={e=>setNewName(e.target.value)} maxLength={120} placeholder={copy(lang,"方法名称","Method name")} className="rounded-xl border border-current/15 bg-transparent px-4 py-3 text-sm"/>
+          <input value={newDescription} onChange={e=>setNewDescription(e.target.value)} maxLength={180} placeholder={copy(lang,"一句话说明（可选）","One-line description (optional)")} className="rounded-xl border border-current/15 bg-transparent px-4 py-3 text-sm"/>
+          <textarea value={newInstructions} onChange={e=>setNewInstructions(e.target.value)} maxLength={20000} rows={6} placeholder={copy(lang,"具体步骤、检查点和完成标准","Steps, checkpoints and completion criteria")} className="rounded-xl border border-current/15 bg-transparent px-4 py-3 text-sm leading-6"/>
+          <button type="button" disabled={creating||!newName.trim()||!newInstructions.trim()} onClick={()=>void createSkill()} className="w-fit rounded-xl border border-current/15 px-5 py-3 text-sm disabled:opacity-40">{creating?copy(lang,"正在保存…","Saving…"):copy(lang,"保存这个方法","Save this method")}</button>
+        </div>
+      </div>
+      <label className="mt-4 inline-flex cursor-pointer items-center rounded-xl border border-current/15 px-5 py-3 text-sm">
+        {uploading?copy(lang,"正在保存…","Saving…"):copy(lang,"＋ 或上传已有 Skill 文件","＋ Or upload a Skill file")}
         <input type="file" className="hidden" accept=".md,.txt,.json,.yaml,.yml" disabled={uploading} onChange={event=>void upload(event)}/>
       </label>
 

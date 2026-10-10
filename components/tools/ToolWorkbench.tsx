@@ -20,10 +20,11 @@ import { convertImage, compressImageToTarget, resizeImage, stripImageMetadata } 
 import { detectFileType, extensionMismatch } from "@/lib/tools/shared/magic-bytes";
 import { md5Hex, sha256Hex, buffersEqual } from "@/lib/tools/shared/hash";
 import { delimitedToXlsx, docxToText, xlsxToCsvFiles } from "@/lib/tools/shared/office-convert";
+import {pdfToXlsx} from "@/lib/tools/shared/pdf-to-xlsx";
 import { heicToJpgFiles, imagesToPdf, mergePdfFiles, pdfToJpgFiles, readQrCode, splitPdfFile } from "@/lib/tools/shared/practical-doc-tools";
 import { rebuildCompressedPdf, type PdfCompressionPreset } from "@/lib/tools/shared/pdf-rebuild-compress";
 import { pptxToText } from "@/lib/tools/shared/pptx-text";
-import {consumeToolHandoff} from "@/lib/tools/workspace/handoff";
+import {consumeToolHandoff,createToolHandoff} from "@/lib/tools/workspace/handoff";
 
 type Props = { tool: ToolMeta };
 
@@ -60,6 +61,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const [keepAspect, setKeepAspect] = useState(true);
   const [customKb, setCustomKb] = useState(100);
   const [pdfCompression, setPdfCompression] = useState<PdfCompressionPreset>("balanced");
+  const [recoveryBusy,setRecoveryBusy]=useState(false);
 
   // HANDOFF_APPLIED: one-shot local browser handoff from a previous tool.
   useEffect(()=>{
@@ -110,12 +112,11 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         pdfCompression,
       });
       setResult(out);
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : String(e);
+    } catch {
       setResult({
         ok: false,
-        reasonZh: `处理时出错：${msg}`,
-        reasonEn: `Processing error: ${msg}`,
+        reasonZh: "这次文件处理没有完成。",
+        reasonEn: "The file could not be processed this time.",
         hintZh: workbenchCopy(lang,"genericFileHint"),
         hintEn: workbenchCopy("en","genericFileHint"),
       });
@@ -233,7 +234,17 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         <ResultPanel sourceSlug={tool.slug} files={result.files} messageZh={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageZh} messageEn={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageEn} details={tool.slug==="heic-to-jpg"?{files:result.files?.length||0}:result.details} />
       )}
       {result?.ok === false && (
-        <ErrorExplain reasonZh={tool.slug==="heic-to-jpg"?plainText(lang,"fileError"):result.reasonZh} reasonEn={tool.slug==="heic-to-jpg"?plainText(lang,"fileError"):result.reasonEn} hintZh={tool.slug==="heic-to-jpg"?"":result.hintZh} hintEn={tool.slug==="heic-to-jpg"?"":result.hintEn} />
+        <>
+          <ErrorExplain reasonZh={tool.slug==="heic-to-jpg"?plainText(lang,"fileError"):result.reasonZh} reasonEn={tool.slug==="heic-to-jpg"?plainText(lang,"fileError"):result.reasonEn} hintZh={tool.slug==="heic-to-jpg"?"":result.hintZh} hintEn={tool.slug==="heic-to-jpg"?"":result.hintEn} />
+          {tool.slug==="pdf-to-xlsx"&&result.reasonEn?.includes("no extractable text table")&&files[0]?<button type="button" disabled={recoveryBusy} onClick={async()=>{
+            setRecoveryBusy(true);
+            try{
+              const source=files[0];
+              const token=await createToolHandoff(tool.slug,[{name:source.name,blob:source,mime:source.type||"application/pdf",size:source.size}]);
+              window.location.href=`/tools/pdf-ocr?handoff=${encodeURIComponent(token)}`;
+            }finally{setRecoveryBusy(false)}
+          }} className="mt-3 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm text-[var(--lx-ink)] disabled:opacity-50">{recoveryBusy?t("正在继续…","Continuing…"):t("继续做 PDF OCR","Continue with PDF OCR")}</button>:null}
+        </>
       )}
     </div>
   );
@@ -364,6 +375,36 @@ async function runFileTool(
       messageEn:`Exported ${outputs.length} JPG image(s).`,
       details:{pages:outputs.length},
     };
+  }
+
+  if (tool.slug === "pdf-to-xlsx") {
+    try{
+      const out=await pdfToXlsx(file);
+      return {
+        ok:true,
+        files:[{name:out.name,blob:out.blob,mime:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",size:out.blob.size}],
+        messageZh:`已生成 Excel：${out.pages} 个工作表，共提取 ${out.rows} 行。`,
+        messageEn:`Excel created: ${out.pages} worksheet(s), ${out.rows} extracted row(s).`,
+        details:{pages:out.pages,rows:out.rows,columns:out.columns,textItems:out.tokens,structureConfidence:Number(out.confidence.toFixed(2))},
+      };
+    }catch(error){
+      if(error instanceof Error&&error.message==="PDF_TABLE_TEXT_NOT_FOUND"){
+        return {
+          ok:false,
+          reasonZh:"这个 PDF 没有可直接提取的文字表格，可能是扫描件或图片型 PDF。",
+          reasonEn:"This PDF has no extractable text table. It may be a scanned or image-based PDF.",
+          hintZh:"请先使用 PDF OCR，再把识别后的表格导出为 Excel。",
+          hintEn:"Run PDF OCR first, then export the recognized table to Excel.",
+        };
+      }
+      return {
+        ok:false,
+        reasonZh:"暂时无法从这个 PDF 生成 Excel。",
+        reasonEn:"Excel could not be created from this PDF.",
+        hintZh:"请确认文件可以正常打开，且表格不是加密、损坏或完全由图片组成。",
+        hintEn:"Check that the PDF opens normally and is not encrypted, damaged, or entirely image-based.",
+      };
+    }
   }
 
   if (tool.slug === "xlsx-to-csv") {

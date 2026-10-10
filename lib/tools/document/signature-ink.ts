@@ -20,6 +20,7 @@ export function extractHandwritingPixels(source:Uint8ClampedArray,width:number,h
   }
  }
  const radius=Math.max(7,Math.round(Math.min(width,height)*.035));
+ const broadRadius=Math.max(radius+2,Math.round(Math.min(width,height)*.14));
  // Sensitivity governs the contrast required to retain ink; never pretend this is OCR.
  const threshold=19-strength*.16;
  const feather=13;
@@ -30,7 +31,11 @@ export function extractHandwritingPixels(source:Uint8ClampedArray,width:number,h
   if(source[k+3]<12)continue;
   const left=Math.max(0,x-radius),right=Math.min(width,x+radius+1),top=Math.max(0,y-radius),bottom=Math.min(height,y+radius+1);
   const avg=(integral[bottom*stride+right]-integral[top*stride+right]-integral[bottom*stride+left]+integral[top*stride+left])/((right-left)*(bottom-top));
-  const contrast=avg-lum[idx];
+  // A second broad illumination window retains the filled center of thick pen marks:
+  // relying only on a small local average can make solid handwriting look hollow.
+  const L=Math.max(0,x-broadRadius),R=Math.min(width,x+broadRadius+1),T=Math.max(0,y-broadRadius),B=Math.min(height,y+broadRadius+1);
+  const broad=(integral[B*stride+R]-integral[T*stride+R]-integral[B*stride+L]+integral[T*stride+L])/((R-L)*(B-T));
+  const contrast=Math.max(avg,broad)-lum[idx];
   const alpha=Math.round(255*Math.max(0,Math.min(1,(contrast-threshold)/feather)))*(source[k+3]/255);
   if(alpha>=18){mask[idx]=alpha;counted++;minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y)}
  }

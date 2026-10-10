@@ -86,7 +86,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"avif-to-jpg",zh:"AVIF 转 JPG",en:"AVIF to JPG",mode:"local" as const},
   {slug:"base64-encode-decode",zh:"Base64 编码解码",en:"Base64 Encode & Decode",mode:"local" as const},
   {slug:"batch-image",zh:"批量图片处理",en:"Batch Image Tools",mode:"local" as const},
-  {slug:"batch-image-watermark-remover",zh:"批量图片去水印",en:"Batch Watermark Cleanup",mode:"online" as const},
+  {slug:"batch-image-watermark-remover",zh:"批量图片去水印",en:"Batch Watermark Cleanup",mode:"local" as const},
   {slug:"burn-after-read",zh:"阅后即焚",en:"Burn After Reading",mode:"online" as const},
   {slug:"compress-image",zh:"图片压缩",en:"Compress Image",mode:"local" as const},
   {slug:"compress-image-to-100kb",zh:"图片精确压缩到 100KB",en:"Compress Image to 100KB",mode:"local" as const},
@@ -108,7 +108,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"image-to-pdf",zh:"图片转 PDF",en:"Images to PDF",mode:"local" as const},
   {slug:"image-to-pdf-pro",zh:"图片转 PDF",en:"Images to PDF Pro",mode:"local" as const},
   {slug:"image-translator",zh:"图片翻译",en:"Image Translator",mode:"online" as const},
-  {slug:"image-watermark-remover",zh:"图片去水印",en:"Image Watermark Cleanup",mode:"online" as const},
+  {slug:"image-watermark-remover",zh:"图片去水印",en:"Image Watermark Cleanup",mode:"local" as const},
   {slug:"jpg-to-png",zh:"JPG 转 PNG",en:"JPG to PNG",mode:"local" as const},
   {slug:"json-formatter",zh:"JSON 格式化 / 修复",en:"JSON Format / Repair",mode:"local" as const},
   {slug:"long-image",zh:"长图拼接",en:"Long Image Stitcher",mode:"local" as const},
@@ -122,6 +122,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"pdf-pages",zh:"PDF 页面整理",en:"PDF Page Organizer",mode:"local" as const},
   {slug:"pdf-redact",zh:"PDF 永久脱敏",en:"PDF Redaction",mode:"local" as const},
   {slug:"handwriting-ocr",zh:"手写文字识别",en:"Handwriting OCR",mode:"online" as const},
+  {slug:"pdf-to-xlsx",zh:"PDF 转 Excel",en:"PDF to Excel",mode:"local" as const},
   {slug:"pdf-to-word",zh:"PDF 转 Word",en:"PDF to Word",mode:"local" as const},
   {slug:"pdf-watermark",zh:"PDF 加水印",en:"Watermark PDF",mode:"local" as const},
   {slug:"pdf-page-numbers",zh:"PDF 加页码",en:"Add PDF Page Numbers",mode:"local" as const},
@@ -250,6 +251,7 @@ const HOT_TOOL_TERMS:Record<string,string[]>= {
   "temp-mail":["temporary email","10 minute mail","disposable email"],
   "ocr":["image OCR","image to text"],
   "pdf-ocr":["PDF OCR","scanned PDF to text"],
+  "pdf-to-xlsx":["PDF to Excel","PDF table to Excel","convert PDF to XLSX"],
   "food-calorie":["calorie calculator","food nutrition calculator"],
 };
 

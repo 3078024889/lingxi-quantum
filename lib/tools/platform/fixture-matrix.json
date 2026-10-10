@@ -65,7 +65,8 @@
         "pdf-to-jpg",
         "compress-pdf",
         "pdf-compress",
-        "pdf-merge-split"
+        "pdf-merge-split",
+        "pdf-to-xlsx"
       ]
     },
     {
@@ -481,7 +482,11 @@
     },
     "pdf-bookmarks": {
       "kind": "local-contract"
+    },
+    "pdf-to-xlsx": {
+      "kind": "fixture",
+      "fixtureGroup": "pdf-basic"
     }
   },
-  "classificationCount": 118
+  "classificationCount": 119
 }

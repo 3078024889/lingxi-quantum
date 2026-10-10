@@ -5,6 +5,7 @@ import { CREDIT_PACKS } from "@/lib/sasi/catalog";
 import { sasiRmbBalanceV1Enabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import { sasiPublicReadiness } from "@/lib/sasi/readiness";
 import { publicSasiJob, type SasiJobRow } from "@/lib/sasi/production";
+import { readUnifiedBalanceSnapshot } from "@/lib/money/unified-balance";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,20 +17,25 @@ export async function GET() {
   const admin = createAdminClient();
   const rmbBalanceV1 = sasiRmbBalanceV1Enabled();
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
-  const [wallet, ledger, jobs, deliveries] = await Promise.all([
+  const [balancesResult, wallet, ledger, jobs, deliveries] = await Promise.all([
+    readUnifiedBalanceSnapshot(admin,user.id).then(data=>({data,error:null as Error|null})).catch(error=>({data:null,error:error as Error})),
     admin.from("sasi_wallets").select("available_points,reserved_points,updated_at").eq("user_id", user.id).maybeSingle(),
     admin.from("sasi_credit_ledger").select("id,kind,delta_available,delta_reserved,available_after,reserved_after,reference_id,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
     admin.from("sasi_jobs").select("*").eq("user_id", user.id).gte("updated_at", thirtyDaysAgo).order("updated_at", { ascending: false }).limit(1000),
     admin.from("sasi_deliveries").select("id,project_id,job_id,media_kind,mime_type,byte_size,ai_generated,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(30),
   ]);
-  const firstError = wallet.error ?? ledger.error ?? jobs.error ?? deliveries.error;
-  if (firstError && !new Set(["PGRST116"]).has(firstError.code)) {
-    console.error("[sasi account] read failed", firstError.code);
+  const firstError = balancesResult.error ?? wallet.error ?? ledger.error ?? jobs.error ?? deliveries.error;
+  const errorCode = firstError && "code" in firstError && typeof firstError.code === "string" ? firstError.code : "UNKNOWN";
+  if (firstError && errorCode !== "PGRST116") {
+    console.error("[sasi account] read failed", errorCode);
     return NextResponse.json({ error: "PRODUCTION_ACCOUNT_UNAVAILABLE" }, { status: 503 });
   }
   return NextResponse.json({
     wallet: {
-      balanceFen: wallet.data?.available_points ?? 0,
+      balanceFen: balancesResult.data?.CNY.availableMinor ?? 0,
+      balanceUsdCents: balancesResult.data?.USD.availableMinor ?? 0,
+      activeBalanceFen: balancesResult.data?.CNY.activeAvailableMinor ?? 0,
+      legacyBalanceFen: balancesResult.data?.CNY.legacyAvailableMinor ?? 0,
       reservedAmountFen: wallet.data?.reserved_points ?? 0,
       updatedAt: wallet.data?.updated_at ?? null,
     },

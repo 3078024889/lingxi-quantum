@@ -71,6 +71,7 @@
     "slug": "batch-image-watermark-remover",
     "capabilities": [
       "image.watermark.cleanup",
+      "image.mask.edit",
       "archive.package"
     ],
     "contractVersion": 1,
@@ -78,7 +79,7 @@
     "requiresDesktop": true,
     "requiresMobile": true,
     "requiresRealFixture": true,
-    "privacyMode": "declared-online"
+    "privacyMode": "local-first"
   },
   {
     "slug": "batch-pdf",
@@ -514,14 +515,15 @@
   {
     "slug": "image-watermark-remover",
     "capabilities": [
-      "image.watermark.cleanup"
+      "image.watermark.cleanup",
+      "image.mask.edit"
     ],
     "contractVersion": 1,
     "requiresNineLanguage": true,
     "requiresDesktop": true,
     "requiresMobile": true,
     "requiresRealFixture": true,
-    "privacyMode": "declared-online"
+    "privacyMode": "local-first"
   },
   {
     "slug": "jfif-to-jpg",
@@ -1078,6 +1080,20 @@
     "capabilities": [
       "ocr.pdf",
       "text.transform",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "pdf-to-xlsx",
+    "capabilities": [
+      "document.page-model",
+      "spreadsheet.xlsx-write",
       "download.local"
     ],
     "contractVersion": 1,
