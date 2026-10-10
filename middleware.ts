@@ -59,6 +59,10 @@ export async function middleware(request:NextRequest){
  const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
  if(!url||!key)return response;
 
+ // A cookie-free visit has no session to refresh. Keep guest and crawler requests
+ // out of the auth client; requests with session cookies still undergo verification.
+ if(!request.cookies.getAll().some(({name,value})=>value&&/^sb-.+-auth-token(?:\.\d+)?$/.test(name)))return response;
+
  const supabase=createServerClient(url,key,{cookies:{
   getAll(){return request.cookies.getAll()},
   setAll(cookiesToSet){
