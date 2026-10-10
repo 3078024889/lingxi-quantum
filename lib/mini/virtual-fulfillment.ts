@@ -33,6 +33,19 @@ export async function reconcileVirtualToolOrder(orderId: string, ownerId?: strin
   } else if (order.product_id !== `toolquote:${snapshot.quoteId}`) throw new Error("MINI_ORDER_SNAPSHOT_MISSING");
   if (snapshot.env === 1 && !miniSandboxUserAllowed(order.user_id)) throw new Error("MINI_SANDBOX_USER_REQUIRED");
   const remote = await queryVirtualOrder(snapshot.openid, order.provider_payment_id, snapshot.env);
+  // Only the provider can establish that this order can no longer be paid.
+  // A client cancellation or a timeout is never sufficient to clear it.
+  if (remote.order_id === order.provider_payment_id && remote.status === 6 &&
+      remote.paid_fee === 0 && remote.order_fee === Math.round(Number(order.amount_rmb) * 100) &&
+      [0, 7].includes(remote.order_type) && remote.env_type === (snapshot.env === 0 ? 1 : 2) &&
+      ["pending", "canceled"].includes(order.status)) {
+    if (order.status === "pending") {
+      const canceled = await admin.from("orders").update({ status: "canceled" })
+        .eq("id", order.id).eq("status", "pending").select("id");
+      if (canceled.error || canceled.data?.length !== 1) throw new Error("MINI_ORDER_REQUIRES_REVIEW");
+    }
+    return { paid: false, status: "canceled", closed: true };
+  }
   if (!virtualOrderPaid(remote, order.provider_payment_id, snapshot, Math.round(Number(order.amount_rmb) * 100))) {
     return { paid: false, status: order.status };
   }

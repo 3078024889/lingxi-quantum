@@ -10,21 +10,47 @@ Page({
   },
   async onShow() { if (!this.data.busy) await this.refreshAvailability() },
   async refreshAvailability() {
+    if (this._checkingAvailability) return
+    this._checkingAvailability = true
     this.setData({ loading: true })
-    try { const result = await publicRequest('/api/wechat/mini/balance-pay/availability'); this.setData({ enabled: result.enabled === true, message: result.enabled ? '充值人民币余额，可用于支持余额支付的工具。' : MESSAGE }) } catch (_) { this.setData({ enabled: false, message: '未能连接充值服务，请点击重试。' }) }
-    finally { this.setData({ loading: false }) }
+    try {
+      const result = await publicRequest('/api/wechat/mini/balance-pay/availability')
+      if (typeof result.enabled !== 'boolean') throw new Error('Invalid availability')
+      this.setData({ enabled: result.enabled, message: result.enabled ? (this.data.orderId ? '有一笔充值待确认，请先检查上一笔付款结果。金额可以选择，确认完成后再充值。' : '充值人民币余额，可用于支持余额支付的工具。') : MESSAGE })
+    } catch (_) { this.setData({ enabled: false, message: '未能连接充值服务，请点击重试。金额仍可选择，连接恢复后再付款。' }) }
+    finally { this._checkingAvailability = false; this.setData({ loading: false }) }
   },
-  choose(e) { if (!this.data.busy && !this.data.orderId) this.setData({ selected: String(e.currentTarget.dataset.amount), requestId: '' }) },
-  input(e) { if (!this.data.busy && !this.data.orderId) this.setData({ custom: e.detail.value, requestId: '' }) },
+  choose(e) { if (!this.data.busy) this.setData({ selected: String(e.currentTarget.dataset.amount) }) },
+  input(e) { if (!this.data.busy) this.setData({ custom: e.detail.value }) },
+  clearPending(message) {
+    wx.removeStorageSync('lx_mini_topup_pending')
+    this.setData({ message, orderId: '', requestId: '' })
+  },
   async confirmPayment() {
     const result = await request(`/api/wechat/mini/tool-pay/status?orderId=${encodeURIComponent(this.data.orderId)}`)
-    if (!result.paid) { this.setData({ message: '付款结果仍在确认，请稍后查看订单，不要重复付款。' }); return }
-    wx.removeStorageSync('lx_mini_topup_pending')
-    this.setData({ message: '充值已到账，可在账户中查看余额。', orderId: '', requestId: '' })
+    if (result.closed === true && result.status === 'canceled' && result.paid === false) {
+      this.clearPending('上一笔充值已关闭且未付款，可以按当前金额重新充值。'); return
+    }
+    if (!result.paid) { this.setData({ message: '上一笔付款结果仍在确认，请查看订单。已选择的金额保留，确认完成后才能再次付款。' }); return }
+    this.clearPending('充值已到账，可在账户中查看余额。')
   },
   async pay() {
-    if (!this.data.enabled) { this.setData({ message: MESSAGE }); return }
     if (this.data.busy) return
+    // Check an existing order even when availability is temporarily unavailable,
+    // and before validating a newly edited amount.
+    if (this.data.orderId) {
+      this.setData({ busy: true })
+      try { await this.confirmPayment() }
+      catch (_) { this.setData({ message: '暂时无法确认上一笔充值，请重试或查看已有订单。' }) }
+      finally { this.setData({ busy: false }) }
+      return
+    }
+    if (!this.data.enabled) { this.setData({ message: this.data.loading ? '正在连接充值服务，请稍候。' : '充值服务尚未连接，请点击重新检查充值服务。' }); return }
+    const pending = wx.getStorageSync('lx_mini_topup_pending')
+    if (this.data.requestId && pending && !pending.orderId &&
+        (pending.selected !== this.data.selected || pending.custom !== this.data.custom)) {
+      this.setData({ selected: pending.selected, custom: pending.custom, message: '上一笔充值准备结果尚未确认，已恢复原金额。请先重试确认，避免重复下单。' }); return
+    }
     const raw = this.data.selected === 'custom' ? this.data.custom : this.data.selected
     if (!/^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(raw)) { this.setData({ message: '请输入有效金额，最多两位小数。' }); return }
     const [whole, fraction = ''] = raw.split('.')

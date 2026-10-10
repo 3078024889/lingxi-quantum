@@ -10,6 +10,9 @@ function rawRequest(options) {
     timeout: REQUEST_TIMEOUT,
     ...options,
     success(res) {
+      if (typeof res.data !== 'object' || res.data === null || Array.isArray(res.data)) {
+        return reject({ statusCode: res.statusCode, code: 'INVALID_API_RESPONSE', data: { error: '充值服务连接暂时异常，请稍后重试。' } })
+      }
       if (res.statusCode >= 200 && res.statusCode < 300) return resolve(res.data)
       reject({ statusCode: res.statusCode, data: res.data })
     },
@@ -65,7 +68,15 @@ async function request(path, options = {}, retried = false) {
 
 async function publicRequest(path) {
   assertMiniApiPath(path)
-  return rawRequest({ url: `${API_BASE}${path}`, method: 'GET' })
+  // Retry only this public read. Payment creation and authenticated mutations
+  // retain their existing idempotency and result-confirmation protections.
+  try { return await rawRequest({ url: `${API_BASE}${path}`, method: 'GET' }) }
+  catch (error) {
+    const status = error && error.statusCode
+    if (status && status < 500 && error.code !== 'INVALID_API_RESPONSE') throw error
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return rawRequest({ url: `${API_BASE}${path}`, method: 'GET' })
+  }
 }
 
 async function revokeCurrentSession() {
