@@ -1,5 +1,5 @@
 const MESSAGE = '小程序内充值暂未开放。已有余额和订单仍保留，可在账户中查看。'
-const { request, publicRequest, wxLogin } = require('../../utils/api')
+const { request, publicRequest, wxLogin, connectionMessage } = require('../../utils/api')
 
 Page({
   data: { message: '正在检查充值服务…', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '' },
@@ -17,7 +17,10 @@ Page({
       const result = await publicRequest('/api/wechat/mini/balance-pay/availability')
       if (typeof result.enabled !== 'boolean') throw new Error('Invalid availability')
       this.setData({ enabled: result.enabled, message: result.enabled ? (this.data.orderId ? '有一笔充值待确认，请先检查上一笔付款结果。金额可以选择，确认完成后再充值。' : '充值人民币余额，可用于支持余额支付的工具。') : MESSAGE })
-    } catch (_) { this.setData({ enabled: false, message: '未能连接充值服务，请点击重试。金额仍可选择，连接恢复后再付款。' }) }
+    } catch (error) {
+      this.setData({ enabled: false, message: connectionMessage(error) })
+      console.warn('[mini recharge availability]', { statusCode: error && error.statusCode, code: error && error.code })
+    }
     finally { this._checkingAvailability = false; this.setData({ loading: false }) }
   },
   choose(e) { if (!this.data.busy) this.setData({ selected: String(e.currentTarget.dataset.amount) }) },

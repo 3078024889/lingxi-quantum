@@ -1,5 +1,13 @@
-const API_BASE = 'https://lingxifield.cn'
+// Dedicated API domain; must be registered in WeChat before releasing the package.
+const API_BASE = 'https://mini-api.lingxifield.cn'
 const REQUEST_TIMEOUT = 15000
+
+function connectionMessage(error) {
+  if (error && error.statusCode === 403) return '充值连接被服务器拒绝，请稍后重新检查。已有订单保留，请勿重复付款。'
+  if (error && error.statusCode >= 500) return '充值服务暂时繁忙，请稍后重新检查。金额和已有订单保留。'
+  if (error && error.code === 'INVALID_API_RESPONSE') return '充值服务返回异常，请重新检查。已有订单保留，请勿重复付款。'
+  return '未能连接充值服务，请检查网络后重试。金额仍可选择，已有订单保留。'
+}
 
 function wxLogin() {
   return new Promise((resolve, reject) => wx.login({ success: resolve, fail: reject }))
@@ -73,7 +81,8 @@ async function publicRequest(path) {
   try { return await rawRequest({ url: `${API_BASE}${path}`, method: 'GET' }) }
   catch (error) {
     const status = error && error.statusCode
-    if (status && status < 500 && error.code !== 'INVALID_API_RESPONSE') throw error
+    // A rejected request (including an HTML 403 checkpoint) must not be retried.
+    if (status >= 400 && status < 500) throw error
     await new Promise(resolve => setTimeout(resolve, 500))
     return rawRequest({ url: `${API_BASE}${path}`, method: 'GET' })
   }
@@ -110,4 +119,4 @@ async function switchAccount() {
   return token
 }
 
-module.exports = { API_BASE, login, request, publicRequest, wxLogin, switchAccount, revokeCurrentSession }
+module.exports = { API_BASE, login, request, publicRequest, wxLogin, switchAccount, revokeCurrentSession, connectionMessage }

@@ -1,6 +1,6 @@
 App({
   globalData: {
-    apiBase: 'https://lingxifield.cn',
+    apiBase: require('./utils/api').API_BASE,
     ready: false,
     loginError: '',
     lang: 'zh',
