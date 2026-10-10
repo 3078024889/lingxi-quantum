@@ -26,7 +26,7 @@ export default function MoneyAdminDashboard(){
  const d=data?.dashboard,money=d?.summary.money.find(m=>m.currency===currency);
  const rankings=d?[{title:'热门页面',rows:d.traffic.pages.map(x=>({label:x.path,views:x.views}))},{title:'访问来源',rows:d.traffic.sources.map(x=>({label:x.source||'直接访问 / 站内访问',views:x.views}))},{title:'访问域名',rows:d.traffic.hosts.map(x=>({label:x.host,views:x.views}))},{title:'设备',rows:d.traffic.devices.map(x=>({label:x.device==='mobile'?'手机':'电脑',views:x.views}))}]:[];
  const peak=Math.max(1,...(d?.traffic.daily.map(x=>x.views)||[]));
- return <main className={s.page}><header className={s.header}><div><h1>管理后台</h1><p>资金、订单、用户与网站访问，一处查看。</p></div><button disabled={loading} onClick={()=>void load()}>{loading?'正在更新…':'刷新数据'}</button></header>
+ return <main className={s.page}><header className={s.header}><div><h1>管理后台</h1><p>资金、订单、用户与网站访问，一处查看。</p>{data&&<Link href="/account/mini-goods">小程序商品道具 →</Link>}</div><button disabled={loading} onClick={()=>void load()}>{loading?'正在更新…':'刷新数据'}</button></header>
  {error&&<p role="alert" className={s.notice}>{error} <Link href="/account?mode=signin">前往登录</Link></p>}
  {!data&&!error&&<p className={s.empty} role="status">正在读取后台…</p>}
  {data&&d&&<><nav className={s.tabs} role="tablist" aria-label="后台栏目">{tabs.map(([id,label],index)=><button key={id} id={'tab-'+id} role="tab" tabIndex={tab===id?0:-1} aria-selected={tab===id} aria-controls={'panel-'+id} onClick={()=>setTab(id)} onKeyDown={e=>{const next=e.key==='ArrowRight'?(index+1)%tabs.length:e.key==='ArrowLeft'?(index+tabs.length-1)%tabs.length:e.key==='Home'?0:e.key==='End'?tabs.length-1:null;if(next!==null){e.preventDefault();setTab(tabs[next][0]);document.getElementById('tab-'+tabs[next][0])?.focus()}}}>{label}</button>)}</nav>

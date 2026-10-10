@@ -1,8 +1,21 @@
 import { miniVirtualPayConfigured } from "@/lib/mini/virtual-pay";
+import { customTopupAmount } from "@/lib/balance-topups";
 
 // Enable only after platform restrictions are resolved and real-device acceptance passes.
 export function miniVirtualToolsEnabled() {
   return process.env.WECHAT_MINI_VPAY_TOOLS_ENABLED === "true" && miniVirtualPayConfigured();
+}
+
+export function miniVirtualTopupsEnabled() {
+  return process.env.WECHAT_MINI_VPAY_TOPUPS_ENABLED === "true" && miniVirtualPayConfigured();
+}
+
+export function virtualTopupGoods(productId: string) {
+  const fixed = /^sasi-balance-(10|88|666|888)$/.exec(productId);
+  const custom = /^sasi-balance-custom-([0-9]+)$/.exec(productId);
+  const amount = fixed ? Number(fixed[1]) : custom ? customTopupAmount(custom[1]) : null;
+  if (amount === null) return null;
+  return { skuId: fixed ? `lx_balance_${amount}` : "lx_balance_custom", unitPriceFen: fixed ? amount * 100 : 100, quantity: fixed ? 1 : amount, amountFen: amount * 100 };
 }
 
 export function virtualGoodsForQuote(toolId: string, amountFen: number) {
@@ -14,14 +27,16 @@ export function virtualGoodsForQuote(toolId: string, amountFen: number) {
   if (!entry || typeof entry.skuId !== "string" || !/^[A-Za-z0-9_]{1,20}$/.test(entry.skuId)) return null;
   const unitPriceFen = Number(entry.unitPriceFen);
   const quantity = amountFen / unitPriceFen;
-  if (!Number.isSafeInteger(amountFen) || amountFen <= 0 || !Number.isSafeInteger(unitPriceFen) ||
-      unitPriceFen < 100 || unitPriceFen > 1000000 || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 10000) return null;
+  // Apple's minimum applies to the total transaction, not each pricing unit.
+  if (!Number.isSafeInteger(amountFen) || amountFen < 100 || !Number.isSafeInteger(unitPriceFen) ||
+      unitPriceFen < 1 || unitPriceFen > 1000000 || !Number.isSafeInteger(quantity) || quantity < 1 || quantity > 10000) return null;
   return { skuId: entry.skuId, unitPriceFen, quantity };
 }
 
 export type VirtualOrderSnapshot = {
   orderId: string; quoteId: string; toolId: string; openid: string;
   skuId: string; unitPriceFen: number; quantity: number; env: 0 | 1;
+  kind?: "tool" | "topup"; productId?: string;
 };
 
 export function miniSandboxUserAllowed(userId: string) {

@@ -1,3 +1,4 @@
+import { BALANCE_TOPUP_AMOUNTS } from "@/lib/balance-topups";
 export type SasiMode = "code" | "drama" | "skills" | "billing";
 export type SasiQuality = "fast" | "balanced" | "cinema";
 
@@ -40,17 +41,10 @@ export const SASI_SKILLS = [
   { id: "asset-organizer", glyph: "库", zh: "素材资产整理", en: "Asset Organizer", category: "assets", status: "planned", fitZh: "角色图 · 场景 · 镜头 · 版本", fitEn: "Characters · scenes · shots · versions", noteZh: "按项目归档角色、场景、镜头和版本，让团队始终知道该用哪一份素材。", noteEn: "Organize characters, scenes, shots and versions by project so teams know which asset is current.", modes: ["code", "drama"] },
 ] as const;
 
-export const CREDIT_PACKS = [
-  { id: "sasi-balance-10", amountFen: 1000, priceRmb: 10, priceUsd: 0, zh: "¥10 余额", en: "¥10 balance" },
-  { id: "sasi-balance-20", amountFen: 2000, priceRmb: 20, priceUsd: 0, zh: "¥20 余额", en: "¥20 balance" },
-  { id: "sasi-balance-50", amountFen: 5000, priceRmb: 50, priceUsd: 0, zh: "¥50 余额", en: "¥50 balance" },
-  { id: "sasi-balance-100", amountFen: 10000, priceRmb: 100, priceUsd: 0, zh: "¥100 余额", en: "¥100 balance" },
-  { id: "sasi-balance-200", amountFen: 20000, priceRmb: 200, priceUsd: 0, zh: "¥200 余额", en: "¥200 balance" },
-  { id: "sasi-balance-500", amountFen: 50000, priceRmb: 500, priceUsd: 0, zh: "¥500 余额", en: "¥500 balance" },
-  { id: "sasi-balance-1000", amountFen: 100000, priceRmb: 1000, priceUsd: 0, zh: "¥1000 余额", en: "¥1000 balance" },
-  { id: "sasi-balance-2000", amountFen: 200000, priceRmb: 2000, priceUsd: 0, zh: "¥2000 余额", en: "¥2000 balance" },
-  { id: "sasi-balance-10000", amountFen: 1000000, priceRmb: 10000, priceUsd: 0, zh: "¥10000 余额", en: "¥10000 balance" },
-] as const;
+export const CREDIT_PACKS = BALANCE_TOPUP_AMOUNTS.map(amount => ({
+  id: `sasi-balance-${amount}`, amountFen: amount * 100, priceRmb: amount, priceUsd: 0,
+  zh: `¥${amount} 余额`, en: `¥${amount} balance`,
+}));
 
 export function getSasiCreditPack(id: string) {
   return CREDIT_PACKS.find((pack) => pack.id === id);

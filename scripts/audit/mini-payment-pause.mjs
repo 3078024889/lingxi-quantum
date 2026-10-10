@@ -15,7 +15,7 @@ for (const route of ['tool-pay', 'balance-pay']) {
     exports, require(name) {
       if (name === 'next/server') return { NextResponse: { json: (body, init) => ({ body, ...init }) } };
       if (name === '@/lib/mini/payment-availability') return pauseModule;
-      if (name === '@/lib/mini/virtual-goods') return { miniVirtualToolsEnabled: () => false };
+      if (name === '@/lib/mini/virtual-goods') return { miniVirtualToolsEnabled: () => false, miniVirtualTopupsEnabled: () => false };
       if (['crypto','@/lib/supabase/admin','@/lib/mini/session','@/lib/mini/virtual-pay','@/lib/mini/crypto','@/lib/mini/wechat','@/lib/tools/service-readiness','@/lib/rate-limit'].includes(name)) return {};
       throw new Error(`Payment route unexpectedly loads a dependency: ${name}`);
     },

@@ -7,7 +7,7 @@ import { safeEqualHex } from "@/lib/mini/crypto";
 import { reconcileVirtualToolOrder } from "@/lib/mini/virtual-fulfillment";
 
 export const runtime = "nodejs";
-export const maxDuration = 20;
+export const maxDuration = 60;
 
 type GoodsInfo = {
   ProductId?: string;
@@ -72,10 +72,11 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
 
     if (event !== "xpay_goods_deliver_notify") {
-      await admin.from("wechat_mini_payment_events").upsert(
+      const saved = await admin.from("wechat_mini_payment_events").upsert(
         { event_type: event, out_trade_no: outTradeNo, transaction_id: transactionId, payload, handled: false },
         { onConflict: "event_type,out_trade_no,transaction_id", ignoreDuplicates: true }
       );
+      if (saved.error) return failure("event persistence failed");
       return success();
     }
     if (!outTradeNo || !payload.GoodsInfo?.ProductId) {
@@ -90,7 +91,7 @@ export async function POST(req: Request) {
       .maybeSingle();
     if (!order) return failure("order not found", 404);
 
-    if (order.product_id.startsWith("toolquote:")) {
+    if (order.product_id.startsWith("toolquote:") || order.product_id.startsWith("sasi-balance-")) {
       const result = await reconcileVirtualToolOrder(order.id);
       if (!result.paid) return failure("payment not verified", 422);
       const saved = await admin.from("wechat_mini_payment_events").upsert({

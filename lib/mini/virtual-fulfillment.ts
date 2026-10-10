@@ -1,12 +1,13 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
 import { queryVirtualOrder, notifyVirtualGoodsProvided, type XpayOrder } from "@/lib/mini/xpay";
-import { miniSandboxUserAllowed, type VirtualOrderSnapshot } from "@/lib/mini/virtual-goods";
+import { miniSandboxUserAllowed, virtualTopupGoods, type VirtualOrderSnapshot } from "@/lib/mini/virtual-goods";
 
 export function virtualOrderPaid(order: XpayOrder, outTradeNo: string, snapshot: VirtualOrderSnapshot, amountFen: number) {
   return order.order_id === outTradeNo && [2, 3, 4].includes(order.status) &&
     [0, 7].includes(order.order_type) && order.env_type === (snapshot.env === 0 ? 1 : 2) &&
     order.order_fee === amountFen && order.paid_fee === amountFen &&
+    (order.left_fee === undefined || order.left_fee === amountFen) &&
     Number.isSafeInteger(amountFen) && amountFen > 0 &&
     snapshot.unitPriceFen * snapshot.quantity === amountFen;
 }
@@ -19,10 +20,17 @@ export async function reconcileVirtualToolOrder(orderId: string, ownerId?: strin
     .eq("id", orderId).eq("provider", "wechat_mini_virtual").maybeSingle();
   if (error || !order || (ownerId && order.user_id !== ownerId)) throw new Error("MINI_ORDER_NOT_FOUND");
   const { data: creation, error: snapshotError } = await admin.from("wechat_mini_payment_events")
-    .select("payload").eq("event_type", "virtual_tool_order_created").eq("order_id", order.id).maybeSingle();
+    .select("payload").eq("event_type", order.product_id.startsWith("sasi-balance-") ? "virtual_topup_order_created" : "virtual_tool_order_created").eq("order_id", order.id).maybeSingle();
   const snapshot = creation?.payload as VirtualOrderSnapshot | undefined;
   if (snapshotError || !snapshot || snapshot.orderId !== order.id ||
-      order.product_id !== `toolquote:${snapshot.quoteId}` || ![0, 1].includes(snapshot.env)) throw new Error("MINI_ORDER_SNAPSHOT_MISSING");
+      ![0, 1].includes(snapshot.env)) throw new Error("MINI_ORDER_SNAPSHOT_MISSING");
+  if (snapshot.kind === "topup") {
+    const goods = virtualTopupGoods(order.product_id);
+    if (!goods || snapshot.productId !== order.product_id || snapshot.skuId !== goods.skuId ||
+        snapshot.quantity !== goods.quantity || snapshot.unitPriceFen !== goods.unitPriceFen ||
+        goods.amountFen !== Math.round(Number(order.amount_rmb) * 100)) throw new Error("MINI_ORDER_SNAPSHOT_MISSING");
+    if (snapshot.env !== 0) throw new Error("MINI_TOPUP_SANDBOX_NO_CREDIT");
+  } else if (order.product_id !== `toolquote:${snapshot.quoteId}`) throw new Error("MINI_ORDER_SNAPSHOT_MISSING");
   if (snapshot.env === 1 && !miniSandboxUserAllowed(order.user_id)) throw new Error("MINI_SANDBOX_USER_REQUIRED");
   const remote = await queryVirtualOrder(snapshot.openid, order.provider_payment_id, snapshot.env);
   if (!virtualOrderPaid(remote, order.provider_payment_id, snapshot, Math.round(Number(order.amount_rmb) * 100))) {

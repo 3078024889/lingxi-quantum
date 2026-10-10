@@ -43,6 +43,7 @@ export async function POST(req:NextRequest){
       amount_rmb:null,
       status:"pending",
       provider:"paypal",
+      currency:"USD",
       channel:"web",
     }).select("id").single();
     if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});

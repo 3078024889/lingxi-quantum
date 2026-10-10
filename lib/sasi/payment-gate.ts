@@ -3,7 +3,7 @@ import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 
 const SASI_TOPUP_PRODUCTS = new Set([
-  "sasi-balance-10","sasi-balance-20","sasi-balance-50","sasi-balance-100","sasi-balance-200",
+  "sasi-balance-10","sasi-balance-88","sasi-balance-666","sasi-balance-888","sasi-balance-20","sasi-balance-50","sasi-balance-100","sasi-balance-200",
   "sasi-balance-500","sasi-balance-1000","sasi-balance-2000","sasi-balance-10000",
 ]);
 

@@ -1,1 +1,2 @@
 .lx-row.is-selected{border-color:#11110f}.lx-row.is-selected .lx-row-title{font-weight:700}
+.topup-options{display:flex;flex-wrap:wrap;gap:16rpx;margin:32rpx 0}.topup-option{width:calc(50% - 8rpx);margin:0;background:#fff;border:1rpx solid #ddd;border-radius:20rpx;font-size:30rpx}.topup-option.selected{border-color:#2872e3;background:#eef4ff;color:#1654af}

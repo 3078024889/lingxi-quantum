@@ -32,7 +32,7 @@ async function xpay(path: string, body: Record<string, unknown>, env: 0 | 1, sig
 }
 
 export type XpayOrder = { order_id: string; status: number; order_type: number; paid_fee: number;
-  order_fee: number; env_type: number; wx_order_id?: string; wxpay_order_id?: string; };
+  order_fee: number; env_type: number; wx_order_id?: string; wxpay_order_id?: string; left_fee?: number; refund_fee?: number; };
 export async function queryVirtualOrder(openid: string, orderId: string, env: 0 | 1): Promise<XpayOrder> {
   const data = await xpay("/xpay/query_order", { openid, env, order_id: orderId }, env);
   if (!data.order) throw new Error("MINI_XPAY_ORDER_MISSING");
@@ -40,4 +40,14 @@ export async function queryVirtualOrder(openid: string, orderId: string, env: 0 
 }
 export async function notifyVirtualGoodsProvided(orderId: string, env: 0 | 1) {
   return xpay("/xpay/notify_provide_goods", { order_id: orderId, env }, env, false);
+}
+
+export type GoodsUploadResult = { status: number; upload_item?: Array<{ id: string; name: string; price: number; upload_status: number; errmsg?: string }> };
+export async function uploadVirtualGood(item: { skuId: string; name: string; unitPriceFen: number }) {
+  return xpay("/xpay/start_upload_goods", { env: 0, upload_item: [{ id: item.skuId, name: item.name,
+    price: item.unitPriceFen, remark: "灵犀场实用工具及余额服务 按确认价格结算",
+    item_url: "https://lingxifield.cn/images/mini-products/tools-20261010.png" }] }, 0);
+}
+export async function queryVirtualGoodsUpload(): Promise<GoodsUploadResult> {
+  return xpay("/xpay/query_upload_goods", { env: 0 }, 0);
 }
