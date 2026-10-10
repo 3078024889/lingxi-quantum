@@ -21,10 +21,15 @@
 - 使用实际 iPhone UA 及 servicewechat.com Referer，对新域名连续 5 次 GET，均 HTTP 200，enabled=true；充值金额 10/88/666/888、自定义 0.01–10000 元、两位小数。
 - 微信开发者工具 CLI 上传 5.1.6 成功，包大小 1,461,393 字节，凭据 artifacts/mini-upload-5.1.6.json。
 
-## 尚待完成
+## 提交结果
 
-- 微信 request、uploadFile、downloadFile 合法域名编辑已填写新域名并保留原域名；保存要求管理员扫码，目前等待确认。不能把表单填写当作配置已生效。
-- 域名确认前不提交此包审核或发布；确认后需核对实际保存结果，再提交新版本审核。
+- 管理员扫码确认后，微信开发管理实际列表显示 request、uploadFile、downloadFile 均包含 https://mini-api.lingxifield.cn，并保留 https://lingxifield.cn。本月修改次数由 50 变为 49。凭据 artifacts/wechat-domains-confirmed.png。
+- 原 5.1.5 尚未进入审核系统，已撤回以替换完整修复包；5.1.6 于 2026-10-10 19:08:25 提交审核成功，版本管理显示“审核中”。凭据 artifacts/mini-review-5.1.6-result.png、mini-review-5.1.6-pending.png。
+- 审核说明填写实际接口修复、充值金额、自定义规则、自动微信身份登录及订单入口 pages/orders/index；保留采集用户隐私的原声明。
+- 5.1.6 仍为体验版，线上仍为 5.1.4（16:19:35 发布）。审核通过前不能将体验版当作正式上线。
+
+## 尚待验证
+
 - 真机付款、微信商家限制解除、搜索恢复均未验证。无实际扣款、人工入账或清除未知订单操作。
 - 上述 GET 测试不证明微信 requestVirtualPayment 成功，不证明商家限制已经解除。
 
