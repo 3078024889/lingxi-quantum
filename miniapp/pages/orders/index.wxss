@@ -1,1 +1,7 @@
-/* Shared visual system lives in app.wxss. */
+.order-card{padding:28rpx 0;border-bottom:1rpx solid var(--lx-line)}
+.order-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:24rpx}
+.order-title{flex:1;min-width:0;font-size:28rpx;font-weight:620;line-height:1.5}
+.order-amount{flex-shrink:0;font-size:28rpx;font-weight:620;line-height:1.5}
+.order-meta{margin-top:10rpx;color:var(--lx-text-soft);font-size:23rpx;line-height:1.6}
+.order-actions{display:flex;flex-wrap:wrap;gap:16rpx;margin-top:22rpx}
+.order-action{width:auto;margin:0;padding:0 24rpx;line-height:66rpx;font-size:23rpx;border-radius:14rpx;background:var(--lx-bg-soft);color:var(--lx-text);border:1rpx solid var(--lx-line)}

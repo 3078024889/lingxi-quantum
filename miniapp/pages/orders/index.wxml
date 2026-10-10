@@ -1,13 +1,19 @@
 <view class="lx-page"><view class="lx-shell">
  <view class="lx-brand"><view class="lx-brand-name">灵犀场</view><view class="lx-brand-en">ORDERS</view></view>
- <view class="lx-kicker">订单中心</view><view class="lx-title">我的订单</view>
+ <view class="lx-kicker">订单中心</view><view class="lx-title">{{showHistory ? '历史记录' : '我的订单'}}</view>
+ <button class="lx-button secondary" bindtap="toggleHistory">{{showHistory ? '返回当前订单' : '查看历史记录（' + historyCount + '）'}}</button>
+ <button class="lx-button" bindtap="openBalance">前往充值</button>
  <view wx:if="{{loading}}" class="lx-feature-note">正在加载订单…</view>
  <view wx:if="{{message}}" class="lx-feature-note">{{message}}</view>
- <view wx:if="{{!loading && orders.length===0}}" class="lx-feature"><view class="lx-feature-note">还没有订单。</view></view>
- <view class="lx-section"><view class="lx-list">
-  <view wx:for="{{orders}}" wx:key="id" class="lx-row">
-   <view class="lx-row-main"><view class="lx-row-title">{{item.product_id}}</view><view class="lx-row-note">{{item.currency==='USD'?'$':'¥'}}{{item.currency==='USD'?item.amount_usd:item.amount_rmb}} · {{item.status}}</view></view>
-   <button wx:if="{{item.provider==='wechat_mini_virtual' && item.status==='pending'}}" class="lx-button secondary" data-id="{{item.id}}" bindtap="confirmVirtual">确认付款结果</button>
+ <view wx:if="{{!loading && orders.length === 0}}" class="lx-feature"><view class="lx-feature-note">{{showHistory ? '没有移入历史的订单。' : '当前没有订单。'}}</view></view>
+ <view class="lx-section">
+  <view wx:for="{{orders}}" wx:key="id" class="order-card">
+   <view class="order-heading"><view class="order-title">{{item.title}}</view><view class="order-amount">{{item.amountText}}</view></view>
+   <view class="order-meta">{{item.statusText}} · {{item.dateText}}</view>
+   <view class="order-actions">
+    <button wx:if="{{item.provider === 'wechat_mini_virtual' && item.status === 'pending'}}" class="order-action" data-id="{{item.id}}" bindtap="confirmVirtual" disabled="{{loading}}">查付款结果</button>
+    <button class="order-action" data-id="{{item.id}}" bindtap="archiveOrder" disabled="{{loading}}">{{showHistory ? '恢复显示' : '移入历史'}}</button>
+   </view>
   </view>
- </view></view>
+ </view>
 </view></view>

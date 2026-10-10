@@ -8,7 +8,12 @@ Page({
     if (pending) this.setData({ orderId: pending.orderId || '', requestId: pending.requestId || '', selected: pending.selected || '10', custom: pending.custom || '' })
     await this.refreshAvailability()
   },
-  async onShow() { if (!this.data.busy) await this.refreshAvailability() },
+  async onShow() {
+    if (this.data.busy) return
+    const pending = wx.getStorageSync('lx_mini_topup_pending')
+    this.setData({ orderId: pending && pending.orderId || '', requestId: pending && pending.requestId || '' })
+    await this.refreshAvailability()
+  },
   async refreshAvailability() {
     if (this._checkingAvailability) return
     this._checkingAvailability = true
@@ -16,7 +21,7 @@ Page({
     try {
       const result = await publicRequest('/api/wechat/mini/balance-pay/availability')
       if (typeof result.enabled !== 'boolean') throw new Error('Invalid availability')
-      this.setData({ enabled: result.enabled, message: result.enabled ? (this.data.orderId ? '有一笔充值待确认，请先检查上一笔付款结果。金额可以选择，确认完成后再充值。' : '充值人民币余额，可用于支持余额支付的工具。') : MESSAGE })
+      this.setData({ enabled: result.enabled, message: result.enabled ? (this.data.orderId ? '上一笔充值尚未确认。可以查单，或将它保留在订单中后开始一笔新的充值。' : '充值人民币余额，可用于支持余额支付的工具。') : MESSAGE })
     } catch (error) {
       this.setData({ enabled: false, message: connectionMessage(error) })
       console.warn('[mini recharge availability]', { statusCode: error && error.statusCode, code: error && error.code })
@@ -34,8 +39,20 @@ Page({
     if (result.closed === true && result.status === 'canceled' && result.paid === false) {
       this.clearPending('上一笔充值已关闭且未付款，可以按当前金额重新充值。'); return
     }
-    if (!result.paid) { this.setData({ message: '上一笔付款结果仍在确认，请查看订单。已选择的金额保留，确认完成后才能再次付款。' }); return }
+    if (!result.paid) { this.setData({ message: '上一笔付款尚未确认，记录已保留。可以继续查单，也可以选择开始新充值。' }); return }
     this.clearPending('充值已到账，可在账户中查看余额。')
+  },
+  async startNew() {
+    if (this.data.busy || !this.data.orderId) return
+    const previousId = this.data.orderId
+    const confirmed = await new Promise(resolve => wx.showModal({
+      title: '开始新充值',
+      content: '上一笔订单会保留，不会被取消。如果它已付款，后续核实后仍会到账。新充值是另外一笔付款，请勿为补确认而重复充值。',
+      confirmText: '开始新充值', success: result => resolve(result.confirm), fail: () => resolve(false),
+    }))
+    if (!confirmed || this.data.busy || this.data.orderId !== previousId) return
+    // Release the checkout slot, retaining the server order and its settlement.
+    this.clearPending('旧订单已保留在我的订单中，请确认金额后开始新的充值。')
   },
   async pay() {
     if (this.data.busy) return

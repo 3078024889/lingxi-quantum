@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 let definition,charges=0,creates=0,checks=0,logins=0,release,responseOverride;
 const storage=new Map();
-const wx={getStorageSync:k=>storage.get(k),setStorageSync:(k,v)=>storage.set(k,v),removeStorageSync:k=>storage.delete(k),requestVirtualPayment(options){charges++;options.success({});}};
+let modalConfirm = true;
+const wx={getStorageSync:k=>storage.get(k),setStorageSync:(k,v)=>storage.set(k,v),removeStorageSync:k=>storage.delete(k),showModal(options){options.success({confirm:modalConfirm});},requestVirtualPayment(options){charges++;options.success({});}};
 const api={publicRequest:async()=>({enabled:false}),wxLogin:async()=>{logins++;return{code:'fresh-code'};},request:async(path,options)=>{
  if(path.endsWith('/create')){creates++;await new Promise(resolve=>{release=resolve;});assert.equal(options.data.productId,'sasi-balance-custom-1.23');return{orderId:'owned-order',payment:{mode:'short_series_goods'}};}
  checks++;return responseOverride || {paid:checks>1};
@@ -26,4 +27,11 @@ responseOverride={paid:false,status:'canceled',closed:true};await page.pay();
 assert.equal(page.data.orderId,'');assert.equal(storage.has('lx_mini_topup_pending'),false);assert.equal(page.data.custom,'12');
 responseOverride={paid:false,status:'pending',closed:false};page.data.orderId='still-uncertain';await page.pay();
 assert.equal(page.data.orderId,'still-uncertain','Not paid alone cannot unlock a replacement payment');
-console.log('PASS: closed recharge, custom validation, double click, durable request ID and provider polling without double charge');
+storage.set('lx_mini_topup_pending',{orderId:'still-uncertain',requestId:'old-request'});
+modalConfirm=false;await page.startNew();assert.equal(page.data.orderId,'still-uncertain');
+modalConfirm=true;await page.startNew();assert.equal(page.data.orderId,'');assert.equal(page.data.requestId,'');assert.equal(storage.has('lx_mini_topup_pending'),false);
+assert.equal(charges,1,'Starting a new intent must never charge automatically');
+page.data.enabled=true;page.data.custom='1.23';const newIntent=page.pay();await new Promise(resolve=>setTimeout(resolve,0));assert.equal(creates,2);
+assert.notEqual(page.data.requestId,'old-request');release();await newIntent;assert.equal(charges,2);
+page.data.orderId='unknown';page.data.busy=true;await page.startNew();assert.equal(page.data.orderId,'unknown');
+console.log('PASS: old order retained, explicit independent checkout, cancellation guard, decimals, double clicks and durable request identity');

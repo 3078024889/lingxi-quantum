@@ -6,6 +6,7 @@
  <view class="lx-feature"><view class="lx-feature-note">{{message}}</view></view>
  <button wx:if="{{!enabled}}" class="lx-button" bindtap="refreshAvailability" loading="{{loading}}" disabled="{{loading}}">重新检查充值服务</button>
  <button wx:if="{{enabled || orderId}}" class="lx-button" bindtap="pay" loading="{{busy}}" disabled="{{busy}}">{{orderId ? '检查上一笔充值结果' : '确认金额并充值'}}</button>
+ <button wx:if="{{orderId}}" class="lx-button secondary" bindtap="startNew" disabled="{{busy}}">保留旧订单，开始新充值</button>
  <button class="lx-button secondary" bindtap="openAccount">查看账户</button>
  <button class="lx-button secondary" bindtap="openOrders">查看已有订单</button>
 </view></view>
