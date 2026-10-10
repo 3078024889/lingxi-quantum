@@ -16,6 +16,19 @@ const PROFILE_UI={
   ar:{notifications:'الإشعارات',notificationsNote:'الشحن والاسترداد والتحديثات.',settings:'الإعدادات',settingsNote:'اللغة والعملة وروابط الحساب.'},
 };
 
+const RECHARGE_UI={
+ 'zh-CN':['余额充值','人民币 · 10、88、666、888 和自定义'],
+ en:['Top up balance','CNY · 10, 88, 666, 888 or a custom amount'],
+ ja:['残高チャージ','人民元 · 10、88、666、888 または指定額'],
+ ko:['잔액 충전','위안 · 10, 88, 666, 888 또는 직접 입력'],
+ fr:['Recharger le solde','CNY · 10, 88, 666, 888 ou montant libre'],
+ de:['Guthaben aufladen','CNY · 10, 88, 666, 888 oder eigener Betrag'],
+ es:['Recargar saldo','CNY · 10, 88, 666, 888 o importe personalizado'],
+ pt:['Recarregar saldo','CNY · 10, 88, 666, 888 ou valor personalizado'],
+ ar:['شحن الرصيد','يوان · 10، 88، 666، 888 أو مبلغ مخصص'],
+}
+Object.keys(PROFILE_UI).forEach(lang=>{PROFILE_UI[lang].recharge=RECHARGE_UI[lang][0];PROFILE_UI[lang].rechargeNote=RECHARGE_UI[lang][1]})
+
 Page({
   data:{lang:'zh-CN',copy:{},ui:PROFILE_UI['zh-CN'],languages:SUPPORTED,languageIndex:0,currencies:CURRENCIES,currencyIndex:0,checking:true,connected:false,linking:false},
   refreshLanguage(lang){const index=Math.max(0,SUPPORTED.findIndex(item=>item.id===lang));this.setData({lang,copy:copyFor('profile',lang),ui:PROFILE_UI[lang]||PROFILE_UI['zh-CN'],languageIndex:index})},
@@ -34,6 +47,7 @@ Page({
   changeLanguage(event){const index=Number(event.detail.value),item=SUPPORTED[index];if(!item)return;setLanguage(item.id);this.refreshLanguage(item.id)},
   async refreshIdentity(){this.setData({checking:true});try{await login();this.setData({connected:true})}catch(error){this.setData({connected:false});console.warn('[mini identity unavailable]',{statusCode:error&&error.statusCode})}finally{this.setData({checking:false})}},
   openOrders(){wx.navigateTo({url:'/pages/orders/index'})},
+  openBalance(){wx.navigateTo({url:'/pages/balance/index'})},
   openNotifications(){wx.navigateTo({url:'/pages/notifications/index'})},
   openSettings(){wx.navigateTo({url:'/pages/settings/index'})},
   openWeb(event){const path=event.currentTarget.dataset.path;if(!path)return;wx.navigateTo({url:`/pages/web/index?path=${encodeURIComponent(path)}&currency=${CURRENCIES[this.data.currencyIndex].id}`})},

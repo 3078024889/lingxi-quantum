@@ -1,8 +1,8 @@
 import { createHash } from "crypto";
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { fulfillPaidOrder } from "@/lib/fulfill-order";
-import { miniSkuForProduct } from "@/lib/mini/catalog";
+
+
 import { safeEqualHex } from "@/lib/mini/crypto";
 import { reconcileVirtualToolOrder } from "@/lib/mini/virtual-fulfillment";
 
@@ -102,45 +102,7 @@ export async function POST(req: Request) {
       return success();
     }
 
-    const callbackOpenid = payload.OpenId ?? payload.openid;
-    const { data: identity } = await admin
-      .from("wechat_mini_identities")
-      .select("openid")
-      .eq("user_id", order.user_id)
-      .maybeSingle();
-
-    const expectedSku = miniSkuForProduct(order.product_id);
-    const expectedFen = Math.round(Number(order.amount_rmb) * 100);
-    const actualFen = Number(payload.GoodsInfo.ActualPrice);
-    const attachMatches = !payload.GoodsInfo.Attach || payload.GoodsInfo.Attach === order.id;
-    const quantityMatches = Number(payload.GoodsInfo.Quantity ?? 1) === 1;
-    if (
-      !expectedSku ||
-      expectedSku !== payload.GoodsInfo.ProductId ||
-      !identity ||
-      (callbackOpenid ? identity.openid !== callbackOpenid : false) ||
-      actualFen !== expectedFen ||
-      !attachMatches ||
-      !quantityMatches
-    ) {
-      console.error("[mini virtual pay] callback mismatch", { orderId: order.id, outTradeNo });
-      return failure("order validation failed", 422);
-    }
-
-    const fulfillment = await fulfillPaidOrder(order.id);
-    if (!fulfillment.ok) return failure("fulfillment failed");
-    await admin.from("wechat_mini_payment_events").upsert(
-      {
-        event_type: event,
-        out_trade_no: outTradeNo,
-        order_id: order.id,
-        transaction_id: transactionId,
-        payload,
-        handled: true,
-      },
-      { onConflict: "event_type,out_trade_no,transaction_id" }
-    );
-    return success();
+    return failure("retired product requires manual review", 410);
   } catch (error) {
     console.error("[mini virtual pay] notify failed", error instanceof Error ? error.message : "unknown");
     return failure("internal error");
