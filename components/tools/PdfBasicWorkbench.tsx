@@ -43,13 +43,13 @@ export default function PdfBasicWorkbench(){
    setFiles(next);setResults([]);setError("");setPages(0);
    if(next[0]){
      try{const d=await PDFDocument.load(await next[0].arrayBuffer());setPages(d.getPageCount())}
-     catch(e){setError(e instanceof Error?e.message:String(e))}
+     catch{setError(c.error)}
    }
  }
  async function wrap(name:string,fn:()=>Promise<Blob>){
    setBusy(true);setError("");setResults([]);
    try{const b=await fn();setResults([{name,blob:b,mime:"application/pdf",size:b.size}])}
-   catch(e){setError(e instanceof Error?e.message:String(e))}
+   catch(e){setError(e instanceof Error&&e.message===c.badRange?c.badRange:c.error)}
    finally{setBusy(false)}
  }
  async function merge(){if(files.length<2)return;await wrap("lingxifield-merged.pdf",async()=>{const out=await PDFDocument.create();for(const f of files){const s=await PDFDocument.load(await f.arrayBuffer());for(const p of await out.copyPages(s,s.getPageIndices()))out.addPage(p)}return pdfBlob(await out.save())})}
@@ -70,6 +70,6 @@ export default function PdfBasicWorkbench(){
    <button disabled={!first||busy} onClick={rotate} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-2.5 text-sm text-[var(--lx-ink)] disabled:opacity-40">{c.rotate}</button>
   </div>
   {!!results.length&&<ResultPanel files={results} messageZh={c.ready} messageEn={c.ready}/>}
-  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
+  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>
 }

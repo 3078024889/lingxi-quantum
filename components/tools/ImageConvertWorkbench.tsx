@@ -37,7 +37,7 @@ export default function ImageConvertWorkbench({output,accept="image/*",title}:Pr
     out.push({name:`${f.name.replace(/\.[^.]+$/,"")}.${ext}`,blob,mime:blob.type||`image/${output}`,size:blob.size});
    }
    setResults(out);
-  }catch(e){setError(e instanceof Error?e.message:String(e))}
+  }catch(e){setError(c.error)}
   finally{setBusy(false)}
  }
  return <div className="space-y-4">
@@ -45,6 +45,6 @@ export default function ImageConvertWorkbench({output,accept="image/*",title}:Pr
   {output!=="png"&&<label className="block text-sm text-[var(--lx-muted)]">{c.quality}<input type="range" min=".4" max="1" step=".05" value={quality} onChange={e=>setQuality(Math.min(1,Math.max(.4,Number(e.target.value)||.92)))} className="ml-3 align-middle"/><span className="ml-2">{Math.round(quality*100)}%</span></label>}
   <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:`${c.run} · ${title}`}</button>
   {!!results.length&&<ResultPanel files={results} messageZh={c.ready} messageEn={c.ready}/>}
-  {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
+  {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>;
 }
