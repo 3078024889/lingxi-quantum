@@ -4,7 +4,9 @@
  <view wx:if="{{quote}}" class="lx-price">¥{{quote.amount_rmb}}</view>
  <view wx:if="{{quote}}" class="lx-feature-note">{{quote.quantity}} {{quote.unit_name}} · 人民币</view>
  <view class="lx-feature"><view class="lx-feature-note">{{message}}</view></view>
- <button wx:if="{{quote}}" class="lx-button" loading="{{busy}}" disabled="{{busy}}" bindtap="pay">{{orderId ? '确认付款结果' : '虚拟支付'}}</button>
+ <button wx:if="{{quote && !paid && !orderId}}" class="lx-button" loading="{{busy}}" disabled="{{busy}}" bindtap="payBalance">余额支付</button>
+ <button wx:if="{{quote && !paid}}" class="lx-button secondary" loading="{{busy}}" disabled="{{busy}}" bindtap="pay">{{orderId ? '确认付款结果' : '虚拟支付'}}</button>
+ <button wx:if="{{!paid && !orderId}}" class="lx-button secondary" disabled="{{busy}}" bindtap="recharge">充值人民币余额</button>
  <button class="lx-button secondary" bindtap="openOrders">查看已有订单</button>
  <button class="lx-button secondary" bindtap="back">返回</button>
 </view></view>

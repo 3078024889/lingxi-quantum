@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 
 import { safeEqualHex } from "@/lib/mini/crypto";
 import { reconcileVirtualToolOrder } from "@/lib/mini/virtual-fulfillment";
+import { reconcileVirtualRefund, type MiniRefundNotice } from "@/lib/mini/virtual-refund";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -15,7 +16,7 @@ type GoodsInfo = {
   Quantity?: number;
   Attach?: string;
 };
-type DeliverPayload = {
+type DeliverPayload = MiniRefundNotice & {
   Event?: string;
   OpenId?: string;
   openid?: string;
@@ -67,10 +68,28 @@ export async function POST(req: Request) {
   try {
     const payload = normalizePayload((await req.json()) as DeliverPayload);
     const event = payload.Event ?? "unknown";
-    const outTradeNo = payload.OutTradeNo ?? null;
-    const transactionId = payload.WeChatPayInfo?.TransactionId ?? null;
+    const outTradeNo = payload.OutTradeNo ?? payload.MchOrderId ?? null;
+    const transactionId = payload.WxRefundId ?? payload.MchRefundId ?? payload.WeChatPayInfo?.TransactionId ?? null;
     const admin = createAdminClient();
 
+    if (event === "xpay_refund_notify") {
+      if (!outTradeNo || !transactionId) return failure("missing refund fields", 400);
+      const saved = await admin.from("wechat_mini_payment_events").upsert(
+        { event_type: event, out_trade_no: outTradeNo, transaction_id: transactionId, payload, handled: false },
+        { onConflict: "event_type,out_trade_no,transaction_id", ignoreDuplicates: true }
+      );
+      if (saved.error) return failure("event persistence failed");
+      if (payload.RetCode !== 0) {
+        const failed = await admin.from("wechat_mini_payment_events").update({ handled: true })
+          .eq("event_type", event).eq("out_trade_no", outTradeNo).eq("transaction_id", transactionId);
+        return failed.error ? failure("event persistence failed") : success();
+      }
+      const result = await reconcileVirtualRefund(payload);
+      const handled = await admin.from("wechat_mini_payment_events").update({ order_id: result.orderId, handled: true })
+        .eq("event_type", event).eq("out_trade_no", outTradeNo).eq("transaction_id", transactionId);
+      if (handled.error) return failure("event persistence failed");
+      return success();
+    }
     if (event !== "xpay_goods_deliver_notify") {
       const saved = await admin.from("wechat_mini_payment_events").upsert(
         { event_type: event, out_trade_no: outTradeNo, transaction_id: transactionId, payload, handled: false },

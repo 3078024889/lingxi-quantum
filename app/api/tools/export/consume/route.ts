@@ -14,7 +14,7 @@ export async function POST(req:NextRequest){
  if(Number.isFinite(contentLength)&&contentLength>16*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
  const {quoteId,draftId}=await req.json().catch(()=>({})); const admin=createAdminClient();
  if(typeof quoteId!=="string"||!quoteId)return NextResponse.json({error:"QUOTE_REQUIRED"},{status:400});
- const {data:g}=await admin.from("tool_export_grants").select("id,consumed_at").eq("quote_id",quoteId).eq("user_id",user.id).maybeSingle();
+ const {data:g}=await admin.from("tool_export_grants").select("id,consumed_at").eq("quote_id",quoteId).eq("user_id",user.id).is("revoked_at",null).maybeSingle();
  const {data:q}=await admin.from("tool_payment_quotes").select("metadata").eq("id",quoteId).eq("user_id",user.id).maybeSingle();
  const expected=String((q?.metadata as any)?.draftId||"");if(expected&&String(draftId||"")!==expected)return NextResponse.json({error:"TASK_DRAFT_MISMATCH"},{status:409});
 
@@ -23,9 +23,9 @@ export async function POST(req:NextRequest){
  if(g.consumed_at)return NextResponse.json({ok:true,alreadyCompleted:true});
  const claimed=await admin.from("tool_export_grants")
    .update({consumed_at:new Date().toISOString()})
-   .eq("id",g.id).eq("user_id",user.id).is("consumed_at",null)
+   .eq("id",g.id).eq("user_id",user.id).is("consumed_at",null).is("revoked_at",null)
    .select("id").maybeSingle();
  if(claimed.error)return NextResponse.json({error:"导出权限确认失败"},{status:500});
- if(!claimed.data)return NextResponse.json({ok:true,alreadyCompleted:true});
+ if(!claimed.data)return NextResponse.json({error:"导出权限已变化，请刷新后重试"},{status:409});
  return NextResponse.json({ok:true});
 }

@@ -38,6 +38,12 @@ export async function queryVirtualOrder(openid: string, orderId: string, env: 0 
   if (!data.order) throw new Error("MINI_XPAY_ORDER_MISSING");
   return data.order;
 }
+export async function queryVirtualRefund(openid: string, merchantRefundId: string | undefined, wxRefundId: string | undefined, env: 0 | 1): Promise<XpayOrder> {
+  if (!merchantRefundId && !wxRefundId) throw new Error("MINI_REFUND_ID_MISSING");
+  const data = await xpay("/xpay/query_order", { openid, env, ...(merchantRefundId ? { order_id: merchantRefundId } : { wx_order_id: wxRefundId }) }, env);
+  if (!data.order) throw new Error("MINI_XPAY_ORDER_MISSING");
+  return data.order;
+}
 export async function notifyVirtualGoodsProvided(orderId: string, env: 0 | 1) {
   return xpay("/xpay/notify_provide_goods", { order_id: orderId, env }, env, false);
 }

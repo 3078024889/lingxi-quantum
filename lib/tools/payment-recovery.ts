@@ -37,7 +37,7 @@ async function grantFor(userId: string, quoteId: string) {
   const admin = createAdminClient();
   const { data } = await admin.from("tool_export_grants")
     .select("id,tool_id,quantity,unit_name,amount_rmb,consumed_quantity,consumed_at,created_at")
-    .eq("quote_id", quoteId).eq("user_id", userId).maybeSingle();
+    .eq("quote_id", quoteId).eq("user_id", userId).is("revoked_at", null).maybeSingle();
   return data ?? null;
 }
 
@@ -61,6 +61,7 @@ export async function recoverToolQuotePayment(input: { userId: string; quoteId: 
   const quote=quoteData as RecoveryQuote|null;
   if (!quote) return { ok: false as const, paid: false, error: "QUOTE_NOT_FOUND" };
   const meta=quoteMeta(quote);
+  if (quote.status === "canceled") return { ok: false as const, paid: false, quote: meta, error: "QUOTE_CANCELED" };
 
   const existingGrant = await grantFor(input.userId, input.quoteId);
   if (existingGrant) return { ok: true as const, paid: true, grant: existingGrant, quote:meta, recovery: "grant-exists" };
@@ -83,7 +84,7 @@ export async function recoverToolQuotePayment(input: { userId: string; quoteId: 
   }
 
   for (const order of rows) {
-    if (order.status === "paid" || !order.provider_payment_id) continue;
+    if (order.status !== "pending" || !order.provider_payment_id) continue;
     try {
       let confirmed = false, detail = "";
       if (order.provider === "wechat" && order.amount_rmb != null) {
