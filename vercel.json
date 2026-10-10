@@ -8,5 +8,11 @@
       "path": "/api/cron/withdrawal-reconcile",
       "schedule": "47 3 * * *"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "main": true
+    }
+  }
 }
