@@ -8,6 +8,7 @@ import SignOutButton from "./SignOutButton";
 import SwitchAccountButton from "./SwitchAccountButton";
 import ChangePasswordForm from "./ChangePasswordForm";
 import DeleteAccountButton from "./DeleteAccountButton";
+import MiniAccountLinkPanel from "./MiniAccountLinkPanel";
 import AccountProfileCard from "@/components/AccountProfileCard";
 import LxText from "@/components/LxText";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
@@ -33,9 +34,10 @@ const T={
 };
 
 export default async function AccountPage(
-  props: { searchParams?: Promise<{ next?: string; auth_error?: string; mode?: string; email?: string }> }
+  props: { searchParams?: Promise<{ next?: string; auth_error?: string; mode?: string; email?: string; miniLink?: string }> }
 ) {
   const searchParams = await props.searchParams;
+  const miniLink = typeof searchParams?.miniLink === 'string' && searchParams.miniLink.length <= 2048 ? searchParams.miniLink : '';
   const requestedNext = typeof searchParams?.next === "string" ? searchParams.next : null;
   const afterAuthPath = requestedNext
     && requestedNext.startsWith("/")
@@ -43,7 +45,7 @@ export default async function AccountPage(
     && !requestedNext.includes("\\")
     && requestedNext.length <= 512
       ? requestedNext
-      : "/products";
+      : miniLink ? `/account?miniLink=${encodeURIComponent(miniLink)}&mini=1` : "/products";
 
   const authError=typeof searchParams?.auth_error==="string"?searchParams.auth_error:"";
   const initialMode=searchParams?.mode==="verify"?"verify":searchParams?.mode==="signup"?"signup":"signin";
@@ -63,6 +65,7 @@ export default async function AccountPage(
     <main className="lx11-page">
       <section className="mx-auto max-w-3xl px-6 py-20">
         {user ? <>
+          {miniLink && <MiniAccountLinkPanel ticket={miniLink} />}
           <AccountProfileCard email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} />
           <div className="mt-6 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7">
             <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]">{T.account}</p>

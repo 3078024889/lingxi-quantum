@@ -20,4 +20,8 @@ calls=0;responses=[{statusCode:403,data:'<html>Security Checkpoint</html>'}];
 await assert.rejects(exported.publicRequest('/api/wechat/mini/balance-pay/availability'));assert.equal(calls,1,'An HTML 403 is still a rejection, not a retryable read');
 calls=0;responses=[{fail:{errMsg:'timeout'}}];
 await assert.rejects(exported.request('/api/wechat/mini/balance-pay/create',{method:'POST',data:{}}));assert.equal(calls,1,'Never repeat a payment POST on network failure');
+calls=0;responses=[{fail:{errMsg:'timeout'}},{statusCode:200,data:{linked:true,accountLabel:'10505',balanceFen:250}}];
+assert.equal((await exported.request('/api/wechat/mini/account-summary')).balanceFen,250);assert.equal(calls,2,'Account reads recover on the other registered API route');
+calls=0;responses=[{statusCode:403,data:{error:'forbidden'}}];
+await assert.rejects(exported.request('/api/wechat/mini/account-summary'));assert.equal(calls,1,'No fallback can bypass an identity rejection');
 console.log('PASS: bounded public GET recovery, HTML rejection, permission failure preserved, payment POST never automatically repeated');

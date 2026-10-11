@@ -23,7 +23,7 @@ export default function MiniAccountLinkPanel({ ticket }: { ticket: string }) {
       const data = await response.json();
       if (!response.ok || !data.ok) throw new Error(data.error || t("账户连接未完成", "Account link failed"));
       setState("done");
-      setMessage(t("已连接。你的既有权益与报告现在会在小程序「我的场域」中出现。", "Connected. Your existing entitlements and reports will now appear in the mini-program under My Field."));
+      setMessage(t(`已连接 ${data.account || ''}。请返回小程序刷新，充值将到账此账户。`, `Connected ${data.account || ''}. Return to the mini-program and refresh. Top-ups will credit this account.`));
       router.refresh();
     } catch (error) {
       setState("error");
@@ -38,8 +38,8 @@ export default function MiniAccountLinkPanel({ ticket }: { ticket: string }) {
       </p>
       <p className="mt-3 text-sm leading-7 text-bone-dim">
         {t(
-          "确认后，已登录账户中的报告、订单与有效权益会与当前微信小程序身份连接。系统不会猜测或自动合并账户。",
-          "Once confirmed, the reports, orders, and active entitlements in your signed-in account will be linked to your current WeChat mini-program identity. The system will not guess or auto-merge accounts."
+          "确认后，当前手机的小程序会话将使用上方登录账户的余额和订单。其他手机的账户连接保持独立。",
+          "After confirmation, this phone’s mini-program session will use the signed-in account’s balance and orders. Other phones keep their own account connections."
         )}
       </p>
       {state !== "done" && (

@@ -79,6 +79,13 @@ async function request(path, options = {}, retried = false) {
       await login(true)
       return request(path, options, true)
     }
+    // Retry only authenticated reads with the same session. Never repeat a
+    // payment mutation or bypass a rejected identity on the other domain.
+    if (!retried && (!options.method || options.method === 'GET') && (!error.statusCode || error.statusCode >= 500)) {
+      const alternate = activeBase === API_BASE ? FALLBACK_BASE : API_BASE
+      return rawRequest({url:`${alternate}${path}`,method:'GET',data:options.data,
+        header:{Authorization:`Bearer ${token}`,'content-type':'application/json'}})
+    }
     throw error
   }
 }

@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireMiniSession } from "@/lib/mini/session";
-import { miniAccountLinked } from "@/lib/mini/account";
 export const runtime = "nodejs";
 export async function GET(req: Request) {
   const session = await requireMiniSession(req);
   if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
   try {
-    const linked = await miniAccountLinked(session.userId);
     const admin = createAdminClient();
+    const {data: account, error: accountError} = await admin.auth.admin.getUserById(session.userId);
+    if (accountError || !account.user) throw new Error('MINI_ACCOUNT_IDENTITY_UNAVAILABLE');
+    const email = account.user.email || '';
+    const linked = Boolean(account.user.phone || (email && !email.endsWith('@mini.lingxifield.invalid')));
     const [wallet, orders] = await Promise.all([
       admin.from("sasi_wallets").select("available_points,reserved_points").eq("user_id", session.userId).maybeSingle(),
       admin.from("orders").select("id,amount_rmb,status,created_at,paid_at").eq("user_id", session.userId)
@@ -16,9 +18,10 @@ export async function GET(req: Request) {
         .order("created_at", { ascending: false }).limit(10),
     ]);
     if (wallet.error || orders.error) throw new Error("MINI_ACCOUNT_UNAVAILABLE");
-    return NextResponse.json({ linked, balanceFen: Number(wallet.data?.available_points || 0),
+    return NextResponse.json({ linked, accountLabel: linked ? email || account.user.phone : '', balanceFen: Number(wallet.data?.available_points || 0),
       topups: orders.data || [] }, { headers: { "Cache-Control": "private, no-store" } });
-  } catch {
+  } catch (error) {
+    console.error('[mini account summary]', error instanceof Error ? error.message : 'unknown');
     return NextResponse.json({ error: "账户余额暂未加载，请重试" }, { status: 503 });
   }
 }

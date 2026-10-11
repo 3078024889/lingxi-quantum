@@ -2,7 +2,7 @@ import { randomBytes } from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sha256 } from "@/lib/mini/crypto";
 
-export type MiniSession = { userId: string; openid: string; expiresAt: string };
+export type MiniSession = { userId: string; openid: string; expiresAt: string; tokenHash: string };
 
 function bearerToken(req: Request): string {
   const auth = req.headers.get("authorization") ?? "";
@@ -35,7 +35,7 @@ export async function requireMiniSession(req: Request): Promise<MiniSession | nu
     .gt("expires_at", new Date().toISOString())
     .maybeSingle();
   if (error || !data) return null;
-  return { userId: data.user_id, openid: data.openid, expiresAt: data.expires_at };
+  return { userId: data.user_id, openid: data.openid, expiresAt: data.expires_at, tokenHash: sha256(token) };
 }
 
 export async function revokeMiniSession(req: Request): Promise<boolean> {

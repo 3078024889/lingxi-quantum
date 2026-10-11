@@ -14,6 +14,7 @@ export async function POST(req: Request) {
 
   const ticket = encryptMiniSecret(JSON.stringify({
     sourceUserId: session.userId,
+    sessionTokenHash: session.tokenHash,
     openid: session.openid,
     expiresAt: Date.now() + 10 * 60 * 1000,
     nonce: randomBytes(18).toString("base64url"),

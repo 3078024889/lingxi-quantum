@@ -4,7 +4,7 @@ const expiry = require('../../utils/topup-expiry')
 const paymentErrors = require('../../utils/virtual-payment-errors')
 
 Page({
-  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, balanceText: '', topups: [] },
+  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', topups: [] },
   async onLoad() {
     this.setData({ paymentNotice: paymentErrors.iosNotice() })
     expiry.expireCheckout()
@@ -28,7 +28,7 @@ Page({
   async refreshAccount() {
     try {
       const result = await request('/api/wechat/mini/account-summary')
-      this.setData({ accountLoaded: true, linked: result.linked === true, balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2),
+      this.setData({ accountLoaded: true, linked: result.linked === true, accountLabel: result.accountLabel || '', balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2),
         topups: (result.topups || []).map(row => ({ ...row, amountText: Number(row.amount_rmb).toFixed(2), statusText: row.status === 'paid' ? '已到账' : row.status === 'pending' ? '付款确认中' : row.status === 'refunded' ? '已退款' : '已关闭' })) })
     } catch (_) { this.setData({ accountLoaded: false, message: '账户余额暂未加载，请重试。已付款订单仍会核实到账。' }) }
   },
@@ -134,7 +134,8 @@ Page({
       const requestId = this.data.requestId || (Date.now().toString(16) + Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2)).padEnd(32, '0').slice(0, 32)
       await login()
       await this.refreshAccount()
-      if (!this.data.accountLoaded || !this.data.linked) { this.setData({ message: '请先登录并连接灵犀场账户，确认充值到账的账户。' }); return }
+      if (!this.data.accountLoaded) { this.setData({ message: '账户服务暂未响应，请重新加载余额。此时没有创建充值或扣款。' }); return }
+      if (!this.data.linked) { this.setData({ message: '请先登录并连接灵犀场账户，确认充值到账的账户。' }); return }
       this.setData({ requestId })
       const { code } = await wxLogin()
       const productId = `sasi-balance-${this.data.selected === 'custom' ? 'custom-' : ''}${value}`
