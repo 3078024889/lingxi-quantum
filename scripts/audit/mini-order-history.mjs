@@ -8,7 +8,9 @@ vm.runInNewContext(fs.readFileSync('miniapp/utils/order-history.js','utf8'),{mod
 const history=module.exports;
 const rows=[{id:'first',product_id:'sasi-balance-10',status:'pending',currency:'CNY',amount_rmb:10,provider:'wechat_mini_virtual'}, {id:'old',product_id:'stellar-trace',status:'paid',currency:'USD',amount_usd:50}];
 let definition;
-vm.runInNewContext(fs.readFileSync('miniapp/pages/orders/index.js','utf8'),{Page:d=>definition=d,wx,Set,require:name=>name.includes('order-history')?history:{request:async()=>({orders:rows})}});
+const expiryModule={exports:{}};
+vm.runInNewContext(fs.readFileSync('miniapp/utils/topup-expiry.js','utf8'),{module:expiryModule,wx,Date});
+vm.runInNewContext(fs.readFileSync('miniapp/pages/orders/index.js','utf8'),{Page:d=>definition=d,wx,Set,require:name=>name.includes('order-history')?history:name.includes('topup-expiry')?expiryModule.exports:{request:async()=>({orders:rows})}});
 const page={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
 await page.load();assert.equal(page.data.orders[0].title,'余额充值');assert.equal(page.data.orders[0].statusText,'待付款确认');assert.equal(page.data.orders[1].amountText,'$50.00');
 storage.set('lx_mini_topup_pending',{orderId:'first',requestId:'request'});

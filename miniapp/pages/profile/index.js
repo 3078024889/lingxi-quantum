@@ -1,4 +1,4 @@
-const { login, request, switchAccount } = require('../../utils/api')
+const { login, request, switchAccount, publicRequest, connectionMessage } = require('../../utils/api')
 const { SUPPORTED, initPage, copyFor, getLanguage, setLanguage } = require('../../utils/i18n')
 const { enableShareMenu, copyWebLink, appMessage, timeline } = require('../../utils/share')
 const CURRENCIES=[{id:'CNY',label:'CNY ¥ 人民币'},{id:'USD',label:'USD $ 美元'}]
@@ -51,7 +51,7 @@ Page({
   openNotifications(){wx.navigateTo({url:'/pages/notifications/index'})},
   openSettings(){wx.navigateTo({url:'/pages/settings/index'})},
   openWeb(event){const path=event.currentTarget.dataset.path;if(!path)return;wx.navigateTo({url:`/pages/web/index?path=${encodeURIComponent(path)}&currency=${CURRENCIES[this.data.currencyIndex].id}`})},
-  async connectExistingAccount(){if(this.data.linking)return;this.setData({linking:true});wx.showLoading({title:this.data.copy.preparing});try{const result=await request('/api/wechat/mini/account-link/start',{method:'POST'});wx.hideLoading();wx.navigateTo({url:`/pages/web/index?path=${encodeURIComponent(result.path)}`})}catch(error){wx.hideLoading();wx.showModal({title:this.data.copy.unavailable,content:this.data.copy.retry,showCancel:false})}finally{this.setData({linking:false})}},
+  async connectExistingAccount(){if(this.data.linking)return;this.setData({linking:true});wx.showLoading({title:this.data.copy.preparing});try{await publicRequest('/api/wechat/mini/balance-pay/availability');const result=await request('/api/wechat/mini/account-link/start',{method:'POST'});wx.hideLoading();wx.navigateTo({url:`/pages/web/index?path=${encodeURIComponent(result.path)}`})}catch(error){wx.hideLoading();wx.showModal({title:this.data.copy.unavailable,content:error&&error.data&&error.data.error||connectionMessage(error),showCancel:false})}finally{this.setData({linking:false})}},
   async relogin(){wx.showLoading({title:this.data.copy.reconnecting});try{await switchAccount();this.setData({connected:true});wx.showToast({title:this.data.copy.reconnected,icon:'success'})}catch(error){this.setData({connected:false});wx.showToast({title:this.data.copy.notConnected,icon:'none'})}finally{wx.hideLoading()}},
   copyLink(){copyWebLink('/')},
   onShareAppMessage(){return appMessage('灵犀场 LINGXIFIELD','/pages/create/index')},

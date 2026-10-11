@@ -1,12 +1,17 @@
 const { request } = require('../../utils/api')
 const history = require('../../utils/order-history')
+const expiry = require('../../utils/topup-expiry')
 Page({
  data: { loading: true, orders: [], message: '', showHistory: false, historyCount: 0 },
  async onLoad() { await this.load() },
- async onShow() { if (!this.data.loading) await this.load() },
+ async onShow() { clearInterval(this._expiryTimer); this._expiryTimer = setInterval(() => this.renderOrders(), 1000); if (!this.data.loading) await this.load() },
+ onHide() { clearInterval(this._expiryTimer) },
+ onUnload() { clearInterval(this._expiryTimer) },
  renderOrders() {
+  expiry.expireCheckout()
   const hidden = new Set(history.archivedIds())
   const rows = this._orders || []
+  rows.filter(row => expiry.expiredOrder(row)).forEach(row => hidden.add(row.id))
   this.setData({ orders: rows.filter(row => this.data.showHistory ? hidden.has(row.id) : !hidden.has(row.id)).map(history.present), historyCount: rows.filter(row => hidden.has(row.id)).length })
  },
  toggleHistory() { this.setData({ showHistory: !this.data.showHistory }); this.renderOrders() },

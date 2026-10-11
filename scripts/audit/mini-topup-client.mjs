@@ -5,11 +5,13 @@ let definition,charges=0,creates=0,checks=0,logins=0,release,responseOverride;
 const storage=new Map();
 let modalConfirm = true;
 const wx={getStorageSync:k=>storage.get(k),setStorageSync:(k,v)=>storage.set(k,v),removeStorageSync:k=>storage.delete(k),showModal(options){options.success({confirm:modalConfirm});},requestVirtualPayment(options){charges++;options.success({});}};
-const api={publicRequest:async()=>({enabled:false}),wxLogin:async()=>{logins++;return{code:'fresh-code'};},request:async(path,options)=>{
+const api={login:async()=>{},publicRequest:async()=>({enabled:false}),wxLogin:async()=>{logins++;return{code:'fresh-code'};},request:async(path,options)=>{
  if(path.endsWith('/create')){creates++;await new Promise(resolve=>{release=resolve;});assert.equal(options.data.productId,'sasi-balance-custom-1.23');return{orderId:'owned-order',payment:{mode:'short_series_goods'}};}
  checks++;return responseOverride || {paid:checks>1};
 }};
-vm.runInNewContext(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),{Page:d=>definition=d,wx,require:()=>api,Date,Math,Promise});
+const expiryModule={exports:{}};
+vm.runInNewContext(fs.readFileSync('miniapp/utils/topup-expiry.js','utf8'),{module:expiryModule,wx,Date});
+vm.runInNewContext(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),{Page:d=>definition=d,wx,require:name=>name.includes('topup-expiry')?expiryModule.exports:api,Date,Math,Promise});
 const page={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
 await page.pay();assert.equal(charges+creates+logins,0);
 page.data.enabled=true;page.data.selected='custom';page.data.custom='1.234';await page.pay();assert.equal(charges+creates+logins,0);

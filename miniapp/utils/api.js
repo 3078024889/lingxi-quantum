@@ -1,6 +1,9 @@
 // Dedicated API domain; must be registered in WeChat before releasing the package.
 const API_BASE = 'https://mini-api.lingxifield.cn'
 const REQUEST_TIMEOUT = 15000
+const FALLBACK_BASE = 'https://lingxifield.cn'
+let activeBase = API_BASE
+let loginInFlight
 
 function connectionMessage(error) {
   if (error && error.statusCode === 403) return '充值连接被服务器拒绝，请稍后重新检查。已有订单保留，请勿重复付款。'
@@ -34,14 +37,15 @@ function assertMiniApiPath(path) {
   }
 }
 
-async function login(force = false) {
+async function performLogin(force = false) {
   const token = wx.getStorageSync('lx_mini_token')
   const expiresAt = wx.getStorageSync('lx_mini_expires')
   if (!force && token && expiresAt && Date.parse(expiresAt) > Date.now() + 60000) return token
 
+  await publicRequest('/api/wechat/mini/balance-pay/availability')
   const { code } = await wxLogin()
   const result = await rawRequest({
-    url: `${API_BASE}/api/wechat/mini/login`,
+    url: `${activeBase}/api/wechat/mini/login`,
     method: 'POST',
     data: { code },
     header: { 'content-type': 'application/json' },
@@ -51,13 +55,18 @@ async function login(force = false) {
   wx.setStorageSync('lx_mini_expires', result.expiresAt)
   return result.token
 }
+function login(force = false) {
+  if (loginInFlight) return loginInFlight
+  loginInFlight = performLogin(force).finally(() => { loginInFlight = undefined })
+  return loginInFlight
+}
 
 async function request(path, options = {}, retried = false) {
   assertMiniApiPath(path)
   const token = await login()
   try {
     return await rawRequest({
-      url: `${API_BASE}${path}`,
+      url: `${activeBase}${path}`,
       method: options.method || 'GET',
       data: options.data,
       header: {
@@ -78,13 +87,17 @@ async function publicRequest(path) {
   assertMiniApiPath(path)
   // Retry only this public read. Payment creation and authenticated mutations
   // retain their existing idempotency and result-confirmation protections.
-  try { return await rawRequest({ url: `${API_BASE}${path}`, method: 'GET' }) }
+  const firstBase = activeBase
+  try { return await rawRequest({ url: `${firstBase}${path}`, method: 'GET' }) }
   catch (error) {
     const status = error && error.statusCode
     // A rejected request (including an HTML 403 checkpoint) must not be retried.
     if (status >= 400 && status < 500) throw error
     await new Promise(resolve => setTimeout(resolve, 500))
-    return rawRequest({ url: `${API_BASE}${path}`, method: 'GET' })
+    const secondBase = !status ? (firstBase === API_BASE ? FALLBACK_BASE : API_BASE) : firstBase
+    const result = await rawRequest({ url: `${secondBase}${path}`, method: 'GET' })
+    activeBase = secondBase
+    return result
   }
 }
 
@@ -93,7 +106,7 @@ async function revokeCurrentSession() {
   if (!token) return
   try {
     await rawRequest({
-      url: `${API_BASE}/api/wechat/mini/logout`,
+      url: `${activeBase}/api/wechat/mini/logout`,
       method: 'POST',
       header: {
         Authorization: `Bearer ${token}`,

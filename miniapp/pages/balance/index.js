@@ -1,18 +1,28 @@
 const MESSAGE = '小程序内充值暂未开放。已有余额和订单仍保留，可在账户中查看。'
-const { request, publicRequest, wxLogin, connectionMessage } = require('../../utils/api')
+const { login, request, publicRequest, wxLogin, connectionMessage } = require('../../utils/api')
+const expiry = require('../../utils/topup-expiry')
 
 Page({
   data: { message: '正在检查充值服务…', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '' },
   async onLoad() {
+    expiry.expireCheckout()
     const pending = wx.getStorageSync('lx_mini_topup_pending')
     if (pending) this.setData({ orderId: pending.orderId || '', requestId: pending.requestId || '', selected: pending.selected || '10', custom: pending.custom || '' })
     await this.refreshAvailability()
   },
   async onShow() {
     if (this.data.busy) return
+    this.expirePending()
+    clearInterval(this._expiryTimer)
+    this._expiryTimer = setInterval(() => this.expirePending(), 1000)
     const pending = wx.getStorageSync('lx_mini_topup_pending')
     this.setData({ orderId: pending && pending.orderId || '', requestId: pending && pending.requestId || '' })
     await this.refreshAvailability()
+  },
+  onHide() { clearInterval(this._expiryTimer) },
+  onUnload() { clearInterval(this._expiryTimer) },
+  expirePending() {
+    if (!this.data.busy && expiry.expireCheckout()) this.setData({ orderId: '', requestId: '', message: '上一笔充值已超过5分钟，已移出当前付款流程。可以开始新充值，付款记录仍可核实。' })
   },
   async refreshAvailability() {
     if (this._checkingAvailability) return
@@ -56,6 +66,7 @@ Page({
   },
   async pay() {
     if (this.data.busy) return
+    this.expirePending()
     // Check an existing order even when availability is temporarily unavailable,
     // and before validating a newly edited amount.
     if (this.data.orderId) {
@@ -83,12 +94,15 @@ Page({
       if (typeof wx.requestVirtualPayment !== 'function') { this.setData({ message: '请更新微信后再试。' }); return }
       const requestId = this.data.requestId || (Date.now().toString(16) + Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2)).padEnd(32, '0').slice(0, 32)
       this.setData({ requestId })
+      await login()
       const { code } = await wxLogin()
       const productId = `sasi-balance-${this.data.selected === 'custom' ? 'custom-' : ''}${value}`
-      wx.setStorageSync('lx_mini_topup_pending', { requestId, selected: this.data.selected, custom: this.data.custom })
+      const previous = wx.getStorageSync('lx_mini_topup_pending')
+      const createdAt = expiry.timestamp(previous) || Date.now()
+      wx.setStorageSync('lx_mini_topup_pending', { requestId, createdAt, selected: this.data.selected, custom: this.data.custom })
       const created = await request('/api/wechat/mini/balance-pay/create', { method: 'POST', data: { productId, code, requestId } })
       this.setData({ orderId: created.orderId })
-      wx.setStorageSync('lx_mini_topup_pending', { orderId: created.orderId, requestId, selected: this.data.selected, custom: this.data.custom })
+      wx.setStorageSync('lx_mini_topup_pending', { orderId: created.orderId, requestId, createdAt, selected: this.data.selected, custom: this.data.custom })
       if (!created.pending && !created.paid) await new Promise((resolve, reject) => wx.requestVirtualPayment({ ...created.payment, success: resolve, fail: reject }))
       await this.confirmPayment()
     } catch (error) {
