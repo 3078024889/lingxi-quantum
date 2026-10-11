@@ -4,7 +4,7 @@ const expiry = require('../../utils/topup-expiry')
 const paymentErrors = require('../../utils/virtual-payment-errors')
 
 Page({
-  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', topups: [] },
+  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', refundableText: '', topups: [] },
   async onLoad() {
     this.setData({ paymentNotice: paymentErrors.iosNotice() })
     expiry.expireCheckout()
@@ -14,6 +14,8 @@ Page({
     await this.refreshAccount()
   },
   async onShow() {
+    clearInterval(this._balanceTimer)
+    this._balanceTimer = setInterval(() => this.refreshProgress(), 30000)
     if (this.data.busy) return
     this.expirePending()
     clearInterval(this._expiryTimer)
@@ -23,14 +25,22 @@ Page({
     await this.refreshAvailability()
     await this.refreshAccount()
   },
-  onHide() { clearInterval(this._expiryTimer) },
-  onUnload() { clearInterval(this._expiryTimer) },
+  onHide() { clearInterval(this._expiryTimer); clearInterval(this._balanceTimer) },
+  onUnload() { clearInterval(this._expiryTimer); clearInterval(this._balanceTimer) },
+  async refreshProgress() {
+    if (this.data.busy || this._refreshingProgress) return
+    this._refreshingProgress = true
+    try {
+      if (this.data.linked) await request('/api/wechat/mini/refunds/progress', { method: 'POST' }).catch(() => {})
+      await this.refreshAccount()
+    } finally { this._refreshingProgress = false }
+  },
   async refreshAccount() {
     this.setData({ accountLoaded: false, linked: false, topups: [] })
     try {
       const result = await request('/api/wechat/mini/account-summary')
       if (this.data.accountLabel && this.data.accountLabel !== result.accountLabel) this.clearPending('到账账户已改变，旧充值记录请在原账户中查看。')
-      this.setData({ accountLoaded: true, linked: result.linked === true, accountLabel: result.accountLabel || '', balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2),
+      this.setData({ accountLoaded: true, linked: result.linked === true, accountLabel: result.accountLabel || '', balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2), refundableText: (Number(result.refundableFen || 0) / 100).toFixed(2),
         topups: (result.topups || []).map(row => ({ ...row, amountText: Number(row.amount_rmb).toFixed(2), statusText: row.status === 'paid' ? '已到账' : row.status === 'pending' ? '付款确认中' : row.status === 'refunded' ? '已退款' : '已关闭' })) })
     } catch (_) { this.setData({ accountLoaded: false, linked: false, accountLabel: '', balanceText: '', topups: [], message: '账户余额暂未加载，请重试。已付款订单仍会核实到账。' }) }
   },
@@ -168,5 +178,6 @@ Page({
     finally { this.setData({ busy: false }) }
   },
   openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
-  openAccount() { wx.switchTab({ url: '/pages/profile/index' }) },
+  openAccount() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/sasi/pricing') }) },
+  openRefunds() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/refunds#mini') }) },
 })

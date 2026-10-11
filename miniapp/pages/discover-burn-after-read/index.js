@@ -1,15 +1,2 @@
-const { enableShareMenu, appMessage, timeline } = require('../../utils/share')
-
-Page({
-  onLoad(){ enableShareMenu() },
-  onShow(){ enableShareMenu() },
-  openTool(){
-    wx.navigateTo({url:'/pages/web/index?path=%2Ftools%2Fburn-after-read'})
-  },
-  onShareAppMessage(){
-    return appMessage('阅后即焚｜灵犀场','/pages/discover-burn-after-read/index')
-  },
-  onShareTimeline(){
-    return timeline('阅后即焚｜灵犀场')
-  },
-})
+// Compatibility entry; the website owns this page.
+Page({onLoad(){wx.redirectTo({url:'/pages/web/index?path='+encodeURIComponent('/tools/burn-after-read')})}})

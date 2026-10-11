@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import {useMoneyAutoRefresh} from "@/lib/money/use-money-auto-refresh";
 import {useEffect,useMemo,useState,useRef,type ReactNode} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -37,6 +38,7 @@ export default function BalanceWithdrawalPanel({currency,view="all",historyExtra
   const[amounts,setAmounts]=useState<Record<string,string>>({});
 
   const providerText=(order:Order)=>{
+    if(order.provider==="wechat_mini_virtual")return lang === 'zh' ? '小程序虚拟支付 · 原支付渠道退款' : 'Mini-program payment · refund via original provider';
     if(order.provider==="paypal")return `PayPal · $${Number(order.amount_usd||0).toFixed(2)} USD`;
     const name=order.provider==="wechat"?c.wechat:order.provider==="alipay"?c.alipay:c.other;
     return `${name} · ¥${Number(order.amount_rmb||0).toFixed(2)}`;
@@ -113,11 +115,14 @@ export default function BalanceWithdrawalPanel({currency,view="all",historyExtra
         {orders.map(o=>{
           const max=walletAmount(o),active=activeByOrder.has(o.id);
           return <article key={o.id} className={styles.eligible}>
-            <div className={styles.eligibleInfo}><b>{walletSymbol(o)}{max.toFixed(2)} <span className="text-xs font-normal">{c.principal}</span></b><p>{providerText(o)} · {new Date(o.created_at).toLocaleString(lang)}</p></div>
-            <div className={styles.form}>
+            <div className={styles.eligibleInfo}><b>{walletSymbol(o)}{(o.provider === "wechat_mini_virtual" ? Number(o.amount_rmb||0) : max).toFixed(2)} <span className="text-xs font-normal">{o.provider === "wechat_mini_virtual" ? (lang === "zh" ? "小程序已付金额" : "mini-program payment") : c.principal}</span></b><p>{providerText(o)} · {new Date(o.created_at).toLocaleString(lang)}</p></div>
+            {o.provider === 'wechat_mini_virtual' ? <div className={styles.form}>
+              <p>{lang==='zh'?'小程序充值退款按原支付渠道办理，不是等待 T+1 后提现。':'Mini-program purchases are refunded through their original payment channel.'}</p>
+              <Link className={styles.link} href="/refunds#mini">{lang==='zh'?'退款方式与进度说明':'Refund instructions'}</Link>
+            </div> : <div className={styles.form}>
               <input aria-label={c.amountLabel} inputMode="decimal" value={amounts[o.id]??String(max)} onChange={e=>setAmounts(x=>({...x,[o.id]:e.target.value}))}/>
               <button disabled={active||busy!==null||max<=0} onClick={()=>void submit(o)}>{active?c.processing:busy===o.id?c.submitting:c.return}</button>
-            </div>
+            </div>}
           </article>
         })}
       </div>

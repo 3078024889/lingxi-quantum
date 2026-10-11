@@ -7,10 +7,9 @@ App({
   },
 
   onLaunch() {
-    const { getLanguage, applyTabBar } = require('./utils/i18n')
+    const { getLanguage } = require('./utils/i18n')
     const { login } = require('./utils/api')
     this.globalData.lang = getLanguage()
-    applyTabBar(this.globalData.lang)
 
     login()
       .then(() => {
@@ -27,8 +26,5 @@ App({
       })
   },
 
-  onShow() {
-    const { applyTabBar } = require('./utils/i18n')
-    applyTabBar(this.globalData.lang)
-  },
+
 })

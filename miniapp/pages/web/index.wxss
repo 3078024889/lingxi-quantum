@@ -35,17 +35,3 @@
 .lx-web-retry::after {
   border: 0;
 }
-
-.lx-web-copy-link {
-  position: fixed;
-  right: 24rpx;
-  bottom: calc(34rpx + env(safe-area-inset-bottom));
-  z-index: 9999;
-  padding: 16rpx 22rpx;
-  border-radius: 999rpx;
-  background: rgba(20, 20, 18, .82);
-  color: #fff;
-  font-size: 22rpx;
-  line-height: 1;
-}
-.lx-web-share-link{position:fixed;right:32rpx;bottom:132rpx;z-index:9999;background:#111;color:#fff;border-radius:999rpx;padding:18rpx 28rpx;font-size:26rpx}

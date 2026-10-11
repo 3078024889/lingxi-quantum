@@ -1,0 +1,13 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import ts from 'typescript';
+const exports={};const userid='10505';
+const wallet={CNY:{availableMinor:740,refundableMinor:300,refundHoldMinor:0}};
+let queriedUser;
+const builder={select(){return this},eq(key,value){if(key==='user_id')assert.equal(value,userid);return this},like(){return this},order(){return this},limit(){return Promise.resolve({data:[],error:null})}};
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('app/api/wechat/mini/account-summary/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require(name){if(name==='next/server')return{NextResponse:{json:(body,opts)=>({body,...opts})}};if(name.includes('/admin'))return{createAdminClient:()=>({auth:{admin:{getUserById:async id=>{assert.equal(id,userid);return{data:{user:{email:'1050542469@qq.com'}}}}}},from:()=>builder})};if(name.includes('/session'))return{requireMiniSession:async()=>({userId:userid,accountConnected:true})};if(name.includes('unified-balance'))return{readUnifiedBalanceSnapshot:async(_,id)=>{queriedUser=id;return wallet}};throw Error(name)},console});
+const result=await exports.GET({});assert.equal(queriedUser,userid);assert.equal(result.body.balanceFen,740);assert.equal(result.body.refundableFen,300);assert.equal(result.body.accountLabel,'1050542469@qq.com');
+const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));assert.equal(app.pages[0],'pages/web/index');assert.equal(app.tabBar,undefined);
+for(const page of ['home','tools','create','profile'])assert.match(fs.readFileSync(`miniapp/pages/${page}/index.js`,'utf8'),/wx.redirectTo/);
+assert.doesNotMatch(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),/switchTab/);
+console.log('PASS: one navigation surface; compatibility links; native and web unified 740-fen balance, separate refundable principal and owned identity.');
+
+let appInstance;vm.runInNewContext(fs.readFileSync('miniapp/app.js','utf8'),{App:definition=>appInstance=definition,require:path=>path.includes('i18n')?{getLanguage:()=> 'zh-CN'}:{API_BASE:'https://mini-api.lingxifield.cn',login:()=>Promise.resolve()},console});appInstance.onLaunch();await Promise.resolve();assert.equal(appInstance.globalData.ready,true);console.log('PASS: app starts without obsolete native tab-bar dependency.');

@@ -12,13 +12,21 @@ export function verifiedRefundAmount(original: XpayOrder, refund: XpayOrder, not
   const valid = Number.isSafeInteger(expectedFen) && expectedFen > 0 &&
     notice.RetCode === 0 && Number.isSafeInteger(notice.RefundFee) && Number(notice.RefundFee) > 0 &&
     original.order_id === notice.MchOrderId && [0, 7].includes(original.order_type) &&
-    [2, 3, 4].includes(original.status) && original.env_type === 1 &&
+    [2, 3, 4, 5, 8].includes(original.status) && original.env_type === 1 &&
     original.order_fee === expectedFen && original.paid_fee === expectedFen &&
     Number.isSafeInteger(original.left_fee) && Number(original.left_fee) >= 0 && Number(original.left_fee) < expectedFen &&
     refund.env_type === 1 && [1, 8].includes(refund.order_type) && refund.status === 8 &&
     refund.refund_fee === notice.RefundFee &&
     (notice.MchRefundId ? refund.order_id === notice.MchRefundId : Boolean(notice.WxRefundId && refund.wx_order_id === notice.WxRefundId));
-  if (!valid) throw new Error("MINI_REFUND_NOT_CONFIRMED");
+  if (!valid) {
+    // Operational diagnostics contain no payer identity, credentials or transaction IDs.
+    console.error('[mini refund verification]', { originalStatus: original.status, originalType: original.order_type,
+      originalEnv: original.env_type, orderFee: original.order_fee, paidFee: original.paid_fee, leftFee: original.left_fee,
+      refundStatus: refund.status, refundType: refund.order_type, refundEnv: refund.env_type, refundFee: refund.refund_fee,
+      expectedFen, noticeFee: notice.RefundFee, originalIdMatches: original.order_id === notice.MchOrderId,
+      refundIdMatches: notice.MchRefundId ? refund.order_id === notice.MchRefundId : refund.wx_order_id === notice.WxRefundId });
+    throw new Error("MINI_REFUND_NOT_CONFIRMED");
+  }
   const cumulative = expectedFen - Number(original.left_fee);
   if (cumulative < Number(refund.refund_fee)) throw new Error("MINI_REFUND_AMOUNT_MISMATCH");
   return cumulative;
@@ -43,10 +51,18 @@ export async function reconcileVirtualRefund(notice: MiniRefundNotice) {
   return { orderId: order.id, ...result.data };
 }
 
-export async function retryVirtualRefunds(limit = 5) {
+export async function retryVirtualRefunds(limit = 5, userId?: string) {
   const admin = createAdminClient();
-  const { data, error } = await admin.from("wechat_mini_payment_events").select("id,payload")
-    .eq("event_type", "xpay_refund_notify").eq("handled", false).order("created_at", { ascending: true }).limit(Math.max(1, Math.min(5, limit)));
+  let query = admin.from("wechat_mini_payment_events").select("id,payload")
+    .eq("event_type", "xpay_refund_notify").eq("handled", false).order("created_at", { ascending: true });
+  if (userId) {
+    const owned = await admin.from("orders").select("provider_payment_id").eq("user_id", userId).eq("provider", "wechat_mini_virtual");
+    if (owned.error) throw new Error("MINI_REFUND_INBOX_UNAVAILABLE");
+    const ids = (owned.data || []).map(row => row.provider_payment_id).filter(Boolean);
+    if (!ids.length) return { results: [] };
+    query = query.in("out_trade_no", ids);
+  }
+  const { data, error } = await query.limit(Math.max(1, Math.min(5, limit)));
   if (error) throw new Error("MINI_REFUND_INBOX_UNAVAILABLE");
   const results: { id: number; processed: boolean }[] = [];
   for (const row of data || []) {
@@ -59,7 +75,10 @@ export async function retryVirtualRefunds(limit = 5) {
       const result = await reconcileVirtualRefund(row.payload as MiniRefundNotice);
       const saved = await admin.from("wechat_mini_payment_events").update({ order_id: result.orderId, handled: true }).eq("id", row.id);
       results.push({ id: row.id, processed: !saved.error });
-    } catch { results.push({ id: row.id, processed: false }); }
+    } catch (error) {
+      console.error('[mini refund retry]', row.id, error instanceof Error ? error.message : 'unknown');
+      results.push({ id: row.id, processed: false });
+    }
   }
   return { results };
 }

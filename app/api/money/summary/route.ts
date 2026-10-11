@@ -2,6 +2,7 @@ import{NextResponse}from"next/server";
 import{createClient,getServerUser,isSupabasePublicConfigured}from"@/lib/supabase/server";
 import{readUnifiedBalanceSnapshot}from"@/lib/money/unified-balance";
 import{normalizeWithdrawalStatus}from"@/lib/money/refund-state";
+import { miniRefundHistory } from '@/lib/mini/refund-history';
 
 export const dynamic="force-dynamic";
 
@@ -31,7 +32,8 @@ export async function GET(){
     normalized_status:normalizeWithdrawalStatus(row.status,row.provider_status),
   }));
 
-  return NextResponse.json({balances:{CNY:cny,USD:usd},withdrawals},{
+  const miniRefunds = await miniRefundHistory(user.id).catch(() => []);
+  return NextResponse.json({balances:{CNY:cny,USD:usd},withdrawals:[...withdrawals,...miniRefunds].sort((a,b)=>Date.parse(b.created_at)-Date.parse(a.created_at))},{
     headers:{"Cache-Control":"no-store"}
   });
 }

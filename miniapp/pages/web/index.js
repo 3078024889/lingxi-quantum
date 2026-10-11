@@ -1,7 +1,7 @@
 // Web-view needs the registered business domain, not the request API domain.
 const WEB_BASE = 'https://lingxifield.cn'
 const { enableShareMenu, copyWebLink, publicWebPath, appMessage, timeline } = require('../../utils/share')
-const EXACT_ALLOWED=new Set(['/','/sasi','/sasi/drama','/sasi/connections','/tools','/ai-knowledge','/ai-learning','/ai-research','/account','/account/orders','/ai-wallet','/privacy','/terms','/refunds'])
+const EXACT_ALLOWED=new Set(['/','/sasi','/sasi/drama','/sasi/connections','/tools','/ai-knowledge','/ai-learning','/ai-research','/account','/account/orders','/ai-wallet','/sasi/pricing','/privacy','/terms','/refunds'])
 const PREFIX_ALLOWED=['/tools/','/api/wechat/mini/account-link/'],MAX_PATH_LENGTH=2048,CURRENCY_KEY='lx_currency'
 function safeDecode(value){try{return decodeURIComponent(value)}catch(_){return''}}
 function normalizeMiniPath(input){

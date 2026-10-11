@@ -5,6 +5,7 @@ import{reconcileDueWithdrawals}from"@/lib/money/reconcile-worker";
 import{secureSecretEqual}from"@/lib/security/secret-equals";
 import{markRuntimeFailed,markRuntimeStarted,markRuntimeSucceeded}from"@/lib/ops/runtime-heartbeat";
 import { reconcileMiniPayments } from "@/lib/mini/reconcile-worker";
+import { retryVirtualRefunds } from "@/lib/mini/virtual-refund";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -29,6 +30,7 @@ export async function GET(req:Request){
   const webhookEvents=await processMoneyWebhookInbox(30);
   const result=await reconcileDueWithdrawals(20);
   const miniPayments = await reconcileMiniPayments();
+  const miniRefunds = await retryVirtualRefunds();
   const completed=result.filter((x:any)=>x?.status==="completed").length;
   const failed=result.filter((x:any)=>x?.status==="failed").length;
   const pending=result.length-completed-failed;
@@ -45,6 +47,7 @@ export async function GET(req:Request){
    requestId,
    durationMs,
    miniPayments,
+   miniRefunds,
    webhookEvents:{
     checked:webhookEvents.length,
     deadLetter:webhookEvents.filter((x:any)=>x?.status==="dead_letter").length,

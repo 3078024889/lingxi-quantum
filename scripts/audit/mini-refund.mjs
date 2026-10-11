@@ -8,6 +8,8 @@ const original={order_id:'original',order_type:0,status:4,env_type:1,order_fee:1
 const refund={order_id:'refund',wx_order_id:'wxrefund',order_type:1,status:8,env_type:1,refund_fee:200};
 const notice={RetCode:0,RefundFee:200,MchOrderId:'original',MchRefundId:'refund',WxRefundId:'wxrefund'};
 assert.equal(exports.verifiedRefundAmount(original,refund,notice,1000),500);
+for(const status of [5,8])assert.equal(exports.verifiedRefundAmount({...original,status},refund,notice,1000),500);
+for(const status of [0,1,6,7])assert.throws(()=>exports.verifiedRefundAmount({...original,status},refund,notice,1000));
 for(const changes of [{env_type:2},{status:5},{order_id:'another'},{refund_fee:300}])assert.throws(()=>exports.verifiedRefundAmount(original,{...refund,...changes},notice,1000));
 for(const changes of [{order_id:'another'},{paid_fee:900},{left_fee:-1},{left_fee:1000},{left_fee:900},{env_type:2}])assert.throws(()=>exports.verifiedRefundAmount({...original,...changes},refund,notice,1000));
 assert.throws(()=>exports.verifiedRefundAmount(original,refund,{...notice,RetCode:1},1000));

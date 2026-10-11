@@ -7,13 +7,13 @@ async function refreshMoney(queryProgress:boolean){
  running=true;
  try{
   const active=[...subscribers].filter(s=>s.active());
-  if(queryProgress&&active.length){try{await fetch('/api/account/withdrawals/progress',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({operator:active.some(s=>s.operator)})})}catch{ /* Read stored progress even when the provider query is unavailable. */ }}
+  if(queryProgress&&subscribers.size){try{await fetch('/api/account/withdrawals/progress',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({operator:active.some(s=>s.operator)})})}catch{ /* Read stored progress even when the provider query is unavailable. */ }}
   await Promise.allSettled([...subscribers].map(s=>Promise.resolve().then(()=>subscribers.has(s)?s.refresh():undefined)));
  }finally{running=false;}
 }
 const updated=()=>void refreshMoney(false);
 const resume=()=>void refreshMoney(true);
-const tick=()=>{if([...subscribers].some(s=>s.active()))void refreshMoney(true)};
+const tick=()=>{if(subscribers.size)void refreshMoney(true)};
 export function useMoneyAutoRefresh(refresh:()=>Promise<unknown>|void,active:boolean,operator=false){
  const latest=useRef({refresh,active});latest.current={refresh,active};
  useEffect(()=>{

@@ -59,10 +59,9 @@ must(app.pages.length===expected.length,`MINI_PAGE_COUNT_DRIFT:${app.pages.lengt
 for(const p of expected)must(app.pages.includes(p),`MINI_PAGE_MISSING:${p}`);
 for(const p of["pages/field/index","pages/assessment/index","pages/narrative/index"])must(!app.pages.includes(p),`RETIRED_PAGE_REGISTERED:${p}`);
 
-must(app.tabBar && Array.isArray(app.tabBar.list),"MINI_TABBAR_INVALID");
-const tabExpected=["pages/home/index","pages/tools/index","pages/create/index","pages/profile/index"];
-must(app.tabBar.list.length===tabExpected.length,`MINI_TABBAR_COUNT_DRIFT:${app.tabBar.list.length}`);
-for(let i=0;i<tabExpected.length;i++)must(app.tabBar.list[i]?.pagePath===tabExpected[i],`MINI_TABBAR_PATH_DRIFT:${i}`);
+must(!app.tabBar,"DUPLICATE_NATIVE_TABBAR");
+must(app.pages[0]==="pages/web/index","MINI_WEB_ENTRY_REQUIRED");
+for(const p of ["home","tools","create","profile"])must(read(`miniapp/pages/${p}/index.js`).includes("wx.redirectTo"),"LEGACY_LANDING_REMAINS");
 
 const api=read("miniapp/utils/api.js");
 must(api.includes("path.startsWith('/api/wechat/mini/')"),"MINI_API_PATH_GUARD_MISSING");
@@ -80,6 +79,6 @@ must(web.includes("currency=${preferredCurrency()}"),"MINI_CURRENCY_WEB_SYNC_MIS
 
 console.log("AUDIT_MINI_PROGRAM=PASS");
 console.log("CURRENT_MINI_TOPOLOGY=16_PAGES_PASS");
-console.log("MINI_TABBAR_4=PASS");
+console.log("SINGLE_WEB_NAVIGATION=PASS");
 console.log("MINI_9_LANGUAGE_STRUCTURE=PASS");
 console.log("MINI_API_BOUNDARY=PASS");

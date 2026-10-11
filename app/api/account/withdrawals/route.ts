@@ -5,6 +5,7 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {dispatchWithdrawal} from "@/lib/payments/withdrawal-processing";
 import {moneyMinor,walletKind} from "@/lib/payments/money-input";
 import {randomUUID} from "node:crypto";
+import {miniRefundHistory} from '@/lib/mini/refund-history';
 
 export const runtime="nodejs";
 export const maxDuration=90;
@@ -45,7 +46,7 @@ export async function GET(){
   const caps={ai_cny:cap(ai.data?.available_fen,ai.data?.refundable_fen,ai.data?.refund_hold_fen),sasi_cny:cap(sasi.data?.available_points,sasi.data?.refundable_points,sasi.data?.refund_hold_points),ai_usd:cap(aiUsd.data?.available_cents,aiUsd.data?.refundable_cents,aiUsd.data?.refund_hold_cents),sasi_usd:cap(sasiUsd.data?.available_cents,sasiUsd.data?.refundable_cents,sasiUsd.data?.refund_hold_cents)};
   return NextResponse.json({
     orders:(ordersResult.data||[]).filter(o=>isBalanceProduct(String(o.product_id||""))).map(o=>{const kind=walletKind(o.product_id);const principal=Math.round(Number(kind.endsWith("usd")?o.amount_usd:o.amount_rmb)*100);const used=(withdrawalsResult.data||[]).filter(w=>w.order_id===o.id&&["requested","processing","completed"].includes(w.status)).reduce((a,w)=>a+Number(w.amount_minor),0)+(legacyResult.data||[]).filter(w=>w.order_id===o.id&&["requested","approved","completed"].includes(w.status)).reduce((a,w)=>a+Number(w.amount_fen),0);return {...o,refundable_minor:Math.max(0,Math.min(caps[kind],principal-used)),currency:kind.endsWith("usd")?"USD":"CNY"}}),
-    withdrawals:withdrawalsResult.data||[],
+    withdrawals:[...(withdrawalsResult.data||[]),...await miniRefundHistory(user.id)],
     legacyRefunds:legacyResult.data||[],
   },{headers:{"Cache-Control":"private, no-store, max-age=0"}});
 }
@@ -81,6 +82,11 @@ export async function POST(req:NextRequest){
     .eq("id",orderId).eq("user_id",user.id).single();
   if(orderError||!order||order.status!=="paid"||!isBalanceProduct(String(order.product_id||""))){
     return NextResponse.json({error:"ORDER_NOT_REFUNDABLE"},{status:409});
+  }
+  // Virtual payments use their own provider refund flow, never the ordinary
+  // WeChat merchant adapter or its wallet hold/withdrawal request.
+  if(order.provider === "wechat_mini_virtual") {
+    return NextResponse.json({error:"MINI_REFUND_CHANNEL_REQUIRED",message:"小程序充值请按原支付渠道申请退款。Apple 支付在 Apple 申请；微信虚拟支付请联系微信客服核对该订单。",guide:"/refunds#mini"},{status:409});
   }
 
   const balanceCurrency=walletCurrency(String(order.product_id));

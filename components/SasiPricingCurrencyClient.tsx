@@ -43,7 +43,7 @@ type Copy={
 };
 
 const C:Record<LingxiLang,Copy>={
- zh:{title:"余额",subtitle:"一个余额，全部 SASI 共用。",available:"可用余额",refundable:"可退本金",processing:"处理中",topup:"充值",topupHint:"选择金额充值到当前币种余额。",returnTitle:"退回原支付方式",returnHint:"未使用的真实充值本金可按原支付方式退回。",history:"最近退款",noHistory:"还没有退款记录。",refresh:"刷新",loading:"正在读取余额…",unavailable:"暂时无法读取余额。",statusPending:"处理中",statusSuccess:"已完成",statusFailed:"失败"},
+ zh:{title:"余额",subtitle:"一个余额，全部 SASI 共用。",available:"可用余额",refundable:"本站可退本金",processing:"处理中",topup:"充值",topupHint:"选择金额充值到当前币种余额。",returnTitle:"退回原支付方式",returnHint:"未使用的真实充值本金可按原支付方式退回。",history:"最近退款",noHistory:"还没有退款记录。",refresh:"刷新",loading:"正在读取余额…",unavailable:"暂时无法读取余额。",statusPending:"处理中",statusSuccess:"已完成",statusFailed:"失败"},
  en:{title:"Balance",subtitle:"One balance across every SASI.",available:"Available",refundable:"Refundable principal",processing:"Processing",topup:"Top up",topupHint:"Choose an amount to add to the selected currency balance.",returnTitle:"Return to original payment method",returnHint:"Unused paid principal can be returned to the original payment method.",history:"Recent refunds",noHistory:"No refund history yet.",refresh:"Refresh",loading:"Loading balance…",unavailable:"Balance is temporarily unavailable.",statusPending:"Processing",statusSuccess:"Completed",statusFailed:"Failed"},
  ja:{title:"残高",subtitle:"1つの残高をSASI全体で共有します。",available:"利用可能",refundable:"返金可能元本",processing:"処理中",topup:"チャージ",topupHint:"選択中の通貨残高へチャージします。",returnTitle:"元の支払い方法へ返金",returnHint:"未使用の実入金元本は元の支払い方法へ返金できます。",history:"最近の返金",noHistory:"返金履歴はまだありません。",refresh:"更新",loading:"残高を読み込み中…",unavailable:"残高を一時的に読み込めません。",statusPending:"処理中",statusSuccess:"完了",statusFailed:"失敗"},
  ko:{title:"잔액",subtitle:"하나의 잔액을 모든 SASI에서 함께 사용합니다.",available:"사용 가능",refundable:"환불 가능 원금",processing:"처리 중",topup:"충전",topupHint:"선택한 통화 잔액으로 충전합니다.",returnTitle:"원 결제수단으로 환불",returnHint:"사용하지 않은 실제 충전 원금은 원 결제수단으로 환불할 수 있습니다.",history:"최근 환불",noHistory:"아직 환불 기록이 없습니다.",refresh:"새로고침",loading:"잔액 불러오는 중…",unavailable:"잔액을 일시적으로 불러올 수 없습니다.",statusPending:"처리 중",statusSuccess:"완료",statusFailed:"실패"},
@@ -142,6 +142,7 @@ export default function SasiPricingCurrencyClient(){
      }}>{item.label}</button>)}
     </div>
    </section>
+   {selected === 'CNY' && <p className={styles.notice}><Link className={styles.link} href="/refunds#mini">{lang==='zh'?'小程序充值已计入总余额；退款按原支付渠道办理，查看说明。':'Mini-program top-ups are included in the total; view refund channel instructions.'}</Link></p>}
    <div className={styles.sync}>
     <p role={error?"alert":undefined}>{loading?c.loading:error||ui.auto}</p>
     {isAdmin&&<Link className={styles.link} href="/account/money-admin">{moneyText(lang,"moneyAdmin")}</Link>}

@@ -2,6 +2,7 @@ import 'server-only';
 import {createAdminClient} from '@/lib/supabase/admin';
 import {moneyOperatorSettings} from '@/lib/money/operator-settings';
 import {moneyNotice,moneyText} from './money-copy';
+import {miniRefundHistory} from '@/lib/mini/refund-history';
 export async function accountMoneyFeed(userId:string,lang:string,platform='web'){
  const admin=createAdminClient();
  const [orders,refunds,withdrawals,reads,announcements]=await Promise.all([
@@ -13,6 +14,11 @@ export async function accountMoneyFeed(userId:string,lang:string,platform='web')
  ]);
  const seen=new Set((reads.data||[]).map(x=>x.event_key)),migrated=new Set((withdrawals.data||[]).map(x=>x.legacy_refund_id));
  const items=[];
+ for (const r of await miniRefundHistory(userId)) {
+  const id=`mini-refund:${r.order_id}:${r.amount_minor}`;
+  items.push({id,eventKey:id,kind:'refund',currency:'CNY',amountMinor:r.amount_minor,status:'completed',
+   ...moneyNotice(lang,'refund','completed','CNY',r.amount_minor),createdAt:r.completed_at,href:'/account/withdrawals',read:seen.has(id)});
+ }
  for(const o of orders.data||[]){const usd=o.currency==='USD'||(!o.currency&&String(o.product_id).includes('-usd-'));const currency=usd?'USD':'CNY',amountMinor=Math.round(Number(usd?o.amount_usd:o.amount_rmb)*100);const kind=String(o.product_id).includes('balance')?'topup':'payment';const id=`payment:${o.id}:paid`;items.push({id,eventKey:id,kind,currency,amountMinor,...moneyNotice(lang,kind,'completed',currency,amountMinor),createdAt:o.paid_at||o.created_at,href:kind==='topup'?'/ai-wallet':'/account/orders',read:seen.has(id)});}
  for(const r of refunds.data||[]){if(migrated.has(r.id))continue;const id=`refund:${r.id}:${r.status}`;items.push({id,eventKey:id,kind:'refund',currency:'CNY',amountMinor:Number(r.amount_fen),status:r.status,...moneyNotice(lang,'refund',r.status,'CNY',Number(r.amount_fen),true),createdAt:r.updated_at||r.created_at,href:`/account/withdrawals#legacy-${r.id}`,read:seen.has(id)});}
  for(const w of withdrawals.data||[]){const id=`withdrawal:${w.id}:${w.status}`;items.push({id,eventKey:id,kind:'withdrawal',currency:w.currency,amountMinor:Number(w.amount_minor),status:w.status,...moneyNotice(lang,'withdrawal',w.status,w.currency,Number(w.amount_minor)),createdAt:w.completed_at||w.updated_at||w.created_at,href:`/account/withdrawals#withdrawal-${w.id}`,read:seen.has(id)});}

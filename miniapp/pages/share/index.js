@@ -11,7 +11,7 @@ Page({
   wx.showShareMenu({menus:['shareAppMessage','shareTimeline']})
  },
  copyLink(){wx.setClipboardData({data:this.data.webUrl})},
- back(){if(getCurrentPages().length>1)wx.navigateBack();else wx.switchTab({url:'/pages/tools/index'})},
+ back(){if(getCurrentPages().length>1)wx.navigateBack();else wx.reLaunch({url:'/pages/web/index?path=%2Ftools'})},
  onShareAppMessage(){return{title:this.data.title,path:`/pages/web/index?path=${encodeURIComponent(this.data.webPath)}`,imageUrl:"/assets/share-lingxifield-20260928.png"}},
  onShareTimeline(){return{title:this.data.title,query:`path=${encodeURIComponent(this.data.webPath)}`,imageUrl:"/assets/share-lingxifield-20260928.png"}}
 })
